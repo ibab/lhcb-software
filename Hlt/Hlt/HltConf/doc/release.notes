@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.65 2008-12-08 12:30:02 graven Exp $ 
+! $Id: release.notes,v 1.66 2008-12-09 10:53:02 witekma Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2008-12-09 - Mariusz Witek
+- update python options for Photon and Electron lines 
 
 ! 2008-12-08 - Gerhard Raven
  - in HltL0Lines, replace HltL0CaloPrepare and HltL0MuonPrepare with

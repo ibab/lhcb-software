@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltPhotonLines.py,v 1.8 2008-12-08 12:32:26 graven Exp $
+# $Id: HltPhotonLines.py,v 1.9 2008-12-09 10:51:43 witekma Exp $
 # =============================================================================
 ## @file
 #  Configuration of Photon Lines
@@ -12,7 +12,7 @@
 '''
 # =============================================================================
 __author__  = 'Gerhard Raven Gerhard.Raven@nikhef.nl'
-__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $'
+__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $'
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -42,7 +42,7 @@ Line ('Photon'
       [ HltL0CaloPrepare('L0PhotonDecision', CaloType = 'Photon', MinEt = 2300.0 )
       , Member ('TF', 'Photon'
                , InputSelection = 'L0PhotonDecision'
-               , FilterDescriptor = ['IsPhoton,>,0.5']
+               , FilterDescriptor = ['IsPhoton,>,-0.1']
                )
       , GaudiSequencer('Hlt1RecoRZVeloSequence')
       , Member ('TF', 'RZVelo'
@@ -57,13 +57,24 @@ Line ('Photon'
                , HistogramUpdatePeriod = 0
                , HistoDescriptor = { 'IP' : ('IP',-1.,3.,400), 'IPBest' : ('IPBest',-1.,3.,400) }
                )
+      , GaudiSequencer('Hlt1RecoSequence')
+      , Member ('TF', 'SecondVelo' 
+               , InputSelection     = 'Velo'
+               , FilterDescriptor = ['IP_PV2D,||[],0.15,3.0']
+               , HistogramUpdatePeriod = 0
+               , HistoDescriptor = { 'IP' : ('IP',-1.,3.,400), 'IPBest' : ('IPBest',-1.,3.,400) }
+               )
+      , GaudiSequencer('HltDecodeT')
+      , GaudiSequencer('HltDecodeTT')
       , Member ('TU' ,'Forward' , RecoName = 'Forward') #  upgrade to Forward 
       , Member ('TF', 'Forward' #  Pt cut (call it pretrigger sice could not implement veloTT)
-               , FilterDescriptor = ['PT,>,650.']
+               , FilterDescriptor = ['PT,>,600.']
                , HistogramUpdatePeriod = 0
                , HistoDescriptor =  { 'PT'     : ('PT',0.,8000.,100), 'PTBest' : ('PTBest',0.,8000.,100) }
                )
-      , Member ('VM1', 'DiTrack' # two track vertex: DOCA
+      , Member ('VM2', 'DiTrack' # two track vertex: DOCA
+               , InputSelection1 = '%TFForward'
+               , InputSelection2 = '%TFSecondVelo'
                , FilterDescriptor = [ 'DOCA,<,0.2']
                , HistoDescriptor = { 'DOCA':('DOCA',0.,3.,100), 'DOCABest':('DOCABest',0.,3.,100) }
                )
@@ -71,8 +82,12 @@ Line ('Photon'
                , FilterDescriptor = [ 'VertexDz_PV2D,>,0.']
                , HistoDescriptor = { 'VertexDz_PV2D':('VertexDz_PV2D',-3.,3.,100), 'VertexDz_PV2DBest':('VertexDz_PV2D',-3.,3.,100) }
                )
+      , Member ('VU', 'DiTrack' , RecoName = 'Forward')
+      , Member ('VF', 'SecondDiTrack' 
+               , FilterDescriptor = [ 'VertexMinPT,>,600.']
+               )
       , Member ( 'AddPhotonToVertex', 'DiTrackDecision' # add photon track to ditrack vertex to save all objects into summary
-               , InputSelection1 = '%VFDiTrack'
+               , InputSelection1 = '%VFSecondDiTrack'
                , InputSelection2 = '%TFPhoton'
                , OutputSelection = '%Decision'
                )

@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltElectronLines.py,v 1.8 2008-12-08 15:42:03 graven Exp $
+# $Id: HltElectronLines.py,v 1.9 2008-12-09 10:51:43 witekma Exp $
 # =============================================================================
 ## @file
 #  Configuration of Photon Lines
@@ -12,7 +12,7 @@
 '''
 # =============================================================================
 __author__  = 'Gerhard Raven Gerhard.Raven@nikhef.nl'
-__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $'
+__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $'
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -42,7 +42,7 @@ prepElectron =  bindMembers( 'PrepElectron',
   , Member ( 'TU', 'Velo', RecoName = 'Velo') # // Velo reconstruction of selected RZVelo
   , Member ( 'TF', 'Velo' # // Select Velo tracks with an IP and matched to L0Calo
            , HistogramUpdatePeriod = 0
-           , FilterDescriptor = [ 'IP_PV2D,||[],0.1,3.', 'Ecal3DChi2_L0ElectronDecision,<,4.' ]
+           , FilterDescriptor = [ 'IP_PV2D,||[],0.1,3.', 'Ecal3DChi2_L0ElectronDecision,<,16.' ]
            , HistoDescriptor = { 'IP' :           ('IP',-1.,3.,400), 'IPBest' :       ('IPBest',-1.,3.,400), 'Ecal3DChi2':    ('Ecal3DChi2',0.,20.,100), 'Ecal3DChi2Best':('Ecal3DChi2Best',0.,20.,100) }
            )
   , Member ( 'TU', 'Forward' # // Make forward the selected velo tracks
