@@ -1,5 +1,5 @@
 ##############################################################################
-# $Id: JpsiMuonMonitor.py,v 1.2 2008-12-08 18:12:13 pkoppenb Exp $
+# $Id: JpsiMuonMonitor.py,v 1.3 2008-12-09 10:18:01 pkoppenb Exp $
 #
 # Jpsi muon monitor
 #
@@ -45,6 +45,5 @@ plotter =  ParticleMonitor()
 plotter.PeakCut = "(ADMASS('J/psi(1S)')<5*MeV)"
 plotter.SideBandCut = "(ADMASS('J/psi(1S)')>10*MeV)"
 plotter.PlotTools = [ "PidPlotTool" ]
-plotter.OutputLevel = 1 
 
 JpsiSeq.Members += [ plotter ]
