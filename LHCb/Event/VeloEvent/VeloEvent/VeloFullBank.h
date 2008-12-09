@@ -1,4 +1,4 @@
-// $Id: VeloFullBank.h,v 1.4 2008-02-27 14:43:18 jonrob Exp $
+// $Id: VeloFullBank.h,v 1.5 2008-12-09 16:26:25 cattanem Exp $
 #ifndef VELOFULLBANK_H 
 #define VELOFULLBANK_H 1
 
@@ -47,8 +47,8 @@ protected:
   void initialize(const int type);
   void writeSections();
   void writeEventInfos(const int type);
-  const int NumberOfWordsInSection() const;
-  const int NumberOfWordsInBlock() const;
+  int NumberOfWordsInSection() const;
+  int NumberOfWordsInBlock() const;
 
 private:
 
@@ -137,12 +137,12 @@ inline void VeloFullBank::writeEventInfos(const int type)
   }
 }
 //=============================================================================
-inline const int VeloFullBank::NumberOfWordsInBlock() const
+inline int VeloFullBank::NumberOfWordsInBlock() const
 {
   return ( m_NumberOfWordsInBlock ); 
 }
 //=============================================================================
-inline const int VeloFullBank::NumberOfWordsInSection() const
+inline int VeloFullBank::NumberOfWordsInSection() const
 {
   return ( m_NumberOfWordsInSection ); 
 }
