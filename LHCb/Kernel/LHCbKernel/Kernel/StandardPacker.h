@@ -1,9 +1,8 @@
-// $Id: StandardPacker.h,v 1.3 2008-12-04 16:59:57 ocallot Exp $
+// $Id: StandardPacker.h,v 1.4 2008-12-09 08:08:27 ocallot Exp $
 #ifndef KERNEL_STANDARDPACKER_H 
 #define KERNEL_STANDARDPACKER_H 1
 
 // Include files
-#include "math.h"   // get the log
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/IRegistry.h"
@@ -20,7 +19,6 @@ namespace Packer {
   const double POSITION_SCALE   = 1.e4;  ///< 0.1 micron steps
   const double SLOPE_SCALE      = 1.e8;  ///< full scale +- 20 radians
   const double FRACTION_SCALE   = 3.e4;  ///< store in short int.
-  const double SMALL_SCALE      = 1.e7;  ///< store the log with this accuracy
 }
 
 class StandardPacker {
@@ -50,18 +48,11 @@ public:
     return shortPackDouble( f * Packer::FRACTION_SCALE );  
   }
 
-  /** returns an int from a value with a log between -100 and 100 ! */
-  int logPacked( double x  ) { 
-    double tmp = 0.;
-    if ( 0 == x ) return 0;
-    if ( 0 < x ) {
-      tmp = log( x ) + 100.;
-      if ( 0 > tmp ) tmp = 0.;
-    } else {
-      tmp = - ( log( -x ) + 100. );
-      if ( 0 < tmp ) tmp = 0.;
-    }
-    return packDouble( tmp * Packer::SMALL_SCALE ); 
+  /** returns an int containing the float value of the double */
+  int fltPacked( double x  ) { 
+    union fltInt { int i; float f; } convert;
+    convert.f = x;
+    return convert.i;
   }
 
   /** returns an int for a Smart Ref.
@@ -100,18 +91,11 @@ public:
   /** returns the fraction as double from the short int value */
   double fraction( short int k ) { return double(k) / Packer::FRACTION_SCALE; }  
 
-  /** returns an double from a log packed value */
-  double logPacked( int k  ) {
-    if ( 0 == k ) return 0.;
-    if ( 0 < k ) {  // rounding for int stored as double: if at 1.e-7 of an int, put int.
-      double newVal = exp( double( k )/ Packer::SMALL_SCALE - 100. );
-      if ( .5 < newVal ) {
-        int temp = int( 1.0000001 * newVal );
-        if ( fabs( 1. - double( temp ) /newVal ) < 1.e-7 ) newVal = double( temp );
-      }
-      return newVal;
-    }
-    return -exp( double( -k ) / Packer::SMALL_SCALE -100. );
+  /** returns an double from a int containing in fact a float */
+  double fltPacked( int k  ) {
+    union fltInt { int i; float f; } convert;
+    convert.i = k;
+    return double(convert.f);
   }
 
 protected:

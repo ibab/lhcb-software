@@ -4,6 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2008-12-09 - Olivier Callot
+ - Remove the logPacked methods from StandardPacker.h, put new methods fltPacked
+   to store the float of a double in an int.
+
 ! 2008-12-07 - Vanya BELYAEV
  - xmt/LHCbID.xml 
     add the comparison "less"-operator 
