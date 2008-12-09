@@ -26,7 +26,7 @@ public:
     typedef SimpleProperty<std::map<KEY,VALUE> > property_type;
     typedef optional<IANNSvc::minor_value_type>  result_type; 
 
-    bimap_t();
+    bimap_t(const ANNSvc* parent);
 
     property_type& property() { return m_property; } 
 
@@ -53,11 +53,12 @@ private:
     property_type   m_property;
     k2v_type        m_map;
     v2k_type        m_invmap;
+    const ANNSvc*         m_parent;
 };
 
 
 template<typename KEY, typename VALUE>
-bimap_t<KEY,VALUE>::bimap_t() {
+bimap_t<KEY,VALUE>::bimap_t(const ANNSvc* parent) : m_parent(parent) {
     m_property.declareUpdateHandler( &bimap_t<KEY,VALUE>::updateHandler, this);
 }
 
@@ -66,6 +67,7 @@ bimap_t<KEY,VALUE>::bimap_t(const bimap_t& rhs)
     : m_map(       rhs.m_map      )
     , m_invmap(    rhs.m_invmap   )
     , m_property(  rhs.m_property )
+    , m_parent(    rhs.m_parent   )
 {
     m_property.declareUpdateHandler(&bimap_t<KEY,VALUE>::updateHandler, this);
 }
@@ -73,6 +75,15 @@ bimap_t<KEY,VALUE>::bimap_t(const bimap_t& rhs)
 template <typename KEY, typename VALUE>
 void
 bimap_t<KEY,VALUE>::insert(const mapped_type& value) {
+        // verify each entry to be unique
+        if (m_map.find( value.first ) != m_map.end() ||
+            m_invmap.find(value.second) != m_invmap.end() ) {
+            if (m_parent!=0) {
+                m_parent->log() << MSG::ERROR 
+                                << " Entry \"" << value.first << "\" -> \""<< value.second<<"\" clashes with existing entry" << endmsg;
+            }
+            throw GaudiException( "non-unique entry in ANNSvc instance","",StatusCode::FAILURE);
+        }
         m_map.   insert( value.first,  value.second );
         m_invmap.insert( value.second, value.first  );
 }
@@ -105,7 +116,7 @@ ANNSvc::ANNSvc( const string& name, ISvcLocator* pSvcLocator,
 {
     for (vector<string>::const_iterator i  = majors.begin();
                                         i != majors.end(); ++i)  {
-        maps_type::result_type r = m_maps.insert(*i, new bimap_type()); 
+        maps_type::result_type r = m_maps.insert(*i, new bimap_type(this)); 
         declareProperty(r.first->first, 
                         const_cast<maps_type::mapped_type&>(r.first->second)->property());
     }

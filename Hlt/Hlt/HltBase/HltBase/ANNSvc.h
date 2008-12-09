@@ -1,4 +1,4 @@
-// $Id: ANNSvc.h,v 1.9 2008-06-25 14:12:02 graven Exp $
+// $Id: ANNSvc.h,v 1.10 2008-12-09 15:30:48 graven Exp $
 #ifndef ANNSVC_H  
 #define ANNSVC_H 1
 
@@ -52,11 +52,12 @@ protected:
 
 
 private:
+  mutable MsgStream m_log;
   
   typedef ANNSvcUtilities::bimap_t<minor_key_type, minor_mapped_type> bimap_type;
   typedef GaudiUtils::VectorMap< major_key_type, bimap_type* > maps_type;
   maps_type   m_maps;
+  friend class ANNSvcUtilities::bimap_t<minor_key_type, minor_mapped_type> ;
 
-  mutable MsgStream m_log;
 };
 #endif // ANNSVC_H 1
