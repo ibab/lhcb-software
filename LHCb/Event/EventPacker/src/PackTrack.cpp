@@ -1,4 +1,4 @@
-// $Id: PackTrack.cpp,v 1.3 2008-11-19 13:37:18 ocallot Exp $
+// $Id: PackTrack.cpp,v 1.4 2008-12-09 08:13:23 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -52,7 +52,7 @@ StatusCode PackTrack::execute() {
     LHCb::Track* track = *itT;
 
     newTrk.key        = track->key();
-    newTrk.chi2PerDoF = pack.logPacked( track->chi2PerDoF() );
+    newTrk.chi2PerDoF = pack.fltPacked( track->chi2PerDoF() );
     newTrk.nDoF       = track->nDoF();
     newTrk.flags      = track->flags();
 
@@ -77,7 +77,7 @@ StatusCode PackTrack::execute() {
     newTrk.firstExtra = out->sizeExtra();
     for ( GaudiUtils::VectorMap<int,double>::iterator itE = track->extraInfo().begin();
           track->extraInfo().end() != itE; ++itE ) {
-      out->addExtra( (*itE).first, pack.logPacked( (*itE).second ) );
+      out->addExtra( (*itE).first, pack.fltPacked( (*itE).second ) );
     }
     newTrk.lastExtra = out->sizeExtra();
 

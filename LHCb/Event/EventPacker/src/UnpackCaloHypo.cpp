@@ -1,4 +1,4 @@
-// $Id: UnpackCaloHypo.cpp,v 1.1.1.1 2008-11-18 17:12:59 ocallot Exp $
+// $Id: UnpackCaloHypo.cpp,v 1.2 2008-12-09 08:13:23 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -56,7 +56,7 @@ StatusCode UnpackCaloHypo::execute() {
     LHCb::CaloHypo* hypo = new LHCb::CaloHypo( );
     newCaloHypos->insert( hypo, src.key );
     hypo->setHypothesis( (LHCb::CaloHypo::Hypothesis) src.hypothesis );
-    hypo->setLh( pack.logPacked( src.lh ) );
+    hypo->setLh( pack.fltPacked( src.lh ) );
     if ( 0. != src.z ) {
       LHCb::CaloPosition* pos = new LHCb::CaloPosition();
       hypo->setPosition( pos );

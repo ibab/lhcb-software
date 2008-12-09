@@ -1,4 +1,4 @@
-// $Id: UnpackTrack.cpp,v 1.3 2008-11-19 13:37:18 ocallot Exp $
+// $Id: UnpackTrack.cpp,v 1.4 2008-12-09 08:13:23 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -55,7 +55,7 @@ StatusCode UnpackTrack::execute() {
     LHCb::Track* track = new LHCb::Track( );
     newTracks->insert( track, src.key );
 
-    track->setChi2PerDoF( pack.logPacked( src.chi2PerDoF ) );
+    track->setChi2PerDoF( pack.fltPacked( src.chi2PerDoF ) );
     track->setNDoF(       src.nDoF );
     track->setFlags(      src.flags );
     for ( int kId = src.firstId; src.lastId > kId; ++kId ) {
@@ -68,7 +68,7 @@ StatusCode UnpackTrack::execute() {
     }
     for ( int kEx = src.firstExtra; src.lastExtra > kEx; ++kEx ) {
       std::pair<int,int> info = *(dst->beginExtra()+kEx);
-      track->addInfo( info.first, pack.logPacked( info.second ) );
+      track->addInfo( info.first, pack.fltPacked( info.second ) );
     }
   }
   return StatusCode::SUCCESS;

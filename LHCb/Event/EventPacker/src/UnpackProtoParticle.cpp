@@ -1,4 +1,4 @@
-// $Id: UnpackProtoParticle.cpp,v 1.1.1.1 2008-11-18 17:12:59 ocallot Exp $
+// $Id: UnpackProtoParticle.cpp,v 1.2 2008-12-09 08:13:23 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -86,7 +86,7 @@ StatusCode UnpackProtoParticle::execute() {
 
     for ( kk = src.firstExtra; src.lastExtra > kk; ++kk ) {
       std::pair<int,int> info = *(dst->beginExtra()+kk);
-      part->addInfo( info.first, pack.logPacked( info.second ) );
+      part->addInfo( info.first, pack.fltPacked( info.second ) );
     }
   }
   

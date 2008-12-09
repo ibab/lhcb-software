@@ -1,4 +1,4 @@
-// $Id: PackProtoParticle.cpp,v 1.2 2008-11-19 10:08:54 ocallot Exp $
+// $Id: PackProtoParticle.cpp,v 1.3 2008-12-09 08:13:23 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -85,7 +85,7 @@ StatusCode PackProtoParticle::execute() {
     newPart.firstExtra = out->sizeExtra();
     for ( GaudiUtils::VectorMap<int,double>::iterator itE = part->extraInfo().begin();
           part->extraInfo().end() != itE; ++itE ) {
-      out->addExtra( (*itE).first, pack.logPacked( (*itE).second ) );
+      out->addExtra( (*itE).first, pack.fltPacked( (*itE).second ) );
     }
     newPart.lastExtra = out->sizeExtra();
     

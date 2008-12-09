@@ -1,4 +1,4 @@
-// $Id: PackCaloHypo.cpp,v 1.2 2008-11-19 10:08:54 ocallot Exp $
+// $Id: PackCaloHypo.cpp,v 1.3 2008-12-09 08:13:23 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -53,7 +53,7 @@ StatusCode PackCaloHypo::execute() {
     LHCb::PackedCaloHypo pH;
     pH.key        = (*itH)->key();
     pH.hypothesis = (*itH)->hypothesis();
-    pH.lh         = pack.logPacked( (*itH)->lh() );
+    pH.lh         = pack.fltPacked( (*itH)->lh() );
     if ( 0 == (*itH)->position() ) {
       pH.z    = 0;
       pH.posX = 0;

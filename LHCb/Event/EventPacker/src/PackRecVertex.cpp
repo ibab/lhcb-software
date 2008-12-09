@@ -1,4 +1,4 @@
-// $Id: PackRecVertex.cpp,v 1.2 2008-11-19 10:08:54 ocallot Exp $
+// $Id: PackRecVertex.cpp,v 1.3 2008-12-09 08:13:23 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -55,7 +55,7 @@ StatusCode PackRecVertex::execute() {
 
     pVert.key        = vert->key();
     pVert.technique  = vert->technique();
-    pVert.chi2       = pack.logPacked( vert->chi2() );
+    pVert.chi2       = pack.fltPacked( vert->chi2() );
     pVert.nDoF       = vert->nDoF();
     pVert.x          = pack.position( vert->position().x() );
     pVert.y          = pack.position( vert->position().y() );
@@ -86,7 +86,7 @@ StatusCode PackRecVertex::execute() {
     pVert.firstInfo = out->sizeExtra();
     for ( GaudiUtils::VectorMap<int,double>::iterator itE = vert->extraInfo().begin(); 
           vert->extraInfo().end() != itE; ++itE ) {
-      out->addExtra( (*itE).first, pack.logPacked( (*itE).second ) );
+      out->addExtra( (*itE).first, pack.fltPacked( (*itE).second ) );
     }
     pVert.lastInfo = out->sizeExtra();
     out->addEntry( pVert );
