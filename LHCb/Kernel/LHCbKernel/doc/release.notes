@@ -4,6 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2008-12-09 - Louis Nicolas
+ - AlignTraj: changed m_traj from reference to pointer to fix genreflex warning
+   during compilation.
+
 ! 2008-12-09 - Olivier Callot
  - Remove the logPacked methods from StandardPacker.h, put new methods fltPacked
    to store the float of a double in an int.

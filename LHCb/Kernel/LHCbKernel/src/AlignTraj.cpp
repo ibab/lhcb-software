@@ -1,4 +1,4 @@
-// $Id: AlignTraj.cpp,v 1.5 2008-01-23 10:11:43 graven Exp $
+// $Id: AlignTraj.cpp,v 1.6 2008-12-09 16:54:07 lnicolas Exp $
 
 #include "Kernel/AlignTraj.h"
 #include "GaudiKernel/GenericMatrixTypes.h"
@@ -89,19 +89,19 @@ AlignTraj::Point
 AlignTraj::position( double s ) const 
 {
     // rotate around pivot, then translate
-    return m_pivot + rotate(m_traj.position(s)-m_pivot) + m_trans ;
+    return m_pivot + rotate(m_traj->position(s)-m_pivot) + m_trans ;
 }
 
 AlignTraj::Vector 
 AlignTraj::direction( double s ) const 
 {
-    return rotate(m_traj.direction(s));
+    return rotate(m_traj->direction(s));
 }
 
 AlignTraj::Vector 
 AlignTraj::curvature( double s ) const 
 {
-    return rotate(m_traj.curvature(s));
+    return rotate(m_traj->curvature(s));
 }
 
 void 
@@ -110,7 +110,7 @@ AlignTraj::expansion( double s,
                       Vector &dp,
                       Vector &ddp) const 
 {
-    m_traj.expansion(s,p,dp,ddp);
+    m_traj->expansion(s,p,dp,ddp);
     p   = m_pivot + m_trans + rotate(p-m_pivot);
     dp  = rotate(dp);
     ddp = rotate(ddp);
@@ -120,7 +120,7 @@ double
 AlignTraj::muEstimate( const Point& p) const 
 {
     // apply inverse transformation to Point, and forward...
-    return m_traj.arclength( m_pivot + invRotate(p - m_pivot - m_trans) );
+    return m_traj->arclength( m_pivot + invRotate(p - m_pivot - m_trans) );
 }
 
 double 
@@ -128,7 +128,7 @@ AlignTraj::distTo1stError( double arclength,
                            double tolerance, 
                            int pathDirection ) const 
 {
-    return m_traj.distTo1stError(arclength,tolerance,pathDirection);    
+    return m_traj->distTo1stError(arclength,tolerance,pathDirection);    
 }
 
 double 
@@ -136,5 +136,5 @@ AlignTraj::distTo2ndError( double arclength,
                            double tolerance, 
                            int pathDirection ) const 
 {
-    return m_traj.distTo2ndError(arclength,tolerance,pathDirection);    
+    return m_traj->distTo2ndError(arclength,tolerance,pathDirection);    
 }
