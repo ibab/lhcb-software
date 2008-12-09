@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2008-12-09 - Patrick Koppenburg
+ - SpotLight moved here
+
 ! 2008-12-08 - Patrick Koppenburg
  - Split Tool into Base and implementation
  - Full functionality is there
