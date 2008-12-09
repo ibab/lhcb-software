@@ -1,4 +1,4 @@
-// $Id: FIDManipAlg.h,v 1.1 2008-12-05 19:28:09 frankb Exp $
+// $Id: FIDManipAlg.h,v 1.2 2008-12-09 20:16:10 frankb Exp $
 // Include files 
 //-----------------------------------------------------------------------------
 // Implementation file for class : Fileidmanipulator
@@ -11,6 +11,10 @@
 
 // Include files from Gaudi
 #include "GaudiKernel/Algorithm.h"
+#include "GaudiKernel/IIncidentListener.h"
+
+// Forward declarations
+class IIncidentSvc;
 
 /*
  *   LHCb namespace
@@ -29,9 +33,12 @@ namespace LHCb {
   *  @author M.Frank
   *  @date   2008-03-03
   */
-  class FIDManipAlg : public Algorithm {
+  class FIDManipAlg : public Algorithm, virtual public IIncidentListener {
   public:
     enum Action { ADD=1, REMOVE, DUMP };
+    /// Reference to incident service
+    IIncidentSvc* m_incidentSvc;
+
   protected:
     /// Property: remove/add file id bank
     int          m_action;
@@ -45,6 +52,10 @@ namespace LHCb {
     int          m_printFreq;
     /// Print frequence counter
     int          m_printCnt;
+    /// FID info (if retrieved using incident service
+    std::pair<int,std::string> m_fid;
+    /// Property: New file incident name
+    std::string  m_incidentName;
 
   protected:
   public: 
@@ -52,8 +63,14 @@ namespace LHCb {
     FIDManipAlg(const std::string& nam, ISvcLocator* pSvc);
     /// Standard destructor
     virtual ~FIDManipAlg()  {}
-    /// Algorithm execution
+    // IInterface implementation : queryInterface
+    virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvInterface);
+    /// Incident handler implemenentation: Inform that a new incident has occured
+    virtual void handle(const Incident& inc);
+    /// Algorithm initialization
     virtual StatusCode initialize();
+    /// Algorithm finalization
+    virtual StatusCode finalize();
     /// Algorithm execution
     virtual StatusCode execute();
   };

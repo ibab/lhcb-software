@@ -1,4 +1,4 @@
-// $Id: DimRPCFileReader.h,v 1.8 2008-11-13 09:25:23 frankb Exp $
+// $Id: DimRPCFileReader.h,v 1.9 2008-12-09 20:16:10 frankb Exp $
 #ifndef GAUDIONLINE_DIMRPCFILEREADER_H
 #define GAUDIONLINE_DIMRPCFILEREADER_H
 
@@ -73,6 +73,8 @@ namespace LHCb  {
     time_t m_timerStartProc;
     time_t m_timerStopPrep;
     time_t m_timerStopProc;
+    /// Property: New file incident name
+    std::string m_incidentName;
     
   public:
     /// Standard Constructor

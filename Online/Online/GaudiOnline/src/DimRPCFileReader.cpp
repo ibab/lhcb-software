@@ -1,8 +1,9 @@
-// $Id: DimRPCFileReader.cpp,v 1.16 2008-12-04 13:31:08 frankb Exp $
+// $Id: DimRPCFileReader.cpp,v 1.17 2008-12-09 20:16:10 frankb Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IAppMgrUI.h"
 #include "GaudiKernel/SvcFactory.h"
+#include "GaudiKernel/DataIncident.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiOnline/DimRPCFileReader.h"
@@ -34,6 +35,7 @@ DimRPCFileReader::DimRPCFileReader(const std::string& nam, ISvcLocator* svcLoc)
 {
   ::lib_rtl_create_lock(0,&m_lock);
   m_reply = "ds6:statusi1es6:paramsdes7:commands4:idlee";
+  declareProperty("Incident",     m_incidentName="NEW_INPUT_FID");
 }
 
 /// Standard Destructor
@@ -87,6 +89,7 @@ StatusCode DimRPCFileReader::sysStart()   {
     m_rpc.first  = ::dis_add_service((char*)svcName.c_str(),(char*)"C",0,0,publishEvents,(long)this);
   if ( 0 == m_rpc.second )
     m_rpc.second = ::dis_add_cmnd((char*)cmdName.c_str(),(char*)"C",cmndCallback,(long)this);
+  incidentSvc()->removeListener(this);
   return StatusCode::SUCCESS;
 }
 
@@ -161,7 +164,8 @@ void DimRPCFileReader::handleCommand(const char* address, int /* size */){
     es->sysStart();
     m_evtLoopMgr->reinitialize();
     //m_evtLoopMgr->start();
-    m_fileID=m_command->data.fileID;
+    m_fileID=c.fileID;
+    incidentSvc()->fireIncident(ContextIncident<int>(c.guid,m_incidentName,c.fileID));
     ::lib_rtl_unlock(m_lock);
     return;
   }
