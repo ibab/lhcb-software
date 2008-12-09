@@ -8,12 +8,12 @@
 class Command {
 public:
   Command ();
-  Command (char* cmd, char* f, int fid, char* guid, char* s, int n);
+  Command (char* cmd, char* f, int fid, char* g, char* s, int n);
   struct Data {
     std::string name;
     std::string file;
     int fileID;
-    std::strinf guid;
+    std::strinf g;
     std::string sender;
     int nEvts;
   } data;
