@@ -1,4 +1,4 @@
-// $Id: ProcUtilities.h,v 1.3 2008-11-07 16:23:39 jucogan Exp $
+// $Id: ProcUtilities.h,v 1.4 2008-12-09 18:47:29 cattanem Exp $
 
 #ifndef L0MUONKERNEL_PROCUTILITIES_H
 #define L0MUONKERNEL_PROCUTILITIES_H     1
@@ -30,7 +30,7 @@ namespace L0Muon {
   /** Used when looking for a candididate (Tower::processTower) and at decoding stage 
       when retrieving the pads of a candididate (MuonCandidate::pads).
   */
-  const int extrapolationM1(int i,int procVersion=-1);
+  int extrapolationM1(int i,int procVersion=-1);
 
   /// Used when looking for a candididate (Tower::processTower). 
   int offsetM1(int offM1, int procVersion=-1);

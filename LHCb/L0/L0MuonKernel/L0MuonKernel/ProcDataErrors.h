@@ -1,4 +1,4 @@
-// $Id: ProcDataErrors.h,v 1.3 2008-11-07 16:23:39 jucogan Exp $
+// $Id: ProcDataErrors.h,v 1.4 2008-12-09 18:47:28 cattanem Exp $
 #ifndef PROCDATAERRORS_H 
 #define PROCDATAERRORS_H 1
 
@@ -42,7 +42,7 @@ namespace L0Muon {
     } 
 
     /// Return the sum of all error counters.
-    const int sumCounters() const ;
+    int sumCounters() const ;
     
     /** Returns true if the specified PU is in error.
         
@@ -52,7 +52,7 @@ namespace L0Muon {
 
         @param ipu : index of the pu in the board
     */
-    const bool inError(int ipu) const;
+    bool inError(int ipu) const;
     
     /** Returns the decoding error code for the quarter attached to this error container.
         
@@ -60,7 +60,7 @@ namespace L0Muon {
 
         For further details on the frame structure, the L0Muon TELL1 specifications (EDMS 818559).
     */
-    const int decodingError() const;
+    int decodingError() const;
 
     /** Returns the hardware error code for the given PU.
 
@@ -72,7 +72,7 @@ namespace L0Muon {
         
         @param ib : index of the PU in the board
     */
-    const int hardwareError(int ipu) const;
+    int hardwareError(int ipu) const;
     
     ErrorHandler present;     ///< Incremented each time the decoding of L0MuonProcData is called. 
     ErrorHandler decoding;    ///< Incremented when a decoding error is found in L0MuonCtrlCand.

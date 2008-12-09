@@ -1,4 +1,4 @@
-// $Id: ProcUtilities.cpp,v 1.6 2008-11-07 16:23:39 jucogan Exp $
+// $Id: ProcUtilities.cpp,v 1.7 2008-12-09 18:47:29 cattanem Exp $
 
 #include "L0MuonKernel/ProcUtilities.h"
 
@@ -23,7 +23,7 @@ void L0Muon::candidatesOrdering(std::vector<L0Muon::PMuonCandidate> * cands, int
   return;
 }
 
-const int L0Muon::extrapolationM1(int i,int procVersion){
+int L0Muon::extrapolationM1(int i,int procVersion){
   if (procVersion ==0) {
     const int ExtrapolationM1[6]={0,+4,+7,+11,+14,+18};
     return ExtrapolationM1[i];

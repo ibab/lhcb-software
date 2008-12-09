@@ -33,7 +33,7 @@ L0Muon::CtrlCandErrors::CtrlCandErrors()
 
 L0Muon::CtrlCandErrors::~CtrlCandErrors(){}
     
-const bool L0Muon::CtrlCandErrors::inError() const 
+bool L0Muon::CtrlCandErrors::inError() const 
 {
   bool error=false;
 
@@ -46,7 +46,7 @@ const bool L0Muon::CtrlCandErrors::inError() const
 }
 
 
-const bool L0Muon::CtrlCandErrors::inError(int ib) const 
+bool L0Muon::CtrlCandErrors::inError(int ib) const 
 {
   bool error=false;
 
@@ -58,11 +58,11 @@ const bool L0Muon::CtrlCandErrors::inError(int ib) const
   return error;
 }
 
-const int L0Muon::CtrlCandErrors::decodingError() const {
+int L0Muon::CtrlCandErrors::decodingError() const {
   return int(decoding.inError());
 }
 
-const int L0Muon::CtrlCandErrors::hardwareError() const {
+int L0Muon::CtrlCandErrors::hardwareError() const {
   int error=0;
   if (ctrl_bcid[0].inError()) error|=((ctrl_bcid[0].value()<< 0)&0x000F);
   if (ctrl_bcid[1].inError()) error|=((ctrl_bcid[1].value()<< 4)&0x00F0);
@@ -71,7 +71,7 @@ const int L0Muon::CtrlCandErrors::hardwareError() const {
   return error;
 }
 
-const int L0Muon::CtrlCandErrors::hardwareError(int ib) const {
+int L0Muon::CtrlCandErrors::hardwareError(int ib) const {
   int error=0;
   error|=((link[ib][0].value()           <<0)&0x003);
   error|=((link[ib][1].value()           <<4)&0x030);
@@ -79,25 +79,25 @@ const int L0Muon::CtrlCandErrors::hardwareError(int ib) const {
   return error;
 }
 
-const int L0Muon::CtrlCandErrors::bcidError() const {
+int L0Muon::CtrlCandErrors::bcidError() const {
   if (best_bcid.inError()) return best_bcid.value();
   return -1;
 }
 
-const int L0Muon::CtrlCandErrors::bcidError(int ib) const {
+int L0Muon::CtrlCandErrors::bcidError(int ib) const {
   if (bcsu_bcid[ib].inError()) return bcsu_bcid[ib].value();
   return -1;
 }
 
-const int L0Muon::CtrlCandErrors::statusError() const {
+int L0Muon::CtrlCandErrors::statusError() const {
   return best_status.value();
 }
 
-const int L0Muon::CtrlCandErrors::statusError(int ib) const {
+int L0Muon::CtrlCandErrors::statusError(int ib) const {
   return bcsu_status[ib].value();
 }
 
-const int L0Muon::CtrlCandErrors::sumCounters() const {
+int L0Muon::CtrlCandErrors::sumCounters() const {
   
   int n=0;
   

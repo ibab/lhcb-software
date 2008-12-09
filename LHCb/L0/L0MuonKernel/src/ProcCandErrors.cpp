@@ -25,7 +25,7 @@ L0Muon::ProcCandErrors::ProcCandErrors()
 
 L0Muon::ProcCandErrors::~ProcCandErrors(){}
     
-const bool L0Muon::ProcCandErrors::inError() const
+bool L0Muon::ProcCandErrors::inError() const
 {
 
   bool error=false;
@@ -38,7 +38,7 @@ const bool L0Muon::ProcCandErrors::inError() const
   return error;
 }
 
-const bool L0Muon::ProcCandErrors::inError(int ipu) const
+bool L0Muon::ProcCandErrors::inError(int ipu) const
 {
 
   bool error=false;
@@ -49,35 +49,35 @@ const bool L0Muon::ProcCandErrors::inError(int ipu) const
   
   return error;
 }
-const int L0Muon::ProcCandErrors::decodingError() const {
+int L0Muon::ProcCandErrors::decodingError() const {
   return int(decoding.inError());
 }
 
-const int L0Muon::ProcCandErrors::hardwareError() const {
+int L0Muon::ProcCandErrors::hardwareError() const {
   return ( ((errJ.value()<<12)&0x00001000) + ((errK.value()<<8)&0x00000100) 
            + ((errH.value()<<4)&0x000000F0) + ( (errF.value()<<0)&0x0000000F) );
 }
 
 
-const int L0Muon::ProcCandErrors::bcidError() const {
+int L0Muon::ProcCandErrors::bcidError() const {
   if (bcsu_bcid.inError()) return bcsu_bcid.value();
   return -1;
 }
 
-const int L0Muon::ProcCandErrors::bcidError(int ipu) const {
+int L0Muon::ProcCandErrors::bcidError(int ipu) const {
   if (pus_bcid[ipu].inError()) return pus_bcid[ipu].value();
   return -1;
 }
 
-const int L0Muon::ProcCandErrors::statusError() const {
+int L0Muon::ProcCandErrors::statusError() const {
   return bcsu_status.value();
 }
 
-const int L0Muon::ProcCandErrors::statusError(int ipu) const {
+int L0Muon::ProcCandErrors::statusError(int ipu) const {
   return pus_status[ipu].value();
 }
 
-const int L0Muon::ProcCandErrors::sumCounters() const {
+int L0Muon::ProcCandErrors::sumCounters() const {
   
   int n=0;
 

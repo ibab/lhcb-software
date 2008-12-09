@@ -1,4 +1,4 @@
-// $Id: MuonCandidate.h,v 1.8 2008-11-07 16:23:38 jucogan Exp $
+// $Id: MuonCandidate.h,v 1.9 2008-12-09 18:47:28 cattanem Exp $
 
 #ifndef L0MUONKERNEL_MUONCANDIDATE_H
 #define L0MUONKERNEL_MUONCANDIDATE_H     1
@@ -32,55 +32,55 @@ namespace L0Muon {
     MuonCandidate(const MuonCandidate& cand);
 
     /// Get the address in M3 (column)
-    const int colM3() const
+    int colM3() const
     {
       return m_colM3 ;
     }
 
     /// Get the address in M3 (row)
-    const int rowM3() const
+    int rowM3() const
     {
       return m_rowM3 ;
     }
     
     /// Get the offset in M2
-    const int offM2() const
+    int offM2() const
     {
       return m_offM2 ;
     }
     
     /// Get the offset in M1
-    const int offM1() const
+    int offM1() const
     {
       return m_offM1 ;
     }
     
     /// Get the quarter
-    const int quarter() const
+    int quarter() const
     {
       return m_quarter ;
     }
     
     /// Get the pu number
-    const int pu() const
+    int pu() const
     {
       return m_pu ;
     }
     
     /// Get the board number
-    const int board() const
+    int board() const
     {
       return m_board ;
     }
     
     /// Get the PT
-    const int pT() const
+    int pT() const
     {
       return m_pT ;
     }
 
     /// Get the charge
-    const int charge() const
+    int charge() const
     {
       return m_charge ;
     }

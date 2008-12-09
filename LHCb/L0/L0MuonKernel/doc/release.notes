@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-12-09 - Marco Cattaneo
+ - Fix gcc 4.3 warnings
+
 ! 2008-11-19 - Julien Cogan
  - Implement compression algorithm for L0MuonProcData Bank
 

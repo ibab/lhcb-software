@@ -18,7 +18,7 @@ L0Muon::ProcDataErrors::ProcDataErrors()
 
 L0Muon::ProcDataErrors::~ProcDataErrors(){}
     
-const bool L0Muon::ProcDataErrors::inError(int ipu) const
+bool L0Muon::ProcDataErrors::inError(int ipu) const
 {
   bool error=false;
 
@@ -28,17 +28,17 @@ const bool L0Muon::ProcDataErrors::inError(int ipu) const
   return error;
 }
 
-const int L0Muon::ProcDataErrors::decodingError() const {
+int L0Muon::ProcDataErrors::decodingError() const {
  return int(decoding.inError());
 }
 
-const int L0Muon::ProcDataErrors::hardwareError(int ipu) const {
+int L0Muon::ProcDataErrors::hardwareError(int ipu) const {
   return ( ((opt_link[ipu].value()<<16)&0x00FF0000) 
            + ((ser_link[ipu].value()<<8)&0x0000FF00) 
            + ((par_link[ipu].value()<<0)&0x000000FF) );
 }
 
-const int L0Muon::ProcDataErrors::sumCounters() const {
+int L0Muon::ProcDataErrors::sumCounters() const {
   
   int n=0;
 

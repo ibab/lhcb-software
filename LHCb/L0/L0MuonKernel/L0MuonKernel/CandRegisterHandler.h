@@ -1,4 +1,4 @@
-// $Id: CandRegisterHandler.h,v 1.9 2008-11-07 16:23:38 jucogan Exp $
+// $Id: CandRegisterHandler.h,v 1.10 2008-12-09 18:47:28 cattanem Exp $
 
 #ifndef L0MUONKERNEL_CANDREGISTERHANDLER_H
 #define L0MUONKERNEL_CANDREGISTERHANDLER_H     1
@@ -77,7 +77,7 @@ namespace L0Muon {
     }
 
     /// Candidate register size in bits
-    static const int size() {return BitsCandRegTot;}   
+    static int size() {return BitsCandRegTot;}   
 
     //
     // Set the candidate's properties from the register

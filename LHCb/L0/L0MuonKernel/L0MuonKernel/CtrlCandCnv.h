@@ -176,7 +176,7 @@ namespace L0Muon {
         
         @param iq : index of the quarter in the side (0 to 1)
     */
-    const bool inError(int iq) const { return m_errors[iq].inError();}
+    bool inError(int iq) const { return m_errors[iq].inError();}
 
     /** Returns true if an error was detected in the L0MuonCtrlCand bank part 
         corresponding to the given board of the given quarter (see CtrlCandErrors::inError(int) const).
@@ -184,7 +184,7 @@ namespace L0Muon {
         @param iq : index of the quarter in the side (0 to 1)
         @param ib : index of the board (0 to 11)
     */
-    const bool inError(int iq, int ib)const { return m_errors[iq].inError(ib);}
+    bool inError(int iq, int ib)const { return m_errors[iq].inError(ib);}
 
     
     /** Returns the decoding error code for the given quarter 
@@ -192,14 +192,14 @@ namespace L0Muon {
         
         @param iq : index of the quarter in the side (0 to 1)
     */
-    const int  decodingError(int iq) const { return int(m_errors[iq].decodingError());}
+    int  decodingError(int iq) const { return int(m_errors[iq].decodingError());}
 
     /** Returns the hardware error code for the given quarter 
         (see CtrlCandErrors::hardwareError() const ).
 
         @param iq : index of the quarter in the side (0 to 1)
     */
-    const int  hardwareError(int iq) const {return m_errors[iq].hardwareError();}
+    int  hardwareError(int iq) const {return m_errors[iq].hardwareError();}
  
     /** Returns the hardware error code for the given board of the given quarter 
         (see CtrlCandErrors::hardwareError(int ib) const).
@@ -207,7 +207,7 @@ namespace L0Muon {
         @param iq : index of the quarter in the side (0 to 1)
         @param ib : index of the board (0 to 11)
     */
-    const int  hardwareError(int iq, int ib) const {return m_errors[iq].hardwareError(ib);}
+    int  hardwareError(int iq, int ib) const {return m_errors[iq].hardwareError(ib);}
 
     /** Returns the status error bits for the best candidates of the given quarter 
         (see CtrlCandErrors::statusError() const).
@@ -215,7 +215,7 @@ namespace L0Muon {
         @param iq : index of the quarter in the side (0 to 1)
         @param ib : index of the board (0 to 11)
     */
-    const int  statusError(int iq) const { return m_errors[iq].statusError();}
+    int  statusError(int iq) const { return m_errors[iq].statusError();}
 
     /** Returns the status error bits for the candidates of the given board in the given quarter 
         (see CtrlCandErrors::statusError(int) const).
@@ -223,7 +223,7 @@ namespace L0Muon {
         @param iq : index of the quarter in the side (0 to 1)
         @param ib : index of the board (0 to 11)
     */
-    const int  statusError(int iq,int ib) const { return m_errors[iq].statusError(ib);}
+    int  statusError(int iq,int ib) const { return m_errors[iq].statusError(ib);}
 
     /** Returns the bcid error for the given quarter 
         (see CtrlCandErrors::bcidError() const).
@@ -231,7 +231,7 @@ namespace L0Muon {
         @param iq : index of the quarter in the side (0 to 1)
     */
 
-    const int  bcidError(int iq) const { return m_errors[iq].bcidError();}
+    int  bcidError(int iq) const { return m_errors[iq].bcidError();}
 
     /** Returns the bcid error for the candidates of the given board in the given quarter 
         (see CtrlCandErrors::bcidError(int) const).
@@ -239,7 +239,7 @@ namespace L0Muon {
         @param iq : index of the quarter in the side (0 to 1)
         @param ib : index of the board (0 to 11)
     */
-    const int  bcidError(int iq,int ib) const { return m_errors[iq].bcidError(ib);}
+    int  bcidError(int iq,int ib) const { return m_errors[iq].bcidError(ib);}
 
     /** Returns a pointer to the CtrlCandErrors of the given quarter
         

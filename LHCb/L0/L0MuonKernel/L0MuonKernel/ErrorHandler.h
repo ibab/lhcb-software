@@ -1,4 +1,4 @@
-// $Id: ErrorHandler.h,v 1.3 2008-11-07 16:23:38 jucogan Exp $
+// $Id: ErrorHandler.h,v 1.4 2008-12-09 18:47:28 cattanem Exp $
 #ifndef L0MUONKERNEL_ERRORHANDLER_H 
 #define L0MUONKERNEL_ERRORHANDLER_H 1
 
@@ -61,13 +61,13 @@ namespace L0Muon {
     const std::string fmt() const { return m_fmt;}
     
     /// Current value
-    const int value() const { return m_value;}
+    int value() const { return m_value;}
     
     /// True if in error (value does not match reference)
-    const int inError() const { return m_inError;}
+    int inError() const { return m_inError;}
     
     /// Error counter (incremented each time the value did not match the reference)
-    const int counter() const {return m_counter;}
+    int counter() const {return m_counter;}
 
     /** Fill the input string with the counter value and the given name (formatted output)
 

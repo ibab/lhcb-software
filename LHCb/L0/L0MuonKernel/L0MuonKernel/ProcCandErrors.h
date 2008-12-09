@@ -1,4 +1,4 @@
-// $Id: ProcCandErrors.h,v 1.3 2008-11-07 16:23:39 jucogan Exp $
+// $Id: ProcCandErrors.h,v 1.4 2008-12-09 18:47:28 cattanem Exp $
 #ifndef PROCCANDERRORS_H 
 #define PROCCANDERRORS_H 1
 
@@ -48,16 +48,16 @@ namespace L0Muon {
     } 
 
     //void printCounters(std::string &os, std::string tab="") const;
-    const int sumCounters() const ;
+    int sumCounters() const ;
 
-    const bool inError() const;
-    const bool inError(int ipu) const ;
-    const int decodingError() const ;
-    const int hardwareError() const ;
-    const int bcidError() const ;
-    const int bcidError(int ipu) const ;
-    const int statusError() const ;
-    const int statusError(int ipu) const;
+    bool inError() const;
+    bool inError(int ipu) const ;
+    int decodingError() const ;
+    int hardwareError() const ;
+    int bcidError() const ;
+    int bcidError(int ipu) const ;
+    int statusError() const ;
+    int statusError(int ipu) const;
     
     ErrorHandler present;
     ErrorHandler decoding;

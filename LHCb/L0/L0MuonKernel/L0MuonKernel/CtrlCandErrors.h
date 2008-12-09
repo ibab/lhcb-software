@@ -1,4 +1,4 @@
-// $Id: CtrlCandErrors.h,v 1.3 2008-11-07 16:23:38 jucogan Exp $
+// $Id: CtrlCandErrors.h,v 1.4 2008-12-09 18:47:28 cattanem Exp $
 #ifndef CTRLCANDERRORS_H 
 #define CTRLCANDERRORS_H 1
 
@@ -57,7 +57,7 @@ namespace L0Muon {
     } 
 
     /// Return the sum of all error counters
-    const int sumCounters() const ;
+    int sumCounters() const ;
 
     /** Returns true if an error was detected in the L0MuonCtrlCand bank part
         corresponding to the quarter attached to this error container.
@@ -68,7 +68,7 @@ namespace L0Muon {
         - a bcid error (see bcidError() const)
         - a status error (see statusError() const)
     */
-    const bool inError() const;
+    bool inError() const;
 
     /** Returns true if an error was detected in the L0MuonCtrlCand bank part
         corresponding to the given board of the quarter attached to this error container.
@@ -81,7 +81,7 @@ namespace L0Muon {
 
         @param ib : board index
     */
-    const bool inError(int ib) const ;
+    bool inError(int ib) const ;
 
     /** Returns the decoding error code for the quarter attached to this error container.
         
@@ -89,7 +89,7 @@ namespace L0Muon {
 
         For further details on the frame structure, the L0Muon TELL1 specifications (EDMS 818559).
     */
-    const int decodingError() const;
+    int decodingError() const;
 
     /** Returns the hardware error code for the quarter attached to this error container.
 
@@ -100,7 +100,7 @@ namespace L0Muon {
 
         For further details, please refer to the controller board specifications (EDMS 544412).
     */
-    const int hardwareError() const;
+    int hardwareError() const;
 
     /** Returns the hardware error code for the given board of the quarter attached to this error container.
         
@@ -113,31 +113,31 @@ namespace L0Muon {
         @param ib : board index
 
     */
-    const int hardwareError(int ib) const;
+    int hardwareError(int ib) const;
 
     /** Error on the bcid of the best candidate.
         Return -1 if no mismatch, return the faulty bcid otherwise.
  
     */
-    const int bcidError() const ;
+    int bcidError() const ;
 
     /** Error on the bcid of the given by the BCSU of the board with index ib.
         Return -1 if no mismatch, return the faulty bcid otherwise.
         
         @param ib : board index
     */
-    const int bcidError(int ib) const;
+    int bcidError(int ib) const;
 
     /** Return the error bits of the status of the controller board of the quarter attached to this error container.
     */
-    const int statusError()const ;
+    int statusError()const ;
 
     /** Return the error bits of the status of the BCSU of the board with index ib 
         of the quarter attached to this error container.
 
         @param ib : board index
     */
-    const int statusError(int ib) const;
+    int statusError(int ib) const;
     
     ErrorHandler present;       ///< Incremented each time the decoding of L0MuonCtrlCand is called. 
     ErrorHandler decoding;      ///< Incremented when a decoding error is found in L0MuonCtrlCand. 
