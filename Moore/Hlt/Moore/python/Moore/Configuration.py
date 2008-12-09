@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.41 2008-12-01 15:10:58 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.42 2008-12-09 15:51:43 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -95,8 +95,9 @@ class Moore(LHCbConfigurableUser):
         x.Enable = True
 
     def __apply_configuration__(self):
-        #GaudiKernel.ProcessJobOptions.PrintOff() #TODO: waiting for next release of Gaudi
-        importOptions('$STDOPTS/DstDicts.opts')
+        GaudiKernel.ProcessJobOptions.PrintOff()
+        importOptions('$HLTCONFROOT/options/units.opts')
+        importOptions('$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts')
         EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
         importOptions('$STDOPTS/DecodeRawEvent.py')
         # needed for DecodeRawEvent and LoKiTrigger

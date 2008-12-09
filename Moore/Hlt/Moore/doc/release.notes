@@ -2,6 +2,10 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2008-12-09 - Gerhard Raven
+ - pick up units explicitly now it is no longer in HltInit.opts
+   (which is now HltInit.py, and doesn't know #units directive anymore)
+
 ! 2008-12-02 - Gerhard Raven
  - adapt scripts/GenerateRunMooreOnline_EFF.py to new location of online
    project on online system
