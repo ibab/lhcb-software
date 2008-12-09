@@ -8,11 +8,12 @@
 class Command {
 public:
   Command ();
-  Command (char* cmd, char* f ,int fid, char* s, int n);
+  Command (char* cmd, char* f, int fid, char* guid, char* s, int n);
   struct Data {
     std::string name;
     std::string file;
     int fileID;
+    std::strinf guid;
     std::string sender;
     int nEvts;
   } data;
@@ -27,6 +28,7 @@ private:
                      enum_command,
                      enum_file,
                      enum_fileID,
+                     enum_guid,
                      enum_sender };
   std::map<std::string, StringValue> s_mapStringValues;
   
@@ -39,6 +41,7 @@ Command::Command () {
   data.name="";
   data.file="";
   data.fileID=-1;
+  data.guid="";
   data.sender="";
   data.nEvts=0;    
   
@@ -46,13 +49,15 @@ Command::Command () {
   s_mapStringValues["command"] = enum_command;
   s_mapStringValues["raw_file"] = enum_file;
   s_mapStringValues["fileID"] = enum_fileID;
+  s_mapStringValues["guid"] = enum_guid;
   s_mapStringValues["sender"] = enum_sender;
 }
 
-Command::Command (char* cmd, char* f ,int fid, char* s, int n=0){
+Command::Command (char* cmd, char* f ,int fid, char* g, char* s, int n=0){
   data.name=cmd;
   data.file=f;
   data.fileID=fid;
+  data.guid=g;
   data.sender=s;
   data.nEvts=n;
   
@@ -60,6 +65,7 @@ Command::Command (char* cmd, char* f ,int fid, char* s, int n=0){
   s_mapStringValues["command"] = enum_command;
   s_mapStringValues["raw_file"] = enum_file;
   s_mapStringValues["fileID"] = enum_fileID;
+  s_mapStringValues["guid"] = enum_guid;  
   s_mapStringValues["sender"] = enum_sender;
 }
 
@@ -106,6 +112,10 @@ int Command::decodeDict(std::string msg, int &pos, Data &out){
             // std::cout << "Decode file" << std::endl;
             out.file=decodeString(msg,i);
             break;
+          case enum_guid:
+            // std::cout << "Decode GUID" << std::endl;
+            out.guid=decodeString(msg,i);
+            break;          
           case enum_sender:
             // std::cout << "Sender" << std::endl;
             out.sender=decodeString(msg,i);
