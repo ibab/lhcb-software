@@ -1,4 +1,4 @@
-// $Id: PrepareVeloRawBuffer.h,v 1.14 2007-09-16 16:56:23 krinnert Exp $
+// $Id: PrepareVeloRawBuffer.h,v 1.15 2008-12-09 16:26:01 cattanem Exp $
 #ifndef PREPAREVELORAWBUFFER_H 
 #define PREPAREVELORAWBUFFER_H 1
 
@@ -11,8 +11,9 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 
 class DeVelo;
-
-class LHCb::RawEvent;
+namespace LHCb {
+  class RawEvent;
+}
 
 /** @class PrepareVeloRawBuffer PrepareVeloRawBuffer.h
  *  Prepare the cluster container from 1MHz raw buffer.

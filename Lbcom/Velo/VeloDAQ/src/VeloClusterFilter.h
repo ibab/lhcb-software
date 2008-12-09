@@ -1,7 +1,9 @@
 #ifndef VELOCLUSTERFILTER_H 
 #define VELOCLUSTERFILTER_H 1
 
+#include "Kernel/VeloChannelID.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
+#include <string>
 
 class DeVelo;
 
@@ -12,8 +14,6 @@ class DeVelo;
 ///<    "R"    : retains only clusters in R sensors
 ///<    "Phi"  : retains only clusters in Phi sensors
 ///<    "PU"  : retains only clusters in PU sensors
-
-class LHCb::VeloLiteCluster;
 
 class VeloClusterFilter : public GaudiAlgorithm {
 public: 
