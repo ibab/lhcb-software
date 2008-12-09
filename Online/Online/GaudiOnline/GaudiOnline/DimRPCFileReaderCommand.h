@@ -13,7 +13,7 @@ public:
     std::string name;
     std::string file;
     int fileID;
-    std::strinf g;
+    std::string guid;
     std::string sender;
     int nEvts;
   } data;
