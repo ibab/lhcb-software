@@ -1,4 +1,4 @@
-// $Id: FIDManipAlg.h,v 1.2 2008-12-09 20:16:10 frankb Exp $
+// $Id: FIDManipAlg.h,v 1.3 2008-12-09 20:21:20 frankb Exp $
 // Include files 
 //-----------------------------------------------------------------------------
 // Implementation file for class : Fileidmanipulator
@@ -36,8 +36,6 @@ namespace LHCb {
   class FIDManipAlg : public Algorithm, virtual public IIncidentListener {
   public:
     enum Action { ADD=1, REMOVE, DUMP };
-    /// Reference to incident service
-    IIncidentSvc* m_incidentSvc;
 
   protected:
     /// Property: remove/add file id bank
@@ -52,6 +50,8 @@ namespace LHCb {
     int          m_printFreq;
     /// Print frequence counter
     int          m_printCnt;
+    /// Reference to incident service
+    IIncidentSvc* m_incidentSvc;
     /// FID info (if retrieved using incident service
     std::pair<int,std::string> m_fid;
     /// Property: New file incident name
