@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.272 2008-12-05 15:46:05 jpalac Exp $
+! $Id: release.notes,v 1.273 2008-12-09 10:16:27 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,11 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2008-12-09 - Patrick Koppenburg
+ - python/DaVinci/Configuration.py
+   . import DaVinciCommon.py
+ - DaVinciCommon.py : will replce the .opts. Only calls it so far.  
 
 ! 2008-12-05 - Juan PALACIOS
  - python/DaVinci/Configuration.py

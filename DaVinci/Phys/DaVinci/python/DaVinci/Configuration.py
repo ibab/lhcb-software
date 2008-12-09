@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinciApp
 """
-__version__ = "$Id: Configuration.py,v 1.13 2008-12-05 14:51:34 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.14 2008-12-09 10:16:27 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -43,6 +43,7 @@ class DaVinci(LHCbConfigurableUser) :
             
     def __apply_configuration__(self):
         GaudiKernel.ProcessJobOptions.PrintOff()
+        importOptions ("$DAVINCIROOT/options/DaVinciCommon.py")
         opts = self.getProp( "MainOptions" )
         if not (opts == '') :
             importOptions( self.getProp( "MainOptions" ) )
