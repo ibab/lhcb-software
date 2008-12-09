@@ -1,4 +1,4 @@
-// $Id: GetDecay.h,v 1.3 2008-12-04 16:39:14 ibelyaev Exp $
+// $Id: GetDecay.h,v 1.4 2008-12-09 07:09:52 pkoppenb Exp $
 // ============================================================================
 #ifndef DAVINCIKERNEL_GETDECAY_H 
 #define DAVINCIKERNEL_GETDECAY_H 1
@@ -46,7 +46,7 @@ namespace Decays
   ( const std::vector<std::string>& descriptors , 
     IDecodeSimpleDecayString*       decoder     ) ;
   // ==========================================================================
-} // end of namespace DaVinci
+} // end of namespace Decays
 // ============================================================================
 // The END
 // ============================================================================

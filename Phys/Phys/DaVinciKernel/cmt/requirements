@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.60 2008-12-04 16:39:14 ibelyaev Exp $
+# $Id: requirements,v 1.61 2008-12-09 07:09:52 pkoppenb Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg, J. Palcios
 #============================================================================
@@ -36,3 +36,5 @@ apply_pattern reflex_dictionary                                             \
               headerfiles=$(DAVINCIKERNELROOT)/dict/DaVinciKernelDict.h     \
               selectionfile=$(DAVINCIKERNELROOT)/dict/DaVinciKernelDict.xml \
               options="-U__MINGW32__"
+
+macro_append Boost_linkopts " $(Boost_linkopts_regex) "

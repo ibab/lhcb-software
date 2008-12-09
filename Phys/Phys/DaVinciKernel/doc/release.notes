@@ -1,8 +1,12 @@
-!$Id: release.notes,v 1.276 2008-12-05 13:27:04 ibelyaev Exp $
+!$Id: release.notes,v 1.277 2008-12-09 07:09:52 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2008-12-09 - Patrick Koppenburg
+ - Added new function Decays::escape that replaces special characters
+   by something likes by root. Taken from DecayTreeTuple.
 
 ! 2008-12-05 - Vanya BELYAEV
  - DVAlgorithm:
