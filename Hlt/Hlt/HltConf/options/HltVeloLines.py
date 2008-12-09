@@ -84,8 +84,7 @@ for side in [ 'ASide', 'CSide' ] :
 #
 #HltLine( 'VeloOverlap'
 #       , algos =
-#       [ DecodeVeloRawBuffer()
-#       , VeloClusterFilter( 'OverlapTracksClusterFilter'
+#       [ VeloClusterFilter( 'OverlapTracksClusterFilter'
 #                 , OutputLiteClusterLocation = "/Event/Raw/Velo/OverlapTracksLiteClusters"
 #                 , OutputClusterLocation = "/Event/Raw/Velo/OverlapTracksClusters"
 #                 , FilterOption = "Overlap"

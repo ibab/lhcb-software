@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.24 2008-12-08 12:30:02 graven Exp $
+# $Id: Hlt1.py,v 1.25 2008-12-09 15:49:58 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.24 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.25 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -22,6 +22,7 @@ from Configurables       import GaudiSequencer as Sequence
 from Configurables       import HltSelectionFilter, HltSelectionToTES
 from Configurables       import HltDecisionFilter
 from Configurables       import HltIncidentFilter
+from Configurables       import HltANNSvc
 from Configurables       import HltSelReportsMaker, HltSelReportsWriter
 from Configurables       import HltDecReportsMaker, HltDecReportsWriter
 from Configurables       import HltVertexReportsMaker, HltVertexReportsWriter
@@ -43,7 +44,7 @@ addHlt1Prop([ 'routingBitDefinitions', 'Accept', 'FilterDescriptor'
             , 'DaughtersCuts', 'CombinationCut', 'MotherCut', 'DecayDescriptor'
             , 'OutputSelection','Context' ])
 
-importOptions('$HLTCONFROOT/options/HltInit.opts')
+importOptions('$HLTCONFROOT/options/HltInit.py')
 importOptions('$HLTCONFROOT/options/HltLumiInit.opts')
 
 ## add the 'Incident' line...
@@ -69,6 +70,7 @@ veloVertices = [ i for i in hlt1Selections()['All'] if i.startswith('Hlt1Velo') 
 #### TODO: check that the used lines are actually in use!!!
 ### non-existant strings always evaluate to false, and are not an error (yet)
 ### empty strings always evaluate to false, and are not an error
+
 routingBits = { 32 : 'Hlt1Global'
               , 33 : 'Hlt1LumiDecision'
               , 34 : 'Hlt1LumiExclusiveDecision'
@@ -77,6 +79,8 @@ routingBits = { 32 : 'Hlt1Global'
               , 37 : 'Hlt1PhysicsDecision'
               }
 
+## and record the settings in the ANN service
+HltANNSvc().RoutingBits = dict( [ (v,k) for k,v in routingBits.iteritems() ] )
 
 
 ## finally, define the Hlt1 sequence!!

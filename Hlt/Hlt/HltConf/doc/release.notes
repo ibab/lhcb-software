@@ -1,12 +1,16 @@
-! $Id: release.notes,v 1.66 2008-12-09 10:53:02 witekma Exp $ 
+! $Id: release.notes,v 1.67 2008-12-09 15:49:58 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2008-12-09 - Gerhard Raven
+ - register routingbits with HltANNSvc
+ - move HltANNSvc configuration from .opts to .py
+
 ! 2008-12-09 - Mariusz Witek
-- update python options for Photon and Electron lines 
+ - update python options for Photon and Electron lines 
 
 ! 2008-12-08 - Gerhard Raven
  - in HltL0Lines, replace HltL0CaloPrepare and HltL0MuonPrepare with

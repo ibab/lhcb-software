@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonLines.py,v 1.10 2008-12-08 12:30:03 graven Exp $
+# $Id: HltMuonLines.py,v 1.11 2008-12-09 15:49:58 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -12,7 +12,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -60,8 +60,8 @@ TConfMatchVelo = [ Member ('TU', 'TConf' , RecoName = 'TConf' )
 
 singleMuonPrep = bindMembers( 'SingleMuonPrep',
                    [ Member ( 'L0MuonPrepare' , 'MuonORMuonNoGlob'
+                            #  how to get LHCb::L0MuonCandidateLocation::Default instead?
                             , InputSelection = HltL0MuonPrepare().getDefaultProperties()['InputSelection']
-                            # , InputSelection = 'TES:' + 'Trig/L0/MuonCtrl' # how to get LHCb::L0MuonCandidateLocation::Default instead?
                             , MinPt = 1300.0  
                             )
                    , Member ( 'TF', 'L0'
