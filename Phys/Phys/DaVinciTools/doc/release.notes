@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.389 2008-12-05 13:36:56 pkoppenb Exp $
+! $Id: release.notes,v 1.390 2008-12-09 08:06:29 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-12-09 - Patrick Koppenburg
+ - Move SpotLight to DaVinciMonitors
 
 ! 2008-12-05 - Patrick Koppenburg
  - Move SimplePlots to DaVinciMonitors
