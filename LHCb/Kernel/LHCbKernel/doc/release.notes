@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2008-12-10 - Marco Cattaneo
+ - Remove unneccessary PartProp dependency
+
 ! 2008-12-10 - Louis Nicolas
  - AlignTraj: Changed again in order not to break TrackProjectors compilation
    The constructors shouldn't have been changed at first.
