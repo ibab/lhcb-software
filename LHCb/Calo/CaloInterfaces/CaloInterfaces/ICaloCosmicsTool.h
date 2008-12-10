@@ -1,4 +1,4 @@
-// $Id: ICaloCosmicsTool.h,v 1.3 2008-06-30 08:34:30 odescham Exp $
+// $Id: ICaloCosmicsTool.h,v 1.4 2008-12-10 09:57:07 cattanem Exp $
 #ifndef ICALOCOSMICSTOOL_H 
 #define ICALOCOSMICSTOOL_H 1
 
@@ -33,20 +33,20 @@ public:
   virtual Gaudi::XYZPoint referencePoint()=0;
   virtual Gaudi::XYZPoint referencePointVariance()=0;
   virtual const std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint>& extrema()=0;
-  virtual const double deposit()=0;
-  virtual const double phi()=0;
-  virtual const double phiVariance()=0;
-  virtual const double asymmetry()=0;
-  virtual const double asymmetryVariance()=0;
-  virtual const double slot()=0;
-  virtual const double time()=0;
-  virtual const double timeVariance()=0;
-  virtual const double timeDispersion()=0;
+  virtual double deposit()=0;
+  virtual double phi()=0;
+  virtual double phiVariance()=0;
+  virtual double asymmetry()=0;
+  virtual double asymmetryVariance()=0;
+  virtual double slot()=0;
+  virtual double time()=0;
+  virtual double timeVariance()=0;
+  virtual double timeDispersion()=0;
   virtual DeCalorimeter* det()=0;
   virtual StatusCode tupling(unsigned int unit)=0;
   virtual bool tracked()=0;
   virtual bool timed()=0;
-  virtual const double kernel()=0;
+  virtual double kernel()=0;
  
 
 protected:

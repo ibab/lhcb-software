@@ -1,4 +1,4 @@
-// $Id: ICaloCosmicsTrackTool.h,v 1.2 2008-06-02 11:00:26 cattanem Exp $
+// $Id: ICaloCosmicsTrackTool.h,v 1.3 2008-12-10 09:57:07 cattanem Exp $
 #ifndef ICALOCOSMICSTRACKTOOL_H 
 #define ICALOCOSMICSTRACKTOOL_H 1
 
@@ -35,19 +35,19 @@ public:
   virtual StatusCode processing()=0;
   virtual StatusCode tupling(unsigned int unit)=0;
   //virtual  const double time()=0;
-  virtual const double phi()=0;
-  virtual const double phiVariance()=0;
-  virtual const double theta()=0;
-  virtual const double thetaVariance()=0;
+  virtual double phi()=0;
+  virtual double phiVariance()=0;
+  virtual double theta()=0;
+  virtual double thetaVariance()=0;
   virtual const Gaudi::XYZVector slopes()=0;
   virtual const Gaudi::XYZPoint  referencePoint()=0;
   virtual const Gaudi::SymMatrix3x3 slopesCovariance()=0;
   virtual const Gaudi::SymMatrix3x3 referencePointCovariance()=0;
-  virtual const bool   forward()=0;
-  virtual const bool   tracked()=0;
-  virtual const double time()=0;
-  virtual const double timeVariance()=0;
-  virtual const bool   timed()=0;  
+  virtual bool   forward()=0;
+  virtual bool   tracked()=0;
+  virtual double time()=0;
+  virtual double timeVariance()=0;
+  virtual bool   timed()=0;  
   virtual const LHCb::Track& track()=0;
   virtual ICaloCosmicsTool* ecal()=0;
   virtual ICaloCosmicsTool* hcal()=0;
