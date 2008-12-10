@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.34 2008-11-04 21:05:14 robbep Exp $
+# $Id: requirements,v 1.35 2008-12-10 17:24:16 cattanem Exp $
 # Created    : 08/03/2002
 # Maintainer : Marco Cattaneo
 #
@@ -9,6 +9,7 @@ branches          cmt doc src xml Event dict
 # Used packages. 
 #============================================================================
 use LHCbKernel   v*      Kernel
+use PartProp     v*      Kernel
 use EventBase    v*      Event
 private
 use GaudiObjDesc v* -no_auto_imports

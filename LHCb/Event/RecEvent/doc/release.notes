@@ -1,9 +1,12 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.111 2008-11-18 06:24:20 cattanem Exp $
+! $Id: release.notes,v 1.112 2008-12-10 17:26:13 cattanem Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
+
+! 2008-12-10 - Marco Cattaneo
+ - Add PartProp dependency, to pick up ParticleID from new location
 
 !========================= RecEvent v2r17 2008-11-17 =========================
 ! 2008-11-17 - Olivier Callot

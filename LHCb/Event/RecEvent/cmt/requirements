@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.37 2008-11-06 17:05:13 cattanem Exp $
+# $Id: requirements,v 1.38 2008-12-10 17:26:13 cattanem Exp $
 # Created    : 13/12/2005
 # Maintainer : Marco Cattaneo
 #
 package           RecEvent
-version           v2r17
+version           v2r18
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -15,6 +15,7 @@ use EventBase    v*      Event
 use DigiEvent    v*      Event
 use TrackEvent   v*      Event
 use LHCbMath     v*      Kernel
+use PartProp     v*      Kernel
 private
 use GaudiObjDesc v* -no_auto_imports
 end_private
