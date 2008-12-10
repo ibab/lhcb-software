@@ -1,4 +1,4 @@
-// $Id: CaloCosmicsTrackTool.h,v 1.2 2008-07-21 14:40:37 cattanem Exp $
+// $Id: CaloCosmicsTrackTool.h,v 1.3 2008-12-10 09:56:47 cattanem Exp $
 #ifndef CALOCOSMICSTRACKTOOL_H 
 #define CALOCOSMICSTRACKTOOL_H 1
 
@@ -30,19 +30,19 @@ public:
   //
   virtual StatusCode processing();    
   StatusCode tupling(unsigned int unit);  
-  const double phi(){return m_phi;}
-  const double phiVariance(){return m_sPhi;}
-  const double theta(){return m_theta;}
-  const double thetaVariance(){return m_sTheta;}
+  double phi(){return m_phi;}
+  double phiVariance(){return m_sPhi;}
+  double theta(){return m_theta;}
+  double thetaVariance(){return m_sTheta;}
   const Gaudi::XYZVector slopes(){return m_slopes;}
   const Gaudi::XYZPoint  referencePoint(){ return m_refPt;}
   const Gaudi::SymMatrix3x3 slopesCovariance(){return m_slopesCov;}
   const Gaudi::SymMatrix3x3 referencePointCovariance(){ return m_refPtCov;}
-  const bool   forward(){return (m_dir == 1) ? true : false;}
-  const bool   tracked(){return m_tracked;}
-  const double time(){return m_time;}
-  const double timeVariance(){return m_stime;}
-  const bool   timed(){return  m_timed;}
+  bool   forward(){return (m_dir == 1) ? true : false;}
+  bool   tracked(){return m_tracked;}
+  double time(){return m_time;}
+  double timeVariance(){return m_stime;}
+  bool   timed(){return  m_timed;}
   ICaloCosmicsTool* ecal(){return m_eCosmics;}
   ICaloCosmicsTool* hcal(){return m_hCosmics;}
   const LHCb::Track& track(){return m_track;}

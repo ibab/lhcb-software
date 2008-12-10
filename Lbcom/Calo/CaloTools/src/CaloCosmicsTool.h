@@ -1,4 +1,4 @@
-// $Id: CaloCosmicsTool.h,v 1.2 2008-06-30 08:32:18 odescham Exp $
+// $Id: CaloCosmicsTool.h,v 1.3 2008-12-10 09:56:47 cattanem Exp $
 #ifndef CALOCOSMICSTOOL_H 
 #define CALOCOSMICSTOOL_H 1
 
@@ -32,21 +32,21 @@ public:
   Gaudi::XYZPoint referencePoint(){return m_refPoint;}
   Gaudi::XYZPoint referencePointVariance(){return m_eRefPoint;}
   const std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint>& extrema(){return m_bound;}
-  const double deposit(){return m_adcSum;}
-  const double phi(){return m_phi;}
-  const double phiVariance(){return m_sPhi;}
-  const double asymmetry(){return (m_maxLoc != "none") ? m_Rmean[m_maxLoc] : -99.;}
-  const double asymmetryVariance(){return (m_maxLoc !="none") ? m_Rmean2[m_maxLoc] : -99.;}
-  const double slot(){return m_offset;}
-  const double time(){return m_time;}
-  const double timeVariance(){return m_stime;}
-  const double timeDispersion(){return (m_maxLoc !="none") ? m_td[m_maxLoc] : -99.;;}
+  double deposit(){return m_adcSum;}
+  double phi(){return m_phi;}
+  double phiVariance(){return m_sPhi;}
+  double asymmetry(){return (m_maxLoc != "none") ? m_Rmean[m_maxLoc] : -99.;}
+  double asymmetryVariance(){return (m_maxLoc !="none") ? m_Rmean2[m_maxLoc] : -99.;}
+  double slot(){return m_offset;}
+  double time(){return m_time;}
+  double timeVariance(){return m_stime;}
+  double timeDispersion(){return (m_maxLoc !="none") ? m_td[m_maxLoc] : -99.;;}
   DeCalorimeter* det(){return m_calo;}
   StatusCode processing();
   StatusCode tupling(unsigned int unit);
   bool tracked(){return m_tracked;}  
   bool timed(){return m_timed;}
-  const double kernel(){return m_kernel;};
+  double kernel(){return m_kernel;};
   
  
 protected:
