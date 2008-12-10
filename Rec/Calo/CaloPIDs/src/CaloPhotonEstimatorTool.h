@@ -27,10 +27,9 @@
 
 // Forward declarations
 class DeCalorimeter   ;
-class LHCb::CaloHypo  ;
-class IDataProviderSvc;
-class IIncidentSvc    ;
-class IHistogram1D    ;
+namespace LHCb {
+  class CaloHypo;
+}
 
 class CaloPhotonEstimatorTool :  public         GaudiTool,
                                  virtual public ICaloHypoLikelihood{

@@ -19,8 +19,10 @@
 
 // Forward declarations
 class DeCalorimeter;
-class LHCb::CaloHypo;
 class IDataProviderSvc;
+namespace LHCb {
+  class CaloHypo;
+}
 
 
 class CaloSingleGammaTool :  public  GaudiTool ,
