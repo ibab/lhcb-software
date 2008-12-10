@@ -3,6 +3,9 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+! 2008-12-10 - Marco Cattaneo
+ - Fix gcc 4.3 compilation warnings
+
 !====================== L0Interfaces v1r2 2008-07-16 ==========================
 ! 2008-07-15 - Marco Cattaneo
  - Remove cmt/version.cmt file, breaks cmt when running with version directory!

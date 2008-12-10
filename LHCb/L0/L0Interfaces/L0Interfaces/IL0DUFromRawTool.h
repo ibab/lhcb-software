@@ -1,4 +1,4 @@
-// $Id: IL0DUFromRawTool.h,v 1.3 2008-07-03 18:32:34 odescham Exp $
+// $Id: IL0DUFromRawTool.h,v 1.4 2008-12-10 07:48:11 cattanem Exp $
 #ifndef IL0DUFROMRAWTOOL_H 
 #define IL0DUFROMRAWTOOL_H 1
 
@@ -29,18 +29,18 @@ public:
 
 
   virtual bool decodeBank(int iBank=0 )=0;
-  virtual const unsigned int data(std::string name)=0;
-  virtual const unsigned int tck()=0;
-  virtual const unsigned int version()=0;
-  virtual const unsigned int firmware()=0;
+  virtual unsigned int data(std::string name)=0;
+  virtual unsigned int tck()=0;
+  virtual unsigned int version()=0;
+  virtual unsigned int firmware()=0;
   virtual const std::pair<unsigned int,unsigned int> bcid()=0;
-  virtual const unsigned int rsda()=0;
-  virtual const unsigned int muonCleaningPattern()=0;
-  virtual const unsigned int status()=0;
+  virtual unsigned int rsda()=0;
+  virtual unsigned int muonCleaningPattern()=0;
+  virtual unsigned int status()=0;
   virtual LHCb::L0DUReport report()=0;
   virtual LHCb::L0ProcessorDatas* L0ProcessorDatas()=0;
-  virtual const unsigned int size()=0;
-  virtual const unsigned long roStatus()=0;
+  virtual unsigned int size()=0;
+  virtual unsigned long roStatus()=0;
   
 
 protected:
