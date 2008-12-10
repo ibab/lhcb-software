@@ -4,6 +4,10 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2008-12-10 - Patrick Koppenburg
+ - PidPlotTool : Add some meat 
+ - BasePlotTool : Remove fillPlots
+
 ! 2008-12-09 - Patrick Koppenburg
  - SpotLight moved here
 
