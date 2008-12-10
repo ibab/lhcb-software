@@ -1,4 +1,4 @@
-// $Id: AlignTraj.h,v 1.4 2008-12-09 16:54:07 lnicolas Exp $
+// $Id: AlignTraj.h,v 1.5 2008-12-10 10:07:11 lnicolas Exp $
 #ifndef KERNEL_ALIGNTRAJ_H 
 #define KERNEL_ALIGNTRAJ_H 1
 
@@ -45,26 +45,26 @@ namespace LHCb
     typedef DifTraj<6>::Vector     Vector;
 
     /// Constructors
-    AlignTraj(const Trajectory* traj, const Point& pivot) 
-         : DifTraj<6>(traj->range()), 
+    AlignTraj(const Trajectory& traj, const Point& pivot) 
+         : DifTraj<6>(traj.range()), 
            m_pivot(pivot), 
-           m_traj(traj) {  }
+           m_traj(&traj) {  }
    
-    AlignTraj(const Trajectory* traj)
-         : DifTraj<6>(traj->range()), 
+    AlignTraj(const Trajectory& traj)
+         : DifTraj<6>(traj.range()), 
            m_pivot(0,0,0), 
-           m_traj(traj) {  }
+           m_traj(&traj) {  }
 
-    AlignTraj(const Trajectory* traj, const Parameters& p)
-         : DifTraj<6>(traj->range()), 
+    AlignTraj(const Trajectory& traj, const Parameters& p)
+         : DifTraj<6>(traj.range()), 
            m_rx(p(3)),m_ry(p(4)), m_rz(p(5)), 
-           m_pivot(0,0,0), m_traj(traj)
+           m_pivot(0,0,0), m_traj(&traj)
          {  m_trans.SetX(p(0)); m_trans.SetY(p(1)); m_trans.SetZ(p(2)); }
    
-    AlignTraj(const Trajectory* traj, const Parameters& p, const Point& pivot) 
-         : DifTraj<6>(traj->range()), 
+    AlignTraj(const Trajectory& traj, const Parameters& p, const Point& pivot) 
+         : DifTraj<6>(traj.range()), 
            m_rx(p(3)),m_ry(p(4)), m_rz(p(5)), 
-           m_pivot(pivot), m_traj(traj)
+           m_pivot(pivot), m_traj(&traj)
          {  m_trans.SetX(p(0)); m_trans.SetY(p(1)); m_trans.SetZ(p(2)); }
    
     /// destructor
