@@ -1,4 +1,4 @@
-// $Id: L0DUEmulatorTool.h,v 1.2 2008-03-27 16:32:13 odescham Exp $
+// $Id: L0DUEmulatorTool.h,v 1.3 2008-12-10 07:47:35 cattanem Exp $
 #ifndef L0DUEMULATORTOOL_H 
 #define L0DUEMULATORTOOL_H 1
 
@@ -34,9 +34,9 @@ public:
   
 protected:
 private:
-  const unsigned long digit(const unsigned int   base[L0DUBase::Index::Size]);
-  const double scale (const unsigned int   base[L0DUBase::Index::Size]);
-  const long   max   (const unsigned int   base[L0DUBase::Index::Size]);
+  unsigned long digit(const unsigned int   base[L0DUBase::Index::Size]);
+  double        scale(const unsigned int   base[L0DUBase::Index::Size]);
+  long          max  (const unsigned int   base[L0DUBase::Index::Size]);
   void setDataValue(LHCb::L0DUElementaryData* data, 
                     const unsigned int  base[L0DUBase::Index::Size]);
   StatusCode processing();

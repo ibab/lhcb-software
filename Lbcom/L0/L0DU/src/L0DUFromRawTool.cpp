@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.cpp,v 1.17 2008-07-17 16:16:07 odescham Exp $
+// $Id: L0DUFromRawTool.cpp,v 1.18 2008-12-10 07:47:35 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -634,7 +634,7 @@ bool L0DUFromRawTool::decoding(int ibank){
 }
 
 
-const unsigned int L0DUFromRawTool::data(std::string name){
+unsigned int L0DUFromRawTool::data(std::string name){
   std::map<std::string, unsigned int>::iterator it = m_dataMap.find(name);
   if(m_dataMap.end() == it){
     if(m_warn)Warning("Warning: Requested data '" + name  + "' is unknown ",StatusCode::SUCCESS).ignore();
@@ -643,7 +643,7 @@ const unsigned int L0DUFromRawTool::data(std::string name){
   return (*it).second;
 }
 
-const double L0DUFromRawTool::scale(unsigned int base){
+double L0DUFromRawTool::scale(unsigned int base){
   return m_condDB->scale( base );
 }
 

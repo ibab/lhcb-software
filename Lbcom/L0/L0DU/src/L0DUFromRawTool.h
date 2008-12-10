@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.h,v 1.8 2008-07-03 18:33:11 odescham Exp $
+// $Id: L0DUFromRawTool.h,v 1.9 2008-12-10 07:47:35 cattanem Exp $
 #ifndef L0DUFROMRAWTOOL_H 
 #define L0DUFROMRAWTOOL_H 1
 
@@ -32,21 +32,19 @@ public:
   virtual StatusCode initialize();
   bool decodeBank(int ibank=0 );
 
-  const unsigned int data(std::string name);
-  virtual const unsigned int version(){return m_vsn;};
-  const unsigned int tck(){  return m_tck; }
-  const unsigned int firmware(){  return m_pgaVsn; }
+  unsigned int data(std::string name);
+  virtual unsigned int version(){return m_vsn;};
+  unsigned int tck(){  return m_tck; }
+  unsigned int firmware(){  return m_pgaVsn; }
   const std::pair<unsigned int,unsigned int> bcid(){  return std::make_pair(m_bcid2,m_bcid3); }
-  const unsigned int rsda(){  return m_rsda; }
-  const unsigned int muonCleaningPattern(){  return m_muCleanPattern; }
-  const unsigned int status(){  return m_status; }
-  const unsigned int size(){return m_size;  }
-  const unsigned long roStatus(){return m_roStatus.status();  }
-  
+  unsigned int rsda(){  return m_rsda; }
+  unsigned int muonCleaningPattern(){  return m_muCleanPattern; }
+  unsigned int status(){  return m_status; }
+  unsigned int size(){return m_size;  }
+  unsigned long roStatus(){return m_roStatus.status();  }
     
   LHCb::L0DUReport report(){return m_report;}
   LHCb::L0ProcessorDatas* L0ProcessorDatas(){return m_processorDatas;}
-  
   
 protected:
 
@@ -55,7 +53,7 @@ private:
   bool getL0DUBanksFromRaw();
   void encode(unsigned int data ,  const unsigned int base[L0DUBase::Index::Size]);
   void fillProcessorData();
-  const double scale(unsigned int base);
+  double scale(unsigned int base);
   bool nextData();
   void putStatusOnTES();
   //

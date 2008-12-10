@@ -1,4 +1,4 @@
-// $Id: L0DUEmulatorTool.cpp,v 1.5 2008-06-30 08:20:16 odescham Exp $
+// $Id: L0DUEmulatorTool.cpp,v 1.6 2008-12-10 07:47:35 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -293,14 +293,14 @@ bool L0DUEmulatorTool::cleanMuon(int i, int j){
 }
  
 
-const unsigned long L0DUEmulatorTool::digit(const unsigned int   base[L0DUBase::Index::Size]){
+unsigned long L0DUEmulatorTool::digit(const unsigned int   base[L0DUBase::Index::Size]){
   return m_decoder->digit(base);
 }
-const double L0DUEmulatorTool::scale(const unsigned int base[L0DUBase::Index::Size]){
+double L0DUEmulatorTool::scale(const unsigned int base[L0DUBase::Index::Size]){
   return m_condDB->scale(base[L0DUBase::Index::Scale]);
 }
 
-const long L0DUEmulatorTool::max(const unsigned int base[L0DUBase::Index::Size]){
+long L0DUEmulatorTool::max(const unsigned int base[L0DUBase::Index::Size]){
   long  w1 = base[L0DUBase::Index::Mask] >> base[L0DUBase::Index::Shift];
   long  w2 = base[L0DUBase::Index::Mask2] >> base[L0DUBase::Index::Shift2];
   long  w  = w1 | (w2 << base[L0DUBase::Index::Offset]);

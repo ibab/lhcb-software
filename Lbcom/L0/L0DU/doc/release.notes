@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.137 2008-12-08 18:03:28 odescham Exp $
+! $Id: release.notes,v 1.138 2008-12-10 07:47:35 cattanem Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
+
+! 2008-12-10 - Marco Cattaneo
+ - Fix gcc 4.3 warnings
 
 ! 2008-12-08 - Olivier Deschamps
 - new algo : FastL0Filter : get decision from L0DU rawBank and filter -> NO COMPLETE L0DU bank decoding -> NO REPORT
