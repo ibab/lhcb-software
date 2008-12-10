@@ -1,4 +1,4 @@
-// $Id: PidPlotTool.cpp,v 1.2 2008-12-08 18:12:13 pkoppenb Exp $
+// $Id: PidPlotTool.cpp,v 1.3 2008-12-10 16:42:17 pkoppenb Exp $
 // Include files 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
@@ -41,32 +41,39 @@ StatusCode PidPlotTool::initialize(){
 StatusCode PidPlotTool::fillFinal(const LHCb::Particle* p,const std::string trailer){
   
   const LHCb::ParticleProperty* pp = ppSvc()->find( p->particleID() );
-  plot(p->p(), histoName("P",pp,trailer), 
-       "Momentum of "+pp->name()+"_"+trailer, 0, 100*GeV);
+  plot(p->p()/GeV, histoName("P",pp,trailer), 
+       "Momentum of "+pp->name()+"_"+trailer, 0, 100);
   const LHCb::ProtoParticle* proto = p->proto() ;
   if ( 0==proto) return StatusCode::SUCCESS;
   
-  fillPID(proto->info(LHCb::ProtoParticle::CombDLLe, -1000),p->p(),"e", pp,trailer);
-  fillPID(proto->info(LHCb::ProtoParticle::CombDLLmu,-1000),p->p(),"mu",pp,trailer);
-  fillPID(proto->info(LHCb::ProtoParticle::CombDLLk, -1000),p->p(),"K", pp,trailer);
-  fillPID(proto->info(LHCb::ProtoParticle::CombDLLp, -1000),p->p(),"p", pp,trailer);
+  fillPID(proto->info(LHCb::ProtoParticle::CombDLLe, -1000),p->p()/GeV,"e", pp,trailer);
+  fillPID(proto->info(LHCb::ProtoParticle::CombDLLmu,-1000),p->p()/GeV,"mu",pp,trailer);
+  fillPID(proto->info(LHCb::ProtoParticle::CombDLLk, -1000),p->p()/GeV,"K", pp,trailer);
+  fillPID(proto->info(LHCb::ProtoParticle::CombDLLp, -1000),p->p()/GeV,"p", pp,trailer);
 
-  profile1D(p->p(), (proto->muonPID()!=0), 
-       histoName("MuonPID_p",pp,trailer),
-       "has MuonPID vs p of "+pp->name()+"_"+trailer,-10., 10.);
+  profile1D(p->p()/GeV, double(proto->muonPID()!=0), 
+       histoName("MuonPID",pp,"p_"+trailer),
+       "has MuonPID vs p of "+pp->name()+" in "+trailer,0., 100.);
 
   return StatusCode::SUCCESS ;
 }
 
 //=========================================================================
-//  
+//  fill PID
 //=========================================================================
 void PidPlotTool::fillPID ( double val, double p, std::string part, 
                             const LHCb::ParticleProperty* pp, std::string trailer) {
   plot(val,histoName("DLL"+part,pp,trailer),
        part+" DLL of "+pp->name()+"_"+trailer,-10., 10.);
-  profile1D(p, val>0, histoName("DLL"+part+"_p",pp,trailer),
-       part+" DLL>0 vs p of "+pp->name()+"_"+trailer,-10., 10.);
+  profile1D(p, double(val>0), histoName("DLL"+part,pp,"p_"+trailer),
+       part+" DLL>0 vs p of "+pp->name()+" in "+trailer,0., 100.);
   return ;
   
+}
+//=============================================================================
+// Fill plots using a single Particle
+//=============================================================================
+StatusCode PidPlotTool::fillPlots(const LHCb::Particle* p,const std::string trailer){
+  if ( p->isBasicParticle ()) return fillFinal(p,trailer);
+  else return fillMother(p,trailer);
 }

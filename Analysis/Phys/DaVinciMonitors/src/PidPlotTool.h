@@ -1,4 +1,4 @@
-// $Id: PidPlotTool.h,v 1.2 2008-12-08 18:12:13 pkoppenb Exp $
+// $Id: PidPlotTool.h,v 1.3 2008-12-10 16:42:17 pkoppenb Exp $
 #ifndef PIDPLOTTOOL_H 
 #define PIDPLOTTOOL_H 1
 
@@ -25,12 +25,13 @@ public:
   /// initialisation
   StatusCode initialize();
 
+  /// the method
+  StatusCode fillPlots(const LHCb::Particle*, std::string);
+
 protected:
 
 private:
-  /// Fill mother mass plot
-  StatusCode fillMother(const LHCb::Particle*,const std::string trailer = "");
-  /// Fill final state PID plots
+  /// Fill final state PID plots - overwrites BasePlotTools method
   StatusCode fillFinal(const LHCb::Particle*,const std::string trailer = "");
   /// Fill PID plot pair
   void fillPID(double val, double p, std::string part, 

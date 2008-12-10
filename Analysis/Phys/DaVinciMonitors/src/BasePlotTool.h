@@ -1,4 +1,4 @@
-// $Id: BasePlotTool.h,v 1.1 2008-12-08 18:12:13 pkoppenb Exp $
+// $Id: BasePlotTool.h,v 1.2 2008-12-10 16:42:17 pkoppenb Exp $
 #ifndef BASEPLOTTOOL_H 
 #define BASEPLOTTOOL_H 1
 
@@ -29,7 +29,10 @@ public:
 
 //=============================================================================
 /// Fill plots using a single Particle
-StatusCode fillPlots(const LHCb::Particle*,const std::string trailer = "");
+StatusCode fillPlots(const LHCb::Particle*,const std::string trailer = ""){
+    err() << "BasePlotTool::fillPlots should never be called " << trailer << endmsg ;
+    return StatusCode::FAILURE;
+};
 
 /// Fill plots using a LHCb::Particle::ConstVector
 StatusCode fillPlots(const LHCb::Particle::ConstVector& pv,
@@ -53,7 +56,7 @@ protected:
   StatusCode fillMother(const LHCb::Particle*,const std::string trailer = "");
   /// Fill final state PID plots
   StatusCode fillFinal(const LHCb::Particle*,const std::string trailer = ""){
-    err() << "This should never be called " << trailer << endmsg ;
+    err() << "BasePlotTool::fillFinal  should never be called " << trailer << endmsg ;
     return StatusCode::FAILURE;
   }
   

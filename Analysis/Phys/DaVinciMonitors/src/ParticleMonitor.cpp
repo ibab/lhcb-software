@@ -1,4 +1,4 @@
-// $Id: ParticleMonitor.cpp,v 1.2 2008-12-08 18:12:13 pkoppenb Exp $
+// $Id: ParticleMonitor.cpp,v 1.3 2008-12-10 16:42:17 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -100,10 +100,10 @@ StatusCode ParticleMonitor::execute() {
     bool sideband = m_sideband( *m ) ;
     if (peak) {
       counter("# Accepted Mothers in Peak")++;
-      trail = "_peak";
+      trail = "peak";
     } else if (sideband) {
       counter("# Accepted Mothers in Sidebands")++;
-      trail = "_sideband";
+      trail = "sideband";
     } else continue ;  // ignore events ouside of sidebands
     const LHCb::Particle::ConstVector dauts = descendants()->descendants(*m);   
     for ( LHCb::Particle::ConstVector::const_iterator d = dauts.begin() ; d != dauts.end() ; ++d){

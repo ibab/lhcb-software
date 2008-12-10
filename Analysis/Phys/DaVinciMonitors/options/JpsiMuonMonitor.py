@@ -1,5 +1,5 @@
 ##############################################################################
-# $Id: JpsiMuonMonitor.py,v 1.3 2008-12-09 10:18:01 pkoppenb Exp $
+# $Id: JpsiMuonMonitor.py,v 1.4 2008-12-10 16:42:16 pkoppenb Exp $
 #
 # Jpsi muon monitor
 #
@@ -33,7 +33,7 @@ Jpsi2MuPi.DecayDescriptor = "[J/psi(1S) -> mu+ pi-]cc"
 # a good muon and any pion
 Jpsi2MuPi.DaughtersCuts = { "pi+" : "(P>1*GeV)",
                             "mu+" : "(P>10*GeV) & (PT>1*GeV)" }
-Jpsi2MuPi.CombinationCut = "(ADAMASS('J/psi(1S)')<50*MeV)"
+Jpsi2MuPi.CombinationCut = "(ADAMASS('J/psi(1S)')<100*MeV)"
 Jpsi2MuPi.MotherCut = "(ALL)"
 JpsiSeq.Members += [ Jpsi2MuPi ]
 ##############################################################################
@@ -42,8 +42,10 @@ JpsiSeq.Members += [ Jpsi2MuPi ]
 #
 from Configurables import ParticleMonitor
 plotter =  ParticleMonitor()
+plotter.addTool(PhysDesktop())
+plotter.PhysDesktop.InputLocations = [ "Jpsi2MuPi" ]
 plotter.PeakCut = "(ADMASS('J/psi(1S)')<5*MeV)"
-plotter.SideBandCut = "(ADMASS('J/psi(1S)')>10*MeV)"
+plotter.SideBandCut = "(ADMASS('J/psi(1S)')>20*MeV)"
 plotter.PlotTools = [ "PidPlotTool" ]
 
 JpsiSeq.Members += [ plotter ]

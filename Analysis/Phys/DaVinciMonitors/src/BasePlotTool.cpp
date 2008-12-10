@@ -1,4 +1,4 @@
-// $Id: BasePlotTool.cpp,v 1.1 2008-12-08 18:12:13 pkoppenb Exp $
+// $Id: BasePlotTool.cpp,v 1.2 2008-12-10 16:42:17 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -38,13 +38,6 @@ StatusCode BasePlotTool::initialize(){
   if (!sc) return sc;
   m_ppSvc = svc<LHCb::IParticlePropertySvc>( "LHCb::ParticlePropertySvc", true );
   return sc;
-}
-//=============================================================================
-// Fill plots using a single Particle
-//=============================================================================
-StatusCode BasePlotTool::fillPlots(const LHCb::Particle* p,const std::string trailer){
-  if ( p->isBasicParticle ()) return fillFinal(p,trailer);
-  else return fillMother(p,trailer);
 }
 //=============================================================================
 // Mother plots - just mass plots
