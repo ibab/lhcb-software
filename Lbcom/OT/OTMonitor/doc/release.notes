@@ -2,6 +2,9 @@
 ! Package manager : J. Amoraal
 !---------------------------------------------------------------------------
 
+! 2008-12-10 - Marco Cattaneo
+ - Fix gcc 4.3 compilation warning
+
 !==================== OTMonitor v2r8 2008-04-04 =====================
 ! 2008-03-31 Jan Amoraal
  - Added OTTime to expert moni

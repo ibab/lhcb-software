@@ -1,14 +1,17 @@
-// $Id: OTTimeChecker.h,v 1.6 2007-04-08 17:00:48 janos Exp $
+// $Id: OTTimeChecker.h,v 1.7 2008-12-10 06:58:25 cattanem Exp $
 #ifndef OTMONITOR_OTTIMECHECKER_H
 #define OTMONITOR_OTTIMECHECKER_H 1
 
-/// STL
+// STL
 #include <vector>
 
-/// Gaudi
+// Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
 
-/** @class OTTimeChecker OTTimeChecker.h "OTMonitor/OTTimeChecker.h"
+// LHCb
+#include "Event/MCParticle.h"
+
+/** @class OTTimeChecker OTTimeChecker.h
  *
  *  Top level algorithm for checking OTTimes. Checker algorithms 
  *  use the associators for efficiency and resolution studies.
@@ -26,6 +29,7 @@
 
 // forward declarations
 class IOTrtRelation;
+class DeOTDetector;
 
 namespace AIDA 
 {
@@ -35,7 +39,6 @@ namespace AIDA
 namespace LHCb
 {
   class MCHit;
-  class MCParticle;
   class OTTime;
 }
 
@@ -78,7 +81,7 @@ private:
   typedef std::vector<PartMultiplicity> PartMultVec;
 
   /// Return my particle code
-  const unsigned int myParticleCode(const LHCb::MCParticle* aMCPart) const;
+  unsigned int myParticleCode(const LHCb::MCParticle* aMCPart) const;
 
   DeOTDetector* m_tracker;               ///< pointer to geometry
   /// flag to cut on momentum used for resolution plot 
@@ -100,7 +103,7 @@ private:
 
 };
 
-inline const unsigned int OTTimeChecker::myParticleCode(const LHCb::MCParticle* aMCPart) const {
+inline unsigned int OTTimeChecker::myParticleCode(const LHCb::MCParticle* aMCPart) const {
   /// electron
   if ((aMCPart->particleID()).abspid() == 11 ) return 1u;
   /// muon
