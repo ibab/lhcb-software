@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.61 2008-12-02 14:44:30 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.62 2008-12-10 13:18:28 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -537,7 +537,7 @@ void TrackMasterFitter::fillExtraInfo(Track& track ) const
   double chisqTT[2]   = {0,0} ;
   double chisqVelo[2] = {0,0} ;
   int    nhitsT(0), nhitsTT(0), nhitsVelo(0) ;
-  for( std::vector<Node*>::const_iterator iNode = iNode = track.nodes().begin(); 
+  for( std::vector<Node*>::const_iterator iNode = track.nodes().begin(); 
        iNode != track.nodes().end(); ++iNode ) 
     if( (*iNode)->hasMeasurement() &&
 	(*iNode)->type() != LHCb::Node::Outlier ) {
