@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.67 2008-12-09 15:49:58 graven Exp $ 
+! $Id: release.notes,v 1.68 2008-12-10 10:16:54 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2008-12-10 - Vanya BELYAEV
+ - HltConf/HltLine.py 
+   put few "deepcopy" in various places to deal propertly with 
+   mutable arguments
 
 ! 2008-12-09 - Gerhard Raven
  - register routingbits with HltANNSvc

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.29 2008-12-08 12:30:03 graven Exp $ 
+# $Id: HltLine.py,v 1.30 2008-12-10 10:16:54 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.29 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.30 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt line itself 
@@ -71,6 +71,7 @@ __all__ = ( 'Hlt1Line'     ,  ## the Hlt line itself
             
 
 import re
+from copy import deepcopy 
 from Gaudi.Configuration import GaudiSequencer, Sequencer, Configurable 
 
 from Configurables import DeterministicPrescaler as Scaler
@@ -540,10 +541,10 @@ class Hlt1Tool (object ) :
     __slots__ = ( 'Type' , 'Name' , 'Args' )
 
     ### The standard constructor to create an Hlt1Tool instance:
-    def __init__ ( self      , ## ...
-                   type = None , ## the type of the (configurable corresponding to the) tool
-                   name = '' , ## the instance name of the tool
-                   **Args ) :  ## other arguments 
+    def __init__ ( self        ,    ## ...
+                   type = None ,    ## the type of the (configurable corresponding to the) tool
+                   name = ''   ,    ## the instance name of the tool
+                   **Args      ) :  ## other arguments 
         if type  == None : raise AttributeError, "Tool must have a type"
         self.Type = type
         self.Name = name if len(name) > 0 else type().getType()
@@ -585,11 +586,11 @@ class Hlt1Member ( object ) :
     __slots__ = ( 'Type' , 'Name' , 'Args', 'Tools' )
     
     ### The standard constructor to create the  Hlt1Member instance:
-    def __init__ ( self      , ## ...
-                   Type      , ## short type of members, e.g. 'TF' HltTrackFilter
-                   name = '' , ## the specific part of the algorithm name 
-                   tools = [] , ## list of tool options for this algorithm
-                   **Args ) :  ## arguments 
+    def __init__ ( self       ,    ## ...
+                   Type       ,    ## short type of members, e.g. 'TF' HltTrackFilter
+                   name  = '' ,    ## the specific part of the algorithm name 
+                   tools = [] ,    ## list of tool options for this algorithm
+                   **Args     ) :  ## arguments 
         """
         The standard constructor to create the  Hlt1Member instance:
         
@@ -598,6 +599,12 @@ class Hlt1Member ( object ) :
                     FilterDescriptor = [ 'IP_PV2D,||>,0.1',
                                          'Calo3DChi2_L0TriggerHadron,<,4' ] ) 
         """
+        ## (1) "clone" all agruments
+        Type  = deepcopy ( Type  )
+        name  = deepcopy ( name  )
+        tools = deepcopy ( tools )
+        Args  = deepcopy ( Args  )
+        ##
         Name = name
         if type(Type) is str : Type = typeFromNick ( Type ) 
         if not Type in _types_ :
@@ -623,7 +630,12 @@ class Hlt1Member ( object ) :
         " Return the specific part of the name "        
         return self.id()
     def createConfigurable( self, line, **args ) :
-        " Create the configurable, and, if needed, deal with tool configuration "        
+        """
+        Create the configurable, and, if needed, deal with tool configuration
+        """
+        ## clone the arguments
+        line = deepcopy ( line )
+        args = deepcopy ( args ) 
         # see if alg has any special Tool requests...
         name = memberName( self, line )
         for tool in self.Tools : tool.createConfigurable( parent = name )
@@ -662,15 +674,15 @@ class Hlt1Line(object):
     #    - 'HLT'       : the list of HLT selections for HLTFilter
     #    - 'algos'     : the list of actual members 
     #    - 'postscale' : the postscale factor
-    def __init__ ( self           ,
-                   name           ,   # the base name for the Line
-                   prescale  = 1  ,   # prescale factor
+    def __init__ ( self             ,
+                   name             ,   # the base name for the Line
+                   prescale  = 1    ,   # prescale factor
                    ODIN      = None ,   # ODIN predicate  
                    L0DU      = None ,   # L0DU predicate  
                    HLT       = None ,   # HltDecReports predicate
-                   algos     = [] ,   # the list of algorithms/members
-                   postscale = 1  ,   # prescale factor
-                   **args         ) : # other configuration parameters
+                   algos     = []   ,   # the list of algorithms/members
+                   postscale = 1    ,   # prescale factor
+                   **args           ) : # other configuration parameters
         """
         The constructor, which essentially defines the line
         
@@ -684,13 +696,21 @@ class Hlt1Line(object):
         - 'postscale' : the postscale factor
         
         """
-        # verify exclusivity...
+        ## 1) clone all arguments
+        name  = deepcopy ( name  )
+        ODIN  = deepcopy ( ODIN  )
+        L0DU  = deepcopy ( L0DU  )
+        HLT   = deepcopy ( HLT   )
+        algos = deepcopy ( algos )
+        args  = deepcopy ( args  )
+        
+        ## 2) verify exclusivity...
         if L0DU and HLT :
-            raise AttributeError, "The attribute L0DU and HLT should be exclusive -- line %s" % name 
+            raise AttributeError, "The attribute L0DU and HLT  should be exclusive -- line %s" % name 
         if L0DU and ODIN :
             raise AttributeError, "The attribute L0DU and ODIN should be exclusive -- line %s" % name 
         if HLT and ODIN :
-            raise AttributeError, "The attribute HLT and ODIN should be exclusive -- line %s" % name 
+            raise AttributeError, "The attribute HLT  and ODIN should be exclusive -- line %s" % name 
         # 1) save all parameters (needed for the proper cloning)
         self._name      = name
         self._prescale  = prescale
@@ -720,7 +740,7 @@ class Hlt1Line(object):
         #TODO: shouldn't we just allow all three of them? 
         #      and shouldn't each correspond to a stage in the DecReport?
         _seed = None
-        if  ODIN  : _seed = ODINFilter ( odinentryName( line ) , Code = self._ODIN ) 
+        if   ODIN : _seed = ODINFilter ( odinentryName( line ) , Code = self._ODIN ) 
         elif L0DU : _seed = L0Filter   ( l0entryName  ( line ) , Code = self._L0DU ) 
         elif HLT  : _seed = HDRFilter  ( hltentryName ( line ) , Code = self._HLT  )
         
@@ -759,7 +779,9 @@ class Hlt1Line(object):
                       , 'Seed'         : _seed } )
         # TODO: if len(_members) = 1, we don't need a sequencer...
         if _members : mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line ) , Members = _members ) })
-        self._configurable = Line ( self.name() , **mdict )
+        # final cloning of all parameters:
+        __mdict = deepcopy ( mdict ) 
+        self._configurable = Line ( self.name() , **__mdict )
 
         ## finally assign the decision name!
         self._decision = decisionName ( line )
@@ -854,24 +876,26 @@ class Hlt1Line(object):
         are updated accordingly.
         
         """
-        # classify arguments:
+        ## 1) clone the arguyments
+        args = deepcopy ( args )
+        ## 2) classify arguments:
         _own   = {} # own arguments 
         _seq   = {} # arguments for sequencer
         _other = {} # the rest (probably reconfiguration of members)
         for key in args :
-            if    key in GaudiSequencer.__slots__ : _seq[keq]   = args[key]
-            elif  key in  _myslots_               : _own[key]   = args[key] 
-            else                                  : _other[key] = args[key]
+            if    key in GaudiSequencer.__slots__ : _seq   [keq] = args[key]
+            elif  key in  _myslots_               : _own   [key] = args[key] 
+            else                                  : _other [key] = args[key]
 
         # Explictly copy all major structural parameters 
-        __name       = name
-        __prescale   = args.get ( 'prescale'  , self._prescale  ) 
-        __ODIN       = args.get ( 'ODIN'      , self._ODIN      )         
-        __L0DU       = args.get ( 'L0DU'      , self._L0DU      )         
-        __HLT        = args.get ( 'HLT'       , self._HLT       )         
-        __postscale  = args.get ( 'postscale' , self._postscale )  
-        __algos      = args.get ( 'algos'     , self._algos     )      
-        __args       = self._args
+        __name       = deepcopy ( name        )
+        __prescale   = deepcopy ( args.get ( 'prescale'  , self._prescale  ) )
+        __ODIN       = deepcopy ( args.get ( 'ODIN'      , self._ODIN      ) )        
+        __L0DU       = deepcopy ( args.get ( 'L0DU'      , self._L0DU      ) )        
+        __HLT        = deepcopy ( args.get ( 'HLT'       , self._HLT       ) )        
+        __postscale  = deepcopy ( args.get ( 'postscale' , self._postscale ) ) 
+        __algos      = deepcopy ( args.get ( 'algos'     , self._algos     ) )
+        __args       = deepcopy ( self._args  ) 
 
         # Check the parameters, reponsible for reconfiguration:
         for alg in [ i for i in __algos if type(i) is Hlt1Member ] :
@@ -880,7 +904,7 @@ class Hlt1Line(object):
                 alg.Args.update( _other [id] ) 
                 del _other [id]
 
-        # unknonw parameters/arguments 
+        # unknown parameters/arguments 
         if _other :
             raise AttributeError, 'Invalid attributes are detected: %s'%_other 
 
@@ -891,7 +915,7 @@ class Hlt1Line(object):
         return Hlt1Line ( name      = __name       ,
                           prescale  = __prescale   ,
                           ODIN      = __ODIN       ,
-                          L0DU      = __L0DU         ,
+                          L0DU      = __L0DU       ,
                           HLT       = __HLT        ,
                           postscale = __postscale  ,
                           algos     = __algos      , **__args )
