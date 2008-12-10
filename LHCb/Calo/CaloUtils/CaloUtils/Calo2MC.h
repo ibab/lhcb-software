@@ -1,10 +1,13 @@
-// $Id: Calo2MC.h,v 1.2 2006-06-14 16:40:19 odescham Exp $
+// $Id: Calo2MC.h,v 1.3 2008-12-10 12:29:34 cattanem Exp $
 #ifndef CALO2MC_H 
 #define CALO2MC_H 1
 
-class LHCb::MCParticle;
-class LHCb::CaloCluster;
-class LHCb::CaloDigit;
+namespace LHCb {
+  class MCParticle;
+  class CaloCluster;
+  class CaloDigit;
+}
+
 template <class FROM,class TO,class WEIGHT> class IRelationWeighted; 
 template <class FROM,class TO> class LinkerWithKey;
 template <class FROM,class TO> class LinkedTo;
