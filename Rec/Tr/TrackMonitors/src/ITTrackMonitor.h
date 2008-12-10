@@ -1,4 +1,4 @@
-// $Id: ITTrackMonitor.h,v 1.1 2008-12-01 16:41:04 mneedham Exp $
+// $Id: ITTrackMonitor.h,v 1.2 2008-12-10 12:42:31 cattanem Exp $
 #ifndef ITTRACKMONITOR_H
 #define ITTRACKMONITOR_H 1
  
@@ -9,7 +9,6 @@
 
 namespace LHCb {
   class Track ;
-  class State ;
   class LHCbID ;
 }
 
@@ -40,7 +39,7 @@ class ITTrackMonitor : public TrackMonitorBase {
 
   bool splitByITType() const;
 
-  std::string ITTrackMonitor::ITCategory(const std::vector<LHCb::LHCbID>& ids) const;
+  std::string ITCategory(const std::vector<LHCb::LHCbID>& ids) const;
 
   void fillHistograms(const LHCb::Track& track, 
                       const std::string& type,

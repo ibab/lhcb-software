@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2008-12-10 - Marco Cattaneo
- - Fix gcc 4.3 compilation
+ - Fix gcc 4.3 compilation error
 
 ! 2008-12-05 M Needham
  - Bug fix in ITTrackMonitor
