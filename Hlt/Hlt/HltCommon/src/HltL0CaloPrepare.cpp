@@ -1,4 +1,4 @@
-// $Id: HltL0CaloPrepare.cpp,v 1.15 2008-12-03 21:04:48 graven Exp $
+// $Id: HltL0CaloPrepare.cpp,v 1.16 2008-12-10 07:36:04 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -149,11 +149,6 @@ StatusCode HltL0CaloPrepare::execute() {
 }
 
 
-StatusCode HltL0CaloPrepare::finalize() {
-
-  debug() << "==> Finalize" << endmsg;
-  return HltAlgorithm::finalize();  
-}
 
 void HltL0CaloPrepare::makeTrack(const L0CaloCandidate& calo,
                                   LHCb::Track& track) {

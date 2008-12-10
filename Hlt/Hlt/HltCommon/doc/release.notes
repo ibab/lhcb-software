@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2008-12-09 - Gerhard Raven
+ - add 'RoutingBits' major to HltANNSvc
+
 ! 2008-12-08 - Gerhard Raven
  - remove obsolete CreateDecReportsHack, HltDummySelection
  - add HtlL0MuonCandidates, the muon version of HltL0CaloCandidates

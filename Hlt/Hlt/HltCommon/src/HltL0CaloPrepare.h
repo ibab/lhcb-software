@@ -1,4 +1,4 @@
-// $Id: HltL0CaloPrepare.h,v 1.5 2008-10-22 14:38:20 hernando Exp $
+// $Id: HltL0CaloPrepare.h,v 1.6 2008-12-10 07:36:04 graven Exp $
 #ifndef HLTCOMMON_HLTLOCALOPREPARE_H 
 #define HLTCOMMON_HLTL0CALOPREPARE_H 1
 
@@ -24,8 +24,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
-
 
 private:
 

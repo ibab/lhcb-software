@@ -1,4 +1,4 @@
-// $Id: HltL0CaloCandidates.cpp,v 1.2 2008-12-08 12:14:05 graven Exp $
+// $Id: HltL0CaloCandidates.cpp,v 1.3 2008-12-10 07:36:04 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -108,7 +108,6 @@ StatusCode HltL0CaloCandidates::execute() {
             cuts.push_back( std::make_pair( i->second, condition->second->threshold() ) );
          }
   }
-
 
   Tracks* output = new Tracks();
   put(output,"Hlt/Track/"+m_selection.output()->id().str());
