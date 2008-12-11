@@ -3,9 +3,20 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-! 2008-12-05 - Marco Cattaneo
- - Add a file DoxyBrunel.cfg, included by DoxyFile.cfg, to allow standalone
-   documentation of current project only.
+</PRE><H1><A NAME=v17r1>2008-12-11 Boole v17r1</A></H1><PRE>
+This version uses projects Gaudi v20r3, LHCb v26r0, Lbcom v6r24
+ and SQLDDDB v5r0, ParamFiles v8r0, FieldMap v5r2, L0TCK v1r0
+
+Identical to v17r0 but with a bug fix to allow it to process data 
+produced with Gauss v36r0 or later. Output needs Brunel v33r3 or later
+
+- Bug fixes:
+  . Fix an array overflow in BuildMCTrackInfo (DigiAlg v4r13)
+  . Protect verbose() streams with msgLevel(MSG::VERBOSE) (DigiAlg v4r13)
+
+- Documentation change:
+ . Add a file DoxyBrunel.cfg, included by DoxyFile.cfg, to allow standalone
+   documentation of current project only
 
 </PRE><H1><A NAME=v17r0>2008-11-25 Boole v17r0</A></H1><PRE>
 This version uses projects Gaudi v20r3, LHCb v26r0, Lbcom v6r24
