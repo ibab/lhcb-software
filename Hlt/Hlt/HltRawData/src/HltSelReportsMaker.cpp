@@ -1,4 +1,4 @@
-// $Id: HltSelReportsMaker.cpp,v 1.4 2008-10-24 19:33:22 tskwarni Exp $
+// $Id: HltSelReportsMaker.cpp,v 1.5 2008-12-11 15:27:55 tskwarni Exp $
 // Include files 
 
 // from Gaudi
@@ -368,11 +368,11 @@ StatusCode HltSelReportsMaker::execute() {
        }
      }
 
-     HltObjectSummary* selSumOut = new HltObjectSummary();    
-     selSumOut->setSummarizedObjectCLID( 1 ); // use special CLID for selection summaries (lowest number for sorting to the end)
+     HltObjectSummary selSumOut;    
+     selSumOut.setSummarizedObjectCLID( 1 ); // use special CLID for selection summaries (lowest number for sorting to the end)
      
      // integer selection id 
-     selSumOut->addToInfo("0#SelectionID",float(intSelID));
+     selSumOut.addToInfo("0#SelectionID",float(intSelID));
     
      setPresentInfoLevel( selName );
   
@@ -408,11 +408,11 @@ StatusCode HltSelReportsMaker::execute() {
          Warning(" Could not store supported candidate - skip remaining candidates too ",StatusCode::SUCCESS, 20 );
          break;
        } 
-       selSumOut->addToSubstructure(hos);
+       selSumOut.addToSubstructure(hos);
      }
 
      // insert selection into the container
-     if( outputSummary->insert(selName,*selSumOut) == StatusCode::FAILURE ){
+     if( outputSummary->insert(selName,selSumOut) == StatusCode::FAILURE ){
        Warning(" Failed to add Hlt selection name "+selName
                +" to its container ",StatusCode::SUCCESS, 20 );
 
@@ -436,11 +436,11 @@ StatusCode HltSelReportsMaker::execute() {
   // -------------------------------------------------------------------------------------
   if( !outputSummary->hasSelectionName("Hlt1Global") ){
 
-     HltObjectSummary* selSumOut = new HltObjectSummary();    
-     selSumOut->setSummarizedObjectCLID( 1 ); // use special CLID for selection summaries (lowest number for sorting to the end)
+     HltObjectSummary selSumOut;    
+     selSumOut.setSummarizedObjectCLID( 1 ); // use special CLID for selection summaries (lowest number for sorting to the end)
      
      // integer selection id 
-     selSumOut->addToInfo("0#SelectionID",float(kHlt1GlobalID));
+     selSumOut.addToInfo("0#SelectionID",float(kHlt1GlobalID));
 
      // see which decisions contributed to it
      for( HltSelReports::Container::const_iterator it=outputSummary->begin();it!=outputSummary->end();++it){
@@ -458,7 +458,7 @@ StatusCode HltSelReportsMaker::execute() {
              HltObjectSummary::Info::const_iterator j=(*pObj)->numericalInfo().find("0#SelectionID");
              if( j!=(*pObj)->numericalInfo().end() ){
                if( id == (int)(j->second+0.1) ){
-                 selSumOut->addToSubstructure( (const SmartRef<HltObjectSummary>)(*pObj) );
+                 selSumOut.addToSubstructure( (const SmartRef<HltObjectSummary>)(*pObj) );
                  break;                     
                }
              } else {
@@ -470,29 +470,26 @@ StatusCode HltSelReportsMaker::execute() {
          }
        }
      }
-     if( selSumOut->substructure().size() ){
+     if( selSumOut.substructure().size() ){
        
        // insert selection into the container
-       if( outputSummary->insert("Hlt1Global",*selSumOut) == StatusCode::FAILURE ){
+       if( outputSummary->insert("Hlt1Global",selSumOut) == StatusCode::FAILURE ){
          Error( "  Failed to add Hlt selection name Hlt1Global to its container ", StatusCode::SUCCESS, 10 );
        } 
-       HltObjectSummary* hos= new HltObjectSummary(  *selSumOut );    
+       HltObjectSummary* hos= new HltObjectSummary(  selSumOut );    
        m_objectSummaries->push_back(hos);
        
-     } else {
-       
-       delete selSumOut;
        
      }
   }
 
   if( !outputSummary->hasSelectionName("Hlt2Global") ){
 
-     HltObjectSummary* selSumOut = new HltObjectSummary();    
-     selSumOut->setSummarizedObjectCLID( 1 ); // use special CLID for selection summaries (lowest number for sorting to the end)
+     HltObjectSummary selSumOut;    
+     selSumOut.setSummarizedObjectCLID( 1 ); // use special CLID for selection summaries (lowest number for sorting to the end)
      
      // integer selection id 
-     selSumOut->addToInfo("0#SelectionID",float(kHlt2GlobalID));
+     selSumOut.addToInfo("0#SelectionID",float(kHlt2GlobalID));
 
      // see which decisions contributed to it
      for( HltSelReports::Container::const_iterator it=outputSummary->begin();it!=outputSummary->end();++it){
@@ -510,7 +507,7 @@ StatusCode HltSelReportsMaker::execute() {
              HltObjectSummary::Info::const_iterator j=(*pObj)->numericalInfo().find("0#SelectionID");
              if( j!=(*pObj)->numericalInfo().end() ){
                if( id == (int)(j->second+0.1) ){
-                 selSumOut->addToSubstructure( (const SmartRef<HltObjectSummary>)(*pObj) );
+                 selSumOut.addToSubstructure( (const SmartRef<HltObjectSummary>)(*pObj) );
                  break;                     
                }
              } else {
@@ -522,18 +519,15 @@ StatusCode HltSelReportsMaker::execute() {
          }
        }
      }
-     if( selSumOut->substructure().size() ){
+     if( selSumOut.substructure().size() ){
        
        // insert selection into the container
-       if( outputSummary->insert("Hlt2Global",*selSumOut) == StatusCode::FAILURE ){
+       if( outputSummary->insert("Hlt2Global",selSumOut) == StatusCode::FAILURE ){
          Error( "  Failed to add Hlt selection name Hlt2Global to its container ", StatusCode::SUCCESS, 10 );
        } 
-       HltObjectSummary* hos= new HltObjectSummary(  *selSumOut );    
+       HltObjectSummary* hos= new HltObjectSummary(  selSumOut );    
        m_objectSummaries->push_back(hos);
        
-     } else {
-       
-       delete selSumOut;
        
      }
   }
@@ -848,9 +842,9 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::storeParticle(const LHCb::Part
       if( track ){
         // charged track particle
         hos->addToSubstructure( storeTrack( track ) );
-        // if muon add muon stub too
+        // if muon add muon stub too        
         const LHCb::MuonPID* muid = pp->muonPID();
-        if( muid!=0 ){
+        if( muid!=0 && object->particleID().abspid()==13 ){
           if( muid->IsMuon() ){
             if( !m_HLTmuonTracks ){ 
               if( exist<LHCb::Tracks>(m_HltMuonTracksLocation) ){

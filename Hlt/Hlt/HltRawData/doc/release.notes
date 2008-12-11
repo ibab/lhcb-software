@@ -1,9 +1,14 @@
-!$Id: release.notes,v 1.21 2008-11-24 12:05:54 pkoppenb Exp $
+!$Id: release.notes,v 1.22 2008-12-11 15:27:55 tskwarni Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltRawData
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Writers and Readers, Makers of persisted TES info
 !-----------------------------------------------------------------------------
+
+! 2008-12-11 - Tomasz Skwarnicki
+ - fix memory leaks (thanks to Stephan Nies)
+ - HltDecReportsMaker does not create HltXGlobal unless HltX configured
+ - HltSelReportsMaker save muon hits only if particle pid==13 
 
 !========================== HltRawData v1r6 2008-11-24 ===================
 ! 2008-11-13 - Tomasz Skwarnicki

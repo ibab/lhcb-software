@@ -1,4 +1,4 @@
-// $Id: HltSelReportsWriter.cpp,v 1.3 2008-11-14 06:44:40 tskwarni Exp $
+// $Id: HltSelReportsWriter.cpp,v 1.4 2008-12-11 15:27:55 tskwarni Exp $
 // Include files 
 
 // from Gaudi
@@ -281,6 +281,7 @@ StatusCode HltSelReportsWriter::execute() {
           svect.push_back( iSeqID );          
         }
       }
+      delete thisIDset;      
     }
 
     HltSelRepRBSubstr::Substr aS( sHitType, svect );

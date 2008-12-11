@@ -1,4 +1,4 @@
-// $Id: HltDecReportsReader.cpp,v 1.4 2008-10-24 19:33:22 tskwarni Exp $
+// $Id: HltDecReportsReader.cpp,v 1.5 2008-12-11 15:27:55 tskwarni Exp $
 // Include files 
 
 // from Gaudi
@@ -124,8 +124,8 @@ StatusCode HltDecReportsReader::execute() {
   for( std::vector< unsigned int >::const_iterator idec=bankBody.begin();
        idec!=bankBody.end();++idec){
 
-    HltDecReport* dec = new HltDecReport( *idec );
-    int id=dec->intSelectionID();
+    HltDecReport dec( *idec );
+    int id=dec.intSelectionID();
 
     std::string selName="Dummy";
     switch(id){
@@ -145,7 +145,7 @@ StatusCode HltDecReportsReader::execute() {
       if( outputSummary->hasSelectionName( selName ) ){
         Warning(" Duplicate decision report in storage "+selName, StatusCode::SUCCESS, 20 );
       } else {
-        outputSummary->insert( selName, *dec );
+        outputSummary->insert( selName, dec );
       }
     } else {
       std::ostringstream mess;
@@ -170,9 +170,8 @@ StatusCode HltDecReportsReader::execute() {
 
     if( selName.find("Decision") != std::string::npos ){
       
-      HltDecReport* selSumOut = new HltDecReport( 0, 0, 0, si->second );
-      if( selSumOut->invalidIntSelectionID() ){
-        delete selSumOut;
+      HltDecReport selSumOut( 0, 0, 0, si->second );
+      if( selSumOut.invalidIntSelectionID() ){
         std::ostringstream mess;
         mess << " selectionName=" << selName << " has invalid intSelectionID=" << si->second;
         Warning( mess.str(), StatusCode::SUCCESS, 20 );
@@ -180,7 +179,7 @@ StatusCode HltDecReportsReader::execute() {
       }
 
       // insert selection into the container
-      if( outputSummary->insert( selName, *selSumOut ) == StatusCode::FAILURE ){
+      if( outputSummary->insert( selName, selSumOut ) == StatusCode::FAILURE ){
         Error(" Failed to add HltDecReport selectionName=" + selName 
               + " to its container ");
       }    

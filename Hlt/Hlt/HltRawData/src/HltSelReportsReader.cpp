@@ -1,4 +1,4 @@
-// $Id: HltSelReportsReader.cpp,v 1.2 2008-09-17 16:14:56 tskwarni Exp $
+// $Id: HltSelReportsReader.cpp,v 1.3 2008-12-11 15:27:55 tskwarni Exp $
 // Include files 
 
 // from Gaudi
@@ -514,13 +514,13 @@ StatusCode HltSelReportsReader::execute() {
     if( selName != "Dummy" ){
       
       // clone hos
-      HltObjectSummary* selSumOut = new HltObjectSummary();
-      selSumOut->setSummarizedObjectCLID( hos->summarizedObjectCLID() );
-      selSumOut->setNumericalInfo( hos->numericalInfo() );
-      selSumOut->setSubstructure( hos->substructure() ); 
+      HltObjectSummary selSumOut;
+      selSumOut.setSummarizedObjectCLID( hos->summarizedObjectCLID() );
+      selSumOut.setNumericalInfo( hos->numericalInfo() );
+      selSumOut.setSubstructure( hos->substructure() ); 
 
       // insert selection into the container
-      if( outputSummary->insert(selName,*selSumOut) == StatusCode::FAILURE ){
+      if( outputSummary->insert(selName,selSumOut) == StatusCode::FAILURE ){
           Error( "  Failed to add Hlt selection name " + selName
                 + " to its container ", StatusCode::SUCCESS, 10 );
       }

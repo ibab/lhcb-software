@@ -1,4 +1,4 @@
-// $Id: HltDecReportsMaker.cpp,v 1.5 2008-10-24 19:33:22 tskwarni Exp $
+// $Id: HltDecReportsMaker.cpp,v 1.6 2008-12-11 15:27:55 tskwarni Exp $
 // Include files 
 
 // from Gaudi
@@ -169,10 +169,9 @@ StatusCode HltDecReportsMaker::execute() {
      noc = selSumIn.data().size();
      if( !noc ){ noc=selSumIn.particles().size();   }      
      
-     HltDecReport* selSumOut = new HltDecReport( dec, errorBits, noc, intSelID );
+     HltDecReport selSumOut( dec, errorBits, noc, intSelID );
 
-     if( selSumOut->invalidIntSelectionID() ){
-       delete selSumOut;
+     if( selSumOut.invalidIntSelectionID() ){
        std::ostringstream mess;
        mess << " selectionName=" << selName << " has invalid intSelectionID=" << intSelID << " Skipped. ";
        Warning( mess.str(), StatusCode::SUCCESS, 20 );
@@ -180,7 +179,7 @@ StatusCode HltDecReportsMaker::execute() {
      }
      
      // insert selection into the container
-     if( outputSummary->insert( selName, *selSumOut ) == StatusCode::FAILURE ){
+     if( outputSummary->insert( selName, selSumOut ) == StatusCode::FAILURE ){
        Warning( " Failed to add HltDecReport selectionName=" + selName 
                 + " to its container ", StatusCode::SUCCESS, 20 );
      }    
@@ -212,10 +211,10 @@ StatusCode HltDecReportsMaker::execute() {
     }
     if( noc )dec=1;
     
-    if( !noc ){
+    bool config( noc!=0 );
+    if( !config ){
       
       // see if configured (use dataSvc)
-      bool config(false);
       std::vector<stringKey> selectionIDs = dataSvc().selectionKeys(); 
       for( std::vector<stringKey>::const_iterator si=selectionIDs.begin();
            si != selectionIDs.end(); ++si){
@@ -233,7 +232,8 @@ StatusCode HltDecReportsMaker::execute() {
       }
     }
 
-    outputSummary->insert( "Hlt1Global", *(new HltDecReport( dec, errors, noc, kHlt1GlobalID )) );
+    // create Hlt1Global dec report only when configured:
+    if( config )outputSummary->insert( "Hlt1Global", HltDecReport( dec, errors, noc, kHlt1GlobalID ) );
     
   }
 
@@ -256,10 +256,10 @@ StatusCode HltDecReportsMaker::execute() {
     }
     if( noc )dec=1;
     
-    if( !noc ){
+    bool config( noc!=0 );
+    if( !config ){
       
       // see if configured (use dataSvc)
-      bool config(false);
       std::vector<stringKey> selectionIDs = dataSvc().selectionKeys(); 
       for( std::vector<stringKey>::const_iterator si=selectionIDs.begin();
            si != selectionIDs.end(); ++si){
@@ -290,7 +290,8 @@ StatusCode HltDecReportsMaker::execute() {
       }
     }
 
-    outputSummary->insert( "Hlt2Global", *(new HltDecReport( dec, errors, noc, kHlt2GlobalID )) );
+    // create Hlt2Global dec report only when configured:
+    if( config )outputSummary->insert( "Hlt2Global", HltDecReport( dec, errors, noc, kHlt2GlobalID ) );
     
   }
 
