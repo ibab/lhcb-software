@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.4 2008-12-11 15:23:05 gcorti Exp $ 
+! $Id: release.notes,v 1.5 2008-12-11 15:28:55 gcorti Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/PartProp
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -7,7 +7,8 @@
 
 ! 2008-12-11 - Gloria CORTI
  - Kernel/ParticleID.h, src/ParticleID.cpp
-      Modify the methods "isNuclei", "isValid", "fundamentalID()" to take
+      Modify the methods "isNuclei", "isValid", "fundamentalID()", and
+      "threeCharge()" to take
       into account new pdgID convention for nuclei that has also been adopted
       by Geant4. Keep backward compatibility for DC06.
       Introduce new methods "A", "Z" and "nLambda" that return a valid result
