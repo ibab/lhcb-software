@@ -138,20 +138,20 @@ namespace L0Muon {
     @param ib : index of the board in the quarter (0 to 11)
     @param ipu : index of the pu in the board (0 to 3)
     */
-    const bool inError(int ib, int ipu) const { return m_errors[ib].inError(ipu);}
+    bool inError(int ib, int ipu) const { return m_errors[ib].inError(ipu);}
 
     /** Returns the decoding error code for the given processing board.
         
     @param ib : index of the board in the quarter (0 to 11)
     */
-    const int  decodingError(int ib) const { return ((int(m_errors[ib].decodingError())<<1)&2);}
+    int  decodingError(int ib) const { return ((int(m_errors[ib].decodingError())<<1)&2);}
 
     /** Returns the hardware error code for the given pu in the given processing board.
         
     @param ib : index of the board in the quarter (0 to 11)
     @param ipu : index of the pu in the board (0 to 3)
     */
-    const int  hardwareError(int ib, int ipu) const {return m_errors[ib].hardwareError(ipu);}
+    int  hardwareError(int ib, int ipu) const {return m_errors[ib].hardwareError(ipu);}
 
     /** Returns a pointer to the ProcDataErrors error handler for the given processing board.
         

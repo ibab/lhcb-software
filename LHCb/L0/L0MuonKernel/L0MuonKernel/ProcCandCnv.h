@@ -65,14 +65,14 @@ namespace L0Muon {
     void submitL0EventNumber(int l0EventNumber){if (m_ref_l0EventNumber==-1) m_ref_l0EventNumber=l0EventNumber;}
     void clearRef();
 
-    const bool inError(int ib) const { return m_errors[ib].inError();}
-    const bool inError(int ib, int ipu) const { return m_errors[ib].inError(ipu);}
-    const int  decodingError(int ib) const { return m_errors[ib].decodingError();}
-    const int  hardwareError(int ib) const { return m_errors[ib].hardwareError();}
-    const int  statusError(int ib) const { return m_errors[ib].statusError();}
-    const int  statusError(int ib,int ipu) const { return m_errors[ib].statusError(ipu);}
-    const int  bcidError(int ib) const { return m_errors[ib].bcidError();}
-    const int  bcidError(int ib,int ipu) const { return m_errors[ib].bcidError(ipu);}
+    bool inError(int ib) const { return m_errors[ib].inError();}
+    bool inError(int ib, int ipu) const { return m_errors[ib].inError(ipu);}
+    int  decodingError(int ib) const { return m_errors[ib].decodingError();}
+    int  hardwareError(int ib) const { return m_errors[ib].hardwareError();}
+    int  statusError(int ib) const { return m_errors[ib].statusError();}
+    int  statusError(int ib,int ipu) const { return m_errors[ib].statusError(ipu);}
+    int  bcidError(int ib) const { return m_errors[ib].bcidError();}
+    int  bcidError(int ib,int ipu) const { return m_errors[ib].bcidError(ipu);}
     
     const ProcCandErrors * errors(int ib) const {return &m_errors[ib];}
 
