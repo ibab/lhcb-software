@@ -1,4 +1,4 @@
-// $Id: GenerationToSimulation.h,v 1.2 2008-11-28 15:06:59 robbep Exp $
+// $Id: GenerationToSimulation.h,v 1.3 2008-12-11 14:00:17 robbep Exp $
 #ifndef GENERATIONTOSIMULATION_H 
 #define GENERATIONTOSIMULATION_H 1
 
@@ -56,7 +56,7 @@ private:
   /// Convert a GenParticle either into a MCParticle or G4PrimaryParticle
   void convert( HepMC::GenParticle *& particle , G4PrimaryVertex * pvertexg4 ,
 		LHCb::MCVertex * originVertex , G4PrimaryParticle * motherg4 ,
-		LHCb::MCParticle * mothermcp ) const ;
+		LHCb::MCParticle * mothermcp ) ;
 		
   /// decides if the particle should be transfered to Geant4 or only MCParticle
   unsigned char transferToGeant4( const HepMC::GenParticle * p ) const ;
@@ -75,6 +75,10 @@ private:
   
   /// Check if a particle has oscillated
   const HepMC::GenParticle * hasOscillated( const HepMC::GenParticle * P ) const ;
+  
+  /// Remove a primary particle from a primary vertex
+  void removeFromPrimaryVertex( G4PrimaryVertex *& pvertexg4 , 
+				const G4PrimaryParticle * particleToDelete ) const ;
 
   std::string m_gigaSvcName;         ///< Name of GiGa Service
   IGiGaSvc*   m_gigaSvc;             ///< Pointer to GiGa Service
@@ -89,5 +93,8 @@ private:
   
   LHCb::MCParticles * m_particleContainer ; ///< Container of MCParticles
   LHCb::MCVertices  * m_vertexContainer   ; ///< Container of MCVertices
+  
+  std::map< int , std::pair< bool , G4PrimaryParticle * > > m_g4ParticleMap ; ///< Map to know if a particle was already converted to G4
+  std::map< int , bool > m_mcParticleMap ; ///< Map to know if a particle was already converted to MCParticle
 };
 #endif // GENERATIONTOSIMULATION

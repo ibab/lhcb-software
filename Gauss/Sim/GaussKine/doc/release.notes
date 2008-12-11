@@ -4,6 +4,12 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+! 2008-12-11 - Patrick Robbe
+ - GenerationToSimulation: use signal_process_vertex to define the
+   primary vertex in case of absence of beam particles, and protect
+   against passing twice the same particles for complicated tree
+   structures (susy events)
+
 !========================= GaussKine v3r2 2008-12-08 ========================= 
 ! 2008-11-28 - Patrick Robbe
  - GenerationToSimulation: update G4 particles from ppSvc (moved

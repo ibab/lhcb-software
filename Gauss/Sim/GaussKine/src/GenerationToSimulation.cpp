@@ -1,4 +1,4 @@
-// $Id: GenerationToSimulation.cpp,v 1.4 2008-11-28 15:06:59 robbep Exp $
+// $Id: GenerationToSimulation.cpp,v 1.5 2008-12-11 14:00:17 robbep Exp $
 // Include files 
 // local
 #include "GenerationToSimulation.h"
@@ -123,7 +123,11 @@ StatusCode GenerationToSimulation::execute() {
   // Loop over the events (one for each pile-up interaction)
   for( LHCb::HepMCEvents::const_iterator genEvent = generationEvents -> begin() ; 
        generationEvents -> end() != genEvent ; ++genEvent ) {
-    HepMC::GenEvent * ev = (*genEvent) -> pGenEvt() ;       
+    HepMC::GenEvent * ev = (*genEvent) -> pGenEvt() ;
+    // New event: empty the map of converted particles
+    m_g4ParticleMap.clear() ;
+    m_mcParticleMap.clear() ;
+    
     // Determine the position of the primary vertex
     Gaudi::LorentzVector thePV = primaryVertex( ev ) ;
     
@@ -149,7 +153,7 @@ StatusCode GenerationToSimulation::execute() {
     for ( HepMC::GenEvent::vertex_iterator itV = ev -> vertices_begin() ;
           itV != ev -> vertices_end() ; ++itV ) {
       (*itV) -> set_id( 0 ) ;
-    }      
+    }
 
     std::vector< HepMC::GenParticle *> mctruthList ;
     // Now extract the particles we want to keep in the MC Truth
@@ -160,8 +164,6 @@ StatusCode GenerationToSimulation::execute() {
 	// Set Id of End Vertex to one, then the particle with 
 	// production vertex of id 0 and end vertex of id 1 (or without end vertex)
 	// will be the start point of a decay tree to convert to MCTruth
-	// !! it implies that in the decay chain of a particle there are no
-	// quarks, gluons, strings, etc... TO CHECK
 	HepMC::GenVertex * endVertex = (*itP) -> end_vertex() ;
 	if ( 0 != endVertex ) endVertex -> set_id ( 1 ) ;
       }
@@ -245,33 +247,65 @@ void GenerationToSimulation::convert( HepMC::GenParticle *& particle ,
                                       G4PrimaryVertex * pvertexg4 ,
                                       LHCb::MCVertex * originVertex ,
                                       G4PrimaryParticle * motherg4 ,
-                                      LHCb::MCParticle * mothermcp ) const {
+                                      LHCb::MCParticle * mothermcp ) {
   // Decide if we convert to G4 (1), to MCTruth directly (2) or if
   // we skip the particle (3)
   unsigned char conversionCode = transferToGeant4( particle ) ;
   switch ( conversionCode ) {
     case 1:
-      // convert to G4Primary
+      { // convert to G4Primary
+      // check first if the particle was already converted (it will happen
+      // for particles decaying to string,quarks, ...)
+      // if yes and it has no mother, then destroy it and recreate it with 
+      // correct mother links [map result is *false*]
+      // if yes and it has a mother, then skip because it has already been treated
+      // [map result is *true*]
+      const int pBarcode = particle -> barcode() ;
+      std::map< int , std::pair< bool , G4PrimaryParticle * > >::const_iterator result = 
+        m_g4ParticleMap.find( pBarcode ) ;
+      if ( result != m_g4ParticleMap.end() ) {
+        if ( result -> second.first ) return ;
+        else {
+	  m_g4ParticleMap.erase( pBarcode ) ;
+	  G4PrimaryParticle * particleToDelete = result -> second.second ;
+	  removeFromPrimaryVertex( pvertexg4 , particleToDelete ) ;
+	  delete particleToDelete ;
+	  particleToDelete = 0 ;
+        }
+      }
+      
       G4PrimaryParticle * g4P = makeG4Particle( particle , mothermcp ) ;
       if ( 0 == motherg4 ) {
+        m_g4ParticleMap.insert( std::make_pair( pBarcode ,
+                                  std::make_pair( false , g4P ) ) ) ;
         // root particle -> attach to G4 primary vertex
         if ( 0 != pvertexg4 ) pvertexg4 -> SetPrimary( g4P ) ;
         else error() << "Primary vertex points to NULL !" << endreq ;
-      } else motherg4 -> SetDaughter( g4P ) ;
+      } else {
+        m_g4ParticleMap.insert( std::make_pair( pBarcode ,
+                                  std::make_pair( true , g4P ) ) ) ;
+        motherg4 -> SetDaughter( g4P ) ;
+      }
       
       pvertexg4 = 0 ;
       originVertex = 0 ;
       motherg4 = g4P ;
-      mothermcp = 0 ;
+      mothermcp = 0 ; }
       break ;
     case 2:
       { // convert to MCParticle
+      // check first it the particle has already been treated. In this case skip it
+      const int pBarcode = particle -> barcode() ;
+      std::map< int , bool >::const_iterator result = m_mcParticleMap.find( pBarcode ) ;
+      if ( result != m_mcParticleMap.end() ) return ;
+      
       LHCb::MCVertex * endVertex = 0 ;
       LHCb::MCParticle * mcP = makeMCParticle( particle , endVertex ) ;
       if ( 0 != originVertex ) {
 	mcP -> setOriginVertex( originVertex ) ;
 	originVertex -> addToProducts( mcP ) ;
       }
+      m_mcParticleMap.insert( std::make_pair( pBarcode , true ) ) ;
       mothermcp = mcP ;
       originVertex = endVertex ; }
       break ;
@@ -408,8 +442,13 @@ Gaudi::LorentzVector GenerationToSimulation::primaryVertex( const HepMC::GenEven
     if ( 0 != V ) result = V -> position() ; 
     else error() << "The beam particles have no end vertex !" << endreq ;
     return result ;
+  } else if ( 0 != genEvent -> signal_process_vertex() ) { 
+  // Second option, use the signal vertex stored in HepMC 
+    HepMC::GenVertex * V = genEvent -> signal_process_vertex() ;
+    result = V -> position() ;
+    return result ;
   } else {
-  // Second option, take the production vertex of the particle with bar code 1
+  // Last option, take the production vertex of the particle with bar code 1
     HepMC::GenParticle * P = genEvent -> barcode_to_particle( 1 ) ;
     HepMC::GenVertex   * V = 0 ;
     if ( 0 != P ) {
@@ -457,3 +496,27 @@ const HepMC::GenParticle * GenerationToSimulation::hasOscillated( const HepMC::G
   if ( -P -> pdg_id() != D -> pdg_id() ) return 0 ;
   return D ;
 }
+
+//==============================================================================================
+// Remove a particle from a primary vertex
+//==============================================================================================
+void GenerationToSimulation::removeFromPrimaryVertex( G4PrimaryVertex *& pvertexg4 , 
+                                                      const G4PrimaryParticle * particleToDelete ) 
+  const {
+  // This should be very rare so put a warning to see when it happens
+  warning() << "A G4PrimaryParticle will be removed from the G4PrimaryVertex" << endmsg ;
+  // Make a new vertex
+  G4PrimaryVertex * newVertex = 
+    new G4PrimaryVertex( pvertexg4 -> GetX0() , pvertexg4 -> GetY0() , 
+                         pvertexg4 -> GetZ0() , pvertexg4 -> GetT0() ) ;
+
+  // copy particle to new vertex, except the one to remove
+  G4PrimaryParticle * particle = pvertexg4 -> GetPrimary() ;
+  while ( 0 != particle ) {
+    if ( particle != particleToDelete ) newVertex -> SetPrimary( particle ) ;
+    particle = particle -> GetNext() ;
+  }
+
+  delete pvertexg4 ;
+  pvertexg4 = newVertex ;
+} 
