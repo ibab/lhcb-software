@@ -314,9 +314,10 @@ class CVS(RevisionControlSystem):
         options += (module,)
         apply(_cvs, options, {"cwd": dest, "stdout": None, "stderr": None})
         
-        if not vers_dir:
+        vers_cmt_file = os.path.join(dest, module, "cmt", "version.cmt")
+        if not vers_dir and not os.path.exists(vers_cmt_file):
             # create version.cmt file
-            open(os.path.join(dest, module, "cmt", "version.cmt"), "w").write(version + "\n")
+            open(vers_cmt_file, "w").write(version + "\n")
 
 _svn = lambda *args, **kwargs: apply(_call_command, ("svn",) + args, kwargs)
 class SubversionCmd(RevisionControlSystem):
