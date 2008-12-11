@@ -1,5 +1,8 @@
 2008-12-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* scripts/generateLogin.py: added the option to pass the MSITEROOT location. This 
+	will be used at installation time and then the LbLogin script can be called without
+	having to set the MYSITEROOT variable beforehand.
 	* scripts/SetupProject.py: Fix the override of the LCG_home variable on the windows
 	platform.
 

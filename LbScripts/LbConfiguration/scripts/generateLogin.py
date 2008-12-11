@@ -77,7 +77,7 @@ source %s/scripts/SetupProject.csh --disable-CASTOR LbScripts %s --runtime LCGCM
 set LbLogin_tmpfile="%%TEMP%%\LbLogin_tmpsetup.bat"
 
 python %s\scripts\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% --mysiteroot=%s %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9
-""" (wintargetlocation, winmysiteroot)
+""" % (wintargetlocation, winmysiteroot)
         else :
             content = """ @echo off
         
@@ -108,14 +108,14 @@ if __name__ == '__main__':
 
     opts, args = parser.parse_args()
     
-    if len(args) < 2 :
+    if len(args) < 1 :
         sys.exit("Error must have at least 1 argument (the version)")
+    if len(args) > 0 :
+        version = args[0]
     if len(args) > 1 :
-        version = args[1]
+        targetlocation = os.path.realpath(args[1])
     if len(args) > 2 :
-        targetlocation = os.path.realpath(args[2])
-    if len(args) > 3 :
-        scripts = args[3:]
+        scripts = args[2:]
         
     generateLogins(version, targetlocation, scripts, opts.mysiteroot)
 
