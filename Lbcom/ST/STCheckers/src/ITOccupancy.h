@@ -1,10 +1,12 @@
-// $Id: ITOccupancy.h,v 1.5 2008-10-16 13:10:34 mneedham Exp $
+// $Id: ITOccupancy.h,v 1.6 2008-12-11 14:41:13 cattanem Exp $
 #ifndef ITOccupancy_H
 #define ITOccupancy_H 1
 
 #include "Kernel/STHistoAlgBase.h"
 
-class AIDA::IHistogram1D;
+namespace AIDA {
+  class IHistogram1D;
+}
 
 namespace LHCb{
  class STChannelID;

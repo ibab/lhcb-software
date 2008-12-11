@@ -1,4 +1,4 @@
-// $Id: STEffChecker.cpp,v 1.10 2008-10-16 13:10:34 mneedham Exp $
+// $Id: STEffChecker.cpp,v 1.11 2008-12-11 14:41:13 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -193,7 +193,7 @@ StatusCode STEffChecker::finalize()
     if (nAcc > 0){
       eff = 100.0*(double)nFound/(double)nAcc;
       err = sqrt((eff*(100.0-eff))/(double)nAcc);
-      if (m_pEff = false) eff = 1-eff;
+      if (m_pEff == false) eff = 1-eff;
     }
 
     info() << uniqueLayer(aChan) 

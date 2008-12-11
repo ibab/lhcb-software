@@ -1,4 +1,4 @@
-// $Id: STClusterResolution.h,v 1.7 2008-10-16 13:10:34 mneedham Exp $
+// $Id: STClusterResolution.h,v 1.8 2008-12-11 14:41:13 cattanem Exp $
 #ifndef STClusterResolution_H
 #define STClusterResolution_H 1
 
@@ -12,10 +12,13 @@ namespace LHCb{
   class STCluster;
 };
 
+namespace AIDA {
+  class IHistogram1D;
+}
+
 class DeSTDetector;
 class DeSTSector;
 class DeSTSensor;
-class AIDA::IHistogram1D;
 class STDetectionLayer;
 class IMCParticleSelector;
 class ISTClusterPosition;

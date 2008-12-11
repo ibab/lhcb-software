@@ -1,4 +1,4 @@
-// $Id: STEffChecker.h,v 1.4 2008-10-16 13:10:34 mneedham Exp $
+// $Id: STEffChecker.h,v 1.5 2008-12-11 14:41:13 cattanem Exp $
 #ifndef STEffChecker_H
 #define STEffChecker_H 1
 
@@ -18,8 +18,10 @@ namespace LHCb {
 class DeSTLayer;
 class IMCParticleSelector;
 
-class AIDA::IHistogram1D;
-class AIDA::IHistogram2D;
+namespace AIDA {
+  class IHistogram1D;
+  class IHistogram2D;
+}
 
 /** @class STEffChecker STEffChecker.h
  *
