@@ -1,4 +1,4 @@
-// $Id: Signal.cpp,v 1.23 2008-09-20 20:06:11 robbep Exp $
+// $Id: Signal.cpp,v 1.24 2008-12-11 15:38:15 robbep Exp $
 // Include files 
 
 // local
@@ -235,7 +235,7 @@ StatusCode Signal::isolateSignal( const HepMC::GenParticle * theSignal )
   // Associate the new particle to the HepMC event
   // and copy all tree to the new HepMC event
   sc = fillHepMCEvent( theNewParticle , theSignal ) ;
-  hepMCevt -> set_signal_process_vertex( theNewParticle -> end_vertex() ) ;
+  hepMCevt -> set_signal_process_vertex( theNewParticle -> production_vertex() ) ;
   
   if ( ! sc.isSuccess( ) ) 
     return Error( "Could not fill HepMC event for signal tree" , sc ) ;
