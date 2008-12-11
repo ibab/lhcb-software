@@ -1,4 +1,4 @@
-// $Id: IOnOffline.h,v 1.11 2008-10-31 06:53:50 jpalac Exp $
+// $Id: IOnOffline.h,v 1.12 2008-12-11 07:56:07 cattanem Exp $
 #ifndef DAVINCIKERNEL_IONOFFLINE_H 
 #define DAVINCIKERNEL_IONOFFLINE_H 1
 
@@ -29,7 +29,7 @@ public:
   static const InterfaceID& interfaceID() { return IID_IOnOffline; }
 
   /// On or Offline ?
-  virtual const bool online() const = 0 ;
+  virtual bool online() const = 0 ;
 
   /// Return name of IDistanceCalculator implementation 
   virtual const std::string& distanceCalculatorType() const = 0 ;

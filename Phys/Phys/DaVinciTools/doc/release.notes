@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.390 2008-12-09 08:06:29 pkoppenb Exp $
+! $Id: release.notes,v 1.391 2008-12-11 07:55:28 cattanem Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-12-11 - Marco Cattaneo
+ - Adapt to IOnOfflineTool interface change (fix gcc 4.3 warning) 
 
 ! 2008-12-09 - Patrick Koppenburg
  - Move SpotLight to DaVinciMonitors

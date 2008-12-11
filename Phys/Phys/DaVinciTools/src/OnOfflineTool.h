@@ -1,4 +1,4 @@
-// $Id: OnOfflineTool.h,v 1.8 2008-10-31 07:20:12 jpalac Exp $
+// $Id: OnOfflineTool.h,v 1.9 2008-12-11 07:55:28 cattanem Exp $
 #ifndef ONOFFLINETOOL_H 
 #define ONOFFLINETOOL_H 1
 
@@ -24,7 +24,7 @@ public:
 
   StatusCode initialize();
 
-  virtual const bool online() const {return m_online;} ;
+  virtual bool online() const {return m_online;} ;
 
   virtual const std::string& distanceCalculatorType() const  ;
 
