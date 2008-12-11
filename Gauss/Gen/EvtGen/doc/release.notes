@@ -4,6 +4,12 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-12-11 - Patrick Robbe
+ - EvtRanf: use double instead of float to be able to run in debug
+   mode on 64 bit machines
+ - EvtBTo3Pi.F: use double precision evtranf function for 64 bit 
+   computers
+
 !========================== EvtGen v10r0 2008-10-10 ==========================
 ! 2008-09-20 - Patrick Robbe
  - EvtGen/EvtGen.hh, src/EvtGen.cpp: remove CLHEP dependancy (remove 2 
