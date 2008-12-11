@@ -1,4 +1,4 @@
-// $Id: Common.opts,v 1.30 2008-12-07 16:23:44 gcorti Exp $ 
+// $Id: Common.opts,v 1.31 2008-12-11 12:11:43 gcorti Exp $ 
 
 /** @file 
  * 
@@ -27,7 +27,7 @@ MessageSvc.setWarning += { "XmlGenericCnv" };
 MessageSvc.Format = "% F%24W%S%7W%R%T %0W%M";
 
 // Geometry setup always necessary
-#include "$DDDBROOT/options/DDDB.opts"
+//#include "$DDDBROOT/options/DDDB.opts"
 
 // Transient store setup
 EventDataSvc.ForceLeaves         = true ;

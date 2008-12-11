@@ -13,10 +13,12 @@
 from Gauss.Configuration import *
 
 #--Tell SIMCOND tag to generate Open VELO
-from DetCond.Configuration import addCondDBLayer
-simCondVelo = allConfigurables["SIMCOND"].clone("VELOCOND")
-simCondVelo.DefaultTAG = "velo-open"
-addCondDBLayer(simCondVelo)
+from Configurables import CondDB
+## from DetCond.Configuration import addCondDBLayer
+## simCondVelo = allConfigurables["SIMCOND"].clone("VELOCOND")
+## simCondVelo.DefaultTAG = "velo-open"
+## addCondDBLayer(simCondVelo)
+CondDB().LocalTags["SIMCOND"] = ["velo-open"]
 
 #--Tell SIMCOND to generate Magnetic Field OFF, will be as tag "magnet-off"
 from Configurables import UpdateManagerSvc

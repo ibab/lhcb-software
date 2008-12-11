@@ -13,10 +13,12 @@
 from Gauss.Configuration import *
 
 #--Tell SIMCOND tag to generate Open VELO
-from DetCond.Configuration import addCondDBLayer
-simCondVelo = allConfigurables["SIMCOND"].clone("VELOCOND")
-simCondVelo.DefaultTAG = "velo-open"
-addCondDBLayer(simCondVelo)
+from Configurables import CondDB
+## from DetCond.Configuration import addCondDBLayer
+## simCondVelo = allConfigurables["SIMCOND"].clone("VELOCOND")
+## simCondVelo.DefaultTAG = "velo-open"
+## addCondDBLayer(simCondVelo)
+CondDB().LocalTags["SIMCOND"] = ["velo-open"]
 
 #--Tell to use 450 GeV beams for collisions and beam gas, with corresponding
 #--beam size and luminous region, and set crossingle angle for collisions
