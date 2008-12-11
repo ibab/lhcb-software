@@ -5,11 +5,11 @@ from xml.sax import parse, ContentHandler
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.35 2008-10-30 17:06:24 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.36 2008-12-11 17:58:59 hmdegaud Exp $"
 
 try:
     from LbUtils.CVS import CVS2Version
-    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.35 $")
+    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.36 $")
 except ImportError :
     __version__ = _cvs_id
 
@@ -1220,7 +1220,7 @@ class SetupProject:
 
         # use external location relative to the LCG Interfaces for the local installation
 
-        req.write('macro LCG_home "$(LCG_home)" LOCAL&Unix "$(LCG_SETTINGSROOT)/../../../.." LOCAL&Unix "$(LCG_SETTINGSROOT)\\..\\..\\..\\.."\n')
+        req.write('macro LCG_home "$(LCG_home)" LOCAL&Unix "$(LCG_SETTINGSROOT)/../../../.." LOCAL&WIN32 "$(LCG_SETTINGSROOT)\\..\\..\\..\\.."\n')
 
         req.flush()
         del req

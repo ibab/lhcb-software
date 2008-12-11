@@ -1,3 +1,8 @@
+2008-12-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/SetupProject.py: Fix the override of the LCG_home variable on the windows
+	platform.
+
 2008-12-11  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/rcs.py: added support for gserver protocol for
