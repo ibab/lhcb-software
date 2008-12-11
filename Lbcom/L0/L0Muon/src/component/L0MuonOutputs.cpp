@@ -1,4 +1,4 @@
-// $Id: L0MuonOutputs.cpp,v 1.25 2008-11-13 08:29:56 jucogan Exp $
+// $Id: L0MuonOutputs.cpp,v 1.26 2008-12-11 13:39:11 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -269,6 +269,7 @@ StatusCode L0MuonOutputs::decodeRawBanks(){
     }
     LHCb::RawBankReadoutStatus * procDataStatus = new LHCb::RawBankReadoutStatus(LHCb::RawBank::L0MuonProcData );
     if (procdatabanks.size()==0) {
+      if( msgLevel(MSG::DEBUG) ) debug()<<"decodeRawBanks: no banks in "<<LHCb::RawBank::L0MuonProcData<<endreq;
       procDataStatus->addStatus(0,LHCb::RawBankReadoutStatus::Missing);
     } else {
       m_procDataFlag =true;
@@ -330,6 +331,7 @@ StatusCode L0MuonOutputs::writeRawBanks(){
   }  
   
   LHCb::RawEvent* raw = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
+  
   std::vector<unsigned int> data;
 
   // L0Muon DC06 (only 5 TELL1s where foreseen)
@@ -369,7 +371,7 @@ StatusCode L0MuonOutputs::writeRawBanks(){
       for (int i= 0; i<4; ++i) {
         m_procData[i].rawBank(data,m_version,m_mode,m_compression);
         raw->addBank(i, LHCb::RawBank::L0MuonProcData,m_version,data);
-        if( msgLevel(MSG::DEBUG) ) debug() << "writeRawBanks: L0MuonProcData bank written (version "
+        if( msgLevel(MSG::VERBOSE) ) debug() << "writeRawBanks: L0MuonProcData bank written (version "
                                                << m_version<<" ) size is "<< data.size() <<endreq;
         rawBankSize += data.size();
       }
@@ -415,7 +417,7 @@ StatusCode L0MuonOutputs::writeRawBanks(){
       for (int i= 0; i<4; ++i) {
         encoding_status = m_procCand[i].rawBank(data,ievt,m_version,m_compression);
         if (encoding_status<1) {
-          if( msgLevel(MSG::DEBUG) ) debug() << "writeRawBanks: L0MuonProcCand bank written "
+          if( msgLevel(MSG::DEBUG) ) debug() << "writeRawBanks: L0MuonProcCand bank "
                                              << "with srcID= "<<procSourceID_inv(i)
                                              <<" ( "
                                              <<"version "<< m_version
@@ -447,7 +449,7 @@ StatusCode L0MuonOutputs::writeRawBanks(){
       for (int i= 0; i<4; ++i) {
         encoding_status = m_procData[i].rawBank(data,m_version,m_mode,m_compression);
         if (encoding_status<1) {
-          if( msgLevel(MSG::DEBUG) ) debug() << "writeRawBanks: L0MuonProcData bank written "
+          if( msgLevel(MSG::DEBUG) ) debug() << "writeRawBanks: L0MuonProcData bank "
                                              << "with srcID= "<<procSourceID_inv(i)
                                              <<" ( "
                                              <<"version "<< m_version

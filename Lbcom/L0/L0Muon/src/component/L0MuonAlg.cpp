@@ -1,4 +1,4 @@
-// $Id: L0MuonAlg.cpp,v 1.19 2008-11-11 12:13:56 cattanem Exp $
+// $Id: L0MuonAlg.cpp,v 1.20 2008-12-11 13:39:11 jucogan Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -81,7 +81,7 @@ L0MuonAlg::L0MuonAlg(const std::string& name,
   declareProperty("InputSource"    , m_inputSource = 0);  
   declareProperty("Version"        , m_version     = 2 );
   declareProperty("DAQMode"        , m_mode  = 0 );
-  declareProperty("Compression"    , m_compression = false );
+  declareProperty("Compression"    , m_compression = true );
 
 }
 
@@ -431,8 +431,19 @@ StatusCode L0MuonAlg::fillOLsfromDigits()
       return Error( "Unable to locate IProperty interface of MuonRawBuffer" );
     }
     
-    sc = m_muonBuffer->getTile(ddigits);
-    if( sc.isFailure() ) return Error( "Unable to get the tiles from the MuonRawBuffer", sc );
+    if (m_inputSource<0) {
+      std::vector<std::pair<LHCb::MuonTileID,unsigned int> >  tileAndTDC;
+      m_muonBuffer->getNZSupp(tileAndTDC);
+      //         info()<<"Nb of muon hits : "<<tileAndTDC.size()<<endmsg;
+      std::vector<std::pair<LHCb::MuonTileID,unsigned int> >::iterator itileAndTDC;
+      for (itileAndTDC=tileAndTDC.begin(); itileAndTDC<tileAndTDC.end(); ++itileAndTDC) {
+        ddigits.push_back(itileAndTDC->first);
+      }
+    } else {
+      sc = m_muonBuffer->getTile(ddigits);
+      if( sc.isFailure() ) return Error( "Unable to get the tiles from the MuonRawBuffer", sc );
+    }
+    
     m_muonBuffer->forceReset();
   }  
   
