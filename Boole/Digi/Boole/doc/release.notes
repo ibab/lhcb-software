@@ -3,10 +3,8 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-! 2008-12-05 - Marco Cattaneo
+</PRE><H1><A NAME=v17r1>2008-12-11 Boole v17r1</A></H1><PRE>
  - Clean up options
-
-! 2008-12-03 - Marco Cattaneo
  - Skip RootDBase.open message in QMTest, can be put back when we move to a new
    LCGCMT
 
