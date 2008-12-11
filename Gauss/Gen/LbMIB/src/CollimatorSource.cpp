@@ -1,4 +1,4 @@
-// $Id: CollimatorSource.cpp,v 1.4 2008-07-27 13:12:45 robbep Exp $
+// $Id: CollimatorSource.cpp,v 1.5 2008-12-11 14:04:41 robbep Exp $
 // Include files
  
 // from Gaudi
@@ -251,6 +251,7 @@ StatusCode CollimatorSource::generateParticle( HepMC::GenEvent* evt ) {
     mcvtx = new HepMC::GenVertex( vtx );
   }
   evt -> add_vertex( mcvtx );
+  evt -> set_signal_process_vertex( mcvtx ) ;
   
   // Make the spesific particle
   mcvtx->add_particle_out( new HepMC::GenParticle( fourMom,
