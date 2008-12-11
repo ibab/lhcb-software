@@ -1,11 +1,14 @@
-# $Id: requirements,v 1.398 2008-12-03 10:22:31 pkoppenb Exp $
+# $Id: requirements,v 1.399 2008-12-11 09:37:19 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : J. Palacios
 #
 
 #============================================================================
 package           DaVinci
-version           v21r1
+version           v21r0p1
+
+use DaVinciMonitors v* Phys
+
 
 # Structure, i.e. directories to process. 
 #============================================================================

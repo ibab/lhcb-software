@@ -1,11 +1,12 @@
 """
 High level configuration tools for DaVinciApp
 """
-__version__ = "$Id: Configuration.py,v 1.14 2008-12-09 10:16:27 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.15 2008-12-11 09:37:19 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
+from Configurables import GaudiSequencer
 import GaudiKernel.ProcessJobOptions
 
 class DaVinci(LHCbConfigurableUser) :
@@ -44,6 +45,12 @@ class DaVinci(LHCbConfigurableUser) :
     def __apply_configuration__(self):
         GaudiKernel.ProcessJobOptions.PrintOff()
         importOptions ("$DAVINCIROOT/options/DaVinciCommon.py")
+#       @todo Remove this from Common and put it here
+#        if ( self.getProp( "DataType" ) == 'DC06' ):
+#            importOptions ("$DAVINCIROOT/options/DaVinciProtoPCalibrate.opts")
+        if ( self.getProp( "DataType" ) != 'DC06' ):
+            GaudiSequencer("ProtoPRecalibration").Members = []
+        
         opts = self.getProp( "MainOptions" )
         if not (opts == '') :
             importOptions( self.getProp( "MainOptions" ) )
