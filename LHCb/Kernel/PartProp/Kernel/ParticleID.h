@@ -1,4 +1,4 @@
-// $Id: ParticleID.h,v 1.2 2008-12-02 11:31:28 ibelyaev Exp $ 
+// $Id: ParticleID.h,v 1.3 2008-12-11 15:23:05 gcorti Exp $ 
 // ============================================================================
 #ifndef LHCbKernel_ParticleID_H
 #define LHCbKernel_ParticleID_H 1
@@ -126,6 +126,13 @@ namespace LHCb
     bool hasQuark ( const Quark& q ) const;
     /// Contains quarks but not a nucleus
     bool hasQuarks  () const;
+    /// Atomic number if a nucleus
+    int Z() const;
+    /// Nucleon number if a nucleus
+    int A() const;
+    /// nLambda if this is a nucleus
+    int nLambda() const;
+    
     // ========================================================================
   public:
     // ========================================================================
@@ -144,8 +151,10 @@ namespace LHCb
      *  Will return digits for quarks, leptons, higgs, etc. 
      *  but 0 for mesons, baryons
      */
-    int fundamentalID() const
-    { return 0 == digits_<nq2,nr>() ? abspid()%10000 : 0 ; }
+    int fundamentalID() const { 
+      if( ( 1 == digit_<n10>() ) && ( 0 == digit_<n9>() ) ) { return 0; }
+      return 0 == digits_<nq2,nr>() ? abspid()%10000 : 0 ; 
+    }
     /// Value of digit in specified location
     unsigned short digit ( const Location& loc) const
     { return Gaudi::Math::digit ( abspid(), loc - 1  ) ; }

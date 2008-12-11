@@ -1,4 +1,4 @@
-// $Id: ParticleID.cpp,v 1.3 2008-12-02 14:13:46 ibelyaev Exp $
+// $Id: ParticleID.cpp,v 1.4 2008-12-11 15:23:05 gcorti Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -22,11 +22,11 @@
 bool LHCb::ParticleID::isValid( ) const 
 {
   //
-  const int extra = extraBits () ;
-  if ( 0 < extra ) 
+  if ( 0 < extraBits() ) 
   {
-    // Reserved GEANT3 particles
-    return  45 <= extra && extra <= 50 ;
+    if( isNucleus() ) { return true; }
+    // Reserved special particles: geantino and intermediate
+    return (480000000 == pid()) || (-990000000 == pid());
   }
   // Meson, Baryon or DiQuark signature
   if ( isMeson() || isBaryon() || isDiQuark() ) { return true; }
@@ -105,9 +105,84 @@ bool LHCb::ParticleID::isNucleus() const
 {
   const int extra = extraBits () ;
   if ( 0 >= extra ) { return false ; }
-  //
-  return 48 != extra && 50 != extra ;
+  
+  // Nuclei with PDG2008 convention (2006 Monte Carlo nuclear code scheme)
+  // Ion numbers are +/- 10LZZZAAAI. 
+  // AAA is A - baryon/nucleon number
+  // ZZZ is Z - total charge/atomic number
+  // L is the total number of strange quarks.
+  // I is the isomer number, with I=0 corresponding to the ground state.
+
+  // a proton can also be a Hydrogen nucleus
+  if( abspid() == 2212 ) { return true; }
+
+  if( ( 1 == digit_<n10>() ) && ( 0 == digit_<n9>() ) ) {
+    // charge should always be less than or equal to baryon number
+    if( A() >= Z() ) { return true; }
+  }
+
+  // geantino
+  if ( 48 == extra ) { return false; }
+    
+  // Old convention
+  if ( 45 <= extra && extra <= 49 ) { return true; }
+  
+  // all else is not a nucleus
+  return false;
+  
 }
+
+// ============================================================================
+// Atomic number if this is a nucleus
+// ============================================================================
+int LHCb::ParticleID::Z( ) const
+{
+  // a proton can also be an Hydrogen nucleus
+  if ( abspid() == 2212 ) { return 1; }
+
+  const int extra = extraBits ();
+  if ( ( digit_<n10>() != 1 ) || ( digit_<n9>() != 0 ) ) { 
+    // Special LHcb particle and old conventions
+    if ( 45 == extra || 46 == extra ) { return 1; } // H2 or H3
+    if ( 47 == extra || 49 == extra ) { return 2; } // alph aor He3
+    return 0; 
+  }
+  return (abspid()/10000)%1000;
+}
+
+// ============================================================================
+// Nucleon number if this is a nucleus
+// ============================================================================
+int LHCb::ParticleID::A( ) const
+{
+  // a proton can also be a Hydrogen nucleus
+  if ( abspid() == 2212 ) { return 1; }
+  if ( ( digit_<n10>() != 1 ) || ( digit_<n9>() != 0 ) ) { 
+    // Special LHCb particle and old conventions
+    const int extra = extraBits();
+    if ( 45 <= extra && extra <= 47 ) { return ( extra - 43 ); } // H2, H3 and He4
+    if ( 49 == extra ) { return 3; } // He3
+    return 0; 
+  }
+  return (abspid()/10)%1000;
+}
+
+
+// ============================================================================
+// nLambda if this is a nucleus
+// ============================================================================
+int LHCb::ParticleID::nLambda( ) const
+{
+    if( ! isNucleus() ) { return 0; }
+    // a proton can also be a Hydrogen nucleus
+    if( abspid() == 2212 ) { return 0; }
+    // special LHCb convention for DC06
+    const int extra = extraBits();
+    if ( 45 <= extra && extra <= 50 ) { return 0; }
+    
+    return digit_<n8>();
+}
+
 // ============================================================================
 // Composed by quarks and not a nucleus
 // ============================================================================
@@ -141,14 +216,15 @@ int LHCb::ParticleID::threeCharge( ) const
   
   const int extra = extraBits() ;
   
-  // Special LHCb particles 
-  if ( 0 < extra ) 
-  {
+  if ( 0 < extra ) { 
     charge = 0;
-    // H2 or H3
+    // H2 or H3 with DC06 convention
     if ( 45 == extra || 46 == extra ) { return 3 ; } // H2 or H3 
-    // Alpha or He3
+    // Alpha or He3 with DC06 convetion
     if ( 47 == extra || 49 == extra ) { return 6 ; } // alph aor He3
+    // Nuclei with PDG2008 convention (2006 Monte Carlo nuclear code scheme)
+    // +/- 10LZZZAAAI
+    if ( isNucleus() ) { return 3*Z(); } // ion
     //
     return 0 ;
   }

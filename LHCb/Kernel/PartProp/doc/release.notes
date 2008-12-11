@@ -1,9 +1,23 @@
-! $Id: release.notes,v 1.3 2008-12-03 17:35:54 ibelyaev Exp $ 
+! $Id: release.notes,v 1.4 2008-12-11 15:23:05 gcorti Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/PartProp
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
+
+! 2008-12-11 - Gloria CORTI
+ - Kernel/ParticleID.h, src/ParticleID.cpp
+      Modify the methods "isNuclei", "isValid", "fundamentalID()" to take
+      into account new pdgID convention for nuclei that has also been adopted
+      by Geant4. Keep backward compatibility for DC06.
+      Introduce new methods "A", "Z" and "nLambda" that return a valid result
+      for nuclei and zero for everything else.
+      The new convention for ion numbers is +/- 10LZZZAAAI, where:
+         AAA is A - baryon/nucleon number
+         ZZZ is Z - total charge/atomic number
+         L is the total number of strange quarks.
+         I is the isomer number, with I=0 corresponding to the ground state.
+ - introduce check on few nuclei pIDs in test
 
 ! 2008-12-03 - Vanya BELYAEV
 
