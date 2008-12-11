@@ -4,7 +4,13 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
-!======================== Gauss v36r0 2008-10-10 =============================
+!======================== Gauss v36r0 2008-10-11 =============================
+! 2008-12-11 - Gloria CORTI
+ - Fix problem to run with tag velo-open 
+   . Beam{450GeV,5TeV,7TeV}-VeloOpen-Mag{Down,Off,Up}.opts
+ - Remove including DDDB.opts since all setting already don in LHCbApp()
+   . Common.opts
+
 ! 2008-12-08 - Gloria CORTI
  - Pack MCParticles and MCVertices to write them out
    . GaussTape.opts
