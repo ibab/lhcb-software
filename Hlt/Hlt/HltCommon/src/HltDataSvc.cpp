@@ -38,6 +38,10 @@ HltDataSvc::HltDataSvc( const std::string& name,
   , m_evtSvc(0)
   , m_annSvc(0)
   , m_hltConf(0)
+  //
+  , m_mapselections   () 
+  , m_ownedSelections () 
+  , m_parents ()
 {
 }
 
@@ -57,8 +61,9 @@ HltDataSvc::~HltDataSvc()
 //=============================================================================
 StatusCode HltDataSvc::queryInterface(const InterfaceID& IID,
                                       void** iface) {
-  if ( IHltDataSvc::interfaceID().versionMatch(IID) )   {
-    *iface = (IHltDataSvc*)this;
+  if ( IHltDataSvc::interfaceID().versionMatch(IID) )   
+  {
+    *iface = static_cast<IHltDataSvc*> ( this ) ;
     addRef();
     return StatusCode::SUCCESS;
   }
@@ -115,90 +120,99 @@ IANNSvc& HltDataSvc::annSvc() const {
 }
 
 StatusCode 
-HltDataSvc::addSelection(Hlt::Selection* sel,IAlgorithm* parent,bool originatesFromTES) {
-//@TODO: record dependency of id on parent
-//@TODO: verify that is a valid name by going to the ANNSvc...
-    if (parent==0) {
-        error() << " did not specify parent... " << endmsg;
-        return StatusCode::FAILURE;
+HltDataSvc::addSelection
+( Hlt::Selection*   sel               ,
+  const IAlgorithm* parent            ,
+  const bool        originatesFromTES ) 
+{
+  //@TODO: record dependency of id on parent
+  //@TODO: verify that is a valid name by going to the ANNSvc...
+  if (parent==0) {
+    error() << " did not specify parent... " << endmsg;
+    return StatusCode::FAILURE;
+  }
+  if (sel->id().empty()) {
+    error() << " attempt by " << parent->name() << " to register an unnamed selection... " << endmsg;
+    return StatusCode::FAILURE;
+  }
+  typedef std::map<stringKey,Hlt::Selection*>::iterator iter_t;
+  std::pair<iter_t,iter_t> p = m_mapselections.equal_range(sel->id());
+  if (p.first!=p.second) return StatusCode::FAILURE; // already there...
+  
+  if (!originatesFromTES) { 
+    if (!annSvc().value("Hlt1SelectionID",sel->id().str())) {
+      error() << "attempt by " << parent->name() << " to register a selection, " << sel->id() 
+              << "unknown to HltANNSvc" << endmsg;
+      return StatusCode::FAILURE;
     }
-    if (sel->id().empty()) {
-        error() << " attempt by " << parent->name() << " to register an unnamed selection... " << endmsg;
-        return StatusCode::FAILURE;
-    }
-    typedef std::map<stringKey,Hlt::Selection*>::iterator iter_t;
-    std::pair<iter_t,iter_t> p = m_mapselections.equal_range(sel->id());
-    if (p.first!=p.second) return StatusCode::FAILURE; // already there...
-
-    if (!originatesFromTES) { 
-        if (!annSvc().value("Hlt1SelectionID",sel->id().str())) {
-            error() << "attempt by " << parent->name() << " to register a selection, " << sel->id() 
-                    << "unknown to HltANNSvc" << endmsg;
+    if (std::find(m_parents.begin(),m_parents.end(),parent)!=m_parents.end()) {
+      error() << " parent already registerd an output selection... " << endmsg;
             return StatusCode::FAILURE;
-        }
-        if (std::find(m_parents.begin(),m_parents.end(),parent)!=m_parents.end()) {
-            error() << " parent already registerd an output selection... " << endmsg;
-            return StatusCode::FAILURE;
-        }
-        m_parents.push_back(parent); // register that a parent generated an output selection...
-        debug() << "adding output selection " << sel->id() << " for " << parent->name() << endmsg;
-    } else {
-        debug() << "adding TES input selection " << sel->id() << " requested by " << parent->name() << endmsg;
     }
-    m_ownedSelections.push_back(sel);
-    m_mapselections.insert(p.first,std::make_pair(sel->id(),sel));
-    return StatusCode::SUCCESS;
+    m_parents.push_back(parent); // register that a parent generated an output selection...
+    debug() << "adding output selection " << sel->id() << " for " << parent->name() << endmsg;
+  } else {
+    debug() << "adding TES input selection " << sel->id() << " requested by " << parent->name() << endmsg;
+  }
+  m_ownedSelections.push_back(sel);
+  m_mapselections.insert(p.first,std::make_pair(sel->id(),sel));
+  return StatusCode::SUCCESS;
 }
 
 bool 
 HltDataSvc::hasSelection(const stringKey& id) const {   
-    return (m_mapselections.find(id) != m_mapselections.end());
+  return (m_mapselections.find(id) != m_mapselections.end());
 }
-    
+
 
 Hlt::Selection& 
-HltDataSvc::selection(const stringKey& id,IAlgorithm* parent) {
-//@TODO: record dependency of parent on id
-    //if (parent==0) std::cout << "don't have parent..." << std::endl;
-    // else std::cout << "HltDataSvc("<<name()<<"):selection called by " << parent->name() << " for " << id << std::endl;
-    // don't use hasSelection here to avoid doing 'find' twice...
-    if (parent==0) {
-        throw GaudiException(" did not specify parent... ", id.str(),StatusCode::FAILURE);
-    }
-    if (std::find(m_parents.begin(),m_parents.end(),parent)!=m_parents.end()) {
-        throw GaudiException( " parent requests input after declaring output!",parent->name()+":"+id.str(),StatusCode::FAILURE);
-    }
-    std::map<stringKey,Hlt::Selection*>::const_iterator i = m_mapselections.find(id);
-    if (i == m_mapselections.end()) throw GaudiException( name()+"::selection() not present ",id.str(),StatusCode::FAILURE);
-    return *(i->second);
+HltDataSvc::selection
+( const stringKey&  id     , 
+  const IAlgorithm* parent ) 
+{
+  //@TODO: record dependency of parent on id
+  //if (parent==0) std::cout << "don't have parent..." << std::endl;
+  // else std::cout << "HltDataSvc("<<name()<<"):selection called by " << parent->name() << " for " << id << std::endl;
+  // don't use hasSelection here to avoid doing 'find' twice...
+  if (parent==0) {
+    throw GaudiException(" did not specify parent... ", id.str(),StatusCode::FAILURE);
+  }
+  if (std::find(m_parents.begin(),m_parents.end(),parent)!=m_parents.end()) {
+    throw GaudiException( " parent requests input after declaring output!",parent->name()+":"+id.str(),StatusCode::FAILURE);
+  }
+  std::map<stringKey,Hlt::Selection*>::const_iterator i = m_mapselections.find(id);
+  if (i == m_mapselections.end()) 
+  { throw GaudiException( name()+"::selection() not present ",id.str(),StatusCode::FAILURE); }
+  return *(i->second);
 }
 
 std::vector<stringKey> 
 HltDataSvc::selectionKeys()
 {
-    std::vector<stringKey> keys; keys.reserve(m_mapselections.size());
-    for (std::map<stringKey,Hlt::Selection*>::const_iterator i = m_mapselections.begin();
-         i!=m_mapselections.end();++i)  keys.push_back(i->first);
-    return keys;
+  std::vector<stringKey> keys; keys.reserve(m_mapselections.size());
+  for (std::map<stringKey,Hlt::Selection*>::const_iterator i = m_mapselections.begin();
+       i!=m_mapselections.end();++i)  keys.push_back(i->first);
+  return keys;
 }
 
 Hlt::Configuration& 
 HltDataSvc::config() {
-    if ( m_hltConf.get() == 0) { 
-        throw GaudiException( name()+"::config() no Hlt::Configuration","",StatusCode::FAILURE);
-    }
-    return *m_hltConf;
+  if ( m_hltConf.get() == 0) 
+  { 
+    throw GaudiException( name()+"::config() no Hlt::Configuration","",StatusCode::FAILURE);
+  }
+  return *m_hltConf;
 };
 
 void HltDataSvc::handle( const Incident& ) {
-    for ( std::map<stringKey,Hlt::Selection*>::iterator i  = m_mapselections.begin();
-                                                        i != m_mapselections.end(); ++i) {
-        // std::cout << "cleaning " << i->first << std::endl;
-        i->second->clean(); // invalidates all selections, resets decision to 'no', i.e. reject
-    }
+  for ( std::map<stringKey,Hlt::Selection*>::iterator i  = m_mapselections.begin();
+        i != m_mapselections.end(); ++i) {
+    // std::cout << "cleaning " << i->first << std::endl;
+    i->second->clean(); // invalidates all selections, resets decision to 'no', i.e. reject
+  }
 };
 
 MsgStream& HltDataSvc::msg(MSG::Level level) const {
-    if (m_msg.get()==0) m_msg.reset( new MsgStream( msgSvc(), name() ));
-    return *m_msg << level;
+  if (m_msg.get()==0) m_msg.reset( new MsgStream( msgSvc(), name() ));
+  return *m_msg << level;
 }

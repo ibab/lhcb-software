@@ -4,6 +4,10 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2008-12-11 - Vanya BELYAEV
+ - HltDataSvc :  IAlgorithm*  -> const IAlgorithm* 
+
+
 ! 2008-12-09 - Gerhard Raven
  - add 'RoutingBits' major to HltANNSvc
 
