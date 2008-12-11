@@ -4,6 +4,11 @@
 ! Purpose     : Interfaces with dependency on MC
 !-----------------------------------------------------------------------------
 
+! 2008-12-11 - Marco Cattaneo
+ - Fix gcc 4.3 warning in IRichMCTrackInfoTool.h
+ - Remove obsolete hack for Windows from requirements
+ - Remove unneccessary dependency on RichKernel
+
 !==================== MCInterfaces v1r5 2008-03-28 ===========================
 ! 2008-03-28 - Marco Cattaneo for Patrick Spradlin
  - Add IMCReconstructed interface

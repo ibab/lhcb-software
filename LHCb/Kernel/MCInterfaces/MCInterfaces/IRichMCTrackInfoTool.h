@@ -4,7 +4,7 @@
  *  Header file for tool interface : Rich::IMCTrackInfoTool
  *
  *  CVS Log :-
- *  $Id: IRichMCTrackInfoTool.h,v 1.1.1.1 2007-05-25 16:24:33 cattanem Exp $
+ *  $Id: IRichMCTrackInfoTool.h,v 1.2 2008-12-11 13:57:00 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -61,7 +61,7 @@ namespace Rich
        *  @retval true   intersection was successful, returned hitPoint is valid
        *  @retval false  intersection was unsuccessful, returned hitPoint is not valid
        */
-      virtual const bool
+      virtual bool
       panelIntersectGlobal ( const LHCb::MCRichSegment * segment,
                              Gaudi::XYZPoint & hitPoint ) const = 0;
 
@@ -76,7 +76,7 @@ namespace Rich
        *  @retval true   intersection was successful, returned hitPoint is valid
        *  @retval false  intersection was unsuccessful, returned hitPoint is not valid
        */
-      virtual const bool
+      virtual bool
       panelIntersectLocal ( const LHCb::MCRichSegment * segment,
                             Gaudi::XYZPoint & hitPoint ) const = 0;
 

@@ -3,7 +3,7 @@
 # Maintainer : Marco Cattaneo et al.
 #============================================================================
 package           MCInterfaces
-version           v1r5
+version           v1r6
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -11,7 +11,7 @@ branches          cmt doc MCInterfaces dict
 
 # =============== dependencies ==============================================
 use GaudiKernel      v*
-use RichKernel       v* Rich
+use LHCbKernel       v* Kernel
 use MCEvent          v* Event
 
 # =============== include directories =======================================
@@ -23,6 +23,3 @@ apply_pattern reflex_dictionary                                           \
               headerfiles=$(MCINTERFACESROOT)/dict/MCInterfacesDict.h     \
               selectionfile=$(MCINTERFACESROOT)/dict/MCInterfacesDict.xml \
               options="-U__MINGW32__"
-
-# Hack for cmt v1r19 bug to link dictionary on windows
-macro MCInterfacesDict_use_linkopts $(use_linkopts)
