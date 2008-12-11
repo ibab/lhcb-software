@@ -1,3 +1,12 @@
+2008-12-11  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/rcs.py: added support for gserver protocol for
+	CVS.
+	Added the possibility to specify an external algorithm to filter and
+	sort the tags of versions. The default implementation is now empty.
+	* python/LbConfiguration/GetPack.py: added a version filter implementation
+	(LHCbVersionFilter) that passes both vXrY(pZ) and the user tags '<user>_<date>'.
+
 2008-12-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/generateLogin.py: added the possibity to pass 

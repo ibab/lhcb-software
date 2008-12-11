@@ -1,10 +1,24 @@
 #!/usr/bin/env python
-# $Id: GetPack.py,v 1.8 2008-12-05 13:47:05 marcocle Exp $
+# $Id: GetPack.py,v 1.9 2008-12-11 13:35:12 marcocle Exp $
 
 from LbUtils.Script import Script
 import rcs
 import os, sys, re
 from subprocess import Popen, PIPE, STDOUT
+
+## Class to select valid version tags according to LHCb policy
+class LHCbVersionFilter(object):
+    def __init__(self, regexp = r'v([0-9]+)r([0-9]+)(?:p([0-9]+))?|(?:\w+_([0-9]{4})([0-9]{2})([0-9]{2})[a-z]?)'):
+        self.regexp = re.compile(regexp)
+    def __call__(self, version):
+        m = self.regexp.match(version)
+        if m:
+            # groups gives something like ("1","2","3") or ("1","2",None)
+            # and we need to convert it to numbers to sort them
+            return tuple([ int(n or "0") # this returns 0 if n is empty or None
+                           for n in m.groups() ])
+        return None
+rcs.setVersionFilter(LHCbVersionFilter())
 
 ## Small class for the generic manipulation of RevisionControlSystem URLs
 class RepositoryInfo(object):
@@ -47,7 +61,7 @@ class SVNReposInfo(RepositoryInfo):
 
 ## CVS specific implementation of RepositoryInfo
 class CVSReposInfo(RepositoryInfo):
-    __protocols__ = ["kserver", "ext", "pserver"]
+    __protocols__ = [ "gserver", "kserver", "ext", "pserver"]
     def __str__(self):
         if self._protocol == "ext" and 'CVS_RSH' not in os.environ:
             raise RuntimeError("Cannot use 'ext' protocol without the environment variable 'CVS_RSH' set (e.g. ssh or plink)")
@@ -62,18 +76,20 @@ class CVSReposInfo(RepositoryInfo):
 #  @todo: temporarily here, but should be moved.
 __repositories__ = { "gaudi": { "ssh":       SVNReposInfo("svn+ssh", "svn.cern.ch", "/reps/gaudi"),
                                 "anonymous": SVNReposInfo("https", "svnweb.cern.ch", "/guest/gaudi") },
-                     "lhcb":  { "kserver":   CVSReposInfo("kserver", "isscvs.cern.ch", "/local/reps/lhcb"),
+                     "lhcb":  { "kerberos":   CVSReposInfo("gserver", "isscvs.cern.ch", "/local/reps/lhcb"),
+                                "kserver":   CVSReposInfo("kserver", "isscvs.cern.ch", "/local/reps/lhcb"),
                                 "ssh":       CVSReposInfo("ext", "isscvs.cern.ch", "/local/reps/lhcb"),
                                 "anonymous": CVSReposInfo("pserver", "isscvs.cern.ch", "/local/reps/lhcb", "anonymous") },
-                     "dirac":  { "kserver":   CVSReposInfo("kserver", "isscvs.cern.ch", "/local/reps/dirac"),
-                                  "ssh":       CVSReposInfo("ext", "isscvs.cern.ch", "/local/reps/dirac"),
-                                  "anonymous": CVSReposInfo("pserver", "isscvs.cern.ch", "/local/reps/dirac", "anonymous") },
+                     "dirac":  { "kerberos":   CVSReposInfo("gserver", "isscvs.cern.ch", "/local/reps/dirac"),
+                                 "kserver":   CVSReposInfo("kserver", "isscvs.cern.ch", "/local/reps/dirac"),
+                                 "ssh":       CVSReposInfo("ext", "isscvs.cern.ch", "/local/reps/dirac"),
+                                 "anonymous": CVSReposInfo("pserver", "isscvs.cern.ch", "/local/reps/dirac", "anonymous") },
                      }
 # Define default repositories
 __repositories__["gaudi"]["default"] = __repositories__["gaudi"]["ssh"]
 if sys.platform.startswith("linux"):
-    __repositories__["lhcb"]["default"] = __repositories__["lhcb"]["kserver"]
-    __repositories__["dirac"]["default"] = __repositories__["dirac"]["kserver"]
+    __repositories__["lhcb"]["default"] = __repositories__["lhcb"]["kerberos"]
+    __repositories__["dirac"]["default"] = __repositories__["dirac"]["kerberos"]
 else:
     __repositories__["lhcb"]["default"] = __repositories__["lhcb"]["ssh"]
     __repositories__["dirac"]["default"] = __repositories__["dirac"]["ssh"]
@@ -88,7 +104,7 @@ class Skip:
 ## @class GetPack
 # Main script class for getpack.
 class GetPack(Script):
-    _version = "$Id: GetPack.py,v 1.8 2008-12-05 13:47:05 marcocle Exp $".replace("$","").replace("Id:","").strip()
+    _version = "$Id: GetPack.py,v 1.9 2008-12-11 13:35:12 marcocle Exp $".replace("$","").replace("Id:","").strip()
     def __init__(self):
         Script.__init__(self, usage = "\n\t%prog [options] package [ [version] ['tag'|'head'] ]"
                                       "\n\t%prog [options] -i [repository [hat]]"
@@ -123,7 +139,7 @@ class GetPack(Script):
         self.parser.add_option("-R", "--really-recursive", action = "store_true",
                                help = "check out >every< package this one depends on")
         self.parser.add_option("-p", "--protocol",
-                               help = "preferred access method to revision system [kserver|ssh|anonymous]"
+                               help = "preferred access method to revision system [kerberos|kserver|ssh|anonymous]"
                                       " (kserver is valid only for CVS)")
         self.parser.add_option("-f",
                                dest = "protocol",
@@ -258,7 +274,9 @@ class GetPack(Script):
         if version.lower() != "head": # head is always valid
             versions = rep.listVersions(package)
             if not versions:
-                raise RuntimeError("No version found for package '%s'" % package)
+                self.log.warning("No version found for package '%s', using 'head'" % package)
+                version = "head"
+                versions = ["head"] # this is to pass the next check
             if (not version) or (version not in versions):
                 if version:
                     self.log.warning("Version '%s' not found for package '%s'" % (version, package))
@@ -332,7 +350,11 @@ class GetPack(Script):
             for rep in repositories:
                 url = str(repositories[rep])
                 self.log.info("Using repository '%s' for '%s'", url, rep)
-                self._repositories[rep] = rcs.connect(url)
+                bridge = rcs.connect(url)
+                if bridge:
+                    self._repositories[rep] = bridge
+                else:
+                    self.log.warning("Invalid repository URL '%s'", rep)
             #--- Now we are ready to talk to the repositories
         return self._repositories
     

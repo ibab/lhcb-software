@@ -56,17 +56,23 @@ class RCSUnknownVersionError(RCSError):
     def __str__(self):
         return "Cannot find version '%(version)s' for module '%(module)s'" % self.__dict__
 
-def filterSortVersions(tags):
-    lhcb_style_version = re.compile(r'v([0-9]+)r([0-9]+)(?:p([0-9]+))?')
+_versionFilter = None
+def setVersionFilter(filter = None):
+    global _versionFilter
+    if filter is None:
+        # The default version filter does no check
+        filter = lambda version: version
+    _versionFilter = filter
+# Set the default version filter
+setVersionFilter()
+
+def filterSortVersions(tags, filter = None):
+    if filter == None:
+        filter = _versionFilter
     versions = []
     for t in tags:
-        m = lhcb_style_version.match(t)
-        if m:
-            # groups gives something like ("1","2","3") or ("1","2",None)
-            # and we need to convert it to numbers to sort them 
-            version = tuple([ int(n)
-                              for n in m.groups()
-                              if n ])
+        version = filter(t)
+        if version is not None:
             versions.append((version, t))
     versions.sort(reverse = True)
     return [ v[1] for v in versions ]
@@ -166,7 +172,7 @@ class CVS(RevisionControlSystem):
     """
     CVS implementation of RevisionControlSystem.
     """
-    __repository_rexp__ = re.compile(r":([pk]server|ext):(?:([\w.]+)@)?([\w.]+):(/[\w./]+)*")
+    __repository_rexp__ = re.compile(r":([pkg]server|ext):(?:([\w.]+)@)?([\w.]+):(/[\w./]+)*")
     CVS_PROTOCOL = 1
     CVS_USER     = 2
     CVS_HOST     = 3
@@ -348,8 +354,8 @@ class SubversionCmd(RevisionControlSystem):
         m = cls.__repository_rexp__.match(repository)
         # if protocol is "file" we do not want the host and vice versa
         valid = m and \
-                ( m.group(cls.SVN_PROTOCOL) == "file" and not m.group(cls.SVN_HOST) ) or \
-                ( m.group(cls.SVN_PROTOCOL) != "file" and m.group(cls.SVN_HOST) ) 
+                ( ( m.group(cls.SVN_PROTOCOL) == "file" and not m.group(cls.SVN_HOST) ) or \
+                  ( m.group(cls.SVN_PROTOCOL) != "file" and m.group(cls.SVN_HOST) ) ) 
         return valid
         
     def _ls(self, path):
