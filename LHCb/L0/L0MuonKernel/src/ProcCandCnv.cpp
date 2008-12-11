@@ -17,21 +17,18 @@ L0Muon::ProcCandCnv::ProcCandCnv(int quarter){
   m_quarter=quarter;
 
   char buf[4096];
-  char* format ;
   
   L0Muon::RegisterFactory* rfactory = L0Muon::RegisterFactory::instance();
 
   for (int iboard = 0; iboard <12 ; iboard++) {
     // Candidate Register handlers for BCSU candidates
-    format = "BOARDCAND_Q%d_%d";
-    sprintf(buf,format,m_quarter+1,iboard);
+    sprintf(buf,"BOARDCAND_Q%d_%d",m_quarter+1,iboard);
     //    L0Muon::Register* reg_board = rfactory->createRegister(buf,L0Muon::BitsCandRegTot);
     L0Muon::Register* reg_board = rfactory->createRegister(buf,CandRegisterHandler::size());
     m_candRegHandlerBCSU[iboard] = CandRegisterHandler(reg_board) ;
     for (int ipu = 0; ipu <4 ; ipu++) {
       // Candidate Register handlers for PU candidates
-      format = "PUCAND_Q%d_%d_%d";
-      sprintf(buf,format,m_quarter+1,iboard,ipu);
+      sprintf(buf,"PUCAND_Q%d_%d_%d",m_quarter+1,iboard,ipu);
       //       L0Muon::Register* reg_pu = rfactory->createRegister(buf,L0Muon::BitsCandRegTot);
       L0Muon::Register* reg_pu = rfactory->createRegister(buf,CandRegisterHandler::size());
       m_candRegHandlerPU[iboard][ipu] = CandRegisterHandler(reg_pu) ;
@@ -73,10 +70,8 @@ void L0Muon::ProcCandCnv::setDecodingMode(){
   L0Muon::RegisterFactory* rfactory = L0Muon::RegisterFactory::instance();
 
   char buf[4096];
-  char* format ;
   for (int iboard = 0; iboard <12 ; iboard++) {
-    format = "BOARDCAND_Q%d_%d_proc";
-    sprintf(buf,format,m_quarter+1,iboard);
+    sprintf(buf,"BOARDCAND_Q%d_%d_proc",m_quarter+1,iboard);
     L0Muon::Register* reg_board = rfactory->createRegister(buf,CandRegisterHandler::size());
     m_candRegHandlerBCSU[iboard] = CandRegisterHandler(reg_board) ;
   }

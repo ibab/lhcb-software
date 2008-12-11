@@ -9,22 +9,18 @@
 L0Muon::PUL0BufferCnv::PUL0BufferCnv(LHCb::MuonTileID id):L0BufferCnv(id){
 
   char buf[4096];
-  char* format ;
  
   m_valid=true;
 
   L0Muon::RegisterFactory* rfactory = L0Muon::RegisterFactory::instance();
 
-  format = "FORMATTED_OL_Q%dR%d%d%d";
-  sprintf(buf,format,m_mid.quarter()+1,m_mid.region()+1,m_mid.nX(),m_mid.nY());
+  sprintf(buf,"FORMATTED_OL_Q%dR%d%d%d",m_mid.quarter()+1,m_mid.region()+1,m_mid.nX(),m_mid.nY());
   m_ol = rfactory->searchTileRegister(buf);
 
-  format = "FORMATTED_NEIGH_Q%dR%d%d%d";
-  sprintf(buf,format,m_mid.quarter()+1,m_mid.region()+1,m_mid.nX(),m_mid.nY());
+  sprintf(buf,"FORMATTED_NEIGH_Q%dR%d%d%d",m_mid.quarter()+1,m_mid.region()+1,m_mid.nX(),m_mid.nY());
   m_neigh = rfactory->searchTileRegister(buf);
    
-  format = "CAND_PUQ%dR%d%d%d";
-  sprintf(buf,format,m_mid.quarter()+1,m_mid.region()+1,m_mid.nX(),m_mid.nY());
+  sprintf(buf,"CAND_PUQ%dR%d%d%d",m_mid.quarter()+1,m_mid.region()+1,m_mid.nX(),m_mid.nY());
   L0Muon::Register* reg = rfactory->searchRegister(buf);
   m_candRegHandler = CandRegisterHandler(reg) ;
 

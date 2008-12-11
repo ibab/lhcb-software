@@ -18,20 +18,17 @@ L0Muon::ProcDataCnv::ProcDataCnv(int quarter){
   m_quarter=quarter;
 
   char buf[4096];
-  char* format ;
 
   L0Muon::RegisterFactory* rfactory = L0Muon::RegisterFactory::instance();
 
   for (int iboard = 0; iboard <12 ; iboard++) {
     for (int ipu = 0; ipu <4 ; ipu++) {
 
-      format = "FORMATTED_OL_Q%d_%d_%d";
-      sprintf(buf,format,m_quarter+1,iboard,ipu);
+      sprintf(buf,"FORMATTED_OL_Q%d_%d_%d",m_quarter+1,iboard,ipu);
       TileRegister* ol = rfactory->searchTileRegister(buf);
       m_ols[iboard][ipu] = ol;
       
-      format = "FORMATTED_NEIGH_Q%d_%d_%d";
-      sprintf(buf,format,m_quarter+1,iboard,ipu);
+      sprintf(buf,"FORMATTED_NEIGH_Q%d_%d_%d",m_quarter+1,iboard,ipu);
       TileRegister* neigh = rfactory->searchTileRegister(buf);
       m_neighs[iboard][ipu] = neigh;
 
@@ -41,13 +38,11 @@ L0Muon::ProcDataCnv::ProcDataCnv(int quarter){
   std::vector<LHCb::MuonTileID> lpus = MuonLayout(2,2).tiles(m_quarter);
   for (std::vector<LHCb::MuonTileID>::iterator ip=lpus.begin(); ip<lpus.end(); ++ip) {
 
-    format = "FORMATTED_OL_Q%dR%d%d%d";
-    sprintf(buf,format,m_quarter+1,(*ip).region()+1,(*ip).nX(),(*ip).nY());
+    sprintf(buf,"FORMATTED_OL_Q%dR%d%d%d",m_quarter+1,(*ip).region()+1,(*ip).nX(),(*ip).nY());
     TileRegister* ol = rfactory->searchTileRegister(buf);
     m_olsMap[(*ip)] = ol;
     
-    format = "FORMATTED_NEIGH_Q%dR%d%d%d";
-    sprintf(buf,format,m_quarter+1,(*ip).region()+1,(*ip).nX(),(*ip).nY());
+    sprintf(buf,"FORMATTED_NEIGH_Q%dR%d%d%d",m_quarter+1,(*ip).region()+1,(*ip).nX(),(*ip).nY());
     TileRegister* neigh = rfactory->searchTileRegister(buf);
     m_neighsMap[(*ip)] = neigh;
  
@@ -813,7 +808,7 @@ int L0Muon::ProcDataCnv::rawBank_v2(std::vector<unsigned int> &raw, int mode, bo
             
           } // End if even PU
           else {// If odd PU
-            word_lsb==m_neighs[ib][ipu]->getulong(16,PU_Neighbours_size_16-16);
+            word_lsb=m_neighs[ib][ipu]->getulong(16,PU_Neighbours_size_16-16);
             word=((word_msb<<16)&0xFFFF0000)+(word_lsb&0xFFFF);
             word_to_compressedBitset(word,pp_bitset);
             for (unsigned int iwd=0; iwd<PU_Neighbours_size_16/2; ++iwd) { // Loop over PU Neighbour words

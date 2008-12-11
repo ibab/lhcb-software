@@ -9,21 +9,18 @@
 L0Muon::SUL0BufferCnv::SUL0BufferCnv(LHCb::MuonTileID id):L0BufferCnv(id){
 
   char buf[4096];
-  char* format ;
 
   m_valid=true;
 
   L0Muon::RegisterFactory* rfactory = L0Muon::RegisterFactory::instance();
 
-  format = "CAND_CTRLQ%d";
-  sprintf(buf,format,m_mid.quarter()+1);
+  sprintf(buf,"CAND_CTRLQ%d",m_mid.quarter()+1);
   L0Muon::Register* reg = rfactory->searchRegister(buf);
   m_candRegHandler = CandRegisterHandler(reg) ;
   if (reg==0) m_valid = false;
 
   for (int iboard = 0; iboard <12 ; iboard++) {
-    format = "BOARDCAND_Q%d_%d";
-    sprintf(buf,format,m_mid.quarter()+1,iboard);
+    sprintf(buf,"BOARDCAND_Q%d_%d",m_mid.quarter()+1,iboard);
     //    L0Muon::Register* reg = rfactory->createRegister(buf,L0Muon::BitsCandRegTot);
     L0Muon::Register* reg = rfactory->createRegister(buf,CandRegisterHandler::size());
     m_candRegHandlerBCSU[iboard] = CandRegisterHandler(reg) ;

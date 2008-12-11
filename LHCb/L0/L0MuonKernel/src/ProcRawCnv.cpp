@@ -30,21 +30,18 @@ L0Muon::ProcRawCnv::ProcRawCnv(int quarter){
   m_n_decoded_banks=0;  
 
   char buf[4096];
-  char* format ;
   
   L0Muon::RegisterFactory* rfactory = L0Muon::RegisterFactory::instance();
 
   for (int iboard = 0; iboard <12 ; iboard++) {
     // Candidate Register handlers for BCSU candidates
-    format = "BCSUCAND_Q%d_%d";
-    sprintf(buf,format,m_quarter+1,iboard);
+    sprintf(buf,"BCSUCAND_Q%d_%d",m_quarter+1,iboard);
     //    L0Muon::Register* reg_board = rfactory->createRegister(buf,L0Muon::BitsCandRegTot);
     L0Muon::Register* reg_board = rfactory->createRegister(buf,CandRegisterHandler::size());
     m_candRegHandlerBCSU[iboard] = CandRegisterHandler(reg_board) ;
     for (int ipu = 0; ipu <4 ; ipu++) {
       // Candidate Register handlers for PU candidates
-      format = "PUCAND_Q%d_%d_%d";
-      sprintf(buf,format,m_quarter+1,iboard,ipu);
+      sprintf(buf,"PUCAND_Q%d_%d_%d",m_quarter+1,iboard,ipu);
       //       L0Muon::Register* reg_pu = rfactory->createRegister(buf,L0Muon::BitsCandRegTot);
       L0Muon::Register* reg_pu = rfactory->createRegister(buf,CandRegisterHandler::size());
       m_candRegHandlerPU[iboard][ipu] = CandRegisterHandler(reg_pu) ;
@@ -54,13 +51,11 @@ L0Muon::ProcRawCnv::ProcRawCnv(int quarter){
   for (int iboard = 0; iboard <12 ; iboard++) {
     for (int ipu = 0; ipu <4 ; ipu++) {
 
-      format = "FORMATTED_OL_Q%d_%d_%d";
-      sprintf(buf,format,m_quarter+1,iboard,ipu);
+      sprintf(buf,"FORMATTED_OL_Q%d_%d_%d",m_quarter+1,iboard,ipu);
       TileRegister* ol = rfactory->searchTileRegister(buf);
       m_ols[iboard][ipu] = ol;
       
-      format = "FORMATTED_NEIGH_Q%d_%d_%d";
-      sprintf(buf,format,m_quarter+1,iboard,ipu);
+      sprintf(buf,"FORMATTED_NEIGH_Q%d_%d_%d",m_quarter+1,iboard,ipu);
       TileRegister* neigh = rfactory->searchTileRegister(buf);
       m_neighs[iboard][ipu] = neigh;
 
@@ -70,13 +65,11 @@ L0Muon::ProcRawCnv::ProcRawCnv(int quarter){
   std::vector<LHCb::MuonTileID> lpus = MuonLayout(2,2).tiles(m_quarter);
   for (std::vector<LHCb::MuonTileID>::iterator ip=lpus.begin(); ip<lpus.end(); ++ip) {
 
-    format = "FORMATTED_OL_Q%dR%d%d%d";
-    sprintf(buf,format,m_quarter+1,(*ip).region()+1,(*ip).nX(),(*ip).nY());
+    sprintf(buf,"FORMATTED_OL_Q%dR%d%d%d",m_quarter+1,(*ip).region()+1,(*ip).nX(),(*ip).nY());
     TileRegister* ol = rfactory->searchTileRegister(buf);
     m_olsMap[(*ip)] = ol;
     
-    format = "FORMATTED_NEIGH_Q%dR%d%d%d";
-    sprintf(buf,format,m_quarter+1,(*ip).region()+1,(*ip).nX(),(*ip).nY());
+    sprintf(buf,"FORMATTED_NEIGH_Q%dR%d%d%d",m_quarter+1,(*ip).region()+1,(*ip).nX(),(*ip).nY());
     TileRegister* neigh = rfactory->searchTileRegister(buf);
     m_neighsMap[(*ip)] = neigh;
  

@@ -22,12 +22,10 @@ void L0Muon::CtrlUnit::initialize()
   L0MUnit::initialize();
 
   char buf[4096];
-  char* format ;
 
   // Candidate Register handlers for input candidates
   for (int iboard = 0; iboard <12 ; iboard++) {
-    format = "BOARD%d";
-    sprintf(buf,format,iboard);
+    sprintf(buf,"BOARD%d",iboard);
     std::map<std::string,L0Muon::Register*>::iterator itinputs =  m_inputs.find(buf);
     if (itinputs==m_inputs.end()) continue;
     Register* reg = (*itinputs).second;
@@ -35,8 +33,7 @@ void L0Muon::CtrlUnit::initialize()
   }
 
   // Candidate Register handler for selected candidates
-  format = "CAND_CTRLQ%d";
-  sprintf(buf,format,m_mid.quarter()+1);
+  sprintf(buf,"CAND_CTRLQ%d",m_mid.quarter()+1);
   std::map<std::string,L0Muon::Register*>::iterator itoutputs =  m_outputs.find(buf);
   if (itoutputs==m_outputs.end()) std::cout <<"L0Muon::CtrlUnit::initialize key "<<buf  <<" not found in output registers\n";
   Register* reg =(*itoutputs).second;

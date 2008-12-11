@@ -9,14 +9,12 @@
 L0Muon::OLCnv::OLCnv(LHCb::MuonTileID id):L0BufferCnv(id){
 
   char buf[4096];
-  char* format ;
  
   m_valid=true;
 
   L0Muon::RegisterFactory* rfactory = L0Muon::RegisterFactory::instance();
 
-  format = "OLDUMP_Q%dR%d%d%d";
-  sprintf(buf,format,m_mid.quarter()+1,m_mid.region()+1,m_mid.nX(),m_mid.nY());
+  sprintf(buf,"OLDUMP_Q%dR%d%d%d",m_mid.quarter()+1,m_mid.region()+1,m_mid.nX(),m_mid.nY());
   
   m_ol = rfactory->searchTileRegister(buf);
 

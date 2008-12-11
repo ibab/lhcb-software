@@ -25,18 +25,15 @@ L0Muon::CtrlRawCnv::CtrlRawCnv(int side){
   m_n_decoded_banks=0;
 
   char buf[4096];
-  char* format ;
   
   L0Muon::RegisterFactory* rfactory = L0Muon::RegisterFactory::instance();
 
   for (int iq = 0; iq<2 ; ++iq){
-    format = "CAND_CTRLQ%d";
-    sprintf(buf,format,m_side*2+iq+1);
+    sprintf(buf,"CAND_CTRLQ%d",m_side*2+iq+1);
     L0Muon::Register* reg = rfactory->createRegister(buf,CandRegisterHandler::size());
     m_candRegHandler[iq] = CandRegisterHandler(reg) ;
     for (int iboard = 0; iboard <12 ; iboard++) {
-      format = "BOARDCAND_Q%d_%d";
-      sprintf(buf,format,m_side*2+iq+1,iboard);
+      sprintf(buf,"BOARDCAND_Q%d_%d",m_side*2+iq+1,iboard);
       L0Muon::Register* regBCSU = rfactory->createRegister(buf,CandRegisterHandler::size());
       m_candRegHandlerBCSU[iq][iboard] = CandRegisterHandler(regBCSU) ;
     }

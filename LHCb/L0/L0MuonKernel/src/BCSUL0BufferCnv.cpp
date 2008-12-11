@@ -9,21 +9,18 @@
 L0Muon::BCSUL0BufferCnv::BCSUL0BufferCnv(LHCb::MuonTileID id):L0BufferCnv(id){
 
   char buf[4096];
-  char* format ;
 
   m_valid=true;
 
   L0Muon::RegisterFactory* rfactory = L0Muon::RegisterFactory::instance();
 
-  format = "CAND_BCSUQ%dR%d%d%d";
-  sprintf(buf,format,m_mid.quarter()+1,m_mid.region()+1,m_mid.nX(),m_mid.nY());
+  sprintf(buf,"CAND_BCSUQ%dR%d%d%d",m_mid.quarter()+1,m_mid.region()+1,m_mid.nX(),m_mid.nY());
   L0Muon::Register* reg = rfactory->searchRegister(buf);
   m_candRegHandler = CandRegisterHandler(reg) ;
   if (reg==0) m_valid = false;
 
   for (int ipu=0; ipu<4; ++ipu){
-    format = "PUCAND_BCSUQ%dR%d%d%d_%d";
-    sprintf(buf,format,m_mid.quarter()+1,m_mid.region()+1,m_mid.nX(),m_mid.nY(),ipu);
+    sprintf(buf,"PUCAND_BCSUQ%dR%d%d%d_%d",m_mid.quarter()+1,m_mid.region()+1,m_mid.nX(),m_mid.nY(),ipu);
     L0Muon::Register* reg = rfactory->searchRegister(buf);
     m_candRegHandlerPU[ipu] = CandRegisterHandler(reg) ;
   }

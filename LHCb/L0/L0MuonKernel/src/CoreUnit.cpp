@@ -343,9 +343,7 @@ void L0Muon::CoreUnit::initialize() {
 
   // Candidate Register handler for output candidates
   char buf[4096];
-  char* format ;
-  format = "CAND_PUQ%dR%d%d%d";
-  sprintf(buf,format,m_mid.quarter()+1,m_mid.region()+1,m_mid.nX(),m_mid.nY());
+  sprintf(buf,"CAND_PUQ%dR%d%d%d",m_mid.quarter()+1,m_mid.region()+1,m_mid.nX(),m_mid.nY());
   std::map<std::string,L0Muon::Register*>::iterator itout =  m_outputs.find(buf);
   if (itout==m_outputs.end()) {
     std::cout <<"L0Muon::CoreUnit::initialize "<<m_mid 
