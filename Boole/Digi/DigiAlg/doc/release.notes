@@ -4,6 +4,7 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+!========================== DigiAlg v4r13 2008-12-11 =========================
 ! 2008-12-06 - Marco Cattaneo
  - Fix an array overflow in BuildMCTrackInfo
  - Protect verbose() streams with msgLevel(MSG::VERBOSE)
