@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinciApp
 """
-__version__ = "$Id: Configuration.py,v 1.15 2008-12-11 09:37:19 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.16 2008-12-11 11:12:07 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -48,8 +48,8 @@ class DaVinci(LHCbConfigurableUser) :
 #       @todo Remove this from Common and put it here
 #        if ( self.getProp( "DataType" ) == 'DC06' ):
 #            importOptions ("$DAVINCIROOT/options/DaVinciProtoPCalibrate.opts")
-        if ( self.getProp( "DataType" ) != 'DC06' ):
-            GaudiSequencer("ProtoPRecalibration").Members = []
+#        if ( self.getProp( "DataType" ) != 'DC06' ):
+#            GaudiSequencer("ProtoPRecalibration").Members = []
         
         opts = self.getProp( "MainOptions" )
         if not (opts == '') :
