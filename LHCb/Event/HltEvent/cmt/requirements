@@ -3,7 +3,7 @@
 # Maintainer : Jose Hernando
 #============================================================================
 package           HltEvent
-version           v8r13
+version           v8r14
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -21,6 +21,11 @@ end_private
 #============================================================================
 apply_pattern god_headers files=../xml/*.xml
 apply_pattern install_more_includes more=Event
+
+# Make custom dictionary. Must be before GOD generation
+#============================================================================
+document customdict HltEventCustomDict ../dict/lcgDict.h
+macro_append HltEventObj2Dict_dependencies HltEventCustomDict
 
 # Generate dictionaries with lcgdict via GOD
 #============================================================================
