@@ -1,4 +1,4 @@
-// $Id: ITGenericTracking.h,v 1.6 2008-12-08 15:36:13 mneedham Exp $
+// $Id: ITGenericTracking.h,v 1.7 2008-12-11 07:38:21 mneedham Exp $
 #ifndef ITGenericTracking_H
 #define ITGenericTracking_H 1
 
@@ -72,9 +72,6 @@ private:
                const Tf::Tsa::Line& yLine, 
                std::vector<Tf::STHit*>& selected2 );
 
-  void cleanX(const std::vector<Tf::STHit*>& hits,
-	      const Tf::STHit* hit1, const Tf::STHit* hit2,
-	      const Tf::Tsa::Line& xLine) const;
 
   bool allowedBox(const Tf::STHit* hit) const;
   bool allowedFirstStation(const Tf::STHit* hit) const;

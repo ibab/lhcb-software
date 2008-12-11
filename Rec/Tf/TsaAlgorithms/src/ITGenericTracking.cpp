@@ -1,4 +1,4 @@
-// $Id: ITGenericTracking.cpp,v 1.7 2008-12-08 15:36:13 mneedham Exp $
+// $Id: ITGenericTracking.cpp,v 1.8 2008-12-11 07:38:21 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -298,56 +298,8 @@ void ITGenericTracking::collectIDs( std::vector<yInfo> hits , std::vector<LHCb::
    // convert LHCbIDs to hits
    for (std::vector<yInfo>::const_iterator iterHit = hits.begin(); iterHit != hits.end(); ++iterHit ){
      ids.push_back(iterHit->first->lhcbID());
-     //std::cout << "collecting " << **iterHit << std::endl;
      iterHit->first->setUsed(true);
    }
-}
-
-void ITGenericTracking::cleanX(const std::vector<Tf::STHit*>& hits,
-                               const Tf::STHit* hit1, const Tf::STHit* hit2, 
-                               const Tf::Tsa::Line& xLine) const {
-
-  // get the hit in station 2 to act as seeds
-  std::vector<Tf::STHit*> station2; std::vector<Tf::STHit*> rest;
-  BOOST_FOREACH(Tf::STHit* hit, hits){
-  // for (std::vector<Tf::STHit*>::const_iterator iterHit = hits.begin(); iterHit != hits.end(); ++iterHit){
-    if (hit->channelID().station() == 2 ){
-      station2.push_back(hit);
-    }
-    else if (hit1 != hit && hit2 != hit){
-      rest.push_back(hit);
-    }
-  } // FOR_EACH
-
-
-  // make candidates
-  double cov11, cov00, cov01, c, m, chisq;
-  double w[4] = {20., 20., 20., 20}; //weights in the fit
-  for (std::vector<Tf::STHit*>::const_iterator iterX1 = station2.begin(); iterX1 != station2.end(); ++iterX1) {
-    for (std::vector<Tf::STHit*>::const_iterator iterX2= rest.begin(); iterX2 != rest.end() ; ++iterX2){
-      // lets fit the candidates
-      double z[4] = {hit1->zMid(), hit2->zMid(), (*iterX1)->zMid(), (*iterX2)->zMid()};
-      double x[4] = {hit1->xMid(), hit2->xMid(), (*iterX1)->xMid(), (*iterX2)->xMid()};
-      gsl_fit_wlinear(z,1,w,1,x,1,4,&c,&m,&cov00, &cov01, &cov11,&chisq);
-      plot(chisq, "chi-sq", 0., 20., 200);
-      std::vector<const Tf::STHit*> candidatehits = boost::assign::list_of(hit1)(hit2)(*iterX1)(*iterX2);
-      Tf::Tsa::Line canLine(m,c);
-      BOOST_FOREACH(Tf::STHit* hit, hits){
-	std::vector<const Tf::STHit*>::iterator iter = std::find(candidatehits.begin(), candidatehits.end(), hit);
-        if (iter == candidatehits.end()) plot(hit->xMid() - canLine.value(hit->zMid()) ,"x res", -2.,2.);
-      }
-    } //iterX2 
-  } // iterX
-
-  //  for (std::vector<Tf::STHit*>::const_iterator iterX = hits.begin(); iterX != hits.end(); ++iterX) {
-    std::vector<double> zv; std::vector<double> xv; std::vector<double> wv;
-    BOOST_FOREACH(Tf::STHit* hit, hits){
-      xv.push_back(hit->xMid()); zv.push_back(hit->zMid()); wv.push_back(20);
-    }
-    //double cov11, cov00, cov01, c, m, chisq;
-    gsl_fit_wlinear(&zv[0],1,&wv[0],1,&xv[0],1,4,&c,&m,&cov00, &cov01, &cov11,&chisq);
-    plot(chisq/(hits.size()-2u), "chi-sq all", 0., 20., 200);
-    //}
 }
 
 void ITGenericTracking::selectX(const std::vector<Tf::STHit*>& hits, 
