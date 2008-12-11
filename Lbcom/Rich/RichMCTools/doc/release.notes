@@ -4,6 +4,9 @@
 ! Purpose     : Provides basic tools for RICH MC information
 !-----------------------------------------------------------------------------
 
+! 2008-12-11 - Marco Cattaneo
+ - Adapt to IRichCTrackInfoTool interface change to fix gcc 4.3 warnings
+
 !========================== RichMCTools v3r9 2008-03-28 =====================
 ! 2008-03-25 - Chris Jones
  - Add new methods (isHPDReflection and isSiBackScatter) to MCTruthTool

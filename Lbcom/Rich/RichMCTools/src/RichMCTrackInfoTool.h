@@ -4,7 +4,7 @@
  *  Header file for tool : Rich::MC::TrackInfoTool
  *
  *  CVS Log :-
- *  $Id: RichMCTrackInfoTool.h,v 1.14 2007-05-29 15:11:53 cattanem Exp $
+ *  $Id: RichMCTrackInfoTool.h,v 1.15 2008-12-11 13:56:16 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -63,14 +63,14 @@ namespace Rich
       // Takes the direction information from a MCRichSegment and ray traces it through the
       // appropriate RICH optical system and computes the intersect points with the HPD
       // panel in LHCb global coordinates
-      const bool panelIntersectGlobal ( const LHCb::MCRichSegment * segment,
-                                        Gaudi::XYZPoint & hitPoint ) const;
+      bool panelIntersectGlobal ( const LHCb::MCRichSegment * segment,
+                                  Gaudi::XYZPoint & hitPoint ) const;
 
       // Takes the direction information from a MCRichSegment and ray traces it through the
       // appropriate RICH optical system and computes the intersect points with the HPD
       // panel in local HPD panel coordinates
-      const bool panelIntersectLocal ( const LHCb::MCRichSegment * segment,
-                                       Gaudi::XYZPoint & hitPoint ) const;
+      bool panelIntersectLocal ( const LHCb::MCRichSegment * segment,
+                                 Gaudi::XYZPoint & hitPoint ) const;
 
     private: // private data
 

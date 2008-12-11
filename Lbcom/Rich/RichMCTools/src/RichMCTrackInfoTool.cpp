@@ -5,7 +5,7 @@
  * Implementation file for class : RichMCTrackInfoTool
  *
  * CVS Log :-
- * $Id: RichMCTrackInfoTool.cpp,v 1.13 2007-08-09 15:57:02 jonrob Exp $
+ * $Id: RichMCTrackInfoTool.cpp,v 1.14 2008-12-11 13:56:16 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/03/2002
@@ -57,9 +57,8 @@ StatusCode MCTrackInfoTool::finalize()
   return RichToolBase::finalize();
 }
 
-const bool
-MCTrackInfoTool::panelIntersectGlobal( const LHCb::MCRichSegment * segment,
-                                       Gaudi::XYZPoint & hitPoint ) const
+bool MCTrackInfoTool::panelIntersectGlobal( const LHCb::MCRichSegment * segment,
+                                            Gaudi::XYZPoint & hitPoint ) const
 {
   if ( NULL == segment ) return false;
   const LHCb::RichTraceMode::RayTraceResult result
@@ -71,9 +70,8 @@ MCTrackInfoTool::panelIntersectGlobal( const LHCb::MCRichSegment * segment,
   return m_traceMode.traceWasOK(result);
 }
 
-const bool
-MCTrackInfoTool::panelIntersectLocal( const LHCb::MCRichSegment * segment,
-                                      Gaudi::XYZPoint & hitPoint ) const
+bool MCTrackInfoTool::panelIntersectLocal( const LHCb::MCRichSegment * segment,
+                                           Gaudi::XYZPoint & hitPoint ) const
 {
 
   // find global point
