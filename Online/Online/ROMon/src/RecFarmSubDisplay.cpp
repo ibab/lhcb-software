@@ -182,14 +182,13 @@ void RecFarmSubDisplay::updateContent(const Nodeset& ns) {
       int idx = 0;
       char b = (*ib).name[0];
       const MBMBuffer::Control& ctrl = (*ib).ctrl;
-      inuse = true;
       numBuffs++;
       switch(b) {
       case INPUT_BUFFER:        idx = 0; break;
-      case OUTPUT_BUFFER:        idx = 1; break;
-      default:
-        continue;
+      case OUTPUT_BUFFER:       idx = 1; break;
+      default:                        continue;
       }
+      inuse = true;
       fspace[idx]       = min(fspace[idx],float(ctrl.i_space)/float(ctrl.bm_size)); 
       fslots[idx]       = min(fslots[idx],float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax));
       min_space[idx]    = min(min_space[idx],(ctrl.i_space*ctrl.bytes_p_Bit)/1024/1024);
