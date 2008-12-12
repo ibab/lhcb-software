@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.69 2008-12-12 12:29:07 panmanj Exp $ 
+! $Id: release.notes,v 1.70 2008-12-12 16:38:07 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2008-12-12 - Vanya BELYAEV
+
+ - HltConf/Hlt1Units.py 
+   add the objects for "track-upgrade" and "track-match"
 
 ! 2008-12-12 - Jaap Panman
  - Cleanup obsolete option files - still remains some duplication in
