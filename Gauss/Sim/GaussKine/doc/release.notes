@@ -4,6 +4,10 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+! 2008-12-12 - Patrick Robbe
+ - GenerationToSimulation: processing of particles coming from 
+   SUSY particles
+
 ! 2008-12-11 - Patrick Robbe
  - GenerationToSimulation: use signal_process_vertex to define the
    primary vertex in case of absence of beam particles, and protect

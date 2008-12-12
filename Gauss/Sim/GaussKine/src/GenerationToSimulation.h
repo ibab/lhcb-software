@@ -1,4 +1,4 @@
-// $Id: GenerationToSimulation.h,v 1.3 2008-12-11 14:00:17 robbep Exp $
+// $Id: GenerationToSimulation.h,v 1.4 2008-12-12 13:58:32 robbep Exp $
 #ifndef GENERATIONTOSIMULATION_H 
 #define GENERATIONTOSIMULATION_H 1
 
@@ -96,5 +96,6 @@ private:
   
   std::map< int , std::pair< bool , G4PrimaryParticle * > > m_g4ParticleMap ; ///< Map to know if a particle was already converted to G4
   std::map< int , bool > m_mcParticleMap ; ///< Map to know if a particle was already converted to MCParticle
+  std::vector< G4PrimaryParticle * > m_particlesToDelete ; ///< Vector of particles to remove from G4PrimaryVertex
 };
 #endif // GENERATIONTOSIMULATION

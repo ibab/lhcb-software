@@ -1,4 +1,4 @@
-// $Id: GenerationToSimulation.cpp,v 1.5 2008-12-11 14:00:17 robbep Exp $
+// $Id: GenerationToSimulation.cpp,v 1.6 2008-12-12 13:58:32 robbep Exp $
 // Include files 
 // local
 #include "GenerationToSimulation.h"
@@ -127,6 +127,7 @@ StatusCode GenerationToSimulation::execute() {
     // New event: empty the map of converted particles
     m_g4ParticleMap.clear() ;
     m_mcParticleMap.clear() ;
+    m_particlesToDelete.clear() ;
     
     // Determine the position of the primary vertex
     Gaudi::LorentzVector thePV = primaryVertex( ev ) ;
@@ -179,6 +180,15 @@ StatusCode GenerationToSimulation::execute() {
         convert( *it , origVertex , primaryVertex , 0 , 0 ) ;
     }
     
+    // now remove from primary vertex the particles to delete
+    if ( ! m_particlesToDelete.empty() ) {
+      std::vector< G4PrimaryParticle * >::const_iterator itDel ;
+      for ( itDel = m_particlesToDelete.begin() ; itDel != m_particlesToDelete.end() ; 
+            ++itDel ) { 
+        removeFromPrimaryVertex( origVertex , *itDel ) ;
+        delete *itDel ;
+      }
+    }
     *gigaSvc() << origVertex;
   }
 
@@ -268,16 +278,16 @@ void GenerationToSimulation::convert( HepMC::GenParticle *& particle ,
         else {
 	  m_g4ParticleMap.erase( pBarcode ) ;
 	  G4PrimaryParticle * particleToDelete = result -> second.second ;
-	  removeFromPrimaryVertex( pvertexg4 , particleToDelete ) ;
-	  delete particleToDelete ;
-	  particleToDelete = 0 ;
+	  m_particlesToDelete.push_back( particleToDelete ) ;
         }
       }
       
       G4PrimaryParticle * g4P = makeG4Particle( particle , mothermcp ) ;
       if ( 0 == motherg4 ) {
-        m_g4ParticleMap.insert( std::make_pair( pBarcode ,
-                                  std::make_pair( false , g4P ) ) ) ;
+        if ( 0 == mothermcp ) m_g4ParticleMap.insert( std::make_pair( pBarcode ,
+                                                      std::make_pair( false , g4P ) ) ) ;
+        else m_g4ParticleMap.insert( std::make_pair( pBarcode ,
+				     std::make_pair( true , g4P ) ) ) ;
         // root particle -> attach to G4 primary vertex
         if ( 0 != pvertexg4 ) pvertexg4 -> SetPrimary( g4P ) ;
         else error() << "Primary vertex points to NULL !" << endreq ;
@@ -505,6 +515,7 @@ void GenerationToSimulation::removeFromPrimaryVertex( G4PrimaryVertex *& pvertex
   const {
   // This should be very rare so put a warning to see when it happens
   warning() << "A G4PrimaryParticle will be removed from the G4PrimaryVertex" << endmsg ;
+  particleToDelete -> Print() ;
   // Make a new vertex
   G4PrimaryVertex * newVertex = 
     new G4PrimaryVertex( pvertexg4 -> GetX0() , pvertexg4 -> GetY0() , 
