@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.68 2008-12-10 10:16:54 ibelyaev Exp $ 
+! $Id: release.notes,v 1.69 2008-12-12 12:29:07 panmanj Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2008-12-12 - Jaap Panman
+ - Cleanup obsolete option files - still remains some duplication in
+   HLTLumiLines and HltLumiSequences
 
 ! 2008-12-10 - Vanya BELYAEV
  - HltConf/HltLine.py 
