@@ -112,7 +112,7 @@
        </method>
        <method
         const="TRUE"
-        desc="Beta of the particle - no method in XYZTVector ?"
+        desc="Beta of the particle"
         name="beta"
         type="double"
        >
@@ -128,6 +128,16 @@
        >
          <code>
   return ( m_momentum.M() > 0. ? m_momentum.E()/m_momentum.M() : -999.) ;
+         </code>
+       </method>
+       <method
+        const="TRUE"
+        desc="Beta x Gamma of the particle"
+        name="betaGamma"
+        type="double"
+       >
+         <code>
+  return ( m_momentum.M() > 0. ? m_momentum.R()/m_momentum.M() : -999.) ;
          </code>
        </method>
        <method

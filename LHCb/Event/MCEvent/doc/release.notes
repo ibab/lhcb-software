@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.105 2008-12-10 17:24:16 cattanem Exp $
+! $Id: release.notes,v 1.106 2008-12-12 12:33:18 cattanem Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 !-----------------------------------------------------------------------------
+
+! 2008-12-12 - Marco Cattaneo
+ - Add MCParticle::betaGamma() method
 
 ! 2008-12-10 - Marco Cattaneo
  - Add PartProp dependency, to pick up ParticleID from new location
