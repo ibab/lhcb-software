@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2008-12-12 - Jaap Panman
+ - remove obsolete option/MyMoore.py and python/LumiMonitor/lumiChecker.py
+
 ! 2008-12-09 - Gerhard Raven
  - pick up units explicitly now it is no longer in HltInit.opts
    (which is now HltInit.py, and doesn't know #units directive anymore)
