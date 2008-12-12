@@ -1,4 +1,4 @@
-// $Id: FilterAlg.cpp,v 1.3 2008-11-19 13:55:52 ibelyaev Exp $
+// $Id: FilterAlg.cpp,v 1.4 2008-12-12 16:35:24 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -61,6 +61,9 @@ LoKi::FilterAlg::FilterAlg
       m_preambulo_ , 
       "The preambulo to be used for the temporary python script" ) 
     -> declareUpdateHandler ( &LoKi::FilterAlg::updatePreambulo , this ) ;
+  // 
+  Assert( setProperty ( "RegisterForContextService" , true ).isSuccess() ,
+          "Unable to enforce the registration for Algorithm Context Service") ;
 }
 // ============================================================================
 // virtual and protected destructor 
@@ -144,6 +147,8 @@ void LoKi::FilterAlg::updatePreambulo ( Property& /* p */ )  // update preambulo
 // ============================================================================
 StatusCode LoKi::FilterAlg::initialize () 
 {
+  // look the context 
+  Gaudi::Utils::AlgContext lock ( this , contextSvc() ) ;
   /// initialize the base 
   StatusCode sc = GaudiAlgorithm::initialize () ;
   if ( sc.isFailure() ) { return sc ; }
