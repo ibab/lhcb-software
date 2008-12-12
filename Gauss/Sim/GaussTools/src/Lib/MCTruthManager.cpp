@@ -1,5 +1,6 @@
-// $Id: MCTruthManager.cpp,v 1.10 2008-11-04 21:14:15 robbep Exp $
+// $Id: MCTruthManager.cpp,v 1.11 2008-12-12 17:23:45 gcorti Exp $
 // Include files 
+#include <string>
 
 // local
 #include "GaussTools/MCTruthManager.h"
