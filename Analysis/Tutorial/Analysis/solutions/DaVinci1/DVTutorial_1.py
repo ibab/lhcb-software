@@ -2,11 +2,10 @@
 #
 # Options for exercise 1
 #
-# @author Marco Cattaneo
-# @date 2008-06-02
+# @author Patrick Koppenburg
+# @date 2008-11-27
 #
 ########################################################################
-from os import environ
 from Gaudi.Configuration import *
 from Configurables import TutorialAlgorithm, PhysDesktop
 
