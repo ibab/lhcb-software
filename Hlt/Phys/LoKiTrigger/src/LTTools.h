@@ -1,4 +1,4 @@
-// $Id: LTTools.h,v 1.3 2008-12-07 14:34:30 ibelyaev Exp $
+// $Id: LTTools.h,v 1.4 2008-12-12 16:35:46 ibelyaev Exp $
 // ============================================================================
 #ifndef LTTOOLS_H 
 #define LTTOOLS_H 1
@@ -92,11 +92,17 @@ namespace LoKi
       ( const stringKey&        key  ,
         const LoKi::AuxFunBase& base )
       {
+        std::cout << " debug1 : " << key << "/" << base << std::endl ;
         Hlt::Selection* sel = getSelection ( key , base ) ;
+        std::cout << " debug2 : " << key << "/" << base << std::endl ;
         base.Assert ( 0 !=  sel , "Hlt::Selection  points to NULL!" ) ;
+        std::cout << " debug3 : " << key << "/" << base << std::endl ;
         typedef Hlt::TSelection<TYPE> TSel ;
+        std::cout << " debug4 : " << key << "/" << base << std::endl ;
         TSel* tsel = cast<TYPE> ( sel ) ;
+        std::cout << " debug5 : " << key << "/" << base << std::endl ;
         base.Assert ( 0 != tsel , "Hlt::TSelection points to NULL!" ) ;    
+        std::cout << " debug6 : " << key << "/" << base << std::endl ;
         return tsel ;
       }
       // ======================================================================

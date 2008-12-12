@@ -1,4 +1,4 @@
-// $Id: LTTools.cpp,v 1.4 2008-12-07 14:51:11 ibelyaev Exp $
+// $Id: LTTools.cpp,v 1.5 2008-12-12 16:35:46 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -64,7 +64,7 @@ Hlt::Selection* LoKi::Hlt1::Utils::getSelection
 ( const stringKey&        key  ,
   const LoKi::AuxFunBase& base )
 {
-  SmartIF<LoKi::IHltUnit> unit ( getUnit( base ) ) ;
+  SmartIF<LoKi::IHltUnit> unit ( getAlg ( base ) ) ;
   base.Assert( !(!unit) , "LoKi::IHltUnit* is invalid") ;
   return unit->selection ( key ) ;
 }

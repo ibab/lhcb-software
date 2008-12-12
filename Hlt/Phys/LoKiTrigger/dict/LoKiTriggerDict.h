@@ -1,4 +1,4 @@
-// $Id: LoKiTriggerDict.h,v 1.12 2008-11-22 17:21:57 ibelyaev Exp $
+// $Id: LoKiTriggerDict.h,v 1.13 2008-12-12 16:35:46 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
@@ -25,6 +25,43 @@
 #include "LoKi/TrMatch.h"
 #include "LoKi/VxMaker.h"
 #include "LoKi/VxUpgrade.h"
+// ============================================================================
+namespace LoKi 
+{
+  // ==========================================================================
+  namespace Functors 
+  {
+    // ========================================================================
+    // the specific printout
+    // ========================================================================
+    template <>
+    std::ostream& Empty<LHCb::Track*>::fillStream
+    ( std::ostream& s ) const { return s << "TrEMPTY" ; }
+    // ========================================================================
+    // the specific printpout
+    // ========================================================================
+    template <>
+    std::ostream& 
+    Size<LHCb::Track*>::fillStream
+    ( std::ostream& s ) const { return s << "TrSIZE" ; }
+    // ========================================================================
+    // the specific printout
+    // ========================================================================
+    template <>
+    std::ostream& 
+    Empty<LHCb::RecVertex*>::fillStream
+    ( std::ostream& s ) const { return s << "RVEMPTY" ; }
+    // ========================================================================
+    // the specific printpout
+    // ========================================================================
+    template <>
+    std::ostream& 
+    Size<LHCb::RecVertex*>::fillStream
+    ( std::ostream& s ) const { return s << "RVSIZE" ; }
+    // ========================================================================
+  } // end of namespace LoKi::Functors 
+  // ==========================================================================
+} // end of namespace LoKi
 // ============================================================================
 namespace LoKi
 {

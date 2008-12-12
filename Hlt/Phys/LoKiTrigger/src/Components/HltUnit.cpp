@@ -1,6 +1,10 @@
-// $Id: HltUnit.cpp,v 1.2 2008-11-13 13:14:42 ibelyaev Exp $
+// $Id: HltUnit.cpp,v 1.3 2008-12-12 16:35:46 ibelyaev Exp $
 // ============================================================================
 // Include files
+// ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/SmartIF.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -89,7 +93,6 @@ Hlt::Selection* LoKi::HltUnit::selection ( const stringKey& key ) const
   Hlt::Selection* s = i_selection ( key ) ;
   // register "all" selection 
   if ( monitor() ) { m_all.insert ( key , s ) ; }
-  //
   return s ;
 }
 // ============================================================================
@@ -99,6 +102,8 @@ Hlt::Selection* LoKi::HltUnit::selection ( const stringKey& key ) const
 // ============================================================================
 StatusCode LoKi::HltUnit::decode() 
 {
+  /// lock the context 
+  Gaudi::Utils::AlgContext lock ( this , contextSvc() ) ;
   StatusCode sc = i_decode<LoKi::Hybrid::ICoreFactory> ( m_cut ) ;
   Assert ( sc.isSuccess() , "Unable to decode the functor!" ) ;
   return StatusCode::SUCCESS ;  
@@ -146,6 +151,9 @@ StatusCode LoKi::HltUnit::queryInterface
 // ===========================================================================
 StatusCode LoKi::HltUnit::execute () 
 {
+  /// lock the context 
+  Gaudi::Utils::AlgContext lock ( this , contextSvc() ) ;
+  ///
   if ( updateRequired() )
   {
     Warning ( "Update of the algorithm is required!!!") ;
@@ -190,7 +198,7 @@ StatusCode LoKi::HltUnit::execute ()
       const Hlt::Selection* s = m_all [ ikey->first ] ;
       // count the changes in the number of candidates  
       if ( m_out.end() == m_out.find ( ikey->first ) ) 
-      { counter ( "delta " + ikey->first ) += ( s->size() - ikey->second ) ; }
+      { counter ( "delta '" + ikey->first + "'" ) += ( s->size() - ikey->second ) ; }
       // ======================================================================
     } 
   }

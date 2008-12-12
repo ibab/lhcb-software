@@ -1,4 +1,4 @@
-// $Id: HltUnit.h,v 1.3 2008-11-19 14:07:06 ibelyaev Exp $
+// $Id: HltUnit.h,v 1.4 2008-12-12 16:35:46 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_HLTUNIT_H 
 #define LOKI_HLTUNIT_H 1
@@ -84,15 +84,13 @@ namespace LoKi
     /// get access to Hlt data service 
     inline IHltDataSvc* hltSvc() const 
     {
-      if ( 0 == m_hltSvc ) 
-      { m_hltSvc = svc<IHltDataSvc>( "HltDataSvc" , true ) ; }
+      if ( 0 == m_hltSvc ) { m_hltSvc = svc<IHltDataSvc>( "HltDataSvc" , true ) ; }
       return m_hltSvc ;
     }
     /// get access to Hlt data service 
     inline IANNSvc* annSvc() const 
     {
-      if ( 0 == m_annSvc ) 
-      { m_annSvc = svc<IANNSvc>( "HltANNSvc" , true ) ; }
+      if ( 0 == m_annSvc ) { m_annSvc = svc<IANNSvc>( "HltANNSvc" , true ) ; }
       return m_annSvc ;
     }
     // ========================================================================
@@ -102,9 +100,9 @@ namespace LoKi
     inline Hlt::Selection*  i_selection ( const stringKey& key ) const 
     {
       IHltDataSvc* hlt = hltSvc() ;
-      const IAlgorithm* a_ = this ;
-      IAlgorithm* a = const_cast<IAlgorithm*> (  a_ ) ;
-      Hlt::Selection& s = hlt->selection ( key , a ) ;
+      const IAlgorithm* _a = this ;
+      IAlgorithm* ia = const_cast<IAlgorithm*> ( _a ) ;
+      Hlt::Selection& s = hlt->selection ( key , ia ) ;
       return &s ;
     }
     // ========================================================================
