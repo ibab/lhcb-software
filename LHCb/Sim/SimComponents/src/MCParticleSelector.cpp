@@ -1,4 +1,4 @@
-// $Id: MCParticleSelector.cpp,v 1.12 2008-12-04 14:38:53 mneedham Exp $
+// $Id: MCParticleSelector.cpp,v 1.13 2008-12-12 12:41:37 cattanem Exp $
 
 #include "Event/MCParticle.h"
 
@@ -63,9 +63,6 @@ bool MCParticleSelector::accept(const LHCb::MCParticle* aParticle) const
   // Check for NULL pointers
   if ( !aParticle ) return false;
 
-  // Sanity check, protects FPEs later
-  if( 0. > aParticle->gamma() ) return false;
-
   // charge selection
   const int charge = aParticle->particleID().threeCharge();
   if ( (0 == charge && !m_selNeutral) ||
@@ -80,10 +77,12 @@ bool MCParticleSelector::accept(const LHCb::MCParticle* aParticle) const
   // momentum cuts
   const double tMomentum = aParticle->p();
   if ( tMomentum < m_pMin || tMomentum > m_pMax ) return false;
-  
-  // beta * gamma
-  const double betaGamma = aParticle->beta() * aParticle->gamma();
-  if ( betaGamma < m_betaGammaMin ) return false;
+
+  // beta * gamma - skip it for photons
+  if( aParticle->virtualMass() > 1.*Gaudi::Units::keV ) {
+    const double betaGamma = aParticle->betaGamma();
+    if ( betaGamma < m_betaGammaMin ) return false;
+  }
 
   // eta
   const double tEta = aParticle->pseudoRapidity();
