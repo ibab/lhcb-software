@@ -281,7 +281,7 @@ namespace LHCb {
     /** Generates a new file name from the MDF information.
      * @param runNumber  The current run number, to be included in the file name.
      */
-    std::string getNewFileName(unsigned int runNumber);
+    virtual std::string getNewFileName(unsigned int runNumber);
 
     /// Similar to MDFWriter::construct()
     virtual void constructNet(void);
