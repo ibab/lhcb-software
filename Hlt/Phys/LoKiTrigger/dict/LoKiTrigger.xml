@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiTrigger.xml,v 1.14 2008-11-22 17:21:57 ibelyaev Exp $ 
+     * $Id: LoKiTrigger.xml,v 1.15 2008-12-13 13:35:44 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
@@ -150,6 +150,13 @@
       <method name="=" />
     </class>
     <class pattern="std::binary_function&lt;*&gt;">
+      <method name="=" />
+    </class>
+    
+    <class pattern="LoKi::Functors::*">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::Hlt1::*">
       <method name="=" />
     </class>
 

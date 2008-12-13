@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.20 2008-11-28 17:13:20 ibelyaev Exp $
+! $Id: release.notes,v 1.21 2008-12-13 13:35:44 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiTrigger
 ! Responsible : Vanya BELYAEV
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
+
+! 2008-12-13 - Vanya BELYAEV
+ - fix the dictionarie sfor lhcb3 compilation
+     remoev extra "operator="
 
 ! 2008-11-28 - Vanya BELYAEV
 
