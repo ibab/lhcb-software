@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.70 2008-12-12 16:38:07 ibelyaev Exp $ 
+! $Id: release.notes,v 1.71 2008-12-13 13:00:09 witekma Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2008-12-13 - Mariusz Witek
+- New photon line starting from L0Electrons not confirmed in T
 
 ! 2008-12-12 - Vanya BELYAEV
 
