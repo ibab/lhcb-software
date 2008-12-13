@@ -4,6 +4,9 @@
 ! Purpose     : Ecal alley specific algorithms and tools
 !----------------------------------------------------------------------------
 
+! 2008-12-13 - Mariusz Witek
+- HltAntiEleConf, anti T confirmation tool for L0Electrons
+
 ! 2008-12-07 - Vanya BELYAEV
  - fix for new signature of LHCb::Track:stateAt  
 
