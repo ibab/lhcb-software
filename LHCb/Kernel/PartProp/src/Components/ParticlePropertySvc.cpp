@@ -1,4 +1,4 @@
-// $Id: ParticlePropertySvc.cpp,v 1.2 2008-12-03 13:43:51 ibelyaev Exp $
+// $Id: ParticlePropertySvc.cpp,v 1.3 2008-12-13 14:48:22 ibelyaev Exp $
 // ============================================================================
 //Include files
 // ============================================================================
@@ -24,6 +24,7 @@
 #include "Kernel/IParticlePropertySvc.h"
 #include "Kernel/ParticleProperty.h"
 #include "Kernel/ParticleID.h"
+#include "Kernel/CC.h"
 // ============================================================================
 // Boost 
 // ============================================================================
@@ -32,8 +33,6 @@
 #include "boost/algorithm/string.hpp"
 // ============================================================================
 // local 
-// ============================================================================
-#include "CC.h"
 // ============================================================================
 /** @file
  *  Simple implementation of class LHCb::ParticlePropertySvc 
@@ -394,7 +393,7 @@ namespace LHCb
   private: // CC-related stuff 
     // ========================================================================
     /// the CC-map 
-    mutable MapCC                     m_ccMap  ;            //       the CC-map 
+    mutable Decays::CC::MapCC         m_ccMap  ;            //       the CC-map 
     /// CC-map for properties 
     std::map<std::string,std::string> m_ccmap_ ;            //           CC-map
     // ========================================================================
@@ -915,7 +914,7 @@ std::string LHCb::ParticlePropertySvc::cc ( const std::string& decay ) const
     }
   }
   // use the map 
-  return cc_ ( decay , m_ccMap ) ;
+  return Decays::CC::cc ( decay , m_ccMap ) ;
 }
 // ============================================================================
 // Instantiation of a static factory class used by clients to create

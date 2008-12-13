@@ -1,41 +1,19 @@
-// $Id: CC.h,v 1.1 2008-12-03 13:43:50 ibelyaev Exp $
+// $Id: CC.cpp,v 1.1 2008-12-13 14:48:22 ibelyaev Exp $
 // ============================================================================
-#ifndef PARTPROP_KERNEL_CC_H 
-#define PARTPROP_KERNEL_CC_H 1
+// Include files 
 // ============================================================================
-// Include files
+// PartProp
 // ============================================================================
-// STD & STL 
+#include "Kernel/CC.h"
 // ============================================================================
-#include <string>
-#include <map>
+/** @file 
+ *  Implementation file for namespace Decays::CC
+ *  @date 2008-12-13 
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ */
 // ============================================================================
 namespace 
 {
-  // ==========================================================================
-  /** @struct CmpCC
-   *  a bit specific comparison of strings, useful for 
-   *  ordering according to the length as the primary parameter 
-   *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-   */
-  struct CmpCC : public std::binary_function<std::string,std::string,bool>
-  {
-    /** the only one essential method 
-     *  The most long string is "less", otherwise the 
-     *  standard comparison is applicable.
-     */
-    inline bool operator() 
-      ( const std::string& v1 , 
-          const std::string& v2 ) const 
-    { 
-      const std::string::size_type s1 = v1.size () ; 
-      const std::string::size_type s2 = v2.size () ;
-      return s1 < s2 ? false : s2 < s1 ? true  : ( v1 < v2 ) ;
-    }
-  };
-  // ========================================================================
-  /// the actual type of CC-map 
-  typedef std::map<std::string,std::string,CmpCC>  MapCC ;          // CC-MAP
   // ========================================================================
   /** simple function to make charge conjugated inside the original string. 
    *  All substrings are subsutututed by their charge conjugates 
@@ -46,16 +24,16 @@ namespace
    */
   inline std::string cc_
   ( const std::string&           decay   , 
-    const MapCC&                 map_    ,
+    const Decays::CC::MapCC&     map_    ,
     const std::string::size_type pos = 0 ) 
   {
     // check the validity of position 
     if  ( pos >= decay.size() ) { return decay ; }                  // RETURN
     // find the match:
     std::string::size_type _p = std::string::npos ;
-    MapCC::const_iterator  _i = map_.end () ;
+    Decays::CC::MapCC::const_iterator  _i = map_.end () ;
     // look for the "nearest" and "longest" match 
-    for ( MapCC::const_iterator ic = map_.begin() ; 
+    for ( Decays::CC::MapCC::const_iterator ic = map_.begin() ; 
           map_.end() != ic ; ++ic ) 
     {
       // find the particle 
@@ -79,13 +57,31 @@ namespace
     
     // advance the position 
     _p +=  _i -> second.size() ;
-    // ... and start the recursion 
+    // ... and start the recursion here 
     return _p < aux.size() ? cc_ ( aux , map_ , _p ) : aux ;       // RETURN
   }
-  // ========================================================================
-} // end of anonymous namespace 
+  // ==========================================================================
+} // end of anonympous namespace 
+// ============================================================================
+/* simple function to make charge conjugated inside the original string. 
+ *  All substrings are subsutututed by their charge conjugates 
+ *  @param orig the original sring 
+ *  @param map_ the full map of substitutions 
+ *  @param pos the starting position 
+ *  @return charge-conjugated string 
+ */
+// ============================================================================
+std::string Decays::CC::cc
+( const std::string&           decay   , 
+  const Decays::CC::MapCC&     map_    ) { return cc_ ( decay , map_ ) ; }
+// ============================================================================
+std::string Decays::CC::cc
+( const std::string&                       decay   , 
+  const std::map<std::string,std::string>& map_    ) 
+{
+  Decays::CC::MapCC mapcc ( map_.begin() , map_.end() ) ;
+  return cc_ ( decay , mapcc ) ;
+}
 // ============================================================================
 // The END 
-// ============================================================================
-#endif // PARTPROP_KERNEL_CC_H
 // ============================================================================
