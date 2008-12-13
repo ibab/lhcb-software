@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactories.cpp,v 1.17 2008-12-03 07:52:51 albrecht Exp $
+// $Id: HltFunctionFactories.cpp,v 1.18 2008-12-13 13:05:57 witekma Exp $
 // Include files 
 
 // from Gaudi
@@ -69,6 +69,7 @@ StatusCode HltTrackFunctionFactory::initialize() {
   declare<ITrackFunctionTool>("DeltaP","HltDeltaPTool");
   declare<ITrackFunctionTool>("IsMuon","HltIsMuonTool");
   declare<ITrackFunctionTool>("IsPhoton","HltIsPhotonTool");
+  declare<ITrackFunctionTool>("AntiEleConf","HltAntiEleConf");
   declare<ITrackBiFunctionTool,zen::abs_min,Hlt::TrackSelection>
     ("Ecal2DChi2","HltRZVeloEcalMatch");
 

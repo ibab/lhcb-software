@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2008-12-13 - Mariusz Witek
+- add HltFunctionFactories entry for anti T confirmation of L0Electrons
+
 ! 2008-12-11 - Vanya BELYAEV
  - HltDataSvc :  IAlgorithm*  -> const IAlgorithm* 
 
