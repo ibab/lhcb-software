@@ -1,4 +1,4 @@
-// $Id: iTree.h,v 1.5 2008-12-13 15:08:22 ibelyaev Exp $
+// $Id: iTree.h,v 1.6 2008-12-13 15:18:22 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ITREE_H 
 #define LOKI_ITREE_H 1
@@ -164,9 +164,9 @@ Decays::Tree_<PARTICLE>::Tree_
   , m_tree (0) 
 {
   typedef Decays::Tree_<PARTICLE> Self ;  
-  const Self* _tree = dynamic_cast<const Self*>( &tree ) ;
-  if ( 0 != _tree  ) { m_tree = _tree. m_tree-> clone () ; }
-  if ( 0 == m_tree ) { m_tree =  tree.          clone () ; }
+  const Self* self = dynamic_cast<const Self*>( &tree ) ;
+  if ( 0 !=   self ) { m_tree = self  -> m_tree-> clone () ; }
+  if ( 0 == m_tree ) { m_tree = tree.             clone () ; }
 }
 // ============================================================================
 // copy constructor 
