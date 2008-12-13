@@ -1,4 +1,4 @@
-// $Id: HltIsPhotonTool.cpp,v 1.4 2008-12-07 13:23:45 ibelyaev Exp $
+// $Id: HltIsPhotonTool.cpp,v 1.5 2008-12-13 13:18:30 witekma Exp $
 // Include files 
 
 // from Gaudi
@@ -26,7 +26,8 @@ HltIsPhotonTool::HltIsPhotonTool( const std::string& type,
                                   const IInterface* parent )
   : GaudiTool ( type, name , parent )
 {
-  declareProperty("MinEtCluster", m_minEtCluster = 2800.);
+  // just a safeguard against crazy clusters
+  declareProperty("MinEtCluster", m_minEtCluster = 2000.);
   declareInterface<ITrackFunctionTool>(this);
 }
 //=============================================================================
