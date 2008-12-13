@@ -1,4 +1,4 @@
-// $Id: iTree.h,v 1.4 2008-12-04 14:37:31 ibelyaev Exp $
+// $Id: iTree.h,v 1.5 2008-12-13 15:08:22 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ITREE_H 
 #define LOKI_ITREE_H 1
@@ -39,6 +39,8 @@ namespace Decays
     /// the actual type of the argument 
     typedef typename boost::call_traits<PARTICLE>::param_type argument   ;
     typedef std::vector<PARTICLE>                             Collection ;
+    // the actual type of particle
+    typedef PARTICLE                                          particle   ;
     // ======================================================================
   public:
     // ======================================================================
@@ -129,6 +131,11 @@ namespace Decays
     // ======================================================================
   public:
     // ======================================================================
+    bool eval ( typename Decays::iTree_<PARTICLE>:: argument p ) const
+    { return (*m_tree) ( p ) ; }
+    // ======================================================================
+  public:
+    // ======================================================================
     /// assignement operator 
     Tree_& operator=( const  Tree_&           right ) ; // assignement 
       /// pseudo-assignement operator 
@@ -156,12 +163,10 @@ Decays::Tree_<PARTICLE>::Tree_
   : Decays::iTree_<PARTICLE> () 
   , m_tree (0) 
 {
-  if ( typeid ( Decays::Tree_<PARTICLE> ) == typeid ( tree ) ) 
-  {
-    const Tree_& _tree = dynamic_cast<const Tree_&>( tree ) ;
-    m_tree = _tree.m_tree->clone() ;
-  }
-  else { m_tree = tree.clone() ; }
+  typedef Decays::Tree_<PARTICLE> Self ;  
+  const Self* _tree = dynamic_cast<const Self*>( &tree ) ;
+  if ( 0 != _tree  ) { m_tree = _tree. m_tree-> clone () ; }
+  if ( 0 == m_tree ) { m_tree =  tree.          clone () ; }
 }
 // ============================================================================
 // copy constructor 
@@ -195,15 +200,11 @@ Decays::Tree_<PARTICLE>::operator=
 ( const Decays::iTree_<PARTICLE>& right ) // assignement 
 {
   if ( &right == this ) { return *this ; } 
-  Decays::iTree_<PARTICLE>* tree = 0 ;
   typedef Decays::Tree_<PARTICLE> Self ;
-  //
-  if ( typeid ( Self ) == typeid ( right ) ) 
-  { 
-    const Self* self = dynamic_cast<const Self*>( &right ) ;  
-    tree = self->m_tree->clone() ; 
-  }
-  else { tree = right.clone() ; }
+  Decays::iTree_<PARTICLE>* tree = 0 ;
+  const Self* self = dynamic_cast<const Self*>( &right ) ;  
+  if ( 0 != self ) { tree = self->m_tree-> clone () ; }
+  if ( 0 == tree ) { tree = right.         clone () ; }
   //
   delete m_tree ; 
   m_tree = tree ;
