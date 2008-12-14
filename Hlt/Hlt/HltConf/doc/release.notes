@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.74 2008-12-14 21:29:19 graven Exp $ 
+! $Id: release.notes,v 1.75 2008-12-14 21:30:46 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -9,6 +9,7 @@
  - remove explicit decoding of T and TT
  - add config file for express stream
  - fix on/offline tool in HltRecoSequence.py
+ - add express line config file
 
 ! 2008-12-13 - Mariusz Witek
 - New photon line starting from L0Electrons not confirmed in T
