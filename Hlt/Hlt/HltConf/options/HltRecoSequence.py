@@ -48,6 +48,9 @@ prepareForward = HltTrackFilter( 'HltPrepareForward'
 
 recoPV3D =  PatPV3D('Hlt1RecoPV3D' ) #TODO: check IPVOfflineTool config!!! InputTracksName = recoVelo.OutputTracksName )
 #Hlt1RecoPV3D.PVOfflineTool.InputTracks = [ recoVelo.OutputTracksName ]
+recoPV3D.addTool( PVOfflineTool, name = 'PVOfflineTool' )
+recoPV3D.PVOfflineTool.InputTracks = [ recoVelo.OutputTracksName ]
+
 
 
 #TODO: could this be a 'boundMembers' instance? 
