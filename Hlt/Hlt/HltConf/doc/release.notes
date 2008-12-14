@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.71 2008-12-13 13:00:09 witekma Exp $ 
+! $Id: release.notes,v 1.72 2008-12-14 21:27:10 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2008-12-14 - Gerhard Raven
+ - remove explicit decoding of T and TT
 
 ! 2008-12-13 - Mariusz Witek
 - New photon line starting from L0Electrons not confirmed in T
