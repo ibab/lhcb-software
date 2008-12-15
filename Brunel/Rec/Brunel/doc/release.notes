@@ -3,6 +3,12 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2008-12-12 - Marco Cattaneo
+ - Remove ExpertTracking option, should be set directly in TrackSys
+ - Do not stop if unknown sub-detector added to Moni or Check sequences, just 
+   issue a warning
+ - Set Context to all phases, default is "Offline"
+
 ! 2008-12-05 - Marco Cattaneo
  - Cleanups in options and configurable
 

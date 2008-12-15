@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.42 2008-12-05 12:28:35 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.43 2008-12-15 07:22:39 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -61,8 +61,6 @@ class Brunel(LHCbConfigurableUser):
         # Following are options forwarded to RecSys
        ,"RecoSequence"   : [] # The Sub-detector reconstruction sequencing. See RecSys for default
        ,"SpecialData"    : [] # Various special data processing options. See KnownSpecialData for all options
-        # Following are options forwarded to TrackSys
-       ,"ExpertTracking": []  # list of expert Tracking options, see KnownExpertTracking
        ,"Context":     "Offline" # The context within which to run
         }
 
@@ -115,6 +113,7 @@ class Brunel(LHCbConfigurableUser):
         if withMC:
             # Create associators for checking and for DST
             ProcessPhase("MCLinks").DetectorList += self.getProp("MCLinksSequence")
+            ProcessPhase("MCLinks").Context = self.getProp("Context")
             # Unpack Sim data
             GaudiSequencer("MCLinksUnpackSeq").Members += [ "UnpackMCParticle",
                                                             "UnpackMCVertex" ]
@@ -177,6 +176,7 @@ class Brunel(LHCbConfigurableUser):
             self.MainSequence = mainSeq
         brunelSeq.Members += mainSeq
         ProcessPhase("Init").DetectorList += self.getProp("InitSequence")
+        ProcessPhase("Init").Context = self.getProp("Context")
         from Configurables import RecInit
         recInit = RecInit( name = "BrunelInit",
                            PrintFreq = self.getProp("PrintFreq"))
@@ -286,12 +286,12 @@ class Brunel(LHCbConfigurableUser):
             for seq in moniSeq:
                 if expert:
                     if seq not in self.KnownExpertMoniSubdets:
-                        raise RuntimeError("Unknown subdet '%s' in MoniSequence"%seq)
+                        log.warning("Unknown subdet '%s' in MoniSequence"%seq)
                 else:
                     if seq not in self.KnownMoniSubdets:
-                        raise RuntimeError("Unknown subdet '%s' in MoniSequence"%seq)
+                        log.warning("Unknown subdet '%s' in MoniSequence"%seq)
         ProcessPhase("Moni").DetectorList += moniSeq
-        ProcessPhase('Moni').Context = 'Offline'
+        ProcessPhase('Moni').Context = self.getProp("Context")
 
         # Histograms filled both in real and simulated data cases
         if "CALO" in moniSeq :
@@ -350,12 +350,13 @@ class Brunel(LHCbConfigurableUser):
             for seq in checkSeq:
                 if expert:
                     if seq not in self.KnownExpertCheckSubdets:
-                        raise RuntimeError("Unknown subdet '%s' in MCCheckSequence"%seq)
+                        log.warning("Unknown subdet '%s' in MCCheckSequence"%seq)
                 else:
                     if seq not in self.KnownCheckSubdets:
-                        raise RuntimeError("Unknown subdet '%s' in MCCheckSequence"%seq)
+                        log.warning("Unknown subdet '%s' in MCCheckSequence"%seq)
             
         ProcessPhase("Check").DetectorList += checkSeq
+        ProcessPhase("Check").Context = self.getProp("Context")
 
         # Tracking handled inside TrackSys configurable
         TrackSys().setProp( "WithMC", True )
@@ -422,12 +423,13 @@ class Brunel(LHCbConfigurableUser):
     def __apply_configuration__(self):
         
         GaudiKernel.ProcessJobOptions.PrintOff()
-        self.setOtherProp(TrackSys(),"ExpertTracking")
-        self.setOtherProps(RecSysConf(),["SpecialData","RecoSequence"])
+        self.setOtherProps(RecSysConf(),["SpecialData","RecoSequence","Context"])
         self.defineGeometry()
         self.defineEvents()
         self.defineOptions()
         self.defineMonitors()
         GaudiKernel.ProcessJobOptions.PrintOn()
         log.info( self )
+        log.info( RecSysConf() )
+        log.info( TrackSys() )
         GaudiKernel.ProcessJobOptions.PrintOff()
