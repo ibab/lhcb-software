@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.75 2008-12-14 21:30:46 graven Exp $ 
+! $Id: release.notes,v 1.76 2008-12-15 20:11:14 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+
+! 2008-12-15 - Gerhard Raven
+ - remove 3D PV from Hlt1RecoSequence -- seems to be not used, fixes
+   problem with PhotonLines which use Hlt1RecoSequence...
 
 ! 2008-12-14 - Gerhard Raven
  - remove explicit decoding of T and TT

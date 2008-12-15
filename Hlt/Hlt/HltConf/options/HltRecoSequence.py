@@ -5,7 +5,7 @@ from Gaudi.Configuration import *
 from Configurables import GaudiSequencer
 from Configurables import PatPV2D, PatPV3D, PatForward, PatForwardTool
 from Configurables import Tf__PatVeloRTracking, Tf__PatVeloSpaceTracking
-from Configurables import RawBankToSTLiteClusterAlg
+from Configurables import PVOfflineTool
 from Configurables import HltTrackFilter, HltVertexFilter, HltTrackUpgrade
 
 #----------------------- HltTrack sequence
@@ -112,7 +112,7 @@ hlt1RecoSequence = GaudiSequencer( 'Hlt1RecoSequence', MeasureTime = True
                                  [ hlt1RecoRZVeloTracksSequence
                                  , hlt1RecoRZPVSequence
                                  , reco1Velo
-                                 , recoPV3D # does this not abort the remainder of the sequence if no primary??
+                                 #, recoPV3D # does this not abort the remainder of the sequence if no primary??
                                  , recoFwd ] )
 
 # Forward
