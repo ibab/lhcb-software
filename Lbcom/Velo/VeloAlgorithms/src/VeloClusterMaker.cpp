@@ -40,7 +40,8 @@ VeloClusterMaker::VeloClusterMaker( const std::string& name,
   declareProperty( "SignalToNoiseCut", m_signalToNoiseCut = 3.0);
   declareProperty( "ClusterSignalToNoiseCut", 
                    m_clusterSignalToNoiseCut = 4.5 );
-  declareProperty( "HighThreshold", m_highThreshold= 25.0 );
+  declareProperty( "ClusterAbsoluteADCCut", m_clusterAbsoluteADCCut = 20. );
+  declareProperty( "HighThreshold", m_highThreshold= 30.0 );
 }
 
 //=============================================================================
@@ -127,8 +128,13 @@ void VeloClusterMaker::makeClusters(){
       if(m_isVerbose) verbose()<< " made cluster from digit S/N = " 
 			       << currentClusterSTN
 			       << endreq;
+      double adcTotal = 0.;
+      for ( int iS = 0 ; iS < currentCluster->size() ; ++iS ){
+	adcTotal += currentCluster->adcValue(iS);
+      }
       // global cluster S/N cut:
-      if( currentClusterSTN > m_clusterSignalToNoiseCut){
+      if( currentClusterSTN > m_clusterSignalToNoiseCut &&
+	 adcTotal > m_clusterAbsoluteADCCut ){
 	// Cluster is OK! 
 	// set Key and Add it to the event.
 	LHCb::VeloChannelID channelID( currentCluster->sensor(), 

@@ -80,6 +80,8 @@ private:
   double  m_signalToNoiseCut;
   /// S/N cut for clusters to apply to all detectors from job opts
   double  m_clusterSignalToNoiseCut;
+  ///  AbsoluteADCCut cut for clusters to apply to all detectors from job opts
+  double  m_clusterAbsoluteADCCut;
   int m_maxClusters; ///< maximum number of clusters to make per event
   double m_inclusionThreshold; ///< for adding strips to the cluster
   double m_highThreshold; ///< Spillover Threshold 
