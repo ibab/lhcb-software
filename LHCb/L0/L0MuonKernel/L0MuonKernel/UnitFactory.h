@@ -1,13 +1,9 @@
-// $Id: UnitFactory.h,v 1.3 2008-11-07 16:23:39 jucogan Exp $
+// $Id: UnitFactory.h,v 1.4 2008-12-15 10:19:47 cattanem Exp $
 
 #ifndef L0MUONKERNEL_UNITFACTORY_H
 #define L0MUONKERNEL_UNITFACTORY_H     1
 
-
 #include <string>
-#include <map>
-#include "ProcessorKernel/Unit.h"
-//#include "L0MuonKernel/L0MUnit.h"
 
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/parsers/AbstractDOMParser.hpp>
@@ -17,6 +13,7 @@
 XERCES_CPP_NAMESPACE_USE
 
 namespace L0Muon {
+  class Unit;
 
   /** @class UnitFactory UnitFactory.h L0MuonKernel/UnitFactory.h
 

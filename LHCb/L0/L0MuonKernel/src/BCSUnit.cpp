@@ -19,12 +19,10 @@ void L0Muon::BCSUnit::initialize()
 {
 
   char buf[4096];
-  char* format ;
 
   // Candidate Register handlers for input candidates
   for (int ipu = 0; ipu <4 ; ipu++) {
-    format = "PU%d";
-    sprintf(buf,format,ipu);
+    sprintf(buf,"PU%d",ipu);
     std::map<std::string,L0Muon::Register*>::iterator itinputs =  m_inputs.find(buf);
     if (itinputs==m_inputs.end()) continue;
     Register* reg = (*itinputs).second;
@@ -32,8 +30,7 @@ void L0Muon::BCSUnit::initialize()
   }
 
   // Candidate Register handler for selected candidates
-  format = "CAND_BCSUQ%dR%d%d%d";
-  sprintf(buf,format,m_mid.quarter()+1,m_mid.region()+1,m_mid.nX(),m_mid.nY());
+  sprintf(buf,"CAND_BCSUQ%dR%d%d%d",m_mid.quarter()+1,m_mid.region()+1,m_mid.nX(),m_mid.nY());
   std::map<std::string,L0Muon::Register*>::iterator itoutputs =  m_outputs.find(buf);
   if (itoutputs==m_outputs.end()) std::cout <<"L0Muon::BCSUnit::initialize key "<<buf  <<" not found in output registers\n";
   Register* reg =(*itoutputs).second;

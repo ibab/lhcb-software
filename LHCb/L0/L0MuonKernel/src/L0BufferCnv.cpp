@@ -1,5 +1,4 @@
 #include "L0MuonKernel/L0BufferCnv.h"
-#include "ProcessorKernel/RegisterFactory.h"
 #include <iostream>
 
 /**

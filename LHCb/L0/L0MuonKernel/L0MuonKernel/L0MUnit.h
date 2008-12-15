@@ -2,7 +2,6 @@
 #define L0MUONKERNEL_L0MUNIT_H     1
 
 #include "ProcessorKernel/Unit.h"
-#include "ProcessorKernel/RegisterFactory.h"
 #include "Kernel/MuonTileID.h"
 
 #include <xercesc/dom/DOM.hpp>

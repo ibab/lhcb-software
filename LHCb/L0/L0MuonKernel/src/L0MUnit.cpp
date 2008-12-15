@@ -2,6 +2,7 @@
 #include <algorithm> 
 #include "L0MuonKernel/L0MUnit.h"
 #include "L0MuonKernel/UnitFactory.h"
+#include "ProcessorKernel/RegisterFactory.h"
 
 L0Muon::L0MUnit::L0MUnit():Unit(){
 }
