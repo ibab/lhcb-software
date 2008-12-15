@@ -1,4 +1,4 @@
-// $Id: L0MuonFromRawTrans.cpp,v 1.14 2008-09-04 08:57:02 jucogan Exp $
+// $Id: L0MuonFromRawTrans.cpp,v 1.15 2008-12-15 10:25:01 cattanem Exp $
 // Include files 
 
 #include "boost/format.hpp"
@@ -19,6 +19,7 @@
 
 #include "L0MuonKernel/ProcUtilities.h"
 #include "L0MuonKernel/L0MuonKernelFromXML.h"
+#include "ProcessorKernel/RegisterFactory.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : L0MuonFromRawTrans

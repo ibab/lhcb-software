@@ -1,10 +1,11 @@
-// $Id: L0MuonCandidatesFromRaw.cpp,v 1.17 2008-12-15 08:09:06 cattanem Exp $
+// $Id: L0MuonCandidatesFromRaw.cpp,v 1.18 2008-12-15 10:25:01 cattanem Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
 
 #include "L0MuonCandidatesFromRaw.h"
 #include "L0MuonKernel/L0MuonKernelFromXML.h"
+#include "ProcessorKernel/RegisterFactory.h"
 
 /// Gaudi interfaces
 #include "GaudiKernel/IChronoStatSvc.h"
