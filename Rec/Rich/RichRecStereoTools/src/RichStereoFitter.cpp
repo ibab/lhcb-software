@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichStereoFitter
  *
  *  CVS Log :-
- *  $Id: RichStereoFitter.cpp,v 1.14 2008-11-30 10:55:48 jonrob Exp $
+ *  $Id: RichStereoFitter.cpp,v 1.15 2008-12-15 12:53:04 jonrob Exp $
  *
  *  @author Luigi Delbuono   delbuono@in2p3.fr
  *  @date   27/06/2007
@@ -207,7 +207,8 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
                                                             config.pidType );
 
     //------------------- iterative fit section: initialization
-    g_XCenterGuess=0; g_YCenterGuess=0;
+    g_XCenterGuess=0; 
+    g_YCenterGuess=0;
 
     int n_iter(0);
     double diffChi2(s_diffChi2Lim);
@@ -328,7 +329,7 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
               //--keep 'old solution' if necessary
               if(diffChi2>0)
               {
-                for(int i=0;i<3;i++) m_solPrev[i]=m_sol[i];
+                for(int i=0;i<3;++i) m_solPrev[i]=m_sol[i];
                 m_chi2Prev=m_chi2;
                 m_chi2ExpPrev=m_chi2Exp;
                 m_probPrev=m_prob;
@@ -437,11 +438,13 @@ bool StereoFitter::trkErrStereo(const State *state, RichRecSegment *segment,
   err_tx2 = state->errTx2();  //these 2 errors are returned because they are mofified
   err_ty2 = state->errTy2();  //in this routine
 
-  double err_txy = (state->errSlopes())(2,3);
-  const Gaudi::SymMatrix5x5 &qCovMatrix = state->covariance();
-  //####
-  double err_txp = qCovMatrix(3,5)*std::pow(PTrk,2)/Gaudi::Units::GeV;   //(x,y,tx,ty,q/p) matrix used to
-  double err_typ = qCovMatrix(4,5)*std::pow(PTrk,2)/Gaudi::Units::GeV;   //get approximately (tx,p), (ty,p) with |q|=1
+  double err_txy = (state->errSlopes())(1,2); // CRJ : was (2,3)
+  const Gaudi::TrackSymMatrix & qCovMatrix = state->covariance();
+  // CRJ : Fix indices ?
+  //double err_txp = qCovMatrix(3,5)*std::pow(PTrk,2)/Gaudi::Unifsts::GeV;   //(x,y,tx,ty,q/p) matrix used to
+  //double err_typ = qCovMatrix(4,5)*std::pow(PTrk,2)/Gaudi::Units::GeV;   //get approximately (tx,p), (ty,p) with |q|=1
+  double err_txp = qCovMatrix(2,4)*std::pow(PTrk,2)/Gaudi::Units::GeV;   //(x,y,tx,ty,q/p) matrix used to
+  double err_typ = qCovMatrix(3,4)*std::pow(PTrk,2)/Gaudi::Units::GeV;   //get approximately (tx,p), (ty,p) with |q|=1
 
   //rms error on PTrk (GeV)
   errMom=std::sqrt(state->errP2())/Gaudi::Units::GeV;
