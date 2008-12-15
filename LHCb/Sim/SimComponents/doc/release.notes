@@ -5,6 +5,9 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+! 2008-12-15 - Marco Cattaneo
+ - In ForcedBDecayTool, protect hepmcp->print() with msgLevel(MSG::DEBUG) test
+
 ! 2008-12-12 - Marco Cattaneo
  - In MCParticleSelector.cpp, do not check betaGamma for particles with zero
    mass, to avoid FPE

@@ -1,4 +1,4 @@
-// $Id: ForcedBDecayTool.cpp,v 1.4 2008-09-03 08:48:27 musy Exp $
+// $Id: ForcedBDecayTool.cpp,v 1.5 2008-12-15 07:11:20 cattanem Exp $
 #include "ForcedBDecayTool.h"
 #include "GaudiKernel/ToolFactory.h"
 
@@ -74,11 +74,10 @@ MCParticle* ForcedBDecayTool::associatedofHEP(HepMC::GenParticle* hepmcp) {
     if((*imc)->particleID().hasBottom() ) {
 
       //always zero momentum?
-      hepmcp->print();
-
-
+      if( msgLevel(MSG::DEBUG) ) { hepmcp->print(); }
+      
       if( mid == (*imc)->particleID().pid() ) {
-	  return (*imc);
+        return (*imc);
       }
     }
   }
