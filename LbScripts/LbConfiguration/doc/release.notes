@@ -1,3 +1,8 @@
+2008-12-15  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/GetPack.py: use shell=True when calling cmt otherwise it
+	does not work on OSX.
+
 2008-12-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/generateLogin.py: added the option to pass the MSITEROOT location. This 

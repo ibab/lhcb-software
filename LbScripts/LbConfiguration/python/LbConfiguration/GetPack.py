@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: GetPack.py,v 1.9 2008-12-11 13:35:12 marcocle Exp $
+# $Id: GetPack.py,v 1.10 2008-12-15 16:51:29 marcocle Exp $
 
 from LbUtils.Script import Script
 import rcs
@@ -104,7 +104,7 @@ class Skip:
 ## @class GetPack
 # Main script class for getpack.
 class GetPack(Script):
-    _version = "$Id: GetPack.py,v 1.9 2008-12-11 13:35:12 marcocle Exp $".replace("$","").replace("Id:","").strip()
+    _version = "$Id: GetPack.py,v 1.10 2008-12-15 16:51:29 marcocle Exp $".replace("$","").replace("Id:","").strip()
     def __init__(self):
         Script.__init__(self, usage = "\n\t%prog [options] package [ [version] ['tag'|'head'] ]"
                                       "\n\t%prog [options] -i [repository [hat]]"
@@ -249,12 +249,14 @@ class GetPack(Script):
     def _doCMTConfig(self, cwd):
         if os.path.exists(os.path.join(cwd,"requirements")):
             self.log.info("Executing 'cmt config' in '%s'", cwd)
-            proc = Popen(["cmt", "config"], cwd = cwd, stdout = PIPE, stderr = PIPE)
+            #proc = Popen(["cmt", "config"], cwd = cwd, stdout = PIPE, stderr = PIPE)
+            proc = Popen(["cmt config"], cwd = cwd, shell = True, stdout = PIPE, stderr = PIPE)
             out, err = proc.communicate()
             ## @todo: check for success of 'cmt config'
             if sys.platform.startswith("win"):
                 self.log.info("Executing 'cmt build vsnet' in '%s'", cwd)
-                proc = Popen(["cmt", "build", "vsnet"], cwd = cwd, stdout = PIPE, stderr = PIPE)
+                #proc = Popen(["cmt", "build", "vsnet"], cwd = cwd, stdout = PIPE, stderr = PIPE)
+                proc = Popen(["cmt build vsnet"], shell = True, cwd = cwd, stdout = PIPE, stderr = PIPE)
                 out, err = proc.communicate()
                 ## @todo: check for success of 'cmt build vsnet'
         else:
@@ -490,7 +492,8 @@ Select the project
             self.options.recursive = False
             
             self.log.debug("Executing 'cmt show uses' in '%s'", pkgdir)
-            proc = Popen(["cmt", "show", "uses"], cwd = pkgdir, stdout = PIPE, stderr = PIPE)
+            #proc = Popen(["cmt", "show", "uses"], cwd = pkgdir, stdout = PIPE, stderr = PIPE)
+            proc = Popen(["cmt show uses"], shell = True, cwd = pkgdir, stdout = PIPE, stderr = PIPE)
             out, err = proc.communicate()
             
             for l in out.splitlines():
