@@ -1,3 +1,8 @@
+2008-12-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/doxypy.py: added the doxygen filter for python. It translates the 
+	python docstring into comments.
+
 2008-12-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v1r8
