@@ -4,6 +4,9 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2008-12-15 - Marco Cattaneo
+ - Fix gcc 4.3 compilation error
+
 ! 2008-11-12 M Needham
  - Remove unused cleanX function
 

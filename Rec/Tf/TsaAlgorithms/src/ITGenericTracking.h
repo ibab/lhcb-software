@@ -1,4 +1,4 @@
-// $Id: ITGenericTracking.h,v 1.7 2008-12-11 07:38:21 mneedham Exp $
+// $Id: ITGenericTracking.h,v 1.8 2008-12-15 12:12:54 cattanem Exp $
 #ifndef ITGenericTracking_H
 #define ITGenericTracking_H 1
 
@@ -106,8 +106,8 @@ private:
 		       std::vector<std::vector<yInfo> >& output ) const;
 
 
-  bool ITGenericTracking::newStereoCandidate(const std::vector<ITGenericTracking::yInfo>& testCand, 
-                                      const CandidateHits& tracks) const;
+  bool newStereoCandidate(const std::vector<ITGenericTracking::yInfo>& testCand, 
+                          const CandidateHits& tracks) const;
 
   IHitExpectation* m_hitExpectation;
  
