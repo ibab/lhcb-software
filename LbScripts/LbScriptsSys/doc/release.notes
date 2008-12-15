@@ -1,3 +1,7 @@
+2008-12-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* doc/DoxyFile.cfg: filtered doxypy.py and the _helpers from the documentation
+
 2008-12-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v1r11
