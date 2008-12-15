@@ -1,4 +1,4 @@
-// $Id: TriggerSelectionTisTos.cpp,v 1.12 2008-11-17 16:26:34 tskwarni Exp $
+// $Id: TriggerSelectionTisTos.cpp,v 1.13 2008-12-15 21:42:48 tskwarni Exp $
 // Include files 
 #include <algorithm>
 
@@ -560,23 +560,27 @@ void TriggerSelectionTisTos::selectionTisTos( const std::string & selectionName,
   getHltSummary();
 
   // get decision from HltDecReports if can find it
+  bool decFound(false);  
   if( m_hltDecReports ){
     const HltDecReport* rep=m_hltDecReports->decReport( selectionName );
-    if( rep )decision = rep->decision();
+    if( rep ){
+      decision = rep->decision();
+      decFound = true;
+    }    
   }
   
   if( !m_hltSelReports ){ storeInCache(selectionName,decision,tis,tos); return;}
   const LHCb::HltObjectSummary* sel =   m_hltSelReports->selReport( selectionName );
   if( !sel ){ storeInCache(selectionName,decision,tis,tos); return;}
-  // presence in HltSelReports indicates that decision was positive
+  // presence in HltSelReports indicates that selection was successful
   // it is possible that decision was not stored in HltDecReports if this was an intermediate step, thus
-  //   overwrite whatever we got from HltDecReports
-  decision=true;
+  //   if not found in HltDecReports, set it here
+  // do not overwrite decisions from HltDecReports, since positive selection could have been killed by postscale
+  if( !decFound )decision=true;
 
   // classify the decision
   hosTISTOS( *sel, m_offlineInput,tis,tos);
   storeInCache(selectionName,decision,tis,tos);
-
 
 }
 
