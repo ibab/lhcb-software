@@ -1,4 +1,4 @@
-// $Id: HltSelReportsReader.h,v 1.1.1.1 2008-08-02 16:40:07 tskwarni Exp $
+// $Id: HltSelReportsReader.h,v 1.2 2008-12-15 21:41:25 tskwarni Exp $
 #ifndef HLTSELREPORTSREADER_H 
 #define HLTSELREPORTSREADER_H 1
 
@@ -23,9 +23,7 @@ class HltSelReportsReader : public GaudiAlgorithm {
 //class HltSelReportsReader :  public HltBaseAlg {
 public: 
 
-  enum HeaderIDs { kSourceID=0,
-                   kVersionNumber=0 
-  };
+  enum HeaderIDs { kVersionNumber=0 };
 
   /// Standard constructor
   HltSelReportsReader( const std::string& name, ISvcLocator* pSvcLocator );

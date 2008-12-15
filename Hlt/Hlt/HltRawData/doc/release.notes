@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.22 2008-12-11 15:27:55 tskwarni Exp $
+!$Id: release.notes,v 1.23 2008-12-15 21:41:25 tskwarni Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltRawData
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Writers and Readers, Makers of persisted TES info
 !-----------------------------------------------------------------------------
+
+! 2008-12-15 - Tomasz Skwarnicki
+ - split HltSelReports into multiple raw banks if too large to store in one
 
 ! 2008-12-11 - Tomasz Skwarnicki
  - fix memory leaks (thanks to Stephan Nies)

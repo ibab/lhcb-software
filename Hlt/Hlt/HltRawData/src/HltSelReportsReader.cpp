@@ -1,4 +1,4 @@
-// $Id: HltSelReportsReader.cpp,v 1.3 2008-12-11 15:27:55 tskwarni Exp $
+// $Id: HltSelReportsReader.cpp,v 1.4 2008-12-15 21:41:25 tskwarni Exp $
 // Include files 
 
 // from Gaudi
@@ -105,25 +105,44 @@ StatusCode HltSelReportsReader::execute() {
   const std::vector<RawBank*> hltselreportsRawBanks = rawEvent->banks( RawBank::HltSelReports );
   if( !hltselreportsRawBanks.size() ){
     return Warning( " No HltSelReports RawBank in RawEvent. Quiting. ",StatusCode::SUCCESS, 10 );
-  } else if( hltselreportsRawBanks.size() != 1 ){
-    Warning( " More then one HltSelReports RawBanks in RawEvent. Will process only the first one. ",StatusCode::SUCCESS, 20 );
   }
-  const RawBank* hltselreportsRawBank = *(hltselreportsRawBanks.begin());
-  if( hltselreportsRawBank->version() > kVersionNumber ){
-  }
-  if( hltselreportsRawBank->sourceID() != kSourceID ){
-    Warning( " HltSelReports RawBank has unexpected source ID. Will try to decode it anyway." ,StatusCode::SUCCESS, 20 );
+  const RawBank* hltselreportsRawBank0 = *(hltselreportsRawBanks.begin());
+  if( hltselreportsRawBank0->version() > kVersionNumber ){
+    Warning( " HltSelReports RawBank version is higher than expected. Will try to decode it anyway." ,StatusCode::SUCCESS, 20 );
   }
 
-  unsigned int bankSize = (hltselreportsRawBank->size()+3)/4; // from bytes to words
+  unsigned int bankSize =0;
+  const RawBank* orderedBanks[hltselreportsRawBanks.size()];
+  for( unsigned int iBank=0; iBank<hltselreportsRawBanks.size(); ++iBank){
+    orderedBanks[iBank]=0;
+  }
+  for( std::vector<RawBank*>::const_iterator hltselreportsRawBankP=hltselreportsRawBanks.begin();
+	 hltselreportsRawBankP!=hltselreportsRawBanks.end(); ++hltselreportsRawBankP ){    
+    const RawBank* hltselreportsRawBank = *hltselreportsRawBankP;
+    unsigned int sourceId = hltselreportsRawBank->sourceID();
+    if( sourceId < hltselreportsRawBanks.size() ){
+      orderedBanks[sourceId]= hltselreportsRawBank;
+    } else {
+      Error( " Illegal Source ID HltSelReports bank skipped ", StatusCode::SUCCESS, 20 );
+    }
+    bankSize += hltselreportsRawBank->size();
+  }
+  bankSize = (bankSize+3)/4; // from bytes to words
   // need to copy it to local array to get rid of const restriction
   unsigned int* pBank = new unsigned int[bankSize];
   HltSelRepRawBank hltSelReportsBank( pBank );
 
-  for(unsigned int i=0; i!=bankSize; ++i){
-    (*pBank) = hltselreportsRawBank->data()[i]; ++pBank;
+  for( unsigned int iBank=0; iBank<hltselreportsRawBanks.size(); ++iBank){
+    const RawBank* hltselreportsRawBank = orderedBanks[iBank];
+    if( !hltselreportsRawBank ){
+      hltSelReportsBank.deleteBank();
+      return Error("Missing HltSelReports RawBank part - quiting.", StatusCode::SUCCESS, 100 );
+    }
+    unsigned int bankSize1 =  (hltselreportsRawBank->size()+3)/4; // from bytes to words
+    for(unsigned int i=0; i!=bankSize1; ++i){
+      (*pBank) = hltselreportsRawBank->data()[i]; ++pBank;
+    }
   }
-
 
   HltSelRepRBHits hitsSubBank( hltSelReportsBank.subBankFromID( HltSelRepRBEnums::kHitsID ) );
   HltSelRepRBObjTyp objTypSubBank( hltSelReportsBank.subBankFromID( HltSelRepRBEnums::kObjTypID ) );

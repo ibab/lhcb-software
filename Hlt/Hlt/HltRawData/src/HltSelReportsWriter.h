@@ -1,4 +1,4 @@
-// $Id: HltSelReportsWriter.h,v 1.1.1.1 2008-08-02 16:40:07 tskwarni Exp $
+// $Id: HltSelReportsWriter.h,v 1.2 2008-12-15 21:41:25 tskwarni Exp $
 #ifndef HLTSELREPORTSWRITER_H 
 #define HLTSELREPORTSWRITER_H 1
 
@@ -26,9 +26,7 @@
 class HltSelReportsWriter :  public HltBaseAlg {
 public: 
 
-  enum HeaderIDs { kSourceID=0,
-                   kVersionNumber=0 
-  };
+  enum HeaderIDs { kVersionNumber=0 };
 
   /// Standard constructor
   HltSelReportsWriter( const std::string& name, ISvcLocator* pSvcLocator );

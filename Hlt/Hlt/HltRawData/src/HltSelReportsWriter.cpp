@@ -1,4 +1,4 @@
-// $Id: HltSelReportsWriter.cpp,v 1.4 2008-12-11 15:27:55 tskwarni Exp $
+// $Id: HltSelReportsWriter.cpp,v 1.5 2008-12-15 21:41:25 tskwarni Exp $
 // Include files 
 
 // from Gaudi
@@ -339,15 +339,38 @@ StatusCode HltSelReportsWriter::execute() {
 
   // insert the bank into the RawEvent
   hltSelReportsBank.saveSize();
-  // RawBank is limited in size to 65535 bytes i.e. 16383 words; be conservative cut it off at smaller limit
-  if( hltSelReportsBank.size() < 16300 ){    
-    std::vector< unsigned int > bankBody( &(hltSelReportsBank.location()[0]), 
-                                          &(hltSelReportsBank.location()[hltSelReportsBank.size()]) );
-    rawEvent->addBank(  kSourceID, RawBank::HltSelReports, kVersionNumber, bankBody );
-  } else {
+
+
+  // delete any previously inserted sel reports
+  const std::vector<RawBank*> hltselreportsRawBanks = rawEvent->banks( RawBank::HltSelReports );
+  for( std::vector<RawBank*>::const_iterator b=hltselreportsRawBanks.begin();
+       b!=hltselreportsRawBanks.end(); ++b){
+    rawEvent->removeBank(*b);
+    if ( msgLevel(MSG::VERBOSE) ){ verbose() << " Deleted previosuly inserted HltSelReports bank " << endmsg;
+    }    
+  }
+
+  //    std::vector< unsigned int > bankBody( &(hltSelReportsBank.location()[0]), 
+  //                                        &(hltSelReportsBank.location()[hltSelReportsBank.size()]) );
+  //  rawEvent->addBank(  0, RawBank::HltSelReports, kVersionNumber, bankBody );
+  //
+  // RawBank is limited in size to 65535 bytes i.e. 16383 words; be conservative cut it off at a smaller limit.
+  // Save in chunks if exceed this size.
+  int nBank = (hltSelReportsBank.size()-1)/16300 + 1;
+  for( int iBank=0; iBank < nBank; ++iBank ){
+    int ioff=iBank*16300;
+    int isize=hltSelReportsBank.size()-ioff;
+    if( isize > 16300 )isize=16300;	
+    std::vector< unsigned int > bankBody( &(hltSelReportsBank.location()[ioff]), 
+                                          &(hltSelReportsBank.location()[ioff+isize]) );
+    rawEvent->addBank(  iBank, RawBank::HltSelReports, kVersionNumber, bankBody );
+  }
+  if( nBank>1 ){
     std::ostringstream mess;
-    mess << "Raw Bank too long - cannot be saved in RawEvent size=" << hltSelReportsBank.size();
-    Error( mess.str(), StatusCode::SUCCESS );
+    mess << "HltSelReports is huge " 
+	 << hltSelReportsBank.size()*4/1000.0
+	 << " kBytes. Saved in " << nBank << " separate RawBanks ";    
+    Warning( mess.str(), StatusCode::SUCCESS, 100 );
   }
     
   if ( msgLevel(MSG::VERBOSE) ){
