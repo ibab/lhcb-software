@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.20 2008-12-14 21:30:46 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.21 2008-12-15 20:12:20 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -17,7 +17,7 @@ class HltConf(LHCbConfigurableUser):
     __slots__ = {
           "hltType" :          'Hlt1+Hlt2'
         , "userAlgorithms":    [ ]  # put here user algorithms to add
-        , "oldStyle" :         True # old style options configuration
+        , "oldStyle" :         False # old style options configuration
         , "replaceL0BanksWithEmulated" : False
         , "Hlt2IgnoreHlt1Decision" : False # run Hlt2 even if Hlt1 failed
         , "verbose" :          False # print the generated Hlt sequence
