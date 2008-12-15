@@ -1,8 +1,7 @@
-// $Id: L0MuonCandidatesFromRaw.cpp,v 1.16 2008-11-07 16:25:31 jucogan Exp $
+// $Id: L0MuonCandidatesFromRaw.cpp,v 1.17 2008-12-15 08:09:06 cattanem Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
-#include <boost/dynamic_bitset.hpp>
 
 #include "L0MuonCandidatesFromRaw.h"
 #include "L0MuonKernel/L0MuonKernelFromXML.h"
@@ -13,11 +12,7 @@
 /// Gaudi factories for algorithms 
 #include "GaudiKernel/AlgFactory.h"
 
-/// Utility classes
-#include "GaudiKernel/IToolSvc.h" 
-  
 #include "Event/RawEvent.h"
-
 #include "Kernel/MuonTileID.h"
 
 DECLARE_ALGORITHM_FACTORY( L0MuonCandidatesFromRaw );

@@ -1,26 +1,19 @@
-// $Id: L0MuonAlg.cpp,v 1.20 2008-12-11 13:39:11 jucogan Exp $
+// $Id: L0MuonAlg.cpp,v 1.21 2008-12-15 08:09:06 cattanem Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
-#include <boost/dynamic_bitset.hpp>
 
 #include "L0MuonAlg.h"
 
-/// Gaudi interfaces
+// Gaudi interfaces
 #include "GaudiKernel/IChronoStatSvc.h"
 
-/// Gaudi factories for algorithms 
+// Gaudi factories for algorithms 
 #include "GaudiKernel/AlgFactory.h"
-
-/// Utility classes
-#include "GaudiKernel/IToolSvc.h"   
 
 // from Event
 #include "Event/MuonDigit.h"
 #include "Event/L0MuonData.h"
-
-// // from DAQEvent
-// #include "Event/RawEvent.h"
 
 // Registers (to fill optical links)
 #include "ProcessorKernel/RegisterFactory.h"
@@ -422,10 +415,9 @@ StatusCode L0MuonAlg::fillOLsfromDigits()
       }
     }
 
-    StatusCode sc;
     IProperty* prop = dynamic_cast<IProperty*>( m_muonBuffer );
     if( prop ) {
-      sc = prop->setProperty( "RootInTES", rootInTES() );
+      StatusCode sc = prop->setProperty( "RootInTES", rootInTES() );
       if( sc.isFailure() ) return Error( "Unable to set RootInTES property of MuonRawBuffer", sc );
     } else {
       return Error( "Unable to locate IProperty interface of MuonRawBuffer" );
@@ -440,7 +432,7 @@ StatusCode L0MuonAlg::fillOLsfromDigits()
         ddigits.push_back(itileAndTDC->first);
       }
     } else {
-      sc = m_muonBuffer->getTile(ddigits);
+      StatusCode sc = m_muonBuffer->getTile(ddigits);
       if( sc.isFailure() ) return Error( "Unable to get the tiles from the MuonRawBuffer", sc );
     }
     
@@ -491,8 +483,7 @@ StatusCode L0MuonAlg::fillOLsfromDigits()
     sprintf(bufnm,"(Q%d,R%d,%d,%d)",
             olID.quarter(),olID.region(),olID.nX(),olID.nY());           
     char buf[4096];
-    char* format = "OL_%d_%s";
-    sprintf(buf,format,sta,bufnm);
+    sprintf(buf,"OL_%d_%s",sta,bufnm);
     
     //       if( msgLevel(MSG::DEBUG) )debug() << "fillOLsfromDigits:     buf: "<<buf<<endmsg;
     
