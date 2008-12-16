@@ -81,8 +81,9 @@ void EvtModel::Register(EvtDecayBase* prototype){
 
 void EvtModel::UnRegisterAll( ) { 
   for ( std::map<std::string,EvtDecayBase*>::iterator it = _modelNameHash.begin() ;
-        it != _modelNameHash.end() ; ++it ) 
+        it != _modelNameHash.end() ; ++it ) {
     delete it -> second ;
+   }
   _modelNameHash.clear() ;
 }
 

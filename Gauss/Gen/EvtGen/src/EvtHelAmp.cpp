@@ -34,7 +34,7 @@
 
 EvtHelAmp::~EvtHelAmp() {
 
-  delete _evalHelAmp;
+  if ( _evalHelAmp ) delete _evalHelAmp;
 }
 
 void EvtHelAmp::getName(std::string& model_name){

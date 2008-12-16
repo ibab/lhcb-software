@@ -33,7 +33,7 @@ class EvtBtoXsgamma:public  EvtDecayIncoherent  {
 
 public:
   
-  EvtBtoXsgamma() {};
+  EvtBtoXsgamma():_model(0) {};
 
   virtual ~EvtBtoXsgamma();
 

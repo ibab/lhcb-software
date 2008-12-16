@@ -120,20 +120,17 @@ EvtPythia::~EvtPythia(){
   }
 
   for(i=0;i<njetsetdecays;i++){
-    if (jetsetdecays[i]==this){
-      jetsetdecays[i]=jetsetdecays[njetsetdecays-1];
-      njetsetdecays--;
-      if (njetsetdecays==0) {
-	delete [] commands;
-	commands=0;
-      }
-      delete jetsetdecays ;
-      jetsetdecays = 0 ;
-      return;
-    }
+//    delete jetsetdecays[ i ] ;
+    jetsetdecays[ i ] = 0 ;
   }
   
-  report(ERROR,"EvtGen") << "Error in destroying Pythia model!"<<std::endl;
+  delete [] commands ;
+  commands = 0 ;
+  
+  delete [] jetsetdecays ;
+  jetsetdecays = 0 ;
+  njetsetdecays = 0 ;
+  //  report(ERROR,"EvtGen") << "Error in destroying Pythia model!"<<std::endl;
  
 }
 

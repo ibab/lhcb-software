@@ -33,10 +33,10 @@
 #include "EvtGenBase/EvtRandom.hh"
 
 EvtVub::~EvtVub() {
-  delete _dGamma;
-  delete _pFermi;
-  delete [] _masses;
-  delete [] _weights;
+  if ( _dGamma ) delete _dGamma;
+  if ( _pFermi ) delete _pFermi;
+  if ( _masses ) delete [] _masses;
+  if ( _weights ) delete [] _weights;
 }
 
 void EvtVub::getName(std::string& model_name){

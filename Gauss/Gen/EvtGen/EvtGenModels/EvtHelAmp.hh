@@ -36,7 +36,7 @@ class EvtHelAmp:public  EvtDecayAmp{
 
 public:
 
-  EvtHelAmp() {}
+  EvtHelAmp(): _evalHelAmp(0) {}
   virtual ~EvtHelAmp();
 
   void getName(std::string& name);

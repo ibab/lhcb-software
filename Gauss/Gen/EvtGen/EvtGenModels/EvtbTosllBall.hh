@@ -32,7 +32,7 @@ class EvtbTosllBall:public  EvtDecayAmp  {
 
 public:
 
-  EvtbTosllBall() {}
+  EvtbTosllBall(): _ballffmodel(0), _calcamp(0) {}
   virtual ~EvtbTosllBall();
 
   void getName(std::string& name);

@@ -44,7 +44,8 @@
 
 EvtBtoXsgamma::~EvtBtoXsgamma() {
 
-  delete _model; _model=0;
+  if ( _model ) delete _model; 
+  _model=0;
 
 }
 

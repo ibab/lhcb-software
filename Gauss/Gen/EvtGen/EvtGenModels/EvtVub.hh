@@ -33,7 +33,7 @@ class EvtVub:public  EvtDecayIncoherent  {
 
 public:
   
-  EvtVub() {}
+  EvtVub() : _masses( 0 ) , _weights( 0 ) , _dGamma( 0 ) , _pFermi( 0 ) {}
   virtual ~EvtVub();
 
   void getName(std::string& name);

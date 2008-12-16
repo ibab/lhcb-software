@@ -32,7 +32,7 @@
 #include <string>
 
 EvtbTosllBall::~EvtbTosllBall() {
-  delete _ballffmodel ;
+  if ( _ballffmodel ) delete _ballffmodel ;
   if ( _calcamp ) delete _calcamp ;
 }
 

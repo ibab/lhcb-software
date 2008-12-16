@@ -32,7 +32,7 @@ class EvtBtoXsll:public  EvtDecayIncoherent  {
 
 public:
   
-  EvtBtoXsll() {}
+  EvtBtoXsll(): _calcprob(0) {}
   virtual ~EvtBtoXsll();
 
   void getName(std::string& name);

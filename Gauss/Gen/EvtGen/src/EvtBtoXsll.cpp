@@ -36,7 +36,7 @@
 
 EvtBtoXsll::~EvtBtoXsll() 
 {
-  delete _calcprob ;
+  if ( _calcprob ) delete _calcprob ;
 }
 
 void EvtBtoXsll::getName(std::string& model_name){

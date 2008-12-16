@@ -1,4 +1,5 @@
 //--------------------------------------------------------------------------
+// $Id: EvtPartWave.hh,v 1.3 2008-12-16 20:09:20 robbep Exp $
 //
 // Environment:
 //      This software is part of the EvtGen package developed jointly
@@ -32,7 +33,7 @@ class EvtPartWave:public  EvtDecayAmp{
 
 public:
 
-  EvtPartWave() {}
+  EvtPartWave() : _evalHelAmp( 0 ) , _HBC( 0 ) {}
   virtual ~EvtPartWave();
 
   void getName(std::string& name);
