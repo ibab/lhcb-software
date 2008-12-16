@@ -5,8 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2008-12-15 - Chris Jones
- - Fix indices in Track State matrix accessors to number from 0 
-   (To be checked by Luigi).
+ - Fix indices in Track State matrix accessors to number from 0.
 
 ! 2008-11-30 - Chris Jones
  - Adapt to changes in refractive index tools.
