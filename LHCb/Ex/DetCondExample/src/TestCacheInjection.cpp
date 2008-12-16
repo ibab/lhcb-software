@@ -1,9 +1,9 @@
-// $Id: TestCacheInjection.cpp,v 1.10 2007-02-05 19:05:13 marcocle Exp $
-// Include files 
+// $Id: TestCacheInjection.cpp,v 1.11 2008-12-16 16:36:02 marcocle Exp $
+// Include files
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h"
 
 #include "DetDesc/Condition.h"
 #include "DetCond/ICondDBAccessSvc.h"
@@ -33,7 +33,7 @@ TestCacheInjection::TestCacheInjection( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-TestCacheInjection::~TestCacheInjection() {}; 
+TestCacheInjection::~TestCacheInjection() {};
 
 //=============================================================================
 // Initialization
@@ -62,7 +62,7 @@ StatusCode TestCacheInjection::initialize() {
   catch (GaudiException) {
     return StatusCode::FAILURE;
   }
-    
+
   return runUpdate();
 };
 
@@ -77,11 +77,11 @@ StatusCode TestCacheInjection::execute() {
 
   if ( m_evtCount == 2 ) { // second event
     // add a new object to folder 2 to be ready for next event
-    
+
     Gaudi::Time
       new_since(20),
       new_until(Gaudi::Time::max());
-    
+
     // **************************************************
     info() << "Try to add a new condition to the cache" << endmsg;
     Condition testCond;
@@ -110,16 +110,16 @@ StatusCode TestCacheInjection::execute() {
 
   info() << "Object1: " << m_cond1->validSince() << " -> " << m_cond1->validTill() << endmsg;
   info() << "         data = " << m_cond1->paramAsString("data") << endmsg;
-  
+
   info() << "Object2: " << m_cond2->validSince() << " -> " << m_cond2->validTill() << endmsg;
   info() << "         data = " << m_cond2->paramAsString("data") << endmsg;
-  
+
   info() << "Object3: " << m_cond3->validSince() << " -> " << m_cond3->validTill() << endmsg;
   info() << "         data = " << m_cond3->paramAsString("data") << endmsg;
-  
+
   info() << "Object4: " << m_cond4->validSince() << " -> " << m_cond4->validTill() << endmsg;
   info() << "         data = " << m_cond4->paramAsString("data") << endmsg;
-  
+
   return StatusCode::SUCCESS;
 };
 
@@ -129,7 +129,7 @@ StatusCode TestCacheInjection::execute() {
 StatusCode TestCacheInjection::finalize() {
 
   debug() << "==> Finalize" << endmsg;
-  
+
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
@@ -154,13 +154,13 @@ StatusCode TestCacheInjection::i_injectData() {
                       "      <conditionref href=\"test/cache/folder3:1#Object4\"/>\n"
                       "    </catalog>\n"
                       "  </catalog>\n"
-                      "</DDDB>\n"));
+                      "</DDDB>\n")) return StatusCode::FAILURE;
 
   // add a few of folders
   if (!m_dbAccSvc->cacheAddXMLFolder("/test/cache/folder1")) return StatusCode::FAILURE;
   if (!m_dbAccSvc->cacheAddXMLFolder("/test/cache/folder2")) return StatusCode::FAILURE;
   if (!m_dbAccSvc->cacheAddXMLFolder("/test/cache/folder3")) return StatusCode::FAILURE;
-  
+
   // then the objects
   Condition testCond;
   testCond.addParam<std::string>("data","object 1.a");
@@ -168,12 +168,12 @@ StatusCode TestCacheInjection::i_injectData() {
   if (!m_dbAccSvc->cacheAddXMLData("/test/cache/folder1",0,10,testCond.toXml("Object1"))) {
     return StatusCode::FAILURE;
   }
-  
+
   testCond.param<std::string>("data") = "object 1.b";
   if (!m_dbAccSvc->cacheAddXMLData("/test/cache/folder1",10,Gaudi::Time::max(),testCond.toXml("Object1"))) {
     return StatusCode::FAILURE;
   }
-  
+
   testCond.param<std::string>("data") = "object 2";
   if (!m_dbAccSvc->cacheAddXMLData("/test/cache/folder2",0,Gaudi::Time::max(),testCond.toXml("Object2"))) {
     return StatusCode::FAILURE;

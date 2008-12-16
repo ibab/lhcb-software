@@ -1,9 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.109 2008-11-17 15:20:16 cattanem Exp $
+! $Id: release.notes,v 1.110 2008-12-16 16:36:59 marcocle Exp $
 ! =============================================================================
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+! 2008-12-16 - Marco Clemencic
+ - Added a missing return in TestCacheInjection.cpp.
 
 !============ Ex/DetCondExample v11r5 2008-11-17 ==============================
 ! 2008-11-03 - Marco Clemencic
