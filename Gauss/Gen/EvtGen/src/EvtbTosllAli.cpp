@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------
-//
+// $Id: EvtbTosllAli.cpp,v 1.4 2008-12-16 14:49:57 robbep Exp $
 // Environment:
 //      This software is part of the EvtGen package developed jointly
 //      for the BaBar and CLEO collaborations.  If you use all or part
@@ -32,7 +32,7 @@
 #include <string>
 
 EvtbTosllAli::~EvtbTosllAli() {
-  delete _aliffmodel ;
+  if ( _aliffmodel ) delete _aliffmodel ;
   if ( _calcamp ) delete _calcamp ;
 }
 
