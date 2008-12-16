@@ -3,6 +3,9 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+! 2008-12-16 - Marco Cattaneo
+ - Update reference to follow cleanups in Brunel configurable
+
 ! 2008-12-07 - Marco Cattaneo
  - Update reference to add new PatPVOfflineCheck
 
