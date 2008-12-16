@@ -49,6 +49,17 @@ void L0Muon::CUL0BufferCnv::write(int ievt)
   iword = (ievt&0xFFF);
   m_file<<std::setw(4)<<std::setfill('0')<<iword<<" \n"; // L0_B_Id (l.1)
 
+  // Candidates from controller board
+  for (int icand=0;icand<2;icand++) {
+    iword =( ( m_candRegHandler.getCandPT(   icand)    ) & 0x007F );
+    iword|=( ( m_candRegHandler.getCandColM3(icand)<< 8) & 0x1F00 );
+    iword|=( ( m_candRegHandler.getCandRowM3(icand)<<13) & 0x6000 );
+    m_file<<std::setw(4)<<std::setfill('0')<<iword<<" \n"; 
+  }
+  m_file<<std::setw(4)<<std::setfill('0')<<bid<<" \n"; // bid
+
+  m_file<<" \n"; // Empty word
+  
   for (int i=0; i<3; ++i) m_file<<std::setw(4)<<std::setfill('0')<<0<<" \n"; // (l.2, l.3 & l.4) serial link errors
 
   // Candidates from processing boards
@@ -66,14 +77,6 @@ void L0Muon::CUL0BufferCnv::write(int ievt)
     }
   }
 
-  // Candidates from controller board
-  for (int icand=0;icand<2;icand++) {
-    iword =( ( m_candRegHandler.getCandPT(   icand)    ) & 0x007F );
-    iword|=( ( m_candRegHandler.getCandColM3(icand)<< 8) & 0x1F00 );
-    iword|=( ( m_candRegHandler.getCandRowM3(icand)<<13) & 0x6000 );
-    m_file<<std::setw(4)<<std::setfill('0')<<iword<<" \n"; 
-  }
-  m_file<<std::setw(4)<<std::setfill('0')<<bid<<" \n"; // bid
 
   m_file<<"----\n";
 

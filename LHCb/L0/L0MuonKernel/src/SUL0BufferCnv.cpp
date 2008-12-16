@@ -50,6 +50,20 @@ void L0Muon::SUL0BufferCnv::write(int ievt)
   iword = (ievt&0xFFF);
   m_file<<std::setw(4)<<std::setfill('0')<<iword<<" \n"; // L0_B_Id (l.1)
 
+  // Candidates from controller board
+  for (int icand=0;icand<2;icand++) {
+    iword =( ( m_candRegHandler.getCandOffM1(icand)    ) & 0x000F );
+    iword|=( ( m_candRegHandler.getCandOffM2(icand)<< 4) & 0x00F0 );
+    iword|=( ( m_candRegHandler.getCandPU(   icand)<< 8) & 0x0300 );
+    iword|=( ( m_candRegHandler.getCandBoard(icand)<<12) & 0xF000 );
+    m_file<<std::setw(4)<<std::setfill('0')<<iword<<" \n"; // Candidate  
+  }
+  int status = m_candRegHandler.getStatus();
+  int c1     = m_candRegHandler.getCandCharge(0);
+  int c2     = m_candRegHandler.getCandCharge(1);
+  iword = (  ((c1<<12)&0x3000) + ((c2<<8)&0x300) + ((status<<4)&0xF0) + bid)  & 0x33FF;
+  m_file<<std::setw(4)<<std::setfill('0')<<iword<<" \n"; // bid
+
   iword = ( bid + (bid<<4) ); 
   m_file<<std::setw(4)<<std::setfill('0')<<iword<<" \n"; // bid
 
@@ -73,19 +87,6 @@ void L0Muon::SUL0BufferCnv::write(int ievt)
     }
   }
 
-  // Candidates from controller board
-  for (int icand=0;icand<2;icand++) {
-    iword =( ( m_candRegHandler.getCandOffM1(icand)    ) & 0x000F );
-    iword|=( ( m_candRegHandler.getCandOffM2(icand)<< 4) & 0x00F0 );
-    iword|=( ( m_candRegHandler.getCandPU(   icand)<< 8) & 0x0300 );
-    iword|=( ( m_candRegHandler.getCandBoard(icand)<<12) & 0xF000 );
-    m_file<<std::setw(4)<<std::setfill('0')<<iword<<" \n"; // Candidate  
-  }
-  int status = m_candRegHandler.getStatus();
-  int c1     = m_candRegHandler.getCandCharge(0);
-  int c2     = m_candRegHandler.getCandCharge(1);
-  iword = (  ((c1<<12)&0x3000) + ((c2<<8)&0x300) + ((status<<4)&0xF0) + bid)  & 0x33FF;
-  m_file<<std::setw(4)<<std::setfill('0')<<iword<<" \n"; // bid
   
   m_file<<"----\n";
 
