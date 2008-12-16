@@ -1,4 +1,4 @@
-// $Id: OdinTypesFilter.cpp,v 1.4 2008-08-25 11:05:05 panmanj Exp $
+// $Id: OdinTypesFilter.cpp,v 1.5 2008-12-16 14:06:34 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -130,7 +130,7 @@ StatusCode OdinTypesFilter::initialize() {
 
 
   // warns trivial requests 
-  if((m_bxs.empty() || m_trs.empty()) || m_ros.empty() || m_winmin>=m_winmax && m_log == "AND")
+  if((m_bxs.empty() || m_trs.empty()  || m_ros.empty() || m_winmin>=m_winmax ) && m_log == "AND")
     Warning("BXTypes, TriggerTypes, ReadoutTypes or TAEWindow is empty : ALL events will be rejected !!"
             ,StatusCode::SUCCESS).ignore();
   if((m_bxs.empty() && m_trs.empty()) && m_ros.empty() && m_winmin>=m_winmax && m_log == "OR")
@@ -231,7 +231,7 @@ StatusCode OdinTypesFilter::execute() {
   if((int) odin->timeAlignmentEventWindow()>m_winmin && (int) odin->timeAlignmentEventWindow()<m_winmax)taePass=true;
   
   if(m_log == "AND")setFilterPassed( trPass && bxPass && roPass && taePass);
-  if(m_log == "OR")setFilterPassed( trPass || bxPass || roPass && taePass);
+  if(m_log == "OR")setFilterPassed( trPass || bxPass || roPass || taePass);
 
   if(filterPassed() )m_acc++;
   
