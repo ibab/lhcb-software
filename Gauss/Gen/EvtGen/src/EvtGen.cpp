@@ -42,6 +42,7 @@
 #include "EvtGenBase/EvtAbsRadCorr.hh"
 #include "EvtGenBase/EvtRadCorr.hh"
 #include "EvtGenModels/EvtPHOTOS.hh"
+#include "EvtGenBase/EvtModel.hh"
 
 extern "C" {
 extern void evtgen_(float svertex[3],float *e_cms,float *beta_zs,
@@ -58,7 +59,7 @@ EvtGen::~EvtGen(){
   if (getenv("EVTINFO")){
     EvtDecayTable::printSummary();
   }
-
+  EvtModel::deleteInstance() ;
 }
 
 EvtGen::EvtGen(const char* const decayName,

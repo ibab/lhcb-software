@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-12-16 - Patrick Robbe
+ - EvtGen, EvtModel, EvtPythia: fix memory leaks reported by valgrind
+
 ! 2008-12-11 - Patrick Robbe
  - EvtRanf: use double instead of float to be able to run in debug
    mode on 64 bit machines

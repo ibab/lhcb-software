@@ -36,8 +36,10 @@ class EvtModel{
 public:
 
   static EvtModel& instance();
+  static void deleteInstance() ;
 
   void Register(EvtDecayBase* prototype);
+  void UnRegisterAll() ;
       
   int isModel(std::string name);
 

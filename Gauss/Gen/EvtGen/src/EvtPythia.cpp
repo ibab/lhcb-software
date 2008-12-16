@@ -40,7 +40,7 @@
 using std::string;
 
 int EvtPythia::njetsetdecays=0;
-  EvtDecayBasePtr* EvtPythia::jetsetdecays=0; 
+EvtDecayBasePtr* EvtPythia::jetsetdecays=0; 
 int EvtPythia::ntable=0;
 
 int EvtPythia::ncommand=0;
@@ -127,10 +127,12 @@ EvtPythia::~EvtPythia(){
 	delete [] commands;
 	commands=0;
       }
+      delete jetsetdecays ;
+      jetsetdecays = 0 ;
       return;
     }
   }
-
+  
   report(ERROR,"EvtGen") << "Error in destroying Pythia model!"<<std::endl;
  
 }

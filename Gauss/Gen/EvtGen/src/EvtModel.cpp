@@ -79,6 +79,13 @@ void EvtModel::Register(EvtDecayBase* prototype){
 
 }
 
+void EvtModel::UnRegisterAll( ) { 
+  for ( std::map<std::string,EvtDecayBase*>::iterator it = _modelNameHash.begin() ;
+        it != _modelNameHash.end() ; ++it ) 
+    delete it -> second ;
+  _modelNameHash.clear() ;
+}
+
 int EvtModel::isModel(std::string model_name){
 
   if ( _modelNameHash.find(model_name)!=_modelNameHash.end() ) {
@@ -114,4 +121,11 @@ EvtModel& EvtModel::instance() {
   return *_instance;
 }
 
+void EvtModel::deleteInstance() { 
+  if ( _instance ) { 
+    _instance -> UnRegisterAll() ;
+    delete _instance ;
+  }
+  _instance = 0 ;
+}
 
