@@ -3,6 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+! 2008-12-16 - Marco Cattaneo
+ - Update references for new Velo signal to noise tuning
+
 ! 2008-12-12 - Marco Cattaneo
  - Update references for new run record handling (Gaudi v20r4) and new L0Muon
    raw bank compression
