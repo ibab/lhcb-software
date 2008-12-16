@@ -4,6 +4,10 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
 ! 2008-12-16 - Marco Cattaneo
+ - Move spillover options into configurable, and add support for packed
+   MCParticle/MCVertex containers in Spillover input file
+
+! 2008-12-16 - Marco Cattaneo
  - Update references for new Velo signal to noise tuning
 
 ! 2008-12-12 - Marco Cattaneo

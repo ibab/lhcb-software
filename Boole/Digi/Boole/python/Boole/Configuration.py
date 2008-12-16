@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.29 2008-12-01 17:01:17 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.30 2008-12-16 10:48:36 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -14,6 +14,7 @@ class Boole(LHCbConfigurableUser):
        ,"SkipEvents"     : 0
        ,"SkipSpill"      : 0
        ,"UseSpillover"   : False
+       ,"SpilloverPaths" : ["Prev", "PrevPrev", "Next"]
        ,"GenerateTAE"    : False
        ,"Outputs"        : [ "DIGI" ]
        ,"WriteL0Only"    : False
@@ -34,6 +35,7 @@ class Boole(LHCbConfigurableUser):
        ,'SkipEvents'   : """ Number of events to skip """
        ,'SkipSpill'    : """ Number of spillover events to skip """
        ,'UseSpillover' : """ Flag to enable spillover (default True) """
+       ,'SpilloverPaths':""" Paths to fill when spillover is enabled """
        ,'GenerateTAE'  : """ Flag to simulate time alignment events (default False) """
        ,'Outputs'      : """ List of outputs: ['MDF','DIGI','L0ETC'] (default 'DIGI') """
        ,'WriteL0Only'  : """ Flag to write only L0 selected events (default False) """
@@ -82,12 +84,28 @@ class Boole(LHCbConfigurableUser):
         spill = self.getProp("UseSpillover")
         if tae       : self.enableTAE()
         if not spill :
-            self.disableSpillover()
             if self.getProp("DataType") == "DC06" :
                 log.warning("Spillover is disabled. Should normally be enabled for DC06!")
+            from Configurables import ( MuonBackground, MuonDigitization )
+            MuonBackground("MuonLowEnergy").OutputLevel = ERROR
+            MuonDigitization().OutputLevel = ERROR
         else:
             if self.getProp("DataType") != "DC06" :
                 log.warning("Spillover is enabled. Should normally be enabled only for DC06!")
+            from Configurables import MergeEventAlg, UnpackMCParticle, UnpackMCVertex
+            initDataSeq = GaudiSequencer( "InitDataSeq" )
+            spillPaths  = self.getProp("SpilloverPaths")
+            spillAlg    = MergeEventAlg( name = "SpilloverAlg", PathList = spillPaths )
+            initDataSeq.Members += [ spillAlg ]
+            importOptions("$DIGIALGROOT/options/Spillover.opts")
+            # Handle the unpacking of pSim containers
+            for spill in spillPaths :
+                particleUnpacker = UnpackMCParticle( "UnpackMCP" + spill )
+                particleUnpacker.RootInTES = spill
+                vertexUnpacker = UnpackMCVertex( "UnpackMCV" + spill )
+                vertexUnpacker.RootInTES = spill
+                DataOnDemandSvc().AlgMap[ spill + "/MC/Particles" ] = particleUnpacker
+                DataOnDemandSvc().AlgMap[ spill + "/MC/Vertices" ] = vertexUnpacker
             
     def enableTAE(self):
         """
@@ -102,15 +120,6 @@ class Boole(LHCbConfigurableUser):
             MCSTDepositCreator("MCITDepositCreatorPrev1").DepChargeTool = "SiDepositedCharge"
             MCSTDepositCreator("MCTTDepositCreatorPrev1").DepChargeTool = "SiDepositedCharge"
             
-    def disableSpillover(self):
-        """
-        Switch to disable spillover.
-        """
-        initDataSeq = GaudiSequencer( "InitDataSeq" )
-        initDataSeq.Members.remove( "MergeEventAlg/SpilloverAlg" )
-        from Configurables import ( MuonBackground, MuonDigitization )
-        MuonBackground("MuonLowEnergy").OutputLevel = ERROR
-        MuonDigitization().OutputLevel = ERROR
 
     def defineMonitors(self):
         # get all defined monitors

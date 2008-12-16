@@ -67,10 +67,6 @@ Relations.DetectorList = {
 // Initialization
 InitBooleSeq.Members += { "BooleInit" };
 
-// Spillover
-InitDataSeq.Members += { "MergeEventAlg/SpilloverAlg" };
-#include "$DIGIALGROOT/options/Spillover.opts"
-
 // Muon Background
 InitMUONSeq.Members += { "MuonBackground/MuonLowEnergy" };
 #include "$MUONBACKGROUNDROOT/options/MuonLowEnergy-G4.opts"
