@@ -1,4 +1,4 @@
-// $Id: STClusterClassification.cpp,v 1.6 2008-10-16 13:10:34 mneedham Exp $
+// $Id: STClusterClassification.cpp,v 1.7 2008-12-16 18:07:41 mneedham Exp $
 
 
 // Gaudi
@@ -36,7 +36,7 @@ STClusterClassification::STClusterClassification(const std::string& name,
   declareSTConfigProperty("inputData", m_clusterLocation , STClusterLocation::TTClusters);
 
   using namespace boost::assign;
-  m_spillVector += "/", "/Prev/", "/PrevPrev/"; 
+  m_spillVector += "/", "/Prev/", "/PrevPrev/", "/Next/"; 
   m_hitLocation = MCHitLocation::TT;
   m_asctLocation = m_clusterLocation + "2MCHits";
 
@@ -170,8 +170,8 @@ std::string STClusterClassification::findSpill(const MCHit* aHit) const
 
   unsigned int index = 0;
   while (index<m_spillNames.size()&&(m_spillNames[index]!=idName)){
-    index++;
+    ++index;
   } //  iterS
   
-  return m_spillVector[index];
+  return index < m_spillNames.size() ? m_spillVector[index] : "Unknown";
 }
