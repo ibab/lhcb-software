@@ -136,7 +136,7 @@ void L0Muon::TileRegister::print_bits(unsigned int event, FILE *file){
       
       if (mid.isValid()){
         fprintf(file,"%5u %3u ( %2d,%2d ) Q%1d M%1d R%1d %2d %2d  %d\n"
-                ,event ,(unsigned long)i 
+                ,event ,(unsigned int)i 
                 ,mid.layout().xGrid()
                 ,mid.layout().yGrid()
                 ,mid.quarter()+1 
@@ -147,7 +147,7 @@ void L0Muon::TileRegister::print_bits(unsigned int event, FILE *file){
                 ,val
                 ); 
       } else {
-        fprintf(file,"%5u %3u                           %d\n",event,i,val);
+        fprintf(file,"%5u %3u                           %d\n",event,(unsigned int)i,val);
       }
     }
     
