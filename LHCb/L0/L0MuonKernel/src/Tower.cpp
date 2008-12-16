@@ -398,8 +398,8 @@ std::vector<L0Muon::PMuonCandidate> L0Muon::Tower::processTower(LHCb::MuonTileID
         muoncand->setRowM3(rowseed);
         muoncand->setOffM2(offM2);
         muoncand->setOffM1(offM1);
-        muoncand->setPT(ipt);
-        muoncand->setCharge((ipt>>8)&1);
+        muoncand->setPT(ipt&0x7F);
+        muoncand->setCharge((ipt>>7)&1);
         puCandidates.push_back(muoncand);
         if (m_debug) std::cout <<"--- Tower::processTower: candidate pushed in vector"<< std::endl;
 

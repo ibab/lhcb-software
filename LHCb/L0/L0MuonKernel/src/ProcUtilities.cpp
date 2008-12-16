@@ -1,4 +1,4 @@
-// $Id: ProcUtilities.cpp,v 1.7 2008-12-09 18:47:29 cattanem Exp $
+// $Id: ProcUtilities.cpp,v 1.8 2008-12-16 15:59:50 jucogan Exp $
 
 #include "L0MuonKernel/ProcUtilities.h"
 
@@ -419,10 +419,10 @@ int L0Muon::encodePT(double pT,int procVersion, bool debug) {
   
   // Encode absolute value
   ipt= int(0.5+fabs(pT)/dpT);
-  ipt = pT>ptMax ? ptMax:ipt;
+  ipt = ipt>ptMax ? ptMax:ipt;
   
   // Encode charge
-  if (pT>0) ipt|=(1<<8);
+  if (pT>0) ipt|=(1<<nbits);
 
   if (debug) std::cout<<"L0Muon::ptEncoding pT= "<<pT<<" => "<<ipt<<std::endl;
 
