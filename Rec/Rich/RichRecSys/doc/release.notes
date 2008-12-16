@@ -4,6 +4,9 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2008-12-16 - Chris Jones
+ - Various python Configurable updates to avoid a few build problems.
+
 !====================== RichRecSys v3r14 2008-11-21 ==========================
 ! 2008-11-19 - Marco Cattaneo
  - Change scope of some imports in configurables, to fix genConf warnings

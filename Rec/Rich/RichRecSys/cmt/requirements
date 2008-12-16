@@ -2,11 +2,11 @@
 # Created    : 2003-07-01
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch
 #============================================================================
-# $Id: requirements,v 1.83 2008-12-16 13:45:36 jonrob Exp $
+# $Id: requirements,v 1.84 2008-12-16 14:54:08 jonrob Exp $
 #============================================================================
 
 package           RichRecSys
-version           v3r14
+version           v3r15
 
 # ================ structure ================================================
 branches          cmt doc options python
@@ -43,4 +43,4 @@ use RichMarkovRingFinder  v*   Rich
 
 # Setup Python Configurables
 apply_pattern install_python_modules
-macro RichRecSysConfUserModules "RichRecSys.RichGlobalPID_"
+#macro RichRecSysConfUserModules "RichRecSys.RichGlobalPID_"

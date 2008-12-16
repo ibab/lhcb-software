@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: RichGlobalPID_.py,v 1.1 2008-12-16 13:45:36 jonrob Exp $"
+__version__ = "$Id: RichGlobalPID_.py,v 1.2 2008-12-16 14:54:08 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -25,7 +25,7 @@ from Configurables import ( GaudiSequencer,
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 class RichGlobalPIDConfig(RichConfigurableUser):
-
+    
     ## The default options
     __slots__ = {
         "Context":  "Offline",
