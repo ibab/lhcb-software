@@ -1,4 +1,4 @@
-// $Id: CompareTrack.cpp,v 1.4 2008-11-19 13:37:18 ocallot Exp $
+// $Id: CompareTrack.cpp,v 1.5 2008-12-16 16:18:51 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -104,7 +104,7 @@ StatusCode CompareTrack::execute() {
 
     //== Compare the states. The track number won't be reported...
 
-    for ( kk = 0 ; oTrack->nStates() > kk, tTrack->nStates() > kk ; ++kk ) {
+    for ( kk = 0; (oTrack->nStates() > kk) && (tTrack->nStates() > kk); ++kk ) {
       compareStates( oTrack->states()[kk], tTrack->states()[kk] );
     }
   }

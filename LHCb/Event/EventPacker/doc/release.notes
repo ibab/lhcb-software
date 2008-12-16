@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2008-12-16 - Marco Cattaneo
+ - Fix a loop test condition in CompareTrack.cpp
+
 ! 2008-12-09 - Olivier Callot
  - Change logPacked to fltPacked in all occurences
 
