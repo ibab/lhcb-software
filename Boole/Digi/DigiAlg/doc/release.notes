@@ -4,6 +4,9 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-12-16 - Marco Cattaneo
+ - In Spillover.opts, do not set PathList, not done as option to Boole()
+
 !========================== DigiAlg v4r13 2008-12-11 =========================
 ! 2008-12-06 - Marco Cattaneo
  - Fix an array overflow in BuildMCTrackInfo
