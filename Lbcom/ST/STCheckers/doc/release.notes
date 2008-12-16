@@ -2,6 +2,11 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+
+! 2008-12-16 M Needham
+ - Bug fixes in STClusterClassification algorithm
+
+
 ! 2008-12-11 M.Cattaneo
  - Fix gcc 4.3 warnings
  - Fix a a wrong equality comparison (assignment was used instead)
@@ -15,6 +20,7 @@
    in STPerformanceMonitor/STDigitMonitor 
  - tidy up in STClusterMonitor
 
+>>>>>>> 1.73
 !=========================== STCheckers v2r8 2008-11-21 =======================
 ! 2008-11-04 M Needham 
  - Add root macro directory and two example macros
