@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: RichGlobalPID.py,v 1.7 2008-11-14 17:14:05 jonrob Exp $"
+__version__ = "$Id: RichGlobalPID_.py,v 1.1 2008-12-16 13:45:36 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *

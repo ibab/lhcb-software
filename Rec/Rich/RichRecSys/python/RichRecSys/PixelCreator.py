@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: PixelCreator.py,v 1.5 2008-11-19 18:00:09 cattanem Exp $"
+__version__ = "$Id: PixelCreator.py,v 1.6 2008-12-16 13:45:36 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -27,6 +27,7 @@ class RichPixelCreatorConfig(RichConfigurableUser):
        ,"PixelCleaning": "HotClusters" # Turn on RICH pixel cleaning (hot HPDs etc.)
        ,"FindClusters": True # Find clusters in the HPD data
        ,"UseClustersAsPixels": [ False, False ] # Use clusters as the raw pixel objects
+       ,"MaxHotPixelClusterSize": [ 10, 8 ] # Max size of clusters for HotClusters pixel cleaning (RICH1,RICH2)
        ,"BookKeeping": False
         }
 
@@ -54,10 +55,14 @@ class RichPixelCreatorConfig(RichConfigurableUser):
         from Configurables import Rich__DAQ__HPDPixelClusteringTool
         self.toolRegistry().Tools += ["Rich::DAQ::HPDPixelClusteringTool/ClusteringTool"]
         pixmaker.ApplyPixelSuppression = True
+    
         pixCleanMode = self.getProp("PixelCleaning")
+        
         if pixCleanMode == "HotClusters" :
             from Configurables import Rich__DAQ__HPDPixelClusterSuppressionTool
- 
+
+            maxClusterSize = self.getProp("MaxHotPixelClusterSize")
+            
             # RICH1 cleaning
             r1Cleaner = Rich__DAQ__HPDPixelClusterSuppressionTool("PixelSuppressRich1")
             self.toolRegistry().Tools += [r1Cleaner]
@@ -66,8 +71,8 @@ class RichPixelCreatorConfig(RichConfigurableUser):
             r1Cleaner.WhichRich = "RICH1"
             r1Cleaner.AbsoluteMaxHPDOcc      = 200
             r1Cleaner.OccCutScaleFactor      = 14
-            r1Cleaner.MaxPixelClusterSize    = 10
-            r1Cleaner.MinHPDOccForClustering = 10
+            r1Cleaner.MaxPixelClusterSize    = maxClusterSize[0]
+            r1Cleaner.MinHPDOccForClustering = maxClusterSize[0]
             pixmaker.addTool( r1Cleaner )
                                
             # RICH2 cleaning
@@ -78,8 +83,8 @@ class RichPixelCreatorConfig(RichConfigurableUser):
             r2Cleaner.WhichRich = "RICH2"
             r2Cleaner.AbsoluteMaxHPDOcc      = 200
             r2Cleaner.OccCutScaleFactor      = 14
-            r2Cleaner.MaxPixelClusterSize    = 8
-            r2Cleaner.MinHPDOccForClustering = 8
+            r2Cleaner.MaxPixelClusterSize    = maxClusterSize[1]
+            r2Cleaner.MinHPDOccForClustering = maxClusterSize[1]
             pixmaker.addTool( r2Cleaner )
   
         elif pixCleanMode == "HotHPDs" :

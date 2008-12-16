@@ -4,17 +4,17 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.11 2008-11-19 18:00:08 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.12 2008-12-16 13:45:36 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
-from RichRecSys.TrackCreator  import *
-from RichRecSys.PixelCreator  import *
-from RichRecSys.PhotonCreator import *
-from RichRecSys.CKThetaResolution import *
+from TrackCreator  import *
+from PixelCreator  import *
+from PhotonCreator import *
+from CKThetaResolution import *
 from RichMarkovRingFinder.Configuration import *
-from RichRecSys.RichGlobalPID import RichGlobalPIDConfig
-from RichRecSys.RichHLTLocalPID import RichHLTLocalPIDConfig
+from RichGlobalPID_ import RichGlobalPIDConfig
+from RichHLTLocalPID_ import RichHLTLocalPIDConfig
 from Configurables import GaudiSequencer
 
 # ----------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ class RichRecSysConf(RichConfigurableUser):
                                ]
     
     ## Known contexts
-    KnownContexts      = [ "Offline", "HLT" ]
+    KnownContexts = [ "Offline", "HLT" ]
     
     ## Steering options
     __slots__ = {
