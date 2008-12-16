@@ -1,13 +1,15 @@
-! $Id: release.notes,v 1.6 2008-12-13 14:48:22 ibelyaev Exp $ 
+! $Id: release.notes,v 1.7 2008-12-16 12:48:11 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/PartProp
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
 
-! 2008-12-13 - Vanya BELYAEV
- - move the function form "local" heade CC.h into Kernel/CC.h
+! 2008-12-16 - Marco Cattaneo
+ - Fix gcc 4.3 warning
 
+! 2008-12-13 - Vanya BELYAEV
+ - move the function form "local" header CC.h into Kernel/CC.h
 
 ! 2008-12-11 - Gloria CORTI
  - Kernel/ParticleID.h, src/ParticleID.cpp

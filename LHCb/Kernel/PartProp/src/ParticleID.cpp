@@ -1,4 +1,4 @@
-// $Id: ParticleID.cpp,v 1.4 2008-12-11 15:23:05 gcorti Exp $
+// $Id: ParticleID.cpp,v 1.5 2008-12-16 12:48:11 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -197,7 +197,7 @@ bool LHCb::ParticleID::hasQuarks() const
 // ============================================================================
 bool LHCb::ParticleID::hasQuark ( const Quark& q ) const 
 {
-  if ( abspid() == ::abs(q) ) { return true ; } // Special case for quarks
+  if ( abspid() == (unsigned int)::abs(q) ) { return true ; } // Special case for quarks
   //
   return   hasQuarks() && 
     ( q == digit_<nq3> () ||
