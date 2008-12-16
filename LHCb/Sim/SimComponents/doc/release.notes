@@ -5,6 +5,9 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+! 2008-12-16 - Marco Cattaneo
+ - Fix gcc 4.3 warning
+
 ! 2008-12-15 - Marco Cattaneo
  - In ForcedBDecayTool, protect hepmcp->print() with msgLevel(MSG::DEBUG) test
 

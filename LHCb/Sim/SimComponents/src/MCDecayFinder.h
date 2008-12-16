@@ -1,4 +1,4 @@
-// $Id: MCDecayFinder.h,v 1.7 2008-07-22 13:01:43 cattanem Exp $
+// $Id: MCDecayFinder.h,v 1.8 2008-12-16 16:03:29 cattanem Exp $
 #ifndef TOOLS_MCDECAYFINDER_H 
 #define TOOLS_MCDECAYFINDER_H 1
 
@@ -350,7 +350,7 @@ private:
 #include "mcparser.h"
 
   int yparse( void );
-  void yerror( char *msg ) { throw DescriptorError(msg); }
+  void yerror( std::string msg ) { throw DescriptorError(msg); }
 
   int ylex( void );
 
