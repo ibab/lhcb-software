@@ -14,20 +14,20 @@ fi
 #valgrind -v --leak-check=yes  
 #${GAUDIKERNELROOT}/../../InstallArea/$CMTCONFIG/bin/Gaudi.exe ../options/MEPInjector.opts 
 #valgrind --tool=callgrind 
-#${GAUDIKERNELROOT}/../../InstallArea/$CMTCONFIG/bin/Gaudi.exe ${ONLINETASKSROOT}/options/MEPInjector.opts
+${GAUDIKERNELROOT}/../../InstallArea/$CMTCONFIG/bin/Gaudi.exe ${ONLINETASKSROOT}/options/MEPInjectorStdAlone.opts
 
 
-HOST=$(hostname --short | awk '{ print toupper($1) }')
+#HOST=$(hostname --short | awk '{ print toupper($1) }')
 
 
 
 #$BIGTERM MEPInjector@${HOST}   -e "
-export UTGID=${HOST}_Injector_1
+#export UTGID=${HOST}/INJECTOR
 
-. ${ONLINETASKSROOT}/job/setupOnline.sh $*
+#. ./setupOnline.sh $*
 
 
-exec -a ${UTGID} ${gaudi_exe} -tasktype=LHCb::Class2Task -main=${GAUDIONLINEROOT}/options/Main.opts -opt=${ONLINETASKSROOT}/options/MEPInjector.opts
+#exec -a ${UTGID} ${gaudi_exe} -tasktype=LHCb::Class2Task -main=${GAUDIONLINEROOT}/options/Main.opts -opt=${ONLINETASKSROOT}/options/MEPInjector.opts
 
 
 
