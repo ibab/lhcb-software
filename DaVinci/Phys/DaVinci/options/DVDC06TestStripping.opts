@@ -2,10 +2,6 @@
  * Options to test stripping
  */
 /*
- * Initialisation
- */
-#include "$DAVINCIROOT/options/DaVinciCommon.opts"
-/*
  * load common particles
  */
 #include "$DAVINCIROOT/options/loadParticlesSeq.opts"
