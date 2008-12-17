@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.9 2008-12-03 07:52:42 albrecht Exp $
+// $Id: HltFunctions.h,v 1.10 2008-12-17 15:53:23 hernando Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -193,6 +193,18 @@ namespace Hlt {
       return (fabs(ip1)<fabs(ip0)) ? ip1 : ip0;
     }
     Hlt::VertexBiFunction* clone() const {return new VertexMinIP();}
+  };
+
+  class VertexMaxChi2OverNdf: public Hlt::VertexFunction {
+  public:
+    explicit VertexMaxChi2OverNdf(){}
+    double operator() (const LHCb::RecVertex& v) const 
+    {
+      double chi2_0 = (v.tracks()[0])->chi2PerDoF();
+      double chi2_1 = (v.tracks()[1])->chi2PerDoF();
+      return (fabs(chi2_0)>fabs(chi2_1)) ? chi2_0 : chi2_1;
+    }
+    Hlt::VertexFunction* clone() const {return new VertexMaxChi2OverNdf();}
   };
 
   template <class T, class ITOOL>

@@ -1,4 +1,4 @@
-// $Id: HltTFunctionFactory.h,v 1.4 2008-12-03 12:50:21 graven Exp $
+// $Id: HltTFunctionFactory.h,v 1.5 2008-12-17 15:53:23 hernando Exp $
 #ifndef HLTTFUNCTIONFACTORY_H 
 #define HLTTFUNCTIONFACTORY_H 1
 
@@ -117,6 +117,11 @@ public:
   virtual StatusCode initialize();
 
 protected:
+
+  void declare(const std::string& name) {
+    int id = hltInfoID(name);
+    declare(name, new Hlt::FunctionCreator<T>(Hlt::Info<T>(id),this));  
+  }
 
   void declare(const std::string& name, Hlt::IFunctionCreator<T>* creator) {
     Assert(m_creators.find(name) == m_creators.end(), 

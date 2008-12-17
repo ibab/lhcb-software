@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactories.cpp,v 1.18 2008-12-13 13:05:57 witekma Exp $
+// $Id: HltFunctionFactories.cpp,v 1.19 2008-12-17 15:53:23 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -37,6 +37,7 @@ StatusCode HltTrackFunctionFactory::initialize() {
 
   StatusCode sc = HltTFunctionFactory<LHCb::Track>::initialize();
 
+  declare("L0ET");
   declare<Hlt::PT>("PT");
   declare<Hlt::PT>("PT0");
   declare<Hlt::TrackFlag>("IsBackward");
@@ -45,12 +46,12 @@ StatusCode HltTrackFunctionFactory::initialize() {
 
   declare<Hlt::rIP,zen::abs_min,Hlt::VertexSelection>("rIP");
   declare<Hlt::IP,zen::abs_min,Hlt::VertexSelection>("IP");
+  declare<Hlt::IP,zen::abs_min,Hlt::VertexSelection>("FitIP");
 
   declare<Hlt::DOCA,zen::abs_min,Hlt::TrackSelection>("DOCA");
   declare<Hlt::MatchIDsFraction,zen::abs_max,Hlt::TrackSelection>("MatchIDsFraction");
   declare<Hlt::DoShareM3,zen::abs_max,Hlt::TrackSelection>("DoShareM3");
 
-  //FIXME zen::abs_min ??
   declare<Hlt::FitChi2OverNdf>("FitChi2OverNdf");
   declare<Hlt::FitMuChi2>("FitMuChi2");
   declare<Hlt::FitCleanedChi2OverNdf>("FitCleanedChi2OverNdf");
@@ -103,13 +104,17 @@ StatusCode HltVertexFunctionFactory::initialize() {
   
   declare<Hlt::DZ,zen::abs_min,Hlt::VertexSelection>("VertexDz");
   declare<Hlt::FC,zen::abs_min,Hlt::VertexSelection>("VertexPointing");
+  declare<Hlt::FC,zen::abs_min,Hlt::VertexSelection>("FitVertexPointing");
   declare<Hlt::VertexMinIP,zen::abs_min,Hlt::VertexSelection>("VertexMinIP");
+  declare<Hlt::VertexMinIP,zen::abs_min,Hlt::VertexSelection>("FitVertexMinIP");
   declare<Hlt::VertexMatchIDsFraction,zen::abs_max,Hlt::VertexSelection>("VertexMatchIDsFraction");
   
   declare<Hlt::VertexDimuonMass>("VertexDimuonMass");
   declare<Hlt::VertexSumPT>("VertexSumPT");
   declare<Hlt::VertexMinPT>("VertexMinPT");
   declare<Hlt::VertexMaxPT>("VertexMaxPT");
+  declare<Hlt::VertexMinPT>("FitVertexMinPT");
+  declare<Hlt::VertexMaxPT>("FitVertexMaxPT");
 
   declare<Hlt::VertexNumberOfASideTracks>("VertexNumberOfASideTracks");
   declare<Hlt::VertexNumberOfCSideTracks>("VertexNumberOfCSideTracks");

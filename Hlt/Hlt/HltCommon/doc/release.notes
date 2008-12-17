@@ -4,6 +4,10 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2008-12-17 - Jose A. Hernando
+- add HltTFunctionFactory declare a read-from-extrainfo as function
+- add HltFunctionFactories entry for variables using fit tracks
+
 ! 2008-12-13 - Mariusz Witek
 - add HltFunctionFactories entry for anti T confirmation of L0Electrons
 
