@@ -1,3 +1,8 @@
+2008-12-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/LbLogin.py: removed the shared area setup if CMTSITE is not local (if no
+	MYSITEROOT has been provided)
+
 2008-12-15  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/GetPack.py: use shell=True when calling cmt otherwise it

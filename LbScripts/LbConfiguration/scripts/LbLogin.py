@@ -23,7 +23,7 @@ import sys, os, logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.19 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.20 $")
 
 
 def getLbLoginEnv(debug=False, 
@@ -440,8 +440,6 @@ class LbLoginScript(Script):
         if opts.sharedarea :
             if opts.cmtsite == "LOCAL" :
                 opts.mysiteroot = os.pathsep.join(opts.sharedarea.split(os.pathsep))
-            else :
-                log.error("Cannot have a shared area if your CMTSITE is not local")
             
     def setCMTConfig(self, debug=False):
         ev = self._env
