@@ -1,4 +1,4 @@
-// $Id: DecayTreeTuple.h,v 1.2 2008-07-01 14:50:02 pkoppenb Exp $
+// $Id: DecayTreeTuple.h,v 1.3 2008-12-17 20:14:55 pkoppenb Exp $
 #ifndef JBOREL_DECAYTREETUPLE_H
 #define JBOREL_DECAYTREETUPLE_H 1
 
@@ -26,10 +26,12 @@ class IEventTupleTool;
  *
  * Here is a minimalist but working example:
  * \verbatim
- MyGaudiSequencer.Member = {"DecayTreeTuple"};
- DecayTreeTuple.PhysDesktop.InputLocations = {"Phys/SomeSelection"};
- DecayTreeTuple.Decay = "B0 -> ^pi- ^pi+";
- DecayTreeTuple.TupleName = "MyTuple";\endverbatim
+ from Configurables import DecayTreeTuple, PhysDesktop, GaudiSequencer
+ MyDecayTreeTuple = DecayTreeTuple("MyDecayTreeTuple")
+ GaudiSequencer("MySeq").Members =+ [ MyDecayTreeTuple]
+ MyDecayTreeTuple.PhysDesktop.InputLocations = ["Phys/SomeSelection"]
+ MyDecayTreeTuple.Decay = "B0 -> ^pi- ^pi+"
+ MyDecayTreeTuple.TupleName = "MyTuple"\endverbatim
  *
  * \note Any particle to be stored in the Tuple has to be flagged with
  * '^' (an exception here is the decay head which cannot be flagged as
@@ -52,9 +54,11 @@ class IEventTupleTool;
  * usual, doing things like
  *
  * \verbatim
- DecayTreeTuple.ToolList = { "TupleToolMCTruth", TupleToolTrigger" };
- DecayTreeTuple.ToolList += { "TupleToolPid/genericPID" };
- DecayTreeTuple.genericPID.SomeProperty = true;\endverbatim
+ MyDecayTreeTuple.ToolList = [ "TupleToolMCTruth", TupleToolTrigger" ]
+ MyDecayTreeTuple.ToolList += [ "TupleToolPid/genericPID" ]
+ from Configurables import TupleTooPid
+ MyDecayTreeTuple.addTool(TupleTooPid("genericPID"))
+ MyDecayTreeTuple.genericPID.SomeProperty = True\endverbatim
  *
  * \subsection branches Fine tuning of the branches:
  *
@@ -79,19 +83,23 @@ class IEventTupleTool;
  * good occasion to remind you the DecayFinder syntax):
  *
  * \verbatim
- MyGaudiSequencer.Members = {"DecayTreeTuple/Dtt"};
- Dtt.Decay = "[[B_s0]cc -> (^D_s- => ^K+ ^K- ^pi-) {^pi+, ^K+}]cc";
+ Dtt = DecayTreeTuple("Dtt")
+ GaudiSequencer("MySeq").Members = [ Dtt ]
+ Dtt.Decay = "[[B_s0]cc -> (^D_s- => ^K+ ^K- ^pi-) {^pi+, ^K+}]cc"
  Dtt.Branches = {
     "bachelor" : " [[B_s0]cc -> D_s- {^pi+, ^K+}]cc "
     ,"Ds" : " [ [B_s0]cc -> ^D_s- {pi+,K+} ]cc "
     ,"head" : " [B_s0]cc : [[B_s0]cc -> (D_s- => K+ K- pi- ) pi+ ]cc"
- };
+ }
 
- Dtt.head.ToolList = { "TupleToolPropertime" };
- Dtt.head.InheritTools = false;
+ Dtt.head.ToolList = [ "TupleToolPropertime" ]
+ Dtt.head.InheritTools = False
+ from Configurables import TupleToolMCTruth, TupleToolDecay
+ Dtt.addTool(TupleToolDecay("bachelor"))
+ Dtt.bachelor.addTool(TupleToolMCTruth())
+ Dtt.bachelor.ToolList = [ "TupleToolMCTruth" ]
 
- Dtt.bachelor.ToolList = { "TupleToolMCTruth" };
- Dtt.bachelor.TupleToolMCTruch.UseChi2Method = true;\endverbatim
+ Dtt.bachelor.TupleToolMCTruch.UseChi2Method = True\endverbatim
  *
  * \note Notice the way the decay head is matched as it is a bit unusual.
  *

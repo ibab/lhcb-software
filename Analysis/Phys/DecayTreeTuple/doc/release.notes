@@ -1,8 +1,12 @@
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DecayTreeTuple
-! Responsible : Jeremie Borel
+! Responsible : Jeremie Borel (orphan)
 ! Purpose     : Option-steered tuples. Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
+
+! 2008-12-17 - Patrick Koppenburg
+ - TupleToolGeometry : Added a method to fill IPs wrt to best PV for 
+   intermediates and finals as well.
 
 ! 2008-12-09 - Patrick Koppenburg
  - Move escape method to a function in namesp;ace Decays in DaVinciKernel.

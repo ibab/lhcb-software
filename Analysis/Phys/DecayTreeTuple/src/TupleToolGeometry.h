@@ -1,4 +1,4 @@
-// $Id: TupleToolGeometry.h,v 1.4 2008-11-11 07:47:58 pkoppenb Exp $
+// $Id: TupleToolGeometry.h,v 1.5 2008-12-17 20:14:55 pkoppenb Exp $
 #ifndef JBOREL_TUPLETOOLGEOMETRY_H
 #define JBOREL_TUPLETOOLGEOMETRY_H 1
 
@@ -12,16 +12,20 @@ class IDistanceCalculator;
 
 namespace LHCb {
   class Particle;
-  class Vertex;
+  class VertexBase;
 };
 
 
 /** @class TupleToolGeometry TupleToolGeometry.h jborel/TupleToolGeometry.h
  *
- * \brief Fill geometry related informatio for DecayTreeTuple
+ * \brief Fill geometry related information for DecayTreeTuple
  *
- * - head_IP : impact parameter with respect to the PhysDesktop::relatedVertex()
- * - head_IPCHI2 : impact parameter chi2
+ * - head_IP : impact parameter with respect to the PhysDesktop::relatedVertex() of the top of decay chain
+ * - head_IPCHI2 : impact parameter chi2 with respect to the PhysDesktop::relatedVertex() of the top of decay chain
+ * - head_IP : impact parameter with respect to the PhysDesktop::relatedVertex() 
+ *      of the particle (not available for the top of decay chain)
+ * - head_IPCHI2 : impact parameter chi2 with respect to the PhysDesktop::relatedVertex() of the particle 
+ *     (not available for the top of decay chain)
  * - head_MINIP : minimum impact parameter on any PV
  * - head_MINIPCHI2 : minimum chi2 IP on all PVs
  * - head_FD : flight distance of composite particle wrt. the origin
@@ -57,9 +61,18 @@ public:
 
 private:
 
-  const LHCb::Vertex* originVertex( const  LHCb::Particle*
-				    , const LHCb::Particle* ) const;
-  
+  /// origin vertex
+  const LHCb::VertexBase* originVertex( const  LHCb::Particle*
+                                        , const LHCb::Particle* ) const;
+  /// fill related pV stuff
+  StatusCode fillBPV(const LHCb::VertexBase*, const LHCb::Particle*, std::string, Tuples::Tuple&) const ;
+
+  /// fill min IP
+  StatusCode fillMinIP(const LHCb::Particle*, std::string, Tuples::Tuple&) const ;
+
+  /// fill end vertex stuff
+  StatusCode fillEndVertex(const LHCb::VertexBase*, const LHCb::VertexBase*, 
+                           const LHCb::Particle*, std::string, Tuples::Tuple&) const ;
 
   IContextTool* m_context;
   const IDistanceCalculator* m_dist;

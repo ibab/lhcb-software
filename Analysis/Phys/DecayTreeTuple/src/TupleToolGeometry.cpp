@@ -1,4 +1,4 @@
-// $Id: TupleToolGeometry.cpp,v 1.6 2008-11-11 07:47:58 pkoppenb Exp $
+// $Id: TupleToolGeometry.cpp,v 1.7 2008-12-17 20:14:55 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -16,10 +16,6 @@
 #include "GaudiAlg/TupleObj.h"
 
 #include "Event/Particle.h"
-
-
-
-
 //-----------------------------------------------------------------------------
 // Implementation file for class : GeometryTupleTool
 //
@@ -67,23 +63,57 @@ StatusCode TupleToolGeometry::initialize() {
 }
 
 //=============================================================================
-
 StatusCode TupleToolGeometry::fill( const Particle* mother
-				    , const Particle* P
-				    , const std::string& head
-				    , Tuples::Tuple& tuple ){
+                                    , const Particle* P
+                                    , const std::string& head
+                                    , Tuples::Tuple& tuple ){
   Assert( P && mother && m_dist && m_context
-	  , "This should not happen, you are inside TupleToolGeometry.cpp :(" );
-
-  bool test=true;
-  if( P->particleID().pid() != m_photonID ||  P->particleID().pid()  != m_pi0ID  ){//skip the neutrals  
-  const VertexBase* primVtx = m_context->desktop()->relatedVertex ( mother );
-  if( primVtx ){}
-  else { 
-    Error("No related primary vertex to compute the IPS"); 
+          , "This should not happen, you are inside TupleToolGeometry.cpp :(" );
+  
+  if( P->particleID().pid() == m_photonID ||  P->particleID().pid()  == m_pi0ID  ){
+    return Warning("Will not fill geometry tuple for photons and pi0. No worry.", StatusCode::SUCCESS, 10);
+  }
+  
+  StatusCode sc = fillMinIP(P,head,tuple);
+  if (!sc) return sc;
+ 
+  // fill with mother PV
+  const VertexBase* motherPV = m_context->desktop()->relatedVertex ( mother );
+  sc = fillBPV(motherPV,P,head,tuple);
+  if (!sc) return sc;
+  
+  // fill with particle's best PV
+  if ( mother != P ){
+    const VertexBase* myPV = m_context->desktop()->relatedVertex ( P );
+    sc = fillBPV(myPV,P,head+"_OwnPV",tuple);
+    if (!sc) return sc;
+  }
+  // nothing more for basic particles
+  if( P->isBasicParticle() ) return sc ;
+  
+  const VertexBase* vtx = 0;
+  if ( mother != P ) vtx = originVertex( mother, P );
+  else vtx = motherPV;
+  if( !vtx ){
+    Error("Can't retrieve the origin vertex for " + head );
     return StatusCode::FAILURE;
   }
-    
+  sc = fillEndVertex(vtx,motherPV,P,head,tuple);
+  return sc ;
+}
+//=========================================================================
+//  Fill PV for related PV 
+//=========================================================================
+StatusCode TupleToolGeometry::fillBPV( const VertexBase* primVtx
+                                    , const Particle* P
+                                    , const std::string head
+                                    , Tuples::Tuple& tuple ) const {
+  bool test = true ;
+  if( 0==primVtx ){ 
+    Error("No related primary vertex to compute the IP of "+head); 
+    return StatusCode::FAILURE;
+  }
+  
   double ip=0, chi2=0;
   test &= m_dist->distance ( P, primVtx, ip, chi2 );
   if( !test ){
@@ -93,11 +123,21 @@ StatusCode TupleToolGeometry::fill( const Particle* mother
   test &= tuple->column( head + "_IP", ip );
   test &= tuple->column( head + "_IPCHI2", chi2 );
 
+  return StatusCode(test) ;
+}
+//=========================================================================
+//  Fill PV for all PV
+//=========================================================================
+StatusCode TupleToolGeometry::fillMinIP( const Particle* P
+                                         , const std::string head
+                                         , Tuples::Tuple& tuple ) const {
+  bool test = true ;
   // minimum IP
   double ipmin = -1;
   double minchi2 = -1 ;
   const RecVertex::Container* PV = m_context->primaryVertices();
   for ( RecVertex::Container::const_iterator pv = PV->begin() ; pv!=PV->end() ; ++pv){
+    double ip, chi2;
     StatusCode test2 = m_dist->distance ( P, *pv, ip, chi2 );
     if( test2 ) {
       if ((ip<ipmin) || (ipmin<0.)) ipmin = ip ;
@@ -106,25 +146,23 @@ StatusCode TupleToolGeometry::fill( const Particle* mother
   }
   test &= tuple->column( head + "_MINIP", ipmin );
   test &= tuple->column( head + "_MINIPCHI2", minchi2 );
-
-  // nothing more for basic particles
-  if( P->isBasicParticle() ) return StatusCode(test);
+  
   // --------------------------------------------------
-
+  return StatusCode(test) ;
+}
+//=========================================================================
+// fill origin vertex stuff 
+//=========================================================================
+StatusCode TupleToolGeometry::fillEndVertex( const VertexBase* vtx
+                                          , const VertexBase* primVtx
+                                          , const Particle* P
+                                          , const std::string head
+                                          , Tuples::Tuple& tuple ) const {
+  bool test = true ;
   // --------------------------------------------------
   // cosine of (flight distance) dot (momentum):
-
   // find the origin vertex. Either the primary or the origin in the
   // decay
-  const VertexBase* vtx = NULL;
-  if( mother != P ) vtx = originVertex( mother, P );
-  else vtx = primVtx;
-  if( !vtx ){
-    Error("Can't retrieve the origin vertex for " + head );
-    return StatusCode::FAILURE;
-  }
-
-
   const LHCb::Vertex* evtx = P->endVertex();
   if( !evtx ){
     Error("Can't retrieve the end vertex for " + head );
@@ -132,7 +170,7 @@ StatusCode TupleToolGeometry::fill( const Particle* mother
   }
   Gaudi::XYZVector A = P->momentum().Vect();
   Gaudi::XYZVector B = evtx->position() - vtx->position ();  
-
+  
   double cosPFD = A.Dot( B ) / std::sqrt( A.Mag2()*B.Mag2() );
   test &= tuple->column( head + "_DIRA", cosPFD );
 
@@ -147,7 +185,8 @@ StatusCode TupleToolGeometry::fill( const Particle* mother
   
   // --------------------------------------------------
   // flight distance
-  double dist=0;
+  double dist = 0;
+  double chi2 = 0 ;
   StatusCode sc = m_dist->distance( vtx, P->endVertex(), dist, chi2 );
   if( sc ){}
   else {
@@ -169,19 +208,16 @@ StatusCode TupleToolGeometry::fill( const Particle* mother
   test &= tuple->column( head + "_FDPV", dist );
   //test &= tuple->column( head + "_FDPVS", dist/edist );
   test &= tuple->column( head + "_FDPVCHI2", chi2 );
-  }
   return StatusCode(test);
 }
-
 // =====================================================
 // =====================================================
-
-const Vertex* TupleToolGeometry::originVertex( const Particle* top
+const VertexBase* TupleToolGeometry::originVertex( const Particle* top
 						 , const Particle* P ) const {
-  if( top == P || P->isBasicParticle() ) return NULL;
+  if( top == P || P->isBasicParticle() ) return 0;
 
   const SmartRefVector< LHCb::Particle >& dau = top->daughters ();
-  if( dau.empty() ) return NULL;
+  if( dau.empty() ) return 0;
 
   SmartRefVector< LHCb::Particle >::const_iterator it;
   for( it = dau.begin(); dau.end()!=it; ++it ){
@@ -193,9 +229,9 @@ const Vertex* TupleToolGeometry::originVertex( const Particle* top
   // vertex not yet found, get deeper in the decay:
   for( it = dau.begin(); dau.end()!=it; ++it ){
     if( P != *it && !(*it)->isBasicParticle() ){
-      const Vertex* vv = originVertex( *it, P );
+      const VertexBase* vv = originVertex( *it, P );
       if( vv ) return vv;
     }
   }
-  return NULL;
+  return 0;
 }
