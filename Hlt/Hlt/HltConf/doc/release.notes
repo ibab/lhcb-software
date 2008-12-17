@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.78 2008-12-17 16:44:47 depaula Exp $ 
+! $Id: release.notes,v 1.79 2008-12-17 16:48:04 hernando Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+
+! 2008-12-17 - Jose A. Hernando
+ - modify HltHadronLines.py to separe Single from DiHadron,
+   introduce the fast kalman fitting in the Hlt1 Hadron alleys (still some opts files to be converted into python conf: HltHadFitTracks.opts)
+	 set but not activate the soft DiHadron alley
 
 ! 2008-12-17 - Leandro de Paula
  - New Muon line to trigger on DiMuons not pointing to a PV

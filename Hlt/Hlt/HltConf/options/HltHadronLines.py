@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltHadronLines.py,v 1.13 2008-12-08 15:42:03 graven Exp $
+# $Id: HltHadronLines.py,v 1.14 2008-12-17 16:48:04 hernando Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hadron Lines
@@ -12,7 +12,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.13 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.14 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -29,99 +29,178 @@ from HltConf.HltLine import Hlt1Tool   as Tool
 from HltConf.HltLine import hlt1Lines, addHlt1Prop, rmHlt1Prop 
 
 importOptions('$HLTCONFROOT/options/HltRecoSequence.py')
+importOptions('$HLTCONFROOT/options/Hlt1HadFitTracks.opts')
+
+# TODO 
+#--------------------------------
+#
+# (J.A. Hernando 17/12/08)
+# External selection to be provided
+#    1) L0Hadrons (L0 Candidates above a given threshold i.e 2000 MeV)
+#    2) L0HadronsDecision (L0 Candidates that fired the L0-Hadron channel)
+#           This is necesary for the TOS tool
+#    3) RZVelo, PV2D, Velo tracks
+# Replace opts-file to set the opts for the fast fit by configurables
+# Declare the knows of the alleys to the optimization program
+
+# stearing variables
+#----------------------------------
+#L0HADRON = "HadronNoGlob"
+L0HADRON = "Hadron"
+
+HADL0_ETCUT = 3500.
+HADL0_MINETCUT = 2500.
+
+SINGLEHADRON_PTCUT = 5000.
+
+HADMAIN_IPCUT = 0.1
+HADMAIN_PTCUT = 2500.
+HADMAIN_TRACKFITCHI2CUT = 10.
+
+HADVERTEX_DOCACUT = 0.2
+HADVERTEX_DZCUT = 0.
+HADVERTEX_MINIPCUT = 0.1
+HADVERTEX_MINPTCUT = 1000.
+HADVERTEX_POINTINGCUT = 0.4
+
+SOFTDIHADRON = False
+HADL0_SOFTETCUT = 2500. 
+HADMAIN_SOFTPTCUT = 1500. 
+
+# depending variables
+#------------------------------------
+if (L0HADRON == "HadronNoGlob"): HADL0_ETCUT = 4000.
+
+L0CHANNELS = ["Electron","Photon","LocalPi0","GlobalPi0",
+              "Muon","DiMuon","MuonNonGlob"]
+L0ALL = "L0_CHANNEL('"+L0HADRON+"') "
+for l0channel in L0CHANNELS:
+    L0ALL = L0ALL + " | L0_CHANNEL('"+l0channel+"') "
 
 
-HltL0CaloPrepare('L0HadronDecision').addTool( HadronSeedTool(decodeCalos = False) )
-
-prepMainHadron = bindMembers( 'MainHadronPrep',
-                              [ HltL0CaloPrepare('L0HadronDecision'
-                                                , CaloMakerTool= HadronSeedTool(decodeCalos = False)
-                                                , CaloType = 'Hadron'
-                                                , MinEt = 3500.0 )
-                                , GaudiSequencer('Hlt1RecoRZVeloSequence')
-                                , Member ( 'TF' ,'RZVelo'
-                                           , InputSelection = 'RZVelo'
-                                           , FilterDescriptor = ['Calo2DChi2_L0HadronDecision,<,4']
-                                           , HistogramUpdatePeriod = 1
-                                           , HistoDescriptor = { 'Calo2DChi2_L0HadronDecision':('Calo2DChi2_L0HadronDecision',0.,100.,20)
-                                                               , 'Calo2DChi2_L0HadronDecision':('Calo2DChi2_L0HadronDecision',0.,100.,20) }
-                                           )
-                                , Member ( 'TU', 'Velo', RecoName = 'Velo')
-                                , Member ( 'TF', 'Velo'
-                                           , FilterDescriptor = [ 'IP_PV2D,||>,0.1', 'Calo3DChi2_L0HadronDecision,<,4' ]
-                                           , HistogramUpdatePeriod = 1
-                                           , HistoDescriptor = { 'IP_PV2D':('IP_PV2D',-0.1,3.,100)
-                                                               , 'IP_PV2DBest':('IP_PV2DBest',-0.1,3.,100)
-                                                               , 'Calo3DChi2_L0HadronDecision':('Calo3DChi2_L0HadronDecision',-0.1,50.,100)
-                                                               , 'Calo3DChi2_L0HadronDecision':('Calo3DChi2_L0HadronDecision',-0.1,50.,100) }
-                                           )
-                                , Member ( 'TM' , 'VeloCalo'
-                                           , InputSelection1 = '%TUVelo'
-                                           , InputSelection2 = 'L0HadronDecision'
-                                           , MatchName = 'VeloCalo' , MaxQuality = 4.
-                                           , HistogramUpdatePeriod = 1
-                                           )
-                                , Member ( 'TU', 'GuidedForward'
-                                           , InputSelection  = '%TMVeloCalo' ##TODO: can this line be deleted?
-                                           , RecoName = 'GuidedForward'
-                                           , HistogramUpdatePeriod = 1
-                                           )
-                                ])
-
+# Single Hadron Alley
+#-----------------------------------
+HltL0CaloPrepare('L0Hadrons').addTool( HadronSeedTool(decodeCalos = False) )
 
 Line ( 'SingleHadron' 
-       , L0DU  = "L0_CHANNEL('Hadron')"
-       , algos = 
-       [ prepMainHadron 
-         , Member ( 'TF' , 'Decision'
-                    , OutputSelection = '%Decision'
-                    , FilterDescriptor = ['PT,>,5000.']
-                    , HistogramUpdatePeriod = 1
-                    , HistoDescriptor = { 'PT':('PT',0.,6000.,100), 'PTBest':('PTBest',0.,6000.,100) }
-                    )
-         ])
+       , L0DU  = "L0_CHANNEL('"+L0HADRON+"')"
+       , algos = [
+    HltL0CaloPrepare('L0Hadrons', CaloMakerTool="HadronSeedTool",
+                     CaloType = 'Hadron',MinEt = HADL0_MINETCUT)
+    , Member("TF","L0Hadrons",
+             InputSelection = "L0Hadrons",
+             FilterDescriptor = ["L0ET,>,"+str(HADL0_ETCUT)])
+    , Member("TF","2L0Hadrons",
+             InputSelection = "L0Hadrons",
+             OutputSelection = "L0HadronsDecision",
+             FilterDescriptor = ["L0ET,>,"+str(HADL0_ETCUT)])
+    , GaudiSequencer('Hlt1RecoRZVeloSequence')
+    , Member ( 'TF' ,'RZVelo'
+               , InputSelection = 'RZVelo'
+               , FilterDescriptor = ['Calo2DChi2_%TFL0Hadrons,<,4'])
+    , Member ( 'TU', 'Velo', RecoName = 'Velo')
+    , Member ( 'TF', '1Velo'
+               , FilterDescriptor = [ 'IP_PV2D,||>,'+str(HADMAIN_IPCUT)])
+    , Member ( 'TF', '2Velo'
+               , FilterDescriptor = [ 'Calo3DChi2_%TFL0Hadrons,<,4' ])
+    , Member ( 'TM' , 'VeloCalo'
+               , InputSelection1 = '%TF2Velo'
+               , InputSelection2 = '%TFL0Hadrons'
+               , MatchName = 'VeloCalo' , MaxQuality = 4.
+               )
+    , Member ( 'TU', 'GuidedForward'
+               , InputSelection  = '%TMVeloCalo'
+               , RecoName = 'GuidedForward'
+               , HistogramUpdatePeriod = 1
+               )
+    , Member ( 'TF' , 'GuidedForward'
+               #               , OutputSelection = '%Decision'
+               , FilterDescriptor = ['PT,>,'+str(SINGLEHADRON_PTCUT)])
+    , Member ( 'TU' , 'FitTrack'
+               , RecoName = "FitTrack")
+    , Member ( 'TF' , '1FitTrack'
+               , FilterDescriptor = ["FitIP_PV2D,||>,"+str(HADMAIN_IPCUT)])
+    , Member ( 'TF' , '2FitTrack'
+               , OutputSelection = '%Decision'
+               , FilterDescriptor = ["FitChi2OverNdf,<,"+str(HADMAIN_TRACKFITCHI2CUT)])
+    ])
+       
 
-Line ('DiHadron' 
-      , L0DU  = "L0_CHANNEL('Hadron')"
-      , algos =  
-      [ prepMainHadron
-        , Member ( 'TF', 'GuidedForward'
-                   , FilterDescriptor = ['PT,>,2500.']
-                   , HistogramUpdatePeriod = 1
-                   , HistoDescriptor = { 'PT':('PT',0.,6000.,100), 'PTBest':('PTBest',0.,6000.,100) }
-                   )
-        , HltTrackUpgrade( 'Hlt1RecoVelo' )
-        , Member ( 'TF', 'Velo'
-                   , InputSelection = HltTrackUpgrade('Hlt1RecoVelo') ## TODO: is this line still needed?
-                   , FilterDescriptor = [ 'IP_PV2D,||>,0.1', 'MatchIDsFraction_%TFGuidedForward,<,0.9' ]
-                   , HistogramUpdatePeriod = 1
-                   , HistoDescriptor = { 'IP_PV2D':('IP_PV2D',0.,3.,100)
-                                       , 'IP_PV2DBest':('IP_PV2DBest',0.,3.,100) 
-                                       }
-                   )
-        , Member ( 'VM2', 'Velo'
-                   , InputSelection1 = '%TFGuidedForward'
-                   , InputSelection2 = '%TFVelo'
-                   , FilterDescriptor = [ 'DOCA,<,0.2']
-                   , HistoDescriptor = { 'DOCA':('DOCA',0.,3.,100)
-                                       , 'DOCABest':('DOCABest',0.,3.,100) 
-                                       }
-                   )
-        , Member ( 'VF' ,'Velo'
-                   , FilterDescriptor = [ 'VertexDz_PV2D,>,0.']
-                   , HistoDescriptor = { 'VertexDz_PV2D':('VertexDz_PV2D',-3.,3.,100)
-                                       , 'VertexDz_PV2DBest':('VertexDz_PV2D',-3.,3.,100) 
-                                       }
-                   )
-        , Member ( 'VU', 'Forward' , RecoName = 'Forward')
-        , Member ( 'VF', 'Decision'
-                   , OutputSelection = '%Decision'
-                   , FilterDescriptor = [ 'VertexMinPT,>,1000.', 'VertexPointing_PV2D,<,0.4' ]
-                   , HistogramUpdatePeriod = 1
-                   , HistoDescriptor = { 'VertexMinPT':('VertexMinPT',0.,6000.,100)
-                                       , 'VertexMinPTBest':('VertexMinPTBest',0.,6000.,100)
-                                       , 'VertexPointing_PV2D':('VertexPointing_PV2D',0.,1.,100)
-                                       , 'VertexPointing_PV2DBest':('VertexPointing_PV2DBest',0.,1.,100) 
-                                       }
-                   )
-        ])
+Line ('DiHadron'
+      , L0DU  = "L0_CHANNEL('"+L0HADRON+"')"
+      , algos =  [
+    HltL0CaloPrepare('L0Hadrons', CaloMakerTool="HadronSeedTool",
+                     CaloType = 'Hadron',MinEt = HADL0_MINETCUT)
+    , Member("TF","L0Hadrons",
+             InputSelection = "L0Hadrons",
+             FilterDescriptor = ["L0ET,>,"+str(HADL0_ETCUT)])
+    , GaudiSequencer('Hlt1RecoRZVeloSequence')
+    , Member ( 'TF' ,'RZVelo'
+               , InputSelection = 'RZVelo'
+               , FilterDescriptor = ['Calo2DChi2_%TFL0Hadrons,<,4'])
+    , Member ( 'TU', 'Velo', RecoName = 'Velo')
+    , Member ( 'TF', '1Velo'
+               , FilterDescriptor = [ 'IP_PV2D,||>,'+str(HADMAIN_IPCUT)] )
+    , Member ( 'TF', '2Velo'
+               , FilterDescriptor = [
+                                      'Calo3DChi2_%TFL0Hadrons,<,4' ])
+    , Member ( 'TM' , 'VeloCalo'
+               , InputSelection1 = '%TF2Velo'
+               , InputSelection2 = '%TFL0Hadrons'
+               , MatchName = 'VeloCalo' , MaxQuality = 4.
+               )
+    , GaudiSequencer('HltDecodeT')
+    , GaudiSequencer('HltDecodeTT')
+    , Member ( 'TU', 'GuidedForward'
+               , InputSelection  = '%TMVeloCalo'
+               , RecoName = 'GuidedForward'
+               , HistogramUpdatePeriod = 1
+               )        
+    , Member ( 'TF', 'GuidedForward'
+               , FilterDescriptor = ['PT,>,'+str(HADMAIN_PTCUT)])
+    , HltTrackUpgrade( 'Hlt1RecoVelo' )
+    , Member ( 'TF', '1Velo2'
+               , InputSelection = HltTrackUpgrade('Hlt1RecoVelo')
+               , FilterDescriptor = [ 'IP_PV2D,||>,'+str(HADMAIN_IPCUT)])
+    , Member ( 'TF', '2Velo2'
+               , InputSelection = HltTrackUpgrade('Hlt1RecoVelo')
+               , FilterDescriptor =
+               ['MatchIDsFraction_%TFGuidedForward,<,0.9' ])
+    , Member ( 'VM2', 'Velo'
+               , InputSelection1 = '%TFGuidedForward'
+               , InputSelection2 = '%TF2Velo2'
+               , FilterDescriptor = [ 'DOCA,<,'+str(HADVERTEX_DOCACUT)])
+    , Member ( 'VF' ,'Velo2'
+               , FilterDescriptor = [ 'VertexDz_PV2D,>,'+str(HADVERTEX_DZCUT)])
+    , Member ( 'VU', 'Forward' , RecoName = 'Forward')
+    , Member ( 'VF', '1Forward'
+               , FilterDescriptor = [ 'VertexMinPT,>,'+str(HADVERTEX_MINPTCUT)])
+    , Member ( 'VF', '2Forward'
+               , FilterDescriptor =
+               [ 'VertexPointing_PV2D,<,'+str(HADVERTEX_POINTINGCUT)])
+    , Member('VU', 'FitTrack',RecoName = 'FitTrack')
+    , Member('VF', '1FitTrack'
+             , FilterDescriptor =
+             [ 'FitVertexMinIP_PV2D,||>,'+str(HADVERTEX_MINIPCUT)])
+    , Member('VF', '2FitTrack'
+             , OutputSelection = "%Decision"
+             , FilterDescriptor = ['FitVertexMaxChi2OverNdf,<,'+str(HADMAIN_TRACKFITCHI2CUT) ])
+    ])
+
+
+# here get a Hlt1 line 
+def getLine(name):
+    for line in hlt1Lines():
+        if (line._name == name): return line
+    print "ERROR:  no line with name", name
+
+
+if (SOFTDIHADRON):
+    getLine("DiHadron").clone("SoftDiHadron"
+                              , L0DU = L0ALL
+                              , TFL0Hadrons = {"FilterDescriptor":
+                                               ["L0ET,>,"+str(HADL0_SOFTETCUT)]}
+                              , TFGuidedForward =
+                              {"FilterDescriptor":["PT,>,"+str(HADMAIN_SOFTPTCUT)]}
+                              )
+
