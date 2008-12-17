@@ -5,7 +5,7 @@
  *  Header file for Markov Ring finder algorithms
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.h,v 1.42 2008-08-26 19:36:46 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.h,v 1.43 2008-12-17 13:50:58 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -92,13 +92,13 @@ namespace Rich
       protected:
 
         /// Returns the RICH Detector
-        inline const Rich::DetectorType rich() const { return m_rich; }
+        inline Rich::DetectorType rich() const { return m_rich; }
 
         /// Returns the RICH panel
-        inline const Rich::Side panel() const { return m_panel; }
+        inline Rich::Side panel() const { return m_panel; }
 
         /// Returns the RICH radiator
-        inline const Rich::RadiatorType rad() const { return m_rad; }
+        inline Rich::RadiatorType rad() const { return m_rad; }
 
       private: // methods
 

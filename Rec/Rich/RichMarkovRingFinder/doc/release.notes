@@ -4,6 +4,9 @@
 ! Purpose     : Uses a Markov Chain sampler to do ring finding without tracks
 !-----------------------------------------------------------------------------
 
+! 2008-12-17 - Marco Cattaneo
+ - Fix gcc 4.3 warnings
+
 !=================== Rich/RichMarkovRingFinder v2r3 2008-11-21 ===============
 ! 2008-11-14 - Chris Jones
  - Fixes to python Configurable for latest Gaudi changes
