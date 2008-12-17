@@ -7,18 +7,15 @@
 //
 //  Description : 
 //  
-//  This file contains the implementation of a MEP injector. It consists 
+//  This file contains the implementation of the MEP injector. It consists 
 //  in a GAUDI algorithm which reads raw events from MDF files, produces
-//  Tell1's MEPs which represent the events, and then it sends them to
-//  the HLT.
+//  Tell1's MEPs, and then it sends them to the HLT.
 //
-//  Currently it consists in only one Gaudi Algorithm, but it will be 
-//  certainly needed to split tasks in several algorithm, in order to
-//  improve the throughput of the injector. 
-//  Tasks would be : 
-//       - Read events 
-//       - Produce MEPs
-//       - Send MEPs
+//  It implements also a MEP request manager and an Odin MEP manager in order
+//  to be integrated in the DAQ network.
+//
+//  Each task is made by a dedicated thread. 
+//
 //  ====================================================================
 
 #ifndef _WIN32
