@@ -1,4 +1,4 @@
-// $Id: Trees.h,v 1.4 2008-12-04 14:37:31 ibelyaev Exp $
+// $Id: Trees.h,v 1.5 2008-12-17 16:51:05 ibelyaev Exp $
 // ============================================================================
 #ifndef DECAYS_TREES_H 
 #define DECAYS_TREES_H 1
@@ -167,7 +167,7 @@ namespace Decays
       /// reset the collection cache 
       virtual void reset () const {}
       /// collect the marked elements 
-      virtual size_t collect ( Collection& ouput ) const { return 0 ; }
+      virtual size_t collect ( Collection& /* output */ ) const { return 0 ; }
       // ====================================================================
     } ;
     // ======================================================================      
@@ -429,6 +429,7 @@ namespace Decays
         ( typename Decays::iTree_<PARTICLE>::argument p ) const ;
       /// MANDATORY: the specific printout 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ====================================================================
     public:
       // ====================================================================
       And_& operator&= ( const Decays::iTree_<PARTICLE>& tree ) 
@@ -449,6 +450,8 @@ namespace Decays
     } ;
     // ======================================================================
     /** @class  Not_
+     * 
+     *  @attention NOT blocks the marked elements!
      *  Simple sub-tree which matches .NOT. for subtree
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-04-13
@@ -459,7 +462,10 @@ namespace Decays
     public:
       // ====================================================================
       /// constructor from the node 
-      Not_ ( const Decays::iTree_<PARTICLE>& tree ) ;
+      Not_ ( const Decays::iTree_<PARTICLE>& tree ) 
+        : Decays::iTree_<PARTICLE> () 
+        , m_tree ( tree ) 
+      {}
       /// MANDATORY: virtual destrcutor 
       virtual ~Not_ () {}
       // ====================================================================
@@ -469,19 +475,26 @@ namespace Decays
       virtual  Not_* clone() const { return new Not_ ( *this ) ; }
       /// MANDATORY: the only one essential method
       virtual bool operator() 
-        ( typename Decays::iTree_<PARTICLE>::argument p ) const ;
+        ( typename Decays::iTree_<PARTICLE>::argument p ) const 
+      {
+        const bool result = m_tree.tree ( p ) ;
+        m_tree.tree().reset () ;
+        return result ;
+      }
       /// MANDATORY: the specific printout 
-      virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      virtual  std::ostream& fillStream( std::ostream& s ) const 
+      { return s << " ~(" << m_tree << ") " ; }
       /// MANDATORY: check the validness 
-      virtual bool valid () const ;
+      virtual bool valid () const { return m_tree.valid() ; }
         /// MANDATORY: the proper validation of the tree
       virtual  StatusCode validate 
-      ( const LHCb::IParticlePropertySvc* svc ) const ;
-      /// reset the cache 
-      virtual void reset() ; 
+      ( const LHCb::IParticlePropertySvc* svc ) const 
+      { return m_tree.validate ( svc ) ; }
       /// MANDATORY: collect all marked elements 
       virtual size_t collect 
-      ( typename Decays::iTree_<PARTICLE>::Collection& ) const ;
+      ( typename Decays::iTree_<PARTICLE>::Collection& ) const { return 0 ; }
+      /// reset the collection cache 
+      virtual void reset () const { m_tree.reset() ; }
       // ====================================================================
     private:
       // ====================================================================

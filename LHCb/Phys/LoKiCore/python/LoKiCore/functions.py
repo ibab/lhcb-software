@@ -521,6 +521,20 @@ def count ( cut ) :
     """
     return cut.__count__ ()
 
+
+
+# =============================================================================
+def mark ( tree ) :
+    """
+    Create the 'marked' tree:
+
+
+    >>> tree = ...
+    >>> marked = mark ( tree )
+    
+    """
+    return tree.__mark__()
+
 # =============================================================================
 ## construct std::vector<std::string> from the arguments 
 def strings ( arg1 , *args ) :

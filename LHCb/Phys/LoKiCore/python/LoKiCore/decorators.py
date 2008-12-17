@@ -1422,6 +1422,149 @@ def getAndDecoratePipes  ( name , base , opers ) :
     funcs = getInherited ( name , base )
     return decorateMaps  ( funcs , opers )  ## RETURN 
 
+
+
+# =============================================================================
+## Decorate the trees 
+def decorateTrees ( trees , opers ) :
+    """
+    Decorate the trees using the proper adapters
+    """
+    _call_    = None
+    _and_     = None
+    _or_      = None
+    _invert_  = None
+    _rshift_  = None
+    _rrshift_ = None
+    _mark_    = None
+
+    
+    ## the regular call  
+    if hasattr ( opers , '__call__' ) : 
+        def _call_ ( s ,*a ) :
+            """
+            Use the regular call:
+            
+            >>> object =
+            >>> result = functor ( object ) 
+            
+            Uses:\n
+            """
+            return opers.__call__ ( s , *a )
+        # documentation
+        _call_.__doc__     += opers . __call__ . __doc__ 
+
+
+    ## and ? 
+    if hasattr ( opers , '__and__' ) : 
+        def _and_ ( s , a ) :
+            """
+            Logical 'AND' for two trees:
+            
+            >>> tree1 = ...
+            >>> tree2 = ...
+            >>> tree  = tree1 & tree2
+            
+            Uses:\n
+            """
+            return opers.__and__ ( s , a )
+        # documentation
+        _and_.__doc__     += opers . __and__ . __doc__ 
+
+
+    ## or ? 
+    if hasattr ( opers , '__or__' ) : 
+        def _or_ ( s , a ) :
+            """
+            Logical 'OR' for two trees:
+            
+            >>> tree1 = ...
+            >>> tree2 = ...
+            >>> tree  = tree1 | tree2
+            
+            Uses:\n
+            """
+            return opers.__or__ ( s , a )
+        # documentation
+        _or_.__doc__     += opers . __or__ . __doc__ 
+
+
+    ## mark ? 
+    if hasattr ( opers , '__mark__' ) : 
+        def _mark_ ( s ) :
+            """
+            Mark the tree
+            
+            >>> tree1 = ...
+            >>> tree  = mark ( tree1 ) 
+            
+            Uses:\n
+            """
+            return opers.__mark__ ( s )
+        # documentation
+        _mark_.__doc__     += opers . __mark__ . __doc__ 
+
+    ## invert/negate?
+    if hasattr ( opers , '__invert__' ) : 
+        def _invert_ ( s ) :
+            """
+            Invert/negate the tree
+            
+            >>> tree1 = ...
+            >>> tree  = ~tree1  
+            
+            Uses:\n
+            """
+            return opers.__invert__ ( s )
+        # documentation
+        _invert_.__doc__     += opers . __invert__ . __doc__ 
+
+    ## right shift/streamer 
+    if hasattr ( opers , '__rshift__' ) : 
+        def _rshift_ ( s , a ) :
+            """
+            Right shoift/streamer
+            
+            >>> obj  = ...
+            >>> tree = ...
+            >>> res = tree >> obj 
+            
+            Uses:\n
+            """
+            return opers.__rshift__ ( s , a )
+        # documentation
+        _rshift_.__doc__     += opers . __rshift__ . __doc__
+        
+    ## Right-right shift/streamer 
+    if hasattr ( opers , '__rrshift__' ) : 
+        def _rrshift_ ( s , a ) :
+            """
+            Right-right shift/streamer
+            
+            >>> obj  = ...
+            >>> tree = ...
+            >>> res = obj >> tree 
+            
+            Uses:\n
+            """
+            return opers.__rrshift__ ( s , a )
+        # documentation
+        _rrshift_.__doc__     += opers . __rshift__ . __doc__ 
+
+
+    # finally redefine the functions:
+    for tree in trees : 
+        if _call_     : tree . __call__    =  _call_ 
+        if _and_      : tree . __call__    =  _and_ 
+        if _or_       : tree . __call__    =  _or_ 
+        if _invert_   : tree . __invert__  =  _invert_ 
+        if _rrshift_  : tree . __rrshift__ =  _rrshift_ 
+        if _rshift_   : tree . __rshift__  =  _rshift_ 
+        if _mark_     : tree . __mark__    =  _mark_
+        
+    return trees 
+
+
 # =============================================================================
 ## import all dependent functions 
 # =============================================================================

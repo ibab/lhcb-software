@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.129 2008-12-13 15:08:22 ibelyaev Exp $ 
+! $Id: release.notes,v 1.130 2008-12-17 16:51:05 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,12 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2008-12-17 - Vanya Belyaev
+
+ - add the dictionaries for the trees 
+   fix many tiny bugs 
+
 
 ! 2008-12-13 - Vanya BELYAEV
 
