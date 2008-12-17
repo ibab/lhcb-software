@@ -10,11 +10,6 @@
 //  System dependent parts of the eventbuilder MEPRxSvc
 //  ===========================================================
 #include "GaudiOnline/MEPRxSys.h"
-#include <cstring>
-#include <cstdlib>
-#include <cerrno>
-#include <ctime>
-
 #ifdef _WIN32
 #include <WinSock2.h>
 #include <Ws2tcpip.h>
@@ -29,6 +24,7 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include <netdb.h>
+#include <ctime>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <sys/select.h>
@@ -36,8 +32,10 @@
 #include <netinet/ip.h>
 #include <arpa/inet.h>
 #include <sys/time.h> 
-#endif // ifndef _WIN32
+#include <cerrno>
+#include <sys/poll.h>
 
+#endif // ifndef _WIN32
 // Like the Windows and Unix syscalls
 // *all* functions return 0 on success and > 0 on a failure 
 // this differs from OnlineKernel, which provides a (sentimental) mimickry
@@ -150,6 +148,7 @@ drop_out:
   return -1;
 }
 
+
 int recv_msg(int sockfd, void *buf, int len,  int flags)
 {
   int ioflags = 0;
@@ -189,9 +188,19 @@ int send_msg(int sockfd, u_int32_t addr, u_int8_t protocol, void *buf, int len, 
 #endif
 }
 
+
+int
+send_msg_arb_source(int raw_socket, u_int8_t proto, u_int32_t srcAddr, u_int32_t destAddr, void *buf, int len, u_int16_t datagramID) {
+  struct iphdr *hdr = (struct iphdr *) buf;
+  hdr->id = datagramID; 
+
+  return send_msg_arb_source(raw_socket, proto, srcAddr, destAddr, buf, len);
+}
+
 /** Special function for sending messages with arbitrary source ip address.
  * Currently used by MEPInjector
  */
+
 int
 send_msg_arb_source(int raw_socket, u_int8_t proto, u_int32_t srcAddr, u_int32_t destAddr, void *buf, int len) {
   int n = 0;
@@ -207,7 +216,7 @@ send_msg_arb_source(int raw_socket, u_int8_t proto, u_int32_t srcAddr, u_int32_t
   in.sin_family = AF_INET;
   in.sin_port = proto;
   memcpy(&(in.sin_addr), &(hdr->daddr), 4);
-
+  
   if ((n = sendto(raw_socket, buf, len, 0, (struct sockaddr *) &in, sizeof(in))) != len) {
     perror("send");
     exit(errno);
@@ -218,12 +227,7 @@ send_msg_arb_source(int raw_socket, u_int8_t proto, u_int32_t srcAddr, u_int32_t
 
 //Also socket need some special treatment.
 int
-#ifdef _WIN32
-  open_sock_arb_source(int ipproto, int rxbufsiz, std::string &errmsg)
-#else
-  open_sock_arb_source(int /* ipproto */, int rxbufsiz, std::string &errmsg)
-#endif
-{
+open_sock_arb_source(int ipproto, int rxbufsiz, std::string &errmsg) {
   int raw_socket;
 #ifndef _WIN32
   int fd;
@@ -243,12 +247,10 @@ int
      return -1;
      //RCVBUF not needed
   }
-#ifdef _WIN32
   if (setsockopt(raw_socket, SOL_IP, IP_HDRINCL, (char*)&ipproto, 4)) { // any non-zero value is fine.
     errmsg = "setsockopt";
     return -1;
   }
-#else
   char netdev_name[10];
   int netdev = 1;
   sprintf(netdev_name, netdev < 0 ? "lo" : "eth%d", netdev);
@@ -257,7 +259,6 @@ int
     errmsg = "setsockopt SO_BINDTODEVICE";
     return -1;
   }
-#endif
 
   int val;
   val = MEP_REQ_TTL;
@@ -333,11 +334,46 @@ unsigned long ms2k(void)
     return ms++; // Windows has neither future nor past...
 #else
     struct timeval tv;
-    const time_t sec2000 = 30 * 365 * 24 * 3600;
+    const unsigned long sec2000 = 365 * 24 * 3600;
     gettimeofday(&tv, NULL);
     return ((tv.tv_sec - sec2000) * 1000 + tv.tv_usec / 1000);
 #endif
 }
+
+int cinet_addr(const std::string &addr) {
+    return inet_addr(addr.c_str());
+}  
+
+/// poll the only socket in entry, so return only the number of socket which got the event we were waiting for, normal read 
+int rx_poll(int sockFd, int mSec) 
+{
+#ifdef _WIN32
+  return 0;
+#endif
+
+  struct pollfd strPoll;
+
+  /// Initialization of the pollfd structure, 
+  ///    * listen to odin socket
+  ///    * wait for data to read
+  ///    * clean the answer of the poll primitive (actually we don't care about the answer as we wait for only one event  
+  strPoll.fd = sockFd;
+  strPoll.events = 0x0001;
+  strPoll.revents = 0;
+
+  int polRet = poll(&strPoll, 1, mSec); 
+
+  if (polRet == -1) { /// Error
+    perror("poll");
+    exit(errno);
+  }
+  if (polRet == 0) { /// Timeout
+    return 0;
+  }
+  return polRet;
+ 
+}
+
 
 int rx_select(int sockfd, int sec)
 {
@@ -367,8 +403,16 @@ int rx_would_block()
 #endif
   return 0;
 }
-int cinet_addr(const std::string &addr) {
-    return inet_addr(addr.c_str());
+
+u_int32_t IPStringToBits(std::string &StrIPAddr) {
+    u_int32_t BitIPAddr=0;
+    if (MEPRxSys::parse_addr(StrIPAddr, BitIPAddr) != 0) {
+        std::string msg;
+        if(MEPRxSys::addr_from_name(StrIPAddr, BitIPAddr, msg) != 0) {
+            return 0;
+        }
+    }
+    return BitIPAddr;
 }
 
 } // namespace MEPRxSys
