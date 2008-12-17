@@ -4,6 +4,8 @@
 ! Purpose     : Checker for pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2008-12-17 - Marco Cattaneo
+ - Fix a gcc 4.3 warning
 
 ! 2008-12-08 - Marcin Kucharczyk
  - Add CheatedPrimaryVertices

@@ -4,6 +4,8 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+! 2008-12-17 - Marco Cattaneo
+ - Fix gcc 4.3 warning
 
 ! 2008-12-06 - Mariusz Witek
 - Improved efficiency of PatPV2D for multi PV events. Only 10% increase of exe time.

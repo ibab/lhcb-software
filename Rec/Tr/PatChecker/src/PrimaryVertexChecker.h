@@ -1,4 +1,4 @@
-// $Id: PrimaryVertexChecker.h,v 1.1 2008-12-05 13:52:54 witekma Exp $
+// $Id: PrimaryVertexChecker.h,v 1.2 2008-12-17 15:49:14 cattanem Exp $
 #ifndef PRIMARYVERTEXCHECKER_H 
 #define PRIMARYVERTEXCHECKER_H 1
 
@@ -7,7 +7,7 @@
 #include "GaudiAlg/GaudiTupleAlg.h"
 #include "MCInterfaces/IForcedBDecayTool.h"
 
-typedef struct MCPVInfo {  
+typedef struct {  
   LHCb::MCVertex* pMCPV;     // pointer to MC PV 
   int nRecTracks;            // number of reconstructed tracks from this MCPV  
   int nRecBackTracks;        // number of reconstructed backward tracks
@@ -17,9 +17,9 @@ typedef struct MCPVInfo {
   double distToClosestMCPV;  // distance to closest reconstructible MCPV
   std::vector<LHCb::MCParticle*> m_mcPartInMCPV;
   std::vector<LHCb::Track*> m_recTracksInMCPV;
-};
+} MCPVInfo;
 
-typedef struct RecPVInfo {
+typedef struct {
  public:
   int nTracks;                    // number of tracks in a vertex
   int nBackTracks;                // number of backward tracks in a vertex
@@ -27,7 +27,7 @@ typedef struct RecPVInfo {
   Gaudi::XYZPoint positionSigma;  // position sigmas
   int indexMCPVInfo;              // index to MCPVInfo
   LHCb::RecVertex* pRECPV;        // pointer to REC PV
-};
+} RecPVInfo;
 
 class PrimaryVertexChecker : public GaudiTupleAlg {
 public: 

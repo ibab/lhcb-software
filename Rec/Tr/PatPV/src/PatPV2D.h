@@ -1,4 +1,4 @@
-// $Id: PatPV2D.h,v 1.2 2008-06-11 19:28:25 witekma Exp $
+// $Id: PatPV2D.h,v 1.3 2008-12-17 15:53:09 cattanem Exp $
 #ifndef PATPV2D_H 
 #define PATPV2D_H 1
 
@@ -10,7 +10,7 @@
 #include "Event/Track.h"
 #include "Event/RecVertex.h"
 
-typedef struct myTrack {
+typedef struct {
   // local representation of 2D tracks parameters close to PV (x=y=0) 
   // and some variables used internally during PV reconstruction
   LHCb::Track *pTr2d; // pointer to Track2D
@@ -25,9 +25,9 @@ typedef struct myTrack {
   double d2tr;       // error**2 for slope
   double cosPhi;
   double sinPhi;
-};
+} myTrack;
 
-typedef struct myVertex {
+typedef struct {
   // local representation of reconstructed vertex
   double x; 
   double y; 
@@ -37,7 +37,7 @@ typedef struct myVertex {
   double sigmaz; 
   int    multi;
   double chi2;
-};
+} myVertex;
 
 /** @class PatPV2D PatPV2D.h
  *  PV reconstruction in 2D
