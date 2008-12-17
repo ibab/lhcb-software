@@ -13,12 +13,8 @@ ApplicationMgr.Dlls                 += { "MDF", "GaudiOnline", "Gaucho", "GaudiA
 ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
 EventDataSvc.RootCLID                = 1;
 EventDataSvc.EnableFaultHandler      = true;
-MEPManager.PartitionBuffers          = true;
 
 StoreExplorerAlg.Load                = true;
-EventDataSvc.RootCLID                = 1;
-EventDataSvc.EnableFaultHandler      = true ;
-
 
 ApplicationMgr.ExtSvc               += { "IncidentSvc" };
 ApplicationMgr.ExtSvc               += { "MonitorSvc" };
@@ -38,12 +34,13 @@ ApplicationMgr.TopAlg                = {"StoreExplorerAlg"/*, "LHCb::MEPInjector
 AuditorSvc.Auditors = {"ChronoAuditor"};
 
 // L0 Trigger of the injector
-ApplicationMgr.TopAlg += { "GaudiSequencer/L0FilteredInjectionSeq" };
-L0FilteredInjectionSeq.Members += { "FastL0DUFilter", "LHCb::MEPInjector"};
-L0FilteredInjectionSeq.OutputLevel = @OnlineEnv.OutputLevel;
-FastL0DUFilter.OutputLevel = @OnlineEnv.OutputLevel;
-L0FilteredInjectionSeq.IgnoreFilterPassed = true;
+//ApplicationMgr.TopAlg += { "GaudiSequencer/L0FilteredInjectionSeq" };
+//L0FilteredInjectionSeq.Members += { "FastL0DUFilter", "LHCb::MEPInjector"};
+//L0FilteredInjectionSeq.OutputLevel = @OnlineEnv.OutputLevel;
+//FastL0DUFilter.OutputLevel = 5;
+//L0FilteredInjectionSeq.IgnoreFilterPassed = true;
 
+ApplicationMgr.TopAlg += {"LHCb::MEPInjector"};
 
 ChronoStatSvc.PrintEllapsedTime = true;
 ChronoStatSvc.PrintSystemTime = true;
@@ -78,17 +75,10 @@ LHCb::MEPInjector.OdinIPAddr = @OnlineEnv.Injector_ODIN_REQ_Name;     //tfcodinx
 //XXX Change sightly the injector source to use the options and optimize some stuff and names mapping and convention
 LHCb::MEPInjector.PartitionID=@OnlineEnv.PartitionID;
 
-
 LHCb::MEPInjector.EventBuffer = 300000;
 
 /// Not useful params
-LHCb::MEPInjector.OdinRxTO = -1;
+LHCb::MEPInjector.TimeOut = 1000;  //milliseconds
 
-LHCb::MEPInjector.AutoMode = true; // Are we running in Auto Mode or in Odin Mode
+LHCb::MEPInjector.AutoMode = false; // Are we running in Auto Mode or in Odin Mode
 
-/// These params are used only in automode, in Odin mode, Odin provides these data 
-LHCb::MEPInjector.PackingFactor = 10;
-LHCb::MEPInjector.L0ID = 1; // The first event ID in Auto mode
-LHCb::MEPInjector.PartitionID = 65535; //Partition ID set to all
-
- 
