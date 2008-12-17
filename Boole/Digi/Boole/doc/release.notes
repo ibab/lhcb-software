@@ -3,6 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+! 2008-12-17 - Marco Cattaneo
+ - Update references for L0Muon bug fix, and for new # in log.info printout
+
 ! 2008-12-16 - Marco Cattaneo
  - Move spillover options into configurable, and add support for packed
    MCParticle/MCVertex containers in Spillover input file
