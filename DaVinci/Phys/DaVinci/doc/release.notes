@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.275 2008-12-11 11:12:07 pkoppenb Exp $
+! $Id: release.notes,v 1.276 2008-12-17 19:49:36 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -9,6 +9,26 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2008-12-17 - Patrick Koppenburg
+ - Big Reshuffle of options. Requires PhysConf and AnalysiConf packages.
+ - python/DaVinci/Configuration.py : Big change
+   . now calls PhysConf and AnalysisConf
+   . Includes all of DaVinciCommon.opts
+ - options/DaVinciCommon.opts : Removed.
+   . This will break almost all main optionf files. 
+   . Cleanup not yet done. Nightlies will help...
+ - options/DVExampleStripping.opts : removed
+ - options/DaVinciCommon.py : removed
+ - options/DaVinciCommonDigi.opts : removed
+ - options/DaVinciDDDB.opts : removed
+ - options/DaVinciMainSeq.opts : removed
+ - options/DaVinciProtoPCalibrate.opts : removed
+ - options/DVDC06TestStripping.opts : remove DaVinciCommon.opts
+ - Added options/2008-InclJpsiDst.py : some 2008 MC
+ - Added options/DaVinci-DC06TestStripping.py : example stripping job
+ - 
+
+!========================== DaVinci v21r0p1 2008-12-17 ===================
 ! 2008-12-11 - Patrick Koppenburg
  - Remove proto recalibration from 2008
  - Comment it again : kills MuonPID
