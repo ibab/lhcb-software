@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.79 2008-12-01 16:50:44 jpalac Exp $
+# $Id: requirements,v 1.80 2008-12-17 20:01:05 pkoppenb Exp $
 package AnalysisSys
 version v2r4
 
@@ -7,6 +7,7 @@ branches doc cmt
 
 ####################################################################
 
+use  AnalysisConf               v1r0     Phys   # Patrick Koppenburg, Juan Palacios
 #===================================================================
 use  CommonParticles            v4r1p2   Phys   # Juan Palacios, WGs
 use  FlavourTagging             v8r1     Phys   # Marco Musy

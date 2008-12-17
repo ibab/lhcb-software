@@ -3,6 +3,9 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+! 2008-12-17 - Patrick Koppenburg
+ - New AnalysisConf package for configuration
+
 </PRE><H1><A NAME=v2r3>2008-11-26 Analysis v2r3 </A></H1><PRE>
 
  - Based on LHCb v26r0 and Gaudi v20r3
