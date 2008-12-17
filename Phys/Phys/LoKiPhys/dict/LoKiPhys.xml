@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiPhys.xml,v 1.20 2008-11-29 16:55:38 ibelyaev Exp $ 
+     * $Id: LoKiPhys.xml,v 1.21 2008-12-17 16:53:20 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiPhys package
@@ -102,6 +102,17 @@
   <class pattern   = "LoKi::*Keeper<*LHCb::Track*>"         />
 
   <class pattern   = "LoKi::Legacy::*"     />
+  
+
+  <class pattern   = "Decays::Trees::_Tree_<*>" />
+  <class pattern   = "std:vector<Decays::Trees:_Tree_*" />
+
+  <class name      = "Decays::Trees::Exclusive" />
+  <class name      = "Decays::Trees::Inclusive" />
+  <class name      = "Decays::Trees::Optional"  />
+  <class name      = "LoKi::Dicts::TreeOps<const LHCb::Particle*>" />
+  <class name      = "Decays::iTree_<const LHCb::Particle*>" />
+  <class name      = "Decays::Tree_<const LHCb::Particle*>"  />
 
   <exclusion>
     
@@ -171,6 +182,10 @@
     </class>
 
     <class pattern="LoKi::Functors::*">
+      <method name="=" />
+    </class>
+    
+    <class pattern="Decays::*">
       <method name="=" />
     </class>
 

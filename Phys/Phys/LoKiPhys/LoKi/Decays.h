@@ -1,4 +1,4 @@
-// $Id: Decays.h,v 1.3 2008-12-05 09:09:21 ibelyaev Exp $
+// $Id: Decays.h,v 1.4 2008-12-17 16:53:20 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_DECAYS_H 
 #define LOKI_DECAYS_H 1
@@ -315,9 +315,11 @@ namespace Decays
     public:
       // ====================================================================
       /// add one more node to the tree 
-      Inclusive& operator+= ( const Decays::iTree_<PARTICLE>& tree ) ;
+      Inclusive& operator+= ( const Decays::iTree_<PARTICLE>& tree ) 
+      { addDaughter ( tree ) ; return *this ; }
       /// add one more node to the tree 
-      Inclusive& operator+= ( const Decays::iNode& node ) ;
+      Inclusive& operator+= ( const Decays::iNode& node ) 
+      { addDaughter ( node ) ; return *this ; }
       /// add one more node to the tree 
       Inclusive& operator+= ( const Decays::Decay::Item&   node ) 
       { addDaughter ( node ) ; return *this ; }

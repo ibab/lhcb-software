@@ -1,4 +1,4 @@
-// $Id: LoKiPhysDict.h,v 1.15 2008-11-29 16:55:38 ibelyaev Exp $
+// $Id: LoKiPhysDict.h,v 1.16 2008-12-17 16:53:20 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKIPHYSDICT_H 
 #define LOKI_LOKIPHYSDICT_H 1
@@ -30,6 +30,9 @@
 #include "LoKi/ParticleContextCuts.h"
 #include "LoKi/VertexContextCuts.h"
 #include "LoKi/Legacy1.h"
+// ============================================================================
+#include "LoKi/Decays.h"
+#include "LoKi/TreeOps.h"
 // ============================================================================
 /** @file
  *  The dictionaries for the package Phys/LoKiPhys
@@ -256,7 +259,9 @@ namespace
     LoKi::Functors::Empty<const LHCb::VertexBase*>      m_ee2 ;
     LoKi::Functors::Size<const LHCb::Particle*>         m_es1 ;
     LoKi::Functors::Size<const LHCb::VertexBase*>       m_es2 ;
-    // functional stuff:
+    // decay funders:
+    Decays::Tree_<const LHCb::Particle*>                m_tree1 ;
+    LoKi::Dicts::TreeOps<const LHCb::Particle*>         m_trops ;
   } ;  
   // ==========================================================================
 }
