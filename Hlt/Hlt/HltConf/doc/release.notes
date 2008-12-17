@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.84 2008-12-17 22:37:27 graven Exp $ 
+! $Id: release.notes,v 1.85 2008-12-17 22:39:03 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -13,6 +13,7 @@
  - add HltL0Candidates.py as module: to be used for common conversion of L0 Candidates
  - use HltL0Candidates in HltL0Lines
  - add Hlt1IgnoringLumiDecision, and use it in bankkiller
+ - add Hlt1VeloClosingDecision
 
 ! 2008-12-17 - Jose A. Hernando
  - modify HltHadronLines.py to separe Single from DiHadron,

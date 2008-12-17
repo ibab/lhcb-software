@@ -58,8 +58,8 @@ for side in [ 'ASide', 'CSide' ] :
     pv3D.PVOfflineTool.PVFitterName = "LSAdaptPV3DFitter"
     pv3D.PVOfflineTool.PVSeedingName = "PVSeed3DTool"
 
-    line =Line( 'Velo' + side
-              ,  ODIN = "( ODIN_TRGTYP == LHCb.ODIN.PhysicsTrigger ) | ( ODIN_TRGTYP == LHCb.ODIN.NonZSupTrigger )"
+    Line( 'Velo' + side
+              , ODIN = "( ODIN_TRGTYP != LHCb.ODIN.RandomTrigger )"
               , algos =
               [ cf, rt, st, gt, pv3D
               , Member( 'VF' , 'Decision'
@@ -71,75 +71,5 @@ for side in [ 'ASide', 'CSide' ] :
                       )
               ] )
 
-
-#Line( 'VeloAlignTracks' 
-#    , algos = [ PatVeloAlignTrackFilter( 'AlignTrackFilter' ) ] )
-#
-#
-#Line( 'VeloOverlapTracks' 
-#    ,  algos = [ PatVeloAlignTrackFilter( 'OverlapAlignTrackFilter', Overlap = True ) ] )
-#
-#
-# Overlap-track-finding sequence
-#
-#HltLine( 'VeloOverlap'
-#       , algos =
-#       [ VeloClusterFilter( 'OverlapTracksClusterFilter'
-#                 , OutputLiteClusterLocation = "/Event/Raw/Velo/OverlapTracksLiteClusters"
-#                 , OutputClusterLocation = "/Event/Raw/Velo/OverlapTracksClusters"
-#                 , FilterOption = "Overlap"
-#                 , MinimumNumberOfPhiClusters =18 # 1 track  with 18 hits
-#                 , MaximumNumberOfPhiClusters =84 # 4 tracks with 21 hits
-#                 )
-#       , Tf__PatVeloGeneric( 'OverlapTracksGenericTracking'
-#                  , RHitManagerName = "OverlapTracksRHitManager"
-#                  , PhiHitManagerName= "OverlapTracksPhiHitManager"
-#                  , Output = "Hlt/Track/OverlapTracks"
-#                  , ConsiderOverlaps = True
-#                  , CheckReadOut = True
-#                  , ForwardProp = True
-#                  , MinModules=10
-#                  )
-#       , Member( 'TF','Decision' ,"HltTrackFilter/OverlapTrackTrigger"
-#               , InputSelection  = "TES:Hlt/Track/OverlapTracks"
-#               , FilterDescriptor = ["NumberOfASideVeloHits,>,20", "NumberOfCSideVeloHits,>,20" ]
-#               , HistogramUpdatePeriod = 1
-#               , HistoDescriptor = { "NumberOfASideVeloHits" : [ "NumberOfASideVeloHits",0.,100.,100],
-#                                     "NumberOfCSideVeloHits" : [ "NumberOfCSideVeloHits",0.,100.,100] }
-#               )
-#       ])
-#
-#ottt = OverlapTracksTrackTool( RHitManagerName="OverlapTracksRHitManager", PhiHitManagerName="OverlapTracksPhiHitManager")
-#ottt.addTool( name = OverlapTracksRHitManager )
-#ottt.OverlapTracksRHitManager.DefaultHitManagerName="OverlapTracksDefaultVeloRHitManager"
-#ottt.addTool( name = OverlapTracksPhiHitManager )
-#ottt.OverlapTracksPhiHitManager.DefaultHitManagerName="OverlapTracksDefaultVeloPhiHitManager"
-#
-#OverlapTracksDefaultVeloRHitManager( ClusterLocation = "/Event/Raw/Velo/OverlapTracksClusters"
-#                                   , LiteClusterLocation = "/Event/Raw/Velo/OverlapTracksLiteClusters" )
-#OverlapTracksDefaultVeloPhiHitManager( ClusterLocation = "/Event/Raw/Velo/OverlapTracksClusters"
-#                                     , LiteClusterLocation = "/Event/Raw/Velo/OverlapTracksLiteClusters" )
-#
-#OverlapTracksAssociator( TracksInContainer = "Hlt/Track/OverlapTracks" )
-#OverlapTracksPatChecker( VeloTrackLocation = "Hlt/Track/OverlapTracks" )
-#
-#
-##
-## VELO-specific, HLT-resident monitoring sequence
-#
-GaudiSequencer( 'HltVeloAligningSequence', IgnoreFilterPassed = True
-              , Members = [ GaudiSequencer( 'OverlapTracksSequence' , MeasureTime=True  ) ]
-              )
-
-GaudiSequencer( 'HltVeloMonitoringSequence' , IgnoreFilterPassed=True
-              , Members = [ GaudiSequencer('LiteClusterMonitorSequence', MeasureTime=True ) ]
-              )
-
-GaudiSequencer( 'LiteClusterMonitorSequence'
-              , Members = [ Velo__VeloHltLiteClusterMonitor( 'VeloLiteClusterMonitor'
-                                                           , HistogramByZone=True
-                                                           , VeloLiteClusterLocation="Raw/Velo/LiteClusters" 
-                                                           )
-                          ]
-              )
+Line( 'VeloClosing' , HLT = "HLT_PASS('Hlt1VeloCSideDecision') | HLT_PASS('Hlt1VeloASideDecision')" )
 
