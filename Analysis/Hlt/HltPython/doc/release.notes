@@ -5,7 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2008-12-17 - Jose A. Hernando
-   - modification of hltconf and adding datacard for lumi2 mb DC06
+   - in python/examples hltalleymonitor to monitor un alley
+     python hltalleymonitor.py
+   - in python/modules hltmonitortools (pyalgorithms) to monitor the alley
+   - in python/modules hltconf and adding datacard for lumi2 mb DC06  
 
 !========================== HltPython v1r11 2008-11-24 ===================
 Loads of undocumented changes

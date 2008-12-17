@@ -1,515 +1,132 @@
 #!/usr/bin/python
 # =============================================================================
 """ @namespace hltalleymonitor
+@brief script that monitor an alley
 
-@brief script example of how to monitor rate, time, candidates and values of an Hlt1 alley
+Usage:
+python hltalleymonitor.py 
+note: you can use arguments: i.e python hltalleymonitor.py -c BsPhiPhi -n 1000
 
-This example monitor for a given alley
-1) Rate per algorithm
-2) Time and time per algorithm
-3) Candidates of each selection
-4) Quantities of the filters (before apply them) and the best Quantity of a given filter
-5) TisTos Rate per algorithm
-6) The Decision of the given alleys
+Inputs:
+1) define the HLT configuration to run
+2) define dst data cards and path where the B is located to do TOS
+3) the list of alleys names to be monitored: i.e 'SingleHadron'
+4) the list of monitoring tasks to perform
+
+Monitoring tacks available:
+1) Rate and RateTOS
+2) Candidates and CandidatesTOS
+3) Time (not working properly)
+4) Variables of the filters applied (i.e PT>2500 etc), all, best and TOS
+
+Output:
+A ROOT file with a set of histograms for the monitoring tasks
 
 @author Jose A. Hernando hernando@cern.ch
 @date 2008-06-1@date 2008-06-16
-@revision DaVinci v20r3
+@revision DaVinci v21r0
 """
 # =============================================================================
 
 import GaudiPython
-from Gaudi.Configuration import *
+
 from math import *
-from ROOT import *
-import arguments
 import desktop
+import arguments
 import histotools
 import PlotTools
-import hltconf
 import benchmarkchannels as bch
+import hltconf
 
+from Gaudi.Configuration import *
+from ROOT import *
 
-# Configuration
-# Set the alleys to monitor, the entry po,
-# Save all the HLT selections in the HltSummary
+from hltmonitortools import Rate
+from hltmonitortools import RateTOS
+from hltmonitortools import Candidates
+from hltmonitortools import CandidatesTOS
+from hltmonitortools import Time
+from hltmonitortools import Filters
+from hltmonitortools import FiltersTOS
 
-NOEXIT = False
+# configure channel and alleys to monitor
+#----------------------------------
 DEBUG = arguments.argument("dbg"," debug ",False)
 NEVENTS = arguments.argument("n"," number of events ",1000)
-CHANNEL = arguments.argument("c"," channel name ","Bd2KPi")
-PROD = arguments.argument("prod"," production version ","")
-INTERNALMONITOR = arguments.argument("imon"," options for alley internal monitoring ",False)
+#CHANNEL = arguments.argument("c"," channel name ","mblumi2")
+CHANNEL = arguments.argument("c"," channel name ","Bs2PhiPhi")
+ALLEYS = arguments.argument_list("a"," alleys list to monitor ", ["SingleHadron"])
+CANDOTOS = (CHANNEL.find("mb")<0)
 
-WRITEOPTS = True
-MONITOR_TIME = arguments.argument("mtime"," monitor time ", True)
-MONITOR_RATE = arguments.argument("mrate"," monitor rate ", True)
-MONITOR_RATETOS = arguments.argument("mtos"," monitor TisTos ", False)
-MONITOR_CANDIDATES = arguments.argument("mcan"," monitor candidates ", True)
-MONITOR_FILTERS = arguments.argument("mfilter"," monitor Hlt filters ", True)
-MONITOR_DECISION = arguments.argument("mdecision"," monitor alleys decision ", True)
-PLOT = arguments.argument("plot"," plot and save as ps histograms ", False)
-L0ENTRY = arguments.argument("l0"," l0 entry ", "L0HadronDecision")
-
-ALLEYS = arguments.argument_list("a"," alleys list to monitor ", ["SingleHadron","DiHadron"])
+# define the moniroting tasks
+#----------------------------------
+ALGTYPES = []
+TIME = arguments.argument("mtime"," monitor time ", True)
+if (TIME): ALGTYPES.append([Time,"Time"])
+RATE = arguments.argument("mrate"," monitor rate ", True)
+if (RATE): ALGTYPES.append([Rate,"Rate"])
+RATETOS = arguments.argument("mtos"," monitor TisTos ", True)
+if ((RATETOS) and CANDOTOS): ALGTYPES.append([RateTOS,"RateTOS"])
+CANDIDATES = arguments.argument("mcan"," monitor candidates ", True)
+if (CANDIDATES): ALGTYPES.append([Candidates,"Candidates"])
+CANDIDATESTOS = arguments.argument("mcantos"," monitor candidates TOS ", True)
+if (CANDIDATESTOS and CANDOTOS): ALGTYPES.append([CandidatesTOS,"CandidatesTOS"])
+FILTERS = arguments.argument("mfilters"," monitor filters ", True)
+if (FILTERS): ALGTYPES.append([Filters,"Filters"])
+FILTERSTOS = arguments.argument("mfilterstos"," monitor filters ", True)
+if ((FILTERSTOS) and CANDOTOS):
+    ALGTYPES.append([FiltersTOS,"FiltersTOS"])
 
 importOptions("$DAVINCIROOT/options/DaVinci.py")
-importOptions("$HLTPYTHONROOT/options/Hlt1.py")
+# import the HLT that you want to monitor!
+importOptions("$HLTPYRUNROOT/options/Hlt1.py")
 
 EOPTS = []
-
 datacards = bch.createOptLines(CHANNEL)   
 print datacards
 PATH = bch.TESPath[CHANNEL]
 print PATH
 EOPTS.append(datacards)
-    
+
 EOPTS.append("HltSummaryWriter.SaveAll = true")
-EOPTS.append("ApplicationMgr.StatusCodeCheck=false")
-XPROD = ""
-if (PROD): XPROD = PROD+"/"
-EOPTS.append('HistogramPersistencySvc.OutputFile = "hlt.root"')
-#EOPTS.append('HistogramPersistencySvc.OutputFile = "'+CHANNEL+'hltalleymonitor.root";')
+if (CANDOTOS):
+    EOPTS.append("HltSelReportsMaker.MaxCandidatesNonDecision=500");
 
-HIS = desktop.ROOTOBJECTS
-CHANNELPATH = bch.TESPath[CHANNEL]
-ALGOS = {}
+# set the range for booking histograms variables
+hltconf.VARIABLE_RANGE["L0ET"]=[1500.,5100.]
 
+# create the application
 gaudi = GaudiPython.AppMgr(outputlevel=3)
 gaudi.config(options=EOPTS)
-gaudi.initialize()
 
+# create the moniroting tasks
+for alley in ALLEYS:
+    for algtype in ALGTYPES:
+        alg = desktop.addAlgorithm(gaudi,algtype[0],alley+algtype[1])
+        setattr(alg,"alleyname",alley)
+
+# initialize the application and retrieve main tools
+gaudi.initialize()
+HIS = desktop.ROOTOBJECTS
 TES = gaudi.evtsvc()
 HLTSUM = gaudi.toolsvc().create("HltSummaryTool",interface="IHltConfSummaryTool")
-TIMER = gaudi.toolsvc().create("SequencerTimerTool",interface="ISequencerTimerTool")
 TISTOS = gaudi.toolsvc().create("TriggerTisTos",interface="ITriggerTisTos")
+TIMER = gaudi.toolsvc().create("SequencerTimerTool",interface="ISequencerTimerTool")
 
-#
-#  Booking
-#
+alley = hltconf.confAlley(gaudi,"SingleHadron")
 
-def ini():
-    """ book and initialize
-    """
-    for A in ALLEYS: iniAlley(A)
-    if (MONITOR_DECISION): bookDecision()
+# initialize the monitoring tasks
+for alg in desktop.ALGOS:
+    alleyname = alg.alleyname
+    alley = hltconf.confAlley(gaudi,alleyname)
+    setattr(alg,"alley",alley)
+    setattr(alg,"PATH",PATH)
+    setattr(alg,"HLTSUM",HLTSUM)
+    setattr(alg,"TISTOS",TISTOS)
+    setattr(alg,"TIMER",TIMER)
+    setattr(alg,"TES",TES)
+    if (getattr(alg,"book",None)): alg.book()
 
-def iniAlley(alley):
-    """ get the sequence algorithms and book histograms
-    @ param alley is the name of the alley
-    NOTE: it assumes that the sequencer name is 'Hlt1'+alley+'Sequence'
-    """
-    print alley
-    ALGOS[alley] = hltconf.confAlley(gaudi,alley)
-    if (MONITOR_RATE): bookRate(alley)
-    if (MONITOR_RATETOS): bookRateTOS(alley)
-    if (MONITOR_TIME): bookTime(alley)
-    if (MONITOR_CANDIDATES): bookCandidates(alley)
-    if (MONITOR_FILTERS): bookFilters(alley)
-    if (WRITEOPTS): writeOpts(alley)
-
-def writeOpts(alley):
-    """ write an opts file to internally monitor the alley
-    """
-    hltconf.writeInternalMonitorOpts(gaudi,alley)
-
-def bookRate(alley):
-    """ book the time, profile and rate histograms of a sequence
-    @ param the name of the alley: i.e HadronSingle
-    """
-    algos = map(lambda x: x.name,ALGOS[alley])
-    xf = 20.
-    n = len(algos)+1
-    title = alley+":Rate"
-    h0 = TH1F(title,title,n,0.,n)
-    histotools.setXLabels(h0,algos)
-    desktop.register( h0 )
-    return
-
-def bookRateTOS(alley):
-    algos = map(lambda x: x.name,ALGOS[alley])
-    xf = 20.
-    n = len(algos)+1
-    title = alley+":RateTOS"
-    h0 = TH1F(title,title,n,0.,n)
-    histotools.setXLabels(h0,algos)
-    desktop.register( h0 )
-    title = alley+":RateTIS"
-    h1 = TH1F(title,title,n,0.,n)
-    histotools.setXLabels(h1,algos)
-    desktop.register( h1 )
-    title = alley+":RateTISTOS"
-    h2 = TH1F(title,title,n,0.,n)
-    histotools.setXLabels(h2,algos)
-    desktop.register( h2 )
-    return    
-
-def hltalgos(alley):
-    algos = []
-    for algo in ALGOS[alley]:
-        if (algo.property("OutputSelection") != None): algos.append(algo)
-    return algos
-
-def bookCandidates(alley):
-    """ book number of candidates per algo in the alley
-    @ param the name of the alley, i.e HadronSingle
-    """
-    algos = hltalgos(alley)
-    sels = map(lambda x: x.property("OutputSelection"),algos)
-    n = len(algos)+1
-    title = alley+":CandidatesProfile"
-    h = TProfile(title,title,n,0.,1.*n,0.,100.)
-    histotools.setXLabels(h,sels)
-    desktop.register( h )
-    xf = 100.
-    for algo in algos:
-        sel = algo.property("OutputSelection")
-        title = algo.name+":"+sel
-        if (sel and not HIS.has_key(title)):
-            hi = TH1F(title,title,100,0.,100.)
-            desktop.register( hi )
-    return
-         
-def bookFilters(alley):
-    """ book quantities of a filter
-    @param: name of the alley HadronSingle
-    """
-    algos = ALGOS[alley]
-    for algo in algos:
-        if (algo.type.find("Filter")>0):
-            filters = algo.property("FilterDescriptor")
-            algo.filters = []
-            if (not filters): continue
-            for f in filters:
-                sel0 = algo.property("InputSelection")
-                sel  = algo.property("OutputSelection")
-                fil = hltconf.hltfilter(HLTSUM,f)
-                algo.filters.append(fil)
-                title = algo.name+":"+fil.name
-                def histo(title):
-                    if (not HIS.has_key(title)):
-                        hi = TH1F(title,title,100,fil.xrange[0],fil.xrange[1])
-                        desktop.register( hi )
-                    hi = desktop.my(title)
-                    return hi
-                fil.histo = histo(title)
-                title = algo.name+"Best:"+fil.name+"Best"
-                fil.histobest = histo(title)
-
-    return
-
-def bookTime(alley):
-    """ book the time and profile of the algos of an alley
-    @ param the name of the alley, i.e HadronSingle
-    """
-    algos = map(lambda x: x.name,ALGOS[alley])
-    xf = 20.
-    n = len(algos)+1
-    title = alley+":Time"
-    h3 = TH1F(title,title,200,0.,xf)
-    desktop.register( h3 )
-    title = alley+":TimeProfile"
-    h = TProfile(title,title,n,0.,1.*n,0.,xf)
-    histotools.setXLabels(h,algos)
-    desktop.register( h )
-    for algo in algos:
-        title = algo+":Time"
-        if (not HIS.has_key(title)):
-            hi = TH1F(title,title,200,0.,xf/5.)
-            desktop.register( hi )
-    return
-
-def bookDecision():
-    """ book the decision of the list of the alleys, including the OR and AND
-    """
-    names = [L0ENTRY,]
-    for x in ALLEYS: names.append("Hlt1"+x+"Decision")
-    names.append("OR")
-    names.append("AND")
-    n = len(names)+1
-    h = TH1F("AlleysDecision","AlleysDecision",n,0.,1.*n)
-    histotools.setXLabels(h,names)
-    desktop.register( h )
-            
-    
-##
-## --------- Analyze ----------
-##
-
-def go(n=1):
-    for i in range(n):
-        gaudi.run(1)
-        desktop.unlockHistos()
-        for A in ALLEYS: anaAlley(A)
-        if (MONITOR_DECISION): anaDecision()
-    return
-
-def anaAlley(alley):
-    if (MONITOR_RATE): anaRate(alley)
-    if (MONITOR_RATETOS): anaRateTOS(alley)
-    if (MONITOR_TIME): anaTime(alley)
-    if (MONITOR_CANDIDATES): anaCandidates(alley)
-    if (MONITOR_FILTERS): anaFilters(alley)
-
-def anaRate(alley):
-    """ ana the rate of an alley
-    @param alley 
-    """
-    ok = 1
-    for i in range(len(ALGOS[alley])):
-        if (not ok): continue
-        algo = ALGOS[alley][i]
-        sel = algo.property("OutputSelection")
-        if (sel): ok = HLTSUM.selectionDecision(sel)
-        if (ok): desktop.my(alley+":Rate").Fill(i,1.)
-        if (DEBUG):
-            print " Rate: algo ",algo.name,' ? ',ok
-    return 
-
-def anaRateTOS(alley):
-    """ ana the rate of an alley
-    @param alley 
-    """
-    Bs = TES[CHANNELPATH]
-    if (not Bs): return
-    Bs = Bs[0]
-    TISTOS.setOfflineInput()
-    n = Bs.daughters().size()
-    print " number of daughters ",n
-    for i in range(n): TISTOS.addToOfflineInput(Bs.daughters()[i].clone())
-    ok = True
-    for i in range(len(ALGOS[alley])):
-        algo = ALGOS[alley][i]
-        sel = algo.property("OutputSelection")
-        if (sel): ok = HLTSUM.selectionDecision(sel)
-        if (not ok): continue
-        print " TISTOS at selection ",sel
-        btistos = TISTOS.triggerTisTos(sel,TISTOS.kAllTriggerSelections)
-        if (btistos.tis()):
-            desktop.my(alley+":RateTIS").Fill(i,1.)
-        if (btistos.tos()):
-            desktop.my(alley+":RateTOS").Fill(i,1.)
-        if (btistos.tis() and btistos.tos()):
-            desktop.my(alley+":RateTISTOS").Fill(i,1.)
-        if (DEBUG):
-            print " selection ",sel," TIS ",btistos.tis(), " TOS ",btistos.tos() 
-    return 
-
-def anaTime(alley):
-    """ analize a given sequence (fill histograms of time)
-    @ param alley the name of the alley
-    """
-    t = 0.
-    ok = 1
-    nsteps = 0
-    algos = map(lambda x: x.name,ALGOS[alley])
-    sels = map(lambda x: x.property("OutputSelection"),ALGOS[alley])
-    for i in range(len(algos)):
-        if (ok):
-            nstep = i
-            algo = algos[i]
-            sel  = sels[i]
-            ti = TIMER.lastTime(TIMER.indexByName(algos[i]))
-            if (abs(ti)<0.001): ti = 0.
-            if (abs(ti)>100.): ti = 0.
-            desktop.hfill(algo+":Time",ti,1.,True)
-            t = t+ti
-            ok = 1
-            if (sel): ok = HLTSUM.selectionDecision(sel)
-            desktop.my(alley+":TimeProfile").Fill(i,t)
-            if (DEBUG): print " Time: algo ",algo,",",i," ? ",ok," time (ms) ",ti," T ",t
-    if (DEBUG): print " Time: total time ",t
-    if (t>0. and nstep>0): desktop.my(alley+":Time").Fill(t,1.)
-    return
-
-def typeCandidates(algo):
-    """ return the type of candidates
-    """
-    if (algo.type.find("Track")>0): return "Track"
-    if (algo.type.find("L0Calo")>0): return "Track"
-    if (algo.type.find("Vert")>0): return "Vertex"
-    return ""
-    
-def getCandidates(algo,sel=None):
-    """ return the candidates of an algorithm
-    @param algo, hltalgo class
-    @param sel, the candidates of the selection
-    """
-    can = []
-    if (not sel): sel = algo.property("OutputSelection")
-    if (not sel): return can
-    type = typeCandidates(algo)
-    if (not type): return can
-    if (type == "Track"): return HLTSUM.selectionTracks(sel)
-    if (type == "Vertex"): return HLTSUM.selectionVertices(sel)
-
-def anaCandidates(alley):
-    """ ana the candidates
-    @param: name of the alley
-    """
-    algos = hltalgos(alley)
-    for i in range(len(algos)):
-        algo = algos[i]
-        sel = algo.property("OutputSelection")
-        can = getCandidates(algo)
-        ncan = len(can)
-        if (ncan<=0): continue
-        title = algo.name+":"+sel
-        desktop.hfill(title,1.*ncan,1.,True)
-        desktop.my(alley+":CandidatesProfile").Fill(i,1.*ncan)
-        if (DEBUG): print" Candidates: algo",i,sel," Candidates ",ncan
-    return
-
-def anaFilters(alley):
-    """ ana the filters
-    """
-    for algo in ALGOS[alley]:
-        if (not algo.type.find("Filter")>0): continue
-        fils = algo.filters
-        sel0 = algo.property("InputSelection")
-        candis = getCandidates(algo,sel0)
-        for fil in fils:
-            if (fil.histobest.look): continue
-            vals = fil.vals(candis,fillhisto=True)
-            best = fil.best(candis,fillhisto=True)
-            fil.histo.lock = True
-            fil.histobest.lock = True
-            if (DEBUG): print " Filter: ",fil.name," vals ",vals," best ",best
-    return
-
-
-def anaDecision():
-    names = [L0ENTRY,]
-    for a in ALLEYS: names.append("Hlt1"+a+"Decision")
-    okOR = false
-    okAND = true
-    n = len(names)
-    for i in range(n):
-        name = names[i]
-        ok = HLTSUM.selectionDecision(name)
-        if (i>0): okOR = okOR or ok
-        okAND = okAND and ok
-        if (ok): desktop.hfill("AlleysDecision",i,1.,False)
-    if (okOR): desktop.hfill("AlleysDecision",n,1.,False)
-    if (okAND): desktop.hfill("AlleysDecision",n+1,1.,False)
-    if (DEBUG): print " Decision OR ",okOR," Decision AND ",okAND
-
-#
-# finalize
-#---------------------------
-def fin():
-    if (MONITOR_DECISION): finDecision()
-    for alley in ALLEYS: finAlley(alley)
-
-def finAlley(alley):
-    if (MONITOR_RATE): finRate(alley)
-    if (MONITOR_RATETOS): finRateTOS(alley)
-
-def hisnorma(title,norma):
-    h = desktop.my(title)
-    h.Scale(norma)
-
-def finDecision():
-    hisnorma("AlleysDecision",1./float(NEVENTS))
-
-def finRate(alley):
-    hisnorma(alley+":Rate",1./float(NEVENTS))
-
-def finRateTOS(alley):
-    hisnorma(alley+":RateTOS",1./float(NEVENTS))
-    hisnorma(alley+":RateTIS",1./float(NEVENTS))
-    hisnorma(alley+":RateTISTOS",1./float(NEVENTS))
-    
-#
-# Plotting
-#---------------------------
-
-def plot():
-    if (not PLOT): return
-    for alley in ALLEYS: plotAlley(alley)
-    plotDecision()
-
-def plotAlley(alley):
-    if (not PLOT): return
-    if (MONITOR_TIME): plotTime(alley)
-    if (MONITOR_RATE): plotRate(alley)
-    if (MONITOR_RATETOS): plotRateTOS(alley)
-    if (MONITOR_CANDIDATES): plotCandidates(alley)
-    if (MONITOR_FILTERS): plotFilters(alley)    
-    return
-
-def plotHistos(hs,name="",prefix="",endfix=""):
-    n = (len(hs)/12)+1
-    for i in range(n):
-        n0 = 12*i
-        ni = 12*(i+1)
-        ni = min(ni,len(hs))
-        hs2 = hs[n0:ni]
-        C = PlotTools.plot(hs2)
-        end2fix = ""
-        if (i>0): end2fix =str(i)
-        C.SaveAs(CHANNEL+prefix+name+endfix+end2fix+".ps")
-    return C
-
-def plotTime(alley):
-    """ plot the histograms associated to that sequence
-    @ param alley the name of the alley
-    """
-    hs = [HIS[alley+":Time"],HIS[alley+":TimeProfile"]]
-    C = plotHistos(hs,alley,prefix="Time")
-    algos = map(lambda x: x.name,ALGOS[alley])
-    hs = map(lambda x: HIS[x+":Time"],algos)
-    C = plotHistos(hs,name=alley,prefix="Time",endfix="Algos")      
-    return C
-
-def plotRate(alley):
-    hs = [HIS[alley+":Rate"]]
-    C = plotHistos(hs,name=alley,prefix="Rate")
-    return
-
-def plotRateTOS(alley):
-    hs = [HIS[alley+":RateTOS"],HIS[alley+":RateTIS"],HIS[alley+":RateTISTOS"]]
-    C = plotHistos(hs,name=alley,prefix="RateTOS")
-    return
-
-def plotCandidates(alley):
-    hs = [HIS[alley+":CandidatesProfile"]]
-    C = plotHistos(hs,name=alley,prefix="CandidatesProfile")
-    his = []
-    for algo in ALGOS[alley]:
-        sel = algo.property("OutputSelection")
-        if (not sel): continue
-        title = algo.name+":"+sel
-        if (sel): his.append(HIS[title])
-    plotHistos(his,name=alley,prefix="Candidates",endfix="Algos")
-    return
-
-def plotFilters(alley):
-    his = []
-    for algo in ALGOS[alley]:
-        if (algo.type.find("Filter")>0):
-            for fil in algo.filters:
-                his.append(fil.histo)
-                his.append(fil.histobest)
-    plotHistos(his,name=alley,prefix="Filters",endfix="Algos")
-    return
-
-def plotDecision():
-    h = desktop.my("AlleysDecision")
-    plotHistos([h,],"AlleysDecision")
-
-#
-#  main script
-#------------------------
-
-def run():
-    ini()
-    go(NEVENTS)
-    if (NOEXIT): return
-    fin()
-    plot()
-    gaudi.exit()
-
-if __name__ == '__main__':
-    run()
+# run the application
+gaudi.run(NEVENTS)
 
