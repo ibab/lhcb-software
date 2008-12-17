@@ -1,9 +1,11 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonLines.py,v 1.11 2008-12-09 15:49:58 graven Exp $
+# $Id: HltMuonLines.py,v 1.12 2008-12-17 16:44:47 depaula Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
+#  Include New Line for Dimuon without PV: Leandro de Paula
+#  2008-12-17 
 #  @Translator from the original options: Gerhard Raven Gerhard.Raven@nikhef.nl
 #  @date 2008-08-25
 # =============================================================================
@@ -12,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.12 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -60,7 +62,6 @@ TConfMatchVelo = [ Member ('TU', 'TConf' , RecoName = 'TConf' )
 
 singleMuonPrep = bindMembers( 'SingleMuonPrep',
                    [ Member ( 'L0MuonPrepare' , 'MuonORMuonNoGlob'
-                            #  how to get LHCb::L0MuonCandidateLocation::Default instead?
                             , InputSelection = HltL0MuonPrepare().getDefaultProperties()['InputSelection']
                             , MinPt = 1300.0  
                             )
@@ -78,11 +79,80 @@ muonSegPrep = bindMembers ('MuonSegPrepare' ,
                             , FilterDescriptor = [ 'DoShareM3_'+singleMuonPrep.outputSelection()+',<,0.5' ] )
                    ] + TConfMatchVelo )
 
+###DiMuons in Events with no Reconstructed Primary Vertices
+singleMuonPrepNoPV = bindMembers( 'SingleMuonPrepNoPV',
+                     [ Member ( 'L0MuonPrepare' , 'MuonORMuonNoGlob'
+                            , InputSelection = HltL0MuonPrepare().getDefaultProperties()['InputSelection']
+                            , MinPt = 200.0  
+                            )
+                     , Member ( 'TF', 'L0'
+                            , FilterDescriptor = [ 'PT0,||>,400' ] )
+                     ] + TConfMatchVelo )
+
+muonSegPrepNoPV = bindMembers ('MuonSegPrepareNoPV' ,
+                   [ singleMuonPrepNoPV
+                   , RecoMuonSeg
+                   , Member ('TF', 'PrepareMuonSeg'
+                            , RequirePositiveInputs = False
+                            , InputSelection = 'TES:' + RecoMuonSeg.OutputMuonTracksName # if has else RecoMuonSeg.getDefaults('OutputMuonTracksName')
+                            , FilterDescriptor = [ 'DoShareM3_'+singleMuonPrepNoPV.outputSelection()+',<,0.5' ] )
+                   ] + TConfMatchVelo )
+
 DiMuonFromL0DiMuonPrepare = bindMembers( 'DiMuonFromL0DiMuonPrepare',
                    [ HltL0MuonPrepare('L0AllMuons') # WARNING: we require dimuon, but use L0AllMuons
                    , Member( 'VM1', 'L0DiMuon' # this is the selection formery known as L0DiMuonDecision
                            , InputSelection = 'L0AllMuons'
                            , FilterDescriptor = [ 'SumPT,>,1500.' ]
+                           )
+                   , Member( 'VT', 'L0' )
+                   , Member( 'TU', 'TConf' , RecoName = 'TConf')
+                   , Member( 'TF', 'TConf' , FilterDescriptor = ['IsMuon,>,0.'])
+                   , RZVelo
+                   , Member( 'TF', 'RZVelo'
+                           , InputSelection = 'RZVelo'
+                           , FilterDescriptor = ['RZVeloTMatch_%TFTConf,||<,80.']
+                           )
+                   , Member( 'TU', 'Velo' , RecoName = 'Velo')
+                   , Member( 'TM', 'VeloT'
+                           , InputSelection1 =  '%TUVelo'
+                           , InputSelection2 =  '%TFTConf'
+                           , MatchName = 'VeloT'
+                           , tools = [ Tool( PatMatchTool, maxMatchChi2 = 6 ) ]
+                           )
+                   , Member( 'VM1', 'VeloT', FilterDescriptor = [ 'DOCA,<,0.5' ])
+                   , Member( 'VF', 'VeloT',  FilterDescriptor = [ 'VertexMatchIDsFraction_%VM1L0DiMuon,>,1.9' ]) # TODO: a fraction which is larger than 1.9???
+                   ] )
+
+DiMuonFromL0DiMuonPrepareHighIP = bindMembers( 'DiMuonFromL0DiMuonPrepareHighIP',
+                   [ HltL0MuonPrepare('L0AllMuons') # WARNING: we require dimuon, but use L0AllMuons
+                   , Member( 'VM1', 'L0DiMuon' # this is the selection formery known as L0DiMuonDecision
+                           , InputSelection = 'L0AllMuons'
+                           , FilterDescriptor = [ 'SumPT,>,500.' ]
+                           )
+                   , Member( 'VT', 'L0' )
+                   , Member( 'TU', 'TConf' , RecoName = 'TConf')
+                   , Member( 'TF', 'TConf' , FilterDescriptor = ['IsMuon,>,0.'])
+                   , RZVelo
+                   , Member( 'TF', 'RZVelo'
+                           , InputSelection = 'RZVelo'
+                           , FilterDescriptor = ['RZVeloTMatch_%TFTConf,||<,80.']
+                           )
+                   , Member( 'TU', 'Velo' , RecoName = 'Velo')
+                   , Member( 'TM', 'VeloT'
+                           , InputSelection1 =  '%TUVelo'
+                           , InputSelection2 =  '%TFTConf'
+                           , MatchName = 'VeloT'
+                           , tools = [ Tool( PatMatchTool, maxMatchChi2 = 6 ) ]
+                           )
+                   , Member( 'VM1', 'VeloT', FilterDescriptor = [ 'DOCA,<,0.5' ])
+                   , Member( 'VF', 'VeloT',  FilterDescriptor = [ 'VertexMatchIDsFraction_%VM1L0DiMuon,>,1.9' ]) # TODO: a fraction which is larger than 1.9???
+                   ] )
+
+DiMuonFromL0DiMuonPrepareNoPV = bindMembers( 'DiMuonFromL0DiMuonPrepareNoPV',
+                   [ HltL0MuonPrepare('L0AllMuons') # WARNING: we require dimuon, but use L0AllMuons
+                   , Member( 'VM1', 'L0DiMuon' # this is the selection formery known as L0DiMuonDecision
+                           , InputSelection = 'L0AllMuons'
+                           , FilterDescriptor = [ 'SumPT,>,400.' ]
                            )
                    , Member( 'VT', 'L0' )
                    , Member( 'TU', 'TConf' , RecoName = 'TConf')
@@ -129,7 +199,7 @@ SingleMuonIPandPT = Line ( 'SingleMuonIPandPT'
                    ] )
 
 
-DiMuonFromL0DiMuonNoIP = Line( 'DiMuonFromL0DiMuoNoIP'
+DiMuonFromL0DiMuonNoIP = Line( 'DiMuonFromL0DiMuonNoIP'
                    , L0DU = "L0_CHANNEL('DiMuon')"
                    ,  algos = 
                    [ DiMuonFromL0DiMuonPrepare 
@@ -138,7 +208,6 @@ DiMuonFromL0DiMuonNoIP = Line( 'DiMuonFromL0DiMuoNoIP'
                            , FilterDescriptor = ['VertexDimuonMass,>,2500.']
                            )
                    ] )
-
 ### TODO: clone and mutate from line above...
 ### FIXME: how to remove RecoRZPV in that case??
 DiMuonFromL0DiMuonIP = Line ( 'DiMuonFromL0DiMuonIP'
@@ -152,6 +221,26 @@ DiMuonFromL0DiMuonIP = Line ( 'DiMuonFromL0DiMuonIP'
                            )
                    ] )
 
+DiMuonFromL0DiMuonNoPV = Line( 'DiMuonFromL0DiMuonNoPV'
+                   , L0DU = "(L0_CHANNEL('DiMuon,lowMult'))"
+                   ,  algos = 
+                   [ DiMuonFromL0DiMuonPrepareNoPV
+                   , Member( 'VF', 'Decision' 
+                           , OutputSelection = '%Decision'
+                           , FilterDescriptor = ['VertexDimuonMass,>,1000.']
+                           )
+                   ] )
+
+DiMuonFromL0DiMuonHighIP = Line ( 'DiMuonFromL0DiMuonHighIP'
+                   , L0DU = "L0_CHANNEL('DiMuon')"
+                   , algos = 
+                   [ DiMuonFromL0DiMuonPrepareHighIP
+                   , RecoRZPV
+                   , Member( 'VF','Decision' 
+                           , OutputSelection = '%Decision'
+                           , FilterDescriptor = [ 'VertexDimuonMass,>,1000.', 'VertexMinIP_PV2D,||>,1.' ]
+                           )
+                   ] )
 #-----------------------------------------------------
 # DIMUON ALLEY : from L0Muon + L0Muon
 #-----------------------------------------------------
@@ -165,6 +254,18 @@ DiMuonFrom2L0IP = Line ('DiMuonFrom2L0IP'
                    , Member( 'VF','Decision' 
                            , OutputSelection = '%Decision'
                            , FilterDescriptor = ['VertexDimuonMass,>,500.', 'VertexMinIP_PV2D,||>,0.15']
+                           )
+                   ] )
+
+DiMuonFrom2L0HighIP = Line ('DiMuonFrom2L0HighIP'
+                   ,  L0DU = "L0_CHANNEL('Muon') | L0_CHANNEL('MuonNoGlob')"
+                   , algos = 
+                   [ singleMuonPrepNoPV
+                   , Member( 'VM1' , 'VeloT' , FilterDescriptor = ['DOCA,<,0.5'])
+                   , RecoRZPV
+                   , Member( 'VF','Decision' 
+                           , OutputSelection = '%Decision'
+                           , FilterDescriptor = ['VertexDimuonMass,>,1000.', 'VertexMinIP_PV2D,||>,1.']
                            )
                    ] )
 
@@ -206,6 +307,25 @@ DiMuonFromMuonSegIP  = Line( 'DiMuonFromMuonSegIP'
                                                  ] )
                    ] )
 
+DiMuonFromMuonSegHighIP  = Line( 'DiMuonFromMuonSegHighIP' 
+                   ,  L0DU = "L0_CHANNEL('Muon') | L0_CHANNEL('MuonNoGlob')"
+                   , algos = 
+                   [ muonSegPrepNoPV
+                   , Member ( 'VM2', 'VeloT'
+                           , InputSelection1 = singleMuonPrepNoPV
+                           , InputSelection2 = muonSegPrepNoPV
+                           , FilterDescriptor = ['DOCA,<,0.5']
+                           #If you do not set DoMergeInputs = False it will make vertices
+                           #with 2 tracks from  InputSelection and
+                           #one track from InputSelection and another track from InputSelection2 
+                           , DoMergeInputs = False)
+                   , RecoRZPV
+                   , Member ( 'VF' , 'Decision'
+                            , OutputSelection = '%Decision'
+                            , FilterDescriptor = [ 'VertexDimuonMass,>,1000.'
+                                                 , 'VertexMinIP_PV2D,||>,1.'
+                                                 ] )
+                   ] )
 
 ### TODO: clone and mutate from line above...
 ### FIXME: how to remove RecoRZPV??
@@ -226,6 +346,25 @@ DiMuonFromMuonSegNoIP = Line( 'DiMuonFromMuonSegNoIP'
                            , FilterDescriptor = ['VertexDimuonMass,>,2500.' ]
                            ) 
                    ])
+
+DiMuonFromMuonSegNoPV = Line( 'DiMuonFromMuonSegNoPV'
+                          #,  L0DU = "(L0_CHANNEL('Muon') | L0_CHANNEL('MuonNoGlob')) & ( L0_DATA('Spd(Mult)') < 20 )"
+                          ,  L0DU = "L0_CHANNEL('Muon,lowMult')"
+                          , algos = 
+                          [ muonSegPrepNoPV
+                          , Member( 'VM2', 'VeloT'
+                              , InputSelection1 = singleMuonPrepNoPV
+                              , InputSelection2   = muonSegPrepNoPV
+                              , FilterDescriptor = ['DOCA,<,0.5']
+                              #If you do not set DoMergeInputs = False it will make vertices
+                              #with 2 tracks from  InputSelection and
+                              #one track from InputSelection and another track from InputSelection2 
+                              , DoMergeInputs = False )
+                          , Member(  'VF', 'Decision'
+                             , OutputSelection = '%Decision'
+                             , FilterDescriptor = ['VertexDimuonMass,>,1000.' ]
+                             ) 
+                          ])
 
 
 #### and now the mu+had line(s)

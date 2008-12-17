@@ -1,10 +1,12 @@
-! $Id: release.notes,v 1.77 2008-12-15 20:12:20 graven Exp $ 
+! $Id: release.notes,v 1.78 2008-12-17 16:44:47 depaula Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2008-12-17 - Leandro de Paula
+ - New Muon line to trigger on DiMuons not pointing to a PV
 
 ! 2008-12-15 - Gerhard Raven
  - remove 3D PV from Hlt1RecoSequence -- seems to be not used, fixes
