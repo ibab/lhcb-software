@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltL0Lines.py,v 1.4 2008-12-08 12:30:03 graven Exp $
+# $Id: HltL0Lines.py,v 1.5 2008-12-17 21:36:56 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines which are plain L0 lines
@@ -12,40 +12,16 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
 # =============================================================================
 
-
 from HltConf.HltLine import Hlt1Line   as Line
-from HltConf.HltLine import Hlt1Member as Member
-from Configurables import HltL0CaloCandidates, HltL0MuonCandidates, HadronSeedTool
+from HltConf.HltL0Candidates import *
 
-l0calolines = [ 'Electron','Photon','Hadron' ,'LocalPi0','GlobalPi0' ]
-
-calomaker = {  'Hadron'   : HadronSeedTool( decodeCalos = False )
-            ,  'Electron' : 'EcalSeedForVeloMatch' }
-
-for i in l0calolines: 
+for i in L0Channels(): 
     Line ( 'L0' + i 
-       , L0DU  = "L0_CHANNEL('"+i+"')"
-       , postscale = 0.000001
-       , algos = [ Member('L0Calo','Decision'
-                         , InputSelection =  HltL0CaloCandidates().getDefaultProperties()['InputSelection']
-                         , OutputSelection = '%Decision'
-                         , L0Channel = i
-                         , CaloMakerTool = ( '' if i not in calomaker else calomaker[i] )
-                         ) ]
-       )
+         , L0DU  = "L0_CHANNEL('"+i+"')"
+         , prescale = 0.000001
+         , algos = convertL0Candidates(i)
+         )
 
-l0muonlines = [ 'Muon','DiMuon','MuonNoGlob' ]
-
-for i in l0muonlines: 
-    Line ( 'L0' + i 
-       , L0DU  = "L0_CHANNEL('"+i+"')"
-       , postscale = 0.000001
-       , algos = [ Member('L0Muon','Decision'
-                                   , InputSelection =  HltL0MuonCandidates().getDefaultProperties()['InputSelection']
-                                   , L0Channel = i
-                                   , OutputSelection = '%Decision'
-                                   ) ]
-       )

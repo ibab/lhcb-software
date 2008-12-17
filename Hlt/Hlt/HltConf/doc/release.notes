@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.82 2008-12-17 21:36:12 graven Exp $ 
+! $Id: release.notes,v 1.83 2008-12-17 21:36:56 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -11,6 +11,7 @@
  - Configuration.py: replace HltInit.opts by HltInit.py, 
                      remove (optional) inclusion of obsolete and non-existant files
  - add HltL0Candidates.py as module: to be used for common conversion of L0 Candidates
+ - use HltL0Candidates in HltL0Lines
 
 ! 2008-12-17 - Jose A. Hernando
  - modify HltHadronLines.py to separe Single from DiHadron,
