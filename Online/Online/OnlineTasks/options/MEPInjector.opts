@@ -1,44 +1,94 @@
-// hello workls
-//#include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
-ApplicationMgr.SvcOptMapping += { "Gaudi::MultiFileCatalog/FileCatalog", "Gaudi::IODataManager/IODataManager" };
+#include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
 
-EventSelector.PrintFreq              = 1;
-EventSelector.Input                  = {
-   "DATA='PFN:root:file:///home/dsvantes/021089_0000001658.raw' SVC='LHCb::MDFSelector'"   
-   //"DATA='PFN:root:file:///afs/cern.ch/user/d/dsvantes/021089_0000001658.raw' SVC='LHCb::MDFSelector'"
-};  //Choose file
+ApplicationMgr.HistogramPersistency  = "NONE";
 
+//#include "/group/online/dataflow/options/LHCb/Injector_Info.opt
 
-// ApplicationMgr.ExtSvc               += {"LHCb::OnlineEvtSelector/EventSelector"};  
-ApplicationMgr.TopAlg                = {"StoreExplorerAlg","LHCb::MEPInjector"}; 
-ApplicationMgr.Dlls                  = { "MDF", "GaudiOnline", "Gaucho"};
+#pragma print on
+//ApplicationMgr.SvcOptMapping += {"Gaudi::MultiFileCatalog/FileCatalog", "Gaudi::IODataManager/IODataManager"};
 
-LHCb::MEPInjector.PackingFactor = 2; //max pk. factor currently 2, due to fragmentisation problems... 
-LHCb::MEPInjector.IPAddrTo = "192.168.200.2";
-LHCb::MEPInjector.IPAddrFrom = {"192.168.201.1","192.168.201.2","192.168.201.3","192.168.201.4","192.168.201.5","192.168.201.6","192.168.201.7","192.168.201.8"};
-LHCb::MEPInjector.ethInterface = 1;
+ApplicationMgr.Dlls                 += { "MDF", "GaudiOnline", "Gaucho", "GaudiAud", "GaudiAlg"};
 
-//ApplicationMgr.Runable               = "LHCb::MEPRxSvc/Runable";
-//Runable.OutputLevel      = 1;
-//Runable.MEPBuffers       = 1;          // concurrently built events
-//Runable.maxBadPktRatio   = 0.1;     // maximum fraction of erroneous packets during sampling time before going into state ERROR
-//Runable.pktSamplingCount = 100;  // number of packets to sample to determine error ratio
-//Runable.maxMsForGetSpace = 100;  // milliseconds to wait to get buffer memory from BM
-//Runable.partitionID      = 333;       
-//Runable.MEPBufSize       = 21000000;
-//Runable.refCount         = 2;
-//Runable.RTTCCompat       = false;       // for RTTC backward compatibility
-//Runable.sockBuf           = 30000000;     // receive socket size
-//Runable.IPNameOdin       = "";
+//ApplicationMgr.SvcOptMapping        += { "LHCb::OnlineEvtSelector/EventSelector" };
+ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
+EventDataSvc.RootCLID                = 1;
+EventDataSvc.EnableFaultHandler      = true;
+MEPManager.PartitionBuffers          = true;
+
+StoreExplorerAlg.Load                = true;
+EventDataSvc.RootCLID                = 1;
+EventDataSvc.EnableFaultHandler      = true ;
 
 
-StoreExplorerAlg.Load                = 1;
-StoreExplorerAlg.PrintFreq           = 1;
-// EventSelector.Decode                 = false;
+ApplicationMgr.ExtSvc               += { "IncidentSvc" };
+ApplicationMgr.ExtSvc               += { "MonitorSvc" };
+
+MessageSvc.OutputLevel      = @OnlineEnv.OutputLevel;
+
+MEPManager.PartitionID               = 65535;
 EventDataSvc.RootCLID                = 1;
 EventDataSvc.EnableFaultHandler      = true ;
 EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc/RawDataCnvSvc" };
-// EventSelector.REQ1 = // "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0";
-Sender.OutputLevel = 1;
+ApplicationMgr.SvcOptMapping += {"LHCb::RawDataCnvSvc/RawDataCnvSvc" };
 
-MessageSvc.OutputLevel = 2;
+EventSelector.Input                  = @OnlineEnv.Injector_Files;
+
+
+ApplicationMgr.TopAlg                = {"StoreExplorerAlg"/*, "LHCb::MEPInjector"*//*, "LHCb::EventReader"*/}; 
+AuditorSvc.Auditors = {"ChronoAuditor"};
+
+// L0 Trigger of the injector
+ApplicationMgr.TopAlg += { "GaudiSequencer/L0FilteredInjectionSeq" };
+L0FilteredInjectionSeq.Members += { "FastL0DUFilter", "LHCb::MEPInjector"};
+L0FilteredInjectionSeq.OutputLevel = @OnlineEnv.OutputLevel;
+FastL0DUFilter.OutputLevel = @OnlineEnv.OutputLevel;
+L0FilteredInjectionSeq.IgnoreFilterPassed = true;
+
+
+ChronoStatSvc.PrintEllapsedTime = true;
+ChronoStatSvc.PrintSystemTime = true;
+
+
+//LHCb::EventReader.AuditExecute=true;
+
+LHCb::MEPInjector.AuditExecute=true;
+StoreExplorerAlg.AuditExecute=true;
+
+
+LHCb::MEPInjector.OutputLevel = @OnlineEnv.OutputLevel;
+
+MessageSvc.OutputLevel = @OnlineEnv.OutputLevel;
+EventSelector.PrintFreq =10000; //just display every 2000 events ~2kHz
+EventDataSvc.OutputLevel = @OnlineEnv.OutputLevel;
+
+IODataManager.UseGFAL = true; // what's this ?
+
+
+///////////////////////////////////////////////////////////////////////////////
+//                               My options                                  //
+///////////////////////////////////////////////////////////////////////////////
+
+LHCb::MEPInjector.Tell1Boards = @OnlineEnv.Tell1Boards;
+LHCb::MEPInjector.OdinIf = @OnlineEnv.Injector_odinIF_Name;  //inj01-d2
+LHCb::MEPInjector.HLTIf = @OnlineEnv.Injector_farmIF_Name;   //inj01-d1
+LHCb::MEPInjector.OdinIPAddr = @OnlineEnv.ODIN_REQ_NAME;     //tfcodinxx-d1
+//OnlineEnv.Injector_ODIN_REQ_IP not used because computed from the first one 
+//OnlineEnv.Injector_odinIF_IP not used for same reason
+//OnlineEnv.Injector_farmIF_IP not used for same reason
+//XXX Change sightly the injector source to use the options and optimize some stuff and names mapping and convention
+LHCb::MEPInjector.PartitionID=@OnlineEnv.PartitionID;
+
+
+LHCb::MEPInjector.EventBuffer = 300000;
+
+/// Not useful params
+LHCb::MEPInjector.OdinRxTO = -1;
+
+LHCb::MEPInjector.AutoMode = true; // Are we running in Auto Mode or in Odin Mode
+
+/// These params are used only in automode, in Odin mode, Odin provides these data 
+LHCb::MEPInjector.PackingFactor = 10;
+LHCb::MEPInjector.L0ID = 1; // The first event ID in Auto mode
+LHCb::MEPInjector.PartitionID = 65535; //Partition ID set to all
+
+ 
