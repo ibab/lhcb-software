@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.80 2008-12-17 21:32:07 graven Exp $ 
+! $Id: release.notes,v 1.81 2008-12-17 21:34:46 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -8,6 +8,8 @@
 
 ! 2008-12-17 - Gerhard Raven
  - allow seperate ODIN, L0DU and HLT stages in HltLine
+ - Configuration.py: replace HltInit.opts by HltInit.py, 
+                     remove (optional) inclusion of obsolete and non-existant files
 
 ! 2008-12-17 - Jose A. Hernando
  - modify HltHadronLines.py to separe Single from DiHadron,

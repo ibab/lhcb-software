@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.21 2008-12-15 20:12:20 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.22 2008-12-17 21:34:46 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -30,8 +30,8 @@ class HltConf(LHCbConfigurableUser):
                  'DEFAULT' ]
                 
     def applyConf(self):
-        # GaudiKernel.ProcessJobOptions.PrintOff() #TODO: waiting for next release of Gaudi
-        importOptions('$HLTCONFROOT/options/HltInit.opts')
+        GaudiKernel.ProcessJobOptions.PrintOff()
+        importOptions('$HLTCONFROOT/options/HltInit.py')
         if self.getProp('replaceL0BanksWithEmulated') : importOptions('$L0DUROOT/options/ReplaceL0BanksWithEmulated.opts')
         hlttype = self.getProp('hltType')
         if self.getProp('oldStyle') :
@@ -45,9 +45,6 @@ class HltConf(LHCbConfigurableUser):
                     Sequence("Hlt2CheckHlt1Passed").Members = [ L0Filter() ]
                 else :
                     Sequence("Hlt2CheckHlt1Passed").Members = [ Sequence( "PassedAlleys" ) ]
-            if hlttype == 'readBackLumi'  :   importOptions('$HLTCONFROOT/options/HltJob_readLumiPy.opts')
-            if hlttype == 'writeLumi'     :   importOptions('$HLTCONFROOT/options/HltJob_onlyLumi.opts')
-            if hlttype.find('Lumi') != -1 :   importOptions('$HLTCONFROOT/options/Lumi.opts')
             if hlttype.find('Velo') != -1 :   importOptions('$HLTCONFROOT/options/HltVeloAlleySequence.opts')
             importOptions( '$HLTCONFROOT/options/HltPersistentOutput.py' )
         else :
