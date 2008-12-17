@@ -66,13 +66,13 @@ void StateDetailedBetheBlochEnergyCorrectionTool::correctState( LHCb::State& sta
   double x = log(eta*eta)/4.606;
   double rho = 0;
   
-  if (x > material->X0())
+  if (x > material->X0()) {
       if (x < material->X1())
-	  rho = 4.606*x-material->C() + material->a()*pow(material->X1()-x,material->m());
+        rho = 4.606*x-material->C() + material->a()*pow(material->X1()-x,material->m());
       else
-	  rho = 4.606*x-material->C();
-
-
+        rho = 4.606*x-material->C();
+  }
+ 
   double eLoss =  m_energyLossCorr*wallThickness
      * sqrt( 1. + gsl_pow_2(state.tx()) + gsl_pow_2(state.ty()) )
     * 30.71 * MeV*mm2/mole * material->Z() * material->density() / material->A()

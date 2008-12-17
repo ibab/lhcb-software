@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2008-12-17 - Marco Cattaneo
+ - Fix gcc 4.3 warnings
+
 ! 2008-12-02 Wouter Hulsbergen
  - OTMeasurementProvider: added property to set otdecoder and adapted to
    change in otdecoder interface
