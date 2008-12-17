@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.30 2008-12-10 10:16:54 ibelyaev Exp $ 
+# $Id: HltLine.py,v 1.31 2008-12-17 21:32:07 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.30 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.31 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt line itself 
@@ -704,13 +704,10 @@ class Hlt1Line(object):
         algos = deepcopy ( algos )
         args  = deepcopy ( args  )
         
-        ## 2) verify exclusivity...
-        if L0DU and HLT :
-            raise AttributeError, "The attribute L0DU and HLT  should be exclusive -- line %s" % name 
-        if L0DU and ODIN :
-            raise AttributeError, "The attribute L0DU and ODIN should be exclusive -- line %s" % name 
-        if HLT and ODIN :
-            raise AttributeError, "The attribute HLT  and ODIN should be exclusive -- line %s" % name 
+        ## 2) require at least one of ODIN, L0DU, or HLT
+        if not (ODIN or L0DU or HLT ) :
+            raise AttributeError, "Must have at least one of ODIN, L0DU or HLT -- line %s" % name 
+
         # 1) save all parameters (needed for the proper cloning)
         self._name      = name
         self._prescale  = prescale
@@ -737,12 +734,6 @@ class Hlt1Line(object):
         #start to contruct the sequence        
         line = self.subname()
         
-        #TODO: shouldn't we just allow all three of them? 
-        #      and shouldn't each correspond to a stage in the DecReport?
-        _seed = None
-        if   ODIN : _seed = ODINFilter ( odinentryName( line ) , Code = self._ODIN ) 
-        elif L0DU : _seed = L0Filter   ( l0entryName  ( line ) , Code = self._L0DU ) 
-        elif HLT  : _seed = HDRFilter  ( hltentryName ( line ) , Code = self._HLT  )
         
         # most recent output selection
         self._outputsel = None
@@ -776,7 +767,11 @@ class Hlt1Line(object):
         mdict.update( { 'DecisionName' : decisionName ( line ) 
                       , 'Prescale'     : Scaler(     prescalerName ( line ) , AcceptFraction = self._prescale  )
                       , 'Postscale'    : Scaler(    postscalerName ( line ) , AcceptFraction = self._postscale ) 
-                      , 'Seed'         : _seed } )
+                      } )
+        if ODIN : mdict.update( { 'ODIN' : ODINFilter ( odinentryName( line ) , Code = self._ODIN )  } )
+        if L0DU : mdict.update( { 'L0DU' : L0Filter   ( l0entryName  ( line ) , Code = self._L0DU )  } )
+        ## TODO: in case of HLT, we have a dependency... dangerous, as things become order dependent...
+        if HLT  : mdict.update( { 'HLT'  : HDRFilter  ( hltentryName ( line ) , Code = self._HLT  ) } )
         # TODO: if len(_members) = 1, we don't need a sequencer...
         if _members : mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line ) , Members = _members ) })
         # final cloning of all parameters:
@@ -1073,7 +1068,9 @@ def __enroll__ ( self       ,   ## the object
 
     if type(self) is Line :
         line = line + __enroll__( self.Prescale,  level + 1, lst )
-        line = line + __enroll__( self.Seed,      level + 1, lst )
+        if hasattr(self,'ODIN') : line = line + __enroll__( self.ODIN,      level + 1, lst )
+        if hasattr(self,'L0DU') : line = line + __enroll__( self.L0DU,      level + 1, lst )
+        if hasattr(self,'HLT')  : line = line + __enroll__( self.HLT,      level + 1, lst )
         if hasattr(self,'Filter1') : line = line + __enroll__( self.Filter1,   level + 1, lst )
         line = line + __enroll__( self.Postscale, level + 1, lst )
 

@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.79 2008-12-17 16:48:04 hernando Exp $ 
+! $Id: release.notes,v 1.80 2008-12-17 21:32:07 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+
+! 2008-12-17 - Gerhard Raven
+ - allow seperate ODIN, L0DU and HLT stages in HltLine
 
 ! 2008-12-17 - Jose A. Hernando
  - modify HltHadronLines.py to separe Single from DiHadron,
