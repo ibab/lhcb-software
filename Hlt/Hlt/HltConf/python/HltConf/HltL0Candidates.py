@@ -6,7 +6,7 @@ from Configurables import HltSelReportsMaker
 def _name(i) : return 'HltL0'+i+'Candidates'
 
 _calomaker = {  'Hadron'   : HadronSeedTool( decodeCalos = False )
-             ,  'Electron' : EcalSeedForVeloMatch }
+             ,  'Electron' : EcalSeedForVeloMatch() }
 
 _dict = dict()
 for i in [ 'Muon','DiMuon','MuonNoGlob' ] :
