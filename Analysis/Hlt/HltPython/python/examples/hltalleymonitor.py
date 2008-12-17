@@ -79,7 +79,12 @@ if ((FILTERSTOS) and CANDOTOS):
 
 importOptions("$DAVINCIROOT/options/DaVinci.py")
 # import the HLT that you want to monitor!
-importOptions("$HLTPYRUNROOT/options/Hlt1.py")
+from HltConf.Configuration import *
+HltConf().oldStyle = False
+HltConf().replaceL0BanksWithEmulated = True
+HltConf().hltType = 'Hlt1'
+HltConf().applyConf()
+#--- end HLT configuration
 
 EOPTS = []
 datacards = bch.createOptLines(CHANNEL)   
