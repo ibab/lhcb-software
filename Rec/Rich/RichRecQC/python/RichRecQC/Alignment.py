@@ -1,5 +1,5 @@
 
-__version__ = "$Id: Alignment.py,v 1.2 2008-11-14 17:13:40 jonrob Exp $"
+__version__ = "$Id: Alignment.py,v 1.3 2008-12-17 16:11:28 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -17,6 +17,8 @@ class RichAlignmentConf(RichConfigurableUser):
     __slots__ = {
         "context": "Offline"  # The context within which to run
         ,"alignmentSequncer" : None
+        ,"NTupleProduce" : True
+        ,"HistoProduce" : True
         }
     
     ## Apply the configuration
@@ -40,6 +42,8 @@ class RichAlignmentConf(RichConfigurableUser):
         RichAlignMoniR1.TrackSelector.TrackAlgs = [ "Match","Forward" ]
         RichAlignMoniR1.TrackSelector.MinPCut   = 5
 
+        RichAlignMoniR1.NTupleProduce = self.getProp("NTupleProduce")
+        RichAlignMoniR1.HistoProduce  = self.getProp("HistoProduce")
         
         # Mirror Alignment monitor for Rich2
         #-------------------------------------------------------------------------------
@@ -55,6 +59,9 @@ class RichAlignmentConf(RichConfigurableUser):
 
         RichAlignMoniR2.TrackSelector.TrackAlgs = [ "Match","Forward" ]
         RichAlignMoniR2.TrackSelector.MinPCut   = 10
+
+        RichAlignMoniR2.NTupleProduce = self.getProp("NTupleProduce")
+        RichAlignMoniR2.HistoProduce  = self.getProp("HistoProduce")
 
         RichAlignMoniR2.HPDList = [ 200107, 200108, 200007, 200008,
                                     210107, 210108, 210007, 210008 ]

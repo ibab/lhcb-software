@@ -4,6 +4,13 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2008-12-17 - Chris Jones
+ - Improve python Configuration :
+  + Add expert checking options previously in job options in RichRecMonitors.
+    Exact expert checks that are run are controlled by ExpertTests slot.
+  + Add global flags to turn on and off histogram and ntuple produce for all
+    monitoring algorithms.
+
 ! 2008-12-04 - Chris Jones
  - Suppress database checks in RichDataDBCheck when HPD information is invalid
    or HPD is suppressed.

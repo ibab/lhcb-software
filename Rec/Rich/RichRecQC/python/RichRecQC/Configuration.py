@@ -4,14 +4,14 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.10 2008-11-30 18:17:05 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.11 2008-12-17 16:11:28 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
 from Configurables import ( GaudiSequencer, MessageSvc )
 from DDDB.Configuration import DDDBConf
     
-# ----------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------
 
 ## @class RichRecQCConf
 #  High level Configuration tools for RICH Data Quality monitoring
@@ -34,9 +34,49 @@ class RichRecQCConf(RichConfigurableUser):
        ,"RecoTrackTypes": [ ["All"],
                             ["Forward","Match"],
                             ["Forward"],["Match"],["KsTrack"],["VeloTT"],["Seed"] ]
-       ,"MoniSequencer" : None     # The sequencer to add the RICH monitoringalgorithms to
-       ,"ExpertHistos": False # set to True to write out expert histos
+       ,"MoniSequencer" : None # The sequencer to add the RICH monitoring algorithms to
+       ,"ExpertHistos" : False  # set to True to write out expert histos
+       ,"ExpertTests" : [ "RichPixelPositions",
+                          "RichTrackGeometry","RichGhostTracks","RichCKThetaResolution",
+                          "RichTrackResolution","RichPhotonSignal","RichTrackCKResolutions",
+                          "RichPhotonGeometry","PhotonRecoEfficiency","RichPhotonTrajectory"
+                          #,"RichRayTracingTests","RichStereoFitterTests"
+                          #,"RichDataObjectChecks"
+                          #,"RichRecoTiming"
+                          ]
+       ,"NTupleProduce" : True
+       ,"HistoProduce" : True
         }
+
+    ## Set the histogram and ntuple producing options
+    def setHistosTupleOpts(self,mon):
+        if "NTupleProduce" in mon.properties() :
+            mon.NTupleProduce = self.getProp("NTupleProduce")
+        if "HistoProduce" in mon.properties() :
+            mon.HistoProduce  = self.getProp("HistoProduce")
+            
+    ## Configure a default monitor algorithm of given type 
+    def createMonitor(self,type,name,trackType=None):
+        mon = type(name)
+        self.setHistosTupleOpts(mon)
+        if trackType != None :
+            mon.addTool( RichTools().trackSelector(nickname="TrackSelector",private=True) )
+            if trackType != ["All"] : mon.TrackSelector.TrackAlgs = trackType
+        return mon
+
+    ## Check a new sequence and add to main sequence
+    def newSeq(self,sequence,name):
+        seq = GaudiSequencer(name)
+        seq.MeasureTime  = True
+        sequence.Members += [seq]
+        return seq
+
+    ## Create the track selection name from a list of track alg types
+    def trackSelName(self,types) :
+        name = ""
+        for type in types : name += type
+        if name == "ForwardMatch" or name == "MatchForward" : name = "Long"
+        return name
 
     ## Apply the configuration to the given sequence
     def applyConf(self):
@@ -65,7 +105,7 @@ class RichRecQCConf(RichConfigurableUser):
             sequence.Members += [pixSeq]
             if self.getProp("DataType") not in ["DC06"]:
                 from Configurables import Rich__DAQ__DataDBCheck
-                dbCheck = Rich__DAQ__DataDBCheck("RichRawDataDBCheck")
+                dbCheck = self.createMonitor(Rich__DAQ__DataDBCheck,"RichRawDataDBCheck")
                 pixSeq.Members += [dbCheck]
 
         # RICH data monitoring
@@ -102,19 +142,17 @@ class RichRecQCConf(RichConfigurableUser):
             alignSeq.MeasureTime = True
             sequence.Members += [alignSeq]
             from RichRecQC.Alignment import RichAlignmentConf
-            self.setOtherProp(RichAlignmentConf(),"context")
+            self.setOtherProps(RichAlignmentConf(),["context","NTupleProduce","HistoProduce"])
             RichAlignmentConf().alignmentSequncer = alignSeq
 
         # Expert Monitoring
         if self.getProp("ExpertHistos") :
             
             # Add detailed monitoring histograms from RichRecMonitor
-            # Need to convert this to python eventually ...
-            importOptions( "$RICHRECMONITORSOPTS/RecoMoni_Brunel.opts" )
-
-            # Define the RICH ntuple file
-            from Configurables import NTupleSvc
-            NTupleSvc().Output += ["RICHTUPLE1 DATAFILE='rich.tuples.root' TYP='ROOT' OPT='NEW'"]
+            expertSeq = GaudiSequencer("RichExpertChecks")
+            expertSeq.MeasureTime = True
+            sequence.Members += [expertSeq]
+            self.exportMonitoring(expertSeq)
 
     ## standalone ring finder monitors
     def ringsMoni(self,sequence):
@@ -125,18 +163,18 @@ class RichRecQCConf(RichConfigurableUser):
         conf = RichMarkovRingFinderConf()
 
         # Activate histos in the finder algs themselves
-        conf.rich1TopFinder().HistoProduce    = True
-        conf.rich1BottomFinder().HistoProduce = True
-        conf.rich2LeftFinder().HistoProduce   = True
-        conf.rich2RightFinder().HistoProduce  = True
+        conf.rich1TopFinder().HistoProduce    = self.getProp("HistoProduce")
+        conf.rich1BottomFinder().HistoProduce = self.getProp("HistoProduce")
+        conf.rich2LeftFinder().HistoProduce   = self.getProp("HistoProduce")
+        conf.rich2RightFinder().HistoProduce  = self.getProp("HistoProduce")
 
         # Add monitors
-        allMoni  = Rich__Rec__MarkovRingFinder__MC__Moni("MarkovRingMoniAll")
+        allMoni  = self.createMonitor(Rich__Rec__MarkovRingFinder__MC__Moni,"MarkovRingMoniAll")
         sequence.Members += [allMoni]
-        bestMoni = Rich__Rec__MarkovRingFinder__MC__Moni("MarkovRingMoniBest")
+        bestMoni = Rself.createMonitor(ich__Rec__MarkovRingFinder__MC__Moni,"MarkovRingMoniBest")
         bestMoni.RingLocation = "Rec/Rich/Markov/RingsBest"
         sequence.Members += [bestMoni]
-        isoMoni = Rich__Rec__MarkovRingFinder__MC__Moni("MarkovRingMoniIsolated")
+        isoMoni = self.createMonitor(Rich__Rec__MarkovRingFinder__MC__Moni,"MarkovRingMoniIsolated")
         isoMoni.RingLocation = "Rec/Rich/Markov/RingsIsolated"
         sequence.Members += [isoMoni]
         
@@ -145,7 +183,7 @@ class RichRecQCConf(RichConfigurableUser):
         
         from Configurables import ( Rich__Rec__MC__PixelQC )
 
-        sequence.Members += [ Rich__Rec__MC__PixelQC("RichRecPixelQC") ]
+        sequence.Members += [ self.createMonitor(Rich__Rec__MC__PixelQC,"RichRecPixelQC") ]
         
     ## Run the PID Performance monitors
     def pidPerf(self,sequence):
@@ -160,20 +198,16 @@ class RichRecQCConf(RichConfigurableUser):
 
                 # Construct the name for this monitor out of the track types
                 # and momentum range
-                tkName = ""
-                for tkT in trackType : tkName += tkT
+                tkName = self.trackSelName(trackType)
                 name = "RiPIDMon" + tkName + `pRange[0]` + "To" + `pRange[1]`
 
                 # Make a monitor alg
-                pidMon = Rich__Rec__MC__PIDQC(name)
+                pidMon = self.createMonitor(Rich__Rec__MC__PIDQC,name,trackType)
 
-                # Trackselector
-                tkSel = RichTools().trackSelector(nickname="TrackSelector",private=True)
-                pidMon.addTool( tkSel )
+                # Trackselector momentum cuts
                 pidMon.TrackSelector.MinPCut = pRange[0]
                 pidMon.TrackSelector.MaxPCut = pRange[1]
-                if trackType != ["All"] : pidMon.TrackSelector.TrackAlgs = trackType
-
+ 
                 # Add to sequence
                 sequence.Members += [pidMon]
 
@@ -186,19 +220,174 @@ class RichRecQCConf(RichConfigurableUser):
         for trackType in self.getProp("RecoTrackTypes") : 
 
             # Construct the name for this monitor
-            name = "RiCKRes"
-            for tkT in trackType : name += tkT
-
+            name = "RiCKRes" + self.trackSelName(trackType)
+ 
             # Make a monitor alg
-            mon = Rich__Rec__MC__RecoQC(name)
+            mon = self.createMonitor(Rich__Rec__MC__RecoQC,name,trackType)
             mon.HistoPrint = False
           
-            # Trackselector
-            tkSel = RichTools().trackSelector(nickname="TrackSelector",private=True)
-            mon.addTool( tkSel )
-            if trackType != ["All"] : mon.TrackSelector.TrackAlgs = trackType
+            # cuts
             if trackType == ["All"] : mon.MinBeta = [ 0.0, 0.0, 0.0 ]
             
             # Add to sequence
             sequence.Members += [mon]
 
+    ## Expert monitoring options
+    def exportMonitoring(self,sequence):
+
+        # Define the RICH ntuple file
+        if self.getProp("NTupleProduce") :
+            from Configurables import NTupleSvc
+            NTupleSvc().Output += ["RICHTUPLE1 DATAFILE='rich.tuples.root' TYP='ROOT' OPT='NEW'"]
+
+        checks  = self.getProp("ExpertTests")
+        tkTypes = self.getProp("RecoTrackTypes")
+
+        # Turn on histos in CK resolution tool
+        #RichTools().ckResolution().HistoProduce = True
+
+        check = "RichPixelPositions"
+        if check in checks :
+            from Configurables import Rich__Rec__MC__PixelPositionMonitor
+            seq = self.newSeq(sequence,check)
+            seq.Members += [Rich__Rec__MC__PixelPositionMonitor("RiRecPixelPosMoni")]
+
+        check = "RichTrackGeometry"
+        if check in checks :
+            from Configurables import Rich__Rec__MC__TrackGeomMoni
+            seq = self.newSeq(sequence,check)
+            for trackType in tkTypes :
+                name = "RiRec" + self.trackSelName(trackType) + "GeomMoni"
+                seq.Members += [ self.createMonitor(Rich__Rec__MC__TrackGeomMoni,name,trackType) ]
+
+        check = "RichTrackResolution"
+        if check in checks :
+            from Configurables import Rich__Rec__MC__TrackResolutionMoni
+            seq = self.newSeq(sequence,check)
+            for trackType in tkTypes :
+                name = "RiRec" + self.trackSelName(trackType) + "TkResMoni"
+                seq.Members += [ self.createMonitor(Rich__Rec__MC__TrackResolutionMoni,name,trackType) ]
+
+        check = "RichCKThetaResolution"
+        if check in checks :
+            from Configurables import Rich__Rec__MC__CherenkovAngleMonitor
+            seq = self.newSeq(sequence,check)
+            for trackType in tkTypes :
+                name = "RiRecPhotAng" + self.trackSelName(trackType) + "Moni"
+                seq.Members += [ self.createMonitor(Rich__Rec__MC__CherenkovAngleMonitor,name,trackType) ]
+
+        check = "RichTrackCKResolutions"
+        if check in checks :
+            from Configurables import Rich__Rec__MC__CherenkovResMoni
+            seq = self.newSeq(sequence,check)
+            for trackType in tkTypes :
+                name = "RiRec" + self.trackSelName(trackType) + "CKResMoni"
+                seq.Members += [ self.createMonitor(Rich__Rec__MC__CherenkovResMoni,name,trackType) ]
+
+        check = "RichPhotonSignal"
+        if check in checks :
+            from Configurables import Rich__Rec__MC__PhotonSignalMonitor
+            seq = self.newSeq(sequence,check)
+            for trackType in tkTypes :
+                name = "RiRecPhotSig" + self.trackSelName(trackType) + "TkMoni"
+                seq.Members += [ self.createMonitor(Rich__Rec__MC__PhotonSignalMonitor,name,trackType) ]
+        
+        check = "RichPhotonGeometry"
+        if check in checks :
+            from Configurables import Rich__Rec__MC__PhotonGeomMonitor
+            seq = self.newSeq(sequence,check)
+            for trackType in tkTypes :
+                name = "RiRecPhotGeom" + self.trackSelName(trackType) + "TkMoni"
+                seq.Members += [ self.createMonitor(Rich__Rec__MC__PhotonGeomMonitor,name,trackType) ]
+
+        check = "RichPhotonTrajectory"
+        if check in checks :
+            from Configurables import Rich__Rec__MC__PhotonTrajectoryMonitor
+            seq = self.newSeq(sequence,check)
+            for trackType in tkTypes :
+                name = "RiRecPhotTraj" + self.trackSelName(trackType) + "TkMoni"
+                seq.Members += [ self.createMonitor(Rich__Rec__MC__PhotonTrajectoryMonitor,name,trackType) ]
+                
+        check = "PhotonRecoEfficiency"
+        if check in checks :
+
+            RichTools().toolRegistry().Tools += [ "Rich::Rec::PhotonCreator/ForcedRichPhotonCreator" ]
+            RichTools().toolRegistry().Tools += [ "Rich::Rec::PhotonRecoUsingQuarticSoln/ForcedPhotonReco" ]
+            RichTools().toolRegistry().Tools += [ "Rich::Rec::SimplePhotonPredictor/ForcedRichPhotonPredictor" ]
+
+            context = self.getProp("Context")
+                       
+            from Configurables import ( Rich__Rec__PhotonCreator, Rich__Rec__SimplePhotonPredictor )
+            forcedCreator = Rich__Rec__PhotonCreator(context+".ForcedRichPhotonCreator")
+            forcedCreator.MinAllowedCherenkovTheta = [  0.0,     0.0,     0.0    ]
+            forcedCreator.MaxAllowedCherenkovTheta = [  999,     999,     999    ]
+            forcedCreator.MinPhotonProbability     = [  1e-99,   1e-99,   1e-99  ]
+            forcedCreator.NSigma                   = [  999,    999,      999    ]
+            forcedCreator.PhotonPredictor = "ForcedRichPhotonPredictor"
+            forcedCreator.PhotonRecoTool  = "ForcedPhotonReco"
+            forcedPredictor = Rich__Rec__SimplePhotonPredictor(context+".ForcedRichPhotonPredictor")
+            forcedPredictor.MinTrackROI            = [  0.0,   0.0,    0.0   ]
+            forcedPredictor.MaxTrackROI            = [  9999,  9999,   9999  ]
+
+            from Configurables import Rich__Rec__MC__PhotonRecoEffMonitor
+            seq = self.newSeq(sequence,check)
+            for trackType in tkTypes :
+                name = "RiRecPhotEff" + self.trackSelName(trackType) + "TkMoni"
+                seq.Members += [ self.createMonitor(Rich__Rec__MC__PhotonRecoEffMonitor,name,trackType) ]
+                
+        check = "RichRayTracingTests"
+        if check in checks :
+            from Configurables import Rich__Rec__MC__PhotonRecoRayTraceTest
+            seq = self.newSeq(sequence,check)
+            moniA = Rich__Rec__MC__PhotonRecoRayTraceTest("PhotRayTraceTestSimple")
+            moniA.FullHPDsInRayTracing = False
+            moniB = Rich__Rec__MC__PhotonRecoRayTraceTest("PhotRayTraceTestFull")
+            moniB.FullHPDsInRayTracing = True
+            seq.Members += [moniA,moniB]
+
+        check = "RichStereoFitterTests"
+        if check in checks :
+            from Configurables import Rich__Rec__MC__StereoPhotonFitTest
+            seq = self.newSeq(sequence,check)
+            for trackType in tkTypes :
+                name = "RiRecStereoFitter" + self.trackSelName(trackType) + "TkMoni"
+                seq.Members += [ self.createMonitor(Rich__Rec__MC__StereoPhotonFitTest,name,trackType) ]
+        
+        check = "RichGhostTracks"
+        if check in checks:
+            from Configurables import Rich__Rec__MC__GhostTrackMoni
+            seq = self.newSeq(sequence,check)
+            seq.Members += [ self.createMonitor(Rich__Rec__MC__GhostTrackMoni,"RichGhostsMoni") ]
+
+        check = "RichDataObjectChecks"
+        if check in checks:
+            from Configurables import Rich__Rec__DataObjVerifier
+            seq = self.newSeq(sequence,check)
+            moni = Rich__Rec__DataObjVerifier("RichRecObjPrint")
+            moni.PrintPixels   = True
+            moni.PrintTracks   = True
+            moni.PrintSegments = True
+            moni.PrintPhotons  = True
+            seq.Members += [moni]
+            
+        check = "RichRecoTiming"
+        if check in checks:
+            from Configurables import ( AuditorSvc, ChronoAuditor, Rich__Rec__TimeMonitor )
+           
+            AuditorSvc().Auditors += [ "ChronoAuditor" ]
+            ChronoAuditor().Enable = True
+
+            seq = self.newSeq(sequence,check)
+
+            # overall rich reconstruction
+            moni = self.createMonitor(Rich__Rec__TimeMonitor,"RichTime")
+            moni.TimingName = "RecoRICHSeq"
+            moni.Algorithms = [ "RecoRICHSeq" ]
+            seq.Members += [moni]
+
+            # overall track reconstruction
+            moni = self.createMonitor(Rich__Rec__TimeMonitor,"TrackTime")
+            moni.TimingName = "RecoTrSeq"
+            moni.Algorithms = [ "RecoTrSeq" ]
+            seq.Members += [moni]
+        
