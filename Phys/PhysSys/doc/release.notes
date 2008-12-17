@@ -3,6 +3,9 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
+! 2008-12-17 - Patrick Koppenburg
+ - Added PhysConf for configuration
+
 ! 2008-12-05 - Patrick Koppenburg
  - New DaVinciMonitors for DQ
 
