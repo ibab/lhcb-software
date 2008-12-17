@@ -1,1 +1,1 @@
-importOptions('HltInit.py')
+importOptions("$HLTCONFROOT/options/HltInit.py")
