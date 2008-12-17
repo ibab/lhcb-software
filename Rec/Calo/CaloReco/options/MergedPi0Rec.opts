@@ -13,15 +13,14 @@ MergedPi0Rec.TrShMid_spd  ={  0.0882,  1.7910, 24.4324,  7.4802,  0.0258,  2.771
 MergedPi0Rec.TrShInn_spd  ={  0.1111,  1.7909, 18.0852,  7.1122,  0.0261,  1.3889,  1.1846, -0.0934,  0.0029, -8.9966 };
 
 MergedPi0Rec.SPar = { 0.102 , 0.129 , 0.144 };
-MergedPi0Rec.Lpar_Al1= { 17.936       ,  19.053       , 22.305       } ;
-MergedPi0Rec.Lpar_Al2= {   1.15  ,  1.53  ,  2.04  } ;
-MergedPi0Rec.Lpar_Al3= { 0.0392 , 0.455  , 0.0281  } ;
-MergedPi0Rec.Lpar_Be1= { 54.54  , 60.87  , 58.04   } ;
-MergedPi0Rec.Lpar_Be2= { 4.02  ,  4.15  ,  4.38    } ;
-MergedPi0Rec.Lpar_Be3= {  0.0308 , 0.0597 , 0.0247 } ;
-MergedPi0Rec.Lpar_Be0= {   0.,0.,0. } ;//unused
-
-MergedPi0Rec.Lpar_z0 = { 12566. } ;
+MergedPi0Rec.LPar_Al1= { 17.936       ,  19.053       , 22.305       } ;
+MergedPi0Rec.LPar_Al2= {   1.15  ,  1.53  ,  2.04  } ;
+MergedPi0Rec.LPar_Al3= { 0.0392 , 0.455  , 0.0281  } ;
+MergedPi0Rec.LPar_Be1= { 54.54  , 60.87  , 58.04   } ;
+MergedPi0Rec.LPar_Be2= { 4.02  ,  4.15  ,  4.38    } ;
+MergedPi0Rec.LPar_Be3= {  0.0308 , 0.0597 , 0.0247 } ;
+MergedPi0Rec.LPar_Be0= {   0.,0.,0. } ;//unused
+MergedPi0Rec.LPar_z0 = { 12566. } ;
 
 //
 MergedPi0Rec.EtCut = 2.*GeV;
