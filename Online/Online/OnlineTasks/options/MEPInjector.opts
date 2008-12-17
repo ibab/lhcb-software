@@ -1,8 +1,8 @@
-#include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
+//#include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
+#include "/group/online/dataflow/options/LHCb/Injector_Info.opts"
 
 ApplicationMgr.HistogramPersistency  = "NONE";
 
-//#include "/group/online/dataflow/options/LHCb/Injector_Info.opt
 
 #pragma print on
 //ApplicationMgr.SvcOptMapping += {"Gaudi::MultiFileCatalog/FileCatalog", "Gaudi::IODataManager/IODataManager"};
@@ -71,7 +71,7 @@ IODataManager.UseGFAL = true; // what's this ?
 LHCb::MEPInjector.Tell1Boards = @OnlineEnv.Tell1Boards;
 LHCb::MEPInjector.OdinIf = @OnlineEnv.Injector_odinIF_Name;  //inj01-d2
 LHCb::MEPInjector.HLTIf = @OnlineEnv.Injector_farmIF_Name;   //inj01-d1
-LHCb::MEPInjector.OdinIPAddr = @OnlineEnv.ODIN_REQ_NAME;     //tfcodinxx-d1
+LHCb::MEPInjector.OdinIPAddr = @OnlineEnv.Injector_ODIN_REQ_Name;     //tfcodinxx-d1
 //OnlineEnv.Injector_ODIN_REQ_IP not used because computed from the first one 
 //OnlineEnv.Injector_odinIF_IP not used for same reason
 //OnlineEnv.Injector_farmIF_IP not used for same reason
