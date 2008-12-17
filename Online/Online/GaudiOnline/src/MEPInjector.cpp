@@ -144,7 +144,7 @@ MEPInjector::MEPInjector(const std::string & name, ISvcLocator * pSvcLocator):Al
     declareProperty("HLTEthInterface", m_HLTEthInterface=m_HLTIfIPAddr[m_HLTIfIPAddr.length()]);
     
 
-    declareProperty("OdinRxTO", m_OdinRxTO = -1);
+    declareProperty("TimeOut", m_TimeOut = -1);
 
     /// Partition ID set to all detectors by default, but copied from Odin in TFC mode
     declareProperty("PartitionID", m_PartitionID = 0x7fff);
@@ -450,7 +450,7 @@ StatusCode MEPInjector::readEvent()
                 
 		tell1id = getTell1IP(hdr->type(), hdr->sourceID());
 		if (tell1id == 0) { 
-                    log << MSG::WARNING<<"Unknown source "<<hdr->sourceID()<<" or type "<<RawBank::typeName(hdr->type()) << " no tell1 found, execution continue "<<endmsg; 
+                    log << MSG::DEBUG<<"Unknown source "<<hdr->sourceID()<<" or type "<<RawBank::typeName(hdr->type()) << " no tell1 found, execution continue "<<endmsg; 
 		    continue;
 		}
 
@@ -627,13 +627,18 @@ StatusCode MEPInjector::injectorProcessing()
     
     if(!m_AutoMode) {
         sc = getHLTInfo();
-        if(sc.isFailure()) {
+        if(sc.isRecoverable()) {
+            
+        }
+        else if(sc.isFailure()) {
             ERRMSG(log, " Selecting a HLT");
             return StatusCode::FAILURE;
         }
 
         sc= getOdinInfo();
-        if(sc.isFailure()) 
+        if(sc.isRecoverable()) {
+        } 
+        else if(sc.isFailure()) 
         {
             ERRMSG(log, " Copying data from Odin MEP");
             return StatusCode::FAILURE;
@@ -717,12 +722,14 @@ StatusCode MEPInjector::readThenSend()
             /// Actually I hope these is no wait 
             StatusCode sc; 
             sc = getHLTInfo();
+            if(sc.isRecoverable()) return sc;
             if(sc.isFailure()) {
                 ERRMSG(log, " Selecting a HLT");
                 return StatusCode::FAILURE;
             }
 
             sc= getOdinInfo();
+            if(sc.isRecoverable()) return sc;
             if(sc.isFailure()) {
                 ERRMSG(log, " Copying data from Odin MEP");
                 return StatusCode::FAILURE;
@@ -1260,14 +1267,15 @@ StatusCode MEPInjector::receiveOdinMEP(char *bufMEP, int *retLen)
 {
     static MsgStream log(msgSvc(), name());
 
-    int n = MEPRxSys::rx_poll(m_FromOdinSock, m_OdinRxTO);	/// XXX Timeout to become a job option 
+    
+    int n = MEPRxSys::rx_poll(m_FromOdinSock, m_TimeOut);	 
   
     log<<MSG::DEBUG<<"DATA COMING ON THE ODIN SOCKET" << endmsg;
  
     if (n != 1) {
-	/// XXX Better management plz
-	ERRMSG(log, " Odin MEP reception time out");
-        return StatusCode::FAILURE;
+        /// Recoverable will ask for one more iteration of the manager
+        /// which checks boolean which asks for end of injection
+        return StatusCode::RECOVERABLE;
     }
 
     /// Reception with IP header, some cooking needed ?
@@ -1311,10 +1319,11 @@ StatusCode MEPInjector::receiveMEPReq(char *req)
     if (req == NULL)
 	return StatusCode::FAILURE;
 
-    int n = MEPRxSys::rx_poll(m_FromHLTSock, -1);	///XXX Infinite timeout
+    int n = MEPRxSys::rx_poll(m_FromHLTSock, m_TimeOut);	
     if (n != 1) {
-	ERRMSG(log, " MEP Request reception time out");	/// Impossible at the moment  
-        return StatusCode::FAILURE;
+        /// Recoverable will ask for one more iteration of the manager
+        /// which checks boolean which asks for end of injection
+        return StatusCode::RECOVERABLE;
     }
   
     int len =
@@ -1344,6 +1353,10 @@ StatusCode MEPInjector::manageMEPRequest()
  
     while (!m_ManagerStop) {
 	sc = receiveMEPReq(req);
+        if(sc.isRecoverable()) /// End of injection but continue to check 
+        {
+            continue;
+        } 
 	if (sc.isFailure()) {
 	    ERRMSG(log, " MEP Request Receive");
 	    return sc;
@@ -1403,7 +1416,10 @@ StatusCode MEPInjector::manageOdinMEP()
 
     while (!m_ManagerStop) {
 	sc = receiveOdinMEP(bufMEP, &len);
-        if(sc.isRecoverable()) continue;
+        if(sc.isRecoverable())  /// End of injection 
+        {
+            continue;
+        } 
 	if (sc.isFailure()) {
 	    ERRMSG(log, "Failed to receive Odin Information : MEP reception");
             return StatusCode::FAILURE;
@@ -1462,7 +1478,7 @@ StatusCode MEPInjector::getInfoFromOdinMEP()
 StatusCode MEPInjector::getHLTInfo() 
 {
     static MsgStream log(msgSvc(), name());    //Message stream for output
-    StatusCode ret;
+    StatusCode ret=StatusCode::RECOVERABLE;
     int retVal;
     
 //    while((retVal=sem_wait(&m_MEPReqCount))==-1 && errno == EINTR) continue;
@@ -1503,7 +1519,7 @@ StatusCode MEPInjector::getHLTInfo()
 
 StatusCode MEPInjector::getOdinInfo()
 {
-    StatusCode ret;
+    StatusCode ret=StatusCode::RECOVERABLE;
     static MsgStream log(msgSvc(), name());    //Message stream for output
     int retVal;
 
@@ -1579,22 +1595,42 @@ StatusCode MEPInjector::finalize()
 
     /// Set this only on dim stop command
     m_InjectorStop = true;
+    m_ManagerStop = true;
 
 
-    /// No more need of synchronisation to access to the queue, min value = 1  
+    /// No more need of synchronisation to access to the queues/maps, min value = 1
+    /// and they should exit  
     if(sem_post(&m_RawEventsCount)==-1)
     {   
         ERRMSG(log, "Posting on the semaphore");
         perror("sem_post");
         exit(errno);
     }
-
+    if(sem_post(&m_MEPReqCount)==-1)
+    {
+        ERRMSG(log, "Posting on the semaphore");
+        perror("sem_post");
+        exit(errno);
+    } 
+    if(sem_post(&m_OdinCount)==-1) 
+    {
+        ERRMSG(log, "Posting on the semaphore");
+        perror("sem_post");
+        exit(errno);
+    }
+    
+/*
+    if(pthread_kill(m_InjectorProcessing, SIGTERM))
+    {
+        ERRMSG(log, "Kill SIGTERM InjectorProcessing");
+        return StatusCode::FAILURE;
+    }
+*/
     if(pthread_join(m_InjectorProcessing, NULL))
     {
        ERRMSG(log, "injectorProcessing thread join");
        return StatusCode::FAILURE;
     }
-    m_ManagerStop = true;
 
     /// Do not do if here cause of dim stop cmd
     /// This is done to ensure that nothing remains in the queue, the reader thread takes the job of the injectorprocessing thread ... but it's easier
@@ -1649,6 +1685,18 @@ StatusCode MEPInjector::finalize()
         }
     } /// end if finalSent
     if(! m_AutoMode) {
+/*
+        if(pthread_kill(m_ThreadOdinMEPManager, SIGTERM))
+        {
+            ERRMSG(log, "Kill SIGTERM OdinMEPManager");
+            return StatusCode::FAILURE;
+        } 
+        if(pthread_kill(m_ThreadMEPReqManager, SIGTERM))
+        {
+            ERRMSG(log, "Kill SIGTERM MEPReqManager");
+            return StatusCode::FAILURE;
+        }
+*/
         if(pthread_join(m_ThreadOdinMEPManager, NULL))
         {
             ERRMSG(log, "OdinMEPManager thread join");

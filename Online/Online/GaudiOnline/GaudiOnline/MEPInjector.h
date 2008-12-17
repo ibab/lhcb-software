@@ -99,7 +99,9 @@ namespace LHCb {
 
     
 
-    int 	  m_OdinRxTO;   /* Time Out on Odin MEP reception */
+    int 	  m_TimeOut;    /* Time Out for every blocking call */
+                                /* Only used for the polling */
+                                 
 
     int 	  m_MEPSize;    /* Size of the MEP on which the algorithm is working on */
 
