@@ -1,0 +1,8 @@
+!-----------------------------------------------------------------------------
+! Package     : Phys/PhysConf
+! Responsible : Patrick Koppenburg
+! Purpose     : Configuration for Phys project
+!-----------------------------------------------------------------------------
+
+! 2008-12-17 - Patrick Koppenburg
+ - Import initial package containing most of what used to be in DaVinciCommon.opts
