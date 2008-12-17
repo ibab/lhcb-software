@@ -11,7 +11,7 @@
 
   //const std::string dataFile = "/usera/jonesc/cmtuser/Brunel_v31r9/Rec/Brunel/v31r9/cmt/flibble.root";
 
-  gROOT->ProcessLine(".x Calo-ElectronID.C");
+  //gROOT->ProcessLine(".x Calo-ElectronID.C");
   //gROOT->ProcessLine(".x Combined-ElectronID-2-100GeV.C");
   //gROOT->ProcessLine(".x Combined-ElectronID-2-10GeV.C");
   //gROOT->ProcessLine(".x Combined-ElectronID-10-50GeV.C");
@@ -25,6 +25,6 @@
 
   //gROOT->ProcessLine(".x Combined-MuonID.C");
 
-  //gROOT->ProcessLine(".x CompareTwoFiles-KaonID.C");
+  gROOT->ProcessLine(".x CompareTwoFiles-KaonID.C");
  
 }

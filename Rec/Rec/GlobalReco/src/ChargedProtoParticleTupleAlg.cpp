@@ -5,7 +5,7 @@
  * Implemenrtation file for algorithm ChargedProtoParticleTupleAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoParticleTupleAlg.cpp,v 1.4 2007-11-28 16:30:27 jonrob Exp $
+ * $Id: ChargedProtoParticleTupleAlg.cpp,v 1.5 2008-12-17 18:02:48 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-11-15
@@ -26,8 +26,9 @@ DECLARE_ALGORITHM_FACTORY( ChargedProtoParticleTupleAlg );
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-ChargedProtoParticleTupleAlg::ChargedProtoParticleTupleAlg( const std::string& name,
-                                                            ISvcLocator* pSvcLocator )
+ChargedProtoParticleTupleAlg::
+ChargedProtoParticleTupleAlg( const std::string& name,
+                              ISvcLocator* pSvcLocator )
   : GaudiTupleAlg ( name , pSvcLocator ),
     m_protoPath   ( LHCb::ProtoParticleLocation::Charged ),
     m_truth       ( NULL )
@@ -103,7 +104,7 @@ StatusCode ChargedProtoParticleTupleAlg::execute()
     tuple->column( "RichDLLmu",     proto->info ( LHCb::ProtoParticle::RichDLLmu, 0 ) );
     tuple->column( "RichDLLpi",     proto->info ( LHCb::ProtoParticle::RichDLLpi, 0 ) );
     tuple->column( "RichDLLk",      proto->info ( LHCb::ProtoParticle::RichDLLk,  0 ) );
-    tuple->column( "RichDLLp",      proto->info ( LHCb::ProtoParticle::RichDLLp,  0 ) );
+    tuple->column( "RichDLLp",      proto->info ( LHCb::ProtoParticle:: RichDLLp,  0 ) );
     tuple->column( "RichUsedAero",  tmpRPID.usedAerogel()  );
     tuple->column( "RichUsedR1Gas", tmpRPID.usedRich1Gas() );
     tuple->column( "RichUsedR2Gas", tmpRPID.usedRich2Gas() );

@@ -3,12 +3,10 @@
 # Maintainer : Global PID Group ( Chris Jones et. al. )
 #============================================================================
 package           GlobalReco
-version           v6r17
+version           v6r18
 
-branches          cmt doc src options root
+branches          cmt doc src python root
 include_path none
-
-set GLOBALRECOOPTS  ${GLOBALRECOROOT}/options
 
 # Used packages.
 #============================================================================
@@ -27,3 +25,7 @@ library          GlobalReco    ../src/*.cpp
 # define component library link options
 #============================================================================
 apply_pattern    component_library library=GlobalReco
+
+# Setup Python Configurables
+#============================================================================
+apply_pattern install_python_modules

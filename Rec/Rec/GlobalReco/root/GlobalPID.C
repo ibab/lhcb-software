@@ -560,7 +560,7 @@ void GlobalPID::loadTTree( const std::string & filename )
   resetFile();
   std::cout << "Opening file : " << filename << std::endl;
   m_file = new TFile(filename.c_str());
-  m_file->cd((filename+":/ChargedProtoParticleTupleAlg").c_str());
+  m_file->cd((filename+":/ChargedProtoTuple").c_str());
   fChain = (TTree*)gDirectory->Get("protoPtuple");
   Init( fChain );
 }

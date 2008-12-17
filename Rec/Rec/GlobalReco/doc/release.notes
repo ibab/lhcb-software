@@ -4,6 +4,9 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2008-12-17 - Chris Jones
+ - Retire job options and add new python Configurable
+
 !========================== GlobalReco v6r17 2008-07-02 ======================
 ! 2008-06-27 - Olivier Deschamps
    - ChargedProtoPAlg and NeutralProtoPAlg : add HLT context for Calo

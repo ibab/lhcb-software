@@ -6,8 +6,7 @@
   // make a new pid object
   GlobalPID * pid = new GlobalPID();
 
-  //pid->loadTTree("/var/work/pcgs/jonesc/fastreco/Offline-AllRads-AllTracks.tuples.root");
-  pid->loadTTree("/var/work/pcgs/jonesc/RootFiles/Offline-AllRads-LongTracks.tuples.root");
+  pid->loadTTree("/usera/jonesc/cmtuser/Brunel_v34r0/Rec/Brunel/cmt/DC06/protoparticles.tuples.root");
 
   // K-pi RICH
   pid->configReset();
@@ -16,8 +15,8 @@
   pid->config.maxGraphX = 100;
   pid->config.minGraphY = 1;
   pid->config.maxGraphY = 20;
-  pid->config.title     = "RICH Kaon ID : Gas Radiators";
-  pid->config.subtitle  = "Full Offline";
+  pid->config.title     = "RICH Kaon ID";
+  pid->config.subtitle  = "2006 MC";
   pid->config.minP      = 3   * GeV;
   pid->config.maxP      = 100 * GeV;
   pid->config.minPt     = 0.0 * GeV;
@@ -40,7 +39,7 @@
   // K-pi RICH
   pid->configReset();
   pid->config.useFixedGraphRange = true;
-  pid->config.subtitle  = "Full Offline";
+  pid->config.subtitle  = "2006 MC";
   pid->config.minP      = 3    * GeV;
   pid->config.maxP      = 100  * GeV;
   pid->config.minPt     = 0.5 * GeV;
@@ -59,13 +58,12 @@
   // create the plot
   pid->makeCurve(nTracks);
 
-  //pid->loadTTree("/var/work/pcgs/jonesc/fastreco/Fast-AllRads-LongTracks.tuples.root");
-  pid->loadTTree("/var/work/pcgs/jonesc/RootFiles/Offline-AllRads-LongTracks-90pcInEff.tuples.root");
+  pid->loadTTree("/usera/jonesc/cmtuser/Brunel_v34r0/Rec/Brunel/cmt/2008MC/protoparticles.tuples.root");
 
   // K-pi RICH
   pid->configReset();
   pid->config.useFixedGraphRange = true;
-  pid->config.subtitle  = "Full Offline 90% Inefficiency";
+  pid->config.subtitle  = "2008 MC";
   pid->config.minP      = 3    * GeV;
   pid->config.maxP      = 100  * GeV;
   pid->config.minPt     = 0.0 * GeV;
@@ -87,7 +85,7 @@
   // K-pi RICH
   pid->configReset();
   pid->config.useFixedGraphRange = true;
-  pid->config.subtitle  = "Full Offline 90% Inefficiency";
+  pid->config.subtitle  = "2008 MC";
   pid->config.minP      = 3    * GeV;
   pid->config.maxP      = 100  * GeV;
   pid->config.minPt     = 0.5 * GeV;

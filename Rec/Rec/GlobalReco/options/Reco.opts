@@ -1,9 +1,0 @@
-
-// Charged Proto particles
-// For time being put all protoparticles in the same container
-RecoPROTOSeq.Members += { "ChargedProtoPAlg" };
-// Fill the Combined DLL information in the charged protoparticles
-RecoPROTOSeq.Members += { "ChargedProtoCombineDLLsAlg" };
-
-// Neutrals
-RecoPROTOSeq.Members += { "NeutralProtoPAlg" };
