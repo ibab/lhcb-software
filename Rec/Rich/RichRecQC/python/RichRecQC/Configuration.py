@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.11 2008-12-17 16:11:28 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.12 2008-12-17 17:03:11 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -243,8 +243,9 @@ class RichRecQCConf(RichConfigurableUser):
         checks  = self.getProp("ExpertTests")
         tkTypes = self.getProp("RecoTrackTypes")
 
-        # Turn on histos in CK resolution tool
-        #RichTools().ckResolution().HistoProduce = True
+        # Turn on/off histos in CK resolution tool
+        if "HistoProduce" in RichTools().ckResolution().properties() :
+            RichTools().ckResolution().HistoProduce = self.getProp("HistoProduce")
 
         check = "RichPixelPositions"
         if check in checks :
