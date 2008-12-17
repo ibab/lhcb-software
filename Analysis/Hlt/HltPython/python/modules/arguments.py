@@ -55,10 +55,11 @@ def argument_list(key, comment, default = []):
             word = args[i]
             if (word == "-"+key):
                 i0 = i+1
+                ie = i0+1
             for j in range(i+1,len(args)):
                 if (args[j].find("-")>=0): ie = j
-    if ((i0 != 0) and (ie >=i0)):
-        list = args[i0,ie]
+    if ((i0 != 0) and (ie >i0)):
+        list = args[i0:ie]
     print " argument list ",key," ", list
     if (len(list) == 0):
         print "   use: ",comment

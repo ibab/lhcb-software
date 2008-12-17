@@ -13,19 +13,22 @@ This example monitor for a given alley
 6) The Decision of the given alleys
 
 @author Jose A. Hernando hernando@cern.ch
-@date 2008-06-16
+@date 2008-06-1@date 2008-06-16
+@revision DaVinci v20r3
 """
 # =============================================================================
 
 import GaudiPython
+from Gaudi.Configuration import *
 from math import *
+from ROOT import *
+import arguments
 import desktop
 import histotools
 import PlotTools
 import hltconf
-import hltbchannels
-import arguments
-from ROOT import *
+import benchmarkchannels as bch
+
 
 # Configuration
 # Set the alleys to monitor, the entry po,
@@ -33,7 +36,7 @@ from ROOT import *
 
 NOEXIT = False
 DEBUG = arguments.argument("dbg"," debug ",False)
-NEVENTS = arguments.argument("n"," number of events ",10)
+NEVENTS = arguments.argument("n"," number of events ",1000)
 CHANNEL = arguments.argument("c"," channel name ","Bd2KPi")
 PROD = arguments.argument("prod"," production version ","")
 INTERNALMONITOR = arguments.argument("imon"," options for alley internal monitoring ",False)
@@ -48,36 +51,32 @@ MONITOR_DECISION = arguments.argument("mdecision"," monitor alleys decision ", T
 PLOT = arguments.argument("plot"," plot and save as ps histograms ", False)
 L0ENTRY = arguments.argument("l0"," l0 entry ", "L0HadronDecision")
 
-ALLEYS = arguments.argument_list("a"," alleys list to monitor ", ["HadronSingle","HadronDi"])
+ALLEYS = arguments.argument_list("a"," alleys list to monitor ", ["SingleHadron","DiHadron"])
 
-JOB = "$HLTSYSROOT/options/HltJob.opts"
-#DATACARD = "$HLTSYSROOT/options/dst06_bkpi_sel.opts"
-#DATACARD = "$HLTSYSROOT/options/dst06_bsmumu_sel.opts"
-FILES = [JOB,]
-if (INTERNALMONITOR):
-    map(lambda x: FILES.append("$HLTSYSROOT/options/Hlt1"+x+"InternalMonitor.opts"),ALLEYS)
-print " Files to RUN: ",FILES
+importOptions("$DAVINCIROOT/options/DaVinci.py")
+importOptions("$HLTPYTHONROOT/options/Hlt1.py")
 
-EFILES,EOPTS,EDATA = hltbchannels.configuration(CHANNEL);
-print " configuration files ",EFILES
-print " configuration options ",EOPTS
-print " configuration data ",EDATA
+EOPTS = []
 
-#FILES = FILES+EFILES
-
+datacards = bch.createOptLines(CHANNEL)   
+print datacards
+PATH = bch.TESPath[CHANNEL]
+print PATH
+EOPTS.append(datacards)
+    
 EOPTS.append("HltSummaryWriter.SaveAll = true")
 EOPTS.append("ApplicationMgr.StatusCodeCheck=false")
 XPROD = ""
 if (PROD): XPROD = PROD+"/"
-EOPTS.append('HistogramPersistencySvc.OutputFile = "'+XPROD+'hltalleymonitor_'+CHANNEL+'.root"')
+EOPTS.append('HistogramPersistencySvc.OutputFile = "hlt.root"')
 #EOPTS.append('HistogramPersistencySvc.OutputFile = "'+CHANNEL+'hltalleymonitor.root";')
 
 HIS = desktop.ROOTOBJECTS
-CHANNELPATH = hltbchannels.TESPath[CHANNEL]
+CHANNELPATH = bch.TESPath[CHANNEL]
 ALGOS = {}
 
 gaudi = GaudiPython.AppMgr(outputlevel=3)
-gaudi.config(files = FILES, options=EOPTS)
+gaudi.config(options=EOPTS)
 gaudi.initialize()
 
 TES = gaudi.evtsvc()
@@ -100,7 +99,8 @@ def iniAlley(alley):
     @ param alley is the name of the alley
     NOTE: it assumes that the sequencer name is 'Hlt1'+alley+'Sequence'
     """
-    ALGOS[alley] = hltconf.confAlley(gaudi,"Hlt1"+alley+"Sequence")
+    print alley
+    ALGOS[alley] = hltconf.confAlley(gaudi,alley)
     if (MONITOR_RATE): bookRate(alley)
     if (MONITOR_RATETOS): bookRateTOS(alley)
     if (MONITOR_TIME): bookTime(alley)
@@ -111,7 +111,7 @@ def iniAlley(alley):
 def writeOpts(alley):
     """ write an opts file to internally monitor the alley
     """
-    hltconf.writeOpts(alley,ALGOS[alley])
+    hltconf.writeInternalMonitorOpts(gaudi,alley)
 
 def bookRate(alley):
     """ book the time, profile and rate histograms of a sequence

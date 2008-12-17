@@ -30,6 +30,8 @@ ROOTOBJECTS = {}
 COUNTERS = {}
 TOOLS = {}
 
+ALGOS = []
+
 #---------------------------------------------------
 # Counters
 #---------------------------------------------------
@@ -164,7 +166,15 @@ def hfill(name,value,weight=1.,lock=True):
         h.Fill(value,weight)
         if (lock): h.lock = True
         
-    
+   
+def hisnorma(title,norma):
+    """ normalize a histogram to a value
+    @param title title of the histogram
+    @param norma value to normalize
+    @author jose.hernando@cern.ch
+    """
+    h = my(title)
+    h.Scale(norma) 
 
 
 #---------------------------------------------------
@@ -262,7 +272,20 @@ def pickleLoad(fileName):
     f = open(fileName, 'r')
     return cPickle.load(f)
 
-
+#---------------------------------------------------
+def addAlgorithm(gaudi,algotype,algoname):
+    """ Create an algorithm and add it to gaudi, keep the object in a list ALGOS
+    @param gaudi application
+    @param algotype the type of the algorithm
+    @param algoname the name of the algotithm
+    @returns the created algo
+    @author jose.hernando@cern.ch
+    """
+    alg = algotype(algoname)
+    gaudi.addAlgorithm(alg)
+    ALGOS.append(alg)
+    return alg
+    
 
 #---------------------------------------------------
 def desktopExample():

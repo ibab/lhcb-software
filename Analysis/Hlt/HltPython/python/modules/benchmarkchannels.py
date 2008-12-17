@@ -11,7 +11,8 @@
 """
 # =============================================================================
 
-import datacard_dst06L0_mblumi2_2 as mblumi2
+from datacard_dst06L0_mblumi2_2 import DATACARDS as mbL0lumi2
+from datacard_dst06_mblumi2_1 import DATACARDS as mblumi2
 
 def configuration(channel):
     """ for a given channel returns the list of files needs for the selection,
@@ -68,7 +69,9 @@ dstDataCards = {
     'Dstar2D2hhPi'     : ['/d/dijkstra/Selections-DC06/Dstar2D0Pi_D02HH-lum2.dst'],
     'Bu2eeK'           : ['/d/dijkstra/Selections-DC06/Bu2eeK-lum2.dst'],
     'Bu2JpsiK'         : ['/d/diegoms/buJPsiK.dst'],
-    'Bs2PhiGamma'      : ['/d/dijkstra/Selections-DC06/Bs2PhiGamma.dst']
+    'Bs2PhiGamma'      : ['/d/dijkstra/Selections-DC06/Bs2PhiGamma.dst'],
+    'mbL0lumi2'          : mbL0lumi2,
+    'mblumi2'          : mblumi2,
 ##     'Bs2PhiGamma'      : ['/l/lshchuts/phigamma1a.dst',
 ##                           '/l/lshchuts/phigamma1b.dst',
 ##                           '/l/lshchuts/phigamma1c.dst',
@@ -88,8 +91,10 @@ def createOptLines(sample):
     @autor Antonio Perez-Calero, aperez@ecm.ub.es
     """
     dataOptline='EventSelector.Input = {'
+    CASTOR = "PFN:castor:/castor/cern.ch/user"
+    if (sample.find("lumi2") >= 0) : CASTOR = "PFN:castor:/castor/cern.ch/grid"
     for ifile in dstDataCards[sample]:
-        line='"'+'DATAFILE='+"'"+"PFN:castor:/castor/cern.ch/user"+ifile+"'"+" TYP="+"'"+"POOL_ROOTTREE"+"'"+" OPT="+"'"+"READ"+"'"+'",'
+        line='"'+'DATAFILE='+"'"+CASTOR+ifile+"'"+" TYP="+"'"+"POOL_ROOTTREE"+"'"+" OPT="+"'"+"READ"+"'"+'",'
         dataOptline+=line
     return str(dataOptline[:-1]+'}')
         
@@ -144,6 +149,8 @@ selectionOptsFiles = {
                           StandardParticles, StandardJPsi],
     'Bu2JpsiK'         : [], #??
     'Bs2PhiGamma'      : [], #??
+    'mbL0lumi2'          : [],
+    'mblumi2'          : []
     }
 
 
@@ -166,15 +173,16 @@ TESPath = {
     'Bs2PiK'           : '/Event/Phys/SelB2HH/Particles',
     'Bs2KK'            : '/Event/Phys/SelB2HH/Particles',
     'Bu2KD2KSPiPi'     : '', #??
-    'Bs2PhiPhi'        : '', #??
+    'Bs2PhiPhi'        : '/Event/Phys/SelBs2PhiPhi/Particles', 
     'Bs2DsPi'          : '/Event/Phys/DC06SelBs2DsH/Particles',
     'Bs2DsK'           : '/Event/Phys/DC06SelBs2DsH/Particles',
     'Bs2DsDs'          : '', #??
     'Dstar2D2hhPi'     : '/Event/Phys/SelDstar2D0Pi_D02HH/Particles',
     'Bu2JpsiK'         : '', #??
     'Bu2eeK'           : '/Event/Phys/DC06SelBu2eeK/Particles',
-    'Bs2PhiGamma'      : ''  #??
-                         
+    'Bs2PhiGamma'      : '',  #??
+    'mbL0lumi2'        : '',
+    'mblumi2'          : ''
     }
 
 

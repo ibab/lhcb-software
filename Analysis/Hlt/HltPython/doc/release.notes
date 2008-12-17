@@ -4,8 +4,12 @@
 ! Purpose     : Exposing Hlt tools to Python, share common python tools
 !-----------------------------------------------------------------------------
 
+! 2008-12-17 - Jose A. Hernando
+   - modification of hltconf and adding datacard for lumi2 mb DC06
+
 !========================== HltPython v1r11 2008-11-24 ===================
 Loads of undocumented changes
+
 !========================== HltPython v1r10 2008-10-03 ===================
 ! 2008-10-20 - Xabier Cid Vidal
    - correction of bugs in ghostsClassifyTools

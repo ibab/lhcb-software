@@ -11,19 +11,40 @@ For an example see histotoolsExample() function
 from ROOT import *
 import easygraphs
 
+## #---------------------------------------------------
+## def integralHisto( h ):
+##    """ Produce a cummulative histogram
+##    @param h Input histogram
+##    @returns A integral in which each bin corresponds to the cummulative of the input histogram
+##    @author Hugo Ruiz, hugo.ruiz@cern.ch
+##    """
+##    h.ComputeIntegral()
+##    integral = h.GetIntegral()
+##    outHisto = h.Clone('Integral_'+h.GetName())
+##    outHisto.SetContent(integral)
+##    return outHisto
+
 #---------------------------------------------------
-def integralHisto( h ):
+def integralHisto( h, reverse = False ):
    """ Produce a cummulative histogram
    @param h Input histogram
    @returns A integral in which each bin corresponds to the cummulative of the input histogram
    @author Hugo Ruiz, hugo.ruiz@cern.ch
    """
-   h.ComputeIntegral()
-   integral = h.GetIntegral()
+   n = h.GetNbinsX()
+   cons = map(lambda i: h.GetBinContent(i),range(n+2))
+   under = cons[0]
+   over = cons[-1]
+   vals = [cons[0]]
+   for i in range(1,len(cons)):
+      vals.append( vals[i-1]+cons[i])
+   if (reverse):
+      valmax = vals[-1]
+      vals = map(lambda x: valmax-x,vals)
    outHisto = h.Clone('Integral_'+h.GetName())
-   outHisto.SetContent(integral)
+   for i in range(len(vals)):
+      outHisto.SetBinContent(i,vals[i])
    return outHisto
-
 
 #---------------------------------------------------
 def getContents ( h , overFlows = False ):
