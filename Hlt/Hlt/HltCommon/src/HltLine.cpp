@@ -1,4 +1,4 @@
-// $Id: HltLine.cpp,v 1.4 2008-10-07 11:35:38 graven Exp $
+// $Id: HltLine.cpp,v 1.5 2008-12-17 21:30:14 graven Exp $
 // Include files
 #include "HltLine.h"
 
@@ -136,7 +136,11 @@ StatusCode HltLine::initialize() {
   m_errorHisto = book1D(name()+" error",name()+" error",-0.5,7.5,8);
   m_stageHisto = book1D(m_decision,m_decision,-0.5,7.5,8);
 
+  //== and the counters
+  declareInfo("# Accept","",&counter("# Accept"),0,std::string("Events accepted by ") + m_decision);
+
   if ( m_measureTime ) m_timerTool->decreaseIndent();
+
   return StatusCode::SUCCESS;
 };
 
@@ -157,12 +161,12 @@ StatusCode HltLine::execute() {
   boost::optional<IANNSvc::minor_value_type> key = annSvc().value("Hlt1SelectionID",m_decision);
   //TODO: add c'tor with only selID
   LHCb::HltDecReport report( 0, 0, 0, key->second );
-  bool accept = true;
+  bool accept = true; // !m_stages.empty()??
   for (unsigned i=0;i<m_stages.size();++i) {
      result = m_stages[i]->execute();
      if (result.isFailure()) {
         report.setErrorBits(1); //TODO: different value depending on error type..
-        accept = m_acceptOnError;
+        accept = m_acceptOnError; //TODO: don't allow infinite # of accepts on error...
         break;
      }
      accept = m_stages[i]->passed();
@@ -172,13 +176,14 @@ StatusCode HltLine::execute() {
 
 
   if (accept) report.setDecision(accept ? 1u : 0u);
+  counter("# Accept") += accept;
   if ( !m_ignoreFilter ) setFilterPassed( accept );
   setExecuted( true );
 
   //TODO: allow insert at the beginning, and non-const access to update...
   reports->insert( key->first , report );
 
-  // publish monitoring
+  // update monitoring
   fill( m_stageHisto, report.executionStage(),1.0);
   fill( m_errorHisto, report.errorBits(),1.0);
 

@@ -4,16 +4,18 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2008-12-17 - Gerhard Raven
+ - allow seperate ODIN,L0DU and HLT filters as stages in HltLine
+
 ! 2008-12-17 - Jose A. Hernando
-- add HltTFunctionFactory declare a read-from-extrainfo as function
-- add HltFunctionFactories entry for variables using fit tracks
+ - add HltTFunctionFactory declare a read-from-extrainfo as function
+ - add HltFunctionFactories entry for variables using fit tracks
 
 ! 2008-12-13 - Mariusz Witek
-- add HltFunctionFactories entry for anti T confirmation of L0Electrons
+ - add HltFunctionFactories entry for anti T confirmation of L0Electrons
 
 ! 2008-12-11 - Vanya BELYAEV
  - HltDataSvc :  IAlgorithm*  -> const IAlgorithm* 
-
 
 ! 2008-12-09 - Gerhard Raven
  - add 'RoutingBits' major to HltANNSvc

@@ -1,4 +1,4 @@
-// $Id: HltLine.h,v 1.4 2008-10-07 11:35:38 graven Exp $
+// $Id: HltLine.h,v 1.5 2008-12-17 21:30:14 graven Exp $
 #ifndef HLTLINE_H
 #define HLTLINE_H 1
 
@@ -86,22 +86,22 @@ private:
   //TODO: move into DecReport...
   enum stage { initial=          0,  // i.e. did not pass 'prescale
                prescaled =       1,  // i.e. did not pass 'seed'
-               seeded =          2 , // i.e. did not pass 'filter0'
-               filter0ed =       3,  // i.e. did not pass 'filter1'
-               filter1ed =       4,  // i.e. did not pass 'filter2'
-               filter2ed =       5,  // i.e. did not pass 'filter3'
-               filter3ed =       6,  // i.e. did not pass 'postscale'
+               odin      =          2 , // i.e. did not pass 'filter0'
+               l0du      =       3,  // i.e. did not pass 'filter1'
+               hlt       =       4,  // i.e. did not pass 'filter2'
+               filter1ed =       5,  // i.e. did not pass 'filter3'
+               filter2ed =       6,  // i.e. did not pass 'postscale'
                postscaled =      7 ,
                nStages = postscaled };
   const std::string& transition( const stage &s) const {
         static std::vector<std::string> s_map;
         if (s_map.empty()) {
             s_map.push_back("Prescale");
-            s_map.push_back("Seed");
+            s_map.push_back("ODIN");
+            s_map.push_back("L0DU");
+            s_map.push_back("HLT");
             s_map.push_back("Filter0");
             s_map.push_back("Filter1");
-            s_map.push_back("Filter2");
-            s_map.push_back("Filter3");
             s_map.push_back("Postscale");
         }
         return s_map[s];
