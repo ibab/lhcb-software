@@ -30,10 +30,18 @@ namespace OTDAQ {
  *  @date   2008-05-22
  */
 
+namespace nTell1s {
+ enum nTell1s { v2008 = 48u };
+}
+
+namespace nGols {
+ enum nGols { v2008 = 9u };
+}
+
 class OTRawBankEncoder : public GaudiTool, 
                          virtual public IOTRawBankEncoder {
 
-public: 
+public:
   
   /// Standard constructor
   OTRawBankEncoder( const std::string& type,
@@ -54,8 +62,10 @@ public:
   
 private:
   /// Some handy typedefs
-  typedef std::vector< OTDAQ::OTBank >       OTBanks;
-  typedef std::vector< unsigned int > OTRawBank;
+  typedef std::vector< OTDAQ::OTBank > OTBanks;
+  typedef std::vector< unsigned int >  OTRawBank;
+  
+  void createBanks();
   
   /// Returns the bank == Tell1 number for a given channel
   size_t channelToBank( const LHCb::OTChannelID& channel ) const;
@@ -64,9 +74,8 @@ private:
   /// Clear OTBanks and OTRawbank after each event
   void clear() const;
       
-  IOTChannelMapTool* m_channelmaptool;     ///< Pointer to IOTChannelMapTool
-  size_t             m_numberOfBanks;    ///< Number of bakns corresponds to number of Tell1s
-  size_t             m_numberOfGols;     ///< Number of gols per bank
+  IOTChannelMapTool* m_channelmaptool;   ///< Pointer to IOTChannelMapTool
+  bool               m_addEmptyBanks;    ///< Falg to add empty banks 
   std::string        m_rawEventLocation; ///< Location of RawEvent
   mutable OTBanks    m_banks;            ///< Vector of banks
   mutable OTRawBank  m_rawBank;          ///< A raw bank. This goes into the raw buffer
