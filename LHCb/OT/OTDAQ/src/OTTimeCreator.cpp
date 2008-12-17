@@ -1,4 +1,4 @@
-// $Id: OTTimeCreator.cpp,v 1.22 2008-05-27 13:48:17 hterrier Exp $
+// $Id: OTTimeCreator.cpp,v 1.23 2008-12-17 08:35:18 cattanem Exp $
 // Include files
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -30,8 +30,7 @@ DECLARE_ALGORITHM_FACTORY( OTTimeCreator );
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-OTTimeCreator::OTTimeCreator( const std::string& name,
-				    ISvcLocator* pSvcLocator)
+OTTimeCreator::OTTimeCreator(const std::string& name, ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
     m_rawBankDecoder( (IOTRawBankDecoder*)0 )
 {

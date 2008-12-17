@@ -1,4 +1,4 @@
-// $Id: OTTimeCreator.h,v 1.12 2007-10-05 11:54:39 cattanem Exp $
+// $Id: OTTimeCreator.h,v 1.13 2008-12-17 08:35:18 cattanem Exp $
 #ifndef OTDAQ_OTTIMECREATOR_H 
 #define OTDAQ_OTTIMECREATOR_H 1
 
@@ -12,7 +12,7 @@
 class IOTRawBankDecoder;
 class DeOTDetector;
 
-/** @class OTTimeCreator OTTimeCreator.h OTDAQ/OTTimeCreator.h
+/** @class OTTimeCreator OTTimeCreator.h
  *  
  *
  *  @author Jacopo Nardulli

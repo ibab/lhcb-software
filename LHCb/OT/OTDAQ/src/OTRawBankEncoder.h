@@ -17,11 +17,11 @@
 // Channel map tool
 #include "OTDAQ/IOTChannelMapTool.h"
 
-namespace {
- class OTBank;
+namespace OTDAQ {
+  class OTBank;
 }
 
-/** @class IOTRawBankEncoder IOTRawBankEncoder.h
+/** @class OTRawBankEncoder OTRawBankEncoder.h
  *
  *  Encodes the channels and puts them in the raw bank. 
  *
@@ -31,7 +31,7 @@ namespace {
  */
 
 class OTRawBankEncoder : public GaudiTool, 
-                       virtual public IOTRawBankEncoder {
+                         virtual public IOTRawBankEncoder {
 
 public: 
   
@@ -54,13 +54,13 @@ public:
   
 private:
   /// Some handy typedefs
-  typedef std::vector< OTBank >       OTBanks;
+  typedef std::vector< OTDAQ::OTBank >       OTBanks;
   typedef std::vector< unsigned int > OTRawBank;
   
   /// Returns the bank == Tell1 number for a given channel
   size_t channelToBank( const LHCb::OTChannelID& channel ) const;
   /// Creates a RawBank for a given bank
-  const OTRawBank& createRawBank(const OTBank& bank) const;
+  const OTRawBank& createRawBank(const OTDAQ::OTBank& bank) const;
   /// Clear OTBanks and OTRawbank after each event
   void clear() const;
       

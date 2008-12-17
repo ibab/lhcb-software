@@ -1,4 +1,4 @@
-// $Id: OTChannelMapTool.cpp,v 1.7 2008-07-22 13:16:54 janos Exp $
+// $Id: OTChannelMapTool.cpp,v 1.8 2008-12-17 08:35:18 cattanem Exp $
 // Include files
 
 // Include files
@@ -10,7 +10,7 @@
 #include "OTDet/DeOTDetector.h"
 #include "Event/OTBankVersion.h"
 
-/** @class OTChannelMapTool OTChannelMapTool.h
+/** @class OTChannelMapTool OTChannelMapTool.cpp
  *
  *
  *  @author Wouter Hulsbergen

@@ -23,14 +23,15 @@
 // local
 #include "OTRawBankEncoder.h"
 
-
 //-----------------------------------------------------------------------------
 // Implementation file for class : OTRawBankEncoder
 //
 // 2008-05-22 : Jan Amoraal
 //-----------------------------------------------------------------------------
 
-namespace {
+namespace OTDAQ {
+  /// These simple classes are needed for sorting
+  /// the channel ids according to Bank and Gol
 
  template<class T> 
  void pipeToBuffer( const T& t, std::vector<unsigned char>& buffer ) {
@@ -45,9 +46,6 @@ namespace {
      return lhs.channel() < rhs.channel() ;
    }
  };
-
- /// These simple classes are needed for sorting
- /// the channel ids according to Bank and Gol
 
  /// Simple Gol class
  /// One gol per X modules
@@ -183,12 +181,12 @@ StatusCode OTRawBankEncoder::initialize() {
   m_banks.reserve( m_numberOfBanks );
   /// Note Tell1s start from 1
   for ( size_t bank = 1u, bankEnd = m_numberOfBanks+1u; bank != bankEnd ; ++bank )  
-    m_banks.push_back( OTBank( bank , m_numberOfGols ) );
+    m_banks.push_back( OTDAQ::OTBank( bank , m_numberOfGols ) );
   
   return sc;
 }
 
-const OTRawBankEncoder::OTRawBank& OTRawBankEncoder::createRawBank(const OTBank& bank) const {
+const OTRawBankEncoder::OTRawBank& OTRawBankEncoder::createRawBank(const OTDAQ::OTBank& bank) const {
   
   const bool isDebug = msgLevel( MSG::DEBUG );
   
@@ -205,7 +203,7 @@ const OTRawBankEncoder::OTRawBank& OTRawBankEncoder::createRawBank(const OTBank&
   
   /// Loop over ot gols and encode them
   /// Do this only for non-empty gols
-  for ( std::vector<OTGol>::const_iterator gol = bank.firstGol(), golEnd = bank.lastGol(); 
+  for ( std::vector<OTDAQ::OTGol>::const_iterator gol = bank.firstGol(), golEnd = bank.lastGol(); 
         gol != golEnd ; ++gol ) {
     
     if ( gol->encode() ) {
@@ -237,7 +235,7 @@ const OTRawBankEncoder::OTRawBank& OTRawBankEncoder::createRawBank(const OTBank&
       }
       
       /// Sort according to channel in Tell1
-      std::sort( rawHits.begin(), rawHits.end(), CompareChannel() );
+      std::sort( rawHits.begin(), rawHits.end(), OTDAQ::CompareChannel() );
       
       // add padding i.e. empty hit
       if ( rawHits.size()%2 ) rawHits.push_back( OTDAQ::RawHit() );
@@ -290,7 +288,7 @@ StatusCode OTRawBankEncoder::encodeChannels( const std::vector<LHCb::OTChannelID
   if ( isDebug ) {
     for ( OTBanks::const_iterator bank = m_banks.begin(), bankEnd = m_banks.end(); bank != bankEnd; ++bank ) {
       debug() << "Bank id = " << bank->id() << " number of channels = " << bank->nChannels() << endmsg;
-      for ( std::vector<OTGol>::const_iterator gol = bank->firstGol(), golEnd = bank->lastGol(); gol != golEnd; ++gol ) {
+      for ( std::vector<OTDAQ::OTGol>::const_iterator gol = bank->firstGol(), golEnd = bank->lastGol(); gol != golEnd; ++gol ) {
         debug() << "  ===> Gol id = " << gol->id() << endmsg;
         for ( std::vector<LHCb::OTChannelID>::const_iterator chan = gol->firstChannel(), chanEnd = gol->lastChannel(); chan != chanEnd; ++chan ) {
           debug() << "   ++> Channel id = " << (*chan) << endmsg;
@@ -313,7 +311,7 @@ StatusCode OTRawBankEncoder::encodeChannels( const std::vector<LHCb::OTChannelID
   }
   
   /// clear OTBanks
-  std::for_each( m_banks.begin(), m_banks.end(), boost::lambda::bind( &OTBank::clear, boost::lambda::_1 ) );
+  std::for_each( m_banks.begin(), m_banks.end(), boost::lambda::bind( &OTDAQ::OTBank::clear, boost::lambda::_1 ) );
 
   return StatusCode::SUCCESS;
 }

@@ -2,6 +2,10 @@ Package         : OTDAQ
 Package manager : J.Amoraal
 !---------------------------------------------------------------------
 
+! 2008-12-17 - Marco Cattaneo
+ - Put OTBank and OTGol in OTDAQ namespace, to avoid gcc 4.3 warning
+ - Fix doxygen warnings
+
 ! 2008-12-01 - Wouter Hulsbergen
  - added OTMultiBXRawBankDecoder, for 'merging' data from different BX
 
