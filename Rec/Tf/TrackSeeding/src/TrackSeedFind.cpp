@@ -589,7 +589,7 @@ StatusCode TrackSeedFind::findSeeds() {
                       It up=p.second;
                       bool skipthishit=false;
                       for (It it=low; (it != up) ; ++it)
-                         if (skipthishit = (it->second == hitX3.getItRef()->channelID()) ) break; // if this statement is true, the hit is in the mask
+                         if ((skipthishit = (it->second == hitX3.getItRef()->channelID())) ) break; // if this statement is true, the hit is in the mask
                       if (skipthishit) continue; // check next X3 ambiguity
                   } else {
                      typedef std::multimap<LHCb::STChannelID,LHCb::OTChannelID>::iterator It;
@@ -600,7 +600,7 @@ StatusCode TrackSeedFind::findSeeds() {
                      It up=p.second;
                      bool skipthishit=false;
                      for (It it=low; (it != up) ; ++it)
-                        if (skipthishit = (it->second == hitX3.getOtRef()->channel())) break; // if this statement is true, the hit is in the mask
+                        if ((skipthishit = (it->second == hitX3.getOtRef()->channel()))) break; // if this statement is true, the hit is in the mask
                      if (skipthishit) continue; // check next X3 ambiguity
                   }  // endif of X3 is IT or OT
                } else { // X1 is an OT hit  
@@ -613,7 +613,7 @@ StatusCode TrackSeedFind::findSeeds() {
                       It up=p.second;
                       bool skipthishit=false;
                       for (It it=low; it!=up ; ++it)
-                         if (skipthishit = (it->second == hitX3.getItRef()->channelID())) break; // if this statement is true, the hit is in the mask
+                         if ((skipthishit = (it->second == hitX3.getItRef()->channelID()))) break; // if this statement is true, the hit is in the mask
                       if (skipthishit) continue; // check next X3 ambiguity
                   } else { // X3 is is OT
                       typedef std::multimap<LHCb::OTChannelID,LHCb::OTChannelID>::iterator It;
@@ -629,7 +629,7 @@ StatusCode TrackSeedFind::findSeeds() {
                       It up=p.second;
                       bool skipthishit=false;
                       for (It it=low; (it != up) ; ++it)
-                         if (skipthishit = (it->second == hitX3.getOtRef()->channel())) break; // if this statement is true, the hit is in the mask
+                         if ((skipthishit = (it->second == hitX3.getOtRef()->channel()))) break; // if this statement is true, the hit is in the mask
                       if (skipthishit) continue;
                   } // if X3 is IT or OT
                } // if X1 is IT or OT
