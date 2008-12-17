@@ -5,6 +5,9 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+! 2008-12-17 - Chris Jones
+ - Update ProtoParticle reconstruction to use python options
+
 ! 2008-11-24 - Marco Cattaneo
  -  Fix DoxyFile.cfg for use directly with CMT (without makedoc.py).
     N.B. Undo this change if makedoc not updated to use CMT. makedoc.py still

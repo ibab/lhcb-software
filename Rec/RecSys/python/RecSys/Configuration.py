@@ -4,12 +4,13 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.4 2008-11-14 17:11:19 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.5 2008-12-17 17:59:51 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
 from TrackSys.Configuration   import *
 from RichRecSys.Configuration import *
+from GlobalReco.Configuration import *
 from Configurables import ProcessPhase
 
 ## @class RecSysConf
@@ -19,7 +20,7 @@ from Configurables import ProcessPhase
 class RecSysConf(LHCbConfigurableUser):
 
     ## Possible used Configurables
-    __used_configurables__ = [ TrackSys, RichRecSysConf ]
+    __used_configurables__ = [ GlobalRecoConf, TrackSys, RichRecSysConf ]
 
     ## Default tracking Sub-detector processing sequence
     DefaultTrackingSubdets = ["VELO","TT","IT","OT","Tr","Vertex"]
@@ -85,5 +86,6 @@ class RecSysConf(LHCbConfigurableUser):
             importOptions("$MUONIDROOT/options/MuonID.opts")
 
         # PROTO
-        if "PROTO" in recoSeq: 
-            importOptions("$GLOBALRECOOPTS/Reco.opts")
+        if "PROTO" in recoSeq:
+            self.setOtherProps(GlobalRecoConf(),["SpecialData","Context"])
+            GlobalRecoConf().RecoSequencer = GaudiSequencer("RecoPROTOSeq")

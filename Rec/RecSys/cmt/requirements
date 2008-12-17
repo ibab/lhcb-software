@@ -1,5 +1,5 @@
 package RecSys
-version v6r0
+version v6r1
 
 branches cmt doc python
  
@@ -71,7 +71,7 @@ use RichRecTools         v4r6    Rich # Chris Jones
 use RichRecTrackTools    v1r7    Rich # Chris Jones
 
 # Global reco
-use GlobalReco          v6r17   Rec   # Chris Jones
+use GlobalReco          v6r18   Rec   # Chris Jones
 
 # Velo
 use VeloRecMonitors      v1r2    Velo # Malcom John, Eduardo Rodrigues
