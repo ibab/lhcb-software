@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichStereoFitter
  *
  *  CVS Log :-
- *  $Id: RichStereoFitter.cpp,v 1.15 2008-12-15 12:53:04 jonrob Exp $
+ *  $Id: RichStereoFitter.cpp,v 1.16 2008-12-17 13:56:44 jonrob Exp $
  *
  *  @author Luigi Delbuono   delbuono@in2p3.fr
  *  @date   27/06/2007
@@ -317,13 +317,12 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
 
         //------------- begin fit steps
         //compute covariance matrix, solve chi2 equations, get the fitted solution
-        bool statusCovarianceMatrix, statusSolveChi2Eq, statusTransferFit;
-        if(statusCovarianceMatrix = newCovarianceMatrix(recRing))
+        //bool statusCovarianceMatrix, statusSolveChi2Eq, statusTransferFit;
+        if ( newCovarianceMatrix(recRing) )
         {
-          if(statusSolveChi2Eq = solveChi2Equations(recRing))
+          if ( solveChi2Equations(recRing) )
           {
-            statusTransferFit=transferFitSolution(recRing);
-            if(statusTransferFit)
+            if( transferFitSolution(recRing) )
             {
               diffChi2=m_chi2Prev-m_chi2;
               //--keep 'old solution' if necessary

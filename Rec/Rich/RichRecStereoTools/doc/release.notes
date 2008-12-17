@@ -4,6 +4,9 @@
 ! Purpose     : Stereographic tools
 !-----------------------------------------------------------------------------
 
+! 2008-12-17 - Chris Jones
+ - Avoid warnings with gcc 4.3
+
 ! 2008-12-15 - Chris Jones
  - Fix indices in Track State matrix accessors to number from 0.
 
