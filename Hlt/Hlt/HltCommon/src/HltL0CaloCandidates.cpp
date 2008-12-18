@@ -1,4 +1,4 @@
-// $Id: HltL0CaloCandidates.cpp,v 1.3 2008-12-10 07:36:04 graven Exp $
+// $Id: HltL0CaloCandidates.cpp,v 1.4 2008-12-18 12:37:07 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -68,9 +68,9 @@ StatusCode HltL0CaloCandidates::initialize() {
   saveConfiguration();  
 
   // force creation of counters...
-  counter("# Input");
-  counter("# NonEmpty");
-  counter("# Output");
+  counter("#input");
+  counter("#accept");
+  counter("#passed");
   
   return StatusCode::SUCCESS;
 }
@@ -143,9 +143,9 @@ StatusCode HltL0CaloCandidates::execute() {
   }
   
 
-  counter("# Input")    +=  m_selection.input<1>()->size();
-  counter("# NonEmpty") += !m_selection.output()->empty();
-  counter("# Output")   +=  m_selection.output()->size();
+  counter("#input")  +=  m_selection.input<1>()->size();
+  counter("#accept") += !m_selection.output()->empty();
+  counter("#passed") +=  m_selection.output()->size();
   // TODO: plot max et
   // TODO: plot  all accepted et
 
