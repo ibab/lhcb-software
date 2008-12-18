@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactories.cpp,v 1.19 2008-12-17 15:53:23 hernando Exp $
+// $Id: HltFunctionFactories.cpp,v 1.20 2008-12-18 12:40:51 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -115,6 +115,7 @@ StatusCode HltVertexFunctionFactory::initialize() {
   declare<Hlt::VertexMaxPT>("VertexMaxPT");
   declare<Hlt::VertexMinPT>("FitVertexMinPT");
   declare<Hlt::VertexMaxPT>("FitVertexMaxPT");
+  declare<Hlt::VertexMaxChi2OverNdf>("FitVertexMaxChi2OverNdf");
 
   declare<Hlt::VertexNumberOfASideTracks>("VertexNumberOfASideTracks");
   declare<Hlt::VertexNumberOfCSideTracks>("VertexNumberOfCSideTracks");
