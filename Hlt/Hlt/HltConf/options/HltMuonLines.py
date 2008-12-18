@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonLines.py,v 1.14 2008-12-18 12:26:34 graven Exp $
+# $Id: HltMuonLines.py,v 1.15 2008-12-18 14:04:58 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.14 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.15 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -44,7 +44,6 @@ RecoMuonSeg = HltMuonRec('HltRecoMuonSeg'
 
 TConfMatchVelo = [ Member ('TU', 'TConf' , RecoName = 'TConf' )
                  , Member ('TF', 'TConf' , FilterDescriptor = ['DeltaP,>,0.','IsMuon,>,0.'] )
-                 #, Member ('TF', 'TConf' , FilterDescriptor = ['IsMuon,>,0.'] )
                  , RZVelo
                  , Member ('TF', 'RZVelo'
                           , InputSelection = 'RZVelo'
@@ -65,9 +64,7 @@ singleMuonPrep = bindMembers( 'SingleMuonPrep',
                             , InputSelection = HltL0MuonPrepare().getDefaultProperties()['InputSelection']
                             , MinPt = 1300.0  
                             )
-                   , Member ( 'TF', 'L0'
-                            # , InputSelection = 'L0AllMuons' # did we really mean L0AllMuons and not the above???
-                            , FilterDescriptor = [ 'PT0,||>,1300' ] )
+                   , Member ( 'TF', 'L0' , FilterDescriptor = [ 'PT0,||>,1300' ] )
                    ] + TConfMatchVelo )
 
 muonSegPrep = bindMembers ('MuonSegPrepare' ,
@@ -85,8 +82,7 @@ singleMuonPrepNoPV = bindMembers( 'SingleMuonPrepNoPV',
                             , InputSelection = HltL0MuonPrepare().getDefaultProperties()['InputSelection']
                             , MinPt = 200.0  
                             )
-                     , Member ( 'TF', 'L0'
-                            , FilterDescriptor = [ 'PT0,||>,400' ] )
+                     , Member ( 'TF', 'L0' , FilterDescriptor = [ 'PT0,||>,400' ] )
                      ] + TConfMatchVelo )
 
 muonSegPrepNoPV = bindMembers ('MuonSegPrepareNoPV' ,
@@ -107,7 +103,6 @@ DiMuonFromL0DiMuonPrepare = bindMembers( 'DiMuonFromL0DiMuonPrepare',
                    , Member( 'VT', 'L0' )
                    , Member( 'TU', 'TConf' , RecoName = 'TConf')
                    , Member( 'TF', 'TConf' , FilterDescriptor = ['DeltaP,>,0.','IsMuon,>,0.'])
-                   #, Member( 'TF', 'TConf' , FilterDescriptor = ['IsMuon,>,0.'])
                    , RZVelo
                    , Member( 'TF', 'RZVelo'
                            , InputSelection = 'RZVelo'
@@ -133,7 +128,6 @@ DiMuonFromL0DiMuonPrepareHighIP = bindMembers( 'DiMuonFromL0DiMuonPrepareHighIP'
                    , Member( 'VT', 'L0' )
                    , Member( 'TU', 'TConf' , RecoName = 'TConf')
                    , Member( 'TF', 'TConf' , FilterDescriptor = ['DeltaP,>,0.','IsMuon,>,0.'])
-                   #, Member( 'TF', 'TConf' , FilterDescriptor = ['IsMuon,>,0.'])
                    , RZVelo
                    , Member( 'TF', 'RZVelo'
                            , InputSelection = 'RZVelo'
@@ -159,7 +153,6 @@ DiMuonFromL0DiMuonPrepareNoPV = bindMembers( 'DiMuonFromL0DiMuonPrepareNoPV',
                    , Member( 'VT', 'L0' )
                    , Member( 'TU', 'TConf' , RecoName = 'TConf')
                    , Member( 'TF', 'TConf' , FilterDescriptor = ['DeltaP,>,0','IsMuon,>,0.'])
-                   #, Member( 'TF', 'TConf' , FilterDescriptor = ['IsMuon,>,0.'])
                    , RZVelo
                    , Member( 'TF', 'RZVelo'
                            , InputSelection = 'RZVelo'
