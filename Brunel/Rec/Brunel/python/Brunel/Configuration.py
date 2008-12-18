@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.43 2008-12-15 07:22:39 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.44 2008-12-18 13:58:59 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -365,6 +365,7 @@ class Brunel(LHCbConfigurableUser):
             importOptions("$MUONPIDCHECKERROOT/options/MuonPIDChecker.opts")
 
         if "RICH" in checkSeq :
+            self.setOtherProps(RichRecQCConf(),["Context","DataType"])
             RichRecQCConf().MoniSequencer = GaudiSequencer("CheckRICHSeq")
 
         if expert:
@@ -409,7 +410,6 @@ class Brunel(LHCbConfigurableUser):
                 importOptions( "$CALOMONIDSTOPTS/CaloChecker.opts" )
 
             if "RICH" in checkSeq :
-                self.setOtherProps(RichRecQCConf(),["Context","DataType"])
                 RichRecQCConf().setProp( "ExpertHistos", True )
 
             if "PROTO" in checkSeq :
