@@ -2,7 +2,7 @@ package LbScriptsPolicy
 version v1r4
 
 
-macro install_excludes = " -xCVS"
+macro install_excludes " -xCVS"
 macro install_command 'python $(LbScriptsPolicy_root)/cmt/fragments/install.py $(install_excludes) --log=./install.history '
 macro uninstall_command 'python $(LbScriptsPolicy_root)/cmt/fragments/install.py -u --log=./install.history '
 
@@ -202,7 +202,7 @@ setup_script ../scripts/NoCMTPATH
 apply_pattern python_alias script=PathStripper
 apply_pattern source_shell_alias script=StripPath
 
-macro strip_script "$(LBSCRIPTSPOLICYROOT)/scripts/StripPath" WIN32 "$(LBSCRIPTSPOLICYROOT)\scripts\StripPath" 
+macro strip_script "$(LBSCRIPTSPOLICYROOT)/scripts/StripPath" 
 
 cmtpath_pattern \
     setup_script $(strip_script) ;

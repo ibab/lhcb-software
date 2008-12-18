@@ -1,6 +1,5 @@
+@echo off
 
-
-set SOURCESHELLALIASLIST
 
 set SOURCESHELLALIASLIST=
 

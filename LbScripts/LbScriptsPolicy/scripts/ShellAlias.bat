@@ -1,5 +1,4 @@
+@echo off
 
-
-set SHELLALIASLIST
 
 set SHELLALIASLIST=

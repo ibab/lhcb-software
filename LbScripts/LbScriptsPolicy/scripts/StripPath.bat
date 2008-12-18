@@ -1,12 +1,12 @@
 @echo off
 
-set tmpfile="%TEMP%\StripPath_tmpsetup.bat"
+set StripPath_tmpfile="%TEMP%\StripPath_tmpsetup.bat"
 
-python %LBSCRIPTSPOLICYROOT%\scripts\PathStripper.py --shell=bat --output=%tmpfile% -e PATH -e PYTHONPATH -e JOBOPTSEARCHPATH -e HPATH
+python %LBSCRIPTSPOLICYROOT%\scripts\PathStripper.py --shell=bat --output=%StripPath_tmpfile% -e PATH -e PYTHONPATH -e JOBOPTSEARCHPATH -e HPATH
 
-call %tmpfile%
+call %StripPath_tmpfile%
 
 
-if exist %tmpfile% del %tmpfile%
-set tmpfile=
+if exist %StripPath_tmpfile% del %StripPath_tmpfile%
+set StripPath_tmpfile=
 
