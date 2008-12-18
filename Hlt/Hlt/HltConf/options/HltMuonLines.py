@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonLines.py,v 1.13 2008-12-18 11:57:03 depaula Exp $
+# $Id: HltMuonLines.py,v 1.14 2008-12-18 12:26:34 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.13 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.14 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -29,7 +29,6 @@ from HltConf.HltLine import Hlt1Line   as Line
 from HltConf.HltLine import Hlt1Member as Member
 from HltConf.HltLine import bindMembers
 from HltConf.HltLine import Hlt1Tool   as Tool
-from HltConf.HltLine import hlt1Lines, addHlt1Prop, rmHlt1Prop 
 
 
 importOptions('$HLTCONFROOT/options/TsaTool.opts')
