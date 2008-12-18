@@ -10,6 +10,9 @@ import sys
 try:
     from functions import *
 except ImportError:
+    # This is needed to be able to launch the submodule with "python -m",
+    # because it seems the sys.path is not the same than what we get when
+    # simply importing it. 
     from LbRelease.Nightlies.functions import *
 
 def printUsage():
