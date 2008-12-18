@@ -1,3 +1,12 @@
+2008-12-18  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+
+	* python/LbRelease/Nightlies/setup.py: Gaudi added to listOfProjectNames.
+	* python/LbRelease/Nightlies/functions.py: containerPackage function added to find
+	a one and to not assume that it is ProjectSys; new getpack script (cvs/svn) in use
+	and Python 2.5 to be able to use it, recursive getpack flag in use, instead of
+	calling getpack for each package; use statements for LbScriptsSys and Python added
+	to the "builders" - no need to use full path for calling python in the "builders".
+
 2008-12-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v1r5

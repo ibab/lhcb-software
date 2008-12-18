@@ -74,6 +74,14 @@ def run(slotName, minusj=None, platforms=None):
     os.environ['LCG_NIGHTLIES_XMLCONFIGCOPIES'] = configurationHistoryPath
     slot = configuration.findSlot(slotName)
     if slot != None:
+        for p in slot.getProjects():
+            c = p.getDependences()
+            cu = {}
+            for x in c.keys():
+                cu[x.upper()] = c[x]
+            if cu.has_key('LCGCMT'):
+                os.environ['LCGCMT_VERSION'] = cu['LCGCMT']
+                break
         generateBuilders(slot.buildersDir(), listOfProjectNames, minusj)
         os.system('python ' + os.path.join(os.environ['LCG_NIGHTLIES_SCRIPTDIR'], 'doBuild.py') + ' --slots ' + slotName + platformsparam)
         cleanPycPyoFiles(slot)
@@ -101,7 +109,6 @@ def runparallel(slotName, minusj=None):
 def cleanAFSSpace(slotName):
     """ removes everything from today from AFS for the <slotName> """
     slot = configuration.findSlot(slotName)
-    #pathToRemoveFiles = nightliesAFSPath + '/' + slotName + '/' + configuration.TODAY
     if slot is not None:
         pathToRemoveFiles = os.path.join(slot.releaseDir())
         if os.path.exists(pathToRemoveFiles):
@@ -163,6 +170,23 @@ def setCmtProjectPath(slot):
     os.environ['CMTPROJECTPATH'] = cmtProjectPathNew
     if os.environ.has_key('CMTPATH'): del os.environ['CMTPATH']
 
+def containerPackage(projectRoot):
+    projectName = None
+    containerPkg = None #projectName + 'Sys'
+    for l in open(os.path.join(projectRoot,"cmt","project.cmt")):
+        l = l.strip().split()
+        #print l
+        if len(l) == 2:
+            if l[0] == "container":
+                containerPkg = l[1]
+                break
+            elif l[0] == "project":
+                projectName = l[1]
+    if containerPkg is None and projectName:
+        projectName = projectNamesDict.get(projectName.upper(), projectName)
+        containerPkg = projectName + 'Sys'
+    return containerPkg
+
 def generatePath(slot, project, type, projectRealName=None):
     """ generatePath(slotObject, projectObject, type[, projectRealName]) -> string
 
@@ -171,10 +195,11 @@ def generatePath(slot, project, type, projectRealName=None):
         - TAG:           /build/nightlies/..slot../..day../LHCB/LHCB_v23r4
         - SYSPACKAGECMT: /build/nightlies/..slot../..day../LHCB/LHCB_v23r4/LHCbSys/cmt
     """
+    projectRoot = os.path.join(slot.buildDir(), project.getName().upper(), project.getTag())
     if type == 'TAG':
-        return os.path.join(slot.buildDir(), project.getName().upper(), project.getTag())
+        return projectRoot
     elif type == 'SYSPACKAGECMT':
-        return os.path.join(slot.buildDir(), project.getName().upper(), project.getTag(), projectRealName + 'Sys', 'cmt')
+        return os.path.join(projectRoot, containerPackage(projectRoot), 'cmt')
     else:
         raise Exception, 'type parameter: ' + type + ' not implemented.'
 
@@ -268,25 +293,18 @@ def generateBuilders(destPath, projectNames, minusj):
     """
     actionsFileAbsPath = os.path.dirname(os.path.abspath(__file__))
     actionsFileAbsPath = os.path.join(actionsFileAbsPath, 'actionLauncher.py')
-    settingEnv = 'export CMTCONFIGcopy=$CMTCONFIG ; export LD_LIBRARY_PATHcopy=$LD_LIBRARY_PATH ; '
-    settingEnv+= 'source ' + pathLbLogin + ' -q'
-    if cmtVersion != None: settingEnv += ' -cmtvers=' + cmtVersion
-    #settingEnv += ' --cmtsite=$CMTSITE' #+os.environ.get('CMTSITE','""')
-    #settingEnv += ' --cmtconfig=$CMTCONFIG' #+os.environ.get('CMTCONFIG','""')
-    #settingEnv += ' --userarea=$User_release_area' #+os.environ.get('User_release_area','""')
-    settingEnv += ' > /dev/null'
-    if pathCmtSetup is not None: settingEnv += ' ; source ' + pathCmtSetup
-    settingEnv += ' ; export CMTCONFIG=$CMTCONFIGcopy ; export LD_LIBRARY_PATH=$LD_LIBRARY_PATHcopy'
+
     lines = """
-action pkg_get "mkdir -p logs ; """ + settingEnv + """ ; python """ + actionsFileAbsPath + """ get $(packageName) 2>&1 | tee -a logs/$(package)_$(CMTCONFIG)_get.log"
-action pkg_config " """ + settingEnv + """ ; python """ + actionsFileAbsPath + """ config $(packageName) 2>&1"
-action pkg_make " """ + settingEnv + """ ; python """ + actionsFileAbsPath + """ make $(packageName) """
+action pkg_get "mkdir -p logs ; """ + python + """ """ + actionsFileAbsPath + """ get $(packageName) 2>&1 | tee -a logs/$(package)_$(CMTCONFIG)_get.log"
+action pkg_config " """ + python + """ """ + actionsFileAbsPath + """ config $(packageName) 2>&1"
+action pkg_make " """ + python + """ """ + actionsFileAbsPath + """ make $(packageName) """
     if minusj > 0: lines += str(minusj)
     else: lines += "0"
     lines += """ 2>&1 ; exit 0"
-action pkg_install " """ + settingEnv + """ ; python """ + actionsFileAbsPath + """ install $(packageName) 2>&1"
-action pkg_test " """ + settingEnv + """ ; python """ + actionsFileAbsPath + """ test $(packageName) 2>&1"
+action pkg_install " """ + python + """ """ + actionsFileAbsPath + """ install $(packageName) 2>&1"
+action pkg_test " """ + python + """ """ + actionsFileAbsPath + """ test $(packageName) 2>&1"
     """
+
     destPath = os.path.abspath(destPath)
     for p in projectNames:
         shutil.rmtree(os.path.join(destPath, p.lower()), ignore_errors=True)
@@ -294,6 +312,8 @@ action pkg_test " """ + settingEnv + """ ; python """ + actionsFileAbsPath + """
         f = file(os.path.join(destPath, p.lower(), 'cmt', 'requirements'), 'w')
         f.write('package ' + p.lower() + os.linesep)
         f.write('macro packageName "' + p + '"' + os.linesep)
+        f.write('use LbScriptsSys' + os.linesep)
+        f.write('use Python v* LCG_Interfaces' + os.linesep)
         f.write(lines)
         f.close()
     for p in projectNames:
@@ -302,20 +322,30 @@ action pkg_test " """ + settingEnv + """ ; python """ + actionsFileAbsPath + """
         f = file(os.path.join(destPath, p.upper(), 'cmt', 'requirements'), 'w')
         f.write('package ' + p.upper() + os.linesep)
         f.write('macro packageName "' + p + '"' + os.linesep)
+        f.write('use LbScriptsSys' + os.linesep)
+        f.write('use Python v* LCG_Interfaces' + os.linesep)
         f.write(lines)
         f.close()
+    shutil.rmtree(os.path.join(destPath, 'cmt'), ignore_errors=True)
+    os.makedirs(os.path.join(destPath, 'cmt'))
+    f = file(os.path.join(destPath, 'cmt', 'project.cmt'), 'w')
+    f.write("project builders\nuse LCGCMT LCGCMT*\nuse LBSCRIPTS LBSCRIPTS_*\n")
+    f.close()
 
-def getpackget(package, version, withVersionDir=False):
+def getpackget(package, version, withVersionDir=False, recursive=False, project=False):
     """ getpack(packageName, packageVersion[, withVersionDirectory])
 
         Function launches "getpack" with parameters.
     """
-    if withVersionDir: wVD = '-v '
-    else: wVD = '-u '
-    if version == 'HEAD': version = 'head'
-    os.system('echo "--> python /afs/cern.ch/lhcb/scripts/python/getpack.py ' + wVD + package + ' ' + version +'"')
-    os.system(getpackCommand + ' ' + wVD + package + ' ' + version)
-    time.sleep(0.5)
+    cmd = getpackCommand
+    if withVersionDir: cmd += ' -v'
+    if recursive: cmd += ' -r'
+    if project: cmd += ' -P'
+    cmd += ' %s %s' % (package, version)
+    print "*"*80
+    print cmd
+    print "*"*80
+    os.system(cmd)
 
 def disableLCG_NIGHTLIES_BUILD():
     """ Removes "LCG_NIGHTLIES_BUILD" from CMTEXTRATAGS variable. """
@@ -345,8 +375,9 @@ def clean(slotName):
         - remove logs from web directory,
         for given slot.
     """
-    disableLCG_NIGHTLIES_BUILD()
     slot = configuration.findSlot(slotName)
+    if slot is not None: setCmtProjectPath(slot)
+    disableLCG_NIGHTLIES_BUILD()
     #remove contents of build directory:
     shutil.rmtree(slot.buildDir(), ignore_errors=True)
     os.makedirs(slot.buildDir())
@@ -493,27 +524,19 @@ def get(slotName, projectName):
     # create symbolic link: LHCB --> lhcb, LBCOM --> lbcom, ... [ only on Linux ? ]
     if not os.path.exists(project.getName().upper()): os.symlink(project.getName().lower(), project.getName().upper())
 
-    if project.getVersion() == 'HEAD':
-        os.chdir(os.path.join(slot.buildDir(), project.getName().upper()))
-        os.symlink(project.getTag(), 'HEAD')
-        os.chdir(slot.buildDir())
-        getpackget(project.getName().upper(), 'HEAD', withVersionDir = True)
-        os.chdir(generatePath(slot, project, 'TAG', projectName))
-        getpackget(projectName + 'Sys', 'HEAD')
-    else:
-        os.chdir(slot.buildDir())
-        getpackget(project.getName().upper(), project.getTag(), withVersionDir = True)
-        os.chdir(generatePath(slot, project, 'TAG', projectName))
-        getpackget(projectName + 'Sys', project.getVersion())
+    os.chdir(slot.buildDir())
+    getpackget(project.getName().upper(), project.getVersion(), project=True)
+    os.chdir(generatePath(slot, project, 'TAG', projectName))
+    containerPackageName = containerPackage('.')
+    getpackget(containerPackageName, project.getVersion())
 
     # copy the 'requirements' file
     shutil.copy2(os.path.join(generatePath(slot, project, 'SYSPACKAGECMT', projectName), 'requirements'), os.path.join(generatePath(slot, project, 'SYSPACKAGECMT', projectName), 'requirements_copy'))
 
     changesMade = {}
     #change also ProjectSys package in all requirements files later (next projects in the slot) !!!
-    changesMade[projectName + 'Sys'] = project.getVersion()
+    changesMade[containerPackageName] = project.getVersion()
     sysPackageRF = readRequirementsFile(os.path.join(generatePath(slot, project, 'SYSPACKAGECMT', projectName), 'requirements'), withHat=True)
-
 
 ####################################################################
 ####################################################################
@@ -540,8 +563,7 @@ def get(slotName, projectName):
 
     os.chdir(generatePath(slot, project, 'TAG', projectName))
 
-    for x in sysPackageRF.keys():
-        getpackget(x, sysPackageRF[x][0])
+    getpackget(containerPackageName, project.getVersion(), recursive=True)
 
     # save the `changesMade` data to a file. It will be used by next projects in the slot
     os.chdir(generatePath(slot, project, 'TAG', projectName))
