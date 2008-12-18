@@ -1,4 +1,4 @@
-// $Id: HltL0MuonCandidates.cpp,v 1.1 2008-12-08 12:14:05 graven Exp $
+// $Id: HltL0MuonCandidates.cpp,v 1.2 2008-12-18 12:39:35 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -56,6 +56,9 @@ StatusCode HltL0MuonCandidates::initialize() {
   m_selection.registerSelection();
   
   m_maker = tool<IMuonSeedTool>("MuonSeedTool");
+  declareInfo("#accept","",&counter("#accept"),0,std::string("Events accepted by ") + m_decision);
+  declareInfo("#input","",&counter("#input"),0,std::string("Candidates seen by ") + m_decision);
+  declareInfo("#pass","",&counter("#pass"),0,std::string("Candidates passed by ") + m_decision);
 
   saveConfiguration();
 
@@ -122,9 +125,9 @@ StatusCode HltL0MuonCandidates::execute() {
     muons->insert(track.release());
   }
 
-  counter("# Input")    +=  m_selection.input<1>()->size();
-  counter("# NonEmpty") += !m_selection.output()->empty();
-  counter("# Output")   +=  m_selection.output()->size();
+  counter("#input")  +=  m_selection.input<1>()->size();
+  counter("#accept") += !m_selection.output()->empty();
+  counter("#pass")   +=  m_selection.output()->size();
 
   if (m_debug) {
      debug() << "# Input: " << m_selection.input<1>()->size() 
