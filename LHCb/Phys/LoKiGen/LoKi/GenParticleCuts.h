@@ -1,4 +1,4 @@
-// $Id: GenParticleCuts.h,v 1.18 2008-11-23 19:36:04 ibelyaev Exp $
+// $Id: GenParticleCuts.h,v 1.19 2008-12-18 14:49:00 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENPARTICLECUTS_H 
 #define LOKI_GENPARTICLECUTS_H 1
@@ -33,6 +33,7 @@
 // ============================================================================
 namespace LoKi 
 {
+  // ==========================================================================
   namespace Cuts 
   {
     // ========================================================================
@@ -290,6 +291,62 @@ namespace LoKi
      */
     const LoKi::GenParticles::ProperLifeTime                            GCTAU ;
     // ========================================================================    
+    /** @typedef GDECNODE
+     *  the trivial predicate whcih acts on ParticleID
+     *
+     *
+     *  @code
+     *
+     *  // construct some node:
+     *  Decays::Node node = Decays::Nodes::Lepton() && Decays::Nodes::Positive() ;
+     *
+     *  const HepMC::GenParticle* p = .... ;
+     *
+     *  // create the predicate:
+     *  GCut good = GDECNODE( node  ) ;
+     *
+     *  // use the predicate:
+     *  const ok = good ( p ) ;
+     *
+     *  @endcode
+     *
+     *  @see LHCb::ParticleID
+     *  @see LHCb::ParticleID
+     *  @see Decays::iNode
+     *  @see Decays::Node
+     *  @see Decays::Nodes
+     *  @author Vanya BELYAEV Ivane.Belyaev@nikhef.nl
+     *  @date 2008-12-17
+     */
+    typedef LoKi::GenParticles::DecNode                              GDECNODE ;
+    // ========================================================================
+    /** @typedef GDECTREE
+     *  the trivial predicate which acts on decay structure
+     *
+     *  @code
+     *
+     *  // construct some tree
+     *  Decays::Tree_<const HepMC::GenParticle*> tree =  ... ;
+     *
+     *  const HepMC::GenParticle* p = .... ;
+     *
+     *  // create the predicate:
+     *  GCut good = GDECTREE ( tree  ) ;
+     *
+     *  // use the predicate:
+     *  const ok = good ( p ) ;
+     *
+     *  @endcode
+     *
+     *  @see LHCb::ParticleID
+     *  @see Decays::iTree_
+     *  @see Decays::Tree_
+     *  @see Decays::Trees
+     *  @author Vanya BELYAEV Ivane.Belyaev@nikhef.nl
+     *  @date 2008-12-17
+     */
+    typedef LoKi::GenParticles::DecTree                              GDECTREE ;
+    // ========================================================================
     /** @typedef GDELTAR2 
      *  simple evaluator of "delta eta" of the particle momenta
      * 

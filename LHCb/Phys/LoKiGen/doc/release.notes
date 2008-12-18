@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.63 2008-11-23 19:36:05 ibelyaev Exp $ 
+! $Id: release.notes,v 1.64 2008-12-18 14:49:00 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -13,6 +13,12 @@
 !   contributions and advices from G.Raven, J.van Tilburg, 
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
+
+! 2008-12-18 - Vanya Belyaev
+ - many fixes for trees , 
+   add new symbols:
+     GDECNODE 
+     GDECTREE 
 
 ! 2008-11-23 - Vanya BELYAEV
   - add QMTest 

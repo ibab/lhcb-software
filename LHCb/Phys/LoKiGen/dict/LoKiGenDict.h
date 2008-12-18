@@ -1,4 +1,4 @@
-// $Id: LoKiGenDict.h,v 1.10 2008-11-29 16:06:25 ibelyaev Exp $
+// $Id: LoKiGenDict.h,v 1.11 2008-12-18 14:49:00 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
@@ -17,11 +17,14 @@
 #include "LoKi/UniqueKeeper.h"
 #include "LoKi/Monitoring.h"
 #include "LoKi/Operators.h"
+#include "LoKi/Trees.h"
+#include "LoKi/TreeOps.h"
 // ============================================================================
 #include "LoKi/Dicts.h"
 #include "LoKi/GenExtractDicts.h"
 #include "LoKi/GenAlgsDicts.h"
 #include "LoKi/GenMoniDicts.h"
+#include "LoKi/GenDecays.h"
 // ============================================================================
 #include "LoKi/IGenHybridTool.h"
 #include "LoKi/GenHybridEngine.h"
@@ -288,10 +291,15 @@ namespace
     LoKi::Functors::Size<const HepMC::GenParticle*>  m_si1 ;
     LoKi::Functors::Empty<const HepMC::GenVertex*>   m_e2  ;
     LoKi::Functors::Size<const HepMC::GenVertex*>    m_si2 ;    
+    // decay funders:
+    Decays::Tree_<const HepMC::GenParticle*>           m_tree1 ;
+    Decays::Trees::Any_<const HepMC::GenParticle*>     m_tree3 ;
+    LoKi::Dicts::TreeOps<const HepMC::GenParticle*>   m_trops ;
     /// fictive constructor 
     _Instantiations () ;
   } ;  
-}
+  // ==========================================================================
+} // end of anonymous namespace 
 // ============================================================================
 // The END 
 // ============================================================================

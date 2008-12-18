@@ -106,6 +106,10 @@ GCHARGED  = LoKi.GenParticles.IsCharged ()
 GCHARM    = LoKi.GenParticles.HasQuark ( 4 )
 ## @see LoKi::Cuts::GCTAU
 GCTAU     = LoKi.GenParticles.ProperLifeTime ()
+## @see LoKi::Cuts::GDECNODE 
+GDECNODE  = LoKi.GenParticles.DecNode
+## @see LoKi::Cuts::GDECTREE 
+GDECTREE  = LoKi.GenParticles.DecTree
 ## @see LoKi::Cuts::GDELTAR2
 GDELTAR2  = LoKi.GenParticles.DeltaR2   
 ## @see LoKi::Cuts::GDETA

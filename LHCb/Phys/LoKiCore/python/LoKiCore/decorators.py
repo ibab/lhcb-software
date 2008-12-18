@@ -1437,11 +1437,12 @@ def decorateTrees ( trees , opers ) :
     _rshift_  = None
     _rrshift_ = None
     _mark_    = None
+    _str_     = None
 
     
     ## the regular call  
     if hasattr ( opers , '__call__' ) : 
-        def _call_ ( s ,*a ) :
+        def _call_ ( s , *a ) :
             """
             Use the regular call:
             
@@ -1551,16 +1552,33 @@ def decorateTrees ( trees , opers ) :
         # documentation
         _rrshift_.__doc__     += opers . __rshift__ . __doc__ 
 
-
+    ## string representation
+    if hasattr ( opers , '__toString__' ) :
+        def _str_ ( s ) :
+            """
+            String representation of the object
+            
+            >>> obj 
+            
+            Uses:\n
+            """
+            return opers.__toString__ ( s )
+        # documentation
+        _str_.__doc__     += opers . __str__ . __doc__
+        
+    
     # finally redefine the functions:
     for tree in trees : 
         if _call_     : tree . __call__    =  _call_ 
-        if _and_      : tree . __call__    =  _and_ 
-        if _or_       : tree . __call__    =  _or_ 
+        if _and_      : tree . __and__     =  _and_ 
+        if _or_       : tree . __or__      =  _or_ 
         if _invert_   : tree . __invert__  =  _invert_ 
         if _rrshift_  : tree . __rrshift__ =  _rrshift_ 
         if _rshift_   : tree . __rshift__  =  _rshift_ 
         if _mark_     : tree . __mark__    =  _mark_
+        if _str_      : tree . __str__     =  _str_
+        if _str_      : tree . __repr__    =  _str_
+        if _str_      : tree . toString    =  _str_
         
     return trees 
 
