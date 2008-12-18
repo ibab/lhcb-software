@@ -1,4 +1,4 @@
-// $Id: HltLine.cpp,v 1.6 2008-12-18 12:34:18 graven Exp $
+// $Id: HltLine.cpp,v 1.7 2008-12-18 13:38:57 graven Exp $
 // Include files
 #include "HltLine.h"
 
@@ -87,6 +87,8 @@ HltLine::HltLine( const std::string& name,
   , m_stageHisto(0)
   , m_errorHisto(0)
   , m_hltANNSvc(0)
+  , m_errorRate(0)
+  , m_acceptRate(0)
 {
   for (unsigned i=0; i<m_stages.size(); ++i) {
     m_stages[i] = new HltStage(*this, transition(stage(i)));
@@ -134,10 +136,16 @@ StatusCode HltLine::initialize() {
   }
   //== Create the monitoring histogram
   m_errorHisto = book1D(name()+" error",name()+" error",-0.5,7.5,8);
-  m_stageHisto = book1D(m_decision,m_decision,-0.5,7.5,8);
+  m_stageHisto = book1D(m_decision,     m_decision,     -0.5,7.5,8);
 
   //== and the counters
   declareInfo("#accept","",&counter("#accept"),0,std::string("Events accepted by ") + m_decision);
+  declareInfo("#errors","",&counter("#errors"),0,std::string("Errors seen by ") + m_decision);
+
+  m_acceptRate=0;
+  m_errorRate=0;
+  declareInfo("COUNTER_TO_RATE["+m_decision+"Accept]", m_acceptRate, m_decision + " Accept Rate");
+  declareInfo("COUNTER_TO_RATE["+m_decision+"Error]",  m_errorRate,  m_decision + " Error Rate");
 
   if ( m_measureTime ) m_timerTool->decreaseIndent();
 
@@ -165,7 +173,7 @@ StatusCode HltLine::execute() {
   for (unsigned i=0;i<m_stages.size();++i) {
      result = m_stages[i]->execute();
      if (result.isFailure()) {
-        report.setErrorBits(1); //TODO: different value depending on error type..
+        report.setErrorBits(1);   //TODO: different value depending on error type..
         accept = m_acceptOnError; //TODO: don't allow infinite # of accepts on error...
         break;
      }
@@ -175,7 +183,8 @@ StatusCode HltLine::execute() {
   }
 
 
-  if (accept) report.setDecision(accept ? 1u : 0u);
+  report.setDecision(accept ? 1u : 0u);
+  if (accept) ++m_acceptRate;
   counter("#accept") += accept;
   if ( !m_ignoreFilter ) setFilterPassed( accept );
   setExecuted( true );
@@ -186,6 +195,11 @@ StatusCode HltLine::execute() {
   // update monitoring
   fill( m_stageHisto, report.executionStage(),1.0);
   fill( m_errorHisto, report.errorBits(),1.0);
+  counter("#errors") += ( report.errorBits()!=0);
+  if (report.errorBits()!=0) ++m_errorRate;
+
+  // Plot the distribution of the # of candidates
+
 
   if ( m_measureTime ) m_timerTool->stop( m_timer );
 

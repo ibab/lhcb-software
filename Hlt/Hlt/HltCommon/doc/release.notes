@@ -7,6 +7,7 @@
 ! 2008-12-18 - Gerhard Raven
  - adapt counter labels to Hlt2 usage, publish to monitoring svc
  - add FitVertexMaxChi2OverNdf to HltFunctionFactories
+ - add some additional monitoring to HltLine
 
 ! 2008-12-17 - Gerhard Raven
  - allow seperate ODIN,L0DU and HLT filters as stages in HltLine
