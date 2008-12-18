@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltL0Lines.py,v 1.6 2008-12-18 12:56:12 graven Exp $
+# $Id: HltL0Lines.py,v 1.7 2008-12-18 13:57:17 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines which are plain L0 lines
@@ -12,7 +12,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
 # =============================================================================
 
 from HltConf.HltLine import Hlt1Line   as Line
@@ -22,6 +22,6 @@ for i in L0Channels() :
     Line ( 'L0' + i 
          , L0DU  = "L0_CHANNEL('"+i+"')"
          , prescale = 0.000001
-         , algos = convertL0Candidates(i)
+         , algos = [ convertL0Candidates(i) ]
          )
 
