@@ -7,7 +7,10 @@ for LHCb projects to start get, config, install, make, and test cmt actions.
 """
 
 import sys
-from functions import *
+try:
+    from functions import *
+except ImportError:
+    from LbRelease.Nightlies.functions import *
 
 def printUsage():
     print 'usage: actionLauncher.py get|config|install|test projectName [slotName]'

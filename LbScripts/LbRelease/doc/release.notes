@@ -1,3 +1,8 @@
+2008-12-18  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/Nightlies/actionLauncher.py: Modified the import of
+	functions to be able to start it with "python -m".
+
 2008-12-18  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
 	* python/LbRelease/Nightlies/setup.py: Gaudi added to listOfProjectNames.
