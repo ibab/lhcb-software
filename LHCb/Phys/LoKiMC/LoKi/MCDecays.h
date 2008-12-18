@@ -1,4 +1,4 @@
-// $Id: MCDecays.h,v 1.4 2008-12-04 16:42:16 ibelyaev Exp $
+// $Id: MCDecays.h,v 1.5 2008-12-18 15:24:34 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCDECAYS_H
 #define LOKI_MCDECAYS_H 1
@@ -268,7 +268,7 @@ namespace Decays
     public:
       // ====================================================================
       /// add one more node to the tree
-        MCExclusive& operator+= ( const Decays::iTree_<PARTICLE>& node)
+      MCExclusive& operator+= ( const Decays::iTree_<PARTICLE>& node)
       { addDaughter ( node ) ; return *this ; }
       /// add one more node to the tree
       MCExclusive& operator+= ( const Decays::iNode& node )
@@ -526,9 +526,11 @@ namespace Decays
     public:
       // ====================================================================
       /// add one more node to the tree
-      MCInclusive& operator+= ( const Decays::iTree_<PARTICLE>& tree ) ;
+      MCInclusive& operator+= ( const Decays::iTree_<PARTICLE>& tree ) 
+      { addDaughter ( tree ) ; return *this ; }
       /// add one more node to the tree
-      MCInclusive& operator+= ( const Decays::iNode& node ) ;
+      MCInclusive& operator+= ( const Decays::iNode& node ) 
+      { addDaughter ( node ) ; return *this ; }
       /// add one more node to the tree
       MCInclusive& operator+= ( const Decays::Decay::Item&   node )
       { addDaughter ( node ) ; return *this ; }

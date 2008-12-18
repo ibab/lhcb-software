@@ -1,4 +1,4 @@
-// $Id: MCParticles.h,v 1.19 2008-11-02 18:46:30 ibelyaev Exp $
+// $Id: MCParticles.h,v 1.20 2008-12-18 15:24:34 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCPARTICLES_H 
 #define LOKI_MCPARTICLES_H 1
@@ -13,6 +13,10 @@
 // Event 
 // ============================================================================
 #include "Event/MCParticle.h"
+// ============================================================================
+// PartProp
+// ============================================================================
+#include "Kernel/iNode.h"
 // ============================================================================
 // MCInterfaces
 // ============================================================================
@@ -29,6 +33,7 @@
 #include "LoKi/Constants.h"
 #include "LoKi/MCTypes.h"
 #include "LoKi/MCPIDOperators.h"
+#include "LoKi/iTree.h"
 // ============================================================================
 /** @file
  *
@@ -45,7 +50,8 @@
  */
 // ============================================================================
 namespace LoKi 
-{  
+{ 
+  // ==========================================================================
   /** @namespace LoKi::MCParticles MCParticles.h LoKi/MCParticles.h  
    *
    *  @author Vanya  BELYAEV Ivan.Belyaev@itep.ru
@@ -1823,13 +1829,118 @@ namespace LoKi
       // the default constructor is disabled 
       MaxTree() ; ///< the default constructor is disabled 
     private:
+      // ======================================================================
       LoKi::MCTypes::MCFun m_fun       ;
       LoKi::MCTypes::MCCut m_cut       ;
       bool                 m_decayOnly ;
       double               m_res       ;
+      // ======================================================================
+    };
+    // ========================================================================
+    /** @class DecNode
+     *  simple predicate, which acts on the particleID fo the particle
+     *  @see LHCb::ParticleID
+     *  @see Decays::iNode
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-12-17
+     */
+    class DecNode
+      : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate
+    {
+    public:
+      // ======================================================================
+      /// constructor from the actual node
+      DecNode ( const Decays::iNode& node ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~DecNode() {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual DecNode* clone() const { return new DecNode ( *this ) ; }
+      /// MANDATORY: the only one essential method
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the nice printout
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled
+      DecNode () ;                       // the default constructor is disabled
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the decay node
+      const Decays::iNode& node() const { return m_node.node () ; }
+      /// valid node ?
+      bool valid() const { return m_node.valid() ; }
+      // validate the node
+      StatusCode validate ( const LHCb::IParticlePropertySvc* svc ) const
+      { return m_node.validate ( svc ) ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the decay node itself
+      Decays::Node m_node ;                            // the decay node itself
+      // ======================================================================
     };
     // ========================================================================    
-  } // end of namespace LHCb::MCParticles 
+    /** @class DecTree
+     *  simple predicate, which acts on the decay structuire/tree for the particle
+     *  @see Decays::iTree
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-12-17
+     */
+    class DecTree
+      : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate
+    {
+    public:
+      // ======================================================================
+      /// the actual type of tree (interface
+      typedef Decays::iTree_<const LHCb::MCParticle*> iTree ; // the tree
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual type of tree (assignable)
+      typedef Decays::Tree_<const LHCb::MCParticle*>   Tree ; // the tree
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from the actual node
+      DecTree ( const iTree& node ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~DecTree() {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual DecTree* clone() const { return new DecTree ( *this ) ; }
+      /// MANDATORY: the only one essential method
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the nice printout
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled
+      DecTree () ;                       // the default constructor is disabled
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the decay node
+      const iTree& tree() const { return m_tree.tree () ; }
+      // ======================================================================
+      /// valid tree ?
+      bool valid () const { return m_tree.valid() ; }
+      // validate the teh tree
+      StatusCode validate ( const LHCb::IParticlePropertySvc* svc ) const
+      { return m_tree.validate ( svc ) ; }
+      // reset the collection
+      void reset() const { m_tree.reset() ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the decay tree itself
+      Tree m_tree ;                                    // the decay tree itself
+      // ======================================================================
+    };
+    // ========================================================================
+  } // end of namespace LHCb::MCParticles
+  // ==========================================================================
 } // end of namespace LoKi
 // ============================================================================
 // The END 

@@ -1,4 +1,4 @@
-// $Id: MCParticleCuts.h,v 1.12 2008-05-05 13:43:54 cattanem Exp $
+// $Id: MCParticleCuts.h,v 1.13 2008-12-18 15:24:34 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCPARTICLECUTS_H 
 #define LOKI_MCPARTICLECUTS_H 1
@@ -424,6 +424,62 @@ namespace LoKi
      *  @date 2005-05-16
      */
     typedef LoKi::MCParticles::MCDecayPattern                         MCDECAY ;
+    // ========================================================================
+    /** @typedef MCDECNODE
+     *  the trivial predicate whcih acts on ParticleID
+     *
+     *
+     *  @code
+     *
+     *  // construct some node:
+     *  Decays::Node node = Decays::Nodes::Lepton() && Decays::Nodes::Positive() ;
+     *
+     *  const LHCb::MCParticle* p = .... ;
+     *
+     *  // create the predicate:
+     *  MCCut good = MCDECNODE( node  ) ;
+     *
+     *  // use the predicate:
+     *  const ok = good ( p ) ;
+     *
+     *  @endcode
+     *
+     *  @see LHCb::ParticleID
+     *  @see LHCb::ParticleID
+     *  @see Decays::iNode
+     *  @see Decays::Node
+     *  @see Decays::Nodes
+     *  @author Vanya BELYAEV Ivane.Belyaev@nikhef.nl
+     *  @date 2008-12-17
+     */
+    typedef LoKi::MCParticles::DecNode                              MCDECNODE ;
+    // ========================================================================
+    /** @typedef MCDECTREE
+     *  the trivial predicate which acts on decay structure
+     *
+     *  @code
+     *
+     *  // construct some tree
+     *  Decays::Tree_<const LHCb::MCParticle*> tree =  ... ;
+     *
+     *  const LHCb::MCParticle* p = .... ;
+     *
+     *  // create the predicate:
+     *  MCCut good = MCDECTREE ( tree  ) ;
+     *
+     *  // use the predicate:
+     *  const ok = good ( p ) ;
+     *
+     *  @endcode
+     *
+     *  @see LHCb::ParticleID
+     *  @see Decays::iTree_
+     *  @see Decays::Tree_
+     *  @see Decays::Trees
+     *  @author Vanya BELYAEV Ivane.Belyaev@nikhef.nl
+     *  @date 2008-12-17
+     */
+    typedef LoKi::MCParticles::DecTree                              MCDECTREE ;
     // ========================================================================
     /** @typedef MCDELTAR2 
      *  simple evaluator of "delta eta" of the particle momenta

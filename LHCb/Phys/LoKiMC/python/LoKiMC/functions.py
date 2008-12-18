@@ -266,6 +266,11 @@ MCVDIST     = LoKi.MCVertices.MCVertexDistance
 MCVXFUN     = LoKi.MCVertices.MCVFunAsMCFun
 
 
+## @see LoKi::Cuts::MCDECNODE
+MCDECNODE   = LoKi.MCParticles.DecNode
+## @see LoKi::Cuts::MCDECTREE
+MCDECTREE   = LoKi.MCParticles.DecTree
+
 # functional part:
 
 ## functional part

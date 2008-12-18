@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiMC.xml,v 1.21 2008-11-29 16:06:47 ibelyaev Exp $ 
+     * $Id: LoKiMC.xml,v 1.22 2008-12-18 15:24:34 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiMC package
@@ -78,6 +78,20 @@
   
   <class pattern   = "LoKi::Hybrid::*"          />
   <class pattern   = "LoKi::IMCHybrid*"         />
+
+
+
+  <class name = "Decays::Trees::Any_<const LHCb::MCParticle*>"   />
+  <class name = "Decays::Trees::MCExclusive" />
+  <class name = "Decays::Trees::MCInclusive" />
+  <class name = "Decays::Trees::MCOptional"  />
+  <class name = "Decays::Trees::Photos"  />
+  <class name = "Decays::Trees::PhotosOptional"  />
+  <class name = "LoKi::Dicts::TreeOps<const LHCb::MCParticle*>" />
+  <class name = "Decays::iTree_<const LHCb::MCParticle*>"       />
+  <class name = "Decays::Tree_<const LHCb::MCParticle*>"        />
+
+
   
   <exclusion>
     <class name = "std::unary_function<char,bool>"                />
@@ -162,6 +176,11 @@
     </class>
 
     <class pattern="LoKi::Functors::*">
+      <method name="=" />
+    </class>
+    
+
+    <class pattern="Decays::*">
       <method name="=" />
     </class>
     
