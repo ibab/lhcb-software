@@ -1,8 +1,10 @@
+#include "$HLTCONFROOT/options/HltRecoSequence.opts"
+
 // HLT HadViaT Alley
 //--------------------------
 HltSummaryWriter.Save += {
   "PV2D",
-  "L0TriggerHadron",
+  "L0HadronDecision",
   "Hlt1HadronViaTSingle",
   "Hlt1HadronViaTDi"
 };
@@ -34,7 +36,7 @@ Hlt1HadronViaT.InputSelections = {
 
 Hlt1HadronViaTSingleSequence.MeasureTime = true;
 Hlt1HadronViaTSingleSequence.Members = {
-  "GaudiSequencer/PrepareL0TriggerHadronSeq",
+  "GaudiSequencer/PrepareL0HadronDecisionSeq",
   "GaudiSequencer/Hlt1HadronViaTSinglePrepare",
   "HltTrackFilter/Hlt1HadronViaTSingle"
 };
@@ -58,7 +60,7 @@ Hlt1HadronViaTSinglePrepare.Members = {
 
 Hlt1HadronViaTDiSequence.MeasureTime = true;
 Hlt1HadronViaTDiSequence.Members = {
-  "GaudiSequencer/PrepareL0TriggerHadronSeq",
+  "GaudiSequencer/PrepareL0HadronDecisionSeq",
   "GaudiSequencer/Hlt1HadronViaTDiPrepare",
   "HltVertexFilter/Hlt1HadronViaTDi"
 };
@@ -102,14 +104,13 @@ Hlt1HadronViaTDi.FilterDescriptor = {
 //-------------------------------------------------------------------------
 
 
-Hlt1HadronViaTSingleTUTConf.InputSelection = "L0TriggerHadron";
+Hlt1HadronViaTSingleTUTConf.InputSelection = "L0HadronDecision";
 Hlt1HadronViaTSingleTUTConf.RecoName = "TConf";
 Hlt1HadronViaTSingleTUTConf.HltTrackUpgradeTool.L0ConfirmWithT.trackingTool = "PatConfirmTool";    
 Hlt1HadronViaTSingleTUTConf.HltTrackUpgradeTool.L0ConfirmWithT.particleType = 1;
 // Hlt1HadronViaTSingleTUTConf.HistogramUpdatePeriod = 0;
 
 
-ToolSvc.PatConfirmTool.debugMode = false;
 ToolSvc.PatConfirmTool.nSigmaX = 3;
 ToolSvc.PatConfirmTool.nSigmaY = 4;
 ToolSvc.PatConfirmTool.nSigmaTx = 3;
@@ -147,9 +148,9 @@ Hlt1HadronViaTSingleTFVelo.FilterDescriptor = {"IP_PV2D,||>,0.1"};
 // };
 
 //match 3d velo to T segments
-Hlt1HadronViaTSingleTMPatMatch.InputSelection =  "Hlt1HadronViaTSingleTFVelo";
+Hlt1HadronViaTSingleTMPatMatch.InputSelection1 =  "Hlt1HadronViaTSingleTFVelo";
 Hlt1HadronViaTSingleTMPatMatch.InputSelection2 =  "Hlt1HadronViaTSingleTFTConf";
-Hlt1HadronViaTSingleTMPatMatch.MatchName = "PatMatch";
+Hlt1HadronViaTSingleTMPatMatch.MatchName = "VeloCalo";
 Hlt1HadronViaTSingleTMPatMatch.PatMatchTool.maxMatchChi2 = 2;
 // Hlt1HadronViaTSingleTMPatMatch.HistogramUpdatePeriod = 0;
 
