@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltHadronLines.py,v 1.14 2008-12-17 16:48:04 hernando Exp $
+# $Id: HltHadronLines.py,v 1.15 2008-12-18 12:27:41 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hadron Lines
@@ -12,7 +12,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.14 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.15 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -27,10 +27,13 @@ from HltConf.HltLine import bindMembers
 from HltConf.HltLine import Hlt1Member as Member
 from HltConf.HltLine import Hlt1Tool   as Tool
 from HltConf.HltLine import hlt1Lines, addHlt1Prop, rmHlt1Prop 
+from HltConf.HltL0Candidates import *
 
 importOptions('$HLTCONFROOT/options/HltRecoSequence.py')
 importOptions('$HLTCONFROOT/options/Hlt1HadFitTracks.opts')
 
+#L0CandidateConverter = convertL0Candidates('Hadron')
+#L0Candidates = L0CandidateConverter.OutputSelection
 # TODO 
 #--------------------------------
 #
@@ -71,16 +74,15 @@ HADMAIN_SOFTPTCUT = 1500.
 #------------------------------------
 if (L0HADRON == "HadronNoGlob"): HADL0_ETCUT = 4000.
 
-L0CHANNELS = ["Electron","Photon","LocalPi0","GlobalPi0",
-              "Muon","DiMuon","MuonNonGlob"]
 L0ALL = "L0_CHANNEL('"+L0HADRON+"') "
-for l0channel in L0CHANNELS:
+for l0channel in L0Channels():
     L0ALL = L0ALL + " | L0_CHANNEL('"+l0channel+"') "
 
 
 # Single Hadron Alley
 #-----------------------------------
 HltL0CaloPrepare('L0Hadrons').addTool( HadronSeedTool(decodeCalos = False) )
+
 
 Line ( 'SingleHadron' 
        , L0DU  = "L0_CHANNEL('"+L0HADRON+"')"
@@ -114,7 +116,6 @@ Line ( 'SingleHadron'
                , HistogramUpdatePeriod = 1
                )
     , Member ( 'TF' , 'GuidedForward'
-               #               , OutputSelection = '%Decision'
                , FilterDescriptor = ['PT,>,'+str(SINGLEHADRON_PTCUT)])
     , Member ( 'TU' , 'FitTrack'
                , RecoName = "FitTrack")
@@ -149,8 +150,6 @@ Line ('DiHadron'
                , InputSelection2 = '%TFL0Hadrons'
                , MatchName = 'VeloCalo' , MaxQuality = 4.
                )
-    , GaudiSequencer('HltDecodeT')
-    , GaudiSequencer('HltDecodeTT')
     , Member ( 'TU', 'GuidedForward'
                , InputSelection  = '%TMVeloCalo'
                , RecoName = 'GuidedForward'
