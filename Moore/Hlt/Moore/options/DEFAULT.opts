@@ -1,8 +1,7 @@
+#pragma print off
 //-----------------------------------------------------------------
 // Main Opts to run the Moore or HLTAPP application 
 //-----------------------------------------------------------------
-
-#pragma print off
 // Standard LHCb application setup
 #include "$STDOPTS/LHCbApplication.opts"
 
@@ -24,17 +23,13 @@ EventPersistencySvc.CnvServices += {"LHCb::RawDataCnvSvc"};
 #include "$ONLINETASKSROOT/hltopts/OnlineEnvironment.opts"
 
 ApplicationMgr.TopAlg += { "UpdateAndReset" };
-// UpdateAndReset.disableReadOdin=0;
-
 
 /////////////////////////////////////
-#include "$STDOPTS/DstDicts.opts"
-#include "$STDOPTS/DecodeRawEvent.opts"
-#include "$L0DUOPTS/L0OnDemand.opts"
+#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
+#include "$MOOREOPTS/DecodeRawEvent.opts"
 
 ApplicationMgr.ExtSvc += {  "DataOnDemandSvc" } ; 
 
-#include "$DDDBROOT/options/DDDB.opts"
 ///@TODO: this is not maintainable -- need either a single tag, or it comes from @OnlineEnv...
 /// Note: the value is taken (by hand!) from $DDDBROOT/options/LHCb-2008.py
 DDDB.DefaultTAG     = "head-20081002";
@@ -82,5 +77,5 @@ Output.InputDataType                 = 1;
 Output.Compress                      = 0;
 
 // added on request of Markus @ 2008/11/19 20:35
-Output.RoutingBits                   = 1;
+// Output.RoutingBits                   = 1;
 

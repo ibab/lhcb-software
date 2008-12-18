@@ -1,0 +1,21 @@
+/// translation of $STDOPTS/DecodeRawEvent.py...
+
+DataOnDemandSvc.AlgMap += {"Raw/TT/Clusters":       "RawBankToSTClusterAlg/createTTClusters",
+                          "Raw/OT/Times":          "OTTimeCreator",
+                          "Raw/IT/LiteClusters":   "RawBankToSTLiteClusterAlg/createITLiteClusters",
+                          "DAQ/ODIN":              "createODIN",
+                          "Raw/Velo/LiteClusters": "DecodeVeloRawBuffer/createVeloLiteClusters",
+                          "Raw/Rich/Digits":       "Rich::DAQ::RawBufferToRichDigitsAlg/RichRawEventToDigits",
+                          "Raw/IT/Clusters":       "RawBankToSTClusterAlg/createITClusters",
+                          "Raw/Velo/Clusters":     "DecodeVeloRawBuffer/createVeloClusters",
+                          "Raw/Muon/Coords":       "MuonRec",
+                          "Raw/TT/LiteClusters":   "RawBankToSTLiteClusterAlg/createTTLiteClusters"
+};
+createITClusters.DetType = "IT";
+createITLiteClusters.DetType = "IT";
+createVeloClusters.DecodeToVeloClusters = true;
+createVeloClusters.DecodeToVeloLiteClusters = false;
+
+
+#include "$CALODAQROOT/options/CaloDigitsOnDemand.opts"
+#include "$L0DUOPTS/L0OnDemand.opts"
