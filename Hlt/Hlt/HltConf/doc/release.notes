@@ -1,10 +1,12 @@
-! $Id: release.notes,v 1.86 2008-12-18 10:33:47 graven Exp $ 
+! $Id: release.notes,v 1.87 2008-12-18 11:57:03 depaula Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2008-12-18 - Leandro de Paula
+ - re-introduce DeltaPTool in MuonLines
 
 ! 2008-12-18 - Gerhard Raven
  - fix warnings about L0_Filter in Configuration.py

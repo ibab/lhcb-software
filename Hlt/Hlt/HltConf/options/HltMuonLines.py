@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonLines.py,v 1.12 2008-12-17 16:44:47 depaula Exp $
+# $Id: HltMuonLines.py,v 1.13 2008-12-18 11:57:03 depaula Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.12 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.13 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -44,7 +44,8 @@ RecoMuonSeg = HltMuonRec('HltRecoMuonSeg'
 
 
 TConfMatchVelo = [ Member ('TU', 'TConf' , RecoName = 'TConf' )
-                 , Member ('TF', 'TConf' , FilterDescriptor = ['IsMuon,>,0.'] )
+                 , Member ('TF', 'TConf' , FilterDescriptor = ['DeltaP,>,0.','IsMuon,>,0.'] )
+                 #, Member ('TF', 'TConf' , FilterDescriptor = ['IsMuon,>,0.'] )
                  , RZVelo
                  , Member ('TF', 'RZVelo'
                           , InputSelection = 'RZVelo'
@@ -106,7 +107,8 @@ DiMuonFromL0DiMuonPrepare = bindMembers( 'DiMuonFromL0DiMuonPrepare',
                            )
                    , Member( 'VT', 'L0' )
                    , Member( 'TU', 'TConf' , RecoName = 'TConf')
-                   , Member( 'TF', 'TConf' , FilterDescriptor = ['IsMuon,>,0.'])
+                   , Member( 'TF', 'TConf' , FilterDescriptor = ['DeltaP,>,0.','IsMuon,>,0.'])
+                   #, Member( 'TF', 'TConf' , FilterDescriptor = ['IsMuon,>,0.'])
                    , RZVelo
                    , Member( 'TF', 'RZVelo'
                            , InputSelection = 'RZVelo'
@@ -131,7 +133,8 @@ DiMuonFromL0DiMuonPrepareHighIP = bindMembers( 'DiMuonFromL0DiMuonPrepareHighIP'
                            )
                    , Member( 'VT', 'L0' )
                    , Member( 'TU', 'TConf' , RecoName = 'TConf')
-                   , Member( 'TF', 'TConf' , FilterDescriptor = ['IsMuon,>,0.'])
+                   , Member( 'TF', 'TConf' , FilterDescriptor = ['DeltaP,>,0.','IsMuon,>,0.'])
+                   #, Member( 'TF', 'TConf' , FilterDescriptor = ['IsMuon,>,0.'])
                    , RZVelo
                    , Member( 'TF', 'RZVelo'
                            , InputSelection = 'RZVelo'
@@ -156,7 +159,8 @@ DiMuonFromL0DiMuonPrepareNoPV = bindMembers( 'DiMuonFromL0DiMuonPrepareNoPV',
                            )
                    , Member( 'VT', 'L0' )
                    , Member( 'TU', 'TConf' , RecoName = 'TConf')
-                   , Member( 'TF', 'TConf' , FilterDescriptor = ['IsMuon,>,0.'])
+                   , Member( 'TF', 'TConf' , FilterDescriptor = ['DeltaP,>,0','IsMuon,>,0.'])
+                   #, Member( 'TF', 'TConf' , FilterDescriptor = ['IsMuon,>,0.'])
                    , RZVelo
                    , Member( 'TF', 'RZVelo'
                            , InputSelection = 'RZVelo'
@@ -241,6 +245,7 @@ DiMuonFromL0DiMuonHighIP = Line ( 'DiMuonFromL0DiMuonHighIP'
                            , FilterDescriptor = [ 'VertexDimuonMass,>,1000.', 'VertexMinIP_PV2D,||>,1.' ]
                            )
                    ] )
+
 #-----------------------------------------------------
 # DIMUON ALLEY : from L0Muon + L0Muon
 #-----------------------------------------------------
