@@ -1,4 +1,4 @@
-// $Id: HltLine.cpp,v 1.5 2008-12-17 21:30:14 graven Exp $
+// $Id: HltLine.cpp,v 1.6 2008-12-18 12:34:18 graven Exp $
 // Include files
 #include "HltLine.h"
 
@@ -137,7 +137,7 @@ StatusCode HltLine::initialize() {
   m_stageHisto = book1D(m_decision,m_decision,-0.5,7.5,8);
 
   //== and the counters
-  declareInfo("# Accept","",&counter("# Accept"),0,std::string("Events accepted by ") + m_decision);
+  declareInfo("#accept","",&counter("#accept"),0,std::string("Events accepted by ") + m_decision);
 
   if ( m_measureTime ) m_timerTool->decreaseIndent();
 
@@ -176,7 +176,7 @@ StatusCode HltLine::execute() {
 
 
   if (accept) report.setDecision(accept ? 1u : 0u);
-  counter("# Accept") += accept;
+  counter("#accept") += accept;
   if ( !m_ignoreFilter ) setFilterPassed( accept );
   setExecuted( true );
 
