@@ -1,12 +1,15 @@
 2008-12-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of version v1r5
+
+2008-12-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* scripts/NoCMTPATH.bat: made it silent
 	* scripts/ShellAlias.bat: made it silent
 	* scripts/SourceShellAlias.bat: made it silent
 	* scripts/StripPath.bat: fixed the temporary file name
 	* cmt/requirements: fixed the installation of the documentation. Now doesn't copy
 	the full doxygen generated tree.
-	
 
 2008-11-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 

@@ -1,5 +1,5 @@
 package LbScriptsPolicy
-version v1r4
+version v1r5
 
 
 macro install_excludes " -xCVS"
