@@ -1,4 +1,4 @@
-// $Id: LoKiPhysDict.h,v 1.16 2008-12-17 16:53:20 ibelyaev Exp $
+// $Id: LoKiPhysDict.h,v 1.17 2008-12-18 15:27:25 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKIPHYSDICT_H 
 #define LOKI_LOKIPHYSDICT_H 1
@@ -261,6 +261,7 @@ namespace
     LoKi::Functors::Size<const LHCb::VertexBase*>       m_es2 ;
     // decay funders:
     Decays::Tree_<const LHCb::Particle*>                m_tree1 ;
+    Decays::Trees::Any_<const LHCb::Particle*>          m_tree2 ;
     LoKi::Dicts::TreeOps<const LHCb::Particle*>         m_trops ;
   } ;  
   // ==========================================================================

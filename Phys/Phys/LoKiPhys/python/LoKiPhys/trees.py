@@ -40,19 +40,24 @@ LoKi     = cpp.LoKi
 
 _RCP = 'const LHCb::Particle*'
 
+_decorated = _LoKiCore.decorateTrees (
+    ( Decays.iTree_     ( _RCP ) ,
+      Decays.Tree_      ( _RCP ) ,
+      Decays.Trees.Any_ ( _RCP ) ,
+      Decays.Trees.Exclusive ,
+      Decays.Trees.Inclusive ,
+      Decays.Trees.Optional  ) ,
+    LoKi.Dicts.TreeOps( _RCP ) )
+
 ## decay trees
 iTree     = Decays.iTree_       ( _RCP )
 Tree      = Decays.Tree_        ( _RCP )
-_Tree_    = Decays.Trees._Tree_ ( _RCP )
-SubTrees  = std.vector( _Tree_ )
+PAny      = Decays.Trees.Any_   ( _RCP ) () # instance!!
 Exclusive = Decays.Trees.Exclusive
 Inclusive = Decays.Trees.Inclusive
 Optional  = Decays.Trees.Optional
 
 
-_decorated = _LoKiCore.decorateTrees (
-    ( iTree , Tree  , Exclusive , Inclusive , Optional ) ,
-    LoKi.Dicts.TreeOps( _RCP ) )
 
 # =============================================================================
 if '__main__' == __name__ :
