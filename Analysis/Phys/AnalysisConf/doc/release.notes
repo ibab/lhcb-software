@@ -4,5 +4,8 @@
 ! Purpose     : Configuration for Analysis project
 !-----------------------------------------------------------------------------
 
+! 2008-12-18 - Patrick Koppenburg
+ - Configuration.py : Redo MC links.
+
 ! 2008-12-17 - Patrick Koppenburg
  - Import empty shell. Just some Unpack options.
