@@ -23,7 +23,7 @@ import sys, os, logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.20 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.21 $")
 
 
 def getLbLoginEnv(debug=False, 
@@ -426,12 +426,12 @@ class LbLoginScript(Script):
                 al["mkprivate"] = "find . -type d -print -exec fs setacl {} system:anyuser l \\;"
                 al["mkpublic"] = "find . -type d -print -exec fs setacl {} system:anyuser rl \\;"
     
-            dirm = os.path.join(opts.userarea, "cmt")
-            if os.path.exists(dirm) :
-                if os.path.isdir(dirm):
-                    os.rmdir(dirm)
-                else:
-                    os.remove(dirm)
+#            dirm = os.path.join(opts.userarea, "cmt")
+#            if os.path.exists(dirm) :
+#                if os.path.isdir(dirm):
+#                    os.rmdir(dirm)
+#                else:
+#                    os.remove(dirm)
             
     def setSharedArea(self):
         log = logging.getLogger()

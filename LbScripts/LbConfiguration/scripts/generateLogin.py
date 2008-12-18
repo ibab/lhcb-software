@@ -42,9 +42,9 @@ if [ "$LbLoginStatus" = 0 ]; then
 fi
 rm -f $LbLogin_tmpfile
 unset LbLogin_tmpfile
-. %s/scripts/SetupProject.sh --disable-CASTOR LbScripts %s --runtime LCGCMT Python -v 2.5
+. %s/scripts/SetupProject.sh LbScripts --runtime LCGCMT Python 
 
-""" % (targetlocation, version)
+""" % targetlocation
     elif shell == "csh" or shell == "tcsh" :
         if mysiteroot :
             content = """set LbLogin_tmpfile = `%s/scripts/LbLogin.py --shell=csh --mktemp --mysiteroot=%s ${*:q}`
@@ -58,9 +58,9 @@ if ( ! $LbLoginStatus ) then
 endif
 rm -f $LbLogin_tmpfile
 unset LbLogin_tmpfile
-source %s/scripts/SetupProject.csh --disable-CASTOR LbScripts %s --runtime LCGCMT Python -v 2.5
+source %s/scripts/SetupProject.csh LbScripts --runtime LCGCMT Python
 
-""" % (targetlocation, version)
+""" % targetlocation
     elif shell == "bat" :
         wintargetlocation = targetlocation
         winmysiteroot = mysiteroot
@@ -79,7 +79,7 @@ set LbLogin_tmpfile="%%TEMP%%\LbLogin_tmpsetup.bat"
 python %s\scripts\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% --mysiteroot=%s %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9
 """ % (wintargetlocation, winmysiteroot)
         else :
-            content = """ @echo off
+            content = """@echo off
         
 set LbLogin_tmpfile="%%TEMP%%\LbLogin_tmpsetup.bat"
 
@@ -93,7 +93,7 @@ if %%LbLoginStatus%% EQU 0 (
 
 if exist %%LbLogin_tmpfile%% del %%LbLogin_tmpfile%%
 set LbLogin_tmpfile=
-call %s\scripts\SetupProject.bat --disable-CASTOR LbScripts %s --runtime LCGCMT Python -v 2.5""" % (wintargetlocation, version)
+call %s\scripts\SetupProject.bat LbScripts --runtime LCGCMT Python """ % wintargetlocation
     
     f.write(content)
     f.close()

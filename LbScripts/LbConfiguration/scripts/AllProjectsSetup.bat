@@ -1,16 +1,16 @@
 @echo off
 
-set tmpzzdffile="%TEMP%\SetupProject_tmpsetup.bat"
+set AllProjectSetup_tmpfile="%TEMP%\AllProjectSetup_tmpsetup.bat"
 
-python %~d0\%~p0\AllProjectsSetup.py --shell=bat --output=%tmpzzdffile%
+python %~d0\%~p0\AllProjectsSetup.py --shell=bat --output=%AllProjectSetup_tmpfile%
 
 set AllProjectsSetupStatus=%ERRORLEVEL%
 
 if %AllProjectsSetupStatus% EQU 0 (
-	call %tmpzzdffile%
+	call %AllProjectSetup_tmpfile%
 )
 
-if exist %tmpzzdffile% del %tmpzzdffile%
-set tmpzzdffile=
+if exist %AllProjectSetup_tmpfile% del %AllProjectSetup_tmpfile%
+set AllProjectSetup_tmpfile=
 set AllProjectsSetupStatus=
 

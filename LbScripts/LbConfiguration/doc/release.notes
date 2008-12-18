@@ -1,3 +1,10 @@
+2008-12-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/AllProjectsSetup.bat: fixed temporary file name
+	* scripts/generateLogin.py: removed the explicit versions for Python and LbScripts
+	* scripts/LbLogin.py: remove obsolete cleanup of the User_release_area (it was 
+	a problem on windows
+
 2008-12-18  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/GetPack.py: changed the default protocol to ssh
