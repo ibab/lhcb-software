@@ -46,7 +46,6 @@ LiteClusterMonitorSequence.ModeOR=false;
  */
 
 ASideVertexerSequence.Members = {
-  "DecodeVeloRawBuffer"
  ,"VeloClusterFilter/ASideClusterFilter"
  ,"Tf::PatVeloRTracking/ASideRTracking"
  ,"Tf::PatVeloSpaceTracking/ASideSpaceTracking"
@@ -107,7 +106,6 @@ ASideVertexTrigger.HistoDescriptor = {"VertexNumberOfASideTracks" : ( "VertexNum
  */
 
 CSideVertexerSequence.Members = {
-  "DecodeVeloRawBuffer"
  ,"VeloClusterFilter/CSideClusterFilter"
  ,"Tf::PatVeloRTracking/CSideRTracking"
  ,"Tf::PatVeloSpaceTracking/CSideSpaceTracking"
@@ -169,7 +167,6 @@ CSideVertexTrigger.HistoDescriptor = {"VertexNumberOfCSideTracks" : ( "VertexNum
  */
 
 OverlapTracksSequence.Members = {
-  "DecodeVeloRawBuffer"
  ,"VeloClusterFilter/OverlapTracksClusterFilter"
  ,"Tf::PatVeloGeneric/OverlapTracksGenericTracking"
  ,"HltTrackFilter/OverlapTrackTrigger"
@@ -223,7 +220,6 @@ OverlapTrackTrigger.HistoDescriptor = {
  */
 
 LiteClusterMonitorSequence.Members = {
-  "DecodeVeloRawBuffer"
  ,"Velo::VeloHltLiteClusterMonitor/VeloLiteClusterMonitor"
 };
 
@@ -238,14 +234,12 @@ VeloLiteClusterMonitor.VeloLiteClusterLocation="Raw/Velo/LiteClusters";
  *
 
 ASideVertexerSequence.Members = {
-  "DecodeVeloRawBuffer"
  ,"VeloClusterFilter/ASideClusterFilter"
  ,"Tf::PatVeloGeneric/ASideGenericTracking"
  ,"PatPV3D/ASidePatPV3D"
  ,"HltVertexFilter/ASideVertexTrigger"
 };
 CSideVertexerSequence.Members = {
-  "DecodeVeloRawBuffer"
  ,"VeloClusterFilter/CSideClusterFilter"
  ,"Tf::PatVeloGeneric/CSideGenericTracking"
  ,"PatPV3D/CSidePatPV3D"
