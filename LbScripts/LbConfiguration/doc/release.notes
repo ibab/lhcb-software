@@ -1,3 +1,13 @@
+2008-12-18  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/GetPack.py: changed the default protocol to ssh
+	in all cases. Do not modify the case of version 'head' when passing it
+	to the rcs checkout.
+	* python/LbConfiguration/rcs.py: moved the creation of version.cmt to
+	the base class and modified the logic to use always the version in the
+	requirements file or the requested version if the version.cmt is not
+	there and the value cannot be found in the requirements.
+
 2008-12-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/LbLogin.py: removed the shared area setup if CMTSITE is not local (if no
