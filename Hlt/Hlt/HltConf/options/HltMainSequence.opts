@@ -6,7 +6,7 @@
 /**
  * defines online reconstruction
  */
-#include "$HLTCONFROOT/options/HltRecoSequence.opts"
+importOptions("$HLTCONFROOT/options/HltRecoSequence.py")
 /**
  * Add Ks 
  * @todo Make ProtoParticlea and articles with these Ks
