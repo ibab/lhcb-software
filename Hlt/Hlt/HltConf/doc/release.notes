@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.87 2008-12-18 11:57:03 depaula Exp $ 
+! $Id: release.notes,v 1.88 2008-12-18 12:28:58 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -10,6 +10,11 @@
 
 ! 2008-12-18 - Gerhard Raven
  - fix warnings about L0_Filter in Configuration.py
+ - replace usage of HltRecoSequence.opts by HltRecoSequence.py
+   (having both is utterly confusing and error prone!)
+ - remove all explicit rawbank decoding -- consistently rely on data-on-demand svc
+ - in HltHadronLines, pick up name of L0Channels from HltL0Candidates
+ - in Hlt1.opts, use HltInit.py instead of HltInit.opts
 
 ! 2008-12-17 - Gerhard Raven
  - allow seperate ODIN, L0DU and HLT stages in HltLine
