@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.22 2008-12-17 21:34:46 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.23 2008-12-18 10:33:47 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -10,7 +10,7 @@ from Gaudi.Configuration import *
 from GaudiConf.Configuration import *
 import GaudiKernel.ProcessJobOptions
 from Configurables       import GaudiSequencer as Sequence
-from Configurables       import L0Filter
+from Configurables       import LoKi__L0Filter    as L0Filter
 from Configurables       import LoKi__HDRFilter   as HltFilter
 
 class HltConf(LHCbConfigurableUser):
@@ -42,7 +42,7 @@ class HltConf(LHCbConfigurableUser):
                 # TODO: this next one should become a property of the Hlt2 configurable, and we
                 #       just forward to it...
                 if self.getProp('Hlt2IgnoreHlt1Decision') :  
-                    Sequence("Hlt2CheckHlt1Passed").Members = [ L0Filter() ]
+                    Sequence("Hlt2CheckHlt1Passed").Members = [ L0Filter('L0Pass', Code = "L0_DECISION") ]
                 else :
                     Sequence("Hlt2CheckHlt1Passed").Members = [ Sequence( "PassedAlleys" ) ]
             if hlttype.find('Velo') != -1 :   importOptions('$HLTCONFROOT/options/HltVeloAlleySequence.opts')
@@ -74,7 +74,7 @@ class HltConf(LHCbConfigurableUser):
                 # TODO: this next one should become a property of the Hlt2 configurable, and we
                 #       just forward to it...
                 if self.getProp('Hlt2IgnoreHlt1Decision') :  
-                    Sequence("Hlt2CheckHlt1Passed").Members = [ L0Filter() ]
+                    Sequence("Hlt2CheckHlt1Passed").Members = [ L0Filter('L0Pass', Code = "L0_DECISION" ) ]
                 else : 
                     Sequence("Hlt2CheckHlt1Passed").Members = [ HltFilter('Hlt1GlobalPass' , Code = "HLT_PASS('Hlt1Global')" ) ]
             if self.getProp("verbose") : print Sequence('Hlt') 

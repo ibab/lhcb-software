@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.85 2008-12-17 22:39:03 graven Exp $ 
+! $Id: release.notes,v 1.86 2008-12-18 10:33:47 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+
+! 2008-12-18 - Gerhard Raven
+ - fix warnings about L0_Filter in Configuration.py
 
 ! 2008-12-17 - Gerhard Raven
  - allow seperate ODIN, L0DU and HLT stages in HltLine
