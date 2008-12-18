@@ -4,6 +4,12 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-12-18 - Julien Cogan
+ - Implement new L0Buffer frame for the CU/SU L0buffer converter
+
+! 2008-12-16 - Julien Cogan
+ - Fix bug in the encoding parameter
+
 ! 2008-12-15 - Marco Cattaneo
  - Improve encapsulation of DOM parser
 

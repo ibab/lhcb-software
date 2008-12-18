@@ -72,15 +72,14 @@ void L0Muon::SUL0BufferCnv::write(int ievt)
   for (int iboard = 0; iboard <12 ; iboard++) {
     if (m_candRegHandlerBCSU[iboard].isValid()) {
       for (int icand=0;icand<2;icand++) {
-        iword =( ( m_candRegHandlerBCSU[iboard].getCandOffM1(icand)    ) & 0x000F );
-        iword|=( ( m_candRegHandlerBCSU[iboard].getCandOffM2(icand)<< 4) & 0x00F0 );
-        iword|=( ( m_candRegHandlerBCSU[iboard].getCandPU(   icand)<< 8) & 0x0300 );
+        iword =( ( m_candRegHandlerBCSU[iboard].getCandOffM1( icand)    ) & 0x000F );
+        iword|=( ( m_candRegHandlerBCSU[iboard].getCandOffM2( icand)<< 4) & 0x00F0 );
+        iword|=( ( m_candRegHandlerBCSU[iboard].getCandPU(    icand)<< 8) & 0x0300 );
+        iword|=( ( m_candRegHandlerBCSU[iboard].getCandCharge(icand)<<12) & 0x1000 );
         m_file<<std::setw(4)<<std::setfill('0')<<iword<<" \n"; // Candidate  
       }
       int status = m_candRegHandlerBCSU[iboard].getStatus();
-      int c1 = m_candRegHandlerBCSU[iboard].getCandCharge(0);
-      int c2 = m_candRegHandlerBCSU[iboard].getCandCharge(1);
-      iword = (  ((c1<<12)&0x3000) + ((c2<<8)&0x300) + ((status<<4)&0xF0) + bid)  & 0x33FF;
+      iword = (  (((m_mid.quarter())<<12)&0x3000) + ((status<<4)&0xF0) + bid)  & 0x30FF;
       m_file<<std::setw(4)<<std::setfill('0')<<iword<<" \n"; // bid
     } else {
       for (int i=0; i<3; ++i) m_file<<std::setw(4)<<std::setfill('0')<<0<<" \n"; // empty
