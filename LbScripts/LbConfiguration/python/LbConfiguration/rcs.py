@@ -87,7 +87,7 @@ class RevisionControlSystem(object):
         Initialize the connection to the repository.
         The parameter 'repository' should contain enough information to connect
         to the RCS. The back-end specific implementation is responsible of
-        interpreting the data. 
+        interpreting the data.
         """
         self.repository = repository
         if not self.canHandle(repository):
@@ -95,8 +95,8 @@ class RevisionControlSystem(object):
         self._packages = None
         self._projects = None
         self._pkg_versions = {}
-        self._proj_versions = {} 
-    
+        self._proj_versions = {}
+
     @classmethod
     def canHandle(cls, repository):
         """
@@ -104,22 +104,22 @@ class RevisionControlSystem(object):
         specified.
         A back-end specific implementation should implement this method to allow
         an automatic discovery of the correct implementation for a given RCS
-        repository.  
+        repository.
         """
         return False
 
     def _retrievePackages(self):
         return []
-    
+
     def _retrieveProjects(self):
         return []
-    
+
     @property
     def packages(self):
         if self._packages is None:
             self._packages = self._retrievePackages()
         return self._packages
-    
+
     @property
     def projects(self):
         if self._projects is None:
@@ -138,19 +138,19 @@ class RevisionControlSystem(object):
                 path += "/"
             modules = [ m for m in modules if m.startswith(path) ]
         return modules
-    
+
     def listProjects(self):
         """
         Return a list of strings identifying the projects.
         """
         return self.projects
-    
+
     def _retrieveVersions(self, module, isProject):
         """
         Extract from the repository the list of symbolic names for the module.
         """
         return []
-        
+
     def listVersions(self, module, isProject = False):
         """
         Return a list of strings identifying the known versions of a package.
@@ -159,13 +159,35 @@ class RevisionControlSystem(object):
            ((not isProject) and module not in self.packages):
             raise RCSUnknownModuleError(module, self.repository, isProject)
         return filterSortVersions(self._retrieveVersions(module, isProject))
-    
+
     def checkout(self, module, dest = None, vers_dir = False, project = False):
         """
         Extract a module in the directory specified with "dest".
-        If no destination is specified, the current directory is used. 
+        If no destination is specified, the current directory is used.
         """
         pass
+
+    def _create_vers_cmt(self, base, version = "v*"):
+        """Create the version.cmt file in 'base'/cmt.
+        The file will contain the version found in the requirements file. If there is no
+        version in the requirements, an already present version.cmt is kept otherwise it
+        is created with the content of the parameter 'version'.
+        """
+        cmt_dir = os.path.join(base, "cmt")
+        found_version = None
+        try:
+            for l in open(os.path.join(cmt_dir, "requirements")):
+                l = l.split()
+                if len(l) == 2 and l[0] == "version":
+                    found_version = l[1]
+                    break
+        except IOError:
+            pass # if I do not have a requirements file => we cannot find a version
+        vers_file = os.path.join(cmt_dir,"version.cmt")
+        if found_version:
+            open(vers_file, "w").write(found_version + "\n")
+        elif not os.path.exists(vers_file):
+            open(vers_file, "w").write(version + "\n")
 
 _cvs = lambda *args, **kwargs: apply(_call_command, ("cvs",) + args, kwargs)
 class CVS(RevisionControlSystem):
@@ -184,7 +206,7 @@ class CVS(RevisionControlSystem):
         Initialize the connection to the repository.
         The parameter 'repository' should contain enough information to connect
         to the RCS. The back-end specific implementation is responsible of
-        interpreting the data. 
+        interpreting the data.
         """
         super(CVS, self).__init__(repository)
         self.protocol, self.user, self.host, self.path = \
@@ -192,7 +214,7 @@ class CVS(RevisionControlSystem):
         self._packages = None
         self._projects = None
         self._paths = None
-    
+
     @classmethod
     def canHandle(cls, repository):
         """
@@ -200,10 +222,10 @@ class CVS(RevisionControlSystem):
         specified.
         A back-end specific implementation should implement this method to allow
         an automatic discovery of the correct implementation for a given RCS
-        repository.  
+        repository.
         """
         return cls.__repository_rexp__.match(repository)
-    
+
     def _retrieveModules(self):
         """
         Get the list of modules in the repository and separate them in projects
@@ -218,7 +240,7 @@ class CVS(RevisionControlSystem):
         paths = {}
         # empiric definition:
         # a project is a module all capital letters, with no hat
-        proj_re = re.compile("^[A-Z]*$") 
+        proj_re = re.compile("^[A-Z]*$")
         for m in modules:
             if len(m) > 2:
                 m, path = m[0], m[2]
@@ -234,7 +256,7 @@ class CVS(RevisionControlSystem):
         self._projects = projects
         self._projects.sort()
         self._paths = paths
-    
+
     def _retrievePackages(self):
         """
         Return a list of strings identifying the packages below the specified
@@ -244,7 +266,7 @@ class CVS(RevisionControlSystem):
         """
         self._retrieveModules()
         return self._packages
-    
+
     def _retrieveProjects(self):
         """
         Return a list of strings identifying the projects.
@@ -253,7 +275,7 @@ class CVS(RevisionControlSystem):
         """
         self._retrieveModules()
         return self._projects
-    
+
     def _retrieveVersions(self, module, isProject):
         """
         Extract from the repository the list of symbolic names for the module.
@@ -263,7 +285,7 @@ class CVS(RevisionControlSystem):
         file_to_check = self.__package_version_check_file__
         if isProject:
             file_to_check = self.__project_version_check_file__
-            
+
         out, err = _cvs("-d", self.repository, "rlog", module_dir + file_to_check)
         # extract the list of tags
         tags = []
@@ -283,26 +305,26 @@ class CVS(RevisionControlSystem):
             else:
                 break
         return tags
-        
+
     def checkout(self, module, version = "head", dest = None, vers_dir = False, project = False):
         """
         Extract a module in the directory specified with "dest".
-        If no destination is specified, the current directory is used. 
+        If no destination is specified, the current directory is used.
         """
         # this implies a check on the existence of the module
         versions = self.listVersions(module, project)
         # check for the validity of the version
         if version.lower() != "head" and version not in versions:
             raise RCSUnknownVersionError(module, version)
-        
+
         if dest: # prepare destination directory
             if not os.path.isdir(dest):
                 os.makedirs(dest, mode = 0755)
             os.chdir(dest)
         else:
             dest = "." # If not specified, use local directory
-        
-        # prepare options for CVS checkout 
+
+        # prepare options for CVS checkout
         options = ("-d", self.repository, "checkout", "-P")
         isHead = version.lower() == "head"
         if project:
@@ -313,11 +335,10 @@ class CVS(RevisionControlSystem):
             options += ("-d", os.path.join(module, version))
         options += (module,)
         apply(_cvs, options, {"cwd": dest, "stdout": None, "stderr": None})
-        
-        vers_cmt_file = os.path.join(dest, module, "cmt", "version.cmt")
-        if not vers_dir and not os.path.exists(vers_cmt_file):
+
+        if not vers_dir and not project:
             # create version.cmt file
-            open(vers_cmt_file, "w").write(version + "\n")
+            self._create_vers_cmt(os.path.join(dest, module), version)
 
 _svn = lambda *args, **kwargs: apply(_call_command, ("svn",) + args, kwargs)
 class SubversionCmd(RevisionControlSystem):
@@ -334,7 +355,7 @@ class SubversionCmd(RevisionControlSystem):
         Initialize the connection to the repository.
         The parameter 'repository' should contain enough information to connect
         to the RCS. The back-end specific implementation is responsible of
-        interpreting the data. 
+        interpreting the data.
         """
         super(SubversionCmd, self).__init__(repository)
         self.protocol, self.user, self.host, self.path = \
@@ -342,7 +363,7 @@ class SubversionCmd(RevisionControlSystem):
         # cache of module names and versions
         self._modules = {}
         self._packages = None
-    
+
     @classmethod
     def canHandle(cls, repository):
         """
@@ -356,9 +377,9 @@ class SubversionCmd(RevisionControlSystem):
         # if protocol is "file" we do not want the host and vice versa
         valid = m and \
                 ( ( m.group(cls.SVN_PROTOCOL) == "file" and not m.group(cls.SVN_HOST) ) or \
-                  ( m.group(cls.SVN_PROTOCOL) != "file" and m.group(cls.SVN_HOST) ) ) 
+                  ( m.group(cls.SVN_PROTOCOL) != "file" and m.group(cls.SVN_HOST) ) )
         return valid
-        
+
     def _ls(self, path):
         """
         List the content of a directory in the repository.
@@ -373,7 +394,7 @@ class SubversionCmd(RevisionControlSystem):
         """
         out, err = _svn("propget", "modules", "/".join([self.repository, "packages"]))
         return [ m for m in out.splitlines() if m ]
-    
+
     def _scanModules(self):
         """
         Scan the directory structure under 'packages' to find modules.
@@ -390,21 +411,21 @@ class SubversionCmd(RevisionControlSystem):
                 for sd in subdirs:
                     dirs.append(d+sd)
         return modules
-    
+
     def _retrievePackages(self):
         # if _getModulesFromProp is empty, try _scanModules
         return self._getModulesFromProp() or self._scanModules()
-    
+
     def _retrieveProjects(self):
         # if _getModulesFromProp is empty, try _scanModules
         return [ l[:-1] for l in self._ls("projects") if l.endswith("/") ]
-    
+
     def _topLevel(self, isProject = False):
         if isProject:
             return "projects"
         else:
             return "packages"
-        
+
     def _retrieveVersions(self, module, isProject):
         """
         Extract from the repository the list of symbolic names for the module.
@@ -412,44 +433,44 @@ class SubversionCmd(RevisionControlSystem):
         return [ l[:-1]
                  for l in self._ls("%s/%s/tags" % (self._topLevel(isProject), module))
                  if l.endswith("/") ]
-    
+
     def checkout(self, module, version = "head", dest = None, vers_dir = False, project = False):
         """
         Extract a module in the directory specified with "dest".
-        If no destination is specified, the current directory is used. 
+        If no destination is specified, the current directory is used.
         """
         # this implies a check on the existence of the module
         versions = self.listVersions(module, project)
         # check for the validity of the version
         if version.lower() != "head" and version not in versions:
             raise RCSUnknownVersionError(module, version)
-        
+
         if dest: # prepare destination directory
             if not os.path.isdir(dest):
                 os.makedirs(dest, mode = 0755)
             os.chdir(dest)
         else:
             dest = "." # If not specified, use local directory
-        
+
         if version.lower() != "head":
             src = "/".join([self.repository, self._topLevel(project), module, "tags", version])
         else:
             src = "/".join([self.repository, self._topLevel(project), module, "trunk"])
-        
+
         if project:
             version = "%s_%s" % (module, version)
-        
+
         dst = os.path.join(dest, module)
         if vers_dir:
             dst = os.path.join(dst, version)
         if project: # projects in SVN _are_ the content of the "cmt" directory
             dst = os.path.join(dst, "cmt")
-        
+
         _svn("checkout", src, dst, stdout = None, stderr = None)
-        
-        if not vers_dir:
+
+        if not vers_dir and not project:
             # create version.cmt file
-            open(os.path.join(dst, "cmt", "version.cmt"), "w").write(version + "\n")
+            self._create_vers_cmt(os.path.join(dest, module), version)
 
 
 # get all the implementations of RevisionControlSystem available in the module
