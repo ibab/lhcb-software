@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.89 2008-12-18 13:45:37 graven Exp $ 
+! $Id: release.notes,v 1.90 2008-12-18 14:03:47 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -16,6 +16,7 @@
  - in HltHadronLines, pick up name of L0Channels from HltL0Candidates
  - in Hlt1.opts, use HltInit.py instead of HltInit.opts
  - in HltElectronLines, use HltL0Candidates
+ - in part of HltPhotonLines, use HltL0Candidates
 
 ! 2008-12-17 - Gerhard Raven
  - allow seperate ODIN, L0DU and HLT stages in HltLine

@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltPhotonLines.py,v 1.11 2008-12-14 21:27:10 graven Exp $
+# $Id: HltPhotonLines.py,v 1.12 2008-12-18 14:03:47 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Photon Lines
@@ -12,7 +12,7 @@
 '''
 # =============================================================================
 __author__  = 'Gerhard Raven Gerhard.Raven@nikhef.nl'
-__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $'
+__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.12 $'
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -27,23 +27,19 @@ from HltConf.HltLine import Hlt1Tool   as Tool
 from HltConf.HltLine import hlt1Lines, addHlt1Prop, rmHlt1Prop 
 
 #//---------------------------
-#// HLT Reconstruction
-#//--------------------------
-#
-#// in Had Alley #include '$HLTCONFROOT/options/HltRecoSequence.opts'
-#
-#//---------------------------
 #// HLT Photon Alley
 #//--------------------------
+from HltConf.HltL0Candidates import *
+L0CandidateConverter = convertL0Candidates('Photon')
+L0Candidates = HltL0Candidates('Photon')
 
 Line ('Photon' 
       , L0DU = "L0_CHANNEL('Photon')"
       , algos = 
-      [ HltL0CaloPrepare('L0PhotonDecision', CaloType = 'Photon', MinEt = 2800.0 )
-      , Member ('TF', 'Photon'
-               , InputSelection = 'L0PhotonDecision'
-               , FilterDescriptor = ['IsPhoton,>,-0.1']
-               )
+      [ L0CandidateConverter
+      , Member ('TF', 'Photon' 
+                , InputSelection     = L0Candidates
+                , FilterDescriptor = ['IsPhoton,>,-0.1','L0ET,>,2800.'])
       , GaudiSequencer('Hlt1RecoRZVeloSequence')
       , Member ('TF', 'RZVelo'
                , InputSelection     = 'RZVelo'
@@ -93,13 +89,15 @@ Line ('Photon'
 
 from Configurables import L0ConfirmWithT
 
+#L0CandidateConverter = convertL0Candidates('Electron')
+#L0Candidates = L0CandidateConverter.OutputSelection
 Line ('PhoFromEle' 
       , L0DU = "L0_CHANNEL('Electron')"
       , algos = 
       [ HltL0CaloPrepare('L0PhoFromEleDecision', CaloType = 'Electron', MinEt = 2800.0 )
       , Member ('TF', 'AntiEle'
                , InputSelection = 'L0PhoFromEleDecision'
-               , FilterDescriptor = ['AntiEleConf,>,0.5']
+               , FilterDescriptor = ['AntiEleConf,>,0.5'] 
                , tools = [ Tool( L0ConfirmWithT, particleType = 2 )]
                )
       , Member ('TF', 'Photon'
