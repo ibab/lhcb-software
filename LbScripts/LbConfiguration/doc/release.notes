@@ -1,5 +1,6 @@
 2008-12-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of version v1r12
 	* scripts/AllProjectsSetup.bat: fixed temporary file name
 	* scripts/generateLogin.py: removed the explicit versions for Python and LbScripts
 	* scripts/LbLogin.py: remove obsolete cleanup of the User_release_area (it was 
