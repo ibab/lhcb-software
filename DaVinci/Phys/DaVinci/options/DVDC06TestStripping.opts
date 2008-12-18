@@ -4,7 +4,6 @@
 /*
  * load common particles
  */
-#include "$DAVINCIROOT/options/loadParticlesSeq.opts"
 /*
  * Monitoring of standard Particles. Needs MC.
  */
@@ -13,6 +12,7 @@
  * Stripping options
  */
 #pragma print on
+#units "$STDOPTS/units.opts"
 #include "$STRIPPINGROOT/options/Presel.opts"
 //#include "$STDOPTS/DstContent.opts" // remove for making rDST or when running on rDST
 //#include "$STDOPTS/MCDstContent.opts" // remove for real data or when running on rDST

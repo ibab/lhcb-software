@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.277 2008-12-17 19:49:59 pkoppenb Exp $
+! $Id: release.notes,v 1.278 2008-12-18 09:57:52 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,25 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2008-12-18 - Patrick Koppenburg
+ - options/DaVinci.py : fill working example
+ - python/DaVinci/Configuration.py
+   . Add functionality : histo, tuple file. Redo MC links.
+ - Removed or renamed most of the legacy .opts files. 
+   . options/DC06_stripped_bbincl_lumi2.opts   -> options/DC06_stripped_bbincl_lumi2.py
+   . options/DC06_v4_BB_lumi2_rdst.opts        -> options/DC06_v4_BB_lumi2_rdst.py
+   . options/DVExampleStrippingETC.opts        : will have to be rewritten
+   . options/DVL0Strip.opts                    : will have to be rewritten
+   . options/DaVinci.opts                      -> options/DaVinci.py
+   . options/DaVinciMainSeqFixes.opts          : functionality moved to AnalysisConf()
+   . options/DaVinciReco.opts                  : obsolete
+   . options/DaVinciTestData.opts              -> options/DaVinciTestData.py
+   . options/MicroDSTCommon.opts               -> options/MicroDstStream.py
+   . options/Phys_v4_BB_lumi2.opts (duplicate) -> options/DC06_stripped_bbincl_lumi2.py
+   . options/loadParticlesSeq.opts             : obsolete (using in DC06 stripping tests)
+ - options/DaVinci-Default.py : remove old opts file
+ - options/DVDC06TestStripping.opts : add #units
 
 ! 2008-12-17 - Patrick Koppenburg
  - Big Reshuffle of options. Requires PhysConf and AnalysiConf packages.

@@ -1,17 +1,20 @@
-//-- GAUDI data cards generated on 9/15/07 3:53 PM
-//-- For Event Type = 10000000 / Data type = RDST 1
-//--     Configuration = DC06 - phys-v4-lumi2
-//--     RDST 1 datasets produced by Brunel - v30r17
-//--     From DIGI 1 datasets produced by ANY
-//--     From SIM 1 datasets produced by ANY
-//--     Database version = Default
-//--     Cards content = physical-physical
-//--     
-//-- Datasets replicated at CERN
-//-- 200 dataset(s) - NbEvents = 1987826
-//-- 
-#pragma print off
-EventSelector.Input   = {
+
+##-- GAUDI data cards generated on 9/9/07 11:29 AM
+##-- For Event Type = 10000000 / Data type = RDST 1
+##--     Configuration = DC06 - phys-v4-lumi2
+##--     RDST 1 datasets produced by Brunel - v30r17
+##--     From DIGI 1 datasets produced by ANY
+##--     From SIM 1 datasets produced by ANY
+##--     Database version = Default
+##--     Cards content = physical-physical
+##--     
+##-- Datasets replicated at CERN
+##-- 200 dataset(s) - NbEvents = 1987826
+##-- 
+
+from Gaudi.Configuration import *
+
+EventSelector().Input   = [
 "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v4-lumi2/00001896/RDST/0000/00001896_00000004_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'",
 "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v4-lumi2/00001896/RDST/0000/00001896_00000006_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'",
 "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v4-lumi2/00001896/RDST/0000/00001896_00000011_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'",
@@ -212,5 +215,5 @@ EventSelector.Input   = {
 "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v4-lumi2/00001896/RDST/0000/00001896_00000436_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'",
 "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v4-lumi2/00001896/RDST/0000/00001896_00000437_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'",
 "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v4-lumi2/00001896/RDST/0000/00001896_00000438_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'" 
-};
-#pragma print on
+]
+

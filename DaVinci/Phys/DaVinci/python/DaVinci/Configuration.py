@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.17 2008-12-17 19:49:36 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.18 2008-12-18 09:57:52 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -20,13 +20,42 @@ class DaVinci(LHCbConfigurableUser) :
        , "DDDBtag"         : ""      # Tag for DDDB. Default as set in DDDBConf for DataType
        , "CondDBtag"       : ""      # Tag for CondDB. Default as set in DDDBConf for DataType
        , "UseOracle"       : False   # if False, use SQLDDDB instead
-       , "MainOptions"     : ''      # Main option file to execute
+       , "RedoMCLinks"     : False   # One some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association.
+       , "HistogramFile"   : ""      # Write name of output Histogram file
+       , "TupleFile"       : ""      # Write name of output Tuple file
+       , "ETCFile"         : ""      # Write name of output ETC file @todo Not yet implemented
+       , "DstFile"         : ""      # Write name of output DST file @todo Not yet implemented
+       , "MainOptions"     : ""      # Main option file to execute
        , "Input"           : []      # Input data. Can also be passed as a second option file.
        , "UserAlgorithms"  : []      # User algorithms to run.
         }
 
     __used_configurables__ = [ LHCbApp, PhysConf, AnalysisConf ]
 
+
+    def checkOptions(self):
+        """
+        Does nothing but checking that all is fine
+        """
+        dataType = self.getProp("DataType")
+        if dataType not in [ "DC06", "2008" ]:
+            raise TypeError( "Invalid dataType '%s'"%dataType )
+
+    def outputFiles(self):
+        """
+        output files
+        """
+        if ( self.getProp("HistogramFile") != "" ):
+            HistogramPersistencySvc().OutputFile = self.getProp("HistogramFile")
+        if ( self.getProp("TupleFile") != "" ):
+            tupleFile = self.getProp("TupleFile")
+            ApplicationMgr().ExtSvc +=  [ "NTupleSvc" ]
+            NTupleSvc().Output =  [ "FILE1 DATAFILE='"+tupleFile+"' TYP='ROOT' OPT='NEW'" ]
+        if ( self.getProp("ETCFile") != "" ):
+            raise TypeError( "ETC not yet implemented in configurables" )
+        if ( self.getProp("DstFile") != "" ):
+            raise TypeError( "DST not yet implemented in configurables" )
+        
 #
 # @todo Stolen from Brunel. Could be common to all apps?
 #
@@ -43,18 +72,19 @@ class DaVinci(LHCbConfigurableUser) :
         # Do not print event number at every event
         EventSelector().PrintFreq = -1;
 #        ToolSvc().SequencerTimerTool.OutputLevel = 4;  // suppress SequencerTimerTool printout
-        
-                
+
     def mainSeq(self):
         """
-        Main sequence
+        Initialisation sequence
         """
         from Configurables import (GaudiSequencer, LbAppInit)
         init = GaudiSequencer("DaVinciInitSeq")
+        ApplicationMgr().TopAlg = [ init ]  # note the = here
         init.Members += [ LbAppInit("DaVinciAppInit") ]
         init.IgnoreFilterPassed = True
-        ApplicationMgr().TopAlg += [ init ] 
-        
+        if ( self.getProp("RedoMCLinks") ) :
+            AnalysisConf().redoMCLinks(init)
+
     def defineEvents(self):
         # Delegate handling to LHCbApp configurable
         self.setOtherProps(LHCbApp(),["EvtMax","SkipEvents"])
@@ -85,6 +115,7 @@ class DaVinci(LHCbConfigurableUser) :
 
     def __apply_configuration__(self):
         print "# applying DaVinci configuration"
+        self.checkOptions()
         importOptions("$STDOPTS/LHCbApplication.opts") # to get units in .opts files
         self.defineMonitors()
         self.setOtherProps(PhysConf(),["DataType","Simulation"])

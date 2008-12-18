@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DaVinci.py,v 1.19 2008-12-03 10:22:31 pkoppenb Exp $
+# $Id: DaVinci.py,v 1.20 2008-12-18 09:57:52 pkoppenb Exp $
 #
 # Options for a typical DaVinci job
 #
@@ -8,82 +8,59 @@
 # @date 2008-08-06
 #
 ########################################################################
-from os import environ
 from Gaudi.Configuration import *
 ########################################################################
-#
-# Standard configuration
-#
-# @todo : Replace by a python Configuration, like in Brunel
-#
-importOptions( "$DAVINCIROOT/options/DaVinciCommon.opts" )
+########################################################################
+################ First define all things to run ########################
+########################################################################
 ########################################################################
 #
-# Trigger. Uncomment what you need. Hlt1 needs L0, Hlt2 doesn't.
+# If you want to import .opts options, do this first
 #
-#from HltConf.Configuration import *
+importOptions("$DAVINCIROOT/options/PreloadUnits.opts")
+########################################################################
 #
-## enable if you want to rerun L0
-#HltConf().replaceL0BanksWithEmulated = True
-#
-## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
-#HltConf().hltType = 'Hlt1'
-#HltConf().hltType = 'Hlt2'
-#HltConf().hltType = 'Hlt1+Hlt2'
-## don't forget to actually apply the configuration!!!
-#HltConf().applyConf()
+# Hlt always goes first ? 
 #
 ########################################################################
 #
-# enable standard particles monitors
+# Some preselection. This defines a GaudiSequencer.
 #
-importOptions( "$COMMONPARTICLESROOT/options/EnableStandardParticleMonitors.opts" )
+importOptions("$B2DILEPTONROOT/options/DoPreselBu2LLK.opts")
+from Configurables import GaudiSequencer
+preselSeq = GaudiSequencer("SeqPreselBu2LLK")
 ########################################################################
 #
-# Run some DC06 preselection
-#
-importOptions( "$B2DILEPTONROOT/options/DoPreselBu2LLK.opts" )
-########################################################################
-#
-# Example of running some algorithms
+# Some Monitoring stuff
 #
 from Configurables import GaudiSequencer, PrintTree, PhysDesktop
-ApplicationMgr().TopAlg += [ GaudiSequencer("ExampleSeq") ]
+exampleSeq = GaudiSequencer("ExampleSeq")
 tree = PrintTree("PrintBu2LLK")
-GaudiSequencer("ExampleSeq").Members += [ tree ]
+exampleSeq.Members += [ tree ]
 tree.addTool( PhysDesktop() )
 tree.PhysDesktop.InputLocations = [ "PreselBu2LLK" ]
 ########################################################################
 #
 # Flavour tagging. Don't ask why you'd be tagging a B+...
 #
-from Configurables import BTagging
+from Configurables import BTagging, PhysDesktop
 tag = BTagging("BTagging")
-tag.addTool( PhysDesktop() ) 
+tag.addTool( PhysDesktop() )
 tag.PhysDesktop.InputLocations = [ "PreselBu2LLK" ]
-ApplicationMgr().TopAlg += [ tag ]
 ########################################################################
 #
-# Histogram File
+# Standard configuration
 #
-HistogramPersistencySvc().OutputFile = "DVHistos_1.root"
+from Configurables import DaVinci
+DaVinci().EvtMax = 1000
+DaVinci().SkipEvents = 0
+DaVinci().DataType = "DC06" # Default is "DC06"
+DaVinci().Simulation   = True
+DaVinci().HistogramFile = "DVHistos_1.root" # Histogram file
+DaVinci().TupleFile = "DVNtuples.root"  # Ntuple
+DaVinci().UserAlgorithms = [ preselSeq, exampleSeq, tag ]
+# DaVinci().MainOptions  = "" # None
 ########################################################################
 #
-# nTuple File
+# To run : gaudirun.py options/DaVinci.py options/DaVinciTestData.py
 #
-ApplicationMgr().ExtSvc += [ "NTupleSvc" ]
-NTupleSvc().Output=["FILE1 DATAFILE='DVNtuples.root' TYP='ROOT' OPT='NEW'"]
-########################################################################
-#
-# Event numbers
-#
-ApplicationMgr().EvtMax = 1000 
-EventSelector().FirstEvent = 1
-EventSelector().PrintFreq  = 100
-########################################################################
-#
-# Test data : add it as a separate option file.
-#
-# see $DAVINCIROOT/options/DC06_stripped_bbincl_lumi2.py
-#
-########################################################################
