@@ -45,7 +45,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v34r0
-                                          running on lxbuild120.cern.ch on Wed Dec 17 13:47:58 2008
+                                          running on lxbuild120.cern.ch on Thu Dec 18 07:43:47 2008
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -59,7 +59,7 @@ TransportSvc         INFO Recovery of geometry errors is  ENABLED
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   2.13 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   2.05 times the speed of a 2.8 GHz Xeon.
 BrunelSequencer      INFO Member list: ProcessPhase/Init, ProcessPhase/Reco, ProcessPhase/Moni, ProcessPhase/MCLinks, ProcessPhase/Check, ProcessPhase/Output
 Init                 INFO Member list: GaudiSequencer/InitReprocSeq, GaudiSequencer/InitBrunelSeq, GaudiSequencer/InitCaloSeq, with context 'Offline'
 InitReprocSeq        INFO Member list: , with context 'Offline'
@@ -543,7 +543,7 @@ EcalPIDmu            INFO  Check Tracks: YES Rejected flags: [  'Invalid'  'Clon
 HcalPIDmu            INFO  Check Tracks: YES Rejected flags: [  'Invalid'  'Clone'  'Backward' ] Accepted FitStatus: [ 'Fitted' ]; Accepted Types: [ 'Long'  'Ttrack'  'Downstream' ]; Rejected History: [];
 RecoMUONSeq          INFO Member list: MuonRec, MuonID
 MuonID               INFO  MuonID v5r2
-RecoPROTOSeq         INFO Member list: ChargedProtoPAlg, ChargedProtoCombineDLLsAlg, NeutralProtoPAlg
+RecoPROTOSeq         INFO Member list: ChargedProtoPAlg, ChargedProtoCombineDLLsAlg, NeutralProtoPAlg, with context 'Offline'
 ChargedProtoPAl...   INFO VELO dE/dx charge parameters : normalisation = 22.4 ratio = 0.6
 ChargedProtoCom...   INFO Using retuned RICH el and mu DLL values in combined DLLs
 NeutralProtoPAlg     INFO  Hypothesis loaded from Rec/Calo/Photons
@@ -634,16 +634,16 @@ BestTracks.Sele...   INFO            Will reject particles from interations befo
 CheckRICHSeq         INFO Member list: GaudiSequencer/RichRawMoni, GaudiSequencer/RichPixelMoni, GaudiSequencer/RichRecoMoni, GaudiSequencer/RichPIDMoni, with context 'Offline'
 RichRawMoni          INFO Member list: Rich::DAQ::DataDBCheck/RichRawDataDBCheck, with context 'Offline'
 RichPixelMoni        INFO Member list: Rich::Rec::MC::PixelQC/RichRecPixelQC, with context 'Offline'
-RichRecoMoni         INFO Member list: Rich::Rec::MC::RecoQC/RiCKResAll, Rich::Rec::MC::RecoQC/RiCKResForwardMatch, Rich::Rec::MC::RecoQC/RiCKResForward, Rich::Rec::MC::RecoQC/RiCKResMatch, Rich::Rec::MC::RecoQC/RiCKResKsTrack, Rich::Rec::MC::RecoQC/RiCKResVeloTT, Rich::Rec::MC::RecoQC/RiCKResSeed, with context 'Offline'
+RichRecoMoni         INFO Member list: Rich::Rec::MC::RecoQC/RiCKResAll, Rich::Rec::MC::RecoQC/RiCKResLong, Rich::Rec::MC::RecoQC/RiCKResForward, Rich::Rec::MC::RecoQC/RiCKResMatch, Rich::Rec::MC::RecoQC/RiCKResKsTrack, Rich::Rec::MC::RecoQC/RiCKResVeloTT, Rich::Rec::MC::RecoQC/RiCKResSeed, with context 'Offline'
 RiCKResAll.Trac...   INFO Track Selection : [Forward, Match, Seed, VeloTT, KsTrack]
 RiCKResAll.Trac...   INFO  Forward     : P = 0.00e+00->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : cloneCut = -1.00e+10
 RiCKResAll.Trac...   INFO  Match       : P = 0.00e+00->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : cloneCut = -1.00e+10 : MatchChi2 = 0.00e+00->2.00e+02
 RiCKResAll.Trac...   INFO  Seed        : P = 0.00e+00->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : cloneCut = -1.00e+10 : LL = -1.50e+01->1.80e+308
 RiCKResAll.Trac...   INFO  VeloTT      : P = 1.00e+00->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : cloneCut = -1.00e+10
 RiCKResAll.Trac...   INFO  KsTrack     : P = 1.00e+00->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : cloneCut = -1.00e+10
-RiCKResForwardM...   INFO Track Selection : [Forward, Match]
-RiCKResForwardM...   INFO  Forward     : P = 0.00e+00->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : cloneCut = -1.00e+10
-RiCKResForwardM...   INFO  Match       : P = 0.00e+00->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : cloneCut = -1.00e+10 : MatchChi2 = 0.00e+00->2.00e+02
+RiCKResLong.Tra...   INFO Track Selection : [Forward, Match]
+RiCKResLong.Tra...   INFO  Forward     : P = 0.00e+00->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : cloneCut = -1.00e+10
+RiCKResLong.Tra...   INFO  Match       : P = 0.00e+00->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : cloneCut = -1.00e+10 : MatchChi2 = 0.00e+00->2.00e+02
 RiCKResForward....   INFO Track Selection : [Forward]
 RiCKResForward....   INFO  Forward     : P = 0.00e+00->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : cloneCut = -1.00e+10
 RiCKResMatch.Tr...   INFO Track Selection : [Match]
@@ -836,10 +836,10 @@ RiCKResAll           INFO ======================================================
 RiCKResAll           INFO  Track Selection : [Forward, Match, Seed, VeloTT, KsTrack]
 RiCKResAll           INFO                  : beta > [0, 0, 0]
 RiCKResAll           INFO ==============================================================================
-RiCKResForwardM...   INFO ==============================================================================
-RiCKResForwardM...   INFO  Track Selection : [Forward, Match]
-RiCKResForwardM...   INFO                  : beta > [0.999, 0.999, 0.999]
-RiCKResForwardM...   INFO ==============================================================================
+RiCKResLong          INFO ==============================================================================
+RiCKResLong          INFO  Track Selection : [Forward, Match]
+RiCKResLong          INFO                  : beta > [0.999, 0.999, 0.999]
+RiCKResLong          INFO ==============================================================================
 RiCKResForward       INFO ==============================================================================
 RiCKResForward       INFO  Track Selection : [Forward]
 RiCKResForward       INFO                  : beta > [0.999, 0.999, 0.999]
@@ -909,7 +909,7 @@ ToolSvc.Offline...WARNING Rich::Rec::PixelCreatorFromRawBuffer:: No pixels produ
 ToolSvc.Offline...SUCCESS Exceptions/Errors/Warnings Statistics : 0/0/1
 ToolSvc.Offline...SUCCESS  #WARNINGS   = 1        Message = 'No pixels produced'
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   2.13 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   2.05 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -1138,7 +1138,7 @@ TimingAuditor.T...   INFO     RichPixelMoni             |     0.000 |     0.000 
 TimingAuditor.T...   INFO      RichRecPixelQC           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     RichRecoMoni              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      RiCKResAll               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      RiCKResForwardMatch      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      RiCKResLong              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      RiCKResForward           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      RiCKResMatch             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      RiCKResKsTrack           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -1161,7 +1161,6 @@ StatusCodeSvc        INFO
 Num | Function                       | Source Library
 ----+--------------------------------+------------------------------------------
   1 | EventLoopMgr::nextEvent(int)   | libGaudiSvc.so
-  1 | ROOT::Reflex::NewDelFunctionsT<StatusCode>::delete_T(void*) | libGaudiKernelDict.so
 
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

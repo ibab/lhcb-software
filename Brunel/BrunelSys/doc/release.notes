@@ -3,6 +3,9 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+! 2008-12-18 - Marco Cattaneo
+ - Update reference to follow change in RichCKResLong name
+
 ! 2008-12-16 - Marco Cattaneo
  - Update reference to follow cleanups in Brunel configurable
 
