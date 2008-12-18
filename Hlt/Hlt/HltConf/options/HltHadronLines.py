@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltHadronLines.py,v 1.15 2008-12-18 12:27:41 graven Exp $
+# $Id: HltHadronLines.py,v 1.16 2008-12-18 14:00:22 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hadron Lines
@@ -12,7 +12,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.15 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.16 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -74,10 +74,11 @@ HADMAIN_SOFTPTCUT = 1500.
 #------------------------------------
 if (L0HADRON == "HadronNoGlob"): HADL0_ETCUT = 4000.
 
-L0ALL = "L0_CHANNEL('"+L0HADRON+"') "
-for l0channel in L0Channels():
-    L0ALL = L0ALL + " | L0_CHANNEL('"+l0channel+"') "
+#L0ALL = "L0_CHANNEL('"+L0HADRON+"') "
+#for l0channel in L0Channels():
+#    L0ALL = L0ALL + " | L0_CHANNEL('"+l0channel+"') "
 
+L0ALL = "L0_CHANNEL('"+",".join([L0HADRON]+L0Channels())+"') "
 
 # Single Hadron Alley
 #-----------------------------------
