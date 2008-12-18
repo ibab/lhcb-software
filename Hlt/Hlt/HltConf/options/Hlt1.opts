@@ -1,7 +1,7 @@
 /**
  * Steering file for Hlt1 
  */
-#include "$HLTCONFROOT/options/HltInit.opts"
+importOptions("$HLTCONFROOT/options/HltInit.py")
 #include "$HLTCONFROOT/options/HltMainSequence.opts"
 /**
  * the Hlt1 sequencer
@@ -34,19 +34,7 @@ Hlt1.Members += {  "GaudiSequencer/Hlt1EleAlleySequence" };
 Hlt1.Members += {  "GaudiSequencer/Hlt1PhoAlleySequence" };
 #include "$HLTCONFROOT/options/HltPhoAlleySequence.opts"
 
-//Hlt1.Members += {  "GaudiSequencer/HltVeloClosingSequence" };
-//Hlt1.Members += {  "GaudiSequencer/HltVeloAligningSequence" };
-//Hlt1.Members += {  "GaudiSequencer/HltVeloMonitoringSequence" };
-//#include "$HLTCONFROOT/options/HltVeloAlleySequence.opts"
-
-//Hlt1.Members += {  "GaudiSequencer/Hlt1LumiAlleySequence" };
-//#include "$HLTCONFROOT/options/HltLumiAlleyConfSequence.opts"
-//Hlt1.Members += {  "GaudiSequencer/HltLumiSequence" };
-//#include "$HLTCONFROOT/options/HltLumiAlleyConfSequence.py"
-
 Hlt1.Members += {  "HltSelectionFilter/Hlt1Global" };
-
-
 
 /**
  * end the Hlt sequencer: write in summary and copy to TES
