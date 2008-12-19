@@ -1,4 +1,4 @@
-// $Id: FilterMuonSegments.h,v 1.3 2008-07-30 13:42:04 graven Exp $
+// $Id: FilterMuonSegments.h,v 1.4 2008-12-19 17:34:24 graven Exp $
 #ifndef FILTERMUONSEGMENTS_H 
 #define FILTERMUONSEGMENTS_H 1
 
@@ -22,7 +22,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
   Hlt::SelectionContainer3<LHCb::Track,LHCb::Track,LHCb::Track> m_selections;

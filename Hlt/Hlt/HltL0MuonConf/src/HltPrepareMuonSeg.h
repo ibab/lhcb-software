@@ -1,4 +1,4 @@
-// $Id: HltPrepareMuonSeg.h,v 1.4 2008-07-30 13:42:04 graven Exp $
+// $Id: HltPrepareMuonSeg.h,v 1.5 2008-12-19 17:34:24 graven Exp $
 #ifndef HLTPREPAREMUONSEG_H 
 #define HLTPREPAREMUONSEG_H 1
 
@@ -23,16 +23,11 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-protected:
-  
 private:
   
   Hlt::SelectionContainer2<LHCb::Track,LHCb::Track> m_selections; 
   IMuonSeedTool* m_prepareMuonSeed;
-  
-  
   
   std::string m_outputMuonTracksName;   ///< output container name
 };
