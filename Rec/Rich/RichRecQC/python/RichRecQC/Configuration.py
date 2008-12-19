@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.12 2008-12-17 17:03:11 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.13 2008-12-19 11:39:44 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -22,7 +22,7 @@ class RichRecQCConf(RichConfigurableUser):
     ## Steering options
     __slots__ = {
         "Context": "Offline"  # The context within which to run
-       ,"DataType"   : "2008" # Data type, can be ['DC06','2008']
+       ,"DataType" : "2008" # Data type, can be ['DC06','2008']
        ,"RawMonitoring": True
        ,"PidMonitoring": True
        ,"PixelMonitoring": True
@@ -67,7 +67,7 @@ class RichRecQCConf(RichConfigurableUser):
     ## Check a new sequence and add to main sequence
     def newSeq(self,sequence,name):
         seq = GaudiSequencer(name)
-        seq.MeasureTime  = True
+        seq.MeasureTime = True
         sequence.Members += [seq]
         return seq
 
@@ -100,59 +100,37 @@ class RichRecQCConf(RichConfigurableUser):
 
         # Some monitoring of raw information
         if self.getProp("RawMonitoring") :
-            pixSeq = GaudiSequencer("RichRawMoni")
-            pixSeq.MeasureTime = True
-            sequence.Members += [pixSeq]
             if self.getProp("DataType") not in ["DC06"]:
+                rawSeq = self.newSeq(sequence,"RichRawMoni")
                 from Configurables import Rich__DAQ__DataDBCheck
                 dbCheck = self.createMonitor(Rich__DAQ__DataDBCheck,"RichRawDataDBCheck")
-                pixSeq.Members += [dbCheck]
+                rawSeq.Members += [dbCheck]
 
         # RICH data monitoring
         if self.getProp("PixelMonitoring") :
-            pixSeq = GaudiSequencer("RichPixelMoni")
-            pixSeq.MeasureTime = True
-            sequence.Members += [pixSeq]
-            self.pixelPerf(pixSeq)
+            self.pixelPerf(self.newSeq(sequence,"RichPixelMoni"))
          
         # Reconstruction monitoring
         if self.getProp("PhotonMonitoring") :
-            recSeq = GaudiSequencer("RichRecoMoni")
-            recSeq.MeasureTime = True
-            sequence.Members += [recSeq]
-            self.recPerf(recSeq)
+            self.recPerf(self.newSeq(sequence,"RichRecoMoni"))
 
         # PID Performance
         if self.getProp("PidMonitoring") :
-            pidPerf = GaudiSequencer("RichPIDMoni")
-            pidPerf.MeasureTime = True
-            sequence.Members += [pidPerf]
-            self.pidPerf(pidPerf)
+            self.pidPerf(self.newSeq(sequence,"RichPIDMoni"))
 
         # Trackless rings
         if self.getProp("TracklessRingMonitoring") :
-            ringsMoni = GaudiSequencer("RichTracklessRingsMoni")
-            ringsMoni.MeasureTime = True
-            sequence.Members += [ringsMoni]
-            self.ringsMoni(ringsMoni)
+            self.ringsMoni(self.newSeq(sequence,"RichTracklessRingsMoni"))
 
         # Alignment monitor
         if self.getProp("MirrorAlignmentMonitoring"):
-            alignSeq = GaudiSequencer("RichMirrAlignMoni")
-            alignSeq.MeasureTime = True
-            sequence.Members += [alignSeq]
             from RichRecQC.Alignment import RichAlignmentConf
             self.setOtherProps(RichAlignmentConf(),["context","NTupleProduce","HistoProduce"])
-            RichAlignmentConf().alignmentSequncer = alignSeq
+            RichAlignmentConf().alignmentSequncer = self.newSeq(sequence,"RichMirrAlignMoni")
 
         # Expert Monitoring
         if self.getProp("ExpertHistos") :
-            
-            # Add detailed monitoring histograms from RichRecMonitor
-            expertSeq = GaudiSequencer("RichExpertChecks")
-            expertSeq.MeasureTime = True
-            sequence.Members += [expertSeq]
-            self.exportMonitoring(expertSeq)
+            self.exportMonitoring(self.newSeq(sequence,"RichExpertChecks"))
 
     ## standalone ring finder monitors
     def ringsMoni(self,sequence):
