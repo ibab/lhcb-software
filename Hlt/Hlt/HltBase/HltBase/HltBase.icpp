@@ -1,4 +1,4 @@
-// $Id: HltBase.icpp,v 1.17 2008-10-31 10:24:20 graven Exp $
+// $Id: HltBase.icpp,v 1.18 2008-12-19 17:29:52 graven Exp $
 // Include files
 
 
@@ -85,8 +85,7 @@ void HltBase<EBASE>::initializeHistosFromDescriptor() {
 
   if (!EBASE::produceHistos()) return;
 
-  const std::map<std::string, Gaudi::Histo1DDef>& hdes =
-    m_histoDescriptor.value();
+  const std::map<std::string, Gaudi::Histo1DDef>& hdes = m_histoDescriptor.value();
   for (std::map<std::string, Gaudi::Histo1DDef>::const_iterator 
          it = hdes.begin(); it != hdes.end(); it++){
       EBASE::book(it->second);
@@ -127,28 +126,6 @@ void HltBase<EBASE>::fillHisto( Hlt::Histo& histo,
          EBASE::fill( &histo, *it, weight);
 }
 
-//FIXME: don't use member data of Hlt::Counter directly...
-template <class EBASE>
-void HltBase<EBASE>::initializeCounter (Hlt::Counter& counter, 
-                                        const std::string& inputString) { 
-  counter.m_name = inputString;
-  counter.m_histo = 0;
-  counter.m_counter = 0;
-  // if (EBASE::produceHistos())
-  //  counter.m_histo = initializeHisto(inputString,0.,1.,1);
-  EBASE::debug() << " counter " << counter.m_name 
-                 << " " << counter.m_counter << endreq;
-};
-
-template <class EBASE>
-void HltBase<EBASE>::increaseCounter( Hlt::Counter& count, 
-                                      int increment) {
-  count.increase(increment);
-  EBASE::verbose() << " counter " << count.m_name 
-                   << " = " << count.m_counter << endreq;;
-  // if (count.m_histo)
-  //  EBASE::fill( count.m_histo, 0.5, 1.*increase);
-}
 
 template <class EBASE>
 IHltDataSvc& HltBase<EBASE>::dataSvc() const {

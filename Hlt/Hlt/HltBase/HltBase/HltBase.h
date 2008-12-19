@@ -1,4 +1,4 @@
-// $Id: HltBase.h,v 1.15 2008-09-26 08:42:17 graven Exp $
+// $Id: HltBase.h,v 1.16 2008-12-19 17:29:52 graven Exp $
 #ifndef HLTBASE_HLTBASE_H 
 #define HLTBASE_HLTBASE_H 1
 
@@ -33,14 +33,13 @@
 namespace Hlt {
   class  Counter {
   public:
-    Counter () : m_histo(0),m_counter(0) {}
+    Counter (const std::string& name) : m_name(name),m_counter(0) {}
     virtual ~Counter(){}
 
-    operator int () const { return m_counter;}
-    void increase(int i) { m_counter += i; }
+    operator long() const           { return m_counter;}
+    void increase(int i=1)            { m_counter += i; }
     const std::string& name() const { return m_name;}
-  public:
-    Hlt::Histo* m_histo;
+  private:
     std::string m_name;
     long m_counter;
   };
@@ -83,13 +82,6 @@ protected:
   void fillHisto( Hlt::Histo& histo, const std::vector<double>& x, 
                   double weight );
 
-  // initialize counter
-  void initializeCounter( Hlt::Counter& counter, 
-                          const std::string& name );
-  
-  // increase counter
-  void increaseCounter( Hlt::Counter& counter, int increase = 1);
-  
   // print info of total counter
   void infoTotalEvents(int  n);
   
@@ -131,6 +123,7 @@ protected:
     if (myroot.empty()) myroot = BASE::name();
     std::string mykey = myroot + "/" + key;
     hltConf().add(mykey,value);
+    //std::cout << " HLT [" << mykey << "] = " << value << std::endl;    
     if (m_debug)
       BASE::debug() << " HLT [" << mykey << "] = " << value << endreq;    
   }

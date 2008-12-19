@@ -4,15 +4,16 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
-! 2008-12-11 - Vanya BELYAEV
+! 2008-12-19 - Gerhard Raven
+ - streamline counter usage
 
+! 2008-12-11 - Vanya BELYAEV
  - IHltDataSvc :  IAlgorithm*  -> const IAlgorithm* 
 
+!========================== HltBase v5r5 2008-12-19 ===================
 
 ! 2008-12-09 - Gerhard Raven
  - disallow duplicate values in ANNSvc
-
- 
 
 !========================== HltBase v5r4 2008-11-24 ===================
 ! 2008-11-18 - Vanya Belyaev

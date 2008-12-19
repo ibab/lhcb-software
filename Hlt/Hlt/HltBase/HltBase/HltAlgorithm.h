@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.h,v 1.32 2008-09-26 08:42:17 graven Exp $
+// $Id: HltAlgorithm.h,v 1.33 2008-12-19 17:29:52 graven Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
@@ -34,9 +34,6 @@ public:
 
   // driver of the initialize()
   virtual StatusCode sysInitialize();
-
-  // initialize algorithm
-  virtual StatusCode initialize();
 
   // restart algorithm
   virtual StatusCode restart  ();
@@ -76,9 +73,6 @@ public:
 
 
 protected:
-
-  // initialize the counters
-  virtual void initCounters();
 
   // save configurtion of algorithm
   virtual void saveConfiguration();
@@ -139,7 +133,8 @@ private:
   //TODO: since this is not applicable to all algorithms, remove from base...
   size_t m_minNCandidates;
 
-
+protected:
+  const Hlt::Counter counterEntries() const { return m_counterEntries; }
 private:
   // set this selection as output, to be monitor, and to decide if the 
   // event pass
@@ -151,20 +146,14 @@ private:
   // (owner) pointer to the output selection
   Hlt::Selection* m_outputSelection;
 
-protected:
-
   // counter with all the entries of the algorithm
   Hlt::Counter m_counterEntries;
 
-private:
   // counter with all the events with fine inputs
   Hlt::Counter m_counterInputs;
 
   // counter with the accepted events (decision true)
   Hlt::Counter m_counterAccepted;
-
-  // counter with all the event passed (accepted + forced)
-  Hlt::Counter m_counterPassed;
 
   // coutner with the total number of candidates
   Hlt::Counter m_counterCandidates;
