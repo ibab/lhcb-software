@@ -1,4 +1,4 @@
-// $Id: TupleToolGeometry.cpp,v 1.7 2008-12-17 20:14:55 pkoppenb Exp $
+// $Id: TupleToolGeometry.cpp,v 1.8 2008-12-19 13:12:08 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -85,20 +85,27 @@ StatusCode TupleToolGeometry::fill( const Particle* mother
   // fill with particle's best PV
   if ( mother != P ){
     const VertexBase* myPV = m_context->desktop()->relatedVertex ( P );
-    sc = fillBPV(myPV,P,head+"_OwnPV",tuple);
+    sc = fillBPV(myPV,P,head,tuple,"_OWNPV");
     if (!sc) return sc;
   }
   // nothing more for basic particles
   if( P->isBasicParticle() ) return sc ;
-  
-  const VertexBase* vtx = 0;
-  if ( mother != P ) vtx = originVertex( mother, P );
-  else vtx = motherPV;
-  if( !vtx ){
-    Error("Can't retrieve the origin vertex for " + head );
-    return StatusCode::FAILURE;
+  // end vertex 
+  sc = fillEndVertex(P,head,tuple);
+  if (!sc) return sc;
+  // flight wrt Mother BPV
+  sc = fillFlight(motherPV,P,head,tuple);
+  if (!sc) return sc;
+  if ( mother != P ){
+    // flight wrt own best PV
+    sc = fillFlight(motherPV,P,head,tuple,"_OWNPV");
+    if (!sc) return sc;
+    // flight wrt origin vertex (I.e. the B for a D)
+    const VertexBase* vtx = originVertex( mother, P );
+    if( 0==vtx ) return Error("Can't retrieve the origin vertex for " + head );
+    sc = fillFlight(vtx,P,head,tuple,"_ORIVX");
   }
-  sc = fillEndVertex(vtx,motherPV,P,head,tuple);
+
   return sc ;
 }
 //=========================================================================
@@ -107,7 +114,8 @@ StatusCode TupleToolGeometry::fill( const Particle* mother
 StatusCode TupleToolGeometry::fillBPV( const VertexBase* primVtx
                                     , const Particle* P
                                     , const std::string head
-                                    , Tuples::Tuple& tuple ) const {
+                                    , Tuples::Tuple& tuple
+                                    , std::string trail) const {
   bool test = true ;
   if( 0==primVtx ){ 
     Error("No related primary vertex to compute the IP of "+head); 
@@ -120,8 +128,8 @@ StatusCode TupleToolGeometry::fillBPV( const VertexBase* primVtx
     ip=-1;
     chi2=-1;
   }
-  test &= tuple->column( head + "_IP", ip );
-  test &= tuple->column( head + "_IPCHI2", chi2 );
+  test &= tuple->column( head + "_IP"+trail, ip );
+  test &= tuple->column( head + "_IPCHI2"+trail, chi2 );
 
   return StatusCode(test) ;
 }
@@ -151,14 +159,45 @@ StatusCode TupleToolGeometry::fillMinIP( const Particle* P
   return StatusCode(test) ;
 }
 //=========================================================================
-// fill origin vertex stuff 
+// fill vertex stuff 
 //=========================================================================
-StatusCode TupleToolGeometry::fillEndVertex( const VertexBase* vtx
-                                          , const VertexBase* primVtx
-                                          , const Particle* P
+StatusCode TupleToolGeometry::fillEndVertex( const Particle* P
                                           , const std::string head
                                           , Tuples::Tuple& tuple ) const {
   bool test = true ;
+
+  const VertexBase* evtx = P->endVertex();
+  // decay vertex information:
+  test &= tuple->column( head + "_ENDVERTEX_", evtx->position() );
+  const Gaudi::SymMatrix3x3 & m = evtx->covMatrix ();
+  test &= tuple->column( head + "_ENDVERTEX_XERR", std::sqrt( m(0,0) ) );
+  test &= tuple->column( head + "_ENDVERTEX_YERR", std::sqrt( m(1,1) ) );
+  test &= tuple->column( head + "_ENDVERTEX_ZERR", std::sqrt( m(2,2) ) );
+  test &= tuple->column( head + "_ENDVERTEX_CHI2", evtx->chi2() );
+  test &= tuple->column( head + "_ENDVERTEX_NDOF", evtx->nDoF() );
+  // --------------------------------------------------
+  return StatusCode(test) ;
+
+}
+//=========================================================================
+// fill flight distance, angle...
+//=========================================================================
+StatusCode TupleToolGeometry::fillFlight( const VertexBase* oriVtx
+                                          , const Particle* P
+                                          , const std::string head
+                                          , Tuples::Tuple& tuple
+                                          , std::string trail ) const {
+  bool test = true ;
+  // --------------------------------------------------
+  // flight distance
+  double dist = 0;
+  double chi2 = 0 ;
+  StatusCode sc = m_dist->distance( oriVtx, P->endVertex(), dist, chi2 );
+  if (!sc) return sc ;
+  
+  test &= tuple->column( head + "_FD"+trail, dist );
+  // test &= tuple->column( head + "_FDS", dist/edist );
+  test &= tuple->column( head + "_FDCHI2"+trail, chi2 );
   // --------------------------------------------------
   // cosine of (flight distance) dot (momentum):
   // find the origin vertex. Either the primary or the origin in the
@@ -169,45 +208,11 @@ StatusCode TupleToolGeometry::fillEndVertex( const VertexBase* vtx
     return StatusCode::FAILURE;
   }
   Gaudi::XYZVector A = P->momentum().Vect();
-  Gaudi::XYZVector B = evtx->position() - vtx->position ();  
+  Gaudi::XYZVector B = evtx->position() - oriVtx->position ();  
   
   double cosPFD = A.Dot( B ) / std::sqrt( A.Mag2()*B.Mag2() );
-  test &= tuple->column( head + "_DIRA", cosPFD );
+  test &= tuple->column( head + "_DIRA"+trail, cosPFD );
 
-  // decay vertex information:
-  test &= tuple->column( head + "_ENDVERTEX_", evtx->position() );
-  const Gaudi::SymMatrix3x3 & m = evtx->covMatrix ();
-  test &= tuple->column( head + "_ENDVERTEX_XERR", std::sqrt( m(0,0) ) );
-  test &= tuple->column( head + "_ENDVERTEX_YERR", std::sqrt( m(1,1) ) );
-  test &= tuple->column( head + "_ENDVERTEX_ZERR", std::sqrt( m(2,2) ) );
-  test &= tuple->column( head + "_ENDVERTEX_CHI2", evtx->chi2() );
-  test &= tuple->column( head + "_ENDVERTEX_NDOF", evtx->nDoF() );
-  
-  // --------------------------------------------------
-  // flight distance
-  double dist = 0;
-  double chi2 = 0 ;
-  StatusCode sc = m_dist->distance( vtx, P->endVertex(), dist, chi2 );
-  if( sc ){}
-  else {
-    dist = 0;
-    chi2 = 0;
-  }
-  
-  test &= tuple->column( head + "_FD", dist );
-  // test &= tuple->column( head + "_FDS", dist/edist );
-  test &= tuple->column( head + "_FDCHI2", chi2 );
-
-  sc = m_dist->distance( primVtx, P->endVertex(), dist, chi2 );
-  if( sc ){}
-  else {
-    dist = 0;
-    chi2 = 0;
-  }
-
-  test &= tuple->column( head + "_FDPV", dist );
-  //test &= tuple->column( head + "_FDPVS", dist/edist );
-  test &= tuple->column( head + "_FDPVCHI2", chi2 );
   return StatusCode(test);
 }
 // =====================================================

@@ -4,6 +4,14 @@
 ! Purpose     : Option-steered tuples. Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+! 2008-12-19 - Patrick Koppenburg
+ - TupleToolGeometry : More variables. Now IP and FD come in three flavours
+   . Best PV
+   . Best PV of mother
+   . Origin (i.e. mother) vertex
+ - options/DVTestDecayTreeTuple.py
+   . Adapt to DaVinci() 
+
 ! 2008-12-17 - Patrick Koppenburg
  - TupleToolGeometry : Added a method to fill IPs wrt to best PV for 
    intermediates and finals as well.

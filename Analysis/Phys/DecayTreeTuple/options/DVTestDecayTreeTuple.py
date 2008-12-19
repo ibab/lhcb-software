@@ -20,27 +20,40 @@
  #
 
 from Gaudi.Configuration import *
-from Configurables import DecayTreeTuple, PhysDesktop, NeuralNetTmva, EventTuple, HltDecReportsMaker, TupleToolTrigger
-
-importOptions( "$B2DILEPTONROOT/options/DVDC06SelBu2eeK.opts" )
+from GaudiKernel.SystemOfUnits import *
+########################################################################
 #
+# If you want to import .opts options, do this first
 #
+importOptions("$DAVINCIROOT/options/PreloadUnits.opts")
 ########################################################################
 #
 # Trigger. Uncomment what you need. Hlt1 needs L0, Hlt2 doesn't.
 #
-from HltConf.Configuration import *
-HltConf().replaceL0BanksWithEmulated = True
-HltConf().hltType = 'Hlt1+Hlt2'
-HltConf().applyConf()
+#from HltConf.Configuration import *
+#HltConf().replaceL0BanksWithEmulated = True
+#HltConf().hltType = 'Hlt1+Hlt2'
+#HltConf().applyConf()
+#from Configurables import GaudiSequencer
+hlt = GaudiSequencer("Hlt") # capture Hlt sequencer
+#######################################################################
+#
+# Selection
+#
+importOptions( "$B2DILEPTONROOT/options/DoDC06SelBu2eeK.opts" )
+sel = GaudiSequencer("SeqPreselBu2LLK")
+#
+#
 ##################################################################
-
-ApplicationMgr().TopAlg += [ NeuralNetTmva() ] 
-importOptions( "$NNTOOLSROOT/options/NeuralNetTmva.opts")
-
+#ApplicationMgr().TopAlg += [ NeuralNetTmva() ] 
+#importOptions( "$NNTOOLSROOT/options/NeuralNetTmva.opts")
 # get reports
-ApplicationMgr().TopAlg += [ HltDecReportsMaker() ]
-
+#ApplicationMgr().TopAlg += [ HltDecReportsMaker() ]
+########################################################################
+#
+# The Decay Tuple
+#
+from Configurables import DecayTreeTuple, PhysDesktop 
 tuple = DecayTreeTuple("Tuple")
 tuple.ToolList +=  [
       "TupleToolTrigger"
@@ -54,27 +67,30 @@ tuple.ToolList +=  [
     , "TupleToolTrackInfo"
     , "TupleToolTISTOS"
      ]
-
 tuple.addTool( PhysDesktop())
-tuple.PhysDesktop.InputLocations = ["Phys/DC06SelBu2eeK"]
+tuple.PhysDesktop.InputLocations = ["DC06SelBu2eeK"]
 tuple.Decay = "[B+ -> (^J/psi(1S) => ^e+ ^e-) ^K+]cc"
+########################################################################
 #
-# Branches
+# The Event Tuple
 #
-
-ApplicationMgr().TopAlg += [ tuple ]
-
-# another Tuple with only event-stuff
+from Configurables import EventTuple, TupleToolTrigger
 evtTuple = EventTuple()
 evtTuple.ToolList = [ "TupleToolTrigger", "TupleToolEventInfo" , "TupleToolGeneration" ]
-ApplicationMgr().TopAlg += [ evtTuple ]
-
 evtTuple.addTool(TupleToolTrigger())
 evtTuple.TupleToolTrigger.VerboseHlt1 = True 
 evtTuple.TupleToolTrigger.VerboseHlt2 = True 
-
-ApplicationMgr().EvtMax = 1000
-
-NTupleSvc().Output = ["FILE1 DATAFILE='Tuple.root' TYP='ROOT' OPT='NEW'"]
-
-
+########################################################################
+#
+# DaVinci
+#
+from Configurables import DaVinci
+DaVinci().EvtMax = 1000
+DaVinci().SkipEvents = 0
+DaVinci().DataType = "DC06" # Default is "DC06"
+DaVinci().Simulation   = True
+DaVinci().HistogramFile = "DVHistos_1.root" # Histogram file
+DaVinci().TupleFile = "DecayTreeTuple.root"  # Ntuple
+DaVinci().UserAlgorithms = [ hlt, sel, tuple, evtTuple ]
+DaVinci().Input = [
+    "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol3/dijkstra/Selections/Bu2Kee-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]

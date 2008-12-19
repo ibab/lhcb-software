@@ -1,4 +1,4 @@
-// $Id: TupleToolGeometry.h,v 1.5 2008-12-17 20:14:55 pkoppenb Exp $
+// $Id: TupleToolGeometry.h,v 1.6 2008-12-19 13:12:08 pkoppenb Exp $
 #ifndef JBOREL_TUPLETOOLGEOMETRY_H
 #define JBOREL_TUPLETOOLGEOMETRY_H 1
 
@@ -20,23 +20,32 @@ namespace LHCb {
  *
  * \brief Fill geometry related information for DecayTreeTuple
  *
- * - head_IP : impact parameter with respect to the PhysDesktop::relatedVertex() of the top of decay chain
- * - head_IPCHI2 : impact parameter chi2 with respect to the PhysDesktop::relatedVertex() of the top of decay chain
- * - head_IP : impact parameter with respect to the PhysDesktop::relatedVertex() 
- *      of the particle (not available for the top of decay chain)
- * - head_IPCHI2 : impact parameter chi2 with respect to the PhysDesktop::relatedVertex() of the particle 
- *     (not available for the top of decay chain)
  * - head_MINIP : minimum impact parameter on any PV
  * - head_MINIPCHI2 : minimum chi2 IP on all PVs
- * - head_FD : flight distance of composite particle wrt. the origin
- *   associated origin vertex (maybe not the relatedVertex()).
- * - head_FDERR : flight distance error estimate
- * - head_FDS : flight distance significance
  * - head_ENDVERTEX_[X|Y|Z] : decay vertex position for composite particles
  * - head_ENDVERTEX_[X|Y|Z]ERR : decay vertex position error estimate for composite particles
  * - head_ENDVERTEX_CHI2 : decay vertex chi2
  * - head_ENDVERTEX_NDOF : decay vertex nDoF
- *
+ * - head_IP : impact parameter with respect to the PhysDesktop::relatedVertex() of the top of decay chain
+ * - head_IPCHI2 : impact parameter chi2 with respect to the PhysDesktop::relatedVertex() of the top of decay chain
+ * - head_FD : flight distance of composite particle wrt. the PhysDesktop::relatedVertex() of the top of decay chain
+ * - head_FDCHI2 : flight distance significance in units of chi2 wrt. the PhysDesktop::relatedVertex() of the top of decay chain
+ * - head_DIRA : direction angle wrt. the PhysDesktop::relatedVertex() of the top of decay chain
+ * - head_IP_OWNPV : impact parameter with respect to the PhysDesktop::relatedVertex() considered particle 
+ *  (not vailable for the top of decay chain)
+ * - head_IPCHI2_OWNPV : impact parameter chi2 with respect to the PhysDesktop::relatedVertex() considered particle 
+ * (not vailable for the top of decay chain)
+ * - head_FD_OWNPV : flight distance of composite particle wrt. the PhysDesktop::relatedVertex() considered particle 
+ * (not vailable for the top of decay chain)
+ * - head_FDCHI2_OWNPV : flight distance significance in units of chi2 wrt. the PhysDesktop::relatedVertex() considered particle 
+ * (not vailable for the top of decay chain)
+ * - head_DIRA_OWNPV : direction angle wrt. the PhysDesktop::relatedVertex() considered particle 
+ * (not vailable for the top of decay chain)
+ * - head_IP_ORIVX : impact parameter with respect to the ancestor's vertex (when applicable)
+ * - head_IPCHI2_ORIVX : impact parameter chi2 with respect to the ancestor's vertex (when applicable)
+ * - head_FD_ORIVX : flight distance of composite particle wrt. the ancestor's vertex (when applicable)
+ * - head_FDCHI2_ORIVX : flight distance significance in units of chi2 wrt. ancestor's vertex (when applicable)
+ * - head_DIRA_ORIVX : direction angle wrt. ancestor's vertex (when applicable)
  *
  * \sa DecayTreeTuple
  *
@@ -65,14 +74,20 @@ private:
   const LHCb::VertexBase* originVertex( const  LHCb::Particle*
                                         , const LHCb::Particle* ) const;
   /// fill related pV stuff
-  StatusCode fillBPV(const LHCb::VertexBase*, const LHCb::Particle*, std::string, Tuples::Tuple&) const ;
+  StatusCode fillBPV(const LHCb::VertexBase*, const LHCb::Particle*, std::string, Tuples::Tuple&, std::string trail = "") const ;
 
   /// fill min IP
   StatusCode fillMinIP(const LHCb::Particle*, std::string, Tuples::Tuple&) const ;
 
   /// fill end vertex stuff
-  StatusCode fillEndVertex(const LHCb::VertexBase*, const LHCb::VertexBase*, 
-                           const LHCb::Particle*, std::string, Tuples::Tuple&) const ;
+  StatusCode fillEndVertex(const LHCb::Particle*, std::string, Tuples::Tuple&) const ;
+
+  /// fill origin vertex stuff
+  StatusCode fillOriginVertex(const LHCb::Particle*, std::string, Tuples::Tuple&) const ;
+
+  /// fill flight
+  StatusCode fillFlight(const LHCb::VertexBase* oriVtx, const LHCb::Particle*, 
+                        std::string, Tuples::Tuple&, std::string trail = "") const ;
 
   IContextTool* m_context;
   const IDistanceCalculator* m_dist;
