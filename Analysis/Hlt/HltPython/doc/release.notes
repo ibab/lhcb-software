@@ -4,6 +4,9 @@
 ! Purpose     : Exposing Hlt tools to Python, share common python tools
 !-----------------------------------------------------------------------------
 
+! 2008-12-19- Jose A. Hernando
+   - in python/modules hltmonitortools decoration changes
+
 ! 2008-12-17 - Jose A. Hernando
    - in python/examples hltalleymonitor to monitor un alley
      python hltalleymonitor.py

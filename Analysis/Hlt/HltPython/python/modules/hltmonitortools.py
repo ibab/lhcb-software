@@ -33,7 +33,14 @@ def stepname(a):
     HAS = ["FilterDescriptor","RecoName","MatchName"]
     name = None
     xname = a.property('FilterDescriptor')
-    if (xname and len(xname)>0): name = str(xname[0])
+    if (xname and len(xname)>0):
+        name = str(xname[0])
+        cromos = name.split(",")
+        funs = cromos[0].split("_")
+        fun = funs[0]
+        com = cromos[1].replace("||","")
+        val = cromos[2]
+        name = fun+com+val
     xname = a.property('RecoName')
     if (xname): name = xname
     xname = a.property('MatchName')
