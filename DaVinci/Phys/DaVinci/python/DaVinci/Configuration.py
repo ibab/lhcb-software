@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.18 2008-12-18 09:57:52 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.19 2008-12-19 13:15:49 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -45,12 +45,17 @@ class DaVinci(LHCbConfigurableUser) :
         """
         output files
         """
+        ApplicationMgr().HistogramPersistency = "ROOT"
         if ( self.getProp("HistogramFile") != "" ):
             HistogramPersistencySvc().OutputFile = self.getProp("HistogramFile")
+            print "# Histos file will be ``", self.getProp("HistogramFile"), "''"
         if ( self.getProp("TupleFile") != "" ):
             tupleFile = self.getProp("TupleFile")
-            ApplicationMgr().ExtSvc +=  [ "NTupleSvc" ]
-            NTupleSvc().Output =  [ "FILE1 DATAFILE='"+tupleFile+"' TYP='ROOT' OPT='NEW'" ]
+            ApplicationMgr().ExtSvc +=  [ NTupleSvc() ]
+            tuple = "FILE1 DATAFILE='"+tupleFile+"' TYP='ROOT' OPT='NEW'"
+            print "# Tuple will be in ``", tupleFile, "''"
+            NTupleSvc().Output = [ tuple ]
+            NTupleSvc().OutputLevel = 1 
         if ( self.getProp("ETCFile") != "" ):
             raise TypeError( "ETC not yet implemented in configurables" )
         if ( self.getProp("DstFile") != "" ):
@@ -70,7 +75,7 @@ class DaVinci(LHCbConfigurableUser) :
         SequencerTimerTool().OutputLevel = 4
         MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
         # Do not print event number at every event
-        EventSelector().PrintFreq = -1;
+        EventSelector().PrintFreq = self.getProp("PrintFreq");
 #        ToolSvc().SequencerTimerTool.OutputLevel = 4;  // suppress SequencerTimerTool printout
 
     def mainSeq(self):
@@ -91,7 +96,7 @@ class DaVinci(LHCbConfigurableUser) :
 
     def defineInput(self):
         input = self.getProp("Input")
-#        print "DaVinci input is ", input
+        print "# DaVinci input is ", input
         if ( len(input) > 0) :
 #            print "Re-defining input to\n", input
             EventSelector().Input = input
@@ -130,6 +135,7 @@ class DaVinci(LHCbConfigurableUser) :
         self.defineDB()
         self.mainSeq()
         self.standardParticles()
+        self.outputFiles()
         
         opts = self.getProp( "MainOptions" )
         if not (opts == '') :

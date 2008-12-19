@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.278 2008-12-18 09:57:52 pkoppenb Exp $
+! $Id: release.notes,v 1.279 2008-12-19 13:15:49 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,10 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2008-12-19 - Patrick Koppenburg
+ - python/DaVinci/Configuration.py
+   . Bug fix in Tuple, printfreq.
 
 ! 2008-12-18 - Patrick Koppenburg
  - options/DaVinci.py : fill working example
