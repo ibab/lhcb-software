@@ -23,7 +23,7 @@ import sys, os, logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.21 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.22 $")
 
 
 def getLbLoginEnv(debug=False, 
@@ -172,11 +172,23 @@ class LbLoginScript(Script):
 
     def setCVSEnv(self):
         """ CVS base setup """
+        log = logging.getLogger()
         if sys.platform == "win32" :
             method = "ext"
         else :
             method = "kserver"
         server = "isscvs.cern.ch"
+        if sys.platform == "win32" :
+            if self._env.has_key("CVS_RSH") :
+                log.info("The CVS_RSH environment variable is set to %s" % self._env["CVS_RSH"])
+            else :
+                log.warning("The CVS_RSH environment variable is not set" )
+                log.warning("You should set it to the plink executable from your putty installation" )
+                log.warning("in your System Properties" )
+                self._env["CVS_RSH"] = "C:\\Program Files\\PuTTY\\plink.exe"
+                log.warning("the CVS_RSH environment variable is defaulted to %s" % self._env["CVS_RSH"])
+        else :
+            self._env["CVS_RSH"] = "ssh"
         self._env["GAUDIKSERVER"] = ":%s:%s:/local/reps/Gaudi" % (method, server)
         self._env["LHCBKSERVER"] = ":%s:%s:/local/reps/lhcb" % (method, server)
 

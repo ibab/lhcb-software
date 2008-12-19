@@ -1,3 +1,7 @@
+2008-12-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/LbLogin.py: added the CVS_RSH env variable to the main login enviroment.
+
 2008-12-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v1r12
