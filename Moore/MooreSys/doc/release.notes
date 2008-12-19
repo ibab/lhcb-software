@@ -3,7 +3,11 @@ Package     : MooreSys
 Package Coordinator : G.Raven
 Purpose     : LHCb HLT application
 
-</PRE><H1><A NAME=v5r4>2008-12-01 Moore v5r5</A></H1><PRE>
+</PRE><H1><A NAME=v5r6>2008-12-19 Moore v5r6</A></H1><PRE>
+Based on Phys v7r4, Rec v6r0, HLT v4r4, Lbcom v6r24, Online v4r18
+  Updates for monitoring, routing bits, fixes for memory leak
+
+</PRE><H1><A NAME=v5r5>2008-12-01 Moore v5r5</A></H1><PRE>
 Based on Phys v7r4, Rec v6r0, HLT v4r4, Lbcom v6r24, Online v4r18
   Updates for Online v4r18 and Gaudi v20r3
 

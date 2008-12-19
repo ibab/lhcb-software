@@ -1,17 +1,22 @@
 package MooreSys
-version v5r5
+version v5r6
 
 branches doc cmt
 
 #=======================================================
 # Don't forget the applications
 #=======================================================
-use  Moore    v5r5    Hlt
-use  TCKData  v1r5    Hlt
-use  HltLuminosityMonitor  v0r1    Hlt
+use  Moore    v5r6    Hlt
+use  TCKData  v1r6    Hlt
+use  HltLuminosityMonitor  v1r0    Hlt
 
 ###TMP
-use  HltConf  v1r7    Hlt
+use  HltBase  v5r5    Hlt
+use  HltCommon  v4r7    Hlt
+use  HltConf  v1r8    Hlt
+use  HltEcalAlley  v1r4    Hlt
+use  HltGlobalMonitor  v1r7    Hlt
+use  HltRawData  v1r7    Hlt
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
