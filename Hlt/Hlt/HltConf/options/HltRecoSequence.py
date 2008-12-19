@@ -59,7 +59,7 @@ trackRecoSequence = GaudiSequencer( 'HltTrackRecoSequence'
                                   [  recoRZVeloSequence
                                   ,  recoVelo
                                   ,  prepareVelo
-                                  #,  recoPV3D
+                                  ,  recoPV3D # this aborts the remainder of the sequence if no primary -- do we really want that??
                                   ,  recoForward
                                   ,  prepareForward
                                   ] )
@@ -112,7 +112,7 @@ hlt1RecoSequence = GaudiSequencer( 'Hlt1RecoSequence', MeasureTime = True
                                  [ hlt1RecoRZVeloTracksSequence
                                  , hlt1RecoRZPVSequence
                                  , reco1Velo
-                                 #, recoPV3D # does this not abort the remainder of the sequence if no primary??
+                                 ,  recoPV3D # this aborts the remainder of the sequence if no primary -- do we really want that??
                                  , recoFwd ] )
 
 # Forward

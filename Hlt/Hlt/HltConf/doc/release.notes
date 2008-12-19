@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.92 2008-12-19 13:10:06 witekma Exp $ 
+! $Id: release.notes,v 1.93 2008-12-19 15:02:22 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2008-12-19 - Gerhard Raven
+ - re-enable PV3D in Hlt1RecoSequence now that Photon lines don't use it anymore
 
 ! 2008-12-19 - Mariusz Witek
   - HltPhotonLines.py: Modify Hlt1RecoSequence to Hlt1RecoVelo
