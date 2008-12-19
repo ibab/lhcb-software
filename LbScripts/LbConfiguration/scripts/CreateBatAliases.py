@@ -5,7 +5,7 @@ from LbConfiguration.Project import project_list
 import sys, os
 import logging
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.3 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.4 $")
 
 class CreateBatAliasesScript(Script):
     _version = __version__
@@ -35,7 +35,7 @@ class CreateBatAliasesScript(Script):
                 filename = os.path.join(opts.outputdir, "%s.bat" % a)
                 log.info("Writing %s : call %%~d0%%~p0\%s.bat %s" % (filename, cmd , args))
                 f = open(filename, "w")
-                f.write(" call %%~d0%%~p0\%s.bat %s\n\n" % ( cmd , args))
+                f.write(" call %%~d0%%~p0\%s.bat %s %%1 %%2 %%3 %%4 %%5 %%6\n\n" % ( cmd , args))
                 f.close()
         return 0
 

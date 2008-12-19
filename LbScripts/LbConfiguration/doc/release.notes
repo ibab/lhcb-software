@@ -1,5 +1,6 @@
 2008-12-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* scripts/CreateBatAliases.py: added default argument to the windows .bat "aliases"
 	* scripts/LbLogin.py: added the CVS_RSH env variable to the main login enviroment.
 	added the setting of the windows cmtconfig.
 
