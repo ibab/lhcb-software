@@ -77,6 +77,7 @@ void MonRateDecoder::update(MonRate *monRate) {
 
   Data m_numprocessesData;
   m_numprocessesData.value = m_newNumEntries;
+  m_numprocessesData.counter = m_newNumEntries;
   strcpy(m_numprocessesData.comment, "\0");
   std::string numprocessesComment="Number of processes publishing via this MonRate";
   int commentSize = Misc::min(MAX_CAR, numprocessesComment.length()+1);
@@ -90,7 +91,7 @@ void MonRateDecoder::update(MonRate *monRate) {
   
   
   if (!procexists) {
-    static const std::string s_nbprocFormat("D:1;C");
+    static const std::string s_nbprocFormat("D:2;C");
     char * ttmpFormat = new char[s_nbprocFormat.length()+1];
     strcpy(ttmpFormat, s_nbprocFormat.c_str());    
     m_dimSvcNumberOfProcess = new DimService(numberOfProcessSvcName.c_str(), ttmpFormat, (void*)&m_numprocessesData,  nbprocdataSize);
@@ -102,6 +103,7 @@ void MonRateDecoder::update(MonRate *monRate) {
   Data m_numcountersData;
   //need to add 1 for the number of processes service
   m_numcountersData.value = m_oldNumCounters+1;
+  m_numcountersData.counter = m_oldNumCounters+1;
   strcpy(m_numcountersData.comment, "\0");
   std::string numcountersComment="Number of MonRates processed by this RateService";
   int commentcSize = Misc::min(MAX_CAR, numcountersComment.length()+1);
@@ -112,7 +114,7 @@ void MonRateDecoder::update(MonRate *monRate) {
   
   
   if (!countexists){
-    static const std::string s_nbcountersFormat("D:1;C");
+    static const std::string s_nbcountersFormat("D:2;C");
     char * tttmpFormat = new char[s_nbcountersFormat.length()+1];
     strcpy(tttmpFormat, s_nbcountersFormat.c_str());    
     m_dimSvcNumberOfCounters = new DimService(numberOfCountersSvcName.c_str(),tttmpFormat, (void*)&m_numcountersData,  nbcountdataSize);
@@ -149,8 +151,10 @@ void MonRateDecoder::update(MonRate *monRate) {
     }
 
     double counterMean = monRate->binContent(8 + i);
-    m_newCounters[i] = std::pair<std::string, double> (comment, m_newNumEntries*counterMean);
+    double counterValue = m_newNumEntries*counterMean;
+    m_newCounters[i] = std::pair<std::string, double> (comment, counterValue);
 
+    
     msg << MSG::DEBUG << "comment = " << comment <<endreq;
 
     if(i >= m_oldNumCounters){
@@ -160,16 +164,24 @@ void MonRateDecoder::update(MonRate *monRate) {
     double rateValue = m_newCounters[i].second - m_oldCounters[i].second;
     rateValue *= 1000000.0;
     rateValue /= realDeltaT;
-
-
+    if(m_oldrateValue.size()<=i) {
+       //the first time, fill the vector
+       m_oldrateValue.push_back(rateValue);
+    }
+    else {   
+       if (rateValue<=0.000001) { rateValue=m_oldrateValue[i];}
+       m_oldrateValue[i]=rateValue;
+    }  
     Data m_rateData;
     m_rateData.value = rateValue;
+    //evh addition: in addition to the rate, we also publish the value of the counters 
+    m_rateData.counter = counterValue;
     strcpy(m_rateData.comment, "\0");
     int commentSize = Misc::min(MAX_CAR, comment.length()+1);
 
     strncpy(m_rateData.comment, comment.c_str(), commentSize);
-    int dataSize = sizeof(double) + commentSize * sizeof(char);
-    msg << MSG::DEBUG << "rateValue = " << rateValue <<endreq;
+    int dataSize = 2*sizeof(double) + commentSize * sizeof(char);
+    msg << MSG::DEBUG << "rateValue = " << rateValue <<" counterValue = " << counterValue << endreq;
     
     if (m_dimSvcRate.find(i) == m_dimSvcRate.end()){
      /* std::string header = m_utgId + "/" + 
@@ -179,7 +191,7 @@ void MonRateDecoder::update(MonRate *monRate) {
                                                     m_monRateSvcName.length() - s_pfixMonRate.length()+1);
       std::string serviceName =	makeServiceName(header,i,comment);
       					    
-      static const std::string s_rateServiceFormat("D:1;C");
+      static const std::string s_rateServiceFormat("D:2;C");
       char * tmpFormat = new char[s_rateServiceFormat.length()+1];
       strcpy(tmpFormat, s_rateServiceFormat.c_str());
       msg << MSG::DEBUG << "It's a new counter, then we create DimService " << serviceName <<endreq;

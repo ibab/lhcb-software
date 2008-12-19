@@ -15,6 +15,7 @@
 struct Data
 {
   double value;
+  double counter;
   char comment[MAX_CAR+1];
 };
 
@@ -50,7 +51,7 @@ protected:
 
   DimService* m_dimSvcNumberOfProcess;
   DimService* m_dimSvcNumberOfCounters; 
-
+  std::vector<double >m_oldrateValue;
   std::map<int, std::pair<std::string, double> > m_oldCounters;
   std::map<int, std::pair<std::string, double> > m_newCounters;
   std::map<int, DimService* > m_dimSvcRate;

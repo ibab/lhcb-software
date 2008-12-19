@@ -263,6 +263,9 @@ StatusCode UpdateAndReset::finalize() {
      //calling finalize - don't need to reset, they probably don't exist anymore
      manageTESHistos(false, false, true, true);
   }
+  else {
+     updateData(true,false);
+  }
   DimTimer::stop();
 
   if (m_dimSvcSaveSetLoc !=0 ) {delete m_dimSvcSaveSetLoc; m_dimSvcSaveSetLoc=0;}
@@ -346,7 +349,8 @@ ulonglong UpdateAndReset::gpsTime() {
 
 std::pair<int, bool> UpdateAndReset::currentCycleNumber(ulonglong currentTime) {
   bool changed = false;
-  int cycleNumber = (int)currentTime/(m_desiredDeltaTCycle*1000000);
+  int cycleNumber = (int)(((double)currentTime)/(m_desiredDeltaTCycle*1000000.00));
+  
   if (m_cycleNumber != cycleNumber ) changed = true;
   return std::pair<int, bool>(cycleNumber,changed);
 }

@@ -667,7 +667,7 @@ void BaseServiceMap::add() {
       continue;
     }
 
-    if (m_dimSrvStatus[m_dimInfoIt->first].first){
+    if (!m_dimSrvStatus[m_dimInfoIt->first].first){
       MonObject *monObjectTmp = m_dimInfo[m_dimInfoIt->first][m_dimSrvStatus[m_dimInfoIt->first].second]->monObject();
       if (monObjectTmp !=0) {
         m_dimSrv[m_dimInfoIt->first].second->copyFrom(monObjectTmp);
