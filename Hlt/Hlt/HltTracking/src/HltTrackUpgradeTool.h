@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.h,v 1.13 2008-11-12 14:25:52 ibelyaev Exp $
+// $Id: HltTrackUpgradeTool.h,v 1.14 2008-12-19 17:37:27 graven Exp $
 #ifndef HLTTRACKING_HLTTRACKUPGRADETOOL_H 
 #define HLTTRACKING_HLTTRACKUPGRADETOOL_H 1
 
@@ -6,7 +6,6 @@
 // from Gaudi
 #include "GaudiAlg/ISequencerTimerTool.h"
 #include "GaudiAlg/GaudiTool.h"
-#include "HltBase/HltTypes.h"
 #include "HltBase/HltUtils.h"
 #include "HltBase/ITrackUpgrade.h"
 #include "HltBase/ITrackView.h"
