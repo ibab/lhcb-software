@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltPhotonLines.py,v 1.12 2008-12-18 14:03:47 graven Exp $
+# $Id: HltPhotonLines.py,v 1.13 2008-12-19 13:06:35 witekma Exp $
 # =============================================================================
 ## @file
 #  Configuration of Photon Lines
@@ -12,7 +12,7 @@
 '''
 # =============================================================================
 __author__  = 'Gerhard Raven Gerhard.Raven@nikhef.nl'
-__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.12 $'
+__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.13 $'
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -53,7 +53,7 @@ Line ('Photon'
                , HistogramUpdatePeriod = 0
                , HistoDescriptor = { 'IP' : ('IP',-1.,3.,400), 'IPBest' : ('IPBest',-1.,3.,400) }
                )
-      , GaudiSequencer('Hlt1RecoSequence')
+      , GaudiSequencer('Hlt1RecoVelo')
       , Member ('TF', 'SecondVelo' 
                , InputSelection     = 'Velo'
                , FilterDescriptor = ['IP_PV2D,||[],0.15,3.0']
@@ -116,7 +116,7 @@ Line ('PhoFromEle'
                , HistogramUpdatePeriod = 0
                , HistoDescriptor = { 'IP' : ('IP',-1.,3.,400), 'IPBest' : ('IPBest',-1.,3.,400) }
                )
-      , GaudiSequencer('Hlt1RecoSequence')
+      , GaudiSequencer('Hlt1RecoVelo')
       , Member ('TF', 'SecondVelo' 
                , InputSelection     = 'Velo'
                , FilterDescriptor = ['IP_PV2D,||[],0.15,3.0']

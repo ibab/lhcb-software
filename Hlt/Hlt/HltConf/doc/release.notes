@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.91 2008-12-18 15:36:54 albrecht Exp $ 
+! $Id: release.notes,v 1.92 2008-12-19 13:10:06 witekma Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2008-12-19 - Mariusz Witek
+  - HltPhotonLines.py: Modify Hlt1RecoSequence to Hlt1RecoVelo
+    Correction of mistaken call to full Hlt1RecoSequence
 
 ! 2008-12-18 - Johannes Albrecht
   - Hlt1HadronViaTSequence.opts: Corrected algorithm and function names
