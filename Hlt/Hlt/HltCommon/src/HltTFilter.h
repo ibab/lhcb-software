@@ -1,4 +1,4 @@
-// $Id: HltTFilter.h,v 1.6 2008-07-30 13:37:33 graven Exp $
+// $Id: HltTFilter.h,v 1.7 2008-12-19 17:32:08 graven Exp $
 #ifndef HLTCOMMON_HLTTFILTER_H 
 #define HLTCOMMON_HLTTFILTER_H 1
 
@@ -23,6 +23,8 @@ namespace Hlt {
         : filtername(name)
         , minvalue(-1e6)
         , maxvalue(1e6)
+        , counter(name)
+        , counterCandidates(name+" candidates")
     {}
     virtual ~TFilterData()  {}
   private:

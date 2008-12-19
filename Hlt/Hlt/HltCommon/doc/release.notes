@@ -4,6 +4,10 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2008-12-19 - Gerhard Raven
+ - follow counter changes in HltBase
+
+!========================== HltCommon v4r7 2008-12-18 ===================
 ! 2008-12-18 - Gerhard Raven
  - adapt counter labels to Hlt2 usage, publish to monitoring svc
  - add FitVertexMaxChi2OverNdf to HltFunctionFactories

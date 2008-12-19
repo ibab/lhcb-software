@@ -1,4 +1,4 @@
-// $Id: HltSelectionFilter.cpp,v 1.8 2008-08-13 07:26:54 graven Exp $
+// $Id: HltSelectionFilter.cpp,v 1.9 2008-12-19 17:32:08 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -80,7 +80,7 @@ StatusCode HltSelectionFilter::finalize() {
 
   for (size_t i = 0; i < m_scounters.size(); ++i) {
     infoSubsetEvents(m_scounters[i],
-                     m_counterEntries,
+                     counterEntries(),
                      m_input[i]->id().str());
   }
   return HltAlgorithm::finalize();  

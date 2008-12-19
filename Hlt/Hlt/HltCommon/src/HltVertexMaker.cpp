@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.cpp,v 1.25 2008-10-03 11:30:58 graven Exp $
+// $Id: HltVertexMaker.cpp,v 1.26 2008-12-19 17:32:08 graven Exp $
 // Include files 
 
 
@@ -78,6 +78,7 @@ HltVertexMaker<SelectionContainer>::HltVertexMaker( const std::string& name,
                                 ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
   , m_selections(*this)
+  , m_counterCombinations("N combinations")
 {
   declareProperty("CheckForOverlaps", m_checkForOverlaps = false );
   declareProperty("FilterDescriptor", m_filterDescriptor);
@@ -175,7 +176,7 @@ StatusCode HltVertexMaker<Selections>::execute() {
       // can not be the same track
       if (track1 == track2) continue;
 
-      increaseCounter(m_counterCombinations);
+      m_counterCombinations.increase();
 
       // Check for segment overlaps
       bool rejected = ( m_checkForOverlaps && HltUtils::matchIDs(*track1,*track2) );
