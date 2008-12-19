@@ -1,38 +1,67 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.19 2008-12-19 13:15:49 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.20 2008-12-19 15:56:59 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 from Configurables import GaudiSequencer
-from Configurables import ( LHCbConfigurableUser, LHCbApp, PhysConf, AnalysisConf )
+from Configurables import ( LHCbConfigurableUser, LHCbApp, PhysConf, AnalysisConf, HltConf )
 import GaudiKernel.ProcessJobOptions
 
 class DaVinci(LHCbConfigurableUser) :
     __slots__ = {
-         "EvtMax"          :  -1     # Number of events to analyse
-       , "SkipEvents"      :   0     # Number of events to skip at beginning for file
-       , "PrintFreq"       : 100     # The frequency at which to print event numbers
-       , "DataType"        : 'DC06'  # Data type, can be ['DC06','2008'] Forwarded to PhysConf
-       , "Simulation"      : True    # set to True to use SimCond. Forwarded to PhysConf
-       , "DDDBtag"         : ""      # Tag for DDDB. Default as set in DDDBConf for DataType
-       , "CondDBtag"       : ""      # Tag for CondDB. Default as set in DDDBConf for DataType
-       , "UseOracle"       : False   # if False, use SQLDDDB instead
-       , "RedoMCLinks"     : False   # One some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association.
-       , "HistogramFile"   : ""      # Write name of output Histogram file
-       , "TupleFile"       : ""      # Write name of output Tuple file
-       , "ETCFile"         : ""      # Write name of output ETC file @todo Not yet implemented
-       , "DstFile"         : ""      # Write name of output DST file @todo Not yet implemented
-       , "MainOptions"     : ""      # Main option file to execute
-       , "Input"           : []      # Input data. Can also be passed as a second option file.
-       , "UserAlgorithms"  : []      # User algorithms to run.
+# Application Configuration : sent to LHCbApp and Gaudi
+         "EvtMax"             :  -1     # Number of events to analyse
+       , "SkipEvents"         :   0     # Number of events to skip at beginning for file
+       , "PrintFreq"          : 100     # The frequency at which to print event numbers
+       , "DataType"           : 'DC06'  # Data type, can be ['DC06','2008'] Forwarded to PhysConf
+       , "Simulation"         : True    # set to True to use SimCond. Forwarded to PhysConf
+       , "DDDBtag"            : ""      # Tag for DDDB. Default as set in DDDBConf for DataType
+       , "CondDBtag"          : ""      # Tag for CondDB. Default as set in DDDBConf for DataType
+       , "UseOracle"          : False   # if False, use SQLDDDB instead
+# Input
+       , "Input"              : []      # Input data. Can also be passed as a second option file.
+# Output
+       , "HistogramFile"      : ""      # Write name of output Histogram file
+       , "TupleFile"          : ""      # Write name of output Tuple file
+       , "ETCFile"            : ""      # Write name of output ETC file @todo Not yet implemented
+       , "DstFile"            : ""      # Write name of output DST file @todo Not yet implemented
+# DaVinci Options
+       , "MainOptions"        : ""      # Main option file to execute
+       , "UserAlgorithms"     : []      # User algorithms to run.
+       , "RedoMCLinks"        : False   # One some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association.
+# Hlt running
+       , "HltType"            : ''      # HltType : No Hlt. Use Hlt1+Hlt2 to run Hlt
+       , "HltUserAlgorithms"  : [ ]     # put here user algorithms to add
+       , "HltOldStyle"        : False   # old style options configuration
+       , "ReplaceL0BanksWithEmulated" : False
+       , "Hlt2IgnoreHlt1Decision" : False # run Hlt2 even if Hlt1 failed
         }
 
-    __used_configurables__ = [ LHCbApp, PhysConf, AnalysisConf ]
+    __used_configurables__ = [ LHCbApp, PhysConf, AnalysisConf, HltConf ]
 
+    def initSeq(self):
+        """
+        Initialisation sequence
+        """
+        from Configurables import (GaudiSequencer, LbAppInit)
+        init = GaudiSequencer("DaVinciInitSeq")
+        ApplicationMgr().TopAlg = [ init ]  # Note the = here 
+        init.Members += [ LbAppInit("DaVinciAppInit") ]
+        init.IgnoreFilterPassed = True
+        if ( self.getProp("RedoMCLinks") ) :
+            AnalysisConf().redoMCLinks(init)
 
+    def hlt(self):
+        from HltConf.Configuration import *        
+        HltConf().replaceL0BanksWithEmulated = self.getProp("ReplaceL0BanksWithEmulated") ## enable if you want to rerun L0
+        HltConf().Hlt2IgnoreHlt1Decision =  self.getProp("Hlt2IgnoreHlt1Decision")        ## enable if you want Hlt2 irrespective of Hlt1
+        HltConf().hltType =  self.getProp("HltType")                                      ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
+        HltConf().oldStyle = self.getProp("HltOldStyle")                                  ## Go for the new thing
+        HltConf().applyConf()                                                             ## don't forget to actually apply the configuration!!!
+        
     def checkOptions(self):
         """
         Does nothing but checking that all is fine
@@ -78,18 +107,6 @@ class DaVinci(LHCbConfigurableUser) :
         EventSelector().PrintFreq = self.getProp("PrintFreq");
 #        ToolSvc().SequencerTimerTool.OutputLevel = 4;  // suppress SequencerTimerTool printout
 
-    def mainSeq(self):
-        """
-        Initialisation sequence
-        """
-        from Configurables import (GaudiSequencer, LbAppInit)
-        init = GaudiSequencer("DaVinciInitSeq")
-        ApplicationMgr().TopAlg = [ init ]  # note the = here
-        init.Members += [ LbAppInit("DaVinciAppInit") ]
-        init.IgnoreFilterPassed = True
-        if ( self.getProp("RedoMCLinks") ) :
-            AnalysisConf().redoMCLinks(init)
-
     def defineEvents(self):
         # Delegate handling to LHCbApp configurable
         self.setOtherProps(LHCbApp(),["EvtMax","SkipEvents"])
@@ -122,6 +139,9 @@ class DaVinci(LHCbConfigurableUser) :
         print "# applying DaVinci configuration"
         self.checkOptions()
         importOptions("$STDOPTS/LHCbApplication.opts") # to get units in .opts files
+        # start with init
+        self.initSeq()
+        self.hlt()
         self.defineMonitors()
         self.setOtherProps(PhysConf(),["DataType","Simulation"])
         self.setOtherProps(AnalysisConf(),["DataType","Simulation"])
@@ -133,7 +153,6 @@ class DaVinci(LHCbConfigurableUser) :
         self.defineEvents()
         self.defineInput()
         self.defineDB()
-        self.mainSeq()
         self.standardParticles()
         self.outputFiles()
         

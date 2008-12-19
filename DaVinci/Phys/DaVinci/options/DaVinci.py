@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DaVinci.py,v 1.21 2008-12-19 13:15:49 pkoppenb Exp $
+# $Id: DaVinci.py,v 1.22 2008-12-19 15:56:59 pkoppenb Exp $
 #
 # Options for a typical DaVinci job
 #
@@ -19,17 +19,6 @@ from Configurables import GaudiSequencer
 # If you want to import .opts options, do this first
 #
 importOptions("$DAVINCIROOT/options/PreloadUnits.opts")
-########################################################################
-#
-# Hlt always goes first ?  - Broken 
-#
-#from HltConf.Configuration import *
-#HltConf().replaceL0BanksWithEmulated = True ## enable if you want to rerun L0
-#HltConf().Hlt2IgnoreHlt1Decision = True ## enable if you want Hlt2 irrespective of Hlt1
-#HltConf().hltType = 'Hlt1+Hlt2'  ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
-#HltConf().oldStyle = False        ## Go for the new thing
-#HltConf().applyConf()            ## don't forget to actually apply the configuration!!!
-#hlt = GaudiSequencer("Hlt")      ## Pick HLT sequencer
 ########################################################################
 #
 # Some preselection. This defines a GaudiSequencer.
@@ -61,13 +50,19 @@ tag.PhysDesktop.InputLocations = [ "PreselBu2LLK" ]
 from Configurables import DaVinci
 DaVinci().EvtMax = 1000
 DaVinci().SkipEvents = 0
-DaVinci().DataType = "2008" # Default is "DC06"
+DaVinci().DataType = "DC06" # Default is "DC06"
 DaVinci().Simulation   = True
 DaVinci().HistogramFile = "DVHistos_1.root" # Histogram file
 DaVinci().TupleFile = "DVNtuples.root"  # Ntuple
 # DaVinci().UserAlgorithms = [ preselSeq, exampleSeq, tag ]
-DaVinci().UserAlgorithms = [ hlt, preselSeq, exampleSeq, tag ]
+DaVinci().UserAlgorithms = [ preselSeq, exampleSeq, tag ]
 # DaVinci().MainOptions  = "" # None
+########################################################################
+# HLT
+DaVinci().ReplaceL0BanksWithEmulated = True ## enable if you want to rerun L0
+DaVinci().Hlt2IgnoreHlt1Decision = True     ## enable if you want Hlt2 irrespective of Hlt1
+DaVinci().HltType = 'Hlt1+Hlt2'             ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
+DaVinci().HltOldStyle = False               ## Go for the new thing
 ########################################################################
 #
 # To run : gaudirun.py options/DaVinci.py options/DaVinciTestData.py
