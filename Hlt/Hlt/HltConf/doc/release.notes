@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.93 2008-12-19 15:02:22 graven Exp $ 
+! $Id: release.notes,v 1.94 2008-12-19 19:51:25 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -7,6 +7,7 @@
 
 ! 2008-12-19 - Gerhard Raven
  - re-enable PV3D in Hlt1RecoSequence now that Photon lines don't use it anymore
+ - fix type of Hlt1RecoVelo used in HltPhotonLines
 
 ! 2008-12-19 - Mariusz Witek
   - HltPhotonLines.py: Modify Hlt1RecoSequence to Hlt1RecoVelo
