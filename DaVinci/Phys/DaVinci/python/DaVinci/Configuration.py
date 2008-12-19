@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.20 2008-12-19 15:56:59 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.21 2008-12-19 16:00:08 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -55,7 +55,6 @@ class DaVinci(LHCbConfigurableUser) :
             AnalysisConf().redoMCLinks(init)
 
     def hlt(self):
-        from HltConf.Configuration import *        
         HltConf().replaceL0BanksWithEmulated = self.getProp("ReplaceL0BanksWithEmulated") ## enable if you want to rerun L0
         HltConf().Hlt2IgnoreHlt1Decision =  self.getProp("Hlt2IgnoreHlt1Decision")        ## enable if you want Hlt2 irrespective of Hlt1
         HltConf().hltType =  self.getProp("HltType")                                      ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
