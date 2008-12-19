@@ -1,7 +1,7 @@
 """
 High level configuration tools for PhysConf
 """
-__version__ = "$Id: Configuration.py,v 1.1.1.1 2008-12-17 19:54:07 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.2 2008-12-19 14:59:49 pkoppenb Exp $"
 __author__ = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -26,6 +26,10 @@ class PhysConf(LHCbConfigurableUser) :
         """
         # POOL Persistency
         importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
+        # PPSvc
+        from Configurables import LHCb__ParticlePropertySvc
+        pp = LHCb__ParticlePropertySvc ( ParticlePropertiesFile = 'conddb:///param/ParticleTable.txt' )
+        ApplicationMgr().ExtSvc +=  [ pp ]            
         # Get the event time (for CondDb) from ODIN
         from Configurables import EventClockSvc
         EventClockSvc().EventTimeDecoder = "OdinTimeDecoder";
