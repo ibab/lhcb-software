@@ -1,4 +1,4 @@
-// $Id: LumiAnalyser.h,v 1.4 2008-11-28 16:05:56 panmanj Exp $
+// $Id: LumiAnalyser.h,v 1.5 2008-12-19 17:35:58 graven Exp $
 #ifndef LUMIANALYSER_H 
 #define LUMIANALYSER_H 1
 
@@ -6,9 +6,8 @@
 #include "GaudiKernel/IHistogramSvc.h"
 #include "Event/HltSummary.h"
 #include "Event/RecVertex.h"
-#include "HltBase/HltTypes.h"
-#include "HltBase/HltBaseAlg.h"
 #include "Event/HltLumiSummary.h"
+#include "HltBase/HltBaseAlg.h"
 #include "HltBase/ANNSvc.h"
 
 /** @class LumiAnalyser 
@@ -37,9 +36,6 @@ public:
   virtual StatusCode finalize  ();
 
 protected:
-  // initialize the counters
-  virtual void initCounters();
-
   // analyse histos
   virtual StatusCode accumulate  ();
   virtual StatusCode analyse  ();

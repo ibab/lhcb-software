@@ -1,4 +1,4 @@
-// $Id: LumiHistoCollector.cpp,v 1.1 2008-10-01 15:04:12 panmanj Exp $
+// $Id: LumiHistoCollector.cpp,v 1.2 2008-12-19 17:35:58 graven Exp $
 // Include files 
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -41,6 +41,8 @@ DECLARE_ALGORITHM_FACTORY( LumiHistoCollector );
 LumiHistoCollector::LumiHistoCollector( const std::string& name,
                             ISvcLocator* pSvcLocator )
   : HltBaseAlg ( name , pSvcLocator )
+  , m_counterEntries("Entries")
+  , m_counterHistoInputs("HistoInputs")
 {
   declareProperty("HistogramUpdatePeriod" , m_histogramUpdatePeriod = 1 );
   declareProperty("TrendSize"             , m_trendSize = 100 );
@@ -89,8 +91,6 @@ StatusCode LumiHistoCollector::initialize() {
       m_Variables.push_back("CaloEt_threshold");
   }
 
-  initCounters();
-
   // set up the hisogram lookup tables and book the result histos
   setupStore();
   
@@ -105,20 +105,11 @@ StatusCode LumiHistoCollector::initialize() {
 }
 
 //---------------------------------------------------------
-void LumiHistoCollector::initCounters() 
-{
-  // counters
-  initializeCounter(m_counterEntries,    "Entries");
-  initializeCounter(m_counterHistoInputs,     "HistoInputs");
-  debug() << "Counters initialised" << endmsg;
-}
-
-//---------------------------------------------------------
 StatusCode LumiHistoCollector::execute() {
 
   StatusCode sc = StatusCode::SUCCESS;  
-  increaseCounter(m_counterEntries,1);
-  increaseCounter(m_counterHistoInputs,1);
+  m_counterEntries.increase();
+  m_counterHistoInputs.increase();
 
   // analyse the data at with time intervals
   if ( gpsTimeInterval() ) analyse();

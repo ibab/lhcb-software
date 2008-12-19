@@ -1,12 +1,12 @@
-// $Id: LumiHistoMaker.h,v 1.5 2008-09-24 18:52:18 graven Exp $
+// $Id: LumiHistoMaker.h,v 1.6 2008-12-19 17:35:58 graven Exp $
 #ifndef LUMIHISTOMAKER_H 
 #define LUMIHISTOMAKER_H 1
 
 // Include files
 #include "Event/RecVertex.h"
-#include "HltBase/HltTypes.h"
-#include "HltBase/HltBaseAlg.h"
 #include "Event/HltLumiSummary.h"
+#include "HltBase/HltBaseAlg.h"
+
 /** @class LumiHistoMaker 
  *  
  *
@@ -34,12 +34,6 @@ public:
 
   // finalize algorithm
   virtual StatusCode finalize  ();
-
-protected:
-
-  // initialize the counters
-  virtual void initCounters();
-
 
 private:  
 

@@ -1,4 +1,4 @@
-// $Id: LumiAnalyser.cpp,v 1.4 2008-11-28 16:05:56 panmanj Exp $
+// $Id: LumiAnalyser.cpp,v 1.5 2008-12-19 17:35:58 graven Exp $
 // Include files 
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -43,6 +43,8 @@ DECLARE_ALGORITHM_FACTORY( LumiAnalyser );
 LumiAnalyser::LumiAnalyser( const std::string& name,
                             ISvcLocator* pSvcLocator )
   : HltBaseAlg ( name , pSvcLocator )
+  , m_counterEntries("Entries")
+  , m_counterHistoInputs("HistoInputs")
 {
   declareProperty("HistogramUpdatePeriod" , m_histogramUpdatePeriod = 1 );
   declareProperty("InputDataContainer",     m_DataName = LHCb::HltLumiSummaryLocation::Default );
@@ -95,7 +97,6 @@ StatusCode LumiAnalyser::initialize() {
   // ------------------------------------------
   m_annSvc = svc<IANNSvc>("LumiANNSvc");
 
-  initCounters();
   m_call_counter = 0;
 
   if (m_Variables.size()!=m_Thresholds.size() && !m_Thresholds.empty()) {
@@ -149,21 +150,12 @@ StatusCode LumiAnalyser::initialize() {
 }
 
 //---------------------------------------------------------
-void LumiAnalyser::initCounters() 
-{
-   // counters
-  initializeCounter(m_counterEntries,    "Entries");
-  initializeCounter(m_counterHistoInputs,     "HistoInputs");
-  info()<< "Counters initialised!"<<endmsg;
-  
-}
 
 //---------------------------------------------------------
 StatusCode LumiAnalyser::execute() {
 
-  StatusCode sc = StatusCode::SUCCESS;  
-  increaseCounter(m_counterEntries,1);
-  increaseCounter(m_counterHistoInputs,1);
+  m_counterEntries.increase();
+  m_counterHistoInputs.increase();
   m_call_counter++;
 
   // accumulate the counters with their normalization
@@ -174,7 +166,7 @@ StatusCode LumiAnalyser::execute() {
   //if (  m_call_counter%100 == 0 ) analyse();
 
   setDecision(true);
-  return sc;
+  return StatusCode::SUCCESS;  
 }
 
 //---------------------------------------------------------

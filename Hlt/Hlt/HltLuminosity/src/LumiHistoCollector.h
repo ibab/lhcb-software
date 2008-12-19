@@ -1,4 +1,4 @@
-// $Id: LumiHistoCollector.h,v 1.1 2008-10-01 15:04:12 panmanj Exp $
+// $Id: LumiHistoCollector.h,v 1.2 2008-12-19 17:35:58 graven Exp $
 #ifndef LUMIHISTOCOLLECTOR_H 
 #define LUMIHISTOCOLLECTOR_H 1
 
@@ -6,9 +6,8 @@
 #include "GaudiKernel/IHistogramSvc.h"
 #include "Event/HltSummary.h"
 #include "Event/RecVertex.h"
-#include "HltBase/HltTypes.h"
-#include "HltBase/HltBaseAlg.h"
 #include "Event/HltLumiSummary.h"
+#include "HltBase/HltBaseAlg.h"
 
 class IRegistry;
 class IDataManagerSvc;
@@ -39,9 +38,6 @@ public:
   virtual StatusCode finalize  ();
 
 protected:
-  // initialize the counters
-  virtual void initCounters();
-
   // analyse histos
   virtual StatusCode analyse  ();
   virtual void storeTrend  (std::string varname, double lumiValue) ;
