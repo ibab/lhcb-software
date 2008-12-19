@@ -1,6 +1,7 @@
 2008-12-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/LbLogin.py: added the CVS_RSH env variable to the main login enviroment.
+	added the setting of the windows cmtconfig.
 
 2008-12-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
@@ -8,7 +9,7 @@
 	* scripts/AllProjectsSetup.bat: fixed temporary file name
 	* scripts/generateLogin.py: removed the explicit versions for Python and LbScripts
 	* scripts/LbLogin.py: remove obsolete cleanup of the User_release_area (it was 
-	a problem on windows
+	a problem on windows)
 
 2008-12-18  Marco Clemencic  <Marco.Clemencic@cern.ch>
 

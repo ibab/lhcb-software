@@ -23,7 +23,7 @@ import sys, os, logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.22 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.23 $")
 
 
 def getLbLoginEnv(debug=False, 
@@ -516,7 +516,9 @@ class LbLoginScript(Script):
                     platlist = l[:-1].split()[1]
                     platlist = platlist.split(".")
                     self.platform = "osx%s" % "".join(platlist[:2])
-
+        elif sys.platform == "win32":
+            self.platform = "win32"
+            self.compdef = "vc71"
 
         if opts.cmtconfig :
             conflist = opts.cmtconfig.split("_")
@@ -555,11 +557,15 @@ class LbLoginScript(Script):
                         ev["LD_LIBRARY_PATH"] = os.pathsep.join(lpthlist)
 
 
-        ev["CMTOPT"] = "_".join([self.platform, self.binary, self.compdef])
+        if not sys.platform == "win32" :
+            ev["CMTOPT"] = "_".join([self.platform, self.binary, self.compdef])
+        else :
+            ev["CMTOPT"] = "_".join([self.platform, self.compdef]) 
+                       
         ev["CMTDEB"] = ev["CMTOPT"] + "_dbg"
         
         ev["CMTCONFIG"] = ev["CMTOPT"]
-        if debug :
+        if debug or sys.platform == "win32":
             ev["CMTCONFIG"] = ev["CMTDEB"]
             
     def setCMTPath(self):
