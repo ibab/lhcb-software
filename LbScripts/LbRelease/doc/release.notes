@@ -1,3 +1,8 @@
+2008-12-19  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+
+	* python/LbRelease/Nightlies/functions.py: modified the way of invoking
+	actionLauncher from the "builders". Now it is used as a module (with python -m).
+
 2008-12-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v1r6

@@ -295,37 +295,26 @@ def generateBuilders(destPath, projectNames, minusj):
     actionsFileAbsPath = os.path.join(actionsFileAbsPath, 'actionLauncher.py')
 
     lines = """
-action pkg_get "mkdir -p logs ; """ + python + """ """ + actionsFileAbsPath + """ get $(packageName) 2>&1 | tee -a logs/$(package)_$(CMTCONFIG)_get.log"
-action pkg_config " """ + python + """ """ + actionsFileAbsPath + """ config $(packageName) 2>&1"
-action pkg_make " """ + python + """ """ + actionsFileAbsPath + """ make $(packageName) """
-    if minusj > 0: lines += str(minusj)
-    else: lines += "0"
-    lines += """ 2>&1 ; exit 0"
-action pkg_install " """ + python + """ """ + actionsFileAbsPath + """ install $(packageName) 2>&1"
-action pkg_test " """ + python + """ """ + actionsFileAbsPath + """ test $(packageName) 2>&1"
-    """
+action pkg_get "mkdir -p logs ; %(launcher)s get $(packageName) 2>&1 | tee -a logs/$(package)_$(CMTCONFIG)_get.log"
+action pkg_config " %(launcher)s config $(packageName) 2>&1"
+action pkg_make " %(launcher)s make $(packageName) %(processes)d 2>&1 ; exit 0"
+action pkg_install " %(launcher)s install $(packageName) 2>&1"
+action pkg_test " %(launcher)s test $(packageName) 2>&1"
+    """ % { "launcher" : python + " -m LbRelease.Nightlies.actionLauncher",
+            "processes": max(0,minusj) }
 
     destPath = os.path.abspath(destPath)
     for p in projectNames:
-        shutil.rmtree(os.path.join(destPath, p.lower()), ignore_errors=True)
-        os.makedirs(os.path.join(destPath, p.lower(), 'cmt') )
-        f = file(os.path.join(destPath, p.lower(), 'cmt', 'requirements'), 'w')
-        f.write('package ' + p.lower() + os.linesep)
-        f.write('macro packageName "' + p + '"' + os.linesep)
-        f.write('use LbScriptsSys' + os.linesep)
-        f.write('use Python v* LCG_Interfaces' + os.linesep)
-        f.write(lines)
-        f.close()
-    for p in projectNames:
-        shutil.rmtree(os.path.join(destPath, p.upper()), ignore_errors=True)
-        os.makedirs(os.path.join(destPath, p.upper(), 'cmt') )
-        f = file(os.path.join(destPath, p.upper(), 'cmt', 'requirements'), 'w')
-        f.write('package ' + p.upper() + os.linesep)
-        f.write('macro packageName "' + p + '"' + os.linesep)
-        f.write('use LbScriptsSys' + os.linesep)
-        f.write('use Python v* LCG_Interfaces' + os.linesep)
-        f.write(lines)
-        f.close()
+        for pdir in [ p.lower(), p.upper() ]:
+            shutil.rmtree(os.path.join(destPath, pdir), ignore_errors=True)
+            os.makedirs(os.path.join(destPath, pdir, 'cmt') )
+            f = file(os.path.join(destPath, pdir, 'cmt', 'requirements'), 'w')
+            f.write('package ' + pdir + os.linesep)
+            f.write('macro packageName "' + p + '"' + os.linesep)
+            f.write('use LbScriptsSys' + os.linesep)
+            f.write('use Python v* LCG_Interfaces' + os.linesep)
+            f.write(lines)
+            f.close()
     shutil.rmtree(os.path.join(destPath, 'cmt'), ignore_errors=True)
     os.makedirs(os.path.join(destPath, 'cmt'))
     f = file(os.path.join(destPath, 'cmt', 'project.cmt'), 'w')
