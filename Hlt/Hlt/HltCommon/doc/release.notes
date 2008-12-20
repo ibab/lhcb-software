@@ -4,6 +4,8 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2008-12-20 - Gerhard Raven
+ - check for valid int ID in HltLine
 ! 2008-12-19 - Gerhard Raven
  - follow counter changes in HltBase
 

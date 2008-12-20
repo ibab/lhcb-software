@@ -1,4 +1,4 @@
-// $Id: HltLine.cpp,v 1.7 2008-12-18 13:38:57 graven Exp $
+// $Id: HltLine.cpp,v 1.8 2008-12-20 08:50:39 graven Exp $
 // Include files
 #include "HltLine.h"
 
@@ -169,6 +169,9 @@ StatusCode HltLine::execute() {
   boost::optional<IANNSvc::minor_value_type> key = annSvc().value("Hlt1SelectionID",m_decision);
   //TODO: add c'tor with only selID
   LHCb::HltDecReport report( 0, 0, 0, key->second );
+  if (report.invalidIntSelectionID()) {
+    warning() << " selectionName=" << key->first << " has invalid intSelectionID=" << key->second << endmsg;
+  } 
   bool accept = true; // !m_stages.empty()??
   for (unsigned i=0;i<m_stages.size();++i) {
      result = m_stages[i]->execute();
