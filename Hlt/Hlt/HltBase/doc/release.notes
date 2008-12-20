@@ -7,6 +7,7 @@
 ! 2008-12-19 - Gerhard Raven
  - streamline counter usage
  - remove unused HltMonitorAlgorithm, HltSequences
+ - use standard StatEntity instead of Hlt::Counter
 
 ! 2008-12-11 - Vanya BELYAEV
  - IHltDataSvc :  IAlgorithm*  -> const IAlgorithm* 

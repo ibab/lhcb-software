@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.45 2008-12-19 17:29:52 graven Exp $
+// $Id: HltAlgorithm.cpp,v 1.46 2008-12-20 18:21:06 graven Exp $
 // Include files 
 
 #include "Event/Particle.h"
@@ -37,15 +37,15 @@ HltAlgorithm::HltAlgorithm( const std::string& name,
   : HltBaseAlg ( name , pSvcLocator )
   , m_requireInputsToBeValid(requireInputsToBeValid)
   , m_outputSelection(0)
-  , m_counterEntries("Entries")
-  , m_counterInputs("Inputs")
-  , m_counterAccepted("Accepted Events")
-  , m_counterCandidates("nCandidates")
   , m_outputHisto(0)
 {
   declareProperty("RequirePositiveInputs", m_requireInputsToBeValid );
   declareProperty("HistogramUpdatePeriod" , m_histogramUpdatePeriod = 0 );
   declareProperty("SaveConfiguration", m_saveConf = true);
+
+  //TODO: in init, declare these to mon svc...
+  counter("#accept");
+  counter("#candidates accepted");
 
 
   //TODO: since this is not applicable to all algorithms, remove from base...
@@ -117,7 +117,7 @@ StatusCode HltAlgorithm::sysExecute() {
   StatusCode sc = StatusCode::SUCCESS;
 
   // switch of histogramming for this event only if so requested
-  histoGuard guard( m_histogramUpdatePeriod>0 && (m_counterEntries % m_histogramUpdatePeriod !=0), *this );
+  histoGuard guard( m_histogramUpdatePeriod>0 && (counter("#accept").nEntries() % m_histogramUpdatePeriod !=0), *this );
 
   
   //TODO: add try/catch around this, and set error flags...
@@ -157,12 +157,9 @@ StatusCode HltAlgorithm::beginExecute() {
   // we always process callbacks first...
   BOOST_FOREACH( CallBack* i, m_callbacks ) i->process();
   
-  m_counterEntries.increase();
-  
   m_outputSelection->clean();
   bool ok = verifyInput();
   if (produceHistos()) monitorInputs();
-  if (ok) m_counterInputs.increase();
   
   return ok ? StatusCode::SUCCESS : StatusCode::FAILURE ;
 }
@@ -242,7 +239,7 @@ void HltAlgorithm::monitorOutput() {
 void HltAlgorithm::setDecision() {
   Assert (0 != m_outputSelection," setDecision() no output selection! ");
   size_t n = m_outputSelection->ncandidates();
-  m_counterCandidates.increase(n);
+  counter("#candidates accepted") += n ; 
   if (n>=m_minNCandidates) m_outputSelection->setDecision(true); // for non-counting triggers, this must be done explicity by hand!!!
   setDecision( m_outputSelection->decision() );
 }
@@ -255,17 +252,9 @@ void HltAlgorithm::setDecision(bool accept) {
   // candidates, we never explicitly set 'false', and hence would otherwise
   // not set 'processed'
   m_outputSelection->setDecision(accept);
-  if (accept) m_counterAccepted.increase();
+  counter("#accept") += accept;
 }
 
-////  Finalize
-StatusCode HltAlgorithm::finalize() {
-  debug() << "HltAlgorithm::finalize()" << endmsg;
-  infoTotalEvents(m_counterEntries);
-  infoSubsetEvents(m_counterAccepted, m_counterEntries, " passed/entries ");
-  infoCandidates(m_counterCandidates, m_counterAccepted, " passed ");
-  return HltBaseAlg::finalize();
-}
 
 class cmp_by_id {
 public:

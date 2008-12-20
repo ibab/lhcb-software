@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.h,v 1.33 2008-12-19 17:29:52 graven Exp $
+// $Id: HltAlgorithm.h,v 1.34 2008-12-20 18:21:06 graven Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
@@ -37,9 +37,6 @@ public:
 
   // restart algorithm
   virtual StatusCode restart  ();
-
-  // finalize algorithm
-  virtual StatusCode finalize  ();
 
   //@TODO: move the {retrieve,register}{,T}Selection into IHltDataSvc...
   // retrieve a selection
@@ -133,8 +130,6 @@ private:
   //TODO: since this is not applicable to all algorithms, remove from base...
   size_t m_minNCandidates;
 
-protected:
-  const Hlt::Counter counterEntries() const { return m_counterEntries; }
 private:
   // set this selection as output, to be monitor, and to decide if the 
   // event pass
@@ -145,18 +140,6 @@ private:
 
   // (owner) pointer to the output selection
   Hlt::Selection* m_outputSelection;
-
-  // counter with all the entries of the algorithm
-  Hlt::Counter m_counterEntries;
-
-  // counter with all the events with fine inputs
-  Hlt::Counter m_counterInputs;
-
-  // counter with the accepted events (decision true)
-  Hlt::Counter m_counterAccepted;
-
-  // coutner with the total number of candidates
-  Hlt::Counter m_counterCandidates;
 
   // map of id of selection and histogram to monitor input candidate
   std::map<stringKey,Hlt::Histo*> m_inputHistos;

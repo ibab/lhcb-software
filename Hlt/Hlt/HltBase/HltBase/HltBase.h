@@ -1,4 +1,4 @@
-// $Id: HltBase.h,v 1.16 2008-12-19 17:29:52 graven Exp $
+// $Id: HltBase.h,v 1.17 2008-12-20 18:21:06 graven Exp $
 #ifndef HLTBASE_HLTBASE_H 
 #define HLTBASE_HLTBASE_H 1
 
@@ -27,23 +27,6 @@
  *  @author Jose Angel Hernando Morata
  *  @date   2006-06-15
  */
-
-
-
-namespace Hlt {
-  class  Counter {
-  public:
-    Counter (const std::string& name) : m_name(name),m_counter(0) {}
-    virtual ~Counter(){}
-
-    operator long() const           { return m_counter;}
-    void increase(int i=1)            { m_counter += i; }
-    const std::string& name() const { return m_name;}
-  private:
-    std::string m_name;
-    long m_counter;
-  };
-}
 
 template <class BASE>
 class HltBase : public BASE {
@@ -123,7 +106,7 @@ protected:
     if (myroot.empty()) myroot = BASE::name();
     std::string mykey = myroot + "/" + key;
     hltConf().add(mykey,value);
-    //std::cout << " HLT [" << mykey << "] = " << value << std::endl;    
+    // BASE::always() << " HLT [" << mykey << "] = " << value << endreq;    
     if (m_debug)
       BASE::debug() << " HLT [" << mykey << "] = " << value << endreq;    
   }
