@@ -7,6 +7,7 @@
 ! 2008-12-20 - Gerhard Raven
  - check for valid int ID in HltLine
  - use standard StatEntity instead of Hlt::Counter
+ - remove obsolete HltSelectionCombinerFactory
 
 ! 2008-12-19 - Gerhard Raven
  - follow counter changes in HltBase
