@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.46 2008-12-20 18:21:06 graven Exp $
+// $Id: HltAlgorithm.cpp,v 1.47 2008-12-20 19:22:41 graven Exp $
 // Include files 
 
 #include "Event/Particle.h"
@@ -242,6 +242,7 @@ void HltAlgorithm::setDecision() {
   counter("#candidates accepted") += n ; 
   if (n>=m_minNCandidates) m_outputSelection->setDecision(true); // for non-counting triggers, this must be done explicity by hand!!!
   setDecision( m_outputSelection->decision() );
+  counter("#accept") += m_outputSelection->decision();
 }
 
 void HltAlgorithm::setDecision(bool accept) {
@@ -252,7 +253,6 @@ void HltAlgorithm::setDecision(bool accept) {
   // candidates, we never explicitly set 'false', and hence would otherwise
   // not set 'processed'
   m_outputSelection->setDecision(accept);
-  counter("#accept") += accept;
 }
 
 

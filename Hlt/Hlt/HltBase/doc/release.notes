@@ -8,6 +8,7 @@
  - streamline counter usage
  - remove unused HltMonitorAlgorithm, HltSequences
  - use standard StatEntity instead of Hlt::Counter
+ - remove obsolete IHltSelectionCombinerFactory.h 
 
 ! 2008-12-11 - Vanya BELYAEV
  - IHltDataSvc :  IAlgorithm*  -> const IAlgorithm* 
