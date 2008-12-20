@@ -1,4 +1,4 @@
-// $Id: LumiHistoMaker.cpp,v 1.8 2008-12-19 17:35:58 graven Exp $
+// $Id: LumiHistoMaker.cpp,v 1.9 2008-12-20 17:58:31 graven Exp $
 // Include files 
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -22,8 +22,6 @@ DECLARE_ALGORITHM_FACTORY( LumiHistoMaker );
 LumiHistoMaker::LumiHistoMaker( const std::string& name,
                             ISvcLocator* pSvcLocator )
   : HltBaseAlg ( name , pSvcLocator )
-  , m_counterEntries("Entries")
-  , m_counterHistoInputs("HistoInputs")
 {
   
   declareProperty("HistogramUpdatePeriod" , m_histogramUpdatePeriod = 1 );
@@ -110,7 +108,7 @@ StatusCode LumiHistoMaker::initialize() {
 StatusCode LumiHistoMaker::execute() {
 
   StatusCode sc = StatusCode::SUCCESS;  
-  m_counterEntries.increase(1);
+  counter("#entries") += 1;
 
   // get data container
   m_HltLumiSummary = get<LHCb::HltLumiSummary>(m_DataName);
@@ -129,7 +127,7 @@ StatusCode LumiHistoMaker::execute() {
     debug() << "histo:" << cname << " value " << ivalue << " threshold " << digit<< endmsg;
   }
   
-  m_counterHistoInputs.increase(1);
+  counter("#HistoInputs") += 1;
   setDecision(true);
   return sc;
 
@@ -137,13 +135,4 @@ StatusCode LumiHistoMaker::execute() {
 
 void LumiHistoMaker::setDecision(bool ok) {
   setFilterPassed(ok);
-}
-
-////  Finalize
-StatusCode LumiHistoMaker::finalize() {
-  debug() << "LumiHistoMaker::finalize()" << endmsg;
-  infoTotalEvents(m_counterEntries);
-  infoSubsetEvents(m_counterEntries,m_counterHistoInputs, " events to Histos ");
-
-  return HltBaseAlg::finalize();
 }

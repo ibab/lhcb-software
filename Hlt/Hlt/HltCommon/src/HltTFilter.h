@@ -1,4 +1,4 @@
-// $Id: HltTFilter.h,v 1.8 2008-12-19 17:56:23 graven Exp $
+// $Id: HltTFilter.h,v 1.9 2008-12-20 17:59:36 graven Exp $
 #ifndef HLTCOMMON_HLTTFILTER_H 
 #define HLTCOMMON_HLTTFILTER_H 1
 
@@ -19,10 +19,11 @@ namespace Hlt {
   template <class T>
   class TFilterData {
   public:
-    TFilterData(const std::string& name) 
+      template <typename P>
+    TFilterData(const std::string& name, P& parent) 
         : filtername(name)
-        , counter(name)
-        , counterCandidates(name+" candidates")
+        , counter(parent.counter(name))
+        , counterCandidates(parent.counter(name+" candidates"))
         , minvalue(-1e6)
         , maxvalue(1e6)
     {}
@@ -37,8 +38,8 @@ namespace Hlt {
     int infoID;
     std::auto_ptr<zen::function<T> > function;
     std::auto_ptr<zen::filter<T> > filter;
-    Hlt::Counter counter;
-    Hlt::Counter counterCandidates;
+    StatEntity& counter;
+    StatEntity& counterCandidates;
     std::string operation;
     double minvalue;
     double maxvalue;

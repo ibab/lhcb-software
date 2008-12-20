@@ -1,4 +1,4 @@
-// $Id: LumiAnalyser.h,v 1.5 2008-12-19 17:35:58 graven Exp $
+// $Id: LumiAnalyser.h,v 1.6 2008-12-20 17:58:31 graven Exp $
 #ifndef LUMIANALYSER_H 
 #define LUMIANALYSER_H 1
 
@@ -63,12 +63,9 @@ protected:
   IHistogramSvc* m_histogramSvc;
 
   long m_call_counter;
-  // counter with all the entries of the algorithm
-  Hlt::Counter m_counterEntries;
 
   // counter with all the events with fine inputs
   IANNSvc* m_annSvc;
-  Hlt::Counter m_counterHistoInputs;
   std::string m_DataName;                        // input location of summary data
   bool m_rawHistos;                              // flag to store raw histos of R
 

@@ -1,4 +1,4 @@
-// $Id: LumiAnalyser.cpp,v 1.5 2008-12-19 17:35:58 graven Exp $
+// $Id: LumiAnalyser.cpp,v 1.6 2008-12-20 17:58:31 graven Exp $
 // Include files 
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -43,8 +43,6 @@ DECLARE_ALGORITHM_FACTORY( LumiAnalyser );
 LumiAnalyser::LumiAnalyser( const std::string& name,
                             ISvcLocator* pSvcLocator )
   : HltBaseAlg ( name , pSvcLocator )
-  , m_counterEntries("Entries")
-  , m_counterHistoInputs("HistoInputs")
 {
   declareProperty("HistogramUpdatePeriod" , m_histogramUpdatePeriod = 1 );
   declareProperty("InputDataContainer",     m_DataName = LHCb::HltLumiSummaryLocation::Default );
@@ -154,8 +152,8 @@ StatusCode LumiAnalyser::initialize() {
 //---------------------------------------------------------
 StatusCode LumiAnalyser::execute() {
 
-  m_counterEntries.increase();
-  m_counterHistoInputs.increase();
+  counter("#Entries") += 1;
+  counter("HistoInputs") += 1;
   m_call_counter++;
 
   // accumulate the counters with their normalization
@@ -177,9 +175,6 @@ void LumiAnalyser::setDecision(bool ok) {
 //---------------------------------------------------------
 StatusCode LumiAnalyser::finalize() {
   debug() << "LumiAnalyser::finalize()" << endmsg;
-  infoTotalEvents(m_counterEntries);
-  infoSubsetEvents(m_counterEntries,m_counterHistoInputs, " events to Histos ");
-
   // report avergaes of all counters
   for (std::vector<std::string>::iterator iVar = m_Averages.begin(); iVar != m_Averages.end(); ++iVar) {
     std::string var=*iVar;

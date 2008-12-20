@@ -1,4 +1,4 @@
-// $Id: LumiHistoCollector.h,v 1.2 2008-12-19 17:35:58 graven Exp $
+// $Id: LumiHistoCollector.h,v 1.3 2008-12-20 17:58:31 graven Exp $
 #ifndef LUMIHISTOCOLLECTOR_H 
 #define LUMIHISTOCOLLECTOR_H 1
 
@@ -34,10 +34,7 @@ public:
   // initialize algorithm
   virtual StatusCode initialize();
 
-  // finalize algorithm
-  virtual StatusCode finalize  ();
-
-protected:
+private:
   // analyse histos
   virtual StatusCode analyse  ();
   virtual void storeTrend  (std::string varname, double lumiValue) ;
@@ -62,10 +59,6 @@ private:
 protected:
   IHistogramSvc* m_histogramSvc;
 
-  // counter with all the entries of the algorithm
-  Hlt::Counter m_counterEntries;
-  // counter with all the events with fine inputs
-  Hlt::Counter m_counterHistoInputs;
 
   std::vector< std::string > m_Variables;        // list of variables to look at
   std::vector< std::string > m_BXTypes;          // list of bunch crossing types to look at

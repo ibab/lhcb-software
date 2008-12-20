@@ -4,6 +4,9 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+! 2008-12-20 - Gerhard Raven
+ - use standard StatEntity + counter
+
 ! 2008-12-19 - Gerhard Raven
  - follow counter cleanup in HltBase
 

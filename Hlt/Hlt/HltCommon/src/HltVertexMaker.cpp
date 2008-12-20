@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.cpp,v 1.26 2008-12-19 17:32:08 graven Exp $
+// $Id: HltVertexMaker.cpp,v 1.27 2008-12-20 17:59:37 graven Exp $
 // Include files 
 
 
@@ -78,7 +78,6 @@ HltVertexMaker<SelectionContainer>::HltVertexMaker( const std::string& name,
                                 ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
   , m_selections(*this)
-  , m_counterCombinations("N combinations")
 {
   declareProperty("CheckForOverlaps", m_checkForOverlaps = false );
   declareProperty("FilterDescriptor", m_filterDescriptor);
@@ -103,6 +102,7 @@ StatusCode HltVertexMaker<Selections>::initialize() {
   StatusCode sc = HltAlgorithm::initialize();
 
   m_selections.retrieveSelections();
+  counter("#Combinations"); //TODO: publish to mon svc
 
   typedef IBiFunctionFactory<LHCb::Track,LHCb::Track> IBiTrackFactory;
   IBiTrackFactory* factory = 
@@ -165,6 +165,7 @@ StatusCode HltVertexMaker<Selections>::execute() {
   RecVertices* overtices = new RecVertices();
   put(overtices,"Hlt/Vertex/"+m_selections.output()->id().str());
 
+  size_t nCombinations(0);
   for (combinatorics_engine combinations = combine();!combinations.end();++combinations) {
       const LHCb::Track* track1 = combinations().first;
       const LHCb::Track* track2 = combinations().second;
@@ -176,7 +177,7 @@ StatusCode HltVertexMaker<Selections>::execute() {
       // can not be the same track
       if (track1 == track2) continue;
 
-      m_counterCombinations.increase();
+      ++nCombinations;
 
       // Check for segment overlaps
       bool rejected = ( m_checkForOverlaps && HltUtils::matchIDs(*track1,*track2) );
@@ -211,6 +212,7 @@ StatusCode HltVertexMaker<Selections>::execute() {
       }
       if (m_debug) printInfo(" make vertex ",*sv);
   } 
+  counter("#Combinations") += nCombinations;
   return sc;
 }
 
@@ -231,11 +233,10 @@ template <typename Selections>
 StatusCode HltVertexMaker<Selections>::finalize() {
 
   
-  info() << " N Combinations " << m_counterCombinations << endreq;
   for (size_t i = 0; i < m_filterNames.size(); ++i) {
     std::string title =  " accepted combinations " 
       + m_filterNames[i] + " / total ";
-    infoSubsetEvents(m_tcounters[i],m_counterCombinations,title);
+    infoSubsetEvents(m_tcounters[i],counter("#Combinations").nEntries(),title);
   }
 
   return HltAlgorithm::finalize(); 

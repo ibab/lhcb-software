@@ -1,4 +1,4 @@
-// $Id: HltSelectionFilter.cpp,v 1.9 2008-12-19 17:32:08 graven Exp $
+// $Id: HltSelectionFilter.cpp,v 1.10 2008-12-20 17:59:36 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -46,7 +46,8 @@ StatusCode HltSelectionFilter::initialize() {
 
   BOOST_FOREACH( const std::string& name, m_inputSelectionNames.value() ) {
     m_input.push_back(&retrieveSelection(name));
-    m_scounters.push_back(0);
+    counter( name );
+    //TODO: register with mon service...
   }
   
   m_output = &(registerTSelection<Hlt::Selection>(m_outputSelectionName));
@@ -61,29 +62,14 @@ StatusCode HltSelectionFilter::initialize() {
 //=============================================================================
 StatusCode HltSelectionFilter::execute() {
   
-  size_t i = 0;
   BOOST_FOREACH( Hlt::Selection* sel, m_input ) {
+    counter(sel->id().str()) += sel->decision();
     if ( sel->decision()) {
       debug() << " positive selection " << sel->id().str() << endreq;
       m_output->push_back(sel);
-      ++m_scounters[i];
     }
-    ++i;
   }
   return StatusCode::SUCCESS;
 };
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode HltSelectionFilter::finalize() {
-
-  for (size_t i = 0; i < m_scounters.size(); ++i) {
-    infoSubsetEvents(m_scounters[i],
-                     counterEntries(),
-                     m_input[i]->id().str());
-  }
-  return HltAlgorithm::finalize();  
-}
 
 //=============================================================================

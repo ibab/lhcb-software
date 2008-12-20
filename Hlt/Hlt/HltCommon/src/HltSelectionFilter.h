@@ -1,4 +1,4 @@
-// $Id: HltSelectionFilter.h,v 1.4 2008-07-30 13:37:32 graven Exp $
+// $Id: HltSelectionFilter.h,v 1.5 2008-12-20 17:59:36 graven Exp $
 #ifndef HLTCOMMON_HLTSELECTIONFILTER_H 
 #define HLTCOMMON_HLTSELECTIONFILTER_H 1
 
@@ -29,11 +29,8 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
-
-  std::vector<int> m_scounters;
 
   StringArrayProperty m_inputSelectionNames;
   std::string m_outputSelectionName;

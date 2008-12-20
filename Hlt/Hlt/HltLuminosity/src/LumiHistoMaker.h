@@ -1,4 +1,4 @@
-// $Id: LumiHistoMaker.h,v 1.6 2008-12-19 17:35:58 graven Exp $
+// $Id: LumiHistoMaker.h,v 1.7 2008-12-20 17:58:31 graven Exp $
 #ifndef LUMIHISTOMAKER_H 
 #define LUMIHISTOMAKER_H 1
 
@@ -32,33 +32,21 @@ public:
   // initialize algorithm
   virtual StatusCode initialize();
 
-  // finalize algorithm
-  virtual StatusCode finalize  ();
 
-private:  
-
-  
   // driver of the execute()
   StatusCode execute();
 
-  //protected:
 
+private:  
 
   // force decision to the value of decision
   void setDecision(bool decision);
-    
-
     
 private:
 
   // period to update filling of histogram
   int m_histogramUpdatePeriod;
 
-
-protected:
-
-  Hlt::Counter m_counterEntries;               // counter with all the entries of the algorithm
-  Hlt::Counter m_counterHistoInputs;           // counter with all the events with fine inputs
 
   std::string m_DataName;                      // input location of summary data
   LHCb::HltLumiSummary* m_HltLumiSummary;      // summary data

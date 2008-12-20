@@ -1,4 +1,4 @@
-// $Id: HltTFilter.icpp,v 1.13 2008-12-19 17:32:08 graven Exp $
+// $Id: HltTFilter.icpp,v 1.14 2008-12-20 17:59:36 graven Exp $
 // Include files
 
 #include "HltBase/EParser.h"
@@ -77,7 +77,7 @@ StatusCode HltTFilter<T>::initialize() {
 template <class T>
 bool HltTFilter<T>::addTFilterData(const std::string& descriptor) {
   debug() << " filter descriptor " << descriptor << endreq;
-  TFilterData* ptf = new TFilterData(descriptor);
+  TFilterData* ptf = new TFilterData(descriptor,*this);
   bool ok = EParser::parseFilter(ptf->filtername, ptf->functionname,
                                  ptf->operation,ptf->minvalue,ptf->maxvalue);
   debug() << " function name " << ptf->functionname
@@ -182,10 +182,10 @@ StatusCode HltTFilter<T>::execute() {
     size_t ncan = out->ncandidates();
     debug() << " filtered  " << ncan << endreq;
     
+    filter->counter += !out->empty();
     // continue or break
     if (out->empty()) break;
-    filter->counter.increase(1);
-    filter->counterCandidates.increase(ncan);
+    filter->counterCandidates += ncan;
   }
   return sc;
 }
@@ -193,18 +193,8 @@ StatusCode HltTFilter<T>::execute() {
 
 template <class T>
 StatusCode HltTFilter<T>::finalize() {
-
   debug() << "==> Finalize" << endmsg;
-  StatusCode sc =  HltAlgorithm::finalize();  
-
-  BOOST_FOREACH( TFilterData *filter , m_tfilters ) {
-    std::string title =  " event accepted " + filter->filtername + " / input ";
-    infoSubsetEvents(filter->counter,counterEntries(),title);
-    infoCandidates(filter->counterCandidates,filter->counter," passed "+filter->filtername);
-  }
-
   for_each(m_tfilters.begin(),m_tfilters.end(), boost::lambda::delete_ptr());
   m_tfilters.clear();
-
-  return sc;
+  return  HltAlgorithm::finalize();  
 }

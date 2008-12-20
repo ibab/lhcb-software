@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.h,v 1.9 2008-07-30 13:37:33 graven Exp $
+// $Id: HltVertexMaker.h,v 1.10 2008-12-20 17:59:37 graven Exp $
 #ifndef HLTVERTEXMAKER_H 
 #define HLTVERTEXMAKER_H 1
 
@@ -62,8 +62,6 @@ private:
 
 
   StringArrayProperty m_filterDescriptor;
-
-  Hlt::Counter m_counterCombinations;
 
   std::vector<std::string> m_filterNames;
   std::vector<int> m_filterIDs;
