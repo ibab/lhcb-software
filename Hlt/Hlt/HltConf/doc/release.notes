@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.94 2008-12-19 19:51:25 graven Exp $ 
+! $Id: release.notes,v 1.95 2008-12-20 12:51:28 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2008-12-20 - Gerhard Raven
+ - slightly re-organize selection numbers in HltANNSvc
 
 ! 2008-12-19 - Gerhard Raven
  - re-enable PV3D in Hlt1RecoSequence now that Photon lines don't use it anymore
