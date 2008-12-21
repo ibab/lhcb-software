@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.h,v 1.34 2008-12-20 18:21:06 graven Exp $
+// $Id: HltAlgorithm.h,v 1.35 2008-12-21 17:14:51 graven Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
@@ -42,7 +42,6 @@ public:
   // retrieve a selection
   Hlt::Selection& retrieveSelection(const stringKey& selname);
 
-public:
   // retrieve a selection with candidates of type T (e.g. Track)
   template <class T>
   Hlt::TSelection<T>& retrieveTSelection(const stringKey& key) {

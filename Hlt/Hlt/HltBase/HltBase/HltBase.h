@@ -1,4 +1,4 @@
-// $Id: HltBase.h,v 1.17 2008-12-20 18:21:06 graven Exp $
+// $Id: HltBase.h,v 1.18 2008-12-21 17:14:51 graven Exp $
 #ifndef HLTBASE_HLTBASE_H 
 #define HLTBASE_HLTBASE_H 1
 
@@ -64,17 +64,6 @@ protected:
   // fill histogram
   void fillHisto( Hlt::Histo& histo, const std::vector<double>& x, 
                   double weight );
-
-  // print info of total counter
-  void infoTotalEvents(int  n);
-  
-  // print info of fraction
-  void infoSubsetEvents( int nEventsInSubset, int  nTotEvts, 
-                         const std::string& comment );
-
-  // print average number of candidates
-  void infoCandidates( int nTotCandidates, int  nTotEvts, 
-                       const std::string& comment );
 
   // initialize the Msg service (set internal bool variables m_debug, etc)
   void initializeMsg();

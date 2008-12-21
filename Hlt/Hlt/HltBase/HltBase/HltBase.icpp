@@ -1,4 +1,4 @@
-// $Id: HltBase.icpp,v 1.18 2008-12-19 17:29:52 graven Exp $
+// $Id: HltBase.icpp,v 1.19 2008-12-21 17:14:51 graven Exp $
 // Include files
 
 
@@ -59,28 +59,6 @@ void HltBase<EBASE>::initializeMsg() {
 }
 
 template <class EBASE>
-void HltBase<EBASE>::infoTotalEvents(int n) {
-  EBASE::info() << " N Entries: \t" << n << endreq;
-}
-
-template <class EBASE>
-void HltBase<EBASE>::infoSubsetEvents(  int nEventsInSubset, int  nTotEvts, 
-                                    const std::string& subsetName)
-{
-  double f = (nTotEvts<=0? 0.: double(nEventsInSubset)/double(nTotEvts) );
-  EBASE::info() << " N " <<subsetName << "\t" << nEventsInSubset 
-         << " (" << 100.*f << "%)" << endreq;
-}
-
-template <class EBASE>
-void HltBase<EBASE>::infoCandidates(  int nTotCandidates, int  nTotEvts, 
-                                      const std::string& comment)
-{
-  double f = (nTotEvts<=0? 0.: double(nTotCandidates)/double(nTotEvts) );
-  EBASE::info() << " N  candidates " << comment << " \t" << f  << endreq;
-}
-
-template <class EBASE>
 void HltBase<EBASE>::initializeHistosFromDescriptor() {
 
   if (!EBASE::produceHistos()) return;
@@ -107,7 +85,6 @@ Hlt::Histo* HltBase<EBASE>::initializeHisto(const std::string& title,
   Gaudi::Histo1DDef hd = (i!=values.end()) ? i->second 
                                            : Gaudi::Histo1DDef(title,x0,xf,nbins);
   EBASE::debug() << " booking histogram  " << hd << endreq;
-  //FIXME: add declareInfo ???
   return EBASE::book(hd);
 };
 
