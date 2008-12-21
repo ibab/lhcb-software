@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.cpp,v 1.27 2008-12-20 17:59:37 graven Exp $
+// $Id: HltVertexMaker.cpp,v 1.28 2008-12-21 17:14:10 graven Exp $
 // Include files 
 
 
@@ -226,22 +226,6 @@ void HltVertexMaker<Selections>::saveConfiguration() {
 }
 
 
-//=============================================================================
-//  Finalize
-//=============================================================================
-template <typename Selections>
-StatusCode HltVertexMaker<Selections>::finalize() {
-
-  
-  for (size_t i = 0; i < m_filterNames.size(); ++i) {
-    std::string title =  " accepted combinations " 
-      + m_filterNames[i] + " / total ";
-    infoSubsetEvents(m_tcounters[i],counter("#Combinations").nEntries(),title);
-  }
-
-  return HltAlgorithm::finalize(); 
-  
-}
 
 //=============================================================================
 ////////////////////////// TrackContainer -> VertexContainer

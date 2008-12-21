@@ -1,4 +1,4 @@
-// $Id: HltL0MuonCandidates.cpp,v 1.3 2008-12-18 12:43:43 graven Exp $
+// $Id: HltL0MuonCandidates.cpp,v 1.4 2008-12-21 17:14:10 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -59,8 +59,6 @@ StatusCode HltL0MuonCandidates::initialize() {
   declareInfo("#accept","",&counter("#accept"),0,std::string("Events accepted by ") + name());
   declareInfo("#input","",&counter("#input"),0,std::string("Candidates seen by ") + name());
   declareInfo("#pass","",&counter("#pass"),0,std::string("Candidates passed by ") + name());
-
-  saveConfiguration();
 
   return StatusCode::SUCCESS;
 }
@@ -154,7 +152,7 @@ bool HltL0MuonCandidates::checkClone(L0MuonCandidate* muon)
   const MuonTileID& tileM1 = muon->muonTileIDs(0).front();
   const MuonTileID& tileM2 = muon->muonTileIDs(1).front();
 
-  BOOST_FOREACH( Track* t, *m_selection.output() ) {
+  BOOST_FOREACH(const Track* t, *m_selection.output() ) {
     const std::vector< LHCb::LHCbID >& ids= t->lhcbIDs();
 
     std::vector<LHCb::LHCbID>::const_iterator oldTileM1 = 

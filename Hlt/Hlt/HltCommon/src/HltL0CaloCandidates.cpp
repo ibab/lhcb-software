@@ -1,4 +1,4 @@
-// $Id: HltL0CaloCandidates.cpp,v 1.6 2008-12-18 12:43:43 graven Exp $
+// $Id: HltL0CaloCandidates.cpp,v 1.7 2008-12-21 17:14:10 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -28,7 +28,11 @@ DECLARE_ALGORITHM_FACTORY( HltL0CaloCandidates );
 //=============================================================================
 HltL0CaloCandidates::HltL0CaloCandidates( const std::string& name,
                                         ISvcLocator* pSvcLocator)
-  : HltAlgorithm ( name , pSvcLocator, false )
+  : HltAlgorithm ( name , pSvcLocator, false 
+  // vector of default histo defs...
+  //   list_of( Gaudi::Histo1DDef( "Et", 0., 6000., 100 ) )
+  //            Gaudi::Histo1DDef( "EtBest", 0., 6000., 100 ) )
+    ) 
   , m_selection(*this)
   , m_caloMaker(0)
   , m_histoEt(0)
@@ -57,15 +61,9 @@ StatusCode HltL0CaloCandidates::initialize() {
   m_selection.retrieveSelections();
   m_selection.registerSelection();
 
-
-  m_histoEt = initializeHisto("Et",0.,6000.,100);
-  m_histoEtBest = initializeHisto("EtBest",0.,6000.,100);
-
   m_caloMaker = (m_caloMakerName.empty() 
                     ? (ICaloSeedTool*)0
                     :tool<ICaloSeedTool>(m_caloMakerName));
-
-  saveConfiguration();  
 
   // force creation of counters, and declare them to monitoring...
   declareInfo("#accept","",&counter("#accept"),0,std::string("Events accepted by ") + name());
@@ -141,6 +139,9 @@ StatusCode HltL0CaloCandidates::execute() {
     m_selection.output()->push_back(tcalo.get());
     output->insert(tcalo.release());
   }
+  // use vector version of plot1D...
+  // plot1D( "Et", L0et()
+  // plot1D( "Etbest", 
   
 
   counter("#input")  +=  m_selection.input<1>()->size();

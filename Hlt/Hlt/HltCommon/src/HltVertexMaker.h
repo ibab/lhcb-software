@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.h,v 1.10 2008-12-20 17:59:37 graven Exp $
+// $Id: HltVertexMaker.h,v 1.11 2008-12-21 17:14:10 graven Exp $
 #ifndef HLTVERTEXMAKER_H 
 #define HLTVERTEXMAKER_H 1
 
@@ -30,7 +30,6 @@ class HltVertexMaker : public HltAlgorithm {
   virtual ~HltVertexMaker( ); ///< Destructor
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
     
  protected:
 
