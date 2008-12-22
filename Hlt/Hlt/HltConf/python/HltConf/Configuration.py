@@ -1,7 +1,7 @@
-""
+"""
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.24 2008-12-22 16:57:31 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.25 2008-12-22 17:15:46 pkoppenb Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
