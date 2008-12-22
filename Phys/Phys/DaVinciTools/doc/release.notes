@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.391 2008-12-11 07:55:28 cattanem Exp $
+! $Id: release.notes,v 1.392 2008-12-22 17:34:19 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-12-22 - Patrick Koppenburg
+ - remove all .opts files.
 
 ! 2008-12-11 - Marco Cattaneo
  - Adapt to IOnOfflineTool interface change (fix gcc 4.3 warning) 
