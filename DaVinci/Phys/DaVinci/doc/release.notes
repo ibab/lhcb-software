@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.281 2008-12-22 15:33:27 pkoppenb Exp $
+! $Id: release.notes,v 1.282 2008-12-22 18:12:16 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,9 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2008-12-22 - Patrick Koppenburg
+ - Add DoD Svc
 
 ! 2008-12-22 - Patrick Koppenburg
  - Allow no Hlt in DaVinci

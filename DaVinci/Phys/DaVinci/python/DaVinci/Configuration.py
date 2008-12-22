@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.22 2008-12-22 15:33:27 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.23 2008-12-22 18:12:16 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -35,7 +35,7 @@ class DaVinci(LHCbConfigurableUser) :
 # Hlt running
        , "HltType"            : ''      # HltType : No Hlt. Use Hlt1+Hlt2 to run Hlt
        , "HltUserAlgorithms"  : [ ]     # put here user algorithms to add
-       , "HltOldStyle"        : False   # old style options configuration
+       , "HltOldStyle"        : True    # old style options configuration
        , "ReplaceL0BanksWithEmulated" : False
        , "Hlt2IgnoreHlt1Decision" : False # run Hlt2 even if Hlt1 failed
         }
@@ -130,6 +130,7 @@ class DaVinci(LHCbConfigurableUser) :
         """
         define standard particles on DoD service
         """
+        ApplicationMgr().ExtSvc +=  [ DataOnDemandSvc() ]            
         importOptions("$COMMONPARTICLESROOT/options/StandardOptions.opts")
         if (  self.getProp("DataType")=='DC06'):
             importOptions("$COMMONPARTICLESROOT/options/StandardDC06Options.opts")
