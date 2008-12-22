@@ -4,6 +4,9 @@
 ! Purpose     : Configuration for Analysis project
 !-----------------------------------------------------------------------------
 
+! 2008-12-22 - Patrick Koppenburg
+ - Configuration.py : Add tagging
+
 ! 2008-12-18 - Patrick Koppenburg
  - Configuration.py : Redo MC links.
 

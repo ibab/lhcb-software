@@ -1,7 +1,7 @@
 """
 High level configuration tools for AnalysisConf
 """
-__version__ = "$Id: Configuration.py,v 1.2 2008-12-18 09:59:19 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.3 2008-12-22 18:06:11 pkoppenb Exp $"
 __author__ = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -16,6 +16,11 @@ class AnalysisConf(LHCbConfigurableUser) :
         }
 
     __used_configurables__ = [ LHCbApp ]
+#
+# BTaggingTool configuration 
+#
+    def tagging(self):
+        importOptions("$FLAVOURTAGGINGROOT/options/BTaggingTool.py")
 #
 # Redo all MC links. To be called from main application.
 #
@@ -44,3 +49,4 @@ class AnalysisConf(LHCbConfigurableUser) :
         if ( self.getProp("Simulation" )):
             importOptions ("$DAVINCIASSOCIATORSROOT/options/DaVinciAssociators.opts")
             importOptions ("$ANALYSISCONFROOT/options/UnpackMC.py")
+        self.tagging()
