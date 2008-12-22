@@ -1,8 +1,8 @@
-// $Id: TutorialAlgorithm.cpp,v 1.11 2008-11-26 11:54:34 pkoppenb Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.12 2008-12-22 18:08:36 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
 
 // local
 #include "TutorialAlgorithm.h"
@@ -40,13 +40,12 @@ TutorialAlgorithm::~TutorialAlgorithm() {}
 // Initialization
 //=============================================================================
 StatusCode TutorialAlgorithm::initialize() {
-  //=== The following two lines should be commented for DC04 algorithms ! ===
   StatusCode sc = DVAlgorithm::initialize(); 
   if ( sc.isFailure() ) return sc;
 
-  debug() << "==> Initialize" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
 
-  ParticleProperty* mother = ppSvc()->find( "J/psi(1S)" );
+  const LHCb::ParticleProperty* mother = ppSvc()->find( "J/psi(1S)" );
   if ( !mother ) { //
     err() << "Cannot find particle property for J/psi(1S)" << endmsg ;
     return StatusCode::FAILURE;
@@ -65,7 +64,7 @@ StatusCode TutorialAlgorithm::initialize() {
 //=============================================================================
 StatusCode TutorialAlgorithm::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
   StatusCode sc = StatusCode::SUCCESS ;
   setFilterPassed(false);   // Mandatory. Set to true if event is accepted.
   counter("Events")++;
@@ -109,7 +108,7 @@ StatusCode TutorialAlgorithm::makeJpsi(const LHCb::Particle::ConstVector& muons)
         Warning("Fit error").ignore();
         continue;
       }
-      debug() << "Vertex fit at " << MuMuVertex.position()/cm
+      if (msgLevel(MSG::DEBUG)) debug() << "Vertex fit at " << MuMuVertex.position()/cm
               << " with chi2 " << MuMuVertex.chi2() << endmsg;
       plot(MuMuVertex.chi2(), "DiMuChi2", "DiMu Chi^2",0.,200.);
       if ( MuMuVertex.chi2() > m_jPsiChi2 ) continue ; // chi2 cut
@@ -148,7 +147,7 @@ StatusCode TutorialAlgorithm::plotMuon(const LHCb::Particle* mu, const std::stri
 
   plot(mu->p(),  head+"MuP", head+" Muon P",  0., 50.*GeV);    // momentum
   plot(mu->pt(), head+"MuPt", head+" Muon Pt", 0., 5.*GeV );  // Pt
-  debug() << mu->momentum() << endmsg ;
+  if (msgLevel(MSG::DEBUG)) debug() << mu->momentum() << endmsg ;
 
   const LHCb::RecVertex::Container* prims = desktop()->primaryVertices() ;
   
@@ -156,7 +155,7 @@ StatusCode TutorialAlgorithm::plotMuon(const LHCb::Particle* mu, const std::stri
         ipv != prims->end() ; ++ipv )
   {
     double IP, IPE;
-    debug() << (*ipv)->position() << endmsg ;
+    if (msgLevel(MSG::DEBUG)) debug() << (*ipv)->position() << endmsg ;
     sc = distanceCalculator()->distance(mu, (*ipv), IP, IPE);
     if (sc){
       plot(IP, head+"MuIP", head+" Muon IP", 0., 10.*mm);
@@ -172,9 +171,9 @@ StatusCode TutorialAlgorithm::plotMuon(const LHCb::Particle* mu, const std::stri
 //=============================================================================
 StatusCode TutorialAlgorithm::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "==> Finalize" << endmsg;
 
-  return DVAlgorithm::finalize(); //=== For DC04, return StatusCode::SUCCESS;
+  return DVAlgorithm::finalize(); 
 } 
 
 //=============================================================================

@@ -1,4 +1,5 @@
 ########################################################################
+# $Id: DVTutorial_3.py,v 1.6 2008-12-22 18:08:37 pkoppenb Exp $
 #
 # Options for exercise 3
 #
@@ -6,47 +7,60 @@
 # @date 2008-06-02
 #
 ########################################################################
-from os import environ
-import GaudiKernel.SystemOfUnits as Units 
 from Gaudi.Configuration import *
+#######################################################################
+#
+# 1) Let's define a sequence
+#
+from Configurables import GaudiSequencer
+tutorialseq = GaudiSequencer("TutorialSeq")
+#######################################################################
+#
+# 2) Add the J/psi
+#
 from Configurables import TutorialAlgorithm, PhysDesktop
-
-importOptions( "$DAVINCIROOT/options/DaVinciCommon.opts" )
-
-#
-# Let's make it a sequence
-#
-ApplicationMgr().TopAlg += [ "GaudiSequencer/TutorialSeq" ]
-#
-# J/psi->mumu selection
-#
-jpsi2mumu = TutorialAlgorithm("Jpsi2MuMu");
-
+jpsi2mumu = TutorialAlgorithm("Jpsi2MuMu")
 jpsi2mumu.addTool( PhysDesktop() )
 jpsi2mumu.PhysDesktop.InputLocations = [ "StdLooseMuons" ]
-jpsi2mumu.MassWindow = 30*Units.MeV 
-jpsi2mumu.OutputLevel = 3 ;
-jpsi2mumu.MaxChi2 = 100 ;
-jpsi2mumu.Particle = "J/psi(1S)" ;
-
-GaudiSequencer("TutorialSeq").Members.append(jpsi2mumu)
+from GaudiKernel.SystemOfUnits import MeV
+jpsi2mumu.MassWindow = 30*MeV 
+jpsi2mumu.MaxChi2 = 100 
+jpsi2mumu.Particle = "J/psi(1S)"
+tutorialseq.Members += [ jpsi2mumu ]
+#######################################################################
 #
-# Phi->KK selection
+# 2) Add the Phi
 #
 phi2kk = TutorialAlgorithm("Phi2KK");
 
 phi2kk.addTool( PhysDesktop() )
 phi2kk.PhysDesktop.InputLocations = [ "StdLooseKaons" ]
-phi2kk.MassWindow = 50*Units.MeV 
-phi2kk.Particle =  "phi(1020)" ;
-phi2kk.MaxChi2 = 20 ;
-phi2kk.OutputLevel = 3 ;
-
-GaudiSequencer("TutorialSeq").Members.append(phi2kk)
-
-GaudiSequencer("TutorialSeq").IgnoreFilterPassed = True # get all phis
-
-HistogramPersistencySvc().OutputFile = "DVHistos_3.root";
-
-ApplicationMgr().EvtMax = 1000 ;
-
+phi2kk.MassWindow = 50*MeV 
+phi2kk.Particle =  "phi(1020)" 
+phi2kk.MaxChi2 = 20 
+tutorialseq.Members += [ phi2kk ]
+#######################################################################
+#
+# Say True to have all phis. False to be fast.
+#
+tutorialseq.IgnoreFilterPassed = True # get all phis
+#######################################################################
+#
+# 3) Configure the application
+#
+from Configurables import DaVinci
+DaVinci().HistogramFile = "DVHistos_3.root"    # Histogram file
+DaVinci().EvtMax = 1000                        # Number of events
+DaVinci().DataType = "2008"                    # Default is "DC06"
+DaVinci().Simulation   = True                  # It's MC
+#
+# Add our own stuff
+#
+DaVinci().UserAlgorithms = [ tutorialseq ]
+DaVinci().MainOptions  = ""                    # None
+########################################################################
+#
+# To run in shell :
+# gaudirun.py solutions/DaVinci2/DVTutorial_2.py $DAVINCIROOT/options/DaVinciTestData.py
+#
+########################################################################

@@ -1,8 +1,8 @@
-// $Id: TutorialAlgorithm.cpp,v 1.7 2008-11-26 11:54:34 pkoppenb Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.8 2008-12-22 18:08:36 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
 
 // local
 #include "TutorialAlgorithm.h"
@@ -35,11 +35,10 @@ TutorialAlgorithm::~TutorialAlgorithm() {}
 // Initialization
 //=============================================================================
 StatusCode TutorialAlgorithm::initialize() {
-  //=== The following two lines should be commented for DC04 algorithms ! ===
   StatusCode sc = DVAlgorithm::initialize(); 
   if ( sc.isFailure() ) return sc;
 
-  debug() << "==> Initialize" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -48,7 +47,7 @@ StatusCode TutorialAlgorithm::initialize() {
 //=============================================================================
 StatusCode TutorialAlgorithm::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
   StatusCode sc = StatusCode::SUCCESS ;
 
   // code goes here  
@@ -74,15 +73,17 @@ StatusCode TutorialAlgorithm::loopOnMuons(const LHCb::Particle::ConstVector& muo
         im != muons.end() ; ++im ){
     plot((*im)->p(),  "P", "Muon P",  0., 50.*Gaudi::Units::GeV);  // momentum
     plot((*im)->pt(), "Pt", "Muon Pt", 0., 5.*Gaudi::Units::GeV );  // Pt
-    debug() << "Mu Momentum: " << (*im)->momentum() << endmsg ;
+    if (msgLevel(MSG::DEBUG)) debug() << "Mu Momentum: " << (*im)->momentum() << endmsg ;
     for ( LHCb::RecVertex::Container::const_iterator ipv = pvs->begin() ;
           ipv != pvs->end() ; ++ipv ){
       double IP, IPchi2;
-      debug() << (*ipv)->position() << endmsg ;
+      if (msgLevel(MSG::DEBUG)) debug() << (*ipv)->position() << endmsg ;
       sc = distanceCalculator()->distance((*im), (*ipv), IP, IPchi2);
       if (sc){
         plot(IP, "IP", "Muon IP", 0., 10.*Gaudi::Units::mm);
         plot(IP/IPchi2, "IPchi2", "Muon chi2 IP", 0., 10.);
+        if ( (*im)->pt()>2*Gaudi::Units::GeV) 
+          plot(IP, "IP_2", "Muon IP for PT>2GeV", 0., 10.*Gaudi::Units::mm);
       } 
     }
   }
@@ -95,9 +96,9 @@ StatusCode TutorialAlgorithm::loopOnMuons(const LHCb::Particle::ConstVector& muo
 //=============================================================================
 StatusCode TutorialAlgorithm::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "==> Finalize" << endmsg;
 
-  return DVAlgorithm::finalize(); //=== For DC04, return StatusCode::SUCCESS;
+  return DVAlgorithm::finalize(); 
 } 
 
 //=============================================================================

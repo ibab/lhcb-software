@@ -1,0 +1,16 @@
+#-- GAUDI jobOptions generated on Mon Dec 22 16:03:44 2008
+#-- Contains event types : 
+#--   13144002 - 9 files - 4482 events - 1.77 GBytes
+
+from Gaudi.Configuration import * 
+
+EventSelector().Input   = [
+"   DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/2008/DST/00003392/0000/00003392_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"   DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/2008/DST/00003392/0000/00003392_00000002_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"   DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/2008/DST/00003392/0000/00003392_00000004_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"   DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/2008/DST/00003392/0000/00003392_00000005_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"   DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/2008/DST/00003392/0000/00003392_00000006_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"   DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/2008/DST/00003392/0000/00003392_00000007_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"   DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/2008/DST/00003392/0000/00003392_00000008_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"   DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/2008/DST/00003392/0000/00003392_00000009_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"   DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/2008/DST/00003392/0000/00003392_00000010_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"]

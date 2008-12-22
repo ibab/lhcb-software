@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.h,v 1.1 2006-05-25 11:58:29 pkoppenb Exp $
+// $Id: TutorialAlgorithm.h,v 1.2 2008-12-22 18:08:36 pkoppenb Exp $
 #ifndef TUTORIALALGORITHM_H 
 #define TUTORIALALGORITHM_H 1 
 
@@ -9,6 +9,9 @@
 
 /** @class TutorialAlgorithm TutorialAlgorithm.h
  *  
+ *  Simple algorithm that loops on muons and plots some quantities of interest.
+ *
+ *  See https://twiki.cern.ch/twiki/bin/view/LHCb/DaVinciTutorial
  *
  *  @author Patrick Koppenburg
  *  @date   2006-05-24

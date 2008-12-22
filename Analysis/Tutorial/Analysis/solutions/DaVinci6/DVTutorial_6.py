@@ -6,36 +6,57 @@
 # @date 2008-06-03
 #
 ########################################################################
-import GaudiKernel.SystemOfUnits as Units 
 from Gaudi.Configuration import *
-from Configurables import PhysDesktop
-from Configurables import TutorialChecker
+#######################################################################
 #
-# Standard configuration
+# Load the sequencer from Ex 4 and catch it
 #
-importOptions( "$ANALYSISROOT/solutions/DaVinci4/DVTutorial_4.py" )
+importOptions("$ANALYSISROOT/solutions/DaVinci4/TutorialSeq.py")
+tutorialseq = GaudiSequencer("TutorialSeq")
+#######################################################################
 #
-# Standard Trigger configuration (not default)
+# DecayTreeTuple
 #
-from HltConf.Configuration import *
-HltConf().replaceL0BanksWithEmulated = True 
-HltConf().Hlt2IgnoreHlt1Decision = True             ## enable if you want Hlt2 irrespective of Hlt1
-HltConf().hltType = 'Hlt1+Hlt2'                     ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
-HltConf().applyConf()
-#
-# B tagging options
-#
-# importOptions( "$FLAVOURTAGGINGROOT/options/BTaggingTool.opts" )
-#
-# Checker
-#
-checker = TutorialChecker() 
-checker.addTool( PhysDesktop() )
-checker.PhysDesktop.InputLocations = [ "Bs2JpsiPhi" ]
-ApplicationMgr().TopAlg += [ checker ]
+from Configurables import DecayTreeTuple, PhysDesktop
+tuple = DecayTreeTuple() 
+tuple.addTool( PhysDesktop() )
+tuple.PhysDesktop.InputLocations = [ "Bs2JpsiPhi" ]
+tuple.ToolList +=  [
+#      "TupleToolTrigger"
+     "TupleToolMCTruth"
+    , "TupleToolMCBackgroundInfo"
+    , "TupleToolGeometry"
+    , "TupleToolKinematic"
+    , "TupleToolPropertime"
+    , "TupleToolPrimaries"
+    , "TupleToolEventInfo"
+    , "TupleToolTrackInfo"
+#    , "TupleToolTISTOS"
+    , "TupleToolTagging" ]
+tuple.Decay = "[B_s0 -> (^J/psi(1S) => ^mu+ ^mu-) (^phi(1020) -> ^K+ ^K-)]cc"
 
-HistogramPersistencySvc().OutputFile = "DVHistos_6.root"
-NTupleSvc().Output = ["FILE1 DATAFILE='Tuple.root' TYP='ROOT' OPT='NEW'"]
-
-ApplicationMgr().EvtMax = 100
-EventSelector().PrintFreq = 1 
+#######################################################################
+#
+# Configure the application
+#
+from Configurables import DaVinci
+DaVinci().TupleFile = "Tutorial6.root"         # Ntuple
+DaVinci().EvtMax = 1000                        # Number of events
+DaVinci().DataType = "2008"                    # Default is "DC06"
+DaVinci().Simulation   = True                  # It's MC
+#
+# Add our own stuff
+#
+DaVinci().UserAlgorithms = [ tutorialseq, tuple ]
+DaVinci().MainOptions  = ""                    # None
+#
+# Trigger (Restore when fixed on 2008 data)
+#
+# DaVinci().HltType = 'Hlt1+Hlt2'                ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
+# DaVinci().HltOldStyle = False                  ## Go for the new thing
+########################################################################
+#
+# To run in shell :
+# gaudirun.py solutions/DaVinci6/DVTutorial_6.py options/Bs2JpsiPhi2008.py
+#
+########################################################################

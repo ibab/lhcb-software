@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2008-12-22 - Patrick Koppenburg
+ - Big cleanup for DaVinci v22r0
+ - Increment to v8r0
+
 ! 2008-12-06 - Vanya BELYAEV
  - solutions/DaVinci3/TutorialAlgorithm.cpp
    fix for new particle properties 

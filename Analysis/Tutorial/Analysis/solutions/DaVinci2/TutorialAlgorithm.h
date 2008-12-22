@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.h,v 1.3 2008-06-03 09:58:38 pkoppenb Exp $
+// $Id: TutorialAlgorithm.h,v 1.4 2008-12-22 18:08:36 pkoppenb Exp $
 #ifndef TUTORIALALGORITHM_H 
 #define TUTORIALALGORITHM_H 1 
 
@@ -9,6 +9,12 @@
 
 /** @class TutorialAlgorithm TutorialAlgorithm.h
  *  
+ *  Example of how to loop over particles to make a composite particle.
+ *  Practically no-one ever does that. Use CombineParticles instead.
+ *
+ *  https://twiki.cern.ch/twiki/bin/view/LHCb/DaVinciTutorial2
+ *  
+ *  \sa CombineParticles
  *
  *  @author Patrick Koppenburg
  *  @date   2006-05-24
@@ -27,8 +33,11 @@ public:
 protected:
 
 private:
+  /// Make a loop over muons
   StatusCode loopOnMuons(const LHCb::Particle::ConstVector&)const ;
+  /// Plot quantities for muon
   StatusCode plotMuon(const LHCb::Particle*, const std::string& head)const ;
+  /// Build J/psi
   StatusCode makeJpsi(const LHCb::Particle::ConstVector&) ;
 
   double m_jPsiMassWin ; ///< Mass window
