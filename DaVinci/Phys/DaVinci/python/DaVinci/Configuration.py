@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.21 2008-12-19 16:00:08 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.22 2008-12-22 15:33:27 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -140,7 +140,8 @@ class DaVinci(LHCbConfigurableUser) :
         importOptions("$STDOPTS/LHCbApplication.opts") # to get units in .opts files
         # start with init
         self.initSeq()
-        self.hlt()
+        if (self.getProp("HltType")!=''):
+            self.hlt()
         self.defineMonitors()
         self.setOtherProps(PhysConf(),["DataType","Simulation"])
         self.setOtherProps(AnalysisConf(),["DataType","Simulation"])
