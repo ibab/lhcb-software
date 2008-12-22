@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+! 2008-12-22 - Patrick Koppenburg
+ - Adapt options to DaVinci v22r0 configurable. Not backward compatible.
+
 ! 2008-12-19 - Patrick Koppenburg
  - TupleToolGeometry : More variables. Now IP and FD come in three flavours
    . Best PV

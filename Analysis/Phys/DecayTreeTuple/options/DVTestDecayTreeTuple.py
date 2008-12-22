@@ -26,29 +26,12 @@ from GaudiKernel.SystemOfUnits import *
 # If you want to import .opts options, do this first
 #
 importOptions("$DAVINCIROOT/options/PreloadUnits.opts")
-########################################################################
-#
-# Trigger. Uncomment what you need. Hlt1 needs L0, Hlt2 doesn't.
-#
-#from HltConf.Configuration import *
-#HltConf().replaceL0BanksWithEmulated = True
-#HltConf().hltType = 'Hlt1+Hlt2'
-#HltConf().applyConf()
-#from Configurables import GaudiSequencer
-hlt = GaudiSequencer("Hlt") # capture Hlt sequencer
 #######################################################################
 #
 # Selection
 #
 importOptions( "$B2DILEPTONROOT/options/DoDC06SelBu2eeK.opts" )
 sel = GaudiSequencer("SeqPreselBu2LLK")
-#
-#
-##################################################################
-#ApplicationMgr().TopAlg += [ NeuralNetTmva() ] 
-#importOptions( "$NNTOOLSROOT/options/NeuralNetTmva.opts")
-# get reports
-#ApplicationMgr().TopAlg += [ HltDecReportsMaker() ]
 ########################################################################
 #
 # The Decay Tuple
@@ -91,6 +74,8 @@ DaVinci().DataType = "DC06" # Default is "DC06"
 DaVinci().Simulation   = True
 DaVinci().HistogramFile = "DVHistos_1.root" # Histogram file
 DaVinci().TupleFile = "DecayTreeTuple.root"  # Ntuple
-DaVinci().UserAlgorithms = [ hlt, sel, tuple, evtTuple ]
+DaVinci().UserAlgorithms = [ sel, tuple, evtTuple ]
+DaVinci().ReplaceL0BanksWithEmulated = True
+DaVinci().HltType = "Hlt1+Hlt2"
 DaVinci().Input = [
     "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol3/dijkstra/Selections/Bu2Kee-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
