@@ -15,7 +15,7 @@ importOptions( "$HLTCONFROOT/options/HltMainSequence.opts" )
 # ---------------------------------------------------------------------
 #  Phys initialisation
 # ---------------------------------------------------------------------
-importOptions( "$HLTCONFROOT/options/Hlt2Init.opts" )
+importOptions( "$HLTCONFROOT/options/Hlt2Init.py" )
 # ---------------------------------------------------------------------
 #  HLT exclusive Selections
 # ---------------------------------------------------------------------

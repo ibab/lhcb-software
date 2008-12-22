@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.95 2008-12-20 12:51:28 graven Exp $ 
+! $Id: release.notes,v 1.96 2008-12-22 16:57:31 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2008-12-22 - Patrick Koppenburg
+ - Remove HltInit.opts
 
 ! 2008-12-20 - Gerhard Raven
  - slightly re-organize selection numbers in HltANNSvc
