@@ -4,6 +4,9 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+! 2008-12-22 - Patrick Koppenburg
+ - Add DataOnDemandSvc
+
 ! 2008-12-19 - Patrick Koppenburg
  - Initialize LHCb__ParticlePropertySvc
 
