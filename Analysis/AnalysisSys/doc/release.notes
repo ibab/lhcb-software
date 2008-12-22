@@ -3,6 +3,9 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+! 2008-12-22 - Patrick Koppenburg
+ - Remove options
+
 ! 2008-12-17 - Patrick Koppenburg
  - New AnalysisConf package for configuration
 

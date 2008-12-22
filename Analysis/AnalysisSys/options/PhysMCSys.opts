@@ -1,6 +1,0 @@
-//--------------------------------------------------------------
-DataOnDemandSvc.Nodes += { "DATA='/Event/MC' TYPE='DataObject'" };
-DataOnDemandSvc.Algorithms += {
-  "DATA='/Event/MC/Particles'       TYPE='UnpackMCParticle'",
-  "DATA='/Event/MC/Vertices'        TYPE='UnpackMCVertex'"
-};
