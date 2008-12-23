@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.24 2008-12-23 09:07:07 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.25 2008-12-23 10:36:06 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -12,32 +12,32 @@ import GaudiKernel.ProcessJobOptions
 
 class DaVinci(LHCbConfigurableUser) :
     __slots__ = {
-# Application Configuration : sent to LHCbApp and Gaudi
-         "EvtMax"             :  -1     # Number of events to analyse
-       , "SkipEvents"         :   0     # Number of events to skip at beginning for file
-       , "PrintFreq"          : 100     # The frequency at which to print event numbers
-       , "DataType"           : 'DC06'  # Data type, can be ['DC06','2008'] Forwarded to PhysConf
-       , "Simulation"         : True    # set to True to use SimCond. Forwarded to PhysConf
-       , "DDDBtag"            : ""      # Tag for DDDB. Default as set in DDDBConf for DataType
-       , "CondDBtag"          : ""      # Tag for CondDB. Default as set in DDDBConf for DataType
-       , "UseOracle"          : False   # if False, use SQLDDDB instead
-# Input
-       , "Input"              : []      # Input data. Can also be passed as a second option file.
-# Output
-       , "HistogramFile"      : ""      # Write name of output Histogram file
-       , "TupleFile"          : ""      # Write name of output Tuple file
-       , "ETCFile"            : ""      # Write name of output ETC file @todo Not yet implemented
-       , "DstFile"            : ""      # Write name of output DST file @todo Not yet implemented
-# DaVinci Options
-       , "MainOptions"        : ""      # Main option file to execute
-       , "UserAlgorithms"     : []      # User algorithms to run.
-       , "RedoMCLinks"        : False   # On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association.
-# Hlt running
-       , "HltType"            : ''      # HltType : No Hlt. Use Hlt1+Hlt2 to run Hlt
-       , "HltUserAlgorithms"  : [ ]     # put here user algorithms to add
-       , "HltOldStyle"        : True    # old style options configuration
-       , "ReplaceL0BanksWithEmulated" : False
-       , "Hlt2IgnoreHlt1Decision" : False # run Hlt2 even if Hlt1 failed
+        # Application Configuration : sent to LHCbApp and Gaudi
+         "EvtMax"             :  -1           # Number of events to analyse
+       , "SkipEvents"         :   0           # Number of events to skip at beginning for file
+       , "PrintFreq"          : 100           # The frequency at which to print event numbers
+       , "DataType"           : 'DC06'        # Data type, can be ['DC06','2008'] Forwarded to PhysConf
+       , "Simulation"         : True          # set to True to use SimCond. Forwarded to PhysConf
+       , "DDDBtag"            : ""            # Tag for DDDB. Default as set in DDDBConf for DataType
+       , "CondDBtag"          : ""            # Tag for CondDB. Default as set in DDDBConf for DataType
+       , "UseOracle"          : False         # if False, use SQLDDDB instead
+         # Input
+       , "Input"              : []            # Input data. Can also be passed as a second option file.
+         # Output
+       , "HistogramFile"      : ""            # Write name of output Histogram file
+       , "TupleFile"          : ""            # Write name of output Tuple file
+       , "ETCFile"            : ""            # Write name of output ETC file @todo Not yet implemented
+       , "DstFile"            : ""            # Write name of output DST file @todo Not yet implemented
+         # DaVinci Options
+       , "MainOptions"        : ""            # Main option file to execute
+       , "UserAlgorithms"     : []            # User algorithms to run.
+       , "RedoMCLinks"        : False         # On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association.
+         # Hlt running
+       , "HltType"            : ''            # HltType : No Hlt. Use Hlt1+Hlt2 to run Hlt
+       , "HltUserAlgorithms"  : [ ]           # put here user algorithms to add
+       , "HltOldStyle"        : True          # old style options configuration
+       , "ReplaceL0BanksWithEmulated" : False # Re-run L0 
+       , "Hlt2IgnoreHlt1Decision" : False     # run Hlt2 even if Hlt1 failed
         }
 
     __used_configurables__ = [ LHCbApp, PhysConf, AnalysisConf, HltConf ]
