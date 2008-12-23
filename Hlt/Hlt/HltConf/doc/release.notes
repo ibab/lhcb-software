@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.98 2008-12-23 12:12:36 graven Exp $ 
+! $Id: release.notes,v 1.99 2008-12-23 12:13:22 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -6,7 +6,7 @@
 ! -----------------------------------------------------------------------------
 
 ! 2008-12-23 - Gerhard Raven
- - remove HltJob.opts, Hlt1.opts, L0.opts
+ - remove HltJob.opts, Hlt1.opts, L0.opts, RandomPrescaling.opts
 
 ! 2008-12-22 - Patrick Koppenburg
  - Remove HltInit.opts
