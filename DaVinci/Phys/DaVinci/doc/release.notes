@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.283 2008-12-23 09:07:07 pkoppenb Exp $
+! $Id: release.notes,v 1.284 2008-12-23 13:00:27 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -11,6 +11,7 @@
 
 ! 2008-12-23 - Patrick Koppenburg
  - Adapt to changes in PhysConf and AnalysisConf. Do not call methods directly.
+ - Use new style Hlt
 
 ! 2008-12-22 - Patrick Koppenburg
  - Add DoD Svc
