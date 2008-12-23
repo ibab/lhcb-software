@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.237 2008-11-26 08:25:04 jpalac Exp $
+! $Id: release.notes,v 1.238 2008-12-23 14:15:55 pkoppenb Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2008-12-23 - Patrick Koppenburg
+ - Remove all options files. They are all obsolete.
+ - Increment to v9r17p2
 
 !========================== DaVinciMCTools v9r17p1 2008-11-26 ================
 
