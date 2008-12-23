@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.23 2008-12-22 18:12:16 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.24 2008-12-23 09:07:07 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -31,7 +31,7 @@ class DaVinci(LHCbConfigurableUser) :
 # DaVinci Options
        , "MainOptions"        : ""      # Main option file to execute
        , "UserAlgorithms"     : []      # User algorithms to run.
-       , "RedoMCLinks"        : False   # One some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association.
+       , "RedoMCLinks"        : False   # On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association.
 # Hlt running
        , "HltType"            : ''      # HltType : No Hlt. Use Hlt1+Hlt2 to run Hlt
        , "HltUserAlgorithms"  : [ ]     # put here user algorithms to add
@@ -51,8 +51,9 @@ class DaVinci(LHCbConfigurableUser) :
         ApplicationMgr().TopAlg = [ init ]  # Note the = here 
         init.Members += [ LbAppInit("DaVinciAppInit") ]
         init.IgnoreFilterPassed = True
-        if ( self.getProp("RedoMCLinks") ) :
-            AnalysisConf().redoMCLinks(init)
+        PhysConf().InitSeq = init                    # Declare InitSeq in PhysConf 
+        AnalysisConf().InitSeq = init                # Declare InitSeq in AnalysisConf
+        AnalysisConf().RedoMCLinks =  self.getProp("RedoMCLinks") 
 
     def hlt(self):
         HltConf().replaceL0BanksWithEmulated = self.getProp("ReplaceL0BanksWithEmulated") ## enable if you want to rerun L0

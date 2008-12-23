@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.282 2008-12-22 18:12:16 pkoppenb Exp $
+! $Id: release.notes,v 1.283 2008-12-23 09:07:07 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,9 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2008-12-23 - Patrick Koppenburg
+ - Adapt to changes in PhysConf and AnalysisConf. Do not call methods directly.
 
 ! 2008-12-22 - Patrick Koppenburg
  - Add DoD Svc
