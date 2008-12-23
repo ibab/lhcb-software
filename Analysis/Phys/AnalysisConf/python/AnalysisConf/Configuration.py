@@ -1,7 +1,7 @@
 """
 High level configuration tools for AnalysisConf
 """
-__version__ = "$Id: Configuration.py,v 1.3 2008-12-22 18:06:11 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.4 2008-12-23 09:08:06 pkoppenb Exp $"
 __author__ = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -10,10 +10,13 @@ from Configurables import GaudiSequencer
 import GaudiKernel.ProcessJobOptions
 
 class AnalysisConf(LHCbConfigurableUser) :
+    
     __slots__ = {
-         "DataType"        : 'DC06' # Data type, can be ['DC06','2008']
-        ,"Simulation"      : True   # set to True to use SimCond
-        }
+          "DataType"        : 'DC06'                             # Data type, can be ['DC06','2008']
+        , "Simulation"      : True                               # set to True to use SimCond
+        , "InitSeq"         : GaudiSequencer("DaVinciInitSeq")   # Initialisation sequence in the application. Is set from e.g. DaVinci()
+        , "RedoMCLinks"     : False                              # On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association. 
+         }
 
     __used_configurables__ = [ LHCbApp ]
 #
@@ -22,22 +25,35 @@ class AnalysisConf(LHCbConfigurableUser) :
     def tagging(self):
         importOptions("$FLAVOURTAGGINGROOT/options/BTaggingTool.py")
 #
-# Redo all MC links. To be called from main application.
+# Set MC
 #
-    def redoMCLinks(init,self):
+    def redoMCLinks(self):
         """
-        Redo MC links
+        Redo MC links.
         """
-        from Configurables import (GaudiSequencer,TESCheck,EventNodeKiller,TrackAssociator)
-        mcLinkSeq = GaudiSequencer("RedoMCLinks")
-        tescheck = TESCheck("DaVinciEvtCheck")
-        tescheck.Inputs = ["Link/Rec/Track/Best"]
-        tescheck.Stop = False
-        tescheck.OutputLevel = 5
-        evtnodekiller = EventNodeKiller("DaVinciEvtNodeKiller")
-        evtnodekiller.Nodes = ["Link/Rec"]
-        mcLinkSeq.Members = [ tescheck, evtnodekiller, TrackAssociator() ]
-        init.Members += [ mcLinkSeq ]
+        if ( self.getProp("RedoMCLinks")):
+             from Configurables import (GaudiSequencer,TESCheck,EventNodeKiller,TrackAssociator)
+             init = self.getProp("InitSeq")
+             mcLinkSeq = GaudiSequencer("RedoMCLinks")
+             tescheck = TESCheck("DaVinciEvtCheck")
+             tescheck.Inputs = ["Link/Rec/Track/Best"]
+             tescheck.Stop = False
+             tescheck.OutputLevel = 5
+             evtnodekiller = EventNodeKiller("DaVinciEvtNodeKiller")
+             evtnodekiller.Nodes = ["Link/Rec"]
+             mcLinkSeq.Members = [ tescheck, evtnodekiller, TrackAssociator() ]
+             init.Members += [ mcLinkSeq ]
+#
+# Set MC
+#
+    def configureMC(self):
+        """
+        Define DaVinciAssociators. Do MC unpacking.
+        """
+        importOptions ("$DAVINCIASSOCIATORSROOT/options/DaVinciAssociators.opts")
+        DataOnDemandSvc().Nodes += [ "DATA='/Event/MC' TYPE='DataObject'" ]
+        DataOnDemandSvc().AlgMap["MC/Particles"] = "UnpackMCParticle"
+        DataOnDemandSvc().AlgMap["MC/Vertices"] = "UnpackMCVertex"
 #
 # Apply configuration
 #
@@ -47,6 +63,6 @@ class AnalysisConf(LHCbConfigurableUser) :
         """
         GaudiKernel.ProcessJobOptions.PrintOff()
         if ( self.getProp("Simulation" )):
-            importOptions ("$DAVINCIASSOCIATORSROOT/options/DaVinciAssociators.opts")
-            importOptions ("$ANALYSISCONFROOT/options/UnpackMC.py")
+            self.redoMCLinks()
+            self.configureMC()
         self.tagging()

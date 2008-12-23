@@ -4,6 +4,9 @@
 ! Purpose     : Configuration for Analysis project
 !-----------------------------------------------------------------------------
 
+! 2008-12-23 - Patrick Koppenburg
+ - Do MC unpacking directly. No direct call from DaVinci.
+
 ! 2008-12-22 - Patrick Koppenburg
  - Configuration.py : Add tagging
 
