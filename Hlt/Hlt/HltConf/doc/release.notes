@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.96 2008-12-22 16:57:31 pkoppenb Exp $ 
+! $Id: release.notes,v 1.97 2008-12-23 12:11:39 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2008-12-23 - Gerhard Raven
+ - remove HltJob.opts, Hlt1.opts
 
 ! 2008-12-22 - Patrick Koppenburg
  - Remove HltInit.opts
