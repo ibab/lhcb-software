@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.284 2008-12-23 13:00:27 pkoppenb Exp $
+! $Id: release.notes,v 1.285 2008-12-23 14:27:13 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -12,6 +12,7 @@
 ! 2008-12-23 - Patrick Koppenburg
  - Adapt to changes in PhysConf and AnalysisConf. Do not call methods directly.
  - Use new style Hlt
+ - Change CommonParticles to .py
 
 ! 2008-12-22 - Patrick Koppenburg
  - Add DoD Svc

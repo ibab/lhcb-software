@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.26 2008-12-23 13:00:27 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.27 2008-12-23 14:27:13 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -134,7 +134,7 @@ class DaVinci(LHCbConfigurableUser) :
         define standard particles on DoD service
         """
         ApplicationMgr().ExtSvc +=  [ DataOnDemandSvc() ]            
-        importOptions("$COMMONPARTICLESROOT/options/StandardOptions.opts")
+        importOptions("$COMMONPARTICLESROOT/options/StandardOptions.py")
         if (  self.getProp("DataType")=='DC06'):
             importOptions("$COMMONPARTICLESROOT/options/StandardDC06Options.opts")
 
