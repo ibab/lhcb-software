@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.25 2008-12-22 17:15:46 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.26 2008-12-23 12:24:38 pkoppenb Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -32,6 +32,7 @@ class HltConf(LHCbConfigurableUser):
     def applyConf(self):
         GaudiKernel.ProcessJobOptions.PrintOff()
         importOptions('$HLTCONFROOT/options/HltInit.py')
+        log.info("Loaded HltInit")
         if self.getProp('replaceL0BanksWithEmulated') : importOptions('$L0DUROOT/options/ReplaceL0BanksWithEmulated.opts')
         hlttype = self.getProp('hltType')
         if self.getProp('oldStyle') :
