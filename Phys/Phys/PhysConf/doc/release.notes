@@ -4,6 +4,9 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+! 2008-12-23 - Patrick Koppenburg
+ - Do proto calibration in configurable.
+
 ! 2008-12-22 - Patrick Koppenburg
  - Add DataOnDemandSvc
 
