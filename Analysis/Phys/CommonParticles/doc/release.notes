@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.107 2008-11-05 09:21:17 jpalac Exp $
+!$Id: release.notes,v 1.108 2008-12-23 14:28:45 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
+
+! 2008-12-23 - Patrick Koppenburg
+ - Rename StandardOptions.opts to .py
+ - Increment to v4r1p3
 
 !========================== CommonParticles v4r1p2 2008-11-05 =================
 
