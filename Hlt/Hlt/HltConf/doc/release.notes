@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.101 2008-12-24 09:31:28 graven Exp $ 
+! $Id: release.notes,v 1.102 2008-12-24 09:39:05 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -10,6 +10,7 @@
  - restore Hlt1.opts -- not quite dead yet...
  - make hltType 'NONE' work
  - rename applyConf into __apply_configuration__
+ - fix oldStyle configuration (was missing an include of HltMain.py)
 
 ! 2008-12-23 - Gerhard Raven
  - remove HltJob.opts, Hlt1.opts, L0.opts, RandomPrescaling.opts, L0DAQ.opts

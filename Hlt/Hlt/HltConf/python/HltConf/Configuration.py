@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.27 2008-12-24 09:31:28 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.28 2008-12-24 09:39:05 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -31,6 +31,7 @@ class HltConf(LHCbConfigurableUser):
                 
     def oldConfig(self,hlttype) :
             if hlttype not in self.validHltTypes() :  raise TypeError("Unknown hlttype '%s'"%hlttype)
+            importOptions('$HLTCONFROOT/options/HltMain.py')
             if hlttype.find('Hlt1') != -1 :   
                 importOptions('$HLTCONFROOT/options/Hlt1.opts')
             if hlttype.find('Hlt2') != -1 :   
