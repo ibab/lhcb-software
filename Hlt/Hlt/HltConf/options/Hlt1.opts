@@ -57,3 +57,28 @@ HltSummaryWriter.OutputLevel=3;
  *  If selections are not run this does not harm.
  */
 PassedAlleys.Members += { "HltSelectionFilter/Hlt1Global" } ;
+
+
+// temporary hack to provide backwards compatibility numbers...
+
+HltANNSvc.Hlt1SelectionID += {
+"L0DiMuonDecision" : 65501,
+"L0ElectronDecision" : 65502,
+"L0GlobalPi0Decision" : 65503,
+"L0HadronDecision" : 65504,
+"L0LocalPi0Decision" : 65505,
+"L0MuonDecision" : 65506,
+"L0MuonNoGlobDecision" : 65507,
+"L0PhotonDecision" : 65508,
+"Hlt1ElectronEleTrkDecision" : 65510,
+"Hlt1ElectronSingleDecision" : 65511,
+"Hlt1HadronDiDecision" : 65512,
+"Hlt1HadronSingleDecision" : 65513,
+"Hlt1MuTrackDecision" : 65514,
+"Hlt1MuonDiMuon2L0WithIPDecision" : 65515,
+"Hlt1MuonDiMuonMuonSegNoIPDecision" : 65516,
+"Hlt1MuonDiMuonMuonSegWithIPDecision" : 65517,
+"Hlt1MuonDiMuonWithIPDecision" : 65518,
+"Hlt1MuonSingleDecision" : 65519,
+"Hlt1MuonSingleNoIPDecision" : 65520
+};
