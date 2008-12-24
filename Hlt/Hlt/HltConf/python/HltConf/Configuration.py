@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.26 2008-12-23 12:24:38 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.27 2008-12-24 09:31:28 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -29,15 +29,10 @@ class HltConf(LHCbConfigurableUser):
                  'Hlt1+Hlt2',
                  'DEFAULT' ]
                 
-    def applyConf(self):
-        GaudiKernel.ProcessJobOptions.PrintOff()
-        importOptions('$HLTCONFROOT/options/HltInit.py')
-        log.info("Loaded HltInit")
-        if self.getProp('replaceL0BanksWithEmulated') : importOptions('$L0DUROOT/options/ReplaceL0BanksWithEmulated.opts')
-        hlttype = self.getProp('hltType')
-        if self.getProp('oldStyle') :
+    def oldConfig(self,hlttype) :
             if hlttype not in self.validHltTypes() :  raise TypeError("Unknown hlttype '%s'"%hlttype)
-            if hlttype.find('Hlt1') != -1 :   importOptions('$HLTCONFROOT/options/Hlt1.opts')
+            if hlttype.find('Hlt1') != -1 :   
+                importOptions('$HLTCONFROOT/options/Hlt1.opts')
             if hlttype.find('Hlt2') != -1 :   
                 importOptions('$HLTCONFROOT/options/Hlt2.py')
                 # TODO: this next one should become a property of the Hlt2 configurable, and we
@@ -46,12 +41,10 @@ class HltConf(LHCbConfigurableUser):
                     Sequence("Hlt2CheckHlt1Passed").Members = [ L0Filter('L0Pass', Code = "L0_DECISION") ]
                 else :
                     Sequence("Hlt2CheckHlt1Passed").Members = [ Sequence( "PassedAlleys" ) ]
-            if hlttype.find('Velo') != -1 :   importOptions('$HLTCONFROOT/options/HltVeloAlleySequence.opts')
             importOptions( '$HLTCONFROOT/options/HltPersistentOutput.py' )
-        else :
+    def newConfig(self,hlttype) :
             trans = { 'Hlt1'   : 'LU+L0+VE+XP+MU+HA+PH+EL'
                     , 'DEFAULT': 'PA+LU+L0+VE+XP'
-                    , 'NONE'   : '' 
                     }
             for short,full in trans.iteritems() : hlttype = hlttype.replace(short,full)
             type2conf = { 'PA' : '$HLTCONFROOT/options/HltCommissioningLines.py' # PA for 'PAss-thru' (PT was considered bad)
@@ -64,9 +57,10 @@ class HltConf(LHCbConfigurableUser):
                         , 'PH' : '$HLTCONFROOT/options/HltPhotonLines.py' 
                         , 'EL' : '$HLTCONFROOT/options/HltElectronLines.py' }
             for i in hlttype.split('+') :
+                if i == 'NONE' : continue # no operation...
                 if i == 'Hlt2' : continue # we deal with this later...
                 if i not in type2conf : raise AttributError, "unknown hlttype fragment '%s'"%i
-                print '# requested ' + i + ', including ' + type2conf[i] 
+                log.info( '# requested ' + i + ', including ' + type2conf[i]  )
                 importOptions( type2conf[i] )
             importOptions('$HLTCONFROOT/options/HltMain.py')
             importOptions('$HLTCONFROOT/options/Hlt1.py')
@@ -78,6 +72,18 @@ class HltConf(LHCbConfigurableUser):
                     Sequence("Hlt2CheckHlt1Passed").Members = [ L0Filter('L0Pass', Code = "L0_DECISION" ) ]
                 else : 
                     Sequence("Hlt2CheckHlt1Passed").Members = [ HltFilter('Hlt1GlobalPass' , Code = "HLT_PASS('Hlt1Global')" ) ]
-            if self.getProp("verbose") : print Sequence('Hlt') 
+            if self.getProp("verbose") : log.info( Sequence('Hlt')  )
+
+    def __apply_configuration__(self):
+        GaudiKernel.ProcessJobOptions.PrintOff()
+        importOptions('$HLTCONFROOT/options/HltInit.py')
+        log.info("Loaded HltInit")
+        if self.getProp('replaceL0BanksWithEmulated') : 
+            importOptions('$L0DUROOT/options/ReplaceL0BanksWithEmulated.opts')
+        hlttype = self.getProp('hltType')
+        if self.getProp('oldStyle') :
+            self.oldConfig(hlttype)
+        else :
+            self.newConfig(hlttype)
         for userAlg in self.getProp("userAlgorithms"):
             ApplicationMgr().TopAlg += [ userAlg ]
