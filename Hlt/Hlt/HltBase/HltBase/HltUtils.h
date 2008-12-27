@@ -6,7 +6,6 @@
 
 //#include "Event/Track.h"
 #include "Event/RecVertex.h"
-#include "Event/L0CaloCandidate.h"
 
 #include <algorithm>
 #include <functional>
@@ -16,10 +15,6 @@ namespace LHCb {
   class Track;
 };
 
-typedef Gaudi::XYZVector EVector;
-typedef Gaudi::XYZPoint EPoint;
-
-typedef LHCb::RecVertex TVertex;
 
 namespace Hlt {
 
@@ -54,8 +49,13 @@ namespace Hlt {
    */
   class SortTrackByPt {
   public:
-    bool operator() (const LHCb::Track* iniTrack, 
-                     const LHCb::Track* endTrack ) const;
+    bool operator() (const LHCb::Track* lhs, 
+                     const LHCb::Track* rhs ) const {
+        double ptl = lhs->pt();
+        double ptr = rhs->pt();
+        return (ptl == ptr) ? (lhs->key() > rhs->key())
+                            : (ptl > ptr) ;
+}
   };
 }
 
@@ -82,7 +82,7 @@ namespace HltUtils
                                     const LHCb::Track& track2);
 
   //! return the closest distance between the 2 tracks (first State)
-  EVector closestDistance(const LHCb::Track& track1, 
+  Gaudi::XYZVector closestDistance(const LHCb::Track& track1, 
                           const LHCb::Track& track2);
 
   double deltaEta(const LHCb::Track& track1, const LHCb::Track& track2);
@@ -92,7 +92,7 @@ namespace HltUtils
   double deltaAngle(const LHCb::Track& track1, const LHCb::Track& track2);
 
   //! retun the closest point between the 2 tracks (first State)
-  EPoint closestPoint(const LHCb::Track& track1,
+  Gaudi::XYZPoint closestPoint(const LHCb::Track& track1,
                       const LHCb::Track& track2);
 
   double FC(const LHCb::RecVertex& svertex, 
@@ -140,19 +140,19 @@ namespace HltUtils
   //------------------------------------------------------------
 
   //! compute the impact parameter vector
-  EVector impactParameterVector(const EPoint& vertex,
-                                const EPoint& point,
-                                const EVector& direction);
+  Gaudi::XYZVector impactParameterVector(const Gaudi::XYZPoint& vertex,
+                                const Gaudi::XYZPoint& point,
+                                const Gaudi::XYZVector& direction);
 
   //! return the modules of the impact parameter (signed)
-  double impactParameter(const EPoint& vertex,
-                         const EPoint& point,
-                         const EVector& direction);
+  double impactParameter(const Gaudi::XYZPoint& vertex,
+                         const Gaudi::XYZPoint& point,
+                         const Gaudi::XYZVector& direction);
   
   //! return points in rays 
-  bool closestPoints(const EPoint& ori1, const EVector& dir1,
-                     const EPoint& ori2, const EVector& dir2,
-                     EPoint& close1, EPoint& close2);
+  bool closestPoints(const Gaudi::XYZPoint& ori1, const Gaudi::XYZVector& dir1,
+                     const Gaudi::XYZPoint& ori2, const Gaudi::XYZVector& dir2,
+                     Gaudi::XYZPoint& close1, Gaudi::XYZPoint& close2);
 
   //! old parameterization of Pt error
   double impactParameterError(double pt);

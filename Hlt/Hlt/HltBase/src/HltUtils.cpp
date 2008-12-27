@@ -39,19 +39,11 @@ void Hlt::TrackMerge(const LHCb::Track& track, LHCb::Track& otrack) {
 void Hlt::VertexCreator::operator() 
   (const LHCb::Track& track1, const LHCb::Track& track2,
    LHCb::RecVertex& ver) const {
-  // EVector dis = HltUtils::closestDistance(track1,track2);
+  // XYZVector dis = HltUtils::closestDistance(track1,track2);
   ver.setPosition(HltUtils::closestPoint(track1,track2));
   ver.addToTracks(const_cast<Track*>(&track1));
   ver.addToTracks(const_cast<Track*>(&track2));
   // std::cout << " vertex position " << pos << std::endl;
-}
-
-bool Hlt::SortTrackByPt::operator() (const Track* lhs, 
-                                     const Track* rhs ) const {
-  double ptl = lhs->pt();
-  double ptr = rhs->pt();
-  return (ptl == ptr) ? (lhs->key() > rhs->key())
-                      : (ptl > ptr) ;
 }
 
 
@@ -64,7 +56,7 @@ double HltUtils::rImpactParameter(const RecVertex& vertex,
   double tr  = state.tx();
   double zt  = state.z();
   
-  const EPoint& p = vertex.position();
+  const XYZPoint& p = vertex.position();
   double xv = p.x();
   double yv = p.y();
   double zv = p.z();
@@ -86,7 +78,7 @@ double HltUtils::rImpactParameter(const RecVertex& vertex,
 double HltUtils::impactParameter (const RecVertex& vertex, 
                                   const Track& track)
 {
-  const EPoint& pos = vertex.position();
+  const XYZPoint& pos = vertex.position();
   double xv = pos.x();
   double yv = pos.y();
   double zv = pos.z();
@@ -134,26 +126,26 @@ double HltUtils::IPError(const Track& track)
   
 }
 
-double HltUtils::impactParameter(const EPoint& vertex,
-                                 const EPoint& point,
-                                 const EVector& direction)
+double HltUtils::impactParameter(const XYZPoint& vertex,
+                                 const XYZPoint& point,
+                                 const XYZVector& direction)
 {
-  EVector ipVector = impactParameterVector(vertex,point,direction);
+  XYZVector ipVector = impactParameterVector(vertex,point,direction);
   return (ipVector.z() < 0) ? -ipVector.R() : ipVector.R();
 }
 
 
-EVector HltUtils::impactParameterVector(const EPoint& vertex,
-                                        const EPoint& point,
-                                        const EVector& direction) {
-  EVector udir = direction.unit();
-  EVector distance = point - vertex;
+XYZVector HltUtils::impactParameterVector(const XYZPoint& vertex,
+                                        const XYZPoint& point,
+                                        const XYZVector& direction) {
+  XYZVector udir = direction.unit();
+  XYZVector distance = point - vertex;
   return udir.Cross(distance.Cross(udir));
 }
 
-bool HltUtils::closestPoints(const EPoint& ori1, const EVector& dir1,
-                             const EPoint& ori2, const EVector& dir2,
-                             EPoint& close1, EPoint& close2) {
+bool HltUtils::closestPoints(const XYZPoint& ori1, const XYZVector& dir1,
+                             const XYZPoint& ori2, const XYZVector& dir2,
+                             XYZPoint& close1, XYZPoint& close2) {
   
   //TODO new SMatrix
   // Calculate the point between two tracks
@@ -163,14 +155,14 @@ bool HltUtils::closestPoints(const EPoint& ori1, const EVector& dir1,
  
   double eps(1.e-6);
   
-  close1 = EPoint(0.,0.,0.);
-  close2 = EPoint(0.,0.,0.);
+  close1 = XYZPoint(0.,0.,0.);
+  close2 = XYZPoint(0.,0.,0.);
   
-  EVector v0 = ori1 - ori2;
-  EVector v1 = dir1.unit();
+  XYZVector v0 = ori1 - ori2;
+  XYZVector v1 = dir1.unit();
   if (fabs(v1.x())  < eps && fabs(v1.y())  < eps && fabs(v1.z())  < eps)
     return false;
-  EVector v2 = dir2.unit();
+  XYZVector v2 = dir2.unit();
   if (fabs(v2.x())  < eps && fabs(v2.y())  < eps && fabs(v2.z())  < eps)
     return false;
   
@@ -192,44 +184,44 @@ bool HltUtils::closestPoints(const EPoint& ori1, const EVector& dir1,
   return true;
 }
 
-EVector HltUtils::closestDistance(const Track& track1, 
+XYZVector HltUtils::closestDistance(const Track& track1, 
                                   const Track& track2) {
   const State& state1 = track1.firstState();
   const State& state2 = track2.firstState();
-  EPoint pos1(0.,0.,0.);
-  EPoint pos2(0.,0.,0.);
-  EVector dir1(state1.tx(),state1.ty(),1.);
-  EVector dir2(state2.tx(),state2.ty(),1.);
-  EPoint  ori1(state1.x(),state1.y(),state1.z());
-  EPoint  ori2(state2.x(),state2.y(),state2.z());
+  XYZPoint pos1(0.,0.,0.);
+  XYZPoint pos2(0.,0.,0.);
+  XYZVector dir1(state1.tx(),state1.ty(),1.);
+  XYZVector dir2(state2.tx(),state2.ty(),1.);
+  XYZPoint  ori1(state1.x(),state1.y(),state1.z());
+  XYZPoint  ori2(state2.x(),state2.y(),state2.z());
   bool ok = closestPoints(ori1,dir1,ori2,dir2,pos1,pos2);
-  if (!ok) return EVector(0.,0.,1.e6);
+  if (!ok) return XYZVector(0.,0.,1.e6);
   return pos1 - pos2;
 }
 
-EPoint HltUtils::closestPoint(const Track& track1, 
+XYZPoint HltUtils::closestPoint(const Track& track1, 
                               const Track& track2) {
   const State& state1 = track1.firstState();
   const State& state2 = track2.firstState();
   
-  EPoint pos1(0.,0.,0.);
-  EPoint pos2(0.,0.,0.);
-  EVector dir1(state1.tx(),state1.ty(),1.);
-  EVector dir2(state2.tx(),state2.ty(),1.);
-  EPoint  ori1(state1.x(),state1.y(),state1.z());
-  EPoint  ori2(state2.x(),state2.y(),state2.z());
+  XYZPoint pos1(0.,0.,0.);
+  XYZPoint pos2(0.,0.,0.);
+  XYZVector dir1(state1.tx(),state1.ty(),1.);
+  XYZVector dir2(state2.tx(),state2.ty(),1.);
+  XYZPoint  ori1(state1.x(),state1.y(),state1.z());
+  XYZPoint  ori2(state2.x(),state2.y(),state2.z());
   closestPoints(ori1,dir1,ori2,dir2,pos1,pos2);
-  return EPoint(0.5*(pos1.x()+pos2.x()),
+  return XYZPoint(0.5*(pos1.x()+pos2.x()),
                 0.5*(pos1.y()+pos2.y()),
                 0.5*(pos1.z()+pos2.z()));
 }
 
 RecVertex* HltUtils::newRecVertex(const Track& t1, const Track& t2) 
 {
-  EPoint x1=t1.position();
-  EVector p1=t1.momentum();
-  EPoint x2=t2.position();
-  EVector p2=t2.momentum();
+  XYZPoint x1=t1.position();
+  XYZVector p1=t1.momentum();
+  XYZPoint x2=t2.position();
+  XYZVector p2=t2.momentum();
 
   RecVertex* sv = new RecVertex();
   sv->addToTracks(&t1);
@@ -240,7 +232,7 @@ RecVertex* HltUtils::newRecVertex(const Track& t1, const Track& t2)
   p1=p1.unit();
   p2=p2.unit();
   
-  EVector v0=x1-x2;
+  XYZVector v0=x1-x2;
   double d02=v0.Dot(p2);
   double d21=p2.Dot(p1);
   double d01=v0.Dot(p1);
@@ -249,15 +241,15 @@ RecVertex* HltUtils::newRecVertex(const Track& t1, const Track& t2)
   
   double den=d11*d22-d21*d21;
   if (fabs(den)<tol) {
-    sv->setPosition(EPoint(0,0,-8000));
+    sv->setPosition(XYZPoint(0,0,-8000));
     return sv;
   }
   double num=d02*d21-d01*d22;
   double mu1=num/den;
   double mu2=(d02+d21*mu1)/d22;
-  EPoint sv1=(x1+mu1*p1);
-  EPoint sv2=(x2+mu2*p2);
-  EPoint center(0.5*(sv1.x()+sv2.x()),
+  XYZPoint sv1=(x1+mu1*p1);
+  XYZPoint sv2=(x2+mu2*p2);
+  XYZPoint center(0.5*(sv1.x()+sv2.x()),
                 0.5*(sv1.y()+sv2.y()),
                 0.5*(sv1.z()+sv2.z()));
   sv->setPosition(center);
@@ -279,10 +271,10 @@ double HltUtils::FC(const LHCb::RecVertex& vertex1,
   const Track& track1 = *(vertex1.tracks()[0]);
   const Track& track2 = *(vertex1.tracks()[1]);
 
-  EVector dir(dx,dy,dz);
-  EVector p1 = track1.momentum();
-  EVector p2 = track2.momentum();
-  EVector p = p1+p2;
+  XYZVector dir(dx,dy,dz);
+  XYZVector p1 = track1.momentum();
+  XYZVector p2 = track2.momentum();
+  XYZVector p = p1+p2;
 
   double dd = sqrt(dir.Dot(dir));
   double pp = sqrt(p.Dot(p));  
@@ -302,9 +294,9 @@ double HltUtils::FC2(const LHCb::RecVertex& vertex1,
   const Track& track1 = *(vertex1.tracks()[0]);
   const Track& track2 = *(vertex1.tracks()[1]);
 
-  EVector p = track1.momentum() + track2.momentum();
-  EVector udir = (vertex1.position() - vertex2.position()).unit();
-  EVector wdir = udir.Cross(udir.Cross(p.unit()));
+  XYZVector p = track1.momentum() + track2.momentum();
+  XYZVector udir = (vertex1.position() - vertex2.position()).unit();
+  XYZVector wdir = udir.Cross(udir.Cross(p.unit()));
 
   double ptPerp = fabs(p.Dot(wdir));
   double pt     = track1.pt() + track2.pt();
@@ -325,7 +317,7 @@ double HltUtils::impactParameterError(double pt0)
 
 double HltUtils::closestDistanceMod(const LHCb::Track& track1,
                                     const LHCb::Track& track2) {
-  EVector dis = closestDistance(track1,track2);
+  XYZVector dis = closestDistance(track1,track2);
   assert( sqrt(dis.Dot(dis)) == dis.R() );
   return closestDistance(track1,track2).R();
 } 
