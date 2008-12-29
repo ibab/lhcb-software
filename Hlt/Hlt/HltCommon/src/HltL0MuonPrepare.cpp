@@ -1,4 +1,4 @@
-// $Id: HltL0MuonPrepare.cpp,v 1.13 2008-12-03 21:04:48 graven Exp $
+// $Id: HltL0MuonPrepare.cpp,v 1.14 2008-12-29 12:56:09 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -52,8 +52,6 @@ StatusCode HltL0MuonPrepare::initialize() {
   m_selections.registerSelection();
   
   m_maker = tool<IMuonSeedTool>("MuonSeedTool");
-
-  saveConfiguration();
 
   return StatusCode::SUCCESS;
 }

@@ -37,11 +37,11 @@ HltDataSvc::HltDataSvc( const std::string& name,
   : Service ( name , pSvcLocator )
   , m_evtSvc(0)
   , m_annSvc(0)
-  , m_hltConf(0)
   //
   , m_mapselections   () 
   , m_ownedSelections () 
   , m_parents ()
+  , m_beginEventCalled(false)
 {
 }
 
@@ -76,8 +76,6 @@ StatusCode HltDataSvc::initialize() {
   info() << "Initialize" << endmsg;
   StatusCode status = Service::initialize();
   if ( !status.isSuccess() )   return status;
-  // create the Hlt Data Svc
-  m_hltConf.reset( new Hlt::Configuration() );
   
   // get incident Svc...
   IIncidentSvc*                incidentSvc(0);     ///<
@@ -92,7 +90,6 @@ StatusCode HltDataSvc::initialize() {
 
 StatusCode HltDataSvc::finalize() {
   StatusCode status = Service::finalize();
-  m_hltConf.reset( (Hlt::Configuration*)0 );
   if (m_evtSvc) { m_evtSvc->release(); m_evtSvc=0; }
   if (m_annSvc) { m_annSvc->release(); m_annSvc=0; }
   return status;
@@ -187,7 +184,7 @@ HltDataSvc::selection
 }
 
 std::vector<stringKey> 
-HltDataSvc::selectionKeys()
+HltDataSvc::selectionKeys() const
 {
   std::vector<stringKey> keys; keys.reserve(m_mapselections.size());
   for (std::map<stringKey,Hlt::Selection*>::const_iterator i = m_mapselections.begin();
@@ -195,16 +192,21 @@ HltDataSvc::selectionKeys()
   return keys;
 }
 
-Hlt::Configuration& 
-HltDataSvc::config() {
-  if ( m_hltConf.get() == 0) 
-  { 
-    throw GaudiException( name()+"::config() no Hlt::Configuration","",StatusCode::FAILURE);
-  }
-  return *m_hltConf;
-};
+StatusCode 
+HltDataSvc::inputUsedBy(const stringKey& key, std::vector<std::string>& inserter) const {
+  std::map<stringKey,Hlt::Selection*>::const_iterator sel = m_mapselections.find(key);
+  if (sel == m_mapselections.end()) return StatusCode::FAILURE;
+  std::vector<stringKey>::const_iterator i=sel->second->inputSelectionsIDs().begin();
+  while (i!=sel->second->inputSelectionsIDs().end()) inserter.push_back( *i++ );
+  return StatusCode::SUCCESS;
+}
+
 
 void HltDataSvc::handle( const Incident& ) {
+  if (!m_beginEventCalled) {
+    always() << " first event seen, locking dependency graph " << endmsg;
+  }
+  m_beginEventCalled = true;
   for ( std::map<stringKey,Hlt::Selection*>::iterator i  = m_mapselections.begin();
         i != m_mapselections.end(); ++i) {
     // std::cout << "cleaning " << i->first << std::endl;

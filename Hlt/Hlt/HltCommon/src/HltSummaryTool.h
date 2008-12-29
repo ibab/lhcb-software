@@ -1,11 +1,10 @@
-// $Id: HltSummaryTool.h,v 1.15 2008-11-22 23:00:19 tskwarni Exp $
+// $Id: HltSummaryTool.h,v 1.16 2008-12-29 12:56:09 graven Exp $
 #ifndef HLTCOMMON_HLTSUMMARYTOOL_H 
 #define HLTCOMMON_HLTSUMMARYTOOL_H 1
 
 // Include files
 // from Gaudi
 #include "HltBase/HltBaseTool.h"
-#include "HltBase/IHltConfSummaryTool.h"
 #include "Kernel/IHltSummaryTool.h"
 #include "Event/HltSummary.h"
 #include "Event/HltDecReports.h"
@@ -23,7 +22,6 @@
  */
 class HltSummaryTool : public HltBaseTool
                      , virtual public IIncidentListener
-                     , virtual public IHltConfSummaryTool
                      , virtual public IHltSummaryTool
 {
 public:
@@ -70,12 +68,6 @@ public:
   // returns the number of candidates of a given selection
   size_t selectionNCandidates(const std::string& name);
   
-  // returns a list of string that code the filter/cuts applied in a selection
-  std::vector<std::string> selectionFilters(const std::string& name);
-
-  // returns the type of candidates of a given selection, i.e Track, Vertex, Particle
-  std::string selectionType(const std::string& name);
-
   // returns a list of input selections required to produce this selection
   std::vector<std::string> selectionInputSelections(const std::string& name);
 
@@ -91,21 +83,6 @@ public:
   // do not use
   bool isInSelection(const std::string& name,
                      const LHCb::Track& track );
-
-  // returns all the keys stored in the HLT configuration dictionary
-  std::vector<std::string> confKeys();
-
-  // returns the int value asociated to a HLT configuration key
-  int confInt(const std::string& name);
-
-  // returns the double value asociated to a HLT configuration key
-  double confDouble(const std::string& name);
-
-  // returns the string value asociated to a HLT configuration key
-  std::string confString(const std::string& name) ;
-
-  // returns a list of strings asociated to a HLT configuration key
-  std::vector<std::string> confStringVector(const std::string& name);  
 
   class FakeAlgorithm:virtual public IAlgorithm
   {    

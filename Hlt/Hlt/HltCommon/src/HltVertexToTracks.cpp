@@ -1,4 +1,4 @@
-// $Id: HltVertexToTracks.cpp,v 1.6 2008-07-30 13:37:33 graven Exp $
+// $Id: HltVertexToTracks.cpp,v 1.7 2008-12-29 12:56:09 graven Exp $
 // Include files 
 #include <algorithm>
 #include "boost/foreach.hpp"
@@ -57,8 +57,6 @@ StatusCode HltVertexToTracks::initialize() {
 
   m_selections.retrieveSelections();
   m_selections.registerSelection();
-
-  saveConfiguration();
 
   return sc;
 }

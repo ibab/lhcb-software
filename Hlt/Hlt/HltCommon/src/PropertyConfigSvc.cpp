@@ -1,4 +1,4 @@
-// $Id: PropertyConfigSvc.cpp,v 1.18 2008-08-26 09:15:33 graven Exp $
+// $Id: PropertyConfigSvc.cpp,v 1.19 2008-12-29 12:56:09 graven Exp $
 // Include files 
 
 #include <sstream>
@@ -352,13 +352,10 @@ PropertyConfigSvc::loadConfig(const ConfigTreeNode::digest_type& nodeRef)
          for (vector<PropertyConfig::digest_type>::const_iterator i = list.begin();i!=list.end();++i) {
                 resolvePropertyConfig(*i);
          }
-    //     for_each(list.begin(),
-    //                   list.end(), 
-    //                   bl::bind(&PropertyConfigSvc::resolvePropertyConfig,this,bl::_1) );
          return validateConfig( nodeRef );
 
      } catch ( const boost::filesystem::basic_filesystem_error<boost::filesystem::path>& x )  {
-         error() << boost::filesystem::what( x)  << endmsg;
+         error() << boost::filesystem::what( x )  << endmsg;
          throw x;
      }
      return StatusCode::FAILURE;

@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.cpp,v 1.28 2008-12-21 17:14:10 graven Exp $
+// $Id: HltVertexMaker.cpp,v 1.29 2008-12-29 12:56:09 graven Exp $
 // Include files 
 
 
@@ -146,9 +146,6 @@ StatusCode HltVertexMaker<Selections>::initialize() {
   }
 
   m_selections.registerSelection();
-  
-  saveConfiguration();
-
   return sc;
 };
 
@@ -215,16 +212,6 @@ StatusCode HltVertexMaker<Selections>::execute() {
   counter("#Combinations") += nCombinations;
   return sc;
 }
-
-template <typename Selections>
-void HltVertexMaker<Selections>::saveConfiguration() {
-  HltAlgorithm::saveConfiguration();
-
-  const std::vector<std::string>& values = m_filterDescriptor.value();
-  confregister("Filters",values);
-  info() << " HLT filters " << values << endreq;
-}
-
 
 
 //=============================================================================

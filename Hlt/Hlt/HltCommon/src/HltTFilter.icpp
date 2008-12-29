@@ -1,4 +1,4 @@
-// $Id: HltTFilter.icpp,v 1.14 2008-12-20 17:59:36 graven Exp $
+// $Id: HltTFilter.icpp,v 1.15 2008-12-29 12:56:09 graven Exp $
 // Include files
 
 #include "HltBase/EParser.h"
@@ -66,12 +66,7 @@ StatusCode HltTFilter<T>::initialize() {
 
   // output
   m_selections.registerSelection();
-  
-  // save configuration
-  saveConfiguration();
-  
   return  sc;
-  
 }
 
 template <class T>
@@ -111,16 +106,6 @@ bool HltTFilter<T>::addTFilterData(const std::string& descriptor) {
           << endreq;
   m_tfilters.push_back(ptf);
   return ok;  
-}
-
-
-template <class T>
-void HltTFilter<T>::saveConfiguration() {
-  HltAlgorithm::saveConfiguration();
-
-  const std::vector<std::string>& filters = m_filterDescriptor.value();
-  confregister("Filters",filters);
-  info() << " HLT filters " << filters << endreq;
 }
 
 

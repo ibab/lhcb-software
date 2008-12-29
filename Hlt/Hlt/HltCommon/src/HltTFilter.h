@@ -1,4 +1,4 @@
-// $Id: HltTFilter.h,v 1.9 2008-12-20 17:59:36 graven Exp $
+// $Id: HltTFilter.h,v 1.10 2008-12-29 12:56:09 graven Exp $
 #ifndef HLTCOMMON_HLTTFILTER_H 
 #define HLTCOMMON_HLTTFILTER_H 1
 
@@ -65,7 +65,6 @@ private:
   typedef typename Hlt::TFilterData<T> TFilterData;
   typedef typename std::vector<TFilterData*>::iterator TFilterDataIterator;
 
-  virtual void saveConfiguration();  
   bool addTFilterData(const std::string& filtername);
 
   bool m_addInfo;

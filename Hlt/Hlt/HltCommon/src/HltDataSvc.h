@@ -32,27 +32,25 @@ public:
     const bool        useTES = false ) ;
   
   bool hasSelection(const stringKey& id) const;
-
   
   Hlt::Selection& selection
   ( const stringKey&  id     ,
     const IAlgorithm* parent ) ;
   
-  std::vector<stringKey> selectionKeys();
+  std::vector<stringKey> selectionKeys() const;
+  StatusCode inputUsedBy(const stringKey& key, std::vector<std::string>& inserter) const;
   
-  Hlt::Configuration& config();
-  
-    void handle(const Incident&);
+  void handle(const Incident&);
 private:
   MsgStream& msg(MSG::Level level) const;
 
   MsgStream& verbose() const { return msg(MSG::VERBOSE); }
-  MsgStream& debug() const { return msg(MSG::DEBUG); }
-  MsgStream& info() const { return msg(MSG::INFO); }
+  MsgStream&   debug() const { return msg(MSG::DEBUG); }
+  MsgStream&    info() const { return msg(MSG::INFO); }
   MsgStream& warning() const { return msg(MSG::WARNING); }
-  MsgStream& error() const { return msg(MSG::ERROR); }
-  MsgStream& fatal() const { return msg(MSG::FATAL); }
-  MsgStream& always() const { return msg(MSG::ALWAYS); }
+  MsgStream&   error() const { return msg(MSG::ERROR); }
+  MsgStream&   fatal() const { return msg(MSG::FATAL); }
+  MsgStream&  always() const { return msg(MSG::ALWAYS); }
 
   mutable std::auto_ptr<MsgStream>     m_msg;
   IDataProviderSvc& evtSvc() const;
@@ -61,13 +59,17 @@ private:
 
   mutable IDataProviderSvc* m_evtSvc;
   mutable IANNSvc*          m_annSvc;
-  std::auto_ptr<Hlt::Configuration> m_hltConf;
   
   std::map<stringKey,Hlt::Selection*> m_mapselections;
   std::vector<Hlt::Selection*>        m_ownedSelections; //owner of HltSelection
   
   std::vector<const IAlgorithm*>            m_parents;
+
+  bool m_beginEventCalled;
   
+  //  TODO: store the dependency graph of selections as a Property...
+  //  insure not modified after beginEvent...
+  //
   //  std::multimap<Hlt::Selection*,IAlgorithm*> m_users;     // which algorithms use a given selection?
   //  std::map<Hlt::Selection*,IAlgorithm*>      m_producers; // which algorithm produced a given selection?
 };

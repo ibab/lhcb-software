@@ -1,4 +1,4 @@
-// $Id: HltL0CaloPrepare.cpp,v 1.16 2008-12-10 07:36:04 graven Exp $
+// $Id: HltL0CaloPrepare.cpp,v 1.17 2008-12-29 12:56:09 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -113,8 +113,6 @@ StatusCode HltL0CaloPrepare::initialize() {
                     ? (ICaloSeedTool*)0
                     :tool<ICaloSeedTool>(m_caloMakerName));
 
-  saveConfiguration();  
-  
   return StatusCode::SUCCESS;
 }
 

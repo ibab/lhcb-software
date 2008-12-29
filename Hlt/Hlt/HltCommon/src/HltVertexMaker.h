@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.h,v 1.11 2008-12-21 17:14:10 graven Exp $
+// $Id: HltVertexMaker.h,v 1.12 2008-12-29 12:56:09 graven Exp $
 #ifndef HLTVERTEXMAKER_H 
 #define HLTVERTEXMAKER_H 1
 
@@ -56,7 +56,6 @@ class HltVertexMaker : public HltAlgorithm {
   virtual combinatorics_engine combine() = 0;
   SelectionContainer m_selections;
 private:
-  void saveConfiguration();
   bool m_checkForOverlaps;
 
 

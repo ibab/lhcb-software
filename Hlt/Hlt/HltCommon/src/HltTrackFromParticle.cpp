@@ -1,4 +1,4 @@
-// $Id: HltTrackFromParticle.cpp,v 1.8 2008-07-30 13:37:33 graven Exp $
+// $Id: HltTrackFromParticle.cpp,v 1.9 2008-12-29 12:56:09 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -46,9 +46,7 @@ StatusCode HltTrackFromParticle::initialize() {
 
   m_selections.registerSelection();
 
-  saveConfiguration();
   info() << "HltAlgorithm initialized";
-
   return sc;
 }
 

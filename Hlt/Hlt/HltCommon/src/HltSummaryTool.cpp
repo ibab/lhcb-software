@@ -31,7 +31,6 @@ HltSummaryTool::HltSummaryTool( const std::string& type,
   : HltBaseTool ( type, name , parent )
   , m_summary(0)
 {
-  declareInterface<IHltConfSummaryTool>(this);
   declareInterface<IHltSummaryTool>(this);
   
   declareProperty("HltSummaryLocation",
@@ -187,29 +186,15 @@ size_t HltSummaryTool::selectionNCandidates(const std::string& name) {
   return selectionParticles(name).size();
 }
 
-std::vector<std::string> 
-HltSummaryTool::selectionFilters(const std::string& name) {
-  std::string key = name+"/Filters";
-  return hltConf().has_key(key)
-            ? hltConf().retrieve<std::vector<std::string> >(key)
-            : std::vector<std::string>();
-}
 
 std::vector<std::string> 
 HltSummaryTool::selectionInputSelections(const std::string& name) {
   std::vector<std::string> inputs;
-  std::string key = name+"/InputSelections";
-  if (hltConf().has_key(key))
-    inputs = hltConf().retrieve<std::vector<std::string> >(key);
+  stringKey key(name);
+  if( dataSvc().hasSelection(name) ){
+    dataSvc().inputUsedBy(name,inputs).ignore();
+  }
   return inputs;
-}
-
-std::string 
-HltSummaryTool::selectionType(const std::string& name) {
-  std::string key = name+"/SelectionType";
-  std::string type = "unknown";
-  if (hltConf().has_key(key)) type = hltConf().retrieve<std::string >(key);
-  return type;
 }
 
 std::vector<Track*> 
@@ -283,36 +268,4 @@ bool HltSummaryTool::checkSelection(const std::string& name) {
   return ok;
 }
 
-std::vector<std::string> HltSummaryTool::confKeys() {
-  return hltConf().keys();
-}
 
-template <typename T> 
-T confVal(const std::string& name, Hlt::Configuration& conf, T unknownValue = T())
-{ 
-  // std::cout << " requested " << name << " has? " << conf.has_key(name) << std::endl;
-  return conf.has_key(name) ? conf.retrieve<T>(name) : T(unknownValue) ;
-}
-
-
-int HltSummaryTool::confInt(const std::string& name) {
-  if (hltConf().has_key(name)) return confVal(name,hltConf(),-1);
-  std::vector<std::string> cromos = EParser::parse(name,"/");
-  if (cromos.size() != 2) return -1;
-  boost::optional<IANNSvc::minor_value_type> i =  annSvc().value(cromos[0],cromos[1]);
-  int val = i->second;
-  return val;
-}
-
-double HltSummaryTool::confDouble(const std::string& name) {
-  return confVal<double>(name, hltConf(),0);
-}
-
-std::string HltSummaryTool::confString(const std::string& name) {
-  return confVal<std::string>(name, hltConf(),"unknown");
-}
-
-std::vector<std::string> HltSummaryTool::confStringVector(const std::string& name) 
-{
-  return confVal<std::vector<std::string> >(name,hltConf());
-}

@@ -1,4 +1,4 @@
-// $Id: HltMoveVerticesForSwimming.cpp,v 1.5 2008-07-30 13:37:32 graven Exp $
+// $Id: HltMoveVerticesForSwimming.cpp,v 1.6 2008-12-29 12:56:09 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -44,16 +44,11 @@ HltMoveVerticesForSwimming::~HltMoveVerticesForSwimming() {}
 //=============================================================================
 StatusCode HltMoveVerticesForSwimming::initialize() {
 
-  info() << "Starts" << endmsg;
-  
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   m_selections.retrieveSelections();
   m_selections.registerSelection();
-
-  saveConfiguration();
-  info() << "HltAlgorithm initialized" << endmsg;
 
   return sc;
 }
