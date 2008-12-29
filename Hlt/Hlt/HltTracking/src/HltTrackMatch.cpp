@@ -1,4 +1,4 @@
-// $Id: HltTrackMatch.cpp,v 1.11 2008-09-08 10:14:22 graven Exp $
+// $Id: HltTrackMatch.cpp,v 1.12 2008-12-29 12:37:16 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -65,8 +65,6 @@ StatusCode HltTrackMatch::initialize() {
   sc = setReco(m_matchName);
   if ( sc.isFailure() ) return sc;
   
-  saveConfiguration();
-
   return StatusCode::SUCCESS;
 }
 

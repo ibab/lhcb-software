@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.67 2008-12-19 17:37:27 graven Exp $
+!$Id: release.notes,v 1.68 2008-12-29 12:37:16 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+! 2008-12-29 - Gerhard Raven
+ - remove unneeded call to saveConfiguration
+
 ! 2008-11-19 - Gerhard Raven
  - remove unneeded include
 

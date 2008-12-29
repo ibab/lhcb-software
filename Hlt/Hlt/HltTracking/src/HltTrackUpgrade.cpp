@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgrade.cpp,v 1.12 2008-07-30 13:39:39 graven Exp $
+// $Id: HltTrackUpgrade.cpp,v 1.13 2008-12-29 12:37:16 graven Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -50,8 +50,6 @@ StatusCode HltTrackUpgrade::initialize() {
   
   sc = m_tool->setReco(m_recoName);
   if (sc.isFailure()) return sc;
-
-  saveConfiguration();
   return sc;
 };
 
