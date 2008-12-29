@@ -1,4 +1,4 @@
-// $Id: HltAddPhotonToVertex.cpp,v 1.2 2008-07-31 11:55:52 graven Exp $
+// $Id: HltAddPhotonToVertex.cpp,v 1.3 2008-12-29 12:34:04 graven Exp $
 // Include files 
 
 
@@ -39,12 +39,8 @@ HltAddPhotonToVertex::HltAddPhotonToVertex( const std::string& name,
 
 StatusCode HltAddPhotonToVertex::initialize() {
   StatusCode sc = HltAlgorithm::initialize();
-
   m_selections.retrieveSelections();
   m_selections.registerSelection();
-
-  saveConfiguration();
-
   return sc;
 };
 
