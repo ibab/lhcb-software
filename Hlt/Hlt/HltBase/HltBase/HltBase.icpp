@@ -1,4 +1,4 @@
-// $Id: HltBase.icpp,v 1.19 2008-12-21 17:14:51 graven Exp $
+// $Id: HltBase.icpp,v 1.20 2008-12-29 16:42:23 graven Exp $
 // Include files
 
 
@@ -16,9 +16,7 @@
 
 template <class EBASE>
 void HltBase<EBASE>::hltBaseConstructor() {
-  
   EBASE::declareProperty("HistoDescriptor", m_histoDescriptor);
-
   m_dataSvc = 0;
   m_hltANNSvc = 0;
 }
@@ -31,31 +29,9 @@ StatusCode HltBase<EBASE>::initialize() {
   EBASE::debug() << "==> Initialize -- calling " <<System::typeinfoName( typeid(EBASE) ) <<  "::initialize"<< endreq;
   StatusCode sc = EBASE::initialize(); 
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-  
-  initializeMsg();
+
   initializeHistosFromDescriptor();
-
   return StatusCode::SUCCESS;
-}
-
-template <class EBASE>
-StatusCode HltBase<EBASE>::finalize() {  
-  EBASE::debug() << "==> Finalize -- calling " <<System::typeinfoName( typeid(EBASE) ) <<  "::finalize"<< endreq;
-  return EBASE::finalize();
-}  
-
-template <class EBASE>
-void HltBase<EBASE>::initializeMsg() {
-
-  m_verbose = EBASE::msgLevel(MSG::VERBOSE);             
-  m_debug   = EBASE::msgLevel(MSG::DEBUG)   || m_verbose ;
-  m_info    = EBASE::msgLevel(MSG::INFO)    || m_debug   ;
-  m_warning = EBASE::msgLevel(MSG::WARNING) || m_info    ;
-  m_error   = EBASE::msgLevel(MSG::ERROR)   || m_warning ;
-  m_fatal   = true;
-
-  EBASE::debug() << " msg level " 
-                 << m_info << m_debug << m_verbose << endreq;
 }
 
 template <class EBASE>

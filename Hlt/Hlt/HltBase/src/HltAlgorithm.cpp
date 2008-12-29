@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.48 2008-12-29 12:59:09 graven Exp $
+// $Id: HltAlgorithm.cpp,v 1.49 2008-12-29 16:42:23 graven Exp $
 // Include files 
 
 #include "Event/Particle.h"
@@ -146,7 +146,7 @@ bool HltAlgorithm::verifyInput()
     // propagate error status!
     if (i->error()) m_outputSelection->setError(true);
     ok = ok &&  i->decision() ;
-    if (m_debug) 
+    if (msgLevel(MSG::DEBUG)) 
       debug() << " input " << i->id()
               << " decision " << i->decision() 
               << " process status " << i->processed() 

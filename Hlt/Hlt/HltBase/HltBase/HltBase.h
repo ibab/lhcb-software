@@ -1,4 +1,4 @@
-// $Id: HltBase.h,v 1.19 2008-12-29 12:59:09 graven Exp $
+// $Id: HltBase.h,v 1.20 2008-12-29 16:42:23 graven Exp $
 #ifndef HLTBASE_HLTBASE_H 
 #define HLTBASE_HLTBASE_H 1
 
@@ -45,9 +45,6 @@ public:
   // initialize
   virtual StatusCode initialize();
 
-  // finalize
-  virtual StatusCode finalize();
-
 protected:
 
   // initialize Histos via options
@@ -64,9 +61,6 @@ protected:
   // fill histogram
   void fillHisto( Hlt::Histo& histo, const std::vector<double>& x, 
                   double weight );
-
-  // initialize the Msg service (set internal bool variables m_debug, etc)
-  void initializeMsg();
 
   // print info of this container
   template <class CONT>
@@ -98,17 +92,6 @@ private:
   // returns the ID of the extraInfo by name
   std::string hltInfoName(int id);
 
-protected:
-
-  // bool about the msg level
-  bool m_verbose;
-  bool m_debug;
-  bool m_info;
-  bool m_warning;
-  bool m_error;
-  bool m_fatal;
-
-private:  
   // delegate constructor
   virtual void hltBaseConstructor();
 
