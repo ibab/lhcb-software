@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.34 2008-12-19 17:34:24 graven Exp $
+!$Id: release.notes,v 1.35 2008-12-29 16:20:28 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltL0MuonConf
 ! Responsible : Alessia Satta
 ! Purpose     : Matching of Muon object (L0 or Muon segment) to T station
 !-----------------------------------------------------------------------------
+! 2008-12-29 - Gerhard Raven
+ - use msgLevel
+
 ! 2008-12-19 - Gerhard Raven
  - minor clean up
 

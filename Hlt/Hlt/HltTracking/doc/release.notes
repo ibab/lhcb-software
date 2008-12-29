@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.68 2008-12-29 12:37:16 graven Exp $
+!$Id: release.notes,v 1.69 2008-12-29 16:19:29 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
@@ -6,6 +6,7 @@
 !-----------------------------------------------------------------------------
 ! 2008-12-29 - Gerhard Raven
  - remove unneeded call to saveConfiguration
+ - use standard msglevel 
 
 ! 2008-11-19 - Gerhard Raven
  - remove unneeded include

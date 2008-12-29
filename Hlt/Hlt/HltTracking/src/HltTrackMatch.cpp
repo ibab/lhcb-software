@@ -1,4 +1,4 @@
-// $Id: HltTrackMatch.cpp,v 1.12 2008-12-29 12:37:16 graven Exp $
+// $Id: HltTrackMatch.cpp,v 1.13 2008-12-29 16:19:29 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -158,9 +158,9 @@ StatusCode HltTrackMatch::execute() {
     getOrCreate<LHCb::Tracks,LHCb::Tracks>(m_TESOutput);
 
   BOOST_FOREACH( LHCb::Track* track1, *m_selections.input<1>()) {
-    if (m_verbose) printInfo(" track [1] ",*track1);
+    if (msgLevel(MSG::VERBOSE)) printInfo(" track [1] ",*track1);
     BOOST_FOREACH( LHCb::Track* track2, *m_selections.input<2>()) {
-      if (m_verbose) printInfo(" track [2] ",*track2);
+      if (msgLevel(MSG::VERBOSE)) printInfo(" track [2] ",*track2);
 
       Track otrack(track1->key());
 
@@ -171,7 +171,7 @@ StatusCode HltTrackMatch::execute() {
         // Warning(" matching failed ",0);
         continue;
       }
-      if (m_verbose) {
+      if (msgLevel(MSG::VERBOSE)) {
         verbose() << " track [1+2] quality " 
                   << quality << ", " << quality2 << endreq;
         printInfo(" track [1+2] ",otrack);
@@ -193,7 +193,7 @@ StatusCode HltTrackMatch::execute() {
     }
   }
   
-  if (m_debug) printInfo(" matched tracks ",*m_selections.output());
+  if (msgLevel(MSG::DEBUG)) printInfo(" matched tracks ",*m_selections.output());
 
 
   return StatusCode::SUCCESS;

@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgrade.cpp,v 1.14 2008-12-29 12:40:35 graven Exp $
+// $Id: HltTrackUpgrade.cpp,v 1.15 2008-12-29 16:19:29 graven Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -65,7 +65,7 @@ StatusCode HltTrackUpgrade::execute() {
   std::vector<LHCb::Track*> out;
   StatusCode sc = m_tool->upgrade(in,out);
   m_selections.output()->insert(m_selections.output()->end(),out.begin(),out.end());
-  if (m_debug) printInfo(" upgraded tracks ",*m_selections.output());
+  if (msgLevel(MSG::DEBUG)) printInfo(" upgraded tracks ",*m_selections.output());
   
   return sc;
 }

@@ -1,4 +1,4 @@
-// $Id: RZMuonMatch.cpp,v 1.9 2008-09-09 06:37:05 graven Exp $
+// $Id: RZMuonMatch.cpp,v 1.10 2008-12-29 16:20:28 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -86,7 +86,7 @@ StatusCode RZMuonMatch::execute() {
         pTr2d->addInfo(hltInfoID("Muon2DxDist"),x_dist); 
 
         
-        if(m_debug) debug() << " Selected track" << endreq;
+        if(msgLevel(MSG::DEBUG)) debug() << " Selected track" << endreq;
         
         //TODO ?? only first match is considered ???
         break;

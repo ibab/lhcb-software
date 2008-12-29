@@ -1,4 +1,4 @@
-// $Id: HltVertexUpgrade.cpp,v 1.15 2008-12-29 12:40:36 graven Exp $
+// $Id: HltVertexUpgrade.cpp,v 1.16 2008-12-29 16:19:29 graven Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -78,7 +78,7 @@ StatusCode HltVertexUpgrade::execute() {
     Track& seed1 = (Track&) *(*otracks.begin());
     Track& seed2 = (Track&) *(*(otracks.begin()+1));
     debug() << " -- updating vertex -- " << endreq;
-    if (m_debug) {
+    if (msgLevel(MSG::DEBUG)) {
       printInfo(" seed1 ", seed1);
       printInfo(" seed2 ", seed2);
     }
@@ -101,7 +101,7 @@ StatusCode HltVertexUpgrade::execute() {
         overtices->insert(sv);
         m_selections.output()->push_back(sv);
         debug() << " created vertex " << endreq;
-        if (m_debug) printInfo(" vertex ",*sv);
+        if (msgLevel(MSG::DEBUG)) printInfo(" vertex ",*sv);
         // TODO - wait till RecVertex is done
         // if (m_transferExtraInfo)
         //   sv->setExtraInfo( vseed.extraInfo() );
