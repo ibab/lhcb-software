@@ -1,4 +1,4 @@
-// $Id: HltVertexUpgrade.cpp,v 1.14 2008-12-29 12:37:16 graven Exp $
+// $Id: HltVertexUpgrade.cpp,v 1.15 2008-12-29 12:40:36 graven Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -113,12 +113,3 @@ StatusCode HltVertexUpgrade::execute() {
 }
 
 
-
-void HltVertexUpgrade::saveConfiguration() 
-{
-  HltAlgorithm::saveConfiguration();
-  
-  std::string type = "HltVertexUpgrade";
-  confregister("Type",type);
-  confregister("RecoName",m_recoName);
-}
