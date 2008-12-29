@@ -1,4 +1,4 @@
-// $Id: HltMoveVerticesForSwimming.cpp,v 1.6 2008-12-29 12:56:09 graven Exp $
+// $Id: HltMoveVerticesForSwimming.cpp,v 1.7 2008-12-29 16:36:13 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -65,7 +65,7 @@ StatusCode HltMoveVerticesForSwimming::execute() {
   if (!exist<Particles>(m_particlesName)) return sc;
 
   Particles* pars = get<Particles>(m_particlesName);
-  if (m_debug) {
+  if (msgLevel(MSG::DEBUG)) {
     if (pars == 0) verbose() << " no particles found! " << endmsg;
     else verbose() << " particles found " << pars->size() << endmsg;
   }  
@@ -74,7 +74,7 @@ StatusCode HltMoveVerticesForSwimming::execute() {
   m_selections.output()->clean(); //TODO: is this really needed?
 
   //Lets see what we just did, for debug
-  if (m_debug) {
+  if (msgLevel(MSG::DEBUG)) {
         debug() << "Printing out the input vertices" << endmsg;
         BOOST_FOREACH( LHCb::RecVertex* v, *m_selections.input<1>()) {
                 debug() << *v << endmsg;

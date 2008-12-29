@@ -1,4 +1,4 @@
-// $Id: HltTFilter.icpp,v 1.15 2008-12-29 12:56:09 graven Exp $
+// $Id: HltTFilter.icpp,v 1.16 2008-12-29 16:36:13 graven Exp $
 // Include files
 
 #include "HltBase/EParser.h"
@@ -141,13 +141,13 @@ StatusCode HltTFilter<T>::execute() {
 
 
     // debug and monitor
-    if ((m_debug || produceHistos()) && m_addInfo) {
+    if ((msgLevel(MSG::DEBUG) || produceHistos()) && m_addInfo) {
       std::vector<double> vals; vals.reserve(m_selections.output()->size());
       BOOST_FOREACH( T* cand, *out) vals.push_back( cand->info(filter->infoID,1e6));
 
       double val = *( filter->isMin() ? std::min_element(vals.begin(),vals.end()) 
                                       : std::max_element(vals.begin(),vals.end()) );
-      if (m_debug) {
+      if (msgLevel(MSG::DEBUG)) {
         std::string name = filter->filtername+" : ";
         for(std::vector<double>::const_iterator i=vals.begin();i!=vals.end();++i)
              debug() << *i << ", ";

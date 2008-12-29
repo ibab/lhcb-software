@@ -1,4 +1,4 @@
-// $Id: HltL0MuonCandidates.cpp,v 1.4 2008-12-21 17:14:10 graven Exp $
+// $Id: HltL0MuonCandidates.cpp,v 1.5 2008-12-29 16:36:13 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -127,11 +127,11 @@ StatusCode HltL0MuonCandidates::execute() {
   counter("#accept") += !m_selection.output()->empty();
   counter("#pass")   +=  m_selection.output()->size();
 
-  if (m_debug) {
+  if (msgLevel(MSG::DEBUG)) {
      debug() << "# Input: " << m_selection.input<1>()->size() 
              << " -> # Output: " << m_selection.output()->size() << endreq;
+     printInfo(" Muons ",*m_selection.output()); //#($)*))@*)@ requires outputlevel debut, but prnts at INFO...
   }
-  if (m_debug) printInfo(" Muons ",*m_selection.output()); //#($)*))@*)@ requires outputlevel debut, but prnts at INFO...
 
   return StatusCode::SUCCESS;
 }

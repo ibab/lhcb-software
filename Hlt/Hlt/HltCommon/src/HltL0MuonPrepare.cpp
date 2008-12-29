@@ -1,4 +1,4 @@
-// $Id: HltL0MuonPrepare.cpp,v 1.14 2008-12-29 12:56:09 graven Exp $
+// $Id: HltL0MuonPrepare.cpp,v 1.15 2008-12-29 16:36:13 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -81,7 +81,7 @@ StatusCode HltL0MuonPrepare::execute() {
     muons->insert(track.release());
   }
 
-  if (m_debug) {
+  if (msgLevel(MSG::DEBUG)) {
      debug() << "# Input: " << m_selections.input<1>()->size() 
              << " -> # Output: " << m_selections.output()->size() << endreq;
   }

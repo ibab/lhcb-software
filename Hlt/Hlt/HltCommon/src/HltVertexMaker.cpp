@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.cpp,v 1.29 2008-12-29 12:56:09 graven Exp $
+// $Id: HltVertexMaker.cpp,v 1.30 2008-12-29 16:36:13 graven Exp $
 // Include files 
 
 
@@ -141,7 +141,7 @@ StatusCode HltVertexMaker<Selections>::initialize() {
       m_histos.push_back( initializeHisto(funname,0.,100.,100) );
     }
 
-    if (m_debug) debug() << " filter " << filtername << " " << id << " "
+    if (msgLevel(MSG::DEBUG)) debug() << " filter " << filtername << " " << id << " "
                          << mode << x0 << "," << xf << endreq;
   }
 
@@ -157,7 +157,7 @@ StatusCode HltVertexMaker<Selections>::execute() {
 
   StatusCode sc = StatusCode::SUCCESS;
 
-  if ( m_debug ) debug() << "HltVertexMaker: Execute" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "HltVertexMaker: Execute" << endmsg;
 
   RecVertices* overtices = new RecVertices();
   put(overtices,"Hlt/Vertex/"+m_selections.output()->id().str());
@@ -207,7 +207,7 @@ StatusCode HltVertexMaker<Selections>::execute() {
         verbose()<< " info " << m_filterIDs[i]<<" = "<<m_vals[i] << endreq;
         sv->addInfo(m_filterIDs[i],m_vals[i]);
       }
-      if (m_debug) printInfo(" make vertex ",*sv);
+      if (msgLevel(MSG::DEBUG)) printInfo(" make vertex ",*sv);
   } 
   counter("#Combinations") += nCombinations;
   return sc;

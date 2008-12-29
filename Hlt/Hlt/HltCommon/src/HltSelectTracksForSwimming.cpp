@@ -1,4 +1,4 @@
-// $Id: HltSelectTracksForSwimming.cpp,v 1.5 2008-12-29 12:56:09 graven Exp $
+// $Id: HltSelectTracksForSwimming.cpp,v 1.6 2008-12-29 16:36:13 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -60,7 +60,7 @@ StatusCode HltSelectTracksForSwimming::execute() {
   if (!exist<Particles>(m_particlesName)) return sc;
 
   Particles* pars = get<Particles>(m_particlesName);
-  if (m_debug) {
+  if (msgLevel(MSG::DEBUG)) {
     if (pars == 0) verbose() << " no particles found! " << endmsg;
     else verbose() << " particles found " << pars->size() << endmsg;
   }  
@@ -69,7 +69,7 @@ StatusCode HltSelectTracksForSwimming::execute() {
   m_selections.output()->clean();
 
   //Lets see what we just did, for debug
-  if (m_debug) {
+  if (msgLevel(MSG::DEBUG)) {
 
         verbose() << "About to print out a  mountain of crap" << endmsg;
 
@@ -86,7 +86,7 @@ StatusCode HltSelectTracksForSwimming::execute() {
   //Filter the tracks
   sc = filter_Tracks();
 
-  if (m_debug) {
+  if (msgLevel(MSG::DEBUG)) {
         debug() << "About to print out a mountain of crap" << endmsg;
         debug() << "Printing out the output tracks" << endmsg;
         BOOST_FOREACH( LHCb::Track *iT, *m_selections.output() ) {
@@ -98,7 +98,7 @@ StatusCode HltSelectTracksForSwimming::execute() {
   //candidateFound(ncan);
   
   debug() << " candidates found " << ncan << endmsg;
-  if (m_debug)
+  if (msgLevel(MSG::DEBUG))
     printInfo(" tracks from particles ",*m_selections.output());
   
   return sc;

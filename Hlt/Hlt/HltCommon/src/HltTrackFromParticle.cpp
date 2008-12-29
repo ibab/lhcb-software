@@ -1,4 +1,4 @@
-// $Id: HltTrackFromParticle.cpp,v 1.9 2008-12-29 12:56:09 graven Exp $
+// $Id: HltTrackFromParticle.cpp,v 1.10 2008-12-29 16:36:13 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -61,7 +61,7 @@ StatusCode HltTrackFromParticle::execute() {
   if (!exist<Particles>(m_particlesName)) return sc;
 
   Particles* pars = get<Particles>(m_particlesName);
-  if (m_debug) {
+  if (msgLevel(MSG::DEBUG)) {
     if (pars == 0) verbose() << " no particles found! " << endreq;
     else           verbose() << " particles found " << pars->size() << endreq;
   }  
@@ -75,7 +75,7 @@ StatusCode HltTrackFromParticle::execute() {
     loadParticle(**it);
   }
   
-  if (m_debug) {
+  if (msgLevel(MSG::DEBUG)) {
     debug() << " candidates found " << m_selections.output()->size() << endreq;
     printInfo(" tracks from particles ",*m_selections.output());
   }

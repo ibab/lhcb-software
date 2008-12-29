@@ -7,6 +7,7 @@
 ! 2008-12-29 - Gerhard Raven
  - remove usage of Hlt::Configuration
  - augment HltDataSvc to return dependency information of selections
+ - use msgLevel
 
 ! 2008-12-20 - Gerhard Raven
  - check for valid int ID in HltLine

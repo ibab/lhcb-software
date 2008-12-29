@@ -1,4 +1,4 @@
-// $Id: HltL0CaloPrepare.cpp,v 1.17 2008-12-29 12:56:09 graven Exp $
+// $Id: HltL0CaloPrepare.cpp,v 1.18 2008-12-29 16:36:13 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -138,11 +138,11 @@ StatusCode HltL0CaloPrepare::execute() {
     }
   }
 
-  if (m_debug) {
+  if (msgLevel(MSG::DEBUG)) {
     debug()  << "# Input: " << m_selection.input<1>()->size() 
              << " -> # Output: " << m_selection.output()->size() << endreq;
+    printInfo(" Calos ",*m_selection.output());
   }
-  if (m_debug) printInfo(" Calos ",*m_selection.output());
   return StatusCode::SUCCESS;
 }
 
