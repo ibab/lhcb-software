@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.4 2008-06-30 19:20:19 cattanem Exp $
+! $Id: release.notes,v 1.5 2008-12-29 10:47:59 graven Exp $
 ! Package     : HltInterfaces
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
+
+! 2008-12-29 - Gerhard Raven
+ - remove some obsolete methods from IHltSummaryTool 
 
 !============ Kernel/HltInterfaces v1r0 2008-06-30 ============================
 ! 2008-06-25 - Gerhard Raven

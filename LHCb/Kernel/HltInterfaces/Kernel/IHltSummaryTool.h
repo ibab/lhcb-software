@@ -1,4 +1,4 @@
-// $Id: IHltSummaryTool.h,v 1.1 2008-06-17 21:41:35 pkoppenb Exp $
+// $Id: IHltSummaryTool.h,v 1.2 2008-12-29 10:47:59 graven Exp $
 #ifndef HLTBASE_IHLTSUMMARYTOOL_H 
 #define HLTBASE_IHLTSUMMARYTOOL_H 1
 
@@ -16,7 +16,7 @@ namespace LHCb {
   class Particle ;
 };
 
-static const InterfaceID IID_IHltSummaryTool ( "IHltSummaryTool", 1, 0 );
+static const InterfaceID IID_IHltSummaryTool ( "IHltSummaryTool", 2, 0 );
 
 /** @class IHltSummaryTool IHltSummaryTool.h HltBase/IHltSummaryTool.h
  *
@@ -70,23 +70,6 @@ public:
   virtual bool isInSelection(const std::string& name,
                              const LHCb::Track& track ) = 0;
 
-  /// returns the keys of the HLT configuration
-  virtual std::vector<std::string> confKeys() = 0;
-  
-  /// returns a int value of this key of the HLT configuration
-  virtual int confInt(const std::string& name) = 0;
-  
-  /// returns a double value of this key of the HLT configuration
-  virtual double confDouble(const std::string& name) = 0;
-  
-  /// returns a string value of this key of the HLT configuration
-  virtual std::string confString(const std::string& name) = 0;
-  
-  /// returns a vector of strings of this key of the HLT configuration
-  virtual std::vector<std::string> confStringVector(const std::string& name)= 0;
-
-  // virtual bool isInSelection(const std::string& name,
-  //                           const LHCb::RecVectex& vertex) = 0;
   
 };
 #endif // HLTBASE_IHLTSUMMARYTOOL_H
