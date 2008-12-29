@@ -1,4 +1,4 @@
-// $Id: ITOccupancy.h,v 1.6 2008-12-11 14:41:13 cattanem Exp $
+// $Id: ITOccupancy.h,v 1.7 2008-12-29 12:55:16 mneedham Exp $
 #ifndef ITOccupancy_H
 #define ITOccupancy_H 1
 
@@ -53,6 +53,8 @@ private:
 
   void initHistograms();
   void fillHistograms(const PBASE* obj);
+  
+  unsigned int weight(const PBASE* obj) const; 
 
   int uniqueInt(const LHCb::STChannelID aChan) const;
 

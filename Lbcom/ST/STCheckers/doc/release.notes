@@ -2,6 +2,8 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2008-12-29 M Needham
+ - Bug fixes in IT/TTDigitOccupancy 
 
 ! 2008-12-16 M Needham
  - Bug fixes in STClusterClassification algorithm
@@ -10,6 +12,7 @@
 ! 2008-12-11 M.Cattaneo
  - Fix gcc 4.3 warnings
  - Fix a a wrong equality comparison (assignment was used instead)
+
 
 ! 2008-12-03 M Needham
  - Use the shorth for monitoring in STDigitMonitor

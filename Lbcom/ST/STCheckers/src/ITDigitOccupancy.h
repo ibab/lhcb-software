@@ -1,4 +1,4 @@
-// $Id: ITDigitOccupancy.h,v 1.1 2008-10-16 13:12:03 mneedham Exp $
+// $Id: ITDigitOccupancy.h,v 1.2 2008-12-29 12:55:16 mneedham Exp $
 
 #ifndef ITDigitOccupancy_H 
 #define ITDigitOccypancy_H !
@@ -24,7 +24,7 @@ inline const std::string ITDigitOccupancy::histoDirName() const{
 
 template <>
 inline double ITDigitOccupancy::defaultThreshold() const{
-  return 0.0; // no threshold for clusters
+  return 3.0; // no threshold for clusters
 }
 
 //template class ITOccupancy<LHCb::STDigit>;

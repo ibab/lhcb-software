@@ -1,4 +1,4 @@
-// $Id: ITOccupancy.icpp,v 1.1 2008-10-16 13:12:03 mneedham Exp $
+// $Id: ITOccupancy.icpp,v 1.2 2008-12-29 12:55:16 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -17,6 +17,8 @@
 
 // local
 #include "ITOccupancy.h"
+
+#include "Kernel/STLexicalCaster.h"
 
 using namespace LHCb;
 
@@ -121,6 +123,7 @@ template <class PBASE>
 inline StatusCode ITOccupancy<PBASE>::execute()
 {
 
+
   typedef typename PBASE::Container Container; 
   typedef typename Container::const_iterator iterator;
 
@@ -130,11 +133,33 @@ inline StatusCode ITOccupancy<PBASE>::execute()
   // retrieve Digitizations
   const Container* objCont = get<Container>(m_dataLocation);
   
+  std::map<unsigned int, unsigned int> SectorMap;
+  std::map<std::string, unsigned int> BeetleMap;
   // histos per digit
   iterator iterObj = objCont->begin();
   for( ; iterObj != objCont->end(); ++iterObj){
     this->fillHistograms(*iterObj);
+    SectorMap[(*iterObj)->channelID().uniqueSector()] += weight(*iterObj);
+    DeSTSector* theSector = findSector((*iterObj)->channelID());
+    std::string theBeetle = theSector->nickname() + ST::toString(theSector->beetle((*iterObj)->channelID()));
+    BeetleMap[theBeetle] += weight(*iterObj) ;
   } // loop iterDigit
+
+  // fill histogram of sector occupancy
+  for (std::map<unsigned int, unsigned int>::iterator iterS = SectorMap.begin(); 
+  iterS != SectorMap.end(); ++iterS){
+    double occ = iterS->second/double(tracker()->sectors().front()->nStrip());
+    plot(occ,"module occupancy", -0.005, 1.005, 101);
+  } //iter
+
+  // fill histogram of sector occupancy
+  for (std::map<std::string, unsigned int>::iterator iterS = BeetleMap.begin(); 
+  iterS != BeetleMap.end(); ++iterS){
+    double occ = iterS->second/double(tracker()->sectors().front()->nStrip());
+    plot(occ,"beetle occupancy", -0.005, 1.005, 101);
+  } //iter
+
+
 
   // average occupancy in each layer
   int iCount = 0;
@@ -177,4 +202,9 @@ template <class PBASE>
 inline int ITOccupancy<PBASE>::uniqueInt(const STChannelID aChan) const 
 {
   return ((aChan.station()*100)+(10*aChan.detRegion())+aChan.layer());
+}
+
+template <class PBASE>
+inline unsigned int ITOccupancy<PBASE>::weight(const PBASE* ) const{
+  return 1;
 }
