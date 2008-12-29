@@ -1,4 +1,4 @@
-// $Id: HltL0CaloCandidates.cpp,v 1.8 2008-12-29 16:36:13 graven Exp $
+// $Id: HltL0CaloCandidates.cpp,v 1.9 2008-12-29 21:07:20 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -68,7 +68,7 @@ StatusCode HltL0CaloCandidates::initialize() {
   // force creation of counters, and declare them to monitoring...
   declareInfo("#accept","",&counter("#accept"),0,std::string("Events accepted by ") + name());
   declareInfo("#input","",&counter("#input"),0,std::string("Candidates seen by ") + name());
-  declareInfo("#pass","",&counter("#pass"),0,std::string("Candidates passed by ") + name());
+  declareInfo("#candidated accepted","",&counter("#candidated accepted"),0,std::string("Candidates accepted by ") + name());
   
   return StatusCode::SUCCESS;
 }
@@ -146,7 +146,7 @@ StatusCode HltL0CaloCandidates::execute() {
 
   counter("#input")  +=  m_selection.input<1>()->size();
   counter("#accept") += !m_selection.output()->empty();
-  counter("#passed") +=  m_selection.output()->size();
+  counter("#candidated accepted") +=  m_selection.output()->size();
   // TODO: plot max et
   // TODO: plot  all accepted et
 
