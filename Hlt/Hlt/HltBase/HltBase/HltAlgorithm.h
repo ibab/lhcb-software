@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.h,v 1.35 2008-12-21 17:14:51 graven Exp $
+// $Id: HltAlgorithm.h,v 1.36 2008-12-29 12:59:09 graven Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
@@ -70,9 +70,6 @@ public:
 
 protected:
 
-  // save configurtion of algorithm
-  virtual void saveConfiguration();
-
   // decision according with nCandidates and filter, or preset in the selection
   void setDecision() ;
 
@@ -120,9 +117,6 @@ private:
 
   // period to update filling of histogram
   int m_histogramUpdatePeriod;
-
-  // fill the hlt configuration
-  bool m_saveConf;
 
   // minimun number of candidates
   //   deciison true if output selection has more candidates than the minimun

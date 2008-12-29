@@ -1,7 +1,6 @@
 #ifndef DICT_HLTBASEDICT_H 
 #define DICT_HLTBASEDICT_H 1
 
-#include "HltBase/IHltConfSummaryTool.h"
 #include "HltBase/IHltFunctionFactory.h"
 #include "HltBase/IMatchTVeloTracks.h"
 #include "HltBase/ITrackConfirmTool.h"
@@ -27,7 +26,6 @@ namespace {
   
   struct _hltbase_instantiations  
   {
-    Hlt::Configuration py_hlt_00;
     zen::IntRelation py_hlt_05; 
     Hlt::IntRelation py_hlt_06;
     std::vector<ConfigTreeNodeAlias> py_hlt_07;

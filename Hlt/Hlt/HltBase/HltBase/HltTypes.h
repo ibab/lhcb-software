@@ -1,4 +1,4 @@
-// $Id: HltTypes.h,v 1.9 2008-08-10 19:57:54 graven Exp $
+// $Id: HltTypes.h,v 1.10 2008-12-29 12:59:09 graven Exp $
 #ifndef HLTBASE_HLTTYPES_H 
 #define HLTBASE_HLTTYPES_H 1
 
@@ -30,7 +30,7 @@ namespace Hlt {
 
   typedef AIDA::IHistogram1D Histo;
 
-  typedef DObj<zen::dictionary>  Configuration;
+  //typedef DObj<zen::dictionary>  Configuration;
   typedef DObj<zen::IntRelation> IntRelation;
   
   typedef zen::filter<double> Filter;

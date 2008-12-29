@@ -1,4 +1,4 @@
-// $Id: HltBase.h,v 1.18 2008-12-21 17:14:51 graven Exp $
+// $Id: HltBase.h,v 1.19 2008-12-29 12:59:09 graven Exp $
 #ifndef HLTBASE_HLTBASE_H 
 #define HLTBASE_HLTBASE_H 1
 
@@ -14,7 +14,7 @@
  *  Provide services to HLT algorithms and tools
  *
  *  Functionality:
- *       Access to HltSvc, Hlt::Data and Hlt::Configuration
+ *       Access to HltSvc, Hlt::Data 
  *       Retrieve, register Hlt::Selections
  *       Histogram booking via options
  *       Counters 
@@ -87,29 +87,10 @@ protected:
   void printInfo(const std::string& title,
                  const GaudiUtils::VectorMap<int,double>& info);
 
-  // register a value with a root/key into the hlt configuration
-  template <class T>
-  void confregister(const std::string& key, const T& value, 
-                    const std::string& root = "") {
-    std::string myroot = root;
-    if (myroot.empty()) myroot = BASE::name();
-    std::string mykey = myroot + "/" + key;
-    hltConf().add(mykey,value);
-    // BASE::always() << " HLT [" << mykey << "] = " << value << endreq;    
-    if (m_debug)
-      BASE::debug() << " HLT [" << mykey << "] = " << value << endreq;    
-  }
-
   IHltDataSvc& dataSvc() const;
   IANNSvc&     annSvc() const;
 
 
-  // @TODO: forward Hlt::Configuration so that it is no longer exposed...
-  // next, replace by direct queries to dataSvc()...
-  // Note: sole user is HltSummaryTool...
-  // returns the hlt configuration
-  Hlt::Configuration& hltConf() { return dataSvc().config(); }
-  
   // returns the ID of the extraInfo by name
   int hltInfoID(const std::string& name);
 
@@ -131,8 +112,7 @@ private:
   // delegate constructor
   virtual void hltBaseConstructor();
 
-private:
-  // Property to rebook histogram from options
+  // Property to book histogram from options
   SimpleProperty< std::map<std::string, Gaudi::Histo1DDef> > m_histoDescriptor;
 
   // hlt data provided service

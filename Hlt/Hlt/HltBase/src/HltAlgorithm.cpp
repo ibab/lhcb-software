@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.47 2008-12-20 19:22:41 graven Exp $
+// $Id: HltAlgorithm.cpp,v 1.48 2008-12-29 12:59:09 graven Exp $
 // Include files 
 
 #include "Event/Particle.h"
@@ -41,7 +41,6 @@ HltAlgorithm::HltAlgorithm( const std::string& name,
 {
   declareProperty("RequirePositiveInputs", m_requireInputsToBeValid );
   declareProperty("HistogramUpdatePeriod" , m_histogramUpdatePeriod = 0 );
-  declareProperty("SaveConfiguration", m_saveConf = true);
 
   //TODO: in init, declare these to mon svc...
   counter("#accept");
@@ -73,44 +72,6 @@ StatusCode HltAlgorithm::restart() {
   always() << "restart of " << name() << " requested -- please implement! " << endmsg;
   return StatusCode::SUCCESS;
 }
-
-
-
-void HltAlgorithm::saveConfiguration() {
-//@TODO: move _all_ of this (implicitly) to IHltDataSvc...
-
-  
-  if (!m_saveConf) return;
-  if ( m_outputSelection == 0 ) {
-    warning() << "m_outputSelection is NULL. Not saving config." << endmsg ;
-    return ;
-  }
-  verbose() << "Saving Config " << m_outputSelection->id() << endmsg ;
-
-  CLID clID = m_outputSelection->classID();
-  verbose() << " classID: " << m_outputSelection->classID() << endmsg ;
-
-  std::string type = ( clID == LHCb::Track::classID()     ?  "Track"    :
-                       clID == LHCb::RecVertex::classID() ?  "Vertex"   :
-                       clID == LHCb::Particle::classID()  ?  "Particle" :
-                                                             "unknown" );
-  verbose() << "Type : " << type << endmsg ;
-  
-  std::string algoType =  System::typeinfoName(typeid(*this));
-
-  confregister("Algorithm",algoType+"/"+name(), m_outputSelection->id().str());
-  confregister("SelectionType",type,            m_outputSelection->id().str());
-
-  const std::vector<stringKey>& in = m_outputSelection->inputSelectionsIDs();
-  std::vector<std::string> inames;
-  transform(in.begin(),in.end(),std::back_inserter(inames),bl::bind(&stringKey::str,bl::_1));
-
-  confregister("InputSelections",inames,m_outputSelection->id().str());
-  verbose() << "Done saveConfigureation" << endmsg ;  
-  info() << " HLT flow: " << m_outputSelection->inputSelectionsIDs() 
-         << " --> "       << m_outputSelection->id() << endreq;
-}
-
 
 StatusCode HltAlgorithm::sysExecute() {
 
