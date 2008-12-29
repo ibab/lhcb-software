@@ -1,4 +1,4 @@
-// $Id: TriggerSelectionTisTosHS.cpp,v 1.1 2008-11-14 06:55:39 tskwarni Exp $
+// $Id: TriggerSelectionTisTosHS.cpp,v 1.2 2008-12-29 12:26:51 graven Exp $
 // Include files 
 #include <algorithm>
 
@@ -76,7 +76,6 @@ TriggerSelectionTisTosHS::TriggerSelectionTisTosHS( const std::string& type,
   m_cached_tis.reserve(500);
   m_cached_tos.reserve(500);
   
-  m_hltconf =0;
   
  
 }
@@ -97,6 +96,7 @@ StatusCode TriggerSelectionTisTosHS::initialize() {
   debug() << "==> Initialize" << endmsg;
 
   m_track2calo = tool<ITrack2Calo>( "Track2Calo","Track2Calo",this);
+  m_hltDataSvc = svc<IHltDataSvc>("HltDataSvc");
  
   setOfflineInput();
   
@@ -428,16 +428,6 @@ void TriggerSelectionTisTosHS::getHltSummary()
   if( m_summary == 0 ){
     m_summary = get<HltSummary>(m_HltSummaryLocation);
   }
-  if( m_hltconf == 0 ){
-    // m_hltconf = &hltConf();
-    IHltDataSvc* dataS = svc<IHltDataSvc>("HltDataSvc");
-    if( dataS ){
-      m_hltconf = &(dataS->config());        
-    } else {
-      Error( " cannot get HltDataSvc " , StatusCode::FAILURE, 20 );
-    }
-    if( m_hltconf == 0 ){ Error( " No HLT Configuration! " , StatusCode::FAILURE, 20 ); }
-  }
   
 }
 
@@ -460,7 +450,6 @@ void TriggerSelectionTisTosHS::setOfflineInput( )
   m_muonsOff = false;
 
   m_summary = 0;
-  //  m_hltconf = 0;
 
   clearCache();
 
@@ -723,7 +712,7 @@ void TriggerSelectionTisTosHS::selectionTisTos( const std::string & selectionNam
 
   decision=false; tis=false; tos=false;
   getHltSummary();
-  if( (m_summary==0)||(m_hltconf==0) ){ storeInCache(selectionName,decision,tis,tos); return;}
+  if( m_summary==0 ){ storeInCache(selectionName,decision,tis,tos); return;}
   
 
 
@@ -782,12 +771,13 @@ void TriggerSelectionTisTosHS::selectionTisTos( const std::string & selectionNam
   if( particles.size() > 0 ){
     particleListTISTOS( particles,m_offlineInput,tis,tos);
   } else {
-    //   ... or HltSelectionFilter
-    std::string selInput = selectionName + "/InputSelections";
-    if( m_hltconf->has_key( selInput ) ){             
-      selectionTisTos( m_hltconf->retrieve< std::vector<std::string> >(selInput),
-                       decision, tis, tos, kSelectionOR );
-    }    
+    std::vector<std::string> dependencies;
+    StatusCode sc = m_hltDataSvc->inputUsedBy( stringKey(selectionName) , dependencies );
+    if (sc.isSuccess()) {
+      selectionTisTos( dependencies, decision, tis, tos, kSelectionOR );
+    } else {
+      //@TODO: warning: hltDataSvc doesn't know about selInput...
+    }
   }
   
 
@@ -849,7 +839,7 @@ std::vector<const LHCb::Track*>     TriggerSelectionTisTosHS::matchedTOSTracks( 
   std::vector<const LHCb::Track*> matchedTracks;
 
   getHltSummary();
-  if( (m_summary==0)||(m_hltconf==0) )return matchedTracks;
+  if( m_summary==0 )return matchedTracks;
 
 
   bool decision= m_summary->hasSelectionSummary( selectionName );
@@ -923,7 +913,7 @@ std::vector<const LHCb::RecVertex*> TriggerSelectionTisTosHS::matchedTOSVertices
   std::vector<const  LHCb::RecVertex*> matchedVertices;
 
   getHltSummary();
-  if( (m_summary==0)||(m_hltconf==0) )return matchedVertices;
+  if( m_summary==0 )return matchedVertices;
 
 
   bool decision= m_summary->hasSelectionSummary( selectionName );
@@ -1004,7 +994,7 @@ std::vector<const LHCb::Particle*>  TriggerSelectionTisTosHS::matchedTOSParticle
   std::vector<const  LHCb::Particle*> matchedParticles;
 
   getHltSummary();
-  if( (m_summary==0)||(m_hltconf==0) )return matchedParticles;
+  if( m_summary==0)return matchedParticles;
 
 
   bool decision= m_summary->hasSelectionSummary( selectionName );

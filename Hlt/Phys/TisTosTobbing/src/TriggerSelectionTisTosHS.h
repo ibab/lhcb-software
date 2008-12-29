@@ -1,4 +1,4 @@
-// $Id: TriggerSelectionTisTosHS.h,v 1.1 2008-11-14 06:55:39 tskwarni Exp $
+// $Id: TriggerSelectionTisTosHS.h,v 1.2 2008-12-29 12:26:51 graven Exp $
 #ifndef TRIGGERSELECTIONTISTOSHS_H 
 #define TRIGGERSELECTIONTISTOSHS_H 1
 
@@ -147,8 +147,6 @@ protected:
   
   /// Hlt summary 
   LHCb::HltSummary* m_summary;
-  /// Hlt configuration
-  Hlt::Configuration* m_hltconf;
 
 private:
 
@@ -198,6 +196,8 @@ private:
   DeCalorimeter* m_hcalDeCal;
   /// Ecal detector geometry
   DeCalorimeter* m_ecalDeCal;
+  /// HltDataSvc
+  IHltDataSvc*   m_hltDataSvc;
 
   /// Location of Muon Tracks holding muon hits for protoparticles
   std::string m_MuonTracksLocation;
