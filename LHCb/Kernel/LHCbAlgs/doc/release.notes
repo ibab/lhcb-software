@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2008-12-29 - Gerhard Raven
+ - DeterminsticPrescaler: replace custom statistics with StatEntity
+
 ! 2008-12-09 - Patrick Spradlin
  - Added doxygen comments to FilterByRunEvent
 

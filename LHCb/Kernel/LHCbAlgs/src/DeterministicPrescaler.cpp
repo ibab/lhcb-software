@@ -76,8 +76,6 @@ DECLARE_ALGORITHM_FACTORY( DeterministicPrescaler );
 DeterministicPrescaler::DeterministicPrescaler(const std::string& name, ISvcLocator* pSvcLocator) :
     GaudiAlgorithm(name, pSvcLocator) 
   , m_initial(0)
-  , m_seen(0)
-  , m_passed(0)
 {
   declareProperty( "AcceptPattern" ,  m_prescaleSpec = "" ) ;
   declareProperty( "AcceptFraction" , m_accFrac = -1 ) ;
@@ -93,8 +91,6 @@ DeterministicPrescaler::initialize()
   const StatusCode sc = GaudiAlgorithm::initialize();
   if ( !sc) return sc;
 
-  m_seen    = 0;
-  m_passed  = 0;
   m_initial = mixString( name().size(), name() );
 
   if (msgLevel(MSG::DEBUG)) debug() << " generated initial value " << m_initial << endmsg;
@@ -173,17 +169,10 @@ DeterministicPrescaler::execute()
   bool acc = ( m_accFrac >= 0 ? accept(*odin)
                               : accept(odin->eventNumber()) );
   setFilterPassed(acc);
+  counter("#accept")+= acc;
   if (msgLevel(MSG::DEBUG)) debug() << " run # "   << odin->runNumber() 
                                     << " event # " << odin->eventNumber() 
                                     << " : " << (acc?"Accepted":"Rejected") << endmsg ;
 
-  ++m_seen; if (acc) ++m_passed;
   return StatusCode::SUCCESS;
-}
-
-StatusCode
-DeterministicPrescaler::finalize()
-{
-  info() << " passed " << m_passed << " out of " << m_seen << " : " << double(m_passed)/double(m_seen) << endmsg;
-  return GaudiAlgorithm::finalize();
 }
