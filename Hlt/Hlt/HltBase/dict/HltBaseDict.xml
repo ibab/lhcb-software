@@ -9,7 +9,6 @@
   <class name = "ITrackBiFunctionFactory" />
   <class name = "ITrackView"       />
   <class name = "ITrackUpgrade" />
-  <class name = "Hlt::Configuration" />
   <class name = "Hlt::TrackFunction" />
   <class name = "Hlt::TrackFilter" />
   <class name = "Hlt::VertexFunction" />
