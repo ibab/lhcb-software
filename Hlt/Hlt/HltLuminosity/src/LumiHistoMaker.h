@@ -1,4 +1,4 @@
-// $Id: LumiHistoMaker.h,v 1.7 2008-12-20 17:58:31 graven Exp $
+// $Id: LumiHistoMaker.h,v 1.8 2008-12-30 21:23:13 graven Exp $
 #ifndef LUMIHISTOMAKER_H 
 #define LUMIHISTOMAKER_H 1
 
@@ -56,8 +56,8 @@ private:
   int m_MaxBin;                                // default maximum bin number
   int m_Threshold;                             // default threshold
 
-  std::vector<Hlt::Histo*> m_Histos;           // the straight histogram of counts
-  std::vector<Hlt::Histo*> m_ThresholdHistos;  // two-bin histogram after threshold
+  std::vector<AIDA::IHistogram1D*> m_Histos;           // the straight histogram of counts
+  std::vector<AIDA::IHistogram1D*> m_ThresholdHistos;  // two-bin histogram after threshold
   std::vector<std::string> m_names;            // list of named counters to look at
   std::vector<int> m_keys;                     // key value in the summary bank
   

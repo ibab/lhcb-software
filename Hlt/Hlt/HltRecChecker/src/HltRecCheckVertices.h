@@ -1,4 +1,4 @@
-// $Id: HltRecCheckVertices.h,v 1.4 2008-07-30 13:38:48 graven Exp $
+// $Id: HltRecCheckVertices.h,v 1.5 2008-12-30 21:25:38 graven Exp $
 #ifndef HLTRECCHECKVERTICES_H 
 #define HLTRECCHECKVERTICES_H 1
 
@@ -45,17 +45,17 @@ private:
   Hlt::SelectionContainer2<LHCb::Track,LHCb::Track> m_selections;
 
 
-  Hlt::Histo* m_histoNRCV;
-  Hlt::Histo* m_histoNMCV;
-  Hlt::Histo* m_histoNDV;
+  AIDA::IHistogram1D* m_histoNRCV;
+  AIDA::IHistogram1D* m_histoNMCV;
+  AIDA::IHistogram1D* m_histoNDV;
 
-  Hlt::Histo* m_histoX;
-  Hlt::Histo* m_histoY;
-  Hlt::Histo* m_histoZ;
+  AIDA::IHistogram1D* m_histoX;
+  AIDA::IHistogram1D* m_histoY;
+  AIDA::IHistogram1D* m_histoZ;
 
-  Hlt::Histo* m_histoDX;
-  Hlt::Histo* m_histoDY;
-  Hlt::Histo* m_histoDZ;
+  AIDA::IHistogram1D* m_histoDX;
+  AIDA::IHistogram1D* m_histoDY;
+  AIDA::IHistogram1D* m_histoDZ;
 
   zen::relation<LHCb::Track*,LHCb::MCVertex*> m_relTrackMCVertex;
   zen::relation<LHCb::MCVertex*,LHCb::Track*> m_relMCVertexTrack;

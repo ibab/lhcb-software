@@ -1,4 +1,4 @@
-// $Id: HltRecCheckTracks.h,v 1.4 2008-07-30 13:38:48 graven Exp $
+// $Id: HltRecCheckTracks.h,v 1.5 2008-12-30 21:25:38 graven Exp $
 #ifndef HLTRECCHECKTRACKS_H 
 #define HLTRECCHECKTRACKS_H 1
 
@@ -28,13 +28,13 @@ private:
   Hlt::SelectionContainer2<LHCb::Track,LHCb::Track> m_selections;
   std::string m_linkName;
 
-  Hlt::Histo* m_histoGhost;
-  Hlt::Histo* m_histoDx;
-  Hlt::Histo* m_histoDy;
-  Hlt::Histo* m_histoDz;
-  Hlt::Histo* m_histoDTx;
-  Hlt::Histo* m_histoDTy;
-  Hlt::Histo* m_histoPOP;
+  AIDA::IHistogram1D* m_histoGhost;
+  AIDA::IHistogram1D* m_histoDx;
+  AIDA::IHistogram1D* m_histoDy;
+  AIDA::IHistogram1D* m_histoDz;
+  AIDA::IHistogram1D* m_histoDTx;
+  AIDA::IHistogram1D* m_histoDTy;
+  AIDA::IHistogram1D* m_histoPOP;
 
 };
 #endif // HLTMCMONITOR_H

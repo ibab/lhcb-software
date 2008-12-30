@@ -1,4 +1,4 @@
-// $Id: LumiHistoCollector.h,v 1.3 2008-12-20 17:58:31 graven Exp $
+// $Id: LumiHistoCollector.h,v 1.4 2008-12-30 21:23:13 graven Exp $
 #ifndef LUMIHISTOCOLLECTOR_H 
 #define LUMIHISTOCOLLECTOR_H 1
 
@@ -66,8 +66,8 @@ protected:
   std::vector< std::string > m_subtractBXTypes;  // list of bunch crossing types to be subtracted
 
   std::vector< std::string > m_HistoNames;
-  std::vector< Hlt::Histo* > m_Histos;
-  Hlt::Histo* myhisto;
+  std::vector< AIDA::IHistogram1D* > m_Histos;
+  AIDA::IHistogram1D* myhisto;
 
   std::string m_pathBase;                                         // prefix of pathname
   std::string m_topDir;                                           // topDirectory for local storage

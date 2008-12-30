@@ -4,6 +4,9 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+! 2008-12-30 - Gerhard Raven
+ - replace Hlt::Histo by AIDA::IHistogram1D
+
 ! 2008-12-29 - Gerhard Raven
  - remove obsolete DummyLumiAlley
 

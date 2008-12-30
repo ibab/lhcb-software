@@ -1,4 +1,4 @@
-// $Id: LumiHistoMaker.cpp,v 1.9 2008-12-20 17:58:31 graven Exp $
+// $Id: LumiHistoMaker.cpp,v 1.10 2008-12-30 21:23:13 graven Exp $
 // Include files 
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -84,13 +84,13 @@ StatusCode LumiHistoMaker::initialize() {
       if (useMaxBins) {
 	bins = m_MaxBins[i];
       }
-      Hlt::Histo* countHisto = initializeHisto(*ivar, -0.5, double(bins)-0.5, bins);
+      AIDA::IHistogram1D* countHisto = initializeHisto(*ivar, -0.5, double(bins)-0.5, bins);
       m_Histos.push_back(countHisto);  
       m_names.push_back(*ivar);
       m_keys.push_back(counter);
 
       // create histograms to hold the counts above threshold
-      Hlt::Histo* digitHisto = initializeHisto(*ivar+"_threshold", -0.5, 1.5, 2);
+      AIDA::IHistogram1D* digitHisto = initializeHisto(*ivar+"_threshold", -0.5, 1.5, 2);
       m_ThresholdHistos.push_back(digitHisto);  
 
       info() << "Variable: " << *ivar << " Key: " << counter << 
@@ -117,8 +117,8 @@ StatusCode LumiHistoMaker::execute() {
   for ( unsigned int i = 0; i < m_Histos.size(); ++i) {
     std::string cname = m_names[i];
     int counter = m_keys[i];
-    Hlt::Histo *histo = m_Histos[i];
-    Hlt::Histo *thresholdHisto = m_ThresholdHistos[i];
+    AIDA::IHistogram1D *histo = m_Histos[i];
+    AIDA::IHistogram1D *thresholdHisto = m_ThresholdHistos[i];
     int ivalue = m_HltLumiSummary->info(counter,-1);
     fillHisto(*histo, (double) ivalue, 1.);
     double digit=0;
