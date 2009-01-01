@@ -1,4 +1,4 @@
-// $Id: HltBase.h,v 1.20 2008-12-29 16:42:23 graven Exp $
+// $Id: HltBase.h,v 1.21 2009-01-01 21:20:34 graven Exp $
 #ifndef HLTBASE_HLTBASE_H 
 #define HLTBASE_HLTBASE_H 1
 
@@ -44,22 +44,19 @@ public:
   virtual ~HltBase( ); ///< Destructor
   // initialize
   virtual StatusCode initialize();
-
-protected:
-
-  // initialize Histos via options
-  void initializeHistosFromDescriptor();
   
-  // initialize Histo (overwrite booking via options)
-  Hlt::Histo* initializeHisto(const std::string& name,
+protected:
+  // initialize Histo 
+  AIDA::IHistogram1D* book(const std::string& name);
+  AIDA::IHistogram1D* initializeHisto(const std::string& name,
                               double min = 0., double max = 100., 
                               int nBins = 100 );
 
   // fill histogram
-  void fillHisto( Hlt::Histo& histo, double x, double weight );
+  void fillHisto( AIDA::IHistogram1D& histo, double x, double weight );
 
   // fill histogram
-  void fillHisto( Hlt::Histo& histo, const std::vector<double>& x, 
+  void fillHisto( AIDA::IHistogram1D& histo, const std::vector<double>& x, 
                   double weight );
 
   // print info of this container

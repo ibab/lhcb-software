@@ -4,6 +4,9 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2009-01-01 - Gerhard Raven
+ - replace Hlt::Histo by AIDA::IHistogram1D
+
 ! 2008-12-29 - Gerhard Raven
  - remove hltConf accessor for IHltDataSvc
  - add inputUsedBy to IHltDataSvc to request dependency graph of selections

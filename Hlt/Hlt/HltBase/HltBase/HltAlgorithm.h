@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.h,v 1.36 2008-12-29 12:59:09 graven Exp $
+// $Id: HltAlgorithm.h,v 1.37 2009-01-01 21:20:34 graven Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
@@ -135,10 +135,10 @@ private:
   Hlt::Selection* m_outputSelection;
 
   // map of id of selection and histogram to monitor input candidate
-  std::map<stringKey,Hlt::Histo*> m_inputHistos;
+  std::map<stringKey,AIDA::IHistogram1D*> m_inputHistos;
   
   // map of the output selection candidates
-  Hlt::Histo* m_outputHisto;
+  AIDA::IHistogram1D* m_outputHisto;
 
 
   struct CallBack {

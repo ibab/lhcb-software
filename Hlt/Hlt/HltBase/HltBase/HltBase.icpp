@@ -1,4 +1,4 @@
-// $Id: HltBase.icpp,v 1.20 2008-12-29 16:42:23 graven Exp $
+// $Id: HltBase.icpp,v 1.21 2009-01-01 21:20:34 graven Exp $
 // Include files
 
 
@@ -30,29 +30,35 @@ StatusCode HltBase<EBASE>::initialize() {
   StatusCode sc = EBASE::initialize(); 
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  initializeHistosFromDescriptor();
+  if (EBASE::produceHistos()) {
+      const std::map<std::string, Gaudi::Histo1DDef>& hdes = m_histoDescriptor.value();
+      for (std::map<std::string, Gaudi::Histo1DDef>::const_iterator 
+             it = hdes.begin(); it != hdes.end(); it++){
+          EBASE::book(it->second);
+          EBASE::debug() << " booking histogram from descriptor " 
+                         << it->second << endreq;
+      }
+  }
   return StatusCode::SUCCESS;
 }
 
-template <class EBASE>
-void HltBase<EBASE>::initializeHistosFromDescriptor() {
-
-  if (!EBASE::produceHistos()) return;
-
-  const std::map<std::string, Gaudi::Histo1DDef>& hdes = m_histoDescriptor.value();
-  for (std::map<std::string, Gaudi::Histo1DDef>::const_iterator 
-         it = hdes.begin(); it != hdes.end(); it++){
-      EBASE::book(it->second);
-      EBASE::debug() << " booking histogram from descriptor " 
-                     << it->second << endreq;
-  }
-  
-}
 
 template <class EBASE>
-Hlt::Histo* HltBase<EBASE>::initializeHisto(const std::string& title,
+AIDA::IHistogram1D* HltBase<EBASE>::book(const std::string& title) {
+  AIDA::IHistogram1D* histo = 0;
+  if (!EBASE::produceHistos()) return histo;
+
+  const std::map<std::string,Gaudi::Histo1DDef>& values = m_histoDescriptor.value();
+  std::map<std::string,Gaudi::Histo1DDef>::const_iterator i = 
+        values.find(title);
+  return EBASE::book(  (i!=values.end()) ? i->second 
+                                         : Gaudi::Histo1DDef(title,0.,100.,100) );
+};
+
+template <class EBASE>
+AIDA::IHistogram1D* HltBase<EBASE>::initializeHisto(const std::string& title,
                                             double x0, double xf, int nbins) {
-  Hlt::Histo* histo = 0;
+  AIDA::IHistogram1D* histo = 0;
   if (!EBASE::produceHistos()) return histo;
 
   const std::map<std::string,Gaudi::Histo1DDef>& values = m_histoDescriptor.value();
@@ -65,12 +71,12 @@ Hlt::Histo* HltBase<EBASE>::initializeHisto(const std::string& title,
 };
 
 template <class EBASE>
-void HltBase<EBASE>::fillHisto( Hlt::Histo& histo, double x, double weight) {
+void HltBase<EBASE>::fillHisto( AIDA::IHistogram1D& histo, double x, double weight) {
   if (EBASE::produceHistos()) EBASE::fill( &histo , x, weight);
 }
 
 template <class EBASE>
-void HltBase<EBASE>::fillHisto( Hlt::Histo& histo, 
+void HltBase<EBASE>::fillHisto( AIDA::IHistogram1D& histo, 
                                 const std::vector<double>& x, 
                                 double weight) {
   if (EBASE::produceHistos()) 
