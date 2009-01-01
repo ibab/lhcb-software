@@ -1,4 +1,4 @@
-// $Id: ERelations.h,v 1.5 2008-05-15 08:56:54 graven Exp $
+// $Id: ERelations.h,v 1.6 2009-01-01 21:17:48 graven Exp $
 #ifndef HLTBASE_RELATIONS_H 
 #define HLTBASE_RELATIONS_H 1
 
@@ -52,8 +52,9 @@ namespace zen
 
     // returns the relations of this key
     const targets& relations(const T1& t1) const {
-      if (has_key(t1)) return ((_relations.find(t1))->second);
-      // std::cout << " ERROR no relations to " << t1 << std::endl;
+      if (!has_key(t1)) 
+          throw GaudiException( "relations: invalid key ", "", StatusCode::FAILURE );
+      return ((_relations.find(t1))->second);
     }
     
     // return the best relation
