@@ -4,6 +4,10 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+! 2009-01-05 - Juan PALACIOS
+ - python/PhysConf/Configuration.py
+  . Add LoKiSvc() to ApplicationMgr().ExtSvc
+
 ! 2008-12-23 - Patrick Koppenburg
  - Do proto calibration in configurable.
 
