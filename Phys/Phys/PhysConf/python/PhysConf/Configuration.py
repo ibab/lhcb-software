@@ -1,12 +1,13 @@
 """
 High level configuration tools for PhysConf
 """
-__version__ = "$Id: Configuration.py,v 1.4 2008-12-23 09:07:35 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.5 2009-01-05 14:01:54 jpalac Exp $"
 __author__ = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 from Configurables import GaudiSequencer
+from Configurables import LoKiSvc
 import GaudiKernel.ProcessJobOptions
 
 class PhysConf(LHCbConfigurableUser) :
@@ -69,6 +70,9 @@ class PhysConf(LHCbConfigurableUser) :
         DataOnDemandSvc().NodeMap['/Event/Phys']           = 'DataObject'
         DataOnDemandSvc().NodeMap['/Event/Relations/Phys'] = 'DataObject'
 
+    def loki(self) :
+        lokiService = LoKiSvc()
+        ApplicationMgr().ExtSvc +=  [ lokiService ]
 #
 # Main configuration
 #
@@ -78,6 +82,7 @@ class PhysConf(LHCbConfigurableUser) :
         self.dataOnDemand()
         self.configureInput()
         self.configureReco()
+        self.loki()
         
 #       @todo Remove this from Common and put it here
 #        if ( self.getProp( "DataType" ) == 'DC06' ):
