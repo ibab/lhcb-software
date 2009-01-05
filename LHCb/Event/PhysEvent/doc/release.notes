@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.139 2008-03-03 10:36:56 cattanem Exp $
+! $Id: release.notes,v 1.140 2009-01-05 14:13:10 jpalac Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
 !----------------------------------------------------------------------------
+
+! 2009-01-05 - Juan PALACIOS
+ - xml/lcgdict/lcg_selection.xml
+  . Add dictionary for std::vector<const LHCb::Particle*>::iterator
 
 !======================== PhysEvent v11r6 2008-03-03 ========================
 ! 2008-02-27 - Chris Jones
