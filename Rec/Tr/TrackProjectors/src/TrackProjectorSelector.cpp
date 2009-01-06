@@ -1,4 +1,4 @@
-// $Id: TrackProjectorSelector.cpp,v 1.2 2007-07-17 09:25:42 wouter Exp $
+// $Id: TrackProjectorSelector.cpp,v 1.3 2009-01-06 12:52:45 mneedham Exp $
 // Include files 
 
 // from Gaudi
@@ -35,6 +35,9 @@ TrackProjectorSelector::TrackProjectorSelector( const std::string& type,
   declareProperty( "IT",      m_projNames[Measurement::IT]      = "TrajProjector<ST>/TrajITProjector" );
   declareProperty( "OT",      m_projNames[Measurement::OT]      = "TrajOTProjector" );
   declareProperty( "Muon",    m_projNames[Measurement::Muon]    = "TrajProjector<Muon>/TrajMuonProjector" );
+  declareProperty( "TTLite",      m_projNames[Measurement::TTLite]      = "TrajProjector<ST>/TrajTTLiteProjector" );
+  declareProperty( "ITLite",    m_projNames[Measurement::ITLite]    = "TrajProjector<ST>/TrajITLiteProjector" );
+
 }
 
 //-----------------------------------------------------------------------------
@@ -67,9 +70,10 @@ StatusCode TrackProjectorSelector::initialize()
 //-----------------------------------------------------------------------------
 ITrackProjector* TrackProjectorSelector::projector( const LHCb::Measurement& m ) const
 {
+
   Projectors::const_iterator i = m_projectors.find(m.type());
   if ( i == m_projectors.end() || i->second ==0 ) {
-    warning() << "No projector in for measurement of type " << m.type() << "!";
+    warning() << "No projector in for measurement of type " << m.type() << "!" << endmsg;
     return 0;
   }
   return i->second;
