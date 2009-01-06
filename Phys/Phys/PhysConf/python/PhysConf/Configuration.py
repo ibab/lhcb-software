@@ -1,7 +1,7 @@
 """
 High level configuration tools for PhysConf
 """
-__version__ = "$Id: Configuration.py,v 1.5 2009-01-05 14:01:54 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.6 2009-01-06 17:19:41 pkoppenb Exp $"
 __author__ = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -9,6 +9,7 @@ from GaudiConf.Configuration import *
 from Configurables import GaudiSequencer
 from Configurables import LoKiSvc
 import GaudiKernel.ProcessJobOptions
+from Configurables import ( DstConf )
 
 class PhysConf(LHCbConfigurableUser) :
     from Configurables import (GaudiSequencer)
@@ -18,7 +19,7 @@ class PhysConf(LHCbConfigurableUser) :
      ,  "InitSeq"         : GaudiSequencer("DaVinciInitSeq")   # Initialisation sequence in the application. Is set from e.g. DaVinci()
         }
 
-    __used_configurables__ = [ LHCbApp ]
+    __used_configurables__ = [ DstConf, LHCbApp ]
 
 #
 # configure reconstruction to be redone
@@ -57,6 +58,8 @@ class PhysConf(LHCbConfigurableUser) :
         # Get the event time (for CondDb) from ODIN
         from Configurables import EventClockSvc
         EventClockSvc().EventTimeDecoder = "OdinTimeDecoder";
+        # DST unpacking
+        DstConf().EnableUnpack = True
 #
 # Data on demand
 #
@@ -69,10 +72,16 @@ class PhysConf(LHCbConfigurableUser) :
         DataOnDemandSvc().NodeMap['/Event/Rec/Rich']       = 'DataObject'
         DataOnDemandSvc().NodeMap['/Event/Phys']           = 'DataObject'
         DataOnDemandSvc().NodeMap['/Event/Relations/Phys'] = 'DataObject'
-
+#
+# LoKi
+#
     def loki(self) :
+        """
+        Define loki service
+        """
         lokiService = LoKiSvc()
         ApplicationMgr().ExtSvc +=  [ lokiService ]
+        
 #
 # Main configuration
 #

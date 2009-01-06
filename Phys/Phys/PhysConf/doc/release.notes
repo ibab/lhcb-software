@@ -4,6 +4,9 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+! 2009-01-06 - Patrick Koppenburg
+ - Configure DstConf. Requires GaudiConf of 6/1/09 or later
+
 ! 2009-01-05 - Juan PALACIOS
  - python/PhysConf/Configuration.py
   . Add LoKiSvc() to ApplicationMgr().ExtSvc
