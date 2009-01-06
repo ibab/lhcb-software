@@ -3,9 +3,13 @@
 <gdd>
   <package name='RecEvent'>
 
-  <class author="Matthew Needham" desc="Silicon tracker summary class" id="9005" name="STSummary" >
+  <class author="Matthew Needham" desc="Silicon tracker summary class" id="9005" name="STSummary"  serializers = "TRUE">
       <base name="DataObject"/>
       &DataObject;
+
+      <import name = "vector" std = "TRUE" />
+      <import name = "map" std = "TRUE" />
+
       <location name="TTSummary"   place="Rec/TT/Summary"   />
       <location name="ITSummary"   place="Rec/IT/Summary"   />
     <typedef
@@ -15,7 +19,7 @@
         access = "PUBLIC"
        />
 
-       <constructor argList="unsigned int nClusters, unsigned int pcn, bool pcnSynch , std::vector&lt; unsigned int &gt; banksWithError, std::vector&lt; unsigned int &gt; missing , RecoveredInfo recoveredBanks " 
+       <constructor argList="unsigned int nClusters, unsigned int pcn, bool pcnSynch , std::vector&lt; unsigned int &gt; banksWithError, std::vector&lt; unsigned int &gt; missing , RecoveredInfo recoveredBanks" 
                     initList="m_nClusters(nClusters), m_pcn(pcn), m_pcnSynch(pcnSynch), m_banksWithError(banksWithError), m_missingBanks(missing), m_recoveredBanks(recoveredBanks)" desc="special constructor">
        <code></code>
       </constructor>
@@ -31,6 +35,16 @@
             return !good; 
          </code>
       </method>
+
+   <method 
+    name = "fillStream"
+    desc = "Print in a human readable way"
+    type = "std::ostream&amp;"
+    virtual = "FALSE"
+    const = "TRUE">
+    <arg type = "std::ostream" name  = "s" />
+  </method>
+
   </class>
  </package>
 </gdd>

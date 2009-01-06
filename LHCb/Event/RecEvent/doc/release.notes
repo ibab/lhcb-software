@@ -1,9 +1,12 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.112 2008-12-10 17:26:13 cattanem Exp $
+! $Id: release.notes,v 1.113 2009-01-06 13:45:37 mneedham Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
+
+! 2009-01-06 M Needham
+ - Add fillStream to STSummary object
 
 ! 2008-12-10 - Marco Cattaneo
  - Add PartProp dependency, to pick up ParticleID from new location
