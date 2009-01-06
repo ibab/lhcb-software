@@ -1,4 +1,4 @@
-// $Id: MeasurementProviderT.cpp,v 1.15 2008-10-24 13:45:07 mneedham Exp $
+// $Id: MeasurementProviderT.cpp,v 1.16 2009-01-06 12:59:03 mneedham Exp $
 // Include files
 
 //=============================================================================
@@ -19,6 +19,9 @@
 #include "GaudiKernel/ToolHandle.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "Event/TrackParameters.h"
+
+
+
 
 template <typename T>
 class MeasurementProviderT : public GaudiTool,
@@ -148,6 +151,7 @@ LHCb::Measurement* MeasurementProviderT<T>::measurement( const LHCb::LHCbID& id,
   return meas ;
 }
 
+
 //-----------------------------------------------------------------------------
 /// Create a measurement with statevector. For now very inefficient.
 //-----------------------------------------------------------------------------
@@ -176,6 +180,13 @@ LHCb::Measurement* MeasurementProviderT<T>::measurement( const LHCb::LHCbID& id,
   }
   return meas ;
 }
+
+
+//-----------------------------------------------------------------------------
+/// Create a measurement with statevector. For now very inefficient.
+//-----------------------------------------------------------------------------
+
+
 
 //-----------------------------------------------------------------------------
 /// Create measurements for list of LHCbIDs
@@ -257,8 +268,10 @@ DECLARE_TOOL_FACTORY( VeloPhiMeasurementProvider );
 
 #include "Event/STCluster.h"
 #include "Event/STMeasurement.h"
+#include "Event/STLiteMeasurement.h"
 #include "Kernel/ISTClusterPosition.h"
 #include "STDet/DeSTDetector.h"
+#include "Event/STLiteCluster.h"
 
 namespace MeasurementProviderTypes {
   struct TT {
@@ -289,6 +302,84 @@ DECLARE_TOOL_FACTORY( TTMeasurementProvider );
 ////////////////////////////////////////////////////////////////////////////////////////
 
 namespace MeasurementProviderTypes {
+  struct TTLite {
+    typedef LHCb::STLiteMeasurement      MeasurementType ;
+    typedef ISTClusterPosition       PositionToolType ;
+    typedef LHCb::STLiteCluster          ClusterType ;
+    typedef LHCb::STLiteCluster::STLiteClusters  ClusterContainerType ;
+    typedef DeSTDetector             DetectorType ;
+    static std::string positionToolName() { return "STOnlinePosition" ; }
+    static std::string defaultDetectorLocation() { return DeSTDetLocation::location("TT") ; }
+    static std::string defaultClusterLocation() { return LHCb::STLiteClusterLocation::TTClusters ; }
+    static LHCb::STChannelID channelId( const LHCb::LHCbID& id ) { return id.stID() ; }
+    static bool checkType(const LHCb::LHCbID& id) { return id.isTT() ; }
+  };
+}
+
+template<>
+double MeasurementProviderT<MeasurementProviderTypes::TTLite>::nominalZ( const LHCb::LHCbID& id ) const
+{
+  LHCb::STChannelID stid(id.stID()) ;
+  const DeSTSector* sector = const_cast<DeSTDetector*>(m_det)->findSector(stid) ;
+  return sector->globalCentre().z();
+}
+
+template <>
+LHCb::Measurement* MeasurementProviderT<MeasurementProviderTypes::TTLite>::measurement( const LHCb::LHCbID& id, bool ) const
+{
+
+  using namespace MeasurementProviderTypes;
+
+  LHCb::Measurement* meas(0) ;
+  if ( !TTLite::checkType(id) ) {
+    error() << "Not correct measurement" << endreq ;
+  } else {
+    TTLite::ClusterContainerType::const_iterator clus = clusters()->find<LHCb::STLiteCluster::findPolicy>( TTLite::channelId(id) );
+    if (clus != clusters()->end()){
+      meas = new TTLite::MeasurementType( *clus, *m_det, *m_positiontool );
+    }
+    else {
+      error() << "Cannot find cluster for id " << id << endreq ;
+    }
+  }
+  return meas ;
+}
+
+template <>
+LHCb::Measurement* MeasurementProviderT<MeasurementProviderTypes::TTLite>::measurement( const LHCb::LHCbID& id, 
+                                                         const LHCb::ZTrajectory& reftraj, 
+                                                         bool localY ) const 
+{
+ 
+  using namespace MeasurementProviderTypes;
+  
+  LHCb::Measurement* meas(0) ;
+  if( !m_useReference ) {
+    meas = measurement( id, localY ) ;
+  } else {
+    if ( !TTLite::checkType(id) ) {
+      error() << "Not correct measurement" << endreq ;
+    } else {
+      TTLite::ClusterContainerType::const_iterator clus = clusters()->find<LHCb::STLiteCluster::findPolicy>( TTLite::channelId(id) );     
+      if (clus != clusters()->end()){
+        const double z = nominalZ(id) ;      
+        LHCb::StateVector refvector = reftraj.stateVector(z) ;
+        meas = new TTLite::MeasurementType( *clus, *m_det, *m_positiontool, refvector );
+      }
+      else {
+        error() << "Cannot find cluster for id " << id << endreq ;
+      }
+    }
+  }
+  return meas ;
+}
+
+typedef MeasurementProviderT<MeasurementProviderTypes::TTLite> TTLiteMeasurementProvider ;
+DECLARE_TOOL_FACTORY( TTLiteMeasurementProvider );
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+namespace MeasurementProviderTypes {
   struct IT {
     typedef LHCb::STMeasurement      MeasurementType ;
     typedef ISTClusterPosition       PositionToolType ;
@@ -296,11 +387,8 @@ namespace MeasurementProviderTypes {
     typedef LHCb::STClusters         ClusterContainerType ;
     typedef DeSTDetector             DetectorType ;
     static std::string positionToolName() { return "STOfflinePosition/ITClusterPosition" ; }
+    static std::string defaultClusterLocation() { return LHCb::STClusterLocation::ITClusters ; }
     static std::string defaultDetectorLocation() { return DeSTDetLocation::location("IT") ; }
-    static std::string defaultClusterLocation() { return LHCb::STClusterLocation::ITClusters; }
-    
-    
-
     static LHCb::STChannelID channelId( const LHCb::LHCbID& id ) { return id.stID() ; }
     static bool checkType(const LHCb::LHCbID& id) { return id.isIT() ; }
   };
@@ -317,3 +405,87 @@ double MeasurementProviderT<MeasurementProviderTypes::IT>::nominalZ( const LHCb:
 
 typedef MeasurementProviderT<MeasurementProviderTypes::IT> ITMeasurementProvider ;
 DECLARE_TOOL_FACTORY( ITMeasurementProvider );
+
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+namespace MeasurementProviderTypes {
+  struct ITLite {
+    typedef LHCb::STLiteMeasurement      MeasurementType ;
+    typedef ISTClusterPosition       PositionToolType ;
+    typedef LHCb::STLiteCluster          ClusterType ;
+    typedef LHCb::STLiteCluster::STLiteClusters         ClusterContainerType ;
+    typedef DeSTDetector             DetectorType ;
+    static std::string positionToolName() { return "STOnlinePosition/ITLiteClusterPosition" ; }
+    static std::string defaultClusterLocation() { return LHCb::STLiteClusterLocation::ITClusters; }
+    static std::string defaultDetectorLocation() { return DeSTDetLocation::location("IT") ; }
+    static LHCb::STChannelID channelId( const LHCb::LHCbID& id ) { return id.stID() ; }
+    static bool checkType(const LHCb::LHCbID& id) { return id.isIT() ; }
+  };
+}
+
+template<>
+double MeasurementProviderT<MeasurementProviderTypes::ITLite>::nominalZ( const LHCb::LHCbID& id ) const
+{
+  // extremely ugly. need more functionality in det elements to do this quicker.
+  LHCb::STChannelID stid(id.stID()) ;
+  const DeSTSector* sector = const_cast<DeSTDetector*>(m_det)->findSector(stid) ;
+  return sector->globalCentre().z() ;
+}
+
+
+template <>
+LHCb::Measurement* MeasurementProviderT<MeasurementProviderTypes::ITLite>::measurement( const LHCb::LHCbID& id, bool ) const
+{
+
+  using namespace MeasurementProviderTypes;
+
+  LHCb::Measurement* meas(0) ;
+  if ( !ITLite::checkType(id) ) {
+    error() << "Not correct measurement" << endreq ;
+  } else {
+    ITLite::ClusterContainerType::const_iterator clus = clusters()->find<LHCb::STLiteCluster::findPolicy>( TTLite::channelId(id) );
+    if (clus != clusters()->end()){
+      meas = new ITLite::MeasurementType( *clus, *m_det, *m_positiontool );
+    }
+    else {
+      error() << "Cannot find cluster for id " << id << endreq ;
+    }
+  }
+  return meas ;
+}
+
+template <>
+LHCb::Measurement* MeasurementProviderT<MeasurementProviderTypes::ITLite>::measurement( const LHCb::LHCbID& id, 
+                                                         const LHCb::ZTrajectory& reftraj, 
+                                                         bool localY ) const 
+{
+ 
+  using namespace MeasurementProviderTypes;
+
+  LHCb::Measurement* meas(0) ;
+  if( !m_useReference ) {
+    meas = measurement( id, localY ) ;
+  } else {
+    if ( !ITLite::checkType(id) ) {
+      error() << "Not correct measurement" << endreq ;
+    } else {
+      ITLite::ClusterContainerType::const_iterator clus = clusters()->find<LHCb::STLiteCluster::findPolicy>( ITLite::channelId(id) );
+      if (clus != clusters()->end()){
+        const double z = nominalZ(id) ;
+        LHCb::StateVector refvector = reftraj.stateVector(z) ;
+        meas = new ITLite::MeasurementType( *clus, *m_det, *m_positiontool, refvector);
+      }
+      else {
+        error() << "Cannot find cluster for id " << id << endreq;
+      }
+    }
+  }
+  return meas ;
+}
+
+
+typedef MeasurementProviderT<MeasurementProviderTypes::ITLite> ITLiteMeasurementProvider ;
+DECLARE_TOOL_FACTORY( ITLiteMeasurementProvider );
+
+
