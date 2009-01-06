@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.8 2008-12-01 16:28:28 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.9 2009-01-06 12:49:16 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -23,6 +23,7 @@ class TrackSys(LHCbConfigurableUser):
        ,"TrackPatRecAlgorithms": []  # List of track pattern recognition algorithms to run
        ,"TrackExtraInfoAlgorithms": []  # List of track 'extra info' algorithms to run
        ,"WithMC":       False # set to True to use MC truth
+       ,"OutputType": "" # set to "RDST" for special RDST sequence
         }
     
     ## Possible expert options

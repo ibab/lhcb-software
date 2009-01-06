@@ -17,7 +17,7 @@ from Configurables import ( ProcessPhase, MagneticFieldSvc,
                             Tf__Tsa__Seed, Tf__Tsa__SeedTrackCnv,
                             PatSeeding,
                             TrackMatchVeloSeed, PatDownstream, PatVeloTT,
-                            TrackEventCloneKiller, TrackPrepareVelo, TrackContainerCopy,
+                            TrackEventCloneKiller, TrackPrepareVelo,
                             TrackAddLikelihood, TrackLikelihood, NeuralNetTmva, Tf__OTHitCreator,
                             TrackBuildCloneTable, TrackCloneCleaner, AlignMuonRec
                            )
@@ -162,11 +162,14 @@ if "Velo" in trackAlgs :
    ## Prepare the velo tracks for the fit
    track.DetectorList += ["VeloPreFit", "VeloFit"]
    GaudiSequencer("TrackVeloPreFitSeq").Members += [ TrackPrepareVelo() ] 
-   ## Fit the velo tracks and copy them to the "best" container
+   ## Fit the velo tracks
    GaudiSequencer("TrackVeloFitSeq").Members += [ ConfiguredFitVelo() ]
-   copyVelo = TrackContainerCopy( "CopyVelo" )
-   copyVelo.inputLocation = "Rec/Track/PreparedVelo";
-   GaudiSequencer("TrackVeloFitSeq").Members += [ copyVelo ]
+   ## copy the velo tracks to the "best" container (except in RDST case)
+   if TrackSys().getProp( "OutputType" ).upper() != "RDST":
+      from Configurables import TrackContainerCopy
+      copyVelo = TrackContainerCopy( "CopyVelo" )
+      copyVelo.inputLocation = "Rec/Track/PreparedVelo";
+      GaudiSequencer("TrackVeloFitSeq").Members += [ copyVelo ]
 
 ## Extra track information sequence
 extraInfos = TrackSys().getProp("TrackExtraInfoAlgorithms")
