@@ -1,4 +1,4 @@
-// $Id: TTOccupancy.icpp,v 1.1 2008-10-16 13:12:03 mneedham Exp $
+// $Id: TTOccupancy.icpp,v 1.2 2009-01-06 13:47:56 mneedham Exp $
 
 
 // Gaudi
@@ -8,6 +8,7 @@
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeTTSector.h"
 
+#include "Kernel/LHCbConstants.h"
 #include "Kernel/STLexicalCaster.h"
 
 // LHCbKernel
@@ -81,13 +82,41 @@ StatusCode TTOccupancy<PBASE>::execute()
 
   const Container* objCont = get<Container>(m_dataLocation);
 
+  std::map<unsigned int, unsigned int> SectorMap;
+  std::map<std::string, unsigned int> BeetleMap;
+  std::map<std::string, unsigned int> PortMap;
+
   // histos per digit
   iterator iterObj =  objCont->begin();
   for( ; iterObj != objCont->end(); ++iterObj){
     this->fillHistograms(*iterObj);
+    SectorMap[(*iterObj)->channelID().uniqueSector()] += weight(*iterObj);
+    BeetleMap[uniqueBeetle((*iterObj)->channelID())] += weight(*iterObj) ;
+    PortMap[uniquePort((*iterObj)->channelID())] += weight(*iterObj) ;
   } // loop iterDigit
 
- 
+
+  // fill histogram of sector occupancy
+  for (std::map<unsigned int, unsigned int>::iterator iterS = SectorMap.begin();    iterS != SectorMap.end(); ++iterS){
+    double occ = iterS->second/double(tracker()->sectors().front()->nStrip());
+    plot(occ,"module occupancy", -0.005, 1.005, 101);
+  } //iter
+
+  // fill histogram of beetle occupancy
+  for (std::map<std::string, unsigned int>::iterator iterS = BeetleMap.begin();   iterS != BeetleMap.end(); ++iterS){
+    double occ = iterS->second/double(LHCbConstants::nStripsInBeetle);
+    plot(occ,"beetle occupancy", -0.005, 1.005, 101);
+  } //iter
+
+
+ // fill histogram of port occupancy
+  for (std::map<std::string, unsigned int>::iterator iterP = PortMap.begin(); 
+  iterP != PortMap.end(); ++iterP){
+    const double occ = iterP->second/double(LHCbConstants::nStripsInPort);
+    plot(occ,"port occupancy", -0.005, 1.005, 101);
+  } //iter
+
+
   return StatusCode::SUCCESS;
 }
 
@@ -128,4 +157,10 @@ void TTOccupancy<PBASE>::fillHistograms(const PBASE* obj )
 
   } // if above threshold
 
+}
+
+
+template <class PBASE>
+inline unsigned int TTOccupancy<PBASE>::weight(const PBASE* ) const{
+  return 1;
 }

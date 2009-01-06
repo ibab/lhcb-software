@@ -1,4 +1,4 @@
-// $Id: TTClusterOccupancy.h,v 1.1 2008-10-16 13:12:03 mneedham Exp $
+// $Id: TTClusterOccupancy.h,v 1.2 2009-01-06 13:47:56 mneedham Exp $
 
 #ifndef TTClusterOccupancy_H 
 #define TTClusterOccypancy_H !
@@ -25,6 +25,11 @@ inline const std::string TTClusterOccupancy::histoDirName() const{
 template <>
 inline double TTClusterOccupancy::defaultThreshold() const{
   return 0.0; // no threshold for clusters
+}
+
+template <>
+inline unsigned int TTClusterOccupancy::weight(const LHCb::STCluster* obj) const {
+  return obj->size();
 }
 
 //template class TTOccupancy<LHCb::STCluster>;

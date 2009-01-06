@@ -2,6 +2,10 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2009-01-06 M Needham 
+ - Add STDumpEvent classes
+ - Add histograms of port occupancy in Occupancy classes
+
 ! 2008-12-29 M Needham
  - Bug fixes in IT/TTDigitOccupancy 
 

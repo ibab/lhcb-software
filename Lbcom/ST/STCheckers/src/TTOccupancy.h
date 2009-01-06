@@ -1,4 +1,4 @@
-// $Id: TTOccupancy.h,v 1.6 2008-10-16 13:10:34 mneedham Exp $
+// $Id: TTOccupancy.h,v 1.7 2009-01-06 13:47:56 mneedham Exp $
 #ifndef TTOccupancy_H
 #define TTOccupancy_H 1
 
@@ -43,6 +43,8 @@ private:
 
 
   void fillHistograms(const PBASE* obj);
+
+   unsigned int weight(const PBASE* obj) const; 
   
   ISTSignalToNoiseTool* m_sigNoiseTool;
  

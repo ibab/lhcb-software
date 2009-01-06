@@ -1,4 +1,4 @@
-// $Id: ITOccupancy.icpp,v 1.2 2008-12-29 12:55:16 mneedham Exp $
+// $Id: ITOccupancy.icpp,v 1.3 2009-01-06 13:47:56 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -17,8 +17,8 @@
 
 // local
 #include "ITOccupancy.h"
+#include "Kernel/LHCbConstants.h"
 
-#include "Kernel/STLexicalCaster.h"
 
 using namespace LHCb;
 
@@ -135,31 +135,36 @@ inline StatusCode ITOccupancy<PBASE>::execute()
   
   std::map<unsigned int, unsigned int> SectorMap;
   std::map<std::string, unsigned int> BeetleMap;
+  std::map<std::string, unsigned int> PortMap;
   // histos per digit
   iterator iterObj = objCont->begin();
   for( ; iterObj != objCont->end(); ++iterObj){
     this->fillHistograms(*iterObj);
     SectorMap[(*iterObj)->channelID().uniqueSector()] += weight(*iterObj);
-    DeSTSector* theSector = findSector((*iterObj)->channelID());
-    std::string theBeetle = theSector->nickname() + ST::toString(theSector->beetle((*iterObj)->channelID()));
-    BeetleMap[theBeetle] += weight(*iterObj) ;
+    BeetleMap[uniqueBeetle((*iterObj)->channelID())] += weight(*iterObj) ;
+    PortMap[uniquePort((*iterObj)->channelID())] += weight(*iterObj) ;
   } // loop iterDigit
 
   // fill histogram of sector occupancy
   for (std::map<unsigned int, unsigned int>::iterator iterS = SectorMap.begin(); 
   iterS != SectorMap.end(); ++iterS){
-    double occ = iterS->second/double(tracker()->sectors().front()->nStrip());
+    const double occ = iterS->second/double(tracker()->sectors().front()->nStrip());
     plot(occ,"module occupancy", -0.005, 1.005, 101);
   } //iter
 
-  // fill histogram of sector occupancy
-  for (std::map<std::string, unsigned int>::iterator iterS = BeetleMap.begin(); 
-  iterS != BeetleMap.end(); ++iterS){
-    double occ = iterS->second/double(tracker()->sectors().front()->nStrip());
+  // fill histogram of beetle occupancy
+  for (std::map<std::string, unsigned int>::iterator iterB = BeetleMap.begin(); 
+  iterB != BeetleMap.end(); ++iterB){
+    const double occ = iterB->second/double(LHCbConstants::nStripsInBeetle);
     plot(occ,"beetle occupancy", -0.005, 1.005, 101);
   } //iter
 
-
+  // fill histogram of port occupancy
+  for (std::map<std::string, unsigned int>::iterator iterP = PortMap.begin(); 
+  iterP != PortMap.end(); ++iterP){
+    const double occ = iterP->second/double(LHCbConstants::nStripsInPort);
+    plot(occ,"port occupancy", -0.005, 1.005, 101);
+  } //iter
 
   // average occupancy in each layer
   int iCount = 0;
