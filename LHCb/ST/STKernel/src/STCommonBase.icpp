@@ -5,7 +5,7 @@
  *  Implementation file for RICH base class : ST::CommonBase
  *
  *  CVS Log :-
- *  $Id: STCommonBase.icpp,v 1.7 2008-11-18 15:49:55 cattanem Exp $
+ *  $Id: STCommonBase.icpp,v 1.8 2009-01-06 13:48:59 mneedham Exp $
  *
  *  @author Matthew Needham    Matthew.Needham@cern.ch
  *  @date   2008-11-10
@@ -22,7 +22,8 @@
 #include "GaudiAlg/GaudiTupleTool.h"
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "GaudiAlg/GaudiHistoTool.h"
-
+#include "Kernel/STLexicalCaster.h"
+#include "Kernel/LHCbConstants.h"
 
 //=============================================================================
 // Destructor
@@ -157,11 +158,22 @@ inline std::string ST::CommonBase<PBASE>::uniqueSector(const LHCb::STChannelID& 
 } 
 
 template <class PBASE>
+inline std::string ST::CommonBase<PBASE>::uniqueBeetle(const LHCb::STChannelID& chan) const{
+  const DeSTSector* theSector = findSector(chan);
+  return theSector->nickname() + "Beetle" + ST::toString(theSector->beetle(chan)); ;
+} 
+
+template <class PBASE>
+inline std::string ST::CommonBase<PBASE>::uniquePort(const LHCb::STChannelID& chan) const{
+  const unsigned int port = ((chan.strip()-1u)/LHCbConstants::nStripsInPort) + 1u;
+  return uniqueBeetle(chan) + "Port" + ST::toString(port); ;
+} 
+
+template <class PBASE>
 inline std::string ST::CommonBase<PBASE>::detectorType(const LHCb::STChannelID& chan) const{
   const DeSTSector* sector = tracker()->findSector(chan);
   return sector ? sector->type()  : "Unknown" ;
 } 
-
 
 #include "Kernel/STDetSwitch.h"
 template <class PBASE>

@@ -5,7 +5,7 @@
  *  Header file for ST base class : STCommonBase
  *
  *  CVS Log :-
- *  $Id: STCommonBase.h,v 1.4 2008-10-16 13:08:02 mneedham Exp $
+ *  $Id: STCommonBase.h,v 1.5 2009-01-06 13:48:59 mneedham Exp $
  *
  *  @author Matthew Needham    Matthew.Needham@cern.ch
  *  @date   2005-11-10
@@ -99,7 +99,13 @@ namespace ST
 
    /** sector as a string */
    std::string uniqueSector(const LHCb::STChannelID& chan) const;
+   
+   /** beetle as a string */
+   std::string uniqueBeetle(const LHCb::STChannelID& chan) const;
   
+   /** port */
+   std::string uniquePort(const LHCb::STChannelID& chan) const; 
+
    /** detector type as a string */
    std::string detectorType(const LHCb::STChannelID& chan) const;
   
