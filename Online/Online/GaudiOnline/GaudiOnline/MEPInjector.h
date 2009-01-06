@@ -52,12 +52,19 @@ namespace LHCb {
   *          Jean-Christophe Garnier
   *  @date   2008-06-26
   */
-  class MEPInjector : public Algorithm, virtual public IRunable, virtual public IIncidentListener {
+  class MEPInjector : public Algorithm, virtual public IRunable 
+                      ,virtual public IIncidentListener
+ {
   protected:
+    enum InjectorState { NOT_READY, READY, RUNNING, STOPPED };
+ 
+    InjectorState m_InjState;
 
     /// Protected Attributes
     IIncidentSvc*               m_IncidentSvc; 
     IMonitorSvc*                m_MonSvc;
+
+    char*         m_AllNames;        /* Publish the names of all enabled Tell1s */
 
     int  m_EvtBuf;
  
@@ -69,10 +76,23 @@ namespace LHCb {
     sem_t         m_MEPReqCount;     /* Synchronisation to access to HLT Req data */
                                      /* = counter of requests registered */
 
-    int           m_shmRawEvents;
-
     std::queue< /*SmartDataPtr<RawEvent>*/ RawEvent* > m_QueueRawEvents;   /* A queue of raw events to be processed */
-    
+   
+    unsigned int  m_TotEvtsRead;         /* Total of events read */
+    unsigned int  m_TotEvtsSent;         /* Total of events sent */
+    unsigned int  m_TotMEPsTx;           /* Total of MEPs transmitted */
+ 
+    struct timeval m_InitTime;          /* Date of initialization of the injector */
+    struct timeval m_CurTime;           /* Current date */
+    unsigned int m_TotElapsedTime;      /* Elapsed time since the initialization, in ms */       
+
+    unsigned int m_TotMEPReqTx;          /* Total of MEP request forwarded */
+    unsigned int m_TotMEPReqRx;          /* Total of MEP request received */
+    unsigned int m_TotMEPReqPktTx;       /* Total of MEP request packet sent */
+    unsigned int m_TotMEPReqPktRx;       /* Total of MEP request packet received */
+
+    unsigned int m_TotOdinMEPRx;         /* Total of Odin MEP received */
+    unsigned int m_TotOdinMEPTx;         /* Total of Odin MEP sent */
 
     pthread_t     m_ThreadMEPReqManager; 
  
@@ -131,11 +151,6 @@ namespace LHCb {
 
 //    MEPReq m_MEPReq;            /* The MEP request packet */
 
-    int m_TotMEPReq;            /* Total of MEP request made */
-
-    int m_TotMEPReqPkt;         /* Total of MEP request packet sent */
-
-    int m_TotMEPRx;             /* Total of Odin MEP received */
 
     std::map<unsigned long, StreamBuffer> m_MapStreamBuffers;
     std::map<unsigned long, MEPEvent *> m_MapTell1MEPs;  
@@ -209,9 +224,18 @@ namespace LHCb {
     /// Receive a MEP Request from the HLT
     StatusCode receiveMEPReq(char *req);
 
+    /// Clear monitoring counters
+    void clearCounters();
+ 
+    /// Setup monitoring counters
+    int setupCounters();
 
-   
-    
+    /// Publish monitoring counters
+    void publishCounters(void);
+
+    /// Fix OT non respect of the rules
+    void OTFIX(int side);  
+
    public: 
     ///////////////////////////////////////////////////////////////////////
     /// Public Methods
