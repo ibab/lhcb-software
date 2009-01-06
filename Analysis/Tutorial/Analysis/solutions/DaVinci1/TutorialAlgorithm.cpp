@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.cpp,v 1.8 2008-12-22 18:08:36 pkoppenb Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.9 2009-01-06 10:15:05 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -68,6 +68,8 @@ StatusCode TutorialAlgorithm::loopOnMuons(const LHCb::Particle::ConstVector& muo
 
   // code goes here  
   const LHCb::RecVertex::Container* pvs = desktop()->primaryVertices(); // get PVs
+  counter("# PV")+= pvs->size();
+  counter("# muons")+= muons.size();
 
   for ( LHCb::Particle::ConstVector::const_iterator im =  muons.begin() ;
         im != muons.end() ; ++im ){

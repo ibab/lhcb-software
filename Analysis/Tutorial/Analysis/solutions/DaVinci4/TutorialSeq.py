@@ -14,7 +14,7 @@ jpsi2mumu.addTool( PhysDesktop() )
 jpsi2mumu.PhysDesktop.InputLocations = [ "StdLooseMuons" ] 
 jpsi2mumu.DecayDescriptor = "J/psi(1S) -> mu+ mu-" 
 jpsi2mumu.DaughtersCuts = { "mu+" : "ALL" } 
-jpsi2mumu.CombinationCut = "ADAMASS('J/psi(1S)')<30" 
+jpsi2mumu.CombinationCut = "ADAMASS('J/psi(1S)')<30*MeV" 
 jpsi2mumu.MotherCut = "(VFASPF(VCHI2/VDOF)<100)" 
 tutorialseq.Members += [ jpsi2mumu ]
 #######################################################################

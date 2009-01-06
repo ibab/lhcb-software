@@ -34,6 +34,13 @@ tuple.ToolList +=  [
 #    , "TupleToolTISTOS"
     , "TupleToolTagging" ]
 tuple.Decay = "[B_s0 -> (^J/psi(1S) => ^mu+ ^mu-) (^phi(1020) -> ^K+ ^K-)]cc"
+#######################################################################
+#
+# Event Tuple
+#
+from Configurables import EventTuple
+etuple = EventTuple()
+etuple.ToolList = [ "TupleToolEventInfo", "TupleToolGeneration", "TupleToolTrigger"  ]
 
 #######################################################################
 #
@@ -47,7 +54,7 @@ DaVinci().Simulation   = True                  # It's MC
 #
 # Add our own stuff
 #
-DaVinci().UserAlgorithms = [ tutorialseq, tuple ]
+DaVinci().UserAlgorithms = [ tutorialseq, tuple, etuple ]
 DaVinci().MainOptions  = ""                    # None
 #
 # Trigger (Restore when fixed on 2008 data)

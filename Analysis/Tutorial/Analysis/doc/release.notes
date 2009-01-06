@@ -8,6 +8,11 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2009-01-06 - Patrick Koppenburg
+ - solutions/DaVinci1/TutorialAlgorithm.cpp : add counters
+ - solutions/DaVinci4/TutorialSeq.py : Use proper unit
+ - solutions/DaVinci6/DVTutorial_6.py : Add event tuple
+
 ! 2008-12-22 - Patrick Koppenburg
  - Big cleanup for DaVinci v22r0
  - Increment to v8r0
