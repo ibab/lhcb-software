@@ -2,7 +2,7 @@
 Utilities to interact with XML ReleaseNotes. 
 """
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
-__version__ = "$Id: ReleaseNotes.py,v 1.3 2008-07-16 16:28:08 marcocle Exp $"
+__version__ = "$Id: ReleaseNotes.py,v 1.4 2009-01-06 18:21:19 marcocle Exp $"
 
 # exported symbols
 __all__ = [ "ReleaseNotes" ]
@@ -39,7 +39,7 @@ class ReleaseNotes(object):
         self.filename = filename
         # load XML
         self.tree = ET.parse(self.filename)
-    def addNote(self, contributor, partitions, description, date = None):
+    def addNote(self, contributor, partitions, description, date = None, patch = None):
         """
         And a basic entry to the release notes.
         
@@ -47,6 +47,7 @@ class ReleaseNotes(object):
         partitions: dictionary in the format {"PARTITION":("tag",["file1","file2"])}
         description: list of comments, ["comment1","comment2"]
         date: date in the format "YYYY-MM-DD", the current date is used if omitted
+        patch: numeric id of the patch (on savannah)
         """
         if date is None:
             date = time.strftime("%Y-%m-%d")
@@ -71,6 +72,8 @@ class ReleaseNotes(object):
         desc_el = ET.SubElement(note,xel("description"))
         for d in description:
             ET.SubElement(desc_el, xel("di")).text = d
+        if patch:
+            ET.SubElement(desc_el, xel("patch")).text = str(patch)
         
         # this should be safe enough: the first element is always "maintainer"
         pos = 0

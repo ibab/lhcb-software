@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
-__version__ = "$Id: CondDBAdmin_Commit.py,v 1.7 2008-09-25 22:56:16 marcocle Exp $"
+__version__ = "$Id: CondDBAdmin_Commit.py,v 1.8 2009-01-06 18:21:19 marcocle Exp $"
 
 import os, sys, stat
 
@@ -121,6 +121,9 @@ and for a short message for the release notes.""")
     parser.add_option("-u", "--until", type = "string",
                       help = "End of the Interval Of Validity (local time)"+ 
                       " Format: YYYY-MM-DD[_HH:MM[:SS.SSS]][UTC]"
+                      )
+    parser.add_option("-P","--patch", type = "int",
+                      help = "numerical id of the patch on savannah"
                       )
     parser.set_default("user_tag", "HEAD")
     parser.set_default("dir", None)
@@ -248,7 +251,8 @@ and for a short message for the release notes.""")
     rel_notes = ReleaseNotes(options.rel_notes)
     rel_notes.addNote(contributor = options.contributor,
                       partitions = {partition:(local_tag,modified + added)},
-                      description = [options.message])
+                      description = [options.message],
+                      patch = options.patch)
     
     ans = None
     if options.dry_run:
