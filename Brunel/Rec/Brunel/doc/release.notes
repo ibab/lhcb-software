@@ -3,6 +3,11 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-01-06 - Marco Cattaneo
+ - Use new DstConf configurable to set up DST/RDST content. Also, enable
+   packed DST/RDST by default.
+ - Remove obsolete DstContent.opts, rDstContent.opts 
+
 ! 2008-12-18 - Chris Jones
  - Properly pass ["Context","DataType"] options to RichRecQCConf in all cases.
 

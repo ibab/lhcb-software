@@ -1,8 +1,0 @@
-// Define DST content for Brunel real data
-
-// Sequence for altering DST content
-Output.DetectorList  += { "DST" };
-OutputDSTSeq.Members += { "TrackToDST" }; // Filters Track States to be written
-
-// Objects to write out 
-#include "$STDOPTS/DstContent.opts"

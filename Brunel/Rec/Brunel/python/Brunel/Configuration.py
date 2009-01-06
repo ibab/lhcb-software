@@ -3,13 +3,13 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.44 2008-12-18 13:58:59 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.45 2009-01-06 12:50:26 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
 import GaudiKernel.ProcessJobOptions
 from Configurables import ( LHCbConfigurableUser, LHCbApp, RecSysConf, TrackSys,
-                            ProcessPhase, GaudiSequencer, RichRecQCConf )
+                            ProcessPhase, GaudiSequencer, RichRecQCConf, DstConf )
 
 ## @class Brunel
 #  Configurable for Brunel application
@@ -18,7 +18,7 @@ from Configurables import ( LHCbConfigurableUser, LHCbApp, RecSysConf, TrackSys,
 class Brunel(LHCbConfigurableUser):
 
     ## Possible used Configurables
-    __used_configurables__ = [ TrackSys, RecSysConf, RichRecQCConf, LHCbApp ]
+    __used_configurables__ = [ TrackSys, RecSysConf, RichRecQCConf, LHCbApp, DstConf ]
 
     ## Known monitoring sequences, all run by default
     KnownMoniSubdets        = ["CALO","RICH","MUON","VELO","Tr","ST"] 
@@ -45,7 +45,8 @@ class Brunel(LHCbConfigurableUser):
        ,"Simulation":   False # set to True to use SimCond
        ,"RecL0Only":    False # set to True to reconstruct only L0-yes events
        ,"InputType":    "MDF" # or "DIGI" or "ETC" or "RDST" or "DST"
-       ,"OutputType":   "DST" # or "RDST" or "NONE"
+       ,"OutputType":   "DST" # or "RDST" or "NONE". Also forwarded to RecSys
+       ,"PackedOutput": True  # Flag whether or not to use packed containers
        ,"Histograms": "Default" # Type of histograms: ['None','Default','Expert']
        ,"NoWarnings":   False # suppress all messages with MSG::WARNING or below 
        ,"DatasetName":  ""    # string used to build file names
@@ -72,7 +73,7 @@ class Brunel(LHCbConfigurableUser):
             self.setProp( "Simulation", True )
 
         # Delegate handling to LHCbApp configurable
-        self.setOtherProps(LHCbApp(),["DataType","CondDBtag","DDDBtag","UseOracle","Simulation"]) 
+        self.setOtherProps(LHCbApp(),["DataType","CondDBtag","DDDBtag","UseOracle","Simulation"])
 
     def defineEvents(self):
         # Delegate handling to LHCbApp configurable
@@ -230,21 +231,47 @@ class Brunel(LHCbConfigurableUser):
         Set up output stream
         """
         if dstType in [ "DST", "RDST" ]:
-            if( dstType == "DST" ):
-                importOptions( "$BRUNELOPTS/DstContent.opts" )
-            else:
-                importOptions( "$BRUNELOPTS/rDstContent.opts" )
-            dstWriter = OutputStream( "DstWriter" )
-            ApplicationMgr().OutStream.append( dstWriter )
-            dstWriter.Preload = False
+            writerName = "DstWriter"
+            packedDST  = self.getProp( "PackedOutput" ) 
+
+            dstWriter = OutputStream( writerName )
             dstWriter.RequireAlgs += ["Reco"] # Write only if Rec phase completed
+
+            # Set a default output file name if not already defined in the user job options
             if not hasattr( dstWriter, "Output" ):
                 dstWriter.Output  = "DATAFILE='PFN:" + self.outputName() + "' TYP='POOL_ROOTTREE' OPT='REC'"
 
-        # Add MC truth to DST
-        if withMC and dstType == "DST":
-            importOptions("$STDOPTS/MCDstContent.opts")
-            
+            # Define the file content
+            DstConf().Writer     = writerName
+            DstConf().DstType    = dstType
+            DstConf().EnablePack = packedDST
+            DstConf().Simulation = withMC
+
+            from Configurables import TrackToDST
+            if dstType == "DST":
+                # Sequence for altering DST content
+                ProcessPhase("Output").DetectorList += [ "DST" ]
+                # Filter Track States to be written
+                trackFilter = TrackToDST()
+            else:
+                # Sequence for altering content of rDST compared to DST
+                ProcessPhase("Output").DetectorList += [ "L0", "DST" ]
+                # Filter Track States to be written
+                trackFilter = TrackToDST("TrackToRDST")
+                trackFilter.veloStates = ["ClosestToBeam"]
+                trackFilter.longStates = ["ClosestToBeam"]
+                trackFilter.TTrackStates = ["FirstMeasurement"]
+                trackFilter.downstreamStates = ["FirstMeasurement"]
+                trackFilter.upstreamStates = ["ClosestToBeam"]
+                
+            GaudiSequencer("OutputDSTSeq").Members += [ trackFilter ]
+
+            if packedDST:
+                # Add the sequence to pack the DST containers
+                packSeq = GaudiSequencer("PackDST")
+                DstConf().PackSequencer = packSeq
+                GaudiSequencer("OutputDSTSeq").Members += [ packSeq ]
+
         # Always write an ETC if ETC input
         if self.getProp( "InputType" ).upper() == "ETC":
             etcWriter = TagCollectionSvc("EvtTupleSvc")
@@ -423,7 +450,7 @@ class Brunel(LHCbConfigurableUser):
     def __apply_configuration__(self):
         
         GaudiKernel.ProcessJobOptions.PrintOff()
-        self.setOtherProps(RecSysConf(),["SpecialData","RecoSequence","Context"])
+        self.setOtherProps(RecSysConf(),["SpecialData","RecoSequence","Context","OutputType"])
         self.defineGeometry()
         self.defineEvents()
         self.defineOptions()
