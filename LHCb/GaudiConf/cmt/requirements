@@ -1,5 +1,5 @@
 package GaudiConf
-version v11r0
+version v12r0
 
 branches doc cmt options python src
 include_path none
@@ -12,5 +12,7 @@ set STDOPTS    $(GaudiConf_root)/options
 
 macro_append cppflags ' -DAPPNAME=\"${package}\" -DAPPVERS=\"${version}\" '
 
+macro GaudiConfConfUserModules "GaudiConf.DstConf GaudiConf.Configuration"
 apply_pattern install_python_modules
 apply_pattern install_scripts
+
