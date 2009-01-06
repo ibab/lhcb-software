@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.h,v 1.17 2007-11-30 17:19:26 cattanem Exp $
+// $Id: MeasurementProvider.h,v 1.18 2009-01-06 14:50:11 mneedham Exp $
 #ifndef TRACKTOOLS_MEASUREMENTPROVIDER_H 
 #define TRACKTOOLS_MEASUREMENTPROVIDER_H
 
@@ -56,6 +56,13 @@ private:
   ToolHandle<IMeasurementProvider> m_itProvider ;
   ToolHandle<IMeasurementProvider> m_otProvider ;
   ToolHandle<IMeasurementProvider> m_muonProvider ;
+
+  std::string m_veloRTypeAndName;
+  std::string m_veloPhiTypeAndName;
+  std::string m_ttTypeAndName;
+  std::string m_itTypeAndName;
+  std::string m_otTypeAndName;
+  std::string m_muonTypeAndName;
   
   bool m_ignoreVelo;    ///< Ignore Velo hits
   bool m_ignoreTT;      ///< Ignore TT hits

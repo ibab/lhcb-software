@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-01-06 M Needham
+ - Make measurement providers jobOptions
+
+! 2009-01-06 M Needham
  - Add TTLite/ITLite creation to MeasurementProviderT.cpp
 
 ! 2008-12-17 - Marco Cattaneo

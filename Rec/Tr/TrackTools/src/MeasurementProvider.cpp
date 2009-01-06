@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.36 2008-10-17 12:03:23 wouter Exp $
+// $Id: MeasurementProvider.cpp,v 1.37 2009-01-06 14:50:11 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -26,14 +26,9 @@ DECLARE_TOOL_FACTORY( MeasurementProvider );
 MeasurementProvider::MeasurementProvider( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent ) 
-  : GaudiTool ( type, name , parent ),
-    m_veloRProvider(  "MeasurementProviderT<MeasurementProviderTypes::VeloR>/VeloRMeasurementProvider" ),
-    m_veloPhiProvider("MeasurementProviderT<MeasurementProviderTypes::VeloPhi>/VeloPhiMeasurementProvider" ),
-    m_ttProvider(     "MeasurementProviderT<MeasurementProviderTypes::TT>/TTMeasurementProvider" ),
-    m_itProvider(     "MeasurementProviderT<MeasurementProviderTypes::IT>/ITMeasurementProvider" ),
-    m_otProvider(     "OTMeasurementProvider" ),
-    m_muonProvider(   "MuonMeasurementProvider" )
+  : GaudiTool ( type, name , parent )
 {
+
   declareInterface<IMeasurementProvider>(this);
   declareProperty( "IgnoreVelo", m_ignoreVelo = false );
   declareProperty( "IgnoreTT",   m_ignoreTT   = false );
@@ -41,6 +36,20 @@ MeasurementProvider::MeasurementProvider( const std::string& type,
   declareProperty( "IgnoreOT",   m_ignoreOT   = false );
   declareProperty( "IgnoreMuon", m_ignoreMuon = false );
   declareProperty( "InitializeReference", m_initializeReference  = true ) ;
+
+  declareProperty("veloRName", m_veloRTypeAndName ="MeasurementProviderT<MeasurementProviderTypes::VeloR>/VeloRMeasurementProvider" );
+  declareProperty("veloPhiName", m_veloPhiTypeAndName ="MeasurementProviderT<MeasurementProviderTypes::VeloPhi>/VeloPhiMeasurementProvider");
+  declareProperty("ttName", m_ttTypeAndName = "MeasurementProviderT<MeasurementProviderTypes::TT>/TTMeasurementProvider" );
+  declareProperty("itName", m_itTypeAndName = "MeasurementProviderT<MeasurementProviderTypes::IT>/ITMeasurementProvider" );
+  declareProperty( "otName", m_otTypeAndName = "OTMeasurementProvider");
+  declareProperty( "muonName", m_muonTypeAndName = "MuonMeasurementProvider" );
+
+  m_veloRProvider =  ToolHandle<IMeasurementProvider>(m_veloRTypeAndName);
+  m_veloPhiProvider = ToolHandle<IMeasurementProvider>(m_veloPhiTypeAndName);
+  m_ttProvider = ToolHandle<IMeasurementProvider>(m_ttTypeAndName);
+  m_itProvider = ToolHandle<IMeasurementProvider> (m_itTypeAndName);
+  m_otProvider = ToolHandle<IMeasurementProvider>(m_otTypeAndName);
+  m_muonProvider = ToolHandle<IMeasurementProvider>(m_muonTypeAndName);
 }
 
 //=============================================================================
