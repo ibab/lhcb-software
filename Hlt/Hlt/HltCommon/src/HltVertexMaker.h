@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.h,v 1.12 2008-12-29 12:56:09 graven Exp $
+// $Id: HltVertexMaker.h,v 1.13 2009-01-06 12:18:26 graven Exp $
 #ifndef HLTVERTEXMAKER_H 
 #define HLTVERTEXMAKER_H 1
 
@@ -65,7 +65,7 @@ private:
   std::vector<int> m_filterIDs;
   std::vector<Hlt::TrackBiFunction*> m_functions;
   std::vector<Hlt::Filter*> m_filters;
-  std::vector<Hlt::Histo*> m_histos;
+  std::vector<AIDA::IHistogram1D*> m_histos;
   std::vector<int> m_tcounters;
 
   std::vector<double> m_vals;

@@ -1,4 +1,4 @@
-// $Id: HltL0MuonCandidates.h,v 1.1 2008-12-08 12:14:05 graven Exp $
+// $Id: HltL0MuonCandidates.h,v 1.2 2009-01-06 12:18:26 graven Exp $
 #ifndef HLTCOMMON_HLTL0MUONPREPARE_H 
 #define HLTCOMMON_HLTL0MUONPREPARE_H 1
 
@@ -32,6 +32,8 @@ private:
   std::string m_l0Location;  
   std::string m_l0Channel;  
   IMuonSeedTool* m_maker;
+  AIDA::IHistogram1D* m_pt;
+  AIDA::IHistogram1D* m_ptMax;
 
   bool checkClone(LHCb::L0MuonCandidate* muon);
 

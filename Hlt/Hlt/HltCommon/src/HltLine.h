@@ -1,10 +1,11 @@
-// $Id: HltLine.h,v 1.6 2008-12-18 13:38:57 graven Exp $
+// $Id: HltLine.h,v 1.7 2009-01-06 12:18:26 graven Exp $
 #ifndef HLTLINE_H
 #define HLTLINE_H 1
 
 // Include files
 // from Gaudi
 #include "Kernel/IANNSvc.h"
+#include "HltBase/IHltDataSvc.h"
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "boost/array.hpp"
 
@@ -113,6 +114,7 @@ private:
   Algorithm* getSubAlgorithm(const std::string& name);
 private:
   IANNSvc&     annSvc() const;
+  IHltDataSvc& dataSvc() const;
 
   /** Private copy, assignment operator. This is not allowed **/
   HltLine( const HltLine& a );
@@ -125,7 +127,11 @@ private:
   IAlgManager* m_algMgr;                 ///< Pointer to algorithm manager
   AIDA::IHistogram1D* m_stageHisto;
   AIDA::IHistogram1D* m_errorHisto;
+  AIDA::IHistogram1D *m_cpuHisto;
+  AIDA::IHistogram1D *m_timeHisto;
   mutable IANNSvc *m_hltANNSvc;
+  mutable IHltDataSvc *m_hltDataSvc;
+  Hlt::Selection* m_selection;
   std::string m_outputContainerName;
   std::string m_decision;
   bool m_ignoreFilter;                   ///< True if one continues always.
@@ -134,7 +140,7 @@ private:
   bool m_returnOK;                       ///< Forces the sequencer to return a good status
   bool m_acceptOnError;                  ///< Forces accept if error
   int  m_timer;                          ///< Timer number for the sequencer
-  double m_errorRate; ///< TODO: why double?
-  double m_acceptRate; ///< TODO: why double?
+  double m_errorRate;                    ///< TODO: why double?
+  double m_acceptRate;                   ///< TODO: why double?
 };
 #endif // HltLine_H

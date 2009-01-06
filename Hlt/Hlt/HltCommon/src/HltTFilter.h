@@ -1,4 +1,4 @@
-// $Id: HltTFilter.h,v 1.10 2008-12-29 12:56:09 graven Exp $
+// $Id: HltTFilter.h,v 1.11 2009-01-06 12:18:26 graven Exp $
 #ifndef HLTCOMMON_HLTTFILTER_H 
 #define HLTCOMMON_HLTTFILTER_H 1
 
@@ -44,8 +44,8 @@ namespace Hlt {
     double minvalue;
     double maxvalue;
     bool isMin() const { return operation!=">"; }
-    Hlt::Histo* histovalues;
-    Hlt::Histo* histobest;
+    AIDA::IHistogram1D* histovalues;
+    AIDA::IHistogram1D* histobest;
   };  
 }
 

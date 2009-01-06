@@ -1,4 +1,4 @@
-// $Id: HltL0CaloCandidates.cpp,v 1.9 2008-12-29 21:07:20 graven Exp $
+// $Id: HltL0CaloCandidates.cpp,v 1.10 2009-01-06 12:18:25 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -35,12 +35,16 @@ HltL0CaloCandidates::HltL0CaloCandidates( const std::string& name,
     ) 
   , m_selection(*this)
   , m_caloMaker(0)
-  , m_histoEt(0)
-  , m_histoEtBest(0)
+  , m_et(0)
+  , m_etMax(0)
 {
   declareProperty("L0DULocation", m_l0Location = L0DUReportLocation::Default );
   declareProperty("L0Channel", m_l0Channel );
   declareProperty("CaloMakerTool", m_caloMakerName = "");
+  // (re)set property from HltAlgorithm
+  setProperty("HistoDescriptor","{ 'Et'    : ('Et',   0.,6000.,100)"
+                                ", 'EtMax' : ('EtMax',0.,6000.,100)"
+                                "}");
 
   //FIXME/TODO: check whether Full should not be Default...
   m_selection.declareProperties( boost::assign::map_list_of(1,std::string("TES:")+L0CaloCandidateLocation::Full)  );
@@ -70,6 +74,8 @@ StatusCode HltL0CaloCandidates::initialize() {
   declareInfo("#input","",&counter("#input"),0,std::string("Candidates seen by ") + name());
   declareInfo("#candidated accepted","",&counter("#candidated accepted"),0,std::string("Candidates accepted by ") + name());
   
+  m_et    = book("Et");
+  m_etMax = book("EtMax");
   return StatusCode::SUCCESS;
 }
 
@@ -115,6 +121,7 @@ StatusCode HltL0CaloCandidates::execute() {
     return StatusCode::SUCCESS;
   }
 
+  double etMax = -1.;
   BOOST_FOREACH(const L0CaloCandidate* calo, *m_selection.input<1>()) {
     if (       calo->type()!=L0DUBase::CaloType::Electron
             && calo->type()!=L0DUBase::CaloType::Photon
@@ -128,6 +135,8 @@ StatusCode HltL0CaloCandidates::execute() {
         pass = ( calo->type() == i->first && calo->etCode() > i->second);
     }
     if (!pass)  continue;
+    fill(m_et,calo->et(),1.);
+    if (calo->et()>etMax) etMax = calo->et();
     debug() << " accepted calo cand with type = " << calo->type()  << " and et = " << calo->et() << " and etcode = " << calo->etCode() << endmsg;
     //TODO: split creating subset of L0 candidates and conversion into track....
     std::auto_ptr<Track> tcalo( new Track() );
@@ -139,21 +148,16 @@ StatusCode HltL0CaloCandidates::execute() {
     m_selection.output()->push_back(tcalo.get());
     output->insert(tcalo.release());
   }
-  // use vector version of plot1D...
-  // plot1D( "Et", L0et()
-  // plot1D( "Etbest", 
-  
+  if (!m_selection.output()->empty()) fill(m_etMax,etMax,1.);
 
   counter("#input")  +=  m_selection.input<1>()->size();
   counter("#accept") += !m_selection.output()->empty();
   counter("#candidated accepted") +=  m_selection.output()->size();
-  // TODO: plot max et
-  // TODO: plot  all accepted et
 
   if (msgLevel(MSG::DEBUG)) {
     debug()  << "# Input: " << m_selection.input<1>()->size() 
              << " -> # Output: " << m_selection.output()->size() << endreq;
-    printInfo(" Calos ",*m_selection.output()); //#($)*))@*)@ requires outputlevel debut, but prnts at INFO...
+    printInfo(" Calos ",*m_selection.output()); //#($)*))@*)@ requires outputlevel debug, but prints at INFO...
   }
   return StatusCode::SUCCESS;
 }

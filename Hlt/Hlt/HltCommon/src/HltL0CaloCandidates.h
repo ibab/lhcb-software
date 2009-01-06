@@ -1,4 +1,4 @@
-// $Id: HltL0CaloCandidates.h,v 1.1 2008-12-05 19:11:39 graven Exp $
+// $Id: HltL0CaloCandidates.h,v 1.2 2009-01-06 12:18:25 graven Exp $
 #ifndef HLTCOMMON_HLTLOCALOPREPARE_H 
 #define HLTCOMMON_HLTL0CALOPREPARE_H 1
 
@@ -39,8 +39,8 @@ private:
   std::string m_caloMakerName;  
   ICaloSeedTool* m_caloMaker;
 
-  Hlt::Histo* m_histoEt;
-  Hlt::Histo* m_histoEtBest;
+  AIDA::IHistogram1D* m_et;
+  AIDA::IHistogram1D* m_etMax;
 
 
 };

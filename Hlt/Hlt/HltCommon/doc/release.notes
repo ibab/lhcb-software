@@ -4,6 +4,13 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2009-01-06 - Gerhard Raven
+ - plot Et (Pt) of L0Calo(Muon)Candidates
+ - set the # of candidates in HltDecReport (if decision has corresponding selection)
+ - add histograms of CPU (wall) clock time spend in HltLine(s)
+ - replace Hlt::Histo by AIDA::IHistogram1D
+ - remove obsolete HltDecisionFilter (use LoKi's HDRFilter instead)
+
 ! 2008-12-29 - Gerhard Raven
  - remove usage of Hlt::Configuration
  - augment HltDataSvc to return dependency information of selections

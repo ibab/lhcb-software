@@ -1,4 +1,4 @@
-// $Id: HltL0MuonCandidates.cpp,v 1.6 2008-12-29 21:07:20 graven Exp $
+// $Id: HltL0MuonCandidates.cpp,v 1.7 2009-01-06 12:18:25 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -34,9 +34,15 @@ HltL0MuonCandidates::HltL0MuonCandidates( const std::string& name,
   : HltAlgorithm ( name , pSvcLocator, false )
   , m_selection(*this)
   , m_maker(0)
+  , m_pt(0)
+  , m_ptMax(0)
 {
   declareProperty("L0DULocation", m_l0Location = L0DUReportLocation::Default );
   declareProperty("L0Channel", m_l0Channel );
+  // (re)set property from HltAlgorithm
+  setProperty("HistoDescriptor","{ 'Pt'    : ('Pt',   0.,6000.,100)"
+                                ", 'PtMax' : ('PtMax',0.,6000.,100)"
+                                "}");
   m_selection.declareProperties( boost::assign::map_list_of( 1,std::string("TES:")+L0MuonCandidateLocation::Default) );
 }
 //=============================================================================
@@ -59,6 +65,8 @@ StatusCode HltL0MuonCandidates::initialize() {
   declareInfo("#accept","",&counter("#accept"),0,std::string("Events accepted by ") + name());
   declareInfo("#input","",&counter("#input"),0,std::string("Candidates seen by ") + name());
   declareInfo("#candidates accepted","",&counter("#candidates accepted"),0,std::string("Candidates accepted by ") + name());
+  m_pt    = book("Pt");
+  m_ptMax = book("PtMax");
 
   return StatusCode::SUCCESS;
 }
@@ -105,6 +113,7 @@ StatusCode HltL0MuonCandidates::execute() {
   assert(cuts.size()==1);
 
 
+  double ptMax = -1.;
   BOOST_FOREACH( L0MuonCandidate* l0muon, *m_selection.input<1>()) {
     bool pass=( l0muon->encodedPt() > cuts[0] );
     if (!pass)  continue;
@@ -114,6 +123,8 @@ StatusCode HltL0MuonCandidates::execute() {
         debug() << "is clone " << endmsg;
         continue;
     }
+    fill(m_pt,l0muon->pt(),1.0);
+    if (l0muon->pt()>ptMax) ptMax = l0muon->pt();
     std::auto_ptr<Track> track( new Track() );
     StatusCode sc = m_maker->makeTrack(*l0muon,*track);
     if (sc.isFailure()) return sc;
@@ -122,6 +133,7 @@ StatusCode HltL0MuonCandidates::execute() {
     m_selection.output()->push_back(track.get());
     muons->insert(track.release());
   }
+  if (!m_selection.output()->empty()) fill(m_ptMax,ptMax,1.);
 
   counter("#input")  +=  m_selection.input<1>()->size();
   counter("#accept") += !m_selection.output()->empty();

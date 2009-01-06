@@ -1,4 +1,4 @@
-// $Id: HltL0CaloPrepare.h,v 1.6 2008-12-10 07:36:04 graven Exp $
+// $Id: HltL0CaloPrepare.h,v 1.7 2009-01-06 12:18:25 graven Exp $
 #ifndef HLTCOMMON_HLTLOCALOPREPARE_H 
 #define HLTCOMMON_HLTL0CALOPREPARE_H 1
 
@@ -39,8 +39,8 @@ private:
   
   int m_L0ETID;
 
-  Hlt::Histo* m_histoEt;
-  Hlt::Histo* m_histoEtBest;
+  AIDA::IHistogram1D* m_histoEt;
+  AIDA::IHistogram1D* m_histoEtBest;
 
   class caloTypeProperty {
   public:

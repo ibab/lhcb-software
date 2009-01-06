@@ -1,4 +1,4 @@
-// $Id: HltLine.cpp,v 1.8 2008-12-20 08:50:39 graven Exp $
+// $Id: HltLine.cpp,v 1.9 2009-01-06 12:18:26 graven Exp $
 // Include files
 #include "HltLine.h"
 
@@ -75,6 +75,14 @@ IANNSvc& HltLine::annSvc() const {
   }
   return *m_hltANNSvc;
 }
+
+IHltDataSvc& HltLine::dataSvc() const {
+  if (m_hltDataSvc == 0) {
+    StatusCode sc = serviceLocator()->service("HltDataSvc", m_hltDataSvc);
+    Assert( sc.isSuccess() && m_hltDataSvc != 0, " no HltDataSvc??");
+  }
+  return *m_hltDataSvc;
+}
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -87,6 +95,8 @@ HltLine::HltLine( const std::string& name,
   , m_stageHisto(0)
   , m_errorHisto(0)
   , m_hltANNSvc(0)
+  , m_hltDataSvc(0)
+  , m_selection(0)
   , m_errorRate(0)
   , m_acceptRate(0)
 {
@@ -134,9 +144,17 @@ StatusCode HltLine::initialize() {
     sc = i->initialize(m_timerTool);
     if (!sc.isSuccess()) Error( "Failed to initialize " + i->name(), sc );
   }
+  //== now pick up (if exists) the selection created by the 'decision stage'
+  //   if it exists, then it was just created during the above 'initialize' of 
+  //   the stages...
+  stringKey key(m_decision);
+  if (dataSvc().hasSelection(key)) m_selection = & dataSvc().selection(key,this);
+
   //== Create the monitoring histogram
   m_errorHisto = book1D(name()+" error",name()+" error",-0.5,7.5,8);
   m_stageHisto = book1D(m_decision,     m_decision,     -0.5,7.5,8);
+  m_cpuHisto   = book1D(name()+" CPU time",name()+" CPU time",0,1000);
+  m_timeHisto  = book1D(name()+" Wall time",name()+" Wall time",0,1000);
 
   //== and the counters
   declareInfo("#accept","",&counter("#accept"),0,std::string("Events accepted by ") + m_decision);
@@ -158,6 +176,9 @@ StatusCode HltLine::initialize() {
 StatusCode HltLine::execute() {
 
   if ( m_measureTime ) m_timerTool->start( m_timer );
+
+  longlong startClock = System::currentTime( System::microSec );
+  longlong startCPU   = System::cpuTime( System::microSec );
 
   debug() << "==> Execute" << endreq;
   StatusCode result = StatusCode::SUCCESS;
@@ -184,11 +205,12 @@ StatusCode HltLine::execute() {
      if ( !accept ) break;
      report.setExecutionStage( i+1 );
   }
+  //TODO: see if we have candidates with the 'same' name as the decision
+  //      if so, add the # of them to the report...
 
 
   report.setDecision(accept ? 1u : 0u);
-  if (accept) ++m_acceptRate;
-  counter("#accept") += accept;
+  report.setNumberOfCandidates( m_selection ? m_selection->size() : 0 );
   if ( !m_ignoreFilter ) setFilterPassed( accept );
   setExecuted( true );
 
@@ -196,13 +218,21 @@ StatusCode HltLine::execute() {
   reports->insert( key->first , report );
 
   // update monitoring
-  fill( m_stageHisto, report.executionStage(),1.0);
-  fill( m_errorHisto, report.errorBits(),1.0);
+  counter("#accept") += accept;
+  if (accept) ++m_acceptRate;
   counter("#errors") += ( report.errorBits()!=0);
   if (report.errorBits()!=0) ++m_errorRate;
 
+  fill( m_stageHisto, report.executionStage(),1.0);
+  fill( m_errorHisto, report.errorBits(),1.0);
+
   // Plot the distribution of the # of candidates
 
+  // plot the CPU & wall clock time spent...
+  longlong elapsedTime = System::currentTime( System::microSec ) - startClock;
+  fill( m_timeHisto, elapsedTime ,1.0);
+  longlong elapsedCPU = System::cpuTime( System::microSec ) - startCPU;
+  fill( m_cpuHisto, elapsedCPU  ,1.0);
 
   if ( m_measureTime ) m_timerTool->stop( m_timer );
 
