@@ -1,4 +1,4 @@
-// $Id: HltSelReportsReader.cpp,v 1.5 2009-01-06 08:43:11 graven Exp $
+// $Id: HltSelReportsReader.cpp,v 1.6 2009-01-06 08:48:31 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -112,10 +112,7 @@ StatusCode HltSelReportsReader::execute() {
   }
 
   unsigned int bankSize =0;
-  const RawBank* orderedBanks[hltselreportsRawBanks.size()];
-  for( unsigned int iBank=0; iBank<hltselreportsRawBanks.size(); ++iBank){
-    orderedBanks[iBank]=0;
-  }
+  std::vector<const RawBank*> orderedBanks(hltselreportsRawBanks.size(),(const RawBank*)0);
   for( std::vector<RawBank*>::const_iterator hltselreportsRawBankP=hltselreportsRawBanks.begin();
 	 hltselreportsRawBankP!=hltselreportsRawBanks.end(); ++hltselreportsRawBankP ){    
     const RawBank* hltselreportsRawBank = *hltselreportsRawBankP;
