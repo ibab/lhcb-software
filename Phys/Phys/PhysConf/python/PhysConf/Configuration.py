@@ -1,7 +1,7 @@
 """
 High level configuration tools for PhysConf
 """
-__version__ = "$Id: Configuration.py,v 1.6 2009-01-06 17:19:41 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.7 2009-01-06 18:02:41 pkoppenb Exp $"
 __author__ = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -72,6 +72,8 @@ class PhysConf(LHCbConfigurableUser) :
         DataOnDemandSvc().NodeMap['/Event/Rec/Rich']       = 'DataObject'
         DataOnDemandSvc().NodeMap['/Event/Phys']           = 'DataObject'
         DataOnDemandSvc().NodeMap['/Event/Relations/Phys'] = 'DataObject'
+        # raw event
+        importOptions("$STDOPTS/DecodeRawEvent.py")
 #
 # LoKi
 #
