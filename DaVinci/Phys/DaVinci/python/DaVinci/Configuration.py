@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.27 2008-12-23 14:27:13 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.28 2009-01-06 18:32:19 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -35,7 +35,7 @@ class DaVinci(LHCbConfigurableUser) :
          # Hlt running
        , "HltType"            : ''            # HltType : No Hlt. Use Hlt1+Hlt2 to run Hlt
        , "HltUserAlgorithms"  : [ ]           # put here user algorithms to add
-       , "HltOldStyle"        : False         # old style options configuration
+#       , "HltOldStyle"        : False         # old style options configuration
        , "ReplaceL0BanksWithEmulated" : False # Re-run L0 
        , "Hlt2IgnoreHlt1Decision" : False     # run Hlt2 even if Hlt1 failed
         }
@@ -60,7 +60,7 @@ class DaVinci(LHCbConfigurableUser) :
         HltConf().replaceL0BanksWithEmulated = self.getProp("ReplaceL0BanksWithEmulated") ## enable if you want to rerun L0
         HltConf().Hlt2IgnoreHlt1Decision =  self.getProp("Hlt2IgnoreHlt1Decision")        ## enable if you want Hlt2 irrespective of Hlt1
         HltConf().hltType =  self.getProp("HltType")                                      ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
-        HltConf().oldStyle = self.getProp("HltOldStyle")                                  ## Go for the new thing
+#        HltConf().oldStyle = self.getProp("HltOldStyle")                                  ## Go for the new thing
         HltConf().applyConf()                                                             ## don't forget to actually apply the configuration!!!
         log.info("Done Hlt")
         

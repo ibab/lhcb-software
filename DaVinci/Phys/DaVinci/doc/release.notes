@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.285 2008-12-23 14:27:13 pkoppenb Exp $
+! $Id: release.notes,v 1.286 2009-01-06 18:32:19 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,9 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-01-06 - Patrick Koppenburg
+ - Remove HltOldStyle option.
 
 ! 2008-12-23 - Patrick Koppenburg
  - Adapt to changes in PhysConf and AnalysisConf. Do not call methods directly.
