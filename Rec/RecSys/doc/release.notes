@@ -5,6 +5,10 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+! 2009-01-06 - Marco Cattaneo
+ - Add OutputType property to RecSys configurable, and propagate it to TrackSys
+ - Use OutputType property to configure PVOfflineTool inputs in case of RDST
+
 ! 2008-12-17 - Chris Jones
  - Update ProtoParticle reconstruction to use python options
 

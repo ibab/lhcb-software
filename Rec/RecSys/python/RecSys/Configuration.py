@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.5 2008-12-17 17:59:51 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.6 2009-01-06 12:49:52 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -37,6 +37,7 @@ class RecSysConf(LHCbConfigurableUser):
        ,"SpecialData"  : []      # Various special data processing options. See KnownSpecialData for all options
        ,"ExpertHistos":  False   # set to True to write out expert histos
        ,"Context":     "Offline" # The context within which to run the reco sequences
+       ,"OutputType": "" # some sequences are different for RDST
         }
 
     ## Apply the configuration
@@ -59,7 +60,13 @@ class RecSysConf(LHCbConfigurableUser):
         # Primary Vertex
         if "Vertex" in recoSeq:
             from Configurables import PatPVOffline
-            GaudiSequencer("RecoVertexSeq").Members += [ PatPVOffline() ];
+            pvAlg = PatPVOffline()
+            GaudiSequencer("RecoVertexSeq").Members += [ pvAlg ];
+            if self.getProp( "OutputType" ).upper() == "RDST":
+                # Velo tracks not copied to Rec/Track/Best for RDST 
+                from Configurables import PVOfflineTool
+                pvAlg.addTool( PVOfflineTool() )
+                pvAlg.PVOfflineTool.InputTracks = [ "Rec/Track/Best", "Rec/Track/PreparedVelo" ]
 
         # Tracking (Should make it more fine grained ??)
         DoTracking = False
@@ -67,7 +74,7 @@ class RecSysConf(LHCbConfigurableUser):
             if seq in recoSeq: DoTracking = True
         if DoTracking:
             trackConf = TrackSys()
-            self.setOtherProps(trackConf,["ExpertHistos","SpecialData"])
+            self.setOtherProps(trackConf,["ExpertHistos","SpecialData","OutputType"])
 
         # RICH
         if "RICH" in recoSeq:
