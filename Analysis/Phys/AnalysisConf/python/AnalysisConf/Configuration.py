@@ -1,7 +1,7 @@
 """
 High level configuration tools for AnalysisConf
 """
-__version__ = "$Id: Configuration.py,v 1.4 2008-12-23 09:08:06 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.5 2009-01-06 17:20:31 pkoppenb Exp $"
 __author__ = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -49,6 +49,15 @@ class AnalysisConf(LHCbConfigurableUser) :
     def configureMC(self):
         """
         Define DaVinciAssociators. Do MC unpacking.
+        """
+        importOptions ("$DAVINCIASSOCIATORSROOT/options/DaVinciAssociators.opts")
+        self.unpackMC()
+#
+# Unpack MC
+#
+    def unpackMC(self):
+        """
+        Do MC unpacking
         """
         importOptions ("$DAVINCIASSOCIATORSROOT/options/DaVinciAssociators.opts")
         DataOnDemandSvc().Nodes += [ "DATA='/Event/MC' TYPE='DataObject'" ]

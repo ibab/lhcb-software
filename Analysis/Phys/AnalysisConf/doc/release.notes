@@ -4,6 +4,9 @@
 ! Purpose     : Configuration for Analysis project
 !-----------------------------------------------------------------------------
 
+! 2009-01-06 - Patrick Koppenburg
+ - Esthetic change
+
 ! 2008-12-23 - Patrick Koppenburg
  - Do MC unpacking directly. No direct call from DaVinci.
 
