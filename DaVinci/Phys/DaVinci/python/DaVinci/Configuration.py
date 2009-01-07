@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.28 2009-01-06 18:32:19 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.29 2009-01-07 16:35:51 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -89,6 +89,7 @@ class DaVinci(LHCbConfigurableUser) :
             NTupleSvc().OutputLevel = 1 
         if ( self.getProp("ETCFile") != "" ):
             raise TypeError( "ETC not yet implemented in configurables" )
+            importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts") # but this will be needed
         if ( self.getProp("DstFile") != "" ):
             raise TypeError( "DST not yet implemented in configurables" )
         
