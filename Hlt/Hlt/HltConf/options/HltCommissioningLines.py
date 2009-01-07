@@ -9,6 +9,6 @@ Line('Random' ,  ODIN = 'ODIN_TRGTYP == LHCb.ODIN.RandomTrigger'
     , prescale = 1 # @OnlineEnv.AcceptRate
     )
 
-Line('Force', L0DU = 'L0_FORCEBIT'
+Line('L0Forced', L0DU = 'L0_FORCEBIT'
     , prescale = 1
     )
