@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.27 2009-01-07 11:02:24 graven Exp $
+# $Id: Hlt1.py,v 1.28 2009-01-07 15:58:49 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,12 +14,11 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.27 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.28 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
 from Configurables       import GaudiSequencer as Sequence
-from Configurables       import HltSelectionFilter, HltSelectionToTES
 from Configurables       import HltIncidentFilter
 from Configurables       import HltANNSvc
 from Configurables       import HltSelReportsMaker, HltSelReportsWriter
@@ -46,18 +45,20 @@ addHlt1Prop([ 'routingBitDefinitions', 'Accept', 'FilterDescriptor'
 importOptions('$HLTCONFROOT/options/HltInit.py')
 importOptions('$HLTCONFROOT/options/HltLumiInit.opts')
 
+# Lines which are 'always' there...
+
 ## add the 'Incident' line...
-## Line('Incident', algos = [ HltIncidentFilter() ])
+Line('Incident', ODIN = 'ODIN_ALL', algos = [ HltIncidentFilter() ])
 
 ## add a line for 'not lumi only' 
-## -- note: before the 'global' otherwise lumi set global, and we have lumi and global set...
+## -- note: before the 'global' otherwise lumi set global, and we have lumi AND global set...
 Line('IgnoringLumi', HLT = "HLT_PASSIGNORING('Hlt1LumiDecision')" )
 
 ## finally, add the Hlt1Global line...
 Line('Global', HLT = 'HLT_DECISION' )
 
-# grab the names of the velo vertices...
-veloVertices = [ i for i in hlt1Selections()['All'] if i.startswith('Hlt1Velo')  and i.endswith('Decision') ]
+# grab the names of the vertices...
+vertices = [ i for i in hlt1Selections()['All'] if i is 'PV2D' or ( i.startswith('Hlt1Velo') and i.endswith('Decision') ) ]
 
 ## set triggerbits
 #  0-31: reserved for L0  // need to add L0DU support to routing bit writer
@@ -85,13 +86,14 @@ HltANNSvc().RoutingBits = dict( [ (v,k) for k,v in routingBits.iteritems() ] )
 Sequence('Hlt1',  ModeOR = True, ShortCircuit = False
         , Members = [ i.sequencer() for i in  hlt1Lines() ] # note : should verify order (?) -- global should be last hlt1line! 
         )
+
 Sequence( 'HltEndSequence', ModeOR = True, ShortCircuit = False , Members = 
             [ HltGlobalMonitor( Hlt1Decisions = list( hlt1Decisions() ) )
             , HltDecReportsMaker()
             , HltDecReportsWriter()
             , HltSelReportsMaker()
             , HltSelReportsWriter()
-            , HltVertexReportsMaker( VertexSelections = veloVertices  )
+            , HltVertexReportsMaker( VertexSelections = vertices  )
             , HltVertexReportsWriter()
             , HltRoutingBitsWriter( routingBitDefinitions = routingBits )
             , HltLumiWriter()

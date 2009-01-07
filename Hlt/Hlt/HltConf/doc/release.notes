@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.109 2009-01-07 12:36:45 graven Exp $ 
+! $Id: release.notes,v 1.110 2009-01-07 15:58:48 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -16,6 +16,8 @@
  - push use of units.opts to the one place it is needed...
  - slightly change use of L0 muon candidates in HltMuonLines.py 
    WARNING: this is not quite optimal yet wrt. TISTOS, and needs to be improved
+ - add Incident line
+ - persist PV2D if present
 
 ! 2008-12-24 - Gerhard Raven
  - restore Hlt1.opts -- not quite dead yet...
