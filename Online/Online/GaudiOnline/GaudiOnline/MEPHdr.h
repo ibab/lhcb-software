@@ -33,6 +33,15 @@ namespace LHCb      {
 	u_int16_t m_l0IDlow;
 	u_int16_t m_len;
     };
+
+  struct PACKIT MEPBkHdr {
+        u_int16_t m_magic;
+        u_int16_t m_len;
+        u_int8_t m_type;
+        u_int8_t m_version;
+        u_int16_t m_sourceID;  
+    };
+
 }
 /* 
  * A MEP request is a minimal legal Ethernet packet
