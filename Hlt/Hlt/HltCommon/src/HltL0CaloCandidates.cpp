@@ -1,4 +1,4 @@
-// $Id: HltL0CaloCandidates.cpp,v 1.11 2009-01-07 12:21:40 graven Exp $
+// $Id: HltL0CaloCandidates.cpp,v 1.12 2009-01-07 15:33:46 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -14,6 +14,7 @@
 
 using namespace LHCb;
 
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltL0CaloCandidates
 // 2008-12-05 : Gerhard Raven
@@ -22,6 +23,8 @@ using namespace LHCb;
 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( HltL0CaloCandidates );
+
+
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -101,24 +104,47 @@ HltL0CaloCandidates::generateCutList(const LHCb::L0DUChannel& channel) {
          std::string data = condition->second->data()->name();
          for (map_t::const_iterator i = map.begin();i!=map.end();++i ) {
             if (data!=i->first) continue;
-            cuts.push_back( std::make_pair( i->second, condition->second->threshold() ) );
+            cuts.push_back( L0CaloCandidateCut( i->second, condition->second->threshold() ) );
          }
   }
   return cuts;
 }
 
-StatusCode HltL0CaloCandidates::execute() {
-  LHCb::L0DUReport* l0 = get<L0DUReport>(m_l0Location);
-
-  //@TODO: only update cuts on L0 TCK change, and cache the result...
-  const LHCb::L0DUChannel::Map& channels = l0->configuration()->channels();
-  LHCb::L0DUChannel::Map::const_iterator channel  = channels.find(m_l0Channel);
-  if (channel == channels.end()) {
-        error() << "could not find requested l0 channel " << m_l0Channel << endmsg;
-        return StatusCode::FAILURE;
+HltL0CaloCandidates::CutList_t 
+HltL0CaloCandidates::generateCutList(const std::string& whichType) {
+  typedef GaudiUtils::VectorMap<std::string,L0DUBase::CaloType::Type> map_t;
+  static map_t map;
+  if (map.empty()) {
+     map.insert("AllElectron", L0DUBase::CaloType::Electron);
+     map.insert("AllPhoton",   L0DUBase::CaloType::Photon);
+     map.insert("AllHadron",   L0DUBase::CaloType::Hadron);
+     map.insert("AllLocalPi0", L0DUBase::CaloType::Pi0Local);
+     map.insert("AllGlobalPi0",L0DUBase::CaloType::Pi0Global);
   }
-  //@TODO: check if channel is actually enabled!!
-  HltL0CaloCandidates::CutList_t cuts = generateCutList( *(channel->second) );
+  map_t::const_iterator i = map.find(whichType);
+  CutList_t cuts;
+  if (i!=map.end()) cuts.push_back( L0CaloCandidateCut( i->second ) );
+  return cuts;
+}
+
+StatusCode HltL0CaloCandidates::execute() {
+
+  HltL0CaloCandidates::CutList_t cuts;
+  if (m_l0Channel.substr(1,3)!="All") {
+      LHCb::L0DUReport* l0 = get<L0DUReport>(m_l0Location);
+
+      //@TODO: only update cuts on L0 TCK change, and cache the result...
+      const LHCb::L0DUChannel::Map& channels = l0->configuration()->channels();
+      LHCb::L0DUChannel::Map::const_iterator channel  = channels.find(m_l0Channel);
+      if (channel == channels.end()) {
+            error() << "could not find requested l0 channel " << m_l0Channel << endmsg;
+            return StatusCode::FAILURE;
+      }
+      //@TODO: check if channel is actually enabled!!
+      HltL0CaloCandidates::CutList_t cuts = generateCutList( *(channel->second) );
+  } else {
+      HltL0CaloCandidates::CutList_t cuts = generateCutList( m_l0Channel );
+  }
 
   Tracks* output = new Tracks();
   put(output,"Hlt/Track/"+m_selection.output()->id().str());
@@ -138,9 +164,8 @@ StatusCode HltL0CaloCandidates::execute() {
              warning() << " got candidate with unexpected type " << calo->type() << endmsg;
     }
     bool pass=true;
-    for (CutList_t::const_iterator i = cuts.begin();i!=cuts.end()&&pass;++i) {
-        pass = ( calo->type() == i->first && calo->etCode() > i->second);
-    }
+    CutList_t::const_iterator i = cuts.begin();
+    while ( pass && i!=cuts.end() ) pass = (*i++)(calo);
     if (!pass)  continue;
     fill(m_et,calo->et(),1.);
     if (calo->et()>etMax) etMax = calo->et();

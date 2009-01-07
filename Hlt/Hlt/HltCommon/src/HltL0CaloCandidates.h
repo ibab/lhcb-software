@@ -1,4 +1,4 @@
-// $Id: HltL0CaloCandidates.h,v 1.3 2009-01-07 12:21:40 graven Exp $
+// $Id: HltL0CaloCandidates.h,v 1.4 2009-01-07 15:33:46 graven Exp $
 #ifndef HLTCOMMON_HLTLOCALOPREPARE_H 
 #define HLTCOMMON_HLTL0CALOPREPARE_H 1
 
@@ -31,8 +31,24 @@ private:
   void makeTrack(const LHCb::L0CaloCandidate& calo, LHCb::Track& track);
   void addExtras(const LHCb::L0CaloCandidate& calo, LHCb::Track& track);
 
-  typedef std::vector< std::pair<L0DUBase::CaloType::Type,int> > CutList_t;
+    class L0CaloCandidateCut {
+    public:
+        L0CaloCandidateCut( L0DUBase::CaloType::Type type ) : m_type(type), m_hasThreshold(false), m_threshold(-1) {}
+        L0CaloCandidateCut( L0DUBase::CaloType::Type type, int threshold ) : m_type(type), m_hasThreshold(true), m_threshold(threshold) {}
+        bool operator()(const LHCb::L0CaloCandidate* calo) const {
+            return ( calo != 0 ) 
+                && ( calo->type() == m_type ) 
+                && ( !m_hasThreshold || calo->etCode() > m_threshold );
+        }
+    private:
+        L0DUBase::CaloType::Type m_type;
+        bool m_hasThreshold;
+        int  m_threshold;
+    };
+
+  typedef std::vector< L0CaloCandidateCut > CutList_t;
   CutList_t generateCutList(const LHCb::L0DUChannel& channel);
+  CutList_t generateCutList(const std::string& whichType);
 
   Hlt::SelectionContainer2<LHCb::Track,LHCb::L0CaloCandidate> m_selection; 
 
