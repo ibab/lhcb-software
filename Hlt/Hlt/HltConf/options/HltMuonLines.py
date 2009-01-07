@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonLines.py,v 1.15 2008-12-18 14:04:58 graven Exp $
+# $Id: HltMuonLines.py,v 1.16 2009-01-07 12:36:45 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.15 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.16 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -29,6 +29,7 @@ from HltConf.HltLine import Hlt1Line   as Line
 from HltConf.HltLine import Hlt1Member as Member
 from HltConf.HltLine import bindMembers
 from HltConf.HltLine import Hlt1Tool   as Tool
+from HltConf.HltL0Candidates import *
 
 
 importOptions('$HLTCONFROOT/options/TsaTool.opts')
@@ -60,10 +61,7 @@ TConfMatchVelo = [ Member ('TU', 'TConf' , RecoName = 'TConf' )
 #### shared 'blocks' of members
 
 singleMuonPrep = bindMembers( 'SingleMuonPrep',
-                   [ Member ( 'L0MuonPrepare' , 'MuonORMuonNoGlob'
-                            , InputSelection = HltL0MuonPrepare().getDefaultProperties()['InputSelection']
-                            , MinPt = 1300.0  
-                            )
+                   [ convertL0Candidates('AllMuon')
                    , Member ( 'TF', 'L0' , FilterDescriptor = [ 'PT0,||>,1300' ] )
                    ] + TConfMatchVelo )
 
@@ -78,10 +76,7 @@ muonSegPrep = bindMembers ('MuonSegPrepare' ,
 
 ###DiMuons in Events with no Reconstructed Primary Vertices
 singleMuonPrepNoPV = bindMembers( 'SingleMuonPrepNoPV',
-                     [ Member ( 'L0MuonPrepare' , 'MuonORMuonNoGlob'
-                            , InputSelection = HltL0MuonPrepare().getDefaultProperties()['InputSelection']
-                            , MinPt = 200.0  
-                            )
+                     [ convertL0Candidates('AllMuon') 
                      , Member ( 'TF', 'L0' , FilterDescriptor = [ 'PT0,||>,400' ] )
                      ] + TConfMatchVelo )
 
@@ -95,11 +90,8 @@ muonSegPrepNoPV = bindMembers ('MuonSegPrepareNoPV' ,
                    ] + TConfMatchVelo )
 
 DiMuonFromL0DiMuonPrepare = bindMembers( 'DiMuonFromL0DiMuonPrepare',
-                   [ HltL0MuonPrepare('L0AllMuons') # WARNING: we require dimuon, but use L0AllMuons
-                   , Member( 'VM1', 'L0DiMuon' # this is the selection formery known as L0DiMuonDecision
-                           , InputSelection = 'L0AllMuons'
-                           , FilterDescriptor = [ 'SumPT,>,1500.' ]
-                           )
+                   [ convertL0Candidates('AllMuon') # WARNING: we require dimuon, but use L0AllMuons
+                   , Member( 'VM1', 'L0DiMuon' , FilterDescriptor = [ 'SumPT,>,1500.' ])
                    , Member( 'VT', 'L0' )
                    , Member( 'TU', 'TConf' , RecoName = 'TConf')
                    , Member( 'TF', 'TConf' , FilterDescriptor = ['DeltaP,>,0.','IsMuon,>,0.'])
@@ -120,11 +112,8 @@ DiMuonFromL0DiMuonPrepare = bindMembers( 'DiMuonFromL0DiMuonPrepare',
                    ] )
 
 DiMuonFromL0DiMuonPrepareHighIP = bindMembers( 'DiMuonFromL0DiMuonPrepareHighIP',
-                   [ HltL0MuonPrepare('L0AllMuons') # WARNING: we require dimuon, but use L0AllMuons
-                   , Member( 'VM1', 'L0DiMuon' # this is the selection formery known as L0DiMuonDecision
-                           , InputSelection = 'L0AllMuons'
-                           , FilterDescriptor = [ 'SumPT,>,500.' ]
-                           )
+                   [ convertL0Candidates('AllMuon') # WARNING: we require dimuon, but use L0AllMuons
+                   , Member( 'VM1', 'L0DiMuon' , FilterDescriptor = [ 'SumPT,>,500.' ])
                    , Member( 'VT', 'L0' )
                    , Member( 'TU', 'TConf' , RecoName = 'TConf')
                    , Member( 'TF', 'TConf' , FilterDescriptor = ['DeltaP,>,0.','IsMuon,>,0.'])
@@ -145,9 +134,8 @@ DiMuonFromL0DiMuonPrepareHighIP = bindMembers( 'DiMuonFromL0DiMuonPrepareHighIP'
                    ] )
 
 DiMuonFromL0DiMuonPrepareNoPV = bindMembers( 'DiMuonFromL0DiMuonPrepareNoPV',
-                   [ HltL0MuonPrepare('L0AllMuons') # WARNING: we require dimuon, but use L0AllMuons
+                   [ convertL0Candidates('AllMuon')
                    , Member( 'VM1', 'L0DiMuon' # this is the selection formery known as L0DiMuonDecision
-                           , InputSelection = 'L0AllMuons'
                            , FilterDescriptor = [ 'SumPT,>,400.' ]
                            )
                    , Member( 'VT', 'L0' )

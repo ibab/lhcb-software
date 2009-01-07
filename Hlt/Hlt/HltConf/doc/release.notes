@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.108 2009-01-07 12:33:18 graven Exp $ 
+! $Id: release.notes,v 1.109 2009-01-07 12:36:45 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -14,6 +14,8 @@
  - use the above in photon and electron lines
  - renumber id of commissioning decisions
  - push use of units.opts to the one place it is needed...
+ - slightly change use of L0 muon candidates in HltMuonLines.py 
+   WARNING: this is not quite optimal yet wrt. TISTOS, and needs to be improved
 
 ! 2008-12-24 - Gerhard Raven
  - restore Hlt1.opts -- not quite dead yet...
