@@ -3,7 +3,7 @@
 <extension class="GaudiTest.GaudiExeTest" kind="test">
 <argument name="program"><text>gaudirun.py</text></argument>
 <argument name="args"><set>
-  <text>../options/DVTestBu2eeK.opts</text>
+  <text>../options/DVTestBu2eeK.py</text>
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
@@ -12,12 +12,12 @@ findReferenceBlock("""
 ======================================================================================
     Algorithm                  Eff.      1      2      3      4      5      6  
 --------------------------------------------------------------------------------------
-  1 SelectTrueNoPIDsDecay     78.0% |  #####  *****  93.9% 100.0%  88.5% 100.0%
-  2 AllTrueNoPIDsDecay         0.0% |   0.0%  #####   0.0%   0.0%   0.0%   0.0%
-  3 SelectTrueLooseDecay      82.0% |  98.7%  *****  ##### 100.0%  96.2% 100.0%
-  4 AllTrueLooseDecay          4.0% |   5.1%  *****   4.9%  #####  11.5%  33.3%
-  5 DiLeptonForPreselBu2LLK   26.0% |  29.5%  *****  30.5%  75.0%  ##### 100.0%
-  6 PreselBu2LLK               3.0% |   3.8%  *****   3.7%  25.0%  11.5%  #####
+  1 SelectTrueNoPIDsDecay     76.8% |  ##### 100.0%  90.8% 100.0%  80.9% 100.0%
+  2 AllTrueNoPIDsDecay         1.0% |   1.3%  #####   1.2% 100.0%   2.9%   9.7%
+  3 SelectTrueLooseDecay      82.2% |  97.1% 100.0%  ##### 100.0%  91.9% 100.0%
+  4 AllTrueLooseDecay          1.0% |   1.3% 100.0%   1.2%  #####   2.9%   9.7%
+  5 DiLeptonForPreselBu2LLK   27.2% |  28.6%  80.0%  30.4%  80.0%  ##### 100.0%
+  6 PreselBu2LLK               6.2% |   8.1%  60.0%   7.5%  60.0%  22.8%  #####
 ======================================================================================
 """, stdout, result, causes, signature_offset = 1)
 </text></argument>

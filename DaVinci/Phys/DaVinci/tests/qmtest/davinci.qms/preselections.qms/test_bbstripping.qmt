@@ -4,7 +4,7 @@
 <argument name="program"><text>gaudirun.py</text></argument>
 <argument name="timeout"><integer>3600</integer></argument>
 <argument name="args"><set>
-  <text>../options/DVTestAllPreselections.opts</text>
+  <text>../options/DVTestAllPreselections.py</text>
 </set></argument>
 <argument name="validator"><text>
 filterResults = ["PrintPreselB2DiMuon                                  INFO Filtered 7 events",
