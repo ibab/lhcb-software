@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.401 2008-12-19 14:15:03 pkoppenb Exp $
+# $Id: requirements,v 1.402 2009-01-07 16:51:52 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : J. Palacios
 #
@@ -67,9 +67,6 @@ apply_pattern application_path
 # define aliases
 alias DaVinci gaudirun.py
 
-alias DaVinciTests "cmt qmtest_run"
-# for QMtest
-apply_pattern QMTest
 #
 apply_pattern GaudiApp
 #
