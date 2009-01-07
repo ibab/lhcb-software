@@ -4,6 +4,9 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2009-01-07 - Ulrich Kerzel
+ - Follow changes to updates in Configurable for RichMarkovRingFinder
+
 ! 2008-12-16 - Chris Jones
  - Various python Configurable updates to avoid a few build problems.
 

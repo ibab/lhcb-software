@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.12 2008-12-16 13:45:36 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.13 2009-01-07 13:54:32 ukerzel Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -207,11 +207,12 @@ class RichRecSysConf(RichConfigurableUser):
         #-----------------------------------------------------------------------------
         if self.getProp("TracklessRings"):
             print "Using RichMarkovRingFinderConf 1"
-            finderSeq = GaudiSequencer("Rich"+cont+"RingFinderSeq")
-            finderSeq.MeasureTime = True
-            sequence.Members += [ finderSeq ]
-            self.setOtherProp(RichMarkovRingFinderConf(),"context")
-            RichMarkovRingFinderConf().setProp("Sequencer",finderSeq)
+            finderSeq                           = GaudiSequencer("Rich"+cont+"RingFinderSeq")
+            finderSeq.MeasureTime               = True
+            sequence.Members                   += [ finderSeq ]
+            #self.setOtherProp(RichMarkovRingFinderConf(),"context")
+            RichMarkovRingFinderConf().Context  = self.getProp("Context")
+            RichMarkovRingFinderConf().setProp("Sequencer", finderSeq)
            
         #-----------------------------------------------------------------------------
         # PID
