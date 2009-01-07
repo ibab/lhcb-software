@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.403 2009-01-07 16:52:48 pkoppenb Exp $
+# $Id: requirements,v 1.404 2009-01-07 17:00:56 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : J. Palacios
 #
@@ -9,7 +9,7 @@ version           v22r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src job options python
+branches          cmt doc job options python
 
 # Set the default path for DaVinci options.
 set DAVINCIOPTS ${DAVINCIROOT}/options
@@ -55,10 +55,6 @@ use PhysSys     v*
 
 #-- Analysis
 use AnalysisSys v*
-
-# DO NOT Build DaVinci Application with standard executable
-#============================================================================
-# application DaVinci $(GAUDICONFROOT)/src/GaudiMain.cpp
 
 # define link options
 #============================================================================

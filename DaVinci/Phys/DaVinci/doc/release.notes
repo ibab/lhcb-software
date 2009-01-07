@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.291 2009-01-07 16:51:52 pkoppenb Exp $
+! $Id: release.notes,v 1.292 2009-01-07 17:00:56 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -11,6 +11,7 @@
 
 ! 2009-01-07 - Patrick Koppenburg
  - Moved all tests to DaVinciSys
+ - Remove cpp file
 
 ! 2009-01-07 - Patrick Koppenburg
  - Translate Bd2DstarPi test to python
