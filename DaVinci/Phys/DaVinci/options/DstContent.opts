@@ -1,7 +1,0 @@
-DstWriter.Preload = false;
-#include "$STDOPTS/DstContent.opts"
-//
-DstWriter.ItemList += {"/Event/Phys#1"};
-DstWriter.ItemList += {"/Event/Phys/Selections#1"};
-DstWriter.OptItemList = {};
-
