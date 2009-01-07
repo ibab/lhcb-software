@@ -1,3 +1,15 @@
+2009-01-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbRelease/GetPack.py: New file.
+	* scripts/getClass.py: New file.
+	* scripts/getpack.py: New file.
+	* cmt/requirements: added the getpack related software. They were originally in the 
+	LbConfiguration package. Please look at its release.notes for the detail of the
+	changes.
+	* python/LbRelease/rcs.py: set the shell=true to the Popen call. It is needed on
+	windows in order to call svn (Marco Cl.).
+	
+
 2009-01-07  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
 	* python/LbRelease/Nightlies/setup.py: Alignment added to listOfProjectNames.
