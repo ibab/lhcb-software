@@ -66,17 +66,13 @@
 #include <errno.h>
 #include <signal.h>
 
-#ifdef _WIN32
-#define ERRMSG(a,x) do {  \
-  a << MSG::ERROR << x << " " << MEPRxSys::sys_err_msg() << " in " << __FUNCDNAME__ << ":" << __LINE__ << endmsg;} while(0);
-#else
 #define ERRMSG(a,x) do {  \
   (a) << MSG::ERROR << (x) << " " << " in " << __PRETTY_FUNCTION__<< ":"  << __FILE__<< ":(" << __LINE__ << ")" << endmsg;} while(0);
-#endif
-
 
 #define PUBCNT(name, desc) do {m_ ## name = 0; m_MonSvc->declareInfo(#name, m_ ## name, desc, this);} while(0);
 #define PUBARRAYCNT(name, desc) do {m_MonSvc->declareInfo(#name, "I", & m_ ## name [0], m_ ## name.size() * sizeof(int), desc, this);} while(0);
+
+
 
 
 //XXX
@@ -177,12 +173,6 @@ StatusCode MEPInjector::initialize()
 
     }
 
-    if(!service("IncidentSvc", m_IncidentSvc).isSuccess()) {
-        ERRMSG(log, "Failed to access to incident service.");
-        return StatusCode::FAILURE;
-    }
-    m_IncidentSvc->addListener(this, "DAQ_CANCEL");
-    m_IncidentSvc->addListener(this, "DAQ_ENABLE");
    
     if(!service("MonitorSvc", m_MonSvc).isSuccess()) {
         ERRMSG(log, "Failed to access to monitor service.");
@@ -264,6 +254,12 @@ StatusCode MEPInjector::initialize()
 
 
     if (!m_AutoMode) {
+        if(!service("IncidentSvc", m_IncidentSvc).isSuccess()) {
+            ERRMSG(log, "Failed to access to incident service.");
+            return StatusCode::FAILURE;
+        }
+        m_IncidentSvc->addListener(this, "DAQ_CANCEL");
+        m_IncidentSvc->addListener(this, "DAQ_ENABLE");
 
         void *memory = extendBuffer(&m_OdinData, m_OdinBufSize);
         m_OdinMEP = new(memory) MEPEvent(0);
@@ -353,9 +349,17 @@ StatusCode MEPInjector::initialize()
         return StatusCode::FAILURE;
     }
 
-    log << MSG::DEBUG << "Injector initialized" << endmsg; 
-//    log << MSG::WARNING<<"CKTAG" <<"L0ID;type;src;IP"<<endmsg; 
-    m_InjState = READY;
+
+    if(!m_AutoMode)
+    {
+        m_InjState = READY;
+        log << MSG::DEBUG << "Injector initialized in TFC mode" << endmsg;
+    }
+    else
+    { 
+        m_InjState = RUNNING;
+        log << MSG::DEBUG << "Injector initialized in automode" << endmsg;
+    }
 
     return StatusCode::SUCCESS;
 }
@@ -636,7 +640,6 @@ void MEPInjector::printMEP(MEPEvent *me, int size) {
 /// send it
 StatusCode MEPInjector::execute()
 {
-
     Chrono chrono(chronoSvc(), "execute");
     static MsgStream log(msgSvc(), name());     //Message stream for output
   
@@ -1395,7 +1398,8 @@ StatusCode MEPInjector::sendMEP(int tell1IP, MEPEvent * me)
 	log << MSG::
 	    DEBUG << "MEP successfully fragmented and sent!" << endmsg;
 
-        m_TotMEPsTx++; 
+        m_TotMEPsTx++;
+        m_TotBytesTx += iBytesSent; 
 	return StatusCode::SUCCESS;
     }
     ERRMSG(log, " MEP corrupted on send! Sent length:" + n);
@@ -1989,6 +1993,17 @@ template <typename T> static void resetCounters(T& cnt,size_t len) {
 
 void MEPInjector::publishCounters()
 {
+    PUBCNT(TotBytesTx,         "Total amount of bytes sent to the farms");
+    PUBCNT(TotMEPReqRx,        "Total MEP requests received from farms");
+    PUBCNT(TotMEPReqPktRx,     "Total MEP request packets received from farms");  
+    PUBCNT(TotOdinMEPRx,       "Total Odin MEPs received");
+    PUBCNT(TotMEPReqTx,        "Total MEP requests sent to Odin");
+    PUBCNT(TotMEPReqPktTx,     "Total MEP request packets sent to Odin");
+    PUBCNT(TotEvtsRead,        "Total read events");
+    PUBCNT(TotEvtsSent,        "Total sent events");
+    PUBCNT(TotElapsedTime,     "Total time since last initialization");
+    PUBCNT(TotMEPsTx,          "Total sent MEPs");   
+    
 //  PUBCNT(totRxOct,           "Total received bytes");
 //  PUBARRAYCNT(badLenPkt,     "MEPs with mismatched length");
 }
@@ -1997,6 +2012,7 @@ void MEPInjector::clearCounters() {
 //  resetCounters(m_rxOct, m_nSrc);
 //  m_totMEPReq          = 0;
 
+    m_TotBytesTx = 0;
     m_TotMEPReqRx = 0;
     m_TotMEPReqPktRx = 0;
     m_TotOdinMEPRx = 0;
