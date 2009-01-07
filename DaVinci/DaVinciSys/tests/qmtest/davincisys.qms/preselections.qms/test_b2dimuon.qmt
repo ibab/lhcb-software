@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+<!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program"><text>gaudirun.py</text></argument>
+<argument name="args"><set>
+  <text>../options/DVTestB2DiMuon.py</text>
+</set></argument>
+<argument name="validator"><text>
+findReferenceBlock("""
+=============================================================================
+                   TestCorrelations.AlgorithmCorrelations
+=============================================================================
+    Algorithm                Eff.      1      2      3      4      5  
+-----------------------------------------------------------------------------
+  1 SelectTrueNoPIDsDecay   95.0% |  ##### 100.0% 100.0% 100.0% 100.0%
+  2 AllTrueNoPIDsDecay      64.1% |  67.5%  #####  69.5% 100.0%  98.5%
+  3 SelectTrueLooseDecay    91.0% |  95.8%  98.6%  ##### 100.0% 100.0%
+  4 AllTrueLooseDecay       51.2% |  53.9%  79.9%  56.3%  #####  98.5%
+  5 PreselB2DiMuon          27.2% |  28.6%  41.8%  29.9%  52.3%  #####
+=============================================================================
+""", stdout, result, causes, signature_offset = 1)
+</text></argument>
+</extension>

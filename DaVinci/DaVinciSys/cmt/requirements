@@ -1,12 +1,17 @@
 package DaVinciSys
-version v21r0
+version v22r0
 
 branches doc cmt
 
 #=======================================================
 # Don't forget DaVinci itself
 #=======================================================
-use  DaVinci                 	v21r0   Phys   
+use  DaVinci                 	v22r0   Phys   
+
+alias DaVinciTests "cmt qmtest_run"
+
+# Allow the generation of the SAM QMTest
+apply_pattern QMTest
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
