@@ -12,7 +12,6 @@ apply_pattern source_shell_alias script=setenvProject
 
 apply_pattern python_alias script=LbShowProjectConf
 apply_pattern python_alias script=CreateBatAliases
-apply_pattern python_alias script=getpack
 
 
 # give public (rl) access to the current directory

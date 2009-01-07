@@ -1,3 +1,10 @@
+2009-01-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/GetPack.py: Removed.
+	* python/LbConfiguration/rcs.py: Removed.
+	* scripts/getpack.py: Removed.
+	* cmt/requirements: removed the release dependent software and moved it to LbRelease
+
 2008-12-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/CreateBatAliases.py: added default argument to the windows .bat "aliases"
