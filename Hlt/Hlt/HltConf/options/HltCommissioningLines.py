@@ -1,12 +1,14 @@
 from HltConf.HltLine import Hlt1Line   as Line
 from HltConf.HltLine import Hlt1Member as Member
 
-physics = Line( 'Physics'
-              , prescale = 1
-              ,  ODIN = 'ODIN_TRGTYP != LHCb.ODIN.RandomTrigger'
-              )
+Line('Physics' ,  ODIN = 'ODIN_TRGTYP != LHCb.ODIN.RandomTrigger'
+    , prescale = 1 
+    )
 
-random  = Line('Random' 
-              ,  prescale = 1 # @OnlineEnv.AcceptRate
-              ,  ODIN = 'ODIN_TRGTYP == LHCb.ODIN.RandomTrigger'
-              )
+Line('Random' ,  ODIN = 'ODIN_TRGTYP == LHCb.ODIN.RandomTrigger'
+    , prescale = 1 # @OnlineEnv.AcceptRate
+    )
+
+Line('Force', L0DU = 'L0_FORCEBIT'
+    , prescale = 1
+    )

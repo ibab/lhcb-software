@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.102 2008-12-24 09:39:05 graven Exp $ 
+! $Id: release.notes,v 1.103 2009-01-07 12:24:37 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+
+! 2009-01-07 - Gerhard Raven
+ - add line which accepts L0 'forced' triggers in HltCommissioningLines.py
 
 ! 2008-12-24 - Gerhard Raven
  - restore Hlt1.opts -- not quite dead yet...
