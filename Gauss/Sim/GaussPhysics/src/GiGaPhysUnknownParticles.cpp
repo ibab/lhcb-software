@@ -1,4 +1,4 @@
-// $Id: GiGaPhysUnknownParticles.cpp,v 1.3 2008-11-27 16:01:37 robbep Exp $
+// $Id: GiGaPhysUnknownParticles.cpp,v 1.4 2009-01-07 14:03:39 robbep Exp $
 // Include files 
 
 // from Gaudi
@@ -16,6 +16,10 @@
 #include "G4BcMesonPlus.h"
 #include "G4AntiLambdabZero.h"
 #include "G4LambdabZero.h"
+#include "G4AntiXibZero.h"
+#include "G4XibZero.h"
+#include "G4AntiXiccStarMinus.h"
+#include "G4XiccStarPlus.h"
 #include "G4Neutralino.h"
 #include "G4CharginoMinus.h"
 #include "G4CharginoPlus.h"
@@ -54,6 +58,10 @@ void GiGaPhysUnknownParticles::ConstructParticle()
   G4BcMesonPlus::BcMesonPlusDefinition() ;  
   G4AntiLambdabZero::AntiLambdabZeroDefinition();
   G4LambdabZero::LambdabZeroDefinition();
+  G4AntiXibZero::AntiXibZeroDefinition();
+  G4XibZero::XibZeroDefinition();
+  G4AntiXiccStarMinus::AntiXiccStarMinusDefinition();
+  G4XiccStarPlus::XiccStarPlusDefinition();
   G4Neutralino::NeutralinoDefinition();
   G4CharginoPlus::CharginoPlusDefinition();
   G4CharginoMinus::CharginoMinusDefinition();
