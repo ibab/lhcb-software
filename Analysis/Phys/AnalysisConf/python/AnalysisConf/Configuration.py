@@ -1,7 +1,7 @@
 """
 High level configuration tools for AnalysisConf
 """
-__version__ = "$Id: Configuration.py,v 1.5 2009-01-06 17:20:31 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.6 2009-01-07 17:39:35 pkoppenb Exp $"
 __author__ = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -59,7 +59,6 @@ class AnalysisConf(LHCbConfigurableUser) :
         """
         Do MC unpacking
         """
-        importOptions ("$DAVINCIASSOCIATORSROOT/options/DaVinciAssociators.opts")
         DataOnDemandSvc().Nodes += [ "DATA='/Event/MC' TYPE='DataObject'" ]
         DataOnDemandSvc().AlgMap["MC/Particles"] = "UnpackMCParticle"
         DataOnDemandSvc().AlgMap["MC/Vertices"] = "UnpackMCVertex"

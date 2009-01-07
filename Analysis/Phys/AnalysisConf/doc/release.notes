@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-01-07 - Patrick Koppenburg
+ - DaVinciAssociators only once
+
+! 2009-01-07 - Patrick Koppenburg
  - Remove options directory
 
 ! 2009-01-06 - Patrick Koppenburg
