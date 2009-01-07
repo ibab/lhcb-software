@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltElectronLines.py,v 1.10 2008-12-18 13:45:37 graven Exp $
+# $Id: HltElectronLines.py,v 1.11 2009-01-07 12:26:51 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Photon Lines
@@ -12,7 +12,7 @@
 '''
 # =============================================================================
 __author__  = 'Gerhard Raven Gerhard.Raven@nikhef.nl'
-__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $'
+__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $'
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -28,11 +28,10 @@ from HltConf.HltLine import Hlt1Tool   as Tool
 from HltConf.HltL0Candidates import *
 
 
-L0CandidateConverter = convertL0Candidates('Electron')
 L0Candidates = HltL0Candidates('Electron')
 
 prepElectron =  bindMembers( 'PrepElectron', 
-  [ L0CandidateConverter
+  [ convertL0Candidates('Electron')
   , GaudiSequencer('Hlt1RecoRZVeloSequence')
   , Member ('TF', 'RZVelo'  # // select RZVelo tracks with an IP and matched to L0Calo
            , InputSelection     = 'RZVelo'

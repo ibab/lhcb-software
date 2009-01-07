@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltPhotonLines.py,v 1.14 2008-12-19 19:51:25 graven Exp $
+# $Id: HltPhotonLines.py,v 1.15 2009-01-07 12:26:51 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Photon Lines
@@ -12,7 +12,7 @@
 '''
 # =============================================================================
 __author__  = 'Gerhard Raven Gerhard.Raven@nikhef.nl'
-__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.14 $'
+__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.15 $'
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -31,15 +31,12 @@ from HltConf.HltLine import hlt1Lines, addHlt1Prop, rmHlt1Prop
 #// HLT Photon Alley
 #//--------------------------
 from HltConf.HltL0Candidates import *
-L0CandidateConverter = convertL0Candidates('Photon')
-L0Candidates = HltL0Candidates('Photon')
 
 Line ('Photon' 
       , L0DU = "L0_CHANNEL('Photon')"
       , algos = 
-      [ L0CandidateConverter
+      [ convertL0Candidates('Photon')
       , Member ('TF', 'Photon' 
-                , InputSelection     = L0Candidates
                 , FilterDescriptor = ['IsPhoton,>,-0.1','L0ET,>,2800.'])
       , GaudiSequencer('Hlt1RecoRZVeloSequence')
       , Member ('TF', 'RZVelo'
@@ -90,14 +87,11 @@ Line ('Photon'
 
 from Configurables import L0ConfirmWithT
 
-#L0CandidateConverter = convertL0Candidates('Electron')
-#L0Candidates = L0CandidateConverter.OutputSelection
 Line ('PhoFromEle' 
       , L0DU = "L0_CHANNEL('Electron')"
       , algos = 
-      [ HltL0CaloPrepare('L0PhoFromEleDecision', CaloType = 'Electron', MinEt = 2800.0 )
+      [ convertL0Candidates('Electron')
       , Member ('TF', 'AntiEle'
-               , InputSelection = 'L0PhoFromEleDecision'
                , FilterDescriptor = ['AntiEleConf,>,0.5'] 
                , tools = [ Tool( L0ConfirmWithT, particleType = 2 )]
                )
