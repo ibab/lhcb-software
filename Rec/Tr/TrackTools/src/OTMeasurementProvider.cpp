@@ -1,4 +1,4 @@
-// $Id: OTMeasurementProvider.cpp,v 1.4 2009-01-06 12:59:03 mneedham Exp $
+// $Id: OTMeasurementProvider.cpp,v 1.5 2009-01-07 08:37:59 mneedham Exp $
 
 /** @class OTMeasurementProvider OTMeasurementProvider.cpp
  *
@@ -35,6 +35,7 @@ public:
   ~OTMeasurementProvider() {}
   
   StatusCode initialize() ;
+  StatusCode finalize() ;
   LHCb::Measurement* measurement( const LHCb::LHCbID& id, bool localY=false ) const  ;
   LHCb::Measurement* measurement( const LHCb::LHCbID& id, const LHCb::ZTrajectory& refvector, bool localY=false) const ;
   double nominalZ( const LHCb::LHCbID& id ) const ;
@@ -51,7 +52,7 @@ public:
 
 private:
   const DeOTDetector* m_det;
-  const IOTRawBankDecoder* m_otdecoder ;
+  ToolHandle<IOTRawBankDecoder> m_otdecoder ;
   bool m_applyTofCorrection ;
   double m_magnetZTofCorrection ;
   double m_tofCorrectionScale ;
@@ -72,12 +73,14 @@ OTMeasurementProvider::OTMeasurementProvider( const std::string& type,
                                               const IInterface* parent )
   :  GaudiTool( type, name , parent ),
      m_det(0),
+     m_otdecoder("OTRawBankDecoder"),
      m_applyTofCorrection(true),
      m_magnetZTofCorrection(5140*Gaudi::Units::mm),
      m_tofCorrectionScale(0.46) 
 {
   declareInterface<IMeasurementProvider>(this);
   declareProperty("ApplyTofCorrection",m_applyTofCorrection) ;
+  declareProperty("RawBankDecoder",m_otdecoder) ;
 }
 
 //-----------------------------------------------------------------------------
@@ -92,9 +95,19 @@ StatusCode OTMeasurementProvider::initialize()
   // Retrieve the detector element
   m_det = getDet<DeOTDetector>( DeOTDetectorLocation::Default ) ;
   // Retrieve the raw bank decoder (for recreating the OTLiteTime)
-  m_otdecoder = tool<IOTRawBankDecoder>("OTRawBankDecoder") ;
+  m_otdecoder.retrieve().ignore() ;
   
   return sc;
+}
+
+//-----------------------------------------------------------------------------
+/// Finalize
+//-----------------------------------------------------------------------------
+
+StatusCode OTMeasurementProvider::finalize()
+{
+  m_otdecoder.release().ignore() ;
+  return GaudiTool::finalize();
 }
 
 //-----------------------------------------------------------------------------
@@ -109,7 +122,7 @@ inline LHCb::OTMeasurement* OTMeasurementProvider::otmeasurement( const LHCb::LH
   } else {
     LHCb::OTChannelID otid = id.otID() ;
     const DeOTModule* module = m_det->findModule( otid ) ;
-    meas = new LHCb::OTMeasurement(m_otdecoder->time( otid, *module ) , *module, 0 ) ;
+    meas = new LHCb::OTMeasurement(m_otdecoder->time(otid),*module) ;
   }
   return meas ;
 }
