@@ -5,7 +5,7 @@
 !----------------------------------------------------------------------------
 
 ! 2009-01-07 - Gerhard Raven
- - allow one to set the L0Channel to 'Ignore' in HltL0MuonCandidates, which
+ - allow one to set the L0Channel to 'AllMuon' in HltL0MuonCandidates, which
    results in all muon candidates to be converted...
  - streamline HltL0{Muon,Calo}Candidates
 

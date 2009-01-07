@@ -1,4 +1,4 @@
-// $Id: HltL0MuonCandidates.cpp,v 1.8 2009-01-07 12:21:40 graven Exp $
+// $Id: HltL0MuonCandidates.cpp,v 1.9 2009-01-07 13:14:07 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -98,7 +98,7 @@ HltL0MuonCandidates::generateCutList(const LHCb::L0DUChannel& channel) {
 StatusCode HltL0MuonCandidates::execute() {
    
   std::vector<int> cuts;
-  if (m_l0Channel!="Ignore") {
+  if (m_l0Channel!="AllMuon") {
       //@TODO: only update cuts on L0 TCK change...
       LHCb::L0DUReport* l0 = get<L0DUReport>(m_l0Location);
       const LHCb::L0DUChannel::Map& channels = l0->configuration()->channels();
@@ -114,12 +114,12 @@ StatusCode HltL0MuonCandidates::execute() {
   Tracks* muons = new Tracks();
   put(muons, "Hlt/Track/"+m_selection.output()->id().str());
 
-  if (cuts.empty() && m_l0Channel!="Ignore") {
+  if (cuts.empty() && m_l0Channel!="AllMuon") {
     warning() << " L0 channel " << m_l0Channel << " does not use any known type of l0MuonCandidate?? -- no candidates converted!" << endmsg;
     return StatusCode::SUCCESS;
   }
 
-  assert(cuts.size()==1 || (cuts.empty()&&m_l0Channel=="Ignore"));
+  assert(cuts.size()==1 || (cuts.empty()&&m_l0Channel=="AllMuon"));
 
 
   double ptMax = -1.;
