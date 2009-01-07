@@ -1,5 +1,9 @@
 2009-01-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of version v1r7
+
+2009-01-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* python/LbRelease/GetPack.py: New file.
 	* scripts/getClass.py: New file.
 	* scripts/getpack.py: New file.
