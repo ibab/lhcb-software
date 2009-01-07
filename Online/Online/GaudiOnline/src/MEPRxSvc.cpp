@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.71 2009-01-07 10:31:52 garnierj Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.72 2009-01-07 10:39:28 garnierj Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -989,7 +989,6 @@ int MEPRxSvc::getSrcID(u_int32_t addr)  {
 }
 
 void MEPRxSvc::ageEvents() {
-  if (m_maxEventAge == 0) return;	
   unsigned long ms = MEPRxSys::ms2k();
  ageloop:
   for (RXIT w=m_workDsc.begin(); w != m_workDsc.end(); ++w) {
