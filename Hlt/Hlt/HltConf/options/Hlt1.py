@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.26 2008-12-17 22:37:27 graven Exp $
+# $Id: Hlt1.py,v 1.27 2009-01-07 11:02:24 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,13 +14,12 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.26 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.27 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
 from Configurables       import GaudiSequencer as Sequence
 from Configurables       import HltSelectionFilter, HltSelectionToTES
-from Configurables       import HltDecisionFilter
 from Configurables       import HltIncidentFilter
 from Configurables       import HltANNSvc
 from Configurables       import HltSelReportsMaker, HltSelReportsWriter
