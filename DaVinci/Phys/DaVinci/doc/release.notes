@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.290 2009-01-07 16:35:51 pkoppenb Exp $
+! $Id: release.notes,v 1.291 2009-01-07 16:51:52 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,9 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-01-07 - Patrick Koppenburg
+ - Moved all tests to DaVinciSys
 
 ! 2009-01-07 - Patrick Koppenburg
  - Translate Bd2DstarPi test to python
