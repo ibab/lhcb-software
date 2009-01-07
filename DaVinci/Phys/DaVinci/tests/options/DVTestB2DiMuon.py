@@ -1,5 +1,5 @@
 ##############################################################################
-#$Id: DVTestB2DiMuon.py,v 1.8 2008-11-28 13:07:49 jpalac Exp $
+#$Id: DVTestB2DiMuon.py,v 1.9 2009-01-07 10:23:31 pkoppenb Exp $
 #
 # Example Qm test option using configurables.
 #
@@ -67,7 +67,7 @@ from DaVinci.Configuration import DaVinci
 DaVinci().EvtMax = 1000
 # DaVinci().SkipEvents = 0
 # DaVinci().DataType = "DC06"
-DaVinci().MainOptions  = "$B2DILEPTONROOT/options/DVPreselB2DiMuon.opts"
+DaVinci().MainOptions  = "$B2DILEPTONROOT/options/DoPreselB2DiMuon.opts"
 DaVinci().UserAlgorithms = [findTrueDecay, testCorrelations]
 ##############################################################################
 """
