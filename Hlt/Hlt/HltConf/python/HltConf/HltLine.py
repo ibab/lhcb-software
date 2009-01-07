@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.31 2008-12-17 21:32:07 graven Exp $ 
+# $Id: HltLine.py,v 1.32 2009-01-07 12:25:37 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.31 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.32 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt line itself 
@@ -443,6 +443,12 @@ class bindMembers (object) :
             if type(alg) is bindMembers:
                 self._members  += alg.members()
                 self._outputsel = alg.outputSelection()
+                continue
+
+            # allow automatic picking up of shared L0 candidates...
+            if type(alg) is L0CaloCandidates or type(alg) is L0MuonCandidates:
+                self._members += [ alg ]
+                self._outputsel = alg.OutputSelection
                 continue
 
             # if not Hlt1Member, blindly copy -- not much else we can do
