@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-01-07 - Marco Cattaneo
+ - Do not pack DST in DC06 case
+
 ! 2009-01-06 - Marco Cattaneo
  - Use new DstConf configurable to set up DST/RDST content. Also, enable
    packed DST/RDST by default.

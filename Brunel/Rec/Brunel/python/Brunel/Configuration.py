@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.45 2009-01-06 12:50:26 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.46 2009-01-07 13:21:06 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -232,7 +232,9 @@ class Brunel(LHCbConfigurableUser):
         """
         if dstType in [ "DST", "RDST" ]:
             writerName = "DstWriter"
-            packedDST  = self.getProp( "PackedOutput" ) 
+            packedDST  = self.getProp( "PackedOutput" )
+            # Do not pack DC06 DSTs, for consistency with existing productions
+            if self.getProp("DataType") == "DC06": packedDST = False
 
             dstWriter = OutputStream( writerName )
             dstWriter.RequireAlgs += ["Reco"] # Write only if Rec phase completed
