@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.288 2009-01-07 10:49:06 pkoppenb Exp $
+! $Id: release.notes,v 1.289 2009-01-07 13:45:48 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -13,6 +13,7 @@
  - Translate Bd2DstarPi test to python
  - Translate Bu2eeK test to python. Small inprovements taken into account in 
    reference table
+ - Translate Bd2KstarMuMu and Bs2PhiGamma
 
 ! 2009-01-06 - Patrick Koppenburg
  - Remove HltOldStyle option.

@@ -1,6 +1,6 @@
-## $Id: DVTestBd2DstarPi.py,v 1.2 2009-01-07 10:49:06 pkoppenb Exp $
+## $Id: DVTestBd2DstarPi.py,v 1.3 2009-01-07 13:45:48 pkoppenb Exp $
 ## ============================================================================
-## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 ## ============================================================================
 """
 @file DVTestBd2DstarPi.py
@@ -61,6 +61,8 @@ SelectTrueLooseDecay.PhysDesktop.InputLocations = [ "StdDC06LoosePions",
 ## Dummy MakeResonances to check that all tracks are there
 ##
 AllTrueLooseDecay = AllTrueNoPIDsDecay.clone("AllTrueLooseDecay")
+AllTrueLooseDecay.addTool(PhysDesktop())
+AllTrueLooseDecay.PhysDesktop.InputLocations = [ "SelectTrueLooseDecay" ]
 trueSeq.Members += [ AllTrueLooseDecay  ]
 ##
 ## Correlations
