@@ -1,4 +1,4 @@
-// $Id: HltIncidentFilter.cpp,v 1.3 2008-09-17 19:31:57 graven Exp $
+// $Id: HltIncidentFilter.cpp,v 1.4 2009-01-07 15:59:56 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -25,13 +25,11 @@ DECLARE_ALGORITHM_FACTORY( HltIncidentFilter );
 //=============================================================================
 HltIncidentFilter::HltIncidentFilter( const string& name,
                     ISvcLocator* pSvcLocator)
-  : HltAlgorithm ( name , pSvcLocator )
-  , m_selection(*this)
+  : GaudiHistoAlg ( name , pSvcLocator )
   , m_keep(false)
 {
     declareProperty("AcceptQuota", m_quota );
     declareProperty("HltAcceptIncident", s_incident = "RequestHltAccept" );
-    m_selection.declareProperties();
 }
 //=============================================================================
 // Destructor
@@ -43,7 +41,7 @@ HltIncidentFilter::~HltIncidentFilter() {};
 //=============================================================================
 StatusCode HltIncidentFilter::initialize() {
   debug() << "==> Initialize" << endmsg;
-  StatusCode sc = HltAlgorithm::initialize(); // must be executed first
+  StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   IIncidentSvc *incidentSvc = svc<IIncidentSvc>("IncidentSvc");
@@ -52,7 +50,7 @@ StatusCode HltIncidentFilter::initialize() {
   incidentSvc->addListener(this,s_incident,int(0),rethrow,oneShot);
   incidentSvc->addListener(this,"EndEvent",int(0),rethrow,oneShot);
 
-  m_selection.registerSelection();
+  declareInfo("#accept","",&counter("#accept"),0,std::string("Events accepted by ") + name());
 
   return StatusCode::SUCCESS;
 };
@@ -60,7 +58,7 @@ StatusCode HltIncidentFilter::initialize() {
 // Finalization
 //=============================================================================
 StatusCode HltIncidentFilter::finalize() {
-    StatusCode sc = HltAlgorithm::finalize();
+    StatusCode sc = GaudiHistoAlg::finalize();
     for (std::map<std::string,stat>::const_iterator i = m_stat.begin(); i!= m_stat.end(); ++i) {
         info() << i->first 
                << " requested: " << i->second.request << " events " 
@@ -74,8 +72,9 @@ StatusCode HltIncidentFilter::finalize() {
 // Main execution
 //=============================================================================
 StatusCode HltIncidentFilter::execute() {
-    m_selection.output()->setDecision(m_keep);
+    setFilterPassed(m_keep);
     if (msgLevel(MSG::DEBUG)) debug() << "HltIncidentFilter: " << (m_keep?"accept":"reject") << endreq;
+    counter("#accept") += m_keep;
     return StatusCode::SUCCESS;
 };
 
@@ -91,6 +90,7 @@ void HltIncidentFilter::handle(const Incident& incident) {
         if (!m_keep) { // only check quota if event not yet accepted...
             std::map<std::string,int>::const_iterator i = m_quota.find(incident.source());
             typedef unsigned long ul;
+            //@TODO: always keep 1 (and 1 only) if not listed in quota??
             m_keep = ( i!=m_quota.end() && ( i->second < 0 || s.accept < ul(i->second) ) );
         }
         if (m_keep) ++s.accept;

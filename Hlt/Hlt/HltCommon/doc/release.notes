@@ -7,7 +7,10 @@
 ! 2009-01-07 - Gerhard Raven
  - allow one to set the L0Channel to 'AllMuon' in HltL0MuonCandidates, which
    results in all muon candidates to be converted...
+ - allow one to set the L0Channel to 'AllXXX' in HltL0CaloCandiate, which
+   results in all calo candidates of type XXX to be converted...
  - streamline HltL0{Muon,Calo}Candidates
+ - simplify incident filter
 
 ! 2009-01-06 - Gerhard Raven
  - plot Et (Pt) of L0Calo(Muon)Candidates
