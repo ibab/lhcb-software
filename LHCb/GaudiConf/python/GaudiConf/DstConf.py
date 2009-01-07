@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: DstConf.py,v 1.1 2009-01-06 12:47:34 cattanem Exp $"
+__version__ = "$Id: DstConf.py,v 1.2 2009-01-07 13:38:53 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -143,26 +143,26 @@ class DstConf(ConfigurableUser):
         from Configurables import UnpackTrack, UnpackCaloHypo, UnpackProtoParticle, UnpackRecVertex
 
         unpackTracks       = UnpackTrack()
-        unpackMuons        = UnpackTrack( name       = "PackMuons",
+        unpackMuons        = UnpackTrack( name       = "UnpackMuons",
                                           OutputName = "/Event/Rec/Track/Muon",
                                           InputName  = "/Event/pRec/Track/Muon")
         unpackVertex       = UnpackRecVertex()
-        unpackElectrons    = UnpackCaloHypo( name       = "PackElectrons",
+        unpackElectrons    = UnpackCaloHypo( name       = "UnpackElectrons",
                                              OutputName = "/Event/Rec/Calo/Electrons",
                                              InputName  = "/Event/pRec/Calo/Electrons")
-        unpackPhotons      = UnpackCaloHypo( name       = "PackPhotons",
+        unpackPhotons      = UnpackCaloHypo( name       = "UnpackPhotons",
                                              OutputName = "/Event/Rec/Calo/Photons",
                                              InputName  = "/Event/pRec/Calo/Photons")
-        unpackMergedPi0s   = UnpackCaloHypo( name       = "PackMergedPi0s",
+        unpackMergedPi0s   = UnpackCaloHypo( name       = "UnpackMergedPi0s",
                                              OutputName = "/Event/Rec/Calo/MergedPi0s",
                                              InputName  = "/Event/pRec/Calo/MergedPi0s")
-        unpackSplitPhotons = UnpackCaloHypo( name       = "PackSplitPhotons",
+        unpackSplitPhotons = UnpackCaloHypo( name       = "UnpackSplitPhotons",
                                              OutputName = "/Event/Rec/Calo/SplitPhotons",
                                              InputName  = "/Event/pRec/Calo/SplitPhotons")
-        unpackCharged  = UnpackProtoParticle(name       = "PackCharged",
+        unpackCharged  = UnpackProtoParticle(name       = "UnpackCharged",
                                              OutputName = "/Event/Rec/ProtoP/Charged",
                                              InputName  = "/Event/pRec/ProtoP/Charged")
-        unpackNeutrals = UnpackProtoParticle(name       = "PackNeutrals",
+        unpackNeutrals = UnpackProtoParticle(name       = "UnpackNeutrals",
                                              OutputName = "/Event/Rec/ProtoP/Neutrals",
                                              InputName  = "/Event/pRec/ProtoP/Neutrals")
 
