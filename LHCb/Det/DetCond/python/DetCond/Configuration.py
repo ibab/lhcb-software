@@ -1,7 +1,7 @@
 """
 High level configuration tools for Conditions Database.
 """
-__version__ = "$Id: Configuration.py,v 1.10 2008-11-14 13:33:41 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.11 2009-01-07 13:28:03 marcocle Exp $"
 __author__  = "Marco Clemencic <Marco.Clemencic@cern.ch>"
 
 from Gaudi.Configuration import allConfigurables, ConfigurableUser, importOptions, getConfigurable, log
@@ -14,6 +14,8 @@ from Configurables import ( CondDBAccessSvc,
                             CondDBLogger,
                             MessageSvc )
 
+import os, re
+
 class CondDB(ConfigurableUser):
     """
     Configurable user to allow high-level configuration of the access to the
@@ -25,7 +27,9 @@ class CondDB(ConfigurableUser):
                   "LocalTags"   : {},
                   "LogFile"     : "",
                   "Overrides"   : [], 
-                  "PartitionConnectionString": {},  }
+                  "PartitionConnectionString": {},
+                  "SQLiteLocalCopiesDir": "",
+                  "OverwriteSQLiteLocalCopy": False  }
     _propertyDocDct = { 
                        'Tags' : """ Dictionary of tags (partition:tag) to use for the COOL databases """,
                        'Simulation' : """ Boolean flag to select the simulation or real-data configuration """,
@@ -34,6 +38,8 @@ class CondDB(ConfigurableUser):
                        'LogFile' : """ Record the requests to the database the specified file """,
                        'Overrides' : """ Internal property used to add layers or alternatives """,
                        'PartitionConnectionString' : """ Dictionary with alternative connection strings for the CondDB partitions """,
+                       'SQLiteLocalCopiesDir' : """ The directory where to copy the SQLite files before accessing them """,
+                       'OverwriteSQLiteLocalCopy' : """ When using SQLite local copies, overwrite existing files """,
                        }
     LAYER = 0
     ALTERNATIVE = 1
@@ -45,16 +51,51 @@ class CondDB(ConfigurableUser):
                           CondDBSQLiteCopyAccSvc,
                           str ]
 
-    def addLayer(self, accessSvc):
+    def _checkOverrideArgs(self, accessSvc, connStr, dbFile, dbName):
+        """
+        Check if the accessSvc is a valid CondDBReader or build one using the
+        other arguments.
+        """
+        kwargs = { "accessSvc": accessSvc, "connStr": connStr, "dbFile": dbFile, "dbName": dbName }
+        if accessSvc is None:
+            if not connStr:
+                if dbFile:
+                    if not dbName:
+                        dbName = os.path.basename(dbFile)
+                        m = re.match(r'([A-Z][A-Z0-9_]{0,7})(_\w+)?.db', dbName)
+                        if m:
+                            dbName = m.group(1)
+                        else:
+                            raise ValueError('invalid arguments %r' % kwargs)
+                    connStr = "sqlite_file:%s/%s" % (dbFile, dbName)
+                else:
+                    raise ValueError('invalid arguments %r' % kwargs)
+                name = dbName
+            else:
+                name = connStr.rsplit('/')[-1]
+                if not re.match(r'[A-Z][A-Z0-9_]{0,7}', name):
+                    name = 'CondDBAccessSvc'
+            # make a unique name for the configurable
+            name = "automatic_" + name
+            name_format = name + '_%d'
+            i = 0
+            while name in allConfigurables:
+                i += 1
+                name = name_format % i
+            accessSvc = CondDBAccessSvc(name, ConnectionString = connStr)
+        elif type(accessSvc) not in __CondDBReaders__: # Check for supported types
+            raise TypeError("'%s' not supported as CondDBReader"%accessSvc.__class__.__name__)
+        return accessSvc
+        
+    def addLayer(self, accessSvc = None, connStr = None, dbFile = None, dbName = None):
         """
         Add the given CondDBReader as a layer on top of the existing configuration.
     
         Example:
         CondDB().addLayer(myDB)
         """
-        # Check for supported types
-        if type(accessSvc) not in __CondDBReaders__:
-            raise TypeError("CondDB.addLayer does not support '%s'"%accessSvc.__class__.__name__)
+        # Check the arguments and/or prepare a valid access svc 
+        accessSvc = self._checkOverrideArgs(accessSvc, connStr, dbFile, dbName)
         self.Overrides.append((self.LAYER, accessSvc))
     
     def _addLayer(self, accessSvc):
@@ -76,7 +117,7 @@ class CondDB(ConfigurableUser):
                                                     Layers = [accessSvc,
                                                               originalReader])
 
-    def addAlternative(self, accessSvc, path):
+    def addAlternative(self, accessSvc = None, path = None, connStr = None, dbFile = None, dbName = None):
         """
         Add the given CondDBReader as an alternative to the existing configuration
         for the specified path.
@@ -84,9 +125,10 @@ class CondDB(ConfigurableUser):
         Example:
         CondDB().addAlternative(myDB,"/Conditions/MyDetector/Alignment")
         """
-        # Check for supported types
-        if type(accessSvc) not in __CondDBReaders__:
-            raise TypeError("CondDB.addAlternative does not support '%s'"%accessSvc.__class__.__name__)
+        if path is None:
+            raise ValueError("'path' must be specified")
+        # Check the arguments and/or prepare a valid access svc 
+        accessSvc = self._checkOverrideArgs(accessSvc, connStr, dbFile, dbName)
         self.Overrides.append((self.ALTERNATIVE, accessSvc, path))
         
     def _addAlternative(self, accessSvc, path):
@@ -108,11 +150,82 @@ class CondDB(ConfigurableUser):
                                                       MainAccessSvc = originalReader,
                                                       Alternatives = { path: accessSvc }
                                                       )
-    
+    def __make_sqlite_local_copy__(self, accsvc, local_dir = None, force_copy = None):
+        if isinstance(accsvc, str):
+            # convert the string in an actual configurable instance
+            # This is both for backward compatibility and CondDBTimeSwitchSvc
+            if "/" in accsvc:
+                tp, name = accsvc.split("/",1)
+            else:
+                tp = name = accsvc
+            accsvc = getConfigurable(name, tp)
+        if local_dir is None:
+            local_dir = self.getProp("SQLiteLocalCopiesDir")
+        if force_copy is None:
+            force_copy = self.getProp("OverwriteSQLiteLocalCopy")
+        # If the directory for the local copies is not specified, we do nothing        
+        if not local_dir:
+            return accsvc
+        # Modify partitions to use local copies of the DBs
+        newaccsvc = accsvc # fallback return value (no change)
+        if isinstance(accsvc, CondDBAccessSvc):
+            # replace the reader with another
+            m = re.match(r"^sqlite_file:(.*)/([_0-9A-Z]{1,8})$",
+                         accsvc.getProp("ConnectionString"))
+            if not m: # not SQLite connection string
+                return accsvc
+            newaccsvc = CondDBSQLiteCopyAccSvc(accsvc.name() + "_local")
+            newaccsvc.OriginalFile = m.group(1)
+            newaccsvc.DestinationFile = os.path.join(local_dir,
+                                                     os.path.basename(m.group(1)))
+            newaccsvc.DBName = m.group(2)
+            newaccsvc.ForceCopy = force_copy
+            newaccsvc.IgnoreCopyError = not force_copy # ignore copy errors if we do not overwrite (needed for local tags) 
+            if hasattr(accsvc, "CacheHighLevel"): 
+                newaccsvc.CacheHighLevel = accsvc.CacheHighLevel
+        elif isinstance(accsvc, CondDBDispatcherSvc):
+            # use the same dispatcher replacing its content 
+            mainAccSvc = accsvc.getProp("MainAccessSvc")
+            accsvc.MainAccessSvc = self.__make_sqlite_local_copy__(mainAccSvc, local_dir)
+            alternatives = accsvc.getProp("Alternatives")
+            for alt in alternatives.keys():
+                accsvc.Alternatives[alt] = \
+                   self.__make_sqlite_local_copy__(alternatives[alt], local_dir)
+        elif isinstance(accsvc, CondDBLayeringSvc):
+            # use the same layering service replacing its content 
+            new_layers = []
+            for layer in accsvc.getProp("Layers"):
+                new_layers.append(self.__make_sqlite_local_copy__(layer, local_dir))
+            accsvc.Layers = new_layers
+        elif isinstance(accsvc, CondDBTimeSwitchSvc):
+            # use the same time switcher replacing its content,
+            # but we need to parse its options (in format "'%s':(%d,%d)")
+            readers_list = accsvc.getProp("Readers")
+            readers = eval("{%s}" % (",".join(readers_list)))
+            new_readers = []
+            for r, iov in readers.items():
+                new_reader = self.__make_sqlite_local_copy__(r, local_dir)
+                new_readers.append("'%s':(%d,%d)" %
+                                   (new_reader.getFullName(), iov[0], iov[1]))
+            accsvc.Readers = new_readers
+        elif isinstance(accsvc, CondDBLogger):
+            # use the same logger replacing its content 
+            logged = accsvc.getProp("LoggedReader")
+            accsvc.LoggedReader = self.__make_sqlite_local_copy__(logged, local_dir)
+        elif isinstance(accsvc, CondDBCnvSvc):
+            # use the same conversion service replacing its content 
+            reader = accsvc.getProp("CondDBReader")
+            accsvc.CondDBReader = self.__make_sqlite_local_copy__(reader, local_dir)
+        return newaccsvc
+        
     def __apply_configuration__(self):
         """
         Converts the high-level information passed as properties into low-level configuration.
         """
+        # Check options consistency
+        if self.getProp("UseOracle") and self.getProp("SQLiteLocalCopiesDir"):
+            raise RuntimeError("Conflicting properties in CondDB Configurable: UseOracle and SQLiteLocalCopiesDir")
+        
         if self.getProp("UseOracle"):
             importOptions("$SQLDDDBROOT/options/SQLDDDB-Oracle.py")
         else:   
@@ -143,7 +256,7 @@ class CondDB(ConfigurableUser):
             log.warning("Cannot override the connection strings of the partitions %r", conns.keys()) 
         if tags:
             log.warning("Cannot set the tag for partitions %r", tags.keys()) 
-            
+        
         if not self.getProp("Simulation"):
             # Standard configurations
             #  - Reconstruction / analysis
@@ -177,6 +290,11 @@ class CondDB(ConfigurableUser):
                 not_applied.append(p)
         if not_applied:
             log.warning("Cannot set the local tags for partitions %r", not_applied) 
+        
+        # Modify partitions to use local copies of the DBs
+        # before adding user layers and alternatives, which should be already local.
+        # This is a no-operation if the property is not set
+        self.__make_sqlite_local_copy__(CondDBCnvSvc()) 
         
         # Add layers and alternatives
         call = { self.LAYER : self._addLayer,

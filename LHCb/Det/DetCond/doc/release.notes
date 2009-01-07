@@ -1,9 +1,16 @@
-# $Id: release.notes,v 1.158 2008-11-17 14:33:09 cattanem Exp $
+# $Id: release.notes,v 1.159 2009-01-07 13:28:03 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+! 2009-01-07 - Marco Clemencic
+ - Improvements to the CondDB configurable:
+   - added the possibility to use local copies of the SQLite databases (through
+     CondDBSQLiteCopyAccSvc)
+   - added the possibility of specifying alternatives and layers with only the
+     connection string or the SQLite filename
 
 !===================== Det/DetCond v12r4 2008-11-17 ==========================
 ! 2008-11-17 - Marco Cattaneo
