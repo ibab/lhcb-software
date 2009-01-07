@@ -22,7 +22,7 @@ HltANNSvc().Hlt1SelectionID = {
     "Hlt1L0GlobalPi0Decision"               :   16,
     "Hlt1L0LocalPi0Decision"                :   17,
     # Misc...
-    "Hlt1IncidentDecision"                  :   30
+    "Hlt1IncidentDecision"                  :   30,
     # LU
     "Hlt1LumiDecision"                      :   40, 
     "Hlt1IgnoringLumiDecision"              :   41,
