@@ -129,7 +129,8 @@ recoSeq = GaudiSequencer('HltRecoSequence', MeasureTime = True
 
 #// --------------------- HltCalosequence // In HltChargedProtoPAlg for the time being
 #// Options for Calo reconstruction
-importOptions( "$CALORECOROOT/options/HltCaloSeq.opts" )
+importOptions( '$HLTCONFROOT/options/units.opts' )
+importOptions( '$CALORECOROOT/options/HltCaloSeq.opts' )
 GaudiSequencer('HltCaloRecoSequence', Members = [ GaudiSequencer('RecoCALOSeq') ] )
 
 #/// @todo This cannot work, as tracking must have been done to process the rest.

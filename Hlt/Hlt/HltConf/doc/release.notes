@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.107 2009-01-07 12:30:46 graven Exp $ 
+! $Id: release.notes,v 1.108 2009-01-07 12:33:18 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -13,6 +13,7 @@
  - add possibility to convert 'all' L0 Muon candidates 
  - use the above in photon and electron lines
  - renumber id of commissioning decisions
+ - push use of units.opts to the one place it is needed...
 
 ! 2008-12-24 - Gerhard Raven
  - restore Hlt1.opts -- not quite dead yet...
