@@ -5,6 +5,7 @@ Purpose             : LHCb analysis program
 
 ! 2009-01-07 - Patrick Koppenburg
  - Moved all tests here
+ - Added three more, inclusing SAM test for Dirac
 
 </PRE><H1><A NAME=v21r0>2008-11-28 DaVinci v21r0</A></H1><PRE>
 Based on Phys v7r3, Analysis v2r3, Rec v6r0, HLT v4r4, Lbcom v6r24, LHCb v26r0, Gaudi v20r3, LCGCMT 55b
