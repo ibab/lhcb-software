@@ -1,4 +1,4 @@
-// $Id: HltL0MuonCandidates.h,v 1.2 2009-01-06 12:18:26 graven Exp $
+// $Id: HltL0MuonCandidates.h,v 1.3 2009-01-07 12:21:40 graven Exp $
 #ifndef HLTCOMMON_HLTL0MUONPREPARE_H 
 #define HLTCOMMON_HLTL0MUONPREPARE_H 1
 
@@ -27,6 +27,8 @@ public:
 
 
 private:
+  std::vector<int> generateCutList(const LHCb::L0DUChannel& channel);
+
   Hlt::SelectionContainer2<LHCb::Track,LHCb::L0MuonCandidate> m_selection;
 
   std::string m_l0Location;  

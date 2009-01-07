@@ -1,4 +1,4 @@
-// $Id: HltL0CaloCandidates.h,v 1.2 2009-01-06 12:18:25 graven Exp $
+// $Id: HltL0CaloCandidates.h,v 1.3 2009-01-07 12:21:40 graven Exp $
 #ifndef HLTCOMMON_HLTLOCALOPREPARE_H 
 #define HLTCOMMON_HLTL0CALOPREPARE_H 1
 
@@ -31,6 +31,8 @@ private:
   void makeTrack(const LHCb::L0CaloCandidate& calo, LHCb::Track& track);
   void addExtras(const LHCb::L0CaloCandidate& calo, LHCb::Track& track);
 
+  typedef std::vector< std::pair<L0DUBase::CaloType::Type,int> > CutList_t;
+  CutList_t generateCutList(const LHCb::L0DUChannel& channel);
 
   Hlt::SelectionContainer2<LHCb::Track,LHCb::L0CaloCandidate> m_selection; 
 
@@ -41,6 +43,8 @@ private:
 
   AIDA::IHistogram1D* m_et;
   AIDA::IHistogram1D* m_etMax;
+
+  //std::map< unsigned int, CutList_t > m_l0config;
 
 
 };

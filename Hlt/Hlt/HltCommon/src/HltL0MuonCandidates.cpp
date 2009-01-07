@@ -1,4 +1,4 @@
-// $Id: HltL0MuonCandidates.cpp,v 1.7 2009-01-06 12:18:25 graven Exp $
+// $Id: HltL0MuonCandidates.cpp,v 1.8 2009-01-07 12:21:40 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -71,21 +71,10 @@ StatusCode HltL0MuonCandidates::initialize() {
   return StatusCode::SUCCESS;
 }
 
-//=============================================================================
-// Main execution
-//=============================================================================
-StatusCode HltL0MuonCandidates::execute() {
-  //@TODO: only update cuts on L0 TCK change...
-  LHCb::L0DUReport* l0 = get<L0DUReport>(m_l0Location);
-  const LHCb::L0DUChannel::Map& channels = l0->configuration()->channels();
-  LHCb::L0DUChannel::Map::const_iterator channel  = channels.find(m_l0Channel);
-  if (channel == channels.end()) {
-            error() << "could not find requested l0 channel " << m_l0Channel<< endmsg;
-            return StatusCode::FAILURE;
-  }
-  //@TODO: check if channel is enabled!!
 
-  const LHCb::L0DUElementaryCondition::Map& conditions = channel->second->elementaryConditions();
+std::vector<int>
+HltL0MuonCandidates::generateCutList(const LHCb::L0DUChannel& channel) {
+  const LHCb::L0DUElementaryCondition::Map& conditions = channel.elementaryConditions();
   typedef std::vector<std::string> map_t;
   static map_t map;
   if (map.empty()) {
@@ -101,21 +90,41 @@ StatusCode HltL0MuonCandidates::execute() {
             cuts.push_back( condition->second->threshold() );
          }
   }
+  return cuts;
+}
+//=============================================================================
+// Main execution
+//=============================================================================
+StatusCode HltL0MuonCandidates::execute() {
+   
+  std::vector<int> cuts;
+  if (m_l0Channel!="Ignore") {
+      //@TODO: only update cuts on L0 TCK change...
+      LHCb::L0DUReport* l0 = get<L0DUReport>(m_l0Location);
+      const LHCb::L0DUChannel::Map& channels = l0->configuration()->channels();
+      LHCb::L0DUChannel::Map::const_iterator channel  = channels.find(m_l0Channel);
+      if (channel == channels.end()) {
+                error() << "could not find requested l0 channel " << m_l0Channel<< endmsg;
+                return StatusCode::FAILURE;
+      }
+      //@TODO: check if channel is enabled!!
+      cuts = generateCutList( *(channel->second) );
+  }
 
   Tracks* muons = new Tracks();
   put(muons, "Hlt/Track/"+m_selection.output()->id().str());
 
-  if (cuts.empty()) {
-    warning() << " L0 channel " << m_l0Channel << " does not use any know type of l0MuonCandidate?? -- no candidates converted!" << endmsg;
+  if (cuts.empty() && m_l0Channel!="Ignore") {
+    warning() << " L0 channel " << m_l0Channel << " does not use any known type of l0MuonCandidate?? -- no candidates converted!" << endmsg;
     return StatusCode::SUCCESS;
   }
 
-  assert(cuts.size()==1);
+  assert(cuts.size()==1 || (cuts.empty()&&m_l0Channel=="Ignore"));
 
 
   double ptMax = -1.;
   BOOST_FOREACH( L0MuonCandidate* l0muon, *m_selection.input<1>()) {
-    bool pass=( l0muon->encodedPt() > cuts[0] );
+    bool pass = ( cuts.empty() || ( l0muon->encodedPt() > cuts[0] ) );
     if (!pass)  continue;
 
     debug() << "l0pt " << l0muon->pt()<< endmsg;
@@ -123,7 +132,7 @@ StatusCode HltL0MuonCandidates::execute() {
         debug() << "is clone " << endmsg;
         continue;
     }
-    fill(m_pt,l0muon->pt(),1.0);
+    fill(m_pt,l0muon->pt(),1.);
     if (l0muon->pt()>ptMax) ptMax = l0muon->pt();
     std::auto_ptr<Track> track( new Track() );
     StatusCode sc = m_maker->makeTrack(*l0muon,*track);

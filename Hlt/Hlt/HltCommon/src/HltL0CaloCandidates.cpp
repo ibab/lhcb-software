@@ -1,4 +1,4 @@
-// $Id: HltL0CaloCandidates.cpp,v 1.10 2009-01-06 12:18:25 graven Exp $
+// $Id: HltL0CaloCandidates.cpp,v 1.11 2009-01-07 12:21:40 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -82,17 +82,9 @@ StatusCode HltL0CaloCandidates::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode HltL0CaloCandidates::execute() {
-  //@TODO: only update cuts on L0 TCK change...
-  LHCb::L0DUReport* l0 = get<L0DUReport>(m_l0Location);
-  const LHCb::L0DUChannel::Map& channels = l0->configuration()->channels();
-  LHCb::L0DUChannel::Map::const_iterator channel  = channels.find(m_l0Channel);
-  if (channel == channels.end()) {
-            error() << "could not find requested l0 channel " << m_l0Channel<< endmsg;
-            return StatusCode::FAILURE;
-  }
-  //@TODO: check if channel is enabled!!
 
+HltL0CaloCandidates::CutList_t 
+HltL0CaloCandidates::generateCutList(const LHCb::L0DUChannel& channel) {
   typedef GaudiUtils::VectorMap<std::string,L0DUBase::CaloType::Type> map_t;
   static map_t map;
   if (map.empty()) {
@@ -102,8 +94,8 @@ StatusCode HltL0CaloCandidates::execute() {
      map.insert("LocalPi0(Et)", L0DUBase::CaloType::Pi0Local);
      map.insert("GlobalPi0(Et)",L0DUBase::CaloType::Pi0Global);
   }
-  std::vector<std::pair<L0DUBase::CaloType::Type,int> > cuts;
-  const LHCb::L0DUElementaryCondition::Map& conditions = channel->second->elementaryConditions();
+  CutList_t cuts;
+  const LHCb::L0DUElementaryCondition::Map& conditions = channel.elementaryConditions();
   for (LHCb::L0DUElementaryCondition::Map::const_iterator condition = conditions.begin();
        condition!=conditions.end(); ++condition) {
          std::string data = condition->second->data()->name();
@@ -112,6 +104,21 @@ StatusCode HltL0CaloCandidates::execute() {
             cuts.push_back( std::make_pair( i->second, condition->second->threshold() ) );
          }
   }
+  return cuts;
+}
+
+StatusCode HltL0CaloCandidates::execute() {
+  LHCb::L0DUReport* l0 = get<L0DUReport>(m_l0Location);
+
+  //@TODO: only update cuts on L0 TCK change, and cache the result...
+  const LHCb::L0DUChannel::Map& channels = l0->configuration()->channels();
+  LHCb::L0DUChannel::Map::const_iterator channel  = channels.find(m_l0Channel);
+  if (channel == channels.end()) {
+        error() << "could not find requested l0 channel " << m_l0Channel << endmsg;
+        return StatusCode::FAILURE;
+  }
+  //@TODO: check if channel is actually enabled!!
+  HltL0CaloCandidates::CutList_t cuts = generateCutList( *(channel->second) );
 
   Tracks* output = new Tracks();
   put(output,"Hlt/Track/"+m_selection.output()->id().str());
@@ -131,7 +138,7 @@ StatusCode HltL0CaloCandidates::execute() {
              warning() << " got candidate with unexpected type " << calo->type() << endmsg;
     }
     bool pass=true;
-    for (std::vector<std::pair<L0DUBase::CaloType::Type,int> >::const_iterator i = cuts.begin();i!=cuts.end()&&pass;++i) {
+    for (CutList_t::const_iterator i = cuts.begin();i!=cuts.end()&&pass;++i) {
         pass = ( calo->type() == i->first && calo->etCode() > i->second);
     }
     if (!pass)  continue;
