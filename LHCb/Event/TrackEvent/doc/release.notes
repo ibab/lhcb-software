@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!======================= TrackEvent v4r17 2009-01-08 =========================
 ! 2008-12-02 Wouter Hulsbergen
  - Track::stateAt and Track::measurement(id) now return pointers
 
