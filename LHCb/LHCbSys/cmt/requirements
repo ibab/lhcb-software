@@ -58,7 +58,7 @@ use TrackEvent            v4r17   Event   # Matt Needham
 use VeloEvent             v16r6p1 Event   # Tomasz Szumlak, Chris Parkes
 use STTELL1Event          v1r6    ST      # Matt Needham
 use EventPacker           v1r1    Event   # Olivier Callot
-use PartProp              v1r1    Kernel  # Vanya Belyaev 
+use PartProp              v1r0    Kernel  # Vanya Belyaev 
 
 # L1/Raw buffer encoding and decoding
 use DAQSys                v5r4    DAQ     # Marco Cattaneo
