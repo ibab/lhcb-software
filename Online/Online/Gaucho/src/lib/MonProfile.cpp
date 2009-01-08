@@ -11,18 +11,18 @@ MonObject(msgSvc, source, version)
   isLoaded = false;
   objectCreated = false;
   m_profile = 0;
-  binCont = 0;
-  binErr = 0;
+  binSum = 0;
+  //binErr = 0;
   binEntries = 0;
   m_fSumw2 = 0;  
 }
 
 MonProfile::~MonProfile(){
 //   MsgStream msgStream = createMsgStream();
-//   msgStream <<MSG::DEBUG<<"deleting binCont" << endreq;
-  if (binCont!=0) delete []binCont;
-//   msgStream <<MSG::DEBUG<<"deleting binErr" << endreq;
-  if (binErr!=0) delete []binErr;
+//   msgStream <<MSG::DEBUG<<"deleting binSum" << endreq;
+  if (binSum!=0) delete []binSum;
+////   msgStream <<MSG::DEBUG<<"deleting binErr" << endreq;
+//  if (binErr!=0) delete []binErr;
 //   msgStream <<MSG::DEBUG<<"deleting binLabelX" << endreq;
 //   msgStream <<MSG::DEBUG<<"deleting m_fSumw2" << endreq;
   if (m_fSumw2!=0) delete []m_fSumw2;
@@ -67,17 +67,17 @@ void MonProfile::load2(boost::archive::binary_iarchive  & ar){
 
   msg <<MSG::DEBUG<<"creating MsgStream" << endreq;
   
-  if (binCont==0) binCont = new double[(nbinsx+2)];
+  if (binSum==0) binSum = new double[(nbinsx+2)];
 
   for (int i = 0; i < (nbinsx+2) ; ++i){
-    ar & binCont[i];
+    ar & binSum[i];
   }
 
-  if (binErr==0) binErr = new double[(nbinsx+2)];
+  //if (binErr==0) binErr = new double[(nbinsx+2)];
 
-  for (int i = 0; i < (nbinsx+2) ; ++i){
-    ar & binErr[i];
-  }
+  //for (int i = 0; i < (nbinsx+2) ; ++i){
+  //  ar & binErr[i];
+  //}
 
   if (binEntries==0) binEntries = new double[(nbinsx+2)];
 
@@ -113,14 +113,10 @@ void MonProfile::load2(boost::archive::binary_iarchive  & ar){
 
   ar & m_fSumSize;
 
-  //msg <<MSG::DEBUG<<"m_fSumSize" << m_fSumSize << endreq;
-
   if (m_fSumw2==0) m_fSumw2 = new double[m_fSumSize];
   for (int i=0 ; i < m_fSumSize; ++i) {
     ar & m_fSumw2[i];
   }
-
-  //msg <<MSG::DEBUG<<"is Loaded" << endreq;
 
   isLoaded = true;
 
@@ -146,11 +142,11 @@ void MonProfile::save3(boost::archive::binary_oarchive  & ar) {
   ar & bBinLabelX;
 
   for (int i = 0; i < (nbinsx+2) ; ++i){
-    ar & binCont[i];
+    ar & binSum[i];
   }
-  for (int i = 0; i < (nbinsx+2) ; ++i){
-    ar & binErr[i];
-  }
+  //for (int i = 0; i < (nbinsx+2) ; ++i){
+  //  ar & binErr[i];
+  //}
   for (int i = 0; i < (nbinsx+2) ; ++i){
     ar & binEntries[i];
   }
@@ -228,20 +224,20 @@ void MonProfile::loadObject(){
   m_profile->Reset();
   FriendOfTProfile * fot = (FriendOfTProfile *)m_profile; 
 
-  for (int i = 0; i < (nbinsx+2) ; ++i){
-    m_profile->SetBinContent(i, binCont[i]);
-  }
-
-  //SetEntries must be after SetBinContents
-  m_profile->SetEntries(nEntries);
-
-  for (int i = 0; i < (nbinsx+2) ; ++i){
-    m_profile->SetBinError(i, binErr[i]);
-  }
+  //for (int i = 0; i < (nbinsx+2) ; ++i){
+  //  m_profile->SetBinError(i, binErr[i]);
+  //}
 
   for (int i = 0; i < (nbinsx+2) ; ++i){
     m_profile->SetBinEntries(i, binEntries[i]);
   }
+
+  for (int i = 0; i < (nbinsx+2) ; ++i){
+    fot->fArray[i] = binSum[i];
+  }
+
+  //SetEntries must be after SetBinContents
+  m_profile->SetEntries(nEntries);
 
   if (bBinLabelX){
     std::vector<std::string>::iterator it;
@@ -265,8 +261,13 @@ void MonProfile::loadObject(){
 
   fot->fSumw2.Set(m_fSumSize);
 
+  //msg <<MSG::DEBUG << "MonProfile::loadObject: m_fSumSize = " << m_fSumSize   << endreq;
+
   for (int i=0 ; i < m_fSumSize; ++i) {
     fot->fSumw2[i] = m_fSumw2[i];
+ //  msg <<MSG::DEBUG << "MonProfile::loadObject: i=" << i << " binSum=" << binSum[i] << " m_fSumw2=" << m_fSumw2[i]
+ //      << " content[i] = " << binContent(i) << " error[i] = " << binError(i) << endreq;
+
   }
 }
 
@@ -289,28 +290,30 @@ void MonProfile::splitObject(){
   sTitle  = std::string(cTitle);
 
   MsgStream msgStream = createMsgStream();
-  if (binCont != 0) {
-    delete []binCont;
+  if (binSum != 0) {
+    delete []binSum;
   }
-  binCont = new double[(nbinsx+2)];
-  if (binErr != 0) delete []binErr;
-  binErr = new double[(nbinsx+2)];
+  binSum = new double[(nbinsx+2)];
+  //if (binErr != 0) delete []binErr;
+  //binErr = new double[(nbinsx+2)];
   if (binEntries != 0) delete []binEntries;
   binEntries = new double[(nbinsx+2)];
 
-  for (int i = 0; i < (nbinsx+2) ; ++i){
-    binCont[i] = ((double) (m_profile->GetBinContent(i))); 
-  }
-
-  for (int i = 0; i < (nbinsx+2) ; ++i){
-    binErr[i] = ((double) (m_profile->GetBinError(i))); 
-   msg <<MSG::DEBUG<<"Saving binErr["<<i <<"]: "<< binErr[i] << endreq;
+  //for (int i = 0; i < (nbinsx+2) ; ++i){
+  //  binErr[i] = ((double) (m_profile->GetBinError(i))); 
+  // msg <<MSG::DEBUG<<"Saving binErr["<<i <<"]: "<< binErr[i] << endreq;
   
-  }
+  //}
 
   for (int i = 0; i < (nbinsx+2) ; ++i){
     binEntries[i] = ((double) (m_profile->GetBinEntries(i))); 
   }
+
+  for (int i = 0; i < (nbinsx+2) ; ++i){
+    binSum[i] = ((double) (m_profile->GetBinContent(i)))*binEntries[i];
+    //msg << MSG::DEBUG << "splitObject: binSum[i] = " << binSum[i] << " fot->fArray[i] = " << fot->fArray[i] << endreq;
+  }
+
 
   bBinLabelX = false;
   for (int i = 1; i < (nbinsx+1) ; ++i){
@@ -351,6 +354,7 @@ void MonProfile::splitObject(){
 
 void MonProfile::combine(MonObject * H){
   MsgStream msg = createMsgStream();
+  //msg <<MSG::DEBUG << "==+> Entering combine" << endreq;
   if (H->typeName() != this->typeName()){
     msg <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<H->typeName() << " failed." << endreq;
     return;
@@ -386,25 +390,26 @@ void MonProfile::combine(MonObject * H){
   }
 
   for (int i = 0; i < (nbinsx+2); ++i){
- //   binCont[i] += HH->binCont[i];
- //   if (i==5) msg << MSG::INFO<<"  Adding binCont["<<i<<"] "<<binCont[i] << " binEntries["<<i<<"] "<< binEntries[i] << " to HH->binCont["<<i<<"] "<<HH->binCont[i]<< " HH->binEntries["<<i<<"] " << HH->binEntries[i] << endreq;
+ //   binSum[i] += HH->binSum[i];
+ //   if (i==5) msg << MSG::INFO<<"  Adding binSum["<<i<<"] "<<binSum[i] << " binEntries["<<i<<"] "<< binEntries[i] << " to HH->binSum["<<i<<"] "<<HH->binSum[i]<< " HH->binEntries["<<i<<"] " << HH->binEntries[i] << endreq;
     if ((this->typeName()=="MonRate") && ((i==5)||(i==6))) {
        //do not add the runnumber or cyclenumber; we assume they are all the same.
        //this code needs to be corrected when we ensure consistency at end of run
-       binCont[i] = HH->binCont[i];
+       binSum[i] = HH->binSum[i];
     }
     else {   
-       if ((binEntries[i]+HH->binEntries[i]) > 0) {
-          binCont[i] = (binCont[i]*binEntries[i]+HH->binCont[i]*HH->binEntries[i])/(binEntries[i]+HH->binEntries[i]); 
-       } 
-       else binCont[i] = (binCont[i]*binEntries[i]+HH->binCont[i]*HH->binEntries[i]);
+       binSum[i] += HH->binSum[i];
     }   
     binEntries[i] += HH->binEntries[i];
-  //  if (i==5) msg << MSG::INFO<<"  Result binCont["<<i<<"] "<<binCont[i] << " binEntries["<<i<<"] "<< binEntries[i] << endreq;
-    binErr[i] = sqrt(pow(binErr[i],2)+pow(HH->binErr[i],2));
+  //  if (i==5) msg << MSG::INFO<<"  Result binSum["<<i<<"] "<<binSum[i] << " binEntries["<<i<<"] "<< binEntries[i] << endreq;
+  //  binErr[i] = sqrt(pow(binErr[i],2)+pow(HH->binErr[i],2));
   //  binErr[i] += HH->binErr[i];
+
+  //msg << MSG::DEBUG << "combine: After  sum: i = " << i << "Combined: binEntries[i] = " << binEntries[i] << " Adding: HH->binEntries[i] = " 
+  //    << HH->binEntries[i] << " Combined: binSum[i] = " << binSum[i] << " Adding: HH->binSum[i] = " << HH->binSum[i] << endreq;
+
   }
-  
+
   m_fTsumw += HH->m_fTsumw;
   m_fTsumw2 += HH->m_fTsumw2;
   m_fTsumwx += HH->m_fTsumwx;
@@ -418,6 +423,7 @@ void MonProfile::combine(MonObject * H){
     }
   }
   nEntries += HH->nEntries;
+  if(0 != m_profile) loadObject();
 }
 
 void MonProfile::printLabels(){
@@ -449,19 +455,19 @@ void MonProfile::copyFrom(MonObject * H){
   sName = HH->sName;
   sTitle = HH->sTitle;
   
-  if (binCont != 0) delete []binCont;
-  binCont = new double[(nbinsx+2)];
+  if (binSum != 0) delete []binSum;
+  binSum = new double[(nbinsx+2)];
 
   for (int i = 0; i < (nbinsx+2) ; ++i){
-    binCont[i] = HH->binCont[i];
+    binSum[i] = HH->binSum[i];
   }
 
-  if (binErr != 0) delete []binErr;
-  binErr = new double[(nbinsx+2)];
+  //if (binErr != 0) delete []binErr;
+  //binErr = new double[(nbinsx+2)];
 
-  for (int i = 0; i < (nbinsx+2) ; ++i){
-    binErr[i] = HH->binErr[i];
-  }
+  //for (int i = 0; i < (nbinsx+2) ; ++i){
+  //  binErr[i] = HH->binErr[i];
+ // }
 
   if (binEntries != 0) delete []binEntries;
   binEntries = new double[(nbinsx+2)];
@@ -469,6 +475,7 @@ void MonProfile::copyFrom(MonObject * H){
   for (int i = 0; i < (nbinsx+2) ; ++i){
     binEntries[i] = HH->binEntries[i];
   }
+
   bBinLabelX = HH->bBinLabelX;
   
   if (bBinLabelX){
@@ -534,8 +541,8 @@ void MonProfile::reset(){
   }
 
   for (int i = 0; i < (nbinsx+2) ; ++i){
-    binCont[i] = 0;
-    binErr[i] = 0; 
+    binSum[i] = 0;
+    //binErr[i] = 0; 
     binEntries[i] = 0; 
   }
 
@@ -552,6 +559,7 @@ void MonProfile::reset(){
   m_fTsumwy2 = 0;
 
 //  m_fSumSize = 0;
+  if(0 != m_profile) m_profile->Reset();
 }
 
 void MonProfile::print(){
@@ -569,17 +577,17 @@ void MonProfile::print(){
   msg <<MSG::INFO<<"Ymin="<<Ymin<<endreq;
   msg <<MSG::INFO<<"Ymax="<<Ymax<<endreq;
   msg <<MSG::INFO<<"*************************************"<<endreq;
-  msg <<MSG::INFO<<"BinContents:"<<endreq;
+  msg <<MSG::INFO<<"BinSum:"<<endreq;
   for (int i = 0; i < (nbinsx+2) ; ++i){
-    if (i==6)    msg << " cycle nr " << (int) binCont[i]<<" ";
-    else msg <<  binCont[i]<<" ";
+    if (i==6)    msg << " cycle nr " << (int) binSum[i]<<" ";
+    else msg <<  binSum[i]<<" ";
   }
   msg << endreq;
   msg <<MSG::INFO<<"*************************************"<<endreq;
-  msg <<MSG::INFO<<"BinErrors:"<<endreq;
-  for (int i = 0; i < (nbinsx+2) ; ++i){
-    msg << binErr[i]<<" ";
-  }
+  //msg <<MSG::INFO<<"BinErrors:"<<endreq;
+  //for (int i = 0; i < (nbinsx+2) ; ++i){
+  //  msg << binErr[i]<<" ";
+  //}
   msg << endreq;
   msg <<MSG::INFO<<"*************************************"<<endreq;
   msg <<MSG::INFO<<"BinEntries:"<<endreq;
@@ -616,4 +624,20 @@ void MonProfile::print(){
   msg << endreq;
   msg <<MSG::INFO<<"*************************************"<<endreq;
   
+}
+
+double MonProfile::binError(int bin){
+  if (!isLoaded) return 0.;
+  // Simplified version adapted from Root TProfile::GetBinError
+  if (bin < 0 || bin > nbinsx+2) return 0;
+  Double_t cont = binSum[bin];
+  Double_t sum  = binEntries[bin];
+  Double_t err2 = m_fSumw2[bin];
+  if (sum == 0) return 0;
+  Double_t eprim;
+  Double_t contsum = cont/sum;
+  Double_t eprim2  = TMath::Abs(err2/sum - contsum*contsum);
+  eprim          = sqrt(eprim2);
+  //return eprim; //kERRORSPREAD option
+  return eprim/sqrt(sum); //kERRORMEAN option
 }

@@ -82,8 +82,7 @@ double RateExtractor::getCounterFromMonRate()
   TProfile * profile = m_pMonRate->profile();
   
   double numberOfProcesses = profile->GetBinEntries(4);  
-  //double counterMean = profile->GetBinContent(8 + m_counterId);
-  double counterMean = m_pMonRate->binCont[8 + m_counterId];
+  double counterMean = m_pMonRate->binSum[8 + m_counterId];
   //the 8th is the gps time
   if (m_counterId==0) return counterMean;
   else return numberOfProcesses * counterMean;
@@ -92,8 +91,7 @@ double RateExtractor::getCounterFromMonRate()
 longlong RateExtractor::getCycleLengthFromMonRate()
 {
  // TProfile * profile = m_pMonRate->profile();
- // return (longlong)profile->GetBinContent(7);  
-  return (longlong)m_pMonRate->binCont[7];
+  return (longlong)m_pMonRate->binSum[7];
 }
 
 std::string RateExtractor::getCommentFromMonRate()

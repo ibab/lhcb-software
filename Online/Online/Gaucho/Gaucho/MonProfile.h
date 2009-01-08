@@ -53,9 +53,15 @@ public:
   virtual void reset();
   void synchronizeLabelNames(MonObject * H);
 
-  double binContent(int i) {return binCont[i];}
-  double binError(int i) {return binErr[i];}
   double binEntry(int i) {return binEntries[i];}
+  double binContent(int i){if((this->typeName()=="MonRate") && ((i==5)||(i==6))) return binSum[i]; else { if(0!=binEntries[i]) return binSum[i]/binEntries[i]; else return 0;} };
+  double binError(int i);
+
+
+  
+
+
+
   std::string binLabX(int i) {return binLabelX[i];}
   int numbinx() {return nbinsx;}
 
@@ -77,8 +83,8 @@ public:
 
   bool bBinLabelX;
 
-  double *binCont;
-  double *binErr;
+  double *binSum;
+  //double *binErr;
   double *binEntries;
   
   int m_fDimension;

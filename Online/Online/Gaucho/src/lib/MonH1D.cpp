@@ -375,7 +375,7 @@ void MonH1D::copyFrom(MonObject * H){
   m_fTsumwx = HH->m_fTsumwx;
   m_fTsumwx2 = HH->m_fTsumwx2;
   m_fSumSize = HH->m_fSumSize;
-  
+
   if (m_fSumw2 !=0) delete []m_fSumw2;
   m_fSumw2 = new double[m_fSumSize];
   for (int i=0 ; i < m_fSumSize; ++i) {
@@ -407,7 +407,7 @@ void MonH1D::reset(){
   m_fTsumw2  = 0;
   m_fTsumwx  = 0;
   m_fTsumwx2 = 0;
-  m_fSumSize = 0;
+  //m_fSumSize = 0;
 }
 
 void MonH1D::print(){
