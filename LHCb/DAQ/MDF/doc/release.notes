@@ -6,6 +6,10 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+!========================= MDF v3r16 2008-12-10 ===============================
+! 2009-01-08- Markus Frank
+ - Fix bug in RawDataSelector.cpp for support for FileID bank
+
 !========================= MDF v3r15 2008-12-10 ===============================
 ! 2008-12-10- Markus Frank
  - Add support for FileID bank
