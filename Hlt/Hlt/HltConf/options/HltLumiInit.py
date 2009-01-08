@@ -1,7 +1,11 @@
+#
+# contains the keys and values for the lumi counters
+#
+from Configurables import ApplicationMgr, LumiANNSvc 
 
-ApplicationMgr.ExtSvc += { "LumiANNSvc" };
+ApplicationMgr().ExtSvc.append( "LumiANNSvc"  )
 
-LumiANNSvc.LumiCounters = {
+LumiANNSvc().LumiCounters = {
     "PUMult"     : 0   ,
     "RZVelo"     : 1   ,
     "RZVeloBW"   : 2   , 
@@ -12,7 +16,5 @@ LumiANNSvc.LumiCounters = {
     "CaloEt"     : 7   , 
     "PV2D"       : 10  , 
     "PV3D"       : 11  , 
-    "PU"         : 13  
+    "PU"         : 13  ,
 };
-
-LumiANNSvc.OutputLevel=2;

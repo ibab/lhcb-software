@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.28 2009-01-07 15:58:49 graven Exp $
+# $Id: Hlt1.py,v 1.29 2009-01-08 12:58:54 panmanj Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.28 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.29 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -43,7 +43,7 @@ addHlt1Prop([ 'routingBitDefinitions', 'Accept', 'FilterDescriptor'
             , 'OutputSelection','Context' ])
 
 importOptions('$HLTCONFROOT/options/HltInit.py')
-importOptions('$HLTCONFROOT/options/HltLumiInit.opts')
+importOptions('$HLTCONFROOT/options/HltLumiInit.py')
 
 # Lines which are 'always' there...
 

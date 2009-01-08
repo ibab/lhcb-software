@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.110 2009-01-07 15:58:48 graven Exp $ 
+! $Id: release.notes,v 1.111 2009-01-08 12:58:54 panmanj Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2009-01-08 - Jaap Panman
+ - add HltLumiSequences.py (needed for HltLuminosityMonitor)
+ - translate HltLumiInit.opts to HltLumiInit.py and remove the old .opts
 
 ! 2009-01-07 - Gerhard Raven
  - add line which accepts L0 'forced' triggers in HltCommissioningLines.py
