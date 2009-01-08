@@ -4,10 +4,9 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
-
+!================ DAQEvent v7r17 2009-01-08 ===========================
 ! 2008-12-16 - Olivier Deschamps
  - Fix bug in OdinTypesFilter.cpp
-
 
 !================ DAQEvent v7r16 2008-11-17 ===========================
 ! 2008-10-28 - Marco Cattaneo
