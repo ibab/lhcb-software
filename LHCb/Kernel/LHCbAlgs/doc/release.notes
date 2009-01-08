@@ -4,6 +4,7 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!======================== LHCbAlgs v2r23 2009-01-08 ==========================
 ! 2008-12-29 - Gerhard Raven
  - DeterminsticPrescaler: replace custom statistics with StatEntity
 
