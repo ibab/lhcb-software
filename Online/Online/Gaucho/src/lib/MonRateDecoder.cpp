@@ -164,7 +164,7 @@ void MonRateDecoder::update(MonRate *monRate) {
     double rateValue = m_newCounters[i].second - m_oldCounters[i].second;
     rateValue *= 1000000.0;
     rateValue /= realDeltaT;
-    if(m_oldrateValue.size()<=i) {
+    if((int)m_oldrateValue.size()<=i) {
        //the first time, fill the vector
        m_oldrateValue.push_back(rateValue);
     }
