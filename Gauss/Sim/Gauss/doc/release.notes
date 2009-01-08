@@ -4,6 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-01-08 - Gloria CORTI
+ - Keep all particles that decay to preserve the whole tree in case of decay
+   at rest since the decay products are always kept
+   . Simulation.opts
+
 !======================== Gauss v36r0 2008-10-11 =============================
 ! 2008-12-11 - Gloria CORTI
  - Fix problem to run with tag velo-open 

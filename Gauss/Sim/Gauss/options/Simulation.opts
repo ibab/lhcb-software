@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.93 2008-12-08 14:16:58 gcorti Exp $ 
+// $Id: Simulation.opts,v 1.94 2009-01-08 17:53:30 gcorti Exp $ 
 
 /** @file 
  * 
@@ -126,7 +126,7 @@ GiGa.TrackSeq.PostTrack.StoreByOwnEnergy   = true;
 GiGa.TrackSeq.PostTrack.OwnEnergyThreshold = 100.0 * MeV;        
 // For particles producing a cerenkov photon just store it
 GiGa.TrackSeq.PostTrack.StoreByChildProcess  = true; 
-GiGa.TrackSeq.PostTrack.StoredChildProcesses = {"RichG4Cerenkov"}; 
+GiGa.TrackSeq.PostTrack.StoredChildProcesses = {"RichG4Cerenkov", "Decay"}; 
 // Store particles from a Decay
 GiGa.TrackSeq.PostTrack.StoreByOwnProcess  = true; 
 GiGa.TrackSeq.PostTrack.StoredOwnProcesses = {"Decay"}; 
