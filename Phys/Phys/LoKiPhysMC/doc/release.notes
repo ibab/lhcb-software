@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.52 2008-11-17 16:11:18 cattanem Exp $ 
+! $Id: release.notes,v 1.53 2009-01-08 17:28:30 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiPhysMC v8r1 2009-01-08 ========================
+! 2008-11-28 - Vanya BELYAEV
+ - Add QMTest
 
 !========================== LoKiPhysMC v8r0 2008-11-17 ========================
 ! 2008-11-04 - Vanya BELYAEV
