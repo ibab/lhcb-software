@@ -1,3 +1,7 @@
+2009-01-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/SetupProject.py: made the touch command silent for csh and sh.
+
 2009-01-08  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* scripts/SetupProject.py: added --append option to append to an output
