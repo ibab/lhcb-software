@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.48 2008-12-10 09:57:07 cattanem Exp $
+! $Id: release.notes,v 1.49 2009-01-08 12:49:08 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloInterfaces
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+!========================== CaloInterfaces v7r9 2009-01-08 ====================
 ! 2008-12-10 - Marco Cattaneo
  - Fix gcc 4.3 compilation warnings
 
