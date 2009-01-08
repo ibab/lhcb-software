@@ -1,5 +1,5 @@
 package EventSys
-version v24r10
+version v24r11
 
 branches doc cmt
 
@@ -10,15 +10,15 @@ use DigiEvent   v2r10   Event
 use EventAssoc  v4r5    Event
 use EventBase   v2r5    Event
 use GenEvent    v5r3    Event
-use HltEvent    v8r13   Event
-use LinkerEvent v3r5    Event
+use HltEvent    v8r14   Event
+use LinkerEvent v3r6    Event
 use L0Event     v17r3   Event
-use MCEvent     v2r10   Event
+use MCEvent     v2r11   Event
 use PackedEvent v3r4    Event
-use PhysEvent   v11r6   Event
-use RecEvent    v2r17   Event
-use TrackEvent  v4r16   Event
-use VeloEvent   v16r6   Event
+use PhysEvent   v11r7   Event
+use RecEvent    v2r18   Event
+use TrackEvent  v4r17   Event
+use VeloEvent   v16r6p1 Event
 
 private
 use RELAX       v*      LCG_Interfaces
