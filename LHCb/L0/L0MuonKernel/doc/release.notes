@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!============================ L0MuonKernel v8r5 2009-01-08 ==================== 
 ! 2008-12-18 - Julien Cogan
  - Implement new L0Buffer frame for the CU/SU L0buffer converter
 
@@ -19,12 +20,12 @@
 ! 2008-11-19 - Julien Cogan
  - Implement compression algorithm for L0MuonProcData Bank
 
-!============================ L0MuonKernel v8r4 2009-11-17 ==================== 
+!============================ L0MuonKernel v8r4 2008-11-17 ==================== 
 ! 2008-11-04 - Julien Cogan
  - Add documentation for doxygen
  - Remove pt encoding parameters : they are fixed by the version number
 
-!============================ L0MuonKernel v8r3 2009-09-30 ==================== 
+!============================ L0MuonKernel v8r3 2008-09-30 ==================== 
 ! 2008-09-21 - Julien Cogan
  - MonUtilities : add new names for histograms
 
@@ -33,7 +34,7 @@
  - ProcDataCnv : bug fix in the decoding of PU errors
  - CtrlCanCnv : bug fix in the decoding of bank header 
 
-!============================ L0MuonKernel v8r2 2009-08-04 =================== 
+!============================ L0MuonKernel v8r2 2008-08-04 =================== 
 ! 2008-09-04 - Julien Cogan
  - Decoding of the L0Muon compressed mode + transparent mode v2 
 
