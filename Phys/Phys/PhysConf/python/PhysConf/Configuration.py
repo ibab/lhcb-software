@@ -1,7 +1,7 @@
 """
 High level configuration tools for PhysConf
 """
-__version__ = "$Id: Configuration.py,v 1.7 2009-01-06 18:02:41 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.8 2009-01-08 09:06:27 pkoppenb Exp $"
 __author__ = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -51,15 +51,12 @@ class PhysConf(LHCbConfigurableUser) :
         """
         # POOL Persistency
         importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
-        # PPSvc
-        from Configurables import LHCb__ParticlePropertySvc
-        pp = LHCb__ParticlePropertySvc ( ParticlePropertiesFile = 'conddb:///param/ParticleTable.txt' )
-        ApplicationMgr().ExtSvc +=  [ pp ]            
         # Get the event time (for CondDb) from ODIN
         from Configurables import EventClockSvc
         EventClockSvc().EventTimeDecoder = "OdinTimeDecoder";
-        # DST unpacking
-        DstConf().EnableUnpack = True
+        # DST unpacking, not for DC06
+        if ( self.getProp("DataType") != "DC06" ):
+            DstConf().EnableUnpack = True
 #
 # Data on demand
 #
@@ -72,7 +69,7 @@ class PhysConf(LHCbConfigurableUser) :
         DataOnDemandSvc().NodeMap['/Event/Rec/Rich']       = 'DataObject'
         DataOnDemandSvc().NodeMap['/Event/Phys']           = 'DataObject'
         DataOnDemandSvc().NodeMap['/Event/Relations/Phys'] = 'DataObject'
-        # raw event
+        # raw event, not for DC06
         importOptions("$STDOPTS/DecodeRawEvent.py")
 #
 # LoKi
