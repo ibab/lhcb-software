@@ -1,11 +1,11 @@
-! $Id: release.notes,v 1.13 2009-01-08 17:12:58 cattanem Exp $ 
+! $Id: release.notes,v 1.14 2009-01-08 17:15:45 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiHlt
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : collection of functors&factory for HLT 
 ! -----------------------------------------------------------------------------
 
-!========================== LoKiHlt v8r1 2009-01-08 ==========================
+!========================== LoKiHlt v2r1 2009-01-08 ==========================
 ! 2009-01-08 - Marco Cattaneo
  - Add -no_auto_imports to GaudiPython usage
 
