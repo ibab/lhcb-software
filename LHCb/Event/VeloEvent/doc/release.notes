@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.62 2008-12-09 16:26:25 cattanem Exp $
+! $Id: release.notes,v 1.63 2009-01-08 13:24:09 cattanem Exp $
 ! package Event/VeloEvent
 ! package manager: C.Parkes, T.Szumlak
 !========================================================================
 
+!====================== VeloEvent v16r6p1 2009-01-08 ====================
 ! 2008-12-09 - Marco Cattaneo
  - Fix gcc 4.3 compilation warnings
 
