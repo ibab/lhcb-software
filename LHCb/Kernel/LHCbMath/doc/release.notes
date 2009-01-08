@@ -6,10 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
-
-! 200812-03 M Needham
+!========================= LHCbMath v3r5 2009-01-08 ==========================
+! 2008-12-03 M Needham
  - More protections against fpe in ModeFunctions
- 
 
 ! 2008-12-02 - Vanya BELYAEV
  - LHCbMath/Kinematics.h
@@ -19,8 +18,7 @@
  - cmt/requirments 
     version increment to v3r5 
 
->>>>>>> 1.83
-! 2008012-02 M Needham
+! 2008-12-02 M Needham
   - Guard against fpe in generalizedMean calc 
 
 ! 2008-12-02 M. Needham
@@ -28,7 +26,6 @@
 
 ! 2008-11-28 - Gerhard Raven
  - add list<MD5> to the dictionary
-
 
 !========================= LHCbMath v3r4 2008-11-17 ==========================
 ! 2008-11-08 - Vanya BELYAEV
