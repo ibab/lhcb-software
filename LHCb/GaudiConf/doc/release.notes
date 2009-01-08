@@ -2,6 +2,7 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+!======================== GaudiConf v12r0 2009-01-08 ========================
 ! 2009-01-06 - Marco Cattaneo
  - Add a configurable DstConf to set up DST content. Replaces DstContent.opts,
    MCDstContent.opts, rDstContent.opts, which have been removed. Also allows
