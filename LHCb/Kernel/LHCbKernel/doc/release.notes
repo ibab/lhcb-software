@@ -4,6 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+!===================== LHCbKernel v11r0 2009-01-08 ========================
 ! 2009-01-08 - Chris Jones
  - Fix NULL implementation of FPEGuard.
 
