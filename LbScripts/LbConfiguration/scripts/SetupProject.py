@@ -5,11 +5,11 @@ from xml.sax import parse, ContentHandler
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.37 2009-01-08 17:52:14 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.38 2009-01-08 18:55:44 hmdegaud Exp $"
 
 try:
     from LbUtils.CVS import CVS2Version
-    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.37 $")
+    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.38 $")
 except ImportError :
     __version__ = _cvs_id
 
@@ -1157,6 +1157,7 @@ class SetupProject:
         return ans
     
     def _touch_project_logfiles(self):
+        touchline = ""
         self._debug("----- _touch_project_logfiles() -----")
         if self.shell in [ 'csh', 'sh' ]:
             # I have to touch a file to tell the release manager which version of the project I'm using
@@ -1165,11 +1166,11 @@ class SetupProject:
                 and lhcb_style_version.match(self.project_info.version): # I do not want to record non-standard or no versions
                 dirname = os.path.join(os.environ['LHCBHOME'],'project','logfiles')
                 if os.path.isdir(dirname):
-                    return 'touch %s/%s_%s_%s\n'%(dirname,
+                    touchline= 'touch %s/%s_%s_%s >& /dev/null\n'%(dirname,
                                                   self.project_info.name.upper(),
                                                   self.project_info.version,
                                                   os.environ["USER"])
-        return ""
+        return touchline
 
     def _prepare_tmp_local_project(self):
         # prepare temporary local project directory
