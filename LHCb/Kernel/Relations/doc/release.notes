@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.59 2008-11-29 16:25:30 ibelyaev Exp $ 
+! $Id: release.notes,v 1.60 2009-01-08 16:39:57 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
 
+!====================== Relations v5r6 2008-11-17 ============================
 ! 2008-11-29 - Vanya BELYAEV
  - Relations/IsConvertible.h
    Reflex fof gcc4.3 does not accept usage of 
