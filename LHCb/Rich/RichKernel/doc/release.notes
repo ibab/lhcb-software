@@ -1,10 +1,10 @@
-! $Id: release.notes,v 1.210 2009-01-08 17:29:50 cattanem Exp $
+! $Id: release.notes,v 1.211 2009-01-08 17:33:28 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
-!====================== RichKernel v7r18 2009-01-08 ====================
+!====================== RichKernel v7r19 2009-01-08 ====================
 ! 2008-11-30 - Chris Jones
  - Extend tool interface IRichRefractiveIndex with new methods to 
    calculate the effective index for a set of radiator intersections.
@@ -15,7 +15,7 @@
  - Add new MC photon creator options that cheats the track direction at
    the emission point.
 
-!====================== RichKernel v7r17 2008-11-17 ====================
+!====================== RichKernel v7r18 2008-11-17 ====================
 ! 2008-11-17 - Marco Cattaneo
  - Add a component library containing the ToolRegistry (moved from RichTools)
 
