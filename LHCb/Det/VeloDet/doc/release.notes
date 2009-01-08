@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.207 2008-11-28 16:27:55 krinnert Exp $
+! $Id: release.notes,v 1.208 2009-01-08 13:09:18 cattanem Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
+!======================== VeloDet v13r4p1 2009-01-08 =========================
 ! 2008-11-28 - Kurt Rinnert
  - fixed bug in DeVeloRType::rPitch() that caused non-sensical results in 3
    sectors.
