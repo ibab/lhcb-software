@@ -1,6 +1,11 @@
-2009-01-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+2009-01-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v1r7
+
+2008-01-08  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/rcs.py: changed to use shell=true only on windows (it
+	breaks on linux).
 
 2009-01-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 

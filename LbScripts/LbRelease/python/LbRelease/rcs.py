@@ -1,16 +1,17 @@
 """
 Module providing the basic functionalities of the GetPack utility.
 """
-import os, re
+import os, re, sys
 from subprocess import Popen, PIPE, STDOUT
 import logging
 
+_use_shell = sys.platform.startswith("win")
 _call_command_log = logging.getLogger("_call_command")
 def _call_command(cmd, *args, **kwargs):
     """
     Simple wrapper to execute a command and return standard output and standard error.
     """
-    d = {"stdout": PIPE, "stderr": PIPE, "shell": True}
+    d = {"stdout": PIPE, "stderr": PIPE, "shell": _use_shell}
     d.update(kwargs)
     cmd = [cmd] + list(args)
     _call_command_log.debug("Execute command: %r %r", " ".join(cmd), kwargs)
