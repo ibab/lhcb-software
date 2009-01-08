@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!===================== RichRecBase v3r19 2009-01-08 ==========================
 ! 2008-11-30 - Chris Jones
  - Add new tool interface to calculate the effective radiator refractive
    index as seen by a given RichRecSegment.
