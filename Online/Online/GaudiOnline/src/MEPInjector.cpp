@@ -2027,7 +2027,7 @@ void MEPInjector::clearCounters() {
 }
 
 int MEPInjector::setupCounters() {
-  MsgStream log(msgSvc(),"MEPRx");
+  MsgStream log(msgSvc(),name());
   clearCounters();
   publishCounters();
   
