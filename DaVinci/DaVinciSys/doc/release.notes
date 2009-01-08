@@ -3,6 +3,9 @@ Package             : Phys/DaVinci
 Package Coordinator : Juan Palacios
 Purpose             : LHCb analysis program 
 
+! 2009-01-08 - Patrick Koppenburg
+ - Added Hlt test
+
 ! 2009-01-07 - Patrick Koppenburg
  - Moved all tests here
  - Added three more, inclusing SAM test for Dirac
