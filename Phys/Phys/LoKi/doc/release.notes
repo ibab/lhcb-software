@@ -1,18 +1,18 @@
-! $Id: release.notes,v 1.23 2008-12-04 10:19:51 ibelyaev Exp $ 
+! $Id: release.notes,v 1.24 2009-01-08 16:54:20 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKi
 ! Responsible : Vanya BELYAEV
 ! Purpose     : The suite for the whole  LoKi project 
 ! -----------------------------------------------------------------------------
 
+!=========================== LoKi v8r1 2009-01-08 =============================
 ! 2008-12-04 - Vanya BELYAEV
  - list all Loki packages 
 
 ! 2008-11-28 - Vanya BELYAEV
-
  - remove the library and the code 
  - add LoKiHlt into dependencies 
- - version incremen tto v8r1
+ - version increment to v8r1
 
 !=========================== LoKi v8r0 2008-11-17 =============================
 ! 2008-11-02 - Vanya BELYAEV
@@ -107,6 +107,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.23  2008/12/04 10:19:51  ibelyaev
+!  list all LoKi packages
+!
 ! Revision 1.22  2008/11/28 17:10:17  ibelyaev
 !  add LoKiHlt
 !
