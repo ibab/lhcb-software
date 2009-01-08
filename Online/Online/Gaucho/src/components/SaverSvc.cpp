@@ -132,7 +132,7 @@ StatusCode SaverSvc::initialize() {
   m_pGauchoMonitorSvc->enableMonObjectsForString();
   
   std::vector<std::string>::iterator  it;
-  int i =0;
+ // int i =0;
   
   char timestr[64];
   char year[5];
@@ -185,7 +185,7 @@ StatusCode SaverSvc::initialize() {
   
     m_processMgr.push_back(processMgr);
     msg << MSG::DEBUG << "Finishing the initialize ProcessMgr for taskName " << *it << endreq;
-    i++;
+  //  i++;
   }
   msg << MSG::DEBUG << "Finishing the initialize method." << endreq;
   return StatusCode::SUCCESS;
