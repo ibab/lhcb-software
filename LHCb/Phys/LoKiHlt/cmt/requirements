@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.4 2008-11-28 17:11:48 ibelyaev Exp $ 
+# $Id: requirements,v 1.5 2009-01-08 17:12:58 cattanem Exp $ 
 # ============================================================================
 # Created    : 2008-09-16
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -16,7 +16,7 @@ use               L0Event  v*    Event
 use               HltEvent v*    Event 
 
 private
-use               GaudiPython   v*                   
+use               GaudiPython   v*    -no_auto_imports
 use               Python        v*    LCG_Interfaces 
 public
 

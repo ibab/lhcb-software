@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.8 2008-11-22 15:46:59 ibelyaev Exp $ 
+# $Id: requirements,v 1.9 2009-01-08 17:14:58 cattanem Exp $ 
 # =============================================================================
 # Created    : 2007-12-01
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
@@ -10,7 +10,7 @@ branches           cmt doc dict python
 
 # ================ dependencies ===============================================
 use   LoKiCore     v*    Phys 
-use   GaudiPython v* 
+use   GaudiPython  v*    -no_auto_imports
 
 # ================ own includes ===============================================
 apply_pattern install_python_modules 

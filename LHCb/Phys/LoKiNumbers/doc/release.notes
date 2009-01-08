@@ -4,16 +4,17 @@
 ! Purpose     : Set of dictionaries for LoKi functions 
 ! -----------------------------------------------------------------------------
 
-! 2008-11-22 - Vanya BELYAEV
+!========================== LoKiNumbers v8r1 2009-01-08 =======================
+! 2009-01-08 - Marco Cattaneo
+ - Add -no_auto_imports to GaudiPython usage
 
+! 2008-11-22 - Vanya BELYAEV
  - first attempt to provide the integrated QMtests
 
 ! 2008-11-21 - Vanya Belyaev
-
  - add more improvements fo  vector->bool functors 
  - cmt/requirements
    version incrmeent to v8r1 
-
 
 ! =========================== LoKiNumbers v8r0 2008-11-17 =====================
 ! 2008-11-02 - Vanya BELYAEV
