@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.7 2008-12-16 12:48:11 cattanem Exp $ 
+! $Id: release.notes,v 1.8 2009-01-08 16:33:16 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/PartProp
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
 
+!======================== PartProp v1r0 2009-01-08 ============================
 ! 2008-12-16 - Marco Cattaneo
  - Fix gcc 4.3 warning
 
