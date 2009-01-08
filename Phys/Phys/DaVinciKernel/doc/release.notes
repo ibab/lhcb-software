@@ -1,9 +1,10 @@
-!$Id: release.notes,v 1.278 2008-12-11 07:56:07 cattanem Exp $
+!$Id: release.notes,v 1.279 2009-01-08 16:52:14 cattanem Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!======================== DaVinciKernel v7r2 2009-01-08 =====================
 ! 2008-12-11 - Marco Cattaneo
  - Fix gcc 4.3 warning in IOnOfflineTool.h
 
