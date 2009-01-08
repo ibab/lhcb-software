@@ -5,11 +5,11 @@ from xml.sax import parse, ContentHandler
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.36 2008-12-11 17:58:59 hmdegaud Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.37 2009-01-08 17:52:14 marcocle Exp $"
 
 try:
     from LbUtils.CVS import CVS2Version
-    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.36 $")
+    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.37 $")
 except ImportError :
     __version__ = _cvs_id
 
@@ -818,7 +818,10 @@ class SetupProject:
     def _write_script(self,data):
         close_output = False
         if self.output:
-            self.output_file = open(self.output,"w")
+            if self.append:
+                self.output_file = open(self.output,"a")
+            else:
+                self.output_file = open(self.output,"w")
             self.output = None # reset the option value to avoid to reuse it
             close_output = True
         elif self.mktemp:
@@ -925,12 +928,13 @@ class SetupProject:
         def check_output_options_cb(option, opt_str, value, parser):
             if opt_str == "--mktemp":
                 if parser.values.output:
-                    raise OptionValueError("--mktemp cannot be used at the same time as --output")
+                    raise OptionValueError("--mktemp cannot be used at the same time as --output or --append")
                 parser.values.mktemp = True
-            elif opt_str == "--output":
+            elif opt_str in ["--output", "--append"] :
                 if parser.values.mktemp:
-                    raise OptionValueError("--mktemp cannot be used at the same time as --output")
+                    raise OptionValueError("--mktemp cannot be used at the same time as --output or --append")
                 parser.values.output = value
+                parser.values.append = (opt_str == "--append")
         
         # internal options
         parser.add_option("--shell", action="store", type="choice", metavar="SHELL",
@@ -939,6 +943,9 @@ class SetupProject:
         parser.add_option("--output", action="callback", metavar="FILE",
                           type = "string", callback = check_output_options_cb,
                           help="(internal) output the command to set up the environment ot the given file instead of stdout")
+        parser.add_option("--append", action="callback", metavar="FILE",
+                          type = "string", callback = check_output_options_cb,
+                          help="(internal) same as --output, but do not truncate")
         parser.add_option("--mktemp", action="callback",
                           callback = check_output_options_cb,
                           help="(internal) send the output to a temporary file and print on stdout the file name (like mktemp)")
@@ -1087,6 +1094,7 @@ class SetupProject:
         
         parser.set_defaults(output=None,
                             mktemp=False,
+                            append=False,
                             loglevel = 3,
                             disable_CASTOR=False,
                             dev_dirs=[],
@@ -1475,7 +1483,8 @@ class SetupProject:
         script = "" # things we need to append to the setup script (like aliases)
         messages = [] # lines to print (feedback)
         if not self.build_env: # this part is needed only if we do not ask for build only env
-            self._always("Configuring %s" % self.project_info)
+            if not self.opts.silent:
+                self._always("Configuring %s" % self.project_info)
             tmp_dir = self._prepare_tmp_local_project()
             try:
                 (script,err) = self._gen_setup(tmp_dir,env)
