@@ -59,8 +59,7 @@ DaVinci().MainOptions  = ""                    # None
 #
 # Trigger (Restore when fixed on 2008 data)
 #
-# DaVinci().HltType = 'Hlt1+Hlt2'                ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
-# DaVinci().HltOldStyle = False                  ## Go for the new thing
+DaVinci().HltType = 'Hlt1+Hlt2'                ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
 ########################################################################
 #
 # To run in shell :

@@ -1,5 +1,5 @@
 ########################################################################
-# $Id: DVTutorial_2.py,v 1.6 2008-12-22 18:08:36 pkoppenb Exp $
+# $Id: DVTutorial_2.py,v 1.7 2009-01-08 17:38:25 pkoppenb Exp $
 #
 # Options for exercise 2
 #
@@ -25,7 +25,8 @@ tutorialseq.Members += [ jpsi2mumu ]
 jpsi2mumu.addTool( PhysDesktop() )
 jpsi2mumu.PhysDesktop.InputLocations = [ "StdLooseMuons" ]
 from GaudiKernel.SystemOfUnits import MeV
-jpsi2mumu.MassWindow = 30*MeV 
+jpsi2mumu.MassWindow = 30*MeV
+jpsi2mumu.MaxChi2 = 100 
 #######################################################################
 #
 # 3) Configure the application

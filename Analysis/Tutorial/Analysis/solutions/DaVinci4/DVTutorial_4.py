@@ -1,5 +1,5 @@
 ########################################################################
-# $Id: DVTutorial_4.py,v 1.3 2008-12-22 18:08:37 pkoppenb Exp $
+# $Id: DVTutorial_4.py,v 1.4 2009-01-08 17:38:25 pkoppenb Exp $
 #
 # Options for exercise 4
 #
@@ -20,7 +20,7 @@ tutorialseq = GaudiSequencer("TutorialSeq")
 #
 from Configurables import DaVinci
 DaVinci().HistogramFile = "DVHistos_4.root"    # Histogram file
-DaVinci().EvtMax = 1000                        # Number of events
+DaVinci().EvtMax = -1                          # Number of events
 DaVinci().DataType = "2008"                    # Default is "DC06"
 DaVinci().Simulation   = True                  # It's MC
 #
