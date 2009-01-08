@@ -4,6 +4,12 @@
 ! Purpose     : collect Kernel packages
 !-----------------------------------------------------------------------------
 
+!======================== KernelSys v11r0 2009-01-08 =========================
+! 2009-01-08 - Marco Cattaneo
+ - Add PartProp v1r0
+ - Use LHCbKernel v11r0, LHCbMath v3r5, L0MuonKernel v8r5, 
+       ProcessorKernel v5r3p1, Relations v5r6, RichKernel v7r19
+
 !======================== KernelSys v10r0 2008-11-17 =========================
 ! 2008-11-17 - Marco Cattaneo
  - Use CaloKernel v5r2, LHCbKernel v10r0, LHCbMath v3r4, L0MuonKernel v8r4,
