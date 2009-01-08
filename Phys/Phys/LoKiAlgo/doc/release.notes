@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.49 2009-01-08 16:55:36 cattanem Exp $ 
+! $Id: release.notes,v 1.50 2009-01-08 17:09:10 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgo
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -6,6 +6,9 @@
 ! -----------------------------------------------------------------------------
 
 !========================== LoKiAlgo v8r1 2009-01-08 ==========================
+! 2009-01-08 - Marco Cattaneo
+ - Add -no_auto_imports to GaudiPython usage
+
 ! 2008-11-27 - Vanya BELYAEV
  - add QMtest 
  - use new decorators 

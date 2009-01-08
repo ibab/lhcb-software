@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.25 2008-11-28 17:07:21 ibelyaev Exp $ 
+! $Id: release.notes,v 1.26 2009-01-08 17:10:04 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgoMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : MC-analogue for the basic LoKi algorithm 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiAlgoMC v8r1 2009-01-08 ========================
+! 2009-01-08 - Marco Cattaneo
+ - Add -no_auto_imports to GaudiPython usage
 
 ! 2008-11-27 - Vanya BELYAEV
  - add QMTest
