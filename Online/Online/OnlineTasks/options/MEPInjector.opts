@@ -1,4 +1,3 @@
-//#include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
 #include "/group/online/dataflow/options/LHCb/Injector_Info.opts"
 
 ApplicationMgr.HistogramPersistency  = "NONE";
@@ -52,7 +51,7 @@ LHCb::MEPInjector.AuditExecute=true;
 StoreExplorerAlg.AuditExecute=true;
 
 
-LHCb::MEPInjector.OutputLevel = @OnlineEnv.OutputLevel;
+LHCb::MEPInjector.OutputLevel = 2; //@OnlineEnv.OutputLevel;
 
 MessageSvc.OutputLevel = @OnlineEnv.OutputLevel;
 EventSelector.PrintFreq =10000; //just display every 2000 events ~2kHz
@@ -81,4 +80,4 @@ LHCb::MEPInjector.EventBuffer = 300000;
 LHCb::MEPInjector.TimeOut = 1000;  //milliseconds
 
 LHCb::MEPInjector.AutoMode = false; // Are we running in Auto Mode or in Odin Mode
-
+LHCb::MEPInjector.HLTIPAddrTo = "192.168.19.252"; //Still used in Automode

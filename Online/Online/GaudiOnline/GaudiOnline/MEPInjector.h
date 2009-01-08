@@ -77,22 +77,21 @@ namespace LHCb {
                                      /* = counter of requests registered */
 
     std::queue< /*SmartDataPtr<RawEvent>*/ RawEvent* > m_QueueRawEvents;   /* A queue of raw events to be processed */
-   
-    unsigned int  m_TotEvtsRead;         /* Total of events read */
-    unsigned int  m_TotEvtsSent;         /* Total of events sent */
-    unsigned int  m_TotMEPsTx;           /* Total of MEPs transmitted */
  
+    /// Data to publish or used to publish monitoring 
+    int  m_TotBytesTx;          /* Total of bytes transmitted to the farms */ 
+    int  m_TotEvtsRead;         /* Total of events read */
+    int  m_TotEvtsSent;         /* Total of events sent */
+    int  m_TotMEPsTx;           /* Total of MEPs transmitted */
     struct timeval m_InitTime;          /* Date of initialization of the injector */
     struct timeval m_CurTime;           /* Current date */
-    unsigned int m_TotElapsedTime;      /* Elapsed time since the initialization, in ms */       
-
-    unsigned int m_TotMEPReqTx;          /* Total of MEP request forwarded */
-    unsigned int m_TotMEPReqRx;          /* Total of MEP request received */
-    unsigned int m_TotMEPReqPktTx;       /* Total of MEP request packet sent */
-    unsigned int m_TotMEPReqPktRx;       /* Total of MEP request packet received */
-
-    unsigned int m_TotOdinMEPRx;         /* Total of Odin MEP received */
-    unsigned int m_TotOdinMEPTx;         /* Total of Odin MEP sent */
+    int m_TotElapsedTime;      /* Elapsed time since the initialization, in ms */       
+    int m_TotMEPReqTx;          /* Total of MEP request forwarded */
+    int m_TotMEPReqRx;          /* Total of MEP request received */
+    int m_TotMEPReqPktTx;       /* Total of MEP request packet sent */
+    int m_TotMEPReqPktRx;       /* Total of MEP request packet received */
+    int m_TotOdinMEPRx;         /* Total of Odin MEP received */
+    int m_TotOdinMEPTx;         /* Total of Odin MEP sent */
 
     pthread_t     m_ThreadMEPReqManager; 
  
