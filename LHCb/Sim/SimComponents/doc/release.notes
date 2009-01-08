@@ -5,6 +5,12 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+! 2009-01-08 - Marco Cattaneo
+ - Adapt DumpHepMCDecay, DumpHepMCTree, MCDecayFinder, PrintMCDecayTreeTool, PrintMCTree
+   to use new LHCb::IParticlePropertySvc implementation of particle properties
+ - Remove unnecessary releaseTool from PrintMCTree::finalize()
+ - Various cosmetic cleanups of above files
+
 ! 2008-12-16 - Marco Cattaneo
  - Fix gcc 4.3 warning
 

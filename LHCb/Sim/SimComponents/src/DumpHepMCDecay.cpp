@@ -1,7 +1,19 @@
-// $Id: DumpHepMCDecay.cpp,v 1.1 2008-07-23 17:38:05 cattanem Exp $
+// $Id: DumpHepMCDecay.cpp,v 1.2 2009-01-08 09:44:37 cattanem Exp $
 
 // Include files 
 #include "boost/lexical_cast.hpp"
+
+// HepMC 
+#include "HepMC/GenParticle.h"
+#include "HepMC/GenVertex.h"
+
+// PartProp
+#include "Kernel/IParticlePropertySvc.h" 
+#include "Kernel/ParticleID.h"
+#include "Kernel/ParticleProperty.h" 
+
+// GenEvent
+#include "Event/HepMCEvent.h"
 
 // local
 #include "DumpHepMCDecay.h"
@@ -66,10 +78,8 @@ StatusCode DumpHepMCDecay::execute() {
   bool found = false ;
   if ( !m_particles.empty() || !m_quarks.empty() ) {
 
-    MsgStream& msg = info() ;   // get the stream
-    
-    msg << " Decay dump [cut-off at "
-        << m_levels << " levels] " << endmsg ;
+    info() << " Decay dump [cut-off at "
+           << m_levels << " levels] " << endmsg ;
 
     for( Addresses::const_iterator ia = m_addresses.begin() ; 
          m_addresses.end() != ia ; ++ia ) {
@@ -77,7 +87,7 @@ StatusCode DumpHepMCDecay::execute() {
       LHCb::HepMCEvents* events = get<LHCb::HepMCEvents>( *ia ) ;
       if( 0 == events ) { continue ; }
 
-      msg << " Container '"  << *ia << "' " << endmsg ;
+      info() << " Container '"  << *ia << "' " << endmsg ;
       for ( LHCb::HepMCEvents::const_iterator ie = events->begin() ; 
             events->end() != ie ; ++ie ) {
 
@@ -109,18 +119,20 @@ StatusCode DumpHepMCDecay::execute() {
 
           if ( print ) { 
             found = true ;
-            if( msg.isActive() ) { 
-              msg << std::endl ; 
-              printDecay ( particle ,  msg.stream() , 0  ) ; 
+            if( info().isActive() ) { 
+              info() << std::endl ; 
+              printDecay ( particle ,  info().stream() , 0  ) ; 
             }
           }
         }
       }
     }
-    msg << endmsg ;
+    info() << endmsg ;
   }
 
-  if ( !found ) { Warning ( " No specified Particles/Quarks are found! " ) ; }
+  if ( !found ) { 
+    Warning ( " No specified Particles/Quarks are found! " ).ignore() ;
+  }
   
   return StatusCode::SUCCESS;
 }
@@ -213,13 +225,13 @@ std::string DumpHepMCDecay::particleName
   }
 
   if( 0 == m_ppSvc ) { 
-    m_ppSvc = svc<IParticlePropertySvc> ( "ParticlePropertySvc" , true ) ; 
+    m_ppSvc = svc<LHCb::IParticlePropertySvc> ( "LHCb::ParticlePropertySvc" , true ) ; 
   }
 
   const int pdg_id    = particle->pdg_id() ;
-  const ParticleProperty* pp = 0 ;
+  const LHCb::ParticleProperty* pp = 0 ;
 
-  pp = m_ppSvc -> findByStdHepID ( pdg_id ) ;
+  pp = m_ppSvc -> find( LHCb::ParticleID(pdg_id) ) ;
   if( 0 != pp ) { return adjust( pp->particle() ) ; }
 
   Warning  ( "particleName(): ParticleProperty* points to NULL for PDG=" +

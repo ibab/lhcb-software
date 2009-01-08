@@ -1,19 +1,18 @@
-// $Id: PrintMCDecayTreeTool.cpp,v 1.4 2008-11-19 06:52:50 cattanem Exp $
+// $Id: PrintMCDecayTreeTool.cpp,v 1.5 2009-01-08 09:44:37 cattanem Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/GaudiException.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
+#include "GaudiKernel/PhysicalConstants.h"
+
+// From PartProp
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 
 // from Event
 #include "Event/MCParticle.h"
 #include "Event/MCVertex.h"
-
-// from LHCb
-#include "GaudiKernel/PhysicalConstants.h"
 
 // local
 #include "PrintMCDecayTreeTool.h"
@@ -57,17 +56,11 @@ PrintMCDecayTreeTool::PrintMCDecayTreeTool( const std::string& type,
 // initialise
 //=============================================================================
 StatusCode PrintMCDecayTreeTool::initialize( void ){
+
   StatusCode sc = GaudiTool::initialize();
   if (!sc) return sc;
 
-  if( serviceLocator() ) {
-    sc = service("ParticlePropertySvc",m_ppSvc);
-  }
-  if( !m_ppSvc ) {
-    throw GaudiException( "ParticlePropertySvc not found",
-                          "DebugException",
-                          StatusCode::FAILURE );
-  }
+  m_ppSvc = svc<LHCb::IParticlePropertySvc>( "LHCb::ParticlePropertySvc",true);
 
   if ( m_informationsDeprecated != "" ){
     warning() << "You are using the deprecated option ``informations''." << endmsg ;
@@ -211,7 +204,7 @@ void PrintMCDecayTreeTool::printInfo( const std::string &prefix,
                                       const LHCb::MCParticle *part,
                                       MsgStream &log )
 {
-  ParticleProperty* p = m_ppSvc->findByStdHepID( part->particleID().pid() );
+  const LHCb::ParticleProperty* p = m_ppSvc->find( part->particleID() );
   const LHCb::MCVertex *origin = part->originVertex();
 
   std::vector<InfoKeys>::iterator i;
@@ -333,16 +326,15 @@ void PrintMCDecayTreeTool::printTree( const LHCb::MCParticle* mother,
 //=============================================================================
 void PrintMCDecayTreeTool::printAncestor( const LHCb::MCParticle *child )
 {
-  MsgStream log( msgSvc(), name() );
-  ParticleProperty *p = m_ppSvc->findByStdHepID(child->particleID().pid());
+  const LHCb::ParticleProperty *p = m_ppSvc->find(child->particleID());
   std::string decay = p ? p->particle() : "N/A";
   const LHCb::MCVertex *origin = child->originVertex();
   while( origin && (child = origin->mother()) ) {
-    p = m_ppSvc->findByStdHepID(child->particleID().pid());
+    p = m_ppSvc->find(child->particleID());
     decay = (p ? p->particle() : std::string("N/A")) + " -> "+ decay;
     origin = child->originVertex();
   }
-  log << MSG::INFO << decay << endreq;
+  info() << decay << endmsg;
 }
 //=============================================================================
 // printAsTree (MCParticle)

@@ -1,10 +1,12 @@
-// $Id: PrintMCTree.cpp,v 1.1 2007-10-10 12:11:35 jpalac Exp $
+// $Id: PrintMCTree.cpp,v 1.2 2009-01-08 09:44:37 cattanem Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
+
+// from PartProp
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 // from LHCb
 #include "MCInterfaces/IPrintMCDecayTreeTool.h"
 
@@ -56,21 +58,18 @@ StatusCode PrintMCTree::initialize() {
   
   m_printMCTree = tool<IPrintMCDecayTreeTool>( "PrintMCDecayTreeTool", this );
 
-  IParticlePropertySvc *ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc");
-  if( !ppSvc ) {
-    fatal() << "Unable to locate Particle Property Service" << endmsg;
-    return sc;
-  }
+  const LHCb::IParticlePropertySvc *ppSvc = 
+    svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc");
 
   std::vector<std::string>::iterator PN;
   for (PN=m_particleNames.begin() ; PN!=m_particleNames.end() ; ++PN ){
-    ParticleProperty *pp = ppSvc->find(*PN);
+    const LHCb::ParticleProperty *pp = ppSvc->find(*PN);
     if (!pp) {
       fatal() << " Unable to retrieve particle property for " 
               << *PN << endmsg;
       return StatusCode::FAILURE;
     }
-    int pid = pp->jetsetID();
+    int pid = pp->pid().pid();
     m_particleIDs.push_back(pid);
   }
 
@@ -87,11 +86,7 @@ StatusCode PrintMCTree::execute() {
   debug() << "==> Execute" << endmsg;
 
   LHCb::MCParticles* kmcparts = get<LHCb::MCParticles>(LHCb::MCParticleLocation::Default );
-  if( !kmcparts ) {
-    fatal() << "Unable to find MC particles at '" 
-            << LHCb::MCParticleLocation::Default << "'" << endreq;
-    return StatusCode::FAILURE;
-  }
+
   std::vector<LHCb::MCParticle*> mcparts(kmcparts->begin(), kmcparts->end());
   debug() << "There are " <<  mcparts.size() << " MC particles" << endmsg;
 
@@ -123,9 +118,6 @@ StatusCode PrintMCTree::execute() {
 StatusCode PrintMCTree::finalize() {
 
   debug() << "==> Finalize" << endmsg;
-  StatusCode sc = toolSvc()->releaseTool( m_printMCTree );
-  if (!sc) return sc ;
-
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 

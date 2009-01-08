@@ -1,12 +1,18 @@
-// $Id: DumpHepMCTree.cpp,v 1.1 2008-07-23 17:38:06 cattanem Exp $
+// $Id: DumpHepMCTree.cpp,v 1.2 2009-01-08 09:44:37 cattanem Exp $
 // ============================================================================
 // Include files
 // ============================================================================
 // GaudiKernel
 #include "GaudiKernel/AlgFactory.h" 
-// ============================================================================
+
+// HepMC 
+#include "HepMC/GenParticle.h"
+#include "HepMC/GenVertex.h"
+
+// GenEvent
+#include "Event/HepMCEvent.h"
+
 // Local
-// ============================================================================
 #include "DumpHepMCDecay.h"
 // ============================================================================
 /** @class DumpHepMCTree 

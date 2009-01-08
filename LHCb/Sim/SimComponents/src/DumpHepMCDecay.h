@@ -1,4 +1,4 @@
-// $Id: DumpHepMCDecay.h,v 1.1 2008-07-23 17:38:05 cattanem Exp $
+// $Id: DumpHepMCDecay.h,v 1.2 2009-01-08 09:44:37 cattanem Exp $
 // ============================================================================
 #ifndef SIM_DUMPHEPMCDECAY_H 
 #define SIM_DUMPHEPMCDECAY_H 1
@@ -6,27 +6,23 @@
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h" 
-#include "GaudiKernel/IParticlePropertySvc.h" 
-#include "GaudiKernel/ParticleProperty.h" 
 // ============================================================================
 // GaudiAlg 
 // ============================================================================
 #include "GaudiAlg/GaudiAlgorithm.h" 
 // ============================================================================
-// HepMC 
-// ============================================================================
-#include "HepMC/GenParticle.h"
-#include "HepMC/GenVertex.h"
-// ============================================================================
-// Kernel
-// ============================================================================
-#include "Kernel/ParticleID.h"
-// ============================================================================
-// Event 
-// ============================================================================
-#include "Event/HepMCEvent.h"
-// ============================================================================
+#include <string>
+#include <vector>
+
+namespace LHCb {
+  class IParticlePropertySvc;
+}
+
+namespace HepMC {
+  class GenParticle;
+  class GenVertex;
+}
+
 
 /** @class DumpHepMCDecay DumpHepMCDecay.h
  *
@@ -108,7 +104,7 @@ protected:
   int                           m_levels    ;
 private:
   // pointer to particle property service 
-  mutable IParticlePropertySvc* m_ppSvc     ;
+  mutable LHCb::IParticlePropertySvc* m_ppSvc;
 } ;
 // ============================================================================
 // The END 

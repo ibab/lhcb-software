@@ -1,17 +1,22 @@
-// $Id: PrintMCDecayTreeTool.h,v 1.2 2007-10-09 16:26:23 jpalac Exp $
+// $Id: PrintMCDecayTreeTool.h,v 1.3 2009-01-08 09:44:37 cattanem Exp $
 #ifndef PRINTMCDECAYTREETOOL_H 
 #define PRINTMCDECAYTREETOOL_H 1
 
 // Include files
+#include <string>
+#include <vector>
+
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
 // from LHCb
 #include "MCInterfaces/IPrintMCDecayTreeTool.h"
 
-
 // Forward declarations
-class IParticlePropertySvc;
+namespace LHCb {
+  class IParticlePropertySvc;
+}
+
 class MsgStream;
 
 /** @class PrintMCDecayTreeTool PrintMCDecayTreeTool.h
@@ -64,7 +69,7 @@ private:
                        int depth, 
                        MsgStream &log );
 
-  IParticlePropertySvc* m_ppSvc; ///< Reference to particle property service
+  LHCb::IParticlePropertySvc* m_ppSvc; ///< Pointer to particle property service
   int m_depth;         ///< Depth of printing for tree
   int m_treeWidth;     ///< width of the tree drawing
   int m_fWidth;        ///< width of the data fields

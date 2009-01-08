@@ -1,4 +1,4 @@
-// $Id: MCDecayFinder.h,v 1.8 2008-12-16 16:03:29 cattanem Exp $
+// $Id: MCDecayFinder.h,v 1.9 2009-01-08 09:44:37 cattanem Exp $
 #ifndef TOOLS_MCDECAYFINDER_H 
 #define TOOLS_MCDECAYFINDER_H 1
 
@@ -16,7 +16,10 @@
 #include "MCInterfaces/IMCDecayFinder.h"
 #include "Event/MCParticle.h"
 
-class IParticlePropertySvc;
+namespace LHCb {
+  class IParticlePropertySvc;
+}
+
 struct yy_buffer_state;
 
 /** @class MCDecayFinder MCDecayFinder.h
@@ -191,13 +194,13 @@ private:
   class ParticleMatcher
   {
   public:
-    ParticleMatcher( IParticlePropertySvc *ppSvc );
+    ParticleMatcher( LHCb::IParticlePropertySvc *ppSvc );
     ParticleMatcher( ParticleMatcher &copy );
-    ParticleMatcher( std::string *name, IParticlePropertySvc *ppSvc );
+    ParticleMatcher( std::string *name, LHCb::IParticlePropertySvc *ppSvc );
     ParticleMatcher( Quarks q1, Quarks q2, Quarks q3,
-                     IParticlePropertySvc *ppSvc );
+                     LHCb::IParticlePropertySvc *ppSvc );
     ParticleMatcher( Quantums quantum, Relations relation, double value,
-                     IParticlePropertySvc *ppSvc );
+                     LHCb::IParticlePropertySvc *ppSvc );
     bool test( const LHCb::MCParticle *part, 
               LHCb::MCParticle::ConstVector *collect=NULL );
     void setLift( void ) { lift = true; }
@@ -236,16 +239,16 @@ private:
     bool noscillate;
     bool inverse;
     bool stable;
-    IParticlePropertySvc *m_ppSvc;
+    LHCb::IParticlePropertySvc *m_ppSvc;
   };
 
   /// The opaque representation of the decay chain.
   class Descriptor
   {
   public:
-    Descriptor( IParticlePropertySvc *ppSvc, double resonnanceThreshold );
+    Descriptor( LHCb::IParticlePropertySvc *ppSvc, double resonnanceThreshold );
     Descriptor( Descriptor &copy );
-    Descriptor( ParticleMatcher *mother, IParticlePropertySvc *ppSvc,
+    Descriptor( ParticleMatcher *mother, LHCb::IParticlePropertySvc *ppSvc,
                 double resonnanceThreshold );
 
     ~Descriptor();
@@ -325,7 +328,7 @@ private:
     bool skipResonnance;
     bool elipsis;
     double m_resThreshold;
-    IParticlePropertySvc *m_ppSvc;
+    LHCb::IParticlePropertySvc *m_ppSvc;
 
     Descriptor *alternate;
   };
@@ -339,7 +342,7 @@ private:
     std::string msg;
   };
 
-  IParticlePropertySvc *m_ppSvc;
+  LHCb::IParticlePropertySvc *m_ppSvc;
   std::string m_source;
   Descriptor *m_decay;
   std::vector<ParticleMatcher *> *m_members;
