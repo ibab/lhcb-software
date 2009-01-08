@@ -5,6 +5,7 @@ Purpose             : LHCb analysis program
 
 ! 2009-01-08 - Patrick Koppenburg
  - Added Hlt test
+ - Added reference for SAM test 
 
 ! 2009-01-07 - Patrick Koppenburg
  - Moved all tests here
