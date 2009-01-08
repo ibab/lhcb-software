@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!============================= PatKernel v2r2 2009-01-08 =====================
 ! 2008-12-04 - Marco Cattaneo
  - Add IPatDebugTool and IPatDebugTTool interfaces and corresponding dictionary,
    moved from TrackInterfaces to reduce package dependencies
