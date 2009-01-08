@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2009-01-08 - Chris Jones
+ - Fix NULL implementation of FPEGuard.
+
 ! 2008-12-10 - Marco Cattaneo
  - Remove unneccessary PartProp dependency
 

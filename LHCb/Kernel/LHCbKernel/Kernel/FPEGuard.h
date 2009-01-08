@@ -177,8 +177,8 @@ namespace FPE {
      *  @param mask    The mask of exceptions to activate/deactive
      *  @param disable Disable or enable the given FPE exceptions
      */
-    Guard( mask_type mask,
-           bool disable   = false )
+    explicit Guard( mask_type mask,
+		    bool disable   = false )
       : m_initial( disable ? 
                    FPE::detail::disable(mask) : 
                    FPE::detail::enable(mask)  )
@@ -244,17 +244,25 @@ namespace FPE {
      */
     static mask_type mask( const std::string & excpt )
     {
-      std::map<std::string,mask_type>::const_iterator j = FPE::detail::map().find(excpt);
-      if ( FPE::detail::map().end() == j )
+      mask_type mask(0);
+      if ( FPE::detail::has_working_implementation )
       {
-        throw GaudiException("FPE::Guard::mask : Unknown mask...",excpt,StatusCode::FAILURE);
+	std::map<std::string,mask_type>::const_iterator j = FPE::detail::map().find(excpt);
+	if ( FPE::detail::map().end() == j )
+	{
+	  throw GaudiException("FPE::Guard::mask : Unknown mask "+excpt,excpt,StatusCode::FAILURE);
+	}
+	mask = j->second;
       }
-      return j->second;
+      return mask;
     }
 
   private:
+
     mask_type m_initial; ///< Saved previous mask value
+
   };
 
 } // namespace FPE
+
 #endif
