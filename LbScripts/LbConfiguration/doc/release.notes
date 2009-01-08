@@ -1,5 +1,8 @@
 2009-01-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* scripts/generateLogin.py: reenable the explicit version specification for
+	LbScripts. Otherwise LbLogin is always taking the very last one according 
+	to the CMT ordering!
 	* scripts/SetupProject.py: made the touch command silent for csh and sh.
 
 2009-01-08  Marco Clemencic  <Marco.Clemencic@cern.ch>

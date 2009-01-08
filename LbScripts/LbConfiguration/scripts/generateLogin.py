@@ -42,9 +42,9 @@ if [ "$LbLoginStatus" = 0 ]; then
 fi
 rm -f $LbLogin_tmpfile
 unset LbLogin_tmpfile
-. %s/scripts/SetupProject.sh LbScripts --runtime LCGCMT Python 
+. %s/scripts/SetupProject.sh LbScripts %s --runtime LCGCMT Python 
 
-""" % targetlocation
+""" % (targetlocation, version)
     elif shell == "csh" or shell == "tcsh" :
         if mysiteroot :
             content = """set LbLogin_tmpfile = `%s/scripts/LbLogin.py --shell=csh --mktemp --mysiteroot=%s ${*:q}`
@@ -58,9 +58,9 @@ if ( ! $LbLoginStatus ) then
 endif
 rm -f $LbLogin_tmpfile
 unset LbLogin_tmpfile
-source %s/scripts/SetupProject.csh LbScripts --runtime LCGCMT Python
+source %s/scripts/SetupProject.csh LbScripts %s --runtime LCGCMT Python
 
-""" % targetlocation
+""" % (targetlocation, version)
     elif shell == "bat" :
         wintargetlocation = targetlocation
         winmysiteroot = mysiteroot
@@ -93,7 +93,7 @@ if %%LbLoginStatus%% EQU 0 (
 
 if exist %%LbLogin_tmpfile%% del %%LbLogin_tmpfile%%
 set LbLogin_tmpfile=
-call %s\scripts\SetupProject.bat LbScripts --runtime LCGCMT Python """ % wintargetlocation
+call %s\scripts\SetupProject.bat LbScripts %s --runtime LCGCMT Python """ % (wintargetlocation, version)
     
     f.write(content)
     f.close()
