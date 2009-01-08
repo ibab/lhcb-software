@@ -4,6 +4,9 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+! 2009-01-08 - Marco Cattaneo
+ - Add ParticlePropertiesFile location for new LHCb::ParticlePropertySvc
+
 !========================== DDDB v1r13 2008-11-17 ============================
 ! 2008-11-14 - Marco Cattaneo
  - Add loading of HepMCBack Dll for DC06 case
