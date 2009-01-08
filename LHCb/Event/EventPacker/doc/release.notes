@@ -4,6 +4,7 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+!============================ EventPacker v1r1 2009-01-08 ====================
 ! 2008-12-16 - Marco Cattaneo
  - Fix a loop test condition in CompareTrack.cpp
 
