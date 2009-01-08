@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.35 2009-01-06 16:11:01 cattanem Exp $
+! $Id: release.notes,v 1.36 2009-01-08 15:48:19 cattanem Exp $
 ! Package: IOExample
 ! Package Manager: M.Frank
 ! Purpose: Demonstrate how to write and read back event data using POOL I/O.
 !---------------------------------------------------------------------------
 
+!====================== IOExample v2r7 2009-01-08 =========================
 ! 2009-01-06 - Marco Cattaneo
  - Add a test for DST unpacking
 
