@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.64 2008-12-18 14:49:00 ibelyaev Exp $ 
+! $Id: release.notes,v 1.65 2009-01-08 17:11:58 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -14,6 +14,7 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiGen v8r1 2009-01-08 ===========================
 ! 2008-12-18 - Vanya Belyaev
  - many fixes for trees , 
    add new symbols:
