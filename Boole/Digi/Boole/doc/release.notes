@@ -3,6 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+! 2009-01-09 - Marco Cattaneo
+ - Set the database tags explicitly
+
 ! 2008-12-17 - Marco Cattaneo
  - Update references for L0Muon bug fix, and for new # in log.info printout
 

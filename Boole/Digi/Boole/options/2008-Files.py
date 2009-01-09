@@ -6,13 +6,15 @@
 #
 
 from Gaudi.Configuration import *
-from Configurables import Boole
+from Configurables import Boole, LHCbApp
 
 #-- File catalogs
 FileCatalog().Catalogs = [ "xmlcatalog_file:NewCatalog.xml" ]
 
 #-- Main ('signal') event input
 # Events from Gauss v35r1, DB tag head-20081002
+LHCbApp().DDDBtag   = "head-20081002"
+LHCbApp().CondDBtag = "head-20081002"
 datasetName = '11144101-100ev-20081006'
 EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/g/gcorti/Gauss/2008/v35r1/" + datasetName + ".sim' TYP='POOL_ROOTTREE' OPT='READ'"]
 

@@ -5,10 +5,14 @@
 #   gaudirun.py Boole<conf>.py DC06-Files.py
 #
 from Gaudi.Configuration import *
-from Configurables import Boole
+from Configurables import Boole, LHCbApp
 
 #-- File catalogs
 FileCatalog().Catalogs = [ "xmlcatalog_file:NewCatalog.xml" ]
+
+#-- DC06 database tags are backwards compatible by construction, use default
+LHCbApp().DDDBtag   = "default"
+LHCbApp().CondDBtag = "default"
 
 #-- Main ('signal') event input
 datasetName = "00001820_00000001"
