@@ -191,7 +191,8 @@ StatusCode MDFWriterNet::initialize(void)
       m_mq_available = false;
   } else {
       *m_log << MSG::INFO
-             << "Established connection to message queue"
+             << "Established connection to message queue. "
+             << "Delimiter is " << DELIMITER
              << endmsg;
       m_mq_available = true;
       // send message that this writer now exists

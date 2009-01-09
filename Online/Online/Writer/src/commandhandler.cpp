@@ -20,24 +20,24 @@ Command* CommandHandler::parse(char *buf) {
     // command/param1/param2 or
     // command/param1/param2/name=value
     char* cp = NULL;
-    if((cp= strtok(buf, DELIMITER)) == NULL) {
+    if((cp= strtok(buf, DELIMITER_CHAR)) == NULL) {
         this->setErrorMessage( new string("Error: can not tokenize") );
         return NULL;
     } else {
         name += string(cp);
     }
-    if((cp = strtok(NULL, DELIMITER)) == NULL) {
+    if((cp = strtok(NULL, DELIMITER_CHAR)) == NULL) {
         this->setErrorMessage( new string("Error: no parameter found\n") );
         return NULL;
     } else {
         p1 += string(cp);
     }
-    if((cp = strtok(NULL, DELIMITER)) == NULL) {
+    if((cp = strtok(NULL, DELIMITER_CHAR)) == NULL) {
         this->setErrorMessage( new string("Info: no second parameter found\n") );
     } else {
         p2 += string(cp);
     }
-    if((cp = strtok(NULL, DELIMITER)) == NULL) {
+    if((cp = strtok(NULL, DELIMITER_CHAR)) == NULL) {
         this->setErrorMessage( new string("Info: no third parameter found\n") );
     } else {
         // split the name=value
