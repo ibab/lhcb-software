@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.28 2008-12-24 09:39:05 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.29 2009-01-09 10:39:27 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -48,21 +48,31 @@ class HltConf(LHCbConfigurableUser):
                     , 'DEFAULT': 'PA+LU+L0+VE+XP'
                     }
             for short,full in trans.iteritems() : hlttype = hlttype.replace(short,full)
-            type2conf = { 'PA' : '$HLTCONFROOT/options/HltCommissioningLines.py' # PA for 'PAss-thru' (PT was considered bad)
-                        , 'LU' : '$HLTCONFROOT/options/HltLumiLines.py'
-                        , 'L0' : '$HLTCONFROOT/options/HltL0Lines.py'
-                        , 'VE' : '$HLTCONFROOT/options/HltVeloLines.py'
-                        , 'XP' : '$HLTCONFROOT/options/HltExpressLines.py'
-                        , 'MU' : '$HLTCONFROOT/options/HltMuonLines.py' 
-                        , 'HA' : '$HLTCONFROOT/options/HltHadronLines.py' 
-                        , 'PH' : '$HLTCONFROOT/options/HltPhotonLines.py' 
-                        , 'EL' : '$HLTCONFROOT/options/HltElectronLines.py' }
+            type2conf = { 'PA' : 'HltCommissioningLines' # PA for 'PAss-thru' (PT was considered bad)
+                        , 'LU' : 'HltLumiLines'
+                        , 'L0' : 'HltL0Lines'
+                        , 'VE' : 'HltVeloLines'
+                        , 'XP' : 'HltExpressLines'
+                        , 'MU' : 'HltMuonLines' 
+                        , 'HA' : 'HltHadronLines' 
+                        , 'PH' : 'HltPhotonLines' 
+                        , 'EL' : 'HltElectronLines' }
             for i in hlttype.split('+') :
                 if i == 'NONE' : continue # no operation...
                 if i == 'Hlt2' : continue # we deal with this later...
                 if i not in type2conf : raise AttributError, "unknown hlttype fragment '%s'"%i
-                log.info( '# requested ' + i + ', including ' + type2conf[i]  )
-                importOptions( type2conf[i] )
+                log.info( '# requested ' + i + ', importing ' + type2conf[i]  )
+                # TODO: must be a better way to do this...
+                # will move these to configurables ASAP...
+                if i == 'PA' : import HltConf.HltCommissioningLines
+                if i == 'LU' : import HltConf.HltLumiLines
+                if i == 'L0' : import HltConf.HltL0Lines
+                if i == 'VE' : import HltConf.HltVeloLines
+                if i == 'XP' : import HltConf.HltVeloLines
+                if i == 'MU' : import HltConf.HltMuonLines
+                if i == 'HA' : import HltConf.HltHadronLines
+                if i == 'PH' : import HltConf.HltPhotonLines
+                if i == 'EL' : import HltConf.HltElectronLines
             importOptions('$HLTCONFROOT/options/HltMain.py')
             importOptions('$HLTCONFROOT/options/Hlt1.py')
             if hlttype.find('Hlt2') != -1 :   

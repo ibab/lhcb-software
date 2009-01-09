@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltL0Lines.py,v 1.7 2008-12-18 13:57:17 graven Exp $
+# $Id: HltL0Lines.py,v 1.1 2009-01-09 10:39:27 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines which are plain L0 lines
@@ -12,16 +12,18 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.1 $"
 # =============================================================================
 
 from HltConf.HltLine import Hlt1Line   as Line
 from HltConf.HltL0Candidates import *
 
+# we postscale (instead of prescale!) these lines because 
+# TOS needs these candidates to exist
 for i in L0Channels() :
     Line ( 'L0' + i 
          , L0DU  = "L0_CHANNEL('"+i+"')"
-         , prescale = 0.000001
          , algos = [ convertL0Candidates(i) ]
+         , postscale = 0.000001
          )
 
