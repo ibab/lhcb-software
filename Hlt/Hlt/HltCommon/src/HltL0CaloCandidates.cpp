@@ -1,4 +1,4 @@
-// $Id: HltL0CaloCandidates.cpp,v 1.12 2009-01-07 15:33:46 graven Exp $
+// $Id: HltL0CaloCandidates.cpp,v 1.13 2009-01-09 10:21:52 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -130,7 +130,7 @@ HltL0CaloCandidates::generateCutList(const std::string& whichType) {
 StatusCode HltL0CaloCandidates::execute() {
 
   HltL0CaloCandidates::CutList_t cuts;
-  if (m_l0Channel.substr(1,3)!="All") {
+  if (m_l0Channel.substr(0,3)!="All") {
       LHCb::L0DUReport* l0 = get<L0DUReport>(m_l0Location);
 
       //@TODO: only update cuts on L0 TCK change, and cache the result...
