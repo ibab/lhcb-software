@@ -1,11 +1,14 @@
-! $Id: release.notes,v 1.50 2009-01-08 17:09:10 cattanem Exp $ 
+! $Id: release.notes,v 1.51 2009-01-09 07:29:33 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgo
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
 
-!========================== LoKiAlgo v8r1 2009-01-08 ==========================
+!========================== LoKiAlgo v8r1 2009-01-09 ==========================
+! 2009-01-09 - Marco Cattaneo
+ - import GaudiPython, but only for the dictionary
+
 ! 2009-01-08 - Marco Cattaneo
  - Add -no_auto_imports to GaudiPython usage
 

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.32 2009-01-08 17:09:10 cattanem Exp $ 
+# $Id: requirements,v 1.33 2009-01-09 07:29:33 cattanem Exp $ 
 # ============================================================================
 # Created    : 2006-01-17
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
@@ -30,7 +30,8 @@ apply_pattern    reflex_dictionary                                  \
                  dictionary=LoKiAlgo                                \
                  headerfiles=$(LOKIALGOROOT)/dict/LoKiAlgoDict.h    \
                  selectionfile=$(LOKIALGOROOT)/dict/LoKiAlgo.xml    \  
-                 options=" -U__MINGW32__ "                          
+                 options=" -U__MINGW32__ "                          \
+                 imports="Python -import=GaudiPython"
 
 # =============== patterns ===================================================
 apply_pattern    linker_library library=LoKiAlgo
