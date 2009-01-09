@@ -1,6 +1,9 @@
 ! Package     : MuonPIDChecker
 ! Responsible : E. Polycarpo, M. Gandelman
 !----------------------------------------------------------------------------
+!====================== MuonPIDChecker v3r0 2009-01-09 ====================
+! 2009-01-09 - M. Gandelman
+ - replaced the option files for python configurables
 
 ! 2008-12-17 - Marco Cattaneo
  - Fix gcc 4.3 warning

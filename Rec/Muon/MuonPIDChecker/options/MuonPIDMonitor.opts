@@ -1,6 +1,0 @@
-MoniMUONSeq.Members += { "MuonPIDChecker/MuonPIDMonitor" };
-MuonPIDMonitor.HistoTopDir = "Muon/";
-MuonPIDMonitor.DLLCut = -1.0;
-MuonPIDMonitor.NSHCut = 1.;
-MuonPIDMonitor.RunningMC = false;
-MuonPIDMonitor.HistoDir = "MuonPID/Monitor";
