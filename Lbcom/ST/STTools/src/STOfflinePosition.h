@@ -1,9 +1,10 @@
-// $Id: STOfflinePosition.h,v 1.6 2007-06-29 14:37:25 mneedham Exp $
+// $Id: STOfflinePosition.h,v 1.7 2009-01-09 16:15:36 jvantilb Exp $
 #ifndef STOfflinePosition_H
 #define STOfflinePosition_H 1
 
 // Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/IIncidentListener.h"
+#include "Kernel/STToolBase.h"
 
 // LHCbKernel
 #include "Kernel/ISTClusterPosition.h"
@@ -16,7 +17,9 @@
  *  @date   14/3/2002
  */
 
-class STOfflinePosition: public GaudiTool, virtual public ISTClusterPosition {
+class STOfflinePosition: public ST::ToolBase, 
+                         virtual public ISTClusterPosition,
+                         virtual public IIncidentListener {
 
 public: 
    
@@ -27,6 +30,16 @@ public:
 
   /// destructer
   virtual ~STOfflinePosition();
+
+  /** intialize */
+  StatusCode initialize();
+
+  /** Implement the handle method for the Incident service.
+  *  This is used to nform the tool of software incidents.
+  *
+  *  @param incident The incident identifier
+  */
+  void handle( const Incident& incident );
 
   /// method
   virtual ISTClusterPosition::Info estimate(const LHCb::STCluster* 
@@ -44,11 +57,16 @@ private:
 
   double chargeSharingCorr( const double dist ) const;
 
+  /// STCluster container, needed to merge splitted clusters
+  mutable LHCb::STClusters* m_clusters;
+
   // job options
   std::vector<double> m_errorVec;  ///< Error parametrized by cluster size
   double m_sharingCorr;            ///< Charge sharing correction factor
   int m_maxNtoCorr;                ///< Maximum size of cluster for S-shape corr
-  double m_trim;
+  double m_trim;                   ///< Trimming value to suppress cap. coupling
+  bool m_mergeClusters;            ///< Flag to merge split clusters
+  std::string m_clusterLocation;   ///< Location STClusters (needed for merging)
 
 };
 

@@ -2,6 +2,15 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2009-01-09 - Jeroen van Tilburg
+ - Move STOfflinePosition tool to new base class.
+ - Added functionality in STOfflinePosition tool to merge neighbouring clusters
+   that are split into two or more due the the TELL1 clustering algorithm. Note
+   that TELL1 splits clusters when larger than 4. By default merging is off.
+ - Pass the actual cluster size that is used in the calculation of the position.
+ - Small modification in the charge sharing correction: do not correct when
+   fractional position is equal to zero (i.e. symmetric, uneven-sized clusters).
+
 !=========================== STTools v3r6 2008-11-21 ==========================
 ! 2008-10-16 M Needham
  - Move STSignalToNoise tool to ST::ToolBase
