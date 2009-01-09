@@ -1,13 +1,35 @@
 # --> Including file '/afs/cern.ch/user/p/pkoppenb/cmtuser/DaVinci_HEAD/DaVinciSys/tests/options/DVTestInitialise.py'
 # <-- End of file '/afs/cern.ch/user/p/pkoppenb/cmtuser/DaVinci_HEAD/DaVinciSys/tests/options/DVTestInitialise.py'
 # applying configuration of DaVinci
-# applying DaVinci configuration
-# --> Including file '/afs/cern.ch/user/p/pkoppenb/cmtuser/DaVinci_HEAD/GaudiConf/options/LHCbApplication.opts'
-# --> Including file '/afs/cern.ch/user/p/pkoppenb/cmtuser/DaVinci_HEAD/GaudiConf/options/units.opts'
-# <-- End of file '/afs/cern.ch/user/p/pkoppenb/cmtuser/DaVinci_HEAD/GaudiConf/options/units.opts'
+# Applying DaVinci configuration
+# /***** User DaVinci/DaVinci ************************************************************************
+# |-DstFile                    = ''
+# |-DDDBtag                    = ''
+# |-MainOptions                = ''  (default: '')
+# |-UserAlgorithms             = []  (default: [])
+# |-RedoMCLinks                = False
+# |-DataType                   = 'DC06'
+# |-TupleFile                  = ''
+# |-PrintFreq                  = 1  (default: 100)
+# |-HltType                    = ''
+# |-SkipEvents                 = 0  (default: 0)
+# |-EvtMax                     = 0  (default: -1)
+# |-CondDBtag                  = ''
+# |-HistogramFile              = ''
+# |-UseOracle                  = False
+# |-ETCFile                    = ''
+# |-Input                      = []  (default: [])
+# |-ReplaceL0BanksWithEmulated = False
+# |-Simulation                 = True
+# |-HltUserAlgorithms          = []  (default: [])
+# |-Hlt2IgnoreHlt1Decision     = False
+# \----- (End of User DaVinci/DaVinci) ---------------------------------------------------------------
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/LHCB/LHCB_v26r1/GaudiConf/options/LHCbApplication.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/LHCB/LHCB_v26r1/GaudiConf/options/units.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/LHCB/LHCB_v26r1/GaudiConf/options/units.opts'
 # EventDataSvc.ForceLeaves = true;
 # EventDataSvc.RootCLID    =    1;
-# --> Including file '/afs/cern.ch/user/p/pkoppenb/cmtuser/DaVinci_HEAD/Det/DDDB/options/DDDB.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/LHCB/LHCB_v26r1/Det/DDDB/options/DDDB.opts'
 # ApplicationMgr.ExtSvc += { "DetDataSvc/DetectorDataSvc" };
 # DetectorDataSvc.UsePersistency = true;
 # DetectorDataSvc.DetDbRootName  = "dd";
@@ -35,13 +57,13 @@
 # ONLINE_200808.ConnectionString = 'sqlite_file:$SQLITEDBPATH/ONLINE-200808.db/ONLINE';
 # <-- End of file '/afs/cern.ch/user/m/marcocle/scratch0/workspace/LHCb/Det/SQLDDDB/options/SQLDDDB.opts'
 # MessageSvc.setError += { "RelationalDatabase" };
-# <-- End of file '/afs/cern.ch/user/p/pkoppenb/cmtuser/DaVinci_HEAD/Det/DDDB/options/DDDB.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/LHCB/LHCB_v26r1/Det/DDDB/options/DDDB.opts'
 # EventDataSvc.EnableFaultHandler = true;
-# <-- End of file '/afs/cern.ch/user/p/pkoppenb/cmtuser/DaVinci_HEAD/GaudiConf/options/LHCbApplication.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/LHCB/LHCB_v26r1/GaudiConf/options/LHCbApplication.opts'
 # Resetting ApplicationMgr
 # DaVinci input is  []
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardOptions.py'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardElectrons.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardOptions.py'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardElectrons.opts'
 # DataOnDemandSvc.Algorithms += {    "DATA='/Event/Phys/StdNoPIDsElectrons/Particles'     TYPE='GaudiSequencer/StdNoPIDsElectronsSeq'",  "DATA='/Event/Phys/StdNoPIDsElectrons/Vertices'      TYPE='GaudiSequencer/StdNoPIDsElectronsSeq'",    "DATA='/Event/Phys/StdLooseElectrons/Particles'     TYPE='GaudiSequencer/StdLooseElectronsSeq'",  "DATA='/Event/Phys/StdLooseElectrons/Vertices'      TYPE='GaudiSequencer/StdLooseElectronsSeq'",    "DATA='/Event/Phys/StdTightElectrons/Particles'     TYPE='GaudiSequencer/StdTightElectronsSeq'",  "DATA='/Event/Phys/StdTightElectrons/Vertices'      TYPE='GaudiSequencer/StdTightElectronsSeq'"};
 # StdNoPIDsElectronsSeq.Members += { "PreLoadParticles/StdNoPIDsElectrons" };
 # StdNoPIDsElectronsSeq.MeasureTime = true;
@@ -67,8 +89,8 @@
 # StdTightElectrons.PhysDesktop.CombinedParticleMaker.BremAdder.BremCor = 1.06;
 # StdLooseElectrons.PhysDesktop.CombinedParticleMaker.BremAdder.BremCor = 1.06;
 # StdNoPIDsElectrons.PhysDesktop.CombinedParticleMaker.BremAdder.BremCor = 1.06;
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardElectrons.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardMuons.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardElectrons.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardMuons.opts'
 # DataOnDemandSvc.Algorithms += {    "DATA='/Event/Phys/StdNoPIDsMuons/Particles'     TYPE='GaudiSequencer/StdNoPIDsMuonsSeq'",  "DATA='/Event/Phys/StdNoPIDsMuons/Vertices'      TYPE='GaudiSequencer/StdNoPIDsMuonsSeq'",    "DATA='/Event/Phys/StdLooseMuons/Particles'     TYPE='GaudiSequencer/StdLooseMuonsSeq'",  "DATA='/Event/Phys/StdLooseMuons/Vertices'      TYPE='GaudiSequencer/StdLooseMuonsSeq'",    "DATA='/Event/Phys/StdTightMuons/Particles'     TYPE='GaudiSequencer/StdTightMuonsSeq'",  "DATA='/Event/Phys/StdTightMuons/Vertices'      TYPE='GaudiSequencer/StdTightMuonsSeq'"};
 # StdNoPIDsMuonsSeq.Members += { "PreLoadParticles/StdNoPIDsMuons" };
 # StdNoPIDsMuonsSeq.MeasureTime = true;
@@ -91,8 +113,8 @@
 # StdTightMuons.PhysDesktop.CombinedParticleMaker.Muon.Selection = {"RequiresDet='MUON' CombDLL(mu-pi)>'-3.0'" };
 # StdTightMuons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
 # StdTightMuons.DecayDescriptor = "Muon";
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardMuons.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardProtons.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardMuons.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardProtons.opts'
 # DataOnDemandSvc.Algorithms += {    "DATA='/Event/Phys/StdNoPIDsProtons/Particles'   TYPE='GaudiSequencer/StdNoPIDsProtonsSeq'",  "DATA='/Event/Phys/StdNoPIDsProtons/Vertices'    TYPE='GaudiSequencer/StdNoPIDsProtonsSeq'",    "DATA='/Event/Phys/StdLooseProtons/Particles'   TYPE='GaudiSequencer/StdLooseProtonsSeq'",  "DATA='/Event/Phys/StdLooseProtons/Vertices'    TYPE='GaudiSequencer/StdLooseProtonsSeq'",    "DATA='/Event/Phys/StdLooseVTTProtons/Particles'   TYPE='GaudiSequencer/StdLooseVTTProtonsSeq'",  "DATA='/Event/Phys/StdLooseVTTProtons/Vertices'    TYPE='GaudiSequencer/StdLooseVTTProtonsSeq'",    "DATA='/Event/Phys/StdLooseDownstreamProtons/Particles'   TYPE='GaudiSequencer/StdLooseDownstreamProtonsSeq'",  "DATA='/Event/Phys/StdLooseDownstreamProtons/Vertices'    TYPE='GaudiSequencer/StdLooseDownstreamProtonsSeq'",    "DATA='/Event/Phys/StdTightProtons/Particles'   TYPE='GaudiSequencer/StdTightProtonsSeq'",  "DATA='/Event/Phys/StdTightProtons/Vertices'    TYPE='GaudiSequencer/StdTightProtonsSeq'"};
 # StdNoPIDsProtonsSeq.Members += { "PreLoadParticles/StdNoPIDsProtons" };
 # StdNoPIDsProtonsSeq.MeasureTime = true;
@@ -131,8 +153,8 @@
 # StdTightProtons.PhysDesktop.CombinedParticleMaker.Proton.Selection = {"RequiresDet='RICH' CombDLL(p-pi)>'0.0'" };
 # StdTightProtons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
 # StdTightProtons.DecayDescriptor = "Proton";
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardProtons.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardPions.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardProtons.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardPions.opts'
 # DataOnDemandSvc.Algorithms += {    "DATA='/Event/Phys/StdNoPIDsPions/Particles'     TYPE='GaudiSequencer/StdNoPIDsPionsSeq'",  "DATA='/Event/Phys/StdNoPIDsPions/Vertices'      TYPE='GaudiSequencer/StdNoPIDsPionsSeq'",    "DATA='/Event/Phys/StdLoosePions/Particles'     TYPE='GaudiSequencer/StdLoosePionsSeq'",  "DATA='/Event/Phys/StdLoosePions/Vertices'      TYPE='GaudiSequencer/StdLoosePionsSeq'",    "DATA='/Event/Phys/StdLooseVTTPions/Particles'     TYPE='GaudiSequencer/StdLooseVTTPionsSeq'",  "DATA='/Event/Phys/StdLooseVTTPions/Vertices'      TYPE='GaudiSequencer/StdLooseVTTPionsSeq'",    "DATA='/Event/Phys/StdNoPIDsVTTPions/Particles'     TYPE='GaudiSequencer/StdNoPIDsVTTPionsSeq'",  "DATA='/Event/Phys/StdNoPIDsVTTPions/Vertices'      TYPE='GaudiSequencer/StdNoPIDsVTTPionsSeq'",    "DATA='/Event/Phys/StdLooseDownstreamPions/Particles' TYPE='GaudiSequencer/StdLooseDownstreamPionsSeq'",  "DATA='/Event/Phys/StdLooseDownstreamPions/Vertices'  TYPE='GaudiSequencer/StdLooseDownstreamPionsSeq'",    "DATA='/Event/Phys/StdNoPIDsDownstreamPions/Particles' TYPE='GaudiSequencer/StdNoPIDsDownstreamPionsSeq'",  "DATA='/Event/Phys/StdNoPIDsDownstreamPions/Vertices'  TYPE='GaudiSequencer/StdNoPIDsDownstreamPionsSeq'",    "DATA='/Event/Phys/StdTightPions/Particles'     TYPE='GaudiSequencer/StdTightPionsSeq'",  "DATA='/Event/Phys/StdTightPions/Vertices'      TYPE='GaudiSequencer/StdTightPionsSeq'"};
 # StdNoPIDsPionsSeq.Members += { "PreLoadParticles/StdNoPIDsPions" };
 # StdNoPIDsPionsSeq.MeasureTime = true;
@@ -183,8 +205,8 @@
 # StdTightPions.PhysDesktop.CombinedParticleMaker.Pion.Selection = {"RequiresDet='RICH' CombDLL(pi-k)>'-5.0'" };
 # StdTightPions.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
 # StdTightPions.DecayDescriptor = "Pion";
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardPions.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardKaons.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardPions.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardKaons.opts'
 # DataOnDemandSvc.Algorithms += {    "DATA='/Event/Phys/StdNoPIDsKaons/Particles'     TYPE='GaudiSequencer/StdNoPIDsKaonsSeq'",  "DATA='/Event/Phys/StdNoPIDsKaons/Vertices'      TYPE='GaudiSequencer/StdNoPIDsKaonsSeq'",    "DATA='/Event/Phys/StdLooseKaons/Particles'     TYPE='GaudiSequencer/StdLooseKaonsSeq'",  "DATA='/Event/Phys/StdLooseKaons/Vertices'      TYPE='GaudiSequencer/StdLooseKaonsSeq'",    "DATA='/Event/Phys/StdTightKaons/Particles'     TYPE='GaudiSequencer/StdTightKaonsSeq'",  "DATA='/Event/Phys/StdTightKaons/Vertices'      TYPE='GaudiSequencer/StdTightKaonsSeq'"};
 # StdNoPIDsKaonsSeq.Members += { "PreLoadParticles/StdNoPIDsKaons" };
 # StdNoPIDsKaonsSeq.MeasureTime = true;
@@ -207,8 +229,8 @@
 # StdTightKaons.PhysDesktop.CombinedParticleMaker.Kaon.Selection = {"RequiresDet='RICH' CombDLL(k-pi)>'0.0'" };
 # StdTightKaons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
 # StdTightKaons.DecayDescriptor = "Kaon";
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardKaons.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardPhotons.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardKaons.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardPhotons.opts'
 # DataOnDemandSvc.Algorithms += {    "DATA='/Event/Phys/StdLoosePhotons/Particles'   TYPE='GaudiSequencer/StdLoosePhotonsSeq'",  "DATA='/Event/Phys/StdLoosePhotons/Vertices'    TYPE='GaudiSequencer/StdLoosePhotonsSeq'",    "DATA='/Event/Phys/StdLooseCnvPhotons/Particles' TYPE='GaudiSequencer/StdLooseCnvPhotonsSeq'",  "DATA='/Event/Phys/StdLooseCnvPhotons/Vertices'  TYPE='GaudiSequencer/StdLooseCnvPhotonsSeq'",    "DATA='/Event/Phys/StdLooseAllPhotons/Particles' TYPE='GaudiSequencer/StdLooseAllPhotonsSeq'",  "DATA='/Event/Phys/StdLooseAllPhotons/Vertices'  TYPE='GaudiSequencer/StdLooseAllPhotonsSeq'"};
 # StdLoosePhotonsSeq.Members += { "PreLoadParticles/StdLoosePhotons" };
 # StdLoosePhotonsSeq.MeasureTime = true;
@@ -234,8 +256,8 @@
 # StdLooseAllPhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.UnConvertedPhotons = true;
 # StdLooseAllPhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.PtCut = 200.* MeV;
 # StdLooseAllPhotons.DecayDescriptor = "Gamma";
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardPhotons.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardD0.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardPhotons.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardD0.opts'
 # DataOnDemandSvc.Algorithms += {    "DATA='/Event/Phys/StdLooseD02KPi/Particles'     TYPE='GaudiSequencer/StdLooseD02KPiSeq'",  "DATA='/Event/Phys/StdLooseD02KPi/Vertices'      TYPE='GaudiSequencer/StdLooseD02KPiSeq'",    "DATA='/Event/Phys/StdLooseD02PiPi/Particles'    TYPE='GaudiSequencer/StdLooseD02PiPiSeq'",  "DATA='/Event/Phys/StdLooseD02PiPi/Vertices'     TYPE='GaudiSequencer/StdLooseD02PiPiSeq'",    "DATA='/Event/Phys/StdLooseD02KK/Particles'      TYPE='GaudiSequencer/StdLooseD02KKSeq'",  "DATA='/Event/Phys/StdLooseD02KK/Vertices'       TYPE='GaudiSequencer/StdLooseD02KKSeq'",    "DATA='/Event/Phys/StdLooseD02KsPiPi/Particles'  TYPE='GaudiSequencer/StdLooseD02KsPiPiSeq'",  "DATA='/Event/Phys/StdLooseD02KsPiPi/Vertices'   TYPE='GaudiSequencer/StdLooseD02KsPiPiSeq'",    "DATA='/Event/Phys/StdLooseD02KsKK/Particles'    TYPE='GaudiSequencer/StdLooseD02KsKKSeq'",  "DATA='/Event/Phys/StdLooseD02KsKK/Vertices'     TYPE='GaudiSequencer/StdLooseD02KsKKSeq'",    "DATA='/Event/Phys/StdLooseD02KsKPi/Particles'    TYPE='GaudiSequencer/StdLooseD02KsKPiSeq'",  "DATA='/Event/Phys/StdLooseD02KsKPi/Vertices'     TYPE='GaudiSequencer/StdLooseD02KsKPiSeq'",    "DATA='/Event/Phys/StdLooseD02KKPiPiNoCC/Particles'   TYPE='GaudiSequencer/StdLooseD02KKPiPiNoCCSeq'",  "DATA='/Event/Phys/StdLooseD02KKPiPiNoCC/Vertices'    TYPE='GaudiSequencer/StdLooseD02KKPiPiNoCCSeq'",    "DATA='/Event/Phys/StdLooseD02KPiPiPiCA/Particles'    TYPE='GaudiSequencer/StdLooseD02KPiPiPiCASeq'",  "DATA='/Event/Phys/StdLooseD02KPiPiPiCA/Vertices'     TYPE='GaudiSequencer/StdLooseD02KPiPiPiCASeq'"};
 # StdLooseD02KPiSeq.Members += { "MakeResonances/StdLooseD02KPi" };
 # StdLooseD02KPiSeq.MeasureTime = true;
@@ -358,8 +380,8 @@
 # StdLooseD02KPiPiPiCA.MotherFilter.VtxFilterCriterion.MaxChi2 = 30.0;
 # StdLooseD02KPiPiPiCA.MotherFilter.PVIPFilterCriterion.MinIPsignif = 0.5;
 # StdLooseD02KPiPiPiCA.MotherFilter.FlightDistanceFilterCriterion.MinFSPV = 4.0;
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardD0.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDplus.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardD0.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDplus.opts'
 # DataOnDemandSvc.Algorithms += {    "DATA='/Event/Phys/StdLooseD2KPiPi/Particles'     TYPE='GaudiSequencer/StdLooseD2KPiPiSeq'",  "DATA='/Event/Phys/StdLooseD2KPiPi/Vertices'      TYPE='GaudiSequencer/StdLooseD2KPiPiSeq'",  "DATA='/Event/Phys/StdTightD2KPiPi/Particles'     TYPE='GaudiSequencer/StdTightD2KPiPiSeq'",  "DATA='/Event/Phys/StdTightD2KPiPi/Vertices'      TYPE='GaudiSequencer/StdTightD2KPiPiSeq'"};
 # StdLooseD2KPiPiSeq.Members += { "MakeResonances/StdLooseD2KPiPi" };
 # StdLooseD2KPiPiSeq.MeasureTime = true;
@@ -387,8 +409,8 @@
 # StdTightD2KPiPi.MotherFilter.Selections = {"D+ : VtxFilterCriterion, PVIPFilterCriterion"};
 # StdTightD2KPiPi.MotherFilter.PVIPFilterCriterion.MinIPsignif = 3.0;
 # StdTightD2KPiPi.MotherFilter.VtxFilterCriterion.MaxChi2 = 15.0;
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDplus.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDs.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDplus.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDs.opts'
 # DataOnDemandSvc.Algorithms += {    "DATA='/Event/Phys/StdLooseDs2KKPi/Particles'     TYPE='GaudiSequencer/StdLooseDs2KKPiSeq'",  "DATA='/Event/Phys/StdLooseDs2KKPi/Vertices'      TYPE='GaudiSequencer/StdLooseDs2KKPiSeq'"};
 # StdLooseDs2KKPiSeq.Members += { "MakeResonances/StdLooseDs2KKPi" };
 # StdLooseDs2KKPiSeq.MeasureTime = true;
@@ -403,8 +425,8 @@
 # StdLooseDs2KKPi.MotherFilter.Selections = {"D_s- : VtxFilterCriterion, PVIPFilterCriterion"};
 # StdLooseDs2KKPi.MotherFilter.VtxFilterCriterion.MaxChi2 = 20.0;
 # StdLooseDs2KKPi.MotherFilter.PVIPFilterCriterion.MinIPsignif = 3.0;
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDs.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDstar.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDs.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDstar.opts'
 # DataOnDemandSvc.Algorithms += {    "DATA='/Event/Phys/StdLooseDstarWithD02KPi/Particles'     TYPE='GaudiSequencer/StdLooseDstarWithD02KPiSeq'",  "DATA='/Event/Phys/StdLooseDstarWithD02KPi/Vertices'      TYPE='GaudiSequencer/StdLooseDstarWithD02KPiSeq'",    "DATA='/Event/Phys/StdLooseDstarWithD02PiPi/Particles'    TYPE='GaudiSequencer/StdLooseDstarWithD02PiPiSeq'",  "DATA='/Event/Phys/StdLooseDstarWithD02PiPi/Vertices'     TYPE='GaudiSequencer/StdLooseDstarWithD02PiPiSeq'",    "DATA='/Event/Phys/StdLooseDstarWithD02KK/Particles'      TYPE='GaudiSequencer/StdLooseDstarWithD02KKSeq'",  "DATA='/Event/Phys/StdLooseDstarWithD02KK/Vertices'       TYPE='GaudiSequencer/StdLooseDstarWithD02KKSeq'"};
 # StdLooseDstarWithD02KPiSeq.Members += { "MakeResonances/StdLooseDstarWithD02KPi" };
 # StdLooseDstarWithD02KPiSeq.MeasureTime = true;
@@ -448,8 +470,8 @@
 # StdLooseDstarWithD02KK.MotherFilter.MassDifferenceFilterCriterion.Window = 20.0 * MeV;
 # StdLooseDstarWithD02KK.MotherFilter.MassDifferenceFilterCriterion.DaughterName = "D0";
 # StdLooseDstarWithD02KK.MotherFilter.MassDifferenceFilterCriterion.MotherName = "D*(2010)+";
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDstar.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardJpsi.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDstar.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardJpsi.opts'
 # DataOnDemandSvc.Algorithms += {    "DATA='/Event/Phys/StdUnbiasedHeavyDimuon/Particles'     TYPE='GaudiSequencer/StdUnbiasedHeavyDimuonSeq'",  "DATA='/Event/Phys/StdUnbiasedHeavyDimuon/Vertices'      TYPE='GaudiSequencer/StdUnbiasedHeavyDimuonSeq'",    "DATA='/Event/Phys/StdLoosePenguinDimuon/Particles'      TYPE='GaudiSequencer/StdLoosePenguinDimuonSeq'",  "DATA='/Event/Phys/StdLoosePenguinDimuon/Vertices'       TYPE='GaudiSequencer/StdLoosePenguinDimuonSeq'",    "DATA='/Event/Phys/StdUnbiasedJpsi2MuMu/Particles'     TYPE='GaudiSequencer/StdUnbiasedJpsi2MuMuSeq'",  "DATA='/Event/Phys/StdUnbiasedJpsi2MuMu/Vertices'      TYPE='GaudiSequencer/StdUnbiasedJpsi2MuMuSeq'",    "DATA='/Event/Phys/StdLooseBiasedJpsi2MuMu/Particles'     TYPE='GaudiSequencer/StdLooseBiasedJpsi2MuMuSeq'",  "DATA='/Event/Phys/StdLooseBiasedJpsi2MuMu/Vertices'      TYPE='GaudiSequencer/StdLooseBiasedJpsi2MuMuSeq'",    "DATA='/Event/Phys/StdLooseJpsi2ee/Particles'     TYPE='GaudiSequencer/StdLooseJpsi2eeSeq'",  "DATA='/Event/Phys/StdLooseJpsi2ee/Vertices'      TYPE='GaudiSequencer/StdLooseJpsi2eeSeq'",    "DATA='/Event/Phys/StdLooseBiasedJpsi2ee/Particles'     TYPE='GaudiSequencer/StdLooseBiasedJpsi2eeSeq'",  "DATA='/Event/Phys/StdLooseBiasedJpsi2ee/Vertices'      TYPE='GaudiSequencer/StdLooseBiasedJpsi2eeSeq'"};
 # StdUnbiasedHeavyDimuonSeq.Members += { "MakeResonances/StdUnbiasedHeavyDimuon" };
 # StdUnbiasedHeavyDimuonSeq.MeasureTime = true;
@@ -511,8 +533,8 @@
 # StdLoosePenguinDimuon.Window = 3000.0 * MeV;
 # StdLoosePenguinDimuon.MotherFilter.Selections = {       "J/psi(1S) :       VtxFilterCriterion"};
 # StdLoosePenguinDimuon.MotherFilter.VtxFilterCriterion.MaxChi2 = 100000.0;
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardJpsi.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardKstar.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardJpsi.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardKstar.opts'
 # DataOnDemandSvc.Algorithms += {  "DATA='/Event/Phys/StdTightKstar2KPi/Particles'     TYPE='GaudiSequencer/StdTightKstar2KPiSeq'",  "DATA='/Event/Phys/StdTightKstar2KPi/Vertices'      TYPE='GaudiSequencer/StdTightKstar2KPiSeq'"};
 # DataOnDemandSvc.Algorithms += {  "DATA='/Event/Phys/StdLooseKstar2KPi/Particles'     TYPE='GaudiSequencer/StdLooseKstar2KPiSeq'",  "DATA='/Event/Phys/StdLooseKstar2KPi/Vertices'      TYPE='GaudiSequencer/StdLooseKstar2KPiSeq'"};
 # StdTightKstar2KPiSeq.Members += { "MakeResonances/StdTightKstar2KPi" };
@@ -537,8 +559,8 @@
 # StdLooseKstar2KPi.MinPt  =   0.0 * MeV;
 # StdLooseKstar2KPi.MotherFilter.Selections = { "K*(892)0 : VtxFilterCriterion" };
 # StdLooseKstar2KPi.MotherFilter.VtxFilterCriterion.MaxChi2 = 25.0;
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardKstar.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardPhi.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardKstar.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardPhi.opts'
 # DataOnDemandSvc.Algorithms += {  "DATA='/Event/Phys/StdLoosePhi2KK/Particles'     TYPE='GaudiSequencer/StdLoosePhi2KKSeq'",  "DATA='/Event/Phys/StdLoosePhi2KK/Vertices'      TYPE='GaudiSequencer/StdLoosePhi2KKSeq'"};
 # StdLoosePhi2KKSeq.Members += { "MakeResonances/StdLoosePhi2KK" };
 # StdLoosePhi2KKSeq.MeasureTime = true;
@@ -549,8 +571,8 @@
 # StdLoosePhi2KK.Window = 50.0 * MeV;
 # StdLoosePhi2KK.MotherFilter.Selections = {"phi(1020) : VtxFilterCriterion"};
 # StdLoosePhi2KK.MotherFilter.VtxFilterCriterion.MaxChi2 = 25.0;
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardPhi.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardRho0.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardPhi.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardRho0.opts'
 # DataOnDemandSvc.Algorithms += {    "DATA='/Event/Phys/StdLooseRho02PiPi/Particles' TYPE='GaudiSequencer/StdLooseRho02PiPiSeq'",  "DATA='/Event/Phys/StdLooseRho02PiPi/Vertices'  TYPE='GaudiSequencer/StdLooseRho02PiPiSeq'"};
 # StdLooseRho02PiPiSeq.Members += { "MakeResonances/StdLooseRho02PiPi" };
 # StdLooseRho02PiPiSeq.MeasureTime = true;
@@ -562,8 +584,8 @@
 # StdLooseRho02PiPi.MinPt  =   0.0 * MeV;
 # StdLooseRho02PiPi.MotherFilter.Selections = { "rho(770)0 : VtxFilterCriterion" };
 # StdLooseRho02PiPi.MotherFilter.VtxFilterCriterion.MaxChi2 = 25.0;
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardRho0.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardKs.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardRho0.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardKs.opts'
 # DataOnDemandSvc.Algorithms += {    "DATA='/Event/Phys/StdLooseKsLL/Particles'     TYPE='GaudiSequencer/StdLooseKsLLSeq'",  "DATA='/Event/Phys/StdLooseKsLL/Vertices'      TYPE='GaudiSequencer/StdLooseKsLLSeq'",    "DATA='/Event/Phys/StdTightKsLL/Particles'     TYPE='GaudiSequencer/StdTightKsLLSeq'",  "DATA='/Event/Phys/StdTightKsLL/Vertices'      TYPE='GaudiSequencer/StdTightKsLLSeq'",    "DATA='/Event/Phys/StdLooseKsDD/Particles'     TYPE='GaudiSequencer/StdLooseKsDDSeq'",  "DATA='/Event/Phys/StdLooseKsDD/Vertices'      TYPE='GaudiSequencer/StdLooseKsDDSeq'"};
 # StdLooseKsLLSeq.Members += { "MakeResonances/StdLooseKsLL" };
 # StdLooseKsLLSeq.MeasureTime = true;
@@ -608,8 +630,8 @@
 # StdLooseKsDD.MotherFilter.Selections = { "KS0 : VtxFilterCriterion,                                           MassFilterCriterion " };
 # StdLooseKsDD.MotherFilter.VtxFilterCriterion.MaxChi2 = 30.;
 # StdLooseKsDD.MotherFilter.MassFilterCriterion.Window = 64.*MeV;
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardKs.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardLambda.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardKs.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardLambda.opts'
 # DataOnDemandSvc.Algorithms += {  "DATA='/Event/Phys/StdLooseLambda1115_LL/Particles'     TYPE='GaudiSequencer/StdLooseLambda1115_LL_Seq'",  "DATA='/Event/Phys/StdLooseLambda1115_LL/Vertices'      TYPE='GaudiSequencer/StdLooseLambda1115_LL_Seq'",  "DATA='/Event/Phys/StdLooseLambda1115_DD/Particles'     TYPE='GaudiSequencer/StdLooseLambda1115_DD_Seq'",  "DATA='/Event/Phys/StdLooseLambda1115_DD/Vertices'      TYPE='GaudiSequencer/StdLooseLambda1115_DD_Seq'",  "DATA='/Event/Phys/StdLooseLambda1115_LU/Particles'     TYPE='GaudiSequencer/StdLooseLambda1115_LU_Seq'",  "DATA='/Event/Phys/StdLooseLambda1115_LU/Vertices'      TYPE='GaudiSequencer/StdLooseLambda1115_LU_Seq'",  "DATA='/Event/Phys/StdLooseLambda1115_UL/Particles'     TYPE='GaudiSequencer/StdLooseLambda1115_UL_Seq'",  "DATA='/Event/Phys/StdLooseLambda1115_UL/Vertices'      TYPE='GaudiSequencer/StdLooseLambda1115_UL_Seq'",  "DATA='/Event/Phys/StdLooseLambda1115_LD/Particles'     TYPE='GaudiSequencer/StdLooseLambda1115_LD_Seq'",  "DATA='/Event/Phys/StdLooseLambda1115_LD/Vertices'      TYPE='GaudiSequencer/StdLooseLambda1115_LD_Seq'",  "DATA='/Event/Phys/StdLooseLambda1115_DL/Particles'     TYPE='GaudiSequencer/StdLooseLambda1115_DL_Seq'",  "DATA='/Event/Phys/StdLooseLambda1115_DL/Vertices'      TYPE='GaudiSequencer/StdLooseLambda1115_DL_Seq'",  "DATA='/Event/Phys/StdTightLambda1115_LL/Particles'     TYPE='GaudiSequencer/StdTightLambda1115_LL_Seq'",  "DATA='/Event/Phys/StdTightLambda1115_LL/Vertices'      TYPE='GaudiSequencer/StdTightLambda1115_LL_Seq'",  "DATA='/Event/Phys/StdTightLambda1115_DD/Particles'     TYPE='GaudiSequencer/StdTightLambda1115_DD_Seq'",  "DATA='/Event/Phys/StdTightLambda1115_DD/Vertices'      TYPE='GaudiSequencer/StdTightLambda1115_DD_Seq'",  "DATA='/Event/Phys/StdTightLambda1115_LU/Particles'     TYPE='GaudiSequencer/StdTightLambda1115_LU_Seq'",  "DATA='/Event/Phys/StdTightLambda1115_LU/Vertices'      TYPE='GaudiSequencer/StdTightLambda1115_LU_Seq'",  "DATA='/Event/Phys/StdTightLambda1115_UL/Particles'     TYPE='GaudiSequencer/StdTightLambda1115_UL_Seq'",  "DATA='/Event/Phys/StdTightLambda1115_UL/Vertices'      TYPE='GaudiSequencer/StdTightLambda1115_UL_Seq'",  "DATA='/Event/Phys/StdTightLambda1115_LD/Particles'     TYPE='GaudiSequencer/StdTightLambda1115_LD_Seq'",  "DATA='/Event/Phys/StdTightLambda1115_LD/Vertices'      TYPE='GaudiSequencer/StdTightLambda1115_LD_Seq'",  "DATA='/Event/Phys/StdTightLambda1115_DL/Particles'     TYPE='GaudiSequencer/StdTightLambda1115_DL_Seq'",  "DATA='/Event/Phys/StdTightLambda1115_DL/Vertices'      TYPE='GaudiSequencer/StdTightLambda1115_DL_Seq'"};
 # StdLooseLambda1115_LL_Seq.Members += { "MakeResonances/StdLooseLambda1115_LL" };
 # StdLooseLambda1115_LL_Seq.MeasureTime = true;
@@ -793,15 +815,15 @@
 # StdTightLambda1115_DL.MinPt = 1000. * MeV;
 # StdTightLambda1115_LD.MotherFilter.VtxFilterCriterion.MaxChi2 = 50.;
 # StdTightLambda1115_DL.MotherFilter.VtxFilterCriterion.MaxChi2 = 50.;
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardLambda.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardMergedPi0s.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardLambda.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardMergedPi0s.opts'
 # DataOnDemandSvc.Algorithms += {  "DATA='/Event/Phys/StdLooseMergedPi0s/Particles'     TYPE='PreLoadParticles/StdLooseMergedPi0s'"};
 # StdLooseMergedPi0s.PhysDesktop.ParticleMakerType =  "CaloParticleMaker";
 # StdLooseMergedPi0s.PhysDesktop.CaloParticleMaker.Type = "MergedPi0Maker";
 # StdLooseMergedPi0s.PhysDesktop.CaloParticleMaker.MergedPi0Maker.Pi0MassWindow = 60.* MeV;
 # StdLooseMergedPi0s.DecayDescriptor = "Pi0";
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardMergedPi0s.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardResolvedPi0s.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardMergedPi0s.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardResolvedPi0s.opts'
 # DataOnDemandSvc.Algorithms += {  "DATA='/Event/Phys/StdLooseResolvedPi0s/Particles'     TYPE='GaudiSequencer/StdLooseResolvedPi0sSeq'"};
 # StdLooseResolvedPi0sSeq.Members += { "PreLoadParticles/StdLooseResolvedPi0s" };
 # StdLooseResolvedPi0sSeq.MeasureTime = true;
@@ -810,10 +832,10 @@
 # StdLooseResolvedPi0s.PhysDesktop.CaloParticleMaker.ResolvedPi0Maker.Pi0MassWindow = 30.* MeV;
 # StdLooseResolvedPi0s.PhysDesktop.CaloParticleMaker.ResolvedPi0Maker.PhotonMaker.PtCut = 200.*MeV;
 # StdLooseResolvedPi0s.DecayDescriptor = "Pi0";
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardResolvedPi0s.opts'
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardOptions.py'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Options.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Electrons.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardResolvedPi0s.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardOptions.py'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Options.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Electrons.opts'
 # DataOnDemandSvc.Algorithms += {    "DATA='/Event/Phys/StdDC06NoPIDsElectrons/Particles'     TYPE='GaudiSequencer/StdDC06NoPIDsElectronsSeq'",  "DATA='/Event/Phys/StdDC06NoPIDsElectrons/Vertices'      TYPE='GaudiSequencer/StdDC06NoPIDsElectronsSeq'",    "DATA='/Event/Phys/StdDC06LooseElectrons/Particles'     TYPE='GaudiSequencer/StdDC06LooseElectronsSeq'",  "DATA='/Event/Phys/StdDC06LooseElectrons/Vertices'      TYPE='GaudiSequencer/StdDC06LooseElectronsSeq'",    "DATA='/Event/Phys/StdDC06TightElectrons/Particles'     TYPE='GaudiSequencer/StdDC06TightElectronsSeq'",  "DATA='/Event/Phys/StdDC06TightElectrons/Vertices'      TYPE='GaudiSequencer/StdDC06TightElectronsSeq'"};
 # StdDC06NoPIDsElectronsSeq.Members += { "PreLoadParticles/StdDC06NoPIDsElectrons" };
 # StdDC06NoPIDsElectronsSeq.MeasureTime = true;
@@ -839,8 +861,8 @@
 # StdDC06TightElectrons.PhysDesktop.CombinedParticleMaker.BremAdder.BremCor = 1.06;
 # StdDC06LooseElectrons.PhysDesktop.CombinedParticleMaker.BremAdder.BremCor = 1.06;
 # StdDC06NoPIDsElectrons.PhysDesktop.CombinedParticleMaker.BremAdder.BremCor = 1.06;
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Electrons.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Muons.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Electrons.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Muons.opts'
 # DataOnDemandSvc.Algorithms += {    "DATA='/Event/Phys/StdDC06NoPIDsMuons/Particles'     TYPE='GaudiSequencer/StdDC06NoPIDsMuonsSeq'",  "DATA='/Event/Phys/StdDC06NoPIDsMuons/Vertices'      TYPE='GaudiSequencer/StdDC06NoPIDsMuonsSeq'",    "DATA='/Event/Phys/StdDC06LooseMuons/Particles'     TYPE='GaudiSequencer/StdDC06LooseMuonsSeq'",  "DATA='/Event/Phys/StdDC06LooseMuons/Vertices'      TYPE='GaudiSequencer/StdDC06LooseMuonsSeq'",    "DATA='/Event/Phys/StdDC06TightMuons/Particles'     TYPE='GaudiSequencer/StdDC06TightMuonsSeq'",  "DATA='/Event/Phys/StdDC06TightMuons/Vertices'      TYPE='GaudiSequencer/StdDC06TightMuonsSeq'"};
 # StdDC06NoPIDsMuonsSeq.Members += { "PreLoadParticles/StdDC06NoPIDsMuons" };
 # StdDC06NoPIDsMuonsSeq.MeasureTime = true;
@@ -863,8 +885,8 @@
 # StdDC06TightMuons.PhysDesktop.CombinedParticleMaker.Muon.Selection = {"RequiresDet='MUON' CombDLL(mu-pi)>'-3.0'" };
 # StdDC06TightMuons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
 # StdDC06TightMuons.DecayDescriptor = "Muon";
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Muons.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Protons.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Muons.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Protons.opts'
 # DataOnDemandSvc.Algorithms += {    "DATA='/Event/Phys/StdDC06NoPIDsProtons/Particles'   TYPE='GaudiSequencer/StdDC06NoPIDsProtonsSeq'",  "DATA='/Event/Phys/StdDC06NoPIDsProtons/Vertices'    TYPE='GaudiSequencer/StdDC06NoPIDsProtonsSeq'",    "DATA='/Event/Phys/StdDC06LooseProtons/Particles'   TYPE='GaudiSequencer/StdDC06LooseProtonsSeq'",  "DATA='/Event/Phys/StdDC06LooseProtons/Vertices'    TYPE='GaudiSequencer/StdDC06LooseProtonsSeq'",    "DATA='/Event/Phys/StdDC06LooseVTTProtons/Particles'   TYPE='GaudiSequencer/StdDC06LooseVTTProtonsSeq'",  "DATA='/Event/Phys/StdDC06LooseVTTProtons/Vertices'    TYPE='GaudiSequencer/StdDC06LooseVTTProtonsSeq'",    "DATA='/Event/Phys/StdDC06LooseDownstreamProtons/Particles'   TYPE='GaudiSequencer/StdDC06LooseDownstreamProtonsSeq'",  "DATA='/Event/Phys/StdDC06LooseDownstreamProtons/Vertices'    TYPE='GaudiSequencer/StdDC06LooseDownstreamProtonsSeq'",    "DATA='/Event/Phys/StdDC06TightProtons/Particles'   TYPE='GaudiSequencer/StdDC06TightProtonsSeq'",  "DATA='/Event/Phys/StdDC06TightProtons/Vertices'    TYPE='GaudiSequencer/StdDC06TightProtonsSeq'"};
 # StdDC06NoPIDsProtonsSeq.Members += { "PreLoadParticles/StdDC06NoPIDsProtons" };
 # StdDC06NoPIDsProtonsSeq.MeasureTime = true;
@@ -903,8 +925,8 @@
 # StdDC06TightProtons.PhysDesktop.CombinedParticleMaker.Proton.Selection = {"RequiresDet='RICH' CombDLL(p-pi)>'0.0'" };
 # StdDC06TightProtons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
 # StdDC06TightProtons.DecayDescriptor = "Proton";
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Protons.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Pions.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Protons.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Pions.opts'
 # DataOnDemandSvc.Algorithms += {    "DATA='/Event/Phys/StdDC06NoPIDsPions/Particles'     TYPE='GaudiSequencer/StdDC06NoPIDsPionsSeq'",  "DATA='/Event/Phys/StdDC06NoPIDsPions/Vertices'      TYPE='GaudiSequencer/StdDC06NoPIDsPionsSeq'",    "DATA='/Event/Phys/StdDC06NoPIDsPions/Particles'     TYPE='GaudiSequencer/StdDC06NoPIDsPionsSeq'",  "DATA='/Event/Phys/StdDC06NoPIDsPions/Vertices'      TYPE='GaudiSequencer/StdDC06NoPIDsPionsSeq'",    "DATA='/Event/Phys/StdDC06LoosePions/Particles'     TYPE='GaudiSequencer/StdDC06LoosePionsSeq'",  "DATA='/Event/Phys/StdDC06LoosePions/Vertices'      TYPE='GaudiSequencer/StdDC06LoosePionsSeq'",    "DATA='/Event/Phys/StdDC06LooseVTTPions/Particles'     TYPE='GaudiSequencer/StdDC06LooseVTTPionsSeq'",  "DATA='/Event/Phys/StdDC06LooseVTTPions/Vertices'      TYPE='GaudiSequencer/StdDC06LooseVTTPionsSeq'",    "DATA='/Event/Phys/StdDC06NoPIDsVTTPions/Particles'     TYPE='GaudiSequencer/StdDC06NoPIDsVTTPionsSeq'",  "DATA='/Event/Phys/StdDC06NoPIDsVTTPions/Vertices'      TYPE='GaudiSequencer/StdDC06NoPIDsVTTPionsSeq'",    "DATA='/Event/Phys/StdDC06LooseDownstreamPions/Particles' TYPE='GaudiSequencer/StdDC06LooseDownstreamPionsSeq'",  "DATA='/Event/Phys/StdDC06LooseDownstreamPions/Vertices'  TYPE='GaudiSequencer/StdDC06LooseDownstreamPionsSeq'",    "DATA='/Event/Phys/StdDC06TightPions/Particles'     TYPE='GaudiSequencer/StdDC06TightPionsSeq'",  "DATA='/Event/Phys/StdDC06TightPions/Vertices'      TYPE='GaudiSequencer/StdDC06TightPionsSeq'"};
 # StdDC06NoPIDsPionsSeq.Members += { "PreLoadParticles/StdDC06NoPIDsPions" };
 # StdDC06NoPIDsPionsSeq.MeasureTime = true;
@@ -950,8 +972,8 @@
 # StdDC06TightPions.PhysDesktop.CombinedParticleMaker.Pion.Selection = {"RequiresDet='RICH' CombDLL(pi-k)>'-5.0'" };
 # StdDC06TightPions.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
 # StdDC06TightPions.DecayDescriptor = "Pion";
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Pions.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Kaons.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Pions.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Kaons.opts'
 # DataOnDemandSvc.Algorithms += {    "DATA='/Event/Phys/StdDC06NoPIDsKaons/Particles'     TYPE='GaudiSequencer/StdDC06NoPIDsKaonsSeq'",  "DATA='/Event/Phys/StdDC06NoPIDsKaons/Vertices'      TYPE='GaudiSequencer/StdDC06NoPIDsKaonsSeq'",    "DATA='/Event/Phys/StdDC06LooseKaons/Particles'     TYPE='GaudiSequencer/StdDC06LooseKaonsSeq'",  "DATA='/Event/Phys/StdDC06LooseKaons/Vertices'      TYPE='GaudiSequencer/StdDC06LooseKaonsSeq'",    "DATA='/Event/Phys/StdDC06TightKaons/Particles'     TYPE='GaudiSequencer/StdDC06TightKaonsSeq'",  "DATA='/Event/Phys/StdDC06TightKaons/Vertices'      TYPE='GaudiSequencer/StdDC06TightKaonsSeq'"};
 # StdDC06NoPIDsKaonsSeq.Members += { "PreLoadParticles/StdDC06NoPIDsKaons" };
 # StdDC06NoPIDsKaonsSeq.MeasureTime = true;
@@ -974,8 +996,8 @@
 # StdDC06TightKaons.PhysDesktop.CombinedParticleMaker.Kaon.Selection = {"RequiresDet='RICH' CombDLL(k-pi)>'0.0'" };
 # StdDC06TightKaons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
 # StdDC06TightKaons.DecayDescriptor = "Kaon";
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Kaons.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Photons.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Kaons.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Photons.opts'
 # DataOnDemandSvc.Algorithms += {    "DATA='/Event/Phys/StdDC06LoosePhotons/Particles'   TYPE='GaudiSequencer/StdDC06LoosePhotonsSeq'",  "DATA='/Event/Phys/StdDC06LoosePhotons/Vertices'    TYPE='GaudiSequencer/StdDC06LoosePhotonsSeq'",    "DATA='/Event/Phys/StdDC06LooseCnvPhotons/Particles' TYPE='GaudiSequencer/StdDC06LooseCnvPhotonsSeq'",  "DATA='/Event/Phys/StdDC06LooseCnvPhotons/Vertices'  TYPE='GaudiSequencer/StdDC06LooseCnvPhotonsSeq'",    "DATA='/Event/Phys/StdDC06LooseAllPhotons/Particles' TYPE='GaudiSequencer/StdDC06LooseAllPhotonsSeq'",  "DATA='/Event/Phys/StdDC06LooseAllPhotons/Vertices'  TYPE='GaudiSequencer/StdDC06LooseAllPhotonsSeq'"};
 # StdDC06LoosePhotonsSeq.Members += { "PreLoadParticles/StdDC06LoosePhotons" };
 # StdDC06LoosePhotonsSeq.MeasureTime = true;
@@ -1001,8 +1023,8 @@
 # StdDC06LooseAllPhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.UnConvertedPhotons = true;
 # StdDC06LooseAllPhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.PtCut = 200.* MeV;
 # StdDC06LooseAllPhotons.DecayDescriptor = "Gamma";
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Photons.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06D0.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Photons.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06D0.opts'
 # DataOnDemandSvc.Algorithms += {    "DATA='/Event/Phys/StdDC06LooseD02KPi/Particles'     TYPE='GaudiSequencer/StdDC06LooseD02KPiSeq'",  "DATA='/Event/Phys/StdDC06LooseD02KPi/Vertices'      TYPE='GaudiSequencer/StdDC06LooseD02KPiSeq'",    "DATA='/Event/Phys/StdDC06LooseD02PiPi/Particles'    TYPE='GaudiSequencer/StdDC06LooseD02PiPiSeq'",  "DATA='/Event/Phys/StdDC06LooseD02PiPi/Vertices'     TYPE='GaudiSequencer/StdDC06LooseD02PiPiSeq'",    "DATA='/Event/Phys/StdDC06LooseD02KK/Particles'      TYPE='GaudiSequencer/StdDC06LooseD02KKSeq'",  "DATA='/Event/Phys/StdDC06LooseD02KK/Vertices'       TYPE='GaudiSequencer/StdDC06LooseD02KKSeq'",    "DATA='/Event/Phys/StdDC06LooseD02KsPiPi/Particles'  TYPE='GaudiSequencer/StdDC06LooseD02KsPiPiSeq'",  "DATA='/Event/Phys/StdDC06LooseD02KsPiPi/Vertices'   TYPE='GaudiSequencer/StdDC06LooseD02KsPiPiSeq'",    "DATA='/Event/Phys/StdDC06LooseD02KsKK/Particles'    TYPE='GaudiSequencer/StdDC06LooseD02KsKKSeq'",  "DATA='/Event/Phys/StdDC06LooseD02KsKK/Vertices'     TYPE='GaudiSequencer/StdDC06LooseD02KsKKSeq'",    "DATA='/Event/Phys/StdDC06LooseD02KsKPi/Particles'    TYPE='GaudiSequencer/StdDC06LooseD02KsKPiSeq'",  "DATA='/Event/Phys/StdDC06LooseD02KsKPi/Vertices'     TYPE='GaudiSequencer/StdDC06LooseD02KsKPiSeq'",    "DATA='/Event/Phys/StdDC06LooseD02KKPiPiNoCC/Particles'   TYPE='GaudiSequencer/StdDC06LooseD02KKPiPiNoCCSeq'",  "DATA='/Event/Phys/StdDC06LooseD02KKPiPiNoCC/Vertices'    TYPE='GaudiSequencer/StdDC06LooseD02KKPiPiNoCCSeq'",    "DATA='/Event/Phys/StdDC06LooseD02KPiPiPiCA/Particles'    TYPE='GaudiSequencer/StdDC06LooseD02KPiPiPiCASeq'",  "DATA='/Event/Phys/StdDC06LooseD02KPiPiPiCA/Vertices'     TYPE='GaudiSequencer/StdDC06LooseD02KPiPiPiCASeq'"};
 # StdDC06LooseD02KPiSeq.Members += { "MakeResonances/StdDC06LooseD02KPi" };
 # StdDC06LooseD02KPiSeq.MeasureTime = true;
@@ -1125,8 +1147,8 @@
 # StdDC06LooseD02KPiPiPiCA.MotherFilter.VtxFilterCriterion.MaxChi2 = 30.0;
 # StdDC06LooseD02KPiPiPiCA.MotherFilter.PVIPFilterCriterion.MinIPsignif = 0.5;
 # StdDC06LooseD02KPiPiPiCA.MotherFilter.FlightDistanceFilterCriterion.MinFSPV = 4.0;
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06D0.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Dplus.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06D0.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Dplus.opts'
 # DataOnDemandSvc.Algorithms += {    "DATA='/Event/Phys/StdDC06LooseD2KPiPi/Particles'     TYPE='GaudiSequencer/StdDC06LooseD2KPiPiSeq'",  "DATA='/Event/Phys/StdDC06LooseD2KPiPi/Vertices'      TYPE='GaudiSequencer/StdDC06LooseD2KPiPiSeq'",  "DATA='/Event/Phys/StdDC06TightD2KPiPi/Particles'     TYPE='GaudiSequencer/StdDC06TightD2KPiPiSeq'",  "DATA='/Event/Phys/StdDC06TightD2KPiPi/Vertices'      TYPE='GaudiSequencer/StdDC06TightD2KPiPiSeq'"};
 # StdDC06LooseD2KPiPiSeq.Members += { "MakeResonances/StdDC06LooseD2KPiPi" };
 # StdDC06LooseD2KPiPiSeq.MeasureTime = true;
@@ -1154,8 +1176,8 @@
 # StdDC06TightD2KPiPi.MotherFilter.Selections = {"D+ : VtxFilterCriterion, PVIPFilterCriterion"};
 # StdDC06TightD2KPiPi.MotherFilter.PVIPFilterCriterion.MinIPsignif = 3.0;
 # StdDC06TightD2KPiPi.MotherFilter.VtxFilterCriterion.MaxChi2 = 15.0;
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Dplus.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Ds.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Dplus.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Ds.opts'
 # DataOnDemandSvc.Algorithms += {    "DATA='/Event/Phys/StdDC06LooseDs2KKPi/Particles'     TYPE='GaudiSequencer/StdDC06LooseDs2KKPiSeq'",  "DATA='/Event/Phys/StdDC06LooseDs2KKPi/Vertices'      TYPE='GaudiSequencer/StdDC06LooseDs2KKPiSeq'"};
 # StdDC06LooseDs2KKPiSeq.Members += { "MakeResonances/StdDC06LooseDs2KKPi" };
 # StdDC06LooseDs2KKPiSeq.MeasureTime = true;
@@ -1170,8 +1192,8 @@
 # StdDC06LooseDs2KKPi.MotherFilter.Selections = {"D_s- : VtxFilterCriterion, PVIPFilterCriterion"};
 # StdDC06LooseDs2KKPi.MotherFilter.VtxFilterCriterion.MaxChi2 = 20.0;
 # StdDC06LooseDs2KKPi.MotherFilter.PVIPFilterCriterion.MinIPsignif = 3.0;
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Ds.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Dstar.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Ds.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Dstar.opts'
 # DataOnDemandSvc.Algorithms += {    "DATA='/Event/Phys/StdDC06LooseDstarWithD02KPi/Particles'     TYPE='GaudiSequencer/StdDC06LooseDstarWithD02KPiSeq'",  "DATA='/Event/Phys/StdDC06LooseDstarWithD02KPi/Vertices'      TYPE='GaudiSequencer/StdDC06LooseDstarWithD02KPiSeq'",    "DATA='/Event/Phys/StdDC06LooseDstarWithD02PiPi/Particles'    TYPE='GaudiSequencer/StdDC06LooseDstarWithD02PiPiSeq'",  "DATA='/Event/Phys/StdDC06LooseDstarWithD02PiPi/Vertices'     TYPE='GaudiSequencer/StdDC06LooseDstarWithD02PiPiSeq'",    "DATA='/Event/Phys/StdDC06LooseDstarWithD02KK/Particles'      TYPE='GaudiSequencer/StdDC06LooseDstarWithD02KKSeq'",  "DATA='/Event/Phys/StdDC06LooseDstarWithD02KK/Vertices'       TYPE='GaudiSequencer/StdDC06LooseDstarWithD02KKSeq'"};
 # StdDC06LooseDstarWithD02KPiSeq.Members += { "MakeResonances/StdDC06LooseDstarWithD02KPi" };
 # StdDC06LooseDstarWithD02KPiSeq.MeasureTime = true;
@@ -1215,8 +1237,8 @@
 # StdDC06LooseDstarWithD02KK.MotherFilter.MassDifferenceFilterCriterion.Window = 20.0 * MeV;
 # StdDC06LooseDstarWithD02KK.MotherFilter.MassDifferenceFilterCriterion.DaughterName = "D0";
 # StdDC06LooseDstarWithD02KK.MotherFilter.MassDifferenceFilterCriterion.MotherName = "D*(2010)+";
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Dstar.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Jpsi.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Dstar.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Jpsi.opts'
 # DataOnDemandSvc.Algorithms += {    "DATA='/Event/Phys/StdDC06UnbiasedHeavyDimuon/Particles'     TYPE='GaudiSequencer/StdDC06UnbiasedHeavyDimuonSeq'",  "DATA='/Event/Phys/StdDC06UnbiasedHeavyDimuon/Vertices'      TYPE='GaudiSequencer/StdDC06UnbiasedHeavyDimuonSeq'",    "DATA='/Event/Phys/StdDC06LoosePenguinDimuon/Particles'      TYPE='GaudiSequencer/StdDC06LoosePenguinDimuonSeq'",  "DATA='/Event/Phys/StdDC06LoosePenguinDimuon/Vertices'       TYPE='GaudiSequencer/StdDC06LoosePenguinDimuonSeq'",    "DATA='/Event/Phys/StdDC06UnbiasedJpsi2MuMu/Particles'     TYPE='GaudiSequencer/StdDC06UnbiasedJpsi2MuMuSeq'",  "DATA='/Event/Phys/StdDC06UnbiasedJpsi2MuMu/Vertices'      TYPE='GaudiSequencer/StdDC06UnbiasedJpsi2MuMuSeq'",    "DATA='/Event/Phys/StdDC06LooseBiasedJpsi2MuMu/Particles'     TYPE='GaudiSequencer/StdDC06LooseBiasedJpsi2MuMuSeq'",  "DATA='/Event/Phys/StdDC06LooseBiasedJpsi2MuMu/Vertices'      TYPE='GaudiSequencer/StdDC06LooseBiasedJpsi2MuMuSeq'",    "DATA='/Event/Phys/StdDC06LooseJpsi2ee/Particles'     TYPE='GaudiSequencer/StdDC06LooseJpsi2eeSeq'",  "DATA='/Event/Phys/StdDC06LooseJpsi2ee/Vertices'      TYPE='GaudiSequencer/StdDC06LooseJpsi2eeSeq'",    "DATA='/Event/Phys/StdDC06LooseBiasedJpsi2ee/Particles'     TYPE='GaudiSequencer/StdDC06LooseBiasedJpsi2eeSeq'",  "DATA='/Event/Phys/StdDC06LooseBiasedJpsi2ee/Vertices'      TYPE='GaudiSequencer/StdDC06LooseBiasedJpsi2eeSeq'"};
 # StdDC06UnbiasedHeavyDimuonSeq.Members += { "MakeResonances/StdDC06UnbiasedHeavyDimuon" };
 # StdDC06UnbiasedHeavyDimuonSeq.MeasureTime = true;
@@ -1278,8 +1300,8 @@
 # StdDC06LoosePenguinDimuon.Window = 3000.0 * MeV;
 # StdDC06LoosePenguinDimuon.MotherFilter.Selections = {       "J/psi(1S) :       VtxFilterCriterion"};
 # StdDC06LoosePenguinDimuon.MotherFilter.VtxFilterCriterion.MaxChi2 = 100000.0;
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Jpsi.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Kstar.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Jpsi.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Kstar.opts'
 # DataOnDemandSvc.Algorithms += {  "DATA='/Event/Phys/StdDC06TightKstar2KPi/Particles'     TYPE='GaudiSequencer/StdDC06TightKstar2KPiSeq'",  "DATA='/Event/Phys/StdDC06TightKstar2KPi/Vertices'      TYPE='GaudiSequencer/StdDC06TightKstar2KPiSeq'"};
 # DataOnDemandSvc.Algorithms += {  "DATA='/Event/Phys/StdDC06LooseKstar2KPi/Particles'     TYPE='GaudiSequencer/StdDC06LooseKstar2KPiSeq'",  "DATA='/Event/Phys/StdDC06LooseKstar2KPi/Vertices'      TYPE='GaudiSequencer/StdDC06LooseKstar2KPiSeq'"};
 # StdDC06TightKstar2KPiSeq.Members += { "MakeResonances/StdDC06TightKstar2KPi" };
@@ -1304,8 +1326,8 @@
 # StdDC06LooseKstar2KPi.MinPt  =   0.0 * MeV;
 # StdDC06LooseKstar2KPi.MotherFilter.Selections = { "K*(892)0 : VtxFilterCriterion" };
 # StdDC06LooseKstar2KPi.MotherFilter.VtxFilterCriterion.MaxChi2 = 25.0;
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Kstar.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Phi.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Kstar.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Phi.opts'
 # DataOnDemandSvc.Algorithms += {  "DATA='/Event/Phys/StdDC06LoosePhi2KK/Particles'     TYPE='GaudiSequencer/StdDC06LoosePhi2KKSeq'",  "DATA='/Event/Phys/StdDC06LoosePhi2KK/Vertices'      TYPE='GaudiSequencer/StdDC06LoosePhi2KKSeq'"};
 # StdDC06LoosePhi2KKSeq.Members += { "MakeResonances/StdDC06LoosePhi2KK" };
 # StdDC06LoosePhi2KKSeq.MeasureTime = true;
@@ -1316,8 +1338,8 @@
 # StdDC06LoosePhi2KK.Window = 50.0 * MeV;
 # StdDC06LoosePhi2KK.MotherFilter.Selections = {"phi(1020) : VtxFilterCriterion"};
 # StdDC06LoosePhi2KK.MotherFilter.VtxFilterCriterion.MaxChi2 = 25.0;
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Phi.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Rho0.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Phi.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Rho0.opts'
 # DataOnDemandSvc.Algorithms += {    "DATA='/Event/Phys/StdDC06LooseRho02PiPi/Particles' TYPE='GaudiSequencer/StdDC06LooseRho02PiPiSeq'",  "DATA='/Event/Phys/StdDC06LooseRho02PiPi/Vertices'  TYPE='GaudiSequencer/StdDC06LooseRho02PiPiSeq'"};
 # StdDC06LooseRho02PiPiSeq.Members += { "MakeResonances/StdDC06LooseRho02PiPi" };
 # StdDC06LooseRho02PiPiSeq.MeasureTime = true;
@@ -1329,8 +1351,8 @@
 # StdDC06LooseRho02PiPi.MinPt  =   0.0 * MeV;
 # StdDC06LooseRho02PiPi.MotherFilter.Selections = { "rho(770)0 : VtxFilterCriterion" };
 # StdDC06LooseRho02PiPi.MotherFilter.VtxFilterCriterion.MaxChi2 = 25.0;
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Rho0.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Ks.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Rho0.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Ks.opts'
 # DataOnDemandSvc.Algorithms += {    "DATA='/Event/Phys/StdDC06LooseKsLL/Particles'     TYPE='GaudiSequencer/StdDC06LooseKsLLSeq'",  "DATA='/Event/Phys/StdDC06LooseKsLL/Vertices'      TYPE='GaudiSequencer/StdDC06LooseKsLLSeq'",    "DATA='/Event/Phys/StdDC06TightKsLL/Particles'     TYPE='GaudiSequencer/StdDC06TightKsLLSeq'",  "DATA='/Event/Phys/StdDC06TightKsLL/Vertices'      TYPE='GaudiSequencer/StdDC06TightKsLLSeq'",    "DATA='/Event/Phys/StdDC06LooseKsDD/Particles'     TYPE='GaudiSequencer/StdDC06LooseKsDDSeq'",  "DATA='/Event/Phys/StdDC06LooseKsDD/Vertices'      TYPE='GaudiSequencer/StdDC06LooseKsDDSeq'"};
 # StdDC06LooseKsLLSeq.Members += { "MakeResonances/StdDC06LooseKsLL" };
 # StdDC06LooseKsLLSeq.MeasureTime = true;
@@ -1375,8 +1397,8 @@
 # StdDC06LooseKsDD.MotherFilter.Selections = { "KS0 : VtxFilterCriterion,                                           MassFilterCriterion " };
 # StdDC06LooseKsDD.MotherFilter.VtxFilterCriterion.MaxChi2 = 30.;
 # StdDC06LooseKsDD.MotherFilter.MassFilterCriterion.Window = 64.*MeV;
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Ks.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Lambda.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Ks.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Lambda.opts'
 # DataOnDemandSvc.Algorithms += {  "DATA='/Event/Phys/StdDC06LooseLambda1115_LL/Particles'     TYPE='GaudiSequencer/StdDC06LooseLambda1115_LL_Seq'",  "DATA='/Event/Phys/StdDC06LooseLambda1115_LL/Vertices'      TYPE='GaudiSequencer/StdDC06LooseLambda1115_LL_Seq'",  "DATA='/Event/Phys/StdDC06LooseLambda1115_DD/Particles'     TYPE='GaudiSequencer/StdDC06LooseLambda1115_DD_Seq'",  "DATA='/Event/Phys/StdDC06LooseLambda1115_DD/Vertices'      TYPE='GaudiSequencer/StdDC06LooseLambda1115_DD_Seq'",  "DATA='/Event/Phys/StdDC06LooseLambda1115_LU/Particles'     TYPE='GaudiSequencer/StdDC06LooseLambda1115_LU_Seq'",  "DATA='/Event/Phys/StdDC06LooseLambda1115_LU/Vertices'      TYPE='GaudiSequencer/StdDC06LooseLambda1115_LU_Seq'",  "DATA='/Event/Phys/StdDC06LooseLambda1115_UL/Particles'     TYPE='GaudiSequencer/StdDC06LooseLambda1115_UL_Seq'",  "DATA='/Event/Phys/StdDC06LooseLambda1115_UL/Vertices'      TYPE='GaudiSequencer/StdDC06LooseLambda1115_UL_Seq'",  "DATA='/Event/Phys/StdDC06LooseLambda1115_LD/Particles'     TYPE='GaudiSequencer/StdDC06LooseLambda1115_LD_Seq'",  "DATA='/Event/Phys/StdDC06LooseLambda1115_LD/Vertices'      TYPE='GaudiSequencer/StdDC06LooseLambda1115_LD_Seq'",  "DATA='/Event/Phys/StdDC06LooseLambda1115_DL/Particles'     TYPE='GaudiSequencer/StdDC06LooseLambda1115_DL_Seq'",  "DATA='/Event/Phys/StdDC06LooseLambda1115_DL/Vertices'      TYPE='GaudiSequencer/StdDC06LooseLambda1115_DL_Seq'",  "DATA='/Event/Phys/StdDC06TightLambda1115_LL/Particles'     TYPE='GaudiSequencer/StdDC06TightLambda1115_LL_Seq'",  "DATA='/Event/Phys/StdDC06TightLambda1115_LL/Vertices'      TYPE='GaudiSequencer/StdDC06TightLambda1115_LL_Seq'",  "DATA='/Event/Phys/StdDC06TightLambda1115_DD/Particles'     TYPE='GaudiSequencer/StdDC06TightLambda1115_DD_Seq'",  "DATA='/Event/Phys/StdDC06TightLambda1115_DD/Vertices'      TYPE='GaudiSequencer/StdDC06TightLambda1115_DD_Seq'",  "DATA='/Event/Phys/StdDC06TightLambda1115_LU/Particles'     TYPE='GaudiSequencer/StdDC06TightLambda1115_LU_Seq'",  "DATA='/Event/Phys/StdDC06TightLambda1115_LU/Vertices'      TYPE='GaudiSequencer/StdDC06TightLambda1115_LU_Seq'",  "DATA='/Event/Phys/StdDC06TightLambda1115_UL/Particles'     TYPE='GaudiSequencer/StdDC06TightLambda1115_UL_Seq'",  "DATA='/Event/Phys/StdDC06TightLambda1115_UL/Vertices'      TYPE='GaudiSequencer/StdDC06TightLambda1115_UL_Seq'",  "DATA='/Event/Phys/StdDC06TightLambda1115_LD/Particles'     TYPE='GaudiSequencer/StdDC06TightLambda1115_LD_Seq'",  "DATA='/Event/Phys/StdDC06TightLambda1115_LD/Vertices'      TYPE='GaudiSequencer/StdDC06TightLambda1115_LD_Seq'",  "DATA='/Event/Phys/StdDC06TightLambda1115_DL/Particles'     TYPE='GaudiSequencer/StdDC06TightLambda1115_DL_Seq'",  "DATA='/Event/Phys/StdDC06TightLambda1115_DL/Vertices'      TYPE='GaudiSequencer/StdDC06TightLambda1115_DL_Seq'"};
 # StdDC06LooseLambda1115_LL_Seq.Members += { "MakeResonances/StdDC06LooseLambda1115_LL" };
 # StdDC06LooseLambda1115_LL_Seq.MeasureTime = true;
@@ -1560,15 +1582,15 @@
 # StdDC06TightLambda1115_DL.MinPt = 1000. * MeV;
 # StdDC06TightLambda1115_LD.MotherFilter.VtxFilterCriterion.MaxChi2 = 50.;
 # StdDC06TightLambda1115_DL.MotherFilter.VtxFilterCriterion.MaxChi2 = 50.;
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Lambda.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06MergedPi0s.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Lambda.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06MergedPi0s.opts'
 # DataOnDemandSvc.Algorithms += {  "DATA='/Event/Phys/StdDC06LooseMergedPi0s/Particles'     TYPE='PreLoadParticles/StdDC06LooseMergedPi0s'"};
 # StdDC06LooseMergedPi0s.PhysDesktop.ParticleMakerType =  "CaloParticleMaker";
 # StdDC06LooseMergedPi0s.PhysDesktop.CaloParticleMaker.Type = "MergedPi0Maker";
 # StdDC06LooseMergedPi0s.PhysDesktop.CaloParticleMaker.MergedPi0Maker.Pi0MassWindow = 60.* MeV;
 # StdDC06LooseMergedPi0s.DecayDescriptor = "Pi0";
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06MergedPi0s.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06ResolvedPi0s.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06MergedPi0s.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06ResolvedPi0s.opts'
 # DataOnDemandSvc.Algorithms += {  "DATA='/Event/Phys/StdDC06LooseResolvedPi0s/Particles'     TYPE='GaudiSequencer/StdDC06LooseResolvedPi0sSeq'"};
 # StdDC06LooseResolvedPi0sSeq.Members += { "PreLoadParticles/StdDC06LooseResolvedPi0s" };
 # StdDC06LooseResolvedPi0sSeq.MeasureTime = true;
@@ -1577,15 +1599,15 @@
 # StdDC06LooseResolvedPi0s.PhysDesktop.CaloParticleMaker.ResolvedPi0Maker.Pi0MassWindow = 30.* MeV;
 # StdDC06LooseResolvedPi0s.PhysDesktop.CaloParticleMaker.ResolvedPi0Maker.PhotonMaker.PtCut = 200.*MeV;
 # StdDC06LooseResolvedPi0s.DecayDescriptor = "Pi0";
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06ResolvedPi0s.opts'
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Options.opts'
-# --> Including file '/afs/cern.ch/user/p/pkoppenb/cmtuser/DaVinci_HEAD/PhysSel/B2Dilepton/options/Do09selBu2LLK.py'
-# <-- End of file '/afs/cern.ch/user/p/pkoppenb/cmtuser/DaVinci_HEAD/PhysSel/B2Dilepton/options/Do09selBu2LLK.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06ResolvedPi0s.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/ANALYSIS/ANALYSIS_HEAD/Phys/CommonParticles/options/StandardDC06Options.opts'
+# No MainOptions specified. DaVinci() will import no options file!
+# Creating User Algorithms
 # /***** User DaVinci/DaVinci ************************************************************************
 # |-DstFile                    = ''
 # |-DDDBtag                    = ''
-# |-MainOptions                = '$B2DILEPTONROOT/options/Do09selBu2LLK.py'  (default: '')
-# |-UserAlgorithms             = [<AlgorithmCorrelationsAlg/TestCorrelations at 0x8c8fb0>]  (default: [])
+# |-MainOptions                = ''  (default: '')
+# |-UserAlgorithms             = []  (default: [])
 # |-RedoMCLinks                = False
 # |-DataType                   = 'DC06'
 # |-TupleFile                  = ''
@@ -1604,13 +1626,13 @@
 # |-Hlt2IgnoreHlt1Decision     = False
 # \----- (End of User DaVinci/DaVinci) ---------------------------------------------------------------
 # skipping configuration of HltConf
-# applying configuration of PhysConf
-# applying Phys configuration
-# WARNING: file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/LHCB/LHCB_HEAD/Calo/CaloDAQ/options/CaloDigitsOnDemand.opts' already included, ignored.
+# applying configuration of AnalysisConf
+# Applying Analysis configuration
+# WARNING: file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/LHCB/LHCB_v26r1/Calo/CaloDAQ/options/CaloDigitsOnDemand.opts' already included, ignored.
 ApplicationMgr    SUCCESS 
 ====================================================================================================================================
                                                    Welcome to DaVinci version v22r0
-                                          running on lxplus244.cern.ch on Thu Jan  8 10:45:12 2009
+                                          running on lxplus249.cern.ch on Fri Jan  9 13:42:42 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Successfully loaded modules : HepMCBack
 ApplicationMgr       INFO Application Manager Configured successfully
@@ -1622,7 +1644,7 @@ DetectorDataSvc                                             SUCCESS Detector des
 RndmGenSvc.Engine                                              INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine                                              INFO Current Seed:1234567 Luxury:3
 RndmGenSvc                                                     INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.TIMER                                            INFO This machine has a speed about   1.83 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER                                            INFO This machine has a speed about   1.82 times the speed of a 2.8 GHz Xeon.
 DataOnDemandSvc                                             WARNING The property 'Nodes'      is obsolete, switch to map-like 'NodeMap'  = { 'data' : 'type'      } 
 DataOnDemandSvc                                             WARNING The property 'Algorithms' is obsolete, switch to map-like 'AlgMap'   = { 'data' : 'algorithm' } 
 EventPersistencySvc                                            INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
@@ -1651,28 +1673,15 @@ Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome 
 
 
 
-DaVinciInitSeq                                                 INFO Member list: LbAppInit/DaVinciAppInit, GaudiSequencer/ProtoPRecalibration
+DaVinciInitSeq                                                 INFO Member list: LbAppInit/DaVinciAppInit, GaudiSequencer/TestProtoPRecalibration
 DaVinciAppInit                                              SUCCESS ==================================================================
 DaVinciAppInit                                              SUCCESS Requested to process 0 events
 DaVinciAppInit                                              SUCCESS ==================================================================
+TestProtoPRecalibration                                        INFO Member list: TESCheck/CheckProto, GaudiSequencer/ProtoPRecalibration
 ProtoPRecalibration                                            INFO Member list: ChargedProtoCombineDLLsAlg, MuonPIDsFromProtoParticlesAlg/MuonPIDsFromProtos, RichPIDsFromProtoParticlesAlg/RichPIDsFromProtos
 ChargedProtoCombineDLLsAlg                                     INFO Using retuned RICH el and mu DLL values in combined DLLs
 MuonPIDsFromProtos                                             INFO Creating MuonPIDs 'Rec/Muon/MuonPID' from ProtoParticles at 'Rec/ProtoP/Charged'
 RichPIDsFromProtos                                             INFO Creating RichPIDs 'Rec/Rich/PIDs' from ProtoParticles at 'Rec/ProtoP/Charged'
-Sel09Bu2LLKFilterSequence                                      INFO Member list: CombineParticles/Bu2LLK09_DiLepton, CombineParticles/Presel09Bu2LLK, FilterDesktop/Sel09Bu2LLK
-COOLConfSvc                                                    INFO CORAL Connection Retrial Period set to 60s
-COOLConfSvc                                                    INFO CORAL Connection Retrial Time-Out set to 900s
-DDDB                                                           INFO Connected to database "sqlite_file:/afs/cern.ch/user/m/marcocle/public/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
-DDDB                                                           INFO Using TAG "DC06-20081002"
-LHCBCOND                                                       INFO Connected to database "sqlite_file:/afs/cern.ch/user/m/marcocle/public/DBASE/Det/SQLDDDB/db/LHCBCOND.db/LHCBCOND"
-LHCBCOND                                                       INFO Using TAG "DC06-20081002"
-ONLINE_200808                                                  INFO Connected to database "sqlite_file:/afs/cern.ch/user/m/marcocle/public/DBASE/Det/SQLDDDB/db/ONLINE-200808.db/ONLINE"
-ONLINE_200808                                                  INFO Using TAG ""
-ParticlePropertySvc                                            INFO Opened particle properties file : conddb:///param/ParticleTable.txt
-LHCb::ParticlePropertySvc                                      INFO  No anti particle : [ 'Ar36[0.0]' , 'Ar40[0.0]' , 'B10[0.0]' , 'B11[0.0]' , 'B12[0.0]' , 'Be10[0.0]' , 'C12[0.0]' , 'C13[0.0]' , 'C14[0.0]' , 'Cl40[0.0]' , 'Cr50[0.0]' , 'Cr52[0.0]' , 'Cr53[0.0]' , 'Cu63[0.0]' , 'Cu65[0.0]' , 'F19[0.0]' , 'Fe54[0.0]' , 'Intermediate' , 'N14[0.0]' , 'N15[0.0]' , 'N16[0.0]' , 'Ni60[0.0]' , 'Ni61[0.0]' , 'Ni62[0.0]' , 'Ni63[0.0]' , 'Ni64[0.0]' , 'O16[0.0]' , 'O17[0.0]' , 'O18[0.0]' , 'P31[0.0]' , 'Si30[0.0]' ]
-TestCorrelations.AlgorithmCorrelations                         INFO Algorithms to check correlations: [ALWAYS, Bu2LLK09_DiLepton, Presel09Bu2LLK, Sel09Bu2LLK]
-TestCorrelations.AlgorithmCorrelations                         INFO No algorithms row defined. Will make a square matrix using algorithms column.
-TestCorrelations.AlgorithmCorrelations                         INFO Will print efficiencies with automatic precision
 HistogramPersistencySvc                                        INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 RootHistSvc                                                    INFO Writing ROOT histograms to: UndefinedROOTOutputFileName
 HistogramPersistencySvc                                        INFO Added successfully Conversion service:RootHistSvc
@@ -1682,18 +1691,6 @@ ApplicationMgr                                                 INFO Application 
 DaVinciAppInit                                              SUCCESS ==================================================================
 DaVinciAppInit                                              SUCCESS 0 events processed
 DaVinciAppInit                                              SUCCESS ==================================================================
-TestCorrelations.AlgorithmCorrelations                      SUCCESS Correlation Table:
-
-======================================================
-        TestCorrelations.AlgorithmCorrelations
-======================================================
-    Algorithm            Eff.      1     2     3 
-------------------------------------------------------
-  1 Bu2LLK09_DiLepton  -100% |  ####  ****  ****
-  2 Presel09Bu2LLK     -100% |  ****  ####  ****
-  3 Sel09Bu2LLK        -100% |  ****  ****  ####
-======================================================
-
 RootHistSvc                                                 WARNING no ROOT output file name, Histograms cannot be persistified
 EventLoopMgr                                                   INFO Histograms converted successfully according to request.
 LoKiSvc                                                     SUCCESS 
@@ -1721,21 +1718,18 @@ Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye
 DataOnDemandSvc                                                INFO Handled "DataFault" incidents: 0/0/0(Alg/Node/Total).
 ToolSvc                                                        INFO Removing all tools created by ToolSvc
 TimingAuditor.TIMER                                            INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.TIMER                                            INFO This machine has a speed about   1.83 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER                                            INFO This machine has a speed about   1.82 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.TIMER                                            INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.TIMER                                            INFO ------------------------------------------------------------------------------------------------
 TimingAuditor.TIMER                                            INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.TIMER                                            INFO  DaVinciInitSeq               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.TIMER                                            INFO   DaVinciAppInit              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO   ProtoPRecalibration         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO    ChargedProtoCombineDLLsAlg |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO    MuonPIDsFromProtos         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO    RichPIDsFromProtos         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO  Sel09Bu2LLKFilterSequence    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO   Bu2LLK09_DiLepton           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO   Presel09Bu2LLK              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO   Sel09Bu2LLK                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO  TestCorrelations             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO   TestProtoPRecalibration     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO    CheckProto                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO    ProtoPRecalibration        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO     ChargedProtoCombineDLLsAlg|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO     MuonPIDsFromProtos        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO     RichPIDsFromProtos        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.TIMER                                            INFO ------------------------------------------------------------------------------------------------
 ApplicationMgr                                                 INFO Application Manager Finalized successfully
 ApplicationMgr                                                 INFO Application Manager Terminated successfully

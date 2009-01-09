@@ -4,6 +4,7 @@ Package Coordinator : Juan Palacios
 Purpose             : LHCb analysis program 
 
 ! 2009-01-09 - Patrick Koppenburg
+ - Simplify sam test
  - Added Hlt test
 
 ! 2009-01-08 - Patrick Koppenburg
