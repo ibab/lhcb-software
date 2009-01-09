@@ -1,7 +1,7 @@
 """
 High level configuration tools for AnalysisConf
 """
-__version__ = "$Id: Configuration.py,v 1.6 2009-01-07 17:39:35 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.7 2009-01-09 14:45:20 pkoppenb Exp $"
 __author__ = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -14,26 +14,37 @@ class AnalysisConf(LHCbConfigurableUser) :
     __slots__ = {
           "DataType"        : 'DC06'                             # Data type, can be ['DC06','2008']
         , "Simulation"      : True                               # set to True to use SimCond
-        , "InitSeq"         : GaudiSequencer("DaVinciInitSeq")   # Initialisation sequence in the application. Is set from e.g. DaVinci()
         , "RedoMCLinks"     : False                              # On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association. 
          }
 
     __used_configurables__ = [ LHCbApp ]
 #
+# configure reconstruction to be redone
+#
+    def initSequence(self):
+        """
+        Init Sequence. Called by master application.
+        """
+        # only one initialisiation do far
+        init = GaudiSequencer("AnalysisInitSeq")
+        self.redoMCLinks(init)
+        return init
+        
+#
 # BTaggingTool configuration 
 #
     def tagging(self):
         importOptions("$FLAVOURTAGGINGROOT/options/BTaggingTool.py")
+        
 #
 # Set MC
 #
-    def redoMCLinks(self):
+    def redoMCLinks(self,init):
         """
         Redo MC links.
         """
-        if ( self.getProp("RedoMCLinks")):
+        if ( (self.getProp("RedoMCLinks")) & (self.getProp("Simulation"))):
              from Configurables import (GaudiSequencer,TESCheck,EventNodeKiller,TrackAssociator)
-             init = self.getProp("InitSeq")
              mcLinkSeq = GaudiSequencer("RedoMCLinks")
              tescheck = TESCheck("DaVinciEvtCheck")
              tescheck.Inputs = ["Link/Rec/Track/Best"]
@@ -69,8 +80,8 @@ class AnalysisConf(LHCbConfigurableUser) :
         """
         Apply configuration for Analysis
         """
+        log.info("Applying Analysis configuration")
         GaudiKernel.ProcessJobOptions.PrintOff()
         if ( self.getProp("Simulation" )):
-            self.redoMCLinks()
             self.configureMC()
         self.tagging()
