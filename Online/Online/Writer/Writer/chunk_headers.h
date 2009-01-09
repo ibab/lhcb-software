@@ -37,6 +37,7 @@ struct cmd_stop_header {
 	__uint32_t adler32_sum;    /**< The Adler checksum calculated at client */
         __uint64_t size;
         __uint32_t events;
+        __uint32_t lumiEvents;
 } __attribute__((__packed__));
 
 
