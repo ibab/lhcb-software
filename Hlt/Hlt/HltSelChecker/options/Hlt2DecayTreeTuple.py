@@ -26,7 +26,6 @@ from Gaudi.Configuration import *
 from Configurables import DecayTreeTuple
 #
 Hlt2DecayTreeTuple = DecayTreeTuple("Hlt2DecayTreeTuple")
-#ApplicationMgr().TopAlg += [ Hlt2DecayTreeTuple ]
 Hlt2DecayTreeTuple.Context = "HLT"
 
 Hlt2DecayTreeTuple.ToolList += [
