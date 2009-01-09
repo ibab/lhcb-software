@@ -119,9 +119,11 @@ int SendThread::processSends(void)
 
     ret = bif->nbSend();
     if(ret == totalSize) {
+      // *m_log << MSG::INFO << "send was successful" << endmsg;
       delete bif;
       bif = NULL;
     } else if(ret == BIF::DISCONNECTED) {
+      *m_log << MSG::INFO << "send returned: DISCONNECTED " << endmsg;
       if(m_conn->failover(SEND_THREAD) == KILL_THREAD)  {
         return 0;
       } else {
@@ -130,7 +132,14 @@ int SendThread::processSends(void)
         bif = NULL;
         continue;
       }
-    }
+    } else if(ret == BIF::AGAIN) {
+          // *m_log << MSG::INFO << "send returned AGAIN "  << endmsg;
+          continue; // try to send again
+      }
+      else {
+          // *m_log << MSG::INFO << "send:  " << ret  << endmsg;
+          // Unknown Error
+      }
   } while( (m_stopUrgently == false && m_stopAfterFinish == false) ||
       (m_stopAfterFinish == true && cmd_to_send != NULL));
 
