@@ -202,6 +202,9 @@ StatusCode PhotonMaker::makeParticles (LHCb::Particle::Vector & particles )
     const LHCb::CaloHypo*   hypo  = *( (pp->calo()).begin() );
     if(LHCb::CaloHypo::Photon != hypo->hypothesis() )continue;    
 
+    // skip negative energy
+    if( hypo->e() <= 0 ) continue;
+
     // Photon conversion (Spd-based for late conversion after magnet)
     bool cnv = (bool) pp->info(LHCb::ProtoParticle::CaloNeutralSpd, 0.) ;
     debug() << " Conversion " << cnv << " " << pp->info(LHCb::ProtoParticle::CaloNeutralSpd,0.) << endreq;
