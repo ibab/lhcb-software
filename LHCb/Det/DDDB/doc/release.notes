@@ -4,7 +4,12 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
-!========================== DDDB v1r14 2009-01-08 ============================
+!========================== DDDB v1r14 2009-01-09 ============================
+! 2000-01-09 - Marco Clemencic
+ - New default tags for 2008:
+   - head-20090108 for DDDB and LHCBCOND
+   - sim-20090108 for SIMCOND
+
 ! 2009-01-08 - Marco Cattaneo
  - Add ParticlePropertiesFile location for new LHCb::ParticlePropertySvc
 
