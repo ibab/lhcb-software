@@ -24,7 +24,8 @@ void RPCComm::confirmFile(char *fileName,
                           unsigned int adlerSum, 
                           const unsigned char *md5CSum,
                           unsigned long size,
-                          unsigned long events
+                          unsigned long events,
+                          unsigned long lumiEvents
                           )
 {
   int ret;
@@ -48,9 +49,9 @@ void RPCComm::confirmFile(char *fileName,
 
   /* Now we fill up templates. */
   snprintf(xmlData, sizeof(xmlData), CONFIRM_TEMPLATE,
-           fileName, adler32String, md5CharString, size, events);
+           fileName, adler32String, md5CharString, size, events, lumiEvents);
   snprintf(headerData, sizeof(headerData), HEADER_TEMPLATE,
-           "WriterHost", (unsigned int)strlen(xmlData));
+           "WriterHost",  strlen(xmlData));
 
   memset(response, 0, sizeof(response));
   ret = requestResponse(headerData, xmlData, response, sizeof(response));
@@ -170,7 +171,7 @@ std::string RPCComm::createNewFile(unsigned int runNumber)
 
   snprintf(xmlData, sizeof(xmlData), NEWFILE_TEMPLATE, runNumber);
   snprintf(headerData, sizeof(headerData), HEADER_TEMPLATE,
-          "WriterHost", strlen(xmlData));
+          "WriterHost", (long unsigned) strlen(xmlData));
 
   memset(response, 0, sizeof(response));
   ret = requestResponse(headerData, xmlData, response, sizeof(response));
