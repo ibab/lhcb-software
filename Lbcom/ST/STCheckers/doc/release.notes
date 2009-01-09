@@ -2,6 +2,16 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2009-01-09 - Jeroen van Tilburg
+ - STClusterResolution: Added two options to remove split clusters (recall that
+   the TELL1 does not accept clusters larger than 4). With the flag
+   MergeSplitClusters only one STCluster of a split cluster is considered (to
+   avoid double-counting). With the flag SkipSplitClusters, all the STClusters
+   from a split cluster are ignored. By default both flags are switched off.
+ - STClusterResolution: Take the cluster size from the STOfflinePosition tool. 
+ - STClusterResolution: Added histograms for the fractional position of an
+   offline cluster.
+
 ! 2009-01-06 M Needham 
  - Add STDumpEvent classes
  - Add histograms of port occupancy in Occupancy classes

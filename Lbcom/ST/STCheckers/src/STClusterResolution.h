@@ -1,4 +1,4 @@
-// $Id: STClusterResolution.h,v 1.8 2008-12-11 14:41:13 cattanem Exp $
+// $Id: STClusterResolution.h,v 1.9 2009-01-09 16:16:42 jvantilb Exp $
 #ifndef STClusterResolution_H
 #define STClusterResolution_H 1
 
@@ -69,15 +69,21 @@ private:
                          const DeSTSensor* aSector) const;
 
 
-  std::string m_clusterLocation;
+  // Associator location
   std::string m_asctLocation;
 
   // selector
-  std::string m_selectorName;
   IMCParticleSelector* m_selector;
 
+  // Position tool
   ISTClusterPosition* m_positionTool;
+
+  // job options
+  std::string m_selectorName;
   std::string m_positionToolName;
+  bool m_mergeSplitClusters; ///< Consider only one STCluster in split cluster
+  bool m_skipSplitClusters;  ///< Ignore all STClusters in a split cluster
+  std::string m_clusterLocation;
 
   ITrajPoca*         m_poca; ///< Pointer to the ITrajPoca interface
 
