@@ -1,4 +1,4 @@
-// $Id: StorageDisplay.h,v 1.4 2008-02-11 20:00:18 frankm Exp $
+// $Id: StorageDisplay.h,v 1.5 2009-01-09 10:30:18 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,12 +12,12 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/StorageDisplay.h,v 1.4 2008-02-11 20:00:18 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/StorageDisplay.h,v 1.5 2009-01-09 10:30:18 frankb Exp $
 #ifndef ROMON_STORAGEDISPLAY_H
 #define ROMON_STORAGEDISPLAY_H 1
 
 // Framework includes
-#include "ROMon/ROMonDisplay.h"
+#include "ROMon/ClusterDisplay.h"
 
 /*
  *   ROMon namespace declaration
@@ -30,7 +30,7 @@ namespace ROMon {
    *
    *   @author M.Frank
    */
-  class StorageDisplay : public ROMonDisplay  {
+  class StorageDisplay : public ClusterDisplay  {
   protected:
 
     /// Reference to the MBMBuffer diaplay
@@ -48,6 +48,9 @@ namespace ROMon {
     /// Reference to the HLT receiver display
     MonitorDisplay* m_hltRec;
 
+    /// Reference node selector display if used as sub-dispay
+    MonitorDisplay* m_select;
+
     /// Partition name for projection(s)
     std::string     m_partName;
 
@@ -55,8 +58,29 @@ namespace ROMon {
     /// Standard constructor
     StorageDisplay(int argc, char** argv);
 
+    /// Initializing constructor for using display as sub-display
+    StorageDisplay(int width, int height, int posx, int posy, int argc, char** argv);
+
     /// Standard destructor
     virtual ~StorageDisplay();
+
+    /// Initialize the display
+    void init(int flag, int argc, char** argv);
+
+    /// Number of nodes in the dataset
+    virtual size_t numNodes();
+
+    /// Retrieve cluster name from cluster display
+    virtual std::string clusterName() const;
+
+    /// Retrieve node name from cluster display by offset
+    virtual std::string nodeName(size_t offset);
+
+    /// Access Node display
+    virtual MonitorDisplay* nodeDisplay() const;
+
+    /// Update selector information
+    void showSelector(const Nodeset& ns);
 
     /// Show the display header information (title, time, ...)
     void showHeader(const Nodeset& ns);

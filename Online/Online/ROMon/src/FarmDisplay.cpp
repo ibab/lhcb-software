@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.34 2008-11-21 17:20:15 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.35 2009-01-09 10:30:18 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,11 +11,13 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.34 2008-11-21 17:20:15 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.35 2009-01-09 10:30:18 frankb Exp $
 
 #include "ROMon/CtrlSubfarmDisplay.h"
 #include "ROMon/RecSubfarmDisplay.h"
+#include "ROMon/MonitoringDisplay.h"
 #include "ROMon/SubfarmDisplay.h"
+#include "ROMon/StorageDisplay.h"
 #include "ROMon/FarmDisplay.h"
 #include "ROMon/CPUMon.h"
 #include "SCR/MouseSensor.h"
@@ -729,7 +731,7 @@ FarmDisplay::FarmDisplay(int argc, char** argv)
   char txt[128];
   string anchor;
   RTL::CLI cli(argc,argv,help);
-  cli.getopt("partition",   2, m_name = "LHCb");
+  cli.getopt("partition",   2, m_name = "ALL");
   cli.getopt("match",       2, m_match = "*");
   if ( cli.getopt("anchor",2,anchor) != 0 ) {
     int x, y;
@@ -886,19 +888,28 @@ int FarmDisplay::showSubfarm()    {
     m_nodeSelector = 0;
   }
   else if ( (d=currentDisplay()) != 0 ) {
-    string title = "Sub farm info:" + d->name();
+    string dnam = d->name();
+    string title = "Sub farm info:" + dnam;
+    string svc = "-servicename=/"+dnam+"/ROpublish";
+    string part= "-partition="+m_name;
     if ( m_mode == CTRL_MODE ) {
-      string svc = "-servicename=/"+strUpper(d->name())+"/TaskSupervisor/Status";
+      svc = "-servicename=/"+strUpper(dnam)+"/TaskSupervisor/Status";
       const char* argv[] = {"",svc.c_str(), "-delay=300"};
       m_subfarmDisplay = new CtrlSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
     }
+    else if ( strncasecmp(dnam.c_str(),"storectl01",10)==0 && m_name != "ALL" ) {
+      const char* argv[] = {"",svc.c_str(), part.c_str(), "-delay=300"};
+      m_subfarmDisplay = new StorageDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
+    }
+    else if ( strncasecmp(dnam.c_str(),"mona08",6)==0 && m_name != "ALL" ) {
+      const char* argv[] = {"",svc.c_str(), part.c_str(), "-delay=300", "-relayheight=12", "-nodeheight=12"};
+      m_subfarmDisplay = new MonitoringDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
+    }
     else if ( m_mode == RECO_MODE ) {
-      string svc = "-servicename=/"+d->name()+"/ROpublish";
       const char* argv[] = {"",svc.c_str(), "-delay=300"};
       m_subfarmDisplay = new RecSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
     }
     else if ( m_mode == HLT_MODE ) {
-      string svc = "-servicename=/"+d->name()+"/ROpublish";
       const char* argv[] = {"",svc.c_str(), "-delay=300"};
       m_subfarmDisplay = new SubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
     }

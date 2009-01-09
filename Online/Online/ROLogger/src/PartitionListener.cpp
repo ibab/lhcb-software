@@ -1,4 +1,4 @@
-// $Id: PartitionListener.cpp,v 1.16 2008-11-19 11:09:39 frankb Exp $
+// $Id: PartitionListener.cpp,v 1.17 2009-01-09 10:31:20 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionListener.cpp,v 1.16 2008-11-19 11:09:39 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionListener.cpp,v 1.17 2009-01-09 10:31:20 frankb Exp $
 
 // Framework include files
 #include "ROLogger/PartitionListener.h"
@@ -37,10 +37,10 @@ extern "C" {
 using namespace ROLogger;
 using namespace std;
 typedef vector<string> _SV;
-static std::string facility = "gaudi";
 
 /// Standard constructor with object setup through parameters
-PartitionListener::PartitionListener(Interactor* parent,const string& nam) : m_parent(parent), m_name(nam)
+PartitionListener::PartitionListener(Interactor* parent,const string& nam, const string& fac) 
+  : m_parent(parent), m_name(nam), m_facility(fac)
 {
   string name;
   name = "RunInfo/" + m_name + "/HLTsubFarms";
@@ -127,8 +127,8 @@ void PartitionListener::subFarmHandler(void* tag, void* address, int* size) {
   auto_ptr<_SV> f(new _SV());
   PartitionListener* h = *(PartitionListener**)tag;
   for(const char* data = (char*)address, *end=data+*size;data<end;data += strlen(data)+1)
-    f->push_back(fmcLogger(data,facility));
-  if ( h->name() == "LHCb" ) f->push_back(fmcLogger("CALD07",facility));
+    f->push_back(fmcLogger(data,h->m_facility));
+  if ( h->name() == "LHCb" ) f->push_back(fmcLogger("CALD07",h->m_facility));
   IocSensor::instance().send(h->m_parent,CMD_UPDATE_FARMS,f.release());
 }
 

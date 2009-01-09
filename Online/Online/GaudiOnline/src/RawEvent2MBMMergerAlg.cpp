@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawEvent2MBMMergerAlg.cpp,v 1.8 2008-12-05 19:26:30 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawEvent2MBMMergerAlg.cpp,v 1.9 2009-01-09 10:35:48 frankb Exp $
 //  ====================================================================
 //  DecisionSetterAlg.cpp
 //  --------------------------------------------------------------------
@@ -116,7 +116,7 @@ namespace LHCb  {
       }
       case MDFIO::MDF_BANKS: {
 	data = getDataFromAddress();
-	if ( !(data.first == 0 || data.second<0) ) {
+	if ( data.first == 0 || data.second<0 ) {
 	  return res;
 	}
 	res.first = data.first ? ((RawBank*)data.first)->begin<MDFHeader>() : 0;
@@ -136,7 +136,7 @@ namespace LHCb  {
       }
       case MDFIO::MDF_RECORDS:
 	data = getDataFromAddress();
-	if ( !(data.first == 0 || data.second<0) ) {
+	if ( data.first == 0 || data.second<0 ) {
 	  return res;
 	}
 	res.first = (MDFHeader*)data.first;

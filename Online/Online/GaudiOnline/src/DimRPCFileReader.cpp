@@ -1,4 +1,4 @@
-// $Id: DimRPCFileReader.cpp,v 1.17 2008-12-09 20:16:10 frankb Exp $
+// $Id: DimRPCFileReader.cpp,v 1.18 2009-01-09 10:35:48 frankb Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IAppMgrUI.h"
@@ -82,30 +82,6 @@ StatusCode DimRPCFileReader::initialize()   {
   return sc;
 }
 
-StatusCode DimRPCFileReader::sysStart()   {
-  std::string svcName=RTL::processName()+"/RpcFileDBOut";
-  std::string cmdName=RTL::processName()+"/RpcFileDBIn";
-  if ( 0 == m_rpc.first )
-    m_rpc.first  = ::dis_add_service((char*)svcName.c_str(),(char*)"C",0,0,publishEvents,(long)this);
-  if ( 0 == m_rpc.second )
-    m_rpc.second = ::dis_add_cmnd((char*)cmdName.c_str(),(char*)"C",cmndCallback,(long)this);
-  incidentSvc()->removeListener(this);
-  return StatusCode::SUCCESS;
-}
-
-/// IService implementation: finalize the service
-StatusCode DimRPCFileReader::sysStop()     {
-  if ( m_rpc.first ) {
-    ::dis_remove_service(m_rpc.first);
-    m_rpc.first = 0;
-  }
-  if ( m_rpc.second ) {
-    ::dis_remove_service(m_rpc.second);
-    m_rpc.second = 0;
-  }
-  return StatusCode::SUCCESS;
-}
-
 /// IService implementation: finalize the service
 StatusCode DimRPCFileReader::finalize()     {
   if ( m_rpc.first ) {
@@ -123,6 +99,30 @@ StatusCode DimRPCFileReader::finalize()     {
   return OnlineService::finalize();
 }
 
+StatusCode DimRPCFileReader::sysStart()   {
+  std::string svcName=RTL::processName()+"/RpcFileDBOut";
+  std::string cmdName=RTL::processName()+"/RpcFileDBIn";
+  if ( 0 == m_rpc.first )
+    m_rpc.first  = ::dis_add_service((char*)svcName.c_str(),(char*)"C",0,0,publishEvents,(long)this);
+  if ( 0 == m_rpc.second )
+    m_rpc.second = ::dis_add_cmnd((char*)cmdName.c_str(),(char*)"C",cmndCallback,(long)this);
+  return StatusCode::SUCCESS;
+}
+
+/// IService implementation: finalize the service
+StatusCode DimRPCFileReader::sysStop()     {
+  if ( m_rpc.first ) {
+    ::dis_remove_service(m_rpc.first);
+    m_rpc.first = 0;
+  }
+  if ( m_rpc.second ) {
+    ::dis_remove_service(m_rpc.second);
+    m_rpc.second = 0;
+  }
+  incidentSvc()->removeListener(this);
+  return StatusCode::SUCCESS;
+}
+
 void DimRPCFileReader::publishEvents(void* tag, void** buf, int* size, int* first)    {
   DimRPCFileReader* self=*(DimRPCFileReader**) tag;
   std::string result=self->m_reply;
@@ -135,10 +135,16 @@ void DimRPCFileReader::publishEvents(void* tag, void** buf, int* size, int* firs
   *buf = (void*)result.c_str();
   return;
 }
+bool s_isProcessing = false;
 
 void DimRPCFileReader::handleCommand(const char* address, int /* size */){
   ::time(&m_timerStartPrep);
   std::string in = address;
+
+  if ( s_isProcessing ) {
+    error("File is processing and STILL got new proc request:"+in);
+  }
+
   int sc = m_command->decodeCommand(in);
   if (!sc) {
     info("Error decoding "+in);
@@ -154,16 +160,25 @@ void DimRPCFileReader::handleCommand(const char* address, int /* size */){
     time(&m_timerStopPrep);
     time(&m_timerStartProc);
     Service* es = dynamic_cast<Service*>(m_evtSelector);
-    es->sysStop();
-    es->sysFinalize();
-    //m_evtLoopMgr->stop();
-    es->sysInitialize();
+    //es->sysStop();
+    //es->sysFinalize();
+    //es->sysInitialize();
+    SmartIF<IService> am(serviceLocator());
+    am->stop();
     prp->setProperty("Input","FILE=file://"+c.file);
     //prp->setProperty("Input","[\"DATA='file://"+c.file+"' SVC='LHCb::MDFSelector'\"]");
     //prp->setProperty("PrintFreq","500");
-    es->sysStart();
-    m_evtLoopMgr->reinitialize();
-    //m_evtLoopMgr->start();
+    //es->sysStart();
+
+    es = dynamic_cast<Service*>(m_evtLoopMgr);
+    //es->sysStop();
+    es->reinitialize();
+    //es->sysStart();
+    am->start();
+    /*
+    es->sysFinalize();
+    es->sysInitialize();
+    */
     m_fileID=c.fileID;
     incidentSvc()->fireIncident(ContextIncident<int>(c.guid,m_incidentName,c.fileID));
     ::lib_rtl_unlock(m_lock);
@@ -201,7 +216,8 @@ StatusCode DimRPCFileReader::run()   {
         // m_reply = "ds7:commands4:quits6:paramsdee"
         // ::dis_update_service(m_rpc.first);
         break;
-      }      
+      }
+      s_isProcessing = true;
       m_evtCount = 0;
       m_reply=m_command->encodeResponse(1);
       ::dis_update_service(m_rpc.first);
@@ -222,6 +238,7 @@ StatusCode DimRPCFileReader::run()   {
       time(&m_timerStopProc);
       m_reply = m_command->encodeResponse(2,m_evtCount);
       ::dis_update_service(m_rpc.first);      
+      s_isProcessing = false;
       m_reply = "ds6:statusi1es6:paramsdes7:commands4:idlee";
       m_evtCount = 0;
       info("Preparation took %5.2f seconds",difftime(m_timerStopPrep,m_timerStartPrep));

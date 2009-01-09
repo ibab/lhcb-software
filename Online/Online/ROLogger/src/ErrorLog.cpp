@@ -1,4 +1,4 @@
-// $Id: ErrorLog.cpp,v 1.11 2008-11-19 11:09:38 frankb Exp $
+// $Id: ErrorLog.cpp,v 1.12 2009-01-09 10:31:20 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrorLog.cpp,v 1.11 2008-11-19 11:09:38 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrorLog.cpp,v 1.12 2009-01-09 10:31:20 frankb Exp $
 
 // Framework include files
 #include <sstream>
@@ -23,6 +23,7 @@
 #include "ROLogger/Logger.h"
 #include "ROLogger/ErrorLog.h"
 #include "ROLogger/PartitionDisplay.h"
+#include "ROLogger/RecoListener.h"
 #include "ROLogger/AlarmListener.h"
 #include "ROLogger/PVSSLogListener.h"
 #include "ROLogger/PartitionListener.h"
@@ -51,12 +52,14 @@ ErrorLog::ErrorLog(int argc, char** argv)
     return;
   }
   m_partDisplay = new PartitionDisplay(this,m_messageLog,m_historyLog,name);
-  if ( cli.getopt("pvss",1) == 0 )  
-    m_partListener = new PartitionListener(this,name);
-  else if ( cli.getopt("alarms",1) == 0 )  
-    m_partListener = new AlarmListener(this,name);
-  else
+  if ( cli.getopt("pvss",3) != 0 )  
     m_partListener = new PVSSLogListener(this,name);
+  else if ( cli.getopt("alarms",3) != 0 )  
+    m_partListener = new AlarmListener(this,name);
+  else if ( cli.getopt("reco",3) != 0 )  
+    m_partListener = new RecoListener(this,name);
+  else
+    m_partListener = new PartitionListener(this,name);
 }
 
 /// Standard destructor

@@ -1,4 +1,4 @@
-// $Id: StorageDisplay.cpp,v 1.11 2008-11-13 12:13:33 frankb Exp $
+// $Id: StorageDisplay.cpp,v 1.12 2009-01-09 10:30:18 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/StorageDisplay.cpp,v 1.11 2008-11-13 12:13:33 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/StorageDisplay.cpp,v 1.12 2009-01-09 10:30:18 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -81,11 +81,24 @@ static void help() {
 
 }
 
-/// Standard constructor
-StorageDisplay::StorageDisplay(int argc, char** argv) : ROMonDisplay(), m_partName("LHCb")
+/// Initializing constructor for using display as sub-display
+StorageDisplay::StorageDisplay(int width, int height, int posx, int posy, int argc, char** argv)
+: ClusterDisplay(width, height)
 {
+  m_position = Position(posx,posy);
+  init(1, argc, argv);
+}
+
+/// Standard constructor
+StorageDisplay::StorageDisplay(int argc, char** argv) {
+  init(0, argc,argv);
+}
+
+/// Initialize the display
+void StorageDisplay::init(int flag, int argc, char** argv)   {
   RTL::CLI cli(argc,argv,help);
-  int hdr_height, hlt_width, buff_height, strm_height, logg_height;
+  int hdr_height, hlt_width, hlt_height, hlt_posy, buff_height, strm_height, logg_height;
+  int right, width, height, posx, posy;
   cli.getopt("headerheight",  1, hdr_height    =    5);
   cli.getopt("streamheight",  1, strm_height   =    8);
   cli.getopt("loggerheight",  1, logg_height   =    4);
@@ -95,23 +108,66 @@ StorageDisplay::StorageDisplay(int argc, char** argv) : ROMonDisplay(), m_partNa
   cli.getopt("servicename",   1, m_svcName     = "/storectl01/ROpublish");
   cli.getopt("partitionname", 1, m_partName    = "LHCb");
 
+  m_select = 0;
   setup_window();
-  m_hltRec  = createSubDisplay(Position(0,hdr_height), Area(hlt_width,m_area.height-hdr_height),"Farm receivers");
-  int right = m_hltRec->right();
-  int width = m_area.width-right;
-  m_buffers = createSubDisplay(Position(right,hdr_height), Area(width,buff_height),
-                               "Buffer Monitor");
-  m_streams = createSubDisplay(Position(right,m_buffers->bottom()-1),Area(width,strm_height),
-                               "Stream Information");
-  m_logging = createSubDisplay(Position(right,m_streams->bottom()-1),Area(width,logg_height),
-                               "Logger Summary");
-  m_files   = createSubDisplay(Position(right,m_logging->bottom()-1),Area(width,m_area.height-m_logging->bottom()+1),
-                               "File Information");
+  posx  = m_position.x-2;
+  posy  = m_position.y-2;
+  hlt_posy = posy+hdr_height;
+  hlt_height = m_area.height-hdr_height;
+  m_select = 0;
+  if ( flag ) {
+    m_select  = createSubDisplay(Position(posx,posy+hdr_height),Area(hlt_width, 6),"  Node Selector");
+    hlt_posy += 7;
+    hlt_height -= 7;
+  }
+  m_hltRec  = createSubDisplay(Position(posx,hlt_posy), Area(hlt_width,hlt_height),"Farm receivers");
+  right = m_hltRec->right();
+  width = m_area.width-hlt_width-2;
+  height= m_area.height-hdr_height-buff_height-strm_height-logg_height-4;
+  m_buffers = createSubDisplay(Position(right,posy+hdr_height), Area(width,buff_height),      "Buffer Monitor");
+  m_streams = createSubDisplay(Position(right,m_buffers->bottom()-1),Area(width,strm_height), "Stream Information");
+  m_logging = createSubDisplay(Position(right,m_streams->bottom()-1),Area(width,logg_height), "Logger Summary");
+  m_files   = createSubDisplay(Position(right,m_logging->bottom()-1),Area(width,height+1),    "File Information");
   end_update();
 }
 
 /// Standard destructor
 StorageDisplay::~StorageDisplay()   {
+  begin_update();
+  delete m_hltRec;
+  delete m_buffers;
+  delete m_streams;
+  delete m_logging;
+  delete m_files;
+  if ( m_select ) delete m_select;
+  end_update();
+}
+
+/// Number of nodes in the dataset
+size_t StorageDisplay::numNodes() {
+  return 4;
+}
+
+/// Retrieve cluster name from cluster display
+std::string StorageDisplay::clusterName() const {
+  return "storectl01";
+}
+
+/// Retrieve node name from cluster display by offset
+std::string StorageDisplay::nodeName(size_t offset) {
+  switch(offset) {
+  case 0:    return "storerecv01";
+  case 1:    return "storerecv02";
+  case 2:    return "storestrm01";
+  case 3:    return "storestrm02";
+  default:   return "";
+  }
+  return "";
+}
+
+/// Access Node display
+MonitorDisplay* StorageDisplay::nodeDisplay() const {
+  return m_select;
 }
 
 /// Show the data logging status
@@ -268,18 +324,32 @@ void StorageDisplay::showHeader(const Nodeset& ns)   {
   ::strftime(b1,sizeof(b1),"%H:%M:%S",::localtime(&t1));
   ::strftime(b2,sizeof(b1),"%H:%M:%S",::localtime(&t2));
   draw_line_normal ("");
-  draw_line_reverse("         Stream Monitor for partition %s on %s   [%s]",
+  draw_line_reverse("                     Storage Monitor for partition %s on %s   [%s]",
                     m_partName.c_str(), RTL::nodeNameShort().c_str(), ::lib_rtl_timestr());    
-  draw_line_bold   ("         Information updates date between: %s.%03d and %s.%03d",b1,frst.second,b2,last.second);
+  draw_line_bold   ("                     Information updates date between: %s.%03d and %s.%03d",b1,frst.second,b2,last.second);
+  draw_line_normal ("");
   for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
     char* c = ::strchr((*n).name,'.');
     if ( c ) *c = 0;
   }
 }
 
+/// Update selector information
+void StorageDisplay::showSelector(const Nodeset& /* ns */)   {
+  if ( m_select )    {
+    m_select->draw_line_normal("Move curser, then command");
+    m_select->draw_line_normal("CTRL-H for help");
+    m_select->draw_line_bold  ("  storerecv01");
+    m_select->draw_line_bold  ("  storerecv02");    
+    m_select->draw_line_bold  ("  storestrm01");
+    m_select->draw_line_bold  ("  storestrm02");
+  }
+}
+
 /// Update all displays
 void StorageDisplay::updateDisplay(const Nodeset& ns)   {
   begin_update();
+  if ( m_select ) m_select->begin_update();
   m_hltRec->begin_update();
   m_buffers->begin_update();
   m_streams->begin_update();
@@ -292,12 +362,14 @@ void StorageDisplay::updateDisplay(const Nodeset& ns)   {
   showStreams(ns);
   showLogging();
   showFiles();
+  showSelector(ns);
 
   m_files->end_update();
   m_logging->end_update();
   m_streams->end_update();
   m_buffers->end_update();
   m_hltRec->end_update();
+  if ( m_select ) m_select->end_update();
   end_update();
 }
 

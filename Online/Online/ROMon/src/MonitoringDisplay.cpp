@@ -1,4 +1,4 @@
-// $Id: MonitoringDisplay.cpp,v 1.12 2008-11-13 12:13:32 frankb Exp $
+// $Id: MonitoringDisplay.cpp,v 1.13 2009-01-09 10:30:18 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/MonitoringDisplay.cpp,v 1.12 2008-11-13 12:13:32 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/MonitoringDisplay.cpp,v 1.13 2009-01-09 10:30:18 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -71,8 +71,21 @@ static void help() {
        << endl;
 }
 
+/// Initializing constructor for using display as sub-display
+MonitoringDisplay::MonitoringDisplay(int width, int height, int posx, int posy, int argc, char** argv)
+: ClusterDisplay(width, height)
+{
+  m_position = Position(posx,posy);
+  init(1, argc, argv);
+}
+
 /// Standard constructor
-MonitoringDisplay::MonitoringDisplay(int argc, char** argv)   {
+MonitoringDisplay::MonitoringDisplay(int argc, char** argv) {
+  init(0, argc,argv);
+}
+
+/// Initialize the display
+void MonitoringDisplay::init(int flag, int argc, char** argv)   {
   RTL::CLI cli(argc,argv,help);
   int hdr_height, relay_height, node_height;
   cli.getopt("headerheight",  1, hdr_height    =    5);
@@ -83,10 +96,18 @@ MonitoringDisplay::MonitoringDisplay(int argc, char** argv)   {
   cli.getopt("partitionname", 1, m_partName    = "LHCb");
   cli.getopt("namerelay",     1, m_relayNode   = "mona0801");
 
+  m_select = 0;
   setup_window();
-  int right = 0;
+  int posx  = m_position.x-2;
+  int posy  = m_position.y-2;
+  int right = posx;
   int width = m_area.width;
-  m_relay = createSubDisplay(Position(right,hdr_height), Area(width,relay_height),"Relay Information");
+
+  if ( flag ) {
+    //m_select  = createSubDisplay(Position(right,posy),Area(16, 6),"  Node Selector");
+  }
+
+  m_relay = createSubDisplay(Position(right,posy+hdr_height), Area(width,relay_height),"Relay Information");
   m_nodes = createSubDisplay(Position(right,m_relay->bottom()-1),Area(width,node_height),"Monitoring Nodes");
   m_tasks = createSubDisplay(Position(right,m_nodes->bottom()-1),Area(width,m_area.height-m_nodes->bottom()+1),
                                "Monitoring Tasks");
@@ -95,6 +116,35 @@ MonitoringDisplay::MonitoringDisplay(int argc, char** argv)   {
 
 /// Standard destructor
 MonitoringDisplay::~MonitoringDisplay()   {
+  begin_update();
+  if ( m_select ) delete m_select;
+  delete m_relay;
+  delete m_nodes;
+  delete m_tasks;
+  end_update();
+}
+
+/// Number of nodes in the dataset
+size_t MonitoringDisplay::numNodes() {
+  return 0;
+}
+
+/// Retrieve cluster name from cluster display
+std::string MonitoringDisplay::clusterName() const {
+  return m_relayNode.substr(0,m_relayNode.length()-2);
+}
+
+/// Retrieve node name from cluster display by offset
+std::string MonitoringDisplay::nodeName(size_t offset) {
+  switch(offset) {
+  default:   return "";
+  }
+  return "";
+}
+
+/// Access Node display
+MonitorDisplay* MonitoringDisplay::nodeDisplay() const {
+  return m_relay;
 }
 
 /// Show the file information

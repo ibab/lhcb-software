@@ -1,4 +1,4 @@
-// $Id: PartitionListener.h,v 1.5 2008-11-19 11:09:38 frankb Exp $
+// $Id: PartitionListener.h,v 1.6 2009-01-09 10:31:20 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/PartitionListener.h,v 1.5 2008-11-19 11:09:38 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/PartitionListener.h,v 1.6 2009-01-09 10:31:20 frankb Exp $
 #ifndef ROLOGGER_PARTITIONLISTENER_H
 #define ROLOGGER_PARTITIONLISTENER_H
 
@@ -32,8 +32,12 @@ namespace ROLogger {
    */
   class PartitionListener : public Interactor {
   protected:
+    /// Reference to parent for communication
     Interactor* m_parent;
+    /// Listener service name
     std::string m_name;
+    /// Listener facility
+    std::string m_facility;
     /// Dim service ID for calibration nodes
     int         m_calibNodesDP;
     /// Dim service ID for subfarms
@@ -49,7 +53,7 @@ namespace ROLogger {
     
   public:
     /// Standard constructor with object setup through parameters
-    PartitionListener(Interactor* parent,const std::string& name);
+    PartitionListener(Interactor* parent,const std::string& name, const std::string& facility="gaudi");
     /// Standard destructor
     virtual ~PartitionListener();
     /// Access name

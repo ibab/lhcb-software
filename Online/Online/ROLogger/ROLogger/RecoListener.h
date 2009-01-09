@@ -1,4 +1,4 @@
-// $Id: AlarmListener.h,v 1.2 2009-01-09 10:31:20 frankb Exp $
+// $Id: RecoListener.h,v 1.1 2009-01-09 10:32:38 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,9 +11,9 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/AlarmListener.h,v 1.2 2009-01-09 10:31:20 frankb Exp $
-#ifndef ROLOGGER_ALARMLISTENER_H
-#define ROLOGGER_ALARMLISTENER_H
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/RecoListener.h,v 1.1 2009-01-09 10:32:38 frankb Exp $
+#ifndef ROLOGGER_RECOLISTENER_H
+#define ROLOGGER_RECOLISTENER_H
 
 // C++ include files
 #include <string>
@@ -24,13 +24,13 @@
  */
 namespace ROLogger {
 
-  /**@class AlarmListener AlarmListener.h ROLogger/AlarmListener.h
+  /**@class RecoListener RecoListener.h ROLogger/RecoListener.h
    *
    *   DIM error logger
    *
    *   @author M.Frank
    */
-  class AlarmListener : public Interactor {
+  class RecoListener : public Interactor {
   protected:
     /// Reference to parent for communication
     Interactor* m_parent;
@@ -43,13 +43,13 @@ namespace ROLogger {
     
   public:
     /// Standard constructor with object setup through parameters
-    AlarmListener(Interactor* parent,const std::string& name, const std::string& fac="alarms");
+    RecoListener(Interactor* parent,const std::string& name, const std::string& fac="reco");
     /// Standard destructor
-    virtual ~AlarmListener();
+    virtual ~RecoListener();
     /// Access name
     const std::string& name() const {   return m_name; }
     /// DIM command service callback
     static void subFarmHandler(void* tag, void* address, int* size);
   };
 }      /* End namespace ROLogger */
-#endif /* ROLOGGER_ALARMLISTENER_H */
+#endif /* ROLOGGER_RECOLISTENER_H */

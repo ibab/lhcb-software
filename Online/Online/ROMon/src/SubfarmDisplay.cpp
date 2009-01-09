@@ -1,4 +1,4 @@
-// $Id: SubfarmDisplay.cpp,v 1.11 2008-11-13 12:13:33 frankb Exp $
+// $Id: SubfarmDisplay.cpp,v 1.12 2009-01-09 10:30:18 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SubfarmDisplay.cpp,v 1.11 2008-11-13 12:13:33 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SubfarmDisplay.cpp,v 1.12 2009-01-09 10:30:18 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -93,7 +93,7 @@ void SubfarmDisplay::init(int argc, char** argv)   {
   int eb_width = width/3;
   int posx     = m_position.x-2;
   int posy     = m_position.y-2;
-  m_nodes      = createSubDisplay(Position(posx,posy+hdr_height),              Area(width,nodes_height),"Node Information");
+  m_nodes      = createSubDisplay(Position(posx,posy+hdr_height),            Area(width,nodes_height),"Node Information");
   m_moores     = createSubDisplay(Position(posx,m_nodes->bottom()),          Area(width,moores_height),"Moore Processes");
   m_builders   = createSubDisplay(Position(posx,m_moores->bottom()),         Area(eb_width,posy+m_area.height-m_moores->bottom()),"Event builders");
   m_holders    = createSubDisplay(Position(posx+eb_width,m_moores->bottom()),Area(eb_width,posy+m_area.height-m_moores->bottom()),"Event Producers");
