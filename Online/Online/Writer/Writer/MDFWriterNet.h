@@ -9,6 +9,21 @@
 
 #include <map>
 
+#include <unistd.h>
+#include <limits.h>
+#include <stdlib.h>
+#include <signal.h>
+#include <sys/mman.h>
+#include <sys/types.h>
+#include <sys/shm.h>
+#include <sys/msg.h>
+#include <sys/ipc.h>
+#include <sys/stat.h>
+#include <pthread.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <mqueue.h>
+
 #ifndef MDFWRITERNET_H
 #define MDFWRITERNET_H
 
@@ -43,6 +58,10 @@ namespace LHCb {
 
       /// The number of events
       unsigned int m_events;
+      
+      /// The number of lumi events, that means bit 34 in the trigger mask
+      /// was set
+      unsigned int m_lumiEvents;
 
       /// The sequence number of the last command that was sent for this file.
       unsigned int m_seqNum;
@@ -76,6 +95,8 @@ namespace LHCb {
     static void feedMonitor(void* tag, void** buf, int* size, int* first);
 
   public:
+    /// get the monitor values
+    inline Monitor* getMonitor() { return m_mon; } 
 
     /// Increments the sequence number.
     inline void incSeqNum() { ++m_mon->m_seqNum; }
@@ -92,6 +113,9 @@ namespace LHCb {
     /// increases the number of events by one
     inline void incEvents() { m_mon->m_events++; }
     
+    /// increases the number of lumi events by one
+    inline void incLumiEvents() { m_mon->m_lumiEvents++; }
+    
     /// set the value of events, used when there where events before the
     /// file was created
     inline void setEvents(unsigned int events) {
@@ -100,6 +124,12 @@ namespace LHCb {
 
     /// get the number of events
     inline unsigned int getEvents() { return m_mon->m_events; }
+
+    /// get the number of lumi events
+    inline unsigned int getLumiEvents() { return m_mon->m_lumiEvents; }
+
+    /// get the phys stat which is number of events - lumi events
+    inline unsigned int getPhysStat() { return m_mon->m_events - m_mon->m_lumiEvents;}
 
     /// Returns the name of the file.
     inline std::string* getFileName() { return &m_fileName; }
@@ -130,6 +160,9 @@ namespace LHCb {
 
     /// Gets the previous element after this element.
     inline File* getPrev() { return m_prev; }
+
+    /// feed the named message queue which is used for monitoring
+    void feedMessageQueue(mqd_t);
 
     /// Constructor
 //    File(std::string fileName, unsigned int runNumber) {
@@ -260,9 +293,6 @@ namespace LHCb {
     /// Property: The stream identifier
     int m_streamID;
 
-    /// number of events, this variable is used as long there exists no file
-    int m_events_tmp;
-
     /// A map of all current open files.
     FileList m_openFiles;
 
@@ -277,6 +307,15 @@ namespace LHCb {
 
     /// The message stream to log to.
     MsgStream *m_log;
+    
+    /// the named queue which is used to send the monitoring messages to the
+    /// daemon running on this machines which collects all monitoring values
+    /// from all writers on this machine and then publishes them over DIM
+    mqd_t  m_mq;
+
+    /// indicator if the named queue is broken or not
+    /// a broken monitoring system should not prevent the writer from working
+    bool m_mq_available;
 
     /** Generates a new file name from the MDF information.
      * @param runNumber  The current run number, to be included in the file name.
@@ -288,6 +327,9 @@ namespace LHCb {
 
     /// Returns the run number from an MDF header.
     virtual unsigned int getRunNumber(const void *data, size_t len);
+
+    /// check if an event is a lumi event
+    virtual bool checkForLumiEvent(const void*, size_t);
 
     /// Returns a File object for the specified run number
 
