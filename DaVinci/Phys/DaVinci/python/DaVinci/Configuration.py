@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.29 2009-01-07 16:35:51 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.30 2009-01-09 14:44:32 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -35,7 +35,7 @@ class DaVinci(LHCbConfigurableUser) :
          # Hlt running
        , "HltType"            : ''            # HltType : No Hlt. Use Hlt1+Hlt2 to run Hlt
        , "HltUserAlgorithms"  : [ ]           # put here user algorithms to add
-#       , "HltOldStyle"        : False         # old style options configuration
+#       , "HltOldStyle"        : False        # old style options configuration
        , "ReplaceL0BanksWithEmulated" : False # Re-run L0 
        , "Hlt2IgnoreHlt1Decision" : False     # run Hlt2 even if Hlt1 failed
         }
@@ -46,23 +46,28 @@ class DaVinci(LHCbConfigurableUser) :
         """
         Initialisation sequence
         """
-        from Configurables import (GaudiSequencer, LbAppInit)
+        from Configurables import (GaudiSequencer, LbAppInit, PhysConf, AnalysisConf)
         init = GaudiSequencer("DaVinciInitSeq")
         log.info("Resetting ApplicationMgr")
-        ApplicationMgr().TopAlg = [ init ]  # Note the = here 
+        ApplicationMgr().TopAlg = [ init ]  # Note the = here
         init.Members += [ LbAppInit("DaVinciAppInit") ]
         init.IgnoreFilterPassed = True
-        PhysConf().InitSeq = init                    # Declare InitSeq in PhysConf 
-        AnalysisConf().InitSeq = init                # Declare InitSeq in AnalysisConf
-        AnalysisConf().RedoMCLinks =  self.getProp("RedoMCLinks") 
+        # Phys
+        physinit = PhysConf().initSequence()         # PhysConf initSequence
+        init.Members += [ physinit ]
+        # Analysis
+        AnalysisConf().RedoMCLinks = self.getProp("RedoMCLinks") 
+        analysisinit = AnalysisConf().initSequence()
+        init.Members += [ analysisinit ]
 
     def hlt(self):
         HltConf().replaceL0BanksWithEmulated = self.getProp("ReplaceL0BanksWithEmulated") ## enable if you want to rerun L0
         HltConf().Hlt2IgnoreHlt1Decision =  self.getProp("Hlt2IgnoreHlt1Decision")        ## enable if you want Hlt2 irrespective of Hlt1
         HltConf().hltType =  self.getProp("HltType")                                      ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
-#        HltConf().oldStyle = self.getProp("HltOldStyle")                                  ## Go for the new thing
-        HltConf().applyConf()                                                             ## don't forget to actually apply the configuration!!!
-        log.info("Done Hlt")
+        from Configurables import (GaudiSequencer, LbAppInit)
+        hltSeq = GaudiSequencer("Hlt")
+        ApplicationMgr().TopAlg += [ hltSeq ]  # catch the Hlt sequence to make sur it's run first
+        
         
     def checkOptions(self):
         """
@@ -140,7 +145,11 @@ class DaVinci(LHCbConfigurableUser) :
             importOptions("$COMMONPARTICLESROOT/options/StandardDC06Options.opts")
 
     def __apply_configuration__(self):
-        print "# applying DaVinci configuration"
+        """
+        DaVinci configuration
+        """
+        log.info("Applying DaVinci configuration")
+        log.info( self )
         self.checkOptions()
         importOptions("$STDOPTS/LHCbApplication.opts") # to get units in .opts files
         # start with init
@@ -165,7 +174,8 @@ class DaVinci(LHCbConfigurableUser) :
         if not (opts == '') :
             importOptions( self.getProp( "MainOptions" ) )
         else :
-            log.warning("No MainOptions specified. DaVinci() will import no options file!")
+            log.info("No MainOptions specified. DaVinci() will import no options file!")
+        log.info("Creating User Algorithms")
         for alg in self.getProp("UserAlgorithms"):
             ApplicationMgr().TopAlg += [ alg ]
 

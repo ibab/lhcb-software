@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DaVinci.py,v 1.24 2009-01-06 18:32:19 pkoppenb Exp $
+# $Id: DaVinci.py,v 1.25 2009-01-09 14:44:32 pkoppenb Exp $
 #
 # Options for a typical DaVinci job
 #
@@ -50,7 +50,7 @@ tag.PhysDesktop.InputLocations = [ "PreselBu2LLK" ]
 from Configurables import DaVinci
 DaVinci().EvtMax = 1000                        # Number of events
 DaVinci().SkipEvents = 0                       # Events to skip
-DaVinci().DataType = "2008"                    # Default is "DC06"
+# DaVinci().DataType = "2008"                    # Default is "DC06"
 DaVinci().Simulation   = True
 DaVinci().HistogramFile = "DVHistos_1.root"    # Histogram file
 DaVinci().TupleFile = "DVNtuples.root"         # Ntuple
