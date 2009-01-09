@@ -104,8 +104,10 @@ class DDDBConf(ConfigurableUser):
         for p in partitions:
             if p not in cdb.Tags:
                 cdb.Tags[p] = tag
-            else:
-                log.warning("Not using default tag %s for partition %s (using %s)", tag, p,cdb.Tags[p])
+                log.warning("Using default tag %s for partition %s", tag, p)
+            elif cdb.Tags[p].upper() == "DEFAULT" :
+                cdb.Tags[p] = tag
+                log.warning("Default tag requested for partition %s (using %s)", p, tag )
 
     def __2008_conf__(self):
         """

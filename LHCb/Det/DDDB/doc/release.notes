@@ -5,6 +5,12 @@
 !-----------------------------------------------------------------------------
 
 !========================== DDDB v1r14 2009-01-09 ============================
+! 2009-01-09 - Marco Cattaneo
+ - DDDBConf now issues a warning if default tags are being used. Previously
+   warning was issued when default tag was NOT used
+ - Default tag is used if DetCond().Tags has not been set for a given partition,
+   or if it has been set to the string "default" (case insensitive)
+
 ! 2000-01-09 - Marco Clemencic
  - New default tags for 2008:
    - head-20090108 for DDDB and LHCBCOND
