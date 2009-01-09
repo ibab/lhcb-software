@@ -1,4 +1,4 @@
-// $Id: TESCheck.cpp,v 1.4 2006-11-30 15:57:28 cattanem Exp $
+// $Id: TESCheck.cpp,v 1.5 2009-01-09 10:55:45 pkoppenb Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -152,14 +152,19 @@ StatusCode TESCheck::execute()
     if ( 0 == o  )
     {
       if ( m_stop ) { return Error ( "Check failed for '" + address + "'" ) ; }
-      Warning ( "Check failed for '" + address  + "'" ) ;
+      Warning ( "Check failed for '" + address  + "'", StatusCode::SUCCESS, 1 ).ignore() ;
+      setFilterPassed(false) ;
     }
-    else if ( msgLevel ( MSG::DEBUG ) )
-    {
-      debug() << "Object address/type : "
-              << "'" << address << "'/'"
-              << System::typeinfoName( typeid( *o ) ) << "'" << endreq ;
+    else {
+      setFilterPassed(true) ;
+      if ( msgLevel ( MSG::DEBUG ) )
+      {
+        debug() << "Object address/type : "
+                << "'" << address << "'/'"
+                << System::typeinfoName( typeid( *o ) ) << "'" << endreq ;
+      }
     }
+    
   }
 
   return StatusCode::SUCCESS;
