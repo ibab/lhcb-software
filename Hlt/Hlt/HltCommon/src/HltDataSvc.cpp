@@ -205,11 +205,11 @@ HltDataSvc::inputUsedBy(const stringKey& key, std::vector<std::string>& inserter
 void HltDataSvc::handle( const Incident& ) {
   if (!m_beginEventCalled) {
     always() << " first event seen, locking dependency graph " << endmsg;
+    m_beginEventCalled = true;
+    // TODO: record dependency graph in property to allow querries offline
   }
-  m_beginEventCalled = true;
   for ( std::map<stringKey,Hlt::Selection*>::iterator i  = m_mapselections.begin();
         i != m_mapselections.end(); ++i) {
-    // std::cout << "cleaning " << i->first << std::endl;
     i->second->clean(); // invalidates all selections, resets decision to 'no', i.e. reject
   }
 };

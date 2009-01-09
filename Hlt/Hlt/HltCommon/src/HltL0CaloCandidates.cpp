@@ -1,4 +1,4 @@
-// $Id: HltL0CaloCandidates.cpp,v 1.14 2009-01-09 10:34:47 graven Exp $
+// $Id: HltL0CaloCandidates.cpp,v 1.15 2009-01-09 14:41:37 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -150,7 +150,7 @@ StatusCode HltL0CaloCandidates::execute() {
   put(output,"Hlt/Track/"+m_selection.output()->id().str());
 
   if (cuts.empty()) {
-    warning() << " L0 channel " << m_l0Channel << " does not use any know type of l0CaloCandidate?? -- no candidates converted!" << endmsg;
+    warning() << " L0 channel " << m_l0Channel << " does not use any known type of l0CaloCandidate?? -- no candidates converted!" << endmsg;
     return StatusCode::SUCCESS;
   }
 
