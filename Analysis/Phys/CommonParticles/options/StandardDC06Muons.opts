@@ -16,7 +16,7 @@ DataOnDemandSvc.Algorithms += {
   // No PID muons 
   "DATA='/Event/Phys/StdDC06NoPIDsMuons/Particles'     TYPE='GaudiSequencer/StdDC06NoPIDsMuonsSeq'",
   "DATA='/Event/Phys/StdDC06NoPIDsMuons/Vertices'      TYPE='GaudiSequencer/StdDC06NoPIDsMuonsSeq'",
-  // Loose muons       MUON & DLL(mu-pi)>-10
+  // Loose muons 
   "DATA='/Event/Phys/StdDC06LooseMuons/Particles'     TYPE='GaudiSequencer/StdDC06LooseMuonsSeq'",
   "DATA='/Event/Phys/StdDC06LooseMuons/Vertices'      TYPE='GaudiSequencer/StdDC06LooseMuonsSeq'",
   // Tight muons

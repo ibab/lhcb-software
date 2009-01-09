@@ -1,6 +1,6 @@
-## $Id: StandardOptions.py,v 1.1 2008-12-23 14:28:45 pkoppenb Exp $
+## $Id: StandardOptions.py,v 1.2 2009-01-09 08:25:11 pkoppenb Exp $
 ## ============================================================================
-## CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+## CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 ## ============================================================================
 
 ### @file 
@@ -26,7 +26,7 @@
  #   <b>"Loose PID" particles</b>
  #  CombinedParticlMaker (with "ExclusiveSelection=false") is used for 
  #  charged particles with the definitions:
- #    - Muon     : det='MUON' DLL(mu/pi) > -15
+ #    - Muon     : det='MUON' 
  #    - Electron : det='CALO' DLL(e/pi)  > -5 
  #    - Kaon     : det='RICH' DLL(K/pi)  > -5 
  #    - Proton   : det='RICH' DLL(p/pi)  > -5 
