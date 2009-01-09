@@ -1,10 +1,19 @@
-! $Id: release.notes,v 1.122 2008-12-17 17:21:41 odescham Exp $
+! $Id: release.notes,v 1.123 2009-01-09 14:50:30 odescham Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+
+! 2009-01-09 Olivier Deschamps
+ - CellularAutomatonAlg.cpp : put cluster container before cluster is sorted - to be bakward compatible with CellularAutomaton
+   (-> if not trouble with calo MC-association for DC06 data reconstruced with CellularAutomaton)
+ - options/Brunel.opts     : remove obsolete CaloClusterCorrect3x3Position/EcalPosition (handle by the clusterisation)
+ - options/HltCaloSeq.opts : use CellularAutomatonAlg as default clusterisation algorithm (as already done for offline sequence)
+                   : remove obsolete CaloClusterCorrect3x3Position/EcalPosition (handle by the clusterisation)
+ - options/(Hlt)ClusterSelection.opts : add default protection against negative cluster energy ( e > threshold = 0 )
+ 
 
 ! 2008-10-02 - Olivier Deschamps
   - fix typo in (HLT)MergedPi0Rec.opts

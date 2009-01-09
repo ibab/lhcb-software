@@ -1,4 +1,4 @@
-// $Id: CellularAutomatonAlg.cpp,v 1.2 2008-09-22 01:41:23 odescham Exp $
+// $Id: CellularAutomatonAlg.cpp,v 1.3 2009-01-09 14:50:30 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -136,25 +136,28 @@ StatusCode CellularAutomatonAlg::execute() {
   if ( sc.isFailure() ){
     return Error(" Failure from the tool, no clusterization!");
   }
+
+
+  // put to the container of clusters
+  for ( std::vector<LHCb::CaloCluster*>::const_iterator icluster = clusters.begin();
+        clusters.end() != icluster; ++icluster){
+    output -> insert ( *icluster ) ;
+  }
+
   
   /** sort the sequence to simplify the comparison 
    *  with other clusterisation techniques 
    */
   
-  if ( m_sort )
-  { 
-    
-    if ( !m_sortByET ) 
-    {
+  if ( m_sort )  { 
+    if ( !m_sortByET ) {
       // sorting criteria: Energy
       LHCb::CaloDataFunctor::Less_by_Energy<const LHCb::CaloCluster*> Cmp;
       // perform the sorting 
       std::stable_sort    ( clusters.begin()            ,
                             clusters.end  ()            ,
                             LHCb::CaloDataFunctor::inverse( Cmp ) ) ;
-    }
-    else 
-    {
+    }else{
       // sorting criteria : Transverse Energy
       LHCb::CaloDataFunctor::Less_by_TransverseEnergy<const LHCb::CaloCluster*,
         const DeCalorimeter*> Cmp ( m_detector ) ;
@@ -163,14 +166,6 @@ StatusCode CellularAutomatonAlg::execute() {
                            clusters.end  ()            ,
                            LHCb::CaloDataFunctor::inverse( Cmp ) ) ;    
     }
-    
-  }
-
-  // put to the container of clusters  
-
-  for ( std::vector<LHCb::CaloCluster*>::const_iterator icluster = clusters.begin();
-        clusters.end() != icluster; ++icluster){
-    output -> insert ( *icluster ) ;
   }
 
   // statistics

@@ -18,7 +18,7 @@ HltRecoCALOSeq.Members +=     { 	"GaudiSequencer/HltCaloClusters",
 
 
 //------ Clusterize, clean & compute cluster parameters 
-HltCaloClusters.Members += { "CellularAutomaton/EcalHltClust",
+HltCaloClusters.Members += { "CellularAutomatonAlg/EcalHltClust",
                              "CaloSharedCellAlg/EcalHltShare",
                              "CaloClusterCovarianceAlg/EcalHltCovar",
                              "CaloClusterCorrect3x3Position/EcalHltPosition"};

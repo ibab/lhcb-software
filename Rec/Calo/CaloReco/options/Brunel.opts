@@ -1,6 +1,6 @@
-// $Id: Brunel.opts,v 1.23 2008-09-22 01:41:23 odescham Exp $ 
+// $Id: Brunel.opts,v 1.24 2009-01-09 14:50:30 odescham Exp $ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.23 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.24 $ 
 // ============================================================================
 
 /** @file
@@ -27,8 +27,7 @@ CaloDigits.Members = {  "CaloZSupAlg/EcalZSup",
 //------ Clusterize, clean & compute cluster parameters 
 CaloClusters.Members += { "CellularAutomatonAlg/EcalClust",
                           "CaloSharedCellAlg/EcalShare",
-                          "CaloClusterCovarianceAlg/EcalCovar",
-                          "CaloClusterCorrect3x3Position/EcalPosition"};
+                          "CaloClusterCovarianceAlg/EcalCovar"};
 
 //------ Track-Cluster 2D matching for Neutral/Charged cluster selection
 

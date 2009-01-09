@@ -1,18 +1,18 @@
 // Select neutral clusters
 HltSinglePhotonRec.SelectionTools   = { 
-  //"CaloSelectCluster/HltPhotonClusterSelect",
+  "CaloSelectCluster/HltPhotonClusterSelect",
   "CaloSelectNeutralClusterWithTracks/HltNeutralCluster" 
 } ;
 ToolSvc.HltNeutralCluster.MinChi2 = 4 ;
 ToolSvc.HltNeutralCluster.Table = "Hlt/Calo/ClusterMatch";
-//ToolSvc.HltPhotonClusterSelect.MinEnergy = 0;
+ToolSvc.HltPhotonClusterSelect.MinEnergy = 0;
 //ToolSvc.HltPhotonClusterSelect.MaxDigits = 99;
 
 
 // Select charged clusters for Electron hypo
 // Selector
 HltElectronRec.SelectionTools           =  { 
-  //"CaloSelectCluster/HltElectronClusterSelect",
+  "CaloSelectCluster/HltElectronClusterSelect",
   "CaloSelectorNOT/HltChargedCluster",
   "CaloSelectNeutralClusterWithSpd/HltClusterWithSpd",
   "CaloSelectClusterWithPrs/HltClusterWithPrs"
@@ -21,5 +21,5 @@ ToolSvc.HltChargedCluster.SelectorTools =  { "CaloSelectNeutralClusterWithTracks
 ToolSvc.HltNotNeutralCluster.MinChi2 = 25 ;
 ToolSvc.HltNotNeutralCluster.Table = "Hlt/Calo/ClusterMatch";
 ToolSvc.HltClusterWithPrs.MinEnergy = 10.*MeV;
-//ToolSvc.HltElectronClusterSelect.MinEnergy = 0;
+ToolSvc.HltElectronClusterSelect.MinEnergy = 0;
 //ToolSvc.HltElectronClusterSelect.MaxDigits = 99;
