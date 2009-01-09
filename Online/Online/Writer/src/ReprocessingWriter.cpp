@@ -167,7 +167,7 @@ File* ReprocessingWriter::createAndOpenFile(unsigned int runNumber)    {
   File* currFile = new File(fname, runNumber);
 
   ::memset(&header, 0, sizeof(struct cmd_header));
-  INIT_OPEN_COMMAND(&header, currFile->getFileName().c_str(),
+  INIT_OPEN_COMMAND(&header, currFile->getFileName()->c_str(),
                     currFile->getSeqNum(), runNumber);
   m_srvConnection->sendCommand(&header);
   currFile->open();
@@ -184,9 +184,9 @@ void ReprocessingWriter::closeFile(File *f)   {
   struct cmd_header header;
   ::memset(&header, 0, sizeof(struct cmd_header));
   *m_log << MSG::INFO << "RUN:" << f->getRunNumber()
-	 << " ...closing file:" << f->getFileName() << endmsg;
+	 << " ...closing file:" << *(f->getFileName()) << endmsg;
   INIT_CLOSE_COMMAND(&header,
-		     f->getFileName().c_str(),
+		     f->getFileName()->c_str(),
 		     f->getAdlerChecksum(),
 		     f->getMD5Checksum(),
 		     f->getSeqNum(),
@@ -232,7 +232,7 @@ StatusCode ReprocessingWriter::writeBuffer(void *const /*fd*/, const void *data,
 	 tmp->getTimeSinceLastWrite() > m_runFileTimeoutSeconds) {
 	*m_log << MSG::INFO << "RUN:" << tmp->getRunNumber()
 	       << ": Close after TIMEOUT:"
-	       << tmp->getFileName()
+	       << *(tmp->getFileName())
 	       << endmsg;
 	File *toDelete = tmp;
 	closeFile(tmp);
@@ -247,7 +247,7 @@ StatusCode ReprocessingWriter::writeBuffer(void *const /*fd*/, const void *data,
 
   INIT_WRITE_COMMAND(&header, len,
 		     m_currFile->getBytesWritten(),
-		     m_currFile->getFileName().c_str(),
+		     m_currFile->getFileName()->c_str(),
 		     m_currFile->getSeqNum(),
 		     m_currFile->getRunNumber());
   m_srvConnection->sendCommand(&header, (void*)data);
