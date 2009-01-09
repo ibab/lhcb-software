@@ -1,4 +1,4 @@
-// $Id: HltL0CaloCandidates.cpp,v 1.13 2009-01-09 10:21:52 graven Exp $
+// $Id: HltL0CaloCandidates.cpp,v 1.14 2009-01-09 10:34:47 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -141,9 +141,9 @@ StatusCode HltL0CaloCandidates::execute() {
             return StatusCode::FAILURE;
       }
       //@TODO: check if channel is actually enabled!!
-      HltL0CaloCandidates::CutList_t cuts = generateCutList( *(channel->second) );
+      cuts = generateCutList( *(channel->second) );
   } else {
-      HltL0CaloCandidates::CutList_t cuts = generateCutList( m_l0Channel );
+      cuts = generateCutList( m_l0Channel );
   }
 
   Tracks* output = new Tracks();
