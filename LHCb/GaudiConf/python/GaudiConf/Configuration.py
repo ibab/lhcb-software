@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: Configuration.py,v 1.16 2008-11-19 17:56:16 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.17 2009-01-09 15:32:54 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from os import environ
@@ -40,13 +40,21 @@ class LHCbApp(LHCbConfigurableUser):
     def defineDB(self):
         # Delegate handling of properties to DDDBConf
         self.setOtherProps( DDDBConf(), ["Simulation", "UseOracle", "DataType" ] )
-        # Set the CondDB tags if not using defaults
+        # CondDB tags must be set
         from Configurables import CondDB
+        tagsOK = True
         if hasattr( self, "DDDBtag" ):
             CondDB().Tags [ "DDDB" ] = self.getProp("DDDBtag")
+        else:
+            log.error( "DDDBtag property has not been set in the options" )
+            tagsOK = False
         if hasattr( self, "CondDBtag" ):
             CondDB().Tags [ "LHCBCOND" ] = self.getProp("CondDBtag")
             CondDB().Tags [ "SIMCOND"  ] = self.getProp("CondDBtag")
+        else:
+            log.error( "CondDBtag property has not been set in the options" )
+            tagsOK = False
+        if not tagsOK : sys.exit(1)
             
     def defineEvents(self):
         # Set up transient store and data on demand service
