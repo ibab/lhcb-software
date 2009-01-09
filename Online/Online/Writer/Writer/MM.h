@@ -63,6 +63,9 @@ namespace LHCb {
 
       /// Destructor.
       ~MM();
+      
+      /// getter
+      inline unsigned int getQueueLength() const { return this->m_queueLength; };
 
       /// Allocates space for a command and makes a copy of it.
       struct cmd_header* allocAndCopyCommand(struct cmd_header *, void *data);

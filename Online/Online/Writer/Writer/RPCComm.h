@@ -57,7 +57,7 @@ namespace LHCb {
        * "Confirms" that the file is completely written to, closed,
        * and ready for migration to tape.
        */
-      void confirmFile(char *fileName, unsigned int adlerSum, unsigned const char *md5Sum, unsigned long size, unsigned long events);
+      void confirmFile(char *fileName, unsigned int adlerSum, unsigned const char *md5Sum, unsigned long size, unsigned long events, unsigned long lumiEvents);
 
       /**
        * Creates an entry in the Run Database for the specified file,
@@ -122,6 +122,9 @@ namespace LHCb {
   "      <string>%lu</string>\n" \
   "    </value></param>\n" \
   "    <param><value>\n" \
+  "      <string>%lu</string>\n" \
+  "    </value></param>\n" \
+  "   <param><value>\n" \
   "      <string>%lu</string>\n" \
   "    </value></param>\n" \
   "  </params>\n"  \

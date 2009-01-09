@@ -116,6 +116,8 @@ namespace LHCb {
 
 
     public:
+      /// getter for the length of the queue of the MM object
+      inline unsigned int getQueueLength() const { return this->m_mmObj.getQueueLength(); }
 
       /// The connection is closed, no files are open.
       static const int STATE_CONN_CLOSED  =  0x01;
