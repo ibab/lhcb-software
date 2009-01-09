@@ -19,15 +19,15 @@ fi
 
 HOST=$(hostname --short | awk '{ print toupper($1) }')
 
-
-
 #$BIGTERM MEPInjector@${HOST}   -e "
 export UTGID=${HOST}_Injector_1
 
-. ${ONLINETASKSROOT}/job/setupOnline.sh $*
+echo $ONLINETASKSROOT
+. ./setupOnline.sh $*
 
+echo ${gaudi_exe}
 
-exec -a ${UTGID} ${gaudi_exe} -tasktype=LHCb::Class2Task -main=${GAUDIONLINEROOT}/options/Main.opts -opt=${ONLINETASKSROOT}/options/MEPInjector.opts
+exec -a ${UTGID} ${gaudi_exe} -tasktype=LHCb::Class1Task -main=${GAUDIONLINEROOT}/options/Main.opts -opt=${ONLINETASKSROOT}/options/MEPInjector.opts&
 
 
 
