@@ -1,6 +1,9 @@
 ! Package     : MuonID
 ! Responsible : Erica Polycarpo, Miriam Gandelman
 !---------------------------------------------------------------------
+!======================== MuonID v6r0 2008-01-29 ===================
+! 2008-01-09 - Miriam Gandelman
+ - options file replaced by python configurables
 
 !======================== MuonID v5r2p1 2007-07-29 ===================
 ! 2008-07-25 - Marco Cattaneo
