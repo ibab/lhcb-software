@@ -10,5 +10,8 @@ Brunel().InputType = "DIGI"
 Brunel().WithMC    = True
 Brunel().Monitors  = ["FPE","SC"]
 
+Brunel().DDDBtag   = "default"
+Brunel().CondDBtag = "default"
+
 # Switch off output
 ApplicationMgr().OutStream = []
