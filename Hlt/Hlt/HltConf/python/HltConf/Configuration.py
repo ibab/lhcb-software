@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.29 2009-01-09 10:39:27 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.30 2009-01-09 12:05:40 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -12,8 +12,10 @@ import GaudiKernel.ProcessJobOptions
 from Configurables       import GaudiSequencer as Sequence
 from Configurables       import LoKi__L0Filter    as L0Filter
 from Configurables       import LoKi__HDRFilter   as HltFilter
+from HltConf.HltL0Lines  import HltL0LinesConf
 
 class HltConf(LHCbConfigurableUser):
+    __used_configurables__ = [ HltL0LinesConf ]
     __slots__ = {
           "hltType" :          'Hlt1+Hlt2'
         , "userAlgorithms":    [ ]  # put here user algorithms to add
@@ -66,9 +68,9 @@ class HltConf(LHCbConfigurableUser):
                 # will move these to configurables ASAP...
                 if i == 'PA' : import HltConf.HltCommissioningLines
                 if i == 'LU' : import HltConf.HltLumiLines
-                if i == 'L0' : import HltConf.HltL0Lines
+                if i == 'L0' : HltL0LinesConf()
                 if i == 'VE' : import HltConf.HltVeloLines
-                if i == 'XP' : import HltConf.HltVeloLines
+                if i == 'XP' : import HltConf.HltExpressLines
                 if i == 'MU' : import HltConf.HltMuonLines
                 if i == 'HA' : import HltConf.HltHadronLines
                 if i == 'PH' : import HltConf.HltPhotonLines

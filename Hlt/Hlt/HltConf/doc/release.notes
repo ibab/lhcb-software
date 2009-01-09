@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.112 2009-01-09 10:39:27 graven Exp $ 
+! $Id: release.notes,v 1.113 2009-01-09 12:05:40 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -9,6 +9,7 @@
  - move options/HltXXXLines.py to python/HltConf/HltXXXLines.py, update
    python/HltConf/Configuration.py accordingly
  - update L0 candidate usage in HltHadronLines.py
+ - upgrade HltL0Lines.py to a real configurable
 
 ! 2009-01-08 - Jaap Panman
  - add HltLumiSequences.py (needed for HltLuminosityMonitor)
