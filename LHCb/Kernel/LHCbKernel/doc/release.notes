@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2009-01-09 - Jeroen van Tilburg
+ - Added the cluster size as data the SiPositionInfo struct.
+
 !===================== LHCbKernel v11r0 2009-01-08 ========================
 ! 2009-01-08 - Chris Jones
  - Fix NULL implementation of FPEGuard.

@@ -1,4 +1,4 @@
-// $Id: SiPositionInfo.h,v 1.2 2007-08-28 12:49:17 jonrob Exp $
+// $Id: SiPositionInfo.h,v 1.3 2009-01-09 16:12:48 jvantilb Exp $
 #ifndef KERNEL_SIPOSITIONINFO_H
 #define KERNEL_SIPOSITIONINFO_H 1
 
@@ -21,6 +21,7 @@ namespace LHCb
     ChannelType strip;
     double fractionalPosition;
     double fractionalError;
+    unsigned int clusterSize;
   };
 };
 
