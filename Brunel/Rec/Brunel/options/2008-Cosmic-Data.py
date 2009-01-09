@@ -4,10 +4,14 @@
 #   gaudirun.py Brunel-Cosmics.py 2008-Cosmic-Data.py
 #
 from Gaudi.Configuration import *
-from Configurables import Brunel
+from Configurables import Brunel, LHCbApp
 
 #-- File catalogs. First one is read-write
 FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml" ]
+
+#-- Use latest database tags for real data
+LHCbApp().DDDBtag   = "default"
+LHCbApp().CondDBtag = "default"
 
 # Latest cosmic run, with CALO, OT and (!!) RICH2 (35569 events)
 datasetName = "035537_0000088110"

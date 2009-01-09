@@ -5,7 +5,7 @@
 #   gaudirun.py Brunel<conf>.py DC06-Files.py
 #
 from Gaudi.Configuration import *
-from Configurables import Brunel
+from Configurables import Brunel, LHCbApp
 
 #-- File catalogs. First one is read-write
 FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml",
@@ -13,6 +13,10 @@ FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml",
 
 #-- Main ('signal') event input
 inputType   = Brunel().getProp("InputType").upper()
+
+#-- DC06 database tags are backwards compatible by construction, use default
+LHCbApp().DDDBtag   = "default"
+LHCbApp().CondDBtag = "default"
 
 if inputType == "MDF":
     # Example MDF file. File MUST be described in the FileCatalog, with an FID

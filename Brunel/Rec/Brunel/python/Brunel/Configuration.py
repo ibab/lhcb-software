@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.46 2009-01-07 13:21:06 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.47 2009-01-09 15:29:54 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -334,7 +334,7 @@ class Brunel(LHCbConfigurableUser):
             ConfiguredTrackMonitorSequence(Name='MoniTrSeq')
 
         if "MUON" in moniSeq :
-            importOptions("$MUONPIDCHECKERROOT/options/MuonPIDMonitor.opts")
+            importOptions("$MUONPIDCHECKERROOT/options/MuonPIDMonitor.py")
 
         if "ST" in moniSeq :
             from Configurables import STClusterMonitor, GaudiSequencer
@@ -391,7 +391,7 @@ class Brunel(LHCbConfigurableUser):
         TrackSys().setProp( "WithMC", True )
 
         if "MUON" in checkSeq :
-            importOptions("$MUONPIDCHECKERROOT/options/MuonPIDChecker.opts")
+            importOptions("$MUONPIDCHECKERROOT/options/MuonPIDChecker.py")
 
         if "RICH" in checkSeq :
             self.setOtherProps(RichRecQCConf(),["Context","DataType"])

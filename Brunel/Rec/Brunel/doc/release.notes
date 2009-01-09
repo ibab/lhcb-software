@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-01-09 - Marco Cattaneo
+ - Add explicit setting of database tags to options/*-Files.py
+ - Include MuonPIDChecker .py options instead of .opts
+
 ! 2009-01-07 - Marco Cattaneo
  - Do not pack DST in DC06 case
 

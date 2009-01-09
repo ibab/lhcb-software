@@ -5,7 +5,7 @@
 #   gaudirun.py Brunel<conf>.py 2008-Files.py
 #
 from Gaudi.Configuration import *
-from Configurables import Brunel
+from Configurables import Brunel, LHCbApp
 
 #-- File catalogs. First one is read-write
 FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml",
@@ -37,6 +37,8 @@ else:
     # Example POOL DIGI (default, MC production)
     datasetName =  "11144101-100ev-20081006"
     # B->J/Psi(mumu)Ks events with Boole v16r3, Gauss v35r1, DB tag head-20081002
+    LHCbApp().DDDBtag   = "head-20081002"
+    LHCbApp().CondDBtag = "head-20081002"
     EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v16r3/" + datasetName + ".digi' TYP='POOL_ROOTTREE' OPT='READ'"]
 
 # Default output files names are set up using value Brunel().DatasetName property

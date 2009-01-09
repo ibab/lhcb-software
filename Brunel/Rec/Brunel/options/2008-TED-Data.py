@@ -2,7 +2,7 @@
 # Details of these datasets are at https://lbtwiki.cern.ch/bin/view/Computing/VeryFirstData
 
 from Gaudi.Configuration import *
-from Configurables import Brunel
+from Configurables import Brunel, LHCbApp
 
 #-- File catalogs. First one is read-write
 FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml",
@@ -12,6 +12,10 @@ FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml",
 inputType   = Brunel().getProp("InputType").upper()
 
 if inputType == "MDF":
+    #-- Use latest database tags for real data
+    LHCbApp().DDDBtag   = "default"
+    LHCbApp().CondDBtag = "default"
+
     datasetName = "SeptTEDData"
     # friday night with the velo - prev2
     EventSelector().Input = [  
