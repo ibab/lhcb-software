@@ -9,8 +9,8 @@
 findReferenceBlock("""
 Hlt2Decision                                                SUCCESS Number of counters : 27
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"Accepted Events"                               |       488 |        202 |(  41.3934 +- 2.22961  )%|   -------   |   -------   |
- | "Candidates"                                    |       362 |        484 |     1.3370 |    0.95316 |      1.0000 |      8.0000 |
+ |*"Accepted Events"                               |       490 |        203 |(  41.4286 +- 2.22533  )%|   -------   |   -------   |
+ | "Candidates"                                    |       366 |        493 |     1.3470 |    0.97920 |      1.0000 |      8.0000 |
  | "Hlt2SelB2DMuTight Candidates"                  |         1 |          2 |     2.0000 |     0.0000 |      2.0000 |      2.0000 |
  | "Hlt2SelB2DVec Candidates"                      |         1 |          1 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
  | "Hlt2SelB2DplusH Candidates"                    |         2 |          4 |     2.0000 |     0.0000 |      2.0000 |      2.0000 |
@@ -18,9 +18,9 @@ Hlt2Decision                                                SUCCESS Number of co
  | "Hlt2SelB2MuTrack Candidates"                   |        25 |         47 |     1.8800 |     1.5829 |      1.0000 |      6.0000 |
  | "Hlt2SelB2MuTrackNoPT Candidates"               |        19 |         46 |     2.4211 |     1.2697 |      1.0000 |      6.0000 |
  | "Hlt2SelBd2JpsiKstarLowMass Candidates"         |         1 |          1 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
- | "Hlt2SelBd2JpsiKstarSignal Candidates"          |        22 |         28 |     1.2727 |    0.53783 |      1.0000 |      3.0000 |
- | "Hlt2SelBd2JpsiMuMuKsDDBiased Candidates"       |        34 |         52 |     1.5294 |     1.1940 |      1.0000 |      7.0000 |
- | "Hlt2SelBd2JpsiMuMuKsDDUnbiased Candidates"     |        23 |         28 |     1.2174 |    0.65651 |      1.0000 |      4.0000 |
+ | "Hlt2SelBd2JpsiKstarSignal Candidates"          |        23 |         34 |     1.4783 |     1.0982 |      1.0000 |      6.0000 |
+ | "Hlt2SelBd2JpsiMuMuKsDDBiased Candidates"       |        35 |         53 |     1.5143 |     1.1801 |      1.0000 |      7.0000 |
+ | "Hlt2SelBd2JpsiMuMuKsDDUnbiased Candidates"     |        24 |         29 |     1.2083 |    0.64415 |      1.0000 |      4.0000 |
  | "Hlt2SelBd2JpsiMuMuKsLLBiased Candidates"       |         3 |          3 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
  | "Hlt2SelBd2JpsiMuMuKsLLUnbiased Candidates"     |         2 |          2 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
  | "Hlt2SelBd2MuMuKstar Candidates"                |         1 |          4 |     4.0000 |     0.0000 |      4.0000 |      4.0000 |
@@ -34,8 +34,8 @@ Hlt2Decision                                                SUCCESS Number of co
  | "Hlt2SelBu2JpsiKSignal Candidates"              |         4 |          6 |     1.5000 |    0.86603 |      1.0000 |      3.0000 |
  | "Hlt2SelDrellYan Candidates"                    |         1 |          1 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
  | "Hlt2SelSingleMuon Candidates"                  |        22 |         25 |     1.1364 |    0.34317 |      1.0000 |      2.0000 |
- | "Hlt2SelUnbiasedDiMuon Candidates"              |       129 |        138 |     1.0698 |    0.30969 |      1.0000 |      3.0000 |
- | "Unique Selections"                             |       202 |        362 |     1.7921 |     1.1460 |      1.0000 |      7.0000 |
+ | "Hlt2SelUnbiasedDiMuon Candidates"              |       130 |        139 |     1.0692 |    0.30856 |      1.0000 |      3.0000 |
+ | "Unique Selections"                             |       203 |        366 |     1.8030 |     1.1535 |      1.0000 |      7.0000 |
 """, stdout, result, causes, signature_offset = 0)
 </text></argument>
 </extension>
