@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.30 2009-01-09 14:44:32 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.31 2009-01-09 18:05:59 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -35,10 +35,10 @@ class DaVinci(LHCbConfigurableUser) :
          # Hlt running
        , "HltType"            : ''            # HltType : No Hlt. Use Hlt1+Hlt2 to run Hlt
        , "HltUserAlgorithms"  : [ ]           # put here user algorithms to add
-#       , "HltOldStyle"        : False        # old style options configuration
        , "ReplaceL0BanksWithEmulated" : False # Re-run L0 
        , "Hlt2IgnoreHlt1Decision" : False     # run Hlt2 even if Hlt1 failed
-        }
+       , "InputType"          : "DST"         # or "DIGI" or "ETC" or "RDST" or "DST". Most of the time it's irrelevant.
+       }
 
     __used_configurables__ = [ LHCbApp, PhysConf, AnalysisConf, HltConf ]
 
@@ -53,12 +53,14 @@ class DaVinci(LHCbConfigurableUser) :
         init.Members += [ LbAppInit("DaVinciAppInit") ]
         init.IgnoreFilterPassed = True
         # Phys
-        physinit = PhysConf().initSequence()         # PhysConf initSequence
-        init.Members += [ physinit ]
-        # Analysis
-        AnalysisConf().RedoMCLinks = self.getProp("RedoMCLinks") 
-        analysisinit = AnalysisConf().initSequence()
-        init.Members += [ analysisinit ]
+        inputType = self.getProp( "InputType" ).upper()
+        if (( inputType != "MDF" ) & (inputType != "DIGI")) :
+            physinit = PhysConf().initSequence()         # PhysConf initSequence
+            init.Members += [ physinit ]
+            # Analysis
+            AnalysisConf().RedoMCLinks = self.getProp("RedoMCLinks") 
+            analysisinit = AnalysisConf().initSequence()
+            init.Members += [ analysisinit ]
 
     def hlt(self):
         HltConf().replaceL0BanksWithEmulated = self.getProp("ReplaceL0BanksWithEmulated") ## enable if you want to rerun L0
@@ -76,6 +78,9 @@ class DaVinci(LHCbConfigurableUser) :
         dataType = self.getProp("DataType")
         if dataType not in [ "DC06", "2008" ]:
             raise TypeError( "Invalid dataType '%s'"%dataType )
+        inputType = self.getProp( "InputType" ).upper()
+        if inputType not in [ "MDF", "DST", "DIGI", "ETC", "RDST" ]:
+            raise TypeError( "Invalid inputType '%s'"%inputType )
 
     def outputFiles(self):
         """
@@ -113,7 +118,6 @@ class DaVinci(LHCbConfigurableUser) :
         MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
         # Do not print event number at every event
         EventSelector().PrintFreq = self.getProp("PrintFreq");
-#        ToolSvc().SequencerTimerTool.OutputLevel = 4;  // suppress SequencerTimerTool printout
 
     def defineEvents(self):
         # Delegate handling to LHCbApp configurable
@@ -123,10 +127,11 @@ class DaVinci(LHCbConfigurableUser) :
         input = self.getProp("Input")
         print "# DaVinci input is ", input
         if ( len(input) > 0) :
-#            print "Re-defining input to\n", input
             EventSelector().Input = input
-#        else :
-#            print "Input is\n", getattr(EventSelector(),"Input")
+        inputType = self.getProp( "InputType" ).upper()
+        if ( inputType == "MDF" ):
+            EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
+            importOptions("$STDOPTS/DecodeRawEvent.py")
 
     def evtMax(self):
         return LHCbApp().evtMax()

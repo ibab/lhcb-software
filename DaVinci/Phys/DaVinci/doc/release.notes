@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.294 2009-01-09 14:44:32 pkoppenb Exp $
+! $Id: release.notes,v 1.295 2009-01-09 18:05:59 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -11,6 +11,7 @@
 
 ! 2009-01-09 - Patrick Koppenburg
  - Get initialisation sequences from Phys and AnalysisConf
+ - Add a special case for MDF files
 
 ! 2009-01-07 - Patrick Koppenburg
  - Removed last .opts files.
