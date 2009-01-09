@@ -1,7 +1,7 @@
 """
 High level configuration tools for PhysConf
 """
-__version__ = "$Id: Configuration.py,v 1.8 2009-01-08 09:06:27 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.9 2009-01-09 14:44:52 pkoppenb Exp $"
 __author__ = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -16,7 +16,6 @@ class PhysConf(LHCbConfigurableUser) :
     __slots__ = {
         "DataType"        : 'DC06'                             # Data type, can be ['DC06','2008']
      ,  "Simulation"      : True                               # set to True to use SimCond
-     ,  "InitSeq"         : GaudiSequencer("DaVinciInitSeq")   # Initialisation sequence in the application. Is set from e.g. DaVinci()
         }
 
     __used_configurables__ = [ DstConf, LHCbApp ]
@@ -24,16 +23,40 @@ class PhysConf(LHCbConfigurableUser) :
 #
 # configure reconstruction to be redone
 #
-    def configureReco(self):
+    def initSequence(self):
+        """
+        Init Sequence. Called by master application.
+        """
+        # only one initialisiation do far
+        init = GaudiSequencer("PhysInitSeq")
+        self.configureReco(init)
+        return init
+        
+#
+# configure reconstruction to be redone
+#
+    def configureReco(self,init):
         """
         Configure Reconstruction to be redone
         """
+        # Calo reco
+        importOptions("$CALORECOROOT/options/CaloRecoOnDemand.opts")
+        #
+        # Proto recalibration
+        #
         from Configurables import (GaudiSequencer)
+        # Test protos are here
+        testrecalib = GaudiSequencer("TestProtoPRecalibration")
+        init.Members += [ testrecalib ]
+        from Configurables import (TESCheck)
+        protoCheck = TESCheck("CheckProto")
+        protoCheck.Inputs = [ "Rec/ProtoP" ] 
+        protoCheck.Stop = False 
+        testrecalib.Members += [ protoCheck ]
+        # Do recalibration
         recalib = GaudiSequencer("ProtoPRecalibration")
         recalib.IgnoreFilterPassed = True 
-        init = self.getProp("InitSeq")
-        init.Members += [ recalib ]
-        importOptions("$CALORECOROOT/options/CaloRecoOnDemand.opts")
+        testrecalib.Members += [ recalib ]
         if ( self.getProp( "DataType" ) == 'DC06' ):
             from Configurables import (ChargedProtoCombineDLLsAlg)
             recalib.Members += [ ChargedProtoCombineDLLsAlg() ]
@@ -41,7 +64,7 @@ class PhysConf(LHCbConfigurableUser) :
         from Configurables import (MuonPIDsFromProtoParticlesAlg, RichPIDsFromProtoParticlesAlg)
         recalib.Members += [ MuonPIDsFromProtoParticlesAlg("MuonPIDsFromProtos") ]
         recalib.Members += [ RichPIDsFromProtoParticlesAlg("RichPIDsFromProtos") ]
-        
+    
 #
 # Initialization
 #
@@ -85,15 +108,12 @@ class PhysConf(LHCbConfigurableUser) :
 # Main configuration
 #
     def __apply_configuration__(self):
-        print "# applying Phys configuration"
-        GaudiKernel.ProcessJobOptions.PrintOff()
+        """
+        Apply configuration for Phys
+        """
+        log.info("Applying Phys configuration")
         self.dataOnDemand()
         self.configureInput()
-        self.configureReco()
+#        self.configureReco() # call it directly
         self.loki()
         
-#       @todo Remove this from Common and put it here
-#        if ( self.getProp( "DataType" ) == 'DC06' ):
-#            importOptions ("$DAVINCIROOT/options/DaVinciProtoPCalibrate.opts")
-#        if ( self.getProp( "DataType" ) != 'DC06' ):
-#            GaudiSequencer("ProtoPRecalibration").Members = []

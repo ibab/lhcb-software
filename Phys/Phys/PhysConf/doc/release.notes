@@ -4,6 +4,9 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+! 2009-01-09 - Patrick Koppenburg
+ - Send init seq to master
+
 ! 2009-01-08 - Patrick Koppenburg
  - Remove Particle Property Service configuration. Now in DDDB.
 
