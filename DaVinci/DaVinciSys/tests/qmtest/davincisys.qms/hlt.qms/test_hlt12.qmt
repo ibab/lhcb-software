@@ -1,0 +1,41 @@
+<?xml version="1.0" ?>
+<!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program"><text>gaudirun.py</text></argument>
+<argument name="args"><set>
+  <text>../options/DVTestHlt.py</text>
+</set></argument>
+<argument name="validator"><text>
+findReferenceBlock("""
+Hlt2Decision                                                SUCCESS Number of counters : 27
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ |*"Accepted Events"                               |       488 |        202 |(  41.3934 +- 2.22961  )%|   -------   |   -------   |
+ | "Candidates"                                    |       362 |        484 |     1.3370 |    0.95316 |      1.0000 |      8.0000 |
+ | "Hlt2SelB2DMuTight Candidates"                  |         1 |          2 |     2.0000 |     0.0000 |      2.0000 |      2.0000 |
+ | "Hlt2SelB2DVec Candidates"                      |         1 |          1 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "Hlt2SelB2DplusH Candidates"                    |         2 |          4 |     2.0000 |     0.0000 |      2.0000 |      2.0000 |
+ | "Hlt2SelB2DstarMu Candidates"                   |         5 |          7 |     1.4000 |    0.80000 |      1.0000 |      3.0000 |
+ | "Hlt2SelB2MuTrack Candidates"                   |        25 |         47 |     1.8800 |     1.5829 |      1.0000 |      6.0000 |
+ | "Hlt2SelB2MuTrackNoPT Candidates"               |        19 |         46 |     2.4211 |     1.2697 |      1.0000 |      6.0000 |
+ | "Hlt2SelBd2JpsiKstarLowMass Candidates"         |         1 |          1 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "Hlt2SelBd2JpsiKstarSignal Candidates"          |        22 |         28 |     1.2727 |    0.53783 |      1.0000 |      3.0000 |
+ | "Hlt2SelBd2JpsiMuMuKsDDBiased Candidates"       |        34 |         52 |     1.5294 |     1.1940 |      1.0000 |      7.0000 |
+ | "Hlt2SelBd2JpsiMuMuKsDDUnbiased Candidates"     |        23 |         28 |     1.2174 |    0.65651 |      1.0000 |      4.0000 |
+ | "Hlt2SelBd2JpsiMuMuKsLLBiased Candidates"       |         3 |          3 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "Hlt2SelBd2JpsiMuMuKsLLUnbiased Candidates"     |         2 |          2 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "Hlt2SelBd2MuMuKstar Candidates"                |         1 |          4 |     4.0000 |     0.0000 |      4.0000 |      4.0000 |
+ | "Hlt2SelBiasedDiElectron Candidates"            |         1 |          1 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "Hlt2SelBiasedDiMuon Candidates"                |        55 |         59 |     1.0727 |    0.25969 |      1.0000 |      2.0000 |
+ | "Hlt2SelBs2JpsiEtap Candidates"                 |         2 |         16 |     8.0000 |     0.0000 |      8.0000 |      8.0000 |
+ | "Hlt2SelBs2JpsiPhiSignal Candidates"            |         4 |          8 |     2.0000 |     0.0000 |      2.0000 |      2.0000 |
+ | "Hlt2SelBs2JpsieePhi Candidates"                |         3 |          3 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "Hlt2SelBu2JpsiKHighMass Candidates"            |         1 |          1 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "Hlt2SelBu2JpsiKLowMass Candidates"             |         1 |          1 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "Hlt2SelBu2JpsiKSignal Candidates"              |         4 |          6 |     1.5000 |    0.86603 |      1.0000 |      3.0000 |
+ | "Hlt2SelDrellYan Candidates"                    |         1 |          1 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "Hlt2SelSingleMuon Candidates"                  |        22 |         25 |     1.1364 |    0.34317 |      1.0000 |      2.0000 |
+ | "Hlt2SelUnbiasedDiMuon Candidates"              |       129 |        138 |     1.0698 |    0.30969 |      1.0000 |      3.0000 |
+ | "Unique Selections"                             |       202 |        362 |     1.7921 |     1.1460 |      1.0000 |      7.0000 |
+""", stdout, result, causes, signature_offset = 0)
+</text></argument>
+</extension>
