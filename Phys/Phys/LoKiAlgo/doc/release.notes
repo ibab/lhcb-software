@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.51 2009-01-09 07:29:33 cattanem Exp $ 
+! $Id: release.notes,v 1.52 2009-01-10 20:01:40 jonrob Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgo
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
+
+! 2009-01-10 - Chris Jones
+ - Add usage of CLHEP for OSX
 
 !========================== LoKiAlgo v8r1 2009-01-09 ==========================
 ! 2009-01-09 - Marco Cattaneo

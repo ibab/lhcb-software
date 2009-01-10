@@ -1,7 +1,7 @@
 <!-- 
-     * $Id: LoKiAlgoMC.xml,v 1.4 2008-11-02 21:19:12 ibelyaev Exp $ 
+     * $Id: LoKiAlgoMC.xml,v 1.5 2009-01-10 20:05:17 jonrob Exp $ 
      * ========================================================================
-     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
+     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
      * ======================================================================== 
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiAlgo package
