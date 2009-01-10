@@ -1,4 +1,4 @@
-// $Id: Nodes.cpp,v 1.2 2008-12-06 17:44:22 ibelyaev Exp $
+// $Id: Nodes.cpp,v 1.3 2009-01-10 14:02:02 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -529,20 +529,12 @@ Decays::Nodes::Not::fillStream ( std::ostream& s ) const
 
 // ============================================================================
 Decays::Nodes::Or& 
-Decays::Nodes::Or::operator|= ( const Decays::iNode& node )
-{ m_nodes.push_back ( node ) ; return *this ; }
-// ============================================================================
-Decays::Nodes::Or& 
 Decays::Nodes::Or::operator+= ( const Decays::iNode& node )
-{ return (*this) |= node  ; }
-// ============================================================================
-Decays::Nodes::And& 
-Decays::Nodes::And::operator&= ( const Decays::iNode& node )
 { m_nodes.push_back ( node ) ; return *this ; }
 // ============================================================================
 Decays::Nodes::And& 
 Decays::Nodes::And::operator+= ( const Decays::iNode& node )
-{ return (*this) &= node  ; }
+{ m_nodes.push_back ( node ) ; return *this ; }
 // ============================================================================
 
 

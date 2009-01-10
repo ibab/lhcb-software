@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.8 2009-01-08 16:33:16 cattanem Exp $ 
+! $Id: release.notes,v 1.9 2009-01-10 14:02:02 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/PartProp
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
+
+! 2009-01-10 - Ivan Belyaev
+ - Nodes.h, Nodes.cpp 
+
+   disable operator&= and |=  
 
 !======================== PartProp v1r0 2009-01-08 ============================
 ! 2008-12-16 - Marco Cattaneo
