@@ -23,7 +23,7 @@
 # \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.1 $
+                                                   Welcome to ApplicationMgr $Revision: 1.2 $
                                           running on lxbuild120.cern.ch on Sat Jan 10 23:08:21 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
@@ -54,7 +54,7 @@ UpdateManagerSvc    DEBUG newEvent(evtTime): loop over head items
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
 VeloAlignCondTe...   INFO Connected to database "sqlite_file:../data/VeloAlignCondTest.db/DDDB"
-VeloAlignCondTe...   INFO Using TAG "HEAD"
+VeloAlignCondTe...   INFO Using TAG "updates"
 UpdateManagerSvc    DEBUG registering condition "Conditions/Online/Velo/MotionSystem" for object of type VeloAlignCond at 0x2095a30
 UpdateManagerSvc    DEBUG registering condition "Conditions/Online/Velo/MotionSystem" for object of type VeloAlignCond at 0x2095a30
 UpdateManagerSvc    DEBUG Update specific object at 0x2095a30
