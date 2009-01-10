@@ -1,4 +1,4 @@
-// $Id: VeloAlignCond.cpp,v 1.1 2008-07-11 16:35:58 marcocle Exp $
+// $Id: VeloAlignCond.cpp,v 1.2 2009-01-10 23:00:40 marcocle Exp $
 #include "VeloDet/VeloAlignCond.h"
 
 #include "DetDesc/3DTransformationFunctions.h"
@@ -54,7 +54,8 @@ VeloAlignCond::VeloAlignCond():
   AlignmentCondition(),
   m_paths(),
   m_xOffCond(0),m_yOffCond(0),
-  m_firstInit(true) {}
+  m_inUpdMgrSvc(false)
+{}
 
 //-----------------------------------------------------------------------------
 // Main costructor
@@ -67,7 +68,7 @@ VeloAlignCond::VeloAlignCond(const std::vector<double>& translation,
   AlignmentCondition(translation,rotation,pivot),
   m_paths(),
   m_xOffCond(0),m_yOffCond(0),
-  m_firstInit(true)
+  m_inUpdMgrSvc(false)
 {
   if ( !xOffsetLoc.empty() ) this->addParam("XOffset",xOffsetLoc);
   if ( !yOffsetLoc.empty() ) this->addParam("YOffset",yOffsetLoc);
@@ -77,49 +78,37 @@ VeloAlignCond::VeloAlignCond(const std::vector<double>& translation,
 //=============================================================================
 VeloAlignCond::~VeloAlignCond(){
   // De-register from the UMS (if needed)
-  if ( (! m_paths.x.first.empty()) || (! m_paths.y.first.empty()) ) {
+  if ( m_inUpdMgrSvc ) {
     m_services->updMgrSvc()->unregister(this);
   }
 }
-//=============================================================================
-// Initialize the position path data member (after instantiation)
-//=============================================================================
-void VeloAlignCond::initializePosPath() {
-  // Prepare new PositionPaths object
-  std::string xOff, yOff;
-  if(exists("XOffset")) xOff = param<std::string>("XOffset");
-  if(exists("YOffset")) yOff = param<std::string>("YOffset");
-  m_paths = PositionPaths(xOff,yOff);
 
-  // Register the condition to the UMS for the positions of the stepping motors
-  if ( ! m_paths.x.first.empty() ) {
-    m_services->updMgrSvc()->registerCondition(this, m_paths.x.first,
-        &VeloAlignCond::makeMatrices,
-        m_xOffCond);
-  }
-  if ( ! m_paths.y.first.empty() ) {
-    m_services->updMgrSvc()->registerCondition(this, m_paths.y.first,
-        &VeloAlignCond::makeMatrices,
-        m_yOffCond);
-  }
-}
 //=============================================================================
-// Update the position path data member (after update)
+// Register to the UpdateManagerSvc for a 
 //=============================================================================
-void VeloAlignCond::updatePosPath() {
-  
-  std::string xOff, yOff;
-  if(exists("XOffset")) xOff = param<std::string>("XOffset");
-  if(exists("YOffset")) yOff = param<std::string>("YOffset");
-  PositionPaths paths(xOff,yOff);
-  
-  // check if it has changed
-  if ( m_paths != paths ) {
-    MsgStream log(this->msgSvc(), "VeloAlignCond");
-    if (this->registry()) {
-      log << MSG::WARNING << "In condition " << this->registry()->identifier() << ":" << endmsg;
+void VeloAlignCond::i_registerOffsetCond(const PositionPaths::ValueType &offsetCond, Condition *&cond,
+                                         PositionPaths::ValueType &oldOffsetCond)
+{
+  if (oldOffsetCond.first != offsetCond.first) { // do something only if they are not ==
+    if (!oldOffsetCond.first.empty()) {
+      // should deregister previous condition, but it is not implemented yet
+      MsgStream log(this->msgSvc(), "VeloAlignCond");
+      if (this->registry()) {
+        log << MSG::WARNING << "In condition " << this->registry()->identifier() << ":" << endmsg;
+      }
+      log << MSG::WARNING << "Offset condition changed from '"
+          << oldOffsetCond.first << "[" << oldOffsetCond.second << "]"
+          << "' to '"
+          << offsetCond.first << "[" << offsetCond.second << "]"
+          << "', but it will not taken into account (missing implementation)" << endmsg;
+    } else { // it is implicit that (!offsetCond.empty()) because they are != and the other is empty
+      m_services->updMgrSvc()->registerCondition(this, offsetCond.first,
+                                                 &VeloAlignCond::makeMatrices,
+                                                 cond);
+      // remember what we have done
+      m_inUpdMgrSvc = true;
+      oldOffsetCond = offsetCond;
     }
-    log << MSG::WARNING << "The location of the X and Y offsets has changed, but they will be ignored." << endmsg;
   }
 }
 
@@ -127,15 +116,18 @@ void VeloAlignCond::updatePosPath() {
 // Initialization
 //=============================================================================
 StatusCode VeloAlignCond::initialize() {
+  // Prepare new PositionPaths object
+  std::string xOff, yOff;
+  if(exists("XOffset")) xOff = param<std::string>("XOffset");
+  if(exists("YOffset")) yOff = param<std::string>("YOffset");
+  PositionPaths paths(xOff, yOff);
+
+  // Register the condition to the UMS for the positions of the stepping motors
+  // This also sets m_paths.
+  i_registerOffsetCond(paths.x, m_xOffCond, m_paths.x);
+  i_registerOffsetCond(paths.y, m_yOffCond, m_paths.y);
   
-  if (m_firstInit) {
-    // This should not be done only on the first load of the condition
-    initializePosPath();
-    m_firstInit = false;
-  } else {
-    updatePosPath();
-  }
-  if ( m_paths.x.first.empty() && m_paths.y.first.empty() ) {
+  if (!m_inUpdMgrSvc) {
     // the UMS doesn't know about us, so we have to call makeMatrices ourselves
     return makeMatrices();
   }
@@ -160,8 +152,9 @@ namespace {
   ///    $\sum_{i=0}^{n} c_i x^i$
   inline
   double correctOffset(double offset, const std::vector<double> &coeffs) {
-    return std::accumulate(coeffs.rbegin()+1,coeffs.rend(),
-                           *(coeffs.rbegin()),poly(offset));
+    return (coeffs.empty()) ? offset
+      : std::accumulate(coeffs.rbegin()+1,coeffs.rend(),
+                        *(coeffs.rbegin()),poly(offset));
   }
 }
 
@@ -209,4 +202,28 @@ StatusCode VeloAlignCond::makeMatrices()
     return StatusCode::FAILURE;
   }
 
+}
+
+//=============================================================================
+void VeloAlignCond::update(ValidDataObject& obj)
+{
+  // Base class implementation
+  Condition::update ( obj );
+  // Allow XOffsetCoeffs and YOffsetCoeffs do disappear in the new condition.
+  ParamValidDataObject *pvdo = dynamic_cast<ParamValidDataObject*>(&obj);
+  if (pvdo) {
+    if (exists("XOffsetCoeffs") && !pvdo->exists("XOffsetCoeffs")) {
+      param<std::vector<double> >("XOffsetCoeffs").clear();
+    }
+    if (exists("YOffsetCoeffs") && !pvdo->exists("YOffsetCoeffs")) {
+      param<std::vector<double> >("YOffsetCoeffs").clear();
+    }
+  }
+  if (m_inUpdMgrSvc) {
+    // These are needed, otherwise the changes in the parameters
+    // are not taken into account by ums->update(this)
+    // (because the function is called only when the off. conditions need updates)
+    m_services->updMgrSvc()->invalidate(m_xOffCond);
+    m_services->updMgrSvc()->invalidate(m_yOffCond);
+  }
 }
