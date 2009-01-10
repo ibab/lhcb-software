@@ -1,4 +1,4 @@
-// $Id: Digit.h,v 1.3 2008-08-02 10:14:05 ibelyaev Exp $
+// $Id: Digit.h,v 1.4 2009-01-10 12:58:54 ibelyaev Exp $
 // ============================================================================
 #ifndef LHCBMATH_DIGIT_H 
 #define LHCBMATH_DIGIT_H 1
@@ -80,9 +80,9 @@ namespace Gaudi
       struct Check10 
       {
         // ====================================================================
-        BOOST_STATIC_ASSERT( boost::integer_traits<TYPE>::is_specialized 
-                             && boost::integer_traits<TYPE>::is_integral  
-                             &&!boost::integer_traits<TYPE>::is_signed  );
+        BOOST_STATIC_ASSERT(  boost::integer_traits<TYPE>::is_specialized ) ;
+        BOOST_STATIC_ASSERT(  boost::integer_traits<TYPE>::is_integral    ) ;
+        BOOST_STATIC_ASSERT( !boost::integer_traits<TYPE>::is_signed      ) ;
         // ====================================================================
         enum
           {
@@ -110,9 +110,9 @@ namespace Gaudi
       struct _IDigit
       {
         // ====================================================================
-        BOOST_STATIC_ASSERT( boost::integer_traits<TYPE>::is_specialized 
-                             && boost::integer_traits<TYPE>::is_integral  
-                             &&!boost::integer_traits<TYPE>::is_signed  );
+        BOOST_STATIC_ASSERT(  boost::integer_traits<TYPE>::is_specialized ) ;
+        BOOST_STATIC_ASSERT(  boost::integer_traits<TYPE>::is_integral    ) ;
+        BOOST_STATIC_ASSERT( !boost::integer_traits<TYPE>::is_signed      ) ;
         // ====================================================================
         enum 
           { 
@@ -121,6 +121,15 @@ namespace Gaudi
             (I/Gaudi::Math::IPower<TYPE              ,10,N>::value )%10 :
             (I/Gaudi::Math::IPower<unsigned long long,10,N>::value )%10 
           } ;
+      private:
+        // ======================================================================
+        enum {
+          _imax10 = boost::integer_traits<TYPE>::digits10 ,
+          check   = N <= _imax10 
+        } ;
+        // ======================================================================  
+        BOOST_STATIC_ASSERT( check ) ;
+        // ======================================================================
       } ;
       // ======================================================================
       /** @struct _IDigits 
@@ -139,9 +148,9 @@ namespace Gaudi
       struct _IDigits
       {
         // ====================================================================
-        BOOST_STATIC_ASSERT( boost::integer_traits<TYPE>::is_specialized 
-                             && boost::integer_traits<TYPE>::is_integral  
-                             &&!boost::integer_traits<TYPE>::is_signed  );
+        BOOST_STATIC_ASSERT(  boost::integer_traits<TYPE>::is_specialized ) ;
+        BOOST_STATIC_ASSERT(  boost::integer_traits<TYPE>::is_integral    ) ;
+        BOOST_STATIC_ASSERT( !boost::integer_traits<TYPE>::is_signed      ) ;
         // ====================================================================
         enum 
           { 
@@ -153,6 +162,19 @@ namespace Gaudi
             Gaudi::Math::IPower<unsigned long long,10,N2-N1>::value 
           };
         // ====================================================================
+      private:
+        // ====================================================================
+        enum {
+          _imax10 = boost::integer_traits<TYPE>::digits10 ,
+          check1  = N1 < N2 ,
+          check2  = N1 <= _imax10 ,
+          check3  = N2 <= _imax10 + 1 
+        } ;
+        // ====================================================================
+        BOOST_STATIC_ASSERT( check1 ) ;
+        BOOST_STATIC_ASSERT( check2 ) ;
+        BOOST_STATIC_ASSERT( check3 ) ;
+        // ====================================================================`
       } ;
       // ======================================================================
       /** @struct _Digit 
@@ -167,13 +189,21 @@ namespace Gaudi
       struct _Digit : public std::unary_function<TYPE,int>
       {
         // ====================================================================
-        BOOST_STATIC_ASSERT( boost::integer_traits<TYPE>::is_specialized 
-                             && boost::integer_traits<TYPE>::is_integral  
-                             &&!boost::integer_traits<TYPE>::is_signed  );
+        BOOST_STATIC_ASSERT(  boost::integer_traits<TYPE>::is_specialized ) ;
+        BOOST_STATIC_ASSERT(  boost::integer_traits<TYPE>::is_integral    ) ;
+        BOOST_STATIC_ASSERT( !boost::integer_traits<TYPE>::is_signed      ) ;
         // ====================================================================
         enum { value = Gaudi::Math::IPower<unsigned long long,10,N>::value } ;
         // ====================================================================
         inline int operator () ( const TYPE v ) const { return (v/value)%10 ; }
+        // ====================================================================
+      private:
+        // ====================================================================
+        enum {
+          _imax10 = boost::integer_traits<TYPE>::digits10 
+        } ;
+        // ====================================================================
+        BOOST_STATIC_ASSERT( N <= _imax10 ) ;
         // ====================================================================
       } ;
       // ======================================================================
@@ -201,9 +231,9 @@ namespace Gaudi
       {
       private:
         // ====================================================================
-        BOOST_STATIC_ASSERT( boost::integer_traits<TYPE>::is_specialized 
-                             && boost::integer_traits<TYPE>::is_integral  
-                             &&!boost::integer_traits<TYPE>::is_signed  );
+        BOOST_STATIC_ASSERT(  boost::integer_traits<TYPE>::is_specialized ) ;
+        BOOST_STATIC_ASSERT(  boost::integer_traits<TYPE>::is_integral    ) ;
+        BOOST_STATIC_ASSERT( !boost::integer_traits<TYPE>::is_signed      ) ;
         // ====================================================================
         enum
           {
@@ -217,6 +247,16 @@ namespace Gaudi
         // ====================================================================
         /// the only on eessential method 
         inline int operator() ( const TYPE v ) const { return (v/val1)%val2 ; }
+        // ====================================================================
+      private:
+        // ====================================================================
+        enum {
+          _imax10 = boost::integer_traits<TYPE>::digits10 
+        } ;
+        // ====================================================================
+        BOOST_STATIC_ASSERT( N1 < N2 ) ;
+        BOOST_STATIC_ASSERT( N1 <= _imax10     ) ;
+        BOOST_STATIC_ASSERT( N2 <= _imax10 + 1 ) ;
         // ====================================================================
       };
     } // end of namespace detail 
@@ -243,15 +283,13 @@ namespace Gaudi
     struct IDigit : public detail::_IDigit<TYPE,I,N>
     {
       // ======================================================================
-      BOOST_STATIC_ASSERT( boost::integer_traits<TYPE>::is_specialized 
-                           && boost::integer_traits<TYPE>::is_integral  
-                           &&!boost::integer_traits<TYPE>::is_signed  );
-      // ======================================================================
-      BOOST_STATIC_ASSERT( N <= (unsigned int) boost::integer_traits<TYPE>::digits10 ) ;
+      BOOST_STATIC_ASSERT(  boost::integer_traits<TYPE>::is_specialized ) ;
+      BOOST_STATIC_ASSERT(  boost::integer_traits<TYPE>::is_integral    ) ;
+      BOOST_STATIC_ASSERT( !boost::integer_traits<TYPE>::is_signed      ) ;
       // ======================================================================
     };
     // ========================================================================
-    /** @struct IDigit 
+    /** @struct IDigits 
      *  Simple structr efor compile-time evaluation of 
      *  the range of decimal digits N1->N2 (N2 is excluded) 
      *  for the given integral type 
@@ -274,13 +312,9 @@ namespace Gaudi
     struct IDigits : public detail::_IDigits<TYPE,I,N1,N2>     
     {
       // ======================================================================
-      BOOST_STATIC_ASSERT( boost::integer_traits<TYPE>::is_specialized 
-                           && boost::integer_traits<TYPE>::is_integral  
-                           &&!boost::integer_traits<TYPE>::is_signed  );
-      // ======================================================================
-      BOOST_STATIC_ASSERT( N1 < N2 
-                           && N1 <=     boost::integer_traits<TYPE>::digits10 
-                           && N2 <= 1 + boost::integer_traits<TYPE>::digits10  ) ;
+      BOOST_STATIC_ASSERT(  boost::integer_traits<TYPE>::is_specialized ) ;
+      BOOST_STATIC_ASSERT(  boost::integer_traits<TYPE>::is_integral    ) ;
+      BOOST_STATIC_ASSERT( !boost::integer_traits<TYPE>::is_signed      ) ;
       // ======================================================================
     };
     // ========================================================================
@@ -307,11 +341,9 @@ namespace Gaudi
     struct Digit : public detail::_Digit<TYPE,N>
     {
       // ======================================================================
-      BOOST_STATIC_ASSERT( boost::integer_traits<TYPE>::is_specialized 
-                           && boost::integer_traits<TYPE>::is_integral  
-                           &&!boost::integer_traits<TYPE>::is_signed  );
-      // ======================================================================
-      BOOST_STATIC_ASSERT( N <= (unsigned int ) boost::integer_traits<TYPE>::digits10  ) ;
+      BOOST_STATIC_ASSERT(  boost::integer_traits<TYPE>::is_specialized ) ;
+      BOOST_STATIC_ASSERT(  boost::integer_traits<TYPE>::is_integral    ) ;
+      BOOST_STATIC_ASSERT( !boost::integer_traits<TYPE>::is_signed      ) ;
       // ======================================================================
     };
     // ========================================================================
@@ -340,13 +372,9 @@ namespace Gaudi
     struct Digits : public detail::_Digits<TYPE,N1,N2>
     {
       // ======================================================================
-      BOOST_STATIC_ASSERT( boost::integer_traits<TYPE>::is_specialized 
-                           && boost::integer_traits<TYPE>::is_integral  
-                           &&!boost::integer_traits<TYPE>::is_signed  );
-      // ======================================================================
-      BOOST_STATIC_ASSERT( N1 < N2 
-                           && N1 <= (unsigned int ) boost::integer_traits<TYPE>::digits10
-                           && N2 <= 1 +             boost::integer_traits<TYPE>::digits10  ) ;
+      BOOST_STATIC_ASSERT(  boost::integer_traits<TYPE>::is_specialized ) ;
+      BOOST_STATIC_ASSERT(  boost::integer_traits<TYPE>::is_integral    ) ;
+      BOOST_STATIC_ASSERT( !boost::integer_traits<TYPE>::is_signed      ) ;
       // ======================================================================
     };
     // ========================================================================
@@ -371,12 +399,12 @@ namespace Gaudi
     inline TYPE digit ( const TYPE value , const unsigned int N  ) 
     {
       // ======================================================================
-      BOOST_STATIC_ASSERT ( boost::integer_traits<TYPE>::is_specialized
-                            && boost::integer_traits<TYPE>::is_integral
-                            &&!boost::integer_traits<TYPE>::is_signed  ) ;
+      BOOST_STATIC_ASSERT (  boost::integer_traits<TYPE>::is_specialized ) ;
+      BOOST_STATIC_ASSERT (  boost::integer_traits<TYPE>::is_integral    ) ;
+      BOOST_STATIC_ASSERT ( !boost::integer_traits<TYPE>::is_signed      ) ;
       // ======================================================================
-      if      (  N > (unsigned int ) boost::integer_traits<TYPE>::digits10 ) { return 0 ; } // RETURN 
-      else if (  N < (unsigned int ) boost::integer_traits<TYPE>::digits10 ) 
+      if      (  N > (unsigned int) boost::integer_traits<TYPE>::digits10 ) { return 0 ; } // RETURN 
+      else if (  N < (unsigned int) boost::integer_traits<TYPE>::digits10 ) 
       {
         // ====================================================================
         const TYPE ten = 10 ;
@@ -416,9 +444,9 @@ namespace Gaudi
                          const unsigned int N2    ) 
     {
       // ======================================================================
-      BOOST_STATIC_ASSERT ( boost::integer_traits<TYPE>::is_specialized
-                            && boost::integer_traits<TYPE>::is_integral
-                            &&!boost::integer_traits<TYPE>::is_signed  ) ;
+      BOOST_STATIC_ASSERT (  boost::integer_traits<TYPE>::is_specialized ) ;
+      BOOST_STATIC_ASSERT (  boost::integer_traits<TYPE>::is_integral    ) ;
+      BOOST_STATIC_ASSERT ( !boost::integer_traits<TYPE>::is_signed      ) ;
       // ======================================================================
       if      (  N2 >  1 + boost::integer_traits<TYPE>::digits10 )
       { return digits ( value , N1 , 1 + boost::integer_traits<TYPE>::digits10 ) ; }
