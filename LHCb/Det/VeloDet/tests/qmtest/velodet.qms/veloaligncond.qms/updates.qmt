@@ -1,0 +1,41 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program"><text>gaudirun.py</text></argument>
+<argument name="options"><text>
+from Gaudi.Configuration import *
+from Configurables import (ApplicationMgr, MessageSvc,
+                           DDDBConf, CondDB, CondDBAccessSvc,
+                           EventClockSvc, FakeEventTime,
+                           UpdateManagerSvc)
+import GaudiKernel.SystemOfUnits as unit
+
+ConditionPaths =  ["/dd/Conditions/Online/Velo/MotionSystem",
+                   "/dd/Conditions/Alignment/Velo/VeloLeft",
+                   "/dd/Conditions/Alignment/Velo/VeloRight"]
+
+DDDBConf() # detector description
+localDb = CondDBAccessSvc("VeloAlignCondTestDB",
+                          ConnectionString = "sqlite_file:../data/VeloAlignCondTest.db/DDDB",
+                          DefaultTAG = "updates")
+CondDB().addLayer(localDb) # use local DB
+
+# This is needed to trigger the instantiation of the update manager service 
+from Configurables import DetCondTest__TestConditionAlg
+alg = DetCondTest__TestConditionAlg()
+alg.Conditions = ConditionPaths
+
+ApplicationMgr(TopAlg = [alg], EvtSel = "NONE", EvtMax = 8)
+#MessageSvc(OutputLevel = 1)
+
+UpdateManagerSvc().OutputLevel = VERBOSE
+
+
+ecs = EventClockSvc(InitialTime = 10 * unit.s)
+ecs.addTool(FakeEventTime, "EventTimeDecoder")
+ecs.EventTimeDecoder.StartTime = ecs.InitialTime
+ecs.EventTimeDecoder.TimeStep =  10 * unit.s
+
+#MessageSvc(setVerbose = ["VeloAlignCond"])
+</text></argument>
+<argument name="reference"><text>../data/VeloAlignCondUpdates.ref</text></argument>
+</extension>
