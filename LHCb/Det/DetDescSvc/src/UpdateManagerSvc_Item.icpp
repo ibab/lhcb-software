@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc_Item.icpp,v 1.9 2008-09-23 12:28:32 marcocle Exp $
+// $Id: UpdateManagerSvc_Item.icpp,v 1.10 2009-01-10 23:01:00 marcocle Exp $
 #ifndef UPDATEMANAGERSVC_ITEM_ICPP
 #define UPDATEMANAGERSVC_ITEM_ICPP 1
 
@@ -203,7 +203,11 @@ struct Item {
 
   /// Adds a (item,member_function) pair to the list of parents.
   inline void addParent(Item* parent, BaseObjectMemberFunction *parentMF) {
-    parents.push_back(std::make_pair(parent,parentMF));
+    // avoid duplicates in the list
+    const ParentItem pi(parent,parentMF);
+    if (std::find(parents.begin(),parents.end(),pi) == parents.end()){
+      parents.push_back(pi);
+    }
   }
 
   /// Adds a child item to the given member function.

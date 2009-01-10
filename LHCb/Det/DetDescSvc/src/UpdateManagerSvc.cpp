@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.cpp,v 1.21 2008-10-29 08:48:19 cattanem Exp $
+// $Id: UpdateManagerSvc.cpp,v 1.22 2009-01-10 23:01:00 marcocle Exp $
 // Include files
 
 #include "GaudiKernel/SvcFactory.h"
@@ -546,8 +546,13 @@ void UpdateManagerSvc::unlink(Item *parent, Item *child){
     else ++p_mf;
   }
 
-  // remove child from parent's list of all childs
-  parent->children.erase(childIt);
+  // Remove child from parent's list of all children.
+  // we have to look again for it because the iterator may have been made
+  // invalid by the "unlink" of siblings
+  childIt = std::find(parent->children.begin(),
+                      parent->children.end(),child);
+  if (childIt != parent->children.end())
+    parent->children.erase(childIt);
 
   // check if the child should be part of the head now
   if ( child->isHead() ) {
