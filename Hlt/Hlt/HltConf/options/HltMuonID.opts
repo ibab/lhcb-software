@@ -3,7 +3,7 @@
  *  Copy of MuonID.opts as of 8/8/07
  *  @author P. Koppenburg 
  */
-#include "$MUONIDROOT/options/MuonID.opts"
+#include "$MUONIDROOT/options/MuonID.py"
 
 // MuonID depth in stations for the momentum bin, below means:
 // 3GeV -> 6GeV : station M2.and.M3, 6->10 GeV M2.and.M3.and.M4.or.M5
