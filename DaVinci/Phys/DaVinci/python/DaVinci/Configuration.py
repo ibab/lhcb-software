@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.31 2009-01-09 18:05:59 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.32 2009-01-11 10:33:28 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -18,8 +18,8 @@ class DaVinci(LHCbConfigurableUser) :
        , "PrintFreq"          : 100           # The frequency at which to print event numbers
        , "DataType"           : 'DC06'        # Data type, can be ['DC06','2008'] Forwarded to PhysConf
        , "Simulation"         : True          # set to True to use SimCond. Forwarded to PhysConf
-       , "DDDBtag"            : ""            # Tag for DDDB. Default as set in DDDBConf for DataType
-       , "CondDBtag"          : ""            # Tag for CondDB. Default as set in DDDBConf for DataType
+       , "DDDBtag"            : "default"     # Tag for DDDB. Default as set in DDDBConf for DataType
+       , "CondDBtag"          : "default"     # Tag for CondDB. Default as set in DDDBConf for DataType
        , "UseOracle"          : False         # if False, use SQLDDDB instead
          # Input
        , "Input"              : []            # Input data. Can also be passed as a second option file.
@@ -138,7 +138,10 @@ class DaVinci(LHCbConfigurableUser) :
     
     def defineDB(self):
         # Delegate handling to LHCbApp configurable
-        self.setOtherProps(LHCbApp(),["DataType","CondDBtag","DDDBtag","UseOracle","Simulation"])
+        self.setOtherProps(LHCbApp(),["DataType","UseOracle","Simulation"])
+        LHCbApp.DDDBtag = self.getProp("DDDBtag")
+        LHCbApp.CondDBtag = self.getProp("CondDBtag")
+        log.info("Set DDDBtag "+self.getProp("DDDBtag"))
 
     def standardParticles(self):
         """

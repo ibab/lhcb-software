@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.295 2009-01-09 18:05:59 pkoppenb Exp $
+! $Id: release.notes,v 1.296 2009-01-11 10:33:28 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,9 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-01-11 - Patrick Koppenburg
+ - Set DDDB and CondDB tag. TODO : Needs to be in data lists.
 
 ! 2009-01-09 - Patrick Koppenburg
  - Get initialisation sequences from Phys and AnalysisConf

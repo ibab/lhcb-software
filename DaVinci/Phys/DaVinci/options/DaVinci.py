@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DaVinci.py,v 1.25 2009-01-09 14:44:32 pkoppenb Exp $
+# $Id: DaVinci.py,v 1.26 2009-01-11 10:33:28 pkoppenb Exp $
 #
 # Options for a typical DaVinci job
 #
@@ -58,9 +58,9 @@ DaVinci().UserAlgorithms = [ preselSeq, exampleSeq, tag ]
 # DaVinci().MainOptions  = "" # None
 ########################################################################
 # HLT
-DaVinci().ReplaceL0BanksWithEmulated = True ## enable if you want to rerun L0
-DaVinci().Hlt2IgnoreHlt1Decision = True     ## enable if you want Hlt2 irrespective of Hlt1
-DaVinci().HltType = 'Hlt1+Hlt2'             ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
+#DaVinci().ReplaceL0BanksWithEmulated = True ## enable if you want to rerun L0
+#DaVinci().Hlt2IgnoreHlt1Decision = True     ## enable if you want Hlt2 irrespective of Hlt1
+#DaVinci().HltType = 'Hlt1+Hlt2'             ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
 ########################################################################
 #
 # To run : gaudirun.py options/DaVinci.py options/DaVinciTestData.py
