@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.42 2008-12-09 15:51:43 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.43 2009-01-12 11:04:34 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -9,6 +9,7 @@ from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 from Configurables import ConfigFileAccessSvc, ConfigDBAccessSvc, HltConfigSvc, HltGenConfig
 from Configurables import EventClockSvc
+from Configurables import GaudiSequencer
 from Configurables import L0DUMultiConfigProvider
 from Configurables import LHCb__MDFWriter as MDFWriter
 from HltConf.Configuration import *
@@ -21,6 +22,10 @@ from  ctypes import c_uint
 
 def _ext(name) : return path.splitext(name)[-1].lstrip('.')
 
+# canonicalize tck  -- eats integer + string, returns canonical string
+def _tck(x) :
+    if type(x) == str and x[0:2] == '0x' : return x
+    return '0x%08x'%int(x)
 
 class Moore(LHCbConfigurableUser):
     ## Possible used Configurables
@@ -38,6 +43,7 @@ class Moore(LHCbConfigurableUser):
         , "inputFiles" :       [ ] # input
         , "hltType" :          'Hlt1'
         , "useTCK"     :       False # use TCK instead of options...
+        #, "L0TCK"      :       [ ] # list of L0 TCKs to prefetch
         , "prefetchTCK" :      [ ] # which TCKs to prefetch. Initial TCK used is first one...
         , "generateConfig" :   False # whether or not to generate a configuration
         , "configLabel" :      ''    # label for generated configuration
@@ -96,10 +102,10 @@ class Moore(LHCbConfigurableUser):
 
     def __apply_configuration__(self):
         GaudiKernel.ProcessJobOptions.PrintOff()
-        importOptions('$HLTCONFROOT/options/units.opts')
         importOptions('$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts')
         EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
         importOptions('$STDOPTS/DecodeRawEvent.py')
+        ApplicationMgr().TopAlg.append( GaudiSequencer('Hlt') )
         # needed for DecodeRawEvent and LoKiTrigger
         for i in [ 'ToolSvc' , 'AuditorSvc',  'DataOnDemandSvc' , 'LoKiSvc' ] : ApplicationMgr().ExtSvc.append( i ) 
         # forward some settings... 
@@ -107,7 +113,7 @@ class Moore(LHCbConfigurableUser):
         # Get the event time (for CondDb) from ODIN 
         EventClockSvc().EventTimeDecoder = 'OdinTimeDecoder'
         # make sure we don't pick up small variations of the read current
-        # MagneticFieldSvc().UseSetCurrent = True
+        #MagneticFieldSvc().UseSetCurrent = True
         # output levels...
         ToolSvc().OutputLevel                     = INFO
         from Configurables import XmlParserSvc 
@@ -125,18 +131,19 @@ class Moore(LHCbConfigurableUser):
         for i in self.getProp('enableAuditor') : self.addAuditor( i )
         # TODO: check for mutually exclusive options...
         if self.getProp('useTCK') :
-            tcks = [ int(i) for i in self.getProp('prefetchTCK') ]
+            tcks = [ _tck(i) for i in self.getProp('prefetchTCK') ]
             cfg = HltConfigSvc( prefetchTCK = tcks
                               , initialTCK = tcks[0]
                               , ConfigAccessSvc = self.getConfigAccessSvc().getFullName() ) 
             ApplicationMgr().ExtSvc.append(cfg.getFullName())
         else:
             for i in [ 'hltType','oldStyle','userAlgorithms','verbose' ] : self.setOtherProp( HltConf(), i )
-            print HltConf()
+            log.info( HltConf() )
             
         if self.getProp("generateConfig") :
-            # make sure we load as many L0 TCKs as possible...
             importOptions('$L0TCKROOT/options/L0DUConfig.opts')
+            #if self.getProp('L0TCK') : ### load a subset of L0TCKs..
+            #else : # make sure we load as many L0 TCKs as possible...
             L0DUMultiConfigProvider('L0DUConfig').Preload = True
             svcs = self.getProp("configServices")
             algs = self.getProp("configAlgorithms")

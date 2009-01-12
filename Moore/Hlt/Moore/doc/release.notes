@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2009-01-12 - Gerhard Raven
+ - Hlt sequence no longer added to TopAlg list in HltConf -- do it here...
+
 ! 2008-12-18 - Gerhard Raven
  - fold in changes needed for online
 

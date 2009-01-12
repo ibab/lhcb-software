@@ -14,12 +14,11 @@ from Moore.Configuration import *
 #Moore().generateConfig = True
 #Moore().configLabel = 'NO prescale'
 
-Moore().hltType = 'Hlt1'
+Moore().hltType = 'Hlt1' # 'PA+L0+HA' # +Hlt2'
+HltConf().Hlt2IgnoreHlt1Decision = False
 Moore().oldStyle = False
 Moore().verbose = True
 
-#dataType = 'DC06'
-#files= [ '/data/bfys/lhcb/MinBias-L0strip/DC06_L0_v1_lumi2_MuonHadron_40000ev_' + str(f) +'.mdf'  for f in range(1,3) ]
 
 #dataType = 'DC06'
 #files = [ '/data/bfys/lhcb/MinBias-L0strip/MBL0-lumi2-' + str(f) +'.dst'  for f in range(1,5) ]
@@ -34,13 +33,13 @@ Moore().verbose = True
 #          '/afs/cern.ch/lhcb/group/trigger/vol3/dijkstra/Selections/MBL0-lumi2-4.dst' ]
 
 dataType = 'DC06'
-files = [ 'castor:/castor/cern.ch/user/s/snies/mdf/DC06_L0_v1_lumi2_MuonHadron_40000ev_1.mdf',
-          'castor:/castor/cern.ch/user/s/snies/mdf/DC06_L0_v1_lumi2_MuonHadron_40000ev_2.mdf' ]
+files= [ '/data/bfys/lhcb/MinBias-L0strip/DC06_L0_v1_lumi2_MuonHadron_40000ev_' + str(f) +'.mdf'  for f in range(1,3) ]
+#files = [ 'castor:/castor/cern.ch/user/s/snies/mdf/DC06_L0_v1_lumi2_MuonHadron_40000ev_'+str(f)+'1.mdf' for f in range(1,3) ]
 
 
 EventSelector().PrintFreq = 100
 
-#Moore().EvtMax = 10000
+Moore().EvtMax = 1000
 Moore().DataType   = dataType
 Moore().inputFiles = files
 # Moore().outputFile = '/tmp/foo.raw'
