@@ -116,7 +116,7 @@ StatusCode TrackV0Monitor::execute()
       "LongLong" :
       trackA == LHCb::Track::Downstream && 
       trackB == LHCb::Track::Downstream ? 
-      "DsDs" : "Mixed" ;
+      "DownstreamDownstream" : "Mixed" ;
     process(*vertex, type ) ;
   }
   
