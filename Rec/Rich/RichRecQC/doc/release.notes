@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!======================= RichRecQC v2r25 2009-01-12 ==========================
 ! 2008-12-17 - Chris Jones
  - Improve python Configuration :
   + Add expert checking options previously in job options in RichRecMonitors.
