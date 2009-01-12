@@ -4,6 +4,7 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+!=============================== STDAQ v3r14 2009-01-12 ======================
 ! 2008-12-15 - Marco Cattaneo
  - Fix compilation warning with gcc 4.3
 
