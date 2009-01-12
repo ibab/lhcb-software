@@ -3,6 +3,9 @@ Package             : Phys/DaVinci
 Package Coordinator : Juan Palacios
 Purpose             : LHCb analysis program 
 
+! 2009-01-12 - Patrick Koppenburg
+ - Add a DC06 HLT test. Rename Hlt into Hlt-2008.
+
 ! 2009-01-11 - Patrick Koppenburg
  - Yet another tests update
 
