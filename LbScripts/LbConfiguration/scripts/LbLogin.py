@@ -12,8 +12,8 @@ _this_file = find_module(os.path.splitext(os.path.basename(__file__))[0])[1]
 _scripts_dir = os.path.dirname(_this_file)
 _base_dir = os.path.dirname(_scripts_dir)
 # updating the sys.path for the bare minimum of the available scripts
-sys.path.append(_scripts_dir)
-sys.path.append(os.path.join(_base_dir, "python"))
+sys.path.insert(0,_scripts_dir)
+sys.path.insert(0,os.path.join(_base_dir, "python"))
 
 from LbUtils.Script import Script
 from LbUtils.Env import Environment, Aliases
@@ -23,7 +23,7 @@ import sys, os, logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.23 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.24 $")
 
 
 def getLbLoginEnv(debug=False, 
@@ -169,6 +169,8 @@ class LbLoginScript(Script):
             if ev.has_key("SAVEPATH") :
                 if ev["PATH"] != ev["SAVEPATH"] :
                     ev["PATH"] = ev["SAVEPATH"]
+                else :
+                    ev["SAVEPATH"] = ev["PATH"]
 
     def setCVSEnv(self):
         """ CVS base setup """
@@ -410,9 +412,9 @@ class LbLoginScript(Script):
     def setUserArea(self):
         log = logging.getLogger()
         opts = self.options
+        ev = self._env
+        al = self._aliases
         if not opts.remove_userarea :
-            ev = self._env
-            al = self._aliases
             newdir = False
             if not opts.userarea :
                 opts.userarea = os.path.join(ev["HOME"], "cmtuser") # @todo: use something different for window
@@ -437,13 +439,8 @@ class LbLoginScript(Script):
                     self._add_echo( " --- use mkpublic to give public access to the current directory" )
                 al["mkprivate"] = "find . -type d -print -exec fs setacl {} system:anyuser l \\;"
                 al["mkpublic"] = "find . -type d -print -exec fs setacl {} system:anyuser rl \\;"
-    
-#            dirm = os.path.join(opts.userarea, "cmt")
-#            if os.path.exists(dirm) :
-#                if os.path.isdir(dirm):
-#                    os.rmdir(dirm)
-#                else:
-#                    os.remove(dirm)
+        elif ev.has_key("User_release_area") :
+            del ev["User_release_area"] 
             
     def setSharedArea(self):
         log = logging.getLogger()
@@ -519,6 +516,10 @@ class LbLoginScript(Script):
         elif sys.platform == "win32":
             self.platform = "win32"
             self.compdef = "vc71"
+
+        if self.platform == "slc5" :
+            newtag = True
+
 
         if opts.cmtconfig :
             conflist = opts.cmtconfig.split("_")

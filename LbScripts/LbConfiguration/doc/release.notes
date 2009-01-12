@@ -1,3 +1,8 @@
+2009-01-12  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/LbLogin.py: remove the User_release_area variable if the option --no-userarea 
+	is set. Prepends the local internal location to the sys.path instead of appending.
+
 2009-01-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/generateLogin.py: reenable the explicit version specification for
