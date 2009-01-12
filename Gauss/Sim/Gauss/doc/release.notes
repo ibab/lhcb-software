@@ -4,6 +4,12 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-01-12 - Gloria CORTI
+ - Take latest tag in DDDB and SIMCOND. Ot now needs to be explicitely set.
+   . Gauss-2008.py
+ - Pick latest DecFiles compatible with new Particle Property table
+   . requirements
+
 ! 2009-01-08 - Gloria CORTI
  - Keep all particles that decay to preserve the whole tree in case of decay
    at rest since the decay products are always kept
