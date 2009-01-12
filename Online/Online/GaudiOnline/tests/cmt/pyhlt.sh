@@ -41,6 +41,12 @@ start_py_task Sender2 "import GaudiOnlineTests;GaudiOnlineTests.runSender('${NOD
 start_py_task EvtCons1 "import GaudiOnlineTests;GaudiOnlineTests.runNetCons('${NODENAME}/EvtServ',1,0.0005)"
 start_py_task EvtCons2 "import GaudiOnlineTests;GaudiOnlineTests.runNetCons('${NODENAME}/EvtServ',1,0.0005)"
 #
+# Testing panormaix interface:
+#start_gaudi_task Panoramix "import PanoramixSim;PanoramixSim.run('${NODENAME}/EvtServ')"
+#
+#
+#
+#
 # For debugging enable this and disable any other
 #$MINITERM Sender@${HOST}    -e "export UTGID=${NODENAME}/DbgTask   ; cat gaudi.gdb; gdb -x gaudi.gdb $GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe" &
 # $BIGTERM MBMDump@${HOST} -e "export UTGID=${NODENAME}/MBMDump; $gaudi_run libMBMDump.so mbmdump" &

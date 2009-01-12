@@ -1,4 +1,4 @@
-// $Id: NetworkEvtSelector.cpp,v 1.4 2008-10-06 11:49:19 frankb Exp $
+// $Id: NetworkEvtSelector.cpp,v 1.5 2009-01-12 16:30:39 frankb Exp $
 //====================================================================
 //  NetworkEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -40,13 +40,19 @@ static void handle_event(netentry_t* e, const netheader_t& h, void* param)  {
 }
 
 NetworkContext::NetworkContext(const NetworkEvtSelector* s)
-: OnlineContext(s)
+  : OnlineContext(s), m_cancelled(false)
 {
   m_evdesc.setEventType(EVENT_TYPE_EVENT);
 }
 
 void NetworkContext::taskDead(const string& who)  {
-  m_sel->error("The event data source "+who+" died ....");
+  OnlineBaseEvtSelector* thisPtr = const_cast<OnlineBaseEvtSelector*>(m_sel);
+  NetworkEvtSelector* sel = dynamic_cast<NetworkEvtSelector*>(thisPtr);
+  sel->error("The event data source "+who+" died ....");
+  freeEvent();
+  if ( sel->cancelOnDeath() ) {
+    sel->handle(Incident(sel->name(),"DAQ_CANCEL"));
+  }
 }
 
 StatusCode NetworkContext::freeEvent()  {
@@ -111,8 +117,11 @@ StatusCode NetworkContext::rearmEvent()  {
 }
 
 StatusCode NetworkContext::receiveEvent()  {
-  m_sel->increaseEvtCount();
-  return StatusCode::SUCCESS;
+  if ( !m_cancelled ) {
+    m_sel->increaseEvtCount();
+    return StatusCode::SUCCESS;
+  }
+  return StatusCode::FAILURE;
 }
 
 StatusCode NetworkContext::connect(const string& input)  {
@@ -133,6 +142,7 @@ StatusCode NetworkContext::connect(const string& input)  {
     m_input = input;
     m_netPlug = net_init(self, NET_CLIENT);
     net_subscribe(m_netPlug,this,WT_FACILITY_CBMEVENT,handle_event,handle_death);
+    m_cancelled = false;
     return StatusCode::SUCCESS;
   }
   return StatusCode::FAILURE;
@@ -142,6 +152,7 @@ StatusCode NetworkContext::connect(const string& input)  {
 void NetworkContext::close()  {
   net_unsubscribe(m_netPlug,this,WT_FACILITY_CBMEVENT);
   net_close(m_netPlug);
+  m_cancelled = false;
   m_netPlug = 0;
 }
 
@@ -151,6 +162,7 @@ NetworkEvtSelector::NetworkEvtSelector(const string& nam, ISvcLocator* svc)
 {
   m_decode = false;
   m_allowSuspend = true;
+  declareProperty("CancelOnDeath",m_cancelDeath=false);
 }
 
 /// Create event selector iteration context

@@ -1,4 +1,4 @@
-// $Id: OnlineBaseEvtSelector.h,v 1.5 2008-10-21 13:53:50 frankb Exp $
+// $Id: OnlineBaseEvtSelector.h,v 1.6 2009-01-12 16:30:39 frankb Exp $
 //====================================================================
 //  OnlineBaseEvtSelector.h
 //--------------------------------------------------------------------
@@ -13,7 +13,7 @@
 //  Created    : 4/01/99
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineBaseEvtSelector.h,v 1.5 2008-10-21 13:53:50 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineBaseEvtSelector.h,v 1.6 2009-01-12 16:30:39 frankb Exp $
 #ifndef GAUDIONLINE_ONLINEBASEEVTSELECTOR_H
 #define GAUDIONLINE_ONLINEBASEEVTSELECTOR_H 1
 
@@ -203,12 +203,14 @@ namespace LHCb  {
   protected:
     /// Lock handle to suspend/resume operations
     lib_rtl_event_t               m_suspendLock;
-    /// Allow suspending event access
-    bool                          m_allowSuspend;
     /// Input buffer name (default="EVENT")
     std::string                   m_input;
+    /// Allow suspending event access
+    bool                          m_allowSuspend;
     /// Decode data buffer
     bool                          m_decode;
+    /// Property to indicate that the connection goes to a partitioned buffer
+    bool                          m_partitionBuffer;
     /// Dummy property for backwards compatibility
     int                           m_printFreq;
     /// Requirement properties
@@ -217,8 +219,6 @@ namespace LHCb  {
     mutable MBM::Requirement      m_Reqs[8];
     /// Number of requirements
     mutable int                   m_nreqs;
-    /// Property to indicate that the connection goes to a partitioned buffer
-    bool                          m_partitionBuffer;
     /// Monitoring quantity: Number of events received
     mutable int                   m_evtCount;
     /// Monitoring quantity: Number of events requested

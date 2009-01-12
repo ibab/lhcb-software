@@ -291,6 +291,18 @@ def netConsumerApp(partID, partName, source, algs=[]):
   return _application('NONE',extsvc=[Configs.MonitorSvc(),mepMgr,evtSel],runable=runable,algs=algs)
 
 #------------------------------------------------------------------------------------------------
+def panoramixSimApp(partID, partName, source, algs=[]):
+  "Simple network consumer picking events from the event server application."
+  mepMgr               = mepManager(partID,partName,[])
+  runable              = Configs.LHCb__PanoramixSim('Runable')
+  runable.MEPManager   = mepMgr
+  evtSel               = netSelector(source,'ALL')
+  evtSel.CancelOnDeath = True
+  evtdata              = evtDataSvc()
+  evtPers              = rawPersistencySvc()
+  return _application('NONE',extsvc=[Configs.MonitorSvc(),mepMgr,runable,evtSel],runable=runable,algs=algs)
+
+#------------------------------------------------------------------------------------------------
 def defaultFilterApp(partID, partName, percent, print_freq):
   mepMgr               = mepManager(partID,partName,['EVENT','RESULT'])
   runable              = evtRunable(mepMgr)

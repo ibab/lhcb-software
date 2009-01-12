@@ -1,4 +1,4 @@
-// $Id: NetworkEvtSelector.h,v 1.2 2008-10-21 13:53:50 frankb Exp $
+// $Id: NetworkEvtSelector.h,v 1.3 2009-01-12 16:30:39 frankb Exp $
 //====================================================================
 //  NetworkEvtSelector
 //--------------------------------------------------------------------
@@ -13,7 +13,7 @@
 //  Created    : 4/12/2007
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/NetworkEvtSelector.h,v 1.2 2008-10-21 13:53:50 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/NetworkEvtSelector.h,v 1.3 2009-01-12 16:30:39 frankb Exp $
 #ifndef GAUDIONLINE_NETWORKEVTSELECTOR_H
 #define GAUDIONLINE_NETWORKEVTSELECTOR_H 1
 
@@ -47,6 +47,8 @@ namespace LHCb  {
     MBM::Requirement   m_request;
     /// Source process
     std::string        m_input;
+    /// Flag to indicate if event request got cancelled
+    bool               m_cancelled;
   public:
     /// Standard constructor
     NetworkContext(const NetworkEvtSelector* pSelector);
@@ -76,6 +78,9 @@ namespace LHCb  {
     * @vrsion  1.0
     */
   class NetworkEvtSelector : public OnlineBaseEvtSelector  {
+  protected:
+    /// Property to indicate if a DAQ_CANCEL incident shoud be generated on task death
+    bool                          m_cancelDeath;
   public:
     /// Create a new event loop context
     virtual StatusCode createContext(Context*& refpCtxt) const;
@@ -85,6 +90,8 @@ namespace LHCb  {
     virtual ~NetworkEvtSelector()    {}
     /// Event printout
     void printEvt(const std::string& src);
+    /// Access to cancel Death property
+    bool cancelOnDeath() const {  return m_cancelDeath; }
   };
 }      // End namespace LHCb
 #endif // GAUDIONLINE_NETWORKEVTSELECTOR_H

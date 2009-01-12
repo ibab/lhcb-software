@@ -1,4 +1,4 @@
-// $Id: EventRunable.cpp,v 1.8 2008-04-10 10:04:32 frankb Exp $
+// $Id: EventRunable.cpp,v 1.9 2009-01-12 16:30:39 frankb Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IAppMgrUI.h"
@@ -13,9 +13,10 @@
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,EventRunable)
 
 using namespace LHCb;
+using namespace std;
 
 // Standard Constructor
-EventRunable::EventRunable(const std::string& nam, ISvcLocator* svcLoc)   
+EventRunable::EventRunable(const string& nam, ISvcLocator* svcLoc)   
 : OnlineService(nam, svcLoc), m_mepMgr(0), m_dataSvc(0),
   m_receiveEvts(false), m_nerr(0), m_evtCount(0)
 {
