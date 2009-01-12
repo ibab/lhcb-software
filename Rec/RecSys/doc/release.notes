@@ -5,6 +5,9 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+! 2009-01-12 - Wouter Hulsbergen
+ - Added TrackV0Finder to RecoVertexSeq
+
 ! 2009-01-09 - Marco Cattaneo
  - Include MuonID.py instead of MuonID.opts
 
