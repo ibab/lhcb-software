@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.43 2009-01-12 11:04:34 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.44 2009-01-12 15:36:55 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -36,8 +36,8 @@ class Moore(LHCbConfigurableUser):
           "EvtMax":            -1    # Maximum number of events to process
         , "SkipEvents":        0
         , "DataType":          '2008' # Data type, can be [ 'DC06','2008' ]
-        , "DDDBtag" :          '' # default as set in DDDBConf for DataType
-        , "CondDBtag" :        '' # default as set in DDDBConf for DataType
+        , "DDDBtag" :          'default' # default as set in DDDBConf for DataType
+        , "CondDBtag" :        'default' # default as set in DDDBConf for DataType
         , "UseOracle":         False  # if False, use SQLDDDB instead
         , "outputFile" :       '' # output filename
         , "inputFiles" :       [ ] # input
