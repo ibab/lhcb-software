@@ -4,7 +4,8 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
-! 2008-12-02 W. Hulsbergen
+!============================ TrackMonitors v1r6 2009-01-12 ==================
+! 2008-12-21 W. Hulsbergen
  - Add TrackV0Monitor to monitoring sequence
  - Small fixes in TrackMonitor
 
