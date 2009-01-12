@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltL0Lines.py,v 1.4 2009-01-12 11:02:19 graven Exp $
+# $Id: HltL0Lines.py,v 1.5 2009-01-12 12:05:16 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines which are plain L0 lines
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
 # =============================================================================
 
 from LHCbKernel.Configuration import *
@@ -26,7 +26,6 @@ class HltL0LinesConf(LHCbConfigurableUser) :
                }
 
    def __apply_configuration__(self):
-        print 'HltL0LinesConf: apply'
         channels = self.getProp('L0Channels')
         if not channels : channels = L0Channels()
         for channel in channels :
