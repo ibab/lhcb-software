@@ -3,27 +3,16 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-! 2009-01-12 - Marco Cattaneo
- - Add a reference for slc4_ia32_gcc34_dbg (different from optimised, to be
-   understood...)
-
-! 2009-01-09 - Marco Cattaneo
- - Set the database tags explicitly
-
-! 2008-12-17 - Marco Cattaneo
- - Update references for L0Muon bug fix, and for new # in log.info printout
-
-! 2008-12-16 - Marco Cattaneo
+</PRE><H1><A NAME=v17r2>2009-01-12 Boole v17r2</A></H1><PRE>
+ - Explicit setting of database tag now compulsory, update options files
+   accordingly
  - Move spillover options into configurable, and add support for packed
    MCParticle/MCVertex containers in Spillover input file
-
-! 2008-12-16 - Marco Cattaneo
- - Update references for new Velo signal to noise tuning
-
-! 2008-12-12 - Marco Cattaneo
- - Update references for new run record handling (Gaudi v20r4) and new L0Muon
+ - Add a reference for slc4_ia32_gcc34_dbg (different from optimised, to be
+   understood...)
+ - Update references for L0Muon bug fix, new # in log.info printout, new Velo
+   signal to noise tuning, new run record handling (Gaudi v20r4) and new L0Muon
    raw bank compression
- - Change version to v17r2
 
 </PRE><H1><A NAME=v17r1>2008-12-11 Boole v17r1</A></H1><PRE>
  - Clean up options
