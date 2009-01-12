@@ -1,4 +1,4 @@
-// $Id: TrackMonitor.cpp,v 1.6 2008-10-21 07:33:12 wouter Exp $
+// $Id: TrackMonitor.cpp,v 1.7 2009-01-12 12:51:45 wouter Exp $
 // Include files 
 #include "TrackMonitor.h"
 
@@ -76,7 +76,8 @@ StatusCode TrackMonitor::execute()
 
   // # number of tracks
   plot(tracks->size(),1, "# tracks", 0., 500., 50);
-
+  plot(tracks->size(),"TrackMultiplicityFine", "# tracks", -0.5, 50.5, 51);
+  
   // histograms per track
   LHCb::Tracks::const_iterator iterT = tracks->begin();
   
@@ -92,7 +93,7 @@ StatusCode TrackMonitor::execute()
       
       tMap[type]+= 1;
       fillHistograms(**iterT,type);
-      plot((*iterT)->type(),2, "type" ,-0.5, 10.5, 10);
+      plot((*iterT)->type(),2, "type" ,-0.5, 10.5, 11);
     }
   } // iterT
 
@@ -131,6 +132,7 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
   plot(track.chi2PerDoF(),type+"/3","chi2/ndof",0,20);
   plot(track.nLHCbIDs(),type+"/4","#nLHCbIDs", -0.5, 60.5, 61);
   plot(track.pseudoRapidity(),type+"/7", "eta", 0.95 , 6.05, 50);
+  plot(track.nDoF(),type+"/ndof","ndof",-0.5,10.5,11);
   plot(track.flag(),type+"/flag","flag",-0.5,255.5,256) ;
   plot(track.history(),type+"/history","history",-0.5,20.5,21) ;
   plot(track.fitStatus(),type+"/fitstatus","fit status",-0.5,5.5,6) ;
@@ -139,8 +141,8 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
   plot(firststate.x(),type + "/120","x of first state",-100,100) ;
   plot(firststate.y(),type + "/121","y of first state",-100,100) ;
   plot(firststate.z(),type + "/122","z of first state",-500,500) ;
-  plot(firststate.tx(),type + "/123","tx of first state",-0.3,0.3) ;
-  plot(firststate.ty(),type + "/124","ty of first state",-0.3,0.3) ;
+  plot(firststate.tx(),type + "/123","tx of first state",-1.0,1.0) ;
+  plot(firststate.ty(),type + "/124","ty of first state",-1.0,1.0) ;
   plot(firststate.qOverP(),type + "/125","q/p of first state",-0.001,0.001) ; 
 
   if( firststate.qOverP()!=0 ) {
@@ -172,8 +174,10 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
 	 inode != track.nodes().end(); ++inode) 
       if( (*inode)->type() == LHCb::Node::HitOnTrack ) {
 	size_t mtype = (*inode)->measurement().type() - 1  ;
-	plot((*inode)->residual(),
-	     type+"/"+names[mtype]+"Residual",names[mtype]+" residual",
+	// factor for unbiasing the rms (not the mean!)
+	double f = std::sqrt( (*inode)->errMeasure2()/(*inode)->errResidual2()) ;
+	plot(f*(*inode)->residual(),
+	     type+"/"+names[mtype]+"Residual",names[mtype]+" residual (rms-unbiased)",
 	     -resmax[mtype],resmax[mtype],50);
 	plot((*inode)->residual()/(*inode)->errResidual(),
 	     type+"/"+names[mtype]+"residualPull",names[mtype]+" residual pull",-5,5,50);
@@ -184,8 +188,6 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
 	  Gaudi::XYZPoint localPoint = 
 	    (*inode)->measurement().detectorElement()->geometry()->toLocal( globalPoint ) ;
 	  double r = localPoint.Rho() ;
-	  // factor for unbiasing the rms (not the mean!)
-	  double f = std::sqrt( (*inode)->errMeasure2()/(*inode)->errResidual2()) ;
 	  // factor to calculate residual in detector plane
 	  const LHCb::FitNode* fitnode = dynamic_cast<const LHCb::FitNode*>(*inode) ;
 	  double cosalpha(1) ;
@@ -278,6 +280,28 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
         plot(iterInfo->second,type+"/info/"+range.fid, title,range.fxMin ,range.fxMax , 100);
       }
     } // iterInfo
+
+    // velo hit map
+    const size_t maxlayer = 30 ;
+    std::vector<size_t> velohitmap( maxlayer,0 ) ;
+    for( std::vector<LHCbID>::const_iterator iid = track.lhcbIDs().begin() ;
+	 iid != track.lhcbIDs().end(); ++iid) 
+      if( iid->isVelo() ) {
+	LHCb::VeloChannelID veloid = iid->veloID() ;
+	size_t station = (veloid.sensor() & 0x3E) >> 1; 
+	++(velohitmap[station]) ;
+      }
+    size_t numstations(0) ;
+    bool   numstationsoverlap(0) ;
+    for( std::vector<size_t>::const_iterator istation = velohitmap.begin() ;
+	 istation != velohitmap.end(); ++istation) 
+      if( *istation >= 1 ) { // request one R OR one phi hit 
+	++numstations ;
+	if( *istation >= 3 ) 
+	  ++numstationsoverlap ;
+      }
+    plot( numstations, type+"/NumVeloStations", "Number of traversed stations in velo", -0.5,30.5, 31) ;
+    plot( numstationsoverlap, type+"/NumVeloOverlapStations", "Number of traversed overlaps in velo", -0.5,30.5, 31) ;
 
   }
 }
