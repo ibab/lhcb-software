@@ -1,4 +1,4 @@
-// $Id: CaloDigitAlg.cpp,v 1.25 2008-11-17 16:59:03 odescham Exp $
+// $Id: CaloDigitAlg.cpp,v 1.26 2009-01-12 17:46:14 odescham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -129,7 +129,7 @@ CaloDigitAlg::CaloDigitAlg( const std::string& name,
     m_coherentNoise    = 0.0;
     m_incoherentNoise  = 1.0;
     m_triggerName      = LHCb::L0PrsSpdHitLocation::Prs;
-    m_triggerThreshold = 23.5 * Gaudi::Units::MeV;
+    m_triggerThreshold = 27.4 * Gaudi::Units::MeV;
     m_triggerIsBit     = true;
     m_zSupThreshold    = 5;
   } else if ( "EcalDigi" == begName ) {

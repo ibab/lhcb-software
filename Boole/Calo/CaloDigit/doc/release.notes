@@ -4,6 +4,11 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+
+! 2008-11-17 - Olivier Deschamps
+ - CaloDigitAlg :  - default noise for Ecal is 'gaussian' 
+                   - trigger threshold for Prs set to 27.4 MeV = 10 MIP according to Geant4 v8
+
 !======================== CaloDigit v2r10 2008-11-24 =========================
 ! 2008-11-17 - Olivier Deschamps
  - CaloDigitAlg :  - default noise for Ecal is 'gaussian' 
