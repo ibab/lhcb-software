@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.392 2008-12-22 17:34:19 pkoppenb Exp $
+! $Id: release.notes,v 1.393 2009-01-12 14:11:01 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-01-12 - Patrick Koppenburg
+ - Reduce verbosity
 
 ! 2008-12-22 - Patrick Koppenburg
  - remove all .opts files.

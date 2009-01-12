@@ -584,9 +584,9 @@ StatusCode PhysDesktop::getEventInput(){
     StatusCode sc = getPrimaryVertices();
     if ( sc.isFailure() ) return sc;
     if ( 0==m_primVerts) {
-      Warning( "No primary vertex container at "+primaryVertexLocation() ).ignore() ;      
+      Warning( "No primary vertex container at "+primaryVertexLocation(),StatusCode::SUCCESS,1 ).ignore() ;      
     } else if (m_primVerts->empty()) {
-      Warning( "Empty primary vertex container at "+primaryVertexLocation() ).ignore() ;      
+      Warning( "Empty primary vertex container at "+primaryVertexLocation(),StatusCode::SUCCESS,1  ).ignore() ;      
     }
   }
 
