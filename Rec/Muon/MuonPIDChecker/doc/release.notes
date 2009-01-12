@@ -1,7 +1,8 @@
 ! Package     : MuonPIDChecker
 ! Responsible : E. Polycarpo, M. Gandelman
 !----------------------------------------------------------------------------
-!====================== MuonPIDChecker v3r0 2009-01-09 ====================
+
+!====================== MuonPIDChecker v3r0 2009-01-12 ======================
 ! 2009-01-09 - M. Gandelman
  - replaced the option files for python configurables
 
