@@ -37,7 +37,7 @@ use TrackUtils           v1r23   Tr   # Eduardo Rodrigues
 use TrackSys             v4r20   Tf   # Stephanie Hansmann-Menzemer 
 use PatAlgorithms        v3r14   Tf   # Stephanie Hansmann-Menzemer
 use PatVelo              v3r10p1 Tf   # David Hutchcroft
-use PatVeloTT            v3r4    Tf   # Mariusz Witek
+use PatVeloTT            v3r5    Tf   # Mariusz Witek
 use TfTools              v1r7    Tf   # Stephanie Hansmann-Menzemer
 use TrackMatching        v2r21   Tf   # Eduardo Rodrigues
 use TrackSeeding         v1r4p2  Tf   # Eduardo Rodrigues, Henk Jan Bulten
