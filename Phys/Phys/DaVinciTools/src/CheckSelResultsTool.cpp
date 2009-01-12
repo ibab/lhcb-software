@@ -1,7 +1,10 @@
-// $Id: CheckSelResultsTool.cpp,v 1.2 2008-11-12 08:03:13 pkoppenb Exp $
+// $Id: CheckSelResultsTool.cpp,v 1.3 2009-01-12 15:38:07 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
+#include "GaudiKernel/SmartIF.h"  // TMP
+#include "GaudiKernel/IAlgorithm.h"// TMP
+#include "GaudiKernel/IAlgManager.h"// TMP
 #include "GaudiKernel/ToolFactory.h" 
 
 #include "LoKi/AlgFunctors.h"
@@ -39,6 +42,14 @@ CheckSelResultsTool::CheckSelResultsTool( const std::string& type,
  */
 //=============================================================================
 bool CheckSelResultsTool::isSelected ( const Selection  & selection) const {
+
+  if (msgLevel(MSG::VERBOSE)) verbose() << selection << endmsg ;
+  // @todo : temporary protection against Executing bombing
+  SmartIF<IAlgManager> iam(IID_IProperty, serviceLocator()) ;
+  IAlgorithm* _a = 0 ;
+  StatusCode sc = iam->getAlgorithm ( selection , _a ) ;
+  if (!sc) return false ;
+  // end temporary protection
 
   LoKi::Algorithms::Executed exec(selection) ;
   if ( exec()) {
