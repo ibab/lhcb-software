@@ -4,6 +4,7 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================== GlobalReco v6r18 2009-01-12 ======================
 ! 2008-12-17 - Chris Jones
  - Retire job options and add new python Configurable
 
