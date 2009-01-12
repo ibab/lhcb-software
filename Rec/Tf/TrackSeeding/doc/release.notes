@@ -4,6 +4,7 @@
 ! Purpose     : Package for the Seeding Pattern Recognition algorithm
 !-----------------------------------------------------------------------------
 
+!========================= TrackSeeding v1r4p2 2009-01-12 ====================
 ! 2008-12-17 - Marco Cattaneo
  - Fix gcc 4.3 warnings
 
