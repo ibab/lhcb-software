@@ -14,10 +14,10 @@ branches src doc options cmt job python
 #============================================================================
 
 #-- Databases
-use DDDB               v1r*   Det            -no_auto_imports
-use ParamFiles         v7r3                  -no_auto_imports
+use DDDB               v*     Det            -no_auto_imports
+use ParamFiles         v8r0                  -no_auto_imports
 use FieldMap           v5r*                  -no_auto_imports
-use DecFiles           v15r*  Gen            -no_auto_imports
+use DecFiles           v16r*  Gen            -no_auto_imports
 use Geant4Files	       v91r0	             -no_auto_imports
 use MIBData            v2r0                  -no_auto_imports
 use MCatNLOData        v1r1                  -no_auto_imports
@@ -34,6 +34,7 @@ use Python             v*     LCG_Interfaces -no_auto_imports
 use HepMC              v*     LCG_Interfaces -no_auto_imports
  
 # From GAUDI project
+
 use GaudiSvc           v*                    -no_auto_imports
 use GaudiAud           v*                    -no_auto_imports
 use GaudiPoolDb        v*                    -no_auto_imports
@@ -104,16 +105,10 @@ set  GAUSSOPTS "${GAUSSROOT}/options"
 set AlwaysKillLeadingHadron 1
 
 #===========================================================================
-#-- Build Main Program 
-
-application Gauss $(GAUDICONFROOT)/src/GaudiMain.cpp
-
-#===========================================================================
-#-- Set macros
-apply_pattern application_path 
-macro Gauss_linkopts  "$(application_linkopts)"
-macro_append Gauss_linkopts " -Wl,-Map,Linux.map " \
-             WIN32          " /STACK:4000000"
+#Need to find out for win32 the stack size for python and in case how to 
+#increase it
+##macro_append Gauss_linkopts " -Wl,-Map,Linux.map " \
+##             WIN32          " /STACK:4000000"
 
 #-- For visualization make appropriate engine visible (dawn and david)
 path_remove    PATH  "" Linux&Vis "/dawn/"
@@ -122,6 +117,13 @@ path_remove    PATH  "" Linux&Vis "/david/"
 path_append    PATH  "" Linux&Vis "$(DAVID_HOME)/$(LCG_system)/bin"
 
 #===========================================================================
+#== Install configurable
 apply_pattern install_python_modules
+
+#== Export application name and version to gaudirun.py
 apply_pattern GaudiApp
 
+#== Run the tests
+##private
+##  apply_pattern QMTest
+##end_private
