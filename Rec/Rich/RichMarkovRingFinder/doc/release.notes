@@ -4,6 +4,7 @@
 ! Purpose     : Uses a Markov Chain sampler to do ring finding without tracks
 !-----------------------------------------------------------------------------
 
+!=================== Rich/RichMarkovRingFinder v2r4 2009-01-12 ===============
 ! 2009-01-07 - Ulrich Kerzel
 - Fixes to python Configurable
   - change to uppercase parameters following the new convention
