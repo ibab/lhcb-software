@@ -1,14 +1,18 @@
 #!/usr/bin/env python
-# $Id: makeSelfExtractScript.py,v 1.2 2008-10-29 17:43:40 hmdegaud Exp $
+# $Id: makeSelfExtractScript.py,v 1.3 2009-01-12 10:40:02 hmdegaud Exp $
+""" 
+Script to create self-extracting scripts 
+"""
 
 from LbUtils.Script import Script
 from LbUtils.SelfExtract import createSelfExtractFile
 from LbUtils.CVS import CVS2Version
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.2 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.3 $")
 
 class makeSelfExtractScript(Script):
     _version = __version__
+    _description = __doc__
     def defineOpts(self):
         parser = self.parser 
     def main(self):
