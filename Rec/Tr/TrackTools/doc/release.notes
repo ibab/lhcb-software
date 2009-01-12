@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2009-01-12 W. Hulsbergen
+ - Make TrackInterpolator::Extrapolator a jobOption
+
 ! 2009-01-06 M Needham
  - Make measurement providers jobOptions
 
