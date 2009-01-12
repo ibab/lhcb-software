@@ -3,6 +3,9 @@
 !---------------------------------------------------------------------
 
 !======================== MuonID v6r0 2009-01-12 =====================
+! 2009-01-12 - Marco Cattaneo
+ - Remove empty python ConfigurableUser, python options are sufficient 
+
 ! 2009-01-09 - Miriam Gandelman
  - options file replaced by python configurables
 
