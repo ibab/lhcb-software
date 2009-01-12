@@ -39,7 +39,7 @@ use RichTools         v2r24   Rich      # Chris Jones
 use SiTools           v1r5    Si        # Matt Needham
 
 # Silicon Tracker
-use STAlgorithms      v3r2    ST        # Jeroen van Tilburg, Matt Needham
+use STAlgorithms      v3r3    ST        # Jeroen van Tilburg, Matt Needham
 use STAssociators     v1r5    ST        # Jeroen van Tilburg, Matt Needham
 use STCheckers        v2r9    ST        # Jeroen van Tilburg, Matt Needham
 use STDAQ             v3r14   ST        # Jeroen van Tilburg, Matt Needham
