@@ -1,14 +1,14 @@
-! $Id: release.notes,v 1.28 2009-01-10 20:05:17 jonrob Exp $ 
+! $Id: release.notes,v 1.29 2009-01-12 06:51:45 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgoMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : MC-analogue for the basic LoKi algorithm 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiAlgoMC v8r1 2009-01-12 ========================
 ! 2009-01-10 - Chris Jones
  - Add CLHEP dependency for OSX only
 
-!========================== LoKiAlgoMC v8r1 2009-01-09 ========================
 ! 2009-01-09 - Marco Cattaneo
  - import GaudiPython, but only for the dictionary
 

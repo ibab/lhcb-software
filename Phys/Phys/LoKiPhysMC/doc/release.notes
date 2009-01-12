@@ -1,14 +1,14 @@
-! $Id: release.notes,v 1.54 2009-01-10 20:15:13 jonrob Exp $ 
+! $Id: release.notes,v 1.55 2009-01-12 06:55:01 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiPhysMC v8r1 2009-01-12 ========================
 ! 2009-01-10 - Chris Jones
  - Add CLHEP dependency for OSX
 
-!========================== LoKiPhysMC v8r1 2009-01-08 ========================
 ! 2008-11-28 - Vanya BELYAEV
  - Add QMTest
 
