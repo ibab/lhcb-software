@@ -2,6 +2,7 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+!=========================== STCheckers v2r9 2009-01-12 =======================
 ! 2009-01-09 - Jeroen van Tilburg
  - STClusterResolution: Added two options to remove split clusters (recall that
    the TELL1 does not accept clusters larger than 4). With the flag
@@ -22,11 +23,9 @@
 ! 2008-12-16 M Needham
  - Bug fixes in STClusterClassification algorithm
 
-
 ! 2008-12-11 M.Cattaneo
  - Fix gcc 4.3 warnings
  - Fix a a wrong equality comparison (assignment was used instead)
-
 
 ! 2008-12-03 M Needham
  - Use the shorth for monitoring in STDigitMonitor
@@ -36,7 +35,6 @@
  - Use generalized mean function to fill reference histos 
    in STPerformanceMonitor/STDigitMonitor 
  - tidy up in STClusterMonitor
-
 
 !=========================== STCheckers v2r8 2008-11-21 =======================
 ! 2008-11-04 M Needham 
