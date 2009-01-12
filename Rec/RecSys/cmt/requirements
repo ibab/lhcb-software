@@ -18,7 +18,7 @@ use CaloPIDs             v4r14p1 Calo # Victor Egorychev, Vanya Belyaev
 use CaloReco             v4r17   Calo # Olivier Deschamps
 
 # Tr packages: Track Fit & Pattern Reco Validation with MonteCarlo
-use NNTools              v1r4    Tr   # Adrian Perieanu
+use NNTools              v1r3p1  Tr   # Adrian Perieanu
 use PatChecker           v3r4    Tr   # Olivier Callot, David Hutchcroft
 use PatFitParams         v3r2p1  Tr   # Olivier Callot
 use TrackAssociators     v2r6    Tr   # Eduardo Rodrigues, Edwin Bos
