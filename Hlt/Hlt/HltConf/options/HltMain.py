@@ -1,7 +1,6 @@
 from Gaudi.Configuration import *
-from Configurables import ApplicationMgr
 from Configurables import GaudiSequencer
-from Configurables import CreateHltVzero
+#from Configurables import CreateHltVzero
 #/**
 # * Common configuration for Hlt1 and Hlt2. Will be included only once.
 # *
@@ -35,6 +34,4 @@ Hlt = GaudiSequencer('Hlt', ModeOR= True, ShortCircuit = False
                                 , GaudiSequencer('HltEndSequence') 
                                 ] )
 
-
-ApplicationMgr().TopAlg.append( Hlt )
 

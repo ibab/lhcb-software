@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.114 2009-01-11 10:11:31 pkoppenb Exp $ 
+! $Id: release.notes,v 1.115 2009-01-12 11:02:19 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-01-12 - Gerhard Raven
+ - upgrade all HltXXXLines.py to real configurables,
+   move Hlt1.py from options to python/...
 
 ! 2009-01-11 - Patrick Koppenburg
  - Use MuonID python file
@@ -12,7 +16,6 @@
  - move options/HltXXXLines.py to python/HltConf/HltXXXLines.py, update
    python/HltConf/Configuration.py accordingly
  - update L0 candidate usage in HltHadronLines.py
- - upgrade HltL0Lines.py to a real configurable
 
 ! 2009-01-08 - Jaap Panman
  - add HltLumiSequences.py (needed for HltLuminosityMonitor)

@@ -50,7 +50,7 @@ HltANNSvc().Hlt1SelectionID = {
     "Hlt1DiMuonFromMuonSegIPDecision"       :  118,
     "Hlt1DiMuonFromMuonSegNoIPDecision"     :  119,
     "Hlt1DiMuonFromMuonSegNoPVDecision"     :  120,
-    "Hlt1MuonHadronDecision"                :  150,
+    "Hlt1MuonTrackDecision"                 :  150,
     # HA
     "Hlt1SingleHadronDecision"              :  200,
     "Hlt1DiHadronDecision"                  :  201,
