@@ -3,6 +3,10 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+! 2009-01-12 - Marco Cattaneo
+ - Update reference following change in Calo sequence
+ - Update test following change in CondDB tag handling
+
 ! 2008-12-18 - Marco Cattaneo
  - Update reference to follow change in RichCKResLong name
 
