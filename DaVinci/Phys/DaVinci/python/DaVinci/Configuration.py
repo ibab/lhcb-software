@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.32 2009-01-11 10:33:28 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.33 2009-01-12 13:02:31 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -11,6 +11,7 @@ from Configurables import ( LHCbConfigurableUser, LHCbApp, PhysConf, AnalysisCon
 import GaudiKernel.ProcessJobOptions
 
 class DaVinci(LHCbConfigurableUser) :
+    
     __slots__ = {
         # Application Configuration : sent to LHCbApp and Gaudi
          "EvtMax"             :  -1           # Number of events to analyse
@@ -28,10 +29,13 @@ class DaVinci(LHCbConfigurableUser) :
        , "TupleFile"          : ""            # Write name of output Tuple file
        , "ETCFile"            : ""            # Write name of output ETC file @todo Not yet implemented
        , "DstFile"            : ""            # Write name of output DST file @todo Not yet implemented
+         # Monitoring
+       , "MoniSequence"       : [ ]           # Add your monitors here
          # DaVinci Options
        , "MainOptions"        : ""            # Main option file to execute
        , "UserAlgorithms"     : []            # User algorithms to run.
        , "RedoMCLinks"        : False         # On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association.
+         
          # Hlt running
        , "HltType"            : ''            # HltType : No Hlt. Use Hlt1+Hlt2 to run Hlt
        , "HltUserAlgorithms"  : [ ]           # put here user algorithms to add
@@ -41,6 +45,9 @@ class DaVinci(LHCbConfigurableUser) :
        }
 
     __used_configurables__ = [ LHCbApp, PhysConf, AnalysisConf, HltConf ]
+
+    ## Known monitoring sequences run by default
+    KnownMonitors        = []    
 
     def initSeq(self):
         """
@@ -152,6 +159,38 @@ class DaVinci(LHCbConfigurableUser) :
         if (  self.getProp("DataType")=='DC06'):
             importOptions("$COMMONPARTICLESROOT/options/StandardDC06Options.opts")
 
+    def moniSequence(self):
+        """
+        Monitoring sequence
+        """
+        from Configurables import GaudiSequencer
+        print "# MONI ", len(self.KnownMonitors), len(self.getProp("MoniSequence"))
+        if ( len(self.KnownMonitors)+len( self.getProp("MoniSequence") ) > 0 ):
+            monSeq = GaudiSequencer("MonitoringSequence")
+            monSeq.IgnoreFilterPassed = True 
+            monSeq.Members = self.KnownMonitors
+            ApplicationMgr().TopAlg += [ monSeq ]
+            for alg in self.getProp("MoniSequence"):
+                monSeq.Members += [ alg ]
+
+    def mainSequence(self):
+        """
+        Main Sequence
+        """
+        opts = self.getProp( "MainOptions" )
+        if not (opts == '') :
+            importOptions( self.getProp( "MainOptions" ) )
+        else :
+            log.info("No MainOptions specified. DaVinci() will import no options file!")
+        log.info("Creating User Algorithms")
+        if ( len ( self.getProp("UserAlgorithms") ) > 0 ):
+            from Configurables import GaudiSequencer
+            mainSeq = GaudiSequencer("DaVinciMainSequence")
+            mainSeq.IgnoreFilterPassed = True 
+            ApplicationMgr().TopAlg += [ mainSeq ]
+            for alg in self.getProp("UserAlgorithms"):
+                mainSeq += [ alg ]
+
     def __apply_configuration__(self):
         """
         DaVinci configuration
@@ -178,12 +217,7 @@ class DaVinci(LHCbConfigurableUser) :
         self.standardParticles()
         self.outputFiles()
         
-        opts = self.getProp( "MainOptions" )
-        if not (opts == '') :
-            importOptions( self.getProp( "MainOptions" ) )
-        else :
-            log.info("No MainOptions specified. DaVinci() will import no options file!")
-        log.info("Creating User Algorithms")
-        for alg in self.getProp("UserAlgorithms"):
-            ApplicationMgr().TopAlg += [ alg ]
-
+        # main sequence
+        self.mainSequence()
+        # monitoring
+        self.moniSequence()
