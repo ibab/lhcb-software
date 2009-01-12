@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.7 2009-01-09 15:32:01 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.8 2009-01-12 12:38:37 wouter Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -57,9 +57,9 @@ class RecSysConf(LHCbConfigurableUser):
         recoSeq = self.getProp("RecoSequence")
         ProcessPhase("Reco").DetectorList += recoSeq
 
-        # Primary Vertex
+        # Primary Vertex and V0 finding
         if "Vertex" in recoSeq:
-            from Configurables import PatPVOffline
+            from Configurables import PatPVOffline, TrackV0Finder
             pvAlg = PatPVOffline()
             GaudiSequencer("RecoVertexSeq").Members += [ pvAlg ];
             if self.getProp( "OutputType" ).upper() == "RDST":
@@ -67,6 +67,11 @@ class RecSysConf(LHCbConfigurableUser):
                 from Configurables import PVOfflineTool
                 pvAlg.addTool( PVOfflineTool() )
                 pvAlg.PVOfflineTool.InputTracks = [ "Rec/Track/Best", "Rec/Track/PreparedVelo" ]
+            trackV0Finder = TrackV0Finder()
+            GaudiSequencer("RecoVertexSeq").Members += [ trackV0Finder ]
+            # the TrackV0Finder use simplified material for extra/interpolation
+            trackV0Finder.Extrapolator.MaterialLocator='SimplifiedMaterialLocator'
+            trackV0Finder.Interpolator.Extrapolator.MaterialLocator='SimplifiedMaterialLocator'
 
         # Tracking (Should make it more fine grained ??)
         DoTracking = False
