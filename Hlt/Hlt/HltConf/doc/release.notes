@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.115 2009-01-12 11:02:19 graven Exp $ 
+! $Id: release.notes,v 1.116 2009-01-12 11:03:00 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -8,6 +8,7 @@
 ! 2009-01-12 - Gerhard Raven
  - upgrade all HltXXXLines.py to real configurables,
    move Hlt1.py from options to python/...
+ - no longer add anything to TopAlg -- leave this for application configurables
 
 ! 2009-01-11 - Patrick Koppenburg
  - Use MuonID python file
