@@ -4,6 +4,7 @@
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
 
+!======================= TrackCheckers v4r5 2009-01-12 =======================
 ! 2008-12-04 - Marco Cattaneo
  - Fix TrackResChecker to work also with post-DC06 OT linkers
  - Fix untested StatusCode in Warning() messages
