@@ -1,4 +1,4 @@
-// $Id: TrackInterpolator.cpp,v 1.7 2008-12-02 14:58:37 wouter Exp $
+// $Id: TrackInterpolator.cpp,v 1.8 2009-01-12 10:55:18 wouter Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -36,13 +36,13 @@ DECLARE_TOOL_FACTORY( TrackInterpolator );
 TrackInterpolator::TrackInterpolator( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : GaudiTool ( type, name , parent ),
+    m_extrapolator("TrackMasterExtrapolator",this)
 {
   // interfaces
   declareInterface<ITrackInterpolator>(this);
 
-  declareProperty( "Extrapolator", m_extrapolatorName =
-                   "TrackMasterExtrapolator" );
+  declareProperty( "Extrapolator", m_extrapolator );
 };
 
 //=============================================================================
@@ -59,11 +59,18 @@ StatusCode TrackInterpolator::initialize() {
   if (sc.isFailure()) return sc;  // error already reported by base class
 
   // extrapolator
-  m_extrapolator = tool<ITrackExtrapolator>( m_extrapolatorName,
-                                             "Extrapolator", this );
-
-  return StatusCode::SUCCESS;
+  sc = m_extrapolator.retrieve() ;
+  
+  return sc;
 };
+
+//=============================================================================
+// Finalize
+//=============================================================================
+StatusCode TrackInterpolator::finalize() {
+  m_extrapolator.release().ignore() ;
+  return GaudiTool::finalize() ;
+}
 
 //=============================================================================
 // Interpolate between the nearest nodes

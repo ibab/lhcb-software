@@ -5,6 +5,7 @@
 // -------------
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/ToolHandle.h"
 
 // from TrackInterfaces
 #include "TrackInterfaces/ITrackExtrapolator.h"            
@@ -38,6 +39,7 @@ public:
   virtual ~TrackInterpolator( );  ///< Destructor
 
   StatusCode initialize();
+  StatusCode finalize();
 
   /// Interpolate between the two nearest nodes to get a state
   virtual StatusCode interpolate( const LHCb::Track& track,
@@ -50,10 +52,6 @@ private:
   StatusCode filter( const LHCb::FitNode& node, LHCb::State& state );
 
   /// extrapolator
-  ITrackExtrapolator* m_extrapolator;
-
-  // job options
-  std::string m_extrapolatorName;   ///<  name of the extrapolator
-
+  ToolHandle<ITrackExtrapolator> m_extrapolator;
 };
 #endif // TRACKTOOLS_TRACKINTERPOLATOR_H
