@@ -1,4 +1,4 @@
-// $Id: SpotLight.cpp,v 1.1 2008-12-09 08:07:05 pkoppenb Exp $
+// $Id: SpotLight.cpp,v 1.2 2009-01-12 13:49:15 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -48,15 +48,22 @@ StatusCode SpotLight::initialize() {
   if ( sc.isFailure() ) return sc;
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
+
+  if ( m_algos.empty()) {
+    err() << "No algorithms given" << endmsg ;
+    return StatusCode::FAILURE ;
+  }
+
+  info() << "Will be looking at algorithms " ;
+  for ( std::vector<std::string>::const_iterator a = m_algos.begin() ; a!= m_algos.end() ; ++a) info() << *a << " " ;
+  info() << endmsg ;
+  
+
   m_mother = tool<IFilterCriterion>("LoKi::Hybrid::FilterCriterion", "MotherFilter", this ) ;
   m_intermediate = tool<IFilterCriterion>("LoKi::Hybrid::FilterCriterion", "IntermediateFilter", this ) ;
   m_final = tool<IFilterCriterion>("LoKi::Hybrid::FilterCriterion", "FinalFilter", this ) ;
   m_print = tool<IPrintDecay>("PrintDecayTreeTool/PrintDecay");
 
-  info() << "Will be looking at algoithms " ;
-  for ( std::vector<std::string>::const_iterator a = m_algos.begin() ; a!= m_algos.end() ; ++a) info() << *a << " " ;
-  info() << endmsg ;
-  
   return StatusCode::SUCCESS;
 }
 

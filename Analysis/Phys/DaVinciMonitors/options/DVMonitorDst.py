@@ -1,5 +1,5 @@
 ##############################################################################
-# $Id: DVMonitorDst.py,v 1.4 2008-12-10 16:42:16 pkoppenb Exp $
+# $Id: DVMonitorDst.py,v 1.5 2009-01-12 13:49:15 pkoppenb Exp $
 #
 # syntax: gaudirun.py $DAVINCIMONITORSROOT/options/DVMonitorDst.py
 #
@@ -10,26 +10,59 @@ from DaVinci.Configuration import *
 from Gaudi.Configuration import *
 ##############################################################################
 #
-# Most of this will be configured from Dirac
+# Make a sequence and take only events from given Hlt selections
 #
-##############################################################################
-DaVinci().EvtMax = -1
-DaVinci().DataType = "2008" # Default is "DC06"
-DaVinci().Simulation = True
-DaVinci().MainOptions  = "$DAVINCIMONITORSROOT/options/JpsiMuonMonitor.py"
-
-#DaVinci().Input   = [
-# "DATAFILE='PFN:castor:/castor/cern.ch/user/t/truf/MC2008/mbias_2008.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
-#DaVinci().Input   = [
-# "DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Brunel/v34r0/11144101-100ev-20081006.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
+from Configurables import GaudiSequencer
+JpsiSeq = GaudiSequencer("JpsiMonitorSeq")
 ##############################################################################
 #
-# Monitoring algorithms
+# Get right selection @todo does not work yet 
+#
+# from Configurables import LoKi__HDRFilter   as HltDecReportsFilter
+# HltDecReportsFilter  ( 'myname', Code = "HLT_PASS('somedecisionname')" )
 #
 ##############################################################################
-# importOptions( "$DAVINCIMONITORSROOT/options/JpsiMuonMonitor.py" )
+#
+# Make a J/psi with only one side mu-IDed
+#
+from Configurables import CombineParticles, PhysDesktop
+Jpsi2MuPi = CombineParticles("Jpsi2MuPi")
+Jpsi2MuPi.addTool(PhysDesktop())
+Jpsi2MuPi.PhysDesktop.InputLocations = [ "StdLooseMuons", "StdNoPIDsPions" ]
+Jpsi2MuPi.DecayDescriptor = "[J/psi(1S) -> mu+ pi-]cc"
+# a good muon and any pion
+Jpsi2MuPi.DaughtersCuts = { "pi+" : "(P>1*GeV)",
+                            "mu+" : "(P>10*GeV) & (PT>1*GeV)" }
+Jpsi2MuPi.CombinationCut = "(ADAMASS('J/psi(1S)')<100*MeV)"
+Jpsi2MuPi.MotherCut = "(ALL)"
+JpsiSeq.Members += [ Jpsi2MuPi ]
+##############################################################################
+#
+# Plot quantities
+#
+from Configurables import ParticleMonitor
+plotter =  ParticleMonitor()
+plotter.addTool(PhysDesktop())
+plotter.PhysDesktop.InputLocations = [ "Jpsi2MuPi" ]
+plotter.PeakCut = "(ADMASS('J/psi(1S)')<5*MeV)"
+plotter.SideBandCut = "(ADMASS('J/psi(1S)')>20*MeV)"
+plotter.PlotTools = [ "PidPlotTool" ]
+JpsiSeq.Members += [ plotter ]
+#############################################################################
+#
+# Declare it
+#
+DaVinci().MoniSequence += [ JpsiSeq ]
 ##############################################################################
 #
 # Histograms
 #
-HistogramPersistencySvc().OutputFile = "DVMonitors.root"
+DaVinci().HistogramFile = "DVMonitors.root"
+##############################################################################
+#
+# Most of this will be configured from Dirac
+#
+##############################################################################
+DaVinci().EvtMax = 1000
+DaVinci().DataType = "2008" # Default is "DC06"
+DaVinci().Simulation = True
