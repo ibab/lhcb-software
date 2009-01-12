@@ -3,7 +3,7 @@
 ##############################################################################
 
 from Boole.Configuration import *
-from Configurables import CondDBAccessSvc
+from Configurables import CondDBAccessSvc, LHCbApp
 
 Boole().EvtMax   = 0
 Boole().Outputs  = ["DIGI","MDF","L0ETC"] # Test all output types
@@ -12,6 +12,5 @@ Boole().Histograms = "NONE"
 # Do not compare times....
 TimingAuditor().OutputLevel = WARNING 
 
-# Ignore changes to database tags
-CondDBAccessSvc('DDDB').OutputLevel = WARNING
-CondDBAccessSvc('LHCBCOND').OutputLevel = WARNING
+LHCbApp().CondDBtag = "default"
+LHCbApp().DDDBtag   = "default"
