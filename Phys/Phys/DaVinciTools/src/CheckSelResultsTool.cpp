@@ -1,4 +1,4 @@
-// $Id: CheckSelResultsTool.cpp,v 1.3 2009-01-12 15:38:07 pkoppenb Exp $
+// $Id: CheckSelResultsTool.cpp,v 1.4 2009-01-12 16:12:19 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -43,9 +43,11 @@ CheckSelResultsTool::CheckSelResultsTool( const std::string& type,
 //=============================================================================
 bool CheckSelResultsTool::isSelected ( const Selection  & selection) const {
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << selection << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << selection << " " << serviceLocator() << endmsg ;
   // @todo : temporary protection against Executing bombing
-  SmartIF<IAlgManager> iam(IID_IProperty, serviceLocator()) ;
+  SmartIF<IAlgManager> iam(IID_IAlgManager, serviceLocator()) ;
+  //  if ( 0==iam ) Exception("No IAlgManager");
+  //  else if (msgLevel(MSG::VERBOSE)) verbose() << iam << endmsg ;
   IAlgorithm* _a = 0 ;
   StatusCode sc = iam->getAlgorithm ( selection , _a ) ;
   if (!sc) return false ;
