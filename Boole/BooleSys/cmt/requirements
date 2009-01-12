@@ -1,5 +1,5 @@
 package BooleSys
-version v17r1
+version v17r2
 
 branches cmt doc
  
@@ -8,8 +8,8 @@ branches cmt doc
 #=======================================================
 
 # Boole application                   # Maintainer  
-use Boole               v17r1   Digi  # Marco Cattaneo
-use DigiAlg             v4r13   Digi  # Marco Cattaneo
+use Boole               v17r2   Digi  # Marco Cattaneo
+use DigiAlg             v4r14   Digi  # Marco Cattaneo
 
 # Calorimeter
 use CaloMoniDigi        v2r4    Calo  # Olivier Deschamps
