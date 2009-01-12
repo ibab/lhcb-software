@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program"><text>gaudirun.py</text></argument>
+<argument name="args"><set>
+  <text>../options/DVTestHlt-DC06.py</text>
+</set></argument>
+<argument name="validator"><text>
+findReferenceBlock("""
+Hlt2Decision                                                SUCCESS Number of counters : 6
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ |*"Accepted Events"                               |        93 |          3 |(  3.22581 +- 1.83213  )%|   -------   |   -------   |
+ | "Candidates"                                    |         4 |         20 |     5.0000 |     5.3385 |      1.0000 |      14.000 |
+ | "Hlt2SelB2DVec Candidates"                      |         1 |          1 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "Hlt2SelBs2JpsieePhi Candidates"                |         2 |         18 |     9.0000 |     5.0000 |      4.0000 |      14.000 |
+ | "Hlt2SelSingleMuon Candidates"                  |         1 |          1 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "Unique Selections"                             |         3 |          4 |     1.3333 |    0.47140 |      1.0000 |      2.0000 |
+""", stdout, result, causes, signature_offset = 0)
+</text></argument>
+</extension>
