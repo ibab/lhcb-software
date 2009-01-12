@@ -23,6 +23,8 @@ importOptions('$GAUSSOPTS/Gauss.opts')
 
 #--Geometry dependent options, use information from SIMCOND for positions
 LHCbApp( DataType = "2008", Simulation = True )
+LHCbApp().DDDBtag = "head-20090108"
+LHCbApp().CondDBtag = "sim-20090108" 
 
 giGaGeo = GiGaGeo()
 giGaGeo.UseAlignment      = True
