@@ -4,6 +4,7 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+!============================ TfTools v1r7 2009-01-12 ========================
 ! 2008-12-01 - Wouter Hulsbergen
   - added property to set rawbankdecoder to OTHitCreator
 
