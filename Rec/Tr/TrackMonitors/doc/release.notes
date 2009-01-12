@@ -4,6 +4,10 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-12-02 W. Hulsbergen
+ - Add TrackV0Monitor to monitoring sequence
+ - Small fixes in TrackMonitor
+
 ! 2008-12-10 - Marco Cattaneo
  - Fix gcc 4.3 compilation error
 
