@@ -6,13 +6,12 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================= LHCbMath v3r5 2009-01-12 ==========================
 ! 2009-01-10 - Vanya BELYAEV 
  - LHCbMath/Digit.h
    to please Reflex at Win32 platform. make a drafstical simplification 
    of argument for BOOST_STATIC_ASSERT macro.
-   
 
-!========================= LHCbMath v3r5 2009-01-08 ==========================
 ! 2008-12-03 M Needham
  - More protections against fpe in ModeFunctions
 
