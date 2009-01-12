@@ -2,6 +2,7 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+!=========================== STTools v3r7 2009-01-12 ==========================
 ! 2009-01-09 - Jeroen van Tilburg
  - Move STOfflinePosition tool to new base class.
  - Added functionality in STOfflinePosition tool to merge neighbouring clusters
