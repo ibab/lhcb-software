@@ -4,6 +4,7 @@
 ! Purpose     : Checker for pattern recognition
 !-----------------------------------------------------------------------------
 
+!========================== PatChecker v3r4 2009-01-12 =======================
 ! 2008-12-17 - Marco Cattaneo
  - Fix a gcc 4.3 warning
 
