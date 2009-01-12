@@ -1,9 +1,10 @@
-// $Id: TrackV0Finder.cpp,v 1.5 2008-12-02 14:46:55 wouter Exp $
+// $Id: TrackV0Finder.cpp,v 1.6 2009-01-12 11:01:27 wouter Exp $
 // Include files 
 
 
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiKernel/ToolHandle.h"
 
 /** @class TrackV0Finder TrackV0Finder.h
  *  
@@ -27,8 +28,8 @@ public:
   virtual ~TrackV0Finder( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
+  virtual StatusCode finalize();      ///< Algorithm finalization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  //virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
   void constrainToVertex(const Gaudi::XYZPoint& pos,
@@ -48,8 +49,8 @@ private:
   std::string m_v0ContainerName;
   IMagneticFieldSvc* m_magfieldsvc ;
   ITrajPoca* m_pocatool ;
-  ITrackExtrapolator* m_extrapolator ;
-  ITrackInterpolator* m_interpolator ;
+  ToolHandle<ITrackExtrapolator> m_extrapolator ;
+  ToolHandle<ITrackInterpolator> m_interpolator ;
   ITrackVertexer* m_vertexer ;
   const ParticleProperty* m_ksProperty ;
   const ParticleProperty* m_lambdaProperty ;
@@ -108,6 +109,8 @@ TrackV0Finder::TrackV0Finder( const std::string& name,
                               ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
     m_trackInputListName(LHCb::TrackLocation::Default),
+    m_extrapolator("TrackMasterExtrapolator",this),
+    m_interpolator("TrackInterpolator",this),
     m_zmin(-100*Gaudi::Units::cm),
     m_zmax( 300*Gaudi::Units::cm),
     m_distanceCutUpstream(5*Gaudi::Units::mm),
@@ -140,6 +143,8 @@ TrackV0Finder::TrackV0Finder( const std::string& name,
   declareProperty( "MaxChi2PVConstraint", m_maxChi2PVConstraint ) ;
   //declareProperty( "RejectUpstreamHits", m_rejectUpstreamHits ) ;
   declareProperty( "AddExtraInfo", m_addExtraInfo ) ;
+  declareProperty( "Interpolator", m_interpolator ) ;
+  declareProperty( "Extrapolator", m_extrapolator ) ;
 
 }
 //=============================================================================
@@ -158,8 +163,8 @@ StatusCode TrackV0Finder::initialize() {
   m_pocatool = tool<ITrajPoca>( "TrajPoca" );
   m_vertexer = tool<ITrackVertexer>( "TrackVertexer" );
   if(m_useExtrapolator) {
-    m_extrapolator = tool<ITrackExtrapolator>( "TrackMasterExtrapolator/TrackFitExtrapolator" ) ;
-    m_interpolator = tool<ITrackInterpolator>( "TrackInterpolator" ) ;
+    m_extrapolator.retrieve() ;
+    m_interpolator.retrieve() ;
   }
 
   IParticlePropertySvc* propertysvc = svc<IParticlePropertySvc>("ParticlePropertySvc",true) ;
@@ -173,6 +178,14 @@ StatusCode TrackV0Finder::initialize() {
   }
   
   return sc;
+}
+
+StatusCode TrackV0Finder::finalize() {
+  if( m_useExtrapolator ) {
+    m_extrapolator.release().ignore() ;
+    m_interpolator.release().ignore() ;
+  }
+  return GaudiAlgorithm::finalize() ;
 }
 
 inline bool inAnyVertex( const LHCb::Track& track,
