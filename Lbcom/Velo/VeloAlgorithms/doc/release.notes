@@ -2,6 +2,7 @@
 ! Responsible : Chris Parkes
 !--------------------------------------------------------------------------
 
+!===================== VeloAlgorithms v4r8 2009-01-12 =====================
 ! 2008-12-15 - David Hutchcroft
  - Re-tuned the cluster threshold and high bit threshold as per the
    T-Rec talk on the 15th of December. 
