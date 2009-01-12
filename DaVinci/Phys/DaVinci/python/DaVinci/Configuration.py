@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.35 2009-01-12 14:10:09 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.36 2009-01-12 18:59:46 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -203,7 +203,7 @@ class DaVinci(LHCbConfigurableUser) :
             mainSeq.IgnoreFilterPassed = True 
             ApplicationMgr().TopAlg += [ mainSeq ]
             for alg in self.getProp("UserAlgorithms"):
-                mainSeq += [ alg ]
+                mainSeq.Members += [ alg ]
 
     def __apply_configuration__(self):
         """
