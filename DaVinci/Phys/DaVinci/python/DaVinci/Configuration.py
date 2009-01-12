@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.34 2009-01-12 13:03:46 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.35 2009-01-12 14:10:09 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -70,6 +70,9 @@ class DaVinci(LHCbConfigurableUser) :
             init.Members += [ analysisinit ]
 
     def hlt(self):
+        """
+        Define HLT. Make sure it runs first.
+        """
         HltConf().replaceL0BanksWithEmulated = self.getProp("ReplaceL0BanksWithEmulated") ## enable if you want to rerun L0
         HltConf().Hlt2IgnoreHlt1Decision =  self.getProp("Hlt2IgnoreHlt1Decision")        ## enable if you want Hlt2 irrespective of Hlt1
         HltConf().hltType =  self.getProp("HltType")                                      ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
@@ -127,10 +130,16 @@ class DaVinci(LHCbConfigurableUser) :
         EventSelector().PrintFreq = self.getProp("PrintFreq");
 
     def defineEvents(self):
+        """
+        Define number of events
+        """
         # Delegate handling to LHCbApp configurable
         self.setOtherProps(LHCbApp(),["EvtMax","SkipEvents"])
 
     def defineInput(self):
+        """
+        Define Input
+        """
         input = self.getProp("Input")
         print "# DaVinci input is ", input
         if ( len(input) > 0) :
@@ -141,9 +150,15 @@ class DaVinci(LHCbConfigurableUser) :
             importOptions("$STDOPTS/DecodeRawEvent.py")
 
     def evtMax(self):
+        """
+        Get evtMax
+        """
         return LHCbApp().evtMax()
     
     def defineDB(self):
+        """
+        Define DB
+        """
         # Delegate handling to LHCbApp configurable
         self.setOtherProps(LHCbApp(),["DataType","UseOracle","Simulation"])
         LHCbApp.DDDBtag = self.getProp("DDDBtag")
