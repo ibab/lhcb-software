@@ -3,6 +3,10 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+!=========================== TrackFitter v2r30 2009-01-12 ===================
+! 2008-12-10 - Wouter Hulsbergen
+ - Fix invalid iterator initialisation flagged by gcc 4.3
+
 ! 2008-12-02 - Wouter Hulsbergen
  - Add 'NoDriftTime' option to StraighLineFitter
  - adapted to change in Track::stateAt
