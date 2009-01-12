@@ -129,7 +129,7 @@ def getProjectObject(slotObject, projectName):
     """
     project = None
     for p in slotObject.getProjects():
-        if p.getName() == projectName.lower():
+        if p.getName().lower() == projectName.lower():
             project = p
             break
     if project == None:
@@ -305,7 +305,7 @@ action pkg_test " %(launcher)s test $(packageName) 2>&1"
 
     destPath = os.path.abspath(destPath)
     for p in projectNames:
-        for pdir in [ p.lower(), p.upper() ]:
+        for pdir in [ p, p.lower(), p.upper() ]:
             shutil.rmtree(os.path.join(destPath, pdir), ignore_errors=True)
             os.makedirs(os.path.join(destPath, pdir, 'cmt') )
             f = file(os.path.join(destPath, pdir, 'cmt', 'requirements'), 'w')
@@ -510,8 +510,12 @@ def get(slotName, projectName):
     setCmtProjectPath(slot)
 
     os.chdir(slot.buildDir())
-    # create symbolic link: LHCB --> lhcb, LBCOM --> lbcom, ... [ only on Linux ? ]
-    if not os.path.exists(project.getName().upper()): os.symlink(project.getName().lower(), project.getName().upper())
+    if os.path.exists(project.getName()):
+	    # create symbolic link: LHCB --> LHCb, LBCOM --> Lbcom, ... [ only on Linux ? ]
+        if not os.path.exists(project.getName().upper()): os.symlink(project.getName(), project.getName().upper())
+    elif os.path.exists(project.getName().lower()):
+        # create symbolic link: LHCB --> lhcb, LBCOM --> lbcom, ... [ only on Linux ? ]
+        if not os.path.exists(project.getName().upper()): os.symlink(project.getName().lower(), project.getName().upper())
 
     os.chdir(slot.buildDir())
     getpackget(project.getName().upper(), project.getVersion(), project=True)

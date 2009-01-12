@@ -1,3 +1,8 @@
+2008-01-12  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+
+	* python/LbRelease/Nightlies/functions.py: changes to be able to use the real
+	project names in configuration (no only lowercase ones)
+
 2009-01-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v1r7
