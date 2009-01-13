@@ -126,7 +126,7 @@ namespace Al
       int offset = it->activeParOffset() ;
       if ( 0<=offset ) {
 	size_t ndof = (*it).dofMask().nActive() ;
-	size_t N = equations.numHits(iElem) ;
+	size_t N = equations.element(iElem).numHits() ;
 	for (ipar = offset; ipar< offset+ndof; ++ipar) {
 	  assert( ipar < size ) ;
 	  if ( halfD2Chi2DAlpha2[ipar][ipar] > 0 ) scale[ipar] = std::sqrt( N / halfD2Chi2DAlpha2[ipar][ipar] ) ;
@@ -233,12 +233,15 @@ namespace Al
 	       << "Used " << equations.numHits() << " hits for alignment" << std::endl
 	       << "Total number of hits in external detectors: " << equations.numExternalHits() << std::endl;
     
-    if (printDebug()) {
-      for (size_t i = 0; i < equations.nElem(); ++i) {
-	for (size_t j = i; j < equations.nElem(); ++j) {
-	  debug() << "==> M["<<i<<","<<j<<"] = "      << equations.M(i,j) << endmsg;
-	}
-	debug() << "\n==> V["<<i<<"] = "    << equations.V(i) << endmsg;
+    if (printDebug()) { 
+      size_t index(0) ;
+      for( Al::Equations::ElementContainer::const_iterator ieq = equations.elements().begin() ;
+	   ieq != equations.elements().end(); ++ieq,++index) {
+	debug() << "\n==> V["<< index <<"] = "    << ieq->dChi2DAlpha() << endmsg ;
+	debug() << "\n==> M["<< index << ',' << index <<"] = "    << ieq->d2Chi2DAlpha2() << endmsg ;
+	for( Al::ElementData::OffdiagonalContainer::const_iterator jeq = ieq->d2Chi2DAlphaDBeta().begin() ;
+	     jeq != ieq->d2Chi2DAlphaDBeta().end() ; ++jeq) 
+	  debug() << "==> M["<<index<<","<<jeq->first<<"] = "      << jeq->second << endmsg;
       }
     }
     
@@ -247,7 +250,7 @@ namespace Al
     // enough hits'.
     size_t numParameters(0), numExcluded(0) ;
     for (Elements::const_iterator it = elements.begin(); it != elements.end(); ++it ) {
-      if (equations.numHits(it->index()) >= m_minNumberOfHits) {
+      if (equations.element(it->index()).numHits() >= m_minNumberOfHits) {
 	it->setActiveParOffset( numParameters ) ;
 	numParameters += it->dofMask().nActive() ;
       } else {
@@ -266,33 +269,29 @@ namespace Al
       for( Al::Equations::ElementContainer::const_iterator ieq = equations.elements().begin() ;
 	   ieq != equations.elements().end(); ++ieq, ++index ) {
 	const AlignmentElement& ielem = elements[index] ;
-	// first derivative. note that we correct here for the fraction of outliers
+	// 1st derivative and diagonal 2nd derivative. note that we correct here for the fraction of outliers
 	double outliercorrection = 1./ieq->fracNonOutlier() ;
 	for(unsigned ipar=0; ipar<Derivatives::kCols; ++ipar) 
-	  if( 0<= (iactive = ielem.activeParIndex(ipar) ) )
-	    halfDChi2dX(iactive) = ieq->V()(ipar) * outliercorrection ;
-	
-	// second derivative. fill only non-zero terms
-	for( Al::ElementData::OffdiagonalContainer::const_iterator im = ieq->M().begin() ;
-	     im != ieq->M().end(); ++im ) {
-	  size_t jndex = im->first ;
-	  // guaranteed: index <= jndex .. that's how we fill it. furthermore, row==i, col==j
-	  if(jndex==index) { // diagonal element
-	    for(unsigned ipar=0; ipar<Derivatives::kCols; ++ipar) 
-	      if( 0<= ( iactive = ielem.activeParIndex(ipar) ) ) 
-		for(unsigned jpar=0; jpar<=ipar; ++jpar) 
-		  if( 0<= ( jactive = ielem.activeParIndex(jpar) ) )
-		    halfD2Chi2dX2.fast(iactive,jactive) = im->second(ipar,jpar) ;
-	  } else {
-	    const AlignmentElement& jelem = elements[jndex] ;
-	    for(unsigned ipar=0; ipar<Derivatives::kCols; ++ipar) 
-	      if( 0<= ( iactive = ielem.activeParIndex(ipar) ) ) 
-		for(unsigned jpar=0; jpar<Derivatives::kCols; ++jpar) 
-		  if( 0<= ( jactive = jelem.activeParIndex(jpar) ) ) {
-		    assert(jactive > iactive  ) ;
-		    halfD2Chi2dX2.fast(jactive,iactive) = im->second(ipar,jpar) ;
-		  }
+	  if( 0<= (iactive = ielem.activeParIndex(ipar) ) ) {
+	    halfDChi2dX(iactive) = ieq->dChi2DAlpha()(ipar) * outliercorrection ;
+	    for(unsigned jpar=0; jpar<=ipar; ++jpar) 
+	      if( 0<= ( jactive = ielem.activeParIndex(jpar) ) )
+		halfD2Chi2dX2.fast(iactive,jactive) = ieq->d2Chi2DAlpha2()(ipar,jpar) ;
 	  }
+
+	// second derivative. fill only non-zero terms
+	for( Al::ElementData::OffdiagonalContainer::const_iterator im = ieq->d2Chi2DAlphaDBeta().begin() ;
+	     im != ieq->d2Chi2DAlphaDBeta().end(); ++im ) {
+	  // guaranteed: index < jndex .. that's how we fill it. furthermore, row==i, col==j
+	  assert(index < im->first) ;
+	  const AlignmentElement& jelem = elements[im->first] ;
+	  for(unsigned ipar=0; ipar<Derivatives::kCols; ++ipar) 
+	    if( 0<= ( iactive = ielem.activeParIndex(ipar) ) ) 
+	      for(unsigned jpar=0; jpar<Derivatives::kCols; ++jpar) 
+		if( 0<= ( jactive = jelem.activeParIndex(jpar) ) ) {
+		  assert(jactive > iactive  ) ;
+		  halfD2Chi2dX2.fast(jactive,iactive) = im->second(ipar,jpar) ;
+		}
 	}
       }
       
@@ -338,9 +337,10 @@ namespace Al
 	size_t iElem(0u) ;
 	double totalLocalDeltaChi2(0) ; // another figure of merit of the size of the misalignment.
 	for (Elements::iterator it = elements.begin(); it != elements.end(); ++it, ++iElem) {
+	  const Al::ElementData& elemdata = equations.element(iElem) ;
 	  logmessage << "Alignable: " << it->name() << std::endl
-		     << "Number of hits/outliers seen: " << equations.numHits(iElem) << " "
-		     << equations.numOutliers(iElem) << std::endl ;
+		     << "Number of hits/outliers seen: " << elemdata.numHits() << " "
+		     << elemdata.numOutliers() << std::endl ;
 	  int offset = it->activeParOffset() ;
 	  if( offset < 0 ) {
 	    logmessage << "Not enough hits for alignment. Skipping update." << std::endl ;
@@ -354,8 +354,8 @@ namespace Al
 			 << " delta= " << std::setw(12) << delta.parameters()[iactive] << " +/- "
 			 << std::setw(12) << AlParameters::signedSqrt(delta.covariance()[iactive][iactive]) 
 			 << " gcc= " << delta.globalCorrelationCoefficient(iactive) << std::endl ;
-	    double contributionToCoordinateError = delta.measurementCoordinateSigma( equations.weightR(iElem) ) ;
-	    double coordinateError = std::sqrt(equations.numHits(iElem)/equations.weight(iElem)) ;
+	    double contributionToCoordinateError = delta.measurementCoordinateSigma( elemdata.weightR() ) ;
+	    double coordinateError = std::sqrt(elemdata.numHits()/elemdata.weightV()) ;
 	    logmessage << "contribution to hit error (absolute/relative): "
 		       << contributionToCoordinateError << " " << contributionToCoordinateError/coordinateError << std::endl ;
 	    
@@ -363,9 +363,10 @@ namespace Al
 	    // alignment parameters that does not rely on the
 	    // correlations. this should also go into either
 	    // AlParameters or AlEquation
-	    const Gaudi::Matrix6x6& thisdChi2dAlpha2 = equations.elements()[iElem].M().find(iElem)->second ;
-	    Gaudi::Vector6 thisAlpha = delta.parameterVector6() ;
-	    double thisLocalDeltaChi2 = ROOT::Math::Dot(thisAlpha,thisdChi2dAlpha2 * thisAlpha) ;
+	    //const Gaudi::SymMatrix6x6& thisdChi2dAlpha2 = equations.element(iElem).d2Chi2DAlpha2() ;
+	    //Gaudi::Vector6 thisAlpha = delta.parameterVector6() ;
+	    double thisLocalDeltaChi2 = ROOT::Math::Similarity(delta.parameterVector6(),
+							       equations.element(iElem).d2Chi2DAlpha2() ) ;
 	    logmessage << "local delta chi2 / dof: " << thisLocalDeltaChi2 << " / " << delta.dim() << std::endl ;
 	    totalLocalDeltaChi2 += thisLocalDeltaChi2 ;
 	    //double d2 = equations.elements()[iElem].M()[iElem]
