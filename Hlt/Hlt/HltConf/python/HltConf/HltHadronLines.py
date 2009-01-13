@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltHadronLines.py,v 1.2 2009-01-12 11:02:19 graven Exp $
+# $Id: HltHadronLines.py,v 1.3 2009-01-13 15:35:38 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hadron Lines
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -42,7 +42,7 @@ class HltHadronLinesConf(LHCbConfigurableUser) :
     # (J.A. Hernando 17/12/08)
     # External selection to be provided
     #    1) AllL0Hadrons (L0 Candidates above a given threshold i.e 2000 MeV)
-    #    3) RZVelo, PV2D, Velo tracks
+    #    2) RZVelo, PV2D, Velo tracks
     # Replace opts-file to set the opts for the fast fit by configurables
 
     # steering variables

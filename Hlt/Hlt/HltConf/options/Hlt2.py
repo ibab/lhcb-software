@@ -11,7 +11,7 @@ from Configurables import LoKi__HDRFilter   as HltFilter
 # ---------------------------------------------------------------------
 # Common stuff. Probably already included in Hlt1.
 # ---------------------------------------------------------------------
-importOptions( "$HLTCONFROOT/options/HltMainSequence.opts" )
+importOptions( "$HLTCONFROOT/options/HltRecoSequence.py" )
 # ---------------------------------------------------------------------
 #  Phys initialisation
 # ---------------------------------------------------------------------

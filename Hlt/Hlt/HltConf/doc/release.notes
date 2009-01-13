@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.116 2009-01-12 11:03:00 graven Exp $ 
+! $Id: release.notes,v 1.117 2009-01-13 15:35:38 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-01-13 - Gerhard Raven
+ - major cleanup: remove support for 'oldStyle' Hlt configuration,
+   and remove (!) the old options files...
 
 ! 2009-01-12 - Gerhard Raven
  - upgrade all HltXXXLines.py to real configurables,

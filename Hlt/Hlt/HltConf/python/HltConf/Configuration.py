@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.33 2009-01-12 11:02:19 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.34 2009-01-13 15:35:38 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -57,19 +57,7 @@ class HltConf(LHCbConfigurableUser):
                  'DEFAULT' ]
                 
     def oldConfig(self,hlttype) :
-            if hlttype not in self.validHltTypes() :  raise TypeError("Unknown hlttype '%s'"%hlttype)
-            importOptions('$HLTCONFROOT/options/HltMain.py')
-            if hlttype.find('Hlt1') != -1 :   
-                importOptions('$HLTCONFROOT/options/Hlt1.opts')
-            if hlttype.find('Hlt2') != -1 :   
-                importOptions('$HLTCONFROOT/options/Hlt2.py')
-                # TODO: this next one should become a property of the Hlt2 configurable, and we
-                #       just forward to it...
-                if self.getProp('Hlt2IgnoreHlt1Decision') :  
-                    Sequence("Hlt2CheckHlt1Passed").Members = [ L0Filter('L0Pass', Code = "L0_DECISION") ]
-                else :
-                    Sequence("Hlt2CheckHlt1Passed").Members = [ Sequence( "PassedAlleys" ) ]
-            importOptions( '$HLTCONFROOT/options/HltPersistentOutput.py' )
+       raise NotImplementedError('\n\n\n      HltConf().oldStyle = True is no longer supported. Please remove any mention of "oldStyle"... \n\n\n')
     def newConfig(self,hlttype) :
             trans = { 'Hlt1'   : 'LU+L0+VE+XP+MU+HA+PH+EL'
                     , 'DEFAULT': 'PA+LU+L0+VE+XP'
@@ -113,13 +101,15 @@ class HltConf(LHCbConfigurableUser):
         Line('IgnoringLumi', HLT = "HLT_PASSIGNORING('Hlt1LumiDecision')" )
         ## finally, add the Hlt1Global line...
         Line('Global', HLT = 'HLT_DECISION' )
-        log.info( 'List of known Hlt1Lines : ' + str(hlt1Lines()) )
-        lines = hlt1Lines() if not self.getProp('ActiveHlt1Lines') else self.getProp('ActiveHlt1Lines')
+        activeLines = self.getProp('ActiveHlt1Lines') 
+        lines = [ i for i in hlt1Lines() if ( not activeLines or i.name() in activeLines ) ]
         log.info( 'List of Hlt1Lines to be added to Hlt1 : ' + str(lines) )
         Sequence('Hlt1').Members = [ i.sequencer() for i in  lines ] # note : should verify order (?) -- global should be last hlt1line! 
         ## and tell the monitoring what it should expect..
+        ## uhhh... need to pick only those in ActiveHlt1Lines...
         HltGlobalMonitor().Hlt1Decisions = list( hlt1Decisions() )
         ## and persist some vertices...
+        ## uhhh... need to pick only those in ActiveHlt1Lines...
         HltVertexReportsMaker().VertexSelections = [ i for i in hlt1Selections()['All'] if i is 'PV2D' or ( i.startswith('Hlt1Velo') and i.endswith('Decision') ) ]
 
     def __apply_configuration__(self):
