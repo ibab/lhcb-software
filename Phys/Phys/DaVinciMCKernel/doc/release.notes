@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.49 2008-11-17 16:25:36 cattanem Exp $
+! $Id: release.notes,v 1.50 2009-01-13 19:32:43 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
+
+! 2009-01-13 - V. Gligorov
+ - Added IDaVinciSmartAssociator, the interface to a new ``smart'' association
+   tool which works for any kind of Particle.
 
 !====================== DaVinciMCKernel v2r11p1 2008-11-17 ===================
 ! 2008-10-29 - Marco Cattaneo
