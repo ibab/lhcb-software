@@ -6,6 +6,7 @@
 
 ! 2009-01-13 - Wouter Hulsbergen
  - fixed unchecked statuscodes
+ - make sure V0 daughters do not share VELO segment
 
 !========================== TrackUtils v1r23 2009-01-12 ======================
 ! 2009-01-12 - Wouter Hulsbergen
