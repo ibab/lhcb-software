@@ -18,14 +18,14 @@ class PIDMass:
     def __init__(self, partProp) :
         self.partProp = partProp
     def __call__(self, particle) :
-        pid = Helpers.pid(particle)
+        pid = Helpers.particleID(particle)
         return self.partProp( pid ).mass()
 #==============================================================================
 class ParticleName:
     def __init__(self, partProp) :
         self.partProp = partProp
     def __call__(self, particle) :
-        pid = particle.particleID().pid()
+        pid = particle.particleID()
         pProp=self.partProp( pid )
         return pProp.particle()
 #==============================================================================

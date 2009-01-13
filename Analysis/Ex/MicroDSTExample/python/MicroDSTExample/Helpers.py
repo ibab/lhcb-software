@@ -1,5 +1,5 @@
 from ROOT import TCanvas, TH1D, Double
-from GaudiPython import gbl, AppMgr
+from GaudiPython import gbl, AppMgr, Helper, InterfaceCast
 from math import sqrt, fabs
 from GaudiKernel import SystemOfUnits, PhysicalConstants
 from LHCbMath import XYZVector, XYZPoint
@@ -7,7 +7,8 @@ from LHCbMath import XYZVector, XYZPoint
 class EventLoop:
     def __init__(self, am ):
         self.appMgr = am
-        self.partSvc = self.appMgr.partSvc()
+        svc = Helper.service(self.appMgr._svcloc, 'LHCb::ParticlePropertySvc')
+        self.partSvc = InterfaceCast(gbl.LHCb.IParticlePropertySvc)(svc)
         self.sel = self.appMgr.evtSel()
         self.evt = self.appMgr.evtSvc()
         self.tools = self.appMgr.toolsvc()
@@ -17,7 +18,8 @@ class EventLoop:
         return  self.evt['/Event'] != None
     
     def partProp(self, pid):
-        return self.partSvc.findByStdHepID( pid )
+        pidx = gbl.LHCb.ParticleID(pid)
+        return self.partSvc.find( pidx )
 
     def getEvtStuff(self, location) :
         stuff = self.evt[location]
@@ -103,6 +105,9 @@ def properTime(particle, vertex, fitter) :
         chi2=Double(0.)
         fitter.fit(vertex, particle, tau, error, chi2)
     return tau/SystemOfUnits.picosecond
+#==============================================================================
+def particleID(particle) :
+    return particle.particleID()
 #==============================================================================
 def pid(particle) :
     return particle.particleID().pid()
