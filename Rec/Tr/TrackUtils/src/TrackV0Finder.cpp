@@ -1,4 +1,4 @@
-// $Id: TrackV0Finder.cpp,v 1.7 2009-01-13 08:10:21 wouter Exp $
+// $Id: TrackV0Finder.cpp,v 1.8 2009-01-13 13:07:24 wouter Exp $
 // Include files 
 
 
@@ -42,7 +42,7 @@ protected:
   
   bool hasV0Topology(LHCb::TwoProngVertex& vertex,
 		     const LHCb::RecVertices& pvs) const ;
-    
+  bool overlap( const LHCb::Track& rhs, const LHCb::Track& lhs) const ;
 private:
   std::string m_trackInputListName; // Input Tracks container location
   std::string m_pvContainerName;
@@ -271,133 +271,153 @@ StatusCode TrackV0Finder::execute()
   typedef KeyedContainer<LHCb::TwoProngVertex, Containers::HashMap> TwoProngVertices;
   TwoProngVertices* v0container = new TwoProngVertices() ;
   put(v0container, m_v0ContainerName) ;
-  //LHCb::TrackworongContainer* v0container = new LHCb::TrackTwoProngContainer ;
-
-  // Now do some poca studies to see if this works at all
+  
   for( TrackContainer::iterator ipos = postracks.begin() ;
-       ipos != postracks.end(); ++ipos) {
+       ipos != postracks.end(); ++ipos) 
     for( TrackContainer::iterator ineg = negtracks.begin() ;
-         ineg != negtracks.end(); ++ineg) {
-      LHCb::TrackTraj& postraj = postrajs[std::distance(postracks.begin(),ipos)] ;
-      LHCb::TrackTraj& negtraj = negtrajs[std::distance(negtracks.begin(),ineg)] ;
-      
-      // seed the z position with the intersection in the yz-plane
-      double mupos = postraj.beginRange() + 10*Gaudi::Units::mm ;
-      double muneg = negtraj.beginRange() + 10*Gaudi::Units::mm ;
-      double ypos  = postraj.position(mupos).y() ;
-      double yneg  = negtraj.position(muneg).y() ;
-      double typos = postraj.direction(mupos).y() ;
-      double tyneg = negtraj.direction(muneg).y() ;
-      double z_yz = - (ypos - yneg + muneg*tyneg - mupos*typos) / ( typos - tyneg ) ;
-      mupos = muneg = z_yz ;
-
-      // Calls pocatool
-      Gaudi::XYZVector deltaX; 
-      StatusCode sc = m_pocatool->minimize( postraj,mupos,negtraj,muneg,deltaX,0.001*Gaudi::Units::mm );
-      if( sc.isSuccess() ) {
-        double distance = deltaX.R() ;
-        double z = 0.5*(mupos+muneg) ;
-        // make the cut on the distance and the z-position
-        bool isVeloCombi = (*ipos)->hasVelo() && (*ineg)->hasVelo() ;
-        if( (distance < m_distanceCutLong ||
-             (distance < m_distanceCutUpstream && !isVeloCombi)) &&
-            zprimary + m_deltaZCut < z && z< m_zmax ) {
-          // now make an invariant mass cut
-          Gaudi::XYZVector mompos = postraj.momentum(mupos) ;
-          Gaudi::XYZVector momneg = negtraj.momentum(muneg) ;
-          Gaudi::LorentzVector p4pos(mompos.X(),mompos.Y(),mompos.Z(),
-                                     std::sqrt(mompos.Mag2()+pimass*pimass)) ;
-          Gaudi::LorentzVector p4neg(momneg.X(),momneg.y(),momneg.Z(),
-                                     std::sqrt(momneg.Mag2()+pimass*pimass)) ;
-          double pipimass = (p4pos+p4neg).M() ;
-          p4pos.SetE( std::sqrt(mompos.Mag2()+pmass*pmass)) ;
-          double ppimass = (p4pos+p4neg).M() ;
-          p4pos.SetE( std::sqrt(mompos.Mag2()+pimass*pimass)) ;
-          p4neg.SetE( std::sqrt(momneg.Mag2()+pmass*pmass)) ;
-          double pipmass = (p4pos+p4neg).M() ;
-	  bool iskscandidate = fabs(pipimass - ksmass) < m_ksmasscut ;
-	  bool islambdacandidate = fabs(ppimass - lambdamass) < m_lambdamasscut ;
-	  bool isantilambdacandidate = fabs(pipmass - lambdamass) < m_lambdamasscut ;
-	  
-          if( iskscandidate || islambdacandidate || isantilambdacandidate) {
-            // Determine the states passed to the vertexer. At this
-            // stage combinatorics is small enough that we can
-            // eventually use a real extrapolator.
-            LHCb::State posstate,negstate ;
-            if( m_useExtrapolator ) {
-              // If we can, we use interpolators, because those can do
-              // this correctly even if we are between nodes. (The
-              // extrapolators are guaranteed to be wrong half the
-              // time!)
-              StatusCode sc ;
-              if( (*ipos)->nodes().empty() ) sc = m_extrapolator->propagate( **ipos, z, posstate ) ;
-              else                           sc = m_interpolator->interpolate( **ipos, z, posstate ) ;
-              if(!sc.isSuccess() ) {
-		Warning("Extrapolation failed. Rely on trajectory interpolation.",StatusCode::SUCCESS,0) ;
-                posstate = postraj.state(z) ;
-              }
-              if( (*ineg)->nodes().empty() ) sc = m_extrapolator->propagate( **ineg, z, negstate ) ;
-              else                           sc = m_interpolator->interpolate( **ineg, z, negstate ) ;
-              if(!sc.isSuccess() ) {
-		Warning("Extrapolation failed. Rely on trajectory interpolation.",StatusCode::SUCCESS,0) ;
-                negstate = negtraj.state(z) ;
-              }
-            } else {
-              posstate = postraj.state(z) ;
-              negstate = negtraj.state(z) ;
-            }
-            
-            // finally, create the vertex and cut on the significance
-            LHCb::TwoProngVertex* vertex = m_vertexer->fit(posstate,negstate ) ;
+         ineg != negtracks.end(); ++ineg) 
+      if( !overlap(**ipos,**ineg) ) {
+	const LHCb::TrackTraj& postraj = postrajs[std::distance(postracks.begin(),ipos)] ;
+	const LHCb::TrackTraj& negtraj = negtrajs[std::distance(negtracks.begin(),ineg)] ;
+	
+	// seed the z position with the intersection in the yz-plane
+	double mupos = postraj.beginRange() + 10*Gaudi::Units::mm ;
+	double muneg = negtraj.beginRange() + 10*Gaudi::Units::mm ;
+	double ypos  = postraj.position(mupos).y() ;
+	double yneg  = negtraj.position(muneg).y() ;
+	double typos = postraj.direction(mupos).y() ;
+	double tyneg = negtraj.direction(muneg).y() ;
+	double z_yz = - (ypos - yneg + muneg*tyneg - mupos*typos) / ( typos - tyneg ) ;
+	mupos = muneg = z_yz ;
+	
+	// Calls pocatool
+	Gaudi::XYZVector deltaX; 
+	StatusCode sc = m_pocatool->minimize( postraj,mupos,negtraj,muneg,deltaX,0.001*Gaudi::Units::mm );
+	if( sc.isSuccess() ) {
+	  double distance = deltaX.R() ;
+	  double z = 0.5*(mupos+muneg) ;
+	  // make the cut on the distance and the z-position
+	  bool isVeloCombi = (*ipos)->hasVelo() && (*ineg)->hasVelo() ;
+	  if( (distance < m_distanceCutLong ||
+	       (distance < m_distanceCutUpstream && !isVeloCombi)) &&
+	      zprimary + m_deltaZCut < z && z< m_zmax ) {
+	    // now make an invariant mass cut
+	    Gaudi::XYZVector mompos = postraj.momentum(mupos) ;
+	    Gaudi::XYZVector momneg = negtraj.momentum(muneg) ;
+	    Gaudi::LorentzVector p4pos(mompos.X(),mompos.Y(),mompos.Z(),
+				       std::sqrt(mompos.Mag2()+pimass*pimass)) ;
+	    Gaudi::LorentzVector p4neg(momneg.X(),momneg.y(),momneg.Z(),
+				       std::sqrt(momneg.Mag2()+pimass*pimass)) ;
+	    double pipimass = (p4pos+p4neg).M() ;
+	    p4pos.SetE( std::sqrt(mompos.Mag2()+pmass*pmass)) ;
+	    double ppimass = (p4pos+p4neg).M() ;
+	    p4pos.SetE( std::sqrt(mompos.Mag2()+pimass*pimass)) ;
+	    p4neg.SetE( std::sqrt(momneg.Mag2()+pmass*pmass)) ;
+	    double pipmass = (p4pos+p4neg).M() ;
+	    bool iskscandidate = fabs(pipimass - ksmass) < m_ksmasscut ;
+	    bool islambdacandidate = fabs(ppimass - lambdamass) < m_lambdamasscut ;
+	    bool isantilambdacandidate = fabs(pipmass - lambdamass) < m_lambdamasscut ;
 	    
-
-	    if( vertex->chi2() < m_maxChi2V0Vertex 
-		&& hasV0Topology( *vertex, *pvcontainer ) ) {
-	      // one last check: test that there are no hits upstream of the vertex on either track
-	      const LHCb::State* mstatepos = (*ipos)->stateAt(LHCb::State::FirstMeasurement ) ;
-	      const LHCb::State* mstateneg = (*ineg)->stateAt(LHCb::State::FirstMeasurement ) ;
-	      bool hasUpstreamHits = false ;
-	      if( m_rejectUpstreamHits || m_addExtraInfo ) {
-		hasUpstreamHits =
-		  (mstatepos && mstatepos->z() < vertex->position().z() ) ||
-		  (mstateneg && mstateneg->z() < vertex->position().z() ) ;
+	    if( iskscandidate || islambdacandidate || isantilambdacandidate) {
+	      // Determine the states passed to the vertexer. At this
+	      // stage combinatorics is small enough that we can
+	      // eventually use a real extrapolator.
+	      LHCb::State posstate,negstate ;
+	      if( m_useExtrapolator ) {
+		// If we can, we use interpolators, because those can do
+		// this correctly even if we are between nodes. (The
+		// extrapolators are guaranteed to be wrong half the
+		// time!)
+		StatusCode sc ;
+		if( (*ipos)->nodes().empty() ) sc = m_extrapolator->propagate( **ipos, z, posstate ) ;
+		else                           sc = m_interpolator->interpolate( **ipos, z, posstate ) ;
+		if(!sc.isSuccess() ) {
+		  Warning("Extrapolation failed. Rely on trajectory interpolation.",StatusCode::SUCCESS,0) ;
+		  posstate = postraj.state(z) ;
+		}
+		if( (*ineg)->nodes().empty() ) sc = m_extrapolator->propagate( **ineg, z, negstate ) ;
+		else                           sc = m_interpolator->interpolate( **ineg, z, negstate ) ;
+		if(!sc.isSuccess() ) {
+		  Warning("Extrapolation failed. Rely on trajectory interpolation.",StatusCode::SUCCESS,0) ;
+		  negstate = negtraj.state(z) ;
+		}
+	      } else {
+		posstate = postraj.state(z) ;
+		negstate = negtraj.state(z) ;
 	      }
-
-	      if( m_addExtraInfo ) {
-		vertex->addInfo(100,distance) ;
-		vertex->addInfo(101,z-zprimary) ;
-		vertex->addInfo(102,pipimass) ;
-		vertex->addInfo(103,ppimass) ;
-		vertex->addInfo(104,pipmass) ;
-		vertex->addInfo(105,double(hasUpstreamHits)) ;
+	      
+	      // finally, create the vertex and cut on the significance
+	      LHCb::TwoProngVertex* vertex = m_vertexer->fit(posstate,negstate ) ;
+	      
+	      if( vertex->chi2() < m_maxChi2V0Vertex 
+		  && hasV0Topology( *vertex, *pvcontainer ) ) {
+		// one last check: test that there are no hits upstream of the vertex on either track
+		const LHCb::State* mstatepos = (*ipos)->stateAt(LHCb::State::FirstMeasurement ) ;
+		const LHCb::State* mstateneg = (*ineg)->stateAt(LHCb::State::FirstMeasurement ) ;
+		bool hasUpstreamHits = false ;
+		if( m_rejectUpstreamHits || m_addExtraInfo ) {
+		  hasUpstreamHits =
+		    (mstatepos && mstatepos->z() < vertex->position().z() ) ||
+		    (mstateneg && mstateneg->z() < vertex->position().z() ) ;
+		}
+		
+		if( m_addExtraInfo ) {
+		  vertex->addInfo(100,distance) ;
+		  vertex->addInfo(101,z-zprimary) ;
+		  vertex->addInfo(102,pipimass) ;
+		  vertex->addInfo(103,ppimass) ;
+		  vertex->addInfo(104,pipmass) ;
+		  vertex->addInfo(105,double(hasUpstreamHits)) ;
+		}
+		vertex->addToTracks(*ipos) ;
+		vertex->addToTracks(*ineg) ;
+		if(iskscandidate) {
+		  LHCb::ParticleID pid = LHCb::ParticleID(m_ksProperty->pdgID());
+		  vertex->addPID( pid ) ;
+		}
+		if(islambdacandidate) {
+		  LHCb::ParticleID pid = LHCb::ParticleID(m_lambdaProperty->pdgID());
+		  vertex->addPID( pid ) ;
+		}
+		if(isantilambdacandidate) {
+		  LHCb::ParticleID pid = LHCb::ParticleID(m_lambdaProperty->antiParticle()->pdgID());
+		  vertex->addPID( pid ) ;
+		}
+		v0container->add( vertex ) ;
+	      } else {
+		delete vertex ;
 	      }
-	      vertex->addToTracks(*ipos) ;
-              vertex->addToTracks(*ineg) ;
-              if(iskscandidate) {
-                LHCb::ParticleID pid = LHCb::ParticleID(m_ksProperty->pdgID());
-                vertex->addPID( pid ) ;
-              }
-              if(islambdacandidate) {
-                LHCb::ParticleID pid = LHCb::ParticleID(m_lambdaProperty->pdgID());
-                vertex->addPID( pid ) ;
-              }
-              if(isantilambdacandidate) {
-                LHCb::ParticleID pid = LHCb::ParticleID(m_lambdaProperty->antiParticle()->pdgID());
-                vertex->addPID( pid ) ;
-              }
-	      v0container->add( vertex ) ;
-            } else {
-              delete vertex ;
-            }
-          }
-        }
+	    }
+	  }
+	} else {
+	  Warning("TrajPoca Failure",StatusCode::SUCCESS,0) ;
+	}
       }
-    }
-  } 
+  
   counter("numselected") += v0container->size() ;
   return StatusCode::SUCCESS;
 }
 
+//=============================================================================
+// Check of two tracks do not have two much overlap to be combined as V0
+//=============================================================================
+
+bool TrackV0Finder::overlap( const LHCb::Track& trackA,
+			     const LHCb::Track& trackB ) const
+{
+  // for now, just look at common ancestors
+  bool rc = false ;
+  for( SmartRefVector<LHCb::Track>::const_iterator iancA = trackA.ancestors().begin() ;
+       iancA != trackA.ancestors().end() && !rc; ++iancA) 
+    for( SmartRefVector<LHCb::Track>::const_iterator iancB = trackB.ancestors().begin() ;
+	 iancB != trackB.ancestors().end() && !rc; ++iancB) 
+      rc = *iancA == *iancB ;
+  return rc ;
+}
+
+
+//=============================================================================
+// Check how well this V0 candidate fits to the PV
 //=============================================================================
 
 inline Gaudi::Vector3 transform( const Gaudi::XYZVector& vec)
