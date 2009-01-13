@@ -1,4 +1,4 @@
-### @file DVTestHlt2B2DiMuon.opts
+### @Id: $
  #
  #  Test file for HLT B -> mu mu X selection
  #
@@ -8,38 +8,37 @@
 from Gaudi.Configuration import *
 from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, PhysDesktop, DecayTreeTuple, PrintHeader, CheckSelResult
 #--------------------------------------------------------------
+signal = "Bs2JpsiPhi"
 #
 # Preselection
 #
-importOptions( "$CCBARROOT/options/DVPreselHeavyDimuon.opts")
-PrintHeader("PrintPreselHeavyDimuon").OutputLevel = 4 
-#
-# Run correlations only on offline selected events
-#
-GaudiSequencer("Hlt2CorrsSeq").Members += [ CheckSelResult("CheckOffline") ]
-CheckSelResult("CheckOffline").Algorithms += [ "PreselHeavyDimuon" ]
-#
-# Hlt test
-#
-importOptions( "$HLTSELECTIONSROOT/options/DVTestHlt2.py")
-from HltConf.Configuration import *
-HltConf().Hlt2IgnoreHlt1Decision = True  # do both Hlt1 and 2
-HltConf().applyConf()
-#
-# Plots
-#
-importOptions( "$HLTSELECTIONSROOT/options/Hlt2MonitorPlots.py")
+importOptions( "$DAVINCIROOT/options/PreloadUnits.opts")
+importOptions( "$CCBARROOT/options/DoPreselHeavyDimuon.opts")
+presel = GaudiSequencer("SeqPreselHeavyDimuon")
+PrintHeader("PrintPreselHeavyDimuon").OutputLevel = 4
 #
 # True filter criterion - will only run HLT on TRUE signal
 #
 importOptions( "$HLTSELCHECKERROOT/options/FilterTrueTracks.py")
 FilterTrueTracks().addTool(MCDecayFinder())
-FilterTrueTracks().MCDecayFinder.Decay =  "{<Xb>, <Xb~>, [<Xb~>]os, [<Xb>]os} => ^mu+ ^mu- ... " 
+FilterTrueTracks().MCDecayFinder.Decay =  "[B_s0 -> (phi(1020) -> ^K+ ^K- {,gamma}{,gamma}) (J/psi(1S) -> ^mu+ ^mu- {,gamma}{,gamma})]cc"
 #
 # Set the following to false if you want only events with a signal
 # fully reconstructed in the HLT
 #
-GaudiSequencer("SeqHlt2TruthFilter").IgnoreFilterPassed = TRUE  
+GaudiSequencer("SeqHlt2TruthFilter").IgnoreFilterPassed = True
+#
+# Overwrite input - uncomment to run HLT on TRUE signal only
+#
+# importOptions( "$HLTSELCHECKERROOT/options/OverwriteWithTruth.py")
+#
+# Monitoring
+#
+moni = GaudiSequencer("Hlt2MonitorSeq")
+moni.IgnoreFilterPassed = True
+moni.Context = "HLT"
+importOptions( "$HLTSELECTIONSROOT/options/Hlt2Correlations.py")
+importOptions( "$HLTSELECTIONSROOT/options/Hlt2MonitorPlots.py")
 ###
  # Tuple
 ###
@@ -48,21 +47,18 @@ DecayTreeTuple("Hlt2DecayTreeTuple").addTool(PhysDesktop())
 DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Hlt2SelBs2JpsiPhiSignal"]
 DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B_s0 -> (^J/psi(1S) => ^mu+ ^mu-) (^phi(1020) -> ^K+ ^K-)]cc"
 #
-# Overwrite input - uncomment to run HLT on TRUE signal only
+# Configuration
 #
-# importOptions( "$HLTSELCHECKERROOT/options/OverwriteWithTruth.py")
-#
-# Options
-#
-EventSelector().Input   = [
+from Configurables import DaVinci
+DaVinci().EvtMax = -1
+DaVinci().HltType = "Hlt1+Hlt2"                # Both Hlt levels
+DaVinci().Hlt2IgnoreHlt1Decision = True        # Ignore Hlt1 in 2
+DaVinci().ReplaceL0BanksWithEmulated = False   # Redo L0
+DaVinci().DataType = "DC06" 
+DaVinci().Simulation = True 
+DaVinci().TupleFile =  "HLT-"+signal+".root"
+DaVinci().HistogramFile = "DVHlt2-"+signal+".root"
+DaVinci().UserAlgorithms = [ presel ] 
+DaVinci().MoniSequence += [ moni, DecayTreeTuple("Hlt2DecayTreeTuple") ]
+DaVinci().Input = [
   "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol3/dijkstra/Selections/Bs2psiphi-decprodcut-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
-
-MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
-
-ApplicationMgr().ExtSvc +=  [ "NTupleSvc" ]                             
-NTupleSvc().Output =  [ "FILE1 DATAFILE='HLT-Bs2JpsiPhi' TYP='ROOT' OPT='NEW'" ] 
-HistogramPersistencySvc().OutputFile = "DVHlt2-Bs2JpsiPhi.root"
-
-ApplicationMgr().EvtMax = -1 
-EventSelector().FirstEvent = 1 
-

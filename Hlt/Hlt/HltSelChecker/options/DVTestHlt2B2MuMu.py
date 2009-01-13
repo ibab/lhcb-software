@@ -7,6 +7,7 @@
 ###
 from Gaudi.Configuration import *
 #--------------------------------------------------------------
+signal = "B2MuMu"
 #
 # Preselection
 #
@@ -53,6 +54,6 @@ DaVinci().ReplaceL0BanksWithEmulated = False   # Redo L0
 DaVinci().DataType = "DC06" 
 DaVinci().Simulation = True 
 DaVinci().Input = [ "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/Bs2MuMu-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
-DaVinci().TupleFile =  'HLT-B2MuMu.root'
-DaVinci().HistogramFile = "DVHlt2-B2MuMu.root"
-DaVinci().UserAlgorithms += [ moni, DecayTreeTuple("Hlt2DecayTreeTuple") ]
+DaVinci().TupleFile =  "HLT-"+signal+".root"
+DaVinci().HistogramFile = "DVHlt2-"+signal+".root"
+DaVinci().MoniSequence += [ moni, DecayTreeTuple("Hlt2DecayTreeTuple") ]

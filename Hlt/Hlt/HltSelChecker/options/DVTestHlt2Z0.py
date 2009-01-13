@@ -7,20 +7,19 @@
  ####################################################
 from Gaudi.Configuration import *
 from Configurables import Z0Checker, HltBackgroundCategory
-importOptions ("$HLTSELECTIONSROOT/options/DVTestHlt2.py")
-from HltConf.Configuration import *
-HltConf().Hlt2IgnoreHlt1Decision = True  # do both Hlt1 and 2
-HltConf().applyConf()
+signal = "Z0"
 #
-# background category
+# Monitoring
 #
-ApplicationMgr().TopAlg += [ HltBackgroundCategory() ]
-# HltBackgroundCategory().PrintTree = TRUE
+moni = GaudiSequencer("Hlt2MonitorSeq")
+moni.IgnoreFilterPassed = True
+moni.Context = "HLT"
+importOptions( "$HLTSELECTIONSROOT/options/Hlt2Correlations.py")
+importOptions( "$HLTSELECTIONSROOT/options/Hlt2MonitorPlots.py")
 #
 # various instances of Z0 checker
 #
 Z0 = GaudiSequencer("Z0")
-ApplicationMgr().TopAlg += [ Z0 ]  
 Z0.Members += [ Z0Checker("OffNoIDZ0Checker") ]  
 Z0Checker("OffNoIDZ0Checker").Locations = [ "/Event/Phys/StdNoPIDsMuons/Particles" ]
 Z0.Members += [ Z0Checker("OffMuZ0Checker") ]  
@@ -30,12 +29,20 @@ Z0Checker("HltPiZ0Checker").Locations = [ "/Event/HLT/Hlt2Pions/Particles" ]
 Z0.Members += [ Z0Checker("HltMuZ0Checker") ]  
 Z0Checker("HltMuZ0Checker").Locations = [ "/Event/HLT/Hlt2Muons/Particles" ]
 
-MessageSvc().Format = "% F%50W%S%7W%R%T %0W%M"
-
-ApplicationMgr().EvtMax = -1 
-EventSelector().PrintFreq = 10
-
-EventSelector().Input   = [
+#
+# Configuration
+#
+from Configurables import DaVinci
+DaVinci().EvtMax = -1
+DaVinci().HltType = "Hlt1+Hlt2"                # Both Hlt levels
+DaVinci().Hlt2IgnoreHlt1Decision = True        # Ignore Hlt1 in 2
+DaVinci().ReplaceL0BanksWithEmulated = False   # Redo L0
+DaVinci().DataType = "DC06" 
+DaVinci().Simulation = True 
+DaVinci().TupleFile =  "HLT-"+signal+".root"
+DaVinci().HistogramFile = "DVHlt2-"+signal+".root"
+DaVinci().MoniSequence += [ moni, HltBackgroundCategory(), Z0 ]
+DaVinci().Input = [
   "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001929/DST/0000/00001929_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
   "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001929/DST/0000/00001929_00000002_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
   "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001929/DST/0000/00001929_00000006_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",

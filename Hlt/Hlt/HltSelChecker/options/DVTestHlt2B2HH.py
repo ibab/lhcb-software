@@ -1,4 +1,4 @@
-### @file DVTestHlt2B2HH.opts
+### $Id: DVTestHlt2B2HH.py,v 1.7 2009-01-13 08:36:21 pkoppenb Exp $
  #
  #  Test file for HLT B->hh selection
  #
@@ -8,26 +8,12 @@
 from Gaudi.Configuration import *
 from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, PhysDesktop, DecayTreeTuple, PrintTree, CheckSelResult
 #--------------------------------------------------------------
+signal = "B2HH"
 #
 # Preselection
 #
-importOptions( "$B2UDSROOT/options/DVPreselB2HH.opts")
-#
-# Run correlations only on offline selected events
-#
-GaudiSequencer("Hlt2CorrsSeq").Members += [ CheckSelResult("CheckOffline") ]
-CheckSelResult("CheckOffline").Algorithms += [ "PreselB2HH" ]
-#
-# Hlt test
-#
-importOptions( "$HLTSELECTIONSROOT/options/DVTestHlt2.py")
-from HltConf.Configuration import *
-HltConf().Hlt2IgnoreHlt1Decision = True  # do both Hlt1 and 2
-HltConf().applyConf()
-#
-# Plots
-#
-importOptions( "$HLTSELECTIONSROOT/options/Hlt2MonitorPlots.py")
+importOptions( "$DAVINCIROOT/options/PreloadUnits.opts")
+# BROKEN # importOptions( "$B2UDSROOT/options/DVPreselB2HH.opts")
 #
 # True filter criterion
 #
@@ -42,6 +28,13 @@ GaudiSequencer("SeqHlt2TruthFilter").IgnoreFilterPassed = TRUE
 # Overwrite input - uncomment to run HLT on TRUE signal only
 #
 # importOptions( "$HLTSELCHECKERROOT/options/OverwriteWithTruth.py")
+# Monitoring
+#
+moni = GaudiSequencer("Hlt2MonitorSeq")
+moni.IgnoreFilterPassed = True
+moni.Context = "HLT"
+importOptions( "$HLTSELECTIONSROOT/options/Hlt2Correlations.py")
+importOptions( "$HLTSELECTIONSROOT/options/Hlt2MonitorPlots.py")
 ###
  # Tuple
 ###
@@ -50,21 +43,18 @@ DecayTreeTuple("Hlt2DecayTreeTuple").addTool(PhysDesktop())
 DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Hlt2SelB2HH"]
 DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "B0 -> ^pi+ ^pi-"
 #
-# Options
+# Configuration
 #
-EventSelector().Input   = [
+from Configurables import DaVinci
+DaVinci().EvtMax = -1
+DaVinci().HltType = "Hlt1+Hlt2"                # Both Hlt levels
+DaVinci().Hlt2IgnoreHlt1Decision = True        # Ignore Hlt1 in 2
+DaVinci().ReplaceL0BanksWithEmulated = False   # Redo L0
+DaVinci().DataType = "DC06" 
+DaVinci().Simulation = True 
+DaVinci().TupleFile =  "HLT-"+signal+".root"
+DaVinci().HistogramFile = "DVHlt2-"+signal+".root"
+DaVinci().UserAlgorithms = [ ] 
+DaVinci().MoniSequence += [ moni, DecayTreeTuple("Hlt2DecayTreeTuple") ]
+DaVinci().Input = [
   "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/Bd2Kpi-decprodcut-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
-
-MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
-
-ApplicationMgr().ExtSvc +=  [ "NTupleSvc" ]                              #GP: (45,1)
-NTupleSvc().Output =  [ "FILE1 DATAFILE='HLT-B2HH.root' TYP='ROOT' OPT='NEW'" ] #GP: (46,1)
-HistogramPersistencySvc().OutputFile = "DVHlt2-B2HH.root"
-
-ApplicationMgr().EvtMax = -1 
-EventSelector().FirstEvent = 1 
-EventSelector().PrintFreq = 10 
-
-# ApplicationMgr().TopAlg += [ "PrintTree" ]
-# PrintTree().PhysDesktop.InputLocations = [ "Hlt2SelB2HH" ]
-

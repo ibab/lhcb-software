@@ -9,6 +9,9 @@
 ! end
 !-----------------------------------------------------------------------------
 
+! 2009-01-13 - Patrick Koppenburg
+ - Adapt all tests to new DaVinci()
+
 ! 2009-01-09 - Patrick Koppenburg
  - options/DVTestHlt2B2MuMu.py : first to be adapted to new DaVinci()
 

@@ -9,65 +9,38 @@ from Gaudi.Configuration import *
 from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, PhysDesktop, DecayTreeTuple, TupleToolDecay, ReadHltSummary, PrintTree, PrintMCTree, TupleToolTrigger, CheckSelResult, PrintHeader
 # from Configurables ChargedProtoPAlg, PreLoadParticles, CombineParticles, FilterDesktop
 #--------------------------------------------------------------
+signal = "Bd2MuMukstar"
 #
 # Preselection
 #
-importOptions( "$B2DILEPTONROOT/options/DVPreselBd2KstarMuMu.opts")
+importOptions( "$DAVINCIROOT/options/PreloadUnits.opts")
+importOptions( "$B2DILEPTONROOT/options/DoPreselBd2KstarMuMu.opts")
+from Configurables import MakeResonances
+presel = GaudiSequencer("SeqPreselBd2KstarMuMu")
+presel.Members += [ MakeResonances("PreselBd2KstarMuMu") ]
 #
-# Run correlations only on offline selected events
-#
-GaudiSequencer("Hlt2CorrsSeq").Members += [ CheckSelResult("CheckOffline") ]
-CheckSelResult("CheckOffline").Algorithms += [ "PreselBd2KstarMuMu" ]
-#
-# Hlt test
-#
-importOptions( "$HLTSELECTIONSROOT/options/DVTestHlt2.py")
-from HltConf.Configuration import *
-HltConf().Hlt2IgnoreHlt1Decision = True  # do both Hlt1 and 2
-HltConf().applyConf()
-#
-# Plots
-#
-importOptions( "$HLTSELECTIONSROOT/options/Hlt2MonitorPlots.py")
-#
-# True filter criterion
+# True filter criterion - will only run HLT on TRUE signal
 #
 importOptions( "$HLTSELCHECKERROOT/options/FilterTrueTracks.py")
 FilterTrueTracks().addTool(MCDecayFinder())
-FilterTrueTracks().MCDecayFinder.Decay =  "{[[B0]nos => ^K+ ^pi- ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}]cc, [[B0]os => ^K- ^pi+ ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}]cc}" 
+FilterTrueTracks().MCDecayFinder.Decay =  "{[[B0]nos => ^K+ ^pi- ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}]cc, [[B0]os => ^K- ^pi+ ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}]cc}"
 #
 # Set the following to false if you want only events with a signal
 # fully reconstructed in the HLT
 #
-GaudiSequencer("SeqHlt2TruthFilter").IgnoreFilterPassed = TRUE  
+GaudiSequencer("SeqHlt2TruthFilter").IgnoreFilterPassed = True
 #
 # Overwrite input - uncomment to run HLT on TRUE signal only
 #
 # importOptions( "$HLTSELCHECKERROOT/options/OverwriteWithTruth.py")
 #
-# Options
+# Monitoring
 #
-EventSelector().Input   = [
-  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol3/dijkstra/Selections/Bd2MuMuKst-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
-
-MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
-
-ApplicationMgr().ExtSvc +=  [ "NTupleSvc" ]                             
-NTupleSvc().Output =  [ "FILE1 DATAFILE='HLT-Bd2MuMuKstar.root' TYP='ROOT' OPT='NEW'" ] 
-HistogramPersistencySvc().OutputFile = "DVHlt2-Bd2MuMuKstar.root"
-
-ApplicationMgr().EvtMax = -1
-EventSelector().FirstEvent = 1 
-EventSelector().PrintFreq = 1 
-
-#
-#ApplicationMgr().TopAlg += [ PrintTree("PrintHlt2"), PrintTree("PrintPresel"), PrintMCTree() ]
-#
-PrintTree("PrintHlt2").addTool(PhysDesktop())
-PrintTree("PrintHlt2").PhysDesktop.InputLocations = [ "Hlt2SelBd2MuMuKstar" ]
-PrintTree("PrintPresel").addTool(PhysDesktop())
-PrintTree("PrintPresel").PhysDesktop.InputLocations = [ "Phys/PreselBd2KstarMuMu"  ]
-PrintMCTree().ParticleNames = [ "B0", "B~0" ]
+moni = GaudiSequencer("Hlt2MonitorSeq")
+moni.IgnoreFilterPassed = True
+moni.Context = "HLT"
+importOptions( "$HLTSELECTIONSROOT/options/Hlt2Correlations.py")
+importOptions( "$HLTSELECTIONSROOT/options/Hlt2MonitorPlots.py")
 ###
  # Tuple
 ###
@@ -84,20 +57,19 @@ DecayTreeTuple("Hlt2DecayTreeTuple").Head.ToolList += [ "TupleToolP2VV" ]
 DecayTreeTuple("Hlt2DecayTreeTuple").addTool(TupleToolTrigger())
 DecayTreeTuple("Hlt2DecayTreeTuple").TupleToolTrigger.VerboseL0 = True
 DecayTreeTuple("Hlt2DecayTreeTuple").ToolList += [ "TupleToolTISTOS" ]
-# importOptions( "$FLAVOURTAGGINGOPTS/BTaggingTool.opts")
-
-# HltBackgroundCategory.FillAll = false 
-
-#ReadHltSummary().OutputLevel = 1
-
-#CombineParticles("Hlt2SelBd2MuMuKstar").OutputLevel = 1
-
-#ApplicationMgr().TopAlg += [ FilterDesktop() ]
-#FilterDesktop().addTool(PhysDesktop())
-#FilterDesktop().PhysDesktop.InputLocations = ["Hlt2SelBd2MuMuKstar"]
-#FilterDesktop().OutputLevel = 1
-#FilterDesktop().Code = "ALL"
-
-#from Configurables import CondDBAccessSvc, MagneticFieldSvc, MagFieldToolDC06
-#MagneticFieldSvc().Polarity = 2
-
+#
+# Configuration
+#
+from Configurables import DaVinci
+DaVinci().EvtMax = -1
+DaVinci().HltType = "Hlt1+Hlt2"                # Both Hlt levels
+DaVinci().Hlt2IgnoreHlt1Decision = True        # Ignore Hlt1 in 2
+DaVinci().ReplaceL0BanksWithEmulated = False   # Redo L0
+DaVinci().DataType = "DC06" 
+DaVinci().Simulation = True 
+DaVinci().TupleFile =  "HLT-"+signal+".root"
+DaVinci().HistogramFile = "DVHlt2-"+signal+".root"
+DaVinci().UserAlgorithms = [ presel ] 
+DaVinci().MoniSequence += [ moni, DecayTreeTuple("Hlt2DecayTreeTuple") ]
+DaVinci().Input = [
+  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol3/dijkstra/Selections/Bd2MuMuKst-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
