@@ -11,9 +11,13 @@ AlElementHistos::AlElementHistos(GaudiHistoAlg& parent, const AlignmentElement& 
   //size_t index_i         = elem.index() ;
   const std::string name = elem.name(); 
   std::string dirname =  "element" + boost::lexical_cast<std::string>( elem.index() ) + "/"; //name + "/" ;
+  double resmax = elem.histoResidualMax() ;
   m_resHisto      = parent.book2D(dirname + boost::lexical_cast<std::string>(1000u), 
 				  "Residual vs iteration for " + name,
-				  -0.5, numiter-0.5, numiter, -5.00 , +5.00, 100);
+				  -0.5, numiter-0.5, numiter, -resmax , +resmax, 100);
+  m_unbiasedResHisto      = parent.book2D(dirname + boost::lexical_cast<std::string>(1001u), 
+					  "Unbiased Residual vs iteration for " + name,
+					  -0.5, numiter-0.5, numiter, -resmax , +resmax, 100);
   m_pullHisto     = parent.book2D(dirname + boost::lexical_cast<std::string>(2000u),
 				  "Pull vs iteration for " + name,
 				  -0.5, numiter-0.5, numiter, -5.00 , +5.00, 100);

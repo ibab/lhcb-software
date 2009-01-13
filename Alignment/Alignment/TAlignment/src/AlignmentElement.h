@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.h,v 1.15 2008-09-10 12:31:31 wouter Exp $
+// $Id: AlignmentElement.h,v 1.16 2009-01-13 15:51:20 wouter Exp $
 #ifndef TALIGNMENT_ALIGNMENTELEMENT_H
 #define TALIGNMENT_ALIGNMENTELEMENT_H 1
 
@@ -163,7 +163,11 @@ public:
     return m_activeParOffset >=0 ? ( (tmp = m_dofMask.activeParIndex(ipar))>=0 ? (tmp + m_activeParOffset) : -1) : -1 ; 
   }
  
+  /** return all detector elements associated to this alignable */
   const ElementContainer& detelements() const { return m_elements ; }
+
+  /** return the value used for the range of residual histograms */
+  double histoResidualMax() const ;
 
 private:
   

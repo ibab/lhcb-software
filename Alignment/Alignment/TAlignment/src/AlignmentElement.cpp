@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.cpp,v 1.21 2008-10-27 14:52:09 janos Exp $
+// $Id: AlignmentElement.cpp,v 1.22 2009-01-13 15:51:20 wouter Exp $
 // Include files
 
 // from STD
@@ -231,3 +231,19 @@ std::ostream& AlignmentElement::fillStream(std::ostream& lhs) const {
   return lhs;
 }
 
+double AlignmentElement::histoResidualMax() const
+{
+  // in the end, I would like to do this by inheritance. for now, just
+  // very ugly:
+  double resmax[] = { 0.1,0.1,0.5,0.5,5.0,10 } ;
+  size_t dettype(0) ; // [veloR,veloPhi,,tt,it,ot,muon]
+  if(     name().find("Muon",0) != std::string::npos)
+    dettype = 5 ;
+  else if(name().find("OT",0) != std::string::npos)
+    dettype = 4 ;
+  else if(name().find("IT",0) != std::string::npos)
+    dettype = 3 ;
+  else if(name().find("TT",0) != std::string::npos)
+    dettype = 2 ;
+  return resmax[dettype] ;
+}

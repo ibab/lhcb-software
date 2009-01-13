@@ -11,6 +11,7 @@ struct AlElementHistos
   AlElementHistos( GaudiHistoAlg& parent, const AlignmentElement& elem, size_t niter) ;
   void reset() ;
   IHistogram2D* m_resHisto;
+  IHistogram2D* m_unbiasedResHisto;
   IHistogram2D* m_pullHisto;
   IHistogram1D* m_nHitsHisto;
   //   IHistogram1D* m_deltaTxHisto;
