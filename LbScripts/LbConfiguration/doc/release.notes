@@ -1,3 +1,13 @@
+2009-01-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/CreateBatAliases.py: Removed.
+	* scripts/LbShowProjectConf.py: Removed.
+	* scripts/CreateBatAliases: New file.
+	* scripts/LbShowProjectConf: New file.
+	* cmt/fragments/create_bat_aliases_header: 
+	* cmt/fragments/nmake/create_bat_aliases_header: fixed the fragments. Now 
+	python scripts have no extension. Removed the extension from the python scripts.
+
 2009-01-08  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* scripts/SetupProject.py: changed %TODAY% to %DAY% in the interpretation of

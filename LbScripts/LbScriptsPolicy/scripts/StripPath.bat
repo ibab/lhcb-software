@@ -2,7 +2,7 @@
 
 set StripPath_tmpfile="%TEMP%\StripPath_tmpsetup.bat"
 
-python %LBSCRIPTSPOLICYROOT%\scripts\PathStripper.py --shell=bat --output=%StripPath_tmpfile% -e PATH -e PYTHONPATH -e JOBOPTSEARCHPATH -e HPATH
+python %LBSCRIPTSPOLICYROOT%\scripts\PathStripper --shell=bat --output=%StripPath_tmpfile% -e PATH -e PYTHONPATH -e JOBOPTSEARCHPATH -e HPATH
 
 call %StripPath_tmpfile%
 

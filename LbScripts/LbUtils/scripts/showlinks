@@ -1,7 +1,7 @@
 from LbUtils.Links import showLinks
 from LbUtils.CVS import CVS2Version
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.2 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.1 $")
 
 import sys
 from optparse import OptionParser

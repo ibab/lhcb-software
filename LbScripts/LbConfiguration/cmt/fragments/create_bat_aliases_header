@@ -11,7 +11,7 @@ install :: ${CONSTITUENT}install
 ${CONSTITUENT}install ::
 	@if [ -e $(install_scripts_dir) ] ; then \
 	  echo "Creating bat alias files" ; \
-	  python $(install_scripts_dir)/CreateBatAliases.py -o $(install_scripts_dir) ; \
+	  python $(install_scripts_dir)/CreateBatAliases -o $(install_scripts_dir) ; \
 	  chmod a-x $(install_scripts_dir)/*.bat ; \
 	fi
 

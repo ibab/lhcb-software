@@ -8,7 +8,7 @@ ${CONSTITUENT} :: ${CONSTITUENT}install
 install :: ${CONSTITUENT}install
 
 ${CONSTITUENT}install ::
-	@if exist $(install_scripts_dir) echo python $(install_scripts_dir)\CreateBatAliases.py -o $(install_scripts_dir)
+	@if exist $(install_scripts_dir) echo python $(install_scripts_dir)\CreateBatAliases -o $(install_scripts_dir)
 
 ${CONSTITUENT}clean :: ${CONSTITUENT}uninstall
 

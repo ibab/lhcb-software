@@ -5,7 +5,7 @@ from LbConfiguration.Project import project_list
 import sys, os
 import logging
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.4 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.1 $")
 
 class CreateBatAliasesScript(Script):
     _version = __version__

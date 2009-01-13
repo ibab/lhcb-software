@@ -55,7 +55,6 @@ make_fragment python_init -header=python_init_header -dependencies
 
 pattern python_alias \
     set_append PYTHONALIASDEF " <script>:$(<package>_root) " ; \
-    alias <script> "python $(<project>_home)/InstallArea/scripts/<script>.py" ; \
     document python_alias <script>_python_alias script=<script> ; \
     macro_append <script>_python_alias_dependencies " install_scripts "
 

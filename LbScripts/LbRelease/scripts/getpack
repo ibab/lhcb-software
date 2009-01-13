@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: getpack.py,v 1.1 2009-01-07 19:53:32 hmdegaud Exp $
+# $Id: getpack,v 1.1 2009-01-13 13:32:17 hmdegaud Exp $
 
 from LbRelease.GetPack import GetPack
 

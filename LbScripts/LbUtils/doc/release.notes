@@ -1,3 +1,30 @@
+2009-01-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/cu.py: Removed.
+	* scripts/doxypy.py: Removed.
+	* scripts/fixDoxygenLinks.py: Removed.
+	* scripts/fixlinks.py: Removed.
+	* scripts/fixWinCVSRoot.py: Removed.
+	* scripts/getCVSModules.py: Removed.
+	* scripts/lockdo.py: Removed.
+	* scripts/makeSelfExtractScript.py: Removed.
+	* scripts/showCMTProjects.py: Removed.
+	* scripts/showlinks.py: Removed.
+	* scripts/version_db_html.py: Removed.
+	* python/LbUtils/Archive.py: New file.
+	* scripts/cu: New file.
+	* scripts/doxypy: New file.
+	* scripts/fixDoxygenLinks: New file.
+	* scripts/fixlinks: New file.
+	* scripts/fixWinCVSRoot: New file.
+	* scripts/getCVSModules: New file.
+	* scripts/lockdo: New file.
+	* scripts/makeSelfExtractScript: New file.
+	* scripts/showCMTProjects: New file.
+	* scripts/showlinks: New file.
+	* scripts/version_db_html: New file. Removed the extension from the python 
+	scripts.
+
 2008-12-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v1r9

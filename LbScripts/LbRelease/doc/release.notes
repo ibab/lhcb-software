@@ -1,3 +1,15 @@
+2009-01-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/Benchmark.py: Removed.
+	* scripts/getpack.py: Removed.
+	* scripts/showProjects.py: Removed.
+	* scripts/usedProjects.py: Removed.
+	* scripts/Benchmark: New file.
+	* scripts/getClass.py: New file.
+	* scripts/getpack: New file.
+	* scripts/showProjects: New file.
+	* scripts/usedProjects: Removed the extension from the python scripts.
+
 2008-01-12  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
 	* python/LbRelease/Nightlies/functions.py: changes to be able to use the real

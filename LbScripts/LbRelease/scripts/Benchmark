@@ -244,7 +244,7 @@ def getNbProc():
 if __name__ == '__main__':
 
     usage = "%prog [options] exe optfile"
-    version = "$Id: Benchmark.py,v 1.4 2008-06-04 08:21:50 hmdegaud Exp $"
+    version = "$Id: Benchmark,v 1.1 2009-01-13 13:32:17 hmdegaud Exp $"
     
     parser = OptionParser(usage=usage, version=version)
     parser.set_defaults(nbevent=1)

@@ -1,3 +1,15 @@
+2009-01-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/PathStripper.py: Removed.
+	* scripts/PathStripper: New file.
+	* cmt/fragments/nmake/python_alias_header: 
+	* cmt/fragments/python_alias_header: 
+	* cmt/requirements: 
+	* scripts/StripPath.bat: 
+	* scripts/StripPath.csh: 
+	* scripts/StripPath.sh: Removed the extension from the python scripts.
+	Modified the fragments for this.
+
 2008-12-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v1r5
