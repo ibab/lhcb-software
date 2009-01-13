@@ -5,17 +5,275 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-! 2008-12-02 - Vanya BELYAEV
+</PRE><H1><A NAME=v26r1>2009-01-13 LHCbSys v26r1</A></H1><PRE>
+This version uses Gaudi v20r4 and LCG_55c
 
- - add the dependency on Kernel/PartProp
+- Packages added    : PartProp v1r0 - LHCb implementation of ParticlePropertySvc
+- Packages modified : GaudiConf v12r0, KernelSys v11r0, LHCbKernel v11r0,
+    LHCbMath v3r5, L0MuonKernel v8r5, ProcessorKernel v5r3p1, Relations v5r6,
+    RichKernel v7r19, DetSys v17r0, CaloDet v10r1, DDDB v1r14, DetCond v12r5,
+    DetDesc v18r11, DetDescSvc v2r2, RichDet v11r4, VeloDet v13r5,
+    EventSys v24r11, DAQEvent v7r17, HltEvent v8r14, LinkerEvent v3r6,
+    MCEvent v2r11, PhysEvent v11r7, RecEvent v2r18, TrackEvent v4r17,
+    VeloEvent v16r6p1, EventPacker v1r1, DAQSys v5r4, MuonDAQ v4r5p1, OTDAQ v7r4,
+    CaloDAQ v4r9, CaloInterfaces v7r9, CaloUtils v8r3p1, CondDBUI v2r15,
+    DaVinciKernel v7r2, HltInterfaces v2r0, LHCbAlgs v2r23, LoKi v8r1,
+    LoKiAlgo v8r1, LoKiAlgoMC v8r1, LoKiArrayFunctors v8r1, LoKiCore v8r1,
+    LoKiGen v8r1, LoKiGenMC v8r1, LoKiHlt v2r1, LoKiMC v8r1, LoKiNumbers v8r1,
+    LoKiPhys v8r1, LoKiPhysMC v8r1, L0Interfaces v1r3, MCInterfaces v1r6,
+    MDF v3r16, PatKernel v2r2, RichRecBase v3r19, SimComponents v2r15,
+    STKernel v1r10, TrackInterfaces v4r0, DetCondExample v11r6, IOExample v2r7
 
-
-! 2008-11-24 - Marco Cattaneo
+- In LHCbSys v26r1
   . Fix DoxyLHCbCommon.cfg and DoxyFile.cfg for use directly with CMT
-    (without makedoc.py).
-    N.B. Undo this change if makedoc not updated to use CMT. makedoc.py still
-         needed to set LHCBVERS, GAUDIVERS set for the tag file URLs, and to
-         use /tmp or /build for the temporary doxygen database files
+    (without makedoc.py). N.B.: makedoc.py still needed to set LHCBVERS,
+    GAUDIVERS set for the tag file URLs, and to use /tmp or /build for the
+    temporary doxygen database files
+
+- In GaudiConf v12r0
+  . LHCbApp configurable now exits if DDDBtag and CondDBtag properties have not
+    been explicitly set
+  . Add a configurable DstConf to set up DST content. Replaces DstContent.opts,
+    MCDstContent.opts, rDstContent.opts, which have been removed. Also allows
+    to enable packed DST (default) and to set up DataOnDemand service for
+    unpacking
+  . Add Rec/Vertex/V0 to (r)DST.
+
+- In LHCbKernel v11r0
+  . Added the cluster size as data the SiPositionInfo struct.
+  . Fix NULL implementation of FPEGuard.
+  . AlignTraj : changed m_traj from reference to pointer to fix genreflex warning
+    during compilation.
+  . Remove the logPacked methods from StandardPacker.h, put new methods fltPacked
+    to store the float of a double in an int.
+  . LHCbID : add the comparison "less"-operator 
+  . Remove Kernel/Decay.h, xml/ParticleID.xml, src/ParticleID.cpp
+    (moved to PartProp)
+  . Add interface functions for robust estimation of the mode in Silicon
+    [SiChargeFun.h]
+  . Add functors for sorting +accumulating by charge [SiDataFunctor.h]   
+  . In Configurable, fix setOtherProp to work also for property types for
+    which hasattr is True even if property has not been set (lists, dicts etc.)
+
+- In LHCbMath v3r5
+  . LHCbMath/Digit.h: Make drastic simplification of argument for 
+    BOOST_STATIC_ASSERT macro, to please genreflex on Windows and OSX
+  . LHCbMath/Kinematics.h: fix the bugs...
+  . Tests/kinematics.cpp: new test-file 
+  . Add robust functions to calculate mode or MPV [ModeFunctions.h]
+  . Add list<MD5> to the dictionary
+
+- In L0MuonKernel v8r5
+  . Implement new L0Buffer frame for the CU/SU L0buffer converter
+  . Fix bug in the encoding parameter
+  . Improve encapsulation of DOM parser
+  . Implement compression algorithm for L0MuonProcData Bank
+
+- In RichKernel v7r19
+  . Extend tool interface IRichRefractiveIndex with new methods to 
+    calculate the effective index for a set of radiator intersections.
+  . Add new tool mapping to RichToolRegistry.
+  . Set custom NTuple LUN in tupling base classes.
+  . Add new MC photon creator options that cheats the track direction at
+    the emission point.
+
+- In DetSys v17r0
+  . Remove explicit versions from requirements
+
+- In CaloDet v10r1
+  . Fix FPE in DeCalorimeter.cpp
+
+- In DDDB v1r14
+  . New default tags for 2008:
+    o head-20090112 for DDDB and LHCBCOND
+    o sim-20090112 for SIMCOND
+  . DDDBConf now issues a warning if default tags are being used. Previously
+    warning was issued when default tag was NOT used
+  . Default tag is used if DetCond().Tags has not been set for a given partition,
+    or if it has been set to the string "default" (case insensitive)
+  . Add ParticlePropertiesFile location for new LHCb::ParticlePropertySvc
+
+- In DetCond v12r5
+  . Improvements to the CondDB configurable:
+    o added the possibility to use local copies of the SQLite databases (through
+      CondDBSQLiteCopyAccSvc)
+    o added the possibility of specifying alternatives and layers with only the
+      connection string or the SQLite filename
+
+- In RichDet v11r4
+  . Add new virtual method to DeRichRadiator base class to return the
+    refractive index for a given photon energy. Implemented in both the single
+    and multi gas radiator derived classes.
+
+- In VeloDet v13r5
+  . Fixed bug in DeVeloRType::rPitch() that caused non-sensical results in 3
+    sectors.
+
+- In DAQEvent v7r17
+  . Fix bug in OdinTypesFilter.cpp
+
+- In HltEvent v8r14
+  . Create custom dictionary for std::vector<const HltObjectSummary*>
+
+- In LinkerEvent v3r6
+  . Make the error message when template doesn't match the stored class ID more
+    explicit, i.e. the two class ID are printed.
+
+- In MCEvent v2r11
+  . Add MCParticle::betaGamma() method
+
+- In PhysEvent v11r7
+  . Add dictionary for std::vector<const LHCb::Particle*>::iterator
+
+- In RecEvent v2r18
+  . Add fillStream to STSummary object
+
+- In TrackEvent v4r17
+  . Track::stateAt and Track::measurement(id) now return pointers
+
+- In EventPacker v1r1
+  . Fix a loop test condition in CompareTrack.cpp
+  . Change logPacked to fltPacked in all occurences
+
+- In MuonDAQ v4r5p1
+  . Fix unitialized variable
+
+- In OTDAQ v7r4
+  . Change TELL1 numbering from 1-48 to 0x0TLQ where (T = {1,2,3}, L={0,1,2,3}, 
+    and Q={0,1,2,3} 
+  . Also encode empty banks and empty gols
+  . Added option to add empty banks ( default == true )
+  . Put OTBank and OTGol in OTDAQ namespace, to avoid gcc 4.3 warning
+  . Fix doxygen warnings
+  . Added OTMultiBXRawBankDecoder, for 'merging' data from different BX
+
+- In CaloDAQ v4r9
+  . Calo(L0)DataProvider : protect against abusive warning in case of 
+                           0-suppressed data
+
+- In CondDBUI v2r15
+  . Added support for savannah patches in release_notes.xs[ld] to
+    CondDBUI.Admin.ReleaseNotes and CondDBAdmin_Commit.py.
+
+- In DaVinciKernel v7r2
+  . Added new function Decays::escape that replaces special characters
+    by something liked by root. Taken from DecayTreeTuple.
+  . In DVAlgorithm :
+    o modify the method ppSvc to return the pointer to new particle 
+      property service 
+    o add method "pid" which returns particleproperty by name and ID
+  . Adapt to namespace change LHCb::Decay -> Decays::Decay
+  . IDecodeSimpleDecayString.h : Remove public global typedefs for strings&ints
+
+- In HltInterfaces v2r0
+  . Remove some obsolete methods from IHltSummaryTool 
+
+- In LHCbAlgs v2r23
+  . TESCheck : issue setFilterPassed(false) when location is not found in 
+               Stop = false mode.
+  . DeterminsticPrescaler: replace custom statistics with StatEntity
+  . Added doxygen comments to FilterByRunEvent
+
+- In LoKi v8r1
+  . List all Loki packages 
+  . Remove the library and its code
+
+- In LoKiAlgo v8r1, LoKiAlgoMC v8r1, LoKiArrayFunctors v8r1, LoKiHlt v2r1
+  . use new decorators 
+
+- In LoKiCore v8r1
+  . Add the dictionaries for the trees 
+  . Fix many tiny bugs 
+  . LoKi/iTree.h : Add typedef for the actual particle type 
+  . LoKi/Filters.h : add Empty&Size functors 
+  . src/FilterAlg.cpp : enforce the execution of "decode" method within the 
+                        AlgContext guard  
+  . src/HybridBase.cpp : substitute WARNING-messages for PyLocals/PyGlobals
+                         with INFO-messages
+
+- In LoKiGen v8r1
+  . Many fixes for trees
+  . Add new symbols: GDECNODE, GDECTREE 
+  . New functors: GSIZE, GEMTPTY, GOSCILLATED1, GOSCILLATED2 
+  . Better treatment  of "CutVals"    
+
+- In LoKiMC v8r1
+  .  add the trees 
+
+- In LoKiNumbers v8r1
+  . Add more improvements for vector->bool functors 
+
+- In LoKiPhys v8r1
+  . Add the first tree-functions 
+  . New symbols:
+    o  DWMASS &  DWM : delta wrong mass
+    o ADWMASS & ADWM : absolute value for delta wrong mass 
+  . Polish filters 
+
+- In MCInterfaces v1r6
+  . Remove obsolete hack for Windows from requirements
+  . Remove unneccessary dependency on RichKernel
+
+- In MDF v3r16, v3r15
+  . Fix bug in RawDataSelector.cpp for support for FileID bank
+  . Add support for FileID bank
+  . Add DAQ Bank versions to MDFHeader
+
+- In PatKernel v2r2
+  . Add IPatDebugTool and IPatDebugTTool interfaces and corresponding dictionary,
+    moved from TrackInterfaces to reduce package dependencies
+
+- In RichRecBase v3r19
+  . Add new tool interface to calculate the effective radiator refractive
+    index as seen by a given RichRecSegment.
+
+- In SimComponents v2r15
+  . Adapt DumpHepMCDecay, DumpHepMCTree, MCDecayFinder, PrintMCDecayTreeTool,
+    PrintMCTree to use new LHCb::IParticlePropertySvc implementation of particle
+    properties 
+  . Remove unnecessary releaseTool from PrintMCTree::finalize()
+  . Various cosmetic cleanups of above files
+  . In ForcedBDecayTool, protect hepmcp->print() with msgLevel(MSG::DEBUG) test
+  . In MCParticleSelector.cpp, do not check betaGamma for particles with zero
+    mass, to avoid FPE
+  . Update MCHitMonitor: make all histogram ranges sensible
+                         remove unneeded histos
+                         add summary printout in finalize
+  . Make default in MCParticleSelector really do nothing
+    [was not quite case before
+
+- In STKernel v1r10
+  . Add uniquePort and uniqueBeetle functions
+  . Add specializations for STDigit charge manipulation 
+
+- In TrackInterfaces v4r0
+  . Remove IPatDebugTool and IPatDebugTTTool interfaces (moved to PatKernel) and
+    remove PatKernel dependency
+
+- In DetCondExample v11r6
+  . Added a missing return in TestCacheInjection.cpp.
+
+- In LoKiAlgo v8r1, LoKiAlgoMC v8r1, LoKiArrayFunctors v8r1, LoKiCore v8r1,
+     LoKiGen v8r1, LoKiGenMC v8r1, LoKiHlt v2r1, LoKiNumbers v8r1, LoKiPhys v8r1,
+     LoKiPhysMC v8r1, IOExample v2r7
+  . Add or update QMtests
+
+- In LoKiAlgo v8r1, LoKiAlgoMC v8r1, LoKiGenMC v8r1, LoKiMC v8r1, LoKiPhysMC v8r1
+  . Add usage of CLHEP for OSX
+
+- In LoKiAlgo v8r1, LoKiAlgoMC v8r1, LoKiHlt v2r1, LoKiNumbers v8r1
+  . Add -no_auto_imports to GaudiPython usage, import it only for the dictionary
+    if necessary
+
+- In MCEvent v2r11, RecEvent v2r18, DaVinciKernel v7r2
+  . Add PartProp dependency, to pick up ParticleID from new location
+
+- In L0MuonKernel v8r5, ProcessorKernel v5r3p1, Relations v5r6, DetDesc v18r11,
+     DetDescSvc v2r2, VeloEvent v16r6p1, CaloInterfaces v7r9, CaloUtils v8r3p1,
+     DaVinciKernel v7r2, LoKiCore v8r1, L0Interfaces v1r3, MCInterfaces v1r6,
+     SimComponents v2r15
+  . Fixes for gcc 4.3
+
 
 </PRE><H1><A NAME=v26r0>2008-11-20 LHCbSys v26r0</A></H1><PRE>
 This version uses Gaudi v20r3 and LCG_55b
