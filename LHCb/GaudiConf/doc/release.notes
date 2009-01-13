@@ -2,7 +2,10 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
-!======================== GaudiConf v12r0 2009-01-09 ========================
+!======================== GaudiConf v12r0 2009-01-13 ========================
+! 2009-01-13 - Marco Cattaneo
+ - Set up unpacking of MC truth in DstConf().EnableUnpack, in simulation case
+
 ! 2009-01-09 - Marco Cattaneo
  - LHCbApp configurable now exits if DDDBtag and CondDBtag properties have not
    been explicitly set

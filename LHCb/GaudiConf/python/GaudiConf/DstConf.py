@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: DstConf.py,v 1.2 2009-01-07 13:38:53 cattanem Exp $"
+__version__ = "$Id: DstConf.py,v 1.3 2009-01-13 07:42:30 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -176,6 +176,12 @@ class DstConf(ConfigurableUser):
         DataOnDemandSvc().AlgMap[ "/Event/Rec/ProtoP/Neutrals" ]   = unpackNeutrals
         DataOnDemandSvc().AlgMap[ "/Event/Rec/Vertex/Primary" ]    = unpackVertex
 
+        # If simulation, set up also unpacking of MC Truth
+        if self.getProp( "Simulation" ):
+            from Configurables import UnpackMCParticle, UnpackMCVertex
+            DataOnDemandSvc().AlgMap[ "/Event/MC/Particles" ] = UnpackMCParticle()
+            DataOnDemandSvc().AlgMap[ "/Event/MC/Vertices" ]  = UnpackMCVertex()
+        
 
     def __apply_configuration__(self):
         if self.getProp( "EnableUnpack" ) : self._doUnpack()
