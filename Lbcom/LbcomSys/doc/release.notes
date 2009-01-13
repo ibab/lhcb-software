@@ -6,11 +6,86 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
-! 2008-11-24 - Marco Cattaneo
- -  Fix DoxyFile.cfg for use directly with CMT (without makedoc.py).
-    N.B. Undo this change if makedoc not updated to use CMT. makedoc.py still
-         needed to set LHCBVERS, GAUDIVERS set for the tag file URLs, and to
-         use /tmp or /build for the temporary doxygen database files
+</PRE><H1><A NAME=v6r25>2009-01-13 LbcomSys v6r25</A></H1><PRE>
+This version uses Gaudi v20r4 and LHCb v26r1
+
+- Packages modified: Associators v3r7, CaloTools v5r6, L0DU v8r12, L0Muon v8r4,
+    OTMonitor v2r8p1, RichMCTools v3r10, RichTools v2r24, STAlgorithms v3r3,
+    STCheckers v2r9, STDAQ v3r14, STTools v3r7, VeloAlgorithms v4r8, 
+    VeloDAQ v4r4p1
+
+- In LbcomSys v6r25
+  . Fix DoxyFile.cfg for use directly with CMT (without makedoc.py).
+    makedoc.py still needed to set LHCBVERS, GAUDIVERS for the tag file URLs,
+    and to use /tmp or /build for the temporary doxygen database files
+
+- In Associators v3r7
+  . Add MCParticleToMCHit.py, python options to replace Brunel.opts
+
+- In CaloTools v5r6
+  . Fix gcc 4.3 warnings
+  . CaloCosmicsTrackTool :: fix bug in Hcal timing 
+
+- In L0DU v8r12
+  . FastL0Filter : new algo to get decision from L0DU rawBank and filter 
+                   -> NO COMPLETE L0DU bank decoding -> NO REPORT
+                   add the possibility to re-inforce the threshold on 
+                   sumEt/SpdMult/hardon/electron/muon1
+  . Add missing -import=AIDA for compilation
+
+- In L0Muon v8r4
+  . Implement the possibility to run the emulator from the muon non-zero
+    suppressed bank
+
+- In RichTools v2r24
+  . Extend RichTabulatedRefractiveIndex with new methods to calculate index
+    for a set of radiator intersections + Update to use DeRichRadiator methods
+  . Adapt RichSnellsLawRefraction to changes in refractive index tool.
+
+- In STAlgorithms v3r3
+  . Add dependency on RecEvent
+  . Change default to TT in STClustersToLite
+  . Add STCosmicFilter algorithm
+
+- In STCheckers v2r9
+  . STClusterResolution:
+    o Added two options MergeSplitClusters, SkipSplitClusters, to remove split
+      clusters. By default both flags are switched off.
+    o Take the cluster size from the STOfflinePosition tool. 
+    o  Added histograms for the fractional position of an offline cluster.
+  . Add STDumpEvent classes
+  . Add histograms of port occupancy in Occupancy classes
+  . Bug fixes in IT/TTDigitOccupancy 
+  . Bug fixes in STClusterClassification algorithm
+  . Fix a a wrong equality comparison (assignment was used instead)
+  . Use the shorth for monitoring in STDigitMonitor
+  . Add STLiteClusterMonitor
+  . Use generalized mean function to fill reference histos 
+    in STPerformanceMonitor/STDigitMonitor 
+  . Tidy up in STClusterMonitor
+
+- In STDAQ v3r14
+  . Add checkValidity flag to allow skip of ODIN spill check
+  . Implement recovery mode for lite cluster decoding
+  . Fix STCluster decoding for special case that 'first' Beetle PCN is wrong on
+    Tell1
+
+- In STTools v3r7
+  . Move STOfflinePosition tool to new base class.
+  . Added functionality in STOfflinePosition tool to merge neighbouring clusters
+    that are split into two or more due the the TELL1 clustering algorithm. Note
+    that TELL1 splits clusters when larger than 4. By default merging is off.
+  . Pass the actual cluster size that is used in the calculation of the position.
+  . Small modification in the charge sharing correction: do not correct when
+    fractional position is equal to zero (i.e. symmetric, uneven-sized clusters).
+
+- In VeloAlgorithms v4r8
+  . Re-tuned the cluster threshold and high bit threshold as per the
+    T-Rec talk on the 15th of December. 
+
+- In CaloTools v5r6, L0DU v8r12, L0Muon v8r4, OTMonitor v2r8p1,
+     RichMCTools v3r10, STCheckers v2r9, STDAQ v3r14, VeloDAQ v4r4p1
+  . Fixes for gcc 4.3
 
 </PRE><H1><A NAME=v6r24>2008-11-24 LbcomSys v6r24</A></H1><PRE>
 This version uses Gaudi v20r3 and LHCb v26r0
