@@ -1,4 +1,4 @@
-// $Id: TrackV0Finder.cpp,v 1.6 2009-01-12 11:01:27 wouter Exp $
+// $Id: TrackV0Finder.cpp,v 1.7 2009-01-13 08:10:21 wouter Exp $
 // Include files 
 
 
@@ -163,8 +163,16 @@ StatusCode TrackV0Finder::initialize() {
   m_pocatool = tool<ITrajPoca>( "TrajPoca" );
   m_vertexer = tool<ITrackVertexer>( "TrackVertexer" );
   if(m_useExtrapolator) {
-    m_extrapolator.retrieve() ;
-    m_interpolator.retrieve() ;
+    sc = m_extrapolator.retrieve() ;
+    if( sc.isFailure() ) {
+      error() << "Cannot retrieve extrapolator" << endmsg ;
+      return sc; 
+    }
+    sc = m_interpolator.retrieve() ;
+    if( sc.isFailure() ) {
+       error() << "Cannot retrieve interpolator" << endmsg ;
+      return sc; 
+    }
   }
 
   IParticlePropertySvc* propertysvc = svc<IParticlePropertySvc>("ParticlePropertySvc",true) ;
