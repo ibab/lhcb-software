@@ -18,7 +18,10 @@ Can be launched in one of the following ways:
 """
 
 import sys
+import os
 from os import linesep
+from LbRelease.Nightlies.setup import configurationPath
+if not os.environ.has_key('LCG_XMLCONFIGDIR'): os.environ['LCG_XMLCONFIGDIR'] = configurationPath
 from LbRelease.Nightlies.functions import config, get, install, test, clean, cleanAFSSpace, run, runparallel
 from LbUtils.Script import Script
 

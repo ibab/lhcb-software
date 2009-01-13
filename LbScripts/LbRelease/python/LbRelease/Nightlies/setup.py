@@ -9,7 +9,7 @@ for p in listOfProjectNames:
     projectNamesDict[p.upper()] = p
 
 os.environ['LCG_NIGHTLIES_SCRIPTDIR'] = os.path.join('/afs', 'cern.ch', 'sw', 'lcg', 'app', 'nightlies', 'scripts')
-os.environ['LCG_XMLCONFIGDIR'] = os.path.join('/afs', 'cern.ch', 'lhcb', 'software', 'nightlies', 'conf')
+configurationPath = os.path.join('/afs', 'cern.ch', 'lhcb', 'software', 'nightlies', 'conf')
 configurationHistoryPath = os.path.join('/afs', 'cern.ch', 'lhcb', 'software', 'nightlies', 'conf', 'history')
 
 cmtCommand = 'cmt -disable_warnings'

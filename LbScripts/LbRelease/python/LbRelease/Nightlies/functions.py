@@ -21,6 +21,7 @@ def copyLocal(sourceDir, targetDir):
     for root, dires, files in dirList:
         if files:
             path = (root+os.sep).replace(sourceDir, '')
+            files = [x for x in files if x[-4:] != '.pyc' and x[-4:] == '.pyo']
             filesString = ' '.join(files)
             Lock('mkdir -p '+ targetDir + path +' && cd '+ sourceDir + path +' && tar cf - '+filesString+' | (cd '+targetDir+path+'. ; tar xf -) && cd -',str(os.getpid()),path)
 
@@ -39,6 +40,7 @@ def copySsh(sourceHost, sourceDir, targetDir):
     for root, dires, files in dirList:
         if files:
             path = (root+os.sep).replace(sourceDir, '')
+            files = [x for x in files if x[-4:] != '.pyc' and x[-4:] == '.pyo']
             filesString = ' '.join(files)
             Lock('mkdir -p '+ targetDir + path +' && ssh ' + sourceHost + ' "cd '+ sourceDir + path +' && tar cf - '+filesString+'" | (cd '+targetDir+path+'. ; tar xf -) && cd -',str(os.getpid()),path)
 
@@ -72,7 +74,8 @@ def run(slotName, minusj=None, platforms=None):
     if not platforms: platformsparam = ''
     else: platformsparam = ' --platforms "' + platforms + '"'
     os.environ['LCG_NIGHTLIES_XMLCONFIGCOPIES'] = configurationHistoryPath
-    slot = configuration.findSlot(slotName)
+    generalConfig, slotList = configuration.readConf(os.path.join(os.environ['LCG_XMLCONFIGDIR'], 'configuration.xml'))
+    slot = configuration.findSlot(slotName, slotList)
     if slot != None:
         for p in slot.getProjects():
             c = p.getDependences()
@@ -83,6 +86,11 @@ def run(slotName, minusj=None, platforms=None):
                 os.environ['LCGCMT_VERSION'] = cu['LCGCMT']
                 break
         generateBuilders(slot.buildersDir(), listOfProjectNames, minusj)
+        releasePath = slot.releaseDir()
+        if not os.path.exists(os.path.join(releasePath, 'configuration.xml')):
+            shutil.copy2(os.path.join(os.environ['LCG_XMLCONFIGDIR'], 'configuration.xml'), os.path.join(releasePath,'configuration.xml'))
+        if os.path.exists(os.path.join(releasePath, 'configuration.xml')):
+            os.environ['LCG_XMLCONFIGDIR'] = releasePath
         os.system('python ' + os.path.join(os.environ['LCG_NIGHTLIES_SCRIPTDIR'], 'doBuild.py') + ' --slots ' + slotName + platformsparam)
         cleanPycPyoFiles(slot)
 
@@ -94,7 +102,8 @@ def runparallel(slotName, minusj=None):
     if minusj == None: minusj = 0
     else: minusj = int(minusj)
     os.environ['LCG_NIGHTLIES_XMLCONFIGCOPIES'] = configurationHistoryPath
-    slot = configuration.findSlot(slotName)
+    generalConfig, slotList = configuration.readConf(os.path.join(os.environ['LCG_XMLCONFIGDIR'], 'configuration.xml'))
+    slot = configuration.findSlot(slotName, slotList)
     if slot != None:
         generateBuilders(slot.buildersDir(), listOfProjectNames, minusj)
         runningPlatformList = []
@@ -108,7 +117,8 @@ def runparallel(slotName, minusj=None):
 
 def cleanAFSSpace(slotName):
     """ removes everything from today from AFS for the <slotName> """
-    slot = configuration.findSlot(slotName)
+    generalConfig, slotList = configuration.readConf(os.path.join(os.environ['LCG_XMLCONFIGDIR'], 'configuration.xml'))
+    slot = configuration.findSlot(slotName, slotList)
     if slot is not None:
         pathToRemoveFiles = os.path.join(slot.releaseDir())
         if os.path.exists(pathToRemoveFiles):
@@ -142,7 +152,8 @@ def getSlotAndProject(slotName, projectName):
 
         Finds slotObject first and than projectObject in the slot.
     """
-    slot = configuration.findSlot(slotName)
+    generalConfig, slotList = configuration.readConf(os.path.join(os.environ['LCG_XMLCONFIGDIR'], 'configuration.xml'))
+    slot = configuration.findSlot(slotName, slotList)
     project = getProjectObject(slot, projectName)
     return slot, project
 
@@ -364,7 +375,8 @@ def clean(slotName):
         - remove logs from web directory,
         for given slot.
     """
-    slot = configuration.findSlot(slotName)
+    generalConfig, slotList = configuration.readConf(os.path.join(os.environ['LCG_XMLCONFIGDIR'], 'configuration.xml'))
+    slot = configuration.findSlot(slotName, slotList)
     if slot is not None: setCmtProjectPath(slot)
     disableLCG_NIGHTLIES_BUILD()
     #remove contents of build directory:
@@ -382,7 +394,7 @@ def install(slotName, projectName):
     setCmtProjectPath(slot)
     disableLCG_NIGHTLIES_BUILD()
     os.chdir(generatePath(slot, project, 'SYSPACKAGECMT', projectName))
-    configuration.system(cmtCommand + ' br "' + cmtCommand + ' config"')
+    os.system(cmtCommand + ' br "' + cmtCommand + ' config"')
     # copying logs
     os.chdir(os.path.join(slot.buildDir(), 'www'))
     files = os.listdir(os.getcwd())

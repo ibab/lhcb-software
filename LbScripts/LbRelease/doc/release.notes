@@ -1,3 +1,16 @@
+2008-01-13  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+
+	* python/LbRelease/Nightlies/setup.py: configurationPath variable added
+	to point to the default directory for configuration.xml; LCG_XMLCONFIGDIR
+	is not set here any more
+	* scripts/startNightlies.py: if LCG_XMLCONFIGDIR is not set, it takes the
+	value from configurationPath
+	* python/LbRelease/Nightlies/functions.py: at the start of the Nightlies
+	the configuration.xml file is copied to the slot's release directory
+	(and LCG_XMLCONFIGDIR is changed). It is used from the slot's release dir
+	during the rest of the process instead of the original one (which can be
+	changed in the meantime); .pyc and .pyo files are not copied to AFS
+
 2009-01-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/Benchmark.py: Removed.
@@ -29,12 +42,12 @@
 	* python/LbRelease/GetPack.py: New file.
 	* scripts/getClass.py: New file.
 	* scripts/getpack.py: New file.
-	* cmt/requirements: added the getpack related software. They were originally in the 
+	* cmt/requirements: added the getpack related software. They were originally in the
 	LbConfiguration package. Please look at its release.notes for the detail of the
 	changes.
 	* python/LbRelease/rcs.py: set the shell=true to the Popen call. It is needed on
 	windows in order to call svn (Marco Cl.).
-	
+
 
 2009-01-07  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
