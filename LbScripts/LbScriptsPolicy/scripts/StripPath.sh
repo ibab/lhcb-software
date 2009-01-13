@@ -1,6 +1,6 @@
 scriptdir=$LBSCRIPTSPOLICYROOT/scripts
 
-tmpfile=`python $scriptdir/PathStripper --shell=sh --mktemp -e PATH -e LD_LIBRARY_PATH -e PYTHONPATH -e JOBOPTSEARCHPATH -e HPATH `
+tmpfile=`python -m LbScriptsPolicy.PathStripper --shell=sh --mktemp -e PATH -e LD_LIBRARY_PATH -e PYTHONPATH -e JOBOPTSEARCHPATH -e HPATH `
 . $tmpfile
 rm -f $tmpfile
 unset tmpfile

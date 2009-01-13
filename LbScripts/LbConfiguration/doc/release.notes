@@ -1,5 +1,23 @@
 2009-01-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* scripts/AllProjectsSetup.py: Removed.
+	* scripts/LbLogin.py: Removed.
+	* scripts/SetupProject.py: Removed.
+	* python/LbConfiguration/AllProjectsSetup.py: New file.
+	* python/LbConfiguration/LbLogin.py: New file.
+	* python/LbConfiguration/SetupProject.py: New file.
+	* scripts/AllProjectsSetup.bat: 
+	* scripts/AllProjectsSetup.csh: 
+	* scripts/AllProjectsSetup.sh: 
+	* scripts/generateLogin.py: 
+	* scripts/setenvProject.bat: 
+	* scripts/setenvProject.csh: 
+	* scripts/setenvProject.sh: 
+	* scripts/SetupProject.bat: 
+	* scripts/SetupProject.csh: 
+	* scripts/SetupProject.sh: converted the source shell scripts. Now they are calling
+	their python internal script with "python -m" and the python scripts have been moved to
+	the python directory
 	* scripts/CreateBatAliases.py: Removed.
 	* scripts/LbShowProjectConf.py: Removed.
 	* scripts/CreateBatAliases: New file.

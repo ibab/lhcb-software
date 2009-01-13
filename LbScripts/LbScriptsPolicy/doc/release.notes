@@ -1,5 +1,11 @@
 2009-01-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbScriptsPolicy/__init__.py: New file.
+	* python/LbScriptsPolicy/PathStripper.py: New file.
+	* scripts/SourceShellAlias.csh: 
+	* scripts/SourceShellAlias.sh: converted the source shell scripts. Now they are calling
+	their python internal script with "python -m" and the python scripts have been moved to
+	the python directory
 	* scripts/ShellAlias.bat: Removed.
 	* scripts/ShellAlias.csh: Removed.
 	* scripts/ShellAlias.sh: Removed. Removed the extension to the plain shell script and
@@ -11,9 +17,12 @@
 	* cmt/requirements: 
 	
 	* scripts/StripPath.bat: 
+	
 	* scripts/StripPath.csh: 
+	
 	* scripts/StripPath.sh: Removed the extension from the python scripts.
 	Modified the fragments for this.
+	
 
 2008-12-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 

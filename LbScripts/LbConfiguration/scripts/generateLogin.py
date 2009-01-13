@@ -31,10 +31,10 @@ def generateLogin(targetlocation, script, version="", mysiteroot=None):
     f = open(script, "w")
     if shell == "sh" or shell == "zsh" :
         if mysiteroot :
-            content = """LbLogin_tmpfile=`%s/scripts/LbLogin.py --shell=sh --mktemp --mysiteroot=%s "$@"`
+            content = """LbLogin_tmpfile=`%s/python/LbConfiguration/LbLogin.py --shell=sh --mktemp --mysiteroot=%s "$@"`
 """ % (targetlocation, mysiteroot)
         else :
-            content = """LbLogin_tmpfile=`%s/scripts/LbLogin.py --shell=sh --mktemp "$@"`
+            content = """LbLogin_tmpfile=`%s/python/LbConfiguration/LbLogin.py --shell=sh --mktemp "$@"`
 """ % targetlocation
         content += """LbLoginStatus="$?"
 if [ "$LbLoginStatus" = 0 ]; then
@@ -47,10 +47,10 @@ unset LbLogin_tmpfile
 """ % (targetlocation, version)
     elif shell == "csh" or shell == "tcsh" :
         if mysiteroot :
-            content = """set LbLogin_tmpfile = `%s/scripts/LbLogin.py --shell=csh --mktemp --mysiteroot=%s ${*:q}`
+            content = """set LbLogin_tmpfile = `%s/python/LbConfiguration/LbLogin.py --shell=csh --mktemp --mysiteroot=%s ${*:q}`
 """ % (targetlocation, mysiteroot)
         else :
-            content = """set LbLogin_tmpfile = `%s/scripts/LbLogin.py --shell=csh --mktemp ${*:q}`
+            content = """set LbLogin_tmpfile = `%s/python/LbConfiguration/LbLogin.py --shell=csh --mktemp ${*:q}`
 """ % targetlocation
         content += """set LbLoginStatus = $?
 if ( ! $LbLoginStatus ) then
@@ -76,14 +76,14 @@ source %s/scripts/SetupProject.csh LbScripts %s --runtime LCGCMT Python
         
 set LbLogin_tmpfile="%%TEMP%%\LbLogin_tmpsetup.bat"
 
-python %s\scripts\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% --mysiteroot=%s %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9
+python %s\python\LbConfiguration\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% --mysiteroot=%s %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9
 """ % (wintargetlocation, winmysiteroot)
         else :
             content = """@echo off
         
 set LbLogin_tmpfile="%%TEMP%%\LbLogin_tmpsetup.bat"
 
-python %s\scripts\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9
+python %s\python\LbConfiguration\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9
 """ % wintargetlocation
         content += """set LbLoginStatus=%%ERRORLEVEL%%
 

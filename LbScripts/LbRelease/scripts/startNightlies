@@ -2,5 +2,5 @@
 
 source `which SetupProject.sh` LCGCMT lcgnightlies
 
-python `which startNightlies.py` "$@"
+python -m LbRelease.Nightlies.startNightlies "$@"
 

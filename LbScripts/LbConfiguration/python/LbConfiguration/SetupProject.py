@@ -5,11 +5,11 @@ from xml.sax import parse, ContentHandler
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.39 2009-01-13 13:17:59 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.1 2009-01-13 17:43:40 hmdegaud Exp $"
 
 try:
     from LbUtils.CVS import CVS2Version
-    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.39 $")
+    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.1 $")
 except ImportError :
     __version__ = _cvs_id
 

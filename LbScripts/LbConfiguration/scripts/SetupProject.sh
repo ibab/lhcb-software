@@ -1,5 +1,5 @@
 
-SetupProject_tmpfile=`SetupProject.py --shell=sh --mktemp "$@"`
+SetupProject_tmpfile=`python -m LbConfiguration.SetupProject --shell=sh --mktemp "$@"`
 SetupProjectStatus="$?"
 if [ "$SetupProjectStatus" = 0 ]; then
     . $SetupProject_tmpfile

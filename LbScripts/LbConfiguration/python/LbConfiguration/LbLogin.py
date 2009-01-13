@@ -19,11 +19,12 @@ from LbUtils.Script import Script
 from LbUtils.Env import Environment, Aliases
 from LbUtils.CVS import CVS2Version
 from tempfile import mkstemp
+from optparse import OptionValueError
 import sys, os, logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.24 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.1 $")
 
 
 def getLbLoginEnv(debug=False, 

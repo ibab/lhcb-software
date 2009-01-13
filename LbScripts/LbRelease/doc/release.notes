@@ -1,3 +1,16 @@
+2009-01-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/getClass.py: Removed.
+	* scripts/startNightlies.csh: Removed.
+	* scripts/startNightlies.py: Removed.
+	* scripts/startNightlies.sh: Removed.
+	* python/LbRelease/Nightlies/startNightlies.py: New file.
+	* scripts/getClass: New file.
+	* scripts/startNightlies.bat: converted the source shell scripts. Now they are calling
+	their python internal script with "python -m" and the python scripts have been moved to
+	the python directory
+	
+
 2008-01-13  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
 	* python/LbRelease/Nightlies/setup.py: configurationPath variable added

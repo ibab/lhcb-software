@@ -1,5 +1,5 @@
 
-set SetupProject_tmpfile = `SetupProject.py --shell=csh --build-env --mktemp ${*:q}`
+set SetupProject_tmpfile = `python -m LbConfiguration.SetupProject --shell=csh --build-env --mktemp ${*:q}`
 set SetupProjectStatus = $?
 if ( ! $SetupProjectStatus ) then
     source $SetupProject_tmpfile

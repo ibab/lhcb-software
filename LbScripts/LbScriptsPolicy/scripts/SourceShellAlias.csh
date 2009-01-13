@@ -3,7 +3,8 @@
 if ${?SOURCESHELLALIASLIST} then
   foreach a ( $SOURCESHELLALIASLIST)
     if ( -e $a.csh ) then
-      alias $a:t "source $a.csh"
+      set b=$a:t
+      alias $b "source `which $b.csh`"
     endif
   end
   unsetenv SOURCESHELLALIASLIST

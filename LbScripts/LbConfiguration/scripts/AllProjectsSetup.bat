@@ -2,7 +2,7 @@
 
 set AllProjectSetup_tmpfile="%TEMP%\AllProjectSetup_tmpsetup.bat"
 
-python %~d0\%~p0\AllProjectsSetup.py --shell=bat --output=%AllProjectSetup_tmpfile%
+python -m LbConfiguration.AllProjectsSetup --shell=bat --output=%AllProjectSetup_tmpfile%
 
 set AllProjectsSetupStatus=%ERRORLEVEL%
 
