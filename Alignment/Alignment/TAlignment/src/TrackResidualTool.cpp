@@ -1,9 +1,11 @@
 
-#include "ITrackResidualTool.h"
+#include <map>
 #include "GaudiKernel/IIncidentListener.h"
+#include "GaudiKernel/ToolHandle.h"
 #include "GaudiAlg/GaudiTool.h"
 #include "LHCbMath/MatrixInversion.h"
-#include <map>
+#include "ITrackResidualTool.h"
+#include "IGetElementsToBeAligned.h"
 
 namespace Al
 {
@@ -19,6 +21,8 @@ namespace Al
     virtual ~TrackResidualTool() {} ;
     // initialisation
     StatusCode initialize() ;
+    // finalize
+    StatusCode finalize() ;
     // incident service handle
     void handle( const Incident& incident ) ;
     // get the residuals for this track
@@ -26,10 +30,14 @@ namespace Al
 
   private:  
     const Al::TrackResiduals* compute(const LHCb::Track& track) const ;
+    Al::TrackResiduals* create( const LHCb::Track& track, 
+				const std::vector<const LHCb::Node*>& nodes,
+				std::vector<size_t>& residualnodeindices,
+				size_t& refnodeindex ) const ;
   private:
     typedef std::map<const LHCb::Track*, const Al::TrackResiduals*> ResidualMap ;
     mutable ResidualMap m_residuals ;
-    bool m_updateStateCovariance ;
+    ToolHandle<IGetElementsToBeAligned> m_elementTool ;
   } ;
   
 }
@@ -53,24 +61,27 @@ namespace Al
 				       const std::string& name,
 				       const IInterface* parent)
     : GaudiTool(type,name,parent),
-      m_updateStateCovariance(false)
+      m_elementTool("GetElementsToBeAligned")
   {
     // interfaces
     declareInterface<ITrackResidualTool>(this);
-    declareProperty("UpdateStateCovariance",m_updateStateCovariance) ;
   }
   
   StatusCode TrackResidualTool::initialize()
   {
     StatusCode sc = GaudiTool::initialize();
-    if (sc.isFailure()){
-      return Error("Failed to initialize",sc);
-    }
+    if (sc.isFailure()) return Error("Failed to initialize",sc);
+    sc = m_elementTool.retrieve() ;
     incSvc()->addListener(this, IncidentType::EndEvent);
     return sc ;
   }
 
-  
+  StatusCode TrackResidualTool::finalize()
+  {
+    m_elementTool.release().ignore() ;
+    return GaudiTool::finalize();
+  }
+
   void TrackResidualTool::handle( const Incident& incident )
   {
     if ( IncidentType::EndEvent == incident.type() ) {
@@ -94,21 +105,13 @@ namespace Al
     return rc ;
   }
 
-  typedef std::pair<const LHCb::Node*, size_t> NodeWithIndex ;
-  struct NodeSorter {
-    // sort nodes such that states at vertex come first
-    bool m_backward ;
-    NodeSorter( bool backward ) : m_backward(backward) {}
-    bool operator()( const NodeWithIndex& lhs, 
-		     const NodeWithIndex& rhs ) const {
-      return m_backward ? lhs.first->z()>rhs.first->z() : lhs.first->z()<rhs.first->z() ; }
-  } ;
-
-  static void SelectSortAndMap(const std::vector<const LHCb::Node*>& nodes,
-			       std::vector<const LHCb::Node*>& measurementnodes,
-			       std::vector<size_t>& measurementnodeindices,
-			       bool backward)
+  Al::TrackResiduals* TrackResidualTool::create( const LHCb::Track& track, 
+						 const std::vector<const LHCb::Node*>& nodes,
+						 std::vector<size_t>& residualnodeindices,
+						 size_t& refnodeindex ) const
   {
+    // first select nodes with a measurement and equip them with an index in the original list
+    typedef std::pair<const LHCb::Node*, size_t> NodeWithIndex ;
     std::vector< NodeWithIndex > nodeswithindex ;
     nodeswithindex.reserve( nodes.size()) ;
     size_t index(0) ;
@@ -116,21 +119,49 @@ namespace Al
 	 it != nodes.end(); ++it, ++index )
       if( (*it)->hasMeasurement() && (*it)->type() != LHCb::Node::Outlier ) 
 	nodeswithindex.push_back( NodeWithIndex(*it,index) ) ;
-    // sort them
-    std::sort( nodeswithindex.begin(), nodeswithindex.end(), NodeSorter(backward) ) ;
 
-    // now copy back
-    measurementnodeindices.clear() ;
-    measurementnodes.clear() ;
-    measurementnodeindices.reserve( nodeswithindex.size() ) ;
-    measurementnodes.reserve( nodeswithindex.size() ) ;
+    // now make sure the order is right for eventual vertexing
+    bool backward = track.checkFlag(LHCb::Track::Backward) ;
+    bool increasingz = nodes.front()->z() < nodes.back()->z() ;
+    if( (backward && increasingz) || (!backward && !increasingz))
+      std::reverse( nodeswithindex.begin(), nodeswithindex.end() ) ;
+
+    // the first node is the reference for vertexing
+    refnodeindex = nodeswithindex.front().second ;
+
+    // now select the subset of nodes associated to an alignable object
+    residualnodeindices.clear() ;
+    residualnodeindices.reserve( nodeswithindex.size() ) ;
+    Al::TrackResiduals* rc = new Al::TrackResiduals(track) ;
+    rc->m_residuals.reserve( nodeswithindex.size() ) ;
+    rc->m_state = nodeswithindex.front().first->state() ;
     for( std::vector< NodeWithIndex >::const_iterator it = nodeswithindex.begin() ;
 	 it != nodeswithindex.end(); ++it ) {
-      measurementnodeindices.push_back( it->second ) ;
-      measurementnodes.push_back( it->first ) ;
+      const LHCb::Node* node = it->first ;
+      const AlignmentElement* elem = m_elementTool->findElement(node->measurement()) ;
+      if( elem ) { 
+	rc->m_residuals.push_back( Al::Residual1D( *node, *elem) ) ;
+	residualnodeindices.push_back( it->second ) ;
+      } else {
+	rc->m_nExternalHits++ ;
+      }
     }
+    
+    return rc ;
   }
 
+  const Gaudi::TrackMatrix& getOffDiagCov( size_t l,
+					   size_t k,
+					   std::vector< std::vector<Gaudi::TrackMatrix*> >& offdiagcov,
+					   const std::vector< Gaudi::TrackMatrix >& smoothergainmatrix)
+  {
+    assert(k < l ) ;
+    if( offdiagcov[l][k] == 0 ) 
+      offdiagcov[l][k] = new Gaudi::TrackMatrix( getOffDiagCov(l,k+1,offdiagcov,smoothergainmatrix)
+						 * Transpose(smoothergainmatrix[k]) ) ;
+    return *offdiagcov[l][k] ;
+  }
+  
   const Al::TrackResiduals* TrackResidualTool::compute(const LHCb::Track& track) const
   {
     debug() << "In TrackResidualTool::Compute" << endreq ;
@@ -269,20 +300,6 @@ namespace Al
 	assert( k-1< offdiagcov[k].size() ) ;
 	
 	offdiagcov[k][k-1] = new Gaudi::TrackMatrix(Transpose(C_km1_k)) ;
-	
-	// now compute the smoothed covariance matrix for node k-1. this
-	// is new. it is really ugly.
-	if( m_updateStateCovariance )
-	  if( nonZeroNoise ) {
-	    // we need the filtered covariance for the previous node. since
-	    // that is not stored, we'll need to extract it.
-	    Gaudi::TrackSymMatrix filteredcovkm1 =  
-	      ROOT::Math::Similarity<double,Gaudi::TrackMatrix::kRows,Gaudi::TrackMatrix::kCols>( invF, predcovMinusQ ) ;
-	    const_cast<Gaudi::TrackSymMatrix&>(*(diagcov[k-1])) = filteredcovkm1 + 
-	      ROOT::Math::Similarity<double,Gaudi::TrackMatrix::kRows,Gaudi::TrackMatrix::kCols>( smoothergainmatrix[k-1], cov - predcov ) ;
-	  } else {
-	    const_cast<Gaudi::TrackSymMatrix&>(*(diagcov[k-1])) = ROOT::Math::Similarity( invF, cov ) ;
-	  }
       }
     }
 
@@ -295,108 +312,74 @@ namespace Al
 
     if( !error ) {
 
-      for(size_t l=2; l<numnodes; ++l) {
-	for(size_t k=l-1; k>0; --k) {
-	  assert( offdiagcov[l][k] != 0 ) ;
-	  offdiagcov[l][k-1] = new Gaudi::TrackMatrix( (*(offdiagcov[l][k])) * Transpose(smoothergainmatrix[k-1]) ) ;
-	}
-      }
+      // FIX ME: replace this with an 'on-demand' computation
+      //       for(size_t l=2; l<numnodes; ++l) {
+      // 	for(size_t k=l-1; k>0; --k) {
+      // 	  assert( offdiagcov[l][k] != 0 ) ;
+      // 	  offdiagcov[l][k-1] = new Gaudi::TrackMatrix( (*(offdiagcov[l][k])) * Transpose(smoothergainmatrix[k-1]) ) ;
+      // 	}
+      //       }
     
-      // for now, just check that every element is filled
-      for( size_t irow = 1; irow<numnodes; ++irow) for(size_t icol = 0; icol<irow; ++icol)
-	if( offdiagcov[irow][icol] == 0 )
-	  std::cout << "element not filled: " << irow << " " << icol << " " << numnodes << std::endl ;
-            
+      //       // for now, just check that every element is filled
+      //       for( size_t irow = 1; irow<numnodes; ++irow) for(size_t icol = 0; icol<irow; ++icol)
+      // 	if( offdiagcov[irow][icol] == 0 )
+      // 	  std::cout << "element not filled: " << irow << " " << icol << " " << numnodes << std::endl ;
+      
       // now it is time to calculate the covariance matrix for the
       // residuals. First we need to know which nodes correspond to
       // measurements. After that, we fill the matrix.
+
+      // create the Al::Residuals object
       std::vector<size_t> measurementnodeindices ;
-      Al::TrackResiduals::NodeContainer measurementnodes ;
-      SelectSortAndMap(nodes,measurementnodes,measurementnodeindices,
-		       track.checkFlag( LHCb::Track::Backward)) ;
+      size_t refnodeindex ;
+      residuals = create( track,nodes,measurementnodeindices,refnodeindex ) ;
       
-      residuals = new Al::TrackResiduals(track,measurementnodes) ;
-      // correlation with the reference state, which is the most
-      // upstream node.
-      size_t refnodeindex = measurementnodeindices[0] ;
-      
-      // allocate the H C H^T matrix
-      // NOTE: we normalize H C H^T relative to V
+      // now create the 'sparce' matrix HCH
       size_t nummeasurements = measurementnodeindices.size() ;
-      residuals->m_HCH = CLHEP::HepSymMatrix(nummeasurements,0) ;
-      CLHEP::HepSymMatrix V = CLHEP::HepSymMatrix(nummeasurements,0) ;
+      residuals->m_HCHElements.reserve( nummeasurements*(nummeasurements-1)/2) ;
+      residuals->m_residualStateCov.reserve( nummeasurements ) ;
       for(size_t irow=0; irow<nummeasurements; ++irow) {
 	size_t k = measurementnodeindices[irow] ;
-	assert(measurementnodes[irow]==nodes[k]);
+	assert(&(residuals->m_residuals[irow].node())==nodes[k]);
 	const Gaudi::TrackProjectionMatrix& Hk = nodes[k]->projectionMatrix() ;
 	// first the off-diagonal elements
 	for(size_t icol=0; icol<irow; ++icol) {
 	  size_t l = measurementnodeindices[icol] ;
-	  assert(measurementnodes[icol]==nodes[l]) ;
+	  assert(&(residuals->m_residuals[icol].node())==nodes[l]);
 	  const Gaudi::TrackProjectionMatrix& Hl = nodes[l]->projectionMatrix() ;
-	  residuals->m_HCH.fast(irow+1,icol+1) = l < k ? 
-	    (Hk * *(offdiagcov[k][l]) * Transpose(Hl))(0,0) :
-	    (Hl * *(offdiagcov[l][k]) * Transpose(Hk))(0,0) ;
+	  double hch = l < k ? 
+	    (Hk * getOffDiagCov(k,l,offdiagcov,smoothergainmatrix) * Transpose(Hl))(0,0) :
+	    (Hl * getOffDiagCov(l,k,offdiagcov,smoothergainmatrix) * Transpose(Hk))(0,0) ;
+	  residuals->m_HCHElements.push_back(CovarianceElement( irow, icol, hch ) ) ;
 	}
-	// now the diagonal element
-	residuals->m_HCH.fast(irow+1,irow+1) = ROOT::Math::Similarity(Hk,*(diagcov[k]))(0,0) ;
+	// now the diagonal element. we recompute this, just to make
+	// sure it is consistent. (this turns out not to be necessary,
+	// but anyway.)
+	residuals->m_residuals[irow].setHCH( ROOT::Math::Similarity(Hk,*(diagcov[k]))(0,0) ) ;
 	
 	// and finally the column for the correlation with the reference state
 	Gaudi::Matrix1x5 correlationmatrix ;
 	if( refnodeindex == k )
 	  correlationmatrix = Hk * *(diagcov[k]) ;
 	else if( refnodeindex < k )
-	  correlationmatrix = Hk * *(offdiagcov[k][refnodeindex]) ;
+	  correlationmatrix = Hk * getOffDiagCov(k,refnodeindex,offdiagcov,smoothergainmatrix) ;
 	else
-	  correlationmatrix = Hk * Transpose(*(offdiagcov[refnodeindex][k])) ;
+	  correlationmatrix = Hk * Transpose(getOffDiagCov(refnodeindex,k,offdiagcov,smoothergainmatrix)) ;
 	// now copy it into the trackresidual. need to be very carefull
 	// with signs here. use H = - dres/dstate. in fact, this the
 	// only place we need to know what the sign of the residual is.
-	residuals->m_residualStateCov[irow] = - correlationmatrix ;
+	residuals->m_residualStateCov.push_back( - correlationmatrix ) ;
       }
       
-      // Let's check the result. Keep track of the roots.
-      const double tol = 1e-3 ;
-      std::vector<double> HCHdiagroots ;
-      std::vector<double> Rdiagroots ;
-      for(size_t irow=0; irow<nummeasurements && !error; ++irow) {
-	double c = residuals->m_HCH.fast(irow+1,irow+1) ;
-	error = ! (0<=c) ;
-	if(error) warning() << "found negative element on diagonal: " << c << endreq ;
-	error = ! ( c<residuals->V(irow)) ;
-	if(error) {
-	  warning() << "found too large element on diagonal: " << c/residuals->V(irow) << endreq ;
-	  size_t k = measurementnodeindices[irow] ;
-	  const Gaudi::TrackProjectionMatrix& Hk = nodes[k]->projectionMatrix() ;
-	  double d = ROOT::Math::Similarity(Hk,*(diagcov[k]))(0,0) ;
-	  std::cout << "c,d: " << c << "," << d << " " << residuals->V(irow) << " "
-		    << nodes[k]->errMeasure() << std::endl ;
-	  std::cout << *(diagcov[k]) << std::endl ;
-	  std::cout << nodes[k]->state().covariance() << std::endl ;
-	}
-	HCHdiagroots.push_back( std::sqrt(c) ) ;
-	Rdiagroots.push_back( std::sqrt(residuals->V(irow) - c) ) ;
+      // Let's check the result
+      if(!error) {
+	std::string message ;
+	error = residuals->testHCH(message) ;
+	if(error) warning() << message << endreq ;
       }
-      bool offdiagerror(false) ;
-      for(size_t irow=0; irow<nummeasurements && !error; ++irow) {
-	for(size_t icol=0; icol<irow && !error; ++icol) {
-	  double c = residuals->m_HCH.fast(irow+1,icol+1) / (HCHdiagroots[irow]*HCHdiagroots[icol]) ;
-	  bool thiserror =  ! (-1-tol < c && c <1+tol) ;
-	  double d = residuals->m_HCH.fast(irow+1,icol+1) / (Rdiagroots[irow]*Rdiagroots[icol]) ;
-	  bool thisderror =  ! (-1-tol < d && d <1+tol) ;
-	  if(thiserror||thisderror) {
-	    warning() << "found bad element on offdiagonal: " 
-		      << irow << " " << icol << " " 
-		      << c << " " << d << endreq ;
-	  }
-	  
-	  offdiagerror |= thiserror || thisderror ;
-	}
-      }
-      if(error||offdiagerror) { delete residuals ; residuals = 0 ; }
-      
+      if(error) { delete residuals ; residuals = 0 ; }
     }
-
+    
     // let's clean up:
     for( size_t irow = 0; irow<numnodes; ++irow)
       for( size_t icol = 0; icol < irow; ++icol)
