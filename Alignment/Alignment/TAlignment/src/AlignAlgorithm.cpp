@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.52 2008-10-08 11:50:33 wouter Exp $
+// $Id: AlignAlgorithm.cpp,v 1.53 2009-01-13 15:56:46 wouter Exp $
 // Include files
 // from std
 // #include <utility>
@@ -51,27 +51,6 @@ namespace {
    return v;
  }
 
- class Data {
- public:
-   Data(unsigned nodeindex, unsigned index, double r, const Gaudi::Matrix1x6& d,bool isoutlier)
-     : m_nodeindex(nodeindex),
-       m_index(index),
-       m_r(r),
-       m_d(d),
-       m_isOutlier(isoutlier) {}
-   unsigned index() const { return m_index; }
-   double r() const { return m_r; }
-   const Gaudi::Matrix1x6& d() const { return m_d; }
-   size_t nodeindex() const { return m_nodeindex ; }
-   bool isOutlier() const { return m_isOutlier ; }
- private:
-   size_t            m_nodeindex;
-   unsigned          m_index;
-   double            m_r;
-   Gaudi::Matrix1x6  m_d;
-   bool              m_isOutlier ;
- };
- 
 };
 
 using namespace LHCb;
@@ -185,6 +164,8 @@ StatusCode AlignAlgorithm::initialize() {
     m_elemHistos.push_back( new AlElementHistos(*this,*i,m_nIterations) ) ;
   m_resetHistos = false ;
 
+  info() << "Use correlations = " << m_correlation << endreq ;
+
   return StatusCode::SUCCESS;
 }
 
@@ -227,7 +208,8 @@ StatusCode AlignAlgorithm::execute() {
 	selectedtracks.push_back( *iTrack ) ;
       } else {
 	warning() << "Error computing residual cov matrix. Skipping track of type "
-		  << (*iTrack)->type() << " with key: " << (*iTrack)->key() << " and chi2 / dof: " << (*iTrack)->chi2() << "/" << (*iTrack)->nDoF() << endmsg ;
+		  << (*iTrack)->type() << " with key: " << (*iTrack)->key() 
+		  << " and chi2 / dof: " << (*iTrack)->chi2() << "/" << (*iTrack)->nDoF() << endmsg ;
 	++m_covFailure;
       }
     } else {
@@ -316,120 +298,129 @@ StatusCode AlignAlgorithm::execute() {
 
 bool AlignAlgorithm::accumulate( const Al::Residuals& residuals )
 {
-  if (printVerbose()) verbose() << "==> Found " << residuals.nodes().size() << " nodes"<< endmsg;
-  std::vector<Data> data;
-  // Loop over nodes and get measurements, residuals and errors
-  typedef Al::Residuals::NodeContainer::const_iterator NodeIter;
-  size_t numexternalhits(0) ;
-  size_t nodeindex(0) ;
-  std::set<unsigned> alignables ;
-  for (Al::Residuals::NodeContainer::const_iterator node = residuals.nodes().begin(); 
-       node != residuals.nodes().end();++node, ++nodeindex) {
-    assert( (*node)->hasMeasurement() ) ;
-
-    // Get measurement
-    const Measurement& meas = (*node)->measurement();
-    // Get element that belongs to this measurment
-    const AlignmentElement* elem = m_align->findElement(meas);
-    if (!elem) {
-      if (printVerbose()) verbose() << "==> Measurement not on a to-be-aligned DetElem " 
-				    << meas.lhcbID() << " "
-				    << meas.detectorElement()->name() << endmsg;
-      ++numexternalhits ;
-      continue;
+  bool accept = true ;
+  if( residuals.size() > 0 &&
+      (residuals.nAlignables() > 1 || residuals.nExternalHits()>0 ) ) {
+    
+    // let's first get the derivatives
+    typedef Gaudi::Matrix1x6 Derivative ;
+    std::vector< Derivative > derivatives ;
+    derivatives.reserve( residuals.size() ) ;
+    for (Al::Residuals::ResidualContainer::const_iterator 
+	   ires = residuals.residuals().begin(); 
+	 ires != residuals.residuals().end() && accept;++ires) {
+      // Project measurement
+      const LHCb::Measurement& meas = ires->node().measurement() ;
+      const ITrackProjector* proj = m_projSelector->projector(meas);
+      if (!proj) {
+	error() << "==> Could not get projector for selected measurement!" << endmsg;
+	accept = false ;
+      } else {
+	LHCb::StateVector state(ires->node().state().stateVector(),ires->node().state().z());
+	derivatives.push_back( proj->alignmentDerivatives(state,meas,Gaudi::XYZPoint(0,0,0)) * ires->element().jacobian() ) ;
+      }
     }
-      
-    const unsigned index = elem->index();
-    if (printVerbose()) verbose() << "==> measure = " << meas.measure() << " id = " << meas.lhcbID() << " -> index = " 
-				  << index << " -> " <<  elem->name() << endmsg;
-    
-    // Project measurement
-    const ITrackProjector* proj = m_projSelector->projector(meas);
-    if (!proj) {
-      error() << "==> Could not get projector for selected measurement!" << endmsg;
-      continue;
-    }
-    double res    = residuals.r(nodeindex) ;
-    double err    = std::sqrt(residuals.V(nodeindex)) ;
-    // Get alignment derivatives
-    LHCb::StateVector state((*node)->state().stateVector(),(*node)->state().z());
-    // the projector calculates the derivatives in the global
-    // frame. The jacobian corrects for the transformation to the
-    // alignment frame.
-    Derivatives der =  
-      proj->alignmentDerivatives(state,meas,Gaudi::XYZPoint(0,0,0)) *
-      elem->jacobian() ;
-    
-    bool isoutlier = res*res/(*node)->errResidual2() > m_chi2Outlier ;
-    
-    // push back normalized residuals & derivatives;
-    res /= err;
-    der /= err;
-    data.push_back(Data(nodeindex, index, res, der, isoutlier));
-    alignables.insert(index) ;
-  }
 
-  // reject this track if there is only a single alignable element and no external hits
-  bool accept = !data.empty() && ( alignables.size()>=2 || numexternalhits >= 1 ) ;
-  if ( accept ) {
-    
-    for (std::vector<Data>::const_iterator id = data.begin(), idEnd = data.end(); id != idEnd; ++id) {
-      m_equations->addHitSummary(id->index(), residuals.V(id->nodeindex()), residuals.R(id->nodeindex())) ;
-      // outliers are not added to the first derivative. they must be
-      // added to the 2nd though, because otherwise we loose the
-      // correlations. we'll solve the relative normalization when we
-      // build the full linear system.
-      if( !id->isOutlier() ) 
-	m_equations->V(id->index())            -= convert(id->r()*id->d()) ;
-      else
-	m_equations->numOutliers(id->index())  += 1 ;
-      
-      m_equations->M(id->index(), id->index()) += (Transpose(id->d())*id->d());
-      
-      for (std::vector<Data>::const_iterator jd = data.begin(); jd != idEnd; ++jd) {
-	if ( id == jd || ( m_correlation && id->index() <= jd->index() )) {
-	  double c = residuals.HCH_norm( id->nodeindex(), jd->nodeindex() ) ;
-	  m_equations->M(id->index(), jd->index()) -= c * (Transpose(id->d())*jd->d());
+    if( accept ) {
+      size_t nodeindex(0) ;
+      for (Al::Residuals::ResidualContainer::const_iterator 
+	     ires = residuals.residuals().begin() ; 
+	   ires != residuals.residuals().end();++ires, ++nodeindex) {
+	const Derivative& deriv = derivatives[nodeindex] ;
+	Al::ElementData& elementdata = m_equations->element(ires->element().index()) ;
+	elementdata.addHitSummary(ires->V(), ires->R()) ;
+
+	// add to the first derivative
+	
+	// 'alignment' outliers are not added to the first
+	// derivative. However, since they have been used in the track
+	// fit, they must be added to the 2nd derivative, otherwise we
+	// loose the unconstrained modes. we'll solve the relative
+	// normalization when we build the full linear system.
+	if( ! (ires->chi2() > m_chi2Outlier) )
+	  // FIX ME: get rid of minus sign
+	  elementdata.m_dChi2DAlpha  -= 1/ires->V() * ires->r() * convert(deriv) ;
+	else
+	  elementdata.m_numOutliers++ ;
+
+	// add V^{-1} ( V - HCH ) V^{-1} to the 2nd derivative
+	Gaudi::SymMatrix6x6 tmpsym ;
+	ROOT::Math::AssignSym::Evaluate(tmpsym,Transpose(deriv)*deriv ) ;
+	elementdata.m_d2Chi2DAlpha2 += (1/ ires->V() * ires->R() * 1/ ires->V() ) * tmpsym ;
+         
+	// compute the derivative of the curvature, used for one of the
+	// canonical constraints:
+	//   dx/dalpha = - dchi^2/dalphadx * ( dchi^2/dx^2)^{-1}
+	//             = - 2 * dr/dalpha * V^{-1} * H * C
+	// This stil needs some work because I actually want the
+	// derivative to the first state.
+	const Gaudi::TrackSymMatrix& C = ires->node().state().covariance() ;
+	const Gaudi::TrackProjectionMatrix& H = ires->node().projectionMatrix() ;
+	const ROOT::Math::SMatrix<double,5,1> normalizeddrdstate = C*Transpose(H) / ires->V() ;
+	elementdata.m_dStateDAlpha += normalizeddrdstate * deriv ;
+      }
+
+      // add V^{-1} R V^{-1} to the 2nd derivative for the offdiagonal entries
+      if( m_correlation ) {
+	for(Al::Residuals::CovarianceContainer::const_iterator ihch = residuals.HCHElements().begin() ;
+	    ihch != residuals.HCHElements().end(); ++ihch) {
+	  assert(ihch->col < ihch->row) ;
+	  size_t rowindex = residuals.residual(ihch->row).element().index() ;
+	  size_t colindex = residuals.residual(ihch->col).element().index() ;
+	  const Derivative& rowderiv = derivatives[ihch->row] ;
+	  const Derivative& colderiv = derivatives[ihch->col] ;
+	  double c = ihch->val / (residuals.residual(ihch->row).V()*residuals.residual(ihch->col).V()) ;
+	  if( rowindex < colindex ) {
+	    Al::ElementData& elementdata = m_equations->element(rowindex) ;
+	    elementdata.m_d2Chi2DAlphaDBeta[colindex] -= c * Transpose(rowderiv) * colderiv ;
+	  } else if (rowindex > colindex) {
+	    Al::ElementData& elementdata = m_equations->element(colindex) ;
+	    elementdata.m_d2Chi2DAlphaDBeta[rowindex] -= c * Transpose(colderiv) * rowderiv ;
+	  } else if(rowindex == colindex ) {
+	    Al::ElementData& elementdata = m_equations->element(rowindex) ;
+	    // make sure to symmetrize: add diagonal elements in both orders.
+	    Gaudi::Matrix6x6 tmpasym = Transpose(rowderiv) * colderiv ;
+	    Gaudi::SymMatrix6x6 tmpsym ;
+	    ROOT::Math::AssignSym::Evaluate(tmpsym, tmpasym + Transpose(tmpasym)) ;
+	    // 	    std::cout << "row,col: "
+	    // 		      << ihch->row << " " << ihch->col << " " << rowindex << " " << colindex << std::endl ;
+	    // 	    std::cout << "row deriv: " << rowderiv << std::endl ;
+	    // 	    std::cout << "col deriv: " << colderiv << std::endl ;
+	    // 	    std::cout << "tmpasym: " << std::endl
+	    // 		      << tmpasym << std::endl
+	    // 		      << "tmpsym: " << std::endl
+	    // 		      << tmpsym << std::endl ;
+	    elementdata.m_d2Chi2DAlpha2 -= c * tmpsym ;
+ 	  }
 	}
       }
-          
-      // compute the derivative of the curvature, used for one of the
-      // canonical constraints:
-      //   dx/dalpha = - dchi^2/dalphadx * ( dchi^2/dx^2)^{-1}
-      //             = - 2 * dr/dalpha * V^{-1} * H * C
-      // This stil neds seom work because I catually want the
-      // derivative to the first state.
-
-      const Gaudi::TrackSymMatrix& C = residuals.nodes()[id->nodeindex()]->state().covariance() ;
-      const Gaudi::TrackProjectionMatrix& H = residuals.nodes()[id->nodeindex()]->projectionMatrix() ;
-      const ROOT::Math::SMatrix<double,5,1> normalizeddrdstate = C*Transpose(H) / std::sqrt(residuals.V(id->nodeindex())) ;
-      m_equations->dStateDAlpha(id->index()) += normalizeddrdstate * id->d() ;
       
       // fill some histograms
-      {
-	double V = residuals.V(id->nodeindex()) ;
-	double R = residuals.R(id->nodeindex()) ;
-	double r = residuals.r(id->nodeindex()) ;
-	double f = std::sqrt(R/V) ;
-	double pull = r / sqrt(R) ;
-	
-	size_t index = id->index() ;
-	double sign = id->d()(0,0) > 0 ? 1 : -1 ;
+      nodeindex = 0 ;
+      for (Al::Residuals::ResidualContainer::const_iterator ires = residuals.residuals().begin();
+	   ires != residuals.residuals().end();++ires, ++nodeindex) {
+	const Derivative& deriv = derivatives[nodeindex] ;
+	double f = std::sqrt(ires->R()/ires->V()) ;
+	double pull = ires->r() / std::sqrt(ires->R()) ;
+	size_t index = ires->element().index() ;
+	double sign = deriv(0,0) > 0 ? 1 : -1 ;
 	m_elemHistos[index]->m_nHitsHisto->fill(m_iteration);
-	m_elemHistos[index]->m_resHisto->fill(m_iteration, sign*r);
+	m_elemHistos[index]->m_resHisto->fill(m_iteration, sign*ires->r());
+	m_elemHistos[index]->m_unbiasedResHisto->fill(m_iteration, sign*ires->r()/f);
 	m_elemHistos[index]->m_pullHisto->fill(m_iteration, sign*pull);
 	m_elemHistos[index]->m_autoCorrHisto->fill(m_iteration,f) ;
 	for(int ipar=0; ipar<6; ++ipar) {
-	  double weight = id->d()(0,ipar) * f ;
+	  double weight = deriv(0,ipar) * f ;
 	  double thispull = pull ;
 	  if(weight<0) { weight *= -1 ; thispull *= -1 ; }
 	  // the last minus sign is because somebody defined our first derivative with the wrong sign
 	  m_elemHistos[index]->m_residualPullHistos[ipar]->fill( -thispull, weight ) ;
 	}
-      } 
-    } 
-    // keep some information about the tracks that we have seen
-    m_equations->addChi2Summary( residuals.chi2(), residuals.nDoF(), numexternalhits ) ;
+      }
+      
+      // keep some information about the tracks that we have seen
+      m_equations->addChi2Summary( residuals.chi2(), residuals.nDoF(), residuals.nExternalHits() ) ;
+    }
   }
   return accept ;
 }
