@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.62 2008-12-10 13:18:28 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.63 2009-01-13 14:19:05 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -315,24 +315,35 @@ bool TrackMasterFitter::outlierRemoved( Track& track ) const
 
   // flag (true if outliers are removed)
   bool outlierWasRemoved = false;
-
-  // loop over the nodes and find the one
-  // with the highest chi2 > m_chi2Outliers
+  
+  // Count the number of hits of each type
+  enum HitType {VeloR, VeloPhi, TT, T, Muon, Unknown} ;
+  static HitType hittypemap[9] = { Unknown, VeloR, VeloPhi, TT, T, T, Muon, TT, T } ;
+  const size_t minNumHits[5] = {2,2,2,4,4} ; // the bare minimum (FIX ME: job option)
+  size_t numHits[5]          = {0,0,0,0,0} ;
+  for( LHCb::Track::NodeContainer::const_iterator inode =  track.nodes().begin() ;
+       inode != track.nodes().end() ; ++inode) 
+    if( (*inode)->type() == LHCb::Node::HitOnTrack ) 
+      ++(numHits[hittypemap[int((*inode)->measurement().type())]]) ;
+  
+  // loop over the nodes and find the one with the highest chi2 >
+  // m_chi2Outliers, provided there is enough hits of this type left.
   std::vector<Node*>& nodes = track.nodes();
   std::vector<Node*>::iterator iNode;
   std::vector<Node*>::iterator iWorstNode = nodes.end();
   double worstChi2 = m_chi2Outliers;
-  for ( iNode = nodes.begin(); iNode != nodes.end(); ++iNode ) {
+  for ( iNode = nodes.begin(); iNode != nodes.end(); ++iNode )
     if ( (*iNode)->hasMeasurement() &&
 	 (*iNode)->type() == LHCb::Node::HitOnTrack ) {
       const double chi2 = (*iNode)->chi2();
-      if ( chi2 > worstChi2 ) {
-        worstChi2 = chi2;
-        iWorstNode = iNode;
+      HitType hittype = hittypemap[int((*iNode)->measurement().type())] ;
+      if ( chi2 > worstChi2 &&
+	   numHits[hittype] > minNumHits[hittype] ) {
+	worstChi2 = chi2;
+	iWorstNode = iNode;
       }
     }
-  }
-
+  
   // if a node is found: remove its measurement from the track
   if ( iWorstNode != nodes.end() ) {
 
