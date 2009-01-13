@@ -1,5 +1,5 @@
-// $Id: UpdateManagerSvc.h,v 1.10 2009-01-13 07:43:32 ocallot Exp $
-#ifndef UPDATEMANAGERSVC_H 
+// $Id: UpdateManagerSvc.h,v 1.11 2009-01-13 11:47:43 marcocle Exp $
+#ifndef UPDATEMANAGERSVC_H
 #define UPDATEMANAGERSVC_H 1
 
 // Include files
@@ -33,7 +33,7 @@ class IEventProcessor;
 class Condition;
 
 /** @class UpdateManagerSvc UpdateManagerSvc.h
- *  
+ *
  *
  *  @author Marco Clemencic
  *  @date   2005-03-30
@@ -41,9 +41,9 @@ class Condition;
 class UpdateManagerSvc: public virtual Service,
                         public virtual IUpdateManagerSvc,
                         public virtual IIncidentListener {
-public: 
+public:
   /// Standard constructor
-  UpdateManagerSvc(const std::string& name, ISvcLocator* svcloc); 
+  UpdateManagerSvc(const std::string& name, ISvcLocator* svcloc);
 
   virtual ~UpdateManagerSvc( ); ///< Destructor
 
@@ -55,7 +55,7 @@ public:
 
   /// Initialize Service
   virtual StatusCode initialize();
-  
+
   /// Finalize Service
   virtual StatusCode finalize();
 
@@ -63,11 +63,11 @@ public:
   virtual IDataProviderSvc *dataProvider() const;
   /// Return the pointer to the detector data service, used to obtain the event time..
   virtual IDetDataSvc *detDataSvc() const;
-  
+
   /// Start a the update loop getting the time to use from the detector data service.
   virtual StatusCode newEvent();
   /// Start a the update loop using the provided time to decide if an item is valid or not.
-  /// \warning{The time used to retrieve an object from the condition database is the one obtained from 
+  /// \warning{The time used to retrieve an object from the condition database is the one obtained from
   /// the detector data service.}
   virtual StatusCode newEvent(const Gaudi::Time &evtTime);
 
@@ -88,11 +88,11 @@ public:
   /// This is needed when the Detector Transient Store is purged, otherwise we
   /// will keep pointers to not existing objects.
   virtual void purge();
-  
+
   // ---- Implement IIncidentListener interface ----
   /// Handle BeginEvent incident.
   virtual void handle(const Incident &inc);
-  
+
 protected:
 
   /// Register a condition for an object
@@ -108,7 +108,7 @@ protected:
   /// Used to force an update of the given instance (ex. when the object is created during an event).
   virtual StatusCode i_update(void *instance);
 
-  /// Used to remove an object from the dependency network. 
+  /// Used to remove an object from the dependency network.
   /// \warning{Removing an object is dangerous}
   virtual void i_unregister(void *instance);
 
@@ -120,37 +120,30 @@ private:
 #include "UpdateManagerSvc_Item.icpp"
 
   /// Hashmap for fast string access
-  GaudiUtils::HashMap<std::string, Item*> m_pathHashMap;
-
-  /// Hashmap for fast database string access
-  GaudiUtils::HashMap<std::string, Item*> m_dbPathHashMap;
+  GaudiUtils::HashMap<std::string, Item*> m_pathMap;
 
   /// Hashmap for fast pointer access
-  GaudiUtils::HashMap<const void*, Item*> m_pointerHashMap;
+  GaudiUtils::Map<const void*, Item*> m_pointerMap;
 
   void insertInMap( Item* it ) {
-    std::pair<const std::string,Item*> tempS( it->path, it );
-    m_pathHashMap.insert( tempS );
-    if ( "" != it->db_path ) {
-      std::pair<const std::string,Item*> tempD( it->db_path, it );
-      m_dbPathHashMap.insert( tempD );
-    }
-    std::pair<const void*,Item*> tempP( it->ptr, it );
-    m_pointerHashMap.insert( tempP );
-  }    
+    const std::pair<const std::string,Item*> tempS( it->path, it );
+    m_dbPathHashMap.insert( tempS );
+    const std::pair<const void*,Item*> tempP( it->ptr, it );
+    m_pointerMap.insert( tempP );
+  }
 
   /// Connects two items in a parent-child relationship through the give member function.
   inline void link(Item* parent, BaseObjectMemberFunction *mf, Item *child);
 
   // Disconnect a parent from the child.
   void unlink(Item *parent, Item *child);
-  
+
   /// Finds the item matching the given path.
   inline Item *findItem(const std::string &path, bool is_path_to_db = false) const;
-   
+
   /// Finds the item matching the given pointer.
   inline Item *findItem(void *p) const;
-  
+
   /// Finds the item containing the given member function.
   inline Item *findItem(BaseObjectMemberFunction *mf) const;
 
@@ -203,7 +196,7 @@ private:
   /// Name of the DIA file into which write the dump (http://live.gnome.org/Dia)
   /// (property DiaDumpFile).
   std::string m_diaDumpFile;
-  
+
 #ifndef WIN32
   /// mutex lock used to avoid dependencies corruptions in a multi-thread environment.
   pthread_mutex_t m_busy;

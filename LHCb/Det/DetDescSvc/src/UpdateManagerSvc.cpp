@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.cpp,v 1.23 2009-01-13 07:43:32 ocallot Exp $
+// $Id: UpdateManagerSvc.cpp,v 1.24 2009-01-13 11:47:43 marcocle Exp $
 // Include files
 
 #include "GaudiKernel/SvcFactory.h"
@@ -603,14 +603,8 @@ void UpdateManagerSvc::i_unregister(void *instance){
     m_all_items.erase(std::find(m_all_items.begin(),m_all_items.end(),item));
 
     // The erased item shoud also disappear from the maps, if this is the last for this key, i.e. isHead
-    Item* tmp = findItem( item->path, false );
-    if ( tmp->isHead() ) m_pathHashMap.erase( item->path );
-    if ( "" != item->db_path ) {
-      tmp = findItem( item->db_path, true );
-      if ( tmp->isHead() ) m_dbPathHashMap.erase( item->db_path );
-    }
-    tmp = findItem( item->ptr );
-    if ( tmp->isHead() ) m_pointerHashMap.erase( item->ptr );
+    m_pathMap.erase( item->path );
+    m_pointerMap.erase( item->ptr );
 
     // finally we can delete the Item
     delete item;

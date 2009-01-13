@@ -1,4 +1,4 @@
-#ifndef UPDATEMANAGERSVC_ICPP 
+#ifndef UPDATEMANAGERSVC_ICPP
 #define UPDATEMANAGERSVC_ICPP 1
 
 // inline methods for UpdateManagerSvc
@@ -8,11 +8,15 @@ inline void UpdateManagerSvc::link(Item* parent, BaseObjectMemberFunction *mf, I
   child->addParent(parent,mf);
 }
 inline UpdateManagerSvc::Item *UpdateManagerSvc::findItem(const std::string &path, bool is_path_to_db ) const {
-  if ( is_path_to_db ) return dynamic_cast<Item*>( m_dbPathHashMap(path) );
-  return dynamic_cast<Item*>( m_pathHashMap(path) );
+  if ( is_path_to_db ) { // "path to db" is not indexed, we need a full scan
+    for (Item::ItemList::const_iterator i = m_all_items.begin(); i != m_all_items.end(); ++i){
+      if ((*i)->match(path,is_path_to_db)) return *i;
+    }
+  }
+  return const_cast<Item*>( m_pathMap(path) );
 }
 inline UpdateManagerSvc::Item *UpdateManagerSvc::findItem(void *p) const {
-  return dynamic_cast<Item*>( m_pointerHashMap(p) );
+  return const_cast<Item*>( m_pointerMap(p) );
 }
 inline UpdateManagerSvc::Item *UpdateManagerSvc::findItem(BaseObjectMemberFunction *mf) const {
   Item *item = NULL;
