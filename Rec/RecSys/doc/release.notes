@@ -5,24 +5,182 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-! 2009-01-12 - Wouter Hulsbergen
- - Added TrackV0Finder to RecoVertexSeq
+</PRE><H1><A NAME=v6r1>2009-01-13 RecSys v6r1</A></H1><PRE>
+This version uses Gaudi v20r4 and LHCb v26r1.
 
-! 2009-01-09 - Marco Cattaneo
- - Include MuonID.py instead of MuonID.opts
+- Packages modified: CaloPIDs v4r14p1, CaloReco v4r17, NNTools v1r3p1,
+   PatChecker v3r4, TrackCheckers v4r5, TrackFitter v2r30, TrackMCTools v2r20,
+   TrackMonitors v1r6, TrackProjectors v2r21, TrackTools v3r14, TrackUtils v1r23,
+   TrackSys v4r20, PatAlgorithms v3r14, PatVelo v3r10p1, PatVeloTT v3r5,
+   TfTools v1r7, TrackMatching v2r21, TrackSeeding v1r4p2, TsaAlgorithms v3r8,
+   PatPV v3r8, MuonID v6r0, MuonPIDChecker v3r0, RichMarkovRingFinder v2r4,
+   RichRecMonitors v2r21, RichRecQC v2r25, RichRecStereoTools v1r5,
+   RichRecSys v3r15, RichRecTrackTools v1r8, GlobalReco v6r18,
+   VeloRecMonitors v1r3
 
-! 2009-01-06 - Marco Cattaneo
- - Add OutputType property to RecSys configurable, and propagate it to TrackSys
- - Use OutputType property to configure PVOfflineTool inputs in case of RDST
+- In RecSys v6r1
+  . In Configurable:
+    o Added TrackV0Finder to RecoVertexSeq
+    o Include MuonID.py instead of MuonID.opts
+    o Add OutputType property, and propagate it to TrackSys
+    o Use OutputType property to configure PVOfflineTool inputs in case of RDST
+    o Update ProtoParticle reconstruction to use python options
+  . Fix DoxyFile.cfg for use directly with CMT (without makedoc.py).
+    makedoc.py still needed to set LHCBVERS, GAUDIVERS set for the tag file URLs,
+    and to use /tmp or /build for the temporary doxygen database files
 
-! 2008-12-17 - Chris Jones
- - Update ProtoParticle reconstruction to use python options
+- In CaloReco v4r17
+  . CellularAutomatonAlg.cpp : put cluster container before cluster is sorted -
+    to be bakward compatible with CellularAutomaton (-> if not trouble with calo
+    MC-association for DC06 data reconstruced with CellularAutomaton)
+  . options/Brunel.opts : remove CaloClusterCorrect3x3Position/EcalPosition
+    (obsolete, handled by the clusterisation)
+  . options/HltCaloSeq.opts
+    o use CellularAutomatonAlg as default clusterisation algorithm
+      (as already done for offline sequence)
+    o remove obsolete CaloClusterCorrect3x3Position/EcalPosition 
+      (handled by the clusterisation)
+  . options/(Hlt)ClusterSelection.opts : add default protection against negative
+    cluster energy ( e > threshold = 0 )
+  . Fix typo in (HLT)MergedPi0Rec.opts
 
-! 2008-11-24 - Marco Cattaneo
- -  Fix DoxyFile.cfg for use directly with CMT (without makedoc.py).
-    N.B. Undo this change if makedoc not updated to use CMT. makedoc.py still
-         needed to set LHCBVERS, GAUDIVERS set for the tag file URLs, and to
-         use /tmp or /build for the temporary doxygen database files
+- In NNTools v1r3p1
+  . Remove unneccessary dependency on STDet
+
+- In PatChecker v3r4
+  . Add CheatedPrimaryVertices
+  . Add PrimaryVertexChecker
+
+- In TrackCheckers v4r5
+  . Fix TrackResChecker to work also with post-DC06 OT linkers
+  . Fix untested StatusCode in Warning() messages
+  . Added test for charge of mc particle
+
+- In TrackFitter v2r30
+  . Change outlier rejection such that minimum number of hits is left in each
+    system
+  . Fix invalid iterator initialisation flagged by gcc 4.3
+  . Add 'NoDriftTime' option to StraighLineFitter
+
+- In TrackMCTools v2r20
+  . Adapt to new location of IPatDebugTool.h and IPatDebugTTTool.h in PatKernel
+  . Fix LHCbIDsToMCHits and LHCbIDsToMCParticles to work also with post-DC06
+    OT linkers
+
+- In TrackMonitors v1r6
+  . Add protection in TrackMonitor for hits with zero error on residual
+  . Add TrackV0Monitor to monitoring sequence
+  . Small fixes in TrackMonitor
+  . Add ITTrackMonitor.h/.cpp
+
+- In TrackProjectors v2r21
+  . Add IT/TTLite projectors to Selector
+
+- In TrackTools v3r14
+  . Bug fix in TrackInterpolator (having to do with outliers)
+  . Make TrackInterpolator::Extrapolator a jobOption
+  . Make measurement providers jobOptions
+  . Add TTLite/ITLite creation to MeasurementProviderT.cpp
+  . OTMeasurementProvider: added property to set otdecoder and adapted to
+    change in otdecoder interface
+  . LongReferenceCreator: adapted to change in Track::stateAt
+  . TrackSelector: added cut on minimum number of OT hits
+  . Move TrackVeloCharge algorithm to use SiChargeFun
+    and profit from new functionality of the measurement classes 
+
+- In TrackUtils v1r23
+  . Fixed unchecked statuscodes
+  . Make sure V0 daughters do not share VELO segment
+  . Introduced tool handles for interpolator and extrapolator in TrackV0Finder
+  . Allow trackcontainercopy without selector
+  . Added cuts to TrackV0Finder
+  . Add TrackCompetition algorithm
+
+- In TrackSys v4r20
+  . In case of RDST output, do not add to TrackVeloFitSeq the algorithm to copy
+    Velo tracks into Best container. Avoids having to remove it later when 
+    defining the RDST content
+  . Activate PV checker algorithm in PatChecking.py
+  . Add "WithMC" option to TrackSys Configurable, and import PatChecking.py if it
+    is set to True
+  . Fix PatChecking.py to handle correctly TrackSys().veloOpen() case
+
+- In PatAlgorithms v3r14, PatVelo v3r10p1
+  . Adapt to new location of IPatDebugTTTool.h in PatKernel
+
+- In TrackFitter v2r30, TrackUtils v1r23, PatAlgorithms v3r14, PatVeloTT v3r5,
+     TrackMatching v2r21
+  . Adapted to change in Track::stateAt
+
+- In PatVelo v3r10p1, TrackMCTools v2r20
+  . Add explicit PatKernel dependency (previously implicit via TrackInterfaces)
+
+- In TfTools v1r7
+  . Added property to set rawbankdecoder to OTHitCreator
+
+- In TsaAlgorithms v3r8
+  . Remove unused cleanX function
+  . Update ITGenericTracking
+
+- In PatPV v3r8
+  . Improved efficiency of PatPV2D for multi PV events. Only 10% increase of
+    exe time.
+  . Small modifications to degrade not critical warnings and errors comming from
+    PV fit.
+
+- In MuonID v6r0, MuonPIDChecker v3r0
+  . Options files migrated python options
+
+- In MuonPIDChecker v3r0
+  . Fix typo in finalize(), in case when no events processed
+
+- In RichMarkovRingFinder v2r4
+  . Fixes to python Configurable
+    o change to uppercase parameters following the new convention
+    o change "Sequence : None" to "Sequence : GaudiSequencer("DefaultSequence")"
+      and raise a run-time error if not changed to a proper sequence
+    o raise run-time error if no panels selected to find rings on
+- In RichRecMonitors v2r21
+  . Remove all Job Option files. How handled by python ConfigurableUser in
+    Rich/RichRecQC package.
+  . Miscellaneous monitoring updates.
+
+- In RichRecQC v2r25
+  . Improve python Configuration :
+    o Add expert checking options previously in job options in RichRecMonitors.
+      Exact expert checks that are run are controlled by ExpertTests slot.
+    o Add global flags to turn on and off histogram and ntuple produce for all
+      monitoring algorithms.
+  . Suppress database checks in RichDataDBCheck when HPD information is invalid
+    or HPD is suppressed.
+  . Add expert options to python configurable.
+
+- In RichRecStereoTools v1r5
+  . Fix indices in Track State matrix accessors to number from 0.
+  . Adapt to changes in refractive index tools.
+
+- In RichRecSys v3r15
+  . Follow changes to updates in Configurable for RichMarkovRingFinder
+  . Various python Configurable updates to avoid a few build problems.
+
+- In RichRecTrackTools v1r8
+  . Add new tool to calculate the effective refractive index seen by a
+    given RichRecSegment.
+  . Adapt to changes in how the refractive index is calculated for a given 
+    track. Fixes problem with correct aerogel tile parameters not being taken
+    into account in 2008 simulations.
+
+- In GlobalReco v6r18
+  . Retire job options and add new python Configurable
+
+- In VeloRecMonitors v1r3
+  . Check for zero pitch in residual normalisation
+
+- In CaloPIDs v4r14p1, NNTools v1r3p1, PatChecker v3r4, TrackMonitors v1r6,
+     TrackTools v3r14, TrackSeeding v1r4p2, TsaAlgorithms v3r8, PatPV v3r8,
+     MuonPIDChecker v3r0, RichMarkovRingFinder v2r4, RichRecStereoTools v1r5
+  . Fixes for gcc 4.3 compilation
+
 
 </PRE><H1><A NAME=v6r0>2008-11-24 RecSys v6r0</A></H1><PRE>
 This version uses Gaudi v20r3 and LHCb v26r0.
