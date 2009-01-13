@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-01-13 W. Hulsbergen
+ - Add protection in TrackMonitor for hits with zero error on residual
+
 !============================ TrackMonitors v1r6 2009-01-12 ==================
 ! 2008-12-21 W. Hulsbergen
  - Add TrackV0Monitor to monitoring sequence
