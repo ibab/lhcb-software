@@ -5,6 +5,7 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "LHCbMath/LHCbMath.h"
 #include "boost/tokenizer.hpp"
+#include "GaudiKernel/SystemOfUnits.h"
 
 /* helper class */
 
@@ -13,7 +14,7 @@ namespace Al
   class ConstraintDerivatives
   {
   public:
-    enum EConstraintDerivatives { Tx=0, Ty, Tz, Rx, Ry, Rz, Szx, Szy, Szz, SRz, Trx, Try, Trtx, Trty, Cur, NumConstraints } ;
+    enum EConstraintDerivatives { Tx=0, Ty, Tz, Rx, Ry, Rz, Szx, Szy, Szz, Sxx, SRz, Trx, Try, Trtx, Trty, Cur, Sz2x, Sz2y, NumConstraints } ;
     ConstraintDerivatives(size_t dim, const std::vector<std::string>& activeconstraints, const std::string& name="", int offset=0) ;
     AlMat& derivatives() { return m_derivatives ; }
     const AlMat& derivatives() const { return m_derivatives ; }
@@ -68,8 +69,8 @@ namespace Al
   }
   
   const std::vector<std::string> ConstraintDerivatives::m_names 
-  = boost::assign::list_of("Tx")("Ty")("Tz")("Rx")("Ry")("Rz")("Szx")("Szy")("Szz")("SRz")
-    ("Trx")("Try")("Trtx")("Trty")("Trcur");
+  = boost::assign::list_of("Tx")("Ty")("Tz")("Rx")("Ry")("Rz")("Szx")("Szy")("Szz")("Sxx")("SRz")
+    ("Trx")("Try")("Trtx")("Trty")("Trcur")("Sz2x")("Sz2y");
   
 
   class AlignConstraintTool : public GaudiTool,  
@@ -206,8 +207,8 @@ namespace Al
 	   ic != m_constraintNames.end(); ++ic ) {
 	// tokenize
 	std::vector<std::string> tokens = tokenize(*ic,":") ;
-	std::cout << "string: " << *ic << std::endl
-		  << "number of tokens: " << tokens.size() << std::endl ;
+	// 	std::cout << "string: " << *ic << std::endl
+	// 		  << "number of tokens: " << tokens.size() << std::endl ;
 	if( tokens.size() == 1 ) {
 	  // this is a single or a set of common constraints
 	  std::vector<std::string> dofs = tokenize(*ic," ,") ;
@@ -224,13 +225,15 @@ namespace Al
 	  m_definitions.push_back( newconstraint ) ;
 	}
       }
-            
+      
+      int nactive(0) ;
       for( std::vector<ConstraintDefinition>::const_iterator ic =  m_definitions.begin() ;
 	   ic != m_definitions.end(); ++ic ) {
 	if( !ConstraintDerivatives::check(ic->dofs()) ) {
 	  error() << "Constraint list contains unknown constraints! "  << endreq ;
 	  sc = StatusCode::FAILURE ;
 	} else {
+	  nactive += ic->dofs().size() ;
 	  info() << "Constraint definition: " << ic->name() 
 		 << " " << "dofs = " ;
 	  for( std::vector<std::string>::const_iterator it = ic->dofs().begin() ;
@@ -239,6 +242,9 @@ namespace Al
 	  info() << "num elements = " << ic->elements().size() << endmsg ;
 	}
       }
+      info() << "Number of constraint definitions= " 
+	     << m_definitions.size() 
+	     << ",  number of active constraints = " << nactive << endreq ;
     }
     return sc ;
   }
@@ -280,24 +286,27 @@ namespace Al
     double weight(0) ;
     size_t numhits(0) ;
     Gaudi::XYZVector pivot ;
-    double zmin(9999999), zmax(-999999) ;
+    double zmin(9999999), zmax(-999999), xmin(9999999), xmax(-999999) ;
     for (ElementPointers::const_iterator it = elements.begin(); it !=elements.end() ; ++it) 
       if((*it)->activeParOffset() >= 0) {
 	size_t elemindex = (*it)->index() ;
-	double thisweight = m_useWeightedAverage ? equations.weight(elemindex) : 1 ;
+	double thisweight = m_useWeightedAverage ? equations.element(elemindex).weightV() : 1 ;
 	weight += thisweight ;
 	Gaudi::XYZPoint cog = (*it)->centerOfGravity() ;
 	pivot += thisweight * Gaudi::XYZVector( cog ) ;
 	zmin = std::min(cog.z(),zmin) ;
 	zmax = std::max(cog.z(),zmax) ;
-	numhits += equations.numHits(elemindex) ;
+	xmin = std::min(cog.x(),xmin) ;
+	xmax = std::max(cog.x(),xmax) ;
+	numhits += equations.element(elemindex).numHits() ;
       }
       
     if (weight>0) pivot *= 1/weight ;
     Gaudi::Transform3D canonicalframe( pivot ) ;
     Gaudi::Transform3D canonicalframeInv = canonicalframe.Inverse() ;
-    info() << "Pivot, z-range for canonical constraints: " 
-	   << pivot << ", [" << zmin << "," << zmax << "]" << endmsg ;
+    info() << "Pivot, z/x-range for canonical constraints: " 
+	   << pivot << ", [" << zmin << "," << zmax << "]" 
+	   << ", [" << xmin << "," << xmax << "]" << endmsg ;
 
     // create the object that we will return
     Al::ConstraintDerivatives* constraints = new Al::ConstraintDerivatives(numAlignPars,activeconstraints,name) ;
@@ -311,8 +320,9 @@ namespace Al
 	size_t elemindex = (*it)->index() ;
 	Gaudi::Transform3D trans = canonicalframeInv * (*it)->alignmentFrame() ;
 	Gaudi::Matrix6x6 jacobian = AlParameters::jacobian( trans ) ;
-	double thisweight = (m_useWeightedAverage ? equations.weight(elemindex) : 1.0 )/weight ;
+	double thisweight = (m_useWeightedAverage ? equations.element(elemindex).weightV() : 1.0 )/weight ;
 	double deltaZ = (*it)->centerOfGravity().z() - 0.5*(zmax+zmin) ;
+	double deltaX = (*it)->centerOfGravity().x() - 0.5*(xmax+xmin) ;
 	
 	// loop over all parameters in this element. skip inactive parameters.
 	for (size_t j=0 ; j<6; ++j) {
@@ -325,18 +335,30 @@ namespace Al
 	      constraints->derivatives()(i,jpar) = thisweight * jacobian(i,j) ;
 	    
 	    if(zmax > zmin) {
+	      double zweight = deltaZ/(zmax-zmin) ;
 	      // Derivatives for shearings
 	      for (size_t i = 0u; i < 3u; ++i) 
-		constraints->derivatives()(i+6,jpar) = thisweight * deltaZ/(zmax-zmin) * jacobian(i,j) ;
+		constraints->derivatives()(i+6,jpar) = thisweight * zweight * jacobian(i,j) ;
 	      
 	      // Derivatives for twist around z-axis
-	      constraints->derivatives()(ConstraintDerivatives::SRz,jpar) = thisweight * deltaZ/(zmax-zmin) * jacobian(5,j) ;
+	      constraints->derivatives()(ConstraintDerivatives::SRz,jpar) = thisweight * zweight * jacobian(5,j) ;
+
+	      // Derivatives for bowing
+	      for (size_t i = 0u; i < 2u; ++i) 
+		constraints->derivatives()(ConstraintDerivatives::Sz2x+i,jpar) = thisweight * zweight*zweight * jacobian(i,j) ;
+	      
+	    }
+
+	    if( xmax > xmin ) {
+	      // Derivative for scaling in x
+	      double xweight = deltaX/(xmax-xmin) ;
+	      constraints->derivatives()(ConstraintDerivatives::Sxx,jpar) = thisweight * xweight * jacobian(0,j) ;
 	    }
 	    
 	    // Curvature constraint. The constraint is on the average per track.
 	    for(size_t trkpar=0; trkpar<5; ++trkpar) 
 	      constraints->derivatives()(ConstraintDerivatives::Trx+trkpar,jpar) 
-		= equations.dStateDAlpha(elemindex)(trkpar,j)/equations.numTracks() ;
+		= equations.element(elemindex).dStateDAlpha()(trkpar,j)/equations.numTracks() ;
 	  }
 	} 
       }
