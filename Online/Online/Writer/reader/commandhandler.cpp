@@ -1,3 +1,5 @@
+#ifndef _WIN32
+
 #include "Writer/commandhandler.h"
 #include "Writer/writers.h"
 #include <stdlib.h>
@@ -158,3 +160,4 @@ bool DebugCommandHandler::handleCommand(Command* theCommand) {
     return true;
 }
 
+#endif

@@ -1,3 +1,5 @@
+#ifndef _WIN32
+
 #include "Writer/defs.h"
 #include "Writer/monitorreaderd.h"
 #include "Writer/writers.h"
@@ -129,3 +131,4 @@ int main(int /* argc */, char** /* argv */) {
     free(buf);
     exit(EXIT_SUCCESS);
 }
+#endif

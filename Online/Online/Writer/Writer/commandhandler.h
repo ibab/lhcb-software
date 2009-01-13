@@ -1,4 +1,4 @@
-#ifndef COMMANDHANLER_H
+#ifndef COMMANDHANDLER_H
 #define COMMANDHANDLER_H
 #include "Writer/writers.h"
 #include <list>
