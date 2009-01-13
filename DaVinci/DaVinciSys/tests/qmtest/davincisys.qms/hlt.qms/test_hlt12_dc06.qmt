@@ -9,7 +9,7 @@
 findReferenceBlock("""
 Hlt2Decision                                                SUCCESS Number of counters : 6
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"Accepted Events"                               |        93 |          3 |(  3.22581 +- 1.83213  )%|   -------   |   -------   |
+ |*"Accepted Events"                               |        96 |          3 |(  3.12500 +- 1.77580  )%|   -------   |   -------   |
  | "Candidates"                                    |         4 |         20 |     5.0000 |     5.3385 |      1.0000 |      14.000 |
  | "Hlt2SelB2DVec Candidates"                      |         1 |          1 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
  | "Hlt2SelBs2JpsieePhi Candidates"                |         2 |         18 |     9.0000 |     5.0000 |      4.0000 |      14.000 |
