@@ -1,4 +1,4 @@
-// $Id: CopyODIN.h,v 1.6 2008-09-01 17:12:56 jpalac Exp $
+// $Id: CopyODIN.h,v 1.7 2009-01-13 16:32:42 jpalac Exp $
 #ifndef COPYODIN_H 
 #define COPYODIN_H 1
 
@@ -48,6 +48,6 @@ const std::string Location<LHCb::ODIN>::Default = LHCb::ODINLocation::Default;
 //=============================================================================
 typedef MicroDST::ObjectClonerAlg<LHCb::ODIN> CopyODIN;
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( CopyODIN )
+DECLARE_NAMED_ALGORITHM_FACTORY( CopyODIN, CopyODIN )
 
 #endif // COPYODIN_H

@@ -1,4 +1,4 @@
-// $Id: CopyProtoParticles.h,v 1.10 2008-09-01 17:28:14 jpalac Exp $
+// $Id: CopyProtoParticles.h,v 1.11 2009-01-13 16:32:42 jpalac Exp $
 #ifndef COPYPROTOPARTICLES_H 
 #define COPYPROTOPARTICLES_H 1
 
@@ -65,5 +65,5 @@ const std::string Location<LHCb::ProtoParticle>::Default = "";
 //=============================================================================
 typedef MicroDST::KeyedContainerClonerAlg<LHCb::ProtoParticle>
 CopyProtoParticles;
-DECLARE_ALGORITHM_FACTORY( CopyProtoParticles );
+DECLARE_NAMED_ALGORITHM_FACTORY( CopyProtoParticles, CopyProtoParticles)
 #endif // COPYPROTOPARTICLES_H

@@ -1,4 +1,4 @@
-// $Id: CopyFlavourTag.h,v 1.4 2008-09-01 17:28:14 jpalac Exp $
+// $Id: CopyFlavourTag.h,v 1.5 2009-01-13 16:32:42 jpalac Exp $
 #ifndef COPYFLAVOURTAG_H 
 #define COPYFLAVOURTAG_H 1
 
@@ -57,5 +57,5 @@ template<> struct Location<LHCb::FlavourTag>
 const std::string Location<LHCb::FlavourTag>::Default = LHCb::FlavourTagLocation::Default;
 //=============================================================================
 typedef MicroDST::KeyedContainerClonerAlg<LHCb::FlavourTag> CopyFlavourTag;
-DECLARE_ALGORITHM_FACTORY( CopyFlavourTag );
+DECLARE_NAMED_ALGORITHM_FACTORY( CopyFlavourTag, CopyFlavourTag )
 #endif // COPYFLAVOURTAG_H

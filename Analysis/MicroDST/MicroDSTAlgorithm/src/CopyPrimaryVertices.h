@@ -1,4 +1,4 @@
-// $Id: CopyPrimaryVertices.h,v 1.9 2008-09-01 17:28:14 jpalac Exp $
+// $Id: CopyPrimaryVertices.h,v 1.10 2009-01-13 16:32:42 jpalac Exp $
 #ifndef COPYPRIMARYVERTICES_H 
 #define COPYPRIMARYVERTICES_H 1
 
@@ -61,5 +61,5 @@ template<> struct Location<LHCb::RecVertex>
 const std::string Location<LHCb::RecVertex>::Default = LHCb::RecVertexLocation::Primary;
 //=============================================================================
 typedef MicroDST::KeyedContainerClonerAlg<LHCb::RecVertex> CopyPrimaryVertices;
-DECLARE_ALGORITHM_FACTORY( CopyPrimaryVertices );
+DECLARE_NAMED_ALGORITHM_FACTORY( CopyPrimaryVertices, CopyPrimaryVertices )
 #endif // COPYPRIMARYVERTICES_H

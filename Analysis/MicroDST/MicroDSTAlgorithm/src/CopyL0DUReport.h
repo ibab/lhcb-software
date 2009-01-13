@@ -1,4 +1,4 @@
-// $Id: CopyL0DUReport.h,v 1.4 2008-09-01 17:28:14 jpalac Exp $
+// $Id: CopyL0DUReport.h,v 1.5 2009-01-13 16:32:42 jpalac Exp $
 #ifndef COPYL0DUREPORT_H 
 #define COPYL0DUREPORT_H 1
 
@@ -44,5 +44,5 @@ const std::string Location<LHCb::L0DUReport>::Default = LHCb::L0DUReportLocation
 //=============================================================================
 typedef MicroDST::ObjectClonerAlg<LHCb::L0DUReport> CopyL0DUReport;
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( CopyL0DUReport )
+DECLARE_NAMED_ALGORITHM_FACTORY( CopyL0DUReport, CopyL0DUReport )
 #endif // COPYL0DUREPORT_H

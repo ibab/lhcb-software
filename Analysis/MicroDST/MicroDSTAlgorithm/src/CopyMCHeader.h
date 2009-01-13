@@ -1,4 +1,4 @@
-// $Id: CopyMCHeader.h,v 1.7 2008-09-01 17:12:56 jpalac Exp $
+// $Id: CopyMCHeader.h,v 1.8 2009-01-13 16:32:42 jpalac Exp $
 #ifndef COPYMCHEADER_H 
 #define COPYMCHEADER_H 1
 
@@ -79,6 +79,6 @@ const std::string Location<LHCb::MCHeader>::Default = LHCb::MCHeaderLocation::De
 //=============================================================================
 typedef MicroDST::ObjectClonerAlg<LHCb::MCHeader> CopyMCHeader;
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( CopyMCHeader )
+DECLARE_NAMED_ALGORITHM_FACTORY( CopyMCHeader, CopyMCHeader )
 
 #endif // COPYMCHEADER_H

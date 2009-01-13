@@ -1,4 +1,4 @@
-// $Id: CopyHltSummary.h,v 1.4 2008-09-01 17:28:14 jpalac Exp $
+// $Id: CopyHltSummary.h,v 1.5 2009-01-13 16:32:42 jpalac Exp $
 #ifndef COPYHLTSUMMARY_H 
 #define COPYHLTSUMMARY_H 1
 
@@ -43,5 +43,5 @@ const std::string Location<LHCb::HltSummary>::Default = LHCb::HltSummaryLocation
 //=============================================================================
 typedef MicroDST::ObjectClonerAlg<LHCb::HltSummary> CopyHltSummary;
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( CopyHltSummary )
+DECLARE_NAMED_ALGORITHM_FACTORY( CopyHltSummary, CopyHltSummary )
 #endif // COPYHLTSUMMARY_H
