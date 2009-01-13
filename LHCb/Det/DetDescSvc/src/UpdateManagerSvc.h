@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.h,v 1.11 2009-01-13 11:47:43 marcocle Exp $
+// $Id: UpdateManagerSvc.h,v 1.12 2009-01-13 11:53:14 marcocle Exp $
 #ifndef UPDATEMANAGERSVC_H
 #define UPDATEMANAGERSVC_H 1
 
@@ -127,7 +127,7 @@ private:
 
   void insertInMap( Item* it ) {
     const std::pair<const std::string,Item*> tempS( it->path, it );
-    m_dbPathHashMap.insert( tempS );
+    m_pathMap.insert( tempS );
     const std::pair<const void*,Item*> tempP( it->ptr, it );
     m_pointerMap.insert( tempP );
   }
