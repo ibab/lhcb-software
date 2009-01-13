@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.15 2008-10-28 13:04:46 jpalac Exp $
+# $Id: requirements,v 1.16 2009-01-13 16:32:32 jpalac Exp $
 package MicroDST
-version v3r3p2
+version v3r4
 
 #############################################################
 # BRANCHES
