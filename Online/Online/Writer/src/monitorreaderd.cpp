@@ -7,7 +7,7 @@
 
 using namespace std;
 
-int main(int argc, char** argv) {
+int main(int /* argc */, char** /* argv */) {
     // create message queue
      mqd_t mq;
      if ((mq = mq_open("/writerqueue", O_CREAT|O_RDWR,S_IRUSR|S_IWUSR,  NULL))  ==  (mqd_t) -1)  {

@@ -193,7 +193,8 @@ void ReprocessingWriter::closeFile(File *f)   {
 		     f->getSeqNum(),
 		     f->getRunNumber(),
 		     f->getBytesWritten(),
-		     f->getEvents());
+		     f->getEvents(),
+                     0);
   m_srvConnection->sendCommand(&header);
 }
 

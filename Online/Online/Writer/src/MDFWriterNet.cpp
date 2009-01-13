@@ -92,7 +92,7 @@ void File::feedMonitor(void* tag, void** buf, int* size, int* first) {
   *buf = (void*)empty;
 }
 
-void File::feedMessageQueue(mqd_t mq) {
+void File::feedMessageQueue(mqd_t /* mq */) {
 }
 
 /// Constructor
