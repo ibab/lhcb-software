@@ -12,7 +12,7 @@ GaussGen.RunNumber        = 1082
 
 #--Number of events
 nEvts = 5
-ApplicationMgr( EvtMax     = nEvts )
+LHCbApp().EvtMax = nEvts
 
 #--Set name of output files for given job
 idFile = 'GaussExample'
