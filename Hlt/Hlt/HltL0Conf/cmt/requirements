@@ -1,5 +1,5 @@
 package		HltL0Conf
-version 	v2r7
+version 	v2r8
 
 # ================ structure =============================================
 branches	src cmt doc options
