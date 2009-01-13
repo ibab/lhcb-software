@@ -1,4 +1,4 @@
-// $Id: IConfigAccessSvc.h,v 1.6 2008-07-08 14:15:58 graven Exp $
+// $Id: IConfigAccessSvc.h,v 1.7 2009-01-13 12:19:25 graven Exp $
 #ifndef ICONFIGACCESSSVC_H 
 #define ICONFIGACCESSSVC_H 1
 
@@ -45,6 +45,7 @@ public:
   // (except, by policy, such as for TCK aliases!, and, by construction, TOPLEVEL aliases!)
   // If you need something which is by construction immutable, use the digest instead!
   virtual boost::optional<ConfigTreeNode>  readConfigTreeNodeAlias(const ConfigTreeNodeAlias::alias_type& alias) = 0;
+  //@TODO: in case of TOPLEVEL alias, this _must_ verify consistency with any existing configs of the same release/type..
   virtual ConfigTreeNodeAlias::alias_type writeConfigTreeNodeAlias(const ConfigTreeNodeAlias& alias) = 0;
 
   // introspection: list all aliases in some 'major' category (TCK, TOPLEVEL, TAG)

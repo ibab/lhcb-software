@@ -38,6 +38,7 @@ public:
     const bool        fromTES = false ) = 0 ;
   virtual bool hasSelection ( const stringKey& id ) const = 0;
   //@TODO: make typesafe, i.e. allow getting of derived classes 
+  //@TODO: return pointer instead of reference -- 0 being don't know id...
   virtual Hlt::Selection& selection 
   ( const stringKey&  id     , 
     const IAlgorithm* parent ) =0 ;
