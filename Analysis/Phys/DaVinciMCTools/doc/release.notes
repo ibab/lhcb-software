@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.238 2008-12-23 14:15:55 pkoppenb Exp $
+! $Id: release.notes,v 1.239 2009-01-13 19:35:20 gligorov Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2009-01-13 - V. Gligorov
+ - Added DaVinciDmartAssociator.{h,cpp} a new ``smart'' association tool.
 
 ! 2008-12-23 - Patrick Koppenburg
  - Remove all options files. They are all obsolete.
