@@ -132,7 +132,7 @@ StatusCode SaverSvc::initialize() {
   m_pGauchoMonitorSvc->enableMonObjectsForString();
   
   std::vector<std::string>::iterator  it;
- // int i =0;
+ // int n =0;
   
   char timestr[64];
   char year[5];
@@ -141,7 +141,7 @@ StatusCode SaverSvc::initialize() {
   ::strftime(timestr, sizeof(timestr),"%Y%m%dT%H%M%S", timeInfo);
   ::strftime(year, sizeof(year),"%Y", timeInfo);
   
-  m_file = new std::string[m_taskName.size()];
+  //m_file = new std::string[m_taskName.size()];
   m_saveDir=m_saveDir+"/"+year+"/"+m_tmpPart+"/";
   msg << MSG::DEBUG << "savedir " << m_saveDir << endreq;  
   for (it = m_taskName.begin(); it < m_taskName.end(); it++){
@@ -159,7 +159,7 @@ StatusCode SaverSvc::initialize() {
   
     processMgr->setMonitorSvc(m_pGauchoMonitorSvc);
 
-    m_file[i] = "Waiting for command to save histograms............."; 
+    //m_file[n] = "Waiting for command to save histograms............."; 
     // std::vector<std::string>::iterator it2 = m_file.end();
     // m_file.insert(it2,fileName);
     //m_file.push_back("Waiting for command to save histograms.............");
@@ -185,7 +185,7 @@ StatusCode SaverSvc::initialize() {
   
     m_processMgr.push_back(processMgr);
     msg << MSG::DEBUG << "Finishing the initialize ProcessMgr for taskName " << *it << endreq;
-  //  i++;
+   // n++;
   }
   msg << MSG::DEBUG << "Finishing the initialize method." << endreq;
   return StatusCode::SUCCESS;
