@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.106 2008-12-07 16:25:51 gcorti Exp $ 
+// $Id: Gauss.opts,v 1.107 2009-01-13 12:03:16 gcorti Exp $ 
 
 /** @file 
  * 
@@ -68,11 +68,6 @@ ApplicationMgr.OutStream += { "GaussTape" };
 // Add here any job specific options, to over-ride previously defined options
 //---------------------------------------------------------------------------
 //MessageSvc.OutputLevel    = 3;
-
-//---------------------------------------------------------------------------
-// Number of events to process
-//---------------------------------------------------------------------------
-ApplicationMgr.EvtMax     = 2;
 
 //---------------------------------------------------------------------------
 // Output files. 
