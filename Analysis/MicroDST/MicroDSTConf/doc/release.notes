@@ -1,9 +1,15 @@
-!$Id: release.notes,v 1.4 2008-12-01 16:48:39 jpalac Exp $
+!$Id: release.notes,v 1.5 2009-01-13 16:36:06 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTConf
 ! Responsible : Juan PALACIOS
 ! Purpose     : Configuration and options files for MicroDST making.
 !-----------------------------------------------------------------------------
+
+! 2009-01-13 - Juan PALACIOS
+ - python/MicroDST/MicroDSTAlgorithm.py
+  . Remove everything. Configurables now made automatically.
+ - cmt/requirements
+  . Increase version to v2r0
 
 !========================== MicroDSTConf v1r0p1 2008-12-01 =================
 
