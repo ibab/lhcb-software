@@ -4,6 +4,18 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-01-13 - Gloria CORTI
+ - Set maximum number of events via LHCbApp(), since ApplicationMgr() does
+   not seem to propagate the information. Also remove example from Gauss.opts
+   since options can no longer be used directly as steering
+   . Gauss-Job.py
+   . Gauss.opts
+ - Remove EvtType.py and put example in Gauss-Job.py, commented, since
+   '$DECFILESROOT/options/EvtType.opts' can be passed directly as argument 
+   of gaudirun.py
+   . Gauss-Job.py
+   . EvtType.py  - REMOVED
+
 ! 2009-01-12 - Gloria CORTI
  - Take latest tag in DDDB and SIMCOND. Ot now needs to be explicitely set.
    . Gauss-2008.py
