@@ -5,7 +5,12 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v4r17>2008-10-24 OnlineSys v4r18</A></H1><PRE>
+</PRE><H1><A NAME=v4r19>2009-01-10 OnlineSys v4r19</A></H1><PRE>
+     New version v4r19 built against LHCb v26r1 and GAUDI v20r4.
+     - Updates to Gaucho, GaudiOnline, OnlineKernel, OnlineTasks, 
+       ROMon, ROLogger, Gaucho, InsertDB and Writer
+
+</PRE><H1><A NAME=v4r18>2008-10-24 OnlineSys v4r18</A></H1><PRE>
      New version v4r18 built against LHCb v26r0.
      - Updates to Gaucho, GaudiOnline, OnlineTasks, ROMon, ROLogger.
      - confDB, confDBpython and Hugin are removed from the release cycle.
