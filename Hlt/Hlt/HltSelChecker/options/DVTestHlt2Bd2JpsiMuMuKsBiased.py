@@ -74,7 +74,7 @@ DecayTreeTuple("Hlt2DecayTreeTuple").Head.ToolList += [ "TupleToolP2VV"
 # Configuration
 #
 from Configurables import DaVinci
-DaVinci().EvtMax = -1
+DaVinci().EvtMax = 2000
 DaVinci().HltType = "Hlt1+Hlt2"                # Both Hlt levels
 DaVinci().Hlt2IgnoreHlt1Decision = True        # Ignore Hlt1 in 2
 DaVinci().ReplaceL0BanksWithEmulated = False   # Redo L0
