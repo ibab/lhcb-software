@@ -1,9 +1,24 @@
-! $Id: release.notes,v 1.73 2008-11-26 08:40:27 jpalac Exp $
+! $Id: release.notes,v 1.74 2009-01-13 16:32:58 jpalac Exp $
 !==============================================================================
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel, Juan Palacios
 !==============================================================================
 
+! 2009-01-13 - Juan PALACIOS
+ - src/CopyFlavourTag.h
+ - src/CopyHltSummary.h
+ - src/CopyL0DUReport.h
+ - src/CopyMCHeader.h
+ - src/CopyMCParticles.h
+ - src/CopyODIN.h
+ - src/CopyParticles.h
+ - src/CopyPrimaryVertices.h
+ - src/CopyProtoParticles.h
+ - src/src/CopyRecHeader.h
+  . Use DECLARE_NAMED_ALGORITHM_FACTORY(type, name) to allow for autmatic 
+    generation of configurables from typedefs of template specialisations.
+ - cmt/requirements
+  . Increase version to v3r4
 !========================== MicroDSTAlgorithm v3r3p2 2008-11-26 ===============
 
 ! 2008-10-28 - Juan PALACIOS
