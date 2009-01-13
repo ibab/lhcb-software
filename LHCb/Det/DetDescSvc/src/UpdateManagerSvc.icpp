@@ -7,17 +7,12 @@ inline void UpdateManagerSvc::link(Item* parent, BaseObjectMemberFunction *mf, I
   mf = parent->addChild(mf,child);
   child->addParent(parent,mf);
 }
-inline UpdateManagerSvc::Item *UpdateManagerSvc::findItem(const std::string &path, bool is_path_to_db) const {
-  for (Item::ItemList::const_iterator i = m_all_items.begin(); i != m_all_items.end(); ++i){
-    if ((*i)->match(path,is_path_to_db)) return *i;
-  }
-  return NULL;
+inline UpdateManagerSvc::Item *UpdateManagerSvc::findItem(const std::string &path, bool is_path_to_db ) const {
+  if ( is_path_to_db ) return dynamic_cast<Item*>( m_dbPathHashMap(path) );
+  return dynamic_cast<Item*>( m_pathHashMap(path) );
 }
 inline UpdateManagerSvc::Item *UpdateManagerSvc::findItem(void *p) const {
-  for (Item::ItemList::const_iterator i = m_all_items.begin(); i != m_all_items.end(); ++i){
-    if ((*i)->match(p)) return *i;
-  }
-  return NULL;
+  return dynamic_cast<Item*>( m_pointerHashMap(p) );
 }
 inline UpdateManagerSvc::Item *UpdateManagerSvc::findItem(BaseObjectMemberFunction *mf) const {
   Item *item = NULL;

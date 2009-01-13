@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.h,v 1.9 2007-08-02 17:04:39 marcocle Exp $
+// $Id: UpdateManagerSvc.h,v 1.10 2009-01-13 07:43:32 ocallot Exp $
 #ifndef UPDATEMANAGERSVC_H 
 #define UPDATEMANAGERSVC_H 1
 
@@ -14,6 +14,8 @@
 #include "GaudiKernel/UpdateManagerException.h"
 
 #include "GaudiKernel/Map.h"
+
+#include "GaudiKernel/HashMap.h"
 
 #include <string>
 #include <map>
@@ -116,6 +118,26 @@ protected:
 private:
 
 #include "UpdateManagerSvc_Item.icpp"
+
+  /// Hashmap for fast string access
+  GaudiUtils::HashMap<std::string, Item*> m_pathHashMap;
+
+  /// Hashmap for fast database string access
+  GaudiUtils::HashMap<std::string, Item*> m_dbPathHashMap;
+
+  /// Hashmap for fast pointer access
+  GaudiUtils::HashMap<const void*, Item*> m_pointerHashMap;
+
+  void insertInMap( Item* it ) {
+    std::pair<const std::string,Item*> tempS( it->path, it );
+    m_pathHashMap.insert( tempS );
+    if ( "" != it->db_path ) {
+      std::pair<const std::string,Item*> tempD( it->db_path, it );
+      m_dbPathHashMap.insert( tempD );
+    }
+    std::pair<const void*,Item*> tempP( it->ptr, it );
+    m_pointerHashMap.insert( tempP );
+  }    
 
   /// Connects two items in a parent-child relationship through the give member function.
   inline void link(Item* parent, BaseObjectMemberFunction *mf, Item *child);

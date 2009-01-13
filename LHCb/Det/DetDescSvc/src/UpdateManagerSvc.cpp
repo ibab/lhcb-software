@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.cpp,v 1.22 2009-01-10 23:01:00 marcocle Exp $
+// $Id: UpdateManagerSvc.cpp,v 1.23 2009-01-13 07:43:32 ocallot Exp $
 // Include files
 
 #include "GaudiKernel/SvcFactory.h"
@@ -36,7 +36,7 @@ DECLARE_SERVICE_FACTORY( UpdateManagerSvc );
 // Standard constructor, initializes variables
 //=============================================================================
 UpdateManagerSvc::UpdateManagerSvc(const std::string& name, ISvcLocator* svcloc):
-  Service(name,svcloc),m_dataProvider(NULL),m_detDataSvc(NULL),m_incidentSvc(NULL),m_evtProc(NULL),
+  Service(name,svcloc), m_dataProvider(NULL),m_detDataSvc(NULL),m_incidentSvc(NULL),m_evtProc(NULL),
   m_head_since(1),m_head_until(0)
 {
 #ifndef WIN32
@@ -253,7 +253,8 @@ void UpdateManagerSvc::i_registerCondition(const std::string &condition, BaseObj
     mf_item = new Item(mf, m_dataProviderRootName);
     m_all_items.push_back(mf_item);
     m_head_items.push_back(mf_item); // since it is new, it has no parents
-  } else {
+    insertInMap( mf_item );
+ } else {
     if ( ! mf_item->ptr ) { // the item is know but not its pointer (e.g. after a purge)
       mf_item->vdo = mf->castToValidDataObject();
       mf_item->ptr = mf->castToVoid();
@@ -279,7 +280,7 @@ void UpdateManagerSvc::i_registerCondition(const std::string &condition, BaseObj
       }
 
       m_all_items.push_back(cond_item);
-
+      insertInMap( cond_item );
     } else {
       if (ptr_dest){
         // I already have this condition registered, but a new user wants to set the pointer to it.
@@ -327,13 +328,14 @@ void UpdateManagerSvc::i_registerCondition(void *obj, BaseObjectMemberFunction *
     throw UpdateManagerException("tried to register for an object not in the UpdateManagerSvc");
   } else {
     if (cond_item->isHead()) removeFromHead(cond_item);
-    }
+  }
   // find the OMF (Object Member Function)
   Item *mf_item = findItem(mf);
   if (!mf_item){ // a new OMF
     mf_item = new Item(mf, m_dataProviderRootName);
     m_all_items.push_back(mf_item);
     m_head_items.push_back(mf_item); // since it is new, it has no parents
+    insertInMap( mf_item );
   }
   if ( ! mf_item->ptr ) { // the item is know but not its pointer (e.g. after a purge)
     mf_item->vdo = mf->castToValidDataObject();
@@ -600,6 +602,16 @@ void UpdateManagerSvc::i_unregister(void *instance){
     if ( item->isHead() ) removeFromHead(item);
     m_all_items.erase(std::find(m_all_items.begin(),m_all_items.end(),item));
 
+    // The erased item shoud also disappear from the maps, if this is the last for this key, i.e. isHead
+    Item* tmp = findItem( item->path, false );
+    if ( tmp->isHead() ) m_pathHashMap.erase( item->path );
+    if ( "" != item->db_path ) {
+      tmp = findItem( item->db_path, true );
+      if ( tmp->isHead() ) m_dbPathHashMap.erase( item->db_path );
+    }
+    tmp = findItem( item->ptr );
+    if ( tmp->isHead() ) m_pointerHashMap.erase( item->ptr );
+
     // finally we can delete the Item
     delete item;
   }
@@ -751,7 +763,6 @@ bool UpdateManagerSvc::getValidity(const std::string path, Gaudi::Time& since, G
   if ( FSMState() < Gaudi::StateMachine::INITIALIZED ){
     throw GaudiException("Service offline","UpdateManagerSvc::registerCondition",StatusCode::FAILURE);
   }
-
   // search
   Item *item = findItem(path,path_to_db);
   if (item) {

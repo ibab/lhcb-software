@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.54 2009-01-12 07:13:45 cattanem Exp $ 
+! $Id: release.notes,v 1.55 2009-01-13 07:43:32 ocallot Exp $ 
 ! =============================================================================
 ! package DetDescSvc
 ! package manager : Marco Clemencic, Juan Palacios ?
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
+
+! 2009-01-13 - Olivier Callot
+ - Added hash maps in UpdateMgrSvc to speed-up registration of conditions.
 
 !========================= DetDescSvc v2r2 2009-01-12 =========================
 ! 2009-01-10 - Marco Clemencic
