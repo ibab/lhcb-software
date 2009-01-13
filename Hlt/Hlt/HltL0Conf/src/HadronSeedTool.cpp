@@ -1,4 +1,4 @@
-// $Id: HadronSeedTool.cpp,v 1.8 2008-10-13 06:27:53 albrecht Exp $
+// $Id: HadronSeedTool.cpp,v 1.9 2009-01-13 14:06:06 albrecht Exp $
 // Include files 
 
 #include <cmath>
@@ -59,7 +59,7 @@ HadronSeedTool::HadronSeedTool( const std::string& type,
   declareProperty("sigmaTy2", m_sigmaTy2 = boost::assign::list_of(4.9e-5)(1.e-4)(1.e-4)(6.4e-5)(1.44e-4) );
 
   declareProperty("debugMode", m_debugMode = false );
-  declareProperty("decodeCalos",m_decodeCalos = true );
+  declareProperty("decodeCalos",m_decodeCalos = false );
   
   declareInterface<ICaloSeedTool>(this);
 
@@ -145,7 +145,7 @@ StatusCode HadronSeedTool::makeTrack(const LHCb::L0CaloCandidate& hadL0Cand,
   //region:  0-2 for ECal, 3-4 for HCal
   int region = m_l0ConfExtrapolator->getCaloRegion(x,y,z);
   if( -1 == region ){
-    warning()<<"calo region not valid, region = "<<region<<endmsg;
+    Warning("Calo region not valid",StatusCode::SUCCESS,1);
     //if position of calo candidate no valid, 
     //assume outermost region --> largest search window
     region = 4;
@@ -170,7 +170,7 @@ StatusCode HadronSeedTool::makeTrack(const LHCb::L0CaloCandidate& hadL0Cand,
     StatusCode sc = getHCalBarycenter( hadL0Cand, x, y, e, region );
     if ( sc.isFailure() ) {
       if ( -1 == region ) { 
-        error() << "Failed to calculate 2x2 HCal cluster or its region!" << endmsg;
+        warning() << "Failed to calculate 2x2 HCal cluster or its region!" << endmsg;
         return StatusCode::SUCCESS;
       }
       info() << "Falling back on position information from L0 candidate"<<endmsg;
