@@ -1,4 +1,4 @@
-// $Id: MCCaloMonitor.cpp,v 1.7 2007-01-12 16:11:53 ranjard Exp $
+// $Id: MCCaloMonitor.cpp,v 1.8 2009-01-13 13:54:09 odescham Exp $
 
 // Include files
 
@@ -187,25 +187,26 @@ StatusCode MCCaloMonitor::execute() {
     plot1D( (*iHit)->activeE(),12,m_hName2,m_MinE,m_MaxE,100,((*iHit)->activeE())/m_nEvents) ;
     plot1D( binTime,13,m_hName3,MinT,MaxT,m_Bin,((*iHit)->activeE())/m_nEvents) ;
     if (m_DivMonitor) {
-      if ( 0 == zone ){
+      if ( ( 2 == zone && m_DetectorName != "Hcal" ) ||
+           ( 1 == zone && m_DetectorName == "Hcal" ) ){
         if ( detector->valid(ID) ){
           plot1D((*iHit)->activeE(),111,m_hName1a,m_MinE,m_MaxE,100,1./m_nEvents) ;
           plot1D((*iHit)->activeE(),121,m_hName2a,m_MinE,m_MaxE,100,((*iHit)->activeE())/m_nEvents) ;
           plot1D(binTime,131,m_hName3a,MinT,MaxT,m_Bin,((*iHit)->activeE())/m_nEvents) ;
         }
       }
-      if ( 1 == zone ){
+      if ( ( 1 == zone   && m_DetectorName != "Hcal" ) ){
         if ( detector->valid(ID) ){
           plot1D((*iHit)->activeE(),112,m_hName1b,m_MinE,m_MaxE,100,1./m_nEvents) ;
           plot1D((*iHit)->activeE(),122,m_hName2b,m_MinE,m_MaxE,100,((*iHit)->activeE())/m_nEvents) ;
           plot1D(binTime,132,m_hName3b,MinT,MaxT,m_Bin,((*iHit)->activeE())/m_nEvents) ;
         }
       }
-      if ( 2 == zone ) {
+      if ( 0 == zone ) {
         if ( detector->valid(ID) ){
-          plot1D((*iHit)->activeE(),113,m_hName1b,m_MinE,m_MaxE,100,1./m_nEvents) ;
-          plot1D((*iHit)->activeE(),123,m_hName2b,m_MinE,m_MaxE,100,((*iHit)->activeE())/m_nEvents) ;
-          plot1D(binTime,133,m_hName3b,MinT,MaxT,m_Bin,((*iHit)->activeE())/m_nEvents) ;
+          plot1D((*iHit)->activeE(),113,m_hName1c,m_MinE,m_MaxE,100,1./m_nEvents) ;
+          plot1D((*iHit)->activeE(),123,m_hName2c,m_MinE,m_MaxE,100,((*iHit)->activeE())/m_nEvents) ;
+          plot1D(binTime,133,m_hName3c,MinT,MaxT,m_Bin,((*iHit)->activeE())/m_nEvents) ;
         }
       }
     }
