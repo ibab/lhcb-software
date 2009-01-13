@@ -1,9 +1,21 @@
-!$Id: release.notes,v 1.13 2008-12-02 17:19:37 jpalac Exp $
+!$Id: release.notes,v 1.14 2009-01-13 17:22:58 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Ex/MicroDSTExample
 ! Responsible : Juan PALACIOS
 ! Purpose     : MicroDST making and reading examples.
 !-----------------------------------------------------------------------------
+
+! 2009-01-13 - Juan PALACIOS
+ - python/MicroDSTExample/Functors.py
+ - python/MicroDSTExample/Helpers.py
+ - python/MicroDSTReadingExample.py
+  . Adapt to ParticlePropertySvc -> LHCb::ParticlePropertSvc change.
+ - options/TestMicroDSTMake.py
+  . Remove import of MicroDST.MicroDSTAlgorithm module. All MicroDSTAlgorithm
+    configurables are now available in Configurables.
+  . Load MicroDSTAlgorithm configurables explicitly from Configurables.
+  . Remove obsolete .opts files. use .py files where available.
+  . Use DaVinci() configurable to control job.
 
 ! 2008-12-02 - Juan PALACIOS
  - cmt/requirements
