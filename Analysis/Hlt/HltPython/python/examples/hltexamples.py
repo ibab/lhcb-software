@@ -9,23 +9,46 @@
 
 import GaudiPython
 from math import *
+import desktop
+import arguments
+import benchmarkchannels as bch
+import hltconf
+from Gaudi.Configuration import *
+from ROOT import *
 
-# define options files and datacards
-HLTJOB = "$HLTSYSROOT/options/HltJob.opts"
-MINBIAS = "$HLTSYSROOT/optionss/raw06_minbias_1.opts"
-BKPISEL = "$HLTSYSROOT/options/dst06_bkpi_sel.opts"
-BSMUMUSEL = "$HLTSYSROOT/options/dst06_bsmumu_sel.opts"
+CHANNEL = arguments.argument("c"," channel name ","Bs2PhiPhi")
 
-# crete application and initialize
+# configure the application and the datacards to run on
+importOptions("$DAVINCIROOT/options/DaVinci.py")
+
+EOPTS = []
+datacards = bch.createOptLines(CHANNEL)
+print datacards
+EOPTS.append(datacards)
+
+# HLT configuration
+from HltConf.Configuration import *
+HltConf().oldStyle = False
+HltConf().replaceL0BanksWithEmulated = True
+HltConf().hltType = 'Hlt1Alleys'
+HltConf().applyConf()
+
+EOPTS.append("HltSummaryWriter.SaveAll = true")
+
+# create the application
 gaudi = GaudiPython.AppMgr(outputlevel=3)
-gaudi.config(files = [HLTJOB,BKPISEL])
+gaudi.config(options=EOPTS)
+
+
+# initialize the application and retrieve main tools
 gaudi.initialize()
-
-# create HLT tool to deal with the summary
-HLTSUM = gaudi.toolsvc().create("HltSummaryTool",interface="IHltConfSummaryTool")
-
-# get the transient event store
+HIS = desktop.ROOTOBJECTS
 TES = gaudi.evtsvc()
+HLTSUM = gaudi.toolsvc().create("HltSummaryTool",interface="IHltSummaryTool")
+TISTOS = gaudi.toolsvc().create("TriggerTisTos",interface="ITriggerTisTos")
+TIMER = gaudi.toolsvc().create("SequencerTimerTool",interface="ISequencerTimerTool")
+
+#alley = hltconf.confAlley(gaudi,"SingleHadron")
 # STDVectorVertices = GaudiPython.gbl.std.vector("LHCb::RecVertex *")
 # STDVectorTrack = GaudiPython.gbl.std.vector("LHCb::Track *") 
 
@@ -77,13 +100,9 @@ def hlt():
         how to get the selections that an event has passed?
     """
     print " HLT decision ", HLTSUM.decision()
-    names = ["L0HadronDecision","Hlt1HadronSingleDecision","Hlt1HadronDiDecision"]
+    names = HLTSUM.selections()
     for name in names:
         print " \t",name," ? ",HLTSUM.selectionDecision(name)
-
-    names = HLTSUM.selections()
-    print " HLT selections passed:"
-    for name in names: print " \t",name
 
 def hlt_selection_configuration(selection):
     """ how to get the filters applied in one selection?
@@ -101,6 +120,7 @@ def hlt_candidates_info(selection = "Hlt1HadronSingleDecision"):
     """ how to get the info of the candidates of a selection?
         i.e what is the PT value of the tracks of the HadPreTrigger selection?
         @ param name of the selection, i.e Hlt1HadronSingleDecision
+        TODO: disable for the moment... 
     """
     print " HLT ",selection," ? ",HLTSUM.selectionDecision(selection)
     if (not HLTSUM.hasSelection(selection)): return

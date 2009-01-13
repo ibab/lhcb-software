@@ -43,6 +43,18 @@ EXCLUDE_FILTERS = ["IsBackward","Calo2DChi2","RZVeloTMatch","IsMuon",
                    "PT0","DoShareM3"]
 EXCLUDE_BINDERS = ["Prep"]
 
+def infoID(annsvc,filtername):
+    """ returns the integer ID associated to an name (string) of the values stored
+    in the extra info of the HLT candidates """
+    vals = annsvc.items("InfoID")
+    cromos = filtername.split(",")
+    name = cromos[0]
+    val = filter(lambda x: x.first == name,vals)
+    if len(val) != 1:
+        print " Warning: no InfoID associated to ",name
+        return -1
+    return val[0].second
+
 
 def confAlley(gaudi,alleyname,head="Hlt1",tail="FilterSequence"):
     """ return the ordered list of the algorithms (HltAlgoConf) of an alley
@@ -194,12 +206,12 @@ class hltfilter():
     """ class that holds the information of an hlt filter, i.e 'PT,>,5000.'
     passing some candidates return the quantities associated to the filter
     """ 
-    def __init__(self,HLTSUM,name,x0=0.,xf=100.):
+    def __init__(self,name,ID,x0=0.,xf=100.):
         cromos = name.split(",")
         self.name = cromos[0]
         self.comparator = cromos[1]
         self.value = cromos[2]
-        self.id = int(HLTSUM.confInt("InfoID/"+self.name));
+        self.id = ID
         if (DEBUG): print " filter ID ",name,self.id
         if (len(cromos)>3): self.value2 = cromos[3]
         self.xrange = hisrange(name)

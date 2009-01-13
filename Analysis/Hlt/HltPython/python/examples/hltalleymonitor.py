@@ -77,14 +77,18 @@ FILTERSTOS = arguments.argument("mfilterstos"," monitor filters ", True)
 if ((FILTERSTOS) and CANDOTOS):
     ALGTYPES.append([FiltersTOS,"FiltersTOS"])
 
-importOptions("$DAVINCIROOT/options/DaVinci.py")
+
 # import the HLT that you want to monitor!
-from HltConf.Configuration import *
-HltConf().oldStyle = False
-HltConf().replaceL0BanksWithEmulated = True
-HltConf().hltType = 'Hlt1'
-HltConf().applyConf()
+from Configurables import DaVinci
+DV = DaVinci()
+DV.ReplaceL0BanksWithEmulated = True
+DV.DataType = "DC06"
+#DV.HistogramFile = "hltalleymonitor_"+CHANNEL+".root"
+DV.HistogramFile = "DVHistos_1.root"
+DV.HltType = 'Hlt1'
+DV.applyConf()
 #--- end HLT configuration
+
 
 EOPTS = []
 datacards = bch.createOptLines(CHANNEL)   
@@ -114,7 +118,8 @@ for alley in ALLEYS:
 gaudi.initialize()
 HIS = desktop.ROOTOBJECTS
 TES = gaudi.evtsvc()
-HLTSUM = gaudi.toolsvc().create("HltSummaryTool",interface="IHltConfSummaryTool")
+ANNSVC = gaudi.service("HltANNSvc",IANNSvc)
+HLTSUM = gaudi.toolsvc().create("HltSummaryTool",interface="IHltSummaryTool")
 TISTOS = gaudi.toolsvc().create("TriggerTisTos",interface="ITriggerTisTos")
 TIMER = gaudi.toolsvc().create("SequencerTimerTool",interface="ISequencerTimerTool")
 
@@ -129,6 +134,7 @@ for alg in desktop.ALGOS:
     setattr(alg,"HLTSUM",HLTSUM)
     setattr(alg,"TISTOS",TISTOS)
     setattr(alg,"TIMER",TIMER)
+    setattr(alg,"ANNSVC",ANNSVC)
     setattr(alg,"TES",TES)
     if (getattr(alg,"book",None)): alg.book()
 

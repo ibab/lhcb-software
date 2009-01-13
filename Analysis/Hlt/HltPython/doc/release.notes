@@ -4,6 +4,10 @@
 ! Purpose     : Exposing Hlt tools to Python, share common python tools
 !-----------------------------------------------------------------------------
 
+! 2009-01-13- Jose A. Hernando
+   - in python/modules hltconf, hltmonitortools adaptation to the HltSummaryTool and ANNSvc
+   - in python/examples hltalleymonitor adaptations to the HltSummaryTool and ANNSvc
+
 ! 2008-12-19- Jose A. Hernando
    - in python/modules hltmonitortools decoration changes
 

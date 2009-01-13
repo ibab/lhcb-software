@@ -357,7 +357,8 @@ class Filters(GaudiPython.PyAlgorithm):
                 for f in filters:
                     sel0 = algo.property("InputSelection")
                     sel  = algo.property("OutputSelection")
-                    fil = hltconf.hltfilter(self.HLTSUM,f)
+                    fid = hltconf.infoID(self.ANNSVC,f) 
+                    fil = hltconf.hltfilter(f,fid)
                     algo.filters.append(fil)
                     title = algo.name+":"+fil.name
                     def histo(title):
@@ -396,7 +397,8 @@ class FiltersTOS(GaudiPython.PyAlgorithm):
                 for f in filters:
                     sel0 = algo.property("InputSelection")
                     sel  = algo.property("OutputSelection")
-                    fil = hltconf.hltfilter(self.HLTSUM,f)
+                    fid = hltconf.infoID(self.ANNSVC,f)
+                    fil = hltconf.hltfilter(f,fid)
                     algo.filters.append(fil)
                     title = algo.name+":"+fil.name+"TOS"
                     def histo(title):
