@@ -1,4 +1,4 @@
-// $Id: TrackInterpolator.cpp,v 1.8 2009-01-12 10:55:18 wouter Exp $
+// $Id: TrackInterpolator.cpp,v 1.9 2009-01-13 11:00:36 wouter Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -98,16 +98,16 @@ StatusCode TrackInterpolator::interpolate( const Track& track,
     while( nextnode != nodes.end() && (*nextnode)->z() > z ) ++nextnode ;
   }
   
-  // determine where we are wrt to nodes with measurements
+  // determine where we are wrt to nodes with (active) measurements
   bool foundprecedingmeasurement(false) ; // is there measurement in nodes < nextnode?
   bool foundprocedingmeasurement(false) ; // is there a measurement in nodes >= nextnode?
   // any measurement nodes between begin and nextnode?
   for( NodeContainer::const_iterator inode = nodes.begin() ;
        inode != nextnode && !foundprecedingmeasurement; ++inode)
-    foundprecedingmeasurement = (*inode)->hasMeasurement() ;
+    foundprecedingmeasurement = (*inode)->type() == LHCb::Node::HitOnTrack ;
   for( NodeContainer::const_iterator inode = nextnode ;
        inode != nodes.end() && !foundprocedingmeasurement; ++inode)
-    foundprocedingmeasurement = (*inode)->hasMeasurement() ;
+    foundprocedingmeasurement = (*inode)->type() == LHCb::Node::HitOnTrack ;
   
   // we must find either of the two (there must be measurement nodes!)
   if( !foundprecedingmeasurement && !foundprocedingmeasurement)
@@ -145,13 +145,19 @@ StatusCode TrackInterpolator::interpolate( const Track& track,
     return StatusCode::SUCCESS ;
   }
 
-  // Get the predicted states
+  // Get the predicted states and filter if necessary
   State stateDown = nodePrev->predictedStateForward();
+  if( nodePrev->type() == LHCb::Node::HitOnTrack ) {
+    StatusCode sc = filter( *nodePrev, stateDown ) ;
+    if( sc.isFailure() ) return sc ;
+  }
+
   State stateUp   = nodeNext->predictedStateBackward();
-
-  if ( nodePrev->hasMeasurement() ) filter( *nodePrev, stateDown );
-  if ( nodeNext->hasMeasurement()   ) filter( *nodeNext, stateUp );
-
+  if( nodeNext->type() == LHCb::Node::HitOnTrack ) {
+    StatusCode sc = filter( *nodeNext, stateUp ) ;
+    if( sc.isFailure() ) return sc ;
+  }
+  
   // extrapolate the upstream and downstream states
   m_extrapolator -> propagate( stateDown, z );  
   m_extrapolator -> propagate( stateUp  , z );
@@ -207,6 +213,7 @@ StatusCode TrackInterpolator::filter(const FitNode& node, State& state)
     Warning( "Z positions of State and Measurement are not equal", 0, 1 );
     debug() << "State at z=" << state.z() 
             << ", Measurement at z=" << meas.z() << endmsg;
+    return StatusCode::FAILURE ;
   }
 
   // get the state vector and cov
