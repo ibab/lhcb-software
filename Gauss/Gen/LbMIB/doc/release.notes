@@ -5,6 +5,7 @@
 !               obtained with dedicated simulations
 !-----------------------------------------------------------------------------
 
+!=========================== LbMIB v3r1 2009-01-13 ===========================
 ! 2008-12-11 - Patrick Robbe
  - CollimatorSource.cpp: set signal_process_vertex to define primary vertex
    for Geant4

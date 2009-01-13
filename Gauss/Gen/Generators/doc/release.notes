@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.139 2008-12-11 15:38:15 robbep Exp $
+! $Id: release.notes,v 1.140 2009-01-13 13:43:24 gcorti Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+!====================== Generators v9r2 2009-01-13 ===========================
 ! 2008-12-11 - Patrick Robbe
  - Signal.cpp: associate production_vertex to signal_vertex for clean 
    events, to allow correct primary vertex assignment for Geant4.
