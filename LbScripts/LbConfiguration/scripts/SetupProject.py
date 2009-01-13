@@ -5,11 +5,11 @@ from xml.sax import parse, ContentHandler
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.38 2009-01-08 18:55:44 hmdegaud Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.39 2009-01-13 13:17:59 marcocle Exp $"
 
 try:
     from LbUtils.CVS import CVS2Version
-    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.38 $")
+    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.39 $")
 except ImportError :
     __version__ = _cvs_id
 
@@ -463,7 +463,7 @@ class GetNightlyCMTPROJECTPATH(ContentHandler):
         """
         today = days[self._day]
         yesterday = days[self._day-1]
-        d = [ s.replace("%TODAY%",today).replace("%YESTERDAY%",yesterday)
+        d = [ s.replace("%DAY%",today).replace("%YESTERDAY%",yesterday)
               for s in self._path ]
         return d
     def value(self):
