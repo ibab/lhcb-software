@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 !
 ! foreach a (`ls -1 options/DVTestHlt2* | awk -FTestHlt2 '{print $2}' | awk -F. '{print $1}'`)
-!   gaudirun.py options/DVTestHlt2${a}.py | tee test-$a
+!   gaudirun.py options/DVTestHlt2${a}.py >! test-$a &
 ! end
 !-----------------------------------------------------------------------------
 

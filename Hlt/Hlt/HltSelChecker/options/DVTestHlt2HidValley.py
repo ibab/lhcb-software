@@ -7,65 +7,43 @@
 # /
 from Gaudi.Configuration import *
 from Configurables import HistogramPersistencySvc, ReadHltSummary, GaudiSequencer, PrintHeader, HltSelectionsDecision
-importOptions ("$DAVINCIROOT/options/DaVinciCommon.opts")
-########################################################################
 #
-# Trigger. Uncomment what you need. Hlt1 needs L0, Hlt2 doesn't.
+signal = 'HidValley'
 #
-from HltConf.Configuration import *
+# Monitoring
 #
-## enable if you want to rerun L0
-HltConf().replaceL0BanksWithEmulated = True
-HltConf().Hlt2IgnoreHlt1Decision = True  # do both Hlt1 and 2
-#
-## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
-#HltConf().hltType = 'Hlt1'
-#HltConf().hltType = 'Hlt2'
-HltConf().hltType = 'Hlt1+Hlt2'
-## don't forget to actually apply the configuration!!!
-HltConf().applyConf()
-##################################################################
-# 
-# to get Hlt2 correlations
-#
+moni = GaudiSequencer("Hlt2MonitorSeq")
+moni.IgnoreFilterPassed = True
+moni.Context = "HLT"
 importOptions( "$HLTSELECTIONSROOT/options/Hlt2Correlations.py")
-##################################################################
-# 
-# to get Hlt2 moniror plots
-#
-# importOptions( "$HLTSELECTIONSROOT/options/Hlt2MonitorPlots.py")
-##################################################################
+importOptions( "$HLTSELECTIONSROOT/options/Hlt2MonitorPlots.py")
 # 
 # Uncomment to Read HltSummary and printout candidates
 #
-ApplicationMgr().TopAlg += [ ReadHltSummary() ]
 ReadHltSummary().PrintParticles = TRUE
 ReadHltSummary().Context = "HLT" 
-##################################################################
-# 
-# Save histograms
-#
-ApplicationMgr().HistogramPersistency = "ROOT"
-HistogramPersistencySvc().OutputFile = "DVHlt2.root"
-##################################################################
-# 
-# Events
-#
-EventSelector().FirstEvent = 1 
-ApplicationMgr().EvtMax = 100
-EventSelector().PrintFreq = 1
-# EventSelector().FirstEvent = 60
-##################################################################
 
-# HiddenValley
-EventSelector().Input = [
-"DATAFILE='PFN:castor:/castor/cern.ch/user/m/marcin/HiddenValleySignal/Higgs120_mA35_tA_100/HV_Higgs_120_35_100_001.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/user/m/marcin/HiddenValleySignal/Higgs120_mA35_tA_100/HV_Higgs_120_35_100_002.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/user/m/marcin/HiddenValleySignal/Higgs120_mA35_tA_100/HV_Higgs_120_35_100_003.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/user/m/marcin/HiddenValleySignal/Higgs120_mA35_tA_100/HV_Higgs_120_35_100_004.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/user/m/marcin/HiddenValleySignal/Higgs120_mA35_tA_100/HV_Higgs_120_35_100_005.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/user/m/marcin/HiddenValleySignal/Higgs120_mA35_tA_100/HV_Higgs_120_35_100_006.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/user/m/marcin/HiddenValleySignal/Higgs120_mA35_tA_100/HV_Higgs_120_35_100_007.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
+#
+# Configuration
+#
+from Configurables import DaVinci
+DaVinci().EvtMax = -1
+DaVinci().HltType = "Hlt1+Hlt2"                # Both Hlt levels
+DaVinci().Hlt2IgnoreHlt1Decision = True        # Ignore Hlt1 in 2
+DaVinci().ReplaceL0BanksWithEmulated = False   # Redo L0
+DaVinci().DataType = "DC06"
+DaVinci().Simulation = True
+DaVinci().TupleFile =  "HLT-"+signal+".root"
+DaVinci().HistogramFile = "DVHlt2-"+signal+".root"
+DaVinci().MoniSequence += [ moni, ReadHltSummary() ]
+DaVinci().Input = [
+    "DATAFILE='PFN:castor:/castor/cern.ch/user/m/marcin/HiddenValleySignal/Higgs120_mA35_tA_100/HV_Higgs_120_35_100_001.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+    "DATAFILE='PFN:castor:/castor/cern.ch/user/m/marcin/HiddenValleySignal/Higgs120_mA35_tA_100/HV_Higgs_120_35_100_002.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+    "DATAFILE='PFN:castor:/castor/cern.ch/user/m/marcin/HiddenValleySignal/Higgs120_mA35_tA_100/HV_Higgs_120_35_100_003.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+    "DATAFILE='PFN:castor:/castor/cern.ch/user/m/marcin/HiddenValleySignal/Higgs120_mA35_tA_100/HV_Higgs_120_35_100_004.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+    "DATAFILE='PFN:castor:/castor/cern.ch/user/m/marcin/HiddenValleySignal/Higgs120_mA35_tA_100/HV_Higgs_120_35_100_005.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+    "DATAFILE='PFN:castor:/castor/cern.ch/user/m/marcin/HiddenValleySignal/Higgs120_mA35_tA_100/HV_Higgs_120_35_100_006.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+    "DATAFILE='PFN:castor:/castor/cern.ch/user/m/marcin/HiddenValleySignal/Higgs120_mA35_tA_100/HV_Higgs_120_35_100_007.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
 
 GaudiSequencer("Hlt2SelHidValleyFilterSequence").Members += [ PrintHeader("FoundHidValley") ]
 

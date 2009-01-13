@@ -53,7 +53,6 @@ corrs = GaudiSequencer("Corrs")
 corrs.Members += [ CheckSelResult("CheckOffline"), L0Filter(), AlgorithmCorrelationsAlg("MuMuK") ]
 CheckSelResult("CheckOffline").Algorithms = [ "DC06SelBu2MuMuK" ]
 AlgorithmCorrelationsAlg("MuMuK").Algorithms = [ "DC06SelBu2MuMuK", "Hlt2SelBu2LLK", "Hlt2SelBu2LLKSignal", "Hlt2SelBu2LLKHighMass", "Hlt2SelBu2LLKJpsi", "Hlt2SelBiasedDiElectron", "Hlt2SelBiasedDiMuon", "Hlt2SelUnbiasedDiMuon", "Hlt2Decision" ]
-CheckSelResult("CheckOffline").OutputLevel = 1 
 ###
  # Tuple
 ###
