@@ -53,6 +53,8 @@ pattern install_python_init \
 
 make_fragment python_init -header=python_init_header -dependencies
 
+
+
 pattern python_alias \
     set_append PYTHONALIASDEF " <script>:$(<package>_root) " ; \
     document python_alias <script>_python_alias script=<script> ; \
@@ -65,6 +67,8 @@ action ShowPythonAlias "echo $(PYTHONALIASDEF) | tr ' ' '\n' " \
 
 macro_remove cmt_actions_constituents "ShowPythonAlias "
 macro_remove cmt_actions_constituentsclean "ShowPythonAliasclean "
+
+
 
 
 pattern source_shell_alias \
@@ -80,31 +84,18 @@ action ShowSourceShellAlias "echo $(SOURCESHELLALIASDEF) | tr ' ' '\n' " \
 macro_remove cmt_actions_constituents "ShowSourceShellAlias "
 macro_remove cmt_actions_constituentsclean "ShowSourceShellAliasclean "
 
-
-pattern shell_alias \
-    set_append SHELLALIASLIST " <script> " ; \
-    set_append SHELLALIASDEF " <script>:$(<package>_root)" 
-    
-
-cmtpath_pattern \
-    setup_script $(LBSCRIPTSPOLICYROOT)/scripts/ShellAlias 
-
-action ShowShellAlias "echo $(SHELLALIASDEF) | tr ' ' '\n' " \
-            WIN32     "echo $(SHELLALIASDEF)"
-
-macro_remove cmt_actions_constituents "ShowShellAlias "
-macro_remove cmt_actions_constituentsclean "ShowShellAliasclean "
+# apply the pattern to itself
+apply_pattern source_shell_alias script=SourceShellAlias
 
 
-action ShowAlias "echo $(PYTHONALIASDEF) $(SHELLALIASDEF) $(SOURCESHELLALIASDEF) | tr ' ' '\n' " \
-           WIN32 "echo $(PYTHONALIASDEF) $(SHELLALIASDEF) $(SOURCESHELLALIASDEF)"
+
+
+action ShowAlias "echo $(PYTHONALIASDEF) $(SOURCESHELLALIASDEF) | tr ' ' '\n' " \
+           WIN32 "echo $(PYTHONALIASDEF) $(SOURCESHELLALIASDEF)"
 
 macro_remove cmt_actions_constituents "ShowAlias "
 macro_remove cmt_actions_constituentsclean "ShowAliasclean "
 
-
-apply_pattern source_shell_alias script=ShellAlias
-apply_pattern source_shell_alias script=SourceShellAlias
 
 #--------------------------------------------
 # Patterns for specifically declaring and installing script files in the
