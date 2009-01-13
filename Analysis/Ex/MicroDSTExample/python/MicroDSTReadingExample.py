@@ -1,12 +1,14 @@
 # Imports and typedefs
+from GaudiConf.Configuration import *
 import sys, getopt
 from ROOT import TCanvas, TH1D, Double
-from GaudiPython import gbl, AppMgr
+from GaudiPython import gbl, AppMgr, Helper
 from math import sqrt, fabs
 from GaudiKernel import SystemOfUnits, PhysicalConstants
 from LHCbMath import XYZVector, XYZPoint
 from MicroDSTExample import Helpers, Functors
 GenPlotter = Functors.GenericPlotter
+import PartProp.Service
 #==============================================================================
 def particleTreeLoop(particles, plotter):
     for p in particles:
@@ -50,13 +52,17 @@ for o, a in opts:
         locationRoot = a
 
 
+lhcbApp = LHCbApp()
+lhcbApp.DDDBtag = 'default'
+lhcbApp.CondDBtag = 'default'
+
 appMgr = AppMgr(outputlevel=4)
 appMgr.config( files = ['$STDOPTS/LHCbApplication.opts',
                         '$STDOPTS/SimDicts.opts',
                         '$DDDBROOT/options/DC06.opts'])
 appMgr.initialize()
 
-appMgr.ExtSvc += ['ParticlePropertySvc']
+appMgr.ExtSvc += ['LHCb::ParticlePropertySvc']
 
 eventLoop = Helpers.EventLoop(appMgr)
 
@@ -208,10 +214,6 @@ print "Found Reco info in ", nRecEvents, "/", nEvents, "events"
 print "Found ", nPrimaryVertices, " PVs in ", nEvents, "events"
 print "Found ", nParticles, " B candidates in ", nEvents, "events"
 
-print "massPlots.keys() = ", massPlots.plots.keys()
+print "massPlots.plots.keys() = ", massPlots.plots.keys()
 
-#massPlots[511].Draw()
-#mcMassPlots[511].SetLineColor(2)
-#mcMassPlots[511].Draw('same')
-#propTimePlots[531].Draw()
 
