@@ -25,7 +25,7 @@ template <class T> void _delete(T& p) {
 }
 
 /// Macro for initialising a close command.
-#define INIT_CLOSE_COMMAND(h, fname, adler_32, md_5, seqno, rno, thesize, noofevents) { \
+#define INIT_CLOSE_COMMAND(h, fname, adler_32, md_5, seqno, rno, thesize, noofevents, nooflumievents) { \
     (h)->cmd = CMD_CLOSE_FILE; \
     (h)->run_no = rno;  \
     (h)->data.chunk_data.seq_num = seqno; \
@@ -33,6 +33,7 @@ template <class T> void _delete(T& p) {
     (md_5)->Final((h)->data.stop_data.md5_sum); \
     (h)->data.stop_data.size = thesize; \
     (h)->data.stop_data.events = noofevents; \
+    (h)->data.stop_data.lumiEvents = nooflumievents; \
     ::strncpy((h)->file_name, (fname), MAX_FILE_NAME); \
 }
 
@@ -296,7 +297,8 @@ void ReprocessingWriter::notifyClose(struct cmd_header *cmd)   {
 			  cmd->data.stop_data.adler32_sum,
 			  cmd->data.stop_data.md5_sum,
                           cmd->data.stop_data.size,
-                          cmd->data.stop_data.events);
+                          cmd->data.stop_data.events,
+                          cmd->data.stop_data.lumiEvents);
     *m_log << MSG::INFO << "Confirmed ";
   }
   catch(exception& rte) {
