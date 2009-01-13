@@ -3,7 +3,7 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v17r2>2009-01-12 Boole v17r2</A></H1><PRE>
+</PRE><H1><A NAME=v17r2>2009-01-13 Boole v17r2</A></H1><PRE>
  - Explicit setting of database tag now compulsory, update options files
    accordingly
  - Move spillover options into configurable, and add support for packed
@@ -11,8 +11,8 @@ Purpose: LHCb Digitization program
  - Add a reference for slc4_ia32_gcc34_dbg (different from optimised, to be
    understood...)
  - Update references for L0Muon bug fix, new # in log.info printout, new Velo
-   signal to noise tuning, new run record handling (Gaudi v20r4) and new L0Muon
-   raw bank compression
+   signal to noise tuning, new run record handling (Gaudi v20r4), new L0Muon
+   raw bank compression, new CaloDigit calibration
 
 </PRE><H1><A NAME=v17r1>2008-12-11 Boole v17r1</A></H1><PRE>
  - Clean up options

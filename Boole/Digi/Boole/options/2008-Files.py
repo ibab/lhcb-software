@@ -12,11 +12,19 @@ from Configurables import Boole, LHCbApp
 FileCatalog().Catalogs = [ "xmlcatalog_file:NewCatalog.xml" ]
 
 #-- Main ('signal') event input
-# Events from Gauss v35r1, DB tag head-20081002
-LHCbApp().DDDBtag   = "head-20081002"
-LHCbApp().CondDBtag = "head-20081002"
-datasetName = '11144101-100ev-20081006'
-EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/g/gcorti/Gauss/2008/v35r1/" + datasetName + ".sim' TYP='POOL_ROOTTREE' OPT='READ'"]
+
+# Events from Gauss v36r1, DB tag head-200910108 (new muon geometry)
+#LHCbApp().DDDBtag   = "head-20090108"
+#LHCbApp().CondDBtag = "sim-20090108"
+#datasetName = '11144101-100ev-20090111'
+#EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/g/gcorti/Gauss/2009/v36r1/" + datasetName + ".sim' TYP='POOL_ROOTTREE' OPT='READ'"]
+
+# Events from Gauss v36r1, DB tag head-200910112
+LHCbApp().DDDBtag   = "head-20090112"
+LHCbApp().CondDBtag = "sim-20090112"
+datasetName = '11144101-100ev-20090112'
+EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/g/gcorti/Gauss/2009/v36r1/" + datasetName + ".sim' TYP='POOL_ROOTTREE' OPT='READ'"]
+
 
 #-- Spillover events not used in 2008 configuration
 
