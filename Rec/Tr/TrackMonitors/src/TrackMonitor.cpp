@@ -1,4 +1,4 @@
-// $Id: TrackMonitor.cpp,v 1.7 2009-01-12 12:51:45 wouter Exp $
+// $Id: TrackMonitor.cpp,v 1.8 2009-01-13 11:50:11 wouter Exp $
 // Include files 
 #include "TrackMonitor.h"
 
@@ -172,7 +172,11 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
     double resmax[] = { 0.1,0.1,0.5,0.5,2.0,10 } ;
     for( LHCb::Track::NodeContainer::const_iterator inode = track.nodes().begin() ;
 	 inode != track.nodes().end(); ++inode) 
-      if( (*inode)->type() == LHCb::Node::HitOnTrack ) {
+      if( (*inode)->type() == LHCb::Node::HitOnTrack 
+	  // discard extremely small fraction of hits with zero error
+	  // on residual. (e.g. a downstream track with only one
+	  // active TT hit)
+	  && (*inode)->errResidual2() > TrackParameters::lowTolerance ) {
 	size_t mtype = (*inode)->measurement().type() - 1  ;
 	// factor for unbiasing the rms (not the mean!)
 	double f = std::sqrt( (*inode)->errMeasure2()/(*inode)->errResidual2()) ;
