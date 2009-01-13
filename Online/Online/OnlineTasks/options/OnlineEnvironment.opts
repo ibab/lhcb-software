@@ -4,4 +4,4 @@ ApplicationMgr.SvcOptMapping += { "Gaudi::MultiFileCatalog/FileCatalog", "Gaudi:
 ApplicationMgr.ExtSvc   += { "MonitorSvc/MonitorSvc" };
 ApplicationMgr.Dlls     += { "Gaucho" };
 MessageSvc.OutputLevel      = 4;
-MessageSvc.LoggerOnly  = false;
+//MessageSvc.LoggerOnly  = false;

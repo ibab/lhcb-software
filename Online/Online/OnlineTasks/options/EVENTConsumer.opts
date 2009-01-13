@@ -5,6 +5,6 @@ ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
 EventDataSvc.RootCLID                = 1;
 EventDataSvc.EnableFaultHandler      = true;
 EventPersistencySvc.CnvServices      = { "LHCb::RawDataCnvSvc/RawDataCnvSvc" };
-MEPManager.PartitionID               = @OnlineEnv.PartitionID;
+MEPManager.PartitionID               = 333;//@OnlineEnv.PartitionID;
 MEPManager.Buffers                   = { "EVENT" };
 EventSelector.Input                  = "EVENT";

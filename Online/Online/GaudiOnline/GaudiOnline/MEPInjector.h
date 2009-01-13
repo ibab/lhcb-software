@@ -56,6 +56,9 @@ namespace LHCb {
                       ,virtual public IIncidentListener
  {
   protected:
+   
+    bool m_ARPMe;
+  
     enum InjectorState { NOT_READY, READY, RUNNING, STOPPED };
  
     InjectorState m_InjState;
@@ -130,7 +133,7 @@ namespace LHCb {
     std::string   m_HLTIfIPAddr;    /* The destination address of HLT MEP Request */
     std::string   m_OdinIfIPAddr;   /* The source address to send MEP request to Odin */ 
 
-
+    std::vector<std::string> m_HLTNodes;     /* The HLT nodes, to be pinged at initialization */ 
     std::vector<std::string> m_Tell1Boards;  /* The Tell1 enabled for the injector, format = {"IP", "HOSTNAME", "TYPE" } */ 
 
     int 	  m_OdinEthInterface; /* The Ethernet interface for Odin */   
@@ -176,6 +179,9 @@ namespace LHCb {
 
     ///////////////////////////////////////////////////////////////////////
     /// Private Methods	
+
+    /// In order to send ARP request at initialization
+    StatusCode pingHLTNodes();
    
     /// Get the MTU configured by the system for the opened socket   
     int getMTU(int );

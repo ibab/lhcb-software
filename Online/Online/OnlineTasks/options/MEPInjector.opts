@@ -64,6 +64,7 @@ IODataManager.UseGFAL = true; // what's this ?
 //                               My options                                  //
 ///////////////////////////////////////////////////////////////////////////////
 
+LHCb::MEPInjector.HLTNodes = @OnlineEnv.Injector_Nodes;
 LHCb::MEPInjector.Tell1Boards = @OnlineEnv.Tell1Boards;
 LHCb::MEPInjector.OdinIf = @OnlineEnv.Injector_odinIF_Name;  //inj01-d2
 LHCb::MEPInjector.HLTIf = @OnlineEnv.Injector_farmIF_Name;   //inj01-d1
@@ -81,3 +82,5 @@ LHCb::MEPInjector.TimeOut = 1000;  //milliseconds
 
 LHCb::MEPInjector.AutoMode = false; // Are we running in Auto Mode or in Odin Mode
 LHCb::MEPInjector.HLTIPAddrTo = "192.168.19.252"; //Still used in Automode
+
+LHCb::MEPInjector.ARPME = true;
