@@ -1,12 +1,4 @@
-from Gaudi.Configuration import *
-from Configurables import MicroDST__ObjectClonerAlg_LHCb__RecHeader_ as CopyRecHeader
-from Configurables import MicroDST__KeyedContainerClonerAlg_LHCb__ProtoParticle_ as CopyProtoParticle
-from Configurables import MicroDST__KeyedContainerClonerAlg_LHCb__RecVertex_ as CopyPrimaryVertices
-from Configurables import MicroDST__KeyedContainerClonerAlg_LHCb__Particle_ as CopyParticles
-from Configurables import MicroDST__ObjectClonerAlg_LHCb__ODIN_ as CopyODIN
-from Configurables import MicroDST__KeyedContainerClonerAlg_LHCb__MCParticle_ as CopyMCParticles
-from Configurables import MicroDST__ObjectClonerAlg_LHCb__MCHeader_ as CopyMCHeader
-from Configurables import MicroDST__ObjectClonerAlg_LHCb__L0DUReport_ as CopyL0DUReport
-from Configurables import MicroDST__ObjectClonerAlg_LHCb__HltSummary_ as CopyHltSummary
-from Configurables import MicroDST__KeyedContainerClonerAlg_LHCb__FlavourTag_ as CopyFlavourTag
-
+"""
+$Id: MicroDSTAlgorithm.py,v 1.2 2009-01-13 16:35:57 jpalac Exp $
+File to include any necessary algorithm configurations.
+"""
