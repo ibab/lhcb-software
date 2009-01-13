@@ -1,4 +1,4 @@
-// $Id: IGetElementsToBeAligned.h,v 1.7 2008-09-10 13:10:01 wouter Exp $
+// $Id: IGetElementsToBeAligned.h,v 1.8 2009-01-13 15:50:00 wouter Exp $
 #ifndef IGETELEMENTSTOBEALIGNED_H 
 #define IGETELEMENTSTOBEALIGNED_H 1
 
@@ -19,7 +19,6 @@
 
 /// Local
 #include "AlignmentElement.h"
-#include "FindAlignmentElement.h"
 
 static const InterfaceID IID_IGetElementsToBeAligned ( "IGetElementsToBeAligned", 1, 0 );
 
