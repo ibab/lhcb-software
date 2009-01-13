@@ -1,8 +1,6 @@
-#$Id: TestMicroDSTMake.py,v 1.10 2008-12-02 17:17:20 jpalac Exp $
+#$Id: TestMicroDSTMake.py,v 1.11 2009-01-13 17:05:31 jpalac Exp $
 from Gaudi.Configuration import *
-from MicroDST.MicroDSTAlgorithm import *
-from Configurables import CopyRelatedMCParticles
-from Configurables import CopyParticle2PVLink
+from DaVinci.Configuration import DaVinci
 from Configurables import MCParticleArrayFilterAlg
 from Configurables import FilterMCParticleArrayByDecay
 from Configurables import MCDecayFinder
@@ -15,6 +13,13 @@ from Configurables import OutputStream
 from Configurables import BTagging, BTaggingTool
 from Configurables import PhysDesktop
 from Configurables import PVReFitterAlg
+from Configurables import CopyRecHeader
+from Configurables import CopyMCParticles
+from Configurables import CopyParticles
+from Configurables import CopyPrimaryVertices
+from Configurables import CopyParticle2PVLink
+from Configurables import CopyRelatedMCParticles
+from Configurables import CopyFlavourTag
 #==============================================================================
 # Some steering options
 #
@@ -31,9 +36,9 @@ BTaggingInfo = True
 # re-fit PV?
 PVRefit = True
 #==============================================================================
-importOptions( "$DAVINCIROOT/options/DaVinciCommon.opts" )
 importOptions( "$MICRODSTEXAMPLEROOT/options/JpsiPhiDataLFN.py")
 #importOptions( "$MICRODSTEXAMPLEROOT/options/JpsiPhiDataPFN.py")
+importOptions("$STDOPTS/LHCbApplication.opts")
 importOptions( "$CCBARROOT/options/DoDC06SelBs2Jpsi2MuMuPhi2KK_lifetime_unbiased.opts"  )
 mainLocation = "Phys/DC06selBs2JpsiPhi_unbiased"
 # get rid of some spam
@@ -121,7 +126,7 @@ if (storeMCInfo) :
 #==============================================================================
 # B tagging
 if (BTaggingInfo) :
-    importOptions('$FLAVOURTAGGINGOPTS/BTaggingTool.opts')
+    importOptions('$FLAVOURTAGGINGOPTS/BTaggingTool.py')
     BTagAlgo = BTagging('BTagging')
     BTagAlgo.addTool(PhysDesktop())
     BTaggingTool("BTaggingTool").OutputLevel=4
@@ -153,10 +158,8 @@ if (PVRefit) :
     copyP2RefitPVLink.OutputLevel=4
     MySelection.Members += [copyP2RefitPVLink]
 #==============================================================================
-MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
-ApplicationMgr().EvtMax = nEvents
-ApplicationMgr().HistogramPersistency = "ROOT";
-HistogramPersistencySvc().OutputFile = "DVHistos.root";
-EventSelector().FirstEvent = 1 
-EventSelector().PrintFreq = 100
+# make a DaVinci application configurable and add the crucial sequence to it.
+dv = DaVinci()
+dv.EvtMax = nEvents
+dv.UserAlgorithms = [MySelection]
 #==============================================================================
