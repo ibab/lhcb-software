@@ -13,32 +13,33 @@ import desktop
 import arguments
 import benchmarkchannels as bch
 import hltconf
-from Gaudi.Configuration import *
+import hltmonitortools
 from ROOT import *
 
+# select the channel
 CHANNEL = arguments.argument("c"," channel name ","Bs2PhiPhi")
 
-# configure the application and the datacards to run on
-importOptions("$DAVINCIROOT/options/DaVinci.py")
 
+# HLT configuration
+from Configurables import DaVinci
+DV = DaVinci()
+DV.DataType = "DC06"
+DV.ReplaceL0BanksWithEmulated = True
+DV.HltType = 'Hlt1'
+DV.applyConf()
+
+# configure the application and the datacards to run on
 EOPTS = []
 datacards = bch.createOptLines(CHANNEL)
 print datacards
 EOPTS.append(datacards)
 
-# HLT configuration
-from HltConf.Configuration import *
-HltConf().oldStyle = False
-HltConf().replaceL0BanksWithEmulated = True
-HltConf().hltType = 'Hlt1Alleys'
-HltConf().applyConf()
-
 EOPTS.append("HltSummaryWriter.SaveAll = true")
+EOPTS.append("HltSelReportsMaker.MaxCandidatesNonDecision=500");
 
 # create the application
 gaudi = GaudiPython.AppMgr(outputlevel=3)
 gaudi.config(options=EOPTS)
-
 
 # initialize the application and retrieve main tools
 gaudi.initialize()
@@ -47,32 +48,16 @@ TES = gaudi.evtsvc()
 HLTSUM = gaudi.toolsvc().create("HltSummaryTool",interface="IHltSummaryTool")
 TISTOS = gaudi.toolsvc().create("TriggerTisTos",interface="ITriggerTisTos")
 TIMER = gaudi.toolsvc().create("SequencerTimerTool",interface="ISequencerTimerTool")
+ANNSVC = gaudi.service("HltANNSvc",IANNSvc)
 
-#alley = hltconf.confAlley(gaudi,"SingleHadron")
-# STDVectorVertices = GaudiPython.gbl.std.vector("LHCb::RecVertex *")
-# STDVectorTrack = GaudiPython.gbl.std.vector("LHCb::Track *") 
-
-def info(name):
+def infoID(filtername):
     """ returns a function to retrieve the info from the object
-    @ param name of the quantity, i.e. 'InfoID/PT'
+    @ param name of the quantity, i.e. 'PT','IP_PV2D'
     """
-    varname = name.split(",")[0]
-    id = HLTSUM.confInt("InfoID/"+varname)
-    def fun(x):
-        return x.info(id,-1)
-    return fun
+    return hltconf.infoID(ANNSVC,filtername)
 
-def candidates(selection):
-    """ return the candidates of a selection (tracks or vertices)
-    @ param name of the selection, i.e Hlt1HadronSingle
-    """
-    if (not HLTSUM.hasSelection(selection)): return None
-    type = HLTSUM.confString(selection+"/SelectionType")
-    if (type == "Track"):
-        return HLTSUM.selectionTracks(selection)
-    elif (type == "Vertex"):
-        return HLTSUM.selectionVertices(selection)
-    return None
+def candidates(algo):
+    return hltmonitortoos.getCandidates(algo,HLTSUM)
 
 def l0():
     """ how to get the l0 decision?
@@ -104,54 +89,43 @@ def hlt():
     for name in names:
         print " \t",name," ? ",HLTSUM.selectionDecision(name)
 
-def hlt_selection_configuration(selection):
+def hlt_alley_configuration(alleyname):
     """ how to get the filters applied in one selection?
         how to get the input selection used for a selection?
         @ param name of the selection, i.e Hlt1HadronSingleDecision 
     """
-    filters = HLTSUM.confStringVector(selection+"/Filters")
-    print " HLT ",selection ," Filters : "
-    for filter in filters: print " \t",filter
-    inputs = HLTSUM.confStringVector(selection+"/InputSelections")
-    print " HLT ",selection ," Inputs : "
-    for input in inputs: print " \t",input
+    alley = hltconf.confAlley(gaudi,alleyname)
+    for algo in alley: print algo
+    return
 
-def hlt_candidates_info(selection = "Hlt1HadronSingleDecision"):
+def hlt_candidates_info(alleyname = "SingleHadron",
+                        selection="Hlt1SingleHadronDecision",
+                        infos=["PT","IP_PV2D"]):
     """ how to get the info of the candidates of a selection?
-        i.e what is the PT value of the tracks of the HadPreTrigger selection?
-        @ param name of the selection, i.e Hlt1HadronSingleDecision
-        TODO: disable for the moment... 
+    i.e what is the PT,IP value of the tracks of the HadPreTrigger selection?
+    @ param name of the selection, i.e Hlt1HadronSingleDecision
     """
-    print " HLT ",selection," ? ",HLTSUM.selectionDecision(selection)
-    if (not HLTSUM.hasSelection(selection)): return
-    objs = candidates(selection)
-    if (not objs): return
-    print " HLT ",selection," candidates ",objs.size()
-    filters = HLTSUM.confStringVector(selection+"/Filters")
-    for filter in filters:
-        xfun = info(filter)
-        vars = map(xfun,objs)
-        s = ""
-        for var in vars: s = s+" "+str(var)
-        print "\t",filter," : ",s
+    alley = hltconf.confAlley(gaudi,alleyname)
+    algo = hltconf._produceSelection(alley,selection)
+    if (not algo): return
+    candis = hltmonitortools.getCandidates(algo,HLTSUM)
+    for can in candis:
+        for info in infos:
+            id = hltconf.infoID(ANNSVC,info)
+            print "candidate ",selection,info,can.info(id,-1)
 
 def run(n=10):
     """ run 10 events and print info about L0 and HLT
     @param n number of events to run
     """
-    for i in range(n):
-        print " *** L0 and HLT info *** "
+    print " *** configuration  *** "
+    hlt_alley_configuration("SingleHadron")
+    ok = True
+    while (ok):
         gaudi.run(1)
         l0()
-        # l0_candidates()
-        hlt()
-        hlt_candidates_info("Hlt1HadronSingleDecision")
-        hlt_candidates_info("Hlt1HadronDiDecision")
-    print " *** configuration  *** "
-    hlt_selection_configuration("Hlt1HadronSingleDecision")
-    hlt_selection_configuration("Hlt1HadronDiDecision")
-
-
+        ok = not HLTSUM.selectionDecision("Hlt1SingleHadronDecision")
+    hlt_candidates_info("SingleHadron","Hlt1SingleHadronDecision")
+    
 if __name__ == "__main__":
     run()
-    gaudi.finalize()
