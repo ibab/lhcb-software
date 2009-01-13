@@ -4,6 +4,7 @@
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/ToolHandle.h"
 #include "LHCbMath/MatrixInversion.h"
+#include "Event/Node.h"
 
 class ITrackExtrapolator ;
 namespace LHCb {
@@ -50,6 +51,7 @@ namespace Al
     std::string m_trackselectorname ;
     double m_chiSquarePerDofCut ;
     bool   m_computeCorrelations ;
+    size_t m_maxHitsPerTrackForCorrelations ;
     typedef std::vector<const Al::MultiTrackResiduals*> ResidualContainer ;
     mutable ResidualContainer m_residuals ;
   } ;
@@ -80,7 +82,7 @@ namespace Al
       m_extrapolator("TrackMasterExtrapolator"),
       //m_trackselectorhandle("TrackSelector",this),
       m_chiSquarePerDofCut(10),
-      m_computeCorrelations(true)
+      m_maxHitsPerTrackForCorrelations(9999)
   {
     // interfaces
     declareInterface<IVertexResidualTool>(this);
@@ -88,7 +90,7 @@ namespace Al
     declareProperty("Extrapolator",m_extrapolator) ;
     // declareProperty("TrackSelectorHandle",m_trackselectorhandle) ;
     declareProperty("MyTrackSelector",m_trackselectorname="TrackSelector") ;
-    declareProperty("ComputeCorrelations",m_computeCorrelations) ;
+    declareProperty("MaxHitsPerTrackForCorrelations", m_maxHitsPerTrackForCorrelations) ;
   }
   
   StatusCode VertexResidualTool::initialize()
@@ -211,21 +213,22 @@ namespace Al
     
     typedef std::vector<TrackContribution> Contributions ;
     Contributions states ;
-    Al::Residuals::NodeContainer allnodes ;
     double totalchisq(0) ;
     size_t totalndof(0) ;
     size_t nacceptedtracks(0) ;
+    size_t numresiduals(0) ;
+    size_t numexternalhits(0) ;
 
     for( TrackResidualContainer::const_iterator itrack = tracks.begin() ;
 	 itrack != tracks.end() && success; ++itrack) {
       TrackContribution tc ;
-      tc.offset = allnodes.size() ;
+      tc.offset = numresiduals ;
       tc.trackresiduals = *itrack ;
       StatusCode sc = extrapolate( **itrack, vertexestimate.z(), tc.inputstate, tc.dResidualdState ) ;
-      
       if( sc.isSuccess() ) {
 	states.push_back( tc ) ;
-	allnodes.insert(allnodes.end(), (*itrack)->nodes().begin(), (*itrack)->nodes().end()) ;
+	numresiduals += (*itrack)->size() ;
+	numexternalhits += (*itrack)->nExternalHits() ;
 	totalchisq += (*itrack)->chi2() ;
 	totalndof  += (*itrack)->nDoF() ;
 	++nacceptedtracks ;
@@ -254,84 +257,73 @@ namespace Al
 	// create a vertexresiduals object
 	totalchisq += vchi2 ;
 	totalndof  += vertex.nDoF() ;
-	rc = new Al::MultiTrackResiduals( allnodes, totalchisq, totalndof, states.size(), vchi2, vertex.nDoF()  ) ;
-	debug() << "created the vertex: " << allnodes.size() << endreq ;
+	rc = new Al::MultiTrackResiduals( totalchisq, totalndof, numexternalhits, states.size(), vchi2, vertex.nDoF()  ) ;
+	rc->m_residuals.reserve(numresiduals) ;
+	debug() << "created the vertex: " << numresiduals << endreq ;
 
 	// calculate all new residuals and all correlations
 	bool computationerror(false) ;
 	for(size_t i = 0; i<states.size() && !computationerror; ++i) {
 	  Gaudi::TrackVector    deltaState = vertex.state(i).stateVector() - vertex.inputState(i).stateVector() ;
 	  Gaudi::TrackSymMatrix deltaCov   = vertex.state(i).covariance()  - vertex.inputState(i).covariance() ;
-	  
+
 	  size_t ioffset = states[i].offset ;
-	  for(size_t irow = 1; irow<=states[i].trackresiduals->size(); ++irow) {
+	  for(size_t irow = 0; irow<states[i].trackresiduals->size(); ++irow) {
+	    // copy the original residual
+	    assert( rc->m_residuals.size() == irow+ioffset ) ;
+	    rc->m_residuals.push_back( states[i].trackresiduals->residuals()[irow] ) ;
+	    Al::Residual1D& res = rc->m_residuals.back() ;
 	    
-	    double deltar = (states[i].dResidualdState[irow-1] * deltaState)(0) ;
-	    rc->m_r(irow+ioffset) = states[i].trackresiduals->m_r(irow) + deltar ;
-	    
-	    for(size_t icol = 1; icol<=irow; ++icol) {
-	      double deltaHCH = 
-		(states[i].dResidualdState[irow-1] * deltaCov *
-		 ROOT::Math::Transpose(states[i].dResidualdState[icol-1]))(0,0) ;
-	      rc->m_HCH.fast(irow + ioffset, icol + ioffset) = 
-		states[i].trackresiduals->m_HCH.fast(irow,icol) + deltaHCH ;
-	      
-	      if( icol==irow &&  rc->m_HCH.fast(irow + ioffset, irow + ioffset) < 0 ) {
-		warning() << "problem computing update of track errors"
-			  << states[i].trackresiduals->m_HCH.fast(irow,irow) << " "
-			  << deltaHCH << std::endl 
-			  << deltaCov << endreq ;
-		computationerror = true ;
-	      }
+	    // update with vertex info
+	    double deltar = (states[i].dResidualdState[irow] * deltaState)(0) ;
+	    double deltaHCH = ROOT::Math::Similarity(states[i].dResidualdState[irow], deltaCov)(0,0) ;
+	    res.setR(   res.r() + deltar ) ;
+	    res.setHCH( res.HCH() + deltaHCH ) ;
+	    if( res.HCH() < 0 ) {
+	      warning() << "problem computing update of track errors"
+			<< states[i].trackresiduals->residuals()[irow].HCH()
+			<< deltaHCH << std::endl 
+			<< deltaCov << endreq ;
+	      computationerror = true ;
 	    }
 	  }
-	  
-	  // now the correlations. this is the very time-consuming part
-	  if( m_computeCorrelations && !computationerror) {
+
+	  // loop over all existing entries of the per-track HCH and update
+	  for( Al::Residuals::CovarianceContainer::const_iterator 
+		 ielem = states[i].trackresiduals->m_HCHElements.begin() ;
+	       ielem != states[i].trackresiduals->m_HCHElements.end(); ++ielem) {
+	    double deltaHCH = 
+	      (states[i].dResidualdState[ielem->row] * deltaCov *
+	       ROOT::Math::Transpose(states[i].dResidualdState[ielem->col]))(0,0) ;
+	    rc->m_HCHElements.push_back
+	      ( Al::CovarianceElement( ielem->row + ioffset, 
+				       ielem->col + ioffset,
+				       ielem->val + deltaHCH ) ) ;
+	  }
+				       
+	  // now the correlations between the tracks. this is the very time-consuming part.
+	  if( m_maxHitsPerTrackForCorrelations>0 && !computationerror)
 	    for(size_t j =0; j<i && !computationerror; ++j) {
 	      size_t joffset = states[j].offset ;
-	      for(size_t irow = 1; irow<=states[i].trackresiduals->size(); ++irow) {
+	      size_t maxirow = std::min( states[i].trackresiduals->size(),m_maxHitsPerTrackForCorrelations) ;
+	      for(size_t irow = 0; irow<maxirow; ++irow) {
 		// store this intermediate matrix too save some time
-		Gaudi::TrackProjectionMatrix A = states[i].dResidualdState[irow-1] * vertex.stateCovariance(i,j) ;
-		for(size_t jcol = 1; jcol<=states[j].trackresiduals->size(); ++jcol)
-		  rc->m_HCH.fast(irow + ioffset, jcol + joffset) = 
-		    (A * ROOT::Math::Transpose( states[j].dResidualdState[jcol-1] ))(0,0) ;
-	      }
-	    }
-	  }
-       
-	  // Let's check the result. Keep track of the roots.
-	  if(!computationerror) {
-	    bool error(false) ;
-	    const double tol = 1e-3 ;
-	    std::vector<double> HCHdiagroots ;
-	    std::vector<double> Rdiagroots ;
-	    for(size_t irow=0; irow<rc->size() && !error; ++irow) {
-	      double c = rc->HCH(irow,irow) ;
-	      error = ! (0<=c) ;
-	      if(error) warning() << "found negative element on diagonal: " << c << endreq ;
-	      error = ! ( c<=rc->V(irow)) ;
-	      if(error) warning() << "found too large element on diagonal: " << c/rc->V(irow) << endreq ;
-	      
-	      HCHdiagroots.push_back( std::sqrt(c) ) ;
-	      Rdiagroots.push_back( c<rc->V(irow) ? std::sqrt(rc->V(irow) - c) :0 ) ;
-	    }
-	    
-	    bool offdiagerror(false) ;
-	    for(size_t irow=0; irow<rc->size() && !error; ++irow) {
-	      for(size_t icol=0; icol<irow && !error; ++icol) {
-		double c = rc->HCH(irow,icol) / (HCHdiagroots[irow]*HCHdiagroots[icol]) ;
-		//double d = rc->HCH(irow,icol) / (Rdiagroots[irow]*Rdiagroots[icol]) ;
-		bool thiserror =  ! (-1-tol < c && c <1+tol) ;//|| ! (-1-tol < d && d <1+tol) ;
-		if(thiserror) {
-		  warning() << "found bad element on offdiagonal: " 
-			    << irow << " " << icol << " " 
-			    << c << endreq ;
+		Gaudi::TrackProjectionMatrix A = states[i].dResidualdState[irow] * vertex.stateCovariance(i,j) ;
+		size_t maxjcol = std::min( states[j].trackresiduals->size(), m_maxHitsPerTrackForCorrelations) ;
+		for(size_t jcol = 0; jcol<maxjcol; ++jcol) {
+		  double deltaHCH = (A * ROOT::Math::Transpose( states[j].dResidualdState[jcol] ))(0,0) ;
+		  rc->m_HCHElements.push_back
+		    ( Al::CovarianceElement( irow + ioffset, jcol + joffset, deltaHCH ) ) ;
 		}
-		offdiagerror |= thiserror;
 	      }
 	    }
-	    computationerror |=  error || offdiagerror ;
+	  
+	  
+	  // Let's check the result Keep track of the roots.
+	  if(!computationerror) {
+	    std::string message ;
+	    computationerror = rc->testHCH(message) ;
+	    if(computationerror) warning() << message << endreq ;
 	  }
 	}
 	
