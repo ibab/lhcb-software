@@ -13,7 +13,7 @@ use DigiAlg             v4r14   Digi  # Marco Cattaneo
 
 # Calorimeter
 use CaloMoniDigi        v2r4    Calo  # Olivier Deschamps
-use CaloDigit           v2r10   Calo  # Olivier Callot
+use CaloDigit           v2r11   Calo  # Olivier Callot
 
 # Muon
 use MuonAlgs            v6r6    Muon  # Alessia Satta
