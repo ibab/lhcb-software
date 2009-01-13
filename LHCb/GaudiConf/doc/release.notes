@@ -4,6 +4,7 @@
 
 !======================== GaudiConf v12r0 2009-01-13 ========================
 ! 2009-01-13 - Marco Cattaneo
+ - Add Vertex/V0 to DST content (without packing/unpacking capability for now)
  - Set up unpacking of MC truth in DstConf().EnableUnpack, in simulation case
 
 ! 2009-01-09 - Marco Cattaneo

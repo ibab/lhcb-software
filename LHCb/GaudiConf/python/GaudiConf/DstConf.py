@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: DstConf.py,v 1.3 2009-01-13 07:42:30 cattanem Exp $"
+__version__ = "$Id: DstConf.py,v 1.4 2009-01-13 09:39:26 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -57,7 +57,8 @@ class DstConf(ConfigurableUser):
                            , "/Event/" + recDir + "/Calo/SplitPhotons#1"
                            , "/Event/" + recDir + "/ProtoP/Charged#1"
                            , "/Event/" + recDir + "/ProtoP/Neutrals#1"
-                           , "/Event/" + recDir + "/Vertex/Primary#1" ]
+                           , "/Event/" + recDir + "/Vertex/Primary#1"
+                           , "/Event/Rec/Vertex/V0#1" ]
 
         # Additional objects only on DST
         if type == "DST":
