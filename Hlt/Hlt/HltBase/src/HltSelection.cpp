@@ -3,6 +3,7 @@
 #include "Event/RecVertex.h"
 #include "Event/L0CaloCandidate.h"
 #include "Event/L0MuonCandidate.h"
+#include "Event/Particle.h"
 #include "boost/lambda/lambda.hpp"
 #include "boost/lambda/construct.hpp"
 #include <algorithm>
@@ -27,6 +28,7 @@ template class Hlt::TSelection<LHCb::Track>;
 template class Hlt::TSelection<LHCb::RecVertex>;
 template class Hlt::TSelection<LHCb::L0CaloCandidate>;
 template class Hlt::TSelection<LHCb::L0MuonCandidate>;
+template class Hlt::TSelection<LHCb::Particle>;
 //FIXME: why do we need this? (in HltSelectionFilter...)
 template class Hlt::TSelection<Hlt::Selection>;
 

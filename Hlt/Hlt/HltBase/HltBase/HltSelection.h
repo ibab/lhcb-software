@@ -1,4 +1,4 @@
-// $Id: HltSelection.h,v 1.10 2008-11-18 09:54:03 ibelyaev Exp $
+// $Id: HltSelection.h,v 1.11 2009-01-13 12:18:53 graven Exp $
 #ifndef HLTBASE_HLTSELECTION_H 
 #define HLTBASE_HLTSELECTION_H 1
 
@@ -10,6 +10,7 @@
 
 #include "Event/Track.h"
 #include "Event/RecVertex.h"
+#include "Event/Particle.h"
 
 
 namespace Hlt 
@@ -103,8 +104,9 @@ namespace Hlt
     container_type m_candidates; // we do NOT own these...
   };
   
-  typedef TSelection<LHCb::Track>      TrackSelection;
-  typedef TSelection<LHCb::RecVertex> VertexSelection;
+  typedef TSelection<LHCb::Track>        TrackSelection;
+  typedef TSelection<LHCb::RecVertex>   VertexSelection;
+  typedef TSelection<LHCb::Particle>  ParticleSelection;
 
 }
-#endif 
+#endif

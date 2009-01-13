@@ -4,6 +4,9 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2009-01-13 - Gerhard Raven
+ - add Hlt::TSelection<Partice>
+
 ! 2009-01-01 - Gerhard Raven
  - replace Hlt::Histo by AIDA::IHistogram1D
 
