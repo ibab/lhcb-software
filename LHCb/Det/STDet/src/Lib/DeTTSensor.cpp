@@ -30,10 +30,10 @@ const CLID& DeTTSensor::clID () const
 StatusCode DeTTSensor::initialize() {
   
   // initialize method
-  MsgStream msg(msgSvc(), name() );
-
+  
   StatusCode sc = DeSTSensor::initialize();
   if (sc.isFailure() ){
+    MsgStream msg(msgSvc(), name() );
     msg << MSG::ERROR << "Failed to initialize detector element" << endreq;
   }
   else {
@@ -44,6 +44,7 @@ StatusCode DeTTSensor::initialize() {
     cacheParentProperties(m_parent);
     sc = initGeometryInfo();  
     if (sc.isFailure()){
+      MsgStream msg(msgSvc(), name() );
       msg<< MSG::ERROR << "failed to cache geometry" << endreq;
       return sc;
     }

@@ -38,11 +38,10 @@ const CLID& DeITBox::clID () const
 
 StatusCode DeITBox::initialize() {
 
-  // initialize
-  MsgStream msg(msgSvc(), name() );
-  
+  // initialize 
   StatusCode sc = DeSTBaseElement::initialize();
   if (sc.isFailure() ){
+    MsgStream msg(msgSvc(), name() );
     msg << MSG::ERROR << "Failed to initialize detector element" << endreq; 
   }
   else {
@@ -50,7 +49,7 @@ StatusCode DeITBox::initialize() {
     m_id = param<int>("boxID");
     m_parent = getParent<DeITBox>(); 
 
-    STChannelID parentID = m_parent->elementID();
+    const STChannelID parentID = m_parent->elementID();
     STChannelID chan(STChannelID::typeIT, parentID.station(),parentID.layer(),
                      m_id, 0, 0);
     setElementID(chan);

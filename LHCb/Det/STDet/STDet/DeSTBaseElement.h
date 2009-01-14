@@ -1,4 +1,4 @@
-// $Id: DeSTBaseElement.h,v 1.14 2008-07-03 09:48:20 mneedham Exp $
+// $Id: DeSTBaseElement.h,v 1.15 2009-01-14 13:26:02 mneedham Exp $
 #ifndef _DeSTBaseElement_H_
 #define _DeSTBaseElement_H_
 
@@ -152,11 +152,12 @@ template<typename TYPE>
 inline std::vector<typename STDetTraits<TYPE>::child*> DeSTBaseElement::getChildren(){
 
   typedef typename STDetTraits<TYPE>::child cType;
-  std::vector<cType*> childVector;
-  std::vector<std::string> names;
+  const unsigned int nElem = childIDetectorElements().size();
+  std::vector<cType*> childVector; childVector.reserve(nElem); 
+  std::vector<std::string> names; names.reserve(nElem);
 
-  IDetectorElement::IDEContainer::const_iterator iChild;
-  for (iChild = this->childBegin(); this->childEnd() != iChild; ++iChild) {
+  IDetectorElement::IDEContainer::const_iterator iChild = childBegin();
+  for (; this->childEnd() != iChild; ++iChild) {
     cType* aChild = dynamic_cast<cType*>(*iChild);
     if (aChild !=0){
       if (duplicate(aChild->name(),names) == false) { 

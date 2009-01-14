@@ -25,10 +25,10 @@ DeSTStation::~DeSTStation() {
 StatusCode DeSTStation::initialize() {
 
   // initialize
-  MsgStream msg(msgSvc(), name() );
-
+ 
   StatusCode sc = DeSTBaseElement::initialize();
   if (sc.isFailure() ){
+    MsgStream msg(msgSvc(), name() );
     msg << MSG::ERROR << "Failed to initialize detector element" << endreq; 
   }
   else {

@@ -1,4 +1,4 @@
-// $Id: DeSTSensor.h,v 1.4 2008-10-28 12:43:08 cattanem Exp $
+// $Id: DeSTSensor.h,v 1.5 2009-01-14 13:26:02 mneedham Exp $
 #ifndef _DeSTSensor_H_
 #define _DeSTSensor_H_
 
@@ -157,7 +157,7 @@ public:
 
 protected:
 
-  void cacheParentProperties(DeSTSector* parent);
+  void cacheParentProperties(const DeSTSector* parent);
   StatusCode initGeometryInfo();   
 
 private:

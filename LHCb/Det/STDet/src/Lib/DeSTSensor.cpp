@@ -1,4 +1,4 @@
-// $Id: DeSTSensor.cpp,v 1.3 2008-10-27 12:29:25 mneedham Exp $
+// $Id: DeSTSensor.cpp,v 1.4 2009-01-14 13:26:02 mneedham Exp $
 #include "STDet/DeSTSensor.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -88,10 +88,9 @@ MsgStream& DeSTSensor::printOut( MsgStream& os ) const{
 StatusCode DeSTSensor::initialize() {
 
   // initialize method
-  MsgStream msg(msgSvc(), name() );
-
   StatusCode sc = DeSTBaseElement::initialize();
   if (sc.isFailure() ){
+    MsgStream msg(msgSvc(), name() );
     msg << MSG::ERROR << "Failed to initialize detector element" << endreq; 
   }
   else {
@@ -182,14 +181,14 @@ StatusCode DeSTSensor::cacheInfo()
 
 
   // direction
-  Gaudi::XYZPoint g1 = globalPoint(xLower, yLower, 0.);
-  Gaudi::XYZPoint g2 = globalPoint(xLower, yUpper, 0.);
+  const Gaudi::XYZPoint g1 = globalPoint(xLower, yLower, 0.);
+  const Gaudi::XYZPoint g2 = globalPoint(xLower, yUpper, 0.);
   m_direction = g2 - g1;
   m_direction = m_direction.Unit();
 
   // trajectory of middle  
-  Gaudi::XYZPoint g3 = globalPoint(xLower, 0., 0.);
-  Gaudi::XYZPoint g4 = globalPoint(xUpper, 0., 0.);
+  const Gaudi::XYZPoint g3 = globalPoint(xLower, 0., 0.);
+  const Gaudi::XYZPoint g4 = globalPoint(xUpper, 0., 0.);
   m_midTraj = new LineTraj(g3,g4);
 
   // range ---> strip Length
@@ -240,10 +239,10 @@ StatusCode DeSTSensor::registerConditionsCallbacks(){
 
   // cache trajectories
   // initialize method
-  MsgStream msg(msgSvc(), name() );
-
+ 
   StatusCode sc = registerCondition(this,this->geometry(),&DeSTSensor::cacheInfo, true);
   if (sc.isFailure() ){
+    MsgStream msg(msgSvc(), name() );
     msg << MSG::ERROR << "Failed to register geometry conditions" << endreq;
     return StatusCode::FAILURE; 
   }
@@ -251,7 +250,7 @@ StatusCode DeSTSensor::registerConditionsCallbacks(){
   return StatusCode::SUCCESS;
 }
 
-void DeSTSensor::cacheParentProperties(DeSTSector* parent) {
+void DeSTSensor::cacheParentProperties(const DeSTSector* parent) {
 
   m_versionString = parent->versionString();
   m_pitch = parent->pitch();

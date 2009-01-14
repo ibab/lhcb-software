@@ -46,11 +46,11 @@ const CLID& DeTTHalfModule::clID () const
 StatusCode DeTTHalfModule::initialize() {
 
   // initialize method
-  MsgStream msg(msgSvc(), name() );
 
   StatusCode sc = DeSTBaseElement::initialize();
   
   if (sc.isFailure() ){
+    MsgStream msg(msgSvc(), name() );
     msg << MSG::ERROR << "Failed to initialize detector element" << endreq; 
   }
   else {
@@ -61,7 +61,7 @@ StatusCode DeTTHalfModule::initialize() {
     m_type = param<std::string>("moduleType");   
 
     m_parent = getParent<DeTTHalfModule>();
-    STChannelID parentID = m_parent->elementID();
+    const STChannelID parentID = m_parent->elementID();
     STChannelID chan(STChannelID::typeTT, parentID.station(), parentID.layer(), m_detRegion,m_firstSector,0);
     setElementID(chan);
     m_sectors = getChildren<DeTTHalfModule>();   

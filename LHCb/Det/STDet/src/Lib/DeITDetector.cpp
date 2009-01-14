@@ -23,6 +23,7 @@ DeITDetector::DeITDetector( const std::string& name ) :
   DeSTDetector( name )
 { 
   // constructer
+  m_sectors.clear();
 }
 
 DeITDetector::~DeITDetector() {
@@ -37,9 +38,9 @@ const CLID& DeITDetector::clID () const
 StatusCode DeITDetector::initialize() {
   
   // initialize
-  MsgStream msg(msgSvc(), name() );
   StatusCode sc = DeSTDetector::initialize();
   if (sc.isFailure() ){
+    MsgStream msg(msgSvc(), name() );
     msg << MSG::ERROR << "Failed to initialize detector element" << endreq; 
   }
   else {
@@ -76,6 +77,7 @@ DeSTSector* DeITDetector::findSector(const Gaudi::XYZPoint& aPoint){
 
 void DeITDetector::flatten(){
 
+  m_sectors.reserve(400);
   std::vector<DeSTStation*>::iterator iterStation = m_stations.begin();
   for (; iterStation != m_stations.end() ; ++iterStation){
     DeITStation* tStation =  dynamic_cast<DeITStation*>(*iterStation);

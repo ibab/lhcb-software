@@ -31,10 +31,9 @@ const CLID& DeITSensor::clID () const
 StatusCode DeITSensor::initialize() {
   
   // initialize method
-  MsgStream msg(msgSvc(), name() );
-
   StatusCode sc = DeSTSensor::initialize();
   if (sc.isFailure() ){
+    MsgStream msg(msgSvc(), name() );
     msg << MSG::ERROR << "Failed to initialize detector element" << endreq;
   }
   else {
@@ -45,6 +44,7 @@ StatusCode DeITSensor::initialize() {
     cacheParentProperties(m_parent);
     sc = initGeometryInfo();  
     if (sc.isFailure()){
+      MsgStream msg(msgSvc(), name() );
       msg<< MSG::ERROR << "failed to cache geometry" << endreq;
       return sc;
     }

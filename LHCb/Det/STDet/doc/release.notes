@@ -1,7 +1,10 @@
-!$Id: release.notes,v 1.150 2008-11-17 14:52:13 cattanem Exp $
+!$Id: release.notes,v 1.151 2009-01-14 13:26:02 mneedham Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
+
+! 2009-01-14 M Needham
+ - Clean up initialize stage to make it few mus faster
 
 !======================== STDet v4r6 2008-11-17 ==========================
 ! 2008-11-04 M Needham

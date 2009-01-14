@@ -28,10 +28,10 @@ DeSTLayer::~DeSTLayer() {
 StatusCode DeSTLayer::initialize() {
 
   // initialize method
-  MsgStream msg(msgSvc(), name() );
-
+ 
   StatusCode sc = DeSTBaseElement::initialize();
   if (sc.isFailure() ){
+    MsgStream msg(msgSvc(), name() );
     msg << MSG::ERROR << "Failed to initialize detector element" << endreq; 
   }
   else {
@@ -44,6 +44,7 @@ StatusCode DeSTLayer::initialize() {
     // cache trajectories
     sc = registerCondition(this,this->geometry(),&DeSTLayer::cachePlane);
     if (sc.isFailure() ){
+      MsgStream msg(msgSvc(), name() );
       msg << MSG::ERROR << "Failed to register conditions" << endreq;
       return StatusCode::FAILURE; 
     }

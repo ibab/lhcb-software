@@ -35,17 +35,17 @@ const CLID& DeITLadder::clID () const
 StatusCode DeITLadder::initialize() {
 
   // initialize
-  MsgStream msg(msgSvc(), name() );
   
   StatusCode sc = DeSTBaseElement::initialize();
   if (sc.isFailure() ){
+    MsgStream msg(msgSvc(), name() );
     msg << MSG::ERROR << "Failed to initialize detector element" << endreq; 
   }
   else {
     // get parent
     m_id = param<int>("sectorID");
     m_parent = getParent<DeITLadder>(); 
-    STChannelID parentID = m_parent->elementID();
+    const STChannelID parentID = m_parent->elementID();
     STChannelID chan(STChannelID::typeIT,
                      parentID.station(),parentID.layer(),
                      parentID.detRegion(), m_id, 0);
@@ -56,6 +56,7 @@ StatusCode DeITLadder::initialize() {
       m_child = tVector.front();
     }
     else {
+      MsgStream msg(msgSvc(), name() );
       msg << MSG::ERROR << "No child sector found - failed to init" << endreq;
       return StatusCode::FAILURE;
     }
