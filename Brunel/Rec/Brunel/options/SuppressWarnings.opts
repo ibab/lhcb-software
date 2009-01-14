@@ -12,14 +12,11 @@ ToolSvc.PhotonPID.OutputLevel = 5; // Vertex location HARD-CODED : IP(0.,0.,0.)
 // "Known" run time Warnings
 ToolSvc.Offline_RichIsolatedTrack.OutputLevel = 5; // Not yet for aerogel
 
-PatPVOffline.PVOfflineTool.LSAdaptPVFitter.OutputLevel = 6; // Error inverting hessian matrix
-ToolSvc.TrackHerabExtrapolator.OutputLevel = 5; // transport impossible, curling track
+ToolSvc.TrackHerabExtrapolator.OutputLevel = 5; // Runga kutta transport, curling track
+
 FindTrackClones.OutputLevel = 5; // Problem extrapolating state
 
-TrackMonitor.OutputLevel = 5; // 'Infinite' value is skipped 
-TrackVertexMonitor.OutputLevel = 5; // 'NaN' value is skipped 
 TrackFitMatchMonitor.OutputLevel = 5; // 'NaN' value is skipped 
-TrackResChecker.OutputLevel = 5; // 'Infinite' value is skipped 
 
 // Information to be kept
 BrunelInit.OutputLevel = 3;

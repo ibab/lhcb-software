@@ -35,11 +35,17 @@ elif inputType == "ETC":
     
 else:
     # Example POOL DIGI (default, MC production)
-    datasetName =  "11144101-100ev-20081006"
+#    datasetName =  "11144101-100ev-20081006"
     # B->J/Psi(mumu)Ks events with Boole v16r3, Gauss v35r1, DB tag head-20081002
-    LHCbApp().DDDBtag   = "head-20081002"
-    LHCbApp().CondDBtag = "head-20081002"
-    EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v16r3/" + datasetName + ".digi' TYP='POOL_ROOTTREE' OPT='READ'"]
+#    LHCbApp().DDDBtag   = "head-20081002"
+#    LHCbApp().CondDBtag = "head-20081002"
+#    EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v16r3/" + datasetName + ".digi' TYP='POOL_ROOTTREE' OPT='READ'"]
+
+    datasetName =  "11144101-100ev-20090112"
+    # B->J/Psi(mumu)Ks events with Boole v17r2, Gauss v36r1, DB tag head-20090112
+    LHCbApp().DDDBtag   = "head-20090112"
+    LHCbApp().CondDBtag = "sim-20090112"
+    EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v17r2/" + datasetName + ".digi' TYP='POOL_ROOTTREE' OPT='READ'"]
 
 # Default output files names are set up using value Brunel().DatasetName property
 Brunel().DatasetName = datasetName

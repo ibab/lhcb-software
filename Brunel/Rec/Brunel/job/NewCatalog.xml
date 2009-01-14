@@ -24,4 +24,11 @@
     <logical/>
    </File>
 
+  <File ID="620A8970-CFE0-DD11-AA83-000CF1F44509">
+    <physical>
+      <pfn filetype="ROOT_All" name="/castor/cern.ch/user/g/gcorti/Gauss/2009/v36r1/11144101-100ev-20090112.sim"/>
+    </physical>
+    <logical/>
+   </File>
+
 </POOLFILECATALOG>

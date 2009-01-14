@@ -3,51 +3,30 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-! 2009-01-09 - Marco Cattaneo
+</PRE><H1><A NAME=v34r1>2009-01-14 Brunel v34r1</A></H1><PRE>
+ - Changes to configurable:
+   . Use new DstConf configurable to set up DST/RDST content. 
+   . Enable packed DST/RDST by default (not for DC06).
+   . Include MuonPIDChecker .py options instead of .opts
+   . Include $ASSOCIATORSROOT/options/MCParticleToMCHit.py instead of Brunel.opts
+   . Properly pass ["Context","DataType"] options to RichRecQCConf in all cases.
+   . Remove ExpertTracking option, should be set directly in TrackSys
+   . Do not stop if unknown sub-detector added to Moni or Check sequences, just 
+     issue a warning
+   . Set Context to all phases, default is "Offline"
+   . Cleanup handling of monitoring and checking in configurable
+   . Add expert checking options from ExpertCheck.opts (obsoleted). Remove Rich
+     monitoring options, now handled by RichRecQC configurable
+   . Make the expert checking respect the settings of the Check & Moni sequences
+   . Remove inclusion of PatChecking sequence, now done in TrackSys(). 
+     Set instead "WithMC" option of TrackSys()
+   . Add ProtoParticle expert monitoring (not run in default Expert check)
  - Add explicit setting of database tags to options/*-Files.py
- - Include MuonPIDChecker .py options instead of .opts
-
-! 2009-01-07 - Marco Cattaneo
- - Do not pack DST in DC06 case
-
-! 2009-01-06 - Marco Cattaneo
- - Use new DstConf configurable to set up DST/RDST content. Also, enable
-   packed DST/RDST by default.
- - Remove obsolete DstContent.opts, rDstContent.opts 
-
-! 2008-12-18 - Chris Jones
- - Properly pass ["Context","DataType"] options to RichRecQCConf in all cases.
-
-! 2008-12-12 - Marco Cattaneo
- - Remove ExpertTracking option, should be set directly in TrackSys
- - Do not stop if unknown sub-detector added to Moni or Check sequences, just 
-   issue a warning
- - Set Context to all phases, default is "Offline"
-
-! 2008-12-05 - Marco Cattaneo
- - Cleanups in options and configurable
-
-! 2008-12-04 - Marco Cattaneo
+ - Remove obsolete DstContent.opts, rDstContent.opts, ExpertCheck.opts
  - Remove BrunelMessage.opts, BrunelMoni.py (now done in Configurable)
- - Cleanup handling of monitoring and checking in configurable
- - Include $ASSOCIASTORSROOT/options/MCParticleToMCHit.py instead of Brunel.opts
  - Add to NewCatalog.xml the description of the sim file used to generate the
    default 2008 .digi, needed by tracking expert checks
-
-! 2008-12-01 - Chris Jones
- - Move expert checking options from ExpertCheck.opts (obsoleted) to python
-   Configurable. Also make the expert checking respect the settings of the
-   Check and Moni sequences .
-
-! 2008-12-01 - Marco Cattaneo
- - Remove inclusion of PatChecking sequence, now done in TrackSys(). Set instead
-   "WithMC" option of TrackSys()
  - Fix obsolete option in Brunel-2008-*-VeloOpen.py
-
-! 2008-11-30 - Chris Jones
- - Remove RICH monitoring options from ExpertCheck.opts (now handled by
-   RichRecQC python configurable).
- - Add ProtoParticle expert monitoring options (commented out by default).
 
 </PRE><H1><A NAME=v34r0>2008-11-26 Brunel v34r0</A></H1><PRE>
  - Many backward incompatible changes to Configurable:
