@@ -63,6 +63,7 @@ public:
   void setAlgorithmVector(const std::vector<std::string> &algorithmName) {m_algorithmName = algorithmName;}
   void setObjectVector(const std::vector<std::string> &objectName) {m_objectName = objectName;}
   void setUtgid(const std::string &utgid);
+  void setPartitionName(const std::string &partitionName);
   void setNodeName(const std::string &nodeName){m_nodeName=nodeName;}
   void setPublishRates(bool publishRates){m_publishRates = publishRates;}
 
@@ -73,6 +74,7 @@ public:
   void timerHandler();
   void write();
   std::string taskName() {return m_taskName;}
+  std::string getPartitionName() {return m_partitionName;}
   
   void setMonitorSvc(IGauchoMonitorSvc* pGauchoMonitorSvc){m_pGauchoMonitorSvc = pGauchoMonitorSvc;}
   //void setFileStaus(std::string& file) {m_pFile = &file;}
@@ -95,6 +97,7 @@ protected:
   int m_refreshTime;
     
   std::string m_utgid;
+  std::string m_partitionName;
   std::string m_nodeName;
   
   //std::string *m_pFile;

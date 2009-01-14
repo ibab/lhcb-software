@@ -459,7 +459,9 @@ std::string BaseServiceMap::createTermServiceName (const std::string &serviceNam
     std::vector<std::string> parts = Misc::splitString(serverName, "_");
     std::string subfarmName = Misc::stringToUpper(parts[1]);
     
-    msg << MSG::DEBUG << " subfarmName = " << subfarmName <<endreq;  
+   // subfarmName=m_processMgr->getPartitionName(); 
+    msg << MSG::DEBUG << " subfarmName = " << subfarmName <<endreq; 
+
     return serviceName.substr(0, first_slash + 1) + subfarmName + "_Adder_1" + serviceName.substr(second_slash);
   }
   else{
@@ -487,8 +489,12 @@ std::string BaseServiceMap::createAdderName (const std::string &serviceName){
   for (unsigned int i = index+2; i < serviceParts.size(); ++i)
     object += "/" + serviceParts[i];
 
-  
-  std::string adderName = svctype + "/" + m_processMgr->utgid()  + "/" + task + "/";
+  std::string partitionName = Misc::splitString(m_processMgr->utgid(),"_")[0];
+  std::string adderName="";
+  if (partitionName.find("PART")!= std::string::npos) {
+    adderName = svctype + "/" + m_processMgr->getPartitionName() + "_Adder_1/" + task + "/";
+  }
+  else adderName = svctype + "/" + m_processMgr->utgid()  + "/" + task + "/";
   
   if ((s_pfixMonH1F==svctype)||(s_pfixMonH2F==svctype)||(s_pfixMonH1D==svctype)||(s_pfixMonH2D==svctype)||(s_pfixMonProfile==svctype)||
       (s_pfixMonRate==svctype))

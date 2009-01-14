@@ -26,6 +26,7 @@ AdderSvc::AdderSvc(const std::string& name, ISvcLocator* ploc) : Service(name, p
   declareProperty("subfarmname",m_subfarmName);
   declareProperty("algorithmname",m_algorithmName);
   declareProperty("objectname",m_objectName);
+  declareProperty("partitionname",m_partitionName);
   declareProperty("refreshTime",  m_refreshTime=10);
   declareProperty("dimclientdns",m_dimClientDns);
   declareProperty("publishRates",m_publishRates=0);
@@ -111,6 +112,7 @@ StatusCode AdderSvc::initialize() {
   m_processMgr->setAlgorithmVector(m_algorithmName);
   m_processMgr->setObjectVector(m_objectName);
   m_processMgr->setUtgid(m_utgid);
+  m_processMgr->setPartitionName(m_partitionName);
   if (m_publishRates == 1) m_processMgr->setPublishRates(true);
 
   m_processMgr->createInfoServers();
@@ -194,6 +196,7 @@ void AdderSvc::handle(const Incident& inc) {
 
 StatusCode AdderSvc::finalize() {
   MsgStream msg(msgSvc(), name());
+  m_processMgr->serviceMap()->add();
   m_enablePostEvents = false;
   msg << MSG::DEBUG << "Finalize Adder..... " << endmsg;
   if (m_processMgr) {delete m_processMgr; m_processMgr=0;}

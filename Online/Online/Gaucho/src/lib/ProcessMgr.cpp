@@ -88,6 +88,11 @@ void ProcessMgr::setUtgid(const std::string &utgid)
   std::size_t first_us = m_utgid.find("_");
   m_nodeName = m_utgid.substr(0, first_us);
 }  
+
+void ProcessMgr::setPartitionName(const std::string &partitionName)
+{
+  m_partitionName = partitionName;
+}  
   
 void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> &serviceSet) {
   

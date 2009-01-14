@@ -42,6 +42,7 @@ private:
   std::vector<std::string> m_subfarmName;
   std::vector<std::string> m_algorithmName;
   std::vector<std::string> m_objectName;
+  std::string m_partitionName;
   
   std::string m_dimClientDns;
   int m_refreshTime;

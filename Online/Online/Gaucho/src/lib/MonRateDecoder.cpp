@@ -58,10 +58,14 @@ void MonRateDecoder::update(MonRate *monRate) {
   m_oldCycleNumber = m_newCycleNumber;
   m_oldDesiredDeltaT = m_newDesiredDeltaT;
   m_oldNumCounters = m_newNumCounters;
-
+ 
+  int tmpcycle;
+  int tmpentries;
+  tmpentries = (int) monRate->binEntry(4);
+  tmpcycle = (int) monRate->binContent(6);
   msg << MSG::DEBUG << "The old cycle number was :" << m_oldCycleNumber << endreq;
-  msg << MSG::DEBUG << "checking the new cycle number :" << ((int) monRate->binContent(6)) << endreq;
-  if (m_oldCycleNumber == ((int) monRate->binContent(6)) ) {
+  msg << MSG::DEBUG << "checking the new cycle number :" << tmpcycle << endreq;
+  if (m_oldCycleNumber == tmpcycle ) {
     msg << MSG::DEBUG << "No update because the cycle number did not change"<<endreq;
     return;
   }
@@ -164,6 +168,7 @@ void MonRateDecoder::update(MonRate *monRate) {
     double rateValue = m_newCounters[i].second - m_oldCounters[i].second;
     rateValue *= 1000000.0;
     rateValue /= realDeltaT;
+    
     if((int)m_oldrateValue.size()<=i) {
        //the first time, fill the vector
        m_oldrateValue.push_back(rateValue);
