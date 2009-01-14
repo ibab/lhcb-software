@@ -3,8 +3,43 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-! 2009-01-12 - Marco Cattaneo
- - Update test for new treatment of CondDB tags
+</PRE><H1><A NAME=v17r2>2009-01-14 Boole v17r2</A></H1><PRE>
+This version uses projects Gaudi v20r4, LHCb v26r1, Lbcom v6r25
+ and SQLDDDB v5r1, ParamFiles v8r0, FieldMap v5r2, L0TCK v1r0
+
+Pre-production version for winter 2009. Output needs Brunel v34r1 or later
+
+- New features
+  . Explicit setting of database tag now compulsory in options (GaudiConf v12r0).
+    Options files for Boole input data examples updated accordingly
+  . Moved spillover options into configurable, and added support for packed
+    MCParticle/MCVertex containers in Spillover input file (Boole, DigiAlg v4r13)
+  . All code now compiles with gcc 4.3 and on OSX
+
+- New tuning
+  . Added a QMTest reference file for slc4_ia32_gcc34_dbg (different from 
+    slc4_ia32_gcc34, to be understood...)
+  . Trigger threshold for Prs set to 27.4 MeV = 10 MIP according to Geant4 v8
+    (CaloDigit v2r11)
+  . Re-tuned the Velo cluster threshold and high bit threshold
+    (VeloAlgorithms v4r8, see <a href="http://indico.cern.ch/getFile.py/access?contribId=2&resId=0&materialId=slides&confId=33063">talk at T-Rec, 2008-12-15</a>)
+
+- Persistency changes
+  . Implement compression algorithm for L0MuonProcData bank (L0MuonKernel v8r5)
+  . Change OT TELL1 numbering from 1-48 to 0x0TLQ where 
+    T = {1,2,3}, L={0,1,2,3}, and Q={0,1,2,3} (OTDAQ v7r4)
+  . Also encode empty banks and empty gols (OTDAQ v7r4)
+
+- Monitoring changes
+  . Update MCHitMonitor: make all histogram ranges sensible, remove unneeded
+    histos, add summary printout in finalize (SimComponents v2r15)
+
+- Bug fixes
+  . Fix bug in L0Muon encoding parameter (L0MuonKernel v8r5)  
+  . Fix FPE in DeCalorimeter.cpp (CaloDet v10r1)
+  . Fixed bug in DeVeloRType::rPitch() that caused non-sensical results in 3
+    sectors (VeloDet v13r5)
+  . Avoid FPE in MCParticleSelector (SimComponents v2r15, MCEvent v2r11)
 
 </PRE><H1><A NAME=v17r1>2008-12-11 Boole v17r1</A></H1><PRE>
 This version uses projects Gaudi v20r3, LHCb v26r0, Lbcom v6r24
