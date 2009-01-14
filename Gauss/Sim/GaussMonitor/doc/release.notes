@@ -4,6 +4,7 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+!====================== GaussMonitor v6r2 2009-01-14 =========================
 ! 2008-12-08 - Vanya BELYAEV
  - fix for the new particle properties 
 

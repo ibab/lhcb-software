@@ -4,6 +4,7 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
+!====================== GaussPhysics v6r2 2009-01-14 =========================
 ! 2009-01-07 - Patrick Robbe
   - Add Xi_b0 and Xi*_cc+ to the list of Geant4 particles
 
