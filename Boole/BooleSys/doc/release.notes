@@ -35,6 +35,7 @@ Pre-production version for winter 2009. Output needs Brunel v34r1 or later
 - Monitoring changes
   . Update MCHitMonitor: make all histogram ranges sensible, remove unneeded
     histos, add summary printout in finalize (SimComponents v2r15)
+  . Remove Rich detailed monitoring from ExpertCheck.opts
 
 - Bug fixes
   . Fix bug in L0Muon encoding parameter (L0MuonKernel v8r5)  
