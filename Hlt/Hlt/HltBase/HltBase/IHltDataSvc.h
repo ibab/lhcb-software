@@ -32,16 +32,15 @@ public:
   //@TODO add interface for retrieving dependency graph of selections
   //      implementations could save this as a property...
   //@TODO: move the {register,retrieve}{,T}selection overhere...
-  virtual StatusCode addSelection 
-  ( Hlt::Selection*   sel             ,
-    const IAlgorithm* parent          , 
-    const bool        fromTES = false ) = 0 ;
+  virtual StatusCode addSelection ( Hlt::Selection*   sel             ,
+                                    const IAlgorithm* parent          , 
+                                    const bool        fromTES = false ) = 0 ;
   virtual bool hasSelection ( const stringKey& id ) const = 0;
   //@TODO: make typesafe, i.e. allow getting of derived classes 
   //@TODO: return pointer instead of reference -- 0 being don't know id...
-  virtual Hlt::Selection& selection 
-  ( const stringKey&  id     , 
-    const IAlgorithm* parent ) =0 ;
+  //@TODO: should only have const access to requested input...
+  virtual /* const*/  Hlt::Selection* selection ( const stringKey&  id     , 
+                                            const IAlgorithm* parent ) =0 ;
   //template <typename T>
   //Hlt::TSelection<T>& selection( const stringKey& id, const IAlgorithm* parent) {
       //Hlt::Selection* sel = &selection(id,parent);

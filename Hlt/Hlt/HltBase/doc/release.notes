@@ -6,6 +6,9 @@
 
 ! 2009-01-14 - Gerhard Raven
  - add const version of Hlt::Selection::down_cast
+ - change IHltDataSvc::selection to return pointer instead of ref:
+    return 0 pointer if selection not present; this avoids having 
+    to first use 'hasSelection', and hence saves a lookup...
 
 ! 2009-01-13 - Gerhard Raven
  - add Hlt::TSelection<Partice>

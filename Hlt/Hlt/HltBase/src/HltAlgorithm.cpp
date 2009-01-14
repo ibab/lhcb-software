@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.49 2008-12-29 16:42:23 graven Exp $
+// $Id: HltAlgorithm.cpp,v 1.50 2009-01-14 21:02:54 graven Exp $
 // Include files 
 
 #include "Event/Particle.h"
@@ -230,23 +230,23 @@ private:
 Hlt::Selection& HltAlgorithm::retrieveSelection(const stringKey& selname) {
     Assert(!selname.empty()," retrieveSelection() no selection name");
     debug() << " retrieveSelection " << selname << endreq;
-    if (!dataSvc().hasSelection(selname)) {
+    Hlt::Selection* sel = dataSvc().selection(selname,this);
+    if (sel == 0 ) {
       error() << " unknown selection " << selname << endreq;
       Assert(0," retrieveSelection, unknown selection!");
     }
-    Hlt::Selection& sel = dataSvc().selection(selname,this);
     if (std::find_if(m_inputSelections.begin(),
                      m_inputSelections.end(), 
-                     cmp_by_id(sel))==m_inputSelections.end() ) {
-      m_inputSelections.push_back(&sel);
+                     cmp_by_id(*sel))==m_inputSelections.end() ) {
+      m_inputSelections.push_back(sel);
       if (produceHistos()) {
-        Assert(m_inputHistos.find(sel.id()) == m_inputHistos.end(),"retrieveSelection() already input selection "+sel.id().str());
-        m_inputHistos[sel.id()] = initializeHisto(sel.id().str());
+        Assert(m_inputHistos.find(sel->id()) == m_inputHistos.end(),"retrieveSelection() already input selection "+sel->id().str());
+        m_inputHistos[sel->id()] = initializeHisto(sel->id().str());
       }
-      debug() << " Input selection " << sel.id() << endreq;
+      debug() << " Input selection " << sel->id() << endreq;
     }
-    debug() << " retrieved selection " << sel.id() << endreq;    
-    return sel;
+    debug() << " retrieved selection " << sel->id() << endreq;    
+    return *sel;
 }
 
   
