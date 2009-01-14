@@ -1,4 +1,4 @@
-// $Id: HltSelReportsMaker.cpp,v 1.5 2008-12-11 15:27:55 tskwarni Exp $
+// $Id: HltSelReportsMaker.cpp,v 1.6 2009-01-14 21:05:42 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -181,33 +181,33 @@ StatusCode HltSelReportsMaker::execute() {
      ContainedObject* candidate(0);
      
      // try dataSvc first
-     if ( dataSvc().hasSelection(name) ) {
+     const Hlt::Selection* sel = dataSvc().selection(name,this);
+     if ( sel != 0 ) {
 
-       Hlt::Selection& sel = dataSvc().selection(name,this);
 
        // unsuccessful selections can't save candidates
-       if( !sel.decision() )continue;
+       if( !sel->decision() )continue;
        
-       if( sel.classID() == LHCb::Track::classID() ) {
+       if( sel->classID() == LHCb::Track::classID() ) {
 
-         Hlt::TrackSelection& tsel = dynamic_cast<Hlt::TrackSelection&>(sel);   
+         const Hlt::TrackSelection& tsel = dynamic_cast<const Hlt::TrackSelection&>(*sel);   
          if( tsel.begin()!=tsel.end() ){
            candidate = (ContainedObject*)(*(tsel.begin()));
          }
 
-       } else if( sel.classID() == LHCb::RecVertex::classID() ) {
+       } else if( sel->classID() == LHCb::RecVertex::classID() ) {
 
-         Hlt::VertexSelection& tsel = dynamic_cast<Hlt::VertexSelection&>(sel);   
+         const Hlt::VertexSelection& tsel = dynamic_cast<const Hlt::VertexSelection&>(*sel);   
          if( tsel.begin()!=tsel.end() ){
            candidate = (ContainedObject*)(*(tsel.begin()));
          }
 
        } else {
          
-         if( sel.classID()==1 )continue;
+         if( sel->classID()==1 )continue;
          
          std::ostringstream mess;
-         mess << " Unsupported data type CLID=" <<  sel.classID() << " - skip selection ID=" +selName;
+         mess << " Unsupported data type CLID=" <<  sel->classID() << " - skip selection ID=" +selName;
          Warning( mess.str(),StatusCode::SUCCESS, 20 );
          continue;
          
@@ -293,24 +293,24 @@ StatusCode HltSelReportsMaker::execute() {
      std::vector<ContainedObject*> candidates;
      
      // try dataSvc first
-     if ( dataSvc().hasSelection(name) ) {
+     const Hlt::Selection* sel = dataSvc().selection(name,this);
+     if ( sel != 0 ) {
 
-       Hlt::Selection& sel = dataSvc().selection(name,this);
 
        // unsuccessful selections can't save candidates
-       if( !sel.decision() )continue;
+       if( !sel->decision() )continue;
        
-       if( sel.classID() == LHCb::Track::classID() ) {
+       if( sel->classID() == LHCb::Track::classID() ) {
          
-         Hlt::TrackSelection& tsel = dynamic_cast<Hlt::TrackSelection&>(sel);   
-         for (Hlt::TrackSelection::iterator it = tsel.begin(); it != tsel.end(); ++it) {
+         const Hlt::TrackSelection& tsel = dynamic_cast<const Hlt::TrackSelection&>(*sel);   
+         for (Hlt::TrackSelection::const_iterator it = tsel.begin(); it != tsel.end(); ++it) {
            candidates.push_back( (ContainedObject*)(*it) );
          }
 
-       } else if( sel.classID() == LHCb::RecVertex::classID() ) {
+       } else if( sel->classID() == LHCb::RecVertex::classID() ) {
 
-         Hlt::VertexSelection& tsel = dynamic_cast<Hlt::VertexSelection&>(sel);   
-         for (Hlt::VertexSelection::iterator it = tsel.begin(); it != tsel.end(); ++it) {
+         const Hlt::VertexSelection& tsel = dynamic_cast<const Hlt::VertexSelection&>(*sel);   
+         for (Hlt::VertexSelection::const_iterator it = tsel.begin(); it != tsel.end(); ++it) {
            candidates.push_back( (ContainedObject*)(*it) );
          }
 

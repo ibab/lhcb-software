@@ -1,4 +1,4 @@
-// $Id: LumiCountHltTracks.cpp,v 1.5 2008-08-26 14:03:14 panmanj Exp $
+// $Id: LumiCountHltTracks.cpp,v 1.6 2009-01-14 21:06:50 graven Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -77,7 +77,7 @@ StatusCode LumiCountHltTracks::initialize() {
 StatusCode LumiCountHltTracks::execute() {
 
   // load the track objects
-  int nCounter =  dataSvc().selection(m_InputSelectionName, this).ncandidates();
+  int nCounter =  dataSvc().selection(m_InputSelectionName, this)->size();
   debug() << "There are " << nCounter << " tracks in " << m_InputSelectionName <<  endreq ;
 
   // get container

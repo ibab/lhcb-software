@@ -1,4 +1,4 @@
-// $Id: HltVertexReportsMaker.cpp,v 1.4 2008-10-24 19:33:22 tskwarni Exp $
+// $Id: HltVertexReportsMaker.cpp,v 1.5 2009-01-14 21:05:42 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -98,30 +98,30 @@ StatusCode HltVertexReportsMaker::execute() {
      // prevent duplicate selections
      if( outputSummary->hasSelectionName( selName ) )continue;
 
-     std::vector<ContainedObject*> candidates;
+     std::vector<const ContainedObject*> candidates;
 
      // try dataSvc first
-     if ( dataSvc().hasSelection(name) ) {
+     const Hlt::Selection* sel = dataSvc().selection(name,this);
+     if ( sel != 0 ) {
 
-       Hlt::Selection& sel = dataSvc().selection(name,this);
 
         // unsuccessful selections can't save candidates
-       if( !sel.decision() )continue;
+       if( !sel->decision() )continue;
 
-       if (sel.classID() != LHCb::RecVertex::classID()) {
+       if (sel->classID() != LHCb::RecVertex::classID()) {
          Error(" Selection name "+selName+" did not select vertices. ");
          continue;
        }
        
 
-       Hlt::VertexSelection& tsel = dynamic_cast<Hlt::VertexSelection&>(sel);      
+       const Hlt::VertexSelection& tsel = dynamic_cast<const Hlt::VertexSelection&>(*sel);      
        // number of candidates
        int noc = tsel.size();
        // empty selections have nothing to save
        if( !noc )continue;
 
-       for (Hlt::VertexSelection::iterator it = tsel.begin(); it != tsel.end(); ++it) {
-         candidates.push_back( (ContainedObject*)(*it) );
+       for (Hlt::VertexSelection::const_iterator it = tsel.begin(); it != tsel.end(); ++it) {
+         candidates.push_back( (const ContainedObject*)(*it) );
        }
          
      } else if( inputSummary ) {
@@ -139,10 +139,10 @@ StatusCode HltVertexReportsMaker::execute() {
        if( !noc )continue;
   
        // const std::vector<ContainedObject*>& candidates = selSumIn.data();
-       candidates = selSumIn.data();
+       candidates.insert(candidates.end(), selSumIn.data().begin(),selSumIn.data().end());
 
-       std::vector<ContainedObject*>::const_iterator ic0 = candidates.begin();
-       RecVertex* candi = dynamic_cast<RecVertex*>(*ic0);
+       std::vector<const ContainedObject*>::const_iterator ic0 = candidates.begin();
+       const RecVertex* candi = dynamic_cast<const RecVertex*>(*ic0);
        if( !candi ){
          Error(" Selection name "+selName+" did not select vertices. ");
          continue;
@@ -181,11 +181,11 @@ StatusCode HltVertexReportsMaker::execute() {
      VertexBase::Container* verticesOutput = new VertexBase::Container();
      put( verticesOutput, m_outputHltVertexReportsLocation.value() + "/" + selName  );
 
-     for (std::vector<ContainedObject*>::const_iterator ic = candidates.begin();
+     for (std::vector<const ContainedObject*>::const_iterator ic = candidates.begin();
              ic != candidates.end(); ++ic) {
-       RecVertex* candi = dynamic_cast<RecVertex*>(*ic);
+       const RecVertex* candi = dynamic_cast<const RecVertex*>(*ic);
        if( !candi )continue;
-       VertexBase* vbase = dynamic_cast<VertexBase*>(candi);
+       const VertexBase* vbase = dynamic_cast<const VertexBase*>(candi);
        if( !vbase )continue;
        // need to clone it to put into its new container, also use precision of the storage banks
        VertexBase* pVtx = new VertexBase();

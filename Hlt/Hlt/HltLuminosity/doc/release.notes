@@ -4,6 +4,9 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+! 2009-01-13 - Gerhard Raven
+ - follow changes to IHltDataSvc::selection in HltBase
+
 ! 2008-12-30 - Gerhard Raven
  - replace Hlt::Histo by AIDA::IHistogram1D
 
