@@ -4,6 +4,14 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!======================== Gauss v36r1 2009-01-14 =============================
+! 2009-01-14 - Gloria CORTI
+ - Take latest tag in DDDB (head-20090112) and SIMCOND (sim-20090112) where
+   latest muon geometry if off, due to problem observed of hits outside 
+   chambers. There is a mismatch between what in DeElement and G4 due to 
+   assembly used to describe misalignment.
+   . Gauss-2008.py
+
 ! 2009-01-13 - Gloria CORTI
  - Set maximum number of events via LHCbApp(), since ApplicationMgr() does
    not seem to propagate the information. Also remove example from Gauss.opts
