@@ -17,10 +17,12 @@ Pre-production version for winter 2009. Output needs Brunel v34r1 or later
   . All code now compiles with gcc 4.3 and on OSX
 
 - New tuning
+  . Changed example input file for 2008 to one produced with Gauss v36r1, 
+    DB tags head-200910112, sim-20090112
   . Added a QMTest reference file for slc4_ia32_gcc34_dbg (different from 
     slc4_ia32_gcc34, to be understood...)
   . Trigger threshold for Prs set to 27.4 MeV = 10 MIP according to Geant4 v8
-    (CaloDigit v2r11)
+    (CaloDigit v2r11, for consistency with sim-20090112 SIMCOND tag)
   . Re-tuned the Velo cluster threshold and high bit threshold
     (VeloAlgorithms v4r8, see <a href="http://indico.cern.ch/getFile.py/access?contribId=2&resId=0&materialId=slides&confId=33063">talk at T-Rec, 2008-12-15</a>)
 
