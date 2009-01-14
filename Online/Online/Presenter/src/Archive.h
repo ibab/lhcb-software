@@ -27,14 +27,11 @@ public:
     References
   };
   Archive(PresenterMainFrame* gui,
-          const std::string & archiveRoot,
           const std::string & savesetPath,
           const std::string & referencePath);
   virtual ~Archive();
   std::vector<boost::filesystem::path> listRootFilesDirectory(const boost::filesystem::path & dirPath);
   std::vector<std::string> listPartitions();
-  void setArchiveRoot(const std::string & archiveRoot);  
-  std::string archiveRoot() { return m_archiveRoot.file_string(); }  
   void setSavesetPath(const std::string & savesetPath);  
   std::string savesetPath() { return m_savesetPath.file_string(); }    
   void setReferencePath(const std::string & referencePath);
@@ -68,7 +65,6 @@ private:
                                                     const std::string & durationTimeString);
 
 
-  boost::filesystem::path m_archiveRoot;
   boost::filesystem::path m_savesetPath;
   boost::filesystem::path m_referencePath;
   pres::MsgLevel m_verbosity;

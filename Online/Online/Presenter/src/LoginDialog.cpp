@@ -82,7 +82,7 @@ void LoginDialog::build()
   m_histogramDbSelector = new TGComboBox(this);
   //m_histogramDbSelector = new TGComboBox(this, m_input);
   m_histogramDbSelector->AddEntry(s_histdb, 0);
-  m_histogramDbSelector->AddEntry(s_lbora01, 1);
+//  m_histogramDbSelector->AddEntry(s_lbora01, 1);
   m_histogramDbSelector->AddEntry(s_oradev10, 2);
   m_histogramDbSelector->Select(0);
   m_histogramDbSelector->Resize(168, 22);

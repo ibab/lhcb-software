@@ -23,11 +23,9 @@ using namespace boost::posix_time;
 using namespace boost::gregorian;
 
 Archive::Archive(PresenterMainFrame* gui,
-                 const std::string & archiveRoot,
                  const std::string & savesetPath,
                  const std::string & referencePath) :
   m_mainFrame(gui),
-  m_archiveRoot(path(archiveRoot)),
   m_savesetPath(path(savesetPath)),
   m_referencePath(path(referencePath)),
   m_verbosity(Silent),
@@ -35,21 +33,14 @@ Archive::Archive(PresenterMainFrame* gui,
   m_msgBoxReturnCode(0)
 {
   if (m_verbosity >= Verbose) {
-    std::cout << "m_archiveRoot " << m_archiveRoot
-              << "m_referencePath " << m_referencePath
+    std::cout << "m_referencePath " << m_referencePath
               << "m_savesetPath " << m_savesetPath << std::endl;
   }
 }
 Archive::~Archive()
 {
 }
-void Archive::setArchiveRoot(const std::string & archiveRoot)
-{
-  m_archiveRoot = path(archiveRoot);
-  if (m_verbosity >= Verbose) {
-    std::cout << "Archive m_archiveRoot " << m_archiveRoot << std::endl;
-  }  
-}
+
 void Archive::setSavesetPath(const std::string & savesetPath)
 {
   m_savesetPath = path(savesetPath);
@@ -68,10 +59,10 @@ void Archive::refreshDirectory(const DirectoryType & directoryType, const std::s
 {
   switch (directoryType) {
     case Savesets:
-      m_foundSavesets = listRootFilesDirectory(m_archiveRoot/m_savesetPath/path(endTimeIsoString.substr(0, 4))/path(m_mainFrame->currentPartition())/path(taskName));
+      m_foundSavesets = listRootFilesDirectory(m_savesetPath/path(endTimeIsoString.substr(0, 4))/path(m_mainFrame->currentPartition())/path(taskName));
       break;
     case References:
-      m_foundReferences = listRootFilesDirectory(m_archiveRoot/m_referencePath);
+      m_foundReferences = listRootFilesDirectory(m_referencePath);
       break;
     default:
       break;
@@ -94,8 +85,8 @@ void Archive::fillHistogram(DbRootHist* histogram,
       if (s_rootFileExtension == extension(filePath) ) {
         if (exists(filePath)){
           foundRootFiles.push_back(filePath);
-        } else if (exists(m_archiveRoot/m_savesetPath/filePath)){
-          foundRootFiles.push_back(m_archiveRoot/m_savesetPath/filePath);
+        } else if (exists(m_savesetPath/filePath)){
+          foundRootFiles.push_back(m_savesetPath/filePath);
         } 
       }
     } else {
@@ -243,9 +234,9 @@ std::vector<path> Archive::listRootFilesDirectory(const path & dirPath)
 }
 std::vector<std::string> Archive::listPartitions() {
   std::vector<std::string> foundPartitionDirectories;
-  if (exists(m_archiveRoot/m_savesetPath)) {
+  if (exists(m_savesetPath)) {
     directory_iterator year_end_itr;
-    for (directory_iterator year_itr(m_archiveRoot/m_savesetPath); year_itr != year_end_itr; ++year_itr) {
+    for (directory_iterator year_itr(m_savesetPath); year_itr != year_end_itr; ++year_itr) {
       if (is_directory(year_itr->path())) {
         directory_iterator partition_end_itr;
         for (directory_iterator partition_itr(year_itr->path()); partition_itr != partition_end_itr; ++partition_itr) {
@@ -408,7 +399,7 @@ TH1* Archive::referenceHistogram(const string & /*referenceDbEntry*/)
 }
 void Archive::saveAsReferenceHistogram(DbRootHist* histogram)
 {
-  path referenceFilePath(m_archiveRoot/m_referencePath/histogram->taskName());
+  path referenceFilePath(m_referencePath/histogram->taskName());
     bool out(false);
     try {
       create_directories(referenceFilePath);
