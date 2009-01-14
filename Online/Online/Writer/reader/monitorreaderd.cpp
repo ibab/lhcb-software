@@ -1,4 +1,6 @@
-#ifndef _WIN32
+#ifdef _WIN32
+int main(int /* argc */, char** /* argv */) {  return 1; }
+#else
 
 #include "Writer/defs.h"
 #include "Writer/monitorreaderd.h"
