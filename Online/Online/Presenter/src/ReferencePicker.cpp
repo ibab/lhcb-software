@@ -90,27 +90,31 @@ ReferencePicker::~ReferencePicker()
 }
 void ReferencePicker::setSelectedAsRef()
 {
-  try {
-    if (0 != m_histogram->dbSession() &&
-        0 != m_mainFrame->selectedHistogram() &&
-        0 != m_histogram->onlineHistogram()->getTask() &&
-        ReadWrite == m_mainFrame->databaseMode()) {
-      std::string referenceEntry(m_mainFrame->selectedHistogram()->GetName());
-      m_histogram->onlineHistogram()->getTask()->setReference(referenceEntry);
-// TODO: read Combobox
-
-      std::string referenceOption(dynamic_cast<TGTextLBEntry*>(m_normalizationSelector->GetSelectedEntry())->
-                                                  GetText()->GetString());
-      m_histogram->setReferenceOption(referenceOption);
-      m_histogram->saveTH1ToDB(0);      
-      m_histogram->dbSession()->commit();
-    }
-  } catch (std::string sqlException) {
-    // TODO: add error logging backend
-    if (m_verbosity >= Verbose) {
-      std::cout << "Could not set reference histogram: " <<
-      m_mainFrame->selectedHistogram()->GetName() << std::endl <<
-      sqlException << std::endl;
+  DbRootHist* selectedDbHisto = m_mainFrame->selectedDbRootHistogram();
+  if (0 != selectedDbHisto) {
+    TH1* selectedHisto = selectedDbHisto->rootHistogram;
+    try {
+      if (0 != m_histogram->dbSession() &&
+          0 != selectedDbHisto &&
+          0 != m_histogram->onlineHistogram()->getTask() &&
+          ReadWrite == m_mainFrame->databaseMode()) {
+        std::string referenceEntry(selectedHisto->GetName());
+        m_histogram->onlineHistogram()->getTask()->setReference(referenceEntry);
+  // TODO: read Combobox
+  
+        std::string referenceOption(dynamic_cast<TGTextLBEntry*>(m_normalizationSelector->GetSelectedEntry())->
+                                                    GetText()->GetString());
+        m_histogram->setReferenceOption(referenceOption);
+        m_histogram->saveTH1ToDB(0);      
+        m_histogram->dbSession()->commit();
+      }
+    } catch (std::string sqlException) {
+      // TODO: add error logging backend
+      if (m_verbosity >= Verbose) {
+        std::cout << "Could not set reference histogram: " <<
+        selectedHisto->GetName() << std::endl <<
+        sqlException << std::endl;
+      }
     }
 //    new TGMsgBox(fClient->GetRoot(), this, "Database Error",
 //        Form("Could not set reference histogram:\n\n%s\n",
