@@ -1,4 +1,4 @@
-// $Id: HltUnit.h,v 1.4 2008-12-12 16:35:46 ibelyaev Exp $
+// $Id: HltUnit.h,v 1.5 2009-01-14 21:13:14 graven Exp $
 // ============================================================================
 #ifndef LOKI_HLTUNIT_H 
 #define LOKI_HLTUNIT_H 1
@@ -102,8 +102,8 @@ namespace LoKi
       IHltDataSvc* hlt = hltSvc() ;
       const IAlgorithm* _a = this ;
       IAlgorithm* ia = const_cast<IAlgorithm*> ( _a ) ;
-      Hlt::Selection& s = hlt->selection ( key , ia ) ;
-      return &s ;
+      Hlt::Selection* s = const_cast<Hlt::Selection*>(hlt->selection ( key , ia ));
+      return s ;
     }
     // ========================================================================
   protected:                                            // allowed constructors  
