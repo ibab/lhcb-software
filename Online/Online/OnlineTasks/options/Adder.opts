@@ -9,13 +9,14 @@ ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.EvtSel                = "NONE";
 Runable.Wait                         = 3;  // 1 of running as daemon
 
-AdderSvc.OutputLevel = 3;
+AdderSvc.OutputLevel = 1;
 AdderSvc.publishRates=1;
-MessageSvc.OutputLevel = 3;
+MessageSvc.OutputLevel = 1;
 
 AdderSvc.taskname={"GauchoJob"}; // Could be empty.
 AdderSvc.refreshTime=10;
 AdderSvc.dimclientdns={"HLT01"};
 AdderSvc.subfarmname=@OnlineEnv.SubFarms;
+AdderSvc.partitionname=@OnlineEnv.PartitionName;
 
 
