@@ -3,7 +3,7 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v17r2>2009-01-13 Boole v17r2</A></H1><PRE>
+</PRE><H1><A NAME=v17r2>2009-01-14 Boole v17r2</A></H1><PRE>
  - Explicit setting of database tag now compulsory, update options files
    accordingly
  - Move spillover options into configurable, and add support for packed
@@ -13,6 +13,9 @@ Purpose: LHCb Digitization program
  - Update references for L0Muon bug fix, new # in log.info printout, new Velo
    signal to noise tuning, new run record handling (Gaudi v20r4), new L0Muon
    raw bank compression, new CaloDigit calibration
+ - Changed example input file in 2008-Files.py to one produced with Gauss v36r1,
+   DB tags head-200910112, sim-20090112
+ - Remove Rich detailed monitoring from ExpertCheck.opts
 
 </PRE><H1><A NAME=v17r1>2008-12-11 Boole v17r1</A></H1><PRE>
  - Clean up options

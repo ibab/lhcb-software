@@ -22,9 +22,6 @@ ITEffChecker.FullDetail = true;
 // OT detailed monitoring
 #include "$OTMONITORROOT/options/Boole.opts"
 
-// Rich detailed monitoring
-#include "$RICHREADOUTOPTS/BooleDigiMoni.opts"
-
 //--------------------------------------------------------------
 // Set up some profiling. Enable/Disable setting lines below to true/false
 //--------------------------------------------------------------
