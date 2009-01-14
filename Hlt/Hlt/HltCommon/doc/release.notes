@@ -4,6 +4,10 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2009-01-14 - Gerhard Raven
+ - follow changes to IHltDataSvc::selection in HltBase
+ - record dependencies & producers in HltDataSvc
+
 ! 2009-01-07 - Gerhard Raven
  - allow one to set the L0Channel to 'AllMuon' in HltL0MuonCandidates, which
    results in all muon candidates to be converted...

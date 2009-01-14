@@ -29,6 +29,22 @@
 // Declaration of the Service Factory
 DECLARE_SERVICE_FACTORY( HltDataSvc );
 
+namespace  {
+    template <typename T>
+    class _cmpFirst {
+        public:
+            _cmpFirst(const T& t) : m_t(t) {}
+            template < typename X> bool operator()(const X& x) const  { return x.first == m_t; }
+        private:
+            T m_t;
+    };
+    
+    template <typename T> _cmpFirst<T> cmpFirst(const T& t) {
+        return _cmpFirst<T>(t);
+    };
+
+};
+
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -43,6 +59,8 @@ HltDataSvc::HltDataSvc( const std::string& name,
   , m_parents ()
   , m_beginEventCalled(false)
 {
+   declareProperty("Producer",m_producers,"Map selection name to the name of the Algorithm which produced it");
+   declareProperty("Dependencies",m_dependencies,"Map selection name to the names of the selections it depends on");
 }
 
 //=============================================================================
@@ -83,6 +101,7 @@ StatusCode HltDataSvc::initialize() {
   // add listener to be triggered by BeginEvent
   bool rethrow = false; bool oneShot = false; long priority = 0;
   incidentSvc->addListener(this,IncidentType::BeginEvent,priority,rethrow,oneShot);
+  incidentSvc->addListener(this,IncidentType::BeginRun,priority,rethrow,oneShot);
   incidentSvc->release();
 
   return status;
@@ -117,10 +136,9 @@ IANNSvc& HltDataSvc::annSvc() const {
 }
 
 StatusCode 
-HltDataSvc::addSelection
-( Hlt::Selection*   sel               ,
-  const IAlgorithm* parent            ,
-  const bool        originatesFromTES ) 
+HltDataSvc::addSelection ( Hlt::Selection*   sel               ,
+                           const IAlgorithm* parent            ,
+                           const bool        originatesFromTES ) 
 {
   //@TODO: record dependency of id on parent
   //@TODO: verify that is a valid name by going to the ANNSvc...
@@ -134,19 +152,23 @@ HltDataSvc::addSelection
   }
   typedef std::map<stringKey,Hlt::Selection*>::iterator iter_t;
   std::pair<iter_t,iter_t> p = m_mapselections.equal_range(sel->id());
-  if (p.first!=p.second) return StatusCode::FAILURE; // already there...
+  if (p.first!=p.second) {
+    error() << " attempt by " << parent->name() << " to register selection " << sel->id() << " which has already been registered" << endmsg;
+    return StatusCode::FAILURE; // already there...
+  }
   
   if (!originatesFromTES) { 
-    if (!annSvc().value("Hlt1SelectionID",sel->id().str())) {
-      error() << "attempt by " << parent->name() << " to register a selection, " << sel->id() 
-              << "unknown to HltANNSvc" << endmsg;
+    //FIXME: what about the fact that we know also register Hlt2 selections???
+    //if (!annSvc().value("Hlt1SelectionID",sel->id().str())) {
+      //error() << "attempt by " << parent->name() << " to register a selection, " << sel->id() 
+      //        << "unknown to HltANNSvc" << endmsg;
+      //return StatusCode::FAILURE;
+    //}
+    if (std::find_if(m_parents.begin(),m_parents.end(), cmpFirst(parent))!=m_parents.end()) {
+      error() << " parent already registerd an output selection... " << endmsg;
       return StatusCode::FAILURE;
     }
-    if (std::find(m_parents.begin(),m_parents.end(),parent)!=m_parents.end()) {
-      error() << " parent already registerd an output selection... " << endmsg;
-            return StatusCode::FAILURE;
-    }
-    m_parents.push_back(parent); // register that a parent generated an output selection...
+    m_parents.push_back(std::make_pair(parent,sel) ); // register that a parent generated an output selection...
     debug() << "adding output selection " << sel->id() << " for " << parent->name() << endmsg;
   } else {
     debug() << "adding TES input selection " << sel->id() << " requested by " << parent->name() << endmsg;
@@ -162,25 +184,19 @@ HltDataSvc::hasSelection(const stringKey& id) const {
 }
 
 
-Hlt::Selection& 
-HltDataSvc::selection
-( const stringKey&  id     , 
-  const IAlgorithm* parent ) 
+Hlt::Selection*
+HltDataSvc::selection ( const stringKey&  id     , 
+                        const IAlgorithm* parent ) 
 {
   //@TODO: record dependency of parent on id
-  //if (parent==0) std::cout << "don't have parent..." << std::endl;
-  // else std::cout << "HltDataSvc("<<name()<<"):selection called by " << parent->name() << " for " << id << std::endl;
-  // don't use hasSelection here to avoid doing 'find' twice...
   if (parent==0) {
     throw GaudiException(" did not specify parent... ", id.str(),StatusCode::FAILURE);
   }
-  if (std::find(m_parents.begin(),m_parents.end(),parent)!=m_parents.end()) {
-    throw GaudiException( " parent requests input after declaring output!",parent->name()+":"+id.str(),StatusCode::FAILURE);
+  if (std::find_if(m_parents.begin(),m_parents.end(), cmpFirst(parent))!=m_parents.end()) {
+    throw GaudiException( " parent requests additional input after declaring output!",parent->name()+":"+id.str(),StatusCode::FAILURE);
   }
   std::map<stringKey,Hlt::Selection*>::const_iterator i = m_mapselections.find(id);
-  if (i == m_mapselections.end()) 
-  { throw GaudiException( name()+"::selection() not present ",id.str(),StatusCode::FAILURE); }
-  return *(i->second);
+  return i != m_mapselections.end() ? i->second : (Hlt::Selection*) 0 ;
 }
 
 std::vector<stringKey> 
@@ -202,16 +218,42 @@ HltDataSvc::inputUsedBy(const stringKey& key, std::vector<std::string>& inserter
 }
 
 
-void HltDataSvc::handle( const Incident& ) {
-  if (!m_beginEventCalled) {
-    always() << " first event seen, locking dependency graph " << endmsg;
-    m_beginEventCalled = true;
-    // TODO: record dependency graph in property to allow querries offline
+void HltDataSvc::handle( const Incident& i) {
+  // info() << " got incident "  << i.type() << " " << i.source() << endmsg;
+  if (i.type()==IncidentType::BeginRun) {
+        // TODO: record dependency graph in property to allow querries offline
+        // FIXME: this incident is never generated ;-(
+  } else if (i.type()==IncidentType::BeginEvent) {
+      if (!m_beginEventCalled) {
+        info() << " first event seen, locking and storing dependency graph " << endmsg;
+        for ( std::vector<std::pair<const IAlgorithm*,const Hlt::Selection*> >::const_iterator i  = m_parents.begin();
+              i != m_parents.end(); ++i) {
+          std::string selName = i->second->id().str();
+          m_producers[ selName ] = i->first->name();
+          info() << " producer[ " << selName << " ] = " << i->first->name()  << endmsg;
+          
+          std::vector<stringKey>::const_iterator d= i->second->inputSelectionsIDs().begin();
+          std::vector<std::string>& deps = m_dependencies[ selName ];
+          while (d!=i->second->inputSelectionsIDs().end()) deps.push_back( *d++ );
+
+          info() << " dependencies[ " << selName << " ] = [" ;
+          for ( std::vector<std::string>::const_iterator ii  = m_dependencies[ selName ].begin();
+                                                         ii != m_dependencies[ selName ].end(); ++ii ) {
+                info() << " " << *ii ;
+          }
+          info() << " ] " << endmsg;
+        }
+
+        m_beginEventCalled = true;
+      }
+      for ( std::map<stringKey,Hlt::Selection*>::iterator i  = m_mapselections.begin();
+            i != m_mapselections.end(); ++i) {
+        i->second->clean(); // invalidates all selections, resets decision to 'no', i.e. reject
+      }
+  } else { 
+      //OOPS ...
   }
-  for ( std::map<stringKey,Hlt::Selection*>::iterator i  = m_mapselections.begin();
-        i != m_mapselections.end(); ++i) {
-    i->second->clean(); // invalidates all selections, resets decision to 'no', i.e. reject
-  }
+
 };
 
 MsgStream& HltDataSvc::msg(MSG::Level level) const {

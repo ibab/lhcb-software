@@ -107,7 +107,7 @@ bool HltSummaryTool::hasSelection(const std::string& name) {
 }
 
 bool HltSummaryTool::selectionDecision(const std::string& name) {
-  if( dataSvc().hasSelection(stringKey(name)) )return dataSvc().selection(stringKey(name),&m_fakeAlgorithm).decision();  
+  if( dataSvc().hasSelection(stringKey(name)) )return dataSvc().selection(stringKey(name),&m_fakeAlgorithm)->decision();  
   getDecReports();  
   if( m_decReports ){return m_decReports->hasSelectionName(name)
                        ?m_decReports->decReport(name)->decision()
@@ -175,7 +175,7 @@ std::vector<std::string> HltSummaryTool::selections() {
 }
 
 size_t HltSummaryTool::selectionNCandidates(const std::string& name) {
-  if( dataSvc().hasSelection(stringKey(name)) )return dataSvc().selection(stringKey(name),&m_fakeAlgorithm).size();
+  if( dataSvc().hasSelection(stringKey(name)) )return dataSvc().selection(stringKey(name),&m_fakeAlgorithm)->size();
   getDecReports();
   if( m_decReports ){    
     if( m_decReports->hasSelectionName(name) )return m_decReports->decReport(name)->numberOfCandidates();
@@ -200,10 +200,10 @@ HltSummaryTool::selectionInputSelections(const std::string& name) {
 std::vector<Track*> 
 HltSummaryTool::selectionTracks(const std::string& name) {
   if( !selectionDecision(name) )return std::vector<Track*>();
-  if( dataSvc().hasSelection(stringKey(name)) ){
-    Hlt::Selection& sel = dataSvc().selection(stringKey(name),&m_fakeAlgorithm);
-    if( sel.classID() == LHCb::Track::classID() ) {
-      Hlt::TrackSelection& tsel = dynamic_cast<Hlt::TrackSelection&>(sel); 
+  Hlt::Selection* sel = dataSvc().selection(stringKey(name),&m_fakeAlgorithm);
+  if( sel != 0  ){
+    if( sel->classID() == LHCb::Track::classID() ) {
+      Hlt::TrackSelection& tsel = dynamic_cast<Hlt::TrackSelection&>(*sel); 
       std::vector<Track*> out;
       out.insert(out.end(),tsel.begin(),tsel.end());
       return out;
@@ -221,9 +221,9 @@ std::vector<RecVertex*>
 HltSummaryTool::selectionVertices(const std::string& name) {
   if( !selectionDecision(name) )return std::vector<RecVertex*>();
   if( dataSvc().hasSelection(stringKey(name)) ){
-    Hlt::Selection& sel = dataSvc().selection(stringKey(name),&m_fakeAlgorithm);
-    if( sel.classID() == LHCb::RecVertex::classID() ) {
-      Hlt::VertexSelection& tsel = dynamic_cast<Hlt::VertexSelection&>(sel); 
+    Hlt::Selection* sel = dataSvc().selection(stringKey(name),&m_fakeAlgorithm);
+    if( sel->classID() == LHCb::RecVertex::classID() ) {
+      Hlt::VertexSelection& tsel = dynamic_cast<Hlt::VertexSelection&>(*sel); 
       std::vector<RecVertex*> out;
       out.insert(out.end(),tsel.begin(),tsel.end());
       return out;

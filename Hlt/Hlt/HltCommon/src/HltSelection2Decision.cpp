@@ -1,4 +1,4 @@
-// $Id: HltSelection2Decision.cpp,v 1.4 2008-10-03 11:30:58 graven Exp $
+// $Id: HltSelection2Decision.cpp,v 1.5 2009-01-14 21:04:37 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -45,8 +45,8 @@ StatusCode HltSelection2Decision::initialize() {
   debug() << "==> Initialize" << endmsg;
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-  if (!dataSvc().hasSelection(m_inputName)) return StatusCode::FAILURE;
-  m_input = &dataSvc().selection(m_inputName,this);
+  m_input = dataSvc().selection(m_inputName,this);
+  if (m_input == 0) return StatusCode::FAILURE;
   return StatusCode::SUCCESS;
 };
 

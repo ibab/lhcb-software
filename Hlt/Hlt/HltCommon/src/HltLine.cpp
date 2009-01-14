@@ -1,4 +1,4 @@
-// $Id: HltLine.cpp,v 1.9 2009-01-06 12:18:26 graven Exp $
+// $Id: HltLine.cpp,v 1.10 2009-01-14 21:04:37 graven Exp $
 // Include files
 #include "HltLine.h"
 
@@ -148,7 +148,7 @@ StatusCode HltLine::initialize() {
   //   if it exists, then it was just created during the above 'initialize' of 
   //   the stages...
   stringKey key(m_decision);
-  if (dataSvc().hasSelection(key)) m_selection = & dataSvc().selection(key,this);
+  m_selection = dataSvc().selection(key,this);
 
   //== Create the monitoring histogram
   m_errorHisto = book1D(name()+" error",name()+" error",-0.5,7.5,8);
@@ -210,7 +210,7 @@ StatusCode HltLine::execute() {
 
 
   report.setDecision(accept ? 1u : 0u);
-  report.setNumberOfCandidates( m_selection ? m_selection->size() : 0 );
+  report.setNumberOfCandidates( m_selection != 0 ? m_selection->size() : 0 );
   if ( !m_ignoreFilter ) setFilterPassed( accept );
   setExecuted( true );
 

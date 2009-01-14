@@ -26,16 +26,13 @@ public:
   StatusCode queryInterface(const InterfaceID& riid,
                             void** ppvUnknown) ;
   
-  StatusCode addSelection
-  ( Hlt::Selection*   sel            ,
-    const IAlgorithm* parent         ,
-    const bool        useTES = false ) ;
+  StatusCode addSelection ( Hlt::Selection*   sel            ,
+                            const IAlgorithm* parent         ,
+                            const bool        useTES = false ) ;
   
   bool hasSelection(const stringKey& id) const;
   
-  Hlt::Selection& selection
-  ( const stringKey&  id     ,
-    const IAlgorithm* parent ) ;
+  Hlt::Selection* selection ( const stringKey&  id, const IAlgorithm* parent ) ;
   
   std::vector<stringKey> selectionKeys() const;
   StatusCode inputUsedBy(const stringKey& key, std::vector<std::string>& inserter) const;
@@ -63,7 +60,7 @@ private:
   std::map<stringKey,Hlt::Selection*> m_mapselections;
   std::vector<Hlt::Selection*>        m_ownedSelections; //owner of HltSelection
   
-  std::vector<const IAlgorithm*>            m_parents;
+  std::vector< std::pair<const IAlgorithm*, const Hlt::Selection*> >            m_parents;
 
   bool m_beginEventCalled;
   
@@ -72,5 +69,7 @@ private:
   //
   //  std::multimap<Hlt::Selection*,IAlgorithm*> m_users;     // which algorithms use a given selection?
   //  std::map<Hlt::Selection*,IAlgorithm*>      m_producers; // which algorithm produced a given selection?
+  std::map<std::string,std::string> m_producers; // map selection name to the name of the algorithm producing it...
+  std::map<std::string , std::vector< std::string > > m_dependencies; // map selections to their inputs
 };
 #endif

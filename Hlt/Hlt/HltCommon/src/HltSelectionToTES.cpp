@@ -1,4 +1,4 @@
-// $Id: HltSelectionToTES.cpp,v 1.6 2008-07-04 08:07:41 graven Exp $
+// $Id: HltSelectionToTES.cpp,v 1.7 2009-01-14 21:04:37 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -94,20 +94,20 @@ StatusCode HltSelectionToTES::execute() {
   
   for (std::vector<stringKey>::iterator it = m_selectionIDs.begin();
        it != m_selectionIDs.end(); ++it) {
-    if (!dataSvc().hasSelection(*it)) {
+    Hlt::Selection* sel = dataSvc().selection(*it,this);
+    if (sel==0) {
       warning() << " no hlt selection to put in TES " << it->str() << endreq;
       continue;
-    } 
-    Hlt::Selection& sel = dataSvc().selection(*it,this);
-    if (sel.classID() == LHCb::Track::classID()) {
+    }
+    if (sel->classID() == LHCb::Track::classID()) {
       LHCb::Tracks* tracks = 
-          sel.decision() ? copy<LHCb::Tracks>(dataSvc().selection(*it,this))
-                         : new LHCb::Tracks();
+          sel->decision() ? copy<LHCb::Tracks>(*sel)
+                          : new LHCb::Tracks();
       put(tracks,m_trackLocation+it->str());
-    } else if (sel.classID() == LHCb::RecVertex::classID()) {
+    } else if (sel->classID() == LHCb::RecVertex::classID()) {
       LHCb::RecVertices* vertices = 
-          sel.decision() ? copy<LHCb::RecVertices>(dataSvc().selection(*it,this))
-                         : new LHCb::RecVertices();
+          sel->decision() ? copy<LHCb::RecVertices>(*sel)
+                          : new LHCb::RecVertices();
       put(vertices,m_vertexLocation+it->str());
     }
   }
