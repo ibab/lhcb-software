@@ -191,10 +191,14 @@ int send_msg(int sockfd, u_int32_t addr, u_int8_t protocol, void *buf, int len, 
 
 int
 send_msg_arb_source(int raw_socket, u_int8_t proto, u_int32_t srcAddr, u_int32_t destAddr, void *buf, int len, u_int16_t datagramID) {
+#ifndef _WIN32
   struct iphdr *hdr = (struct iphdr *) buf;
   hdr->id = datagramID; 
 
   return send_msg_arb_source(raw_socket, proto, srcAddr, destAddr, buf, len);
+#else
+  return 0;
+#endif
 }
 
 /** Special function for sending messages with arbitrary source ip address.
@@ -254,11 +258,13 @@ open_sock_arb_source(int ipproto, int rxbufsiz, std::string &errmsg) {
   char netdev_name[10];
   int netdev = 1;
   sprintf(netdev_name, netdev < 0 ? "lo" : "eth%d", netdev);
+#ifndef _WIN32
   if (setsockopt(raw_socket, SOL_SOCKET, SO_BINDTODEVICE, (void *) netdev_name,
       1 + strlen(netdev_name))) {
     errmsg = "setsockopt SO_BINDTODEVICE";
     return -1;
   }
+#endif
 
   int val;
   val = MEP_REQ_TTL;
@@ -349,7 +355,7 @@ int rx_poll(int sockFd, int mSec)
 {
 #ifdef _WIN32
   return 0;
-#endif
+#else
 
   struct pollfd strPoll;
 
@@ -371,7 +377,7 @@ int rx_poll(int sockFd, int mSec)
     return 0;
   }
   return polRet;
- 
+#endif 
 }
 
 
