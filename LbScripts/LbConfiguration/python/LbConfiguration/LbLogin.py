@@ -20,11 +20,11 @@ from LbUtils.Env import Environment, Aliases
 from LbUtils.CVS import CVS2Version
 from tempfile import mkstemp
 from optparse import OptionValueError
-import sys, os, logging
+import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.1 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.2 $")
 
 
 def getLbLoginEnv(debug=False, 
@@ -146,6 +146,11 @@ class LbLoginScript(Script):
                           dest="remove_userarea",
                           action="store_true",
                           help="prevent the addition of a user area [default: %default]")
+        parser.set_defaults(silent=False)
+        parser.add_option("--silent",
+                          dest="silent",
+                          action="store_true",
+                          help="runs silently")
         parser.set_defaults(cmtvers="v1r20p20070208")
         parser.add_option("--cmtvers",
                           dest="cmtvers",
@@ -164,7 +169,6 @@ class LbLoginScript(Script):
 #-----------------------------------------------------------------------------------
 
     def setPath(self):
-        opts = self.options
         ev = self._env
         if sys.platform != "win32" :
             if ev.has_key("SAVEPATH") :
@@ -271,12 +275,12 @@ class LbLoginScript(Script):
                 f = os.popen("fs sysname")
                 a = f.read()
                 if f.close() is None :
-                   a = a.replace(" ","")
-                   a = a.replace(":","")
-                   a = a.replace("'","")
-                   a = a.replace("Currentsysnameis","")
-                   a = a.replace("Currentsysnamelistis","")
-                   system = a.split()[0]
+                    a = a.replace(" ","")
+                    a = a.replace(":","")
+                    a = a.replace("'","")
+                    a = a.replace("Currentsysnameis","")
+                    a = a.replace("Currentsysnamelistis","")
+                    system = a.split()[0]
         else :
             if ev.has_key("CMTCONFIG") :
                 system = ev["CMTCONFIG"]
@@ -304,7 +308,7 @@ class LbLoginScript(Script):
         newpath = []    
         for p in ev["PATH"].split(os.pathsep) :
             if p.find(os.sep + "CMT" + os.sep) == -1 :
-               newpath.append(p)
+                newpath.append(p)
         newpath.append(os.path.join(ev["CMTROOT"], ev["CMTBIN"]))
         ev["PATH"] = os.pathsep.join(newpath)
 
@@ -314,7 +318,7 @@ class LbLoginScript(Script):
             newpath = []
             for p in ev["CLASSPATH"].split(os.pathsep) :
                 if p.find(os.sep + "CMT" + os.sep) == -1 :
-                   newpath.append(p)
+                    newpath.append(p)
             newpath.append(os.path.join(ev["CMTROOT"], "java"))
             ev["CLASSPATH"] = os.pathsep.join(newpath)
         else :
@@ -444,9 +448,7 @@ class LbLoginScript(Script):
             del ev["User_release_area"] 
             
     def setSharedArea(self):
-        log = logging.getLogger()
         opts = self.options
-        ev = self._env
         if opts.sharedarea :
             if opts.cmtsite == "LOCAL" :
                 opts.mysiteroot = os.pathsep.join(opts.sharedarea.split(os.pathsep))
@@ -645,25 +647,26 @@ class LbLoginScript(Script):
     def Manifest(self, debug=False):
         ev = self._env
         opts = self.options
-        self._add_echo( "*" * 80 )
-        toprint = "*" + " " * 27 + "---- LHCb Login ----"
-        self._add_echo(toprint + " " * (80-len(toprint)-1) + "*")
-        toprint = "*" + " " * 11 + "Building with %s on %s_%s system" % (self.compdef, self.platform, self.binary)
-        self._add_echo(toprint + " " * (80-len(toprint)-1) + "*")
-        toprint = "*" + " " * 11 + "DEVELOPMENT SCRIPT"
-        self._add_echo( toprint + " " * (80-len(toprint)-1) + "*" )
-        self._add_echo( "*" * 80 )
-        self._add_echo( " --- CMTROOT is set to %s " % ev["CMTROOT"] )
-        self._add_echo( " --- CMTCONFIG is set to %s " % ev["CMTCONFIG"] )
-        if debug :
-            self._add_echo( " --- to compile and link in debug mode : setenv CMTCONFIG $CMTDEB ; gmake" )
-        if ev.has_key("CMTPATH") :
-            self._add_echo( " --- CMTPATH is set to %s" % ev["CMTPATH"]) 
-        else :
-            self._add_echo( " --- User_release_area is set to %s" % ev["User_release_area"])
-            self._add_echo( " --- CMTPROJECTPATH is set to $User_release_area:$LHCb_release_area:$Gaudi_release_area:$LCG_release_area")
-            self._add_echo( " --- projects will be searched in $CMTPROJECTPATH ")
-        self._add_echo( "-" * 80)
+        if not opts.silent :
+            self._add_echo( "*" * 80 )
+            toprint = "*" + " " * 27 + "---- LHCb Login ----"
+            self._add_echo(toprint + " " * (80-len(toprint)-1) + "*")
+            toprint = "*" + " " * 11 + "Building with %s on %s_%s system" % (self.compdef, self.platform, self.binary)
+            self._add_echo(toprint + " " * (80-len(toprint)-1) + "*")
+            toprint = "*" + " " * 11 + "DEVELOPMENT SCRIPT"
+            self._add_echo( toprint + " " * (80-len(toprint)-1) + "*" )
+            self._add_echo( "*" * 80 )
+            self._add_echo( " --- CMTROOT is set to %s " % ev["CMTROOT"] )
+            self._add_echo( " --- CMTCONFIG is set to %s " % ev["CMTCONFIG"] )
+            if debug :
+                self._add_echo( " --- to compile and link in debug mode : setenv CMTCONFIG $CMTDEB ; gmake" )
+            if ev.has_key("CMTPATH") :
+                self._add_echo( " --- CMTPATH is set to %s" % ev["CMTPATH"]) 
+            else :
+                self._add_echo( " --- User_release_area is set to %s" % ev["User_release_area"])
+                self._add_echo( " --- CMTPROJECTPATH is set to $User_release_area:$LHCb_release_area:$Gaudi_release_area:$LCG_release_area")
+                self._add_echo( " --- projects will be searched in $CMTPROJECTPATH ")
+            self._add_echo( "-" * 80)
 
     def main(self):
         opts = self.options
@@ -678,7 +681,8 @@ class LbLoginScript(Script):
         self._write_script(self._env.gen_script(opts.targetshell)
                            +self._aliases.gen_script(opts.targetshell)+self._extra)
         
-        self.Manifest(debug)
+#        SetupProject().main(" --shell=%s LbScripts LCGCMT Python 2.5" % opts.shell)
+        
         return 0
 
 

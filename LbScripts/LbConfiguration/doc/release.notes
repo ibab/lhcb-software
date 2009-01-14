@@ -1,3 +1,7 @@
+2009-01-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/LbLogin.py: added the silent option.
+
 2009-01-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/AllProjectsSetup.py: Removed.
