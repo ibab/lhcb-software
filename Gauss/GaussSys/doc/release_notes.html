@@ -4,6 +4,97 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
 
+</PRE><H1><A NAME="v36r1">2009-01-14 - GaussSys v36r1</A></H1><PRE>
+<H2><A NAME="Note">DC09 DEVELOPEMENT version. Support DDDB tag lhcb-20091012
+   and SIMCOND tag sim-20090112
+   </A></H2>
+<H3><A NAME="Use">This version uses:
+   <b>LHCb v26r1 (and Gaudi v20r1)</b>
+   pythia6 418.2, photos 215.2, lhapdf 5.3.1 
+   (via LCG_GeneratorsInterfaces)
+   HepMC 2.03.09 (via LCG_Interfaces)
+   <b>Geant4 v91r3 (based on geant4.9.1.p03)</b> and Geant4Files v91r0
+   <b>DecFiles v16r*</b>, 
+   <b>ParamFiles v8r0</b>, 
+   SQLDDDB v5r1, FieldMap v5r* (latest v5r1), 
+   <b>XmlVis v1r8<b>,
+   herwig 6.510.2, jimmy 4.31.2 (via LCG_GeneratorsInterfaces),
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
+   pythia8 107.1,
+   bcvegpy (LHCb build)
+</A></H3>
+
+!======================== Gauss v36r1 2009-01-14 =============================
+! 2009-01-14 - Gloria CORTI
+ - Take latest tag in DDDB (head-20090112) and SIMCOND (sim-20090112) where
+   latest muon geometry if off, due to problem observed of hits outside
+   chambers. There is a mismatch between what in DeElement and G4 due to
+   assembly used to describe misalignment.
+   . Gauss-2008.py
+
+! 2009-01-13 - Gloria CORTI
+ - Set maximum number of events via LHCbApp(), since ApplicationMgr() does
+   not seem to propagate the information. Also remove example from Gauss.opts
+   since options can no longer be used directly as steering
+   . Gauss-Job.py
+   . Gauss.opts
+ - Remove EvtType.py and put example in Gauss-Job.py, commented, since
+   '$DECFILESROOT/options/EvtType.opts' can be passed directly as argument
+   of gaudirun.py
+   . Gauss-Job.py
+   . EvtType.py  - REMOVED
+
+! 2009-01-12 - Gloria CORTI
+ - Take latest tag in DDDB and SIMCOND. Ot now needs to be explicitely set.
+   . Gauss-2008.py
+ - Pick latest DecFiles compatible with new Particle Property table
+   . requirements
+
+! 2009-01-08 - Gloria CORTI
+ - Keep all particles that decay to preserve the whole tree in case of decay
+   at rest since the decay products are always kept
+   . Simulation.opts
+
+!========================== EvtGen v10r1 2009-01-13 ==========================
+! 2008-12-16 - Patrick Robbe
+ - EvtGen, EvtModel, EvtPythia: fix memory leaks reported by valgrind
+
+! 2008-12-11 - Patrick Robbe
+ - EvtRanf: use double instead of float to be able to run in debug
+   mode on 64 bit machines
+ - EvtBTo3Pi.F: use double precision evtranf function for 64 bit
+   computers
+
+!====================== Generators v9r2 2009-01-13 ===========================
+! 2008-12-11 - Patrick Robbe
+ - Signal.cpp: associate production_vertex to signal_vertex for clean
+   events, to allow correct primary vertex assignment for Geant4.
+
+!========================= GaussKine v3r3 2009-01-14 =========================
+! 2008-12-12 - Patrick Robbe
+ - GenerationToSimulation: processing of particles coming from
+   SUSY particles
+
+! 2008-12-11 - Patrick Robbe
+ - GenerationToSimulation: use signal_process_vertex to define the
+   primary vertex in case of absence of beam particles, and protect
+   against passing twice the same particles for complicated tree
+   structures (susy events)
+
+!======================= GaussTools v15r1p1 2008-12-08 =======================
+! 2008-12-12 - Gloria CORTI
+ - Include <string> to fix compilation error on Win32
+   . MCTruthManager.cpp
+
+!====================== GaussPhysics v6r2 2009-01-14 =========================
+! 2009-01-07 - Patrick Robbe
+  - Add Xi_b0 and Xi*_cc+ to the list of Geant4 particles
+
+!=========================== XmlVis v1r8 =====================================
+! 2008-10-14 - Thomas Ruf
+ - new infrastructure made by Emilie Maurice, summerstudent 2008
+
+!=============================================================================
 </PRE><H1><A NAME="v36r0">2008-12-08 - GaussSys v36r0</A></H1><PRE>
 <H2><A NAME="Note">FST DEVELOPEMENT version. Support SIMCOND tag head-20081002
    </A></H2>
