@@ -1,4 +1,4 @@
-// $Id: HltSelection.h,v 1.11 2009-01-13 12:18:53 graven Exp $
+// $Id: HltSelection.h,v 1.12 2009-01-14 08:32:43 graven Exp $
 #ifndef HLTBASE_HLTSELECTION_H 
 #define HLTBASE_HLTSELECTION_H 1
 
@@ -46,6 +46,10 @@ namespace Hlt
     TSelection<T>* down_cast() { return T::classID()==classID() 
                                    ?  dynamic_cast<TSelection<T>*>(this)
                                    : (TSelection<T>*)0 ; }
+    template <typename T>
+    const TSelection<T>* down_cast() const { return T::classID()==classID() 
+                                   ?  dynamic_cast<const TSelection<T>*>(this)
+                                   : (const TSelection<T>*)0 ; }
 
   public:
     
