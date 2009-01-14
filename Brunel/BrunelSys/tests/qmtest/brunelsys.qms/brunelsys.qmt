@@ -8,7 +8,8 @@ preprocessor = normalizeExamples + \
     RegexpReplacer(when = "Connected to database",
         orig = r"(\"sqlite_file:)(.*/)([\w.]+/[0-9A-Z_]{1,8}\")",
         repl = r"\1\3") + \
-    LineSkipper(["INFO Using TAG", "TimingAuditor.T", "RootDBase.open"])
+    LineSkipper(["INFO Using TAG", "TimingAuditor.T", "RootDBase.open"]) + \
+    LineSkipper(["INFO Opened magnetic field file"])
 validateWithReference(preproc = preprocessor)
 </text></argument>
 </extension>
