@@ -4,6 +4,7 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+!========================= GaussKine v3r3 2009-01-14 ========================= 
 ! 2008-12-12 - Patrick Robbe
  - GenerationToSimulation: processing of particles coming from 
    SUSY particles
