@@ -3,32 +3,83 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-! 2009-01-14 - Marco Cattaneo
- - Update reference following addition of V0 reco
+</PRE><H1><A NAME=v34r1>2009-01-14 Brunel v34r1</A></H1><PRE>
+This version uses projects Gaudi v20r4, LHCb v26r1, Lbcom v6r25, Rec v6r1
+ and SQLDDDB v5r1, ParamFiles v8r0, FieldMap v5r2
 
-! 2009-01-12 - Marco Cattaneo
- - Update reference following change in Calo sequence
- - Update test following change in CondDB tag handling
+This is a pre-production version for the 2009 MC production. 
+Output requires DaVinci v21r1 or greater
 
-! 2008-12-18 - Marco Cattaneo
- - Update reference to follow change in RichCKResLong name
+- New features
+  . Explicit setting of database tag now compulsory in options (GaudiConf v12r0).
+    Options files for Brunel input data examples updated accordingly
+  . Framework support for File Summary Records (Gaudi v20r4)
+  . All code now compiles with gcc 4.3 and on OSX
+  . Removed Brunel().ExpertTracking option, use TrackSys().ExpertTracking instead
+  . Do not stop if unknown sub-detector added to Moni or Check sequences, just 
+    issue a warning
+  . Set Context to all phases, default is "Offline"
+  . Added the possibility to use local copies of the SQLite databases (through
+    CondDBSQLiteCopyAccSvc) (DetCond v12r5)
+  . Add TrackV0Finder to RecoVertexSeq (RecSys v6r1)
 
-! 2008-12-16 - Marco Cattaneo
- - Update reference to follow cleanups in Brunel configurable
+- New packaging
+  . DST/RDST content now defined in DstConf configurable (GaudiConf v12r0)
+  . Removal of old .opts files, replaced by .py options or configurables
+    (MuonID v6r0, MuonPIDChecker v3r0, RichRecQC v2r25, RichRecMonitors v2r21,
+     Associators v3r7, GlobalReco v6r18, Brunel)
+  . PatChecking sequence now set up in TrackSys() when WithMC=True. 
+  . Changed example input file for 2008 to one produced with Boole v17r2,
+    DB tags head-200910112, sim-20090112
+  . Add a file DoxyBrunel.cfg, included by DoxyFile.cfg, to allow standalone
+    documentation of current project only. Make DoxyFile.cfg usable wherever
+    BrunelSys resides
+  . Update doxygen main page with current top level options files
 
-! 2008-12-07 - Marco Cattaneo
- - Update reference to add new PatPVOfflineCheck
+- New tuning
+  . Improvements in real data handling (STDAQ v3r14)
+  . Improvements and fixes to Calo reconstruction (CaloReco v4r17)
+  . Change outlier rejection such that minimum number of hits is left in each
+    system (TrackFitter v2r30)
+  . Improved efficiency of PatPV2D for multi PV events (PatPV v3r8)
+  . Changes in refractive index tools, including fix to problem of correct
+    aerogel tile parameters not being taken into account in 2008 simulations
+    (RichRecTrackTools v1r8, RichRecStereoTools v1r5, RichTools v2r24,
+     RichKernel v7r19, RichDet v1r4, RichRecBase v3r19)
 
-! 2008-12-05 - Marco Cattaneo
- - Cleanups in QMTest and updates to reference
- - Add a file DoxyBrunel.cfg, included by DoxyFile.cfg, to allow standalone
-   documentation of current project only.
+- Persistency changes
+  . Enable packed DST/RDST by default (not for DC06)
+    (GaudiConf v12r0, LHCbKernel v11r0, PackedEvent v3r4, EventPacker v1r1)
+  . Add Rec/Vertex/V0 to RDST and DST (GaudiConf v12r0)
 
-! 2008-12-01 - Marco Cattaneo
- - Start v34r1
- - In QMTest reference, follow fixes in Rich and in LHCbConfigurableUser
- - Make DoxyFile.cfg usable wherever BrunelSys resides
- - Update doxygen main page with current top level options files
+- Monitoring changes
+  . Cleanup handling of monitoring and checking in configurable
+  . Add ProtoParticle expert monitoring (not run in default Expert check)
+  . Various fixes and additions in STCheckers (STCheckers v2r9)
+  . Add TrackV0Monitor to monitoring sequence (TrackMonitors v1r6)
+  . Activate PV checker algorithm in PatChecking.py (TrackSys v4r20)
+  . Miscellaneous monitoring updates (RichRecMonitors v2r21)
+  . Variuos improvements to RichRecQC configurable (RichRecQC v2r25)
+
+- Bug fixes
+  . Make the expert checking respect the settings of the Check & Moni sequences
+  . Fix FPE in DeCalorimeter.cpp (CaloDet v10r1)
+  . Fixed bug in DeVeloRType::rPitch() that caused non-sensical results in 3
+    sectors (VeloDet v13r5)
+  . Avoid FPE in MCParticleSelector (SimComponents v2r15, MCEvent v2r11)
+  . Fix unitialized variable (MuonDAQ v4r5p1)
+  . Fix obsolete option in Brunel-2008-*-VeloOpen.py
+  . Protect Calo(L0)DataProvider against abusive warning in case of 
+    0-suppressed data (CaloDAQ v4r9)
+  . CaloCosmicsTrackTool :: fix bug in Hcal timing (CaloTools v5r6)
+  . Fixes to allow usage of OT linkers in post-DC06 simulation
+    (TrackCheckers v4r5, TrackMCTools v2r20)
+  . Add protection in for hits with zero error on residual (TrackMonitors v1r6)
+  . Bug fix in TrackInterpolator (to do with outliers) (TrackTools v3r14)
+  . Fixed unchecked statuscodes (TrackUtils v1r23)
+  . Fix PatChecking.py to handle correctly TrackSys().veloOpen case
+    (TrackSys v4r20)
+  . Check for zero pitch in residual normalisation (VeloRecMonitors v1r3)
 
 </PRE><H1><A NAME=v34r0>2008-11-26 Brunel v34r0</A></H1><PRE>
 This version uses projects Gaudi v20r3, LHCb v26r0, Lbcom v6r24
