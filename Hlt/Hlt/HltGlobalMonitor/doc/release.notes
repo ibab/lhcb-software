@@ -1,7 +1,10 @@
-!$Id: release.notes,v 1.15 2008-12-18 13:43:30 graven Exp $
+!$Id: release.notes,v 1.16 2009-01-14 21:08:25 graven Exp $
 Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
+
+! 2008-12-18 - Gerhard Raven
+ - some more cleanup & additional monitoring histograms 
 
 ! 2008-12-18 - Gerhard Raven
  - remove obsolete CheckHltDecision, InitHistos

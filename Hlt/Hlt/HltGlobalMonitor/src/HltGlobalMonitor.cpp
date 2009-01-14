@@ -32,6 +32,7 @@ DECLARE_ALGORITHM_FACTORY( HltGlobalMonitor );
 HltGlobalMonitor::HltGlobalMonitor( const std::string& name,
                     ISvcLocator* pSvcLocator)
   : HltBaseAlg ( name , pSvcLocator )
+  , m_gpstimesec(0)
 {
   // se nao tiver declarado no options, ele usa este
   declareProperty("ODIN",                   m_ODINLocation = LHCb::ODINLocation::Default);
@@ -54,165 +55,128 @@ StatusCode HltGlobalMonitor::initialize() {
 
   info() << " Doing HltGlobalMonitor::initialize() " << endreq;
   
-//L0 output histograms
-//  m_histoL0 = initializeHisto("L0 bits",0.,14.,14);
-  m_histoL0corr = this->book2D("Correlated L0 bits",0.,14.,14,0.,14.,14);
+//L0 on HLT input and output
+  m_L0Input      = book1D("L0 channel",-0.5,32.5,33);
+  m_L0Hlt1Accept = book1D("L0 channel [ Hlt1 Accept ]",-0.5,32.5,33);
+  m_L0Hlt2Accept = book1D("L0 channel [ Hlt2 Accept ]",-0.5,32.5,33);
 
 
-  m_hlt1allcall=0;            // "All events"
-  m_randallcall=0;
-  m_physallcall=0;
-  m_counter2=0;           // "L0 accepted evts"
-  m_efficiency=0;        // "Ratio counter2/hlt1allcall"
 
   for (std::vector<std::string>::const_iterator i = m_Hlt1Lines.begin(); i!=m_Hlt1Lines.end();++i) {
      m_allAcc.push_back(0);
-     declareInfo("COUNTER_TO_RATE["+*i+"Acc]",  m_allAcc.back(), "Hlt1 "+*i+" Line Accepts");
+     declareInfo("COUNTER_TO_RATE["+*i+"Acc]",  m_allAcc.back(),  "Hlt1 "+*i+" Line Accepts");
      m_allCall.push_back(0);
      declareInfo("COUNTER_TO_RATE["+*i+"Call]", m_allCall.back(), "Hlt1 "+*i+" Line Calls");
   }
-  m_orallacc=0;
-  gpstime=0;
-  gpstimesec=0;
+  m_gpstimesec=0;
 
-  info() << " Declaring infos to be published " << endreq;
 
-  m_histoalleycall = book1D("histoalleycall", "Hlt1 Lines Called", -0.5, m_Hlt1Lines.size()+0.5,m_Hlt1Lines.size()+1);
-  m_histoodintype  = book1D("histoodintype",  "ODIN Trigger Type Accept",0., 8., 8);
-  m_histoodinentry = book1D("histoodinentry", "ODIN Trigger Type Entries", 0., 8.,8);
-  m_histoL0        = book1D("histoL0",        "Successfull L0 bits",0.,14.,14);
+  m_odin           = book1D("ODIN type",  "ODIN Type ",0., 8., 8);
+
+  m_hltAcc          = book1D("Hlt1 lines Accept", "Hlt1 Lines Accept", -0.5, m_Hlt1Lines.size()+0.5,m_Hlt1Lines.size()+1);
+  m_hltNAcc         = book1D("# positive HltLines ", -0.5,m_Hlt1Lines.size()+0.5, m_Hlt1Lines.size()+1);
+  m_hltInclusive    = book1D("HltLines Inclusive",   -0.5,m_Hlt1Lines.size()-0.5, m_Hlt1Lines.size());
+  m_hltExclusive    = book1D("HltLines Exclusive",   -0.5,m_Hlt1Lines.size()-0.5, m_Hlt1Lines.size());
+  m_hltCorrelations = book2D("HltLines Correlations",-0.5,m_Hlt1Lines.size()-0.5, m_Hlt1Lines.size()
+                                                    ,-0.5,m_Hlt1Lines.size()-0.5, m_Hlt1Lines.size());
   
-//  declareInfo("hlt1allcall",_hlt1allcall,"All events");
-  declareInfo("counter2",m_counter2,"L0 accepted evts");
-  declareInfo("efficiency",m_efficiency,"Ratio counter2/hlt1allcall");
-  declareInfo("COUNTER_TO_RATE[Hlt1AlleyOr]", m_orallacc, "Hlt1 Alleys Or Accepts");
-  declareInfo("COUNTER_TO_RATE[Hlt1Calls]",m_hlt1allcall,"Hlt1 Calls");
-  declareInfo("COUNTER_TO_RATE[GpsTimeoflast]",gpstimesec,"Gps time of last event");
-  declareInfo("m_histoL0corr",m_histoL0corr,"Correlated L0 bits");
+  declareInfo("L0Accept",        "",&counter("L0Accept"),        0,std::string("L0Accept"));
+  declareInfo("COUNTER_TO_RATE[GpsTimeoflast]",m_gpstimesec,"Gps time of last event");
 
   return StatusCode::SUCCESS;
 };
+
+//=============================================================================
+// Finalize
+//=============================================================================
+StatusCode HltGlobalMonitor::finalize() {
+  return HltBaseAlg::finalize();
+}; 
 
 //=============================================================================
 // Main execution
 //=============================================================================
 StatusCode HltGlobalMonitor::execute() {  
 
-  m_hlt1allcall++;  // count all evts
 
-  LHCb::ODIN* odin = 0;
-  if (exist<LHCb::ODIN> ( LHCb::ODINLocation::Default)) {
-    odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
-    monitorODIN(*odin);
-  } else {
-    debug() << "ODIN missing, skipping ODIN monitoring!" << endreq;
-  }
+  LHCb::ODIN*         odin = fetch<LHCb::ODIN>( LHCb::ODINLocation::Default);
+  LHCb::L0DUReport*   l0du = fetch<LHCb::L0DUReport>( m_L0DUReportLocation );
+  LHCb::HltDecReports* hlt = fetch<LHCb::HltDecReports>( m_HltDecReportsLocation );
 
-  LHCb::L0DUReport* l0du = 0;
-  if (exist<L0DUReport>(m_L0DUReportLocation)){
-    l0du = get<L0DUReport>(m_L0DUReportLocation);
-    monitorL0DU(*l0du);
-  } else {
-    debug() << "L0DU missing, skipping L0 monitoring" << endreq;
-  }
-
-  LHCb::HltDecReports* decisions = 0;
-  if (exist<LHCb::HltDecReports>( m_HltDecReportsLocation )){
-    decisions = get<LHCb::HltDecReports>( m_HltDecReportsLocation );
-    monitorHLT(*decisions);
-  } else {
-    debug() << "HltDecReports missing, skipping HLT monitoring" << endreq;
-  }
+  monitorODIN(odin,l0du,hlt);
+  monitorL0DU(odin,l0du,hlt);
+  monitorHLT(odin,l0du,hlt);
   return StatusCode::SUCCESS;
 }
 
-void HltGlobalMonitor::monitorODIN(const LHCb::ODIN& odin) {
-  gpstime=odin.gpsTime();
-  debug() << "gps time" << gpstime << endreq;
-  gpstimesec=int(gpstime/1000000-904262401);
-  fill(m_histoodinentry, odin.triggerType(), 1.);
-  if (odin.triggerType()==ODIN::RandomTrigger) ++m_randallcall;
-  else                                         ++m_physallcall;
+void HltGlobalMonitor::monitorODIN(const LHCb::ODIN* odin,
+                                   const LHCb::L0DUReport*,
+                                   const LHCb::HltDecReports* hlt) {
+  if (odin == 0 ) return;
+  unsigned long long gpstime=odin->gpsTime();
+  if (msgLevel(MSG::DEBUG)) debug() << "gps time" << gpstime << endreq;
+  m_gpstimesec=int(gpstime/1000000-904262401);
+  counter("ODIN::Random")    += (odin->triggerType()==ODIN::RandomTrigger);
+  counter("ODIN::NotRandom") += (odin->triggerType()!=ODIN::RandomTrigger);
+  fill(m_odin, odin->triggerType(), 1.);
+  if ( hlt == 0 ) return;
 
-   //if (anyAccept) { 
-      ++m_orallacc;
-      fill(m_histoalleycall, 0, 1.);
-      fill(m_histoodintype, odin.triggerType(), 1.);
-   //}
-   debug() << "ODIN trigger type" << odin.triggerType() << endreq;
 }
 
-void HltGlobalMonitor::monitorL0DU(const LHCb::L0DUReport& l0) {
+void HltGlobalMonitor::monitorL0DU(const LHCb::ODIN*,
+                                   const LHCb::L0DUReport* l0du,
+                                   const LHCb::HltDecReports* hlt) {
 
-  // Passed ?
-  // bool ok = l0.decision();
-  // if (!ok) return;
+  if (l0du == 0) return;
 
-  if (l0.decision()) debug() << "L0 is true" << endreq; 
-  if (l0.forceBit()) debug() << "L0 is forced" << endreq; 
+  counter("L0Accept") += l0du->decision();
+  counter("L0Forced") += l0du->forceBit();
 
-  if (!l0.decision()) return;
-  
-  m_counter2++;  // count L0 accepts
+  if (!l0du->decision()) return;
 
-  m_efficiency= double(m_counter2)/m_hlt1allcall;
-//  bool first=true;
-
-  for (int i = 0; i<14; i+=1){ 
-    if (l0.channelDecision(i)) {
-      fill(m_histoL0, i , 1.);
-//      if (i!=0){ 
-//        for (int j = i+1; j<14; j+=1){ 
-//	  if (l0.channelDecision(j)) {
-//            fill( m_histoL0corr, i , j, 1.);
- //           if (first){ 
-//	      fill( m_histoL0corr, 0., 0., 1.);
-//	      first=false;
- //           } // book only one entry for a correlated trigger
-//	  } //if there was more than one trigger in the event
- //       } // loop over channels to check if there is an overlap of triggers 
-  //    } // just to avoid entering loop for bin 0
-    } // if there is a bit different of 0
-  }//loop over the channels report
-  
-};
-
-void HltGlobalMonitor::monitorHLT(const HltDecReports& decisions) {
-
-
-  int j=0;
-  bool anyAccept=false;
-  for (std::vector<std::string>::const_iterator i = m_Hlt1Lines.begin(); i!=m_Hlt1Lines.end();++i) {
-     const LHCb::HltDecReport*  decision = decisions.decReport( *i );
-     if (decision == 0 ) {
-       warning() << "decision " << *i << " not found" << endreq;
-     } else if (decision->decision()) {
-      anyAccept = true;
-      fill(m_histoalleycall, j+1, 1.);
-      ++m_allAcc[j];
-     }
-     j=j+1;
+  bool hlt1Accept = false;
+  bool hlt2Accept = false;
+  if (hlt!=0) {
+        // find Hlt1Global
+        // find Hlt2Global
   }
-#if 0
-   // create list of all positive decisions
-   std::vector<std::pair<unsigned,const LHCb::HltDecReport*> > reps;
-   reps.reserve( m_Hlt1Lines.size() );
 
-   for (std::vector<std::string>::const_iterator i = m_Hlt1Lines.begin(); i!=m_Hlt1Lines.end();++i) {
-     const LHCb::HltDecReport*  report = decisions->decReport( *i );
-     if (report == 0 ) {  
-        warning() << "report " << *i << " not found" << endreq;
-        continue;
-     }
-     if (!decision->decision()) continue;
-     size_t offset =  i - m_Hlt1Lines.begin();
-     reps.push_back( make_pair( offset, report ) );
-   }
-   for (size_t i = 0; i < reps.size();++i) {
-        bool exclusive = (reps.size()==1);
-        plot1D( exclusive ? x : y , reps.first, 1 ) // plot the in/exclusive accepts
-   }
-#endif
+  LHCb::L0DUChannel::Map channels = l0du->configuration()->channels();
+  for(LHCb::L0DUChannel::Map::iterator i = channels.begin();i!=channels.end();++i){
+    bool acc = l0du->channelDecision( i->second->id() );
+    fill( m_L0Input  , i->second->id(), acc );
+    if (hlt1Accept) fill( m_L0Hlt1Accept, i->second->id(), acc );
+    if (hlt2Accept) fill( m_L0Hlt2Accept, i->second->id(), acc );
+  }
+};
+
+void HltGlobalMonitor::monitorHLT(const LHCb::ODIN*,
+                                   const LHCb::L0DUReport*,
+                                   const LHCb::HltDecReports* hlt) {
+
+  if (hlt==0) return;
+
+  std::vector<const LHCb::HltDecReport*> reps;
+  unsigned nAcc = 0;
+  for (std::vector<std::string>::const_iterator i = m_Hlt1Lines.begin(); i!=m_Hlt1Lines.end();++i) {
+    const LHCb::HltDecReport*  report = hlt->decReport( *i );
+    if (report == 0 ) {  
+       warning() << "report " << *i << " not found" << endreq;
+    }
+    //TODO: skip Hlt1Global
+    reps.push_back( report );
+    if (report && report->decision()) ++nAcc;
+  }
+  fill( m_hltNAcc, nAcc, 1.0);
+
+  for (size_t i = 0; i<reps.size();++i) {
+    fill( m_hltInclusive, i, reps[i]->decision() );
+    if (!reps[i]->decision()) continue;
+    if (nAcc==1) fill( m_hltExclusive, i, reps[i]->decision() );
+    for (size_t j = 0; j<reps.size(); ++j) {
+       fill(m_hltCorrelations,i,j,reps[j]->decision());
+    }
+  }
 };
 
 
@@ -220,29 +184,6 @@ void HltGlobalMonitor::monitorHLT(const HltDecReports& decisions) {
 //=============================================================================
 
 #if 0
-// taken from $L0DUROOT/src/L0DUReportMonitor.cpp 
-// correlations
-      if( report->channelDecision( id ) ){
-        for(LHCb::L0DUChannel::Map::iterator jt = channels.begin() ;jt!=channels.end();jt++){
-
-   }
-
-
-        other = true
-        plot2D(    
-        
-     }
-     // plot plain rate
-     plot1D( 
-     // plot the inclusive rate for each line
-     if (other)  { plot1D }
-     // plot the exclusive rate for each line
-     else { plot1D }
-   }
-};
-
-//=============================================================================
-
 // taken from $L0DUROOT/src/L0DUReportMonitor.cpp 
 // correlations
       if( report->channelDecision( id ) ){

@@ -26,39 +26,38 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
+  virtual StatusCode finalize  ();    ///< Algorithm execution
 
 private:
+  void monitorODIN(const LHCb::ODIN*,const LHCb::L0DUReport*,const LHCb::HltDecReports*);
+  void monitorL0DU(const LHCb::ODIN*,const LHCb::L0DUReport*,const LHCb::HltDecReports*);
+  void monitorHLT (const LHCb::ODIN*,const LHCb::L0DUReport*,const LHCb::HltDecReports*);
+
   std::string m_ODINLocation;
   std::string m_L0DUReportLocation;
   std::string m_HltDecReportsLocation;
   std::vector<std::string>  m_Hlt1Lines;
   
-  void monitorODIN(const LHCb::ODIN&);
-  void monitorL0DU(const LHCb::L0DUReport&);
-  void monitorHLT(const LHCb::HltDecReports&);
+  int m_gpstimesec;
+
+  template <typename T> T* fetch(const std::string& location) {
+       T* t =  this->exist<T>( location ) ?  this->get<T>( location ) 
+                                           :  (T*)0;
+       if (t == 0 && this->msgLevel(MSG::WARNING) ) this->warning() << " could not retrieve " 
+                                                                    << location << endmsg;
+       return t;
+    };
 
 
-  // hists
-private:
-  
-  AIDA::IHistogram1D* m_histoL0;
-  AIDA::IHistogram1D* m_histoalleycall; 
-  AIDA::IHistogram1D* m_histoodintype; 
-  AIDA::IHistogram1D* m_histoodinentry; 
-
-  AIDA::IHistogram2D* m_histoL0corr;
-
- private:
-
-  int m_hlt1allcall;        // "All events"
-  int m_counter2;       // "L0 accepted evts"
-  double m_efficiency;  // "Ratio counter2/hlt1allcall"
-  std::vector<double> m_allAcc;
-  std::vector<double> m_allCall;
-  double m_physallcall;
-  double m_randallcall;
-  double m_orallacc;
-  unsigned long long gpstime;
-  int gpstimesec;
+  AIDA::IHistogram1D* m_odin;
+  AIDA::IHistogram1D* m_L0Input;
+  AIDA::IHistogram1D* m_L0Hlt1Accept;
+  AIDA::IHistogram1D* m_L0Hlt2Accept;
+  std::vector<double> m_allAcc,m_allCall;
+  AIDA::IHistogram1D* m_hltAcc;
+  AIDA::IHistogram1D* m_hltNAcc;
+  AIDA::IHistogram1D* m_hltInclusive;
+  AIDA::IHistogram1D* m_hltExclusive;
+  AIDA::IHistogram2D* m_hltCorrelations;
 };
 #endif // HLTGLOBALMONITOR_H
