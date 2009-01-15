@@ -4,6 +4,7 @@
 ! Purpose     : Ecal alley specific algorithms and tools
 !----------------------------------------------------------------------------
 
+!========================== HltEcalAlley v1r5 2009-01-15 ===================
 ! 2008-12-29 - Gerhard Raven
  - remove calls to saveConfiguration
  - use msgLevel
