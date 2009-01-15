@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2009-01-15 - Chris Jones
+ - Fix compilation warning (from OSX gcc 4.0.01) "control may reach end of
+   non-void function 'double LHCb::Node::chi2() const"
+
 !======================= TrackEvent v4r17 2009-01-08 =========================
 ! 2008-12-02 Wouter Hulsbergen
  - Track::stateAt and Track::measurement(id) now return pointers

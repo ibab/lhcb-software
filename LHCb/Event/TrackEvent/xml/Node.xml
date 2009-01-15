@@ -132,14 +132,10 @@
         const   = 'TRUE'
         desc    = 'Retrieve the local chi^2 '>
         <code>
-  if (    ( fabs(m_residual) > TrackParameters::lowTolerance)
-       &amp;&amp; (m_errResidual > TrackParameters::lowTolerance)
-     ) {
-    return gsl_pow_2( m_residual/m_errResidual );
-  }
-  else {
-    return 0.;
-  }
+  return ( (fabs(m_residual) > TrackParameters::lowTolerance) &amp;&amp; 
+           (m_errResidual > TrackParameters::lowTolerance) ?
+           gsl_pow_2( m_residual/m_errResidual ) : 0.0 );
+
         </code>
       </method>
 
