@@ -2,6 +2,11 @@ Package         : Si/SiTools
 Package manager : Matt Needham
 !------------------------------------------------------------------------------
 
+! 2009-01-15 M Needham 
+ - Add SiZuriFunction [second order RC-CR shaper function]
+ - Make base class for SiAmplifierResponse [SiAmplifierResponseBase] 
+ - Add print functionality to SiAmplifier classes  
+
 !============================ SiTools v1r5 2008-02-06 =========================
 ! 2008-01-28 M Needham
  - In SiGeantDepositedCharge, set default scalingFactor to 1.0

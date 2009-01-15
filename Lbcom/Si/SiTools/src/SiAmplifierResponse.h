@@ -1,13 +1,11 @@
-// $Id: SiAmplifierResponse.h,v 1.3 2007-06-01 11:57:59 cattanem Exp $
+// $Id: SiAmplifierResponse.h,v 1.4 2009-01-15 10:02:19 mneedham Exp $
 #ifndef SiAmplifierResponse_H
 #define SiAmplifierResponse_H 1
 
 // Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "SiAmplifierResponseBase.h"
 #include "GaudiMath/GaudiMath.h"
 
-// Interface from LHCbKernel
-#include "Kernel/ISiAmplifierResponse.h"
 
 /** @class SiAmplifierResponse SiAmplifierResponse.h
  *
@@ -17,8 +15,7 @@
  *  @date   13/3/2002
  */
 
-class SiAmplifierResponse : public GaudiTool, 
-                            virtual public ISiAmplifierResponse {
+class SiAmplifierResponse : public SiAmplifierResponseBase {
 
 public: 
 
@@ -33,36 +30,6 @@ public:
   /** initialize */
   virtual StatusCode initialize();
 
-  /** calculate Beetle response
-  * @param time in nanoseconds
-  * @return response 
-  */
-  virtual double response(const double time) const;
-  
-  /** The response is only valid for a certain capacitance, Vfs, etc.
-  * This method allows you to find out when the curve is valid
-  * @return validity info
-  */
-  virtual ISiAmplifierResponse::Info validity() const; 
-
-private:
-
-  /// Internal method to convert the spline type from string to GaudiMath type
-  GaudiMath::Interpolation::Type typeFromString() const;
-
-  ISiAmplifierResponse::Info m_info;         ///< Holds information on validity
-  GaudiMath::SimpleSpline* m_responseSpline; ///< The fitted spline
-
-  double m_tMin; ///< First entry in vector of times
-  double m_tMax; ///< Last entry in vector of times
-
-  // job options
-  std::vector<double> m_times;  ///< List of times in ns
-  std::vector<double> m_values; ///< Corresponding values
-  std::string m_splineType;     ///< Spline type (default is "Cspline")
-  std::string m_type;           ///< Info object: Type of data
-  unsigned int m_vfs;           ///< Info object: Signal shaping parameter
-  double m_capacitance;         ///< Info object: Capacitance
 
 };
 
