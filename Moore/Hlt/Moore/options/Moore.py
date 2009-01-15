@@ -9,13 +9,11 @@
 from Gaudi.Configuration import *
 from Moore.Configuration import *
 
-
 # if you want to generate a configuration, uncomment the following lines:
 #Moore().generateConfig = True
 #Moore().configLabel = 'NO prescale'
 
-Moore().hltType = 'Hlt1'
-Moore().oldStyle = False
+Moore().hltType = 'Hlt1' # +Hlt2'
 Moore().verbose = True
 
 #dataType = 'DC06'
@@ -40,9 +38,16 @@ files = [ 'castor:/castor/cern.ch/user/s/snies/mdf/DC06_L0_v1_lumi2_MuonHadron_4
 
 EventSelector().PrintFreq = 100
 
-#Moore().EvtMax = 10000
+Moore().EvtMax = 2000 
 Moore().DataType   = dataType
 Moore().inputFiles = files
+
+#Moore().DDDBtag  = "default"
+#Moore().CondDBtag = "default"
+
+LHCbApp().DDDBtag  = "default"
+LHCbApp().CondDBtag = "default"
+
 # Moore().outputFile = '/tmp/foo.raw'
 
 # optionally, we can enable some auditors...
