@@ -4,6 +4,8 @@
 ! Purpose     : Configuration for Analysis project
 !-----------------------------------------------------------------------------
 
+!========================== AnalysisConf v1r0 2009-01-15 =====================
+
 ! 2009-01-09 - Patrick Koppenburg
  - Send init seq to master
 
