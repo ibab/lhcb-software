@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.118 2009-01-15 11:21:27 pkoppenb Exp $ 
+! $Id: release.notes,v 1.119 2009-01-15 20:25:47 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -6,6 +6,10 @@
 ! -----------------------------------------------------------------------------
 
 !========================== HltConf v2r0 2009-01-15 ===================
+! 2009-01-15 - Gerhard Raven
+ - update naming convention for L0 candidates, see comments in HltL0Candidates.py
+ - completely remove oldStyle from existence
+
 ! 2009-01-13 - Gerhard Raven
  - major cleanup: remove support for 'oldStyle' Hlt configuration,
    and remove (!) the old options files...

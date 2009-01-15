@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.34 2009-01-13 15:35:38 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.35 2009-01-15 20:25:47 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -43,7 +43,6 @@ class HltConf(LHCbConfigurableUser):
     __slots__ = {
           "hltType" :          'Hlt1+Hlt2'
         , "userAlgorithms":    [ ]  # put here user algorithms to add
-        , "oldStyle" :         False # old style options configuration
         , "replaceL0BanksWithEmulated" : False
         , "Hlt2IgnoreHlt1Decision" : False # run Hlt2 even if Hlt1 failed
         , "verbose" :          False # print the generated Hlt sequence
@@ -56,9 +55,7 @@ class HltConf(LHCbConfigurableUser):
                  'Hlt1+Hlt2',
                  'DEFAULT' ]
                 
-    def oldConfig(self,hlttype) :
-       raise NotImplementedError('\n\n\n      HltConf().oldStyle = True is no longer supported. Please remove any mention of "oldStyle"... \n\n\n')
-    def newConfig(self,hlttype) :
+    def confType(self,hlttype) :
             trans = { 'Hlt1'   : 'LU+L0+VE+XP+MU+HA+PH+EL'
                     , 'DEFAULT': 'PA+LU+L0+VE+XP'
                     }
@@ -79,6 +76,11 @@ class HltConf(LHCbConfigurableUser):
                 if type2conf[i] not in self.__used_configurables__ : raise AttributeError, "configurable for '%s' not in list of used configurables"%i
                 print '# requested ' + i + ', importing ' + str(type2conf[i]) 
                 # TODO: propagate relevant attributes to lines
+                # FIXME: warning: the next is 'brittle': if someone outside 
+                #        does eg. HltMuonLinesConf(), it will get activated
+                #        regardless of whether we do it over here...
+                #        So anyone configuring some part explictly will _always_ get
+                #        that part of the Hlt run, even if it does not appear in HltType...
                 type2conf[i]()
             importOptions('$HLTCONFROOT/options/HltMain.py')
             Hlt1Conf()
@@ -123,10 +125,7 @@ class HltConf(LHCbConfigurableUser):
         if self.getProp('replaceL0BanksWithEmulated') : 
             importOptions('$L0DUROOT/options/ReplaceL0BanksWithEmulated.opts')
         hlttype = self.getProp('hltType')
-        if self.getProp('oldStyle') :
-            self.oldConfig(hlttype)
-        else :
-            self.newConfig(hlttype)
+        self.confType(hlttype)
         for userAlg in self.getProp("userAlgorithms"):
             ApplicationMgr().TopAlg += [ userAlg ]
         appendPostConfigAction( self.postConfigAction )
