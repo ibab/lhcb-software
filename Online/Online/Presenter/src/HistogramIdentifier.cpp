@@ -89,7 +89,9 @@ void HistogramIdentifier::setIdentifiersFromDim(std::string newDimServiceName)
           matchOffset = 1;
           histogramUrlMatchGroup->Delete();          
           delete histogramUrlMatchGroup;
-          histogramUrlMatchGroup = s_histogramUrlRegexpEFF.MatchS(m_histogramUrlTS);          
+          histogramUrlMatchGroup = s_histogramUrlRegexpEFF.MatchS(m_histogramUrlTS);
+          m_partitionName = (((TObjString *)histogramUTGIDMatchGroup->At(1))->
+            GetString()).Data();          
         }
         m_instanceOnNode = (((TObjString *)histogramUTGIDMatchGroup->At(3))->
           GetString()).Data();
@@ -127,7 +129,6 @@ void HistogramIdentifier::setIdentifiersFromDim(std::string newDimServiceName)
   }
   
   if (m_isEFF) {
-    m_partitionName = "";
     m_taskName = (((TObjString *)histogramUrlMatchGroup->At(3))->GetString()).Data();
   }
   

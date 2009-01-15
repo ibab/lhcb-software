@@ -26,6 +26,7 @@ class HistogramIdentifier
     std::string histogramName() const { return m_histogramName; };
     bool isPlausible() const { return m_isPlausible; };
     bool isDimFormat() const { return m_isDimFormat; };
+    bool isEFF() const { return m_isEFF; };
     std::string gauchocommentBeat() const { return m_gauchocommentBeat; };
     std::string gauchocommentEric() const { return m_gauchocommentEric; };
     std::string m_histogramUrl() const { return m_histogramUrlTS.Data(); };
