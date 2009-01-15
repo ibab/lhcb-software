@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.cpp,v 1.24 2009-01-13 11:47:43 marcocle Exp $
+// $Id: UpdateManagerSvc.cpp,v 1.25 2009-01-15 12:18:34 ocallot Exp $
 // Include files
 
 #include "GaudiKernel/SvcFactory.h"
@@ -258,6 +258,8 @@ void UpdateManagerSvc::i_registerCondition(const std::string &condition, BaseObj
     if ( ! mf_item->ptr ) { // the item is know but not its pointer (e.g. after a purge)
       mf_item->vdo = mf->castToValidDataObject();
       mf_item->ptr = mf->castToVoid();
+      const std::pair<const void*,Item*> tempP( mf_item->ptr, mf_item );
+      m_pointerMap.insert( tempP );   //== Register the new pointer
     }
   }
 
@@ -340,6 +342,8 @@ void UpdateManagerSvc::i_registerCondition(void *obj, BaseObjectMemberFunction *
   if ( ! mf_item->ptr ) { // the item is know but not its pointer (e.g. after a purge)
     mf_item->vdo = mf->castToValidDataObject();
     mf_item->ptr = mf->castToVoid();
+    const std::pair<const void*,Item*> tempP( mf_item->ptr, mf_item );
+    m_pointerMap.insert( tempP );  //== Register the new pointer
   }
   link(mf_item,mf,cond_item);
   // a new item means that we need an update
