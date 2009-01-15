@@ -1,9 +1,14 @@
-!$Id: release.notes,v 1.5 2009-01-13 16:36:06 jpalac Exp $
+!$Id: release.notes,v 1.6 2009-01-15 14:19:40 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTConf
 ! Responsible : Juan PALACIOS
 ! Purpose     : Configuration and options files for MicroDST making.
 !-----------------------------------------------------------------------------
+
+!========================== MicroDSTConf v2r0 2009-01-15 ==================
+! 2009-01-15 - Juan PALACIOS
+ -  python/MicroDST/MicroDSTAlgorithm.py
+  . Add all the configurables from MicroDSTAlgorithms to module MicroDST.MicroDSTAlgorithm
 
 ! 2009-01-13 - Juan PALACIOS
  - python/MicroDST/MicroDSTAlgorithm.py
