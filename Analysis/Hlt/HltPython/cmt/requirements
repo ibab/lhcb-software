@@ -3,7 +3,7 @@
 # Maintainer : Jose Angel Hernando Morata
 #============================================================================
 package           HltPython
-version           v1r11
+version           v1r12
 
 #============================================================================
 # Structure, i.e. directories to process. 

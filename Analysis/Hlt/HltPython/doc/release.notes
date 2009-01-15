@@ -4,6 +4,7 @@
 ! Purpose     : Exposing Hlt tools to Python, share common python tools
 !-----------------------------------------------------------------------------
 
+!========================== HltPython v1r12 2009-01-15 ===================
 ! 2009-01-13- Jose A. Hernando
    - in python/modules hltconf, hltmonitortools adaptation to the HltSummaryTool and ANNSvc
    - in python/examples hltalleymonitor adaptations to the HltSummaryTool and ANNSvc
