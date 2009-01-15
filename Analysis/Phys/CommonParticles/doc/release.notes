@@ -1,9 +1,11 @@
-!$Id: release.notes,v 1.110 2009-01-15 14:22:14 ibelyaev Exp $
+!$Id: release.notes,v 1.111 2009-01-15 14:58:24 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
+
+!========================== CommonParticles v4r2 2009-01-05 ==================
 
 ! 2009-01-15 - Vanya BELYAEV
 
