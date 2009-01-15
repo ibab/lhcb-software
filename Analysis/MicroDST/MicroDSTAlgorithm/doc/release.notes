@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.75 2009-01-14 10:07:09 jpalac Exp $
+! $Id: release.notes,v 1.76 2009-01-15 14:26:37 jpalac Exp $
 !==============================================================================
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel, Juan Palacios
 !==============================================================================
+
+!========================== MicroDSTAlgorithm v3r4 2009-01-15 =================
 
 ! 2009-01-14 - Juan PALACIOS
  - src/CreateMicroDSTAlg.cpp
