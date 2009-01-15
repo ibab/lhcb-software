@@ -3,6 +3,8 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Check reconstruction algorithms for HLT 
 !-----------------------------------------------------------------------------
+
+!========================== HltRecChecker v1r8 2009-01-15 ===================
 ! 2008-12-30 - Gerhard Raven
  - replace Hlt::Histo by AIDA::IHistogram1D 
 
