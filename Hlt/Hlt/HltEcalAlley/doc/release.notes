@@ -8,6 +8,7 @@
  - remove calls to saveConfiguration
  - use msgLevel
 
+!========================== HltEcalAlley v1r4 2008-12-13 ===================
 ! 2008-12-13 - Mariusz Witek
 - HltAntiEleConf, anti T confirmation tool for L0Electrons
 
