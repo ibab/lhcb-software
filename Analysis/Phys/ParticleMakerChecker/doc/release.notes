@@ -1,16 +1,18 @@
-!$Id: release.notes,v 1.17 2008-12-06 16:40:23 ibelyaev Exp $
+!$Id: release.notes,v 1.18 2009-01-15 14:04:14 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/ParticleMakerChecker
 ! Responsible : Chris Jones
 ! Purpose     : MC checker algorithms for ParticleMakers
 !-----------------------------------------------------------------------------
 
+!========================== ParticleMakerChecker v1r3 2009-01-15 ==========
+
 ! 2008-12-06 - Vanya BELYAEV
  - ParticleEffPurMoni.h/.cpp
    tiny fix for new particle properties 
  - version increment to v1r3 
 
-!!========================== ParticleMakerChecker v1r2p1 2008-11-26 ==========
+!========================== ParticleMakerChecker v1r2p1 2008-11-26 ==========
 
 ! 2008-10-20 - Chris Jones
  - Properly initialize the MC truth tool to NULL in the ParticleEffPurMoni 
