@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.394 2009-01-12 15:38:07 pkoppenb Exp $
+! $Id: release.notes,v 1.395 2009-01-15 09:53:58 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+!========================== DaVinciTools v18r1 2009-01-15 ===================
 
 ! 2009-01-12 - Patrick Koppenburg
  - CheckSelResult : protect against Execute bombing. Vanya said he'd protect.
