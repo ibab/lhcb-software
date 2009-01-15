@@ -3,7 +3,7 @@
 # Maintainer : Sandra Amato, Alessia Satta
 #============================================================================
 package           HltMuonAlley
-version           v2r7
+version           v2r7p1
 
 # Structure, i.e. directories to process. 
 #============================================================================
