@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.159 2008-12-22 18:04:47 pkoppenb Exp $
+! $Id: release.notes,v 1.160 2009-01-15 10:49:53 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+!========================== VertexFit v5r5 2009-01-15 =================
+
+! 2009-01-15 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v5r5
 
 ! 2008-12-22 - Patrick Koppenburg
  - Remove all .opts files
