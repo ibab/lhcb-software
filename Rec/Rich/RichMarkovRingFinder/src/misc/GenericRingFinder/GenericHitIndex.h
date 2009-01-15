@@ -12,9 +12,11 @@ namespace GenRingF
 {
 
   // declaration
-  class GenericHitIndex : public Index<unsigned int,GenericHitIndex> {
+  class GenericHitIndex : public Index<unsigned int,GenericHitIndex> 
+  {
   public:
-    explicit GenericHitIndex(const unsigned int i) : Index<unsigned int,GenericHitIndex>(i) {};
+    explicit GenericHitIndex(const unsigned int i) 
+      : Index<unsigned int,GenericHitIndex>(i) { }
   };
   
 }

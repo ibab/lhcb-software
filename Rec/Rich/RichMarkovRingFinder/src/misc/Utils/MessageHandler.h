@@ -1,4 +1,4 @@
-// $Id: MessageHandler.h,v 1.1 2008-06-20 09:54:23 jonrob Exp $
+// $Id: MessageHandler.h,v 1.2 2009-01-15 21:10:06 jonrob Exp $
 #ifndef UTILS_MESSAGEHANDLER_H
 #define UTILS_MESSAGEHANDLER_H 1
 
@@ -41,6 +41,8 @@ namespace Lester
     /// Handle a message of the given level
     virtual void lesterMessage( const Lester::MessageLevel level,
                                 const std::string & message ) const = 0;
+    /// virtual destructor
+    virtual ~IMessageHandler() { }
   };
 
   /** @class MessageHandler MessageHandler.h Utils/MessageHandler.h
@@ -59,7 +61,7 @@ namespace Lester
     MessageHandler( ) : m_handler(NULL) { }
 
     /// Destructor
-    ~MessageHandler( ) { }
+    virtual ~MessageHandler( ) { }
 
   public:
 

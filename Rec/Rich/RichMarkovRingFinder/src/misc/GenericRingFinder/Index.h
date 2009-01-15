@@ -12,7 +12,7 @@ namespace GenRingF {
   
   // declaration
   template<class TYPE,class Dummy>
-  struct Index {
+  class Index {
   private:
     Index(); // don't want people to use this!
   public:
@@ -22,6 +22,7 @@ namespace GenRingF {
       return value() < other.value();
     }
     virtual void printMeTo(std::ostream & os) const { os << value(); }
+    virtual ~Index(){}
   private:
     TYPE m_i;
   };

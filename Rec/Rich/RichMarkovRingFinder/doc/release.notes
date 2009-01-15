@@ -4,9 +4,12 @@
 ! Purpose     : Uses a Markov Chain sampler to do ring finding without tracks
 !-----------------------------------------------------------------------------
 
+! 2009-01-15 - Chris Jones
+ - Fix various compilation warnings on OSX with gcc 4.0.1
+
 !=================== Rich/RichMarkovRingFinder v2r4 2009-01-12 ===============
 ! 2009-01-07 - Ulrich Kerzel
-- Fixes to python Configurable
+ - Fixes to python Configurable
   - change to uppercase parameters following the new convention
   - change "Sequence : None" to "Sequence : GaudiSequencer("DefaultSequence")"
     and raise a run-time error if not changed to a proper sequence
