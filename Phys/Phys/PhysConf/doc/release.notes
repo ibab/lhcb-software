@@ -1,8 +1,11 @@
+!$Id: release.notes,v 1.10 2009-01-15 09:33:46 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/PhysConf
 ! Responsible : Patrick Koppenburg
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
+
+!========================== PhysConf v1r0 2009-01-15 =========================
 
 ! 2009-01-09 - Patrick Koppenburg
  - Send init seq to master
