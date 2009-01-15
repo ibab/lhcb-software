@@ -1,9 +1,90 @@
-!$Id: release.notes,v 1.109 2009-01-09 08:25:11 pkoppenb Exp $
+!$Id: release.notes,v 1.110 2009-01-15 14:22:14 ibelyaev Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
+
+! 2009-01-15 - Vanya BELYAEV
+
+ - The first attempt to provide 'configurables' for standard particles.
+   all modules configurables are available in python/CommonParticles directory.
+
+   Basic: 
+
+      StdLoosePions
+      StdLooseKaons
+      StdLooseMuons
+      StdLooseProtons
+      StdLooseElectrons
+
+      StdTightPions
+      StdTightKaons
+      StdTightMuons
+      StdTightProtons
+      StdTightElectrons
+
+      StdNoPIDsPions
+      StdNoPIDsKaons
+      StdNoPIDsMuons
+      StdNoPIDsProtons
+      StdNoPIDsElectrons
+
+      StdLoosePhotons 
+      StdLooseCnvPhotons 
+      StdLooseAllPhotons 
+	
+   Collections:
+
+      StandardPions 
+      StandardKaons
+      StandardMuons 
+      StandardProtons
+ 		  StandardElectrons
+  	  StandardPhotons
+      StandardBasicCharged 
+      StandardBasicNeutral
+      StandardBasic
+
+   
+   The usage is fairly trivial, e.g.: 
+     
+     import CommonParticles.StdLoosePions 
+
+   or: 
+
+     import CommonParticles.StandardMuons
+
+   or: 
+
+     import CommonParticles.StandardBasic 
+
+
+   The loaded content could always be inspected using:
+
+     from CommonParticles.Utils import locationsDoD 
+     print locationsDoD() 
+
+   Also one can always get the actial algorithms(configurables), 
+   which are responsible for the given equipped locations:
+ 
+     >>>  from CommonParticles.Utils import particles 
+     >>>  parts = particles() 
+     >>>  for location in parts :
+          ... print 'location :'      % location 
+          ... conf = parts[location]
+          ... print ' configurable: ' % conf.name() 
+ 
+
+   Each file can be inspected from the common line:
+  
+       python StandardBasicCharged.py 
+
+
+   cmt/requirments: 
+
+    version increment to  v4r2 
+
 
 ! 2009-01-09 - Patrick Koppenburg for Diego Martinez Santos
  - Fixed incorrect comment about loose muon DLL

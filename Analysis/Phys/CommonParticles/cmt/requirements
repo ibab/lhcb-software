@@ -6,12 +6,16 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           CommonParticles
-version           v4r1p3
+version           v4r2
 
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc options
+branches          cmt doc options python 
+
+use GaudiPolicy v* 
+
+apply_pattern install_python_modules 
 
 #============================================================================
 # Used packages. 
