@@ -108,7 +108,7 @@ void PageSaveDialog::build()
 
 
                                
-  TGLabel *pageDescriptionLabel = new TGLabel(this,"Page Description:");
+  TGLabel *pageDescriptionLabel = new TGLabel(this,"Page Comment:");
   pageDescriptionLabel->SetTextJustify(36);
   AddFrame(pageDescriptionLabel,
            new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
