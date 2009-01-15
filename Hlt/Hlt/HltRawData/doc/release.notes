@@ -1,9 +1,11 @@
-!$Id: release.notes,v 1.25 2009-01-14 21:05:42 graven Exp $
+!$Id: release.notes,v 1.26 2009-01-15 11:22:54 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltRawData
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Writers and Readers, Makers of persisted TES info
 !-----------------------------------------------------------------------------
+
+!========================== HltRawData v1r8 2009-01-15 ===================
 ! 2009-01-13 - Gerhard Raven
  - follow changes to IHltDataSvc::selection in HltBase
 
