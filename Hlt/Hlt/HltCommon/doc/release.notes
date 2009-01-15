@@ -5,6 +5,10 @@
 !----------------------------------------------------------------------------
 
 !========================== HltCommon v5r0 2009-01-15 ===================
+
+! 2009-01-15 - Gerhard Raven
+ - make HltDataSvc less verbose
+
 ! 2009-01-14 - Gerhard Raven
  - follow changes to IHltDataSvc::selection in HltBase
  - record dependencies & producers in HltDataSvc

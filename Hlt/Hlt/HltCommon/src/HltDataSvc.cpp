@@ -225,23 +225,23 @@ void HltDataSvc::handle( const Incident& i) {
         // FIXME: this incident is never generated ;-(
   } else if (i.type()==IncidentType::BeginEvent) {
       if (!m_beginEventCalled) {
-        info() << " first event seen, locking and storing dependency graph " << endmsg;
+        debug() << " first event seen, locking and storing dependency graph " << endmsg;
         for ( std::vector<std::pair<const IAlgorithm*,const Hlt::Selection*> >::const_iterator i  = m_parents.begin();
               i != m_parents.end(); ++i) {
           std::string selName = i->second->id().str();
           m_producers[ selName ] = i->first->name();
-          info() << " producer[ " << selName << " ] = " << i->first->name()  << endmsg;
+          debug() << " producer[ " << selName << " ] = " << i->first->name()  << endmsg;
           
           std::vector<stringKey>::const_iterator d= i->second->inputSelectionsIDs().begin();
           std::vector<std::string>& deps = m_dependencies[ selName ];
           while (d!=i->second->inputSelectionsIDs().end()) deps.push_back( *d++ );
 
-          info() << " dependencies[ " << selName << " ] = [" ;
+          debug() << " dependencies[ " << selName << " ] = [" ;
           for ( std::vector<std::string>::const_iterator ii  = m_dependencies[ selName ].begin();
                                                          ii != m_dependencies[ selName ].end(); ++ii ) {
-                info() << " " << *ii ;
+                debug() << " " << *ii ;
           }
-          info() << " ] " << endmsg;
+          debug() << " ] " << endmsg;
         }
 
         m_beginEventCalled = true;
