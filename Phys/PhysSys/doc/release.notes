@@ -3,18 +3,30 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
-! 2008-12-22 - Patrick Koppenburg
- - Removed all options.
+</PRE><H1><A NAME=v8r0>2009-01-15 Phys v8r0 </A></H1><PRE>
 
-! 2008-12-17 - Patrick Koppenburg
- - Added PhysConf for configuration
+###############################################################################
+#                                  PHYS v8r0                                  #
+###############################################################################
 
-! 2008-12-05 - Patrick Koppenburg
- - New DaVinciMonitors for DQ
+  Backward incompatible version as far as configuration is concerned.
 
-! 2008-12-03 - Patrick Koppenburg
- - Moved StandardOptions to here
- - Increment to v7r4
+  Highlights: 
+
+  * New package Phys/PhysConf containing the configuration of physics
+packages. Do not call directly, it is used internally in DaVinci().
+
+  * ALL .opts files removed from all packages. They have been replaced
+by .py options or configurables where necessary. (Juan, Patrick)
+
+  * Migrate to new particle property service
+  
+  * VertexFit : Improvements in PVReFitterAlg. Steer choice of PV re-fitting interface and implementation from properties. (Juan)
+
+  * ParticleMaker : More robust pi0 making for 2008 MC (Olivier)
+
+  * DaVinciMonitors : New package for all Particle-level DQ (Patrick)
+
 
 </PRE><H1><A NAME=v7r3>2008-11-26 Phys v7r3 </A></H1><PRE>
 
