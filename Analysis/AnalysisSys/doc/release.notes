@@ -3,12 +3,39 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
-! 2008-12-22 - Patrick Koppenburg
- - Remove options
+</PRE><H1><A NAME=v3r0>2009-01-15 Analysis v3r0 </A></H1><PRE>
 
-! 2008-12-17 - Patrick Koppenburg
- - New AnalysisConf package for configuration
+ - Based on LHCb v26r1 and Gaudi v20r4
 
+  Backward incompatible version as far as configuration is concerned. 
+
+ Highlights:
+
+  * Many .opts files removed from all packages. They have been replaced
+by .py options or configurables where necessary. (Juan, Patrick)
+  - Warning : many .opts files still in the release (especially in
+PhysSel) do not work anymore. Follow this recipe to adapt:
+
+    https://twiki.cern.ch/twiki/bin/view/LHCb/DaVinciConfigurable
+
+  * New package Phys/AnalysisConf containing the configuration of
+analysis and MC packages. Do not call directly, it is used internally in
+DaVinci() (Patrick)
+
+  * Migration to new Particle Property service
+
+  * Tools/Stripping : Declared obsolete. Kept for backward-compatibility.
+
+  * Tutorial/Analysis : Adpated to DaVinci v22r0.
+ 
+  * Phys/DecayTreeTuple : Additions to geometry. More variables. Now IP
+and FD come in three flavours: Best PV, Best PV of mother, Origin (i.e.
+mother) vertex.
+ 
+  * Phys/CommonParticles: First release of python "configurables" for standard particles. Standard particles now accessible via loading of python modules. For details see release notes (Vanya)
+
+  * MicroDST : Automatic creation of algorithm configurables with their typedef name, not mangled name from template specialisation. All packaged in MicroDST.MicroDSTAlgorithm module, available in MicroDST/MicroDSTConf. Ex/MicroDSTExample adapted to use DaVinci() configurable and new particle property service. (Juan)
+  
 </PRE><H1><A NAME=v2r3>2008-11-26 Analysis v2r3 </A></H1><PRE>
 
  - Based on LHCb v26r0 and Gaudi v20r3
