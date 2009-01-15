@@ -4,6 +4,7 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!========================== HltCommon v5r0 2009-01-15 ===================
 ! 2009-01-14 - Gerhard Raven
  - follow changes to IHltDataSvc::selection in HltBase
  - record dependencies & producers in HltDataSvc
