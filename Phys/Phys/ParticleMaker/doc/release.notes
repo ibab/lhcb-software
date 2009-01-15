@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.87 2009-01-09 15:23:30 odescham Exp $ 
+! $Id: release.notes,v 1.88 2009-01-15 10:09:32 jpalac Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : Chris Jones, J. Palacios
 !==============================================================================
 
+!======================== ParticleMaker v4r2 2009-01-15 ===================
 
 ! 2008-01-09 - Olivier Deschamps 
  - PhotonMaker.cpp : add protection against negative energy caloHypo
