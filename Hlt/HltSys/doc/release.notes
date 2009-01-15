@@ -5,8 +5,18 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+</PRE><H1><A NAME=v4r4>2009-01-15 HltSys v5r0</A></H1><PRE>
+ This version is based on LHCb v26r1 and Gaudi v20r4
+
+ - Major changes in configuration. Most .opts files are gone.
+   "OldStyle" configuration removed.
+ - Changes in infrastructure. See HltBase and HltCommon.
+ - Improvements in many alleys.
+ - Only changes in configuration in Hlt2.
+
+!========================== HltSys v5r0 2009-01-15 ===================
 ! 2008-11-30 - Patrick Koppenburg
- - LoKiHt moved to LHCb
+ - LoKiHlt moved to LHCb
 
 </PRE><H1><A NAME=v4r4>2008-11-24 HltSys v4r4</A></H1><PRE>
 
