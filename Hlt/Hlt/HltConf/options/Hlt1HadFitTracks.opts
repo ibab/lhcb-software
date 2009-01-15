@@ -36,3 +36,14 @@ Hlt1SoftDiHadronVUFitTrack.HltTrackUpgradeTool.HltTrackFit.Fit.Extrapolator.Mate
 Hlt1SoftDiHadronVUFitTrack.HltTrackUpgradeTool.HltTrackFit.Fit.Extrapolator.ExtrapolatorSelection.LongFieldExtrapolatorType="TrackHerabExtrapolator";
 Hlt1SoftDiHadronVUFitTrack.HltTrackUpgradeTool.HltTrackFit.Fit.Extrapolator.ExtrapolatorSelection.LongFieldExtrapolatorName="TrackHerabExtrapolator";
 
+// For the muon+track line:
+Hlt1MuonTrackVUFitVertex.HltTrackUpgradeTool.HltTrackFit.Fit.MaxNumberOutliers = 0;
+Hlt1MuonTrackVUFitVertex.HltTrackUpgradeTool.HltTrackFit.Fit.NumberFitIterations = 1;
+Hlt1MuonTrackVUFitVertex.HltTrackUpgradeTool.HltTrackFit.Fit.MaterialLocator = "SimplifiedMaterialLocator";
+Hlt1MuonTrackVUFitVertex.HltTrackUpgradeTool.HltTrackFit.Fit.ZPositions = [];
+Hlt1MuonTrackVUFitVertex.HltTrackUpgradeTool.HltTrackFit.Fit.MeasProvider.IgnoreTT = true;
+Hlt1MuonTrackVUFitVertex.HltTrackUpgradeTool.HltTrackFit.Fit.NodeFitter.BiDirectionalFit=false;
+Hlt1MuonTrackVUFitVertex.HltTrackUpgradeTool.HltTrackFit.Fit.NodeFitter.Smooth=false;
+Hlt1MuonTrackVUFitVertex.HltTrackUpgradeTool.HltTrackFit.Fit.Extrapolator.MaterialLocator="SimplifiedMaterialLocator";
+Hlt1MuonTrackVUFitVertex.HltTrackUpgradeTool.HltTrackFit.Fit.Extrapolator.ExtrapolatorSelection.LongFieldExtrapolatorType="TrackHerabExtrapolator";
+Hlt1MuonTrackVUFitVertex.HltTrackUpgradeTool.HltTrackFit.Fit.Extrapolator.ExtrapolatorSelection.LongFieldExtrapolatorName="TrackHerabExtrapolator";

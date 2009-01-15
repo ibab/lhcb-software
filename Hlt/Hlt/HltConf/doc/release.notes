@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.119 2009-01-15 20:25:47 graven Exp $ 
+! $Id: release.notes,v 1.120 2009-01-15 21:23:14 aperezca Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -6,6 +6,10 @@
 ! -----------------------------------------------------------------------------
 
 !========================== HltConf v2r0 2009-01-15 ===================
+! 2009-01-15 - Antonio Perez-Calero
+ - rewrite muon+track inside HltMuonLines.py, now also using fast fit as the hadron alley
+ - introduced muon+track in Hlt1HadFitTracks.opts for this purpose
+
 ! 2009-01-15 - Gerhard Raven
  - update naming convention for L0 candidates, see comments in HltL0Candidates.py
  - completely remove oldStyle from existence
