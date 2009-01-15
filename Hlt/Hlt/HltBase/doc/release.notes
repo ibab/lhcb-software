@@ -4,6 +4,7 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+!========================== HltBase v6r0 2009-01-15 ===================
 ! 2009-01-14 - Gerhard Raven
  - add const version of Hlt::Selection::down_cast
  - change IHltDataSvc::selection to return pointer instead of ref:
