@@ -1,4 +1,14 @@
-"""
-$Id: MicroDSTAlgorithm.py,v 1.2 2009-01-13 16:35:57 jpalac Exp $
-File to include any necessary algorithm configurations.
-"""
+from Gaudi.Configuration import *
+from Configurables import CopyRelatedMCParticles
+from Configurables import CopyRecHeader
+from Configurables import CopyProtoParticles
+from Configurables import CopyPrimaryVertices
+from Configurables import CopyParticles
+from Configurables import CopyParticle2PVLink.h
+from Configurables import CopyODIN
+from Configurables import CopyMCParticles
+from Configurables import CopyMCHeader
+from Configurables import CopyL0DUReport
+from Configurables import CopyHltSummary
+from Configurables import CopyFlavourTag
+
