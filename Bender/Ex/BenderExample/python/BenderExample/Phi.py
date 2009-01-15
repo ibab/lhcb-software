@@ -25,7 +25,7 @@ The simple Bender-based example plot dikaon mass peak
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ "
 # =============================================================================
 ## import everything form bender 
 from Bender.Main import * 
@@ -77,12 +77,16 @@ def configure () :
     Configure the job
     """
     
-    importOptions ('$DAVINCIROOT/options/DaVinciCommon.opts')
+    from Configurables import DaVinci, HistogramPersistencySvc
     
-    from Configurables import HistogramPersistencySvc
+    daVinci = DaVinci (
+        DataType   = 'DC06' , # default  
+        Simulation = True   ,
+        HltType    = 'NONE' 
+        ) 
+    
     HistogramPersistencySvc ( OutputFile = 'Phi_Histos.root' ) 
-    
-    
+       
     ## get the actual application manager (create if needed)
     gaudi = appMgr() 
     

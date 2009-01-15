@@ -25,7 +25,7 @@ The simple Bender-based example: count the particles
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $   "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $   "
 # =============================================================================
 
 # =============================================================================
@@ -84,11 +84,12 @@ def configure ( **args ) :
     Configure the job
     """
     
-    ## read external configruation files
-    importOptions('$DAVINCIROOT/options/DaVinciCommon.opts')
-    importOptions('$COMMONPARTICLESROOT/options/StandardKaons.opts')
-    importOptions('$COMMONPARTICLESROOT/options/StandardPions.opts')
-    importOptions('$COMMONPARTICLESROOT/options/StandardMuons.opts')
+    from Configurables import DaVinci
+    
+    daVinci = DaVinci (
+        DataType   = 'DC06'      , # default  
+        Simulation = True        ,
+        HltType    = 'Hlt1+Hlt2' ) 
 
     ## get (create if needed) the actual application manager
     gaudi = appMgr()

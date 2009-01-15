@@ -25,7 +25,7 @@ The simple Bender-based example for Bs-> Jpsi phi selection
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ "
 # =============================================================================
 ## import everything from bender 
 from Bender.All                import *
@@ -202,17 +202,16 @@ class Bs2PsiPhi(AlgoMC) :
 def configure ( **args ) :
     """ Configure the job """
     
-    ## read external configuration files
-    importOptions('$DAVINCIROOT/options/DaVinciCommon.opts')
-    importOptions('$COMMONPARTICLESROOT/options/StandardKaons.opts')
-    importOptions('$COMMONPARTICLESROOT/options/StandardMuons.opts')
+    from Configurables import NTupleSvc, HistogramPersistencySvc, DaVinci
     
-    from Configurables import NTupleSvc, HistogramPersistencySvc
+    daVinci = DaVinci (
+        DataType   = 'DC06'      , # default  
+        Simulation = True        ,
+        HltType    = 'Hlt1+Hlt2' ) 
+    
     HistogramPersistencySvc ( OutputFile = 'Bs2PsiPhi_Histos.root' ) 
     NTupleSvc ( Output = [ "PsiPhi DATAFILE='Bs2PsiPhi_Tuples.root' TYPE='ROOT' OPT='NEW'"] )
     
-    
-
     ## get the actual application manager (create if needed)
     gaudi = appMgr()
     

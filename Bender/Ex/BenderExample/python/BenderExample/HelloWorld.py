@@ -25,7 +25,7 @@ The most trivial Bender-based  'Hello,World' example
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ "
 # =============================================================================
 ## import everything from Bender 
 from Bender.Main import * 
@@ -52,16 +52,20 @@ def configure ( **args ) :
     """
     Configure the job
     """
-
-    ## read external configruation files
-    importOptions('$DAVINCIROOT/options/DaVinciCommon.opts') 
-
+    
+    from Configurables import DaVinci
+    
+    daVinci = DaVinci (
+        DataType   = 'DC06'      , # default  
+        Simulation = True        ,
+        HltType    = 'Hlt1+Hlt2' ) 
+    
     ## get or create the Application Manager
     gaudi = appMgr()
     
     ## create local algorithm:
     hello = HelloWorld ('Hello')
-
+    
     ## set it as main algorithm to be executed 
     gaudi.setAlgorithms ( hello )
     

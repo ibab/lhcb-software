@@ -25,7 +25,7 @@ The simple Bender-based example plot dikaon mass peak with MC-truth
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ "
 # =============================================================================
 ## import everything form bender
 from Bender.MainMC import *
@@ -91,13 +91,16 @@ def configure ( **args ) :
     Configure the job
     """
     
-    ## read the external configuration files
-    importOptions('$DAVINCIROOT/options/DaVinciCommon.opts')
-    importOptions('$COMMONPARTICLESROOT/options/StandardKaons.opts')
     
-    from Configurables import HistogramPersistencySvc
+    from Configurables import DaVinci, HistogramPersistencySvc
+    
+    daVinci = DaVinci (
+        DataType   = 'DC06' , # default  
+        Simulation = True   ,
+        HltType    = 'NONE'
+        ) 
+    
     HistogramPersistencySvc ( OutputFile = 'PhiMC_Histos.root' ) 
-
 
     gaudi = appMgr() 
     
