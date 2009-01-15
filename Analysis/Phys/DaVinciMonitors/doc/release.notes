@@ -4,8 +4,10 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+!========================== DaVinciMonitors v1r0 2009-01-15 ==================
+
 ! 2009-01-12 - Patrick Koppenburg
- - Adapt to v22r0
+ - Adapt to DV v22r0
 
 ! 2008-12-10 - Patrick Koppenburg
  - PidPlotTool : Add some meat 
