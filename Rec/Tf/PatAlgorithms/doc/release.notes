@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2009-01-16 - Marco Cattaneo
+ - Fix two ggc 4.3 warnings
+
 !========================== PatAlgorithms v3r14 2009-01-12 ===================
 ! 2008-12-04 - Marco Cattaneo
  - Adapt to new location of IPatDebugTTTool.h in PatKernel

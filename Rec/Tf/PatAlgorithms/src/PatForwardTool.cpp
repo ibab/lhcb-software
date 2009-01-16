@@ -1,4 +1,4 @@
-// $Id: PatForwardTool.cpp,v 1.12 2008-08-21 18:11:27 smenzeme Exp $
+// $Id: PatForwardTool.cpp,v 1.13 2009-01-16 10:10:01 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -224,12 +224,13 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
 
     double qOverP = 1000. * m_fwdTool->qOverP( temp );  // in 1/GeV
 
-    if (m_withoutBField)
+    if (m_withoutBField) {
       if (m_minMomentum !=0)
         qOverP = 1/m_minMomentum;
       else
         qOverP = 1;
-
+    }
+    
     double tol = m_maxSpreadY + m_maxSpreadSlopeY * qOverP *  qOverP;
 
     debug() << "Adding stereo coordinates, tol = " << tol << endreq;

@@ -1,4 +1,4 @@
-// $Id: PatSeedTool.cpp,v 1.7 2008-08-26 09:57:02 mschille Exp $
+// $Id: PatSeedTool.cpp,v 1.8 2009-01-16 10:10:01 cattanem Exp $
 // Include files
 
 #include <cmath>
@@ -226,7 +226,7 @@ void PatSeedTool::fitInitialXProjection (
   // we use builtin arrays because we know there are three stations, and
   // the cost of allocating memory dynamically for std::vector is too
   // high
-  boost::array<double, 3> largestDrift = { 0., 0., 0. };
+  boost::array<double, 3> largestDrift = {{ 0., 0., 0. }};
   boost::array<PatFwdHit*, 3> seeds;
   BOOST_FOREACH( PatFwdHit* hit, track.coords() ) {
     if ( hit->hit()->type() != Tf::RegionID::OT ) continue;
