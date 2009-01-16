@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.h,v 1.12 2009-01-13 11:53:14 marcocle Exp $
+// $Id: UpdateManagerSvc.h,v 1.13 2009-01-16 12:03:46 ocallot Exp $
 #ifndef UPDATEMANAGERSVC_H
 #define UPDATEMANAGERSVC_H 1
 
@@ -122,14 +122,9 @@ private:
   /// Hashmap for fast string access
   GaudiUtils::HashMap<std::string, Item*> m_pathMap;
 
-  /// Hashmap for fast pointer access
-  GaudiUtils::Map<const void*, Item*> m_pointerMap;
-
   void insertInMap( Item* it ) {
     const std::pair<const std::string,Item*> tempS( it->path, it );
     m_pathMap.insert( tempS );
-    const std::pair<const void*,Item*> tempP( it->ptr, it );
-    m_pointerMap.insert( tempP );
   }
 
   /// Connects two items in a parent-child relationship through the give member function.

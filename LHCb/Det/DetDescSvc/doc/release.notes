@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.57 2009-01-16 11:01:12 marcocle Exp $ 
+! $Id: release.notes,v 1.58 2009-01-16 12:03:46 ocallot Exp $ 
 ! =============================================================================
 ! package DetDescSvc
 ! package manager : Marco Clemencic, Juan Palacios ?
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
+
+! 2009-01-16 - Olivier Callot
+ - Removed the pointer map in UpdateManagerSvc: The pointer value was updated
+   on the objects in too many locations. Speed-up decreased a little.
 
 ! 2009-01-16 - Marco Clemencic
  - Fixed a memory leak occurring when registering without condition but passing

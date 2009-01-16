@@ -16,7 +16,10 @@ inline UpdateManagerSvc::Item *UpdateManagerSvc::findItem(const std::string &pat
   return const_cast<Item*>( m_pathMap(path) );
 }
 inline UpdateManagerSvc::Item *UpdateManagerSvc::findItem(void *p) const {
-  return const_cast<Item*>( m_pointerMap(p) );
+  for (Item::ItemList::const_reverse_iterator i = m_all_items.rbegin(); i != m_all_items.rend(); ++i){
+    if ((*i)->match(p)) return *i;
+  }
+  return NULL;
 }
 inline UpdateManagerSvc::Item *UpdateManagerSvc::findItem(BaseObjectMemberFunction *mf) const {
   Item *item = NULL;

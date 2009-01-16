@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.cpp,v 1.27 2009-01-16 11:01:12 marcocle Exp $
+// $Id: UpdateManagerSvc.cpp,v 1.28 2009-01-16 12:03:46 ocallot Exp $
 // Include files
 
 #include "GaudiKernel/SvcFactory.h"
@@ -257,10 +257,7 @@ void UpdateManagerSvc::i_registerCondition(const std::string &condition, BaseObj
  } else {
     if ( ! mf_item->ptr ) { // the item is know but not its pointer (e.g. after a purge)
       mf_item->vdo = mf->castToValidDataObject();
-      m_pointerMap.erase( mf_item->ptr );   //== Delete the entry with this empty key
       mf_item->ptr = mf->castToVoid();
-      const std::pair<const void*,Item*> tempP( mf_item->ptr, mf_item );
-      m_pointerMap.insert( tempP );   //== Register the new pointer
     }
   }
 
@@ -345,10 +342,7 @@ void UpdateManagerSvc::i_registerCondition(void *obj, BaseObjectMemberFunction *
   }
   if ( ! mf_item->ptr ) { // the item is know but not its pointer (e.g. after a purge)
     mf_item->vdo = mf->castToValidDataObject();
-    m_pointerMap.erase( mf_item->ptr );   //== Delete the entry with this empty key
     mf_item->ptr = mf->castToVoid();
-    const std::pair<const void*,Item*> tempP( mf_item->ptr, mf_item );
-    m_pointerMap.insert( tempP );  //== Register the new pointer
   }
   link(mf_item,mf,cond_item);
   // a new item means that we need an update
@@ -613,7 +607,6 @@ void UpdateManagerSvc::i_unregister(void *instance){
 
     // The erased item shoud also disappear from the maps, if this is the last for this key, i.e. isHead
     m_pathMap.erase( item->path );
-    m_pointerMap.erase( item->ptr );
 
     // finally we can delete the Item
     delete item;
