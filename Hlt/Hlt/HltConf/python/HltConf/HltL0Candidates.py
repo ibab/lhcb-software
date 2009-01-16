@@ -1,6 +1,6 @@
 #
 #==============================================================================
-# $Id: HltL0Candidates.py,v 1.7 2009-01-15 20:25:47 graven Exp $
+# $Id: HltL0Candidates.py,v 1.8 2009-01-16 07:56:33 graven Exp $
 #==============================================================================
 #
 # Module to define the conversion of L0 candidates across several HltLines
@@ -60,9 +60,9 @@ _l0CaloTypes = [ 'Electron','Photon','Hadron' ,'LocalPi0','GlobalPi0' ]
 
 _dict = dict()
 for i in _l0MuonChannels : _dict.update( _muon( i, _cname(i) ) )
-for i in _l0MuonTypes :    _dict.update( _muon( 'All' + i, _tname(i) ) )
+for i in _l0MuonTypes :    _dict.update( _muon( 'All' + i, _tname( 'All' + i) ) )
 for i in _l0CaloChannels : _dict.update( _calo( i, _cname(i) ) )
-for i in _l0CaloTypes :    _dict.update( _calo( 'All' + i, _tname(i) ) )
+for i in _l0CaloTypes :    _dict.update( _calo( 'All' + i, _tname( 'All' + i) ) )
 
 def L0Channels() :
     #TODO: strip 'fake' 'all' entries...
