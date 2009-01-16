@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.44 2009-01-12 15:36:55 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.45 2009-01-16 07:15:09 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -53,7 +53,6 @@ class Moore(LHCbConfigurableUser):
         , "TCKpersistency" :   'file' # which method to use for TCK data? valid is 'file' and 'sqlite'
         , "enableAuditor" :    [ ]  # put here eg . [ NameAuditor(), ChronoAuditor(), MemoryAuditor() ]
         , "userAlgorithms":    [ ]  # put here user algorithms to add
-        , "oldStyle" :         False# old style options configuration
         , "verbose" :          True # whether or not to print Hlt sequence
         }   
                 
@@ -137,7 +136,7 @@ class Moore(LHCbConfigurableUser):
                               , ConfigAccessSvc = self.getConfigAccessSvc().getFullName() ) 
             ApplicationMgr().ExtSvc.append(cfg.getFullName())
         else:
-            for i in [ 'hltType','oldStyle','userAlgorithms','verbose' ] : self.setOtherProp( HltConf(), i )
+            for i in [ 'hltType','userAlgorithms','verbose' ] : self.setOtherProp( HltConf(), i )
             log.info( HltConf() )
             
         if self.getProp("generateConfig") :
