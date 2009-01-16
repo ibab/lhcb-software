@@ -1,13 +1,13 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.36 2009-01-12 18:59:46 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.37 2009-01-16 18:34:42 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 from Configurables import GaudiSequencer
-from Configurables import ( LHCbConfigurableUser, LHCbApp, PhysConf, AnalysisConf, HltConf )
+from Configurables import ( LHCbConfigurableUser, LHCbApp, PhysConf, AnalysisConf, HltConf, DstConf )
 import GaudiKernel.ProcessJobOptions
 
 class DaVinci(LHCbConfigurableUser) :
@@ -35,19 +35,30 @@ class DaVinci(LHCbConfigurableUser) :
        , "MainOptions"        : ""            # Main option file to execute
        , "UserAlgorithms"     : []            # User algorithms to run.
        , "RedoMCLinks"        : False         # On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association.
-         
+       , "InputType"          : "DST"         # or "DIGI" or "ETC" or "RDST" or "DST". Nothing means the input type is compatible with being a DST. 
          # Hlt running
        , "HltType"            : ''            # HltType : No Hlt. Use Hlt1+Hlt2 to run Hlt
        , "HltUserAlgorithms"  : [ ]           # put here user algorithms to add
        , "ReplaceL0BanksWithEmulated" : False # Re-run L0 
        , "Hlt2IgnoreHlt1Decision" : False     # run Hlt2 even if Hlt1 failed
-       , "InputType"          : "DST"         # or "DIGI" or "ETC" or "RDST" or "DST". Most of the time it's irrelevant.
        }
 
     __used_configurables__ = [ LHCbApp, PhysConf, AnalysisConf, HltConf ]
 
     ## Known monitoring sequences run by default
     KnownMonitors        = []    
+
+    def configureSubPackages(self):
+        """
+        Define DB and so on
+        """
+        # Delegate handling to LHCbApp configurable
+        self.setOtherProps(LHCbApp(),["DataType","UseOracle","Simulation"])
+        LHCbApp.DDDBtag = self.getProp("DDDBtag")
+        LHCbApp.CondDBtag = self.getProp("CondDBtag")
+        log.info("Set DDDBtag "+self.getProp("DDDBtag"))
+        self.setOtherProps(PhysConf(),["DataType","Simulation"])
+        self.setOtherProps(AnalysisConf(),["DataType","Simulation"])
 
     def initSeq(self):
         """
@@ -155,24 +166,18 @@ class DaVinci(LHCbConfigurableUser) :
         """
         return LHCbApp().evtMax()
     
-    def defineDB(self):
+    def configureInput(self):
         """
-        Define DB
+        Tune initialisation 
         """
-        # Delegate handling to LHCbApp configurable
-        self.setOtherProps(LHCbApp(),["DataType","UseOracle","Simulation"])
-        LHCbApp.DDDBtag = self.getProp("DDDBtag")
-        LHCbApp.CondDBtag = self.getProp("CondDBtag")
-        log.info("Set DDDBtag "+self.getProp("DDDBtag"))
-
-    def standardParticles(self):
-        """
-        define standard particles on DoD service
-        """
-        ApplicationMgr().ExtSvc +=  [ DataOnDemandSvc() ]            
-        importOptions("$COMMONPARTICLESROOT/options/StandardOptions.py")
-        if (  self.getProp("DataType")=='DC06'):
-            importOptions("$COMMONPARTICLESROOT/options/StandardDC06Options.opts")
+        # POOL Persistency
+        importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
+        # Get the event time (for CondDb) from ODIN
+        from Configurables import EventClockSvc
+        EventClockSvc().EventTimeDecoder = "OdinTimeDecoder";
+        # DST unpacking, not for DC06
+        if ( self.getProp("DataType") != "DC06" ):
+            DstConf().EnableUnpack = True
 
     def moniSequence(self):
         """
@@ -212,23 +217,16 @@ class DaVinci(LHCbConfigurableUser) :
         log.info("Applying DaVinci configuration")
         log.info( self )
         self.checkOptions()
+        self.configureSubPackages()
         importOptions("$STDOPTS/LHCbApplication.opts") # to get units in .opts files
+        self.configureInput()
         # start with init
         self.initSeq()
         if (self.getProp("HltType")!=''):
             self.hlt()
         self.defineMonitors()
-        self.setOtherProps(PhysConf(),["DataType","Simulation"])
-        self.setOtherProps(AnalysisConf(),["DataType","Simulation"])
-#       @todo Remove this from Common and put it here
-#        if ( self.getProp( "DataType" ) == 'DC06' ):
-#            importOptions ("$DAVINCIROOT/options/DaVinciProtoPCalibrate.opts")
-#        if ( self.getProp( "DataType" ) != 'DC06' ):
-#            GaudiSequencer("ProtoPRecalibration").Members = []
         self.defineEvents()
         self.defineInput()
-        self.defineDB()
-        self.standardParticles()
         self.outputFiles()
         
         # main sequence

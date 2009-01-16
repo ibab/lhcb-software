@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.297 2009-01-12 13:02:31 pkoppenb Exp $
+! $Id: release.notes,v 1.298 2009-01-16 18:34:41 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,12 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-01-16 - Patrick Koppenburg
+ - DaVinci.py : moved exampleSeq to monitoring
+ - DaVinci() : 
+   . standardParticles moved to AnalysisConf
+   .  configureInput moved from PhysConf
 
 ! 2009-01-12 - Patrick Koppenburg
  - Added a DaVinciMonitoringSequence

@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DaVinci.py,v 1.27 2009-01-11 13:07:11 pkoppenb Exp $
+# $Id: DaVinci.py,v 1.28 2009-01-16 18:34:42 pkoppenb Exp $
 #
 # Options for a typical DaVinci job
 #
@@ -54,7 +54,8 @@ DaVinci().DataType = "2008"                    # Default is "DC06"
 DaVinci().Simulation   = True
 DaVinci().HistogramFile = "DVHistos_1.root"    # Histogram file
 DaVinci().TupleFile = "DVNtuples.root"         # Ntuple
-DaVinci().UserAlgorithms = [ preselSeq, exampleSeq, tag ]
+DaVinci().UserAlgorithms = [ preselSeq, tag ]  # The algorithms
+DaVinci().MoniSequence = [ exampleSeq ]        # Monitoring
 # DaVinci().MainOptions  = "" # None
 ########################################################################
 # HLT
