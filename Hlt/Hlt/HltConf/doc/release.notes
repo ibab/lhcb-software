@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.120 2009-01-15 21:23:14 aperezca Exp $ 
+! $Id: release.notes,v 1.121 2009-01-16 22:27:29 aperezca Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -6,6 +6,10 @@
 ! -----------------------------------------------------------------------------
 
 !========================== HltConf v2r0 2009-01-15 ===================
+! 2009-01-15 - Antonio Perez-Calero
+ - further refinements in muon+track line in HltMuonLines.py: move cut values 
+   to __slots__ and added all cuts to be redone after track fast fit 
+
 ! 2009-01-15 - Antonio Perez-Calero
  - rewrite muon+track inside HltMuonLines.py, now also using fast fit as the hadron alley
  - introduced muon+track in Hlt1HadFitTracks.opts for this purpose

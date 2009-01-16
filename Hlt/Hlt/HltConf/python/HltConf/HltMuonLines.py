@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonLines.py,v 1.3 2009-01-15 21:23:14 aperezca Exp $
+# $Id: HltMuonLines.py,v 1.4 2009-01-16 22:27:29 aperezca Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -33,8 +33,19 @@ from HltConf.HltL0Candidates import *
 
 
 class HltMuonLinesConf(LHCbConfigurableUser) :
-    # steering variables
-    __slots__ = { }
+    # steering variables, so far only for the Muon+Track
+    __slots__ = { 'MuTrackL0DU'     :"L0_CHANNEL('Muon') | L0_CHANNEL('MuonNoGlob')"  
+                  ,'MuTrackMuPt'    : 1000.
+                  ,'MuTrackMuIP'    : 0.025
+                  ,'MuTrackTrPt'    : 800.
+                  ,'MuTrackTrIP'    : 0.05
+                  ,'MuTrackDoca'    : 0.4
+                  ,'MuTrackDZ'      : 1.5
+                  ,'MuTrackDimuMass': 1000.
+                  ,'MuTrackPoint'   : 0.4
+                  ,'MuTrackTrChi2'  : 10.
+                  }
+
 
     def __apply_configuration__(self) : 
         importOptions('$HLTCONFROOT/options/TsaTool.opts')
@@ -363,16 +374,16 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
         # MUON+TRACK ALLEY (Antonio Perez-Calero, aperez@ecm.ub.es):
         #-----------------------------------------------------
 
-
         MuonTrack= Line( 'MuonTrack'
-                         , L0DU = "L0_CHANNEL('Muon') | L0_CHANNEL('MuonNoGlob')"
+                         , L0DU = str(self.getProp('MuTrackL0DU'))
                          , algos =
                          [ singleMuonPrep
                            , RecoRZPV
                            
                            , Member( 'TF','Muon' # // Select Muons with IP and pT
                                      , HistogramUpdatePeriod = 0
-                                     , FilterDescriptor = ['PT,>,1000.', 'IP_PV2D,||>,0.025' ]
+                                     , FilterDescriptor = ['PT,>,'+str(self.getProp('MuTrackMuPt')),
+                                                           'IP_PV2D,||>,'+str(self.getProp('MuTrackMuIP')) ]
                                      , HistoDescriptor = { 'PT': ( 'PT',0.,6000.,400), 'PTBest': ( 'PTBest',0.,6000.,400),
                                                            'IP': ( 'IP',-1.,3.,400), 'IPBest': ( 'IPBest',-1.,3.,400)
                                                            }
@@ -383,7 +394,8 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
                            , Member( 'TF', 'CompanionVelo' # // Select Velo tracks with an IP and good DOCA to Muon
                                      , InputSelection  = HltTrackUpgrade('Hlt1RecoVelo')
                                      , HistogramUpdatePeriod = 0
-                                     , FilterDescriptor = ['IP_PV2D,||>,0.05', 'DOCA_%TFMuon,<,0.4' ]
+                                     , FilterDescriptor = ['IP_PV2D,||>,'+str(self.getProp('MuTrackTrIP')),
+                                                           'DOCA_%TFMuon,<,'+str(self.getProp('MuTrackDoca')) ]
                                      , HistoDescriptor = { 'IP': ( 'IP',-1.,3.,400), 'IPBest': ( 'IPBest',-1.,3.,400),
                                                            'DOCA': ( 'DOCA',0.,2.,400), 'DOCABest': ( 'DOCABest',0.,1.,400)
                                                            }
@@ -391,7 +403,7 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
                            , Member( 'VM2', 'VeloVertex' # // Make vertices with muon and VELO companion tracks, filtered by doca again
                                      , InputSelection1  = '%TFMuon'
                                      , InputSelection2  = '%TFCompanionVelo'
-                                     , FilterDescriptor = ['DOCA,<,0.4' ]
+                                     , FilterDescriptor = ['DOCA,<,'+str(self.getProp('MuTrackDoca')) ]
                                      , HistogramUpdatePeriod = 0
                                      , HistoDescriptor = {  'DOCA': ('DOCA',0.,2.,400), 'DOCABest': ( 'DOCABest',0.,1.,400)
                                                            }
@@ -399,7 +411,7 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
                            
                            , Member( 'VF', 'VeloVertex' # // Filter velo vertices in DZ
                                      , InputSelection  = '%VM2VeloVertex'
-                                     , FilterDescriptor = ['VertexDz_PV2D,>,2.' ]
+                                     , FilterDescriptor = ['VertexDz_PV2D,>,'+str(self.getProp('MuTrackDZ')) ]
                                      , HistogramUpdatePeriod = 0
                                      , HistoDescriptor = { 'VertexDz': ( 'VertexDz',-10.,50.,100), 'VertexDzBest': ( 'VertexDzBest',-10.,50.,100) }
                                      )
@@ -411,7 +423,9 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
 
                            , Member( 'VF', 'Vertex' # // Select vertices if Pt, pointing, and distance
                                      , InputSelection  = '%VUVertex'
-                                     , FilterDescriptor = ['VertexMinPT,>,800.','VertexPointing_PV2D,<,0.4','VertexDimuonMass,>,1000.']
+                                     , FilterDescriptor = ['VertexMinPT,>,'+str(self.getProp('MuTrackTrPt')),
+                                                           'VertexDimuonMass,>,'+str(self.getProp('MuTrackDimuMass')),
+                                                           'VertexPointing_PV2D,<,'+str(self.getProp('MuTrackPoint'))]
                                      , HistogramUpdatePeriod = 0
                                      , HistoDescriptor = { 'VertexPointing': ( 'VertexPointing',0.,1.,100), 'VertexPointingBest': ( 'VertexPointingBest',0.,1.,100),
                                                            'VertexMinPT': ('PT',0.,6000.,100), 'VertexMinPTBest': ('PTBest',0.,6000.,100),
@@ -427,8 +441,13 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
                            , Member ( 'VF', 'Decision' # // Final filter on track quality (Chi2 cut taken from hadron line)
                                       , InputSelection  = '%VUFitVertex'
                                       , OutputSelection = '%Decision'
-                                      , FilterDescriptor = ['FitVertexMaxChi2OverNdf,<,10.',
-                                                            'FitVertexMinIP_PV2D,||>,0.025'
+                                      , FilterDescriptor = ['FitVertexMaxChi2OverNdf,<,'+str(self.getProp('MuTrackTrChi2')),
+                                                            'FitVertexMinIP_PV2D,||>,'+str(self.getProp('MuTrackMuIP')),
+                                                            'FitVertexDOCA,<,'+str(self.getProp('MuTrackDoca')),
+                                                            'FitVertexDz_PV2D,>,'+str(self.getProp('MuTrackDZ')),
+                                                            'FitVertexMinPT,>,'+str(self.getProp('MuTrackTrPt')),
+                                                            'FitVertexDimuonMass,>,'+str(self.getProp('MuTrackDimuMass')),
+                                                            'FitVertexPointing_PV2D,<,'+str(self.getProp('MuTrackPoint'))
                                                             ]
                                       )
                            ]
