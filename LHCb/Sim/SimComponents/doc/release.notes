@@ -5,6 +5,9 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+! 2009-01-16 - Chris Jones
+ - Fix memory leak in MCReconstructible
+
 !====================== SimComponents v2r15 2009-01-08 =======================
 ! 2009-01-08 - Marco Cattaneo
  - Adapt DumpHepMCDecay, DumpHepMCTree, MCDecayFinder, PrintMCDecayTreeTool,

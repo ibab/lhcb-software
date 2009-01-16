@@ -4,7 +4,7 @@
  *  Implementation file for class : MCReconstructible
  *
  *  CVS Log :-
- *  $Id: MCReconstructible.cpp,v 1.11 2008-06-04 09:52:48 mneedham Exp $
+ *  $Id: MCReconstructible.cpp,v 1.12 2009-01-16 08:06:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 28/02/2007
@@ -68,12 +68,9 @@ MCReconstructible::MCReconstructible( const std::string& type,
 MCReconstructible::~MCReconstructible()
 {
   // clean up
-  CriteriaMap::iterator iterC = m_critMap.begin();
-  for (; iterC != m_critMap.end() ;++iterC){
-    LHCb::MC::MCTrackGeomCriteria* crit = iterC->second;
-    delete crit;
-    crit = 0;
-  } // iterC
+  delete m_tkInfo;
+  for ( CriteriaMap::iterator iterC = m_critMap.begin(); 
+	iterC != m_critMap.end(); ++iterC ) { delete iterC->second; }
   m_critMap.clear();  
 }
 
