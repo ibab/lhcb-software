@@ -6,6 +6,11 @@
 
 !========================== HltCommon v5r0 2009-01-15 ===================
 
+! 2009-01-16 - Antonio Perez-Calero
+ - added definition of VertexDOCA in HltFunctions.h
+ - added declaration of VertexDOCA and FitVertexDOCA in HltFunctionFactories.cpp
+   and replicated other filters to be reapplied after the fast track fit 
+
 ! 2009-01-15 - Gerhard Raven
  - make HltDataSvc less verbose
 

@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.10 2008-12-17 15:53:23 hernando Exp $
+// $Id: HltFunctions.h,v 1.11 2009-01-16 22:37:51 aperezca Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -334,6 +334,19 @@ namespace Hlt {
     zen::bifunction<LHCb::Track,LHCb::Track>* clone() const
     {return new DimuonMass();}
   };
+  
+  class VertexDOCA : public Hlt::VertexFunction {
+  public:
+    explicit VertexDOCA() {}
+    double operator() (const LHCb::RecVertex& vertex) const {
+      const LHCb::Track& t1 = *(vertex.tracks()[0]);
+      const LHCb::Track& t2 = *(vertex.tracks()[1]);
+      return HltUtils::closestDistanceMod(t1,t2);
+    }
+    zen::function<LHCb::RecVertex>* clone() const
+    {return new VertexDOCA();}
+  };
+
 
   class VertexDimuonMass : public Hlt::VertexFunction {
   public:

@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactories.cpp,v 1.20 2008-12-18 12:40:51 graven Exp $
+// $Id: HltFunctionFactories.cpp,v 1.21 2009-01-16 22:37:51 aperezca Exp $
 // Include files 
 
 // from Gaudi
@@ -103,13 +103,17 @@ StatusCode HltVertexFunctionFactory::initialize() {
   StatusCode sc = HltTFunctionFactory<LHCb::RecVertex>::initialize();
   
   declare<Hlt::DZ,zen::abs_min,Hlt::VertexSelection>("VertexDz");
+  declare<Hlt::DZ,zen::abs_min,Hlt::VertexSelection>("FitVertexDz");
   declare<Hlt::FC,zen::abs_min,Hlt::VertexSelection>("VertexPointing");
   declare<Hlt::FC,zen::abs_min,Hlt::VertexSelection>("FitVertexPointing");
   declare<Hlt::VertexMinIP,zen::abs_min,Hlt::VertexSelection>("VertexMinIP");
   declare<Hlt::VertexMinIP,zen::abs_min,Hlt::VertexSelection>("FitVertexMinIP");
   declare<Hlt::VertexMatchIDsFraction,zen::abs_max,Hlt::VertexSelection>("VertexMatchIDsFraction");
   
+  declare<Hlt::VertexDOCA>("VertexDOCA");
+  declare<Hlt::VertexDOCA>("FitVertexDOCA");
   declare<Hlt::VertexDimuonMass>("VertexDimuonMass");
+  declare<Hlt::VertexDimuonMass>("FitVertexDimuonMass");
   declare<Hlt::VertexSumPT>("VertexSumPT");
   declare<Hlt::VertexMinPT>("VertexMinPT");
   declare<Hlt::VertexMaxPT>("VertexMaxPT");
