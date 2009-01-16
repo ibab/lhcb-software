@@ -1,7 +1,7 @@
 """
 High level configuration tools for PhysConf
 """
-__version__ = "$Id: Configuration.py,v 1.9 2009-01-09 14:44:52 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.10 2009-01-16 17:53:33 pkoppenb Exp $"
 __author__ = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -9,7 +9,6 @@ from GaudiConf.Configuration import *
 from Configurables import GaudiSequencer
 from Configurables import LoKiSvc
 import GaudiKernel.ProcessJobOptions
-from Configurables import ( DstConf )
 
 class PhysConf(LHCbConfigurableUser) :
     from Configurables import (GaudiSequencer)
@@ -18,7 +17,7 @@ class PhysConf(LHCbConfigurableUser) :
      ,  "Simulation"      : True                               # set to True to use SimCond
         }
 
-    __used_configurables__ = [ DstConf, LHCbApp ]
+    __used_configurables__ = [ LHCbApp ]
 
 #
 # configure reconstruction to be redone
@@ -66,21 +65,6 @@ class PhysConf(LHCbConfigurableUser) :
         recalib.Members += [ RichPIDsFromProtoParticlesAlg("RichPIDsFromProtos") ]
     
 #
-# Initialization
-#
-    def configureInput(self):
-        """
-        Tune initialisation 
-        """
-        # POOL Persistency
-        importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
-        # Get the event time (for CondDb) from ODIN
-        from Configurables import EventClockSvc
-        EventClockSvc().EventTimeDecoder = "OdinTimeDecoder";
-        # DST unpacking, not for DC06
-        if ( self.getProp("DataType") != "DC06" ):
-            DstConf().EnableUnpack = True
-#
 # Data on demand
 #
     def dataOnDemand(self):
@@ -113,7 +97,6 @@ class PhysConf(LHCbConfigurableUser) :
         """
         log.info("Applying Phys configuration")
         self.dataOnDemand()
-        self.configureInput()
 #        self.configureReco() # call it directly
         self.loki()
         

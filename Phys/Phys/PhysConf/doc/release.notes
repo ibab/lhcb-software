@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.10 2009-01-15 09:33:46 jpalac Exp $
+!$Id: release.notes,v 1.11 2009-01-16 17:53:33 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/PhysConf
 ! Responsible : Patrick Koppenburg
@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== PhysConf v1r0 2009-01-15 =========================
+
+! 2009-01-16 - Patrick Koppenburg
+ - Moved configureInput to DaVinci()
 
 ! 2009-01-09 - Patrick Koppenburg
  - Send init seq to master
