@@ -95,15 +95,16 @@ Info can only be read and stored sequencially.'
 
       <method
           name ='initialize'
-          type ='void'
+          type ='bool'
           desc ='initialize existing complete bank for reading'
           >
         <code>
-          if( m_floatLoc )return;
+          if( m_floatLoc )return true;
           unsigned int nObj = numberOfObj();
           m_floatLoc = 1;
           if( nObj ) m_floatLoc += 1 + (nObj-1)/4 ;
           rewind();
+          return true;
         </code>
       </method>
 
@@ -333,7 +334,7 @@ Info can only be read and stored sequencially.'
 
       <method
         name ='initialize'
-        type ='void'
+        type ='bool'
 	argList='unsigned int nObj, unsigned int nAllInfo'
         desc ='create a new bank to hold nObj and max of nAllInfo info words, initialize for writing (does not delete old bank if any)'
         >
@@ -341,12 +342,14 @@ Info can only be read and stored sequencially.'
              unsigned int len = 2;
             if( nObj ) len += (nObj-1)/4;
             if( nAllInfo ) len += 1 +  nAllInfo;
+            if( len  &gt; 0xFFFFL )return false;
             m_location = new unsigned int[len];           
             m_location[0] =   (len &lt;&lt; 16);
             m_location[1] =  0;
             m_floatLoc = 1;
             if( nObj ) m_floatLoc += 1 + (nObj-1)/4 ;
             rewind();
+            return true;
         </code>
       </method>
 

@@ -1,4 +1,4 @@
-// $Id: HltSelReportsWriter.cpp,v 1.5 2008-12-15 21:41:25 tskwarni Exp $
+// $Id: HltSelReportsWriter.cpp,v 1.6 2009-01-16 06:14:20 tskwarni Exp $
 // Include files 
 
 // from Gaudi
@@ -191,7 +191,6 @@ StatusCode HltSelReportsWriter::execute() {
   for( std::vector<const HltObjectSummary*>::const_iterator  iObj= sortedHosPtrs.begin();
        iObj != sortedHosPtrs.end(); ++iObj ){
     const HltObjectSummary & hos = **iObj;
-    HltSelRepRBExtraInfo::ExtraInfo extraInfo;
     for( HltObjectSummary::Info::const_iterator i=hos.numericalInfo().begin();
          i!=hos.numericalInfo().end();++i){
       if( i->first.find("#")!=std::string::npos ){
@@ -201,9 +200,40 @@ StatusCode HltSelReportsWriter::execute() {
       }
     }
   }  
-  extraInfoSubBank.initialize( sortedHosPtrs.size(), nExtraInfo );
-  stdInfoSubBank.initialize( sortedHosPtrs.size(), nStdInfo );
-  
+  bool saveExtraInfo = extraInfoSubBank.initialize( sortedHosPtrs.size(), nExtraInfo );
+  if( !saveExtraInfo ){
+        std::ostringstream mess;
+        mess << "ExtraInfoSubBank too large to store nObj=" << sortedHosPtrs.size()
+             << " nInfo=" << nExtraInfo << " No Extra Info will be saved!";
+        Error( mess.str(), StatusCode::SUCCESS, 50 );
+        if( !extraInfoSubBank.initialize( sortedHosPtrs.size(), 0 ) ){
+          Error( "Cannot save even empty ExtraInfoSubBank  - expect a fatal error", StatusCode::SUCCESS, 50 );
+        }        
+  }
+  bool saveStdInfo = stdInfoSubBank.initialize( sortedHosPtrs.size(), nStdInfo );
+  if( !saveStdInfo ){
+        std::ostringstream mess;
+        mess << "StdInfoSubBank too large to store nObj=" << sortedHosPtrs.size()
+             << " nInfo=" << nStdInfo << " No Std Info will be saved!";        
+        Error( mess.str(), StatusCode::SUCCESS, 50 );
+        // save only selection IDs
+        nStdInfo=0;  
+        for( std::vector<const HltObjectSummary*>::const_iterator  iObj= sortedHosPtrs.begin();
+             iObj != sortedHosPtrs.end(); ++iObj ){
+          const HltObjectSummary & hos = **iObj;
+          if( hos.summarizedObjectCLID() == 1 ){
+            for( HltObjectSummary::Info::const_iterator i=hos.numericalInfo().begin();
+                 i!=hos.numericalInfo().end();++i){
+              if( i->first.find("#")!=std::string::npos ){
+                ++nStdInfo;        
+              }
+            }
+          }
+        }  
+        if( !stdInfoSubBank.initialize( sortedHosPtrs.size(), nStdInfo ) ){
+          Error( "Cannot save even selectionIDs - expect a fatal error", StatusCode::SUCCESS, 50 );
+        }        
+  }
 
   // associate objects with hit sequences, or do simple substructure
   // do info banks, and object type bank
@@ -221,13 +251,17 @@ StatusCode HltSelReportsWriter::execute() {
 
       if( i->first.find("#")!=std::string::npos ){
 
-        // push floats as ints (allows for possible compression in future versions)
-        union IntFloat { unsigned int mInt; float mFloat; };
-        IntFloat a; a.mFloat = i->second;
-        unsigned int intFloat = a.mInt;
-        stdInfo.push_back( intFloat );
+        if( saveStdInfo || ( hos.summarizedObjectCLID() == 1 ) ){
+          
+          // push floats as ints (allows for possible compression in future versions)
+          union IntFloat { unsigned int mInt; float mFloat; };
+          IntFloat a; a.mFloat = i->second;
+          unsigned int intFloat = a.mInt;
+          stdInfo.push_back( intFloat );
+          
+        }
 
-      } else {
+      } else if(saveExtraInfo) {
 
         bool found=false;        
         // convert string-id to a short

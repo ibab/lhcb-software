@@ -1,4 +1,5 @@
-// $Id: HltDecReportsMaker.cpp,v 1.6 2008-12-11 15:27:55 tskwarni Exp $
+// $Id: HltDecReportsMaker.cpp,v 1.7 2009-01-16 06:14:20 tskwarni Exp $
+#define DEBUGCODE
 // Include files 
 
 // from Gaudi
@@ -183,7 +184,16 @@ StatusCode HltDecReportsMaker::execute() {
        Warning( " Failed to add HltDecReport selectionName=" + selName 
                 + " to its container ", StatusCode::SUCCESS, 20 );
      }    
-     
+#ifdef DEBUGCODE    
+     else
+     {
+       if ( msgLevel(MSG::VERBOSE) ){
+         verbose() <<" Selection name=" << selName << " HltDecReport created from HltSummary " << endmsg;
+       }
+     }
+#endif     
+           
+      
     }
   }
 
@@ -234,7 +244,13 @@ StatusCode HltDecReportsMaker::execute() {
 
     // create Hlt1Global dec report only when configured:
     if( config )outputSummary->insert( "Hlt1Global", HltDecReport( dec, errors, noc, kHlt1GlobalID ) );
-    
+#ifdef DEBUGCODE    
+    if ( msgLevel(MSG::VERBOSE) ){
+      if( config ){
+        verbose() << " Hlt1Global HltDecReport created " << endmsg;
+      }
+    }
+#endif    
   }
 
   // Hlt2Global
@@ -292,6 +308,13 @@ StatusCode HltDecReportsMaker::execute() {
 
     // create Hlt2Global dec report only when configured:
     if( config )outputSummary->insert( "Hlt2Global", HltDecReport( dec, errors, noc, kHlt2GlobalID ) );
+#ifdef DEBUGCODE    
+    if ( msgLevel(MSG::VERBOSE) ){
+      if( config ){
+        verbose() << " Hlt2Global HltDecReport created " << endmsg;
+      }
+    }
+#endif    
     
   }
 

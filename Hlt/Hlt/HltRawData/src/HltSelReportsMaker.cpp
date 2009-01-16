@@ -1,4 +1,5 @@
-// $Id: HltSelReportsMaker.cpp,v 1.6 2009-01-14 21:05:42 graven Exp $
+// $Id: HltSelReportsMaker.cpp,v 1.7 2009-01-16 06:14:20 tskwarni Exp $
+// #define DEBUGCODE
 // Include files 
 
 // from Gaudi
@@ -10,6 +11,7 @@
 
 #include "Event/RecVertex.h"
 #include "Event/Particle.h"
+
 
 #include "Kernel/CaloCellCode.h"
 
@@ -149,6 +151,14 @@ StatusCode HltSelReportsMaker::execute() {
 
   // get trigger selection names 
   std::vector<stringKey> selectionIDs = dataSvc().selectionKeys(); 
+#ifdef DEBUGCODE
+  if ( msgLevel(MSG::VERBOSE) ){
+    verbose() <<" Selection Names Found =" ;
+    for( std::vector<stringKey>::const_iterator i=selectionIDs.begin();i!=selectionIDs.end();++i){
+      verbose() << i->str() << " ";
+    }
+  }
+#endif  
   // if HltSummary has any extras add them
   if( inputSummary ){
     // selection names in HltSummary
@@ -157,10 +167,20 @@ StatusCode HltSelReportsMaker::execute() {
       stringKey name(*is);
       if( find( selectionIDs.begin(),selectionIDs.end(),name) == selectionIDs.end() ){
         selectionIDs.push_back(name);
+#ifdef DEBUGCODE
+        if ( msgLevel(MSG::VERBOSE) ){
+          verbose() << name.str() << "(hs) ";
+        }
+#endif  
       }
     }
   }
-  
+#ifdef DEBUGCODE
+  if ( msgLevel(MSG::VERBOSE) ){
+    verbose() << endmsg;
+  }
+#endif  
+ 
 
   // data compression requires that we store objects from early processing stages first
   // order selections accordingly 
@@ -184,7 +204,11 @@ StatusCode HltSelReportsMaker::execute() {
      const Hlt::Selection* sel = dataSvc().selection(name,this);
      if ( sel != 0 ) {
 
-
+#ifdef DEBUGCODE
+        if ( msgLevel(MSG::VERBOSE) ){
+          verbose() << " Selection " << name.str() <<  " found in dataSvc decison=" << sel->decision() << endmsg;          
+        }
+#endif
        // unsuccessful selections can't save candidates
        if( !sel->decision() )continue;
        
@@ -202,9 +226,16 @@ StatusCode HltSelReportsMaker::execute() {
            candidate = (ContainedObject*)(*(tsel.begin()));
          }
 
+       } else if( sel->classID() == LHCb::Particle::classID() ) {
+
+         const Hlt::TSelection<LHCb::Particle>& psel = dynamic_cast<const Hlt::TSelection<LHCb::Particle>&>(*sel);   
+         if( psel.begin()!=psel.end() ){
+           candidate = (ContainedObject*)(*(psel.begin()));
+         }
+
        } else {
          
-         if( sel->classID()==1 )continue;
+         if( sel->classID()==1 )continue; // skip selections of selections for now
          
          std::ostringstream mess;
          mess << " Unsupported data type CLID=" <<  sel->classID() << " - skip selection ID=" +selName;
@@ -232,7 +263,13 @@ StatusCode HltSelReportsMaker::execute() {
      // empty selections have nothing to save
      if( !candidate )continue;
        
-     // save selection ---------------------------
+#ifdef DEBUGCODE
+        if ( msgLevel(MSG::VERBOSE) ){
+          verbose() << "Selection " << name.str() <<  " has candidates " << endmsg;
+        } 
+#endif
+
+    // save selection ---------------------------
 
      // int selection id
      int intSelID(0);   
@@ -312,6 +349,13 @@ StatusCode HltSelReportsMaker::execute() {
          const Hlt::VertexSelection& tsel = dynamic_cast<const Hlt::VertexSelection&>(*sel);   
          for (Hlt::VertexSelection::const_iterator it = tsel.begin(); it != tsel.end(); ++it) {
            candidates.push_back( (ContainedObject*)(*it) );
+         }
+
+       } else if( sel->classID() == LHCb::Particle::classID() ) {
+
+         const Hlt::TSelection<LHCb::Particle>& psel = dynamic_cast<const Hlt::TSelection<LHCb::Particle>&>(*sel);   
+         for (Hlt::TSelection<LHCb::Particle>::const_iterator it = psel.begin(); it != psel.end(); ++it) {
+          candidates.push_back( (ContainedObject*)(*it) );
          }
 
        } else {
