@@ -1,7 +1,7 @@
 """
 High level configuration tools for AnalysisConf
 """
-__version__ = "$Id: Configuration.py,v 1.7 2009-01-09 14:45:20 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.8 2009-01-16 17:55:25 pkoppenb Exp $"
 __author__ = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -64,6 +64,19 @@ class AnalysisConf(LHCbConfigurableUser) :
         importOptions ("$DAVINCIASSOCIATORSROOT/options/DaVinciAssociators.opts")
         self.unpackMC()
 #
+# Standard Particles
+#
+    def standardParticles(self):
+        """
+        define standard particles on DoD service
+        @todo Use configurable 
+        """
+        ApplicationMgr().ExtSvc +=  [ DataOnDemandSvc() ]            
+        importOptions("$COMMONPARTICLESROOT/options/StandardOptions.py")
+#        if (  self.getProp("DataType")=='DC06'):
+        importOptions("$COMMONPARTICLESROOT/options/StandardDC06Options.opts")
+
+#
 # Unpack MC
 #
     def unpackMC(self):
@@ -85,3 +98,4 @@ class AnalysisConf(LHCbConfigurableUser) :
         if ( self.getProp("Simulation" )):
             self.configureMC()
         self.tagging()
+        self.standardParticles()

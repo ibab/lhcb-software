@@ -5,6 +5,8 @@
 !-----------------------------------------------------------------------------
 
 !========================== AnalysisConf v1r0 2009-01-15 =====================
+! 2009-01-16 - Patrick Koppenburg
+ - Moved standardParticles(self) from DaVinci() to here.
 
 ! 2009-01-09 - Patrick Koppenburg
  - Send init seq to master
