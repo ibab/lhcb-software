@@ -3,7 +3,7 @@
 
      @author M.Frank
 """
-__version__ = "$Id: BrunelOnline.py,v 1.5 2009-01-16 13:20:25 frankb Exp $"
+__version__ = "$Id: BrunelOnline.py,v 1.6 2009-01-16 14:26:10 frankb Exp $"
 __author__  = "Markus Frank <Markus.Frank@cern.ch>"
 
 import os
@@ -36,11 +36,8 @@ def patchBrunel(true_online_version):
     brunel.NoWarnings     = True
     brunel.PrintFreq      = -1
   Brunel.Configuration.ProcessPhase("Output").DetectorList += [ 'DST' ]
-  if debug: print 'Apply configuration ....'
   # Set the property, used to build other file names
   brunel.setProp( "DatasetName", 'GaudiSerialize' )
-  
-  if debug: print 'Standard Brunel configured.'
 
 def setupOnline():
   """

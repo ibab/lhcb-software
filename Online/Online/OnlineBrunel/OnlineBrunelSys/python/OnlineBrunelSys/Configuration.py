@@ -1,7 +1,7 @@
 """
       High level configuration tools for LHCb applications
 """
-__version__ = "$Id: Configuration.py,v 1.1 2009-01-16 13:20:25 frankb Exp $"
+__version__ = "$Id: Configuration.py,v 1.2 2009-01-16 14:26:10 frankb Exp $"
 __author__  = "Markus Frank <Markus.Frank@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -10,14 +10,14 @@ class Serialisation(ConfigurableUser):
     __slots__ = {
       'Writer'        : 'Writer',
       'Buffer'        : 'Output',
-      'Location'      : '/Event/GaudiSerialize'
+      'Location'      : '/Event/GaudiSerialize',
       'OutputLevel'   : 4
       }
 
     _propertyDocDct = { 
       'Writer'        : """ Name of OutputStream writing the DST """,
       'Buffer'        : """ Output buffer name """,
-      'Location'      : """ Location of serialization banks in TES """
+      'Location'      : """ Location of serialization banks in TES """,
       'OutputLevel'   : """ Printout level of output stream """
       }
     
