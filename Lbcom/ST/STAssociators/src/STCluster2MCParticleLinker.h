@@ -1,8 +1,8 @@
-// $Id: STCluster2MCParticleLinker.h,v 1.8 2007-03-23 14:30:45 cattanem Exp $
+// $Id: STCluster2MCParticleLinker.h,v 1.9 2009-01-16 08:39:37 mneedham Exp $
 #ifndef STCLUSTER2MCPARTICLELINKER_H
 #define STCLUSTER2MCPARTICLELINKER_H 1
 
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "Kernel/STAlgBase.h"
 
 namespace LHCb{
   class MCParticle;
@@ -14,7 +14,7 @@ namespace LHCb{
  *  @author Matt Needham
  *  @date   26/11/2005
  */
-class STCluster2MCParticleLinker : public GaudiAlgorithm {
+class STCluster2MCParticleLinker : public ST::AlgBase {
 
   friend class AlgFactory<STCluster2MCParticleLinker>;
   
@@ -29,8 +29,6 @@ public:
   /// Destructor
   virtual ~STCluster2MCParticleLinker(); 
 
-  /// init
-  virtual StatusCode initialize();
 
   /// execute
   virtual StatusCode execute();    
@@ -58,7 +56,7 @@ private:
   bool m_addSpillOverHits; ///< Flag to add spill-over to linker table
   double m_minFrac;        ///< Minimal charge fraction to link to MCParticle
   bool m_oneRef;           ///< Flag to allow only 1 link for each cluster
-  std::string m_detType;   ///< Detector type (IT or TT)
+
 };
 
 inline std::string STCluster2MCParticleLinker::outputData() const {

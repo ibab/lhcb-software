@@ -1,9 +1,9 @@
-// $Id: STCluster2MCHitLinker.h,v 1.6 2007-03-23 08:59:12 jvantilb Exp $
+// $Id: STCluster2MCHitLinker.h,v 1.7 2009-01-16 08:39:37 mneedham Exp $
 #ifndef STCLUSTER2MCHITLINKER_H
 #define STCLUSTER2MCHITLINKER_H 1
 
 // Gaudi
-#include "GaudiAlg/GaudiHistoAlg.h"
+#include "Kernel/STAlgBase.h"
 
 // Event
 #include "Event/MCHit.h"
@@ -16,7 +16,7 @@
  *  @date   26/04/2002
  */
 
-class STCluster2MCHitLinker : public GaudiAlgorithm {
+class STCluster2MCHitLinker : public ST::AlgBase {
 
   friend class AlgFactory<STCluster2MCHitLinker>;
   
@@ -30,9 +30,6 @@ public:
 
   /// Destructor
   virtual ~STCluster2MCHitLinker(); 
-
-  /// initialize
-  virtual StatusCode initialize();    
 
   /// execute
   virtual StatusCode execute();    
@@ -61,7 +58,7 @@ private:
   double m_minFrac;           ///< Minimal charge fraction to link to MCParticle
   bool m_oneRef;              ///< Flag to allow only 1 link for each cluster
   std::string m_digitLocation;///< Location of the STDigits
-  std::string m_detType;      ///< Detector type (IT or TT)
+
 };
 
 inline std::string STCluster2MCHitLinker::outputData() const {

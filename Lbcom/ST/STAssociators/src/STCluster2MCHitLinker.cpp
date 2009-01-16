@@ -1,4 +1,4 @@
-// $Id: STCluster2MCHitLinker.cpp,v 1.12 2007-11-28 13:01:46 mneedham Exp $
+// $Id: STCluster2MCHitLinker.cpp,v 1.13 2009-01-16 08:39:37 mneedham Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -8,7 +8,7 @@
 
 // Event
 #include "Event/STCluster.h"
-#include "Kernel/STDetSwitch.h"
+
 
 // local
 #include "STCluster2MCHitLinker.h"
@@ -19,17 +19,23 @@ DECLARE_ALGORITHM_FACTORY( STCluster2MCHitLinker );
 
 STCluster2MCHitLinker::STCluster2MCHitLinker( const std::string& name,
                                               ISvcLocator* pSvcLocator) : 
-  GaudiAlgorithm (name,pSvcLocator) 
+  ST::AlgBase (name,pSvcLocator),
+  m_hitLocation(MCHitLocation::TT),
+  m_asctLocation(STDigitLocation::TTDigits + "2MCHits")
 {
 
-  declareProperty("InputData", m_inputData = STClusterLocation::TTClusters );
-  declareProperty("OutputData", m_outputData = STClusterLocation::TTClusters 
+  declareSTConfigProperty("InputData", m_inputData , STClusterLocation::TTClusters );
+  declareSTConfigProperty("OutputData", m_outputData , STClusterLocation::TTClusters 
                   + "2MCHits" );
   declareProperty("AddSpillOverHits",m_addSpillOverHits = false); 
   declareProperty("Minfrac", m_minFrac = 0.2);
   declareProperty("OneRef",m_oneRef = false);
-  declareProperty("DigitLocation", m_digitLocation = STDigitLocation::TTDigits);
-  declareProperty("DetType", m_detType = "TT");
+  declareSTConfigProperty("DigitLocation", m_digitLocation , STDigitLocation::TTDigits);
+
+  // register to be flipped IT/TT
+  addToFlipList(&m_hitLocation);
+  addToFlipList(&m_asctLocation);
+
 }
 
 STCluster2MCHitLinker::~STCluster2MCHitLinker() 
@@ -37,28 +43,10 @@ STCluster2MCHitLinker::~STCluster2MCHitLinker()
   // destructer
 }; 
 
-StatusCode STCluster2MCHitLinker::initialize() 
-{  
-  // get associator tool 
-  StatusCode sc = GaudiAlgorithm::initialize();
-  if (sc.isFailure()) return Error("Failed to initialize", sc);
-
-  m_hitLocation = MCHitLocation::TT;
-  m_asctLocation= STDigitLocation::TTDigits + "2MCHits";
-
-  STDetSwitch::flip(m_detType,m_hitLocation);
-  STDetSwitch::flip(m_detType,m_asctLocation);
-  STDetSwitch::flip(m_detType,m_digitLocation);
-  STDetSwitch::flip(m_detType,m_inputData);
-  STDetSwitch::flip(m_detType,m_outputData);
-
-  return StatusCode::SUCCESS;
-};
-
 StatusCode STCluster2MCHitLinker::execute() 
 {
   // get STClusters
-  STClusters* clusterCont = get<STClusters>(m_inputData);
+  const STClusters* clusterCont = get<STClusters>(m_inputData);
 
   // get the digits
   m_digitCont = get<STDigits>(m_digitLocation);

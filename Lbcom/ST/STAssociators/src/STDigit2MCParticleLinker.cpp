@@ -1,4 +1,4 @@
-// $Id: STDigit2MCParticleLinker.cpp,v 1.6 2007-03-23 08:59:13 jvantilb Exp $
+// $Id: STDigit2MCParticleLinker.cpp,v 1.7 2009-01-16 08:39:37 mneedham Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -9,7 +9,7 @@
 // Event
 #include "Event/STDigit.h"
 #include "Event/MCParticle.h"
-#include "Kernel/STDetSwitch.h"
+
 
 // local
 #include "STDigit2MCParticleLinker.h"
@@ -21,27 +21,16 @@ DECLARE_ALGORITHM_FACTORY( STDigit2MCParticleLinker );
 
 STDigit2MCParticleLinker::STDigit2MCParticleLinker( const std::string& name,
                                                     ISvcLocator* pSvcLocator) :
-  GaudiAlgorithm (name,pSvcLocator)
+  ST::AlgBase (name,pSvcLocator)
 {
-  declareProperty("OutputData", m_outputData = STDigitLocation::TTDigits);
-  declareProperty("InputData",  m_inputData  = STDigitLocation::TTDigits);
+  declareSTConfigProperty("OutputData", m_outputData , STDigitLocation::TTDigits);
+  declareSTConfigProperty("InputData",  m_inputData  , STDigitLocation::TTDigits);
   declareProperty("AddSpillOverHits", m_addSpillOverHits = false); 
   declareProperty("Minfrac", m_minFrac = 0.05);
   declareProperty("OneRef", m_oneRef = false);
-  declareProperty("DetType", m_detType = "TT");
+
 }
 
-StatusCode STDigit2MCParticleLinker::initialize()
-{
-  // initialize
-  StatusCode sc = GaudiAlgorithm::initialize();
-  if (sc.isFailure()) return Error("Failed to initialize", sc);
-
-  STDetSwitch::flip(m_detType,m_inputData);
-  STDetSwitch::flip(m_detType,m_outputData);
-
-  return StatusCode::SUCCESS;
-}
 
 STDigit2MCParticleLinker::~STDigit2MCParticleLinker()
 {
@@ -51,7 +40,7 @@ STDigit2MCParticleLinker::~STDigit2MCParticleLinker()
 StatusCode STDigit2MCParticleLinker::execute()
 {
   // get STDigits
-  STDigits* digitCont = get<STDigits>(m_inputData);
+  const STDigits* digitCont = get<STDigits>(m_inputData);
 
   // get MCParticles
   MCParticles* mcParts = get<MCParticles>(MCParticleLocation::Default);

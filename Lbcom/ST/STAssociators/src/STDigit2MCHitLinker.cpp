@@ -1,4 +1,4 @@
-// $Id: STDigit2MCHitLinker.cpp,v 1.6 2007-03-23 08:59:13 jvantilb Exp $
+// $Id: STDigit2MCHitLinker.cpp,v 1.7 2009-01-16 08:39:37 mneedham Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -21,15 +21,18 @@ DECLARE_ALGORITHM_FACTORY( STDigit2MCHitLinker );
 
 STDigit2MCHitLinker::STDigit2MCHitLinker( const std::string& name,
                                           ISvcLocator* pSvcLocator) :
-  GaudiAlgorithm (name,pSvcLocator) 
+  ST::AlgBase (name,pSvcLocator),
+  m_hitLocation(MCHitLocation::TT) 
 {
-  declareProperty("OutputData", m_outputData = STDigitLocation::TTDigits 
+  declareSTConfigProperty("OutputData", m_outputData , STDigitLocation::TTDigits 
                   + "2MCHits" );
-  declareProperty("InputData", m_inputData  = STDigitLocation::TTDigits);
+  declareSTConfigProperty("InputData", m_inputData  , STDigitLocation::TTDigits);
   declareProperty("AddSpillOverHits",m_addSpillOverHits = false); 
   declareProperty("Minfrac", m_minFrac = 0.05);
   declareProperty("OneRef",m_oneRef = false);
-  declareProperty("DetType", m_detType = "TT");
+
+  addToFlipList(&m_hitLocation);
+
 }
 
 STDigit2MCHitLinker::~STDigit2MCHitLinker()
@@ -37,24 +40,11 @@ STDigit2MCHitLinker::~STDigit2MCHitLinker()
   // destructer
 } 
 
-StatusCode STDigit2MCHitLinker::initialize()
-{
-  StatusCode sc = GaudiAlgorithm::initialize();
-  if (sc.isFailure()) return Error("Failed to initialize", sc);
-   
-  m_hitLocation = MCHitLocation::TT;
-
-  STDetSwitch::flip(m_detType,m_hitLocation);
-  STDetSwitch::flip(m_detType,m_inputData);
-  STDetSwitch::flip(m_detType,m_outputData);
-
-  return StatusCode::SUCCESS;
-}
 
 StatusCode STDigit2MCHitLinker::execute()
 {
   // get STDigits
-  STDigits* digitCont = get<STDigits>(m_inputData);
+  const STDigits* digitCont = get<STDigits>(m_inputData);
 
   // get hits
   MCHits* mcHits = get<MCHits>(m_hitLocation); 

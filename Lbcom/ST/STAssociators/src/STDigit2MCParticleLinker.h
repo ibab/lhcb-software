@@ -1,8 +1,8 @@
-// $Id: STDigit2MCParticleLinker.h,v 1.4 2007-03-23 08:59:13 jvantilb Exp $
+// $Id: STDigit2MCParticleLinker.h,v 1.5 2009-01-16 08:39:37 mneedham Exp $
 #ifndef STDigit2MCPARTICLELINKER_H
 #define STDigit2MCPARTICLELINKER_H 1
 
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "Kernel/STAlgBase.h"
 
 #include "Event/MCParticle.h"
 
@@ -13,7 +13,7 @@
  *  @date   26/04/2002
  */
 
-class STDigit2MCParticleLinker : public GaudiAlgorithm {
+class STDigit2MCParticleLinker : public ST::AlgBase {
 
   friend class AlgFactory<STDigit2MCParticleLinker>;
   
@@ -28,8 +28,6 @@ public:
   /// Destructor
   virtual ~STDigit2MCParticleLinker(); 
 
-  /// initialize
-  virtual StatusCode initialize();
 
   /// execute
   virtual StatusCode execute();    
@@ -52,7 +50,7 @@ private:
   bool m_addSpillOverHits;    ///< Flag to add spill-over to linker table
   double m_minFrac;           ///< Minimal charge fraction to link to MCParticle
   bool m_oneRef;              ///< Flag to allow only 1 link for each digit
-  std::string m_detType;      ///< Detector type (IT or TT)
+
 };
 
 inline std::string STDigit2MCParticleLinker::outputData() const {

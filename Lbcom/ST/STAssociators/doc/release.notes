@@ -2,6 +2,9 @@
 ! Package manager : J. van Tilburg
 !------------------------------------------------------------------------------
 
+! 2008-1-16 M Needham
+ - Migrate to STAlgBase class
+
 !======================= STAssociators v1r5 2007-11-30 ========================
 ! 2007-11-30 M Needham
  - Fix spelling mistake in jobOption name
