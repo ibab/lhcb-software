@@ -1,4 +1,4 @@
-// $Id: SiZuriFunction.h,v 1.1 2009-01-15 10:02:19 mneedham Exp $
+// $Id: SiZuriFunction.h,v 1.2 2009-01-16 16:28:15 mneedham Exp $
 #ifndef SiZuriFunction_H
 #define SiZuriFunction_H 1
 
@@ -42,7 +42,7 @@ public:
   /// the actual Zurich function
   double zuriFun(const double t) const;
 
-  std::pair<double,double> SiZuriFunction::findMax() const;
+  std::pair<double,double> findMax() const;
 
   /// fit par[2] ~ risetime
   double m_riseTime; 

@@ -2,6 +2,8 @@ Package         : Si/SiTools
 Package manager : Matt Needham
 !------------------------------------------------------------------------------
 
+! 2009-01-16 Fixes for gcc 4.3
+
 ! 2009-01-15 M Needham 
  - Add SiZuriFunction [second order RC-CR shaper function]
  - Make base class for SiAmplifierResponse [SiAmplifierResponseBase] 
