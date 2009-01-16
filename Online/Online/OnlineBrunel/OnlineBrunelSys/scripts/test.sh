@@ -5,16 +5,13 @@ export PYTHONPATH=`cd ..;dirname $PWD`/InstallArea/python:${PYTHONPATH};
 #
 start_task()
 {
-    $MINITERM ${1}@${HOST}   -e "export UTGID=${NODENAME}/${1};   exec -a \${UTGID} $Class1_task -opt=command=\"${2}\""&
+    $MINITERM ${1}@${HOST} -sl 30000  -e "export UTGID=${NODENAME}/${1};   exec -a \${UTGID} $Class1_task -opt=command=\"${2}\""&
 }
 start_Brunel()
 {
-    start_task Brunel_0 \
-    "import Gaudi;Gaudi.gaudimain().configure(['../python/BrunelOnline.py']);"
-    start_task Brunel_1 \
-    "import Gaudi;Gaudi.gaudimain().configure(['../python/BrunelOnline.py']);"
-    start_task Brunel_2 \
-    "import Gaudi;Gaudi.gaudimain().configure(['../python/BrunelOnline.py']);"
+    start_task Brunel_0 "from Gaudi.Configuration import importOptions;importOptions('../python/BrunelOnline.py');"
+    start_task Brunel_1 "from Gaudi.Configuration import importOptions;importOptions('../python/BrunelOnline.py');"
+    start_task Brunel_2 "from Gaudi.Configuration import importOptions;importOptions('../python/BrunelOnline.py');"
 }
 #
 start_task MbmEvents "import GaudiOnlineTests;GaudiOnlineTests.runRecBuffer()"
@@ -30,7 +27,7 @@ $BIGTERM MBMMon@${HOST}     -e "export UTGID=${NODENAME}/MBMMon;    exec -a \${U
 start_task DiskWR   "import GaudiOnlineTests;GaudiOnlineTests.runDiskWR('Output',True,False,'./mdfOutput.dat')"
 #
 # $BIGTERM MBMDump@${HOST} -e "export UTGID=${NODENAME}/MBMDump; $gaudi_run libMBMDump.so mbmdump" &
-# start_Brunel()
+start_Brunel
 # start_task Mdf2Mbm "import GaudiOnlineTests;GaudiOnlineTests.runMDF2MBM(['Events'])"
 # start_task Mdf2Mbm "import GaudiOnlineTests;GaudiOnlineTests.runMDF2MBM2(['Events'])"
 tail -n 5 ${0}

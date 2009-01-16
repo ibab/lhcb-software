@@ -7,7 +7,8 @@ import os
 import Configurables as Configs
 import Gaudi.Configuration as Gaudi
 
-def dummy(): pass
+debug = 0
+def dummy(*args,**kwd): pass
 
 def patchBrunel(true_online_version):
   """
@@ -17,22 +18,26 @@ def patchBrunel(true_online_version):
   """
   import Brunel.Configuration
 
-  brunel=Brunel.Configuration.Brunel()
-  brunel.defineMonitors = dummy
+  brunel = Brunel.Configuration.Brunel()
+  Brunel.Configuration.Brunel.defineMonitors = dummy
+  Brunel.Configuration.Brunel.configureOutput = dummy
+  #if debug: print dir(brunel)
+  #brunel.DDDBtag   = 'default'
+  #brunel.CondDBtag = 'default'
+  brunel.DDDBtag   = "head-20090112"
+  brunel.CondDBtag = "sim-20090112"
+
+  brunel.Simulation = True
   if true_online_version:
     brunel.__repr__       = dummy
-    brunel.noWarnings     = True
-    brunel.printFreq      = -1
-  brunel.applyConf()
-  # Above file requires following special options for Velo
-  Configs.DecodeVeloRawBuffer().ForceBankVersion=3
-  Configs.DecodeVeloRawBuffer('DecodeVeloClusters').RawEventLocation='Prev2/DAQ/RawEvent'
-  Configs.DecodeVeloRawBuffer('DecodeVeloClusters').ForceBankVersion=3
-  Configs.UpdateManagerSvc().ConditionsOverride +=  ["Conditions/Online/Velo/MotionSystem := double ResolPosRC =-29. ; double ResolPosLA = 29. ;"]
-  Configs.RawBankToSTClusterAlg('CreateTTClusters').rawEventLocation = "/Event/Prev2/DAQ/RawEvent"
-  Configs.RawBankToSTLiteClusterAlg('CreateTTLiteClusters').rawEventLocation = "/Event/Prev2/DAQ/RawEvent"
+    brunel.NoWarnings     = True
+    brunel.PrintFreq      = -1
+  Brunel.Configuration.ProcessPhase("Output").DetectorList += [ 'DST' ]
+  if debug: print 'Apply configuration ....'
   # Set the property, used to build other file names
-  brunel.setProp( "datasetName", 'GaudiSerialize' )
+  brunel.setProp( "DatasetName", 'GaudiSerialize' )
+  
+  if debug: print 'Standard Brunel configured.'
 
 def setupOnline():
   """
@@ -41,19 +46,29 @@ def setupOnline():
         @author M.Frank
   """
   import OnlineEnv as Online
+  from Configurables import DstConf
+  from Configurables import Serialisation
+  buffs = ['Events','Output']
   app=Gaudi.ApplicationMgr()
   app.AppName = ''
   app.HistogramPersistency = 'ROOT'
   app.SvcOptMapping.append('LHCb::OnlineEvtSelector/EventSelector')
   app.SvcOptMapping.append('LHCb::FmcMessageSvc/MessageSvc')
-  mepMgr = Online.mepManager(Online.PartitionID,Online.PartitionName,['Events','Output'],True)
-  app.EvtSel  = Online.mbmSelector(input='Events',type='ONE',decode=False)
-  app.Runable = Online.evtRunable(mepMgr)
-  app.ExtSvc.append(mepMgr)
-  app.OutStream = []
-  app.OutStream.append(Online.serialWriter(name='DstWriter',location='/Event/GaudiSerialize'))
-  app.OutStream.append(Online.evtMerger(buffer='Output',name='Writer',location='/Event/GaudiSerialize',routing=0x10))
+  mep = Online.mepManager(Online.PartitionID,Online.PartitionName,buffs,True)
+  sel = Online.mbmSelector(input='Events',type='ONE',decode=False)
+  app.EvtSel  = sel
+  app.Runable = Online.evtRunable(mep)
+  app.ExtSvc.append(mep)
+  app.ExtSvc.append(sel)
+
+  DstConf().Writer     = 'DstWriter'
+  DstConf().DstType    = 'DST'
+  DstConf().EnablePack = False
+  DstConf().Simulation = False
+  Serialisation().Writer = 'Writer'
+  
   app.AuditAlgorithms = False
+  Configs.MonitorSvc().OutputLevel = 5
   app.OutputLevel = 4
 
 def patchMessages():
@@ -80,11 +95,12 @@ def start():
   """
   import OnlineEnv as Online
   Online.end_config(False)
+  #Online.end_config(True)
 
 true_online = os.environ.has_key('LOGFIFO') and os.environ.has_key('PARTITION')
+debug = not true_online
 
-if not true_online:
-  print '\n            Running terminal version 1.1 of Brunel ONLINE\n\n'  
+if not true_online: print '\n            Running terminal version 1.1 of Brunel ONLINE\n\n'  
 patchBrunel(true_online)
 setupOnline()
 if true_online: patchMessages()
