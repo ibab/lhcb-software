@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.56 2009-01-15 12:18:34 ocallot Exp $ 
+! $Id: release.notes,v 1.57 2009-01-16 11:01:12 marcocle Exp $ 
 ! =============================================================================
 ! package DetDescSvc
 ! package manager : Marco Clemencic, Juan Palacios ?
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
+
+! 2009-01-16 - Marco Clemencic
+ - Fixed a memory leak occurring when registering without condition but passing
+   the pointer to be filled (happens in GeometryInfoPlus after some recent
+   changes). 
 
 ! 2009-01-15 - Olivier Callot
  - Fix the case of modification of the pointer in UpdateManagerSvc.

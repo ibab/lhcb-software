@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.cpp,v 1.26 2009-01-16 08:14:30 ocallot Exp $
+// $Id: UpdateManagerSvc.cpp,v 1.27 2009-01-16 11:01:12 marcocle Exp $
 // Include files
 
 #include "GaudiKernel/SvcFactory.h"
@@ -313,6 +313,9 @@ void UpdateManagerSvc::i_registerCondition(const std::string &condition, BaseObj
         // so I do not need to keep the copy I have
         delete mf;
     }
+    // Since we are not using a condition, the user pointer setter is not needed
+    // nor used, so we must delete it.
+    if (ptr_dest) delete ptr_dest;
   }
   // a new item means that we need an update
   m_head_since = 1;
