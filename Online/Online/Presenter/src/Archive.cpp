@@ -326,6 +326,20 @@ std::string Archive::substractIsoTimeDate(const std::string & startTimeIsoString
   
   return createIsoTimeString(to_tm(newPTime)); //to_iso_string(newTime);
 }
+std::string Archive::taskNameFromFile(const std::string & fileName) {
+  TObjArray* fileDateMatchGroup = 0;
+  std::string taskNameFound("");   
+  fileDateMatchGroup = s_fileDateRegexp.MatchS(path(fileName).leaf());
+  if (!fileDateMatchGroup->IsEmpty()) {
+    taskNameFound = (((TObjString *)fileDateMatchGroup->At(1))->GetString()).Data();
+  }
+  if (fileDateMatchGroup) {
+    fileDateMatchGroup->Delete();
+    delete fileDateMatchGroup;
+    fileDateMatchGroup = 0;
+  }
+  return taskNameFound;
+}        
 std::vector<path> Archive::findSavesets(const std::string & taskname,
                                         const std::string & endTimeIsoString,
                                         const std::string & durationTimeString)

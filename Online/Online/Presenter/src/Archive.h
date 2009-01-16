@@ -55,6 +55,8 @@ public:
                              const std::string & deltaTimeString);
   std::string substractIsoTimeDate(const std::string & startTimeIsoString,
                                    const std::string & deltaTimeString);                      
+  std::string taskNameFromFile(const std::string & fileName);
+
 //  void deleteReferenceHistogram(TH1* reference); 
 private:
   PresenterMainFrame* m_mainFrame;
