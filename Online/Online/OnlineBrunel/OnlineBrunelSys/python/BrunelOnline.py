@@ -3,6 +3,9 @@
 
      @author M.Frank
 """
+__version__ = "$Id: BrunelOnline.py,v 1.5 2009-01-16 13:20:25 frankb Exp $"
+__author__  = "Markus Frank <Markus.Frank@cern.ch>"
+
 import os
 import Configurables as Configs
 import Gaudi.Configuration as Gaudi
