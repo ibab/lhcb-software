@@ -15,7 +15,6 @@ from Configurables import EventTuple, TupleToolGeneration, TupleToolTrigger, L0F
 
 # add event-info tuple
 tuple = EventTuple("TriggerTuple")
-ApplicationMgr().TopAlg += [tuple ]
 tuple.ToolList = [ "TupleToolEventInfo", "TupleToolGeneration", "TupleToolTrigger"  ]
 tuple.addTool( TupleToolTrigger() )
 tuple.TupleToolTrigger.VerboseHlt1 = True
@@ -24,4 +23,5 @@ tuple.TupleToolTrigger.VerboseHlt2 = True
 #tuple.TupleToolGeneration.OutputLevel = 1
 #tuple.OutputLevel = 1
 
-
+moni = GaudiSequencer("Hlt2MonitorSeq")
+moni.Members += [ tuple ] 
