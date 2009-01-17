@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2009-01-17 - Chris Jones
+ - Add virtual destructor to Hlt::IFunctionCreator
+
 !========================== HltCommon v5r0 2009-01-15 ===================
 
 ! 2009-01-16 - Antonio Perez-Calero

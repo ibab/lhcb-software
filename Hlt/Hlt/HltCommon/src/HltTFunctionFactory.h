@@ -1,4 +1,4 @@
-// $Id: HltTFunctionFactory.h,v 1.5 2008-12-17 15:53:23 hernando Exp $
+// $Id: HltTFunctionFactory.h,v 1.6 2009-01-17 23:27:25 jonrob Exp $
 #ifndef HLTTFUNCTIONFACTORY_H 
 #define HLTTFUNCTIONFACTORY_H 1
 
@@ -24,6 +24,7 @@ namespace Hlt {
   public:
     typedef typename zen::function<T> TFunction;
     virtual TFunction* create(const std::string& name, HltAlgorithm*) = 0;
+    virtual ~IFunctionCreator() { }
   };  
 
   template <class T>
