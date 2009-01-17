@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.121 2009-01-16 22:27:29 aperezca Exp $ 
+! $Id: release.notes,v 1.122 2009-01-17 08:46:30 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -6,6 +6,9 @@
 ! -----------------------------------------------------------------------------
 
 !========================== HltConf v2r0 2009-01-15 ===================
+! 2009-01-17 - Gerhard Raven
+ - change prescale in HltL0Lines into postscale
+
 ! 2009-01-15 - Antonio Perez-Calero
  - further refinements in muon+track line in HltMuonLines.py: move cut values 
    to __slots__ and added all cuts to be redone after track fast fit 
