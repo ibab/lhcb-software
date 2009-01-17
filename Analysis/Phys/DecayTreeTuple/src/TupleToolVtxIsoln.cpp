@@ -174,9 +174,6 @@ StatusCode TupleToolVtxIsoln::fill( const Particle* mother
     
     if (!exist<LHCb::Particles>(*i+"/Particles")){
       if (msgLevel(MSG::DEBUG)) debug() << "No particles at " << *i << " !!!!!" << endreq;
-      std::cout << "No particles at " << *i << " !!!!!" << endreq;
-      
-
       continue; 
     }
 

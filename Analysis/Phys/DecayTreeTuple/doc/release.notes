@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+! 2009-01-17 - Chris Jones
+ - Fix OSX/gcc4 warning in TupleToolVtxIsoln
+
 !======================== DecayTreeTuple v1r10 2009-01-15 ====================
 
 ! 2008-12-22 - Patrick Koppenburg
@@ -22,7 +25,7 @@
    intermediates and finals as well.
 
 ! 2008-12-09 - Patrick Koppenburg
- - Move escape method to a function in namesp;ace Decays in DaVinciKernel.
+ - Move escape method to a function in namespace Decays in DaVinciKernel.
 
 ! 2008-12-06 - Vanya BELYAEV
  - minor fix for new particle properties 
