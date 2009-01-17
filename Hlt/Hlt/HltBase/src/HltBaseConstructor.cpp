@@ -2,11 +2,13 @@
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "GaudiAlg/GaudiHistoTool.h"
 
+template<> 
 HltBase<GaudiHistoAlg>::HltBase( const std::string& name,
-                                 ISvcLocator* pSvcLocator)
+				 ISvcLocator* pSvcLocator)
   : GaudiHistoAlg ( name , pSvcLocator )
 { hltBaseConstructor(); }
 
+template <>
 HltBase<GaudiHistoAlg>::HltBase ( const std::string& type   ,
                                   const std::string& name   ,
                                   const IInterface*  parent )
@@ -16,6 +18,7 @@ HltBase<GaudiHistoAlg>::HltBase ( const std::string& type   ,
           << " interface" << parent << endreq;
 }
 
+template<>
 HltBase<GaudiHistoTool>::HltBase( const std::string& name,
                                   ISvcLocator* pSvcLocator)
   : GaudiHistoTool ( "ERROR", "ERROR", 0 )
@@ -24,6 +27,7 @@ HltBase<GaudiHistoTool>::HltBase( const std::string& name,
           << " svclocator " << pSvcLocator << endreq;
 }
 
+template<>
 HltBase<GaudiHistoTool>::HltBase ( const std::string& type   ,
                                    const std::string& name   ,
                                    const IInterface*  parent )
