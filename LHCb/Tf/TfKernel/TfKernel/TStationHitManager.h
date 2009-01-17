@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::TStationHitManager
  *
- *  $Id: TStationHitManager.h,v 1.25 2008-07-17 07:24:24 albrecht Exp $
+ *  $Id: TStationHitManager.h,v 1.26 2009-01-17 19:43:29 jonrob Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -40,11 +40,18 @@ static const InterfaceID IID_TStationHitManager ( "TStationHitManager", 1, 0 );
 
 namespace Tf
 {
-
+  /** @class IStationSelector TStationHitManager.h TfKernel/TStationHitManager.h 
+   *
+   *  Interface to region selectors
+   */
   class IStationSelector {
   public:
+    /// Returns the search window for a given z position
     virtual XYSearchWindow searchWindow(double z) const = 0;
+    /// Get the max and min z region of validity
     virtual void getValidity(double& zmin, double& zmax) const = 0;
+    /// Virtual destructor
+    virtual ~IStationSelector() { }
   };
 
   /** @class TStationHitManager TStationHitManager.h TfKernel/TStationHitManager.h 
