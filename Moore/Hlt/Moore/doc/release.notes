@@ -7,6 +7,8 @@ Purpose     : LHCb HLT application
  - add 'Simulation' to Configurable
  - update options/Moore.py to reflect above
  - add script to install TCK manifest in InstallArea
+ - add some more qmtests...
+
 
 ! 2009-01-12 - Gerhard Raven
  - Hlt sequence no longer added to TopAlg list in HltConf -- do it here...
