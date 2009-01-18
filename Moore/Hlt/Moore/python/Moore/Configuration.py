@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.45 2009-01-16 07:15:09 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.46 2009-01-18 14:31:37 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -35,6 +35,7 @@ class Moore(LHCbConfigurableUser):
     __slots__ = {
           "EvtMax":            -1    # Maximum number of events to process
         , "SkipEvents":        0
+        , "Simulation":        True # True implies use SimCond
         , "DataType":          '2008' # Data type, can be [ 'DC06','2008' ]
         , "DDDBtag" :          'default' # default as set in DDDBConf for DataType
         , "CondDBtag" :        'default' # default as set in DDDBConf for DataType
@@ -108,7 +109,7 @@ class Moore(LHCbConfigurableUser):
         # needed for DecodeRawEvent and LoKiTrigger
         for i in [ 'ToolSvc' , 'AuditorSvc',  'DataOnDemandSvc' , 'LoKiSvc' ] : ApplicationMgr().ExtSvc.append( i ) 
         # forward some settings... 
-        self.setOtherProps( LHCbApp(), ['EvtMax','SkipEvents','DataType','DDDBtag','CondDBtag','UseOracle' ] )
+        self.setOtherProps( LHCbApp(), ['EvtMax','SkipEvents','Simulation', 'DataType','DDDBtag','CondDBtag','UseOracle' ] )
         # Get the event time (for CondDb) from ODIN 
         EventClockSvc().EventTimeDecoder = 'OdinTimeDecoder'
         # make sure we don't pick up small variations of the read current
