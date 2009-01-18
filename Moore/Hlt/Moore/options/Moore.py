@@ -18,20 +18,20 @@ Moore().verbose = True
 
 #Moore().Simulation = False
 #Moore().DataType = '2008'
-#Moore().InputFiles= [ '/data/bfys/lhcb/data/2008/RAW/LHCb/PHYSICS_COSMICS/27804/027804_0000063303.raw' ]
+#Moore().inputFiles= [ '/data/bfys/lhcb/data/2008/RAW/LHCb/PHYSICS_COSMICS/27804/027804_0000063303.raw' ]
 
 #Moore().Simulation = True
 #Moore().DataType = 'DC06'
-#Moore().InputFiles = [ '/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/MBL0-lumi2-1.dst'
+#Moore().inputFiles = [ '/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/MBL0-lumi2-1.dst'
 #                     , '/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/MBL0-lumi2-2.dst'
 #                     , '/afs/cern.ch/lhcb/group/trigger/vol3/dijkstra/Selections/MBL0-lumi2-3.dst'
 #                     , '/afs/cern.ch/lhcb/group/trigger/vol3/dijkstra/Selections/MBL0-lumi2-4.dst' ]
 
 #Moore().Simulation = True
 #Moore().DataType = 'DC06'
-#Moore().InputFiles = [ '/data/bfys/lhcb/MinBias-L0strip/DC06_L0_v1_lumi2_MuonHadron_40000ev_' + str(f) +'.mdf'  for f in range(1,3) ]
-#Moore().InputFiles = [ 'castor:/castor/cern.ch/user/s/snies/mdf/DC06_L0_v1_lumi2_MuonHadron_40000ev_'+str(f)+'1.mdf' for f in range(1,3) ]
-#Moore().InputFiles = [ '/data/bfys/lhcb/MinBias-L0strip/MBL0-lumi2-' + str(f) +'.dst'  for f in range(1,5) ]
+#Moore().inputFiles = [ '/data/bfys/lhcb/MinBias-L0strip/DC06_L0_v1_lumi2_MuonHadron_40000ev_' + str(f) +'.mdf'  for f in range(1,3) ]
+#Moore().inputFiles = [ 'castor:/castor/cern.ch/user/s/snies/mdf/DC06_L0_v1_lumi2_MuonHadron_40000ev_'+str(f)+'.mdf' for f in range(1,3) ]
+#Moore().inputFiles = [ '/data/bfys/lhcb/MinBias-L0strip/MBL0-lumi2-' + str(f) +'.dst'  for f in range(1,5) ]
 
 Moore().Simulation = True
 Moore().DataType   = '2008'
@@ -42,7 +42,7 @@ EventSelector().PrintFreq = 100
 
 #Moore().DDDBtag  = "default"
 #Moore().CondDBtag = "default"
-LHCbApp().DDDBtag  = "default"
+LHCbApp().DDDBtag   = "default"
 LHCbApp().CondDBtag = "default"
 
 # Moore().outputFile = '/tmp/foo.raw'
