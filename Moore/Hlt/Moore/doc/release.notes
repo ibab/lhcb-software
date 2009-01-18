@@ -6,6 +6,7 @@ Purpose     : LHCb HLT application
  - explicitly specify our version in createRunMooreOnline_EFF
  - add 'Simulation' to Configurable
  - update options/Moore.py to reflect above
+ - add script to install TCK manifest in InstallArea
 
 ! 2009-01-12 - Gerhard Raven
  - Hlt sequence no longer added to TopAlg list in HltConf -- do it here...
