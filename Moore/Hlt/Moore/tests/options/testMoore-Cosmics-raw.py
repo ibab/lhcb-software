@@ -1,5 +1,8 @@
 #!/usr/bin/env gaudirun.py
 
+from Gaudi.Configuration import *
+from Moore.Configuration import *
+
 Moore().hltType = 'Hlt1' # +Hlt2'
 Moore().EvtMax = 2000
 Moore().Simulation = False
