@@ -64,12 +64,12 @@ HltANNSvc().Hlt1SelectionID = {
     #
     # intermediate selections: 10000 -- 20000
     # 'All' L0 candidates
-    'Hlt1L0AllMuonCandidates'               :10000
-    'Hlt1L0ElectronCandidates'              :10010
-    'Hlt1L0PhotonCandidates'                :10011
-    'Hlt1L0HadronCandidates'                :10012
-    'Hlt1L0LocalPi0Candidates'              :10013
-    'Hlt1L0GlobalPi0Candidates'             :10014
+    'Hlt1L0AllMuonCandidates'               :10000,
+    'Hlt1L0ElectronCandidates'              :10010,
+    'Hlt1L0PhotonCandidates'                :10011,
+    'Hlt1L0HadronCandidates'                :10012,
+    'Hlt1L0LocalPi0Candidates'              :10013,
+    'Hlt1L0GlobalPi0Candidates'             :10014,
     #
     "Forward1"                              :10101,
     "Hlt1EleCompanionTFForward"             :10201,
