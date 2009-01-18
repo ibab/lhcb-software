@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.122 2009-01-17 08:46:30 graven Exp $ 
+! $Id: release.notes,v 1.123 2009-01-18 15:21:41 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -8,6 +8,7 @@
 !========================== HltConf v2r0 2009-01-15 ===================
 ! 2009-01-17 - Gerhard Raven
  - change prescale in HltL0Lines into postscale
+ - add 'all' L0 candidates to HltANNSvc
 
 ! 2009-01-15 - Antonio Perez-Calero
  - further refinements in muon+track line in HltMuonLines.py: move cut values 

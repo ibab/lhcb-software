@@ -63,6 +63,14 @@ HltANNSvc().Hlt1SelectionID = {
     #
     #
     # intermediate selections: 10000 -- 20000
+    # 'All' L0 candidates
+    'Hlt1L0AllMuonCandidates'               :10000
+    'Hlt1L0ElectronCandidates'              :10010
+    'Hlt1L0PhotonCandidates'                :10011
+    'Hlt1L0HadronCandidates'                :10012
+    'Hlt1L0LocalPi0Candidates'              :10013
+    'Hlt1L0GlobalPi0Candidates'             :10014
+    #
     "Forward1"                              :10101,
     "Hlt1EleCompanionTFForward"             :10201,
     "Hlt1EleCompanionTFVelo"                :10202,
@@ -138,18 +146,6 @@ HltANNSvc().Hlt1SelectionID = {
     "Hlt1PhoVMDiTrack"                      :10613,
     "Hlt1PhoVUDiTrack"                      :10614,
     "Hlt1PrepareMuonSeg"                    :10701,
-    "Hlt1L0AllMuons"                        :10900,
-    "L0AllMuons"                            :10901,
-    "Hlt1L0MuonORMuonNoGlob"                :10902,
-    "L0MuonORMuonNoGlob"                    :10903,
-    "Hlt1L0DiMuon"                          :11000,
-    "Hlt1L0Electron"                        :11100,
-    "Hlt1L0GlobalPi0"                       :11200,
-    "Hlt1L0Hadron"                          :11300,
-    "Hlt1L0LocalPi0"                        :11400,
-    "Hlt1L0Muon"                            :11500,
-    "Hlt1L0MuonNoGlob"                      :11600,
-    "Hlt1L0Photon"                          :11700,
     "PV2D"                                  :11801,
     "RZVelo"                                :11901, 
     "Velo"                                  :12001,
