@@ -35,7 +35,7 @@
 -->
       <enum
         name    = 'Type'
-        value   = 'Unknown,VeloR,VeloPhi,TT,IT,OT,Muon, TTLite, ITLite'
+        value   = 'Unknown,VeloR,VeloPhi,VeloLiteR,VeloLitePhi,TT,IT,OT,Muon, TTLite, ITLite'
         desc    = 'enumerator for the type of Measurement'
         access  = 'PUBLIC'
         strTypConv = 'TRUE' 
