@@ -12,16 +12,8 @@ _scripts_dir = os.path.dirname(_this_file)
 _base_dir = os.path.dirname(_scripts_dir)
 
 
-def generateLogins(version, targetlocation=None, scripts=None, mysiteroot=None):
-    if not targetlocation : 
-        targetlocation = os.path.realpath(_base_dir)
-    if not scripts :
-        scripts = []
-        scripts.append(os.path.join(_scripts_dir, "LbLogin.csh"))
-        scripts.append(os.path.join(_scripts_dir, "LbLogin.sh"))
-        scripts.append(os.path.join(_scripts_dir, "LbLogin.bat"))
-    for s in scripts :
-        generateLogin(targetlocation, s, version, mysiteroot)
+def generateLoginCache(targetlocation, shell="csh", version="", mysiteroot=None):
+    pass
 
 def generateLogin(targetlocation, script, version="", mysiteroot=None):
     knownshells = ["sh", "csh", "tcsh", "zsh", "bat"]
@@ -31,36 +23,34 @@ def generateLogin(targetlocation, script, version="", mysiteroot=None):
     f = open(script, "w")
     if shell == "sh" or shell == "zsh" :
         if mysiteroot :
-            content = """LbLogin_tmpfile=`%s/python/LbConfiguration/LbLogin.py --shell=sh --mktemp --mysiteroot=%s "$@"`
-""" % (targetlocation, mysiteroot)
+            content = """LbLogin_tmpfile=`%s/python/LbConfiguration/LbLogin.py --shell=sh --mktemp --mysiteroot=%s --scripts-version=%s "$@"`
+""" % (targetlocation, mysiteroot, version)
         else :
-            content = """LbLogin_tmpfile=`%s/python/LbConfiguration/LbLogin.py --shell=sh --mktemp "$@"`
-""" % targetlocation
+            content = """LbLogin_tmpfile=`%s/python/LbConfiguration/LbLogin.py --shell=sh --mktemp --scripts-version=%s "$@"`
+""" % (targetlocation, version)
         content += """LbLoginStatus="$?"
 if [ "$LbLoginStatus" = 0 ]; then
     . $LbLogin_tmpfile
 fi
 rm -f $LbLogin_tmpfile
 unset LbLogin_tmpfile
-. %s/scripts/SetupProject.sh LbScripts %s --runtime LCGCMT Python 
 
-""" % (targetlocation, version)
+"""
     elif shell == "csh" or shell == "tcsh" :
         if mysiteroot :
-            content = """set LbLogin_tmpfile = `%s/python/LbConfiguration/LbLogin.py --shell=csh --mktemp --mysiteroot=%s ${*:q}`
-""" % (targetlocation, mysiteroot)
+            content = """set LbLogin_tmpfile = `%s/python/LbConfiguration/LbLogin.py --shell=csh --mktemp --mysiteroot=%s --scripts-version=%s ${*:q}`
+""" % (targetlocation, mysiteroot, version)
         else :
-            content = """set LbLogin_tmpfile = `%s/python/LbConfiguration/LbLogin.py --shell=csh --mktemp ${*:q}`
-""" % targetlocation
+            content = """set LbLogin_tmpfile = `%s/python/LbConfiguration/LbLogin.py --shell=csh --mktemp --scripts-version=%s ${*:q}`
+""" % (targetlocation, version)
         content += """set LbLoginStatus = $?
 if ( ! $LbLoginStatus ) then
     source $LbLogin_tmpfile
 endif
 rm -f $LbLogin_tmpfile
 unset LbLogin_tmpfile
-source %s/scripts/SetupProject.csh LbScripts %s --runtime LCGCMT Python
 
-""" % (targetlocation, version)
+"""
     elif shell == "bat" :
         wintargetlocation = targetlocation
         winmysiteroot = mysiteroot
@@ -76,15 +66,15 @@ source %s/scripts/SetupProject.csh LbScripts %s --runtime LCGCMT Python
         
 set LbLogin_tmpfile="%%TEMP%%\LbLogin_tmpsetup.bat"
 
-python %s\python\LbConfiguration\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% --mysiteroot=%s %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9
-""" % (wintargetlocation, winmysiteroot)
+python %s\python\LbConfiguration\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% --mysiteroot=%s --scripts-version=%s %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9
+""" % (wintargetlocation, winmysiteroot, version)
         else :
             content = """@echo off
         
 set LbLogin_tmpfile="%%TEMP%%\LbLogin_tmpsetup.bat"
 
-python %s\python\LbConfiguration\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9
-""" % wintargetlocation
+python %s\python\LbConfiguration\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% --scripts-version=%s %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9
+""" % (wintargetlocation, version)
         content += """set LbLoginStatus=%%ERRORLEVEL%%
 
 if %%LbLoginStatus%% EQU 0 (
@@ -93,10 +83,25 @@ if %%LbLoginStatus%% EQU 0 (
 
 if exist %%LbLogin_tmpfile%% del %%LbLogin_tmpfile%%
 set LbLogin_tmpfile=
-call %s\scripts\SetupProject.bat LbScripts %s --runtime LCGCMT Python """ % (wintargetlocation, version)
+
+"""
     
     f.write(content)
     f.close()
+
+    generateLoginCache(targetlocation, shell, version, mysiteroot)
+
+def generateLogins(version, targetlocation=None, scripts=None, mysiteroot=None):
+    if not targetlocation : 
+        targetlocation = os.path.realpath(_base_dir)
+    if not scripts :
+        scripts = []
+        scripts.append(os.path.join(_scripts_dir, "LbLogin.csh"))
+        scripts.append(os.path.join(_scripts_dir, "LbLogin.sh"))
+        scripts.append(os.path.join(_scripts_dir, "LbLogin.bat"))
+    for s in scripts :
+        generateLogin(targetlocation, s, version, mysiteroot)
+
 
 if __name__ == '__main__':
     targetlocation = None

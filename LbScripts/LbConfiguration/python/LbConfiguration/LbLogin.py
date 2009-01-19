@@ -13,7 +13,7 @@ _scripts_dir = os.path.dirname(_this_file)
 _base_dir = os.path.dirname(_scripts_dir)
 # updating the sys.path for the bare minimum of the available scripts
 sys.path.insert(0,_scripts_dir)
-sys.path.insert(0,os.path.join(_base_dir, "python"))
+sys.path.insert(0,_base_dir)
 
 from LbUtils.Script import Script
 from LbUtils.Env import Environment, Aliases
@@ -24,7 +24,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.2 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.3 $")
 
 
 def getLbLoginEnv(debug=False, 
@@ -82,15 +82,18 @@ class LbLoginScript(Script):
         self.binary   = ""
         self.compdef  = ""
         self.output_file = None
+        self.output_name = None
     def _write_script(self, env):
         """ select the ouput stream according to the cmd line options """
         close_output = False
         if self.options.output:
             self.output_file = open(self.options.output,"w")
+            self.output_name = self.options.output
             self.options.output = None # reset the option value to avoid to reuse it
             close_output = True
         elif self.options.mktemp:
             fd, outname = mkstemp()
+            self.output_name = outname
             self.output_file = os.fdopen(fd,"w")
             print outname
             self.options.mktemp = None # reset the option value to avoid to reuse it
@@ -146,15 +149,23 @@ class LbLoginScript(Script):
                           dest="remove_userarea",
                           action="store_true",
                           help="prevent the addition of a user area [default: %default]")
-        parser.set_defaults(silent=False)
-        parser.add_option("--silent",
-                          dest="silent",
-                          action="store_true",
-                          help="runs silently")
+        parser.set_defaults(use_cache=True)
+        parser.add_option("--no-cache",
+                          dest="use_cache",
+                          action="store_false",
+                          help="prevent the usage of the cached setup of LbScripts")
         parser.set_defaults(cmtvers="v1r20p20070208")
         parser.add_option("--cmtvers",
                           dest="cmtvers",
                           help="set CMT version")
+        parser.set_defaults(scriptsvers=None)
+        parser.add_option("--scripts-version",
+                          dest="scriptsvers",
+                          help="version of LbScripts to be setup [default: %default")
+        parser.set_defaults(pythonvers="2.5")
+        parser.add_option("--python-version",
+                          dest="pythonvers",
+                          help="version of python to be setup [default: %default]")
         parser.set_defaults(sharedarea=None)
         parser.add_option("-s", "--shared",
                           dest="sharedarea",
@@ -596,39 +607,33 @@ class LbLoginScript(Script):
     
     def setupLbScripts(self):
         log = logging.getLogger()
-        ev = self._env
-        al = self._aliases
         opts = self.options
-        if ev.has_key("PYTHONPATH"):
-            pylist = ev["PYTHONPATH"].split(os.pathsep)
-        else : 
-            pylist = []
-        pylist.append(os.path.join(_base_dir, "python"))
-        ev["PYTHONPATH"] = os.pathsep.join(pylist)
+        for var in self._env.keys() :
+            os.environ[var] = self._env[var]
 
-        if ev.has_key("PATH") :
-            plist = ev["PATH"].split(os.pathsep)
-            if "." in plist :
-                plist = [ p for p in plist if p != "."]
-                log.warning("Removed '.' from PATH. It causes problems with CMT")
-        else : 
-            plist = []
-        plist.append(os.path.join(_base_dir, "scripts"))
-        ev["PATH"] = os.pathsep.join(plist)
-        
-        if not ev.has_key("LHCBSCRIPTS") :
-            ev["LHCBSCRIPTS"] = os.path.join(_base_dir, "scripts")
+        setupprojargs=[]
+        if opts.loglevel=="DEBUG" :
+            setupprojargs.append("--debug")
+        if opts.loglevel=="CRITICAL" :
+            setupprojargs.append("--silent")
+        setupprojargs.append("--no-user-area")
+        if self.output_name :
+            setupprojargs.append("--append=%s" % self.output_name)
+        setupprojargs.append("--shell=%s" % opts.targetshell)
+        setupprojargs.append("LbScripts")
+        if opts.scriptsvers :
+            setupprojargs.append(opts.scriptsvers)
+        setupprojargs.append("--runtime-project")            
+        setupprojargs.append("LCGCMT")
+        setupprojargs.append("Python")
+        if opts.pythonvers :
+            setupprojargs.append("-v")
+            setupprojargs.append(opts.pythonvers)
 
-        from AllProjectsSetup import AllProjectsSetupScript    
-        AProj = AllProjectsSetupScript()
-        sev, sal = AProj.getEnv()
-        
-        for e in sev.keys():
-            if sev[e] :
-                ev[e] = sev[e]
-        for a in sal.keys():
-            if sal[a] :
-                ev[a] = sal[a]
+
+        log.debug("Arguments to SetupProject: %s" % " ".join(setupprojargs))
+
+        SetupProject().main(setupprojargs)
     
     def setEnv(self, debug=False):
         self.setPath()
@@ -640,14 +645,14 @@ class LbLoginScript(Script):
 
         self.setCMTConfig(debug)
         self.setCMTPath()
-        self.setupLbScripts()
+#        self.setupLbScripts()
 
         return self._env, self._aliases, self._extra
 
     def Manifest(self, debug=False):
         ev = self._env
         opts = self.options
-        if not opts.silent :
+        if opts.loglevel != "CRITICAL" :
             self._add_echo( "*" * 80 )
             toprint = "*" + " " * 27 + "---- LHCb Login ----"
             self._add_echo(toprint + " " * (80-len(toprint)-1) + "*")
@@ -680,9 +685,10 @@ class LbLoginScript(Script):
 
         self._write_script(self._env.gen_script(opts.targetshell)
                            +self._aliases.gen_script(opts.targetshell)+self._extra)
-        
-#        SetupProject().main(" --shell=%s LbScripts LCGCMT Python 2.5" % opts.shell)
-        
+
+
+        self.setupLbScripts()
+                        
         return 0
 
 

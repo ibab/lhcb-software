@@ -1,3 +1,9 @@
+2009-01-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/LbLogin.py: 
+	* scripts/generateLogin.py: Modified LbLogin in order to call directly SetupProject
+	from python and not from the shell wrapper anymore.
+
 2009-01-19  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* scripts/SetupProject.py: added the command line option '--no-user-area' to
