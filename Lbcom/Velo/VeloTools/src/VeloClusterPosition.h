@@ -1,4 +1,4 @@
-// $Id: VeloClusterPosition.h,v 1.10 2007-11-21 13:22:26 szumlat Exp $
+// $Id: VeloClusterPosition.h,v 1.11 2009-01-19 11:26:19 dhcroft Exp $
 #ifndef VELOCLUSTERPOSITION_H 
 #define VELOCLUSTERPOSITION_H 1
 
@@ -52,16 +52,35 @@ public:
   virtual ~VeloClusterPosition( ); ///< Destructor
   //-- public interface ----------------------------------------------
   virtual toolInfo position(const LHCb::VeloCluster* aCluster) const;
+  virtual toolInfo position(const LHCb::VeloLiteCluster* aCluster) const;
+
   virtual toolInfo position(const LHCb::VeloCluster* aCluster,
                             const Gaudi::XYZPoint& aPoint,
                             const Direction& aDirection) const;
+  virtual toolInfo position(const LHCb::VeloLiteCluster* aCluster,
+                            const Gaudi::XYZPoint& aPoint,
+                            const Direction& aDirection) const;
+
   virtual toolInfo position(const LHCb::VeloCluster* aCluster,
+                            const LHCb::StateVector& aState) const;
+  virtual toolInfo position(const LHCb::VeloLiteCluster* aCluster,
                             const LHCb::StateVector& aState) const;
   //------------------------------------------------------------------
   //-- returns value of the projected angle
   double projectedAngle() const;
   
 protected:
+
+  /// full/lite cluster position implementation code
+  toolInfo position(const LHCb::VeloChannelID &centreChannel,
+		    const double &fractionalPos) const;
+  
+  /// full/lite cluster position implementation code with point and direction
+  toolInfo position(const LHCb::VeloChannelID &centreChan,
+		    const double & fracPos,
+		    const Gaudi::XYZPoint& aGlobalPoint,
+		    const Direction& aDirection) const;
+
 
   toolInfo weightedLAPos(const LHCb::VeloCluster* cluster) const;
   //-- if state is not available use simpler version of the 
@@ -74,6 +93,7 @@ protected:
   Pair projectedAngle(const DeVeloSensor* sensor,
                       const LHCb::VeloChannelID centreChan) const;
   virtual double fracPosLA(const LHCb::VeloCluster* aCluster) const;
+  virtual double fracPosLA(const LHCb::VeloLiteCluster* aCluster) const;
   double angleOfTrack(const Direction& localSlopes,
                       Gaudi::XYZVector& parallel2Track) const;
   Direction localTrackDirection(const Gaudi::XYZVector& globalTrackDir,

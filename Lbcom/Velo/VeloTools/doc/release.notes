@@ -4,6 +4,9 @@
 ! Purpose     : Velo Tools for reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-01-19 - David Hutchcroft
+ - Added code to calculate cluster position for "Lite" VELO clusters
+
 !========================== VeloTools v3r2 2008-05-29 ========================
 ! 2008-05-23 - Wouter Hulsbergen
  - Fixed bug exposed when reconstructing in a non-ideal geometry

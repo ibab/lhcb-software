@@ -1,4 +1,4 @@
-// $Id: VeloClusterPosition.cpp,v 1.21 2008-05-23 10:26:11 wouter Exp $
+// $Id: VeloClusterPosition.cpp,v 1.22 2009-01-19 11:26:19 dhcroft Exp $
 // Include files
 
 // stl
@@ -172,16 +172,33 @@ double VeloClusterPosition::fracPosLA(const LHCb::VeloCluster* cluster) const
   //
   return  ( fractionalPos );
 }
+
+//=========================================================================
+double VeloClusterPosition::fracPosLA(const LHCb::VeloLiteCluster* cluster) const
+{
+  if( msgLevel(MSG::DEBUG) ) debug()<< " ==> fracPosLA() Lite Cluster" <<endmsg;
+  return  ( cluster->interStripFraction() );
+}
+
 //=========================================================================
 toolInfo VeloClusterPosition::position(const LHCb::VeloCluster* cluster) const
 {
   if( msgLevel(MSG::DEBUG) ) debug()<< " ==> position(cluster) " <<endmsg;
-  //
+  return (position(cluster->channelID(),fracPosLA(cluster)));
+}
+
+//=========================================================================
+toolInfo VeloClusterPosition::position(const LHCb::VeloLiteCluster* cluster) const
+{
+  if( msgLevel(MSG::DEBUG) ) debug()<< " ==> position(liteCluster)  " <<endmsg;
+  return (position(cluster->channelID(),fracPosLA(cluster)));
+}
+
+toolInfo VeloClusterPosition::position(const LHCb::VeloChannelID &centreChannel,
+				       const double &fractionalPos) const{
   toolInfo myInfo;
   // calculate fractional position in units of 'strip'
-  double fractionalPos=fracPosLA(cluster);
   double errorPos=0., pitch=0.;
-  LHCb::VeloChannelID centreChannel=cluster->channelID();
   const DeVeloSensor* sens=m_veloDet->sensor(centreChannel.sensor());
   if(sens==0){
     Error("No valid pointer to sensor");
@@ -213,7 +230,8 @@ toolInfo VeloClusterPosition::position(const LHCb::VeloCluster* cluster) const
   myInfo.fractionalError=errorPos;
   //
   return ( myInfo );
-}
+}  
+
 //============================================================================
 toolInfo VeloClusterPosition::position(const LHCb::VeloCluster* cluster,
                                        const Gaudi::XYZPoint& aGlobalPoint,
@@ -221,11 +239,31 @@ toolInfo VeloClusterPosition::position(const LHCb::VeloCluster* cluster,
 {
   if( msgLevel(MSG::DEBUG) ) 
     debug() << " ==> position(cluster, point, direction) " <<endmsg;
+  return position(cluster->channelID(),fracPosLA(cluster),
+		  aGlobalPoint,aDirection);
+}
+
+//============================================================================
+toolInfo VeloClusterPosition::position(const LHCb::VeloLiteCluster* cluster,
+                                       const Gaudi::XYZPoint& aGlobalPoint,
+                                       const Direction& aDirection) const
+{
+  if( msgLevel(MSG::DEBUG) ) 
+    debug() << " ==> position(litecluster, point, direction) " <<endmsg;
+  return position(cluster->channelID(),fracPosLA(cluster),
+		  aGlobalPoint,aDirection);
+}
+
+//============================================================================
+toolInfo VeloClusterPosition::position(const LHCb::VeloChannelID &centreChan,
+				       const double & fracPos,
+                                       const Gaudi::XYZPoint& aGlobalPoint,
+                                       const Direction& aDirection) const
+{
   // this struct will be returned as output
   toolInfo anInfo;
   // get information about sensor form passed cluster
-  unsigned int sensorNumber=cluster->channelID().sensor();
-  const DeVeloSensor* sensor=m_veloDet->sensor(sensorNumber);
+  const DeVeloSensor* sensor=m_veloDet->sensor(centreChan.sensor());
   if(sensor==0){
     Error("No valid pointer to sensor");
     anInfo.strip=LHCb::VeloChannelID(0);
@@ -233,12 +271,9 @@ toolInfo VeloClusterPosition::position(const LHCb::VeloCluster* cluster,
     anInfo.fractionalError=0.;
     return ( anInfo );
   }
-  // calculate fractional position
-  double m_fracPos=fracPosLA(cluster);
-  LHCb::VeloChannelID centreChan=cluster->channelID();
   // fill partially the toolInfo structure
   anInfo.strip=centreChan;
-  anInfo.fractionalPosition=m_fracPos;
+  anInfo.fractionalPosition=fracPos;
   // error estimate
   double error=0.;
   m_trackDir=Gaudi::XYZVector(aDirection.first, aDirection.second, 1.);
@@ -321,7 +356,8 @@ double VeloClusterPosition::projectedAngle() const
 toolInfo VeloClusterPosition::position(const LHCb::VeloCluster* cluster,
                                        const LHCb::StateVector& aState) const
 {
-  if( msgLevel(MSG::DEBUG) ) debug()<< " ==> position (VectorState) " <<endmsg;
+  if( msgLevel(MSG::DEBUG) ) 
+    debug()<< " ==> position (cluster,VectorState) " <<endmsg;
   unsigned int sensorNumber=cluster->channelID().sensor();
   const DeVeloSensor* sensor=m_veloDet->sensor(sensorNumber);
   double z=sensor->z();
@@ -331,8 +367,26 @@ toolInfo VeloClusterPosition::position(const LHCb::VeloCluster* cluster,
   Direction aDirection;
   aDirection.first=aState.tx();
   aDirection.second=aState.ty();
-  return ( position(cluster, aPoint, aDirection) );
+  return ( position(cluster->channelID(),fracPosLA(cluster), aPoint, aDirection) );
 }
+
+toolInfo VeloClusterPosition::position(const LHCb::VeloLiteCluster* cluster,
+                                       const LHCb::StateVector& aState) const
+{
+  if( msgLevel(MSG::DEBUG) ) 
+    debug()<< " ==> position (LiteCluster,VectorState) " <<endmsg;
+  unsigned int sensorNumber=cluster->channelID().sensor();
+  const DeVeloSensor* sensor=m_veloDet->sensor(sensorNumber);
+  double z=sensor->z();
+  // build space point in global ref. frame
+  Gaudi::XYZPoint aPoint(aState.x(), aState.y(), z);
+  // build state pair
+  Direction aDirection;
+  aDirection.first=aState.tx();
+  aDirection.second=aState.ty();
+  return ( position(cluster->channelID(),fracPosLA(cluster), aPoint, aDirection) );
+}
+
 //============================================================================
 GaudiMath::Interpolation::Type VeloClusterPosition::splineType() const
 {
