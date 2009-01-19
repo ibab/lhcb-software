@@ -1,4 +1,4 @@
-// $Id: MCTupleToolMCTruth.h,v 1.1 2009-01-19 18:07:44 pkoppenb Exp $
+// $Id: MCTupleToolMCTruth.h,v 1.2 2009-01-19 18:10:41 pkoppenb Exp $
 #ifndef MCTUPLETOOLMCTRUTH_H 
 #define MCTUPLETOOLMCTRUTH_H 1
 
@@ -55,7 +55,6 @@ private:
   bool m_storeKinetic; //!< Store kinetic information from the associated candidate
   bool m_storePT; //!< Store the propertime information for associated composite particle
   bool m_storeVertexes; //!< Store the end and origin true vertex information
-  std::string m_calculator; //!< Name of the tool for the angles calculation
 
 };
 #endif // MCTUPLETOOLMCTRUTH_H
