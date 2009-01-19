@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.50 2009-01-13 19:32:43 gligorov Exp $
+! $Id: release.notes,v 1.51 2009-01-19 18:05:52 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
+
+! 2009-01-19 - Patrick Koppenburg
+ - New interface IMCParticleTupleTool for plotting MCParticle-realted quantities.
 
 ! 2009-01-13 - V. Gligorov
  - Added IDaVinciSmartAssociator, the interface to a new ``smart'' association
