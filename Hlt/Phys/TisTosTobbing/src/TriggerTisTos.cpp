@@ -1,4 +1,4 @@
-// $Id: TriggerTisTos.cpp,v 1.9 2008-11-14 06:55:39 tskwarni Exp $
+// $Id: TriggerTisTos.cpp,v 1.10 2009-01-19 17:12:30 tskwarni Exp $
 // Include files 
 #include <algorithm>
 
@@ -158,9 +158,12 @@ void TriggerTisTos::triggerTisTos( bool & decision, bool & tis, bool & tos)
        iTriggerSelection!=m_triggerInput_Selections.end(); ++iTriggerSelection){
     bool decisionThis, tisThis, tosThis;
     selectionTisTos( *iTriggerSelection, decisionThis, tisThis, tosThis );
-    decision = decision || decisionThis;
-    tis = tis || tisThis;
-    tos = tos || tosThis;
+    if( decisionThis ){      
+      //      decision = decision || decisionThis;
+      decision = true;      
+      tis = tis || tisThis;
+      tos = tos || tosThis;
+    }    
     if( tis && tos ){ break; }
   }
 }

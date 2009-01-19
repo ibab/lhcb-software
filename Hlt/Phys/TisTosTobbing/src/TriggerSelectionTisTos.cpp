@@ -1,4 +1,4 @@
-// $Id: TriggerSelectionTisTos.cpp,v 1.13 2008-12-15 21:42:48 tskwarni Exp $
+// $Id: TriggerSelectionTisTos.cpp,v 1.14 2009-01-19 17:12:30 tskwarni Exp $
 // Include files 
 #include <algorithm>
 
@@ -599,8 +599,9 @@ void TriggerSelectionTisTos::selectionTisTos( const std::vector< std::string > &
       selectionTisTos( *pselnam,decision_thisSel,tis_thisSel,tos_thisSel);
       decision = decision || decision_thisSel;
       tis = tis || tis_thisSel;
-      tos = tos || tos_thisSel;
-      if( tis && tos )break; // don't waste time if tis && tos already
+      tos = tos || tos_thisSel;      
+      //      if( tis && tos )break; // don't waste time if tis && tos already
+      if( tis && tos && decision )break; // don't waste time if tis && tos && decision already
     }
   } else {
     //            AND between various trigger selections
@@ -613,7 +614,8 @@ void TriggerSelectionTisTos::selectionTisTos( const std::vector< std::string > &
       decision = decision && decision_thisSel;
       tis = tis && tis_thisSel;
       tos = tos && tos_thisSel;
-      if( !decision )break; // don't waste time if failed trigger already (tis,tos are false too!)      
+      // if( !decision )break; // don't waste time if failed trigger already (tis,tos are false too!)      
+      if( !(decision||tis||tos) )break; // don't waste time 
     }
   } 
 }
