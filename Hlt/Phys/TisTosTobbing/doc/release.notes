@@ -1,12 +1,14 @@
-! $Id: release.notes,v 1.37 2009-01-19 17:12:30 tskwarni Exp $
+! $Id: release.notes,v 1.38 2009-01-19 21:38:02 tskwarni Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
 
+!========================== TisTosTobbing v3r2 2009-01-19 ===================
+
 ! 2009-01-19 - Tomasz Skwarnicki
  - triggerTisTos: do not use tis,tos from selections which failed (postscale kill!)
-   selectionTisTos in OR more: do use tis,tos from selections which failed
+   selectionTisTos: do use tis,tos from selections which failed
 
 !========================== TisTosTobbing v3r1 2009-01-15 ===================
 ! 2008-12-29 - Gerhard Raven
