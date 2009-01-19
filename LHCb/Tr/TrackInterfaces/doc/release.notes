@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2009-01-19 - David Hutchcroft
+ - Added "lite" options to IVeloClusterPosition tool interface
+
 !====================== TrackInterfaces v4r0 2009-01-08 ======================
 ! 2008-12-04 - Marco Cattaneo
  - Remove IPatDebugTool and IPatDebugTTTool interfaces (moved to PatKernel) and

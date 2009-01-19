@@ -1,4 +1,4 @@
-// $Id: IVeloClusterPosition.h,v 1.1 2007-11-21 13:21:17 szumlat Exp $
+// $Id: IVeloClusterPosition.h,v 1.2 2009-01-19 10:14:50 dhcroft Exp $
 #ifndef KERNEL_IVELOCLUSTERPOSITION_H 
 #define KERNEL_IVELOCLUSTERPOSITION_H 1
 
@@ -20,6 +20,7 @@ static const InterfaceID IID_IVeloClusterPosition ("IVeloClusterPosition", 1, 0)
 namespace LHCb
 {
   class VeloCluster;
+  class VeloLiteCluster;
   class VeloChannelID;
   class StateVector;
 }
@@ -45,6 +46,17 @@ public:
   * The returned error estimate depends only on pitch
   */
   virtual toolInfo position(const LHCb::VeloCluster* aCluster) const=0;
+
+ /** calculate position of the VeloLiteCluster
+  * @param aCluster pointer to a VeloLiteCLuster cluster
+  * @return toolInfo (templated struct) 
+  * <br> strip = channel ID of a floored nearest strip
+  * <br> fractionalPosition = interstrip position (in fraction of strip)
+  * within range (0-1)
+  * <br> error = estimate of the error (in fraction of strip)
+  * The returned error estimate depends only on pitch
+  */
+  virtual toolInfo position(const LHCb::VeloLiteCluster* aCluster) const=0;
  
  /** calculate position of the VeloCluster
   * @param aCluster pointer to a VeloCLuster cluster
@@ -63,6 +75,23 @@ public:
                             const Gaudi::XYZPoint& aPoint,
                             const Direction& aDirection) const=0;
 
+ /** calculate position of the VeloLiteCluster
+  * @param aCluster pointer to a VeloLiteCLuster cluster
+  * @param aPoint const reference to XYZPoint - XYZ position of track  
+  * in the sensor in global reference frame. 
+  * @param aDirection const reference to pair of doubles - directions of 
+  *        track xz slope and yz slope
+  * @return toolInfo (templated struct) 
+  * <br> strip = channel ID of a floored nearest strip
+  * <br> fractionalPosition = interstrip position (in fraction of strip)
+  * <br> error = estimate of the error (in fraction of strip)
+  * The returned error estimate depends both on pitch and 
+  * projected angle of a track
+  */
+  virtual toolInfo position(const LHCb::VeloLiteCluster* aCluster,
+                            const Gaudi::XYZPoint& aPoint,
+                            const Direction& aDirection) const=0;
+
  /** calculate position of the VeloCluster
   * @param aCluster pointer to a VeloCLuster cluster
   * @param aState const reference to VectorState object
@@ -77,12 +106,19 @@ public:
   virtual toolInfo position(const LHCb::VeloCluster* aCluster,
                             const LHCb::StateVector& aState) const=0;
 
-/** calculate fractional position
-  * @param aCluster pointer to a VeloCLuster cluster
-  * @return Pair - pair of doubles 
-  * The method is very useful for resolution studies
+ /** calculate position of the VeloLiteCluster
+  * @param aCluster pointer to a VeloLiteCluster cluster
+  * @param aState const reference to VectorState object
+  * @return toolInfo (templated struct) 
+  * <br> strip = channel ID of a floored nearest strip
+  * <br> fractionalPosition = interstrip position (in fraction of strip)
+  * <br> error = estimate of the error (in fraction of strip)
+  * The returned error estimate depends both on pitch and 
+  * projected angle of a track
   */
-  virtual double fracPosLA(const LHCb::VeloCluster* aCluster) const=0;
+
+  virtual toolInfo position(const LHCb::VeloLiteCluster* aCluster,
+                            const LHCb::StateVector& aState) const=0;
 
 };
 #endif // KERNEL_IVELOCLUSTERPOSITION_H
