@@ -1,11 +1,11 @@
-C $Id: ran.F,v 1.1.1.1 2006-07-03 17:23:35 gcorti Exp $
+C $Id: ran.F,v 1.2 2009-01-19 16:48:22 jonrob Exp $
 c use Gaudi RndmNumberSvc as random generator
       
-      REAL FUNCTION RAN(DUMMY)
+      REAL FUNCTION HIJING_RAN(DUMMY)
       IMPLICIT NONE
       DOUBLE PRECISION DUMMY, CPYR
       INTEGER IDUMMY
-      RAN=CPYR(IDUMMY)
+      HIJING_RAN=CPYR(IDUMMY)
       RETURN
       END
       

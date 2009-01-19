@@ -4,6 +4,10 @@
 ! Purpose     : "Interface" to Hijing 
 !-----------------------------------------------------------------------------
 
+! 2009-01-19 - Chris Jones
+ - Fix for name conflicit between local ran function and implicit function 
+   with gfortran gcc 4.3 (OSX).
+
 !========================= LbHijing v4r0 2008-09-09 ==========================
 ! 2008-09-09 - Gloria CORTI
  - Fix bug introduced with latest changes, i.e. reset momentum in particle
