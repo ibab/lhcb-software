@@ -2,6 +2,10 @@ Package         : OTDAQ
 Package manager : J.Amoraal
 !---------------------------------------------------------------------
 
+! 2008-12-18 - Jan Amoraal
+ - Remove warning about empty Gol Headers. Headers can be empty
+ - Fix unchecked status code
+
 !======================= OTDAQ v7r4 2009-01-08 =======================
 ! 2008-12-18 - Jan Amoraal
  - Change TELL1 numbering from 1-48 to 0x0TLQ where (T = {1,2,3}, L={0,1,2,3}, 
