@@ -1,4 +1,4 @@
-// $Id: TrackProjectorSelector.cpp,v 1.3 2009-01-06 12:52:45 mneedham Exp $
+// $Id: TrackProjectorSelector.cpp,v 1.4 2009-01-19 10:26:12 dhcroft Exp $
 // Include files 
 
 // from Gaudi
@@ -31,6 +31,10 @@ TrackProjectorSelector::TrackProjectorSelector( const std::string& type,
   //       can remove the different names for the 
   declareProperty( "VeloR",   m_projNames[Measurement::VeloR]   = "TrajProjector<Velo>/TrajVeloRProjector" );
   declareProperty( "VeloPhi", m_projNames[Measurement::VeloPhi] = "TrajProjector<Velo>/TrajVeloPhiProjector" );
+  declareProperty( "VeloLiteR",   m_projNames[Measurement::VeloLiteR]   
+		   = "TrajProjector<Velo>/TrajVeloLiteRProjector" );
+  declareProperty( "VeloLitePhi", m_projNames[Measurement::VeloLitePhi] 
+		   = "TrajProjector<Velo>/TrajVeloLitePhiProjector" );
   declareProperty( "TT",      m_projNames[Measurement::TT]      = "TrajProjector<ST>/TrajTTProjector" );
   declareProperty( "IT",      m_projNames[Measurement::IT]      = "TrajProjector<ST>/TrajITProjector" );
   declareProperty( "OT",      m_projNames[Measurement::OT]      = "TrajOTProjector" );
@@ -70,10 +74,9 @@ StatusCode TrackProjectorSelector::initialize()
 //-----------------------------------------------------------------------------
 ITrackProjector* TrackProjectorSelector::projector( const LHCb::Measurement& m ) const
 {
-
   Projectors::const_iterator i = m_projectors.find(m.type());
   if ( i == m_projectors.end() || i->second ==0 ) {
-    warning() << "No projector in for measurement of type " << m.type() << "!" << endmsg;
+    warning() << "No projector in for measurement of type " << m.type() << "!";
     return 0;
   }
   return i->second;
