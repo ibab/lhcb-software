@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.8 2007-10-02 07:56:42 gcorti Exp $
+! $Id: release.notes,v 1.9 2009-01-19 16:46:47 jonrob Exp $
 ! Package     : Gen/BcVegPy
 ! Responsible : 
+
+! 2009-01-19 - Chris Jones
+ - Fixes for line-too-long compilation errors in various files using gfortran
+   on OSX. Just slightly shorten all offending lines.
 
 ! ====================== BcVegPy v1r1p2 2007-10-02 ===========================
 ! 2007-10-02 - Gloria Corti
