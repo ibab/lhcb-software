@@ -1,4 +1,4 @@
-// $Id: TrackTrajFitter.cpp,v 1.2 2008-03-31 07:07:59 mneedham Exp $
+// $Id: TrackTrajFitter.cpp,v 1.3 2009-01-19 10:12:35 dhcroft Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -75,7 +75,10 @@ StatusCode TrackTrajFitter::fit( Track& track, LHCb::ParticleID )
   for(LHCb::Measurement::Vector::const_iterator i=in.begin();i!=in.end();++i) {
        // grab all velo hits of the track...
        if ( *i == 0 ) { debug() << " null pointer to measurement! " << endmsg; continue; }
-       if ( !(*i)->checkType(Measurement::VeloR) && !(*i)->checkType(Measurement::VeloPhi) ) continue; 
+       if ( !( (*i)->checkType(Measurement::VeloR) ||
+	       (*i)->checkType(Measurement::VeloPhi) ||
+	       (*i)->checkType(Measurement::VeloLiteR) ||
+	       (*i)->checkType(Measurement::VeloLitePhi) ) ) continue; 
        out.push_back( (*i)->clone() );
   }
   debug() << "  picked up " 

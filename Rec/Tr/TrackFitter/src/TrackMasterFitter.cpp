@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.63 2009-01-13 14:19:05 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.64 2009-01-19 10:12:35 dhcroft Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -318,7 +318,7 @@ bool TrackMasterFitter::outlierRemoved( Track& track ) const
   
   // Count the number of hits of each type
   enum HitType {VeloR, VeloPhi, TT, T, Muon, Unknown} ;
-  static HitType hittypemap[9] = { Unknown, VeloR, VeloPhi, TT, T, T, Muon, TT, T } ;
+  static HitType hittypemap[11] = { Unknown, VeloR, VeloPhi, VeloR, VeloPhi, TT, T, T, Muon, TT, T } ;
   const size_t minNumHits[5] = {2,2,2,4,4} ; // the bare minimum (FIX ME: job option)
   size_t numHits[5]          = {0,0,0,0,0} ;
   for( LHCb::Track::NodeContainer::const_iterator inode =  track.nodes().begin() ;
@@ -559,6 +559,8 @@ void TrackMasterFitter::fillExtraInfo(Track& track ) const
 	switch( node->measurement().type() ) {
 	case Measurement::VeloR:
 	case Measurement::VeloPhi:
+	case Measurement::VeloLiteR:
+	case Measurement::VeloLitePhi:
 	  chisqVelo[0] += node->deltaChi2Forward() ;
 	  chisqVelo[1] += node->deltaChi2Backward() ;
 	  ++nhitsVelo ;

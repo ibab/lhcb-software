@@ -3,6 +3,11 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+! 2009-01-19 - David Hutchcroft
+ - Added ability to fit Velo "lite" clusters
+   Added ConfiguredFitForwardLiteOnly and ConfiguredFitVeloLiteOnly to 
+   ConfiguredFitters.py
+
 !=========================== TrackFitter v2r30 2009-01-13 ===================
 ! 2009-01-13 - Wouter Hulsbergen
  - Change outlier rejection such that minimum number of hits is left in each system

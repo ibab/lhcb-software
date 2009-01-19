@@ -79,6 +79,21 @@ def ConfiguredPrefitter( Name = "DefaultEventFitter",
     eventfitter.Fitter.ErrorY2 = 10000
     return eventfitter
 
+def ConfiguredPrefitterLiteOnly( Name = "DefaultPrefitterLiteOnly",
+                                 TracksInContainer = "Rec/Tracks/Best",
+                                 FieldOff = TrackSys().fieldOff(),
+                                 SimplifiedGeometry = TrackSys().simplifiedGeometry()):
+    eventfitter = ConfiguredEventFitter(Name,TracksInContainer,FieldOff,SimplifiedGeometry,NoDriftTimes=True)
+    eventfitter.Fitter.NumberFitIterations = 2
+    eventfitter.Fitter.MaxNumberOutliers = 0
+    eventfitter.Fitter.ErrorY2 = 10000
+    eventfitter.Fitter.addTool( MeasurementProvider(), name = 'MeasProvider')
+    eventfitter.Fitter.MeasProvider.VeloLite = True
+    return eventfitter
+
+
+
+
 def ConfiguredFitVelo( Name = "FitVelo",
                        TracksInContainer = "Rec/Track/PreparedVelo",
                        FieldOff = True):
@@ -92,6 +107,23 @@ def ConfiguredFitVelo( Name = "FitVelo",
     #eventfitter.Fitter.ErrorY2 = 100
     #eventfitter.Fitter.ErrorP= [0,0.01]
     #eventfitter.Fitter.Extrapolator.ApplyEnergyLossCorr = False
+    return eventfitter
+
+def ConfiguredFitVeloLiteOnly( Name = "FitVeloLite",
+                               TracksInContainer = "Rec/Track/PreparedVelo",
+                               FieldOff = True):
+    # note that we ignore curvatue in velo. in the end that seems the
+    # most sensible thing to do.
+    eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
+    eventfitter.Fitter.NumberFitIterations = 2
+    eventfitter.Fitter.ZPositions = []
+    #eventfitter.Fitter.ErrorP= [0.01, 5e-08]
+    #eventfitter.Fitter.ErrorX2 = 100
+    #eventfitter.Fitter.ErrorY2 = 100
+    #eventfitter.Fitter.ErrorP= [0,0.01]
+    #eventfitter.Fitter.Extrapolator.ApplyEnergyLossCorr = False
+    eventfitter.Fitter.addTool( MeasurementProvider(), name = 'MeasProvider')
+    eventfitter.Fitter.MeasProvider.VeloLite = True
     return eventfitter
 
 def ConfiguredFitVeloTT( Name = "FitVeloTT",
@@ -123,6 +155,14 @@ def ConfiguredFitForward( Name = "FitForward",
     eventfitter.Fitter.NumberFitIterations = 2
     return eventfitter
 
+def ConfiguredFitForwardLiteOnly( Name = "FitForwardLiteOnly",
+                                  TracksInContainer = "Rec/Track/Forward" ):
+    eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
+    eventfitter.Fitter.NumberFitIterations = 2
+    eventfitter.Fitter.addTool( MeasurementProvider(), name = 'MeasProvider')
+    eventfitter.Fitter.MeasProvider.VeloLite = True    
+    return eventfitter
+
 def ConfiguredFitMatch( Name = "FitMatch",
                         TracksInContainer = "Rec/Track/Match" ):
     eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
@@ -139,6 +179,10 @@ def ConfiguredFitDownstream( Name = "FitDownstream",
 def ConfiguredPreFitForward( Name = "PreFitForward",
                              TracksInContainer = "Rec/Track/Forward" ):
     return ConfiguredPrefitter(Name,TracksInContainer)
+
+def ConfiguredPreFitForwardLiteOnly( Name = "PreFitForwardLiteOnly",
+                             TracksInContainer = "Rec/Track/Forward" ):
+    return ConfiguredPrefitterLiteOnly(Name,TracksInContainer)
 
 def ConfiguredPreFitMatch( Name = "PreFitMatch",
                            TracksInContainer = "Rec/Track/Match" ):
@@ -184,9 +228,8 @@ def ConfiguredFastVeloOnlyEventFitter( Name, TracksInContainer ):
     eventfitter.Fitter.MeasProvider.IgnoreMuon = True
     return eventfitter
 
-def ConfiguredStraightLineFit( Name, TracksInContainer,
-                               NoDriftTimes =  TrackSys().noDrifttimes()  ):
-    eventfitter = ConfiguredEventFitter(Name,TracksInContainer,FieldOff=True,NoDriftTimes=NoDriftTimes)
+def ConfiguredStraightLineFit( Name, TracksInContainer ):
+    eventfitter = ConfiguredEventFitter(Name,TracksInContainer,FieldOff=True)
     eventfitter.Fitter.ApplyMaterialCorrections = False
     eventfitter.Fitter.Extrapolator.ApplyMultScattCorr = False
     eventfitter.Fitter.Extrapolator.ApplyEnergyLossCorr = False
