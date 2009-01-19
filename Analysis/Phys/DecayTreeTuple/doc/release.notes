@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+! 2009-01-19 - Patrick Koppenburg
+ - Add MCTupleToolP2VV and MCTupleToolMCTruth using MCParticle as input
+ - call the from TupleToolMCTruth
+
 ! 2009-01-17 - Chris Jones
  - Fix OSX/gcc4 warning in TupleToolVtxIsoln
 
