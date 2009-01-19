@@ -1,4 +1,4 @@
-// $Id: IDaVinciSmartAssociator.h,v 1.1 2009-01-13 19:30:15 gligorov Exp $
+// $Id: IDaVinciSmartAssociator.h,v 1.2 2009-01-19 18:15:51 jpalac Exp $
 #ifndef IDAVINCISMARTASSOCIATOR_H 
 #define IDAVINCISMARTASSOCIATOR_H 1
 
@@ -29,16 +29,13 @@ static const InterfaceID IID_IDaVinciSmartAssociator ( "IDaVinciSmartAssociator"
  *  @date   2009-01-13
  */
 class IDaVinciSmartAssociator : virtual public IAlgTool {
+
 public: 
 
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_IDaVinciSmartAssociator; }
 
-  virtual ProtoParticle2MCLinker::ToRange associate(LHCb::Particle*) = 0;
-
-protected:
-
-private:
+  virtual Particle2MCLinker::ToRange associate(const LHCb::Particle*) = 0;
 
 };
 #endif // IDAVINCISMARTASSOCIATOR_H
