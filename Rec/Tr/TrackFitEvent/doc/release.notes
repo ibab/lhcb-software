@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2009-01-19 M Needham
+ - Cluster size method for STMeasurement now returns value
+   given by STPositionTool [was value from cluster]
+
 !========================== TrackFitEvent v3r19 2008-11-21 ===================
 ! 2008-11-17 M Needham
   - Fix warning in OTMeasurement constructor [module should be passed to base class]

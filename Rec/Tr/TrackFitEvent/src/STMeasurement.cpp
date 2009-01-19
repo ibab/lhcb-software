@@ -1,4 +1,4 @@
-// $Id: STMeasurement.cpp,v 1.15 2008-11-06 12:41:26 mneedham Exp $
+// $Id: STMeasurement.cpp,v 1.16 2009-01-19 11:23:56 mneedham Exp $
 // Include files 
 
 // from STDet
@@ -50,6 +50,7 @@ void STMeasurement::init( const DeSTDetector& geom,
     stClusPosTool.estimate( m_cluster );
  
   m_errMeasure = measVal.fractionalError*stSector -> pitch();
+  m_size = measVal.clusterSize;
   m_trajectory = stSector->trajectory( measVal.strip, measVal.fractionalPosition) ;
   m_z = stSector->globalCentre().z();
 

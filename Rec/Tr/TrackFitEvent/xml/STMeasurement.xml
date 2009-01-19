@@ -33,7 +33,12 @@
         getMeth = 'FALSE' 
         setMeth = 'FALSE' />
 
- 
+      <attribute
+        type    = 'unsigned int'
+        name    = 'size'
+        desc    = 'cluster size'
+        setMeth = 'FALSE' />
+     
 
       <method
         type  = 'const LHCb::STCluster*'
@@ -56,16 +61,7 @@
 	</method>
 
 
-<method
-  type    = 'unsigned int'
-  name    = 'size'
-  desc    = 'cluster size'
-  const   = 'TRUE'>
-  <code>
-     return m_cluster->size();
-  </code>
-</method>
-     
+
 
      &STCommon;
 
