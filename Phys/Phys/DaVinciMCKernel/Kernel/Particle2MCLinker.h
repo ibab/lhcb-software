@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinker.h,v 1.7 2009-01-19 18:16:04 jpalac Exp $
+// $Id: Particle2MCLinker.h,v 1.8 2009-01-19 18:20:58 jpalac Exp $
 #ifndef DAVINCIASSOCIATORS_PARTICLE2MCLINKER_H
 #define DAVINCIASSOCIATORS_PARTICLE2MCLINKER_H 1
 
@@ -31,52 +31,6 @@ namespace LHCb
     *  @date   2004-04-29
     */
 
-/* 	The class MCAssociation holds a single MCParticle and an association weight. it is
-	used when returning the array of all MCParticles associated to a single
-	Particle/ProtoParticle. This is implemented in the rangeFrom method, where the interface
-	is identical as it was in DC04.
-
-	Added by V. Gligorov, 23-11-07. 
-	
-*/
-
-class MCAssociation {
-public:
-
-  MCAssociation() 
-    :
-    m_associatedMCP(0),
-    m_weight(0.)
-  {}
-
-  MCAssociation(const LHCb::MCParticle* mcp, 
-                const double weight)
-    :
-    m_associatedMCP(mcp),
-    m_weight(weight)
-  {
-  }
-
-  virtual ~MCAssociation() {}
-  
-  const LHCb::MCParticle* to() const { return m_associatedMCP; }
-
-  double weight() const { return m_weight; }
-
-  StatusCode setTo(const LHCb::MCParticle* associatedMCP) {
-    m_associatedMCP = associatedMCP;
-    return StatusCode::SUCCESS;
-  }
-
-  StatusCode setWeight(double weight)  {
-    m_weight = weight;
-    return StatusCode::SUCCESS;
-  }
-
-private:
-  const LHCb::MCParticle* m_associatedMCP;
-  double m_weight;
-};
 
 template <class SOURCE=LHCb::Particle>
 class Object2MCLinker
