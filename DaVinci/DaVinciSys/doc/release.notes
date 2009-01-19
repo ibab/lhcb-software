@@ -3,25 +3,63 @@ Package             : Phys/DaVinci
 Package Coordinator : Juan Palacios
 Purpose             : LHCb analysis program 
 
-! 2009-01-13 - Patrick Koppenburg
- - Fix HLT test
+</PRE><H1><A NAME=v22r0>2009-01-19 DaVinci v22r0</A></H1><PRE>
+Based on Phys v8r0, Analysis v3r0, Rec v6r1, HLT v5r0, Lbcom v6r25, LHCb v26r1, Gaudi v20r4, LCGCMT 55c
 
-! 2009-01-12 - Patrick Koppenburg
- - Add a DC06 HLT test. Rename Hlt into Hlt-2008.
+* Overhaul of configurables. Most opts files removed. New ParticleProperty service. Old style HLT configuration removed.
 
-! 2009-01-11 - Patrick Koppenburg
- - Yet another tests update
+  PHYS Highlights: 
 
-! 2009-01-09 - Patrick Koppenburg
- - Simplify sam test
- - Added Hlt test
+  * New package Phys/PhysConf containing the configuration of physics
+packages. Do not call directly, it is used internally in DaVinci().
 
-! 2009-01-08 - Patrick Koppenburg
- - Added reference for SAM test 
+  * ALL .opts files removed from all packages. They have been replaced
+by .py options or configurables where necessary. (Juan, Patrick)
 
-! 2009-01-07 - Patrick Koppenburg
- - Moved all tests here
- - Added three more, inclusing SAM test for Dirac
+  * Migrate to new particle property service
+  
+  * VertexFit : Improvements in PVReFitterAlg. Steer choice of PV re-fitting interface and implementation from properties. (Juan)
+
+  * ParticleMaker : More robust pi0 making for 2008 MC (Olivier)
+
+  * DaVinciMonitors : New package for all Particle-level DQ (Patrick)
+
+  ANALYSIS highlights:
+
+  * Many .opts files removed from all packages. They have been replaced
+by .py options or configurables where necessary. (Juan, Patrick)
+  - Warning : many .opts files still in the release (especially in
+PhysSel) do not work anymore. Follow this recipe to adapt:
+
+    https://twiki.cern.ch/twiki/bin/view/LHCb/DaVinciConfigurable
+
+  * New package Phys/AnalysisConf containing the configuration of
+analysis and MC packages. Do not call directly, it is used internally in
+DaVinci() (Patrick)
+
+  * Migration to new Particle Property service
+
+  * Tools/Stripping : Declared obsolete. Kept for backward-compatibility.
+
+  * Tutorial/Analysis : Adpated to DaVinci v22r0.
+ 
+  * Phys/DecayTreeTuple : Additions to geometry. More variables. Now IP
+and FD come in three flavours: Best PV, Best PV of mother, Origin (i.e.
+mother) vertex.
+ 
+  * Phys/CommonParticles: First release of python "configurables" for standard particles. Standard particles now accessible via loading of python modules. For details see release notes (Vanya)
+
+  * MicroDST : Automatic creation of algorithm configurables with their typedef name, not mangled name from template specialisation. All packaged in MicroDST.MicroDSTAlgorithm module, available in MicroDST/MicroDSTConf. Ex/MicroDSTExample adapted to use DaVinci() configurable and new particle property service. (Juan)
+
+  HLT highlights
+
+ * Major changes in configuration. Most .opts files are gone.
+   "OldStyle" configuration removed.
+ * Changes in infrastructure. See HltBase and HltCommon.
+ * Improvements in many alleys.
+ * Only changes in configuration in Hlt2.
+
+  
 
 </PRE><H1><A NAME=v21r0>2008-11-28 DaVinci v21r0</A></H1><PRE>
 Based on Phys v7r3, Analysis v2r3, Rec v6r0, HLT v4r4, Lbcom v6r24, LHCb v26r0, Gaudi v20r3, LCGCMT 55b

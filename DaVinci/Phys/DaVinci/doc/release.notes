@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.298 2009-01-16 18:34:41 pkoppenb Exp $
+! $Id: release.notes,v 1.299 2009-01-19 12:56:08 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,8 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+!========================== DaVinci v22r0 2000-01-19 =====================
 
 ! 2009-01-16 - Patrick Koppenburg
  - DaVinci.py : moved exampleSeq to monitoring
