@@ -1,4 +1,4 @@
-// $Id: DecodeVeloRawBuffer.cpp,v 1.16 2008-10-16 15:31:30 krinnert Exp $
+// $Id: DecodeVeloRawBuffer.cpp,v 1.17 2009-01-19 11:24:39 dhcroft Exp $
 
 #include "GaudiKernel/AlgFactory.h"
 
@@ -161,6 +161,7 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloLiteClusters(const std::vector<LHCb:
     VeloDAQ::decodeRawBankToLiteClusters(rawBank,sensor,m_assumeChipChannelsInRawBuffer,fastCont);
 
   }
+  std::sort(fastCont->begin(),fastCont->end(),SiDataFunctor::Less_by_Channel< LHCb::VeloLiteCluster >());
   put(fastCont,m_veloLiteClusterLocation);
  
   return StatusCode::SUCCESS;
