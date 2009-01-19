@@ -42,7 +42,7 @@ macro LbHijing_use      "LbHijing     v4r0    Gen"  WIN32 ""
 use ${LbHijing_use}
 
 # Generators packages: LHCb sampling results for Machine Induced Background
-use LbMIB               v3r0      Gen
+use LbMIB               v3r1      Gen
 
 # Generators packages: LHCb particle gun generator: temporarly off on Win32
 macro ParticleGuns_use  "ParticleGuns v6r2    Gen"  WIN32 ""
@@ -67,7 +67,7 @@ use GaussCalo		v9r2	  Sim
 use GaussPhysics	v6r2	  Sim
 
 # Monitoring packages
-use GaussMonitor	v6r1      Sim
+use GaussMonitor	v6r2      Sim
 use CaloMoniSim         v3r1p1    Calo
 use VeloGauss           v2r3      Velo
 use MuonMoniSim         v2r3      Muon
