@@ -39,7 +39,7 @@ void ProcessMgr::createInfoServers() {
 
 void ProcessMgr::createInfoServices(std::string serverName){
   MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "Creating Service Status"<< endreq;
+  msg << MSG::DEBUG << "Creating Service Status servername "<< serverName << endreq;
   m_dimInfoServices = new DimInfoServices(this, serverName);
 }
 
@@ -141,8 +141,8 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
       }
       else {
         if (!m_monitoringFarm) {
-          if (serviceName.find("/" + m_nodeName) == std::string::npos) {
-            msg << MSG::DEBUG << "REFUSED because nodeName NOT OK" << endreq;
+	 if (serviceName.find("/" + m_nodeName) == std::string::npos) {
+            msg << MSG::DEBUG << "REFUSED because partition name NOT OK" << endreq;
             continue;
           }
         }
@@ -150,7 +150,11 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
     }
     else if (m_serviceOwner.compare(s_Saver)==0){
       if (!m_monitoringFarm) {
-        if (serviceName.find("/" + m_nodeName) == std::string::npos) {
+        //here we need to check for m_partName[1] (only 1 partition at a time in EFF), not the nodename
+        //if (serviceName.find("/" + m_nodeName) == std::string::npos) {
+	msg << MSG::DEBUG << "checking for partitionname in servicename " << endreq;
+	msg << MSG::DEBUG << "m_partName.size " <<    m_partName.size() << " partname "<< m_partName[0] << endreq;	
+	if (serviceName.find("/" + m_partName[0]) == std::string::npos) {	
           msg << MSG::DEBUG << "REFUSED because nodeName NOT OK" << endreq;
           continue;
         }

@@ -24,7 +24,6 @@ void DimInfoServices::infoHandler()
   while ( (tmpStringSize = getSize()) <=0 ){usleep(10000);}
   
   std::string value = getString();
-  
   m_processMgr->updateServiceSet(value, m_serviceSet);
   //IocSensor::instance().send(m_processMgr->service(), s_createServiceMap , m_processMgr->service());
   //IocSensor::instance().send(m_processMgr->service(), s_updateServiceMap, m_processMgr->dimInfoServers()); //start Timer*/

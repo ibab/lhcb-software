@@ -465,7 +465,9 @@ std::string BaseServiceMap::createTermServiceName (const std::string &serviceNam
     return serviceName.substr(0, first_slash + 1) + subfarmName + "_Adder_1" + serviceName.substr(second_slash);
   }
   else{
-    return serviceName.substr(0, first_slash + 1) + serverName + serviceName.substr(second_slash);
+   // return serviceName.substr(0, first_slash + 1) + serverName + serviceName.substr(second_slash);
+   // for saver the partition is in the utgid position
+    return serviceName;
   }
 
 }    
@@ -564,9 +566,12 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName)
 
     for (it=m_dimInfoIt->second.begin(); it!=m_dimInfoIt->second.end(); ++it) {
       std::string serverName = Misc::splitString(it->first, "/")[1];
-      if (!m_processMgr->dimInfoServers()->isActive(serverName)) continue;
+      msg << MSG::DEBUG << "Term : " << it->first << " servername " << serverName << endreq;
+      //EvH I commented this line out for the moment because the servername is now the partitionname
+      //(for the presenter) - not that slice name PARTxx
+      //if (!m_processMgr->dimInfoServers()->isActive(serverName)) continue;
       if(0 == it->second->monObject()) continue;
-      //msg << MSG::DEBUG << "Term : " << it->first << endreq;
+
       msg << MSG::DEBUG << "Term : " << it->second->dimInfo()->getName() << endreq;
 
       std::string type = it->second->monObject()->typeName();
@@ -641,7 +646,7 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName)
 // 	}
       }
       else {
-        msg << MSG::ERROR << "MonObject of type " << type << " can not be writed."<< endreq; 
+        msg << MSG::ERROR << "MonObject of type " << type << " can not be written."<< endreq; 
       }
     }
   
