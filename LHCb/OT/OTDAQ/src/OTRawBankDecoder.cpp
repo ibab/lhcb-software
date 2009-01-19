@@ -1,4 +1,4 @@
-// $Id: OTRawBankDecoder.cpp,v 1.21 2008-12-02 10:22:28 wouter Exp $
+// $Id: OTRawBankDecoder.cpp,v 1.22 2009-01-19 15:40:15 janos Exp $
 // Include files
 #include <algorithm>
 #include <sstream>
@@ -354,27 +354,22 @@ StatusCode OTRawBankDecoder::decodeGolHeadersV3(const LHCb::RawBank& bank, int b
     OTDAQ::GolHeader golHeader(*idata) ;
     // if there are no hits, issue a warning
     numhits = golHeader.numberOfHits() ;
-    if( 0 == numhits ) {
-      Warning( "Found empty GOL header!", StatusCode::SUCCESS, 0).ignore();
-      //warning() << "Found empty GOL header " << golHeader << " " << *idata << endmsg ;
+    // Decode the GOL ID
+    station = golHeader.station();
+    layer = golHeader.layer();
+    quarter = golHeader.quarter();
+    module = golHeader.module();
+    // check that the GOL ID is valid  
+    if(!m_detectordata->isvalidID(station,layer,quarter,module) ) {
+      warning() << "Invalid gol header "<< golHeader << endmsg ;
+      decodingerror = true ;
     } else {
-      // Decode the GOL ID
-      station = golHeader.station();
-      layer = golHeader.layer();
-      quarter = golHeader.quarter();
-      module = golHeader.module();
-      // check that the GOL ID is valid  
-      if(!m_detectordata->isvalidID(station,layer,quarter,module) ) {
-        warning() << "Invalid gol header "<< golHeader << endmsg ;
-        decodingerror = true ;
-      } else {
-        const unsigned short* firsthit = reinterpret_cast<const unsigned short*>(idata+1) ;
-        m_detectordata->module(station,layer,quarter,module).setData(numhits,firsthit,bankversion) ; 
-        if (msgLevel(MSG::DEBUG)) debug() << "Reading gol header " << golHeader << endmsg ;
-      }
-      // skip the actual hits
-      idata += golHeader.hitBufferSize() ;
+      const unsigned short* firsthit = reinterpret_cast<const unsigned short*>(idata+1) ;
+      m_detectordata->module(station,layer,quarter,module).setData(numhits,firsthit,bankversion) ; 
+      if (msgLevel(MSG::DEBUG)) debug() << "Reading gol header " << golHeader << endmsg ;
     }
+    // skip the actual hits
+    idata += golHeader.hitBufferSize() ;
     ++numgols ;
   }
 
@@ -451,7 +446,7 @@ StatusCode OTRawBankDecoder::decodeGolHeaders() const
   // Retrieve the RawEvent:
   if ( exist<LHCb::RawEvent>(m_rawEventLocation) ) {
     const LHCb::RawEvent* event = get<LHCb::RawEvent>(m_rawEventLocation);
-    decodeGolHeaders( *event ) ;
+    decodeGolHeaders( *event ).ignore() ; ///< Always returns SUCCESS. Might change in the future ;)
   } else {
     warning() << " RawEvent does not exist at " << m_rawEventLocation << " location " << endmsg;
   }
