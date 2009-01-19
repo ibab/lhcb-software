@@ -1,6 +1,6 @@
 #
 #==============================================================================
-# $Id: HltL0Candidates.py,v 1.8 2009-01-16 07:56:33 graven Exp $
+# $Id: HltL0Candidates.py,v 1.9 2009-01-19 12:10:27 graven Exp $
 #==============================================================================
 #
 # Module to define the conversion of L0 candidates across several HltLines
@@ -44,7 +44,7 @@ def _calo( channel, name ) :
                  }
     #note: explicitly set the OutputSelection so we can pick it up downstream...
     x = { channel: HltL0CaloCandidates(name, L0Channel = channel, OutputSelection = name) }
-    if i in _calomaker :
+    if channel in _calomaker :
         HltL0CaloCandidates(name).addTool(_calomaker[channel],name='CaloMakerTool')
         HltL0CaloCandidates(name).CaloMakerTool = _calomaker[channel]
     return x
