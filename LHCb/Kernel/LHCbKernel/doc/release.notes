@@ -4,6 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2009-01-19 - David Hutchcroft
+ - Added a direct accessor to FastClusterContainer (requires container sorted)
+   and a Less_By_Channel to SiDataFunctor to sort the container
+
 !===================== LHCbKernel v11r0 2009-01-09 ========================
 ! 2009-01-09 - Jeroen van Tilburg
  - Added the cluster size as data the SiPositionInfo struct.

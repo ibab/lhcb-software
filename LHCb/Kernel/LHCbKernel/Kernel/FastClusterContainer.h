@@ -37,6 +37,7 @@ public:
   typedef typename VD::const_pointer          const_pointer;
   typedef typename VD::reference              reference;
   typedef typename VD::const_reference        const_reference;
+  typedef typename VISIBLE::chan_type         chan_type;
 
 private:
   typedef std::vector<INTERNAL> InternalData;
@@ -117,6 +118,15 @@ public:
     const_iterator find(const typename findPolicy::comp_type& value) const{
     std::pair< const_iterator, const_iterator> iterP = std::equal_range(begin(),end(),value,findPolicy());
     return (iterP.first!=iterP.second) ? iterP.first : end();
+  }
+  
+  /// object method, adding a direct access by key using a customised lower_bound (assumes list sorted)
+  const value_type * object( const chan_type & id ) const{
+    const_iterator it = find<typename VISIBLE::findPolicy>( id );
+    if( it == end() ){
+      return 0; // not found
+    }
+    return &(*it);
   }
 
 };

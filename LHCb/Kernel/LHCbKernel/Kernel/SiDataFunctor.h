@@ -1,4 +1,4 @@
-// $Id: SiDataFunctor.h,v 1.2 2008-12-01 16:11:31 mneedham Exp $
+// $Id: SiDataFunctor.h,v 1.3 2009-01-19 10:05:48 dhcroft Exp $
 #ifndef _SiDataFunctor_H_
 #define _SiDataFunctor_H_
 
@@ -45,6 +45,26 @@ template <typename TYPE>
       return ( !obj ) ? charge :  charge+= obj->totalCharge() ; };
     ///
  };
+
+  template <class TYPE1, class TYPE2 = TYPE1 >
+  class Less_by_Channel
+    : public std::binary_function<TYPE1,TYPE2,bool> 
+  {
+  public:
+    
+    /** compare the channel of one object with the 
+     *  channel of another object
+     *  @param obj1   first  object 
+     *  @param obj2   second object
+     *  @return  result of the comparision
+     */
+    inline bool operator() ( TYPE1 obj1 , TYPE2 obj2 ) const 
+    { 
+      return obj1.channelID() < obj2.channelID() ; 
+    }
+    ///
+  };
+
 
  template <class TYPE1, class TYPE2 = TYPE1 >
   class Less_by_Charge
