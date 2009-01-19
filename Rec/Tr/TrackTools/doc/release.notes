@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2009-01-19 David Hutchcroft
+ - Added code to handle Velo Lite measurements to tools
+
 !======================== TrackTools v3r14 2009-01-13 ========================
 ! 2009-01-13 W. Hulsbergen
  - Bug fix in TrackInterpolator (having to do with outliers)

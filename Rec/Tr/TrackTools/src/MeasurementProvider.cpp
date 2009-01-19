@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.37 2009-01-06 14:50:11 mneedham Exp $
+// $Id: MeasurementProvider.cpp,v 1.38 2009-01-19 11:22:58 dhcroft Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -31,6 +31,7 @@ MeasurementProvider::MeasurementProvider( const std::string& type,
 
   declareInterface<IMeasurementProvider>(this);
   declareProperty( "IgnoreVelo", m_ignoreVelo = false );
+  declareProperty( "VeloLite",   m_veloLite   = false );
   declareProperty( "IgnoreTT",   m_ignoreTT   = false );
   declareProperty( "IgnoreIT",   m_ignoreIT   = false );
   declareProperty( "IgnoreOT",   m_ignoreOT   = false );
@@ -39,6 +40,13 @@ MeasurementProvider::MeasurementProvider( const std::string& type,
 
   declareProperty("veloRName", m_veloRTypeAndName ="MeasurementProviderT<MeasurementProviderTypes::VeloR>/VeloRMeasurementProvider" );
   declareProperty("veloPhiName", m_veloPhiTypeAndName ="MeasurementProviderT<MeasurementProviderTypes::VeloPhi>/VeloPhiMeasurementProvider");
+  declareProperty("veloLiteRName", 
+		  m_veloLiteRTypeAndName = 
+		  "MeasurementProviderT<MeasurementProviderTypes::VeloLiteR>/VeloLiteRMeasurementProvider" );
+  declareProperty("veloLitePhiName", 
+		  m_veloLitePhiTypeAndName = 
+		  "MeasurementProviderT<MeasurementProviderTypes::VeloLitePhi>/VeloLitePhiMeasurementProvider" );
+
   declareProperty("ttName", m_ttTypeAndName = "MeasurementProviderT<MeasurementProviderTypes::TT>/TTMeasurementProvider" );
   declareProperty("itName", m_itTypeAndName = "MeasurementProviderT<MeasurementProviderTypes::IT>/ITMeasurementProvider" );
   declareProperty( "otName", m_otTypeAndName = "OTMeasurementProvider");
@@ -46,6 +54,10 @@ MeasurementProvider::MeasurementProvider( const std::string& type,
 
   m_veloRProvider =  ToolHandle<IMeasurementProvider>(m_veloRTypeAndName);
   m_veloPhiProvider = ToolHandle<IMeasurementProvider>(m_veloPhiTypeAndName);
+  m_veloLiteRProvider = 
+    ToolHandle<IMeasurementProvider>(m_veloLiteRTypeAndName);
+  m_veloLitePhiProvider = 
+    ToolHandle<IMeasurementProvider>(m_veloLitePhiTypeAndName);
   m_ttProvider = ToolHandle<IMeasurementProvider>(m_ttTypeAndName);
   m_itProvider = ToolHandle<IMeasurementProvider> (m_itTypeAndName);
   m_otProvider = ToolHandle<IMeasurementProvider>(m_otTypeAndName);
@@ -70,13 +82,24 @@ StatusCode MeasurementProvider::initialize()
   m_providermap.resize(LHCb::Measurement::Muon+1,0) ;
 
   if(!m_ignoreVelo) {
-    sc = m_veloRProvider.retrieve() ;
-    if (sc.isFailure()) return sc;  
-    m_providermap[LHCb::Measurement::VeloR] = &(*m_veloRProvider) ;
-   
-    sc = m_veloPhiProvider.retrieve() ;
-    if (sc.isFailure()) return sc; 
-    m_providermap[LHCb::Measurement::VeloPhi] = &(*m_veloPhiProvider) ;
+    if(!m_veloLite){
+      sc = m_veloRProvider.retrieve() ;
+      if (sc.isFailure()) return sc;  
+      m_providermap[LHCb::Measurement::VeloR] = &(*m_veloRProvider) ;
+      
+      sc = m_veloPhiProvider.retrieve() ;
+      if (sc.isFailure()) return sc; 
+      m_providermap[LHCb::Measurement::VeloPhi] = &(*m_veloPhiProvider) ;
+
+    }else{
+      sc = m_veloLiteRProvider.retrieve() ;
+      if (sc.isFailure()) return sc;  
+      m_providermap[LHCb::Measurement::VeloLiteR] = &(*m_veloLiteRProvider) ;
+      
+      sc = m_veloLitePhiProvider.retrieve() ;
+      if (sc.isFailure()) return sc; 
+      m_providermap[LHCb::Measurement::VeloLitePhi] = &(*m_veloLitePhiProvider) ;
+    }
   }
 
   if(!m_ignoreTT) {
@@ -154,12 +177,17 @@ StatusCode MeasurementProvider::load( Track& track ) const
   return StatusCode::SUCCESS;
 }
 
-inline LHCb::Measurement::Type measurementtype(const LHCb::LHCbID& id)
+inline LHCb::Measurement::Type measurementtype(const LHCb::LHCbID& id,
+					       const bool& veloLite)
 {
   LHCb::Measurement::Type rc = LHCb::Measurement::Unknown ;
   switch( id.detectorType() ) {
   case LHCb::LHCbID::Velo: 
-    rc = id.isVeloR() ? LHCb::Measurement::VeloR : LHCb::Measurement::VeloPhi ;
+    if( !veloLite ){
+      rc = id.isVeloR() ? LHCb::Measurement::VeloR : LHCb::Measurement::VeloPhi ;
+    } else {
+      rc = id.isVeloR() ? LHCb::Measurement::VeloLiteR : LHCb::Measurement::VeloLitePhi ;
+    }
     break ;
   case LHCb::LHCbID::TT:   rc = LHCb::Measurement::TT ; break ;
   case LHCb::LHCbID::IT:   rc = LHCb::Measurement::IT ; break ;
@@ -176,13 +204,13 @@ inline LHCb::Measurement::Type measurementtype(const LHCb::LHCbID& id)
 
 Measurement* MeasurementProvider::measurement ( const LHCbID& id, bool localY ) const
 {
-  const IMeasurementProvider* provider = m_providermap[measurementtype( id )] ;
+  const IMeasurementProvider* provider = m_providermap[measurementtype( id, m_veloLite )] ;
   return provider ? provider->measurement(id, localY) : 0 ; 
 }
 
 Measurement* MeasurementProvider::measurement ( const LHCbID& id, const LHCb::ZTrajectory& state, bool localY ) const
 {
-  const IMeasurementProvider* provider = m_providermap[measurementtype( id )] ;
+  const IMeasurementProvider* provider = m_providermap[measurementtype( id, m_veloLite )] ;
   return provider ? provider->measurement(id,state, localY) : 0 ; 
 }
 
@@ -196,7 +224,7 @@ void MeasurementProvider::addToMeasurements( const std::vector<LHCb::LHCbID>& id
   // map the ids to measurement-providers
   std::vector<std::vector<LHCb::LHCbID> > idsbytype(m_providermap.size());
   for ( std::vector<LHCbID>::const_iterator it = ids.begin(); it != ids.end(); ++it )
-    idsbytype[measurementtype( *it )].push_back( *it );
+    idsbytype[measurementtype( *it, m_veloLite )].push_back( *it );
   // now call all the providers
   for( size_t i = 0; i<m_providermap.size(); ++i)
     if( m_providermap[i] && !idsbytype[i].empty()) 
@@ -208,7 +236,7 @@ void MeasurementProvider::addToMeasurements( const std::vector<LHCb::LHCbID>& id
 //-----------------------------------------------------------------------------
 double MeasurementProvider::nominalZ( const LHCb::LHCbID& id ) const 
 {
-  const IMeasurementProvider* provider = m_providermap[measurementtype( id )] ;
+  const IMeasurementProvider* provider = m_providermap[measurementtype( id, m_veloLite )] ;
   return provider ? provider->nominalZ(id) : 0 ; 
 }
 

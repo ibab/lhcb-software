@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.h,v 1.18 2009-01-06 14:50:11 mneedham Exp $
+// $Id: MeasurementProvider.h,v 1.19 2009-01-19 11:22:58 dhcroft Exp $
 #ifndef TRACKTOOLS_MEASUREMENTPROVIDER_H 
 #define TRACKTOOLS_MEASUREMENTPROVIDER_H
 
@@ -52,6 +52,10 @@ private:
   // Handles to actual measurement providers
   ToolHandle<IMeasurementProvider> m_veloRProvider ;
   ToolHandle<IMeasurementProvider> m_veloPhiProvider ;
+  // extra tools for "lite" velo clusters
+  ToolHandle<IMeasurementProvider> m_veloLiteRProvider ;
+  ToolHandle<IMeasurementProvider> m_veloLitePhiProvider ;
+  // Non velo providers
   ToolHandle<IMeasurementProvider> m_ttProvider ;
   ToolHandle<IMeasurementProvider> m_itProvider ;
   ToolHandle<IMeasurementProvider> m_otProvider ;
@@ -59,12 +63,15 @@ private:
 
   std::string m_veloRTypeAndName;
   std::string m_veloPhiTypeAndName;
+  std::string m_veloLiteRTypeAndName;
+  std::string m_veloLitePhiTypeAndName;
   std::string m_ttTypeAndName;
   std::string m_itTypeAndName;
   std::string m_otTypeAndName;
   std::string m_muonTypeAndName;
   
   bool m_ignoreVelo;    ///< Ignore Velo hits
+  bool m_veloLite;      ///< Work with lite velo clusters
   bool m_ignoreTT;      ///< Ignore TT hits
   bool m_ignoreIT;      ///< Ignore IT hits
   bool m_ignoreOT;      ///< Ignore OT hits

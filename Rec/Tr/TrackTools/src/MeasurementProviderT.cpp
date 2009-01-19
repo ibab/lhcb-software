@@ -1,4 +1,4 @@
-// $Id: MeasurementProviderT.cpp,v 1.16 2009-01-06 12:59:03 mneedham Exp $
+// $Id: MeasurementProviderT.cpp,v 1.17 2009-01-19 11:22:58 dhcroft Exp $
 // Include files
 
 //=============================================================================
@@ -19,9 +19,6 @@
 #include "GaudiKernel/ToolHandle.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "Event/TrackParameters.h"
-
-
-
 
 template <typename T>
 class MeasurementProviderT : public GaudiTool,
@@ -151,7 +148,6 @@ LHCb::Measurement* MeasurementProviderT<T>::measurement( const LHCb::LHCbID& id,
   return meas ;
 }
 
-
 //-----------------------------------------------------------------------------
 /// Create a measurement with statevector. For now very inefficient.
 //-----------------------------------------------------------------------------
@@ -209,7 +205,9 @@ void MeasurementProviderT<T>::addToMeasurements( const std::vector<LHCb::LHCbID>
 
 #include "VeloDet/DeVelo.h"
 #include "Event/VeloCluster.h"
+#include "Event/VeloLiteCluster.h"
 #include "Event/VeloRMeasurement.h"
+#include "Event/VeloLiteRMeasurement.h"
 #include "TrackInterfaces/IVeloClusterPosition.h"
 
 namespace MeasurementProviderTypes {
@@ -225,6 +223,20 @@ namespace MeasurementProviderTypes {
     static LHCb::VeloChannelID channelId( const LHCb::LHCbID& id ) { return id.veloID(); }
     static bool checkType(const LHCb::LHCbID& id) { return id.isVelo() && channelId(id).isRType() ; }
   };
+
+  struct VeloLiteR {
+    typedef LHCb::VeloLiteRMeasurement   MeasurementType ;
+    typedef IVeloClusterPosition         PositionToolType ;
+    typedef LHCb::VeloLiteCluster        ClusterType ;
+    typedef LHCb::VeloLiteCluster::VeloLiteClusters   ClusterContainerType ;
+    typedef DeVelo                       DetectorType ;
+    static std::string positionToolName() { return "VeloClusterPosition" ; }
+    static std::string defaultDetectorLocation() { return DeVeloLocation::Default ; }
+    static std::string defaultClusterLocation() { return LHCb::VeloLiteClusterLocation::Default ; }
+    static LHCb::VeloChannelID channelId( const LHCb::LHCbID& id ) { return id.veloID(); }
+    static bool checkType(const LHCb::LHCbID& id) { return id.isVelo() && channelId(id).isRType() ; }
+  };
+
 }
 
 template<>
@@ -236,9 +248,19 @@ double MeasurementProviderT<MeasurementProviderTypes::VeloR>::nominalZ( const LH
 typedef MeasurementProviderT<MeasurementProviderTypes::VeloR> VeloRMeasurementProvider ;
 DECLARE_TOOL_FACTORY( VeloRMeasurementProvider );
 
+template<>
+double MeasurementProviderT<MeasurementProviderTypes::VeloLiteR>::nominalZ( const LHCb::LHCbID& id ) const
+{
+  return m_det->rSensor( id.veloID() )->z() ;
+}
+
+typedef MeasurementProviderT<MeasurementProviderTypes::VeloLiteR> VeloLiteRMeasurementProvider ;
+DECLARE_TOOL_FACTORY( VeloLiteRMeasurementProvider );
+
 ////////////////////////////////////////////////////////////////////////////////////////
 
 #include "Event/VeloPhiMeasurement.h"
+#include "Event/VeloLitePhiMeasurement.h"
 
 namespace MeasurementProviderTypes {
   struct VeloPhi {
@@ -253,6 +275,19 @@ namespace MeasurementProviderTypes {
     static LHCb::VeloChannelID channelId( const LHCb::LHCbID& id ) { return id.veloID(); }
     static bool checkType(const LHCb::LHCbID& id) { return id.isVelo() && channelId(id).isPhiType() ; }
   };
+
+  struct VeloLitePhi {
+    typedef LHCb::VeloLitePhiMeasurement MeasurementType ;
+    typedef IVeloClusterPosition         PositionToolType ;
+    typedef LHCb::VeloLiteCluster        ClusterType ;
+    typedef LHCb::VeloLiteCluster::VeloLiteClusters ClusterContainerType ;
+    typedef DeVelo                       DetectorType ;
+    static std::string positionToolName() { return "VeloClusterPosition" ; }
+    static std::string defaultDetectorLocation() { return DeVeloLocation::Default ; }
+    static std::string defaultClusterLocation() { return LHCb::VeloLiteClusterLocation::Default ; }
+    static LHCb::VeloChannelID channelId( const LHCb::LHCbID& id ) { return id.veloID(); }
+    static bool checkType(const LHCb::LHCbID& id) { return id.isVelo() && channelId(id).isPhiType() ; }
+  };
 }
 
 template<>
@@ -263,6 +298,15 @@ double MeasurementProviderT<MeasurementProviderTypes::VeloPhi>::nominalZ( const 
 
 typedef MeasurementProviderT<MeasurementProviderTypes::VeloPhi> VeloPhiMeasurementProvider ;
 DECLARE_TOOL_FACTORY( VeloPhiMeasurementProvider );
+
+template<>
+double MeasurementProviderT<MeasurementProviderTypes::VeloLitePhi>::nominalZ( const LHCb::LHCbID& id ) const
+{
+  return m_det->phiSensor( id.veloID() )->z() ;
+}
+
+typedef MeasurementProviderT<MeasurementProviderTypes::VeloLitePhi> VeloLitePhiMeasurementProvider ;
+DECLARE_TOOL_FACTORY( VeloLitePhiMeasurementProvider );
 
 ////////////////////////////////////////////////////////////////////////////////////////
 

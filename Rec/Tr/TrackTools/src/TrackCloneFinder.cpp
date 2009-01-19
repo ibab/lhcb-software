@@ -1,4 +1,4 @@
-// $Id: TrackCloneFinder.cpp,v 1.11 2008-05-06 09:51:11 aperiean Exp $
+// $Id: TrackCloneFinder.cpp,v 1.12 2009-01-19 11:22:58 dhcroft Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -158,7 +158,9 @@ void TrackCloneFinder::getCommonHits( const LHCb::Track& track1,
       if( ( track2.type() == LHCb::Track::Downstream || 
 	    track2.type() == LHCb::Track::Ttrack) &&
 	  ( hits1[i1]->type() ==  LHCb::Measurement::VeloR ||
-	    hits1[i1]->type() ==  LHCb::Measurement::VeloPhi) )continue;
+	    hits1[i1]->type() ==  LHCb::Measurement::VeloPhi ||
+	    hits1[i1]->type() ==  LHCb::Measurement::VeloLiteR ||
+	    hits1[i1]->type() ==  LHCb::Measurement::VeloLitePhi ) )continue;
       for( unsigned int i2 = 0; i2 < hits2.size(); ++i2){
 	if( hits1[i1]->lhcbID() == hits2[i2]->lhcbID()){
 	  ++nCommonHits;

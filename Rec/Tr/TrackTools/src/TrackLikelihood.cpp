@@ -1,4 +1,4 @@
-// $Id: TrackLikelihood.cpp,v 1.6 2008-10-18 10:35:02 mneedham Exp $
+// $Id: TrackLikelihood.cpp,v 1.7 2009-01-19 11:22:58 dhcroft Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -7,8 +7,8 @@
 // Event
 #include "Event/Track.h"
 #include "Event/VeloCluster.h"
-#include "Event/VeloRMeasurement.h"
-#include "Event/VeloPhiMeasurement.h"
+#include "Event/VeloMeasurement.h"
+#include "Event/VeloLiteMeasurement.h"
 #include "Event/STCluster.h"
 #include "Event/STMeasurement.h"
 
@@ -149,24 +149,38 @@ double TrackLikelihood::addVelo(LHCb::Track& aTrack) const{
   std::vector<LHCb::Measurement*> veloRHits; veloRHits.reserve(meas.size());
   LoKi::select(meas.begin(), meas.end(), std::back_inserter(veloRHits), 
                  bind(&Measurement::checkType,_1,Measurement::VeloR));
+  LoKi::select(meas.begin(), meas.end(), std::back_inserter(veloRHits), 
+                 bind(&Measurement::checkType,_1,Measurement::VeloLiteR));
 
   // loop and count # with high threshold in R
   unsigned int nHigh = 0; 
   for (std::vector<LHCb::Measurement*>::iterator iterM = veloRHits.begin(); 
     iterM != veloRHits.end(); ++iterM){
-    LHCb::VeloRMeasurement* veloMeas = dynamic_cast<LHCb::VeloRMeasurement*>(*iterM); 
-    if (veloMeas->cluster()->highThreshold() == true) ++nHigh;
+    LHCb::VeloMeasurement* veloMeas = dynamic_cast<LHCb::VeloMeasurement*>(*iterM); 
+    if( veloMeas ){
+      if (veloMeas->highThreshold() == true) ++nHigh;
+    }else{
+      LHCb::VeloLiteMeasurement* veloLiteMeas = dynamic_cast<LHCb::VeloLiteMeasurement*>(*iterM);
+      if (veloLiteMeas->highThreshold() == true) ++nHigh;
+    }
   }
 
   std::vector<LHCb::Measurement*> veloPhiHits; veloPhiHits.reserve(meas.size());
   LoKi::select(meas.begin(), meas.end(), std::back_inserter(veloPhiHits), 
                  bind(&Measurement::checkType,_1,Measurement::VeloPhi));
+  LoKi::select(meas.begin(), meas.end(), std::back_inserter(veloPhiHits), 
+                 bind(&Measurement::checkType,_1,Measurement::VeloLitePhi));
 
   // loop and count # with high threshold in phi
   for (std::vector<LHCb::Measurement*>::iterator iterM = veloPhiHits.begin(); 
     iterM != veloPhiHits.end(); ++iterM){
-    LHCb::VeloPhiMeasurement* veloMeas = dynamic_cast<LHCb::VeloPhiMeasurement*>(*iterM); 
-    if (veloMeas->cluster()->highThreshold() == true) ++nHigh;
+    LHCb::VeloMeasurement* veloMeas = dynamic_cast<LHCb::VeloMeasurement*>(*iterM); 
+    if( veloMeas ){
+      if (veloMeas->cluster()->highThreshold() == true) ++nHigh;
+    }else{
+      LHCb::VeloLiteMeasurement* veloLiteMeas = dynamic_cast<LHCb::VeloLiteMeasurement*>(*iterM);
+      if (veloLiteMeas->highThreshold() == true) ++nHigh;
+    }
   }
 
   // add term to lik
