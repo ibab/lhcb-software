@@ -9,6 +9,8 @@
 #include "boost/filesystem/convenience.hpp"
 namespace fs = boost::filesystem;
 
+//// temporary to support both boost 1.37 (and later) and 1.36 (and earlier)
+#include "boost/version.hpp"
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/System.h"
@@ -68,7 +70,11 @@ bool ConfigFileAccessSvc::create_directories( fs::path dir ) const {
         return fs::create_directories(dir);
    } 
    catch ( const fs::basic_filesystem_error<fs::path>& x )  {
+#if BOOST_VERSION < 103700
         error() << fs::what( x )  << endmsg;
+#else
+        error() << x.what() << endmsg;
+#endif
    }
    return false;
 }
