@@ -1,6 +1,6 @@
 import unittest
 
-import SetupProject
+from LbConfiguration import SetupProject
 #from SetupProject import *
 
 import os, sys, re, datetime
@@ -116,8 +116,8 @@ class SetupProjectTestCase(unittest.TestCase):
     def test_050_options(self):
         """option parsing
         """
-        parse_opts = lambda opts: os.popen4('python -c "import SetupProject; SetupProject.SetupProject().parser.parse_args(args=%s)"'%opts)[1].read()
-        parse_opts_stdout = lambda opts: os.popen3('python -c "import SetupProject; SetupProject.SetupProject().parser.parse_args(args=%s)"'%opts)[1].read()
+        parse_opts = lambda opts: os.popen4('python -c "from LbConfiguration import SetupProject; SetupProject.SetupProject().parser.parse_args(args=%s)"'%opts)[1].read()
+        parse_opts_stdout = lambda opts: os.popen3('python -c "from LbConfiguration import SetupProject; SetupProject.SetupProject().parser.parse_args(args=%s)"'%opts)[1].read()
 
         # This is different between Python 2.3 and Python 2.5
         exp23 = 'usage: -c [options] '
@@ -137,7 +137,7 @@ class SetupProjectTestCase(unittest.TestCase):
         sp.parse_args(["--shell=csh"])
         self.assertEquals('csh',sp.shell)
         
-        exp = "error: --mktemp cannot be used at the same time as --output"
+        exp = "error: --mktemp cannot be used at the same time as --output or --append"
         x = parse_opts(["--mktemp","--output","xyz"]).strip()
         self.assert_(x.endswith(exp))
         
@@ -244,13 +244,13 @@ class SetupProjectTestCase(unittest.TestCase):
         """main (wrong options)
         """
         
-        x = os.popen4("python SetupProject.py")
+        x = os.popen4("python -m LbConfiguration.SetupProject")
         self.assert_(x[1].read().startswith("You have to specify a project"))
         
-        x = os.popen4("python SetupProject.py Brunel")
+        x = os.popen4("python -m LbConfiguration.SetupProject Brunel")
         self.assert_(x[1].read().startswith("Internal error: shell type not specified"))
         
-        x = os.popen4("python SetupProject.py Brunel --shell=xyz")
+        x = os.popen4("python -m LbConfiguration.SetupProject Brunel --shell=xyz")
         self.assert_(x[1].readlines()[-1].startswith("SetupProject.py: error: option --shell: invalid choice:"))
 
     def test_065_main(self):
@@ -258,7 +258,7 @@ class SetupProjectTestCase(unittest.TestCase):
         """
 
         # no env
-        x = os.popen4("python SetupProject.py --shell=%s DummyProject"%_shell)
+        x = os.popen4("python -m LbConfiguration.SetupProject --shell=%s DummyProject"%_shell)
         s = x[1].read().strip()
         self.assert_(proj_not_found(s))
 
@@ -269,7 +269,7 @@ class SetupProjectTestCase(unittest.TestCase):
                 env['CMTPROJECTPATH'] = env['LHCBPROJECTPATH']
             env['CMTPROJECTPATH'] = tmp_dir + os.pathsep + env['CMTPROJECTPATH']
             os.mkdir(os.path.join(tmp_dir,'DUMMYPROJECT'))
-            x = os.popen4("python SetupProject.py --shell=%s DummyProject"%_shell)
+            x = os.popen4("python -m LbConfiguration.SetupProject --shell=%s DummyProject"%_shell)
             s = x[1].read().strip()
             self.assert_(proj_not_found(s))
         finally:
@@ -280,7 +280,7 @@ class SetupProjectTestCase(unittest.TestCase):
         """
         v = SetupProject.makeProjectInfo("Brunel").version
 
-        x = os.popen4("python SetupProject.py --shell=%s BrUnEl"%_shell)
+        x = os.popen4("python -m LbConfiguration.SetupProject --shell=%s BrUnEl"%_shell)
         s = x[1].read()
         ## wrong case is valid
         # self.assert_("Could not produce the environment, check the arguments" in s)
@@ -292,7 +292,7 @@ class SetupProjectTestCase(unittest.TestCase):
         
         v = SetupProject.makeProjectInfo("Brunel").version
         
-        x = os.popen4("python SetupProject.py --shell=%s Brunel"%_shell)
+        x = os.popen4("python -m LbConfiguration.SetupProject --shell=%s Brunel"%_shell)
         s = x[1].read()
         
         self._check_env(s, "Brunel", v)
@@ -307,7 +307,7 @@ class SetupProjectTestCase(unittest.TestCase):
         
         v = SetupProject.makeProjectInfo("Brunel").version
 
-        x = os.popen4("python SetupProject.py --shell=%s Brunel"%_shell)
+        x = os.popen4("python -m LbConfiguration.SetupProject --shell=%s Brunel"%_shell)
         s = x[1].read()
         
         self._check_env(s, "Brunel", v)
@@ -323,7 +323,7 @@ class SetupProjectTestCase(unittest.TestCase):
         
         v = SetupProject.makeProjectInfo("Brunel").version
 
-        x = os.popen4("python SetupProject.py --shell=%s Brunel"%_shell)
+        x = os.popen4("python -m LbConfiguration.SetupProject --shell=%s Brunel"%_shell)
         s = x[1].read()
         
         self._check_env(s, "Brunel", v)
@@ -334,7 +334,7 @@ class SetupProjectTestCase(unittest.TestCase):
         
         v = SetupProject.makeProjectInfo("Brunel").version
         
-        x = os.popen4("python SetupProject.py --shell=%s Brunel mysql"%_shell)
+        x = os.popen4("python -m LbConfiguration.SetupProject --shell=%s Brunel mysql"%_shell)
         s = x[1].read()
         
         self._check_env(s, "Brunel", v)
@@ -349,7 +349,7 @@ class SetupProjectTestCase(unittest.TestCase):
         vo = SetupProject.makeProjectInfo("Online").version
         
         # --ignore-missing is needed to avoid problems with incompatible versions of Online ad Brunel
-        x = os.popen4("python SetupProject.py --shell=%s Brunel --ignore-missing --runtime-project Online"%_shell)
+        x = os.popen4("python -m LbConfiguration.SetupProject --shell=%s Brunel --ignore-missing --runtime-project Online"%_shell)
         s = x[1].read()
         
         self._check_env(s, "Brunel", v)
@@ -359,7 +359,7 @@ class SetupProjectTestCase(unittest.TestCase):
         """main (Brunel with wrong ext)
         """
         
-        x = os.popen4("python SetupProject.py --shell=%s Brunel NoPack"%_shell)
+        x = os.popen4("python -m LbConfiguration.SetupProject --shell=%s Brunel NoPack"%_shell)
         s = x[1].read()
         self.assert_(s.find("Warning: package NoPack v* LCG_Interfaces not found")>=0)
         self.assert_(s.endswith("Could not produce the environment, check the arguments\n"))
@@ -371,7 +371,7 @@ class SetupProjectTestCase(unittest.TestCase):
         
         v = SetupProject.makeProjectInfo("Brunel").version
         
-        x = os.popen4("python SetupProject.py --shell=%s --ignore-missing Brunel NoPack"%_shell)
+        x = os.popen4("python -m LbConfiguration.SetupProject --shell=%s --ignore-missing Brunel NoPack"%_shell)
         s = x[1].read()
         self.assert_(s.find("Warning: package NoPack v* LCG_Interfaces not found")>=0)
         self.assert_(project_configured(s,"Brunel",v))
@@ -380,7 +380,7 @@ class SetupProjectTestCase(unittest.TestCase):
         """main (Brunel list versions)
         """
         
-        x = os.popen4("python SetupProject.py --shell=%s --list-versions Brunel"%_shell)
+        x = os.popen4("python -m LbConfiguration.SetupProject --shell=%s --list-versions Brunel"%_shell)
         l = x[1].read().split('\n')
         l = [ x for x in l if x != '' ]
         self.assert_( len(l) > 0 )
@@ -395,7 +395,7 @@ class SetupProjectTestCase(unittest.TestCase):
             v = l[-2]
         else:
             v = l[0]
-        x = os.popen4("python SetupProject.py --shell=%s Brunel %s"%(_shell,v))
+        x = os.popen4("python -m LbConfiguration.SetupProject --shell=%s Brunel %s"%(_shell,v))
         s = x[1].read()
         
         self._check_env(s,"Brunel",v)
@@ -417,7 +417,7 @@ class SetupProjectTestCase(unittest.TestCase):
             vo = l[0]
             
         # --ignore-missing is needed to avoid problems with incompatible versions of Online ad Brunel
-        x = os.popen4("python SetupProject.py --shell=%s --ignore-missing Brunel %s --runtime-project Online %s"%(_shell,v,vo))
+        x = os.popen4("python -m LbConfiguration.SetupProject --shell=%s --ignore-missing Brunel %s --runtime-project Online %s"%(_shell,v,vo))
         s = x[1].read()
         
         self._check_env(s,"Brunel",v)
@@ -427,7 +427,7 @@ class SetupProjectTestCase(unittest.TestCase):
         """main (Brunel explicit bad version)
         """
 
-        x = os.popen4("python SetupProject.py --shell=%s Brunel v999r999p999"%_shell)
+        x = os.popen4("python -m LbConfiguration.SetupProject --shell=%s Brunel v999r999p999"%_shell)
         s = x[1].read()
         self.assert_(s.endswith("Try with --list-versions.\n"))
         
@@ -435,7 +435,7 @@ class SetupProjectTestCase(unittest.TestCase):
         """main (Brunel + runtime project Online, explicit bad version)
         """
 
-        x = os.popen4("python SetupProject.py --shell=%s Brunel --runtime-project Online v999r999p999"%_shell)
+        x = os.popen4("python -m LbConfiguration.SetupProject --shell=%s Brunel --runtime-project Online v999r999p999"%_shell)
         s = x[1].read()
         self.assert_(s.endswith("Try with --list-versions.\n"))
         
@@ -443,7 +443,7 @@ class SetupProjectTestCase(unittest.TestCase):
         """main (Brunel update $LHCBHOME/project/logfiles)
         """
         if 'LHCBHOME' in os.environ: # ignore the test on win32
-            x = os.popen4("python SetupProject.py --shell=%s Brunel"%_shell)
+            x = os.popen4("python -m LbConfiguration.SetupProject --shell=%s Brunel"%_shell)
             s = x[1].read()
             self.assert_(s.find('touch %s/BRUNEL'%os.path.join(os.environ['LHCBHOME'],'project','logfiles'))>=0)
         
@@ -453,7 +453,7 @@ class SetupProjectTestCase(unittest.TestCase):
 
         l = get_all_versions("Brunel")
         
-        x = os.popen3("python SetupProject.py --shell=%s Brunel --ask"%_shell)
+        x = os.popen3("python -m LbConfiguration.SetupProject --shell=%s Brunel --ask"%_shell)
 
         self.assertEquals("Please enter",x[2].read(12))
 
@@ -475,7 +475,7 @@ class SetupProjectTestCase(unittest.TestCase):
 
         l = get_all_versions("Brunel")
         
-        x = os.popen3("python SetupProject.py --shell=%s Brunel --ask"%_shell)
+        x = os.popen3("python -m LbConfiguration.SetupProject --shell=%s Brunel --ask"%_shell)
 
         self.assertEquals("Please enter",x[2].read(12))
 
@@ -495,7 +495,7 @@ class SetupProjectTestCase(unittest.TestCase):
 
         l = get_all_versions("Brunel")
         
-        x = os.popen3("python SetupProject.py --shell=%s Brunel --ask"%_shell)
+        x = os.popen3("python -m LbConfiguration.SetupProject --shell=%s Brunel --ask"%_shell)
 
         self.assertEquals("Please enter",x[2].read(12))
 
@@ -521,7 +521,7 @@ class SetupProjectTestCase(unittest.TestCase):
         else:
             v = l[0]
         
-        x = os.popen3("python SetupProject.py --shell=%s Brunel --ask"%_shell)
+        x = os.popen3("python -m LbConfiguration.SetupProject --shell=%s Brunel --ask"%_shell)
 
         self.assertEquals("Please enter",x[2].read(12))
 
@@ -551,7 +551,7 @@ class SetupProjectTestCase(unittest.TestCase):
             v = l[-2]
         else:
             v = l[0]
-        x = os.popen4("python SetupProject.py --shell=%s Brunel %s"%(_shell,v))
+        x = os.popen4("python -m LbConfiguration.SetupProject --shell=%s Brunel %s"%(_shell,v))
         s = x[1].read()
         
         self._check_env(s,"Brunel",v)
@@ -572,7 +572,7 @@ class SetupProjectTestCase(unittest.TestCase):
                 write("project Brunel_%s\n\nuse BRUNEL BRUNEL_%s\n"%(v,v))
             
             env['User_release_area'] = tmp_dir
-            x = os.popen4("python SetupProject.py --shell=%s --no-auto-override Brunel %s"%(_shell,v))
+            x = os.popen4("python -m LbConfiguration.SetupProject --shell=%s --no-auto-override Brunel %s"%(_shell,v))
             s = x[1].read().strip()
             
             self._check_env(s,"Brunel",v)
@@ -585,6 +585,38 @@ class SetupProjectTestCase(unittest.TestCase):
             self.assert_(m.group(1).split(os.pathsep)[0].find(
                             os.path.join(tmp_dir,'Brunel_%s'%v,"InstallArea"))>=0)
             #self.assert_(proj_not_found(s))
+        finally:
+            SetupProject.removeall(tmp_dir)
+    
+    def test_205_main(self):
+        """main (Brunel in user release area, ignored)
+        """
+        l = get_all_versions("Brunel")
+        v = l[-1]
+
+        env = SetupProject.TemporaryEnvironment()
+        tmp_dir = SetupProject.mkdtemp()
+        try:
+            # prepare fake user release area
+            os.mkdir(os.path.join(tmp_dir,'Brunel_%s'%v))
+            os.mkdir(os.path.join(tmp_dir,'Brunel_%s'%v,"cmt"))
+            open(os.path.join(tmp_dir,'Brunel_%s'%v,"cmt","project.cmt"),"w").\
+                write("project Brunel_%s\n\nuse BRUNEL BRUNEL_%s\n"%(v,v))
+            
+            env['User_release_area'] = tmp_dir
+            x = os.popen4("python -m LbConfiguration.SetupProject --shell=%s --no-auto-override --no-user-area Brunel %s"%(_shell,v))
+            s = x[1].read().strip()
+            
+            self._check_env(s,"Brunel",v)
+            
+            if os.environ["CMTCONFIG"][0:3] != "win":
+                m = re.compile('LIBRARY_PATH=(.*)').search(s)
+            else:
+                m = re.compile('set PATH=(.*)').search(s)
+            self.assert_(m is not None)
+            # Check that the user area is not in the path
+            self.assert_(m.group(1).split(os.pathsep)[0].find(
+                            os.path.join(tmp_dir,'Brunel_%s'%v,"InstallArea")) < 0)
         finally:
             SetupProject.removeall(tmp_dir)
     
@@ -612,12 +644,12 @@ version v999r999
             
             env['LHCBDEV'] = tmp_dir
             # get it from LHCBDEV
-            x = os.popen4("python SetupProject.py --shell=%s --ignore-missing --dev Brunel"%_shell)
+            x = os.popen4("python -m LbConfiguration.SetupProject --shell=%s --ignore-missing --dev Brunel"%_shell)
             s = x[1].read()
             self.assert_(project_configured(s,"Brunel","v999r999"))
             
             # get it from offical releases
-            x = os.popen4("python SetupProject.py --shell=%s Brunel"%_shell)
+            x = os.popen4("python -m LbConfiguration.SetupProject --shell=%s Brunel"%_shell)
             s = x[1].read()
             self.assert_(project_configured(s,"Brunel",v))
             
@@ -634,7 +666,7 @@ version v999r999
         tmp_dir = SetupProject.mkdtemp()
         env["User_release_area"] = tmp_dir
         try:
-            x = os.popen3("python SetupProject.py --shell=%s --ignore-missing --build-env Brunel %s"%(_shell,v))
+            x = os.popen3("python -m LbConfiguration.SetupProject --shell=%s --ignore-missing --build-env Brunel %s"%(_shell,v))
             s = x[1].read()
             proj_cmt = os.path.join(tmp_dir,"Brunel_%s" % v, "cmt", "project.cmt")
             self.assert_(os.path.isfile(proj_cmt))
@@ -652,7 +684,7 @@ version v999r999
         tmp_dir = SetupProject.mkdtemp()
         env["User_release_area"] = tmp_dir
         try:
-            x = os.popen3("python SetupProject.py --shell=%s --ignore-missing --build-env Brunel"%_shell)
+            x = os.popen3("python -m LbConfiguration.SetupProject --shell=%s --ignore-missing --build-env Brunel"%_shell)
             self.assertEquals("Please enter",x[2].read(12))
         
             # read up to the prompt
@@ -678,7 +710,7 @@ version v999r999
         tmp_dir = SetupProject.mkdtemp()
         env["User_release_area"] = tmp_dir
         try:
-            x = os.popen4("python SetupProject.py --shell=%s --ignore-missing --build-env Brunel v999r999"%_shell)
+            x = os.popen4("python -m LbConfiguration.SetupProject --shell=%s --ignore-missing --build-env Brunel v999r999"%_shell)
             s = x[1].read()
             proj_cmt = os.path.join(tmp_dir,"Brunel_v999r999", "cmt", "project.cmt")
             self.assert_(not os.path.isfile(proj_cmt))
@@ -713,7 +745,7 @@ version v999r999
         self._createFakeProject(version = "v1r0", tmp_dir = tmp_dir)
         env["CMTPROJECTPATH"] = env["User_release_area"] = tmp_dir
         try:
-            x = os.popen4("python SetupProject.py --shell=%s --no-auto-override --disable-CASTOR TestProject"%_shell)
+            x = os.popen4("python -m LbConfiguration.SetupProject --shell=%s --no-auto-override --disable-CASTOR TestProject"%_shell)
             s = x[1].read()
             self.assert_(project_configured(s, "TestProject", None))
         finally:
@@ -729,7 +761,7 @@ version v999r999
         env["CMTPROJECTPATH"] = env["User_release_area"] = tmp_dir
         
         try:
-            x = os.popen3("python SetupProject.py --shell=%s --no-auto-override --disable-CASTOR TestProject --ask"%_shell)
+            x = os.popen3("python -m LbConfiguration.SetupProject --shell=%s --no-auto-override --disable-CASTOR TestProject --ask"%_shell)
     
             self.assertEquals("Please enter",x[2].read(12))
     

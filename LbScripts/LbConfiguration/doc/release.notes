@@ -1,3 +1,10 @@
+2009-01-19  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* scripts/SetupProject.py: added the command line option '--no-user-area' to
+	ignore the value of User_releasea_area.
+	* tests/SetupProjectTest.py: adapted to the new location of SetupProject.py and
+	added a test of --no-user-area.
+
 2009-01-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/LbLogin.py: added the silent option.

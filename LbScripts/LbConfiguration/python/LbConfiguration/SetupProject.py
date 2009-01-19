@@ -5,11 +5,11 @@ from xml.sax import parse, ContentHandler
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.1 2009-01-13 17:43:40 hmdegaud Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.2 2009-01-19 15:38:04 marcocle Exp $"
 
 try:
     from LbUtils.CVS import CVS2Version
-    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.1 $")
+    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.2 $")
 except ImportError :
     __version__ = _cvs_id
 
@@ -801,9 +801,9 @@ class SetupProject:
             env['CMTPATH'] = cmtpath
             os.chdir(olddir)
             # prepend User_release_area if defined
-            if 'User_release_area' in env:
-                if env['CMTPATH'].find(env['User_release_area']) < 0:
-                    env['CMTPATH'] =  os.pathsep.join([ env['User_release_area'],
+            if self.user_area:
+                if env['CMTPATH'].find(self.user_area) < 0:
+                    env['CMTPATH'] =  os.pathsep.join([ self.user_area,
                                                         env['CMTPATH'] ])
             self._debug("----- CMTPATH set to '%s' -----"%env['CMTPATH'])
         else:
@@ -1092,6 +1092,9 @@ class SetupProject:
                                  "of the CMTPROJECTPATH needed for the "+
                                  "nightly build slot are taken into account.")
         
+        parser.add_option("--no-user-area", action="store_true",
+                          help = "Ignore the user release area when looking for projects.")
+        
         parser.set_defaults(output=None,
                             mktemp=False,
                             append=False,
@@ -1107,7 +1110,8 @@ class SetupProject:
                             auto_override = True,
                             use_grid = False,
                             silent=False,
-                            keep_CMTPROJECTPATH=False
+                            keep_CMTPROJECTPATH=False,
+                            no_user_area=False,
                             )
         
         if 'CMTSITE' in os.environ and \
@@ -1358,7 +1362,10 @@ class SetupProject:
             return 1
         
         #------------- set user area
-        self.user_area = os.environ.get('User_release_area', None)
+        if self.opts.no_user_area:
+            self.user_area = None
+        else:
+            self.user_area = os.environ.get('User_release_area', None)
         
         #------------- prepare search_path
         self.search_path = []
