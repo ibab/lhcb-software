@@ -1,4 +1,4 @@
-// $Id: LumiAnalyser.h,v 1.6 2008-12-20 17:58:31 graven Exp $
+// $Id: LumiAnalyser.h,v 1.7 2009-01-19 20:08:46 graven Exp $
 #ifndef LUMIANALYSER_H 
 #define LUMIANALYSER_H 1
 
@@ -45,8 +45,8 @@ protected:
   virtual void setupStore  ();
 
   // to set interval
-  ulonglong LumiAnalyser::gpsTime  ();
-  bool LumiAnalyser::gpsTimeInterval  ();
+  ulonglong gpsTime  ();
+  bool gpsTimeInterval  ();
 
   // force decision to the value of decision
   void setDecision(bool decision);

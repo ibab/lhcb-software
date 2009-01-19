@@ -4,6 +4,9 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+! 2009-01-19 - Gerhard Raven
+ - fix gcc 4.x compile error
+
 !========================== HltLuminosity v2r4 2009-01-15 ===================
 ! 2009-01-13 - Gerhard Raven
  - follow changes to IHltDataSvc::selection in HltBase
