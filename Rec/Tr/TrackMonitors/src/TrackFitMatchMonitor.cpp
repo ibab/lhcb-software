@@ -231,6 +231,8 @@ StatusCode TrackFitMatchMonitor::execute()
 	switch(fitnode->measurement().type()) {
 	case LHCb::Measurement::VeloR:
 	case LHCb::Measurement::VeloPhi:
+	case LHCb::Measurement::VeloLiteR:
+	case LHCb::Measurement::VeloLitePhi:
 	  if( !lastVelo || (lastVelo->z() < fitnode->z()) ) lastVelo = fitnode ;
 	  break ;
 	case LHCb::Measurement::TT:

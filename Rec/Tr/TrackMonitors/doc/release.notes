@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-01-19 David Hutchcroft
+ - Added the code to monitor "lite" VELO clusters in measurements
+
 !============================ TrackMonitors v1r6 2009-01-13 ==================
 ! 2009-01-13 W. Hulsbergen
  - Add protection in TrackMonitor for hits with zero error on residual

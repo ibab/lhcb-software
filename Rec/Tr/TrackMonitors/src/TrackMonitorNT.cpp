@@ -1,4 +1,4 @@
-// $Id: TrackMonitorNT.cpp,v 1.1 2008-05-30 13:49:13 wouter Exp $
+// $Id: TrackMonitorNT.cpp,v 1.2 2009-01-19 10:22:25 dhcroft Exp $
 // Include files 
 
 // from Gaudi
@@ -243,14 +243,16 @@ void TrackMonitorNT::fillNtuple(const LHCb::Track* aTrack,
       TT_region.push_back(theTTID.detRegion());
       TT_sector.push_back(theTTID.sector());
     }
-     else if (aNode.measurement().type() == LHCb::Measurement::VeloR){
+     else if (aNode.measurement().type() == LHCb::Measurement::VeloR ||
+	      aNode.measurement().type() == LHCb::Measurement::VeloLiteR ){
        theVeloID = nodeID.veloID();  
        Velo_res.push_back(fNode->unbiasedResidual());
        Velo_pull.push_back(fNode->unbiasedResidual()/fNode->errUnbiasedResidual());
        Velo_sensor.push_back(theVeloID.sensor());
        Velo_rType.push_back(theVeloID.isRType());
      } 
-    else if (aNode.measurement().type() == LHCb::Measurement::VeloPhi){
+    else if (aNode.measurement().type() == LHCb::Measurement::VeloPhi ||
+	     aNode.measurement().type() == LHCb::Measurement::VeloLitePhi ){
        theVeloID = nodeID.veloID();  
        Velo_res.push_back(fNode->unbiasedResidual()); 
        Velo_pull.push_back(fNode->unbiasedResidual()/fNode->errUnbiasedResidual());

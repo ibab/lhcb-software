@@ -1,4 +1,4 @@
-// $Id: TrackMonitor.cpp,v 1.8 2009-01-13 11:50:11 wouter Exp $
+// $Id: TrackMonitor.cpp,v 1.9 2009-01-19 10:22:25 dhcroft Exp $
 // Include files 
 #include "TrackMonitor.h"
 
@@ -168,7 +168,9 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
   
   size_t numoutliers(0) ;
   if( track.nodes().size()>0 ) {
-    std::string names[] = { "VeloR","VeloPhi","TT","IT","OT","Muon" } ;
+    std::string names[] = { "VeloR","VeloPhi","VeloLiteR",
+			    "VeloLitePhi","TT","IT","OT","Muon",
+			    "TTLite","ITLite" } ;
     double resmax[] = { 0.1,0.1,0.5,0.5,2.0,10 } ;
     for( LHCb::Track::NodeContainer::const_iterator inode = track.nodes().begin() ;
 	 inode != track.nodes().end(); ++inode) 
@@ -207,7 +209,8 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
 
 	  // now get the pitch ...
 	  double pitch(1) ;
-	  if( (*inode)->measurement().type() == LHCb::Measurement::VeloPhi ) {
+	  if( (*inode)->measurement().type() == LHCb::Measurement::VeloPhi ||
+	      (*inode)->measurement().type() == LHCb::Measurement::VeloLitePhi) {
 	    const LHCb::VeloCluster* clus = 
 	      static_cast<LHCb::VeloPhiMeasurement&>((*inode)->measurement()).cluster() ;
 	    const DeVeloPhiType* phiDet = m_veloDet->phiSensor( clus->channelID().sensor() );
