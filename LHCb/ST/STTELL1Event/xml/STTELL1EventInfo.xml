@@ -8,8 +8,7 @@
     <class name='STTELL1EventInfo'
 	   id='9011' 
 	   author='Mathias Knecht' 
-	   desc='Event info from a TELL1 board'
-           serializers = 'FALSE'>
+	   desc='Event info from a TELL1 board'>
    <base name='KeyedObject&lt; int &gt; '/>
       <location name="ITEventInfo"   place="Raw/IT/EventInfo"   />
       <location name="TTEventInfo"   place="Raw/TT/EventInfo"   />
@@ -356,7 +355,15 @@
         const   = "TRUE"
         type    = "unsigned int"
 	/>
-      
+
+       <method
+	name    = "findIHeader"
+	desc    = "find iheader for each beetle"
+        argList = "const unsigned int beetle" 
+        const   = "TRUE"
+        type    = "unsigned int"
+	/>
+  
       <method
 	name = 'pcnVote'
 	desc = 'majority vote on pcn'
@@ -378,7 +385,16 @@
          desc = "test if bit enable"
          argList = "const unsigned int"
          const = "TRUE" />
-  
+
+         <method 
+          name = "fillStream"
+          desc = "Print in a human readable way"
+          type = "std::ostream&amp;"
+          virtual = "FALSE"
+          const = "TRUE">
+          <arg type = "std::ostream" name  = "s" />
+           </method>
+
 	 </class>
   </package>
 </gdd>

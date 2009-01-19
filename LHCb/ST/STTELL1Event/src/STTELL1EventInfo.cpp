@@ -24,6 +24,20 @@ unsigned int LHCb::STTELL1EventInfo::findPCN(const unsigned int beetle) const{
     return 200u;
 }
 
+unsigned int LHCb::STTELL1EventInfo::findIHeader(const unsigned int beetle) const{  // get the pcn for a given beetle
+    switch (beetle) {
+      case 0: return iHeaderBeetle0();
+      case 1: return iHeaderBeetle1();
+      case 2: return iHeaderBeetle2();
+      case 3: return iHeaderBeetle3();
+      case 4: return iHeaderBeetle4();
+      case 5: return iHeaderBeetle5();
+      default : return 200u; // 
+    }
+
+    return 200u;
+}
+
 
 unsigned int LHCb::STTELL1EventInfo::pcnVote() const{
   
@@ -65,5 +79,17 @@ bool LHCb::STTELL1EventInfo::linkEnabled(const unsigned int iLink) const{
   return  (OptLnkDisable() >> iLink & 1) ;
 } 
 
+// fillstream method
+std::ostream& LHCb::STTELL1EventInfo::fillStream(std::ostream& s) const{
+
+  s << "Print Event info " <<  ChipAddr() << std::endl;
+  for (unsigned int i = 0 ; i < nBeetle; ++i){
+    s << "Beetle: " << i << " PCN "  << findPCN(i)   
+    <<  " IHeader " << findIHeader(i) << std::endl; 
+  } //i
+
+  return s;
+
+}
 
 

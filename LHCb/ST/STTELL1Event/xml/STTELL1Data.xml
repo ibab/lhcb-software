@@ -39,26 +39,25 @@
        def = "Info"
        access = "PUBLIC " />
 
+
       <constructor
         desc = 'constructor with arguments'
-        argList = 'Data data'
+        argList = 'Data data, Data headers, std::vector&lt; unsigned int &gt; sentPP, Info info'
+        initList = 'm_data(data), m_header(headers), m_sentPPs(sentPP) ,m_eventInfo(info)'>
+      </constructor>
+
+      <constructor
+        desc = 'constructor with arguments'
+        argList = 'Data data '
         initList = 'm_data(data)'>
       </constructor>
+
 
       <constructor
         desc = 'constructor with key'
         argList = 'const int numberOfTELL1'
         initList = 'KeyedObject&lt;int&gt;(numberOfTELL1), m_data(), m_header()'>
       </constructor>
-
-     <!--<destructor
-        desc = 'destructor'>
-      <code> 
-        for ( std::vector&lt; LHCb::STTELL1EventInfo* &gt;::iterator it = m_eventInfo.begin();
-              it != m_eventInfo.end(); ++it ) delete *it;
-              m_eventInfo.clear();
-      </code>
-      </destructor>-->
 
       <attribute 
         type ='Data'
@@ -73,27 +72,32 @@
         desc = 'vector of headers'
       /> 
 
-       
-       
+
+          
+     <attribute 
+        type ='std::vector&lt; unsigned int &gt;'
+        name = 'sentPPs'
+        desc = 'which pp sent data'
+      /> 
+
+          
        <relation 
        name="eventInfo" 
        multiplicity="M" 
        type="LHCb::STTELL1EventInfo"
        desc= "Vector of 4 Event Info block (1 per PP)"
        />
+ 
+  
       
-      
-      
-      
-       <!--<attribute
-        type      = 'Info'
-        name      = 'eventInfo'
-        desc      = 'Vector of 4 Event Info block (1 per PP)'
-        access    = 'PUBLIC'
-        />-->
-
-      
-      
+      <method 
+          name = "fillStream"
+          desc = "Print in a human readable way"
+          type = "std::ostream&amp;"
+          virtual = "FALSE"
+          const = "TRUE">
+          <arg type = "std::ostream" name  = "s" />
+      </method>
         
       <method type = 'unsigned int'
               name = 'dataSize'
