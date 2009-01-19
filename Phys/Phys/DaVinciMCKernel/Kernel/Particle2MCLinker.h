@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinker.h,v 1.6 2008-11-06 17:15:50 cattanem Exp $
+// $Id: Particle2MCLinker.h,v 1.7 2009-01-19 18:16:04 jpalac Exp $
 #ifndef DAVINCIASSOCIATORS_PARTICLE2MCLINKER_H
 #define DAVINCIASSOCIATORS_PARTICLE2MCLINKER_H 1
 
@@ -13,9 +13,9 @@
 #include "Linker/LinkedFrom.h"
 #include "Linker/LinkerWithKey.h"
 
-// DaVinciKernel
+// DaVinciMCKernel
 #include "Kernel/Particle2MCMethod.h"
-
+#include "Kernel/MCAssociation.h"
 namespace LHCb
 {
   class Particle;
