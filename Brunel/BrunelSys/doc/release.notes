@@ -3,6 +3,10 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+! 2009-01-20 - Marco Cattaneo
+ - Adapt to LHCb::ParticlePropertySvc in test
+ - Exclude "PARAM/ParamFiles" paths from QMTest comparison
+
 ! 2009-01-15 - Marco Cattaneo
  - Exclude TMVA initialisation messages from QMTest comparison
 

@@ -412,7 +412,6 @@ NeuralNetTmva        INFO The MVAnalysis_pf_CFMlpANN.weights.txt weights file is
 RecoVertexSeq        INFO Member list: PatPVOffline, TrackV0Finder
 ToolSvc.Simplif...   INFO SimplifiedMaterialLocator::initialize()
 ToolSvc.Simplif...   INFO Found TrackfitGeometry volume with 17 daughters.
-ParticlePropert...   INFO Opened particle properties file : conddb:///param/ParticleTable.txt
 RecoRICHSeq          INFO Member list: GaudiSequencer/RichRecInitOfflineSeq, GaudiSequencer/RichOfflinePIDSeq, with context 'Offline'
 RichRecInitOffl...   INFO Member list: Rich::Rec::Initialise/CheckProcOfflineStatus, GaudiSequencer/RichOfflinePixelsSeq, GaudiSequencer/RichOfflineTracksSeq, GaudiSequencer/RichOfflinePhotonsSeq, with context 'Offline'
 RichOfflinePixe...   INFO Member list: Rich::DAQ::RawBufferToRichDigitsAlg/DecodeRawRichOffline, Rich::Rec::Initialise/CreateOfflinePixels, with context 'Offline'
