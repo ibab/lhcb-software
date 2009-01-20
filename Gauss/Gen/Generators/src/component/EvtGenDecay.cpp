@@ -1,10 +1,11 @@
-// $Id: EvtGenDecay.cpp,v 1.18 2008-09-20 20:27:11 robbep Exp $
+// $Id: EvtGenDecay.cpp,v 1.19 2009-01-20 15:20:29 wreece Exp $
 // Header file
 #include "EvtGenDecay.h"
 
 // Include files
 #include <iostream>
 #include <fstream>
+#include <memory>
 
 // from boost
 #include "boost/filesystem.hpp"
@@ -36,6 +37,9 @@
 #include "EvtGenBase/EvtParticleFactory.hh"
 #include "EvtGenBase/EvtDecayTable.hh"
 #include "EvtGenBase/EvtDecayBase.hh"
+
+// from EvtGenExtras
+#include "EvtGenModels/EvtModelRegExtras.hh"
 
 #include "Generators/StreamForGenerator.h"
 
@@ -151,9 +155,14 @@ StatusCode EvtGenDecay::initialize( ) {
     return Error( "Cannot initialize EvtGenGaudiRandomService" , sc ) ;
   release( randSvc ) ;
 
+  //this list will be deleted after use
+  //the actual models will be deleted by the singleton EvtModel
+  const std::auto_ptr<const EvtModelList> models = EvtModelRegExtras::getModels();
+  EvtAbsRadCorr* isrEngine = 0;//dummy needed for compile
+
   // create EvtGen engine from decay file, evt.pdl file and random engine
   m_gen = new EvtGen ( m_decayFile.c_str() , evtPdlFile.string().c_str() ,
-                       m_randomEngine ) ;
+                       m_randomEngine, isrEngine, models.get()) ;
 
   // Remove temporary file if not asked to keep it
   if ( ! m_keepTempEvtFile ) boost::filesystem::remove( evtPdlFile ) ;

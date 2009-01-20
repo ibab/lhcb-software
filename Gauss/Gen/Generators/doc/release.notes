@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.140 2009-01-13 13:43:24 gcorti Exp $
+! $Id: release.notes,v 1.141 2009-01-20 15:20:29 wreece Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2009-01-20 - Will REECE
+ - EvtGenDecay: Passes the list of models from EvtGenExtras into EvtGen.
+   requirements: Adds dependency on EvtGenExtras.
 
 !====================== Generators v9r2 2009-01-13 ===========================
 ! 2008-12-11 - Patrick Robbe
