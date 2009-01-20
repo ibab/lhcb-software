@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2009-01-20 - Will REECE
+ - EvtGen, EvtModelReg. Adds a hook so new decay models can be passed in from
+   an external pacakge - in this case EvtGenExtras
+
 !========================== EvtGen v10r1 2009-01-13 ==========================
 ! 2008-12-16 - Patrick Robbe
  - EvtGen, EvtModel, EvtPythia: fix memory leaks reported by valgrind
