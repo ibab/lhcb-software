@@ -1,4 +1,4 @@
-// $Id: OnePart.h,v 1.2 2009-01-20 10:00:44 pkoppenb Exp $
+// $Id: OnePart.h,v 1.3 2009-01-20 10:42:24 pkoppenb Exp $
 #ifndef ONEPART_H 
 #define ONEPART_H 1
 
@@ -21,6 +21,7 @@ namespace LHCb{
 class DecayTreeTupleBase ;//@todo replace with Base
 class Tuple ; // @todo remove
 class IParticleTupleTool ;
+class IMCParticleTupleTool ;
 namespace Decays{
   
   class OnePart {
@@ -58,10 +59,13 @@ namespace Decays{
     std::string info() const;
     /// add a Tuple tool
     void addTool( IParticleTupleTool* tool );
+    void addTool( IMCParticleTupleTool* tool );
     /// list of tuple tools
     std::vector< IParticleTupleTool* >& tools();
+    std::vector< IMCParticleTupleTool* >& mctools();
     /// list of tools
     std::vector<std::string> toolList() const;
+    std::vector<std::string> mctoolList() const;
     /// clear list of tools
     void clearTools();
     
@@ -73,6 +77,7 @@ namespace Decays{
     const OnePart* m_mother;        //< mother
     std::vector<const OnePart*> m_daughters; //< daughters
     std::vector< IParticleTupleTool* > m_tools; //< tools
+    std::vector< IMCParticleTupleTool* > m_mctools; //< tools
   };
 
   // ===============================================================  

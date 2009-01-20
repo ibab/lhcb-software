@@ -1,7 +1,8 @@
-// $Id: OnePart.cpp,v 1.2 2009-01-20 10:00:44 pkoppenb Exp $
+// $Id: OnePart.cpp,v 1.3 2009-01-20 10:42:24 pkoppenb Exp $
 // Include files
 
 #include "Kernel/IParticleTupleTool.h"
+#include "Kernel/IMCParticleTupleTool.h"
 #include "Event/Particle.h"
 #include "DecayTreeTupleBase.h" /// @todo Base
 // local
@@ -17,7 +18,7 @@ Decays::OnePart::OnePart( DecayTreeTupleBase* parent
                           , const Particle& me
                           , const std::string& head )
   : m_head( head )
-    , m_parent( parent )
+  , m_parent( parent )
   , m_mother(0)
 {
   if( !m_parent ){
@@ -72,21 +73,26 @@ int Decays::OnePart::depth() const
   return 0;
 }
 // -----------------------------------------------------
-void Decays::OnePart::addTool( IParticleTupleTool* tool )
-{
+void Decays::OnePart::addTool( IParticleTupleTool* tool ){
   m_tools.push_back( tool );
 };
-std::vector< IParticleTupleTool* >& Decays::OnePart::tools( )
-{
+void Decays::OnePart::addTool( IMCParticleTupleTool* tool ){
+  m_mctools.push_back( tool );
+};
+std::vector< IParticleTupleTool* >& Decays::OnePart::tools( ){
   return m_tools;
+};
+std::vector< IMCParticleTupleTool* >& Decays::OnePart::mctools( ){
+  return m_mctools;
 };
 void Decays::OnePart::clearTools()
 {
   m_tools.clear();
+  m_mctools.clear();
 };
 bool Decays::OnePart::fill( Tuples::Tuple& tuple
-                                    , const Particle* mother
-                                    , const Particle* pp )
+                            , const Particle* mother
+                            , const Particle* pp )
 {
   bool test = true;
   for( std::vector< IParticleTupleTool* >::iterator it = m_tools.begin();
@@ -110,6 +116,15 @@ std::vector<std::string> Decays::OnePart::toolList() const{
   }
   return v;
 }
+std::vector<std::string> Decays::OnePart::mctoolList() const{
+  std::vector<std::string> v;
+  v.reserve( m_mctools.size() );
+  for( std::vector<IMCParticleTupleTool*>::const_iterator it=m_mctools.begin();
+       m_mctools.end()!=it; ++ it ){
+    v.push_back( (*it)->type() );
+  }
+  return v;
+}
 // -----------------------------------------------------   
 void Decays::OnePart::printStructure( std::ostream& os, bool verbose ) const{
   int dd = depth();
@@ -128,5 +143,3 @@ void Decays::OnePart::printStructure( std::ostream& os, bool verbose ) const{
     (*cit)->printStructure( os, verbose );
   }
 }
-
-
