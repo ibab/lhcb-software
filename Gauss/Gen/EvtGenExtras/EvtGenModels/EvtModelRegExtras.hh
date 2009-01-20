@@ -3,7 +3,10 @@
 
 #include <memory>
 #include "EvtGenModels/EvtModelReg.hh"
-
+/** 
+ * Provides a list of external decay models to
+ * use with EvtGen.
+*/
 class EvtModelRegExtras
 {
 public:
