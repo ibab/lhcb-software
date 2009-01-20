@@ -1,8 +1,12 @@
-// $Id: MCAssociation.h,v 1.1 2009-01-19 18:16:31 jpalac Exp $
+// $Id: MCAssociation.h,v 1.2 2009-01-20 15:50:29 jpalac Exp $
 #ifndef KERNEL_MCASSOCIATION_H 
 #define KERNEL_MCASSOCIATION_H 1
 
 // Include files
+namespace LHCb 
+{
+  class MCParticle;
+}
 
 /** @class MCAssociation MCAssociation.h Kernel/MCAssociation.h
  *  
