@@ -1,4 +1,4 @@
-// $Id: OnePart.h,v 1.1 2009-01-20 09:19:40 pkoppenb Exp $
+// $Id: OnePart.h,v 1.2 2009-01-20 10:00:44 pkoppenb Exp $
 #ifndef ONEPART_H 
 #define ONEPART_H 1
 
@@ -6,7 +6,7 @@
 
 /** @class OnePart OnePart.h
  *  
- *  Helper class for DecayTreeTuple
+ *  Helper class for DecayTreeTupleBase
  *
  *  Stores info about one particle and its tools
  *
@@ -18,7 +18,7 @@
 namespace LHCb{
   class Particle; // @todo remove
 }
-class DecayTreeTuple ;//@todo replace with Base
+class DecayTreeTupleBase ;//@todo replace with Base
 class Tuple ; // @todo remove
 class IParticleTupleTool ;
 namespace Decays{
@@ -26,7 +26,7 @@ namespace Decays{
   class OnePart {
   public:
     /// constructor
-    OnePart( DecayTreeTuple* parent
+    OnePart( DecayTreeTupleBase* parent
              , const LHCb::Particle& me
              , const std::string& head );
     /// destructor
@@ -49,7 +49,7 @@ namespace Decays{
     /// set mother
     void setMother( const OnePart* );
     /// parent
-    DecayTreeTuple* parent();
+    DecayTreeTupleBase* parent();
     /// mother
     const OnePart* getMother() const;
     /// add daughter
@@ -69,7 +69,7 @@ namespace Decays{
     std::string m_head, m_realname; //< real name of particle
     OnePart();                      //< constructor
     OnePart( const OnePart& );      //< copy constructor
-    DecayTreeTuple* m_parent;       //< parent
+    DecayTreeTupleBase* m_parent;       //< parent
     const OnePart* m_mother;        //< mother
     std::vector<const OnePart*> m_daughters; //< daughters
     std::vector< IParticleTupleTool* > m_tools; //< tools

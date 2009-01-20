@@ -1,9 +1,9 @@
-// $Id: OnePart.cpp,v 1.1 2009-01-20 09:19:40 pkoppenb Exp $
+// $Id: OnePart.cpp,v 1.2 2009-01-20 10:00:44 pkoppenb Exp $
 // Include files
 
 #include "Kernel/IParticleTupleTool.h"
 #include "Event/Particle.h"
-#include "DecayTreeTuple.h" /// @todo Base
+#include "DecayTreeTupleBase.h" /// @todo Base
 // local
 #include "OnePart.h"
 
@@ -13,7 +13,7 @@ using namespace LHCb;
 //
 // 2009-01-20 : Patrick Koppenburg
 //-----------------------------------------------------------------------------
-Decays::OnePart::OnePart( DecayTreeTuple* parent
+Decays::OnePart::OnePart( DecayTreeTupleBase* parent
                           , const Particle& me
                           , const std::string& head )
   : m_head( head )
@@ -58,7 +58,7 @@ const Decays::OnePart* Decays::OnePart::getMother() const
 {
   return m_mother;
 };
-DecayTreeTuple* Decays::OnePart::parent()
+DecayTreeTupleBase* Decays::OnePart::parent()
 {
   return m_parent;
 };

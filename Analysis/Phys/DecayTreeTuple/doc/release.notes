@@ -6,6 +6,8 @@
 
 ! 2009-01-20 - Patrick Koppenburg
  - Extracted class OnePart from DecayTreeTuple.
+ - Split DecayTreeTuple in DecayTreeTuple and Base
+ - Increment to v2r0
 
 ! 2009-01-19 - Tomasz Skwarnicki
  - adopt TupleToolTISTOS to new ways of tistossing L0 trigger
