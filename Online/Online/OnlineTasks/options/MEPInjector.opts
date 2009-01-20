@@ -83,4 +83,4 @@ LHCb::MEPInjector.TimeOut = 1000;  //milliseconds
 LHCb::MEPInjector.AutoMode = false; // Are we running in Auto Mode or in Odin Mode
 LHCb::MEPInjector.HLTIPAddrTo = "192.168.19.252"; //Still used in Automode
 
-LHCb::MEPInjector.ARPME = true;
+LHCb::MEPInjector.ARPME = false;

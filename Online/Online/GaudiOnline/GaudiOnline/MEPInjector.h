@@ -161,7 +161,8 @@ namespace LHCb {
 
     std::queue<char*> m_QueueOdinMEP; /* A queue of Odin MEP to be processed */
 
-    std::map<unsigned int, unsigned int > m_HLTReqs; /*map<HLT IP, counter of request> */
+    std::map<unsigned int, unsigned int > m_HLTReqs; /* map<HLT IP, counter of request> */
+    std::map < unsigned int, unsigned int >::iterator m_HLTReqsIte; /* iterator on the MEP Requests */ 
 
     ///////////////////////////////////////////////////////////////////////
     /// These attributes are set by Odin MEPs or by Job options in automode
@@ -179,6 +180,9 @@ namespace LHCb {
 
     ///////////////////////////////////////////////////////////////////////
     /// Private Methods	
+ 
+    /// Copy the content of the src bank in dest bank. except for run number and GPS time
+    void copyOdinBank(OnlineRunInfo *dest, OnlineRunInfo *src);
 
     /// In order to send ARP request at initialization
     StatusCode pingHLTNodes();
@@ -239,7 +243,7 @@ namespace LHCb {
     void publishCounters(void);
 
     /// Fix OT non respect of the rules
-    void OTFIX(int side);  
+    StatusCode OTFIX(int id, int nbEv);  
 
    public: 
     ///////////////////////////////////////////////////////////////////////
