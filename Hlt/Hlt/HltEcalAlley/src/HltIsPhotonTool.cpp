@@ -1,4 +1,4 @@
-// $Id: HltIsPhotonTool.cpp,v 1.5 2008-12-13 13:18:30 witekma Exp $
+// $Id: HltIsPhotonTool.cpp,v 1.6 2009-01-20 12:32:40 witekma Exp $
 // Include files 
 
 // from Gaudi
@@ -90,11 +90,12 @@ double HltIsPhotonTool::function(const Track& ctrack)
   }
   
   // get LHCbID of coresponding L0CaloCandidate
-  std::vector< LHCb::LHCbID >  lista=   ctrack.lhcbIDs ();
-  LHCb::CaloCellID *idL0 = 0;
+  const std::vector< LHCb::LHCbID >&  lista=   ctrack.lhcbIDs ();
+  LHCb::CaloCellID idL0;
+  bool found_idL0 = false;
   int row_min    = 100000000;
   int col_min    = 100000000;
-  for (std::vector< LHCb::LHCbID >::iterator itid = lista.begin(); itid != lista.end(); itid++) {
+  for (std::vector< LHCb::LHCbID >::const_iterator itid = lista.begin(); itid != lista.end(); itid++) {
     if( ! itid->isCalo() ) continue;
     LHCb::CaloCellID cid = itid->caloID();
     if ( cid.calo() != 2 ) continue;
@@ -102,11 +103,12 @@ double HltIsPhotonTool::function(const Track& ctrack)
     int col = cid.col();
     if ( row <= row_min && col <= col_min ) {
       row_min = row; col_min = col;
-      idL0 = &cid; 
+      idL0 = cid; 
+      found_idL0 = true;
     } 
   }  
 
-  if ( idL0 == 0 ) return -9999999.;
+  if ( ! found_idL0 ) return -9999999.;
 
   // get input data (sequential and simultaneously direct access!)  
   LHCb::CaloDigits* digits = get<LHCb::CaloDigits>( LHCb::CaloDigitLocation::Ecal );
@@ -114,7 +116,7 @@ double HltIsPhotonTool::function(const Track& ctrack)
   std::vector<CaloCluster*> clusters;
   unsigned int level = 3; // level 1:3x3, 2:5x5, 3:7x7
   // remember to delete cluster
-  m_tool->clusterize(clusters, digits, m_detector, *idL0, level);
+  m_tool->clusterize(clusters, digits, m_detector, idL0, level);
   if (clusters.empty()) return -9999999.;
 
   // get cluster closest to Track ( = L0Photon )
@@ -147,11 +149,14 @@ double HltIsPhotonTool::function(const Track& ctrack)
 
   normalizeShowerShapeVariables(showershape, showerasym, showerkappa, showertail, showerenergy);
 
-  int iarea =  idL0->area();
+  int iarea =  idL0.area();
   double phovar = photonDiscriminant(iarea, showershape, showerasym, showerkappa, showertail, showerenergy);
 
   // print ==========================================
-  /*
+  /*  
+  std::cout << format("isisP area, phovar: %3d %8.5f %8.5f %8.5f %8.5f %8.5f  result = %8.5f  xc yc = %8.5f %8.5f ", 
+		      iarea, showershape, showerasym, showerkappa, showertail, showerenergy, phovar, xc, yc) << std::endl;
+
   std::cout << "clusters size: " << clusters.size() 
             << " area: " << ireg 
             << " xc,yc: " << xc << " " << yc 
