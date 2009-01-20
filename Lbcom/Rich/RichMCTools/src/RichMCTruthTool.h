@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::MC::MCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichMCTruthTool.h,v 1.35 2008-03-25 15:41:18 jonrob Exp $
+ *  $Id: RichMCTruthTool.h,v 1.36 2009-01-20 16:00:55 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -18,8 +18,6 @@
 // from Gaudi
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
 
 // base class
 #include "RichKernel/RichToolBase.h"

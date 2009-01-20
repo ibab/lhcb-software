@@ -4,6 +4,9 @@
 ! Purpose     : Provides basic tools for RICH MC information
 !-----------------------------------------------------------------------------
 
+! 2009-01-20 - Marco Cattaneo
+ - Migrate to LHCb::ParticlePropertySvc
+
 !========================== RichMCTools v3r10 2009-01-12 =====================
 ! 2008-12-11 - Marco Cattaneo
  - Adapt to IRichCTrackInfoTool interface change to fix gcc 4.3 warnings

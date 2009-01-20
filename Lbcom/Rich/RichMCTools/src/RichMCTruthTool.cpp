@@ -5,7 +5,7 @@
  * Implementation file for class : RichMCTruthTool
  *
  * CVS Log :-
- * $Id: RichMCTruthTool.cpp,v 1.36 2008-03-25 15:41:18 jonrob Exp $
+ * $Id: RichMCTruthTool.cpp,v 1.37 2009-01-20 16:00:55 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -16,6 +16,10 @@
 
 // local
 #include "RichMCTruthTool.h"
+
+// From PartProp
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 
 // namespace
 //using namespace boost;
@@ -61,15 +65,15 @@ StatusCode MCTruthTool::initialize()
   if ( sc.isFailure() ) return sc;
 
   // Retrieve particle property service
-  IParticlePropertySvc * ppSvc = svc<IParticlePropertySvc>( "ParticlePropertySvc", true );
+  LHCb::IParticlePropertySvc * ppSvc = svc<LHCb::IParticlePropertySvc>( "LHCb::ParticlePropertySvc", true );
 
   // Setup the PDG code mappings
-  m_localID[ 0 ]                                   = Rich::Unknown;
-  m_localID[ abs(ppSvc->find("e+")->jetsetID()) ]  = Rich::Electron;
-  m_localID[ abs(ppSvc->find("mu+")->jetsetID()) ] = Rich::Muon;
-  m_localID[ abs(ppSvc->find("pi+")->jetsetID()) ] = Rich::Pion;
-  m_localID[ abs(ppSvc->find("K+")->jetsetID()) ]  = Rich::Kaon;
-  m_localID[ abs(ppSvc->find("p+")->jetsetID()) ]  = Rich::Proton;
+  m_localID[ 0 ]                                    = Rich::Unknown;
+  m_localID[ abs(ppSvc->find("e+")->pid().pid()) ]  = Rich::Electron;
+  m_localID[ abs(ppSvc->find("mu+")->pid().pid()) ] = Rich::Muon;
+  m_localID[ abs(ppSvc->find("pi+")->pid().pid()) ] = Rich::Pion;
+  m_localID[ abs(ppSvc->find("K+")->pid().pid()) ]  = Rich::Kaon;
+  m_localID[ abs(ppSvc->find("p+")->pid().pid()) ]  = Rich::Proton;
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );

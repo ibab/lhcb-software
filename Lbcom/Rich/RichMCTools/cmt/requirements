@@ -2,11 +2,11 @@
 # Created    : 2004-01-28
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.30 2008-12-11 13:56:16 cattanem Exp $
+# $Id: requirements,v 1.31 2009-01-20 16:00:55 cattanem Exp $
 #============================================================================
 
 package           RichMCTools
-version           v3r10
+version           v3r11
 
 #============================================================================
 # Structure
@@ -26,6 +26,7 @@ use  RichDet      v*    Det
 use  LinkerEvent  v*    Event
 use  MCEvent      v*    Event  
 use  MCInterfaces v*    Kernel
+use  PartProp     v*    Kernel
 
 #============================================================================
 # Component library building rule

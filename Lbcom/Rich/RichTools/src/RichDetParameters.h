@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DetParameters
  *
  *  CVS Log :-
- *  $Id: RichDetParameters.h,v 1.9 2007-03-09 17:40:29 jonrob Exp $
+ *  $Id: RichDetParameters.h,v 1.10 2009-01-20 16:00:55 cattanem Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -14,10 +14,6 @@
 
 #ifndef RICHTOOLS_RICHDETPARAMETERS_H
 #define RICHTOOLS_RICHDETPARAMETERS_H 1
-
-// from Gaudi
-#include "GaudiKernel/ParticleProperty.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
 
 // Rich Kernel
 #include "RichKernel/BoostArray.h"

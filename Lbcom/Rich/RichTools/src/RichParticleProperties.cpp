@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::ParticleProperties
  *
  *  CVS Log :-
- *  $Id: RichParticleProperties.cpp,v 1.6 2007-08-09 16:00:25 jonrob Exp $
+ *  $Id: RichParticleProperties.cpp,v 1.7 2009-01-20 16:00:55 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -14,6 +14,10 @@
 
 // local
 #include "RichParticleProperties.h"
+
+// From LHCb 
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -51,7 +55,7 @@ StatusCode Rich::ParticleProperties::initialize()
   acquireTool( "RichRefractiveIndex", refIndex );
 
   // Retrieve particle property service
-  IParticlePropertySvc * ppSvc = svc<IParticlePropertySvc>( "ParticlePropertySvc", true );
+  LHCb::IParticlePropertySvc * ppSvc = svc<LHCb::IParticlePropertySvc>( "LHCb::ParticlePropertySvc", true );
 
   // Retrieve particle masses
   m_particleMass[Rich::Electron] = ppSvc->find("e+" )->mass()/Gaudi::Units::MeV;

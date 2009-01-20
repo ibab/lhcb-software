@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::TabulatedRefractiveIndex
  *
  *  CVS Log :-
- *  $Id: RichTabulatedRefractiveIndex.h,v 1.18 2008-11-30 10:43:47 jonrob Exp $
+ *  $Id: RichTabulatedRefractiveIndex.h,v 1.19 2009-01-20 16:00:55 cattanem Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -16,8 +16,6 @@
 #define RICHTOOLS_RICHTABULATEDREFRACTIVEINDEX_H 1
 
 // from Gaudi
-#include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
 
 // Base class and interface
