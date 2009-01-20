@@ -26,31 +26,26 @@
  *  @date   2009-01-13
  */
 class DaVinciSmartAssociator : public GaudiTool, 
-                                      virtual public IDaVinciSmartAssociator {
+                               virtual public IDaVinciSmartAssociator {
 public: 
   /// Standard constructor
   DaVinciSmartAssociator( const std::string& type, 
-                                 const std::string& name,
-                                 const IInterface* parent);
+                          const std::string& name,
+                          const IInterface* parent);
 
   virtual ~DaVinciSmartAssociator( ); ///< Destructor
 
   StatusCode initialize() ;
   StatusCode finalize() ;
 
-  ProtoParticle2MCLinker::ToRange associate(LHCb::Particle*);
+  Particle2MCLinker::ToRange associate(const LHCb::Particle* particleToBeAssociated);
 
 private:
 
-  IDaVinciAssociatorsWrapper* m_linkerTool_cPP; //wrapper for the charged linker
-  IDaVinciAssociatorsWrapper* m_linkerTool_nPP; //wrapper for the neutral linker
-  
-  ProtoParticle2MCLinker* m_linker_charged ; ///< linker for charged particles
-  ProtoParticle2MCLinker* m_linker_neutral ; ///< linker for neutral particles
+  IDaVinciAssociatorsWrapper* m_linkerTool_cPP;
+  IDaVinciAssociatorsWrapper* m_linkerTool_nPP;
 
   IBackgroundCategory* m_bkg; //for composites
-
-  ProtoParticle2MCLinker::ToRange associatedParts; //the results of the association
 
 };
 #endif // DAVINCISMARTASSOCIATOR_H
