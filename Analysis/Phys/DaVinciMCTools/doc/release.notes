@@ -1,11 +1,23 @@
-! $Id: release.notes,v 1.239 2009-01-13 19:35:20 gligorov Exp $
+! $Id: release.notes,v 1.240 2009-01-20 16:25:29 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
 
+! 2009-01-20 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v9r18
+ - Add src/GenericParticle2MCAssociator.h
+  . Template implementation of the IParticle2MCAssociator interface.
+    Does all of the data handling, and uses the template parameter 
+    do the estimation of the association weight.
+ - src/DaVinciAssociatorsWrapper{.cpp, .h}
+  . Arguments now passed by const reference. Simplify code a bit.
+ - src/DaVinciSmartAssociator{.cpp, .h}
+  . Adapt to interface changes. Simplify code.
+
 ! 2009-01-13 - V. Gligorov
- - Added DaVinciDmartAssociator.{h,cpp} a new ``smart'' association tool.
+ - Added DaVinciSmartAssociator.{h,cpp} a new ``smart'' association tool.
 
 ! 2008-12-23 - Patrick Koppenburg
  - Remove all options files. They are all obsolete.
