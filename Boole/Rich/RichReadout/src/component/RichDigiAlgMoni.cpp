@@ -1,10 +1,14 @@
-// $Id: RichDigiAlgMoni.cpp,v 1.17 2008-06-05 09:51:16 jonrob Exp $
+// $Id: RichDigiAlgMoni.cpp,v 1.18 2009-01-20 16:00:55 cattanem Exp $
 
 // Units
 #include "GaudiKernel/SystemOfUnits.h"
 
 // From GaudiKernel
 #include "GaudiKernel/SmartDataPtr.h"
+
+// From PartProp
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 
 // local
 #include "RichDigiAlgMoni.h"
@@ -54,7 +58,7 @@ StatusCode AlgMoni::initialize()
   m_richSys = getDet<DeRichSystem>( DeRichLocations::RichSystem );
 
   // Retrieve particle property service
-  IParticlePropertySvc * ppSvc = svc<IParticlePropertySvc>( "ParticlePropertySvc", true );
+  LHCb::IParticlePropertySvc * ppSvc = svc<LHCb::IParticlePropertySvc>( "LHCb::ParticlePropertySvc", true );
 
   // Retrieve particle masses
   m_particleMass[Rich::Unknown]  = 0;

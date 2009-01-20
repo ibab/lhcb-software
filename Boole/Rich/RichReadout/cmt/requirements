@@ -2,11 +2,11 @@
 # Created    : 11/05/2003
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.46 2008-10-24 12:59:28 jonrob Exp $
+# $Id: requirements,v 1.47 2009-01-20 16:00:55 cattanem Exp $
 #============================================================================
 
 package RichReadout
-version v2r11
+version v2r12
 
 # ================ structure =================================================
 branches cmt doc src Event xml
@@ -20,6 +20,7 @@ use MCEvent      v*      Event
 use RichKernel   v*      Rich
 use RichDet      v*      Det
 use MCInterfaces v*      Kernel
+use PartProp     v*      Kernel
 private
 use GaudiObjDesc v* -no_auto_imports
 end_private

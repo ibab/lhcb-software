@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.h,v 1.15 2008-01-31 15:41:00 jonrob Exp $
+// $Id: RichDigiAlgMoni.h,v 1.16 2009-01-20 16:00:55 cattanem Exp $
 #ifndef RICHMONITOR_RICHDIGIALGMONI_H
 #define RICHMONITOR_RICHDIGIALGMONI_H 1
 
@@ -10,8 +10,6 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/Vector3DTypes.h"
 
 // Event model
