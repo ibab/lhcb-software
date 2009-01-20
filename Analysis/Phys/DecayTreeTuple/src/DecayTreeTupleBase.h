@@ -1,4 +1,4 @@
-// $Id: DecayTreeTupleBase.h,v 1.1 2009-01-20 10:00:44 pkoppenb Exp $
+// $Id: DecayTreeTupleBase.h,v 1.2 2009-01-20 11:09:16 pkoppenb Exp $
 #ifndef JBOREL_DECAYTREETUPLEBASE_H
 #define JBOREL_DECAYTREETUPLEBASE_H 1
 
@@ -55,6 +55,8 @@ class DecayTreeTupleBase : public DVAlgorithm  {
   bool sizeCheckOrInit( const LHCb::Particle::ConstVector& );
   void matchSubDecays( const LHCb::Particle::ConstVector& );
 
+  /// Call successively all OnePart's fill method 
+  bool fillOnePart( Decays::OnePart*, Tuples::Tuple&, const LHCb::Particle* mother, const LHCb::Particle* );
   std::vector<std::string> getEventTools() const;
   std::vector<std::string> getParticleTools() const;
 

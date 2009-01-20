@@ -1,10 +1,8 @@
-// $Id: OnePart.cpp,v 1.3 2009-01-20 10:42:24 pkoppenb Exp $
+// $Id: OnePart.cpp,v 1.4 2009-01-20 11:09:16 pkoppenb Exp $
 // Include files
 
 #include "Kernel/IParticleTupleTool.h"
 #include "Kernel/IMCParticleTupleTool.h"
-#include "Event/Particle.h"
-#include "DecayTreeTupleBase.h" /// @todo Base
 // local
 #include "OnePart.h"
 
@@ -14,19 +12,12 @@ using namespace LHCb;
 //
 // 2009-01-20 : Patrick Koppenburg
 //-----------------------------------------------------------------------------
-Decays::OnePart::OnePart( DecayTreeTupleBase* parent
-                          , const Particle& me
-                          , const std::string& head )
+Decays::OnePart::OnePart( std::string realname
+                          , std::string head )
   : m_head( head )
-  , m_parent( parent )
-  , m_mother(0)
+    , m_realname(realname)
+    , m_mother(0)
 {
-  if( !m_parent ){
-    // should not happen                                                                                      
-    std::cout << "Error: parent interface not set!" << std::endl;
-    return;
-  }
-  m_realname = m_parent->ppSvc()->find ( me.particleID() )->particle();
 }
 // -----------------------------------------------------
 Decays::OnePart::~OnePart(){}
@@ -59,10 +50,6 @@ const Decays::OnePart* Decays::OnePart::getMother() const
 {
   return m_mother;
 };
-DecayTreeTupleBase* Decays::OnePart::parent()
-{
-  return m_parent;
-};
 void Decays::OnePart::addDaughter( OnePart* d )
 {
   m_daughters.push_back( d );
@@ -90,23 +77,6 @@ void Decays::OnePart::clearTools()
   m_tools.clear();
   m_mctools.clear();
 };
-bool Decays::OnePart::fill( Tuples::Tuple& tuple
-                            , const Particle* mother
-                            , const Particle* pp )
-{
-  bool test = true;
-  for( std::vector< IParticleTupleTool* >::iterator it = m_tools.begin();
-       m_tools.end()!=it; ++it ){
-    bool localTest = (*it)->fill( mother, pp, headName(), tuple );
-    test &= localTest;
-    if( localTest ){    }
-    else {
-      m_parent->Warning("Tool '" + (*it)->type() + "' acting on particle '"
-                        + headName() + "' returned a failure status." );
-    }
-  }
-  return test;
-}
 std::vector<std::string> Decays::OnePart::toolList() const{
   std::vector<std::string> v;
   v.reserve( m_tools.size() );

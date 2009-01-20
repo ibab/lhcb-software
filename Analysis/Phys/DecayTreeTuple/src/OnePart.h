@@ -1,4 +1,4 @@
-// $Id: OnePart.h,v 1.3 2009-01-20 10:42:24 pkoppenb Exp $
+// $Id: OnePart.h,v 1.4 2009-01-20 11:09:16 pkoppenb Exp $
 #ifndef ONEPART_H 
 #define ONEPART_H 1
 
@@ -15,11 +15,6 @@
  *  @author Patrick Koppenburg - extracted from DecayTreeTuple
  *  @date   2009-01-09
  */
-namespace LHCb{
-  class Particle; // @todo remove
-}
-class DecayTreeTupleBase ;//@todo replace with Base
-class Tuple ; // @todo remove
 class IParticleTupleTool ;
 class IMCParticleTupleTool ;
 namespace Decays{
@@ -27,14 +22,9 @@ namespace Decays{
   class OnePart {
   public:
     /// constructor
-    OnePart( DecayTreeTupleBase* parent
-             , const LHCb::Particle& me
-             , const std::string& head );
+    OnePart( std::string partname, std::string head );
     /// destructor
     ~OnePart();
-    /// Call successively all the tool's fill method @todo Needs to be extracted to get rid of dependency on Particle
-    bool fill( Tuples::Tuple&, const LHCb::Particle* mother
-               , const LHCb::Particle* ); 
     /// Refers to the tuple column name prefix
     std::string headName();
     /// Refers to the tuple column name prefix
@@ -49,8 +39,6 @@ namespace Decays{
     int depth() const;
     /// set mother
     void setMother( const OnePart* );
-    /// parent
-    DecayTreeTupleBase* parent();
     /// mother
     const OnePart* getMother() const;
     /// add daughter
@@ -73,7 +61,6 @@ namespace Decays{
     std::string m_head, m_realname; //< real name of particle
     OnePart();                      //< constructor
     OnePart( const OnePart& );      //< copy constructor
-    DecayTreeTupleBase* m_parent;       //< parent
     const OnePart* m_mother;        //< mother
     std::vector<const OnePart*> m_daughters; //< daughters
     std::vector< IParticleTupleTool* > m_tools; //< tools

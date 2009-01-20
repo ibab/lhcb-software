@@ -1,4 +1,4 @@
-// $Id: DecayTreeTupleBase.cpp,v 1.1 2009-01-20 10:00:44 pkoppenb Exp $
+// $Id: DecayTreeTupleBase.cpp,v 1.2 2009-01-20 11:09:16 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -319,13 +319,33 @@ StatusCode DecayTreeTupleBase::fillParticles( Tuples::Tuple& tuple
     bool test = true;
     const int size = m_parts.size();
     for( int k=0; size>k; ++k ){ // row[0] is the deday head.
-      test &= m_parts[k]->fill( tuple, row[0], row[k] );
+      //      test &= m_parts[k]->fill( tuple, row[0], row[k] );
+      test &= fillOnePart( m_parts[k], tuple, row[0], row[k] );
     }
     return StatusCode(test);
   }
   return StatusCode::FAILURE;
 }
-
+//=============================================================================
+// Moved from OnePart
+//=============================================================================
+bool DecayTreeTupleBase::fillOnePart( Decays::OnePart* op 
+                            , Tuples::Tuple& tuple
+                            , const Particle* mother
+                            , const Particle* pp )
+{
+  bool test = true;
+  for( std::vector< IParticleTupleTool* >::iterator it = op->tools().begin();
+       op->tools().end()!=it; ++it ){
+    bool localTest = (*it)->fill( mother, pp, op->headName(), tuple );
+    test &= localTest;
+    if( localTest ){}
+    else {
+      Warning("Tool '" + (*it)->type() + "' acting on particle '"+ op->headName() + "' returned a failure status." );
+    }
+  }
+  return test;
+}
 //=============================================================================
 //=============================================================================
 
@@ -395,7 +415,7 @@ bool DecayTreeTupleBase::sizeCheckOrInit( const Particle::ConstVector& row ){
   // initializing the particles object.
   m_parts.reserve( size );
   for( unsigned int i=0; i<size; ++i ){
-    Decays::OnePart *p = new Decays::OnePart( this, *(row[i]) , getBranchName(row[i]) );
+    Decays::OnePart *p = new Decays::OnePart( ppSvc()->find ( row[i]->particleID() )->particle(), getBranchName(row[i]) );
     // inherit the default properties:
     m_parts.push_back( p );
   }
