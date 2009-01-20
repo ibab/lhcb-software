@@ -1,19 +1,17 @@
-// $Id: DecayTreeTuple.h,v 1.6 2009-01-20 17:53:49 pkoppenb Exp $
+// $Id: DecayTreeTuple.h,v 1.7 2009-01-20 18:31:30 pkoppenb Exp $
 #ifndef JBOREL_DECAYTREETUPLE_H
 #define JBOREL_DECAYTREETUPLE_H 1
 
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
 #include "DecayTreeTupleBase.h"
+#include "OnePart.h"
 
 class IDecayFinder;
 class TupleToolDecay;
 
 class IParticleTupleTool;
 class IEventTupleTool;
-namespace Decays{  
-  class OnePart;
-}
 
 /** @class DecayTreeTuple DecayTreeTuple.h jborel/DecayTreeTuple.h
  *
@@ -149,8 +147,8 @@ private:
   //! Check if ready to fill or trigger the initialization
   bool sizeCheckOrInit( const LHCb::Particle::ConstVector& );
   void matchSubDecays( const LHCb::Particle::ConstVector& );
-
-
+  /// Call successively all OnePart's fill method 
+  bool fillOnePart( Decays::OnePart*, Tuples::Tuple&, const LHCb::Particle* mother, const LHCb::Particle* );
 private:  
   std::vector< IParticleTupleTool* > m_pTools;
 };

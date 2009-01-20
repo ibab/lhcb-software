@@ -5,10 +5,17 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-01-20 - Patrick Koppenburg
+  ##
+  # The plan is to get a shared base for DecayTreeTuple and MCDecayTreeTuple.
+  # The differences are (MC)Particle, (MC)DecayFinder, I(MC)ParticleTools.
+  # Some can be addressed by templates.
+  ##
  - Extracted class OnePart from DecayTreeTuple.
    . Added MCTools 
    . Moved fill method to DecayTreeTupleBase -> removes dependency on Particle, Tuple and parent
  - Split DecayTreeTuple in DecayTreeTuple and Base
+   . Template as much as possible in DecayTreeTupleBase
+   . Move the rest to DecayTreeTuple
  - Increment to v2r0
 
 ! 2009-01-19 - Tomasz Skwarnicki

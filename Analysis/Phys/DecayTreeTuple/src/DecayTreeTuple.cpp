@@ -1,4 +1,4 @@
-// $Id: DecayTreeTuple.cpp,v 1.9 2009-01-20 17:53:49 pkoppenb Exp $
+// $Id: DecayTreeTuple.cpp,v 1.10 2009-01-20 18:31:30 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -9,7 +9,6 @@
 #include "Kernel/IMCParticleTupleTool.h"
 #include "Kernel/IEventTupleTool.h"
 #include "TupleToolDecay.h"
-#include "OnePart.h"
 
 #include "boost/lexical_cast.hpp" 
 #include "Kernel/Escape.h"
@@ -267,6 +266,26 @@ StatusCode DecayTreeTuple::finalize() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
   return DecayTreeTupleBase::finalize();
+}
+//=============================================================================
+// Moved from OnePart
+//=============================================================================
+bool DecayTreeTuple::fillOnePart( Decays::OnePart* op 
+                            , Tuples::Tuple& tuple
+                            , const Particle* mother
+                            , const Particle* pp )
+{
+  bool test = true;
+  for( std::vector< IParticleTupleTool* >::iterator it = op->tools().begin();
+       op->tools().end()!=it; ++it ){
+    bool localTest = (*it)->fill( mother, pp, op->headName(), tuple );
+    test &= localTest;
+    if( localTest ){}
+    else {
+      Warning("Tool '" + (*it)->type() + "' acting on particle '"+ op->headName() + "' returned a failure status." );
+    }
+  }
+  return test;
 }
 
 //=============================================================================
