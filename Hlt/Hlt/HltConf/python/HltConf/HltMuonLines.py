@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonLines.py,v 1.4 2009-01-16 22:27:29 aperezca Exp $
+# $Id: HltMuonLines.py,v 1.5 2009-01-20 19:11:42 aperezca Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -41,6 +41,7 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
                   ,'MuTrackTrIP'    : 0.05
                   ,'MuTrackDoca'    : 0.4
                   ,'MuTrackDZ'      : 1.5
+                  ,'MuTrackAngle'   : 0.
                   ,'MuTrackDimuMass': 1000.
                   ,'MuTrackPoint'   : 0.4
                   ,'MuTrackTrChi2'  : 10.
@@ -411,7 +412,8 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
                            
                            , Member( 'VF', 'VeloVertex' # // Filter velo vertices in DZ
                                      , InputSelection  = '%VM2VeloVertex'
-                                     , FilterDescriptor = ['VertexDz_PV2D,>,'+str(self.getProp('MuTrackDZ')) ]
+                                     , FilterDescriptor = ['VertexDz_PV2D,>,'+str(self.getProp('MuTrackDZ')),
+                                                           'VertexAngle,>,'+str(self.getProp('MuTrackAngle'))]
                                      , HistogramUpdatePeriod = 0
                                      , HistoDescriptor = { 'VertexDz': ( 'VertexDz',-10.,50.,100), 'VertexDzBest': ( 'VertexDzBest',-10.,50.,100) }
                                      )
@@ -444,6 +446,7 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
                                       , FilterDescriptor = ['FitVertexMaxChi2OverNdf,<,'+str(self.getProp('MuTrackTrChi2')),
                                                             'FitVertexMinIP_PV2D,||>,'+str(self.getProp('MuTrackMuIP')),
                                                             'FitVertexDOCA,<,'+str(self.getProp('MuTrackDoca')),
+                                                            'FitVertexAngle,>,'+str(self.getProp('MuTrackAngle')),
                                                             'FitVertexDz_PV2D,>,'+str(self.getProp('MuTrackDZ')),
                                                             'FitVertexMinPT,>,'+str(self.getProp('MuTrackTrPt')),
                                                             'FitVertexDimuonMass,>,'+str(self.getProp('MuTrackDimuMass')),
