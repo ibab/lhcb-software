@@ -1,4 +1,4 @@
-// $Id: DecayTreeTuple.h,v 1.3 2008-12-17 20:14:55 pkoppenb Exp $
+// $Id: DecayTreeTuple.h,v 1.4 2009-01-20 09:19:40 pkoppenb Exp $
 #ifndef JBOREL_DECAYTREETUPLE_H
 #define JBOREL_DECAYTREETUPLE_H 1
 
@@ -12,6 +12,9 @@ class DecayTreeTuple;
 
 class IParticleTupleTool;
 class IEventTupleTool;
+namespace Decays{  
+  class OnePart;
+}
 
 /** @class DecayTreeTuple DecayTreeTuple.h jborel/DecayTreeTuple.h
  *
@@ -128,60 +131,6 @@ class IEventTupleTool;
  * \date 2007-11-01 
  */
 class DecayTreeTuple : public DVAlgorithm  {
-  // forward declaration
-  class OnePart;
-
-  // ==================================================
-
-  class OnePart {
-  public:
-    OnePart( DecayTreeTuple* parent
-	     , const LHCb::Particle& me 
-	     , const std::string& head );
-    ~OnePart();
-    
-    //! Call successively all the tool's fill method
-    bool fill( Tuples::Tuple&, const LHCb::Particle* mother
-	       , const LHCb::Particle* );
-
-    //! Refers to the tuple column name prefix
-    std::string headName();
-    //! Refers to the tuple column name prefix
-    void headName( const std::string& h );
-    
-    //! Refers to the particle's real syntax (not escaped)
-    std::string getRealName();
-    //! Refers to the particle's real syntax (not escaped)
-    const std::string& getRealName() const;
-
-    //! Prints the tree strucutre, if verbose, also prints the tool list
-    void printStructure( std::ostream& os, bool verbose=false ) const ;
-    int depth() const;
-    void setMother( const OnePart* );
-    DecayTreeTuple* parent();
-    const OnePart* getMother() const;
-    void addDaughter( OnePart* );
-
-    std::string info() const;
-
-    void addTool( IParticleTupleTool* tool );
-
-    std::vector< IParticleTupleTool* >& tools();
-    std::vector<std::string> toolList() const;
-    void clearTools();
-
-  private:
-    std::string m_head, m_realname;
-
-    OnePart();
-    OnePart( const OnePart& );
-
-    DecayTreeTuple* m_parent;
-
-    const OnePart* m_mother;
-    std::vector<const OnePart*> m_daughters;
-    std::vector< IParticleTupleTool* > m_tools;
-  };
 
  public:
   /// Standard constructor
@@ -193,17 +142,6 @@ class DecayTreeTuple : public DVAlgorithm  {
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
   
-  //! Escape a string, removing all the char that cannot be used for a tuple column name
-  static std::string escape( const std::string& );
-
-  //! Retrun a string with all the element joined by sep. If empty, returns ifemtpy
-  template <class ForwardIterator>
-  static std::string join( ForwardIterator first
-			   , ForwardIterator last
-			   , const char* sep=", "
-			   , const char* ifempty="none" );
-
-
  protected:
   //! Trigger all the fill procedures
   StatusCode fillTuple( Tuples::Tuple&, const LHCb::Particle::ConstVector& );
@@ -228,7 +166,7 @@ class DecayTreeTuple : public DVAlgorithm  {
 
   bool initializeDecays();
   void initializeStufferTools();
-  void initializeOnePartsStufferTools( OnePart*, const TupleToolDecay* );
+  void initializeOnePartsStufferTools( Decays::OnePart*, const TupleToolDecay* );
 
   std::string getBranchName( const LHCb::Particle* p );
 
@@ -246,7 +184,7 @@ class DecayTreeTuple : public DVAlgorithm  {
 
   std::vector<std::string> m_toolList;
 
-  std::vector<OnePart*> m_parts;
+  std::vector<Decays::OnePart*> m_parts;
 
   std::vector< IParticleTupleTool* > m_pTools;
   std::vector< IEventTupleTool* > m_eTools;
@@ -257,37 +195,6 @@ class DecayTreeTuple : public DVAlgorithm  {
 
 };
 
-// ===============================================================
-// ======================= inline & template body ================
-// ===============================================================
-
-/** join a container with a separation char. */
-template <class ForwardIterator>
-std::string DecayTreeTuple::join( ForwardIterator first
-				  , ForwardIterator last, 
-				  const char* sep
-				  , const char* ifempty ){
-  std::stringstream  ret;
-  ForwardIterator it(first), it2( first );
-
-  if( first == last ) return std::string(ifempty);
-  ++it2;
-  if( it2 == last ){
-    ret << *first;
-    return ret.str();
-  }
-
-  it2=first;
-
-  while( it2!=last ){
-    ret << *it << sep;
-    ++it;
-    it2=it;
-    ++it2;
-  }
-  ret << *it;
-  return ret.str();
-};
 
 
 #endif // JBOREL_DECAYTREETUPLE_H

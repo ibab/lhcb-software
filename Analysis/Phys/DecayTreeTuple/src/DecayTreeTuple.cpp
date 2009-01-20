@@ -1,4 +1,4 @@
-// $Id: DecayTreeTuple.cpp,v 1.6 2008-12-09 07:10:56 pkoppenb Exp $
+// $Id: DecayTreeTuple.cpp,v 1.7 2009-01-20 09:19:40 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -8,15 +8,13 @@
 #include "Kernel/IDecayFinder.h"
 #include "Kernel/Escape.h"
 
-// #include "GaudiAlg/Tuple.h"
-// #include "GaudiAlg/TupleObj.h"
-
-// local
 #include "DecayTreeTuple.h"
 
 #include "Kernel/IParticleTupleTool.h"
 #include "Kernel/IEventTupleTool.h"
 #include "TupleToolDecay.h"
+#include "OnePart.h"
+#include "Event/Particle.h"
 
 #include "GaudiKernel/IRegistry.h" // IOpaqueAddress
 
@@ -28,156 +26,11 @@
 //
 // 2007-11-01 : Jeremie Borel
 //-----------------------------------------------------------------------------
-using namespace Gaudi;
-using namespace LHCb;
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( DecayTreeTuple );
 
-// ===============================================================
-// ===============================================================
-// ===============================================================
-
-// void DecayTreeTuple::DecayVertex::fill( const LHCb::Particle& p ){
-//   const LHCb::Vertex * vtx = p.endVertex ();
-//   if( !vtx ) return ;
-
-//   const XYZPoint & pos = vtx->position ();
-//   x = pos.x();
-//   y = pos.y();
-//   z = pos.z();
-
-//   const SymMatrix3x3 & mat = vtx->covMatrix ();
-//   ex = sqrt( mat(0,0) );
-//   ey = sqrt( mat(1,1) );
-//   ez = sqrt( mat(2,2) );
-
-//   chi2 = vtx->chi2();
-//   ndof = vtx->nDoF();
-// }
-
-//=============================================================================
-//=============================================================================
-
-DecayTreeTuple::OnePart::OnePart( DecayTreeTuple* parent
-                                  , const Particle& me
-                                  , const std::string& head )
-  : m_head( head )
-  , m_parent( parent )
-  , m_mother(0)
-{
-  if( !m_parent ){ // should not happen
-    std::cout << "Error: parent interface not set!" << std::endl;
-    return;
-  }
-  m_realname = m_parent->ppSvc()->find ( me.particleID() )->particle();
-}
-
-// -----------------------------------------------------
-DecayTreeTuple::OnePart::~OnePart(){}
-
-// -----------------------------------------------------
-// small interface methode:
-
-std::string DecayTreeTuple::OnePart::headName(){ 
-  return m_head; 
-};
-void DecayTreeTuple::OnePart::headName( const std::string& h ){
-  m_head=h; 
-};
-    
-std::string DecayTreeTuple::OnePart::getRealName(){ 
-  return m_realname;
-};
-const std::string& DecayTreeTuple::OnePart::getRealName() const { 
-  return m_realname;
-};
-std::string DecayTreeTuple::OnePart::info() const {
-  return m_realname + " (" + m_head + ")";
-}
-
-void DecayTreeTuple::OnePart::setMother( const OnePart* mother ){
-  m_mother = mother;
-}
-const DecayTreeTuple::OnePart* DecayTreeTuple::OnePart::getMother() const { 
-  return m_mother; 
-};
-
-DecayTreeTuple* DecayTreeTuple::OnePart::parent(){ 
-  return m_parent; 
-};
-
-void DecayTreeTuple::OnePart::addDaughter( OnePart* d ){
-  m_daughters.push_back( d );
-}
-int DecayTreeTuple::OnePart::depth() const {
-  if( m_mother ) return m_mother->depth()+1;
-  return 0;
-}
-
-// -----------------------------------------------------
-void DecayTreeTuple::OnePart::addTool( IParticleTupleTool* tool ){
-  m_tools.push_back( tool ); 
-};
-std::vector< IParticleTupleTool* >& DecayTreeTuple::OnePart::tools( ){
-  return m_tools;
-};
-void DecayTreeTuple::OnePart::clearTools(){ 
-  m_tools.clear();
-};
-
-// -----------------------------------------------------
-bool DecayTreeTuple::OnePart::fill( Tuples::Tuple& tuple
-                                    , const Particle* mother
-                                    , const Particle* pp ){
-  bool test = true;
-  for( std::vector< IParticleTupleTool* >::iterator it = m_tools.begin();
-       m_tools.end()!=it; ++it ){
-    bool localTest = (*it)->fill( mother, pp, headName(), tuple );
-    test &= localTest;
-    if( localTest ){}
-    else {
-      m_parent->Warning("Tool '" + (*it)->type() + "' acting on particle '"
-                        + headName() + "' returned a failure status." );
-    }
-  }
-  return test;
-}
-std::vector<std::string> DecayTreeTuple::OnePart::toolList() const {
-  std::vector<std::string> v;
-  v.reserve( m_tools.size() );
-  for( std::vector<IParticleTupleTool*>::const_iterator it=m_tools.begin();
-       m_tools.end()!=it; ++ it ){
-    v.push_back( (*it)->type() );
-  }
-  return v;
-}
-
-// -----------------------------------------------------
-void DecayTreeTuple::OnePart::printStructure( std::ostream& os, bool verbose ) const {
-
-  int dd = depth();
-  std::string i;
-  if( dd ) i = std::string( 3*dd, ' ' ); //not the same as std::string(char*,int)
-  i.append( info() );
-  if( !verbose ) os << i << "\n";
-  else {
-    std::vector<std::string> l = toolList();
-    os << "|" << i << std::setw( 20-i.size() ) <<  " " << ":";
-    os << DecayTreeTuple::join( l.begin(), l.end(), ", ", "none" ) << "\n";
-  }
-
-  if( m_daughters.empty() ) return;
-
-  for( std::vector<const OnePart*>::const_iterator cit=m_daughters.begin();
-       cit != m_daughters.end(); ++cit ){
-    (*cit)->printStructure( os, verbose );
-  }
-}
-
-//=============================================================================
-//================= class DecayTreeTuple ======================================
-//=============================================================================
-
+using namespace Gaudi ;
+using namespace LHCb ;
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -204,6 +57,7 @@ DecayTreeTuple::DecayTreeTuple( const std::string& name,
   m_toolList.push_back( "TupleToolEventInfo" );
   
   declareProperty( "ToolList", m_toolList );
+
 }
 //=============================================================================
 // Destructor
@@ -219,11 +73,9 @@ StatusCode DecayTreeTuple::initialize() {
 
   if (msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
 
-  if( initializeDecays() )
-    return StatusCode::SUCCESS;
+  if( initializeDecays() ) return StatusCode::SUCCESS;
   return StatusCode::FAILURE;
 }
-
 //=============================================================================
 // Main execution
 //=============================================================================
@@ -241,7 +93,7 @@ StatusCode DecayTreeTuple::execute() {
 
   Tuple tuple = nTuple( m_tupleName,  m_tupleName );
 
-  Particle::ConstVector heads;
+  LHCb::Particle::ConstVector heads;
   StatusCode test = getDecayMatches( mothers, heads );
   if( test ){
     if (msgLevel(MSG::VERBOSE)) verbose() << "There is " << heads.size()
@@ -286,7 +138,6 @@ StatusCode DecayTreeTuple::execute() {
   setFilterPassed(test);  // Mandatory. Set to true if event is accepted.
   return StatusCode::SUCCESS;
 }
-
 //=============================================================================
 //  Finalize
 //=============================================================================
@@ -294,8 +145,7 @@ StatusCode DecayTreeTuple::finalize() {
 
   if (msgLevel(MSG::DEBUG)) debug() << "==> Finalize" << endmsg;
 
-  for( std::vector<OnePart*>::iterator it = m_parts.begin();
-       m_parts.end() != it; ++it ){
+  for( std::vector<Decays::OnePart*>::iterator it = m_parts.begin();m_parts.end() != it; ++it ){
     if( *it ){
       delete *it;
       *it = 0; // not really usefull
@@ -354,7 +204,6 @@ bool DecayTreeTuple::initializeDecays() {
   }
   return true;
 }
-
 //=============================================================================
 //=============================================================================
 
@@ -395,7 +244,7 @@ void DecayTreeTuple::initializeStufferTools(){
       m_pTools.push_back( test2 );
 
       // inherit by default: give all the tools to the particles:
-      std::vector<OnePart*>::iterator op;
+      std::vector<Decays::OnePart*>::iterator op;
       for( op=m_parts.begin(); op!=m_parts.end(); ++op ){
         (*op)->addTool( test2 );
       }
@@ -420,7 +269,6 @@ void DecayTreeTuple::initializeStufferTools(){
 }
 //=============================================================================
 //=============================================================================
-
 StatusCode DecayTreeTuple::fillTuple( Tuples::Tuple& tuple
                                       , const Particle::ConstVector& heads ){
   Particle::ConstVector::const_iterator pit = heads.begin();
@@ -466,7 +314,7 @@ StatusCode DecayTreeTuple::fillTuple( Tuples::Tuple& tuple
 //=============================================================================
 //=============================================================================
 
-void DecayTreeTuple::initializeOnePartsStufferTools( OnePart* P
+void DecayTreeTuple::initializeOnePartsStufferTools( Decays::OnePart* P
                                                      , const TupleToolDecay* m ){
 
   // there is a specific descriptor for P, i.e. default settings are wrong
@@ -601,7 +449,7 @@ bool DecayTreeTuple::sizeCheckOrInit( const Particle::ConstVector& row ){
   // initializing the particles object.
   m_parts.reserve( size );
   for( unsigned int i=0; i<size; ++i ){
-    OnePart *p = new OnePart( this, *(row[i]) , getBranchName(row[i]) );
+    Decays::OnePart *p = new Decays::OnePart( this, *(row[i]) , getBranchName(row[i]) );
     // inherit the default properties:
     m_parts.push_back( p );
   }
@@ -617,7 +465,7 @@ bool DecayTreeTuple::sizeCheckOrInit( const Particle::ConstVector& row ){
   // re-creating mother->daughter relationship,
   // allows better printout later on
   for( int i=0; i<(int)row.size(); ++i ){
-    OnePart* Mother = m_parts[i];
+    Decays::OnePart* Mother = m_parts[i];
     const Particle* mother = row[i];
 
     Particle::ConstVector dau = mother->daughtersVector();
@@ -648,7 +496,7 @@ bool DecayTreeTuple::sizeCheckOrInit( const Particle::ConstVector& row ){
   // generic tool info:
   std::stringstream tmp;
   std::vector<std::string> tools = getEventTools();
-  std::string tList = DecayTreeTuple::join( tools.begin(), tools.end() );
+  std::string tList = Decays::join( tools.begin(), tools.end() );
   tmp << "Event related tools: " << tList;
 
   tmp << "\nParticle related stuffers: realname (tuplename) \n";
@@ -689,7 +537,7 @@ void DecayTreeTuple::matchSubDecays( const Particle::ConstVector& row ){
 
     const int size=buffer.size();
     for( int k=0; k<size; ++k ){
-      // loop on the matched particles and find the associated OnePart* object
+      // loop on the matched particles and find the associated Decays::OnePart* object
       int off = getOffset( buffer[k], row, false );
       if( off == (int)row.size() ){
         Error("The decay descriptor \n'" + (*mit)->getInfo()
