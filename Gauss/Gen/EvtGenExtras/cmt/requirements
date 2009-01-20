@@ -1,0 +1,17 @@
+# Package of Non-Standard EvtGen Models
+
+package     EvtGenExtras
+version     v1r0
+ 
+branches    cmt doc EvtGenModels src
+
+use         EvtGen  v* Gen
+use         GSL     v* LCG_Interfaces
+
+include_dirs  $(EVTGENEXTRASROOT)
+
+library     EvtGenExtras *.cpp
+
+apply_pattern linker_library  library=EvtGenExtras
+apply_pattern linker_stamps   library=EvtGenExtras
+

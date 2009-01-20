@@ -1,0 +1,16 @@
+!-----------------------------------------------------------------------------
+! Package     : EvtGenExtra
+! Responsible : Will REECE
+! Purpose     : Repository of EvtGen models with external linkages
+!-----------------------------------------------------------------------------
+
+! 2009-01-20 - Will REECE
+ - New Package
+
+   Initial version for testing, including a dummy model.
+   Allows extra models to be passed into EvtGen at runtime.
+   These models are provided as a list using the method
+   EvtModelRegExtras::getModels(). This can be uses in the
+   situation where it is desirable to include a new model,
+   but not introduce extra external dependencies for the EvtGen
+   package itself.
