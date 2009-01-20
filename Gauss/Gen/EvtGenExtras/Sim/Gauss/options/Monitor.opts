@@ -1,0 +1,87 @@
+// $Id: Monitor.opts,v 1.1.1.1 2009-01-20 13:27:50 wreece Exp $ 
+
+/** @file 
+ * 
+ *  File containing options to monitor/study details of production.
+ *
+ *  @author G.Corti
+ *  @date 2005-02-21
+ */
+
+// ROOT is chosen as default for Histograms and ntuple persistency.
+#include "$STDOPTS/RootHist.opts"
+RootHistCnv.ForceAlphaIds = true;
+ 
+// Use TimingAuditor for timing
+ApplicationMgr.ExtSvc += { "AuditorSvc"};
+ApplicationMgr.AuditAlgorithms = True;
+AuditorSvc.Auditors += {"TimingAuditor"};
+//ToolSvc.SequencerTimerTool.OutputLevel = 4;
+ 
+//---------------------------------------------------------------------
+// Generator Monitor Histograms: set of histograms from HepMC
+//---------------------------------------------------------------------
+// Note that if you are running GenStandAlone you will also need to 
+// switch on the algorithm:
+GenMonitor.Members         += {"GenMonitorAlg"};
+GenMonitorAlg.HistoProduce  = true;
+
+//---------------------------------------------------------------------
+// Check if event type and events produced correspond to what set
+//---------------------------------------------------------------------
+//SimMonitor.Members += { "EvtTypeChecker" };
+
+//---------------------------------------------------------------------
+// Simulation Monitor Histograms: from MCParticles and MCHits
+//---------------------------------------------------------------------
+// MCParticles & MCVertices
+SimMonitor.Members   += { "GiGaGetEventAlg" };
+SimMonitor.Members   += { "MCTruthMonitor" };
+GiGaGetEventAlg.Vertices = "";
+
+// MC(XXX)Hits summary
+SimMonitor.Members   += { "GiGaGetHitsAlg" };
+
+// Detectors monitors
+//---------------------------------------------------------------------
+SimMonitor.Members   += { "GaudiSequencer/DetectorsMonitor" };
+
+// VELO
+DetectorsMonitor.Members += { "VeloGaussMoni" };
+
+// Silicon tracker
+DetectorsMonitor.Members += { "MCHitMonitor/TTHitMonitor" };
+TTHitMonitor.mcPathString = "/Event/MC/TT/Hits";
+TTHitMonitor.zStations    = { 2350.0*mm, 2620.0*mm };
+TTHitMonitor.xMax         = 150.0*cm;
+TTHitMonitor.yMax         = 150.0*cm;
+DetectorsMonitor.Members += { "MCHitMonitor/ITHitMonitor" };
+ITHitMonitor.mcPathString = "/Event/MC/IT/Hits";
+ITHitMonitor.zStations    = { 7780.0*mm, 8460.0*mm, 9115.0*mm };
+ITHitMonitor.xMax         = 100.0*cm;
+ITHitMonitor.yMax         = 100.0*cm;
+ 
+// Outer tracker
+DetectorsMonitor.Members += { "MCHitMonitor/OTHitMonitor" };
+OTHitMonitor.mcPathString = "/Event/MC/OT/Hits";
+OTHitMonitor.zStations    = { 7938.0, 8625.0, 9315.0 };
+
+// RICH info, because of the way it is setup it will only be executed
+// when running the simulation with Geant4 not when reading files!
+#include "$GAUSSRICHROOT/options/RichAnalysis.opts"
+
+// Calorimeters
+DetectorsMonitor.Members  += { "MCCaloMonitor/SpdMonitor" };
+DetectorsMonitor.Members  += { "MCCaloMonitor/PrsMonitor" }; 
+DetectorsMonitor.Members  += { "MCCaloMonitor/EcalMonitor" };
+DetectorsMonitor.Members  += { "MCCaloMonitor/HcalMonitor" };
+#include "$CALOMONISIMOPTS/MoniSim.opts"
+SpdMonitor.OutputLevel  = 4;
+PrsMonitor.OutputLevel  = 4;
+EcalMonitor.OutputLevel = 4;
+HcalMonitor.OutputLevel = 4;
+
+// Muon system
+DetectorsMonitor.Members += { "MuonHitChecker" };
+MuonHitChecker.FullDetail = true;
+

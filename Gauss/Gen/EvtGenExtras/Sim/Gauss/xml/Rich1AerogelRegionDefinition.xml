@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Aerogel volume Region Defintion -->
+
+    <Region name="Rich1AerogelRegion" prodcut="RichAerogelDeltaElectronCut">
+      <Volume name="/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT0"/>
+      <Volume name="/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT1"/>
+      <Volume name="/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT2"/>
+      <Volume name="/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT3"/>
+      <Volume name="/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT4"/>
+      <Volume name="/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT5"/>
+      <Volume name="/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT6"/>
+      <Volume name="/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT7"/>
+      <Volume name="/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT8"/>
+      <Volume name="/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT9"/>
+      <Volume name="/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT10"/>
+      <Volume name="/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT11"/>
+      <Volume name="/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT12"/>
+      <Volume name="/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT13"/>
+      <Volume name="/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT14"/>
+      <Volume name="/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1AerogelT15"/>
+    </Region>
+                                                                                                        

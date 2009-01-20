@@ -1,0 +1,157 @@
+// $Id: Simulation.opts,v 1.1.1.1 2009-01-20 13:27:50 wreece Exp $ 
+
+/** @file 
+ * 
+ *  File containing all the steps in the simulation phase of
+ *  a Gauss job. 
+ *
+ *  Original version by G.Corti on 2004-11-18
+ *  Last modified by    P.Robbe on 2008-11-20
+ */
+
+// Services necessary for any simulation phase
+ApplicationMgr.ExtSvc += { 
+  "GiGa"
+};
+EventPersistencySvc.CnvServices += { "GiGaKine" };
+
+// Data store configuration: request GiGaKine and GiGaHits (IGiGaCnvSvc) at
+// initialization and register leaves in store for each event,
+// Keep default configuration for 
+// GiGaStore.ConversionServices   =  { "GiGaKine" , "GiGaHits" };
+Simulation.Members += { "GiGaDataStoreAlgorithm/GiGaStore" };
+GiGaStore.ConversionServices = { "GiGaKine" };
+
+// Define the geometrical setup to simulate, including the magnetic field
+// simulation
+//---------------------------------------------------------------------------
+Simulation.Members += { "GiGaInputStream/Geo" }; 
+#include "$GAUSSOPTS/SimGeometry.opts"
+
+// Steering of the simulation
+//---------------------------------------------------------------------------
+// Pass the generator event to Geant4
+//Simulation.Members += { "GeneratorToG4" };         // DC06 mechanism 
+Simulation.Members += { "GenerationToSimulation" };  // new mechanism
+GenerationToSimulation.LookForUnknownParticles = true;
+
+// Perform the Geant4 simulation
+Simulation.Members += { "GiGaFlushAlgorithm" };
+// Check the G4Event processing status
+Simulation.Members += { "GiGaCheckEventStatus" };
+
+// Populate the MCParticles/MCVertices in the TES with HEPMC internally
+//Simulation.Members += { "G4HepMCToMCTruth" };      // DC06 mechanism
+Simulation.Members += { "SimulationToMCTruth" };     // new mechanism
+//SimulationToMCTruth.CheckForUnknownParticle = true;
+
+// Populate sensitive hits in the TES for all sub-detectors
+Simulation.Members += { "GaudiSequencer/DetectorsHits" };
+DetectorsHits.Members += { "GetTrackerHitsAlg/GetVeloHits" };   // Velo
+DetectorsHits.Members += { "GetTrackerHitsAlg/GetPuVetoHits" }; // PuVeto
+DetectorsHits.Members += { "GetTrackerHitsAlg/GetTTHits" };     // TT
+DetectorsHits.Members += { "GetTrackerHitsAlg/GetITHits" };     // IT
+DetectorsHits.Members += { "GetTrackerHitsAlg/GetOTHits" };     // OT
+DetectorsHits.Members += { "GetTrackerHitsAlg/GetMuonHits" };   // Muon
+DetectorsHits.Members += { "GetCaloHitsAlg/GetSpdHits" };       // Calo - SPD
+DetectorsHits.Members += { "GetCaloHitsAlg/GetPrsHits" };       // Calo - Prs
+DetectorsHits.Members += { "GetCaloHitsAlg/GetEcalHits" };      // Calo - ECAL
+DetectorsHits.Members += { "GetCaloHitsAlg/GetHcalHits" };      // Calo - HCAL
+DetectorsHits.Members += { "GetMCRichHitsAlg" };                // RICHes
+#include "$GAUSSTRACKERROOT/options/TrackersHits.opts" 
+DetectorsHits.MeasureTime = true;
+
+// Simulation configuration: Geant4 control
+//---------------------------------------------------------------------------
+// Production cuts  
+GiGa.PhysicsList              = "GiGaPhysListModular/ModularPL";
+GiGa.ModularPL.CutForElectron = 10000.0 * m;
+GiGa.ModularPL.CutForPositron = 5.0 * mm; 
+GiGa.ModularPL.CutForGamma    = 10.0 * mm;
+//GiGa.ModularPL.DumpCutsTable = true;
+
+// Physics lists: the files below give the default configuration
+// for LHEP and QGSP with EM physics tuned without step limitations,
+// i.e. to have CPU performance similar to G4 7.1, but not as good
+// physics performance as the default in G4 8.2.p01
+// Instructions are given in the files on how to use other EM physics
+// tuning and other low/intermediate energy hadronic processes
+#include "$GAUSSOPTS/PhysList-LHEP.opts"
+//#include "$GAUSSOPTS/PhysList-QGSP.opts"
+
+// Mandatory run action  
+GiGa.RunAction                 =   "GiGaRunActionSequence/RunSeq";
+GiGa.RunSeq.Members           += { "TrCutsRunAction/TrCuts"};
+GiGa.RunSeq.Members           += { "GiGaRunActionCommand/RunCommand" };
+GiGa.RunSeq.RunCommand.BeginOfRunCommands  = { 
+  "/tracking/verbose 0",
+  "/tracking/storeTrajectory  1",
+  "/process/eLoss/verbose -1" 
+};
+//GiGa.RunSeq.RunCommand.BeginOfRunCommands    += { "/process/list" };
+// Mandatory event action  
+GiGa.EventAction            =   "GiGaEventActionSequence/EventSeq";
+GiGa.EventSeq.Members      += { "GaussEventActionHepMC/HepMCEvent" };
+
+// Mandatory tracking action (1/2)
+// Must be in two steps, when a trajectory is created
+GiGa.TrackingAction         =   "GiGaTrackActionSequence/TrackSeq"    ;
+GiGa.TrackSeq.Members      += { "GaussPreTrackAction/PreTrack" }; 
+
+///////////////////////////////////////////////////////////////////////
+// To debug wih detailed Geant4 printout a specific track
+// uncomment the following options editing the file accordingly
+//#include "$GAUSSOPTS/DebugG4Track.opts"
+
+///////////////////////////////////////////////////////////////////////
+// all the subdetector specific actions should be added here:
+
+// specific RICH options
+#include "$GAUSSRICHROOT/options/Rich.opts"
+
+//////////////////////////////////////////////////////////////////////
+
+// mandatory tracking action (2/2)
+// ... and when a trajectory ends
+GiGa.TrackSeq.Members      += { "GaussPostTrackAction/PostTrack" } ;
+GiGa.TrackSeq.Members      += { "GaussTrackActionHepMC/HepMCTrack" } ;
+GiGa.TrackSeq.PostTrack.StoreAll          = false; 
+GiGa.TrackSeq.PostTrack.StorePrimaries    = true;
+GiGa.TrackSeq.PostTrack.StoreMarkedTracks = true;
+GiGa.TrackSeq.PostTrack.StoreForcedDecays = true;
+// Store particle with Energy > 100 MeV, this include all
+// particles in any process that satisfy this, this is applied
+// only to particles which origin is before z=12280mm (i.e.PRS/SPD)
+GiGa.TrackSeq.PostTrack.StoreByOwnEnergy   = true; 
+GiGa.TrackSeq.PostTrack.OwnEnergyThreshold = 100.0 * MeV;        
+// For particles producing a cerenkov photon just store it
+GiGa.TrackSeq.PostTrack.StoreByChildProcess  = true; 
+GiGa.TrackSeq.PostTrack.StoredChildProcesses = {"RichG4Cerenkov", "Decay"}; 
+// Store particles from a Decay
+GiGa.TrackSeq.PostTrack.StoreByOwnProcess  = true; 
+GiGa.TrackSeq.PostTrack.StoredOwnProcesses = {"Decay"}; 
+
+// mandatory stepping action   
+GiGa.SteppingAction               =   "GiGaStepActionSequence/StepSeq"  ;
+GiGa.StepSeq.Members             += { "GaussStepAction/GaussStep" } ;
+
+// setting simulation attributes
+SimulationSvc.SimulationDbLocation = "$GAUSSROOT/xml/Simulation.xml";
+GiGa.GiGaMgr.RunTools += { "GiGaSetSimAttributes" };
+GiGa.GiGaMgr.RunTools += { "GiGaRegionsTool"      }; // Cuts per region
+GiGa.GiGaMgr.GiGaSetSimAttributes.OutputLevel = 4;
+
+// uncomment the following to save geometry in GDML format
+//#include "$GDMLG4WRITEROPTS/GDMLWriter.opts"
+
+// uncomment the following to do low energy simulation in the Muon system
+// with special physics list
+//#include "$GAUSSOPTS/MuonLowEnergy.opts"
+
+// uncomment the following to simulate and write RICH extended information
+//#include "$GAUSSOPTS/RichExtendedInfo.opts"
+
+// uncomment the following to produce and write VeLo, TT, IT and OT  extended
+// hit information
+//#include "$GAUSSTRACKERROOT/options/TrackersExtendedInfo.opts"
+

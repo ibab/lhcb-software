@@ -1,0 +1,16 @@
+// $Id: RichExtendedInfo.opts,v 1.1.1.1 2009-01-20 13:27:50 wreece Exp $
+ 
+/** @file
+ *
+ *  File containing options to switch on simulation and retrieval
+ *  of extended RICH information
+ *
+ *  @author G.Corti
+ *  @date 2006-04-06
+ */
+ 
+DetectorsHits.Members += { "GetMCRichOpticalPhotonsAlg",
+                        "GetMCRichSegmentsAlg",
+                        "GetMCRichTracksAlg" };
+
+#include "$GAUSSRICHROOT/options/RichExtendedInfo.opts"

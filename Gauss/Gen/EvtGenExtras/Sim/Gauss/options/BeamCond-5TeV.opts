@@ -1,0 +1,34 @@
+// $Id: BeamCond-5TeV.opts,v 1.1.1.1 2009-01-20 13:27:50 wreece Exp $ 
+
+/** @file 
+ * 
+ *  Options to run pp collisions as in Startup with 5 TeV
+ *
+ *  @author G.Corti
+ *  @date 2008-07-28
+ *
+ */
+
+// == Sigle interactions
+Generation.PileUpTool = "FixedNInteractions";
+Generation.FixedNInteractions.Luminosity = 1.0e-03*LumiUnit;
+ 
+// == Beam momentum and vertex smearing for pp collisions 
+Generation.MinimumBias.PythiaProduction.CollidingBeams.BeamMomentum = 5.0*TeV;
+Generation.Inclusive.PythiaProduction.CollidingBeams.BeamMomentum = 5.0*TeV;
+Generation.SignalPlain.PythiaProduction.CollidingBeams.BeamMomentum = 5.0*TeV;
+Generation.SignalRepeatedHadronization.PythiaProduction.CollidingBeams.BeamMomentum = 5.0*TeV;
+Generation.SignalForcedFragmentation.PythiaProduction.CollidingBeams.BeamMomentum = 5.0*TeV;
+Generation.StandAloneDecayTool.PythiaProduction.CollidingBeams.BeamMomentum = 5.0*TeV;
+Generation.Special.PythiaProduction.CollidingBeams.BeamMomentum = 5.0*TeV;
+
+Generation.BeamSpotSmearVertex.SigmaX = 0.200*mm; 
+Generation.BeamSpotSmearVertex.SigmaY = 0.200*mm; 
+
+// == or beam gas (Pythia & Hijing) depending on what is produced
+Generation.MinimumBias.PythiaProduction.FixedTarget.BeamMomentum = 5.0*TeV;
+Generation.MinimumBias.HijingProduction.Commands += { "hijinginit efrm 5000." }; // in GeV
+Generation.FlatZSmearVertex.SigmaX = 0.280*mm;
+Generation.FlatZSmearVertex.SigmaY = 0.280*mm;
+
+

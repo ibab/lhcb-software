@@ -1,0 +1,14 @@
+/** @file
+ *
+ *  Options to generate events with a fiex number of interaction
+ *  Refer to Gauss User Guide for details.
+ *  This file need to be included in Gauss.opts (or Generator.opts)
+ *
+ *  @author G.Corti
+ *  @date   2006-01-04.
+ *
+ */
+ 
+Generation.PileUpTool = "FixedNInteractions";
+// Uncomment the following and set desired number for how many (def = 1)
+// Generation.FixedNInteractions.NInteractions = 2;

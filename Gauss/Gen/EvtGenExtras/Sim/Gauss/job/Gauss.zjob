@@ -1,0 +1,173 @@
+#!/usr/local/bin/zsh
+###############################################################################
+#   Initialize LSF queue parameters
+#
+# "-q" gives the queue (1nh by default)
+# "-c" gives the CPU time in minutes
+#
+# -q 8nm  = about 30 min HP735     express
+# -q 1nh           3 hours         short
+# -q 8nh           1 day           medium
+# -q 1nd           3 days          long
+# -q 1nw          10 days HP K260  verylong
+#
+#
+#  define the job name
+#BSUB -J Gauss
+#  define the queue
+#BSUB -q 1nw
+#
+###############################################################################
+limit   coredumpsize   500000
+    
+typeset NUMEVENTS=$1
+typeset OUTPUTFILE=$2
+  
+typeset  VERS=v12r8 
+
+###############################################################################
+# set the environment 
+###############################################################################
+. $LHCb_release_area/GaussEnv/$VERS/cmt/setup.sh
+###############################################################################
+
+typeset  JDIR=~/newmycmt/Sim/Gauss/v12r8
+typeset  MODE=$CMTCONFIG
+typeset  SELF=Gauss.zjob 
+
+echo  ' * '$SELF' ************************************************************ '
+echo  ' * '$SELF' *       Start                                              * '
+echo  ' * '$SELF' ************************************************************ '
+echo  ' * '$SELF' * parameter 1        = "'$1'"'   
+echo  ' * '$SELF' * parameter 2        = "'$2'"'   
+echo  ' * '$SELF' * Number of Events   = "'$NUMEVENTS'"'
+echo  ' * '$SELF' * Output File        = "'$OUTPUTFILE'"'
+echo  ' * '$SELF' * Run mode           = "'$MODE'"'
+echo  ' * '$SELF' * CMTCONFIG          = "'$CMTCONFIG'"'
+echo  ' * '$SELF' * Brunel version     = "'$VERS'"'
+echo  ' * '$SELF' * Job directory      = "'$JDIR'"'
+echo  ' * '$SELF' * Start directory    = "'$PWD'"'
+echo  ' * '$SELF' ************************************************************ '
+
+
+###############################################################################
+# batch mode ?
+###############################################################################
+if  [[ $+LS_SUBCWD -eq 1 ]]   then
+  typeset BATCH=1
+else
+  typeset BATCH=0
+fi
+
+# batch ?
+if  [[ $BATCH -eq 1 ]]   then 
+  typeset TMPJOBROOT=$JDIR
+else
+# in interactive set WORKDIR to submission directory
+  typeset WORKDIR=$PWD
+# in interactive, executable is under same root directory as this command file
+  cd `dirname $0` 
+  cd ..
+  typeset TMPJOBROOT=$JDIR
+fi 
+
+cd $TMPJOBROOT/cmt
+. ./setup.sh -tag=$MODE 
+cmt show uses >! $WORKDIR/used.packages 
+
+cd $WORKDIR 
+
+echo  ' * '$SELF' ************************************************************ '
+echo  ' * '$SELF' * After . setup.sh -tag=$MODE                              * '
+echo  ' * '$SELF' ************************************************************ '
+echo  ' * '$SELF' * WORKDIR            = "'$WORKDIR'"'
+echo  ' * '$SELF' * TMPJOBROOT         = "'$TMPJOBROOT'"'
+echo  ' * '$SELF' * PWD                = "'$PWD'"'   
+echo  ' * '$SELF' ************************************************************ '
+echo  ' * '$SELF' * see the actual list of packages in ./used.packages file  * '
+echo  ' * '$SELF' ************************************************************ '
+
+
+if [[ $BATCH -eq 1 ]] then
+  cp $TMPJOBROOT/$MODE/Gauss.exe     _Gauss.exe
+else
+  ln -fs $TMPJOBROOT/$MODE/Gauss.exe _Gauss.exe
+fi
+    
+cp $GAUSSOPTS/Gauss.opts   ./_job.opts    
+
+###############################################################################
+# redefine few parameters from standard options file                          #
+###############################################################################
+echo '//                                                  '     >>! ./_job.opts
+echo '// ************************************************ '     >>! ./_job.opts
+echo '// * redefined parameters from batch stript       * '     >>! ./_job.opts
+echo '// ************************************************ '     >>! ./_job.opts
+echo '// ************************************************ '     >>! ./_job.opts
+echo '// * (re)define number of events to be processed  * '     >>! ./_job.opts
+echo '// ************************************************ '     >>! ./_job.opts
+echo ' ApplicationMgr.EvtMax    = '$NUMEVENTS'  ;         '     >>! ./_job.opts
+echo '//                                                  '     >>! ./_job.opts
+echo '// ************************************************ '     >>! ./_job.opts
+echo '// * (re)define the output DST file               * '     >>! ./_job.opts
+echo '// ************************************************ '     >>! ./_job.opts
+echo ' GaussTape.Output =                                 '     >>! ./_job.opts
+echo \"DATAFILE=\'$OUTPUTFILE\' TYP=\'ROOT\' OPT=\'NEW\' \" \;  >>! ./_job.opts
+echo '// ************************************************ '     >>! ./_job.opts
+###############################################################################
+
+echo  ' * '$SELF' ************************************************************ '
+echo  ' * '$SELF' * cat ./_jobs.opts                                          * '
+echo  ' * '$SELF' ************************************************************ '
+cat ./_job.opts
+echo  ' * '$SELF' ************************************************************ '
+echo  ' * '$SELF' * end of 'cat ./_jobs.opts'                                * '
+echo  ' * '$SELF' ************************************************************ '
+
+
+# == run the excutable ================================
+if [[ ${MODE} != 'Linuxdbx' ]] then
+  time ./_Gauss.exe ./_job.opts
+else
+  typeset PATH=/usr/local/bin:PATH
+  gvd  ./_Gauss.exe ./_job.opts
+fi
+
+echo  ' * '$SELF' ************************************************************ '
+echo  ' * '$SELF' * Check for ./core file                                    * '
+echo  ' * '$SELF' ************************************************************ '
+if [[ -e ./core ]] then
+echo  ' * '$SELF' ************************************************************ '
+echo  ' * '$SELF' * Investigate ./core file with debugger                    * '
+echo  ' * '$SELF' ************************************************************ '
+   gdb ./_Gauss.exe ./core << EOF
+where
+quit
+EOF
+fi
+
+if [[ $BATCH -eq 1 ]] then
+  rm -f ./_Gauss.exe
+  rm -f ./_job.opts
+# if in batch copy all other files to user directories
+  ls *.* >! RETURN
+fi 
+
+echo  ' * '$SELF' ************************************************************ '
+echo  ' * '$SELF' *       End                                                * '
+echo  ' * '$SELF' ************************************************************ '
+echo  ' * '$SELF' * parameter 1        = "'$1'"'   
+echo  ' * '$SELF' * parameter 2        = "'$2'"'   
+echo  ' * '$SELF' * Number of Events   = "'$NUMEVENTS'"'
+echo  ' * '$SELF' * Output File        = "'$OUTPUTFILE'"'
+echo  ' * '$SELF' * Run mode           = "'$MODE'"'
+echo  ' * '$SELF' * CMTCONFIG          = "'$CMTCONFIG'"'
+echo  ' * '$SELF' * Gauss version      = "'$VERS'"'
+echo  ' * '$SELF' * Job directory      = "'$JDIR'"'
+echo  ' * '$SELF' * Start directory    = "'$PWD'"'
+echo  ' * '$SELF' * WORKDIR            = "'$WORKDIR'"'
+echo  ' * '$SELF' * TMPJOBROOT         = "'$TMPJOBROOT'"'
+echo  ' * '$SELF' * PWD                = "'$PWD'"'   
+echo  ' * '$SELF' ************************************************************ '
+echo  ' * '$SELF' * see the actual list of packages in ./used.packages file  * '
+echo  ' * '$SELF' ************************************************************ '

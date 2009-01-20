@@ -1,0 +1,37 @@
+// $Id: MuonLowEnergy.opts,v 1.1.1.1 2009-01-20 13:27:50 wreece Exp $
+ 
+/** @file
+ *
+ *  File containing options to lower thresholds for low energy
+ *  simulation for muon system.
+ *  Options provided by E.Santovetti - 2005-11-03
+ *
+ *  @author G.Corti
+ *  @date 2005-11-10
+ */
+ 
+// Reset production cuts for whole detector
+GiGa.ModularPL.CutForElectron = 0.5 * mm;
+GiGa.ModularPL.CutForPositron = 0.5 * mm;
+GiGa.ModularPL.CutForGamma    = 0.5 * mm;
+
+// Reset tracking cuts for whole detector
+GiGa.RunSeq.TrCuts.MuonTrCut     = 10.0*MeV;
+GiGa.RunSeq.TrCuts.pKpiCut       = 0.1*MeV;
+GiGa.RunSeq.TrCuts.NeutrinoTrCut = 0.0*MeV;
+GiGa.RunSeq.TrCuts.NeutronTrCut  = 0.0*MeV;
+GiGa.RunSeq.TrCuts.GammaTrCut    = 0.03*MeV;
+GiGa.RunSeq.TrCuts.ElectronTrCut = 0.03*MeV;
+GiGa.RunSeq.TrCuts.OtherTrCut    = 0.0*MeV;
+
+// Use different physics list, remove default and add new one
+GiGa.ModularPL.PhysicsConstructors -= {
+  "GiGaExtPhysics<HadronPhysicsLHEP>/LHEPPhysics" 
+};
+GiGa.ModularPL.PhysicsConstructors += { 
+  "GiGaExtPhysics<HadronPhysicsQGSP_BERT_HP>/QGSP_BERT_HPPhysics"
+};
+
+// Reset muon threshold as set in XMLDDDB: when using vYYYYMM.opts as
+// Gauss options edit it to use the line below instead of what there
+SimulationSvc.SimulationDbLocation = "$GAUSSROOT/xml/MuonLowEnergy.xml";

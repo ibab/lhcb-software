@@ -1,0 +1,53 @@
+# $Id: requirements,v 1.1.1.1 2009-01-20 13:27:50 wreece Exp $ 
+#============================================================================
+# Created    : 2005-06-20
+# Maintainer : Patrick ROBBE
+#============================================================================
+package       Generators
+version       v9r2
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches      Generators doc cmt src
+
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+use           GaudiAlg          v*
+use           GenEvent          v*                Event
+use           EvtGen            v*                Gen
+use           EvtGenExtras      v*                Gen
+use           LoKiGen           v*                Phys 
+
+#============================================================================
+# Include directories
+#============================================================================
+apply_pattern install_more_includes more=Generators
+
+#============================================================================
+# Component and linker libraries building rule
+#============================================================================
+macro         GeneratorsLibSrc  "Lib/*.cpp Lib/*.F "
+macro_append  GeneratorsLibSrc  "" \
+                         WIN32  "-x=ExternalGenerator.cpp -x=Signal.cpp "
+macro         GeneratorsSrc     "component/*.cpp -x=MuXMaxBias.cpp" 
+macro_append  GeneratorsSrc     "" \
+                         WIN32  "Lib/ExternalGenerator.cpp  Lib/Signal.cpp "
+
+library       GeneratorsLib $(GeneratorsLibSrc)
+library       Generators    $(GeneratorsSrc)
+
+#============================================================================
+# define component and linker libraries link options (order is essential)
+#============================================================================
+apply_pattern component_library library=Generators 
+apply_pattern linker_library    library=GeneratorsLib 
+apply_pattern library_stamps    library=GeneratorsLib 
+
+#============================================================================
+# Link with HepMCfio from HepMC
+#============================================================================
+macro_prepend HepMC_linkopts "-L$(HepMC_home)/lib -lHepMCfio " \
+                       WIN32 "/LIBPATH:$(HepMC_home)/lib HepMCfio.lib"

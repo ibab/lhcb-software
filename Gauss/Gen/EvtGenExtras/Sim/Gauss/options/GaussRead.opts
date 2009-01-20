@@ -1,0 +1,84 @@
+// $Id: GaussRead.opts,v 1.1.1.1 2009-01-20 13:27:50 wreece Exp $ 
+
+/** @file 
+ * 
+ *  Example options to read sim file produced by Gauss.
+ *  This file defines, sequences and configures the algorithms to be executed
+ *
+ */
+
+#include "$GAUSSOPTS/Common.opts"   // Necessary for any Gauss executable
+
+//---------------------------------------------------------------------------
+// Phases to be executed: initialization + monitor
+//---------------------------------------------------------------------------
+ApplicationMgr.TopAlg  = { "GaudiSequencer/Initialize" };
+ApplicationMgr.TopAlg += { "GaudiSequencer/Monitor" }; 
+
+//---------------------------------------------------------------------------
+// Initialize the application
+//---------------------------------------------------------------------------
+Initialize.Members    = { "LbAppInit/GaussRead" };
+
+//---------------------------------------------------------------------------
+// Monitor phase: as in production + user monitor
+//                two separate phase for Generator and Simulation
+//                can be commented separately
+//---------------------------------------------------------------------------
+Monitor.Members         += { "GaudiSequencer/GenMonitor" };
+Monitor.Members         += { "GaudiSequencer/SimMonitor" };     
+Monitor.Members         += { "GaudiSequencer/UserMonitor" };
+#include "$GAUSSOPTS/Monitor.opts"
+//#include "$GAUSSOPTS/MonitorInDetail.opts"
+GenHistos.OutputLevel   = 3;
+Monitor.MeasureTime = true;
+
+// Algorithm in User monitor
+UserMonitor.Members     += { "MCDecayCounter" };
+MCDecayCounter.MCDecayFinder.Decay = "KS0 -> pi+ pi-";
+
+// If the file contains also Rich extended information you can uncomment below
+//#include "$GAUSSRICHROOT/options/RichExtendedInfo.opts" 
+
+//---------------------------------------------------------------------------
+// Must read events (overwrite property of no events input set for 
+// "normal" Gauss jobs)
+//---------------------------------------------------------------------------
+ApplicationMgr.EvtSel = "";
+EventDataSvc.RootCLID = 1;
+
+//---------------------------------------------------------------------------
+// Add here any job specific options, to over-ride previously defined options
+//---------------------------------------------------------------------------
+//MessageSvc.OutputLevel    = 3;
+//MCTruthFullMonitor.OutputLevel   = 2;
+//GeneratorFullMonitor.OutputLevel = 2;
+
+//---------------------------------------------------------------------------
+// Number of events to read: all in input file
+//---------------------------------------------------------------------------
+ApplicationMgr.EvtMax      = -1;
+
+//--------------------------------------------------------------------------
+// Geometry database used to produce the file to be read in: choose the
+// appropriate tags
+//--------------------------------------------------------------------------
+DDDB.DefaultTAG     = "head-20080225-no-TT";
+LHCBCOND.DefaultTAG = "head-20080225-no-TT";
+
+//---------------------------------------------------------------------------
+// Input file 
+//---------------------------------------------------------------------------
+EventSelector.Input   = {
+   "DATAFILE='PFN:rfio:/castor/cern.ch/user/g/gcorti/Gauss/2008/v31r0/30000000-1000ev-20080319.sim' TYP='POOL_ROOTTREE' OPT='READ'"
+}; // Min bias events with Gauss v31r0, DDDB v1r* and tags head-20080225-no-TT
+
+//---------------------------------------------------------------------------
+// Output file(s). 
+// The NtupleSvc is set in MonitorInDetail.opts.
+//---------------------------------------------------------------------------
+HistogramPersistencySvc.OutputFile = "GaussReadHistos.root";
+
+// Overwrite file name as set in MonitorInDetails.opts
+NTupleSvc.Output={"FILE1 DATAFILE='GaussReadMonitor.root' TYP='ROOT' OPT='NEW'"};
+

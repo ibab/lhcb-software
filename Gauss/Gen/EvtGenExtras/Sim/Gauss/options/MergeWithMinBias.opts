@@ -1,0 +1,20 @@
+// $Id: MergeWithMinBias.opts,v 1.1.1.1 2009-01-20 13:27:50 wreece Exp $
+ 
+/** @file
+ *
+ *  File to be included in the steering options to generate in a 
+ *  bunch crossing min bias event in addition to whatever is generated
+ *  as signal (for example beam-gas).
+ *  NOTE that it should be included AFTER the "signal" event type!
+ *
+ *  @author G.Corti
+ *  @date   2007-10-10
+ *
+ */
+ 
+// It is only necessary to name the Generation algorithm differently 
+// than the default and sequence it correctly.
+Generator.Members -= { "GaudiSequencer/GenMonitor" };
+Generator.Members += { "Generation/GenMinBias" };
+Generator.Members += { "GaudiSequencer/GenMonitor" };
+

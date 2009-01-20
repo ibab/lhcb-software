@@ -1,0 +1,41 @@
+// $Id: Common.opts,v 1.1.1.1 2009-01-20 13:27:50 wreece Exp $ 
+
+/** @file 
+ * 
+ *  File containing options to all Gauss jobs
+ *  It must be included in Gauss.opts before all others
+ *
+ *  @author F.Ranjard
+ *  @author G.Corti
+ *  @date: modified 26 Mar 2007
+ */
+
+#units "$STDOPTS/units.opts"
+
+// Configuration of various services that are used: 
+RndmGenSvc.Engine.SetSingleton   = true;
+
+// No events are read as input
+ApplicationMgr.EvtSel  = "NONE" ;
+
+// To prevent writing too much in production
+MessageSvc.OutputLevel         = 3;
+ToolSvc.EvtGenTool.OutputLevel = 4;
+SetDecayAlg.OutputLevel        = 4;
+MessageSvc.setWarning += { "XmlGenericCnv" };
+// Longer "algorithm" identifier in printout
+MessageSvc.Format = "% F%24W%S%7W%R%T %0W%M";
+
+// Geometry setup always necessary
+//#include "$DDDBROOT/options/DDDB.opts"
+
+// Transient store setup
+EventDataSvc.ForceLeaves         = true ;
+
+// POOL persistency 
+EventPersistencySvc.CnvServices  = [];  
+#include "$STDOPTS/SimDicts.opts"
+
+// Other outputs
+ApplicationMgr.HistogramPersistency = "NONE";
+

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Rich1 and Rich2 region definition -->
+ 
+<Region name="Rich1Overall" prodcut="Rich1OverallDeltaElectronCut">
+  <Volume name="/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1SubMaster" />
+ </Region>
+<Region name="Rich2Overall" prodcut="Rich2OverallDeltaElectronCut">
+  <Volume name="/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2Master" />
+</Region>
+ 

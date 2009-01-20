@@ -1,0 +1,16 @@
+/** @file 
+ * 
+ *  Options to run EvtGen as Stand alone 
+ *  use it togheter with GenStandAlone when running only generator phase
+ *
+ *  @author P.Robbe
+ *  @author G.Corti
+ *  @date   2006-07-28
+ *  @date   2008-07-28
+ *  
+ */
+
+Generation.SampleGenerationTool = "StandAloneDecayTool";
+Generation.StandAloneDecayTool.ProductionTool = "PythiaProduction";
+// Modify the following line depending on the signal particles identity
+Generation.StandAloneDecayTool.SignalPIDList = { 531, -531 };

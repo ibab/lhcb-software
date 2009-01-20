@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Rich Simulation attributes. The ones for the Rich shielding are
+    not used since the default that of the magnet are kept. -->
+
+    <Item name="/dd/Geometry/BeforeMagnetRegion/Rich1/lvRichHPDMaster">
+      <Cut particle="0" attr="SimAttrGlobal"/>
+      <Cut particle="11" attr="SimAttrElectr"/>
+    </Item>

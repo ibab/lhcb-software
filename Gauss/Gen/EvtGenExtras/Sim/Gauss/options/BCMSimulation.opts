@@ -1,0 +1,41 @@
+// $Id: BCMSimulation.opts,v 1.1.1.1 2009-01-20 13:27:50 wreece Exp $
+
+/** @file
+ *
+ *  File containing options to generate events with hits in the BCM.
+ *  While BCM after TT are in the default simulation, those upstream
+ *  of the VELO are not, as well as the rest of the geometry, so they
+ *  need to be switched on. 
+ *
+ *  @author M.Lieng (adapted by G.Corti)
+ *  @date 2008-05-06
+ */
+
+// Switch on geometry upstream
+Geo.StreamItems += { "/dd/Structure/LHCb/UpstreamRegion" };
+Geo.StreamItems += { "/dd/Structure/LHCb/BeforeMagnetRegion/PipeJunctionBeforeVelo" };
+Geo.StreamItems += { "/dd/Structure/LHCb/BeforeMagnetRegion/BeforeVelo" };  
+// Bcm after TT is already in standard geometry
+// Switch on geometry after muon station
+Geo.StreamItems += { "/dd/Structure/LHCb/DownstreamRegion/AfterMuon" };
+
+// Extend stopping upstream
+GiGa.RunSeq.TrCuts.MinZ = -25.0*m;
+
+// Retrieve hits from Geant4
+DetectorsHits.Members    += { "GetTrackerHitsAlg/GetBcmHits" }; 
+
+GetBcmHits.CollectionName = "BcmSDet/Hits";
+GetBcmHits.MCHitsLocation = "/Event/MC/Bcm/Hits";
+GetBcmHits.Detectors      = { 
+  "/dd/Structure/LHCb/BeforeMagnetRegion/BeforeVelo/BcmUp",
+  "/dd/Structure/LHCb/MagnetRegion/BcmDown" };
+
+// and save them on sim file
+GaussTape.ItemList += { "/Event/MC/Bcm/Hits#1" };
+
+// Monitor
+#include "$BCMMONISIMROOT/options/BcmMoniSim.opts"
+// If in detail uncomment the following two lines
+//BcmHitCheckerUp.MonitorInDetail   = true;
+//BcmHitCheckerDown..MonitorInDetail = true;

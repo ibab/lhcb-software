@@ -1,0 +1,30 @@
+// $Id: BeamScintillators.opts,v 1.1.1.1 2009-01-20 13:27:50 wreece Exp $
+
+/** @file
+ *
+ *  File containing options to simulate geometry upstream of VELO and
+ *  produce hits in Scintillator planes just at the wall.
+ *
+ *  @author G.Corti
+ *  @date 2008-05-06
+ */
+
+// Switch on geometry upstream and scintillator planes
+Geo.StreamItems += {"/dd/Structure/LHCb/UpstreamRegion/BlockWallUpstr" };
+Geo.StreamItems += { "/dd/Structure/LHCb/BeforeMagnetRegion/PipeJunctionBeforeVelo" };
+Geo.StreamItems += { "/dd/Structure/LHCb/BeforeMagnetRegion/BeforeVelo" };  
+
+
+
+// Retrieve hits from Scintillator planes
+DetectorsHits.Members += { "GetTrackerHitsAlg/GetScintillatorHits"};
+GetScintillatorHits.CollectionName = "VPlaneSDet/Hits";
+GetScintillatorHits.MCHitsLocation = "/Event/MC/Scintillators/Hits";
+GetScintillatorHits.Detectors = { 
+  "/dd/Structure/LHCb/BeforeMagnetRegion/BeforeVelo/VPlane1", 
+  "/dd/Structure/LHCb/BeforeMagnetRegion/BeforeVelo/VPlane2" 
+};
+GetScintillatorHits.ExtendedInfo = true;
+
+// and save them on sim file
+GaussTape.ItemList += { "/Event/MC/Scintillators/Hits#1" };

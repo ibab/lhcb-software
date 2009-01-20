@@ -1,0 +1,22 @@
+/** @file
+ *
+ *  Options to generate events at a given fixed luminosity.
+ *  In this case 5 x 10^32 cm-2 s-1 (note that the internal unit
+ *  are mm and ns and LumiUnit correspond to 1 x 10^32 cm-2 s-1)
+ *  Refer to Gauss User Guide for details.
+ *  This file need to be included in Gauss.opts.
+ *
+ *  @author G.Corti
+ *  @date   2006-01-04.
+ *
+ */
+ 
+// Default PileUpTool = "FixedLuminosity";
+Generation.FixedLuminosity.Luminosity =  5*LumiUnit;
+
+// For rare events a special tool is specified in EventType
+Generation.FixedLuminosityForRareProcess.Luminosity =  5*LumiUnit;
+
+// For Machine Induced background events, not used but to store in Header
+MIBackground.Luminosity = 5*LumiUnit;
+
