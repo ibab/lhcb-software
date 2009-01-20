@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.1.1.1 2008-12-01 18:27:10 ibelyaev Exp $ 
+# $Id: requirements,v 1.2 2009-01-20 15:50:20 cattanem Exp $ 
 # =============================================================================
 # Created    : 2008-12-01
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 # =============================================================================
 package           PartProp
-version           v1r0
+version           v1r0p1
 
 # ================ structure ==================================================
 branches          cmt doc Kernel src python dict tests 

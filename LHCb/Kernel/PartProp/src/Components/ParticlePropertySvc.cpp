@@ -1,4 +1,4 @@
-// $Id: ParticlePropertySvc.cpp,v 1.3 2008-12-13 14:48:22 ibelyaev Exp $
+// $Id: ParticlePropertySvc.cpp,v 1.4 2009-01-20 15:50:20 cattanem Exp $
 // ============================================================================
 //Include files
 // ============================================================================
@@ -827,7 +827,7 @@ StatusCode LHCb::ParticlePropertySvc::setAntiParticles ()
           << "Antiparticle for \n" <<  (* pp)
           << " is set to be    \n" <<  (*(pp->antiParticle())) << endreq ;
     }
-    if ( 0 == pp->antiParticle() ) { m_no_anti.insert ( pp->name() ) ; }
+    if ( (0 == pp->antiParticle()) && (0 == pp->pid().extraBits()) ) { m_no_anti.insert ( pp->name() ) ; }
   }
   return StatusCode::SUCCESS ;
 }
