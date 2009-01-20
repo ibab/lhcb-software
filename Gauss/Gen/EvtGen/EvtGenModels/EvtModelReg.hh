@@ -21,11 +21,16 @@
 #ifndef EVTMODELREG_HH
 #define EVTMODELREG_HH
 
+#include "EvtGenBase/EvtDecayBase.hh"
+#include <list>
+
+typedef std::list<EvtDecayBase*> EvtModelList;
+
 class EvtModelReg{
 
 public:
 
-  EvtModelReg();
+  EvtModelReg(const EvtModelList* extraModels = 0);
 private:
 
 

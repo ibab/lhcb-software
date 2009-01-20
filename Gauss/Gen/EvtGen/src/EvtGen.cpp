@@ -65,7 +65,8 @@ EvtGen::~EvtGen(){
 EvtGen::EvtGen(const char* const decayName,
 	       const char* const pdtTableName,
 	       EvtRandomEngine* randomEngine,
-	       EvtAbsRadCorr* isrEngine){
+	       EvtAbsRadCorr* isrEngine,
+         const EvtModelList* extraModels){
 
   if (randomEngine==0){
     static EvtRandomEngine defaultRandomEngine;
@@ -82,7 +83,7 @@ EvtGen::EvtGen(const char* const decayName,
 
   report(INFO,"EvtGen") << "Storing known decay models"<<std::endl;
   // Dummy initialisation to register models
-  EvtModelReg dummy;
+  EvtModelReg dummy(extraModels);
 
   report(INFO,"EvtGen") << "Main decay file name  :"<<decayName<<std::endl;
   report(INFO,"EvtGen") << "PDT table file name   :"<<pdtTableName<<std::endl;

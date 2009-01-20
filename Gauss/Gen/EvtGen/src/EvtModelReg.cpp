@@ -122,9 +122,17 @@
 #include "EvtGenModels/EvtSSD_DirectCP.hh"
 #include "EvtGenModels/EvtModelReg.hh"
 
-EvtModelReg::EvtModelReg() {
+EvtModelReg::EvtModelReg(const EvtModelList* extraModels) {
 
   EvtModel &modelist=EvtModel::instance();
+  
+  //if there are models to register, then do so before others
+  if(extraModels){
+	  for(EvtModelList::const_iterator it = extraModels->begin(); 
+	  	it != extraModels->end(); ++it){
+		  modelist.Register(*it);
+	  }
+  }
 
   modelist.Register(new EvtLambdaP_BarGamma);
   modelist.Register(new EvtFlatQ2);
