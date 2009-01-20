@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.52 2009-01-20 15:23:16 jpalac Exp $
+! $Id: release.notes,v 1.53 2009-01-20 15:50:41 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-01-20 - Juan PALACIOS
+ - Kernel/MCAssociation.h
+  . Forward declaration of LHCb::MCParticle.
+
  - Add Kernel/Particle2MCParticle.h
   . Namespace containing types corresponding to the Particle -> MCParticle 
     uni-directional weighted relationship.
