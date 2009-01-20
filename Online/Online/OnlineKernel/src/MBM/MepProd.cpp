@@ -48,17 +48,22 @@ namespace {
       m_event.mask[2] = 0;
       m_event.mask[3] = 0;
       m_event.type    = EVENT_TYPE_MEP;
+      ::memset(ev->events,0,sizeof(ev->events));
       for (int i = 0; i < PACKING_FACTOR; ++i )   {
         if ( m_evtProd->getSpace(sub_evt_len) == MBM_NORMAL ) {
           MBM::EventDesc& e    = m_evtProd->event();
           MEP_SINGLE_EVT* sube = (MEP_SINGLE_EVT*)e.data;
           sube->begin = ev->begin;
+          sube->evID  = i;
           e.type    = EVENT_TYPE_EVENT;
           e.mask[0] = 0x103;
           e.mask[1] = 0;
           e.mask[2] = 0;
           e.mask[3] = 0;
           e.len     = sub_evt_len;
+          ev->events[i].begin  = long(ev)-m_mepID->mepStart;
+          ev->events[i].evID   = i;
+          ev->events[i].status = 0;
           m_evtProd->sendEvent();
         }
         else  {

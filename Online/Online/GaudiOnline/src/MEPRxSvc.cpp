@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.72 2009-01-07 10:39:28 garnierj Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.73 2009-01-20 09:02:18 frankb Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -422,6 +422,7 @@ int MEPRx::addMEP(int sockfd, const MEPHdr *hdr, int srcid) {
     e->packing     = -1;
     e->valid       = 1;
     e->magic       = mep_magic_pattern();
+    ::memset(e->events,0,sizeof(e->events));
     m_brx          = 0;
     m_pf           = hdr->m_nEvt;
     m_age          = MEPRxSys::ms2k();
@@ -434,8 +435,8 @@ int MEPRx::addMEP(int sockfd, const MEPHdr *hdr, int srcid) {
     return MEP_ADD_ERROR;
   }    
   MEPHdr *newhdr = (MEPHdr*) ((u_int8_t*)e->data + m_brx + 4 + IP_HEADER_LEN);
+  m_parent->m_rxOct[srcid] += len;
   m_parent->m_totRxOct += len;
-  m_parent->m_rxOct[srcid];
   m_brx += len;
   m_nrx++; 
 

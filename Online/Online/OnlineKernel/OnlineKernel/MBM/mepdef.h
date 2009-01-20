@@ -15,6 +15,9 @@ enum EvTypes  {
   EVENT_TYPE_ERROR = 3,
   EVENT_TYPE_MISC  = 4
 };
+enum MepPacking  {
+  MEP_MAX_PACKING = 16
+};
 
 typedef struct _MEPID {
   BMID    resBuffer;
@@ -40,6 +43,11 @@ struct MEPEVENT   {
   int  refCount;
   int  valid;
   int  magic;
+  struct _SingleEvt  {
+    int begin;
+    int evID;
+    int status;
+  } events[MEP_MAX_PACKING];
   char data[4];
 };
 

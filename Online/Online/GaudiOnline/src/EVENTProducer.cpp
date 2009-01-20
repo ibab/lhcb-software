@@ -47,6 +47,7 @@ namespace  {
       }
     }
     virtual void declareSubEvent(const EventDesc& evt, int evID, const Frags& frags)  {
+      long offset;
       int sub_evt_len = LHCb::RawEventHeader::size(frags.size());
       if ( prt ) ::printf("0-Declare MEP fragment [%d]....\n",sub_evt_len);
       if ( m_evtProd->getSpace(sub_evt_len) == MBM_NORMAL ) {
@@ -64,7 +65,11 @@ namespace  {
         for(size_t j=0; j<frags.size(); ++j)  {
           LHCb::MEPFragment* f = frags[j];
           if ( prt ) LHCb::checkFragment(f);
-          h->setOffset(j, long(long(f)-m_mepID->mepStart));
+          offset = long(long(f)-m_mepID->mepStart);
+          h->setOffset(j, offset);
+          ev->events[j].begin  = offset;
+          ev->events[j].status = 0;          
+          ev->events[j].evID   = j;
         }
         e.mask[0] = partitionID();
         e.mask[1] = 0;
