@@ -1,4 +1,4 @@
-// $Id: IParticle2MCAssociator.h,v 1.1 2009-01-19 18:18:28 jpalac Exp $
+// $Id: IParticle2MCAssociator.h,v 1.2 2009-01-20 15:22:42 jpalac Exp $
 #ifndef KERNEL_IPARTICLE2MCASSOCIATOR_H 
 #define KERNEL_IPARTICLE2MCASSOCIATOR_H 1
 
@@ -8,9 +8,8 @@
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
-#include "Relations/RelationWeighted.h"
 // from DaVinciMCKernel
-#include "Kernel/MCAssociation.h"
+#include "Kernel/Particle2MCParticle.h"
 
 namespace LHCb
 {
@@ -30,25 +29,26 @@ static const InterfaceID IID_IParticle2MCAssociator ( "IParticle2MCAssociator", 
 class IParticle2MCAssociator : virtual public IAlgTool {
 public: 
 
-  typedef Relations::RelationWeighted<LHCb::Particle, LHCb::MCParticle, double> Particle2MCTable;
-
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_IParticle2MCAssociator; }
 
-  virtual MCAssociation association(const LHCb::Particle*,
-                                    const std::string& mcParticleLocation) const = 0;
+  virtual Particle2MCParticle::LightTable relatedMCPs(const LHCb::Particle*,
+                                                      const std::string& mcParticleLocation) const = 0;
 
-  virtual Particle2MCTable associations(const LHCb::Particle::ConstVector& particles,
-                                        const std::string& mcParticleLocation) const = 0;
+  virtual Particle2MCParticle::LightTable relatedMCPs(const LHCb::Particle*,
+                                                      const LHCb::MCParticle::ConstVector& mcParticles) const = 0;
 
-  virtual Particle2MCTable associations(const LHCb::Particle::Container& particles,
-                                        const std::string& mcParticleLocation) const = 0;
+  virtual Particle2MCParticle::LightTable associations(const LHCb::Particle::ConstVector& particles,
+                                                       const std::string& mcParticleLocation) const = 0;
 
-  virtual Particle2MCTable associations(const LHCb::Particle::ConstVector& particles,
-                                        const LHCb::MCParticle::ConstVector& mcParticles) const = 0;
+  virtual Particle2MCParticle::LightTable associations(const LHCb::Particle::Container& particles,
+                                                       const std::string& mcParticleLocation) const = 0;
 
-  virtual Particle2MCTable associations(const LHCb::Particle::Container& particles,
-                                        const LHCb::MCParticle::ConstVector& mcParticles) const = 0;
+  virtual Particle2MCParticle::LightTable associations(const LHCb::Particle::ConstVector& particles,
+                                                       const LHCb::MCParticle::ConstVector& mcParticles) const = 0;
+
+  virtual Particle2MCParticle::LightTable associations(const LHCb::Particle::Container& particles,
+                                                       const LHCb::MCParticle::ConstVector& mcParticles) const = 0;
 
   
 };
