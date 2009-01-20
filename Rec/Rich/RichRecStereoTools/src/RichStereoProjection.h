@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::StereoProjection
  *
  *  CVS Log :-
- *  $Id: RichStereoProjection.h,v 1.2 2008-07-02 09:43:23 jonrob Exp $
+ *  $Id: RichStereoProjection.h,v 1.3 2009-01-20 15:49:30 cattanem Exp $
  *
  *  @author Luigi Delbuono  delbuono@in2p3.fr
  *  @date   20/06/2007
@@ -15,10 +15,6 @@
 // RichStereoProjection
 #ifndef RICHRECSTEREOTOOLS_RICHSTEREOPROJECTION_H
 #define RICHRECSTEREOTOOLS_RICHSTEREOPROJECTION_H 1
-
-// from Gaudi
-#include "GaudiKernel/ParticleProperty.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
 
 // base classes
 #include "RichRecBase/RichRecToolBase.h"

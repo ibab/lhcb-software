@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::SellmeirFunc
  *
  *  CVS Log :-
- *  $Id: RichSellmeirFunc.h,v 1.17 2008-08-19 12:54:46 jonrob Exp $
+ *  $Id: RichSellmeirFunc.h,v 1.18 2009-01-20 15:49:30 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -20,8 +20,6 @@
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/ParticleProperty.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
 
 // Kernel
 #include "Kernel/RichRadiatorType.h"

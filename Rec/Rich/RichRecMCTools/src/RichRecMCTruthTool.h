@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : Rich::Rec::MCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.h,v 1.26 2007-08-09 16:13:54 jonrob Exp $
+ *  $Id: RichRecMCTruthTool.h,v 1.27 2009-01-20 15:49:30 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -19,8 +19,6 @@
 #include <sstream>
 
 // from Gaudi
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
 

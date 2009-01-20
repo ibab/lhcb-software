@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::CherenkovAngle
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngle.h,v 1.3 2008-11-30 11:02:23 jonrob Exp $
+ *  $Id: RichCherenkovAngle.h,v 1.4 2009-01-20 15:49:30 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -16,8 +16,6 @@
 #define RICHRECTOOLS_RICHCHERENKOVANGLE_H 1
 
 // from Gaudi
-#include "GaudiKernel/ParticleProperty.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/PhysicalConstants.h"
 

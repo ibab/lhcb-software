@@ -4,7 +4,7 @@
  *  Header file for tool : Rich::Rec::StereoFitter
  *
  *  CVS Log :-
- *  $Id: RichStereoFitter.h,v 1.11 2008-11-30 10:55:48 jonrob Exp $
+ *  $Id: RichStereoFitter.h,v 1.12 2009-01-20 15:49:30 cattanem Exp $
  *
  *  @author Luigi Delbuono  delbuono@in2p3.fr
  *  @date   27/06/2007
@@ -16,8 +16,6 @@
 #define RICHRECSTEREOTOOLS_RICHSTEREOFITTER_H 1
 
 // from Gaudi
-#include "GaudiKernel/ParticleProperty.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/PhysicalConstants.h"
 

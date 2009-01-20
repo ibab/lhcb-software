@@ -4,6 +4,9 @@
 ! Purpose     : Stereographic tools
 !-----------------------------------------------------------------------------
 
+! 2009-01-20 - Marco Cattaneo
+ - Remove obsolete includes for Gaudi ParticlePropertySvc
+
 !======================= RichRecStereoTools v1r5 2009-01-12 ==================
 ! 2008-12-17 - Chris Jones
  - Avoid warnings with gcc 4.3
