@@ -1,9 +1,28 @@
-! $Id: release.notes,v 1.51 2009-01-19 18:05:52 pkoppenb Exp $
+! $Id: release.notes,v 1.52 2009-01-20 15:23:16 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
+
+! 2009-01-20 - Juan PALACIOS
+ - Add Kernel/Particle2MCParticle.h
+  . Namespace containing types corresponding to the Particle -> MCParticle 
+    uni-directional weighted relationship.
+ - Kernel/IParticle2MCAssociator.h
+  . Now return lightweight Particle->MCParticle relations tables.
+
+! 2009-01-19 - Juan PALACIOS
+ - Kernel/IDaVinciSmartAssociator.h
+  . IDaVinciSmartAssociator::associate returns Particle2MCLinker::ToRange
+ - Kernel/IDaVinciAssociatorsWrapper.h
+  . IDaVinciAssociatorsWrapper::linker takes arguments by const reference.
+ - Kernel/Particle2MCLinker.h
+  . Remove MCAssociation class
+ - Add kernel/MCAssociation.h with MCAssociation class
+ - Add Kernel/IParticle2MCAssociator.h
+  . Tool interface to get one to many or many to many Particle->MCParticle
+    associations.
 
 ! 2009-01-19 - Patrick Koppenburg
  - New interface IMCParticleTupleTool for plotting MCParticle-realted quantities.
