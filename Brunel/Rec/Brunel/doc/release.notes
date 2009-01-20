@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-01-20 - Marco Cattaneo
+ - Add QMTests
+ - Change version to v34r2
+
 </PRE><H1><A NAME=v34r1>2009-01-14 Brunel v34r1</A></H1><PRE>
  - Changes to configurable:
    . Use new DstConf configurable to set up DST/RDST content. 

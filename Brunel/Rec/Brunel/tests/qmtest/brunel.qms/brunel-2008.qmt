@@ -1,0 +1,22 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gaudirun.py</text></argument>
+  <argument name="args"><set>
+    <text>$BRUNELROOT/tests/options/testBrunel-defaults.py</text>
+    <text>$BRUNELOPTS/Brunel-2008.py</text>
+    <text>$BRUNELOPTS/2008-TED-Data.py</text>
+  </set></argument>
+  <argument name="reference"><text>../refs/testBrunel-2008.ref</text></argument>
+  <argument name="validator"><text>
+preprocessor = normalizeExamples + \
+    RegexpReplacer(when = "Connected to database",
+        orig = r"(\"sqlite_file:)(.*/)([\w.]+/[0-9A-Z_]{1,8}\")",
+        repl = r"\1\3") + \
+    LineSkipper(["INFO Using TAG", "TimingAuditor.T", "RootDBase.open"]) + \
+    LineSkipper(["INFO Opened magnetic field file"]) + \
+    LineSkipper(["--- Reader", "--- CFMlpANN", "PARAM/ParamFiles"]) + \
+    LineSkipper(["INFO Connected to database"]) + \
+    LineSkipper(["INFO Disconnect from database after being idle"])
+validateWithReference(preproc = preprocessor)
+</text></argument>
+</extension>
