@@ -1,3 +1,9 @@
+2009-01-19  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* scripts/SetupProject.py: removed from the environment the variables that have
+	the temporary directory in the name (fixed an issue with temp dirs with a '-'
+	in the name, like 'temp-123').
+
 2009-01-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/LbLogin.py: 

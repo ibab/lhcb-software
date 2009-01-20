@@ -5,11 +5,11 @@ from xml.sax import parse, ContentHandler
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.2 2009-01-19 15:38:04 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.3 2009-01-20 18:45:50 marcocle Exp $"
 
 try:
     from LbUtils.CVS import CVS2Version
-    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.2 $")
+    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.3 $")
 except ImportError :
     __version__ = _cvs_id
 
@@ -113,7 +113,11 @@ class TemporaryEnvironment:
         """
         if key not in self.env :
             raise KeyError(key)
-        self.old_values[key] = self.env[key]
+        # Record that we unset a variable only if it was not set before
+        if (key in self.old_values) and (self.old_values[key] is None):
+            del self.old_values[key]
+        else:
+            self.old_values[key] = self.env[key]
         del self.env[key]
 
     def keys(self):
@@ -1301,6 +1305,13 @@ class SetupProject:
                                                for d in new_env[v].split(os.pathsep)
                                                if root_dir not in d ])
         # FIXME: I should look for all the variables pointing to the temporary directory
+        
+        # remove the variables that have the temporary directory in the name
+        tmp_base_name = os.path.basename(self.tmp_root)
+        for k in [ k
+                   for k in new_env.keys()[:] # I need a copy of the keys
+                   if tmp_base_name in k ]:
+            del new_env[k]
         
         # remove CMTPATH if not explicitely requested
         if not self.set_CMTPATH and "CMTPATH" in new_env:
