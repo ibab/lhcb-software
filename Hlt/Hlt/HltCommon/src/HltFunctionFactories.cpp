@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactories.cpp,v 1.21 2009-01-16 22:37:51 aperezca Exp $
+// $Id: HltFunctionFactories.cpp,v 1.22 2009-01-20 19:07:12 aperezca Exp $
 // Include files 
 
 // from Gaudi
@@ -110,6 +110,8 @@ StatusCode HltVertexFunctionFactory::initialize() {
   declare<Hlt::VertexMinIP,zen::abs_min,Hlt::VertexSelection>("FitVertexMinIP");
   declare<Hlt::VertexMatchIDsFraction,zen::abs_max,Hlt::VertexSelection>("VertexMatchIDsFraction");
   
+  declare<Hlt::VertexAngle>("VertexAngle");
+  declare<Hlt::VertexAngle>("FitVertexAngle");
   declare<Hlt::VertexDOCA>("VertexDOCA");
   declare<Hlt::VertexDOCA>("FitVertexDOCA");
   declare<Hlt::VertexDimuonMass>("VertexDimuonMass");

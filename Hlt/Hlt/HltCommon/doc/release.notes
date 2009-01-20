@@ -8,6 +8,10 @@
 
 !========================== HltCommon v5r0 2009-01-18 ===================
 
+! 2009-01-20 - Antonio Perez-Calero
+ - added definition of VertexAngle in HltFunctions.h
+ - added declaration of VertexAngle and FitVertexAngle in HltFunctionFactories.cpp
+
 ! 2009-01-17 - Chris Jones
  - Add virtual destructor to Hlt::IFunctionCreator
 
