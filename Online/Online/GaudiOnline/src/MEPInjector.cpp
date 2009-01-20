@@ -1653,7 +1653,7 @@ StatusCode MEPInjector::manageMEPRequest()
         }
         int testsem = 0;
         sem_getvalue(&m_MEPReqCount, &testsem);
-        log << MSG::INFO << "MEPReq count = "<<testsem << endmsg;
+        log << MSG::DEBUG << "MEPReq count = "<<testsem << endmsg;
 
         if (pthread_mutex_unlock(&m_SyncReqOdin)) {
             ERRMSG(log, " Unlocking mutex");
