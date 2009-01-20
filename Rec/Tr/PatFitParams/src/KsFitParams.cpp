@@ -1,10 +1,8 @@
-// $Id: KsFitParams.cpp,v 1.1.1.1 2007-10-09 18:50:43 smenzeme Exp $
+// $Id: KsFitParams.cpp,v 1.2 2009-01-20 15:49:30 cattanem Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
 // from LHCbEvent

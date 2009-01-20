@@ -1,4 +1,4 @@
-// $Id: TrackV0Finder.cpp,v 1.8 2009-01-13 13:07:24 wouter Exp $
+// $Id: TrackV0Finder.cpp,v 1.9 2009-01-20 15:49:30 cattanem Exp $
 // Include files 
 
 
@@ -14,11 +14,13 @@
  */
 class ITrajPoca ;
 class IMagneticFieldSvc ;
-class ParticleProperty ;
 class ITrackVertexer ;
 class ITrackExtrapolator ;
 class ITrackInterpolator ;
 #include "Event/TwoProngVertex.h"
+namespace LHCb {
+  class ParticleProperty ;
+}
 
 class TrackV0Finder : public GaudiAlgorithm {
 public: 
@@ -52,10 +54,10 @@ private:
   ToolHandle<ITrackExtrapolator> m_extrapolator ;
   ToolHandle<ITrackInterpolator> m_interpolator ;
   ITrackVertexer* m_vertexer ;
-  const ParticleProperty* m_ksProperty ;
-  const ParticleProperty* m_lambdaProperty ;
-  const ParticleProperty* m_pionProperty ;
-  const ParticleProperty* m_protonProperty ;
+  const LHCb::ParticleProperty* m_ksProperty ;
+  const LHCb::ParticleProperty* m_lambdaProperty ;
+  const LHCb::ParticleProperty* m_pionProperty ;
+  const LHCb::ParticleProperty* m_protonProperty ;
   double m_zmin ;
   double m_zmax ;
   double m_distanceCutUpstream ;
@@ -81,8 +83,8 @@ private:
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/Vector4DTypes.h"
 #include "GaudiKernel/IMagneticFieldSvc.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 #include "Kernel/ParticleID.h"
 #include "Event/TrackTraj.h"
 
@@ -175,7 +177,8 @@ StatusCode TrackV0Finder::initialize() {
     }
   }
 
-  IParticlePropertySvc* propertysvc = svc<IParticlePropertySvc>("ParticlePropertySvc",true) ;
+  LHCb::IParticlePropertySvc* propertysvc = 
+    svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc",true) ;
   m_ksProperty     = propertysvc->find( "KS0" ) ;
   m_lambdaProperty = propertysvc->find( "Lambda0" ) ;
   m_pionProperty   = propertysvc->find( "pi+" ) ;

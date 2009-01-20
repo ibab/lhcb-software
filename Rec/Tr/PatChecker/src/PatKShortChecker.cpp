@@ -1,4 +1,4 @@
-// $Id: PatKShortChecker.cpp,v 1.2 2007-10-22 15:50:57 ocallot Exp $
+// $Id: PatKShortChecker.cpp,v 1.3 2009-01-20 15:49:30 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -46,7 +46,6 @@ StatusCode PatKShortChecker::initialize() {
 
   debug() << "==> Initialize" << endmsg;
 
-  m_ppSvc     = svc<IParticlePropertySvc>( "ParticlePropertySvc", true );
   m_trToMCP   = new TrAsct( evtSvc(), m_inputLocation);
   m_seedToMCP = new TrAsct( evtSvc(), LHCb::TrackLocation::Seed );
   m_downToMCP = new TrAsct( evtSvc(), LHCb::TrackLocation::Downstream );

@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-01-20 - Marco Cattaneo
+ - Migrate to LHCb::ParticlePropertySvc
+
 !========================== TrackUtils v1r23 2009-01-13 ======================
 ! 2009-01-13 - Wouter Hulsbergen
  - fixed unchecked statuscodes

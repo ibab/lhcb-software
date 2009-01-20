@@ -8,8 +8,6 @@
 #include "Event/ProtoParticle.h"
 #include "Event/MCParticle.h"
 #include "MCInterfaces/IForcedBDecayTool.h"
-#include "GaudiKernel/ParticleProperty.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
 
 /** @class PVEff CheatedPrimaryVertices.h
  *

@@ -1,4 +1,4 @@
-// $Id: PatKShortChecker.h,v 1.1.1.1 2007-10-09 18:41:19 smenzeme Exp $
+// $Id: PatKShortChecker.h,v 1.2 2009-01-20 15:49:30 cattanem Exp $
 #ifndef PATKSHORTCHECKER_H 
 #define PATKSHORTCHECKER_H 1
 
@@ -9,8 +9,6 @@
 
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
 
 #include "Linker/LinkerTool.h"
 
@@ -43,7 +41,6 @@
   private:
     std::string  m_inputLocation;
     
-    IParticlePropertySvc* m_ppSvc;
     TrAsct*               m_trToMCP;          ///< Truth associator
     TrAsct*               m_seedToMCP;        ///< Truth associator
     TrAsct*               m_downToMCP;        ///< Truth associator

@@ -8,7 +8,9 @@
 
 // from TrackInterfaces
 #include "TrackInterfaces/IStateCorrectionTool.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
+
+// From PartProp
+#include "Kernel/IParticlePropertySvc.h"
 
 // from TrackEvent
 #include "Event/State.h"
@@ -47,6 +49,6 @@ private:
   // Job options
   double m_energyLossCorr;      ///< tunable energy loss correction
   double m_maxEnergyLoss;       ///< maximum energy loss in dE/dx correction
-  IParticlePropertySvc* m_pp;   /// particle property service
+  LHCb::IParticlePropertySvc* m_pp;   /// particle property service
 };
 #endif // TRACKTOOLS_STATEDETAILEDBETHEBLOChENERGYCORRECTIONTOOL_H

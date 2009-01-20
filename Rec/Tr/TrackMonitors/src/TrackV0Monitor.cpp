@@ -2,8 +2,8 @@
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "Event/TwoProngVertex.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 #include "gsl/gsl_cdf.h"
 
 class TrackV0Monitor : public GaudiHistoAlg 
@@ -54,15 +54,16 @@ TrackV0Monitor::~TrackV0Monitor()
 StatusCode TrackV0Monitor::initialize()
 {
   StatusCode sc = GaudiHistoAlg::initialize() ;
-  IParticlePropertySvc* propertysvc = svc<IParticlePropertySvc>("ParticlePropertySvc",true) ;
+  LHCb::IParticlePropertySvc* propertysvc = 
+    svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc",true) ;
   if( propertysvc ) {
-    const ParticleProperty* pion = propertysvc->find( "pi+" ) ;
+    const LHCb::ParticleProperty* pion = propertysvc->find( "pi+" ) ;
     m_pionmass   = pion ? pion->mass() : 0 ;
-    const ParticleProperty* proton = propertysvc->find( "p+" ) ;
+    const LHCb::ParticleProperty* proton = propertysvc->find( "p+" ) ;
     m_protonmass = proton ? proton->mass() : 0 ;
-    // const ParticleProperty* kshort = propertysvc->find( "KS0" ) ;
+    // const LHCb::ParticleProperty* kshort = propertysvc->find( "KS0" ) ;
     //     m_k0pid = kshort ? LHCb::ParticleID(kshort->pdgID()) : 0 ;
-    //     const ParticleProperty* lambda = propertysvc->find( "Lambda0" ) ;
+    //     const LHCb::ParticleProperty* lambda = propertysvc->find( "Lambda0" );
     //     m_lambdapid     = lambda ? LHCb::ParticleID(lambda->pdgID()) : 0 ;
     //     m_lambdabarpid = lambda ? LHCb::ParticleID(lambda->antiParticle()->pdgID()) : 0 ;
   } else {

@@ -2,7 +2,6 @@
 // -------------
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
-#include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/PhysicalConstants.h"
 
 // from GSL
@@ -11,6 +10,8 @@
 // from DetDesc
 #include "DetDesc/Material.h"
 
+// from PartProp
+#include "Kernel/ParticleProperty.h"
 
 // local
 #include "StateDetailedBetheBlochEnergyCorrectionTool.h"
@@ -51,11 +52,11 @@ void StateDetailedBetheBlochEnergyCorrectionTool::correctState( LHCb::State& sta
   
   // apply correction - note for now only correct the state vector
   Gaudi::TrackVector& tX = state.stateVector();
-  
-  if(!m_pp->findByStdHepID(pid.pid()))
-    return;
- 
-  double mass = m_pp->findByStdHepID(pid.pid())->mass();
+
+  const LHCb::ParticleProperty* partProp = m_pp->find(pid);
+  if( 0 == partProp ) return;
+
+  double mass = partProp->mass();
   
   double eta = 1/(tX[4]*mass);
 
@@ -101,10 +102,8 @@ StatusCode StateDetailedBetheBlochEnergyCorrectionTool::initialize()
   StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) return sc;  // error already reported by base class
   
-  m_pp = svc<IParticlePropertySvc>( "ParticlePropertySvc", true );
+  m_pp = svc<LHCb::IParticlePropertySvc>( "LHCb::ParticlePropertySvc", true );
  
-  
-  
   return StatusCode::SUCCESS;
 }
 

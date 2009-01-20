@@ -3,7 +3,7 @@
 # Maintainer : Stephanie Hansmann-Menzemer
 #============================================================================
 package           PatAlgorithms
-version           v3r14p1
+version           v3r15
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -20,6 +20,7 @@ use     TrackInterfaces v*      Tr
 use     STDet           v*      Det
 use     OTDet           v*      Det
 use     OTDAQ           v*      OT
+use     PartProp        v*      Kernel
 #============================================================================
 # Component library building rule
 #============================================================================

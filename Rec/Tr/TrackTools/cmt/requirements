@@ -3,7 +3,7 @@
 # Maintainer : Jose Hernando, Eduardo Rodrigues
 #============================================================================
 package           TrackTools
-version           v3r14
+version           v3r15
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -16,6 +16,7 @@ use   GSL             v*     LCG_Interfaces
 
 use   GaudiAlg        v*
 use   LHCbKernel      v*     Kernel
+use   PartProp        v*     Kernel
 use   TrackEvent      v*     Event
 use   DigiEvent       v*     Event
 
@@ -31,6 +32,7 @@ use   MuonDet         v*     Det
 use   CaloUtils       v*     Calo
 
 use   OTDAQ           v*     OT
+
 # Component library building rule
 #============================================================================
 library          TrackTools    ../src/*.cpp 

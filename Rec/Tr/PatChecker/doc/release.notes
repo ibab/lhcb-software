@@ -4,6 +4,9 @@
 ! Purpose     : Checker for pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2009-01-20 - Marco Cattaneo
+ - Remove unused access to ParticlePropertySvc
+
 !========================== PatChecker v3r4 2009-01-12 =======================
 ! 2008-12-17 - Marco Cattaneo
  - Fix a gcc 4.3 warning

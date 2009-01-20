@@ -4,14 +4,14 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-01-20 - Marco Cattaneo
+ - Migrate to LHCb::ParticlePropertySvc
 
 ! 2009-01-19 M Needham
-  - Add TTTrackMonitor algorithm
-
+ - Add TTTrackMonitor algorithm
 
 ! 2009-01-19 David Hutchcroft
  - Added the code to monitor "lite" VELO clusters in measurements
-
 
 !============================ TrackMonitors v1r6 2009-01-13 ==================
 ! 2009-01-13 W. Hulsbergen

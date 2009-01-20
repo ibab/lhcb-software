@@ -1,16 +1,16 @@
-// $Id: PatMakeV0.cpp,v 1.3 2008-03-25 17:31:54 janos Exp $
+// $Id: PatMakeV0.cpp,v 1.4 2009-01-20 15:49:30 cattanem Exp $
 // Include files
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/AlgFactory.h"
 
 //Event
 #include "Event/RecVertex.h"      // Sean Modif
 #include "Event/TwoProngVertex.h"     // Sean Modif
 
-//reconstruction
-#include "GaudiKernel/IParticlePropertySvc.h"    // Sean Modif
-#include "GaudiKernel/ParticleProperty.h"    // Sean Modif
+// From PartProp
+#include "Kernel/IParticlePropertySvc.h"    // Sean Modif
+#include "Kernel/ParticleProperty.h"    // Sean Modif
 
 // local
 #include "PatMakeV0.h"
@@ -114,9 +114,9 @@ StatusCode PatMakeV0::initialize() {
 
   debug() << "==> Initialize" << endmsg;
 
-  //the particle property service is initialised with the properties in $PARAMFILESROOT/data/ParticleTable.txt
-  IParticlePropertySvc* ppSvc = svc<IParticlePropertySvc>( "ParticlePropertySvc", true );
-  ParticleProperty* partP = ppSvc->find( "KS0" );
+  //the particle property service is initialised with the properties in condDB
+  LHCb::IParticlePropertySvc* ppSvc = svc<LHCb::IParticlePropertySvc>( "LHCb::ParticlePropertySvc", true );
+  const LHCb::ParticleProperty* partP = ppSvc->find( "KS0" );
   m_K0sPID = LHCb::ParticleID( partP->pdgID());
   partP = ppSvc->find( "Lambda0" );
   m_lambdaPID =  LHCb::ParticleID(partP->pdgID());
@@ -132,13 +132,15 @@ StatusCode PatMakeV0::initialize() {
 //=============================================================================
 StatusCode PatMakeV0::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   LHCb::Tracks* downs  = get<LHCb::Tracks>( LHCb::TrackLocation::Downstream );
-  debug() << "Start from " << downs->size() << " downstream tracks." << endreq;
+  if( msgLevel(MSG::DEBUG) ) 
+    debug() << "Start from " << downs->size() << " downstream tracks." << endmsg;
 
   LHCb::RecVertices* primaryVertices = get<LHCb::RecVertices>( LHCb::RecVertexLocation::Velo3D );
-  debug() << "Found " << primaryVertices->size() << " primary vertices" << endreq;
+  if( msgLevel(MSG::DEBUG) ) 
+    debug() << "Found " << primaryVertices->size() << " primary vertices" << endmsg;
 
   m_outputContainer = new LHCb::Tracks();
   m_outputV0Container = new V0s();      // Sean Modif
@@ -160,8 +162,11 @@ StatusCode PatMakeV0::execute() {
     double trackMomentum=1./fabs(m_state.qOverP());
     bool tooLowMom = trackMomentum < m_pMinRich1;
     if(tooLowMom){
-      debug() << " ... track " << (*itT)->key() << " skipped " << endreq;
-      debug() << format( "   p%10.2f ",trackMomentum) << " is too low momentum " << endreq;
+      if( msgLevel(MSG::DEBUG) ) {
+        debug() << " ... track " << (*itT)->key() << " skipped " << endmsg;
+        debug() << format( "   p%10.2f ",trackMomentum) << " is too low momentum " << endmsg;
+      }
+      
 
       continue;  // <<<< ==============  skip track (too low momentum)
     }
@@ -175,11 +180,13 @@ StatusCode PatMakeV0::execute() {
     // check track phase space
     bool skipTrk=checkPhaseSpaceAtOrigin();
     if(skipTrk) {
-      debug() << " ... track " << (*itT)->key() << " not in phase space at origin " << endreq;
-      debug() << format( "   x%7.2f y%7.2f tx%8.4f ty%8.4f",
-                         xCoordFast( 0.), yCoordFast( 0. ),
-                         xSlopeFast( 0. ), ySlopeFast( 0. ) ) << endreq;
-
+      if( msgLevel(MSG::DEBUG) ) {
+        debug() << " ... track " << (*itT)->key() 
+                << " not in phase space at origin " << endmsg;
+        debug() << format( "   x%7.2f y%7.2f tx%8.4f ty%8.4f",
+                           xCoordFast( 0. ), yCoordFast( 0. ),
+                           xSlopeFast( 0. ), ySlopeFast( 0. ) ) << endmsg;
+      }
       continue;  // <<<< ==============  skip track (not in phase space)
     }
 
@@ -213,11 +220,13 @@ StatusCode PatMakeV0::execute() {
 
     if(charge > 0) {
       // positive tracks
-      debug() << "Selected + track " << (*itT)->key() << endreq;
+      if( msgLevel(MSG::DEBUG) )
+        debug() << "Selected + track " << (*itT)->key() << endmsg;
       m_pos.push_back( temp );
     } else {
       // negative tracks
-      debug() << "Selected - track " << (*itT)->key() << endreq;
+      if( msgLevel(MSG::DEBUG) )
+        debug() << "Selected - track " << (*itT)->key() << endmsg;
       m_neg.push_back( temp );
     }
   }  // end loop (LHCb::Tracks::const_iterator itT)
@@ -244,19 +253,22 @@ StatusCode PatMakeV0::execute() {
     for (unsigned int iNeg=0;iNeg<m_neg.size(); iNeg++){
 
       // Full Reco
-      debug() << " try pos " << iPos << " neg " << iNeg
-              << " = seed " << m_pos[iPos].track->key() << " and " << m_neg[iNeg].track->key()
-              << endreq;
+      if( msgLevel(MSG::DEBUG) )
+        debug() << " try pos " << iPos << " neg " << iNeg
+                << " = seed " << m_pos[iPos].track->key() 
+                << " and " << m_neg[iNeg].track->key() << endmsg;
 
       StatusCode  sc= intersection( m_pos[iPos], m_neg[iNeg] );
       if ( sc.isFailure() ) {
-        debug() << " ... Failure for intersection" << endreq;
+        if( msgLevel(MSG::DEBUG) )
+          debug() << " ... Failure for intersection" << endmsg;
         continue;
       }
 
       StatusCode sc1b =improveVTX(  m_pos[iPos], m_neg[iNeg] );
       if( sc1b.isFailure() ){
-        debug () << " ... failure for improveVtx" << endreq;
+        if( msgLevel(MSG::DEBUG) )
+          debug () << " ... failure for improveVtx" << endmsg;
         continue;
       }
 
@@ -284,7 +296,9 @@ StatusCode PatMakeV0::execute() {
       //    double zV=m_zV0Vtx; // with old storeV0Info method
       m_plotChi2->fill(m_chiSq);
       if(m_chiSq  > m_chi2VtxLim) {
-        debug() << "    .. V0 vertex has bad chiSq, skip solution  " << m_chiSq << endreq;
+        if( msgLevel(MSG::DEBUG) )
+          debug() << "    .. V0 vertex has bad chiSq, skip solution  "
+                  << m_chiSq << endmsg;
         continue;  // to speed up computing
       }
 
@@ -294,16 +308,22 @@ StatusCode PatMakeV0::execute() {
 
         //  if(fabs(m_xImpact) > m_impactParV0 || fabs(m_yImpact) > m_impactParV0 ) {} // CHANGE from dec. 2007
 
-        debug() << "... V0  has too small impact parameter=" <<impactV0 << "  (mm), skip solution  " << endreq;
-        debug() << "... impact x = "<<m_xImpact<<",  y = "<<m_yImpact << "mm" << endreq;
-
+        if( msgLevel(MSG::DEBUG) ) {
+          debug() << "... V0  has too small impact parameter=" 
+                  << impactV0 << "  (mm), skip solution  " << endmsg;
+          debug() << "... impact x = " << m_xImpact << ",  y = "
+                  << m_yImpact << "mm" << endmsg;
+        }
+        
         continue;
       }
 
       // coupure en  zVtx  ******** MOST DRAMATIC CUT **********
       double primOK =CheckPrimaryVtx( m_pos[iPos], m_neg[iNeg] );
       if( primOK < m_primVtxOKLim ) {
-        debug() << " ... V0  has primOK too small : " << primOK << " , skip solution" << endreq;
+        if( msgLevel(MSG::DEBUG) )
+          debug() << " ... V0  has primOK too small : " << primOK
+                  << " , skip solution" << endmsg;
         continue;
       }
 
@@ -323,11 +343,13 @@ StatusCode PatMakeV0::execute() {
       bool testMass=(testMassK0 || testMassLambda || testMassLambdaBar);
 
       if( !testMass ) {
-        debug() << "   ... no invariant mass in any V0 window : " << endreq;
-        debug() << "   ... ....     Ks  = "<< m_invariantKsMass << " MeV " <<endreq;
-        debug() << "   ... .... Lambda  = "<< m_invariantLambdaMass << " MeV " <<endreq;
-        debug() << "   ... ..LambdaBar  = "<< m_invariantLambdaBarMass << " MeV " <<endreq;
-
+        if( msgLevel(MSG::DEBUG) ) {
+          debug() << "   ... no invariant mass in any V0 window : " << endmsg;
+          debug() << "   ... ....     Ks  = "<< m_invariantKsMass << " MeV " <<endmsg;
+          debug() << "   ... .... Lambda  = "<< m_invariantLambdaMass << " MeV " <<endmsg;
+          debug() << "   ... ..LambdaBar  = "<< m_invariantLambdaBarMass << " MeV " <<endmsg;
+        }
+        
         continue;
       }
 
@@ -335,7 +357,9 @@ StatusCode PatMakeV0::execute() {
       // coupure en impact au "vrai VTX"
       double impactCurrentNormed = NormedSmallestImpactParameter();
       if( impactCurrentNormed > m_impactCurNormLim ) {
-        debug() << "   ... too small V0 impact parameter " << impactCurrentNormed << endreq;
+        if( msgLevel(MSG::DEBUG) )
+          debug() << "   ... too small V0 impact parameter "
+                  << impactCurrentNormed << endmsg;
         continue;
       }
 
@@ -344,7 +368,9 @@ StatusCode PatMakeV0::execute() {
       m_vtxMomAngAll->fill(angle*1000.);  // plot mrd
 
       if(angle > m_angleCut) {
-        debug() << "   ... too large angle  V0 (momentum,line of flight) " << angle  << endreq;
+        if( msgLevel(MSG::DEBUG) )
+          debug() << "   ... too large angle  V0 (momentum,line of flight) "
+                  << angle  << endmsg;
         continue;
       }
 
@@ -352,7 +378,9 @@ StatusCode PatMakeV0::execute() {
       double ptRec=sqrt(m_V0Mom[1]*m_V0Mom[1]+m_V0Mom[2]*m_V0Mom[2]);
       m_ptRec->fill(ptRec/1000.);   //plot GeV
       if( ptRec<m_cutPt ) {
-        debug() << "   ... too small  V0 transverse momentum " << m_chiSq << endreq;
+        if( msgLevel(MSG::DEBUG) )
+          debug() << "   ... too small  V0 transverse momentum "
+                  << m_chiSq << endmsg;
         continue;
       }
 
@@ -392,7 +420,8 @@ StatusCode PatMakeV0::execute() {
         storeV0Info(vtxLoc,primOK,codeSolMass);
         m_angle=vtxMomAngle(primaryVertices);
         iNeg_rem=iNeg;
-        debug() << "  +++ Good solution found" << endreq;
+        if( msgLevel(MSG::DEBUG) )
+          debug() << "  +++ Good solution found" << endmsg;
       }
     }        // end (inner) loop on 0 < trks
 

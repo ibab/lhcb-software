@@ -21,6 +21,7 @@ use   TrackEvent       	v*	Event
 use   TrackFitEvent     v*	Tr
 use   TrackInterfaces 	v*	Tr
 use   STKernel          v*      ST
+use   PartProp          v*      Kernel
 
 #============================================================================
 # Component library building rule
