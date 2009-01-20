@@ -1,4 +1,4 @@
-// $Id: TupleToolDecay.cpp,v 1.1.1.1 2007-12-12 17:46:43 pkoppenb Exp $
+// $Id: TupleToolDecay.cpp,v 1.2 2009-01-20 17:53:49 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -7,8 +7,9 @@
 // local
 #include "TupleToolDecay.h"
 #include "Kernel/IParticleTupleTool.h"
-
 #include "Kernel/IDecayFinder.h"
+#include "MCInterfaces//IMCDecayFinder.h"
+
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/TupleObj.h"
 
@@ -42,6 +43,8 @@ TupleToolDecay::TupleToolDecay( const std::string& type,
   , m_hasMatched( false )
   , m_myName(name)
   , m_dkFinder(0)
+  , m_mcdkFinder(0)
+  , m_isMC(false)
 {
   declareInterface<TupleToolDecay>(this);
 
@@ -56,7 +59,9 @@ TupleToolDecay::~TupleToolDecay() {}
 
 //=============================================================================
 
-StatusCode TupleToolDecay::initialize( const std::string& dcy ){
+StatusCode TupleToolDecay::initialize( const std::string& dcy, bool isMC ){
+
+  m_isMC = isMC ;
 
   std::string pname; // sets the name to "ToolName" and not to "AlgoParent.ToolName"
   const Algorithm* alg = dynamic_cast<const Algorithm*>( parent() );
@@ -67,32 +72,25 @@ StatusCode TupleToolDecay::initialize( const std::string& dcy ){
   else {
     m_myName = m_myName.substr( pname.size()+1 );
   }
+  
+  bool test = true ;
+  if (m_isMC){
+    m_mcdkFinder = tool<IMCDecayFinder>("MCDecayFinder", this );
+    test &= m_mcdkFinder->setDecay( dcy );
+  } else {
+    m_dkFinder = tool<IDecayFinder>("DecayFinder", this );
+    test &= m_dkFinder->setDecay( dcy );
+  }
 
-  m_dkFinder = tool<IDecayFinder>("DecayFinder", this );
-
-  bool test = bool( m_dkFinder );
-  test &= m_dkFinder->setDecay( dcy );
-
-  debug() << "Initialized " << name()
-	  << " with decay " << decay() << endreq;
+  if (msgLevel(MSG::DEBUG)) debug() << "Initialized " << name()
+                                    << " with decay " << decay() << endreq;
 
   std::sort( m_stufferList.begin(), m_stufferList.end() );
   std::unique( m_stufferList.begin(), m_stufferList.end() );
 
   return StatusCode::StatusCode( test );
 }
-
-std::string TupleToolDecay::getInfo() const {
-  return name() + " :" + decay();
-}
-void TupleToolDecay::printInfo() const {
-  info() << getInfo() << endreq;
-}
-std::string TupleToolDecay::decay() const {
-  return m_dkFinder->decay();
-}
-
-void TupleToolDecay::decayMembers ( const LHCb::Particle *head
-				    , LHCb::Particle::ConstVector &members){
-  m_dkFinder->decayMembers( head, members );
-}
+//=============================================================================
+// get decay
+//=============================================================================
+std::string TupleToolDecay::decay() const {return m_dkFinder->decay();}

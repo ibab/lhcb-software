@@ -1,4 +1,4 @@
-// $Id: TupleToolDecay.h,v 1.2 2008-01-07 17:25:25 pkoppenb Exp $
+// $Id: TupleToolDecay.h,v 1.3 2009-01-20 17:53:49 pkoppenb Exp $
 #ifndef JBOREL_TUPLETOOLDECAY_H 
 #define JBOREL_TUPLETOOLDECAY_H 1
 
@@ -9,8 +9,9 @@
 
 class IParticleTupleTool;
 class IDecayFinder;
+class IMCDecayFinder;
 
-static const InterfaceID IID_TupleToolDecay ( "TupleToolDecay", 1, 0 );
+static const InterfaceID IID_TupleToolDecay ( "TupleToolDecay", 1, 1 );
 
 /** @class TupleToolDecay TupleToolDecay.h jborel/TupleToolDecay.h
  * 
@@ -44,16 +45,15 @@ public:
 
   virtual ~TupleToolDecay( ); ///< Destructor
 
-  StatusCode initialize( const std::string& );
+  StatusCode initialize( const std::string&, bool );
+  std::string TupleToolDecay::decay() const ;
 
-  void printInfo() const ;
-  std::string decay() const;
-  std::string getInfo() const;
+  std::string getInfo() const {return name() + " :" + decay();}
+  void printInfo() const {info() << getInfo() << endreq;}
 
-  void decayMembers ( const LHCb::Particle *head
-		      , LHCb::Particle::ConstVector &members);
-
-  
+  IDecayFinder* decayFinder() const {return m_dkFinder;}
+  IMCDecayFinder* mcDecayFinder() const {return m_mcdkFinder;}
+ 
   bool hasMatched() const { return m_hasMatched; };
   void hasMatched( bool state ) { m_hasMatched=state; };
   
@@ -65,11 +65,14 @@ public:
  private:
   bool m_hasMatched;
   bool m_inheritTools;
+  bool isMC(){return m_isMC;}    
 
   std::string m_myName;
 
   std::vector<std::string> m_stufferList;
 
   IDecayFinder* m_dkFinder;
+  IMCDecayFinder* m_mcdkFinder;
+  bool m_isMC ; 
 };
 #endif // JBOREL_TUPLETOOLDECAY_H

@@ -1,4 +1,4 @@
-// $Id: DecayTreeTupleBase.h,v 1.2 2009-01-20 11:09:16 pkoppenb Exp $
+// $Id: DecayTreeTupleBase.h,v 1.3 2009-01-20 17:53:49 pkoppenb Exp $
 #ifndef JBOREL_DECAYTREETUPLEBASE_H
 #define JBOREL_DECAYTREETUPLEBASE_H 1
 
@@ -9,6 +9,7 @@
 class IDecayFinder;
 class TupleToolDecay;
 
+class IMCParticleTupleTool;
 class IParticleTupleTool;
 class IEventTupleTool;
 namespace Decays{  
@@ -37,10 +38,6 @@ class DecayTreeTupleBase : public DVAlgorithm  {
   virtual StatusCode finalize  ();    ///< Algorithm finalization
   
  protected:
-  //! Trigger all the fill procedures
-  StatusCode fillTuple( Tuples::Tuple&, const LHCb::Particle::ConstVector& );
-  //! Call the fill methode of all the particles
-  StatusCode fillParticles( Tuples::Tuple&, const LHCb::Particle::ConstVector& );
   //! Call the fill methode which does not take a particle as argument
   StatusCode fillEventRelatedVariables( Tuples::Tuple& );
 
@@ -51,18 +48,13 @@ class DecayTreeTupleBase : public DVAlgorithm  {
   bool getDecayMatches( const LHCb::Particle::ConstVector& src
 			, LHCb::Particle::ConstVector& target );
 
-  //! Check if ready to fill or trigger the initialization
-  bool sizeCheckOrInit( const LHCb::Particle::ConstVector& );
-  void matchSubDecays( const LHCb::Particle::ConstVector& );
-
   /// Call successively all OnePart's fill method 
   bool fillOnePart( Decays::OnePart*, Tuples::Tuple&, const LHCb::Particle* mother, const LHCb::Particle* );
   std::vector<std::string> getEventTools() const;
-  std::vector<std::string> getParticleTools() const;
 
   bool initializeDecays();
-  void initializeStufferTools();
-  void initializeOnePartsStufferTools( Decays::OnePart*, const TupleToolDecay* );
+  void initializeStufferTools(std::vector< IParticleTupleTool* >& pTools);
+  void initializeOnePartsStufferTools( Decays::OnePart*, const TupleToolDecay*,std::vector< IParticleTupleTool* >& pTools  );
 
   std::string getBranchName( const LHCb::Particle* p );
 
@@ -82,12 +74,11 @@ class DecayTreeTupleBase : public DVAlgorithm  {
 
   std::vector<Decays::OnePart*> m_parts;
 
-  std::vector< IParticleTupleTool* > m_pTools;
+  std::vector< IMCParticleTupleTool* > m_mTools; // TMP
   std::vector< IEventTupleTool* > m_eTools;
 
   IDecayFinder* m_dkFinder;
-
-  unsigned int m_nSuccessEvent, m_nSuccessCandidate, m_nFailedEvent, m_nFailedCandidate;
+  std::vector<std::string> getParticleTools(const std::vector< IParticleTupleTool* > pTools) const;
 
 };
 

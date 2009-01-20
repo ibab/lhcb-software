@@ -14,7 +14,9 @@ branches          cmt doc src options
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
 use   DaVinciKernel      v*    Phys
+use   DaVinciMCKernel    v*    Phys
 use   DaVinciAssociators v*    Phys
+use   MCInterfaces       v*    Kernel
 use   HltInterfaces      v*    Kernel
 
 include_path      none
