@@ -510,13 +510,17 @@ std::string BaseServiceMap::createAdderName (const std::string &serviceName){
 std::string BaseServiceMap::createSaverName (const std::string &serviceName){
   // Creating the task name for the saver
   std::vector<std::string> serviceParts = Misc::splitString(serviceName, "/");
-  std::string svctype = serviceParts[0];
-  std::string utgid = serviceParts[1];
+  //std::string svctype = serviceParts[0];
+  //std::string utgid = serviceParts[1];
+  std::string utgid = serviceParts[0];
   std::vector<std::string> utgidParts = Misc::splitString(utgid, "_");
   if (utgidParts.size() == 4) {
     std::string partName = utgidParts[0];
     std::string taskName = utgidParts[2];
     return partName + "-" + taskName;
+  }
+  if (utgidParts[0].find("PART")!= std::string::npos) {
+    return m_processMgr->getPartitionName() + "_Saver_1/";
   }
   return utgid; // it should be equal to the serverName
 }

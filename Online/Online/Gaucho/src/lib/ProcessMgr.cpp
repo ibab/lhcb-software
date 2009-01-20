@@ -67,9 +67,8 @@ void ProcessMgr::timerHandler(){
     msg << MSG::DEBUG << "Before Save hiostograms in file: "<< m_fileName << endreq;
     write();
     msg << MSG::DEBUG << "After Save histograms in file: "<< m_fileName << endreq;
-    //m_pGauchoMonitorSvc->updateService(infoName, false);
-    m_pGauchoMonitorSvc->updateAll(false);
-    msg << MSG::DEBUG << "After UpdateAll in Monitoring Service: "<< m_fileName << endreq;
+    //m_pGauchoMonitorSvc->updateAll(false);
+    //msg << MSG::DEBUG << "After UpdateAll in Monitoring Service: "<< m_fileName << endreq;
   }
   else if (m_serviceOwner.compare(s_MonRateService) == 0) {
     msg << MSG::DEBUG << "isMonRateService"<< endreq;
