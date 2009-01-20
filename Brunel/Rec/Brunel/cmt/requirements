@@ -1,5 +1,5 @@
 package Brunel
-version v34r1
+version v34r2
 
 branches doc cmt job options
 
@@ -45,3 +45,8 @@ apply_pattern install_python_modules
 
 # ==========  Export application name and version to gaudirun.py ============
 apply_pattern GaudiApp
+
+# Run the tests
+private
+  apply_pattern QMTest
+end_private
