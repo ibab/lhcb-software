@@ -128,8 +128,8 @@ StatusCode SaverSvc::initialize() {
     msg << MSG::ERROR << "Cannot access monitoring service." << endmsg;
     return StatusCode::FAILURE;
   }
-  
-  m_pGauchoMonitorSvc->enableMonObjectsForString();
+  // the saveset name location should be a clear text string
+ // m_pGauchoMonitorSvc->enableMonObjectsForString();
   
   std::vector<std::string>::iterator  it;
   //int i =0;
@@ -172,7 +172,7 @@ StatusCode SaverSvc::initialize() {
     std::string *fileName = processMgr->fileNamePointer();
     
     //declareInfo("SAVESETLOCATION/"+*it, *fileName,"Filename of latest saveset");
-    std::string infoName = "SAVESETLOCATION/"+*it;
+    std::string infoName = m_tmpPart+"/SAVESETLOCATION/"+*it;
     
     declareInfo(infoName, *fileName, "Filename of latest saveset");
     
