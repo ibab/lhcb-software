@@ -4,6 +4,10 @@
 ! Purpose     : Ecal alley specific algorithms and tools
 !----------------------------------------------------------------------------
 
+! 2009-13-20 - Mariusz Witek
+- bug correction. Different results for photon line opt vs debug.
+  Usage of pointer outside the scope in HltIsPhotonTool.cpp
+
 !========================== HltEcalAlley v1r5 2009-01-15 ===================
 ! 2008-12-29 - Gerhard Raven
  - remove calls to saveConfiguration
