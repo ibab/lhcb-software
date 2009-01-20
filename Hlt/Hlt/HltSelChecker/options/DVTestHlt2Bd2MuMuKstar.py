@@ -14,7 +14,7 @@ signal = "Bd2MuMukstar"
 # Preselection
 #
 importOptions( "$DAVINCIROOT/options/PreloadUnits.opts")
-importOptions( "$B2DILEPTONROOT/options/DoPreselBd2KstarMuMu.opts")
+importOptions( "$B2DILEPTONROOT/options/PreselBd2KstarMuMu.opts")
 from Configurables import MakeResonances
 presel = GaudiSequencer("SeqPreselBd2KstarMuMu")
 presel.Members += [ MakeResonances("PreselBd2KstarMuMu") ]

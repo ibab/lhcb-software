@@ -9,6 +9,10 @@
 ! end
 !-----------------------------------------------------------------------------
 
+! 2009-01-20 - Patrick Koppenburg
+ - Typo fix in MuMuKstar
+ - Increment to v7r6
+
 !========================== HltSelChecker v7r5 2009-01-15 ===================
 ! 2009-01-16 - Patrick Koppenburg
  - Fixed Statistics test job
