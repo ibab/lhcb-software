@@ -1,4 +1,4 @@
-2009-01-19  Marco Clemencic  <Marco.Clemencic@cern.ch>
+2009-01-20  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* scripts/SetupProject.py: removed from the environment the variables that have
 	the temporary directory in the name (fixed an issue with temp dirs with a '-'
