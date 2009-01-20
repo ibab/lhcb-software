@@ -16,21 +16,21 @@
  *  @date   2008-06-26
  */
 class DaVinciAssociatorsWrapper : public GaudiTool, 
-                                      virtual public IIncidentListener,
-                                      virtual public IDaVinciAssociatorsWrapper {
+                                  virtual public IIncidentListener,
+                                  virtual public IDaVinciAssociatorsWrapper {
 public: 
   /// Standard constructor
   DaVinciAssociatorsWrapper( const std::string& type, 
-                                 const std::string& name,
-                                 const IInterface* parent);
+                             const std::string& name,
+                             const IInterface* parent);
 
   virtual ~DaVinciAssociatorsWrapper( ); ///< Destructor
 
   StatusCode initialize() ;
   StatusCode finalize() ;
 
-  Particle2MCLinker* linker(Particle2MCMethod::AssociationMethod, std::vector< std::string >
-//                            myLocations = std::vector<std::string>(1,"")
+  Particle2MCLinker* linker(const Particle2MCMethod::AssociationMethod& method, 
+                            const std::vector< std::string >& locations = std::vector<std::string>(1,"")
                            ) ; ///< returns a linker
 
   //-------------------------------------------------------------
@@ -39,6 +39,5 @@ public:
 private:
   
   Particle2MCLinker* m_linker ; ///< linker
-  std::vector< std::string > m_locations ; ///< Locations for association
 };
 #endif // DAVINCIASSOCIATORSWRAPPER_H
