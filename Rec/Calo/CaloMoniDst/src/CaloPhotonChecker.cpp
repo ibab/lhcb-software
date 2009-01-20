@@ -4,11 +4,12 @@
 #include <functional>
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/Plane3DTypes.h"
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/Vector3DTypes.h"
+// From PartProp
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 // Event
 #include "Event/MCParticle.h"
 #include "Event/MCVertex.h"
@@ -62,7 +63,6 @@ CaloPhotonChecker::CaloPhotonChecker
   , m_hypotoolName   ("PhotonPID")
   , m_hypotool       ( 0 )
 
-  , m_ppSvc          ( 0          )
   , m_gammaName      ( "gamma"    )
   , m_gammaID        ( 0          )
   , m_pi0Name        ( "pi0"      )
@@ -143,18 +143,22 @@ StatusCode CaloPhotonChecker::initialize()
 
 
 //----- locate particle property service
+  LHCb::IParticlePropertySvc* ppSvc = svc<LHCb::IParticlePropertySvc>( "LHCb::ParticlePropertySvc", true );
+  if( 0 == ppSvc ) return Error("Could not locate LHCb::ParticlePropertySvc!");
 
-  sc = service( "ParticlePropertySvc" , m_ppSvc , true );
-  if( sc.isFailure() )error()<<"Could not locate ParticlePropertySvc! "<<sc<<endreq;
-    if( 0 == m_ppSvc )error()<<"Could not locate ParticlePropertySvc!"<<endreq;
-
-  m_ppSvc->addRef();
-  const ParticleProperty* ppg = m_ppSvc->find( m_gammaName );
-  const ParticleProperty* ppp = m_ppSvc->find( m_pi0Name );
-  if( 0 == ppg )error()<<"Could not locate particle ' "<<m_gammaName<<" '"<<endreq;
-  if( 0 == ppp )error()<<"Could not locate particle ' "<<m_pi0Name<<" '"<<endreq;
-  m_gammaID = LHCb::ParticleID( ppg->jetsetID() ) ;
-  m_pi0ID = LHCb::ParticleID( ppp->jetsetID() ) ;
+  const LHCb::ParticleProperty* ppg = ppSvc->find( m_gammaName );
+  if( 0 == ppg ) {
+    error() << "Could not locate particle ' " <<m_gammaName << " '" << endmsg;
+    return StatusCode::FAILURE;
+  }
+  m_gammaID = ppg->pid() ;
+  
+  const LHCb::ParticleProperty* ppp = ppSvc->find( m_pi0Name );
+  if( 0 == ppp ) {
+    error() << "Could not locate particle ' " << m_pi0Name << " '" << endmsg;
+    return StatusCode::FAILURE;
+  }
+  m_pi0ID   = ppp->pid() ;
 
 //----- Detector recovery
 

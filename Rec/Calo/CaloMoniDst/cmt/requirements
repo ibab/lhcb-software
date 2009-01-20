@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.12 2008-11-06 17:17:49 cattanem Exp $ 
+# $Id: requirements,v 1.13 2009-01-20 15:49:30 cattanem Exp $ 
 # ============================================================================
 # Created    : 2004-10-25
 # Maintainer : Olivier Deschamps odescham@in2p3.fr
 # ============================================================================
 package           CaloMoniDst
-version           v3r3
+version           v3r4
 
 # =============== structure ==================================================
 branches          cmt doc src options 
@@ -21,6 +21,7 @@ use TrackInterfaces v*    Tr
 #
 use MCEvent         v*    Event
 use DaVinciMCKernel v*    Phys
+use PartProp        v*    Kernel
 
 # =============== constituents ===============================================
 library           CaloMoniDst   -import=AIDA *.cpp

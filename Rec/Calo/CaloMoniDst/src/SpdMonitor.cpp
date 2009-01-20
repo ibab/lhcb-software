@@ -56,7 +56,6 @@ class CaloHypo;
 class IDataProviderSvc;
 class CaloDigit;
 class ICaloHypoLikelyhood;
-class IParticlePropertySvc ;
 class IIncidentSvc    ;
 class IHistogram1D    ;
 class IHistogram2D    ;

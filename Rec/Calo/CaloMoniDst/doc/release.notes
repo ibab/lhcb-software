@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.27 2008-11-21 13:05:29 cattanem Exp $ 
+! $Id: release.notes,v 1.28 2009-01-20 15:49:30 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
+
+! 2009-01-20 - Marco Cattaneo
+ - Migrate to LHCb::ParticlePropertySvc
 
 !========================== CaloMoniDst v3r3 2008-11-21 =======================
 ! 2008-11-06 - Marco Cattaneo

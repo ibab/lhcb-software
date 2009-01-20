@@ -1,14 +1,14 @@
-// $Id: CaloPi0Checker.cpp,v 1.2 2008-09-09 15:37:24 odescham Exp $
+// $Id: CaloPi0Checker.cpp,v 1.3 2009-01-20 15:49:30 cattanem Exp $
 
 // ============================================================================
 // Include files
 // ============================================================================
 #include "Relations/IRelationWeighted.h"
 // ============================================================================
-// from Gaudi
+// from PartProp
 // ============================================================================
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 // ============================================================================
 // Event
 // ============================================================================
@@ -60,14 +60,14 @@ public:
 // re-initialize the Ecal cluster selector
     m_calo.setCalo( detData() );
 
-/// locate particle eproperty service
-    IParticlePropertySvc *ppS =
-      svc<IParticlePropertySvc>( "ParticlePropertySvc", true );
+//  locate particle eproperty service
+    LHCb::IParticlePropertySvc *ppS =
+      svc<LHCb::IParticlePropertySvc>( "LHCb::ParticlePropertySvc", true );
     if ( 0 == ppS ) return StatusCode::FAILURE;
 
-    const ParticleProperty *pp = ppS->find( m_pi0Name );
+    const LHCb::ParticleProperty *pp = ppS->find( m_pi0Name );
     if ( 0 == pp ) return Error( "Could not locate particle '"+m_pi0Name+"'" );
-    m_pi0ID = LHCb::ParticleID( pp->jetsetID() );
+    m_pi0ID = pp->pid();
 
     hBook1( "1", "Gamma-Gamma mass       " , 0, 1, 500 );
     hBook1( "2", "Gamma-Gamma mass (MCpi0 match)" , 0, 1, 500 );

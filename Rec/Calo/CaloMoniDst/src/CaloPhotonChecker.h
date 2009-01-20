@@ -115,7 +115,6 @@ private:
   ICaloHypoLikelihood* m_hypotool;
 
   // Particle Properties
-  IParticlePropertySvc*            m_ppSvc                         ;
   std::string                      m_gammaName                     ;
   LHCb::ParticleID                       m_gammaID                       ;
   std::string                      m_pi0Name                       ;
