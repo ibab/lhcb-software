@@ -1,4 +1,4 @@
-// $Id: IGetElementsToBeAligned.h,v 1.8 2009-01-13 15:50:00 wouter Exp $
+// $Id: IGetElementsToBeAligned.h,v 1.9 2009-01-21 16:23:16 wouter Exp $
 #ifndef IGETELEMENTSTOBEALIGNED_H 
 #define IGETELEMENTSTOBEALIGNED_H 1
 
@@ -36,14 +36,13 @@ namespace LHCb {
 class IGetElementsToBeAligned : virtual public IAlgTool {
 
  public:
-  typedef std::vector<AlignmentElement>                            Elements;
-  typedef LoKi::Range_<Elements>                                   ElementRange ;
+  typedef std::vector<const AlignmentElement*> Elements;
 
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_IGetElementsToBeAligned; };
 
   // Return pair of forward begin iter and forward end iter
-  virtual const ElementRange& rangeElements() const = 0;
+  virtual const Elements& elements() const = 0 ;
   
   // Return method that finds an alignment element for a given LHCb id
   virtual const AlignmentElement* findElement(const LHCb::LHCbID& anLHCbID) const = 0;
@@ -57,5 +56,6 @@ class IGetElementsToBeAligned : virtual public IAlgTool {
   // Find the list of elements corresponding to a path (which can ba rehulare expression)
   virtual StatusCode findElements(const std::string& path, 
 				  std::vector<const AlignmentElement*>& alignelements) const = 0 ;
+
 };
 #endif // IGETELEMENTSTOBEALIGNED_H
