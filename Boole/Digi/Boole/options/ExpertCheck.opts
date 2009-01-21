@@ -21,11 +21,3 @@ ITEffChecker.FullDetail = true;
 
 // OT detailed monitoring
 #include "$OTMONITORROOT/options/Boole.opts"
-
-//--------------------------------------------------------------
-// Set up some profiling. Enable/Disable setting lines below to true/false
-//--------------------------------------------------------------
-AuditorSvc.Auditors += { "NameAuditor", "ChronoAuditor", "MemoryAuditor" };
-NameAuditor.Enable   = false;
-ChronoAuditor.Enable = false;
-MemoryAuditor.Enable = false;
