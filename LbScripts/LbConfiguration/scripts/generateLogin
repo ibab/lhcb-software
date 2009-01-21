@@ -2,19 +2,70 @@
 
 import sys
 import os
-from optparse import OptionParser
 
-
-from imp import find_module
 # bootstraping the location of the file
-_this_file = find_module("generateLogin")[1]
+_this_file = os.path.realpath(sys.argv[0])
 _scripts_dir = os.path.dirname(_this_file)
 _base_dir = os.path.dirname(_scripts_dir)
+_py_dir = os.path.join(_base_dir, "python")
+if os.path.basename(_base_dir) != "InstallArea" :
+    _ia_dir = os.path.join(os.path.dirname(_base_dir), "InstallArea" )
+    _iapy_dir = os.path.join(_ia_dir, "python")
+    if os.path.isdir(_iapy_dir) :
+        sys.path.insert(0, _iapy_dir)
+if os.path.isdir(_py_dir) :
+    sys.path.insert(0, _py_dir)
 
+from LbConfiguration.LbLogin import getLoginCacheName, LbLoginScript
+from LbConfiguration.SetupProject import SetupProject
+from LbConfiguration.Project import binary_opt_list
+from optparse import OptionParser
 
-def generateLoginCache(targetlocation, shell="csh", version="", mysiteroot=None):
-    pass
-
+def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None):
+    location = None
+    if targetlocation :
+        location = os.path.join(targetlocation, "scripts")
+    for b in binary_opt_list :
+        os.environ["CMTCONFIG"] = b
+        if sys.platform == "win32" and not b.startswith("win") :
+            continue
+        elif sys.platform != "win32" and b.startswith("win") :
+            continue
+        if b.startswith("win") and shell != "bat" :
+            continue
+        elif not b.startswith("win") and shell == "bat" :
+            continue
+        cachefilename = getLoginCacheName(b, shell, location)
+        lls = LbLoginScript()
+        lls.defineOpts()
+        llsargs = []
+        llsargs.append("--silent")
+        llsargs.append("--shell=%s" % shell)
+        if mysiteroot :
+            llsargs.append("--mysiteroot=%s" % mysiteroot)
+        if version :
+            llsargs.append("--scripts-version=%s" % version)
+        lls.parseOpts(llsargs)
+        env = lls.setEnv()[0]
+        for var in env.keys() :
+            os.environ[var] = env[var]
+        os.environ["CMTCONFIG"] = b
+        setupprojargs = []
+        setupprojargs.append("--silent")
+        setupprojargs.append("--no-user-area")
+        setupprojargs.append("--output=%s" % cachefilename)
+        setupprojargs.append("--shell=%s" % shell)
+        setupprojargs.append("LbScripts")
+        if version :
+            setupprojargs.append(version)
+        setupprojargs.append("--runtime-project")            
+        setupprojargs.append("LCGCMT")
+        setupprojargs.append("Python")
+        if lls.options.pythonvers :
+            setupprojargs.append("-v")
+            setupprojargs.append(lls.options.pythonvers)
+        SetupProject().main(setupprojargs)
+        
 def generateLogin(targetlocation, script, version="", mysiteroot=None):
     knownshells = ["sh", "csh", "tcsh", "zsh", "bat"]
     shell = os.path.splitext(script)[1][1:]
@@ -89,7 +140,7 @@ set LbLogin_tmpfile=
     f.write(content)
     f.close()
 
-    generateLoginCache(targetlocation, shell, version, mysiteroot)
+    generateLoginCache(mysiteroot, shell, version, targetlocation)
 
 def generateLogins(version, targetlocation=None, scripts=None, mysiteroot=None):
     if not targetlocation : 

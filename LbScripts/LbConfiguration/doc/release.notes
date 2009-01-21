@@ -1,3 +1,13 @@
+2009-01-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/generateLogin.py: Removed.
+	* scripts/generateLogin: New file. converted the name to the new convention.
+	* cmt/requirements: implemented the creation of a cache file for the setup of
+	this very project. Prevent the call to SetupProject and CMT. It should be much 
+	faster.
+	* python/LbConfiguration/LbLogin.py: added the usage of the cache file
+	* python/LbConfiguration/Project.py: added the optimize and debug binary list.
+
 2009-01-20  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* scripts/SetupProject.py: removed from the environment the variables that have

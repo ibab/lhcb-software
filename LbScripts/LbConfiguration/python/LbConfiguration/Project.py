@@ -10,10 +10,12 @@ project_names = ["Gaudi", "LHCb", "Lbcom", "Rec", "Boole", "Brunel" ,
                  "Online", "Euler", "Geant4", "DaVinci", "Bender", "Orwell",
                  "Panoramix", "LbScripts"]
 
-binary_list = ["slc3_ia32_gcc323", "slc3_ia32_gcc323_dbg",
-               "slc4_ia32_gcc34", "slc4_ia32_gcc34_dbg",
-               "slc4_amd64_gcc34", "slc4_amd64_gcc34_dbg",
-               "win32_vc71", "win32_vc71_dbg"]
+binary_opt_list = ["slc3_ia32_gcc323", "slc4_ia32_gcc34",
+                   "slc4_amd64_gcc34", "win32_vc71"]
+
+binary_dbg_list = [ x + "_dbg" for x in binary_opt_list ]
+
+binary_list = binary_opt_list + binary_dbg_list
 
 class ProjectConfException(Exception):
     pass

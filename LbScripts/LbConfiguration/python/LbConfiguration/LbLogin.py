@@ -1,19 +1,35 @@
 #!/usr/bin/env python
 """ Main script to setup the basic LHCb environment """
 
-from imp import find_module
+# from imp import find_module
 from SetupProject import SetupProject
 
 import sys
 import os
 
 # bootstraping the location of the file
-_this_file = find_module(os.path.splitext(os.path.basename(__file__))[0])[1]
-_scripts_dir = os.path.dirname(_this_file)
-_base_dir = os.path.dirname(_scripts_dir)
+# _this_file = find_module(os.path.splitext(os.path.basename(__file__))[0])[1]
+_this_file = __file__
+_pyconf_dir = os.path.dirname(_this_file)
+_py_dir = os.path.dirname(_pyconf_dir)
+_base_dir = os.path.dirname(_py_dir)
+
+
+# added the installarea if I am called from the local package
+if os.path.basename(_base_dir) != "InstallArea" :
+    _ia_dir = os.path.join(os.path.dirname(_base_dir), "InstallArea" )
+    _iapy_dir = os.path.join(_ia_dir, "python")
+    if os.path.isdir(_iapy_dir) :
+        sys.path.insert(0, _iapy_dir)
+
 # updating the sys.path for the bare minimum of the available scripts
-sys.path.insert(0,_scripts_dir)
-sys.path.insert(0,_base_dir)
+sys.path.insert(0,_pyconf_dir)
+sys.path.insert(0,_py_dir)
+
+
+# needed for the cache use
+_scripts_dir = os.path.join(_base_dir, "scripts")
+
 
 from LbUtils.Script import Script
 from LbUtils.Env import Environment, Aliases
@@ -24,8 +40,18 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.3 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.4 $")
 
+
+def getLoginCacheName(cmtconfig, shell="csh", location=None):
+    name = ".LbLoginCache"
+    if cmtconfig :
+        name += "-" + cmtconfig
+    name += "." + shell
+    if location :
+        name = os.path.join(location, name)
+    return name
+    
 
 def getLbLoginEnv(debug=False, 
                   targetshell="csh", mysiteroot=None,
@@ -608,32 +634,48 @@ class LbLoginScript(Script):
     def setupLbScripts(self):
         log = logging.getLogger()
         opts = self.options
+
         for var in self._env.keys() :
             os.environ[var] = self._env[var]
+        
+        cachefile = getLoginCacheName(os.environ["CMTCONFIG"], opts.targetshell, _scripts_dir)
+        if opts.use_cache and os.path.exists(cachefile):
+            if self.output_name :
+                outf = open(self.output_name, "a")
+            else :
+                outf = sys.stdout
+            for l in open(cachefile, "r") :
+                outf.write(l)
+            if self.output_name :
+                outf.close()
+        else :
+            if not os.path.exists(cachefile) :
+                log.debug("Cache file % doesn't exist" % cachefile)
+                log.debug("Calling SetupProject directly")
 
-        setupprojargs=[]
-        if opts.loglevel=="DEBUG" :
-            setupprojargs.append("--debug")
-        if opts.loglevel=="CRITICAL" :
-            setupprojargs.append("--silent")
-        setupprojargs.append("--no-user-area")
-        if self.output_name :
-            setupprojargs.append("--append=%s" % self.output_name)
-        setupprojargs.append("--shell=%s" % opts.targetshell)
-        setupprojargs.append("LbScripts")
-        if opts.scriptsvers :
-            setupprojargs.append(opts.scriptsvers)
-        setupprojargs.append("--runtime-project")            
-        setupprojargs.append("LCGCMT")
-        setupprojargs.append("Python")
-        if opts.pythonvers :
-            setupprojargs.append("-v")
-            setupprojargs.append(opts.pythonvers)
-
-
-        log.debug("Arguments to SetupProject: %s" % " ".join(setupprojargs))
-
-        SetupProject().main(setupprojargs)
+            setupprojargs=[]
+            if opts.loglevel=="DEBUG" :
+                setupprojargs.append("--debug")
+            if opts.loglevel=="CRITICAL" :
+                setupprojargs.append("--silent")
+            setupprojargs.append("--no-user-area")
+            if self.output_name :
+                setupprojargs.append("--append=%s" % self.output_name)
+            setupprojargs.append("--shell=%s" % opts.targetshell)
+            setupprojargs.append("LbScripts")
+            if opts.scriptsvers :
+                setupprojargs.append(opts.scriptsvers)
+            setupprojargs.append("--runtime-project")            
+            setupprojargs.append("LCGCMT")
+            setupprojargs.append("Python")
+            if opts.pythonvers :
+                setupprojargs.append("-v")
+                setupprojargs.append(opts.pythonvers)
+    
+    
+            log.debug("Arguments to SetupProject: %s" % " ".join(setupprojargs))
+    
+            SetupProject().main(setupprojargs)
     
     def setEnv(self, debug=False):
         self.setPath()
@@ -647,7 +689,7 @@ class LbLoginScript(Script):
         self.setCMTPath()
 #        self.setupLbScripts()
 
-        return self._env, self._aliases, self._extra
+        return self._env.env, self._aliases.env, self._extra
 
     def Manifest(self, debug=False):
         ev = self._env
