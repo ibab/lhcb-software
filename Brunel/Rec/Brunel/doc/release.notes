@@ -6,6 +6,7 @@ Purpose: LHCb reconstruction program
 ! 2009-01-21 - Marco Cattaneo
  - Update QMTest references for OTDAQ fixes (fix untested StatusCode, no
    warning for empty GOL headers)
+ - Add platform dependent test references
 
 ! 2009-01-20 - Marco Cattaneo
  - Add QMTests
