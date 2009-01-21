@@ -4,7 +4,8 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 ! 2009-01-21 - Gerhard Raven
- - remove HltSummary{Tool,Writer}
+ - remove HltSummary{Tool,Writer}, HltSelection2Decision, HltDecision
+ - move EParser from HltBase to HltCommon
 
 ! 2009-01-19 - Gerhard Raven
  - support both boost <= 1.37, and > 1.37

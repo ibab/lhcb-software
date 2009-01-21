@@ -1,7 +1,7 @@
-// $Id: HltTFilter.icpp,v 1.16 2008-12-29 16:36:13 graven Exp $
+// $Id: HltTFilter.icpp,v 1.17 2009-01-21 12:04:33 graven Exp $
 // Include files
 
-#include "HltBase/EParser.h"
+#include "EParser.h"
 #include <functional>
 #include "boost/lambda/construct.hpp"
 #include "boost/foreach.hpp"
