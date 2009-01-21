@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.h,v 1.16 2009-01-13 15:51:20 wouter Exp $
+// $Id: AlignmentElement.h,v 1.17 2009-01-21 16:27:19 wouter Exp $
 #ifndef TALIGNMENT_ALIGNMENTELEMENT_H
 #define TALIGNMENT_ALIGNMENTELEMENT_H 1
 
@@ -73,14 +73,16 @@ public:
    *  vector of booleans representing which dofs to align for, Tx, Ty, Tz, 
    *  Rx, Ry, and Rz. Default is all dofs
    */
-  AlignmentElement(const std::vector<const DetectorElement*>& elements, 
+  AlignmentElement(const std::string& name,
+		   const std::vector<const DetectorElement*>& elements, 
 		   const unsigned int index, 
                    const std::vector<bool>& dofMask = std::vector<bool>(6, true),
 		   bool useLocalFrame=false);
 
- public:
-
+public:
+  
   typedef std::vector<const DetectorElement*> ElementContainer ;
+  typedef std::vector<const AlignmentElement*> DaughterContainer ;
   typedef AlParameters::DofMask DofMask ;
 
   /** Method to get the detector elements
@@ -89,11 +91,22 @@ public:
 
   /** Method to get the name of the detector(s) element
    */
-  const std::string name() const;
+  const std::string& name() const { return m_name ; }
+  
+  /** Part of the name that all detector elements have in common. May need to cash this. */
+  const std::string& basename() const { return m_basename ; }
+  
+  /** Method to get the name of the detector(s) element
+   */
+  std::string description() const;
 
   /** Method to get the index
    */
-  unsigned int index() const;
+  unsigned int index() const { return m_index; }
+
+  /** Method to get the index
+   */
+  void setIndex(size_t index) { m_index = index ; }
 
   /** Method to get the delta translations as a vector of doubles
    */
@@ -141,8 +154,14 @@ public:
   const Gaudi::Matrix6x6& jacobian() const { return m_jacobian ; }
   
   /** Return all elements that are served by this alignment element */
-  ElementContainer elementsInTree() const ;
+  const ElementContainer& elementsInTree() const { return m_elementsInTree ; }
   
+  /** return the current delta */
+  AlParameters currentTotalDelta() const ;
+
+  /** return the current delta (active parameters only) */
+  AlParameters currentActiveTotalDelta() const ;
+
   /** return the current delta */
   AlParameters currentDelta() const ;
 
@@ -169,6 +188,18 @@ public:
   /** return the value used for the range of residual histograms */
   double histoResidualMax() const ;
 
+  /** Add element to daughter list */
+  void addDaughter( const AlignmentElement& dau) { m_daughters.push_back(&dau) ; }
+
+  /** Get daughter list */
+  const DaughterContainer& daughters() const { return m_daughters ; }
+
+  /** Is daughter or granddaughter ... */
+  bool isOffspring( const AlignmentElement& dau) const ;
+
+private:
+  static std::string stripElementName(const std::string& name) ;
+
 private:
   
   typedef std::vector<const DetectorElement*>::const_iterator ElemIter;
@@ -182,24 +213,23 @@ private:
   static void addToElementsInTree( const IDetectorElement* const element, ElementContainer& elements ) ;
 
 private:
-
-  std::vector<const DetectorElement*>          m_elements;         ///< Vector of pointers to detector elements
-  unsigned int                                 m_index;            ///< Index. Needed for bookkeeping
-  mutable int                                  m_activeParOffset;  ///< Parameter index of first active parameter in this element
-  DofMask                                      m_dofMask;          ///< d.o.f's we want to align for
-  Gaudi::XYZPoint                              m_centerOfGravity ; ///< Center of gravity in the global frame
-  Gaudi::Transform3D                           m_alignmentFrame;   ///< Frame in which delta-derivatives are calculated
-  Gaudi::Matrix6x6                             m_jacobian ;        ///< Jacobian for going from global to alignment frame
-  bool                                         m_useLocalFrame;    ///< Use local frame as alignmentframe
+  std::string         m_name;
+  std::string         m_basename;
+  ElementContainer    m_elements;         ///< Vector of pointers to detector elements
+  DaughterContainer   m_daughters;        ///< Container with pointers to daughter elements
+  unsigned int        m_index;            ///< Index. Needed for bookkeeping
+  mutable int         m_activeParOffset;  ///< Parameter index of first active parameter in this element
+  DofMask             m_dofMask;          ///< d.o.f's we want to align for
+  Gaudi::XYZPoint     m_centerOfGravity ; ///< Center of gravity in the global frame
+  Gaudi::Transform3D  m_alignmentFrame;   ///< Frame in which delta-derivatives are calculated
+  Gaudi::Matrix6x6    m_jacobian ;        ///< Jacobian for going from global to alignment frame
+  bool                m_useLocalFrame;    ///< Use local frame as alignmentframe
+  ElementContainer    m_elementsInTree;   ///< Return all elements that are served by this alignment element
 };
 
 
 inline std::ostream& operator<<(std::ostream& lhs, const AlignmentElement& element) {
   return element.fillStream(lhs);
 }
-
-//inline const std::vector<const DetectorElement*> AlignmentElement::elements() const {return m_elements; }
-
-inline unsigned int AlignmentElement::index() const { return m_index; }
 
 #endif // ALIGNMENTELEMENT_H

@@ -1,4 +1,4 @@
-// $Id: GetElementsToBeAligned.h,v 1.11 2008-09-10 13:09:33 wouter Exp $
+// $Id: GetElementsToBeAligned.h,v 1.12 2009-01-21 16:27:19 wouter Exp $
 #ifndef GETELEMENTSTOBEALIGNED_H
 #define GETELEMENTSTOBEALIGNED_H 1
 
@@ -43,10 +43,11 @@ public:
   virtual ~GetElementsToBeAligned( ); ///< Destructor
 
   StatusCode initialize();
+  StatusCode finalize();
 
   // Virtual in IGetElementsToBeAligned
   // Return pair of begin iter and end iter
-  const IGetElementsToBeAligned::ElementRange& rangeElements() const;
+  const Elements& elements() const { return m_elements ; }
 
   // Virtual in IGetElementsToBeAligned
   // Return method that finds an alignment element for a given LHCb id
@@ -67,11 +68,50 @@ private:
   void getElements(const IDetectorElement* parent, const RegExs& expressions,
 		   size_t depth, std::vector<const DetectorElement*>& detelements) const ;
   
+  struct ElementSorter
+  {
+    // this is very tricky: how do you sort elements in a tree if you
+    // don't even know the tree( because of grouping). the following
+    // should cover all cases (I hope).
+    
+    bool operator()(const AlignmentElement* lhs,
+		    const AlignmentElement* rhs) const {
+      return lhs->basename() < rhs->basename() ||
+	(lhs->basename() == rhs->basename() &&
+	 (lhs->elementsInTree().size() > rhs->elementsInTree().size() ||
+	  (lhs->elementsInTree().size() == rhs->elementsInTree().size() &&
+	   lhs->detelements().front()->name() < rhs->detelements().front()->name()))) ;
+      
+      // all varant below do not work or do not give result I wanted.
+      //       return lhs->detelements().front()->name() < 
+      // 	rhs->detelements().front()->name() ||
+      // 	(lhs->detelements().front()->name() == rhs->detelements().front()->name() &&  lhs->elementsInTree().size() > rhs->elementsInTree().size() ) ;
+      
+      //       bool rhsIsLhsOffSpring = lhs->isOffspring( *rhs ) ;
+      //       bool lhsIsRhsOffSpring = rhs->isOffspring( *lhs ) ;
+      
+      //       return (!rhsIsLhsOffSpring && !lhsIsRhsOffSpring) ?
+      // 	lhs->detelements().front()->name() < 
+      // 	rhs->detelements().front()->name() :
+      // 	rhsIsLhsOffSpring ;
+      
+      //       return lhs->elementsInTree().size() > rhs->elementsInTree().size() ||
+      // 	(lhs->elementsInTree().size() == rhs->elementsInTree().size() &&
+      // 	 lhs->detelements().front()->name() < 
+      // 	 rhs->detelements().front()->name() ) ; 
+      // anything based on the 'isOffspring' routine cannot work.
+      // this does not work
+      //return lhs->isOffspring( *rhs )  ||
+      //( ! rhs->isOffspring( *lhs ) &&
+      //lhs->detelements().front()->name() < 
+      //rhs->detelements().front()->name() ) ; 
+    }
+  } ;
+  
 private:
   bool                                                              m_useLocalFrame;    ///< Use local frame as alignmentframe
   std::vector<std::string>                                          m_elemsToBeAligned; ///< Elemenst : Path to elements
-  mutable IGetElementsToBeAligned::Elements                         m_alignElements;    ///< Flat vector of alignment elements
-  IGetElementsToBeAligned::ElementRange                             m_rangeElements;    ///< Range of elements to be aligned
+  mutable IGetElementsToBeAligned::Elements                         m_elements;    ///< Flat vector of alignment elements
   typedef std::map<const DetectorElement*, const AlignmentElement*> ElementMap;
   ElementMap                                                        m_elementMap;       ///< Map of detector elements to alignment element
 };

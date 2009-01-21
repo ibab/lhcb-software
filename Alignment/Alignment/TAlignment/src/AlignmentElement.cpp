@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.cpp,v 1.22 2009-01-13 15:51:20 wouter Exp $
+// $Id: AlignmentElement.cpp,v 1.23 2009-01-21 16:27:19 wouter Exp $
 // Include files
 
 // from STD
@@ -24,47 +24,55 @@
 // local
 #include "AlignmentElement.h"
 
+std::string AlignmentElement::stripElementName(const std::string& name)
+{
+  return boost::algorithm::erase_all_regex_copy(name, boost::regex("/dd/Structure/LHCb/.*Region/")) ;
+}
+
+
 AlignmentElement::AlignmentElement(const DetectorElement* element, 
                                    const unsigned int index, 
                                    const std::vector<bool>& dofMask,
 				   bool useLocalFrame)
-  : m_elements(1u, element),
+  : m_name(stripElementName(element->name())),
+    m_basename(element->name()),
+    m_elements(1u,element),
     m_index(index),
     m_activeParOffset(-1),
     m_dofMask(dofMask),
     m_useLocalFrame(useLocalFrame)
 {
-
-  validDetectorElement(m_elements.at(0u));
-  
+  m_name = description() ;
+  validDetectorElement(m_elements.front());
   initAlignmentFrame();
+  for( ElementContainer::const_iterator ielem = m_elements.begin();
+       ielem != m_elements.end(); ++ielem) 
+    addToElementsInTree( *ielem, m_elementsInTree ) ;
 }
 
-AlignmentElement::AlignmentElement(const std::vector<const DetectorElement*>& elements, 
+AlignmentElement::AlignmentElement(const std::string& aname,
+				   const std::vector<const DetectorElement*>& elements, 
                                    const unsigned int index, 
                                    const std::vector<bool>& dofMask,
 				   bool useLocalFrame)
-  : m_elements(elements),
+  : m_name(stripElementName(aname)),
+    m_elements(elements),
     m_index(index),
     m_activeParOffset(-1),
     m_dofMask(dofMask),
     m_useLocalFrame(useLocalFrame)
 {
-
   std::for_each(m_elements.begin(), m_elements.end(),
                 boost::lambda::bind(&AlignmentElement::validDetectorElement, this, boost::lambda::_1));
-
+  
+  size_t pos = aname.find_first_of("(.*") ;
+  m_basename = pos == std::string::npos ? aname : aname.substr(0,pos) ;
+  
   initAlignmentFrame();
-}
-
-AlignmentElement::ElementContainer AlignmentElement::elementsInTree() const
-{
-  ElementContainer elements ;
-  elements.reserve(  m_elements.size() ) ;
+  
   for( ElementContainer::const_iterator ielem = m_elements.begin();
        ielem != m_elements.end(); ++ielem) 
-    addToElementsInTree( *ielem, elements ) ;
-  return elements ;
+    addToElementsInTree( *ielem, m_elementsInTree ) ;
 }
 
 void AlignmentElement::addToElementsInTree( const IDetectorElement* const ielement,
@@ -76,6 +84,20 @@ void AlignmentElement::addToElementsInTree( const IDetectorElement* const ieleme
   for( IDetectorElement::IDEContainer::const_iterator ichild = ielement->childBegin() ;
        ichild != ielement->childEnd(); ++ichild ) 
     addToElementsInTree(*ichild, elements) ;
+}
+
+bool AlignmentElement::isOffspring( const AlignmentElement& dau) const
+{
+  bool found=false ;
+  if( dau.m_elementsInTree.size() < m_elementsInTree.size() ) {
+    // check that _all_ elements are there. note that we have a real
+    // problem if only a subset is there ...
+    found = true ;
+    for( ElementContainer::const_iterator ielem =  dau.m_elements.begin() ;
+	 ielem != dau.m_elements.end() && found; ++ielem ) 
+      found = std::find( m_elementsInTree.begin(), m_elementsInTree.end(), *ielem )!= m_elementsInTree.end() ;
+  }
+  return found ;
 }
 
 void AlignmentElement::validDetectorElement(const DetectorElement* element) const {
@@ -112,18 +134,18 @@ void AlignmentElement::initAlignmentFrame() {
   }
 }
 
-const std::string AlignmentElement::name() const {
+std::string AlignmentElement::description() const {
   std::string begin = (m_elements.size() > 1u ? "Group = { " : "");
-
+  
   std::string middle;
   for (ElemIter i = m_elements.begin(), iEnd = m_elements.end(); i != iEnd; ++i) {
-    std::string nameElem = boost::algorithm::erase_all_regex_copy((*i)->name(), boost::regex("/dd/Structure/LHCb/.*Region/"))
+    std::string nameElem = stripElementName( (*i)->name() )
       + (i != (iEnd - 1u)?", ":"");
     middle += nameElem;
   }
-
+  
   std::string end = (m_elements.size() > 1u ? "}" : "");
-
+  
   return begin+middle+end;
 }
 
@@ -152,7 +174,7 @@ const std::vector<double> AlignmentElement::deltaRotations() const {
   return averageDeltaRotations;
 }
 
-AlParameters AlignmentElement::currentDelta() const {
+AlParameters AlignmentElement::currentTotalDelta() const {
   double par[6] = {0,0,0,0,0,0} ;
   Gaudi::Transform3D alignmentFrameInv = alignmentFrame().Inverse() ;
   for (ElemIter ielem = m_elements.begin(); ielem != m_elements.end(); ++ielem) {
@@ -162,6 +184,38 @@ AlParameters AlignmentElement::currentDelta() const {
     Gaudi::Transform3D globalDelta   = global*globalNominal.Inverse();
     //Gaudi::Transform3D alignDeltaMatrix = alignmentFrameInv * globalDeltaMatrix * alignmentFrame();
     Gaudi::Transform3D alignDeltaMatrix = alignmentFrameInv * globalDelta * alignmentFrame();
+    std::vector<double> translations(3,0.0), rotations(3,0.0);
+    DetDesc::getZYXTransformParameters(alignDeltaMatrix, translations, rotations);//, it->pivot());
+    for(size_t i=0; i<3; ++i) {
+      par[i]   += translations[i] ;
+      par[i+3] += rotations[i] ;
+    }
+  }
+  for(size_t i=0; i<6; ++i) par[i] /= m_elements.size() ;
+  return AlParameters(par) ;
+}
+
+AlParameters AlignmentElement::currentActiveTotalDelta() const 
+{
+  return AlParameters(currentTotalDelta().parameterArray(),m_dofMask ) ;
+}
+
+AlParameters AlignmentElement::currentDelta() const {
+  double par[6] = {0,0,0,0,0,0} ;
+  Gaudi::Transform3D alignmentFrameInv = alignmentFrame().Inverse() ;
+  for (ElemIter ielem = m_elements.begin(); ielem != m_elements.end(); ++ielem) {
+    // here I want just the _local_ delta.
+    const Gaudi::Transform3D& localDelta   = ((*ielem)->geometry())->ownToOffNominalMatrix() ;
+    // this one includes the localDelta, I think.
+    const Gaudi::Transform3D& global        = ((*ielem)->geometry())->toGlobalMatrix();
+    // so we subtract the delta to get the transformation matrix to global
+    // Gaudi::Transform3D globalMinusDelta = global * localDelta.Inverse() ;
+    // transform the local delta into the global frame
+    // Gaudi::Transform3D localDeltaInGlobal = globalMinusDelta * localDelta * globalMinusDelta.Inverse() ;
+    // which could be shorter written like this (really!)
+    Gaudi::Transform3D localDeltaInGlobal = global * localDelta * global.Inverse() ;
+    // now transform it into the alignment frame
+    Gaudi::Transform3D alignDeltaMatrix = alignmentFrameInv * localDeltaInGlobal * alignmentFrame();
     std::vector<double> translations(3,0.0), rotations(3,0.0);
     DetDesc::getZYXTransformParameters(alignDeltaMatrix, translations, rotations);//, it->pivot());
     for(size_t i=0; i<3; ++i) {
@@ -209,14 +263,14 @@ StatusCode AlignmentElement::updateGeometry( const AlParameters& parameters)
 // }
 
 std::ostream& AlignmentElement::fillStream(std::ostream& lhs) const {
-  const std::string s = name();
   const std::vector<double> t = deltaTranslations();
   const std::vector<double> r = deltaRotations();
   static const std::vector<std::string> dofs = boost::assign::list_of("Tx")("Ty")("Tz")("Rx")("Ry")("Rz");
   
   lhs << std::endl;
   lhs << std::left << std::setw(80u) << std::setfill('*') << "" << std::endl;
-  lhs << "* Element  : " << s << "\n"
+  lhs << "* Alignable: " << name() << "\n" 
+      << "* Element  : " << description() << std::endl
       << "* Index    : " << index() << "\n"
       << "* dPosXYZ  : " << Gaudi::XYZPoint(t[0], t[1], t[2]) << "\n"
       << "* dRotXYZ  : " << Gaudi::XYZPoint(r[0], r[1], r[2]) << "\n"
@@ -226,6 +280,13 @@ std::ostream& AlignmentElement::fillStream(std::ostream& lhs) const {
     if ((*j)) lhs << dofs.at(std::distance(m_dofMask.begin(), j)) + " ";
   }
   lhs << std::endl;
+  if( !m_daughters.empty() ) {
+    lhs << "* Daughters: ";
+    for(DaughterContainer::const_iterator idau = m_daughters.begin() ;
+	idau != m_daughters.end(); ++idau)
+      lhs << (*idau)->index() << " " ;
+    lhs << std::endl;
+  }
   lhs << std::left << std::setw(80u) << std::setfill('*') << "" << std::endl;
 
   return lhs;

@@ -77,7 +77,7 @@ namespace Al
 			      virtual public IAlignConstraintTool
   {
   public:
-    typedef std::vector<const AlignmentElement*> ElementPointers ;
+    typedef IGetElementsToBeAligned::Elements Elements ;
     typedef std::vector<Al::ConstraintDerivatives*> DerivativeContainer ;
     AlignConstraintTool(const std::string& type,
 			const std::string& name,
@@ -95,7 +95,7 @@ namespace Al
     void clearConstraintDerivatives() const ;
     Al::ConstraintDerivatives* createConstraintDerivatives(const std::string& name,
 						 const std::vector<std::string>& activeconstraints,
-						 const ElementPointers& elements,
+						 const Elements& elements,
 						 const Al::Equations& equations, size_t numAlignPars) const ;
 
     void addConstraintToNominal(const Elements& elements,
@@ -107,27 +107,21 @@ namespace Al
       ConstraintDefinition(const std::string& name) : m_name(name) {}
       const std::string& name() const { return m_name ; }
       const std::vector<std::string>& dofs() const { return m_dofs ; }
-      const ElementPointers& elements() const { return m_elements ; }
+      const Elements& elements() const { return m_elements ; }
       void addDof(const std::string& dof) { m_dofs.push_back(dof) ; }
-      void addElements(const ElementPointers& elements) { m_elements.insert( m_elements.end(), elements.begin(), elements.end() ) ; }
+      void addElements(const Elements& elements) { m_elements.insert( m_elements.end(), elements.begin(), elements.end() ) ; }
     private:
       std::string m_name ;
       std::vector<std::string> m_dofs ;
-      ElementPointers m_elements ;
+      Elements m_elements ;
     } ;
     
   private:
     std::vector<std::string> m_constraintNames ;
+    std::vector<std::string> m_chiSquareConstraintNames ;
     std::vector<ConstraintDefinition> m_definitions ;
     mutable DerivativeContainer m_derivatives ;
     bool m_useWeightedAverage ;
-    bool m_constrainToNominal ;
-    double m_sigmaNominalTx ;
-    double m_sigmaNominalTy ;
-    double m_sigmaNominalTz ;
-    double m_sigmaNominalRx ;
-    double m_sigmaNominalRy ;
-    double m_sigmaNominalRz ;
     const IGetElementsToBeAligned* m_elementtool ;
   } ;
   
@@ -143,13 +137,6 @@ namespace Al
     declareInterface<IAlignConstraintTool>(this);
     declareProperty("Constraints", m_constraintNames ) ;
     declareProperty("UseWeightedAverage", m_useWeightedAverage = false ) ;
-    declareProperty("ConstrainToNominal", m_constrainToNominal = false ) ;
-    declareProperty("SigmaNominalTx",m_sigmaNominalTx = 1*Gaudi::Units::mm) ;
-    declareProperty("SigmaNominalTy",m_sigmaNominalTy = 1*Gaudi::Units::mm) ;
-    declareProperty("SigmaNominalTz",m_sigmaNominalTz = 1*Gaudi::Units::mm) ;
-    declareProperty("SigmaNominalRx",m_sigmaNominalRx = 0.01 ) ;
-    declareProperty("SigmaNominalRy",m_sigmaNominalRy = 0.01 ) ;
-    declareProperty("SigmaNominalRz",m_sigmaNominalRz = 0.01 ) ;
   }
 
   AlignConstraintTool::~AlignConstraintTool()
@@ -197,11 +184,7 @@ namespace Al
     if( sc.isSuccess() ) {
       // now we need to decode the string with constraints
       ConstraintDefinition common("") ;
-      ElementPointers elements ;
-      for( Elements::const_iterator ielem=m_elementtool->rangeElements().begin() ;
-	   ielem != m_elementtool->rangeElements().end(); ++ielem)
-	elements.push_back(&(*ielem)) ;
-      common.addElements( elements ) ;
+      common.addElements( m_elementtool->elements() ) ;
       m_definitions.push_back( common ) ; 
       for( std::vector<std::string>::const_iterator ic = m_constraintNames.begin() ;
 	   ic != m_constraintNames.end(); ++ic ) {
@@ -216,7 +199,7 @@ namespace Al
 	    m_definitions.front().addDof( removechars(*idof," ,") ) ;
 	} else if( tokens.size() == 3 ) {
 	  ConstraintDefinition newconstraint( tokens.at(0) ) ;
-	  ElementPointers elements ;
+	  Elements elements ;
 	  sc = m_elementtool->findElements( removechars(tokens.at(1)," ,"), elements ) ;
 	  newconstraint.addElements( elements ) ;
 	  std::vector<std::string> dofs = tokenize(tokens.at(2)," ,") ;
@@ -240,6 +223,8 @@ namespace Al
 	       it != ic->dofs().end(); ++it )
 	    info() << *it << " , " ;
 	  info() << "num elements = " << ic->elements().size() << endmsg ;
+	  for( Elements::const_iterator ielem = ic->elements().begin() ; ielem != ic->elements().end(); ++ielem)
+	    info() << (*ielem)->name() << endreq ;
 	}
       }
       info() << "Number of constraint definitions= " 
@@ -251,7 +236,7 @@ namespace Al
   
   Al::ConstraintDerivatives* AlignConstraintTool::createConstraintDerivatives(const std::string& name,
 									      const std::vector<std::string>& activeconstraints,
-									      const ElementPointers& elements,
+									      const Elements& elements,
 									      const Al::Equations& equations,
 									      size_t numAlignPars) const
   {
@@ -287,7 +272,7 @@ namespace Al
     size_t numhits(0) ;
     Gaudi::XYZVector pivot ;
     double zmin(9999999), zmax(-999999), xmin(9999999), xmax(-999999) ;
-    for (ElementPointers::const_iterator it = elements.begin(); it !=elements.end() ; ++it) 
+    for (Elements::const_iterator it = elements.begin(); it !=elements.end() ; ++it) 
       if((*it)->activeParOffset() >= 0) {
 	size_t elemindex = (*it)->index() ;
 	double thisweight = m_useWeightedAverage ? equations.element(elemindex).weightV() : 1 ;
@@ -311,7 +296,7 @@ namespace Al
     // create the object that we will return
     Al::ConstraintDerivatives* constraints = new Al::ConstraintDerivatives(numAlignPars,activeconstraints,name) ;
  
-    for (ElementPointers::const_iterator it = elements.begin(); it !=elements.end() ; ++it) 
+    for (Elements::const_iterator it = elements.begin(); it !=elements.end() ; ++it) 
       if((*it)->activeParOffset() >= 0) {
 	// calculate the Jacobian for going from the 'alignment' frame to
 	// the 'canonical' frame. This is the first place where we could
@@ -358,7 +343,7 @@ namespace Al
 	    // Curvature constraint. The constraint is on the average per track.
 	    for(size_t trkpar=0; trkpar<5; ++trkpar) 
 	      constraints->derivatives()(ConstraintDerivatives::Trx+trkpar,jpar) 
-		= equations.element(elemindex).dStateDAlpha()(trkpar,j)/equations.numTracks() ;
+		= equations.element(elemindex).dStateDAlpha()(j,trkpar)/equations.numTracks() ;
 	  }
 	} 
       }
@@ -384,7 +369,7 @@ namespace Al
     m_derivatives.clear() ;
   }
 
-  size_t AlignConstraintTool::addConstraints(const Elements& elements,
+  size_t AlignConstraintTool::addConstraints(const Elements& /*elements*/,
 					     const Al::Equations& equations,
 					     AlVec& halfDChi2DAlpha, AlSymMat& halfD2Chi2DAlpha2) const
   {
@@ -439,10 +424,6 @@ namespace Al
       halfD2Chi2DAlpha2 = halfD2Chi2DAlpha2New ;
     }
     
-    // eventually, add also the chisquare constraints
-    if( m_constrainToNominal ) 
-      addConstraintToNominal(elements,halfDChi2DAlpha,halfD2Chi2DAlpha2) ;
-
     return numactive ;
   }
 
@@ -514,39 +495,5 @@ namespace Al
 		   << " +/- " << AlParameters::signedSqrt( constraintcov(i,i) ) << std::endl ;
       }
     }
-  }
-
-  void AlignConstraintTool::addConstraintToNominal(const Elements& elements,
-						   AlVec& halfDChi2DAlpha, AlSymMat& halfD2Chi2DAlpha2) const
-  {
-    info() << "Adding constraint to nominal geometry" << endreq ;
-    // this adds chisquare constraints for the survey. since we don't
-    // really have the survey we constrain to the 'nomina; position.
-    double sigma[6] ;
-    sigma[0] = m_sigmaNominalTx ;
-    sigma[1] = m_sigmaNominalTy ;
-    sigma[2] = m_sigmaNominalTz ;
-    sigma[3] = m_sigmaNominalRx ;
-    sigma[4] = m_sigmaNominalRy ;
-    sigma[5] = m_sigmaNominalRz ;
-
-    for(Elements::const_iterator ielem = elements.begin() ;
-	ielem != elements.end(); ++ielem) 
-      if( ielem->activeParOffset()>=0) {
-	// get the current difference with nominal
-	AlParameters currentdelta = (*ielem).currentActiveDelta() ;
-	// now assign errors. for the moment we choose errors that are
-	// constant: 1mm for all positions and 1mrad for all rotations.
-	// update the first and second derivative
-	for(size_t iactive = 0; iactive<(*ielem).dofMask().nActive(); ++iactive) {
-	  double thissigma = sigma[(*ielem).dofMask().parIndex(iactive)] ;
-	  double weight = 1/(thissigma*thissigma) ;
-	  // this is tricky: need to get the sign right!
-	  double residual = -currentdelta.parameters()(iactive) ;
-	  size_t ipar = iactive + (*ielem).activeParOffset() ;
-	  halfDChi2DAlpha(ipar) += weight * residual; 
-	  halfD2Chi2DAlpha2.fast(ipar,ipar) += weight ;
-	}
-      }
   }
 }

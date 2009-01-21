@@ -22,7 +22,7 @@ namespace Al
 			  virtual public IAlignUpdateTool
   {
   public:
-    typedef IGetElementsToBeAligned::ElementRange Elements ;
+    typedef IGetElementsToBeAligned::Elements Elements ;
     typedef std::vector<double> AlignConstants;
     AlignUpdateTool(const std::string& type,
 			const std::string& name,
@@ -37,13 +37,16 @@ namespace Al
     void preCondition(const Elements& elements, const Al::Equations& equations,
 		      AlVec& dChi2dAlpha, AlSymMat& d2Chi2dAlpha2,AlVec& scale) const ;
     void postCondition(AlVec& dChi2dAlpha, AlSymMat& d2Chi2dAlpha2, const AlVec& scale) const ;
-    void getAlignmentConstants(const Elements& rangeElements, AlignConstants& alignConstants) const ;
+    void getAlignmentConstants(const Elements& elements, AlignConstants& alignConstants) const ;
     void fillIterProfile( const HistoID& id,const std::string& title,size_t numiter,size_t iter,double val, double err=0) const ;
+    void addDaughterDerivatives(Al::Equations& equations) const ;
+
   private:
     std::string                m_matrixSolverToolName;          ///< Name of linear algebra solver tool
     IAlignSolvTool*            m_matrixSolverTool;              ///< Pointer to linear algebra solver tool
     IGetElementsToBeAligned*   m_elementProvider ;
     IAlignConstraintTool*      m_constrainttool ;
+    IAlignConstraintTool*      m_chisqconstrainttool ;
     size_t                     m_minNumberOfHits ;              ///< Minimum number of hits for an Alignable to be aligned
     bool                       m_usePreconditioning ;           ///< Precondition the system of equations before calling solver
     std::string                m_logFileName ;
@@ -90,6 +93,10 @@ namespace Al
     // Get the constraint tool, also from the toolsvc
     m_constrainttool = tool<IAlignConstraintTool>("Al::AlignConstraintTool") ;
     if (!m_constrainttool) return Error("==> Failed to retrieve constraint tool!", StatusCode::FAILURE);
+
+    // Get the constraint tool, also from the toolsvc
+    m_chisqconstrainttool = tool<IAlignConstraintTool>("Al::AlignChisqConstraintTool") ;
+    if (!m_chisqconstrainttool) return Error("==> Failed to retrieve chisq constraint tool!", StatusCode::FAILURE);
     
     //Get matrix solver tool
     //m_matrixSolverTool = tool<IAlignSolvTool>(m_matrixSolverToolName, "MatrixSolver", this);
@@ -123,9 +130,9 @@ namespace Al
     // now set the scales for the elements
     int iElem(0u) ;
     for (Elements::const_iterator it = elements.begin(); it != elements.end(); ++it, ++iElem) {
-      int offset = it->activeParOffset() ;
+      int offset = (*it)->activeParOffset() ;
       if ( 0<=offset ) {
-	size_t ndof = (*it).dofMask().nActive() ;
+	size_t ndof = (*it)->dofMask().nActive() ;
 	size_t N = equations.element(iElem).numHits() ;
 	for (ipar = offset; ipar< offset+ndof; ++ipar) {
 	  assert( ipar < size ) ;
@@ -194,6 +201,115 @@ namespace Al
     h1->SetBinError(iter+1, error);
   }
 
+  void AlignUpdateTool::addDaughterDerivatives(Al::Equations& equations) const
+  {
+    // Propagate information accumulated for daughters back to
+    // parents.
+
+    // Loop over the elements in reverse order. (Order is very
+    // important: We do lowest in hierarchy first, such that it also
+    // works for grandparents.)
+    Elements  sortedelements = m_elementProvider->elements() ;
+    for (Elements::reverse_iterator ielem = sortedelements.rbegin(); 
+	 sortedelements.rend() != ielem ; ++ielem) 
+      if( !(*ielem)->daughters().empty() ) {
+	info() << "Accumulating daughter data for element: "
+	       << (*ielem)->name() << endreq ;
+	// Important note: we accumulate the correlations first inside
+	// the parent element. If that means that the correlation gets
+	// in the wrong place (e.g. below the diagonal rather than
+	// above), then we fix that only in the end. 
+
+	ElementData& elementdata = const_cast<ElementData&>(equations.element((*ielem)->index())) ;
+	// the transpose is because we once made mistake to use a column vector for the derivative.
+	Gaudi::Matrix6x6 parentJacobian = ROOT::Math::Transpose( (*ielem)->jacobian() ) ;
+	// now accumulate information from all daughters. save the jacobians.
+	std::vector< Gaudi::Matrix6x6 > daughterToMotherJacobians ;
+	daughterToMotherJacobians.reserve( (*ielem)->daughters().size() ) ;
+	std::vector<int> daughterIndices( equations.elements().size(), -1 ) ;
+	size_t dauindex(0) ;
+	for(AlignmentElement::DaughterContainer::const_iterator idau = (*ielem)->daughters().begin() ;
+	    idau != (*ielem)->daughters().end(); ++idau, ++dauindex) {
+	  // 1. create the jacobian
+	  int ierr ;
+	  Gaudi::Matrix6x6 totalJacobian = parentJacobian * 
+	    ROOT::Math::Transpose( (*idau)->jacobian().Inverse(ierr)) ;
+	  
+	  // 2. add everything from the daughter, except for its
+	  // correlations: those we'll do below all at once.
+	  const ElementData& daudata = equations.element( (*idau)->index() ) ;
+	  ElementData transformeddaudata = daudata ;
+	  transformeddaudata.m_d2Chi2DAlphaDBeta.clear() ;
+	  transformeddaudata.transform( totalJacobian ) ;
+	  elementdata.add( transformeddaudata ) ;
+
+	  // 3. add the correlation with the daughter
+	  elementdata.m_d2Chi2DAlphaDBeta[ (*idau)->index() ] += totalJacobian * daudata.d2Chi2DAlpha2() ;
+
+	  // save the jacobian for when we treat correlations
+	  daughterToMotherJacobians.push_back( totalJacobian ) ;
+
+	  // save index such that we can easily navigate to the daughters
+	  daughterIndices[(*idau)->index()] = dauindex ;
+	}
+
+	// 4. Add all off-diagonal terms that were not added yet. This is quite tricky.
+	size_t leftindex(0) ;
+	for( Al::Equations::ElementContainer::const_iterator jdata = equations.elements().begin() ;
+	     jdata != equations.elements().end(); ++jdata, ++leftindex)
+	  if( leftindex != (*ielem)->index() ) { // skip the mother itself
+	    for( Al::ElementData::OffdiagonalContainer::const_iterator jelem = jdata->d2Chi2DAlphaDBeta().begin() ;
+		 jelem != jdata->d2Chi2DAlphaDBeta().end(); ++jelem) {
+	      size_t rightindex = jelem->first ;
+	      assert(rightindex != (*ielem)->index()) ;
+	      int leftdaughter  = daughterIndices[leftindex] ;
+	      int rightdaughter = daughterIndices[rightindex] ;
+	      if( leftdaughter>=0 ) {
+		elementdata.m_d2Chi2DAlphaDBeta[ rightindex ] +=
+		  daughterToMotherJacobians[ leftdaughter ] * jelem->second ;
+	      }
+	      if( rightdaughter>=0 ) {
+		elementdata.m_d2Chi2DAlphaDBeta[ leftindex ] +=
+		  daughterToMotherJacobians[ rightdaughter ] * ROOT::Math::Transpose( jelem->second ) ;
+	      }
+	      // the elements where both are daughters need to be treated seperately
+ 	      if( leftdaughter>=0 && rightdaughter>=0) {
+		// Add this term to the diagonal. Note that we
+		// actually have this term twice. Its transpose is
+		// hidden because we only keep lowerdiagonal. We
+		// therefore symmetrize it as follows:
+		Gaudi::Matrix6x6 tmpasym = 
+		  daughterToMotherJacobians[ leftdaughter ] * jelem->second *
+		  ROOT::Math::Transpose( daughterToMotherJacobians[ rightdaughter ] ) ;
+		Gaudi::SymMatrix6x6 tmpsym ;
+		ROOT::Math::AssignSym::Evaluate(tmpsym, tmpasym + ROOT::Math::Transpose(tmpasym)) ;
+		elementdata.m_d2Chi2DAlpha2 += tmpsym ;
+	      }
+	    }
+	  }
+	
+	// now swap any element that we added with wrongly ordered index.
+	Al::ElementData::OffdiagonalContainer keepelements ;	
+	for( Al::ElementData::OffdiagonalContainer::const_iterator jelem = elementdata.d2Chi2DAlphaDBeta().begin() ;
+	     jelem != elementdata.d2Chi2DAlphaDBeta().end(); ++jelem)
+	  if( jelem->first < (*ielem)->index() ) {
+	    //std::cout << "found wrongly ordered element: "
+	    // << (*ielem)->index() << " " << jelem->first << std::endl ;
+	    equations.element( jelem->first ).m_d2Chi2DAlphaDBeta[ (*ielem)->index() ] +=
+	      ROOT::Math::Transpose(jelem->second) ;
+	  } else if( jelem->first == (*ielem)->index() ) {
+	    error() << "VERY serious problem in addDaughterData. This still needs some development." 
+		    << jelem->first << " " << (*ielem)->index() << endreq ;
+	    // just symmetrize and add? (will only work if it is
+	    // actually symmetric :-) First understand again how this
+	    // could occur.
+	  } else {
+	    keepelements.insert( *jelem ) ;
+	  }
+	elementdata.m_d2Chi2DAlphaDBeta = keepelements ;
+      }
+  }
+  
   StatusCode AlignUpdateTool::process( const Al::Equations& equations,
 				       size_t iteration,
 				       size_t maxiteration) const
@@ -207,7 +323,7 @@ namespace Al
     
     info() << "\n";
     info() << "==> iteration " << iteration << " : Initial alignment conditions  : [";
-    Elements elements = m_elementProvider->rangeElements() ;
+    const Elements& elements = m_elementProvider->elements() ;
     std::vector<double> deltas;
     deltas.reserve(elements.size()*6u);  
     getAlignmentConstants(elements, deltas);
@@ -232,6 +348,12 @@ namespace Al
 	       << (equations.totalVertexNumDofs()>0 ? equations.totalVertexChiSquare() / equations.totalVertexNumDofs() : 0.0 ) << std::endl
 	       << "Used " << equations.numHits() << " hits for alignment" << std::endl
 	       << "Total number of hits in external detectors: " << equations.numExternalHits() << std::endl;
+
+    // if there are mother-daughter relations, the information from
+    // the daugters must be transformed to the mothers. This is kind
+    // of tricky. it should also be done only once!
+    addDaughterDerivatives( const_cast<Al::Equations&>(equations) ) ;
+    
     
     if (printDebug()) { 
       size_t index(0) ;
@@ -250,11 +372,11 @@ namespace Al
     // enough hits'.
     size_t numParameters(0), numExcluded(0) ;
     for (Elements::const_iterator it = elements.begin(); it != elements.end(); ++it ) {
-      if (equations.element(it->index()).numHits() >= m_minNumberOfHits) {
-	it->setActiveParOffset( numParameters ) ;
-	numParameters += it->dofMask().nActive() ;
+      if (equations.element((*it)->index()).numHits() >= m_minNumberOfHits) {
+	(*it)->setActiveParOffset( numParameters ) ;
+	numParameters += (*it)->dofMask().nActive() ;
       } else {
-	it->setActiveParOffset(-1) ;
+	(*it)->setActiveParOffset(-1) ;
 	++numExcluded ;
       }
     }
@@ -268,7 +390,7 @@ namespace Al
       int iactive, jactive ;
       for( Al::Equations::ElementContainer::const_iterator ieq = equations.elements().begin() ;
 	   ieq != equations.elements().end(); ++ieq, ++index ) {
-	const AlignmentElement& ielem = elements[index] ;
+	const AlignmentElement& ielem = *(elements[index]) ;
 	// 1st derivative and diagonal 2nd derivative. note that we correct here for the fraction of outliers
 	double outliercorrection = 1./ieq->fracNonOutlier() ;
 	for(unsigned ipar=0; ipar<Derivatives::kCols; ++ipar) 
@@ -283,8 +405,11 @@ namespace Al
 	for( Al::ElementData::OffdiagonalContainer::const_iterator im = ieq->d2Chi2DAlphaDBeta().begin() ;
 	     im != ieq->d2Chi2DAlphaDBeta().end(); ++im ) {
 	  // guaranteed: index < jndex .. that's how we fill it. furthermore, row==i, col==j
-	  assert(index < im->first) ;
-	  const AlignmentElement& jelem = elements[im->first] ;
+	  if( !(index< im->first) ) {
+	    error() << index << " " << im->first << endreq ;
+	    assert(index < im->first) ;
+	  }
+	  const AlignmentElement& jelem = *(elements[im->first]) ;
 	  for(unsigned ipar=0; ipar<Derivatives::kCols; ++ipar) 
 	    if( 0<= ( iactive = ielem.activeParIndex(ipar) ) ) 
 	      for(unsigned jpar=0; jpar<Derivatives::kCols; ++jpar) 
@@ -297,10 +422,12 @@ namespace Al
       
       // add the constraints
       size_t numConstraints = m_constrainttool->addConstraints(elements,equations,halfDChi2dX,halfD2Chi2dX2) ;
+      size_t numChisqConstraints = m_chisqconstrainttool->addConstraints(elements,equations,halfDChi2dX,halfD2Chi2dX2) ;
       
       logmessage << "Number of alignables with insufficient statistics: " << numExcluded << std::endl
-		 << "Number of constraints: "                             << numConstraints << std::endl
-		 << "Number of active parameters: "                       << numParameters << std::endl ;
+		 << "Number of lagrange constraints: "                    << numConstraints << std::endl
+		 << "Number of chisq constraints:    "                    << numChisqConstraints << std::endl
+		 << "Number of active parameters:    "                    << numParameters << std::endl ;
       
       int numDoFs = halfDChi2dX.size() ;
       if (numDoFs < 50 ) {
@@ -332,21 +459,22 @@ namespace Al
 	//m_nordAlignChi2vsIterHisto->fill(iteration, deltaChi2 /numParameters);
 	
 	m_constrainttool->printConstraints(solution, covmatrix, logmessage) ;
+	m_chisqconstrainttool->printConstraints(solution, covmatrix, logmessage) ;
 	
 	if (printDebug()) debug() << "==> Putting alignment constants" << endmsg;
 	size_t iElem(0u) ;
 	double totalLocalDeltaChi2(0) ; // another figure of merit of the size of the misalignment.
-	for (Elements::iterator it = elements.begin(); it != elements.end(); ++it, ++iElem) {
+	for (Elements::const_iterator it = elements.begin(); it != elements.end(); ++it, ++iElem) {
 	  const Al::ElementData& elemdata = equations.element(iElem) ;
-	  logmessage << "Alignable: " << it->name() << std::endl
+	  logmessage << "Alignable: " << (*it)->name() << std::endl
 		     << "Number of hits/outliers seen: " << elemdata.numHits() << " "
 		     << elemdata.numOutliers() << std::endl ;
-	  int offset = it->activeParOffset() ;
+	  int offset = (*it)->activeParOffset() ;
 	  if( offset < 0 ) {
 	    logmessage << "Not enough hits for alignment. Skipping update." << std::endl ;
 	  } else {
-	    AlParameters delta( solution, covmatrix, halfD2Chi2dX2, it->dofMask(), offset ) ;
-	    AlParameters refdelta = it->currentActiveDelta() ;
+	    AlParameters delta( solution, covmatrix, halfD2Chi2dX2, (*it)->dofMask(), offset ) ;
+	    AlParameters refdelta = (*it)->currentActiveTotalDelta() ;
 	    //logmessage << delta ;
 	    for(unsigned int iactive = 0u; iactive < delta.dim(); ++iactive) 
 	      logmessage << std::setw(6)  << delta.activeParName(iactive) << ":" 
@@ -373,11 +501,11 @@ namespace Al
 	    
 	    
 	    // need const_cast because loki range givess access only to const values 
-	    StatusCode sc = (const_cast<AlignmentElement&>(*it)).updateGeometry(delta) ;
-	    if (!sc.isSuccess()) error() << "Failed to set alignment condition for " << it->name() << endmsg ;
+	    StatusCode sc = (const_cast<AlignmentElement*>(*it))->updateGeometry(delta) ;
+	    if (!sc.isSuccess()) error() << "Failed to set alignment condition for " << (*it)->name() << endmsg ;
 	   
-	    std::string name = it->name(); 
-	    std::string dirname =  "element" + boost::lexical_cast<std::string>( it->index() ) + "/"; //name + "/" ;
+	    std::string name = (*it)->name(); 
+	    std::string dirname =  "element" + boost::lexical_cast<std::string>( (*it)->index() ) + "/"; //name + "/" ;
 	    fillIterProfile( dirname + boost::lexical_cast<std::string>(10000u),
 			     "Delta Tx vs iteration for " + name, 
 			     maxiteration, iteration,  delta.translation()[0], delta.errTranslation()[0]);
@@ -428,13 +556,13 @@ namespace Al
     return sc ;
   }
     
-  void AlignUpdateTool::getAlignmentConstants(const Elements& rangeElements, AlignConstants& alignConstants) const {
-    alignConstants.reserve(6*rangeElements.size()); // 6 constants * num elements
-    for (Elements::const_iterator i = rangeElements.begin(); i != rangeElements.end(); ++i) {
-      if (printDebug()) debug() << "Getting alignment constants for " << (*i) << endmsg;
+  void AlignUpdateTool::getAlignmentConstants(const Elements& elements, AlignConstants& alignConstants) const {
+    alignConstants.reserve(6*elements.size()); // 6 constants * num elements
+    for (Elements::const_iterator i = elements.begin(); i != elements.end(); ++i) {
+      if (printDebug()) debug() << "Getting alignment constants for " << (**i) << endmsg;
       /// Get translations and rotations
-	const std::vector<double>& translations = i->deltaTranslations();
-	const std::vector<double>& rotations    = i->deltaRotations();
+	const std::vector<double>& translations = (*i)->deltaTranslations();
+	const std::vector<double>& rotations    = (*i)->deltaRotations();
 	/// Insert intitial constants (per element)
 	  alignConstants.insert(alignConstants.end(), translations.begin(), translations.end());
 	  alignConstants.insert(alignConstants.end(), rotations.begin()   , rotations.end()   );

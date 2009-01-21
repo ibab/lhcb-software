@@ -1,4 +1,4 @@
-// $Id: GetElementsToBeAligned.cpp,v 1.22 2008-09-10 13:09:33 wouter Exp $
+// $Id: GetElementsToBeAligned.cpp,v 1.23 2009-01-21 16:27:19 wouter Exp $
 // Include files
 
 //from STL
@@ -25,6 +25,7 @@
 #include "boost/lambda/construct.hpp"
 #include "boost/assign/std/vector.hpp"
 #include "boost/assign/list_of.hpp"
+#include "boost/regex.hpp"
 
 // // local
 #include "GetElementsToBeAligned.h"
@@ -44,7 +45,6 @@ GetElementsToBeAligned::GetElementsToBeAligned( const std::string& type,
   : GaudiTool ( type, name , parent ),
     m_useLocalFrame(true),
     m_elemsToBeAligned(),
-    m_rangeElements(),
     m_elementMap()
 {
   declareInterface<IGetElementsToBeAligned>(this);
@@ -91,43 +91,38 @@ StatusCode GetElementsToBeAligned::initialize() {
   info() << "   Using the following regular expressions: " << endmsg;
 
   size_t index(0) ;
+  typedef std::vector<AlignmentElement*> NonConstElements ;
+  NonConstElements alignelements ;
   for ( std::vector<std::string>::const_iterator i = m_elemsToBeAligned.begin(), iEnd = m_elemsToBeAligned.end(); 
         i != iEnd; ++i ) {
     /// Split string into path to det elem regex and dofs to align
     bool groupElems = false;
-    std::string path = "", dofs = "";
+    std::string groupname, path, dofs;
 
-    if ((*i).find(":") != std::string::npos) {
-      /// first : second : third
-      /// tokens of strings
-      std::vector<std::string> tokens;
-      Tokenizer split((*i), Separator(" :"));
-      for (Tokenizer::iterator j = split.begin(), jEnd = split.end(); j != jEnd; ++j) tokens.push_back((*j));
+    // first : second : third
+    // tokens of strings
+    std::vector<std::string> tokens;
+    Tokenizer split((*i), Separator(" :"));
+    for (Tokenizer::iterator j = split.begin(), jEnd = split.end(); j != jEnd; ++j) tokens.push_back((*j));
     
-      groupElems = tokens.at(0).find("Group") != std::string::npos ? true : false;
-
-      if (tokens.size() > 3u) {
-        error() << "==> There is something wrong with the specified property Elements" << endmsg;
-        return StatusCode::FAILURE;
-      }
-      
-      if (groupElems && tokens.size() == 3u) {
-        path = tokens.at(1);
-        dofs = tokens.at(2);
-      }
-      
-      if (tokens.size() == 2u) {
-        if (groupElems) {
-          path = tokens.at(1);
-        } else {
-          path = tokens.at(0);
-          dofs = tokens.at(1);
-        }
-      }
-    } else path = (*i);
+    if( tokens.size()==2 ) {
+	path = tokens.at(0);
+        dofs = tokens.at(1);
+    } else if (tokens.size()==3) {
+      groupElems = true ;
+      path = tokens.at(1) ;
+      dofs = tokens.at(2) ;
+      groupname = tokens.at(0) ;
+      if( groupname.find("Group") != std::string::npos) groupname = path ;
+    } else {
+      error() << "==> There is something wrong with the specified property Elements: " << std::endl 
+	      << *i << endmsg;
+      return StatusCode::FAILURE;
+    }
     
     if ( msgLevel(MSG::DEBUG) ) {
       debug() << "Group elements   : " << groupElems << endmsg;
+      if(groupElems) debug() << "Group name       : " << groupname << endmsg;
       debug() << "Path to detelems : " << path       << endmsg;
       debug() << "DoFs to align    : " << dofs       << endmsg;
     }
@@ -189,34 +184,75 @@ StatusCode GetElementsToBeAligned::initialize() {
     }
     
     /// Loop over elements and create AlignmentElements
-    if (groupElems) m_alignElements.push_back(AlignmentElement(detelements, index++, dofMask,m_useLocalFrame));
-    else std::transform(detelements.begin(), detelements.end(), std::back_inserter(m_alignElements),
-                        boost::lambda::bind(boost::lambda::constructor<AlignmentElement>(), 
-                                            boost::lambda::_1, 
-                                            boost::lambda::var(index)++, 
-                                            dofMask,
-                                            m_useLocalFrame));
+    if (groupElems) 
+      alignelements.push_back(new AlignmentElement(groupname,
+						   detelements, index++, dofMask,m_useLocalFrame));
+    else
+      for(std::vector<const DetectorElement*>::iterator ielem = detelements.begin() ;
+	  ielem != detelements.end(); ++ielem)
+	alignelements.push_back(new AlignmentElement(*ielem, index++, dofMask,m_useLocalFrame));
   }
-      
-  m_rangeElements = ElementRange(m_alignElements.begin(), m_alignElements.end());
+  
+  // sort the elements by hierarchy. currently, this just follows the
+  // name of the first associated detector element.
+  std::stable_sort( alignelements.begin(), alignelements.end(), ElementSorter()) ;
+  
+  // make sure to reset the indices after sorting
+  index = 0 ;
+  for (NonConstElements::iterator ielem = alignelements.begin(); 
+       ielem != alignelements.end(); ++ielem, ++index) 
+    (*ielem)->setIndex(index) ;
+  
+  // set up the mother-daughter relations. This only works once the
+  // elements are sorted. We start with the lowest level elements, and
+  // work our way up the tree.
+  for (NonConstElements::reverse_iterator ielem = alignelements.rbegin(); 
+       alignelements.rend() != ielem ; ++ielem) {
+    bool found = false ;
+    NonConstElements::reverse_iterator jelem = ielem ;
+    for (++jelem ; jelem != alignelements.rend()&&!found; ++jelem) 
+      // is 'i' a daughter of 'j'
+      if( (*jelem)->isOffspring( **ielem ) ) {
+	(const_cast<AlignmentElement*>((*jelem)))->addDaughter( **ielem) ;
+	found = true ;
+      }
+  }
+  
+  // now fill the element map. this map is used to assign a certain
+  // hit to a certain alignment element. again, it is important that
+  // alignment elements are sorted: we add the hit only to the lowest
+  // level element in the tree.
+  for (NonConstElements::const_iterator ielem = alignelements.begin(); 
+       ielem != alignelements.end(); ++ielem) {
+    AlignmentElement::ElementContainer allelements = (*ielem)->elementsInTree() ;
+    for (AlignmentElement::ElementContainer::const_iterator idetelem = allelements.begin() ; 
+	 idetelem != allelements.end(); ++idetelem)
+      m_elementMap[*idetelem] = *ielem ;
+  }
+
+  // copy the non-const elements into the local container.
+  m_elements.insert(m_elements.end(),alignelements.begin(),alignelements.end()) ;
+
   /// Print list of detector elements that are going to be aligned
   
-  info() << "   Going to align " << m_rangeElements.size() << " detector elements:" << endmsg;
-  for( ElementRange::const_iterator i = m_rangeElements.begin() ; i != m_rangeElements.end(); ++i) info() <<  "        " << (*i) << endmsg;    
+  info() << "   Going to align " << m_elements.size() << " detector elements:" << endmsg;
+  for( Elements::const_iterator i = m_elements.begin() ; i != m_elements.end(); ++i) 
+    info() <<  "        " << (**i) << endmsg;    
 
-  // Fill the element map
-  for (Elements::const_iterator ialignable = m_alignElements.begin(); ialignable != m_alignElements.end(); ++ialignable) {
-    AlignmentElement::ElementContainer allelements = (*ialignable).elementsInTree() ;
-    for (AlignmentElement::ElementContainer::const_iterator ielement = allelements.begin() ; 
-	 ielement != allelements.end(); ++ielement) {
-      m_elementMap[*ielement] = &(*ialignable) ;
-    }
-  }
   info() << "   Number of elements in map: " << m_elementMap.size() << endmsg ;
   
   info() << "==============================================================" << endmsg;
 
   return sc;
+}
+
+StatusCode GetElementsToBeAligned::finalize()
+{
+  for (Elements::const_iterator ialignable = m_elements.begin(); 
+       ialignable != m_elements.end(); ++ialignable) 
+    delete *ialignable ;
+  m_elements.clear() ;
+  return GaudiTool::finalize() ;
 }
 
 
@@ -270,19 +306,17 @@ StatusCode GetElementsToBeAligned::findElements(const std::string& path,
   alignelements.clear() ;
   boost::regex ex ;
   ex.assign( path, boost::regex_constants::icase) ;
-  for( Elements::const_iterator ialelem = m_alignElements.begin() ; 
-       ialelem != m_alignElements.end() ; ++ialelem) {
-    bool match=false ;
-    for( AlignmentElement::ElementContainer::const_iterator idetelem = ialelem->detelements().begin() ;
-	 idetelem != ialelem->detelements().end() && !match ; ++idetelem) 
-      match = boost::regex_match((*idetelem)->name(),ex) ;
-    if(match) alignelements.push_back( &(*ialelem) ) ;
+  for( Elements::const_iterator ialelem = m_elements.begin() ; 
+       ialelem != m_elements.end() ; ++ialelem) {
+    bool match = (*ialelem)->name() == path || boost::regex_match((*ialelem)->name(),ex) ;
+    if(!match)
+      // if any detector element matches, this is also fine
+      for( AlignmentElement::ElementContainer::const_iterator idetelem = (*ialelem)->detelements().begin() ;
+	   idetelem != (*ialelem)->detelements().end() && !match ; ++idetelem) 
+	match = boost::regex_match((*idetelem)->name(),ex) ;
+    if(match) alignelements.push_back( *ialelem ) ;
   }
   return StatusCode::SUCCESS ;
-}
-
-const IGetElementsToBeAligned::ElementRange& GetElementsToBeAligned::rangeElements() const {
-  return m_rangeElements;
 }
 
 const AlignmentElement* GetElementsToBeAligned::findElement(const LHCb::Measurement& meas) const {
