@@ -4,6 +4,12 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+!============ Presenter v0r15 2009-01-20 =============
+! 2009-01-20
++ fixed histogram selection
++ preliminary offline editor mode using file as histogram svc
++ partition support for EFF
+
 !============ Presenter v0r14 2008-11-24 =============
 ! 2008-11-24
 + page comments and histogram descriptions
