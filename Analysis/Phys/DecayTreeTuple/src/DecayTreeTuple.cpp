@@ -1,14 +1,6 @@
-// $Id: DecayTreeTuple.cpp,v 1.11 2009-01-21 08:50:26 pkoppenb Exp $
+// $Id: DecayTreeTuple.cpp,v 1.12 2009-01-21 09:02:49 pkoppenb Exp $
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-#include "Kernel/IDecayFinder.h"
-
-#include "Kernel/IParticleTupleTool.h"
-#include "Kernel/IMCParticleTupleTool.h"
-#include "Kernel/IEventTupleTool.h"
-#include "TupleToolDecay.h"
 
 #include "boost/lexical_cast.hpp" 
 #include "Kernel/Escape.h"
