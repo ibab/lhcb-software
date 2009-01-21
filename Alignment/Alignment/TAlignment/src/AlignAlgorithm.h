@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.h,v 1.33 2008-08-01 20:33:28 wouter Exp $
+// $Id: AlignAlgorithm.h,v 1.34 2009-01-21 16:22:48 wouter Exp $
 #ifndef TALIGNMENT_ALIGNALGORITHM_H
 #define TALIGNMENT_ALIGNALGORITHM_H 1
 
@@ -66,7 +66,6 @@ class AlignAlgorithm : public GaudiHistoAlg, virtual public IIncidentListener {
 public:
   /// Some handy typedefs
   typedef IGetElementsToBeAligned::Elements                        Elements;
-  typedef IGetElementsToBeAligned::ElementRange                    ElementRange ;
   typedef std::vector<double>                                      AlignConstants;
   typedef std::vector<LHCb::Node*>                                 Nodes;
   typedef Gaudi::Matrix1x6                                         Derivatives;
@@ -98,7 +97,7 @@ public:
   * @param elements flat vector of detector elements, i.e. std::vector<DetectorElements>
   * @param alignConstants reference to a flat vector of alignment constants, i.e. std::vector<double>
   */
-  void getAlignmentConstants(const ElementRange& rangeElements, AlignConstants& alignConstants) const;
+  void getAlignmentConstants(const Elements& elements, AlignConstants& alignConstants) const;
 
 protected:
   
@@ -112,7 +111,6 @@ private:
   size_t                            m_nIterations;                   ///< Number of iterations
   size_t                            m_nTracks;                       ///< Number of tracks used
   size_t                            m_covFailure;                    ///< Number of covariance calculation failures
-  ElementRange                      m_elements;                      ///< Detector elements
   IGetElementsToBeAligned*          m_align;                         ///< Pointer to tool to align detector
   std::string                       m_tracksLocation;                ///< Tracks for alignment
   std::string                       m_vertexLocation;                ///< Vertices for alignment

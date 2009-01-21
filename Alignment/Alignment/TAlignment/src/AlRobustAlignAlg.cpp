@@ -52,7 +52,6 @@ class AlRobustAlignAlg : public GaudiHistoAlg
 public:
   /// Some handy typedefs
   typedef IGetElementsToBeAligned::Elements     Elements;
-  typedef IGetElementsToBeAligned::ElementRange ElementRange ;
 
   /// Standard constructor
   AlRobustAlignAlg( const std::string& name, ISvcLocator* pSvcLocator );
@@ -116,7 +115,7 @@ StatusCode AlRobustAlignAlg::initialize() {
   if(!m_othitcreator.retrieve().isSuccess()) 
     return Error("==> Failed to retrieve OT hit creator",StatusCode::FAILURE);
 
-  m_histos.resize( m_elementtool->rangeElements().size() ) ;
+  m_histos.resize( m_elementtool->elements().size() ) ;
 
   return StatusCode::SUCCESS;
 }

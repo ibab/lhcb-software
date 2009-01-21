@@ -1,4 +1,4 @@
-// $Id: TrackFilterAlg.cpp,v 1.12 2008-05-30 13:29:12 lnicolas Exp $
+// $Id: TrackFilterAlg.cpp,v 1.13 2009-01-21 16:24:20 wouter Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -93,7 +93,6 @@ StatusCode TrackFilterAlg::initialize() {
 
   m_elementsToBeAligned = tool<IGetElementsToBeAligned>("GetElementsToBeAligned", this);
   if (!m_elementsToBeAligned) return Error("==> Failed to retrieve detector selector tool!", StatusCode::FAILURE);
-  m_rangeElements = m_elementsToBeAligned->rangeElements();
   
   return StatusCode::SUCCESS;
 }

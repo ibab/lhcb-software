@@ -1,4 +1,4 @@
-// $Id: TrackFilterAlg.h,v 1.6 2008-05-30 13:29:12 lnicolas Exp $
+// $Id: TrackFilterAlg.h,v 1.7 2009-01-21 16:24:20 wouter Exp $
 #ifndef TALIGNMENT_TRACKFILTERALG_H 
 #define TALIGNMENT_TRACKFILTERALG_H 1
 
@@ -39,8 +39,6 @@ public:
   /// Some handy typedefs
   typedef std::vector<LHCb::LHCbID> LHCBIDS;
   typedef std::map<std::string, boost::function<bool (LHCb::LHCbID)> > LHCbDetChecks;
-  typedef std::pair<std::vector<AlignmentElement>::const_iterator,
-                    std::vector<AlignmentElement>::const_iterator> Range;
   
   /// Standard constructor
   TrackFilterAlg( const std::string& name, ISvcLocator* pSvcLocator );
@@ -74,7 +72,6 @@ private:
   LHCbDetChecks                             m_lhcbDetChecks;         ///< Map LHCb id det checks methods  
   ITrackSelector*                           m_trackSelector;         ///< Pointer to track selector tool for alignment
   IGetElementsToBeAligned*                  m_elementsToBeAligned;
-  Range                                     m_rangeElements;
 };
 
 #endif // TALIGNMENT_TRACKFILTERALG_H

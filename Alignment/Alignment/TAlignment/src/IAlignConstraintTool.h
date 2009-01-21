@@ -16,7 +16,7 @@ namespace Al
   class IAlignConstraintTool : virtual public IAlgTool
   {
   public:
-    typedef IGetElementsToBeAligned::ElementRange Elements ;
+    typedef IGetElementsToBeAligned::Elements Elements ;
 
     // Retrieve interface ID
     static const InterfaceID& interfaceID() { return IID_IAlignConstraintTool ; }

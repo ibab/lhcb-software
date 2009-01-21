@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.53 2009-01-13 15:56:46 wouter Exp $
+// $Id: AlignAlgorithm.cpp,v 1.54 2009-01-21 16:22:49 wouter Exp $
 // Include files
 // from std
 // #include <utility>
@@ -66,7 +66,6 @@ AlignAlgorithm::AlignAlgorithm( const std::string& name,
     m_nIterations(0u),
     m_nTracks(0u),
     m_covFailure(0u),
-    m_elements(),
     m_align(0),
     m_projSelector(0),
     m_trackresidualtool("Al::TrackResidualTool"),
@@ -118,13 +117,13 @@ StatusCode AlignAlgorithm::initialize() {
   if ( sc.isFailure() ) return sc;
 
   /// Get range  detector elements
-  m_elements = m_align->rangeElements();
+  const Elements& elements = m_align->elements();
   
   if (printDebug()) {
-    debug() << "==> Got " << m_elements.size() << " elements to align!" << endmsg;
-    for(ElementRange::const_iterator i = m_elements.begin(); i!= m_elements.end(); ++i) {
-      const AlParameters::DofMask& ownDoFMask = i->dofMask();
-      debug() <<  "        " << (*i) << endmsg;
+    debug() << "==> Got " << elements.size() << " elements to align!" << endmsg;
+    for(Elements::const_iterator i = elements.begin(); i!= elements.end(); ++i) {
+      const AlParameters::DofMask& ownDoFMask = (*i)->dofMask();
+      debug() <<  "        " << (**i) << endmsg;
       const std::vector<std::string> dofs = boost::assign::list_of("Tx")("Ty")("Tz")("Rx")("Ry")("Rz");
       debug() << "DOFs: ";
       for (AlParameters::DofMask::const_iterator j = ownDoFMask.begin(), jEnd = ownDoFMask.end(); j != jEnd; ++j) {
@@ -134,9 +133,9 @@ StatusCode AlignAlgorithm::initialize() {
     }
   }
   
-  m_equations = new Al::Equations(m_elements.size());
+  m_equations = new Al::Equations(elements.size());
   m_equations->clear() ;
-  assert( m_elements.size() == m_equations->nElem() ) ;
+  assert( elements.size() == m_equations->nElem() ) ;
   for(std::vector<std::string>::const_iterator ifile = m_inputDataFileNames.begin() ; 
       ifile != m_inputDataFileNames.end(); ++ifile) {
     Al::Equations tmp(m_equations->nElem()) ;
@@ -160,8 +159,8 @@ StatusCode AlignAlgorithm::initialize() {
                                       +100.00, 100);
   m_trackNorChi2Histo        = book2D(11, "Normalised track chi2 distribution vs iteration", 
                                       -0.5, m_nIterations-0.5, m_nIterations,0,20) ;
-  for(ElementRange::const_iterator i = m_elements.begin(); i!= m_elements.end(); ++i) 
-    m_elemHistos.push_back( new AlElementHistos(*this,*i,m_nIterations) ) ;
+  for(Elements::const_iterator i = elements.begin(); i!= elements.end(); ++i) 
+    m_elemHistos.push_back( new AlElementHistos(*this,**i,m_nIterations) ) ;
   m_resetHistos = false ;
 
   info() << "Use correlations = " << m_correlation << endreq ;
@@ -357,7 +356,7 @@ bool AlignAlgorithm::accumulate( const Al::Residuals& residuals )
 	const Gaudi::TrackSymMatrix& C = ires->node().state().covariance() ;
 	const Gaudi::TrackProjectionMatrix& H = ires->node().projectionMatrix() ;
 	const ROOT::Math::SMatrix<double,5,1> normalizeddrdstate = C*Transpose(H) / ires->V() ;
-	elementdata.m_dStateDAlpha += normalizeddrdstate * deriv ;
+	elementdata.m_dStateDAlpha += ROOT::Math::Transpose(normalizeddrdstate * deriv) ;
       }
 
       // add V^{-1} R V^{-1} to the 2nd derivative for the offdiagonal entries
