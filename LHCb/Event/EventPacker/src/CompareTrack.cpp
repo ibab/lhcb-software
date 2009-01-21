@@ -1,4 +1,4 @@
-// $Id: CompareTrack.cpp,v 1.5 2008-12-16 16:18:51 cattanem Exp $
+// $Id: CompareTrack.cpp,v 1.6 2009-01-21 14:17:53 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -145,7 +145,7 @@ void CompareTrack::compareStates ( const LHCb::State* oSta, const LHCb::State* t
     if ( 5.e-5  < fabs( oDiag[1] - tDiag[1] ) ) isOK = false;
     if ( 5.e-8  < fabs( oDiag[2] - tDiag[2] ) ) isOK = false;
     if ( 5.e-8  < fabs( oDiag[3] - tDiag[3] ) ) isOK = false;
-    if ( 5.     < fabs( oDiag[4]*oP*oP - tDiag[4]*tP*tP ) ) isOK = false;
+    if ( 5.     < fabs( oDiag[4]*oP*1.e5 - tDiag[4]*tP*1.e5 ) ) isOK = false;
 
     std::vector<double> oFrac;
     oFrac.push_back(  oSta->covariance()(1,0) / oDiag[1] / oDiag[0] );

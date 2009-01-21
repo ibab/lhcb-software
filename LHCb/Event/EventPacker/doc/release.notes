@@ -4,6 +4,10 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2009-01-21 - Olivier Callot
+ - Change the coding of cov_44 in track state, to be dp/p with a scale factor.
+   Affects PackTrack.cpp, UnpackTrack.cpp and CompareTrack.cpp
+
 !============================ EventPacker v1r1 2009-01-08 ====================
 ! 2008-12-16 - Marco Cattaneo
  - Fix a loop test condition in CompareTrack.cpp

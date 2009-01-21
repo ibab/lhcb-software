@@ -1,4 +1,4 @@
-// $Id: UnpackTrack.cpp,v 1.4 2008-12-09 08:13:23 ocallot Exp $
+// $Id: UnpackTrack.cpp,v 1.5 2009-01-21 14:17:53 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -97,7 +97,7 @@ void UnpackTrack::convertState ( const LHCb::PackedState& src, LHCb::Track* tra 
   double err1 = pack.position( src.cov_11  );
   double err2 = pack.slope(    src.cov_22  );
   double err3 = pack.slope(    src.cov_33  );
-  double err4 = pack.energy(   src.cov_44  ) * pInv * pInv * 1000.;
+  double err4 = pack.energy(   src.cov_44  ) * fabs(pInv) * 1.e-5;
   
   stateCov(0,0) = err0 * err0;
   stateCov(1,1) = err1 * err1;

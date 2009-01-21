@@ -1,8 +1,8 @@
-// $Id: PackTrack.cpp,v 1.4 2008-12-09 08:13:23 ocallot Exp $
+// $Id: PackTrack.cpp,v 1.5 2009-01-21 14:17:53 ocallot Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 #include "Event/Track.h"
 #include "Kernel/StandardPacker.h"
 
@@ -120,8 +120,8 @@ void PackTrack::convertState ( const LHCb::State* state, LHCb::PackedTracks* out
   newState.cov_11 = pack.position( err[1] );
   newState.cov_22 = pack.slope   ( err[2] );
   newState.cov_33 = pack.slope   ( err[3] );
-  newState.cov_44 = pack.energy  ( .001 * p * p * err[4] );
-  
+  newState.cov_44 = pack.energy  ( 1.e5 * fabs(p) * err[4] ); //== 1.e5 * dp/p (*1.e2)
+
   newState.cov_10 = pack.fraction( state->covariance()(1,0)/err[1]/err[0] );
   newState.cov_20 = pack.fraction( state->covariance()(2,0)/err[2]/err[0] );
   newState.cov_21 = pack.fraction( state->covariance()(2,1)/err[2]/err[1] );
