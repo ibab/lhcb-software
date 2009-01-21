@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: Configuration.py,v 1.17 2009-01-09 15:32:54 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.18 2009-01-21 17:08:51 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from os import environ
@@ -36,6 +36,9 @@ class LHCbApp(LHCbConfigurableUser):
 
     def knownMonitors(self):
         return ["SC", "FPE"]
+
+    def knownAuditors(self):
+        return ["NameAuditor","MemoryAuditor","ChronoAuditor"]
 
     def defineDB(self):
         # Delegate handling of properties to DDDBConf
@@ -86,7 +89,13 @@ class LHCbApp(LHCbConfigurableUser):
     def defineMonitors(self):
         for prop in self.getProp("Monitors"):
             if prop not in self.knownMonitors():
-                raise RuntimeError("Unknown monitor '%s'"%prop)
+                if prop in self.knownAuditors():
+                    from Configurables import AuditorSvc
+                    AuditorSvc().Auditors.append( prop )
+                    theConf = getConfigurable(prop)
+                    theConf.Enable = True
+                else:
+                    raise RuntimeError("Unknown monitor '%s'"%prop)
         if "SC" in self.getProp("Monitors"):
             ApplicationMgr().StatusCodeCheck = True
         if "FPE" in self.getProp("Monitors"):

@@ -2,6 +2,11 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2009-01-21 - Marco Cattaneo
+ - In LHCbApp configurable, add Gaudi auditors to list of possible Monitors:
+   KnownAuditors = ["NameAuditor","MemoryAuditor","ChronoAuditor"]
+   If given as a Monitor, the auditor is enabled (assumes AuditorSvc is loaded) 
+
 !======================== GaudiConf v12r0 2009-01-13 ========================
 ! 2009-01-13 - Marco Cattaneo
  - Add Vertex/V0 to DST content (without packing/unpacking capability for now)
