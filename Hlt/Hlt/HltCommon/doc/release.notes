@@ -3,6 +3,9 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2009-01-21 - Gerhard Raven
+ - remove HltSummary{Tool,Writer}
+
 ! 2009-01-19 - Gerhard Raven
  - support both boost <= 1.37, and > 1.37
 
