@@ -1,4 +1,4 @@
-// $Id: HltTypes.h,v 1.10 2008-12-29 12:59:09 graven Exp $
+// $Id: HltTypes.h,v 1.11 2009-01-21 10:01:28 graven Exp $
 #ifndef HLTBASE_HLTTYPES_H 
 #define HLTBASE_HLTTYPES_H 1
 
@@ -28,9 +28,6 @@ namespace Hlt {
   typedef std::vector<Hlt::Selection*> Selections;
   typedef std::vector<Hlt::Selection*>::iterator SelectionIterator;
 
-  typedef AIDA::IHistogram1D Histo;
-
-  //typedef DObj<zen::dictionary>  Configuration;
   typedef DObj<zen::IntRelation> IntRelation;
   
   typedef zen::filter<double> Filter;
