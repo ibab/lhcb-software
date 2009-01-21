@@ -5,7 +5,8 @@
 	* cmt/requirements: implemented the creation of a cache file for the setup of
 	this very project. Prevent the call to SetupProject and CMT. It should be much 
 	faster.
-	* python/LbConfiguration/LbLogin.py: added the usage of the cache file
+	* python/LbConfiguration/LbLogin.py: added the usage of the cache file. added the
+	convert native method in order to convert x86_64<->i686 if needed.
 	* python/LbConfiguration/Project.py: added the optimize and debug binary list.
 
 2009-01-20  Marco Clemencic  <Marco.Clemencic@cern.ch>
