@@ -1,6 +1,6 @@
 from Gaudi.Configuration import *
 
-nIter               = 5
+nIter               = 1
 nEvents             = 100000
 minNumHits          = 10
 eigenvalueThreshold = 50
@@ -9,7 +9,8 @@ granularity         = 'halflayers'
 preloadalignment    = True
 simplifiedGeometry  = True
 granularity = 'cframes'
-ignoreIT = False
+granularity = 'itonly'
+ignoreIT = True
 
 # configure for half-layers
 from Alignables import *
@@ -31,11 +32,18 @@ if granularity=='halflayers':
 elif granularity=='crames':
    elements.OTCFramesASide("TxTy")
    elements.OTCFramesCSide("TxTy")
-   
-constraints = []
+   constraints = [
+      "T1X1C : /.*?/OT/T1/X1layer/Quarter(0|2)/.*? : Tx Ty Rz",
+      "T1X1A : /.*?/OT/T1/X1layer/Quarter(1|3)/.*? : Tx Ty Rz",
+      "T3X2C : /.*?/OT/T3/X1layer/Quarter(0|2)/.*? : Tx Ty Rz",
+      "T3X2A : /.*?/OT/T3/X1layer/Quarter(1|3)/.*? : Tx Ty Rz",
+      ]
+  
+#constraints = []
 
 #elements.ITLayers("Tx")
-#elements.ITBoxes("TxTyRz")
+elements.ITBoxes("TxTy")
+#elements.IT("TxTyRz")
 
 print elements
 
@@ -159,7 +167,7 @@ data = ['PFN:/afs/cern.ch/lhcb/group/tracking/vol4/mneedham/cosmics_19_20_sept.r
         'PFN:/afs/cern.ch/lhcb/group/tracking/vol5/mneedham/cosmics_run32432.dst',
         'PFN:/afs/cern.ch/lhcb/group/tracking/vol5/mneedham/cosmics_run34116.raw']
 
-data += [ 'PFN:castor:/castor/cern.ch/user/w/wouter/otcosmics/run34117.dst' ]
+#data += [ 'PFN:castor:/castor/cern.ch/user/w/wouter/otcosmics/run34117.dst' ]
 
 
 #data = ['PFN:/afs/cern.ch/lhcb/group/tracking/vol4/mneedham/cosmics_19_20_sept.raw',
@@ -205,12 +213,13 @@ alignment.Chi2Outlier = 10000
 
 if preloadalignment:
    from Configurables import ( CondDBAccessSvc,CondDB )
-   #AlignmentCondition = CondDBAccessSvc("AlignmentCondition")
-   #AlignmentCondition.ConnectionString = "sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/OTHalfLayers.db/LHCBCOND"
-   #CondDB().addLayer(AlignmentCondition)
+   from Configurables import ( CondDBAccessSvc,CondDB )
+   OTAlignmentCondition = CondDBAccessSvc("OTAlignmentCondition")
+   OTAlignmentCondition.ConnectionString = "sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/OTCFramesTxTyRz.db/LHCBCOND"
+   CondDB().addLayer(OTAlignmentCondition)
    ITAlignmentCondition = CondDBAccessSvc("ITAlignmentCondition")
    ITAlignmentCondition.ConnectionString = "sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/AlignedMattNewTxTyRzITLayerSlice.db/LHCBCOND"
-   ITAlignmentCondition.ConnectionString = "sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/AlignedMattNewTxTyRzITLayerWRTOTSlice.db/LHCBCOND"
+   ITAlignmentCondition.ConnectionString = "sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/AlignedMattNewTxTyRzITLayerTxTyWRTOTCFramesSlice.db/LHCBCOND"
    CondDB().addLayer(ITAlignmentCondition)
       
 ## create a reconstruction sequence

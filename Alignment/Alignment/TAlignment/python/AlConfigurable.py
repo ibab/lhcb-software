@@ -1,14 +1,24 @@
 from os      import environ
 from os.path import expandvars
 
+from LHCbKernel.Configuration import *
 from Gaudi.Configuration import *
 from DetCond.Configuration import *
 from TrackSys.Configuration import TrackSys
+from RecSys.Configuration   import RecSysConf
+from Configurables import ( DDDBConf )
 
-
-class AlConfigurable( ConfigurableUser ) :
+class AlConfigurable( LHCbConfigurableUser ) :
+    
+    ## Possible used Configurables
+    __used_configurables__ = [ TrackSys, DDDBConf ]
+    
     __slots__ = {
-        "CondDBTag"                    : "DC06-latest"              , ## Default database to use
+        "DDDBTag"                      : "",     # Tag for DDDB. Default as set in DDDBConf for DataType
+        "CondDBTag"                    : "",     # Tag for CondDB. Default as set in DDDBConf for DataType
+        "DataType"                     : "2008", # Data type, can be ['DC06','2008']
+        "Simulation"                   : False,  # set to True to use SimCond
+        "UseOracle"                    : False,  # Flag to enable Oracle CondDB. Default False (use SQLDDDB) """
         "CondDBOverride"               : []                         , ## Overwrite conditions
         "AlternativeDDDB"              : ""                         , ## Path to alternative DDDB
         "AlternativeDDDBTag"           : ""                         , ## Alternative DDDB tag
@@ -26,6 +36,7 @@ class AlConfigurable( ConfigurableUser ) :
         "UseCorrelations"              : True                       , ## Correlations
         "ApplyMS"                      : True                       , ## Multiple Scattering
         "Constraints"                  : []                         , ## Specify which constrains to use with strategy 1  
+        "ChisqConstraints"             : []                    , ## Specify which constrains to use with strategy 1  
         "UseWeightedAverageConstraint" : False                      , ## Weighted average constraint
         "MinNumberOfHits"              : 1                          , ## Min number of hits per element
         "Chi2Outlier"                  : 10000                      , ## Chi2 cut for outliers
@@ -42,7 +53,7 @@ class AlConfigurable( ConfigurableUser ) :
         "CondDepths"                   : []                         ,              ## Condition levels to write to xml
         "Precision"                    : 16                         , ## Set precision for conditions
         "OutputLevel"                  : INFO                       , ## Output level
-        "LogFile"                      : "alignlog.txt"    
+        "LogFile"                      : "alignlog.txt"
         }
 
     def getProp( self, name ) :
@@ -71,18 +82,29 @@ class AlConfigurable( ConfigurableUser ) :
         # TransportSvc needed by tracking
         ApplicationMgr().ExtSvc.append( TransportSvc() )
 
-    def defineDB( self ) :
-        from Configurables import MagneticFieldSvc
- 
+    def defineDB(self):
+        # Delegate handling of properties to DDDBConf. This is normally done from LHCbApp.
+        self.setOtherProps( DDDBConf(), ["Simulation", "UseOracle", "DataType" ] )
+        # Set the CondDB tags if not using defaults. This is normally done from LHCbApp.
+        from Configurables import CondDB
+        if hasattr( self, "DDDBTag" ):
+            CondDB().Tags [ "DDDB" ] = self.getProp("DDDBTag")
+        if hasattr( self, "CondDBtag" ):
+            CondDB().Tags [ "LHCBCOND" ] = self.getProp("CondDBTag")
+            CondDB().Tags [ "SIMCOND"  ] = self.getProp("CondDBTag")
+
         condDBtag = self.getProp( "CondDBTag" )
+        
         ## For all DC06 cases, use latest DC06 tag
-        if condDBtag.find( "DC06" ) != -1:
-            importOptions( "$DDDBROOT/options/DC06.py" )
-        else:
-            CondDBAccessSvc( "DDDB"    , DefaultTAG = condDBtag )
-            CondDBAccessSvc( "LHCBCOND", DefaultTAG = condDBtag )
+        #if condDBtag.find( "DC06" ) != -1:
+        #    importOptions( "$DDDBROOT/options/DC06.py" )
+        #else:
+        #    CondDBAccessSvc( "DDDB"    , DefaultTAG = condDBtag )
+        #    CondDBAccessSvc( "LHCBCOND", DefaultTAG = condDBtag )
+
         ## Always DC06 magnetic field for now....
-        MagneticFieldSvc().FieldMapFile = os.environ['FIELDMAPROOT']+'/cdf/field047.cdf'
+        #from Configurables import MagneticFieldSvc
+        #MagneticFieldSvc().FieldMapFile = os.environ['FIELDMAPROOT']+'/cdf/field047.cdf'
 
         ## No way to check whether conditions make sense
         ## Nor does UpdateManagerSvc throw FAILURE
@@ -134,20 +156,12 @@ class AlConfigurable( ConfigurableUser ) :
 
             ## Velo Decoding
             from Configurables import ( DecodeVeloRawBuffer )
-
-            decodeVeloClusters = DecodeVeloRawBuffer( "DecodeVeloClusters",
-                                                      OutputLevel = outputLevel )
-            decodeVeloClusters.DecodeToVeloLiteClusters = False
-            decodeVeloClusters.DecodeToVeloClusters     = True
-            
-            decodingSequencer.Members.append( DecodeVeloRawBuffer( OutputLevel = outputLevel ) )
-            decodingSequencer.Members.append( decodeVeloClusters )
-            
+            decodingSequencer.Members.append(  DecodeVeloRawBuffer(OutputLevel = outputLevel ) )
+                        
             ## ST Decoding
             from Configurables import ( RawBankToSTClusterAlg, RawBankToSTLiteClusterAlg, STOfflinePosition ) 
 
-            itClusterPosition = STOfflinePosition( "ITClusterPosition",
-                                                   OutputLevel = outputLevel )
+            itClusterPosition = STOfflinePosition( "ITClusterPosition",OutputLevel = outputLevel )
             itClusterPosition.ErrorVec = [ 0.22, 0.11, 0.24, 0.20 ]
         
             ## TT Decoding
@@ -165,17 +179,12 @@ class AlConfigurable( ConfigurableUser ) :
             createITLiteClusters = RawBankToSTLiteClusterAlg( "CreateITLiteClusters",
                                                               OutputLevel = outputLevel )
         
-            createITClusters.detType     = "IT";
-            createITLiteClusters.detType = "IT";
+            createITClusters.BankType     = "IT";
+            createITLiteClusters.BankType = "IT";
 
             decodingSequencer.Members.append( createITClusters     )
             decodingSequencer.Members.append( createITLiteClusters )
             
-            ## OT Decoding
-            from Configurables import ( OTTimeCreator )
-
-            decodingSequencer.Members.append( OTTimeCreator( OutputLevel = outputLevel ) )
-
             ## Muons (not yet)
 
             return decodingSequencer
@@ -200,8 +209,10 @@ class AlConfigurable( ConfigurableUser ) :
             patSequencer.Members.append( GaudiSequencer( "RecoITSeq"   , MeasureTime = True ) )
             patSequencer.Members.append( GaudiSequencer( "RecoOTSeq"   , MeasureTime = True ) )
             patSequencer.Members.append( GaudiSequencer( "RecoTrSeq"   , MeasureTime = True ) )
-            
-            importOptions("$TALIGNMENTROOT/options/PatRecognition.opts")
+            patSequencer.Members.append( GaudiSequencer( "RecoVertexSeq" , MeasureTime = True ) )
+
+            #importOptions("$TRACKSYSROOT/options/RecoTracking.py")
+            #importOptions("$TALIGNMENTROOT/options/PatRecognition.opts")
 
             from Configurables import TrackRemoveDoubleHits
             if allConfigurables.get( "TrackForwardPatSeq" ):
@@ -217,7 +228,7 @@ class AlConfigurable( ConfigurableUser ) :
                 trackMatchPatSeq.Members.append( trackRemoveDoubleHitsMatch )
 
             from Configurables import ( PatPVOffline )
-            allConfigurables["RecoTrSeq"].Members.append( PatPVOffline() )
+            allConfigurables["RecoVertexSeq"].Members.append( PatPVOffline() )
 
             return patSequencer
         else :
@@ -257,7 +268,9 @@ class AlConfigurable( ConfigurableUser ) :
             
             from Configurables import ( AlignAlgorithm, GetElementsToBeAligned,
                                         gslSVDsolver, CLHEPSolver, MA27Solver, DiagSolvTool,
-                                        Al__AlignConstraintTool, Al__AlignUpdateTool )
+                                        Al__AlignConstraintTool,
+                                        Al__AlignChisqConstraintTool,
+                                        Al__AlignUpdateTool )
             alignAlg = AlignAlgorithm( "Alignment" )
             alignAlg.OutputLevel                  = outputLevel
             alignAlg.NumberOfIterations           = self.getProp( "NumIterations"       )
@@ -285,6 +298,10 @@ class AlConfigurable( ConfigurableUser ) :
             constrainttool = Al__AlignConstraintTool("Al::AlignConstraintTool")
             constrainttool.Constraints = self.getProp( "Constraints" )
             constrainttool.UseWeightedAverage = self.getProp( "UseWeightedAverageConstraint" )
+
+            # this one is in the toolsvc, for now
+            chisqconstrainttool = Al__AlignChisqConstraintTool("Al::AlignChisqConstraintTool")
+            chisqconstrainttool.Constraints = self.getProp( "ChisqConstraints" )
             
             alignSequencer.Members.append(alignAlg)
 
@@ -355,8 +372,23 @@ class AlConfigurable( ConfigurableUser ) :
             print "\n ****************************************************************************** \n"
         
     def __apply_configuration__( self ) :
-    #    if self.getProp( "SimplifiedGeom" ) : TrackSys().expertTracking += "simplifiedGeometry"
-    #    TrackSys().expertTracking += "kalmanSmoother"
-    #    self.defineApp()
-    #    self.defineDB()
+        #    if self.getProp( "SimplifiedGeom" ) : TrackSys().expertTracking += "simplifiedGeometry"
+        #    TrackSys().expertTracking += "kalmanSmoother"
+        #    self.defineApp()
+        self.defineDB()
+
+        # Set up transient store, if not yet done. This is normally done from LHCbApp
+        EventDataSvc( ForceLeaves        = True,
+                      RootCLID           =    1,
+                      EnableFaultHandler = True )
+
+        # this is normally done from RecoTracking.py
+        if TrackSys().fieldOff() :
+            from Configurables import MagneticFieldSvc
+            MagneticFieldSvc().ScaleFactor = 0
+
+        from Configurables import ApplicationMgr, HistogramPersistencySvc
+        ApplicationMgr().HistogramPersistency = 'ROOT'
+        HistogramPersistencySvc().OutputFile = 'alignhistos.root'
+
         self.sequencers( )

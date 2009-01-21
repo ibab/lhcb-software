@@ -3,6 +3,12 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2009-01-13 Wouter Hulsbergen: 
+ - Adapted to changes in SolvKernel
+ - Added functionality to compute only subset of track-track hit correlations in VertexResidualTool
+ - Added constrains for z-bowing
+ - Added functionality to align dos at different granularity simultaneously, e.g. C-frames in z and modules in x.
+
 </PRE><H1><A NAME=v3r7>2008-09-12 TAlignment v3r7</A></H1><PRE>
 
 - Johan Blouw: 2008-09-12: tagged package v3r7 for alignment project release v3r2
