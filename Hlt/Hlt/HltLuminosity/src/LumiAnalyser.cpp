@@ -1,4 +1,4 @@
-// $Id: LumiAnalyser.cpp,v 1.6 2008-12-20 17:58:31 graven Exp $
+// $Id: LumiAnalyser.cpp,v 1.7 2009-01-21 12:02:58 graven Exp $
 // Include files 
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -11,7 +11,6 @@
 
 #include "HltBase/ANNSvc.h"
 #include "LumiAnalyser.h"
-#include "HltBase/ESequences.h"
 
 // to access the histos
 #include "GaudiKernel/GaudiException.h" 

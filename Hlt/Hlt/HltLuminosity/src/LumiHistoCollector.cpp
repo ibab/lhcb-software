@@ -1,4 +1,4 @@
-// $Id: LumiHistoCollector.cpp,v 1.3 2008-12-20 17:58:31 graven Exp $
+// $Id: LumiHistoCollector.cpp,v 1.4 2009-01-21 12:02:58 graven Exp $
 // Include files 
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -11,7 +11,6 @@
 
 #include "HltBase/ANNSvc.h"
 #include "LumiHistoCollector.h"
-#include "HltBase/ESequences.h"
 
 // for histogram retrieval
 #include "GaudiKernel/GaudiException.h" 
