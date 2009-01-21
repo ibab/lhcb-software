@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltPhotonLines.py,v 1.2 2009-01-12 11:02:19 graven Exp $
+# $Id: HltPhotonLines.py,v 1.3 2009-01-21 16:53:57 witekma Exp $
 # =============================================================================
 ## @file
 #  Configuration of Photon Lines
@@ -12,7 +12,7 @@
 '''
 # =============================================================================
 __author__  = 'Gerhard Raven Gerhard.Raven@nikhef.nl'
-__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $'
+__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $'
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -35,8 +35,12 @@ from HltConf.HltL0Candidates import *
 
 
 class HltPhotonLinesConf(LHCbConfigurableUser):
-   __slots__ = { 'Prescale'  : 1
-               , 'Postscale' : 1
+   __slots__ = { 'Prescale'        : 1
+               , 'Postscale'       : 1
+               , 'Pho_IsPho'       : -0.1   # for global optimization 3
+               , 'Pho_EtCut'       : 2800.
+               , 'Track_IPCut3D'   : 0.15   # for global optimization 2
+               , 'Track_PtCut'     : 650.   # for global optimization 1
                }
 
    def __apply_configuration__(self):
@@ -45,7 +49,7 @@ class HltPhotonLinesConf(LHCbConfigurableUser):
               , L0DU = "L0_CHANNEL('Photon')"
               , algos = 
               [ convertL0Candidates('Photon')
-              , Member ('TF', 'Photon' , FilterDescriptor = ['IsPhoton,>,-0.1','L0ET,>,2800.'])
+              , Member ('TF', 'Photon' , FilterDescriptor = ['IsPhoton,>,'+str(self.getProp('Pho_IsPho')),'L0ET,>,'+str(self.getProp('Pho_EtCut'))])
               , GaudiSequencer('Hlt1RecoRZVeloSequence')
               , Member ('TF', 'RZVelo'
                        , InputSelection     = 'RZVelo'
@@ -55,20 +59,20 @@ class HltPhotonLinesConf(LHCbConfigurableUser):
                        )
               , Member ('TU', 'Velo' , RecoName = 'Velo') #  Velo Reco
               , Member ('TF', 'Velo' #  3D IP selection
-                       , FilterDescriptor = ['IP_PV2D,||[],0.15,3.0']
+                       , FilterDescriptor = ['IP_PV2D,||[],'+str(self.getProp('Track_IPCut3D'))+',3.0']
                        , HistogramUpdatePeriod = 0
                        , HistoDescriptor = { 'IP' : ('IP',-1.,3.,400), 'IPBest' : ('IPBest',-1.,3.,400) }
                        )
               , HltTrackUpgrade( 'Hlt1RecoVelo' )
               , Member ('TF', 'SecondVelo' 
                        , InputSelection     = 'Velo'
-                       , FilterDescriptor = ['IP_PV2D,||[],0.15,3.0']
+                       , FilterDescriptor = ['IP_PV2D,||[],'+str(self.getProp('Track_IPCut3D'))+',3.0']
                        , HistogramUpdatePeriod = 0
                        , HistoDescriptor = { 'IP' : ('IP',-1.,3.,400), 'IPBest' : ('IPBest',-1.,3.,400) }
                        )
               , Member ('TU' ,'Forward' , RecoName = 'Forward') #  upgrade to Forward 
               , Member ('TF', 'Forward' #  Pt cut (call it pretrigger sice could not implement veloTT)
-                       , FilterDescriptor = ['PT,>,650.']
+                       , FilterDescriptor = ['PT,>,'+str(self.getProp('Track_PtCut'))]
                        , HistogramUpdatePeriod = 0
                        , HistoDescriptor =  { 'PT'     : ('PT',0.,8000.,100), 'PTBest' : ('PTBest',0.,8000.,100) }
                        )
@@ -83,7 +87,7 @@ class HltPhotonLinesConf(LHCbConfigurableUser):
                        , HistoDescriptor = { 'VertexDz_PV2D':('VertexDz_PV2D',-3.,3.,100), 'VertexDz_PV2DBest':('VertexDz_PV2D',-3.,3.,100) }
                        )
               , Member ('VU', 'DiTrack' , RecoName = 'Forward')
-              , Member ('VF', 'SecondDiTrack' , FilterDescriptor = [ 'VertexMinPT,>,650.'])
+              , Member ('VF', 'SecondDiTrack' , FilterDescriptor = [ 'VertexMinPT,>,'+str(self.getProp('Track_PtCut'))])
               , Member ( 'AddPhotonToVertex', 'DiTrackDecision' # add photon track to ditrack vertex to save all objects into summary
                        , InputSelection1 = '%VFSecondDiTrack'
                        , InputSelection2 = '%TFPhoton'
@@ -100,7 +104,7 @@ class HltPhotonLinesConf(LHCbConfigurableUser):
               , Member ('TF', 'AntiEle' , FilterDescriptor = ['AntiEleConf,>,0.5'] 
                        , tools = [ Tool( L0ConfirmWithT, particleType = 2 )]
                        )
-              , Member ('TF', 'Photon' , FilterDescriptor = ['IsPhoton,>,-0.1'])
+              , Member ('TF', 'Photon' , FilterDescriptor = ['IsPhoton,>,'+str(self.getProp('Pho_IsPho')),'L0ET,>,'+str(self.getProp('Pho_EtCut'))])
               , GaudiSequencer('Hlt1RecoRZVeloSequence')
               , Member ('TF', 'RZVelo'
                        , InputSelection     = 'RZVelo'
@@ -110,20 +114,20 @@ class HltPhotonLinesConf(LHCbConfigurableUser):
                        )
               , Member ('TU', 'Velo' , RecoName = 'Velo') #  Velo Reco
               , Member ('TF', 'Velo' #  3D IP selection
-                       , FilterDescriptor = ['IP_PV2D,||[],0.15,3.0']
+                       , FilterDescriptor = ['IP_PV2D,||[],'+str(self.getProp('Track_IPCut3D'))+',3.0']
                        , HistogramUpdatePeriod = 0
                        , HistoDescriptor = { 'IP' : ('IP',-1.,3.,400), 'IPBest' : ('IPBest',-1.,3.,400) }
                        )
               , HltTrackUpgrade( 'Hlt1RecoVelo' )
               , Member ('TF', 'SecondVelo' 
                        , InputSelection     = 'Velo'
-                       , FilterDescriptor = ['IP_PV2D,||[],0.15,3.0']
+                       , FilterDescriptor = ['IP_PV2D,||[],'+str(self.getProp('Track_IPCut3D'))+',3.0']
                        , HistogramUpdatePeriod = 0
                        , HistoDescriptor = { 'IP' : ('IP',-1.,3.,400), 'IPBest' : ('IPBest',-1.,3.,400) }
                        )
               , Member ('TU' ,'Forward' , RecoName = 'Forward') #  upgrade to Forward 
               , Member ('TF', 'Forward' #  Pt cut (call it pretrigger sice could not implement veloTT)
-                       , FilterDescriptor = ['PT,>,650.']
+                       , FilterDescriptor = ['PT,>,'+str(self.getProp('Track_PtCut'))]
                        , HistogramUpdatePeriod = 0
                        , HistoDescriptor =  { 'PT'     : ('PT',0.,8000.,100), 'PTBest' : ('PTBest',0.,8000.,100) }
                        )
@@ -138,7 +142,7 @@ class HltPhotonLinesConf(LHCbConfigurableUser):
                        , HistoDescriptor = { 'VertexDz_PV2D':('VertexDz_PV2D',-3.,3.,100), 'VertexDz_PV2DBest':('VertexDz_PV2D',-3.,3.,100) }
                        )
               , Member ('VU', 'DiTrack' , RecoName = 'Forward')
-              , Member ('VF', 'SecondDiTrack' , FilterDescriptor = [ 'VertexMinPT,>,650.'])
+              , Member ('VF', 'SecondDiTrack' , FilterDescriptor = [ 'VertexMinPT,>,'+str(self.getProp('Track_PtCut'))])
               , Member ( 'AddPhotonToVertex', 'DiTrackDecision' # add photon track to ditrack vertex to save all objects into summary
                        , InputSelection1 = '%VFSecondDiTrack'
                        , InputSelection2 = '%TFPhoton'

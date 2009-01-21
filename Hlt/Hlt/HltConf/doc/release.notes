@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.124 2009-01-20 19:11:42 aperezca Exp $ 
+! $Id: release.notes,v 1.125 2009-01-21 16:57:08 witekma Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-01-21 - Mariusz Witek
+- introduce slots for photon and electron lines
 
 !========================== HltConf v2r0 2009-01-15 ===================
 ! 2009-01-20 - Antonio Perez-Calero
