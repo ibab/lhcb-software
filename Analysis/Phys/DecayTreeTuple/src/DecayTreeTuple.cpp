@@ -1,4 +1,4 @@
-// $Id: DecayTreeTuple.cpp,v 1.12 2009-01-21 09:02:49 pkoppenb Exp $
+// $Id: DecayTreeTuple.cpp,v 1.13 2009-01-21 11:12:22 pkoppenb Exp $
 // Include files 
 
 
@@ -42,7 +42,8 @@ StatusCode DecayTreeTuple::initialize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
-  return StatusCode::SUCCESS;
+  return initializeDecays(false);
+  
 }
 //=============================================================================
 // Execute
