@@ -1,4 +1,4 @@
-// $Id: DecayTreeTuple.h,v 1.8 2009-01-21 08:50:26 pkoppenb Exp $
+// $Id: DecayTreeTuple.h,v 1.9 2009-01-21 08:57:47 pkoppenb Exp $
 #ifndef JBOREL_DECAYTREETUPLE_H
 #define JBOREL_DECAYTREETUPLE_H 1
 
@@ -23,9 +23,15 @@
  from Configurables import DecayTreeTuple, PhysDesktop, GaudiSequencer
  MyDecayTreeTuple = DecayTreeTuple("MyDecayTreeTuple")
  GaudiSequencer("MySeq").Members =+ [ MyDecayTreeTuple]
- MyDecayTreeTuple.PhysDesktop.InputLocations = ["Phys/SomeSelection"]
+ MyDecayTreeTuple.addTool(PhysDesktop())
+ MyDecayTreeTuple.PhysDesktop.InputLocations = ["SomeSelection"]
  MyDecayTreeTuple.Decay = "B0 -> ^pi- ^pi+"
  MyDecayTreeTuple.TupleName = "MyTuple"\endverbatim
+ *
+ * Do not forget to give the context if you want to use Hlt2 particles:
+ *\verbatim
+MyDecayTreeTuple.PhysDesktop.InputLocations = ["Hlt2SelB2HH"]
+MyDecayTreeTuple.Context = "HLT" \endverbatim       
  *
  * \note Any particle to be stored in the Tuple has to be flagged with
  * '^' (an exception here is the decay head which cannot be flagged as
@@ -116,7 +122,7 @@
  *
  * </ol>
  *
- * \sa TupleTollDecay IEventTupleTool IParticleTupleTool
+ * \sa TupleToolDecay IEventTupleTool IParticleTupleTool
  *
  * \author Jeremie Borel with the help of Patrick and lhcb-davinci@cern.ch
  * \date 2007-11-01 
