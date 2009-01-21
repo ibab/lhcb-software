@@ -1,4 +1,4 @@
-// $Id: PatFwdTrackCandidate.h,v 1.5 2008-12-02 14:43:15 wouter Exp $
+// $Id: PatFwdTrackCandidate.h,v 1.6 2009-01-21 09:06:17 cattanem Exp $
 #ifndef PATFWDTRACKCANDIDATE_H
 #define PATFWDTRACKCANDIDATE_H 1
 
@@ -60,6 +60,15 @@
       m_by = 0.;
       m_cosAfter = 1.;
       m_fitted = false;
+      m_quality = 0.;
+      m_cand1stquality = 0.;
+      m_cand2ndquality = 0.;
+
+      m_nbIT = 0;
+      m_nbOT = 0;
+
+      m_chi2PerDoF = 0.;
+      m_nDoF = 0;
     }
 
     virtual ~PatFwdTrackCandidate( ) {}; ///< Destructor

@@ -4,6 +4,10 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2009-01-21 - Marco Cattaneo
+ - Fix uninitialised variables in constructor of PatFwdTrackCandidate. Fixes
+   slc4_ia32_gcc34_dbg FPE in Brunel
+
 ! 2009-01-20 - Marco Cattaneo
  - Migrate to LHCb::ParticlePropertySvc
  - Protect PatMakeV0.cpp to create debug() msg only if msgLevel(MSG::DEBUG)
