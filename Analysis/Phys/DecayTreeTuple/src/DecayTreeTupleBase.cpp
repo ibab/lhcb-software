@@ -1,4 +1,4 @@
-// $Id: DecayTreeTupleBase.cpp,v 1.5 2009-01-21 08:50:26 pkoppenb Exp $
+// $Id: DecayTreeTupleBase.cpp,v 1.6 2009-01-21 11:19:22 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -65,8 +65,6 @@ StatusCode DecayTreeTupleBase::initialize() {
   if ( sc.isFailure() ) return sc;
 
   if (msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
-
-  if( initializeDecays() ) return StatusCode::SUCCESS;
   return StatusCode::FAILURE;
 }
 //=============================================================================
@@ -87,17 +85,24 @@ StatusCode DecayTreeTupleBase::finalize() {
 }
 //=============================================================================
 //=============================================================================
-
-bool DecayTreeTupleBase::initializeDecays() {
+bool DecayTreeTupleBase::initializeDecays( bool isMC) {
   // main decay initialization
-
-  m_dkFinder = tool<IDecayFinder>( "DecayFinder", this );
-  if( !m_dkFinder->setDecay( m_headDecay ) ){
-    Error( "Cannot initialize the main decay '" + m_headDecay
-           + "' properly." );
-    return false;
+  
+  if (isMC) {
+    m_mcdkFinder = tool<IMCDecayFinder>( "MCDecayFinder", this );
+    if( !m_mcdkFinder->setDecay( m_headDecay ) ){
+      Error( "Cannot initialize the main decay '" + m_headDecay+ "' properly." );
+      return false; 
+    }
+    info() << "Will look for " << m_mcdkFinder->decay() << endreq;
+  } else {    
+    m_dkFinder = tool<IDecayFinder>( "DecayFinder", this );
+    if( !m_dkFinder->setDecay( m_headDecay ) ){
+      Error( "Cannot initialize the main decay '" + m_headDecay+ "' properly." );
+      return false;
+    }
+    info() << "Will look for " << m_dkFinder->decay() << endreq;
   }
-  info() << "Will look for " << m_dkFinder->decay() << endreq;
 
   // sub-decays initialization (if any)
   m_decays.reserve( m_decayMap.size() );
@@ -193,69 +198,10 @@ std::string DecayTreeTupleBase::getBranchName( const Particle* p ){
   } while( kk<100 ); //for security.
   return buffer;
 }
-//=============================================================================
-
-StatusCode DecayTreeTupleBase::fillParticles( Tuples::Tuple& tuple,
-                                          const Particle::ConstVector& row ){
-  if ( sizeCheckOrInit( row ) ){
-    bool test = true;
-    const int size = m_parts.size();
-    for( int k=0; size>k; ++k ){ // row[0] is the deday head.
-      test &= fillOnePart( m_parts[k], tuple, row[0], row[k] );
-    }
-    return StatusCode(test);
-  }
-  return StatusCode::FAILURE;
-}
-//=============================================================================
-//=============================================================================
-bool DecayTreeTupleBase::sizeCheckOrInit( const Particle::ConstVector& row ){
-  const unsigned int size = row.size();
-  if( m_parts.size() == size ) return true;
-
-  if( !m_parts.empty() ){
-    Error( "The number of matched particles with the DecayFinder ("
-           + m_dkFinder->decay()
-           + ") has changed. Skipping the candidate.");
-    return false;
-  }
-
-  info() << "Entering the initialization process" << endreq;
-
-  // initializing the particles object.
-  m_parts.reserve( size );
-  for( unsigned int i=0; i<size; ++i ){
-    Decays::OnePart *p = new Decays::OnePart( ppSvc()->find ( row[i]->particleID() )->particle(), getBranchName(row[i]) );
-    // inherit the default properties:
-    m_parts.push_back( p );
-  }
-
-  if (msgLevel(MSG::DEBUG)) debug() << "There is " << m_parts.size()
-                                    << " particle to initialize." << endreq;
-
-  // set the base properties...
-  initializeStufferTools(m_pTools);
-  // set the branch names and inherit the particle specific tools
-  matchSubDecays( row );
-
-  // re-creating mother->daughter relationship,
-  // allows better printout later on
-  for( int i=0; i<(int)row.size(); ++i ){
-    Decays::OnePart* Mother = m_parts[i];
-    const Particle* mother = row[i];
-
-    Particle::ConstVector dau = mother->daughtersVector();
-    Particle::ConstVector::const_iterator dauit,f;
-    for( dauit=dau.begin(); dau.end()!=dauit; ++dauit ){
-      // am I in the search decay ?
-      f = std::find( row.begin(), row.end(), *dauit );
-      if( f==row.end() ) continue;
-      int off = getOffset( *f, row );
-      Mother->addDaughter( m_parts[off] );
-      m_parts[off]->setMother( Mother );
-    }
-  }
-
+//=========================================================================
+// Check unicity of names  
+//=========================================================================
+bool DecayTreeTupleBase::checkUnicity() const {
   // check the name unicity 
   std::set<std::string> names;
   for( int k=0; k<(int)m_parts.size(); ++k ){
@@ -266,7 +212,12 @@ bool DecayTreeTupleBase::sizeCheckOrInit( const Particle::ConstVector& row ){
       return false;
     }
   }
-
+  return true ;
+}
+//=========================================================================
+// print infos
+//=========================================================================
+void DecayTreeTupleBase::printInfos() const {
   // initalization done, printing some infos:
 
   // generic tool info:
@@ -282,9 +233,8 @@ bool DecayTreeTupleBase::sizeCheckOrInit( const Particle::ConstVector& row ){
     }
   }
   info() << "Tree " << m_tupleName << " initialized:\n"
-         << tmp.str() << endreq;
-
-  return true;
+         << tmp.str() << endreq ;
+  
 }
 // ===============================================================
 // ===============================================================
@@ -350,6 +300,16 @@ bool DecayTreeTupleBase::getDecayMatches( const Particle::ConstVector& pool
 {
   const Particle* head(0);
   while( m_dkFinder->findDecay( pool, head ) ){
+    heads.push_back( head ); 
+  }
+  return !( heads.empty() );  
+}
+//=============================================================================
+bool DecayTreeTupleBase::getDecayMatches( const MCParticle::ConstVector& pool
+                                          , MCParticle::ConstVector& heads )
+{
+  const MCParticle* head(0);
+  while( m_mcdkFinder->findDecay( pool, head ) ){
     heads.push_back( head ); 
   }
   return !( heads.empty() );  
