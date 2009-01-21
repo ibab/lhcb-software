@@ -3,8 +3,10 @@
 ! Responsible : Jose Angel Hernando Morata
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+! 2009-01-21 - Gerhard Raven
+ - remove SummaryHelper, move EParser to HltCommon
 
-!========================== HltBase v6r0 2009-01-15 ===================
+!========================== HltBase v6r0 2009-01-17 ===================
 ! 2009-01-17 - Chris Jones
  - Fix compilation failure on OSX/gcc4.0 by adding template<> statements
    to templated constructors in HltBaseConstructor.cpp
