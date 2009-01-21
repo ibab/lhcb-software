@@ -2695,8 +2695,7 @@ ToolSvc.Offline...   INFO  Selected         :  RICH1 =     0.00 +-  0.00  RICH2 
 ToolSvc.Offline...   INFO  Av. Cluster Size :  RICH1 =     0.00 +-  0.00  RICH2 =     1.00 +-  0.06 HPD pixels / cluster
 ToolSvc.Offline...   INFO  Rejected         :  RICH1 =     0.00 +-  0.00  RICH2 =     0.00 +-  0.00 HPD pixels / event
 ToolSvc.Offline...   INFO =====================================================================================================
-OTTimeCreator.O...SUCCESS Exceptions/Errors/Warnings Statistics : 0/0/34
-OTTimeCreator.O...SUCCESS  #WARNINGS   = 3829     Message = 'Found empty GOL header!'
+OTTimeCreator.O...SUCCESS Exceptions/Errors/Warnings Statistics : 0/0/33
 OTTimeCreator.O...SUCCESS  #WARNINGS   = 10       Message = 'OTSpecificHeader has error bit set in bank 256'
 OTTimeCreator.O...SUCCESS  #WARNINGS   = 10       Message = 'OTSpecificHeader has error bit set in bank 257'
 OTTimeCreator.O...SUCCESS  #WARNINGS   = 6        Message = 'OTSpecificHeader has error bit set in bank 258'
@@ -2945,8 +2944,7 @@ TimingAuditor.T...   INFO      PackRecVertex            |     0.000 |     0.042 
 TimingAuditor.T...   INFO      PackMuons                |     0.100 |     0.080 |    0.016       0.4 |      10 |     0.001 |
 TimingAuditor.T...   INFO  DstWriter                    |   386.241 |   544.323 |    3.125    5386.0 |      10 |     5.443 |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.OTRawBa...SUCCESS Exceptions/Errors/Warnings Statistics : 0/0/34
-ToolSvc.OTRawBa...SUCCESS  #WARNINGS   = 3829     Message = 'Found empty GOL header!'
+ToolSvc.OTRawBa...SUCCESS Exceptions/Errors/Warnings Statistics : 0/0/33
 ToolSvc.OTRawBa...SUCCESS  #WARNINGS   = 10       Message = 'OTSpecificHeader has error bit set in bank 256'
 ToolSvc.OTRawBa...SUCCESS  #WARNINGS   = 10       Message = 'OTSpecificHeader has error bit set in bank 257'
 ToolSvc.OTRawBa...SUCCESS  #WARNINGS   = 6        Message = 'OTSpecificHeader has error bit set in bank 258'
@@ -2993,7 +2991,6 @@ StatusCodeSvc        INFO
 Num | Function                       | Source Library
 ----+--------------------------------+------------------------------------------
   6 | GaudiException::~GaudiException() | libGaudiPythonLib.so
- 20 | OTRawBankDecoder::decodeGolHeaders() const | libOTDAQ.so
  38 | Rich::DAQ::RawDataFormatTool::decodeToSmartIDs_2007(LHCb::RawBank const&, std::map<Rich::DAQ::Level1HardwareID const, std::map<Rich::DAQ::L1IngressID const, Rich::DAQ::IngressInfo, std::less<Rich::DAQ::L1IngressID const>, std::allocator<std::pair<Rich::DAQ::L1IngressID const, Rich::DAQ::IngressInfo> > >, std::less<Rich::DAQ::Level1HardwareID const>, std::allocator<std::pair<Rich::DAQ::Level1HardwareID const, std::map<Rich::DAQ::L1IngressID const, Rich::DAQ::IngressInfo, std::less<Rich::DAQ::L1IngressID const>, std::allocator<std::pair<Rich::DAQ::L1IngressID const, Rich::DAQ::IngressInfo> > > > > >&) const | libRichDAQ.so
  10 | Velo::VeloTrackMonitor::execute() | libVeloRecMonitors.so
 

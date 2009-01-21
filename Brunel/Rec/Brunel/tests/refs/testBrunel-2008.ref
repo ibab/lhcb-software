@@ -1170,7 +1170,6 @@ StatusCodeSvc        INFO listing all unchecked return codes:
 StatusCodeSvc        INFO
 Num | Function                       | Source Library
 ----+--------------------------------+------------------------------------------
- 20 | OTRawBankDecoder::decodeGolHeaders() const | libOTDAQ.so
  10 | TrackMatchVeloSeed::matchTracks(std::vector<VeloCandidate*, std::allocator<VeloCandidate*> >&, KeyedContainer<LHCb::Track, Containers::KeyedObjectManager<Containers::hashmap> >*, KeyedContainer<LHCb::Track, Containers::KeyedObjectManager<Containers::hashmap> >*) | libTrackMatching.so
  10 | TrackMatchVeloSeed::storeTracks(KeyedContainer<LHCb::Track, Containers::KeyedObjectManager<Containers::hashmap> >*) | libTrackMatching.so
 

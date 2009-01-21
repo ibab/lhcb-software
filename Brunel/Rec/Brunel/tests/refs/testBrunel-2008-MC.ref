@@ -1372,8 +1372,6 @@ ToolSvc.Offline...   INFO  Selected         :  RICH1 =  1786.10 +- 13.36  RICH2 
 ToolSvc.Offline...   INFO  Av. Cluster Size :  RICH1 =     1.00 +-  0.01  RICH2 =     1.00 +-  0.01 HPD pixels / cluster
 ToolSvc.Offline...   INFO  Rejected         :  RICH1 =   652.40 +-  8.08  RICH2 =   443.40 +-  6.66 HPD pixels / event
 ToolSvc.Offline...   INFO =====================================================================================================
-OTTimeCreator.O...SUCCESS Exceptions/Errors/Warnings Statistics : 0/0/1
-OTTimeCreator.O...SUCCESS  #WARNINGS   = 731      Message = 'Found empty GOL header!'
 BrunelInit.Brun...SUCCESS Booked 2 Histogram(s) : 1D=2
 ToolSvc.Offline...SUCCESS Number of counters : 6
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
@@ -1667,8 +1665,6 @@ TimingAuditor.T...   INFO      PackRecVertex            |     0.000 |     0.043 
 TimingAuditor.T...   INFO      PackMuons                |     0.100 |     0.033 |    0.019       0.1 |      10 |     0.000 |
 TimingAuditor.T...   INFO  DstWriter                    |   233.665 |   281.248 |   27.781    2115.4 |      10 |     2.812 |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.OTRawBa...SUCCESS Exceptions/Errors/Warnings Statistics : 0/0/1
-ToolSvc.OTRawBa...SUCCESS  #WARNINGS   = 731      Message = 'Found empty GOL header!'
 PoolRootTreeEvt...   INFO Disconnected data IO:5402A253-D9E6-DD11-8341-0030487C5E0E[11144101-100ev-20090112-10ev.dst]
 PoolRootTreeEvt...   INFO Disconnected data IO:6A3370ED-61E1-DD11-A1DC-0030487C5E0E[castor:/castor/cern.ch/user/c/cattanem/Boole/v17r2/11144101-100ev-20090112.digi]
 *****Chrono*****     INFO ****************************************************************************************************
@@ -1682,7 +1678,6 @@ StatusCodeSvc        INFO listing all unchecked return codes:
 StatusCodeSvc        INFO
 Num | Function                       | Source Library
 ----+--------------------------------+------------------------------------------
- 20 | OTRawBankDecoder::decodeGolHeaders() const | libOTDAQ.so
 12952 | Velo::VeloTrackMonitor::monitorTracks() | libVeloRecMonitors.so
 
 ApplicationMgr       INFO Application Manager Finalized successfully

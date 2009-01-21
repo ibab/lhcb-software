@@ -1660,7 +1660,6 @@ StatusCodeSvc        INFO listing all unchecked return codes:
 StatusCodeSvc        INFO
 Num | Function                       | Source Library
 ----+--------------------------------+------------------------------------------
- 20 | OTRawBankDecoder::decodeGolHeaders() const | libOTDAQ.so
 9829 | Velo::VeloTrackMonitor::monitorTracks() | libVeloRecMonitors.so
 
 ApplicationMgr       INFO Application Manager Finalized successfully
