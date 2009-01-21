@@ -9,6 +9,10 @@
 ! end
 !-----------------------------------------------------------------------------
 
+! 2009-01-21 - Patrick Koppenburg
+ - HltBackgroundCategory : adapt to new DaVinciAssociatorWrapper interface
+   . requires DaVinciMCKernel v3r0
+
 ! 2009-01-20 - Patrick Koppenburg
  - Typo fix in MuMuKstar
  - Increment to v7r6

@@ -1,4 +1,4 @@
-// $Id: HltBackgroundCategory.cpp,v 1.18 2008-12-02 17:16:07 pkoppenb Exp $
+// $Id: HltBackgroundCategory.cpp,v 1.19 2009-01-21 15:12:24 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -89,7 +89,7 @@ StatusCode HltBackgroundCategory::execute() {
   Particle2MCLinker* linker = 0;
 
   strings sels =  m_summaryTool->selections() ;
-  if (m_printTree) linker = m_linker->linker( );
+  if (m_printTree) linker = m_linker->linker( Particle2MCMethod::Links );
   
   for ( strings::const_iterator is = sels.begin() ; 
         is!=sels.end() ; ++is){
