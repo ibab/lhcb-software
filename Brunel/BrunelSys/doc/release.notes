@@ -3,19 +3,27 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-! 2009-01-20 - Marco Cattaneo
- - Adapt to LHCb::ParticlePropertySvc in test
- - Exclude "PARAM/ParamFiles" paths from QMTest comparison
+</PRE><H1><A NAME=v34r1p1>2009-01-21 Brunel v34r1p1</A></H1><PRE>
+This version uses projects Gaudi v20r4, LHCb v26r1, Lbcom v6r25, Rec v6r1
+ and SQLDDDB v5r1, ParamFiles v8r0, FieldMap v5r2
 
-! 2009-01-15 - Marco Cattaneo
- - Exclude TMVA initialisation messages from QMTest comparison
+This is a pre-production version for the 2009 MC production. 
+Output requires DaVinci v22r0p1 or greater
+
+- Bug fixes (backward incompatible persistency change)
+  . Change the coding of cov_44 in track state, to be dp/p with a scale factor.
+    Affects momentum error of tracks on PackedDST (EventPacker v1r2)
+
+- Environment fixes
+  . Exclude TMVA initialisation messages and "PARAM/ParamFiles" paths from QMTest
+    comparison
 
 </PRE><H1><A NAME=v34r1>2009-01-14 Brunel v34r1</A></H1><PRE>
 This version uses projects Gaudi v20r4, LHCb v26r1, Lbcom v6r25, Rec v6r1
  and SQLDDDB v5r1, ParamFiles v8r0, FieldMap v5r2
 
 This is a pre-production version for the 2009 MC production. 
-Output requires DaVinci v21r1 or greater
+Output requires DaVinci v22r0 or greater
 
 - New features
   . Explicit setting of database tag now compulsory in options (GaudiConf v12r0).
