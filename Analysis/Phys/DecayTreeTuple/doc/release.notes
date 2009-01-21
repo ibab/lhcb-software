@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+! 2009-01-21 - Patrick Koppenburg
+ - Slight change of strategy: put as much as possible in DecayTreeTupleBase.
+   All functionality goes there. 
+
 ! 2009-01-20 - Patrick Koppenburg
   ##
   # The plan is to get a shared base for DecayTreeTuple and MCDecayTreeTuple.
