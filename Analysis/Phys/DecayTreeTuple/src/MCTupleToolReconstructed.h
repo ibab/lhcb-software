@@ -1,4 +1,4 @@
-// $Id: MCTupleToolReconstructed.h,v 1.1 2009-01-22 10:36:30 pkoppenb Exp $
+// $Id: MCTupleToolReconstructed.h,v 1.2 2009-01-22 17:52:41 pkoppenb Exp $
 #ifndef MCTUPLETOOLMCRECONSTRUCTED_H 
 #define MCTUPLETOOLMCRECONSTRUCTED_H 1
 
@@ -18,6 +18,8 @@
  *
  * - head_Reconstructible : IMCReconstructible category
  * - head_Reconstructed : IMCReconstructed  category
+ * - head_PP_PX,Y,Z : ProtoParticle PX, PY, PZ
+ * - head_PP_Weight : ProtoParticle association weight
  * 
  * \sa MCDecayTreeTuple, IMCReconstructible, IMCReconstructed
  * 

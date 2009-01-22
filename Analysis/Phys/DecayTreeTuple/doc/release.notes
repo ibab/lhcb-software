@@ -7,6 +7,7 @@
 ! 2009-01-22 - Patrick Koppenburg
  - Use the fact that all Hlt1 selections are called XxxDecision to
    consider only those (except if AllIntermediateSteps is set to true.)
+ - src/MCTupleToolAngles.cpp : new tool
 
 ! 2009-01-22 - Patrick Koppenburg
  - First working version of MCDecayTreeTuple
