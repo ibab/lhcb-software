@@ -4,6 +4,12 @@
 ! Purpose     : Option-steered tuples. Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+! 2009-01-22 - Patrick Koppenburg
+ - First working version of MCDecayTreeTuple
+   . Moved all templated methods to DecayTreeTupleBaseTemplates.icpp
+   . Added MCDecayTreeTuple to test options
+   . Fill momentum by default in MCTupleToolMCTruth
+
 ! 2009-01-21 - Patrick Koppenburg
  - Slight change of strategy: put as much as possible in DecayTreeTupleBase.
    All functionality goes there. 

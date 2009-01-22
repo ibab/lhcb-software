@@ -1,4 +1,4 @@
-## @file HltDecayTreeTuple.opts
+ ## @file HltDecayTreeTuple.opts
  #
  #  Generic Tuple configuration
  #  @warning Will not work without decay and input data
@@ -32,6 +32,8 @@ importOptions("$DAVINCIROOT/options/PreloadUnits.opts")
 #
 importOptions( "$B2DILEPTONROOT/options/DoDC06SelBu2eeK.opts" )
 sel = GaudiSequencer("SeqPreselBu2LLK")
+from Configurables import PrintHeader
+PrintHeader("PrintPreselBu2LLK").OutputLevel = 4
 ########################################################################
 #
 # The Decay Tuple
@@ -53,6 +55,7 @@ tuple.ToolList +=  [
 tuple.addTool( PhysDesktop())
 tuple.PhysDesktop.InputLocations = ["DC06SelBu2eeK"]
 tuple.Decay = "[B+ -> (^J/psi(1S) => ^e+ ^e-) ^K+]cc"
+#tuple.OutputLevel = 1 ;
 ########################################################################
 #
 # The Event Tuple
@@ -65,6 +68,15 @@ evtTuple.TupleToolTrigger.VerboseHlt1 = True
 evtTuple.TupleToolTrigger.VerboseHlt2 = True 
 ########################################################################
 #
+# The MC truth Tuple
+#
+from Configurables import MCDecayTreeTuple
+mcTuple = MCDecayTreeTuple("MCTuple")
+mcTuple.Decay = "[B+ -> ^e+ ^e- ^K+ {,gamma}{,gamma}{,gamma}{,gamma}{,gamma}]cc"
+mcTuple.ToolList = [ "MCTupleToolMCTruth", "TupleToolEventInfo"  ]
+#mcTuple.OutputLevel = 1
+########################################################################
+#
 # DaVinci
 #
 from Configurables import DaVinci
@@ -74,7 +86,8 @@ DaVinci().DataType = "DC06" # Default is "DC06"
 DaVinci().Simulation   = True
 DaVinci().HistogramFile = "DVHistos_1.root" # Histogram file
 DaVinci().TupleFile = "DecayTreeTuple.root"  # Ntuple
-DaVinci().UserAlgorithms = [ sel, tuple, evtTuple ]
+DaVinci().UserAlgorithms = [ sel ]
+DaVinci().MoniSequence = [ tuple, evtTuple, mcTuple ]
 DaVinci().ReplaceL0BanksWithEmulated = True
 DaVinci().HltType = "Hlt1+Hlt2"
 DaVinci().Input = [
