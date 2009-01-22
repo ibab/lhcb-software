@@ -1,4 +1,4 @@
-// $Id: MCTupleToolReconstructed.cpp,v 1.1 2009-01-22 10:36:30 pkoppenb Exp $
+// $Id: MCTupleToolReconstructed.cpp,v 1.2 2009-01-22 10:41:41 pkoppenb Exp $
 // Include files 
 #include "gsl/gsl_sys.h"
 
@@ -107,7 +107,7 @@ StatusCode MCTupleToolReconstructed::fill( const LHCb::MCParticle*
   test &= tuple->farray(  head+"_PP_PX", PX, "ProtoParticles" , 10 );
   test &= tuple->farray(  head+"_PP_PY", PY, "ProtoParticles" , 10 );
   test &= tuple->farray(  head+"_PP_PZ", PZ, "ProtoParticles" , 10 );
-  test &= tuple->farray(  head+"_Weight", Weights, "ProtoParticles" , 10 );
+  test &= tuple->farray(  head+"_PP_Weight", Weights, "ProtoParticles" , 10 );
   
   return StatusCode(test);
 }
