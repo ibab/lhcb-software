@@ -9,6 +9,7 @@
    . Moved all templated methods to DecayTreeTupleBaseTemplates.icpp
    . Added MCDecayTreeTuple to test options
    . Fill momentum by default in MCTupleToolMCTruth
+ - New Tool MCTupleToolReconstructed that links to protoparticles
 
 ! 2009-01-21 - Patrick Koppenburg
  - Slight change of strategy: put as much as possible in DecayTreeTupleBase.

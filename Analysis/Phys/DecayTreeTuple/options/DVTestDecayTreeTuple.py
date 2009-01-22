@@ -73,7 +73,7 @@ evtTuple.TupleToolTrigger.VerboseHlt2 = True
 from Configurables import MCDecayTreeTuple
 mcTuple = MCDecayTreeTuple("MCTuple")
 mcTuple.Decay = "[B+ -> ^e+ ^e- ^K+ {,gamma}{,gamma}{,gamma}{,gamma}{,gamma}]cc"
-mcTuple.ToolList = [ "MCTupleToolMCTruth", "TupleToolEventInfo"  ]
+mcTuple.ToolList = [ "MCTupleToolMCTruth", "TupleToolEventInfo", "MCTupleToolReconstructed"  ]
 #mcTuple.OutputLevel = 1
 ########################################################################
 #

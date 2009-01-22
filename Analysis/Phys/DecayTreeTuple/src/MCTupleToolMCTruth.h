@@ -1,4 +1,4 @@
-// $Id: MCTupleToolMCTruth.h,v 1.2 2009-01-19 18:10:41 pkoppenb Exp $
+// $Id: MCTupleToolMCTruth.h,v 1.3 2009-01-22 10:36:30 pkoppenb Exp $
 #ifndef MCTUPLETOOLMCTRUTH_H 
 #define MCTUPLETOOLMCTRUTH_H 1
 
@@ -17,8 +17,6 @@
  *
  * - head_TRUEID : true pid
  *
- * - head_MC_ASSOCNUMBER : the number of associated mc candidates
-     (only tell how many you missed)
  * - head_TRUEP[E|X|Y|Z] : true four vector momentum
  * - head_TRUEORIGINVERTEX_[X|Y|Z] : position of the true origin vertex.
  * - head_TRUEENDVERTEX_[X|Y|Z] : position of the true end vertex (the
@@ -27,7 +25,7 @@
  * - head_TRUE{ThetaL,ThetaK,Phi} : true helicity angles
  * - head_TRUE{ThetaTr,PhiTr,ThetaVtr} : true transversity angles
  * 
- * \sa TupleToolMCTruth, DecayTreeTuple
+ * \sa TupleToolMCTruth, DecayTreeTuple, MCDecayTreeTuple
  * 
  *  @author Patrick Koppenburg
  *  @date   2009-01-19
