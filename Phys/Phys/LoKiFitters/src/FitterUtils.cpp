@@ -1,4 +1,4 @@
-// $Id: FitterUtils.cpp,v 1.1 2008-03-10 18:24:43 ibelyaev Exp $
+// $Id: FitterUtils.cpp,v 1.2 2009-01-22 11:29:52 jonrob Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -230,7 +230,9 @@ StatusCode LoKi::Fitters::var_step
   
   // start to modify the input values 
   
-  momentum   = particle . momentum       ()  + m_dp  ; // new expansion point 
+  //momentum   = particle . momentum       ()  + m_dp  ; // new expansion point 
+  /** @todo CRJ : Understand why this is needed with GCC4 / OSX */
+  momentum   = particle . momentum(); Gaudi::Math::add( momentum, m_dp );
   decvertex  = particle . referencePoint ()  + m_dxd ; // new expansion point
   primvertex = primary  . position       ()  + m_dxp ; // new expansion point 
   

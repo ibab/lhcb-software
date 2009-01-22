@@ -1,11 +1,11 @@
-# $Id: requirements,v 1.4 2008-07-15 10:12:21 ibelyaev Exp $
+# $Id: requirements,v 1.5 2009-01-22 11:29:52 jonrob Exp $
 # =============================================================================
 # Created    : 2008-02-12
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@itep.ru 
 # =============================================================================
 package LoKiFitters
 author  Vanya Belyaev
-version v2r0
+version v2r1
 
 # =============== structure ===================================================
 branches          cmt doc src 

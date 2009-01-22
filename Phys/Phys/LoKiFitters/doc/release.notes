@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.9 2008-08-05 16:00:45 pkoppenb Exp $ 
+! $Id: release.notes,v 1.10 2009-01-22 11:29:52 jonrob Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiFitters
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
+
+! 2009-01-22 - Chris Jones
+ - Workaround for compilation failure on gcc4 / OSX
 
 !========================== LoKiFitters v2r0 2008-08-05 ===================
 ! 2008-07-15 - Vanya BELYAEV
