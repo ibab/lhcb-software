@@ -1,4 +1,4 @@
-// $Id: StripRepresentation.h,v 1.1 2008-08-23 08:22:45 mneedham Exp $
+// $Id: StripRepresentation.h,v 1.2 2009-01-22 11:43:44 mneedham Exp $
 #ifndef _STDAQ_StripRepresentation_H
 #define _STDAQ_StripRepresentation_H 1
 
@@ -42,6 +42,9 @@ namespace STDAQ{
     /** Fill the ASCII output stream **/ 
     std::ostream& fillStream(std::ostream& s) const;
 
+    /** print method for python, not needed in C++ **/
+    std::string toString() const;
+
   private:
 
     unsigned int m_value;
@@ -49,8 +52,6 @@ namespace STDAQ{
   };
 
 }
-
-//#include "Kernel/LHCbConstants.h"
 
 
 inline STDAQ::StripRepresentation::StripRepresentation(unsigned int value):m_value(value){
@@ -72,6 +73,15 @@ inline std::ostream& STDAQ::StripRepresentation::fillStream(std::ostream& s) con
 
   return s;
 }
+
+#include <sstream>
+
+inline std::string  STDAQ::StripRepresentation::toString() const{
+  std::ostringstream o;
+  fillStream(o);
+  return o.str();
+}
+
 
 #endif //  _STDAQ_StripRepresentation_H
  

@@ -9,6 +9,7 @@
   <class name = "STDAQ::PPRepresentation" />
   <class name = "STDAQ::StripRepresentation" />
 
+  <enum pattern = "STDAQ::version" />
   <enum pattern="STBitsPolicy::bits" />
   <enum pattern="STBitsPolicy::masks" />
   <function pattern="STFun::*" />

@@ -2,6 +2,7 @@
 #define ST_STLEXICALCASTER_H
 
 #include "boost/lexical_cast.hpp"
+#include <iostream>
 
 namespace ST{
 
@@ -30,16 +31,26 @@ namespace ST{
    * Template converter from string to any numeric type.
    * @param m_string the string which has to be converted
    * @param type the variable where the value will be stored
-   *
+   * @return bool true if success
    * @author Johan Luisier
+   * @author M Needham
    * @date 2008-10-14
    */
   template <typename T>
-  void fromString(const std::string& m_string, T& type)
+  bool fromString(const std::string& mystring, T& type)
   {
-    type = boost::lexical_cast<T>(m_string);
-  }
-
+    bool ok;
+    try{
+      ok = true;
+      type = boost::lexical_cast<T>(mystring);
+    } // try
+    catch(boost::bad_lexical_cast& e){
+      // catch expection if we fail...
+      ok = false;
+      std::cerr << "ERROR " << e.what() << "** " << mystring << " **" << std::endl;
+    } // catch
+    return ok;
+  };
 }
 
 #endif //ST_STLEXICALCASTER_H

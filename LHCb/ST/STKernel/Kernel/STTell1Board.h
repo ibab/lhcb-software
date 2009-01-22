@@ -1,4 +1,4 @@
-// $Id: STTell1Board.h,v 1.12 2008-11-05 15:31:43 mneedham Exp $
+// $Id: STTell1Board.h,v 1.13 2009-01-22 11:43:44 mneedham Exp $
 #ifndef _STTell1Board_H
 #define _STTell1Board_H 1
 
@@ -42,6 +42,9 @@ public:
 
   /// same board id
   bool sameID(const STTell1ID& id) const;
+
+  /// flat tell1 number as in itell1XXX etc
+  unsigned int flatTell1Number() const;
  
   /// channel is in this board
   bool isInside(const LHCb::STChannelID aOfflineChan,
@@ -95,6 +98,9 @@ public:
   // Fill the ASCII output stream
   virtual std::ostream& fillStream(std::ostream& s) const;
 
+  /** print method for python Not needed in C++ */
+  std::string toString() const;
+
 private:
 
   /// service box
@@ -108,6 +114,15 @@ private:
   std::string m_detType;
 
 };
+
+#include <sstream>
+#include <string>
+
+inline std::string STTell1Board::toString() const{
+  std::ostringstream o;
+  fillStream(o);
+  return o.str();
+}
 
 inline STTell1ID STTell1Board::boardID() const{
   return m_boardID;

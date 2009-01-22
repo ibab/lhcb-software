@@ -1,4 +1,4 @@
-// $Id: STTell1Board.cpp,v 1.10 2008-11-05 15:31:43 mneedham Exp $
+// $Id: STTell1Board.cpp,v 1.11 2009-01-22 11:43:45 mneedham Exp $
 #include "Kernel/STTell1Board.h"
 #include "Kernel/STDAQDefinitions.h"
 #include "Kernel/LHCbConstants.h"
@@ -140,12 +140,20 @@ std::string STTell1Board::serviceBox(const STDAQ::StripRepresentation& tell1Chan
 std::ostream& STTell1Board::fillStream( std::ostream& os ) const{
 
   // print function
+  os << m_detType + "Tell1: " << flatTell1Number() << std::endl;
   os << " Source ID Board: "  <<m_boardID.id() << " region " << m_boardID.region() 
      << " subID" <<  m_boardID.subID() << std::endl;
   os << "# readout sectors " << m_sectorsVector.size() << std::endl;
   std::vector<STChannelID>::const_iterator iterW = m_sectorsVector.begin();
   unsigned int wafer = 0u;
   for (; iterW !=  m_sectorsVector.end() ;++iterW, ++wafer){
+   
+    if (*iterW == LHCb::STChannelID(0) ){
+      // link is not loaded
+      os << "Unloaded Link" << std::endl;
+      continue;
+    }
+
     if (m_detType == "IT"){    
       os  << ITNames().UniqueSectorToString(*iterW)  << " "   << serviceBox(wafer) << std::endl;
     }
@@ -159,3 +167,9 @@ std::ostream& STTell1Board::fillStream( std::ostream& os ) const{
 
 }
 
+#include "Kernel/STBoardMapping.h"
+
+unsigned int STTell1Board::flatTell1Number() const{
+  return m_detType == "IT" ? STBoardMapping::ITSourceIDToNumberMap.find(boardID().id())->second:
+    STBoardMapping::TTSourceIDToNumberMap.find(boardID().id())->second;   
+}

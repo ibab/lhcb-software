@@ -1,4 +1,4 @@
-// $Id: STTell1ID.h,v 1.2 2008-07-18 09:34:56 mneedham Exp $
+// $Id: STTell1ID.h,v 1.3 2009-01-22 11:43:44 mneedham Exp $
 #ifndef _STTell1ID_H
 #define _STTell1ID_H 1
 
@@ -62,6 +62,9 @@ public:
   // Fill the ASCII output stream
   std::ostream& fillStream(std::ostream& s) const;
 
+  /** print method for python Not needed in C++ */
+  std::string toString() const;
+
   enum General { nullBoard =  0x0000ffff};
 
 private:
@@ -72,12 +75,15 @@ private:
   unsigned int m_id; /// STell1ID
 };
 
-/*
-inline STTell1ID::operator int() const
-{
-   return m_id;
+
+#include <sstream>
+#include <string>
+
+inline std::string STTell1ID::toString() const{
+  std::ostringstream o;
+  fillStream(o);
+  return o.str();
 }
-*/
 
 inline bool STTell1ID::operator==(const STTell1ID& testID) const
 {

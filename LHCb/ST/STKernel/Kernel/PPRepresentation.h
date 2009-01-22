@@ -1,4 +1,4 @@
-// $Id: PPRepresentation.h,v 1.2 2008-09-01 08:51:11 mneedham Exp $
+// $Id: PPRepresentation.h,v 1.3 2009-01-22 11:43:44 mneedham Exp $
 #ifndef _STDAQ_PPRepresentation_H
 #define _STDAQ_PPRepresentation_H 1
 
@@ -67,6 +67,9 @@ namespace STDAQ{
     /** Fill the ASCII output stream **/ 
     std::ostream& fillStream(std::ostream& s) const;
 
+    /** print method for python, not needed in C++ **/
+    std::string toString() const;
+
   private:
 
     unsigned int m_value;
@@ -124,6 +127,15 @@ inline std::ostream& STDAQ::PPRepresentation::fillStream(std::ostream& s) const 
 
   return s;
 }
+
+#include <sstream>
+
+inline std::string STDAQ::PPRepresentation::toString() const{
+  std::ostringstream o;
+  fillStream(o);
+  return o.str();
+}
+
 
 #endif //  _STDAQ_PPRepresentation_H
  

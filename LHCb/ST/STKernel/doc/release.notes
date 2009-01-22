@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.47 2009-01-08 17:36:25 cattanem Exp $
+! $Id: release.notes,v 1.48 2009-01-22 11:43:44 mneedham Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
+
+! 2009-01-22 M Needham
+ - Add toString functions for printing in python
+ - Improve STTell1Board printout
+ - Add Safety [exception catching] to STLexicalCastor from string to Primitive type
 
 !====================== STKernel v1r10 2009-01-08 ===========================
 ! 2009-01-06 M Needham
