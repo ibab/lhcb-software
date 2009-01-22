@@ -510,18 +510,18 @@ std::string BaseServiceMap::createAdderName (const std::string &serviceName){
 std::string BaseServiceMap::createSaverName (const std::string &serviceName){
   // Creating the task name for the saver
   std::vector<std::string> serviceParts = Misc::splitString(serviceName, "/");
-  //std::string svctype = serviceParts[0];
-  //std::string utgid = serviceParts[1];
-  std::string utgid = serviceParts[0];
+  std::string svctype = serviceParts[0];
+  std::string utgid = serviceParts[1];
+//  std::string utgid = serviceParts[0];
   std::vector<std::string> utgidParts = Misc::splitString(utgid, "_");
   if (utgidParts.size() == 4) {
     std::string partName = utgidParts[0];
     std::string taskName = utgidParts[2];
     return partName + "-" + taskName;
   }
-  if (utgidParts[0].find("PART")!= std::string::npos) {
-    return m_processMgr->getPartitionName() + "_Saver_1/";
-  }
+ // if (utgidParts[0].find("PART")!= std::string::npos) {
+ //   return m_processMgr->getPartitionName() + "_Saver_1/";
+ // }
   return utgid; // it should be equal to the serverName
 }
 
@@ -551,14 +551,14 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName)
     
      std::vector<std::string> serviceParts = Misc::splitString(m_dimInfoIt->first, "_");
   
-     std::string taskName = "unknownTask";
+     std::string taskName = "Moore";
   
-     if (3 == serviceParts.size()) {
+ /*    if (3 == serviceParts.size()) {
        taskName = "Moore";
      }
      else if (4 == serviceParts.size()) {
        taskName = serviceParts[2];
-     }
+     }*/
 
     
    // std::string tmpfile = saveDir + m_dimInfoIt->first + "-" + timestr + ".root";
@@ -581,73 +581,9 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName)
       std::string type = it->second->monObject()->typeName();
       msg << MSG::DEBUG << " Service " << it->first << " is a " << type <<endreq;
       if ((s_monH1F == type)||(s_monH1D == type)||(s_monH2F == type)||(s_monH2D == type)||(s_monProfile == type)) {
-//        if (!m_processMgr->saveDiff()) {
           it->second->loadMonObject();
           it->second->monObject()->loadObject();
           it->second->monObject()->write();
-//         }
-//         else {
-//           if (s_monH1F == type) {
-//             TH1F oldTH1F;
-//             ((MonH1F*) it->second->monObject())->hist()->Copy(oldTH1F);
-//             it->second->loadMonObject();
-//             it->second->monObject()->loadObject();
-//             TH1F newTH1F;
-//             ((MonH1F*) it->second->monObject())->hist()->Copy(newTH1F);
-//             newTH1F.Add(&oldTH1F, -1);
-//             newTH1F.Write();
-//           }
-//           else if (s_monH1D == type) {
-//             TH1D oldTH1D;
-//             ((MonH1D*) it->second->monObject())->hist()->Copy(oldTH1D);
-//             it->second->loadMonObject();
-//             it->second->monObject()->loadObject();
-//             TH1D newTH1D;
-//             ((MonH1D*) it->second->monObject())->hist()->Copy(newTH1D);
-//             newTH1D.Add(&oldTH1D, -1);
-//             newTH1D.Write();
-//           }
-//           else if (s_monH2F == type) {
-//             TH2F oldTH2F;
-//             ((MonH2F*) it->second->monObject())->hist()->Copy(oldTH2F);
-//             it->second->loadMonObject();
-//             it->second->monObject()->loadObject();
-//             TH2F newTH2F;
-//             ((MonH2F*) it->second->monObject())->hist()->Copy(newTH2F);
-//             newTH2F.Add(&oldTH2F, -1);
-//             newTH2F.Write();
-//           }
-//           else if (s_monH2D == type) {
-//             TH2D oldTH2D;
-//             ((MonH2D*) it->second->monObject())->hist()->Copy(oldTH2D);
-//             it->second->loadMonObject();
-//             it->second->monObject()->loadObject();
-//             TH2D newTH2D;
-//             ((MonH2D*) it->second->monObject())->hist()->Copy(newTH2D);
-//             newTH2D.Add(&oldTH2D, -1);
-//             newTH2D.Write();
-//           }
-//           else if (s_monProfile == type) {
-//             //TH1F* th1f =  ((MonH1F*) it2->second->monObject())->hist();
-// 	    TProfile oldTProfile;
-// 	    msg << MSG::INFO << " A1" <<endreq;
-// 	    TProfile *oldOldProfile = ((MonProfile*) it->second->monObject())->profile();
-// 	    msg << MSG::INFO << " A2" <<endreq;
-// 	    oldOldProfile->Copy(oldTProfile);
-// 	    msg << MSG::INFO << " B" <<endreq;
-// 	    it->second->loadMonObject();
-//             msg << MSG::INFO << " C" <<endreq;
-//             it->second->monObject()->loadObject();
-//             msg << MSG::INFO << " D" <<endreq;
-// 	    TProfile newTProfile;
-//             msg << MSG::INFO << " E" <<endreq;
-// 	    ((MonProfile*) it->second->monObject())->profile()->Copy(newTProfile);
-//             msg << MSG::INFO << " F" <<endreq;
-//             newTProfile.Add(&oldTProfile, -1);
-//             msg << MSG::INFO << " G" <<endreq;
-//             newTProfile.Write();
-//           }
-// 	}
       }
       else {
         msg << MSG::ERROR << "MonObject of type " << type << " can not be written."<< endreq; 
