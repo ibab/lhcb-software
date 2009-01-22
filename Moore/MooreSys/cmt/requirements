@@ -9,6 +9,7 @@ branches doc cmt
 use  Moore    v6r0    Hlt
 use  TCKData  v1r7    Hlt
 use  HltLuminosityMonitor  v1r1    Hlt
+use  HltConf  v2r0    Hlt
 
 
 # Allow the generation of QMTest summary 
