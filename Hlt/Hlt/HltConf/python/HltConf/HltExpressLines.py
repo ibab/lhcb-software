@@ -5,12 +5,12 @@ from HltConf.HltLine import Hlt1Line as Line
 #
 class HltExpressLinesConf(LHCbConfigurableUser) :
     # steering variables
-    __slots__ = { }
+    __slots__ = { 'Prescale' : 0.0025 }
 
     def __apply_configuration__(self) : 
         Line( 'XPress' 
             ,  ODIN = "( ODIN_TRGTYP != LHCb.ODIN.RandomTrigger )"
-            , prescale = 0.0025
+            ,  prescale = self.getProp('Prescale')
             )
 
 
@@ -86,4 +86,3 @@ class HltExpressLinesConf(LHCbConfigurableUser) :
         #              )
         #
         #
-        #Line( 'VeloMonitor' , HLT = "HLT_PASS('Hlt1VeloCSideDecision') | HLT_PASS('Hlt1VeloASideDecision')" )

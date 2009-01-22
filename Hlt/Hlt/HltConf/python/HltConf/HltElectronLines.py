@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltElectronLines.py,v 1.3 2009-01-21 16:53:57 witekma Exp $
+# $Id: HltElectronLines.py,v 1.4 2009-01-22 10:06:54 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Photon Lines
@@ -12,7 +12,7 @@
 '''
 # =============================================================================
 __author__  = 'Gerhard Raven Gerhard.Raven@nikhef.nl'
-__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $'
+__version__ = 'CVS Tag $Name: not supported by cvs2svn $ $Revision: 1.4 $'
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -74,7 +74,6 @@ class HltElectronLinesConf(LHCbConfigurableUser) :
              [ prepElectron
              , Member( 'TF','Decision'
                      , OutputSelection = '%Decision'
-                     , InputSelection  = prepElectron.outputSelection()
                      , FilterDescriptor = ['PT,>,'+str(self.getProp('SingleEle_PtCut'))]
                      , HistogramUpdatePeriod = 0
                      , HistoDescriptor = { 'PT' : ('PT',0.,8000.,100), 'PTBest' : ('PTBest',0.,8000.,100)}

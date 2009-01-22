@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.35 2009-01-15 20:25:47 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.36 2009-01-22 10:06:54 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -14,6 +14,8 @@ from Configurables       import LoKi__L0Filter    as L0Filter
 from Configurables       import LoKi__HDRFilter   as HltFilter
 from Configurables       import HltGlobalMonitor
 from Configurables       import HltVertexReportsMaker
+from Configurables       import HltSelReportsMaker
+from Configurables       import L0DUMultiConfigProvider
 from HltConf.HltLine     import Hlt1Line   as Line
 from HltConf.HltLine     import hlt1Lines
 from HltConf.HltLine     import hlt1Selections
@@ -28,6 +30,8 @@ from HltConf.HltElectronLines import HltElectronLinesConf
 from HltConf.HltPhotonLines   import HltPhotonLinesConf
 from HltConf.HltExpressLines  import HltExpressLinesConf
 from HltConf.Hlt1             import Hlt1Conf
+import HltConf.HltL0Candidates
+from HltConf.HltL0Candidates  import setupL0Channels, decodeL0Channels
 
 class HltConf(LHCbConfigurableUser):
     __used_configurables__ = [ HltCommissioningLinesConf
@@ -40,25 +44,39 @@ class HltConf(LHCbConfigurableUser):
                              , HltPhotonLinesConf
                              , HltExpressLinesConf
                              , Hlt1Conf ]
-    __slots__ = {
-          "hltType" :          'Hlt1+Hlt2'
-        , "userAlgorithms":    [ ]  # put here user algorithms to add
-        , "replaceL0BanksWithEmulated" : False
-        , "Hlt2IgnoreHlt1Decision" : False # run Hlt2 even if Hlt1 failed
-        , "verbose" :          False # print the generated Hlt sequence
-        , "ActiveHlt1Lines" :      [] # list of lines to be added
-        }   
-    def validHltTypes(self):
-        return [ 'NONE',
-                 'Hlt1',
-                 'Hlt2',
-                 'Hlt1+Hlt2',
-                 'DEFAULT' ]
+    __slots__ = { "L0TCK"                      : ''
+                , "hltType"                    : 'Hlt1+Hlt2'
+                , "replaceL0BanksWithEmulated" : False
+                , "Hlt2IgnoreHlt1Decision"     : False # run Hlt2 even if Hlt1 failed
+                , "Verbose"                    : False # print the generated Hlt sequence
+                , "ActiveHlt1Lines"            : [] # list of lines to be added
+                }   
                 
+    def defineL0Channels(self, L0TCK = None) :
+            if L0TCK :
+                importOptions('$L0TCK/L0DUConfig.opts')
+                if L0TCK not in L0DUMultiConfigProvider('L0DUConfig').registerTCK :
+                    raise KeyError('requested L0 TCK %s is not known'%L0TCK)
+                channels = decodeL0Channels( L0TCK )
+            else :
+                channels = [ 'Muon','DiMuon','MuonNoGlob','Electron','Photon','Hadron' ,'LocalPi0','GlobalPi0' ]
+            setupL0Channels( channels ) 
+
+
     def confType(self,hlttype) :
+            self.defineL0Channels( self.getProp('L0TCK') )
+            #/**
+            # * main HLT sequencer
+            # */
+            Hlt = GaudiSequencer('Hlt', ModeOR= True, ShortCircuit = False
+                                , Members = [ GaudiSequencer('Hlt1') 
+                                            , GaudiSequencer('Hlt2') # NOTE: Hlt2 checks itself whether Hlt1 passed or not
+                                            , GaudiSequencer('HltEndSequence') 
+                                            ] )
             trans = { 'Hlt1'   : 'LU+L0+VE+XP+MU+HA+PH+EL'
                     , 'DEFAULT': 'PA+LU+L0+VE+XP'
                     }
+            importOptions('$HLTCONFROOT/options/HltRecoSequence.py')
             for short,full in trans.iteritems() : hlttype = hlttype.replace(short,full)
             type2conf = { 'PA' : HltCommissioningLinesConf # PA for 'PAss-thru' (PT was considered bad)
                         , 'LU' : HltLumiLinesConf
@@ -82,7 +100,6 @@ class HltConf(LHCbConfigurableUser):
                 #        So anyone configuring some part explictly will _always_ get
                 #        that part of the Hlt run, even if it does not appear in HltType...
                 type2conf[i]()
-            importOptions('$HLTCONFROOT/options/HltMain.py')
             Hlt1Conf()
             if hlttype.find('Hlt2') != -1 :   
                 importOptions('$HLTCONFROOT/options/Hlt2.py')
@@ -92,7 +109,7 @@ class HltConf(LHCbConfigurableUser):
                     Sequence("Hlt2CheckHlt1Passed").Members = [ L0Filter('L0Pass', Code = "L0_DECISION" ) ]
                 else : 
                     Sequence("Hlt2CheckHlt1Passed").Members = [ HltFilter('Hlt1GlobalPass' , Code = "HLT_PASS('Hlt1Global')" ) ]
-            if self.getProp("verbose") : log.info( Sequence('Hlt')  )
+            if self.getProp("Verbose") : log.info( Sequence('Hlt')  )
 
     def postConfigAction(self) : 
         ## Should find a more elegant way of doing this...
@@ -105,14 +122,17 @@ class HltConf(LHCbConfigurableUser):
         Line('Global', HLT = 'HLT_DECISION' )
         activeLines = self.getProp('ActiveHlt1Lines') 
         lines = [ i for i in hlt1Lines() if ( not activeLines or i.name() in activeLines ) ]
+        log.info( 'List of configured Hlt1Lines : ' + str(hlt1Lines()) )
         log.info( 'List of Hlt1Lines to be added to Hlt1 : ' + str(lines) )
-        Sequence('Hlt1').Members = [ i.sequencer() for i in  lines ] # note : should verify order (?) -- global should be last hlt1line! 
+        Sequence('Hlt1').Members = [ i.sequencer() for i in lines ] # note : should verify order (?) -- global should be last hlt1line! 
         ## and tell the monitoring what it should expect..
-        ## uhhh... need to pick only those in ActiveHlt1Lines...
-        HltGlobalMonitor().Hlt1Decisions = list( hlt1Decisions() )
+        HltGlobalMonitor().Hlt1Decisions = [ i.decision() for i in lines ]
         ## and persist some vertices...
         ## uhhh... need to pick only those in ActiveHlt1Lines...
-        HltVertexReportsMaker().VertexSelections = [ i for i in hlt1Selections()['All'] if i is 'PV2D' or ( i.startswith('Hlt1Velo') and i.endswith('Decision') ) ]
+        vertices = [ i for i in hlt1Selections()['All'] if i is 'PV2D' or   ( i.startswith('Hlt1Velo') and i.endswith('Decision') ) ]
+        HltVertexReportsMaker().VertexSelections = vertices
+        ## do not write out the candidates for the vertices we store 
+        HltSelReportsMaker().SelectionMaxCandidates.update( dict( [ (i,0) for i in vertices if i.endswith('Decision') ] ) )
 
     def __apply_configuration__(self):
         """
@@ -124,8 +144,5 @@ class HltConf(LHCbConfigurableUser):
         log.info("Loaded HltInit")
         if self.getProp('replaceL0BanksWithEmulated') : 
             importOptions('$L0DUROOT/options/ReplaceL0BanksWithEmulated.opts')
-        hlttype = self.getProp('hltType')
-        self.confType(hlttype)
-        for userAlg in self.getProp("userAlgorithms"):
-            ApplicationMgr().TopAlg += [ userAlg ]
+        self.confType(self.getProp('hltType'))
         appendPostConfigAction( self.postConfigAction )

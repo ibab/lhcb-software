@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.1 2009-01-12 11:03:12 graven Exp $
+# $Id: Hlt1.py,v 1.2 2009-01-22 10:06:54 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.1 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -49,9 +49,6 @@ class Hlt1Conf(LHCbConfigurableUser):
 
         importOptions('$HLTCONFROOT/options/HltInit.py')
         importOptions('$HLTCONFROOT/options/HltLumiInit.py')
-
-        # Lines which are 'always' there...
-
 
         ## set triggerbits
         #  0-31: reserved for L0  // need to add L0DU support to routing bit writer
