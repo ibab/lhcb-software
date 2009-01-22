@@ -1,4 +1,4 @@
-// $Id: StateSimpleBetheBlochEnergyCorrectionTool.cpp,v 1.8 2008-08-11 07:16:23 truf Exp $
+// $Id: StateSimpleBetheBlochEnergyCorrectionTool.cpp,v 1.9 2009-01-22 09:35:42 wouter Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -39,7 +39,9 @@ StateSimpleBetheBlochEnergyCorrectionTool::StateSimpleBetheBlochEnergyCorrection
   
   declareProperty( "EnergyLossFactor",           m_energyLossCorr = 354.1 * MeV*mm2/mole );
   declareProperty( "MaximumEnergyLoss",          m_maxEnergyLoss  = 100. * MeV           );
-  declareProperty( "MinMomentumAfterEnergyCorr", m_minMomentumAfterEnergyCorr = 10.*MeV  );
+  declareProperty( "MinMomentumAfterEnergyCorr", m_minMomentumAfterEnergyCorr = 10.*MeV  );  
+  declareProperty( "EnergyLossError",            m_sqrtEError=1.7 * sqrt(MeV) ); // proportional to sqrt(E)
+  declareProperty( "UseEnergyLossError",         m_useEnergyLossError=false) ;
 }
 
 //=============================================================================
@@ -69,8 +71,17 @@ void StateSimpleBetheBlochEnergyCorrectionTool::correctState( LHCb::State& state
   double newP = 0.0;
   qOverP < 0.0 ? newP = GSL_MIN(1.0/qOverP - bbLoss, -m_minMomentumAfterEnergyCorr) :
                  newP = GSL_MAX(1.0/qOverP + bbLoss, m_minMomentumAfterEnergyCorr);
-
+  
   tX[4] = 1.0/newP;
+  
+  // correction on cov
+  if( m_useEnergyLossError && m_sqrtEError > 0 ) {
+    // error on dE is proportional to the sqrt of dE:
+    // double sigmadE = m_sqrtEError * std::sqrt(std::abs(bbLoss))
+    double err2 = m_sqrtEError * m_sqrtEError * std::abs(bbLoss) * tX[4] * tX[4] ;
+    Gaudi::TrackSymMatrix& cov = state.covariance(); 
+    cov(4,4) += err2;
+  }
 }
 
 //=============================================================================

@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2009-01-22 - Wouter Hulsbergen
+ - Added option to correct for error on energy loss error on StateSimpleBetheBlochEnergyCorrectionTool
+
 ! 2009-01-20 - Marco Cattaneo
  - Migrate to LHCb::ParticlePropertySvc
 
