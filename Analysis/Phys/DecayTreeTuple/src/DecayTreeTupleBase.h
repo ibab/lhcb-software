@@ -1,4 +1,4 @@
-// $Id: DecayTreeTupleBase.h,v 1.7 2009-01-21 15:03:42 pkoppenb Exp $
+// $Id: DecayTreeTupleBase.h,v 1.8 2009-01-22 09:27:33 pkoppenb Exp $
 #ifndef JBOREL_DECAYTREETUPLEBASE_H
 #define JBOREL_DECAYTREETUPLEBASE_H 1
 
@@ -8,6 +8,8 @@
 #include "OnePart.h"
 #include "TupleToolDecay.h"
 #include "Kernel/IEventTupleTool.h"
+#include "Kernel/IParticleTupleTool.h"
+#include "Kernel/IMCParticleTupleTool.h"
 #include "boost/lexical_cast.hpp" 
 #include "Kernel/Escape.h"
 
@@ -43,9 +45,15 @@ class DecayTreeTupleBase : public DVAlgorithm  {
   //! the decay descriptor
   bool getDecayMatches( const LHCb::MCParticle::ConstVector& src, LHCb::MCParticle::ConstVector& target );
   //! Check if ready to fill or trigger the initialization
-  void matchSubDecays( const LHCb::Particle::ConstVector& );
+  //! this is where all the difference between MC particle and Particle occurs
+  void matchSubDecays( const LHCb::Particle::ConstVector& ,
+                       LHCb::Particle::ConstVector& , 
+                       const TupleToolDecay* );
   //! Check if ready to fill or trigger the initialization
-  void matchSubDecays( const LHCb::MCParticle::ConstVector& );
+  //! this is where all the difference between MC particle and Particle occurs
+  void matchSubDecays( const LHCb::MCParticle::ConstVector& ,
+                       LHCb::MCParticle::ConstVector& , 
+                       const TupleToolDecay*  );
   /// Call successively all OnePart's fill methods
   bool fillOnePart( Decays::OnePart*, Tuples::Tuple&, const LHCb::Particle* mother, const LHCb::Particle* );  
   /// Call successively all OnePart's fill methods 
@@ -61,6 +69,16 @@ class DecayTreeTupleBase : public DVAlgorithm  {
   }
   /// get daughters for MCParticles, not so trivially
   LHCb::MCParticle::ConstVector daughtersVector(const LHCb::MCParticle* d) const ;
+  /// Switch for initializeStufferTools
+  void switchStufferTools(const LHCb::MCParticle*){
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Initialize MCParticle tools" << endmsg ;
+    initializeStufferTools(m_mcTools);
+  } ;
+  /// Switch for initializeStufferTools
+  void switchStufferTools(const LHCb::Particle*){
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Initialize Particle tools" << endmsg ;
+    initializeStufferTools(m_pTools);
+  } ;
   
  protected:
   std::vector<std::string> getEventTools() const;
@@ -80,13 +98,12 @@ class DecayTreeTupleBase : public DVAlgorithm  {
 
   std::vector<Decays::OnePart*> m_parts;
 
-  std::vector< IMCParticleTupleTool* > m_mTools; // TMP
+  std::vector< IMCParticleTupleTool* > m_mcTools;
   std::vector< IEventTupleTool* > m_eTools;
+  std::vector< IParticleTupleTool* > m_pTools;
 
   IDecayFinder* m_dkFinder; ///< Decay finder
   IMCDecayFinder* m_mcdkFinder; ///< MC truth decay finder
-  std::vector<std::string> getParticleTools(const std::vector< IParticleTupleTool* > pTools) const;
-  std::vector< IParticleTupleTool* > m_pTools;
 
   //=============================================================================
   // Templated methods accessed from other classes need to be in the header

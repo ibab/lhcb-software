@@ -1,4 +1,4 @@
-// $Id: MCDecayTreeTuple.cpp,v 1.1 2009-01-21 15:03:42 pkoppenb Exp $
+// $Id: MCDecayTreeTuple.cpp,v 1.2 2009-01-22 09:27:33 pkoppenb Exp $
 // Include files 
 
 #include "boost/lexical_cast.hpp" 
@@ -25,6 +25,12 @@ MCDecayTreeTuple::MCDecayTreeTuple( const std::string& name,
                                 ISvcLocator* pSvcLocator)
   : DecayTreeTupleBase ( name , pSvcLocator )
 {
+  declareProperty( "TupleName", m_tupleName="MCDecayTree" );
+  // fill some default value
+  m_toolList.push_back( "MCTupleToolMCTruth" );
+  m_toolList.push_back( "TupleToolEventInfo" );
+  
+  declareProperty( "ToolList", m_toolList );
 
 }
 //=============================================================================

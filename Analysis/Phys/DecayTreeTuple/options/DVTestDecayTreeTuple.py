@@ -50,7 +50,7 @@ tuple.ToolList +=  [
     , "TupleToolPrimaries"
     , "TupleToolEventInfo"
     , "TupleToolTrackInfo"
-    , "TupleToolTISTOS"
+#    , "TupleToolTISTOS"
      ]
 tuple.addTool( PhysDesktop())
 tuple.PhysDesktop.InputLocations = ["DC06SelBu2eeK"]

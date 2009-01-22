@@ -1,4 +1,4 @@
-// $Id: DecayTreeTupleBase.cpp,v 1.7 2009-01-21 15:03:42 pkoppenb Exp $
+// $Id: DecayTreeTupleBase.cpp,v 1.8 2009-01-22 09:27:33 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -8,10 +8,6 @@
 #include "MCInterfaces/IMCDecayFinder.h"
 
 #include "DecayTreeTupleBase.h"
-
-#include "Kernel/IParticleTupleTool.h"
-#include "Kernel/IMCParticleTupleTool.h"
-#include "Kernel/IEventTupleTool.h"
 
 #include "GaudiKernel/IRegistry.h" // IOpaqueAddress
 
@@ -35,18 +31,9 @@ DecayTreeTupleBase::DecayTreeTupleBase( const std::string& name,
 {
   declareProperty( "Branches", m_decayMap );
   declareProperty( "Decay", m_headDecay );
-  declareProperty( "TupleName", m_tupleName="DecayTree" );
   declareProperty( "UseLabXSyntax", m_useLabName = false );
 
   declareProperty( "UseToolNameForBranchName", m_tupleNameAsToolName = true );
-
-  // fill some default value
-  m_toolList.push_back( "TupleToolKinematic" );
-  m_toolList.push_back( "TupleToolPid" );
-  m_toolList.push_back( "TupleToolGeometry" );
-  m_toolList.push_back( "TupleToolEventInfo" );
-  
-  declareProperty( "ToolList", m_toolList );
 
 }
 //=============================================================================
@@ -61,8 +48,8 @@ StatusCode DecayTreeTupleBase::initialize() {
   StatusCode sc = DVAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
 
-  if (msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
-  return StatusCode::FAILURE;
+  if (msgLevel(MSG::DEBUG)) debug() << "==> Initialize (doing nothing)" << endmsg;
+  return StatusCode::SUCCESS;
 }
 //=============================================================================
 // Main execution
@@ -208,38 +195,24 @@ void DecayTreeTupleBase::printInfos() const {
   
 }
 // ===============================================================
-void DecayTreeTupleBase::matchSubDecays( const Particle::ConstVector& row ){
-
-  std::vector<TupleToolDecay*>::iterator mit;
-  Particle::ConstVector buffer;
+// this is where all the difference between MC particle and Particle occurs
+void DecayTreeTupleBase::matchSubDecays( const Particle::ConstVector& row ,
+                                         Particle::ConstVector& buffer, 
+                                         const TupleToolDecay* mit){
 
   const Particle* head = row[0];
-
-  // is there any special name for this Particle ?:
-  for( mit=m_decays.begin(); m_decays.end()!=mit; ++mit ){
-    if( !*mit ) continue;
-
-    buffer.clear();
-    (*mit)->decayFinder()->decayMembers( head, buffer );
-    findAssociatedOneParts( buffer, row, *mit );
-  }
+  mit->decayFinder()->decayMembers( head, buffer );
+  findAssociatedOneParts( buffer, row, mit, m_pTools );
 }
 // ===============================================================
-void DecayTreeTupleBase::matchSubDecays( const MCParticle::ConstVector& row ){
-
-  std::vector<TupleToolDecay*>::iterator mit;
-  MCParticle::ConstVector buffer;
-
+// this is where all the difference between MC particle and Particle occurs
+void DecayTreeTupleBase::matchSubDecays( const MCParticle::ConstVector& row,
+                                         MCParticle::ConstVector& buffer, 
+                                         const TupleToolDecay* mit){
   const MCParticle* head = row[0];
-
-  // is there any special name for this MCParticle ?:
-  for( mit=m_decays.begin(); m_decays.end()!=mit; ++mit ){
-    if( !*mit ) continue;
-
-    buffer.clear();
-    (*mit)->mcDecayFinder()->decayMembers( head, buffer );
-    findAssociatedOneParts( buffer, row, *mit );
-  }
+  mit->mcDecayFinder()->decayMembers( head, buffer );
+  // this is the cause of all the difference between MC particle and Particle occurs
+  findAssociatedOneParts( buffer, row, mit, m_mcTools ); 
 }
 //=============================================================================
 // Moved from OnePart
@@ -301,13 +274,4 @@ bool DecayTreeTupleBase::getDecayMatches( const MCParticle::ConstVector& pool
   }
   return !( heads.empty() );  
 }
-//=============================================================================
-//=============================================================================
-std::vector<std::string> DecayTreeTupleBase::getParticleTools(const std::vector< IParticleTupleTool* > pTools ) const {
-  std::vector<std::string> ret;
-  ret.reserve( pTools.size() );
-  std::vector<IParticleTupleTool*>::const_iterator it = pTools.begin();
-  for( ; pTools.end() != it; ++it ) ret.push_back( (*it)->type() );
-  return ret;
-}
-//=============================================================================
+

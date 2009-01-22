@@ -1,4 +1,4 @@
-// $Id: MCTupleToolMCTruth.cpp,v 1.1 2009-01-19 18:07:44 pkoppenb Exp $
+// $Id: MCTupleToolMCTruth.cpp,v 1.2 2009-01-22 09:27:33 pkoppenb Exp $
 // Include files 
 #include "gsl/gsl_sys.h"
 
@@ -37,10 +37,10 @@ MCTupleToolMCTruth::MCTupleToolMCTruth( const std::string& type,
   declareInterface<IMCParticleTupleTool>(this);
 
   // Store kinetic information from the associated candidate
-  declareProperty( "StoreKineticInfo",  m_storeKinetic = false );
+  declareProperty( "StoreKineticInfo",  m_storeKinetic = true );
 
   // Store the end and origin true vertex information
-  declareProperty( "StoreVertexInfo",  m_storeVertexes = false );
+  declareProperty( "StoreVertexInfo",  m_storeVertexes = true );
   
   // Store the propertime information for associated composite particle
   declareProperty( "StorePropertimeInfo", m_storePT = true );
@@ -78,7 +78,6 @@ StatusCode MCTupleToolMCTruth::fill( const LHCb::MCParticle*
   // pointer is ready, prepare the values:
   if( mcp ) {
     mcPid = mcp->particleID().pid();
-
     trueP = mcp->momentum();
 
     const SmartRefVector< LHCb::MCVertex > & endVertices = mcp->endVertices();

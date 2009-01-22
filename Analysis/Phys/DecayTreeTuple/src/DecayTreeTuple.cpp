@@ -1,4 +1,4 @@
-// $Id: DecayTreeTuple.cpp,v 1.13 2009-01-21 11:12:22 pkoppenb Exp $
+// $Id: DecayTreeTuple.cpp,v 1.14 2009-01-22 09:27:33 pkoppenb Exp $
 // Include files 
 
 
@@ -26,6 +26,14 @@ DecayTreeTuple::DecayTreeTuple( const std::string& name,
                                 ISvcLocator* pSvcLocator)
   : DecayTreeTupleBase ( name , pSvcLocator )
 {
+  declareProperty( "TupleName", m_tupleName="DecayTree" );
+  // fill some default value
+  m_toolList.push_back( "TupleToolKinematic" );
+  m_toolList.push_back( "TupleToolPid" );
+  m_toolList.push_back( "TupleToolGeometry" );
+  m_toolList.push_back( "TupleToolEventInfo" );
+  
+  declareProperty( "ToolList", m_toolList );
 
 }
 //=============================================================================
@@ -38,11 +46,13 @@ DecayTreeTuple::~DecayTreeTuple() {}
 //=============================================================================
 StatusCode DecayTreeTuple::initialize() {
   StatusCode sc = DecayTreeTupleBase::initialize(); 
+  if (!sc) err() << "Error from base class" << endmsg ;
   if ( sc.isFailure() ) return sc;
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-
-  return initializeDecays(false);
+  sc =  initializeDecays(false);
+  if (!sc) err() << "Error from initializeDecays(false)" << endmsg ;
+  return sc ;
   
 }
 //=============================================================================
