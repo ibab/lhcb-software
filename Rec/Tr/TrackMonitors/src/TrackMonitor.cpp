@@ -1,4 +1,4 @@
-// $Id: TrackMonitor.cpp,v 1.9 2009-01-19 10:22:25 dhcroft Exp $
+// $Id: TrackMonitor.cpp,v 1.10 2009-01-22 18:06:49 dhcroft Exp $
 // Include files 
 #include "TrackMonitor.h"
 
@@ -171,7 +171,9 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
     std::string names[] = { "VeloR","VeloPhi","VeloLiteR",
 			    "VeloLitePhi","TT","IT","OT","Muon",
 			    "TTLite","ITLite" } ;
-    double resmax[] = { 0.1,0.1,0.5,0.5,2.0,10 } ;
+    double resmax[] = { 0.1,0.1,0.1,0.1, //VeloR,VeloPhi,VeloLiteR.VeloLitePhi
+			0.5,0.5,2.0,10,  // TT,IT,OT,Muon
+			0.5,0.5 } ;      // TTLite,ITLite
     for( LHCb::Track::NodeContainer::const_iterator inode = track.nodes().begin() ;
 	 inode != track.nodes().end(); ++inode) 
       if( (*inode)->type() == LHCb::Node::HitOnTrack 
