@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltVeloLines.py,v 1.2 2009-01-12 11:02:19 graven Exp $
+# $Id: HltVeloLines.py,v 1.3 2009-01-22 14:22:27 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines for the VELO closing proceure
@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
 # =============================================================================
 
 #
@@ -30,7 +30,7 @@ from HltConf.HltLine import Hlt1Member as Member
 
 
 class HltVeloLinesConf(LHCbConfigurableUser):
-   __slots__ = { 'Prescale'  : 1
+   __slots__ = { 'Prescale'  : 0.0001
                , 'MinimumNumberOfRClusters'   : 12 # 4 tracks with 3 hits
                , 'MinimumNumberOfPhiClusters' : 12 # 4 tracks with 3 hits
                , 'MaxNumberOfClusters'        : 450 # 0.5% occupancy
