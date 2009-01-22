@@ -1,13 +1,20 @@
-// $Id: STChannelID.cpp,v 1.1 2007-07-11 13:33:34 jonrob Exp $
+// $Id: STChannelID.cpp,v 1.2 2009-01-22 11:42:40 mneedham Exp $
 
 // local
 #include "Kernel/STChannelID.h"
+#include <sstream>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : STChannelID
 //
-// 2007-07-11 : Chris Jones
+// 2007-08-11 : M Needham
 //-----------------------------------------------------------------------------
+
+std::string  LHCb::STChannelID::toString() const{
+  std::ostringstream o;
+  fillStream(o);
+  return o.str();
+}
 
 std::ostream& LHCb::STChannelID::fillStream(std::ostream& s) const
 {
@@ -21,8 +28,5 @@ std::ostream& LHCb::STChannelID::fillStream(std::ostream& s) const
     << " detRegion=" << detRegion()
     << " layer=" << layer()
     << " station=" << station();
-  if ( uniqueLayer()     ) s << " uniqueLayer";
-  if ( uniqueDetRegion() ) s << " uniqueDetRegion";
-  if ( uniqueSector()    ) s << " uniqueSector";
   return s << " }";
 }

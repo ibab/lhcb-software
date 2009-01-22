@@ -1,11 +1,17 @@
 #include "Kernel/STChannelID.h"
 #include "Kernel/ITNames.h"
 #include "boost/lexical_cast.hpp"
+#include <iostream>
 
 std::string LHCb::ITNames::UniqueSectorToString(const LHCb::STChannelID& chan) {
   std::string theString = UniqueLayerToString(chan) + "Sector" + boost::lexical_cast<std::string>(chan.sector());
   return theString;
 }
+
+std::string LHCb::ITNames::channelToString(const LHCb::STChannelID& chan) {
+  std::string theStrip = UniqueSectorToString(chan) + "Strip" + boost::lexical_cast<std::string>(chan.strip());
+  return theStrip;
+}  
 
 std::vector<std::string> LHCb::ITNames::stations() {
 
@@ -80,7 +86,93 @@ std::vector<std::string> LHCb::ITNames::layers() {
   return layers;
 }
 
+LHCb::STChannelID LHCb::ITNames::stringToChannel(const std::string& name)  {
+
+  // convert string to channel
+
+  // get the station, layer and box
+  const std::vector<std::string> thestations = stations(); 
+  const unsigned int station = findStationType(name, thestations);
+ 
+  const std::vector<std::string> thelayers = layers(); 
+  const unsigned int layer = findLayerType(name, thelayers );
+
+  const std::vector<std::string> theboxes = boxes(); 
+  const unsigned int box = findBoxType(name, theboxes);
+ 
+  // sector and strip is different
+  unsigned int strip; unsigned int sector;
+  std::string::size_type startSector = name.find("Sector");
+  std::string::size_type startStrip = name.find("Strip");
+
+  if (startSector == std::string::npos){
+    sector = 0;
+    strip = 0;
+  }
+  else if (startStrip == std::string::npos){
+    strip = 0;
+    std::string sectorName = name.substr(startSector+6);
+    sector = toInt(sectorName);
+    if (sector == 0) {
+      return STChannelID(); // invalid sector
+    }
+  }
+  else {
+    std::string stripName = name.substr(startStrip+5); 
+    strip = toInt(stripName);
+    std::string sectorName = name.substr(startSector+6,startStrip - startSector - 6);
+    sector = toInt(sectorName); 
+  }
+
+  return LHCb::STChannelID(LHCb::STChannelID::typeIT, station, layer,
+                           box, sector, strip);
+}
+
+unsigned int LHCb::ITNames::findStationType(const std::string& testname, 
+                                          const std::vector<std::string>& names) {
+
+  std::vector<std::string>::const_iterator theName = names.begin();
+  for ( ; theName != names.end(); ++theName ){
+    if ( testname.find(*theName) != std::string::npos) {
+      break;
+    }
+  } // iterS
+  return theName == names.end()  ? 0 : (unsigned int)StationToType(*theName);
+}
+
+unsigned int LHCb::ITNames::findLayerType(const std::string& testname, 
+                                          const std::vector<std::string>& names) {
+
+  std::vector<std::string>::const_iterator theName = names.begin();
+  for ( ; theName != names.end(); ++theName ){
+    if ( testname.find(*theName) != std::string::npos) {
+      break;
+    }
+  } // iterS
+  return theName == names.end()  ? 0 : (unsigned int)LayerToType(*theName);
+}
+
+unsigned int LHCb::ITNames::findBoxType(const std::string& testname, 
+                                          const std::vector<std::string>& names) {
+
+  std::vector<std::string>::const_iterator theName = names.begin();
+  for ( ; theName != names.end(); ++theName ){
+    if ( testname.find(*theName) != std::string::npos) {
+      break;
+    }
+  } // iterS
+  return theName == names.end()  ? 0 : (unsigned int)BoxToType(*theName);
+}
 
 
-
-
+unsigned int LHCb::ITNames::toInt(const std::string& str) {
+  unsigned int outValue = 0;
+  try {
+    outValue = boost::lexical_cast<unsigned int>(str);
+  }
+  catch(boost::bad_lexical_cast& e){
+    outValue = 0;
+    std::cerr << "ERROR " << e.what() << "** " << str << " **" << std::endl; 
+  }
+  return outValue;
+}

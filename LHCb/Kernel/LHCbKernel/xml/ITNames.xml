@@ -110,7 +110,13 @@
         argList = "LHCb::STChannelID chan"
         desc = "unique sector string from id"> 
       </method>
- 
+
+     <method
+        name = "channelToString"
+        type = "std::string"
+        argList = "LHCb::STChannelID chan"
+        desc = "channel to string from id"> 
+      </method>
 
    <method
         name = "allStations"
@@ -148,7 +154,48 @@
         type = "std::vector &lt; std::string &gt;"
         desc = "vector of string names for layers"> 
   </method>
- 
+
+  <method
+    name = "stringToChannel"
+    type = "LHCb::STChannelID"
+    argList = "std::string name" 
+    desc = "convert string to channel" > 
+   </method>
+
+
+  <method
+    name = "findStationType"
+    type = "unsigned int"
+    argList = "const std::string testName, const std::vector&lt;std::string&gt; names" 
+    access = "PRIVATE"
+    desc = "find type in vector">
+    </method>
+
+   <method
+    name = "findLayerType"
+    type = "unsigned int"
+    argList = "const std::string testName, const std::vector&lt;std::string&gt; names" 
+    access = "PRIVATE"
+    desc = "find type in vector">
+    </method>
+
+    <method
+    name = "findBoxType"
+    type = "unsigned int"
+    argList = "const std::string testName, const std::vector&lt;std::string&gt; names" 
+    access = "PRIVATE"
+    desc = "find type in vector">
+    </method>
+
+
+  <method 
+   name = "toInt"
+   type = "unsigned int"
+   argList = "const std::string&amp; str "
+   desc = "convert string to int"
+   access = "PRIVATE" 
+  >
+    </method>
 
      </class>
   </package>

@@ -85,6 +85,14 @@
             name = "s"/>
       </method>
 
+      <method 
+        name = "toString"
+        desc = "Print method for python NOT NEEDED + SLOW IN C++ use fillStream"
+        type = "std::string"
+        virtual = "FALSE"
+        const = "TRUE"
+       />
+
     </class>
   </package>
 </gdd>

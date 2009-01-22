@@ -50,6 +50,13 @@
         <code> return StationToString(chan.station());</code>
       </method>
 
+    <method
+        name = "channelToString"
+        type = "std::string"
+        argList = "LHCb::STChannelID chan"
+        desc = "channel to string from id"> 
+      </method>
+
       <method
         name = "UniqueRegionToString"
         type = "std::string"
@@ -116,8 +123,40 @@
         desc = "vector of string names for layers"> 
   </method>
  
+  <method
+    name = "stringToChannel"
+    type = "LHCb::STChannelID"
+    argList = "std::string name" 
+    desc = "convert string to channel" > 
+   </method>
 
-  
+
+  <method
+    name = "findStationType"
+    type = "unsigned int"
+    argList = "const std::string testName, const std::vector&lt;std::string&gt; names" 
+    access = "PRIVATE"
+    desc = "find type in vector">
+    </method>
+
+    <method
+    name = "findRegionType"
+    type = "unsigned int"
+    argList = "const std::string testName, const std::vector&lt;std::string&gt; names" 
+    access = "PRIVATE"
+    desc = "find type in vector">
+    </method>
+
+
+  <method 
+   name = "toInt"
+   type = "unsigned int"
+   argList = "const std::string&amp; str "
+   desc = "convert string to int"
+   access = "PRIVATE" 
+  >
+    </method>
+
      </class>
   </package>
 </gdd>
