@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.36 2009-01-08 15:48:19 cattanem Exp $
+! $Id: release.notes,v 1.37 2009-01-22 12:58:48 cattanem Exp $
 ! Package: IOExample
 ! Package Manager: M.Frank
 ! Purpose: Demonstrate how to write and read back event data using POOL I/O.
 !---------------------------------------------------------------------------
+
+! 2009-01-22 - Marco Cattaneo
+ - Change input file of unpackdst test, to follow fix in track momentum error
+   packing in EventPacker v1r2
 
 !====================== IOExample v2r7 2009-01-08 =========================
 ! 2009-01-06 - Marco Cattaneo

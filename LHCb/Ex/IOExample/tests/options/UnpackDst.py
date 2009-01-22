@@ -17,4 +17,4 @@ ApplicationMgr().ExtSvc += [ "DataOnDemandSvc" ]
 EventDataSvc().EnableFaultHandler = True
 DstConf().EnableUnpack = True
 
-EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Brunel/v34r1/11144101-100ev-20081006.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
+EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Brunel/v34r1p1/11144101-100ev-20090112.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
