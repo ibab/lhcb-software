@@ -1,4 +1,4 @@
-// $Id: TupleToolTrigger.h,v 1.5 2008-09-16 09:50:50 pkoppenb Exp $
+// $Id: TupleToolTrigger.h,v 1.6 2009-01-22 14:44:29 pkoppenb Exp $
 #ifndef JBOREL_TUPLETOOLTRIGGER_H
 #define JBOREL_TUPLETOOLTRIGGER_H 1
 
@@ -45,7 +45,7 @@ private:
   bool m_verboseHlt2; ///< get details on Hlt2
   //  std::string m_hlt1MajorKey ; ///< Major key of Hlt1 in HltANNSvc
   //  std::string m_hlt2MajorKey ; ///< Major key of Hlt2 in HltANNSvc
-  
+  bool  m_allSteps ; ///< Fill also intermediate steps
   
 };
 #endif // JBOREL_TUPLETOOLTRIGGER_H

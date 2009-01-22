@@ -1,4 +1,4 @@
-// $Id: TupleToolTrigger.cpp,v 1.12 2008-11-18 15:48:40 pkoppenb Exp $
+// $Id: TupleToolTrigger.cpp,v 1.13 2009-01-22 14:44:29 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -38,6 +38,7 @@ TupleToolTrigger::TupleToolTrigger( const std::string& type,
   declareProperty( "VerboseHlt2", m_verboseHlt2=false );
   declareProperty( "FillL0", m_fillL0=true );
   declareProperty( "FillHlt", m_fillHlt=true );
+  declareProperty( "AllIntermediateSteps", m_allSteps=false );
   //  declareProperty( "Hlt1MajorKey", m_hlt1MajorKey = "Hlt1SelectionID"); 
   //  declareProperty( "Hlt2MajorKey", m_hlt2MajorKey = "Hlt2SelectionID");
 
@@ -110,8 +111,11 @@ StatusCode TupleToolTrigger::fillHlt( Tuples::Tuple& tuple, const std::string & 
         }
         if (msgLevel(MSG::VERBOSE)) verbose() << "Added " << *n << " " << found 
                                               << " to " << nsel << endmsg ;
-        if ( ! tuple->column(*n, found ) ) return StatusCode::FAILURE;
-        if (found) nsel++ ;
+        bool isDecision = ( n->find("Decision") == n->length()-8  ) ; // 8 is length of Decision
+        if (isDecision && found) nsel++ ;
+        if (isDecision || m_allSteps){
+          if ( ! tuple->column(*n, found ) ) return StatusCode::FAILURE;
+        }
       }
       if ( ! tuple->column(level+"nSelections" , nsel ) ) return StatusCode::FAILURE;
     }
