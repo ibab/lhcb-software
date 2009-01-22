@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.127 2008-11-26 08:08:05 jpalac Exp $
+! $Id: release.notes,v 1.128 2009-01-22 16:42:05 pkoppenb Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Vladimir Gligorov
 !==============================================================================
+
+! 2009-01-22 - Patrick Koppenburg
+ - NeutralPP asct : much less verbose!
+ -  Increment to v9r3p2
 
 !========================== DaVinciAssociators v9r3p1 2008-11-26 ==============
 

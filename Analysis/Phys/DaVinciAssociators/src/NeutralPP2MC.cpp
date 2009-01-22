@@ -1,6 +1,6 @@
-// $Id: NeutralPP2MC.cpp,v 1.20 2008-09-25 12:00:54 odescham Exp $
+// $Id: NeutralPP2MC.cpp,v 1.21 2009-01-22 16:42:05 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.20 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.21 $
 // ============================================================================
 #include "Relations/IRelationWeighted.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -96,12 +96,11 @@ StatusCode NeutralPP2MC::initialize(){
 // ============================================================================
 StatusCode NeutralPP2MC::execute(){
 
-  info() << "Execute for context = "     << context() 
-         << "::  inputData   = ("           << m_inputData << ")"
-         << "::  output Relation table =  " << m_outputTable 
-         << "::  input  Relation table =  " << m_mcTable
-         << endreq;
-  debug() << "Context test " << m_test << "/" << context() << endreq;
+  if (msgLevel(MSG::DEBUG)) debug() << "Execute for context = "     << context() 
+                                    << "::  inputData   = ("           << m_inputData << ")"
+                                    << "::  output Relation table =  " << m_outputTable 
+                                    << "::  input  Relation table =  " << m_mcTable
+                                    << endreq;
   // avoid the long name and always use "const" qualifier
   typedef const SmartRefVector<CaloHypo>                        Hypos    ;
   typedef const SmartRefVector<CaloCluster>                     Clusters ;
