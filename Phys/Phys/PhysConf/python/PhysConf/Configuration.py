@@ -1,7 +1,7 @@
 """
 High level configuration tools for PhysConf
 """
-__version__ = "$Id: Configuration.py,v 1.10 2009-01-16 17:53:33 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.11 2009-01-22 23:25:07 tskwarni Exp $"
 __author__ = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -57,11 +57,17 @@ class PhysConf(LHCbConfigurableUser) :
         recalib.IgnoreFilterPassed = True 
         testrecalib.Members += [ recalib ]
         if ( self.getProp( "DataType" ) == 'DC06' ):
+            from Configurables import (MuonRec)
+            from Configurables import (MuonID)
+            importOptions("$MUONIDROOT/options/MuonID.py")
+            from Configurables import (UpdateMuonPIDInProtoP)
             from Configurables import (ChargedProtoCombineDLLsAlg)
-            recalib.Members += [ ChargedProtoCombineDLLsAlg() ]
-        # @todo Should use DoD Svc, but there are some problems
-        from Configurables import (MuonPIDsFromProtoParticlesAlg, RichPIDsFromProtoParticlesAlg)
-        recalib.Members += [ MuonPIDsFromProtoParticlesAlg("MuonPIDsFromProtos") ]
+            recalib.Members += [ MuonRec(), MuonID(), UpdateMuonPIDInProtoP(), ChargedProtoCombineDLLsAlg() ]
+        else:
+            # @todo Should use DoD Svc, but there are some problems
+            from Configurables import (MuonPIDsFromProtoParticlesAlg)
+            recalib.Members += [ MuonPIDsFromProtoParticlesAlg("MuonPIDsFromProtos") ]
+        from Configurables import (RichPIDsFromProtoParticlesAlg)
         recalib.Members += [ RichPIDsFromProtoParticlesAlg("RichPIDsFromProtos") ]
     
 #
