@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitor.cpp,v 1.6 2008-12-01 12:57:57 gersabec Exp $
+// $Id: VeloTrackMonitor.cpp,v 1.7 2009-01-22 13:23:38 gersabec Exp $
 // Include files 
 
 // from Gaudi
@@ -231,7 +231,11 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
     //Call Measurement Provider
     if(!track -> checkPatRecStatus(Track::PatRecMeas)){
       if(m_debugLevel)debug() <<"No measurements found on tracks, calling measurement provider"<<endmsg;
-      m_measurementprovider->load(*track); 
+      StatusCode sc1 = m_measurementprovider->load(*track); 
+      if ( !( sc1.isSuccess() ) ) {
+        debug() << "Measurement provider could not be loaded" << endmsg;
+        return StatusCode::SUCCESS;
+      }
     }
 
     //Skip the tracks without VELO(Velo, VeloR, Upstream and Long)hits
@@ -280,7 +284,11 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
       //------------------
       if(m_unbiasedResidualProfile && m_trackCont != LHCb::TrackLocation::Velo){  
         
-        unbiasedResiduals (track);
+        StatusCode sc2 = unbiasedResiduals (track);
+        if ( !( sc2.isSuccess() ) ) {
+          debug() << "Unbiased residuals method" << endmsg;
+          return StatusCode::SUCCESS;
+        }
       }
       
       unsigned int nRClus(0), nPhiClus(0), nSumClus(0);
@@ -339,7 +347,17 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
       double interStripFr = toolInfo.fractionalPosition; 
       double biasedResid;
       double chi2;
-      sensor->residual(trackInterceptGlobal, vcID, interStripFr, biasedResid, chi2);
+      StatusCode sc3 = sensor->residual(trackInterceptGlobal, vcID, interStripFr, biasedResid, chi2);
+      if ( !( sc3.isSuccess() ) ) {
+        debug() << "Residual calculation failed for " 
+                << trackInterceptGlobal.x() << " "
+                << trackInterceptGlobal.y() << " "
+                << trackInterceptGlobal.z() << " "
+                << vcID << " "
+                << interStripFr << " "
+                << endmsg;
+        return StatusCode::SUCCESS;
+      }
       double pitch;
       if ( sensor->isR() ) {
         pitch = sensor->rType()->rPitch( stripID );
