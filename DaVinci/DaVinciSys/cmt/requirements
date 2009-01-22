@@ -9,9 +9,9 @@ branches doc cmt
 use  DaVinci                 	v22r0p2   Phys   
 
 # Component libraries added as patches
-use TisTosTobbing v3r2 Phys
-use EventPacker v1r2   Event
-
+use TisTosTobbing  v3r2    Phys
+use EventPacker    v1r2    Event
+use DecayTreeTuple v1r10p1 Phys
 
 alias DaVinciTests "cmt qmtest_run"
 

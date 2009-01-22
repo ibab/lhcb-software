@@ -3,10 +3,10 @@ Package             : Phys/DaVinci
 Package Coordinator : Juan Palacios
 Purpose             : LHCb analysis program 
 
-</PRE><H1><A NAME=v22r0p1>2009-01-21 DaVinci v22r0p1</A></H1><PRE>
+</PRE><H1><A NAME=v22r0p2>2009-01-22 DaVinci v22r0p2</A></H1><PRE>
 Based on Phys v8r0, Analysis v3r0, Rec v6r1, HLT v5r0, Lbcom v6r25, LHCb v26r1, Gaudi v20r4, LCGCMT 55c
 
-* Re-release of v22r0 due to installation and builb bug.
+* Patches to TisTosTobbing (and related DecayTreeTuple) plus EventPacker.
 
 * Overhaul of configurables. Most opts files removed. New ParticleProperty service. Old style HLT configuration removed.
 
