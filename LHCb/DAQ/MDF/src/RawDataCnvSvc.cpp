@@ -1,4 +1,4 @@
-// $Id: RawDataCnvSvc.cpp,v 1.30 2009-01-23 13:12:16 frankb Exp $
+// $Id: RawDataCnvSvc.cpp,v 1.31 2009-01-23 13:30:07 cattanem Exp $
 //  ====================================================================
 //  RawDataCnvSvc.cpp
 //  --------------------------------------------------------------------
@@ -108,7 +108,8 @@ StatusCode RawDataCnvSvc::initialize()     {
   }
   
   // get the IDataManagerSvc interface from the EventPersistencySvc
-  sc = dataProvider()->queryInterface(IID_IDataManagerSvc,(void**)&m_dataMgr);
+  sc = dataProvider()->queryInterface(IDataManagerSvc::interfaceID(),
+                                      (void**)&m_dataMgr);
   if ( !sc.isSuccess() )  {
     log << MSG::ERROR << "Conversion service " << name() 
         << "not registered to EventPersistencySvc." << endreq;

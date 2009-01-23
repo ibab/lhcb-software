@@ -6,7 +6,9 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
-!========================= MDF v3r17 2008-12-10 ===============================
+! 2009-01-23 - Marco Cattaneo
+ - Backward compatible fixes for Gaudi v21
+
 ! 2009-01-23  Markus Frank
  - Add references to MDF file implementation.
 

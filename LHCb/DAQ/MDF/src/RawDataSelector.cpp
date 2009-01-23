@@ -1,4 +1,4 @@
-// $Id: RawDataSelector.cpp,v 1.22 2009-01-08 21:24:09 frankb Exp $
+// $Id: RawDataSelector.cpp,v 1.23 2009-01-23 13:30:07 cattanem Exp $
 //====================================================================
 //  OnlineMDFEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -66,7 +66,7 @@ RawDataSelector::RawDataSelector(const std::string& nam, ISvcLocator* svcloc)
 
 // IInterface::queryInterface
 StatusCode RawDataSelector::queryInterface(const InterfaceID& riid, void** ppvIf) {
-  if (riid == IID_IEvtSelector)  {
+  if (riid == IEvtSelector::interfaceID() )  {
     *ppvIf = (IEvtSelector*)this;
     addRef();
     return S_OK;
