@@ -1,4 +1,4 @@
-// $Id: DiagSolvTool.cpp,v 1.14 2008-10-20 10:18:24 wouter Exp $
+// $Id: DiagSolvTool.cpp,v 1.15 2009-01-23 11:21:05 wouter Exp $
 // Include files 
 
 #include <stdio.h>
@@ -88,9 +88,13 @@ bool DiagSolvTool::compute(AlSymMat& m,AlVec& b) const
   
 }
 
-
-
-   
+template<class T>
+struct SortByAbs
+{
+  bool operator()(T lhs, T rhs) const {
+    return std::abs( lhs ) < std::abs(rhs ) ;
+  }
+} ;
 
 int DiagSolvTool::SolvDiag(AlSymMat& m_bigmatrix, AlVec& m_bigvector) {
 
@@ -132,17 +136,19 @@ int DiagSolvTool::SolvDiag(AlSymMat& m_bigmatrix, AlVec& m_bigvector) {
 
   info() << "After diagonalization" << endmsg;
 
-  // Dump the 10 smallest eigenvalues. They should be sorted, but
-  // let's not take any chances and sort them again.
-  std::ostringstream logmessage ;
-  logmessage << "Smallest eigen values: [ " << std::setprecision(4) ;
-  std::vector<double> sortedev(N) ;
-  for(size_t ipar = 0; ipar<N; ++ipar) sortedev[ipar] = w[ipar] ;
-  std::sort(sortedev.begin(),sortedev.end()) ;
-  for(size_t ipar = 0; ipar<m_numberOfPrintedEigenvalues && ipar<N; ++ipar) 
-    logmessage << sortedev[ipar]*scale << ", " ;
-  logmessage << "]" ;
-  info() << logmessage.str() << endmsg ;
+  // Dump the 10 smallest eigenvalues. We'll sort these really in abs,
+  // ignoring the sign.
+  {
+    std::ostringstream logmessage ;
+    logmessage << "Smallest eigen values: [ " << std::setprecision(4) ;
+    std::vector<double> sortedev(N) ;
+    for(size_t ipar = 0; ipar<N; ++ipar) sortedev[ipar] = w[ipar] ;
+    std::sort(sortedev.begin(),sortedev.end(),SortByAbs<double>()) ;
+    for(size_t ipar = 0; ipar<m_numberOfPrintedEigenvalues && ipar<N; ++ipar) 
+      logmessage << sortedev[ipar]*scale << ", " ;
+    logmessage << "]" ;
+    info() << logmessage.str() << endmsg ;
+  }
   
   // Issue a warning for each negative eigenvalue
   for(size_t ipar = 0; ipar<N; ++ipar) 
