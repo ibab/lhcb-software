@@ -1,11 +1,11 @@
 from Gaudi.Configuration import *
 
-nEvents            = 100
+nEvents            = 1000
 nIter              = 3
 alignlevel         = 'sensors'
-alignlevel = 'halves'
+#alignlevel = 'halves'
 #alignlevel = 'all'
-computeVertexCorrelations = False
+maxHitsForVertexCorrelations = 9999
 
 from OTAlElements import *
 
@@ -17,24 +17,15 @@ elements = Alignables()
 if alignlevel == 'sensors':
    elements.VeloRSensors("TxTyRxRy")
    elements.VeloPhiSensors("TxTyRxRyRz")
-#   constraints = ["Tx","Ty","Tz","Szz","Szx","Szy"]
-#   elements.VeloRSensors("Tz")
-#   elements.VeloPhiSensors("Tz")
-   constraints = ["Tz","Ty","Tx"]
-   conddepths = []
-   condname = "Detectors.xml"
+   elements.VeloModules("Tz")
+   # constraint global rotation, translation and shearing
+   constraints = ["Tz","Ty","Tx","Szx","Szy","Szz","Rz","Rx","Ry"]
+   constraints += ["VeloRight: .*?/VeloRight/.*? : Tz Szz"]
+#   constraints += ["VeloLeft: .*?/VeloLeft/.*? : Tz Szz"]  
 elif alignlevel == 'halves':
-#   elements.VeloLeft("TxTyRxRy")
-#   elements.VeloRight("TxTyRxRy")
-#   constraints = ["Tx","Ty","Rx","Ry"]
-   elements.VeloLeft("Tx")
-   elements.VeloRight("Tx")
-   constraints = ["Tx"]
-#   constraints = ["Tx","Ty","Tz","Szz","Szx","Szy"]
-#   elements.VeloLeft("TxTyTz")
-#   elements.VeloRight("TxTyTz")
-   conddepths = [0,1]
-   condname   = "Global.xml"
+   elements.VeloLeft("TxTyTzRxRyRz")
+   elements.VeloRight("TxTyTzRxRyRz")
+   constraints = ["Tx","Ty","Tz","Rx","Ry","Rz"]
 else :
    elements.Velo("TxTyRxRy")
 #   elements.TT("Tz")
@@ -44,13 +35,16 @@ else :
    conddepths = [0,1]
    condname   = "Global.xml"
 
+# load a misalignment
+from Configurables import ( CondDBAccessSvc,CondDB )
+MisAlCh1COND = CondDBAccessSvc("MisAlCh1COND")
+MisAlCh1COND.ConnectionString = "sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/VeloSliceMisalignedTest3.db/LHCBCOND"
+MisAlCh1COND.ConnectionString = "sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/B2HH_LHCBCOND_Velo-slice_1sigma.db/LHCBCOND"
+#MisAlCh1COND.ConnectionString = "sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/VeloSliceAlignedHalvesNoCorr.db/LHCBCOND"
+CondDB().addLayer(MisAlCh1COND)
 
-#elements.VeloPileUpSensors("TxTy")
-
-#elements.extend()
-#trackingOpts       = "$TALIGNMENTROOT/python/OTTrackFitSel.py"
-datatype = 'minbias'
-
+#datatype = 'minbias'
+datatype = ''
 data               = [
    "PFN:rfio:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/DIGI/0000/00001820_00000004_4.digi",
    "PFN:rfio:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/DIGI/0000/00001820_00000009_4.digi",
@@ -189,67 +183,41 @@ if datatype=='minbias':
                        "PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001888/DIGI/0000/00001888_00002958_4.digi" ]
 
 	
-#/castor/cern.ch/user/s/sblusk/7TeV_Boff_Beam12_C/MisAlCh1/Boole/digi/Boole_7TeV_Boff_Beam12_C_MisAlCh1_1000_0.digi
-#/castor/cern.ch/user/s/sblusk/7TeV_Boff_Beam12_C/MisAlCh1/Boole/digi/Boole_7TeV_Boff_Beam12_C_MisAlCh1_1000_1.digi
-#/castor/cern.ch/user/s/sblusk/7TeV_Boff_Beam12_C/MisAlCh1/Boole/digi/Boole_7TeV_Boff_Beam12_C_MisAlCh1_1000_2.digi
-#/castor/cern.ch/user/s/sblusk/7TeV_Boff_Beam12_C/MisAlCh1/Boole/digi/Boole_7TeV_Boff_Beam12_C_MisAlCh1_1000_3.digi
-
 # Go past this line only when you know what you are doing
 ############################################################################################################################
+
 ## File to setup Alignment
-ApplicationMgr( AppName         = "VeloAlignment", AppVersion      = "v1",
-                AuditTools      = True       , AuditServices   = True  , AuditAlgorithms = True )
-
-from Configurables import LbAppInit
-ApplicationMgr().TopAlg.append( LbAppInit( ApplicationMgr().AppName ) )
-
 import GaudiKernel.ProcessJobOptions
-GaudiKernel.ProcessJobOptions.printing_level += 1
+GaudiKernel.ProcessJobOptions.PrintOff()
 
 from AlConfigurable import *
 
-## AlternativeDB
-#AlConfigurable().AlternativeCondDB           = "/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v4r3/db/LHCBCOND.db/LHCBCOND"
-#AlConfigurable().AlternativeCondDBTag        = "DC06-20080407"
-#AlConfigurable().AlternativeCondDBTag       = "MisA-OTL-1"
-#AlConfigurable().AlternativeCondDBOverlays   = [ "/Conditions/IT", "/Conditions/OT", "Conditions/Velo" ]
+alignment = AlConfigurable()
+alignment.DataType                     = 'DC06'
+alignment.Simulation                   = True
+alignment.OutputLevel                  = INFO
+alignment.Pat                          = True
+alignment.ElementsToAlign              = list(elements)
+alignment.NumIterations                = nIter
+alignment.AlignInputTrackCont           = "Alignment/AlignmentTracks"
+#alignment.AlignInputTackCont           = "Rec/Track/Best"
+alignment.UseCorrelations              = True
+alignment.Constraints                  = constraints
+alignment.MinNumberOfHits              = 10
+alignment.SolvTool                     = "DiagSolvTool"
+alignment.WriteCondSubDetList          = [ 'Velo' ]
+alignment.VertexLocation = "Rec/Vertex/Primary"
+alignment.Chi2Outlier = 10000
+alignment.EigenValueThreshold = 50
+alignment.SimplifiedGeom = True
 
-## Patttern Recognition?
-AlConfigurable().Pat                          = True
+ApplicationMgr().ExtSvc += [ 'DataOnDemandSvc' ]
+# this sets up the linker from particles to hits
+#importOptions("$ASSOCIATORSROOT/options/Brunel.opts")
+# this loads the hits
+importOptions('$STDOPTS/DecodeRawEvent.py')
+#IODataManager().AgeLimit = 2
 
-## Set output level
-AlConfigurable().OutputLevel                  = INFO
-AlConfigurable().ElementsToAlign              = list(elements)
-AlConfigurable().NumIterations                = nIter
-AlConfigurable().AlignInputTrackCont           = "Alignment/AlignmentTracks"
-#AlConfigurable().AlignInputTackCont           = "Rec/Track/Best"
-AlConfigurable().UseCorrelations              = True
-AlConfigurable().Constraints                  = constraints
-AlConfigurable().UseWeightedAverageConstraint = False
-AlConfigurable().MinNumberOfHits              = 1
-AlConfigurable().UsePreconditioning           = True
-AlConfigurable().SolvTool                     = "gslSolver"
-AlConfigurable().WriteCondToXML               = True
-AlConfigurable().CondFileName                 = condname
-AlConfigurable().CondDepths                   = conddepths
-#AlConfigurable().TopLevelElement              = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo"
-AlConfigurable().Precision                    = 8
-AlConfigurable().SimplifiedGeom               = True
-#AlConfigurable().VertexLocation = "Rec/Vertex/Primary"
-AlConfigurable().Chi2Outlier = 10000
-#AlConfigurable().RegularizationFactor = 1
-
-## Call after all options are set
-AlConfigurable().applyConf()
-
-MisAlCh1COND = CondDBAccessSvc("MisAlCh1COND")
-#MisAlCh1COND.ConnectionString = "sqlite_file:/afs/cern.ch/user/m/marcocle/public/Wouter/LHCBCOND_MisAlCh1.db/LHCBCOND"
-MisAlCh1COND.ConnectionString = "sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/VeloSliceMisalignedTest3.db/LHCBCOND"
-#MisAlCh1COND.ConnectionString = "sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/VeloSliceAlignedHalvesNoCorr.db/LHCBCOND"
-addCondDBLayer(MisAlCh1COND)
-
-## Here we configure the track fitting/selection and what else?
-## importOptions( trackingOpts )
 from Configurables import (TrackContainerCopy, TrackSelector)
 #trackselectortool = TrackSelector( MinPCut = "3000", MaxChi2Cut="20", TrackTypes = [ "Long","Upstream","Velo" ] ) 
 #trackselectortool = TrackSelector( MaxChi2Cut="20", TrackTypes = [ "Long","Upstream","Velo" ] )
@@ -258,45 +226,68 @@ trackselectortool = TrackSelector( "AlignTrackSelectorTool",
                                    MinNDoF=2,
                                    MinNVeloPhiHits=5,
                                    MinNVeloRHits=5,
-                                   #TrackTypes = [ "Long","Velo","Upstream" ]
-                                   TrackTypes = [ "Velo" ] ) 
+                                   TrackTypes = [ "Long","Velo","Upstream" ])
+                                   #TrackTypes = [ "Long","Velo" ] ) 
 
 trackselectoralg = TrackContainerCopy("AlignTrackSelector",
                                       inputLocation = "Rec/Track/Best",
                                       outputLocation = "Alignment/AlignmentTracks" )
 trackselectoralg.addTool( trackselectortool, "Selector" )
-AlConfigurable().filterSeq().Members.append( trackselectoralg  )
+alignment.filterSeq().Members.append( trackselectoralg  )
 
 from Configurables import (Al__VertexResidualTool, Al__AlignConstraintTool)
 trkselector = TrackSelector("VertexTrackSelector",TrackTypes = [ "Long" ] )
 vertexresidualtool = Al__VertexResidualTool("Al::VertexResidualTool")
 #vertexresidualtool.addTool(TrackSelector("TrackSelector",TrackTypes = [ "Long" ] ) )
-vertexresidualtool.addTool(trkselector,name = "MyTrackSelector")
-vertexresidualtool.MyTrackSelector.TrackTypes = [ "Long" ]
+#vertexresidualtool.addTool(trkselector,name = "MyTrackSelector")
+#vertexresidualtool.MyTrackSelector.TrackTypes = [ "Long" ]
 #vertexresidualtool.MyTrackSelectorHandle = trkselector 
-vertexresidualtool.ComputeCorrelations = computeVertexCorrelations
+#vertexresidualtool.ComputeCorrelations = computeVertexCorrelations
+vertexresidualtool.MaxHitsPerTrackForCorrelations = maxHitsForVertexCorrelations
 
 ## run some monitoring code
 from Configurables import ( TrackMonitor,TrackVertexMonitor )
-trackmonitor = TrackMonitor("AlignTrackMonitor", TracksInContainer = "Alignment/AlignmentTracks" )
-AlConfigurable().filterSeq().Members.append( trackmonitor )
-AlConfigurable().filterSeq().Members.append(TrackVertexMonitor())
 
-## To load parts of the database from a particular xml location
-#DetectorDataSvc().DetDbLocation = "/data/bfys/janos/LHCbDB/lhcb.xml"
 
-#constrainttool = Al__AlignConstraintTool("Al::AlignConstraintTool")
-#constrainttool.ConstrainToNominal = True
-#constrainttool.SigmaNominalTx = 0.0001 ;
-#constrainttool.SigmaNominalTy = 0.0001 ;
-#constrainttool.SigmaNominalTz = 0.0001 ;
-#constrainttool.SigmaNominalRx = 1e-6 ;
-#constrainttool.SigmaNominalRy = 1e-6 ;
-#constrainttool.SigmaNominalRz = 1e-6 ;
+preMonitorSeq = GaudiSequencer('PreMonitorSeq')
+postMonitorSeq = GaudiSequencer('PostMonitorSeq')
+preMonitorSeq.Members.append( TrackMonitor(name = "PreAlignTrackMonitor",
+                                           TracksInContainer = 'Alignment/AlignmentTracks' ) )
+postMonitorSeq.Members.append( TrackMonitor(name = "PostAlignTrackMonitor",
+                                            TracksInContainer = 'Alignment/AlignmentTracks' ) )
+preMonitorSeq.Members.append( TrackVertexMonitor(name = "PreVertexMonitor") )
+postMonitorSeq.Members.append( TrackVertexMonitor(name = "PostVertexMonitor") )
+alignment.filterSeq().Members += [preMonitorSeq,postMonitorSeq]
 
 ## Now lets run it
 from GaudiPython import *
 from GaudiPython import gbl
+
+# Hack to overide default EvtSel open
+from GaudiPython.Bindings import iEventSelector
+iEventSelector.__open_orig__ = iEventSelector.open
+def _my_open_(self,stream, typ = 'POOL_ROOT', opt = 'READ', sel = None, fun = None, collection = None):
+   if typ == "MDF":
+       if type(stream) != list : stream = [stream]
+       fixpart = "TYP=\'%s\' OPT=\'%s\' SVC='LHCb::MDFSelector'" % ( typ, opt )
+       if sel        : fixpart += " SEL=\'%s\'" % sel
+       if fun        : fixpart += " FUN=\'%s\'" % fun
+       if collection : fixpart += " COLLECTION=\'%s\'" % collection
+       cstream = ["DATAFILE=\'%s\' %s" % ( s, fixpart) for s in stream]
+       self.Input = cstream
+       self.reinitialize()
+   elif typ == 'POOL_ROOT':
+       if type(stream) != list : stream = [stream]
+       fixpart = "TYP=\'%s\' OPT=\'%s\'" % ( typ, opt )
+       if sel        : fixpart += " SEL=\'%s\'" % sel
+       if fun        : fixpart += " FUN=\'%s\'" % fun
+       if collection : fixpart += " COLLECTION=\'%s\'" % collection
+       cstream = ["DATAFILE=\'%s\' %s" % ( s, fixpart) for s in stream]
+       self.Input = cstream
+       self.reinitialize()
+   else:
+      self.__open_orig__(stream,typ,opt,sel,fun,collection)
+iEventSelector.open = _my_open_
 
 def update(algorithm, appMgr) :
    # get pointer to incident service
@@ -309,21 +300,26 @@ HistogramPersistencySvc().OutputFile = "alignhistos.root"
 
 ## Instantiate application manager
 appMgr = AppMgr()
+mainSeq = appMgr.algorithm( 'AlignmentMainSeq' )
 
 ## Print flow of application
-AlConfigurable().printFlow(appMgr)
+alignment.printFlow(appMgr)
 
 evtSel           = appMgr.evtSel()
 evtSel.printfreq = 1
 ##evtSel.FirstEvent = 604
 
 ## Open Files; Also initialises Application Manager
-evtSel.open( data )
+evtSel.open( data, typ = 'POOL_ROOT' )
 
 for i in range( nIter ) :
-    evtSel.rewind()
-    appMgr.run( nEvents )
-    update( "Alignment", appMgr )
+   mainSeq.Enable = False
+   evtSel.rewind()
+   mainSeq.Enable = True
+   appMgr.algorithm('PreMonitorSeq').Enable = ( i == 0)
+   appMgr.algorithm('PostMonitorSeq').Enable = ( i == nIter-1)
+   appMgr.run( nEvents )
+   update( "Alignment", appMgr )
 
 appMgr.finalize()
 
