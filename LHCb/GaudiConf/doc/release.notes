@@ -2,6 +2,10 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2009-01-23 - Marco Cattaneo
+ - Add PreloadUnits.opts, previously in $DAVINCIROOT, to allow import of
+   units.opts file from Python.
+
 ! 2009-01-21 - Marco Cattaneo
  - In LHCbApp configurable, add Gaudi auditors to list of possible Monitors:
    KnownAuditors = ["NameAuditor","MemoryAuditor","ChronoAuditor"]
