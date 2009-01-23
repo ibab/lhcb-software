@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.38 2009-01-23 11:15:11 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.39 2009-01-23 12:43:07 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -219,7 +219,7 @@ class DaVinci(LHCbConfigurableUser) :
 
         #====================================================================
         # Hack until next full release
-        if ( self.getProp("DataType") != "DC06" ):
+        if ( self.getProp("DataType") == "DC06" ):
             recalib = GaudiSequencer("ProtoPRecalibration")
             importOptions( "$MUONIDROOT/options/MuonID.py" )
             recalib.Members += [ "MuonRec","MuonID","UpdateMuonPIDInProtoP" ]
@@ -245,7 +245,7 @@ class DaVinci(LHCbConfigurableUser) :
 
         #====================================================================
         # Hack until next full release
-        if ( self.getProp("DataType") != "DC06" ):
+        if ( self.getProp("DataType") == "DC06" ):
             from Configurables import MuonPIDsFromProtoParticlesAlg
             recalib.Members.remove(MuonPIDsFromProtoParticlesAlg("MuonPIDsFromProtos"))
         #====================================================================
