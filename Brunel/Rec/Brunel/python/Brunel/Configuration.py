@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.47 2009-01-09 15:29:54 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.48 2009-01-23 08:17:41 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -325,6 +325,9 @@ class Brunel(LHCbConfigurableUser):
         # Histograms filled both in real and simulated data cases
         if "CALO" in moniSeq :
             importOptions('$CALOMONIDSTOPTS/CaloMonitor.opts')
+        else :
+            # Hack for units options, normally included by CaloMonitor.opts
+            importOptions('$STDOPTS/PreloadUnits.opts')
 
         if "VELO" in moniSeq :
             importOptions('$VELORECMONITORSROOT/options/BrunelMoni_Velo.py')

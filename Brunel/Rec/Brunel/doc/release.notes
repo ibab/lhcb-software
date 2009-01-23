@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-01-23 - Marco Cattaneo
+ - Protect against missing #units when Calo not in monitoring sequence
+
 ! 2009-01-21 - Marco Cattaneo
  - Update QMTest references for OTDAQ fixes (fix untested StatusCode, no
    warning for empty GOL headers)
