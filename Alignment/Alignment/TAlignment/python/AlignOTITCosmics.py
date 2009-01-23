@@ -162,8 +162,9 @@ if preloadalignment:
    OTAlignmentCondition.ConnectionString = "sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/OTCFramesTxTyRz.db/LHCBCOND"
    #CondDB().addLayer(OTAlignmentCondition)
    ITAlignmentCondition = CondDBAccessSvc("ITAlignmentCondition")
-   ITAlignmentCondition.ConnectionString = "sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/AlignedMattNewTxTyRzITLayerSlice.db/LHCBCOND"
+   #ITAlignmentCondition.ConnectionString = "sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/AlignedMattNewTxTyRzITLayerSlice.db/LHCBCOND"
    #ITAlignmentCondition.ConnectionString = "sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/AlignedMattNewTxTyRzITLayerTxTyWRTOTCFramesSlice.db/LHCBCOND"
+   ITAlignmentCondition.ConnectionString = "sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/MattsITLayerSlice.db/LHCBCOND"
    CondDB().addLayer(ITAlignmentCondition)
    
 if loadnewgeometry:
