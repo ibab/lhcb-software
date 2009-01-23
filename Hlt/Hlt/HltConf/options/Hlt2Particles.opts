@@ -45,15 +45,15 @@ HltInHCAL.Inputs =  {"Hlt/Track/Forward" };
 HltInECAL.Inputs =  {"Hlt/Track/Forward" };
 HltInBREM.Inputs =  {"Hlt/Track/Forward" };
 HltClusterMatch.Tracks =  {"Hlt/Track/Forward" };
-HltBremMatch.Tracks ={"Hlt/Tracks/Forward"};
-HltElectronMatch.Tracks ={"Hlt/Tracks/Forward"};
+HltBremMatch.Tracks ={"Hlt/Track/Forward"};
+HltElectronMatch.Tracks ={"Hlt/Track/Forward"};
 HltSpdE.Inputs =  {"Hlt/Track/Forward" };
 HltPrsE.Inputs =  {"Hlt/Track/Forward" };
 HltEcalE.Inputs =  {"Hlt/Track/Forward" };
 HltHcalE.Inputs =  {"Hlt/Track/Forward" };
-HltEcalChi22ID.Tracks ={"Hlt/Tracks/Forward"};
-HltClustChi22ID.Tracks ={"Hlt/Tracks/Forward"};
-HltBremChi22ID.Tracks ={"Hlt/Tracks/Forward"};
+HltEcalChi22ID.Tracks ={"Hlt/Track/Forward"};
+HltClustChi22ID.Tracks ={"Hlt/Track/Forward"};
+HltBremChi22ID.Tracks ={"Hlt/Track/Forward"};
 
 //---------------------------------------------------------------------
 // MuonID
