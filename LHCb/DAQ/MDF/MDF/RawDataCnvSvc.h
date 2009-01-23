@@ -1,4 +1,4 @@
-// $Id: RawDataCnvSvc.h,v 1.12 2008-05-26 06:16:46 cattanem Exp $
+// $Id: RawDataCnvSvc.h,v 1.13 2009-01-23 13:12:16 frankb Exp $
 //  ====================================================================
 //  RawDataCnvSvc.h
 //  --------------------------------------------------------------------
@@ -45,26 +45,30 @@ namespace LHCb  {
     typedef const std::string&            CSTR;
     typedef std::vector<RawBank*>         Banks;
     typedef std::map<std::string, void*>  FileMap;
-    FileMap::iterator   m_current;
+    FileMap::iterator      m_current;
     /// Mapping of accesed files
-    FileMap             m_fileMap;
-    bool                m_wrFlag;
-    /// Compression algorithm identifier
-    int                 m_compress;
-    /// Flag to create checksum
-    int                 m_genChecksum;
+    FileMap                m_fileMap;
+    bool                   m_wrFlag;
     /// Streambuffer to hold uncompressed data
-    StreamBuffer        m_data;
+    StreamBuffer           m_data;
     /// Reference to data manager interface
-    IDataManagerSvc*    m_dataMgr;
-    /// Properties for time alignment events
-    int                 m_evtsBefore, m_evtsAfter;
-    /// Location of the raw banks in the TES
-    std::string          m_bankLocation;
+    IDataManagerSvc*       m_dataMgr;
     /// Reference to file manager service
     Gaudi::IIODataManager* m_ioMgr;
-    /// Name of the IO manager service
-    std::string         m_ioMgrName;
+    /// Property: Compression algorithm identifier
+    int                    m_compress;
+    /// Property: Flag to create checksum
+    int                    m_genChecksum;
+    /// Property: Properties for time alignment events
+    int                    m_evtsBefore, m_evtsAfter;
+    /// Property: Property to indicate input data type (RAW, RDST)
+    std::string            m_sourceType;
+    /// Property: Location of RAW banks in the TES
+    std::string            m_bankLocation;
+    /// Property: Location of DST banks in TES
+    std::string            m_dstLocation;
+    /// Property: Name of the IO manager service
+    std::string            m_ioMgrName;
 
     /// Helper to print errors and return bad status
     StatusCode error(CSTR msg)  const;

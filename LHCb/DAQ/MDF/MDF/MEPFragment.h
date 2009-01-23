@@ -1,4 +1,4 @@
-// $Id: MEPFragment.h,v 1.6 2008-04-10 09:58:42 cattanem Exp $
+// $Id: MEPFragment.h,v 1.7 2009-01-23 13:12:16 frankb Exp $
 //====================================================================
 //  MEPFragment.h
 //--------------------------------------------------------------------
@@ -62,6 +62,8 @@ namespace LHCb  {
     /// Access to first bank in the fragment
     Bank*                first()   const  {  return (Bank*)m_bank;          }
     /// Access to end-iteration over bank
+    Bank*                last()           {  return (Bank*)end();           }
+    /// Access to end-iteration over bank (CONST)
     const Bank*          last()    const  {  return (Bank*)end();           }
     /// Access to the next bank
     static Bank* next(const Bank* last) {

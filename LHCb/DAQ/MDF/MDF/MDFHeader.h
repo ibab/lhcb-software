@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MDFHeader.h,v 1.8 2008-12-05 19:29:09 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MDFHeader.h,v 1.9 2009-01-23 13:12:16 frankb Exp $
 #ifndef EVENT_MDFHEADER
 #define EVENT_MDFHEADER
 
@@ -7,6 +7,8 @@
 #include <stdexcept>
 #define DAQ_ERR_BANK_VERSION 0
 #define DAQ_STATUS_BANK      16
+#define DAQ_PROCERR_HEADER   32
+#define DAQ_PROCERR_BANK     33
 #define DAQ_FILEID_BANK      255
 
 #ifdef _WIN32
