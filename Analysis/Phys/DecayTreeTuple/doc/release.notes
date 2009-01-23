@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+! 2009-01-23 - Patrick Koppenburg
+ - Added TupleToolAngles, same as MCTupleToolAngles
+
 ! 2009-01-22 - Patrick Koppenburg
  - Use the fact that all Hlt1 selections are called XxxDecision to
    consider only those (except if AllIntermediateSteps is set to true.)

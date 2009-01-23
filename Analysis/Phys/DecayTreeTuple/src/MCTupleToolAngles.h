@@ -1,4 +1,4 @@
-// $Id: MCTupleToolAngles.h,v 1.1 2009-01-22 17:52:41 pkoppenb Exp $
+// $Id: MCTupleToolAngles.h,v 1.2 2009-01-23 10:54:36 pkoppenb Exp $
 #ifndef MCTUPLETOOLANGLES_H 
 #define MCTUPLETOOLANGLES_H 1
 
@@ -12,20 +12,9 @@
 
 /** @class MCTupleToolAngles MCTupleToolAngles.h
  *  
- *  Fill MC Particle 
+ *  Fill MC Particle with decay angle in mother frame
  *
- * See the properties inline documentation to toggle on/off some of
- * the columns
- *
- * - head_TRUEID : true pid
- *
- * - head_TRUEP[E|X|Y|Z] : true four vector momentum
- * - head_TRUEORIGINVERTEX_[X|Y|Z] : position of the true origin vertex.
- * - head_TRUEENDVERTEX_[X|Y|Z] : position of the true end vertex (the
-     first one)
- * - head_TRUETAU : true propertime
- * - head_TRUE{ThetaL,ThetaK,Phi} : true helicity angles
- * - head_TRUE{ThetaTr,PhiTr,ThetaVtr} : true transversity angles
+ * - head_TRUECosTheta : angle in mother's frame
  * 
  * \sa TupleToolAngles, DecayTreeTuple, MCDecayTreeTuple
  * 
