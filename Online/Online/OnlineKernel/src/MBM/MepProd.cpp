@@ -63,7 +63,7 @@ namespace {
           e.len     = sub_evt_len;
           ev->events[i].begin  = long(ev)-m_mepID->mepStart;
           ev->events[i].evID   = i;
-          ev->events[i].status = 0;
+          ev->events[i].status = EVENT_TYPE_OK;
           m_evtProd->sendEvent();
         }
         else  {

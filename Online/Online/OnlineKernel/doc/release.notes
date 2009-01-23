@@ -1,6 +1,9 @@
 Package: OnlineKernel
 Author:  Markus Frank
 
+! 2009-01-19 Markus Frank
+ - Implement mechanism to allow saving MEPs by the Hlder task if Moore tasks crash
+
 ! 2008-05-19 Markus Frank
  - Change semaphore handling in buffer manager(s). Named semaphores are now
    always external and not part of the buffer manager structure. This solves

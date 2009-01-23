@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.20 2008-08-11 12:02:21 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.21 2009-01-23 15:02:48 frankb Exp $
 //  ====================================================================
 //  MEPManager.cpp
 //  --------------------------------------------------------------------
@@ -31,6 +31,7 @@ LHCb::MEPManager::MEPManager(const std::string& nam, ISvcLocator* loc)
   declareProperty("InitFlags",        m_initFlags);
   declareProperty("PartitionBuffers", m_partitionBuffers=false);
   declareProperty("MapUnusedBuffers", m_mapUnused=true);
+  declareProperty("HandleSignals",    m_handleSignals=false);
 }
 
 /// Default destructor
@@ -139,6 +140,9 @@ StatusCode LHCb::MEPManager::connectBuffers()  {
       if ( m_mepID == MEP_INV_DESC )  {
         return error("Failed to include into MEP buffers!");
       }
+      if ( m_handleSignals ) {
+	::mep_set_signal_handler(m_mepID,true);
+      }
       log << MSG::DEBUG << " MEP    buffer start: " << (void*)m_mepID->mepStart << endmsg;
       log << MSG::DEBUG << " EVENT  buffer start: " << (void*)m_mepID->evtStart << endmsg;
       log << MSG::DEBUG << " RESULT buffer start: " << (void*)m_mepID->resStart << endmsg;
@@ -169,6 +173,9 @@ StatusCode LHCb::MEPManager::finalize()  {
   log << MSG::INFO << "Excluding from buffers. No more buffer access possible." << endmsg;
   m_buffMap.clear();
   if ( m_mepID != MEP_INV_DESC )  {
+    if ( m_handleSignals ) {
+      ::mep_set_signal_handler(m_mepID,false);
+    }
     mep_exclude(m_mepID);
     m_mepID = MEP_INV_DESC;
   }

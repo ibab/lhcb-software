@@ -21,44 +21,17 @@ namespace {
       ::lib_rtl_output(LIB_RTL_INFO," MEP    buffer start: %08X\n",m_mepID->mepStart);
       ::lib_rtl_output(LIB_RTL_INFO," EVENT  buffer start: %08X\n",m_mepID->evtStart);
       ::lib_rtl_output(LIB_RTL_INFO," RESULT buffer start: %08X\n",m_mepID->resStart);
-      // mep_set_watch(m_mepID);
     }
     virtual int run() {
-      int sc;
-      for (sc=getEvent(); sc == MBM_NORMAL; sc=getEvent() )  {
-        const MBM::EventDesc& evt = event();
-        MEPEVENT* e = (MEPEVENT*)(int*)evt.data;
-        if ( e->magic != mep_magic_pattern() )  {
-          ::lib_rtl_output(LIB_RTL_ERROR,"Bad magic MEP pattern !!!!\n");
-        }
-        //int cnt = 0;
-        while ( 1 )  {
-          //cnt++;
-          //if ( (cnt%3)==0 ) lib_rtl_output(LIB_RTL_ERROR,".");
-          //if ( (cnt%50)==0 )  {
-          //  ::lib_rtl_output(LIB_RTL_INFO,"WAIT MEP release [%d] MEP @ %08X MEP:%p [%d] Pattern:%08X\n",
-          //    e->refCount, m_mepID->mepStart+e->begin, (void*)e, e->evID, e->magic);
-          //}
-          if ( e->refCount <= 1 )    {
-            if ( e->refCount != 1 )    {
-              ::lib_rtl_output(LIB_RTL_ERROR,"MEP release [%d] Event at address %08X MEP:%p [%d] Pattern:%08X\n",
-                e->refCount, m_mepID->mepStart+e->begin, (void*)e, e->evID, e->magic);
-            }
-            break;
-          }
+      while(1) {
+	::mep_scan(m_mepID,0);
 #ifdef _WIN32
-          ::lib_rtl_sleep(1);
+	::lib_rtl_sleep(1);
 #else
-          ::lib_rtl_usleep(10);
+	::lib_rtl_usleep(10);
 #endif
-        }
-        //::lib_rtl_output(LIB_RTL_INFO,"MEP release [%d] MEP @ %08X MEP:%p [%d] Pattern:%08X\n",
-        //  e->refCount, m_mepID->mepStart+e->begin, (void*)e, e->evID, e->magic);
-        freeEvent();
-
-        //e->valid = 0;
       }
-      return sc;
+      return 1;
     }
   };
 }

@@ -15,8 +15,10 @@
 #include <cerrno>
 #include <memory>
 #include <iostream>
+#include <iomanip>
+#include <signal.h>
 #include "RTL/Lock.h"
-#include "bm_struct.h"
+#include "MBM/bmstruct.h"
 #include "bm_internals.h"
 #include "MBM/mepdef.h"
 #include "RTL/DoubleLinkedQueue.h"
@@ -30,7 +32,10 @@ struct MEPDESC : public _MEPID  {
   int             owner;
   lib_rtl_lock_t  lockid;
   char            mutexName[64];
-  MEPDESC(const char* name, int partid) : owner(0), lockid(0) {
+  void*           cbParam;
+  void(*errCB)(void* param, void* data,size_t length);
+
+  MEPDESC(const char* name, int partid) : owner(0), lockid(0), cbParam(0), errCB(0) {
     if ( name ) strncpy(processName,name,sizeof(processName));
     partitionID = partid;
     resBuffer = MBM_INV_DESC;
@@ -39,8 +44,143 @@ struct MEPDESC : public _MEPID  {
   }
 };
 
+#define INSTALL_SIGNAL(x,y) install(x , #x , y);
+namespace {
+  template<class T> union func_desc   {
+    void* ptr;
+    T     fun;
+    func_desc(T t) { fun = t; }
+  };
+  class SignalHandler {
+  protected:
+    typedef std::map<int,std::pair<std::string, struct sigaction> > SigMap;
+    MEPDESC* bmid;
+    SigMap m_map;
+    SignalHandler(MEPDESC* dsc=0);
+    ~SignalHandler() {}
+  public:
+    static SignalHandler* instance(MEPDESC* dsc=0);
+    void install(int num, const std::string& name, struct sigaction& action);
+    static void handler(int signum, siginfo_t *info,void * );
+  };
+}
+
+SignalHandler::SignalHandler(MEPDESC* dsc) : bmid(dsc)  {
+  struct sigaction new_action;
+  sigemptyset(&new_action.sa_mask);
+  new_action.sa_handler   = 0;
+  new_action.sa_sigaction = handler;
+  new_action.sa_flags     = SA_SIGINFO;
+  INSTALL_SIGNAL(SIGABRT,  new_action);
+  INSTALL_SIGNAL(SIGFPE,   new_action);
+  INSTALL_SIGNAL(SIGILL,   new_action);
+  INSTALL_SIGNAL(SIGINT,   new_action);
+  INSTALL_SIGNAL(SIGSEGV,  new_action);
+  INSTALL_SIGNAL(SIGTERM,  new_action);
+  INSTALL_SIGNAL(SIGHUP,   new_action);
+  // INSTALL_SIGNAL(SIGKILL,  new_action);
+  INSTALL_SIGNAL(SIGQUIT,  new_action);
+  INSTALL_SIGNAL(SIGBUS,   new_action);
+  INSTALL_SIGNAL(SIGXCPU,  new_action);
+}
+
+SignalHandler* SignalHandler::instance(MEPDESC* dsc) {
+  static SignalHandler* handler = 0;
+  if ( dsc == MEP_INV_DESC ) {
+    if ( handler ) handler->bmid = dsc;
+    handler = 0;
+  }
+  else if ( dsc != 0 ) {
+    static SignalHandler inst(dsc);
+    handler = &inst;
+    handler->bmid = dsc;
+  }
+  return handler;
+}
+
+void SignalHandler::install(int num, const std::string& name, struct sigaction& action) {
+  std::pair<std::string, struct sigaction>& old_action = m_map[num];
+  int res = sigaction (num, &action, &old_action.second);
+  if ( res != 0 ) {
+    std::cout << "Failed to install exit handler for " << name << std::endl;
+    return;
+  }
+  old_action.first = name;
+}
+
+void SignalHandler::handler(int signum, siginfo_t *info, void * ) {
+  SignalHandler* h = instance();
+  SigMap& m = h->m_map;
+  SigMap::iterator i=m.find(signum);
+  MEPDESC* id = (MEPDESC*)h->bmid;
+  if ( id && id != MEP_INV_DESC && id->owner != -1 )  {
+    BMID bm = id->evtBuffer;
+    if ( bm != MBM_INV_DESC ) {
+      USER* u = bm->_user();
+      if ( u && u->held_eid != MBM::EVTID_NONE ) {
+	const char* tag = "           [ERROR] ";
+	EVENT *e = bm->event+u->held_eid;
+	int* addr = (int*)(e->ev_add+bm->buffer_add);
+	int  size = e->ev_size;
+	MEP_SINGLE_EVT* sevt = (MEP_SINGLE_EVT*)addr;
+	MEPEVENT* m = (MEPEVENT*)(id->mepStart + sevt->begin);
+	if ( sevt->evID >= 0 && sevt->evID <= m->packing )    {
+	  m->events[sevt->evID].status = EVENT_TYPE_BADPROC;
+	  ::lib_rtl_output(LIB_RTL_ERROR,"Signal Handler: MEP Event set to ERROR.\n");
+	}
+	::lib_rtl_output(LIB_RTL_ERROR,"Signal handler: called while processing MBM event. This indicates a CRASH!!!!!!\n");
+	::lib_rtl_output(LIB_RTL_ERROR,"Signal Handler: Event pointer:      %08X [%d] bytes.\n",addr,size);
+	::lib_rtl_output(LIB_RTL_ERROR,
+			 "Signal Handler: MEP Event: Magic:%08X Valid:%d Begin:%d "
+			 "mepID:%d Packing:%d RefCnt:%d SubEvent[%d] Offset:%d from:%08X\n",
+			 m->magic, m->valid, m->begin, m->evID, m->packing, m->refCount, 
+			 sevt->evID, sevt->begin, id->mepStart);
+      }
+    }
+  }
+  if ( i != m.end() ) {
+    __sighandler_t old = (*i).second.second.sa_handler;
+    func_desc<void (*)(int)> dsc(old);
+    ::lib_rtl_output(LIB_RTL_ERROR,"meplib:Handled signal: %d [%s] Old action:%p\n",
+		     info->si_signo,(*i).second.first.c_str(),dsc.ptr);
+    if ( old && old != SIG_IGN ) {
+      (*old)(signum);
+    }
+    else if ( old == SIG_DFL ) {
+      ::_exit(0);
+    }
+  }
+}
+
 void mep_map_unused_buffers(bool value) {
   s_map_unused = value;
+}
+
+/// Install signal handling to mark MEP events at destruction.
+int mep_set_signal_handler(MEPID dsc, bool catch_signals) {
+  MEPDESC* bm = (MEPDESC*)dsc;
+  if ( bm && bm != MEP_INV_DESC && bm->owner != -1 )  {
+    if ( catch_signals ) {
+      SignalHandler::instance(bm);
+      return MBM_NORMAL;
+    }
+    else {
+      SignalHandler::instance((MEPDESC*)MEP_INV_DESC);
+      return MBM_NORMAL;
+    }
+  }
+  return MBM_ERROR;
+}
+
+/// Optional callback to handle with MEP events, where the processing had errors....
+int mep_set_error_call(MEPID dsc, void* param, void(*callback)(void* param, void* data,size_t length)) {
+  MEPDESC* bm = (MEPDESC*)dsc;
+  if ( bm && bm != MEP_INV_DESC && bm->owner != -1 )  {
+    bm->cbParam = param;
+    bm->errCB = callback;
+    return MBM_NORMAL;
+  }
+  return MBM_ERROR;
 }
 
 int mep_scan(MEPID dsc, int loop_delay)  {
@@ -75,6 +215,26 @@ int mep_scan(MEPID dsc, int loop_delay)  {
             e->umask2.clear(uid);
             e->held_mask.clear(uid);
             if ( 0 == e->umask0.mask_or(e->held_mask,e->umask2) )  {  // no more consumers
+	      if ( id->errCB ) {
+		/// Check if there were processing errors .... If yes, call error handler
+		bool called = false;
+		size_t mx = m->packing < MEP_MAX_PACKING ? m->packing : MEP_MAX_PACKING;
+		for(size_t k=0; k<mx; ++k) {
+		  if ( m->events[k].status != EVENT_TYPE_OK ) {
+		    if ( !called ) {
+		      called = true;
+		      try {
+			(*id->errCB)(id->cbParam,m,e->ev_size);
+		      }
+		      catch(...) {
+			::lib_rtl_output(LIB_RTL_ERROR,"Failed to call ERROR callback on MEP processing ERROR\n");
+		      }
+		    }
+		    ::lib_rtl_output(LIB_RTL_ERROR,"MEP Processing ERROR [%d] Event@ %08X MEP@ %08X Subevent:%d/%d/%d Pattern:%08X\n",
+				     m->events[k].status,id->mepStart+m->begin,m,k,m->events[k].evID,m->packing,m->magic);
+		  }
+		}
+	      }
               _mbm_del_event(bm, e, e->ev_size);               // de-allocate event slot/space
             }
           }
@@ -130,9 +290,11 @@ static int _mep_change_refcount(MEPDESC* dsc,MEP_SINGLE_EVT* evt, int change)  {
   // Error
   return MBM_ERROR;
 }
+
 void mep_print_release(bool val)  {
   print_release = val;
 }
+
 static int mep_free_mep(void* param)   {
   void** pars = (void**)param;
   MEPEVENT* e = (MEPEVENT*)pars[2];

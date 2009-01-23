@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPProducer.cpp,v 1.11 2008-01-29 15:08:38 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPProducer.cpp,v 1.12 2009-01-23 15:02:48 frankb Exp $
 //  ====================================================================
 //  RawBufferCreator.cpp
 //  --------------------------------------------------------------------
@@ -95,6 +95,7 @@ namespace {
       e->packing     = -1;
       e->valid       = 1;
       e->magic       = mep_magic_pattern();
+      ::memset(e->events,0,sizeof(e->events));
       //::printf("MEP Buffer: [%d] Event at address %08X MEP:%p [%d] Pattern:%08X [Release MEP]\n",
       //  e->refCount, m_mepID->mepStart+e->begin, (void*)e, e->evID, e->magic);
       int status = receiveEvent(e->data, m_spaceSize-sizeof(MEPEVENT), evtLen);

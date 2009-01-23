@@ -10,11 +10,14 @@ enum MepBufferUsage  {
 };
 
 enum EvTypes  {
+  EVENT_TYPE_OK = 0,
   EVENT_TYPE_MEP = 1,
   EVENT_TYPE_EVENT = 2,
   EVENT_TYPE_ERROR = 3,
-  EVENT_TYPE_MISC  = 4
+  EVENT_TYPE_MISC  = 4,
+  EVENT_TYPE_BADPROC = 5
 };
+
 enum MepPacking  {
   MEP_MAX_PACKING = 16
 };
@@ -32,7 +35,7 @@ typedef struct _MEPID {
 } *MEPID;
 
 struct MEP_SINGLE_EVT  {
-  int  begin;
+  long begin;
   int  evID;
 };
 
@@ -49,6 +52,7 @@ struct MEPEVENT   {
     int status;
   } events[MEP_MAX_PACKING];
   char data[4];
+  static size_t hdrSize() {  return sizeof(MEPEVENT) - 4; }
 };
 
 #ifdef __cplusplus
@@ -66,12 +70,23 @@ extern "C"  {
   int mep_pause (MEPID dsc);
   /* Not for public use                                             */
   int mep_set_watch(MEPID bm);
+  /* Set flag to trigger printout when MEP is released              */
   void mep_print_release(bool val);
+  /* Increment reference count of MEP multi-event                   */
   int mep_increment(MEPID dsc, MEPEVENT* e, int val);
+  /* Decrement reference count of MEP multi-event                   */
   int mep_decrement(MEPID dsc, MEPEVENT* e, int val);
+  /* Install MEP buffer(s)                                          */
   int mep_install(int argc , char** argv);
+  /* Scan and release MEP event until reference count is NULL.      */
   int mep_scan(MEPID bm, int delay);
+  /* Set Flag to not map unused buffers.                            */
   void mep_map_unused_buffers(bool value);
+  /* Optional callback to handle with MEP events, where the processing had errors  */
+  int mep_set_error_call(MEPID dsc, void* param, void(*callback)(void* param, void* data,size_t length));
+  /* Install signal handling to mark MEP events at destruction      */
+  int mep_set_signal_handler(MEPID dsc, bool catch_signals);
+
 #ifdef __cplusplus
 }
 #endif

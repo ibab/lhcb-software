@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/MEPManager.h,v 1.8 2008-10-21 16:15:15 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/MEPManager.h,v 1.9 2009-01-23 15:03:39 frankb Exp $
 //	====================================================================
 //  MEPManager.cpp
 //	--------------------------------------------------------------------
@@ -51,6 +51,8 @@ namespace LHCb    {
     bool                       m_mapUnused;
     /// Property: Flag to indicate if buffer names should contain partition ID
     bool                       m_partitionBuffers;
+    /// Property; Flag to indicate if signals should be handled
+    bool                       m_handleSignals;
     /// Identifier of MEP buffer
     MEPID                      m_mepID;
     /// Buffer to store MBM identifiers

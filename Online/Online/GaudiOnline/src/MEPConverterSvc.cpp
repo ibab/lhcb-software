@@ -194,7 +194,10 @@ int LHCb::MEPConverterSvc::declareSubEvent(const EventDesc& evt, int evID, const
   MEPID id = m_mepMgr->mepID();
   EventDesc& e = m_producer->event();
   MEPEVENT* ev = (MEPEVENT*)evt.data;
+  //MEP_SINGLE_EVT* sev = (MEP_SINGLE_EVT*)e.data;
   LHCb::RawEventHeader* h = (LHCb::RawEventHeader*)e.data;
+  //sev->begin = long(ev)-id->mepStart;
+  //sev->evID  = evID;
   h->setEventID(evID);
   h->setMEPID(ev->evID);
   h->setDataStart(ev->begin);
@@ -209,8 +212,9 @@ int LHCb::MEPConverterSvc::declareSubEvent(const EventDesc& evt, int evID, const
     //        id->mepStart,evID,f,j,off,long(f->size()));
     h->setOffset(j, off);
   }
-  //const char* before_p = (char*)e.data;
-  //int before_len = e.len;
+  ev->events[evID].begin  = long(ev)-id->mepStart;
+  ev->events[evID].status = EVENT_TYPE_OK;
+  ev->events[evID].evID   = evID;
 
   e.mask[0] = id->partitionID;
   e.mask[1] = 0;
@@ -219,9 +223,6 @@ int LHCb::MEPConverterSvc::declareSubEvent(const EventDesc& evt, int evID, const
   e.type    = EVENT_TYPE_EVENT;
   e.len     = sub_evt_len;
   int sc = m_producer->declareEvent();
-  //const char* after_p = (char*)e.data;
-  //int after_len = e.len;
-  //printf("mep: data %p [%p] len:%d [%d] [%d]\n",before_p,after_p,before_len,sub_evt_len,after_len);
   if ( sc == MBM_NORMAL ) {
     m_evtCount++;
   }

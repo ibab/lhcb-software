@@ -1,6 +1,9 @@
 Package: GaudiOnline
 Author:  Markus Frank
 
+! 2009-01-19 Markus Frank
+ - Implement mechanism to allow saving MEPs by the Hlder task if Moore tasks crash
+
 ! 2008-12-10- Markus Frank
  - Add support for FileID bank
 

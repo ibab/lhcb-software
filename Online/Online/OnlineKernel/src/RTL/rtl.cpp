@@ -137,9 +137,8 @@ void RTL::ExitSignalHandler::handler(int signum, siginfo_t *info, void * ) {
   if ( i != m.end() ) {
     __sighandler_t old = (*i).second.second.sa_handler;
     func_desc<void (*)(int)> dsc(old);
-    std::cout << "Handled signal: " << info->si_signo;
-    std::cout << " [" << (*i).second.first;
-    std::cout << "] Old action:" << dsc.ptr << std::endl;
+    ::lib_rtl_output(LIB_RTL_ERROR,"meplib:Handled signal: %d [%s] Old action:%p\n",
+		     info->si_signo,(*i).second.first.c_str(),dsc.ptr);
     if ( old && old != SIG_IGN ) {
       (*old)(signum);
     }
