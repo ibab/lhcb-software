@@ -1,4 +1,4 @@
-// $Id: MCTupleToolAngles.cpp,v 1.1 2009-01-22 17:52:41 pkoppenb Exp $
+// $Id: MCTupleToolAngles.cpp,v 1.2 2009-01-23 10:28:10 pkoppenb Exp $
 // Include files 
 #include "gsl/gsl_sys.h"
 
@@ -59,10 +59,12 @@ StatusCode MCTupleToolAngles::fill( const LHCb::MCParticle* mother
   
   bool test = true;
 
-  if ( 0==mcp || 0==mother ) return StatusCode::SUCCESS ;
+  if ( 0==mcp || 0==mother || mcp==mother ) return StatusCode::SUCCESS ;
   double cosT = cosTheta(mother->momentum(), mcp->momentum() );
   // fill the tuple:
   test &= tuple->column( head+"_TRUECosTheta", cosT );
+  if ( msgLevel(MSG::DEBUG)) debug() << mother->particleID().pid() << " " << mother->momentum() << " " 
+                                     << mcp->particleID().pid() << " " << mcp->momentum() << endmsg ;
   return StatusCode(test) ;
   
 }

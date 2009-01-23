@@ -1,16 +1,16 @@
 #ifndef THETA_ICPP 
 #define THETA_ICPP 1
-double cosTheta( const Gaudi::LorentzVector& mother
-                 , const Gaudi::LorentzVector& mcp ){
+double cosTheta( const Gaudi::LorentzVector& mother,
+                 const Gaudi::LorentzVector& mcp ){
   
   ROOT::Math::Boost boost( mother.BoostToCM() );
   const Gaudi::XYZVector boostedParticle = (boost( mcp )).Vect().unit();
   const Gaudi::XYZVector boostedMother = mother.Vect().unit();
-  double cosTheta = boostedParticle.Dot(boostedMother) ;
+  double cosT = boostedParticle.Dot(boostedMother) ;
   if (msgLevel(MSG::VERBOSE)) verbose() <<  mother << " " 
                                         <<  mcp << " " << boostedMother 
                                         << " " << boostedParticle 
-                                        << " " << cosTheta << endmsg ;
-  return cosTheta;
+                                        << " " << cosT << endmsg ;
+  return cosT;
 }
 #endif //  THETA_ICPP 
