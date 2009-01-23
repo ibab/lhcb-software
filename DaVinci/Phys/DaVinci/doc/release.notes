@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.299 2009-01-19 12:56:08 jpalac Exp $
+! $Id: release.notes,v 1.300 2009-01-23 11:17:50 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,14 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-01-23 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v22r0p2
+ - python/DaVinci/Configuration.py
+  . Add patch lines to re-do MuonPID from ProtiParticles in DC06 data.
+    These should be removed from the next release, with equivalent lines
+    going to PhysConf.
 
 !========================== DaVinci v22r0 2000-01-19 =====================
 
