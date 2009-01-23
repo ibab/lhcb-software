@@ -229,10 +229,16 @@ def mbmInitApp(partID, partName, flags,partitionBuffers=False):
   return _application('NONE','NONE',extsvc=[Configs.MonitorSvc(),mepMgr],runable=onlineRunable(1))
 
 #------------------------------------------------------------------------------------------------
-def mepHolderApp(partID, partName):
+def mepHolderApp(partID, partName,errBuffer=None,partitionBuffers=False):
   "MEP Holder application for usage of multi event packet buffers."
-  extsvc               = [Configs.MonitorSvc(), mepManager(partID,partName,['MEP'])]
   runable              = Configs.LHCb__MEPHolderSvc('Runable')
+  if errBuffer is None:
+    mepMgr               = mepManager(partID,partName,['MEP'])
+  else:
+    mepMgr               = mepManager(partID,partName,['MEP',errBuffer],partitionBuffers)
+    runable.HandleErrors = True
+    runable.ErrorBuffer  = errBuffer
+  extsvc               = [Configs.MonitorSvc(), mepMgr]
   runable.Requirements = [mbm_requirements['MEP']]
   evtloop              = Configs.LHCb__OnlineRunable('EmptyEventLoop')
   evtloop.Wait         = 3
@@ -305,6 +311,7 @@ def panoramixSimApp(partID, partName, source, algs=[]):
 #------------------------------------------------------------------------------------------------
 def defaultFilterApp(partID, partName, percent, print_freq):
   mepMgr               = mepManager(partID,partName,['EVENT','RESULT'])
+  mepMgr.HandleSignals = True
   runable              = evtRunable(mepMgr)
   evtSel               = mbmSelector('EVENT')
   evtdata              = evtDataSvc()
@@ -312,6 +319,9 @@ def defaultFilterApp(partID, partName, percent, print_freq):
   seq                  = CFG.Sequencer('SendSequence')
   seq.Members          = [prescaler(percent=percent),Configs.LHCb__DecisionSetterAlg('DecisionSetter')]
   algs                 = [storeExplorer(load=1,freq=print_freq),seq]
+  #delay                = Configs.LHCb__DelaySleepAlg('Delay')
+  #delay.DelayTime      = 999999;
+  #algs.append(delay)
   return _application('NONE',extsvc=[Configs.MonitorSvc(),mepMgr,evtSel],runable=runable,algs=algs)
 
 #------------------------------------------------------------------------------------------------

@@ -13,7 +13,7 @@ def runReceiver():     return _run(dataReceiverApp(pid,pnam,'OUT',True))
 #------------------------------------------------------------------------------------------------
 def runEvtProd():      return _run(mepConverterApp(pid,pnam,bursts=True,freq=0.001))
 #------------------------------------------------------------------------------------------------
-def runEvtHolder():    return _run(mepHolderApp(pid,pnam))
+def runEvtHolder():    return _run(mepHolderApp(pid,pnam,'OUT',True))
 #------------------------------------------------------------------------------------------------
 def runMBMRead(percent=1,print_freq=0.0001):
   return _run(defaultFilterApp(pid,pnam,percent=percent,print_freq=print_freq))
