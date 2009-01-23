@@ -1,9 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.389 2009-01-12 07:11:44 cattanem Exp $ 
+! $Id: release.notes,v 1.390 2009-01-23 10:59:33 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2009-01-23 - Marco Cattaneo
+ - Backwards compatible fixes for Gaudi v21
 
 !====================== DetDesc v18r11 2009-01-12 =============================
 ! 2009-01-10 - Marco Clemencic

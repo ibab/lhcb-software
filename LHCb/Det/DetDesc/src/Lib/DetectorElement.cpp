@@ -1,4 +1,4 @@
-// $Id: DetectorElement.cpp,v 1.40 2008-10-28 12:04:37 cattanem Exp $
+// $Id: DetectorElement.cpp,v 1.41 2009-01-23 10:59:33 cattanem Exp $
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -6,6 +6,7 @@
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/SmartIF.h"
 
 ///
 #include "DetDesc/IGeometryInfo.h"
@@ -82,12 +83,10 @@ IUpdateManagerSvc* DetectorElement::updMgrSvc() const {
 }
 
 IDetectorElement*  DetectorElement::parentIDetectorElement() const {
-  IDataManagerSvc* mgr = 0;
-  StatusCode sc = dataSvc()->queryInterface(IID_IDataManagerSvc,(void**)&mgr);
-  if ( sc.isSuccess() ) {
+  SmartIF<IDataManagerSvc> mgr( dataSvc() );
+  if( mgr ) {
     IRegistry* pRegParent = 0;
-    sc = mgr->objectParent(this, pRegParent);
-    mgr->release();
+    StatusCode sc = mgr->objectParent(this, pRegParent);
     if ( sc.isSuccess() && 0 != pRegParent ) {
       return dynamic_cast<IDetectorElement*>(pRegParent->object());
     }
@@ -323,12 +322,11 @@ DetectorElement::childIDetectorElements() const {
   /// already loaded?
   if( m_de_childrensLoaded ) { return m_de_childrens; }
   /// load them!
-  IDataManagerSvc* mgr = 0;
-  StatusCode sc = dataSvc()->queryInterface(IID_IDataManagerSvc,(void**)&mgr);
-  if ( sc.isSuccess() ) {
+  SmartIF<IDataManagerSvc> mgr( dataSvc() );
+  if( mgr ) {
     typedef std::vector<IRegistry*> Leaves;
     Leaves leaves;
-    sc = mgr->objectLeaves(this, leaves);
+    StatusCode sc = mgr->objectLeaves(this, leaves);
     if ( sc.isSuccess() ) {
       for ( Leaves::iterator it = leaves.begin(); it != leaves.end(); it++ ) {
         Assert (0 != *it , "DirIterator points to NULL!" );
@@ -340,7 +338,6 @@ DetectorElement::childIDetectorElements() const {
       }
       m_de_childrensLoaded = true;
     }
-    mgr->release();
   }
   return m_de_childrens;
 };
