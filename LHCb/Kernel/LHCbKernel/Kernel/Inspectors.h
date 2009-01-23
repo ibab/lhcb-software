@@ -1,4 +1,4 @@
-// $Id: Inspectors.h,v 1.1 2008-08-03 12:34:36 ibelyaev Exp $
+// $Id: Inspectors.h,v 1.2 2009-01-23 10:30:08 cattanem Exp $
 // ============================================================================
 #ifndef KERNEL_INSPECTORS_H 
 #define KERNEL_INSPECTORS_H 1
@@ -20,7 +20,6 @@
 // forward decalrations 
 // ============================================================================
 class IInterface      ;
-class INamedInterface ;
 class IProperty  ;
 class Property   ;
 // ============================================================================

@@ -4,15 +4,17 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2009-01-23 - Marco Cattaneo
+ - Backward compatible changes to adapt to new Interface definitions in
+   Gaudi v21
+
 ! 2009-01-22 M Needham
  - Add toString method in STChannelID
  - Add channelToString and stringToChannel to IT and TTNames.
 
-
 ! 2009-01-19 - David Hutchcroft
  - Added a direct accessor to FastClusterContainer (requires container sorted)
    and a Less_By_Channel to SiDataFunctor to sort the container
-
 
 !===================== LHCbKernel v11r0 2009-01-09 ========================
 ! 2009-01-09 - Jeroen van Tilburg

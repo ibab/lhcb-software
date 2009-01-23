@@ -1,4 +1,4 @@
-// $Id: LbAppInit.cpp,v 1.11 2008-07-21 14:46:34 cattanem Exp $
+// $Id: LbAppInit.cpp,v 1.12 2009-01-23 10:30:08 cattanem Exp $
 // Include files
 #include <string>
 #include <vector>
@@ -55,7 +55,7 @@ StatusCode LbAppInit::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   IService* appMgr = svc<IService>( "ApplicationMgr" );
-  SmartIF<IProperty> propMgr ( IID_IProperty, appMgr );
+  SmartIF<IProperty> propMgr( appMgr );
   std::string value ;
   sc = propMgr->getProperty( "EvtMax", value );
   if( sc.isFailure() ) {
