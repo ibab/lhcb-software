@@ -224,7 +224,7 @@ namespace Al
 	    info() << *it << " , " ;
 	  info() << "num elements = " << ic->elements().size() << endmsg ;
 	  for( Elements::const_iterator ielem = ic->elements().begin() ; ielem != ic->elements().end(); ++ielem)
-	    info() << (*ielem)->name() << endreq ;
+	    verbose() << (*ielem)->name() << endreq ;
 	}
       }
       info() << "Number of constraint definitions= " 
