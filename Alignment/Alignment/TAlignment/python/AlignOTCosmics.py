@@ -1,8 +1,8 @@
 
 from Gaudi.Configuration import *
 
-nIter               = 1
-nEvents             = 1000
+nIter               = 3
+nEvents             = 100000
 minNumHits          = 10
 eigenvalueThreshold = 0
 maxNumOutliers      = 0
@@ -187,21 +187,10 @@ else :
 
 print list(elements)
 
-# configure some tracking opts
+# reconfigure some tracking opts
 from TrackSys.Configuration import *
-#TrackSys().fieldOff = True
 TrackSys().SpecialData += [ 'fieldOff' ]
-TrackSys().ExpertTracking += ['noDrifttimes','kalmanSmoother' ]
-
-if simplifiedGeometry : TrackSys().ExpertTracking += [ 'simplifiedGeometry' ]
-
-EventDataSvc().ForceLeaves        = True
-EventDataSvc().EnableFaultHandler = True
-EventDataSvc().RootCLID           =    1
-
-#from DDDB.Configuration import *
-from Configurables import DDDBConf
-DDDBConf().DataType = '2008'
+TrackSys().ExpertTracking += ['noDrifttimes' ]
 
 from Configurables import MagneticFieldSvc
 MagneticFieldSvc().UseConstantField = True
@@ -262,9 +251,7 @@ alignment = AlConfigurable()
 #alignment.AlternativeCondDBTag        = "DC06-20080407"
 #alignment.AlternativeCondDBTag       = "MisA-OTL-1"
 #alignment.AlternativeCondDBOverlays   = [ "/Conditions/IT", "/Conditions/OT", "Conditions/Velo" ]
-
-## Patttern Recognition?
-#alignment.CondDBTag                    = "2008-default"
+alignment.DataType                     = '2008'
 alignment.Pat                          = True
 alignment.OutputLevel                  = INFO
 alignment.ElementsToAlign              = list(elements)
@@ -274,16 +261,11 @@ alignment.AlignInputTrackCont          = "Alignment/AlignmentTracks"
 alignment.UseCorrelations              = useCorrelations
 alignment.Constraints                  = constraints
 alignment.ChisqConstraints             = chisqconstraints
-alignment.UseWeightedAverageConstraint = False
 alignment.MinNumberOfHits              = minNumHits
-alignment.UsePreconditioning           = True
 alignment.SolvTool                     = "DiagSolvTool"
-alignment.WriteCondToXML               = True
-alignment.CondFileName                 = "Elements.xml"
-alignment.CondDepths                   = [0,1,2,3,4,5,6]
-alignment.SimplifiedGeom               = True
 alignment.WriteCondSubDetList          = [ "OT","IT" ]
 alignment.Chi2Outlier = 10000
+alignment.SimplifiedGeom = True
 
 if preloadalignment:
    from Configurables import ( CondDBAccessSvc,CondDB )
@@ -545,10 +527,7 @@ from GaudiPython import *
 from GaudiPython import gbl
 
 EventPersistencySvc().CnvServices.append( "LHCb::RawDataCnvSvc" )
-# POOL Persistency
-importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
 #import Gaudi.CommonGaudiConfigurables
-
 
 # Hack to overide default EvtSel open
 from GaudiPython.Bindings import iEventSelector
@@ -590,12 +569,7 @@ mainSeq = appMgr.algorithm( 'AlignmentMainSeq' )
 
 ## Print flow of application
 alignment.printFlow(appMgr)
-
-print 'HOIIOIOIOIOIOIIOIOIO'
-
 evtSel = appMgr.evtSel()
-
-print 'HAHAHAHAHAHAH'
 
 evtSel.printfreq = 100
 ##evtSel.FirstEvent = 604
