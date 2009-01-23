@@ -1,7 +1,7 @@
 from Gaudi.Configuration import *
 
-nEvents            = 1000000
-nIter              = 1
+nEvents            = 100000
+nIter              = 3
 alignlevel         = 'sensors'
 alignlevel = 'modules'
 #alignlevel = 'velott'
@@ -9,15 +9,10 @@ alignlevel = 'modules'
 runVeloTT = False
 datasample = 'TED2'
 
-#alignlevel = 'all'
-computeVertexCorrelations = False
-
 from Alignables import *
 
-#elements = Alignables("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/Velo(Right|Left)/Module..", "TxTyTz")
 elements = Alignables()
 constraints = []
-
 if alignlevel == 'sensors':
    elements.VeloRSensors("TxTy")
    elements.VeloPhiSensors("TxTy")
@@ -26,8 +21,9 @@ if alignlevel == 'sensors':
 #   constraints = ["Tx","Ty","Tz","Szz","Szx","Szy"]
 #   elements.VeloRSensors("Tz")
 #   elements.VeloPhiSensors("Tz")
-   conddepths = [3]
-   condname = "Detectors.xml"
+#   conddepths = [3]
+#   condname = "Detectors.xml"
+#   WriteCondSubDetList = ['Velo']
 elif alignlevel == 'halves':
 #   elements.VeloLeft("TxTyRxRy")
 #   elements.VeloRight("TxTyRxRy")
@@ -82,15 +78,10 @@ else :
 #elements = Alignables()
 if not runVeloTT:
    elements.TTLayers("Tx")
-#elements.VeloLeft("Tx")
-#elements.ITBoxes("Tx")
-#elements += ['/dd/Structure/LHCb/BeforeMagnetRegion/TT/TTa/TTaXLayer: Tx']
-#constraints = []
 elements.IT("Tx")
    
 print list(elements)
 from TrackSys.Configuration import *
-TrackSys().SpecialData.append('fieldOff')
 TrackSys().SpecialData += [ 'fieldOff' ]
 TrackSys().ExpertTracking += ['noDrifttimes','kalmanSmoother','simplifiedGeometry' ]
 from Configurables import MagneticFieldSvc
@@ -109,55 +100,28 @@ DDDBConf().DataType = '2008'
 # Go past this line only when you know what you are doing
 ############################################################################################################################
 ## File to setup Alignment
-#ApplicationMgr( AppName         = "VeloAlignment", AppVersion      = "v1",
-#                AuditTools      = True       , AuditServices   = True  , AuditAlgorithms = True )
-
-#from Configurables import LbAppInit
-#ApplicationMgr().TopAlg.append( LbAppInit( ApplicationMgr().AppName ) )
 
 import GaudiKernel.ProcessJobOptions
 GaudiKernel.ProcessJobOptions.PrintOff()
 
 from AlConfigurable import *
 alignment = AlConfigurable()
-
-## AlternativeDB
-#alignment.AlternativeCondDB           = "/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v4r3/db/LHCBCOND.db/LHCBCOND"
-#alignment.AlternativeCondDBTag        = "DC06-20080407"
-#alignment.AlternativeCondDBTag       = "MisA-OTL-1"
-#alignment.AlternativeCondDBOverlays   = [ "/Conditions/IT", "/Conditions/OT", "Conditions/Velo" ]
-
-## Patttern Recognition?
+alignment.DataType                     = '2008'
 alignment.Pat                          = True
 alignment.CondDBTag                    = "head-20081002"
-## Set output level
 alignment.OutputLevel                  = INFO
 alignment.ElementsToAlign              = list(elements)
 alignment.NumIterations                = nIter
 alignment.AlignInputTrackCont          = 'Rec/Track/VeloSelection'
-alignment.UseCorrelations              = True
 alignment.Constraints                  = constraints
-alignment.UseWeightedAverageConstraint = False
-alignment.MinNumberOfHits              = 15
-alignment.UsePreconditioning           = True
-alignment.SolvTool                     = "gslSolver"
+alignment.MinNumberOfHits              = 20
 alignment.SolvTool                     = "DiagSolvTool"
-alignment.WriteCondToXML               = True
-alignment.CondFileName                 = condname
-alignment.CondDepths                   = conddepths
-alignment.Precision                    = 8
-alignment.SimplifiedGeom               = True
 alignment.WriteCondSubDetList          = [ "Velo","TT" ]
 #alignment.VertexLocation = "Rec/Vertex/Primary"
-alignment.Chi2Outlier = 10000
+alignment.UseLocalFrame                = False
+alignment.EigenValueThreshold = 50
 
-#alignment.RegularizationFactor = 1
-
-## Call after all options are set
-#alignment.applyConf()
-
-
-#EventSelector().Input = ["DATA='castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/PHYSICS_COSMICS/30933/030933_0000077704.raw' SVC='LHCb::MDFSelector'"]
+# load eventual alignment file
 
 MisAlCh1COND = CondDBAccessSvc("MisAlCh1COND")
 #MisAlCh1COND.ConnectionString = "sqlite_file:/afs/cern.ch/user/m/marcocle/public/Wouter/LHCBCOND_MisAlCh1.db/LHCBCOND"
@@ -303,23 +267,9 @@ postmonitorseq.Members += [ TrackMonitor(name = "AlignTracksPostMonitor",
 veloreco.Members += [ monitorseq,postmonitorseq ]
 
 # add the alignment. this is a bit tricky, but for now I just want the histograms
-from Configurables import (AlignAlgorithm, GetElementsToBeAligned,Al__AlignConstraintTool,
-                          Al__AlignUpdateTool,gslSVDsolver,DiagSolvTool,AlRobustAlignAlg )
-
-updatetool = Al__AlignUpdateTool("Al::AlignUpdateTool")
-#solver = gslSVDsolver("MatrixSolverTool")
-#solver.EigenValueThreshold = 100
-#updatetool.addTool( gslSVDsolver(), name = "MatrixSolverTool" )
-DiagSolvTool().EigenValueThreshold = 50
-DiagSolvTool().WriteMonNTuple = False
-#updatetool.addTool( solver, name = "MatrixSolverTool" )
-#updatetool.MatrixSolverTool.EigenValueThreshold = 100
-#updatetool.MatrixSolverTool.WriteMonNTuple = True
-elementtool = GetElementsToBeAligned( "GetElementsToBeAligned" )
-elementtool.UseLocalFrame = False
-
-#constrainttool = Al__AlignConstraintTool("Al::AlignConstraintTool")
-#constrainttool.Constraints = ["Tx","Ty","Szx","Szy" ]
+from Configurables import (AlRobustAlignAlg )
+#from Gaudi.Configuration import NTupleSvc
+#NTupleSvc().Output = [ "FILE1 DATAFILE='aligntuples.root' TYPE='ROOT' OPT='NEW' " ]
 
 monitorseq.Members += [ AlRobustAlignAlg("RobustAlignAlg", TrackLocation = 'Rec/Track/VeloCopy') ]
 monitorseq.Members += [ AlRobustAlignAlg("RobustAlignAlg2", TrackLocation = 'Rec/Track/VeloSelection') ]
@@ -422,9 +372,6 @@ def update(algorithm, appMgr) :
    incSvc.fireIncident( updateConstants )
    
 
-#from Gaudi.Configuration import NTupleSvc
-#NTupleSvc().Output = [ "FILE1 DATAFILE='aligntuples.root' TYPE='ROOT' OPT='NEW' " ]
-
 ## Instantiate application manager
 appMgr = AppMgr()
 mainSeq = appMgr.algorithm( 'AlignmentMainSeq' )
@@ -440,7 +387,6 @@ evtSel.printfreq = 10
 ## Open Files; Also initialises Application Manager
 evtSel.open( data, typ = "MDF")
 print evtSel.Input
-
 
 for i in range( nIter ) :
     mainSeq.Enable = False
