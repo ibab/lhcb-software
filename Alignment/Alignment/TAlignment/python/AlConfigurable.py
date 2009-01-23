@@ -34,26 +34,24 @@ class AlConfigurable( LHCbConfigurableUser ) :
         "AlignInputTrackCont"          : "Alignment/AlignmentTracks", ## Input track container for alignment
         "VertexLocation"               : ""                         , ## Location of input vertex list
         "UseCorrelations"              : True                       , ## Correlations
-        "ApplyMS"                      : True                       , ## Multiple Scattering
         "Constraints"                  : []                         , ## Specify which constrains to use with strategy 1  
         "ChisqConstraints"             : []                    , ## Specify which constrains to use with strategy 1  
         "UseWeightedAverageConstraint" : False                      , ## Weighted average constraint
         "MinNumberOfHits"              : 1                          , ## Min number of hits per element
         "Chi2Outlier"                  : 10000                      , ## Chi2 cut for outliers
-        "UsePreconditioning"           : False                      , ## Pre-conditioning
+        "UsePreconditioning"           : True                       , ## Pre-conditioning
         "SolvTool"                     : "gslSolver"                , ## Solver to use
-        "WriteCondToXML"               : False                      , ## Write conditions to xml file
         "WriteCondSubDetList"          : []                         , ## List of sub-detectors for which to write out the conditions
-        "CondFileName"                 : "Detectors.xml"            , ## Name of xml file for conditions
+        "CondFilePrefix"               : ""                         , ## Prefix for xml file names
         "VeloTopLevelElement"          : "/dd/Structure/LHCb/BeforeMagnetRegion/Velo",
         "TTTopLevelElement"            : "/dd/Structure/LHCb/BeforeMagnetRegion/TT",
         "ITTopLevelElement"            : "/dd/Structure/LHCb/AfterMagnetRegion/T/IT",
         "OTTopLevelElement"            : "/dd/Structure/LHCb/AfterMagnetRegion/T/OT",
         "MuonTopLevelElement"          : "/dd/Structure/LHCb/DownstreamRegion/Muon",
-        "CondDepths"                   : []                         ,              ## Condition levels to write to xml
         "Precision"                    : 16                         , ## Set precision for conditions
         "OutputLevel"                  : INFO                       , ## Output level
-        "LogFile"                      : "alignlog.txt"
+        "LogFile"                      : "alignlog.txt",
+        "EigenValueThreshold"          : -1
         }
 
     def getProp( self, name ) :
@@ -61,26 +59,6 @@ class AlConfigurable( LHCbConfigurableUser ) :
             return getattr( self, name)
         else:
             return self.getDefaultProperties()[name]
-
-    def defineApp( self ) :
-        ## Histos
-        importOptions("$STDOPTS/RootHist.opts")
-        
-        ## Import default LHCb application options
-        importOptions( "$STDOPTS/LHCbApplication.opts" )
-
-        ## Pool persitency
-        importOptions( "$STDOPTS/DstDicts.opts" )
-
-        ## DataOnDemandSvc need for decoding Raw buffer
-        from Configurables import ( DataOnDemandSvc )
-        ApplicationMgr().ExtSvc.append( DataOnDemandSvc() )
-        ## Import default decoding options 
-        #importOptions( "$STDOPTS/DecodeRawEvent.opts" )
-
-        from Configurables import ( TransportSvc )
-        # TransportSvc needed by tracking
-        ApplicationMgr().ExtSvc.append( TransportSvc() )
 
     def defineDB(self):
         # Delegate handling of properties to DDDBConf. This is normally done from LHCbApp.
@@ -142,10 +120,6 @@ class AlConfigurable( LHCbConfigurableUser ) :
                     addCondDBAlternative( myCondDB , "/Conditions" )
                     
             else: print "WARNING: Need to specify a tag for alternative CondDB!"
-            
-
-    def simplifiedGeom( self ) :
-        importOptions("$TALIGNMENTROOT/options/SimplifiedGeometry.opts")
 
     def decodingSeq( self, outputLevel = INFO ) :
         if not allConfigurables.get( "DecodingSeq" ) :
@@ -259,6 +233,15 @@ class AlConfigurable( LHCbConfigurableUser ) :
             if outputLevel == VERBOSE: print "VERBOSE: Filter Sequencer already defined!" 
             return allConfigurables.get( "TrackFilterSeq" )
 
+    def writeAlg( self, subdet, condname, depths, outputLevel = INFO) :
+        from Configurables import WriteAlignmentConditions
+        return WriteAlignmentConditions( 'Write' + subdet + condname + 'ToXML',
+                                         OutputLevel = outputLevel,
+                                         topElement = self.getProp( subdet + 'TopLevelElement' ),
+                                         precision = self.getProp( "Precision" ),
+                                         depths = depths,
+                                         outputFile = self.getProp('CondFilePrefix') + subdet + condname + '.xml' )
+    
     def alignmentSeq( self, outputLevel = INFO ) :
         if not allConfigurables.get( "AlignmentSeq" ) :
             if outputLevel == VERBOSE: print "VERBOSE: Alignment Sequencer not defined! Defining!"
@@ -286,7 +269,11 @@ class AlConfigurable( LHCbConfigurableUser ) :
             updatetool.UsePreconditioning           = self.getProp( "UsePreconditioning"           )
             updatetool.LogFile                      = self.getProp( "LogFile"             )
             updatetool.MatrixSolverTool = self.getProp( "SolvTool" )
-                
+
+            # this needs to be improved on the C++ side
+            DiagSolvTool().EigenValueThreshold = self.getProp( "EigenValueThreshold")
+            gslSVDsolver().EigenValueThreshold = self.getProp( "EigenValueThreshold")
+            
             # configure in the tool service
             elementtool = GetElementsToBeAligned( "GetElementsToBeAligned" )
             elementtool.OutputLevel = outputLevel
@@ -305,25 +292,24 @@ class AlConfigurable( LHCbConfigurableUser ) :
             
             alignSequencer.Members.append(alignAlg)
 
-            if self.getProp( "WriteCondToXML" ) :
+            listOfCondToWrite = self.getProp( "WriteCondSubDetList" )
+            if len(listOfCondToWrite)>0 :
                 writeSequencer = GaudiSequencer( "WriteCondSeq" )
                 alignSequencer.Members.append(writeSequencer)
                 from Configurables import WriteAlignmentConditions
-                listOfCondToWrite = self.getProp( "WriteCondSubDetList" )
-                if listOfCondToWrite:
-                    for subDet in listOfCondToWrite :
-                        writeCondInstName = 'Write' + subDet + 'ConditionsToXML'
-                        topLevelElement = subDet + 'TopLevelElement'
-                        condFileName = subDet + self.getProp( "CondFileName" )
-                        writeSequencer.Members += WriteAlignmentConditions()
-                        writeSequencer.Members.append (
-                            WriteAlignmentConditions( writeCondInstName,
-                                                      OutputLevel = outputLevel,
-                                                      topElement = self.getProp( topLevelElement ),
-                                                      precision = self.getProp( "Precision" ),
-                                                      depths = self.getProp( "CondDepths"),
-                                                      outputFile = condFileName ) )
-                            
+                if 'Velo' in listOfCondToWrite:
+                    writeSequencer.Members.append ( self.writeAlg( 'Velo', 'Global', [0,1] ) )
+                    writeSequencer.Members.append ( self.writeAlg( 'Velo','Modules', [2] ) )
+                    writeSequencer.Members.append ( self.writeAlg( 'Velo','Detectors', [4] ) )
+                if 'TT' in listOfCondToWrite:
+                    writeSequencer.Members.append ( self.writeAlg( 'TT','Detectors', [0,1,2,3] ) )
+                if 'IT' in listOfCondToWrite:
+                    writeSequencer.Members.append ( self.writeAlg( 'IT','Detectors', [0,1,2,3] ) )
+                if 'OT' in listOfCondToWrite:
+                    writeSequencer.Members.append ( self.writeAlg( 'OT','Detectors', [0,1,2,3] ) )
+                if 'Muon' in listOfCondToWrite:
+                    writeSequencer.Members.append ( self.writeAlg( 'Muon','Detectors', [0,1,2,3] ) )
+
             return alignSequencer
         else :
             if outputLevel == VERBOSE : print "VERBOSE: Alignment Sequencer already defined!" 
@@ -372,9 +358,11 @@ class AlConfigurable( LHCbConfigurableUser ) :
             print "\n ****************************************************************************** \n"
         
     def __apply_configuration__( self ) :
-        #    if self.getProp( "SimplifiedGeom" ) : TrackSys().expertTracking += "simplifiedGeometry"
-        #    TrackSys().expertTracking += "kalmanSmoother"
-        #    self.defineApp()
+        # just to make sure we don't forget
+        if self.getProp( "SimplifiedGeom" ) : TrackSys().ExpertTracking += ['simplifiedGeometry']
+        TrackSys().ExpertTracking += ['kalmanSmoother']
+        
+        # Set up the database. Normally done from LHCbApp
         self.defineDB()
 
         # Set up transient store, if not yet done. This is normally done from LHCbApp
@@ -386,6 +374,9 @@ class AlConfigurable( LHCbConfigurableUser ) :
         if TrackSys().fieldOff() :
             from Configurables import MagneticFieldSvc
             MagneticFieldSvc().ScaleFactor = 0
+
+        # this is normally done from Brunel
+        importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
 
         from Configurables import ApplicationMgr, HistogramPersistencySvc
         ApplicationMgr().HistogramPersistency = 'ROOT'
