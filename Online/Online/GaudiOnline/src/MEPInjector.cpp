@@ -141,7 +141,7 @@ MEPInjector::MEPInjector(const std::string & name, ISvcLocator * pSvcLocator):Al
     declareProperty("HLTEthInterface", m_HLTEthInterface=m_HLTIfIPAddr[m_HLTIfIPAddr.length()]);
     
 
-    declareProperty("TimeOut", m_TimeOut = -1);
+    declareProperty("TimeOut", m_TimeOut = 10000);
 
     /// Partition ID set to all detectors by default, but copied from Odin in TFC mode
     declareProperty("PartitionID", m_PartitionID = 0x7fff);
@@ -162,6 +162,9 @@ MEPInjector::MEPInjector(const std::string & name, ISvcLocator * pSvcLocator):Al
 StatusCode MEPInjector::initialize()
 {
     static MsgStream log(msgSvc(), name());	//Message stream for output
+
+    m_gotOdin = false;
+    m_gotHLT = false; 
 
     std::string strAllocatedMEPs = "";
 
@@ -812,8 +815,8 @@ StatusCode MEPInjector::injectorProcessing()
         return StatusCode::FAILURE;
     }
 */
-    StatusCode sc = StatusCode::SUCCESS;
-    
+    StatusCode sc = StatusCode::RECOVERABLE;
+   /* 
     if(!m_AutoMode) {
         sc = getHLTInfo();
         if(sc.isRecoverable()) {
@@ -836,23 +839,46 @@ StatusCode MEPInjector::injectorProcessing()
             return StatusCode::FAILURE;
         }
     }
-
-    while (sc.isSuccess() && !m_InjectorStop) {
+*/
+    while ((sc.isSuccess() || sc.isRecoverable()) && !m_InjectorStop) {
         if(m_InjState != RUNNING) {
             MEPRxSys::microsleep(1000); 
             continue;   //If injector is not running, idle      
         }
  
-        sc = readThenSend();
+        //XXX optimization, all get HLT et get Odin in main loop, not in alternative inside the readThenSend, 
+        //XXX as we could go back to main loop once mep factor reached, to do after 1st FEST
         if(sc.isRecoverable()) 
         {
-            continue; 
+            log << MSG::DEBUG << "Main procedure exited on recover" << endmsg;
+            if(!m_AutoMode) {
+                if(!m_gotHLT) {
+                    sc = getHLTInfo();
+                    if(sc.isRecoverable()) continue;
+                    if(sc.isFailure()) {
+                        ERRMSG(log, " Selecting a HLT");
+                        return StatusCode::FAILURE;
+                    }
+                    m_gotHLT = true;
+                }
+  
+                if(!m_gotOdin) {
+                    sc = getOdinInfo();
+                    if(sc.isRecoverable()) continue;
+                    if(sc.isFailure()) {
+                        ERRMSG(log, " Copying data from Odin MEP");
+                        return StatusCode::FAILURE;
+                    }
+                    m_gotOdin = true;
+                }
+            }
         }
         else if (sc.isFailure())
         {
             ERRMSG(log, "Main processing failed, aborting !");
             return sc;
         }
+        sc = readThenSend();
     }
  
 
@@ -882,6 +908,7 @@ StatusCode MEPInjector::readThenSend()
  
     //If we have reached packing factor
     if (nbEv == m_PackingFactor ) {
+	nbEv = 1;
 
         finalSent = false;
 	if (!m_AutoMode) {
@@ -927,6 +954,8 @@ StatusCode MEPInjector::readThenSend()
             log << MSG::DEBUG << "Number of events sent : " << m_TotEvtsSent << endmsg;
 
 	if (!m_AutoMode) {
+            m_gotOdin = false;
+            m_gotHLT = false;
             /// Get information from Odin and HLT
             StatusCode sc; 
             sc = getHLTInfo();
@@ -935,13 +964,15 @@ StatusCode MEPInjector::readThenSend()
                 ERRMSG(log, " Selecting a HLT");
                 return StatusCode::FAILURE;
             }
+            m_gotHLT = true;
 
-            sc= getOdinInfo();
+            sc = getOdinInfo();
             if(sc.isRecoverable()) return sc;
             if(sc.isFailure()) {
                 ERRMSG(log, " Copying data from Odin MEP");
                 return StatusCode::FAILURE;
             } 
+            m_gotOdin = true;
 
 	} else {
 	    /// The IP datagram ID is set to the least significant 15 bits of the first 
@@ -952,7 +983,6 @@ StatusCode MEPInjector::readThenSend()
 	    m_L0ID += m_PackingFactor;
 	    m_EvtID = 0x0000ffff & m_L0ID;
 	} /// end if(!m_AutoMode)  
-	nbEv = 1;
 
     } else {  ///Packing factor not reached
 	if (m_AutoMode)
@@ -1637,11 +1667,26 @@ StatusCode MEPInjector::manageMEPRequest()
 	m_TotMEPReqRx += mreq->nmep;
 	m_TotMEPReqPktRx++;
 
-        log << MSG::DEBUG << "FARM IP ADDRESS : "<< hdr->saddr <<" ; Credit asked " << m_HLTReqs[hdr->saddr] <<endmsg;
+        if((m_TotEvtsSent%10000) == 0)
+        {   
+            log << MSG::INFO << "-----------------------" << endmsg;
+            log << MSG::INFO << "Time of run (ms) :     " << m_TotElapsedTime << endmsg;
+            log << MSG::INFO << "Farm Node | Requests " << endmsg;
+            for(std::map<unsigned int, unsigned int>::iterator ite = m_HLTReqs.begin(); ite != m_HLTReqs.end(); ++ite) {
+                log << MSG::INFO << MEPRxSys::dotted_addr(ite->first) << " | " << ite->second << endmsg;
+            }
+            log << MSG::INFO << "-----------------------" << endmsg;
+        }
+
+  
+
+        log << MSG::DEBUG << "FARM IP ADDRESS : "<< MEPRxSys::dotted_addr(hdr->saddr) <<" ; Credit asked " << m_HLTReqs[hdr->saddr] <<endmsg;
         log << MSG::DEBUG << "    Total of credits : " << m_HLTReqs[hdr->saddr] << endmsg;   
         log << MSG::DEBUG << "Total of MEP requested : " << m_TotMEPReqRx << endmsg;
 
-        
+       
+
+ 
         for(unsigned int i=0; i< (unsigned int) (mreq->nmep &0x000000ff); ++i) {
             
 	    if(sem_post(&m_MEPReqCount)==-1)
@@ -1655,16 +1700,17 @@ StatusCode MEPInjector::manageMEPRequest()
         sem_getvalue(&m_MEPReqCount, &testsem);
         log << MSG::DEBUG << "MEPReq count = "<<testsem << endmsg;
 
-        if (pthread_mutex_unlock(&m_SyncReqOdin)) {
-            ERRMSG(log, " Unlocking mutex");
-            return StatusCode::FAILURE;
-        }
 	/// Forward the MEP Request received, skip headers, default will be better for us 
         sc = sendMEPReq((MEPReq *) (req + 20));	
 	if (sc.isFailure()) {
 	    ERRMSG(log, " MEP Request Send");
 	    return sc;
 	}
+
+        if (pthread_mutex_unlock(&m_SyncReqOdin)) {
+            ERRMSG(log, " Unlocking mutex");
+            return StatusCode::FAILURE;
+        }
     }
     return StatusCode::SUCCESS;
 }
@@ -1712,14 +1758,16 @@ StatusCode MEPInjector::manageOdinMEP()
         int *itmp = (int *) tmp;
         itmp[0] = len;
         m_QueueOdinMEP.push(tmp); 
+
+        if((m_TotEvtsSent%10000) == 0)
+        {   
+            log << MSG::INFO << "-----------------------" << endmsg;
+            log << MSG::INFO << "Time of run (ms) :     " << m_TotElapsedTime << endmsg;
+            log << MSG::INFO << "Number of Odin MEP : " << m_QueueOdinMEP.size() << endmsg;
+            log << MSG::INFO << "-----------------------" << endmsg;
+        }
  
         log << MSG::DEBUG << "SIZE OF ODIN MEP BUFFER : " << m_QueueOdinMEP.size() << endmsg; 
-
-	if (pthread_mutex_unlock(&m_SyncMainOdin)) {
-	    ERRMSG(log, "Failed unlocking mutex");
-	    return StatusCode::FAILURE;
-	}
-
         int testsem = 0;
         sem_getvalue(&m_OdinCount, &testsem);
         log << MSG::DEBUG << "Odin SEM before post = "<<testsem << endmsg;
@@ -1730,6 +1778,12 @@ StatusCode MEPInjector::manageOdinMEP()
             perror("sem_post"); 
             exit(errno);
         }
+
+	if (pthread_mutex_unlock(&m_SyncMainOdin)) {
+	    ERRMSG(log, "Failed unlocking mutex");
+	    return StatusCode::FAILURE;
+	}
+
     }
     free(bufMEP);
     return StatusCode::SUCCESS;
@@ -1776,8 +1830,7 @@ StatusCode MEPInjector::getHLTInfo()
         return StatusCode::FAILURE;
     }
 
-    /// Select an HLT farm where to send the MEPs, max should be fine
-    /// XXX Or a round robin maybe ? (static iterator, ++ and overflow goes back to begin) 
+    /// Select an HLT farm where to send the MEPs, round robin
     if (m_HLTReqs.size() > 0) {
 	//std::map < unsigned int, unsigned int >::iterator ite =
 	//std::max_element(m_HLTReqs.begin(), m_HLTReqs.end(),
@@ -1795,7 +1848,7 @@ StatusCode MEPInjector::getHLTInfo()
             m_HLTIPAddrTo = m_HLTReqsIte->first;
    
             log << MSG::DEBUG << "Get HLT information" << endmsg; 
-            log << MSG::DEBUG << "	" << "Farm selected : " << m_HLTIPAddrTo << endmsg;
+            log << MSG::DEBUG << "	" << "Farm selected : " << MEPRxSys::dotted_addr(m_HLTIPAddrTo) << endmsg;
             log << MSG::DEBUG << "      " << "Nb Reqs : " << m_HLTReqsIte->second << endmsg;  
             log << MSG::DEBUG << "      " << "MEP Requests managed : " << ++cpt << endmsg; 
             --(m_HLTReqsIte->second);

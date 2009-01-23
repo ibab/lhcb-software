@@ -56,6 +56,10 @@ namespace LHCb {
                       ,virtual public IIncidentListener
  {
   protected:
+ 
+    bool m_gotHLT;
+
+    bool m_gotOdin;  
    
     bool m_ARPMe;
   
