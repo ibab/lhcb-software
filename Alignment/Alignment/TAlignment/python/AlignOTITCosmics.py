@@ -119,9 +119,9 @@ data = ['PFN:/afs/cern.ch/lhcb/group/tracking/vol4/mneedham/cosmics_19_20_sept.r
 
 # add some of my OT cosmics data. this will probably mean that we'll
 # have most IT tracks double, but okay, we need something to fix the OT
-#data += [
-#   'PFN:castor:/castor/cern.ch/user/w/wouter/otcosmics/run34120.dst'
-#   ]
+data += [
+   'PFN:castor:/castor/cern.ch/user/w/wouter/otcosmics/run34120.dst'
+   ]
 
 #data += [ 'PFN:castor:/castor/cern.ch/user/w/wouter/otcosmics/run34117.dst' ]
 
@@ -163,7 +163,7 @@ if preloadalignment:
    #CondDB().addLayer(OTAlignmentCondition)
    ITAlignmentCondition = CondDBAccessSvc("ITAlignmentCondition")
    ITAlignmentCondition.ConnectionString = "sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/AlignedMattNewTxTyRzITLayerSlice.db/LHCBCOND"
-   ITAlignmentCondition.ConnectionString = "sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/AlignedMattNewTxTyRzITLayerTxTyWRTOTCFramesSlice.db/LHCBCOND"
+   #ITAlignmentCondition.ConnectionString = "sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/AlignedMattNewTxTyRzITLayerTxTyWRTOTCFramesSlice.db/LHCBCOND"
    CondDB().addLayer(ITAlignmentCondition)
    
 if loadnewgeometry:
