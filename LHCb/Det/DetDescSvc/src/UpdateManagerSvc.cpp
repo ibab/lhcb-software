@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.cpp,v 1.28 2009-01-16 12:03:46 ocallot Exp $
+// $Id: UpdateManagerSvc.cpp,v 1.29 2009-01-23 13:09:15 cattanem Exp $
 // Include files
 
 #include "GaudiKernel/SvcFactory.h"
@@ -62,11 +62,11 @@ UpdateManagerSvc::~UpdateManagerSvc() {
 // IInterface implementation
 //=============================================================================
 StatusCode UpdateManagerSvc::queryInterface(const InterfaceID& riid, void** ppvUnknown){
-  if ( IID_IUpdateManagerSvc.versionMatch(riid) ) {
+  if ( IUpdateManagerSvc::interfaceID().versionMatch(riid) ) {
     *ppvUnknown = (IUpdateManagerSvc*)this;
     addRef();
     return StatusCode::SUCCESS;
-  } else if ( IID_IIncidentListener.versionMatch(riid) ) {
+  } else if ( IIncidentListener::interfaceID().versionMatch(riid) ) {
     *ppvUnknown = (IIncidentListener*)this;
     addRef();
     return StatusCode::SUCCESS;

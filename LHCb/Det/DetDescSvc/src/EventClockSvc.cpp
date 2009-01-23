@@ -1,4 +1,4 @@
-// $Id: EventClockSvc.cpp,v 1.9 2008-07-29 12:26:55 marcocle Exp $
+// $Id: EventClockSvc.cpp,v 1.10 2009-01-23 13:09:15 cattanem Exp $
 // Include files 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
@@ -44,7 +44,7 @@ EventClockSvc::~EventClockSvc() {};
 // IInterface implementation
 //=============================================================================
 StatusCode EventClockSvc::queryInterface(const InterfaceID& riid, void** ppvUnknown){
-  if ( IID_IIncidentListener.versionMatch(riid) ) {
+  if ( IIncidentListener::interfaceID().versionMatch(riid) ) {
     *ppvUnknown = (IIncidentListener*)this;
     addRef();
     return StatusCode::SUCCESS;
