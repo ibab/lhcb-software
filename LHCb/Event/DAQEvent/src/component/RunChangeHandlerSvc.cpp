@@ -1,4 +1,4 @@
-// $Id: RunChangeHandlerSvc.cpp,v 1.1 2008-07-24 19:22:09 marcocle Exp $
+// $Id: RunChangeHandlerSvc.cpp,v 1.2 2009-01-23 13:18:06 cattanem Exp $
 // Include files 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/IRegistry.h"
@@ -43,7 +43,7 @@ RunChangeHandlerSvc::~RunChangeHandlerSvc() {}
 // IInterface implementation
 //=============================================================================
 StatusCode RunChangeHandlerSvc::queryInterface(const InterfaceID& riid, void** ppvUnknown){
-  if ( IID_IIncidentListener.versionMatch(riid) ) {
+  if ( IIncidentListener::interfaceID().versionMatch(riid) ) {
     *ppvUnknown = (IIncidentListener*)this;
     addRef();
     return StatusCode::SUCCESS;

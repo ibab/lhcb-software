@@ -4,6 +4,9 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+! 2009-01-23 - Marco Cattaneo
+ - Backwards compatible changes for Gaudi v21
+
 !================ DAQEvent v7r17 2009-01-08 ===========================
 ! 2008-12-16 - Olivier Deschamps
  - Fix bug in OdinTypesFilter.cpp
