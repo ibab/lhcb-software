@@ -1,4 +1,4 @@
-// $Id: XmlTabulatedPropertyCnv.cpp,v 1.5 2006-12-14 13:14:10 ranjard Exp $
+// $Id: XmlTabulatedPropertyCnv.cpp,v 1.6 2009-01-23 12:57:27 cattanem Exp $
 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
@@ -15,11 +15,7 @@
 
 #include <cstdlib>
 #include <iostream>
-#if defined (__GNUC__) && ( __GNUC__ <= 2 )
-#include <strstream> 
-#else
 #include <sstream>
-#endif
 #include <string>
 #include <vector>
 #include <algorithm>
@@ -165,15 +161,7 @@ XmlTabulatedPropertyCnv::i_fillObj (xercesc::DOMText* childText,
   // parses it
   std::string x ;
   std::string y ;
-#if defined (__GNUC__) && ( __GNUC__ <= 2 )
-#if defined (__GNUC__) && ( __GNUC__ <= 2 )
-  std::istrstream cstr (textValue, xercesc::XMLString::stringLen(text));
-#else
   std::istringstream cstr (textValue);
-#endif
-#else
-  std::istringstream cstr (textValue);
-#endif
   while (cstr >> x >> y) {
     const double vx = xmlSvc()->eval (x, false) * m_xunit;
     const double vy = xmlSvc()->eval (y, false) * m_yunit;

@@ -1,4 +1,4 @@
-// $Id: XmlCatalogCnv.cpp,v 1.7 2006-12-14 13:14:09 ranjard Exp $
+// $Id: XmlCatalogCnv.cpp,v 1.8 2009-01-23 12:57:27 cattanem Exp $
 
 // include files
 #include <stdlib.h>
@@ -18,6 +18,7 @@
 #include "GaudiKernel/Converter.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/RegistryEntry.h"
+#include "GaudiKernel/SmartIF.h"
 
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/dom/DOMNode.hpp>
@@ -231,14 +232,10 @@ StatusCode XmlCatalogCnv::i_fillObj (xercesc::DOMElement* childElement,
 
   delete[] tagNameEnd;
 
-  // Now we have a new entry name and a corresponding xml address,
-  // just add the new entry to the current registry entry
-  IDataProviderSvc* dsvc = dataProvider();
-  IDataManagerSvc* mgr = 0;
-  StatusCode status = dsvc->queryInterface(IID_IDataManagerSvc,(void**)&mgr);
-  if ( status.isSuccess() ) {
+  StatusCode status = StatusCode::FAILURE;
+  SmartIF<IDataManagerSvc> mgr( dataProvider() );
+  if ( mgr ) {
     status = mgr->registerAddress(searchedDir, xmlAddr->par()[1], xmlAddr);
-    mgr->release();        
   }
   if ( !status.isSuccess() )   {
     log << MSG::FATAL << " File " << __FILE__ << " line " << __LINE__ << endreq;

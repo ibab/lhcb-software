@@ -1,4 +1,4 @@
-// $Id: XmlLVolumeCnv.cpp,v 1.13 2007-03-19 11:04:18 cattanem Exp $ 
+// $Id: XmlLVolumeCnv.cpp,v 1.14 2009-01-23 12:57:27 cattanem Exp $ 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -13,11 +13,7 @@
 
 #include "DetDescCnv/XmlCnvException.h"
 
-#if defined (__GNUC__) && ( __GNUC__ <= 2 )
-#include <strstream> 
-#else
 #include <sstream>
-#endif
 #include <cstdlib>
 #include <float.h>
 #include <map>
@@ -316,23 +312,9 @@ std::string XmlLVolumeCnv::createPvName (PVolumeItem* pv) {
     return pv->physvolName;
   }
   // builds the actual name of the volume
-#if defined (__GNUC__) && ( __GNUC__ <= 2 )
-  const int buffer_size = 256;
-  char buffer [buffer_size] = { 0 , 0 };
-  std::ostrstream ost(buffer, buffer_size);
-  ost << pv->physvolName << ":" << pv->tag;
-  const unsigned int len = strlen(ost.str()); 
-  char *resstr = new char[len+1]; 
-  strncpy(resstr,ost.str(),len);
-  resstr[len] = 0; 
-  std::string result (resstr); 
-  delete [] resstr;
-  return result;
-#else
   std::ostringstream ost;
   ost << pv->physvolName << ":" << pv->tag;
   return ost.str();
-#endif
 }
 
 
@@ -648,18 +630,6 @@ XmlLVolumeCnv::dealWithParamphysvol (xercesc::DOMElement* element,
     unsigned int i = 0;
     for (i = 0; i < nD; i++) {
       // builds the actual name of the attribute
-#if defined (__GNUC__) && ( __GNUC__ <= 2 )
-      const int buffer_size = 16;
-      char buffer [buffer_size] = { 0 , 0 };
-      std::ostrstream ost(buffer, buffer_size);
-      ost << "number" << i + 1;
-      const unsigned int len = strlen(ost.str());
-      char *resstr = new char[len+1];
-      strncpy(resstr,ost.str(),len);
-      resstr[len] = 0;
-      const XMLCh* attrName = xercesc::XMLString::transcode (resstr); 
-      delete [] resstr;
-#else
       std::ostringstream ost;
       ost << "number" << i + 1;
       const unsigned int len = ost.str().size();
@@ -668,7 +638,6 @@ XmlLVolumeCnv::dealWithParamphysvol (xercesc::DOMElement* element,
       resstr[len] = 0;
       const XMLCh* attrName = xercesc::XMLString::transcode (resstr); 
       delete [] resstr;
-#endif
       numberAttributes[i] = dom2Std (element->getAttribute (attrName));
       xercesc::XMLString::release((XMLCh**)&attrName);
     }

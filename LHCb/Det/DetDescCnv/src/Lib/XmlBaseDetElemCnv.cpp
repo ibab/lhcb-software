@@ -1,4 +1,4 @@
-// $Id: XmlBaseDetElemCnv.cpp,v 1.14 2006-03-17 10:02:07 marcocle Exp $
+// $Id: XmlBaseDetElemCnv.cpp,v 1.15 2009-01-23 12:57:27 cattanem Exp $
 
 // include files
 
@@ -7,6 +7,7 @@
 #include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IRegistry.h"
+#include "GaudiKernel/SmartIF.h"
 
 #include <xercesc/dom/DOMNodeList.hpp>
 
@@ -17,11 +18,7 @@
 
 #include <cstdlib>
 #include <iostream>
-#if defined (__GNUC__) && ( __GNUC__ <= 2 )
-#include <strstream> 
-#else
 #include <sstream>
-#endif
 #include <string>
 #include <vector>
 #include <cctype>
@@ -218,12 +215,10 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (xercesc::DOMElement* childElement,
     addr = createAddressForHref (referenceValue, CLID_DetectorElement, address);
 
     // Registers the address to current data object we're converting now
-    IDataProviderSvc* dsvc = dataProvider();
-    IDataManagerSvc* mgr = 0;
-    StatusCode sc = dsvc->queryInterface(IID_IDataManagerSvc,(void**)&mgr);
-    if (sc.isSuccess()) {
+    StatusCode sc = StatusCode::FAILURE;
+    SmartIF<IDataManagerSvc> mgr( dataProvider() );
+    if (mgr) {
       sc = mgr->registerAddress(address->registry(), addr->par()[1], addr);
-      mgr->release();        
     }
     if (!sc.isSuccess()) {
       throw GaudiException ("Unable to register new Address",
@@ -432,12 +427,7 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (xercesc::DOMElement* childElement,
       // we have a vector of parameters here
       // parses the value
       std::vector<std::string> vect;
-#if defined (__GNUC__) && ( __GNUC__ <= 2 )
-      const char *textValue = value.c_str();
-      std::istrstream cstr (textValue, value.length());
-#else
       std::istringstream cstr (value);
-#endif
       std::string val;
       while (cstr >> val) {
         vect.push_back (val);

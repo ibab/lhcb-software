@@ -1,4 +1,4 @@
-// $Id: XmlBaseConditionCnv.cpp,v 1.11 2008-01-07 18:25:22 marcocle Exp $
+// $Id: XmlBaseConditionCnv.cpp,v 1.12 2009-01-23 12:57:27 cattanem Exp $
 
 // include files
 #include "GaudiKernel/CnvFactory.h"
@@ -8,11 +8,7 @@
 #include "DetDescCnv/XmlBaseConditionCnv.h"
 #include "XmlTools/IXmlSvc.h"
 
-#if defined (__GNUC__) && ( __GNUC__ <= 2 )
-#include <strstream> 
-#else
 #include <sstream>
-#endif
 #include <string>
 #include <vector>
 
@@ -231,12 +227,7 @@ StatusCode XmlBaseConditionCnv::i_fillObj (xercesc::DOMElement* childElement,
                (paramVectorString, tagName)) {
       // parses the value
       std::vector<std::string> vect;
-#if defined (__GNUC__) && ( __GNUC__ <= 2 )
-      const char *textValue = value.c_str();
-      std::istrstream cstr (textValue, value.length());
-#else
       std::istringstream cstr (value);
-#endif
       std::string val;
       while (cstr >> val) {
         vect.push_back (val);
