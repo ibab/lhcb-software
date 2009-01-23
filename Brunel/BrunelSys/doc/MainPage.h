@@ -2,7 +2,7 @@
  *  \anchor bruneldoxygenmain
  *
  * This reference manual documents all %LHCb and %Gaudi classes accessible from
- * the <a href=" http://cern.ch/lhcb-release-area/DOC/brunel/">Brunel reconstruction program</a> environment. 
+ * the <a href="http://cern.ch/lhcb-release-area/DOC/brunel/">Brunel reconstruction program</a> environment.<br> 
  * More information on this and other %Brunel releases can be found in the
  * <a href="../index.php">Brunel project Web pages</a>
  *
