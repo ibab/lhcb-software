@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.47 2008-10-27 12:29:25 mneedham Exp $
+// $Id: DeSTSector.cpp,v 1.48 2009-01-23 14:17:36 mneedham Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -88,10 +88,10 @@ MsgStream& DeSTSector::printOut( MsgStream& os ) const{
 StatusCode DeSTSector::initialize() {
 
   // initialize method
-  MsgStream msg(msgSvc(), name() );
-
+ 
   StatusCode sc = DeSTBaseElement::initialize();
   if (sc.isFailure() ){
+    MsgStream msg(msgSvc(), name() );
     msg << MSG::ERROR << "Failed to initialize detector element" << endreq; 
     return sc;
   }
@@ -107,12 +107,12 @@ StatusCode DeSTSector::initialize() {
 
     // guard ring
     m_deadWidth = param<double>("verticalGuardRing");  
-    // if (m_versionString == "DCO6") m_deadWidth += 0.5*param<double>("bondGap");
  
     if (m_versionString != "DC06"){
       StatusCode sc = registerCondition(this,m_statusString,
                                         &DeSTSector::updateStatusCondition,true);
       if (sc.isFailure() ){
+        MsgStream msg(msgSvc(), name() );
         msg << MSG::ERROR << "Failed to register status conditions" << endreq;
         return StatusCode::FAILURE; 
       }
@@ -167,15 +167,15 @@ std::auto_ptr<LHCb::Trajectory> DeSTSector::createTraj(const unsigned int strip,
       }
       else {
 
-        double d1 = (sensTraj->beginPoint()-traj->endPoint()).mag2();      
-        double d2 = (sensTraj->endPoint()-traj->beginPoint()).mag2();      
+        const double d1 = (sensTraj->beginPoint()-traj->endPoint()).mag2();      
+        const double d2 = (sensTraj->endPoint()-traj->beginPoint()).mag2();      
         if (d1 < d2) {
           double mu = sensTraj->muEstimate(traj->endPoint());        
           sensTraj->setRange(mu,sensTraj->endRange());               
           traj->append(sensTraj.release());          
  	} 
         else {                                                           
-	  double mu = sensTraj->muEstimate(traj->beginPoint());      
+	  const double mu = sensTraj->muEstimate(traj->beginPoint());      
 	  sensTraj->setRange(sensTraj->beginRange(),mu);             
 	  traj->prepend(sensTraj.release());                        
 	}
@@ -192,8 +192,8 @@ StatusCode DeSTSector::cacheInfo()
   std::auto_ptr<LHCb::Trajectory> lastTraj = createTraj(nStrip(),0.5);
 
   // get the start point
-  Gaudi::XYZPoint g1 = firstTraj->beginPoint();
-  Gaudi::XYZPoint g2 = firstTraj->endPoint();
+  const Gaudi::XYZPoint g1 = firstTraj->beginPoint();
+  const Gaudi::XYZPoint g2 = firstTraj->endPoint();
 
   const double activeWidth = m_sensors.front()->activeWidth();
 
@@ -207,12 +207,12 @@ StatusCode DeSTSector::cacheInfo()
   Gaudi::XYZVector norm = direction.Cross(zVec);
 
   // trajectory of middle  
-  Gaudi::XYZPoint g3 = g1 + 0.5*(g2 - g1);
-  Gaudi::XYZPoint g4 = g3 + activeWidth*norm ;
+  const Gaudi::XYZPoint g3 = g1 + 0.5*(g2 - g1);
+  const Gaudi::XYZPoint g4 = g3 + activeWidth*norm ;
   
   // creating the 'fast' trajectories  
-  Gaudi::XYZVector vectorlayer = (g4-g3).unit() * m_pitch ;
-  Gaudi::XYZPoint p0 = g3-0.5*m_stripLength*direction ;
+  const Gaudi::XYZVector vectorlayer = (g4-g3).unit() * m_pitch ;
+  const Gaudi::XYZPoint p0 = g3-0.5*m_stripLength*direction ;
   m_dxdy = direction.x()/direction.y() ;
   m_dzdy = direction.z()/direction.y() ;
   m_dy   = m_stripLength * direction.y() ;
@@ -245,7 +245,7 @@ STChannelID DeSTSector::nextLeft(const STChannelID testChan) const
                       testChan.strip() - 1u);
    }
    else {
-     return LHCb::STChannelID(0u,0u,0u,0u,0u,0u);
+     return LHCb::STChannelID(0u);
    }
 }
 
@@ -260,7 +260,7 @@ STChannelID DeSTSector::nextRight(const LHCb::STChannelID testChan) const
                        testChan.strip() + 1u);
   }
   else {
-    return LHCb::STChannelID(0u,0u,0u,0u,0u,0u);
+    return LHCb::STChannelID(0u);
   }
 }
 
@@ -300,7 +300,7 @@ StatusCode DeSTSector::registerConditionsCallbacks(){
     return StatusCode::FAILURE; 
   }
 
-  int tStatus = aCon->param<int>("SectorStatus");
+  const int tStatus = aCon->param<int>("SectorStatus");
   m_status = Status(tStatus);
 
   std::map<int,int> beetleMap = aCon->param<std::map<int,int> >("BeetleStatus");
@@ -345,14 +345,72 @@ bool DeSTSector::globalInBondGap(const Gaudi::XYZPoint& point,
 
 double DeSTSector::fractionActive() const {
 
+  // fraction of the sector that works
   unsigned int nActive = 0u;
-  std::vector<DeSTSector::Status> statusVector = stripStatus();
-  std::vector<DeSTSector::Status>::iterator iter = statusVector.begin();
+  const std::vector<DeSTSector::Status> statusVector = stripStatus();
+  std::vector<DeSTSector::Status>::const_iterator iter = statusVector.begin();
   for (; iter != statusVector.end(); ++iter){
-    if ( *iter == DeSTSector::OK || *iter == DeSTSector::Pinhole  ) ++nActive;
+    if ( *iter == DeSTSector::OK) ++nActive;
   }
 
   return nActive/double(nStrip());
+}
+
+void DeSTSector::setBeetleStatus(const unsigned int beetle, 
+                            const DeSTSector::Status& newStatus){
+
+  // update the beetle status properly...
+  MsgStream msg(msgSvc(), name());
+
+  if (sectorStatus() != DeSTSector::OK){
+    // if the sector is not ok nothing to be done
+    msg << MSG::DEBUG << "Sector is off anyway: set request ignored " << endmsg;
+  }
+  else {
+    if (newStatus == DeSTSector::OK){
+      // Lazarus walks...if we have an entry in the map delete it
+      m_beetleStatus.erase(beetle);
+    }  
+    else {
+      // death comes to this beetle, update the map
+      if (std::find(Status::validBeetleStates().begin(),
+                    Status::validBeetleStates().end(), newStatus) != Status::validBeetleStates().end() ){
+        m_beetleStatus[beetle] = newStatus;
+      } // check is valid state
+      else {
+	msg << "Not a valid Beetle state: set request ignored " << endmsg;
+      }
+    }
+  }
+}
+
+void DeSTSector::setStripStatus(const unsigned int strip, 
+                                const DeSTSector::Status& newStatus){
+
+  // update the strip status properly...
+  MsgStream msg(msgSvc(), name());
+
+  if (sectorStatus() != DeSTSector::OK || beetleStatus(strip) != DeSTSector::OK){
+    // if the sector is not ok nothing to be done
+    msg << MSG::DEBUG << "Sector/Beetle is off anyway: set request ignored " << endmsg;
+  }
+  else {
+    if (newStatus == DeSTSector::OK){
+      // Lazarus walks...if we have an entry in the map delete it
+      m_stripStatus.erase(strip);
+    }  
+    else {
+      // death comes to this beetle, update the map
+      Status oldStatus = m_stripStatus.find(strip)->second;
+      if (std::find(Status::protectedStates().begin(),
+                    Status::protectedStates().end(), oldStatus) != Status::protectedStates().end() ){
+        m_stripStatus[strip] = newStatus;
+      } 
+      else {
+	msg << "Strip in protected state: set request ignored " << endmsg;
+      }
+    }
+  }
 }
 
 

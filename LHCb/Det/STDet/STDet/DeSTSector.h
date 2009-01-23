@@ -1,4 +1,4 @@
-// $Id: DeSTSector.h,v 1.33 2008-11-05 09:43:33 mneedham Exp $
+// $Id: DeSTSector.h,v 1.34 2009-01-23 14:17:36 mneedham Exp $
 #ifndef _DeSTSector_H_
 #define _DeSTSector_H_
 
@@ -194,6 +194,33 @@ public:
 
   /** get vector of strip status for all strips in sector */
   std::vector<Status> stripStatus() const;
+
+  /** set the sector status */
+  void setSectorStatus(const Status& newStatus); 
+
+  /** set vector of beetleStatus 
+  * @param unsigned int beetle [numbering from 1]
+  * @param Status newStatus 
+  **/
+  void setBeetleStatus(const unsigned int beetle, const Status& newStatus);
+
+  /** set vector of beetleStatus 
+  * @param LHCb::STChannelID chan id of beetle
+  * @param Status newStatus 
+  **/
+  void setBeetleStatus(const LHCb::STChannelID& chan, const Status& newStatus);
+
+  /** set vector of beetleStatus 
+  * @param unsigned int strip [numbering from 1]
+  * @param Status newStatus 
+  **/
+  void setStripStatus(const unsigned int strip, const Status& newStatus);
+
+  /** set vector of beetleStatus 
+  * @param LHCb::STChannelID chan id of strip
+  * @param Status newStatus 
+  **/
+  void setStripStatus(const LHCb::STChannelID& chan, const Status& newStatus);
 
   /** short cut for strip status ok 
   * @return isOKStrip
@@ -402,8 +429,24 @@ inline DeSTSector::Status DeSTSector::sectorStatus() const{
   return m_status;
 }
 
+inline void DeSTSector::setSectorStatus(const DeSTSector::Status& newStatus) {
+  m_status = newStatus;
+}
+
 inline DeSTSector::Status DeSTSector::beetleStatus(const LHCb::STChannelID& chan) const{
   return beetleStatus(beetle(chan));
+}
+
+inline void DeSTSector::setBeetleStatus(const LHCb::STChannelID& chan, 
+                                        const DeSTSector::Status& newStatus){
+  // just delegate 
+  setBeetleStatus(beetle(chan), newStatus);
+}
+
+inline void DeSTSector::setStripStatus(const LHCb::STChannelID& chan, 
+                                      const DeSTSector::Status& newStatus){
+  // just delegate 
+  setStripStatus(chan.strip(), newStatus);
 }
 
 inline DeSTSector::Status DeSTSector::beetleStatus(const unsigned int id) const{
