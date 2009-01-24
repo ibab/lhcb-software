@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.46 2008-11-09 17:40:32 gligorov Exp $
+// $Id: BackgroundCategory.cpp,v 1.47 2009-01-24 19:20:14 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -151,6 +151,7 @@ int BackgroundCategory::topologycheck(const LHCb::MCParticle* topmother)
 {
 
   int sumofpids = 0;
+  bool isitstable = false;
 
   SmartRefVector<LHCb::MCParticle>::const_iterator iP;
   SmartRefVector<LHCb::MCVertex>::const_iterator iV = topmother->endVertices().begin();
@@ -159,11 +160,14 @@ int BackgroundCategory::topologycheck(const LHCb::MCParticle* topmother)
 
   for (iP = (*iV)->products().begin(); iP != (*iV)->products().end(); ++iP) {
 
-    SmartRefVector<LHCb::MCVertex>::const_iterator iVV = (*iP)->endVertices().begin();
+    SmartRefVector<LHCb::MCVertex> VV = (*iP)->endVertices();
+    if (VV.size() != 0) isitstable = (*(VV.begin()))->products().empty();
+    else isitstable = true;
+    //SmartRefVector<LHCb::MCVertex>::const_iterator iVV = (*iP)->endVertices().begin();
     verbose() << "Printing out decay vertices of a " << (*iP)->particleID().abspid() << endmsg;
     verbose() << (*iP)->endVertices() << endmsg;
     
-    if (  (*iVV)->products().empty() ||
+    if (  isitstable ||
           isStable( (*iP)->particleID().abspid() ) ||
           (*iP)->particleID().abspid() == 111
 
@@ -226,6 +230,7 @@ MCParticleVector BackgroundCategory::create_finalstatedaughterarray_for_mcmother
   //state particle daughters of the candidate Particle. For obvious reasons, this function is only invoked for
   //background catgegories 0->50.
 {
+  bool isitstable = false;
   verbose() << "Starting to create the array of final state daughters for the mc mother" << endmsg;
   
   MCParticleVector finalstateproducts;
@@ -238,13 +243,17 @@ MCParticleVector BackgroundCategory::create_finalstatedaughterarray_for_mcmother
   
   for (iP = (*iV)->products().begin(); iP != (*iV)->products().end(); ++iP) {
 
-    SmartRefVector<LHCb::MCVertex>::const_iterator iVV = (*iP)->endVertices().begin();
+    SmartRefVector<LHCb::MCVertex> VV = (*iP)->endVertices();
+    if (VV.size() != 0) isitstable = (*(VV.begin()))->products().empty();
+    else isitstable = true;
+    //SmartRefVector<LHCb::MCVertex>::const_iterator iVV = (*iP)->endVertices().begin();
 
     verbose() << (*iP)->particleID().abspid() 
-              << " stable: " << isStable( (*iP)->particleID().abspid() )
-              << " products: " << (*iVV)->products().size() << endmsg ;
+              << " stable: " << isStable( (*iP)->particleID().abspid() );
+    if (isitstable) verbose() << endmsg; 
+    else verbose() << " products: " << (*(VV.begin()))->products().size() << endmsg ;
 
-    if ( (*iVV)->products().empty() || 
+    if ( isitstable || 
          isStable( (*iP)->particleID().abspid() ) 
        ) {
     //if (isStable( (*iP)->particleID().abspid() )) {
@@ -304,18 +313,12 @@ const LHCb::MCParticle* BackgroundCategory::get_lowest_common_mother(MCParticleV
   verbose() << "Starting search for lowest common mother (single)" << endmsg;
 
   bool carryon = false; 
-  verbose() << "Step 1" << endmsg;
   MCParticleVector::const_iterator iMCP = mc_particles_to_compare.begin();
-  verbose() << "Step 2" << endmsg;
   const LHCb::MCParticle* tempmother = (*iMCP);
   verbose() << "The tempmother has been set to " << tempmother << " with PID " << tempmother->particleID().pid() << endmsg;
-  verbose() << "Step 3" << endmsg;
   const LHCb::MCParticle* tempmother2;
-  verbose() << "Step 4" << endmsg;
 
   do {
-
-    verbose() << "Step 5" << endmsg;
 
     if (tempmother) tempmother = tempmother->mother();
     else return 0; //shouldn't happen!
@@ -324,28 +327,20 @@ const LHCb::MCParticle* BackgroundCategory::get_lowest_common_mother(MCParticleV
 
     verbose() << "The current candidate for a common mother is " << tempmother << " and has PID " << tempmother->particleID().pid() << endmsg;
  
-    verbose() << "Step 7" << endmsg;
-
     for (iMCP = mc_particles_to_compare.begin() + 1;
          iMCP != mc_particles_to_compare.end();
          ++iMCP) {
       
-      verbose() << "Step 8" << endmsg;
       carryon = true;
-      verbose() << "Step 9" << endmsg;
       if (!(*iMCP)) return 0; //shouldn't happen!
       verbose() << "Looping on MCParticle " << (*iMCP) << " and PID " << (*iMCP)->particleID().pid() << endmsg;
-      verbose() << "Step 10" << endmsg;
 
       tempmother2 = (*iMCP)->mother();
-      verbose() << "Step 11" << endmsg;
       if (!tempmother2) return 0; //shouldn't happen!
-      verbose() << "Step 12" << endmsg;
 
       verbose() << "Looping on mother " << tempmother2 << " with PID " << tempmother2->particleID().pid() << endmsg;
 
       do {
-        verbose() << "Step 13" << endmsg;
         if (tempmother2 != tempmother) tempmother2 = tempmother2->mother();
         else carryon = false;
         if (tempmother2 != NULL) {
@@ -355,18 +350,13 @@ const LHCb::MCParticle* BackgroundCategory::get_lowest_common_mother(MCParticleV
                     << tempmother2->particleID().pid() 
                     << endmsg;
         }
-        verbose() << "Step 14" << endmsg;
       }while (carryon && (tempmother2 != NULL));
-      verbose() << "Step 15" << endmsg;
 
       if (carryon) break;
-      verbose() << "Step 16" << endmsg;
 
     }
-    verbose() << "Step 17" << endmsg;
 
   } while (carryon);
-  verbose() << "Step 18" << endmsg;
 
   return tempmother;
 }
@@ -389,30 +379,21 @@ const LHCb::MCParticle* BackgroundCategory::get_lowest_common_mother(MCParticleV
   //First we isolate only those MC particles valid for this comparison,
   //i.e. only the ones matching to a stable final state particle
   do{
-    verbose() << "Step 1" << endmsg;
     if(*iPP) {
-      verbose() << "Step 2" << endmsg;
       verbose() << "Looking at Particle " << (*iPP) << " with PID " << (*iPP)->particleID().abspid() << endmsg;
       if ( isStable((*iPP)->particleID().abspid()) ||
            (*iPP)->isBasicParticle()
          ) {
-        verbose() << "Step 3" << endmsg;
         //it is a stable so push back its associated MCP
         if (!(*iMCP)) return 0; //stable associated to nothing, so return 0
-        verbose() << "Step 4" << endmsg;
         mc_particles_to_compare.push_back(*iMCP);
 	verbose() << "Pushed back MCParticle " << (*iMCP) << " with PID " << (*iMCP)->particleID().abspid() << endmsg; 
-        verbose() << "Step 5" << endmsg;
       }
-      verbose() << "Step 6" << endmsg;
       ++iMCP; ++iPP;
-      verbose() << "Step 7" << endmsg;
     } else return 0; //something went wrong 
-    verbose() << "Step 8" << endmsg;
   }while(iMCP != mc_particles_linked_to_decay.end() &&
          iPP != particles_in_decay.end()
         );
-  verbose() << "Step 9" << endmsg;
 
   return get_lowest_common_mother(mc_particles_to_compare);
 
@@ -695,6 +676,7 @@ bool BackgroundCategory::isTheDecayFullyReconstructed(MCParticleVector mc_partic
 {
   //verbose() << "Beginning to check condition B" << endmsg;
   bool carryon;
+  bool isitstable = false;
   int neutrinosFound = 0;
   MCParticleVector finalstateproducts = create_finalstatedaughterarray_for_mcmother(m_commonMother);
   MCParticleVector::const_iterator iPP = finalstateproducts.begin();
@@ -788,8 +770,11 @@ bool BackgroundCategory::isTheDecayFullyReconstructed(MCParticleVector mc_partic
             (*iP)->momentum().e() < m_softPhotonCut ) continue; //soft photons are ignored
 
           verbose() << "The MC-associated particle has pid : " << (*iP)->particleID().pid() << endmsg;
-          SmartRefVector<LHCb::MCVertex>::const_iterator iVV = (*iP)->endVertices().begin();
-          if ( (*iVV)->products().empty() || isStable( (*iP)->particleID().abspid() )  ) {
+          SmartRefVector<LHCb::MCVertex> VV = (*iP)->endVertices();
+          if (VV.size() != 0) isitstable = (*(VV.begin()))->products().empty();
+          else isitstable = true;
+          //SmartRefVector<LHCb::MCVertex>::const_iterator iVV = (*iP)->endVertices().begin();
+          if ( isitstable || isStable( (*iP)->particleID().abspid() )  ) {
             verbose() << "Associated Particle:" << (*iP) << endmsg;
             verbose() << "MC-final state Particle:" << (*iPP) << endmsg;
             carryon = ( *iP == *iPP ); 
@@ -886,8 +871,9 @@ bool BackgroundCategory::areAnyFinalStateParticlesGhosts(MCParticleVector mc_par
         (*iP) == 0 && 
         //(*iPP)->isBasicParticle() 
         ( isStable((*iPP)->particleID().abspid()) || (*iPP)->isBasicParticle()  )
-        ) 
+        ) { 
       carryon = false;  
+    }
     ++iP;
     ++iPP;
 
@@ -985,42 +971,55 @@ int BackgroundCategory::areAnyFinalStateParticlesFromAPrimaryVertex(MCParticleVe
        iPP != mc_particles_linked_to_decay.end(); ++iPP) {
 
     if (*iPP) {
-      SmartRefVector<LHCb::MCVertex>::const_iterator iVV = (*iPP)->endVertices().begin();
-      if (*iVV) { 
-        if ( (*iVV)->products().empty() || isStable( (*iPP)->particleID().abspid()) ) {
-          ++howmanyfinalstate;
-          if ((*iPP)->originVertex()->isPrimary() || 
-              ((*iPP)->primaryVertex()->position() - 
-               (*iPP)->originVertex()->position()).Mag2() < pow(m_rescut,2)) {
-            ++howmanyfromPV;
+      SmartRefVector<LHCb::MCVertex> VV = (*iPP)->endVertices();
+      if (VV.size() != 0) {
+        SmartRefVector<LHCb::MCVertex>::const_iterator iVV = VV.begin();
+        if (*iVV) { 
+          if ( (*iVV)->products().empty() || isStable( (*iPP)->particleID().abspid()) ) {
+            ++howmanyfinalstate;
+            if ( (*iPP)->originVertex()->isPrimary() || 
+                 ( (*iPP)->primaryVertex()->position() - 
+                   (*iPP)->originVertex()->position()
+                 ).Mag2() < pow(m_rescut,2)
+               ) {
+              ++howmanyfromPV;
+            }
+            /*if (*iP != *iPP) {
+              bool fromshortlivedmother = true;
+              const LHCb::MCParticle* tempdaughter = *iPP;
+              do {
+  
+              const LHCb::MCParticle* tempmother = tempdaughter->mother();
+              if (tempmother) {
+
+              SmartRefVector<LHCb::MCVertex>::const_iterator iVT = tempmother->endVertices().begin();
+              double motherflighttime = (*iVT)->timeOfFlight();
+
+              if (motherflighttime > m_rescut) {
+
+              fromshortlivedmother = false;
+              }
+
+              }
+
+              tempdaughter = tempmother;
+
+              } while (fromshortlivedmother && tempdaughter);
+              if (fromshortlivedmother) ++howmanyfromPV;
+              ++iP;
+              continue;
+              } else {
+              ++howmanyfromPV;
+              }*/
           }
-          /*if (*iP != *iPP) {
-            bool fromshortlivedmother = true;
-            const LHCb::MCParticle* tempdaughter = *iPP;
-            do {
-
-            const LHCb::MCParticle* tempmother = tempdaughter->mother();
-            if (tempmother) {
-
-            SmartRefVector<LHCb::MCVertex>::const_iterator iVT = tempmother->endVertices().begin();
-            double motherflighttime = (*iVT)->timeOfFlight();
-
-            if (motherflighttime > m_rescut) {
-
-            fromshortlivedmother = false;
-            }
-
-            }
-
-            tempdaughter = tempmother;
-
-            } while (fromshortlivedmother && tempdaughter);
-            if (fromshortlivedmother) ++howmanyfromPV;
-            ++iP;
-            continue;
-            } else {
-            ++howmanyfromPV;
-            }*/
+        }
+      } else {
+        if ( (*iPP)->originVertex()->isPrimary() ||
+             ( (*iPP)->primaryVertex()->position() -
+               (*iPP)->originVertex()->position()
+             ).Mag2() < pow(m_rescut,2)
+           ) {
+              ++howmanyfromPV;
         }
       }
     }

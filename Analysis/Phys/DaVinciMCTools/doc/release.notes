@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.240 2009-01-20 16:25:29 jpalac Exp $
+! $Id: release.notes,v 1.241 2009-01-24 19:20:25 gligorov Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2009-01-24 - V Gligorov
+ - src/BackgroundCategory.cpp
+  . Allow BackCat to deal with MCParticles which have no EndVertex without
+    segfaulting.
 
 ! 2009-01-20 - Juan PALACIOS
  - cmt/requirements
