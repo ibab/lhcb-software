@@ -1,4 +1,4 @@
-// $Id: SiGeantDepositedCharge.h,v 1.5 2007-12-11 10:14:25 mneedham Exp $
+// $Id: SiGeantDepositedCharge.h,v 1.6 2009-01-24 10:08:04 mneedham Exp $
 #ifndef SiGeantDepositedCharge_H
 #define SiGeantDepositedCharge_H 1
 
@@ -34,6 +34,10 @@ public:
   * @return deposited charge 
   */
   double charge(const LHCb::MCHit* aHit) const;
+
+private:
+
+  bool m_applySmearing;
     
 };
 

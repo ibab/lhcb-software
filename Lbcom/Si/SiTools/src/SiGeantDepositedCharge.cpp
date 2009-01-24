@@ -1,4 +1,4 @@
-// $Id: SiGeantDepositedCharge.cpp,v 1.5 2008-01-28 15:48:02 mneedham Exp $
+// $Id: SiGeantDepositedCharge.cpp,v 1.6 2009-01-24 10:08:04 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -24,7 +24,9 @@ SiGeantDepositedCharge::SiGeantDepositedCharge(const std::string& type,
 {
   /// constructor
   declareProperty("scalingFactor", m_scalingFactor = 1.0);
- 
+  
+  /// add atomic binding smearing or not
+  declareProperty("applySmearing", m_applySmearing = true);  
 }
 
 SiGeantDepositedCharge::~SiGeantDepositedCharge()
@@ -36,7 +38,10 @@ SiGeantDepositedCharge::~SiGeantDepositedCharge()
 double SiGeantDepositedCharge::charge(const LHCb::MCHit* aHit) const
 {
 
-  double aBinding = atomicBinding(aHit->pathLength())*m_GaussDist->shoot();
+  double aBinding = 0.0;
+  if (m_applySmearing == true){
+    aBinding = atomicBinding(aHit->pathLength())*m_GaussDist->shoot();
+  }
   return m_scalingFactor * (aHit->energy() + aBinding)/ LHCbConstants::SiEnergyPerIonPair;
 }
 

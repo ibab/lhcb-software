@@ -2,6 +2,9 @@ Package         : Si/SiTools
 Package manager : Matt Needham
 !------------------------------------------------------------------------------
 
+! 2009-01-24 M Needham
+ - Add flag to turn on/off atomic binding smearing in SiGeantDepositedCharge
+
 ! 2009-01-16 Fixes for gcc 4.3
 
 ! 2009-01-15 M Needham 
