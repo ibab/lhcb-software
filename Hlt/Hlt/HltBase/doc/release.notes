@@ -3,6 +3,10 @@
 ! Responsible : Jose Angel Hernando Morata
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+! 2009-01-24 - Antonio Perez-Calero
+ - changed definition of deltaAngle in HltUtils.cpp (to the actual diff in angle 
+   between two tracks)
+
 ! 2009-01-21 - Gerhard Raven
  - remove SummaryHelper, move EParser to HltCommon
 

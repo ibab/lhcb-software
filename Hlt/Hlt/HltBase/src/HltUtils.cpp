@@ -383,11 +383,18 @@ double HltUtils::deltaPhi(const LHCb::Track& track1,
   return track2.slopes().Phi() -  track1.slopes().Phi();;
 }
 
+
 double HltUtils::deltaAngle(const LHCb::Track& track1, 
                             const LHCb::Track& track2) {
-  double deta = deltaEta(track1,track2);
-  double dphi = deltaPhi(track1,track2);
-  return sqrt ( deta*deta + dphi*dphi );
+
+  XYZVector dir1(track1.slopes().X(),track1.slopes().Y(),1.);
+  XYZVector dir2(track2.slopes().X(),track2.slopes().Y(),1.);
+  
+  double dot12 = dir1.Dot(dir2);
+  double mod1 = sqrt(dir1.Dot(dir1));
+  double mod2 = sqrt(dir2.Dot(dir2));
+  double angle = acos(dot12/(mod1*mod2));
+  return angle;
 }
 
 namespace {
