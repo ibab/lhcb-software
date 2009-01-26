@@ -5,6 +5,9 @@
 !               low energy components, flatspillover
 !-----------------------------------------------------------------------------
 
+! 2009-01-26 - Marco Cattaneo
+ - Backward compatible fixes for Gaudi v21
+
 !====================== MuonBackground v2r7p1 2008-07-29 =====================
 ! 2008-07-22 - Marco Cattaneo
  - Add a missing Gaudi::Units::

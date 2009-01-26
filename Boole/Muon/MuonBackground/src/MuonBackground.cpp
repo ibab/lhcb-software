@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.45 2008-07-22 13:28:40 cattanem Exp $
+// $Id: MuonBackground.cpp,v 1.46 2009-01-26 15:23:07 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -91,17 +91,10 @@ StatusCode MuonBackground::initialize() {
 
   // Get the application manager. Used to find the histogram persistency type
   // and to get number of spillovers from SpillOverAlg
-  IAlgManager* algmgr;
-  sc = service( "ApplicationMgr", algmgr );
-  if( !sc.isSuccess() ) {
-    err() << "Failed to locate algManager i/f of AppMgr"<< endmsg;
-    return sc;
-  }
-  IProperty* algmgrProp;
-  sc=algmgr->queryInterface( IID_IProperty, (void**)&algmgrProp );
-  if( !sc.isSuccess() ) {
-    err() << "Failed to locate algManager i/f of AppMgr"<< endmsg;
-    return sc;
+  IAlgManager* algmgr =svc<IAlgManager>("ApplicationMgr");
+  SmartIF<IProperty> algmgrProp( algmgr );
+  if( !algmgrProp ) {
+    return Error("Failed to locate algManager i/f of AppMgr");
   }
 
   StringProperty persType;
@@ -188,14 +181,16 @@ StatusCode MuonBackground::initialize() {
       m_readSpilloverEvents = 0;
     }
     else {
-      IProperty* spillProp;
-      sc=spillAlg->queryInterface( IID_IProperty, (void**)&spillProp );
-      if( !sc.isSuccess() ) {
-        warning()<<" Spillover problem"<<endreq;
+      SmartIF<IProperty> spillProp( spillAlg );
+      if( !spillProp ) {
+        warning() << "Unable to access SpilloverAlg properties" << endmsg;
+        m_readSpilloverEvents = 0;
       }
-      StringArrayProperty evtPaths;
-      evtPaths.assign( spillProp->getProperty("PathList") );
-      m_readSpilloverEvents = evtPaths.value().size();
+      else {
+        StringArrayProperty evtPaths;
+        evtPaths.assign( spillProp->getProperty("PathList") );
+        m_readSpilloverEvents = evtPaths.value().size();
+      }
       // Release the interface, no longer needed
       spillAlg->release();
     }
@@ -270,9 +265,9 @@ StatusCode MuonBackground::execute() {
             }            
             
             for(int hitID=0;hitID< hitToAdd;hitID++){            
-              StatusCode asc=createHit(hitsContainer, station,multi,ispill);                  if(asc.isFailure())debug()<<"failing hit creation "<<endreq;      
+              StatusCode asc=createHit(hitsContainer, station,multi,ispill);
               if(asc.isFailure()){
-		warning()<<" error in creating hit "<<endmsg;
+                warning()<<" error in creating hit "<<endmsg;
               }   
             }
             if( m_histos ) {

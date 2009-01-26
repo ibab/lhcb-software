@@ -1,4 +1,4 @@
-//$Id: MuonDigitization.cpp,v 1.42 2009-01-26 15:14:53 cattanem Exp $
+//$Id: MuonDigitization.cpp,v 1.43 2009-01-26 15:26:42 cattanem Exp $
 
 #include <algorithm>
 #include <vector>
@@ -74,6 +74,7 @@ StatusCode MuonDigitization::initialize()
     SmartIF<IProperty> spillProp( spillAlg );
     if( !spillProp ) {
       warning() << "Problem locating properties of SpilloverAlg" << endmsg;
+      m_numberOfSpilloverEvents = 0;
     }
     else {
       StringArrayProperty evtPaths;
