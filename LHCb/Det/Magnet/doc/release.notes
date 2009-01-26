@@ -4,6 +4,9 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+! 2009-01-26 - Marco Cattaneo
+ - Backward compatible fixes for Gaudi v21
+
 !====================== Magnet v5r1p2 2008-11-17 =============================
 ! 2008-10-28 - Marco Cattaneo
  - Add missing includes for gcc 4.3 compilation

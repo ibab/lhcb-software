@@ -53,9 +53,6 @@ public:
   virtual StatusCode queryInterface( const InterfaceID& riid, 
                                      void** ppvInterface      );
   
-  /// Service type.
-  virtual const InterfaceID& type() const { return IID_IMagneticFieldSvc; };
-
   /** IAnalyticFieldSvc interface.
    * @param[in]  xyz Point at which magnetic field vector will be given
    * @param[out] fvec Magnectic field vector.

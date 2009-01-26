@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.h,v 1.26 2008-09-12 13:32:35 jonrob Exp $
+// $Id: MagneticFieldSvc.h,v 1.27 2009-01-26 12:45:44 cattanem Exp $
 #ifndef MAGNETICFIELDSVC_H
 #define MAGNETICFIELDSVC_H 1
 
@@ -58,9 +58,6 @@ public:
   virtual StatusCode queryInterface( const InterfaceID& riid, 
                                      void** ppvInterface      );
   
-  /// Service type.
-  virtual const InterfaceID& type() const { return IID_IMagneticFieldSvc; };
-
   /** Implementation of IMagneticFieldSvc interface.
    * @param[in]  xyz Point at which magnetic field vector will be given
    * @param[out] fvec Magnectic field vector.

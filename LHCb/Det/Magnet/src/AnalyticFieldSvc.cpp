@@ -132,7 +132,7 @@ StatusCode AnalyticFieldSvc::queryInterface( const InterfaceID& riid,
   if ( ppvInterface ) {
     *ppvInterface = 0;
     
-    if ( riid == IID_IMagneticFieldSvc ) {
+    if ( riid == IMagneticFieldSvc::interfaceID() ) {
       *ppvInterface = static_cast<IMagneticFieldSvc*>(this);
       sc = StatusCode::SUCCESS;
       addRef();
