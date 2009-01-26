@@ -4,6 +4,9 @@
 ! Responsible : G.Corti
 ! -----------------------------------------------------------------------------
 
+! 2009-01-26 - Chris Jones
+ - Suppress info() message for RICH extended information.
+
 !======================== GaussAlgs v3r3 2008-08-04 ===========================
 ! 2008-08-04 - Gloria CORTI
  - Fix compilation errors due to move of include IGenericTool from LHCbKernel

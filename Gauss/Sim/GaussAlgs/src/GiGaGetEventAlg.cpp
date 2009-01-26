@@ -1,4 +1,4 @@
-// $Id: GiGaGetEventAlg.cpp,v 1.4 2007-01-12 15:23:41 ranjard Exp $ 
+// $Id: GiGaGetEventAlg.cpp,v 1.5 2009-01-26 12:02:48 jonrob Exp $ 
 // Include files 
 
 // from Gaudi
@@ -34,7 +34,7 @@ GiGaGetEventAlg::GiGaGetEventAlg(const std::string& name,
 { 
   declareProperty( "Particles", m_particles = LHCb::MCParticleLocation::Default); 
   declareProperty( "Vertices" , m_vertices = LHCb::MCVertexLocation::Default); 
-};
+}
 
 //=============================================================================
 // Destructor
@@ -49,7 +49,7 @@ StatusCode GiGaGetEventAlg::execute()
   if ( !m_particles.empty() )
   {
     const LHCb::MCParticles* particles = get<LHCb::MCParticles>( m_particles );
-    info() << " Number of extracted MCParticles '"
+    info() << "Number of extracted MCParticles '"
            << m_particles << "' \t"
            << particles -> size() 
            << endreq ;
@@ -59,7 +59,7 @@ StatusCode GiGaGetEventAlg::execute()
   if( !m_vertices.empty() )
   {
     const LHCb::MCVertices* vertices = get<LHCb::MCVertices>( m_vertices ) ;
-    info() << " Number of extracted MCvertices  '"
+    info() << "Number of extracted MCVertices  '"
            << m_vertices << "'  \t" 
            << vertices -> size() 
            << endreq ;
@@ -67,14 +67,6 @@ StatusCode GiGaGetEventAlg::execute()
   }
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
-
-
-
-
-
-
-
-
