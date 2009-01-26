@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2009-01-26 - Patrick Robbe
+ - PythiaProduction.cpp: re-activate extra charmonium processes which had
+   been desactivated by mistake 
+
 !========================= LbPythia v8r2 2008-12-08 ==========================
 ! 2008-12-03 - Gloria CORTI
  - PythiaProduction.cpp: chnage the directory name for LHA files to
