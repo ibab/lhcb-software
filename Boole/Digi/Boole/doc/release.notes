@@ -3,6 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+! 2009-01-26 - Chris Jones
+ - Remove RICH extended information linker algorithms. Now run in Gauss.
+
 ! 2009-01-21 - Marco Cattaneo
  - Remove Auditors from ExpertCheck.opts, now available as LHCbApp().Monitors
 
