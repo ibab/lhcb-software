@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.48 2009-01-23 08:17:41 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.49 2009-01-26 09:29:59 ocallot Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -63,6 +63,7 @@ class Brunel(LHCbConfigurableUser):
        ,"RecoSequence"   : [] # The Sub-detector reconstruction sequencing. See RecSys for default
        ,"SpecialData"    : [] # Various special data processing options. See KnownSpecialData for all options
        ,"Context":     "Offline" # The context within which to run
+       ,"OutputIsMDF":  False  #Is output a packed MDF file
         }
 
 
@@ -241,13 +242,17 @@ class Brunel(LHCbConfigurableUser):
 
             # Set a default output file name if not already defined in the user job options
             if not hasattr( dstWriter, "Output" ):
-                dstWriter.Output  = "DATAFILE='PFN:" + self.outputName() + "' TYP='POOL_ROOTTREE' OPT='REC'"
+                outputFile = self.outputName()
+                outputFile = outputFile + '.' + self.getProp("OutputType").lower()
+                dstWriter.Output  = "DATAFILE='PFN:" + outputFile + "' TYP='POOL_ROOTTREE' OPT='REC'"
 
             # Define the file content
             DstConf().Writer     = writerName
             DstConf().DstType    = dstType
             DstConf().EnablePack = packedDST
             DstConf().Simulation = withMC
+            DstConf().OutputIsMDF = self.getProp("OutputIsMDF")
+            DstConf().OutputName  = self.outputName()
 
             from Configurables import TrackToDST
             if dstType == "DST":
@@ -296,8 +301,7 @@ class Brunel(LHCbConfigurableUser):
         outputName = self.getProp("DatasetName")
         if self.getProp( "RecL0Only" ): outputName += '-L0Yes'
         if ( self.evtMax() > 0 ): outputName += '-' + str(self.evtMax()) + 'ev'
-        outputType = self.getProp("OutputType").lower()
-        return outputName + '.' + outputType
+        return outputName
 
     def evtMax(self):
         return LHCbApp().evtMax()
