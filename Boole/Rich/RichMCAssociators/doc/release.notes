@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2009-01-26 - Chris Jones
+ - Move extended RICH MC information linkers to GaussRICH.
+
 !======================= RichMCAssociators v2r6 2008-11-24 ===================
 ! 2008-10-24 - Chris Jones
  - Remove job options
