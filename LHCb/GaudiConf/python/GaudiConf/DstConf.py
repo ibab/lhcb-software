@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: DstConf.py,v 1.4 2009-01-13 09:39:26 cattanem Exp $"
+__version__ = "$Id: DstConf.py,v 1.5 2009-01-26 09:49:07 ocallot Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -14,7 +14,9 @@ class DstConf(ConfigurableUser):
        , "PackSequencer" : None
        , "Simulation"    : False
        , "Writer"        : "DstWriter"
-        }
+       , "OutputIsMDF"   : False
+       , "OutputName"    : ""
+         }
 
     _propertyDocDct = { 
         'DstType'       : """ Type of dst, can be ['DST','RDST'] """
@@ -23,6 +25,8 @@ class DstConf(ConfigurableUser):
        ,'PackSequencer' : """ Sequencer in which to run the packing algorithms """
        ,'Simulation'    : """ Flag to define whether to store simulation objects """
        ,'Writer'        : """ Name of OutputStream writing the DST """
+       ,'OutputIsMDF'   : """ Flag to write (r)DST as MDF file """
+       ,'OutputName'    : """ Name of the output file, for MDF writing """ 
        }
 
     KnownTypes = ['NONE', 'DST','RDST']
@@ -35,7 +39,10 @@ class DstConf(ConfigurableUser):
         if type not in self.KnownTypes:
             raise TypeError( "Unknown DST type '%s'"%type )
         if type == 'NONE': return
-    
+        if self.getProp( "OutputIsMDF" ):
+            if type == 'DST': raise TypeError( "Only RDST are supported with MDF output" )
+            return     # no ROOT output if mdf...
+        
         writer = OutputStream( self.getProp("Writer") )
         ApplicationMgr().OutStream.append( writer )
         writer.Preload = False
@@ -48,18 +55,18 @@ class DstConf(ConfigurableUser):
 
         # Objects written to all DST types
         writer.ItemList += [ "/Event/DAQ/ODIN#1"
-                           , "/Event/Rec/Header#1"
-                           , "/Event/Rec/Status#1"
-                           , "/Event/" + recDir + "/Track/Best#1"
-                           , "/Event/" + recDir + "/Calo/Electrons#1"
-                           , "/Event/" + recDir + "/Calo/Photons#1"
-                           , "/Event/" + recDir + "/Calo/MergedPi0s#1"
-                           , "/Event/" + recDir + "/Calo/SplitPhotons#1"
-                           , "/Event/" + recDir + "/ProtoP/Charged#1"
-                           , "/Event/" + recDir + "/ProtoP/Neutrals#1"
-                           , "/Event/" + recDir + "/Vertex/Primary#1"
-                           , "/Event/Rec/Vertex/V0#1" ]
-
+                             , "/Event/Rec/Header#1"
+                             , "/Event/Rec/Status#1" 
+                             , "/Event/" + recDir + "/Track/Best#1"
+                             , "/Event/" + recDir + "/Calo/Electrons#1"
+                             , "/Event/" + recDir + "/Calo/Photons#1"
+                             , "/Event/" + recDir + "/Calo/MergedPi0s#1"
+                             , "/Event/" + recDir + "/Calo/SplitPhotons#1"
+                             , "/Event/" + recDir + "/ProtoP/Charged#1"
+                             , "/Event/" + recDir + "/ProtoP/Neutrals#1"
+                             , "/Event/" + recDir + "/Vertex/Primary#1"
+                             , "/Event/" + recDir + "/Vertex/V0#1" ]
+        
         # Additional objects only on DST
         if type == "DST":
             writer.ItemList += [ "/Event/DAQ/RawEvent#1"
@@ -111,7 +118,8 @@ class DstConf(ConfigurableUser):
         Set up the sequence to create the packed containers
         """
         packDST = self.getProp("PackSequencer")
-        from Configurables import PackTrack, PackCaloHypo, PackProtoParticle, PackRecVertex
+        from Configurables import PackTrack, PackCaloHypo, PackProtoParticle, PackRecVertex, PackTwoProngVertex
+        from Configurables import WritePackedDst, ReadPackedDst
         packDST.Members = [   PackTrack()
                               , PackCaloHypo( name       = "PackElectrons",
                                               InputName  = "/Event/Rec/Calo/Electrons",
@@ -131,23 +139,51 @@ class DstConf(ConfigurableUser):
                               , PackProtoParticle( name       = "PackNeutrals",
                                                    InputName  = "/Event/Rec/ProtoP/Neutrals",
                                                    OutputName = "/Event/pRec/ProtoP/Neutrals")
-                              , PackRecVertex() ]
+                              , PackRecVertex()
+                              , PackTwoProngVertex()
+                              ]
         if self.getProp( "DstType" ).upper() == "DST":
             packDST.Members += [ PackTrack( name       = "PackMuons",
                                             InputName  = "/Event/Rec/Track/Muon",
                                             OutputName = "/Event/pRec/Track/Muon") ]
 
+        if self.getProp( "OutputIsMDF" ):
+            from Configurables import LHCb__MDFWriter
+            MDFwr = LHCb__MDFWriter('MdfWriter')
+            MDFwr.Connection = self.getProp( "OutputName" ) + '.mdf'
+            MDFwr.Compress = 2
+            MDFwr.GenerateMD5 = True
+            MDFwr.BankLocation = '/Event/DAQ/DstEvent'
+        
+            packDST.Members += [ WritePackedDst( Containers = [ "/Event/DAQ/ODIN"
+                                                                , "/Event/Rec/Header"
+                                                                , "/Event/Rec/Status" 
+                                                                , "/Event/pRec/Track/Best"
+                                                                , "/Event/pRec/Calo/Electrons"
+                                                                , "/Event/pRec/Calo/Photons"
+                                                                , "/Event/pRec/Calo/MergedPi0s"
+                                                                , "/Event/pRec/Calo/SplitPhotons"
+                                                                , "/Event/pRec/ProtoP/Charged"
+                                                                , "/Event/pRec/ProtoP/Neutrals"
+                                                                , "/Event/pRec/Vertex/Primary"
+                                                                , "/Event/pRec/Vertex/V0" ] )
+                                 , MDFwr
+                                 ]
+        if self.getProp( "DstType" ).upper() == "DST":
+            WritePackedDst().Containers += ["/Event/pRec/Track/Muon" ]
+
     def _doUnpack( self ):
         """
         Set up DataOnDemandSvc to unpack a packed (r)DST
         """
-        from Configurables import UnpackTrack, UnpackCaloHypo, UnpackProtoParticle, UnpackRecVertex
+        from Configurables import UnpackTrack, UnpackCaloHypo, UnpackProtoParticle, UnpackRecVertex, UnpackTwoProngVertex
 
         unpackTracks       = UnpackTrack()
         unpackMuons        = UnpackTrack( name       = "UnpackMuons",
                                           OutputName = "/Event/Rec/Track/Muon",
                                           InputName  = "/Event/pRec/Track/Muon")
         unpackVertex       = UnpackRecVertex()
+        unpackV0           = UnpackTwoProngVertex()
         unpackElectrons    = UnpackCaloHypo( name       = "UnpackElectrons",
                                              OutputName = "/Event/Rec/Calo/Electrons",
                                              InputName  = "/Event/pRec/Calo/Electrons")
@@ -176,6 +212,7 @@ class DstConf(ConfigurableUser):
         DataOnDemandSvc().AlgMap[ "/Event/Rec/ProtoP/Charged" ]    = unpackCharged
         DataOnDemandSvc().AlgMap[ "/Event/Rec/ProtoP/Neutrals" ]   = unpackNeutrals
         DataOnDemandSvc().AlgMap[ "/Event/Rec/Vertex/Primary" ]    = unpackVertex
+        DataOnDemandSvc().AlgMap[ "/Event/Rec/Vertex/V0" ]         = unpackV0
 
         # If simulation, set up also unpacking of MC Truth
         if self.getProp( "Simulation" ):

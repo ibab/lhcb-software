@@ -2,6 +2,10 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2009-01-26 - Olivier Callot
+ - Modifications in DstContent to use the packed TwoProngVertex.
+ - Modifications in DstContent to write RDST in MDF format.
+
 ! 2009-01-23 - Marco Cattaneo
  - Add PreloadUnits.opts, previously in $DAVINCIROOT, to allow import of
    units.opts file from Python.
