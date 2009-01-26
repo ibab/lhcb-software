@@ -110,6 +110,9 @@ namespace LHCb
                    HltLumiSummary,  // 56
                    L0PUFull,        // 57
                    L0PUError,       // 58
+                   DstBank,         // 59
+                   DstData,         // 60
+                   DstAddress,      // 61
                    // Add new types here. Don't forget to update also RawBank.cpp
                    LastType    // LOOP Marker; add new bank types ONLY before!
     };

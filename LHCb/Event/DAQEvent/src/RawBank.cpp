@@ -1,4 +1,4 @@
-// $Id: RawBank.cpp,v 1.6 2008-07-28 15:46:47 tskwarni Exp $
+// $Id: RawBank.cpp,v 1.7 2009-01-26 09:37:59 ocallot Exp $
 
 // local
 #include "Event/RawBank.h"
@@ -69,6 +69,11 @@ std::string LHCb::RawBank::typeName(LHCb::RawBank::BankType e){
   case LHCb::RawBank::HltSelReports   : return  "HltSelReports";
   case LHCb::RawBank::HltVertexReports: return  "HltVertexReports";
   case LHCb::RawBank::HltLumiSummary  : return  "HltLumiSummary";
+  case LHCb::RawBank::L0PUFull        : return  "L0PUFull";
+  case LHCb::RawBank::L0PUError       : return  "L0PUError";
+  case LHCb::RawBank::DstBank         : return  "DstBank";
+  case LHCb::RawBank::DstData         : return  "DstData";
+  case LHCb::RawBank::DstAddress      : return  "DstAddress";    
   default                             : return  "Undefined name";
   };
 }  

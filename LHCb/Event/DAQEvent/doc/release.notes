@@ -4,6 +4,9 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+! 2009-01-26 - Olivier Callot
+ - Add new bank types for MDF Dst writing: DstBank, DstData, DstAddress
+
 ! 2009-01-23 - Marco Cattaneo
  - Backwards compatible changes for Gaudi v21
 
