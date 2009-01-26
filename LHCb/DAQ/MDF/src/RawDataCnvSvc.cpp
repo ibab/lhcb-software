@@ -1,4 +1,4 @@
-// $Id: RawDataCnvSvc.cpp,v 1.31 2009-01-23 13:30:07 cattanem Exp $
+// $Id: RawDataCnvSvc.cpp,v 1.32 2009-01-26 08:53:45 frankb Exp $
 //  ====================================================================
 //  RawDataCnvSvc.cpp
 //  --------------------------------------------------------------------
@@ -384,12 +384,11 @@ StatusCode RawDataCnvSvc::fillObjRefs(IOpaqueAddress* pA, DataObject* pObj)  {
 	    while(start<end) {
 	      RawBank* b = (RawBank*)start;
 	      if ( b->type() == RawBank::HcalE )   {
-		cout << "Reg:" << pReg->identifier() << "  " << m_dstLocation << endl;
+		// cout << "Reg:" << pReg->identifier() << "  " << m_dstLocation << endl;
 		StatusCode sc = StatusCode::FAILURE;
 		const char* objLoc = m_dstLocation.c_str();
 		const char* regLoc = pReg->identifier().c_str();
 		size_t regLen = pReg->identifier().length();
-		size_t idx    = pReg->identifier().find("/",1);
 		if ( objLoc[0] == '/' && strncmp(objLoc,regLoc,regLen)==0 )
 		  sc = regAddr(pReg, pAddRaw, objLoc+regLen+1, RawEvent::classID());
 		else if ( objLoc[0] != '/' && strncmp(objLoc,"DAQ/",4)==0 )
@@ -397,24 +396,14 @@ StatusCode RawDataCnvSvc::fillObjRefs(IOpaqueAddress* pA, DataObject* pObj)  {
 		else
 		  sc = regAddr(pReg, pAddRaw, m_dstLocation, RawEvent::classID());
 		if ( sc.isSuccess() ) {
-		  string p[2];
-		  long unsigned int ip[2];
-		  int slen;
 		  unsigned int *ptr = b->begin<unsigned int>();
-		  CLID clid;
-		  clid = *ptr++;
-		  slen = *ptr++;
-		  p[1] = (char*)ptr;
-		  ptr += ((slen/sizeof(int))+1);
-		  ip[1] = *ptr++;
-		  slen = *ptr++;
-		  p[0] = (char*)ptr;
-		  ptr += ((slen/sizeof(int))+1);
-		  ip[0] = *ptr++;
-		  IOpaqueAddress* new_rawAddr = 0;
-		  sc = m_addressCreator->createAddress(POOL_ROOTTREE_StorageType,clid,p,ip,new_rawAddr);
+		  long unsigned int clid = *ptr++, ip[2] = {*ptr++, *ptr++}, svc_typ = *ptr++;
+		  string p[2] = { std::string((char*)ptr), std::string(((char*)ptr)+1+strlen((char*)ptr))};
+		  IOpaqueAddress* addr = 0;
+		  // cout << "P0:" << p[0] << " P1:" << p[1] << " IP0:" << ip[0] << " IP1:" << ip[1] << " " << svc_typ << endl;
+		  sc = m_addressCreator->createAddress(svc_typ,clid,p,ip,addr);
 		  if ( sc.isSuccess() ) {
-		    sc = m_dataMgr->registerAddress(p[1],new_rawAddr);
+		    sc = m_dataMgr->registerAddress(p[1],addr);
 		    if ( sc.isSuccess() ) {
 		      return sc;
 		    }
