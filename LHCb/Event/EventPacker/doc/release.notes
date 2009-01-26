@@ -4,6 +4,11 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2009-01-26 - Olivier Callot
+ - New algorithms to pack, unpack and compare TwoProngVertex.
+ - New algorithms ReadPackedDst adn WritePackedDsr to write in a RawEvent the 
+   RDST content. Thsi allows writing a RDST in MDF format.
+
 !============================ EventPacker v1r2 2009-01-21 ====================
 ! 2009-01-21 - Olivier Callot
  - Change the coding of cov_44 in track state, to be dp/p with a scale factor.

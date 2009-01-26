@@ -25,6 +25,7 @@ use   PackedEvent  v*    Event
 use   MCEvent      v*    Event
 use   TrackEvent   v*    Event
 use   RecEvent     v*    Event
+use   DAQEvent     v*    Event
 use   Boost        v*    LCG_Interfaces
 
 #============================================================================
