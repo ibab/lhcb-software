@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.41 2009-01-23 15:02:33 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.42 2009-01-26 11:03:09 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -43,7 +43,7 @@ class DaVinci(LHCbConfigurableUser) :
        , "Hlt2IgnoreHlt1Decision" : False     # run Hlt2 even if Hlt1 failed
        }
 
-    __used_configurables__ = [ LHCbApp, PhysConf, AnalysisConf, HltConf ]
+    __used_configurables__ = [ LHCbApp, PhysConf, AnalysisConf, HltConf, DstConf ]
 
     ## Known monitoring sequences run by default
     KnownMonitors        = []    
