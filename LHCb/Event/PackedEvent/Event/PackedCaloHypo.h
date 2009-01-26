@@ -1,4 +1,4 @@
-// $Id: PackedCaloHypo.h,v 1.2 2008-11-19 10:10:49 ocallot Exp $
+// $Id: PackedCaloHypo.h,v 1.3 2009-01-26 09:41:02 ocallot Exp $
 #ifndef EVENT_PACKEDCALOHYPO_H 
 #define EVENT_PACKEDCALOHYPO_H 1
 
@@ -87,20 +87,18 @@ namespace LHCb {
     virtual const CLID& clID()  const { return PackedCaloHypos::classID(); }
     static  const CLID& classID()     { return CLID_PackedCaloHypos;       }
 
-    void setVersion( int vers )       { m_version = vers; }
-    int version()               const { return m_version; }
-
     void addEntry( PackedCaloHypo& obj ) { m_vect.push_back( obj ); }
     std::vector<PackedCaloHypo>::const_iterator begin() const { return m_vect.begin(); }
     std::vector<PackedCaloHypo>::const_iterator end()   const { return m_vect.end(); }
+    std::vector<PackedCaloHypo>& hypos()                      { return m_vect; }
 
     void addRef( int i ) { m_refs.push_back( i ); }
     std::vector<int>::const_iterator beginRefs() const { return m_refs.begin(); }
     unsigned int  sizeRef()                      const { return m_refs.size(); }
+    std::vector<int>& refs()                           { return m_refs; }
   protected:
 
   private:
-    int m_version;
     std::vector<PackedCaloHypo> m_vect;
     std::vector<int>       m_refs;
   };

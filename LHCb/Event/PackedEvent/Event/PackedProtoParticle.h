@@ -1,4 +1,4 @@
-// $Id: PackedProtoParticle.h,v 1.2 2008-11-19 10:10:49 ocallot Exp $
+// $Id: PackedProtoParticle.h,v 1.3 2009-01-26 09:41:02 ocallot Exp $
 #ifndef EVENT_PACKEDPROTOPARTICLE_H 
 #define EVENT_PACKEDPROTOPARTICLE_H 1
 
@@ -56,25 +56,24 @@ namespace LHCb {
     virtual const CLID& clID()  const { return PackedProtoParticles::classID(); }
     static  const CLID& classID()     { return CLID_PackedProtoParticles;       }
 
-    void setVersion( int vers )       { m_version = vers; }
-    int version()               const { return m_version; }
-
     void addEntry( PackedProtoParticle& obj ) { m_vect.push_back( obj ); }
     std::vector<PackedProtoParticle>::const_iterator begin() const { return m_vect.begin(); }
     std::vector<PackedProtoParticle>::const_iterator end()   const { return m_vect.end(); }
+    std::vector<PackedProtoParticle>& protos()                     { return m_vect; }
 
     void addRef( int i ) { m_refs.push_back( i ); }
     std::vector<int>::const_iterator beginRefs() const { return m_refs.begin(); }
     unsigned int  sizeRef()                      const { return m_refs.size(); }
-
+    std::vector<int>& refs()                           { return m_refs; }
+ 
     void addExtra( int a, int b ) { std::pair<int,int> tmp( a, b ); m_extra.push_back( tmp ); }
     std::vector<std::pair<int,int> >::const_iterator beginExtra() const { return m_extra.begin(); }
     unsigned int sizeExtra()                         const { return m_extra.size(); }
+    std::vector<std::pair<int,int> >& extras()             { return m_extra; }
 
   protected:
 
   private:
-    int m_version;
     std::vector<PackedProtoParticle> m_vect;
     std::vector<int>                 m_refs;
     std::vector<std::pair<int,int> > m_extra;

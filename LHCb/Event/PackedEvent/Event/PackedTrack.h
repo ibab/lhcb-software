@@ -1,4 +1,4 @@
-// $Id: PackedTrack.h,v 1.4 2008-11-19 10:10:49 ocallot Exp $
+// $Id: PackedTrack.h,v 1.5 2009-01-26 09:41:02 ocallot Exp $
 #ifndef EVENT_PACKEDTRACK_H 
 #define EVENT_PACHEDTRACK_H 1
 
@@ -101,29 +101,29 @@ namespace LHCb {
     virtual const CLID& clID()  const { return PackedTracks::classID(); }
     static  const CLID& classID()     { return CLID_PackedTracks;       }
 
-    void setVersion( int vers )       { m_version = vers; }
-    int version()               const { return m_version; }
-
     void addEntry( PackedTrack& obj ) { m_vect.push_back( obj ); }
     std::vector<PackedTrack>::const_iterator begin() const { return m_vect.begin(); }
     std::vector<PackedTrack>::const_iterator end()   const { return m_vect.end(); }
+    std::vector<PackedTrack>& tracks() { return m_vect; }
 
     void addId( int i ) { m_ids.push_back( i ); }
     std::vector<int>::const_iterator beginIds() const { return m_ids.begin(); }
     unsigned int  sizeId()                      const { return m_ids.size(); }
+    std::vector<int>& ids() { return m_ids; }
 
     void addState( PackedState& obj ) { m_state.push_back( obj ); }
     std::vector<PackedState>::const_iterator beginState() const { return m_state.begin(); }
     unsigned int sizeState()                         const { return m_state.size(); }
+    std::vector<PackedState>& states() { return m_state; }
 
     void addExtra( int a, int b ) { std::pair<int,int> tmp( a, b ); m_extra.push_back( tmp ); }
     std::vector<std::pair<int,int> >::const_iterator beginExtra() const { return m_extra.begin(); }
     unsigned int sizeExtra()                         const { return m_extra.size(); }
+    std::vector<std::pair<int,int> >& extras() { return m_extra; }
 
   protected:
 
   private:
-    int m_version;
     std::vector<PackedTrack> m_vect;
     std::vector<PackedState> m_state;
     std::vector<int>    m_ids;

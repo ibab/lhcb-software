@@ -4,6 +4,11 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+! 2009-01-26 - Olivier Callot
+ - New class for PackedTwoProngVertex.
+ - Remove version from Track, CaloHypo, Protoparticle and Vertex: This exists in all DataObjects
+ - Some new methods to access internal arrays.
+
 !======================= PackedEvent v3r4 2008-11-17 =========================
 ! 2008-11-19 - Olivier Callot
  - Add a version field in the Packed events (Track, CaloHypo, ProtoParticle, RecVertex).
