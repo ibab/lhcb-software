@@ -100,7 +100,7 @@ StatusCode HltGlobalMonitor::execute() {
 
 
   LHCb::ODIN*         odin = fetch<LHCb::ODIN>( LHCb::ODINLocation::Default);
-  LHCb::L0DUReport*   l0du = fetch<LHCb::L0DUReport>( m_L0DUReportLocation );
+  LHCb::L0DUReport*   l0du = 0 ; // fetch<LHCb::L0DUReport>( m_L0DUReportLocation );
   LHCb::HltDecReports* hlt = fetch<LHCb::HltDecReports>( m_HltDecReportsLocation );
 
   monitorODIN(odin,l0du,hlt);
