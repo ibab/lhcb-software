@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.128 2009-01-22 16:42:05 pkoppenb Exp $
+! $Id: release.notes,v 1.129 2009-01-26 15:35:47 cattanem Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Vladimir Gligorov
 !==============================================================================
+
+! 2009-01-26 - Marco Cattaneo
+ - Backwards compatible fix for Gaudi v21
 
 ! 2009-01-22 - Patrick Koppenburg
  - NeutralPP asct : much less verbose!
