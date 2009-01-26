@@ -29,6 +29,7 @@ source ./setupOnline.sh $*
 source %(setup)s
 # and the options to be used
 export USEROPTS=%(moore)s/options/DEFAULT${IS_TAE_RUN}.opts
+[[ 'x'$RUNTYPE == 'xINJECTOR' ]] && USEROPTS=%(moore)s/options/DEFAULT_INJECTOR.opts
 export CORAL_SQLITE_TEMP_STORE_MEMORY=yes
 # and run them!
 echo exec -a ${UTGID} ${CLASS1_TASK} -opt=${USEROPTS}

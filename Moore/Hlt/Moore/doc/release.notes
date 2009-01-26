@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2009-01-26 - Gerhard Raven
+ - add support for RUNTYPE=INJECTOR in (create)runMooreOnline_EFF
+
 ! 2009-01-18 - Gerhard Raven
  - explicitly specify our version in createRunMooreOnline_EFF
  - add 'Simulation' to Configurable
