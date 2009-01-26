@@ -2,6 +2,9 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2009-01-26 - Marco Cattaneo
+ - Backward compatible fix to GaudiMain.cpp for Gaudi v21
+
 ! 2009-01-26 - Chris Jones
  - Remove extended RICH information from DIGI and DST contents. Now stored
    entirely in the SIM files.

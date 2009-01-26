@@ -1,4 +1,4 @@
-// $Id: GaudiMain.cpp,v 1.8 2006-07-18 15:00:22 cattanem Exp $
+// $Id: GaudiMain.cpp,v 1.9 2009-01-26 12:24:10 cattanem Exp $
 //------------------------------------------------------------------------------
 //
 //  Package    : GaudiConf
@@ -19,8 +19,8 @@
 int main ( int argc, char** argv ) {
   // Create an instance of an application manager
   IInterface* iface = Gaudi::createApplicationMgr();
-  SmartIF<IProperty>     propMgr ( IID_IProperty, iface );
-  SmartIF<IAppMgrUI>     appMgr  ( IID_IAppMgrUI, iface );
+  SmartIF<IProperty>     propMgr ( iface );
+  SmartIF<IAppMgrUI>     appMgr  ( iface );
 
   if( !appMgr.isValid() || !propMgr.isValid() ) {
     std::cout << "Fatal error while creating the ApplicationMgr " << std::endl;
