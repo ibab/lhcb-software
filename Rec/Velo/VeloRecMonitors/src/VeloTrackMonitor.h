@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitor.h,v 1.4 2008-11-14 11:14:26 gersabec Exp $
+// $Id: VeloTrackMonitor.h,v 1.5 2009-01-26 19:55:48 gersabec Exp $
 #ifndef VELORECMONITORS_VELOTRACKMONITOR_H 
 #define VELORECMONITORS_VELOTRACKMONITOR_H 1
 
@@ -77,6 +77,7 @@ namespace Velo
     AIDA::IHistogram1D *m_h_aliMon_Sigma_R_C;
     AIDA::IHistogram1D *m_h_aliMon_Sigma_P_A;
     AIDA::IHistogram1D *m_h_aliMon_Sigma_P_C;
+    AIDA::IProfile1D* m_prof_res[ 84 ]; 
     
     // Job options
     unsigned long m_event;

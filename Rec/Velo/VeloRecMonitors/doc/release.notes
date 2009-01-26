@@ -4,6 +4,9 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2009-01-26 - Marco Gersabeck
+- added alignment offline monitoring plots
+
 ! 2009-01-22 - Marco Gersabeck
 - now check for previously unchecked status codes
 

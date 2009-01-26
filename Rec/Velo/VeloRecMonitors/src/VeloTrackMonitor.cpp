@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitor.cpp,v 1.7 2009-01-22 13:23:38 gersabec Exp $
+// $Id: VeloTrackMonitor.cpp,v 1.8 2009-01-26 19:55:48 gersabec Exp $
 // Include files 
 
 // from Gaudi
@@ -84,6 +84,8 @@ StatusCode Velo::VeloTrackMonitor::initialize() {
   m_expectTool = tool<IVeloExpectation>( "VeloExpectation");
  
   if ( m_alignMoniBasic ) {
+    if ( context() != "Offline" ) {
+    // online
     const GaudiAlg::HistoID aliMonM_R_A_ID = "ResidualMean_R_A" ; 
     const GaudiAlg::HistoID aliMonM_R_C_ID = "ResidualMean_R_C" ; 
     const GaudiAlg::HistoID aliMonM_P_A_ID = "ResidualMean_P_A" ; 
@@ -100,6 +102,16 @@ StatusCode Velo::VeloTrackMonitor::initialize() {
     m_h_aliMon_Sigma_R_C = book1D( aliMonS_R_C_ID, "Residual sigma R sensors C side", 0, 5, 50 ); 
     m_h_aliMon_Sigma_P_A = book1D( aliMonS_P_A_ID, "Residual sigma Phi sensors A side", 0, 5, 50 ); 
     m_h_aliMon_Sigma_P_C = book1D( aliMonS_P_C_ID, "Residual sigma Phi sensors C side", 0, 5, 50 ); 
+    }
+    // offline
+    if ( context() == "Offline" ) {
+    char hname[100];
+    for ( int i = 0; i < 84; i++ ) {
+      sprintf( hname, "m_prof_res_%d", i );
+      const GaudiAlg::HistoID sensors = hname;
+      m_prof_res[ i ] = bookProfile1D( sensors, "residual vs phi" , -210., 210., 42) ;
+    }
+    }
   }
 
   m_binary = sqrt( 12. );
@@ -365,6 +377,27 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
       else {
         pitch = sensor->phiType()->phiPitch( interceptRadius );
       }
+
+      if ( ( m_alignMoniBasic ) //{   // offline monitoring
+        && ( context() == "Offline" ) ) {
+        unsigned int n_sen = sensor->sensorNumber();
+        if ( sensor->isR() ) {
+          m_prof_res[ n_sen ]->fill( interceptAngle / degree, biasedResid );
+        }
+        else {
+          double phi_state = 0.;
+          if ( sensor->phiType()->zoneOfStrip( stripID ) == 0 ) { // inner
+            phi_state = sensor->phiType()->phiOfStrip( stripID, interStripFr, sensor->phiType()->rMin( 0 ) ) / degree;
+            phi_state += 20.;                                 // stereo angle for inner strips
+          }
+          else {                                               // outer
+            phi_state = sensor->phiType()->phiOfStrip( stripID, interStripFr, sensor->phiType()->rMin( 1 ) ) / degree;
+            phi_state += -10.35;                                // stereo angle for outer strips
+          }
+          m_prof_res[ n_sen ]->fill( phi_state, biasedResid );
+        }
+      }
+      
       
       //Sensors vs Biased Residuals profile only for Velo
       //------------------------------------------------- 
@@ -478,7 +511,8 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
     
   }
   
-  if( m_alignMoniBasic ){
+  if( ( m_alignMoniBasic )
+        && ( context() != "Offline" ) ) {
     // reset histograms
     m_h_aliMon_Mean_R_A->reset();
     m_h_aliMon_Mean_R_C->reset();
