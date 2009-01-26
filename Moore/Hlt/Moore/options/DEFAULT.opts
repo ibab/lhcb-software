@@ -32,15 +32,12 @@ ApplicationMgr.ExtSvc += {  "DataOnDemandSvc" } ;
 
 ///@TODO: this is not maintainable -- need either a single tag, or it comes from @OnlineEnv...
 /// Note: the value is taken (by hand!) from $DDDBROOT/options/LHCb-2008.py
-DDDB.DefaultTAG     = "head-20081002";
-LHCBCOND.DefaultTAG = "head-20081002";
-
+DDDB.DefaultTAG     = 'head-20090112';
+LHCBCOND.DefaultTAG = 'head-20090112';
 EventClockSvc.EventTimeDecoder = "OdinTimeDecoder";
 MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 HltConfigSvc.prefetchTCK = { @OnlineEnv.InitialTCK };
 HltConfigSvc.initialTCK =    @OnlineEnv.InitialTCK;
-HltConfigSvc.checkOdin = false;
-HltConfigSvc.maskL0TCK = true;
 ApplicationMgr.ExtSvc += { "HltConfigSvc", "HltANNSvc", "LumiANNSvc", "LoKiSvc" };
 ApplicationMgr.TopAlg += { "GaudiSequencer/Hlt" };
 /////////////////////////////////////

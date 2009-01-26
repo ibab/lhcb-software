@@ -5,6 +5,7 @@ Purpose     : LHCb HLT application
 ! 2009-01-26 - Gerhard Raven
  - add support for RUNTYPE=INJECTOR in (create)runMooreOnline_EFF
  - update 'our' version of DecodeRawEvents.opts
+ - update DB tags in DEFAULT.opts
 
 ! 2009-01-18 - Gerhard Raven
  - explicitly specify our version in createRunMooreOnline_EFF
