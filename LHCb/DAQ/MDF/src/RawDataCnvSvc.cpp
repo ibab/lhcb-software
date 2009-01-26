@@ -1,4 +1,4 @@
-// $Id: RawDataCnvSvc.cpp,v 1.32 2009-01-26 08:53:45 frankb Exp $
+// $Id: RawDataCnvSvc.cpp,v 1.33 2009-01-26 15:37:01 frankb Exp $
 //  ====================================================================
 //  RawDataCnvSvc.cpp
 //  --------------------------------------------------------------------
@@ -383,7 +383,7 @@ StatusCode RawDataCnvSvc::fillObjRefs(IOpaqueAddress* pA, DataObject* pObj)  {
 	    char* start = dat.first, *end = start+dat.second;
 	    while(start<end) {
 	      RawBank* b = (RawBank*)start;
-	      if ( b->type() == RawBank::HcalE )   {
+	      if ( b->type() == RawBank::DstAddress )   {
 		// cout << "Reg:" << pReg->identifier() << "  " << m_dstLocation << endl;
 		StatusCode sc = StatusCode::FAILURE;
 		const char* objLoc = m_dstLocation.c_str();
