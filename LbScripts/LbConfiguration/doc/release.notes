@@ -1,5 +1,9 @@
 2009-01-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of version v2r0
+
+2009-01-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* cmt/requirements: quoted in version in case of "v*"
 	* python/LbConfiguration/Project.py: added functions to manipulate the binary list
 	* python/LbConfiguration/LbLogin.py: use current CMTROOT if the one calculated 
