@@ -4,6 +4,9 @@
 ! Purpose     : Muon digitisation algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-01-26 - Marco Cattaneo
+ - Backward compatible fixes for Gaudi v21
+
 !========================= MuonAlgs v6r6 2008-02-03 ==========================
 ! 2008-02-03 - Alessia Satta
  - Fix index out of range in MuonDetectorResponse

@@ -1,4 +1,4 @@
-//$Id: MuonDigitization.cpp,v 1.40 2008-02-03 14:38:02 asatta Exp $
+//$Id: MuonDigitization.cpp,v 1.41 2009-01-26 15:03:43 cattanem Exp $
 
 #include <algorithm>
 #include <vector>
@@ -62,12 +62,7 @@ StatusCode MuonDigitization::initialize()
   if ( sc.isFailure() ) return sc;  // error printed already by  GaudiAlgorithm	
       
   // Get the number of spillover events from the SpilloverAlg
-  IAlgManager* algmgr;
-  sc = service( "ApplicationMgr", algmgr );
-  if( !sc.isSuccess() ) {
-    err() << "Failed to locate algManager i/f of AppMgr" << endmsg;
-    return sc;
-  }
+  IAlgManager* algmgr =svc<IAlgManager>("ApplicationMgr");
   IAlgorithm*  spillAlg;
   sc = algmgr->getAlgorithm( "SpilloverAlg", spillAlg );
   if( !sc.isSuccess() ) {
@@ -75,15 +70,11 @@ StatusCode MuonDigitization::initialize()
     m_numberOfSpilloverEvents = 0;
   }
   else {
-    IProperty* spillProp;
-    sc=spillAlg->queryInterface( IID_IProperty, (void**)&spillProp );
-    if( !sc.isSuccess() ) {
-      warning()<<" error in query interface "<<endmsg;
-    }
+    SmartIF<IProperty> spillProp( spillAlg );
     StringArrayProperty evtPaths;
     sc=evtPaths.assign( spillProp->getProperty("PathList") );
     if( !sc.isSuccess() ) {
-      warning()<<" problem in spliiover "<<endmsg;
+      warning()<<" problem in spillover "<<endmsg;
     }
     m_numberOfSpilloverEvents = evtPaths.value().size();
     // Release the interfaces no longer needed
