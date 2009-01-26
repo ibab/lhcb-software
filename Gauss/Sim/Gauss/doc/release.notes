@@ -4,6 +4,13 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-01-26 - Chris Jones
+ - Changes to RICH extended information
+  + Activate by default.
+  + Run two additional algorithms, previously run in Boole, to create linker
+    information between the RICH extended information and the main MC data 
+    objects.
+
 !======================== Gauss v36r1 2009-01-14 =============================
 ! 2009-01-14 - Gloria CORTI
  - Take latest tag in DDDB (head-20090112) and SIMCOND (sim-20090112) where

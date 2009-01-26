@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.94 2009-01-08 17:53:30 gcorti Exp $ 
+// $Id: Simulation.opts,v 1.95 2009-01-26 12:00:27 jonrob Exp $ 
 
 /** @file 
  * 
@@ -57,7 +57,8 @@ DetectorsHits.Members += { "GetCaloHitsAlg/GetSpdHits" };       // Calo - SPD
 DetectorsHits.Members += { "GetCaloHitsAlg/GetPrsHits" };       // Calo - Prs
 DetectorsHits.Members += { "GetCaloHitsAlg/GetEcalHits" };      // Calo - ECAL
 DetectorsHits.Members += { "GetCaloHitsAlg/GetHcalHits" };      // Calo - HCAL
-DetectorsHits.Members += { "GetMCRichHitsAlg" };                // RICHes
+DetectorsHits.Members += { "GaudiSequencer/RichHits" };         // RICHes
+RichHits.Members      += { "GetMCRichHitsAlg/GetRichHits" }; 
 #include "$GAUSSTRACKERROOT/options/TrackersHits.opts" 
 DetectorsHits.MeasureTime = true;
 
@@ -149,9 +150,8 @@ GiGa.GiGaMgr.GiGaSetSimAttributes.OutputLevel = 4;
 //#include "$GAUSSOPTS/MuonLowEnergy.opts"
 
 // uncomment the following to simulate and write RICH extended information
-//#include "$GAUSSOPTS/RichExtendedInfo.opts"
+#include "$GAUSSOPTS/RichExtendedInfo.opts"
 
 // uncomment the following to produce and write VeLo, TT, IT and OT  extended
 // hit information
 //#include "$GAUSSTRACKERROOT/options/TrackersExtendedInfo.opts"
-

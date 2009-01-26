@@ -1,4 +1,4 @@
-// $Id: RichExtendedInfo.opts,v 1.1 2006-04-07 09:36:02 gcorti Exp $
+// $Id: RichExtendedInfo.opts,v 1.2 2009-01-26 12:00:27 jonrob Exp $
  
 /** @file
  *
@@ -9,8 +9,16 @@
  *  @date 2006-04-06
  */
  
-DetectorsHits.Members += { "GetMCRichOpticalPhotonsAlg",
-                        "GetMCRichSegmentsAlg",
-                        "GetMCRichTracksAlg" };
-
+// Create the additional extended info
+RichHits.Members += { "GetMCRichOpticalPhotonsAlg/GetRichPhotons",
+                      "GetMCRichSegmentsAlg/GetRichSegments",
+                      "GetMCRichTracksAlg/GetRichTracks" };
 #include "$GAUSSRICHROOT/options/RichExtendedInfo.opts"
+
+// Create the relation linker tables
+RichHits.Members += { "Rich::MC::MCPartToMCRichTrackAlg/MCPartToMCRichTrack",
+                      "Rich::MC::MCRichHitToMCRichOpPhotAlg/MCRichHitToMCRichOpPhot" };
+GaussTape.OptItemList += {
+  "/Event/Link/MC/Particles2MCRichTracks#1"
+, "/Event/Link/MC/Rich/Hits2MCRichOpticalPhotons#1"
+};

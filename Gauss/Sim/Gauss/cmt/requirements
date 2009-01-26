@@ -34,7 +34,6 @@ use Python             v*     LCG_Interfaces -no_auto_imports
 use HepMC              v*     LCG_Interfaces -no_auto_imports
  
 # From GAUDI project
-
 use GaudiSvc           v*                    -no_auto_imports
 use GaudiAud           v*                    -no_auto_imports
 use GaudiPoolDb        v*                    -no_auto_imports
@@ -72,14 +71,15 @@ use ${LbPythia8_use}
 
 
 #-- Simulation
-use GiGaCnv              v*    Sim  -no_auto_imports
-use GaussTools           v*    Sim  -no_auto_imports
-use GaussAlgs		 v*    Sim  -no_auto_imports
-use GaussKine            v*    Sim  -no_auto_imports
-use GaussPhysics         v*    Sim  -no_auto_imports
-use GaussTracker         v*    Sim  -no_auto_imports
-use GaussRICH            v*    Sim  -no_auto_imports
-use GaussCalo            v*    Sim  -no_auto_imports
+use GiGaCnv              v*    Sim   -no_auto_imports
+use GaussTools           v*    Sim   -no_auto_imports
+use GaussAlgs		 v*    Sim   -no_auto_imports
+use GaussKine            v*    Sim   -no_auto_imports
+use GaussPhysics         v*    Sim   -no_auto_imports
+use GaussTracker         v*    Sim   -no_auto_imports
+use GaussRICH            v*    Sim   -no_auto_imports
+use RichMCAssociators    v*    Rich  -no_auto_imports
+use GaussCalo            v*    Sim   -no_auto_imports
 
 #-- Monitoring
 use GaussMonitor         v*    Sim   -no_auto_imports
