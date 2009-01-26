@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.300 2009-01-23 11:17:50 jpalac Exp $
+! $Id: release.notes,v 1.301 2009-01-26 11:04:12 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,12 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+!========================== DaVinci v22r0p2 2000-01-26 ===================
+
+! 2009-01-26 - Juan PALACIOS
+ - python/DaVinci/Configuration.py
+  . Add DstConf to __used__configurables__
 
 ! 2009-01-23 - Juan PALACIOS
  - cmt/requirements
