@@ -4,6 +4,12 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
 
+! 2009-01-26 - Chris Jones
+ - Import two algorithms from Boole to create linkers for extended information.
+   This is a temporary solution. Ideally they would be in a package in the 
+   Lbcom project, which might become possible with a future Gauss 
+   reorganisation.
+
 !========================= GaussRICH v9r2 2008-12-08 =========================
 ! 2008-10-24 - Sajan Easo
    In RichSensDet fixed a bug related to storing mctracks corresponding to

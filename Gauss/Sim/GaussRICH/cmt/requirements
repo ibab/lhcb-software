@@ -18,15 +18,19 @@ use MCEvent       v*   Event
 use RichKernel    v*   Rich
 use RichDet       v*   Det
 
+# CRJ : Needed for Linker algs. To be removed when they are.
+use  LinkerEvent  v*   Event
+
 # Component library building rule
 #============================================================================
-library          GaussRICH    *.cpp             \
-                              SensDet/*.cpp     \ 
-                              PhysProcess/*.cpp \
-                              srcG4/*.cc       \
-                              RichAction/*.cpp \
-                              RichAnalysis/*.cpp \
-                              Misc/*.cpp   
+library          GaussRICH    ../src/*.cpp             \
+                              ../src/SensDet/*.cpp     \ 
+                              ../src/PhysProcess/*.cpp \
+                              ../src/srcG4/*.cc       \
+                              ../src/RichAction/*.cpp \
+                              ../src/RichAnalysis/*.cpp \
+                              ../src/Misc/*.cpp \
+                              ../src/Assoc/*.cpp
 
 # Includes used internally
 #============================================================================
