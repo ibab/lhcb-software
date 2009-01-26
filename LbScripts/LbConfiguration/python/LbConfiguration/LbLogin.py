@@ -40,10 +40,10 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.6 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.7 $")
 
 
-def getLoginCacheName(cmtconfig, shell="csh", location=None):
+def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
     name = ".LbLoginCache"
     if cmtconfig :
         name += "-" + cmtconfig
@@ -285,14 +285,18 @@ class LbLoginScript(Script):
 #-----------------------------------------------------------------------------------
 # Core CMT business
 
-    def setCMTBin(self):
-        ev = self._env
+    def getNativeBin(self):
         if sys.platform != "win32" :
             m1 = os.popen("uname").read()[:-1]
             m2 = os.popen("uname -m").read()[:-1].strip()
-            ev["CMTBIN"] = "%s-%s" % (m1, m2)
+            natbin = "%s-%s" % (m1, m2)
         else : 
-            ev["CMTBIN"] = "VisualC"
+            natbin = "VisualC"        
+        return natbin
+
+    def setCMTBin(self):
+        ev = self._env
+        ev["CMTBIN"] = self.getNativeBin()
 
     def setCMTSystem(self):
         ev = self._env
@@ -641,7 +645,7 @@ class LbLoginScript(Script):
         for var in self._env.keys() :
             os.environ[var] = self._env[var]
         
-        cachefile = getLoginCacheName(os.environ["CMTCONFIG"], opts.targetshell, _scripts_dir)
+        cachefile = getLoginCacheName(shell=opts.targetshell, location=_scripts_dir)
         if opts.use_cache and os.path.exists(cachefile):
             if self.output_name :
                 outf = open(self.output_name, "a")
@@ -662,6 +666,7 @@ class LbLoginScript(Script):
             if opts.loglevel=="CRITICAL" :
                 setupprojargs.append("--silent")
             setupprojargs.append("--no-user-area")
+            setupprojargs.append("--disable-CASTOR")
             if self.output_name :
                 setupprojargs.append("--append=%s" % self.output_name)
             setupprojargs.append("--shell=%s" % opts.targetshell)
@@ -717,31 +722,6 @@ class LbLoginScript(Script):
                 self._add_echo( " --- CMTPROJECTPATH is set to $User_release_area:$LHCb_release_area:$Gaudi_release_area:$LCG_release_area")
                 self._add_echo( " --- projects will be searched in $CMTPROJECTPATH ")
             self._add_echo( "-" * 80)
-            
-    def convertNative(self):
-        """ last pass to convert native item like i686<->x86_64 in the CMTBIN for example"""
-        ev = self._env
-        if ev["CMTBIN"] == "Linux-i686" :
-            if ev["CMTCONFIG"].find("ia32") != -1 and ev["CMTCONFIG"].find("i686") != -1 :
-                return
-        elif ev["CMTBIN"] == "Linux-x86_64" :
-            if ev["CMTCONFIG"].find("amd64") != -1 and ev["CMTCONFIG"].find("x86_64") != -1 :
-                return
-        if ev["CMTCONFIG"].startswith("win") :
-            return
-        if self.output_name : 
-            outlines = []
-            inputf = open(self.output_name, "r")
-            for l in inputf :
-                if ev["CMTBIN"] == "Linux-i686" :
-                    outlines.append(l.replace("i686", "x86_64"))
-                elif ev["CMTBIN"] == "Linux-x86_64" :
-                    outlines.append(l.replace("x86_64", "i686"))
-            inputf.close()
-            outputf = open(self.output_name, "w")
-            for l in outlines :
-                outputf.write(l)
-            outputf.close()
 
 
 
@@ -760,7 +740,6 @@ class LbLoginScript(Script):
 
 
         self.setupLbScripts()
-        self.convertNative()
                     
         return 0
 

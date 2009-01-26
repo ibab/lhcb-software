@@ -1,9 +1,13 @@
 2009-01-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: quoted in version in case of "v*"
+	* python/LbConfiguration/Project.py: added functions to manipulate the binary list
 	* python/LbConfiguration/LbLogin.py: use current CMTROOT if the one calculated 
 	doesn't exist
 	* scripts/generateLogin: removed the setup of the version of LbScripts if 
-	it is "v*". 
+	it is "v*". Post process the cache and the LbLogin wrapper to "rereference" CMTCONFIG, 
+	CMTBIN, VO_LHCB_SW_DIR
+	
 
 2009-01-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 

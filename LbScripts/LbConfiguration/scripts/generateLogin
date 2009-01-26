@@ -18,53 +18,67 @@ if os.path.isdir(_py_dir) :
 
 from LbConfiguration.LbLogin import getLoginCacheName, LbLoginScript
 from LbConfiguration.SetupProject import SetupProject
-from LbConfiguration.Project import binary_opt_list
+from LbConfiguration.Project import binary_list, binary_opt_list, getBinaryOpt
 from optparse import OptionParser
+
+def fixNative(filename):
+    tobereplaced = {}
+    if os.environ.has_key("VO_LHCB_SW_DIR") :
+        tobereplaced["VO_LHCB_SW_DIR"] = os.environ["VO_LHCB_SW_DIR"]
+    if os.environ.has_key("CMTBIN") :
+        tobereplaced["CMTBIN"] = os.environ["CMTBIN"]
+    if os.environ.has_key("CMTCONFIG") :
+        cmtconf =  os.environ["CMTCONFIG"]
+        if cmtconf in binary_list :
+            tobereplaced["CMTOPT"] = getBinaryOpt(cmtconf)
+        else :
+            tobereplaced["CMTOPT"] = cmtconf + "-opt"
+    inf = open(filename, "r")
+    data = inf.read()
+    inf.close()
+    out = open(filename, "w")
+    for k in tobereplaced.keys() :
+        data = data.replace(tobereplaced[k], "${"+k+"}")
+    out.write(data)
+    out.close()    
+    
 
 def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None):
     location = None
     if targetlocation :
         location = os.path.join(targetlocation, "scripts")
-    for b in binary_opt_list :
-        os.environ["CMTCONFIG"] = b
-        if sys.platform == "win32" and not b.startswith("win") :
-            continue
-        elif sys.platform != "win32" and b.startswith("win") :
-            continue
-        if b.startswith("win") and shell != "bat" :
-            continue
-        elif not b.startswith("win") and shell == "bat" :
-            continue
-        cachefilename = getLoginCacheName(b, shell, location)
-        lls = LbLoginScript()
-        lls.defineOpts()
-        llsargs = []
-        llsargs.append("--silent")
-        llsargs.append("--shell=%s" % shell)
-        if mysiteroot :
-            llsargs.append("--mysiteroot=%s" % mysiteroot)
-        if version :
-            llsargs.append("--scripts-version=%s" % version)
-        lls.parseOpts(llsargs)
-        env = lls.setEnv()[0]
-        for var in env.keys() :
-            os.environ[var] = env[var]
-        os.environ["CMTCONFIG"] = b
-        setupprojargs = []
-        setupprojargs.append("--silent")
-        setupprojargs.append("--no-user-area")
-        setupprojargs.append("--output=%s" % cachefilename)
-        setupprojargs.append("--shell=%s" % shell)
-        setupprojargs.append("LbScripts")
-        if version and version != "v*" :
-            setupprojargs.append(version)
-        setupprojargs.append("--runtime-project")            
-        setupprojargs.append("LCGCMT")
-        setupprojargs.append("Python")
-        if lls.options.pythonvers :
-            setupprojargs.append("-v")
-            setupprojargs.append(lls.options.pythonvers)
-        SetupProject().main(setupprojargs)
+    cachefilename = getLoginCacheName(shell=shell, location=location)
+    lls = LbLoginScript()
+    lls.defineOpts()
+    llsargs = []
+    llsargs.append("--silent")
+    llsargs.append("--shell=%s" % shell)
+    if mysiteroot :
+        llsargs.append("--mysiteroot=%s" % mysiteroot)
+    if version :
+        llsargs.append("--scripts-version=%s" % version)
+    lls.parseOpts(llsargs)
+    env = lls.setEnv()[0]
+    for var in env.keys() :
+        os.environ[var] = env[var]
+    os.environ["CMTCONFIG"] = "slc4_ia32_gcc34"
+    setupprojargs = []
+    setupprojargs.append("--silent")
+    setupprojargs.append("--no-user-area")
+    setupprojargs.append("--disable-CASTOR")
+    setupprojargs.append("--output=%s" % cachefilename)
+    setupprojargs.append("--shell=%s" % shell)
+    setupprojargs.append("LbScripts")
+    if version and version != "v*" :
+        setupprojargs.append(version)
+    setupprojargs.append("--runtime-project")            
+    setupprojargs.append("LCGCMT")
+    setupprojargs.append("Python")
+    if lls.options.pythonvers :
+        setupprojargs.append("-v")
+        setupprojargs.append(lls.options.pythonvers)
+    SetupProject().main(setupprojargs)
+    fixNative(cachefilename)
         
 def generateLogin(targetlocation, script, version="", mysiteroot=None):
     knownshells = ["sh", "csh", "tcsh", "zsh", "bat"]
@@ -74,10 +88,10 @@ def generateLogin(targetlocation, script, version="", mysiteroot=None):
     f = open(script, "w")
     if shell == "sh" or shell == "zsh" :
         if mysiteroot :
-            content = """LbLogin_tmpfile=`%s/python/LbConfiguration/LbLogin.py --shell=sh --mktemp --mysiteroot=%s --scripts-version=%s "$@"`
+            content = """LbLogin_tmpfile=`%s/python/LbConfiguration/LbLogin.py --shell=sh --mktemp --mysiteroot=%s --scripts-version="%s" "$@"`
 """ % (targetlocation, mysiteroot, version)
         else :
-            content = """LbLogin_tmpfile=`%s/python/LbConfiguration/LbLogin.py --shell=sh --mktemp --scripts-version=%s "$@"`
+            content = """LbLogin_tmpfile=`%s/python/LbConfiguration/LbLogin.py --shell=sh --mktemp --scripts-version="%s" "$@"`
 """ % (targetlocation, version)
         content += """LbLoginStatus="$?"
 if [ "$LbLoginStatus" = 0 ]; then
@@ -89,10 +103,10 @@ unset LbLogin_tmpfile
 """
     elif shell == "csh" or shell == "tcsh" :
         if mysiteroot :
-            content = """set LbLogin_tmpfile = `%s/python/LbConfiguration/LbLogin.py --shell=csh --mktemp --mysiteroot=%s --scripts-version=%s ${*:q}`
+            content = """set LbLogin_tmpfile = `%s/python/LbConfiguration/LbLogin.py --shell=csh --mktemp --mysiteroot=%s --scripts-version="%s" ${*:q}`
 """ % (targetlocation, mysiteroot, version)
         else :
-            content = """set LbLogin_tmpfile = `%s/python/LbConfiguration/LbLogin.py --shell=csh --mktemp --scripts-version=%s ${*:q}`
+            content = """set LbLogin_tmpfile = `%s/python/LbConfiguration/LbLogin.py --shell=csh --mktemp --scripts-version="%s" ${*:q}`
 """ % (targetlocation, version)
         content += """set LbLoginStatus = $?
 if ( ! $LbLoginStatus ) then
@@ -117,14 +131,14 @@ unset LbLogin_tmpfile
         
 set LbLogin_tmpfile="%%TEMP%%\LbLogin_tmpsetup.bat"
 
-python %s\python\LbConfiguration\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% --mysiteroot=%s --scripts-version=%s %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9
+python %s\python\LbConfiguration\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% --mysiteroot=%s --scripts-version="%s" %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9
 """ % (wintargetlocation, winmysiteroot, version)
         else :
             content = """@echo off
         
 set LbLogin_tmpfile="%%TEMP%%\LbLogin_tmpsetup.bat"
 
-python %s\python\LbConfiguration\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% --scripts-version=%s %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9
+python %s\python\LbConfiguration\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% --scripts-version="%s" %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9
 """ % (wintargetlocation, version)
         content += """set LbLoginStatus=%%ERRORLEVEL%%
 
@@ -139,6 +153,8 @@ set LbLogin_tmpfile=
     
     f.write(content)
     f.close()
+
+    fixNative(script)
 
     generateLoginCache(mysiteroot, shell, version, targetlocation)
 
