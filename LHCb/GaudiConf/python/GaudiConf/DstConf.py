@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: DstConf.py,v 1.5 2009-01-26 09:49:07 ocallot Exp $"
+__version__ = "$Id: DstConf.py,v 1.6 2009-01-26 12:23:16 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -104,10 +104,6 @@ class DstConf(ConfigurableUser):
                 writer.OptItemList += [ "/Event/Prev/MC/Header#1"
                                       , "/Event/PrevPrev/MC/Header#1"
                                       , "/Event/Next/MC/Header#1"
-
-                    # Links for extended Rich info if linked objects exist on input file
-                                      , "/Event/Link/MC/Particles2MCRichTracks#1"
-                                      , "/Event/Link/MC/Rich/Hits2MCRichOpticalPhotons#1"
 
                     # Objects propagated from Boole, not always available
                                       , "/Event/Link/Raw/Hcal/Digits#1" # From Boole v14r9
