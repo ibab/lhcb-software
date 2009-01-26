@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.42 2009-01-26 12:45:44 cattanem Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.43 2009-01-26 12:58:07 cattanem Exp $
 
 // Include files
 #include "GaudiKernel/SvcFactory.h"
@@ -273,11 +273,11 @@ StatusCode MagneticFieldSvc::initializeWithoutCondDB()
 StatusCode MagneticFieldSvc::queryInterface( const InterfaceID& riid, 
                                              void** ppvInterface      ) 
 {
-  if ( riid == IMagneticFieldSvc::interfaceID() ) {
+  if ( IMagneticFieldSvc::interfaceID().versionMatch(riid) ) {
     *ppvInterface = (IMagneticFieldSvc*)this;
     addRef();
     return StatusCode::SUCCESS;
-  } else if ( riid == ILHCbMagnetSvc::interfaceID() ) {
+  } else if ( ILHCbMagnetSvc::interfaceID().versionMatch(riid) ) {
     *ppvInterface = (ILHCbMagnetSvc*)this;
     addRef();
     return StatusCode::SUCCESS;
