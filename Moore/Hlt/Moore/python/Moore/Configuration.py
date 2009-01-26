@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.46 2009-01-18 14:31:37 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.47 2009-01-26 10:15:47 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -53,8 +53,8 @@ class Moore(LHCbConfigurableUser):
         , "TCKData" :          '$TCKDATAROOT' # where do we read TCK data from?
         , "TCKpersistency" :   'file' # which method to use for TCK data? valid is 'file' and 'sqlite'
         , "enableAuditor" :    [ ]  # put here eg . [ NameAuditor(), ChronoAuditor(), MemoryAuditor() ]
-        , "userAlgorithms":    [ ]  # put here user algorithms to add
-        , "verbose" :          True # whether or not to print Hlt sequence
+        , "UserAlgorithms":    [ ]  # put here user algorithms to add
+        , "Verbose" :          True # whether or not to print Hlt sequence
         }   
                 
 
@@ -137,7 +137,7 @@ class Moore(LHCbConfigurableUser):
                               , ConfigAccessSvc = self.getConfigAccessSvc().getFullName() ) 
             ApplicationMgr().ExtSvc.append(cfg.getFullName())
         else:
-            for i in [ 'hltType','userAlgorithms','verbose' ] : self.setOtherProp( HltConf(), i )
+            for i in [ 'hltType','Verbose' ] : self.setOtherProp( HltConf(), i )
             log.info( HltConf() )
             
         if self.getProp("generateConfig") :
@@ -156,5 +156,6 @@ class Moore(LHCbConfigurableUser):
                               , label = self.getProp('configLabel'))
             # make sure gen is the very first Top algorithm...
             ApplicationMgr().TopAlg = [ gen.getFullName() ] + ApplicationMgr().TopAlg
+        for alg in self.getProp('UserAlgorithms') : ApplicationMgr().TopAlg += [ alg ] 
         self.configureInput()
         self.configureOutput()
