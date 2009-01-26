@@ -16,6 +16,7 @@ createITLiteClusters.DetType = "IT";
 createVeloClusters.DecodeToVeloClusters = true;
 createVeloClusters.DecodeToVeloLiteClusters = false;
 
+RichRawEventToDigits.DecodeBufferOnly = false;
 
 #include "$CALODAQROOT/options/CaloDigitsOnDemand.opts"
 #include "$L0DUOPTS/L0OnDemand.opts"
