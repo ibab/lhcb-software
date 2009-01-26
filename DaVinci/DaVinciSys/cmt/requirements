@@ -13,7 +13,7 @@ use TisTosTobbing  v3r2    Phys
 use EventPacker    v1r2    Event
 use DecayTreeTuple v1r10p1 Phys
 use GlobalReco     v6r19   Rec
-
+use B2Dilepton     v1r8p2  PhysSel
 alias DaVinciTests "cmt qmtest_run"
 
 # Allow the generation of the SAM QMTest
