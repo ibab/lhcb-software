@@ -56,7 +56,7 @@ def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None)
         setupprojargs.append("--output=%s" % cachefilename)
         setupprojargs.append("--shell=%s" % shell)
         setupprojargs.append("LbScripts")
-        if version :
+        if version and version != "v*" :
             setupprojargs.append(version)
         setupprojargs.append("--runtime-project")            
         setupprojargs.append("LCGCMT")

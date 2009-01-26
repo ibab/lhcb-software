@@ -1,3 +1,10 @@
+2009-01-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/LbLogin.py: use current CMTROOT if the one calculated 
+	doesn't exist
+	* scripts/generateLogin: removed the setup of the version of LbScripts if 
+	it is "v*". 
+
 2009-01-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/generateLogin.py: Removed.

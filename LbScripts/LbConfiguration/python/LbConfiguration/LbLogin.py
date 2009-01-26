@@ -40,7 +40,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.5 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.6 $")
 
 
 def getLoginCacheName(cmtconfig, shell="csh", location=None):
@@ -109,6 +109,7 @@ class LbLoginScript(Script):
         self.compdef  = ""
         self.output_file = None
         self.output_name = None
+        self._currentcmtroot = os.environ.get("CMTROOT", None)
     def _write_script(self, env):
         """ select the ouput stream according to the cmd line options """
         close_output = False
@@ -378,6 +379,8 @@ class LbLoginScript(Script):
             
         ev["CMT_DIR"] = ev["CONTRIBDIR"]
         ev["CMTROOT"] = _multiPathGet(ev["CMT_DIR"], os.path.join("CMT", opts.cmtvers))
+        if not os.path.isdir(ev["CMTROOT"]) :
+            ev["CMTROOT"] = self._currentcmtroot
         
         self.setCMTInternals()
 #-----------------------------------------------------------------------------------
