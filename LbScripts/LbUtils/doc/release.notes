@@ -1,3 +1,7 @@
+2009-01-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v1r10
+
 2009-01-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/cu.py: Removed.

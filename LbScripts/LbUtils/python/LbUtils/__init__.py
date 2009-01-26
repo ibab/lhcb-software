@@ -20,4 +20,5 @@ import afs, castor
 import Storage
 import Script
 import SelfExtract
+import Temporary
 import Tar
