@@ -1,9 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.111 2009-01-08 20:27:03 cattanem Exp $
+! $Id: release.notes,v 1.112 2009-01-26 12:31:52 cattanem Exp $
 ! =============================================================================
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+! 2009-01-26 - Marco Cattaneo
+ - Backward compatible fix for Gaudi v21
 
 !============ Ex/DetCondExample v11r6 2009-01-08 ==============================
 ! 2008-12-16 - Marco Clemencic

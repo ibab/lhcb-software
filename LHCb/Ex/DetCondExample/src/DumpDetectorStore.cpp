@@ -1,4 +1,4 @@
-//$Id: DumpDetectorStore.cpp,v 1.5 2006-08-31 13:53:44 marcocle Exp $
+//$Id: DumpDetectorStore.cpp,v 1.6 2009-01-26 12:31:52 cattanem Exp $
 #include <stdio.h>
 
 #include "DumpDetectorStore.h"
@@ -6,10 +6,9 @@
 
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataManagerSvc.h"
-#include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/SmartIF.h"
 
 /// Instantiation of a static factory to create instances of this algorithm
 DECLARE_ALGORITHM_FACTORY( DumpDetectorStore );
@@ -35,9 +34,8 @@ StatusCode DumpDetectorStore::finalize( ) {
   info() << "Finalize()" << endmsg;
   
   // Locate the IDataManagerSvc interface of the Detector Data Service
-  IDataManagerSvc* detDataMgr;
-  sc = detSvc()->queryInterface ( IID_IDataManagerSvc, (void **)&detDataMgr);
-  if( sc.isFailure() ) {
+  SmartIF<IDataManagerSvc> detDataMgr( detSvc() );
+  if( !detDataMgr ) {
     error() << "Can't query IDataManagerSvc interface" << endmsg;
     return sc;
   }
