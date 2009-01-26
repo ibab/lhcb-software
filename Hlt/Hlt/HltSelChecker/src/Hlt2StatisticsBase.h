@@ -1,4 +1,4 @@
-// $Id: Hlt2StatisticsBase.h,v 1.2 2008-06-25 15:03:38 pkoppenb Exp $
+// $Id: Hlt2StatisticsBase.h,v 1.3 2009-01-26 17:30:02 pkoppenb Exp $
 #ifndef HLT2STATISTICSBASE_H 
 #define HLT2STATISTICSBASE_H 1
 
@@ -27,7 +27,6 @@ public:
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
-  IHltSummaryTool* m_summaryTool ; ///< HLT summary tool
   IAlgorithmCorrelations* m_algoCorr ;  ///< Correlation tool
 
   strings getSelections() const ;

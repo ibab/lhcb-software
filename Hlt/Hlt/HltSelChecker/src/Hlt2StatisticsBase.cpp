@@ -1,4 +1,4 @@
-// $Id: Hlt2StatisticsBase.cpp,v 1.2 2008-06-25 15:03:38 pkoppenb Exp $
+// $Id: Hlt2StatisticsBase.cpp,v 1.3 2009-01-26 17:30:02 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -25,7 +25,6 @@ DECLARE_ALGORITHM_FACTORY( Hlt2StatisticsBase );
 Hlt2StatisticsBase::Hlt2StatisticsBase( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
-  ,   m_summaryTool()
   ,   m_algoCorr()
 {
   declareProperty( "Hlt2SelectionID", m_hlt2SelectionID = "Hlt2SelectionID");
@@ -43,7 +42,6 @@ StatusCode Hlt2StatisticsBase::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "Hlt2StatisticsBase ==> Initialize" << endmsg;
-  m_summaryTool = tool<IHltSummaryTool>("HltSummaryTool",this);
   m_algoCorr    = tool<IAlgorithmCorrelations>("AlgorithmCorrelations",this);
   return StatusCode::SUCCESS;
 }

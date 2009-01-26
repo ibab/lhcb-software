@@ -1,4 +1,4 @@
-// $Id: Hlt2Statistics.cpp,v 1.3 2008-08-06 19:17:50 pkoppenb Exp $
+// $Id: Hlt2Statistics.cpp,v 1.4 2009-01-26 17:30:02 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -7,6 +7,9 @@
 #include "Event/GenHeader.h" 
 #include "Event/HltSummary.h"
 #include "Kernel/ParticleID.h" 
+#include "Event/HltDecReports.h"
+#include "Event/HltSelReports.h"
+#include "Kernel/IANNSvc.h"
 // local
 #include "Hlt2Statistics.h"
 
@@ -46,6 +49,8 @@ StatusCode Hlt2Statistics::initialize() {
   m_cats.push_back("t");
   m_cats.push_back("b");
   m_cats.push_back("c");
+  m_cats.push_back("s");
+  m_cats.push_back("ud");
   m_cats.push_back("1pp");
   m_cats.push_back("2pp");
   m_cats.push_back("3pp");
@@ -67,9 +72,51 @@ StatusCode Hlt2Statistics::initialize() {
 //=============================================================================
 StatusCode Hlt2Statistics::execute() {
  
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg; 
+  if (!fillQuarks()) return StatusCode::FAILURE;
+  if (!fillHlt()) return StatusCode::FAILURE;  
+  if ( msgLevel(MSG::VERBOSE) ) verbose() << "End of event" << endmsg;
+  return m_algoCorr->endEvent();
 
-  // number of pp collisions
+}
+
+//=========================================================================
+//  fill Hlt
+//=========================================================================
+StatusCode Hlt2Statistics::fillHlt ( std::string level) {
+  if( exist<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default ) ){ 
+    const LHCb::HltDecReports* decReports = 
+      get<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default );
+    if( !m_algoCorr->fillResult( level+"Global", (decReports->decReport(level+"Global"))? 
+                        (decReports->decReport(level+"Global")->decision()):0 )) return StatusCode::FAILURE;
+    unsigned int nsel = 0 ;
+    std::vector<std::string> names = svc<IANNSvc>("HltANNSvc")->keys(level+"SelectionID");
+    for ( std::vector<std::string>::const_iterator n = names.begin() ; n!= names.end() ; ++n){
+      bool found = false ;
+      // individual Hlt trigger lines
+      for(LHCb::HltDecReports::Container::const_iterator it=decReports->begin();
+          it!=decReports->end();++it){
+        if ( ( it->first == *n ) ){
+          if (msgLevel(MSG::DEBUG))  debug() << " Hlt trigger name= " << it->first  
+                                             << " decision= " << it->second.decision() << endmsg;
+          found = it->second.decision() ;
+        }
+      }
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Added " << *n << " " << found 
+                                            << " to " << nsel << endmsg ;
+      bool isDecision = ( n->find("Decision") == n->length()-8  ) ; // 8 is length of Decision
+      if (isDecision && found) nsel++ ;
+      if (!m_algoCorr->fillResult(*n, found )) return StatusCode::FAILURE;
+    }
+  } else Warning("No HltDecReports at "+LHCb::HltDecReportsLocation::Default,StatusCode::FAILURE,1);
+  if (msgLevel(MSG::DEBUG)) debug() << "Done " << level << endmsg ;
+  return StatusCode::SUCCESS ;
+}
+//=========================================================================
+//  Fill Quarks
+//=========================================================================
+StatusCode Hlt2Statistics::fillQuarks( ) {
+ // number of pp collisions
   const LHCb::GenHeader* mch = get<LHCb::GenHeader>(LHCb::GenHeaderLocation::Default);
   std::string npp ;
   switch ( mch->collisions().size() ){
@@ -83,7 +130,6 @@ StatusCode Hlt2Statistics::execute() {
   if (msgLevel(MSG::VERBOSE)) verbose() << mch->collisions().size() << " gets " << npp << endmsg ;
 
   if (!m_algoCorr->fillResult(npp, true )) return StatusCode::FAILURE;
-
   // quarks
   for ( SmartRefVector< LHCb::GenCollision >::const_iterator ic = mch->collisions().begin() ;
         ic != mch->collisions().end() ; ++ic){
@@ -94,8 +140,8 @@ StatusCode Hlt2Statistics::execute() {
           p != gene->pGenEvt()->particles_end();   ++p ) {
       LHCb::ParticleID pid( (*p)->pdg_id()) ;     
       if (msgLevel(MSG::VERBOSE)) verbose() << "Gen particle " << (*p)->pdg_id() << " "
-                                            << pid.hasQuark(LHCb::ParticleID::bottom)
-                                            << " " << pid.hasQuark(LHCb::ParticleID::charm) << endmsg ;      
+                                            << pid.hasQuark(LHCb::ParticleID::bottom)<< " " 
+                                            << pid.hasQuark(LHCb::ParticleID::charm) << endmsg ;
       if (pid.hasQuark(LHCb::ParticleID::top)) {
         if (!m_algoCorr->fillResult("t", true ) ) return StatusCode::FAILURE;
         break ;
@@ -105,26 +151,12 @@ StatusCode Hlt2Statistics::execute() {
         if (!m_algoCorr->fillResult("c", true )) return StatusCode::FAILURE;
       } else if (pid.hasQuark(LHCb::ParticleID::strange)){
         if (!m_algoCorr->fillResult("s", true )) return StatusCode::FAILURE;
-      }
+      } else if (!m_algoCorr->fillResult("ud", true )) return StatusCode::FAILURE;
     }
     if (msgLevel(MSG::VERBOSE)) verbose() << "Process type is " << (*ic)->processType() << endmsg ;
   }
-
-  // fill result for HLT
-  if ( exist<LHCb::HltSummary>(LHCb::HltSummaryLocation::Default)){  
-    if ( m_summaryTool->decision() ) if (!m_algoCorr->fillResult("Hlt2", true )) return StatusCode::FAILURE;
-    strings sels = m_summaryTool->selections() ;
-    for (strings::const_iterator i = sels.begin() ; i!= sels.end() ; ++i){
-      if ( msgLevel(MSG::VERBOSE) ) verbose() << "Filling " << *i << endmsg;
-      if (!m_algoCorr->fillResult(*i, true )) return StatusCode::FAILURE;
-    }
-  }
-  
-  if ( msgLevel(MSG::VERBOSE) ) verbose() << "End of event" << endmsg;
-  return m_algoCorr->endEvent();
-
+  return StatusCode::SUCCESS ;
 }
-
 //=============================================================================
 //  Finalize
 //=============================================================================

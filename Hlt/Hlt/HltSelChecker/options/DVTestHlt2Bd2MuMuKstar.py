@@ -14,10 +14,9 @@ signal = "Bd2MuMukstar"
 # Preselection
 #
 importOptions( "$DAVINCIROOT/options/PreloadUnits.opts")
-importOptions( "$B2DILEPTONROOT/options/PreselBd2KstarMuMu.opts")
-from Configurables import MakeResonances
-presel = GaudiSequencer("SeqPreselBd2KstarMuMu")
-presel.Members += [ MakeResonances("PreselBd2KstarMuMu") ]
+importOptions( "$B2DILEPTONROOT/options/DoDC06SelBd2KstarMuMu.opts")
+dc06sel = GaudiSequencer("SeqDC06SelBd2KstarMuMu")
+# DimuonForDC06SelBd2KstarMuMu.OutputLevel = 3
 #
 # True filter criterion - will only run HLT on TRUE signal
 #
@@ -69,7 +68,7 @@ DaVinci().DataType = "DC06"
 DaVinci().Simulation = True 
 DaVinci().TupleFile =  "HLT-"+signal+".root"
 DaVinci().HistogramFile = "DVHlt2-"+signal+".root"
-DaVinci().UserAlgorithms = [ presel ] 
+DaVinci().UserAlgorithms = [ dc06sel ] 
 DaVinci().MoniSequence += [ moni, DecayTreeTuple("Hlt2DecayTreeTuple") ]
 DaVinci().Input = [
   "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol3/dijkstra/Selections/Bd2MuMuKst-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]

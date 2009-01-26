@@ -1,4 +1,4 @@
-// $Id: HltBackgroundCategory.cpp,v 1.19 2009-01-21 15:12:24 pkoppenb Exp $
+// $Id: HltBackgroundCategory.cpp,v 1.20 2009-01-26 17:30:02 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -11,6 +11,8 @@
 #include "MCInterfaces/IPrintMCDecayTreeTool.h"            // Interface
 #include "Kernel/IANNSvc.h"
 #include "Kernel/IDaVinciAssociatorsWrapper.h"
+#include "Event/HltDecReports.h"
+#include "Event/HltSelReports.h"
 
 // local
 #include "HltBackgroundCategory.h"
@@ -83,38 +85,43 @@ StatusCode HltBackgroundCategory::execute() {
 
   if (msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
 
-  if (!exist<LHCb::HltSummary>(LHCb::HltSummaryLocation::Default)) return StatusCode::SUCCESS ;
-  if ( !(m_summaryTool->decision())) return StatusCode::SUCCESS ;
+  if( !exist<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default ) ){
+    return Warning("No Hlt decision",StatusCode::SUCCESS,1);
+  }
+  const LHCb::HltDecReports* decReports = get<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default);
+  if (!(decReports->decReport("Hlt2Global"))) return StatusCode::SUCCESS ;
+  const LHCb::HltSelReports* selReports = get<LHCb::HltSelReports>( LHCb::HltSelReportsLocation::Default );
 
   Particle2MCLinker* linker = 0;
-
-  strings sels =  m_summaryTool->selections() ;
   if (m_printTree) linker = m_linker->linker( Particle2MCMethod::Links );
-  
-  for ( strings::const_iterator is = sels.begin() ; 
-        is!=sels.end() ; ++is){
 
-    if (msgLevel(MSG::VERBOSE)) verbose() << *is <<  " " 
-                                          << svc<IANNSvc>("HltANNSvc")->value("Hlt2SelectionID",*is)->first  
-                                          <<  " says " << m_summaryTool->decision() 
-                                          << " has selection : " 
-                                          << m_summaryTool->hasSelection(*is) 
-                                          << " summary : " 
-                                          << m_summaryTool->summary().hasSelectionSummary(*is) << endmsg ;
-    if (!m_summaryTool->selectionDecision(*is)) continue ; // selection is false
-    if (!m_summaryTool->hasSelection(*is)) Exception("hasSelection false for "+*is);
-     
-    if (msgLevel(MSG::VERBOSE)) verbose() << *is << " found " 
-                                      << m_summaryTool->selectionParticles(*is).size() 
-                                      << " Particles" << endmsg ;
-    if ( m_summaryTool->selectionParticles(*is).empty()) continue ;
-    const LHCb::Particle::ConstVector  parts =  m_summaryTool->selectionParticles(*is);
-
-    if (parts.empty()) {
-      err() << "Selection " << *is << " found no particles" << endmsg  ;
+  for(LHCb::HltDecReports::Container::const_iterator it=decReports->begin();
+      it!=decReports->end();++it){
+    if (msgLevel(MSG::DEBUG))  debug() << " Hlt trigger name= " << it->first  
+                                       << " decision= " << it->second.decision() << endmsg;
+    if ( !it->second.decision() ) continue ;
+    LHCb::Particle::ConstVector parts;
+    const LHCb::HltObjectSummary* sum = selReports->selReport(it->first);
+    if (0==sum) {
+      Warning("No summary for "+it->first,StatusCode::SUCCESS,1);
       continue ;
     }
-
+    if (msgLevel(MSG::DEBUG)) debug() <<  it->first << " summarised obj = " << sum->summarizedObject() 
+                                      << ", vector " << sum->substructure().size() << endmsg ;
+    for ( SmartRefVector< LHCb::HltObjectSummary >::const_iterator s = sum->substructure().begin() ; 
+          s != sum->substructure().end() ; ++s){
+      if (msgLevel(MSG::DEBUG)) debug() << it->first << " substructure has " << (*s)->summarizedObject() << " and " 
+                                        << (*s)->substructure().size() << endmsg ;
+      if (0==(*s)->summarizedObject()) continue ;
+      const LHCb::Particle* p = dynamic_cast<const LHCb::Particle*>((*s)->summarizedObject());
+      if ( 0==p ) Warning(it->first+" has no particles",StatusCode::SUCCESS,1).ignore();
+      else parts.push_back(p);
+    }
+    if (parts.empty()) {
+      err() << "Selection " << it->first << " found no particles" << endmsg  ;
+      continue ;
+    }
+    
     IBackgroundCategory::categories mincat = IBackgroundCategory::LastGlobal ;
     const std::map<int,std::string>& catMap = m_bkg->getCategoryMap() ;
     for ( LHCb::Particle::ConstVector::const_iterator ip =  
@@ -122,10 +129,10 @@ StatusCode HltBackgroundCategory::execute() {
       
       // bkg category
       IBackgroundCategory::categories cat = m_bkg->category(*ip);
- 
+      
       if ((msgLevel(MSG::DEBUG)) || m_printTree ) {
         std::map<int, std::string>::const_iterator scat = catMap.find(cat) ;
-        info() << *is << " has a candidate " 
+        info() << it->first   << " has a candidate " 
                << (*ip)->particleID().pid() << " " 
                << (*ip)->momentum() 
                << " category: " 
@@ -133,16 +140,16 @@ StatusCode HltBackgroundCategory::execute() {
       }
       
       if ( m_printTree ){
-        m_print->printTree(*ip,linker);
-        if (0!=m_bkg->origin(*ip)) m_printMC->printTree(m_bkg->origin(*ip));
+          m_print->printTree(*ip,linker);
+          if (0!=m_bkg->origin(*ip)) m_printMC->printTree(m_bkg->origin(*ip));
       }
       
       if (m_fillAll){
         std::map<int, std::string>::const_iterator scat = catMap.find(cat) ;
-        if (msgLevel(MSG::DEBUG)) debug() << "Filling " << (*scat).second << " for " << *is << endmsg ;
+        if (msgLevel(MSG::DEBUG)) debug() << "Filling " << (*scat).second << " for " << it->first << endmsg ;
         if (!m_algoCorr->fillResult((*scat).second, true )) return StatusCode::FAILURE;
       } else if ( cat < mincat ) {
-        if (msgLevel(MSG::DEBUG)) debug() << "New minimum " << cat << " for " << *is << endmsg ;
+        if (msgLevel(MSG::DEBUG)) debug() << "New minimum " << cat << " for " << it->first << endmsg ;
         mincat = cat ;   
       }
     }
@@ -150,11 +157,11 @@ StatusCode HltBackgroundCategory::execute() {
       if ( mincat == IBackgroundCategory::LastGlobal ) mincat = IBackgroundCategory::Undefined ;
       std::map<int, std::string>::const_iterator scat = catMap.find(mincat) ;
       if (msgLevel(MSG::DEBUG)) debug() << "Best category is " << (*scat).second 
-                                        << " for " << *is << endmsg ;
+                                        << " for " << it->first << endmsg ;
       if (!m_algoCorr->fillResult((*scat).second, true )) return StatusCode::FAILURE;
     }  
-    if (!m_algoCorr->fillResult(*is, true )) return StatusCode::FAILURE; 
-    if (msgLevel(MSG::DEBUG)) debug() << "End for " << *is << endmsg ;
+    if (!m_algoCorr->fillResult(it->first, true )) return StatusCode::FAILURE; 
+    if (msgLevel(MSG::DEBUG)) debug() << "End for " << it->first << endmsg ;
     if (!m_algoCorr->endEvent()) return StatusCode::FAILURE ;
   }
   
