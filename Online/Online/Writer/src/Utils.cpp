@@ -87,7 +87,7 @@ int Utils::connectToAddress(struct sockaddr_in *destAddr,
     std::stringstream str;
     str << "Failed to open socket to adr: "
 	<< std::hex << ntohl(destAddr->sin_addr.s_addr)
-	<< " Errno is: " << std::dec << errno << std::endl;
+	<< " Errno is: " << std::dec << errno << strerror(errno)  <<std::endl;
     throw std::runtime_error(str.str());
     return -1;
   }
