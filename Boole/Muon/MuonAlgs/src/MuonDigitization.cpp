@@ -1,4 +1,4 @@
-//$Id: MuonDigitization.cpp,v 1.41 2009-01-26 15:03:43 cattanem Exp $
+//$Id: MuonDigitization.cpp,v 1.42 2009-01-26 15:14:53 cattanem Exp $
 
 #include <algorithm>
 #include <vector>
@@ -6,6 +6,7 @@
 
 #include "GaudiKernel/AlgFactory.h"  
 #include "GaudiKernel/IAlgManager.h"
+#include "GaudiKernel/SmartIF.h"
 
 #include "MuonDet/MuonBasicGeometry.h"
 #include "MuonDet/DeMuonDetector.h"
@@ -71,12 +72,18 @@ StatusCode MuonDigitization::initialize()
   }
   else {
     SmartIF<IProperty> spillProp( spillAlg );
-    StringArrayProperty evtPaths;
-    sc=evtPaths.assign( spillProp->getProperty("PathList") );
-    if( !sc.isSuccess() ) {
-      warning()<<" problem in spillover "<<endmsg;
+    if( !spillProp ) {
+      warning() << "Problem locating properties of SpilloverAlg" << endmsg;
     }
-    m_numberOfSpilloverEvents = evtPaths.value().size();
+    else {
+      StringArrayProperty evtPaths;
+      sc=evtPaths.assign( spillProp->getProperty("PathList") );
+      if( !sc.isSuccess() ) {
+        warning()<<" problem in spillover "<<endmsg;
+      }
+      m_numberOfSpilloverEvents = evtPaths.value().size();
+    }
+    
     // Release the interfaces no longer needed
     spillAlg->release();
   }
