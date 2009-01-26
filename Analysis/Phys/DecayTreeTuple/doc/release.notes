@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+! 2009-01-26 - Patrick Koppenburg
+ - Removed HltSummaryTool from ITupleToolTrigger
+
 ! 2009-01-23 - Patrick Koppenburg
  - Added TupleToolAngles, same as MCTupleToolAngles
 

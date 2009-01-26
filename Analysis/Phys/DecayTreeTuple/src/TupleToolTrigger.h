@@ -1,4 +1,4 @@
-// $Id: TupleToolTrigger.h,v 1.6 2009-01-22 14:44:29 pkoppenb Exp $
+// $Id: TupleToolTrigger.h,v 1.7 2009-01-26 13:45:39 pkoppenb Exp $
 #ifndef JBOREL_TUPLETOOLTRIGGER_H
 #define JBOREL_TUPLETOOLTRIGGER_H 1
 
@@ -19,7 +19,6 @@
  *  @author Jeremie Borel
  *  @date   2007-11-07
  */
-class IHltSummaryTool;
 class TupleToolTrigger : public GaudiTool, virtual public IEventTupleTool {
 public:
   /// Standard constructor
