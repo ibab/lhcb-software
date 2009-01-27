@@ -40,7 +40,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.7 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.8 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -718,8 +718,11 @@ class LbLoginScript(Script):
             if ev.has_key("CMTPATH") :
                 self._add_echo( " --- CMTPATH is set to %s" % ev["CMTPATH"]) 
             else :
-                self._add_echo( " --- User_release_area is set to %s" % ev["User_release_area"])
-                self._add_echo( " --- CMTPROJECTPATH is set to $User_release_area:$LHCb_release_area:$Gaudi_release_area:$LCG_release_area")
+                if ev.has_key("User_release_area") :
+                    self._add_echo( " --- User_release_area is set to %s" % ev["User_release_area"])
+                    self._add_echo( " --- CMTPROJECTPATH is set to $User_release_area:$LHCb_release_area:$Gaudi_release_area:$LCG_release_area")
+                else :
+                    self._add_echo( " --- CMTPROJECTPATH is set to $LHCb_release_area:$Gaudi_release_area:$LCG_release_area")                    
                 self._add_echo( " --- projects will be searched in $CMTPROJECTPATH ")
             self._add_echo( "-" * 80)
 
