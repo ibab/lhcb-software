@@ -4,6 +4,10 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2009-01-27 M Needham
+ - Changes to Ghost classification tool interface
+ - Add the trivial real classification
+
 !======================= TrackMCTools v2r20 2009-01-12 =======================
 ! 2008-12-04 - Marco Cattaneo
  - Adapt to new location of IPatDebugTool.h and IPatDebugTTTool.h in PatKernel

@@ -47,6 +47,21 @@ public:
   virtual void info(LHCbIDs::const_iterator& start, 
                     LHCbIDs::const_iterator& stop, LHCb::GhostTrackInfo& tinfo) const;
 
+  /**
+  *  Check this is a ghost .
+  *  @param aTrack to link
+  *  @return bool true if a ghost
+  */
+  virtual bool isGhost(const LHCb::Track& aTrack) const;
+
+  /**
+   *  Check this is a ghost .
+   *  @param aTrack to link
+   *  @return bool true if a ghost
+   */
+  virtual bool isGhost(LHCbIDs::const_iterator& start, 
+                       LHCbIDs::const_iterator& stop) const;
+
  protected:
 
   typedef std::vector<LHCb::LHCbID> LHCbIDs;
@@ -75,6 +90,7 @@ public:
   /** spillover test */
   bool spillover(const LHCb::GhostTrackInfo::LinkPair& aPair) const;
 
+  bool TrackGhostClassificationBase::isReal(const LHCb::GhostTrackInfo::LinkPair& bestPair) const;
 
   /** check if ghost*/
   bool isGhost(const ILHCbIDsToMCParticles::LinkMap& lmap) const;

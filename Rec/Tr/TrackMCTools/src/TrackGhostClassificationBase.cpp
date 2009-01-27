@@ -1,4 +1,4 @@
-// $Id: TrackGhostClassificationBase.cpp,v 1.5 2008-02-04 08:52:00 mneedham Exp $
+// $Id: TrackGhostClassificationBase.cpp,v 1.6 2009-01-27 16:16:30 mneedham Exp $
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
@@ -93,6 +93,11 @@ void TrackGhostClassificationBase::generic(LHCbIDs::const_iterator& start,
   LHCb::GhostTrackInfo::LinkPair bestPair = tinfo.bestLink();
 
   // test the generic cases...
+  if (isReal(bestPair)){
+    // duh its not a ghost
+    tinfo.setClassification(GhostTrackInfo::Real); 
+    return;
+  }
 
   // spillover
   if (spillover(bestPair) == true){
@@ -151,6 +156,7 @@ bool TrackGhostClassificationBase::spillover(const LHCb::GhostTrackInfo::LinkPai
 }
 
 
+/*
 bool TrackGhostClassificationBase::isGhost(const ILHCbIDsToMCParticles::LinkMap& lMap) const{
 
   // is it a ghost ?
@@ -168,7 +174,7 @@ bool TrackGhostClassificationBase::isGhost(const ILHCbIDsToMCParticles::LinkMap&
 
   return (purity < m_purityCut ? true : false);
 }
-
+*/
 
 LHCb::GhostTrackInfo::LinkPair TrackGhostClassificationBase::secondBest(const LHCb::GhostTrackInfo& tinfo,
                                                                         const MCParticle* bestPart) const{
@@ -298,4 +304,34 @@ LHCb::GhostTrackInfo::LinkPair TrackGhostClassificationBase::bestPair(const LHCb
 
 bool TrackGhostClassificationBase::isMatched(const LHCb::GhostTrackInfo::LinkPair& aPair) const{
   return aPair.second > purityCut();
+}
+
+
+bool TrackGhostClassificationBase::isGhost(const LHCb::Track& aTrack) const {
+
+ LHCbIDs::const_iterator start = aTrack.lhcbIDs().begin();
+ LHCbIDs::const_iterator stop = aTrack.lhcbIDs().end();
+ return isGhost(start, stop);
+};
+
+
+bool TrackGhostClassificationBase::isGhost(LHCbIDs::const_iterator& start, 
+                                           LHCbIDs::const_iterator& stop) const{
+
+  // get the information on the track
+  ILHCbIDsToMCParticles::LinkMap testMap;
+  linkTool()->link(start,stop,testMap);  
+
+  // set the link map
+  LHCb::GhostTrackInfo tinfo;
+  tinfo.setLinkMap(testMap);
+
+  // get the bestmatch
+  LHCb::GhostTrackInfo::LinkPair bestPair = tinfo.bestLink();
+
+  return isReal(bestPair);
+}
+
+bool TrackGhostClassificationBase::isReal(const LHCb::GhostTrackInfo::LinkPair& bestPair  ) const {
+  return (bestPair.first == 0 && bestPair.second > purityCut() ? true: false);
 }
