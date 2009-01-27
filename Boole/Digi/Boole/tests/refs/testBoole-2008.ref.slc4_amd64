@@ -141,7 +141,7 @@ RelationsTrSeq       INFO Member list: BuildMCTrackInfo
 BuildMCTrackInfo     INFO Number TT layer 4
 BuildMCTrackInfo     INFO Number IT layer 48
 BuildMCTrackInfo     INFO Number OT layer 12
-RelationsRICHSeq     INFO Member list: Rich::MC::MCRichDigitSummaryAlg, Rich::MC::MCPartToMCRichTrackAlg, Rich::MC::MCRichHitToMCRichOpPhotAlg
+RelationsRICHSeq     INFO Member list: Rich::MC::MCRichDigitSummaryAlg
 Rich::MC::MCRic...   INFO Will only store MCParticle references for main event
 RelationsCALOSeq     INFO Member list: CaloDigitsFromRaw/EcalFromRaw, CaloDigitsFromRaw/HcalFromRaw, CaloReCreateMCLinks, CaloDigitMCTruth/EcalDigitMCTruth, CaloDigitMCTruth/HcalDigitMCTruth
 RelationsMUONSeq     INFO Member list: MuonDigit2MCParticleAlg, MuonTileDigitInfo
