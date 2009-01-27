@@ -33,17 +33,38 @@ def fixNative(filename):
             tobereplaced["CMTOPT"] = getBinaryOpt(cmtconf)
         else :
             tobereplaced["CMTOPT"] = cmtconf + "-opt"
+    if os.environ.has_key("AFSROOT") :
+        tobereplaced["AFSROOT"] = os.environ["AFSROOT"]        
     inf = open(filename, "r")
     data = inf.read()
     inf.close()
     out = open(filename, "w")
     for k in tobereplaced.keys() :
-        data = data.replace(tobereplaced[k], "${"+k+"}")
+        if not filename.endswith(".bat") :
+            data = data.replace(tobereplaced[k], "${%s}" % k)
+        else :
+            data = data.replace("/","\\")
+            data = data.replace(tobereplaced[k].replace("/","\\"), "%%%s%%" % k )
+            data = data.replace(":",";")
     out.write(data)
     out.close()    
     
+def removeCMTCONFIG(filename):
+    inf = open(filename, "r")
+    data = inf.readlines()
+    inf.close()
+    out = open(filename, "w")
+    
+    for l in data :
+        words = l.split()
+        if len(words) > 1 :
+            if words[1] == "CMTCONFIG" or words[1].startswith("CMTCONFIG=") :
+                continue
+        out.write(" ".join(words) + "\n")
+    out.close()    
 
-def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None):
+
+def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None, building=False):
     location = None
     if targetlocation :
         location = os.path.join(targetlocation, "scripts")
@@ -64,7 +85,8 @@ def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None)
     os.environ["CMTCONFIG"] = "slc4_ia32_gcc34"
     setupprojargs = []
     setupprojargs.append("--silent")
-    setupprojargs.append("--no-user-area")
+    if not building :
+        setupprojargs.append("--no-user-area")
     setupprojargs.append("--disable-CASTOR")
     setupprojargs.append("--output=%s" % cachefilename)
     setupprojargs.append("--shell=%s" % shell)
@@ -79,8 +101,9 @@ def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None)
         setupprojargs.append(lls.options.pythonvers)
     SetupProject().main(setupprojargs)
     fixNative(cachefilename)
+    removeCMTCONFIG(cachefilename)
         
-def generateLogin(targetlocation, script, version="", mysiteroot=None):
+def generateLogin(targetlocation, script, version="", mysiteroot=None, building=False):
     knownshells = ["sh", "csh", "tcsh", "zsh", "bat"]
     shell = os.path.splitext(script)[1][1:]
     if not shell in knownshells :
@@ -156,9 +179,9 @@ set LbLogin_tmpfile=
 
     fixNative(script)
 
-    generateLoginCache(mysiteroot, shell, version, targetlocation)
+    generateLoginCache(mysiteroot, shell, version, targetlocation, building)
 
-def generateLogins(version, targetlocation=None, scripts=None, mysiteroot=None):
+def generateLogins(version, targetlocation=None, scripts=None, mysiteroot=None, building=False):
     if not targetlocation : 
         targetlocation = os.path.realpath(_base_dir)
     if not scripts :
@@ -167,16 +190,21 @@ def generateLogins(version, targetlocation=None, scripts=None, mysiteroot=None):
         scripts.append(os.path.join(_scripts_dir, "LbLogin.sh"))
         scripts.append(os.path.join(_scripts_dir, "LbLogin.bat"))
     for s in scripts :
-        generateLogin(targetlocation, s, version, mysiteroot)
+        generateLogin(targetlocation, s, version, mysiteroot, building)
 
 
 if __name__ == '__main__':
+
     targetlocation = None
     scripts = None
     parser = OptionParser()
     parser.set_defaults(mysiteroot=None)
     parser.add_option("-m", "--mysiteroot", dest="mysiteroot",
                   help="defines the main site location")
+    parser.set_defaults(building=False)
+    parser.add_option("-b", "--building", dest="building", action="store_true",
+                      help="do not ignore user_release_area for development")
+    
 
     opts, args = parser.parse_args()
     
@@ -189,6 +217,6 @@ if __name__ == '__main__':
     if len(args) > 2 :
         scripts = args[2:]
         
-    generateLogins(version, targetlocation, scripts, opts.mysiteroot)
+    generateLogins(version, targetlocation, scripts, opts.mysiteroot, opts.building)
 
 

@@ -5,11 +5,11 @@ from xml.sax import parse, ContentHandler
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.3 2009-01-20 18:45:50 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.4 2009-01-27 13:21:02 hmdegaud Exp $"
 
 try:
     from LbUtils.CVS import CVS2Version
-    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.3 $")
+    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.4 $")
 except ImportError :
     __version__ = _cvs_id
 
@@ -1299,11 +1299,14 @@ class SetupProject:
         script = ShellParser[self.shell](script, new_env)
         
         # remove the temporary directory from the paths
-        for v in ["PATH", "PYTHONPATH", "LD_LIBRARY_PATH"]:
+        root_dir_local = root_dir
+        if self.opts.shell == "bat":
+            root_dir_local = root_dir_local.replace('/','\\')
+        for v in ["PATH", "PYTHONPATH", "LD_LIBRARY_PATH", "HPATH"]:
             if v in new_env:
                 new_env[v] = os.pathsep.join([ d
                                                for d in new_env[v].split(os.pathsep)
-                                               if root_dir not in d ])
+                                               if root_dir_local not in d ])
         # FIXME: I should look for all the variables pointing to the temporary directory
         
         # remove the variables that have the temporary directory in the name
