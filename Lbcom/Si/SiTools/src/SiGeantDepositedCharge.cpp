@@ -1,4 +1,4 @@
-// $Id: SiGeantDepositedCharge.cpp,v 1.6 2009-01-24 10:08:04 mneedham Exp $
+// $Id: SiGeantDepositedCharge.cpp,v 1.7 2009-01-27 08:40:10 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -26,7 +26,7 @@ SiGeantDepositedCharge::SiGeantDepositedCharge(const std::string& type,
   declareProperty("scalingFactor", m_scalingFactor = 1.0);
   
   /// add atomic binding smearing or not
-  declareProperty("applySmearing", m_applySmearing = true);  
+  declareProperty("applySmearing", m_applySmearing = false);  
 }
 
 SiGeantDepositedCharge::~SiGeantDepositedCharge()

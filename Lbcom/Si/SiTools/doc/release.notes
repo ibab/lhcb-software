@@ -2,6 +2,9 @@ Package         : Si/SiTools
 Package manager : Matt Needham
 !------------------------------------------------------------------------------
 
+! 2009-01-27 M Needham Make default not to apply atomic binding 
+             in SiGeantDepositedCharge
+
 ! 2009-01-24 M Needham
  - Add flag to turn on/off atomic binding smearing in SiGeantDepositedCharge
 
