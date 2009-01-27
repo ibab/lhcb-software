@@ -3,6 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+! 2009-01-27 - Marco Cattaneo
+ - Adapt QMTest reference to removal of Rich extended info
+
 </PRE><H1><A NAME=v17r2>2009-01-14 Boole v17r2</A></H1><PRE>
 This version uses projects Gaudi v20r4, LHCb v26r1, Lbcom v6r25
  and SQLDDDB v5r1, ParamFiles v8r0, FieldMap v5r2, L0TCK v1r0
