@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.42 2009-01-26 11:03:09 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.43 2009-01-27 16:50:56 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -220,10 +220,19 @@ class DaVinci(LHCbConfigurableUser) :
         #====================================================================
         # Hack until next full release
         if ( self.getProp("DataType") == "DC06" ):
-            from Configurables import MuonRec, MuonID, UpdateMuonPIDInProtoP
-            recalib = GaudiSequencer("ProtoPRecalibration")
+            # make a sequence with the necessary stuff
             importOptions( "$MUONIDROOT/options/MuonID.py" )
-            recalib.Members += [ MuonRec(), MuonID(), UpdateMuonPIDInProtoP() ]
+            from Configurables import MuonRec, MuonID, UpdateMuonPIDInProtoP
+            makeMuonTracks = GaudiSequencer('MakeMuonTracks')
+            makeMuonTracks.Members += [ MuonRec(), MuonID(), UpdateMuonPIDInProtoP() ]
+            # Bind sequence to muon track container with data-on-demand
+            DataOnDemandSvc().AlgMap['/Event/Rec/Track/Muon'] = makeMuonTracks
+            # Trigger data-on-demand by asking for muon tracks
+            from Configurables import TESCheck
+            testMuonTracks = TESCheck('TestMuonTracks')
+            testMuonTracks.Inputs = ['/Event/Rec/Track/Muon']
+            recalib = GaudiSequencer("ProtoPRecalibration")
+            recalib.Members += [testMuonTracks]
         #====================================================================
         
         self.checkOptions()
@@ -247,7 +256,7 @@ class DaVinci(LHCbConfigurableUser) :
         #====================================================================
         # Hack until next full release
         if ( self.getProp("DataType") == "DC06" ):
-            from Configurables import MuonPIDsFromProtoParticlesAlg
-            recalib = GaudiSequencer("ProtoPRecalibration")
-            recalib.Members.remove( MuonPIDsFromProtoParticlesAlg("MuonPIDsFromProtos")  )
+             from Configurables import MuonPIDsFromProtoParticlesAlg
+#            recalib = GaudiSequencer("ProtoPRecalibration")
+#            recalib.Members.remove( MuonPIDsFromProtoParticlesAlg("MuonPIDsFromProtos")  )
         #====================================================================
