@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.37 2009-01-27 12:46:08 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.38 2009-01-27 12:58:50 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -138,7 +138,7 @@ class HltConf(LHCbConfigurableUser):
         ### Make sure that the ANN Svc has everything it will need
         missing = [ i for i in sorted(set(hlt1Selections()['All']) - set(HltANNSvc().Hlt1SelectionID.keys())) if not i.startswith('TES:') ]
         missingSelections = [ i for i in missing if not i.endswith('Decision') ]
-        extraSelections = dict(zip( missingSelections , range(10100, 10100 + len(missingSelections) ) ))
+        extraSelections = dict(zip( missingSelections , range(11000, 11000 + len(missingSelections) ) ))
         HltANNSvc().Hlt1SelectionID.update( extraSelections )
         missingDecisions  = [ i for i in missing if i.endswith('Decision') ]
         extraDecisions = dict(zip( missingDecisions , range( 1000,  1000 + len(missingDecisions) ) ))
