@@ -286,6 +286,14 @@
   <Project name="MONITORING"/>
 </NodeType>
 
+<NodeType name="MonitoringControlTest">
+  <TaskList name="FMC"/>
+  <TaskList name="ControlsPC"/>
+  <TaskList name="StandardMonitoring"/>
+  <TaskList name="MonitoringControl"/>
+  <ConnectionList name="ControlsPC"/>
+</NodeType>
+
 <NodeType name="MonitoringWorker">
   <TaskList name="FMC"/>
   <TaskList name="StandardMonitoring"/>
