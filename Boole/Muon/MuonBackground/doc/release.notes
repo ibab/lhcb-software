@@ -5,6 +5,9 @@
 !               low energy components, flatspillover
 !-----------------------------------------------------------------------------
 
+! 2009-01-27 - Marco Cattaneo
+ - Downgrade some debug messages to verbose
+
 ! 2009-01-26 - Marco Cattaneo
  - Backward compatible fixes for Gaudi v21
 

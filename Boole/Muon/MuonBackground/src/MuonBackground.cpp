@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.46 2009-01-26 15:23:07 cattanem Exp $
+// $Id: MuonBackground.cpp,v 1.47 2009-01-27 12:40:06 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -91,10 +91,10 @@ StatusCode MuonBackground::initialize() {
 
   // Get the application manager. Used to find the histogram persistency type
   // and to get number of spillovers from SpillOverAlg
-  IAlgManager* algmgr =svc<IAlgManager>("ApplicationMgr");
+  IAlgManager* algmgr = svc<IAlgManager>("ApplicationMgr");
   SmartIF<IProperty> algmgrProp( algmgr );
   if( !algmgrProp ) {
-    return Error("Failed to locate algManager i/f of AppMgr");
+    return Error("Failed to locate IProperty i/f of AppMgr");
   }
 
   StringProperty persType;
@@ -191,8 +191,6 @@ StatusCode MuonBackground::initialize() {
         evtPaths.assign( spillProp->getProperty("PathList") );
         m_readSpilloverEvents = evtPaths.value().size();
       }
-      // Release the interface, no longer needed
-      spillAlg->release();
     }
 
     debug() << "number of spillover events read from aux stream "
@@ -238,8 +236,8 @@ StatusCode MuonBackground::execute() {
           for (int multi=0;multi<m_gaps;multi++){
             int index=station*m_gaps+multi;
             int startingHits=((*m_resultPointer)[coll])[index];
-            debug()<<"station safe start end hits "
-                   <<startingHits<<endreq;
+            verbose() <<"station safe start end hits "
+                      <<startingHits<<endreq;
             
             // extract number of hits to be added
             int hitToAdd=0;
@@ -258,7 +256,7 @@ StatusCode MuonBackground::execute() {
               //  station<< " "<<m_safetyFactor[station]<< " "<<
               //  yy<< " "<< hitToAdd<<" "<<startingHits<<endreq;
               
-              debug()<<"adding "<< hitToAdd<<" to orginal "<<
+              verbose()<<"adding "<< hitToAdd<<" to orginal "<<
                 startingHits<<" in station "<<station<<
                 " for multiplicity "<<multi<<" and collisions/spill "<<coll
                  <<" "<<ispill<<endreq;
@@ -296,7 +294,7 @@ StatusCode MuonBackground::execute() {
           for (int fspill=0;fspill<=m_numberOfFlatSpill;fspill++){
             int hitToAdd=0;
             hitToAdd=howManyHit( floatHit);          
-            debug()<<"adding "<< hitToAdd<<
+            verbose()<<"adding "<< hitToAdd<<
               " in station "<<station<<
               " for multiplicity "<<multi<<" and spill"
                    <<fspill<<endreq;
@@ -309,7 +307,7 @@ StatusCode MuonBackground::execute() {
       }
     }
     std::string path="/Event"+spill[ispill]+"/MC/Muon/"+m_containerName;
-    debug()<<" starting saveing the ocntainer "<<path<<endreq;    
+    debug()<<" starting saveing the container "<<path<<endreq;    
     debug()<<" number of total hit added "<<
       hitsContainer->size()<<endreq;
     sc=eventSvc()->registerObject(path,
@@ -411,7 +409,8 @@ StatusCode MuonBackground::initializeParametrization()
           code=m_histogramsMapNumber[i];
           name=m_histoName[i];
           int tt=mapHistoCode(code,station,mult);
-          debug()<<code<<" "<< station<<" "<<mult<<" "<<tt<<endreq;
+          if( msgLevel(MSG::VERBOSE) )
+            verbose() << code <<" "<< station <<" "<< mult <<" "<< tt << endmsg;
           if(tt<100000){
             sprintf(codePath,"%5i", tt); 
           }else{              
@@ -462,7 +461,8 @@ StatusCode MuonBackground::initializeParametrization()
             SmartDataPtr<IHistogram2D> histo2d(histoSvc(),path);
             if(histo2d){
               //   histoPointer=histoin2;
-              debug()<<"found the 2D histo "<<path<<endreq;
+              if( msgLevel(MSG::VERBOSE) )
+                debug() << "found the 2D histo " << path << endmsg;
               std::vector<Rndm::Numbers*>  distributions;
               double xmin,xmax,ymin,ymax;
               int nbinx;              
@@ -701,15 +701,15 @@ MuonBackground::initializeRNDDistribution1D(IHistogram1D*
   for(int i=0;i<nbin;i++){
     double tmp=histoPointer->binHeight(i);
     if(tmp<0){
-      debug()<<" negative value for histogragm "<<histoPointer->title()
-         <<" "<<tmp<<endreq;
-            tmp=0;      
+      verbose() << " negative value for histogram " << histoPointer->title()
+                << " " << tmp << endmsg;
+      tmp=0;
     }    
     content[i]=tmp;    
     total=total+(int)histoPointer->binHeight(i);    
   }  
   Rndm::Numbers* pdf=new Rndm::Numbers; 
-  debug()<<"total "<<total<<endreq;
+  verbose()<<"total "<<total<<endreq;
   
   if(total<=0){
     pointerToFlags.push_back(false);
@@ -749,8 +749,8 @@ MuonBackground::initializeRNDDistribution2D(IHistogram2D* histoPointer,
     IHistogram1D* ySlice = histoSvc()->histogramFactory()->
       sliceY( "MuBG/1" , *histoPointer, xbin);
     int entries=ySlice->entries();
-    if(entries<=0) {
-      debug()<<" zero entries"<<endmsg;
+    if( msgLevel(MSG::VERBOSE) && entries <= 0 ) {
+      verbose()<<" zero entries"<<endmsg;
     }
     StatusCode sc=initializeRNDDistribution1D(ySlice,distributions , 
                                 pointerToFlags,ymin, ymax);
