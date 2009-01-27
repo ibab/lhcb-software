@@ -1,0 +1,80 @@
+// $Id: LumiHisto2dSPD.cpp,v 1.1 2009-01-27 21:21:39 aperezca Exp $
+// Include files 
+
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h" 
+//#include "GaudiKernel/IAlgManager.h"
+
+// local
+#include "LumiHisto2dSPD.h"
+
+//-----------------------------------------------------------------------------
+// Implementation file for class : LumiHisto2dSPD
+//
+// 2009-01-27 : Antonio Maria Perez Calero Yzquierdo
+//-----------------------------------------------------------------------------
+
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( LumiHisto2dSPD );
+
+
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
+LumiHisto2dSPD::LumiHisto2dSPD( const std::string& name,
+                                ISvcLocator* pSvcLocator)
+  : Calo2Dview( name , pSvcLocator )
+{
+  declareProperty( "ReadoutTool"   , m_readoutTool  = "CaloDataProvider" );
+  declareProperty( "HistoTitle"   , m_htitle  = "" );
+}
+//=============================================================================
+// Destructor
+//=============================================================================
+LumiHisto2dSPD::~LumiHisto2dSPD() {} 
+
+//=============================================================================
+// Initialization
+//=============================================================================
+StatusCode LumiHisto2dSPD::initialize() {
+  StatusCode sc = Calo2Dview::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
+
+  m_daq = tool<ICaloDataProvider>( m_readoutTool ,"SpdReadoutTool" , this );
+
+  return StatusCode::SUCCESS;
+}
+
+//=============================================================================
+// Main execution
+//=============================================================================
+StatusCode LumiHisto2dSPD::execute() {
+
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
+
+  // Get SPD hits:
+  if( !m_daq->getBanks()    )return StatusCode::SUCCESS;
+  CaloVector<LHCb::CaloAdc>& adcs= m_daq->adcs();
+  int multDAQ    = adcs.size();
+  debug() << "DAQ :    "<< multDAQ << endmsg ;
+
+  //Make Histo:
+  for(CaloVector<LHCb::CaloAdc>::iterator iadc0 = adcs.begin() ; adcs.end() != iadc0 ; ++iadc0 ){
+    fillCalo2D( "SPD" , (*iadc0) , m_htitle+"Spd hits" );
+  }
+  return StatusCode::SUCCESS;
+}
+
+//=============================================================================
+//  Finalize
+//=============================================================================
+StatusCode LumiHisto2dSPD::finalize() {
+
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
+
+  return Calo2Dview::finalize(); // must be called after all other actions
+}
+
+//=============================================================================
