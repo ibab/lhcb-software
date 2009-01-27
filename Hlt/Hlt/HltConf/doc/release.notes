@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.129 2009-01-27 12:46:08 graven Exp $ 
+! $Id: release.notes,v 1.130 2009-01-27 21:28:49 aperezca Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-01-27 - Antonio Perez-Calero
+ - added LumiHisto2dSpd algo. in HltLumiLines.py to retrieve SPD multiplicities for each
+   bunch crossing type.
 
 ! 2009-01-27 - Gerhard Raven
  - automatically add entries in HltANNSvc for selections & decisions if they

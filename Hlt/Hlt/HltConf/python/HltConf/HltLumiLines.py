@@ -8,7 +8,7 @@ from Configurables import GaudiSequencer as Sequence
 from Configurables import DeterministicPrescaler as Prescale
 from Configurables import HltTrackFilter, HltSelectionFilter
 from Configurables import LumiCountVertices, LumiCountTracks, LumiFromL0DU, LumiCountHltTracks
-from Configurables import HltLumiOdinReader, LumiHistoMaker
+from Configurables import HltLumiOdinReader, LumiHistoMaker, LumiHisto2dSPD
 from Configurables import RawEventDump, HltLumiSummaryDecoder, HltLumiWriter, bankKiller
 from Configurables import LoKi__ODINFilter  as ODINFilter
 from HltConf.HltLine import Hlt1Line   as Line
@@ -101,7 +101,7 @@ class HltLumiLinesConf(LHCbConfigurableUser) :
             HistoMembers.append( ODINFilter('Filter'+i, Code = 'ODIN_BXTYP == LHCb.ODIN.'+i, OutputLevel = debugOPL ))
             if debugging: HistoMembers.append(HltLumiOdinReader('OdinReaderAfter'+i, OutputLevel = debugOPL ))
             HistoMembers.append(LumiHistoMaker('Histo'+i, InputVariables = createdCounters, OutputLevel = 3 ))
-
+            HistoMembers.append(LumiHisto2dSPD('Histo2D'+i, HistoTitle=str(i),OutputLevel = 3 ))
             BXMembers.append( Sequence('Hlt1Lumi'+i+'Sequence', 
                                        Members = HistoMembers,
                                        MeasureTime = True
