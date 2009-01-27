@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.47 2009-01-27 12:40:06 cattanem Exp $
+// $Id: MuonBackground.cpp,v 1.48 2009-01-27 14:49:10 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -202,7 +202,7 @@ StatusCode MuonBackground::initialize() {
   }
 
   // Release interface, no longer needed  
-  algmgr->release();
+  releaseSvc(algmgr).ignore();
 
   return StatusCode::SUCCESS;
 };
