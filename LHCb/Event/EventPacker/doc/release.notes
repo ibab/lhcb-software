@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2009-01-27 - Marco Cattaneo
+ - Fix compilation warning on slc4_ia32_gcc34
+
 ! 2009-01-26 - Olivier Callot
  - New algorithms to pack, unpack and compare TwoProngVertex.
  - New algorithms ReadPackedDst adn WritePackedDsr to write in a RawEvent the 

@@ -1,4 +1,4 @@
-// $Id: PackedBank.h,v 1.1 2009-01-26 09:45:51 ocallot Exp $
+// $Id: PackedBank.h,v 1.2 2009-01-27 15:59:17 cattanem Exp $
 #ifndef PACKEDBANK_H 
 #define PACKEDBANK_H 1
 
@@ -20,8 +20,9 @@ public:
     if ( 0 == obj ) return;
     m_bank.push_back( obj->clID() );
     storeString( obj->registry()->identifier() );
-    m_bank.push_back( obj->linkMgr()->size() );
-    for ( unsigned int kl = 0; obj->linkMgr()->size() > kl ; ++kl ) {
+    unsigned int objSize = obj->linkMgr()->size();
+    m_bank.push_back( objSize );
+    for ( unsigned int kl = 0; objSize > kl ; ++kl ) {
       storeString( obj->linkMgr()->link(kl)->path() );
     }
   }; 
