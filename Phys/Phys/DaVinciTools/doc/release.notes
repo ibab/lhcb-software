@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.395 2009-01-15 09:53:58 jpalac Exp $
+! $Id: release.notes,v 1.396 2009-01-27 07:23:36 cattanem Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-01-27 - Marco Cattaneo
+ - Backwards compatible fix for Gaudi v21
+ - version increment to v18r1p1
 
 !========================== DaVinciTools v18r1 2009-01-15 ===================
 
