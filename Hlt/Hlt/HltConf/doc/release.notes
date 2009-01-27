@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.128 2009-01-23 07:54:26 graven Exp $ 
+! $Id: release.notes,v 1.129 2009-01-27 12:46:08 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-01-27 - Gerhard Raven
+ - automatically add entries in HltANNSvc for selections & decisions if they
+   are not explicitly set a-priori
 
 ! 2009-01-23 - Gerhard Raven for Patrick Spalding
  - make sure Hlt/Track/Forward is used everywhere, and not Hlt/Tracks/Forward

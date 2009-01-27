@@ -1,6 +1,6 @@
 #
 #==============================================================================
-# $Id: HltL0Candidates.py,v 1.10 2009-01-22 10:06:54 graven Exp $
+# $Id: HltL0Candidates.py,v 1.11 2009-01-27 12:46:08 graven Exp $
 #==============================================================================
 #
 # Module to define the conversion of L0 candidates across several HltLines
@@ -85,7 +85,7 @@ def _converter( channel ) :
     return _conv(channel)
 
 global _dict,_l0Channels
-_dict = None
+_dict       = None
 _l0Channels = None
 
 ########################################## public visible part of this module...
@@ -102,8 +102,8 @@ def setupL0Channels( channels ) :
     _l0Channels = channels
     if not _l0Channels:
         _l0Channels = [ 'Muon','DiMuon','MuonNoGlob', 'Electron','Photon','Hadron' ,'LocalPi0','GlobalPi0' ]
-    ## these are basically hardwired and not likely to change...
     print '# recognized L0 channels: ' + str(_l0Channels)
+    # the types are basically hardwired and are thus not likely to change...
     _l0Types = [ 'Muon','Electron','Photon','Hadron' ,'LocalPi0','GlobalPi0' ]
     _dict = dict()
     for i in _l0Channels + [ 'All' + j for j in _l0Types ] : _dict.update( _converter( i ) )

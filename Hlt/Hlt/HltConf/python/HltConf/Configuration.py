@@ -1,10 +1,11 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.36 2009-01-22 10:06:54 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.37 2009-01-27 12:46:08 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
+from pprint import *
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
@@ -16,6 +17,7 @@ from Configurables       import HltGlobalMonitor
 from Configurables       import HltVertexReportsMaker
 from Configurables       import HltSelReportsMaker
 from Configurables       import L0DUMultiConfigProvider
+from Configurables       import HltANNSvc 
 from HltConf.HltLine     import Hlt1Line   as Line
 from HltConf.HltLine     import hlt1Lines
 from HltConf.HltLine     import hlt1Selections
@@ -133,6 +135,17 @@ class HltConf(LHCbConfigurableUser):
         HltVertexReportsMaker().VertexSelections = vertices
         ## do not write out the candidates for the vertices we store 
         HltSelReportsMaker().SelectionMaxCandidates.update( dict( [ (i,0) for i in vertices if i.endswith('Decision') ] ) )
+        ### Make sure that the ANN Svc has everything it will need
+        missing = [ i for i in sorted(set(hlt1Selections()['All']) - set(HltANNSvc().Hlt1SelectionID.keys())) if not i.startswith('TES:') ]
+        missingSelections = [ i for i in missing if not i.endswith('Decision') ]
+        extraSelections = dict(zip( missingSelections , range(10100, 10100 + len(missingSelections) ) ))
+        HltANNSvc().Hlt1SelectionID.update( extraSelections )
+        missingDecisions  = [ i for i in missing if i.endswith('Decision') ]
+        extraDecisions = dict(zip( missingDecisions , range( 1000,  1000 + len(missingDecisions) ) ))
+        HltANNSvc().Hlt1SelectionID.update( extraDecisions )
+        print '# added ' + str(len(missingSelections)) + ' selections to HltANNSvc'
+        print '# added ' + str(len(missingDecisions)) + ' decisions to HltANNSvc'
+         
 
     def __apply_configuration__(self):
         """

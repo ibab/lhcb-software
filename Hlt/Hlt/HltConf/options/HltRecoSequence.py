@@ -92,8 +92,7 @@ hlt1RecoRZPVSequence = GaudiSequencer( 'Hlt1RecoRZPVSequence', MeasureTime = Tru
 # (can we make 'boundMembers' instances singletons, like configurables?)
 # (and make them check that once 'OutputSelection' is picked up, they become 'immutable')
 recoRZVelo = GaudiSequencer( 'Hlt1RecoRZVeloSequence' , MeasureTime = True
-                           , Members = 
-                           [ recoRZVeloSequence , prepareRZVelo, preparePV2D ] ) 
+                           , Members = [ recoRZVeloSequence , prepareRZVelo, preparePV2D ] ) 
 
 reco1Velo = HltTrackUpgrade( 'Hlt1RecoVelo'
                           , InputSelection = prepareRZVelo.OutputSelection
