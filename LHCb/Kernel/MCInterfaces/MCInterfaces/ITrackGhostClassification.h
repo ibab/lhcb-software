@@ -40,6 +40,23 @@ public:
  virtual void info(LHCbIDs::const_iterator& start, 
                    LHCbIDs::const_iterator& stop, LHCb::GhostTrackInfo& tinfo) const= 0;
 
+
+  /**
+  *  Check this is a ghost .
+  *  @param aTrack to link
+  *  @return bool true if a ghost
+  */
+  virtual bool isGhost(const LHCb::Track& aTrack) const= 0;
+
+  /**
+   *  Check this is a ghost .
+   *  @param aTrack to link
+   *  @return bool true if a ghost
+   */
+  virtual bool isGhost(LHCbIDs::const_iterator& start, 
+                       LHCbIDs::const_iterator& stop) const = 0;
+
+
 };
 
 #endif
