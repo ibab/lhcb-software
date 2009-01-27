@@ -1,4 +1,4 @@
-//$Id: DumpDetectorStore.cpp,v 1.6 2009-01-26 12:31:52 cattanem Exp $
+//$Id: DumpDetectorStore.cpp,v 1.7 2009-01-27 16:09:16 cattanem Exp $
 #include <stdio.h>
 
 #include "DumpDetectorStore.h"
@@ -36,8 +36,7 @@ StatusCode DumpDetectorStore::finalize( ) {
   // Locate the IDataManagerSvc interface of the Detector Data Service
   SmartIF<IDataManagerSvc> detDataMgr( detSvc() );
   if( !detDataMgr ) {
-    error() << "Can't query IDataManagerSvc interface" << endmsg;
-    return sc;
+    return Error( "Can't query IDataManagerSvc interface", sc );
   }
 
   // Traverse the transient data store and dump all contents
@@ -49,8 +48,6 @@ StatusCode DumpDetectorStore::finalize( ) {
   } else {
     info() << "Nothing was found in the data store" << endmsg;
   }
-  
-  detDataMgr->release();
   
   return GaudiAlgorithm::finalize();
 }
