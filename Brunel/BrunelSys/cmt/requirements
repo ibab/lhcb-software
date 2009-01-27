@@ -11,7 +11,7 @@ branches cmt doc
 use Brunel v34r1p1 Rec
 
 # Component libraries added as patches
-use EventPacker v1r2 Event
+#use EventPacker v1r2 Event
 
 # Allow the generation of the SAM QMTest
 apply_pattern QMTest
