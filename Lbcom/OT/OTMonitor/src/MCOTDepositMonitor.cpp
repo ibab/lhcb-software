@@ -1,4 +1,7 @@
-// $Id: MCOTDepositMonitor.cpp,v 1.12 2007-04-08 17:00:48 janos Exp $
+// $Id: MCOTDepositMonitor.cpp,v 1.13 2009-01-27 10:19:27 janos Exp $
+
+// from STD
+#include <algorithm>
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -40,13 +43,20 @@ using namespace boost;
 using namespace boost::lambda;
 using boost::lexical_cast;
 
+namespace MonitorHelpers {
+ bool isSignal(      const LHCb::MCOTDeposit* aDeposit ) { return aDeposit->type() == LHCb::MCOTDeposit::Signal;      };   
+ bool isNoise(       const LHCb::MCOTDeposit* aDeposit ) { return aDeposit->type() == LHCb::MCOTDeposit::Noise;       };
+ bool isXTalk(       const LHCb::MCOTDeposit* aDeposit ) { return aDeposit->type() == LHCb::MCOTDeposit::XTalk;       };  
+ bool isDoublePulse( const LHCb::MCOTDeposit* aDeposit ) { return aDeposit->type() == LHCb::MCOTDeposit::DoublePulse; };
+};
+
 /// Declaration of algorithm factory
 DECLARE_ALGORITHM_FACTORY( MCOTDepositMonitor );
 
 MCOTDepositMonitor::MCOTDepositMonitor( const std::string& name, 
 					ISvcLocator* pSvcLocator ) :
-  GaudiHistoAlg(name, pSvcLocator),
-  m_nCrossTalkHits(0) {
+  GaudiHistoAlg(name, pSvcLocator) 
+{
   // constructor
 }
 
@@ -57,10 +67,10 @@ MCOTDepositMonitor::~MCOTDepositMonitor() {
 StatusCode MCOTDepositMonitor::initialize() {
 
   StatusCode sc = GaudiHistoAlg::initialize();
-  if (sc.isFailure()) return Error("Failed to initialize", sc);
+ if (sc.isFailure()) return Error("Failed to initialize", sc);
   
   /// set path
-  if("" == histoTopDir()) setHistoTopDir("OT/");
+ if("" == histoTopDir()) setHistoTopDir("OT/");
     
   // Get OT Geometry from XML
   DeOTDetector* tracker = getDet<DeOTDetector>( DeOTDetectorLocation::Default );
@@ -71,42 +81,45 @@ StatusCode MCOTDepositMonitor::initialize() {
   // intialize histos
   initHistograms();
 
-  return StatusCode::SUCCESS;
+ return StatusCode::SUCCESS;
 }
 
 StatusCode MCOTDepositMonitor::execute() {
-  // execute
-  m_nCrossTalkHits = 0;
 
   // retrieve MCOTDeposits
-  LHCb::MCOTDeposits* depCont = get<LHCb::MCOTDeposits>(LHCb::MCOTDepositLocation::Default);
+  const LHCb::MCOTDeposits* deps = get<LHCb::MCOTDeposits>(LHCb::MCOTDepositLocation::Default);
 
   // number of deposits
-  m_nDepositsHisto->fill(double(depCont->size()));
+  const unsigned nTotalDeposits        = deps->size();
+  const unsigned nSignalDeposits       = std::count_if( deps->begin(), deps->end(), bind( &MonitorHelpers::isSignal     , _1 ) );
+  const unsigned nNoiseDeposits        = std::count_if( deps->begin(), deps->end(), bind( &MonitorHelpers::isNoise      , _1 ) );
+  const unsigned nXTalkDeposits        = std::count_if( deps->begin(), deps->end(), bind( &MonitorHelpers::isXTalk      , _1 ) );
+  const unsigned nDoublePulseDeposits  = std::count_if( deps->begin(), deps->end(), bind( &MonitorHelpers::isDoublePulse, _1 ) );
+  
+  plot( nTotalDeposits      , 10, "Total number of deposits"       , 0.0, 20000.0, 200 );
+  plot( nSignalDeposits     , 11, "Number of signal deposits"      , 0.0, 20000.0, 200 );
+  plot( nNoiseDeposits      , 12, "Number of noise deposits"       , 0.0, 20000.0, 200 );
+  plot( nXTalkDeposits      , 13, "Number of XTalk deposits"       , 0.0, 20000.0, 200 );
+  plot( nDoublePulseDeposits, 14, "Number of double pulse deposits", 0.0, 20000.0, 200 );
 
   // histos per deposit
-  for_each(depCont->begin(), depCont->end(), 
-           bind(&MCOTDepositMonitor::fillHistograms, this, _1));
-  
-  if ( fullDetail() ) m_nCrossTalkHisto->fill(double(m_nCrossTalkHits));
+  std::for_each( deps->begin(), deps->end(), bind(&MCOTDepositMonitor::fillHistograms, this, _1) );
  
   return StatusCode::SUCCESS;
 }
 
 void MCOTDepositMonitor::initHistograms() {
- 
-  // number of deposits in container
-  m_nDepositsHisto = book(1, "Number of deposits",0., 20000., 200);
+
   // number of deposits per layer
   m_nHitsPerLayerHisto = book(3, "Number of deposits per layer", 9.5, 34.5, 25);
   // drift distance
   m_driftDistHisto = book(6, "Drift distance", 0., 5., 50);
   
+
   // number of crosstalk hits in container
   if ( fullDetail() ) {
     // number of deposits per station
     m_nHitsPerStationHisto = book(2, "Number of deposits per station", 0.5, 3.5, 3);
-    m_nCrossTalkHisto= book(11, "Number XTalk and noise deposits", 0., 1000., 100);
 
     // histograms per station
     int id;
@@ -114,7 +127,7 @@ void MCOTDepositMonitor::initHistograms() {
     AIDA::IHistogram2D* aHisto2D;
     // drift time spectra
     for (int iStation = m_firstStation; iStation <= m_nStations; ++iStation) {
-      std::string stationToString = boost::lexical_cast<std::string>(iStation);
+      const std::string stationToString = boost::lexical_cast<std::string>(iStation);
       id=100+iStation;
       aHisto1D = book(id, "Deposit time per station "+stationToString,
 		      -50.0*Gaudi::Units::ns, 200.0*Gaudi::Units::ns, 250);
@@ -138,17 +151,14 @@ void MCOTDepositMonitor::fillHistograms( LHCb::MCOTDeposit* aDeposit ) {
   int iUniqueLayerNum = 10 * iStation + iLayer;
   
   m_nHitsPerLayerHisto->fill(double(iUniqueLayerNum));
- 
-  // reference to mctruth
-  const LHCb::MCHit* aHit = aDeposit->mcHit();
-  
-  aHit?m_driftDistHisto->fill(aDeposit->driftDistance()):++m_nCrossTalkHits;
   
   if ( fullDetail() ) {
-     // histogram per station
+    // reference to mctruth
+    const LHCb::MCHit* aHit = aDeposit->mcHit();
+   // histogram per station
     m_nHitsPerStationHisto->fill(double(iStation));
     m_driftTimeHistos[iStation-m_firstStation]->fill(aDeposit->time());
-    if (0 != aHit) {
+    if ( 0 != aHit ) {
       // retrieve entrance + exit points and take average
       Gaudi::XYZPoint mcHitPoint = aHit->midPoint();
       // fill y vs x scatter plots    

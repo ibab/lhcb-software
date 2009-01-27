@@ -1,4 +1,4 @@
-// $Id: MCOTDepositMonitor.h,v 1.7 2007-04-08 17:00:48 janos Exp $
+// $Id: MCOTDepositMonitor.h,v 1.8 2009-01-27 10:19:27 janos Exp $
 #ifndef OTMONITOR_MCOTDEPOSITMONITOR_H
 #define OTMONITOR_MCOTDEPOSITMONITOR_H 1
 
@@ -54,12 +54,9 @@ private:
   /// fill the histograms
   void fillHistograms( LHCb::MCOTDeposit* aDeposit );
 
-  int m_nCrossTalkHits;  ///< count the number of XTalk hits
   int m_nStations;       ///< number of stations (from geometry)
-  int m_firstStation;    ///< first OT station   (from geometry)
+  int m_firstStation;    ///< first OT station   (from geometry)  
 
-  /// histograms
-  AIDA::IHistogram1D* m_nDepositsHisto;       ///< Deposits distribution
   AIDA::IHistogram1D* m_nHitsPerStationHisto; ///< Hits per station 
   AIDA::IHistogram1D* m_nHitsPerLayerHisto;   ///< Hits per layer
   /// drift time histo for each station
@@ -67,7 +64,6 @@ private:
   /// y vs x of hits for each station 
   std::vector<AIDA::IHistogram2D*> m_yvsxHistos;
   AIDA::IHistogram1D* m_driftDistHisto;  ///< drift distance distribution
-  AIDA::IHistogram1D* m_nCrossTalkHisto; ///< cross talk level
   
 };
 
