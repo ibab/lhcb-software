@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-01-27 - Ulrich Kerzel
+ - typo in configuration for Markov Ring Finder in Configuration.py
+
 ! 2009-01-20 - Marco Cattaneo
  - Remove obsolete includes for Gaudi ParticlePropertySvc
 

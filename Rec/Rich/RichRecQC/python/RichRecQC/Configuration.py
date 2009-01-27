@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.13 2008-12-19 11:39:44 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.14 2009-01-27 14:55:14 ukerzel Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -149,7 +149,7 @@ class RichRecQCConf(RichConfigurableUser):
         # Add monitors
         allMoni  = self.createMonitor(Rich__Rec__MarkovRingFinder__MC__Moni,"MarkovRingMoniAll")
         sequence.Members += [allMoni]
-        bestMoni = Rself.createMonitor(ich__Rec__MarkovRingFinder__MC__Moni,"MarkovRingMoniBest")
+        bestMoni = self.createMonitor(Rich__Rec__MarkovRingFinder__MC__Moni,"MarkovRingMoniBest")
         bestMoni.RingLocation = "Rec/Rich/Markov/RingsBest"
         sequence.Members += [bestMoni]
         isoMoni = self.createMonitor(Rich__Rec__MarkovRingFinder__MC__Moni,"MarkovRingMoniIsolated")
