@@ -10,10 +10,21 @@ project_names = ["Gaudi", "LHCb", "Lbcom", "Rec", "Boole", "Brunel" ,
                  "Online", "Euler", "Geant4", "DaVinci", "Bender", "Orwell",
                  "Panoramix", "LbScripts"]
 
+def isNewStyleBinary(cmtconfig):
+    newstyle = False
+    if len(cmtconfig.split("-")) >1 :
+        if cmtconfig.endswith("-opt") or cmtconfig.endswith("-dbg") :
+            newstyle = True
+    return newstyle
+
 def isBinaryDbg(cmtconfig):
     bindbg = True
-    if not cmtconfig.endswith("_dbg") :
-        bindbg = False
+    if isNewStyleBinary(cmtconfig) :
+        if not cmtconfig.endswith("-dbg") :
+            bindbg = False    
+    else :
+        if not cmtconfig.endswith("_dbg") :
+            bindbg = False
     return bindbg
 
 def isBinaryOpt(cmtconfig):
@@ -26,18 +37,30 @@ def isBinaryOpt(cmtconfig):
 def getBinaryDbg(cmtconfig):
     cmtdbg = cmtconfig
     if not isBinaryDbg(cmtconfig) :
-        cmtdbg += "_dbg"
+        if isNewStyleBinary(cmtconfig) :
+            if cmtconfig.endswith("-opt") :
+                cmtdbg = "-".join(cmtconfig.split("-")[:-1]) + "-dbg"
+            else :
+                cmtdbg += "-dbg"
+        else :
+            cmtdbg += "_dbg"
     return cmtdbg
 
 def getBinaryOpt(cmtconfig):
     cmtopt = cmtconfig
     if isBinaryDbg(cmtconfig) :
-        cmtopt = "_".join(cmtconfig.split("_")[:-1])
+        if isNewStyleBinary(cmtconfig) :
+            cmtopt = "-".join(cmtconfig.split("-")[:-1]) + "-opt"
+        else :
+            cmtopt = "_".join(cmtconfig.split("_")[:-1])
     return cmtopt
 
 
-binary_opt_list = ["slc3_ia32_gcc323", "slc4_ia32_gcc34",
-                   "slc4_amd64_gcc34", "win32_vc71"]
+binary_opt_list = ["slc3_ia32_gcc323", 
+                   "slc4_ia32_gcc34", "slc4_amd64_gcc34", 
+                   "x86_64-slc5-gcc34-opt", "i686-slc5-gcc34-opt",
+                   "x86_64-slc5-gcc43-opt", "i686-slc5-gcc43-opt",
+                   "win32_vc71"]
 
 binary_dbg_list = [ getBinaryDbg(x) for x in binary_opt_list ]
 

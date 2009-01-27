@@ -1,11 +1,13 @@
 2009-01-27  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbConfiguration/Project.py: added support for slc5
 	* cmt/requirements: added the --build to the generateLogin command.
 	* python/LbConfiguration/SetupProject.py: fixed the .bat file format
 	* scripts/generateLogin: added the --build option in order to allow the usage of 
 	the User_release_area for SetupProject at build time. Fixed the .bat file format
 	* python/LbConfiguration/LbLogin.py: fixed manifest for the display when there is no
 	user release area.
+	
 
 2009-01-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 

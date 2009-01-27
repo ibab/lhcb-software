@@ -31,6 +31,7 @@ sys.path.insert(0,_py_dir)
 _scripts_dir = os.path.join(_base_dir, "scripts")
 
 
+from LbConfiguration.Project import getBinaryDbg
 from LbUtils.Script import Script
 from LbUtils.Env import Environment, Aliases
 from LbUtils.CVS import CVS2Version
@@ -40,7 +41,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.8 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.9 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -297,6 +298,14 @@ class LbLoginScript(Script):
     def setCMTBin(self):
         ev = self._env
         ev["CMTBIN"] = self.getNativeBin()
+        
+    def hasAfsCommands(self, cmd):
+        hasafs = False
+        f = os.popen("which %s >& /dev/null" % cmd)
+        f.read()
+        if f.close() is None :
+            hasafs = True
+        return hasafs
 
     def setCMTSystem(self):
         ev = self._env
@@ -313,7 +322,7 @@ class LbLoginScript(Script):
                 system = "%s-%s" % (uname, uname2)
             elif uname == "Darwin" or uname.startswith("CYGWIN") :
                 system = uname
-            if may_use_afs :
+            if may_use_afs and self.hasAfsCommands("fs"):
                 f = os.popen("fs sysname")
                 a = f.read()
                 if f.close() is None :
@@ -564,6 +573,7 @@ class LbLoginScript(Script):
             self.platform = "win32"
             self.compdef = "vc71"
 
+        newtag = False
         if self.platform == "slc5" :
             newtag = True
 
@@ -606,11 +616,14 @@ class LbLoginScript(Script):
 
 
         if not sys.platform == "win32" :
-            ev["CMTOPT"] = "_".join([self.platform, self.binary, self.compdef])
+            if newtag :
+                ev["CMTOPT"] = "-".join([hwdict[self.binary][0], self.platform, self.compdef])
+            else :
+                ev["CMTOPT"] = "_".join([self.platform, self.binary, self.compdef])
         else :
             ev["CMTOPT"] = "_".join([self.platform, self.compdef]) 
                        
-        ev["CMTDEB"] = ev["CMTOPT"] + "_dbg"
+        ev["CMTDEB"] = getBinaryDbg(ev["CMTOPT"])
         
         ev["CMTCONFIG"] = ev["CMTOPT"]
         if debug or sys.platform == "win32":
