@@ -30,4 +30,8 @@
   <class name="std::vector<LHCb::PackedRecVertex>" />
   <class name="LHCb::PackedRecVertices" id="00000611-0000-0000-0000-000000000000" />
 
+  <class name="LHCb::PackedTwoProngVertex" />
+  <class name="std::vector<LHCb::PackedTwoProngVertex>" />
+  <class name="LHCb::PackedTwoProngVertices" id="00000612-0000-0000-0000-000000000000" />
+
 </lcgdict>

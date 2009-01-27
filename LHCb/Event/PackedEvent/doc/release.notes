@@ -4,6 +4,9 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+! 2009-01-27 - Marco Cattaneo
+ - Add missing dictionaries for new class
+
 ! 2009-01-26 - Olivier Callot
  - New class for PackedTwoProngVertex.
  - Remove version from Track, CaloHypo, Protoparticle and Vertex: This exists in all DataObjects
