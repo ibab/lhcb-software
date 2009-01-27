@@ -56,14 +56,14 @@ make_fragment python_init -header=python_init_header -dependencies
 
 
 pattern python_alias \
-    set_append PYTHONALIASDEF " <script>:$(<package>_root) " ; \
+    macro_append python_alias_def " <script>:$(<package>_root) " ; \
     document python_alias <script>_python_alias script=<script> ; \
     macro_append <script>_python_alias_dependencies " install_scripts "
 
 make_fragment python_alias -header=python_alias_header -dependencies
 
-action ShowPythonAlias "echo $(PYTHONALIASDEF) | tr ' ' '\n' " \
-            WIN32           "echo $(PYTHONALIASDEF)"
+action ShowPythonAlias "echo $(python_alias_def) | tr ' ' '\n' " \
+            WIN32           "echo $(python_alias_def)"
 
 macro_remove cmt_actions_constituents "ShowPythonAlias "
 macro_remove cmt_actions_constituentsclean "ShowPythonAliasclean "
@@ -73,13 +73,13 @@ macro_remove cmt_actions_constituentsclean "ShowPythonAliasclean "
 
 pattern source_shell_alias \
     set_append SOURCESHELLALIASLIST " $(<package>_cmtpath)/InstallArea/scripts/<script> " ; \
-    set_append SOURCESHELLALIASDEF " <script>:$(<package>_root) "
+    macro_append source_shell_alias_def " <script>:$(<package>_root) "
 
 cmtpath_pattern \
     setup_script $(LBSCRIPTSPOLICYROOT)/scripts/SourceShellAlias
 
-action ShowSourceShellAlias "echo $(SOURCESHELLALIASDEF) | tr ' ' '\n' " \
-            WIN32           "echo $(SOURCESHELLALIASDEF)"
+action ShowSourceShellAlias "echo $(source_shell_alias_def) | tr ' ' '\n' " \
+            WIN32           "echo $(source_shell_alias_def)"
 
 macro_remove cmt_actions_constituents "ShowSourceShellAlias "
 macro_remove cmt_actions_constituentsclean "ShowSourceShellAliasclean "
@@ -90,8 +90,8 @@ apply_pattern source_shell_alias script=SourceShellAlias
 
 
 
-action ShowAlias "echo $(PYTHONALIASDEF) $(SOURCESHELLALIASDEF) | tr ' ' '\n' " \
-           WIN32 "echo $(PYTHONALIASDEF) $(SOURCESHELLALIASDEF)"
+action ShowAlias "echo $(python_alias_def) $(source_shell_alias_def) | tr ' ' '\n' " \
+           WIN32 "echo $(python_alias_def) $(source_shell_alias_def)"
 
 macro_remove cmt_actions_constituents "ShowAlias "
 macro_remove cmt_actions_constituentsclean "ShowAliasclean "
@@ -183,7 +183,8 @@ cmtpath_pattern \
 apply_pattern source_shell_alias script=NoCMTPATH
 
 # remove CMTPATH from the environment
-setup_script ../scripts/NoCMTPATH
+macro nocmtpath_script "$(LBSCRIPTSPOLICYROOT)/scripts/NoCMTPATH"
+setup_script $(nocmtpath_script)
 
 #---------------------------------------------------
 # clean up of the different path
