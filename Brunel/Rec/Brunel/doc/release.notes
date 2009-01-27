@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-01-27 - Marco Cattaneo
+ - Update references for new algorithm to pack V0s
+
 ! 2009-01-23 - Marco Cattaneo
  - Update references following fix to untested StatusCodes in VeloMonitor
  - Protect against missing #units when Calo not in monitoring sequence
