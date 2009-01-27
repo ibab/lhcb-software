@@ -67,6 +67,8 @@ namespace LHCb {
       
       std::string createNewFile(unsigned int runNumber);
 
+      std::string createNewFile(unsigned int runNumber, int streamID);
+      
       /**Simple constructor.*/
       RPCComm(const char *serverURL) { m_serverURL = new URL(serverURL); }
 
@@ -104,6 +106,23 @@ namespace LHCb {
   "    </value></param>\n" \
   "  </params>\n"  \
   "</methodCall>\n"
+
+#define NEWFILE_TEMPLATE_STREAM  "<?xml version=\"1.0\"?>\n" \
+"<methodCall>\n" \
+  "  <methodName>getNewFileName</methodName>\n" \
+  "  <params>\n"   \
+  "    <param><value>\n" \
+  "      <string>%u</string>\n" \
+  "    </value></param>\n" \
+  "  </params>\n"  \
+  "    <param><value>\n" \
+  "      <string>%i</string>\n" \
+  "    </value></param>\n" \
+  "  </params>\n"  \
+"</methodCall>\n"
+
+
+
 
 #define CONFIRM_TEMPLATE "<?xml version=\"1.0\"?>\n" \
   "<methodCall>\n" \

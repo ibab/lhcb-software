@@ -95,6 +95,12 @@ void File::feedMonitor(void* tag, void** buf, int* size, int* first) {
 void File::feedMessageQueue(mqd_t /* mq */) {
 }
 
+/// New constructor with stream id
+File::File(std::string fileName, unsigned int runNumber, int streamID) {
+    File(fileName, runNumber);
+    m_streamID = streamID;
+}
+
 /// Constructor
 File::File(std::string fileName, unsigned int runNumber) {
   static int s_seqNo = 0;
@@ -112,6 +118,7 @@ File::File(std::string fileName, unsigned int runNumber) {
   m_mon->m_lumiEvents = 0;
   m_fileName = fileName;
   m_md5 = new TMD5();
+  m_streamID = 0;
   m_prev = NULL;
   m_next = NULL;
   sprintf(txt,"/File#%02d",s_seqNo++);
@@ -291,7 +298,7 @@ StatusCode MDFWriterNet::finalize(void)
 std::string MDFWriterNet::createNewFile(unsigned int runNumber)
 {
   // override this if the m_rpcObj looks different
-  return m_rpcObj->createNewFile(runNumber);
+  return m_rpcObj->createNewFile(runNumber, m_streamID);
 }
 
 /**
@@ -311,7 +318,7 @@ File* MDFWriterNet::createAndOpenFile(unsigned int runNumber)
      */
     *m_log << MSG::INFO << "Getting a new file name for run "
            << runNumber << " ..." << endmsg;
-    currFile = new File(this->createNewFile(runNumber), runNumber);
+    currFile = new File(this->createNewFile(runNumber), runNumber, m_streamID);
   } catch (std::exception e) {
     currFile = new File(getNewFileName(runNumber), runNumber);
     *m_log << MSG::WARNING

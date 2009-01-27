@@ -43,7 +43,10 @@ namespace LHCb {
   private:
     /// The current file being written to.
     std::string m_fileName;
-
+    
+    //// The stream this file belongs to
+    int m_streamID;
+    
     /// The MD5 checksum of the file.
     TMD5 *m_md5;
 
@@ -178,6 +181,8 @@ namespace LHCb {
 //      m_next = NULL;
 //    }
     File(std::string fileName, unsigned int runNumber);
+
+    File(std::string fileName, unsigned int runNumber, int streamID);
 
     /// Updates the checksums and the bytes written count for the file, given a new chunk to be written.
     /// Returns the number of bytes written in all so far.

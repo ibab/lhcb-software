@@ -190,6 +190,38 @@ std::string RPCComm::createNewFile(unsigned int runNumber)
   return file;
 }
 
+std::string RPCComm::createNewFile(unsigned int runNumber, int streamID)
+{
+  char headerData[1024], xmlData[1024], response[1024];
+  int ret;
+  std::string file;
+  char startStr[] = "<string>";
+  char endStr[] = "</string>";
+  size_t start, end;
+
+  snprintf(xmlData, sizeof(xmlData), NEWFILE_TEMPLATE_STREAM, runNumber, streamID);
+  snprintf(headerData, sizeof(headerData), HEADER_TEMPLATE,
+          "WriterHost", (long unsigned) strlen(xmlData));
+
+  memset(response, 0, sizeof(response));
+  ret = requestResponse(headerData, xmlData, response, sizeof(response));
+
+  if (ret < 0)
+    throw std::runtime_error("Could not run RPC call for create");
+  if (isError(response))
+    throw std::runtime_error(response);
+
+  std::string res(response);
+
+  start = res.find(startStr) + sizeof(startStr) - 1;
+  end = res.find(endStr);
+  file = std::string(response, start, end-start);
+  
+  return file;
+}
+
+
+
 URL::URL(const char *url)
 {
   char *curr, *currw;
