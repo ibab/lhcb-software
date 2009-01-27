@@ -1,4 +1,4 @@
-// $Id: OTRandomDepositCreator.cpp,v 1.18 2008-06-04 15:17:17 janos Exp $
+// $Id: OTRandomDepositCreator.cpp,v 1.19 2009-01-27 09:55:13 janos Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
@@ -94,6 +94,14 @@ StatusCode OTRandomDepositCreator::initialize()
 
   /// Determine the number of noise hits to generate
   m_nNoise = unsigned( m_nChannels*m_windowSize*m_noiseRate );
+  
+  info() << "******** Noise Settings ********" << endmsg
+         << "Number of channels: " << m_nChannels << endmsg 
+         << "Noise rate: " << m_noiseRate << endmsg
+         << "Width of read out gate in ns" << readoutTool->sizeOfReadOutGate() << endmsg
+         << "Dead time : " << m_deadTime  << endmsg
+         << "Number of deposits to generate: " << m_nNoise << endmsg
+         << "********************************" << endmsg;
 
   return StatusCode::SUCCESS;  
 }
@@ -125,7 +133,8 @@ void OTRandomDepositCreator::createDeposits(OTDeposits& deposits) const
     if (strawID <= module->nChannels()) {
       const unsigned int stationID  = module->elementID().station();
       const double time             = m_windowOffSet[stationID-1u] + (m_flat() * m_windowSize);
-      MCOTDeposit* newDeposit = new MCOTDeposit( 0, 
+      MCOTDeposit* newDeposit = new MCOTDeposit( MCOTDeposit::Noise,
+                                                 0, 
                                                  OTChannelID( stationID, 
                                                               module->elementID().layer(), 
                                                               module->elementID().quarter(),

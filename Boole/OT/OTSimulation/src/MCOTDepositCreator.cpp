@@ -1,4 +1,4 @@
-// $Id: MCOTDepositCreator.cpp,v 1.27 2008-06-04 15:17:17 janos Exp $
+// $Id: MCOTDepositCreator.cpp,v 1.28 2009-01-27 09:55:13 janos Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -87,12 +87,12 @@ MCOTDepositCreator::~MCOTDepositCreator()
 
 StatusCode MCOTDepositCreator::initialize()
 {
-
+  
   StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   // sanity checks
-  if (m_spillVector.empty()) return Error("No spills selected to be digitized !");
+  if ( m_spillVector.empty() ) return Error("No spills selected to be digitized !");
     
   // Get OT Geometry
   m_tracker              = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
@@ -156,7 +156,7 @@ StatusCode MCOTDepositCreator::execute(){
     if (msgLevel(MSG::DEBUG)) debug() << "Number of deposits before adding noise = "
                                       << m_deposits.size() << endmsg;
     m_noiseTool->createDeposits(m_deposits);
-    if (msgLevel(MSG::DEBUG)) debug() << "Number of deposits after adding XTalk = "
+    if (msgLevel(MSG::DEBUG)) debug() << "Number of deposits after adding noise = "
                                       << m_deposits.size() << endmsg;
   }
 
@@ -165,7 +165,7 @@ StatusCode MCOTDepositCreator::execute(){
     if (msgLevel(MSG::DEBUG)) debug() << "Number of deposits before adding double pulse = "
                                       << m_deposits.size() << endmsg;
     addDoublePulse();
-    if (msgLevel(MSG::DEBUG)) debug() << "Number of deposits after adding noise = "
+    if (msgLevel(MSG::DEBUG)) debug() << "Number of deposits after adding double pulse = "
                                       << m_deposits.size() << endmsg;
   }
   
@@ -182,6 +182,7 @@ StatusCode MCOTDepositCreator::execute(){
             bind( &MCOTDeposits::add, 
                   deposits,
                   _1 ) );
+  debug() << "Going to put " << deposits->size() << " in the TES" << endmsg;
   put(deposits, MCOTDepositLocation::Default);
 
   /// Clear deposits vector
@@ -227,7 +228,7 @@ void MCOTDepositCreator::makeDeposits() const
             const double dist            = iT->second;
             const int amb                = (dist< 0.0) ? -1 : 1;
             /// create deposit
-            MCOTDeposit* deposit = new MCOTDeposit(aMCHit, iT->first, tTimeOffset, std::abs(dist), amb);
+            MCOTDeposit* deposit = new MCOTDeposit(MCOTDeposit::Signal, aMCHit, iT->first, tTimeOffset, std::abs(dist), amb);
             /// Apply single cell efficiency cut
             /// Currently per station; but I can imagine we want to do it per module or straw
             bool accept = false;
@@ -282,7 +283,7 @@ void MCOTDepositCreator::addCrossTalk() const
       const double testVal = m_flat();
       if ( testVal < m_crossTalkLevel) {
         // crosstalk in neighbour - copy hit - this is very ugly
-        crossTalkList.push_back(new MCOTDeposit(0, *iterChan, aDeposit->time(), 
+        crossTalkList.push_back(new MCOTDeposit(MCOTDeposit::XTalk, 0, *iterChan, aDeposit->time(), 
                                                 aDeposit->driftDistance(), aDeposit->ambiguity()));
       } 
       ++iterChan;
@@ -310,7 +311,7 @@ void MCOTDepositCreator::addDoublePulse() const
       const double time       = aDeposit->time() + m_doublePulseTime;     
 
       // New Deposit
-      DoublePulseList.push_back(new MCOTDeposit(0, aChan, time, 0, 0));
+      DoublePulseList.push_back(new MCOTDeposit(MCOTDeposit::DoublePulse, 0, aChan, time, 0, 0));
     }
     ++iterDeposit;
   }
