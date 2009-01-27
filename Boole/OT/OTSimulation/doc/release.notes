@@ -2,6 +2,9 @@
 ! Package manager : Jan Amoraal
 !--------------------------------------------------------------------------
 
+! 2008-01-27 Jan Amoraal
+ - Follow changes in MCOTDeposit
+
 !====================== OTSimulation v4r0 2008-06-04 ======================
 ! 2008-06-04 Jan Amoraal
  - Check status codes in MCOTDepositCreator, OTFillRawBuffer and 
