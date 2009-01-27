@@ -3,6 +3,9 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+! 2009-01-27 - Marco Cattaneo
+ - Update test for Packed V0s
+
 ! 2009-01-23 - Marco Cattaneo
  - Tweak the doxygen appearance
 
