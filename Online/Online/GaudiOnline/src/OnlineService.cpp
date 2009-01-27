@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/OnlineService.cpp,v 1.6 2008-04-10 10:04:33 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/OnlineService.cpp,v 1.7 2009-01-27 08:30:02 cattanem Exp $
 //  ====================================================================
 //  MEPManager.cpp
 //  --------------------------------------------------------------------
@@ -26,7 +26,7 @@ LHCb::OnlineService::~OnlineService()  {
 
 /// IInterface implementation: Query interface
 StatusCode LHCb::OnlineService::queryInterface(const InterfaceID& riid,void** ppIf) {
-  if ( riid.versionMatch(IID_IIncidentListener) )  {
+  if ( riid.versionMatch(IIncidentListener::interfaceID()) )  {
     *ppIf = (IIncidentListener*)this;
     addRef();
     return StatusCode::SUCCESS;

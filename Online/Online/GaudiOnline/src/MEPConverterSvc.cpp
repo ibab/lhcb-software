@@ -45,7 +45,7 @@ LHCb::MEPConverterSvc::~MEPConverterSvc()   {
 
 // IInterface implementation: Query interface
 StatusCode LHCb::MEPConverterSvc::queryInterface(const InterfaceID& riid,void** ppIf) {
-  if ( riid == IID_IRunable )  {
+  if ( riid == IRunable::interfaceID() )  {
     *ppIf = (IRunable*)this;
     addRef();
     return StatusCode::SUCCESS;

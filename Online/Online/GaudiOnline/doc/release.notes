@@ -1,6 +1,9 @@
 Package: GaudiOnline
 Author:  Markus Frank
 
+! 2009-01-27 - Marco Cattaneo
+ - Backward compatible fixes for Gaudi v21
+
 ! 2009-01-19 Markus Frank
  - Implement mechanism to allow saving MEPs by the Hlder task if Moore tasks crash
 

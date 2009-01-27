@@ -138,13 +138,13 @@ unsigned long DimTaskFSM::release() {
 
 /// IInterface implementation: DimTaskFSM::queryInterface()
 StatusCode DimTaskFSM::queryInterface(const InterfaceID& iid,void** ppvIf) {
-  if( iid == IID_IInterface )
+  if( iid == IInterface::interfaceID() )
     return cast_success<DimTaskFSM,IInterface>(this,ppvIf);
-  else if( iid == IID_IRunable )
+  else if( iid == IRunable::interfaceID() )
     return cast_success<DimTaskFSM,IRunable>(this,ppvIf);
-  else if( iid == IID_IAppMgrUI )
+  else if( iid == IAppMgrUI::interfaceID() )
     return cast_success<DimTaskFSM,IAppMgrUI>(this,ppvIf);
-  else if ( iid == IID_IProperty )
+  else if ( iid == IProperty::interfaceID() )
     return m_propertyMgr->queryInterface(iid, ppvIf);
   else
     return StatusCode::FAILURE;

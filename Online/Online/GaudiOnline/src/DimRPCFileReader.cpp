@@ -1,4 +1,4 @@
-// $Id: DimRPCFileReader.cpp,v 1.18 2009-01-09 10:35:48 frankb Exp $
+// $Id: DimRPCFileReader.cpp,v 1.19 2009-01-27 08:30:01 cattanem Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IAppMgrUI.h"
@@ -45,7 +45,7 @@ DimRPCFileReader::~DimRPCFileReader()  {
 
 /// IInterface implementation : queryInterface
 StatusCode DimRPCFileReader::queryInterface(const InterfaceID& riid, void** ppIf)   {
-  if ( riid == IID_IRunable ) {
+  if ( riid == IRunable::interfaceID() ) {
     *ppIf = (IRunable*)this;
     addRef();
     return StatusCode::SUCCESS;

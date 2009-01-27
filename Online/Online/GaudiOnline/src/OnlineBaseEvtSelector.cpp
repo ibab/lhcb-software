@@ -1,4 +1,4 @@
-// $Id: OnlineBaseEvtSelector.cpp,v 1.5 2008-10-06 11:49:19 frankb Exp $
+// $Id: OnlineBaseEvtSelector.cpp,v 1.6 2009-01-27 08:30:02 cattanem Exp $
 //====================================================================
 //  OnlineBaseEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -56,9 +56,9 @@ OnlineBaseEvtSelector::OnlineBaseEvtSelector(const string& nam, ISvcLocator* svc
 
 // IInterface::queryInterface
 StatusCode OnlineBaseEvtSelector::queryInterface(const InterfaceID& riid, void** ppvIf) {
-  if ( riid == IID_IEvtSelector )
+  if ( riid == IEvtSelector::interfaceID() )
     *ppvIf = (IEvtSelector*)this;
-  else if ( riid == IID_ISuspendable )
+  else if ( riid == ISuspendable::interfaceID() )
     *ppvIf = (ISuspendable*)this;
   else
     return OnlineService::queryInterface( riid, ppvIf );

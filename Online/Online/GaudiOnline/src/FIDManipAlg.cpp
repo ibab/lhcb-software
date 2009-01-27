@@ -27,7 +27,7 @@ FIDManipAlg::FIDManipAlg(const string& nam, ISvcLocator* pSvc)
 
 /// IInterface implementation : queryInterface
 StatusCode FIDManipAlg::queryInterface(const InterfaceID& riid, void** ppIf)   {
-  if ( riid == IID_IIncidentListener ) {
+  if ( riid == IIncidentListener::interfaceID() ) {
     *ppIf = (IIncidentListener*)this;
     addRef();
     return StatusCode::SUCCESS;

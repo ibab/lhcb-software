@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.73 2009-01-20 09:02:18 frankb Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.74 2009-01-27 08:30:02 cattanem Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -796,7 +796,7 @@ StatusCode MEPRxSvc::run() {
 // IInterface implementation: Query interface
 StatusCode 
 MEPRxSvc::queryInterface(const InterfaceID& riid,void** ppvInterface) {
-  if ( riid == IID_IRunable )   {
+  if ( IRunable::interfaceID() )   {
     *ppvInterface = (IRunable*)this;
     addRef();
     return StatusCode::SUCCESS; 

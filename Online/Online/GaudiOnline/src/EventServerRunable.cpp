@@ -1,4 +1,4 @@
-// $Id: EventServerRunable.cpp,v 1.9 2008-10-14 08:37:21 frankb Exp $
+// $Id: EventServerRunable.cpp,v 1.10 2009-01-27 08:30:01 cattanem Exp $
 //====================================================================
 //  EventServerRunable
 //--------------------------------------------------------------------
@@ -13,7 +13,6 @@
 //  Created    : 4/12/2007
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/EventServerRunable.cpp,v 1.9 2008-10-14 08:37:21 frankb Exp $
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
@@ -70,7 +69,7 @@ EventServerRunable::~EventServerRunable()  {
 
 // IInterface implementation : queryInterface
 StatusCode EventServerRunable::queryInterface(const InterfaceID& riid, void** ppIf)   {
-  if ( riid == IID_IRunable )  {
+  if ( riid == IRunable::interfaceID() )  {
     *ppIf = (IRunable*)this;
     addRef();
     return StatusCode::SUCCESS;

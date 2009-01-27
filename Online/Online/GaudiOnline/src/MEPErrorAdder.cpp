@@ -402,7 +402,7 @@ StatusCode MEPErrorAdder::run() {
 // IInterface implementation: Query interface
 StatusCode
 MEPErrorAdder::queryInterface(const InterfaceID& riid, void** ppvInterface) {
-  if ( riid == IID_IRunable )   {
+  if ( riid == IRunable::interfaceID() )   {
     *ppvInterface = (IRunable*)this;
     addRef();
     return StatusCode::SUCCESS;

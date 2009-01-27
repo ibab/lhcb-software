@@ -35,9 +35,9 @@ LHCb::OnlineRunable::~OnlineRunable()   {
 
 // IInterface implementation: Query interface
 StatusCode LHCb::OnlineRunable::queryInterface(const InterfaceID& riid,void** ppIf) {
-  if ( riid == IID_IEventProcessor )
+  if ( riid == IEventProcessor::interfaceID() )
     *ppIf = (IEventProcessor*)this;
-  else if ( riid == IID_IRunable )
+  else if ( riid == IRunable::interfaceID() )
     *ppIf = (IRunable*)this;
   else
     return Service::queryInterface(riid, ppIf);

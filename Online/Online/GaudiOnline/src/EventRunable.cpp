@@ -1,4 +1,4 @@
-// $Id: EventRunable.cpp,v 1.9 2009-01-12 16:30:39 frankb Exp $
+// $Id: EventRunable.cpp,v 1.10 2009-01-27 08:30:01 cattanem Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IAppMgrUI.h"
@@ -32,7 +32,7 @@ EventRunable::~EventRunable()
 
 // IInterface implementation : queryInterface
 StatusCode EventRunable::queryInterface(const InterfaceID& riid, void** ppIf)   {
-  if ( riid == IID_IRunable )  {
+  if ( riid == IRunable::interfaceID() )  {
     *ppIf = (IRunable*)this;
     addRef();
     return StatusCode::SUCCESS;

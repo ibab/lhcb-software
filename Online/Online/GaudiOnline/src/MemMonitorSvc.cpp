@@ -163,7 +163,7 @@ MemMonitorSvc::MemMonitorSvc(CSTR name, ISvcLocator* sl)
 }
 
 StatusCode MemMonitorSvc::queryInterface(const InterfaceID& riid, void** ppvIF) {
-  if(IID_IMonitorSvc == riid) {
+  if(IMonitorSvc::interfaceID() == riid) {
     *ppvIF = dynamic_cast<IMonitorSvc*> (this);
     addRef();
     return StatusCode::SUCCESS;

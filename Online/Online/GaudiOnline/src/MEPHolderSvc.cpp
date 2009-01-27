@@ -52,7 +52,7 @@ LHCb::MEPHolderSvc::~MEPHolderSvc()   {
 
 // IInterface implementation: Query interface
 StatusCode LHCb::MEPHolderSvc::queryInterface(const InterfaceID& riid,void** ppIf) {
-  if ( riid == IID_IRunable )  {
+  if ( riid == IRunable::interfaceID() )  {
     *ppIf = (IRunable*)this;
     addRef();
     return StatusCode::SUCCESS;

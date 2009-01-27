@@ -1,4 +1,4 @@
-// $Id: OnlineMessageSvc.cpp,v 1.14 2008-10-21 16:15:16 frankb Exp $
+// $Id: OnlineMessageSvc.cpp,v 1.15 2009-01-27 08:30:02 cattanem Exp $
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiOnline/IErrorLogger.h"
@@ -321,7 +321,7 @@ void LHCb::OnlineMessageSvc::eraseMessage( const StatusCode& key, const Message&
 
 // ---------------------------------------------------------------------------
 StatusCode LHCb::OnlineMessageSvc::queryInterface(const InterfaceID& riid, void** ppvInterface) {
-  if ( IID_IMessageSvc == riid )  {
+  if ( IMessageSvc::interfaceID() == riid )  {
     *ppvInterface = (IMessageSvc*)this;
     addRef();
     return StatusCode::SUCCESS;
