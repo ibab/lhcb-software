@@ -1,0 +1,18 @@
+#!/bin/csh
+
+if ! $?DIRACROOT then
+   source `which SetupProject.csh` Dirac >&! /dev/null
+   if $SetupProjectStatus != 0 then
+      echo Problem to set the Dirac environment
+      exit 1
+   endif
+endif
+#$DIRACROOT/scripts/dirac-proxy-info --checkvalid
+`which dirac-proxy-info` --checkvalid
+set rc_dirac = $status
+if ($rc_dirac != 0 ) then
+   echo problem to get the Proxy info
+   exit $rc_dirac
+endif
+
+exit 0

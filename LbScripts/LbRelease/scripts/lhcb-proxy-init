@@ -1,0 +1,53 @@
+#!/bin/csh
+set narg = $#argv
+set nar = 1
+set version = ""
+set list_arg = ""
+
+#if ($narg != 0) then
+while ($nar <= $narg) 
+  if ( "$argv[${nar}]" == "-d" ) then
+     @ nar = ${nar} + 1
+     set version = $argv[${nar}]
+  else if ("$argv[${nar}]" == "-v") then
+     @ nar = ${nar} + 1
+     set list_arg = "$list_arg -v $argv[${nar}]"
+  else if ("$argv[${nar}]" == "-g") then
+     @ nar = ${nar} + 1
+     set list_arg = "$list_arg -g $argv[${nar}]"
+  else if ("$argv[${nar}]" == "-h") then
+     echo "Usage : lhcb-proxy-init [-h] [-l] [-d dirac_version] [-v validity] [-g dirac group]"
+     echo "      -h : provide this help"
+     echo "      -d : to specify which version of DIRAC you want to use"
+     echo "      -p : to read password from stdin"
+     echo "      -g : tp specify the DIRAC groupe that you want to use (default lhcb_user)"
+     echo "      -v HH:MM : to specify the validity of the proxy"
+     exit 0
+  else if ("$argv[${nar}]" == "-p") then
+     set list_arg = "$list_arg -p"
+     @ nar = ${nar} + 1
+  else
+     @ nar = ${nar} + 1
+  endif
+end
+
+if ("$list_arg" == "") then
+   set list_arg = "-g lhcb_user"
+endif
+
+source `which SetupProject.csh` Dirac $version >&! /dev/null
+if $SetupProjectStatus != 0 then
+   echo Problem to set the Dirac environment
+   exit 1
+endif
+
+
+#$DIRACROOT/scripts/lhcb-proxy-init $list_arg
+`which lhcb-proxy-init` $list_arg
+set rc_dirac = $status
+if ($rc_dirac != 0 ) then
+   echo problem to generate the Proxy
+   exit $rc_dirac
+endif
+
+exit 0

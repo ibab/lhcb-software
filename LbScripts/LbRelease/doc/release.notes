@@ -1,3 +1,8 @@
+2009-01-27  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/lhcb-proxy-info: New file.
+	* scripts/lhcb-proxy-init: New file
+
 2009-01-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v2r0
