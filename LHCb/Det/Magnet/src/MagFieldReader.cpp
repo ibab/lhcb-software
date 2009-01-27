@@ -1,4 +1,4 @@
-// $Id: MagFieldReader.cpp,v 1.15 2008-07-14 15:28:49 ahicheur Exp $
+// $Id: MagFieldReader.cpp,v 1.16 2009-01-27 16:13:40 cattanem Exp $
 // Include files 
 #include "Riostream.h"
 // from Gaudi
@@ -175,8 +175,6 @@ Tuple nt2 = nTuple( 20, "Field Integral", CLID_ColumnWiseTuple );
     }
   }
   
-  bIntegrator->release(); 
-                          
-
+  releaseTool(bIntegrator).ignore(); 
   
 }
