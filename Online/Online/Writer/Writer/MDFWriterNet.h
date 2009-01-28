@@ -97,6 +97,8 @@ namespace LHCb {
 
     static void feedMonitor(void* tag, void** buf, int* size, int* first);
 
+    void init(const std::string& fname,  unsigned int runNumber);
+
   public:
     /// get the monitor values
     inline Monitor* getMonitor() { return m_mon; } 
@@ -180,9 +182,9 @@ namespace LHCb {
 //      m_prev = NULL;
 //      m_next = NULL;
 //    }
-    File(std::string fileName, unsigned int runNumber);
+    File(const std::string& fileName, unsigned int runNumber);
 
-    File(std::string fileName, unsigned int runNumber, std::string streamID);
+    File(const std::string& fileName, unsigned int runNumber, const std::string& streamID);
 
     /// Updates the checksums and the bytes written count for the file, given a new chunk to be written.
     /// Returns the number of bytes written in all so far.

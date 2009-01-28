@@ -96,13 +96,18 @@ void File::feedMessageQueue(mqd_t /* mq */) {
 }
 
 /// New constructor with stream id
-File::File(std::string fileName, unsigned int runNumber, std::string streamID) {
-    File(fileName, runNumber);
+File::File(const std::string& fileName, unsigned int runNumber, const std::string& streamID) {
+    init(fileName, runNumber);
     m_streamID = streamID;
 }
 
 /// Constructor
-File::File(std::string fileName, unsigned int runNumber) {
+File::File(const std::string& fileName, unsigned int runNumber) {
+    init(fileName, runNumber);
+}
+
+/// Constructor
+void File::init(const std::string& fileName, unsigned int runNumber) {
   static int s_seqNo = 0;
   char txt[32];
   m_mon = &m_monBuffer;
