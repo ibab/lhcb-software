@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.30 2008-12-16 10:48:36 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.31 2009-01-28 16:37:00 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -34,7 +34,7 @@ class Boole(LHCbConfigurableUser):
         'EvtMax'       : """ Maximum number of events to process """
        ,'SkipEvents'   : """ Number of events to skip """
        ,'SkipSpill'    : """ Number of spillover events to skip """
-       ,'UseSpillover' : """ Flag to enable spillover (default True) """
+       ,'UseSpillover' : """ Flag to enable spillover (default False) """
        ,'SpilloverPaths':""" Paths to fill when spillover is enabled """
        ,'GenerateTAE'  : """ Flag to simulate time alignment events (default False) """
        ,'Outputs'      : """ List of outputs: ['MDF','DIGI','L0ETC'] (default 'DIGI') """
@@ -82,9 +82,13 @@ class Boole(LHCbConfigurableUser):
     def defineOptions(self):
         tae   = self.getProp("GenerateTAE")
         spill = self.getProp("UseSpillover")
-        if tae       : self.enableTAE()
+        if tae :
+            if spill :
+                log.warning("Disabling spillover, incompatible with TAE")
+                spill = False
+            self.enableTAE()
         if not spill :
-            if self.getProp("DataType") == "DC06" :
+            if self.getProp("DataType") == "DC06" and not tae:
                 log.warning("Spillover is disabled. Should normally be enabled for DC06!")
             from Configurables import ( MuonBackground, MuonDigitization )
             MuonBackground("MuonLowEnergy").OutputLevel = ERROR
@@ -111,7 +115,6 @@ class Boole(LHCbConfigurableUser):
         """
         switch to generate Time Alignment events (only Prev1 for now).
         """
-        self.disableSpillover()
         initMUONSeq = GaudiSequencer( "InitMUONSeq" )
         initMUONSeq.Members.remove( "MuonBackground/MuonFlatSpillover" )
         importOptions( "$BOOLEOPTS/TAE-Prev1.opts" ) # add misaligned RawEvent

@@ -4,6 +4,7 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
 ! 2009-01-28 - Marco Cattaneo
+ - Fix TAE option in configurable
  - Update references for changes to Silicon simulation
 
 ! 2009-01-26 - Chris Jones
