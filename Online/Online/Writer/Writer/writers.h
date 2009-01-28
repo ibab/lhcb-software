@@ -6,10 +6,8 @@
 #include <string>
 #include <map>
 
-using namespace std;
-
-typedef map<int, WriterNetObject> AllWriters;
-typedef map<int, WriterNetObject>::iterator  AllWritersIterator;
+typedef std::map<int, WriterNetObject> AllWriters;
+typedef std::map<int, WriterNetObject>::iterator  AllWritersIterator;
 
 /** \brief Manages a list of all Writers on this machine. */
 class Writers {

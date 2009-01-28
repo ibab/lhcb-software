@@ -5,9 +5,8 @@
 #include <string>
 #include <map>
 
-using namespace std;
 
-typedef map<string, WriterNetFileObject> FilesContainer;
+typedef std::map<std::string, WriterNetFileObject> FilesContainer;
 typedef FilesContainer::iterator FilesContainerIterator;
 
 /** \brief Represents a writer process. Manages all files belonging to this process. */

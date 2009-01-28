@@ -192,7 +192,9 @@ StatusCode MDFWriterNet::initialize(void)
   if(m_streamID == "NONE") {
     *m_log << MSG::ERROR << "Exception: No stream identifier provided." << endmsg;
     return StatusCode::FAILURE;
-  }
+  } else {
+      *m_log << MSG::INFO << "streamID: " << m_streamID << endmsg;
+  } 
   // initialize named message queue
   if((m_mq = mq_open("/writerqueue", O_RDWR, S_IRUSR|S_IWUSR, NULL)) == (mqd_t) -1)  {
       *m_log << MSG::ERROR
@@ -301,6 +303,7 @@ StatusCode MDFWriterNet::finalize(void)
 std::string MDFWriterNet::createNewFile(unsigned int runNumber)
 {
   // override this if the m_rpcObj looks different
+  *m_log << MSG::INFO << "createAndOpenFile: " << m_streamID << "runNumber: " << runNumber << endmsg;
   return m_rpcObj->createNewFile(runNumber, m_streamID);
 }
 
@@ -321,7 +324,9 @@ File* MDFWriterNet::createAndOpenFile(unsigned int runNumber)
      */
     *m_log << MSG::INFO << "Getting a new file name for run "
            << runNumber << " ..." << endmsg;
-    currFile = new File(this->createNewFile(runNumber), runNumber, m_streamID);
+    std::string f = this->createNewFile(runNumber);
+    *m_log << MSG::INFO << "new filename: " << f << endmsg;
+    currFile = new File(f, runNumber, m_streamID);
   } catch (std::exception e) {
     currFile = new File(getNewFileName(runNumber), runNumber);
     *m_log << MSG::WARNING

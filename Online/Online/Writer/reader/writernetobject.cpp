@@ -4,6 +4,7 @@
 #include <map>
 #include <set>
 
+using namespace std;
 
 int WriterNetObject::getPID() {
     return this->writerPID;

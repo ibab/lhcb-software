@@ -29,5 +29,5 @@ extern "C" {
 #define FALSE 0
 
 #define DELIMITER '$'
-#define DELIMITER_CHAR "$"
+#define DELIMITER_S "$"
 

@@ -21,14 +21,14 @@
  */
 class Command {
     public:
-        string name;
-        string param1;
-        string param2;
-        string param3;
-        string param4;
+        std::string name;
+        std::string param1;
+        std::string param2;
+        std::string param3;
+        std::string param4;
         Writers* writers;
 
-        Command(string n, string p1, string p2, string p3, string p4) 
+        Command(std::string n, std::string p1, std::string p2, std::string p3, std::string p4) 
                : name(n), param1(p1), param2(p2), param3(p3), param4(p4)  {
         }
 };
@@ -42,23 +42,23 @@ class Command {
  */
 class CommandHandler {
     protected:
-        string* errorMessage; /// string of the error message
+        std::string* errorMessage; /// string of the error message
         FILE* fp; /// The logfile
     public:
-        string command; /// the name of the command
+        std::string command; /// the name of the command
         CommandHandler(char*, FILE*);
         virtual bool handleCommand(Command *)=0;
         virtual struct Command* parse(char*);
-        virtual string* getErrorMessage() const;
-        void setErrorMessage(string*);
+        virtual std::string* getErrorMessage() const;
+        void setErrorMessage(std::string*);
         virtual ~CommandHandler();
 
         CommandHandler(const CommandHandler& other) : command(other.command) {
-            this->errorMessage = new string(*other.errorMessage);
+            this->errorMessage = new std::string(*other.errorMessage);
         };
 
         CommandHandler& operator=(const CommandHandler& other) {
-            this->errorMessage = new string(*other.errorMessage);
+            this->errorMessage = new std::string(*other.errorMessage);
             return *this;
         };
         

@@ -3,9 +3,7 @@
 #include <string>
 #include <map>
 
-using namespace std;
-
-typedef map<string, string> KeyValuePairContainer;
+typedef std::map<std::string, std::string> KeyValuePairContainer;
 typedef KeyValuePairContainer::iterator KeyValuePairIterator;
 
 /** \brief Represents a file belonging to a writer process. Manages the
@@ -15,7 +13,7 @@ class WriterNetFileObject {
         unsigned int keyValuePairsCount;
     public:
         int writerPID; /** process id of the writer */
-        string* fileName; /** name of the file */
+        std::string* fileName; /** name of the file */
         KeyValuePairContainer * keyValuePairs; /** std:map collection of 
                                                 *  the key/value paris
                                                 * belonging to this file */
