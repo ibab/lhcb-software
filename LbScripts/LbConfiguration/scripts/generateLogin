@@ -16,15 +16,17 @@ if os.path.basename(_base_dir) != "InstallArea" :
 if os.path.isdir(_py_dir) :
     sys.path.insert(0, _py_dir)
 
-from LbConfiguration.LbLogin import getLoginCacheName, LbLoginScript
+from LbConfiguration.LbLogin import getLoginCacheName, getLbLoginEnv
 from LbConfiguration.SetupProject import SetupProject
 from LbConfiguration.Project import binary_list, binary_opt_list, getBinaryOpt
 from optparse import OptionParser
 
 def fixNative(filename):
     tobereplaced = {}
+    if os.environ.has_key("HOME") and not filename.endswith(".bat") :
+        tobereplaced["HOME"] = os.environ["HOME"]        
     if os.environ.has_key("VO_LHCB_SW_DIR") :
-        tobereplaced["VO_LHCB_SW_DIR"] = os.path.join(os.environ["VO_LHCB_SW_DIR"])
+        tobereplaced["VO_LHCB_SW_DIR"] = os.environ["VO_LHCB_SW_DIR"]
     if os.environ.has_key("CMTBIN") :
         tobereplaced["CMTBIN"] = os.environ["CMTBIN"]
     if os.environ.has_key("CMTCONFIG") :
@@ -33,7 +35,7 @@ def fixNative(filename):
             tobereplaced["CMTOPT"] = getBinaryOpt(cmtconf)
         else :
             tobereplaced["CMTOPT"] = cmtconf + "-opt"
-    if os.environ.has_key("AFSROOT") :
+    if os.environ.has_key("AFSROOT") and filename.endswith(".bat"):
         tobereplaced["AFSROOT"] = os.environ["AFSROOT"]
     else :
         if not filename.endswith(".bat") :
@@ -70,14 +72,45 @@ def removeCMTCONFIG(filename):
         out.write(" ".join(words) + "\n")
     out.close()    
 
+def fixPathes(filename):
+    inf = open(filename, "r")
+    data = inf.readlines()
+    inf.close()
+    out = open(filename, "w")
+    pathlist = ["PATH", "LD_LIBRARY_PATH", "PYTHONPATH", "HPATH"]
+    for l in data :
+        words = l.split()
+        written = False
+        if len(words) > 1 :
+            for p in pathlist :
+                sp = "SAVED_%s" % p
+                if words[1] == p or words[1].startswith("%s=" % p) :
+                    if filename.endswith(".csh") :
+                        out.write("setenv %s ${%s}\n" % (sp, p))
+                        out.write(" ".join(words) + "\n")
+                        out.write("setenv %s ${%s}:${%s}\n" % (p, p, sp) )
+                        written = True
+                    elif filename.endswith(".sh") :
+                        out.write("export %s=${%s}\n" % (sp, p))
+                        out.write(" ".join(words) + "\n")
+                        out.write("export %s=${%s}:${%s}\n" % (p, p, sp) )
+                        written = True
+                    elif filename.endswith(".bat") :
+                        out.write("set %s=%%%s%%\n" % (sp,p))
+                        out.write(" ".join(words) + "\n")
+                        out.write("set %s=%%%s%%;%%%s%%\n" % (p, p, sp) )
+                        written = True
+        if not written :
+            out.write(" ".join(words) + "\n")
+    out.close()
+
 
 def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None, building=False):
     location = None
     if targetlocation :
         location = os.path.join(targetlocation, "scripts")
     cachefilename = getLoginCacheName(shell=shell, location=location)
-    lls = LbLoginScript()
-    lls.defineOpts()
+    
     llsargs = []
     llsargs.append("--silent")
     llsargs.append("--shell=%s" % shell)
@@ -85,10 +118,10 @@ def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None,
         llsargs.append("--mysiteroot=%s" % mysiteroot)
     if version :
         llsargs.append("--scripts-version=%s" % version)
-    lls.parseOpts(llsargs)
-    env = lls.setEnv()[0]
+    env = getLbLoginEnv(llsargs)
     for var in env.keys() :
         os.environ[var] = env[var]
+    
     os.environ["CMTCONFIG"] = "slc4_ia32_gcc34"
     setupprojargs = []
     setupprojargs.append("--silent")
@@ -103,12 +136,10 @@ def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None,
     setupprojargs.append("--runtime-project")            
     setupprojargs.append("LCGCMT")
     setupprojargs.append("Python")
-    if lls.options.pythonvers :
-        setupprojargs.append("-v")
-        setupprojargs.append(lls.options.pythonvers)
     SetupProject().main(setupprojargs)
     fixNative(cachefilename)
     removeCMTCONFIG(cachefilename)
+    fixPathes(cachefilename)
         
 def generateLogin(targetlocation, script, version="", mysiteroot=None, building=False):
     knownshells = ["sh", "csh", "tcsh", "zsh", "bat"]

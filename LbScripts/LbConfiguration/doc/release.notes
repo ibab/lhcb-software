@@ -1,7 +1,17 @@
 2009-01-28  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/LbLogin.py: default compiler for slc5 is now gcc34 if it
-	is available. Otherwise, it uses the system one (gcc41).
+	* python/LbConfiguration/SetupProject.py: uses LHCB_USERLOGS 
+	* scripts/generateLogin: 
+	  - added the recall of the orignal pathes for the cache
+	  - interpolates the HOME variable in the cache (not for the .bat)
+	* python/LbConfiguration/LbLogin.py: 
+	  - default compiler for slc5 is now gcc34 if it is available. Otherwise, it uses 
+	    the system one (gcc41). 
+	  - Removed KSERVERS variables.
+	  - added the variable LHCB_USERLOGS.
+	  - made the LHCB_HOME variable unique (not a collection of pathes)
+	  - fixed optimized CMTCONFIG for slc5 (it was missing the "-opt")
+	
 
 2009-01-27  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 

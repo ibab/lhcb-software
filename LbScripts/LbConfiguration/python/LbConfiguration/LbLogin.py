@@ -41,7 +41,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.10 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.11 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -54,23 +54,14 @@ def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
     return name
     
 
-def getLbLoginEnv(debug=False, 
-                  targetshell="csh", mysiteroot=None,
-                  cmtconfig=None, userarea=None, remove_userarea=False,
-                  cmtvers="v1r20p20070208", sharedarea=None,
-                  cmtsite=None):
+def getLbLoginEnv(optionlist = None):
+    if not optionlist :
+        optionlist = [] 
     s = LbLoginScript()
-    s.parseOpts("")
-    s.options.targetshell = targetshell
-    s.options.mysiteroot = mysiteroot
-    s.options.cmtconfig = cmtconfig
-    s.options.userarea = userarea
-    s.options.remove_userarea = remove_userarea
-    s.options.cmtvers = cmtvers
-    s.options.sharedarea = sharedarea
-    s.options.cmtsite = cmtsite
+    s.defineOpts()
+    s.parseOpts(optionlist)
 
-    return s.setEnv(debug)
+    return s.setEnv()[0]
 
 def _multiPathJoin(path, subdir):
     pathlist = []
@@ -95,7 +86,10 @@ def _check_output_options_cb(option, opt_str, value, parser):
             raise OptionValueError("--mktemp cannot be used at the same time as --output")
         parser.values.output = value
 
-
+def _setCMTVersion_cb(option, opt_str, value, parser):
+    if parser.values.cmtvers != value :
+        parser.values.use_cache = False
+        parser.values.cmtvers = value
 
 class LbLoginScript(Script):
     _version = __version__
@@ -183,8 +177,8 @@ class LbLoginScript(Script):
                           action="store_false",
                           help="prevent the usage of the cached setup of LbScripts")
         parser.set_defaults(cmtvers="v1r20p20070208")
-        parser.add_option("--cmtvers",
-                          dest="cmtvers",
+        parser.add_option("--cmtvers", action="callback",
+                          callback= _setCMTVersion_cb,
                           help="set CMT version")
         parser.set_defaults(scriptsvers=None)
         parser.add_option("--scripts-version",
@@ -220,11 +214,6 @@ class LbLoginScript(Script):
         """ CVS base setup """
         log = logging.getLogger()
         if sys.platform == "win32" :
-            method = "ext"
-        else :
-            method = "kserver"
-        server = "isscvs.cern.ch"
-        if sys.platform == "win32" :
             if self._env.has_key("CVS_RSH") :
                 log.info("The CVS_RSH environment variable is set to %s" % self._env["CVS_RSH"])
             else :
@@ -235,8 +224,6 @@ class LbLoginScript(Script):
                 log.warning("the CVS_RSH environment variable is defaulted to %s" % self._env["CVS_RSH"])
         else :
             self._env["CVS_RSH"] = "ssh"
-        self._env["GAUDIKSERVER"] = ":%s:%s:/local/reps/Gaudi" % (method, server)
-        self._env["LHCBKSERVER"] = ":%s:%s:/local/reps/lhcb" % (method, server)
 
 
 
@@ -389,6 +376,7 @@ class LbLoginScript(Script):
 
         if sys.platform == "darwin" :
             opts.cmtvers = "v1r20p20070524"
+            opts.use_cache = False
             
         ev["CMT_DIR"] = ev["CONTRIBDIR"]
         ev["CMTROOT"] = _multiPathGet(ev["CMT_DIR"], os.path.join("CMT", opts.cmtvers))
@@ -401,15 +389,17 @@ class LbLoginScript(Script):
         ev = self._env
         opts = self.options
         if opts.cmtsite == "LOCAL" :
-            ev["LHCBHOME"] = ev["MYSITEROOT"]
+            ev["LHCBHOME"] = ev["MYSITEROOT"].split(os.pathsep)[0]
+            ev["LHCB_USERLOGS"] =  os.path.join(ev["LHCBHOME"], "log", "users")
             ev["DIM_release_area"] = ev["CONTRIBDIR"]
             ev["XMLRPC_release_area"] = ev["CONTRIBDIR"]
             ev["LCG_release_area"] = _multiPathJoin(ev["MYSITEROOT"], os.path.join("lcg" ,"external"))
-            ev["LHCBRELEASES"] = _multiPathJoin(ev["LHCBHOME"], "lhcb")
+            ev["LHCBRELEASES"] = _multiPathJoin(ev["MYSITEROOT"], "lhcb")
             ev["GAUDISOFT"] = ev["LHCBRELEASES"]
             ev["LHCBPROJECTPATH"] = os.pathsep.join([ev["LHCBRELEASES"],ev["LCG_release_area"]])
         else :
             ev["LHCBHOME"] = os.path.join(ev["SITEROOT"], "lhcb")
+            ev["LHCB_USERLOGS"] =  os.path.join(ev["LHCBHOME"], "project", "logfiles")
             ev["DIM_release_area"] = os.path.join(ev["LHCBHOME"], "online", "control")
             ev["XMLRPC_release_area"] = os.path.join(ev["LHCBHOME"], "project", "web", "online" )
             ev["LCG_release_area"] = os.path.join(ev["SITEROOT"], "sw", "lcg", "app", "releases" )
@@ -620,7 +610,7 @@ class LbLoginScript(Script):
 
         if not sys.platform == "win32" :
             if newtag :
-                ev["CMTOPT"] = "-".join([hwdict[self.binary][0], self.platform, self.compdef])
+                ev["CMTOPT"] = "-".join([hwdict[self.binary][0], self.platform, self.compdef, "opt"])
             else :
                 ev["CMTOPT"] = "_".join([self.platform, self.binary, self.compdef])
         else :
