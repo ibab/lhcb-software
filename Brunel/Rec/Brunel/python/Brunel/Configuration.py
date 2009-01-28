@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.49 2009-01-26 09:29:59 ocallot Exp $"
+__version__ = "$Id: Configuration.py,v 1.50 2009-01-28 09:13:31 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -46,7 +46,7 @@ class Brunel(LHCbConfigurableUser):
        ,"RecL0Only":    False # set to True to reconstruct only L0-yes events
        ,"InputType":    "MDF" # or "DIGI" or "ETC" or "RDST" or "DST"
        ,"OutputType":   "DST" # or "RDST" or "NONE". Also forwarded to RecSys
-       ,"PackedOutput": True  # Flag whether or not to use packed containers
+       ,"PackType":     "TES" # Type of packing for the DST: ['NONE','TES','MDF'] 
        ,"Histograms": "Default" # Type of histograms: ['None','Default','Expert']
        ,"NoWarnings":   False # suppress all messages with MSG::WARNING or below 
        ,"DatasetName":  ""    # string used to build file names
@@ -63,7 +63,6 @@ class Brunel(LHCbConfigurableUser):
        ,"RecoSequence"   : [] # The Sub-detector reconstruction sequencing. See RecSys for default
        ,"SpecialData"    : [] # Various special data processing options. See KnownSpecialData for all options
        ,"Context":     "Offline" # The context within which to run
-       ,"OutputIsMDF":  False  #Is output a packed MDF file
         }
 
 
@@ -233,9 +232,9 @@ class Brunel(LHCbConfigurableUser):
         """
         if dstType in [ "DST", "RDST" ]:
             writerName = "DstWriter"
-            packedDST  = self.getProp( "PackedOutput" )
+            packType  = self.getProp( "PackType" )
             # Do not pack DC06 DSTs, for consistency with existing productions
-            if self.getProp("DataType") == "DC06": packedDST = False
+            if self.getProp("DataType") == "DC06": packType = "NONE"
 
             dstWriter = OutputStream( writerName )
             dstWriter.RequireAlgs += ["Reco"] # Write only if Rec phase completed
@@ -249,10 +248,9 @@ class Brunel(LHCbConfigurableUser):
             # Define the file content
             DstConf().Writer     = writerName
             DstConf().DstType    = dstType
-            DstConf().EnablePack = packedDST
+            DstConf().PackType   = packType
             DstConf().Simulation = withMC
-            DstConf().OutputIsMDF = self.getProp("OutputIsMDF")
-            DstConf().OutputName  = self.outputName()
+            DstConf().OutputName = self.outputName()
 
             from Configurables import TrackToDST
             if dstType == "DST":
@@ -273,7 +271,7 @@ class Brunel(LHCbConfigurableUser):
                 
             GaudiSequencer("OutputDSTSeq").Members += [ trackFilter ]
 
-            if packedDST:
+            if packType != "NONE":
                 # Add the sequence to pack the DST containers
                 packSeq = GaudiSequencer("PackDST")
                 DstConf().PackSequencer = packSeq
