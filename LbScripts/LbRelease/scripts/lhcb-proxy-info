@@ -7,10 +7,11 @@ if ! $?DIRACROOT then
       exit 1
    endif
 endif
-#$DIRACROOT/scripts/dirac-proxy-info --checkvalid
+
 `which dirac-proxy-info` --checkvalid
 set rc_dirac = $status
 if ($rc_dirac != 0 ) then
+   echo " "
    echo problem to get the Proxy info
    exit $rc_dirac
 endif
