@@ -41,7 +41,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.9 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.10 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -299,7 +299,7 @@ class LbLoginScript(Script):
         ev = self._env
         ev["CMTBIN"] = self.getNativeBin()
         
-    def hasAfsCommands(self, cmd):
+    def hasCommand(self, cmd):
         hasafs = False
         f = os.popen("which %s >& /dev/null" % cmd)
         f.read()
@@ -322,7 +322,7 @@ class LbLoginScript(Script):
                 system = "%s-%s" % (uname, uname2)
             elif uname == "Darwin" or uname.startswith("CYGWIN") :
                 system = uname
-            if may_use_afs and self.hasAfsCommands("fs"):
+            if may_use_afs and self.hasCommand("fs"):
                 f = os.popen("fs sysname")
                 a = f.read()
                 if f.close() is None :
@@ -614,6 +614,9 @@ class LbLoginScript(Script):
                         lpthlist.append(compiler_path)
                         ev["LD_LIBRARY_PATH"] = os.pathsep.join(lpthlist)
 
+        if self.platform == "slc5" :
+            if self.hasCommand("gcc34") :
+                self.compdef = "gcc34"
 
         if not sys.platform == "win32" :
             if newtag :

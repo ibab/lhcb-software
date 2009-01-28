@@ -1,3 +1,8 @@
+2009-01-28  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/LbLogin.py: default compiler for slc5 is now gcc34 if it
+	is available. Otherwise, it uses the system one (gcc41).
+
 2009-01-27  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v2r1.
