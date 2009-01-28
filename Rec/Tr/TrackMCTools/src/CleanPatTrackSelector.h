@@ -1,4 +1,4 @@
-// $Id: CleanPatTrackSelector.h,v 1.2 2007-03-05 15:24:43 cattanem Exp $
+// $Id: CleanPatTrackSelector.h,v 1.3 2009-01-28 13:15:03 mneedham Exp $
 #ifndef _CleanPatTrackSelector_H
 #define _CleanPatTrackSelector_H
 
@@ -50,6 +50,7 @@ private:
   bool cleanTrack(const LHCb::Track& aTrack) const;
 
   bool m_rejectTracksWithOutliers;
+  double m_minPCut;
 
 };
 

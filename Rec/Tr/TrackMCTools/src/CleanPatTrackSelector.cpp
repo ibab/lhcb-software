@@ -23,6 +23,7 @@ CleanPatTrackSelector::CleanPatTrackSelector( const std::string& type,
   declareInterface<ITrackSelector>(this);
   declareProperty( "RejectTracksWithOutliers",
                    m_rejectTracksWithOutliers = false );
+  declareProperty("minPCut", m_minPCut = 0.0*Gaudi::Units::GeV);
 }
 
 CleanPatTrackSelector::~CleanPatTrackSelector() { }
@@ -57,9 +58,10 @@ bool CleanPatTrackSelector::cleanTrack(const Track& aTrack) const {
       if (weight < 0.99) clean = false; 
     } 
     else {
-      //
+      // cut on momentum
+      const MCParticle* mcpart = (*range.begin()).to();
+      if (mcpart->p() < m_minPCut ) clean = false;
     }
-
   }
   
   return clean;

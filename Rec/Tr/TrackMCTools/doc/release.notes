@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2009-01-28  M Needham
+ - Add option to cut on p in CleanPatTrackSelector
+
 ! 2009-01-27 M Needham
  - Changes to Ghost classification tool interface
  - Add the trivial real classification
