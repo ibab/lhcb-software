@@ -4,6 +4,13 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2009-01-28 - Marco Cattaneo
+ - In LHCbConfigurableUser, reimplement setOtherProp and setOtherProps
+   functions to delegate to ConfigurableUser implementation
+   (propagateProperty, propagateProperties).
+   Also fixes a bug in propagation of defaults
+   LHCbConfigurableUser is now an empty shell, kept for future use.
+
 ! 2009-01-23 - Marco Cattaneo
  - Backward compatible changes to adapt to new Interface definitions in
    Gaudi v21
