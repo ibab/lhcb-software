@@ -1,0 +1,96 @@
+#!/usr/bin/env python
+import os, sys, shutil
+
+args = sys.argv
+verbose = '-v' in args
+if verbose:
+    args.remove('-v')
+force = "-f" in args
+if force:
+    args.remove('-f')
+        
+    
+if len(args)>1:
+    version = args[1]
+else:
+    version = ''
+
+if verbose: print "Calling setenvProject"
+fc = os.popen(". `which setenvProject.sh` Dirac "+version)
+out = fc.read().split('\n')
+rc = fc.close()
+if rc:
+    print "Problem setting the user Dirac environment"
+    sys.exit(rc)
+for o in out:
+    if o.find("Build-time environment for Dirac")==0:
+        v = o.split()[4]
+        if version and v != version:
+            print "Incompatible versions..."
+            sys.exit(1)
+        version = v
+    elif o.find("Current directory is") == 0:
+        DiracDir = o.split()[3].split("'")[1]        
+
+if not os.environ.has_key("CMTPROJECTPATH"):
+    print "CMTPROJECTPATH should be defined.."
+    sys.exit(1)
+
+d = os.path.join(DiracDir, "DIRAC")
+if os.path.exists(d):
+    if force:
+        allFiles = os.listdir(DiracDir)
+        for f in allFiles:
+            if f == "cmt": continue
+            f = os.path.join( DiracDir, f)
+            if os.path.islink(f):
+                os.remove(f)
+            elif os.path.isdir(f):
+                shutil.rmtree(f)
+            else:
+                os.remove(f)
+    else:
+        print "Dirac %s user area has already been set up, not changed" % version
+        sys.exit(0)
+
+if verbose: print "Creating the DIRAC directory..."
+os.mkdir(d)
+
+d = os.path.join(DiracDir, "scripts")
+if not os.path.exists(d): os.mkdir(d)
+
+installArea = os.path.join(DiracDir, "InstallArea")
+if not os.path.exists(installArea):
+    if verbose: print "Setting the InstallArea"
+    os.mkdir(installArea)
+    os.symlink("../scripts", os.path.join(installArea, "scripts"))
+    os.symlink("..", os.path.join(installArea, "python"))
+
+#Find the DIRAC release area
+projectPaths = os.environ["CMTPROJECTPATH"].split(":")
+
+for path in projectPaths:
+    releaseDir = os.path.join( path, "DIRAC", "DIRAC_"+version)
+    if os.path.isdir(releaseDir):
+        if verbose: print "Copying __init__.py and dirac-make"
+        os.symlink( os.path.join(releaseDir, "etc"), os.path.join(DiracDir, "etc"))
+        # copy the __init__.py file
+        iniRel = os.path.join(releaseDir, "DIRAC", "__init__.py")
+        iniLoc = os.path.join(DiracDir, "DIRAC", "__init__.py")
+        if os.path.exists(iniRel):
+            if os.path.exists(iniLoc): os.remove(iniLoc)
+            fs = open(iniRel, 'r')
+            fd = open(iniLoc, 'w')
+            c = fs.readlines()
+            for l in c:
+                fd.write(l)
+                if l.find("__RCSID__") >= 0:
+                    fd.write( "from pkgutil import extend_path\n__path__ = extend_path(__path__, __name__)\n")
+
+        shutil.copy( os.path.join(releaseDir, "DIRAC", "dirac-make"), os.path.join(DiracDir, "DIRAC", "dirac-make"))
+        shutil.copy( os.path.join(releaseDir, "scripts", "DIRACEnvironment.py"), os.path.join(DiracDir,"scripts", "DIRACEnvironment.py"))
+        break
+
+if verbose: print "Dirac %s user area successfully set up" % version        
+
+         
