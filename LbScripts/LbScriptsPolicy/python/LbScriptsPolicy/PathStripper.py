@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from sys import argv, stdout
+from sys import stdout
 from os import pathsep, listdir, environ, fdopen
 from os.path import exists, isdir, realpath
 from optparse import OptionParser, OptionValueError
@@ -11,7 +11,7 @@ def StripPath(path):
     for p in path.split(pathsep):
         rp = realpath(p)
         if exists(rp) and isdir(rp):
-            if len(listdir(rp)) != 0:
+            if len(listdir(rp)) != 0 and p not in collected :
                 collected.append(p)     
     return pathsep.join(collected)
 
