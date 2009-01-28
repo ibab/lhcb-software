@@ -2,6 +2,9 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2009-01-28 - Marco Cattaneo
+ - Clean up DstConf following modifications for MDF format
+
 ! 2009-01-26 - Marco Cattaneo
  - Backward compatible fix to GaudiMain.cpp for Gaudi v21
 
