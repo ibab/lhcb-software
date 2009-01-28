@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.14 2009-01-22 10:06:53 graven Exp $ 
+# $Id: requirements,v 1.15 2009-01-28 07:01:17 graven Exp $ 
 # =============================================================================
 # The helper package for configuration of Hlt(1)
 # =============================================================================
@@ -15,6 +15,8 @@ use       HltCommon   v*  Hlt
 use       VeloDAQ     v*  Velo 
 use       PatVelo     v*  Tf
 use       PatAlgorithms  v*  Tf
+### and these by the L0 candidate code
+use       L0DU        v*  L0
 # =============================================================================
 
 # =============================================================================
