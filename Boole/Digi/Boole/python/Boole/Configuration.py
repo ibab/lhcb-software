@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.31 2009-01-28 16:37:00 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.32 2009-01-28 17:36:05 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -9,6 +9,10 @@ import GaudiKernel.ProcessJobOptions
 from Configurables import ( LHCbConfigurableUser, LHCbApp )
 
 class Boole(LHCbConfigurableUser):
+
+    ## Known monitoring sequences, all run by default
+    KnownMoniSubdets = [ "VELO", "IT", "TT", "OT", "RICH", "CALO", "MUON", "L0", "MC" ]
+    
     __slots__ = {
         "EvtMax"         : -1
        ,"SkipEvents"     : 0
@@ -28,6 +32,7 @@ class Boole(LHCbConfigurableUser):
        ,"CondDBtag"      : ""
        ,"UseOracle"      : False
        ,"Monitors"       : []
+       ,"MoniSequence"   : []
         }
 
     _propertyDocDct = { 
@@ -49,6 +54,7 @@ class Boole(LHCbConfigurableUser):
        ,'CondDBtag'    : """ Tag for CondDB. Default as set in DDDBConf for DataType """
        ,'UseOracle'    : """ Flag to enable Oracle CondDB. Default False (use SQLDDDB) """
        ,'Monitors'     : """ List of monitors to execute """
+       ,'MoniSequence' : """ List of subdetectors to monitor, see KnownMoniSubdets """
        }
     
     __used_configurables__ = [ LHCbApp ]
@@ -110,6 +116,8 @@ class Boole(LHCbConfigurableUser):
                 vertexUnpacker.RootInTES = spill
                 DataOnDemandSvc().AlgMap[ spill + "/MC/Particles" ] = particleUnpacker
                 DataOnDemandSvc().AlgMap[ spill + "/MC/Vertices" ] = vertexUnpacker
+
+        self.configureMoni()
             
     def enableTAE(self):
         """
@@ -219,6 +227,22 @@ class Boole(LHCbConfigurableUser):
 
     def evtMax(self):
         return LHCbApp().evtMax()
+
+
+    def configureMoni(self):
+        # Set up monitoring (i.e. not using MC truth)
+        from Configurables import ProcessPhase
+        moniSeq = self.getProp("MoniSequence")
+        if len( moniSeq ) == 0:
+            moniSeq = self.KnownMoniSubdets
+            self.MoniSequence = moniSeq
+        else:
+            for seq in moniSeq:
+                if seq not in self.KnownMoniSubdets:
+                    log.warning("Unknown subdet '%s' in MoniSequence"%seq)
+        ProcessPhase("Moni").DetectorList += moniSeq
+        importOptions( "$BOOLEOPTS/BooleMoni.opts" )
+
 
     def __apply_configuration__(self):
         log.info( self )

@@ -6,25 +6,10 @@
 RootHistCnv.ForceAlphaIds = true;
 
 // Use TimingAuditor for timing, suppress printout of default SequencerTimerTool
-ApplicationMgr.ExtSvc += { "ToolSvc", "AuditorSvc"};
+ApplicationMgr.ExtSvc += { "AuditorSvc"};
 ApplicationMgr.AuditAlgorithms = True;
 AuditorSvc.Auditors += {"TimingAuditor"}; 
 ToolSvc.SequencerTimerTool.OutputLevel = 4;
-
-//--------------------------------------------------------------
-// Detectors to monitor
-//--------------------------------------------------------------
-Moni.DetectorList = { 
-                      "VELO",
-                      "IT",
-                      "TT", 
-                      "OT",
-                      "RICH",
-                      "CALO",
-                      "MUON",
-                      "L0",
-                      "MC"
-                    };
 
 //--------------------------------------------------------------
 // Monitoring algorithms

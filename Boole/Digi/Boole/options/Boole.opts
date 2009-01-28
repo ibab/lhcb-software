@@ -9,6 +9,7 @@
 
 // Unpack MCParticles and MCVertices if not existing on input file
 ApplicationMgr.ExtSvc  += { "DataOnDemandSvc" };
+ApplicationMgr.ExtSvc  += { "ToolSvc"};
 DataOnDemandSvc.AlgMap += { "MC/Particles" : "UnpackMCParticle"
                           , "MC/Vertices"  : "UnpackMCVertex"
                           };
@@ -27,7 +28,6 @@ ApplicationMgr.TopAlg += { "ProcessPhase/Init"
                          , "ProcessPhase/Moni"
                          , "ProcessPhase/Output"
                          };
-#include "$BOOLEOPTS/BooleMoni.opts"
 
 // Set up TAE structure. These phases are only filled if TAE-xxx.opts included
 DigiPrev2.RootInTES = "Prev2/";
