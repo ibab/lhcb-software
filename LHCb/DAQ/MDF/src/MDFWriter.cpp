@@ -1,4 +1,4 @@
-// $Id: MDFWriter.cpp,v 1.27 2008-12-04 13:38:25 frankb Exp $
+// $Id: MDFWriter.cpp,v 1.28 2009-01-28 19:59:51 frankb Exp $
 //  ====================================================================
 //  MDFWriter.cpp
 //  --------------------------------------------------------------------
@@ -80,6 +80,7 @@ StatusCode MDFWriter::initialize()   {
   m_bytesWritten = 0;
   m_connection = new RawDataConnection(this,con);
   status = m_ioMgr->connectWrite(m_connection,IDataConnection::RECREATE,"MDF");
+  status.ignore();
   if ( m_connection->isConnected() )
     log << MSG::INFO << "Received event request connection." << endmsg;
   else
@@ -112,7 +113,6 @@ MDFIO::MDFDescriptor MDFWriter::getDataSpace(void* const /* ioDesc */, size_t le
 
 /// Execute procedure
 StatusCode MDFWriter::execute()    {
-  StatusCode sc;
   std::pair<const char*,int> data;
   setupMDFIO(msgSvc(),eventSvc());
   MsgStream log(msgSvc(), name());
@@ -124,6 +124,7 @@ StatusCode MDFWriter::execute()    {
     case MDFIO::MDF_BANKS:
       data = getDataFromAddress();
       if ( data.first )  {
+	StatusCode sc = StatusCode::SUCCESS;
 	RawBank* b = (RawBank*)data.first;
 	switch(m_dataType) {
 	case MDFIO::MDF_RECORDS:
@@ -142,6 +143,7 @@ StatusCode MDFWriter::execute()    {
     case MDFIO::MDF_RECORDS:
       data = getDataFromAddress();
       if ( data.first )  {
+	StatusCode sc = StatusCode::SUCCESS;
 	switch(m_dataType) {
 	case MDFIO::MDF_RECORDS:
 	  sc = writeBuffer(m_connection,data.first, data.second);

@@ -6,6 +6,9 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+! 2009-01-23  Markus Frank
+ - Add status code checks in MDFWriter
+
 ! 2009-01-23 - Marco Cattaneo
  - Backward compatible fixes for Gaudi v21
 
