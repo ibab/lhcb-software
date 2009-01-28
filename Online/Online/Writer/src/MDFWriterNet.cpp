@@ -96,7 +96,7 @@ void File::feedMessageQueue(mqd_t /* mq */) {
 }
 
 /// New constructor with stream id
-File::File(std::string fileName, unsigned int runNumber, int streamID) {
+File::File(std::string fileName, unsigned int runNumber, std::string streamID) {
     File(fileName, runNumber);
     m_streamID = streamID;
 }
@@ -118,7 +118,7 @@ File::File(std::string fileName, unsigned int runNumber) {
   m_mon->m_lumiEvents = 0;
   m_fileName = fileName;
   m_md5 = new TMD5();
-  m_streamID = 0;
+  m_streamID = "FULL";
   m_prev = NULL;
   m_next = NULL;
   sprintf(txt,"/File#%02d",s_seqNo++);
@@ -165,7 +165,7 @@ void MDFWriterNet::constructNet()
   declareProperty("FilePrefix",         m_filePrefix="MDFWriterNet_File_");
   declareProperty("Directory",          m_directory=".");
   declareProperty("FileExtension",      m_fileExtension="raw");
-  declareProperty("StreamID",           m_streamID=0);
+  declareProperty("StreamID",           m_streamID="NONE");
   declareProperty("RunFileTimeoutSeconds", m_runFileTimeoutSeconds=30);
 
   m_log = new MsgStream(msgSvc(), name());
@@ -189,7 +189,10 @@ StatusCode MDFWriterNet::initialize(void)
     *m_log << MSG::ERROR << "Caught Exception:" << e.what() << endmsg;
     return StatusCode::FAILURE;
   }
-  
+  if(m_streamID == "NONE") {
+    *m_log << MSG::ERROR << "Exception: No stream identifier provided." << endmsg;
+    return StatusCode::FAILURE;
+  }
   // initialize named message queue
   if((m_mq = mq_open("/writerqueue", O_RDWR, S_IRUSR|S_IWUSR, NULL)) == (mqd_t) -1)  {
       *m_log << MSG::ERROR
@@ -572,7 +575,7 @@ std::string MDFWriterNet::getNewFileName(unsigned int runNumber)
   sprintf(buf, "/daqarea/lhcb/data/2008/RAW/TEST/%s/%u/%s%09u.%02u%06lu.%s",
 	  m_directory.c_str(),runNumber,
 	  m_filePrefix.c_str(),
-	  runNumber,m_streamID,// random,
+	  runNumber,0,// random,
        	  time(NULL)&0xFFFF,
 	  m_fileExtension.c_str());
   return std::string(buf);
