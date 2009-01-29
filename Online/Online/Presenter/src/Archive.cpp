@@ -419,7 +419,7 @@ void Archive::saveAsReferenceHistogram(DbRootHist* histogram)
       create_directories(referenceFilePath);
     } catch (const filesystem_error & error) {
       std::cout << "exception: "
-                << lookup_errno(error.system_error())
+                << error.what()
                 << std::endl;
     if (m_verbosity >= Verbose) {}
     }
