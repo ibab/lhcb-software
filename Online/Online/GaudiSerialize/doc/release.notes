@@ -1,6 +1,9 @@
  Package: GaudiSerialize
  Package Manager: Albert Puig
 
+! 2009-01-29 - Marco Cattaneo
+ - Backward compatible fix for Gaudi v21
+
 
 2008-06-17   GaudiSerialize v1r0
    New package: Serialize Gaudi transient store to send objects over the network.

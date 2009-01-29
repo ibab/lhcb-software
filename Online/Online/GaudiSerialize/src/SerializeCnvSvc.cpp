@@ -1,4 +1,4 @@
-// $Id: SerializeCnvSvc.cpp,v 1.5 2008-09-26 08:26:05 frankb Exp $
+// $Id: SerializeCnvSvc.cpp,v 1.6 2009-01-29 10:55:00 cattanem Exp $
 //====================================================================
 //	SerializeCnvSvc implementation
 //--------------------------------------------------------------------
@@ -187,7 +187,7 @@ StatusCode SerializeCnvSvc::setDataProvider(IDataProviderSvc* pSvc)  {
   MsgStream log(msgSvc(), name());
   IDataManagerSvc* tmp = m_dataMgr;
   if (pSvc)  {
-    StatusCode sc = pSvc->queryInterface(IID_IDataManagerSvc,(void**)&m_dataMgr);
+    StatusCode sc = pSvc->queryInterface(IDataManagerSvc::interfaceID(),(void**)&m_dataMgr);
     if ( !sc.isSuccess() )    {
       return error("Cannot connect to \"IDataManagerSvc\" interface.");
     }
