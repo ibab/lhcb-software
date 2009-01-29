@@ -1,9 +1,12 @@
-# $Id: release.notes,v 1.160 2009-01-08 13:03:47 cattanem Exp $
+# $Id: release.notes,v 1.161 2009-01-29 13:18:57 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+! 2009-01-29 - Marco Cattaneo
+ - Fix compilation warning from Boost 1.38
 
 !===================== Det/DetCond v12r5 2009-01-08 ==========================
 ! 2009-01-07 - Marco Clemencic
