@@ -3,6 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+! 2009-01-29 - Marco Cattaneo
+ - Remove ExpertCheck.opts, now done in Configurable
+
 ! 2009-01-28 - Marco Cattaneo
  - Fix TAE option in configurable
  - Update references for changes to Silicon simulation

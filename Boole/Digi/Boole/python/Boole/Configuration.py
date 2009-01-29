@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.32 2009-01-28 17:36:05 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.33 2009-01-29 10:42:14 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -12,6 +12,7 @@ class Boole(LHCbConfigurableUser):
 
     ## Known monitoring sequences, all run by default
     KnownMoniSubdets = [ "VELO", "IT", "TT", "OT", "RICH", "CALO", "MUON", "L0", "MC" ]
+    KnownHistOptions = ["","None","Default","Expert"]
     
     __slots__ = {
         "EvtMax"         : -1
@@ -88,36 +89,27 @@ class Boole(LHCbConfigurableUser):
     def defineOptions(self):
         tae   = self.getProp("GenerateTAE")
         spill = self.getProp("UseSpillover")
+
         if tae :
             if spill :
                 log.warning("Disabling spillover, incompatible with TAE")
                 spill = False
             self.enableTAE()
-        if not spill :
+
+        if spill :
+            self.enableSpillover()
+        else:
             if self.getProp("DataType") == "DC06" and not tae:
                 log.warning("Spillover is disabled. Should normally be enabled for DC06!")
-            from Configurables import ( MuonBackground, MuonDigitization )
-            MuonBackground("MuonLowEnergy").OutputLevel = ERROR
-            MuonDigitization().OutputLevel = ERROR
-        else:
-            if self.getProp("DataType") != "DC06" :
-                log.warning("Spillover is enabled. Should normally be enabled only for DC06!")
-            from Configurables import MergeEventAlg, UnpackMCParticle, UnpackMCVertex
-            initDataSeq = GaudiSequencer( "InitDataSeq" )
-            spillPaths  = self.getProp("SpilloverPaths")
-            spillAlg    = MergeEventAlg( name = "SpilloverAlg", PathList = spillPaths )
-            initDataSeq.Members += [ spillAlg ]
-            importOptions("$DIGIALGROOT/options/Spillover.opts")
-            # Handle the unpacking of pSim containers
-            for spill in spillPaths :
-                particleUnpacker = UnpackMCParticle( "UnpackMCP" + spill )
-                particleUnpacker.RootInTES = spill
-                vertexUnpacker = UnpackMCVertex( "UnpackMCV" + spill )
-                vertexUnpacker.RootInTES = spill
-                DataOnDemandSvc().AlgMap[ spill + "/MC/Particles" ] = particleUnpacker
-                DataOnDemandSvc().AlgMap[ spill + "/MC/Vertices" ] = vertexUnpacker
 
-        self.configureMoni()
+        histOpt = self.getProp("Histograms").capitalize()
+        if histOpt not in self.KnownHistOptions:
+            raise RuntimeError("Unknown Histograms option '%s'"%histOpt)
+
+        self.configureMoni( histOpt )
+
+        self.saveHistos( histOpt )
+
             
     def enableTAE(self):
         """
@@ -132,28 +124,45 @@ class Boole(LHCbConfigurableUser):
             MCSTDepositCreator("MCTTDepositCreatorPrev1").DepChargeTool = "SiDepositedCharge"
             
 
+    def enableSpillover(self):
+        """
+        switch to generate spillover events.
+        """
+        if self.getProp("DataType") != "DC06" :
+            log.warning("Spillover is enabled. Should normally be enabled only for DC06!")
+
+        from Configurables import MergeEventAlg, UnpackMCParticle, UnpackMCVertex
+        initDataSeq = GaudiSequencer( "InitDataSeq" )
+        spillPaths  = self.getProp("SpilloverPaths")
+        spillAlg    = MergeEventAlg( name = "SpilloverAlg", PathList = spillPaths )
+        initDataSeq.Members += [ spillAlg ]
+        importOptions("$DIGIALGROOT/options/Spillover.opts")
+        from Configurables import MuonBackground, MuonDigitization
+        MuonDigitization().EnableSpillover = True
+        MuonBackground("MuonLowEnergy").EnableSpillover = True
+
+        # Handle the unpacking of pSim containers
+        for spill in spillPaths :
+            particleUnpacker = UnpackMCParticle( "UnpackMCP" + spill )
+            particleUnpacker.RootInTES = spill
+            vertexUnpacker = UnpackMCVertex( "UnpackMCV" + spill )
+            vertexUnpacker.RootInTES = spill
+            DataOnDemandSvc().AlgMap[ spill + "/MC/Particles" ] = particleUnpacker
+            DataOnDemandSvc().AlgMap[ spill + "/MC/Vertices" ] = vertexUnpacker
+
+
     def defineMonitors(self):
         # get all defined monitors
         monitors = self.getProp("Monitors") + LHCbApp().getProp("Monitors")
         # Currently no Boole specific monitors, so pass them all to LHCbApp
         LHCbApp().setProp("Monitors", monitors)
 
-    def defineHistos(self):
-        """
-        Define histograms to save according to Boole.Histograms option
-        """
-        knownOptions = ["","None","Default","Expert"]
-        histOpt = self.getProp("Histograms").capitalize()
-        if histOpt not in knownOptions:
-            raise RuntimeError("Unknown Histograms option '%s'"%histOpt)
+    def saveHistos(self, histOpt):
 
         if histOpt == "None" or histOpt == "":
             # HistogramPersistency still needed to read in Muon background.
             # so do not set ApplicationMgr().HistogramPersistency = "NONE"
             return
-
-        if histOpt == "Expert":
-            importOptions( "$BOOLEOPTS/ExpertCheck.opts" )
 
         # Use a default histogram file name if not already set
         if not hasattr( HistogramPersistencySvc(), "OutputFile" ):
@@ -229,7 +238,7 @@ class Boole(LHCbConfigurableUser):
         return LHCbApp().evtMax()
 
 
-    def configureMoni(self):
+    def configureMoni(self, histOpt):
         # Set up monitoring (i.e. not using MC truth)
         from Configurables import ProcessPhase
         moniSeq = self.getProp("MoniSequence")
@@ -243,6 +252,25 @@ class Boole(LHCbConfigurableUser):
         ProcessPhase("Moni").DetectorList += moniSeq
         importOptions( "$BOOLEOPTS/BooleMoni.opts" )
 
+        if histOpt == "Expert":
+
+            if "IT" in moniSeq or "TT" in moniSeq:
+                from Configurables import MCSTDepositMonitor, STDigitMonitor, STClusterMonitor, STEffChecker
+
+            if "IT" in moniSeq:
+                MCSTDepositMonitor("MCITDepositMonitor").FullDetail = True
+                STDigitMonitor("ITDigitMonitor").FullDetail = True
+                STClusterMonitor("ITClusterMonitor").FullDetail = True
+                STEffChecker("ITEffChecker").FullDetail = True
+
+            if "TT" in moniSeq:
+                MCSTDepositMonitor("MCTTDepositMonitor").FullDetail = True
+                STDigitMonitor("TTDigitMonitor").FullDetail = True
+                STClusterMonitor("TTClusterMonitor").FullDetail = True
+                STEffChecker("TTEffChecker").FullDetail = True
+
+            if "OT" in moniSeq:
+                importOptions("$OTMONITORROOT/options/Boole.opts")
 
     def __apply_configuration__(self):
         log.info( self )
@@ -257,6 +285,5 @@ class Boole(LHCbConfigurableUser):
         self.defineDB()
         self.defineEvents()
         self.defineOptions()
-        self.defineHistos()
         self.defineOutput()
         self.defineMonitors()
