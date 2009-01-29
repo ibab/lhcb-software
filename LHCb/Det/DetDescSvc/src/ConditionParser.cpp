@@ -2,7 +2,7 @@
 
 #include <boost/version.hpp>
 #if BOOST_VERSION >= 103800
-#include <boost/spirit/classic_core.hpp>
+#include <boost/spirit/include/classic_core.hpp>
 #else
 #include <boost/spirit/core.hpp>
 #endif
