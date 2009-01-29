@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.33 2009-01-29 10:42:14 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.34 2009-01-29 17:28:22 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -157,7 +157,19 @@ class Boole(LHCbConfigurableUser):
         # Currently no Boole specific monitors, so pass them all to LHCbApp
         LHCbApp().setProp("Monitors", monitors)
 
+        # Use TimingAuditor for timing, suppress printout from SequencerTimerTool
+        from Configurables import ApplicationMgr, AuditorSvc, SequencerTimerTool
+        ApplicationMgr().ExtSvc += [ 'AuditorSvc' ]
+        ApplicationMgr().AuditAlgorithms = True
+        AuditorSvc().Auditors += [ 'TimingAuditor' ] 
+        SequencerTimerTool().OutputLevel = WARNING
+
     def saveHistos(self, histOpt):
+
+        # ROOT persistency for histograms
+        importOptions('$STDOPTS/RootHist.opts')
+        from Configurables import RootHistCnv__PersSvc
+        RootHistCnv__PersSvc('RootHistCnv').ForceAlphaIds = True
 
         if histOpt == "None" or histOpt == "":
             # HistogramPersistency still needed to read in Muon background.
@@ -250,27 +262,95 @@ class Boole(LHCbConfigurableUser):
                 if seq not in self.KnownMoniSubdets:
                     log.warning("Unknown subdet '%s' in MoniSequence"%seq)
         ProcessPhase("Moni").DetectorList += moniSeq
-        importOptions( "$BOOLEOPTS/BooleMoni.opts" )
 
-        if histOpt == "Expert":
+        from Configurables import BooleInit, MemoryTool
+        booleInit = BooleInit("Boole")
+        booleInit.addTool( MemoryTool(), name = "BooleMemory" )
+        booleInit.BooleMemory.HistoTopDir = "Boole/"
+        booleInit.BooleMemory.HistoDir    = "MemoryTool"
 
-            if "IT" in moniSeq or "TT" in moniSeq:
-                from Configurables import MCSTDepositMonitor, STDigitMonitor, STClusterMonitor, STEffChecker
+        if "VELO" in moniSeq:
+            from Configurables import  VeloSimMoni,VeloDigit2MCHitLinker,VeloDigiMoni,VeloRawClustersMoni
+            GaudiSequencer("MoniVELOSeq").Members += [ VeloSimMoni(), VeloDigit2MCHitLinker(),
+                                                       VeloDigiMoni(), VeloRawClustersMoni()  ]
 
-            if "IT" in moniSeq:
-                MCSTDepositMonitor("MCITDepositMonitor").FullDetail = True
-                STDigitMonitor("ITDigitMonitor").FullDetail = True
-                STClusterMonitor("ITClusterMonitor").FullDetail = True
-                STEffChecker("ITEffChecker").FullDetail = True
+        if "IT" in moniSeq or "TT" in moniSeq:
+            from Configurables import ( MCSTDepositMonitor, MCSTDigitMonitor, STDigitMonitor,
+                      STClusterMonitor, STEffChecker, MCParticle2MCHitAlg, MCParticleSelector )
+            from GaudiKernel.SystemOfUnits import GeV
 
-            if "TT" in moniSeq:
-                MCSTDepositMonitor("MCTTDepositMonitor").FullDetail = True
-                STDigitMonitor("TTDigitMonitor").FullDetail = True
-                STClusterMonitor("TTClusterMonitor").FullDetail = True
-                STEffChecker("TTEffChecker").FullDetail = True
+        if "IT" in moniSeq:
+            mcDepMoni   = MCSTDepositMonitor(  "MCITDepositMonitor", DetType="IT" )
+            mcDigitMoni = MCSTDigitMonitor(    "MCITDigitMonitor",   DetType="IT" )
+            digitMoni   = STDigitMonitor(      "ITDigitMonitor",     DetType="IT" )
+            clusMoni    = STClusterMonitor(    "ITClusterMonitor",   DetType="IT" )
+            mcp2MCHit   = MCParticle2MCHitAlg( "MCP2ITMCHitAlg", MCHitPath = "MC/IT/Hits",
+                                               OutputData = "/Event/MC/Particles2MCITHits" )
+            effCheck    = STEffChecker(        "ITEffChecker",       DetType="IT" )
+            effCheck.addTool(MCParticleSelector)
+            effCheck.MCParticleSelector.zOrigin = 50.0
+            effCheck.MCParticleSelector.pMin = 1.0*GeV
+            effCheck.MCParticleSelector.betaGammaMin = 1.0
+            GaudiSequencer("MoniITSeq").Members += [ mcDepMoni, mcDigitMoni, digitMoni, clusMoni,
+                                                     mcp2MCHit, effCheck ]
+            if histOpt == "Expert":
+                mcDepMoni.FullDetail   = True
+                mcDigitMoni.FullDetail = True
+                clusMoni.FullDetail    = True
+                effCheck.FullDetail    = True
 
-            if "OT" in moniSeq:
+        if "TT" in moniSeq:
+            mcDepMoni   = MCSTDepositMonitor(  "MCTTDepositMonitor" )
+            mcDigitMoni = MCSTDigitMonitor(    "MCTTDigitMonitor"   )
+            digitMoni   = STDigitMonitor(      "TTDigitMonitor"     )
+            clusMoni    = STClusterMonitor(    "TTClusterMonitor"   )
+            mcp2MCHit   = MCParticle2MCHitAlg( "MCP2TTMCHitAlg", MCHitPath = "MC/TT/Hits",
+                                               OutputData = "/Event/MC/Particles2MCTTHits" )
+            effCheck    = STEffChecker(        "TTEffChecker"       )
+            effCheck.addTool(MCParticleSelector)
+            effCheck.MCParticleSelector.zOrigin = 50.0
+            effCheck.MCParticleSelector.pMin = 1.0*GeV
+            effCheck.MCParticleSelector.betaGammaMin = 1.0
+            GaudiSequencer("MoniTTSeq").Members += [ mcDepMoni, mcDigitMoni, digitMoni, clusMoni,
+                                                     mcp2MCHit, effCheck ]
+            if histOpt == "Expert":
+                mcDepMoni.FullDetail   = True
+                mcDigitMoni.FullDetail = True
+                clusMoni.FullDetail    = True
+                effCheck.FullDetail    = True
+
+        if "OT" in moniSeq:
+            from Configurables import MCOTDepositMonitor
+            GaudiSequencer("MoniOTSeq").Members += [ MCOTDepositMonitor() ]
+            if histOpt == "Expert":
                 importOptions("$OTMONITORROOT/options/Boole.opts")
+
+        if "RICH" in moniSeq:
+            from Configurables import Rich__MC__Digi__DigitQC
+            GaudiSequencer("MoniRICHSeq").Members += [ Rich__MC__Digi__DigitQC("RiDigitQC") ]
+
+        if "CALO" in moniSeq:
+            from Configurables import CaloDigitChecker
+            importOptions("$CALOMONIDIGIOPTS/CaloDigitChecker.opts")
+            GaudiSequencer("MoniCALOSeq").Members += [ CaloDigitChecker("SpdCheck"),
+                                                       CaloDigitChecker("PrsCheck"),
+                                                       CaloDigitChecker("EcalCheck"),
+                                                       CaloDigitChecker("HcalCheck") ]
+
+        if "MUON" in moniSeq:
+            from Configurables import MuonDigitChecker
+            GaudiSequencer("MoniMUONSeq").Members += [ "MuonDigitChecker" ]
+
+        if "L0" in moniSeq:
+            GaudiSequencer("MoniL0Seq").Members += [ GaudiSequencer("L0MoniSeq") ]
+
+        if "MC" in moniSeq:
+            from Configurables import UnpackMCVertex, UnpackMCParticle, CompareMCVertex, CompareMCParticle
+            # This sequence only makes sense if input data is unpacked. Should be moved to Gauss
+            testMCV = UnpackMCVertex(   "TestMCVertex",   OutputName = "MC/VerticesTest" )
+            testMCP = UnpackMCParticle( "TestMCParticle", OutputName = "MC/ParticlesTest" )
+            GaudiSequencer("MoniMCSeq").Members += [ testMCV, testMCP,
+                                                     CompareMCParticle(), CompareMCVertex() ]
 
     def __apply_configuration__(self):
         log.info( self )
