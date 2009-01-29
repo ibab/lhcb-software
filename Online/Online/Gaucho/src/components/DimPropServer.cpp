@@ -1,4 +1,4 @@
-// $Id: DimPropServer.cpp,v 1.14 2008-08-25 08:04:49 evh Exp $
+// $Id: DimPropServer.cpp,v 1.15 2009-01-29 11:00:42 cattanem Exp $
 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/MsgStream.h"
@@ -85,7 +85,7 @@ DimPropServer::DimPropServer(std::string name, ISvcLocator* svclocator) :  DimRp
     log << MSG::FATAL << "Unable to locate the ApplicationMgr" << endreq;
 
   // get pointer to AlgorithmFactory
-  SmartIF<IAlgManager> algman ( IID_IAlgManager, appmgr );
+  SmartIF<IAlgManager> algman ( appmgr );
   if( algman.isValid() ) {
     m_algman=algman;
     log << MSG::DEBUG << "Found the AlgoritmFactory" << endreq;

@@ -78,7 +78,7 @@ MonitorSvc::~MonitorSvc() {
 // @param riid       ID of Interface to be retrieved
 // @param ppvUnknown Pointer to Location for interface pointer
 StatusCode MonitorSvc::queryInterface(const InterfaceID& riid, void** ppvIF) {
-  if(IID_IMonitorSvc == riid) {
+  if(IMonitorSvc::interfaceID() == riid) {
     *ppvIF = dynamic_cast<IMonitorSvc*> (this);
   } 
   else if (IID_IGauchoMonitorSvc == riid) {
