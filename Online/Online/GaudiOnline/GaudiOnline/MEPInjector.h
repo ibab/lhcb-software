@@ -32,9 +32,7 @@
 
 #include <semaphore.h>
 
-/// DIM Server header
-#include <dis.hxx>
-
+#include <time.h>
 
 /*
  *    LHCb namespace
@@ -56,13 +54,17 @@ namespace LHCb {
                       ,virtual public IIncidentListener
  {
   protected:
+    ///XXX Volatile not tested
+    int  m_CreditsFD;
  
     bool m_gotHLT;
 
     bool m_gotOdin;  
    
     bool m_ARPMe;
-  
+ 
+    bool m_Offline; 
+ 
     enum InjectorState { NOT_READY, READY, RUNNING, STOPPED };
  
     InjectorState m_InjState;
@@ -73,7 +75,7 @@ namespace LHCb {
 
     char*         m_AllNames;        /* Publish the names of all enabled Tell1s */
 
-    int  m_EvtBuf;
+    unsigned int  m_EvtBuf;
  
     sem_t         m_OdinCount;       /* Synchronisation to access to Odin MEP data */
                                      /* = counter of MEPs in the queue */
@@ -90,9 +92,15 @@ namespace LHCb {
     int  m_TotEvtsRead;         /* Total of events read */
     int  m_TotEvtsSent;         /* Total of events sent */
     int  m_TotMEPsTx;           /* Total of MEPs transmitted */
+
     struct timeval m_InitTime;          /* Date of initialization of the injector */
     struct timeval m_CurTime;           /* Current date */
-    int m_TotElapsedTime;      /* Elapsed time since the initialization, in ms */       
+
+    struct timespec m_RTInitTime;
+    struct timespec m_RTCurTime; 
+    int m_RTTotElapsedTime;
+    int m_TotElapsedTime;       /* Elapsed time since the initialization, in ms */       
+    int m_TotCreditConsumed;    /* Total of credits consumed by the injector */
     int m_TotMEPReqTx;          /* Total of MEP request forwarded */
     int m_TotMEPReqRx;          /* Total of MEP request received */
     int m_TotMEPReqPktTx;       /* Total of MEP request packet sent */
@@ -173,7 +181,7 @@ namespace LHCb {
     unsigned int  m_PackingFactor; /* MEP Event packing factor */
 
     u_int32_t     m_L0ID;          /* Level 0 ID               */
- 
+
     u_int32_t     m_PartitionID;   /* Partition ID of the events*/	
     ///////////////////////////////////////////////////////////////////////
 
@@ -183,7 +191,10 @@ namespace LHCb {
     
 
     ///////////////////////////////////////////////////////////////////////
-    /// Private Methods	
+    /// Private Methods
+
+    /// Log MEP requests received, forwaded and credits consumed
+    StatusCode logMEPReqs(); 	
  
     /// Copy the content of the src bank in dest bank. except for run number and GPS time
     void copyOdinBank(OnlineRunInfo *dest, OnlineRunInfo *src);
