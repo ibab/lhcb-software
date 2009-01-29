@@ -1,6 +1,11 @@
 #include "ConditionParser.h"
 
+#include <boost/version.hpp>
+#if BOOST_VERSION >= 103800
+#include <boost/spirit/classic_core.hpp>
+#else
 #include <boost/spirit/core.hpp>
+#endif
 
 using namespace std;
 using namespace boost::spirit;
