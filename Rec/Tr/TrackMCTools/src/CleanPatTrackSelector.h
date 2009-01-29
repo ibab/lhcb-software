@@ -1,4 +1,4 @@
-// $Id: CleanPatTrackSelector.h,v 1.3 2009-01-28 13:15:03 mneedham Exp $
+// $Id: CleanPatTrackSelector.h,v 1.4 2009-01-29 12:28:48 mneedham Exp $
 #ifndef _CleanPatTrackSelector_H
 #define _CleanPatTrackSelector_H
 
@@ -21,8 +21,9 @@
 
 namespace LHCb{
   class MCParticle;
-  class Track;
 };
+
+class IMCParticleSelector;
 
 class CleanPatTrackSelector : public GaudiTool,
 	                      virtual public ITrackSelector{
@@ -39,6 +40,9 @@ public:
   /// the method
   virtual bool accept(const LHCb::Track& aTrack) const;
 
+  /// initialize
+  StatusCode initialize();
+
 private:
 
   typedef LinkerTool<LHCb::Track, LHCb::MCParticle> Asct;
@@ -50,7 +54,8 @@ private:
   bool cleanTrack(const LHCb::Track& aTrack) const;
 
   bool m_rejectTracksWithOutliers;
-  double m_minPCut;
+ 
+  IMCParticleSelector* m_selector;
 
 };
 

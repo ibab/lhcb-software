@@ -1,4 +1,4 @@
-// $Id: TrackGhostClassificationBase.cpp,v 1.6 2009-01-27 16:16:30 mneedham Exp $
+// $Id: TrackGhostClassificationBase.cpp,v 1.7 2009-01-29 12:28:48 mneedham Exp $
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
@@ -329,9 +329,9 @@ bool TrackGhostClassificationBase::isGhost(LHCbIDs::const_iterator& start,
   // get the bestmatch
   LHCb::GhostTrackInfo::LinkPair bestPair = tinfo.bestLink();
 
-  return isReal(bestPair);
+  return isReal(bestPair) ? false : true ;
 }
 
 bool TrackGhostClassificationBase::isReal(const LHCb::GhostTrackInfo::LinkPair& bestPair  ) const {
-  return (bestPair.first == 0 && bestPair.second > purityCut() ? true: false);
+  return (bestPair.first != 0 && bestPair.second > purityCut() ? true: false);
 }

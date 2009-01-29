@@ -4,6 +4,12 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2009-01-29 M Needham
+ - Modify isGhost method for Long tracks: it is a ghost if either T or Velo
+   part is a ghost
+ - bug fix in isGhost method
+ - User MCParticleSelector in CleanPatTrackSelector 
+
 ! 2009-01-28  M Needham
  - Add option to cut on p in CleanPatTrackSelector
 

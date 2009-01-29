@@ -20,6 +20,14 @@ public:
   /** destructer */
   virtual ~LongGhostClassification();
 
+  /**
+   *  Check this is a ghost .
+   *  specialize for long tracks [check velo and T separately]
+   *  @param aTrack to link
+   *  @return bool true if a ghost
+  */
+  virtual bool isGhost(LHCbIDs::const_iterator& start, 
+                       LHCbIDs::const_iterator& stop) const;
 
  private:
 

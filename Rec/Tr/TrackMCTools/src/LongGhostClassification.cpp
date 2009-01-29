@@ -1,4 +1,4 @@
-// $Id: LongGhostClassification.cpp,v 1.4 2008-02-04 08:52:00 mneedham Exp $
+// $Id: LongGhostClassification.cpp,v 1.5 2009-01-29 12:28:48 mneedham Exp $
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
@@ -58,3 +58,32 @@ void LongGhostClassification::specific(LHCbIDs::const_iterator& start,
 
   return;
 }
+
+bool LongGhostClassification::isGhost(TrackGhostClassificationBase::LHCbIDs::const_iterator& start, 
+                                           TrackGhostClassificationBase::LHCbIDs::const_iterator& stop) const{
+
+  LHCbIDs::const_iterator iter = start;
+  LHCbIDs tHits;  tHits.reserve(20);
+  LHCbIDs vHits;  vHits.reserve(20);
+  for (; iter != stop; ++iter){
+    if (iter->detectorType() == LHCbID::OT || 
+        iter->detectorType() == LHCbID::IT){
+      tHits.push_back(*iter); 
+    }
+    else if (iter->detectorType() == LHCbID::Velo){
+      vHits.push_back(*iter);
+    }
+  } // for iter
+
+
+  // match the T Hits
+  LHCb::GhostTrackInfo::LinkPair tMatch = bestPair(tHits);
+  if (isReal(tMatch) == false) return true;
+
+  // match the velo Hits
+  LHCb::GhostTrackInfo::LinkPair vMatch = bestPair(vHits);
+  return isReal(vMatch) ? false : true;
+    
+}
+
+

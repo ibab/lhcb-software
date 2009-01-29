@@ -8,6 +8,7 @@
 #include "Event/Track.h"
 #include "GaudiKernel/IRegistry.h"
 
+#include "MCInterfaces/IMCParticleSelector.h"
 
 using namespace LHCb;
 
@@ -23,10 +24,20 @@ CleanPatTrackSelector::CleanPatTrackSelector( const std::string& type,
   declareInterface<ITrackSelector>(this);
   declareProperty( "RejectTracksWithOutliers",
                    m_rejectTracksWithOutliers = false );
-  declareProperty("minPCut", m_minPCut = 0.0*Gaudi::Units::GeV);
+
 }
 
+
 CleanPatTrackSelector::~CleanPatTrackSelector() { }
+
+StatusCode CleanPatTrackSelector::initialize() {
+
+  StatusCode sc = GaudiTool::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;
+  
+  m_selector = tool<IMCParticleSelector>( "MCParticleSelector", "Selector", this );
+  return StatusCode::SUCCESS;
+}
 
 bool CleanPatTrackSelector::accept ( const Track& aTrack ) const
 {
@@ -58,9 +69,9 @@ bool CleanPatTrackSelector::cleanTrack(const Track& aTrack) const {
       if (weight < 0.99) clean = false; 
     } 
     else {
-      // cut on momentum
+      // use the selector
       const MCParticle* mcpart = (*range.begin()).to();
-      if (mcpart->p() < m_minPCut ) clean = false;
+      clean = m_selector->accept(mcpart);
     }
   }
   
