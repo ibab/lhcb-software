@@ -1,4 +1,4 @@
-// $Id: OnlineRunInfo.h,v 1.6 2008-04-10 09:58:42 cattanem Exp $
+// $Id: OnlineRunInfo.h,v 1.7 2009-01-29 10:37:14 niko Exp $
 //====================================================================
 #ifndef MDF_ONLINERUNINFO_H
 #define MDF_ONLINERUNINFO_H
@@ -36,6 +36,7 @@ namespace LHCb  {
     unsigned      forceBit    :  1;
     unsigned      bxType      :  2;
     unsigned      bunchCurrent:  8;
+    unsigned int  TCK;                      
   };
 }      // end namespace LHCb
 #undef ONLINERUNINFO_ALIGN
