@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.34 2009-01-29 17:28:22 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.35 2009-01-29 17:35:43 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -264,7 +264,7 @@ class Boole(LHCbConfigurableUser):
         ProcessPhase("Moni").DetectorList += moniSeq
 
         from Configurables import BooleInit, MemoryTool
-        booleInit = BooleInit("Boole")
+        booleInit = BooleInit()
         booleInit.addTool( MemoryTool(), name = "BooleMemory" )
         booleInit.BooleMemory.HistoTopDir = "Boole/"
         booleInit.BooleMemory.HistoDir    = "MemoryTool"
