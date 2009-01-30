@@ -1,3 +1,19 @@
+2009-01-30  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/SetupProject.py: fixed a problem with the removal
+	of the temporary directory when invoked with "python -m"
+	* scripts/AllProjectsSetup.bat
+	* scripts/AllProjectsSetup.csh
+	* scripts/AllProjectsSetup.sh
+	* scripts/SetupProject.bat
+	* scripts/SetupProject.csh
+	* scripts/SetupProject.sh
+	* scripts/setenvProject.bat
+	* scripts/setenvProject.csh
+	* scripts/setenvProject.sh
+	* tests/SetupProjectTest.py
+	  Replaced "python -m" with runpy.
+
 2009-01-28  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/SetupProject.py: uses LHCB_USERLOGS 

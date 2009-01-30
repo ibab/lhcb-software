@@ -1,5 +1,5 @@
 
-tmp2dffile=`python -m LbConfiguration.AllProjectsSetup --shell=sh --mktemp`
+tmp2dffile=`runpy LbConfiguration.AllProjectsSetup --shell=sh --mktemp`
 AllProjectsSetupStatus="$?"
 if [ "$AllProjectsSetupStatus" = 0 ]; then
     . $tmp2dffile

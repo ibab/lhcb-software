@@ -1,5 +1,5 @@
 
-SetupProject_tmpfile=`python -m LbConfiguration.SetupProject --shell=sh --build-env --mktemp "$@"`
+SetupProject_tmpfile=`runpy LbConfiguration.SetupProject --shell=sh --build-env --mktemp "$@"`
 SetupProjectStatus="$?"
 if [ "$SetupProjectStatus" = 0 ]; then
     . $SetupProject_tmpfile

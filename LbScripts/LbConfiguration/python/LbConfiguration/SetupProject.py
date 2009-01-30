@@ -5,11 +5,11 @@ from xml.sax import parse, ContentHandler
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.5 2009-01-28 18:37:54 hmdegaud Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.6 2009-01-30 17:01:05 marcocle Exp $"
 
 try:
     from LbUtils.CVS import CVS2Version
-    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.5 $")
+    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.6 $")
 except ImportError :
     __version__ = _cvs_id
 
@@ -216,6 +216,9 @@ class TempDir:
     
     def __del__(self):
         if self.name:
+            # This is needed because globals are not found when invoked with "python -m"
+            import os, sys
+            from LbConfiguration.SetupProject import log, removeall
             if "KEEPTEMPDIR" in os.environ:
                 log.always("KEEPTEMPDIR set: I do not remove the temporary directory '%s'" % self.name)
                 return

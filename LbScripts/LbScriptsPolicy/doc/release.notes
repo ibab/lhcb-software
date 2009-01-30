@@ -1,3 +1,10 @@
+2009-01-30  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* scripts/StripPath.bat
+	* scripts/StripPath.csh
+	* scripts/StripPath.sh
+	  Replaced "python -m" with runpy.
+
 2009-01-28  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbScriptsPolicy/PathStripper.py: removes duplicates

@@ -1,5 +1,5 @@
 
-set tmp2dffile = `python -m LbConfiguration.AllProjectsSetup --shell=csh --mktemp`
+set tmp2dffile = `runpy LbConfiguration.AllProjectsSetup --shell=csh --mktemp`
 set AllProjectsSetupStatus = $?
 if ( ! $AllProjectsSetupStatus ) then
     source $tmp2dffile
