@@ -1,4 +1,4 @@
-// $Id: Particle2MCAssociatorBase.h,v 1.1 2009-01-30 18:33:57 jpalac Exp $
+// $Id: Particle2MCAssociatorBase.h,v 1.2 2009-01-30 18:50:58 jpalac Exp $
 #ifndef PARTICLE2MCASSOCIATORBASE_H 
 #define PARTICLE2MCASSOCIATORBASE_H 1
 
@@ -43,21 +43,21 @@ public:
               const LHCb::MCParticle::ConstVector& mcParticles) const;
   
   virtual Particle2MCParticle::LightTable 
-  associationTable(const LHCb::Particle::ConstVector& particles,
+  associations(const LHCb::Particle::ConstVector& particles,
                    const std::string& mcParticleLocation) const;
 
   
   virtual Particle2MCParticle::LightTable 
-  associationTable(const LHCb::Particle::Container& particles,
+  associations(const LHCb::Particle::Container& particles,
                    const std::string& mcParticleLocation) const;
   
 
   virtual Particle2MCParticle::LightTable 
-  associationTable(const LHCb::Particle::ConstVector& particles,
+  associations(const LHCb::Particle::ConstVector& particles,
                    const LHCb::MCParticle::ConstVector& mcParticles) const;
 
   virtual Particle2MCParticle::LightTable 
-  associationTable(const LHCb::Particle::Container& particles,
+  associations(const LHCb::Particle::Container& particles,
                    const LHCb::MCParticle::ConstVector& mcParticles) const;
   
   virtual double 
@@ -95,7 +95,7 @@ private:
 
   template <typename pIter, typename mcPIter>
   Particle2MCParticle::LightTable 
-  i_associationTable(const pIter pBegin, 
+  i_associations(const pIter pBegin, 
                      const pIter pEnd, 
                      const mcPIter mcBegin, 
                      const mcPIter mcEnd) const
@@ -117,13 +117,13 @@ private:
   
   template <typename Iter> 
   inline Particle2MCParticle::LightTable 
-  i_associationTable(const Iter pBegin,
+  i_associations(const Iter pBegin,
                      const Iter pEnd,
                      const std::string& mcParticleLocation) const
   {
     LHCb::MCParticle::Container* mcps = i_MCParticles(mcParticleLocation);
     if (0!=mcps) {
-      return i_associationTable(pBegin, pEnd, mcps->begin(), mcps->end());
+      return i_associations(pBegin, pEnd, mcps->begin(), mcps->end());
     } else {
       return Particle2MCParticle::LightTable();
     }

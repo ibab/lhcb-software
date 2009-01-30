@@ -1,4 +1,4 @@
-// $Id: Particle2MCAssociatorBase.cpp,v 1.1 2009-01-30 18:33:57 jpalac Exp $
+// $Id: Particle2MCAssociatorBase.cpp,v 1.2 2009-01-30 18:50:58 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -61,35 +61,35 @@ Particle2MCAssociatorBase::relatedMCPs(const LHCb::Particle* particle,
 }
 //=============================================================================
 Particle2MCParticle::LightTable 
-Particle2MCAssociatorBase::associationTable(const LHCb::Particle::ConstVector& particles,
-                                          const std::string& mcParticleLocation) const
+Particle2MCAssociatorBase::associations(const LHCb::Particle::ConstVector& particles,
+                                        const std::string& mcParticleLocation) const
 {
-  return i_associationTable(particles.begin(), particles.end(), mcParticleLocation);
+  return i_associations(particles.begin(), particles.end(), mcParticleLocation);
 }
 //=============================================================================
 Particle2MCParticle::LightTable 
-Particle2MCAssociatorBase::associationTable(const LHCb::Particle::Container& particles,
-                                            const std::string& mcParticleLocation) const
+Particle2MCAssociatorBase::associations(const LHCb::Particle::Container& particles,
+                                        const std::string& mcParticleLocation) const
 {
-  return i_associationTable(particles.begin(), particles.end(), mcParticleLocation);  
+  return i_associations(particles.begin(), particles.end(), mcParticleLocation);  
 }
 //=============================================================================
 Particle2MCParticle::LightTable 
-Particle2MCAssociatorBase::associationTable(const LHCb::Particle::ConstVector& particles,
-                                          const LHCb::MCParticle::ConstVector& mcParticles) const
+Particle2MCAssociatorBase::associations(const LHCb::Particle::ConstVector& particles,
+                                        const LHCb::MCParticle::ConstVector& mcParticles) const
 {
-  return i_associationTable(particles.begin(),
-                            particles.end(),
-                            mcParticles.begin(),
-                            mcParticles.end());
+  return i_associations(particles.begin(),
+                        particles.end(),
+                        mcParticles.begin(),
+                        mcParticles.end());
   
 }
 //=============================================================================
 Particle2MCParticle::LightTable 
-Particle2MCAssociatorBase::associationTable(const LHCb::Particle::Container& particles,
-                                          const LHCb::MCParticle::ConstVector& mcParticles) const
+Particle2MCAssociatorBase::associations(const LHCb::Particle::Container& particles,
+                                        const LHCb::MCParticle::ConstVector& mcParticles) const
 {
-  return i_associationTable(particles.begin(), particles.end(), mcParticles.begin(), mcParticles.end());          
+  return i_associations(particles.begin(), particles.end(), mcParticles.begin(), mcParticles.end());          
 }
 //=============================================================================
 double
