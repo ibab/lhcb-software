@@ -1,4 +1,4 @@
-// $Id: L0MuonOutputs.cpp,v 1.26 2008-12-11 13:39:11 jucogan Exp $
+// $Id: L0MuonOutputs.cpp,v 1.27 2009-01-30 08:29:02 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -890,18 +890,28 @@ std::vector<unsigned int> L0MuonOutputs::DC06RawBanks(){
 
 LHCb::L0MuonCandidate* L0MuonOutputs::l0muoncandidate(L0Muon::PMuonCandidate cand)
 {
-  bool debug = false;
+  bool debugFlag = false;
   //  if (msgLevel( MSG::VERBOSE )) debug=true;
   
   std::vector<LHCb::MuonTileID> pads = L0Muon::add2pads(cand->quarter(),cand->board(),cand->pu(),
                                                         cand->colM3(),cand->rowM3(), cand->offM2(),cand->offM1(),
-                                                        m_version,debug);
+                                                        m_version,debugFlag);
   if (pads.size()==0) {
     if (msgLevel( MSG::ERROR)) error()<<"Wrong address for candidate"<<endmsg;
     return NULL;
   }
-  std::vector<double> kine = L0Muon::kine(pads[0],pads[1],m_version,debug);
-  LHCb::L0MuonCandidate *pl0muoncandidate = new LHCb::L0MuonCandidate(kine[0], kine[1], kine[2], pads,cand->pT());
+  std::vector<double> kine = L0Muon::kine(pads[0],pads[1],m_version,debugFlag);
+
+  int encodedPT=cand->pT()+((cand->charge()<<7)&0x80);
+  
+  //   debug()<<" L0MuonOutputs::l0muoncandidate "<<context()
+  //          <<std::hex
+  //          <<" encodedPT=0x"<<encodedPT
+  //          <<" candpT= 0x"<<cand->pT()
+  //          <<std::dec
+  //          <<" charge= "<<cand->charge() 
+  //          <<" pt= "<<kine[0]<<endmsg;
+  LHCb::L0MuonCandidate *pl0muoncandidate = new LHCb::L0MuonCandidate(kine[0], kine[1], kine[2], pads, encodedPT);
   return pl0muoncandidate;
 }
 

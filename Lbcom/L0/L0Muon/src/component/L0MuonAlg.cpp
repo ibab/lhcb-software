@@ -1,4 +1,4 @@
-// $Id: L0MuonAlg.cpp,v 1.21 2008-12-15 08:09:06 cattanem Exp $
+// $Id: L0MuonAlg.cpp,v 1.22 2009-01-30 08:29:02 jucogan Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -73,7 +73,7 @@ L0MuonAlg::L0MuonAlg(const std::string& name,
   declareProperty("WriteL0ProcData", m_writeL0ProcData  = true);  
   declareProperty("InputSource"    , m_inputSource = 0);  
   declareProperty("Version"        , m_version     = 2 );
-  declareProperty("DAQMode"        , m_mode  = 0 );
+  declareProperty("DAQMode"        , m_mode  = 1 );
   declareProperty("Compression"    , m_compression = true );
 
 }

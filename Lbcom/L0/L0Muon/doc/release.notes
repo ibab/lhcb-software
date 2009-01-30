@@ -1,7 +1,10 @@
-!  $Id: release.notes,v 1.76 2009-01-12 12:34:20 cattanem Exp $
+!  $Id: release.notes,v 1.77 2009-01-30 08:29:02 jucogan Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !---------------------------------------------------------------------------
+
+! 2009-01-30 - Julien Cogan
+ - Fix a bug in the filling of the L0MuonCandidates (pt sign was missing)
 
 !========================= L0Muon v8r4 2009-01-12 ==========================
 ! 2008-12-15 - Marco Cattaneo
