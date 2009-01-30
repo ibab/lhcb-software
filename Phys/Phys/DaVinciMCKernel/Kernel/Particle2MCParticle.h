@@ -1,4 +1,4 @@
-// $Id: Particle2MCParticle.h,v 1.1 2009-01-20 15:16:14 jpalac Exp $
+// $Id: Particle2MCParticle.h,v 1.2 2009-01-30 18:36:51 jpalac Exp $
 #ifndef KERNEL_PARTICLE2MCPARTICLE_H 
 #define KERNEL_PARTICLE2MCPARTICLE_H 1
 
@@ -7,6 +7,7 @@
 #include "Event/Particle.h"
 #include "Relations/RelationWeighted.h"
 #include "Relations/RelationWeighted1D.h"
+#include "Kernel/MCAssociation.h"
 
 /** @namespace Particle2MCParticle Kernel/Particle2MCParticle.h
  *  
@@ -32,5 +33,8 @@ namespace Particle2MCParticle {
   typedef Table::To                                       To         ;
   typedef Table::From                                     From       ;
   typedef WeightType                                      Weight     ;
+
+  typedef std::vector<MCAssociation>                      ToVector;
+  
 }
 #endif // KERNEL_PARTICLE2MCPARTICLE_H
