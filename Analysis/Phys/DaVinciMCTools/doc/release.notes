@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.241 2009-01-24 19:20:25 gligorov Exp $
+! $Id: release.notes,v 1.242 2009-01-30 18:54:56 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2009-01-30 - Juan PALACIOS
+ - src/DaVinciSmartAssociator.h, src/DaVinciSmartAssociator.cpp, src/GenericParticle2MCAssociator.h
+  . These now virtually inherit from IParticle2MCAssociator and inherit
+    helper functionality from Particle2MCAssociatorBase.
 
 ! 2009-01-24 - V Gligorov
  - src/BackgroundCategory.cpp
