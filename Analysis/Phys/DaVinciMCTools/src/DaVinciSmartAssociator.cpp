@@ -19,15 +19,15 @@ DECLARE_TOOL_FACTORY( DaVinciSmartAssociator );
 // Standard constructor, initializes variables
 //=============================================================================
 DaVinciSmartAssociator::DaVinciSmartAssociator( const std::string& type,
-                                                              const std::string& name,
-                                                              const IInterface* parent )
+                                                const std::string& name,
+                                                const IInterface* parent )
   : 
-  GaudiTool ( type, name , parent ),
+  Particle2MCAssociatorBase( type, name , parent ),
   m_linkerTool_cPP(0),
   m_linkerTool_nPP(0),
   m_bkg(0)
 {
-  declareInterface<IDaVinciSmartAssociator>(this);
+  declareInterface<IParticle2MCAssociator>(this);
 }
 //=============================================================================
 // Destructor
@@ -36,7 +36,10 @@ DaVinciSmartAssociator::~DaVinciSmartAssociator() {}
 //=============================================================================
 // Make & return the linker
 //============================================================================= 
-Particle2MCLinker::ToRange DaVinciSmartAssociator::associate(const LHCb::Particle* particleToBeAssociated ) {
+Particle2MCParticle::ToVector 
+DaVinciSmartAssociator::associate(const LHCb::Particle* particleToBeAssociated,
+                                  const std::string& mcParticleLocation) const 
+{
 //We associate according to the particle type: protoparticle associators
 //are used for neutral and charged stable tracks, otherwise we use BackCat
 //for composites. The associator wrapper makes sure the linkers thus created are
@@ -69,7 +72,8 @@ Particle2MCLinker::ToRange DaVinciSmartAssociator::associate(const LHCb::Particl
 // initialize
 //=============================================================================
 StatusCode DaVinciSmartAssociator::initialize() {
-  StatusCode sc = GaudiTool::initialize();
+  StatusCode sc = Particle2MCAssociatorBase::initialize();
+  if (sc.isFailure()) return sc;
   //Init the BackCat instance
   m_bkg = tool<IBackgroundCategory>( "BackgroundCategory", this );
   //And the associator wrappers
@@ -85,5 +89,6 @@ StatusCode DaVinciSmartAssociator::initialize() {
 // finalize
 //=============================================================================
 StatusCode DaVinciSmartAssociator::finalize() {
-  return GaudiTool::finalize() ; 
+  return Particle2MCAssociatorBase::finalize() ; 
 }
+//=============================================================================

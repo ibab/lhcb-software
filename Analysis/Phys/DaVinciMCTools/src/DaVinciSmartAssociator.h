@@ -4,11 +4,12 @@
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "Kernel/IDaVinciSmartAssociator.h"            // Interface
 #include "Kernel/IBackgroundCategory.h"
 #include "Kernel/IDaVinciAssociatorsWrapper.h"
 #include "Kernel/Particle2MCLinker.h"
-
+#include "Kernel/IParticle2MCAssociator.h"
+#include "Kernel/Particle2MCAssociatorBase.h"
+#include "Kernel/MCAssociation.h"
 /** @class DaVinciSmartAssociator DaVinciSmartAssociator.h
  *  
  *  A ``smart'' associator for any kind of particle. Returns a vector of
@@ -25,8 +26,8 @@
  *  @author V. Gligorov
  *  @date   2009-01-13
  */
-class DaVinciSmartAssociator : public GaudiTool, 
-                               virtual public IDaVinciSmartAssociator {
+class DaVinciSmartAssociator : public Particle2MCAssociatorBase, 
+                               virtual public IParticle2MCAssociator {
 public: 
   /// Standard constructor
   DaVinciSmartAssociator( const std::string& type, 
@@ -35,16 +36,19 @@ public:
 
   virtual ~DaVinciSmartAssociator( ); ///< Destructor
 
-  StatusCode initialize() ;
-  StatusCode finalize() ;
+  virtual StatusCode initialize() ;
 
-  Particle2MCLinker::ToRange associate(const LHCb::Particle* particleToBeAssociated);
+  virtual StatusCode finalize() ;
+
+  virtual Particle2MCParticle::ToVector 
+  associate(const LHCb::Particle* particle,
+            const std::string& mcParticleLocation) const;
+
 
 private:
 
   IDaVinciAssociatorsWrapper* m_linkerTool_cPP;
   IDaVinciAssociatorsWrapper* m_linkerTool_nPP;
-
   IBackgroundCategory* m_bkg; //for composites
 
 };
