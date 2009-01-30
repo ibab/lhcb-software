@@ -1,4 +1,4 @@
-// $Id: MCAssociation.h,v 1.2 2009-01-20 15:50:29 jpalac Exp $
+// $Id: MCAssociation.h,v 1.3 2009-01-30 18:34:52 jpalac Exp $
 #ifndef KERNEL_MCASSOCIATION_H 
 #define KERNEL_MCASSOCIATION_H 1
 
@@ -42,5 +42,6 @@ public:
 private:
   const LHCb::MCParticle* m_associatedMCP;
   double m_weight;
+
 };
 #endif // KERNEL_MCASSOCIATION_H
