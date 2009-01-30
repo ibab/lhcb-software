@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2009-01-30 M Needham
+ - Bug fix in definition of isReal for long tracks
+
 ! 2009-01-29 M Needham
  - Modify isGhost method for Long tracks: it is a ghost if either T or Velo
    part is a ghost

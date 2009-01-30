@@ -1,4 +1,4 @@
-// $Id: TrackGhostClassificationBase.cpp,v 1.7 2009-01-29 12:28:48 mneedham Exp $
+// $Id: TrackGhostClassificationBase.cpp,v 1.8 2009-01-30 08:32:39 mneedham Exp $
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
@@ -93,7 +93,7 @@ void TrackGhostClassificationBase::generic(LHCbIDs::const_iterator& start,
   LHCb::GhostTrackInfo::LinkPair bestPair = tinfo.bestLink();
 
   // test the generic cases...
-  if (isReal(bestPair)){
+  if (!isGhost(start,stop)){
     // duh its not a ghost
     tinfo.setClassification(GhostTrackInfo::Real); 
     return;

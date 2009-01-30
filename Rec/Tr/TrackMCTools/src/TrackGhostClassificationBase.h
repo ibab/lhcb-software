@@ -90,6 +90,7 @@ public:
   /** spillover test */
   bool spillover(const LHCb::GhostTrackInfo::LinkPair& aPair) const;
 
+  /** check if real */ 
   bool TrackGhostClassificationBase::isReal(const LHCb::GhostTrackInfo::LinkPair& bestPair) const;
 
   /** check if ghost*/
