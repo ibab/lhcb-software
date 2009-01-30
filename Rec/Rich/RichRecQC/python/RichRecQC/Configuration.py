@@ -4,10 +4,12 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.14 2009-01-27 14:55:14 ukerzel Exp $"
+__version__ = "$Id: Configuration.py,v 1.15 2009-01-30 15:32:28 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
+from RichRecQC.Alignment import RichAlignmentConf
+from RichMarkovRingFinder.Configuration import RichMarkovRingFinderConf
 from Configurables import ( GaudiSequencer, MessageSvc )
 from DDDB.Configuration import DDDBConf
     
@@ -19,16 +21,19 @@ from DDDB.Configuration import DDDBConf
 #  @date   15/08/2008
 class RichRecQCConf(RichConfigurableUser):
 
+    ## Possible used Configurables
+    __used_configurables__ = [ RichAlignmentConf, RichMarkovRingFinderConf ]
+
     ## Steering options
     __slots__ = {
         "Context": "Offline"  # The context within which to run
        ,"DataType" : "2008" # Data type, can be ['DC06','2008']
-       ,"RawMonitoring": True
-       ,"PidMonitoring": True
-       ,"PixelMonitoring": True
-       ,"PhotonMonitoring": True
-       ,"TracklessRingMonitoring": False
-       ,"MirrorAlignmentMonitoring": False
+       ,"RawMonitoring"             : True
+       ,"PidMonitoring"             : True
+       ,"PixelMonitoring"           : True
+       ,"PhotonMonitoring"          : True
+       ,"TracklessRingMonitoring"   : False
+       ,"MirrorAlignmentMonitoring" : False
        ,"PidMomentumRanges": [ [2,100], [2,10], [10,70], [70,100] ]
        ,"PidTrackTypes":  [ ["All"] ]
        ,"RecoTrackTypes": [ ["All"],
@@ -124,9 +129,8 @@ class RichRecQCConf(RichConfigurableUser):
 
         # Alignment monitor
         if self.getProp("MirrorAlignmentMonitoring"):
-            from RichRecQC.Alignment import RichAlignmentConf
-            self.setOtherProps(RichAlignmentConf(),["context","NTupleProduce","HistoProduce"])
-            RichAlignmentConf().alignmentSequncer = self.newSeq(sequence,"RichMirrAlignMoni")
+            self.setOtherProps(RichAlignmentConf(),["Context","NTupleProduce","HistoProduce"])
+            RichAlignmentConf().AlignmentSequncer = self.newSeq(sequence,"RichMirrAlignMoni")
 
         # Expert Monitoring
         if self.getProp("ExpertHistos") :
@@ -135,7 +139,6 @@ class RichRecQCConf(RichConfigurableUser):
     ## standalone ring finder monitors
     def ringsMoni(self,sequence):
  
-        from RichMarkovRingFinder.Configuration import RichMarkovRingFinderConf
         from Configurables import Rich__Rec__MarkovRingFinder__MC__Moni
         
         conf = RichMarkovRingFinderConf()

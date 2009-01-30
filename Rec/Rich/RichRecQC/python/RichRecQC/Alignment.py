@@ -1,5 +1,5 @@
 
-__version__ = "$Id: Alignment.py,v 1.3 2008-12-17 16:11:28 jonrob Exp $"
+__version__ = "$Id: Alignment.py,v 1.4 2009-01-30 15:32:28 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -15,8 +15,8 @@ class RichAlignmentConf(RichConfigurableUser):
 
     ## Steering options
     __slots__ = {
-        "context": "Offline"  # The context within which to run
-        ,"alignmentSequncer" : None
+        "Context": "Offline"  # The context within which to run
+        ,"AlignmentSequncer" : None
         ,"NTupleProduce" : True
         ,"HistoProduce" : True
         }
@@ -24,7 +24,7 @@ class RichAlignmentConf(RichConfigurableUser):
     ## Apply the configuration
     def applyConf(self):
 
-        sequence = self.getProp("alignmentSequncer")
+        sequence = self.getProp("AlignmentSequncer")
         if sequence == None : raise RuntimeError("ERROR : Alignment Sequencer not set")
 
         # Mirror Alignment monitor for Rich1
@@ -42,7 +42,7 @@ class RichAlignmentConf(RichConfigurableUser):
         RichAlignMoniR1.TrackSelector.TrackAlgs = [ "Match","Forward" ]
         RichAlignMoniR1.TrackSelector.MinPCut   = 5
 
-        RichAlignMoniR1.NTupleProduce = self.getProp("NTupleProduce")
+        #RichAlignMoniR1.NTupleProduce = self.getProp("NTupleProduce")
         RichAlignMoniR1.HistoProduce  = self.getProp("HistoProduce")
         
         # Mirror Alignment monitor for Rich2
@@ -60,7 +60,7 @@ class RichAlignmentConf(RichConfigurableUser):
         RichAlignMoniR2.TrackSelector.TrackAlgs = [ "Match","Forward" ]
         RichAlignMoniR2.TrackSelector.MinPCut   = 10
 
-        RichAlignMoniR2.NTupleProduce = self.getProp("NTupleProduce")
+        #RichAlignMoniR2.NTupleProduce = self.getProp("NTupleProduce")
         RichAlignMoniR2.HistoProduce  = self.getProp("HistoProduce")
 
         RichAlignMoniR2.HPDList = [ 200107, 200108, 200007, 200008,

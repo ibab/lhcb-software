@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-01-30 - Chris Jones
+ - Fix a few bugs in the activation of the alignment histos
+
 ! 2009-01-27 - Ulrich Kerzel
  - typo in configuration for Markov Ring Finder in Configuration.py
 
