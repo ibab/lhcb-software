@@ -1,4 +1,4 @@
-// $Id: OTRawBankDecoder.cpp,v 1.22 2009-01-19 15:40:15 janos Exp $
+// $Id: OTRawBankDecoder.cpp,v 1.23 2009-01-30 14:09:59 janos Exp $
 // Include files
 #include <algorithm>
 #include <sstream>
@@ -416,17 +416,19 @@ StatusCode OTRawBankDecoder::decodeGolHeaders(const LHCb::RawEvent& event) const
       
       // Choose decoding based on bank version
       int bVersion = m_forcebankversion != OTBankVersion::UNDEFINED ? m_forcebankversion : (*ibank)->version();
-      m_channelmaptool->setBankVersion( bVersion ) ;
       StatusCode sc ;
       switch( bVersion ) {
         case OTBankVersion::DC06:
+          m_channelmaptool->setBankVersion( bVersion ) ;
           sc = decodeGolHeadersDC06(**ibank,bVersion) ;
           break ;
           // Note: SIM and v3 currently (22/07/2008) uses same decoding.
           //       If SIM changes w.r.t. to the real decoding then we'll need
           //       to change it here.
       case OTBankVersion::SIM:
+        m_channelmaptool->setBankVersion( bVersion ) ;
       case OTBankVersion::v3:
+        m_channelmaptool->setBankVersion( bVersion ) ;
 	sc = decodeGolHeadersV3(**ibank,bVersion) ;
 	break ;
       default:
