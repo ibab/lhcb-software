@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-01-30 - Marco Cattaneo
+ - Set histo name and directory for MemoryTool
+
 ! 2009-01-28 - Marco Cattaneo
  - Adapt configurable to latest DstConf changes
  - Add FPE checking to QMTests

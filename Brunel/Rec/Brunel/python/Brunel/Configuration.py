@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.50 2009-01-28 09:13:31 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.51 2009-01-30 07:06:07 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -178,10 +178,13 @@ class Brunel(LHCbConfigurableUser):
         brunelSeq.Members += mainSeq
         ProcessPhase("Init").DetectorList += self.getProp("InitSequence")
         ProcessPhase("Init").Context = self.getProp("Context")
-        from Configurables import RecInit
+        from Configurables import RecInit, MemoryTool
         recInit = RecInit( name = "BrunelInit",
                            PrintFreq = self.getProp("PrintFreq"))
         GaudiSequencer("InitBrunelSeq").Members += [ recInit ]
+        recInit.addTool( MemoryTool(), name = "BrunelMemory" )
+        recInit.BrunelMemory.HistoTopDir = "Brunel/"
+        recInit.BrunelMemory.HistoDir    = "MemoryTool"
 
     def configureInput(self, inputType):
         """
