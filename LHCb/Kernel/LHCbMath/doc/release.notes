@@ -6,7 +6,13 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+<<<<<<< release.notes
+! 2009-01-30 M Needham
+ - Add function to get width of the half sample in ModeFunctions
+
+=======
 !========================= LHCbMath v3r5 2009-01-12 ==========================
+>>>>>>> 1.87
 ! 2009-01-10 - Vanya BELYAEV 
  - LHCbMath/Digit.h
    to please Reflex at Win32 platform. make a drafstical simplification 

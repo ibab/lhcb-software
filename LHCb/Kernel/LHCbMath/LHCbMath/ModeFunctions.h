@@ -45,6 +45,15 @@ namespace ModeFunctions{
   template <typename TYPE>
     std::pair<TYPE,TYPE> halfSample(TYPE start, TYPE stop);
 
+ /** calculate the halfSampleWidth
+  * size of the half sample 
+  * @param start beginning of sequence 
+  * @param stop  end of sequence
+  * @return TYPE iterator for starting position
+  */
+  template <typename TYPE>
+    double halfSampleWidth(TYPE start, TYPE stop);
+
   /** <a href = "http://en.wikipedia.org/wiki/Harmonic_mean" > Generalized Mean </a>
    * @param start beginning of sequence 
    * @param stop  end of sequence
@@ -68,6 +77,19 @@ inline std::pair<TYPE,TYPE> ModeFunctions::halfSample(TYPE start, TYPE stop){
    }
  } //iter1 
  return std::make_pair(start+bestpos, start+bestpos+halfSize);
+}
+
+template <typename TYPE>
+inline double ModeFunctions::halfSampleWidth(TYPE start, TYPE stop){
+  // trivial cases
+  if (start == stop){
+    return 0.0;
+  }
+  else if (stop - start <= 2) {
+    return 0.5* fabs(*start - *stop); 
+  }
+  std::pair<TYPE,TYPE> bestpos = halfSample(start,stop);
+  return fabs(*bestpos.first - *bestpos.second);
 }
 
 template<typename TYPE>
