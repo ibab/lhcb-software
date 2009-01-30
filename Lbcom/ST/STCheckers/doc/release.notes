@@ -2,6 +2,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2009-01-30 - Marco Cattaneo
+ - Remove Boole.opts, now done inside Boole configurable.
+
 !=========================== STCheckers v2r9 2009-01-12 =======================
 ! 2009-01-09 - Jeroen van Tilburg
  - STClusterResolution: Added two options to remove split clusters (recall that
