@@ -251,12 +251,12 @@ const OTRawBankEncoder::OTRawBank& OTRawBankEncoder::createRawBank(const OTDAQ::
       rawHits.reserve( (*gol).nChannels() );
       for ( std::vector<LHCb::OTChannelID>::const_iterator firstChannel = gol->firstChannel(); 
             firstChannel != gol->lastChannel(); ++firstChannel ) {
-        if ( isVerbose ) debug() << " Gol ID  = " << gol->id()
-                               << " Station = " << firstChannel->station()
-                               << " Layer   = " << firstChannel->layer()
-                               << " Quarter = " << firstChannel->quarter()
-                               << " Module  = " << firstChannel->module() 
-                               << " nHits   = " << gol->nChannels() << endmsg;
+        if ( isVerbose ) verbose() << " Gol ID  = " << gol->id()
+                                   << " Station = " << firstChannel->station()
+                                   << " Layer   = " << firstChannel->layer()
+                                   << " Quarter = " << firstChannel->quarter()
+                                   << " Module  = " << firstChannel->module() 
+                                   << " nHits   = " << gol->nChannels() << endmsg;
         
         size_t channel = m_channelmaptool->channel( (*firstChannel) ) ;
         rawHits.push_back( OTDAQ::RawHit( 0, channel, firstChannel->tdcTime() ) );
@@ -302,15 +302,15 @@ StatusCode OTRawBankEncoder::encodeChannels( const std::vector<LHCb::OTChannelID
   if ( isDebug ) debug() << "Going to encode " << channels.size() << " channels" << endmsg;
   for ( std::vector<LHCb::OTChannelID>::const_iterator chan = channels.begin(), chanEnd = channels.end();
         chan != chanEnd; ++chan ) {
-    if ( isDebug ) debug() << "ChannelID = " << (*chan) << endmsg;
+    if ( isVerbose ) verbose() << "ChannelID = " << (*chan) << endmsg;
     const size_t bankID = channelToBank( (*chan) );
     if ( bankID == 0u || bankID > m_banks.size() ) {
       error() << "Trying to add channel to non-existent bank with id " << bankID <<  ", skipping!" << endmsg;
     } else {
-      if ( isVerbose ) debug() << "Adding channel " << (*chan) << " to bank with id " << bankID << endmsg;
+      if ( isVerbose ) verbose() << "Adding channel " << (*chan) << " to bank with id " << bankID << endmsg;
       /// Remember Tell1s start from 1
       m_banks[bankID-1u].addChannel( (*chan) );
-      if ( isVerbose ) debug() << "Added channel " << (*chan) << " to bank with id " << m_banks[bankID-1u].id() << endmsg;
+      if ( isVerbose ) verbose() << "Added channel " << (*chan) << " to bank with id " << m_banks[bankID-1u].id() << endmsg;
     }
   } 
   
@@ -320,7 +320,7 @@ StatusCode OTRawBankEncoder::encodeChannels( const std::vector<LHCb::OTChannelID
       for ( std::vector<OTDAQ::OTGol>::const_iterator gol = bank->firstGol(), golEnd = bank->lastGol(); gol != golEnd; ++gol ) {
         debug() << "  ===> Gol id = " << gol->id() << endmsg;
         for ( std::vector<LHCb::OTChannelID>::const_iterator chan = gol->firstChannel(), chanEnd = gol->lastChannel(); chan != chanEnd; ++chan ) {
-          debug() << "   ++> Channel id = " << (*chan) << endmsg;
+          if ( isVerbose ) verbose() << "   ++> Channel id = " << (*chan) << endmsg;
         }
       }
     }
