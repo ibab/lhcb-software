@@ -1,18 +1,25 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.35 2009-01-29 17:35:43 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.36 2009-01-30 16:05:54 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
 import GaudiKernel.ProcessJobOptions
-from Configurables import ( LHCbConfigurableUser, LHCbApp )
+from Configurables import LHCbConfigurableUser, LHCbApp, ProcessPhase
 
 class Boole(LHCbConfigurableUser):
 
     ## Known monitoring sequences, all run by default
     KnownMoniSubdets = [ "VELO", "IT", "TT", "OT", "RICH", "CALO", "MUON", "L0", "MC" ]
     KnownHistOptions = ["","None","Default","Expert"]
+
+    ## Default main sequences for real and simulated data
+    DefaultSequence = [ "ProcessPhase/Init",
+                        "ProcessPhase/Digi",
+                        "ProcessPhase/Trigger",
+                        "ProcessPhase/Relations",
+                        "ProcessPhase/Moni" ]
     
     __slots__ = {
         "EvtMax"         : -1
@@ -20,7 +27,9 @@ class Boole(LHCbConfigurableUser):
        ,"SkipSpill"      : 0
        ,"UseSpillover"   : False
        ,"SpilloverPaths" : ["Prev", "PrevPrev", "Next"]
-       ,"GenerateTAE"    : False
+       ,"TAEPrev"        : 0
+       ,"TAENext"        : 0
+       ,"TAESubdets"     : [ "CALO", "MUON" ]
        ,"Outputs"        : [ "DIGI" ]
        ,"WriteL0Only"    : False
        ,"ExtendedDigi"   : False
@@ -33,6 +42,11 @@ class Boole(LHCbConfigurableUser):
        ,"CondDBtag"      : ""
        ,"UseOracle"      : False
        ,"Monitors"       : []
+       ,"MainSequence"   : []
+       ,"InitSequence"   : [ "Boole", "Data", "MUON" ]
+       ,"DigiSequence"   : [ "VELO", "TT", "IT", "OT", "RICH", "CALO", "MUON", "L0"]
+       ,"TrigSequence"   : [ "L0" ]
+       ,"RelsSequence"   : [ "VELO", "TT", "IT", "OT", "Tr", "RICH", "CALO", "MUON", "L0"]
        ,"MoniSequence"   : []
         }
 
@@ -42,7 +56,9 @@ class Boole(LHCbConfigurableUser):
        ,'SkipSpill'    : """ Number of spillover events to skip """
        ,'UseSpillover' : """ Flag to enable spillover (default False) """
        ,'SpilloverPaths':""" Paths to fill when spillover is enabled """
-       ,'GenerateTAE'  : """ Flag to simulate time alignment events (default False) """
+       ,'TAEPrev'      : """ Number of Prev Time Alignment Events to generate """
+       ,'TAENext'      : """ Number of Next Time Alignment Events to generate """
+       ,'TAESubdets'   : """ Subdetectors for which TAE are enabled """
        ,'Outputs'      : """ List of outputs: ['MDF','DIGI','L0ETC'] (default 'DIGI') """
        ,'WriteL0Only'  : """ Flag to write only L0 selected events (default False) """
        ,'ExtendedDigi' : """ Flag to add MCHits to .digi output file (default False) """
@@ -51,10 +67,15 @@ class Boole(LHCbConfigurableUser):
        ,'NoWarnings'   : """ Flag to suppress all MSG::WARNING or below (default False) """ 
        ,'DatasetName'  : """ String used to build output file names """
        ,'DataType'     : """ Data type, can be ['DC06','2008']. Default '2008' """
-       ,'DDDBtag'      : """ Tag for DDDB. Default as set in DDDBConf for DataType """
-       ,'CondDBtag'    : """ Tag for CondDB. Default as set in DDDBConf for DataType """
+       ,'DDDBtag'      : """ Tag for DDDB """
+       ,'CondDBtag'    : """ Tag for CondDB """
        ,'UseOracle'    : """ Flag to enable Oracle CondDB. Default False (use SQLDDDB) """
        ,'Monitors'     : """ List of monitors to execute """
+       ,'MainSequence' : """ The default main sequence, see self.DefaultSequence """
+       ,'InitSequence' : """ List of initialisation sequences """
+       ,'DigiSequence' : """ List of subdetectors to digitize """
+       ,'TrigSequence' : """ List of trigger sequences """
+       ,'RelsSequence' : """ List of relations sequences """
        ,'MoniSequence' : """ List of subdetectors to monitor, see KnownMoniSubdets """
        }
     
@@ -87,9 +108,16 @@ class Boole(LHCbConfigurableUser):
         importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
 
     def defineOptions(self):
-        tae   = self.getProp("GenerateTAE")
-        spill = self.getProp("UseSpillover")
 
+        self.configureSequences()
+        self.configureInit()
+
+        if self.getProp("TAENext") > 0 or self.getProp("TAEPrev") > 0:
+            tae = True
+        else:
+            tae = False
+
+        spill = self.getProp("UseSpillover")
         if tae :
             if spill :
                 log.warning("Disabling spillover, incompatible with TAE")
@@ -106,22 +134,129 @@ class Boole(LHCbConfigurableUser):
         if histOpt not in self.KnownHistOptions:
             raise RuntimeError("Unknown Histograms option '%s'"%histOpt)
 
+        self.configureDigi(tae)
+        self.configureTrigger()
+        self.configureRelations()
         self.configureMoni( histOpt )
 
         self.saveHistos( histOpt )
 
+    def configureSequences(self):
+        """
+        Set up the top level sequences
+        """
+        booleSeq = GaudiSequencer("BooleSequencer")
+        ApplicationMgr().TopAlg = [ booleSeq ]
+        mainSeq = self.getProp("MainSequence")
+        if len( mainSeq ) == 0:
+            mainSeq = self.DefaultSequence
+            self.MainSequence = mainSeq
+        booleSeq.Members += mainSeq
             
+    def configureInit(self):
+        """
+        Set up the initialization sequence
+        """
+        initSeq = self.getProp("InitSequence")
+        ProcessPhase("Init").DetectorList = initSeq
+
+    def configureDigi(self, tae):
+        """
+        Set up the digitization sequence
+        """
+        digiSeq = self.getProp("DigiSequence")
+        ProcessPhase("Digi").DetectorList = digiSeq
+
+        if "CALO" in digiSeq :
+            caloSeq = GaudiSequencer("DigiCALOSeq")
+            if tae: caloSeq.Context = "TAE"
+            self.configureDigiCalo( caloSeq, "" )
+
+        if "MUON" in digiSeq : self.configureDigiMuon( GaudiSequencer("DigiMUONSeq"), "" )
+
+    def configureDigiCalo(self, seq, tae ):
+        # Calorimeter digitisation
+        from Configurables import CaloSignalAlg, CaloDigitAlg, CaloFillPrsSpdRawBuffer, CaloFillRawBuffer
+        seq.Members = [ CaloSignalAlg("SpdSignal%s"%tae),
+                        CaloSignalAlg("PrsSignal%s"%tae),
+                        CaloSignalAlg("EcalSignal%s"%tae),
+                        CaloSignalAlg("HcalSignal%s"%tae),
+                        CaloDigitAlg("SpdDigit%s"%tae),
+                        CaloDigitAlg("PrsDigit%s"%tae),
+                        CaloDigitAlg("EcalDigit%s"%tae),
+                        CaloDigitAlg("HcalDigit%s"%tae) ]
+        rawPrsSpd = CaloFillPrsSpdRawBuffer( "CaloFillPrsSpdRawBuffer%s"%tae, DataCodingType = 3 )
+        rawEcal = CaloFillRawBuffer( "EcalFillRawBuffer%s"%tae, DataCodingType = 2 )
+        rawHcal = CaloFillRawBuffer( "HcalFillRawBuffer%s"%tae, DataCodingType = 2 )
+        seq.Members += [ rawPrsSpd, rawEcal, rawHcal ]
+
+    def configureDigiMuon(self, seq, tae ):
+        from Configurables import MuonDigitization, MuonDigitToRawBuffer
+        seq.Members += [ MuonDigitization("MuonDigitization%s"%tae) ]
+        seq.Members += [ MuonDigitToRawBuffer("MuonDigitToRawBuffer%s"%tae) ]
+
+    def configureTrigger(self):
+        """
+        Set up the trigger sequence
+        """
+        trigSeq = self.getProp("TrigSequence")
+        ProcessPhase("Trigger").DetectorList = trigSeq
+
+    def configureRelations(self):
+        """
+        Set up the relartions sequence
+        """
+        relsSeq = self.getProp("RelsSequence")
+        ProcessPhase("Relations").DetectorList = relsSeq
+
     def enableTAE(self):
         """
         switch to generate Time Alignment events (only Prev1 for now).
         """
+        from GaudiKernel.SystemOfUnits import ns
+
+        taeSlots = []
+        mainSeq = GaudiSequencer("BooleSequencer").Members
+
+        taePrev = self.getProp("TAEPrev")
+        while taePrev > 0:
+            digi = mainSeq.index("ProcessPhase/Digi")
+            taePhase = ProcessPhase( "DigiPrev%s"%taePrev )
+            taePhase.RootInTES = "Prev%s/"%taePrev
+            taePhase.GlobalTimeOffset = -taePrev * 25 * ns
+            mainSeq.insert(digi,taePhase)
+            taeSlots.append( "Prev%s"%taePrev )
+            taePrev -= 1
+
+        taeNext = self.getProp("TAENext")
+        while taeNext>0:
+            digi = mainSeq.index("ProcessPhase/Digi")
+            taePhase = ProcessPhase( "DigiNext%s"%taeNext )
+            taePhase.RootInTES = "Next%s/"%taeNext
+            taePhase.GlobalTimeOffset = taeNext * 25 * ns
+            mainSeq.insert(digi+1,taePhase)
+            taeSlots.append( "Next%s"%taeNext )
+            taeNext -= 1
+        GaudiSequencer("BooleSequencer").Members = mainSeq
+
         initMUONSeq = GaudiSequencer( "InitMUONSeq" )
         initMUONSeq.Members.remove( "MuonBackground/MuonFlatSpillover" )
-        importOptions( "$BOOLEOPTS/TAE-Prev1.opts" ) # add misaligned RawEvent
-        if self.getProp("DataType") == "DC06" :
-            from Configurables import MCSTDepositCreator
-            MCSTDepositCreator("MCITDepositCreatorPrev1").DepChargeTool = "SiDepositedCharge"
-            MCSTDepositCreator("MCTTDepositCreatorPrev1").DepChargeTool = "SiDepositedCharge"
+
+        for taeSlot in taeSlots:
+            taePhase = ProcessPhase( "Digi%s"%taeSlot )
+            taeDets  = self.getProp("TAESubdets")
+            taePhase.DetectorList = [ "Init" ] + taeDets
+            from Configurables import BooleInit
+            slotInit =  BooleInit("Init%s"%taeSlot, RootInTES = "%s/"%taeSlot )
+            GaudiSequencer( "Digi%sInitSeq"%taeSlot ).Members = [ slotInit ]
+            if "CALO" in taeDets:
+                self.configureDigiCalo( GaudiSequencer("Digi%sCALOSeq"%taeSlot), taeSlot )
+            if "MUON" in taeDets:
+                self.configureDigiMuon( GaudiSequencer("Digi%sMUONSeq"%taeSlot), taeSlot )
+            if self.getProp("DataType") == "DC06" :
+                from Configurables import MCSTDepositCreator
+                MCSTDepositCreator("MCITDepositCreator%s"%taeSlot).DepChargeTool = "SiDepositedCharge"
+                MCSTDepositCreator("MCTTDepositCreator%s"%taeSlot).DepChargeTool = "SiDepositedCharge"
             
 
     def enableSpillover(self):
@@ -180,8 +315,6 @@ class Boole(LHCbConfigurableUser):
         if not hasattr( HistogramPersistencySvc(), "OutputFile" ):
             histosName   = self.getProp("DatasetName")
             if (self.evtMax() > 0): histosName += '-' + str(self.evtMax()) + 'ev'
-            generateTAE  = self.getProp("GenerateTAE")
-            if ( generateTAE )  : histosName += '-TAE'
             if histOpt == "Expert": histosName += '-expert'
             histosName += '-histos.root'
             HistogramPersistencySvc().OutputFile = histosName
@@ -213,6 +346,16 @@ class Boole(LHCbConfigurableUser):
             if l0yes : MyWriter.RequireAlgs.append( "L0Filter" )
             ApplicationMgr().OutStream.append( "DigiWriter" )
 
+            # Add TAE RawEvents when enabled
+            taePrev = self.getProp("TAEPrev")
+            while taePrev > 0:
+                MyWriter.ItemList += ["/Event/Prev%s/DAQ/RawEvent#1"%taePrev]
+                taePrev -= 1
+            taeNext = self.getProp("TAENext")
+            while taeNext>0:
+                MyWriter.ItemList += ["/Event/Prev%s/DAQ/RawEvent#1"%taeNext]
+                taeNext -= 1
+
         if "L0ETC" in outputs:
             ApplicationMgr().OutStream.append( "Sequencer/SeqWriteTag" )
             MyWriter = TagCollectionStream( "WR" )
@@ -238,8 +381,6 @@ class Boole(LHCbConfigurableUser):
         """
         outputName = self.getProp("DatasetName")
         if ( self.evtMax() > 0 ): outputName += '-' + str(self.evtMax()) + 'ev'
-        generateTAE  = self.getProp("GenerateTAE")
-        if ( generateTAE )  : outputName += '-TAE'
         l0yes = self.getProp( "WriteL0Only" )
         if ( l0yes ) : outputName += '-L0Yes'
         extended = self.getProp("ExtendedDigi")

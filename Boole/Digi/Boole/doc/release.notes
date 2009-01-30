@@ -3,6 +3,12 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+! 2009-01-30 - Marco Cattaneo
+ - Remove obsolete TAE.opts
+ - Move ProcessPhases into a top sequence, defined in configurable
+ - Replace EnableTAE option by TAEPrev and TAENext, number of TAE to generate
+ - TAE now supports arbitrary numbers of TAE events (partially implemented)
+
 ! 2009-01-29 - Marco Cattaneo
  - Remove ExpertCheck.opts and BooleMoni.opts, now done in Configurable
 

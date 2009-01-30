@@ -6,27 +6,11 @@
 DigiWriter.ItemList += { "/Event/Prev1/DAQ/RawEvent#1" };
 
 //-------------------------------------------------------------------------------
-// Detectors to be processed in TAE phase.
-// Commented detectors have not yet implemented TAE in the digitization
-//-------------------------------------------------------------------------------
-DigiPrev1.DetectorList = { "Init"
-  //                     , "VELO"
-  //                     , "TT"
-  //                     , "IT"
-  //                     , "OT"
-                         // , "RICH" cannot use time alignment events
-                         , "CALO"
-                         , "MUON"
-  //                     , "L0"
-                         };
-
-//-------------------------------------------------------------------------------
 // Subdetector algorithms, copied from Boole.opts
 // This is almost certainly too much: a new instance is needed only for
 // algorithms that need to be rerun with time offset
 //-------------------------------------------------------------------------------
 
-DigiPrev1InitSeq.Members = { "BooleInit/InitPrev1" };
 
 // L0 trigger
 DigiPrev1L0Seq.Members += { "L0CaloAlg/L0CaloPrev1" };
@@ -35,31 +19,6 @@ DigiPrev1L0Seq.Members += { "L0MuonAlg/L0MuonPrev1" };
 DigiPrev1L0Seq.Members += { "PuVetoFillRawBuffer/PuVetoFillRawBufferPrev1" };
 DigiPrev1L0Seq.Members += { "PuVetoAlg/PuVetoAlgPrev1" };
 DigiPrev1L0Seq.Members += { "L0DU/L0DUPrev1" };
-
-// Calorimeter digitisation
-DigiCALOSeq.Context = "TAE";
-DigiPrev1CALOSeq.Members = {
-  "CaloSignalAlg/SpdSignalPrev1",
-  "CaloSignalAlg/PrsSignalPrev1",
-  "CaloSignalAlg/EcalSignalPrev1",
-  "CaloSignalAlg/HcalSignalPrev1",
-  "CaloDigitAlg/SpdDigitPrev1",
-  "CaloDigitAlg/PrsDigitPrev1",
-  "CaloDigitAlg/EcalDigitPrev1",
-  "CaloDigitAlg/HcalDigitPrev1",
-  "CaloFillPrsSpdRawBuffer/CaloFillPrsSpdRawBufferPrev1"
- ,"CaloFillRawBuffer/EcalFillRawBufferPrev1"
- ,"CaloFillRawBuffer/HcalFillRawBufferPrev1"
-};
-
-// set the coding type for TELL1: 
-EcalFillRawBufferPrev1.DataCodingType = 2;
-HcalFillRawBufferPrev1.DataCodingType = 2;
-CaloFillPrsSpdRawBufferPrev1.DataCodingType = 3;
-
-// Muon digitisation
-DigiPrev1MUONSeq.Members += { "MuonDigitization/MuonDigitizationPrev1" };
-DigiPrev1MUONSeq.Members += { "MuonDigitToRawBuffer/MuonDigitToRawBufferPrev1" };
 
 // Silicon Tracker digitisation
 DigiPrev1ITSeq.Members += { "MCSTDepositCreator/MCITDepositCreatorPrev1" };

@@ -1,8 +1,4 @@
-// Default Boole job Options.
-//
-// This file is included by the geometry specific options files.
-//
-// This file defines, sequences and configures the algorithms to be executed
+// This file defines the algorithms to be executed in each sequence
 //==============================================================
 
 #units "$STDOPTS/units.opts"
@@ -16,53 +12,6 @@ DataOnDemandSvc.AlgMap += { "MC/Particles" : "UnpackMCParticle"
 // And pack them for the output if not on the input file...
 DataOnDemandSvc.AlgMap += { "pSim/MCParticles" : "PackMCParticle",
                             "pSim/MCVertices"  : "PackMCVertex" };
-// Phases to be executed
-ApplicationMgr.TopAlg += { "ProcessPhase/Init"
-                         , "ProcessPhase/DigiPrev2"
-                         , "ProcessPhase/DigiPrev1"
-                         , "ProcessPhase/Digi"
-                         , "ProcessPhase/DigiNext1"
-                         , "ProcessPhase/DigiNext2"
-                         , "ProcessPhase/Trigger"
-                         , "ProcessPhase/Relations" 
-                         , "ProcessPhase/Moni"
-                         , "ProcessPhase/Output"
-                         };
-
-// Set up TAE structure. These phases are only filled if TAE-xxx.opts included
-DigiPrev2.RootInTES = "Prev2/";
-DigiPrev1.RootInTES = "Prev1/";
-DigiNext1.RootInTES = "Next1/";
-DigiNext2.RootInTES = "Next2/";
-DigiPrev2.GlobalTimeOffset = +50*ns;
-DigiPrev1.GlobalTimeOffset = +25*ns;
-DigiNext1.GlobalTimeOffset = -25*ns;
-DigiNext2.GlobalTimeOffset = -50*ns;
-
-// Detectors to be processed in each phase
-Init.DetectorList += { "Boole", "Data", "MUON" };
-Digi.DetectorList += { 
-                        "VELO"
-                      , "TT"
-                      , "IT"
-                      , "OT"
-                      , "RICH"
-                      , "CALO"
-                      , "MUON"
-                      , "L0"
-                     };
-Trigger.DetectorList  += { "L0" };
-Relations.DetectorList = { 
-                           "VELO"
-                         , "TT"
-                         , "IT"
-                         , "OT"
-                         , "Tr"
-                         , "RICH"
-                         , "CALO"
-                         , "MUON"
-                         , "L0"
-                         };
 
 // Initialization
 InitBooleSeq.Members += { "BooleInit" };
@@ -78,29 +27,6 @@ InitMUONSeq.Members += { "MuonBackground/MuonFlatSpillover" };
 // L0 trigger Simulation
 DigiL0Seq.Members += { "GaudiSequencer/L0SimulationSeq" };
 #include "$L0DUROOT/options/Boole.opts"
-
-// Calorimeter digitisation
-DigiCALOSeq.Members = {
-  "CaloSignalAlg/SpdSignal",
-  "CaloSignalAlg/PrsSignal",
-  "CaloSignalAlg/EcalSignal",
-  "CaloSignalAlg/HcalSignal",
-  "CaloDigitAlg/SpdDigit",
-  "CaloDigitAlg/PrsDigit",
-  "CaloDigitAlg/EcalDigit",
-  "CaloDigitAlg/HcalDigit",
-  "CaloFillPrsSpdRawBuffer"
- ,"CaloFillRawBuffer/EcalFillRawBuffer"
- ,"CaloFillRawBuffer/HcalFillRawBuffer"
-};
-// set the coding type for TELL1: 
-EcalFillRawBuffer.DataCodingType = 2;
-HcalFillRawBuffer.DataCodingType = 2;
-CaloFillPrsSpdRawBuffer.DataCodingType = 3;
-
-// Muon digitisation
-DigiMUONSeq.Members += { "MuonDigitization" };
-DigiMUONSeq.Members += { "MuonDigitToRawBuffer" };
 
 // Silicon Tracker digitisation
 #include "$STDIGIALGORITHMSROOT/options/itDigi.opts"
@@ -142,6 +68,7 @@ EventSelector.PrintFreq = -1;
 
 // Run the L0Filter always, may be used for selective output
 TriggerL0Seq.Members += { "L0Filter" };
+Trigger.IgnoreFilterPassed = true; // L0Filter sets filter passed...
 
 // Set up tag collection for L0 filter result, and switch off by default
 #include "$L0DUROOT/options/ETC.opts"
