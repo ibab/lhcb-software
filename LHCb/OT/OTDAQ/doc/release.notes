@@ -2,6 +2,10 @@ Package         : OTDAQ
 Package manager : J.Amoraal
 !---------------------------------------------------------------------
 
+! 2009-01-30 - Jan Amoraal
+ - Only set the headers for known versions
+ - debug -> verbose
+
 ! 2008-12-18 - Jan Amoraal
  - Remove warning about empty Gol Headers. Headers can be empty
  - Fix unchecked status code
