@@ -1,10 +1,21 @@
-! $Id: release.notes,v 1.55 2009-01-21 15:11:52 pkoppenb Exp $
+! $Id: release.notes,v 1.56 2009-01-30 18:37:02 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
 
+! 2009-01-30 - Juan PALACIOS
+ - Add src/Lib/Particle2MCAssociatorBase.cpp, 
+       Kernel/Particle2MCAssociatorBase.h
+  . Base class with common implementation for IParticle2MCAssociator interface.
+ - Kernel/MCAssociation.h
+  . Remove nested typedef to std::vector<MCAssociaiton>
+ - Kernel/IParticle2MCAssociator.h
+  . Add virtual double weight(const LHCb::Particle* particle, 
+                              const LHCb::MCParticle* mcParticle) const = 0;
+
+ 
 ! 2009-01-21 - Patrick Koppenburg
  - Increment to v3r0
 
