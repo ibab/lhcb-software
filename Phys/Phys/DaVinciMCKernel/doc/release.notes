@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.56 2009-01-30 18:37:02 jpalac Exp $
+! $Id: release.notes,v 1.57 2009-01-30 18:38:06 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
@@ -14,8 +14,10 @@
  - Kernel/IParticle2MCAssociator.h
   . Add virtual double weight(const LHCb::Particle* particle, 
                               const LHCb::MCParticle* mcParticle) const = 0;
+ - Kernel/Particle2MCParticle.h
+  . typedef std::vector<MCAssociation> as Particle2MCParticle::ToVector
 
- 
+
 ! 2009-01-21 - Patrick Koppenburg
  - Increment to v3r0
 
