@@ -1,4 +1,4 @@
-// $Id: MuonBackground.h,v 1.14 2007-06-08 15:35:41 asatta Exp $
+// $Id: MuonBackground.h,v 1.15 2009-01-31 20:43:05 cattanem Exp $
 #ifndef MUONBACKGROUND_H 
 #define MUONBACKGROUND_H 1
 
@@ -111,6 +111,7 @@ entryGlobal,Gaudi::XYZPoint& exitGlobal,
   int m_regionNumber;
   int m_partition;  
   int m_numberOfEventsNeed;
+  bool m_enableSpillover; ///< Job option to enable use of spillover
   bool m_histos; ///< Job option to switch on debug histos
 
   float m_luminosity;

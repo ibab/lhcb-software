@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.48 2009-01-27 14:49:10 cattanem Exp $
+// $Id: MuonBackground.cpp,v 1.49 2009-01-31 20:43:05 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -68,6 +68,7 @@ MuonBackground::MuonBackground( const std::string& name,
   declareProperty("FlatSpillNumber" , m_numberOfFlatSpill=1 ) ;
   declareProperty("BackgroundType" , m_typeOfBackground ) ;
   declareProperty("RadialUnit" , m_unitLength=10.0 ) ;
+  declareProperty("EnableSpillover", m_enableSpillover=false ) ;
   declareProperty("DebugHistos" , m_histos=false ) ;
 }
 
@@ -172,25 +173,25 @@ StatusCode MuonBackground::initialize() {
         }
       }
     }
-    
-    // Get the number of spillover events from the SpilloverAlg
-    IAlgorithm*  spillAlg;
-    sc = algmgr->getAlgorithm( "SpilloverAlg", spillAlg );
-    if( !sc.isSuccess() ) {
-      warning() << "SpilloverAlg not found" << endmsg;
-      m_readSpilloverEvents = 0;
-    }
-    else {
+
+    m_readSpilloverEvents = 0;
+    if( m_enableSpillover ) {
+      // Get the number of spillover events from the SpilloverAlg
+      IAlgorithm*  spillAlg;
+      sc = algmgr->getAlgorithm( "SpilloverAlg", spillAlg );
+      if( !sc.isSuccess() )
+        return Error( "Spillover enabled but SpilloverAlg not found", sc);
+
       SmartIF<IProperty> spillProp( spillAlg );
-      if( !spillProp ) {
-        warning() << "Unable to access SpilloverAlg properties" << endmsg;
-        m_readSpilloverEvents = 0;
-      }
-      else {
-        StringArrayProperty evtPaths;
-        evtPaths.assign( spillProp->getProperty("PathList") );
-        m_readSpilloverEvents = evtPaths.value().size();
-      }
+      if( !spillProp )
+        return Error( "Unable to access SpilloverAlg properties" );
+
+      StringArrayProperty evtPaths;
+      sc=evtPaths.assign( spillProp->getProperty("PathList") );
+      if( !sc.isSuccess() )
+        return Error( "Problem locating PathList property of SpilloverAlg", sc );
+
+      m_readSpilloverEvents = evtPaths.value().size();
     }
 
     debug() << "number of spillover events read from aux stream "

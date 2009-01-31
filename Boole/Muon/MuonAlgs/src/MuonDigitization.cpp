@@ -1,4 +1,4 @@
-//$Id: MuonDigitization.cpp,v 1.44 2009-01-27 14:49:10 cattanem Exp $
+//$Id: MuonDigitization.cpp,v 1.45 2009-01-31 20:42:22 cattanem Exp $
 
 #include <algorithm>
 #include <vector>
@@ -39,7 +39,7 @@ MuonDigitization::MuonDigitization(const std::string& name,
                                    ISvcLocator* pSvcLocator)
   :  GaudiAlgorithm(name, pSvcLocator)
 {
-  //declareProperty("NmbOfSpilloverEvents" , m_numberOfSpilloverEvents=3) ;
+  declareProperty("EnableSpillover", m_enableSpillover=false) ;
   declareProperty("BXTime" , m_BXTime=25.0) ;
   declareProperty("TimeGate" , m_gate=25.0) ;
   declareProperty("TimeBits" , m_TimeBits=4) ;
@@ -61,44 +61,36 @@ StatusCode MuonDigitization::initialize()
 {  
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by  GaudiAlgorithm	
-      
-  // Get the number of spillover events from the SpilloverAlg
-  IAlgManager* algmgr =svc<IAlgManager>("ApplicationMgr");
-  IAlgorithm*  spillAlg;
-  sc = algmgr->getAlgorithm( "SpilloverAlg", spillAlg );
-  if( !sc.isSuccess() ) {
-    warning() << "SpilloverAlg not found" << endmsg;
-    m_numberOfSpilloverEvents = 0;
-  }
-  else {
+
+  unsigned int numberOfSpilloverEvents = 0;
+  if( m_enableSpillover ) {
+    // Get the number of spillover events from the SpilloverAlg
+    IAlgManager* algmgr =svc<IAlgManager>("ApplicationMgr");
+    IAlgorithm*  spillAlg;
+    sc = algmgr->getAlgorithm( "SpilloverAlg", spillAlg );
+    if( !sc.isSuccess() )
+      return Error( "Spillover requested but SpilloverAlg not found", sc );
+
     SmartIF<IProperty> spillProp( spillAlg );
-    if( !spillProp ) {
-      warning() << "Problem locating properties of SpilloverAlg" << endmsg;
-      m_numberOfSpilloverEvents = 0;
-    }
-    else {
-      StringArrayProperty evtPaths;
-      sc=evtPaths.assign( spillProp->getProperty("PathList") );
-      if( !sc.isSuccess() ) {
-        warning()<<" problem in spillover "<<endmsg;
-      }
-      m_numberOfSpilloverEvents = evtPaths.value().size();
-    }
+    if( !spillProp )
+      return Error( "Problem locating properties of SpilloverAlg" );
+
+    StringArrayProperty evtPaths;
+    sc=evtPaths.assign( spillProp->getProperty("PathList") );
+    if( !sc.isSuccess() )
+      return Error( "Problem locating PathList property of SpilloverAlg", sc );
+
+    numberOfSpilloverEvents = evtPaths.value().size();
+
+    // Release the interface no longer needed
+    releaseSvc(algmgr).ignore();
   }
-
-  // Release the interface no longer needed
-  releaseSvc(algmgr).ignore();
-
+  
   info() << "number of spillover events read from aux stream "
-      << m_numberOfSpilloverEvents << endmsg;
-  m_numberOfEvents=m_numberOfSpilloverEvents+1;
+      << numberOfSpilloverEvents << endmsg;
+  m_numberOfEvents = numberOfSpilloverEvents+1;
   m_numberOfEventsNeed=5;	
-  // m_numberOfEvents=5;
-//  sc = toolSvc()->retrieveTool( "MuonTileIDXYZ", m_pMuonTileXYZ );
- // if( !sc.isSuccess() ) {
-   // err() << "Failed to retrieve MuonTileIDXYZ tool" << endmsg;
-   // return sc;
-  //}
+
   // initialize some basic geometrical information
   MuonBasicGeometry basegeometry(detSvc(),msgSvc()); 
   m_stationNumber=basegeometry.getStations();
@@ -110,17 +102,8 @@ StatusCode MuonDigitization::initialize()
     i++;    
   }
   m_partition=basegeometry.getPartitions();
-  //  sc=toolSvc()->retrieveTool("MuonGetInfoTool",m_pGetInfo);
-  //if(sc.isFailure())return StatusCode::FAILURE;
-  
-  debug()<<"qui"<<endreq;
-  //  MuonGeometryStore::Parameters usefull( toolSvc(), 
-  //                                                detSvc(), msgSvc());
-  //debug()<<m_pGetInfo->getChamberPerRegion(0)<<endreq;
-  debug()<<" ciao "<<endreq;
   sc=m_flatDist.initialize( randSvc(), Rndm::Flat(0.0,1.0));	 
   if(sc.isFailure())warning()<<" error in flat ini"<<endmsg;
-  debug()<<"due "<<endreq; 
   detectorResponse.initialize( toolSvc(),randSvc(), detSvc(), msgSvc());
   debug()<<" detectorResponseInitialized "<<endreq;
   m_spill=6;
@@ -129,9 +112,7 @@ StatusCode MuonDigitization::initialize()
   for (int i=0;i<4;i++){
     count=count*2;    
   }
-  debug()<<"tre "<<endreq;
   m_timeBin=m_BXTime/(count);  
-  debug()<<" fine "<<endreq;
   m_muonDetector=getDet<DeMuonDetector>(DeMuonLocation::Default);
   return StatusCode::SUCCESS;
 }

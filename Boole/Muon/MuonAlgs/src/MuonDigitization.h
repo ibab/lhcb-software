@@ -65,7 +65,6 @@ public:
                                 PhysicalChannel);
   
 private:
-  int m_numberOfSpilloverEvents;
   int m_numberOfEvents;
   int m_numberOfEventsNeed;
   double m_BXTime;
@@ -79,7 +78,8 @@ private:
   bool m_applyDialogDeadtime;	 
   bool m_applyTimeAdjustment;	 
   bool m_registerPhysicalChannelOutput;
-;  
+  bool m_enableSpillover;
+
   bool m_verboseDebug;
   int m_stationNumber;
   int m_regionNumber;
@@ -88,9 +88,6 @@ private:
   int m_container;
   unsigned int m_TimeBits;
   double m_timeBin;
-  
-  
-  
   
   MuonDetectorResponse detectorResponse;
   DeMuonDetector* m_muonDetector;
