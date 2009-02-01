@@ -4,11 +4,15 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
-!============ Presenter v0r15 2009-01-20 =============
-! 2009-01-20
+!============ Presenter v0r15 2009-02-01 =============
+! 2009-02-01
 + fixed histogram selection
-+ preliminary offline editor mode using file as histogram svc
++ preliminary offline editor mode using file as
+  histogram svc
 + partition support for EFF
++ render 2D histos with doubles as images
++ establish partitions using fs entries at init,
+  instead of DIM browsing (faster startup)
 
 !============ Presenter v0r14 2008-11-24 =============
 ! 2008-11-24
