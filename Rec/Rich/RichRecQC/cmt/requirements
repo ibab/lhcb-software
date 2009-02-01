@@ -2,7 +2,7 @@
 # Created    : 2002-06-13
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.47 2009-01-20 15:49:30 cattanem Exp $
+# $Id: requirements,v 1.48 2009-02-01 12:35:19 jonrob Exp $
 #============================================================================
 
 package           RichRecQC
@@ -29,4 +29,5 @@ apply_pattern component_library library=RichRecQC
 
 # Setup Python Configurables
 #============================================================================
+macro RichRecQCConfUserModules "RichRecQC.Alignment RichRecQC.Configuration"
 apply_pattern install_python_modules

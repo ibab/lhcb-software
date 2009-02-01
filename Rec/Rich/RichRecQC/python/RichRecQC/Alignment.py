@@ -1,5 +1,5 @@
 
-__version__ = "$Id: Alignment.py,v 1.4 2009-01-30 15:32:28 jonrob Exp $"
+__version__ = "$Id: Alignment.py,v 1.5 2009-02-01 12:35:19 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -12,6 +12,9 @@ from Configurables import ( Rich__Rec__MC__AlignmentMonitor )
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 class RichAlignmentConf(RichConfigurableUser):
+
+    ## Possible used Configurables
+    __used_configurables__ = [ ]
 
     ## Steering options
     __slots__ = {
