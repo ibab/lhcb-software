@@ -1,3 +1,7 @@
+2009-02-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/generateLogin: add prodection against non-existing cache file.
+
 2009-01-30  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/SetupProject.py: fixed a problem with the removal

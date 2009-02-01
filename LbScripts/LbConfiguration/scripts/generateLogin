@@ -137,9 +137,10 @@ def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None,
     setupprojargs.append("LCGCMT")
     setupprojargs.append("Python")
     SetupProject().main(setupprojargs)
-    fixNative(cachefilename)
-    removeCMTCONFIG(cachefilename)
-    fixPathes(cachefilename)
+    if os.path.exists(cachefilename) :
+        fixNative(cachefilename)
+        removeCMTCONFIG(cachefilename)
+        fixPathes(cachefilename)
         
 def generateLogin(targetlocation, script, version="", mysiteroot=None, building=False):
     knownshells = ["sh", "csh", "tcsh", "zsh", "bat"]
