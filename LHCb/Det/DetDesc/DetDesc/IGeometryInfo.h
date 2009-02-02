@@ -1,4 +1,4 @@
-// $Id: IGeometryInfo.h,v 1.29 2008-10-28 12:04:36 cattanem Exp $ 
+// $Id: IGeometryInfo.h,v 1.30 2009-02-02 12:20:22 marcocle Exp $ 
 // ===========================================================================
 #ifndef  DETDESC_IGEOMETRYINFO_H
 #define  DETDESC_IGEOMETRYINFO_H 1
@@ -143,7 +143,7 @@ public:
    * @return the 3D transformation that returns a nominal position
    *         to the off-nominal position in the frame of the parent
    */
-  virtual const Gaudi::Transform3D  ownToOffNominalMatrix() const = 0;
+  virtual Gaudi::Transform3D  ownToOffNominalMatrix() const = 0;
 
   /**
    * Transformation from this reference frame to the 
@@ -152,7 +152,7 @@ public:
    * @return the 3D transrmation taking this frame to the frame of
    *         the parent.
    */
-  virtual const Gaudi::Transform3D  ownMatrix() const = 0;
+  virtual Gaudi::Transform3D  ownMatrix() const = 0;
 
   /**
    * Upate the nominal-> off-nominal 3D transformation of this IGeometryInfo.

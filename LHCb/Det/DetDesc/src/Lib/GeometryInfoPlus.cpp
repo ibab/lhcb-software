@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.cpp,v 1.32 2009-01-10 23:00:01 marcocle Exp $
+// $Id: GeometryInfoPlus.cpp,v 1.33 2009-02-02 12:20:22 marcocle Exp $
 // Include files
 
 // GaudiKernel
@@ -258,7 +258,7 @@ const Gaudi::Transform3D& GeometryInfoPlus::toGlobalMatrixNominal() const
   return *m_idealMatrixInv;
 }
 //=============================================================================
-const Gaudi::Transform3D GeometryInfoPlus::ownMatrix() const
+Gaudi::Transform3D GeometryInfoPlus::ownMatrix() const
 {
   return Gaudi::Transform3D(this->ownToNominalMatrix() * this->ownToLocalMatrixNominal() );
 }
@@ -590,7 +590,7 @@ const Gaudi::Transform3D& GeometryInfoPlus::ownToNominalMatrix() const
 
 }
 //=============================================================================
-const Gaudi::Transform3D GeometryInfoPlus::ownToOffNominalMatrix() const
+Gaudi::Transform3D GeometryInfoPlus::ownToOffNominalMatrix() const
 {
   return ownToNominalMatrix().Inverse();
 }

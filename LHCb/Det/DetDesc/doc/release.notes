@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.390 2009-01-23 10:59:33 cattanem Exp $ 
+! $Id: release.notes,v 1.391 2009-02-02 12:20:22 marcocle Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2009-02-02 - Marco Clemencic
+ - Fixed some return type qualifiers that were causing problems in the
+   dictionaries with the head version of ROOT.
 
 ! 2009-01-23 - Marco Cattaneo
  - Backwards compatible fixes for Gaudi v21

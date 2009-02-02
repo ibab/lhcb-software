@@ -1,4 +1,4 @@
-//$Id: IConditionInfo.h,v 1.3 2003-04-16 08:06:08 cattanem Exp $
+//$Id: IConditionInfo.h,v 1.4 2009-02-02 12:20:22 marcocle Exp $
 #ifndef DETDESC_ICONDITIONINFO_H
 #define DETDESC_ICONDITIONINFO_H 1
 
@@ -10,7 +10,7 @@ class Condition;
 /** the unique interface identifier 
  * ( unique interface identifier , major & minor versions)
  */
-static const InterfaceID IID_IConditionInfo( "IConditionInfo" , 1 , 0 );
+static const InterfaceID IID_IConditionInfo( "IConditionInfo" , 2 , 0 );
 
 ///---------------------------------------------------------------------------
 /** @class IConditionInfo IConditionInfo.h Det/DetDesc/IConditionInfo.h
@@ -37,7 +37,7 @@ class IConditionInfo : virtual public  IInterface
   virtual IDetectorElement* detElem() const = 0 ;
 
   /// Get the name of the associated condition
-  virtual const std::string conditionName() const = 0 ;
+  virtual const std::string& conditionName() const = 0 ;
 
   /// Get a pointer to the associated condition
   virtual Condition* condition() = 0 ;

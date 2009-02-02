@@ -1,4 +1,4 @@
-//$Id: ConditionInfo.cpp,v 1.4 2006-04-20 14:39:56 ranjard Exp $
+//$Id: ConditionInfo.cpp,v 1.5 2009-02-02 12:20:22 marcocle Exp $
 
 #include "DetDesc/ConditionInfo.h"
 
@@ -45,7 +45,7 @@ IDetectorElement* ConditionInfo::detElem() const {
 //----------------------------------------------------------------------------
 
 /// Get the name of the associated condition
-const std::string ConditionInfo::conditionName() const {
+const std::string& ConditionInfo::conditionName() const {
   return m_conditionName;
 };
 

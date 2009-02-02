@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.h,v 1.12 2008-10-28 12:04:36 cattanem Exp $
+// $Id: GeometryInfoPlus.h,v 1.13 2009-02-02 12:20:22 marcocle Exp $
 #ifndef LIB_GEOMETRYINFOPLUS_H 
 #define LIB_GEOMETRYINFOPLUS_H 1
 
@@ -123,9 +123,9 @@ public:
 
   const Gaudi::Transform3D& ownToNominalMatrix() const;
 
-  const Gaudi::Transform3D ownToOffNominalMatrix() const;
+  Gaudi::Transform3D ownToOffNominalMatrix() const;
 
-  const Gaudi::Transform3D  ownMatrix() const;
+  Gaudi::Transform3D  ownMatrix() const;
   
   StatusCode ownToOffNominalMatrix(const Gaudi::Transform3D&);
 

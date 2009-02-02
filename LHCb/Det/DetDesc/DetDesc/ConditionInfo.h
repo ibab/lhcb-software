@@ -1,4 +1,4 @@
-//$Id: ConditionInfo.h,v 1.1 2006-04-20 14:39:55 ranjard Exp $
+//$Id: ConditionInfo.h,v 1.2 2009-02-02 12:20:22 marcocle Exp $
 #ifndef DETDESC_CONDITIONINFO_H
 #define DETDESC_CONDITIONINFO_H 1
 
@@ -46,7 +46,7 @@ class ConditionInfo : virtual public IConditionInfo
   virtual IDetectorElement* detElem() const;
 
   /// Get the name of the associated condition
-  virtual const std::string conditionName() const;
+  virtual const std::string& conditionName() const;
 
   /// Get a pointer to the associated condition
   virtual Condition* condition();
