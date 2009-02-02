@@ -1,4 +1,4 @@
-// $Id: HltDecReportsWriter.h,v 1.1.1.1 2008-08-02 16:40:07 tskwarni Exp $
+// $Id: HltDecReportsWriter.h,v 1.2 2009-02-02 18:00:25 tskwarni Exp $
 #ifndef HLTDECREPORTSWRITER_H 
 #define HLTDECREPORTSWRITER_H 1
 
@@ -37,7 +37,7 @@ public:
 
 protected:
 
-  /// location of input H
+  /// location of input
   StringProperty m_inputHltDecReportsLocation;
 
   /// location of output

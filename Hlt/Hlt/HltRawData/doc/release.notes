@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.29 2009-01-26 06:24:49 tskwarni Exp $
+!$Id: release.notes,v 1.30 2009-02-02 18:00:23 tskwarni Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltRawData
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Writers and Readers, Makers of persisted TES info
 !-----------------------------------------------------------------------------
+
+! 2009-02-02 - Tomasz Skwarnicki
+ - fix HltSelReportsMaker for HltXGlobal to deal with postscaled selections 
 
 ! 2009-01-26 - Tomasz Skwarnicki
  - add HltRawDataMonitor

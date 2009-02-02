@@ -1,4 +1,4 @@
-// $Id: HltSelReportsMaker.cpp,v 1.7 2009-01-16 06:14:20 tskwarni Exp $
+// $Id: HltSelReportsMaker.cpp,v 1.8 2009-02-02 18:00:25 tskwarni Exp $
 // #define DEBUGCODE
 // Include files 
 
@@ -8,6 +8,7 @@
 #include "Event/HltSummary.h"
 #include "Event/HltSelReports.h"
 #include "Event/HltObjectSummary.h"
+#include "Event/HltDecReports.h"
 
 #include "Event/RecVertex.h"
 #include "Event/Particle.h"
@@ -45,6 +46,8 @@ HltSelReportsMaker::HltSelReportsMaker( const std::string& name,
     m_outputHltSelReportsLocation= LHCb::HltSelReportsLocation::Default);  
   declareProperty("HltMuonTrackLocation",
                   m_HltMuonTracksLocation =  LHCb::TrackLocation::HltMuon);
+  declareProperty("InputHltDecReportsLocation",
+    m_inputHltDecReportsLocation= LHCb::HltDecReportsLocation::Default);  
 
 
   declareProperty("DebugEventPeriod",m_debugPeriod = 0 );
@@ -134,6 +137,13 @@ StatusCode HltSelReportsMaker::execute() {
   m_objectSummaries = new HltObjectSummary::Container();
   put( m_objectSummaries, m_outputHltSelReportsLocation.value() + "/Candidates" );
   
+  const HltDecReports* decReports(0);
+  // get input
+  if( exist<HltDecReports>(m_inputHltDecReportsLocation) ){    
+    decReports = get<HltDecReports>(m_inputHltDecReportsLocation);
+  }  else {
+    Warning( " No HltDecReports at " + m_inputHltDecReportsLocation.value(), StatusCode::SUCCESS, 20 );
+  }
 
   // get input HltSummary if exists
   HltSummary* inputSummary(0);  
@@ -502,6 +512,13 @@ StatusCode HltSelReportsMaker::execute() {
              HltObjectSummary::Info::const_iterator j=(*pObj)->numericalInfo().find("0#SelectionID");
              if( j!=(*pObj)->numericalInfo().end() ){
                if( id == (int)(j->second+0.1) ){
+                 // must also check its decision in HltDecReports since it might have been killed by postscale
+                 if( decReports ){
+                   const HltDecReport* decReport = decReports->decReport(selName);
+                   if( decReport ){
+                     if( !(decReport->decision()) )break;
+                   }
+                 }                 
                  selSumOut.addToSubstructure( (const SmartRef<HltObjectSummary>)(*pObj) );
                  break;                     
                }
@@ -551,6 +568,13 @@ StatusCode HltSelReportsMaker::execute() {
              HltObjectSummary::Info::const_iterator j=(*pObj)->numericalInfo().find("0#SelectionID");
              if( j!=(*pObj)->numericalInfo().end() ){
                if( id == (int)(j->second+0.1) ){
+                 // must also check its decision in HltDecReports since it might have been killed by postscale
+                 if( decReports ){
+                   const HltDecReport* decReport = decReports->decReport(selName);
+                   if( decReport ){
+                     if( !(decReport->decision()) )break;
+                   }
+                 }                 
                  selSumOut.addToSubstructure( (const SmartRef<HltObjectSummary>)(*pObj) );
                  break;                     
                }
