@@ -1,4 +1,4 @@
-// $Id: HltRecCheckGhosts.h,v 1.1 2009-01-30 18:55:59 gligorov Exp $
+// $Id: HltRecCheckGhosts.h,v 1.2 2009-02-02 18:51:39 gligorov Exp $
 #ifndef HLTRECCHECKGHOSTS_H 
 #define HLTRECCHECKGHOSTS_H 1
 
@@ -69,12 +69,16 @@ private:
 
   std::vector<int> m_ghostResultsLong;
   std::vector<int> m_ghostClassesLong;
+  std::vector<unsigned int> m_nHitsLong;
   std::vector<int> m_ghostResultsVelo;
   std::vector<int> m_ghostClassesVelo;
+  std::vector<unsigned int> m_nHitsVelo;
   std::vector<int> m_ghostResultsVeloR;
   std::vector<int> m_ghostClassesVeloR;
+  std::vector<unsigned int> m_nHitsVeloR;
   std::vector<int> m_ghostResultsTTrack;
   std::vector<int> m_ghostClassesTTrack;
+  std::vector<unsigned int> m_nHitsTTrack;
 
 };
 #endif // HLTMCMONITOR_H

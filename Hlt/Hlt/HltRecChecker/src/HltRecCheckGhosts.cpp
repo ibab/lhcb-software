@@ -1,4 +1,4 @@
-// $Id: HltRecCheckGhosts.cpp,v 1.1 2009-01-30 18:55:59 gligorov Exp $
+// $Id: HltRecCheckGhosts.cpp,v 1.2 2009-02-02 18:51:39 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -57,12 +57,16 @@ StatusCode HltRecCheckGhosts::execute() {
 
   m_ghostResultsLong.clear();
   m_ghostClassesLong.clear();
+  m_nHitsLong.clear();
   m_ghostResultsVelo.clear();
   m_ghostClassesVelo.clear();
+  m_nHitsVelo.clear();
   m_ghostResultsVeloR.clear();
   m_ghostClassesVeloR.clear();
+  m_nHitsVeloR.clear();
   m_ghostResultsTTrack.clear();
   m_ghostClassesTTrack.clear();
+  m_nHitsTTrack.clear();
 
   //Make the ntuple
   Tuple m_ghostTuple = nTuple("GhostTuple");
@@ -100,6 +104,7 @@ StatusCode HltRecCheckGhosts::execute() {
  
     //Is it a ghost at all?
     bool isThisAGhost = m_ghostToolLong->isGhost(*ghostTrack);
+    m_nHitsLong.push_back((*ghostTrack).nLHCbIDs());
     if (isThisAGhost) {
       m_ghostResultsLong.push_back(1);
       verbose() << "This long track is a ghost!" << endreq;
@@ -133,6 +138,9 @@ StatusCode HltRecCheckGhosts::writeNtuple(Tuple& m_ghostTuple){
   test = m_ghostTuple->farray( "ghostClassesLong",
                                m_ghostClassesLong.begin(), m_ghostClassesLong.end(),
                                "nLong", 10000 );
+  test = m_ghostTuple->farray( "nHitsLong",
+                               m_nHitsLong.begin(), m_nHitsLong.end(),
+                               "nLong", 10000 );
   if( !test.isSuccess() ) return StatusCode::FAILURE;
 
   //The the velo components (number is equal by definition) 
@@ -141,6 +149,9 @@ StatusCode HltRecCheckGhosts::writeNtuple(Tuple& m_ghostTuple){
                                "nLong", 10000 );
   test = m_ghostTuple->farray( "ghostClassesVelo",
                                m_ghostClassesVelo.begin(), m_ghostClassesVelo.end(),
+                               "nLong", 10000 );
+  test = m_ghostTuple->farray( "nHitsVelo",
+                               m_nHitsVelo.begin(), m_nHitsVelo.end(),
                                "nLong", 10000 );
   if( !test.isSuccess() ) return StatusCode::FAILURE;
 
@@ -151,6 +162,9 @@ StatusCode HltRecCheckGhosts::writeNtuple(Tuple& m_ghostTuple){
   test = m_ghostTuple->farray( "ghostClassesVeloR",
                                m_ghostClassesVeloR.begin(), m_ghostClassesVeloR.end(),
                                "nLong", 10000 );
+  test = m_ghostTuple->farray( "nHitsVeloR",
+                               m_nHitsVeloR.begin(), m_nHitsVeloR.end(),
+                               "nLong", 10000 );
   if( !test.isSuccess() ) return StatusCode::FAILURE;
 
   //Finally the TTRack componenets
@@ -160,9 +174,14 @@ StatusCode HltRecCheckGhosts::writeNtuple(Tuple& m_ghostTuple){
   test = m_ghostTuple->farray( "ghostClassesTTrack",
                                m_ghostClassesTTrack.begin(), m_ghostClassesTTrack.end(),
                                "nLong", 10000 );
+  test = m_ghostTuple->farray( "nHitsTTrack",
+                               m_nHitsTTrack.begin(), m_nHitsTTrack.end(),
+                               "nLong", 10000 );
   if( !test.isSuccess() ) return StatusCode::FAILURE;
 
   m_ghostTuple->write();
+
+  return StatusCode::SUCCESS;
 
 }
 //=========================================================================================================
@@ -246,6 +265,7 @@ StatusCode HltRecCheckGhosts::classifyParts(const LHCb::Track* ghostTrack) {
 
   //Now we classify the two dummy tracks above
   dummyVeloTrackIsAGhost = m_ghostToolVelo->isGhost(*dummyVeloTrack);
+  m_nHitsVelo.push_back((*dummyVeloTrack).nLHCbIDs());
   if (dummyVeloTrackIsAGhost) {
     m_ghostResultsVelo.push_back(1);
     verbose() << "This Velo component is a ghost" << endreq; 
@@ -259,6 +279,7 @@ StatusCode HltRecCheckGhosts::classifyParts(const LHCb::Track* ghostTrack) {
   }
 
   dummyVeloRTrackIsAGhost = m_ghostToolVeloR->isGhost(*dummyVeloRTrack);
+  m_nHitsVeloR.push_back((*dummyVeloRTrack).nLHCbIDs());
   if (dummyVeloRTrackIsAGhost) {
     m_ghostResultsVeloR.push_back(1);
     verbose() << "This VeloR component is a ghost" << endreq; 
@@ -272,6 +293,7 @@ StatusCode HltRecCheckGhosts::classifyParts(const LHCb::Track* ghostTrack) {
   }
 
   dummyTTrackIsAGhost = m_ghostToolTTrack->isGhost(*dummyTTrack);
+  m_nHitsTTrack.push_back((*dummyTTrack).nLHCbIDs());
   if (dummyTTrackIsAGhost) {
     m_ghostResultsTTrack.push_back(1);
     verbose() << "This TTrack component is a ghost" << endreq;

@@ -4,6 +4,9 @@
 ! Purpose     : Check reconstruction algorithms for HLT 
 !-----------------------------------------------------------------------------
 
+! 2009-02-02 - V Gligorov
+ - Updated HltRecCheckGhosts.{h,cpp} to save the number of hits on a track.
+
 ! 2009-01-30 - V Gligorov
  - Added HltRecCheckGhosts.{h,cpp}, an algorithm to help classify ghosts
    in the HLT using the GhostClassification tool developed by Matt. 
