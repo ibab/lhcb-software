@@ -1,0 +1,11 @@
+// file  11114000.opts generated: Wed, 29 Oct 2008 11:54:45
+//
+// Event Type:11114000
+//
+// ASCII decay Descriptor: {[[B0]nos -> mu+ mu- (K*(892)0 -> K+ pi-)]cc, [[B0]os -> mu- mu+ (K*(892)~0 -> K- pi+)]cc}
+//
+Generation.EventType = 11114000;
+Generation.SampleGenerationTool = "SignalRepeatedHadronization";
+Generation.SignalRepeatedHadronization.ProductionTool = "PythiaProduction";
+ToolSvc.EvtGenDecay.UserDecayFile = "$EVTGENEXTRASROOT/testopts/Bd_Kstmumu-btoslldurham07.dec";
+Generation.SignalRepeatedHadronization.SignalPIDList = {511,-511};

@@ -1,0 +1,1007 @@
+//from EvtGen
+#include "EvtGenBase/EvtDiracSpinor.hh"
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtId.hh"
+#include "EvtGenBase/EvtMathematicaFn.hh"
+#include "EvtGenBase/EvtIdSet.hh"
+#include "EvtGenBase/EvtPatches.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include "EvtGenBase/EvtVector4C.hh"
+#include "EvtGenBase/EvtTensor4C.hh"
+
+#include "EvtGenModels/EvtBToVllConstants.hh"
+#include "EvtGenModels/EvtBToVllEvolveWC.hh"
+
+#include "EvtGenModels/EvtBToVllParameterisedFFCalc.hh"
+#include "EvtGenModels/EvtBToKstarllQCDFactorisation.hh"
+#include "EvtGenModels/EvtBToVllQCDUtils.hh"
+
+//from gsl
+#include "gsl/gsl_math.h"
+#include "gsl/gsl_integration.h"
+#include "gsl/gsl_sf_dilog.h"
+#include "gsl/gsl_sf_expint.h"
+#include "gsl/gsl_sf_gegenbauer.h"
+#include "gsl/gsl_sf_result.h"
+
+#include <cmath>
+#include <fstream>
+#include <iomanip>
+#include <iostream>
+#include <list>
+#include <memory>
+#include <utility>
+
+using qcd::alpha_s;
+
+typedef std::pair<const EvtComplex, const EvtComplex> ComplexPair;
+typedef std::list<ComplexPair> ComplexPairList;
+
+const std::string QCDFactorisation::bquark("anti-B0");//The \bar{B}_d contains the b!
+const std::string QCDFactorisation::antibquark("B0");
+
+EvtBToVllParameters* QCDFactorisation::parameters = 0;
+
+QCDFactorisation::QCDFactorisation(const qcd::IPhysicsModel& _model, const bdkszmm::PARAMETERIZATIONS _ffModel, bool _calcAFBZero):
+	model(_model),ffModel(bdkszmm::getFFModel(_ffModel)),calcAFBZero(_calcAFBZero)
+{
+	if(!parameters){
+		init();
+	}
+}
+
+void QCDFactorisation::init(){
+	
+	report(INFO,"EvtGen") << " Form-factor model is \"" << ffModel->getName() << "\"." << std::endl;
+	
+	parameters = new EvtBToVllParameters();
+
+	//find the WCs at mu = mb
+	qcd::WCPtr  C_mw = model.getWilsonCoefficientsMW();
+	qcd::EvtBToVllEvolveWC10D evolveMb(*C_mw);
+	parameters->C_mb = evolveMb(constants::mu_mb);
+	parameters->C_mb3 = evolveMb(constants::mu_h);
+	
+	assert(C_mw->getOperatorBasis() == parameters->C_mb->getOperatorBasis());
+	assert(C_mw->getOperatorBasis() == parameters->C_mb3->getOperatorBasis());
+	
+	DEBUGPRINT("C_mw: ", (*C_mw));
+	DEBUGPRINT("C_mb: ", *(parameters->C_mb));
+	DEBUGPRINT("C_mb3: ", *(parameters->C_mb3));
+	
+	//mapAFBDistribution();
+	if(calcAFBZero){
+		double afbZero = findAFBZero();
+		report(NOTICE,"EvtGen") << "AFB Zero Crossing point is: " << afbZero << " (GeV^2)" <<std::endl;
+	}
+	
+#if 1
+	std::cout << "C(mb)" << std::endl;
+	for(unsigned int i = 1; i <= parameters->C_mb->getOperatorBasis(); i++){
+		const double re = real((*(parameters->C_mb))(i));
+		const double im = imag((*(parameters->C_mb))(i));
+		const char op = (im > 0) ? '+' : '-';
+		if( (im<1e-5) && (im>-1e-5) ){//real
+			std::cout << std::showpoint << std::fixed << std::setprecision(3) << re << " & ";
+		}else{//im
+			std::cout << std::showpoint << std::fixed << std::setprecision(3) << "$"<<re<<op<<fabs(im)<<"i$"<< " & ";
+		}
+	}
+	std::cout << std::endl;
+#endif	
+}
+
+QCDFactorisation::~QCDFactorisation()
+{
+}
+
+void QCDFactorisation::trasformAntiB(EvtParticle* parent, std::vector<EvtComplex>* tensors) const{
+	/** Transform tensors for the \bar{b} quark case */
+		
+	const EvtId parentID = parent->getId();
+	
+	EvtIdSet antib(antibquark);//tmp non-const copy
+	
+	if(antib.contains(parentID)){
+		//we swap terms with a totally anti-symettric tensor
+		tensors->at(A) = -tensors->at(A);
+		tensors->at(E) = -tensors->at(E);
+	}
+}
+
+void QCDFactorisation::getFormFactors(const double q2,
+			double* const A0, double* const A1, double* const A2, double* const V,
+			double* const T1, double* const T2, double* const T3,
+			double* const xi1, double* const xi2) const{
+	
+	//calculate the form factors
+	*V  = ffModel->getV(q2);
+	*A0 = ffModel->getA0(q2);
+	*A1 = ffModel->getA1(q2);
+	*A2 = ffModel->getA2(q2);
+
+	*T1 = ffModel->getT1(q2);
+	*T2 = ffModel->getT2(q2);
+	*T3 = ffModel->getT3(q2);
+	
+	*xi1 = ffModel->getXiT(q2);
+	*xi2 = ffModel->getXiL(q2);
+}
+
+void QCDFactorisation::getAmp(EvtParticle* parent, EvtAmp& amp) const{
+	
+	EvtVector4R q = parent->getDaug(1)->getP4() + parent->getDaug(2)->getP4();
+	//double MB = parent->mass();
+	//double mK = parent->getDaug(0)->mass();
+	const double q2 = (q.mass2());
+	const double MB = constants::mB;
+	const double mK = constants::mKstar;
+	//const double q2 = 1.5;
+	const double mKhat = mK/MB;
+	DEBUGPRINT("MB: ", MB);
+	
+	//get the amplitude tensors
+	std::vector<EvtComplex> tensors(NUMBER_OF_TENSORS);
+	getTnAmplitudes(q2,MB,mK, &tensors);
+	//transform to the b-bar if needed
+	trasformAntiB(parent, &tensors);
+	
+	const EvtComplex tensA = tensors.at(A);
+	const EvtComplex tensB = tensors.at(B);
+	const EvtComplex tensC = tensors.at(C);
+	const EvtComplex tensE = tensors.at(E);
+	const EvtComplex tensF = tensors.at(F);
+	const EvtComplex tensG = tensors.at(G);
+	const EvtComplex tensH =tensors.at(H);
+	const EvtComplex tensS2 =tensors.at(S2);
+	
+	const double parentMass = parent->mass();
+ 	const EvtVector4R p4b(parent->mass(),0.0,0.0,0.0);
+	const EvtVector4R p4meson = parent->getDaug(0)->getP4();
+	const EvtVector4R pbhat = p4b/parentMass;
+	const EvtVector4R qhat = q/parentMass;
+	const EvtVector4R pkstarhat = p4meson/parentMass;
+	const EvtVector4R phat = pbhat+pkstarhat;
+	const EvtComplex I(0.0,1.0);
+
+	const int charge1 = EvtPDL::chg3(parent->getDaug(1)->getId());
+	const int charge2 = EvtPDL::chg3(parent->getDaug(2)->getId());
+	  
+	const EvtParticle* lepPlus = (charge1 > charge2) ? parent->getDaug(1) : parent->getDaug(2);
+	const EvtParticle* lepMinus = (charge1 < charge2) ? parent->getDaug(1) : parent->getDaug(2);
+
+	//eqn 4.4
+	const EvtTensor4C T1 = tensA*dual(directProd(pbhat, pkstarhat)) - tensB*I*EvtTensor4C::g() + 
+		tensC*I*directProd(pbhat, phat);
+
+	//eqn 4.5
+	const EvtTensor4C T2 = tensE*dual(directProd(pbhat, pkstarhat)) - tensF*I*EvtTensor4C::g() +
+				tensG*I*directProd(pbhat, phat) + tensH*I*directProd(pbhat, qhat);
+	
+	//now calculate the V, A, and S lepton currents
+	EvtVector4C l11,l12;
+	EvtVector4C l21,l22;
+	
+	EvtVector4C a11,a12;
+	EvtVector4C a21,a22;
+	
+	EvtComplex s11,s12;
+	EvtComplex s21,s22;
+
+	const EvtId parentID = parent->getId();
+	EvtIdSet antib(antibquark);
+	EvtIdSet b(bquark);
+	if(b.contains(parentID)){
+	
+		l11 = EvtLeptonVCurrent(lepPlus->spParent(0), lepMinus->spParent(0));
+		l21 = EvtLeptonVCurrent(lepPlus->spParent(1), lepMinus->spParent(0));
+		l12 = EvtLeptonVCurrent(lepPlus->spParent(0), lepMinus->spParent(1));
+		l22 = EvtLeptonVCurrent(lepPlus->spParent(1), lepMinus->spParent(1));
+	
+		a11 = EvtLeptonACurrent(lepPlus->spParent(0), lepMinus->spParent(0));
+		a21 = EvtLeptonACurrent(lepPlus->spParent(1), lepMinus->spParent(0));
+		a12 = EvtLeptonACurrent(lepPlus->spParent(0), lepMinus->spParent(1));
+		a22 = EvtLeptonACurrent(lepPlus->spParent(1), lepMinus->spParent(1));
+		
+		s11 = EvtLeptonSCurrent(lepPlus->spParent(0), lepMinus->spParent(0));
+		s21 = EvtLeptonSCurrent(lepPlus->spParent(1), lepMinus->spParent(0));
+		s12 = EvtLeptonSCurrent(lepPlus->spParent(0), lepMinus->spParent(1));
+		s22 = EvtLeptonSCurrent(lepPlus->spParent(1), lepMinus->spParent(1));
+
+	}else if (antib.contains(parentID)){
+
+		l11 = EvtLeptonVCurrent(lepPlus->spParent(1), lepMinus->spParent(1));
+		l21 = EvtLeptonVCurrent(lepPlus->spParent(0), lepMinus->spParent(1));
+		l12 = EvtLeptonVCurrent(lepPlus->spParent(1), lepMinus->spParent(0));
+		l22 = EvtLeptonVCurrent(lepPlus->spParent(0), lepMinus->spParent(0));
+
+		a11 = EvtLeptonACurrent(lepPlus->spParent(1), lepMinus->spParent(1));
+		a21 = EvtLeptonACurrent(lepPlus->spParent(0), lepMinus->spParent(1));
+		a12 = EvtLeptonACurrent(lepPlus->spParent(1), lepMinus->spParent(0));
+		a22 = EvtLeptonACurrent(lepPlus->spParent(0), lepMinus->spParent(0));
+		
+		s11 = EvtLeptonSCurrent(lepPlus->spParent(1), lepMinus->spParent(1));
+		s21 = EvtLeptonSCurrent(lepPlus->spParent(0), lepMinus->spParent(1));
+		s12 = EvtLeptonSCurrent(lepPlus->spParent(1), lepMinus->spParent(0));
+		s22 = EvtLeptonSCurrent(lepPlus->spParent(0), lepMinus->spParent(0));
+
+	}else{
+		report(ERROR,"EvtGen") << __FILE__ << ": Unknown parentID" << std::endl;
+	}
+	
+	for(unsigned int i = 0; i < 3; i++){
+		
+		//K* polarization vector in B rest frame - \epsilon_\mu^*
+		EvtVector4C eps = parent->getDaug(0)->epsParent(i).conj();
+
+	    EvtVector4C E1 = T1.cont1(eps);
+	    EvtVector4C E2 = T2.cont1(eps);
+	    
+	    //eqn 3.7 of hep-ph/000426
+	    EvtComplex  S = I*2*mKhat*(eps*pbhat)*tensS2;
+
+	    amp.vertex(i,0,0, l11*E1+a11*E2+S*s11);
+	    amp.vertex(i,0,1, l12*E1+a12*E2+S*s12);
+	    amp.vertex(i,1,0, l21*E1+a21*E2+S*s21);
+	    amp.vertex(i,1,1, l22*E1+a22*E2+S*s22);
+	 } 
+}
+
+double QCDFactorisation::getAFB(const double q2) const{
+	
+	const double MB = constants::mB;
+	const double mK = constants::mKstar;
+	const double mk = mK/MB;
+	const double mlhat = constants::mmu/MB;
+
+	const double shat = q2/(MB*MB);
+	//get the amplitude tensors
+	std::vector<EvtComplex> tensors(NUMBER_OF_TENSORS);
+	getTnAmplitudes(q2,MB,mK, &tensors);
+		
+	const EvtComplex tensA = tensors.at(A);
+	const EvtComplex tensB = tensors.at(B);
+	const EvtComplex tensC = tensors.at(C);
+	const EvtComplex tensD = tensors.at(D);
+	const EvtComplex tensE = tensors.at(E);
+	const EvtComplex tensF = tensors.at(F);
+	const EvtComplex tensG = tensors.at(G);
+	const EvtComplex tensH =tensors.at(H);
+	const EvtComplex tensS2 =tensors.at(S2);
+	
+	const double lambda = 1 + (mk*mk*mk*mk) + (shat*shat) - (2*shat)*(1 + shat);
+	const double uhat = sqrt(lambda*(1 - ((4*mlhat*mlhat)/shat)));
+	
+	const double dKstar = getDstar(q2,tensors);
+	
+	const double AFB = (uhat/dKstar)*( shat*(real(tensB*conj(tensE)) +  real(tensA*conj(tensF))) +
+										(mlhat/mk)*( real(tensS2*conj(tensB))*(1 - shat - mk*mk) - 
+														real(tensS2*conj(tensC))*lambda) );
+	return AFB;
+}
+
+void QCDFactorisation::mapAFBDistribution() const{
+	
+	const double q2min = 0.5;
+	const double q2max = 11.5;
+	const double q2step = 0.05;
+	
+	std::ofstream outputdata("afb_values.dat");
+	
+	double q2 = q2min;
+	while(q2 < q2max){
+	
+		const double AFB = getAFB(q2);
+		std::cout << "AFB: q2: " << q2 << " AFB: " << AFB << std::endl;
+		outputdata << q2 << "\t" << AFB << std::endl;
+		
+		q2 += q2step;
+	}
+	outputdata.close();
+}
+
+double QCDFactorisation::findAFBZero() const{
+	
+	double q2min = 0.5;
+	double q2max = 8.0;
+	
+	double afb1 = getAFB(q2min);
+	double afb2 = 0.0;
+	double afb3 = getAFB(q2max);
+	
+	double q2diff = fabs(q2min - q2max);
+	unsigned int chops = 0;
+	while(q2diff > 0.05){
+	
+		q2diff = fabs(q2min - q2max);
+		double q2middle = q2min + (0.5*q2diff);
+		
+		afb1 = getAFB(q2min);
+		afb2 = getAFB(q2middle);
+		afb3 = getAFB(q2max);
+		
+		if(afb1*afb3 > 0){//No AFB zero at all
+			report(WARNING,"EvtGen") << __FILE__ << ": No AFB Zero Found in range " << q2min << " - " << q2max << std::endl;
+			if(chops == 0){
+				break;
+			}
+		}
+		
+		if(afb1*afb2 < 0){//afb zero in lower half
+			q2max = q2middle;
+		}else{//afb in upper half
+			q2min = q2middle;
+		}
+		
+		if(chops > 50){
+			report(WARNING,"EvtGen") << __FILE__ << ": Zero not found to required accuracy." << std::endl;
+			break;
+		}
+		
+	}
+	double afbZero = 0.5*(fabs(q2min)+fabs(q2max));
+	return afbZero;
+	
+}
+
+double QCDFactorisation::getDstar(const double q2, const std::vector<EvtComplex>& tensors) const{
+	
+	const EvtComplex tensA = tensors.at(A);
+	const EvtComplex tensB = tensors.at(B);
+	const EvtComplex tensC = tensors.at(C);
+	const EvtComplex tensD = tensors.at(D);
+	const EvtComplex tensE = tensors.at(E);
+	const EvtComplex tensF = tensors.at(F);
+	const EvtComplex tensG = tensors.at(G);
+	const EvtComplex tensH =tensors.at(H);
+	const EvtComplex tensS2 =tensors.at(S2);
+	
+	const double MB = constants::mB;
+	const double mK = constants::mKstar;
+	const double mk = mK/MB;
+	const double mlhat = constants::mmu/MB;
+
+	const double shat = q2/(MB*MB);
+	
+	const double lambda = 1 + (mk*mk*mk*mk) + (shat*shat) - (2*shat)*(1 + shat);
+	const double uhat = sqrt(lambda*(1 - ((4*mlhat*mlhat)/shat)));
+
+	const double mk2 = mk*mk;
+	const double ml2 = mlhat*mlhat;
+	const double u2 = uhat*uhat;
+	
+	//eqn (3.57) of Phys Rev D62 094023
+	EvtComplex result = ((conj(tensA)*tensA)/3.0)*shat*lambda*( 1 + 2*ml2/shat) + 
+		(conj(tensE)*tensE)*shat*uhat/3.0 +
+		(conj(tensS2)*tensS2)*(shat - 4*ml2)*lambda +
+		(1/(1*mk2))*(  (conj(tensB)*tensB)*( lambda - (u2/3.0) + 8*mk2*(shat + 2*ml2) )  +
+				(conj(tensF)*tensF)*(lambda - u2/3.0 + 8*mk2*(shat - 4*ml2)) ) +
+		(lambda/(4*mk2))*( (conj(tensC)*tensC)*(lambda - u2/3.0) + 
+				(conj(tensG)*tensG)*(lambda - u2/3.0 + 4*ml2*(2 + 2*mk2 -shat)) ) - 
+		(1/(2*mk2))*( real(tensB*conj(tensC))*(lambda - u2/3.0)*(1 - mk2 - shat) + 
+				real(tensF*conj(tensG))*((lambda - u2/3)*(1 - mk2 - shat) + 4*ml2*lambda) ) -
+		2*(ml2/mk2)*lambda*( real(tensF*conj(tensH)) - real(tensG*conj(tensH)) )*(1 - mk2) + 
+		(ml2/mk2)*shat*(conj(tensH)*tensH);
+	
+	return real(result);
+	
+}
+double QCDFactorisation::getGammaKstar(const double q2) const{
+	//dGamma^{K*}/ds
+	
+	const double MB = constants::mB;
+	const double mK = constants::mKstar;
+	const double mk = mK/MB;
+	const double mlhat = constants::mmu/MB;
+
+	const double shat = q2/(MB*MB);
+	const double lambda = 1 + (mk*mk*mk*mk) + (shat*shat) - (2*shat)*(1 + shat);
+	const double uhat = sqrt(lambda*(1 - ((4*mlhat*mlhat)/shat)));
+	
+	//get the amplitude tensors
+	std::vector<EvtComplex> tensors(NUMBER_OF_TENSORS);
+	getTnAmplitudes(q2,MB,mK, &tensors);
+	
+	//eqn (3.56) with arbitratry normalisation
+	const double dStar = getDstar(q2,tensors);
+	return uhat*dStar;
+}
+
+void QCDFactorisation::getTnAmplitudes(const double q2, const double MB, const double mK, std::vector<EvtComplex>* tensors) const{
+	
+	/**
+	 * Code to calculate the tensors. The factorisation calculations
+	 * follow Beneke, but the final structure is that of Ali et al
+	 * (PRD 61 074024). The calculations are to be done for the b
+	 * quark. These will be transformed for the b-bar quark.
+	 * 
+	 * @param std::vector<EvtComplex> tensors - An empty vector to be filled by the routine.
+	 * 
+	 * There is an enum to give the correct indexes. These should be:
+	 * 
+	 * index:	0 1 2 3 4 5 6 7 8	
+	 * tensor:	A B C D E F G H S2
+	 * 
+	 * These tensors will be used in the eqns 2.2, 4.4 and 4.5 of Ali et al.
+	 * 
+	 */
+
+	//energy of final state meson
+	const double e = ((MB*MB) - q2)/(2*MB);
+	DEBUGPRINT("e: ", e);//V
+
+	//calculate the form factors
+	double ffA0, ffA1, ffA2, ffV;
+	double ffT1, ffT2, ffT3;
+	double xi1, xi2;
+	
+	getFormFactors(q2,
+			&ffA0,&ffA1,&ffA2,&ffV,
+			&ffT1,&ffT2,&ffT3,
+			&xi1,&xi2);
+	
+	DEBUGPRINT("q2: ", q2);//V
+	DEBUGPRINT("ffA0: ", ffA0);//V
+	DEBUGPRINT("ffA1: ", ffA1);//V
+	DEBUGPRINT("ffA2: ", ffA2);//V
+	DEBUGPRINT("ffV: ", ffV);//V
+
+	DEBUGPRINT("ffT1: ", ffT1);//V
+	DEBUGPRINT("ffT2: ", ffT2);//V
+	DEBUGPRINT("ffT3: ", ffT3);//V
+
+	DEBUGPRINT("xi[1]: ", xi1);//V
+	DEBUGPRINT("xi[2]: ", xi2);//V	
+
+		
+	class inner{
+	public:
+		
+		static EvtComplex getC0(const double& s){
+			//Eqn 84 - Analytic solution only valid in range 0 <= s <= 2.
+			assert( (s >= 0) && (s <= 2) );
+			
+			/*
+			 * the following is basically exported from Mathematica, where the recommendation
+			 * in the paper to express in terms of dilogarithms has been implemented.
+			 */
+			
+			//calculate the 4 PolyLog[2,x]
+			gsl_sf_result re;
+			gsl_sf_result im;
+
+			EvtComplex tmp = -1 + s;
+			gsl_sf_complex_dilog_e(abs(tmp),arg(tmp),&re,&im);
+			EvtComplex diLog0(re.val,im.val);
+			
+			tmp = ((sqrt(4 - s) - EvtComplex(0,1)*sqrt(s))*(-1 + s))/(-sqrt(4 - s) + EvtComplex(0,3)*sqrt(s) + sqrt(4 - s)*s - EvtComplex(0,1)*pow(s,1.5));
+			gsl_sf_complex_dilog_e(abs(tmp),arg(tmp),&re,&im);
+			EvtComplex diLog1(re.val,im.val);
+			
+			tmp = ((sqrt(4 - s) + EvtComplex(0,1)*sqrt(s))*(-1 + s))/(-sqrt(4 - s) + EvtComplex(0,3)*sqrt(s) + sqrt(4 - s)*s - EvtComplex(0,1)*pow(s,1.5));
+			gsl_sf_complex_dilog_e(abs(tmp),arg(tmp),&re,&im);
+			EvtComplex diLog2(re.val,im.val);
+			
+			tmp = ((sqrt(4 - s) - EvtComplex(0,1)*sqrt(s))*(-1 + s))/(-sqrt(4 - s) - EvtComplex(0,3)*sqrt(s) + sqrt(4 - s)*s + EvtComplex(0,1)*pow(s,1.5));
+			gsl_sf_complex_dilog_e(abs(tmp),arg(tmp),&re,&im);
+			EvtComplex diLog3(re.val,im.val);
+			
+			tmp = ((sqrt(4 - s) + EvtComplex(0,1)*sqrt(s))*(-1 + s))/(-sqrt(4 - s) - EvtComplex(0,3)*sqrt(s) + sqrt(4 - s)*s + EvtComplex(0,1)*pow(s,1.5));
+			gsl_sf_complex_dilog_e(abs(tmp),arg(tmp),&re,&im);
+			EvtComplex diLog4(re.val,im.val);
+
+			using constants::Pi;
+			const EvtComplex I(0,1);
+			
+			const double s1 = s;
+			return chop(((-log(-1 + I*sqrt(-1 + 4/s1)) + log(1 + I*sqrt(-1 + 4/s1)))*
+				      (EvtComplex(0,-2)*Pi + log(4) + log(s1) + 2*log(1/(EvtComplex(0,-1)*sqrt(4 - s1) + 3*sqrt(s1) + I*sqrt(4 - s1)*s1 - pow(s1,1.5))))
+				       + log(-1 - I*sqrt(-1 + 4/s1))*(EvtComplex(0,2)*Pi - log(4) - log(s1) - 
+				        2*log(EvtComplex(0,-1)/(sqrt(4 - s1) + I*sqrt(s1)*(-3 + s1 + I*sqrt(-((-4 + s1)*s1)))))) + 
+				     log(1 - I*sqrt(-1 + 4/s1))*(EvtComplex(0,-2)*Pi + log(4) + log(s1) + 
+				        2*log(EvtComplex(0,-1)/(sqrt(4 - s1) + I*sqrt(s1)*(-3 + s1 + I*sqrt(-((-4 + s1)*s1)))))) - 4*diLog0 - 
+				     2*diLog1 + 2*diLog2 + 2*diLog3 - 2*diLog4)/(2.*(-1 + s1)));
+		};
+		
+		static EvtComplex B10(const double& s, const double& mq, const double& reg){
+			EvtComplex regmb2(mq*mq,reg);
+			//Eqn 29
+			const EvtComplex coeff = sqrt(((4*regmb2)/s) - 1);
+			return -2*coeff*atan(1/coeff); 
+		};
+		
+		//makes a list of Ks from the static data
+		static std::auto_ptr<ComplexPairList> getKFactor(const double re[4][2], const double im[4][2]){
+			ComplexPairList* result = new ComplexPairList();
+			for(unsigned int i = 0; i < 4; ++i){
+				result->push_back(std::make_pair(EvtComplex(re[i][0],im[i][0]),EvtComplex(re[i][1],im[i][1])));
+			}
+			return std::auto_ptr<ComplexPairList>(result);
+		};
+		
+		static EvtComplex f_x_y(const ComplexPairList& coeffs, const double& s2, const double& Ls){
+			assert(coeffs.size() == 4);//looking for k factors
+			EvtComplex sum = 0;
+			unsigned int count = 1;
+			for(ComplexPairList::const_iterator it = coeffs.begin(); it != coeffs.end(); ++it){
+				const double s2_fac = pow(s2,count-1);
+				sum += (s2_fac*it->first) + (Ls*s2_fac*it->second);
+				count++;
+			}
+			return sum;
+		};
+		
+		
+		static EvtComplex get_t(const int& a, const std::pair<double,double> xi){
+			const double xi_data[2] = {xi.first, xi.second};
+			const int a_index = a - 1;
+			assert( (a_index < 2) && (a_index <= 0));
+			return xi_data[a_index];
+		}
+		
+	};
+	
+	static const double re_f_1_7[4][2] = {{-0.68192, 0}, {-0.23935, 0.0027424}, {-0.0018555, 0.022864}, {0.28248, 0.029027}};
+	static const double re_f_1_9[4][2] = {{-11.973, -0.081271}, {-28.432, -0.040243}, {-57.114, -0.035191}, {-128.8, -0.017587}};
+	static const double re_f_2_7[4][2] = {{4.095, 0}, {1.4361, -0.016454}, {0.011133, -0.13718}, {-1.6949, -0.17416}};
+	static const double re_f_2_9[4][2] = {{6.6338, 0.48763}, {3.3585, 0.24146}, {-1.1906, 0.21115}, {-17.12, 0.10552}};
+	
+	static const double im_f_1_7[4][2] = {{-0.074998, 0}, {-0.12289, 0.019676}, {-0.175, 0.011456}, {-0.12783, -0.0082265}};
+	static const double im_f_1_9[4][2] = {{0.16371, -0.059691}, {-0.25044, 0.016442}, {-0.86486, 0.027909}, {-2.5243, 0.050639}};
+	static const double im_f_2_7[4][2] = {{0.44999, 0}, {0.73732, -0.11806}, {1.05, -0.068733}, {0.76698, 0.049359}};
+	static const double im_f_2_9[4][2] = {{-0.98225, 0.35815}, {1.5026, -0.098649}, {5.1892, -0.16745}, {15.146, -0.30383}};
+	
+	const std::auto_ptr<ComplexPairList> k_1_7 = inner::getKFactor(re_f_1_7, im_f_1_7);
+	const std::auto_ptr<ComplexPairList> k_1_9 = inner::getKFactor(re_f_1_9, im_f_1_9);
+	const std::auto_ptr<ComplexPairList> k_2_7 = inner::getKFactor(re_f_2_7, im_f_2_7);
+	const std::auto_ptr<ComplexPairList> k_2_9 = inner::getKFactor(re_f_2_9, im_f_2_9);
+		
+	const double mc1 = constants::mc/constants::mb;
+	const double s2 = q2/(constants::mb*constants::mb);
+	const double Lc = log(mc1);
+	const double Ls = log(s2);
+	const double Lm = log(parameters->C_mb->getScale()/constants::mb);
+	
+	DEBUGPRINT("mc1: ", mc1);//V
+	DEBUGPRINT("s2: ", s2);//V
+	DEBUGPRINT("Lc: ", Lc);//V
+	DEBUGPRINT("Ls: ", Ls);//V
+	DEBUGPRINT("Lm: ", Lm);//V
+	
+	const EvtComplex f_1_7 = inner::f_x_y(*k_1_7, s2, Ls);
+	const EvtComplex f_1_9 = inner::f_x_y(*k_1_9, s2, Ls);
+	const EvtComplex f_2_7 = inner::f_x_y(*k_2_7, s2, Ls);
+	const EvtComplex f_2_9 = inner::f_x_y(*k_2_9, s2, Ls);
+	
+	DEBUGPRINT("f[1,7]: ", f_1_7);//V
+	DEBUGPRINT("f[1,9]: ", f_1_9);//V
+	DEBUGPRINT("f[2,7]: ", f_2_7);//V
+	DEBUGPRINT("f[2,9]: ", f_2_9);//V
+	
+	//see Appendix B
+	const EvtComplex IPi(0,constants::Pi);
+	const EvtComplex F_1_9 = ((-1424/729.) + ((16/243.)*IPi) + ((64/27.)*Lc))*Lm -
+		(16/243.)*Lm*Ls + ((16/1215.) - (32/(135.*mc1*mc1)))*Lm*s2 + 
+		((4/2835.) - (8/(315.*pow(mc1,4))))*Lm*s2*s2 + ((16/76545.) - (32/(8505.*pow(mc1,6))))*Lm*pow(s2,3) -
+		(256/243.)*Lm*Lm + f_1_9;
+	const EvtComplex F_2_9 = ( (256/243.) - ((32/81.)*IPi) - (128/9.)*Lc)*Lm +
+		(32/81.)*Lm*Ls + ((-32/405.) + (64/(45.*mc1*mc1)))*Lm*s2 + ( (-8/945.) + (16/(105.*pow(mc1,4))))*Lm*s2*s2 +
+		( (-32/25515.) + (64/(2835.*pow(mc1,6))))*Lm*pow(s2,3) + (512/81.)*Lm*Lm + f_2_9;
+	const EvtComplex F_1_7 = (-208/243.)*Lm + f_1_7;
+	const EvtComplex F_2_7 = ((416/81.)*Lm) + f_2_7;
+	
+	DEBUGPRINT("F[1,9]: ", F_1_9);//V
+	DEBUGPRINT("F[2,9]: ", F_2_9);//V
+	DEBUGPRINT("F[1,7]: ", F_1_7);//V
+	DEBUGPRINT("F[2,7]: ", F_2_7);//V
+	
+	const double reg = 0;//TODO: Understand this in numerical case
+	//do the integration
+	const EvtComplex c00 = inner::getC0(s2);
+	const EvtComplex b10 = inner::B10(q2, constants::mb*constants::mb, reg);
+	
+	DEBUGPRINT("C00[s2]: ", c00);//V
+	DEBUGPRINT("B10[q2,m]: ", b10);//V
+
+	const EvtComplex F_8_7 = ((-32/9.)*Lm) - ((8/9.)*(s2/(1-s2))*log(s2)) - ((8/9.)*IPi) - 
+		((4/9.)*((11 - (16*s2) + (8*s2*s2))/pow(1-s2,2))) + 
+		(4/(9*pow(1-s2,3)))*(((9*s2) - (5*s2*s2) + (2*s2*s2*s2))*b10 - ((4 + 2*s2)*c00));
+	const EvtComplex F_8_9 = ((16/(9*(1-s2)))*log(s2)) + ((8*(5 - 2*s2))/(9*pow(1-s2,3))) - 
+			((8*(4-s2))/(9*pow(1-s2,3)))*(((1+s2)*b10) - (2*c00));
+	
+	DEBUGPRINT("F[8,7]: ", F_8_7);//V
+	DEBUGPRINT("F[8,9]: ", F_8_9);//V
+	
+	class Integrate{
+	
+	public:
+		
+		struct int_params {
+
+		public:
+
+			const int a;
+			const double e;
+			const double MB;
+			const double mK;
+			const double q2;
+			const bool real;
+						
+			const WilsonCoefficientsD* const C_mb;
+			const WilsonCoefficientsD* const C_mb3;
+					
+			int_params(const int& _a, const double& _e, const double& _MB, const double& _mK, 
+					const double& _q2,const bool& _real, const WilsonCoefficientsD* const _C_mb, const WilsonCoefficientsD* const _C_mb3):
+						a(_a),e(_e),MB(_MB),mK(_mK),q2(_q2),real(_real),C_mb(_C_mb),C_mb3(_C_mb3){
+			};
+
+		};
+		
+		Integrate(const double& _e, const double& _MB, const double& _mK, 
+				const double& _q2, const WilsonCoefficientsD* const _C_mb, const WilsonCoefficientsD* const _C_mb3):
+					e(_e),MB(_MB),mK(_mK),q2(_q2),reg(0),C_mb(_C_mb),C_mb3(_C_mb3),Xi(SignedPair<double>(1, _mK/_e)),
+					T0(DataBlock<EvtComplex>(2,2)){
+			
+			const EvtComplex t0_2_2 = -constants::eq * ((4*MB)/constants::mb) * ((*C_mb)(3) + 3*(*C_mb)(4));
+			T0.set(1, 1, 0);
+			T0.set(1, 2, 0);
+			T0.set(2, 1, 0);
+			T0.set(2, 2, t0_2_2);
+			const double fK1 = constants::fKperp*pow(qcd::alpha_s(constants::mb,4)/qcd::alpha_s(1,3), 4/23.);
+			fK = SignedPair<double>(fK1, constants::fKpar);
+		};
+		
+		SignedPair<EvtComplex> getC1(const EvtComplex& _F_2_7, const EvtComplex& _F_8_7, const EvtComplex& _F_1_9, const EvtComplex& _F_2_9, const EvtComplex& _F_8_9) const{
+			const double CF_factor = 1/constants::CF;
+			const EvtComplex part1 = (*C_mb)(2)*_F_2_7;
+
+			const EvtComplex part2 = (*C_mb)(8)*_F_8_7;
+			const EvtComplex part3 = ((*C_mb)(2)*_F_2_9) + (2*(*C_mb)(1)*(_F_1_9 + (1/6.)*_F_2_9)) + 
+			((*C_mb)(8)*_F_8_9);
+			const EvtComplex result1 = CF_factor*(-part1 - part2 - (q2/(2*constants::mb*MB))*part3);
+			const EvtComplex result2 = CF_factor*(part1 + part2 + (MB/(2*constants::mb))*part3);
+			
+			return SignedPair<EvtComplex>(std::make_pair(result1,result2));
+		};
+		
+		ComplexPair get_t_x(const double u, const double mq) const{
+			//Eqns 27, 28
+			const double preFact = (2*MB)/((1-u)*e);
+			if(mq == 0.0){
+				return std::make_pair(EvtComplex(preFact,0),EvtComplex(preFact,0));
+			}
+			return std::make_pair(get_tt1(u,mq),get_tt2(u,mq));
+		};
+		
+		EvtComplex get_tt1(const double u, const double mq) const{
+									
+			const double MB2 = MB*MB;
+			const double mq2 = mq*mq;
+			
+			//exported from mathematica
+			return chop((2*q2*(Sqrt(-1 + (4*mq2)/q2)*
+									ArcTan(1/Sqrt(-1 + (4*mq2)/q2)) -
+									Sqrt(-1 + (4*mq2)/(MB2 - MB2*u + q2*u))*
+									ArcTan(1/Sqrt(-1 + (4*mq2)/(MB2 - MB2*u + q2*u)))) -
+						(2*e*MB*(-MB2 + q2 + MB2*u - q2*u + 2*mq2*
+									Log((-1 + Sqrt(1 - (4*mq2)/q2))/(1 + Sqrt(1 - (4*mq2)/q2)))*
+									Log(0.5 - Sqrt(0.25 - mq2/q2)) +
+									2*mq2*Log((1 + Sqrt(1 - (4*mq2)/q2))/(-1 + Sqrt(1 - (4*mq2)/q2)))*
+									Log(0.5 + Sqrt(0.25 - mq2/q2)) - 2*mq2*Log(0.5 - Sqrt(0.25 + mq2/(MB2*(-1 + u) - q2*u)))*
+									Log((-1 + 2*Sqrt(0.25 + mq2/(MB2*(-1 + u) - q2*u)))/(1 + 2*Sqrt(0.25 + mq2/(MB2*(-1 + u) - q2*u)))) -
+										2*mq2*Log(0.5 +	Sqrt(0.25 + mq2/(MB2*(-1 + u) - q2*u)))*
+									Log((1 + 2*Sqrt(0.25 + mq2/(MB2*(-1 + u) - q2*u)))/(-1 + 2*Sqrt(0.25 + mq2/(MB2*(-1 + u) - q2*u)))) +
+									
+									2*mq2*PolyLog(2, (-1 + Sqrt(1 - (4*mq2)/q2))/(1 + Sqrt(1 - (4*mq2)/q2))) +
+									2*mq2*PolyLog(2, (1 + Sqrt(1 - (4*mq2)/q2))/(-1 + Sqrt(1 - (4*mq2)/q2))) -
+									2*mq2*PolyLog(2, (-1 + 2*Sqrt(0.25 + mq2/(MB2*(-1 + u) - q2*u)))/(1 + 2*Sqrt(0.25 +	mq2/(MB2*(-1 + u) - q2*u)))) -
+									2*mq2*PolyLog(2, (1 + 2*Sqrt(0.25 +	mq2/(MB2*(-1 + u) - q2*u)))/(-1 + 2*Sqrt(0.25 + mq2/(MB2*(-1 + u) - q2*u))))))/
+						(MB2 - q2))/Power(e - e*u,2));
+		}
+		
+		EvtComplex get_tt2(const double u, const double mq) const{
+			
+			const double MB2 = MB*MB;
+			const double mq2 = mq*mq;
+			
+			//exported from mathematica
+			return chop(((-(MB2*(-1 + u)) + q2*u)*(2*Sqrt(-1 + (4*mq2)/q2)*ArcTan(1/Sqrt(-1 + (4*mq2)/q2)) -
+									2*Sqrt(-1 + (4*mq2)/(MB2 - MB2*u + q2*u))*
+									ArcTan(1/Sqrt(-1 + (4*mq2)/(MB2 - MB2*u + q2*u)))) -
+							(2*e*MB*(-MB2 + q2 + MB2*u - q2*u +
+											2*mq2*Log((-1 + Sqrt(1 - (4*mq2)/q2))/(1 + Sqrt(1 - (4*mq2)/q2)))*
+											Log(0.5 - Sqrt(0.25 - mq2/q2)) +
+											2*mq2*Log((1 + Sqrt(1 - (4*mq2)/q2))/(-1 + Sqrt(1 - (4*mq2)/q2)))*
+											Log(0.5 + Sqrt(0.25 - mq2/q2)) -
+											2*mq2*Log(0.5 - Sqrt(0.25 + mq2/(MB2*(-1 + u) - q2*u)))*
+											Log((-1 + 2*Sqrt(0.25 + mq2/(MB2*(-1 + u) - q2*u)))/
+													(1 + 2*Sqrt(0.25 + mq2/(MB2*(-1 + u) - q2*u)))) -
+											2*mq2*Log(0.5 + Sqrt(0.25 + mq2/(MB2*(-1 + u) - q2*u)))*
+											Log((1 + 2*Sqrt(0.25 + mq2/(MB2*(-1 + u) - q2*u)))/
+													(-1 + 2*Sqrt(0.25 + mq2/(MB2*(-1 + u) - q2*u)))) +
+											2*mq2*PolyLog(2,(-1 + Sqrt(1 - (4*mq2)/q2))/(1 + Sqrt(1 - (4*mq2)/q2))) +
+											2*mq2*PolyLog(2,(1 + Sqrt(1 - (4*mq2)/q2))/(-1 + Sqrt(1 - (4*mq2)/q2))) -
+											2*mq2*PolyLog(2,(-1 + 2*Sqrt(0.25 + mq2/(MB2*(-1 + u) - q2*u)))/
+													(1 + 2*Sqrt(0.25 + mq2/(MB2*(-1 + u) - q2*u)))) -
+											2*mq2*PolyLog(2,(1 + 2*Sqrt(0.25 + mq2/(MB2*(-1 + u) - q2*u)))/
+													(-1 + 2*Sqrt(0.25 + mq2/(MB2*(-1 + u) - q2*u))))))/(MB2 - q2))/Power(e - e*u,2));
+			
+		}
+		
+		DataBlock<EvtComplex> getTnf(const double& u) const{
+			//Eqns 23, 24, 25, 26 of Beneke
+			
+			ComplexPair tt_0 = get_t_x(u, 0.0);
+			ComplexPair tt_mc = get_t_x(u, constants::mc);
+			ComplexPair tt_mb = get_t_x(u, constants::mb);
+			
+			const EvtComplex tnf_1_1 = chop(-4*constants::ed*((*C_mb3)(8)/(u + (((1-u)*q2)/(MB*MB)))) +
+				(MB/(2*constants::mb))*( (constants::eu*tt_mc.first*((*C_mb3)(2) + (*C_mb3)(4) - (*C_mb3)(6))) +
+						(constants::ed*tt_mb.first*((*C_mb3)(3) + (*C_mb3)(4) - (*C_mb3)(6) - ((4*constants::mb/MB)*(*C_mb3)(5)))) +
+						(constants::ed*tt_0.first * (*C_mb3)(3))));
+			
+			const EvtComplex tnf_1_2 = chop((MB/constants::mb)*( ((constants::eu * tt_mc.second)*((*C_mb3)(2) + (*C_mb3)(4) - (*C_mb3)(6))) +  
+					((constants::ed*tt_mb.second)*((*C_mb3)(3) + (*C_mb3)(4) - (*C_mb3)(6))) + (constants::ed*tt_0.second*(*C_mb3)(3)) ));
+			
+			const double ub = 1 - u;
+			
+			const EvtComplex h_mc = qcd::h((ub*MB*MB) + (u*q2), constants::mc, C_mb3->getScale());
+			const EvtComplex h_mb = qcd::h((ub*MB*MB) + (u*q2), constants::mb, C_mb3->getScale());
+			const EvtComplex h_0 = qcd::h((ub*MB*MB) + (u*q2), 0, C_mb3->getScale());
+			
+			const EvtComplex tnf_2_2 = chop(constants::eq * ( ((8*(*C_mb3)(8))/(ub + ((u*q2)/(MB*MB)))) + 
+					( (6*MB/constants::mb)*( (h_mc*((*C_mb3)(2) + (*C_mb3)(4) + (*C_mb3)(6))) + 
+							(h_mb*((*C_mb3)(3) + (*C_mb3)(4) + (*C_mb3)(6))) +
+							(h_0*((*C_mb3)(3) + 3*(*C_mb3)(4) + 3*(*C_mb3)(6))) - 
+							((8/27.)*((*C_mb3)(3) - (*C_mb3)(5) - 15*(*C_mb3)(6)))))));
+			
+			DataBlock<EvtComplex> Tnf(2,2);
+			Tnf.set(1,1,tnf_1_1);
+			Tnf.set(1,2,tnf_1_2);
+			Tnf.set(2,1,0); 
+			Tnf.set(2,2,tnf_2_2);
+			return Tnf;
+			
+		}
+		
+		DataBlock<EvtComplex> getT1(const double u) const{
+			return getTnf(u);
+		};
+		
+		//Gegenbauer moment
+		static double amom(const int& n) {
+			return 1/pow( (0.5*n + 1), 3);
+		};
+		
+		//Integrated LCDA of B for + and - signs
+		static double PhiK(const double& u) {
+			//Eqn 48			
+			const double amom1 = 0.2;
+			const double amom2 = 0.05;
+			const double lambda = 1.5;
+			const double uFac = (2*u) - 1;
+					
+			//We use the GSL Gegenbauer Polynomials below...
+			//should be equivalent to GegenbauerC in Mathematica 
+			const double mom1 = amom1*gsl_sf_gegenpoly_1(lambda,uFac);
+			const double mom2 = amom2*gsl_sf_gegenpoly_2(lambda,uFac);
+			double mom3_10 = 0;
+			for(int i = 3; i < 11; ++i){
+				mom3_10 += (amom(i)*gsl_sf_gegenpoly_n(i,lambda,uFac));
+			}
+			return 6*u*(1-u)*(1 + mom1 + mom2 + mom3_10);
+			
+		};
+		
+		ComplexPair PhiBint() const{
+			//see Eqn 54
+			const double Lhqet = MB - constants::mb;
+			const double w0 = (2*Lhqet)/3.;
+			const EvtComplex PhiBint_1(1/((2/3.)*Lhqet));
+			EvtComplex PhiBint_2(-gsl_sf_expint_Ei(q2/(MB*w0)), constants::Pi);
+			PhiBint_2 *= (pow(constants::E, (-q2/(MB*w0)))/w0);
+//			DEBUGPRINT("PhiBint[1]: ", PhiBint_1);//V
+//			DEBUGPRINT("PhiBint[2]: ", PhiBint_2);//V
+			return std::pair<const EvtComplex,const EvtComplex>(PhiBint_1,PhiBint_2);
+		};
+		
+		EvtComplex getT(const int& sign, const int a, const double& u){
+			DataBlock<EvtComplex> kT0 = ((qcd::alpha_s(C_mb3->getScale(), 5)/(4*constants::Pi))*constants::CF*getT1(u));
+			return T0(sign, a) + kT0(sign, a); 
+		};
+		
+		//form dictated by gsl_function
+		static double integralFunction1(double u, void* p){
+			struct int_params* params = (struct int_params*)p;
+
+			const int a = params->a;
+			const bool re = params->real;
+			
+			Integrate cal(params->e,params->MB,params->mK,params->q2,params->C_mb,params->C_mb3);
+			EvtComplex cResult = cal.PhiK(u) * cal.getT(1, a, u) * cal.PhiBint().first;
+
+			double result = 0.0;
+			//from playing about in mathematica, it seems I can integrate the Re and Im parts seperately
+			if(re){
+				result = real(cResult);
+			}else{
+				result = imag(cResult);
+			}
+			//std::cout << "Result for u = " << u << " is " << result << std::endl;
+			return result;
+		};
+		
+		//form dictated by gsl_function
+		static double integralFunction2(double u, void* p) {
+			struct int_params* params = (struct int_params*)p;
+
+			const int a = params->a;
+			const bool re = params->real;
+
+			Integrate cal(params->e,params->MB,params->mK,params->q2,params->C_mb,params->C_mb3);
+			EvtComplex cResult = cal.PhiK(u) * cal.getT(2, a, u) * cal.PhiBint().second;
+
+			double result = 0.0;
+			//from playing about in mathematica, it seems I can intregrate the Re and Im parts seperately
+			if(re) {
+				result = real(cResult);
+			} else {
+				result = imag(cResult);
+			}
+			return result;
+		};
+		
+		EvtComplex get_t(const int& a, const SignedPair<double>& xi, const SignedPair<EvtComplex>& C1) const{
+			
+			gsl_function re_one;
+			re_one.function = &Integrate::integralFunction1;
+			int_params re_one_params(a,e,MB,mK,q2, true, C_mb, C_mb3);
+			re_one.params = &re_one_params;
+
+			gsl_function im_one;
+			im_one.function = &Integrate::integralFunction1;
+			int_params im_one_params(a,e,MB,mK,q2, false, C_mb, C_mb3);
+			im_one.params = &im_one_params;
+			
+			gsl_function re_two;
+			re_two.function = &Integrate::integralFunction2;
+			int_params re_two_params(a,e,MB,mK,q2, true, C_mb, C_mb3);
+			re_two.params = &re_two_params;
+
+			gsl_function im_two;
+			im_two.function = &Integrate::integralFunction2;
+			int_params im_two_params(a,e,MB,mK,q2, false, C_mb, C_mb3);
+			im_two.params = &im_two_params;
+
+			const EvtComplex one(doIntegral(re_one),doIntegral(im_one));
+			const EvtComplex two(doIntegral(re_two),doIntegral(im_two));
+			
+			return (xi[a]*(qcd::as1(C_mb->getScale(),5)*constants::CF*C1[a])) +
+			(((constants::Pi*constants::Pi)/constants::Nc)*Xi[a]*((constants::fB*fK[a])/MB)*(one + two));
+			
+		};
+		
+		double doIntegral(const gsl_function& F) const{
+			/** This function actually calls the GSL integration routines.*/
+			
+			double result = 0;
+			double error = 0;
+			
+			const int nDivisions = 100;
+			const double accuracyGoal = 1e-4;
+			
+			gsl_integration_workspace* w = gsl_integration_workspace_alloc (nDivisions);
+			
+			const int intCode = gsl_integration_qag(&F, 0, 1, 0, accuracyGoal, nDivisions, GSL_INTEG_GAUSS61, w, &result, &error);
+			if(intCode != 0){
+				std::cerr << "Numerical integration did not return cleanly." << std::endl;
+				std::cerr << "Return code of the integration was " << intCode << std::endl;
+				std::cerr << "Result: " << result << " Error: " << error << std::endl;
+			}
+			gsl_integration_workspace_free(w);
+			return result;
+
+		};
+		
+	private:
+		
+		const double e;
+		const double MB;
+		const double mK;
+		const double q2;
+		const double reg;
+		
+		const WilsonCoefficientsD* const C_mb;
+		const WilsonCoefficientsD* const C_mb3;
+		
+		const SignedPair<double> Xi;
+		DataBlock<EvtComplex> T0;
+		SignedPair<double> fK;
+		
+	};
+	
+	
+	DEBUGPRINT("mbp: ", qcd::mb_pole(constants::mb));//V
+	DEBUGPRINT("h3(q^2,0): ", qcd::h(q2,0,parameters->C_mb3->getScale()));//V
+	DEBUGPRINT("h3(q^2,mc): ", qcd::h(q2,constants::mc,parameters->C_mb3->getScale()));//V
+	DEBUGPRINT("h3(q^2,mb): ", qcd::h(q2,constants::mb,parameters->C_mb3->getScale()));//V
+	DEBUGPRINT("h3(q^2,mbp): ", qcd::h(q2,qcd::mb_pole(constants::mb),parameters->C_mb3->getScale()));//V
+	DEBUGPRINT("Y3(q^2): ", qcd::Y(q2,*(parameters->C_mb3)));//V
+	
+	DEBUGPRINT("PolyLog[2, 10102.3465 - 78798.918 I]",PolyLog(2,EvtComplex(10102.3465,78798.918)));
+	DEBUGPRINT("PolyLog[2, -0.003465 - 0.00918 I]",PolyLog(2,EvtComplex(-0.003465,0.00918)));
+	
+	Integrate t1_int(e,MB,mK,q2,parameters->C_mb.get(),parameters->C_mb3.get());
+
+	SignedPair<double> xi(xi1,xi2);
+	SignedPair<EvtComplex> C1 = t1_int.getC1(F_2_7,F_8_7,F_1_9,F_2_9,F_8_9);
+	DEBUGPRINT("C1[1]: ", C1[1]);//V
+	DEBUGPRINT("C1[2]: ", C1[2]);//V
+	
+	EvtComplex t_1 = t1_int.get_t(1, xi, C1);
+	DEBUGPRINT("t_1: ", t_1);
+	EvtComplex t_2 = t1_int.get_t(2, xi, C1);
+	DEBUGPRINT("t_2: ", t_2);
+	
+	//add penguin corrections
+	const EvtComplex C9_1 = (2*constants::mb*MB*t_1)/(q2*xi[1]);
+	const EvtComplex C9_2 = (-2*constants::mb*t_2)/(MB*xi[2]);
+	SignedPair<EvtComplex> C9(C9_1,C9_2);
+	const EvtComplex Ceff1_9 = (*(parameters->C_mb))(9) + qcd::Y(q2,*(parameters->C_mb));
+	
+	DEBUGPRINT("C9[1]: ", C9[1]);//V
+	DEBUGPRINT("C9[2]: ", C9[2]);//V
+	DEBUGPRINT("Ceff1[9]: ", Ceff1_9);//V
+	
+	
+	//These terms are taken from eqns 4.10-4.17 of PR D61 074024 (2000),
+	//with a few alterations to fit in with Beneke.
+	
+	const double mk = mK/MB;
+	DEBUGPRINT("mk: ", mk);
+	
+	//eqn 4.10
+	const EvtComplex tensA = ((2*Ceff1_9*ffV)/(1 + mk)) + ((4*constants::mb*MB*(*(parameters->C_mb))(7)*ffT1)/(q2)) + ((2*C9[1]*xi[1]));
+	DEBUGPRINT("tensA: ", tensA);//V
+	tensors->at(A) = tensA;//will throw runtime exception if the vector is not correct
+	
+	//eqn 4.11
+	const EvtComplex tensB = (1 + mk)*((Ceff1_9*ffA1) + (2*constants::mb*MB*(1 - mk)*(*(parameters->C_mb))(7)*ffT2/q2)) +
+		(2*e*C9[1]*xi[1]/MB);
+	DEBUGPRINT("tensB: ", tensB);//V
+	tensors->at(B) = tensB;//will throw runtime exception if the vector is not correct
+	
+	//eqn 4.12
+	const EvtComplex tensC = (1./(1 - (mk*mk)))*(((1 - mk)*Ceff1_9*ffA2) + 
+			(2*(constants::mb/MB)*((*(parameters->C_mb)))(7)*(ffT3 + (((MB*MB) - (mK*mK))/q2)*ffT2)) + 
+			(C9[1]*xi[1]) - (C9[2]*xi[2]));
+	DEBUGPRINT("tensC: ", tensC);//V
+	tensors->at(C) = tensC;//will throw runtime exception if the vector is not correct
+		
+	//eqn 4.14
+	const EvtComplex tensE = (2*(*(parameters->C_mb))(10)*ffV)/(1 + mk);
+	DEBUGPRINT("tensE: ", tensE);//V
+	tensors->at(E) = tensE;//will throw runtime exception if the vector is not correct
+	
+	//eqn 4.15
+	const EvtComplex tensF = (1 + mk)*(*(parameters->C_mb))(10)*ffA1;
+	DEBUGPRINT("tensF: ", tensF);//V
+	tensors->at(F) = tensF;//will throw runtime exception if the vector is not correct
+	
+	//eqn 4.16
+	const EvtComplex tensG = (*(parameters->C_mb))(10)*(ffA2/(1 + mk));
+	DEBUGPRINT("tensG: ", tensG);//V
+	tensors->at(G) = tensG;//will throw runtime exception if the vector is not correct
+	
+	//eqn 4.17 of Ali and Ball, and also 3.18 of hep-ph/0004262
+	const EvtComplex tensH = (*(parameters->C_mb))(10)*( ((MB*MB/q2)*( (((1 + mk)*ffA1))  - ((1 - mk)*ffA2) - (2*mk*ffA0))) ) +
+		((mK*MB*ffA0*(*(parameters->C_mb))(12))/(constants::mmu*(constants::mb + constants::ms)));//scalar correction
+	tensors->at(H) = tensH;//will throw runtime exception if the vector is not correct
+	DEBUGPRINT("tensH: ", tensH);
+	
+	const EvtComplex tensS2 = (-MB*ffA0*(*(parameters->C_mb))(11))/(constants::mb + constants::ms);
+	tensors->at(S2) = tensS2;//will throw runtime exception if the vector is not correct
+	DEBUGPRINT("tensS2: ", tensS2);//V
+}

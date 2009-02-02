@@ -1,0 +1,74 @@
+#ifndef EVTBTOKSTARLLDURHAM_HH
+#define EVTBTOKSTARLLDURHAM_HH
+
+#include <map>
+#include <string>
+
+#include "EvtGenBase/EvtDecayAmp.hh"
+
+#include "EvtGenModels/EvtBToVllPhysicsModel.hh"
+#include "EvtGenModels/EvtBToVllWC.hh"
+#include "EvtGenModels/EvtBToKstarllQCDFactorisation.hh"
+#include "EvtGenModels/EvtBToVllParameterisedFFCalc.hh"
+
+class EvtBToKStarllDurham07 : public EvtDecayAmp {
+
+public:
+
+	EvtBToKStarllDurham07();
+	virtual ~EvtBToKStarllDurham07();
+
+	void getName(std::string& name) {
+		name = "EVTBTOKSTARLLDURHAM07";
+	}
+	EvtDecayBase* clone();
+
+	virtual void decay(EvtParticle *p);
+	virtual void init();
+	virtual void initProbMax();
+
+	virtual std::string commandName() {
+		return "EVTBTOKSTARLLDURHAM07_MODEL";
+	}
+	virtual void command(std::string cmd);
+	
+	static void printTime(const std::string& msg);
+
+private:
+	
+	EvtBToKStarllDurham07(const EvtBToKStarllDurham07&);
+	EvtBToKStarllDurham07& operator=(const EvtBToKStarllDurham07&);
+	
+	//must be static as is shared between models
+	static qcd::IPhysicsModel* _model;
+	static QCDFactorisation* _calculator;
+	static double _poleSize;
+	static double _lowq2Cut;
+	static double _highq2Cut;
+	static bdkszmm::PARAMETERIZATIONS _ffModel;
+	static unsigned int _timesCalled;
+	static bool _calcAFBZero;
+	
+protected:
+	
+	double getPoleSize() const{
+		return _poleSize;
+	}
+	
+	void setPoleSize(const double poleSize){
+		_poleSize = poleSize;
+	}
+
+  bool isWithinQ2Range(const double q2){
+    return ( ((q2+1e-5) > _lowq2Cut) && ((q2-1e-5) < _highq2Cut) ) ? true : false;
+  }
+  
+  void handleCommand(const std::string& key, const std::string& value);
+  void handleModelCommand(const std::string& model);
+  void getOptions(const std::string& cmd, std::map<std::string, std::string>* optionsMap) const;
+   
+
+};
+
+#endif /* EVTBTOKSTARLLDURHAM */
+

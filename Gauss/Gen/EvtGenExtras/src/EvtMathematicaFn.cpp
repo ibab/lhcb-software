@@ -1,0 +1,38 @@
+#include "EvtGenBase/EvtMathematicaFn.hh"
+#include "gsl/gsl_sf_dilog.h"
+#include "gsl/gsl_sf_result.h"
+
+#include <cassert>
+
+EvtComplex PolyLog(const int n, const EvtComplex value){
+	assert(n == 2);//We can only handle dilogarithms
+	
+	gsl_sf_result re;
+	gsl_sf_result im;
+	
+	gsl_sf_complex_dilog_e(abs(value),arg(value),&re,&im);
+	return EvtComplex(re.val,im.val);
+}
+
+double PolyLog(const int n, const double value){
+	assert(n == 2);//We can only handle dilogarithms
+	return gsl_sf_dilog(value);
+}
+
+template<>
+double Chop(const double value){
+	const double sigma = 1e-10;
+	return (fabs(0.0 - value) < sigma) ? 0.0 : value;
+}
+
+EvtComplex Sqrt(const EvtComplex value){
+	return sqrt(Chop(value));
+}
+
+EvtComplex Sqrt(const double value){
+	return sqrt_real(Chop(value));
+}
+
+EvtComplex Complex(const double re, const double im){
+	return EvtComplex(re,im);
+}
