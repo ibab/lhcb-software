@@ -1,0 +1,8 @@
+!-----------------------------------------------------------------------------
+! Package     : Online/Camera
+! Responsible : Gareth Rogers
+! Purpose     : Package for the CAMERA application and supporting files.
+!-----------------------------------------------------------------------------
+
+! 2009-02-02 - Gareth Rogers
+ - Initial release of the CAMERA package.

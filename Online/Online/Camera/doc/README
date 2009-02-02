@@ -1,0 +1,99 @@
+CAMERA - Commissioning and Monitoring Error Reporting Application
+
+Camera is a network application specifically built for communication and error logging for the commissioning and monitoring. It is based on servers, that handle incoming errors and redistribute them to any number of clients. Error messages contain a header line with the sender name and a severity level and a summary of the error. Additionally, there can be appended data, consisting of a combination of texts timestamps graphs or histograms. The purpose of this is to not only raise and error, but append the exact information, that error was derived from. This differs from DIM, in that the histogram is static and will be saved alongside the error message. (The appendix can contain DIM addresses to inform the shifter of the current status as well.) The whole system is optimised for low latencies.
+
+Camera has been integrated with the LHCb software in the form of a cmt package that provides a group of executables and scripts that are used to start the CAMERA servers and GUIs. Further a Gaudi tool is provided to allow Gaudi algorithms to submit messages to the CAMERA server.
+
+
+Running CAMERA
+
+CAMERA is started using a combination of the scripts found in the scripts directory and the configuration files in the etc directory.
+
+If the servers are to be run on localhost then no modifications are required and RunCamServ.sh can be used to start the web server and CAMERA server, and RunCamera.sh to start the CAMERA GUI. Alternatively Run.sh will do both. It is recommed to create a soft link, $HOME/Camera, which points to the area to store the files that CAMERA saves. These can become quite large. /tmp is sufficient if the files do not need to be saved.
+
+If the CAMERA servers are to run on a specific machine then it is recommend to either create a private copy of the Online/Camera package or copy the etc and scripts directory to a steering package as in the case Panoptes the RICH data quality package. The latter is recommended. The scripts will need to be modified to ensure they point to the appropriate host and directories. If running for a long time CAMERA can generate a lot of files.
+
+The etc directory contains the configuration files for the CAMERA server, camserv.conf, and CAMERA web server, webs.conf. Some variable will need to be changed in order to run places other than local host.
+
+camserv.conf:
+
+datadir
+    Set to a directory where the data is to be stored by the CAMERA server. 
+webdir
+    The remaining path of the web server websdir that converts it to the httproot. 
+webserver
+    Name of the computer the web server is running on. Typically it will match that which the CAMERA server is run on, I don't think it has been tested with the web server and CAMERA server running on different machines. 
+
+webs.conf:
+
+websdir
+    Directory that the server will use for the ROOT of its file operations. 
+httproot
+    Full path to save the extra information that the algorithms submit to the CAMERA server and also where the warnings.out containing the header information is saved. 
+
+These two should be set to an area with at least a couple of gigabytes of space, home areas on lxplus are a bad idea as are areas with similar space restrictions.
+
+
+The scripts directory contains several scripts for starting and maintaining CAMERA.
+
+runCamServ.sh:
+
+No arugments, it starts the CAMERA and web servers.
+
+Scripts running not on localhost should have a slight modification before being used on a specific host. It contains the commented line 
+if [ "$HOST" = "localhost" ]; then
+
+and corresponding `fi' statement and `else' region. This is used simply to prevent CAMERA servers being started on `random' PCs, it can set to the name of the PC to run on and this will prevent accidental starting of CAMERA servers.
+
+export CAMDIR=$HOME/Camera
+
+Set this to the directory to that the CAMERA server will write the files to and then the following line simply ensures that the directory to write the data to exists.
+
+mkdir -p $CAMDIR/data
+
+cd $CAMERAROOT/scripts #Ensures we find the right config files.
+CamWebServ.exe > $CAMDIR/log/webs.log 2>&1 &
+CameraServ.exe > $CAMDIR/log/cams.log 2>&1 &
+
+The config files must be in ./etc where ./ is the directory the servers are started, this first line just ensures we are in that directory. The next two lines start the web server and CAMERA server redirecting the output to log files. These should be checked once the script has finished to ensure the server starts correctly.
+
+$CAMERAROOT/newCameraLog.sh
+
+This is a script that will close the existing warnings.out file and move it to a file containing todays date for future reference. The package that contains the script should be updated.
+
+
+runCamera.sh
+
+Starts the CAMERA GUI to view messages. Takes the name of the CAMERA server and full path and name of the warnings.out file to use if not that in default location. Generally only requires the server name as an arugment.
+
+export CAMCACHE=/tmp/cam/camcache
+
+The CAMERA client caches the histograms it is sent from the server, a copy is always kepy server side so it need not be permanent.
+
+An example line showing how to set up a ssh tunnel to access a CAMERA server is also present in the file.
+
+
+run.sh
+
+A file intended to (re)start the CAMERA servers and then launch the GUI. The file hardcodes the server to be used and assumes the default warnings.out file.
+
+$CAMERAROOT/runCamera.sh localhost $1
+
+This line should be updated to reflect the server where CAMERA is running and the steering package holding it.
+
+
+newCameraLog.sh:
+
+Called with a comment to send to CAMERA indicating what has happened.
+
+export SERVER=localhost
+This needs to be set to the name of the PC that is running the CAMERA server.
+
+
+commentCamera.sh:
+
+Sends a comment to CAMERA with the current user name as an identifier. The comment is simply given as an argument to the script.
+
+
+
+Finally, in Panoptes-Default.py the cameraServer property of the Panoptes configurable should be set to the PC that is running the CAMERA server e.g. Pantopes().cameraServer = 'localhost'. 
