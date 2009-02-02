@@ -2,6 +2,10 @@
 ! Responsible : Erica Polycarpo, Miriam Gandelman
 !---------------------------------------------------------------------
 
+!======================== MuonID v6r1 2009-02-02 =====================
+! 2009-02-02 - Miriam Gandelman
+ - Change the extrapolation Z position to one that is saved to the DST 
+
 !======================== MuonID v6r0 2009-01-12 =====================
 ! 2009-01-12 - Marco Cattaneo
  - Remove empty python ConfigurableUser, python options are sufficient 

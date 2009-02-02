@@ -796,7 +796,9 @@ StatusCode MuonID::trackExtrapolate(const LHCb::Track *pTrack){
   // get first state for the preSel cut
   const LHCb::State * state1 = &(pTrack->firstState());
   // get state closest to M1 for extrapolation
-  const LHCb::State * state = &(pTrack->closestState(m_stationZ[0]));
+  //const LHCb::State * state = &(pTrack->closestState(m_stationZ[0]));
+  //change to use z=9540, which is a state that is saved to the DSTs
+  const LHCb::State * state = &(pTrack->closestState(9540.));
 
   if(!state1){
     err() << " Failed to get 1st state from track " << endreq;
@@ -875,7 +877,7 @@ LHCb::Track* MuonID::makeMuonTrack(const LHCb::MuonPID& mupid){
   LHCb::Track* mtrack = new LHCb::Track( mupid.key() );
 
   const LHCb::Track* mother = mupid.idTrack();
-  mtrack->addToStates( mother->closestState(m_stationZ[0]) );
+  mtrack->addToStates( mother->closestState(9540.) );
 
   std::vector<LHCb::MuonCoord*> & mcoord = m_muonMap[(LHCb::MuonPID*) &mupid];
   std::vector<LHCb::MuonCoord*>::const_iterator iCoord;
