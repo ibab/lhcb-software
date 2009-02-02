@@ -63,7 +63,9 @@ namespace LHCb {
    
     bool m_ARPMe;
  
-    bool m_Offline; 
+    bool m_Offline;
+
+    bool m_Debug;  
  
     enum InjectorState { NOT_READY, READY, RUNNING, STOPPED };
  
@@ -197,8 +199,8 @@ namespace LHCb {
     StatusCode logMEPReqs(); 	
  
     /// Copy the content of the src bank in dest bank. except for run number and GPS time
-    void copyOdinBank(OnlineRunInfo *dest, OnlineRunInfo *src);
-
+    void copyOdinBank(OnlineRunInfo **dest, OnlineRunInfo **src);
+ 
     /// In order to send ARP request at initialization
     StatusCode pingHLTNodes();
    
