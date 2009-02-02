@@ -1,4 +1,4 @@
-// $Id: Particle2MCAssociatorBase.h,v 1.3 2009-02-02 13:04:27 jpalac Exp $
+// $Id: Particle2MCAssociatorBase.h,v 1.4 2009-02-02 14:33:13 jpalac Exp $
 #ifndef PARTICLE2MCASSOCIATORBASE_H 
 #define PARTICLE2MCASSOCIATORBASE_H 1
 
@@ -12,6 +12,14 @@
 
 /** @class Particle2MCAssociatorBase Particle2MCAssociatorBase.h
  *  
+ *  Common implementation for descendants of IParticle2MCAssociator.
+ *  Mainly inline helper methods for common implementation of host of 
+ *  similar methods in the interface.
+ *  Set of methods is self-consistent. Derived classes only need to implement
+ *  method
+ *  @code 
+ *  double weight(const LHCb::Particle*, const LHCb::MCParticle)
+ *  @endcode
  *
  *  @author Juan PALACIOS
  *  @date   2009-01-30
