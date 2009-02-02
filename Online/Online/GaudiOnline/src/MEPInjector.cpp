@@ -167,7 +167,9 @@ MEPInjector::MEPInjector(const std::string & name, ISvcLocator * pSvcLocator):Al
 
     declareProperty("ARPME", m_ARPMe=false);
 
-    declareProperty("Offline", m_Offline=true); 
+    declareProperty("Offline", m_Offline=true);
+
+    declareProperty("Debug", m_Debug = false); 
 
     m_InjState = NOT_READY;
 }
@@ -177,7 +179,7 @@ MEPInjector::MEPInjector(const std::string & name, ISvcLocator * pSvcLocator):Al
 /// Initialize
 StatusCode MEPInjector::initialize()
 {
-    static MsgStream log(msgSvc(), name());	//Message stream for output
+    static MsgStream msgLog(msgSvc(), name());	//Message stream for output
 
 
     m_gotOdin = false;
@@ -188,7 +190,7 @@ StatusCode MEPInjector::initialize()
     for(std::vector<std::string>::iterator ite=m_Tell1Boards.begin(); ite != m_Tell1Boards.end(); ite+=3) 
     {
         if(!m_AutoMode && strncmp((ite+1)->c_str(), "tfc", 3)==0) {
-            log << MSG::INFO << "No MEP for " << *ite << endmsg;
+            msgLog << MSG::INFO << "No MEP for " << *ite << endmsg;
             continue; 
         }
         u_int32_t tell1id = MEPRxSys::IPStringToBits(*ite);
@@ -202,12 +204,12 @@ StatusCode MEPInjector::initialize()
         strAllocatedMEPs = strAllocatedMEPs + MEPRxSys::dotted_addr(tell1id) + "; "; 
     }
 
-    log << MSG::INFO << "Allocated MEPs : "<< endmsg;
-    log << MSG::INFO << strAllocatedMEPs << endmsg;
-    log << MSG::INFO << "Number : " << m_MapTell1MEPs.size() << endmsg; 
+    msgLog << MSG::INFO << "Allocated MEPs : "<< endmsg;
+    msgLog << MSG::INFO << strAllocatedMEPs << endmsg;
+    msgLog << MSG::INFO << "Number : " << m_MapTell1MEPs.size() << endmsg; 
    
     if(!service("MonitorSvc", m_MonSvc).isSuccess()) {
-        ERRMSG(log, "Failed to access to monitor service.");
+        ERRMSG(msgLog, "Failed to access to monitor service.");
         return StatusCode::FAILURE;
     }
     else {
@@ -237,13 +239,13 @@ StatusCode MEPInjector::initialize()
 
     if(pthread_sigmask(SIG_BLOCK, &injSet, NULL))
     {   
-        ERRMSG(log, "sig mask error");
+        ERRMSG(msgLog, "sig mask error");
         return StatusCode::FAILURE;
     }
 */
 
     if (m_MEPProto < 0 || m_MEPProto > 255) {
-	ERRMSG(log, "IPProtoIn is an unsigned 8 bit quantity");
+	ERRMSG(msgLog, "IPProtoIn is an unsigned 8 bit quantity");
         return StatusCode::FAILURE;
     }
     std::string errmsg;
@@ -254,7 +256,7 @@ StatusCode MEPInjector::initialize()
     if (MEPRxSys::parse_addr(m_StrOdinIPAddr, m_BitOdinIPAddr) != 0) {
         std::string msg;
         if(MEPRxSys::addr_from_name(m_StrOdinIPAddr, m_BitOdinIPAddr, msg) != 0) {
-            ERRMSG(log, " Odin address conversion : " + msg);
+            ERRMSG(msgLog, " Odin address conversion : " + msg);
             return StatusCode::FAILURE;
         }
     }
@@ -263,7 +265,7 @@ StatusCode MEPInjector::initialize()
 
     /// This socket allows us to edit IP header
     if ((m_ToHLTSock =  MEPRxSys::open_sock_arb_source(m_MEPProto, m_MEPBufSize, errmsg)) < 0)    {
-        ERRMSG(log, "Failed to open socket:" + errmsg);
+        ERRMSG(msgLog, "Failed to open socket:" + errmsg);
 	return StatusCode::FAILURE;
     }
 
@@ -275,20 +277,20 @@ StatusCode MEPInjector::initialize()
     
 
     if(sem_init(&m_RawEventsCount, 0, 0) == -1) {
-            ERRMSG(log, "Failed to initialize semaphore");
+            ERRMSG(msgLog, "Failed to initialize semaphore");
             perror("sem_init");
             exit(errno);
         }
 
     if (pthread_mutex_init(&m_SyncReadProcess, NULL)) {
-        ERRMSG(log, "Failed to initialize mutex");
+        ERRMSG(msgLog, "Failed to initialize mutex");
         return StatusCode::FAILURE;
     }
 
 
     if (!m_AutoMode) {
         if(!service("IncidentSvc", m_IncidentSvc).isSuccess()) {
-            ERRMSG(log, "Failed to access to incident service.");
+            ERRMSG(msgLog, "Failed to access to incident service.");
             return StatusCode::FAILURE;
         }
         m_IncidentSvc->addListener(this, "DAQ_CANCEL");
@@ -298,14 +300,14 @@ StatusCode MEPInjector::initialize()
         m_OdinMEP = new(memory) MEPEvent(0);
 
         if (m_OdinMEP == NULL) {
-            ERRMSG(log, "Odin MEP Buffer Allocation failed");
+            ERRMSG(msgLog, "Odin MEP Buffer Allocation failed");
             return StatusCode::FAILURE;
         }
 
-        log<<MSG::DEBUG << "IP to send to odin : "<<m_OdinIfIPAddr << " interface : "<<m_OdinEthInterface << endmsg; 
+        msgLog << MSG::DEBUG << "IP to send to odin : "<<m_OdinIfIPAddr << " interface : "<<m_OdinEthInterface << endmsg; 
 
 	if ((m_FromOdinSock = MEPRxSys::open_sock(m_MEPProto, m_OdinBufSize, m_OdinEthInterface, m_OdinIfIPAddr, false, errmsg)) < 0) {
-            ERRMSG(log, "Failed to open socket:" + errmsg);
+            ERRMSG(msgLog, "Failed to open socket:" + errmsg);
             return StatusCode::FAILURE;
 	}
 
@@ -313,7 +315,7 @@ StatusCode MEPInjector::initialize()
                                               m_MEPReqBufSize, 
 					      m_HLTEthInterface, m_HLTIfIPAddr, 
                                               true, errmsg)) < 0) {
-            ERRMSG(log, "Failed to open socket:" + errmsg);
+            ERRMSG(msgLog, "Failed to open socket:" + errmsg);
             return StatusCode::FAILURE;
         }
  
@@ -321,40 +323,40 @@ StatusCode MEPInjector::initialize()
                                               m_MEPReqBufSize, 
                                               m_OdinEthInterface, m_OdinIfIPAddr, 
                                               true, errmsg)) < 0) { 
-            ERRMSG(log, "Failed to open socket:" + errmsg);
+            ERRMSG(msgLog, "Failed to open socket:" + errmsg);
             return StatusCode::FAILURE;
         }
 
 
         if(sem_init(&m_OdinCount, 0, 0) == -1) {
-            ERRMSG(log, "Failed to initialize semaphore");
+            ERRMSG(msgLog, "Failed to initialize semaphore");
             perror("sem_init");
             exit(errno);
         }
   
         if(sem_init(&m_MEPReqCount, 0, 0) == -1) {
-            ERRMSG(log, "Failed to initialize semaphore");
+            ERRMSG(msgLog, "Failed to initialize semaphore");
             perror("sem_init");
             exit(errno);
         }  
 
 
 	if (pthread_mutex_init(&m_SyncMainOdin, NULL)) {
-            ERRMSG(log, "Failed to initialize mutex");
+            ERRMSG(msgLog, "Failed to initialize mutex");
             return StatusCode::FAILURE;
 	}
         if (pthread_mutex_init(&m_SyncReqOdin, NULL)) {
-            ERRMSG(log, "Failed to initialize mutex");
+            ERRMSG(msgLog, "Failed to initialize mutex");
             return StatusCode::FAILURE;
         }
 
 
 	if(pthread_create(&m_ThreadOdinMEPManager, NULL, OdinMEPMgrStartup, this)) {
-	    ERRMSG(log, "Failed to start MEP Odin Manager Thread ");
+	    ERRMSG(msgLog, "Failed to start MEP Odin Manager Thread ");
             return StatusCode::FAILURE;
 	}
 	if(pthread_create(&m_ThreadMEPReqManager, NULL, MEPReqMgrStartup, this)) {
-	    ERRMSG(log, "Failed to start MEP Request Manager Thread ");
+	    ERRMSG(msgLog, "Failed to start MEP Request Manager Thread ");
             return StatusCode::FAILURE;
 	}
     }
@@ -363,19 +365,19 @@ StatusCode MEPInjector::initialize()
 
 
     if(pthread_create(&m_InjectorProcessing, NULL, injectorProcessingStartup, this)) {
-        ERRMSG(log, "Failed to start Injector Processing Thread ");
+        ERRMSG(msgLog, "Failed to start Injector Processing Thread ");
         return StatusCode::FAILURE;
     }
 /*
     cpu_set_t mask;
     CPU_ZERO(&mask);
     if(pthread_getaffinity_np(m_InjectorProcessing, CPU_SETSIZE, &mask)) {
-        ERRMSG(log, "Failed to get InjectorProcessing Affinity");
+        ERRMSG(msgLog, "Failed to get InjectorProcessing Affinity");
         return StatusCode::FAILURE;
     }
 
     for(int i=0; i<8; ++i) {
-        if(CPU_ISSET(i, &mask)) log << MSG::INFO << "CPU " << i << " is set for InjectorProcessing Thread" << endmsg;
+        if(CPU_ISSET(i, &mask)) msgLog << MSG::INFO << "CPU " << i << " is set for InjectorProcessing Thread" << endmsg;
     }
     exit(0);
 */
@@ -385,18 +387,18 @@ StatusCode MEPInjector::initialize()
     if(!m_AutoMode)
     {
         m_InjState = READY;
-        log << MSG::DEBUG << "Injector initialized in TFC mode" << endmsg;
+        msgLog << MSG::DEBUG << "Injector initialized in TFC mode" << endmsg;
     }
     else
     { 
         m_InjState = RUNNING;
-        log << MSG::DEBUG << "Injector initialized in automode" << endmsg;
+        msgLog << MSG::DEBUG << "Injector initialized in automode" << endmsg;
     }
 
 
 /*
     if(clock_gettime(CLOCK_REALTIME, &m_RTInitTime)) {
-        ERRMSG(log, "clock_gettime failed");
+        ERRMSG(msgLog, "clock_gettime failed");
         return StatusCode::FAILURE;
     }
   */
@@ -408,7 +410,7 @@ StatusCode MEPInjector::initialize()
     }
     
     if( ( m_CreditsFD = open(strFile.c_str(), O_WRONLY | O_CREAT ) ) < 0) {
-        ERRMSG(log, "credits log file could not be written");
+        ERRMSG(msgLog, "credits log file could not be written");
         return StatusCode::FAILURE;
     }
 */
@@ -419,10 +421,10 @@ StatusCode MEPInjector::initialize()
 
 StatusCode MEPInjector::logMEPReqs() 
 {/*
-    MsgStream log(msgSvc(), name());     //Message stream for output
+    MsgStream msgLog(msgSvc(), name());     //Message stream for output
 
     if(m_CreditsFD < 0) {
-        ERRMSG(log, "Bad log file descriptor");
+        ERRMSG(msgLog, "Bad log file descriptor");
         return StatusCode::FAILURE;
     }
     int err=0;
@@ -433,11 +435,11 @@ StatusCode MEPInjector::logMEPReqs()
     memcpy(buf + 3*sizeof(int), &m_TotMEPReqRx, sizeof(int));
     if( (err= write(m_CreditsFD, buf, sizeof(buf)) )< sizeof(buf)) {
         if(err < 0) { 
-            ERRMSG(log, "Error on write");
+            ERRMSG(msgLog, "Error on write");
         }
         else 
         {
-            ERRMSG(log, "Log bytes were not all written ..."); 
+            ERRMSG(msgLog, "Log bytes were not all written ..."); 
         }
         return StatusCode::FAILURE;
     }*/
@@ -446,44 +448,80 @@ StatusCode MEPInjector::logMEPReqs()
 
 StatusCode MEPInjector::pingHLTNodes()
 {
-    MsgStream log(msgSvc(), name());     //Message stream for output
+    MsgStream msgLog(msgSvc(), name());     //Message stream for output
 
     char icmpDatagram[84];
     bzero(icmpDatagram, 84);
-    log << MSG::DEBUG << "ping to HLT nodes" << endmsg;
+    msgLog << MSG::DEBUG << "ping to HLT nodes" << endmsg;
     for(std::vector<std::string>::iterator ite = m_HLTNodes.begin(); ite != m_HLTNodes.end(); ++ite)
     { 
-        log << MSG::DEBUG << " ping from " << m_HLTIfIPAddr << " to " << *ite << endmsg; 
+        msgLog << MSG::DEBUG << " ping from " << m_HLTIfIPAddr << " to " << *ite << endmsg; 
         int n =
             MEPRxSys::send_msg_arb_source(m_ToHLTSock, 0x01, MEPRxSys::IPStringToBits(m_HLTIfIPAddr),
                                           inet_addr(ite->c_str()), icmpDatagram, 84);
         if(n!=84) {
-            log << MSG::ERROR << "Ping failed" << endmsg;
+            msgLog << MSG::ERROR << "Ping failed" << endmsg;
             return StatusCode::FAILURE;  
         } 
-        log << MSG::DEBUG << *ite << " pinged in order to add it to the ARP table" << endmsg;
+        msgLog << MSG::DEBUG << *ite << " pinged in order to add it to the ARP table" << endmsg;
     }
     return StatusCode::SUCCESS;
 }
 
 
-void MEPInjector::copyOdinBank(OnlineRunInfo *dest, OnlineRunInfo *src) 
+void MEPInjector::copyOdinBank(OnlineRunInfo **dest, OnlineRunInfo **src) 
 {
+    unsigned int *word9tfc, *word9tape;
+    MsgStream msgLog(msgSvc(), name());     //Message stream for output
     if(dest != NULL && src != NULL) {
-    dest->EventType = src->EventType;
-    dest->CalibrationStep = src->CalibrationStep;
-    dest->Orbit = src->Orbit;
-    dest->detStatus = src->detStatus;
-    dest->errors = src->errors;
-    dest->bunchID = src->bunchID;
-    dest->TAEWindow = src->TAEWindow;
-    dest->pad0 = src->pad0;
-    dest->triggerType = src->triggerType;
-    dest->readoutType = src->readoutType;
-    dest->forceBit = src->forceBit;
-    dest->bxType = src->bxType;
-    dest->bunchCurrent = src->bunchCurrent;
-    }      
+        if(*dest != NULL && *src !=NULL) {
+            if(m_Debug) {
+                msgLog << MSG::DEBUG << "        | From TFC | From Tape " << endmsg;
+                msgLog << MSG::DEBUG << "Run     |"<< (*dest)->Run << " | " << (*src)->Run << endmsg; 
+                msgLog << MSG::DEBUG << "EvtType |"<< (*dest)->EventType << " | " << (*src)->EventType << endmsg; 
+                msgLog << MSG::DEBUG << "Calib   |"<< (*dest)->CalibrationStep << " | " << (*src)->CalibrationStep << endmsg; 
+                msgLog << MSG::DEBUG << "Orbit   |"<< (*dest)->Orbit << " | " << (*src)->Orbit << endmsg; 
+                msgLog << MSG::DEBUG << "L0Id    |"<< (*dest)->L0ID << " | " << (*src)->L0ID << endmsg; 
+                msgLog << MSG::DEBUG << "GPS     |"<< (*dest)->GPSTime << " | " << (*src)->GPSTime << endmsg; 
+                unsigned int *word8tfc, *word8tape;
+                word8tfc=(unsigned int*) *dest;
+                word8tfc+=7;
+                word8tape=(unsigned int*) *src;
+                word8tape+=7;
+                msgLog << MSG::DEBUG << "Word 8  |"<< *word8tfc   << " | " << *word8tape << endmsg;
+
+            }
+    
+            (*dest)->EventType = (*src)->EventType;
+            (*dest)->CalibrationStep = (*src)->CalibrationStep;
+            (*dest)->Orbit = (*src)->Orbit;
+
+ //           (*dest)->detStatus = (*src)->detStatus; //word 8
+ //           (*dest)->errors = (*src)->errors;       
+ //           (*dest)->bunchID = (*src)->bunchID;     //word 9
+/*
+            (*dest)->TAEWindow = (*src)->TAEWindow;   
+            (*dest)->pad0 = (*src)->pad0;
+            (*dest)->triggerType = (*src)->triggerType;
+            (*dest)->readoutType = (*src)->readoutType;
+            (*dest)->forceBit = (*src)->forceBit;
+            (*dest)->bxType = (*src)->bxType;
+            (*dest)->bunchCurrent = (*src)->bunchCurrent;
+*/            
+
+            word9tfc = (((unsigned int *) (*dest))+8);
+            word9tape = (((unsigned int *) (*src))+8); 
+            if(m_Debug) 
+                msgLog << MSG::DEBUG << "Word 9  |"<< *word9tfc   << " | " << *word9tape << endmsg;  
+            *word9tfc = ((*word9tfc)&0xfff00000) | ((*word9tape)&0x000fffff);
+
+        }     
+        else
+        {
+            if(*dest == NULL) msgLog << MSG::WARNING << "No Odin bank where to write information" << endmsg;
+            if(*src == NULL) msgLog << MSG::WARNING << "No Odin bank where to get information" << endmsg;
+        }
+    }
 }
 
 /// Read an event from a MDF file, and store each banks in the future MEP
@@ -492,7 +530,7 @@ StatusCode MEPInjector::readEvent()
     static int icalled = 0;
     icalled++;
 
-    static MsgStream log(msgSvc(), name());	//Message stream for output
+    static MsgStream msgLog(msgSvc(), name());	//Message stream for output
 
     static unsigned int nbEv =0;
     int tell1id = 0;
@@ -506,7 +544,7 @@ StatusCode MEPInjector::readEvent()
     retVal=sem_wait(&m_RawEventsCount);
     if(retVal==-1)
     {   
-        ERRMSG(log, "Waiting on the semaphore");
+        ERRMSG(msgLog, "Waiting on the semaphore");
         perror("sem_wait");
         exit(errno);
     }
@@ -515,7 +553,7 @@ StatusCode MEPInjector::readEvent()
     /// protected by a mutex
 
     if(pthread_mutex_lock(&m_SyncReadProcess)) {
-        ERRMSG(log, " Locking mutex");
+        ERRMSG(msgLog, " Locking mutex");
         return StatusCode::FAILURE;
     }
 
@@ -529,12 +567,12 @@ StatusCode MEPInjector::readEvent()
 
 
     if(pthread_mutex_unlock(&m_SyncReadProcess)) {
-        ERRMSG(log, " Unlocking mutex");
+        ERRMSG(msgLog, " Unlocking mutex");
         return StatusCode::FAILURE;
     }
 
     if(! raw) {
-        log << MSG::ERROR << "Invalid raw event" << endmsg;
+        msgLog << MSG::ERROR << "Invalid raw event" << endmsg;
     }
     else
     {
@@ -542,28 +580,28 @@ StatusCode MEPInjector::readEvent()
         if (!m_AutoMode) {
 
             if(m_OdinMEP->size() == 0) {
-                log << MSG::ERROR << "No Odin MEP received, the algorithm should not be there ..." << endmsg;
+                msgLog << MSG::ERROR << "No Odin MEP received, the algorithm should not be there ..." << endmsg;
                 return StatusCode::FAILURE;
             }
 
-            log << MSG::DEBUG << "nbEv = " << nbEv << "; packing factor = " << m_PackingFactor << endmsg;   
+            msgLog << MSG::DEBUG << "nbEv = " << nbEv << "; packing factor = " << m_PackingFactor << endmsg;   
 
             /// Processing of the Odin banks, basically remove them
 	    std::vector < RawBank * >bnks = raw->banks(RawBank::ODIN);
-            log << MSG::DEBUG << "Number of Odin bank read from file : " << bnks.size() << endmsg; 
+            msgLog << MSG::DEBUG << "Number of Odin bank read from file : " << bnks.size() << endmsg; 
             if(bnks.size() > 1) {
-                log << MSG::WARNING << "More than one ODIN bank in a run" << endmsg;
+                msgLog << MSG::WARNING << "More than one ODIN bank in a run" << endmsg;
                  
             }
-	        for (std::vector < RawBank * >::iterator ib = bnks.begin();
+	    for (std::vector < RawBank * >::iterator ib = bnks.begin();
 		    ib != bnks.end(); ++ib) {
-                    if(m_Offline) {
-                        char *ccur = (((char *) m_OdinMEP) + MEPEVENTOFFSET);
-                        OnlineRunInfo *ori_to = ( OnlineRunInfo *) ccur+IPHDRSZ+MEPHDRSZ+nbEv*(ODFRAGSZ) + FRAGHDRSZ + BKHDRSZ; 
-                        OnlineRunInfo *ori_tape = (OnlineRunInfo * )((*ib)->data());
-                        copyOdinBank(ori_to, ori_tape);   
-	            }
-		    raw->removeBank(*ib);
+                if(m_Offline) {
+                    char *ccur = (((char *) m_OdinMEP) + MEPEVENTOFFSET);
+                    OnlineRunInfo *ori_to = ( OnlineRunInfo *) (ccur+IPHDRSZ+MEPHDRSZ+nbEv*(ODFRAGSZ) + FRAGHDRSZ + BKHDRSZ); 
+                    OnlineRunInfo *ori_tape = (OnlineRunInfo * )((*ib)->data());
+                    copyOdinBank(&ori_to, &ori_tape);   
+	        }
+                raw->removeBank(*ib);
             } 
             /// END OF ODIN BANKS PROCESSING
 	}
@@ -580,16 +618,16 @@ StatusCode MEPInjector::readEvent()
 
 
         /// Processing of the OT banks, insert empty banks for the absents
-        int iot = 0;
+        int iot = 1;
         bnks = raw->banks(RawBank::OT);
         for (std::vector < RawBank * >::iterator ib = bnks.begin();
             ib != bnks.end(); ++ib) {
-            ++iot;
             RawBank *rb = *ib;
             while(rb->sourceID() > iot && iot < 49) /// insert empty raw bank
             {
                 OTFIX(iot++, nbEv);
             }   
+            ++iot;
         }
         while(iot < 49) {
             OTFIX(iot++, nbEv);
@@ -614,7 +652,7 @@ StatusCode MEPInjector::readEvent()
                  
   
                 if (hdr->totalSize() == 0 || hdr->magic() != 0xCBCB ) {
-		    ERRMSG(log, "Severe error in fragment");
+		    ERRMSG(msgLog, "Severe error in fragment");
 		    return StatusCode::FAILURE;  
 		}
  
@@ -626,7 +664,7 @@ StatusCode MEPInjector::readEvent()
                 
 		tell1id = getTell1IP(hdr->type(), hdr->sourceID());
 		if (tell1id == 0) { 
-//                    log << MSG::DEBUG<<"Unknown source "<<hdr->sourceID()<<" or type "<<RawBank::typeName(hdr->type()) << " no tell1 found, execution continue "<<endmsg; 
+//                    msgLog << MSG::DEBUG<<"Unknown source "<<hdr->sourceID()<<" or type "<<RawBank::typeName(hdr->type()) << " no tell1 found, execution continue "<<endmsg; 
 		    continue;
 		}
 
@@ -713,7 +751,7 @@ StatusCode MEPInjector::OTFIX(int iot, int nbEv) {
     MEPBkHdr emptyBk;
     emptyBk.m_type=RawBank::OT;
     emptyBk.m_version=0x3F;
-    emptyBk.m_len=8;
+    emptyBk.m_len=9;
     emptyBk.m_magic = 0xCBCB;   
     emptyBk.m_sourceID = iot;
 
@@ -753,16 +791,17 @@ StatusCode MEPInjector::OTFIX(int iot, int nbEv) {
         ccur = (((char *) curmep) + curmep->size() + MEPEVENTOFFSET);
         mf = ( MEPFrgHdr *) ccur;
         mf->m_l0IDlow = m_EvtID;
-        mf->m_len = 8;
+        mf->m_len = 12;
         mh->m_totLen += FRAGHDRSZ;
     }
     else
     {
-        mf->m_len +=8;
+        mf->m_len +=12;
     }
     ccur = ((char *)curmep) + MEPEVENTOFFSET + IPHDRSZ + mh->m_totLen;
-    mh->m_totLen += sizeof(emptyBk);
+    mh->m_totLen += sizeof(emptyBk) +4;
     memcpy(ccur, (void *) &emptyBk, sizeof(emptyBk));
+    bzero(ccur+sizeof(emptyBk), 4); //useless as it should be already 0 cause of the clean of the buffer, but who knows XXX check it once fest end
 
     return StatusCode::SUCCESS;
 }
@@ -774,16 +813,19 @@ StatusCode MEPInjector::OTFIX(int iot, int nbEv) {
 void MEPInjector::printMEP(MEPEvent *me, int size) {
   //int size = me->size();
   const char* data = me->start();
-  
+  FILE *fic = fopen("/tmp/odinMEP", "w");
+  if(fic == NULL ) return;
+  std::fprintf(fic, "size : %d\n", size);
   for (int i=0; i< (size+20); i++) {
     if ((i % 16)==0) {
-      std::cout << std::endl;
-      std::printf("%08X :",i);
+      std::fprintf(fic,"\n");
+      std::fprintf(fic, "%08X :",i);
       
     }
-    std::printf(" %02X",(unsigned char) data[i]);
+    std::fprintf(fic, " %02X",(unsigned char) data[i]);
   }
-  std::cout << std::endl;
+  std::fprintf(fic, "\n");
+  fclose(fic) ;
 }
 
 
@@ -795,7 +837,7 @@ void MEPInjector::printMEP(MEPEvent *me, int size) {
 StatusCode MEPInjector::execute()
 {
     Chrono chrono(chronoSvc(), "execute");
-    static MsgStream log(msgSvc(), name());     //Message stream for output
+    static MsgStream msgLog(msgSvc(), name());     //Message stream for output
   
     SmartDataPtr < RawEvent > raw(eventSvc(), RawEventLocation::Default);
 
@@ -810,13 +852,13 @@ StatusCode MEPInjector::execute()
 
 
     if (!raw) {
-        log << MSG::ERROR << "Invalid raw event " << endmsg;
+        msgLog << MSG::ERROR << "Invalid raw event " << endmsg;
     }
     else {
                                                    /// The use of the semaphore is too slow here
 
         if(pthread_mutex_lock(&m_SyncReadProcess)) {
-            ERRMSG(log, " Locking mutex");
+            ERRMSG(msgLog, " Locking mutex");
             return StatusCode::FAILURE;
         }
        
@@ -840,13 +882,13 @@ StatusCode MEPInjector::execute()
  
         if(sem_post(&m_RawEventsCount)==-1)
         {   
-            ERRMSG(log, "Posting on the semaphore");
+            ERRMSG(msgLog, "Posting on the semaphore");
             perror("sem_post");
             exit(errno);
         }
         
         if(pthread_mutex_unlock(&m_SyncReadProcess)) {
-            ERRMSG(log, " Unocking mutex");
+            ERRMSG(msgLog, " Unocking mutex");
             return StatusCode::FAILURE;
         }
     }
@@ -857,7 +899,7 @@ StatusCode MEPInjector::execute()
 
 StatusCode MEPInjector::injectorProcessing()
 {
-    static MsgStream log(msgSvc(), name());
+    static MsgStream msgLog(msgSvc(), name());
 
     /// Try to trap all signals
 /*
@@ -866,7 +908,7 @@ StatusCode MEPInjector::injectorProcessing()
    
     if(pthread_sigmask(SIG_BLOCK, &injSet, NULL)) 
     {
-        ERRMSG(log, "sig mask error");
+        ERRMSG(msgLog, "sig mask error");
         return StatusCode::FAILURE;
     }
 */
@@ -875,22 +917,22 @@ StatusCode MEPInjector::injectorProcessing()
     if(!m_AutoMode) {
         sc = getHLTInfo();
         if(sc.isRecoverable()) {
-           log << MSG::DEBUG << "getHLTINFO Exited on Recover" << endmsg; 
+           msgLog << MSG::DEBUG << "getHLTINFO Exited on Recover" << endmsg; 
            return StatusCode::SUCCESS;
         }
         else if(sc.isFailure()) {
-            ERRMSG(log, " Selecting a HLT");
+            ERRMSG(msgLog, " Selecting a HLT");
             return StatusCode::FAILURE;
         }
 
         sc= getOdinInfo();
         if(sc.isRecoverable()) {
-           log << MSG::DEBUG << "getOdinINFO Exited on Recover" << endmsg; 
+           msgLog << MSG::DEBUG << "getOdinINFO Exited on Recover" << endmsg; 
            return StatusCode::SUCCESS;
         } 
         else if(sc.isFailure()) 
         {
-            ERRMSG(log, " Copying data from Odin MEP");
+            ERRMSG(msgLog, " Copying data from Odin MEP");
             return StatusCode::FAILURE;
         }
     }
@@ -905,13 +947,13 @@ StatusCode MEPInjector::injectorProcessing()
         //XXX as we could go back to main loop once mep factor reached, to do after 1st FEST
         if(sc.isRecoverable()) 
         {
-            log << MSG::DEBUG << "Main procedure exited on recover" << endmsg;
+            msgLog << MSG::DEBUG << "Main procedure exited on recover" << endmsg;
             if(!m_AutoMode) {
                 if(!m_gotHLT) {
                     sc = getHLTInfo();
                     if(sc.isRecoverable()) continue;
                     if(sc.isFailure()) {
-                        ERRMSG(log, " Selecting a HLT");
+                        ERRMSG(msgLog, " Selecting a HLT");
                         return StatusCode::FAILURE;
                     }
                     m_gotHLT = true;
@@ -921,7 +963,7 @@ StatusCode MEPInjector::injectorProcessing()
                     sc = getOdinInfo();
                     if(sc.isRecoverable()) continue;
                     if(sc.isFailure()) {
-                        ERRMSG(log, " Copying data from Odin MEP");
+                        ERRMSG(msgLog, " Copying data from Odin MEP");
                         return StatusCode::FAILURE;
                     }
                     m_gotOdin = true;
@@ -930,7 +972,7 @@ StatusCode MEPInjector::injectorProcessing()
         }
         else if (sc.isFailure())
         {
-            ERRMSG(log, "Main processing failed, aborting !");
+            ERRMSG(msgLog, "Main processing failed, aborting !");
             return sc;
         }
         sc = readThenSend();
@@ -943,24 +985,24 @@ StatusCode MEPInjector::injectorProcessing()
 
 StatusCode MEPInjector::readThenSend()
 {
-    static MsgStream log(msgSvc(), name());	//Message stream for output
+    static MsgStream msgLog(msgSvc(), name());	//Message stream for output
 
 
-    if((m_TotEvtsSent%m_EvtBuf) == 0 && !m_AutoMode)
+    if((m_TotElapsedTime%10000) == 0 && !m_AutoMode)
     {   
-        log << MSG::INFO << "+++++++++++++++++++++++" << endmsg;
-        log << MSG::INFO << "-----------------------" << endmsg;
-        log << MSG::INFO << "Time of run (ms) :     " << m_TotElapsedTime << endmsg;
-        log << MSG::INFO << "Number of Odin MEP :   " << m_TotOdinMEPRx << endmsg;
-        log << MSG::INFO << "-----------------------" << endmsg; 
-        log << MSG::INFO << "Number of event sent : " << m_TotEvtsSent << endmsg;
-        log << MSG::INFO << "Number of event read : " << m_TotEvtsRead << endmsg; 
-        log << MSG::INFO << "-----------------------" << endmsg; 
-        log << MSG::INFO << "Credits received :     " << m_TotMEPReqRx << endmsg; 
-        log << MSG::INFO << "Credits sent :         " << m_TotMEPReqTx << endmsg;
-        log << MSG::INFO << "Credits consumed :     " << m_TotCreditConsumed << endmsg; 
-        log << MSG::INFO << "-----------------------" << endmsg;
-        log << MSG::INFO << "+++++++++++++++++++++++" << endmsg;
+        msgLog << MSG::INFO << "+++++++++++++++++++++++" << endmsg;
+        msgLog << MSG::INFO << "-----------------------" << endmsg;
+        msgLog << MSG::INFO << "Time of run (ms) :     " << m_TotElapsedTime << endmsg;
+        msgLog << MSG::INFO << "Number of Odin MEP :   " << m_TotOdinMEPRx << endmsg;
+        msgLog << MSG::INFO << "-----------------------" << endmsg; 
+        msgLog << MSG::INFO << "Number of event sent : " << m_TotEvtsSent << endmsg;
+        msgLog << MSG::INFO << "Number of event read : " << m_TotEvtsRead << endmsg; 
+        msgLog << MSG::INFO << "-----------------------" << endmsg; 
+        msgLog << MSG::INFO << "Credits received :     " << m_TotMEPReqRx << endmsg; 
+        msgLog << MSG::INFO << "Credits sent :         " << m_TotMEPReqTx << endmsg;
+        msgLog << MSG::INFO << "Credits consumed :     " << m_TotCreditConsumed << endmsg; 
+        msgLog << MSG::INFO << "-----------------------" << endmsg;
+        msgLog << MSG::INFO << "+++++++++++++++++++++++" << endmsg;
         logMEPReqs();  
     }
 
@@ -972,11 +1014,11 @@ StatusCode MEPInjector::readThenSend()
     sc = readEvent();
     if (sc.isRecoverable() )  /// End of the job
     {
-        log<<MSG::INFO<< "End of injection"<<endmsg; 
+        msgLog << MSG::INFO<< "End of injection"<<endmsg; 
         return StatusCode::RECOVERABLE;
     }
     if (sc.isFailure()) {
-	ERRMSG(log, " Reading an event from the shared queue");
+	ERRMSG(msgLog, " Reading an event from the shared queue");
         return StatusCode::FAILURE;
     }
   
@@ -990,11 +1032,11 @@ StatusCode MEPInjector::readThenSend()
 	if (!m_AutoMode) {
 
             u_int32_t addrFrom = m_BitOdinIPAddr + ((32<<24)&0xff000000); 
-            log<<MSG::DEBUG<<__FUNCTION__<<"MEP SIZE : " << m_OdinMEP->size() << endmsg;
+            msgLog << MSG::DEBUG<<__FUNCTION__<<"MEP SIZE : " << m_OdinMEP->size() << endmsg;
 
 	    sc = sendMEP(addrFrom, m_OdinMEP);
             if(sc.isFailure()) {
-                ERRMSG(log, "Could not send Odin MEP");
+                ERRMSG(msgLog, "Could not send Odin MEP");
                 return StatusCode::FAILURE;
             }
 	}
@@ -1006,18 +1048,18 @@ StatusCode MEPInjector::readThenSend()
             {
                 sc = sendMEP(iteTell1ID->first, me);
    	        if (sc.isFailure()) {
-	  	    ERRMSG(log, " sendMEP error for Tell1 IP " + iteTell1ID->first);
+	  	    ERRMSG(msgLog, " sendMEP error for Tell1 IP " + iteTell1ID->first);
                     return StatusCode::FAILURE;
                 }
 	    }
             else
-                ERRMSG(log, "NULL MEP pointer, not send : " + MEPRxSys::dotted_addr(iteTell1ID->first));
+                ERRMSG(msgLog, "NULL MEP pointer, not send : " + MEPRxSys::dotted_addr(iteTell1ID->first));
 	} /// end for
 
         m_TotEvtsSent += m_PackingFactor;
 /*
         if(clock_gettime(CLOCK_REALTIME, &m_RTCurTime)) {
-            ERRMSG(log, "clock_gettime failed");
+            ERRMSG(msgLog, "clock_gettime failed");
             return StatusCode::FAILURE;
         }
         m_RTTotElapsedTime = (m_RTCurTime.tv_sec - m_RTInitTime.tv_sec) * 1000 + (m_RTCurTime.tv_nsec - m_RTInitTime.tv_nsec)/1000000 ;
@@ -1034,7 +1076,7 @@ StatusCode MEPInjector::readThenSend()
             sc = getHLTInfo();
             if(sc.isRecoverable()) return sc;
             if(sc.isFailure()) {
-                ERRMSG(log, " Selecting a HLT");
+                ERRMSG(msgLog, " Selecting a HLT");
                 return StatusCode::FAILURE;
             }
             m_gotHLT = true;
@@ -1042,7 +1084,7 @@ StatusCode MEPInjector::readThenSend()
             sc = getOdinInfo();
             if(sc.isRecoverable()) return sc;
             if(sc.isFailure()) {
-                ERRMSG(log, " Copying data from Odin MEP");
+                ERRMSG(msgLog, " Copying data from Odin MEP");
                 return StatusCode::FAILURE;
             } 
             m_gotOdin = true;
@@ -1064,7 +1106,7 @@ StatusCode MEPInjector::readThenSend()
             MEPFragment *mepfrag = (MEPFragment *) ( ((char *) m_OdinMEP) + MEPEVENTOFFSET +
                                    IPHDRSZ + MEPHDRSZ + nbEv * ODFRAGSZ);
             m_EvtID = mepfrag->eventID();
-            log << MSG::DEBUG << "EvtID read from Frag Header (and used) : " << m_EvtID << endmsg;
+            msgLog << MSG::DEBUG << "EvtID read from Frag Header (and used) : " << m_EvtID << endmsg;
         }
 	++nbEv;
  
@@ -1097,7 +1139,7 @@ int MEPInjector::getMTU(int netdev)
 /// Get Tell1 IP, return 0 if no tell1 were found  
 in_addr_t MEPInjector::getTell1IP(int type, int src)
 {
-    static MsgStream log(msgSvc(), name());	//Message stream for output
+    static MsgStream msgLog(msgSvc(), name());	//Message stream for output
     
 //    static stdmap<int, int> MuonMap
     in_addr_t ipNet= ( (192 + (169<<8))&0x0000ffff);
@@ -1118,7 +1160,7 @@ in_addr_t MEPInjector::getTell1IP(int type, int src)
             case 129 : return (ipNet | (4<<24));  
             case 131 : return (ipNet | (5<<24)); 
             default : 
-                //log << MSG::WARNING << "Unknown source "<< src << " for Velo bank type"<<endmsg;   
+                //msgLog << MSG::WARNING << "Unknown source "<< src << " for Velo bank type"<<endmsg;   
                 return 0;
             }
         }
@@ -1212,7 +1254,7 @@ in_addr_t MEPInjector::getTell1IP(int type, int src)
         case 40: return (ipNet | (2<<24));
         case 104: return (ipNet | (16<<24));
         default : 
-            //log << MSG::WARNING << "Unknown source "<< src << " for Velo bank type"<<endmsg;   
+            //msgLog << MSG::WARNING << "Unknown source "<< src << " for Velo bank type"<<endmsg;   
             return 0;
         }
         }
@@ -1277,7 +1319,7 @@ in_addr_t MEPInjector::getTell1IP(int type, int src)
         case 107: return (ipNet | (47<<24));
         case 108: return (ipNet | (48<<24));
         default : 
-            //log << MSG::WARNING << "Unknown source "<< src << " for TT bank type"<<endmsg;   
+            //msgLog << MSG::WARNING << "Unknown source "<< src << " for TT bank type"<<endmsg;   
             return 0; 
         } 
 	break;
@@ -1348,7 +1390,7 @@ in_addr_t MEPInjector::getTell1IP(int type, int src)
 	case 13:
 	    return (/*inet_addr("192.169.9.1")*/ ipNet | (9<<16) |(1<<24));
 	default:
-            //log << MSG::WARNING << "Unknown source "<< src << " for Muon bank type"<<endmsg;   
+            //msgLog << MSG::WARNING << "Unknown source "<< src << " for Muon bank type"<<endmsg;   
             return 0;
 
 	}
@@ -1358,7 +1400,7 @@ in_addr_t MEPInjector::getTell1IP(int type, int src)
         switch(src) {
         case 0 : return (ipNet | (1<<24));   /// Not sure about only this one, if an unknown src appear, it should be it ;) /* Dear Martin mentionned 2 but it seems it is 0*/
         default : 
-            //log << MSG::WARNING << "Unknown source "<< src << " for L0PU bank type"<<endmsg;   
+            //msgLog << MSG::WARNING << "Unknown source "<< src << " for L0PU bank type"<<endmsg;   
             return 0;
         }  
 	return (/*inet_addr("192.169.15.0")*/ ipNet |(15<<16) + ((src + 1) << 24));	//TPU
@@ -1397,7 +1439,7 @@ in_addr_t MEPInjector::getTell1IP(int type, int src)
         case 1 :  return (ipNet | (2<<24));
         case 0 :  return (ipNet | (3<<24));
         default : 
-            //log << MSG::WARNING << "Unknown source "<< src << " for L0Muon bank type"<<endmsg;   
+            //msgLog << MSG::WARNING << "Unknown source "<< src << " for L0Muon bank type"<<endmsg;   
             return 0;
         } 
              
@@ -1432,10 +1474,10 @@ void MEPInjector::setOdinData(MEPEvent ** me)
 
 StatusCode MEPInjector::sendMEP(int tell1IP, MEPEvent * me)
 {
-    static MsgStream log(msgSvc(), name());
+    static MsgStream msgLog(msgSvc(), name());
 
     if(me->size() == 0) { 
-        log << MSG::WARNING << " Empty MEP for Tell1 " << MEPRxSys::dotted_addr(tell1IP) << endmsg;
+        msgLog << MSG::WARNING << " Empty MEP for Tell1 " << MEPRxSys::dotted_addr(tell1IP) << endmsg;
         return StatusCode::SUCCESS; //no data to send
     }
     me->setSize(0);
@@ -1451,7 +1493,7 @@ StatusCode MEPInjector::sendMEP(int tell1IP, MEPEvent * me)
 	((u_int16_t) (0x000000FF & m_L0ID) << 8) |
 	((u_int16_t) (0x0000FF00 & m_L0ID) >> 8);
 
-//    log<<MSG::DEBUG<<"datagram id : "<< datagramID<<endmsg;
+//    msgLog << MSG::DEBUG<<"datagram id : "<< datagramID<<endmsg;
 
     int iDatagramSize = MEPSize +20 ;
 
@@ -1465,7 +1507,7 @@ StatusCode MEPInjector::sendMEP(int tell1IP, MEPEvent * me)
         if (MEPRxSys::parse_addr(m_HLTStrIPAddrTo, addrTo) != 0) {
             std::string msg;
             if(MEPRxSys::addr_from_name(m_HLTStrIPAddrTo, addrTo, msg) != 0) {
-   	        ERRMSG(log, " Automode HLT Address conversion ");
+   	        ERRMSG(msgLog, " Automode HLT Address conversion ");
                 return StatusCode::FAILURE;
             }
         }
@@ -1489,10 +1531,10 @@ StatusCode MEPInjector::sendMEP(int tell1IP, MEPEvent * me)
 	    return StatusCode::SUCCESS;
 	}
 	if (n == -1) {
-	    ERRMSG(log, " MEP sending ");
+	    ERRMSG(msgLog, " MEP sending ");
 	    return StatusCode::FAILURE;
 	}
-	ERRMSG(log, " MEP corrupted on send! Sent length:" + n);
+	ERRMSG(msgLog, " MEP corrupted on send! Sent length:" + n);
         return StatusCode::FAILURE;
     }
 
@@ -1506,7 +1548,7 @@ StatusCode MEPInjector::sendMEP(int tell1IP, MEPEvent * me)
     /// Buffer which will store the fragments to send
     char *cBuf = (char *) malloc(iIPMTU);
     if (cBuf == NULL) {
-	ERRMSG(log, " No memory for buffer ");
+	ERRMSG(msgLog, " No memory for buffer ");
 	return StatusCode::FAILURE;
     }
     struct iphdr *hdr = (struct iphdr *) cBuf;
@@ -1522,10 +1564,10 @@ StatusCode MEPInjector::sendMEP(int tell1IP, MEPEvent * me)
     /// Last datagram size without headers, it contains the bytes which could not get aligned in the full datagrams 
     int iLastDGramSize = MEPSize - uiMaxData * iNbIter;
 
-    log << MSG::DEBUG << " Number of fragments : " << iNbIter << " of size "<< iIPMTU << endmsg;
-    log << MSG::
-	DEBUG << " Size of last fragment : " << iLastDGramSize <<
-	endmsg;
+    if(m_Debug) {
+        msgLog << MSG::DEBUG << " Number of fragments : " << iNbIter << " of size "<< iIPMTU << endmsg;
+        msgLog << MSG::DEBUG << " Size of last fragment : " << iLastDGramSize <<endmsg;
+    }
     int iBytesSent = 0;
 
     for (int iCur = 1; iCur <= iNbIter; ++iCur)	/// 
@@ -1542,7 +1584,7 @@ StatusCode MEPInjector::sendMEP(int tell1IP, MEPEvent * me)
 					  addrTo, cBuf, uiMaxData + 20,
 					  datagramID);
 	if (n == -1) {
-	    ERRMSG(log, " MEP sending ");
+	    ERRMSG(msgLog, " MEP sending ");
 	    return StatusCode::FAILURE;
 	}
         m_TotMEPsTx++;
@@ -1576,53 +1618,53 @@ StatusCode MEPInjector::sendMEP(int tell1IP, MEPEvent * me)
 
     iBytesSent += n;
 
-    log << MSG::
+    msgLog << MSG::
 	DEBUG << "Number of bytes sent : " << iBytesSent << "out of " <<
 	MEPSize << endmsg;
 
     free(cBuf);
 
     if (n == -1) {
-	ERRMSG(log, " MEP sending ");
+	ERRMSG(msgLog, " MEP sending ");
 	return StatusCode::FAILURE;
     }
     if (iBytesSent - ((iNbIter + 1) * 20) == MEPSize ) {
-	log << MSG::
+	msgLog << MSG::
 	    DEBUG << "MEP successfully fragmented and sent!" << endmsg;
 
         m_TotMEPsTx++;
         m_TotBytesTx += iBytesSent; 
 	return StatusCode::SUCCESS;
     }
-    ERRMSG(log, " MEP corrupted on send! Sent length:" + n);
+    ERRMSG(msgLog, " MEP corrupted on send! Sent length:" + n);
     return StatusCode::FAILURE;
 }
 
 
 StatusCode MEPInjector::sendMEPReq(MEPReq * req)
 {
-    static MsgStream log(msgSvc(), name()); 
+    static MsgStream msgLog(msgSvc(), name()); 
 
     int n =
 	MEPRxSys::send_msg(m_ToOdinSock, m_BitOdinIPAddr, MEP_REQ_TOS, req, MEP_REQ_LEN,
 			   0);
     if (n == MEP_REQ_LEN) {
-        log<<MSG::DEBUG<<"MEP Req successfully sent"<<endmsg;
+        msgLog << MSG::DEBUG<<"MEP Req successfully sent"<<endmsg;
 	m_TotMEPReqTx += req->nmep;
 	m_TotMEPReqPktTx++;
 	return StatusCode::SUCCESS;
     }
     if (n == -1) {
-	ERRMSG(log, " Send MEP request");
+	ERRMSG(msgLog, " Send MEP request");
         return StatusCode::FAILURE;
     }
-    ERRMSG(log, " MEPRequest corrupted on send!");
+    ERRMSG(msgLog, " MEPRequest corrupted on send!");
     return StatusCode::FAILURE;
 }
 
 StatusCode MEPInjector::receiveOdinMEP(char *bufMEP, int *retLen)
 {
-    static MsgStream log(msgSvc(), name());
+    static MsgStream msgLog(msgSvc(), name());
 
     int n = MEPRxSys::rx_poll(m_FromOdinSock, m_TimeOut);	 
   
@@ -1640,7 +1682,7 @@ StatusCode MEPInjector::receiveOdinMEP(char *bufMEP, int *retLen)
 			   0);
     if (len < 0) {
 	if (!MEPRxSys::rx_would_block()) {
-	    ERRMSG(log, " recvmsg");
+	    ERRMSG(msgLog, " recvmsg");
             return StatusCode::FAILURE;
         }
 
@@ -1657,19 +1699,19 @@ StatusCode MEPInjector::receiveOdinMEP(char *bufMEP, int *retLen)
  
     
     /// Check that the Odin MEP sender IP is the one we want 
-    log << MSG::DEBUG <<"IP match : Packet from "<< MEPRxSys::dotted_addr(iphdr->saddr) << ", expected " << MEPRxSys::dotted_addr(odinIPAddr) << endmsg;
+    msgLog << MSG::DEBUG <<"IP match : Packet from "<< MEPRxSys::dotted_addr(iphdr->saddr) << ", expected " << MEPRxSys::dotted_addr(odinIPAddr) << endmsg;
     if (iphdr->saddr != odinIPAddr) {
-	ERRMSG(log, " Unexepected Odin source for received data");
+	ERRMSG(msgLog, " Unexepected Odin source for received data");
         return StatusCode::RECOVERABLE;   ///XXX RECOVER THIS ERROR
     }
-    log<<MSG::DEBUG<<"ODIN MEP RECEIVED"<<endmsg;
+    msgLog << MSG::DEBUG<<"ODIN MEP RECEIVED"<<endmsg;
  
     return StatusCode::SUCCESS;
 }
 
 StatusCode MEPInjector::receiveMEPReq(char *req)
 {
-    static MsgStream log(msgSvc(), name());
+    static MsgStream msgLog(msgSvc(), name());
  
     if (req == NULL)
 	return StatusCode::FAILURE;
@@ -1686,21 +1728,21 @@ StatusCode MEPInjector::receiveMEPReq(char *req)
     
     if (len < 0) {
 	if (!MEPRxSys::rx_would_block()) {
-	    ERRMSG(log, "recvmsg");
+	    ERRMSG(msgLog, "recvmsg");
             return StatusCode::FAILURE;
         }
     }
     if (len != MEP_REQ_LEN + IPHDRSZ) {
-	ERRMSG(log, " Packet received is not a MEP Request ");
+	ERRMSG(msgLog, " Packet received is not a MEP Request ");
         return StatusCode::FAILURE;
     }
-    log<<MSG::DEBUG<<"MEP REQUEST RECEIVED"<<endmsg;
+    msgLog << MSG::DEBUG<<"MEP REQUEST RECEIVED"<<endmsg;
     return StatusCode::SUCCESS;
 }
 
 StatusCode MEPInjector::manageMEPRequest()
 {
-    static MsgStream log(msgSvc(), name());
+    static MsgStream msgLog(msgSvc(), name());
     StatusCode sc;
     char req[MEP_REQ_LEN + IPHDRSZ];
     memset(req, 0, sizeof(req));
@@ -1717,22 +1759,22 @@ StatusCode MEPInjector::manageMEPRequest()
             continue;
         } 
 	if (sc.isFailure()) {
-	    ERRMSG(log, " MEP Request Receive failed");
+	    ERRMSG(msgLog, " MEP Request Receive failed");
 	    return sc;
 	}
 
-        log<<MSG::DEBUG<< "Got a MEP Request, forward it"<<endmsg;
+        msgLog << MSG::DEBUG<< "Got a MEP Request, forward it"<<endmsg;
         /// XXX Not tested yet : this send has been move from end of function to this point 
 	/// Forward the MEP Request received, skip headers, default will be better for us 
         sc = sendMEPReq((MEPReq *) (req + 20));	
 	if (sc.isFailure()) {
-	    ERRMSG(log, " MEP Request Send");
+	    ERRMSG(msgLog, " MEP Request Send");
 	    return sc;
 	}
  
 
         if (pthread_mutex_lock(&m_SyncReqOdin)) {
-            ERRMSG(log, " Locking mutex");
+            ERRMSG(msgLog, " Locking mutex");
             return StatusCode::FAILURE;
         }
 
@@ -1750,10 +1792,11 @@ StatusCode MEPInjector::manageMEPRequest()
 
 
   
-
-        log << MSG::DEBUG << "FARM IP ADDRESS : "<< MEPRxSys::dotted_addr(hdr->saddr) <<" ; Credit asked " << m_HLTReqs[hdr->saddr] <<endmsg;
-        log << MSG::DEBUG << "    Total of credits : " << m_HLTReqs[hdr->saddr] << endmsg;   
-        log << MSG::DEBUG << "Total of MEP requested : " << m_TotMEPReqRx << endmsg;
+        if(m_Debug) {
+            msgLog << MSG::DEBUG << "FARM IP ADDRESS : "<< MEPRxSys::dotted_addr(hdr->saddr) <<" ; Credit asked " << m_HLTReqs[hdr->saddr] <<endmsg;
+            msgLog << MSG::DEBUG << "    Total of credits : " << m_HLTReqs[hdr->saddr] << endmsg;   
+            msgLog << MSG::DEBUG << "Total of MEP requested : " << m_TotMEPReqRx << endmsg;
+        }
 
        
 
@@ -1762,18 +1805,18 @@ StatusCode MEPInjector::manageMEPRequest()
             
 	    if(sem_post(&m_MEPReqCount)==-1)
             {
-                ERRMSG(log, "Posting on the semaphore");
+                ERRMSG(msgLog, "Posting on the semaphore");
                 perror("sem_post");
                 exit(errno);  
             } 
         }
         int testsem = 0;
         sem_getvalue(&m_MEPReqCount, &testsem);
-        log << MSG::DEBUG << "MEPReq count = "<<testsem << endmsg;
+        msgLog << MSG::DEBUG << "MEPReq count = "<<testsem << endmsg;
 
 
         if (pthread_mutex_unlock(&m_SyncReqOdin)) {
-            ERRMSG(log, " Unlocking mutex");
+            ERRMSG(msgLog, " Unlocking mutex");
             return StatusCode::FAILURE;
         }
     }
@@ -1782,12 +1825,12 @@ StatusCode MEPInjector::manageMEPRequest()
 
 StatusCode MEPInjector::manageOdinMEP()
 {
-    static MsgStream log(msgSvc(), name());
+    static MsgStream msgLog(msgSvc(), name());
     StatusCode sc;
 
     char *bufMEP = (char *) malloc(m_OdinBufSize); /// I don't like calloc
     if(bufMEP == NULL) {
-        ERRMSG(log, " Memory problem allocating Odin MEP buffer");
+        ERRMSG(msgLog, " Memory problem allocating Odin MEP buffer");
         return StatusCode::FAILURE;
     }
     memset(bufMEP, 0, m_OdinBufSize);
@@ -1806,12 +1849,12 @@ StatusCode MEPInjector::manageOdinMEP()
             continue;
         } 
 	if (sc.isFailure()) {
-	    ERRMSG(log, "Failed to receive Odin Information : MEP reception");
+	    ERRMSG(msgLog, "Failed to receive Odin Information : MEP reception");
             return StatusCode::FAILURE;
 	}
 
 	if (pthread_mutex_lock(&m_SyncMainOdin)) {
-	    ERRMSG(log, "Failed locking mutex");
+	    ERRMSG(msgLog, "Failed locking mutex");
 	    return StatusCode::FAILURE;
 	}
 
@@ -1824,21 +1867,20 @@ StatusCode MEPInjector::manageOdinMEP()
         itmp[0] = len;
         m_QueueOdinMEP.push(tmp); 
 
- 
-        log << MSG::DEBUG << "SIZE OF ODIN MEP BUFFER : " << m_QueueOdinMEP.size() << endmsg; 
+        msgLog << MSG::DEBUG << "SIZE OF ODIN MEP BUFFER : " << m_QueueOdinMEP.size() << endmsg; 
         int testsem = 0;
         sem_getvalue(&m_OdinCount, &testsem);
-        log << MSG::DEBUG << "Odin SEM before post = "<<testsem << endmsg;
+        msgLog << MSG::DEBUG << "Odin SEM before post = "<<testsem << endmsg;
 
         if(sem_post(&m_OdinCount)==-1)
         {
-            ERRMSG(log, "Posting on the semaphore");
+            ERRMSG(msgLog, "Posting on the semaphore");
             perror("sem_post"); 
             exit(errno);
         }
 
 	if (pthread_mutex_unlock(&m_SyncMainOdin)) {
-	    ERRMSG(log, "Failed unlocking mutex");
+	    ERRMSG(msgLog, "Failed unlocking mutex");
 	    return StatusCode::FAILURE;
 	}
 
@@ -1866,13 +1908,13 @@ StatusCode MEPInjector::getInfoFromOdinMEP()
 
 StatusCode MEPInjector::getHLTInfo() 
 {
-    static MsgStream log(msgSvc(), name());    //Message stream for output
+    static MsgStream msgLog(msgSvc(), name());    //Message stream for output
     StatusCode ret=StatusCode::RECOVERABLE;
     int retVal=0;
   
     int testsem = 0;
     sem_getvalue(&m_MEPReqCount, &testsem);
-    log << MSG::DEBUG << "HLT SEM = "<<testsem << endmsg;
+    msgLog << MSG::DEBUG << "HLT SEM = "<<testsem << endmsg;
  
 //    while((retVal=sem_wait(&m_MEPReqCount))==-1 && errno == EINTR) continue;
     retVal=sem_wait(&m_MEPReqCount);
@@ -1882,7 +1924,7 @@ StatusCode MEPInjector::getHLTInfo()
     }
  
     if (pthread_mutex_lock(&m_SyncReqOdin)) {
-        ERRMSG(log, "Failed locking mutex");
+        ERRMSG(msgLog, "Failed locking mutex");
         return StatusCode::FAILURE;
     }
 
@@ -1897,7 +1939,7 @@ StatusCode MEPInjector::getHLTInfo()
             m_HLTReqsIte++; 
         }
         if(m_HLTReqsIte == m_HLTReqs.end()) {
-            log << MSG::INFO << "No MEP Requests received" << endmsg;
+            msgLog << MSG::INFO << "No MEP Requests received" << endmsg;
         }
         else {
          
@@ -1905,11 +1947,12 @@ StatusCode MEPInjector::getHLTInfo()
 
             --(m_HLTReqsIte->second);
             ++m_TotCreditConsumed;
-
-            log << MSG::DEBUG << "Get HLT information" << endmsg; 
-            log << MSG::DEBUG << "	" << "Farm selected : " << MEPRxSys::dotted_addr(m_HLTIPAddrTo) << endmsg;
-            log << MSG::DEBUG << "      " << "Nb Reqs : " << m_HLTReqsIte->second << endmsg;  
-            log << MSG::DEBUG << "Credits consumed : " << m_TotCreditConsumed << endmsg;
+            if(m_Debug) {
+                msgLog << MSG::DEBUG << "Get HLT information" << endmsg; 
+                msgLog << MSG::DEBUG << "	" << "Farm selected : " << MEPRxSys::dotted_addr(m_HLTIPAddrTo) << endmsg;
+                msgLog << MSG::DEBUG << "      " << "Nb Reqs : " << m_HLTReqsIte->second << endmsg;  
+                msgLog << MSG::DEBUG << "Credits consumed : " << m_TotCreditConsumed << endmsg;
+            }
  
             m_HLTReqsIte++;
             ret = StatusCode::SUCCESS;
@@ -1917,7 +1960,7 @@ StatusCode MEPInjector::getHLTInfo()
     } 
 
     if (pthread_mutex_unlock(&m_SyncReqOdin)) {
-        ERRMSG(log, "Failed unlocking mutex");
+        ERRMSG(msgLog, "Failed unlocking mutex");
         return StatusCode::FAILURE;
     }
 
@@ -1928,12 +1971,12 @@ StatusCode MEPInjector::getOdinInfo()
 {
 
     StatusCode ret=StatusCode::RECOVERABLE;
-    static MsgStream log(msgSvc(), name());    //Message stream for output
+    static MsgStream msgLog(msgSvc(), name());    //Message stream for output
     int retVal=0;
 
     int testsem = 0;
     sem_getvalue(&m_OdinCount, &testsem);
-    log << MSG::DEBUG << "Odin SEM = "<<testsem << endmsg;
+    msgLog << MSG::DEBUG << "Odin SEM = "<<testsem << endmsg;
 
 //    while ( (retVal=sem_wait(&m_OdinCount)==-1) && errno == EINTR) continue;
     retVal=sem_wait(&m_OdinCount);
@@ -1943,7 +1986,7 @@ StatusCode MEPInjector::getOdinInfo()
     }
 
     if (pthread_mutex_lock(&m_SyncMainOdin)) {
-        ERRMSG(log, "Failed locking mutex");
+        ERRMSG(msgLog, "Failed locking mutex");
         return StatusCode::FAILURE;
     }
    
@@ -1954,11 +1997,13 @@ StatusCode MEPInjector::getOdinInfo()
     {
         char *tmp = m_QueueOdinMEP.front(); 
         int *itmp = (int *) tmp; 
-        memcpy(m_OdinData.data(), tmp, itmp[0] ); 
+        memcpy(m_OdinData.data(), tmp, itmp[0]+4 ); 
         m_OdinMEP->setSize(itmp[0]);
 
         m_QueueOdinMEP.pop();
         free(tmp);
+
+        //printMEP(m_OdinMEP, m_OdinMEP->size());
 
         MEPHdr *mephdr = (MEPHdr *) ( ((char *) m_OdinMEP) +  MEPEVENTOFFSET + IPHDRSZ);
         m_EvtID = mephdr->m_l0ID;
@@ -1966,17 +2011,18 @@ StatusCode MEPInjector::getOdinInfo()
         m_PartitionID = mephdr->m_partitionID;
         m_PackingFactor = mephdr->m_nEvt;
 
-          
-        log << MSG::DEBUG << "Odin information read : " <<endmsg;
-        log << MSG::DEBUG << "	" << "EvtID = "<< m_EvtID << endmsg;
-        log << MSG::DEBUG << "	" << "PartitionID = "<< m_PartitionID << endmsg;
-        log << MSG::DEBUG << "	" << "PackingFactor = "<< m_PackingFactor << endmsg;
-        log << MSG::DEBUG << "	" << "L0ID = " << m_L0ID << endmsg;
+        if(m_Debug) { 
+            msgLog << MSG::DEBUG << "Odin information read : " <<endmsg;
+            msgLog << MSG::DEBUG << "	" << "EvtID = "<< m_EvtID << endmsg;
+            msgLog << MSG::DEBUG << "	" << "PartitionID = "<< m_PartitionID << endmsg;
+            msgLog << MSG::DEBUG << "	" << "PackingFactor = "<< m_PackingFactor << endmsg;
+            msgLog << MSG::DEBUG << "	" << "L0ID = " << m_L0ID << endmsg;
+        }
 
 
         ++m_TotOdinMEPTx; 
          
-        log << MSG::DEBUG << "NUMBER OF ODIN MEP MANAGED = " << m_TotOdinMEPTx << endmsg;
+        msgLog << MSG::DEBUG << "NUMBER OF ODIN MEP MANAGED = " << m_TotOdinMEPTx << endmsg;
 
         ret = StatusCode::SUCCESS; 
     }
@@ -1985,7 +2031,7 @@ StatusCode MEPInjector::getOdinInfo()
     } 
 
     if (pthread_mutex_unlock(&m_SyncMainOdin)) {
-        ERRMSG(log, "Failed unlocking mutex");
+        ERRMSG(msgLog, "Failed unlocking mutex");
         return StatusCode::FAILURE;
     }
 
@@ -1995,8 +2041,8 @@ StatusCode MEPInjector::getOdinInfo()
 
 StatusCode MEPInjector::error(const std::string & msg)
 {
-    static MsgStream log(msgSvc(), name());
-    log << MSG::ERROR << msg << endmsg;
+    static MsgStream msgLog(msgSvc(), name());
+    msgLog << MSG::ERROR << msg << endmsg;
     return StatusCode::FAILURE;
 }
 
@@ -2021,7 +2067,7 @@ void saveHisto()
 
 StatusCode MEPInjector::finalize()
 {
-    static MsgStream log(msgSvc(), name());
+    static MsgStream msgLog(msgSvc(), name());
 
  //   close(m_CreditsFD);
 
@@ -2040,19 +2086,19 @@ StatusCode MEPInjector::finalize()
     /// and they should exit  
     if(sem_post(&m_RawEventsCount)==-1)
     {   
-        ERRMSG(log, "Posting on the semaphore");
+        ERRMSG(msgLog, "Posting on the semaphore");
         perror("sem_post");
         exit(errno);
     }
     if(sem_post(&m_MEPReqCount)==-1)
     {
-        ERRMSG(log, "Posting on the semaphore");
+        ERRMSG(msgLog, "Posting on the semaphore");
         perror("sem_post");
         exit(errno);
     } 
     if(sem_post(&m_OdinCount)==-1) 
     {
-        ERRMSG(log, "Posting on the semaphore");
+        ERRMSG(msgLog, "Posting on the semaphore");
         perror("sem_post");
         exit(errno);
     }
@@ -2060,13 +2106,13 @@ StatusCode MEPInjector::finalize()
 /*
     if(pthread_kill(m_InjectorProcessing, SIGTERM))
     {
-        ERRMSG(log, "Kill SIGTERM InjectorProcessing");
+        ERRMSG(msgLog, "Kill SIGTERM InjectorProcessing");
         return StatusCode::FAILURE;
     }
 */
     if(pthread_join(m_InjectorProcessing, NULL))
     {
-       ERRMSG(log, "injectorProcessing thread join");
+       ERRMSG(msgLog, "injectorProcessing thread join");
        return StatusCode::FAILURE;
     }
 
@@ -2128,10 +2174,10 @@ StatusCode MEPInjector::finalize()
 
             sc = sendMEP(addrFrom, m_OdinMEP);
             if(sc.isFailure()) {
-                ERRMSG(log, "Could not send Odin MEP");
+                ERRMSG(msgLog, "Could not send Odin MEP");
                 return StatusCode::FAILURE;
             }
-            log<< MSG::DEBUG << "Odin MEP sent";
+            msgLog << MSG::DEBUG << "Odin MEP sent";
         }
  
         m_TotEvtsSent += m_PackingFactor; 
@@ -2140,23 +2186,23 @@ StatusCode MEPInjector::finalize()
 /*
         if(pthread_kill(m_ThreadOdinMEPManager, SIGTERM))
         {
-            ERRMSG(log, "Kill SIGTERM OdinMEPManager");
+            ERRMSG(msgLog, "Kill SIGTERM OdinMEPManager");
             return StatusCode::FAILURE;
         } 
         if(pthread_kill(m_ThreadMEPReqManager, SIGTERM))
         {
-            ERRMSG(log, "Kill SIGTERM MEPReqManager");
+            ERRMSG(msgLog, "Kill SIGTERM MEPReqManager");
             return StatusCode::FAILURE;
         }
 */
         if(pthread_join(m_ThreadOdinMEPManager, NULL))
         {
-            ERRMSG(log, "OdinMEPManager thread join");
+            ERRMSG(msgLog, "OdinMEPManager thread join");
             return StatusCode::FAILURE;
         }
         if(pthread_join(m_ThreadMEPReqManager, NULL)) 
         {
-            ERRMSG(log, "MEPReqManager thread join");
+            ERRMSG(msgLog, "MEPReqManager thread join");
             return StatusCode::FAILURE;
         }
 
@@ -2174,7 +2220,7 @@ StatusCode MEPInjector::finalize()
     sem_destroy(&m_RawEventsCount);
     close(m_ToHLTSock);
 
-    log << MSG::DEBUG <<"Injector finalized"<<endmsg;
+    msgLog << MSG::DEBUG <<"Injector finalized"<<endmsg;
  
     if(m_IncidentSvc) {
         m_IncidentSvc->removeListener(this);
@@ -2188,9 +2234,9 @@ StatusCode MEPInjector::finalize()
         m_MonSvc = 0;
     }
 
-    log << MSG::INFO << "A few stats" << endmsg;
-    log << MSG::INFO << "Total of MEPs sent : " << m_TotMEPsTx << endmsg;
-    log << MSG::INFO << "Total of MEP Requests received : " << m_TotMEPReqRx << endmsg;
+    msgLog << MSG::INFO << "A few stats" << endmsg;
+    msgLog << MSG::INFO << "Total of MEPs sent : " << m_TotMEPsTx << endmsg;
+    msgLog << MSG::INFO << "Total of MEP Requests received : " << m_TotMEPReqRx << endmsg;
 
     return StatusCode::SUCCESS;
 }
@@ -2247,7 +2293,7 @@ void MEPInjector::clearCounters() {
 }
 
 int MEPInjector::setupCounters() {
-  MsgStream log(msgSvc(),name());
+  MsgStream msgLog(msgSvc(),name());
   clearCounters();
   publishCounters();
   
@@ -2259,15 +2305,15 @@ int MEPInjector::setupCounters() {
    ::memcpy(m_AllNames, (const char *) all_names.data(), all_names.size() +1);
   
   m_MonSvc->declareInfo("srcName", "C:", m_AllNames, sizeof(m_Tell1Boards), "Source IP names", this);
-  log << MSG::INFO << all_names << ", " << m_Tell1Boards.size() << endmsg;
+  msgLog << MSG::INFO << all_names << ", " << m_Tell1Boards.size() << endmsg;
   return 0;
 }
 
 
 
 void MEPInjector::handle(const Incident& inc) {
-  MsgStream log(msgSvc(),name());
-  log << MSG::INFO << "Got incident:" << inc.source() << " of type " << inc.type() << endmsg;
+  MsgStream msgLog(msgSvc(),name());
+  msgLog << MSG::INFO << "Got incident:" << inc.source() << " of type " << inc.type() << endmsg;
   if (inc.type() == "DAQ_CANCEL")  { //but if I remember well the PVSS interface was leading the injector in not ready no ? XXX check this once Alba is back 
       m_InjState = STOPPED;
   }
