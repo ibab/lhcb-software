@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.36 2009-01-30 16:05:54 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.37 2009-02-02 17:40:54 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -167,6 +167,9 @@ class Boole(LHCbConfigurableUser):
         digiSeq = self.getProp("DigiSequence")
         ProcessPhase("Digi").DetectorList = digiSeq
 
+        if "IT" in digiSeq: self.configureDigiST( GaudiSequencer("DigiITSeq"), "IT", "" )
+        if "TT" in digiSeq: self.configureDigiST( GaudiSequencer("DigiTTSeq"), "TT", "" )
+
         if "CALO" in digiSeq :
             caloSeq = GaudiSequencer("DigiCALOSeq")
             if tae: caloSeq.Context = "TAE"
@@ -174,10 +177,20 @@ class Boole(LHCbConfigurableUser):
 
         if "MUON" in digiSeq : self.configureDigiMuon( GaudiSequencer("DigiMUONSeq"), "" )
 
+    def configureDigiST(self, seq, det, tae ):
+        from Configurables import ( MCSTDepositCreator, MCSTDigitCreator, STDigitCreator,
+                                    STClusterCreator, STClusterKiller, STClustersToRawBankAlg )
+        seq.Members += [ MCSTDepositCreator("MC%sDepositCreator%s"%(det,tae)) ]
+        seq.Members += [ MCSTDigitCreator("MC%sDigitCreator%s"%(det,tae)) ]
+        seq.Members += [ STDigitCreator("%sDigitCreator%s"%(det,tae)) ]
+        seq.Members += [ STClusterCreator("%sClusterCreator%s"%(det,tae)) ]
+        seq.Members += [ STClusterKiller("%sClusterKiller%s"%(det,tae)) ]
+        seq.Members += [ STClustersToRawBankAlg("create%sRawBuffer%s"%(det,tae)) ]
+
     def configureDigiCalo(self, seq, tae ):
         # Calorimeter digitisation
         from Configurables import CaloSignalAlg, CaloDigitAlg, CaloFillPrsSpdRawBuffer, CaloFillRawBuffer
-        seq.Members = [ CaloSignalAlg("SpdSignal%s"%tae),
+        seq.Members += [CaloSignalAlg("SpdSignal%s"%tae),
                         CaloSignalAlg("PrsSignal%s"%tae),
                         CaloSignalAlg("EcalSignal%s"%tae),
                         CaloSignalAlg("HcalSignal%s"%tae),
@@ -249,6 +262,10 @@ class Boole(LHCbConfigurableUser):
             from Configurables import BooleInit
             slotInit =  BooleInit("Init%s"%taeSlot, RootInTES = "%s/"%taeSlot )
             GaudiSequencer( "Digi%sInitSeq"%taeSlot ).Members = [ slotInit ]
+            if "IT" in taeDets:
+                self.configureDigiST( GaudiSequencer("Digi%sITSeq"%taeSlot), "IT", taeSlot )
+            if "TT" in taeDets:
+                self.configureDigiST( GaudiSequencer("Digi%sTTSeq"%taeSlot), "IT", taeSlot )
             if "CALO" in taeDets:
                 self.configureDigiCalo( GaudiSequencer("Digi%sCALOSeq"%taeSlot), taeSlot )
             if "MUON" in taeDets:
@@ -314,6 +331,7 @@ class Boole(LHCbConfigurableUser):
         # Use a default histogram file name if not already set
         if not hasattr( HistogramPersistencySvc(), "OutputFile" ):
             histosName   = self.getProp("DatasetName")
+            if histosName == "": histosName = "Boole"
             if (self.evtMax() > 0): histosName += '-' + str(self.evtMax()) + 'ev'
             if histOpt == "Expert": histosName += '-expert'
             histosName += '-histos.root'
@@ -353,7 +371,7 @@ class Boole(LHCbConfigurableUser):
                 taePrev -= 1
             taeNext = self.getProp("TAENext")
             while taeNext>0:
-                MyWriter.ItemList += ["/Event/Prev%s/DAQ/RawEvent#1"%taeNext]
+                MyWriter.ItemList += ["/Event/Next%s/DAQ/RawEvent#1"%taeNext]
                 taeNext -= 1
 
         if "L0ETC" in outputs:
