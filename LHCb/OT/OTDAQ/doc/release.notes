@@ -2,6 +2,9 @@ Package         : OTDAQ
 Package manager : J.Amoraal
 !---------------------------------------------------------------------
 
+! 2009-02-02 - Jan Amoraal
+ - use Warning function
+
 ! 2009-01-30 - Jan Amoraal
  - Only set the headers for known versions
  - debug -> verbose
