@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.244 2009-02-02 13:32:52 jpalac Exp $
+! $Id: release.notes,v 1.245 2009-02-02 15:08:19 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
@@ -7,7 +7,7 @@
 ! 2009-02-02 - Juan PALACIOS
  - src/DaVinciSmartAssociator{,h, .cpp}
   . Add implementation of IParticle2MCParticleAssociator::weight method.
-
+  . Add doxygen
 ! 2009-01-30 - Juan PALACIOS
  - src/DaVinciSmartAssociator.h, src/DaVinciSmartAssociator.cpp, src/GenericParticle2MCAssociator.h
   . These now virtually inherit from IParticle2MCAssociator and inherit
