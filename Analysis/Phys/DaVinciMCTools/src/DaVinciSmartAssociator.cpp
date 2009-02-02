@@ -36,9 +36,9 @@ DaVinciSmartAssociator::~DaVinciSmartAssociator() {}
 //=============================================================================
 // Make & return the linker
 //============================================================================= 
+//============================================================================= 
 Particle2MCParticle::ToVector 
-DaVinciSmartAssociator::associate(const LHCb::Particle* particleToBeAssociated,
-                                  const std::string& mcParticleLocation) const 
+DaVinciSmartAssociator::associate(const LHCb::Particle* particleToBeAssociated) const 
 {
 //We associate according to the particle type: protoparticle associators
 //are used for neutral and charged stable tracks, otherwise we use BackCat
@@ -67,6 +67,34 @@ DaVinciSmartAssociator::associate(const LHCb::Particle* particleToBeAssociated,
   }
 
   return associatedParts; 
+}
+//============================================================================= 
+Particle2MCParticle::ToVector 
+DaVinciSmartAssociator::associate(const LHCb::Particle* particleToBeAssociated,
+                                  const std::string& mcParticleLocation) const 
+{
+  if (mcParticleLocation!=LHCb::MCParticleLocation::Default) {
+    Warning("associate(const LHCb::Particle*  particle, const std::string& mcParticleLocation NOT implemented",
+            1, StatusCode::SUCCESS).ignore();
+    return ProtoParticle2MCLinker::ToRange();
+  } else {
+    return associate(particleToBeAssociated);
+  }
+
+}
+//=============================================================================
+double DaVinciSmartAssociator::weight(const LHCb::Particle* particle, 
+                                      const LHCb::MCParticle* mcParticle) const
+{
+  Particle2MCParticle::ToVector assocVector = associate(particle);
+
+  double w(0.);
+
+  for (Particle2MCParticle::ToVector::const_iterator it = assocVector.begin();
+       it != assocVector.end(); ++it) 
+    if (it->to() == mcParticle) w = it->weight();
+
+  return w;
 }
 //=============================================================================
 // initialize

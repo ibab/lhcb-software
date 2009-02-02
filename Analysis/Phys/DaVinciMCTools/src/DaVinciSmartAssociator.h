@@ -41,9 +41,15 @@ public:
   virtual StatusCode finalize() ;
 
   virtual Particle2MCParticle::ToVector 
-  associate(const LHCb::Particle* particle,
-            const std::string& mcParticleLocation) const;
+  associate(const LHCb::Particle* particle) const ;
 
+  virtual Particle2MCParticle::ToVector 
+  associate(const LHCb::Particle* particle,
+            const std::string& mcParticleLocation) const ;
+
+  virtual double 
+  weight(const LHCb::Particle* particle, 
+         const LHCb::MCParticle* mcParticle) const ;
 
 private:
 
