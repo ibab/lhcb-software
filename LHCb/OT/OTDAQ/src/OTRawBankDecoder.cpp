@@ -1,4 +1,4 @@
-// $Id: OTRawBankDecoder.cpp,v 1.23 2009-01-30 14:09:59 janos Exp $
+// $Id: OTRawBankDecoder.cpp,v 1.24 2009-02-02 13:39:41 janos Exp $
 // Include files
 #include <algorithm>
 #include <sstream>
@@ -252,8 +252,9 @@ StatusCode OTRawBankDecoder::initialize()
   
   m_nsPerTdcCount = m_timePerBX/ double(m_countsPerBX);
   
-  if( m_forcebankversion != OTBankVersion::UNDEFINED )
+  if( m_forcebankversion != OTBankVersion::UNDEFINED ) {
     warning() << "Forcing bank version to be " << m_forcebankversion << endreq ;
+  }
   
   info() << " countsPerBX = " << m_countsPerBX << endmsg;
   info() << " numberOfBX  = " << m_numberOfBX << endmsg;
@@ -352,7 +353,6 @@ StatusCode OTRawBankDecoder::decodeGolHeadersV3(const LHCb::RawBank& bank, int b
   for( idata = begin ; idata < end; ++idata) {
     // decode the header
     OTDAQ::GolHeader golHeader(*idata) ;
-    // if there are no hits, issue a warning
     numhits = golHeader.numberOfHits() ;
     // Decode the GOL ID
     station = golHeader.station();
@@ -361,7 +361,9 @@ StatusCode OTRawBankDecoder::decodeGolHeadersV3(const LHCb::RawBank& bank, int b
     module = golHeader.module();
     // check that the GOL ID is valid  
     if(!m_detectordata->isvalidID(station,layer,quarter,module) ) {
-      warning() << "Invalid gol header "<< golHeader << endmsg ;
+      std::ostringstream mess;
+      mess << "Invalid gol header "<< golHeader;
+      Warning( mess.str(), StatusCode::FAILURE, 0 ).ignore();
       decodingerror = true ;
     } else {
       const unsigned short* firsthit = reinterpret_cast<const unsigned short*>(idata+1) ;
@@ -375,14 +377,18 @@ StatusCode OTRawBankDecoder::decodeGolHeadersV3(const LHCb::RawBank& bank, int b
 
   // check that everything is well aligned
   if(idata != end) {
-    warning() << "GOL headers do not add up to buffer size. " << idata << " " << end << endreq ;
+    std::ostringstream mess;
+    mess << "GOL headers do not add up to buffer size. " << idata << " " << end;
+    Warning( mess.str(), StatusCode::FAILURE, 0 ).ignore();
     decodingerror = true ;
   }
   
   // check that we have read the right number of GOLs
   if( numgols != otheader.numberOfGOLs() ) {
-    warning() << "Found " << otheader.numberOfGOLs() << " in bank header, but read only " 
-              << numgols << " from bank." << endmsg ;
+    std::ostringstream mess;
+    mess << "Found " << otheader.numberOfGOLs() << " in bank header, but read only " 
+         << numgols << " from bank.";
+    Warning( mess.str(), StatusCode::FAILURE, 0 ).ignore();
     decodingerror = true ;
   }
     
@@ -425,15 +431,17 @@ StatusCode OTRawBankDecoder::decodeGolHeaders(const LHCb::RawEvent& event) const
           // Note: SIM and v3 currently (22/07/2008) uses same decoding.
           //       If SIM changes w.r.t. to the real decoding then we'll need
           //       to change it here.
-      case OTBankVersion::SIM:
-        m_channelmaptool->setBankVersion( bVersion ) ;
-      case OTBankVersion::v3:
-        m_channelmaptool->setBankVersion( bVersion ) ;
-	sc = decodeGolHeadersV3(**ibank,bVersion) ;
-	break ;
-      default:
-	warning() << "Cannot decode OT raw buffer bank version "
-		  << bVersion << " with this version of OTDAQ" << endmsg;
+        case OTBankVersion::SIM:
+          m_channelmaptool->setBankVersion( bVersion ) ;
+        case OTBankVersion::v3:
+          m_channelmaptool->setBankVersion( bVersion ) ;
+          sc = decodeGolHeadersV3(**ibank,bVersion) ;
+          break ;
+        default:
+          std::ostringstream mess;
+          mess << "Cannot decode OT raw buffer bank version "
+               << bVersion << " with this version of OTDAQ";
+          Warning( mess.str(), StatusCode::FAILURE, 0 ).ignore();
       } ;
       // ignore errors
       sc.ignore() ;
@@ -536,14 +544,18 @@ StatusCode OTRawBankDecoder::decode( OTDAQ::RawEvent& otrawevent ) const
     
     // check that everything is well aligned
     if(idata != end) {
-      warning() << "GOL headers do not add up to buffer size. " << idata << " " << end << endreq ;
+      std::ostringstream mess;
+      mess << "GOL headers do not add up to buffer size. " << idata << " " << end;
+      Warning( mess.str(), StatusCode::FAILURE, 0 ).ignore();
       decodingerror = true ;
     }
     
     // check that we have read the right number of GOLs
     if( numgols != otspecificbank.header().numberOfGOLs() ) {
-      warning() << "Found " << otspecificbank.header().numberOfGOLs() << " in bank header, but read only " 
-		<< numgols << " from bank." << endmsg ;
+      std::ostringstream mess;
+      mess << "Found " << otspecificbank.header().numberOfGOLs() << " in bank header, but read only " 
+           << numgols << " from bank.";
+      Warning( mess.str(), StatusCode::FAILURE, 0 ).ignore();
       decodingerror = true ;
     }
   }

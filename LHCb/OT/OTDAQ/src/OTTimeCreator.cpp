@@ -1,5 +1,8 @@
-// $Id: OTTimeCreator.cpp,v 1.23 2008-12-17 08:35:18 cattanem Exp $
+// $Id: OTTimeCreator.cpp,v 1.24 2009-02-02 13:39:42 janos Exp $
 // Include files
+// from STD
+#include <sstream>
+
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
@@ -78,15 +81,16 @@ StatusCode OTTimeCreator::execute()
       bool found(false) ;
       for( LHCb::OTLiteTimeRange::const_iterator jt = ottimes.begin() ; it != jt && !found; ++jt)
 	found = it->channel()==jt->channel() ;
-      if(found) 
-	warning() << "Found duplicate hit!" << it->channel() << endreq ;
-      else
-	outputTimes->insert(new OTTime(it->channel(),it->calibratedTime())) ;
+      if ( found ) {
+        std::ostringstream mess;
+        mess << "Found duplicate hit!" << it->channel();
+        Warning( mess.str(), StatusCode::FAILURE, 0 ).ignore();
+      } else outputTimes->insert(new OTTime(it->channel(),it->calibratedTime())) ;
     }
   }
   
-  debug() << " OTTimeCreator created " << outputTimes->size() 
-          << " OTTime(s) at " << m_timeLocation << endmsg;
+  if ( msgLevel( MSG::DEBUG ) ) debug() << " OTTimeCreator created " << outputTimes->size() 
+                                        << " OTTime(s) at " << m_timeLocation << endmsg;
 
   return StatusCode::SUCCESS;
 }

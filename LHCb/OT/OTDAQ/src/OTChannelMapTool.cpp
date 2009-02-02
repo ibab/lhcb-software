@@ -1,7 +1,8 @@
-// $Id: OTChannelMapTool.cpp,v 1.8 2008-12-17 08:35:18 cattanem Exp $
+// $Id: OTChannelMapTool.cpp,v 1.9 2009-02-02 13:39:41 janos Exp $
 // Include files
+// from STD
+#include <sstream>
 
-// Include files
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/ToolFactory.h"
 #include "OTDAQ/IOTChannelMapTool.h"
@@ -84,7 +85,7 @@ OTChannelMapTool::~OTChannelMapTool() {}
 StatusCode OTChannelMapTool::initialize()
 {
   
-  debug()<<"initializing OTChannelMapTool"<<endmsg;
+  if ( msgLevel( MSG::DEBUG ) ) debug()<<"initializing OTChannelMapTool"<<endmsg;
   
   StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
@@ -218,7 +219,9 @@ unsigned char OTChannelMapTool::computeStrawDC06( unsigned char channel )
 void OTChannelMapTool::updateChannelMap() const
 {
   using namespace OTDAQ ;
-  info() << "Updating OT channel map for bank version " << m_currentBankVersion << endreq ;
+  std::ostringstream mess;
+  mess << "Updating OT channel map for bank version " << m_currentBankVersion ;
+  Warning( mess.str(), StatusCode::SUCCESS, 0 ).ignore();
 
   // first sort the modules by type ('layout') and assign that type to the module in the channel map
   const DeOTDetector* otdet = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
@@ -233,7 +236,8 @@ void OTChannelMapTool::updateChannelMap() const
   
   // now fill the decoding table for each layout
   for( LayoutMap::const_iterator it = layoutmap.begin(); it != layoutmap.end(); ++it) {
-    debug() << "Number of modules of type " << it->first << " is " << it->second.size() << endreq ;
+    if ( msgLevel( MSG::DEBUG ) ) debug() << "Number of modules of type " << it->first 
+                                          << " is " << it->second.size() << endreq ;
 
     // create a new module
     OTDAQ::ChannelMap::Module module ;
@@ -245,14 +249,16 @@ void OTChannelMapTool::updateChannelMap() const
     // can also read a file that corrects the channel map
      switch( m_currentBankVersion ) {
        case OTBankVersion::DC06:
-         for ( unsigned ichan = 0; ichan < OTDAQ::ChannelMap::Module::NumChannels; ++ichan ) module.m_channelToStraw[ichan] = computeStrawDC06(ichan) ;
+         for ( unsigned ichan = 0; ichan < OTDAQ::ChannelMap::Module::NumChannels; ++ichan ) 
+           module.m_channelToStraw[ichan] = computeStrawDC06(ichan) ;
          break;
          // Note: SIM and v3 currently (22/07/2008) uses same decoding.
          //       If SIM changes w.r.t. to the real decoding then we'll need
          //       to change it here.
        case OTBankVersion::SIM:
        case OTBankVersion::v3:
-         for ( unsigned ichan = 0; ichan < OTDAQ::ChannelMap::Module::NumChannels; ++ichan ) module.m_channelToStraw[ichan] =computeStrawV3( it->first, ichan ) ;
+         for ( unsigned ichan = 0; ichan < OTDAQ::ChannelMap::Module::NumChannels; ++ichan ) 
+           module.m_channelToStraw[ichan] =computeStrawV3( it->first, ichan ) ;
      }
      
     // if( m_currentBankVersion == OTBankVersion::DC06 ) {
