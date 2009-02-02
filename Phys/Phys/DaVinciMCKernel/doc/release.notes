@@ -1,9 +1,20 @@
-! $Id: release.notes,v 1.57 2009-01-30 18:38:06 jpalac Exp $
+! $Id: release.notes,v 1.58 2009-02-02 13:05:43 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
+
+! 2009-02-02 - Juan PALACIOS
+ - Kernel/IParticle2MCAssociator.h
+  . add methods thas assume MCParticles are obtained behind the scenes from
+    somewhere.
+ - Kernel/Particle2MCAssociatorBase.h
+  . Add new methods from interface. Add MCParticle default locaiton string
+ - src/Lib/Particle2MCAssociatorBase.cpp
+  . Simple implementations of new interface methods. MCParticles are taken
+    from TES, location defined by property "MCParticleDefaultLocation", default
+    LHCb::MCParticleLocation::Default
 
 ! 2009-01-30 - Juan PALACIOS
  - Add src/Lib/Particle2MCAssociatorBase.cpp, 
