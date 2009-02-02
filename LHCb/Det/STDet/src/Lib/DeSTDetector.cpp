@@ -1,9 +1,10 @@
-// $Id: DeSTDetector.cpp,v 1.17 2008-10-28 12:43:08 cattanem Exp $
+// $Id: DeSTDetector.cpp,v 1.18 2009-02-02 15:36:48 mneedham Exp $
 
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTStation.h"
 #include "DetDesc/IGeometryInfo.h"
 #include "STDet/DeTTStation.h"
+#include "STDet/STDetFun.h"
 
 //STL
 #include <algorithm>
@@ -123,6 +124,28 @@ DeSTLayer* DeSTDetector::findLayer(const Gaudi::XYZPoint& point){
     std::find_if( m_layers.begin(), m_layers.end(), 
                  bind(&DeSTLayer::isInside, _1, point));
   return (iter != m_layers.end() ? *iter: 0);
+}
+
+
+DeSTSector* DeSTDetector::findSector(const std::string& nickname){
+  // return pointer to the sector from the nickname
+  std::vector<DeSTSector*>::iterator iter = 
+    std::find_if( m_sectors.begin(), m_sectors.end(), STDetFun::equal_by_name<DeSTSector*>(nickname));
+  return (iter != m_sectors.end() ? *iter: 0);
+}
+
+DeSTLayer* DeSTDetector::findLayer(const std::string& nickname){
+  // return pointer to the sector from the nickname
+  std::vector<DeSTLayer*>::iterator iter = 
+    std::find_if( m_layers.begin(), m_layers.end(), STDetFun::equal_by_name<DeSTLayer*>(nickname));
+  return (iter != m_layers.end() ? *iter: 0);
+}
+
+DeSTStation* DeSTDetector::findStation(const std::string& nickname){
+  // return pointer to the sector from the nickname
+  std::vector<DeSTStation*>::iterator iter = 
+    std::find_if( m_stations.begin(), m_stations.end(), STDetFun::equal_by_name<DeSTStation*>(nickname));
+  return (iter != m_stations.end() ? *iter: 0);
 }
 
 std::auto_ptr<LHCb::Trajectory> DeSTDetector::trajectory(const LHCb::LHCbID& id, 

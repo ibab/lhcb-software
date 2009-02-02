@@ -1,4 +1,4 @@
-// $Id: DeSTDetector.h,v 1.26 2008-11-05 09:43:33 mneedham Exp $
+// $Id: DeSTDetector.h,v 1.27 2009-02-02 15:36:48 mneedham Exp $
 #ifndef _DeSTDetector_H_
 #define _DeSTDetector_H_
 
@@ -90,6 +90,20 @@ public:
   @return station */
   DeSTStation* findStation(const Gaudi::XYZPoint & point) ;     
 
+  /** 
+  *  short cut to pick up the station corresponding to a given nickname
+  * @param nickname
+  * @return station 
+  */
+  DeSTStation* findStation(const std::string& nickname); 
+
+  /** 
+  *  short cut to pick up the station corresponding to a given nickname
+  * @param nickname
+  * @return layer
+  */
+  DeSTLayer* findLayer(const std::string& nickname); 
+
   /**  locate the layer based on a channel id
   @return  layer */
   DeSTLayer* findLayer(const LHCb::STChannelID aChannel);     
@@ -136,6 +150,13 @@ public:
   */
   DeSTSector* findSector(const LHCb::STChannelID aChannel) const; 
 
+  /** 
+  *  short cut to pick up the wafer corresponding to a given nickname
+  * @param nickname
+  * @return sector 
+  */
+  DeSTSector* findSector(const std::string& nickname); 
+
   /** get the next channel left */
   LHCb::STChannelID nextLeft(const LHCb::STChannelID testChan);
 
@@ -178,6 +199,9 @@ public:
 
   /** find a list of sectors from channelIDs **/
   Sectors findSectors(const std::vector<LHCb::STChannelID>& vec);
+
+  /** find a list of sectors from list of nicknames  **/
+  Sectors findSectors(const std::vector<std::string>& vec);
 
 protected:
 
@@ -256,20 +280,20 @@ inline const DeSTDetector::Layers& DeSTDetector::layers() const{
 
 inline LHCb::STChannelID DeSTDetector::nextLeft(const LHCb::STChannelID 
                                                 aChannel) {
-  DeSTSector* aSector = findSector(aChannel);
+  const DeSTSector* aSector = findSector(aChannel);
   return (0 != aSector ? aSector->nextLeft(aChannel) : 
-          LHCb::STChannelID(0u,0u,0u,0u,0u,0u) ); 
+          LHCb::STChannelID(0u) ); 
 }
 
 inline LHCb::STChannelID DeSTDetector::nextRight(const LHCb::STChannelID
                                                  aChannel) {
-  DeSTSector* aSector = findSector(aChannel);
+  const DeSTSector* aSector = findSector(aChannel);
   return (0 != aSector ? aSector->nextRight(aChannel) : 
-          LHCb::STChannelID(0u,0u,0u,0u,0u,0u) ); 
+          LHCb::STChannelID(0u) ); 
 }
 
 inline bool DeSTDetector::isValid(const LHCb::STChannelID aChannel){
-  DeSTSector* aSector = findSector(aChannel);
+  const DeSTSector* aSector = findSector(aChannel);
   return (aSector != 0 ? aSector->isStrip(aChannel.strip()) : false); 
 }
 
@@ -297,6 +321,21 @@ inline DeSTDetector::Sectors DeSTDetector::findSectors(const std::vector<LHCb::S
     DeSTSector* aSector = findSector(*iter);
     if (aSector != 0) sectors.push_back(aSector);
   }  // for 
+
+  // ensure unique list 
+  sectors.erase(std::unique(sectors.begin(), sectors.end()), sectors.end());
+  return sectors;
+}
+
+inline DeSTDetector::Sectors DeSTDetector::findSectors(const std::vector<std::string>& vec){
+  std::vector<DeSTSector*> sectors; sectors.reserve(vec.size());
+  std::vector<std::string>::const_iterator iter = vec.begin();
+  for (; iter != vec.end(); ++iter){
+    DeSTSector* aSector = findSector(*iter);
+    if (aSector != 0) sectors.push_back(aSector);
+  }  // for 
+
+  // ensure unique list
   sectors.erase(std::unique(sectors.begin(), sectors.end()), sectors.end());
   return sectors;
 }

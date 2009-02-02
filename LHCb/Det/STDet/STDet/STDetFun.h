@@ -1,4 +1,4 @@
-// $Id: STDetFun.h,v 1.1 2008-05-06 09:58:26 mneedham Exp $
+// $Id: STDetFun.h,v 1.2 2009-02-02 15:36:48 mneedham Exp $
 #ifndef _STDetFun_H_
 #define _STDetFun_H_
 
@@ -22,6 +22,19 @@ namespace STDetFun {
     }
     ///
   };
+
+
+  /// equal by nickname
+  template <class TYPE>
+  class equal_by_name: public std::unary_function<TYPE, bool>{
+    std::string name;
+  public:
+    explicit equal_by_name(const std::string& testname): name(testname){}
+    inline bool operator() (TYPE obj) const{
+      return obj->nickname() == name;
+    }  
+  };
+
 }
 
 #endif // _STDataFunctor_H_
