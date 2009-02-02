@@ -1,4 +1,4 @@
-// $Id: Particle2MCAssociatorBase.h,v 1.2 2009-01-30 18:50:58 jpalac Exp $
+// $Id: Particle2MCAssociatorBase.h,v 1.3 2009-02-02 13:04:27 jpalac Exp $
 #ifndef PARTICLE2MCASSOCIATORBASE_H 
 #define PARTICLE2MCASSOCIATORBASE_H 1
 
@@ -31,38 +31,48 @@ public:
   virtual ~Particle2MCAssociatorBase( );
 
   virtual Particle2MCParticle::ToVector 
+  associate(const LHCb::Particle* particle) const ;
+
+  virtual Particle2MCParticle::ToVector 
   associate(const LHCb::Particle* particle,
-            const std::string& mcParticleLocation) const;
+            const std::string& mcParticleLocation) const ;
 
   virtual Particle2MCParticle::LightTable 
-  relatedMCPs(const LHCb::Particle* particle,
-              const std::string& mcParticleLocation) const;
+  relatedMCPs(const LHCb::Particle*) const ;
 
   virtual Particle2MCParticle::LightTable 
-  relatedMCPs(const LHCb::Particle* particle,
-              const LHCb::MCParticle::ConstVector& mcParticles) const;
+  relatedMCPs(const LHCb::Particle*,
+              const std::string& mcParticleLocation) const ;
+  
+  virtual Particle2MCParticle::LightTable 
+  relatedMCPs(const LHCb::Particle*,
+              const LHCb::MCParticle::ConstVector& mcParticles) const ;
+
+  virtual Particle2MCParticle::LightTable 
+  associations(const LHCb::Particle::ConstVector& particles) const ;
   
   virtual Particle2MCParticle::LightTable 
   associations(const LHCb::Particle::ConstVector& particles,
-                   const std::string& mcParticleLocation) const;
-
-  
-  virtual Particle2MCParticle::LightTable 
-  associations(const LHCb::Particle::Container& particles,
-                   const std::string& mcParticleLocation) const;
-  
+               const std::string& mcParticleLocation) const ;
 
   virtual Particle2MCParticle::LightTable 
   associations(const LHCb::Particle::ConstVector& particles,
-                   const LHCb::MCParticle::ConstVector& mcParticles) const;
+               const LHCb::MCParticle::ConstVector& mcParticles) const ;
+
+  virtual Particle2MCParticle::LightTable 
+  associations(const LHCb::Particle::Container& particles) const ;
 
   virtual Particle2MCParticle::LightTable 
   associations(const LHCb::Particle::Container& particles,
-                   const LHCb::MCParticle::ConstVector& mcParticles) const;
-  
+               const std::string& mcParticleLocation) const ;
+
+  virtual Particle2MCParticle::LightTable 
+  associations(const LHCb::Particle::Container& particles,
+               const LHCb::MCParticle::ConstVector& mcParticles) const ;
+
   virtual double 
   weight(const LHCb::Particle* particle, 
-         const LHCb::MCParticle* mcParticle) const;
+         const LHCb::MCParticle* mcParticle) const ;
   
 private:
 
@@ -128,6 +138,10 @@ private:
       return Particle2MCParticle::LightTable();
     }
   }
+
+private:
+
+  std::string m_defMCLoc;
 
 };
 #endif // PARTICLE2MCASSOCIATORBASE_H

@@ -1,4 +1,4 @@
-// $Id: Particle2MCAssociatorBase.cpp,v 1.2 2009-01-30 18:50:58 jpalac Exp $
+// $Id: Particle2MCAssociatorBase.cpp,v 1.3 2009-02-02 13:04:27 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -19,8 +19,17 @@
 Particle2MCAssociatorBase::Particle2MCAssociatorBase( const std::string& type,
                                                       const std::string& name,
                                                       const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : 
+  GaudiTool ( type, name , parent ),
+  m_defMCLoc(LHCb::MCParticleLocation::Default)
 {
+  declareProperty ( "MCParticleDefaultLocation" , m_defMCLoc  ) ;
+}
+//=============================================================================
+Particle2MCParticle::ToVector 
+Particle2MCAssociatorBase::associate(const LHCb::Particle* particle) const 
+{
+  return associate(particle, m_defMCLoc);
 }
 //=============================================================================
 Particle2MCParticle::ToVector 
@@ -39,6 +48,12 @@ Particle2MCAssociatorBase::associate(const LHCb::Particle* particle,
     assocVector.push_back(myMCAssoc);
   }
   return assocVector;
+}
+//=============================================================================
+Particle2MCParticle::LightTable 
+Particle2MCAssociatorBase::relatedMCPs(const LHCb::Particle* particle) const
+{
+  return relatedMCPs(particle, m_defMCLoc);
 }
 //=============================================================================
 Particle2MCParticle::LightTable 
@@ -61,17 +76,16 @@ Particle2MCAssociatorBase::relatedMCPs(const LHCb::Particle* particle,
 }
 //=============================================================================
 Particle2MCParticle::LightTable 
+Particle2MCAssociatorBase::associations(const LHCb::Particle::ConstVector& particles) const
+{
+  return i_associations(particles.begin(), particles.end(), m_defMCLoc);
+}
+//=============================================================================
+Particle2MCParticle::LightTable 
 Particle2MCAssociatorBase::associations(const LHCb::Particle::ConstVector& particles,
                                         const std::string& mcParticleLocation) const
 {
   return i_associations(particles.begin(), particles.end(), mcParticleLocation);
-}
-//=============================================================================
-Particle2MCParticle::LightTable 
-Particle2MCAssociatorBase::associations(const LHCb::Particle::Container& particles,
-                                        const std::string& mcParticleLocation) const
-{
-  return i_associations(particles.begin(), particles.end(), mcParticleLocation);  
 }
 //=============================================================================
 Particle2MCParticle::LightTable 
@@ -83,6 +97,19 @@ Particle2MCAssociatorBase::associations(const LHCb::Particle::ConstVector& parti
                         mcParticles.begin(),
                         mcParticles.end());
   
+}
+//=============================================================================
+Particle2MCParticle::LightTable 
+Particle2MCAssociatorBase::associations(const LHCb::Particle::Container& particles) const
+{
+  return i_associations(particles.begin(), particles.end(), m_defMCLoc);
+}
+//=============================================================================
+Particle2MCParticle::LightTable 
+Particle2MCAssociatorBase::associations(const LHCb::Particle::Container& particles,
+                                        const std::string& mcParticleLocation) const
+{
+  return i_associations(particles.begin(), particles.end(), mcParticleLocation);  
 }
 //=============================================================================
 Particle2MCParticle::LightTable 
