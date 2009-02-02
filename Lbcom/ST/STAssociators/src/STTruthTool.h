@@ -1,4 +1,4 @@
-// $Id: STTruthTool.h,v 1.3 2007-01-09 15:05:00 jvantilb Exp $
+// $Id: STTruthTool.h,v 1.4 2009-02-02 15:37:40 mneedham Exp $
 #ifndef STTRUTHTOOL_H
 #define STTRUTHTOOL_H 1
 
@@ -11,6 +11,7 @@
 */
 
 #include <map>
+#include "GaudiKernel/SystemOfUnits.h"
 
 namespace LHCb{
   class MCParticle;
@@ -26,6 +27,11 @@ namespace STTruthTool{
   
   void associateToTruth(const LHCb::STDigit* aDigit,
                         std::map<const LHCb::MCParticle*,double>& particleMap);
+
+  void removeDeltaRays(const std::map<const LHCb::MCHit*, double>& inputMap,
+		       std::map<const LHCb::MCHit*,double>& hitMap);
+
+  const static double drayTol = 0.02 * Gaudi::Units::mm;
 
 }; 
 

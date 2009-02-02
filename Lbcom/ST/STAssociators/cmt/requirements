@@ -20,5 +20,5 @@ set STASSOCIATORSOPTS  ${STASSOCIATORSROOT}/options
 library           STAssociators  ../src/*.cpp
 apply_pattern component_library library=STAssociators
 
-
+macro_append cppflags ' -g  '
 
