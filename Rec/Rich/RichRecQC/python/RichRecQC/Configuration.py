@@ -4,11 +4,11 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.15 2009-01-30 15:32:28 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.16 2009-02-02 10:09:01 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
-from RichRecQC.Alignment import RichAlignmentConf
+from Alignment import RichAlignmentConf
 from RichMarkovRingFinder.Configuration import RichMarkovRingFinderConf
 from Configurables import ( GaudiSequencer, MessageSvc )
 from DDDB.Configuration import DDDBConf
@@ -130,7 +130,7 @@ class RichRecQCConf(RichConfigurableUser):
         # Alignment monitor
         if self.getProp("MirrorAlignmentMonitoring"):
             self.setOtherProps(RichAlignmentConf(),["Context","NTupleProduce","HistoProduce"])
-            RichAlignmentConf().AlignmentSequncer = self.newSeq(sequence,"RichMirrAlignMoni")
+            RichAlignmentConf().AlignmentSequencer = self.newSeq(sequence,"RichMirrAlignMoni")
 
         # Expert Monitoring
         if self.getProp("ExpertHistos") :

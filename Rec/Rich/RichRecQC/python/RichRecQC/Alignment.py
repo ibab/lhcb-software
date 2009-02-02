@@ -1,9 +1,8 @@
 
-__version__ = "$Id: Alignment.py,v 1.5 2009-02-01 12:35:19 jonrob Exp $"
+__version__ = "$Id: Alignment.py,v 1.6 2009-02-02 10:09:01 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
-from Configurables import ( Rich__Rec__MC__AlignmentMonitor )
     
 # ----------------------------------------------------------------------------------
 
@@ -19,7 +18,7 @@ class RichAlignmentConf(RichConfigurableUser):
     ## Steering options
     __slots__ = {
         "Context": "Offline"  # The context within which to run
-        ,"AlignmentSequncer" : None
+        ,"AlignmentSequencer" : None
         ,"NTupleProduce" : True
         ,"HistoProduce" : True
         }
@@ -27,9 +26,11 @@ class RichAlignmentConf(RichConfigurableUser):
     ## Apply the configuration
     def applyConf(self):
 
-        sequence = self.getProp("AlignmentSequncer")
+        sequence = self.getProp("AlignmentSequencer")
         if sequence == None : raise RuntimeError("ERROR : Alignment Sequencer not set")
 
+        from Configurables import ( Rich__Rec__MC__AlignmentMonitor )
+        
         # Mirror Alignment monitor for Rich1
         #-------------------------------------------------------------------------------
         RichAlignMoniR1 = Rich__Rec__MC__AlignmentMonitor("RichAlignMoniR1")
