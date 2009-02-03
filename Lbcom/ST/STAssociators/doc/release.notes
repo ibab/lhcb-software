@@ -2,6 +2,9 @@
 ! Package manager : J. van Tilburg
 !------------------------------------------------------------------------------
 
+! 2009-2-3 M Needham
+ - Remove -g from cppflags
+
 ! 2009-2-2 M Needham
  - Make associators delta-ray aware 
 
