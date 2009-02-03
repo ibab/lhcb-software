@@ -4,6 +4,9 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+! 2009-02-03 - Gerhard Raven
+ - fix another gcc 4.x compile error
+
 ! 2009-01-27 - Antonio Perez-Calero
  - added LumiHisto2dSPD.h/.cpp for production of 2D SPD multiplicity plots
 

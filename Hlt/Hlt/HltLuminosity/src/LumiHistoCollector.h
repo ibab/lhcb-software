@@ -1,4 +1,4 @@
-// $Id: LumiHistoCollector.h,v 1.4 2008-12-30 21:23:13 graven Exp $
+// $Id: LumiHistoCollector.h,v 1.5 2009-02-03 17:31:13 graven Exp $
 #ifndef LUMIHISTOCOLLECTOR_H 
 #define LUMIHISTOCOLLECTOR_H 1
 
@@ -42,8 +42,8 @@ private:
   virtual bool printHistoLeaf(IHistogramSvc*, SmartIF<IDataManagerSvc> mgr, IRegistry* pObj);
   virtual void setupStore  ();
   // to set interval
-  ulonglong LumiHistoCollector::gpsTime  ();
-  bool LumiHistoCollector::gpsTimeInterval  ();
+  ulonglong gpsTime  ();
+  bool gpsTimeInterval  ();
 
   // force decision to the value of decision
   void setDecision(bool decision);
