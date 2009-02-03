@@ -1,4 +1,4 @@
-// $Id: CheckPV.cpp,v 1.17 2008-09-30 15:11:34 jpalac Exp $
+// $Id: CheckPV.cpp,v 1.18 2009-02-03 09:14:45 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -27,8 +27,6 @@ CheckPV::CheckPV( const std::string& name,
                   ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
   , m_OnOfflineTool()
-  , m_nEvent(0)
-  , m_nPV(0)
 {
   declareProperty( "MinPVs", m_minPV = 1  );
   declareProperty( "MaxPVs", m_maxPV = -1 ); // -1 -> No maximum defined
@@ -90,13 +88,13 @@ StatusCode CheckPV::execute() {
     }
     n =  PV->size() ;
     if (msgLevel(MSG::VERBOSE)) verbose() << "There are " << n << " primary vertices." << endreq ;
-    m_nPV = m_nPV+n ;
-    ++m_nEvent ;
+    counter("PVs")+=n;
     
     ok = ( n >= m_minPV );      // more than m_minPV
     if ( m_maxPV >= 0 ){              // some maximum?
       ok = (ok && ( n <= m_maxPV ));  // less than m_maxPV
     }
+    counter("Events")+=ok;
   }
   if (msgLevel(MSG::DEBUG)){
     if (ok) debug() << "Event accepted because there are " << n << " primary vertices." << endreq ;
@@ -114,9 +112,6 @@ StatusCode CheckPV::execute() {
 StatusCode CheckPV::finalize() {
 
   debug() << "==> Finalize" << endmsg;
-  double fpv = (double)m_nPV/(double)m_nEvent ;
-  if (msgLevel(MSG::DEBUG)) debug() << "Seen " << m_nPV << " PVs in " << m_nEvent 
-         << " events. Average = " <<  fpv << endreq ;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }

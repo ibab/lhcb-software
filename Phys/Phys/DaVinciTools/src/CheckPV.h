@@ -1,4 +1,4 @@
-// $Id: CheckPV.h,v 1.6 2006-03-15 13:40:12 pkoppenb Exp $
+// $Id: CheckPV.h,v 1.7 2009-02-03 09:14:45 pkoppenb Exp $
 #ifndef CHECKPV_H 
 #define CHECKPV_H 1
 
@@ -9,8 +9,16 @@
 
 /** @class CheckPV CheckPV.h
  *  
- *  Algorithm that checks if there is a reconstructed PV available.
+ *  Algorithm that selects events with a given range of
+ *  Reconstructed PVs. In particular useful for 
+ *  requiring at least 1 PV. 
  *  To be used in any sequencer
+ *
+ *  @code
+ *  c = CheckPV("OnePV")
+ *  c.MinPVs = 1
+ *  # c.MaxPVs = 3 # uncomment for up to 3 PVs
+ *  @endcode
  *
  *  @author Patrick KOPPENBURG
  *  @date   2004-11-18
@@ -32,8 +40,6 @@ private:
   IOnOffline* m_OnOfflineTool ;   ///< OnOfflineTool Tool
   int m_minPV ;  ///< minimal number of reconstructed PVs required
   int m_maxPV ;  ///< maximal number of reconstructed PVs required. -1 means no requirement.
-  int m_nEvent ; ///< Number of events
-  int m_nPV ;    ///< Total number of reconstructed PV
 
 };
 #endif // CHECKPV_H

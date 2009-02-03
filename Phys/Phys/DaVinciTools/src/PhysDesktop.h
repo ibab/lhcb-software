@@ -251,9 +251,6 @@ private: // data
   /// Identify specific type of particle maker requested (Property)
   std::string m_pMakerType;  
 
-  /// turn on location warnings
-  bool m_locationWarned ;
-  
   IOnOffline* m_OnOffline ;   ///< locate PV
 
   Particle2Vertex::LightTable m_p2VtxTable; ///< Table of Particle to PV relations
@@ -268,6 +265,14 @@ private: // data
   /// instance by setting RelatedPVFinderName to RelatedPVFinder/MyFinder and then configuring
   /// ToolSvc.MyFinder.
   std::string m_pvRelatorName ; 
+
+  /// shortcut instead of printing warnings
+  void inline Info(const std::string& mess, const StatusCode sc = StatusCode::SUCCESS, 
+                   const MSG::Level level = MSG::DEBUG ) const {
+    Print(mess, sc, level).ignore();
+    counter(mess)++;
+    return ;
+  }
 
 };
 

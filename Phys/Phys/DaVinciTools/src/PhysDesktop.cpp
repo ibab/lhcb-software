@@ -87,7 +87,6 @@ PhysDesktop::PhysDesktop( const std::string& type,
     m_outputLocn     (),
     m_pMaker         (0),
     m_pMakerType(""),
-    m_locationWarned (false),
     m_OnOffline      (0),
     m_p2VtxTable(),
     m_distanceCalculator(0),
@@ -584,9 +583,9 @@ StatusCode PhysDesktop::getEventInput(){
     StatusCode sc = getPrimaryVertices();
     if ( sc.isFailure() ) return sc;
     if ( 0==m_primVerts) {
-      Warning( "No primary vertex container at "+primaryVertexLocation(),StatusCode::SUCCESS,1 ).ignore() ;      
+      Info( "No primary vertex container at "+primaryVertexLocation() ) ;      
     } else if (m_primVerts->empty()) {
-      Warning( "Empty primary vertex container at "+primaryVertexLocation(),StatusCode::SUCCESS,1  ).ignore() ;      
+      Info( "Empty primary vertex container at "+primaryVertexLocation() ) ;      
     }
   }
 
@@ -663,9 +662,8 @@ StatusCode PhysDesktop::getParticles(){
     std::string location = (*iloc)+"/Particles";
     if ( !exist<LHCb::Particles>( location ) ){ 
       //            return Error("No particles at location "+location); 
-      Warning("No particles at location "+location
-              +((rootInTES().size()>0)?(" under "+rootInTES()):""), 
-              StatusCode::SUCCESS, 1).ignore();
+      Info("No particles at location "+location
+              +((rootInTES().size()>0)?(" under "+rootInTES()):"") );
       continue ;
     }
     LHCb::Particles* parts = get<LHCb::Particles>( location );
@@ -741,13 +739,11 @@ StatusCode PhysDesktop::getInputRelations(std::vector<std::string>::const_iterat
         const Particle2Vertex::Range all = table->relations();
         storeRelationsInTable(all.begin(), all.end());
       } else {
-        Warning("NULL Particle2Vertex::Table* at "+location+" under "+rootInTES(),
-                StatusCode::FAILURE).ignore();
+        Info("NULL Particle2Vertex::Table* at "+location+" under "+rootInTES());
       }
 
     } else {
-      Warning("No relations table exists at "+location+" under "+rootInTES(),
-              StatusCode::SUCCESS, 1).ignore();
+      Info("No relations table exists at "+location+" under "+rootInTES());
     }
 
   }
@@ -766,8 +762,8 @@ StatusCode PhysDesktop::getPrimaryVertices() {
   
   if ( !exist<LHCb::RecVertices>( primaryVertexLocation() ) ) {
     m_primVerts = 0 ;
-    return Warning("No PV container at "+primaryVertexLocation(),
-                   StatusCode::SUCCESS);
+    Info ("No PV container at "+primaryVertexLocation());
+    return StatusCode::SUCCESS ;
   }
 
   m_primVerts = get<LHCb::RecVertices>( primaryVertexLocation() );
@@ -780,12 +776,7 @@ StatusCode PhysDesktop::getPrimaryVertices() {
 //=============================================================================
 void PhysDesktop::imposeOutputLocation(const std::string& outputLocationString){
   if (outputLocationString != m_outputLocn) {
-    if (m_locationWarned)
-    {
-      Warning( "Non-standard output location imposed: "
-               + outputLocationString, StatusCode::SUCCESS );
-      m_locationWarned = true ;
-    }
+    Warning( "Non-standard output location imposed: "+ outputLocationString, StatusCode::SUCCESS , 1);
     m_outputLocn = outputLocationString;
   }
   return;

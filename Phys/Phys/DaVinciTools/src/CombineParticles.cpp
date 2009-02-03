@@ -1,4 +1,4 @@
-// $Id: CombineParticles.cpp,v 1.25 2008-12-05 13:26:37 ibelyaev Exp $
+// $Id: CombineParticles.cpp,v 1.26 2009-02-03 09:14:45 pkoppenb Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -96,8 +96,9 @@ namespace
  *   # Give it a (mandatory) decay descriptor
  *   bs2jpsiphi.DecayDescriptor = "B_s0 -> phi(1020) J/psi(1S)"
  *   # Cut on the input particles
- *   bs2jpsiphi.DaughtersCuts = {"phi(1020)" : "(MAXTREE(ABSID=='mu+',TRCHI2DOF)<10) & (ADMASS('phi(1020)')<30*MeV) & (PT>1000*MeV)",
- *                                "J/psi(1S)" : " (ADMASS('J/psi(1S)')<100*MeV)"}
+ *   bs2jpsiphi.DaughtersCuts = {
+ *      "phi(1020)" : "(MAXTREE(ABSID=='mu+',TRCHI2DOF)<10) & (ADMASS('phi(1020)')<30*MeV) & (PT>1000*MeV)",
+ *      "J/psi(1S)" : " (ADMASS('J/psi(1S)')<100*MeV)"}
  *   # Cut on combinations of particles (in this case, J/Psi and Phi)
  *   bs2jpsiphi.CombinationCut = "ADAMASS('B_s0')<2*GeV"
  *   # Cut on the actual fitted Bs candidate
@@ -580,7 +581,7 @@ StatusCode CombineParticles::execute    ()  // standard execution
     if ( 0 != m_daughtersPlots ) 
     {
       StatusCode sc = m_daughtersPlots -> fillPlots ( r.begin() , r.end() , r.name() ) ;
-      if ( sc.isFailure() ) { Warning ("The error from DaughterPlots" , sc ) ; } 
+      if ( sc.isFailure() ) { Warning ("Error from DaughterPlots" , sc ) ; } 
     }
   }
   
@@ -647,7 +648,8 @@ StatusCode CombineParticles::execute    ()  // standard execution
       StatusCode sc = vertexFitter()->fit( combination , mother , vertex ) ;
       if ( sc.isFailure() ) 
       { 
-        Warning ( "The error from IParticleCombiner, skip the combination" , sc ) ; 
+        Print ( "Error from IParticleCombiner, skip the combination" , sc, MSG::DEBUG ) ;
+        counter("Error from IParticleCombiner, skip the combination")++;
         continue ;                                                 // CONTINUE 
       }
       

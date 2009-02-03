@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.396 2009-01-27 07:23:36 cattanem Exp $
+! $Id: release.notes,v 1.397 2009-02-03 09:14:45 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-02-03 - Patrick Koppenburg
+ - CheckPV : More doc, better counters
+ - PhysDesktop : Switch off all warnings. Replace by counters.
+ - CombineParticles : Switch off all warnings
+ - Increment to v18r2
 
 ! 2009-01-27 - Marco Cattaneo
  - Backwards compatible fix for Gaudi v21

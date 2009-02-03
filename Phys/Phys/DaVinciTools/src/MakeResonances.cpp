@@ -1,4 +1,4 @@
-// $Id: MakeResonances.cpp,v 1.36 2008-12-05 13:26:37 ibelyaev Exp $
+// $Id: MakeResonances.cpp,v 1.37 2009-02-03 09:14:45 pkoppenb Exp $
 
 #include <algorithm>
 
@@ -340,7 +340,8 @@ StatusCode MakeResonances::applyDecay(Decay& decay,
       const LHCb::Particle* Mother = makeMother(DaughterVector,
                                                 decay.getMotherPid());
       if (0==Mother){
-        sc = Warning("Something failed in vertex fitting",StatusCode::SUCCESS,1);
+        //        sc = Warning("Something failed in vertex fitting",StatusCode::SUCCESS,1);
+        Print("Something failed in vertex fitting",StatusCode::SUCCESS,MSG::DEBUG);
       } else {
         if (msgLevel(MSG::VERBOSE)) verbose() << "Getting mother " << Mother->particleID().pid()
                   << " " << Mother->momentum() << endmsg ;
