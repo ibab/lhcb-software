@@ -1,5 +1,5 @@
 
-// $Id: TrgVertexFitter.cpp,v 1.25 2008-09-10 15:10:38 pkoppenb Exp $
+// $Id: TrgVertexFitter.cpp,v 1.26 2009-02-03 09:29:34 pkoppenb Exp $
 // Include files 
 #include "gsl/gsl_sys.h"
 
@@ -247,7 +247,7 @@ StatusCode TrgVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
     
     StatusCode scFit = doFit( partsToFit, V );
     if ( !scFit) {
-      return Warning("doFit failed",StatusCode::FAILURE,1);
+      return Warning("doFit failed",StatusCode::FAILURE,0);
     }
   }
   
@@ -346,7 +346,7 @@ StatusCode TrgVertexFitter::doFit(const LHCb::Particle::ConstVector& partsToFit,
   StatusCode stPosAndErr = vertexPositionAndError(AX, BX, CX, DX, EX, AY, BY, CY, DY, EY, 
                                                   vX, vY, vZ, V);
   if (!stPosAndErr){
-    return Warning("vertexPositionAndError failed", StatusCode::FAILURE, 1);
+    return Warning("vertexPositionAndError failed", StatusCode::FAILURE, 0);
   }
   if (msgLevel(MSG::VERBOSE)){
     verbose() << "Got from VPAE X A " << AX << " B " << BX << " C " << CX << " D " << DX << " E " << EX << endmsg ;
@@ -424,7 +424,7 @@ StatusCode TrgVertexFitter::vertexPositionAndError(const double& AX,
   }
 
   if ( R2 < m_epsilon ) {
-    Warning("R2 is too small, leaving.", StatusCode::FAILURE, 1).ignore();
+    Warning("R2 is too small, leaving.", StatusCode::FAILURE, 0).ignore();
     debug() << " R1 " << R1 << " R2 " << R2 << endmsg ;
     return StatusCode::FAILURE;
   }   
@@ -444,12 +444,12 @@ StatusCode TrgVertexFitter::vertexPositionAndError(const double& AX,
 
   double det = ( BX*BY*( DX + DY ) - CX*CX*BY - CY*CY*BX );
   if ( 0 == gsl_fcmp ( det , 0 , 1.e-8 ) ) { 
-    Warning("Position covariance matrix determinant is zero").ignore();
+    Warning("Position covariance matrix determinant is zero",StatusCode::FAILURE,0).ignore();
     return StatusCode::FAILURE;    
   }
   double invDet = 1./det ;
   if ( ! lfin(invDet) ){ // that's probably not needed anymore
-    Warning("Position covariance matrix determinant cannot be inverted").ignore();
+    Warning("Position covariance matrix determinant cannot be inverted",StatusCode::FAILURE,0).ignore();
     return StatusCode::FAILURE;
   }
   
