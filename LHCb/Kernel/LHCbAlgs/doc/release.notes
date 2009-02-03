@@ -4,6 +4,15 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2009-02-03 - Marco Clemencic
+ - Added OdinTimeDecoder, RunChangeTest, TestTimeDecoderOdin and corresponding
+   tests. (were in Event/DAQEvent)
+ - Added the tools ODINDecodeTool and ODINEncodeTool, both inheriting from
+   ODINCodecBaseTool, which contains the implementation of the ODIN -> RawBank
+   and RawBank -> ODIN functions. Added a test too (lhcbalgs.odin_codec).
+ - Added dependencies on Det/DetDesc to compile RunChangeTest, and to
+   Det/DetDescSvc and Det/DetCond for the tests. 
+
 !======================== LHCbAlgs v2r23 2009-01-09 ==========================
 ! 2009-01-09 - Patrick Koppenburg
  - TESCheck : issue setFilterPassed(false) when location is not found in 

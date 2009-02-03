@@ -17,6 +17,7 @@ include_path    none
 use GaudiAlg   v*
 use LHCbKernel v* Kernel -no_auto_imports
 use DAQEvent   v* Event
+use DetDesc    v* Det
 
 #============================================================================
 # Component library building rule
@@ -27,3 +28,13 @@ library LHCbAlgs ../src/*.cpp -import=LHCbKernel
 # define component library link options
 #============================================================================
 apply_pattern   component_library library=LHCbAlgs
+
+#============================================================================
+# Testing infrastructure
+#============================================================================
+apply_pattern   QMTest
+# dependencies for tests
+private
+use DetDescSvc v* Det -no_auto_imports
+use DetCond    v* Det -no_auto_imports
+end_private
