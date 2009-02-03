@@ -1,4 +1,4 @@
-// $Id: TupleToolDecay.h,v 1.4 2009-01-21 09:02:49 pkoppenb Exp $
+// $Id: TupleToolDecay.h,v 1.5 2009-02-03 16:14:15 pkoppenb Exp $
 #ifndef JBOREL_TUPLETOOLDECAY_H 
 #define JBOREL_TUPLETOOLDECAY_H 1
 
@@ -45,7 +45,7 @@ public:
   virtual ~TupleToolDecay( ); ///< Destructor
 
   StatusCode initialize( const std::string&, bool );
-  std::string TupleToolDecay::decay() const ;
+  std::string decay() const ;
 
   std::string getInfo() const {return name() + " :" + decay();}
   void printInfo() const {info() << getInfo() << endreq;}
