@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.h,v 1.30 2008-12-05 13:27:03 ibelyaev Exp $ 
+// $Id: DVAlgorithm.h,v 1.31 2009-02-03 13:07:39 jpalac Exp $ 
 // ============================================================================
 #ifndef DAVINCIKERNEL_DVALGORITHM_H
 #define DAVINCIKERNEL_DVALGORITHM_H 1
@@ -128,6 +128,11 @@ public:
   inline IPhysDesktop* desktop()const
   {
     return getTool<IPhysDesktop>(m_desktopName,m_desktop,this) ;
+  }
+
+  inline const IRelatedPVFinder* relatedPVFinder() const
+  {
+    return desktop()->relatedPVFinder();
   }
   
 public:
