@@ -1,4 +1,4 @@
-// $Id: STClusterKiller.cpp,v 1.2 2008-10-14 08:49:04 mneedham Exp $
+// $Id: STClusterKiller.cpp,v 1.3 2009-02-03 09:33:20 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -30,7 +30,7 @@ STClusterKiller::~STClusterKiller()
 
 StatusCode STClusterKiller::initialize()
 {
-  StatusCode sc = GaudiAlgorithm::initialize();
+  StatusCode sc = ST::AlgBase::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
 
   /// initialize, flat generator...
@@ -39,7 +39,7 @@ StatusCode STClusterKiller::initialize()
   if (sc.isFailure()) return Error( "Failed to init generator ", sc);
   sc = release(tRandNumSvc);
   if (sc.isFailure()) return Error( "Failed to release RndmGenSvc ", sc);
-  
+
   return StatusCode::SUCCESS;
 }
 

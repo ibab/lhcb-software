@@ -2,6 +2,9 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+! 2009-02-03 M Needham 
+ - Bug fix in initialization of STClusterKiller
+
 !======================= STAlgorithms v3r3 2009-01-12 ========================
 ! 2009-01-06 M Needham
  - Add dependency on RecEvent
