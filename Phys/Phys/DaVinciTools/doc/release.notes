@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.397 2009-02-03 09:14:45 pkoppenb Exp $
+! $Id: release.notes,v 1.398 2009-02-03 13:13:18 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-02-03 - Juan PALACIOS
+ - src/PhysDesktop{.cpp, .h}
+  . Add virtual const IRelatedPVFinder* relatedPVFinder() const
 
 ! 2009-02-03 - Patrick Koppenburg
  - CheckPV : More doc, better counters
