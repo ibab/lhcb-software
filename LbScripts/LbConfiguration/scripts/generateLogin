@@ -38,11 +38,8 @@ def fixNative(filename):
     if os.environ.has_key("AFSROOT") and filename.endswith(".bat"):
         tobereplaced["AFSROOT"] = os.environ["AFSROOT"]
     else :
-        if not filename.endswith(".bat") :
-            tobereplaced["AFSROOT"] = "/afs"
-        else :
-            tobereplaced["AFSROOT"] = "\\afs"
-            
+        tobereplaced["AFSROOT"] = "/afs"
+
                    
     inf = open(filename, "r")
     data = inf.read()
@@ -86,19 +83,31 @@ def fixPathes(filename):
                 sp = "SAVED_%s" % p
                 if words[1] == p or words[1].startswith("%s=" % p) :
                     if filename.endswith(".csh") :
-                        out.write("setenv %s ${%s}\n" % (sp, p))
+                        out.write("if ( $?%s ) then\n" % p )
+                        out.write("  setenv %s ${%s}\n" % (sp, p))
+                        out.write("endif\n")
                         out.write(" ".join(words) + "\n")
-                        out.write("setenv %s ${%s}:${%s}\n" % (p, p, sp) )
+                        out.write("if ( $?%s ) then\n" % sp )
+                        out.write("  setenv %s ${%s}:${%s}\n" % (p, p, sp) )
+                        out.write("endif\n")
                         written = True
                     elif filename.endswith(".sh") :
-                        out.write("export %s=${%s}\n" % (sp, p))
+                        out.write("if test -n \"${%s}\"; then\n" % p )
+                        out.write("  export %s=${%s}\n" % (sp, p))
+                        out.write("fi\n")
                         out.write(" ".join(words) + "\n")
-                        out.write("export %s=${%s}:${%s}\n" % (p, p, sp) )
+                        out.write("if test -n \"${%s}\"; then\n" % sp )
+                        out.write("  export %s=${%s}:${%s}\n" % (p, p, sp) )
+                        out.write("fi\n")
                         written = True
                     elif filename.endswith(".bat") :
-                        out.write("set %s=%%%s%%\n" % (sp,p))
+                        out.write("IF DEFINED %s (\n" % p)                        
+                        out.write("  set %s=%%%s%%\n" % (sp,p))
+                        out.write(")\n")                        
                         out.write(" ".join(words) + "\n")
-                        out.write("set %s=%%%s%%;%%%s%%\n" % (p, p, sp) )
+                        out.write("IF DEFINED %s (\n" % sp)                        
+                        out.write("  set %s=%%%s%%;%%%s%%\n" % (p, p, sp) )
+                        out.write(")\n")                        
                         written = True
         if not written :
             out.write(" ".join(words) + "\n")

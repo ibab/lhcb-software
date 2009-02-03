@@ -1,3 +1,8 @@
+2009-02-03  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/generateLogin: added protection for PATHs additions in the cache. It checks
+	first if the variable exists before trying to dereference it. 
+
 2009-02-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v2r2
