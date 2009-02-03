@@ -95,6 +95,11 @@ public:
 
   virtual Particle2Vertex::Range particle2Vertices(const LHCb::Particle* part ) const;
 
+  virtual const std::string& primaryVertexLocation() const 
+  { 
+    return m_primVtxLocn; 
+  }
+
 private:
   /// Find all particles & vertices in a tree. 
   void findAllTree( const LHCb::Particle* part, 
@@ -180,11 +185,6 @@ private:
                 << " d= " << V->outgoingParticles().size()
                 << " par= " << (0!=V->parent())  << endmsg ;
     return;
-  }
-
-  virtual const std::string& primaryVertexLocation() const 
-  { 
-    return m_primVtxLocn; 
   }
 
   void storeRelationsInTable(const LHCb::Particle* part);
