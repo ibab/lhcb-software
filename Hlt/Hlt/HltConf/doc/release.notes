@@ -1,9 +1,21 @@
-! $Id: release.notes,v 1.131 2009-01-28 07:01:17 graven Exp $ 
+! $Id: release.notes,v 1.132 2009-02-03 12:28:10 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-02-03 - Gerhard Raven
+ - add support for (nested) tool calls in Hlt1Lines, eg. the following:
+               Hlt1Member ('TF', 'AntiEle' , FilterDescriptor = ['AntiEleConf,>,0.5'] 
+                          , tools = [ Hlt1Tool( L0ConfirmWithT, tools = [ Hlt1Tool(PatConfirmTool, nSigmaX = 9 ) ], particleType = 2 )]
+                          )
+   will add a (private)( L0ConfigWithT tool, which the property
+   particleType set to 2, and it will use a tool of type PatConfirmTool
+   with nSigmaX set to 9.
+   One caveat: a public tool configurable instance with 'dummy' in the name 
+   is created in addition. This is due to a limitation of 'addTool'....
+
 
 ! 2009-01-28 - Gerhard Raven
  - add L0DU to requirements

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.32 2009-01-07 12:25:37 graven Exp $ 
+# $Id: HltLine.py,v 1.33 2009-02-03 12:28:10 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.32 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.33 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt line itself 
@@ -544,29 +544,42 @@ class Hlt1Tool (object ) :
     @author Gerhard Raven Gerhard.Raven@nikhef.nl
     @date   2008-08-23  
     """
-    __slots__ = ( 'Type' , 'Name' , 'Args' )
+    __slots__ = ( 'Type' , 'Name' , 'Args', 'Tools' )
 
     ### The standard constructor to create an Hlt1Tool instance:
     def __init__ ( self        ,    ## ...
                    type = None ,    ## the type of the (configurable corresponding to the) tool
                    name = ''   ,    ## the instance name of the tool
+                   tools = []  ,    ## tools used by this tool
                    **Args      ) :  ## other arguments 
         if type  == None : raise AttributeError, "Tool must have a type"
         self.Type = type
         self.Name = name if len(name) > 0 else type().getType()
         self.Args = Args
+        self.Tools = tools
         ### need to deal with recursion on 2nd (and higher) level tools
         ### eg. when Args contains anything of type Hlt1Tool...
-        ### TODO/FIXME: what if this is a private tool???
     
     def createConfigurable( self, parent ) :
-        # TODO: check that we don't try to generate two (different) configs for the same instance?
-        #       (which wouldn't work, and would only result in the 2nd instance overruling
-        #        the settings of the first)
-        # TODO: do we need addTool??? (only if recursive? only if private tool?)
-        conf = self.Type( self.Name, self.Args )
+        ## TODO/FIXME: this creates an unused public tool instance, 
+        ##             which could cause fall-out problems...
+        ##             how to avoid this? Generate a dummy name, 
+        ##             and explicitly kill afterwards???
+        ## origin of the problem is that we don't know the name
+        ## of the result of 'addTool'... otherwise we wouldn't
+        ## go 'depth first', i.e. if we got the instance back
+        ## that addTool makes, we could just continue using it,
+        ## instead of first creating our own (public!) instance
+        ## and then handing it over to addTool to make it private...
+        conf = self.Type( name = 'dummy'+self.Name )
         for k,v in self.Args.iteritems() : setattr(conf,k,v)
-        return conf
+        for tool in self.Tools :  
+                if type(tool) is not Hlt1Tool : 
+                    raise AttributeError, "The type  %s is not an Hlt1Tool"%type(tool)
+                tool.createConfigurable( conf )
+        # make sure we call 'addTool' with an instance!
+        parent.addTool( conf , name = self.Name )
+        del conf
         
    
 
@@ -642,10 +655,11 @@ class Hlt1Member ( object ) :
         ## clone the arguments
         line = deepcopy ( line )
         args = deepcopy ( args ) 
-        # see if alg has any special Tool requests...
         name = memberName( self, line )
-        for tool in self.Tools : tool.createConfigurable( parent = name )
-        return self.Type( name, **args)
+        # see if alg has any special Tool requests...
+        instance =  self.Type( name, **args)
+        for tool in self.Tools : tool.createConfigurable( instance )
+        return instance
 
 # ============================================================================
 ## @class Hl1Line
