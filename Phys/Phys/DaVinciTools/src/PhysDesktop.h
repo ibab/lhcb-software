@@ -82,6 +82,7 @@ public:
 
   virtual const LHCb::VertexBase* relatedVertex(const LHCb::Particle* part);
   
+  virtual const IRelatedPVFinder* relatedPVFinder() const;
 
   virtual void relate(const LHCb::Particle*   part, 
                       const LHCb::VertexBase* vert,

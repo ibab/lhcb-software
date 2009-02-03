@@ -831,6 +831,11 @@ const LHCb::VertexBase* PhysDesktop::relatedVertex(const LHCb::Particle* part){
 
 }
 //=============================================================================
+const IRelatedPVFinder* PhysDesktop::relatedPVFinder() const
+{
+  return m_pvRelator;
+}
+//=============================================================================
 void PhysDesktop::relate(const LHCb::Particle*   part, 
                          const LHCb::VertexBase* vert,
                          const double weight)
