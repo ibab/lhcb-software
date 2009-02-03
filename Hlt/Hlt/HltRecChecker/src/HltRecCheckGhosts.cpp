@@ -1,4 +1,4 @@
-// $Id: HltRecCheckGhosts.cpp,v 1.2 2009-02-02 18:51:39 gligorov Exp $
+// $Id: HltRecCheckGhosts.cpp,v 1.3 2009-02-03 18:17:35 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -73,9 +73,9 @@ StatusCode HltRecCheckGhosts::execute() {
 
   //m_selections.output()->clean();
 
-  Hlt::Selection& s = m_dataSvc->selection(stringKey(m_inputTrackSelection),this);
+  Hlt::Selection* s = m_dataSvc->selection(stringKey(m_inputTrackSelection),this);
 
-  Hlt::TSelection<LHCb::Track>* tracks =  s.down_cast<LHCb::Track >(); 
+  Hlt::TSelection<LHCb::Track>* tracks =  s->down_cast<LHCb::Track >(); 
   //Hlt::TSelection<LHCb::Track>* tracks =  s.down_cast();
   //Lets see what we just did, for debug
   //if (m_debug) {

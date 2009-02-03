@@ -4,6 +4,9 @@
 ! Purpose     : Check reconstruction algorithms for HLT 
 !-----------------------------------------------------------------------------
 
+! 2009-02-03 - V Gligorov
+ - update HltRecCheckGhosts to be in sync with Hlt v5r0 and later
+
 ! 2009-02-02 - V Gligorov
  - Updated HltRecCheckGhosts.{h,cpp} to save the number of hits on a track.
 
