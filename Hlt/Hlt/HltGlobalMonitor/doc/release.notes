@@ -1,7 +1,9 @@
-!$Id: release.notes,v 1.19 2009-01-26 10:36:53 graven Exp $
+!$Id: release.notes,v 1.20 2009-02-03 14:00:42 graven Exp $
 Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
+
+!========================== HltGlobalMonitor v2r0p1 2009-02-03 ===============
 
 !2009-01-26 - Gerhard Raven
  - do not fetch L0DU from event -- in TDET, this results in some corruption...
