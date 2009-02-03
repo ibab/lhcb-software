@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltCommissioningLines.py,v 1.2 2009-01-12 11:02:19 graven Exp $
+# $Id: HltCommissioningLines.py,v 1.3 2009-02-03 14:35:23 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines for commissioning
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
 # =============================================================================
 
 from LHCbKernel.Configuration import *
@@ -24,7 +24,7 @@ class HltCommissioningLinesConf(LHCbConfigurableUser):
 
    __slots__ = { 'PhysicsPrescale'  : 1
                , 'RandomPrescale'   : 1
-               , 'L0ForcedPrescale'   : 1
+               , 'L0ForcedPrescale'   : 0
                }
    def __apply_configuration__(self):
         Line('Physics' ,  ODIN = 'ODIN_TRGTYP != LHCb.ODIN.RandomTrigger'
@@ -34,8 +34,7 @@ class HltCommissioningLinesConf(LHCbConfigurableUser):
         Line('Random' ,  ODIN = 'ODIN_TRGTYP == LHCb.ODIN.RandomTrigger'
             , prescale = self.getProp('RandomPrescale') # @OnlineEnv.AcceptRate
             )
-
-        Line('L0Forced', L0DU = 'L0_FORCEBIT'
-            , prescale = self.getProp('L0ForcedPrescale')
-            )
+        #Line('L0Forced', L0DU = 'L0_FORCEBIT'
+        #    , prescale = self.getProp('L0ForcedPrescale')
+        #    )
         Line('Incident', ODIN = 'ODIN_ALL', algos = [ HltIncidentFilter() ])

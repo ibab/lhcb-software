@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.132 2009-02-03 12:28:10 graven Exp $ 
+! $Id: release.notes,v 1.133 2009-02-03 14:35:23 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -27,6 +27,12 @@
 ! 2009-01-27 - Gerhard Raven
  - automatically add entries in HltANNSvc for selections & decisions if they
    are not explicitly set a-priori
+
+!========================== HltConf v2r1 2009-02-03 ===================
+
+! 2009-02-03 - Gerhard Raven 
+ - remove L0Force-prescaled decision; causes trouble in TDET, which has
+   no L0DU...
 
 ! 2009-01-23 - Gerhard Raven for Patrick Spalding
  - make sure Hlt/Track/Forward is used everywhere, and not Hlt/Tracks/Forward
