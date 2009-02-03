@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.280 2009-02-03 13:08:04 jpalac Exp $
+!$Id: release.notes,v 1.281 2009-02-03 14:54:23 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
@@ -12,6 +12,9 @@
       virtual const IRelatedPVFinder* relatedPVFinder() const = 0 ;
  - Kernel/DVAlgorithm.h
   . Add const accessor to IPhysDesktop's IRelatedPVFinder.
+  . Add const accessor to IPhysDesktop's primary vertex container.
+ - Kernel/DVAlgorithm.h, src/Lib/DVAlgorithm.cpp
+  . Add method to get the best related PV for a given LHCb::Particle.
 
 !======================== DaVinciKernel v7r2 2009-01-08 =====================
 ! 2008-12-11 - Marco Cattaneo
