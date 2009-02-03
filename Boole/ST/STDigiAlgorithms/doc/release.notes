@@ -4,6 +4,10 @@
 ! Purpose     : Algorithms for ST Digitization
 !-----------------------------------------------------------------------------
 
+! 2009-02-03 M Needham
+ - Remove some unneed options from itDigi.opts [now done in Boole 
+   configurable]
+
 !========================= STDigiAlgorithms v1r4 2008-11-24 ==================
 ! 2008-10-22 M Needham
  - Move to new base class
