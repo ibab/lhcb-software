@@ -17,6 +17,7 @@ AuditorSvc.Auditors +=  { "TimingAuditor/TIMER" } ;
 //---------------------------------------------------------------------------
 
 EventPersistencySvc.CnvServices += {"LHCb::RawDataCnvSvc"};
+HistogramPersistencySvc.Warnings = false;
 
 // HLTOPTS = Online/OnlineTasks/v1r13/hltopts/OnlineEnvironment.opts ???
 // #include "$HLTOPTS/OnlineEnvironment.opts"
@@ -36,10 +37,12 @@ DDDB.DefaultTAG     = 'head-20090112';
 LHCBCOND.DefaultTAG = 'head-20090112';
 EventClockSvc.EventTimeDecoder = "OdinTimeDecoder";
 MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
-HltConfigSvc.prefetchTCK = { @OnlineEnv.InitialTCK };
-HltConfigSvc.initialTCK =    @OnlineEnv.InitialTCK;
+HltConfigSvc.prefetchTCK = { '0x80290000'};
+HltConfigSvc.initialTCK =    '0x80290000' ;
+HltConfigSvc.checkOdin = false;
 ApplicationMgr.ExtSvc += { "HltConfigSvc", "HltANNSvc", "LumiANNSvc", "LoKiSvc" };
 ApplicationMgr.TopAlg += { "GaudiSequencer/Hlt" };
+ApplicationMgr.HistogramPersistency = "NONE";
 /////////////////////////////////////
 
 
@@ -74,5 +77,5 @@ Output.InputDataType                 = 1;
 Output.Compress                      = 0;
 
 // added on request of Markus @ 2008/11/19 20:35
-// Output.RoutingBits                   = 1;
+Output.RoutingBits                   = 1;
 

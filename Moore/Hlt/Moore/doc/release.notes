@@ -2,8 +2,10 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2009-02-03 - Gerhard Raven
+ - add settings for LHCb and FEST partitions
+
 ! 2009-01-26 - Gerhard Raven
- - add support for RUNTYPE=INJECTOR in (create)runMooreOnline_EFF
  - update 'our' version of DecodeRawEvents.opts
  - update DB tags in DEFAULT.opts
  - no more UserAlgorithms in HltConf..

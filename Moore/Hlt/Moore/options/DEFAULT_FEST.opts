@@ -1,4 +1,4 @@
-#include "$MOOREOPTS/DEFAULT.opts"
+#include "$MOOREOPTS/DEFAULT_LHCb.opts"
 
 //////  For FEST data only... (I hope this is enough!)
 SIMCOND.DefaultTAG = 'sim-20090112';
