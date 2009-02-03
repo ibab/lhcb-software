@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.29 2008-10-30 16:34:13 jpalac Exp $
+// $Id: IPhysDesktop.h,v 1.30 2009-02-03 12:12:14 jpalac Exp $
 #ifndef DAVINCIKERNEL_IPHYSDESKTOP_H 
 #define DAVINCIKERNEL_IPHYSDESKTOP_H 1
 
@@ -9,6 +9,7 @@
 #include "Kernel/Particle2Vertex.h"
 // Forward declarations
 class StatusCode;
+class IRelatedPVFinder;
 
 // Declaration of the interface ID ( interface id, major version, minor version)
 static const InterfaceID IID_IPhysDesktop("IPhysDesktop", 1, 3);
@@ -118,6 +119,11 @@ public:
   /// Get the vertex with the highest weight in the association
   /// between LHCb::Particle and LHCb::VertexBase
   virtual const LHCb::VertexBase* relatedVertex(const LHCb::Particle* part) = 0;
+
+  /**
+   * Get a pointer to the Particle->PV relator tool
+   **/
+  virtual const IRelatedPVFinder* relatedPVFinder() const = 0 ;
   
   /// Establish a relation between an LHCb::Particle and an LHCb::VertexBase
   virtual void relate(const LHCb::Particle* part, 
