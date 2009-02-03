@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.h,v 1.9 2008-09-17 19:31:57 graven Exp $
+// $Id: HltConfigSvc.h,v 1.10 2009-02-03 18:22:09 graven Exp $
 #ifndef HLTCONFIGSVC_H 
 #define HLTCONFIGSVC_H 1
 
@@ -88,7 +88,7 @@ private:
   bool                         m_maskL0TCK;
 
   // resolve TCK -> toplevel config ID, then call method with ID
-  ConfigTreeNode::digest_type tck2id(const TCKrep& tck) const;
+  ConfigTreeNode::digest_type tck2id(TCKrep tck) const;
 
 };
 #endif // HLTCONFIGSVC_H

@@ -3,6 +3,9 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2009-02-03 - Gerhard Raven
+ - make sure that all TCKs zero their L0 part if the sign bit is set
+
 ! 2009-01-21 - Gerhard Raven
  - remove HltSummary{Tool,Writer}, HltSelection2Decision, HltDecision
  - move EParser from HltBase to HltCommon
