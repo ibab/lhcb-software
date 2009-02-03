@@ -13,5 +13,5 @@ configurationPath = os.path.join('/afs', 'cern.ch', 'lhcb', 'software', 'nightli
 configurationHistoryPath = os.path.join('/afs', 'cern.ch', 'lhcb', 'software', 'nightlies', 'conf', 'history')
 
 cmtCommand = 'cmt -disable_warnings'
-getpackCommand = 'getpack --batch'
+getpackCommand = 'getpack --batch -p anonymous'
 python = 'python '

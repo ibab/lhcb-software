@@ -1,3 +1,7 @@
+2008-02-03  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+
+	* python/LbRelease/Nightlies/setup.py: anonymous flag added for getpack
+
 2009-01-27  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v2r1
@@ -22,7 +26,7 @@
 	* scripts/startNightlies.bat: converted the source shell scripts. Now they are calling
 	their python internal script with "python -m" and the python scripts have been moved to
 	the python directory
-	
+
 
 2008-01-13  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
