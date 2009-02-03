@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTrack.cpp,v 1.4 2008-10-01 14:33:58 dhcroft Exp $
+// $Id: PatVeloSpaceTrack.cpp,v 1.5 2009-02-03 15:10:41 dhcroft Exp $
 // Include files 
 
 // local
@@ -32,6 +32,38 @@ namespace Tf {
     m_rCoord.reserve( 20 );
     m_phiCoord.reserve( 20 );
   }
+
+  PatVeloSpaceTrack::PatVeloSpaceTrack( const PatVeloSpaceTrack & track ) 
+    : m_s0(track.m_s0),
+      m_sr(track.m_sr),
+      m_sz(track.m_sz),
+      m_srz(track.m_srz),
+      m_srz2(track.m_srz2),
+      m_sz2(track.m_sz2),
+      m_valid(track.m_valid),
+      m_zone(track.m_srz2),
+      m_xZone(track.m_xZone),
+      m_negZone(track.m_negZone),
+      m_backward(track.m_backward),
+      m_pos0(track.m_pos0),
+      m_slope(track.m_slope),
+      m_firstZ(track.m_firstZ),
+      m_meanZ(track.m_meanZ),
+      m_posErr(track.m_posErr),
+      m_slopeErr(track.m_slopeErr),
+      m_chiSqDof(track.m_chiSqDof),
+      m_rCoord(track.m_rCoord),
+      m_phiCoord(track.m_phiCoord),
+      m_point(track.m_point),
+      m_slopeX(track.m_slopeX),
+      m_slopeY(track.m_slopeY),
+      m_cov(track.m_cov),
+      m_maxRSensor(track.m_maxRSensor),
+      m_minRSensor(track.m_minRSensor),
+      m_ancestor(track.m_ancestor),
+      m_angleUtils(track.m_angleUtils)
+  {};
+
 
   /// add and R coordinate: update rz parameters
   void PatVeloSpaceTrack::addRCoord( PatVeloRHit* coord )  {  

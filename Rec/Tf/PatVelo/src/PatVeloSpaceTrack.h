@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTrack.h,v 1.5 2008-10-01 14:33:58 dhcroft Exp $
+// $Id: PatVeloSpaceTrack.h,v 1.6 2009-02-03 15:10:41 dhcroft Exp $
 #ifndef TF_PATVELOSPACETRACK_H
 #define TF_PATVELOSPACETRACK_H 1
 
@@ -24,6 +24,8 @@ namespace Tf {
       PatVeloSpaceTrack( );   ///< Standard constructor
 
       ~PatVeloSpaceTrack( ) {}; ///< Destructor
+
+      PatVeloSpaceTrack(const PatVeloSpaceTrack & track); ///< Copy constructor
 
       /// add and R coordinate: update rz parameters
       void addRCoord( PatVeloRHit* coord );

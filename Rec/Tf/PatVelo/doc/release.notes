@@ -4,6 +4,10 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2009-02-03 - David Hutchcroft
+ - Made PatVeloSpaceTrack copy constructor explicit (was automatcially created)
+   Reported as possible FPE problem
+
 !========================== PatVelo v3r10p1 2009-01-12 =======================
 ! 2008-12-04 - Marco Cattaneo
  - Adapt to new location of IPatDebugTool.h in PatKernel
