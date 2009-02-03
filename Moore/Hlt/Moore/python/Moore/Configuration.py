@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.47 2009-01-26 10:15:47 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.48 2009-02-03 13:13:42 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -53,7 +53,6 @@ class Moore(LHCbConfigurableUser):
         , "TCKData" :          '$TCKDATAROOT' # where do we read TCK data from?
         , "TCKpersistency" :   'file' # which method to use for TCK data? valid is 'file' and 'sqlite'
         , "enableAuditor" :    [ ]  # put here eg . [ NameAuditor(), ChronoAuditor(), MemoryAuditor() ]
-        , "UserAlgorithms":    [ ]  # put here user algorithms to add
         , "Verbose" :          True # whether or not to print Hlt sequence
         }   
                 
@@ -156,6 +155,5 @@ class Moore(LHCbConfigurableUser):
                               , label = self.getProp('configLabel'))
             # make sure gen is the very first Top algorithm...
             ApplicationMgr().TopAlg = [ gen.getFullName() ] + ApplicationMgr().TopAlg
-        for alg in self.getProp('UserAlgorithms') : ApplicationMgr().TopAlg += [ alg ] 
         self.configureInput()
         self.configureOutput()
