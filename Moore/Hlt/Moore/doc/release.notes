@@ -4,6 +4,7 @@ Purpose     : LHCb HLT application
 
 ! 2009-02-03 - Gerhard Raven
  - add settings for LHCb and FEST partitions
+ - use the above in CreateRunMooreOnline
  - no more UserAlgorithms in Moore
 
 ! 2009-01-26 - Gerhard Raven
