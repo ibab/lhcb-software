@@ -3,7 +3,6 @@
 # applying configuration of Boole
 # /***** User Boole/Boole ****************************************************************************
 # |-DatasetName    = ''
-# |-MainOptions    = '$BOOLEOPTS/Boole.opts'
 # |-Histograms     = 'NONE'  (default: 'Default')
 # |-SkipEvents     = 0
 # |-ExtendedDigi   = False
@@ -12,21 +11,19 @@
 # |-MainSequence   = []  (default: [])
 # |-MoniSequence   = []  (default: [])
 # |-UseOracle      = False
-# |-TrigSequence   = ['L0']  (default: ['L0'])
+# |-TrigSequence   = []  (default: [])
 # |-TAEPrev        = 0
 # |-SkipSpill      = 0
-# |-DigiSequence   = ['VELO', 'TT', 'IT', 'OT', 'RICH', 'CALO', 'MUON', 'L0']
-# |                (default: ['VELO', 'TT', 'IT', 'OT', 'RICH', 'CALO', 'MUON', 'L0'])
+# |-DigiSequence   = []  (default: [])
 # |-EvtMax         = 0  (default: -1)
 # |-TAENext        = 0
-# |-UseSpillover   = False
 # |-CondDBtag      = ''
+# |-UseSpillover   = False
 # |-WriteL0Only    = False
-# |-RelsSequence   = ['VELO', 'TT', 'IT', 'OT', 'Tr', 'RICH', 'CALO', 'MUON', 'L0']
-# |                (default: ['VELO', 'TT', 'IT', 'OT', 'Tr', 'RICH', 'CALO', 'MUON', 'L0'])
-# |-InitSequence   = ['Boole', 'Data', 'MUON']  (default: ['Boole', 'Data', 'MUON'])
+# |-InitSequence   = []  (default: [])
 # |-DataType       = '2008'
 # |-NoWarnings     = False
+# |-LinkSequence   = []  (default: [])
 # |-SpilloverPaths = ['Prev', 'PrevPrev', 'Next']  (default: ['Prev', 'PrevPrev', 'Next'])
 # |-DDDBtag        = ''
 # |-Monitors       = []  (default: [])
@@ -38,7 +35,7 @@ Collection='EVTTAGS/TagCreator/1' ADDRESS='/Event' DATAFILE='L0ETC.root' TYP='PO
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Boole version v17r2
-                                          running on lxbuild120.cern.ch on Mon Feb  2 12:14:50 2009
+                                          running on lxbuild120.cern.ch on Tue Feb  3 15:33:57 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
@@ -50,8 +47,8 @@ EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEv
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.83 times the speed of a 2.8 GHz Xeon.
-BooleSequencer       INFO Member list: ProcessPhase/Init, ProcessPhase/Digi, ProcessPhase/Trigger, ProcessPhase/Relations, ProcessPhase/Moni
+TimingAuditor.T...   INFO This machine has a speed about   1.78 times the speed of a 2.8 GHz Xeon.
+BooleSequencer       INFO Member list: ProcessPhase/Init, ProcessPhase/Digi, ProcessPhase/Trig, ProcessPhase/Link, ProcessPhase/Moni
 Init                 INFO Member list: GaudiSequencer/InitBooleSeq, GaudiSequencer/InitDataSeq, GaudiSequencer/InitMUONSeq
 InitBooleSeq         INFO Member list: BooleInit
 BooleInit         SUCCESS ==================================================================
@@ -142,33 +139,33 @@ L0MuonTrigger I...   INFO Time User   : Tot= 1.86  [s]                          
 ToolSvc.L0DUCon...   INFO **** L0DU Configs loading : TCK = 0xFFFF
 ToolSvc.L0DUCon...   INFO Short description ::  TCK = 0xFFFF : Algorithm[1] Setting[0] lumi[2] - 2007 tuning - gain:Calo[20] : Muon[40]
 L0DU                 INFO The L0DUConfig (TCK=0xFFFF) have been succesfully loaded
-Trigger              INFO Member list: GaudiSequencer/TriggerL0Seq
-TriggerL0Seq         INFO Member list: L0Filter
+Trig                 INFO Member list: GaudiSequencer/TrigL0Seq
+TrigL0Seq            INFO Member list: L0Filter
 L0Filter             INFO Will require that any L0 channel(s) is passed
-Relations            INFO Member list: GaudiSequencer/RelationsVELOSeq, GaudiSequencer/RelationsTTSeq, GaudiSequencer/RelationsITSeq, GaudiSequencer/RelationsOTSeq, GaudiSequencer/RelationsTrSeq, GaudiSequencer/RelationsRICHSeq, GaudiSequencer/RelationsCALOSeq, GaudiSequencer/RelationsMUONSeq, GaudiSequencer/RelationsL0Seq
-RelationsVELOSeq     INFO Member list: DecodeVeloRawBuffer, VeloCluster2MCHitLinker, VeloCluster2MCParticleLinker
-RelationsTTSeq       INFO Member list: STDigit2MCHitLinker/TTDigitLinker, STCluster2MCHitLinker/TTClusterLinker, STCluster2MCParticleLinker/TTTruthLinker
-RelationsITSeq       INFO Member list: STDigit2MCHitLinker/ITDigitLinker, STCluster2MCHitLinker/ITClusterLinker, STCluster2MCParticleLinker/ITTruthLinker
-RelationsOTSeq       INFO Member list: OTMCDepositLinker, OTMCHitLinker, OTMCParticleLinker
-RelationsTrSeq       INFO Member list: BuildMCTrackInfo
+Link                 INFO Member list: GaudiSequencer/LinkVELOSeq, GaudiSequencer/LinkTTSeq, GaudiSequencer/LinkITSeq, GaudiSequencer/LinkOTSeq, GaudiSequencer/LinkTrSeq, GaudiSequencer/LinkRICHSeq, GaudiSequencer/LinkCALOSeq, GaudiSequencer/LinkMUONSeq, GaudiSequencer/LinkL0Seq
+LinkVELOSeq          INFO Member list: DecodeVeloRawBuffer, VeloCluster2MCHitLinker, VeloCluster2MCParticleLinker
+LinkTTSeq            INFO Member list: STDigit2MCHitLinker/TTDigitLinker, STCluster2MCHitLinker/TTClusterLinker, STCluster2MCParticleLinker/TTTruthLinker
+LinkITSeq            INFO Member list: STDigit2MCHitLinker/ITDigitLinker, STCluster2MCHitLinker/ITClusterLinker, STCluster2MCParticleLinker/ITTruthLinker
+LinkOTSeq            INFO Member list: OTMCDepositLinker, OTMCHitLinker, OTMCParticleLinker
+LinkTrSeq            INFO Member list: BuildMCTrackInfo
 BuildMCTrackInfo     INFO Number TT layer 4
 BuildMCTrackInfo     INFO Number IT layer 48
 BuildMCTrackInfo     INFO Number OT layer 12
-RelationsRICHSeq     INFO Member list: Rich::MC::MCRichDigitSummaryAlg
+LinkRICHSeq          INFO Member list: Rich::MC::MCRichDigitSummaryAlg
 Rich::MC::MCRic...   INFO Will only store MCParticle references for main event
-RelationsCALOSeq     INFO Member list: CaloDigitsFromRaw/EcalFromRaw, CaloDigitsFromRaw/HcalFromRaw, CaloReCreateMCLinks, CaloDigitMCTruth/EcalDigitMCTruth, CaloDigitMCTruth/HcalDigitMCTruth
-RelationsMUONSeq     INFO Member list: MuonDigit2MCParticleAlg, MuonTileDigitInfo
-RelationsL0Seq       INFO Member list: L0CaloToMCParticleAsct, L0CaloToMCParticleAsct/L0CaloFullTruth
-Moni                 INFO Member list: GaudiSequencer/MoniVELOSeq, GaudiSequencer/MoniITSeq, GaudiSequencer/MoniTTSeq, GaudiSequencer/MoniOTSeq, GaudiSequencer/MoniRICHSeq, GaudiSequencer/MoniCALOSeq, GaudiSequencer/MoniMUONSeq, GaudiSequencer/MoniL0Seq, GaudiSequencer/MoniMCSeq
+LinkCALOSeq          INFO Member list: CaloDigitsFromRaw/EcalFromRaw, CaloDigitsFromRaw/HcalFromRaw, CaloReCreateMCLinks, CaloDigitMCTruth/EcalDigitMCTruth, CaloDigitMCTruth/HcalDigitMCTruth
+LinkMUONSeq          INFO Member list: MuonDigit2MCParticleAlg, MuonTileDigitInfo
+LinkL0Seq            INFO Member list: L0CaloToMCParticleAsct, L0CaloToMCParticleAsct/L0CaloFullTruth
+Moni                 INFO Member list: GaudiSequencer/MoniVELOSeq, GaudiSequencer/MoniTTSeq, GaudiSequencer/MoniITSeq, GaudiSequencer/MoniOTSeq, GaudiSequencer/MoniRICHSeq, GaudiSequencer/MoniCALOSeq, GaudiSequencer/MoniMUONSeq, GaudiSequencer/MoniL0Seq, GaudiSequencer/MoniMCSeq
 MoniVELOSeq          INFO Member list: VeloSimMoni, VeloDigit2MCHitLinker, VeloDigiMoni, VeloRawClustersMoni
-MoniITSeq            INFO Member list: MCSTDepositMonitor/MCITDepositMonitor, MCSTDigitMonitor/MCITDigitMonitor, STDigitMonitor/ITDigitMonitor, STClusterMonitor/ITClusterMonitor, MCParticle2MCHitAlg/MCP2ITMCHitAlg, STEffChecker/ITEffChecker
-ITEffChecker.MC...   INFO MCParticle Momentum cut     : 1 GeV/c < P < 1.79769e+308 GeV/c
-ITEffChecker.MC...   INFO            Beta * gamma cut : 1 < beta*gamma
-ITEffChecker.MC...   INFO            Eta cut          : -1.79769e+308 < P < 1.79769e+308
 MoniTTSeq            INFO Member list: MCSTDepositMonitor/MCTTDepositMonitor, MCSTDigitMonitor/MCTTDigitMonitor, STDigitMonitor/TTDigitMonitor, STClusterMonitor/TTClusterMonitor, MCParticle2MCHitAlg/MCP2TTMCHitAlg, STEffChecker/TTEffChecker
 TTEffChecker.MC...   INFO MCParticle Momentum cut     : 1 GeV/c < P < 1.79769e+308 GeV/c
 TTEffChecker.MC...   INFO            Beta * gamma cut : 1 < beta*gamma
 TTEffChecker.MC...   INFO            Eta cut          : -1.79769e+308 < P < 1.79769e+308
+MoniITSeq            INFO Member list: MCSTDepositMonitor/MCITDepositMonitor, MCSTDigitMonitor/MCITDigitMonitor, STDigitMonitor/ITDigitMonitor, STClusterMonitor/ITClusterMonitor, MCParticle2MCHitAlg/MCP2ITMCHitAlg, STEffChecker/ITEffChecker
+ITEffChecker.MC...   INFO MCParticle Momentum cut     : 1 GeV/c < P < 1.79769e+308 GeV/c
+ITEffChecker.MC...   INFO            Beta * gamma cut : 1 < beta*gamma
+ITEffChecker.MC...   INFO            Eta cut          : -1.79769e+308 < P < 1.79769e+308
 MoniOTSeq            INFO Member list: MCOTDepositMonitor
 MoniRICHSeq          INFO Member list: Rich::MC::Digi::DigitQC/RiDigitQC
 MoniCALOSeq          INFO Member list: CaloDigitChecker/SpdCheck, CaloDigitChecker/PrsCheck, CaloDigitChecker/EcalCheck, CaloDigitChecker/HcalCheck
@@ -212,6 +209,13 @@ VeloRawClusters...   INFO ------------------------------------------------------
 VeloRawClusters...   INFO | Number of Clusters/Event: 0 +/- 0
 VeloRawClusters...   INFO | ==> No VeloClusters found!
 VeloRawClusters...   INFO ======================================================
+TTEffChecker         INFO  -------Efficiency %---------
+TTEffChecker         INFO TTaX eff 9999 +/- 9999
+TTEffChecker         INFO TTaU eff 9999 +/- 9999
+TTEffChecker         INFO TTbX eff 9999 +/- 9999
+TTEffChecker         INFO TTbV eff 9999 +/- 9999
+TTEffChecker         INFO  -----------------------
+TTEffChecker      SUCCESS Booked 24 Histogram(s) : 1D=16 2D=8
 ITEffChecker         INFO  -------Efficiency %---------
 ITEffChecker         INFO IT1TopX1 eff 9999 +/- 9999
 ITEffChecker         INFO IT1TopU eff 9999 +/- 9999
@@ -263,13 +267,6 @@ ITEffChecker         INFO IT3CSideV eff 9999 +/- 9999
 ITEffChecker         INFO IT3CSideX2 eff 9999 +/- 9999
 ITEffChecker         INFO  -----------------------
 ITEffChecker      SUCCESS Booked 288 Histogram(s) : 1D=192 2D=96
-TTEffChecker         INFO  -------Efficiency %---------
-TTEffChecker         INFO TTaX eff 9999 +/- 9999
-TTEffChecker         INFO TTaU eff 9999 +/- 9999
-TTEffChecker         INFO TTbX eff 9999 +/- 9999
-TTEffChecker         INFO TTbV eff 9999 +/- 9999
-TTEffChecker         INFO  -----------------------
-TTEffChecker      SUCCESS Booked 24 Histogram(s) : 1D=16 2D=8
 MCOTDepositMonitorSUCCESS Booked 2 Histogram(s) : 1D=2
 RiDigitQC            INFO ===============================================================================================
 RiDigitQC            INFO                             RICH Digitisation Simulation Summary
@@ -376,7 +373,7 @@ EventLoopMgr         INFO Histograms converted successfully according to request
 EvtTupleSvc.EVT...   INFO File sharing enabled. Do not retire files.
 ToolSvc              INFO Removing all tools created by ToolSvc
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.83 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.78 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -444,40 +441,40 @@ TimingAuditor.T...   INFO        L0Muon                 |     0.000 |     0.000 
 TimingAuditor.T...   INFO        L0PuVeto               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       L0DU                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      L0CaloCandidatesFromRaw  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO   Trigger                     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    TriggerL0Seq               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO   Trig                        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO    TrigL0Seq                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     L0Filter                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO   Relations                   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    RelationsVELOSeq           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO   Link                        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO    LinkVELOSeq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     DecodeVeloRawBuffer       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     VeloCluster2MCHitLinker   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     VeloCluster2MCParticleLink|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    RelationsTTSeq             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO    LinkTTSeq                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     TTDigitLinker             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     TTClusterLinker           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     TTTruthLinker             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    RelationsITSeq             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO    LinkITSeq                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     ITDigitLinker             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     ITClusterLinker           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     ITTruthLinker             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    RelationsOTSeq             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO    LinkOTSeq                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     OTMCDepositLinker         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     OTMCHitLinker             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     OTMCParticleLinker        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    RelationsTrSeq             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO    LinkTrSeq                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     BuildMCTrackInfo          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    RelationsRICHSeq           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO    LinkRICHSeq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     Rich::MC::MCRichDigitSumma|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    RelationsCALOSeq           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO    LinkCALOSeq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     EcalFromRaw               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     HcalFromRaw               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     CaloReCreateMCLinks       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     EcalDigitMCTruth          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     HcalDigitMCTruth          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    RelationsMUONSeq           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO    LinkMUONSeq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     MuonDigit2MCParticleAlg   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     MuonTileDigitInfo         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    RelationsL0Seq             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO    LinkL0Seq                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     L0CaloToMCParticleAsct    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     L0CaloFullTruth           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO   Moni                        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -486,13 +483,6 @@ TimingAuditor.T...   INFO     VeloSimMoni               |     0.000 |     0.000 
 TimingAuditor.T...   INFO     VeloDigit2MCHitLinker     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     VeloDigiMoni              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     VeloRawClustersMoni       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    MoniITSeq                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     MCITDepositMonitor        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     MCITDigitMonitor          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     ITDigitMonitor            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     ITClusterMonitor          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     MCP2ITMCHitAlg            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     ITEffChecker              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO    MoniTTSeq                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     MCTTDepositMonitor        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     MCTTDigitMonitor          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -500,6 +490,13 @@ TimingAuditor.T...   INFO     TTDigitMonitor            |     0.000 |     0.000 
 TimingAuditor.T...   INFO     TTClusterMonitor          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     MCP2TTMCHitAlg            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     TTEffChecker              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO    MoniITSeq                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO     MCITDepositMonitor        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO     MCITDigitMonitor          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO     ITDigitMonitor            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO     ITClusterMonitor          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO     MCP2ITMCHitAlg            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO     ITEffChecker              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO    MoniOTSeq                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     MCOTDepositMonitor        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO    MoniRICHSeq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -532,7 +529,7 @@ DataOnDemandSvc      INFO Handled "DataFault" incidents: 0/0/0(Alg/Node/Total).
 *****Chrono*****     INFO  The Final CPU consumption ( Chrono ) Table (ordered)
 *****Chrono*****     INFO ****************************************************************************************************
 L0MuonTrigger I...   INFO Time User   : Tot= 1.86  [s]                                             #=  1
-ChronoStatSvc        INFO Time User   : Tot= 2.93  [s]                                             #=  1
+ChronoStatSvc        INFO Time User   : Tot=  2.9  [s]                                             #=  1
 *****Chrono*****     INFO ****************************************************************************************************
 ChronoStatSvc.f...   INFO  Service finalized succesfully
 ApplicationMgr       INFO Application Manager Finalized successfully
