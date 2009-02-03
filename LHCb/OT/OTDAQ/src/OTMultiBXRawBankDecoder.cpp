@@ -211,6 +211,7 @@ LHCb::OTLiteTimeRange OTMultiBXRawBankDecoder::decodeModule( const LHCb::OTChann
 
 StatusCode OTMultiBXRawBankDecoder::decode( LHCb::OTLiteTimeContainer& ottimes ) const
 {
+  if( !m_hitdata->isDecoded() ) decodeAll() ;
   size_t numhits = m_hitdata->totalNumberOfHits() ;
   ottimes.clear() ;
   ottimes.reserve( numhits ) ;
