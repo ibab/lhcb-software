@@ -21,7 +21,8 @@ public:
   StatusCode finalize();
   StatusCode execute();
   StatusCode dumpErrors();
-    
+  StatusCode tae_bunches(std::vector<std::string> &bunches);
+  
 private:
 
   // Algorithm's properties
@@ -30,7 +31,7 @@ private:
   bool m_writeL0ProcData;             // Flag to activate the writing of the L0ProcessorData for the L0DU
   bool m_writeOnTES;                  // Flag to activate the writing of the L0MuonCandidates 
   int m_mode;                         // Output mode (defin the bank to be decoded)
-  
+  bool m_disableTAE;                  // Flag to disable the decoding of TAE event
 
   // For output to RawEvent, TES or L0ProcessorDatas
   L0MuonOutputs* m_outputTool;

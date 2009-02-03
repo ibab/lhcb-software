@@ -1,4 +1,4 @@
-// $Id: L0MuonCandidatesFromRaw.cpp,v 1.18 2008-12-15 10:25:01 cattanem Exp $
+// $Id: L0MuonCandidatesFromRaw.cpp,v 1.19 2009-02-03 12:04:24 jucogan Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -16,6 +16,10 @@
 #include "Event/RawEvent.h"
 #include "Kernel/MuonTileID.h"
 
+#include "GaudiKernel/IDataManagerSvc.h"
+#include "GaudiKernel/IRegistry.h"
+#include "GaudiKernel/DataObject.h"
+
 DECLARE_ALGORITHM_FACTORY( L0MuonCandidatesFromRaw );
 
 L0MuonCandidatesFromRaw::L0MuonCandidatesFromRaw(const std::string& name,
@@ -32,6 +36,8 @@ L0MuonCandidatesFromRaw::L0MuonCandidatesFromRaw(const std::string& name,
   }
 
   declareProperty( "ConfigFile"     , m_configfile      );
+
+  declareProperty( "DisableTAE"     , m_disableTAE = false  );
 
   // Default for HLT :
   declareProperty( "WriteOnTES"     , m_writeOnTES       = true);  
@@ -95,13 +101,21 @@ StatusCode L0MuonCandidatesFromRaw::execute()
 
   StatusCode sc;
 
-  // Loop over time slots
-  for (int bx=-7; bx<8; ++bx){
+  std::vector<std::string> bunches;
+  bunches.push_back("");
+  if (!m_disableTAE) {
+    sc=tae_bunches(bunches);
+    if ( sc.isFailure() ) {
+      return Error("Failed to get available bunches",StatusCode::SUCCESS,50);
+    }
+  }
 
-    setProperty("RootInTes",timeSlot(bx));  
+  for (std::vector<std::string>::iterator itbunches=bunches.begin(); itbunches<bunches.end(); ++itbunches) {
+    setProperty("RootInTes",(*itbunches));
+
     if (!exist<LHCb::RawEvent>( LHCb::RawEventLocation::Default )) continue;
 
-    if( msgLevel(MSG::VERBOSE) ) verbose() << "decoding event ... "<<timeSlot(bx) << endmsg;
+    if( msgLevel(MSG::VERBOSE) ) verbose() << "decoding event ... "<<(*itbunches) << endmsg;
 
     sc = m_outputTool->setProperty( "RootInTES", rootInTES() );
     if ( sc.isFailure() ) continue;// error printed already by GaudiAlgorithm
@@ -197,6 +211,44 @@ StatusCode L0MuonCandidatesFromRaw::finalize()
   }
   
   return GaudiAlgorithm::finalize();  // must be called after all other actions
+}
+
+
+StatusCode L0MuonCandidatesFromRaw::tae_bunches(std::vector<std::string> &bunches)
+{
+  
+  DataObject * pObj=get<DataObject>("/Event");
+  if (!pObj) return Error("tae_bunches : no DataObject found at /Event",StatusCode::FAILURE,50);
+  
+  SmartIF<IDataManagerSvc> mgr(eventSvc());
+  if ( !mgr ) return Error("tae_bunches : failed to retrieve DataManagerSvc",StatusCode::FAILURE,50);
+
+  typedef std::vector<IRegistry*> Leaves;
+  Leaves leaves;
+  StatusCode sc = mgr->objectLeaves(pObj, leaves);
+  if (! sc.isSuccess() ) return Error("tae_bunches : failed to get leaves",StatusCode::FAILURE,50);
+  if( msgLevel(MSG::VERBOSE) ) verbose() << " tae_bunches : nb of leaves =  "<<leaves.size()<< endmsg;
+  
+  for ( Leaves::const_iterator i=leaves.begin(); i !=leaves.end(); i++ ) {
+    
+    const std::string& id = (*i)->identifier();
+    if( msgLevel(MSG::VERBOSE) ) verbose() << " tae_bunches : leaf found @ "<<id<< endmsg;
+
+    unsigned int first=id.rfind("/");
+    if (first>=id.size()) continue;
+    
+    std::string top=id.substr(first,id.size()-first);
+    if ((id.find("/Event/Next")<id.size()) || (id.find("/Event/Prev")<id.size())) {
+      std::string bunch=id.substr(first+1,id.size()-first);
+      if (bunch.size()<5) continue;
+      bunch.append("/");
+      if( msgLevel(MSG::VERBOSE) ) verbose() << " tae_bunches : add "<<bunch<< endmsg;
+      bunches.push_back(bunch);
+    }
+  }
+
+  return StatusCode::SUCCESS;
+  
 }
 
 

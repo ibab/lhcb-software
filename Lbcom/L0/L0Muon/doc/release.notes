@@ -1,8 +1,14 @@
-!  $Id: release.notes,v 1.78 2009-01-30 08:30:54 jucogan Exp $
+!  $Id: release.notes,v 1.79 2009-02-03 12:04:24 jucogan Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !---------------------------------------------------------------------------
 
+! 2009-02-03 - Julien Cogan
+ - L0MuonCandidatesFromRaw: modify the way the TAE are handled in the 
+   decoding. do not use anymore the exist method to check for raw data since
+   it creates the Prev_i Next_i leaves when data on demand is activated.
+   Instead, check the Event tree by hand.
+  
 ! 2009-01-30 - Julien Cogan
  - Fix a bug in the filling of the L0MuonCandidates (pt sign was missing)
  - Modify the default mode for writing bank (standard instead of light) 	
