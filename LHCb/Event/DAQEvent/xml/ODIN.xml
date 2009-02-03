@@ -81,32 +81,53 @@
       <enum
         name   = 'Word8Bits'
         desc   = ''
-        value  = 'BunchIDBits      = 0,
-                  TAEWindowBits    = 12,
-                  TriggerTypeBits  = 16,
-                  ReadoutTypeBits  = 19,
-                  ForceBits        = 21,
-                  BXTypeBits       = 22,
-                  BunchCurrentBits = 24'
+        value  = 'BunchIDBits         = 0,
+                  TAEWindowBits       = 12,
+                  TriggerTypeBits     = 16,
+                  CalibrationTypeBits = 19,
+                  ForceBits           = 21,
+                  BXTypeBits          = 22,
+                  BunchCurrentBits    = 24'
         access = 'PUBLIC' />
-
+        
       <enum
         name   = 'Word8Masks'
         desc   = ''
-        value  = 'BunchIDMask      = 0x00000FFF,
-                  TAEWindowMask    = 0x00007000,
-                  TriggerTypeMask  = 0x00070000,
-                  ReadoutTypeMask  = 0x00180000,
-                  ForceMask        = 0x00200000,
-                  BXTypeMask       = 0x00C00000,
-                  BunchCurrentMask = 0xFF000000'
+        value  = 'BunchIDMask         = 0x00000FFF,
+                  TAEWindowMask       = 0x00007000,
+                  TriggerTypeMask     = 0x00070000,
+                  CalibrationTypeMask = 0x00180000,
+                  ForceMask           = 0x00200000,
+                  BXTypeMask          = 0x00C00000,
+                  BunchCurrentMask    = 0xFF000000'
         access = 'PUBLIC' />
 
+      <enum
+        name   = 'Word8Bits_v4'
+        desc   = 'Provided for backward compatibility'
+        value  = 'ReadoutTypeBits  = 19'
+        access = 'PUBLIC' />
+
+      <enum
+        name   = 'Word8Masks_v4'
+        desc   = 'Provided for backward compatibility'
+        value  = 'ReadoutTypeMask  = 0x00180000'
+        access = 'PUBLIC' />
+      
       <enum
         name   = 'ReadoutTypes'
         desc   = ''
         value  = 'ZeroSuppressed    = 0,
                   NonZeroSuppressed = 1'
+        access = 'PUBLIC' />
+
+      <enum
+        name   = 'CalibrationTypes'
+        desc   = ''
+        value  = 'A = 0,
+                  B = 1,
+                  C = 2,
+                  D = 3'
         access = 'PUBLIC' />
 
       <enum
@@ -192,7 +213,7 @@
 
       <attribute
         name="readoutType"
-        desc="Readout Type (@see enum LHCb::ODIN::ReadoutTypes)"
+        desc="Readout Type (@see enum LHCb::ODIN::ReadoutTypes). Meaningful only if bank version &lt; 5."
         type="ReadoutTypes"
         init="ZeroSuppressed" />
 
@@ -238,83 +259,32 @@
         type="unsigned int"
         init="0" />
 
+      <attribute
+        name="calibrationType"
+        desc="Calibration Type (@see enum LHCb::ODIN::CalibrationTypes). Meaningful only if bank version &gt;= 5."
+        type="CalibrationTypes"
+        init="A" />
+        
 	<constructor 
 		desc     = "Copy constructor. Creates a new ODIN object with the same information" 
-		initList = "DataObject(), m_runNumber(odin.runNumber()), m_eventType(odin.eventType()), m_orbitNumber(odin.orbitNumber()), m_eventNumber(odin.eventNumber()), m_gpsTime(odin.gpsTime()), m_detectorStatus(odin.detectorStatus()), m_errorBits(odin.errorBits()), m_bunchId(odin.bunchId()), m_triggerType(odin.triggerType()), m_readoutType(odin.readoutType()), m_forceBit(odin.forceBit()), m_bunchCrossingType(odin.bunchCrossingType()), m_bunchCurrent(odin.bunchCurrent()), m_version(odin.version()), m_calibrationStep(odin.calibrationStep()), m_triggerConfigurationKey(odin.triggerConfigurationKey())">
+		initList = "DataObject(), m_runNumber(odin.runNumber()), m_eventType(odin.eventType()), m_orbitNumber(odin.orbitNumber()), m_eventNumber(odin.eventNumber()), m_gpsTime(odin.gpsTime()), m_detectorStatus(odin.detectorStatus()), m_errorBits(odin.errorBits()), m_bunchId(odin.bunchId()), m_triggerType(odin.triggerType()), m_readoutType(odin.readoutType()), m_forceBit(odin.forceBit()), m_bunchCrossingType(odin.bunchCrossingType()), m_bunchCurrent(odin.bunchCurrent()), m_version(odin.version()), m_calibrationStep(odin.calibrationStep()), m_triggerConfigurationKey(odin.triggerConfigurationKey()), m_calibrationType(odin.calibrationType())">
                 <arg const="TRUE" name="odin" type="LHCb::ODIN"/>
                 <code/>
       	</constructor>
 
-      <method name="set" desc="Fill data fields from the ODIN bank"
-        argList="const LHCb::RawBank* bank" type="StatusCode">
-        <code>
-  ulonglong    temp64;
-  unsigned int temp32;
-  
-  if ( bank-&gt;type() != LHCb::RawBank::ODIN )
-    return StatusCode::FAILURE;
-
-  setVersion(bank-&gt;version());
-  const unsigned int* odinData = bank->data();
-
-  setRunNumber(odinData[LHCb::ODIN::RunNumber]);
-
-  setOrbitNumber(odinData[LHCb::ODIN::OrbitNumber]);
-
-  temp64 = odinData[LHCb::ODIN::L0EventIDHi];
-  setEventNumber((temp64 &lt;&lt; 32) + odinData[LHCb::ODIN::L0EventIDLo]);
-
-  temp64 = odinData[LHCb::ODIN::GPSTimeHi];
-  setGpsTime ((temp64 &lt;&lt; 32) + odinData[LHCb::ODIN::GPSTimeLo]);
-
-  temp32 = odinData[LHCb::ODIN::Word7];
-  setDetectorStatus( (temp32 &amp; LHCb::ODIN::DetectorStatusMask) &gt;&gt; LHCb::ODIN::DetectorStatusBits );
-  setErrorBits( (temp32 &amp; LHCb::ODIN::ErrorMask) &gt;&gt; LHCb::ODIN::ErrorBits );
-
-  temp32 = odinData[LHCb::ODIN::Word8];
-  setBunchId( (temp32 &amp; LHCb::ODIN::BunchIDMask) &gt;&gt; LHCb::ODIN::BunchIDBits );
-  setTriggerType( (temp32 &amp; LHCb::ODIN::TriggerTypeMask) &gt;&gt; LHCb::ODIN::TriggerTypeBits );
-  setReadoutType( ((temp32 &amp; LHCb::ODIN::ReadoutTypeMask) &gt;&gt; LHCb::ODIN::ReadoutTypeBits ) == 0 ?
-                  ZeroSuppressed : NonZeroSuppressed );
-  if (version() &gt;= 4) {
-    setTimeAlignmentEventWindow( (temp32 &amp; LHCb::ODIN::TAEWindowMask) &gt;&gt; LHCb::ODIN::TAEWindowBits );
-  }
-  
-  setForceBit( ((temp32 &amp; LHCb::ODIN::ForceMask) &gt;&gt; LHCb::ODIN::ForceBits ) != 0 );
-
-  switch ( (temp32 &amp; LHCb::ODIN::BXTypeMask) &gt;&gt; LHCb::ODIN::BXTypeBits ) {
-    case 0  : setBunchCrossingType(NoBeam); break;
-    case 1  : setBunchCrossingType(SingleBeamLeft); break;
-    case 2  : setBunchCrossingType(SingleBeamRight); break;
-    case 3  : setBunchCrossingType(BeamCrossing); break;
-    default : setBunchCrossingType(NoBeam); break;
-  }
-
-  setBunchCurrent( (temp32 &amp; LHCb::ODIN::BunchCurrentMask) &gt;&gt; LHCb::ODIN::BunchCurrentBits );
-
-  if (version() &lt; 3) {
-
-    setEventType(odinData[LHCb::ODIN::EventType]);
-
-  } else {
-
-    temp32 = odinData[LHCb::ODIN::EventType];
-    setEventType((temp32 &amp; LHCb::ODIN::EventTypeMask) &gt;&gt; LHCb::ODIN::EventTypeBits);
-    setCalibrationStep((temp32 &amp; LHCb::ODIN::CalibrationStepMask) &gt;&gt; LHCb::ODIN::CalibrationStepBits);
-    
-    setTriggerConfigurationKey(odinData[LHCb::ODIN::TriggerConfigurationKey]);
-
-  }
-  
-  return StatusCode::SUCCESS;
-        </code>
-      </method>
-      <method name="eventTime" desc="Return the event time (converted from the GPSTime)" type="Gaudi::Time" const="TRUE">
+      <method name="eventTime" desc="Return the event time (converted from the GPS time)" type="Gaudi::Time" const="TRUE">
         <code>
           if ( gpsTime() == 0xD0DD0D0000000000ULL )
             return 0;
           else
             return gpsTime() * 1000;
+        </code>
+      </method>
+      <method name="setEventTime"
+      	desc="Set the event time (converted to GPS time)" type="void"
+        argList="const Gaudi::Time time" const="FALSE">
+      	<code>
+      	  setGpsTime(time.ns()/1000);
         </code>
       </method>
     </class>

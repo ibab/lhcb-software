@@ -1,5 +1,5 @@
-// $Id: DummyRawEventCreator.cpp,v 1.1 2008-07-21 14:50:55 cattanem Exp $
-// Include files 
+// $Id: DummyRawEventCreator.cpp,v 1.2 2009-02-03 18:31:02 marcocle Exp $
+// Include files
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -33,19 +33,19 @@ DummyRawEventCreator::DummyRawEventCreator( const std::string& name,
                                             ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ), m_eventTimeDecoder(NULL)
 {
-  
+
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-DummyRawEventCreator::~DummyRawEventCreator() {}; 
+DummyRawEventCreator::~DummyRawEventCreator() {};
 
 StatusCode DummyRawEventCreator::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
   if (sc.isFailure()) return sc;
-  
+
   m_eventTimeDecoder = tool<IEventTimeDecoder>("OdinTimeDecoder",this,true);
-  
+
   return sc;
 }
 
@@ -77,56 +77,8 @@ StatusCode DummyRawEventCreator::execute() {
     raw->adoptBank(bank, true);
   }
 
-  { // Fake ODIN Bank
-#if ODIN_VERSION == 1 || ODIN_VERSION == 2
-    const int words = 9;
-    int len = sizeof(unsigned int) * words;
-    unsigned int data[words] = 
-      {
-        1984,   // run number 
-        0xACDC, // event type 
-        23,     // orbit id
-        1,      // L0 event ID (HI)
-        1,      // L0 event ID (LO)
-        0x00041E09, // GPS Time (HI)
-        0xC736E521, // GPS Time (LO)... Fri Sep 22 14:14:12.645153 2006
-        0xAABBBBBB, // Error Bits (AA) and Detector Status (BBBBBB)
-        0x11CF0123  // Bunch Current (11), BXType (beam crossing), Force (false),
-                    // ReadoutType (NonZeroSuppression), TriggerType (7),
-                    // Bunch Id (123)
-      };
-#else // ODIN_VERSION == 3
-    const int words = 10;
-    int len = sizeof(unsigned int) * words;
-    unsigned int data[words] = 
-      {
-        1973,       // run number 
-        0xCAFEACDC, // Calibration Step Number (CAFE), event type (ACDC) 
-        23,         // orbit id
-        1,          // L0 event ID (HI)
-        1,          // L0 event ID (LO)
-        0x000440B1, // GPS Time (HI)
-        0xE73F4B05, // GPS Time (LO)... Fri Dec  7 14:05:39.916549 2007
-        0xAABBBBBB, // Error Bits (AA) and Detector Status (BBBBBB)
-        0x11CF0123, // Bunch Current (11), BXType (beam crossing), Force (false),
-                    // ReadoutType (NonZeroSuppression), TriggerType (7),
-                    // Bunch Id (123)
-        0x01234567  // Trigger Configuration Key
-      };
-#endif
-    RawBank* bank = raw->createBank(0, RawBank::ODIN, ODIN_VERSION, len, data);
-    raw->adoptBank(bank, true);
-  }
-
   put( raw, RawEventLocation::Default );
 
-  // triggers a decoding of the ODIN bank
-  m_eventTimeDecoder->getTime();
-  
-  info() << " ======== ODIN data ========\n";
-  LHCb::ODIN *odin = get<LHCb::ODIN>(LHCb::ODINLocation::Default);
-  info() << *odin << endmsg;
-  
   return StatusCode::SUCCESS;
 }
 

@@ -4,6 +4,15 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+! 2009-02-03 - Marco Clemencic
+ - Moved:
+   - RunChangeIncident to Det/DetDesc
+   - RunChangeHandlerSvc to Det/DetDescSvc
+   - OdinTimeDecoder, RunChangeTest, TestTimeDecoderOdin to Kernel/LHCbAlgs
+ - Moved and modified the tests accordingly to the changes.
+ - Removed dependency on Det/DetDesc.
+ - Added the method setEventTime to ODIN.
+
 ! 2009-01-26 - Olivier Callot
  - Add new bank types for MDF Dst writing: DstBank, DstData, DstAddress
 
