@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.h,v 1.31 2009-02-03 13:07:39 jpalac Exp $ 
+// $Id: DVAlgorithm.h,v 1.32 2009-02-03 14:53:36 jpalac Exp $ 
 // ============================================================================
 #ifndef DAVINCIKERNEL_DVALGORITHM_H
 #define DAVINCIKERNEL_DVALGORITHM_H 1
@@ -32,6 +32,7 @@
 #include "Kernel/IParticleDescendants.h"
 #include "Kernel/IWriteSelResult.h"
 #include "Kernel/IDistanceCalculator.h"
+class IRelatedPVFinder;
 // ============================================================================
 #include "Kernel/IMassFit.h"
 #include "Kernel/IMassVertexFit.h"
@@ -130,10 +131,39 @@ public:
     return getTool<IPhysDesktop>(m_desktopName,m_desktop,this) ;
   }
 
+  /**
+   * direct const access to the tool that calculates the Particle->PV
+   * weighted relations
+   * 
+   * @author Juan Palacios juan.palacios@nikhef.nl
+   **/
   inline const IRelatedPVFinder* relatedPVFinder() const
   {
     return desktop()->relatedPVFinder();
   }
+  /**
+   * direct const access to container of input primary vertices.
+   * 
+   * @author Juan Palacios juan.palacios@nikhef.nl
+   **/
+  inline const LHCb::RecVertex::Container* primaryVertices() const
+  {
+    return desktop()->primaryVertices();
+  }
+
+  /**
+   *
+   * Calculate the best related PV for a particle and return it to the user
+   * Uses the container of PVs obtained from method primaryVertices()
+   * Has no side-effects. Information is returned to user and not stored 
+   * anywhere
+   *
+   * @author Juan Palacios juan.palacios@nikhef.nl
+   * @param p LHCb::Particle to be related
+   * @return pointer to best related LHCb::VertexBase 
+   *
+   **/
+  const LHCb::VertexBase* calculateRelatedPV(const LHCb::Particle* p) const;
   
 public:
   

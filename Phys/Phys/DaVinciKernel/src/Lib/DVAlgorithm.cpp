@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.36 2008-12-05 13:27:04 ibelyaev Exp $
+// $Id: DVAlgorithm.cpp,v 1.37 2009-02-03 14:53:36 jpalac Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -10,6 +10,7 @@
 // ============================================================================
 #include "Kernel/DVAlgorithm.h"
 #include "Kernel/IOnOffline.h"
+#include "Kernel/IRelatedPVFinder.h"
 // ============================================================================
 /** @file
  *  The implementation for class DVAlgorithm
@@ -297,6 +298,19 @@ void DVAlgorithm::setFilterPassed  (  bool    state  )
   this->Algorithm::setFilterPassed(state); 
   m_setFilterCalled = true;
   return;
+}
+// ============================================================================
+const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p) const
+{
+  const IRelatedPVFinder* finder = this->relatedPVFinder();
+  const LHCb::RecVertex::Container* PVs = this->primaryVertices();
+  if (0!=finder && 0!= PVs) {
+    const Particle2Vertex::LightTable rel = 
+      finder->relatedPVs(p, *PVs);
+    return rel.relations(p).back().to();
+  }
+  return 0;
+    
 }
 // ============================================================================
 StatusCode DVAlgorithm::fillSelResult () {
