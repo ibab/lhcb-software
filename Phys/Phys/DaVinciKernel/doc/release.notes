@@ -1,8 +1,17 @@
-!$Id: release.notes,v 1.279 2009-01-08 16:52:14 cattanem Exp $
+!$Id: release.notes,v 1.280 2009-02-03 13:08:04 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2009-02-03 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v7r3
+ - Kernel/IPhysDesktop.h
+  . Add const accessor to IRelatedPVFinder.
+      virtual const IRelatedPVFinder* relatedPVFinder() const = 0 ;
+ - Kernel/DVAlgorithm.h
+  . Add const accessor to IPhysDesktop's IRelatedPVFinder.
 
 !======================== DaVinciKernel v7r2 2009-01-08 =====================
 ! 2008-12-11 - Marco Cattaneo
@@ -10,7 +19,7 @@
 
 ! 2008-12-09 - Patrick Koppenburg
  - Added new function Decays::escape that replaces special characters
-   by something likes by root. Taken from DecayTreeTuple.
+   by something liked by root. Taken from DecayTreeTuple.
 
 ! 2008-12-05 - Vanya BELYAEV
  - DVAlgorithm:
