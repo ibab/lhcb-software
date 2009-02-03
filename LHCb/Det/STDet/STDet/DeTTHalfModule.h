@@ -1,4 +1,4 @@
-// $Id: DeTTHalfModule.h,v 1.7 2008-07-14 07:38:36 mneedham Exp $
+// $Id: DeTTHalfModule.h,v 1.8 2009-02-03 13:40:04 mneedham Exp $
 
 #ifndef _DeTTHalfModule_H_
 #define _DeTTHalfModule_H_
@@ -67,7 +67,7 @@ public:
   */
   unsigned int detRegion() const;
 
-  /** indicate the module type (KLM, KL) 
+  /** indicate the module type (KLM, LM)
   * @return m_type
   */
   std::string type() const;
