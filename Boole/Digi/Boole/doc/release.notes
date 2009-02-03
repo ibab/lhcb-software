@@ -3,6 +3,13 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+! 2009-02-03 - Marco Cattaneo
+ - Remove Boole.opts and TAE*.opts, everything now done in configurable
+ - Remove "MainOptions" Boole option
+ - Options added to define each sequence, names of some sequences changed
+ - Internal restructuring of Configurable
+ - TT now monitored befor IT, for consistency with Digi phase
+
 ! 2009-02-02 - Marco Cattaneo
  - Update references for change in L0Muon raw bank size
 

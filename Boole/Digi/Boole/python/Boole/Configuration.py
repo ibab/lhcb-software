@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.37 2009-02-02 17:40:54 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.38 2009-02-03 14:33:14 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -10,15 +10,19 @@ from Configurables import LHCbConfigurableUser, LHCbApp, ProcessPhase
 
 class Boole(LHCbConfigurableUser):
 
-    ## Known monitoring sequences, all run by default
-    KnownMoniSubdets = [ "VELO", "IT", "TT", "OT", "RICH", "CALO", "MUON", "L0", "MC" ]
+    ## Known sequences, all run by default
+    KnownInitSubdets = [ "Data", "MUON" ]
+    KnownDigiSubdets = [ "VELO", "TT", "IT", "OT", "RICH", "CALO", "MUON", "L0" ]
+    KnownTrigSubdets = [ "L0" ]
+    KnownLinkSubdets = [ "VELO", "TT", "IT", "OT", "Tr", "RICH", "CALO", "MUON", "L0" ]
+    KnownMoniSubdets = [ "VELO", "TT", "IT", "OT", "RICH", "CALO", "MUON", "L0", "MC" ]
     KnownHistOptions = ["","None","Default","Expert"]
 
-    ## Default main sequences for real and simulated data
+    ## Default main sequences
     DefaultSequence = [ "ProcessPhase/Init",
                         "ProcessPhase/Digi",
-                        "ProcessPhase/Trigger",
-                        "ProcessPhase/Relations",
+                        "ProcessPhase/Trig",
+                        "ProcessPhase/Link",
                         "ProcessPhase/Moni" ]
     
     __slots__ = {
@@ -34,7 +38,6 @@ class Boole(LHCbConfigurableUser):
        ,"WriteL0Only"    : False
        ,"ExtendedDigi"   : False
        ,"Histograms"     : "Default"
-       ,"MainOptions"    : '$BOOLEOPTS/Boole.opts'
        ,"NoWarnings"     : False
        ,"DatasetName"    : ''
        ,"DataType"       : "2008"
@@ -43,10 +46,10 @@ class Boole(LHCbConfigurableUser):
        ,"UseOracle"      : False
        ,"Monitors"       : []
        ,"MainSequence"   : []
-       ,"InitSequence"   : [ "Boole", "Data", "MUON" ]
-       ,"DigiSequence"   : [ "VELO", "TT", "IT", "OT", "RICH", "CALO", "MUON", "L0"]
-       ,"TrigSequence"   : [ "L0" ]
-       ,"RelsSequence"   : [ "VELO", "TT", "IT", "OT", "Tr", "RICH", "CALO", "MUON", "L0"]
+       ,"InitSequence"   : []
+       ,"DigiSequence"   : []
+       ,"TrigSequence"   : []
+       ,"LinkSequence"   : []
        ,"MoniSequence"   : []
         }
 
@@ -63,7 +66,6 @@ class Boole(LHCbConfigurableUser):
        ,'WriteL0Only'  : """ Flag to write only L0 selected events (default False) """
        ,'ExtendedDigi' : """ Flag to add MCHits to .digi output file (default False) """
        ,'Histograms'   : """ Type of histograms: ['None','Default','Expert'] """
-       ,'MainOptions'  : """ Top level options to import. Default: $BOOLEOPTS/Boole.opts """
        ,'NoWarnings'   : """ Flag to suppress all MSG::WARNING or below (default False) """ 
        ,'DatasetName'  : """ String used to build output file names """
        ,'DataType'     : """ Data type, can be ['DC06','2008']. Default '2008' """
@@ -72,10 +74,10 @@ class Boole(LHCbConfigurableUser):
        ,'UseOracle'    : """ Flag to enable Oracle CondDB. Default False (use SQLDDDB) """
        ,'Monitors'     : """ List of monitors to execute """
        ,'MainSequence' : """ The default main sequence, see self.DefaultSequence """
-       ,'InitSequence' : """ List of initialisation sequences """
-       ,'DigiSequence' : """ List of subdetectors to digitize """
-       ,'TrigSequence' : """ List of trigger sequences """
-       ,'RelsSequence' : """ List of relations sequences """
+       ,'InitSequence' : """ List of initialisation sequences, see KnownInitSubdets """
+       ,'DigiSequence' : """ List of subdetectors to digitize, see KnownDigiSubdets """
+       ,'TrigSequence' : """ List of trigger sequences, see KnownTrigSubdets  """
+       ,'LinkSequence' : """ List of MC truth link sequences, see KnownLinkSubdets  """
        ,'MoniSequence' : """ List of subdetectors to monitor, see KnownMoniSubdets """
        }
     
@@ -86,13 +88,6 @@ class Boole(LHCbConfigurableUser):
         self.setOtherProps(LHCbApp(),["CondDBtag","DDDBtag","UseOracle","DataType"])
         LHCbApp().Simulation = True
 
-        # Special options for DC06 data processing
-        if self.getProp("DataType") == "DC06" :
-            from Configurables import (MCSTDepositCreator, MuonDigitToRawBuffer)
-
-            MCSTDepositCreator("MCITDepositCreator").DepChargeTool = "SiDepositedCharge"
-            MCSTDepositCreator("MCTTDepositCreator").DepChargeTool = "SiDepositedCharge"
-            MuonDigitToRawBuffer().VType = 1 # DC06 RawBank type
 
     def defineEvents(self):
         # Delegate handling to LHCbApp configurable
@@ -104,25 +99,52 @@ class Boole(LHCbConfigurableUser):
                 log.warning( "EventSelector('SpilloverSelector').FirstEvent and Boole().SkipSpill both defined, using Boole().SkipSpill")
             EventSelector("SpilloverSelector").FirstEvent = skipSpill + 1
 
-        # POOL Persistency
-        importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
 
-    def defineOptions(self):
-
-        self.configureSequences()
-        self.configureInit()
+    def configurePhases(self):
+        """
+        Set up the top level sequence and its phases
+        """
+        booleSeq = GaudiSequencer("BooleSequencer")
+        ApplicationMgr().TopAlg = [ booleSeq ]
+        mainSeq = self.getProp("MainSequence")
+        if len( mainSeq ) == 0:
+            mainSeq = self.DefaultSequence
+        booleSeq.Members += mainSeq
 
         if self.getProp("TAENext") > 0 or self.getProp("TAEPrev") > 0:
             tae = True
+            self.enableTAE()
         else:
             tae = False
+
+        self.configureInit(tae)
+        self.configureDigi()
+        self.configureTrig()
+        self.configureLink()
+        self.configureMoni()
+            
+    def configureInit(self,tae):
+        """
+        Set up the initialization sequence
+        """
+        initDets = self._setupPhase( "Init", self.KnownInitSubdets )
+
+        # Start the DataOnDemandSvc ahead of ToolSvc
+        ApplicationMgr().ExtSvc  += [ "DataOnDemandSvc" ]
+        ApplicationMgr().ExtSvc  += [ "ToolSvc" ]
+
+        ProcessPhase("Init").DetectorList.insert(0,"Boole") # Always run Boole initialisation first!
+        GaudiSequencer("InitBooleSeq").Members += [ "BooleInit" ]
+
+        # Do not print event number at every event (done already by Boole)
+        MessageSvc().OutputLevel = INFO
+        EventSelector().PrintFreq = -1
 
         spill = self.getProp("UseSpillover")
         if tae :
             if spill :
                 log.warning("Disabling spillover, incompatible with TAE")
                 spill = False
-            self.enableTAE()
 
         if spill :
             self.enableSpillover()
@@ -130,66 +152,91 @@ class Boole(LHCbConfigurableUser):
             if self.getProp("DataType") == "DC06" and not tae:
                 log.warning("Spillover is disabled. Should normally be enabled for DC06!")
 
-        histOpt = self.getProp("Histograms").capitalize()
-        if histOpt not in self.KnownHistOptions:
-            raise RuntimeError("Unknown Histograms option '%s'"%histOpt)
+  
+        if "MUON" in initDets:
+            # Muon Background
+            from Configurables import MuonBackground
+            GaudiSequencer("InitMUONSeq").Members += [ MuonBackground("MuonLowEnergy") ]
+            importOptions( "$MUONBACKGROUNDROOT/options/MuonLowEnergy-G4.opts" )
+            if not tae:
+                GaudiSequencer("InitMUONSeq").Members += [ MuonBackground("MuonFlatSpillover") ]
+                importOptions( "$MUONBACKGROUNDROOT/options/MuonFlatSpillover-G4.opts" )
 
-        self.configureDigi(tae)
-        self.configureTrigger()
-        self.configureRelations()
-        self.configureMoni( histOpt )
 
-        self.saveHistos( histOpt )
-
-    def configureSequences(self):
-        """
-        Set up the top level sequences
-        """
-        booleSeq = GaudiSequencer("BooleSequencer")
-        ApplicationMgr().TopAlg = [ booleSeq ]
-        mainSeq = self.getProp("MainSequence")
-        if len( mainSeq ) == 0:
-            mainSeq = self.DefaultSequence
-            self.MainSequence = mainSeq
-        booleSeq.Members += mainSeq
-            
-    def configureInit(self):
-        """
-        Set up the initialization sequence
-        """
-        initSeq = self.getProp("InitSequence")
-        ProcessPhase("Init").DetectorList = initSeq
-
-    def configureDigi(self, tae):
+    def configureDigi(self):
         """
         Set up the digitization sequence
         """
-        digiSeq = self.getProp("DigiSequence")
-        ProcessPhase("Digi").DetectorList = digiSeq
+        digiDets = self._setupPhase( "Digi", self.KnownDigiSubdets )
 
-        if "IT" in digiSeq: self.configureDigiST( GaudiSequencer("DigiITSeq"), "IT", "" )
-        if "TT" in digiSeq: self.configureDigiST( GaudiSequencer("DigiTTSeq"), "TT", "" )
+        importOptions("$STDOPTS/PreloadUnits.opts") # needed by VELO and ST
+        if "VELO" in digiDets : self.configureDigiVELO( GaudiSequencer("DigiVELOSeq"), "" )
+        if "TT"   in digiDets : self.configureDigiST(   GaudiSequencer("DigiTTSeq"), "TT", "" )
+        if "IT"   in digiDets : self.configureDigiST(   GaudiSequencer("DigiITSeq"), "IT", "" )
+        if "OT"   in digiDets : self.configureDigiOT(   GaudiSequencer("DigiOTSeq"), "" )
+        if "RICH" in digiDets : self.configureDigiRICH( GaudiSequencer("DigiRICHSeq"), "" )
+        if "CALO" in digiDets : self.configureDigiCALO( GaudiSequencer("DigiCALOSeq"), "" )
+        if "MUON" in digiDets : self.configureDigiMUON( GaudiSequencer("DigiMUONSeq"), "" )
+        if "L0"   in digiDets : self.configureDigiL0(   GaudiSequencer("DigiL0Seq"), "" )
 
-        if "CALO" in digiSeq :
-            caloSeq = GaudiSequencer("DigiCALOSeq")
-            if tae: caloSeq.Context = "TAE"
-            self.configureDigiCalo( caloSeq, "" )
-
-        if "MUON" in digiSeq : self.configureDigiMuon( GaudiSequencer("DigiMUONSeq"), "" )
+    def configureDigiVELO(self, seq, tae ):
+        # Velo digitisation and clustering (also for PuVeto and trigger)
+        if tae == "":
+            from Configurables import VeloSim
+            importOptions("$VELOSIMULATIONROOT/options/VeloSim.opts")
+            importOptions("$VELOALGORITHMSROOT/options/VeloAlgorithms.opts")
+            seq.Members += [ VeloSim("VeloSim") ]
+            seq.Members += [ VeloSim("VeloPUSim") ]
+            seq.Members += [ "VeloDataProcessor" ]
+            seq.Members += [ "VeloClusterMaker" ]
+            seq.Members += [ "PrepareVeloRawBuffer" ]
+        else:
+            raise RuntimeError("TAE not implemented for VELO")
 
     def configureDigiST(self, seq, det, tae ):
+        # Silicon Tracker digitisation
         from Configurables import ( MCSTDepositCreator, MCSTDigitCreator, STDigitCreator,
                                     STClusterCreator, STClusterKiller, STClustersToRawBankAlg )
-        seq.Members += [ MCSTDepositCreator("MC%sDepositCreator%s"%(det,tae)) ]
-        seq.Members += [ MCSTDigitCreator("MC%sDigitCreator%s"%(det,tae)) ]
-        seq.Members += [ STDigitCreator("%sDigitCreator%s"%(det,tae)) ]
-        seq.Members += [ STClusterCreator("%sClusterCreator%s"%(det,tae)) ]
-        seq.Members += [ STClusterKiller("%sClusterKiller%s"%(det,tae)) ]
-        seq.Members += [ STClustersToRawBankAlg("create%sRawBuffer%s"%(det,tae)) ]
+        if tae == "":
+            if det == "IT":
+                importOptions("$STDIGIALGORITHMSROOT/options/itDigi.opts")
+            elif det == "TT":
+                importOptions("$STDIGIALGORITHMSROOT/options/ttDigi.opts")
+            else:
+                raise RuntimeError("Unknown ST detector '%s'"%det)
 
-    def configureDigiCalo(self, seq, tae ):
+            mcdepCreator = MCSTDepositCreator("MC%sDepositCreator%s"%(det,tae),DetType=det)
+            if self.getProp("DataType") == "DC06" :
+                mcdepCreator.DepChargeTool = "SiDepositedCharge"
+            seq.Members += [ mcdepCreator ]
+            seq.Members += [ MCSTDigitCreator("MC%sDigitCreator%s"%(det,tae),DetType=det) ]
+            seq.Members += [ STDigitCreator("%sDigitCreator%s"%(det,tae),DetType=det) ]
+            seq.Members += [ STClusterCreator("%sClusterCreator%s"%(det,tae),DetType=det) ]
+            seq.Members += [ STClusterKiller("%sClusterKiller%s"%(det,tae),DetType=det) ]
+            seq.Members += [ STClustersToRawBankAlg("create%sRawBuffer%s"%(det,tae),DetType=det) ]
+        else:
+            raise RuntimeError("TAE not implemented for %s"%det)
+
+    def configureDigiOT(self, seq, tae ):
+        # Outer Tracker digitisation
+        from Configurables import MCOTDepositCreator, MCOTTimeCreator, OTFillRawBuffer
+        seq.Members += [ MCOTDepositCreator("MCOTDepositCreator%s"%tae) ]
+        seq.Members += [ MCOTTimeCreator("MCOTTimeCreator%s"%tae) ]
+        seq.Members += [ OTFillRawBuffer("OTFillRawBuffer%s"%tae) ]
+
+    def configureDigiRICH(self, seq, tae ):
+        if tae == "":
+            from RichDigiSys.Configuration import RichDigiSysConf
+            self.setOtherProp(RichDigiSysConf(),"UseSpillover")
+            RichDigiSysConf().applyConf(GaudiSequencer("DigiRICHSeq"))
+        else:
+            raise RuntimeError("TAE not implemented for RICH")
+            
+    def configureDigiCALO(self, seq, tae ):
         # Calorimeter digitisation
         from Configurables import CaloSignalAlg, CaloDigitAlg, CaloFillPrsSpdRawBuffer, CaloFillRawBuffer
+        if tae != "":
+            seq.Context = "TAE"
         seq.Members += [CaloSignalAlg("SpdSignal%s"%tae),
                         CaloSignalAlg("PrsSignal%s"%tae),
                         CaloSignalAlg("EcalSignal%s"%tae),
@@ -203,24 +250,114 @@ class Boole(LHCbConfigurableUser):
         rawHcal = CaloFillRawBuffer( "HcalFillRawBuffer%s"%tae, DataCodingType = 2 )
         seq.Members += [ rawPrsSpd, rawEcal, rawHcal ]
 
-    def configureDigiMuon(self, seq, tae ):
+    def configureDigiMUON(self, seq, tae ):
         from Configurables import MuonDigitization, MuonDigitToRawBuffer
         seq.Members += [ MuonDigitization("MuonDigitization%s"%tae) ]
-        seq.Members += [ MuonDigitToRawBuffer("MuonDigitToRawBuffer%s"%tae) ]
+        digitToRaw = MuonDigitToRawBuffer("MuonDigitToRawBuffer%s"%tae)
+        if self.getProp("DataType") == "DC06" :
+            digitToRaw.VType = 1 # DC06 RawBank type
+        seq.Members += [ digitToRaw ]
 
-    def configureTrigger(self):
+    def configureDigiL0(self, seq, tae ):
+        if tae == "":
+            # L0 trigger Simulation
+            seq.Members += [ GaudiSequencer("L0SimulationSeq") ]
+            importOptions("$L0DUROOT/options/Boole.opts")
+        else:
+            raise RuntimeError("TAE not implemented for L0")
+                
+
+    def configureTrig(self):
         """
         Set up the trigger sequence
         """
-        trigSeq = self.getProp("TrigSequence")
-        ProcessPhase("Trigger").DetectorList = trigSeq
+        trigDets = self._setupPhase( "Trig", self.KnownTrigSubdets )
 
-    def configureRelations(self):
+        if "L0" in trigDets: 
+            # Run the L0Filter always, may be used for selective output
+            GaudiSequencer("TrigL0Seq").Members += [ "L0Filter" ]
+            ProcessPhase("Trig").IgnoreFilterPassed = True # L0Filter sets filter passed...
+
+
+    def configureLink(self):
         """
-        Set up the relartions sequence
+        Set up the MC links sequence
         """
-        relsSeq = self.getProp("RelsSequence")
-        ProcessPhase("Relations").DetectorList = relsSeq
+
+        linkDets = self._setupPhase( "Link", self.KnownLinkSubdets )
+
+        # Unpack MCParticles and MCVertices if not existing on input file
+        DataOnDemandSvc().AlgMap["MC/Particles"] = "UnpackMCParticle"
+        DataOnDemandSvc().AlgMap["MC/Vertices"]  = "UnpackMCVertex"
+
+        # Pack them for the output if not on the input file...
+        DataOnDemandSvc().AlgMap["pSim/MCParticles"] = "PackMCParticle"
+        DataOnDemandSvc().AlgMap["pSim/MCVertices"]  = "PackMCVertex"
+
+        if "VELO" in linkDets:
+            from Configurables import DecodeVeloRawBuffer
+            seq = GaudiSequencer("LinkVELOSeq")
+            decodeVelo = DecodeVeloRawBuffer()
+            decodeVelo.DecodeToVeloClusters     = True
+            decodeVelo.DecodeToVeloLiteClusters = False
+            seq.Members += [ decodeVelo ]
+            seq.Members += [ "VeloCluster2MCHitLinker" ]
+            seq.Members += [ "VeloCluster2MCParticleLinker" ]
+
+        if "TT" in linkDets or "IT" in linkDets:
+            from Configurables import STDigit2MCHitLinker, STCluster2MCHitLinker, STCluster2MCParticleLinker
+            if "TT" in linkDets:
+                seq = GaudiSequencer("LinkTTSeq")
+                seq.Members += [ STDigit2MCHitLinker("TTDigitLinker") ]
+                seq.Members += [ STCluster2MCHitLinker("TTClusterLinker") ]
+                seq.Members += [ STCluster2MCParticleLinker("TTTruthLinker") ]
+
+            if "IT" in linkDets:
+                seq = GaudiSequencer("LinkITSeq")
+                seq.Members += [ STDigit2MCHitLinker("ITDigitLinker", DetType   = "IT") ]
+                seq.Members += [ STCluster2MCHitLinker("ITClusterLinker", DetType   = "IT") ]
+                seq.Members += [ STCluster2MCParticleLinker("ITTruthLinker", DetType   = "IT") ]
+
+        if "OT" in linkDets:
+            seq = GaudiSequencer("LinkOTSeq")
+            seq.Members += [ "OTMCDepositLinker" ]
+            seq.Members += [ "OTMCHitLinker" ]
+            seq.Members += [ "OTMCParticleLinker" ]
+
+        if "Tr" in linkDets:
+            seq = GaudiSequencer("LinkTrSeq")
+            seq.Members += [ "BuildMCTrackInfo" ]
+
+        if "RICH" in linkDets:
+            seq = GaudiSequencer("LinkRICHSeq")
+            seq.Members += [ "Rich::MC::MCRichDigitSummaryAlg" ]
+
+        if "CALO" in linkDets:
+            from Configurables import CaloDigitsFromRaw, CaloReCreateMCLinks, CaloDigitMCTruth
+            seq = GaudiSequencer("LinkCALOSeq")
+            seq.Members += [ CaloDigitsFromRaw("EcalFromRaw") ]
+            seq.Members += [ CaloDigitsFromRaw("HcalFromRaw") ]
+            recreateLinks = CaloReCreateMCLinks()
+            recreateLinks.Digits   = ["Raw/Ecal/Digits", "Raw/Hcal/Digits" ]
+            recreateLinks.MCDigits = ["MC/Ecal/Digits",  "MC/Hcal/Digits" ]
+            seq.Members += [ recreateLinks ]
+            seq.Members += [ CaloDigitMCTruth("EcalDigitMCTruth") ]
+            hcalTruth = CaloDigitMCTruth("HcalDigitMCTruth")
+            hcalTruth.Input = "Raw/Hcal/Digits"
+            hcalTruth.Detector = "/dd/Structure/LHCb/DownstreamRegion/Hcal"
+            seq.Members += [ hcalTruth ]
+
+        if "MUON" in linkDets:
+            seq = GaudiSequencer("LinkMUONSeq")
+            seq.Members += [ "MuonDigit2MCParticleAlg" ]
+            seq.Members += [ "MuonTileDigitInfo" ]
+
+        if "L0" in linkDets:
+            seq = GaudiSequencer("LinkL0Seq")
+            from Configurables import L0CaloToMCParticleAsct
+            seq.Members += [ L0CaloToMCParticleAsct() ]
+            seq.Members += [ L0CaloToMCParticleAsct("L0CaloFullTruth", InputContainer = "Trig/L0/FullCalo") ]
+
 
     def enableTAE(self):
         """
@@ -252,9 +389,6 @@ class Boole(LHCbConfigurableUser):
             taeNext -= 1
         GaudiSequencer("BooleSequencer").Members = mainSeq
 
-        initMUONSeq = GaudiSequencer( "InitMUONSeq" )
-        initMUONSeq.Members.remove( "MuonBackground/MuonFlatSpillover" )
-
         for taeSlot in taeSlots:
             taePhase = ProcessPhase( "Digi%s"%taeSlot )
             taeDets  = self.getProp("TAESubdets")
@@ -262,18 +396,22 @@ class Boole(LHCbConfigurableUser):
             from Configurables import BooleInit
             slotInit =  BooleInit("Init%s"%taeSlot, RootInTES = "%s/"%taeSlot )
             GaudiSequencer( "Digi%sInitSeq"%taeSlot ).Members = [ slotInit ]
+            if "VELO" in taeDets:
+                self.configureDigiVELO( GaudiSequencer("Digi%sVELOSeq"%taeSlot), taeSlot )
+            if "TT" in taeDets:
+                self.configureDigiST( GaudiSequencer("Digi%sTTSeq"%taeSlot), "TT", taeSlot )
             if "IT" in taeDets:
                 self.configureDigiST( GaudiSequencer("Digi%sITSeq"%taeSlot), "IT", taeSlot )
-            if "TT" in taeDets:
-                self.configureDigiST( GaudiSequencer("Digi%sTTSeq"%taeSlot), "IT", taeSlot )
+            if "OT" in taeDets:
+                self.configureDigiOT( GaudiSequencer("Digi%sOTSeq"%taeSlot), taeSlot )
+            if "RICH" in taeDets:
+                self.configureDigiRICH( GaudiSequencer("Digi%sRICHSeq"%taeSlot), taeSlot )
             if "CALO" in taeDets:
-                self.configureDigiCalo( GaudiSequencer("Digi%sCALOSeq"%taeSlot), taeSlot )
+                self.configureDigiCALO( GaudiSequencer("Digi%sCALOSeq"%taeSlot), taeSlot )
             if "MUON" in taeDets:
-                self.configureDigiMuon( GaudiSequencer("Digi%sMUONSeq"%taeSlot), taeSlot )
-            if self.getProp("DataType") == "DC06" :
-                from Configurables import MCSTDepositCreator
-                MCSTDepositCreator("MCITDepositCreator%s"%taeSlot).DepChargeTool = "SiDepositedCharge"
-                MCSTDepositCreator("MCTTDepositCreator%s"%taeSlot).DepChargeTool = "SiDepositedCharge"
+                self.configureDigiMUON( GaudiSequencer("Digi%sMUONSeq"%taeSlot), taeSlot )
+            if "L0" in taeDets:
+                self.configureDigiL0( GaudiSequencer("Digi%sL0Seq"%taeSlot), taeSlot )
             
 
     def enableSpillover(self):
@@ -349,6 +487,9 @@ class Boole(LHCbConfigurableUser):
                 raise RuntimeError("Unknown Boole().Outputs value '%s'"%option)
             outputs.append( option.upper() )
 
+        # POOL Persistency
+        importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
+
         l0yes = self.getProp( "WriteL0Only" )
 
         if "DIGI" in outputs:
@@ -375,20 +516,34 @@ class Boole(LHCbConfigurableUser):
                 taeNext -= 1
 
         if "L0ETC" in outputs:
-            ApplicationMgr().OutStream.append( "Sequencer/SeqWriteTag" )
+            importOptions( "$L0DUROOT/options/ETC.opts" ) # Adds "Sequencer/SeqWriteTag" to OutStreams
             MyWriter = TagCollectionStream( "WR" )
             if not hasattr( MyWriter, "Output" ):
                 MyWriter.Output = "Collection='EVTTAGS/TagCreator/1' ADDRESS='/Event' DATAFILE='" + self.getProp("DatasetName") + "-L0ETC.root' TYP='POOL_ROOTTREE' OPT='RECREATE'"
             else: print MyWriter.getProp("Output")
 
         if "MDF" in outputs:
-            # must be after digi and etc cases, because RawWriter.opts adds EventNodeKiller to OutStream list
-            importOptions( "$BOOLEOPTS/RawWriter.opts" )
-            MyWriter = OutputStream( "RawWriter" )
+            # Set up the MDF persistency
+            importOptions("$STDOPTS/RawDataIO.opts")
+            # Make sure that file will have no knowledge of other nodes
+            from Configurables import EventNodeKiller
+            nodeKiller = EventNodeKiller()
+            nodeKiller.Nodes  = [ "Rec", "Trig", "MC", "Raw", "Gen", "Link", "pSim" ]
+            nodeKiller.Nodes += self.getProp("SpilloverPaths")
+            taePrev = self.getProp("TAEPrev")
+            while taePrev > 0:
+                nodeKiller.Nodes += ["Prev%"%taePrev]
+                taePrev -= 1
+            taeNext = self.getProp("TAENext")
+            while taeNext>0:
+                nodeKiller.Nodes += ["Next%s"%taeNext]
+                taeNext -= 1
+
+            MyWriter = OutputStream( "RawWriter", Preload = False, ItemList = ["/Event/DAQ/RawEvent#1"] )
             if not hasattr( MyWriter, "Output" ):
                 MyWriter.Output = "DATAFILE='PFN:" + self.outputName() + ".mdf' SVC='LHCb::RawDataCnvSvc' OPT='REC'"
             if l0yes : MyWriter.RequireAlgs.append( "L0Filter" )
-            # ApplicationMgr().OutStream.append( "RawWriter" ) # Already in RawWriter.opts
+            ApplicationMgr().OutStream += [ nodeKiller, MyWriter ]
 
         nowarn = self.getProp( "NoWarnings" )
         if nowarn: importOptions( "$BOOLEOPTS/SuppressWarnings.opts" )
@@ -409,18 +564,13 @@ class Boole(LHCbConfigurableUser):
         return LHCbApp().evtMax()
 
 
-    def configureMoni(self, histOpt):
-        # Set up monitoring (i.e. not using MC truth)
-        from Configurables import ProcessPhase
-        moniSeq = self.getProp("MoniSequence")
-        if len( moniSeq ) == 0:
-            moniSeq = self.KnownMoniSubdets
-            self.MoniSequence = moniSeq
-        else:
-            for seq in moniSeq:
-                if seq not in self.KnownMoniSubdets:
-                    log.warning("Unknown subdet '%s' in MoniSequence"%seq)
-        ProcessPhase("Moni").DetectorList += moniSeq
+    def configureMoni(self):
+        # Set up monitoring
+        moniDets = self._setupPhase( "Moni", self.KnownMoniSubdets )
+
+        histOpt = self.getProp("Histograms").capitalize()
+        if histOpt not in self.KnownHistOptions:
+            raise RuntimeError("Unknown Histograms option '%s'"%histOpt)
 
         from Configurables import BooleInit, MemoryTool
         booleInit = BooleInit()
@@ -428,17 +578,17 @@ class Boole(LHCbConfigurableUser):
         booleInit.BooleMemory.HistoTopDir = "Boole/"
         booleInit.BooleMemory.HistoDir    = "MemoryTool"
 
-        if "VELO" in moniSeq:
+        if "VELO" in moniDets:
             from Configurables import  VeloSimMoni,VeloDigit2MCHitLinker,VeloDigiMoni,VeloRawClustersMoni
             GaudiSequencer("MoniVELOSeq").Members += [ VeloSimMoni(), VeloDigit2MCHitLinker(),
                                                        VeloDigiMoni(), VeloRawClustersMoni()  ]
 
-        if "IT" in moniSeq or "TT" in moniSeq:
+        if "IT" in moniDets or "TT" in moniDets:
             from Configurables import ( MCSTDepositMonitor, MCSTDigitMonitor, STDigitMonitor,
                       STClusterMonitor, STEffChecker, MCParticle2MCHitAlg, MCParticleSelector )
             from GaudiKernel.SystemOfUnits import GeV
 
-        if "IT" in moniSeq:
+        if "IT" in moniDets:
             mcDepMoni   = MCSTDepositMonitor(  "MCITDepositMonitor", DetType="IT" )
             mcDigitMoni = MCSTDigitMonitor(    "MCITDigitMonitor",   DetType="IT" )
             digitMoni   = STDigitMonitor(      "ITDigitMonitor",     DetType="IT" )
@@ -458,7 +608,7 @@ class Boole(LHCbConfigurableUser):
                 clusMoni.FullDetail    = True
                 effCheck.FullDetail    = True
 
-        if "TT" in moniSeq:
+        if "TT" in moniDets:
             mcDepMoni   = MCSTDepositMonitor(  "MCTTDepositMonitor" )
             mcDigitMoni = MCSTDigitMonitor(    "MCTTDigitMonitor"   )
             digitMoni   = STDigitMonitor(      "TTDigitMonitor"     )
@@ -478,17 +628,17 @@ class Boole(LHCbConfigurableUser):
                 clusMoni.FullDetail    = True
                 effCheck.FullDetail    = True
 
-        if "OT" in moniSeq:
+        if "OT" in moniDets:
             from Configurables import MCOTDepositMonitor
             GaudiSequencer("MoniOTSeq").Members += [ MCOTDepositMonitor() ]
             if histOpt == "Expert":
                 importOptions("$OTMONITORROOT/options/Boole.opts")
 
-        if "RICH" in moniSeq:
+        if "RICH" in moniDets:
             from Configurables import Rich__MC__Digi__DigitQC
             GaudiSequencer("MoniRICHSeq").Members += [ Rich__MC__Digi__DigitQC("RiDigitQC") ]
 
-        if "CALO" in moniSeq:
+        if "CALO" in moniDets:
             from Configurables import CaloDigitChecker
             importOptions("$CALOMONIDIGIOPTS/CaloDigitChecker.opts")
             GaudiSequencer("MoniCALOSeq").Members += [ CaloDigitChecker("SpdCheck"),
@@ -496,14 +646,14 @@ class Boole(LHCbConfigurableUser):
                                                        CaloDigitChecker("EcalCheck"),
                                                        CaloDigitChecker("HcalCheck") ]
 
-        if "MUON" in moniSeq:
+        if "MUON" in moniDets:
             from Configurables import MuonDigitChecker
             GaudiSequencer("MoniMUONSeq").Members += [ "MuonDigitChecker" ]
 
-        if "L0" in moniSeq:
+        if "L0" in moniDets:
             GaudiSequencer("MoniL0Seq").Members += [ GaudiSequencer("L0MoniSeq") ]
 
-        if "MC" in moniSeq:
+        if "MC" in moniDets:
             from Configurables import UnpackMCVertex, UnpackMCParticle, CompareMCVertex, CompareMCParticle
             # This sequence only makes sense if input data is unpacked. Should be moved to Gauss
             testMCV = UnpackMCVertex(   "TestMCVertex",   OutputName = "MC/VerticesTest" )
@@ -511,18 +661,25 @@ class Boole(LHCbConfigurableUser):
             GaudiSequencer("MoniMCSeq").Members += [ testMCV, testMCP,
                                                      CompareMCParticle(), CompareMCVertex() ]
 
+        self.saveHistos( histOpt )
+
+    def _setupPhase( self, name, knownDets ):
+        seq = self.getProp("%sSequence"%name)
+        if len( seq ) == 0:
+            seq = knownDets
+        else:
+            for det in seq:
+                if det not in knownDets:
+                    log.warning("Unknown subdet '%s' in %sSequence"%(seq,det))
+        ProcessPhase(name).DetectorList += seq
+        return seq
+
     def __apply_configuration__(self):
         log.info( self )
         GaudiKernel.ProcessJobOptions.PrintOff()
-        importOptions( self.getProp( "MainOptions" ) )
-        
-        # CRJ : Rich Digitisation now in python configurables
-        from RichDigiSys.Configuration import RichDigiSysConf
-        self.setOtherProp(RichDigiSysConf(),"UseSpillover")
-        RichDigiSysConf().applyConf(GaudiSequencer("DigiRICHSeq"))
         
         self.defineDB()
         self.defineEvents()
-        self.defineOptions()
+        self.configurePhases()
         self.defineOutput()
         self.defineMonitors()
