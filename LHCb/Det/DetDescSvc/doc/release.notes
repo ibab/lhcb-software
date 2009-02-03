@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.60 2009-01-29 13:08:20 cattanem Exp $ 
+! $Id: release.notes,v 1.61 2009-02-03 18:31:03 marcocle Exp $ 
 ! =============================================================================
 ! package DetDescSvc
 ! package manager : Marco Clemencic, Juan Palacios ?
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
+
+! 2009-02-03 - Marco Clemencic
+ - Added RunChangeHandlesSvc. It listens for a RunChangeIncident and change the
+   source of a set of Condition objects in the Detector Transient Store
+   notifying the UpdateManagerSvc.
+   (was in Event/DAQEvent)
 
 ! 2009-01-29 - Marco Cattaneo
  - Fix a compilation warning from Boost 1.38
