@@ -58,6 +58,9 @@ public:
   virtual const LHCb::Particle* keep( const LHCb::Particle* input ) ;
 
   virtual const LHCb::Vertex* keep( const LHCb::Vertex* input ) ;
+
+  virtual const LHCb::RecVertex* keep( const LHCb::RecVertex* input ) ;
+  
   
   virtual StatusCode saveDesktop() const{
 
@@ -139,14 +142,10 @@ private:
                                std::vector<std::string>::const_iterator end);       ///< get Relation table
 
   ///  Is in TES
-  inline bool inTES(const LHCb::Particle* P) const {
-    if (0==P) Exception("NULL Particle");
+  template <class T>
+  inline bool inTES(const T* P) const {
+    if (0==P) Exception("NULL Pointer");
     return (0!=P->parent()) ;
-  }
-  ///  Is in TES
-  inline bool inTES(const LHCb::Vertex* V)  const {
-    if (0==V) Exception("NULL Vertex");
-    return (0!=V->parent());
   }
 
   /// Add to list of Particles known to be in TES
@@ -244,7 +243,8 @@ private: // data
   
   LHCb::Particle::ConstVector m_parts;          ///< Local Container of particles
   LHCb::Vertex::ConstVector m_secVerts;         ///< Local Container of secondary vertices
-  //  LHCb::RecVertex::ConstVector m_primVerts;    ///< Local Container of primary vertices
+
+  LHCb::RecVertex::ConstVector m_refitPVs;    ///< Local Container of re-fitted primary vertices
   LHCb::RecVertex::Container* m_primVerts;    ///< Local Container of primary vertices
 
   IParticleMaker* m_pMaker;        ///< Reference to LHCb::Particle maker tool

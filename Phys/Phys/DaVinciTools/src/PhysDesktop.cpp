@@ -401,6 +401,34 @@ const LHCb::Vertex* PhysDesktop::keep( const LHCb::Vertex* keptV ){
   return newV;
 
 }
+//=============================================================================
+// Create a new vertex
+//=============================================================================
+const LHCb::RecVertex* PhysDesktop::keep( const LHCb::RecVertex* keptV ){
+
+  if ( 0==keptV ){
+    Exception("Attempt to keep NULL Vertex") ;
+    return 0; 
+  }
+  //  if (msgLevel(MSG::VERBOSE)) printOut("keep in Desktop", keptV);
+
+  // Input vertex is given check if it already exist in the stack
+  if( inTES( keptV ) ) {
+    if (msgLevel(MSG::VERBOSE)) verbose() << " Vertex is in TES" << endmsg;
+    return keptV;
+  }
+  
+
+  // Create new vertex on the heap
+  LHCb::RecVertex* newV = new LHCb::RecVertex(*keptV);
+  if (msgLevel(MSG::VERBOSE)) verbose() << "   -> Create new and keep " << endmsg ;
+
+  // Put in the desktop container
+  //  if (msgLevel(MSG::VERBOSE)) printOut("New vertex in desktop", newV);
+  m_refitPVs.push_back(newV);
+  return newV;
+
+}
 
 //=============================================================================
 void PhysDesktop::saveParticles(const LHCb::Particle::ConstVector& pToSave) const 
