@@ -1,4 +1,4 @@
-// $Id: OdinTimeDecoder.cpp,v 1.1 2009-02-03 18:31:03 marcocle Exp $
+// $Id: OdinTimeDecoder.cpp,v 1.2 2009-02-04 18:02:28 marcocle Exp $
 // Include files
 
 // from Gaudi
@@ -88,7 +88,7 @@ Gaudi::Time OdinTimeDecoder::getTime ( ) const {
               << m_currentRun;
       m_currentRun = odin->runNumber();
       debug() << ", new run=" << m_currentRun << endmsg;
-      incSvc()->fireIncident(Incident(name(),IncidentType::RunChange));
+      incSvc()->fireIncident(RunChangeIncident(name(),m_currentRun));
     }
 
     last_time = odin->eventTime();

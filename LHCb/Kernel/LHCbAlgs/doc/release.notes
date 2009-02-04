@@ -4,6 +4,10 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2009-02-04 - Marco Clemencic
+ - Using the extended RunChangeIncident (DetDesc) in OdinTimeDecoder to pass
+   the run number.
+
 ! 2009-02-03 - Marco Clemencic
  - Added OdinTimeDecoder, RunChangeTest, TestTimeDecoderOdin and corresponding
    tests. (were in Event/DAQEvent)
