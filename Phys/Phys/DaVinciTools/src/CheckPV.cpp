@@ -1,4 +1,4 @@
-// $Id: CheckPV.cpp,v 1.18 2009-02-03 09:14:45 pkoppenb Exp $
+// $Id: CheckPV.cpp,v 1.19 2009-02-04 16:57:19 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -26,10 +26,11 @@ DECLARE_ALGORITHM_FACTORY( CheckPV );
 CheckPV::CheckPV( const std::string& name,
                   ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
-  , m_OnOfflineTool()
+  , m_onOfflineTool()
 {
-  declareProperty( "MinPVs", m_minPV = 1  );
-  declareProperty( "MaxPVs", m_maxPV = -1 ); // -1 -> No maximum defined
+  declareProperty( "MinPVs", m_minPV = 1  , "Minimum nuber of PVs required");
+  declareProperty( "MaxPVs", m_maxPV = -1 , "Maximum nuber of PVs required. -1 : no cut."); 
+  declareProperty( "Print", m_print = false , "Print number of PVs");
 
 }
 //=============================================================================
@@ -46,8 +47,8 @@ StatusCode CheckPV::initialize() {
 
   debug() << "==> Initialize" << endmsg;
 
-  m_OnOfflineTool = tool<IOnOffline>("OnOfflineTool", this);
-  if( !m_OnOfflineTool ){
+  m_onOfflineTool = tool<IOnOffline>("OnOfflineTool", this);
+  if( !m_onOfflineTool ){
     err() << " Unable to retrieve PV Locator tool" << endreq;
     return StatusCode::FAILURE;
   }
@@ -71,7 +72,7 @@ StatusCode CheckPV::execute() {
 
   if (msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
 
-  const std::string& m_PVContainer = m_OnOfflineTool->primaryVertexLocation() ;
+  const std::string& m_PVContainer = m_onOfflineTool->primaryVertexLocation() ;
   int n = 0 ;
   bool ok = 0 ;
   
@@ -87,7 +88,7 @@ StatusCode CheckPV::execute() {
       return StatusCode::FAILURE ;
     }
     n =  PV->size() ;
-    if (msgLevel(MSG::VERBOSE)) verbose() << "There are " << n << " primary vertices." << endreq ;
+    if (msgLevel(MSG::VERBOSE) || m_print ) info() << "There are " << n << " primary vertices." << endreq ;
     counter("PVs")+=n;
     
     ok = ( n >= m_minPV );      // more than m_minPV

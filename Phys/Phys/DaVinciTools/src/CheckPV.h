@@ -1,4 +1,4 @@
-// $Id: CheckPV.h,v 1.7 2009-02-03 09:14:45 pkoppenb Exp $
+// $Id: CheckPV.h,v 1.8 2009-02-04 16:57:19 pkoppenb Exp $
 #ifndef CHECKPV_H 
 #define CHECKPV_H 1
 
@@ -37,9 +37,10 @@ public:
 protected:
 
 private:
-  IOnOffline* m_OnOfflineTool ;   ///< OnOfflineTool Tool
+  IOnOffline* m_onOfflineTool ;   ///< OnOfflineTool Tool
   int m_minPV ;  ///< minimal number of reconstructed PVs required
   int m_maxPV ;  ///< maximal number of reconstructed PVs required. -1 means no requirement.
+  bool m_print ; ///< Print the number of PVs
 
 };
 #endif // CHECKPV_H

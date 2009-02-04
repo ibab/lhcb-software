@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.399 2009-02-04 14:34:09 jpalac Exp $
+! $Id: release.notes,v 1.400 2009-02-04 16:57:19 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-02-04 - Patrick Koppenburg
+ - src/CheckPV : add Print option. 
 
 ! 2009-02-04 - Juan PALACIOS
  - src/PhysDesktop.h
