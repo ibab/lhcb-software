@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.62 2009-02-04 17:23:28 marcocle Exp $ 
+! $Id: release.notes,v 1.63 2009-02-04 18:02:27 marcocle Exp $ 
 ! =============================================================================
 ! package DetDescSvc
 ! package manager : Marco Clemencic, Juan Palacios ?
@@ -6,6 +6,8 @@
 ! =============================================================================
 
 ! 2009-02-04 - Marco Clemencic
+ - Using the extended RunChangeIncident in RunChangeHandlerSvc to get the run
+   number (avoid dependency on ODIN).
  - Added usage of GSL (with -no_auto_imports). Not inherited anymore from
    DetDesc.
 

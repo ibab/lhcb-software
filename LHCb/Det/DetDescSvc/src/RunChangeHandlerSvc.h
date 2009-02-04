@@ -1,4 +1,4 @@
-// $Id: RunChangeHandlerSvc.h,v 1.1 2009-02-03 18:31:02 marcocle Exp $
+// $Id: RunChangeHandlerSvc.h,v 1.2 2009-02-04 18:02:28 marcocle Exp $
 #ifndef _RUNCHANGEHANDLERSVC_H_
 #define _RUNCHANGEHANDLERSVC_H_
 
@@ -119,7 +119,7 @@ private:
   Conditions m_conditions;
   
   /// Current run number.
-  unsigned int m_currentRun;
+  unsigned long m_currentRun;
   
   /// EventDataSvc, for ODIN
   mutable IDataProviderSvc *m_evtSvc;

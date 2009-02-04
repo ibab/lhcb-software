@@ -1,4 +1,4 @@
-// $Id: RunChangeHandlerSvc.cpp,v 1.1 2009-02-03 18:31:02 marcocle Exp $
+// $Id: RunChangeHandlerSvc.cpp,v 1.2 2009-02-04 18:02:28 marcocle Exp $
 // Include files
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/IRegistry.h"
@@ -6,8 +6,6 @@
 
 #include "DetDesc/ValidDataObject.h"
 #include "DetDesc/RunChangeIncident.h"
-
-#include "Event/ODIN.h"
 
 #include <boost/format.hpp>
 
@@ -107,10 +105,16 @@ void RunChangeHandlerSvc::handle(const Incident &inc) {
   MsgStream log( msgSvc(), name() );
   log << MSG::DEBUG << inc.type() << " incident received" << endmsg;
 
-  SmartDataPtr<LHCb::ODIN> odin(eventSvc(),LHCb::ODINLocation::Default);
-  if (m_currentRun != odin->runNumber()) {
+  const RunChangeIncident* rci = dynamic_cast<const RunChangeIncident*>(&inc);
+  if (!rci) {
+    log << MSG::ERROR << "Cannot dynamic_cast the incident to RunChangeIncident, "
+                         " run change ignored" << endmsg;
+    return;
+  }
+  
+  if (m_currentRun != rci->runNumber()) {
     log << MSG::DEBUG << "Change of run number detected " << m_currentRun;
-    m_currentRun = odin->runNumber();
+    m_currentRun = rci->runNumber();
     log << "->" << m_currentRun << endmsg;
 
     // loop over the object to update

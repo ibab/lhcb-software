@@ -1,11 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.393 2009-02-04 17:23:28 marcocle Exp $ 
+! $Id: release.notes,v 1.394 2009-02-04 18:02:27 marcocle Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
 ! 2009-02-04 - Marco Clemencic
+ - Extended the RunChangeIncident to contain the run number too (avoid
+   dependency on ODIN).
  - Fixed usage of GSL (-no_auto_imports).
 
 ! 2009-02-03 - Marco Clemencic
