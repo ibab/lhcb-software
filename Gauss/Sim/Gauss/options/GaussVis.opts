@@ -1,4 +1,4 @@
-// $Id: GaussVis.opts,v 1.15 2008-10-10 08:32:48 gcorti Exp $ 
+// $Id: GaussVis.opts,v 1.16 2009-02-04 17:43:41 gcorti Exp $ 
 
 /** @file 
  *  The base configuration file to run Gauss exceutable with 
@@ -30,13 +30,13 @@ GiGa.UIsession  = "GiGaUIsession/GiGaUI"   ;
 // setting visualization attributes
 GiGa.GiGaMgr.RunTools += { "GiGaSetVisAttributes" };
 
-// Switch off geometry from Calorimeters onward but for beam pipe
-Geo.StreamItems  -= {"/dd/Structure/LHCb/DownstreamRegion/Spd"};
-Geo.StreamItems  -= {"/dd/Structure/LHCb/DownstreamRegion/Converter"};
-Geo.StreamItems  -= {"/dd/Structure/LHCb/DownstreamRegion/Prs"};
-Geo.StreamItems  -= {"/dd/Structure/LHCb/DownstreamRegion/Ecal"};
-Geo.StreamItems  -= {"/dd/Structure/LHCb/DownstreamRegion/Hcal"};
-Geo.StreamItems  -= {"/dd/Structure/LHCb/DownstreamRegion/Muon"};
+// To switch off geometry of Calorimeters, comment the following
+// should be doen when using dawn
+//Geo.StreamItems  -= {"/dd/Structure/LHCb/DownstreamRegion/Spd"};
+//Geo.StreamItems  -= {"/dd/Structure/LHCb/DownstreamRegion/Converter"};
+//Geo.StreamItems  -= {"/dd/Structure/LHCb/DownstreamRegion/Prs"};
+//Geo.StreamItems  -= {"/dd/Structure/LHCb/DownstreamRegion/Ecal"};
+//Geo.StreamItems  -= {"/dd/Structure/LHCb/DownstreamRegion/Hcal"};
 
 // To control level of drawing of track while traveling through detector
 //GiGa.StepSeq.Members  += { "GiGaStepActionDraw/DrawStep"} ;
