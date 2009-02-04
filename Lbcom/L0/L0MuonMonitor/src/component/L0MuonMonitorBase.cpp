@@ -1,4 +1,4 @@
-// $Id: L0MuonMonitorBase.cpp,v 1.7 2008-11-07 16:31:53 jucogan Exp $
+// $Id: L0MuonMonitorBase.cpp,v 1.8 2009-02-04 15:12:02 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -331,22 +331,15 @@ bool L0MuonMonitorBase::excludedBx() {
 
   if (m_excludedBxs.size()==0) return false;
 
-  if (exist<LHCb::RawEvent> (LHCb::RawEventLocation::Default)) {
-    LHCb::RawEvent* rawEvt = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
-    const std::vector<LHCb::RawBank*>& banks = rawEvt->banks( LHCb::RawBank::ODIN );
-    if (banks.size()==1){
-      std::vector<LHCb::RawBank*>::const_iterator itBnk = banks.begin();
-      LHCb::ODIN odin;
-      odin.set(*itBnk);
-      unsigned int bunch =odin.bunchId() ;
-      for (std::vector<unsigned int>::iterator itexcluded=m_excludedBxs.begin(); itexcluded!=m_excludedBxs.end();++itexcluded){
-        if (bunch==(*itexcluded) ) return true;
-      }
-    } else {
-      error()<<"excludedBx : More than 1 ODIN bank  ("<<banks.size()<<")"<<endmsg;
+  try {
+    LHCb::ODIN* odin = get<LHCb::ODIN>(LHCb::ODINLocation::Default);
+
+    unsigned int bunch = odin->bunchId();
+    for (std::vector<unsigned int>::iterator itexcluded=m_excludedBxs.begin(); itexcluded!=m_excludedBxs.end();++itexcluded){
+      if (bunch==(*itexcluded) ) return true;
     }
-  } else {
-    error()<<"excludedBx : "<<LHCb::RawEventLocation::Default<<" not found @"<<rootInTES()<<endmsg;
+  } catch(GaudiException &x) {
+    error() << "excludedBx : " << x << endmsg;
   }
   return false;
 }
@@ -355,22 +348,15 @@ bool L0MuonMonitorBase::exclusiveBx() {
 
   if (m_exclusiveBxs.size()==0) return true;
   
-  if (exist<LHCb::RawEvent> (LHCb::RawEventLocation::Default)) {
-    LHCb::RawEvent* rawEvt = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
-    const std::vector<LHCb::RawBank*>& banks = rawEvt->banks( LHCb::RawBank::ODIN );
-    if (banks.size()==1){
-      std::vector<LHCb::RawBank*>::const_iterator itBnk = banks.begin();
-      LHCb::ODIN odin;
-      odin.set(*itBnk);
-      unsigned int bunch =odin.bunchId() ;
-      for (std::vector<unsigned int>::iterator itexcl=m_exclusiveBxs.begin(); itexcl!=m_exclusiveBxs.end();++itexcl){
-        if (bunch==(*itexcl) ) return true;
-      }
-    } else {
-      error()<<"exclusiveBx : More than 1 ODIN bank  ("<<banks.size()<<")"<<endmsg;
+  try {
+    LHCb::ODIN* odin = get<LHCb::ODIN>(LHCb::ODINLocation::Default);
+    
+    unsigned int bunch = odin->bunchId();
+    for (std::vector<unsigned int>::iterator itexcl=m_exclusiveBxs.begin(); itexcl!=m_exclusiveBxs.end();++itexcl){
+      if (bunch==(*itexcl) ) return true;
     }
-  } else {
-    error()<<"exclusiveBx : "<<LHCb::RawEventLocation::Default<<" not found @"<<rootInTES()<<endmsg;
+  } catch(GaudiException &x) {
+    error() << "exclusiveBx : " << x << endmsg;
   }
   return false;
 }

@@ -1,4 +1,4 @@
-// $Id: L0MuonMonitor.cpp,v 1.11 2008-09-21 21:53:42 jucogan Exp $
+// $Id: L0MuonMonitor.cpp,v 1.12 2009-02-04 15:12:02 marcocle Exp $
 // Include files 
 
 #include <math.h>
@@ -156,25 +156,14 @@ StatusCode L0MuonMonitor::execute() {
   for (std::vector<int>::iterator it_ts=m_time_slots.begin(); it_ts<m_time_slots.end(); ++it_ts){
 
     setProperty("RootInTes",L0Muon::MonUtilities::timeSlot(*it_ts));
-    if (!exist<LHCb::RawEvent>( LHCb::RawEventLocation::Default )) continue;
-    
-    ulonglong event=0;
-    unsigned int run=0;
-    unsigned int bunch=0;
-    if (exist<LHCb::RawEvent> (LHCb::RawEventLocation::Default)) {
-      LHCb::RawEvent* rawEvt = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
-      const std::vector<LHCb::RawBank*>& banks = rawEvt->banks( LHCb::RawBank::ODIN );
-      if (banks.size()==1){
-        std::vector<LHCb::RawBank*>::const_iterator itBnk = banks.begin();
-        LHCb::ODIN odin;
-        odin.set(*itBnk);
-        run   =odin.runNumber();
-        event =odin.eventNumber() ;
-        bunch =odin.bunchId() ;
-      } else{
-        error()<<"More than 1 ODIN bank  ("<<banks.size()<<")"<<endmsg;
-      }
-    }
+
+    if (!exist<LHCb::ODIN> (LHCb::ODINLocation::Default)) continue;
+
+    LHCb::ODIN* odin = get<LHCb::ODIN>(LHCb::ODINLocation::Default);
+
+    ulonglong event=odin->eventNumber();
+    unsigned int run=odin->runNumber();
+    unsigned int bunch=odin->bunchId();
 
 //     info() <<"run= "<<run<<" event= "<<event<<" bunch= "<<bunch<<endmsg;
 

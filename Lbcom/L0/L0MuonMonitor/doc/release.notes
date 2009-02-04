@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.18 2008-11-21 08:12:30 cattanem Exp $
+! $Id: release.notes,v 1.19 2009-02-04 15:12:02 marcocle Exp $
 ! Package     : L0MuonMonitor
 ! Responsible : Julien Cogan
 ! Purpose     : Monitoring of the L0Muon
 !--------------------------------------------------------------------------
+
+! 2009-02-04 - Marco Clemencic
+ - Updated to get ODIN from the Transient Store instead of decoding the
+   RawBank.
 
 !========================== L0MuonMonitor v1r3 2008-11-21 =================
 ! 2008-11-07 - Julien Cogan

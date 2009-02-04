@@ -1,10 +1,9 @@
-// $Id: L0MuonOptLinksHistos.cpp,v 1.1 2008-09-21 21:45:17 jucogan Exp $
+// $Id: L0MuonOptLinksHistos.cpp,v 1.2 2009-02-04 15:12:02 marcocle Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 
-#include "Event/RawEvent.h"
 #include "Event/RecHeader.h"
 #include "Event/ODIN.h"
 
@@ -156,13 +155,8 @@ void L0MuonOptLinksHistos::fillHistos(const std::vector<LHCb::MuonTileID> &tiles
   fill(m_hmultitot,ntot,1);
 
   static int ievt=0;
-  if (exist<LHCb::RawEvent> (LHCb::RawEventLocation::Default)) {
-    LHCb::RawEvent* rawEvt = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
-    const std::vector<LHCb::RawBank*>& banks = rawEvt->banks( LHCb::RawBank::ODIN );
-    std::vector<LHCb::RawBank*>::const_iterator itBnk = banks.begin();
-    LHCb::ODIN odin;
-    odin.set(*itBnk);
-    ievt =odin.eventNumber() ;
+  if (exist<LHCb::ODIN> (LHCb::ODINLocation::Default)) {
+    ievt = get<LHCb::ODIN>(LHCb::ODINLocation::Default)->eventNumber();
   } else if (exist<LHCb::RecHeader> (LHCb::RecHeaderLocation::Default)) {
     LHCb::RecHeader* evt = get<LHCb::RecHeader> (LHCb::RecHeaderLocation::Default);
     ievt = evt->evtNumber();

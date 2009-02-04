@@ -1,10 +1,8 @@
-// $Id: L0MuonInfoHistos.cpp,v 1.4 2008-09-21 21:47:04 jucogan Exp $
+// $Id: L0MuonInfoHistos.cpp,v 1.5 2009-02-04 15:12:02 marcocle Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
-
-#include "Event/RawEvent.h"
 
 // local
 #include "L0MuonInfoHistos.h"
@@ -70,19 +68,10 @@ void L0MuonInfoHistos::fillHistos()
 
 StatusCode L0MuonInfoHistos::getInfo(){
 
-  if (!exist<LHCb::RawEvent> (LHCb::RawEventLocation::Default)) 
-    return Error("RawEvent not found",StatusCode::FAILURE,50);
-    
-  LHCb::RawEvent* rawEvt = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
-  const std::vector<LHCb::RawBank*>& banks = rawEvt->banks( LHCb::RawBank::ODIN );
-  if (banks.size()==0)
-      return Error("No ODIN bank found",StatusCode::FAILURE,50);
-  if (banks.size()>1)
-      return Error("More than 1 ODIN bank found",StatusCode::FAILURE,50);
-    
-  LHCb::ODIN odin;
-  std::vector<LHCb::RawBank*>::const_iterator itBnk = banks.begin();
-  odin.set(*itBnk);
+  if (!exist<LHCb::ODIN> (LHCb::ODINLocation::Default))
+    return Error("ODIN not found",StatusCode::FAILURE,50);
+
+  LHCb::ODIN* odin = get<LHCb::ODIN>(LHCb::ODINLocation::Default);
 
   if (!exist<LHCb::L0MuonInfo> ( LHCb::L0MuonInfoLocation::Default + context() ) )
     return Error("L0MuonInfo not found",StatusCode::FAILURE,50);
@@ -94,8 +83,8 @@ StatusCode L0MuonInfoHistos::getInfo(){
   m_errStatus=(info->status()>>2)&0x3;
   m_ovfStatus=(info->status()>>0)&0x3;
 
-  int event = (odin.eventNumber()&0xFFF) ;
-  int bunch = odin.bunchId();
+  int event = (odin->eventNumber()&0xFFF) ;
+  int bunch = odin->bunchId();
   
   m_error=false;
   if ( (event!=m_evtNum) || (bunch!=m_bunchId) ) m_error=true;
