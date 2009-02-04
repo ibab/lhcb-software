@@ -1,4 +1,4 @@
-// $Id: GaussTape.opts,v 1.30 2008-12-08 14:16:22 gcorti Exp $ 
+// $Id: GaussTape.opts,v 1.31 2009-02-04 17:41:59 gcorti Exp $ 
 
 /** @file 
  * 
@@ -28,6 +28,17 @@ GaussTape.ItemList += {
  ,"/Event/pSim/MCVertices#1"
 };
 
+// RICH extra information: to be put in SimWriter configurable as all else
+// in GaussTape! 
+GaussTape.OptItemList += {
+  "/Event/MC/Rich/OpticalPhotons#1"
+  ,"/Event/MC/Rich/Tracks#1"
+  ,"/Event/MC/Rich/Segments#1"
+};
+GaussTape.OptItemList += {
+  "/Event/Link/MC/Particles2MCRichTracks#1"
+, "/Event/Link/MC/Rich/Hits2MCRichOpticalPhotons#1"
+};
  
 GaussTape.Preload     = false ; // ATTENTION ! it MUST be FALSE for GiGa! 
 GaussTape.OutputLevel = 3;
