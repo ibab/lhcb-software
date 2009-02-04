@@ -1,10 +1,13 @@
-!$Id: release.notes,v 1.282 2009-02-04 13:02:22 jpalac Exp $
+!$Id: release.notes,v 1.283 2009-02-04 14:31:12 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
 
 ! 2009-02-04 - Juan PALACIOS
+ - kernel/IPhysDesktop.h
+  . Add  virtual const LHCb::RecVertex* keep( const LHCb::RecVertex* input )
+    to keep re-fitted PVs.
  - DVAlgorithm
   . Add ToolMap for IPVReFitters.
   . Add accessor method primaryVertexReFitter().
