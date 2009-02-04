@@ -1,8 +1,13 @@
-!$Id: release.notes,v 1.281 2009-02-03 14:54:23 jpalac Exp $
+!$Id: release.notes,v 1.282 2009-02-04 13:02:22 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2009-02-04 - Juan PALACIOS
+ - DVAlgorithm
+  . Add ToolMap for IPVReFitters.
+  . Add accessor method primaryVertexReFitter().
 
 ! 2009-02-03 - Juan PALACIOS
  - cmt/requirements
