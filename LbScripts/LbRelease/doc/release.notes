@@ -1,3 +1,8 @@
+2009-02-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbRelease/CMT/LbPackage.py: use LbConfiguration.Platform instead of 
+	LbConfiguration.Project.
+
 2008-02-03  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
 	* python/LbRelease/Nightlies/setup.py: anonymous flag added for getpack

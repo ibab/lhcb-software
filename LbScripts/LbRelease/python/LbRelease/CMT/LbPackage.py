@@ -1,6 +1,6 @@
 from LbUtils.Set import Set
 from LbUtils.CMT import Package
-from LbConfiguration.Project import binary_list
+from LbConfiguration.Platform import binary_list
 import os
 
 
