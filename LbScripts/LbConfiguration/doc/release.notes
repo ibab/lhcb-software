@@ -1,5 +1,10 @@
 2009-02-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbConfiguration/LbLogin.py: fixed Manifest for windows
+	* python/LbConfiguration/Platform.py: fixed compiler guessing for windows
+
+2009-02-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* cmt/requirements: release of version v2r3
 
 2009-02-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>

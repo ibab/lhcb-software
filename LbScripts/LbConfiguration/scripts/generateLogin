@@ -37,8 +37,6 @@ def fixNative(filename):
             tobereplaced["CMTOPT"] = cmtconf + "-opt"
     if os.environ.has_key("AFSROOT") and filename.endswith(".bat"):
         tobereplaced["AFSROOT"] = os.environ["AFSROOT"]
-    else :
-        tobereplaced["AFSROOT"] = "/afs"
 
                    
     inf = open(filename, "r")

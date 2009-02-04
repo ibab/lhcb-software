@@ -51,7 +51,10 @@ def getCompiler(cmtconfig):
     if isNewStyleBinary(cmtconfig) :
         compdef = cmtconfig.split("-")[2]
     else :
-        compdef = cmtconfig.split("_")[2]
+        if not cmtconfig.startswith("win") :
+            compdef = cmtconfig.split("_")[2]
+        else :
+            compdef = cmtconfig.split("_")[1]            
     return compdef
 
 def getPlatformType(cmtconfig):
