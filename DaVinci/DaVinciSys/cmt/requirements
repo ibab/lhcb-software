@@ -1,19 +1,15 @@
 package DaVinciSys
-version v22r0p2
+version v22r1
 
 branches doc cmt
 
 #=======================================================
 # Don't forget DaVinci itself
 #=======================================================
-use  DaVinci                 	v22r0p2   Phys   
+use  DaVinci                 	v22r1   Phys  
 
 # Component libraries added as patches
-use TisTosTobbing  v3r2    Phys
-use EventPacker    v1r2    Event
-use DecayTreeTuple v1r10p1 Phys
-use GlobalReco     v6r19   Rec
-use B2Dilepton     v1r8p2  PhysSel
+
 alias DaVinciTests "cmt qmtest_run"
 
 # Allow the generation of the SAM QMTest
