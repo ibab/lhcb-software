@@ -64,7 +64,7 @@ MonitorSvc::MonitorSvc(const std::string& name, ISvcLocator* sl):
    declareProperty("disableDeclareInfoPair", m_disableDeclareInfoPair = 0);
    declareProperty("disableDeclareInfoFormat", m_disableDeclareInfoFormat = 0);
    declareProperty("disableDeclareInfoHistos", m_disableDeclareInfoHistos = 0);
-   declareProperty("maxNumCountersMonRate", m_maxNumCountersMonRate = 30);
+   declareProperty("maxNumCountersMonRate", m_maxNumCountersMonRate = 120);
       
    declareProperty("teste", m_teste);
  
@@ -78,7 +78,7 @@ MonitorSvc::~MonitorSvc() {
 // @param riid       ID of Interface to be retrieved
 // @param ppvUnknown Pointer to Location for interface pointer
 StatusCode MonitorSvc::queryInterface(const InterfaceID& riid, void** ppvIF) {
-  if(IMonitorSvc::interfaceID() == riid) {
+  if(IID_IMonitorSvc == riid) {
     *ppvIF = dynamic_cast<IMonitorSvc*> (this);
   } 
   else if (IID_IGauchoMonitorSvc == riid) {
@@ -465,12 +465,12 @@ void MonitorSvc::declareInfo(const std::string& name, const AIDA::IBaseHistogram
       ((MonProfile*) monObject)->setAidaProfile(const_cast<AIDA::IProfile1D *>(dynamic_cast<const AIDA::IProfile1D *>(var)));
     }
     else if( 0 != dynamic_cast<const AIDA::IHistogram1D * >(var) ){ 
-      monObject = MonObjectCreator::createMonObject(s_monH1F, msgSvc(), "MonitorSvc");
-      ((MonH1F*) monObject)->setAidaHisto(const_cast<AIDA::IHistogram1D *>(dynamic_cast<const AIDA::IHistogram1D *>(var)));
+      monObject = MonObjectCreator::createMonObject(s_monH1D, msgSvc(), "MonitorSvc");
+      ((MonH1D*) monObject)->setAidaHisto(const_cast<AIDA::IHistogram1D *>(dynamic_cast<const AIDA::IHistogram1D *>(var)));
     }
     else if( 0 != dynamic_cast<const AIDA::IHistogram2D * >(var) ){ 
-      monObject = MonObjectCreator::createMonObject(s_monH2F, msgSvc(), "MonitorSvc");
-      ((MonH2F*) monObject)->setAidaHisto(const_cast<AIDA::IHistogram2D *>(dynamic_cast<const AIDA::IHistogram2D *>(var)));
+      monObject = MonObjectCreator::createMonObject(s_monH2D, msgSvc(), "MonitorSvc");
+      ((MonH2D*) monObject)->setAidaHisto(const_cast<AIDA::IHistogram2D *>(dynamic_cast<const AIDA::IHistogram2D *>(var)));
     }
     else {
       msg << MSG::ERROR << "Unknown histogram type, name = " << name << ", desc = " << desc << endreq;

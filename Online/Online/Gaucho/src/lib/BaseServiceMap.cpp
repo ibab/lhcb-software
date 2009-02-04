@@ -12,8 +12,6 @@
 #include "Gaucho/ProcessMgr.h"
 #include "Gaucho/BaseServiceMap.h"
 #include "Gaucho/Misc.h"
-#include "Gaucho/DimInfoMonRate.h"
-#include "Gaucho/RatePublisher.h"
 #include "Gaucho/MonRateDecoder.h"
 #include "TFile.h"
 
@@ -22,14 +20,6 @@ BaseServiceMap::BaseServiceMap(ProcessMgr *processMgr):
   m_processMgr(processMgr)
 {
 
-  m_nbCounterInMonRate = 30;
-  
-  if (m_processMgr->serviceOwner().compare(s_MonRateService) == 0) {
-    m_numberOfMonRatesPublisher = new RatePublisher();
-    m_numberOfMonRatesPublisher->setValue(0);
-    m_numberOfMonRatesPublisher->setComment("Number of MonRates processed by this RateService");
-    m_numberOfMonRatesPublisher->publishService(m_processMgr->utgid() + "/NumberOfMonRates");
-  }
 }
 
 BaseServiceMap::~BaseServiceMap() {
@@ -103,24 +93,21 @@ void BaseServiceMap::updateMap(std::map<std::string, bool, std::less<std::string
 
 void BaseServiceMap::includeServerInMaps(const std::string &serverName) {
   MsgStream msg(msgSvc(), name());
-  
+
   std::set<std::string>::iterator svcSetIt;  
   msg << MSG::DEBUG << "m_dimInfo.size() = " << m_dimInfo.size()<< endreq;    
-    
+
   bool insertDimSvc = false;
-  bool loadDimInf = true;
+
   if (m_processMgr->serviceOwner() == s_Adder) {
     if (m_dimInfo.size() <= 0) insertDimSvc = true;
   }
-  if (m_processMgr->serviceOwner() == s_MonRateService) loadDimInf = false;
-    
+
   for (svcSetIt = m_serviceSet.begin(); svcSetIt != m_serviceSet.end(); ++svcSetIt) {
     msg << MSG::DEBUG << "Service " << *svcSetIt << endreq;    
     insertDimInfo(*svcSetIt, serverName);
   }
-    
-  if (!loadDimInf) return;
-    
+
   for (svcSetIt = m_serviceSet.begin(); svcSetIt != m_serviceSet.end(); ++svcSetIt) {
     msg << MSG::DEBUG << "Service " << *svcSetIt << endreq;    
     loadDimInfo(*svcSetIt, serverName);
@@ -159,83 +146,31 @@ void BaseServiceMap::excludeServerInMaps(const std::string &serverName) {
 void BaseServiceMap::insertDimInfo(const std::string &serviceName, const std::string &serverName)
 {
   MsgStream msg(msgSvc(), name());
-  
-  if ((m_processMgr->serviceOwner() == s_Adder)||(m_processMgr->serviceOwner() == s_Saver))
-  {
-    std::string termSvcName = createTermServiceName (serviceName, serverName);
 
-    std::string groupName = "";
-    std::string elementName = "";
+  std::string termSvcName = createTermServiceName (serviceName, serverName);
+
+  std::string groupName = "";
+  std::string elementName = "";
   
-    if (m_processMgr->serviceOwner() == s_Adder){
-      groupName = createAdderName (serviceName);
-      elementName = serverName;
-    }
-    else {
-      groupName = createSaverName (termSvcName);// in the case of Saving Adders it should return "serverName"
-      elementName = termSvcName;
-    }
-  
-    msg << MSG::DEBUG << "creating DimInfoMonObject " << termSvcName << endreq;
-    //msg << MSG::DEBUG << "groupName =  " << groupName << endreq;
-    //msg << MSG::DEBUG << "elementName =  " << elementName << endreq;
-  
-    m_dimInfo[groupName][elementName] = new DimInfoMonObject(termSvcName, m_processMgr->refreshTime()); 
-    //msg << MSG::DEBUG << "setSourceName : " << name() << endreq;
-    m_dimInfo[groupName][elementName]->setSourceName(name());
-    //msg << MSG::DEBUG << "setMsgSvc" << endreq;
-    m_dimInfo[groupName][elementName]->setMsgSvc(msgSvc());
+  if (m_processMgr->serviceOwner() == s_Adder){
+    groupName = createAdderName (serviceName);
+    elementName = serverName;
   }
-  else if (m_processMgr->serviceOwner() == s_MonRateService) {
-    bool exceptionRaised = false;
-    DimInfoMonRate * pNew = 0;
-    try
-    {
-      pNew = new DimInfoMonRate(serviceName, 5, m_processMgr->utgid(), m_nbCounterInMonRate);
-      if(pNew) pNew->setMsgService(msgSvc());
-      msg << MSG::DEBUG << "creating MonRate" << endreq;
-      /* create the MonDouble to receive the data
-      */    
-      try{
-        pNew->createMonRate();
-      }catch(const std::exception & e){
-        msg << MSG::INFO << __LINE__ << ": error in createMonRate() : " << e.what() << endreq;
-        exceptionRaised = true;
-        try{
-          if(pNew) delete pNew;
-        }catch(const std::exception & e)
-        {
-          msg << MSG::FATAL << __LINE__ << ": fatal 1 :" << e.what() << endreq;
-          exit(1);
-        }
-      } 
-    }
-    /* some exception will be probably due to a non MonRate service
-     */
-    catch(std::exception e)
-    {
-      msg << MSG::WARNING << " >>> an error occured while registering MonRate" << endreq;
-      msg << MSG::WARNING << " >>> in RateService::findServices()" << endreq;
-      msg << MSG::WARNING << " >>> can't register " << serviceName << endreq;
-      exceptionRaised = true;
-      try{
-       if(pNew) delete pNew;
-      }catch(const std::exception & e)
-      {
-        msg << MSG::FATAL << "fatal 2 : " << e.what() << endreq;
-        exit(2);
-      }
-    }
-    /* if nothing has been caught then it's OK
-    */
-    if(!exceptionRaised)
-    {
-      m_dimInfoMR[serviceName] = pNew;
-      //m_dimInfoMonRate.push_back(pNew);
-      //sc = StatusCode::SUCCESS;
-      //nbNewServices++; 
-    }    
+  else {
+    groupName = createSaverName (termSvcName);// in the case of Saving Adders it should return "serverName"
+    elementName = termSvcName;
   }
+  
+  msg << MSG::DEBUG << "creating DimInfoMonObject " << termSvcName << endreq;
+  //msg << MSG::DEBUG << "groupName =  " << groupName << endreq;
+  //msg << MSG::DEBUG << "elementName =  " << elementName << endreq;
+  
+  m_dimInfo[groupName][elementName] = new DimInfoMonObject(termSvcName, m_processMgr->refreshTime()); 
+  //msg << MSG::DEBUG << "setSourceName : " << name() << endreq;
+  m_dimInfo[groupName][elementName]->setSourceName(name());
+  //msg << MSG::DEBUG << "setMsgSvc" << endreq;
+  m_dimInfo[groupName][elementName]->setMsgSvc(msgSvc());
+
 }
 
 void BaseServiceMap::loadDimInfo(const std::string &serviceName, const std::string &serverName)
@@ -314,57 +249,43 @@ int BaseServiceMap::deleteDimInfo(const std::string &serviceName, const std::str
 {
   MsgStream msg(msgSvc(), name());
 
-  if ((m_processMgr->serviceOwner() == s_Adder)||(m_processMgr->serviceOwner() == s_Saver)) {
-    std::string termSvcName = createTermServiceName (serviceName, serverName);
+  std::string termSvcName = createTermServiceName (serviceName, serverName);
 
-    std::string groupName = "";
-    std::string elementName = "";
+  std::string groupName = "";
+  std::string elementName = "";
 
-    if (m_processMgr->serviceOwner() == s_Adder) {
-      groupName = createAdderName (serviceName);
-      elementName = serverName;
-    }
-    else {
-      groupName = serverName;
-      elementName = termSvcName;
-    }
-
-    if (m_dimInfo.find(groupName) == m_dimInfo.end()){
-      msg << MSG::DEBUG << " sorry there is no group " << groupName << " in the map" << endreq;    
-      return 1;
-    }
-
-    if (m_dimInfo[groupName].find(elementName) == m_dimInfo[groupName].end()){
-      msg << MSG::DEBUG << " sorry there is no element " << elementName << "in group " << groupName << endreq;    
-      return 1;
-    }
-
-    msg << MSG::DEBUG << " erasing element "<< elementName <<" from group "<< groupName <<endreq;
-    msg << MSG::DEBUG << " the serviceName was: "<< m_dimInfo[groupName][elementName]->dimInfo()->getName() <<endreq;
-    delete m_dimInfo[groupName][elementName]; m_dimInfo[groupName][elementName]=0; m_dimInfo[groupName].erase(elementName);
-
-    if (m_dimInfo[groupName].size()!=0)  return 1;
-
-    msg << MSG::DEBUG << " The group is empty after erasing element "<< elementName << ". We have to erase the group too." <<endreq;
-    msg << MSG::DEBUG << " erasing group "<< groupName << " from map "<< endreq;  
-    m_dimInfo.erase(groupName);
+  if (m_processMgr->serviceOwner() == s_Adder) {
+    groupName = createAdderName (serviceName);
+    elementName = serverName;
   }
-  else if (m_processMgr->serviceOwner() == s_MonRateService) {
-    if (m_dimInfoMR.find(serviceName) == m_dimInfoMR.end()){
-      msg << MSG::DEBUG << " sorry there is no service " << serviceName << " in the map" << endreq;    
-      return 1;
-    }
-    
-    msg << MSG::DEBUG << " erasing service "<< serviceName << endreq;
-    delete m_dimInfoMR[serviceName]; 
-    m_dimInfoMR[serviceName]=0;
-    m_dimInfoMR.erase(serviceName);
+  else {
+    groupName = serverName;
+    elementName = termSvcName;
+  }
+
+  if (m_dimInfo.find(groupName) == m_dimInfo.end()){
+    msg << MSG::DEBUG << " sorry there is no group " << groupName << " in the map" << endreq;    
     return 1;
   }
-  
+
+  if (m_dimInfo[groupName].find(elementName) == m_dimInfo[groupName].end()){
+    msg << MSG::DEBUG << " sorry there is no element " << elementName << "in group " << groupName << endreq;    
+    return 1;
+  }
+
+  msg << MSG::DEBUG << " erasing element "<< elementName <<" from group "<< groupName <<endreq;
+  msg << MSG::DEBUG << " the serviceName was: "<< m_dimInfo[groupName][elementName]->dimInfo()->getName() <<endreq;
+  delete m_dimInfo[groupName][elementName]; m_dimInfo[groupName][elementName]=0; m_dimInfo[groupName].erase(elementName);
+
+  if (m_dimInfo[groupName].size()!=0)  return 1;
+
+  msg << MSG::DEBUG << " The group is empty after erasing element "<< elementName << ". We have to erase the group too." <<endreq;
+  msg << MSG::DEBUG << " erasing group "<< groupName << " from map "<< endreq;  
+  m_dimInfo.erase(groupName);
+
   return 0;
 }
-	
+
 void BaseServiceMap::insertDimService(const std::string &serviceName, const std::string &serverName)
 {
 
@@ -383,19 +304,19 @@ void BaseServiceMap::insertDimService(const std::string &serviceName, const std:
     msg << MSG::WARNING << "This is not an Adder !!!!!!!!. You can not add DimServices." << endreq;
     return;  
   }
-    
+
   MonObject *monObjectTmp = m_dimInfo[groupName][elementName]->monObject();
   //msg << MSG::DEBUG << "printing MonObjectTest: " << endreq;
   //monObjectTest->print();
   msg << MSG::DEBUG << "creating MonObject for Adder" << groupName << endreq;
-  
+
   std::vector<std::string> serviceParts = Misc::splitString(serviceName, "/");
   std::string svctype = serviceParts[0];
-  
+
   MonObject *monObjectAdder = MonObjectCreator::createMonObjectWithPrefix(svctype, msgSvc(), name());
-  
+
   msg << MSG::DEBUG << "copy MonObject for Adder" << groupName << endreq;
-  
+
   bool isCopied = false;
   if (monObjectTmp !=0) {
     monObjectAdder->copyFrom(monObjectTmp);
@@ -604,8 +525,16 @@ void BaseServiceMap::add() {
   
   std::map<std::string, DimInfoMonObject*>::iterator it;
 
-  if ((0 == m_serverMap.size())||(0 == m_serviceSet.size())||(0 == m_dimInfo.size())){
-    msg << MSG::DEBUG << " Adder can't add because the ServerMap, ServiceMap or DimInfoMap is empty " << endreq;
+  if (0 == m_serverMap.size()){
+    msg << MSG::DEBUG << " Adder can't add because the ServerMap is empty " << endreq;
+    return;
+  }
+  if (0 == m_serviceSet.size()) {
+    msg << MSG::DEBUG << " Adder can't add because the ServiceSet is empty " << endreq;
+    return;
+  }
+  if (0 == m_dimInfo.size()){
+    msg << MSG::DEBUG << " Adder can't add because the DimInfoMap is empty " << endreq;
     return;
   }
 
@@ -664,6 +593,3 @@ void BaseServiceMap::add() {
   }
 }
 
-void BaseServiceMap::updateNumberOfMonRates() {
-  m_numberOfMonRatesPublisher->updateService(m_dimInfoMR.size());
-}

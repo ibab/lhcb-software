@@ -42,7 +42,7 @@ DimRpcGaucho::DimRpcGaucho(std::string name, ISvcLocator* svcLocator) : DimRpc(n
   if (sc.isFailure()) msg << MSG::FATAL << "Unable to locate the ApplicationMgr" << endreq;
   else msg << MSG::DEBUG << "Found ApplicationMgr"<< endreq;
 
-  SmartIF<IAlgManager> algManager (m_applicationMgr);
+  SmartIF<IAlgManager> algManager ( IID_IAlgManager, m_applicationMgr);
   if( algManager.isValid() ) {
     m_algManager=algManager;
     msg << MSG::DEBUG << "Found the AlgoritmFactory" << endreq;
@@ -92,7 +92,7 @@ void DimRpcGaucho::manageHistos (bool list, bool reset, bool save) {
   int level = 0;
   std::vector<std::string> idList;
   
-  std::string saveDir = "~/w0/";
+  std::string saveDir = "/hist/Savesets/";
   
   TFile *f=0;
   std::string fileName = "......this is the file name were we will save histograms...........";

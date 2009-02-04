@@ -1,4 +1,4 @@
-// $Id: DimCmdServer.cpp,v 1.15 2008-11-25 15:53:23 evh Exp $
+// $Id: DimCmdServer.cpp,v 1.16 2009-02-04 08:00:12 evh Exp $
 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/MsgStream.h"
@@ -98,10 +98,10 @@ void DimCmdServer::commandHandler() {
   if ( m_incidentSvc ) {
      Incident incident("DimCmdServer","SAVE_HISTOS");
      Incident incident2("DimCmdServer","INSERT_HISTOS");
+     Incident incident3("DimCmdServer","RECONFIGURE");
      if (strncmp(m_nextcommand,"save_histos",11)==0) m_incidentSvc->fireIncident(incident);
-     if (strncmp(m_nextcommand,"insert_histos",13)==0){
-        m_incidentSvc->fireIncident(incident2);
-     }
+     if (strncmp(m_nextcommand,"insert_histos",13)==0) m_incidentSvc->fireIncident(incident2);
+     if (strncmp(m_nextcommand,"reconfigure",11)==0) m_incidentSvc->fireIncident(incident3);
   }
   log << MSG::DEBUG << "received command " << m_nextcommand << endreq;
   if (strncmp(m_nextcommand,"/stat/",6)==0) {

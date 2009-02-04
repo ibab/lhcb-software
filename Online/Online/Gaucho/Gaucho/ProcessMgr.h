@@ -15,10 +15,10 @@ static const int s_updateSvcMapFromInfoServer(125);
 static const int s_startTimer(126);
 static const int s_stopTimer(127);
 static const int s_createInfoServices(128);
+static const int s_reconfigureAdder(129);
 
 static const std::string s_Adder("Adder");
 static const std::string s_Saver("Saver");
-static const std::string s_MonRateService("MonRateService");
 
 
 //  Author: jotalo, 19/06/2008
@@ -28,7 +28,6 @@ class DimInfoServices;
 class BaseServiceMap;
 class Interactor;
 class DimTimerProcess;
-class DimInfoMonRate;
 class RatePublisher;
 class ProcessMgr {
 public:
@@ -54,6 +53,11 @@ public:
   void createInfoServers();
   void createInfoServices(std::string serverName);
   void createTimerProcess();
+
+  void destroyInfoServers();
+  void destroyInfoServices();
+  void destroyTimerProcess();
+
   void updateMap(); //this method update data when we dont have the ServerMap 
 
   void setPartVector(const std::vector<std::string> &partName) {m_partName = partName; m_monitoringFarm = true;}
@@ -78,8 +82,6 @@ public:
   
   void setMonitorSvc(IGauchoMonitorSvc* pGauchoMonitorSvc){m_pGauchoMonitorSvc = pGauchoMonitorSvc;}
   //void setFileStaus(std::string& file) {m_pFile = &file;}
-  void setNbCounterInMonRate(int nbCounterInMonRate){m_nbCounterInMonRate =
-  nbCounterInMonRate;}
   //void fileName() {}
   std::string* fileNamePointer(){return &m_fileName;}
   //bool isAdder () {if (s_Adder == m_serviceOwner) return true;else return false;}
@@ -114,7 +116,6 @@ protected:
   std::string m_saveDir;
   int m_saveDiff;
   bool m_publishRates;
-  int m_nbCounterInMonRate;
   
   DimInfoServers*  m_dimInfoServers;
   DimInfoServices* m_dimInfoServices;

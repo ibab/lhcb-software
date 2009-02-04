@@ -10,6 +10,7 @@
 #include "Gaucho/DimTimerProcess.h"
 #include "Gaucho/DimInfoServices.h"
 #include "Gaucho/AdderSvc.h"
+#include "DimCmdServer.h"
 
 #include <ctime>
 
@@ -77,6 +78,7 @@ StatusCode AdderSvc::initialize() {
     return StatusCode::FAILURE;
   }
 
+
   msg << MSG::DEBUG << "***************************************************** " << endreq;
 
   msg << MSG::DEBUG << "****************** Welcome to "<<adderType<<" Adder********* " << endreq;
@@ -101,6 +103,10 @@ StatusCode AdderSvc::initialize() {
     msg << MSG::DEBUG << endreq;
   }
 
+  m_incidentSvc->addListener(this,"RECONFIGURE");
+
+  m_dimcmdsvr = new DimCmdServer( (m_utgid+"/"), serviceLocator(), 0);
+
   msg << MSG::DEBUG << "Adder will publish data every " << m_refreshTime << " seconds"<< endreq;
   msg << MSG::DEBUG << "***************************************************** " << endreq;
   msg << MSG::DEBUG << "***************************************************** " << endreq;
@@ -115,15 +121,45 @@ StatusCode AdderSvc::initialize() {
   m_processMgr->setPartitionName(m_partitionName);
   if (m_publishRates == 1) m_processMgr->setPublishRates(true);
 
-  m_processMgr->createInfoServers();
-
-  m_processMgr->createTimerProcess();
-
-  msg << MSG::DEBUG << "Activing PostEvent to StartTimer............." << endreq;
-  IocSensor::instance().send(this, s_startTimer, this); //start Timer*/
-
+  startUp();
   msg << MSG::DEBUG << "Finishing the initialize method." << endreq;
   return StatusCode::SUCCESS;
+}
+
+void AdderSvc::startUp(){
+  MsgStream msg(msgSvc(), name());
+  msg << MSG::DEBUG << "*******************************************" << endreq;
+  msg << MSG::DEBUG << "**************STARTUP PROCESS**************" << endreq;
+  msg << MSG::DEBUG << "**************STARTUP PROCESS**************" << endreq;
+  msg << MSG::DEBUG << "**************STARTUP PROCESS**************" << endreq;
+  msg << MSG::DEBUG << "**************STARTUP PROCESS**************" << endreq;
+  msg << MSG::DEBUG << "**************STARTUP PROCESS**************" << endreq;
+  m_processMgr->createInfoServers();
+  m_processMgr->createTimerProcess();
+  msg << MSG::DEBUG << "Activing PostEvent to StartTimer............." << endreq;
+  IocSensor::instance().send(this, s_startTimer, this); //start Timer*/
+  msg << MSG::DEBUG << "*******************************************" << endreq;
+}
+
+void AdderSvc::shutDown(){
+  MsgStream msg(msgSvc(), name());
+  msg << MSG::DEBUG << "*******************************************" << endreq;
+  msg << MSG::DEBUG << "*************SHUTDOWN PROCESS**************" << endreq;
+  msg << MSG::DEBUG << "*************SHUTDOWN PROCESS**************" << endreq;
+  msg << MSG::DEBUG << "*************SHUTDOWN PROCESS**************" << endreq;
+  msg << MSG::DEBUG << "*************SHUTDOWN PROCESS**************" << endreq;
+  msg << MSG::DEBUG << "*************SHUTDOWN PROCESS**************" << endreq;
+  msg << MSG::DEBUG << "*************SHUTDOWN PROCESS**************" << endreq;
+  msg << MSG::DEBUG << "*******************************************" << endreq;
+  m_enablePostEvents = false;
+  m_processMgr->dimTimerProcess()->stop();
+  m_processMgr->destroyTimerProcess();
+  m_processMgr->destroyInfoServers();
+  m_processMgr->destroyInfoServices();
+  m_enablePostEvents = true;
+  msg << MSG::DEBUG << "*******************************************" << endreq;
+  msg << MSG::DEBUG << "*******************************************" << endreq;
+  msg << MSG::DEBUG << "*******************************************" << endreq;
 }
 
 void AdderSvc::handle(const Event&  ev) {
@@ -131,6 +167,13 @@ void AdderSvc::handle(const Event&  ev) {
   
   if (!m_enablePostEvents) return;
     
+  if (s_reconfigureAdder == ev.type) {
+    msg << MSG::DEBUG << " We are inside a PostEvent to reconfigure the Adder " << endreq;
+    msg << MSG::DEBUG << " ShuttingDown the Adder " << endreq;
+    shutDown();
+    msg << MSG::DEBUG << " StartingUp the Adder " << endreq;
+    startUp();
+  }
   if(s_startTimer == ev.type) {
     msg << MSG::DEBUG << " We are inside a PostEvent to Start the Timer " << endreq;
     m_processMgr->dimTimerProcess()->start(m_refreshTime);
@@ -162,36 +205,42 @@ void AdderSvc::handle(const Event&  ev) {
   }
   else if(s_updateSvcMapFromInfoServer == ev.type) {
     msg << MSG::DEBUG << " We are inside a PostEvent to UpdateServiceMapFromInfoServer " << endreq;
-    std::map<std::string, bool, std::less<std::string> > serverMap = m_processMgr->dimInfoServers()->serverMap();
-
 //    std::pair<ProcessMgr*, std::map<std::string, bool, std::less<std::string> > >* data = (std::pair<ProcessMgr*, std::map<std::string, bool, std::less<std::string> > >*) ev.data;
-
 //    std::map<std::string, bool, std::less<std::string> > serverMap = data->second;
-        
+
+    std::map<std::string, bool, std::less<std::string> > serverMap = m_processMgr->dimInfoServers()->serverMap();
     m_processMgr->serviceMap()->updateMap(serverMap);
     m_processMgr->serviceMap()->printMap();
     msg << MSG::DEBUG << " End PostEvent to UpdateServiceMap " << endreq;
   }
   else if(s_updateSvcMapFromInfoService == ev.type) {
     msg << MSG::DEBUG << " We are inside a PostEvent to UpdateServiceMapFromInfoService " << endreq;
-
-    
-    std::set<std::string> serviceSet = m_processMgr->dimInfoServices()->serviceSet();
- 
    // std::pair<ProcessMgr*, std::set<std::string> >* data = (std::pair<ProcessMgr*, std::set<std::string> >*) ev.data;
    // std::set<std::string> serviceSet = data->second;
 
+    std::set<std::string> serviceSet = m_processMgr->dimInfoServices()->serviceSet();
+    std::map<std::string, bool, std::less<std::string> > serverMap = m_processMgr->dimInfoServers()->serverMap();
     m_processMgr->serviceMap()->setServiceSet(serviceSet);
-    m_processMgr->updateMap();
+    m_processMgr->serviceMap()->updateMap(serverMap);
     m_processMgr->serviceMap()->printMap();
     msg << MSG::DEBUG << " End PostEvent to UpdateServiceMapFromInfoService " << endreq;
   }
 }
 
+//------------------------------------------------------------------------------
 void AdderSvc::handle(const Incident& inc) {
+//------------------------------------------------------------------------------
   MsgStream msg(msgSvc(), name());
+  msg << MSG::DEBUG << "******************************************************" << endreq;
+  msg << MSG::DEBUG << "******************************************************" << endreq;
   msg << MSG::DEBUG << "Got incident " << inc.type() << " from " << inc.source() <<endreq;
-  //IocSensor::instance().send(this, s_COMMAND_IN_PROCESSMGR, this);
+  msg << MSG::DEBUG << "Got incident " << inc.type() << " from " << inc.source() <<endreq;
+  msg << MSG::DEBUG << "Got incident " << inc.type() << " from " << inc.source() <<endreq;
+  msg << MSG::DEBUG << "Got incident " << inc.type() << " from " << inc.source() <<endreq;
+  msg << MSG::DEBUG << "Got incident " << inc.type() << " from " << inc.source() <<endreq;
+  msg << MSG::DEBUG << "******************************************************" << endreq;
+  msg << MSG::DEBUG << "******************************************************" << endreq;
+  IocSensor::instance().send(this, s_reconfigureAdder, this);
 }
 
 StatusCode AdderSvc::finalize() {

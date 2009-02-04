@@ -3,7 +3,6 @@
 #include "Gaucho/BaseServiceMap.h"
 #include "CPP/IocSensor.h"
 
-
 DimInfoServices::DimInfoServices(ProcessMgr *processMgr, std::string serverName):
   DimInfo((serverName + "/SERVICE_LIST").c_str(), -1)
  ,m_name("DimInfoServices")

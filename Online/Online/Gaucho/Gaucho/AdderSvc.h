@@ -9,6 +9,7 @@
 class IIncidentSvc;
 
 class ProcessManager;
+class DimCmdServer;
 namespace LHCb {
 
   class AdderSvc : virtual public IIncidentListener, public Service, public Interactor  {
@@ -28,12 +29,15 @@ namespace LHCb {
     /// Interactor handler
     virtual void handle(const Event& ev);
 
+    void startUp();
+    void shutDown();
+
 private:
   /// Reference to incident service
   IIncidentSvc* m_incidentSvc;
     
   ProcessMgr *m_processMgr;
-
+  DimCmdServer* m_dimcmdsvr;
   std::string m_utgid;
   std::string m_nodeName;
   

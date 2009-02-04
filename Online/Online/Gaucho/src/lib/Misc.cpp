@@ -56,6 +56,7 @@ bool Misc::matchStringCaseIns (const std::string &str, const std::vector<std::st
   return true;
 }
 
+
 bool Misc::isStringInVector(const std::string &str, const std::vector<std::string> &strV) {
   std::vector<std::string>::const_iterator it;
   for(it=strV.begin(); it!=strV.end(); ++it)
@@ -82,3 +83,16 @@ std::string Misc::stringToUpper(std::string strToConvert)
    return strToConvert;//return the converted string
 } 
 
+
+void Misc::printSerializedString(char * c, int size)
+{
+  int i=0;
+  std::cout << "content (" << size << " bytes):" << std::endl;
+  while(i < size && c != 0)
+  {
+    if( c[i] >= 33 && c[i] <= 126) std::cout << c[i];
+    else std::cout << ".";
+    i++;
+  }
+  std::cout << std::endl << "/content" << std::endl;
+}

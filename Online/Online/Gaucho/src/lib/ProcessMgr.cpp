@@ -11,7 +11,6 @@
 ProcessMgr::ProcessMgr(std::string serviceOwner, IMessageSvc* msgSvc, Interactor *service, const int &refreshTime): m_serviceOwner(serviceOwner), m_name("ProcessMgr"), m_msgSvc(msgSvc), m_service(service), m_refreshTime(refreshTime)
 {
   m_monitoringFarm = false;
-  m_nbCounterInMonRate = 30;
   m_publishRates = false;
   m_fileName = "Waiting for command to save histograms............."; 
 }
@@ -31,11 +30,19 @@ void ProcessMgr::updateMap(){
 void ProcessMgr::createInfoServers() {
   MsgStream msg(msgSvc(), name());
   m_serviceMap = new BaseServiceMap(this);
-  m_serviceMap->setNbCounterInMonRate(m_nbCounterInMonRate);
-  
+
   msg << MSG::DEBUG << "Creating Server Status"<< endreq;
   m_dimInfoServers = new DimInfoServers(this);
 }
+
+void ProcessMgr::destroyInfoServers() {
+  MsgStream msg(msgSvc(), name());
+  msg << MSG::DEBUG << "Destroying Server Status"<< endreq;
+  if (m_dimInfoServers) {delete m_dimInfoServers; m_dimInfoServers=0;}
+  msg << MSG::DEBUG << "Destroying Service Map"<< endreq;
+  if (m_serviceMap) {delete m_serviceMap; m_serviceMap=0;}
+}
+
 
 void ProcessMgr::createInfoServices(std::string serverName){
   MsgStream msg(msgSvc(), name());
@@ -43,12 +50,22 @@ void ProcessMgr::createInfoServices(std::string serverName){
   m_dimInfoServices = new DimInfoServices(this, serverName);
 }
 
+void ProcessMgr::destroyInfoServices(){
+  MsgStream msg(msgSvc(), name());
+  msg << MSG::DEBUG << "Destroying Service Status "<< endreq;
+  if (m_dimInfoServices) {delete m_dimInfoServices; m_dimInfoServices=0;}
+}
+
 void ProcessMgr::createTimerProcess() {
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "Creating DimTimerAdder"<< endreq;
-  
   m_dimTimerProcess = new DimTimerProcess (this, m_refreshTime, msgSvc());
-  
+}
+
+void ProcessMgr::destroyTimerProcess() {
+  MsgStream msg(msgSvc(), name());
+  msg << MSG::DEBUG << "Destroying DimTimerAdder"<< endreq;
+  if (m_dimTimerProcess) {delete m_dimTimerProcess; m_dimTimerProcess=0;}
 }
 
 void ProcessMgr::timerHandler(){
@@ -70,10 +87,6 @@ void ProcessMgr::timerHandler(){
     //m_pGauchoMonitorSvc->updateAll(false);
     //msg << MSG::DEBUG << "After UpdateAll in Monitoring Service: "<< m_fileName << endreq;
   }
-  else if (m_serviceOwner.compare(s_MonRateService) == 0) {
-    msg << MSG::DEBUG << "isMonRateService"<< endreq;
-    m_serviceMap->updateNumberOfMonRates();
-  }
 }
 
 void ProcessMgr::write(){
@@ -83,7 +96,7 @@ void ProcessMgr::write(){
 void ProcessMgr::setUtgid(const std::string &utgid)
 {
   m_utgid = utgid;
-  if (s_MonRateService == m_serviceOwner) return;
+  
   std::size_t first_us = m_utgid.find("_");
   m_nodeName = m_utgid.substr(0, first_us);
 }  
@@ -159,10 +172,7 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
         }
       }
     }
-    else if (m_serviceOwner.compare(s_MonRateService)==0){
-      
-    }
-    
+
     std::vector<std::string> serviceParts = Misc::splitString(serviceName, "/");
 
     //it should be possible to have an unlimited number of slashes im the histogram names
@@ -170,30 +180,23 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
     std::string svctype = serviceParts[0];
     msg << MSG::DEBUG << "svctype = " << svctype << endreq;
 
-    
-    if (s_MonRateService == m_serviceOwner) {
-      if (svctype.compare(s_pfixMonRate) != 0 ) {
-        msg << MSG::DEBUG << "REFUSED because MonRateService only decode MonRates !!" << endreq;
+
+    if ((svctype.compare(s_pfixMonH1F) != 0)&&(svctype.compare(s_pfixMonH1D) != 0)&&(svctype.compare(s_pfixMonH2F) != 0)&&
+    (svctype.compare(s_pfixMonH2D) != 0)&&(svctype.compare(s_pfixMonProfile) != 0)&&(svctype.compare(s_pfixMonRate) != 0)) {
+      msg << MSG::DEBUG << "REFUSED because Service is not MonHisto, MonProfile, MonRate: " << svctype << endreq;
+      continue;
+    }
+
+    if (s_Saver == m_serviceOwner) { // savers do not save MonRate
+       if (svctype.compare(s_pfixMonRate) == 0 ) {
+        msg << MSG::DEBUG << "REFUSED because Savers do not Save MonRate !!" << endreq;
         continue; 
-      }
+      } 
     }
-    else if ((s_Adder == m_serviceOwner)||(s_Saver == m_serviceOwner)){
-      if ((svctype.compare(s_pfixMonH1F) != 0)&&(svctype.compare(s_pfixMonH1D) != 0)&&(svctype.compare(s_pfixMonH2F) != 0)&&
-      (svctype.compare(s_pfixMonH2D) != 0)&&(svctype.compare(s_pfixMonProfile) != 0)&&(svctype.compare(s_pfixMonRate) != 0)) {
-        msg << MSG::DEBUG << "REFUSED because Service is not MonHisto, MonProfile, MonRate: " << svctype << endreq;
-        continue;
-      }
-      if (s_Saver == m_serviceOwner) { // savers do not save MonRate
-         if (svctype.compare(s_pfixMonRate) == 0 ) {
-          msg << MSG::DEBUG << "REFUSED because Savers do not Save MonRate !!" << endreq;
-          continue; 
-        } 
-      }
-    }
-    
+
     std::string utgid = serviceParts[1];
     msg << MSG::DEBUG << "utgid = " << utgid << endreq;
-    
+
     std::string task;
     std::string part;
     int index=2;
@@ -207,11 +210,9 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
       if ((task.compare("Saver")==0)||(task.compare("SAVER")==0)) continue; 
 
       if ((task.compare("Adder")==0)||(task.compare("ADDER")==0)) {
-        if (s_MonRateService != m_serviceOwner) {
-          if (serviceParts.size() < 5 ) continue; 
-          task = serviceParts[index];
-          index++;
-        }
+        if (serviceParts.size() < 5 ) continue; 
+        task = serviceParts[index];
+        index++;
       }
     }
     
@@ -428,7 +429,7 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
           continue; 
         }
         else msg << MSG::DEBUG << "partName OK server accepted: " << (*serverListTotIt) <<endreq;
-        
+
         if (m_taskName.compare(taskName)!= 0) {
           msg << MSG::DEBUG << "REFUSED because taskName NOT OK" << endreq;
           continue; 
@@ -437,7 +438,7 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
       else {
         nodeName = (*serverListTotIt).substr(0, first_us);
         taskName = (*serverListTotIt).substr(first_us + 1, second_us - first_us - 1);
-        
+
         if (nodeName.compare("Bridge")==0) {
           msg << MSG::DEBUG << "refused because we don't save Bridges. "<< endreq;    
           continue; 
@@ -448,7 +449,7 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
           msg << MSG::DEBUG << "refused saver for partition " << m_nodeName << " ignores partition "<< nodeName << endreq;    
           continue; 
         }
-        
+
         msg << MSG::DEBUG << "checking taskname= "<< taskName << endreq;
         if ((taskName.compare("Adder")!=0)&&(taskName.compare("ADDER")!=0)) {
           msg << MSG::DEBUG << "REFUSED because in the EFF savers can save only adders. Taskname= "<< taskName << endreq;
@@ -456,36 +457,12 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
         }
       }
     }
-    else if (m_serviceOwner.compare(s_MonRateService)==0){
-      partName = (*serverListTotIt).substr(0, first_us);
-      taskName = (*serverListTotIt).substr(first_us + 1, second_us - first_us - 1);
-      
-      bool chooseIt=true;
-      if (m_partName.size()) chooseIt=false;
-      for(it=m_partName.begin(); it!=m_partName.end(); ++it){
-        msg << MSG::DEBUG << "comparing partName="<< partName << " with "<< (*it) << endreq;
-        if (Misc::findCaseIns((*it), partName) != std::string::npos) {
-          chooseIt=true;
-          break;
-        }
-      }
-      if (!chooseIt) {
-        msg << MSG::DEBUG << "REFUSED because partName NOT OK " <<(*serverListTotIt) << endreq;
-        continue; 
-      }
-      else msg << MSG::DEBUG << "partName OK server accepted: " << (*serverListTotIt) <<endreq;
-      
-      if (m_taskName.compare(taskName)!= 0) {
-        msg << MSG::DEBUG << "REFUSED because taskName NOT OK" << endreq;
-        continue; 
-      }
-    }
-    
+
     std::string serverName = (*serverListTotIt).substr(0, (*serverListTotIt).find("@"));
     msg << MSG::DEBUG << "We will consider -----------> Server = "<<serverName << endreq;
     serverList.insert(serverName);
 
   }  
-    
+
   return serverList;
 }
