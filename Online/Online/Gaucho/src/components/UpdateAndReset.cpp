@@ -391,7 +391,7 @@ void UpdateAndReset::updateData(bool isRunNumberChanged, bool isFromTimerHandler
   msg << MSG::DEBUG << "m_offsetTimeLastEvInCycle     = " << m_offsetTimeLastEvInCycle << endreq;
   msg << MSG::DEBUG << "deltaT error = " << m_deltaTCycle - m_desiredDeltaTCycle*1000000 << " microseconds" << endreq;
   
-  if (!isFromTimerHandler) m_gpsTimeLastEvInCycle = currentTime; // we can not read ODIN from timerHandler
+  if (isFromTimerHandler) m_gpsTimeLastEvInCycle = currentTime; // we can not read ODIN from timerHandler
   else  m_gpsTimeLastEvInCycle = gpsTime();
     
   m_offsetGpsTimeLastEvInCycle = offsetToBoundary(m_cycleNumber, m_gpsTimeLastEvInCycle, false);
