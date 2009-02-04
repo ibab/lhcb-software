@@ -18,7 +18,7 @@ branches cmt doc LHCbMath src dict python tests
 use GaudiKernel     v*
 use ROOT            v*      LCG_Interfaces
 use Boost           v*      LCG_Interfaces
-use GSL             v*      LCG_Interfaces
+use GSL             v*      LCG_Interfaces -no_auto_imports
 use GaudiPython     v*                     -no_auto_imports
 
 apply_pattern install_more_includes more=LHCbMath
@@ -32,15 +32,15 @@ macro_append ROOT_linkopts "" \
              ROOT_GE_5_19 " -lGenVector "
 
 # ================= constituents: linker library ============================
-library                     LHCbMathLib    ../src/*.cpp
+library                     LHCbMathLib    ../src/*.cpp -import=GSL
                         
-application  TestPow -group=tests   ../tests/pow.cpp         -check 
+application  TestPow -group=tests   ../tests/pow.cpp         -check -import=GSL
 macro_append TestPow_dependencies " LHCbMathLib "
-application  TestBit -group=tests  ../tests/bit.cpp          -check 
+application  TestBit -group=tests  ../tests/bit.cpp          -check -import=GSL
 macro_append TestBit_dependencies " LHCbMathLib "
-application  TestDigit -group=tests ../tests/digit.cpp       -check 
+application  TestDigit -group=tests ../tests/digit.cpp       -check -import=GSL
 macro_append TestDigit_dependencies " LHCbMathLib "
-application  TestKine -group=tests ../tests/kinematics.cpp   -check 
+application  TestKine -group=tests ../tests/kinematics.cpp   -check -import=GSL
 macro_append TestKine_dependencies " LHCbMathLib "
 
 # ================= patterns ================================================
@@ -50,8 +50,20 @@ apply_pattern reflex_dictionary                               \
               dictionary=LHCbMath                                 \
               headerfiles=$(LHCBMATHROOT)/dict/LHCbMathDict.h         \
               selectionfile=$(LHCBMATHROOT)/dict/LHCbMathDict.xml     \
-              options="-U__MINGW32__"
+              options="-U__MINGW32__" imports=GSL
 #============================================================================
 macro LHCbMath_use_linkopts $(use_linkopts)
 #============================================================================
-
+private
+# Note: libgslcblas is needed by libgsl, but the link is missing.
+macro_prepend GSL_linkopts " -Wl,--no-as-needed " \
+                    Darwin "" \
+                     WIN32 "" \
+          slc3_ia32_gcc323 "" \
+      slc3_ia32_gcc323_dbg ""
+macro_append GSL_linkopts " -Wl,--as-needed " \
+                    Darwin "" \
+                     WIN32 "" \
+          slc3_ia32_gcc323 "" \
+      slc3_ia32_gcc323_dbg ""
+end_private
