@@ -1,5 +1,9 @@
 2009-02-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of verson v2r2
+
+2009-02-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* python/LbRelease/CMT/LbPackage.py: use LbConfiguration.Platform instead of 
 	LbConfiguration.Project.
 
