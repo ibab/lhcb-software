@@ -1,4 +1,4 @@
-// $Id: ReadPackedDst.cpp,v 1.1 2009-01-26 09:45:51 ocallot Exp $
+// $Id: ReadPackedDst.cpp,v 1.2 2009-02-04 17:24:39 marcocle Exp $
 // Include files
 
 // from Gaudi
@@ -31,11 +31,23 @@ DECLARE_ALGORITHM_FACTORY( ReadPackedDst );
 //=============================================================================
 ReadPackedDst::ReadPackedDst( const std::string& name,
                               ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ),
+    m_odinDecoder("ODINDecodeTool", this)
 {
   declareProperty( "InputLocation", m_inputLocation = "/Event/DAQ/DstEvent" );
   declareProperty( "Postfix",       m_postfix       = "Test" );
 }
+//=============================================================================
+// Initialize
+//=============================================================================
+StatusCode ReadPackedDst::initialize() {
+  StatusCode sc = GaudiAlgorithm::initialize();
+  if (sc.isFailure()) return sc;
+  
+  // Pass the Postfix property to the tool
+  Gaudi::Utils::setProperty(&(*m_odinDecoder), "ODINLocation", LHCb::ODINLocation::Default + m_postfix);
+}
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -50,14 +62,10 @@ StatusCode ReadPackedDst::execute() {
 
   LHCb::RawEvent* dstEvent = get<LHCb::RawEvent>( m_inputLocation );
 
-  const std::vector<LHCb::RawBank*>& odinBanks = dstEvent->banks(LHCb::RawBank::ODIN);
-  if ( odinBanks.size() ) {
-    LHCb::RawBank* odin = *odinBanks.begin();
-    LHCb::ODIN* myOdin = new LHCb::ODIN();
-    myOdin->set( odin );
-    put( myOdin, LHCb::ODINLocation::Default + m_postfix );
-  } else {
-    warning() << "ODIN bank not found." << endreq;
+  // Decode the ODIN bank
+  m_odinDecoder->execute();
+  if ( !exist<LHCb::ODIN>(LHCb::ODINLocation::Default + m_postfix) ) {
+    warning() << "ODIN not found." << endreq;
     return StatusCode::FAILURE;
   }
   const std::vector<LHCb::RawBank*>& adds = dstEvent->banks( LHCb::RawBank::DstAddress );
