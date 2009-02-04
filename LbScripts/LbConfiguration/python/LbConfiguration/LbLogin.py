@@ -31,7 +31,8 @@ sys.path.insert(0,_py_dir)
 _scripts_dir = os.path.join(_base_dir, "scripts")
 
 
-from LbConfiguration.Project import getBinaryDbg
+from LbConfiguration.Platform import getBinaryDbg, getConfig
+from LbConfiguration.Platform import getCompiler, getPlatformType, getArchitecture
 from LbUtils.Script import Script
 from LbUtils.Env import Environment, Aliases
 from LbUtils.CVS import CVS2Version
@@ -41,7 +42,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.11 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.12 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -179,6 +180,7 @@ class LbLoginScript(Script):
         parser.set_defaults(cmtvers="v1r20p20070208")
         parser.add_option("--cmtvers", action="callback",
                           callback= _setCMTVersion_cb,
+                          type="string",
                           help="set CMT version")
         parser.set_defaults(scriptsvers=None)
         parser.add_option("--scripts-version",
@@ -495,10 +497,12 @@ class LbLoginScript(Script):
         if opts.sharedarea :
             if opts.cmtsite == "LOCAL" :
                 opts.mysiteroot = os.pathsep.join(opts.sharedarea.split(os.pathsep))
-            
-    def setCMTConfig(self, debug=False):
+
+    def getNativePlatformComponents(self):
+        platform = None 
+        binary = None
+        compdef = None
         ev = self._env
-        opts = self.options
         gcclist = []
         islinux = False
         if sys.platform.find("linux") != -1 :
@@ -513,9 +517,9 @@ class LbLoginScript(Script):
                     gcclist = gcclist.split(".")
                     gccvers = int("".join(gcclist[:2]))
                     if gccvers >= 34 :
-                        self.compdef = "gcc%s" % "".join(gcclist[:2])
+                        compdef = "gcc%s" % "".join(gcclist[:2])
                     else :
-                        self.compdef = "gcc%s" % "".join(gcclist[:3])
+                        compdef = "gcc%s" % "".join(gcclist[:3])
                     break
             
             hwdict = {"ia32" : ["i386"], "amd64" : ["x86_64"] }
@@ -523,7 +527,7 @@ class LbLoginScript(Script):
             for h in hwdict :
                 for l in hwdict[h] :
                     if l == nathw :
-                        self.binary = h
+                        binary = h
                         break
             relfiles = [ "/etc/redhat-release" , "/etc/system-release" ]
             nbre = re.compile("[0-9]")
@@ -533,94 +537,89 @@ class LbLoginScript(Script):
                     distrib = firstl.split()[0]
                     rhw = nbre.search(firstl).group()
                     if distrib == "Scientific" :
-                        self.platform = "slc%s" % rhw
+                        platform = "slc%s" % rhw
                     elif distrib == "Fedora" :
-                        self.platform = "fc%s" % rhw
+                        platform = "fc%s" % rhw
                     else:
-                        self.platform = "rh%s" % rhw
+                        platform = "rh%s" % rhw
                     break
+            
         elif sys.platform.find("darwin") != -1 :
             for l in os.popen("gcc --version") :
                 if l.find("gcc") != -1 :
                     gcclist = l[:-1].split()[2]
                     gcclist = gcclist.split(".")
                     gccvers = int("".join(gcclist))
-                    self.compdef = "gcc%s" % "".join(gcclist)
+                    compdef = "gcc%s" % "".join(gcclist)
                     break
                 
             nathw = os.popen("uname -p").read()[:-1]
             if nathw == "powerpc" :
-                self.binary = "ppc"
+                binary = "ppc"
             else :
-                self.binary = "ia32"
+                binary = "ia32"
             
             for l in os.popen("sw_vers") :
                 if l.find("ProductVersion") != -1 :
                     platlist = l[:-1].split()[1]
                     platlist = platlist.split(".")
-                    self.platform = "osx%s" % "".join(platlist[:2])
+                    platform = "osx%s" % "".join(platlist[:2])
         elif sys.platform == "win32":
-            self.platform = "win32"
-            self.compdef = "vc71"
-
-        newtag = False
-        if self.platform == "slc5" :
-            newtag = True
-
-
+            platform = "win32"
+            compdef = "vc71"
+        return binary, platform, compdef    
+        
+    def getTargetPlatformComponents(self):
+        platform = None 
+        binary = None
+        compdef = None
+        opts = self.options
         if opts.cmtconfig :
-            conflist = opts.cmtconfig.split("_")
-            if len(conflist) > 2 :
-                self.platform = conflist[0]
-                self.binary   = conflist[1]
-                self.compdef  = conflist[2]
-            
-            for c in conflist :
-                if c.startswith("gcc32") or c == "slc3" or c == "sl3":
-                    self.platform = "slc3"
-                    self.binary   = "ia32"
-                    self.compdef  = "gcc323"
-                    break
-                if c == "sl4" :
-                    self.platform = "slc4"
+            platform = getPlatformType(opts.cmtconfig)
+            binary = getArchitecture(opts.cmtconfig)
+            compdef = getCompiler(opts.cmtconfig)
+        return binary, platform, compdef    
+        
+    def setCMTConfig(self, debug=False):
+        ev = self._env
+        opts = self.options
+        
+        if opts.cmtconfig :
+            self.binary, self.platform, self.compdef = self.getTargetPlatformComponents()
+        else :
+            self.binary, self.platform, self.compdef = self.getNativePlatformComponents()
+            if self.platform == "slc5" :
+                if self.hasCommand("gcc34") :
+                    self.compdef = "gcc34"
+            if self.platform == "slc3" :
+                self.binary = "ia32"
 
         if self.compdef == "gcc323" :
-            if "".join(gcclist[:3]) != "323" :
-                if opts.cmtsite == "CERN":
-                    compiler_path = "/afs/cern.ch/lhcb/externallib/SLC3COMPAT/slc3_ia32_gcc323"
-                    if not os.path.isdir(compiler_path) or not os.path.isfile("/usr/bin/gcc32") :
-                        self._add_echo( "%s compiler is not available on this node" % self.compdef )
+            if opts.cmtsite == "CERN":
+                compiler_path = "/afs/cern.ch/lhcb/externallib/SLC3COMPAT/slc3_ia32_gcc323"
+                if not os.path.isdir(compiler_path) or not self.hasCommand("gcc32") :
+                    self._add_echo( "%s compiler is not available on this node" % self.compdef )
+                else :
+                    if ev.has_key("PATH") :
+                        pthlist = ev["PATH"].split(os.pathsep)
                     else :
-                        if ev.has_key("PATH") :
-                            pthlist = ev["PATH"].split(os.pathsep)
-                        else :
-                            pthlist = []
-                        pthlist.append(compiler_path)
-                        ev["PATH"] = os.pathsep.join(pthlist)
-                        if ev.has_key("LD_LIBRARY_PATH") :
-                            lpthlist = ev["LD_LIBRARY_PATH"].split(os.path.sep)
-                        else :
-                            lpthlist = []
-                        lpthlist.append(compiler_path)
-                        ev["LD_LIBRARY_PATH"] = os.pathsep.join(lpthlist)
+                        pthlist = []
+                    pthlist.append(compiler_path)
+                    ev["PATH"] = os.pathsep.join(pthlist)
+                    if ev.has_key("LD_LIBRARY_PATH") :
+                        lpthlist = ev["LD_LIBRARY_PATH"].split(os.path.sep)
+                    else :
+                        lpthlist = []
+                    lpthlist.append(compiler_path)
+                    ev["LD_LIBRARY_PATH"] = os.pathsep.join(lpthlist)
 
-        if self.platform == "slc5" :
-            if self.hasCommand("gcc34") :
-                self.compdef = "gcc34"
-
-        if not sys.platform == "win32" :
-            if newtag :
-                ev["CMTOPT"] = "-".join([hwdict[self.binary][0], self.platform, self.compdef, "opt"])
-            else :
-                ev["CMTOPT"] = "_".join([self.platform, self.binary, self.compdef])
-        else :
-            ev["CMTOPT"] = "_".join([self.platform, self.compdef]) 
-                       
+                    
+        ev["CMTOPT"] = getConfig(self.binary, self.platform, self.compdef)               
         ev["CMTDEB"] = getBinaryDbg(ev["CMTOPT"])
-        
         ev["CMTCONFIG"] = ev["CMTOPT"]
         if debug or sys.platform == "win32":
             ev["CMTCONFIG"] = ev["CMTDEB"]
+
             
     def setCMTPath(self):
         ev = self._env
@@ -710,7 +709,10 @@ class LbLoginScript(Script):
         opts = self.options
         if opts.loglevel != "CRITICAL" :
             self._add_echo( "*" * 80 )
-            toprint = "*" + " " * 27 + "---- LHCb Login ----"
+            if opts.scriptsvers :
+                toprint = "*" + " " * 27 + "---- LHCb Login %s ----" % opts.scriptsvers
+            else :
+                toprint = "*" + " " * 27 + "---- LHCb Login ----"
             self._add_echo(toprint + " " * (80-len(toprint)-1) + "*")
             toprint = "*" + " " * 11 + "Building with %s on %s_%s system" % (self.compdef, self.platform, self.binary)
             self._add_echo(toprint + " " * (80-len(toprint)-1) + "*")

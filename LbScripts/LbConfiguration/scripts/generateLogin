@@ -18,7 +18,7 @@ if os.path.isdir(_py_dir) :
 
 from LbConfiguration.LbLogin import getLoginCacheName, getLbLoginEnv
 from LbConfiguration.SetupProject import SetupProject
-from LbConfiguration.Project import binary_list, binary_opt_list, getBinaryOpt
+from LbConfiguration.Platform import binary_list, binary_opt_list, getBinaryOpt
 from optparse import OptionParser
 
 def fixNative(filename):
@@ -120,6 +120,7 @@ def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None,
         location = os.path.join(targetlocation, "scripts")
     cachefilename = getLoginCacheName(shell=shell, location=location)
     
+    os.environ["CMTCONFIG"] = "slc4_ia32_gcc34"
     llsargs = []
     llsargs.append("--silent")
     llsargs.append("--shell=%s" % shell)
