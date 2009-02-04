@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.302 2009-01-27 16:51:13 jpalac Exp $
+! $Id: release.notes,v 1.303 2009-02-04 18:48:01 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,18 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-02-04 - Patrick Koppenburg
+ - python/DaVinciOutput.py : First working version of Dst writing configurable
+   . Allows to write as many DSTs as needed. 
+   . ETC not yet in.
+   . Packing not yet supported.
+   . Need to sort out some inconsistencies with DstConf
+   . Could be made an independent configurable, to be called before DaVinci().
+ - python/DaVinci/Configuration.py : use the above
+   . may be not a good idea. DaVinci is getting a monster.
+ -  options/DaVinci-WriteDst.py, options/DaVinci-ReadDst.py : exmaple I/O files.
+ - Increment to v22r1.
 
 !========================== DaVinci v22r0p2 2000-01-27 ===================
 

@@ -1,11 +1,11 @@
-# $Id: requirements,v 1.406 2009-01-23 11:17:13 jpalac Exp $
+# $Id: requirements,v 1.407 2009-02-04 18:48:01 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : J. Palacios
 #
 
 #============================================================================
 package           DaVinci
-version           v22r0p2
+version           v22r1
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -48,8 +48,6 @@ use LbcomSys    v*
 #-- Rec
 use RecSys      v*
 
-
-
 #-- Phys
 use PhysSys     v*
 
@@ -59,11 +57,13 @@ use AnalysisSys v*
 # define link options
 #============================================================================
 apply_pattern application_path 
-
 # define aliases
 alias DaVinci gaudirun.py
-
 #
 apply_pattern GaudiApp
+ignore_pattern package_stamps
 #
+macro DaVinciConfUserModules "DaVinci.Configuration DaVinci.DaVinciOutput"
 apply_pattern install_python_modules
+#apply_pattern install_scripts
+

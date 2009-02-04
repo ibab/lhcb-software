@@ -1,13 +1,13 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.43 2009-01-27 16:50:56 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.44 2009-02-04 18:48:01 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 from Configurables import GaudiSequencer
-from Configurables import ( LHCbConfigurableUser, LHCbApp, PhysConf, AnalysisConf, HltConf, DstConf )
+from Configurables import ( LHCbConfigurableUser, LHCbApp, PhysConf, AnalysisConf, HltConf, DstConf, DaVinciOutput )
 import GaudiKernel.ProcessJobOptions
 
 class DaVinci(LHCbConfigurableUser) :
@@ -18,6 +18,7 @@ class DaVinci(LHCbConfigurableUser) :
        , "SkipEvents"         :   0           # Number of events to skip at beginning for file
        , "PrintFreq"          : 100           # The frequency at which to print event numbers
        , "DataType"           : 'DC06'        # Data type, can be ['DC06','2008'] Forwarded to PhysConf
+#       , "PackType"           : "TES"         # Type of packing for the DST: ['NONE','TES','MDF']
        , "Simulation"         : True          # set to True to use SimCond. Forwarded to PhysConf
        , "DDDBtag"            : "default"     # Tag for DDDB. Default as set in DDDBConf for DataType
        , "CondDBtag"          : "default"     # Tag for CondDB. Default as set in DDDBConf for DataType
@@ -27,8 +28,10 @@ class DaVinci(LHCbConfigurableUser) :
          # Output
        , "HistogramFile"      : ""            # Write name of output Histogram file
        , "TupleFile"          : ""            # Write name of output Tuple file
-       , "ETCFile"            : ""            # Write name of output ETC file @todo Not yet implemented
-       , "DstFile"            : ""            # Write name of output DST file @todo Not yet implemented
+       , "ETCFiles"           : {}            # Name and sequence of output files
+       , "DstFiles"           : {}            # Name and sequence of output files
+       , "OptItems"           : []            # Optional items to write to DST
+       , "WriteOutSequence"   : []            # Sequence of algorithms to run before writing out """
          # Monitoring
        , "MoniSequence"       : [ ]           # Add your monitors here
          # DaVinci Options
@@ -43,11 +46,45 @@ class DaVinci(LHCbConfigurableUser) :
        , "Hlt2IgnoreHlt1Decision" : False     # run Hlt2 even if Hlt1 failed
        }
 
-    __used_configurables__ = [ LHCbApp, PhysConf, AnalysisConf, HltConf, DstConf ]
+    _propertyDocDct = {  
+         "EvtMax"             : """ Number of events to analyse """
+       , "SkipEvents"         : """ Number of events to skip at beginning for file """
+       , "PrintFreq"          : """ The frequency at which to print event numbers """
+       , "DataType"           : """ Data type, can be ['DC06','2008'] Forwarded to PhysConf """
+#       , "PackType"           : """ Type of packing for the DST: ['NONE','TES','MDF'] """
+       , "Simulation"         : """ set to True to use SimCond. Forwarded to PhysConf """
+       , "DDDBtag"            : """ Tag for DDDB. Default as set in DDDBConf for DataType """
+       , "CondDBtag"          : """ Tag for CondDB. Default as set in DDDBConf for DataType """
+       , "UseOracle"          : """ if False, use SQLDDDB instead """
+       , "Input"              : """ Input data. Can also be passed as a second option file. """
+       , "HistogramFile"      : """ Write name of output Histogram file """
+       , "TupleFile"          : """ Write name of output Tuple file """
+       , "ETCFiles"           : """ Write name of output ETC file and sequence to be run. See DstFiles."""
+       , "DstFiles"           : """ Write name of output Dst file and sequence to be run
+                                    e.g. DaVinci().DstFiles = { "Name1.dst" : sequence1 ,
+                                                                "Name2.dst" : sequence2 }
+                                    where sequenceX are GaudiSequencers"""
+       , "OptItems"           : """ Optional items to write to DST. Example = [ '/Event/Phys/StdUnbiasedJpsi2MuMu#1' ]"""
+       , "MoniSequence"       : """ Add your monitors here """
+       , "MainOptions"        : """ Main option file to execute """
+       , "UserAlgorithms"     : """ User algorithms to run. """
+       , "RedoMCLinks"        : """ On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association. """
+       , "InputType"          : """ 'DST' or 'DIGI' or 'ETC' or 'RDST' or 'DST'. Nothing means the input type is compatible with being a DST.  """
+         # Hlt running
+       , "HltType"            : """ HltType : No Hlt by default. Use Hlt1+Hlt2 to run Hlt """
+       , "HltUserAlgorithms"  : """ Put here user algorithms to add to Hlt """
+       , "ReplaceL0BanksWithEmulated" : """ Re-run L0  """
+       , "Hlt2IgnoreHlt1Decision" : """ Run Hlt2 even if Hlt1 failed """
+         }
+
+    __used_configurables__ = [ LHCbApp, PhysConf, AnalysisConf, HltConf, DstConf, DaVinciOutput ]
 
     ## Known monitoring sequences run by default
     KnownMonitors        = []    
 
+################################################################################
+# Configure slaves
+#
     def configureSubPackages(self):
         """
         Define DB and so on
@@ -60,6 +97,9 @@ class DaVinci(LHCbConfigurableUser) :
         self.setOtherProps(PhysConf(),["DataType","Simulation"])
         self.setOtherProps(AnalysisConf(),["DataType","Simulation"])
 
+################################################################################
+# Event Initialisation sequence
+#
     def initSeq(self):
         """
         Initialisation sequence
@@ -80,6 +120,9 @@ class DaVinci(LHCbConfigurableUser) :
             analysisinit = AnalysisConf().initSequence()
             init.Members += [ analysisinit ]
 
+################################################################################
+# HLT setup
+#
     def hlt(self):
         """
         Define HLT. Make sure it runs first.
@@ -92,6 +135,9 @@ class DaVinci(LHCbConfigurableUser) :
         ApplicationMgr().TopAlg += [ hltSeq ]  # catch the Hlt sequence to make sur it's run first
         
         
+################################################################################
+# Check Options are OK
+#
     def checkOptions(self):
         """
         Does nothing but checking that all is fine
@@ -102,29 +148,11 @@ class DaVinci(LHCbConfigurableUser) :
         inputType = self.getProp( "InputType" ).upper()
         if inputType not in [ "MDF", "DST", "DIGI", "ETC", "RDST" ]:
             raise TypeError( "Invalid inputType '%s'"%inputType )
+        # DST packing, not for  DC06
+#        if ( self.getProp("DataType") == "DC06" ):
+#            self.setProp('PackType', 'NONE') 
 
-    def outputFiles(self):
-        """
-        output files
-        """
-        ApplicationMgr().HistogramPersistency = "ROOT"
-        if ( self.getProp("HistogramFile") != "" ):
-            HistogramPersistencySvc().OutputFile = self.getProp("HistogramFile")
-            print "# Histos file will be ``", self.getProp("HistogramFile"), "''"
-        if ( self.getProp("TupleFile") != "" ):
-            tupleFile = self.getProp("TupleFile")
-            ApplicationMgr().ExtSvc +=  [ NTupleSvc() ]
-            tuple = "FILE1 DATAFILE='"+tupleFile+"' TYP='ROOT' OPT='NEW'"
-            print "# Tuple will be in ``", tupleFile, "''"
-            NTupleSvc().Output = [ tuple ]
-            NTupleSvc().OutputLevel = 1 
-        if ( self.getProp("ETCFile") != "" ):
-            raise TypeError( "ETC not yet implemented in configurables" )
-            importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts") # but this will be needed
-        if ( self.getProp("DstFile") != "" ):
-            raise TypeError( "DST not yet implemented in configurables" )
-        
-#
+################################################################################
 # @todo Stolen from Brunel. Could be common to all apps?
 #
     def defineMonitors(self):
@@ -140,6 +168,9 @@ class DaVinci(LHCbConfigurableUser) :
         # Do not print event number at every event
         EventSelector().PrintFreq = self.getProp("PrintFreq");
 
+################################################################################
+# set EvtMax
+#
     def defineEvents(self):
         """
         Define number of events
@@ -147,6 +178,18 @@ class DaVinci(LHCbConfigurableUser) :
         # Delegate handling to LHCbApp configurable
         self.setOtherProps(LHCbApp(),["EvtMax","SkipEvents"])
 
+################################################################################
+# returns evtMax
+#
+    def evtMax(self):
+        """
+        Get evtMax
+        """
+        return LHCbApp().evtMax()
+    
+################################################################################
+# Defines input
+#
     def defineInput(self):
         """
         Define Input
@@ -160,12 +203,9 @@ class DaVinci(LHCbConfigurableUser) :
             EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
             importOptions("$STDOPTS/DecodeRawEvent.py")
 
-    def evtMax(self):
-        """
-        Get evtMax
-        """
-        return LHCbApp().evtMax()
-    
+################################################################################
+# Tune initialisation
+#
     def configureInput(self):
         """
         Tune initialisation 
@@ -179,6 +219,9 @@ class DaVinci(LHCbConfigurableUser) :
         if ( self.getProp("DataType") != "DC06" ):
             DstConf().EnableUnpack = True
 
+################################################################################
+# Monitoring sequence
+#
     def moniSequence(self):
         """
         Monitoring sequence
@@ -192,6 +235,55 @@ class DaVinci(LHCbConfigurableUser) :
             for alg in self.getProp("MoniSequence"):
                 monSeq.Members += [ alg ]
 
+################################################################################
+# Ntuple files
+#
+    def rootFiles(self):
+        """
+        output files
+        """
+        ApplicationMgr().HistogramPersistency = "ROOT"
+        if ( self.getProp("HistogramFile") != "" ):
+            HistogramPersistencySvc().OutputFile = self.getProp("HistogramFile")
+            print "# Histos file will be ``", self.getProp("HistogramFile"), "''"
+        if ( self.getProp("TupleFile") != "" ):
+            tupleFile = self.getProp("TupleFile")
+            ApplicationMgr().ExtSvc +=  [ NTupleSvc() ]
+            tuple = "FILE1 DATAFILE='"+tupleFile+"' TYP='ROOT' OPT='NEW'"
+            print "# Tuple will be in ``", tupleFile, "''"
+            NTupleSvc().Output = [ tuple ]
+            NTupleSvc().OutputLevel = 1 
+
+################################################################################
+# Dst and ETC output sequence
+#
+    def outputSequence(self):
+        """
+        Output Sequence
+        """
+        if (len( self.getProp("DstFiles"))+len( self.getProp("ETCFiles"))>0) :
+            log.info("Configuring DST and ETC")
+            d = DaVinciOutput()
+            if (len( self.getProp("DstFiles"))):
+                d.setProp("OptItems", self.getProp("OptItems"))
+                d.setProp("RemovedItems", ["/Vertex/V0"])   # @todo Not good
+                d.configureWriter()
+            from Configurables import GaudiSequencer
+            seq = GaudiSequencer("DstWriters")
+            seq.IgnoreFilterPassed = True
+            for f,s in self.getProp("DstFiles").iteritems():
+                log.info("Will configure DST output file "+f)
+                seq.Members += [ d.writeDst(f,s) ]
+            for f,s in self.getProp("ETCFiles").iteritems():
+                log.info("Will configure ETC output file "+f)
+                seq.Members += [ d.writeETC(f,s) ]
+            ApplicationMgr().TopAlg += [ seq ]
+            DstConf().Simulation = self.getProp("Simulation")
+#            DstConf().PackType = self.getProp("PackType")
+
+################################################################################
+# Main sequence
+#
     def mainSequence(self):
         """
         Main Sequence
@@ -210,6 +302,9 @@ class DaVinci(LHCbConfigurableUser) :
             for alg in self.getProp("UserAlgorithms"):
                 mainSeq.Members += [ alg ]
 
+################################################################################
+# Apply configuration
+#
     def __apply_configuration__(self):
         """
         DaVinci configuration
@@ -220,19 +315,10 @@ class DaVinci(LHCbConfigurableUser) :
         #====================================================================
         # Hack until next full release
         if ( self.getProp("DataType") == "DC06" ):
-            # make a sequence with the necessary stuff
-            importOptions( "$MUONIDROOT/options/MuonID.py" )
             from Configurables import MuonRec, MuonID, UpdateMuonPIDInProtoP
-            makeMuonTracks = GaudiSequencer('MakeMuonTracks')
-            makeMuonTracks.Members += [ MuonRec(), MuonID(), UpdateMuonPIDInProtoP() ]
-            # Bind sequence to muon track container with data-on-demand
-            DataOnDemandSvc().AlgMap['/Event/Rec/Track/Muon'] = makeMuonTracks
-            # Trigger data-on-demand by asking for muon tracks
-            from Configurables import TESCheck
-            testMuonTracks = TESCheck('TestMuonTracks')
-            testMuonTracks.Inputs = ['/Event/Rec/Track/Muon']
             recalib = GaudiSequencer("ProtoPRecalibration")
-            recalib.Members += [testMuonTracks]
+            importOptions( "$MUONIDROOT/options/MuonID.py" )
+            recalib.Members += [ MuonRec(), MuonID(), UpdateMuonPIDInProtoP() ]
         #====================================================================
         
         self.checkOptions()
@@ -246,17 +332,11 @@ class DaVinci(LHCbConfigurableUser) :
         self.defineMonitors()
         self.defineEvents()
         self.defineInput()
-        self.outputFiles()
+        self.rootFiles()
         
         # main sequence
         self.mainSequence()
         # monitoring
         self.moniSequence()
-
-        #====================================================================
-        # Hack until next full release
-        if ( self.getProp("DataType") == "DC06" ):
-             from Configurables import MuonPIDsFromProtoParticlesAlg
-#            recalib = GaudiSequencer("ProtoPRecalibration")
-#            recalib.Members.remove( MuonPIDsFromProtoParticlesAlg("MuonPIDsFromProtos")  )
-        #====================================================================
+        # output
+        self.outputSequence()
