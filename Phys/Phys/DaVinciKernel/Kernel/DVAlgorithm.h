@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.h,v 1.32 2009-02-03 14:53:36 jpalac Exp $ 
+// $Id: DVAlgorithm.h,v 1.33 2009-02-04 12:53:07 jpalac Exp $ 
 // ============================================================================
 #ifndef DAVINCIKERNEL_DVALGORITHM_H
 #define DAVINCIKERNEL_DVALGORITHM_H 1
@@ -32,6 +32,7 @@
 #include "Kernel/IParticleDescendants.h"
 #include "Kernel/IWriteSelResult.h"
 #include "Kernel/IDistanceCalculator.h"
+#include "Kernel/IPVReFitter.h"
 class IRelatedPVFinder;
 // ============================================================================
 #include "Kernel/IMassFit.h"
@@ -70,9 +71,11 @@ class IRelatedPVFinder;
  *  - <b>ParticleCombiners</b> : the map for possible particle combiners
  *     @see IParticleCombiner
  *  
- *  - <b>ParticleReFitetr</b> : the map for possible particle re-fitters 
+ *  - <b>ParticleReFitters</b> : the map for possible particle re-fitters 
  *     @see IParticleReFit
  *
+ *  - <b>PVReFitters</b> : the map for possible primary vertex re-fitters 
+ *     @see IPVReFitter
  *
  *  - <b>DecayDescriptor</b>  : the decay descriptor ofthe algorithm 
  *               in the spirit of (MC)DecayFinder tool by Olivier Dormond.
@@ -228,6 +231,17 @@ public:
         m_particleReFitterNames ,
         m_particleReFitters     , this ) ; 
   }
+
+  /// Accessor for IPVReFitter tool
+  inline IPVReFitter* 
+  primaryVertexReFitter ( const std::string name = "" ) const 
+  {
+    return getTool<IPVReFitter>
+      ( name , 
+        m_pvReFitterNames ,
+        m_pvReFitters     , this ) ; 
+  }
+
 
 public:
   // ==========================================================================
@@ -485,6 +499,12 @@ protected:
   ToolMap                                             m_particleReFitterNames ;
   /// The actual map of "nickname -> tool" for Particle Refitters 
   mutable GaudiUtils::VectorMap<std::string,IParticleReFitter*> m_particleReFitters ;
+
+  /// Mapping of "nickname ->type/name" for Particle Refitters
+  ToolMap                                             m_pvReFitterNames ;
+  /// The actual map of "nickname -> tool" for Particle Refitters 
+  mutable GaudiUtils::VectorMap<std::string,IPVReFitter*> m_pvReFitters ;
+
   
 protected:
   

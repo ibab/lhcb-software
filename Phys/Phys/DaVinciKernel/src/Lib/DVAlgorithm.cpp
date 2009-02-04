@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.37 2009-02-03 14:53:36 jpalac Exp $
+// $Id: DVAlgorithm.cpp,v 1.38 2009-02-04 12:53:07 jpalac Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -112,6 +112,12 @@ DVAlgorithm::DVAlgorithm
   m_particleReFitterNames [ "Direction"     ] = "LoKi::DirectionFitter" ;
   m_particleReFitterNames [ "ParticleAdder" ] = "ParticleAdder"         ;
   declareProperty  ( "ParticleReFitters" , m_particleReFitterNames ) ;
+  //
+  m_pvReFitterNames [ ""           ] = "AdaptivePVReFitter" ;
+  m_pvReFitterNames [ "PVReFitter" ] = "PVReFitter"         ;
+  m_pvReFitterNames [ "Adaptive"   ] = "AdaptivePVReFitter" ;
+  m_pvReFitterNames [ "Cheated"    ] = "CheatedPVReFitter"  ;
+  declareProperty  ( "PVReFitters" , m_pvReFitterNames ) ;
   //
   m_massFitterNames [ ""     ] = "LoKi::MassFitter" ;
   m_massFitterNames [ "LoKi" ] = "LoKi::MassFitter" ;
