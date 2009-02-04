@@ -1,9 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.392 2009-02-03 18:31:03 marcocle Exp $ 
+! $Id: release.notes,v 1.393 2009-02-04 17:23:28 marcocle Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2009-02-04 - Marco Clemencic
+ - Fixed usage of GSL (-no_auto_imports).
 
 ! 2009-02-03 - Marco Clemencic
  - Added the header DetDesc/RunChangeIncident.h (was in Event/DAQEvent).

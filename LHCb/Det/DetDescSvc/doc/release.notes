@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.61 2009-02-03 18:31:03 marcocle Exp $ 
+! $Id: release.notes,v 1.62 2009-02-04 17:23:28 marcocle Exp $ 
 ! =============================================================================
 ! package DetDescSvc
 ! package manager : Marco Clemencic, Juan Palacios ?
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
+
+! 2009-02-04 - Marco Clemencic
+ - Added usage of GSL (with -no_auto_imports). Not inherited anymore from
+   DetDesc.
 
 ! 2009-02-03 - Marco Clemencic
  - Added RunChangeHandlesSvc. It listens for a RunChangeIncident and change the
