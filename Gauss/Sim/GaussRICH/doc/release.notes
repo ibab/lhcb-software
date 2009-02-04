@@ -4,6 +4,10 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
 
+! 2009-02-04 - Gloria CORTI
+ - Remove the lines for GaussTape.OptItems that have been put directly into
+   GaussTape.opts
+
 ! 2009-01-26 - Chris Jones
  - Import two algorithms from Boole to create linkers for extended information.
    This is a temporary solution. Ideally they would be in a package in the 

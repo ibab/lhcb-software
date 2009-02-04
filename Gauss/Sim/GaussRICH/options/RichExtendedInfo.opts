@@ -1,4 +1,4 @@
-// $Id: RichExtendedInfo.opts,v 1.6 2008-01-31 17:45:31 seaso Exp $
+// $Id: RichExtendedInfo.opts,v 1.7 2009-02-04 17:39:06 gcorti Exp $
   
 /** @file
  *
@@ -18,10 +18,4 @@ GiGa.StepSeq.Members  += { "RichG4StepAnalysis5/RichStepMirrorRefl" } ;
 GiGaGetHitsAlg.RichOpticalPhotons = "/Event/MC/Rich/OpticalPhotons";
 GiGaGetHitsAlg.RichSegments       = "/Event/MC/Rich/Segments";
 GiGaGetHitsAlg.RichTracks         = "/Event/MC/Rich/Tracks";
-
-GaussTape.OptItemList += {
-  "/Event/MC/Rich/OpticalPhotons#1"
-  ,"/Event/MC/Rich/Tracks#1"
-  ,"/Event/MC/Rich/Segments#1"
-};
 
