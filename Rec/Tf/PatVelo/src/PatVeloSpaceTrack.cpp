@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTrack.cpp,v 1.5 2009-02-03 15:10:41 dhcroft Exp $
+// $Id: PatVeloSpaceTrack.cpp,v 1.6 2009-02-04 11:42:35 dhcroft Exp $
 // Include files 
 
 // local
@@ -41,7 +41,7 @@ namespace Tf {
       m_srz2(track.m_srz2),
       m_sz2(track.m_sz2),
       m_valid(track.m_valid),
-      m_zone(track.m_srz2),
+      m_zone(track.m_zone),
       m_xZone(track.m_xZone),
       m_negZone(track.m_negZone),
       m_backward(track.m_backward),
