@@ -1,4 +1,4 @@
-// $Id: RichExtendedInfo.opts,v 1.2 2009-01-26 12:00:27 jonrob Exp $
+// $Id: RichExtendedInfo.opts,v 1.3 2009-02-04 17:41:34 gcorti Exp $
  
 /** @file
  *
@@ -18,7 +18,3 @@ RichHits.Members += { "GetMCRichOpticalPhotonsAlg/GetRichPhotons",
 // Create the relation linker tables
 RichHits.Members += { "Rich::MC::MCPartToMCRichTrackAlg/MCPartToMCRichTrack",
                       "Rich::MC::MCRichHitToMCRichOpPhotAlg/MCRichHitToMCRichOpPhot" };
-GaussTape.OptItemList += {
-  "/Event/Link/MC/Particles2MCRichTracks#1"
-, "/Event/Link/MC/Rich/Hits2MCRichOpticalPhotons#1"
-};
