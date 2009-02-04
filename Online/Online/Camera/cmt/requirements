@@ -52,38 +52,44 @@ apply_pattern linker_library library=CameraLib
 
 # Component library.
 library Camera -import=ROOT *.cpp container.C
-macro_append Camera_dependencies CameraLib
+macro_append Camera_dependencies " CameraLib "
 apply_pattern component_library library=Camera
 
 #============================================================================
 # Camera Applications
 #============================================================================
 
-#application  camsend sendone.C
-#macro_append camsend_dependencies CameraLib
-
 application  CameraMessage sendwarn.C
-macro_append camwarn_dependencies CameraLib
+macro_append CameraMessage_dependencies " CameraLib "
 
 application  CameraCommand sendcmd.C
-macro_append camcmd_dependencies CameraLib
+macro_append CameraCommand_dependencies " CameraLib "
 
 application  CameraTest testwarn.C
-macro_append camtest_dependencies CameraLib
+macro_append CameraTest_dependencies " CameraLib "
 
 application  CameraServ sserver.C getnsave.C
-macro_append camserv_dependencies CameraLib
+macro_append CameraServ_dependencies " CameraLib "
 
 application  CameraWebServ webserver.C
-macro_append webs_dependencies CameraLib
-
-#application  camwebg get.C
-#macro_append webg_dependencies CameraLib
+macro_append CameraWebServ_dependencies " CameraLib "
 
 application  CameraGui MessagePresenter.C $(CAMERAROOT)/$(tag)/dict/*.cpp
-macro_append camera_dependencies MessagePresenter CameraLib
+macro_append CameraGui_dependencies " MessagePresenter CameraLib "
 
-#application  camviewcont ViewCont.C $(CAMERAROOT)/$(tag)/dict/*.cpp
-#macro_append viewcont_dependencies MessagePresenter CameraLib
+#application  CameraSend sendone.C
+#macro_append CameraSend_dependencies " CameraLib "
+
+#application  CameraWebGet get.C
+#macro_append CameraWebGet_dependencies " CameraLib "
+
+#application  CameraViewContainer ViewCont.C $(CAMERAROOT)/$(tag)/dict/*.cpp
+#macro_append CameraViewContainer_dependencies " MessagePresenter CameraLib "
 
 apply_pattern application_path
+
+#============================================================================
+# Setup Python Configurables
+#============================================================================
+
+apply_pattern install_python_modules

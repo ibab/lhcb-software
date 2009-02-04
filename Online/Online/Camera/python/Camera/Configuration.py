@@ -25,11 +25,16 @@ from Configurables import CameraTool
 class Camera(LHCbConfigurableUser):
     # Steering options
     __slots__ = {
-        'cameraServer' : 'localhost'
+        'cameraServer' : ''
         }
 
     _propertyDocDct = {
-        'cameraServer' : """This is the server that is running CAMERA."""
+        'cameraServer' : """This is the server that is running CAMERA.
+                            If left empty then no messages will be sent to CAMERA
+                            and it is effectively disabled. Otherwise it must be
+                            set to the name of the CAMERA server to use. Defaults
+                            to empty string and CAMERA is disabled.
+                         """
         }
     
     def __apply_configuration__(self):
@@ -37,6 +42,12 @@ class Camera(LHCbConfigurableUser):
         # We are only exposing the server name and will leave the other
         # properties at their default values.
         camera = CameraTool("ToolSvc.CameraTool")
-        camera.ServerName = self.getProp("cameraServer")
+        serverName = self.getProp("cameraServer")
+        if '' != serverName:
+            camera.Enabled = True
+            camera.ServerName = serverName
+        else:
+            camera.Enabled = False
+        
     # def __apply_configuration__()
 # def Camera()

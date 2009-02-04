@@ -4,5 +4,18 @@
 ! Purpose     : Package for the CAMERA application and supporting files.
 !-----------------------------------------------------------------------------
 
+! 2009-02-04 - Gareth Rogers
+ - Updated the requirements file to use "" around the dependencies in the
+   dependency macro. This fixes the make -j problem and it builds successfully.
+ - Added install_python_modules so configurables are built.
+
+! 2009-02-03 - Gareth Rogers
+ - Updated the CameraTool.h to document the functions. CameraTool.cpp had the
+   Enabled feature more comprehensively implemented such that a disabled tool
+   will do the minimum possible.
+ - Configurable has been updated to accept an empty string for the ServerName
+   slot, which will automatically disable the CameraTool. If a ServerName is
+   passed the tool will be enabled.
+
 ! 2009-02-02 - Gareth Rogers
  - Initial release of the CAMERA package.
