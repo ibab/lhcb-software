@@ -1,8 +1,16 @@
-! $Id: release.notes,v 1.398 2009-02-03 13:13:18 jpalac Exp $
+! $Id: release.notes,v 1.399 2009-02-04 14:34:09 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-02-04 - Juan PALACIOS
+ - src/PhysDesktop.h
+  . add virtual const LHCb::RecVertex* keep( const LHCb::RecVertex* input )
+  . add LHCb::RecVertex::ConstVector data member for re-fitted PVs
+  . Template inTES method
+ - src/PhysDesktop.cpp
+ . add const LHCb::RecVertex* keep( const LHCb::RecVertex* input )
 
 ! 2009-02-03 - Juan PALACIOS
  - src/PhysDesktop{.cpp, .h}
