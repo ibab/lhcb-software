@@ -19,6 +19,7 @@ macro Generators_use    "Generators   v9r3    Gen"  WIN32 ""
 macro LbPythia_use      "LbPythia     v8r2    Gen"  WIN32 ""
 use ${GENSER_use}
 use ${EvtGen_use}
+use ${EvtGenExtras_use}
 use ${Generators_use}
 use ${LbPythia_use}
 
