@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-02-05 - Gloria CORTI
+ - Options to simulate only calorimeters, to allow production of particle 
+   guns for special studies.
+
 ! 2009-02-04 - Gloria CORTI
  - Move optional items to write to tape when running RICH to obtain extended
    information to GaussTape.opts from RichExtendedInfo
