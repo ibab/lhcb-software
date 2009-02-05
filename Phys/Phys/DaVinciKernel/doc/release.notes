@@ -1,8 +1,30 @@
-!$Id: release.notes,v 1.283 2009-02-04 14:31:12 jpalac Exp $
+!$Id: release.notes,v 1.284 2009-02-05 15:53:51 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2009-02-05 - Juan PALACIOS
+ - Kernel/IPhysDesktop.h
+  . Add methods to access Particle->PV relations tables.
+  /// retrieve the Particle->Primary vertex relations
+  virtual const Particle2Vertex::LightTable& Particle2VertexRelations() const = 0;
+
+  /// retrieve the Particle->Primary vertex relations
+  virtual Particle2Vertex::LightTable& Particle2VertexRelations() = 0;
+
+  /// Store relations over-writing previously existing ones
+  virtual void overWriteRelations(Particle2Vertex::Range::const_iterator begin,
+                                  Particle2Vertex::Range::const_iterator end);
+
+ - DVAlgorithm
+  . add methods 
+     particle2Vertex::LightTable calculatePVRelations(const LHCb::Particle* p) const
+     void storeRelationWithOverwrite(const Particle2Vertex::LightTable& table);
+
+     void relateWithOverwrite(const LHCb::Particle*   part, 
+                              const LHCb::VertexBase* vert,
+                              const double weight=1.);
 
 ! 2009-02-04 - Juan PALACIOS
  - kernel/IPhysDesktop.h
