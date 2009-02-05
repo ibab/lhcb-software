@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2009-02-05 - Wouter Hulsbergen
+ - Added HitPattern
+
 ! 2009-01-28 - Marco Cattaneo
  - In LHCbConfigurableUser, reimplement setOtherProp and setOtherProps
    functions to delegate to ConfigurableUser implementation
