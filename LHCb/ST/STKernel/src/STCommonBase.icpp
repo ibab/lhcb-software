@@ -5,7 +5,7 @@
  *  Implementation file for RICH base class : ST::CommonBase
  *
  *  CVS Log :-
- *  $Id: STCommonBase.icpp,v 1.8 2009-01-06 13:48:59 mneedham Exp $
+ *  $Id: STCommonBase.icpp,v 1.9 2009-02-05 11:57:10 mneedham Exp $
  *
  *  @author Matthew Needham    Matthew.Needham@cern.ch
  *  @date   2008-11-10
@@ -92,10 +92,13 @@ inline void ST::CommonBase<PBASE>::setDetType(const std::string& aString){
 #include "STDet/DeSTDetector.h"
 #include "Kernel/ISTReadoutTool.h"
 
+
 template <class PBASE>
 inline DeSTDetector* ST::CommonBase<PBASE>::tracker() const {
   return m_tracker != 0 ? m_tracker : getTracker();
 }
+
+#include "STDet/DeSTSector.h"
 
 template <class PBASE> 
 inline DeSTSector* ST::CommonBase<PBASE>::findSector(const LHCb::STChannelID& aChannel) const{

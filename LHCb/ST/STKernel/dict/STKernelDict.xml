@@ -2,6 +2,7 @@
 
   <class name = "ISTReadoutTool"       />
   <class name = "ISTSignalToNoiseTool" />
+  <class name = "ISTClusterSelector" />
   <class name = "STTell1ID" />
   <class name = "STTell1Board" />
   <class name = "STBitsPolicy" />

@@ -1,7 +1,8 @@
-// $Id: STKernelDict.h,v 1.8 2009-01-22 11:43:44 mneedham Exp $
+// $Id: STKernelDict.h,v 1.9 2009-02-05 11:57:10 mneedham Exp $
 #ifndef DICT_STKERNELDICT_H 
 #define DICT_STKERNELDICT_H 1
 
+#include "Kernel/ISTClusterSelector.h"
 #include "Kernel/ISTReadoutTool.h"
 #include "Kernel/ISTSignalToNoiseTool.h"
 #include "Kernel/STTell1Board.h"

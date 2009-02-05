@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.48 2009-01-22 11:43:44 mneedham Exp $
+! $Id: release.notes,v 1.49 2009-02-05 11:57:10 mneedham Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
+
+! 2009-02-05 M Needham
+ - Add ISTClusterSelector interface
 
 ! 2009-01-22 M Needham
  - Add toString functions for printing in python
