@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2009-02-05 - Marco Clemencic
+ - Removed the -no_auto_imports of GSL.
+
 ! 2009-02-04 - Marco Clemencic
  - Fixed usage of GSL (-no_auto_imports + -no-as-needed).
 
