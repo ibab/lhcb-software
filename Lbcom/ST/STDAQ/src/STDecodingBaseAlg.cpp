@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.cpp,v 1.25 2008-12-15 07:54:53 cattanem Exp $
+// $Id: STDecodingBaseAlg.cpp,v 1.26 2009-02-05 13:41:30 jluisier Exp $
 
 #include <algorithm>
 
@@ -19,6 +19,7 @@
 #include "Kernel/STTell1ID.h"
 #include "Kernel/STRawBankMap.h"
 #include "Kernel/STDecoder.h"
+#include "Kernel/STLexicalCaster.h"
 
 
 #include "SiDAQ/SiHeaderWord.h"
@@ -250,13 +251,15 @@ StatusCode STDecodingBaseAlg::decodeErrors() const{
 
    // bank has to be at least 28 words 
    if (bankEnd < STDAQ::minErrorBankWords){
-     Warning("Error bank too short --> not decoded", StatusCode::SUCCESS,2);
+     warning() << "Error bank length is " << bankEnd << " and should be at least " << STDAQ::minErrorBankWords << endmsg;
+     Warning("Error bank too short --> not decoded for TELL1 " + ST::toString((*itB)->sourceID()), StatusCode::SUCCESS,2);
      continue;
    }
 
-   // and less than 52 words
+   // and less than 56 words
    if (bankEnd > STDAQ::maxErrorBankWords){
-     Warning("Error bank too long --> not decoded", StatusCode::SUCCESS,2);
+     warning() << "Error bank length is " << bankEnd << " and should be at most " << STDAQ::maxErrorBankWords << endmsg;
+     Warning("Error bank too long --> not decoded for TELL1 " + ST::toString((*itB)->sourceID()), StatusCode::SUCCESS,2);
      continue;
    }
 
@@ -317,7 +320,7 @@ StatusCode STDecodingBaseAlg::decodeErrors() const{
      } // has error information
       
    } //  loop ip [ppx's]
-     
+   
    if (w != bankEnd){
      error() << "read " << w << " words, expected: " << bankEnd << endmsg;
    }  
