@@ -21,7 +21,7 @@ def copyLocal(sourceDir, targetDir):
     for root, dires, files in dirList:
         if files:
             path = (root+os.sep).replace(sourceDir, '')
-            files = [x for x in files if x[-4:] != '.pyc' and x[-4:] == '.pyo']
+            files = [x for x in files if x[-4:] != '.pyc' and x[-4:] != '.pyo']
             filesString = ' '.join(files)
             Lock('mkdir -p '+ targetDir + path +' && cd '+ sourceDir + path +' && tar cf - '+filesString+' | (cd '+targetDir+path+'. ; tar xf -) && cd -',str(os.getpid()),path)
 
@@ -40,7 +40,7 @@ def copySsh(sourceHost, sourceDir, targetDir):
     for root, dires, files in dirList:
         if files:
             path = (root+os.sep).replace(sourceDir, '')
-            files = [x for x in files if x[-4:] != '.pyc' and x[-4:] == '.pyo']
+            files = [x for x in files if x[-4:] != '.pyc' and x[-4:] != '.pyo']
             filesString = ' '.join(files)
             Lock('mkdir -p '+ targetDir + path +' && ssh ' + sourceHost + ' "cd '+ sourceDir + path +' && tar cf - '+filesString+'" | (cd '+targetDir+path+'. ; tar xf -) && cd -',str(os.getpid()),path)
 

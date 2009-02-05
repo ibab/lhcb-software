@@ -1,10 +1,15 @@
+2008-02-05  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+
+	* python/LbRelease/Nightlies/functions.py: bugfix
+	(typo in copyLocal and copySsh functions)
+
 2009-02-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of verson v2r2
 
 2009-02-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbRelease/CMT/LbPackage.py: use LbConfiguration.Platform instead of 
+	* python/LbRelease/CMT/LbPackage.py: use LbConfiguration.Platform instead of
 	LbConfiguration.Project.
 
 2008-02-03  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
