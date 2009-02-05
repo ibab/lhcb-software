@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.cpp,v 1.31 2009-01-21 12:04:33 graven Exp $
+// $Id: HltVertexMaker.cpp,v 1.32 2009-02-05 10:45:17 graven Exp $
 // Include files 
 
 
@@ -25,13 +25,11 @@ DECLARE_ALGORITHM_FACTORY( HltVertexMaker2 );
 
 using namespace LHCb;
 using namespace boost::lambda;
-// #namespace bl = boost::lambda;
 
-template <typename Selections>
-HltVertexMaker<Selections>::combinatorics_engine::combinatorics_engine(HltVertexMaker::combinatorics_engine::iterator begin1,
-                                                           HltVertexMaker::combinatorics_engine::iterator end1,
-                                                           HltVertexMaker::combinatorics_engine::iterator begin2,
-                                                           HltVertexMaker::combinatorics_engine::iterator end2,bool merge) 
+HltVertexMaker_details::combinatorics_engine::combinatorics_engine(HltVertexMaker_details::combinatorics_engine::iterator begin1,
+                                                           HltVertexMaker_details::combinatorics_engine::iterator end1,
+                                                           HltVertexMaker_details::combinatorics_engine::iterator begin2,
+                                                           HltVertexMaker_details::combinatorics_engine::iterator end2,bool merge) 
     : m_range1(begin1,end1)
     , m_merge(merge)
 {
@@ -46,8 +44,7 @@ HltVertexMaker<Selections>::combinatorics_engine::combinatorics_engine(HltVertex
     if (merge) inc2();
 }
 
-template <typename Selections>
-HltVertexMaker<Selections>::combinatorics_engine::combinatorics_engine(iterator begin1,iterator end1)
+HltVertexMaker_details::combinatorics_engine::combinatorics_engine(iterator begin1,iterator end1)
             : m_range1(begin1,end1)
             , m_range2(begin1,end1)
             , m_current(begin1,begin1) 
@@ -56,9 +53,8 @@ HltVertexMaker<Selections>::combinatorics_engine::combinatorics_engine(iterator 
     inc2(); 
 }
 
-template <typename Selections>
-typename HltVertexMaker<Selections>::combinatorics_engine&
-HltVertexMaker<Selections>::combinatorics_engine::operator++() {
+HltVertexMaker_details::combinatorics_engine&
+HltVertexMaker_details::combinatorics_engine::operator++() {
     inc2(); 
     if (atEnd2()) {
         inc1();
@@ -163,7 +159,7 @@ StatusCode HltVertexMaker<Selections>::execute() {
   put(overtices,"Hlt/Vertex/"+m_selections.output()->id().str());
 
   size_t nCombinations(0);
-  for (combinatorics_engine combinations = combine();!combinations.end();++combinations) {
+  for (HltVertexMaker_details::combinatorics_engine combinations = combine();!combinations.end();++combinations) {
       const LHCb::Track* track1 = combinations().first;
       const LHCb::Track* track2 = combinations().second;
       assert(track1!=0);
@@ -223,9 +219,9 @@ HltVertexMaker1::HltVertexMaker1( const std::string& name,
 { 
 }
 
-HltVertexMaker<Hlt::SelectionContainer2<LHCb::RecVertex,LHCb::Track> >::combinatorics_engine
+HltVertexMaker_details::combinatorics_engine
 HltVertexMaker1::combine() {
-    typedef HltVertexMaker<container_type>::combinatorics_engine engine_type;
+    typedef HltVertexMaker_details::combinatorics_engine engine_type;
     return engine_type(m_selections.input<1>()->begin(),
                        m_selections.input<1>()->end());
 }
@@ -238,9 +234,9 @@ HltVertexMaker2::HltVertexMaker2( const std::string& name,
     declareProperty("DoMergeInputs", m_doMergeInputs = true);
 }
 
-HltVertexMaker<Hlt::SelectionContainer3<LHCb::RecVertex,LHCb::Track,LHCb::Track> >::combinatorics_engine
+HltVertexMaker_details::combinatorics_engine
 HltVertexMaker2::combine() {
-    typedef HltVertexMaker<container_type>::combinatorics_engine engine_type;
+    typedef HltVertexMaker_details::combinatorics_engine engine_type;
     return engine_type(m_selections.input<1>()->begin(), m_selections.input<1>()->end(),
                        m_selections.input<2>()->begin(), m_selections.input<2>()->end(),
                        m_doMergeInputs);

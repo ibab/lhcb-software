@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.h,v 1.13 2009-01-06 12:18:26 graven Exp $
+// $Id: HltVertexMaker.h,v 1.14 2009-02-05 10:45:18 graven Exp $
 #ifndef HLTVERTEXMAKER_H 
 #define HLTVERTEXMAKER_H 1
 
@@ -16,8 +16,27 @@
  *  @author Hugo Ruiz
  *  @date   2006-02-21
  */
-
-//TODO: template on selectioncontainer...
+namespace HltVertexMaker_details {
+        class combinatorics_engine {
+        public: 
+              typedef std::vector<LHCb::Track*>::iterator iterator;
+              combinatorics_engine(iterator begin1,iterator end1,
+                                   iterator begin2,iterator end2,bool merge) ;
+              combinatorics_engine(iterator begin1,iterator end1);
+              std::pair<LHCb::Track*,LHCb::Track*> operator()() { return std::make_pair(*m_current.first,*m_current.second); }
+              combinatorics_engine& operator++();
+              bool end() const  { return atEnd1()||atEnd2(); }
+        private:
+              std::pair<iterator,iterator> m_range1,m_range2;
+              std::pair<iterator,iterator> m_current;
+              std::vector<LHCb::Track*> m_mergedList;
+              bool m_merge;
+              void inc1()    { if (m_current.first !=m_range1.second ) ++m_current.first; }
+              void inc2()    { if (m_current.second!=m_range2.second ) ++m_current.second; }
+              bool atEnd2() const { return m_current.second==m_range2.second; }
+              bool atEnd1() const { return m_current.first==m_range1.second; }
+        };
+};
 
 template <typename SelectionContainer> 
 class HltVertexMaker : public HltAlgorithm {
@@ -33,27 +52,8 @@ class HltVertexMaker : public HltAlgorithm {
     
  protected:
 
-  class combinatorics_engine {
-  public: 
-        typedef std::vector<LHCb::Track*>::iterator iterator;
-        combinatorics_engine(iterator begin1,iterator end1,
-                             iterator begin2,iterator end2,bool merge) ;
-        combinatorics_engine(iterator begin1,iterator end1);
-        std::pair<LHCb::Track*,LHCb::Track*> operator()() { return std::make_pair(*m_current.first,*m_current.second); }
-        combinatorics_engine& operator++();
-        bool end() const  { return atEnd1()||atEnd2(); }
-  private:
-        std::pair<iterator,iterator> m_range1,m_range2;
-        std::pair<iterator,iterator> m_current;
-        std::vector<LHCb::Track*> m_mergedList;
-        bool m_merge;
-        void inc1()    { if (m_current.first !=m_range1.second ) ++m_current.first; }
-        void inc2()    { if (m_current.second!=m_range2.second ) ++m_current.second; }
-        bool atEnd2() const { return m_current.second==m_range2.second; }
-        bool atEnd1() const { return m_current.first==m_range1.second; }
-  };
 
-  virtual combinatorics_engine combine() = 0;
+  virtual HltVertexMaker_details::combinatorics_engine combine() = 0;
   SelectionContainer m_selections;
 private:
   bool m_checkForOverlaps;
@@ -76,13 +76,13 @@ private:
 class HltVertexMaker1 : public HltVertexMaker<Hlt::SelectionContainer2<LHCb::RecVertex,LHCb::Track> >{
     public:
         HltVertexMaker1( const std::string& name, ISvcLocator* pSvcLocator);
-        combinatorics_engine combine(); 
+        HltVertexMaker_details::combinatorics_engine combine(); 
 };
 
 class HltVertexMaker2 : public HltVertexMaker<Hlt::SelectionContainer3<LHCb::RecVertex,LHCb::Track,LHCb::Track> >{
     public:
         HltVertexMaker2( const std::string& name, ISvcLocator* pSvcLocator);
-        combinatorics_engine combine();
+        HltVertexMaker_details::combinatorics_engine combine();
     private:
         bool m_doMergeInputs;
 };

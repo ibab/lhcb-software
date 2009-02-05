@@ -3,6 +3,9 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2009-02-05 - Gerhard Raven
+ - fixes for gcc 4.3
+
 ! 2009-02-03 - Gerhard Raven
  - make sure that all TCKs zero their L0 part if the sign bit is set
 
