@@ -1,13 +1,17 @@
-! $Id: release.notes,v 1.245 2009-02-02 15:08:19 jpalac Exp $
+! $Id: release.notes,v 1.246 2009-02-05 14:28:45 pkoppenb Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
 
+! 2009-02-05 - Patrick Koppenburg
+ - Remove PrintTree that is replaced by PrintDecayTree
+
 ! 2009-02-02 - Juan PALACIOS
  - src/DaVinciSmartAssociator{,h, .cpp}
   . Add implementation of IParticle2MCParticleAssociator::weight method.
   . Add doxygen
+
 ! 2009-01-30 - Juan PALACIOS
  - src/DaVinciSmartAssociator.h, src/DaVinciSmartAssociator.cpp, src/GenericParticle2MCAssociator.h
   . These now virtually inherit from IParticle2MCAssociator and inherit
