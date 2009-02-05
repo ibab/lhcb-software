@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.44 2009-02-04 18:48:01 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.45 2009-02-05 19:02:48 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -30,7 +30,7 @@ class DaVinci(LHCbConfigurableUser) :
        , "TupleFile"          : ""            # Write name of output Tuple file
        , "ETCFiles"           : {}            # Name and sequence of output files
        , "DstFiles"           : {}            # Name and sequence of output files
-       , "OptItems"           : []            # Optional items to write to DST
+       , "Items"              : []            # Additional items to write to DST
        , "WriteOutSequence"   : []            # Sequence of algorithms to run before writing out """
          # Monitoring
        , "MoniSequence"       : [ ]           # Add your monitors here
@@ -64,7 +64,7 @@ class DaVinci(LHCbConfigurableUser) :
                                     e.g. DaVinci().DstFiles = { "Name1.dst" : sequence1 ,
                                                                 "Name2.dst" : sequence2 }
                                     where sequenceX are GaudiSequencers"""
-       , "OptItems"           : """ Optional items to write to DST. Example = [ '/Event/Phys/StdUnbiasedJpsi2MuMu#1' ]"""
+       , "Items"              : """ Additional items to write to DST. Example = [ '/Event/Phys/StdUnbiasedJpsi2MuMu#1' ]"""
        , "MoniSequence"       : """ Add your monitors here """
        , "MainOptions"        : """ Main option file to execute """
        , "UserAlgorithms"     : """ User algorithms to run. """
@@ -265,18 +265,19 @@ class DaVinci(LHCbConfigurableUser) :
             log.info("Configuring DST and ETC")
             d = DaVinciOutput()
             if (len( self.getProp("DstFiles"))):
-                d.setProp("OptItems", self.getProp("OptItems"))
-                d.setProp("RemovedItems", ["/Vertex/V0"])   # @todo Not good
+                d.setProp("Items", self.getProp("Items"))
                 d.configureWriter()
             from Configurables import GaudiSequencer
             seq = GaudiSequencer("DstWriters")
             seq.IgnoreFilterPassed = True
             for f,s in self.getProp("DstFiles").iteritems():
                 log.info("Will configure DST output file "+f)
-                seq.Members += [ d.writeDst(f,s) ]
+                d.writeDst(f,s)
+                seq.Members += [ s ]
             for f,s in self.getProp("ETCFiles").iteritems():
                 log.info("Will configure ETC output file "+f)
-                seq.Members += [ d.writeETC(f,s) ]
+                d.writeETC(f,s)
+                seq.Members += [ s ]
             ApplicationMgr().TopAlg += [ seq ]
             DstConf().Simulation = self.getProp("Simulation")
 #            DstConf().PackType = self.getProp("PackType")

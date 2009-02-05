@@ -1,23 +1,22 @@
 """
-High level configuration tools for LHCb applications
+Output for DaVinci
 """
-__version__ = "$Id: DaVinciOutput.py,v 1.1 2009-02-04 18:48:01 pkoppenb Exp $"
-__author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
+__version__ = "$Id: DaVinciOutput.py,v 1.2 2009-02-05 19:02:48 pkoppenb Exp $"
+__author__  = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from Gaudi.Configuration import *
 from Configurables import ( DstConf )
 
 class DaVinciOutput(ConfigurableUser):
     __slots__ = {
-         "Items"              : []            # Mandatory items to write to DST
-    ,    "OptItems"           : []            # Optional items to write to DST
-    ,    "RemovedItems"       : []            # Items not to write to DST
+         "Items"              : []            # Items to write to DST
+    ,    "RemovedItems"       : [ "Vertex/V0"]            # Items not to write to DST
+    ,    "PackType"           : "NONE"        # Packing type
         }
 
     _propertyDocDct = { }
     __used_configurables__ = [ DstConf ]
     KnownDstNames = [ "dst", "DST" ]
-    UnsureItems = [ "/Vertex/V0" ]
 
     def __apply_configuration__(self):
         log.info("Do nothing")
@@ -37,43 +36,47 @@ class DaVinciOutput(ConfigurableUser):
         if ( tail not in self.KnownDstNames ):
             log.warning(filename+" has unexpected extension ``"+tail+"''. Expecting DST or dst.")
         return "DST"+head
-
+    
     ############################################################################
-    # ensure backward compatibility with previous versions of Brunel
-    #
-    def reshuffleItems(self, items, optItems):
+    # Reshuffle Items
+    def defineItems(self):
+        """
+        Define TES locations to be put on the DST
+        Ensure backward compatibility with previous versions of Brunel
+        What works is to declare all mandatory items in the Dst as
+        optional. If they are there they get copied.
+        """
+        # 1 get items from DstConf
+        items = []
+        optItems = []
+        DstConf()._defineOutputData( "DST", self.getProp("PackType"), items, optItems )
+        # 2. merge all items.
+        items.extend(optItems)
         itemsTMP = items
-        optItemsTMP = optItems
-        for r in self.RemovedItems :
+        # 3. remove to be removed items
+        for r in self.getProp("RemovedItems") :
             for i in itemsTMP :
                  if (i.find(r)>=0):
                     log.info("Removing "+i+" from Items")
                     items.remove(i)
-            for i in optItemsTMP :
-                 if (i.find(r)>=0):
-                    log.info("Removing "+i+" from optional Items")
-                    optItems.remove(i)
-        itemsTMP = items
-        for u in self.UnsureItems :
-            for i in itemsTMP :
-                 if (i.find(u)>=0):
-                    log.info("Moving "+i+" to optional items")
-                    items.remove(i)
-                    optItems.append(i)
-        self.setProp("Items", items)
-        self.setProp("OptItems", optItems)
-    
+        # 4. add user items
+        items.extend(self.getProp("Items"))
+        print "# will write", items
+        self.setProp("Items",items)
+        
     ############################################################################
     # Configure Writer
-    #
     def configureWriter(self):
-        pType = "NONE" # @todo packing not supported yet
-        if (pType!="NONE"):  # packing not supprted yet
-            DstConf().PackSequencer = seq
-        items = self.getProp("Items")
-        optItems = self.getProp("OptItems")
-        DstConf()._defineOutputData( "DST", pType, items, optItems )
-        self.reshuffleItems(items, optItems)
+        """
+        Configure Writer:
+        """
+        #
+        # This is hack : DstWriter wants a sequencer to be defined,
+        # even if I don't want it
+        #
+        if (self.getProp("PackType")!="NONE"):  
+            DstConf().PackSequencer = GaudiSequencer("PackDST")
+        self.defineItems()
     
     ############################################################################
     # Dst writing
@@ -84,17 +87,20 @@ class DaVinciOutput(ConfigurableUser):
         """
         log.info("DaVinciOutput::writeDst "+filename)
         stream = self.streamName(filename)
+##        from Configurables import ApplicationMgr, InputCopyStream   # InputCopyStream ignores the rest on the TES
+##        writer = InputCopyStream( stream )
         from Configurables import ApplicationMgr, OutputStream
         writer = OutputStream( stream )
-        writer.RequireAlgs = [ seq ]
         ApplicationMgr().OutStream += [ writer ]
         writer.RequireAlgs = [ seq.getName() ]  # require the sequencer 
         writer.Output = "DATAFILE='PFN:" + filename + "' TYP='POOL_ROOTTREE' OPT='REC'"
-        writer.Preload = False
-        writer.ItemList = self.getProp("Items")
-        writer.OptItemList = self.getProp("OptItems")
-        print self.getProp("OptItems")
-        return seq
+        writer.ItemList = [] # No mandatory items. Do not make any assumptions on contents
+        writer.OptItemList = self.getProp("Items")
+###        writer.ItemList = self.getProp("Items")
+        writer.Preload = True
+        writer.PreloadOptItems = True
+        writer.OutputLevel = 1 
+        return 
 
     ############################################################################
     # ETC writing
