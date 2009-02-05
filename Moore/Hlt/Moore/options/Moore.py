@@ -14,7 +14,7 @@ from Moore.Configuration import *
 #Moore().configLabel = 'NO prescale'
 
 Moore().hltType = 'Hlt1' # +Hlt2'
-Moore().verbose = True
+Moore().Verbose = True
 
 #Moore().Simulation = False
 #Moore().DataType = '2008'

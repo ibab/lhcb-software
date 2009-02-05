@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2009-02-05 - Gerhard Raven
+ - Moore.py: verbose now Verbose
+
 ! 2009-02-03 - Gerhard Raven
  - add settings for LHCb and FEST partitions
  - use the above in CreateRunMooreOnline
