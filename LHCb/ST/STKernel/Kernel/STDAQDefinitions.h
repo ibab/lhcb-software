@@ -1,4 +1,4 @@
-// $Id: STDAQDefinitions.h,v 1.5 2008-11-05 15:31:43 mneedham Exp $
+// $Id: STDAQDefinitions.h,v 1.6 2009-02-05 13:45:55 jluisier Exp $
 #ifndef _STDAQDefinitions_H
 #define _STDAQDefinitions_H
 
@@ -69,7 +69,7 @@ namespace STDAQ{
   const unsigned int minErrorBankWords = 28u;
 
   /// max sixr of error bank
-  const unsigned int maxErrorBankWords = 52u;
+  const unsigned int maxErrorBankWords = 56u;
 
 };
 

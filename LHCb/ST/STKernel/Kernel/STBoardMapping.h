@@ -1,4 +1,4 @@
-// $Id: STBoardMapping.h,v 1.2 2008-08-18 13:03:32 jluisier Exp $
+// $Id: STBoardMapping.h,v 1.3 2009-02-05 13:45:55 jluisier Exp $
 #ifndef STBOARDMAPPING_H 
 #define STBOARDMAPPING_H 1
 
@@ -33,7 +33,7 @@ namespace STBoardMapping{
     (44, 76)(45, 105)(46, 106)(47, 107)(48, 108);
 
   const std::map<unsigned int, unsigned int> ITSourceIDToNumberMap
-  = boost::assign::map_list_of(1, 1)(1, 2)(2, 3)(3, 4)(4, 5)(5, 6)(6, 7)
+  = boost::assign::map_list_of(0, 1)(1, 2)(2, 3)(3, 4)(4, 5)(5, 6)(6, 7)
     (7, 8)(8, 9)(9, 10)(10, 11)(11, 12)(12, 13)(13, 14)(32, 15)(33, 16)
     (34, 17)(35, 18)(36, 19)(37, 20)(38, 21)(39, 22)(40, 23)(41, 24)(42, 25)
     (43, 26)(44, 27)(45, 28)(64, 29)(65, 30)(66, 31)(67, 32)(68,33)(69, 34)
