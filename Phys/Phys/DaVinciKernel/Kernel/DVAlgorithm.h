@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.h,v 1.33 2009-02-04 12:53:07 jpalac Exp $ 
+// $Id: DVAlgorithm.h,v 1.34 2009-02-05 15:53:20 jpalac Exp $ 
 // ============================================================================
 #ifndef DAVINCIKERNEL_DVALGORITHM_H
 #define DAVINCIKERNEL_DVALGORITHM_H 1
@@ -167,7 +167,44 @@ public:
    *
    **/
   const LHCb::VertexBase* calculateRelatedPV(const LHCb::Particle* p) const;
+
+  /**
+   *
+   * Calculate the weighter PV relations for a particle and return it to the 
+   * user. Uses the container of PVs obtained from method primaryVertices()
+   * Has no side-effects. Information is returned to user and not stored 
+   * anywhere
+   *
+   * @author Juan Palacios juan.palacios@nikhef.nl
+   * @param p LHCb::Particle to be related
+   * @return weighted P->PVs relations table  
+   *
+   **/
+  Particle2Vertex::LightTable DVAlgorithm::calculatePVRelations(const LHCb::Particle* p) const;
+
+  /**
+   *
+   **/
+  inline void storeRelationWithOverwrite(const Particle2Vertex::LightTable& table) 
+  {
+    desktop()->overWriteRelations(table.i_relations().begin(), 
+                                  table.i_relations().end());
+  }
   
+  /**
+   *
+   **/
+  inline void relateWithOverwrite(const LHCb::Particle*   part, 
+                                  const LHCb::VertexBase* vert,
+                                  const double weight=1.) 
+  {
+    if (0==part || 0== vert ) return;
+    (this->desktop()->Particle2VertexRelations().i_removeFrom(part)).ignore();
+    this->desktop()->relate(part, vert, weight);
+  }
+  
+  
+
 public:
   
   /// Accessor for Vertex Fitter Tool by nickname 

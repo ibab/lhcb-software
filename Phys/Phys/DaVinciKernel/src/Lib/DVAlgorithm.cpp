@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.38 2009-02-04 12:53:07 jpalac Exp $
+// $Id: DVAlgorithm.cpp,v 1.39 2009-02-05 15:53:20 jpalac Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -316,6 +316,14 @@ const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p)
     return rel.relations(p).back().to();
   }
   return 0;
+    
+}
+// ============================================================================
+Particle2Vertex::LightTable DVAlgorithm::calculatePVRelations(const LHCb::Particle* p) const
+{
+  const IRelatedPVFinder* finder = this->relatedPVFinder();
+  const LHCb::RecVertex::Container* PVs = this->primaryVertices();
+  return (0!=finder && 0!= PVs) ? finder->relatedPVs(p, *PVs) : Particle2Vertex::LightTable();
     
 }
 // ============================================================================
