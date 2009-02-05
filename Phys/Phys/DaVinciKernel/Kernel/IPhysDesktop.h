@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.31 2009-02-04 14:30:54 jpalac Exp $
+// $Id: IPhysDesktop.h,v 1.32 2009-02-05 15:51:27 jpalac Exp $
 #ifndef DAVINCIKERNEL_IPHYSDESKTOP_H 
 #define DAVINCIKERNEL_IPHYSDESKTOP_H 1
 
@@ -84,6 +84,16 @@ public:
 
   /// Retrieve the local secondary vertex container
   virtual const LHCb::Vertex::ConstVector& secondaryVertices() const = 0;
+
+  /// retrieve the Particle->Primary vertex relations
+  virtual const Particle2Vertex::LightTable& Particle2VertexRelations() const = 0;
+
+  /// retrieve the Particle->Primary vertex relations
+  virtual Particle2Vertex::LightTable& Particle2VertexRelations() = 0;
+
+  /// Store relations over-writing previously existing ones
+  virtual void overWriteRelations(Particle2Vertex::Range::const_iterator begin,
+                                  Particle2Vertex::Range::const_iterator end) = 0;
 
   /// Keep for future use: Register the new particles in the Desktop, 
   /// pass ownership, return pointer to new particle
