@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.108 2009-01-27 09:49:56 janos Exp $
+! $Id: release.notes,v 1.109 2009-02-05 23:32:30 janos Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 !-----------------------------------------------------------------------------
+
+! 2009-02-05 - Jan Amoraal
+ - Add isX methods to MCOTDeposit
 
 ! 2009-01-27 - Jan Amoraal
  - Add type enum to MCOTDeposit
