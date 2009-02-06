@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.134 2009-02-06 08:46:37 graven Exp $ 
+! $Id: release.notes,v 1.135 2009-02-06 15:26:29 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -8,6 +8,7 @@
 ! 2009-02-06 - Gerhard Raven
  - improve on tool support: tool configurables don't like name = 'foo' as
    argument...
+ - add slot to set lumi bank killer accept fraction, default to 0...
 
 ! 2009-02-03 - Gerhard Raven
  - add support for (nested) tool calls in Hlt1Lines, eg. the following:

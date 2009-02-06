@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.38 2009-01-27 12:58:50 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.39 2009-02-06 15:26:29 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -51,6 +51,7 @@ class HltConf(LHCbConfigurableUser):
                 , "replaceL0BanksWithEmulated" : False
                 , "Hlt2IgnoreHlt1Decision"     : False # run Hlt2 even if Hlt1 failed
                 , "Verbose"                    : False # print the generated Hlt sequence
+                , "LumiBankKillerAcceptFraction" : 0 # fraction of lumi-only events where raw event is stripped down
                 , "ActiveHlt1Lines"            : [] # list of lines to be added
                 }   
                 
@@ -157,5 +158,6 @@ class HltConf(LHCbConfigurableUser):
         log.info("Loaded HltInit")
         if self.getProp('replaceL0BanksWithEmulated') : 
             importOptions('$L0DUROOT/options/ReplaceL0BanksWithEmulated.opts')
+        self.setOtherProp( Hlt1Conf(), 'LumiBankKillerAcceptFraction' )
         self.confType(self.getProp('hltType'))
         appendPostConfigAction( self.postConfigAction )
