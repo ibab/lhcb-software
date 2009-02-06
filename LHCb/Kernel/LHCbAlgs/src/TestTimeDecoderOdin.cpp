@@ -1,4 +1,4 @@
-// $Id: TestTimeDecoderOdin.cpp,v 1.1 2009-02-03 18:31:03 marcocle Exp $
+// $Id: TestTimeDecoderOdin.cpp,v 1.2 2009-02-06 11:02:29 marcocle Exp $
 // Include files
 
 // from Gaudi
@@ -57,7 +57,7 @@ Gaudi::Time TestTimeDecoderOdin::getTime ( ) const {
 
   put(odin,LHCb::ODINLocation::Default);
 
-  incSvc()->fireIncident(Incident(name(),IncidentType::RunChange));
+  incSvc()->fireIncident(RunChangeIncident(name(),m_currentRun));
 
   last_time = odin->eventTime();
 
