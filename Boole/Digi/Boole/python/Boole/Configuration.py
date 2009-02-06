@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.38 2009-02-03 14:33:14 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.39 2009-02-06 16:11:48 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -13,17 +13,17 @@ class Boole(LHCbConfigurableUser):
     ## Known sequences, all run by default
     KnownInitSubdets = [ "Data", "MUON" ]
     KnownDigiSubdets = [ "VELO", "TT", "IT", "OT", "RICH", "CALO", "MUON", "L0" ]
-    KnownTrigSubdets = [ "L0" ]
     KnownLinkSubdets = [ "VELO", "TT", "IT", "OT", "Tr", "RICH", "CALO", "MUON", "L0" ]
     KnownMoniSubdets = [ "VELO", "TT", "IT", "OT", "RICH", "CALO", "MUON", "L0", "MC" ]
+    KnownFilterSubdets = [ "L0", "ODIN" ]
     KnownHistOptions = ["","None","Default","Expert"]
 
     ## Default main sequences
     DefaultSequence = [ "ProcessPhase/Init",
                         "ProcessPhase/Digi",
-                        "ProcessPhase/Trig",
                         "ProcessPhase/Link",
-                        "ProcessPhase/Moni" ]
+                        "ProcessPhase/Moni",  
+                        "ProcessPhase/Filter" ]
     
     __slots__ = {
         "EvtMax"         : -1
@@ -48,9 +48,9 @@ class Boole(LHCbConfigurableUser):
        ,"MainSequence"   : []
        ,"InitSequence"   : []
        ,"DigiSequence"   : []
-       ,"TrigSequence"   : []
        ,"LinkSequence"   : []
        ,"MoniSequence"   : []
+       ,"FilterSequence" : []
         }
 
     _propertyDocDct = { 
@@ -63,7 +63,7 @@ class Boole(LHCbConfigurableUser):
        ,'TAENext'      : """ Number of Next Time Alignment Events to generate """
        ,'TAESubdets'   : """ Subdetectors for which TAE are enabled """
        ,'Outputs'      : """ List of outputs: ['MDF','DIGI','L0ETC'] (default 'DIGI') """
-       ,'WriteL0Only'  : """ Flag to write only L0 selected events (default False) """
+       ,'WriteL0Only'  : """ OBSOLETE. Add L0 to FilterSequence instead """
        ,'ExtendedDigi' : """ Flag to add MCHits to .digi output file (default False) """
        ,'Histograms'   : """ Type of histograms: ['None','Default','Expert'] """
        ,'NoWarnings'   : """ Flag to suppress all MSG::WARNING or below (default False) """ 
@@ -76,9 +76,9 @@ class Boole(LHCbConfigurableUser):
        ,'MainSequence' : """ The default main sequence, see self.DefaultSequence """
        ,'InitSequence' : """ List of initialisation sequences, see KnownInitSubdets """
        ,'DigiSequence' : """ List of subdetectors to digitize, see KnownDigiSubdets """
-       ,'TrigSequence' : """ List of trigger sequences, see KnownTrigSubdets  """
        ,'LinkSequence' : """ List of MC truth link sequences, see KnownLinkSubdets  """
        ,'MoniSequence' : """ List of subdetectors to monitor, see KnownMoniSubdets """
+       ,'FilterSequence' : """ List of Filter sequences, see KnownFilterSubdets  """
        }
     
     __used_configurables__ = [ LHCbApp ]
@@ -119,9 +119,9 @@ class Boole(LHCbConfigurableUser):
 
         self.configureInit(tae)
         self.configureDigi()
-        self.configureTrig()
         self.configureLink()
         self.configureMoni()
+        self.configureFilter()
             
     def configureInit(self,tae):
         """
@@ -267,17 +267,29 @@ class Boole(LHCbConfigurableUser):
             raise RuntimeError("TAE not implemented for L0")
                 
 
-    def configureTrig(self):
+    def configureFilter(self):
         """
-        Set up the trigger sequence
+        Set up the filter sequence to selectively write out events
         """
-        trigDets = self._setupPhase( "Trig", self.KnownTrigSubdets )
+        filterDets = self.getProp("FilterSequence")
+        for det in filterDets:
+            if det not in self.KnownFilterSubdets :
+                log.warning("Unknown subdet '%s' in FilterSequence"%det)
 
-        if "L0" in trigDets: 
-            # Run the L0Filter always, may be used for selective output
-            GaudiSequencer("TrigL0Seq").Members += [ "L0Filter" ]
-            ProcessPhase("Trig").IgnoreFilterPassed = True # L0Filter sets filter passed...
+        l0yes = self.getProp( "WriteL0Only" )
+        if l0yes :
+            log.warning("WriteL0Only property is obsolete. Adding L0 to FilterSequence instead")
+            if "L0" not in filterDets :
+                filterDets += [ "L0" ]
+                self.setProp("FilterSequence",filterDets)
+        filterSeq = ProcessPhase("Filter", ModeOR = True )
+        filterSeq.DetectorList += filterDets
 
+        if "L0" in filterDets: 
+            GaudiSequencer("FilterL0Seq").Members += [ "L0Filter" ]
+
+        if "ODIN" in filterDets: 
+            GaudiSequencer("FilterODINSeq").Members += [ "OdinTypesFilter" ]
 
     def configureLink(self):
         """
@@ -454,13 +466,14 @@ class Boole(LHCbConfigurableUser):
         AuditorSvc().Auditors += [ 'TimingAuditor' ] 
         SequencerTimerTool().OutputLevel = WARNING
 
-    def saveHistos(self, histOpt):
+    def saveHistos(self):
 
         # ROOT persistency for histograms
         importOptions('$STDOPTS/RootHist.opts')
         from Configurables import RootHistCnv__PersSvc
         RootHistCnv__PersSvc('RootHistCnv').ForceAlphaIds = True
 
+        histOpt = self.getProp("Histograms").capitalize()
         if histOpt == "None" or histOpt == "":
             # HistogramPersistency still needed to read in Muon background.
             # so do not set ApplicationMgr().HistogramPersistency = "NONE"
@@ -490,19 +503,16 @@ class Boole(LHCbConfigurableUser):
         # POOL Persistency
         importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
 
-        l0yes = self.getProp( "WriteL0Only" )
-
         if "DIGI" in outputs:
             # Objects to be written to output file
             importOptions("$STDOPTS/DigiContent.opts")
             extended = self.getProp("ExtendedDigi")
             if ( extended ): importOptions( "$STDOPTS/ExtendedDigi.opts" )
 
-            MyWriter = OutputStream( "DigiWriter" )
-            MyWriter.Preload = False
+            MyWriter = OutputStream( "DigiWriter", Preload=False )
             if not hasattr( MyWriter, "Output" ):
                 MyWriter.Output  = "DATAFILE='PFN:" + self.outputName() + ".digi' TYP='POOL_ROOTTREE' OPT='REC'"
-            if l0yes : MyWriter.RequireAlgs.append( "L0Filter" )
+            MyWriter.RequireAlgs.append( "Filter" )
             ApplicationMgr().OutStream.append( "DigiWriter" )
 
             # Add TAE RawEvents when enabled
@@ -542,7 +552,7 @@ class Boole(LHCbConfigurableUser):
             MyWriter = OutputStream( "RawWriter", Preload = False, ItemList = ["/Event/DAQ/RawEvent#1"] )
             if not hasattr( MyWriter, "Output" ):
                 MyWriter.Output = "DATAFILE='PFN:" + self.outputName() + ".mdf' SVC='LHCb::RawDataCnvSvc' OPT='REC'"
-            if l0yes : MyWriter.RequireAlgs.append( "L0Filter" )
+            MyWriter.RequireAlgs.append( "Filter" )
             ApplicationMgr().OutStream += [ nodeKiller, MyWriter ]
 
         nowarn = self.getProp( "NoWarnings" )
@@ -554,10 +564,8 @@ class Boole(LHCbConfigurableUser):
         """
         outputName = self.getProp("DatasetName")
         if ( self.evtMax() > 0 ): outputName += '-' + str(self.evtMax()) + 'ev'
-        l0yes = self.getProp( "WriteL0Only" )
-        if ( l0yes ) : outputName += '-L0Yes'
-        extended = self.getProp("ExtendedDigi")
-        if ( extended ): outputName += '-extended'
+        if len(self.getProp( "FilterSequence" )) > 0 : outputName += '-filtered'
+        if self.getProp("ExtendedDigi") : outputName += '-extended'
         return outputName
 
     def evtMax(self):
@@ -661,21 +669,19 @@ class Boole(LHCbConfigurableUser):
             GaudiSequencer("MoniMCSeq").Members += [ testMCV, testMCP,
                                                      CompareMCParticle(), CompareMCVertex() ]
 
-        self.saveHistos( histOpt )
-
     def _setupPhase( self, name, knownDets ):
         seq = self.getProp("%sSequence"%name)
         if len( seq ) == 0:
             seq = knownDets
+            self.setProp("%sSequence"%name, seq)
         else:
             for det in seq:
                 if det not in knownDets:
-                    log.warning("Unknown subdet '%s' in %sSequence"%(seq,det))
+                    log.warning("Unknown subdet '%s' in %sSequence"%(det,seq))
         ProcessPhase(name).DetectorList += seq
         return seq
 
     def __apply_configuration__(self):
-        log.info( self )
         GaudiKernel.ProcessJobOptions.PrintOff()
         
         self.defineDB()
@@ -683,3 +689,7 @@ class Boole(LHCbConfigurableUser):
         self.configurePhases()
         self.defineOutput()
         self.defineMonitors()
+        self.saveHistos()
+        GaudiKernel.ProcessJobOptions.PrintOn()
+        log.info( self )
+        GaudiKernel.ProcessJobOptions.PrintOff()

@@ -3,6 +3,13 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+! 2009-02-06 - Marco Cattaneo
+ - Replace Trigger sequence by Filter sequence and run it as last sequence
+   . Instrument Filter sequence to filter also on OdinTypeFilter
+   . Filtering enabled by adding subdets ["L0","ODIN"] to FilterSequence
+   . WriteL0Only option is obsolete, equivalent to FilterSequence += ["L0"]
+ - Boole-FEST09.py updated to write out only L0Yes or RandomTrigger
+
 ! 2009-02-03 - Marco Cattaneo
  - Remove Boole.opts and TAE*.opts, everything now done in configurable
  - Remove "MainOptions" Boole option
