@@ -3,8 +3,13 @@
 #include "HltBase/HltAlgorithm.h"
 #include "Event/HltDecReports.h"
 #include "Event/HltDecReport.h"
+#if BOOST_VERSION < 103700
 #include <boost/spirit.hpp>
 #include <boost/spirit/actor.hpp>
+#else 
+#include <boost/spirit/include/classic.hpp>
+#include <boost/spirit/include/classic_actor.hpp>
+#endif
 #include <boost/lambda/bind.hpp>
 #include <boost/ref.hpp>
 #include <memory>

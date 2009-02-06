@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.cpp,v 1.21 2009-02-03 18:22:09 graven Exp $
+// $Id: HltConfigSvc.cpp,v 1.22 2009-02-06 19:47:46 graven Exp $
 // Include files 
 
 #include <algorithm>
@@ -7,6 +7,7 @@
 #include "boost/format.hpp"
 #include "boost/regex.hpp"
 #include "boost/foreach.hpp"
+#include "boost/algorithm/string/case_conv.hpp"
 
 // from Gaudi
 #include "GaudiKernel/IIncidentSvc.h"
@@ -47,9 +48,10 @@ HltConfigSvc::TCKrep& HltConfigSvc::TCKrep::set(const std::string& s) {
             throw GaudiException("Invalid TCK format",s,StatusCode::FAILURE);
             return *this;
         }
-        //  and if most significant bit is set, lower 16 must be zero and vice versa
         m_unsigned = unhex(what[1]);
         m_stringRep = s;
+        // canonical rep is lower case...
+        boost::algorithm::to_lower(m_stringRep);
         return *this;
 }
 

@@ -3,6 +3,10 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2009-02-06 - Gerhard Raven
+ - fix boost 1.38 warnings,
+ - lowercase TCK hex rep
+
 ! 2009-02-05 - Gerhard Raven
  - fixes for gcc 4.3
 
