@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.39 2009-02-06 16:11:48 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.40 2009-02-06 16:58:50 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -93,9 +93,9 @@ class Boole(LHCbConfigurableUser):
         # Delegate handling to LHCbApp configurable
         self.setOtherProps(LHCbApp(),["EvtMax","SkipEvents"])
 
-        skipSpill  = self.getProp("SkipSpill")
+        skipSpill = self.getProp("SkipSpill")
         if skipSpill  > 0 :
-            if hasattr(EventSelector("SpilloverSelector"),"FirstEvent"):
+            if EventSelector("SpilloverSelector").isPropertySet("FirstEvent"):
                 log.warning( "EventSelector('SpilloverSelector').FirstEvent and Boole().SkipSpill both defined, using Boole().SkipSpill")
             EventSelector("SpilloverSelector").FirstEvent = skipSpill + 1
 
@@ -289,7 +289,11 @@ class Boole(LHCbConfigurableUser):
             GaudiSequencer("FilterL0Seq").Members += [ "L0Filter" ]
 
         if "ODIN" in filterDets: 
-            GaudiSequencer("FilterODINSeq").Members += [ "OdinTypesFilter" ]
+            from Configurables import OdinTypesFilter
+            odinFilter = OdinTypesFilter()
+            GaudiSequencer("FilterODINSeq").Members += [ odinFilter ]
+            if not odinFilter.isPropertySet( "TriggerTypes" ):
+                odinFilter.TriggerTypes = ["RandomTrigger"]
 
     def configureLink(self):
         """
@@ -480,7 +484,7 @@ class Boole(LHCbConfigurableUser):
             return
 
         # Use a default histogram file name if not already set
-        if not hasattr( HistogramPersistencySvc(), "OutputFile" ):
+        if not HistogramPersistencySvc().isPropertySet( "OutputFile" ):
             histosName   = self.getProp("DatasetName")
             if histosName == "": histosName = "Boole"
             if (self.evtMax() > 0): histosName += '-' + str(self.evtMax()) + 'ev'
@@ -510,7 +514,7 @@ class Boole(LHCbConfigurableUser):
             if ( extended ): importOptions( "$STDOPTS/ExtendedDigi.opts" )
 
             MyWriter = OutputStream( "DigiWriter", Preload=False )
-            if not hasattr( MyWriter, "Output" ):
+            if not MyWriter.isPropertySet( "Output" ):
                 MyWriter.Output  = "DATAFILE='PFN:" + self.outputName() + ".digi' TYP='POOL_ROOTTREE' OPT='REC'"
             MyWriter.RequireAlgs.append( "Filter" )
             ApplicationMgr().OutStream.append( "DigiWriter" )
@@ -528,7 +532,7 @@ class Boole(LHCbConfigurableUser):
         if "L0ETC" in outputs:
             importOptions( "$L0DUROOT/options/ETC.opts" ) # Adds "Sequencer/SeqWriteTag" to OutStreams
             MyWriter = TagCollectionStream( "WR" )
-            if not hasattr( MyWriter, "Output" ):
+            if not MyWriter.isPropertySet( "Output" ):
                 MyWriter.Output = "Collection='EVTTAGS/TagCreator/1' ADDRESS='/Event' DATAFILE='" + self.getProp("DatasetName") + "-L0ETC.root' TYP='POOL_ROOTTREE' OPT='RECREATE'"
             else: print MyWriter.getProp("Output")
 
@@ -550,7 +554,7 @@ class Boole(LHCbConfigurableUser):
                 taeNext -= 1
 
             MyWriter = OutputStream( "RawWriter", Preload = False, ItemList = ["/Event/DAQ/RawEvent#1"] )
-            if not hasattr( MyWriter, "Output" ):
+            if not MyWriter.isPropertySet( "Output" ):
                 MyWriter.Output = "DATAFILE='PFN:" + self.outputName() + ".mdf' SVC='LHCb::RawDataCnvSvc' OPT='REC'"
             MyWriter.RequireAlgs.append( "Filter" )
             ApplicationMgr().OutStream += [ nodeKiller, MyWriter ]

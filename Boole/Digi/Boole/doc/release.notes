@@ -7,6 +7,7 @@ Purpose: LHCb Digitization program
  - Replace Trigger sequence by Filter sequence and run it as last sequence
    . Instrument Filter sequence to filter also on OdinTypeFilter
    . Filtering enabled by adding subdets ["L0","ODIN"] to FilterSequence
+   . When enabled, OdinTypesFilter selects ["RandomTrigger"] by deafult
    . WriteL0Only option is obsolete, equivalent to FilterSequence += ["L0"]
  - Boole-FEST09.py updated to write out only L0Yes or RandomTrigger
 
