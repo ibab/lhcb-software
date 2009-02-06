@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.16 2009-02-02 10:09:01 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.17 2009-02-06 19:44:18 asolomin Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -134,7 +134,7 @@ class RichRecQCConf(RichConfigurableUser):
 
         # Expert Monitoring
         if self.getProp("ExpertHistos") :
-            self.exportMonitoring(self.newSeq(sequence,"RichExpertChecks"))
+            self.expertMonitoring(self.newSeq(sequence,"RichExpertChecks"))
 
     ## standalone ring finder monitors
     def ringsMoni(self,sequence):
@@ -214,7 +214,7 @@ class RichRecQCConf(RichConfigurableUser):
             sequence.Members += [mon]
 
     ## Expert monitoring options
-    def exportMonitoring(self,sequence):
+    def expertMonitoring(self,sequence):
 
         # Define the RICH ntuple file
         if self.getProp("NTupleProduce") :

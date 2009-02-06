@@ -4,7 +4,8 @@
  *  Implementation file for algorithm class : RichAlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.cpp,v 1.5 2008-10-16 09:34:01 cattanem Exp $
+ *  $Id: RichAlignmentMonitor.cpp,v 1.6 2009-02-06 19:44:18 asolomin Exp $
+
  *
  *  @author Antonis Papanestis
  *  @date   2004-02-19
@@ -91,18 +92,25 @@ StatusCode AlignmentMonitor::initialize()
   const RichHistoID hid;
 
   // prebook histograms
-  for ( unsigned int hi=0; hi<m_preBookHistos.size(); ++hi ) {
-    int combi = m_preBookHistos[hi];
-    std::string title = RAD+" Alignment Histogram: Sph " +
-      boost::lexical_cast<std::string>(combi/100) + " flat " +
-      boost::lexical_cast<std::string>(combi%100) + " R" +
-      boost::lexical_cast<std::string>(m_rich+1);
-    std::string h_id("dThetavphiRec");
-    if ( combi/100 > 9 )
-      h_id += boost::lexical_cast<std::string>(combi);
-    else
-      h_id += "0" + boost::lexical_cast<std::string>(combi);
-
+  /*
+  Since the introduction of python-based configuration, elements of a vector
+  like
+  0000,0103,...
+  in the configurable are no longer interpreted as expected, and therefore the
+  vector of mirror segment combinations is now a comma-separated vector of
+  strings, e.g.
+  '0000','0103',...
+  That vector is defined in
+  /REC/REC_vXrY/Rich/RichRecQC/python/RichRecQC/Alignment.py
+  while here it is m_preBookHistos.
+  See below a second usage of this vector and further explanations therein.
+  Anatoly Solomin 2008-11-01.
+  */
+  BOOST_FOREACH( std::string strCombi, m_preBookHistos ) {
+    std::string h_id = "dThetavphiRec"+strCombi;
+    std::string sph  = strCombi.substr(0,2);
+    std::string flat = strCombi.substr(2,2);
+    std::string title = "Alignment Histogram: Sph "+sph+" flat "+flat+" R"+(boost::lexical_cast<std::string>(m_rich+1));
     book2D( hid(rad, h_id), title, 0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange,
             m_deltaThetaHistoRange, 50 );
     if ( m_useMCTruth ) {
@@ -296,14 +304,64 @@ StatusCode AlignmentMonitor::execute() {
         boost::lexical_cast<std::string>(rich+1);
       std::string h_id( "dThetavphiRec" );
 
-      int combi = sphMirNum*100 + flatMirNum;
-      if ( sphMirNum > 9 )
-        h_id += boost::lexical_cast<std::string>(combi);
-      else
-        h_id += "0" + boost::lexical_cast<std::string>(combi);
+      std::string thisCombiNr( "" ); // only the 4-digit combination number (string)
 
-      plot2D( phiRec, delTheta, hid(rad,h_id), title, 0.0, 2*Gaudi::Units::pi,
-              -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 );
+      if ( sphMirNum > 9 )
+        thisCombiNr +=       boost::lexical_cast<std::string>( sphMirNum );
+      else
+        thisCombiNr += "0" + boost::lexical_cast<std::string>( sphMirNum );
+      if ( flatMirNum > 9 )
+        thisCombiNr +=       boost::lexical_cast<std::string>( flatMirNum );
+      else
+        thisCombiNr += "0" + boost::lexical_cast<std::string>( flatMirNum );
+      /*
+      Before filling the next histograms, we must check, whether this
+      combination of mirrors belongs to the list of combinations for which
+      the histograms are prebooked. Otherwise, we may have trouble at the
+      root file merging stage (when using ganga's splitter/merger),
+      because merging procedure (known ROOT script) assumes that all the files
+      have exact same structure of histograms. That may be broken, when one
+      data file (in one subjob) yields some rare combination that is not
+      prebooked, while another data file (in a different subjob)
+      does not, or yields a different exotic combination.
+      Both non-prebooked histograms will be booked on fly (and filled)
+      and each will inhabit a different root-file.
+      
+      In such a case the two corresponding root-files will have non-identical
+      structure, and the merging (at least at its shape in Ganga 5.0.10 at the
+      time of writing) will fail.
+
+      Anatoly Solomin 2008-11-01.
+      */
+      bool belongs( false );
+      BOOST_FOREACH( std::string strCombi, m_preBookHistos ) {
+        if ( thisCombiNr == strCombi ) {
+          belongs = true;
+          break;
+        }
+      }
+      if ( belongs ) {
+
+        h_id += thisCombiNr;
+        plot2D( phiRec, delTheta, hid(rad,h_id), title, 0.0, 2*Gaudi::Units::pi,
+                -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 );
+  
+        if ( m_useMCTruth ) {
+          // use MC estimate for cherenkov angle
+          h_id += "MC";
+          title += " MC";
+          plot2D( phiRec, delThetaTrue, hid(rad,h_id), title, 0.0, 2*Gaudi::Units::pi,
+                  -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 );
+          // test to see if this photon was emitted from this track
+          if ( trueParent ) {
+            h_id += "TruP";
+            title += " TrueP";
+            plot2D( phiRec, delThetaTrue, hid(rad,h_id), title, 0.0, 2*Gaudi::Units::pi,
+                    -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 );
+          }
+        }
+      }
+      // end of filling prebooked and non-prebooked histograms for mirror combinations
 
       const int hpd = ( m_plotAllHPDs ? Rich::DAQ::HPDIdentifier( gPhoton.smartID() ).number()
                         : makePlotForHPD(gPhoton.smartID()) );
@@ -315,21 +373,6 @@ StatusCode AlignmentMonitor::execute() {
                 -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 );
       }
 
-
-      if ( m_useMCTruth ) {
-        // use MC estimate for cherenkov angle
-        h_id += "MC";
-        title += " MC";
-        plot2D( phiRec, delThetaTrue, hid(rad,h_id), title, 0.0, 2*Gaudi::Units::pi,
-                -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 );
-        // test to see if this photon was emitted from this track
-        if ( trueParent ) {
-          h_id += "TruP";
-          title += " TrueP";
-          plot2D( phiRec, delThetaTrue, hid(rad,h_id), title, 0.0, 2*Gaudi::Units::pi,
-                  -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 );
-        }
-      }
     }
   }
 

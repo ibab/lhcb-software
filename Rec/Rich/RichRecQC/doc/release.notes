@@ -4,6 +4,13 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-02-06 - Anatoly Solomin
+ - Fix prebooking of histograms for RICH2 Mirror alignment both in the code
+   and in the configurable Alignment.py of RichAlignmentMonitor.
+ - Fix activation of the alignment histos dependence on the WithMC on/off
+   mode.
+ - typo in Configuration.py
+
 ! 2009-01-30 - Chris Jones
  - Fix a few bugs in the activation of the alignment histos
 

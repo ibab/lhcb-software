@@ -4,7 +4,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::AlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.h,v 1.3 2008-02-15 10:13:36 jonrob Exp $
+ *  $Id: RichAlignmentMonitor.h,v 1.4 2009-02-06 19:44:18 asolomin Exp $
  *
  *  @author Antonis Papanestis   a.papanestis@rl.ac.uk
  *  @date   2004-02-19
@@ -43,6 +43,7 @@
 
 // boost
 #include "boost/lexical_cast.hpp"
+#include <boost/foreach.hpp>
 
 namespace Rich
 {
@@ -120,8 +121,11 @@ namespace Rich
         IHistogram2D* m_sphMirReflPoint[2];
         IHistogram2D* m_flatMirReflPoint[2];
 
-        // vector of histogram numbers to prebook (helps with merging files)
-        std::vector<int> m_preBookHistos;
+        // Vector of histogram numbers to prebook (helps with merging files).
+        // Since the arrival of the python-based configuration, it is
+        // a vector of strings.
+        // Anatoly Solomin 2008-11-01.
+        std::vector<std::string> m_preBookHistos;
 
         // list of HPDs for histograms
         std::vector<int> m_HPDList;

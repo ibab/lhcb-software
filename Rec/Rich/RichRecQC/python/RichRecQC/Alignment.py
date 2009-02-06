@@ -1,5 +1,5 @@
 
-__version__ = "$Id: Alignment.py,v 1.6 2009-02-02 10:09:01 jonrob Exp $"
+__version__ = "$Id: Alignment.py,v 1.7 2009-02-06 19:44:18 asolomin Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -29,14 +29,14 @@ class RichAlignmentConf(RichConfigurableUser):
         sequence = self.getProp("AlignmentSequencer")
         if sequence == None : raise RuntimeError("ERROR : Alignment Sequencer not set")
 
-        from Configurables import ( Rich__Rec__MC__AlignmentMonitor )
+        from Configurables import ( Brunel, Rich__Rec__MC__AlignmentMonitor )
         
         # Mirror Alignment monitor for Rich1
         #-------------------------------------------------------------------------------
         RichAlignMoniR1 = Rich__Rec__MC__AlignmentMonitor("RichAlignMoniR1")
         sequence.Members += [RichAlignMoniR1]
      
-        RichAlignMoniR1.UseMCTruth    = False
+        RichAlignMoniR1.UseMCTruth    = Brunel().getProp("WithMC")
         RichAlignMoniR1.RichDetector  = 0   # Rich1 = 0, Rich2 = 1
 
         # Track selector
@@ -54,7 +54,7 @@ class RichAlignmentConf(RichConfigurableUser):
         RichAlignMoniR2 = Rich__Rec__MC__AlignmentMonitor("RichAlignMoniR2")
         sequence.Members += [RichAlignMoniR2]
         
-        RichAlignMoniR2.UseMCTruth    = False
+        RichAlignMoniR2.UseMCTruth    = Brunel().getProp("WithMC")
         RichAlignMoniR2.RichDetector  = 1   # Rich1 = 0, Rich2 = 1
 
         # Track selector
@@ -70,7 +70,42 @@ class RichAlignmentConf(RichConfigurableUser):
         RichAlignMoniR2.HPDList = [ 200107, 200108, 200007, 200008,
                                     210107, 210108, 210007, 210008 ]
 
-        # CRJ : For reasons beyond me right now, the follow line does not
-        # work, so just comment it out for the moment
-        #RichAlignMoniR2.PreBookHistos = [ 0000, 0100, 0101, 0102, 0201, 0202, 0203, 0302, 0303, 0400, 0401, 0404, 0405, 0501, 0502, 0505, 0506, 0602, 0603, 0606, 0607, 0707, 0804, 0805, 0808, 0904, 0905, 0906, 0909, 0910, 1005, 1006, 1007, 1010, 1011, 1106, 1107, 1111, 1208, 1209, 1309, 1310, 1410, 1411, 1511, 1608, 1612, 1613, 1709, 1712, 1713, 1714, 1810, 1813, 1814, 1815, 1915, 2012, 2013, 2016, 2017, 2113, 2114, 2117, 2118, 2214, 2215, 2218, 2219, 2315, 2416, 2417, 2516, 2517, 2518, 2617, 2618, 2619, 2719, 2820, 2821, 2920, 2921, 2922, 3021, 3022, 3023, 3123, 3224, 3320, 3321, 3324, 3325, 3421, 3422, 3425, 3426, 3522, 3523, 3526, 3527, 3624, 3625, 3628, 3724, 3725, 3726, 3728, 3729, 3825, 3826, 3827, 3829, 3830, 3926, 3927, 3931, 4028, 4128, 4129, 4229, 4230, 4330, 4331, 4432, 4529, 4532, 4533, 4534, 4630, 4633, 4634, 4635, 4731, 4734, 4735, 4832, 4932, 4933, 4936, 4937, 5033, 5034, 5037, 5038, 5134, 5135, 5138, 5139, 5236, 5336, 5337, 5338, 5437, 5438, 5439, 5538, 5539 ]
-        
+        # List of combinations of RICH2 spheric and flat mirror segments where
+        # e.g. '2719' means spheric mirror No 27 and flat mirror No 19.
+        # Histograms for these combinations are prebooked from the beginnig to
+        # avoid problems with merging ROOT files from all Ganga subjobs when
+        # they are finished.
+        #
+        # The list is depicted here in a way that reflects the real-space
+        # positions of the segments involved in each combination in XY plane,
+        # as seen along the beam direction. So the beam pipe position, for
+        # example, is somehere in the "geometrical center" of the list,
+        # i.e.between '1208' and '4331'.
+        # After the arrival of the python-based configuration, this is an array
+        # of strings rather than integers.
+        # Anatoly Solomin 2008-11-01.
+        RichAlignMoniR2.PreBookHistos = [
+        '2719','2718',  '2619','2618','2617',  '2518','2517','2516',  '2417','2416',  '5539','5538',  '5439','5438','5437',  '5338','5337','5336',  '5237','5236',
+
+
+                        '2219','2218',         '2118','2117',         '2017','2016',  '5139','5138',         '5038','5037',         '4937','4936',
+        '2315',         '2215','2214',         '2114','2113',         '2013','2012',  '5135','5134',         '5034','5033',         '4933','4932',         '4832',
+
+
+        '1915','1914',  '1815','1814','1813',  '1714','1713','1712',  '1613','1612',  '4735','4734',  '4635','4634','4633',  '4534','4533','4532',  '4433','4432',
+        '1911',         '1811','1810',         '1710','1709',                '1608',  '4731',                '4630','4629',         '4529','4528',         '4428',
+
+
+        '1511',         '1411','1410',         '1310','1309',         '1209','1208',  '4331','4330',         '4230','4229',         '4129','4128',         '4028',
+
+
+        '1111',         '1011','1010',         '0910','0909',                '0808',  '3931',                '3830','3829',         '3729','3728',         '3628',
+        '1107','1106',  '1007','1006','1005',  '0906','0905','0904',  '0805','0804',  '3927','3926',  '3827','3826','3825',  '3726','3725','3724',  '3625','3624',
+
+
+        '0707',         '0607','0606',         '0506','0505',         '0405','0404',  '3527','3526',         '3426','3425',         '3325','3324',         '3224',
+                        '0603','0602',         '0502','0501',         '0401','0400',  '3523','3522',         '3422','3421',         '3321','3320',
+
+
+        '0303','0302',  '0203','0202','0201',  '0102','0101','0100',  '0001','0000',  '3123','3122',  '3023','3022','3021',  '2922','2921','2920',  '2821','2820'
+        ]
