@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.50 2009-01-14 21:02:54 graven Exp $
+// $Id: HltAlgorithm.cpp,v 1.51 2009-02-06 20:20:54 graven Exp $
 // Include files 
 
 #include "Event/Particle.h"
@@ -80,27 +80,11 @@ StatusCode HltAlgorithm::sysExecute() {
   // switch of histogramming for this event only if so requested
   histoGuard guard( m_histogramUpdatePeriod>0 && (counter("#accept").nEntries() % m_histogramUpdatePeriod !=0), *this );
 
-  
-  //TODO: add try/catch around this, and set error flags...
-  //      need to know the 'terminus' of the current sequence (probably
-  //      need an explicit property for that, cannot discover ourselves),
-  //      and execute that one explicitly so it can record the problem...
-  //NOTE: GaudiKernel/Algorithm.cpp does a 'try/catch' in sysExecute
-  //      so the above wouldn't catch anything unless we make 
-  //      sure that the IExceptionSvc which one gets as 'ExceptionSvc' 
-  //      does something reasonable -- by default it 'rethrows'... 
-  try {
-    sc = beginExecute();
-    if (sc.isFailure()) return sc;
-    sc = HltBaseAlg::sysExecute();
-    if (sc.isFailure()) return sc;
-    sc = endExecute();
-  } catch(...) {
-    sc = StatusCode::FAILURE; // for now -- maybe at some point we try to continue...
-    setDecision(true); // try to keep event for debugging...
-    m_outputSelection->setError(true);
-  }
-  
+  sc = beginExecute();
+  if (sc.isFailure()) return sc;
+  sc = HltBaseAlg::sysExecute();
+  if (sc.isFailure()) return sc;
+  sc = endExecute();
 
   return sc;
 
@@ -113,12 +97,17 @@ StatusCode HltAlgorithm::beginExecute() {
   }
   Assert( m_outputSelection != 0," beginExecute() no output selection !");
 
-  setDecision(false);
+  setFilterPassed(false);
 
   // we always process callbacks first...
   BOOST_FOREACH( CallBack* i, m_callbacks ) i->process();
   
-  m_outputSelection->clean();
+  // m_outputSelection->clean(); // already done in HltDataSvc
+  // assert if not done properly...
+  Assert(m_outputSelection->decision()==false 
+      && m_outputSelection->processed()==false
+      && m_outputSelection->error()==false," output already touched???");
+
   bool ok = verifyInput();
   if (produceHistos()) monitorInputs();
   
@@ -203,7 +192,6 @@ void HltAlgorithm::setDecision() {
   counter("#candidates accepted") += n ; 
   if (n>=m_minNCandidates) m_outputSelection->setDecision(true); // for non-counting triggers, this must be done explicity by hand!!!
   setDecision( m_outputSelection->decision() );
-  counter("#accept") += m_outputSelection->decision();
 }
 
 void HltAlgorithm::setDecision(bool accept) {
@@ -214,6 +202,7 @@ void HltAlgorithm::setDecision(bool accept) {
   // candidates, we never explicitly set 'false', and hence would otherwise
   // not set 'processed'
   m_outputSelection->setDecision(accept);
+  counter("#accept") += m_outputSelection->decision();
 }
 
 

@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.h,v 1.37 2009-01-01 21:20:34 graven Exp $
+// $Id: HltAlgorithm.h,v 1.38 2009-02-06 20:20:53 graven Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
@@ -68,7 +68,7 @@ public:
   }
 
 
-protected:
+private:
 
   // decision according with nCandidates and filter, or preset in the selection
   void setDecision() ;
@@ -167,8 +167,4 @@ private:
   std::vector<CallBack*> m_callbacks;
 
 };
-
-
-
-
 #endif // HLTBASE_HLTALGORITHM_H

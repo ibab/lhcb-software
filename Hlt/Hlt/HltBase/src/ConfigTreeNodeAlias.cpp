@@ -45,7 +45,7 @@ ConfigTreeNodeAlias::ConfigTreeNodeAlias(const digest_type& ref, const alias_typ
         }
         //  and if most significant bit is set, lower 16 must be zero and vice versa
         unsigned int tck = unhex(what[1]);
-        if (  (tck & 0x80000000) != 0 ? (tck&0xFFFF!=0) : (tck&0xFFFF==0) ){
+        if (  (tck & 0x80000000) != 0 ? ((tck&0xFFFF)!=0) : ((tck&0xFFFF)==0) ){
            invalidate("the requested TCK does not match the rules..");
            return;
         }

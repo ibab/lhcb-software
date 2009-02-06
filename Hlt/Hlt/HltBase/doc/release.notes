@@ -3,6 +3,13 @@
 ! Responsible : Jose Angel Hernando Morata
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+! 2009-02-06 - Gerhard Raven
+ - remove try/catch in HltAlgorithm::execute -- this is now done in HltLine 
+ - don't clean selection in HltAlgorithm -- this is already done in HltDataSvc
+ - move accept counter in HltAlgorithm to avoid it being called twice per event
+ - fix gcc4.3 warning
+ - use XYZVector functionality to simplify deltaAngle
+
 ! 2009-01-24 - Antonio Perez-Calero
  - changed definition of deltaAngle in HltUtils.cpp (to the actual diff in angle 
    between two tracks)
