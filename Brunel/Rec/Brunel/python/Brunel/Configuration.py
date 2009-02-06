@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.51 2009-01-30 07:06:07 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.52 2009-02-06 19:37:24 asolomin Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -354,8 +354,9 @@ class Brunel(LHCbConfigurableUser):
         # Histograms filled only in real data case
         if not withMC:
             if "RICH" in moniSeq :
-                self.setOtherProps(RichRecQCConf(),["Context","DataType"])
-                RichRecQCConf().MoniSequencer = GaudiSequencer("MoniRICHSeq")
+                from Configurables import GaudiSequencer
+                self.setOtherProps(RichRecQCConf(), ["Context","DataType"])
+                RichRecQCConf().setProp("MoniSequencer", GaudiSequencer("MoniRICHSeq"))
 
         # Expert histograms
         if expert:
