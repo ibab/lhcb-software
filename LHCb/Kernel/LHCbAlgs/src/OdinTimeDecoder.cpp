@@ -1,4 +1,4 @@
-// $Id: OdinTimeDecoder.cpp,v 1.2 2009-02-04 18:02:28 marcocle Exp $
+// $Id: OdinTimeDecoder.cpp,v 1.3 2009-02-06 11:01:53 marcocle Exp $
 // Include files
 
 // from Gaudi
@@ -52,8 +52,7 @@ StatusCode OdinTimeDecoder::initialize() {
   StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) return sc;
   // try to get the tool to decode the ODIN bank
-  sc = m_odinDecoder.retrieve();
-  if (sc.isFailure()) return sc;
+  return m_odinDecoder.retrieve();
 }
 
 //=========================================================================
