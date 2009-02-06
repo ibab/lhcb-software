@@ -333,12 +333,13 @@ File* MDFWriterNet::createAndOpenFile(unsigned int runNumber)
     *m_log << MSG::INFO << "new filename: " << f << endmsg;
     currFile = new File(f, runNumber, m_streamID);
   } catch (std::exception e) {
-    currFile = new File(getNewFileName(runNumber), runNumber);
-    *m_log << MSG::WARNING
+    currFile = NULL; 
+    *m_log << MSG::ERROR
            << " Exception: "
            << e.what()
-           << "Could not get new file name! Generating local filename: "
-           << *(currFile->getFileName()) << endmsg ;
+           << "Could not get new file name!"
+           <<  endmsg ;
+    return currFile;       
   }
 
   INIT_OPEN_COMMAND(&header, currFile->getFileName()->c_str(),
@@ -452,6 +453,9 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
              << " Creating a new one."
              << endmsg;
       m_currFile = createAndOpenFile(runNumber);
+      if(m_currFile == NULL) {
+          return StatusCode::FAILURE;
+      }    
       m_openFiles.addFile(m_currFile);
     }
 
