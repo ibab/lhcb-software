@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.33 2009-02-03 12:28:10 graven Exp $ 
+# $Id: HltLine.py,v 1.34 2009-02-06 08:46:37 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.33 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.34 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt line itself 
@@ -571,7 +571,7 @@ class Hlt1Tool (object ) :
         ## that addTool makes, we could just continue using it,
         ## instead of first creating our own (public!) instance
         ## and then handing it over to addTool to make it private...
-        conf = self.Type( name = 'dummy'+self.Name )
+        conf = self.Type( '__dummy__'+self.Name )
         for k,v in self.Args.iteritems() : setattr(conf,k,v)
         for tool in self.Tools :  
                 if type(tool) is not Hlt1Tool : 
