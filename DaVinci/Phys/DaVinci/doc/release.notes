@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.304 2009-02-05 19:02:47 pkoppenb Exp $
+! $Id: release.notes,v 1.305 2009-02-06 17:34:24 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,9 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-02-06 - Patrick Koppenburg
+ - Now it works. But requires a patch of GaudiSvc.
 
 ! 2009-02-05 - Patrick Koppenburg
  - A bit more work on  python/DaVinciOutput.py . Not yet done.

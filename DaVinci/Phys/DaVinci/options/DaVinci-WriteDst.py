@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DaVinci-WriteDst.py,v 1.2 2009-02-05 19:02:48 pkoppenb Exp $
+# $Id: DaVinci-WriteDst.py,v 1.3 2009-02-06 17:34:24 pkoppenb Exp $
 #
 # Options for a DaVinci job creating DSTs
 #
@@ -50,7 +50,7 @@ for i in MassRanges :
 #
 #
 ##############################################################################
-DaVinci().EvtMax = 100
+DaVinci().EvtMax = 500
 DaVinci().PrintFreq = 1 
 # DaVinci().SkipEvents = 0
 DaVinci().DataType = "2008" # Default is "DC06"

@@ -1,7 +1,7 @@
 """
 Output for DaVinci
 """
-__version__ = "$Id: DaVinciOutput.py,v 1.2 2009-02-05 19:02:48 pkoppenb Exp $"
+__version__ = "$Id: DaVinciOutput.py,v 1.3 2009-02-06 17:34:24 pkoppenb Exp $"
 __author__  = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -49,7 +49,7 @@ class DaVinciOutput(ConfigurableUser):
         # 1 get items from DstConf
         items = []
         optItems = []
-        DstConf()._defineOutputData( "DST", self.getProp("PackType"), items, optItems )
+#        DstConf()._defineOutputData( "DST", self.getProp("PackType"), items, optItems )
         # 2. merge all items.
         items.extend(optItems)
         itemsTMP = items
@@ -87,19 +87,20 @@ class DaVinciOutput(ConfigurableUser):
         """
         log.info("DaVinciOutput::writeDst "+filename)
         stream = self.streamName(filename)
-##        from Configurables import ApplicationMgr, InputCopyStream   # InputCopyStream ignores the rest on the TES
-##        writer = InputCopyStream( stream )
-        from Configurables import ApplicationMgr, OutputStream
-        writer = OutputStream( stream )
+        # InputCopyStream ignores the rest on the TES
+        from Configurables import ApplicationMgr, InputCopyStream   
+        writer = InputCopyStream( stream )
         ApplicationMgr().OutStream += [ writer ]
         writer.RequireAlgs = [ seq.getName() ]  # require the sequencer 
         writer.Output = "DATAFILE='PFN:" + filename + "' TYP='POOL_ROOTTREE' OPT='REC'"
-        writer.ItemList = [] # No mandatory items. Do not make any assumptions on contents
         writer.OptItemList = self.getProp("Items")
-###        writer.ItemList = self.getProp("Items")
+# suggetsed by Marco. Say nothing produced fewer errors
+#        writer.ItemList = [ '/Event/MC#999', '/Event/DAQ#999', '/Event/Rec#999', '/Event/Link#999',
+#                            '/Event/pSim#999' ]
+        writer.TakeOptionalFromTES = True
         writer.Preload = True
         writer.PreloadOptItems = True
-        writer.OutputLevel = 1 
+#        writer.OutputLevel = 1 
         return 
 
     ############################################################################
