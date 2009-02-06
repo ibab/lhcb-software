@@ -1,4 +1,4 @@
-// $Id: OTMuonCosmicsMatching.h,v 1.2 2008-11-24 10:01:30 janos Exp $
+// $Id: OTMuonCosmicsMatching.h,v 1.3 2009-02-06 13:17:35 janos Exp $
 #ifndef OTMUONCOSMICSMATCHING_H 
 #define OTMUONCOSMICSMATCHING_H 1
 
@@ -8,7 +8,10 @@
 #include <vector>
 
 // from Gaudi
-#include "GaudiAlg/GaudiTupleAlg.h" 
+#include "GaudiAlg/GaudiTupleAlg.h"
+
+// from Muon
+#include "MuonDet/DeMuonDetector.h"
 
 // from TrackEvent
 #include "Event/State.h"
@@ -18,6 +21,10 @@
 
 // from TrackTools
 #include "TrackInterfaces/ITrackChi2Calculator.h"
+
+namespace MatchingHelpers {
+ class MatchedTrack;
+}
 
 namespace LHCb {
  class Track;
@@ -40,15 +47,23 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  //virtual StatusCode finalize  ();    ///< Algorithm finalization
+
 
 protected:
 
+
 private:
-  StatusCode matchChi2( const LHCb::Track& tTrack, const LHCb::Track& mTrack,
+  StatusCode matchChi2( LHCb::State& tTrack, LHCb::State& mTrack,
                         const double& atZ,
                         double& chi2 ) ;
 
+  void filter( const std::vector< MatchingHelpers::MatchedTrack >& matchedTracks, 
+               LHCb::Tracks& output ) const;
+  
+  void merge( const LHCb::Track& tTrack, const LHCb::Track& muonTrack, LHCb::Track& track ) const;
+
+  void fillNTuple( const std::vector< MatchingHelpers::MatchedTrack >& matchedTracks ) const;
+    
 private:
 
   ITrackExtrapolator*   m_extrapolator         ;
@@ -59,31 +74,11 @@ private:
   std::string           m_mTracksLocation      ;
   std::string           m_tracksOutputLocation ;
   double                m_matchAtZ             ;
+  bool                  m_matchAtFirstMuonHit  ;
   double                m_matchChi2Cut         ;
   bool                  m_allCombinations      ;
-
-  /// Tuple stuff
-  std::vector< LHCb::State > m_matchTStates    ;
-  std::vector< LHCb::State > m_matchMuonStates ;
-
-  //   std::vector< double > m_matchTx              ;
-  //   std::vector< double > m_matchTxErr           ;
-  //   std::vector< double > m_matchTtx             ;
-  //   std::vector< double > m_matchTtxErr          ;
-  //   std::vector< double > m_matchTy              ;
-  //   std::vector< double > m_matchTyErr           ;
-  //   std::vector< double > m_matchTty             ;
-  //   std::vector< double > m_matchTtyErr          ;
-  //   /// M match states
-  //   std::vector< double > m_matchMx              ;
-  //   std::vector< double > m_matchMxErr           ;
-  //   std::vector< double > m_matchMtx             ;
-  //   std::vector< double > m_matchMtxErr          ;
-  //   std::vector< double > m_matchMy              ;
-  //   std::vector< double > m_matchMyErr           ;
-  //   std::vector< double > m_matchMty             ;
-  //   std::vector< double > m_matchMtyErr          ;
-  
+  bool                  m_addMuonIDs           ;
+  DeMuonDetector*       m_muonDet              ;
 };
 
 #endif // OTMUONCOSMICSMATCHING_H
