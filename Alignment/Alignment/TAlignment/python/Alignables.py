@@ -19,10 +19,14 @@ class Alignables( list ):
 
         self.m_ot         = "/dd/Structure/LHCb/AfterMagnetRegion/T/OT"
         self.m_otStations = [ "/T1", "/T2", "/T3" ]
-        self.m_otLayers   = [ "/X1layer", "/Ulayer", "/Vlayer", "/X2layer" ]
-        self.m_otQuarters = [ "/Quarter(0|2)", "/Quarter(1|3)" ]
-        self.m_otModules  = [ "/Module1", "/Module2", "/Module3", "/Module4", "/Module5",
-                              "/Module6", "/Module7", "/Module8", "/Module9" ]
+        self.m_otLayers   = [ "/X1", "/U", "/V", "/X2" ]
+        self.m_otQuarters = [ "/Q(0|2)", "/Q(1|3)" ]
+        self.m_otModules  = [ "/M1", "/M2", "/M3", "/M4", "/M5", "/M6", "/M7", "/M8", "/M9" ]
+        
+        self.m_muon            = "/dd/Structure/LHCb/DownstreamRegion/Muon"
+        self.m_mustations      = ["/M2","/M3","/M4","/M5"] ###cosmici
+        self.m_muhalfstations  = ["/M.ASide", "/M.CSide"] 
+
         if elements and self.__validElements( elements ) :    
             self.__append( elements, dofs )
         
@@ -207,15 +211,53 @@ class Alignables( list ):
                     for l in self.m_otModules :
                         elements.append( "Group : " + self.m_ot + i + j + k + l )
         self.__append( elements, dofs )    
+
+    def XOTModules( self, dofs = '' ) :
+        elements = []
+        for i in self.m_otStations :
+            ## There are four layers X1, U, V and X2
+            for j in [ '/X1', '/X2' ] :
+                ## Quarters 0 and 2 (C-Side) and Quarters 1 and 3 (A-side)
+                for k in self.m_otQuarters :
+                    ## Nine modules numbered from 1 to 9
+                    for l in self.m_otModules :
+                        elements.append( "Group : " + self.m_ot + i + j + k + l )
+        self.__append( elements, dofs )
+    
+    def StereoOTModules( self, dofs = '' ) :
+        elements = []
+        for i in self.m_otStations :
+            ## There are four layers X1, U, V and X2
+            for j in [ '/U', '/V' ] :
+                ## Quarters 0 and 2 (C-Side) and Quarters 1 and 3 (A-side)
+                for k in self.m_otQuarters :
+                    ## Nine modules numbered from 1 to 9
+                    for l in self.m_otModules :
+                        elements.append( "Group : " + self.m_ot + i + j + k + l )
+        self.__append( elements, dofs )
         
     def OTCFramesCSide( self, dofs = "" ) :
         elements = []
         for i in self.m_otStations :
             station = self.m_ot + i
             ## C-side X1 and U
-            elements.append( "Group : " + station + "/(X1|U)layer" + self.m_otQuarters[0] + "/Module." )
+            # elements.append( "Group : " + station + "/(X1|U)" + self.m_otQuarters[0] + "/M." )
+            elements.append( i.strip( '/' ) + "X1UCSide : " + station + "/(X1|U)" + self.m_otQuarters[0] )
             ## C-side V and X2
-            elements.append( "Group : " + station + "/(V|X2)layer" + self.m_otQuarters[0] + "/Module." )
+            # elements.append( "Group : " + station + "/(V|X2)" + self.m_otQuarters[0] + "/M." )
+            elements.append( i.strip( '/' ) + "VX2CSide : " + station + "/(V|X2)" + self.m_otQuarters[0] )
+        self.__append( elements, dofs )
+
+    def OTCFramesASide( self, dofs = "" ) :
+        elements = []
+        for i in self.m_otStations :
+            station = self.m_ot + i
+            ## A-side X1 and U
+            # elements.append( "Group : " + station + "/(X1|U)" + self.m_otQuarters[1] + "/M." )
+            elements.append( i.strip( '/' ) + "X1UASide : " + station + "/(X1|U)" + self.m_otQuarters[1] )
+            ## A-side V and X2
+            # elements.append( "Group : " + station + "/(V|X2)" + self.m_otQuarters[1] + "/M." )
+            elements.append( i.strip( '/' ) + "VX2ASide : " + station + "/(V|X2)" + self.m_otQuarters[1] )
         self.__append( elements, dofs )
 
     def OTLayersCSide( self, dofs = "" ) :
@@ -224,7 +266,7 @@ class Alignables( list ):
             station = self.m_ot + i
             for j in self.m_otLayers :
                 ## C-side layers
-                elements.append( "Group : " + station + j + self.m_otQuarters[0] + "/Module." )
+                elements.append( "Group : " + station + j + self.m_otQuarters[0] + "/M." )
         self.__append( elements, dofs )
         
     def OTLayersASide( self, dofs = "" ) :
@@ -233,17 +275,16 @@ class Alignables( list ):
             station = self.m_ot + i
             for j in self.m_otLayers :
                 ## C-side layers
-                elements.append( "Group : " + station + j + self.m_otQuarters[1] + "/Module." )
+                elements.append( "Group : " + station + j + self.m_otQuarters[1] + "/M." )
         self.__append( elements, dofs )
-        
-    def OTCFramesASide( self, dofs = "" ) :
+
+    def OTLayersPP( self, dofs = "" ) :
         elements = []
         for i in self.m_otStations :
             station = self.m_ot + i
-            ## A-side X1 and U
-            elements.append( "Group : " + station + "/(X1|U)layer" + self.m_otQuarters[1] + "/Module." )
-            ## A-side V and X2
-            elements.append( "Group : " + station + "/(V|X2)layer" + self.m_otQuarters[1] + "/Module." )
+            for j in self.m_otLayers :
+                ## C-side layers
+                elements.append( "Group : " + station + j + "/Q(0|2|1|3)" + "/M." )
         self.__append( elements, dofs )
 
     ## OTHER ##############################################################################
@@ -251,3 +292,15 @@ class Alignables( list ):
         self.ITLadders( dofs )
         self.OTModules( dofs )
         
+
+    def MuonHalfStationsC( self, dofs = "" ) :
+        elements = []
+        for i in self.m_mustations :
+            elements.append( self.m_muon +  i + self.m_muhalfstations[1] )
+        self.__append( elements, dofs )
+
+    def MuonHalfStationsA( self, dofs = "" ) :
+        elements = []
+        for i in self.m_mustations :
+            elements.append( self.m_muon +  i + self.m_muhalfstations[0] )
+        self.__append( elements, dofs ) 
