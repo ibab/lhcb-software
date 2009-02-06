@@ -1,8 +1,14 @@
-!$Id: release.notes,v 1.284 2009-02-05 15:53:51 jpalac Exp $
+!$Id: release.notes,v 1.285 2009-02-06 16:07:21 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2009-02-06 - Juan PALACIOS
+ - DVAlgorithm
+  . Add property "ReFitPVs" controlling whether PVs are re-fitted when the
+    "best" PV for a particle is asked for.
+  . Remove  Particle2Vertex::LightTable calculatePVRelations(const LHCb::Particle* p) const method.
 
 ! 2009-02-05 - Juan PALACIOS
  - Kernel/IPhysDesktop.h
