@@ -1,4 +1,4 @@
-// $Id: HltLine.cpp,v 1.10 2009-01-14 21:04:37 graven Exp $
+// $Id: HltLine.cpp,v 1.11 2009-02-06 21:56:06 graven Exp $
 // Include files
 #include "HltLine.h"
 
@@ -149,6 +149,30 @@ StatusCode HltLine::initialize() {
   //   the stages...
   stringKey key(m_decision);
   m_selection = dataSvc().selection(key,this);
+
+  //== pick up (recursively!) our sub algorithms and their depth count
+ std::list<std::pair<Algorithm*,unsigned> > m_subAlgo;
+ m_subAlgo.push_back( std::make_pair(this,0));
+ std::list<std::pair<Algorithm*,unsigned> >::iterator i = m_subAlgo.begin();
+ while ( i != m_subAlgo.end() ) {
+    std::vector<Algorithm*> *subs = i->first->subAlgorithms();
+    if (!subs->empty()) {
+        unsigned depth = i->second+1;
+        std::list<std::pair<Algorithm*,unsigned> >::iterator j = i; 
+        ++j;
+        for (std::vector<Algorithm*>::const_iterator k = subs->begin();k!=subs->end();++k) m_subAlgo.insert(j, std::make_pair( *k, depth ) );
+    }
+    ++i;
+ }
+ m_subAlgo.pop_front(); // remove ourselves...
+ debug() << " dumping sub algorithms: " << endmsg;
+ for (std::list< std::pair<Algorithm*,unsigned> >::const_iterator i = m_subAlgo.begin(); i!= m_subAlgo.end();++i) {
+    debug() << std::string(3+3*i->second,' ') << i->first->name() << endmsg;
+ }
+ //NOTE: when checking filterPassed: a sequencer can be 'true' even if some member is false...
+ //ANSWER: in case positive, we skip checking all algos with depth count > current one...
+ //        in case negative, we descend, and repeat there, or, if next entry has no 
+ //        depth count larger, we fill bin at current position..
 
   //== Create the monitoring histogram
   m_errorHisto = book1D(name()+" error",name()+" error",-0.5,7.5,8);

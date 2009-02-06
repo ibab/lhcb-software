@@ -1,4 +1,4 @@
-// $Id: HltLine.h,v 1.7 2009-01-06 12:18:26 graven Exp $
+// $Id: HltLine.h,v 1.8 2009-02-06 21:56:06 graven Exp $
 #ifndef HLTLINE_H
 #define HLTLINE_H 1
 
@@ -122,6 +122,7 @@ private:
 
 
   boost::array<HltStage*,nStages> m_stages; ///< List of algorithms to process.
+  std::list<std::pair<Algorithm*,unsigned> > m_subAlgo; ///< list of subalgorithms and their 'depth'
   ISequencerTimerTool* m_timerTool;      ///< Pointer to the timer tool
   IJobOptionsSvc* m_jos;                 ///< Pointer to job options service
   IAlgManager* m_algMgr;                 ///< Pointer to algorithm manager
