@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.h,v 1.34 2009-02-05 15:53:20 jpalac Exp $ 
+// $Id: DVAlgorithm.h,v 1.35 2009-02-06 16:07:33 jpalac Exp $ 
 // ============================================================================
 #ifndef DAVINCIKERNEL_DVALGORITHM_H
 #define DAVINCIKERNEL_DVALGORITHM_H 1
@@ -157,30 +157,21 @@ public:
   /**
    *
    * Calculate the best related PV for a particle and return it to the user
-   * Uses the container of PVs obtained from method primaryVertices()
+   * If property "ReFitPVs" is set to true, this triggers a re-fit of the PVs
+   * after removing tracks coming from the particle in question. If not, then 
+   * it uses the container of PVs obtained from method primaryVertices().
    * Has no side-effects. Information is returned to user and not stored 
    * anywhere
    *
    * @author Juan Palacios juan.palacios@nikhef.nl
    * @param p LHCb::Particle to be related
-   * @return pointer to best related LHCb::VertexBase 
+   * @param vertex RecVertex copy of the related PV
+   * @return StatusCode FAILURE if something went wrong. Resulting vertex should be ignored.
    *
    **/
-  const LHCb::VertexBase* calculateRelatedPV(const LHCb::Particle* p) const;
+  StatusCode calculateRelatedPV(const LHCb::Particle* p,
+                                LHCb::RecVertex& vertex) const;
 
-  /**
-   *
-   * Calculate the weighter PV relations for a particle and return it to the 
-   * user. Uses the container of PVs obtained from method primaryVertices()
-   * Has no side-effects. Information is returned to user and not stored 
-   * anywhere
-   *
-   * @author Juan Palacios juan.palacios@nikhef.nl
-   * @param p LHCb::Particle to be related
-   * @return weighted P->PVs relations table  
-   *
-   **/
-  Particle2Vertex::LightTable DVAlgorithm::calculatePVRelations(const LHCb::Particle* p) const;
 
   /**
    *
@@ -613,6 +604,9 @@ private:
   int m_countFilterWrite ;
   /// Number of passing events
   int m_countFilterPassed ;
+
+  /// Re-fit PVs
+  bool m_refitPVs;
   
   /// Switch PreloadTools to false no to preload any tools.
   /// This will have the effect that they will be loaded on demand, when needed,

@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.39 2009-02-05 15:53:20 jpalac Exp $
+// $Id: DVAlgorithm.cpp,v 1.40 2009-02-06 16:07:33 jpalac Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -63,14 +63,15 @@ DVAlgorithm::DVAlgorithm
   , m_checkOverlap          ( 0 )
   , m_taggingToolName       ( "BTaggingTool" )
   , m_taggingTool           ( 0 )
-  , m_descendants           (0)
-  , m_descendantsName         ("ParticleDescendants")
-  , m_writeSelResultName      ( "WriteSelResult" )
-  , m_writeSelResult          ( 0 )
-  , m_ppSvc                  (0)
-  , m_setFilterCalled          (false)
-  , m_countFilterWrite        (0)
-  , m_countFilterPassed       (0)
+  , m_descendants           ( 0 )
+  , m_descendantsName       ("ParticleDescendants")
+  , m_writeSelResultName    ( "WriteSelResult" )
+  , m_writeSelResult        ( 0 )
+  , m_ppSvc                 ( 0 )
+  , m_setFilterCalled       ( false )
+  , m_countFilterWrite      ( 0 )
+  , m_countFilterPassed     ( 0 )
+  , m_refitPVs              ( true )
 {
   // 
   m_vertexFitNames [ "Offline"       ] = "OfflineVertexFitter" ;
@@ -94,6 +95,7 @@ DVAlgorithm::DVAlgorithm
   // 
   declareProperty ( "FilterCriteria"    , m_criteriaNames     ) ; // empty! 
   // 
+  declareProperty ( "ReFitPVs"    , m_refitPVs     ) ; 
   m_particleCombinerNames [ ""              ] = "OfflineVertexFitter" ;
   m_particleCombinerNames [ "Offline"       ] = "OfflineVertexFitter" ;
   m_particleCombinerNames [ "Trigger"       ] = "TrgVertexFitter"     ;
@@ -306,25 +308,28 @@ void DVAlgorithm::setFilterPassed  (  bool    state  )
   return;
 }
 // ============================================================================
-const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p) const
+StatusCode DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p,
+                                           LHCb::RecVertex& vertex) const
 {
   const IRelatedPVFinder* finder = this->relatedPVFinder();
   const LHCb::RecVertex::Container* PVs = this->primaryVertices();
-  if (0!=finder && 0!= PVs) {
-    const Particle2Vertex::LightTable rel = 
-      finder->relatedPVs(p, *PVs);
-    return rel.relations(p).back().to();
+  if (0==finder || 0==PVs) return Error("NULL IRelatedPVFinder or primary vertex container", StatusCode::FAILURE, 1 ) ;
+  // re-fit vertices, then look for the best one.
+  if (m_refitPVs) {
+    const IPVReFitter* fitter = primaryVertexReFitter();
+    LHCb::RecVertex::ConstVector reFittedPVs;
+    for (LHCb::RecVertex::Container::const_iterator iPV = PVs->begin();
+         iPV != PVs->end(); ++iPV) {
+      LHCb::RecVertex reFittedPV = LHCb::RecVertex(**iPV);
+      if ( (fitter->remove(p, &reFittedPV)).isSuccess() ) {
+        reFittedPVs.push_back(&reFittedPV); 
+      }
+    }
+    vertex= *dynamic_cast<LHCb::RecVertex*>(finder->relatedPVs(p, reFittedPVs).relations(p).back().to());
+  } else {
+    vertex= *dynamic_cast<LHCb::RecVertex*>(finder->relatedPVs(p, *PVs).relations(p).back().to());
   }
-  return 0;
-    
-}
-// ============================================================================
-Particle2Vertex::LightTable DVAlgorithm::calculatePVRelations(const LHCb::Particle* p) const
-{
-  const IRelatedPVFinder* finder = this->relatedPVFinder();
-  const LHCb::RecVertex::Container* PVs = this->primaryVertices();
-  return (0!=finder && 0!= PVs) ? finder->relatedPVs(p, *PVs) : Particle2Vertex::LightTable();
-    
+  return StatusCode::SUCCESS;
 }
 // ============================================================================
 StatusCode DVAlgorithm::fillSelResult () {
