@@ -1,4 +1,4 @@
-// $Id: ReadPackedDst.cpp,v 1.2 2009-02-04 17:24:39 marcocle Exp $
+// $Id: ReadPackedDst.cpp,v 1.3 2009-02-06 11:01:19 marcocle Exp $
 // Include files
 
 // from Gaudi
@@ -43,9 +43,9 @@ ReadPackedDst::ReadPackedDst( const std::string& name,
 StatusCode ReadPackedDst::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
   if (sc.isFailure()) return sc;
-  
+
   // Pass the Postfix property to the tool
-  Gaudi::Utils::setProperty(&(*m_odinDecoder), "ODINLocation", LHCb::ODINLocation::Default + m_postfix);
+  return Gaudi::Utils::setProperty(&(*m_odinDecoder), "ODINLocation", LHCb::ODINLocation::Default + m_postfix);
 }
 
 //=============================================================================
@@ -71,7 +71,7 @@ StatusCode ReadPackedDst::execute() {
   const std::vector<LHCb::RawBank*>& adds = dstEvent->banks( LHCb::RawBank::DstAddress );
   for (std::vector<LHCb::RawBank*>::const_iterator itA = adds.begin(); adds.end() != itA; ++itA ) {
     unsigned int* iptr  = (*itA)->data();
-    debug() << "Address bank: Class ID " << *iptr++ << " ipar[0] " << *iptr++ << " ipar[1] " << *iptr++ 
+    debug() << "Address bank: Class ID " << *iptr++ << " ipar[0] " << *iptr++ << " ipar[1] " << *iptr++
             << " svcType " << *iptr++;
     char* cptr = (char*) iptr;
     char* dptr = cptr + strlen(cptr) + 1;
