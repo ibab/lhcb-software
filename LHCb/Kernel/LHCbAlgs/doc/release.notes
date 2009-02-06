@@ -4,6 +4,10 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2009-02-05 - Marco Clemencic
+ - Relaxed the check on the ODIN bank size for version < 3 to take into account
+   an old bug in BooleInit.
+
 ! 2009-02-04 - Marco Clemencic
  - Using the extended RunChangeIncident (DetDesc) in OdinTimeDecoder to pass
    the run number.

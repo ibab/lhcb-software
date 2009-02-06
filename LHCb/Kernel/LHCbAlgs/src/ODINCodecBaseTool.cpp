@@ -98,7 +98,7 @@ LHCb::ODIN* ODINCodecBaseTool::i_decode(const LHCb::RawBank* bank, LHCb::ODIN* o
   // Validate bank size
   const size_t size = bank->size();
   if ( ((version >= 3) && size != bank_size) ||
-       ((version < 3) && size != bank_size_v2) ) {
+       ((version < 3) && size < bank_size_v2) ) { // relaxed check to take into account a bug in BooleInit
     std::ostringstream msg;
     msg << "Wrong ODIN bank size " << size << ", expected ";
     if (version >= 3) { msg << bank_size; }
