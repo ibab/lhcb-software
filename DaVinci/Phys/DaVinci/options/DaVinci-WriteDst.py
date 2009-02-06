@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DaVinci-WriteDst.py,v 1.3 2009-02-06 17:34:24 pkoppenb Exp $
+# $Id: DaVinci-WriteDst.py,v 1.4 2009-02-06 18:15:02 pkoppenb Exp $
 #
 # Options for a DaVinci job creating DSTs
 #
@@ -11,7 +11,7 @@
 # @date 2009-02-03
 #
 ##############################################################################
-from Configurables import DaVinci
+from Configurables import DaVinci, DaVinciOutput
 ##############################################################################
 from Configurables import GaudiSequencer, FilterDesktop, PhysDesktop, DeterministicPrescaler, PrintDecayTree
 #
@@ -42,12 +42,12 @@ for i in MassRanges :
     p.addTool(PhysDesktop())
     p.PhysDesktop.InputLocations = [ "Jpsi_"+name ]
     seq.Members += [ d, j, p ] 
-    DaVinci().DstFiles[ "Jpsi_"+name+".dst" ] = seq
-    DaVinci().Items += [ "/Event/Phys/Jpsi_"+name+"/Particles#1" ]
-    DaVinci().Items += [ "/Event/Phys/Jpsi_"+name+"/Vertices#1" ]
-    DaVinci().Items += [ "/Event/Phys/Jpsi_"+name+"/Particle2VertexRelations#1" ]
+    DaVinciOutput().DstFiles[ "Jpsi_"+name+".dst" ] = seq
+    DaVinciOutput().Items += [ "/Event/Phys/Jpsi_"+name+"#2" ]
 ##############################################################################
+# get write out sequence. Pass it to DaVinci()
 #
+seq =  DaVinciOutput().dstSequence()
 #
 ##############################################################################
 DaVinci().EvtMax = 500
@@ -59,3 +59,4 @@ DaVinci().DataType = "2008" # Default is "DC06"
 # DaVinci().MainOptions  = "$DAVINCIROOT/options/DaVinci.py" # Default is ""
 ##############################################################################
 # DaVinci().DstFiles = { "Test.dst" : dstSeq }
+DaVinci().UserAlgorithms = [ seq ]

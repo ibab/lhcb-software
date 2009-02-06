@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.305 2009-02-06 17:34:24 pkoppenb Exp $
+! $Id: release.notes,v 1.306 2009-02-06 18:15:02 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,10 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-02-06 - Patrick Koppenburg
+ - A much shorter version of the same thing. Now DaVinciOutput() is outside of
+   DaVinci().
 
 ! 2009-02-06 - Patrick Koppenburg
  - Now it works. But requires a patch of GaudiSvc.
