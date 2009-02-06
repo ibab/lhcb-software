@@ -1,7 +1,7 @@
 """
 Output for DaVinci
 """
-__version__ = "$Id: DaVinciOutput.py,v 1.3 2009-02-06 17:34:24 pkoppenb Exp $"
+__version__ = "$Id: DaVinciOutput.py,v 1.4 2009-02-06 18:15:02 pkoppenb Exp $"
 __author__  = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -9,12 +9,19 @@ from Configurables import ( DstConf )
 
 class DaVinciOutput(ConfigurableUser):
     __slots__ = {
-         "Items"              : []            # Items to write to DST
-    ,    "RemovedItems"       : [ "Vertex/V0"]            # Items not to write to DST
-    ,    "PackType"           : "NONE"        # Packing type
+         "DstFiles"           : {}            # Name and sequence of output files
+       , "Items"              : []            # Additional items to write to DST
+         }
+    
+    _propertyDocDct = {
+        "DstFiles"           : """ Write name of output Dst file and sequence to be run
+                                   e.g. DaVinci().DstFiles = { 'Name1.dst' : sequence1 ,
+                                                               'Name2.dst' : sequence2 }
+                                   where sequenceX are GaudiSequencers"""
+       , "Items"              : """ Additional items to write to DST.
+                                     Example = [ '/Event/Phys/StdUnbiasedJpsi2MuMu#2' ]
+                                     Note the #2 !"""
         }
-
-    _propertyDocDct = { }
     __used_configurables__ = [ DstConf ]
     KnownDstNames = [ "dst", "DST" ]
 
@@ -30,54 +37,14 @@ class DaVinciOutput(ConfigurableUser):
         """
         f1 = filename.find('.')
         if (f1<=0):
-            raise TypeError( "Invalid finename '%s'"%filename )
+            raise TypeError( "Invalid filename '%s'"%filename )
         head = filename[:f1]
         tail = filename[f1+1:]
         if ( tail not in self.KnownDstNames ):
             log.warning(filename+" has unexpected extension ``"+tail+"''. Expecting DST or dst.")
         return "DST"+head
     
-    ############################################################################
-    # Reshuffle Items
-    def defineItems(self):
-        """
-        Define TES locations to be put on the DST
-        Ensure backward compatibility with previous versions of Brunel
-        What works is to declare all mandatory items in the Dst as
-        optional. If they are there they get copied.
-        """
-        # 1 get items from DstConf
-        items = []
-        optItems = []
-#        DstConf()._defineOutputData( "DST", self.getProp("PackType"), items, optItems )
-        # 2. merge all items.
-        items.extend(optItems)
-        itemsTMP = items
-        # 3. remove to be removed items
-        for r in self.getProp("RemovedItems") :
-            for i in itemsTMP :
-                 if (i.find(r)>=0):
-                    log.info("Removing "+i+" from Items")
-                    items.remove(i)
-        # 4. add user items
-        items.extend(self.getProp("Items"))
-        print "# will write", items
-        self.setProp("Items",items)
-        
-    ############################################################################
-    # Configure Writer
-    def configureWriter(self):
-        """
-        Configure Writer:
-        """
-        #
-        # This is hack : DstWriter wants a sequencer to be defined,
-        # even if I don't want it
-        #
-        if (self.getProp("PackType")!="NONE"):  
-            DstConf().PackSequencer = GaudiSequencer("PackDST")
-        self.defineItems()
-    
+            
     ############################################################################
     # Dst writing
     #
@@ -103,14 +70,21 @@ class DaVinciOutput(ConfigurableUser):
 #        writer.OutputLevel = 1 
         return 
 
-    ############################################################################
-    # ETC writing
+    ################################################################################
+    # Dst and ETC output sequence
     #
-    def writeETC(self,filename,seq):
+    def dstSequence(self):
         """
-        Write out a ETC using a sequence
+        Output Sequence
         """
-        log.info("DaVinciOutput::writeETC "+filename)
-        log.warning("DaVinciOutput::writeETC not yet implemented")
+        log.info("Configuring DST and ETC")
+        if (len( self.getProp("DstFiles"))):
+            self.setProp("Items", self.getProp("Items"))
+        from Configurables import GaudiSequencer
+        seq = GaudiSequencer("DstWriters")
+        seq.IgnoreFilterPassed = True
+        for f,s in self.getProp("DstFiles").iteritems():
+            log.info("Will configure DST output file "+f)
+            self.writeDst(f,s)
+            seq.Members += [ s ]
         return seq
-

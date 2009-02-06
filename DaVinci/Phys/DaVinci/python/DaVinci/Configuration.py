@@ -1,13 +1,13 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.45 2009-02-05 19:02:48 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.46 2009-02-06 18:15:02 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 from Configurables import GaudiSequencer
-from Configurables import ( LHCbConfigurableUser, LHCbApp, PhysConf, AnalysisConf, HltConf, DstConf, DaVinciOutput )
+from Configurables import ( LHCbConfigurableUser, LHCbApp, PhysConf, AnalysisConf, HltConf, DstConf )
 import GaudiKernel.ProcessJobOptions
 
 class DaVinci(LHCbConfigurableUser) :
@@ -18,7 +18,6 @@ class DaVinci(LHCbConfigurableUser) :
        , "SkipEvents"         :   0           # Number of events to skip at beginning for file
        , "PrintFreq"          : 100           # The frequency at which to print event numbers
        , "DataType"           : 'DC06'        # Data type, can be ['DC06','2008'] Forwarded to PhysConf
-#       , "PackType"           : "TES"         # Type of packing for the DST: ['NONE','TES','MDF']
        , "Simulation"         : True          # set to True to use SimCond. Forwarded to PhysConf
        , "DDDBtag"            : "default"     # Tag for DDDB. Default as set in DDDBConf for DataType
        , "CondDBtag"          : "default"     # Tag for CondDB. Default as set in DDDBConf for DataType
@@ -28,12 +27,9 @@ class DaVinci(LHCbConfigurableUser) :
          # Output
        , "HistogramFile"      : ""            # Write name of output Histogram file
        , "TupleFile"          : ""            # Write name of output Tuple file
-       , "ETCFiles"           : {}            # Name and sequence of output files
-       , "DstFiles"           : {}            # Name and sequence of output files
-       , "Items"              : []            # Additional items to write to DST
-       , "WriteOutSequence"   : []            # Sequence of algorithms to run before writing out """
+       , "ETCFile"            : ""            # Name of ETC file
          # Monitoring
-       , "MoniSequence"       : [ ]           # Add your monitors here
+       , "MoniSequence"       : []            # Add your monitors here
          # DaVinci Options
        , "MainOptions"        : ""            # Main option file to execute
        , "UserAlgorithms"     : []            # User algorithms to run.
@@ -59,13 +55,7 @@ class DaVinci(LHCbConfigurableUser) :
        , "Input"              : """ Input data. Can also be passed as a second option file. """
        , "HistogramFile"      : """ Write name of output Histogram file """
        , "TupleFile"          : """ Write name of output Tuple file """
-       , "ETCFiles"           : """ Write name of output ETC file and sequence to be run. See DstFiles."""
-       , "DstFiles"           : """ Write name of output Dst file and sequence to be run
-                                    e.g. DaVinci().DstFiles = { "Name1.dst" : sequence1 ,
-                                                                "Name2.dst" : sequence2 }
-                                    where sequenceX are GaudiSequencers"""
-       , "Items"              : """ Additional items to write to DST. Example = [ '/Event/Phys/StdUnbiasedJpsi2MuMu#1' ]"""
-       , "MoniSequence"       : """ Add your monitors here """
+       , "ETCFile"            : """ Write name of output ETC file."""
        , "MainOptions"        : """ Main option file to execute """
        , "UserAlgorithms"     : """ User algorithms to run. """
        , "RedoMCLinks"        : """ On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association. """
@@ -77,7 +67,7 @@ class DaVinci(LHCbConfigurableUser) :
        , "Hlt2IgnoreHlt1Decision" : """ Run Hlt2 even if Hlt1 failed """
          }
 
-    __used_configurables__ = [ LHCbApp, PhysConf, AnalysisConf, HltConf, DstConf, DaVinciOutput ]
+    __used_configurables__ = [ LHCbApp, PhysConf, AnalysisConf, HltConf, DstConf ]
 
     ## Known monitoring sequences run by default
     KnownMonitors        = []    
@@ -254,33 +244,6 @@ class DaVinci(LHCbConfigurableUser) :
             NTupleSvc().Output = [ tuple ]
             NTupleSvc().OutputLevel = 1 
 
-################################################################################
-# Dst and ETC output sequence
-#
-    def outputSequence(self):
-        """
-        Output Sequence
-        """
-        if (len( self.getProp("DstFiles"))+len( self.getProp("ETCFiles"))>0) :
-            log.info("Configuring DST and ETC")
-            d = DaVinciOutput()
-            if (len( self.getProp("DstFiles"))):
-                d.setProp("Items", self.getProp("Items"))
-                d.configureWriter()
-            from Configurables import GaudiSequencer
-            seq = GaudiSequencer("DstWriters")
-            seq.IgnoreFilterPassed = True
-            for f,s in self.getProp("DstFiles").iteritems():
-                log.info("Will configure DST output file "+f)
-                d.writeDst(f,s)
-                seq.Members += [ s ]
-            for f,s in self.getProp("ETCFiles").iteritems():
-                log.info("Will configure ETC output file "+f)
-                d.writeETC(f,s)
-                seq.Members += [ s ]
-            ApplicationMgr().TopAlg += [ seq ]
-            DstConf().Simulation = self.getProp("Simulation")
-#            DstConf().PackType = self.getProp("PackType")
 
 ################################################################################
 # Main sequence
@@ -339,5 +302,3 @@ class DaVinci(LHCbConfigurableUser) :
         self.mainSequence()
         # monitoring
         self.moniSequence()
-        # output
-        self.outputSequence()

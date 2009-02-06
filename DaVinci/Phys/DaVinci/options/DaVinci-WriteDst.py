@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DaVinci-WriteDst.py,v 1.4 2009-02-06 18:15:02 pkoppenb Exp $
+# $Id: DaVinci-WriteDst.py,v 1.5 2009-02-06 18:16:11 pkoppenb Exp $
 #
 # Options for a DaVinci job creating DSTs
 #
@@ -48,6 +48,7 @@ for i in MassRanges :
 # get write out sequence. Pass it to DaVinci()
 #
 seq =  DaVinciOutput().dstSequence()
+DaVinci().UserAlgorithms = [ seq ]
 #
 ##############################################################################
 DaVinci().EvtMax = 500
@@ -58,5 +59,3 @@ DaVinci().DataType = "2008" # Default is "DC06"
 # DaVinci().Input = []
 # DaVinci().MainOptions  = "$DAVINCIROOT/options/DaVinci.py" # Default is ""
 ##############################################################################
-# DaVinci().DstFiles = { "Test.dst" : dstSeq }
-DaVinci().UserAlgorithms = [ seq ]
