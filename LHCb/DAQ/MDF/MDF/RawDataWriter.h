@@ -1,4 +1,4 @@
-// $Id: RawDataWriter.h,v 1.8 2008-05-26 06:16:46 cattanem Exp $
+// $Id: RawDataWriter.h,v 1.9 2009-02-06 09:37:57 frankb Exp $
 //  ====================================================================
 //  RawDataWriter.h
 //  --------------------------------------------------------------------
@@ -22,6 +22,7 @@ namespace Gaudi {  class IIODataManager;     }
 namespace LHCb    {
 
   class MDFHeader;
+  class RawDataConnection;
 
   /** @class RawDataFile
     *

@@ -1,4 +1,4 @@
-// $Id: RawDataWriter.cpp,v 1.13 2008-04-29 11:49:21 cattanem Exp $
+// $Id: RawDataWriter.cpp,v 1.14 2009-02-06 09:37:57 frankb Exp $
 //  ====================================================================
 //  RawDataWriter.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,6 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiUtils/IIODataManager.h"
 #include "MDF/RawDataConnection.h"
@@ -16,8 +15,6 @@
 #include "TMD5.h"
 #include <ctime>
 #include <limits>
-
-DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,RawDataWriter)
 
 enum { KBYTE=1024, MBYTE=1048576, GBYTE=1073741824 };
 

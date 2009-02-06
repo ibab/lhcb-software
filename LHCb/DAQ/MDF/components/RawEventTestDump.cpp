@@ -1,4 +1,4 @@
-// $Id: RawEventTestDump.cpp,v 1.11 2008-05-06 12:22:28 frankm Exp $
+// $Id: RawEventTestDump.cpp,v 1.1 2009-02-06 09:37:57 frankb Exp $
 // Include files from Gaudi
 #include "GaudiKernel/Algorithm.h" 
 #include "GaudiKernel/IDataProviderSvc.h" 

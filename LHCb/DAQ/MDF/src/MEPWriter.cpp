@@ -1,4 +1,4 @@
-// $Id: MEPWriter.cpp,v 1.11 2008-04-28 17:19:34 frankb Exp $
+// $Id: MEPWriter.cpp,v 1.12 2009-02-06 09:37:57 frankb Exp $
 //  ====================================================================
 //  MEPWriter.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,6 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiUtils/IIODataManager.h"
@@ -14,8 +13,6 @@
 #include "MDF/MEPWriter.h"
 #include "MDF/MEPEvent.h"
 #include "Event/RawEvent.h"
-
-DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,MEPWriter)
 
 using namespace LHCb;
 

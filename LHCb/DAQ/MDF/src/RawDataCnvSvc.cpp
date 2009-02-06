@@ -1,4 +1,4 @@
-// $Id: RawDataCnvSvc.cpp,v 1.33 2009-01-26 15:37:01 frankb Exp $
+// $Id: RawDataCnvSvc.cpp,v 1.34 2009-02-06 09:37:57 frankb Exp $
 //  ====================================================================
 //  RawDataCnvSvc.cpp
 //  --------------------------------------------------------------------
@@ -13,7 +13,6 @@
 #include "MDF/MDFHeader.h"
 
 #include "GaudiUtils/IIODataManager.h"
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiKernel/IPersistencySvc.h"
@@ -47,8 +46,6 @@ namespace {
 }
 
 static string RAWDATA_INPUT = "RAW";
-
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,RawDataCnvSvc)
 
 // Initializing constructor
 RawDataCnvSvc::RawDataCnvSvc(CSTR nam, ISvcLocator* loc, long typ) 

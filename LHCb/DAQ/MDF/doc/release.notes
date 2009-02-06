@@ -6,6 +6,12 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+! 2009-02-06  Markus Frank
+ - Split the MDF library into a pure linker library (MDF) and a components
+   library (MDFComponents). The presence of factories in the components 
+   library created too much trouble since the stupid rootmap generation
+   just takes every factory it can find in this world.
+
 ! 2009-01-23  Markus Frank
  - Add status code checks in MDFWriter
 

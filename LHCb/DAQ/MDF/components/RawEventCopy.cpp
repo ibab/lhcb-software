@@ -1,4 +1,4 @@
-// $Id: RawEventCopy.cpp,v 1.5 2008-01-08 15:20:37 cattanem Exp $
+// $Id: RawEventCopy.cpp,v 1.1 2009-02-06 09:37:57 frankb Exp $
 // Include files from Gaudi
 #include "GaudiKernel/Algorithm.h" 
 #include "GaudiKernel/IDataProviderSvc.h" 

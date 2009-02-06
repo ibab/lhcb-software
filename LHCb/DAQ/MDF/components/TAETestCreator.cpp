@@ -1,4 +1,4 @@
-// $Id: TAETestCreator.cpp,v 1.8 2008-04-09 15:16:43 ocallot Exp $
+// $Id: TAETestCreator.cpp,v 1.1 2009-02-06 09:37:57 frankb Exp $
 // Include files from Gaudi
 #include "GaudiKernel/Algorithm.h" 
 #include "GaudiKernel/SmartDataPtr.h" 

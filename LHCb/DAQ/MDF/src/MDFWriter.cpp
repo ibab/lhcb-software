@@ -1,4 +1,4 @@
-// $Id: MDFWriter.cpp,v 1.28 2009-01-28 19:59:51 frankb Exp $
+// $Id: MDFWriter.cpp,v 1.29 2009-02-06 09:37:57 frankb Exp $
 //  ====================================================================
 //  MDFWriter.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,6 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiUtils/IIODataManager.h"
@@ -18,8 +17,6 @@
 #include "TMD5.h"
 #include <iomanip>
 #include <cstring> // For memcpy with gcc 4.3
-
-DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,MDFWriter)
 
 using namespace LHCb;
 using namespace Gaudi;

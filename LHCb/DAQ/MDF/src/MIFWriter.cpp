@@ -1,4 +1,4 @@
-// $Id: MIFWriter.cpp,v 1.10 2008-02-05 16:44:18 frankb Exp $
+// $Id: MIFWriter.cpp,v 1.11 2009-02-06 09:37:57 frankb Exp $
 //  ====================================================================
 //  MIFWriter.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,6 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/SmartDataPtr.h"
@@ -19,7 +18,6 @@
 #include "MDF/MIFHeader.h"
 #include "Event/RawEvent.h"
 #include <cerrno>
-DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,MIFWriter)
 
 using namespace LHCb;
 using namespace Gaudi;
