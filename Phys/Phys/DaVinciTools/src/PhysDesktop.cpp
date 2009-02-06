@@ -264,6 +264,16 @@ const LHCb::Vertex::ConstVector& PhysDesktop::secondaryVertices() const {
   return m_secVerts;
 }
 //============================================================================
+const Particle2Vertex::LightTable& PhysDesktop::Particle2VertexRelations() const
+{
+  return i_p2PVTable();
+}
+//============================================================================
+Particle2Vertex::LightTable& PhysDesktop::Particle2VertexRelations()
+{
+  return i_p2PVTable();
+}
+//============================================================================
 // Clean local data, called by DVAlgorithm
 //============================================================================
 StatusCode PhysDesktop::cleanDesktop(){
@@ -453,6 +463,8 @@ void PhysDesktop::saveParticles(const LHCb::Particle::ConstVector& pToSave) cons
                                         << " total particles in desktop " << endmsg;
 
   put(particlesToSave,location);
+  // now save re-fitted vertices
+  saveRefittedPVs(m_refitPVs);
   // now save relations table
   saveTable(pToSave);
  
@@ -473,6 +485,28 @@ void PhysDesktop::saveVertices(const LHCb::Vertex::ConstVector& vToSave) const
 
   if (msgLevel(MSG::VERBOSE)) verbose() << "Saving " << verticesToSave->size()
                                         << " new vertices in " << location << " from " << vToSave.size()
+                                        << " vertices in desktop " << endmsg;
+
+  put(verticesToSave,location);
+  
+}
+//=============================================================================
+void PhysDesktop::saveRefittedPVs(const LHCb::RecVertex::ConstVector& vToSave) const
+{
+  LHCb::RecVertices* verticesToSave = new LHCb::RecVertex::Container();
+  for(rv_iter iver = vToSave.begin(); 
+      iver != vToSave.end(); ++iver ) {
+    // Check if this was already in a Gaudi container (hence in TES)
+    if( !inTES(*iver) ) {
+      verticesToSave->insert(const_cast<LHCb::RecVertex*>(*iver)); // insert non-const
+    }
+  }
+
+  const std::string location(m_outputLocn+"/_RefitPVs");
+
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Saving " << verticesToSave->size()
+                                        << " new vertices in " << location 
+                                        << " from " << vToSave.size()
                                         << " vertices in desktop " << endmsg;
 
   put(verticesToSave,location);
@@ -765,7 +799,7 @@ StatusCode PhysDesktop::getInputRelations(std::vector<std::string>::const_iterat
         get<Particle2Vertex::Table>(location);
       if (0!=table) {
         const Particle2Vertex::Range all = table->relations();
-        storeRelationsInTable(all.begin(), all.end());
+        overWriteRelations(all.begin(), all.end());
       } else {
         Info("NULL Particle2Vertex::Table* at "+location+" under "+rootInTES());
       }
@@ -915,10 +949,10 @@ void PhysDesktop::storeRelationsInTable(const LHCb::Particle* part){
                                         << endmsg;
 }
 //=============================================================================
-void PhysDesktop::storeRelationsInTable(Particle2Vertex::Range::const_iterator begin,
-                                        Particle2Vertex::Range::const_iterator end)
+void PhysDesktop::overWriteRelations(Particle2Vertex::Range::const_iterator begin,
+                                     Particle2Vertex::Range::const_iterator end)
 {
-  //  always() << "storeRelationsInTable: Storing " << end-begin << " P->PV relations" << endmsg;
+  //  always() << "overWriteRelations: Storing " << end-begin << " P->PV relations" << endmsg;
   for ( Particle2Vertex::Range::const_iterator i = begin ; i!= end ; ++i){
     ( i_p2PVTable().i_removeFrom(i->from()) ).ignore();
     (i_p2PVTable().i_relate(i->from(),i->to(),i->weight())).ignore() ;

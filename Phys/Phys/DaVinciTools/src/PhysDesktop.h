@@ -55,6 +55,10 @@ public:
 
   virtual const LHCb::Vertex::ConstVector& secondaryVertices() const;
 
+  virtual const Particle2Vertex::LightTable& Particle2VertexRelations() const;
+
+  virtual Particle2Vertex::LightTable& Particle2VertexRelations();
+
   virtual const LHCb::Particle* keep( const LHCb::Particle* input ) ;
 
   virtual const LHCb::Vertex* keep( const LHCb::Vertex* input ) ;
@@ -125,6 +129,9 @@ private:
 
   /// Save all Vertices in the Desktop to the TES
   void saveVertices(const LHCb::Vertex::ConstVector& vToSave) const;
+
+  /// Save all Vertices in the Desktop to the TES
+  void saveRefittedPVs(const LHCb::RecVertex::ConstVector& vToSave) const;
 
   /// Save the Particle->Vertex relations table in the Desktop to the TES
   //===========================================================================
@@ -198,8 +205,8 @@ private:
    * @author Juan Palacios juan.palacios@nikhef.nl
    */
 
-  void storeRelationsInTable(Particle2Vertex::Range::const_iterator begin,
-                             Particle2Vertex::Range::const_iterator end);
+  virtual void overWriteRelations(Particle2Vertex::Range::const_iterator begin,
+                                  Particle2Vertex::Range::const_iterator end);
 
   /**
    *
