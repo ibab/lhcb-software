@@ -1,4 +1,4 @@
-// $Id: L0MuonMonitor.cpp,v 1.12 2009-02-04 15:12:02 marcocle Exp $
+// $Id: L0MuonMonitor.cpp,v 1.13 2009-02-07 20:57:24 cattanem Exp $
 // Include files 
 
 #include <math.h>
@@ -162,7 +162,7 @@ StatusCode L0MuonMonitor::execute() {
     LHCb::ODIN* odin = get<LHCb::ODIN>(LHCb::ODINLocation::Default);
 
     ulonglong event=odin->eventNumber();
-    unsigned int run=odin->runNumber();
+    //    unsigned int run=odin->runNumber();
     unsigned int bunch=odin->bunchId();
 
 //     info() <<"run= "<<run<<" event= "<<event<<" bunch= "<<bunch<<endmsg;
