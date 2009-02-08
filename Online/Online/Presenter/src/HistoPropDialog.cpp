@@ -81,6 +81,10 @@ void HistoPropDialog::ok()
   m_mainFrame->bulkHistoOptions.m_lineColour =
     (int) TColor::GetColor(m_lineColourSelector->GetColor());
 
+  m_mainFrame->bulkHistoOptions.m_drawPatternTextEntry =
+        m_drawPatternTextEntry->GetDisplayText();    
+
+
   // m_bulkHistoOptions = new obsolete_BulkHistoOptions;
   // return m_bulkHistoOptions;
   CloseWindow();
@@ -242,6 +246,24 @@ void HistoPropDialog::build()
   fGroupFrame651->AddFrame(fLabel723, new TGLayoutHints(kLHintsLeft |
     kLHintsTop, 2, 2, 2, 2));
   fLabel723->MoveResize(16, 164, 176, 18);
+  TGLabel* fLabel724 = new TGLabel(fGroupFrame651,
+    "Pattern to overlay");
+  fLabel721->SetTextJustify(36);
+  fGroupFrame651->AddFrame(fLabel724, new TGLayoutHints(kLHintsLeft |
+    kLHintsTop, 2, 2, 2, 2));
+  fLabel724->MoveResize(16, 184, 176, 18);
+  
+  
+  m_drawPatternTextEntry = new TGTextEntry(fGroupFrame651,
+    new TGTextBuffer(15), -1);
+  m_drawPatternTextEntry->SetMaxLength(255);
+  m_drawPatternTextEntry->SetAlignment(kTextLeft);
+  m_drawPatternTextEntry->SetText("");
+//  m_drawPatternTextEntry->Resize(184, m_drawPatternTextEntry->
+//    GetDefaultHeight());
+  fGroupFrame651->AddFrame(m_drawPatternTextEntry,
+    new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
+  m_drawPatternTextEntry->MoveResize(200, 184, 152, 18);  
 
   // combo box
   m_genericRootDrawOptionComboBox = new TGComboBox(fGroupFrame651,

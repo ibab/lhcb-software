@@ -40,6 +40,7 @@ class HistoPropDialog : public TGTransientFrame
 
     TGTextEntry        *m_xAxisLabelTextEntry;
     TGTextEntry        *m_yAxisLabelTextEntry;
+    TGTextEntry        *m_drawPatternTextEntry;
     TGTextEdit         *m_histogramDescriptionField;
 
     TGLineWidthComboBox*  m_lineWidthComboBox;

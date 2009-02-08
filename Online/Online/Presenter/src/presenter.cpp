@@ -31,6 +31,7 @@ using namespace boost::filesystem;
 
 int main(int argc, char* argv[])
 {
+  
   TApplication presenterApp("Presenter", NULL, NULL);
   gROOT->Reset("a");
   gSystem->ResetSignal(kSigBus, true);
@@ -46,11 +47,8 @@ int main(int argc, char* argv[])
   int windowHeight(600);
   int titleFontSize(0);
 
-  std::string histdir("");
-  std::string referencePath("");
-  std::string savesetsPath("");
-
-
+  std::string histdir("./");
+  
   const char* histdirEnv = getenv(s_histdir.c_str());
   if (NULL != histdirEnv) {
     histdir = histdirEnv;
@@ -58,21 +56,29 @@ int main(int argc, char* argv[])
       histdir.append(s_slash);
     }
   }
+  
+  std::string referencePath(histdir+OnlineHistDBEnv_constants::StdRefRoot);
+  std::string savesetPath(histdir+OnlineHistDBEnv_constants::StdSavesetsRoot);
+    
   const char* referencePathEnv = getenv(s_referencePath.c_str());
   if (NULL != referencePathEnv) {
-    referencePath = referencePathEnv;
+    referencePath = histdir + referencePathEnv;
     if (!referencePath.empty()) {
       referencePath.append(s_slash);
     }
+  } else {
+//    referencePath = ".";
   }
-  const char* savesetsPathEnv = getenv(s_savesetsPath.c_str());
-  if (NULL != savesetsPathEnv) {
-    savesetsPath = savesetsPathEnv;
-    if (!savesetsPath.empty()) {
-      savesetsPath.append(s_slash);
+  
+  const char* savesetPathEnv = getenv(s_savesetPath.c_str());
+  if (NULL != savesetPathEnv) {
+    savesetPath = histdir + savesetPathEnv;
+    if (!savesetPath.empty()) {
+      savesetPath.append(s_slash);
     }
+  } else {
+//    savesetPath = ".";
   }
-
 
   try {
     // cli
@@ -85,7 +91,7 @@ int main(int argc, char* argv[])
     options_description config("Configuration (=default)");
     config.add_options()
       ("mode,M", value<std::string>()->default_value("online"),
-       "starting operation mode:\n" "online, history or editor")
+       "starting operation mode:\n" "online, history or \n" "editor-online editor-offline")
       ("login", value<std::string>()->default_value("read-only"),
        "\"no\" when not to login to histogram\n" "database on startup\n"
        "read-only or read-write")
@@ -95,9 +101,10 @@ int main(int argc, char* argv[])
        "window height")
       ("verbosity,V", value<std::string>()->default_value("silent"),
        "verbosity level:\n" "silent, verbose or debug")
-//      ("dim-dns-node,D", value<std::string>(), "DIM DNS node name")
+      ("dim-dns-node,D", value<std::string>(), "DIM DNS node name")
       ("reference-path,R", value<std::string>()->default_value(referencePath), "reference path")
-      ("saveset-path,S", value<std::string>()->default_value(savesetsPath), "saveset path")
+      ("saveset-path,S", value<std::string>()->default_value(savesetPath), "saveset path")
+      ("tnsnames-path,O", value<std::string>(), "tnsnames.ora file")
       ("config-file,C", value<std::string>(), "configuration file")
       ("title-font-size,F", value<int>(&titleFontSize),
        "title font size for plots")      
@@ -154,8 +161,43 @@ int main(int argc, char* argv[])
               "Histogram Database schema: " << OnlineHistDBEnv_constants::DBschema << std::endl;
       exit(EXIT_SUCCESS);
     }
+    
+    if (startupSettings.count("saveset-path")) {
+      savesetPath = startupSettings["saveset-path"].as<std::string>();
+    }
+    
+    if (!exists(path(savesetPath))) {
+      std::cout << "error: saveset-path doesn't exist" << std::endl;
+      exit(EXIT_FAILURE);
+    }
 
-    PresenterMainFrame presenterMainFrame("LHCb Online Presenter", 10, 10,
+    if (startupSettings.count("reference-path")) {      
+      referencePath = startupSettings["reference-path"].as<std::string>();
+    }
+
+    if (!exists(path(referencePath))) {
+      std::cout << "error: reference-path doesn't exist" << std::endl;
+      exit(EXIT_FAILURE);
+    }
+
+    if (startupSettings.count("tnsnames-path")) {
+      setenv(s_tnsAdminEnv.c_str(),
+             startupSettings["tnsnames-path"].as<std::string>().c_str(),
+             1);
+    }
+
+    if (startupSettings.count("dim-dns-node")) {
+      setenv(s_dimDnsNodeEnv.c_str(),
+             startupSettings["dim-dns-node"].as<std::string>().c_str(),
+             1);
+    } else {
+        setenv(s_dimDnsNodeEnv.c_str(), "127.0.0.1", 0);
+    }
+    
+    PresenterMainFrame presenterMainFrame("LHCb Online Presenter",
+                                          savesetPath,
+                                          referencePath,
+                                          10, 10,
                                           windowWidth,
                                           windowHeight);
     presenterMainFrame.SetIconPixmap(presenter32);
@@ -190,8 +232,10 @@ int main(int argc, char* argv[])
         presenterMainFrame.setPresenterMode(Online);
       } else if ("history" == startupSettings["mode"].as<std::string>()) {
         presenterMainFrame.setPresenterMode(History);
-      } else if ("editor" == startupSettings["mode"].as<std::string>()) {
-        presenterMainFrame.setPresenterMode(Editor);
+      } else if ("editor-online" == startupSettings["mode"].as<std::string>()) {
+        presenterMainFrame.setPresenterMode(EditorOnline);
+      } else if ("editor-offline" == startupSettings["mode"].as<std::string>()) {
+        presenterMainFrame.setPresenterMode(EditorOffline);        
       } else {
         std::cout << "warning: invalid mode setting, defaulting to Online" << std::endl;
         presenterMainFrame.setPresenterMode(Online);
@@ -200,35 +244,13 @@ int main(int argc, char* argv[])
       presenterMainFrame.setPresenterMode(Online);
     }
 
-    presenterMainFrame.setArchiveRoot(histdir);
 
-    if (startupSettings.count("saveset-path")) {
-      path savesetPath(startupSettings["saveset-path"].as<std::string>());
-      
-      if (exists(path(histdir)/savesetPath)) {
-        presenterMainFrame.setSavesetPath(savesetPath.file_string());
-      } else {
-        std::cout << "error: saveset-path doesn't exist" << std::endl;
-        exit(EXIT_FAILURE);
-      }
-    }
-    if (startupSettings.count("reference-path")) {
-      path referencePath(startupSettings["reference-path"].as<std::string>());
-      if (exists(path(histdir)/referencePath)) {
-        presenterMainFrame.setReferencePath(referencePath.file_string());
-      } else {
-        std::cout << "error: reference-path doesn't exist" << std::endl;
-        exit(EXIT_FAILURE);
-      }
-    }
     if (startupSettings.count("title-font-size")) {
       presenterMainFrame.setTitleFontSize(startupSettings["title-font-size"].as<int>());
     }    
     if (startupSettings.count("startup-histograms")) {
       presenterMainFrame.setStartupHistograms(startupSettings["startup-histograms"].as< std::vector<std::string> >());
     }
-
-    presenterMainFrame.setDimDnsNode("");
 
     presenterApp.Run();
     exit(EXIT_SUCCESS);
