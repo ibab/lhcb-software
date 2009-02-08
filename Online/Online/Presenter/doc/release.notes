@@ -6,7 +6,7 @@
 
 !============ Presenter v0r15 2009-02-01 =============
 ! 2009-02-01
-0 drop MonH1F and MonH2D support
+0 drop MonH1F and MonH2F support
 + custom artwork overlay in standard plot mode
 + fixed histogram selection
 + preliminary offline editor mode using file as
