@@ -1,7 +1,11 @@
-!  $Id: release.notes,v 1.79 2009-02-03 12:04:24 jucogan Exp $
+!  $Id: release.notes,v 1.80 2009-02-09 17:07:17 jucogan Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !---------------------------------------------------------------------------
+
+! 2009-02-09 - Julien Cogan
+ - L0MuonCandidatesFromRaw: fix a bug introduce in the last change. Avoid 
+   to consider the /PrevPrev tree.
 
 ! 2009-02-03 - Julien Cogan
  - L0MuonCandidatesFromRaw: modify the way the TAE are handled in the 
