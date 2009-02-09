@@ -1,7 +1,7 @@
 """
 High level configuration tools for PhysConf
 """
-__version__ = "$Id: Configuration.py,v 1.11 2009-01-22 23:25:07 tskwarni Exp $"
+__version__ = "$Id: Configuration.py,v 1.12 2009-02-09 16:50:14 pkoppenb Exp $"
 __author__ = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -15,6 +15,7 @@ class PhysConf(LHCbConfigurableUser) :
     __slots__ = {
         "DataType"        : 'DC06'                             # Data type, can be ['DC06','2008']
      ,  "Simulation"      : True                               # set to True to use SimCond
+     ,  "InputType"       : 'DST'                              # Hopefully irrelevant
         }
 
     __used_configurables__ = [ LHCbApp ]
@@ -56,7 +57,9 @@ class PhysConf(LHCbConfigurableUser) :
         recalib = GaudiSequencer("ProtoPRecalibration")
         recalib.IgnoreFilterPassed = True 
         testrecalib.Members += [ recalib ]
-        if ( self.getProp( "DataType" ) == 'DC06' ):
+        inputtype =  self.getProp('InputType').upper()
+        if ( (self.getProp( "DataType" ) == 'DC06') & (inputtype != 'RDST')) :
+            log.info('Doing MuonID for '+self.getProp( "DataType" )+' and '+inputtype)
             from Configurables import (MuonRec)
             from Configurables import (MuonID)
             importOptions("$MUONIDROOT/options/MuonID.py")
