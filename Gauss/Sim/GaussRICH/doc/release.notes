@@ -4,6 +4,7 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
 
+!========================= GaussRICH v9r3 2009-02-09 =========================
 ! 2009-02-04 - Gloria CORTI
  - Remove the lines for GaussTape.OptItems that have been put directly into
    GaussTape.opts
