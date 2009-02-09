@@ -1,4 +1,4 @@
-// $Id: PatMatchTool.h,v 1.5 2008-07-18 16:10:14 cattanem Exp $
+// $Id: PatMatchTool.h,v 1.6 2009-02-09 14:33:10 albrecht Exp $
 #ifndef PATMATCHTOOL_H 
 #define PATMATCHTOOL_H 1
 
@@ -110,6 +110,8 @@ private:
   
   // use tool for momentum parametrisation
   std::string m_fastMomentumToolName;
+  bool m_addTT;
+  
   ITrackMomentumEstimate *m_fastMomentumTool;
   
   IAddTTClusterTool*   m_addTTClusterTool;

@@ -1,4 +1,4 @@
-// $Id: PatMatchTool.cpp,v 1.6 2008-07-18 16:10:14 cattanem Exp $
+// $Id: PatMatchTool.cpp,v 1.7 2009-02-09 14:33:13 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -36,6 +36,8 @@ PatMatchTool::PatMatchTool( const std::string& type,
   declareProperty( "dyTolSlope"      , m_dyTolSlope    =  240. * Gaudi::Units::mm   );
   declareProperty( "maxMatchChi2"    , m_maxChi2       = 9                          );
   declareProperty( "FastMomentumToolName",	m_fastMomentumToolName	= "FastMomentumEstimate" );
+  declareProperty( "AddTTClusters"   , m_addTT = true );
+  
 
 }
 //=============================================================================
@@ -74,6 +76,7 @@ StatusCode PatMatchTool::matchSingle(const LHCb::Track& velo,
     
     //set states and flags of output track 
     makeTrack(velo, seed, output, chi2 );
+    if(m_addTT) m_addTTClusterTool->addTTClusters( output );
     return StatusCode::SUCCESS;
   }
   
@@ -133,7 +136,7 @@ StatusCode PatMatchTool::match(const LHCb::Tracks& velos,
     
     makeTrack(*vTr, *sTr, *match, (*itM).dist() );
 
-    m_addTTClusterTool->addTTClusters( *match );
+    if(m_addTT) m_addTTClusterTool->addTTClusters( *match );
     matchs.insert( match);
   
   }//end loop match cands
