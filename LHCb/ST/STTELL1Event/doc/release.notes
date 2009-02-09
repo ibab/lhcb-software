@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.30 2009-01-19 11:20:35 mneedham Exp $
+! $Id: release.notes,v 1.31 2009-02-09 10:40:44 mneedham Exp $
 ! Package     : STTELL1Event
 ! Responsible : Mathias Knecht
 !-----------------------------------------------------------------------------
+
+! 2009-02-09 Printout flat Tell1 number in error bank streamer
 
 ! 2009-01-19 M Needham
  - Add fillStream methos to STTELL1Data and STTELLEventInfo classes

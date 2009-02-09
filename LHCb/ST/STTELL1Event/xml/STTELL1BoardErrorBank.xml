@@ -24,8 +24,7 @@
        type =  "std::vector&lt;LHCb::STTELL1Error*&gt;"
        def = "ErrorVector"
        access = "PUBLIC " />
-        
-       
+               
  <!--  
       <constructor
         desc = 'constructor with arguments'
@@ -90,6 +89,29 @@
      const = "TRUE"
      argList = "const unsigned int pcn">
    </method>
+
+  <method
+     name = "isTT"
+     desc = "true if an TT error bank"
+     type = "bool"
+     const = "TRUE">
+   </method>
+
+    <method
+     name = "isIT"
+     desc = "true if an IT error bank"
+     type = "bool"
+     const = "TRUE">
+   </method>
+
+    <method
+     name = "regName"
+     desc = "short cut to the registry name"
+     type = "std::string"
+     access = "PRIVATE"
+     const = "TRUE">
+   </method>
+  
 
     <method 
         name    = "fillStream" 

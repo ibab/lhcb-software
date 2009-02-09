@@ -755,6 +755,7 @@
      argList = "const unsigned int pcn">
    </method>
 
+ 
      <method 
         name    = "fillStream" 
         desc    = "Print out of error information"
