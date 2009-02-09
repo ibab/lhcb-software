@@ -1,4 +1,4 @@
-// $Id: L0MuonCandidatesFromRaw.cpp,v 1.19 2009-02-03 12:04:24 jucogan Exp $
+// $Id: L0MuonCandidatesFromRaw.cpp,v 1.20 2009-02-09 17:08:20 jucogan Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -109,6 +109,8 @@ StatusCode L0MuonCandidatesFromRaw::execute()
       return Error("Failed to get available bunches",StatusCode::SUCCESS,50);
     }
   }
+
+  if( msgLevel(MSG::VERBOSE) ) verbose() << "Looping over "<<bunches.size()<<" bunches" << endmsg;
 
   for (std::vector<std::string>::iterator itbunches=bunches.begin(); itbunches<bunches.end(); ++itbunches) {
     setProperty("RootInTes",(*itbunches));
@@ -240,7 +242,7 @@ StatusCode L0MuonCandidatesFromRaw::tae_bunches(std::vector<std::string> &bunche
     std::string top=id.substr(first,id.size()-first);
     if ((id.find("/Event/Next")<id.size()) || (id.find("/Event/Prev")<id.size())) {
       std::string bunch=id.substr(first+1,id.size()-first);
-      if (bunch.size()<5) continue;
+      if (bunch.size()!=6) continue;
       bunch.append("/");
       if( msgLevel(MSG::VERBOSE) ) verbose() << " tae_bunches : add "<<bunch<< endmsg;
       bunches.push_back(bunch);
