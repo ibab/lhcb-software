@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.9 2007-11-29 12:25:23 gcorti Exp $ 
+# $Id: requirements,v 1.10 2009-02-09 13:01:12 gcorti Exp $ 
 # Created    : 2004-10-25
 # Maintainer : Olivier Deschamps
 # ============================================================================
 package           CaloMoniSim
-version           v3r1p1
+version           v3r1p2
 
 # =============== structure ==================================================
 branches          cmt doc src options 

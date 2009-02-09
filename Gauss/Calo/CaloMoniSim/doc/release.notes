@@ -1,13 +1,13 @@
-! $Id: release.notes,v 1.13 2009-01-13 13:54:09 odescham Exp $ 
+! $Id: release.notes,v 1.14 2009-02-09 13:01:12 gcorti Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniSim
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
 
+!====================== CaloMoniSim v3r1p2 2009-02-09 =========================
 ! 2009-01-13 - Olivier Deschamps 
  - fix bug with histo/area titl'ing 
-
 
 !====================== CaloMoniSim v3r1p1 2007-12-07 =========================
 ! 2007-11-16 - Gloria Corti
