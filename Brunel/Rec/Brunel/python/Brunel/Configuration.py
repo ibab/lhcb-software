@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.52 2009-02-06 19:37:24 asolomin Exp $"
+__version__ = "$Id: Configuration.py,v 1.53 2009-02-09 15:52:51 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -355,7 +355,7 @@ class Brunel(LHCbConfigurableUser):
         if not withMC:
             if "RICH" in moniSeq :
                 from Configurables import GaudiSequencer
-                self.setOtherProps(RichRecQCConf(), ["Context","DataType"])
+                self.setOtherProps(RichRecQCConf(), ["Context","DataType","WithMC"])
                 RichRecQCConf().setProp("MoniSequencer", GaudiSequencer("MoniRICHSeq"))
 
         # Expert histograms
@@ -403,7 +403,7 @@ class Brunel(LHCbConfigurableUser):
             importOptions("$MUONPIDCHECKERROOT/options/MuonPIDChecker.py")
 
         if "RICH" in checkSeq :
-            self.setOtherProps(RichRecQCConf(),["Context","DataType"])
+            self.setOtherProps(RichRecQCConf(),["Context","DataType","WithMC"])
             RichRecQCConf().MoniSequencer = GaudiSequencer("CheckRICHSeq")
 
         if expert:

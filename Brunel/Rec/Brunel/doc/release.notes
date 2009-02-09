@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-02-09 - Chris Jones
+ - Pass WithMC configuration option to RichRecQCConf()
+
 ! 2009-02-07 - Marco Cattaneo
  - Update reference for changes to OTDAQ warnings, and MuonID
  
