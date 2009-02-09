@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DaVinci.py,v 1.29 2009-02-04 18:48:01 pkoppenb Exp $
+# $Id: DaVinci.py,v 1.30 2009-02-09 16:53:23 pkoppenb Exp $
 #
 # Options for a typical DaVinci job
 #
@@ -48,7 +48,7 @@ tag.PhysDesktop.InputLocations = [ "PreselBu2LLK" ]
 # Standard configuration
 #
 from Configurables import DaVinci
-DaVinci().EvtMax = 1000                        # Number of events
+DaVinci().EvtMax = 100                         # Number of events
 DaVinci().SkipEvents = 0                       # Events to skip
 DaVinci().DataType = "2008"                    # Default is "DC06"
 DaVinci().Simulation   = True

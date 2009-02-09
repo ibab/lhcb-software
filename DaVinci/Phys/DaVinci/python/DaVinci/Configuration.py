@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.46 2009-02-06 18:15:02 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.47 2009-02-09 16:53:23 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -84,7 +84,7 @@ class DaVinci(LHCbConfigurableUser) :
         LHCbApp.DDDBtag = self.getProp("DDDBtag")
         LHCbApp.CondDBtag = self.getProp("CondDBtag")
         log.info("Set DDDBtag "+self.getProp("DDDBtag"))
-        self.setOtherProps(PhysConf(),["DataType","Simulation"])
+        self.setOtherProps(PhysConf(),["DataType","Simulation","InputType"])
         self.setOtherProps(AnalysisConf(),["DataType","Simulation"])
 
 ################################################################################
@@ -276,15 +276,6 @@ class DaVinci(LHCbConfigurableUser) :
         log.info("Applying DaVinci configuration")
         log.info( self )
 
-        #====================================================================
-        # Hack until next full release
-        if ( self.getProp("DataType") == "DC06" ):
-            from Configurables import MuonRec, MuonID, UpdateMuonPIDInProtoP
-            recalib = GaudiSequencer("ProtoPRecalibration")
-            importOptions( "$MUONIDROOT/options/MuonID.py" )
-            recalib.Members += [ MuonRec(), MuonID(), UpdateMuonPIDInProtoP() ]
-        #====================================================================
-        
         self.checkOptions()
         self.configureSubPackages()
         importOptions("$STDOPTS/LHCbApplication.opts") # to get units in .opts files
