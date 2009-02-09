@@ -1,4 +1,4 @@
-// $Id: TupleToolEventInfo.h,v 1.1.1.1 2007-12-12 17:46:43 pkoppenb Exp $
+// $Id: TupleToolEventInfo.h,v 1.2 2009-02-09 09:16:55 pkoppenb Exp $
 #ifndef JBOREL_TUPLETOOLEVENTINFO_H
 #define JBOREL_TUPLETOOLEVENTINFO_H 1
 
@@ -31,10 +31,7 @@ public:
   virtual ~TupleToolEventInfo( ){}; ///< Destructor
 
   StatusCode fill( Tuples::Tuple& );
-  virtual StatusCode initialize();
 
 private :
-  std::string m_etcTupleName;
-  ITupleTool* m_ttool;
 };
 #endif // JBOREL_TUPLETOOLEVENTINFO_H
