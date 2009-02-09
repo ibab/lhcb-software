@@ -3,7 +3,7 @@
 # Maintainer : Gloria Corti, Florence Ranjard
 #============================================================================
 package Gauss
-version v36r1
+version v36r2
 
 #============================================================================
 #-- Structure
@@ -78,7 +78,6 @@ use GaussKine            v*    Sim   -no_auto_imports
 use GaussPhysics         v*    Sim   -no_auto_imports
 use GaussTracker         v*    Sim   -no_auto_imports
 use GaussRICH            v*    Sim   -no_auto_imports
-use RichMCAssociators    v*    Rich  -no_auto_imports
 use GaussCalo            v*    Sim   -no_auto_imports
 
 #-- Monitoring
