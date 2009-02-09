@@ -4,6 +4,8 @@
 ! Purpose     : Repository of EvtGen models with external linkages
 !-----------------------------------------------------------------------------
 
+!======================= EvtGenExtras v1r0 2009-02-09 ========================
+
 ! 2009-02-09 - Will REECE
  - Adds a new model for the decay of Bd->K*mumu based on work with 
    A. Bhurucha. Reference for theory side is arXiv:0811.1214 (hep-ph).
@@ -21,4 +23,4 @@
    but not introduce extra external dependencies for the EvtGen
    package itself.
 
-
+!=============================================================================
