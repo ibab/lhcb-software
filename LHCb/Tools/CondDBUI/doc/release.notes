@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.99 2009-01-08 20:30:44 cattanem Exp $
+! $Id: release.notes,v 1.100 2009-02-09 14:56:09 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+! 2009-02-09 - Marco Clemencic
+ - Modified dump_db_to_files.py to make the reference to /Conditions/Online
+   always point to the database.
 
 !===================== Tools/CondDBUI v2r15 2009-01-08 ========================
 ! 2009-01-06 - Marco Clemencic

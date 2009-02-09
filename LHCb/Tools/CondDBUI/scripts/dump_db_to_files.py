@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: dump_db_to_files.py,v 1.4 2008-11-13 17:17:59 marcocle Exp $
+# $Id: dump_db_to_files.py,v 1.5 2009-02-09 14:56:09 marcocle Exp $
 
 # @todo: Add support for channel IDs
 
@@ -33,7 +33,7 @@ def _fixate_string(src,re,callback):
         # find next occurrence of regular expression
         m = re.search(src,pos+len(newsubs))
     return src
-                
+
 class _relativize_url:
     def __init__(self,node,key,base):
         self.node = node
@@ -143,6 +143,9 @@ def copy_to_files(connString,time=0,tag="HEAD",srcs=['/'],
                     xml = _fixate_string(xml, sysIdRE, _relativize_url(node,key,nodebase))
                     # fix hrefs pointing to absolute conddb urls
                     xml = _fixate_string(xml, hrefRE, _relativize_url(node,key,nodebase))
+                    if tmppath.endswith(os.path.join("Conditions","MainCatalog.xml")):
+                        # make the href to Online point to the DB
+                        xml = xml.replace('"Online"', '"conddb:/Conditions/Online"')
                     
                     log.info("write '%s'",tmppath)
                     open(tmppath,'w').write(xml)
