@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.17 2009-02-06 19:44:18 asolomin Exp $"
+__version__ = "$Id: Configuration.py,v 1.18 2009-02-09 15:48:57 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -50,7 +50,8 @@ class RichRecQCConf(RichConfigurableUser):
                           #,"RichRecoTiming"
                           ]
        ,"NTupleProduce" : True
-       ,"HistoProduce" : True
+       ,"HistoProduce"  : True
+       ,"WithMC"        : False # set to True to use MC truth
         }
 
     ## Set the histogram and ntuple producing options
@@ -129,7 +130,7 @@ class RichRecQCConf(RichConfigurableUser):
 
         # Alignment monitor
         if self.getProp("MirrorAlignmentMonitoring"):
-            self.setOtherProps(RichAlignmentConf(),["Context","NTupleProduce","HistoProduce"])
+            self.setOtherProps(RichAlignmentConf(),["Context","NTupleProduce","HistoProduce","WithMC"])
             RichAlignmentConf().AlignmentSequencer = self.newSeq(sequence,"RichMirrAlignMoni")
 
         # Expert Monitoring

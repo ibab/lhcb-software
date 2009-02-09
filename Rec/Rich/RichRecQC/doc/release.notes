@@ -4,6 +4,12 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-02-09 - Chris Jones
+ - Update Alignment.py to
+  + Not use Brunel() Configurable in order to access the WithMC setting.
+    Instead it now hwas its own setting, which is set from above.
+  + Add an option to conditionally enable Rich1 and/or Rich2 monitoring.
+
 ! 2009-02-06 - Anatoly Solomin
  - Fix prebooking of histograms for RICH2 Mirror alignment both in the code
    and in the configurable Alignment.py of RichAlignmentMonitor.
