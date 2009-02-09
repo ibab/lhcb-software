@@ -1,4 +1,4 @@
-// $Id: STKernelDict.h,v 1.9 2009-02-05 11:57:10 mneedham Exp $
+// $Id: STKernelDict.h,v 1.10 2009-02-09 10:38:23 mneedham Exp $
 #ifndef DICT_STKERNELDICT_H 
 #define DICT_STKERNELDICT_H 1
 
@@ -14,6 +14,7 @@
 #include "Kernel/StripRepresentation.h"
 #include "Kernel/STDAQDefinitions.h"
 #include "Kernel/STDAQDefinitions.h"
+#include "Kernel/STBoardMapping.h"
 
 struct _Instantiations{
 

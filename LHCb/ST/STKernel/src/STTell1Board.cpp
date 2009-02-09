@@ -1,4 +1,4 @@
-// $Id: STTell1Board.cpp,v 1.11 2009-01-22 11:43:45 mneedham Exp $
+// $Id: STTell1Board.cpp,v 1.12 2009-02-09 10:38:23 mneedham Exp $
 #include "Kernel/STTell1Board.h"
 #include "Kernel/STDAQDefinitions.h"
 #include "Kernel/LHCbConstants.h"
@@ -170,6 +170,6 @@ std::ostream& STTell1Board::fillStream( std::ostream& os ) const{
 #include "Kernel/STBoardMapping.h"
 
 unsigned int STTell1Board::flatTell1Number() const{
-  return m_detType == "IT" ? STBoardMapping::ITSourceIDToNumberMap.find(boardID().id())->second:
-    STBoardMapping::TTSourceIDToNumberMap.find(boardID().id())->second;   
+  return m_detType == "IT" ? STBoardMapping::find(boardID().id(), STBoardMapping::ITSourceIDToNumberMap()):
+    STBoardMapping::find(boardID().id(),STBoardMapping::TTSourceIDToNumberMap());   
 }

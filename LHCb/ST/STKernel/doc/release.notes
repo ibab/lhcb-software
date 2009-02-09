@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.50 2009-02-05 13:45:55 jluisier Exp $
+! $Id: release.notes,v 1.51 2009-02-09 10:38:23 mneedham Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
+
+! 2009-02-09 M Needham
+ - Make source id to number mappings static
+ - Add print function for map
+ - Add helper find function to map
 
 ! 2009-02-05 J Luisier
  - Changed maxErrorBankWords to 56
