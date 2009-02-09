@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= LbPythia v8r3 2009-02-09 ==========================
 ! 2009-01-26 - Patrick Robbe
  - PythiaProduction.cpp: re-activate extra charmonium processes which had
    been desactivated by mistake 

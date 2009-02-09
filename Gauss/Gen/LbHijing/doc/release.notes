@@ -4,6 +4,7 @@
 ! Purpose     : "Interface" to Hijing 
 !-----------------------------------------------------------------------------
 
+!========================= LbHijing v4r1 2009-02-09 ==========================
 ! 2009-01-19 - Chris Jones
  - Fix for name conflicit between local ran function and implicit function 
    with gfortran gcc 4.3 (OSX).
