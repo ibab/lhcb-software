@@ -1,4 +1,4 @@
-// $Id: CameraTool.cpp,v 1.2 2009-02-04 13:00:01 rogers Exp $
+// $Id: CameraTool.cpp,v 1.3 2009-02-10 13:57:33 rogers Exp $
 // Include files
 
 // local
@@ -83,12 +83,12 @@ StatusCode CameraTool::finalize()
 int CameraTool::SendAndClear(int l,const std::string& who,const std::string& what)
 {
 
-  if ( ( m_dosend == true) && m_camc ) {
+  std::stringstream ss;
+  std::stringstream s;
 
-    std::stringstream ss;
-    std::stringstream s;
+  ss << who<<"/"<<l<<"/"<<what<<"\n";
 
-    ss << who<<"/"<<l<<"/"<<what<<"\n";
+  if (m_dosend && m_camc) {
 
     if (m_out.entries()>0) m_out.tostream(s);
 
@@ -118,7 +118,11 @@ int CameraTool::SendAndClear(int l,const std::string& who,const std::string& wha
     m_out.reset();
 
     m_lastHistoNum = 0;
-  }
+  } // if(m_dosend&&m_camc)
+  else {
+    if (msgLevel(MSG::DEBUG))
+      debug() << "Sending to CAMERA disabled. Message " << ss.str() << endmsg;
+  } // else(m_dosend&&m_camc)
 
   return 1;
 }

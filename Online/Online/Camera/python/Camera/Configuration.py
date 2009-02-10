@@ -12,9 +12,6 @@
 from Gaudi.Configuration  import *
 from GaudiConf.Configuration import *
 
-# Tools.
-from Configurables import CameraTool
-
 # ==========================================================================================
 # @class Camera
 #   CAMERA configurable.
@@ -41,6 +38,7 @@ class Camera(LHCbConfigurableUser):
         """Applies all the configuration settings for the class."""
         # We are only exposing the server name and will leave the other
         # properties at their default values.
+        from Configurables import CameraTool
         camera = CameraTool("ToolSvc.CameraTool")
         serverName = self.getProp("cameraServer")
         if '' != serverName:

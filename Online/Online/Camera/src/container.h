@@ -25,7 +25,7 @@ class  container{
   int tofile(char *);
   int tostream(std::stringstream &);
   int fromfile(const char *);
-  int fromstream(std::stringstream &s){std::cout << "Not yet."<<std::endl;return 0;}
+  int fromstream(std::stringstream &){std::cout << "Not yet."<<std::endl;return 0;}
   
   void add(std::string,std::string);
   void add(std::string,void *,int sz);
