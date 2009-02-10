@@ -121,9 +121,8 @@ else:
   monitor_system_name      = 'MONITORING'
   monitor_type             = 'Monitoring'
   monitor_num_nodes        = 10
-  monitor_streams_per_node =  8
-  monitor_workers_per_node = 12
-
+  monitor_streams_per_node = 11
+  monitor_workers_per_node = 16
 
 # Same for all monitoring systems
 monitor_control_node     =  node_name

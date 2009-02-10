@@ -48,6 +48,28 @@ def runHLTopts(name='HLT',sim=None):
   ctrl   = Control.Control(mgr,name+'JobOptions','Writer',[writer]).run()
   return (ctrl,run(name,mgr,sim))
   
+def runInjectoropts(name='INJ',sim=None):
+  """
+  Execute job options writer for the HLT farm.
+
+   Arguments:
+   @param name        System name
+   @param sim         (Dummy)
+
+   @author M.Frank
+  """
+  import Online.PVSS as PVSS
+  import Online.AllocatorControl as Control
+  import Online.RunInfoClasses.Injector as RI
+  import Online.JobOptions.OptionsWriter as JobOptions
+
+  info   = RI.InfoCreator()
+  mgr    = _mgr(PVSS.defaultSystemName())
+  print 'System:',mgr.name()
+  writer = JobOptions.InjectorOptionsWriter(mgr,name,info)
+  ctrl   = Control.Control(mgr,'INJJobOptions','Writer',[writer]).run()
+  return (ctrl,run(name,mgr,sim))
+
 def runStorage(name='Storage',sim=None,joboptions=True):
   """
   Execute Storage system streaming component to
@@ -178,6 +200,8 @@ def execute(args):
     function = runReconstruction
   elif typ == 'HLTOptions':
     function = runHLTopts
+  elif typ == 'InjectorOptions':
+    function = runInjectoropts
   elif function is None:
     print 'Unknown action requested.'
     return None
