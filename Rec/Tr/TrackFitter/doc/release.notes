@@ -3,6 +3,10 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+! 2009-02-10 - Wouter Hulsbergen
+ - Added flag to use lite clusters
+ - Fixed bug in configuration of FitVelo
+
 ! 2009-01-19 - David Hutchcroft
  - Added ability to fit Velo "lite" clusters
    Added ConfiguredFitForwardLiteOnly and ConfiguredFitVeloLiteOnly to 
