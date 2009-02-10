@@ -25,9 +25,4 @@ def setupHltFastTrackFit( fit ) :
 
     fit.addTool( MeasurementProvider( 'MeasProvider', IgnoreTT = True ) )
     fit.addTool( TrackKalmanFilter('NodeFitter', BiDirectionalFit = False, Smooth = False ) )
-    fit.addTool( TrackMasterExtrapolator('Extrapolator') )
-    x = getattr(fit,'Extrapolator')
-    setattr( x, 'MaterialLocator', getattr(fit, 'MaterialLocator' ) )
-    x.addTool( TrackDistanceExtraSelector('ExtraSelector'
-                                         , LongFieldExtrapolatorType="TrackHerabExtrapolator"
-                                         , LongFieldExtrapolatorName="TrackHerabExtrapolator" ) )
+    fit.addTool( TrackMasterExtrapolator('Extrapolator', MaterialLocator = fit.MaterialLocator ) )
