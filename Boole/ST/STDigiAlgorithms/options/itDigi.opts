@@ -69,6 +69,11 @@ MCITDepositCreator.ResponseLRcapCoupling.vfs = 0;
 MCITDepositCreator.ResponseLRcapCoupling.capacitance = 33.0*picofarad;
 MCITDepositCreator.ResponseLRcapCoupling.type = "capCoupling";
 
+MCITDepositCreator.DetType = "IT";
+MCITDigitCreator.DetType = "IT";
+ITDigitCreator.DetType = "IT";
+ITClusterCreator.DetType = "IT";
+ITClusterKiller.DetType = "IT";
 
 ToolSvc.STSignalToNoiseToolIT.DetType = "IT";
 ToolSvc.STSignalToNoiseToolIT.ConversionToADC = 0.001;
