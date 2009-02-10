@@ -24,12 +24,7 @@ CondDB().LocalTags["SIMCOND"] = ["velo-open"]
 #--beam size and luminous region, and set crossingle angle for collisions
 #--for beam gas Hijing cannot take inot account crossing angle, so ignore! 
 importOptions("$GAUSSOPTS/PilotRun.opts")
-gen = Generation()
-gen.addTool(MinimumBias,name="SampleGenerationTool")
-gen.SampleGenerationTool.addTool(PythiaProduction,name="ProductionTool")
-gen.SampleGenerationTool.ProductionTool.addTool(CollidingBeams,name="BeamToolName")
-gen.SampleGenerationTool.ProductionTool.BeamToolName.BeamMomentum = 450.0 * GeV
-gen.SampleGenerationTool.ProductionTool.BeamToolName.HorizontalCrossingAngle = 2.1 * mrad
+setCrossingAngle(2.1*SystemOfUnits.mrad)
 
 #--Starting time
 ec = EventClockSvc()

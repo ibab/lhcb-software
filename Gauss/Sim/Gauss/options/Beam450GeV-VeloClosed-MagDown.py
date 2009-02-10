@@ -13,9 +13,9 @@
 from Gauss.Configuration import *
 
 #--Tell to use 450 GeV beams for collisions and beam gas, with corresponding
-#--beam size and luminous region, the options already set zero crossing angle
-#--as for BfieldOff
+#--beam size and luminous region.
 importOptions("$GAUSSOPTS/PilotRun.opts")
+setCrossingAngle(2.1*SystemOfUnits.mrad)
 
 #--Starting time
 ec = EventClockSvc()

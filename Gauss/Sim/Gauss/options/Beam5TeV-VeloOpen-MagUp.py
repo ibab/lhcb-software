@@ -29,6 +29,7 @@ UpdateManagerSvc().ConditionsOverride += [
 #--Tell to use 5 TeV beams for collisions and beam gas, with corresponding
 #--beam size and luminous region
 importOptions("$GAUSSOPTS/BeamCond-5TeV.opts")
+setCrossingAngle(0.121*SystemOfUnits.mrad)
 
 #--Starting time
 ec = EventClockSvc()

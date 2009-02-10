@@ -22,6 +22,7 @@ UpdateManagerSvc().ConditionsOverride += [
 #--beam size and luminous region, the options already set zero crossing angle
 #--as for BfieldOff
 importOptions("$GAUSSOPTS/BeamCond-5TeV.opts")
+setCrossingAngle(0.121*SystemOfUnits.mrad)
 
 #--Starting time
 ec = EventClockSvc()
