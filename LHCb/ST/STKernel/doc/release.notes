@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.51 2009-02-09 10:38:23 mneedham Exp $
+! $Id: release.notes,v 1.52 2009-02-10 07:54:35 mneedham Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
+
+! 2009-02-10 M Needham
+ - Remove can be recovered function to avoid circular dependency
 
 ! 2009-02-09 M Needham
  - Make source id to number mappings static
