@@ -17,7 +17,7 @@ branches src doc options cmt job python
 use DDDB               v*     Det            -no_auto_imports
 use ParamFiles         v8r0                  -no_auto_imports
 use FieldMap           v5r*                  -no_auto_imports
-use DecFiles           v16r*  Gen            -no_auto_imports
+use DecFiles           v16r1  Gen            -no_auto_imports
 use Geant4Files	       v91r0	             -no_auto_imports
 use MIBData            v2r0                  -no_auto_imports
 use MCatNLOData        v1r1                  -no_auto_imports
