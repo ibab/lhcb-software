@@ -1,4 +1,4 @@
-// $Id: PilotRun.opts,v 1.10 2008-10-08 13:00:55 gcorti Exp $ 
+// $Id: PilotRun.opts,v 1.11 2009-02-10 16:40:24 gcorti Exp $ 
 
 /** @file 
  * 
@@ -10,7 +10,7 @@
  *
  */
 
-// == Sigle interactions
+// == Single interactions
 Generation.PileUpTool = "FixedNInteractions";
 Generation.FixedNInteractions.Luminosity = 1.0e-05*LumiUnit;
  
@@ -23,15 +23,15 @@ Generation.SignalForcedFragmentation.PythiaProduction.CollidingBeams.BeamMomentu
 Generation.StandAloneDecayTool.PythiaProduction.CollidingBeams.BeamMomentum = 450.0*GeV;
 Generation.Special.PythiaProduction.CollidingBeams.BeamMomentum = 450.0*GeV;
 
-Generation.BeamSpotSmearVertex.SigmaX = 0.200*mm; 
-Generation.BeamSpotSmearVertex.SigmaY = 0.200*mm; 
+Generation.BeamSpotSmearVertex.SigmaX = 0.191*mm; 
+Generation.BeamSpotSmearVertex.SigmaY = 0.191*mm; 
 Generation.BeamSpotSmearVertex.SigmaZ = 7.95*cm;
 
 // == or beam gas (Pythia & Hijing) depending on what is produced
 Generation.MinimumBias.PythiaProduction.FixedTarget.BeamMomentum = 450.0*GeV;
 Generation.MinimumBias.HijingProduction.Commands += { "hijinginit efrm 450." }; // in GeV
-Generation.FlatZSmearVertex.SigmaX = 0.280*mm;
-Generation.FlatZSmearVertex.SigmaY = 0.280*mm;
+Generation.FlatZSmearVertex.SigmaX = 0.270*mm;
+Generation.FlatZSmearVertex.SigmaY = 0.270*mm;
 
 // For the geometry settings you can use the various combinations of
 // v200601-450GeV-{Open,SemiOpen,Close}Velo-B{Off,On}.opts in which 
@@ -41,12 +41,4 @@ Generation.FlatZSmearVertex.SigmaY = 0.280*mm;
 // Below are explanations of the options set explicitely in the 
 // v200601-450GeV...
 
-// ===========================================================================
-// NOTE that the DEFAULT is Velo Close and Magnet On as in standard simulation
-// ===========================================================================
 
-// MAGNETIC FIELD
-// ===========================================================================
-// == Magnetic Field OFF -> zero beam crossing angle
-Generation.MinimumBias.PythiaProduction.CollidingBeams.HorizontalCrossingAngle = 0.0;
-Generation.MinimumBias.PythiaProduction.FixedTarget.HorizontalCrossingAngle = 0.0;
