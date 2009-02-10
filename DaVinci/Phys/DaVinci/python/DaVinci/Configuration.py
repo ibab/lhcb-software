@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.47 2009-02-09 16:53:23 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.48 2009-02-10 12:07:35 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -28,6 +28,7 @@ class DaVinci(LHCbConfigurableUser) :
        , "HistogramFile"      : ""            # Write name of output Histogram file
        , "TupleFile"          : ""            # Write name of output Tuple file
        , "ETCFile"            : ""            # Name of ETC file
+       , "ETCItemList"        : []            # ItemList to put on ETC
          # Monitoring
        , "MoniSequence"       : []            # Add your monitors here
          # DaVinci Options
@@ -56,6 +57,7 @@ class DaVinci(LHCbConfigurableUser) :
        , "HistogramFile"      : """ Write name of output Histogram file """
        , "TupleFile"          : """ Write name of output Tuple file """
        , "ETCFile"            : """ Write name of output ETC file."""
+       , "ETCItemList"        : """ ItemList ot put on ETC """
        , "MainOptions"        : """ Main option file to execute """
        , "UserAlgorithms"     : """ User algorithms to run. """
        , "RedoMCLinks"        : """ On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association. """
@@ -243,7 +245,34 @@ class DaVinci(LHCbConfigurableUser) :
             print "# Tuple will be in ``", tupleFile, "''"
             NTupleSvc().Output = [ tuple ]
             NTupleSvc().OutputLevel = 1 
-
+        if ( self.getProp("ETCFile") != "" ):
+            etcFile = self.getProp("ETCFile")
+            self.etc(etcFile,self.getProp("ETCItemList"))
+################################################################################
+# ETC
+#
+    def etc(self,etcFile,iList):
+        """
+        write out an ETC
+        """
+        from Configurables import TagCollectionSvc
+        tcname = "EvtTupleSvc"
+        ets = TagCollectionSvc(tcname)
+        ets.Output += [ "EVTTAGS DATAFILE='"+etcFile+"' TYP='POOL_ROOTTREE' OPT='RECREATE' " ]
+        ets.OutputLevel = 1 
+        ApplicationMgr().ExtSvc  += [ ets ]
+        #
+        from Configurables import EvtCollectionStream
+        tagW = EvtCollectionStream("TagWriter")
+        # this somehow matches CollectionName
+        tagW.ItemList = iList
+        tagW.EvtDataSvc = tcname
+        
+        from Configurables import Sequencer
+        seq = Sequencer("SeqWriteTag")
+        ApplicationMgr().OutStream += [ tagW ]
+        
+        print "# ETC will be in ``", etcFile, "''"
 
 ################################################################################
 # Main sequence
