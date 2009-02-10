@@ -1,5 +1,21 @@
 """
+
      Test file for python-PVSS bridge
+     This executes the basic procedures to access
+     PVSS datapoints from python as well as datapoint creation
+     and deletion.
+
+     If this works, most of the stuff should be functional.....
+
+     to execute:
+     . python -c "import Online.testPVSS"
+
+     You should see at the end:
+    ================================= Basic test completed successfully. =================================
+ 
+
+     @author   M.Frank
+     @version  1.0
      
 """
 
@@ -43,12 +59,20 @@ class Test:
     if self.reader.execute():
       print '%-12s Datapoint:%-48s %s'%(comment,dp.name(),"'"+str(dp.data)+"'")
     else:
-      print 'Could not access datapoint:',DataPoint.original(name)
+      print '--> Could not access datapoint:',DataPoint.original(name)
+      return None
+    return self
 
   def modify_BarTrend(self):
-    nam = 'ExampleDP_BarTrend'
+    nam = 'test_device_01'
     actor = PVSS.DpVectorActor(self.mgr)
-    typ   = self.typeMgr.type(nam)
+    typ   = self.typeMgr.type('ExampleDP_BarTrend')
+    device = self.devMgr.createDevice(nam,typ,1)
+    if device.get() is None:
+      print '--> Failed to create device "'+nam+'" of type ',typ.name()
+      return None
+    print '--> Successfully created datapoint:',nam,' of type ',typ.name()
+    
     actor.lookupOriginal(nam+'.*',typ)
     print 'Found %d datapoints of type %s'%(actor.container.size(),nam)
     self.reader.add(actor.container)
@@ -56,8 +80,8 @@ class Test:
       for i in actor.container:
         print '--> %-12s Datapoint:%-48s %d'%(nam,i.name(),i.value().type())
     else:
-      print 'Could not access datapoint:',DataPoint.original(nam)
-      return 0
+      print '--> Could not access datapoint:',DataPoint.original(nam)
+      return None
     actor.container[0].data = std.vector('float')()
     actor.container[1].data = std.vector('float')()
     actor.container[2].data = std.vector('float')()
@@ -84,8 +108,8 @@ class Test:
     wr = self.mgr.devWriter()
     wr.add(actor.container)
     if not wr.execute():
-      print 'Could not access datapoint:',DataPoint.original(nam)
-      return 0
+      print '--> Could not access datapoint:',DataPoint.original(nam)
+      return None
 
     self.reader.add(actor.container)
     if self.reader.execute():
@@ -93,12 +117,22 @@ class Test:
         print '--> %-12s Datapoint:%-48s ##Elements: %d'%(nam,i.name(),i.data.size())
     else:
       print 'Could not access datapoint:',DataPoint.original(nam)
-      return 0
+      return None
+    if not self.devMgr.deleteDevice(nam,1):
+      print '--> Failed to delete datapoint:',nam,' of type ',typ.name()
+      return None
+    print '--> Successfully deleted datapoint:',nam,' of type ',typ.name()
+    
     return self
 
-t=Test('dist_17')
-t.test_access('ExampleDP_AlertHdl1','BIT')
-t.test_access('ExampleDP_Arg1','FLOAT')
-t.test_access('ExampleDP_SumAlert','TEXT')
-t.modify_BarTrend()
+def _check(val):
+  if val is not None: return
+  print ' ================================= TEST FAILED ================================='
+  raise 'Test Failed'
 
+t=Test('dist_17')
+_check(t.test_access('ExampleDP_AlertHdl1','BIT'))
+_check(t.test_access('ExampleDP_Arg1','FLOAT'))
+_check(t.test_access('ExampleDP_SumAlert','TEXT'))
+_check(t.modify_BarTrend())
+print '================================= Basic test completed successfully. ================================='
