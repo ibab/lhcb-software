@@ -32,6 +32,12 @@ namespace LHCb
     std::bitset<NumVelo> velo() const { 
       return m_velo[VeloRA] | m_velo[VeloPhiA] | m_velo[VeloRC] | m_velo[VeloPhiC] ; }
 
+    // velo R station pattern
+    std::bitset<NumVelo> veloR() const { return m_velo[VeloRA] | m_velo[VeloRC] ; }
+
+    // velo phi station pattern
+    std::bitset<NumVelo> veloPhi() const { return m_velo[VeloPhiA] | m_velo[VeloPhiC] ; }
+
     // tt layer pattern
     std::bitset<NumTT> tt() const { return m_tt ; }
 
@@ -53,23 +59,21 @@ namespace LHCb
     std::bitset<NumMuon> muon() const { return m_muon ; }
 
     // number of velo R hits
-    size_t numVeloR() const {
-      return m_velo[VeloRA].count() + m_velo[VeloRC].count() ;
-    } 
+    size_t numVeloR() const { return m_velo[VeloRA].count() + m_velo[VeloRC].count() ; }
     
     // number of velo phi hits
-    size_t numVeloPhi() const {
-      return m_velo[VeloPhiA].count() + m_velo[VeloPhiC].count() ;
-    } 
+    size_t numVeloPhi() const { return m_velo[VeloPhiA].count() + m_velo[VeloPhiC].count() ; }
+    
+    // number of velo clusters: stations with an R and a phi hit.
+    size_t numVeloClusters() const { 
+      return (m_velo[VeloRA]&m_velo[VeloPhiA]).count() + (m_velo[VeloRC]&m_velo[VeloPhiC]).count() ; }
     
     // number of velo stations with one R or phi hit
-    size_t numVeloStations() const {
-      return velo().count() ;
-    } 
+    size_t numVeloStations() const { return velo().count() ; }
     
     // number of velo stations with one R or phi hit on both A and C side
     size_t numVeloStationsOverlap() const  ;
-    
+
     // number of it stations with hit in more than one box
     size_t numITStationsOverlap() const ;
     
@@ -79,8 +83,12 @@ namespace LHCb
     // number of holes in velo (layer) pattern
     size_t numVeloHoles() const  ;
     
-    // number of holes in T-station pattern
+    // number of T-layers
+    size_t numTLayers() const { return (ot() | it()).count() ; }
+
+    // number of holes in T-layer pattern
     size_t numTHoles() const ;
+
 
   private:
     std::bitset<NumVelo> m_velo[4] ;
