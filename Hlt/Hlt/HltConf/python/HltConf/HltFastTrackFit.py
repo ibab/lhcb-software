@@ -23,6 +23,5 @@ def setupHltFastTrackFit( fit ) :
                }.iteritems() :
        setattr(fit,k,v)
 
-    fit.addTool( MeasurementProvider( 'MeasProvider', IgnoreTT = True ) )
     fit.addTool( TrackKalmanFilter('NodeFitter', BiDirectionalFit = False, Smooth = False ) )
     fit.addTool( TrackMasterExtrapolator('Extrapolator', MaterialLocator = fit.MaterialLocator ) )
