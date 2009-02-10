@@ -4,6 +4,36 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-02-10 - Gloria CORTI
+ - Modify transverse beam size settings for 450 GeV and 5 TeV based on 
+   LHC-OP-ES-0011 (EDMS no. 931921).
+   . PilotRun.opts
+   . BeamCond-5TeV.opts
+ - Set luminosity to 2x10^32 for 5TeV to mimick pileup as expected for 
+   50ns bunch spacing
+   . BeamCond-5TeV.opts
+ - Define function (to be moved to configurable) to set crossing angle
+   for all generation type cases.
+   . python/Gauss/Configuration.py
+ - Set beam crossing angle to zero for all cases when LHCb magnet is off
+   under the assumption that this will happen most likely when running
+   with up to 156 bunches when external crossing angle is not required.
+   . Beam{450GeV,5TeV,7TeV}-Velo{Open,Closed}-MagOff.py
+ - Set beam crossing angle to 2.1 mrad for 450GeV beams as given only by
+   LHCb magnet, as will be the case for up to 156 bunches (no external
+   crossing angle required), LHC Project Note 419.
+   . Beam450GeV-Velo{Open,Closed}-Mag{Down,Up}.py
+ - Set beam crossing angle to 121 microrad for 5TeV beams: this is the 
+   effective angle due to both external angle for full positive polarity
+   of the LHCb magnet and for more than 156 bunches and the internal LHCb
+   magnet crossing angle (LHC Project Note 419). Does not know external
+   crossing angle for negative polarity, so leave the same effective angle
+   for the moment.
+   . Beam5TeV-Velo{Open,Closed}-Mag{Down,Up}.py
+
+! 2009-02-09 - Gloria CORTI
+ - Remove use of RichMCAssociators, not necessary since code is in GaussRICH
+
 ! 2009-02-05 - Gloria CORTI
  - Options to simulate only calorimeters, to allow production of particle 
    guns for special studies.
