@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltHadronLines.py,v 1.3 2009-01-13 15:35:38 graven Exp $
+# $Id: HltHadronLines.py,v 1.4 2009-02-10 13:04:54 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hadron Lines
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -26,6 +26,7 @@ from HltConf.HltLine import Hlt1Member as Member
 from HltConf.HltLine import Hlt1Tool   as Tool
 from HltConf.HltLine import hlt1Lines  
 from HltConf.HltL0Candidates import *
+from HltConf.HltFastTrackFit import setupHltFastTrackFit
 
 # here get a Hlt1 line 
 def _getLine(name):
@@ -65,7 +66,6 @@ class HltHadronLinesConf(LHCbConfigurableUser) :
 
     def __apply_configuration__(self) : 
         importOptions('$HLTCONFROOT/options/HltRecoSequence.py')
-        importOptions('$HLTCONFROOT/options/Hlt1HadFitTracks.opts')
 
         # depending variables
         #------------------------------------
@@ -99,12 +99,13 @@ class HltHadronLinesConf(LHCbConfigurableUser) :
                        , HistogramUpdatePeriod = 1
                        )
             , Member ( 'TF' , 'GuidedForward' , FilterDescriptor = ['PT,>,'+str(self.getProp('SingleHadron_PtCut'))])
-            , Member ( 'TU' , 'FitTrack' ,      RecoName = "FitTrack")
+            , Member ( 'TU' , 'FitTrack' ,      RecoName = 'FitTrack')
             , Member ( 'TF' , '1FitTrack' ,     FilterDescriptor = ["FitIP_PV2D,||>,"+str(self.getProp('HadMain_IPCut'))])
             , Member ( 'TF' , '2FitTrack'
                        , OutputSelection = '%Decision'
                        , FilterDescriptor = ["FitChi2OverNdf,<,"+str(self.getProp('HadMain_TrackFitChi2Cut'))])
             ])
+        setupHltFastTrackFit('Hlt1SingleHadronTUFitTrack')
                
 
         Line ('DiHadron'
@@ -151,6 +152,7 @@ class HltHadronLinesConf(LHCbConfigurableUser) :
                      , OutputSelection = "%Decision"
                      , FilterDescriptor = ['FitVertexMaxChi2OverNdf,<,'+str(self.getProp('HadMain_TrackFitChi2Cut')) ])
             ])
+        setupHltFastTrackFit('Hlt1DiHadronVUFitTrack')
 
 
 

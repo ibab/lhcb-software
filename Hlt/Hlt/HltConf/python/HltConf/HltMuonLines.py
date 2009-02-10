@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonLines.py,v 1.6 2009-01-22 10:06:54 graven Exp $
+# $Id: HltMuonLines.py,v 1.7 2009-02-10 13:04:54 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -30,6 +30,7 @@ from HltConf.HltLine import Hlt1Member as Member
 from HltConf.HltLine import bindMembers
 from HltConf.HltLine import Hlt1Tool   as Tool
 from HltConf.HltL0Candidates import *
+from HltConf.HltFastTrackFit import setupHltFastTrackFit
 
 
 class HltMuonLinesConf(LHCbConfigurableUser) :
@@ -51,7 +52,6 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
     def __apply_configuration__(self) : 
         importOptions('$HLTCONFROOT/options/TsaTool.opts')
         importOptions('$HLTCONFROOT/options/HltRecoSequence.py')
-        importOptions('$HLTCONFROOT/options/Hlt1HadFitTracks.opts') #For the fast fit a la hadron line
 
         RZVelo  = GaudiSequencer('Hlt1RecoRZVeloTracksSequence')
         RecoRZPV= GaudiSequencer('Hlt1RecoRZPVSequence')
@@ -380,7 +380,6 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
                          , algos =
                          [ singleMuonPrep
                            , RecoRZPV
-                           
                            , Member( 'TF','Muon' # // Select Muons with IP and pT
                                      , HistogramUpdatePeriod = 0
                                      , FilterDescriptor = ['PT,>,'+str(self.getProp('MuTrackMuPt')),
@@ -389,9 +388,7 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
                                                            'IP': ( 'IP',-1.,3.,400), 'IPBest': ( 'IPBest',-1.,3.,400)
                                                            }
                                      ) 
-
                            , HltTrackUpgrade('Hlt1RecoVelo') # // Velo Reco.
-                           
                            , Member( 'TF', 'CompanionVelo' # // Select Velo tracks with an IP and good DOCA to Muon
                                      , InputSelection  = HltTrackUpgrade('Hlt1RecoVelo')
                                      , HistogramUpdatePeriod = 0
@@ -409,18 +406,14 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
                                      , HistoDescriptor = {  'DOCA': ('DOCA',0.,2.,400), 'DOCABest': ( 'DOCABest',0.,1.,400)
                                                            }
                                      )
-                           
                            , Member( 'VF', 'VeloVertex' # // Filter velo vertices in DZ
                                      , FilterDescriptor = ['VertexDz_PV2D,>,'+str(self.getProp('MuTrackDZ')),
                                                            'VertexAngle,>,'+str(self.getProp('MuTrackAngle'))]
                                      , HistogramUpdatePeriod = 0
                                      , HistoDescriptor = { 'VertexDz': ( 'VertexDz',-10.,50.,100), 'VertexDzBest': ( 'VertexDzBest',-10.,50.,100) }
                                      )
-                           
-                           , Member( 'VU', 'Vertex' # // Make forward the companion velo track
-                                     , RecoName = 'Forward'
-                                     )
-
+                           # // Make forward the companion velo track 
+                           , Member( 'VU', 'Vertex' , RecoName = 'Forward')
                            , Member( 'VF', 'Vertex' # // Select vertices if Pt, pointing, and distance
                                      , FilterDescriptor = ['VertexMinPT,>,'+str(self.getProp('MuTrackTrPt')),
                                                            'VertexDimuonMass,>,'+str(self.getProp('MuTrackDimuMass')),
@@ -431,11 +424,8 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
                                                            'VertexDimuonMass': ('DiMuonMass',0.,10000,200)
                                                            }
                                      )
-
-                           , Member ( 'VU', 'FitVertex' # // Fast fit of tracks for selected vertices
-                                      , RecoName = 'FitTrack'
-                                      )
-
+                           # // Fast fit of tracks for selected vertices
+                           , Member ( 'VU', 'FitVertex' , RecoName = 'FitTrack')
                            , Member ( 'VF', 'Decision' # // Final filter on track quality (Chi2 cut taken from hadron line)
                                       , OutputSelection = '%Decision'
                                       , FilterDescriptor = ['FitVertexMaxChi2OverNdf,<,'+str(self.getProp('MuTrackTrChi2')),
@@ -450,5 +440,6 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
                                       )
                            ]
                          )
+        setupHltFastTrackFit('Hlt1MuonTrackVUFitVertex')
 
 

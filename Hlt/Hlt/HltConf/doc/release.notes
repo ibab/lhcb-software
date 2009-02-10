@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.135 2009-02-06 15:26:29 graven Exp $ 
+! $Id: release.notes,v 1.136 2009-02-10 13:04:54 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-02-10 - Gerhard Raven
+ - pythonize the fast track fit setup
+ - further improve tool support: no more dummy public tool configs created
 
 ! 2009-02-06 - Gerhard Raven
  - improve on tool support: tool configurables don't like name = 'foo' as

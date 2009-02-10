@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltPhotonLines.py,v 1.3 2009-01-21 16:53:57 witekma Exp $
+# $Id: HltPhotonLines.py,v 1.4 2009-02-10 13:04:54 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Photon Lines
@@ -12,7 +12,7 @@
 '''
 # =============================================================================
 __author__  = 'Gerhard Raven Gerhard.Raven@nikhef.nl'
-__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $'
+__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $'
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -102,7 +102,7 @@ class HltPhotonLinesConf(LHCbConfigurableUser):
               , algos = 
               [ convertL0Candidates('Electron')
               , Member ('TF', 'AntiEle' , FilterDescriptor = ['AntiEleConf,>,0.5'] 
-                       , tools = [ Tool( L0ConfirmWithT, particleType = 2 )]
+                       , tools = [ Tool( L0ConfirmWithT,  particleType = 2 )]
                        )
               , Member ('TF', 'Photon' , FilterDescriptor = ['IsPhoton,>,'+str(self.getProp('Pho_IsPho')),'L0ET,>,'+str(self.getProp('Pho_EtCut'))])
               , GaudiSequencer('Hlt1RecoRZVeloSequence')

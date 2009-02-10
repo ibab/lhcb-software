@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.34 2009-02-06 08:46:37 graven Exp $ 
+# $Id: HltLine.py,v 1.35 2009-02-10 13:04:54 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.34 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.35 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt line itself 
@@ -557,29 +557,16 @@ class Hlt1Tool (object ) :
         self.Name = name if len(name) > 0 else type().getType()
         self.Args = Args
         self.Tools = tools
-        ### need to deal with recursion on 2nd (and higher) level tools
-        ### eg. when Args contains anything of type Hlt1Tool...
     
     def createConfigurable( self, parent ) :
-        ## TODO/FIXME: this creates an unused public tool instance, 
-        ##             which could cause fall-out problems...
-        ##             how to avoid this? Generate a dummy name, 
-        ##             and explicitly kill afterwards???
-        ## origin of the problem is that we don't know the name
-        ## of the result of 'addTool'... otherwise we wouldn't
-        ## go 'depth first', i.e. if we got the instance back
-        ## that addTool makes, we could just continue using it,
-        ## instead of first creating our own (public!) instance
-        ## and then handing it over to addTool to make it private...
-        conf = self.Type( '__dummy__'+self.Name )
+        parent.addTool( self.Type( self.Name ) )
+        conf = getattr( parent, self.Name )
         for k,v in self.Args.iteritems() : setattr(conf,k,v)
         for tool in self.Tools :  
                 if type(tool) is not Hlt1Tool : 
-                    raise AttributeError, "The type  %s is not an Hlt1Tool"%type(tool)
+                    raise AttributeError, "The type %s is not an Hlt1Tool"%type(tool)
                 tool.createConfigurable( conf )
-        # make sure we call 'addTool' with an instance!
-        parent.addTool( conf , name = self.Name )
-        del conf
+
         
    
 
