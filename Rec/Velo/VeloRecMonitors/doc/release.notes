@@ -4,6 +4,10 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2009-02-10 - Marco Gersabeck
+- reduced number of clusters in VeloClusterMonitor
+  fixed and improved offline alignment monitoring in VeloTrackMonitor
+
 ! 2009-01-26 - Marco Gersabeck
 - added alignment offline monitoring plots
 

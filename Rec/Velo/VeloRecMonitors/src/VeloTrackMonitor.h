@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitor.h,v 1.5 2009-01-26 19:55:48 gersabec Exp $
+// $Id: VeloTrackMonitor.h,v 1.6 2009-02-10 15:35:17 gersabec Exp $
 #ifndef VELORECMONITORS_VELOTRACKMONITOR_H 
 #define VELORECMONITORS_VELOTRACKMONITOR_H 1
 
@@ -91,6 +91,7 @@ namespace Velo
     bool m_xPlots;
     bool m_EventClusterInfo;
     bool m_alignMoniBasic;
+    unsigned int m_alignNMeasMin;
     double m_binary;
   };
 }

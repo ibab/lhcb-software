@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitor.cpp,v 1.8 2009-01-26 19:55:48 gersabec Exp $
+// $Id: VeloTrackMonitor.cpp,v 1.9 2009-02-10 15:35:17 gersabec Exp $
 // Include files 
 
 // from Gaudi
@@ -63,7 +63,8 @@ Velo::VeloTrackMonitor::VeloTrackMonitor( const std::string& name,
   declareProperty( "ExtraPlots", m_xPlots = true);
   declareProperty( "EventClusterInfo", m_EventClusterInfo = true);
   declareProperty( "AlignMoniBasic", m_alignMoniBasic = false);
-  declareProperty( "ACDCGeometry", m_ACDC = false);
+  declareProperty( "AlignNMeasMin", m_alignNMeasMin = 10);
+  declareProperty( "ACDCGeometry", m_ACDC = true);
 }
 //=============================================================================
 // Destructor
@@ -84,33 +85,33 @@ StatusCode Velo::VeloTrackMonitor::initialize() {
   m_expectTool = tool<IVeloExpectation>( "VeloExpectation");
  
   if ( m_alignMoniBasic ) {
-    if ( context() != "Offline" ) {
     // online
-    const GaudiAlg::HistoID aliMonM_R_A_ID = "ResidualMean_R_A" ; 
-    const GaudiAlg::HistoID aliMonM_R_C_ID = "ResidualMean_R_C" ; 
-    const GaudiAlg::HistoID aliMonM_P_A_ID = "ResidualMean_P_A" ; 
-    const GaudiAlg::HistoID aliMonM_P_C_ID = "ResidualMean_P_C" ; 
-    m_h_aliMon_Mean_R_A = book1D( aliMonM_R_A_ID, "Residual mean R sensors A side", -5, 5, 100 ); 
-    m_h_aliMon_Mean_R_C = book1D( aliMonM_R_C_ID, "Residual mean R sensors C side", -5, 5, 100 ); 
-    m_h_aliMon_Mean_P_A = book1D( aliMonM_P_A_ID, "Residual mean Phi sensors A side", -5, 5, 100 ); 
-    m_h_aliMon_Mean_P_C = book1D( aliMonM_P_C_ID, "Residual mean Phi sensors C side", -5, 5, 100 ); 
-    const GaudiAlg::HistoID aliMonS_R_A_ID = "ResidualSigma_R_A" ; 
-    const GaudiAlg::HistoID aliMonS_R_C_ID = "ResidualSigma_R_C" ; 
-    const GaudiAlg::HistoID aliMonS_P_A_ID = "ResidualSigma_P_A" ; 
-    const GaudiAlg::HistoID aliMonS_P_C_ID = "ResidualSigma_P_C" ; 
-    m_h_aliMon_Sigma_R_A = book1D( aliMonS_R_A_ID, "Residual sigma R sensors A side", 0, 5, 50 ); 
-    m_h_aliMon_Sigma_R_C = book1D( aliMonS_R_C_ID, "Residual sigma R sensors C side", 0, 5, 50 ); 
-    m_h_aliMon_Sigma_P_A = book1D( aliMonS_P_A_ID, "Residual sigma Phi sensors A side", 0, 5, 50 ); 
-    m_h_aliMon_Sigma_P_C = book1D( aliMonS_P_C_ID, "Residual sigma Phi sensors C side", 0, 5, 50 ); 
+    if ( context() != "Offline" ) {
+      const GaudiAlg::HistoID aliMonM_R_A_ID = "ResidualMean_R_A" ; 
+      const GaudiAlg::HistoID aliMonM_R_C_ID = "ResidualMean_R_C" ; 
+      const GaudiAlg::HistoID aliMonM_P_A_ID = "ResidualMean_P_A" ; 
+      const GaudiAlg::HistoID aliMonM_P_C_ID = "ResidualMean_P_C" ; 
+      m_h_aliMon_Mean_R_A = book1D( aliMonM_R_A_ID, "Residual mean R sensors A side", -5, 5, 100 ); 
+      m_h_aliMon_Mean_R_C = book1D( aliMonM_R_C_ID, "Residual mean R sensors C side", -5, 5, 100 ); 
+      m_h_aliMon_Mean_P_A = book1D( aliMonM_P_A_ID, "Residual mean Phi sensors A side", -5, 5, 100 ); 
+      m_h_aliMon_Mean_P_C = book1D( aliMonM_P_C_ID, "Residual mean Phi sensors C side", -5, 5, 100 ); 
+      const GaudiAlg::HistoID aliMonS_R_A_ID = "ResidualSigma_R_A" ; 
+      const GaudiAlg::HistoID aliMonS_R_C_ID = "ResidualSigma_R_C" ; 
+      const GaudiAlg::HistoID aliMonS_P_A_ID = "ResidualSigma_P_A" ; 
+      const GaudiAlg::HistoID aliMonS_P_C_ID = "ResidualSigma_P_C" ; 
+      m_h_aliMon_Sigma_R_A = book1D( aliMonS_R_A_ID, "Residual sigma R sensors A side", 0, 5, 50 ); 
+      m_h_aliMon_Sigma_R_C = book1D( aliMonS_R_C_ID, "Residual sigma R sensors C side", 0, 5, 50 ); 
+      m_h_aliMon_Sigma_P_A = book1D( aliMonS_P_A_ID, "Residual sigma Phi sensors A side", 0, 5, 50 ); 
+      m_h_aliMon_Sigma_P_C = book1D( aliMonS_P_C_ID, "Residual sigma Phi sensors C side", 0, 5, 50 ); 
     }
     // offline
     if ( context() == "Offline" ) {
-    char hname[100];
-    for ( int i = 0; i < 84; i++ ) {
-      sprintf( hname, "m_prof_res_%d", i );
-      const GaudiAlg::HistoID sensors = hname;
-      m_prof_res[ i ] = bookProfile1D( sensors, "residual vs phi" , -210., 210., 42) ;
-    }
+      char hname[100];
+      for ( int i = 0; i < 84; i++ ) {
+        sprintf( hname, "m_prof_res_%d", i );
+        const GaudiAlg::HistoID sensors = hname;
+        m_prof_res[ i ] = bookProfile1D( sensors, "residual vs phi" , -210., 210., 42) ;
+      }
     }
   }
 
@@ -329,6 +330,8 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
     //Loop over measurements
     const std::vector<LHCb::Measurement*>& measures = track->measurements(); 
     std::vector<LHCb::Measurement*>::const_iterator it = measures.begin();
+    unsigned int n_measurements = measures.size();
+    plot1D( n_measurements, "NMeasurements", "Number of measurements on track", 0, 100, 100 );
  
     for ( ; it != measures.end(); ++it ) {
  
@@ -378,11 +381,12 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
         pitch = sensor->phiType()->phiPitch( interceptRadius );
       }
 
-      if ( ( m_alignMoniBasic ) //{   // offline monitoring
-        && ( context() == "Offline" ) ) {
+      if ( ( m_alignMoniBasic ) // offline alignment monitoring
+        && ( context() == "Offline" ) 
+        && ( n_measurements >= m_alignNMeasMin ) ) {
         unsigned int n_sen = sensor->sensorNumber();
         if ( sensor->isR() ) {
-          m_prof_res[ n_sen ]->fill( interceptAngle / degree, biasedResid );
+          m_prof_res[ n_sen ]->fill( interceptAngle / degree, biasedResid / um );
         }
         else {
           double phi_state = 0.;
@@ -394,7 +398,7 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
             phi_state = sensor->phiType()->phiOfStrip( stripID, interStripFr, sensor->phiType()->rMin( 1 ) ) / degree;
             phi_state += -10.35;                                // stereo angle for outer strips
           }
-          m_prof_res[ n_sen ]->fill( phi_state, biasedResid );
+          m_prof_res[ n_sen - 22 ]->fill( phi_state, biasedResid / um ); // phi sensor numbering is 64-105, filled into 42-83
         }
       }
       
@@ -511,8 +515,10 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
     
   }
   
+  // online alignment monitoring
   if( ( m_alignMoniBasic )
         && ( context() != "Offline" ) ) {
+    error() << "Filling online context" << endmsg;
     // reset histograms
     m_h_aliMon_Mean_R_A->reset();
     m_h_aliMon_Mean_R_C->reset();

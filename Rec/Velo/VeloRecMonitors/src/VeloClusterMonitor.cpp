@@ -1,4 +1,4 @@
-// $Id: VeloClusterMonitor.cpp,v 1.10 2008-10-02 17:27:08 erodrigu Exp $
+// $Id: VeloClusterMonitor.cpp,v 1.11 2009-02-10 15:35:17 gersabec Exp $
 // Include files 
 // -------------
 
@@ -134,7 +134,7 @@ void Velo::VeloClusterMonitor::monitorClusters() {
   counter( "# VeloClusters" ) += nclus;
   if ( nclus > 0 )
     plot1D( nclus, "# VELO clusters", "Number of VeloClusters per event",
-	    -0.5, 20000.5, 20001 );
+	    -0.5, 20000.5, 2000 );
   
   // Loop over the VeloClusters
   LHCb::VeloClusters::const_iterator itVC;
@@ -171,7 +171,7 @@ void Velo::VeloClusterMonitor::monitorClusters() {
 	    -0.5, 131.5, -0.5, 5.5, 132, 6 );
     plot2D( sensorNumber, adc, "Cluster ADC values vs sensor",
 	    "Cluster ADC values versus sensor",
-	    -0.5, 131.5, -0.5, 128*4+0.5, 132, 128*4+1 );
+	    -0.5, 131.5, 0, 515, 132, 103 );
     
 
     // Active chip links versus sensor number
