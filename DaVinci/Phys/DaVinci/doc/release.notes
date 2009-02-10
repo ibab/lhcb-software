@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.308 2009-02-10 12:07:35 pkoppenb Exp $
+! $Id: release.notes,v 1.309 2009-02-10 12:17:08 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -11,6 +11,7 @@
 
 ! 2009-02-10 - Patrick Koppenburg
  - First working version of writing and reading an ETC. Many changes ahead.
+ - Rename DaVinciOutput to WriteDst
 
 ! 2009-02-09 - Patrick Koppenburg
  - Remove MuonID stuff. In PhysConf now.

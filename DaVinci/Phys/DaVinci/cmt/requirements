@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.407 2009-02-04 18:48:01 pkoppenb Exp $
+# $Id: requirements,v 1.408 2009-02-10 12:17:08 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : J. Palacios
 #
@@ -63,7 +63,7 @@ alias DaVinci gaudirun.py
 apply_pattern GaudiApp
 ignore_pattern package_stamps
 #
-macro DaVinciConfUserModules "DaVinci.Configuration DaVinci.DaVinciOutput"
+macro DaVinciConfUserModules "DaVinci.Configuration DaVinci.DaVinciWriteDst"
 apply_pattern install_python_modules
 #apply_pattern install_scripts
 

@@ -1,13 +1,13 @@
 """
-Output for DaVinci
+Dst Writing for DaVinci
 """
-__version__ = "$Id: DaVinciOutput.py,v 1.4 2009-02-06 18:15:02 pkoppenb Exp $"
+__version__ = "$Id: DaVinciWriteDst.py,v 1.1 2009-02-10 12:17:08 pkoppenb Exp $"
 __author__  = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from Gaudi.Configuration import *
 from Configurables import ( DstConf )
 
-class DaVinciOutput(ConfigurableUser):
+class DaVinciWriteDst(ConfigurableUser):
     __slots__ = {
          "DstFiles"           : {}            # Name and sequence of output files
        , "Items"              : []            # Additional items to write to DST
@@ -29,7 +29,7 @@ class DaVinciOutput(ConfigurableUser):
         log.info("Do nothing")
 
     ############################################################################
-    # Output Stream Name
+    # WriteDst Stream Name
     #
     def streamName(self,filename):
         """
@@ -52,7 +52,7 @@ class DaVinciOutput(ConfigurableUser):
         """
         Write out a DST using a sequence
         """
-        log.info("DaVinciOutput::writeDst "+filename)
+        log.info("DaVinciWriteDst::writeDst "+filename)
         stream = self.streamName(filename)
         # InputCopyStream ignores the rest on the TES
         from Configurables import ApplicationMgr, InputCopyStream   
