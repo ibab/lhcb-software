@@ -1,5 +1,9 @@
 2009-02-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of version v1r12
+
+2009-02-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* scripts/runpy.bat: Removed.
 	* cmt/requirements: added the declaration of the runpy python script. This
 	is needed to generate the .bat wrapper.
