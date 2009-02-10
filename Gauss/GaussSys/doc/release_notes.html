@@ -3,7 +3,145 @@ Package : GaussSys
 Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
+</PRE><H1><A NAME="v36r2">2009-02-10 - GaussSys v36r2</A></H1><PRE>
+<H2><A NAME="Note">DC09 DEVELOPEMENT version. Support DDDB tag lhcb-20091012
+   and SIMCOND tag sim-20090112
+   </A></H2>
+<H3><A NAME="Use">This version uses:
+   LHCb v26r1 (and Gaudi v20r1)
+   pythia6 418.2, photos 215.2, lhapdf 5.3.1 
+   (via LCG_GeneratorsInterfaces)
+   HepMC 2.03.09 (via LCG_Interfaces)
+   Geant4 v91r3 (based on geant4.9.1.p03) and Geant4Files v91r0
+   <b>DecFiles v16r1</b>, 
+   ParamFiles v8r0, 
+   SQLDDDB v5r1, FieldMap v5r* (latest v5r1), 
+   XmlVis v1r8,
+   herwig 6.510.2, jimmy 4.31.2 (via LCG_GeneratorsInterfaces),
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
+   pythia8 107.1,
+   bcvegpy (LHCb build)
+</A></H3>
 
+!======================== Gauss v36r2 2009-02-10 =============================
+! 2009-02-10 - Gloria CORTI
+ - Modify transverse beam size settings for 450 GeV and 5 TeV based on
+   LHC-OP-ES-0011 (EDMS no. 931921).
+   . PilotRun.opts
+   . BeamCond-5TeV.opts
+ - Set luminosity to 2x10^32 for 5TeV to mimick pileup as expected for
+   50ns bunch spacing
+   . BeamCond-5TeV.opts
+ - Define function (to be moved to configurable) to set crossing angle
+   for all generation type cases.
+   . python/Gauss/Configuration.py
+ - Set beam crossing angle to zero for all cases when LHCb magnet is off
+   under the assumption that this will happen most likely when running
+   with up to 156 bunches when external crossing angle is not required.
+   . Beam{450GeV,5TeV,7TeV}-Velo{Open,Closed}-MagOff.py
+ - Set beam crossing angle to 2.1 mrad for 450GeV beams as given only by
+   LHCb magnet, as will be the case for up to 156 bunches (no external
+   crossing angle required), LHC Project Note 419.
+   . Beam450GeV-Velo{Open,Closed}-Mag{Down,Up}.py
+ - Set beam crossing angle to 121 microrad for 5TeV beams: this is the
+   effective angle due to both external angle for full positive polarity
+   of the LHCb magnet and for more than 156 bunches and the internal LHCb
+   magnet crossing angle (LHC Project Note 419). Does not know external
+   crossing angle for negative polarity, so leave the same effective angle
+   for the moment.
+   . Beam5TeV-Velo{Open,Closed}-Mag{Down,Up}.py
+
+! 2009-02-09 - Gloria CORTI
+ - Remove use of RichMCAssociators, not necessary since code is in GaussRICH
+
+! 2009-02-05 - Gloria CORTI
+ - Options to simulate only calorimeters, to allow production of particle
+   guns for special studies.
+
+! 2009-02-04 - Gloria CORTI
+ - Move optional items to write to tape when running RICH to obtain extended
+   information to GaussTape.opts from RichExtendedInfo
+ - Remove bakeout from RICH from simulation (volume will not even exist in
+   as installed version)
+   . SimGeometry.opts
+ - Put back all geomtry by default, leave as commented example how to switch
+   off calorimeneters when running the visualization
+   . GaussVis.opts
+
+! 2009-01-26 - Chris Jones
+ - Changes to RICH extended information
+  + Activate by default.
+  + Run two additional algorithms, previously run in Boole, to create linker
+    information between the RICH extended information and the main MC data
+    objects.
+
+!========================== EvtGen v10r2 2009-02-09 ==========================
+! 2009-01-20 - Will REECE
+ - EvtGen, EvtModelReg. Adds a hook so new decay models can be passed in from
+   an external pacakge - in this case EvtGenExtras
+
+!====================== Generators v9r3 2009-02-09 ===========================
+! 2009-01-20 - Will REECE
+ - EvtGenDecay: Passes the list of models from EvtGenExtras into EvtGen.
+   requirements: Adds dependency on EvtGenExtras.
+
+!======================= EvtGenExtras v1r0 2009-02-09 ========================
+! 2009-02-09 - Will REECE
+ - Adds a new model for the decay of Bd->K*mumu based on work with
+   A. Bhurucha. Reference for theory side is arXiv:0811.1214 (hep-ph).
+   The model is stable and will compile but is *not validated*, and so
+   should not yet be used for production jobs.
+
+! 2009-01-20 - Will REECE
+ - New Package
+
+   Initial version for testing, including a dummy model.
+   Allows extra models to be passed into EvtGen at runtime.
+   These models are provided as a list using the method
+   EvtModelRegExtras::getModels(). This can be uses in the
+   situation where it is desirable to include a new model,
+   but not introduce extra external dependencies for the EvtGen
+   package itself.
+
+!========================= LbPythia v8r3 2009-02-09 ==========================
+! 2009-01-26 - Patrick Robbe
+ - PythiaProduction.cpp: re-activate extra charmonium processes which had
+   been desactivated by mistake
+
+! ====================== BcVegPy v1r1p3 2009-02-09 ===========================
+! 2009-01-19 - Chris Jones
+ - Fixes for line-too-long compilation errors in various files using gfortran
+   on OSX. Just slightly shorten all offending lines.
+
+!======================= LbHerwig v6r0p1 2008-02-09 =========================
+! 2009-01-29 - Marco Cattaneo
+ - Backward compatible fix for Gaudi v21
+
+!========================= LbHijing v4r1 2009-02-09 ==========================
+! 2009-01-19 - Chris Jones
+ - Fix for name conflicit between local ran function and implicit function
+   with gfortran gcc 4.3 (OSX).
+
+!======================= GaussAlgs v3r3p1 2008-08-04 ==========================
+! 2009-01-26 - Chris Jones
+ - Suppress info() message for RICH extended information.
+
+!========================= GaussRICH v9r3 2009-02-09 =========================
+! 2009-02-04 - Gloria CORTI
+ - Remove the lines for GaussTape.OptItems that have been put directly into
+   GaussTape.opts
+
+! 2009-01-26 - Chris Jones
+ - Import two algorithms from Boole to create linkers for extended information.
+   This is a temporary solution. Ideally they would be in a package in the
+   Lbcom project, which might become possible with a future Gauss
+   reorganisation.
+
+!====================== CaloMoniSim v3r1p2 2009-02-09 =========================
+! 2009-01-13 - Olivier Deschamps
+ - fix bug with histo/area titl'ing
+
+!=============================================================================
 </PRE><H1><A NAME="v36r1">2009-01-14 - GaussSys v36r1</A></H1><PRE>
 <H2><A NAME="Note">DC09 DEVELOPEMENT version. Support DDDB tag lhcb-20091012
    and SIMCOND tag sim-20090112
