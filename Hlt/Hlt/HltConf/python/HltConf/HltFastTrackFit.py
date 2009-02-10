@@ -1,6 +1,7 @@
 from Gaudi import Configuration
 from Configurables import HltTrackUpgradeTool, HltTrackFit, TrackMasterFitter
-from Configurables import MeasurementProvider,TrackKalmanFilter, TrackMasterExtrapolator, TrackDistanceExtraSelector
+from Configurables import MeasurementProvider,TrackKalmanFilter, TrackMasterExtrapolator
+from Configurables import TrackHerabExtrapolator
 
 # why is this not automatically the case if RecoName == FitTrack ???
 def setupHltFastTrackFit( fit ) :
@@ -25,3 +26,4 @@ def setupHltFastTrackFit( fit ) :
 
     fit.addTool( TrackKalmanFilter('NodeFitter', BiDirectionalFit = False, Smooth = False ) )
     fit.addTool( TrackMasterExtrapolator('Extrapolator', MaterialLocator = fit.MaterialLocator ) )
+    TrackHerabExtrapolator().extrapolatorID = 4
