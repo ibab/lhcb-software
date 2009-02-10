@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.81 2009-01-15 15:14:31 jpalac Exp $
+# $Id: requirements,v 1.82 2009-02-10 17:02:49 pkoppenb Exp $
 package AnalysisSys
 version v3r0
 
@@ -35,6 +35,7 @@ use B2DstarX			v1r7p3	PhysSel # WGs
 use B2uds	   		v2r7    PhysSel # Juan Palacios, Gabriel Guerrer, Eric Conte
 # use JetsSel	    	    	v1r4p2  PhysSel # Jets WG
 use Radiative       	    	v2r4p5  PhysSel # Vanya BELYAEV
+use DSelections                 v1r0    PhysSel # Marco Gersabeck
 
 # temporary packages
 use Bd2PiPiPi0       	   	v4r3p4   PhysSel # Olivier Deschamps
