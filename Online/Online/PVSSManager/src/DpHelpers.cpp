@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpHelpers.cpp,v 1.8 2008-03-20 20:50:44 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpHelpers.cpp,v 1.9 2009-02-10 19:32:35 frankb Exp $
 //  ====================================================================
 //  DpHelpers.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DpHelpers.cpp,v 1.8 2008-03-20 20:50:44 frankb Exp $
+// $Id: DpHelpers.cpp,v 1.9 2009-02-10 19:32:35 frankb Exp $
 
 // PVSS include files
 #include "Manager.hxx"
@@ -98,7 +98,7 @@ int PVSS::pvss_load_configurations(CfgManager* m, int id,
     for(size_t j=0; j<attrNum; ++j)  {
       const DpAttributeNrType att = attrs[j];
       n = ConfigsMapper::getAttributeName(cfg,att);
-      if ( pvss_debug() ) ::printf("PVSS>         Adding attribute [%ld]:%s\n",att,n);
+      if ( pvss_debug() ) ::printf("PVSS>         Adding attribute [%ld]:%s\n",long(att),n);
       addAttr(m, att, n);
     }
     // Forget about details....only very few configs have named details.
@@ -150,7 +150,7 @@ bool PVSS::pvss_lookup_name(const DpID& id, char*& nam)  {
   return res;
 }
 
-bool PVSS::pvss_lookup_dpidset(const char* wildname,DpID*& array,long& cnt,int typ)  {
+bool PVSS::pvss_lookup_dpidset(const char* wildname,DpID*& array,int& cnt,int typ)  {
   DpIdentifier* arr = 0;
   bool res = Manager::getIdSet(wildname,arr,cnt,typ) == PVSS_TRUE;
   array = (DpID*)arr;

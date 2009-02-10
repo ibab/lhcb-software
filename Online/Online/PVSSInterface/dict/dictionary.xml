@@ -2,7 +2,6 @@
   <selection>
     <!-- class pattern="*PVSS::*"/ -->
     <class pattern="PVSS::*"/>
-
     <class pattern="std::map<*,PVSS::*>"/>
     <class pattern="std::map<*,PVSS::*>::*iterator"/>
     <class pattern="std::_Tree<*PVSS::*>"/>

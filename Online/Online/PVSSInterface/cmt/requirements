@@ -10,12 +10,16 @@ apply_pattern install_more_includes more=PVSSInterface offset=PVSS
 library PVSSInterface *.cpp -import=Python
 apply_pattern linker_library library=PVSSInterface
 apply_pattern ld_library_path
+# gccxmlopts='--gccxmlopt='--gccxml-cxxflags -m32' -D__GCCXML -E '
 
-macro_append gccxmlopts " -D__GCCXML "
+###macro_append gccxmlopts " -D__GCCXML "
+macro_append gccxml_cppflags ' -D__GCCXML '
+## macro_append PVSS_reflex_options ' --gccxmlopt="-E" '
 apply_pattern reflex_dictionary dictionary=PVSS \
                                 headerfiles=$(PVSSINTERFACEROOT)/dict/dictionary.h \
                                 selectionfile=$(PVSSINTERFACEROOT)/dict/dictionary.xml \
                                 imports=Python
+
 macro OnlineKernelDict_use_linkopts $(use_linkopts)
 # Gnerate dictionary rootmap file
 apply_pattern generate_rootmap library=PVSSDict

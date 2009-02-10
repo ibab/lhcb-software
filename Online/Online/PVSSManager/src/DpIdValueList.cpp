@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpIdValueList.cpp,v 1.7 2007-10-01 14:46:55 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpIdValueList.cpp,v 1.8 2009-02-10 19:32:35 frankb Exp $
 //  ====================================================================
 //  DpIdValueList.cpp
 //  --------------------------------------------------------------------
@@ -6,9 +6,10 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DpIdValueList.cpp,v 1.7 2007-10-01 14:46:55 frankm Exp $
+// $Id: DpIdValueList.cpp,v 1.8 2009-02-10 19:32:35 frankb Exp $
 #include <memory>
-#include <iostream.h>
+#include <iostream>
+#include <stdint.h>
 
 #include "PVSS/Internals.h"
 #include "PVSS/Array.h"

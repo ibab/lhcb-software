@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DataPoint.h,v 1.9 2007-10-15 20:03:51 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DataPoint.h,v 1.10 2009-02-10 19:32:35 frankb Exp $
 //  ====================================================================
 //  DataPoint.h
 //  --------------------------------------------------------------------
@@ -330,7 +330,7 @@ namespace PVSS {
     /// Datapoint identifiers contained in selected list
     DpID*            m_dpids;
     /// Number of Datapoint identifiers contained in selected list
-    long             m_count;
+    int              m_count;
     /// Reference to controls manager
     ControlsManager* m_manager;
   public:

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/PVSS/Internals.h,v 1.10 2007-09-10 09:39:50 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/PVSS/Internals.h,v 1.11 2009-02-10 19:32:35 frankb Exp $
 //  ====================================================================
 //  Internals.h
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: Internals.h,v 1.10 2007-09-10 09:39:50 frankm Exp $
+// $Id: Internals.h,v 1.11 2009-02-10 19:32:35 frankb Exp $
 #ifndef PVSSMANAGER_PVSS_INTERNALS_H
 #define PVSSMANAGER_PVSS_INTERNALS_H
 
@@ -168,7 +168,7 @@ namespace PVSS  {
   /// Lookup datapoint identifier by it's name
   bool pvss_lookup_dpid(const char* nam, DpID& id);
   /// Lookup datapoint set by wildcard name
-  bool pvss_lookup_dpidset(const char* wildname,DpID*& array,long& count,int typeId=0);
+  bool pvss_lookup_dpidset(const char* wildname,DpID*& array,int& count,int typeId=0);
   /// Create PVSS data point
   bool pvss_create_device(const char* name, int type, int systemId, DevAnswer* answer);
   /// Delete PVSS data point
@@ -184,7 +184,7 @@ namespace PVSS  {
   /// Add identifier to list
   bool pvss_list_add(void* ctxt,const DpID& dpid);
   /// Add result of wildcard search to the list
-  bool pvss_list_add_wild(void* ctxt,const char* wild_name,DpID*& array,long& count,int typeId=0);
+  bool pvss_list_add_wild(void* ctxt,const char* wild_name,DpID*& array,int& count,int typeId=0);
 
   /** DpIdValueList handling: DpIdValueList.cpp                            */
 
