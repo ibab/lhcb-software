@@ -1,17 +1,20 @@
-// $Id: BeamCond-5TeV.opts,v 1.3 2008-10-08 13:00:39 gcorti Exp $ 
+// $Id: BeamCond-5TeV.opts,v 1.4 2009-02-10 16:40:50 gcorti Exp $ 
 
 /** @file 
  * 
  *  Options to run pp collisions as in Startup with 5 TeV
  *
+ *  For beam size see LHC-OP-ES-0011
+ *  For beam crossing angles (set based on Magnet see LHC Project Note 419)
+ * 
  *  @author G.Corti
  *  @date 2008-07-28
  *
  */
 
-// == Sigle interactions
-Generation.PileUpTool = "FixedNInteractions";
-Generation.FixedNInteractions.Luminosity = 1.0e-03*LumiUnit;
+// == Interactions with effectively same luminosity as nominal
+Generation.PileUpTool = "FixedLuminosity";
+Generation.FixedLuminosity.Luminosity = 2.0*LumiUnit;
  
 // == Beam momentum and vertex smearing for pp collisions 
 Generation.MinimumBias.PythiaProduction.CollidingBeams.BeamMomentum = 5.0*TeV;
@@ -22,13 +25,12 @@ Generation.SignalForcedFragmentation.PythiaProduction.CollidingBeams.BeamMomentu
 Generation.StandAloneDecayTool.PythiaProduction.CollidingBeams.BeamMomentum = 5.0*TeV;
 Generation.Special.PythiaProduction.CollidingBeams.BeamMomentum = 5.0*TeV;
 
-Generation.BeamSpotSmearVertex.SigmaX = 0.200*mm; 
-Generation.BeamSpotSmearVertex.SigmaY = 0.200*mm; 
+Generation.BeamSpotSmearVertex.SigmaX = 0.046*mm; 
+Generation.BeamSpotSmearVertex.SigmaY = 0.046*mm; 
 
 // == or beam gas (Pythia & Hijing) depending on what is produced
 Generation.MinimumBias.PythiaProduction.FixedTarget.BeamMomentum = 5.0*TeV;
 Generation.MinimumBias.HijingProduction.Commands += { "hijinginit efrm 5000." }; // in GeV
-Generation.FlatZSmearVertex.SigmaX = 0.280*mm;
-Generation.FlatZSmearVertex.SigmaY = 0.280*mm;
-
+Generation.FlatZSmearVertex.SigmaX = 0.065*mm;
+Generation.FlatZSmearVertex.SigmaY = 0.065*mm;
 
