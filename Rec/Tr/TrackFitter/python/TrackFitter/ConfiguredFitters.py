@@ -63,7 +63,11 @@ def ConfiguredMasterFitter( Name,
         fitter.MeasProvider.VeloPhiProvider = MeasurementProviderT_MeasurementProviderTypes__VeloLitePhi_()
         fitter.MeasProvider.TTProvider = MeasurementProviderT_MeasurementProviderTypes__TTLite_()
         fitter.MeasProvider.ITProvider = MeasurementProviderT_MeasurementProviderTypes__ITLite_()
-        
+
+    if TrackSys().cosmics():
+        fitter.addTool( MeasurementProvider(), name = "MeasProvider")
+        fitter.MeasProvider.OTProvider.RawBankDecoder = 'OTMultiBXRawBankDecoder'
+
     return fitter
 
 
@@ -83,11 +87,11 @@ def ConfiguredEventFitter( Name,
     # add the tools that need to be modified
     fittername = Name + ".Fitter"
     eventfitter.addTool( ConfiguredMasterFitter( fittername,
-                                                 FieldOff,
-                                                 SimplifiedGeometry,
-                                                 NoDriftTimes,
-                                                 KalmanSmoother,
-                                                 LiteClusters ), name = "Fitter")
+                                                 FieldOff=FieldOff,
+                                                 SimplifiedGeometry=SimplifiedGeometry,
+                                                 NoDriftTimes=NoDriftTimes,
+                                                 KalmanSmoother=KalmanSmoother,
+                                                 LiteClusters=LiteClusters ), name = "Fitter")
     return eventfitter
 
 def ConfiguredPrefitter( Name = "DefaultEventFitter",
@@ -96,8 +100,10 @@ def ConfiguredPrefitter( Name = "DefaultEventFitter",
                          SimplifiedGeometry = TrackSys().simplifiedGeometry(),
                          LiteClusters = False ):
     eventfitter = ConfiguredEventFitter(Name,TracksInContainer,
-                                        FieldOff,SimplifiedGeometry,
-                                        NoDriftTimes=True, LiteClusters)
+                                        FieldOff=FieldOff,
+                                        SimplifiedGeometry=SimplifiedGeometry,
+                                        NoDriftTimes=True,
+                                        LiteClusters=LiteClusters)
     eventfitter.Fitter.NumberFitIterations = 2
     eventfitter.Fitter.MaxNumberOutliers = 0
     eventfitter.Fitter.ErrorY2 = 10000
@@ -107,7 +113,8 @@ def ConfiguredFitVelo( Name = "FitVelo",
                        TracksInContainer = "Rec/Track/PreparedVelo"):
     # note that we ignore curvatue in velo. in the end that seems the
     # most sensible thing to do.
-    eventfitter = ConfiguredEventFitter(Name,TracksInContainer,FieldOff=True )
+    eventfitter = ConfiguredEventFitter(Name,TracksInContainer,
+                                        FieldOff=True )
     eventfitter.Fitter.NumberFitIterations = 2
     eventfitter.Fitter.ZPositions = []
     #eventfitter.Fitter.ErrorP= [0.01, 5e-08]
@@ -174,7 +181,10 @@ def ConfiguredPreFitDownstream( Name = "PreFitDownstream",
     return eventfitter
 
 def ConfiguredFastFitter( Name, FieldOff = TrackSys().fieldOff(), LiteClusters = True  ):
-    fitter = ConfiguredMasterFitter(Name, FieldOff,SimplifiedGeometry = True, LiteClusters = LiteClusters)
+    fitter = ConfiguredMasterFitter(Name,
+                                    FieldOff=FieldOff,
+                                    SimplifiedGeometry = True,
+                                    LiteClusters = LiteClusters)
     fitter.NumberFitIterations = 1
     fitter.MaxNumberOutliers = 0
     fitter.ZPositions = []
@@ -204,11 +214,10 @@ def ConfiguredFastVeloOnlyEventFitter( Name, TracksInContainer ):
 def ConfiguredStraightLineFit( Name, TracksInContainer,
                                NoDriftTimes =  TrackSys().noDrifttimes()  ):
     eventfitter = ConfiguredEventFitter(Name,TracksInContainer,
-                                        FieldOff=True,NoDriftTimes)
+                                        FieldOff=True,
+                                        NoDriftTimes=NoDriftTimes)
     eventfitter.Fitter.ApplyMaterialCorrections = False
     eventfitter.Fitter.Extrapolator.ApplyMultScattCorr = False
-    eventfitter.Fitter.Extrapolator.ApplyEnergyLossCorr = False
-    eventfitter.Fitter.Extrapolator.ApplyElectronEnergyLossCorr = False
     eventfitter.Fitter.StateAtBeamLine = False
     eventfitter.Fitter.ZPositions = [ ]
     return eventfitter

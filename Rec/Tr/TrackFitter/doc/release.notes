@@ -5,7 +5,9 @@
 
 ! 2009-02-10 - Wouter Hulsbergen
  - Added flag to use lite clusters
+ - Set up fit for merged OT events when running cosmics
  - Fixed bug in configuration of FitVelo
+ - Fixed bug due to using unkeyed function arguments everywhere
 
 ! 2009-01-19 - David Hutchcroft
  - Added ability to fit Velo "lite" clusters
