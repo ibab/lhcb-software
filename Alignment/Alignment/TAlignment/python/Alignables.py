@@ -209,7 +209,7 @@ class Alignables( list ):
                 for k in self.m_otQuarters :
                     ## Nine modules numbered from 1 to 9
                     for l in self.m_otModules :
-                        elements.append( "Group : " + self.m_ot + i + j + k + l )
+                        elements.append( i.strip('/') + j.strip('/') + k.strip('/') + l.strip('/') + " : " + self.m_ot + i + j + k + l )
         self.__append( elements, dofs )    
 
     def XOTModules( self, dofs = '' ) :
