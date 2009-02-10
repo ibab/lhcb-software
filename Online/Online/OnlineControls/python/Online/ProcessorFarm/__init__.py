@@ -32,7 +32,10 @@ def _startupInfo(self,task_typ):
 # =============================================================================
 def _optsFile(self,name,type):
   return type+'.opts'
-
+# ===========================================================================
+def _fifoName(self,task):
+  return '/tmp/logReco.fifo'
+# ===========================================================================
 def runStorage(project,name='Storage'):
   """
   Execute Storage system streaming component to
@@ -54,10 +57,16 @@ def runStorage(project,name='Storage'):
   mgr      = _mgr(FarmSetup.storage_system)
   info     = RI.StorageInfoCreator()
   print 'Starting storage'
-  streamer = StreamAllocator.Allocator(mgr,name,info)
+  blk_policy = StreamAllocator.BlockSlotPolicy
+  all_policy = StreamAllocator.AllSlotPolicy
+  streamer = StreamAllocator.Allocator(mgr,name,info,policy=(blk_policy,all_policy))
   streamer.fsmManip._startupInfo = _startupInfo
   streamer.fsmManip._optsFile = _optsFile
-  #writer   = Farm.RecStorageOptionsWriter(mgr,name,info)
+  #streamer.fsmManip._fifoName = _fifoName
+  streamer.recv_slots_per_node = 4
+  streamer.strm_slots_per_node = 25
+  streamer.showSetup()
+  #writer = Farm.RecStorageOptionsWriter(mgr,name,info)
   #ctrl = Control.Control(mgr,name,'Alloc',[streamer,writer]).run()
   ctrl = Control.Control(mgr,name,'Alloc',[streamer]).run()
   return (ctrl,mgr)

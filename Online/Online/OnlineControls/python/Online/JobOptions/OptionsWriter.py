@@ -93,7 +93,7 @@ class OptionsWriter(Control.AllocatorClient):
   def connect(self,name):
     "Connect job options writer as a standalone device listening to commands."
     devMgr = self.optionsManager().deviceMgr()
-    jo_dev = devMgr.manager().name()+':'+name+'JobOptions'
+    jo_dev = devMgr.manager().name()+':'+name
     print 'Dev exists:',str(devMgr.exists(jo_dev)),jo_dev
     if not devMgr.exists(jo_dev):
       typ = devMgr.manager().typeMgr().type('JobOptionsControl')
@@ -208,9 +208,12 @@ class OptionsWriter(Control.AllocatorClient):
 
   # ===========================================================================
   def configure(self, rundp_name, partition):
-    self.run = self.infoCreator.create(rundp_name,partition).load()
-    if self.run:
-      return self._configure(partition)
+    try:
+      self.run = self.infoCreator.create(rundp_name,partition).load()
+      if self.run:
+        return self._configure(partition)
+    except Exception,X:
+      print 'Exception:',X
     error('Run Information for partition '+partition+' does not exist!',
           timestamp=1,type=PVSS.ILLEGAL_VALUE)
     return None
@@ -248,7 +251,7 @@ class OptionsWriter(Control.AllocatorClient):
     return self.writeOptionsFile(self.run.name, self.run.name+'_RunInfo', opts.value)
   
   # ===========================================================================
-  def _writeOnlineEnv(self,partition):
+  def _getOnlineEnv(self,partition):
     run_type = self.run.runType()
     opts = Options('//  Auto generated options for partition:'+partition+' activity:'+run_type+'  '+time.ctime())
     opts.add('//\n// ---------------- General partition information:  ')
@@ -261,20 +264,25 @@ class OptionsWriter(Control.AllocatorClient):
     if self.run.acceptRate() is None:
       print 'Rate is None!!!!!'
     opts.add('AcceptRate',     float('%.7f'%(self.run.acceptRate(),)))
-    if self.run.TCK() is None:
-      print 'No TCK information present!'
+    tck = self.run.TCK()
+    if tck is None:
+      opts.add('// No TCK information present!')
     else:
-      opts.add('InitialTCK',   '0x%08X'%(self.run.TCK(),))
+      opts.add('InitialTCK',   str(hex(0xFFFFFFFF&int(tck)))[:-1])
+    return opts
 
+  # ===========================================================================
+  def _writeOnlineEnv(self,partition):
+    opts = self._getOnlineEnv(partition)
     fname = partition+'_OnlineEnv'
     if self.writeOptionsFile(partition, fname, opts.value) is None:
       return None
     return self.run
 
-   # ===========================================================================
-  def _writePyOnlineEnv(self,partition):
+  # ===========================================================================
+  def _writePyOnlineEnv(self,partition,fname='OnlineEnv'):
     run_type = self.run.runType()
-    opts = PyOptions('#  Auto generated options for partition:'+partition+' activity:'+run_type+'  '+time.ctime())
+    opts = PyOptions('#  Auto generated PyOnlineEnv for partition:'+partition+' activity:'+run_type+'  '+time.ctime())
     opts.add('#\n# ---------------- General partition information:  ')
     opts.add('PartitionID',    self.run.partitionID())
     opts.add('PartitionIDName','%04X'%self.run.partitionID())
@@ -282,22 +290,23 @@ class OptionsWriter(Control.AllocatorClient):
     opts.add('Activity',       run_type)
     opts.add('OutputLevel',    self.run.outputLevel())
     opts.add('AcceptRate',     float('%.7f'%(self.run.acceptRate(),)))
-    if self.run.TCK() is not None:
-      opts.add('InitialTCK',   '0x%08X'%(self.run.TCK(),))
+    tck = self.run.TCK()
+    if tck is not None:
+      opts.add('InitialTCK',   str(hex(0xFFFFFFFF&int(tck)))[:-1])
     opts.add('#\nfrom OnlineConfig import *')
-    if self.writePythonFile(partition, 'OnlineEnv', opts.value) is None:
+    if self.writePythonFile(partition, fname, opts.value) is None:
       return None
     return self.run
 
- # ===========================================================================
-  def _writeTell1Boards(self,partition):
+  # ===========================================================================
+  def _getTell1Boards(self,partition,hdr=''):
+    h = hdr
+    if len(h)>0: h = h+'\n'
     run_type = self.run.runType()
-    opts = Options('//  Auto generated options for partition:'+partition+' activity:'+run_type+'  '+time.ctime())
-    opts.add('//\n// ---------------- Tell1 board information:')
+    opts = Options(h+'// ---------------- Tell1 board information:')
     opts.add('OnlineEnv.Tell1Boards         = {')
     err = None
     num = 0;
-    print 'New version of HLT options generator....'
     for b in self.run.tell1Boards.data:
       itms = b.split(':')
       try:
@@ -339,16 +348,75 @@ class OptionsWriter(Control.AllocatorClient):
       err = self
     if err:
       return None
+    return opts
+  
+  # ===========================================================================
+  def _writeTell1Boards(self,partition):
+    opts = self._getTell1Boards(partition)
+    opts.value = '//  Auto generated options for partition:'+partition+' activity:'+run_type+'  '+time.ctime()+'\n'+\
+                 opts.value
     fname = partition+'_Tell1Boards'
     if self.writeOptionsFile(partition, fname, opts.value) is None:
       return None
     self._makeRunInfo(partition)
     return self.run
+
+  # ===========================================================================
+  def _gethost(self,ip):
+    try:
+      return socket.gethostbyname(ip)
+    except:
+      return str(None) ## str(ip)
+    
+  # ===========================================================================
+  def _getInjectorInfo(self,partition):
+    b = ''
+    try:
+      run_type = self.run.runType()
+      opts = Options('// ---------------- Injector information:')
+      #opts.add('//   RUN_Info.Injector.FullPartId:')
+      #opts.add('Injector_FullPartId',      self.run.inj_fullPartId.data)
+      opts.add('//   RUN_Info.Injector.MEPRequestAddr:')
+      b = self.run.inj_mepAddress.data
+      opts.add('Injector_odinIF_Name',     b)
+      opts.add('Injector_odinIF_IP',       self._gethost(b))
+      opts.add('//   RUN_Info.Injector.DataAddr:')
+      b = self.run.inj_dataAddress.data
+      opts.add('Injector_farmIF_Name',     b)
+      opts.add('Injector_farmIF_IP',       self._gethost(b))
+      opts.add('//   RUN_Info.Injector.OdinMEPRequest:')
+      b = self.run.inj_odinRequest.data
+      opts.add('Injector_ODIN_REQ_Name',   b)
+      opts.add('Injector_ODIN_REQ_IP',     self._gethost(b))
+      opts.add('//   RUN_Info.Injector.OdinData:')
+      b = self.run.inj_odinData.data
+      opts.add('Injector_ODIN_DATA_Name',  b)
+      opts.add('Injector_ODIN_DATA_IP',    self._gethost(b))
+
+      # opts.add('\n// ---------------- Tell1 borard information: (RUN_Info.Injector.FullTell1List)\nOnlineEnv.FullTell1Boards = {   ')  # Trailing spaces mandatory!
+      # for b in self.run.inj_tell1Boards.data:
+      #   opts.add('  "%s", "%s", "",'%(self._gethost(b+'-d1'),b+'-d1'))
+      # opts.value = opts.value[:-2] + '\n};\n'
+      opts.add('\n// ---------------- Injector node list: (RUN_Info.Injector.nodeList)\nOnlineEnv.Injector_Nodes = {   ')  # Trailing spaces mandatory!
+      for n in self.run.inj_nodeList.data:
+        opts.add('  "%s",'%n)
+      opts.value = opts.value[:-2] + '\n};\n'
+      opts.add('\n// ---------------- Input file list: (RUN_Info.Injector.FileList)\nOnlineEnv.Injector_Files = {   ')  # Trailing spaces mandatory!
+      for f in self.run.inj_fileList.data:
+        opts.add('  "DATA=\'PFN:root:file://%s\' IgnoreChecksum=\'YES\' SVC=\'LHCb::MDFSelector\'",'%f)
+      opts.value = opts.value[:-2] + '\n};\n'
+      return opts
+
+    except Exception,X:
+      error('Failed to retrieve specs '+str(b),timestamp=1)
+      error('Error '+str(X),timestamp=1)
+    return None
   
   # ===========================================================================
   def _configure(self, partition):
     activity = self.activityName()
     tasks = self.getTasks(activity)
+    env = self._getOnlineEnv(partition).value
     if tasks is not None:
       run_type = self.run.runType()
       for task in tasks:
@@ -357,15 +425,10 @@ class OptionsWriter(Control.AllocatorClient):
                '#include "$PREAMBLE_OPTS"')
         if task.defaults.data:
           rt = run_type.lower()
-          opts.add('//\n// ---------------- General partition information:  ')
-          opts.add('PartitionID',    self.run.partitionID())
-          opts.add('PartitionName',  partition)
-          opts.add('PartitionIDName','%04X'%self.run.partitionID())
-          opts.add('Activity',       run_type);
+          opts.value = opts.value + env
           opts.add('HostType',       self.hostType)
           opts.add('HostTypes',     [self.hostType])
           opts.add('TaskType',       task.name)
-          opts.add('OutputLevel',    self.run.outputLevel())
           oloc = self.run.storageDir.data+'/lhcb/data/'+time.strftime('%Y')+'/RAW/'+partition+'/'+rt
           opts.add('OutputLocation', oloc)
         else: opts.add('// ---------------- NO partition information')
@@ -375,22 +438,7 @@ class OptionsWriter(Control.AllocatorClient):
           for nam,opt in addOpts.items(): opts.add(nam,opt)
         else: opts.add('// ---------------- NO additional options')
         if task.tell1s.data:
-          opts.add('//\n// ---------------- Tell1 board information:')
-          opts.add('OnlineEnv.Tell1Boards         = {')
-          err = None
-          for b in self.run.tell1Boards.data:
-            itms = b.split(':')
-            try:
-              board = itms[0]
-              if len(itms)>1: board = itms[1]
-              ip = socket.gethostbyname(board+"-d1.data");
-              opts.add('  "%s", "%s", "",'%(ip,board))
-            except Exception,X:
-              error('Failed to retrieve TELL1 specs for '+str(b))
-              err = self
-          opts.value = opts.value[:-2] + '\n};\n'
-          if err:
-            return None
+          opts.value = opts.value+self._getTell1Boards(partition).value
         else: opts.add('// ---------------- NO tell1 board information') 
         if task.options.data:
           opts.add('//\n// ---------------- Task specific information:')
@@ -434,6 +482,7 @@ class HLTOptionsWriter(OptionsWriter):
     if self.run:
       res = self._writeHLTOpts(partition)
       if res:
+        self._writePyOnlineEnv(partition=partition,fname='OnlineEnv')
         return self._writePyHLTOpts(partition)
 
   # ===========================================================================
@@ -449,13 +498,13 @@ class HLTOptionsWriter(OptionsWriter):
       num = len(farms)
       run_type = self.run.runType()
       farm_names = []
+      hdr='//  Auto generated options for partition:'+partition+' activity:'+run_type+'  '+time.ctime()
       for i in xrange(num):
         node = slots[i].split(':')[0]
         name = '%s_%s_SF%02d_HLT'%(partition,node,i)
         farm = farms[i]
         farm_names.append(farm)
-        opts = '// Auto generated options for partition:'+partition+' activity:'+run_type+\
-               '  '+time.ctime()+'\n//\n'+\
+        opts = hdr+'\n//\n'+\
                '// ---------------- Data sending information for sub-farm:'+farm+'\n'+\
                'OnlineEnv.Target  = "'+node+'-d1::'+name+'";\n'+\
                'OnlineEnv.Target0 = { "'+node+'-d1::'+name+'" };\n'+\
@@ -466,74 +515,15 @@ class HLTOptionsWriter(OptionsWriter):
           return None
         log('      --> Farm:'+farm+' sends to slot:'+slots[i]+', Task:'+name,timestamp=1)
 
-      opts = Options('//  Auto generated options for partition:'+partition+' activity:'+run_type+'  '+time.ctime())
-      opts.add('//\n// ---------------- General partition information:  ')
-      opts.add('PartitionID',    self.run.partitionID())
-      opts.add('PartitionIDName','%04X'%self.run.partitionID())
-      opts.add('PartitionName',  partition)
-      opts.add('Activity',       run_type)
+      opts = self._getOnlineEnv(partition)
       opts.add('SubFarms',       farm_names)
-      opts.add('OutputLevel',    self.run.outputLevel())
-      opts.add('MessageSvc.OutputLevel     = '+str(self.run.outputLevel())+';')
-      if self.run.acceptRate() is None:
-        print 'Rate is None!!!!!'
-      opts.add('AcceptRate',     float('%.7f'%(self.run.acceptRate(),)))
-      if self.run.TCK() is None:
-        print 'No TCK information present!'
-      else:
-        opts.add('InitialTCK',   '0x%08X'%(self.run.TCK(),))
 
       fname = partition+'_Info'
       if self.writeOptionsFile(partition, fname, opts.value) is None:
         return None
 
-      opts = Options('//  Auto generated options for partition:'+partition+' activity:'+run_type+'  '+time.ctime())
-      opts.add('//\n// ---------------- Tell1 board information:')
-      opts.add('OnlineEnv.Tell1Boards         = {')
-      err = None
-      num = 0;
-      print 'New version of HLT options generator....'
-      for b in self.run.tell1Boards.data:
-        itms = b.split(':')
-        try:
-          board = itms[0]
-          if len(itms)>1: board = itms[1]
-          opts.add('  "%s", "%s", "",'%(socket.gethostbyname(board+'-d1'),board))
-          num = num + 1
-        except Exception,X:
-          error('Failed to retrieve TELL1 specs for '+str(b),timestamp=1)
-          error('Error '+str(X),timestamp=1)
-          err = self # None # self
-      if num > 0:
-        opts.value = opts.value[:-2] + '\n};\n'
-      else:
-        opts.value = opts.value + '\n};\n'
-      if err:
-        return None
+      opts = self._getTell1Boards(partition,hdr)
 
-      odin = 'Unknown'
-      try:
-        # If OdinData or OdinIP is explicitly set to None
-        # No odin is in the readout
-        odin  = self.run.odinData.data
-        host  = odin
-        if odin != "None":
-          host = socket.gethostbyname(odin)
-        opts.append('Tell1Boards',[host,odin,'ODIN'])
-
-        odin  = self.run.odinRequest.data
-        host  = odin
-        if odin != "None":
-          host = socket.gethostbyname(odin)
-
-        opts.add('ODIN_Name',odin)
-        opts.add('ODIN_IP',  host)
-      except Exception,X:
-        error('Failed to retrieve ODIN ip address for '+str(odin),timestamp=1)
-        error('Error [IGNORED for NOW] '+str(X),timestamp=1)
-        err = self
-      if err:
-        return None
       fname = partition+'_Tell1Boards'
       if self.writeOptionsFile(partition, fname, opts.value) is None:
         return None
@@ -543,6 +533,7 @@ class HLTOptionsWriter(OptionsWriter):
 
   # ===========================================================================
   def _writePyHLTOpts(self,partition):
+    #import ctypes
     run_type = self.run.runType()
     info = self.getStreamInfo(self.storageMgr,'Storage')
     if info is not None:
@@ -559,7 +550,7 @@ class HLTOptionsWriter(OptionsWriter):
         name = '%s_%s_SF%02d_HLT'%(partition,node,i)
         farm = farms[i]
         farm_names.append(farm)
-        opts = '# Auto generated options for partition:'+partition+' activity:'+run_type+\
+        opts = '# Auto generated PyHLTOpts for partition:'+partition+' activity:'+run_type+\
                '  '+time.ctime()+'\n#\n'+\
                '# ---------------- Data sending information for sub-farm:'+farm+'\n'+\
                'Target  = "'+node+'-d1::'+name+'"\n'+\
@@ -581,10 +572,11 @@ class HLTOptionsWriter(OptionsWriter):
       opts.add('OutputLevel',    self.run.outputLevel())
       opts.add('MessageSvc.OutputLevel     = '+str(self.run.outputLevel()))
       opts.add('AcceptRate',     float('%.7f'%(self.run.acceptRate(),)))
-      if self.run.TCK() is None:
-        print 'No TCK information present for partition:',partition
+      tck = self.run.TCK()
+      if tck is None:
+        opts.add('# Note: No TCK information present for partition:'+str(partition))
       else:
-        opts.add('InitialTCK',   '0x%08X'%(self.run.TCK(),))
+        opts.add('InitialTCK',   str(hex(0xFFFFFFFF&int(tck)))[:-1])
 
       if self.writePythonFile(partition, partition+'_Info', opts.value) is None:
         return None
@@ -643,7 +635,36 @@ class HLTOptionsWriter(OptionsWriter):
       return self.run
     return None
 
-# =============================================================================
+#==============================================================================
+class InjectorOptionsWriter(OptionsWriter):
+  """ Specialized options writer for Injector control node.
+  
+      @author  M.Frank
+  """
+  # ===========================================================================
+  def __init__(self, manager, name, info):
+    "Object constructor."
+    OptionsWriter.__init__(self, manager, '', name, info)
+    nam = 'INJJobOptions'
+    self.optionsMgr = manager
+    self.dp_name = self.manager.name()+':'+nam
+    self.connect(nam)
+
+  # ===========================================================================
+  def _configure(self, partition):
+    opts = self._getOnlineEnv(partition)
+    b = None
+    try:
+      opts.value = opts.value + '\n' + self._getTell1Boards(partition).value
+      opts.value = opts.value + '\n' + self._getInjectorInfo(partition).value
+    except Exception,X:
+      error('Failed to write injector options:'+str(X),timestamp=1)
+      return None
+    if self.writeOptionsFile(partition, 'Injector_Info', opts.value) is None:
+      return None
+    return self.run
+
+#==============================================================================
 class StreamingOptionsWriter(OptionsWriter):
   """ Specialized options writer for the storage control node.
   
@@ -772,6 +793,7 @@ class StreamingOptionsWriter(OptionsWriter):
         res = OptionsWriter._configure(self,partition)
         if res is None:
           result = None
+      self._writePyOnlineEnv(partition=partition,fname='MonitoringEnv')
       self.taskList = None
       return result
     error('Failed to access the Storage info:'+self.streamMgr.name()+' '+self.name)

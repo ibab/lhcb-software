@@ -136,7 +136,7 @@ int StreamTaskMgr_connectTaskManager(string stream)  {
     for(int i=1; i<=dynlen(recvNodes); ++i)  {
       string name = strtoupper(recvNodes[i]);
       string dp_name = name+"_StreamTaskCreator";
-      string svc_name = "/" + name + "/task_manager";
+      string svc_name = "/FMC/" + name + "/task_manager";
       if ( !dpExists(dp_name) ) dpCreate(dp_name,"StreamTaskCreator");
       fwDim_unSubscribeCommandsByDp(cfg,dp_name+"*");
       fwDim_unSubscribeServicesByDp(cfg,dp_name+"*");

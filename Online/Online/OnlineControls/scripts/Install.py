@@ -264,7 +264,7 @@ def copyProject():
       print >>fout, '[dist]'
       print >>fout, 'distPort = '+str(sysN+100)+'10'
       print >>fout, 'distPeer= "storectl01:49910" 399 # LBECS'
-      print >>fout, 'distPeer= "mona07:40610"     398 # RECCTRL'
+      print >>fout, 'distPeer= "mona07:40610"     306 # RECCTRL'
       print >>fout, 'distPeer= "mona07:40310"     303 # RECFARM'
     elif content.find('[dist]')==0:
       pass
@@ -311,6 +311,19 @@ def updateFarm():
     print '......... --> Executing PVSS setup controller for project '+projectName()
     execCmd(pvssCTRL()+'UpdateFarm.cpp')
 
+def hostName():
+  host = socket.gethostname()
+  if host.find('.')>0:
+    host = host[:host.find('.')]
+  return host
+
+def startFarm():
+  print 'Starting...'
+  h = hostname().upper()
+  cfg = '/localdisk/pvss/REC'+h+'/config/config'
+  os.environ['PVSS_II']=cfg
+  execCmd(pvssPMON()+' -config '+cfg+' -autoreg&')
+
 def run():
   os.chdir(sourceDir()+'/cmt')
   parseOpts()
@@ -328,6 +341,8 @@ def run():
     installSubFarm()
   if sys.argv[1].upper()=='UPDATEFARM':
     updateFarm()
+  if sys.argv[1].upper()=='RECSTART':
+    startFarm()
   if sys.argv[1].upper()=='COPYBACK':
     pass
 

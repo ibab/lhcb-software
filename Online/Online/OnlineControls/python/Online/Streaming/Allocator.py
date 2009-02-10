@@ -77,6 +77,7 @@ class FSMmanip:
     self.setupTask         = self._setupTask
     self.configureTask     = self._configureTask
     self.allocateProcesses = self._allocateProcesses
+    self.fifoName          = self._fifoName
     for i in xrange(self.names.container.size()):
       nam = self.names.container[i].name()
       node = nam[nam.find(':')+1:]
@@ -97,6 +98,9 @@ class FSMmanip:
   # ===========================================================================
   def _optsFile(self,name,type):
     return name+'.opts'
+  # ===========================================================================
+  def _fifoName(self,task):
+    return '/tmp/'+task[7]+'.fifo'
   # ===========================================================================
   def _fsmLookup(self,dp,type):
     obj = PVSS.DpVectorActor(self.manager)
@@ -385,6 +389,7 @@ class FSMmanip:
     opts    = self.optionsFile(utgid,type)
     fifo = '/tmp/logSrv.fifo'
     # cmd = sysname+'#-E /tmp/logGaudi.fifo -O /tmp/logGaudi.fifo '+\
+    fifo = self.fifoName(task)
     fifo = '/tmp/'+slice+'.fifo'
     #cmd = sysname+'#-e -o'+\
     cmd = sysname+'#-E '+fifo+' -O '+fifo+\
@@ -454,6 +459,44 @@ class BlockSlotPolicy(SlotPolicy):
 
 # =============================================================================
 #
+# CLASS: AllSlotPolicy
+#
+# =============================================================================
+class AllSlotPolicy(SlotPolicy):
+  """ Class to implement the block slot allocation policy.
+
+      The block allocation policy works as follows:
+      1) get the node with the maximum occupation
+      2) allocate a maximum of slots on this node
+      3) goto 1 until a node with sufficient slots is found
+
+      @author  M.Frank
+      @version 1.0
+  """
+  # ===========================================================================
+  def __init__(self, debug=1):
+    SlotPolicy.__init__(self, debug)
+
+  # ===========================================================================
+  def allocateSlices(self,number,per_node,slices):
+    freeSlots = self.collectFreeSlots(slices)
+    if self.debug: print 'Free slots:',freeSlots
+    occ = self.occupation(freeSlots)
+    print freeSlots
+    if len(occ) > 0:
+      for size,node in occ.items():
+        print 'allocateSlices:',node,size
+      for size,node in occ.items():
+        if size>=number:
+          slots = freeSlots[node]
+          alloc_slots = {node: []}
+          for i in xrange(number):
+            alloc_slots[node].append(slots.pop())
+          return (number,alloc_slots)
+    return (0,{})
+
+# =============================================================================
+#
 # CLASS: Allocator
 #
 # =============================================================================
@@ -478,7 +521,15 @@ class Allocator(StreamingDescriptor):
     self.strmAllocationPolicy = policy[1]
     self.infoInterface        = info_interface
     self.fsmManip             = FSMmanip
+    self.recv_slots_per_node  = 4
+    self.strm_slots_per_node  = 2
 
+  # ===========================================================================
+  def showSetup(self):
+    log('%s> system:             %s'%(self.name,self.manager.name()),timestamp=1)
+    log('%s> recv_slots_per_node:%s'%(self.name,self.recv_slots_per_node),timestamp=1)
+    log('%s> strm_slots_per_node:%s'%(self.name,self.strm_slots_per_node),timestamp=1)
+    return self
   # ===========================================================================
   def _selectSlices(self, slices, all_slices):
     """Select slices from free pool
@@ -621,7 +672,7 @@ class Allocator(StreamingDescriptor):
     return None
   
   # ===========================================================================
-  def allocate(self,rundp_name,partition,recv_slots_per_node=4,strm_slots_per_node=2):
+  def allocate(self,rundp_name,partition,recv_slots_per_node=None,strm_slots_per_node=None):
     """
     Allocate slots in the receiving and streaming layer of the storage system.
     Note: All input data must already be read.
@@ -634,6 +685,9 @@ class Allocator(StreamingDescriptor):
 
     @return None on failure, on Succes tuple (all_recv_slots,all_strm_slots) with allocated slots
     """
+    if recv_slots_per_node is None: recv_slots_per_node = self.recv_slots_per_node
+    if strm_slots_per_node is None: strm_slots_per_node = self.strm_slots_per_node
+
     start = time.time()
     if debug: print 'Starting action:',start
     existing = self.getPartition(partition)

@@ -23,6 +23,14 @@ class SlotPolicy:
     return item
 
   # ===========================================================================
+  def occupation(self,slots):
+    "Retrieve slot occupation"
+    item = {}
+    for n,sl in slots.items():
+      item[len(sl)] = n
+    return item
+
+  # ===========================================================================
   def collectFreeSlots(self,slices):
     "Collect all slots which are actually free."
     slots = {}

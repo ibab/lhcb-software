@@ -894,8 +894,8 @@ class FarmConfigurator(FarmDescriptor):
           self.freePartition(context,rundp_name,partition)
           print 'free [6]:',name,context
           return 'SUCCESS'
-        return self.error('Failed to reset subfarm FSMs for partitionn:'+partition,timestamp=1)
-      return self.error('Failed to free subfarms for partitionn:'+partition,timestamp=1)
+        return self.error('Failed to reset subfarm FSMs for partition:'+partition,timestamp=1)
+      return self.error('Failed to free subfarms for partition:'+partition,timestamp=1)
     return self.error('Failed to access run info for partition:'+partition,timestamp=1)
     
   # ===========================================================================
@@ -1099,20 +1099,23 @@ class FarmOptionsWriter:
     if tasks is not None:
       partition = self.run.partitionName()
       run_type = self.run.runType()
+      opts = self.partitionOptions()
+      if not self.writeOptionsFile(partition, "PartitionInfo", opts.value):
+        return None
       for task in tasks:
         opts = Options('//  Auto generated options for partition:'+partition+\
                ' activity:'+run_type+' task:'+task.name+'  '+time.ctime()+'\n' +\
                '#include "$PREAMBLE_OPTS"')
         if task.defaults.data:
-          rt = run_type.lower()
           opts.add('//\n// ---------------- General partition information:  ')
-          opts.add('PartitionID',    self.run.partitionID())
-          opts.add('PartitionName',  self.run.partitionName())
-          opts.add('PartitionIDName','%04X'%self.run.partitionID())
-          opts.add('Activity',       run_type);
+          opts.add('#include "$OPTIONSDIR/PartitionInfo.opts"')
+          #opts.add('PartitionID',    self.run.partitionID())
+          #opts.add('PartitionName',  self.run.partitionName())
+          #opts.add('PartitionIDName','%04X'%self.run.partitionID())
+          #opts.add('Activity',       run_type);
           opts.add('TaskType',       task.name)
-          opts.add('OutputLevel',    self.run.outputLevel())
-          opts.add('MessageSvc.fifoPath = "$LOGFIFO";')
+          #opts.add('OutputLevel',    self.run.outputLevel())
+          opts.add('MessageSvc.fifoPath = @OnlineEnv.LogFifoName;')
         else: opts.add('// ---------------- NO partition information')
         if task.options.data:
           opts.add('//\n// ---------------- Task specific information:')
@@ -1122,6 +1125,8 @@ class FarmOptionsWriter:
           return None
       if len(tasks)==0:
         log('No tasks found for activity:'+activity,timestamp=1)
+      if not self.writeIoOptions():
+        return None
       farmOpts=self.farmOptions(self.run,self.storage)
       if not farmOpts:
         return None
@@ -1170,8 +1175,63 @@ class FarmOptionsWriter:
         return None
       ret[nl][ 'targetNode' ] = items[STORAGE_NODENAME]+'-d1'
       ret[nl][ 'targetTask' ] = items[STORAGE_NODENAME]+'-d1::'+items[STORAGE_TASKUTGID]
-    return ret  
+    return ret 
 
+  def partitionOptions(self):
+    partition = self.run.partitionName()
+    run_type = self.run.runType()
+    opts = Options('//  Auto generated options for partition:'+partition+\
+                           ' activity:'+run_type+' OnlineEnv settings:'+'  '+time.ctime()+'\n')
+    opts.add('PartitionID',    self.run.partitionID())
+    opts.add('PartitionName',  self.run.partitionName())
+    opts.add('PartitionIDName','%04X'%self.run.partitionID())
+    opts.add('Activity',       run_type);
+    #opts.add('OutputLevel',    self.run.outputLevel())
+    opts.add('OutputLevel',    2)
+    opts.add('LogFifoName' ,  "$LOGFIFO")
+    return opts
+    
+  def writeIoOptions(self):
+    partition = self.run.partitionName()
+    # DimRPCFileReader
+    opts = Options('//  Auto generated options for partition:'+partition+\
+                   ' DimRPCFileReader  '+time.ctime()+'\n' +\
+                   '#include "$OPTIONSDIR/PartitionInfo.opts"\n' +\
+                   '#include "$ONLINETASKS/options/DimRPCFileReader.opts"\n'+\
+                   '#include "$ONLINETASKS/options/RecMessageSvc.opts"')
+    if not self.writeOptionsFile( partition, 'DimRPCFileReader', opts.value ):
+      return None
+    # RECIOBuffers
+    opts = Options('//  Auto generated options for partition:'+partition+\
+                   ' RECBuffers  '+time.ctime()+'\n' +\
+                   '#include "$OPTIONSDIR/PartitionInfo.opts"\n'+\
+                   '#include "$ONLINETASKS/options/MBM.opts"\n'+\
+                   '#include "$ONLINETASKS/options/RecMessageSvc.opts"')
+    opts.add('MEPManager.InitFlags       = "-s=7000 -e=100 -u=5 -b=12 -f -i=READ -c";')
+    if not self.writeOptionsFile( partition, 'RECIOBuffers', opts.value ):
+      return None
+    # INPUTSenders
+    for i in range(1,3):
+      opts = Options('//  Auto generated options for partition:'+partition+\
+                     ' INPUTSender  '+time.ctime()+'\n' +\
+                     '#include "$OPTIONSDIR/PartitionInfo.opts"\n'+\
+                     '#include "$ONLINETASKS/options/SND.opts"\n'+\
+                     '#include "$ONLINETASKS/options/RecMessageSvc.opts"')
+      opts.add('MEPManager.Buffers                   = {"READ"};')
+      opts.add('MEPManager.PartitionBuffers          = true;')
+      opts.add('EventSelector.Input                  = "READ";')
+      opts.add('EventSelector.Decode                 = false;')
+      opts.add('OnlineEnv.Opt0                       = "STORERECV%02X-d1::%s_STORERECV%02X_RecStorageRead";' %(i,partition,i) )
+      opts.add('Sender.DataSink                      = @OnlineEnv.Opt0;')
+      opts.add('Sender.DataType                      = 3;')
+      opts.add('Sender.InputDataType                 = 3;')
+      # Hardcoded options for testing
+      opts.add('EventSelector.REQ1                   = "EvType=2;TriggerMask=0x1,0x1,0x1,0x1;VetoMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0";')
+      if not self.writeOptionsFile( partition, 'INPUTSender%02X' %i, opts.value ):
+        return None
+    # Everything went ok 
+    return True
+    
 def writeOptions(run_info,storage_info,farm_info):
   wr = FarmOptionsWriter(run_info,storage_info,farm_info)
   res = wr.configure()

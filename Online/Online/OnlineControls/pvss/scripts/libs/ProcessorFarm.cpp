@@ -64,28 +64,34 @@ ProcessorFarm_installAllocator(string stream, bool refresh=0)  {
 int ProcessorFarm_connectTaskManager(string type, string ctrl_node)  {
   dyn_string nodes;
   string cfg = ctrlUtils_dimMapName();
-  fwDim_createConfig(cfg);
   int res = dpGet(type+"_"+ctrl_node+".Nodes",nodes);
   if ( 0 == res )  {
     dynAppend(nodes, strtoupper(ctrl_node+"/1")); 
     DebugN("ProcessorFarm_connectTaskManager> Got "+dynlen(nodes)+
            " nodes from "+type+"_"+ctrl_node+" to connect.");
-    for(int i=1; i<=dynlen(nodes); ++i)  {
-      string name = strtoupper(strsplit(nodes[i],"/")[1]);
-      string dp_name = name+"_StreamTaskCreator";
-      string svc_name = "/" + name + "/task_manager";
-      if ( !dpExists(dp_name) ) dpCreate(dp_name,"StreamTaskCreator");
-      fwDim_unSubscribeCommandsByDp(cfg,dp_name+"*");
-      fwDim_unSubscribeServicesByDp(cfg,dp_name+"*");
-      dpSet(dp_name+".Name",name);
-      fwDim_subscribeCommand(cfg,svc_name+"/start",dp_name+".Start");
-      fwDim_subscribeCommand(cfg,svc_name+"/stop",dp_name+".Stop");
-      fwDim_subscribeCommand(cfg,svc_name+"/kill",dp_name+".Kill");
-      DebugN("ProcessorFarm_connectTaskManager> Connect "+svc_name+" to "+dp_name);
-    }
-    DebugN("ProcessorFarm_connectTaskManager> All Done.");
+    return ProcessorFarm_connectTaskManagerEx(nodes);
   }
   ctrlUtils_checkErrors(res);
+  return 1;
+}
+//=============================================================================
+int ProcessorFarm_connectTaskManagerEx(dyn_string nodes)  {
+  string cfg = ctrlUtils_dimMapName();
+  fwDim_createConfig(cfg);
+  for(int i=1; i<=dynlen(nodes); ++i)  {
+    string name = strtoupper(strsplit(nodes[i],"/")[1]);
+    string dp_name = name+"_StreamTaskCreator";
+    string svc_name = "/FMC/" + name + "/task_manager";
+    if ( !dpExists(dp_name) ) dpCreate(dp_name,"StreamTaskCreator");
+    fwDim_unSubscribeCommandsByDp(cfg,dp_name+"*");
+    fwDim_unSubscribeServicesByDp(cfg,dp_name+"*");
+    dpSet(dp_name+".Name",name);
+    fwDim_subscribeCommand(cfg,svc_name+"/start",dp_name+".Start");
+    fwDim_subscribeCommand(cfg,svc_name+"/stop",dp_name+".Stop");
+    fwDim_subscribeCommand(cfg,svc_name+"/kill",dp_name+".Kill");
+    DebugN("ProcessorFarm_connectTaskManager> Connect "+svc_name+" to "+dp_name);
+  }
+  DebugN("ProcessorFarm_connectTaskManager> All Done.");
   return 1;
 }
 //=============================================================================
