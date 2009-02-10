@@ -2,7 +2,7 @@
 
 set SetupProject_tmpfile="%TEMP%\SetupProject_tmpsetup.bat"
 
-runpy LbConfiguration.SetupProject --shell=bat --build-env --output=%SetupProject_tmpfile% %1 %2 %3 %4 %5 %6 %7 %8 %9
+call runpy LbConfiguration.SetupProject --shell=bat --build-env --output=%SetupProject_tmpfile% %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 set SetupProjectStatus=%ERRORLEVEL%
 

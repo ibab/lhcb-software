@@ -1,3 +1,15 @@
+2009-02-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/generateLogin: 
+	  - removed the ROOTSYS variable from the cache
+	  - prepend $MYSITEROOT/lhcb and $MYSITEROOT/lcg/external in the case of 
+	  	a local installation.
+	  - added option "--without-python" for the local installation post process when
+	  	the LCGCMT tar ball is not present
+	* scripts/AllProjectsSetup.bat: prepended the "call" to runpy 
+	* scripts/setenvProject.bat: see above
+	* scripts/SetupProject.bat: see above
+
 2009-02-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/LbLogin.py: fixed Manifest for windows
