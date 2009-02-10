@@ -1,4 +1,6 @@
-// $Id: ITGenericTracking.cpp,v 1.8 2008-12-11 07:38:21 mneedham Exp $
+// $Id: ITGenericTracking.cpp,v 1.9 2009-02-10 13:53:39 mneedham Exp $
+
+#include <algorithm>
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -60,8 +62,7 @@ DECLARE_ALGORITHM_FACTORY( ITGenericTracking );
 
 ITGenericTracking::ITGenericTracking( const std::string& name, 
                                     ISvcLocator* pSvcLocator ) :
-  GaudiHistoAlg(name, pSvcLocator),
-  m_tracker(0)
+  ST::HistoAlgBase(name, pSvcLocator)
 {
   // constructer
   declareProperty("InputData", m_clusterLocation = STClusterLocation::ITClusters);
@@ -91,6 +92,9 @@ ITGenericTracking::ITGenericTracking( const std::string& name,
   declareProperty("confirm2", m_confirm2 = false);
   declareProperty("selectBestY",m_selectBestY = true);
   declareProperty("fracHigh", m_fracHigh = 0.6);
+
+  setDetType("IT");
+  setForcedInit();
 }
 
 ITGenericTracking::~ITGenericTracking() { }
@@ -99,15 +103,13 @@ StatusCode ITGenericTracking::initialize()
 {
   if( "" == histoTopDir() ) setHistoTopDir("IT/");
 
-  StatusCode sc = GaudiHistoAlg::initialize();
+  StatusCode sc = ST::HistoAlgBase::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
 
   // hit expectation
   m_hitExpectation = tool<IHitExpectation>("ITHitExpectation");
      
-  // detector element     
-  m_tracker = getDet<DeSTDetector>(DeSTDetLocation::location("IT"));
-
+  
   return StatusCode::SUCCESS;
 }
 
@@ -116,23 +118,28 @@ StatusCode ITGenericTracking::execute()
    
   setFilterPassed(false);
 
-  LHCb::Tracks* tracks = new LHCb::Tracks();
+  LHCb::Tracks* tracks = new LHCb::Tracks(); tracks->reserve(5000);
+  std::vector<Track*> tmpTracks; tmpTracks.reserve(50000);
   put (tracks, LHCb::TrackLocation::Tsa); 
 
   // retrieve clusters
   const STClusters* clusterCont = get<STClusters>(m_clusterLocation);
-
   if (clusterCont->size() > m_maxHits) return StatusCode::SUCCESS;
+
+  // build map of port occupancies
+  //std::map<std::string, unsigned int> PortMap;
+  //portOccupancy(clusterCont, PortMap);
 
   // make line hits
   std::vector<Tf::STHit*> hits; hits.reserve(clusterCont->size());
   for (STClusters::const_iterator iter = clusterCont->begin();
     iter != clusterCont->end(); ++iter){
-    const DeSTSector* aSector = m_tracker->findSector((*iter)->channelID());
+    const DeSTSector* aSector = tracker()->findSector((*iter)->channelID());
     if (aSector == 0) {
       std::cout << "Error: sector not found" << std::endl;
     }
-    if ((*iter)->size() < m_maxClusterSize && (*iter)->totalCharge() > m_minCharge){
+    if ((*iter)->size() < m_maxClusterSize && (*iter)->totalCharge() > m_minCharge ){
+      // && PortMap[uniquePort((*iter)->channelID())] < 8u ){
       Tf::STHit* newHit = new Tf::STHit(*aSector,(*iter)->liteCluster());
       hits.push_back(newHit);
     }
@@ -239,6 +246,8 @@ StatusCode ITGenericTracking::execute()
           collectIDs(selectedY2, ids);
 	 //std::cout << " ----- " << std::endl; 
 
+          std::sort(ids.begin(), ids.end(), bind(&LHCb::LHCbID::lhcbID,_1) < bind(&LHCb::LHCbID::lhcbID,_2));
+
           plot(ids.size(), "nhits", -0.5, 20.5, 21);
           unsigned int nUnique = countSectors(selectedX2) + countSectors(selectedY2);
           plot(nUnique, "nUnique" , -0.5, 50.5, 51);
@@ -265,7 +274,7 @@ StatusCode ITGenericTracking::execute()
           plot(faults , "nFaults", -10.5, 10.5, 21);
           if (faults < m_maxFaults ) {
             aTrack->addInfo(LHCb::Track::nExpectedIT, itExpected);
-            tracks->insert(aTrack);
+            tmpTracks.push_back(aTrack);
             setFilterPassed(true);
           }
           else {
@@ -281,6 +290,39 @@ StatusCode ITGenericTracking::execute()
   for (std::vector<Tf::STHit*>::const_iterator iterHit = hits.begin(); iterHit != hits.end(); ++iterHit ){
      delete *iterHit;
   }
+
+  // make some sorting and cleaning...
+  std::stable_sort(tracks->begin(),tracks->end(),bind(&Track::nLHCbIDs,_1) > bind(&Track::nLHCbIDs, _2));
+  
+  for (std::vector<LHCb::Track*>::const_iterator iterT = tmpTracks.begin(); 
+       iterT != tmpTracks.end(); ++iterT){
+    if ((*iterT)->checkFlag(Track::Clone ) == true) continue;
+    const std::vector<LHCb::LHCbID>& ids1 = (*iterT)->lhcbIDs();
+    std::vector<LHCb::Track*>::const_iterator iterT2 = iterT; ++iterT2;
+    for (;  iterT2 != tmpTracks.end(); ++iterT2){
+       if ((*iterT2)->checkFlag(Track::Clone ) == true) continue;
+       const std::vector<LHCb::LHCbID>& ids2 = (*iterT2)->lhcbIDs();
+       if ( ids1.size() == ids2.size() && std::equal(ids1.begin(), ids1.end(), ids2.begin()) == true){
+	 (*iterT2)->setFlag( LHCb::Track::Clone, true );
+       }
+    } // iterT2
+  } // iterT
+ 
+  for (Tracks::const_iterator iterT2 = tmpTracks.begin(); 
+       iterT2 != tmpTracks.end(); ++iterT2){
+    if ((*iterT2)->checkFlag(Track::Clone ) == false){
+      Track* newTrack = (*iterT2)->clone(); 
+      tracks->insert(newTrack);
+    }
+  }
+
+  // clear tmp list
+  std::vector<Track*>::iterator iterVec = tmpTracks.begin(); 
+  for (; iterVec != tmpTracks.end(); ++iterVec){
+     delete *iterVec;
+  } // iterVec
+   
+  if (tracks->size() > 0) plot(log10((double)tracks->size()), "nTracks", 0., 10., 200 );
 
   return StatusCode::SUCCESS;
 }
@@ -474,9 +516,7 @@ bool ITGenericTracking::collectXHits13(const Tf::Tsa::Line& line,
 
     const double xDiff = (*iterX1)->xMid() - line.value((*iterX1)->zMid());
     plot(xDiff, "xDiff_13_"+ITNames().BoxToString((*iterX1)->channelID()), -10., 10., 400);
-    if (hit1->layer() == 1 && hit2->layer() == 4){
-      plot(xDiff, "xDiff_13_" + ITNames().UniqueLayerToString((*iterX1)->channelID()), -10.,10., 400);
-    }
+    plot(xDiff, "xDiff_13_" + ITNames().UniqueLayerToString((*iterX1)->channelID()), -10.,10., 400);
     if (fabs(xDiff) < m_xWindow1) selected.push_back(*iterX1);
 
   } // hits
@@ -691,4 +731,14 @@ bool ITGenericTracking::newStereoCandidate(const std::vector<ITGenericTracking::
   } // for each
 
   return newCan;
+}
+
+void ITGenericTracking::portOccupancy( const STClusters* clusters ,std::map<std::string, unsigned int>& occMap ) const{
+
+ // histos per digit
+  LHCb::STClusters::const_iterator iterObj = clusters->begin();
+  for( ; iterObj != clusters->end(); ++iterObj){
+    occMap[uniquePort((*iterObj)->channelID())] += (*iterObj)->size() ;
+  } // loop iterDigit
+
 }

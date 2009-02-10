@@ -1,18 +1,17 @@
-// $Id: ITGenericTracking.h,v 1.8 2008-12-15 12:12:54 cattanem Exp $
+// $Id: ITGenericTracking.h,v 1.9 2009-02-10 13:53:39 mneedham Exp $
 #ifndef ITGenericTracking_H
 #define ITGenericTracking_H 1
 
-#include "GaudiAlg/GaudiHistoAlg.h"
+#include "Kernel/STHistoAlgBase.h"
 #include "TfKernel/STHit.h"
 #include "TsaKernel/Line.h"
+#include "Event/STCluster.h"
 
 
-namespace LHCb{
-  class STCluster;
-};
 class ISTSignalToNoiseTool;
 class DeSTDetector;
 class IHitExpectation;
+class ITrackCloneFinder;
 
 /** @class ITGenericTracking ITGenericTracking.h
  *
@@ -23,7 +22,7 @@ class IHitExpectation;
  *  @date   04/12/2006
  */
 
-class ITGenericTracking : public GaudiHistoAlg {
+class ITGenericTracking : public ST::HistoAlgBase {
 
 public:
  
@@ -106,13 +105,13 @@ private:
 		       std::vector<std::vector<yInfo> >& output ) const;
 
 
-  bool newStereoCandidate(const std::vector<ITGenericTracking::yInfo>& testCand, 
-                          const CandidateHits& tracks) const;
+  bool ITGenericTracking::newStereoCandidate(const std::vector<ITGenericTracking::yInfo>& testCand, 
+                                      const CandidateHits& tracks) const;
+
+  void portOccupancy( const LHCb::STClusters* clusters ,std::map<std::string, unsigned int>& occMap ) const;
 
   IHitExpectation* m_hitExpectation;
  
-  DeSTDetector* m_tracker;
-  
   std::vector<unsigned int> m_allowedBoxes;
   std::vector<unsigned int> m_firstStation;
   std::vector<unsigned int> m_lastStation;

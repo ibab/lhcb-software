@@ -3,7 +3,7 @@
 # Maintainer : Matt Needham
 #============================================================================
 package           TsaAlgorithms
-version           v3r8
+version           v3r9
 
 #============================================================================
 # Structure
@@ -15,6 +15,7 @@ branches          cmt doc src
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
 use TsaKernel       v* Tf
+use STKernel        v* ST
 use TrackInterfaces v* Tr
 use TrackFitEvent   v* Tr
 use CaloUtils       v* Calo
