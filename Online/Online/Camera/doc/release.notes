@@ -4,6 +4,10 @@
 ! Purpose     : Package for the CAMERA application and supporting files.
 !-----------------------------------------------------------------------------
 
+! 2009-02-10 - Gareth Rogers
+ - Removed compiler warnings from container.h and Configuration.py.
+ - CameraTool now print out message when not sending to the server.
+
 ! 2009-02-04 - Gareth Rogers
  - Updated the requirements file to use "" around the dependencies in the
    dependency macro. This fixes the make -j problem and it builds successfully.
