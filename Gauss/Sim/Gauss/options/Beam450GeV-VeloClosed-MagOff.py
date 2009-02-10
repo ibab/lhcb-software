@@ -20,10 +20,12 @@ UpdateManagerSvc().ConditionsOverride += [
 ]
 
 #--Tell to use 450 GeV beams for collisions and beam gas, with corresponding
-#--beam size and luminous region, the options already set zero crossing angle
-#--as for BfieldOff
+#--beam size and luminous region, the options  set zero crossing angle as
+#--Bfield On, so it has to be set to zero here
 importOptions("$GAUSSOPTS/PilotRun.opts")
+setCrossingAngle(0.0)
 
 #--Starting time
 ec = EventClockSvc()
 ec.EventTimeDecoder.StartTime = 101000*SystemOfUnits.ns
+

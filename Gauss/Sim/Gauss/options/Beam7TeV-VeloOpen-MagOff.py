@@ -26,6 +26,7 @@ UpdateManagerSvc().ConditionsOverride += [
  "Conditions/HardwareProperties/LHCb/Magnet/ScaleUp := double_v Coeffs = 0 0;",
  "Conditions/HardwareProperties/LHCb/Magnet/ScaleDown := double_v Coeffs = 0 0;"
 ]
+setCrossingAngle(0.0)
 
 #--Starting time
 ec = EventClockSvc()
