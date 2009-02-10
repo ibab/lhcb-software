@@ -1,5 +1,10 @@
 2009-02-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of version v2r3
+
+2009-02-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: 
 	* scripts/StripPath.bat: added the "call" to runpy
 
 2009-02-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
