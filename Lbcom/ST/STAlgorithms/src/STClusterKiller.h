@@ -1,10 +1,11 @@
-// $Id: STClusterKiller.h,v 1.2 2008-10-14 08:49:04 mneedham Exp $
+// $Id: STClusterKiller.h,v 1.3 2009-02-10 09:44:15 mneedham Exp $
 #ifndef STCLUSTERKILLER_H
 #define STCLUSTERKILLER_H 1
 
 #include "Kernel/STAlgBase.h"
 #include "Event/STCluster.h"
 
+#include <string>
 
 /** @class STClusterKiller STClusterKiller.h
  *
@@ -13,6 +14,8 @@
  *  @author M.Needham
  *  @date   06/10/2007
  */
+
+class ISTClusterSelector;
 
 namespace LHCb{
   class STChannelID;
@@ -36,9 +39,12 @@ private:
                        std::vector<LHCb::STChannelID>& deadClusters) const;
 
    // smart interface to generator
-  SmartIF<IRndmGen> m_uniformDist; 
+
+  std::string m_selectorType;
+  ISTClusterSelector* m_clusterSelector;
+
   std::string m_inputLocation;
-  double m_eff;
+
 };
 
 #endif // STCLUSTERKILLER_H

@@ -2,6 +2,9 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+! 2009-02-10 M Needham
+ - Use clusterselector tool in STClusterKiller
+
 ! 2009-02-03 M Needham 
  - Bug fix in initialization of STClusterKiller
 
