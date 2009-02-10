@@ -1,5 +1,9 @@
 2009-02-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of version v2r4
+
+2009-02-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* scripts/generateLogin: 
 	  - removed the ROOTSYS variable from the cache
 	  - prepend $MYSITEROOT/lhcb and $MYSITEROOT/lcg/external in the case of 
