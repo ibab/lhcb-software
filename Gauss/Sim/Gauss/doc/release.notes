@@ -4,6 +4,7 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!======================== Gauss v36r2 2009-02-10 =============================
 ! 2009-02-10 - Gloria CORTI
  - Modify transverse beam size settings for 450 GeV and 5 TeV based on 
    LHC-OP-ES-0011 (EDMS no. 931921).
