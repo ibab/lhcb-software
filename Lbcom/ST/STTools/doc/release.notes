@@ -2,6 +2,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2009-0-10 M Needham
+ - Add new cluster selectors 
+
 !=========================== STTools v3r7 2009-01-12 ==========================
 ! 2009-01-09 - Jeroen van Tilburg
  - Move STOfflinePosition tool to new base class.
