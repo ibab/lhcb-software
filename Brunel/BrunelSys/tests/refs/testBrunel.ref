@@ -51,7 +51,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v34r1
-                                          running on lxbuild120.cern.ch on Sat Feb  7 23:00:46 2009
+                                          running on lxbuild120.cern.ch on Wed Feb 11 16:14:29 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -65,7 +65,7 @@ TransportSvc         INFO Recovery of geometry errors is  ENABLED
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.63 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   2.12 times the speed of a 2.8 GHz Xeon.
 BrunelSequencer      INFO Member list: ProcessPhase/Init, ProcessPhase/Reco, ProcessPhase/Moni, ProcessPhase/MCLinks, ProcessPhase/Check, ProcessPhase/Output
 Init                 INFO Member list: GaudiSequencer/InitReprocSeq, GaudiSequencer/InitBrunelSeq, GaudiSequencer/InitCaloSeq, with context 'Offline'
 InitReprocSeq        INFO Member list: , with context 'Offline'
@@ -74,7 +74,7 @@ BrunelInit        SUCCESS ======================================================
 BrunelInit        SUCCESS Requested to process 0 events
 BrunelInit        SUCCESS ==================================================================
 HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
-RootHistSvc          INFO Writing ROOT histograms to: -histos.root
+RootHistSvc          INFO Writing ROOT histograms to: Brunel-histos.root
 HistogramPersis...   INFO Added successfully Conversion service:RootHistSvc
 HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r0/data/CaloPIDs_DC06_v2.root as CaloPIDs
 InitCaloSeq          INFO Member list: GaudiSequencer/CaloBanksHandler, with context 'Offline'
@@ -918,7 +918,7 @@ ToolSvc.Offline...SUCCESS  #WARNINGS   = 1        Message = 'No pixels produced'
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings Statistics : 0/0/1
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.63 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   2.12 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
