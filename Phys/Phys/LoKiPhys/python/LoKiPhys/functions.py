@@ -277,6 +277,8 @@ PROTOS   = HASPROTOS
 HASPROTOSINTREE = LoKi.Particles.HasProtosInTree
 ## @see LoKi::Cuts::PROTOSINTREE
 PROTOSINTREE = HASPROTOSINTREE 
+## @see LoKi::Cuts::HASTRACK
+HASTRACK  = LoKi.Particles.HasTrack() 
 ## @see LoKi::Cuts::HASTRACKS
 HASTRACKS = LoKi.Particles.HasTracks 
 ## @see LoKi::Cuts::TRACKS
@@ -340,7 +342,13 @@ HASMUON  = PPHASMUON
 ## @see LoKi::Cuts::PPHASCALOS
 PPHASCALOS = LoKi.Particles.ProtoHasCaloHypos () 
 ## @see LoKi::Cuts::HASCALOS
-HASCALOS = PPHASCALOS 
+HASCALOS = PPHASCALOS
+## @see LoKi::Cuts::THASINFO 
+THASINFO = LoKi.Particles.TrackHasInfo
+## @see LoKi::Cuts::TINFO
+TINFO    = LoKi.Particles.TrackInfo 
+## @see LoKi::Cuts::TRACKINFO
+TRACKINFO= LoKi.Particles.TrackInfo 
 ## @see LoKi::Cuts::TRCHI2 
 TRCHI2   = LoKi.Particles.TrackChi2           ()
 ## @see LoKi::Cuts::TRCHI2DOF 

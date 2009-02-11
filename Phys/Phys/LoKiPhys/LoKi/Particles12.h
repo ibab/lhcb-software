@@ -1,4 +1,4 @@
-// $Id: Particles12.h,v 1.7 2007-11-28 14:39:29 ibelyaev Exp $
+// $Id: Particles12.h,v 1.8 2009-02-11 12:41:49 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES12_H 
 #define LOKI_PARTICLES12_H 1
@@ -10,6 +10,7 @@
 #include "LoKi/PhysTypes.h"
 // ============================================================================
 namespace LHCb { class ProtoParticle ; }
+namespace LHCb { class Track         ; }
 // ============================================================================
 /** @file
  *
@@ -235,7 +236,108 @@ namespace LoKi
       virtual std::ostream& fillStream( std::ostream& s ) const ;
     } ;
     // ========================================================================
+    /** @class TrackHasInfo
+     *  The trivial predicate whcii evaluated for true 
+     *  if the tarck "hasInfo".
+     *  
+     *  @see LHCb::Particle
+     *
+     *  @see LoKi::Cuts::THASINFO 
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-02-11 
+     */
+    class TrackHasInfo 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
+    {
+    public:
+      // ======================================================================
+      /// constructor from the index in Track::ExtraInfo
+      TrackHasInfo ( int index ) ;
+      /// MANDAROTY: virtual destructor 
+      virtual ~TrackHasInfo() {}
+      /// clone method (mandatory!)
+      virtual  TrackHasInfo* clone() const { return new TrackHasInfo(*this) ; }    
+      /// the only one essential method 
+      result_type operator() ( argument p ) const ;
+      /// the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      // default contructor is disabled 
+      TrackHasInfo() ;
+      // ======================================================================
+    private :
+      // ======================================================================
+      /// index in Track::ExtraInfo 
+      int m_info ; // index in Track::ExtraInfo
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class TrackInfo
+     *  Trivial function which evaluates LHCb::Track::info
+     *  
+     *  It relies on the method LHCb::Track::info
+     *
+     *  @see LHCb::Particle
+     *  @see LHCb::Particle::proto
+     *  @see LHCb::Track
+     *  @see LHCb::Track::info
+     *  @see LoKi::Cuts::TINFO 
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-02-11
+     */
+    class TrackInfo
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
+    {
+      // ======================================================================
+    public:
+      // ======================================================================
+      /** constructor from "info"
+       *  @param key info index/mark/key
+       *  @param def default valeu for info 
+       *  @param bad bad value to be retured for invalid particle 
+       */
+      TrackInfo 
+      ( const int    key , 
+        const double def , 
+        const double bad ) ;
+      /** constructor from "info"
+       *  @param key info index/mark/key
+       *  @param def default value for info 
+       */
+      TrackInfo 
+      ( const int    key , 
+        const double def ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~TrackInfo() {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  TrackInfo* clone() const { return new TrackInfo(*this); }
+      /// MANDATORY: the only one essential method 
+      result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      TrackInfo();  // the default constructor is disabled 
+      // ======================================================================
+    private:
+      // =======================================================================
+      /// index in Track::ExtraInfo
+      int    m_key ; // index in ProtoParticle::ExtraInfo
+      /// value to be returned for invalid particle and protoparticle 
+      double m_def ; // value to be returned for invalid objects
+      /// default value for missing information
+      double m_bad ;  // default value for missing information
+      // =====================================================================
+    } ;
+    // ========================================================================
   } // end of namespace Particles
+  // ==========================================================================
 } // end of namespace LoKi
 // ============================================================================
 // The END 

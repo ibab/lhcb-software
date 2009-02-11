@@ -1,4 +1,4 @@
-// $Id: Particles0.cpp,v 1.18 2008-12-05 09:09:21 ibelyaev Exp $
+// $Id: Particles0.cpp,v 1.19 2009-02-11 12:41:49 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -842,6 +842,27 @@ std::ostream&
 LoKi::Particles::HasVertex::fillStream
 ( std::ostream& s ) const 
 { return s << "HASVERTEX" ; }
+// ============================================================================
+LoKi::Particles::HasTrack::result_type 
+LoKi::Particles::HasTrack::operator() 
+  ( LoKi::Particles::HasTrack::argument p ) const 
+{
+  if ( 0 == p ) 
+  {
+    Error ( " Invalid Particle, return false" ) ;
+    return false ;                                                // RETURN
+  }
+  // get protoparticle 
+  const LHCb::ProtoParticle* pp = p -> proto() ;
+  if ( 0 == pp ) { return false ; }                               // RETURN
+  // check validity of the track:
+  return 0 != pp->track() ;
+}
+// ============================================================================
+std::ostream& 
+LoKi::Particles::HasTrack::fillStream
+( std::ostream& s ) const 
+{ return s << "HASTRACK" ; }
 // ============================================================================
 // constructor from theta phi
 // ============================================================================

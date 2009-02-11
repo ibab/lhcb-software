@@ -1,4 +1,4 @@
-// $Id: Particles0.h,v 1.18 2008-12-05 09:09:21 ibelyaev Exp $
+// $Id: Particles0.h,v 1.19 2009-02-11 12:41:49 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES0_H 
 #define LOKI_PARTICLES0_H 1
@@ -1078,6 +1078,33 @@ namespace LoKi
       // ======================================================================
       /// clone method (mandatory!)
       virtual HasVertex* clone() const ;
+      /// the only one essential method 
+      result_type operator() ( argument p ) const ;
+      /// the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    };
+    // ========================================================================
+    /** @class HasTrack
+     *  Trivial predicate which evaluates to true 
+     *  for particles with the valid track
+     *
+     *  It relies on the "chain":  LHCb::Particle::proto()->track()
+     *
+     *  @see LHCb::Particle
+     *  @see LoKi::Cuts::HASTRACK
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-02-11
+     */
+    class HasTrack
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
+    {
+    public:
+      // ======================================================================
+      virtual ~HasTrack() {}
+      /// clone method (mandatory!)
+      virtual HasTrack* clone() const { return new HasTrack(*this) ; }
       /// the only one essential method 
       result_type operator() ( argument p ) const ;
       /// the specific printout 

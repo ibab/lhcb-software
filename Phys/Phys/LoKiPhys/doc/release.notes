@@ -1,9 +1,21 @@
-! $Id: release.notes,v 1.85 2009-01-08 17:18:13 cattanem Exp $ 
+! $Id: release.notes,v 1.86 2009-02-11 12:41:49 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2009-02-11 - Vanya BELYAEV 
+ 
+- add new functors:
+
+   HASTRACK  to check the validity of the track fore the particle
+   TINFO/TRACKINFO to access "extra-info" for the underlying track 
+
+ - cmt/requirements 
+
+   version increment to v8r2 
+
 
 !========================== LoKiPhys v8r1 2009-01-08 ==========================
 ! 2008-12-17 - Vanya  Belyaev

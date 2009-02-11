@@ -1,4 +1,4 @@
-// $Id: Particles12.cpp,v 1.8 2007-11-28 14:39:30 ibelyaev Exp $
+// $Id: Particles12.cpp,v 1.9 2009-02-11 12:41:49 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -129,7 +129,7 @@ std::ostream&
 LoKi::Particles::ProtoInfo::fillStream
 ( std::ostream& s ) const 
 { 
-  s << "INFO(" << m_key << "," << m_def ;
+  s << "PPINFO(" << m_key << "," << m_def ;
   if ( m_bad != m_def ) { s << "," << m_bad ; }
   return s << ")" ;
 }
@@ -261,6 +261,100 @@ LoKi::Particles::IsMuon::fillStream ( std::ostream& s ) const
 { return s << "ISMUON" ; }
 // ============================================================================
 
+
+
+
+// ============================================================================
+LoKi::Particles::TrackHasInfo::TrackHasInfo( const int info ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
+  , m_info ( info ) 
+{}
+// ============================================================================
+LoKi::Particles::TrackHasInfo::result_type 
+LoKi::Particles::TrackHasInfo::operator() 
+  ( LoKi::Particles::TrackHasInfo::argument p ) const 
+{
+  //
+  if ( 0 == p ) 
+  {
+    Error ( " Invalid Particle, return 'false'" ) ;
+    return false ;                                    // RETURN 
+  }
+  // 
+  const LHCb::ProtoParticle* pp = p->proto() ;
+  if ( 0 == pp ) 
+  {
+    Error ( " Invalid ProtoParticle, return 'false'" ) ;
+    return false ;                                    // RETURN 
+  }
+  //
+  return LoKi::ExtraInfo::hasInfo ( pp->track() , m_info ) ;
+}
+// ============================================================================
+std::ostream& 
+LoKi::Particles::TrackHasInfo::fillStream
+( std::ostream& s ) const 
+{ return s << "THASINFO(" << m_info << ")" ; }
+// ============================================================================
+
+
+// ============================================================================
+LoKi::Particles::TrackInfo::TrackInfo
+( const int    key , 
+  const double def , 
+  const double bad )
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  , m_key ( key ) 
+  , m_def ( def ) 
+  , m_bad ( bad ) 
+{}
+// ============================================================================
+LoKi::Particles::TrackInfo::TrackInfo
+( const int    key , 
+  const double def )
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  , m_key ( key ) 
+  , m_def ( def ) 
+  , m_bad ( def ) 
+{}
+// ============================================================================
+LoKi::Particles::TrackInfo::result_type 
+LoKi::Particles::TrackInfo::operator() 
+  ( LoKi::Particles::TrackInfo::argument p ) const 
+{
+  //
+  if ( 0 == p ) 
+  {
+    Error ( " Argument is invalid! return " + 
+            Gaudi::Utils::toString ( m_bad ) ) ;
+    return m_bad ;                                          // RETURN 
+  }  
+  //
+  const LHCb::ProtoParticle* pp = p->proto() ;
+  if ( 0 == pp ) 
+  {
+    Error ( " ProtoParticle is invalid! return " + 
+            Gaudi::Utils::toString ( m_bad ) ) ;
+    return m_bad ;                                          // RETURN 
+  }
+  //
+  const LHCb::Track* track = pp->track() ;
+  if ( 0 == track ) 
+  {
+    Error ( " Track is invalid! return " + 
+            Gaudi::Utils::toString ( m_bad ) ) ;
+    return m_bad ;                                          // RETURN 
+  }  
+  //
+  return LoKi::ExtraInfo::info ( track , m_key , m_def ) ;     // RETURN 
+}
+// ============================================================================
+std::ostream& LoKi::Particles::TrackInfo::fillStream ( std::ostream& s ) const 
+{ 
+  s << "TINFO(" << m_key << "," << m_def ;
+  if ( m_bad != m_def ) { s << "," << m_bad ; }
+  return s << ")" ;
+}
 
 
 // ============================================================================

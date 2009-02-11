@@ -1,4 +1,4 @@
-// $Id: ParticleCuts.h,v 1.33 2008-12-17 16:53:20 ibelyaev Exp $
+// $Id: ParticleCuts.h,v 1.34 2009-02-11 12:41:48 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSPARTICLECUTS_H 
 #define LOKI_PHYSPARTICLECUTS_H 1
@@ -2293,6 +2293,28 @@ namespace LoKi
      *  @date 2006-02-23 
      */
     typedef LoKi::Particles::TrackHasState                           HASSTATE ;
+    // ========================================================================
+    /** @var HASTRACK
+     *  Trivial predicate to check the validity of track for particle: 
+     *  It acks according to the chain Particle->ProroParticle->Track
+     *
+     *  @code
+     *
+     *  const LHCb::Particle* p = ... ;
+     *
+     *  const bool hasTrack = HASTRACK ( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::HasTrack
+     *  @see LHCb::Particle
+     *  @see LHCb::ProtoParticle
+     *  @see LHCb::Track
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-02-11
+     */
+    const LoKi::Particles::HasTrack                                  HASTRACK ;
     // ========================================================================
     /** @typedef HASTRACKS 
      *  The simple predicate which checks if the particle 
@@ -5382,6 +5404,30 @@ namespace LoKi
      */
     typedef LoKi::Particles::TimeSignedDistance                        TDSIGN ;
     // ========================================================================
+    /** @typedef THASINFO
+     *  Simple predicate to check that the track has 'extra-info'
+     * 
+     *  @code
+     *
+     *    const LHCb::Particle* p = ... ;
+     *    // index
+     *    const int info = 12345  ;
+     *    // create the functor 
+     *    const THASINFO has12345 = THASINFO( info ) ;
+     *    
+     *    const bool hasInfo = has12345 ( p ) ;
+     *
+     *  @endcode
+     * 
+     *  @see LoKi::Particles::TrackHasInfo
+     *  @see LHCb::Particle
+     *  @see LHCb::ProtoParticle
+     *  @see LHCb::Track
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-02-11
+     */
+    typedef LoKi::Particles::TrackHasInfo                            THASINFO ;
+    // ========================================================================
     /** @typedef TIMEDIST 
      *  Simple evaluator of the proper lifetime 
      *  distance (c*tau) of the particle between 
@@ -5412,6 +5458,29 @@ namespace LoKi
      *  @date   2002-07-15
      */
     typedef LoKi::Particles::TimeDistance                            TIMEDIST ;
+    // ========================================================================
+    /** @typedef TINFO
+     *  Primitive functor to get 'extra-info' form the underlying track
+     *
+     *  @code
+     * 
+     *  const LHCb::Particle* p = ... ;
+     *
+     *  // prepare the funtor:
+     *  const TINFO info = TINFO ( 1234 , -1000 , -2000 ) ;
+     *
+     *  // use it!
+     *  const double value = info ( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::TrackInfo
+     *  @see LHCb::Particle
+     *  @see LHCb::Track
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-02-11
+     */
+    typedef LoKi::Particles::TrackInfo                                  TINFO ;
     // ========================================================================
     /** @typedef TRACKFROMPV 
      *  The simple predicate which evaluates to 'true' for 
@@ -5472,6 +5541,29 @@ namespace LoKi
      *  @date 2006-02-22
      */
     typedef LoKi::Particles::HasTracksInTreeFromPV          TRACKFROMPVINTREE ;
+    // ========================================================================
+    /** @typedef TRACKINFO
+     *  Primitive functor to get 'extra-info' form the underlying track
+     *
+     *  @code
+     * 
+     *  const LHCb::Particle* p = ... ;
+     *
+     *  // prepare the funtor:
+     *  const TRACKINFO info = TRACKINFO ( 1234 , -1000 , -2000 ) ;
+     *
+     *  // use it!
+     *  const double value = info ( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::TrackInfo
+     *  @see LHCb::Particle
+     *  @see LHCb::Track
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-02-11
+     */
+    typedef LoKi::Particles::TrackInfo                              TRACKINFO ;
     // ========================================================================
     /** @typedef TRACKS 
      *  The simple predicate which checks if the particle 
