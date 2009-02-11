@@ -9,6 +9,7 @@ branches doc cmt
 
 use GaudiConf             v12r0
 use GaudiObjDesc          v11r6
+use GaudiPatches          v1r0
 
 #                                         Maintainer
 # Kernel packages
