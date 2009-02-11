@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.h,v 1.35 2009-02-06 16:07:33 jpalac Exp $ 
+// $Id: DVAlgorithm.h,v 1.36 2009-02-11 14:43:38 jpalac Exp $ 
 // ============================================================================
 #ifndef DAVINCIKERNEL_DVALGORITHM_H
 #define DAVINCIKERNEL_DVALGORITHM_H 1
@@ -169,9 +169,20 @@ public:
    * @return StatusCode FAILURE if something went wrong. Resulting vertex should be ignored.
    *
    **/
-  StatusCode calculateRelatedPV(const LHCb::Particle* p,
-                                LHCb::RecVertex& vertex) const;
+  StatusCode calculateRelatedPV(const LHCb::Particle* p, LHCb::RecVertex& v) const;
 
+
+  /**
+   *
+   * Get the related PV from the relations table, or call calculateRelatedPV
+   * if it isn't already there.
+   *
+   *
+   * @author Juan Palacios juan.palacios@nikhef.nl
+   * @date 10/02/2009
+   * 
+   **/
+  const LHCb::VertexBase* getRelatedPV(const LHCb::Particle* p) const;
 
   /**
    *
@@ -187,7 +198,7 @@ public:
    **/
   inline void relateWithOverwrite(const LHCb::Particle*   part, 
                                   const LHCb::VertexBase* vert,
-                                  const double weight=1.) 
+                                  const double weight=1.) const
   {
     if (0==part || 0== vert ) return;
     (this->desktop()->Particle2VertexRelations().i_removeFrom(part)).ignore();
