@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.53 2009-02-09 15:52:51 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.54 2009-02-11 14:47:12 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -37,35 +37,60 @@ class Brunel(LHCbConfigurableUser):
     
     # Steering options
     __slots__ = {
-        "EvtMax":          -1 # Maximum number of events to process
-       ,"SkipEvents":   0     # events to skip
-       ,"PrintFreq":    1     # The frequency at which to print event numbers
-       ,"DataType"   : "2008" # Data type, can be ['DC06','2008']
-       ,"WithMC":       False # set to True to use MC truth
-       ,"Simulation":   False # set to True to use SimCond
-       ,"RecL0Only":    False # set to True to reconstruct only L0-yes events
-       ,"InputType":    "MDF" # or "DIGI" or "ETC" or "RDST" or "DST"
-       ,"OutputType":   "DST" # or "RDST" or "NONE". Also forwarded to RecSys
-       ,"PackType":     "TES" # Type of packing for the DST: ['NONE','TES','MDF'] 
-       ,"Histograms": "Default" # Type of histograms: ['None','Default','Expert']
-       ,"NoWarnings":   False # suppress all messages with MSG::WARNING or below 
-       ,"DatasetName":  ""    # string used to build file names
-       ,"DDDBtag":      "" # Tag for DDDB. Default as set in DDDBConf for DataType
-       ,"CondDBtag":    "" # Tag for CondDB. Default as set in DDDBConf for DataType
-       ,"UseOracle": False  # if False, use SQLDDDB instead
-       ,"MainSequence": []    # The default main sequence, see self.DefaultSequence
-       ,"MCCheckSequence": [] # The default MC Check sequence, see KnownCheckSubdets
-       ,"MCLinksSequence": [ "L0", "Unpack", "Tr" ] # The default MC Link sequence
-       ,"InitSequence": ["Reproc", "Brunel", "Calo"] # The default init sequence
-       ,"MoniSequence": []    # The default Moni sequence, see KnownMoniSubdets
-       ,"Monitors": []        # list of monitors to execute, see KnownMonitors
-        # Following are options forwarded to RecSys
-       ,"RecoSequence"   : [] # The Sub-detector reconstruction sequencing. See RecSys for default
-       ,"SpecialData"    : [] # Various special data processing options. See KnownSpecialData for all options
-       ,"Context":     "Offline" # The context within which to run
+        "EvtMax"          : -1
+       ,"SkipEvents"      : 0
+       ,"PrintFreq"       : 1
+       ,"DataType"        : "2008"
+       ,"WithMC"          : False
+       ,"Simulation"      : False
+       ,"RecL0Only"       : False
+       ,"InputType"       : "MDF"
+       ,"OutputType"      : "DST"
+       ,"PackType"        : "TES"
+       ,"Histograms"      : "Default"
+       ,"NoWarnings"      : False
+       ,"DatasetName"     : ""
+       ,"DDDBtag"         : ""
+       ,"CondDBtag"       : ""
+       ,"UseOracle"       : False
+       ,"MainSequence"    : []
+       ,"InitSequence"    : ["Reproc", "Brunel", "Calo"]
+       ,"RecoSequence"    : []
+       ,"MoniSequence"    : []
+       ,"MCCheckSequence" : []
+       ,"MCLinksSequence" : ["L0", "Unpack", "Tr"]
+       ,"Monitors"        : []
+       ,"SpecialData"     : []
+       ,"Context"         : "Offline"
         }
 
 
+    _propertyDocDct = { 
+        'EvtMax'       : """ Maximum number of events to process (default -1, all events on input files) """
+       ,'SkipEvents'   : """ Number of events to skip (default 0) """
+       ,'PrintFreq'    : """ The frequency at which to print event numbers (default 1, prints every event) """
+       ,'DataType'     : """ Data type, can be ['DC06','2008']. Default '2008' """
+       ,'WithMC'       : """ Flags whether to enable processing with MC truth (default False) """
+       ,'Simulation'   : """ Flags whether to use SIMCOND conditions (default False) """
+       ,'RecL0Only'    : """ Flags whether to reconstruct and output only events passing L0 (default False) """
+       ,'InputType'    : """ Type of input file. Can be one of ['MDF','DIGI','ETC','RDST','DST'] (default 'MDF') """
+       ,'OutputType'   : """ Type of output file. Can be one of ['RDST','DST','NONE'] (default 'DST') """
+       ,'PackType'     : """ Type of packing for the output file. Can be one of ['TES','MDF','NONE'] (default 'TES') """
+       ,'Histograms'   : """ Type of histograms. Can be one of ['None','Default','Expert'] """
+       ,'NoWarnings'   : """ Flag to suppress all MSG::WARNING or below (default False) """ 
+       ,'DatasetName'  : """ String used to build output file names """
+       ,'DDDBtag'      : """ Tag for DDDB """
+       ,'CondDBtag'    : """ Tag for CondDB """
+       ,'UseOracle'    : """ Flag to enable Oracle CondDB. Default False (use SQLDDDB) """
+       ,'MainSequence' : """ List of main sequences, default self.DefaultSequence """
+       ,'InitSequence' : """ List of initialisation sequences """
+       ,'RecoSequence' : """ List of reconstruction sequences, default defined in RecSys """
+       ,'MCLinksSequence' : """ List of MC truth link sequences """
+       ,'MCCheckSequence' : """ List of MC Check sequence, default self.KnownCheckSubdets """
+       ,'Monitors'     : """ List of monitors to execute, see self.KnownMonitors. Default none """
+       ,'SpecialData'  : """ Various special data processing options. See RecSys.KnownSpecialData for all options """
+       ,'Context'      : """ The context within which to run (default 'Offline') """
+       }
 
     def defineGeometry(self):
         # DIGI is always simulation, as is usage of MC truth!

@@ -4,6 +4,7 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
 ! 2009-02-11 - Marco Cattaneo
+ - Improve documentation of options in configurable
  - Update reference for fixes to Velo track fit
 
 ! 2009-02-09 - Chris Jones
