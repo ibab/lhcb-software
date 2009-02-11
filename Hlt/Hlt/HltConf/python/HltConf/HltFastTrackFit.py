@@ -1,18 +1,17 @@
 from Gaudi import Configuration
-from Configurables import HltTrackUpgradeTool, HltTrackFit, TrackMasterFitter
+from Configurables import HltTrackUpgradeTool, HltTrackFit
 from Configurables import TrackHerabExtrapolator
 from TrackFitter.ConfiguredFitters import ConfiguredFastFitter
 
 # why is this not automatically the case if RecoName == FitTrack ???
 def setupHltFastTrackFit( fit ) :
     fit = Configuration.allConfigurables[fit]
-    if fit.getType() is 'HltTrackUpgrade' or fit.getType() is 'HltVertexUpgrade' :
-        if getattr(fit,'RecoName') != 'FitTrack' : print 'huh?'
-        fit.addTool(HltTrackUpgradeTool())
-        fit = getattr(fit,'HltTrackUpgradeTool')
-    if fit.getType() is 'HltTrackUpgradeTool' :
-        fit.addTool(HltTrackFit())
-        fit = getattr(fit,'HltTrackFit')
-    if fit.getType() is 'HltTrackFit' :
-        fit.addTool( ConfiguredFastFitter( 'Fit' ) )
+    if fit.getType() is not 'HltTrackUpgrade' and fit.getType() is not 'HltVertexUpgrade' :
+           raise AttributeError, "The argument '%s' is of type %s, should be either HltTrackUpgrade or HltVertexUpgrade"%(fit,fit.getType())
+    if fit.RecoName != 'FitTrack' : 
+           raise AttributeError, "The argument '%s' has RecoName %s, should be 'FitTrack'"%(fit,fit.RecoName)
+    for i in [ HltTrackUpgradeTool(),HltTrackFit(),ConfiguredFastFitter('Fit')] :
+        fit.addTool( i )
+        fit = getattr( fit, i.getName().split('.')[-1] )
+    # for good measure, we throw this one in as well...
     TrackHerabExtrapolator().extrapolatorID = 4
