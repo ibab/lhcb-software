@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitor.cpp,v 1.9 2009-02-10 15:35:17 gersabec Exp $
+// $Id: VeloTrackMonitor.cpp,v 1.10 2009-02-11 13:55:23 gersabec Exp $
 // Include files 
 
 // from Gaudi
@@ -615,7 +615,17 @@ StatusCode Velo::VeloTrackMonitor::unbiasedResiduals (LHCb::Track *track )
       double chi2;
       
       //Sensors vs Unbiased Residuals profile
-      sensor->residual(trackInterceptGlobal, vcID, interStripFr, UnbiasedResid, chi2);
+      StatusCode sc3 = sensor->residual(trackInterceptGlobal, vcID, interStripFr, UnbiasedResid, chi2);
+      if ( !( sc3.isSuccess() ) ) {
+        debug() << "Residual calculation failed for "
+                << trackInterceptGlobal.x() << " "
+                << trackInterceptGlobal.y() << " "
+                << trackInterceptGlobal.z() << " "
+                << vcID << " "
+                << interStripFr << " "
+                << endmsg;
+        return StatusCode::SUCCESS;
+      }
       double pitch;
       if ( sensor->isR() ) {
         unsigned int stripID = vcID.strip();
