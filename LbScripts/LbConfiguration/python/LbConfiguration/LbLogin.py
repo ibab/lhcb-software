@@ -42,7 +42,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.13 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.14 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -612,6 +612,12 @@ class LbLoginScript(Script):
                         lpthlist = []
                     lpthlist.append(compiler_path)
                     ev["LD_LIBRARY_PATH"] = os.pathsep.join(lpthlist)
+
+        
+        ev["PYTHON_BINOFFSET"] = os.sep+"bin"
+
+        if self.platform == "win32" :
+            ev["PYTHON_BINOFFSET"] = ""
 
                     
         ev["CMTOPT"] = getConfig(self.binary, self.platform, self.compdef)               

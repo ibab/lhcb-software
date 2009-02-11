@@ -114,12 +114,67 @@ def fixPathes(filename):
             out.write(" ".join(words) + "\n")
     out.close()
 
+def fixPython(filename):
+    inf = open(filename, "r")
+    data = inf.readlines()
+    inf.close()
+    out = open(filename, "w")
+    pathlist = ["PATH"]
+    for l in data :
+        words = l.split()
+        written = False
+        if len(words) > 1 :
+            for p in pathlist :
+                tobefixed = None
+                if words[1] == p:
+                    if len(words) > 2 :
+                        tobefixed = words[2]
+                elif words[1].startswith("%s=" % p) :
+                    tobefixed = words[1].split("=")[1]
+                if tobefixed :
+                    if filename.endswith(".csh") :
+                        components = tobefixed.split(":") 
+                        newcmp = []
+                        for c in components :
+                            if c.find("Python") != -1 and c.endswith("/bin") :
+                                newcmp.append(c.replace("/bin", "${PYTHON_BINOFFSET}" ))
+                            else :
+                                newcmp.append(c)
+                        words[2] = ":".join(newcmp) 
+                        out.write(" ".join(words) + "\n")
+                        written = True
+                    elif filename.endswith(".sh") :
+                        components = tobefixed.split(":")
+                        newcmp = [] 
+                        for c in components :
+                            if c.find("Python") != -1 and c.endswith("/bin") :
+                                newcmp.append(c.replace("/bin", "${PYTHON_BINOFFSET}" ))
+                            else :
+                                newcmp.append(c)
+                        words[1] = "%s=%s" % (p, ":".join(newcmp)) 
+                        out.write(" ".join(words) + "\n")
+                        written = True
+                    elif filename.endswith(".bat") :
+                        components = tobefixed.split(";") 
+                        newcmp = [] 
+                        for c in components :
+                            if c.find("Python") != -1 and c.endswith("\\bin") :
+                                newcmp.append(c.replace("\\bin", "%PYTHON_BINOFFSET%" )) 
+                            else :
+                                newcmp.append(c) 
+                        words[1] = "%s=%s" % (p, ";".join(newcmp)) 
+                        out.write(" ".join(words) + "\n")
+                        written = True
+        if not written :
+            out.write(" ".join(words) + "\n")
+    out.close()
 
 def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None, building=False, withoutpython=False):
     location = None
     if targetlocation :
         location = os.path.join(targetlocation, "scripts")
     cachefilename = getLoginCacheName(shell=shell, location=location)
+    
     
     os.environ["CMTCONFIG"] = "slc4_ia32_gcc34"
     llsargs = []
@@ -153,6 +208,7 @@ def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None,
         fixNative(cachefilename)
         removeVariables(cachefilename, ["CMTCONFIG", "ROOTSYS"] )
         fixPathes(cachefilename)
+        fixPython(cachefilename)
         
 def generateLogin(targetlocation, script, version="", mysiteroot=None, building=False, withoutpython=False):
     knownshells = ["sh", "csh", "tcsh", "zsh", "bat"]

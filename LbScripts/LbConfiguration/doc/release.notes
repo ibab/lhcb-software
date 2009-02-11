@@ -1,3 +1,9 @@
+2009-02-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/LbLogin.py: added PYTHON_BINOFFSET
+	* scripts/generateLogin: add the fixPython option with uses PYTHON_BINOFFSET to
+	iron out the differences between platforms in the cache.
+
 2009-02-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v2r4
