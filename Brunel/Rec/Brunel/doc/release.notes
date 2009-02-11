@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-02-11 - Anatoly Solomin
+ - Fix passing configuration options to RichRecQCConf() if RICH in
+   MCCheckSequence.
+
 ! 2009-02-11 - Marco Cattaneo
  - Improve documentation of options in configurable
  - Update reference for fixes to Velo track fit

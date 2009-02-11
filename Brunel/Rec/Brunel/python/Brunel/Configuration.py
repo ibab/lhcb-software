@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.55 2009-02-11 15:14:00 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.56 2009-02-11 23:55:58 asolomin Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -429,8 +429,9 @@ class Brunel(LHCbConfigurableUser):
             importOptions("$MUONPIDCHECKERROOT/options/MuonPIDChecker.py")
 
         if "RICH" in checkSeq :
-            self.setOtherProps(RichRecQCConf(),["Context","DataType","WithMC"])
-            RichRecQCConf().MoniSequencer = GaudiSequencer("CheckRICHSeq")
+            from Configurables import GaudiSequencer
+            self.setOtherProps(RichRecQCConf(), ["Context","DataType","WithMC"])
+            RichRecQCConf().setProp("MoniSequencer", GaudiSequencer("CheckRICHSeq"))
 
         if expert:
             # Data on Demand for MCParticle to MCHit association, needed by ST, IT, OT, Tr, Muon
