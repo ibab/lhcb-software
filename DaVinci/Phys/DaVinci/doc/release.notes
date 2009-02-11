@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.309 2009-02-10 12:17:08 pkoppenb Exp $
+! $Id: release.notes,v 1.310 2009-02-11 18:05:53 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,10 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-02-11 - Patrick Koppenburg
+ - Writing and reading of ETC now works. It is assumed one uses EventTuple to
+   do so. Requires tag pkoppenb_20090211 of DecayTreeTuple
 
 ! 2009-02-10 - Patrick Koppenburg
  - First working version of writing and reading an ETC. Many changes ahead.
