@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2009-02-11 - Marco Cattaneo
+ - Add missing #include <cassert> in previous change
+
 ! 2009-02-05 - Wouter Hulsbergen
  - Added HitPattern
 
