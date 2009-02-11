@@ -1,11 +1,11 @@
-#$Id: requirements,v 1.53 2009-02-03 09:29:34 pkoppenb Exp $
+#$Id: requirements,v 1.54 2009-02-11 11:12:12 pkoppenb Exp $
 #============================================================================
 # Created    : 23/08/2004
 # Maintainer : P. Koppenburg, Yuehong Xie, J. Palacios
 #
 #============================================================================
 package           VertexFit
-version           v5r5p1
+version           v5r6
 
 # Structure, i.e. directories to process. 
 #============================================================================

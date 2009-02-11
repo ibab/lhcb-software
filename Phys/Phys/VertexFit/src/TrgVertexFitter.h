@@ -1,4 +1,4 @@
-// $Id: TrgVertexFitter.h,v 1.8 2008-09-10 15:10:38 pkoppenb Exp $
+// $Id: TrgVertexFitter.h,v 1.9 2009-02-11 11:12:12 pkoppenb Exp $
 #ifndef TRGVERTEXFITTER_H 
 #define TRGVERTEXFITTER_H 1
 
@@ -49,10 +49,11 @@ public:
                     LHCb::Vertex& v) const;
 
 private:
-
+  /// do the fit
   StatusCode doFit( const LHCb::Particle::ConstVector& partsToFit,  
                     LHCb::Vertex& V) const ;
 
+  /// update vertex
   StatusCode vertexPositionAndError(const double& AX, 
                                     const double& BX, 
                                     const double& CX,
@@ -67,7 +68,7 @@ private:
                                     double& vY, 
                                     double& vZ, 
                                     LHCb::Vertex& V) const ;
-
+  /// is it a resonance?
   bool isResonance(const LHCb::Particle& P) const {
     if ( P.daughters().empty() ) return false ;
     const int pid = abs(P.particleID().pid()) ;
@@ -77,6 +78,26 @@ private:
                pid==15 )) ;
     /// @todo The list of resonances should be obtained from particle property service, but that may be slowish
   };
+
+  /// classify particles
+  StatusCode classify( const LHCb::Particle::ConstVector& parts,
+                       LHCb::Particle::ConstVector& partsToFit,
+                       LHCb::Particle::ConstVector& inputNeutralsFromMother,
+                       LHCb::Particle::ConstVector& inputNeutralsFromResonance,
+                       LHCb::Vertex& V,
+                       bool& fitNeeded) const ;
+  
+  /// neutrals
+  bool classifyNeutrals( const LHCb::Particle* P, LHCb::Particle::ConstVector& container)const{
+    if(m_pi0ID ==  P->particleID().pid() || m_photonID == P->particleID().pid() ){
+      container.push_back(P);
+      if (msgLevel(MSG::VERBOSE)) verbose() <<  "Particle skipped in the fitting : " 
+                                            << P->particleID().pid() << endmsg;
+      return true;
+    }
+    return false ;
+  }
+  
 
 private:
 

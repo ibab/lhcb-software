@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.161 2009-02-03 09:29:34 pkoppenb Exp $
+! $Id: release.notes,v 1.162 2009-02-11 11:12:12 pkoppenb Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+! 2009-02-11 - Patrick Koppenburg
+ - TrgVertexFit: Bug fix for PhiGamma. 
+ - Increment to v5r6
 
 ! 2009-02-03 - Patrick Koppenburg
  - TrgVertexFitter: Switch off all Warnings

@@ -1,4 +1,4 @@
-// $Id: OfflineVertexFitter.cpp,v 1.33 2008-10-04 11:25:15 xieyu Exp $
+// $Id: OfflineVertexFitter.cpp,v 1.34 2009-02-11 11:12:12 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -155,7 +155,6 @@ StatusCode OfflineVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
       return StatusCode::FAILURE;
     }
   }
-
 
   for(Particle::ConstVector::const_iterator iterP = FlyingParticles.begin(); iterP != FlyingParticles.end(); iterP++) {
     const Particle* daughter = *iterP;
