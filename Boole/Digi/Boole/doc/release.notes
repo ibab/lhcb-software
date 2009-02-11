@@ -3,6 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+! 2009-02-11 - Marco Cattaneo
+ - Update test to not complain about fixed spelling of "succesfully" in Gaudi v21
+
 ! 2009-02-06 - Marco Cattaneo
  - Replace Trigger sequence by Filter sequence and run it as last sequence
    . Instrument Filter sequence to filter also on OdinTypeFilter
