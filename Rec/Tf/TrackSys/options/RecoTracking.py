@@ -11,7 +11,6 @@ from Configurables import ( ProcessPhase, MagneticFieldSvc,
                             Tf__PatVeloSpaceTracking, Tf__PatVeloGeneralTracking,
                             Tf__PatVeloTrackTool,
                             RawBankToSTClusterAlg, RawBankToSTLiteClusterAlg,
-                            OTTimeCreator,
                             PatForward,
                             TrackEventFitter,
                             Tf__Tsa__Seed, Tf__Tsa__SeedTrackCnv,
@@ -61,13 +60,22 @@ createITLiteClusters = RawBankToSTLiteClusterAlg("CreateITLiteClusters")
 createITClusters.DetType     = "IT";
 createITLiteClusters.DetType = "IT";
 
+## Special OT decoder for cosmics to merge spills.
+if TrackSys().cosmics():
+   from Configurables import (Tf__OTHitCreator)
+   Tf__OTHitCreator('OTHitCreator').RawBankDecoder = 'OTMultiBXRawBankDecoder'
+   ## note: this does not change the OTMeasurementProvider used in the fit.
+   
 GaudiSequencer("RecoITSeq").Members += [ createITClusters, createITLiteClusters ]
 
 importOptions( "$STTOOLSROOT/options/Brunel.opts" )
 
-## OTTimes for pattern recognition and track fit
-GaudiSequencer("RecoOTSeq").Members += [ OTTimeCreator() ]
-
+## Make sure the default extrapolator and interpolator use simplified material
+if TrackSys().simplifiedGeometry():
+   from Configurables import TrackMasterExtrapolator, TrackInterpolator
+   TrackMasterExtrapolator().MaterialLocator = 'SimplifiedMaterialLocator'
+   TrackInterpolator().addTool( TrackMasterExtrapolator( MaterialLocator = 'SimplifiedMaterialLocator' ), name='Extrapolator')
+   
 ## Tracking sequence
 track = ProcessPhase("Track");
 GaudiSequencer("RecoTrSeq").Members += [ track ]

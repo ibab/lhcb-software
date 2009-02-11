@@ -4,6 +4,10 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2009-02-11 - Wouter Hulsbergen
+ - Removed OTTimeCreator from sequence
+ - Switch to special OT decoder for cosmics
+
 !============================ TrackSys v4r20 2009-01-12 ======================
 ! 2009-01-06 - Marco Cattaneo
  - In case of RDST output, do not add to TrackVeloFitSeq the algorithm to copy
