@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.10 2009-01-22 11:29:52 jonrob Exp $ 
+! $Id: release.notes,v 1.11 2009-02-11 15:04:12 jpalac Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiFitters
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
+
+! 2009-02-11 - Juan PALACIOS
+ - src/DirectionFitter.cpp
+  . use new DVAlgorithm::calculateRelatedPV method to get related PV. This 
+    gets a copy of a related (potentially re-fitted PV) but doesn't modify
+    and PhysDesktop relaitons tables.
 
 ! 2009-01-22 - Chris Jones
  - Workaround for compilation failure on gcc4 / OSX
