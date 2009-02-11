@@ -1,9 +1,21 @@
-! $Id: release.notes,v 1.401 2009-02-06 08:27:19 jpalac Exp $
+! $Id: release.notes,v 1.402 2009-02-11 15:00:12 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
 
+! 2009-02-11 - Juan PALACIOS
+ - PhysDesktop
+  . saveTable -> saveP2PVRelations
+  . relatedVertex now const method.
+  . Add templated method clearLocalContainer and use where applicable
+  . Make withspread use of templates inTES method
+  . Only save to the TES re-fitted PVs that are related to particles also 
+    being saved to the TES
+  . IMPORTANT: relatedVertex no longer triggers calculation of related PV 
+    on demand! It only takes it from relaitons table. To create new P->PV 
+    relations, use DVAlgorithm::calculateRelatedPV or DVAlgorithm::getRelatedPV
+    
 ! 2009-02-06 - Juan PALACIOS
  - PhysDesktop
   . Add methods
