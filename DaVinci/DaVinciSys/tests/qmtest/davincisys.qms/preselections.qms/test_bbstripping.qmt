@@ -7,10 +7,10 @@
   <text>../options/DVTestAllPreselections.py</text>
 </set></argument>
 <argument name="validator"><text>
-filterResults = ["GlobalOR                                                       INFO Filtered 183/5000 events  (Eff = 0.0366 +/- 0.187778 )" ]
-for expected in filterResults:
-    if not expected in stdout:
-	causes.append("\nMissing "+expected+"\n")
-
+findReferenceBlock("""
+GlobalOR                                                    SUCCESS Number of counters : 1
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ |*"Passed"                                        |       100 |          7 |(  7.00000 +- 2.55147  )%|   -------   |   -------   |
+""", stdout, result, causes, signature_offset = 0)
 </text></argument>
 </extension>

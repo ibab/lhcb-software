@@ -1,13 +1,14 @@
-## $Id: DVTestAllPreselections.py,v 1.1 2009-01-07 17:05:46 pkoppenb Exp $
+## $Id: DVTestAllPreselections.py,v 1.2 2009-02-11 09:03:19 pkoppenb Exp $
 ## ============================================================================
-## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 ## ============================================================================
 from Gaudi.Configuration import *
 importOptions("$DAVINCIROOT/options/PreloadUnits.opts")
 from Configurables import DaVinci
 DaVinci().MainOptions  = "$STRIPPINGROOT/options/Presel.opts"
-DaVinci().EvtMax = 5000 
-DaVinci().PrintFreq  = 100
+DaVinci().EvtMax = 100
+DaVinci().PrintFreq  = 1
+DaVinci().InputType = "RDST"
 
 ##-- GAUDI data cards generated on 9/15/07 3:53 PM
 ##-- For Event Type = 10000000 / Data type = RDST 1
