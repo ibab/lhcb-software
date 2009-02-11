@@ -4,6 +4,11 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+
+! 2009-02-11 W. Hulsbergen
+ - Removed cut on maximum number of T hits in TsaSeed such that it no
+ longer needs OTTimes container
+
 ! 2009-02-10 M Needham
  - Updates to the generic tracking
 

@@ -21,10 +21,8 @@ Seed::Seed(const std::string& name,
   BaseAlg(name, pSvcLocator)
 {
 
-  declareProperty("maxNumHits", m_maxNumHits = 12000);
   declareProperty("addHits", m_addHitsInITOverlap = true);
   declareProperty("calcLikelihood", m_calcLikelihood = true);
-
   declareProperty("selectorType", m_selectorType = "Tf::Tsa::SeedSelector");
   declareProperty("seedTracksLocation", m_seedTrackLocation = SeedTrackLocation::Default);
   declareProperty("seedHitLocation",  m_seedHitLocation = SeedHitLocation::Default);
@@ -76,13 +74,6 @@ StatusCode Seed::execute(){
   //-------------------------------------------------------------------------
 
   //  startTimer();
-
-  // CRJ : only needed for cut on # hits
-  typedef LHCb::STLiteCluster::FastContainer FastContainer;
-  LHCb::OTTimes* otCont = get<LHCb::OTTimes>(LHCb::OTTimeLocation::Default);
-  FastContainer* liteCont = get<FastContainer>( LHCb::STLiteClusterLocation::ITClusters);
-  const double nHit = liteCont->size() + otCont->size();
-
   SeedTracks* seedSel = new SeedTracks();    //  Selected seed candidates
   seedSel->reserve(1000);
   std::vector<SeedTrack*> tempSel; tempSel.reserve(1000);
@@ -101,8 +92,6 @@ StatusCode Seed::execute(){
   put(seedSel,m_seedTrackLocation);
   put(hitsCont, m_seedHitLocation);
   put(stubsCont, m_seedStubLocation);
-
-  if (nHit > m_maxNumHits) return StatusCode::SUCCESS;
 
   StatusCode sc(StatusCode::SUCCESS,true);
 

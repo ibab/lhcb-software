@@ -1,4 +1,4 @@
-// $Id: TsaSeed.h,v 1.3 2007-10-10 18:48:10 smenzeme Exp $
+// $Id: TsaSeed.h,v 1.4 2009-02-11 08:19:54 wouter Exp $
 #ifndef _TSASEED_H_
 #define _TSASEED_H_
 
@@ -6,9 +6,6 @@
 #include <vector>
 
 #include "TsaBaseAlg.h"
-
-#include "Event/STLiteCluster.h"
-#include "Event/OTTime.h"
 
 //#include "TsaKernel/TimeSummary.h"
 #include "TsaKernel/ITsaSeedStep.h"
@@ -55,7 +52,6 @@ namespace Tf
       std::string m_seedStubLocation;
 
       std::string m_selectorType;
-      double m_maxNumHits;
       bool m_calcLikelihood;
       bool m_addHitsInITOverlap;
 
