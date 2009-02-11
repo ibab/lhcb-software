@@ -286,35 +286,25 @@ StatusCode PhysDesktop::cleanDesktop(){
               << m_parts.size() << endmsg;
   }
   
-  int iTEScount = 0;
-  while ( !m_parts.empty() ) {
-    const LHCb::Particle* ipart = m_parts.back();
-    m_parts.pop_back();
-    // Particles in KeyedContainers (=>TES) have parent
-    if( ipart->parent() ) ++iTEScount; 
-    else delete ipart; 
-  }
+  int iTESCount = clearLocalContainer(m_parts);
 
   if (msgLevel(MSG::VERBOSE)) {
-    verbose() << "LHCb::Particle in TES = " << iTEScount << endmsg;
+    verbose() << "LHCb::Particle in TES = " << iTESCount << endmsg;
     verbose() << "Removing all vertices from desktop" << endmsg;
     verbose() << "Number of secondary vertices before cleaning = "
               << m_secVerts.size() << endmsg;
   }
-  
-  iTEScount = 0;
-  while ( m_secVerts.size() > 0 ) {
-    const LHCb::Vertex* ivert = m_secVerts.back();
-    m_secVerts.pop_back();
-    if( ivert->parent() ) iTEScount++;
-    else delete ivert;
+
+  iTESCount =  clearLocalContainer(m_secVerts);
+
+  if (msgLevel(MSG::VERBOSE)) {
+    verbose() << "LHCb::Vertex in TES = " << iTESCount << endmsg;
+    verbose() << "Removing all re-fitted PVs from desktop" << endmsg;
+    verbose() << "Number of re-fitted PVs before cleaning = "
+              << m_refitPVs.size() << endmsg;
   }
-//   while ( m_primVerts->size() > 0 ) {
-//     const LHCb::VertexBase* ivert = m_primVerts->back();
-//     m_primVerts->pop_back();
-//     if( ivert->parent() ) iTEScount++;
-//     else delete ivert;
-//   }
+
+  iTESCount =  clearLocalContainer(m_refitPVs);
 
   if (msgLevel(MSG::VERBOSE)) verbose() << "Removing all entries from Particle2Vertex relations" << endmsg;
 
@@ -446,14 +436,20 @@ void PhysDesktop::saveParticles(const LHCb::Particle::ConstVector& pToSave) cons
   if (msgLevel(MSG::VERBOSE)) verbose() << "Save Particles to TES " << endmsg;
 
   LHCb::Particles* particlesToSave = new LHCb::Particles();
-
+  LHCb::RecVertex::ConstVector verticesToSave;
   const std::string location( m_outputLocn+"/Particles");
 
   for( p_iter icand = pToSave.begin(); icand != pToSave.end(); icand++ ) {
     // Check if this was already in a Gaudi container (hence in TES)
-    if (  0 == (*icand)->parent() ) {
+    if (  !inTES(*icand) ) {
       if (msgLevel(MSG::VERBOSE)) printOut("  Saving", (*icand));
       particlesToSave->insert((LHCb::Particle*)*icand); // convert to non-const
+      // store the related PV and the table. All relaitons and PVs should
+      // already be "kept"
+      const LHCb::RecVertex* pv = 
+        dynamic_cast<const LHCb::RecVertex*>(relatedVertex(*icand));
+      if (0!=pv) verticesToSave.push_back(pv);
+      
     } else {
       if (msgLevel(MSG::VERBOSE)) printOut("Skipping", (*icand));
     }
@@ -464,9 +460,9 @@ void PhysDesktop::saveParticles(const LHCb::Particle::ConstVector& pToSave) cons
 
   put(particlesToSave,location);
   // now save re-fitted vertices
-  saveRefittedPVs(m_refitPVs);
+  saveRefittedPVs(verticesToSave);
   // now save relations table
-  saveTable(pToSave);
+  saveP2PVRelations(pToSave);
  
 }
 //=============================================================================
@@ -476,7 +472,7 @@ void PhysDesktop::saveVertices(const LHCb::Vertex::ConstVector& vToSave) const
   LHCb::Vertices* verticesToSave = new LHCb::Vertices();
   for( v_iter iver = vToSave.begin(); iver != vToSave.end(); iver++ ) {
     // Check if this was already in a Gaudi container (hence in TES)
-    if( 0 == (*iver)->parent() ) {
+    if( !inTES(*iver) ) {
       verticesToSave->insert((LHCb::Vertex*)*iver); // insert non-const
     }
   }
@@ -513,7 +509,7 @@ void PhysDesktop::saveRefittedPVs(const LHCb::RecVertex::ConstVector& vToSave) c
   
 }
 //=============================================================================
-void PhysDesktop::saveTable(const  LHCb::Particle::ConstVector& pToSave) const {
+void PhysDesktop::saveP2PVRelations(const  LHCb::Particle::ConstVector& pToSave) const {
   // PK: save only the ones new to Desktop
   /// @todo One might accept saving a relation for an already saved particle (?)
   Particle2Vertex::Table* table = new Particle2Vertex::Table( pToSave.size() );
@@ -859,23 +855,23 @@ StatusCode PhysDesktop::writeEmptyContainerIfNeeded(){
   return sc ;
 }
 //=============================================================================
-const LHCb::VertexBase* PhysDesktop::relatedVertex(const LHCb::Particle* part){
+const LHCb::VertexBase* PhysDesktop::relatedVertex(const LHCb::Particle* part) const {
 
-  if (  particle2Vertices(part).empty() ){
+//   if (  particle2Vertices(part).empty() ){
 
-    if (msgLevel(MSG::VERBOSE)) {
-      verbose() << "Table is empty for particle " << part->key() << " " 
-                << part->particleID().pid() << endmsg ;
-    }
-    storeRelationsInTable(part);
-  }
+//     if (msgLevel(MSG::VERBOSE)) {
+//       verbose() << "Table is empty for particle " << part->key() << " " 
+//                 << part->particleID().pid() << endmsg ;
+//     }
+//     storeRelationsInTable(part);
+//   }
   
   const Particle2Vertex::Range range = i_p2PVTable().i_relations(part);
 
-  if ( particle2Vertices(part).empty() ) {
-  if (msgLevel(MSG::VERBOSE)) {
-    verbose() << "particle2Vertices table empty, return NULL" << endmsg;
-  }
+  if ( range.empty() ) {
+    if (msgLevel(MSG::VERBOSE)) {
+      verbose() << "particle2Vertices table empty, return NULL" << endmsg;
+    }
     return NULL ;
   }
   
@@ -885,11 +881,11 @@ const LHCb::VertexBase* PhysDesktop::relatedVertex(const LHCb::Particle* part){
          i!=range.end(); ++i) {
       verbose() << "P2PV weight " << (*i).weight() << endmsg;
     }
+    verbose() << "Returning PV with weight " 
+              << range.back().weight() << endmsg;
   }
-  if (msgLevel(MSG::VERBOSE)) {
-    verbose() << "Returning PV with weight " << range.back().weight() << endmsg;
-  }
-  return i_p2PVTable().i_relations(part).back().to();
+
+  return range.back().to();
 
 }
 //=============================================================================

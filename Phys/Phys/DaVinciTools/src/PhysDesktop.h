@@ -87,7 +87,7 @@ public:
 
   virtual StatusCode writeEmptyContainerIfNeeded() ;
 
-  virtual const LHCb::VertexBase* relatedVertex(const LHCb::Particle* part);
+  virtual const LHCb::VertexBase* relatedVertex(const LHCb::Particle* part) const;
   
   virtual const IRelatedPVFinder* relatedPVFinder() const;
 
@@ -135,7 +135,7 @@ private:
 
   /// Save the Particle->Vertex relations table in the Desktop to the TES
   //===========================================================================
-  void saveTable(const LHCb::Particle::ConstVector& pToSave) const;
+  void saveP2PVRelations(const LHCb::Particle::ConstVector& pToSave) const;
 
   StatusCode makeParticles();      ///< Make particles
 
@@ -154,6 +154,33 @@ private:
     if (0==P) Exception("NULL Pointer");
     return (0!=P->parent()) ;
   }
+
+  /**
+   *
+   * delete contents of local container of newed pointers unless they are
+   * also in the TES.
+   *
+   * @param container STL container of ContainedObject pointers
+   * @return number of elements that are also in the TES.
+   *
+   * @author Juan Palacios juan.palacios@nikhef.nl
+   * @date 10/02/2009
+   *
+   **/
+  template <class T>
+  inline unsigned int clearLocalContainer(T container) 
+  {
+    if ( container.empty() ) return 0;
+    int iCount(0);
+    for (typename T::const_iterator iObj = container.begin();
+         iObj != container.end(); ++iObj) {
+      if( inTES(*iObj) ) ++iCount;
+      else delete *iObj;
+    }
+    container.clear();
+    return iCount;
+  }
+  
 
   /// Add to list of Particles known to be in TES
   /// inline private method for speed.
