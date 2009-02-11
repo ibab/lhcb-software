@@ -1,0 +1,4 @@
+<lcgdict>
+  <!-- Temporary, added to HepMCRflx in LCG_56 /-->
+  <class name="HepMC::GenVertex::particles_in_const_iterator" />
+</lcgdict>

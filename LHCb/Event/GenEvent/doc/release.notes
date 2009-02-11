@@ -2,6 +2,10 @@
 ! package coordinator: G.Corti
 !------------------------------------------------------------------------------
 
+! 2009-02-11 - Marco Cattaneo
+ - Add missing dictionary for GenVertex. 
+   N.B. This dictionary will be provided in HepMCRflx in LCG_56
+
 !======================= GenEvent v5r3 2008-07-27 =============================
 ! 2008-07-23 - Marco Cattaneo
  - Add GenEvent/HepMCUtils.h, previously in Gen/Generators
