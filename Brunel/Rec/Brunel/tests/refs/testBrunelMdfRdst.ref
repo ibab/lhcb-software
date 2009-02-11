@@ -54,7 +54,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v34r1
-                                          running on lxbuild120.cern.ch on Sat Feb  7 21:57:48 2009
+                                          running on lxbuild120.cern.ch on Wed Feb 11 16:01:53 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -77,7 +77,7 @@ BrunelInit        SUCCESS ======================================================
 BrunelInit        SUCCESS Requested to process 0 events
 BrunelInit        SUCCESS ==================================================================
 HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
-RootHistSvc          INFO Writing ROOT histograms to: -histos.root
+RootHistSvc          INFO Writing ROOT histograms to: Brunel-histos.root
 HistogramPersis...   INFO Added successfully Conversion service:RootHistSvc
 HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r0/data/CaloPIDs_DC06_v2.root as CaloPIDs
 InitCaloSeq          INFO Member list: GaudiSequencer/CaloBanksHandler, with context 'Offline'

@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.54 2009-02-11 14:47:12 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.55 2009-02-11 15:14:00 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -168,8 +168,9 @@ class Brunel(LHCbConfigurableUser):
         if histOpt == "Expert": RecSysConf().setProp( "ExpertHistos", True )
 
         # Use a default histogram file name if not already set
-        if not hasattr( HistogramPersistencySvc(), "OutputFile" ):
+        if not HistogramPersistencySvc().isPropertySet( "OutputFile" ):
             histosName   = self.getProp("DatasetName")
+            if histosName == "": histosName = "Brunel"
             if self.getProp( "RecL0Only" ): histosName += '-L0Yes'
             if (self.evtMax() > 0): histosName += '-' + str(self.evtMax()) + 'ev'
             if histOpt == "Expert": histosName += '-expert'
@@ -232,7 +233,7 @@ class Brunel(LHCbConfigurableUser):
             TESCheck().Stop = False
             TESCheck().OutputLevel = ERROR
             InitReprocSeq.Members.append( "EventNodeKiller" )
-            EventNodeKiller().Nodes = [ "Rec", "Raw", "Link/Rec" ]
+            EventNodeKiller().Nodes = [ "pRec", "Rec", "Raw", "Link/Rec" ]
 
         # Read ETC selection results into TES for writing to DST
         if inputType == "ETC":
@@ -268,7 +269,7 @@ class Brunel(LHCbConfigurableUser):
             dstWriter.RequireAlgs += ["Reco"] # Write only if Rec phase completed
 
             # Set a default output file name if not already defined in the user job options
-            if not hasattr( dstWriter, "Output" ):
+            if not dstWriter.isPropertySet( "Output" ):
                 outputFile = self.outputName()
                 outputFile = outputFile + '.' + self.getProp("OutputType").lower()
                 dstWriter.Output  = "DATAFILE='PFN:" + outputFile + "' TYP='POOL_ROOTTREE' OPT='REC'"
@@ -311,7 +312,7 @@ class Brunel(LHCbConfigurableUser):
             ApplicationMgr().ExtSvc.append(etcWriter)
             ApplicationMgr().OutStream.append("GaudiSequencer/SeqTagWriter")
             importOptions( "$BRUNELOPTS/DefineETC.opts" )
-            if not hasattr( etcWriter, "Output" ):
+            if not etcWriter.isPropertySet( "Output" ):
                etcWriter.Output = [ "EVTTAGS2 DATAFILE='" + self.getProp("DatasetName") + "-etc.root' TYP='POOL_ROOTTREE' OPT='RECREATE' " ]
 
         # Do not print event number at every event (done already by Brunel)

@@ -6,6 +6,8 @@ Purpose: LHCb reconstruction program
 ! 2009-02-11 - Marco Cattaneo
  - Improve documentation of options in configurable
  - Update reference for fixes to Velo track fit
+ - Fix default histogram file name when one is not given in options
+ - Add "pRec" to nodes to be killed when reprocessing from DST etc.
 
 ! 2009-02-09 - Chris Jones
  - Pass WithMC configuration option to RichRecQCConf()
