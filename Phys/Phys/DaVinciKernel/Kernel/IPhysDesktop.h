@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.32 2009-02-05 15:51:27 jpalac Exp $
+// $Id: IPhysDesktop.h,v 1.33 2009-02-11 14:38:44 jpalac Exp $
 #ifndef DAVINCIKERNEL_IPHYSDESKTOP_H 
 #define DAVINCIKERNEL_IPHYSDESKTOP_H 1
 
@@ -104,7 +104,9 @@ public:
   virtual const LHCb::Vertex* keep( const LHCb::Vertex* input ) = 0;
 
   /// Keep for future use: Register re-fitted primary vertices in the Desktop, 
-  /// pass ownership, return pointer to new vertex
+  /// pass ownership, return pointer to new vertex. Vertices will only
+  /// be stored in the TES if they are related to a particle being stored
+  /// there.
   virtual const LHCb::RecVertex* keep( const LHCb::RecVertex* input ) = 0;
 
 
@@ -133,7 +135,7 @@ public:
 
   /// Get the vertex with the highest weight in the association
   /// between LHCb::Particle and LHCb::VertexBase
-  virtual const LHCb::VertexBase* relatedVertex(const LHCb::Particle* part) = 0;
+  virtual const LHCb::VertexBase* relatedVertex(const LHCb::Particle* part) const = 0;
 
   /**
    * Get a pointer to the Particle->PV relator tool
