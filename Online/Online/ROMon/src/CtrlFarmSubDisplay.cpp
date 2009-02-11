@@ -198,6 +198,7 @@ void CtrlFarmSubDisplay::updateContent(XML::TaskSupervisorParser& ts) {
     ::scrc_set_border(m_display,m_title.c_str(),col);
   }
   else {
+    ::scrc_put_chars(m_display,"No obvious error detected.",NORMAL|GREEN,4,1,1);    
     ::scrc_set_border(m_display,m_title.c_str(),NORMAL|BOLD);
   }
 }

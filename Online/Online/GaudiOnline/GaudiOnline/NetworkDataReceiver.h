@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/NetworkDataReceiver.h,v 1.6 2007-06-21 12:18:55 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/NetworkDataReceiver.h,v 1.7 2009-02-11 16:51:43 frankb Exp $
 //  ====================================================================
 //  NetworkDataReceiver.h
 //  --------------------------------------------------------------------
@@ -79,6 +79,10 @@ namespace LHCb  {
     bool            m_useEventRequests;
     /// Property: Declare event asynchronously to MBM after receiving
     bool            m_declareAsynch;
+    /// Property: Additional AND mask to declare event (default: 0)
+    int             m_routingMask;
+    /// Property: Additional OR mask to declare event (default: 0)
+    int             m_vetoMask;
     /// Monitoring item: Total number of items received
     int             m_recvReq; 
     /// Monitoring item: Total number of receive errors

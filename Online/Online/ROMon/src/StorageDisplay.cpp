@@ -1,4 +1,4 @@
-// $Id: StorageDisplay.cpp,v 1.12 2009-01-09 10:30:18 frankb Exp $
+// $Id: StorageDisplay.cpp,v 1.13 2009-02-11 16:51:43 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/StorageDisplay.cpp,v 1.12 2009-01-09 10:30:18 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/StorageDisplay.cpp,v 1.13 2009-02-11 16:51:43 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -100,7 +100,7 @@ void StorageDisplay::init(int flag, int argc, char** argv)   {
   int hdr_height, hlt_width, hlt_height, hlt_posy, buff_height, strm_height, logg_height;
   int right, width, height, posx, posy;
   cli.getopt("headerheight",  1, hdr_height    =    5);
-  cli.getopt("streamheight",  1, strm_height   =    8);
+  cli.getopt("streamheight",  1, strm_height   =   12);
   cli.getopt("loggerheight",  1, logg_height   =    4);
   cli.getopt("widthhltrec",   1, hlt_width     =   27);
   cli.getopt("bufferheight",  1, buff_height   =    5);
@@ -212,9 +212,22 @@ void StorageDisplay::showStreams(const Nodeset& ns) {
           if ( (typ=nullstr(nam,"_SND")) ){
             *(typ+3) = 0;
             ptr = nullchr(str=typ+4,'_');
-            if ( !ptr ) streams[str].node = "Monitoring";
+            if ( !ptr ) {
+              const char* s = "MONA0801";
+	      streams[s].node = s;
+	      streams[s].sent += c.events;
+	      streams[s].source = "Recv Layer";
+	      continue;
+	    }
+	    else if ( (ptr=::strstr(ptr+1,"MONA09")) ) {
+	      const char* s = nullchr(ptr,'_') ? ptr : "MONA0901";
+	      streams[s].node = s;
+	      streams[s].sent += c.events;
+	      streams[s].source = "Recv Layer";
+	      continue;
+	    }
             streams[str].sent += c.events;
-            streams[str].source  = node;
+            streams[str].source = node;
           }
           else if ( (typ=nullstr(nam,"_RCV")) ) {
             *(typ+3) = 0;
@@ -235,8 +248,8 @@ void StorageDisplay::showStreams(const Nodeset& ns) {
   Stream total;
   for(map<string,Stream>::const_iterator i=streams.begin();i!=streams.end();++i) {
     const Stream& s = (*i).second;
-    if ( s.node != "Monitoring" ) {
-      disp->draw_line_normal("%-13s %12s->%-12s %11d %11d %11d",
+    if ( ::strncmp(s.node.c_str(),"MONA0",5) != 0 )  {
+      disp->draw_line_normal("%-14s%12s->%-12s %11d %11d %11d",
                              (*i).first.c_str(),s.source.c_str(),s.node.c_str(),
                              s.sent,s.received,s.written);
       total.sent += s.sent;
@@ -244,14 +257,14 @@ void StorageDisplay::showStreams(const Nodeset& ns) {
       total.received += s.received;
     }
   }
-  disp->draw_line_normal("");
-  disp->draw_line_bold("%-13s %12s->%-12s %11d %11d %11d","Total","Recv Layer","Stream Layer",
+  //disp->draw_line_normal("");
+  disp->draw_line_bold("%-14s%12s->%-12s %11d %11d %11d","Total","Recv Layer","Stream Layer",
                        total.sent,total.received,total.written);
   disp->draw_line_normal("");
   for(map<string,Stream>::const_iterator i=streams.begin();i!=streams.end();++i) {
     const Stream& s = (*i).second;
-    if ( s.node == "Monitoring" ) {
-      disp->draw_line_normal("%-13s %12s->%-12s %11d",(*i).first.c_str(),s.source.c_str(),s.node.c_str(),s.sent);
+    if ( ::strncmp(s.node.c_str(),"MONA0",5) == 0 )  {
+      disp->draw_line_normal("%-14s%12s->%-15s%9d",(*i).first.c_str(),s.source.c_str(),s.node.c_str(),s.sent);
     }
   }
 }

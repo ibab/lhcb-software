@@ -367,7 +367,7 @@ int NodeTaskMon::start()   {
     TimeSensor::instance().add(this,10,(void*)CMD_DATA);
     return 1;
   }
-  m_error = "No setup information present for node monitor "+name();
+  m_error = "No setup information present for node monitor "+name()+" of type "+type();
   return 0;
 }
  
@@ -599,7 +599,6 @@ extern "C" int run_tasksupervisor(int argc, char** argv) {
   if ( cli.getopt("debug",2) ) s_debug = true;
   if ( fname.empty() ) help_TaskSupervisor();
   ::lib_rtl_install_printer(prt,0);
-  
   node = ::strupper(node);
   XML::TaskSupervisorParser ts;
   ts.parseFile(inventory);
@@ -607,8 +606,10 @@ extern "C" int run_tasksupervisor(int argc, char** argv) {
   ts.parseFile(fname);
   ts.getInventory(inv);
 
-  if ( s_debug ) cout << inv << endl;
-
+  if ( s_debug ) {
+    cout << "Input file is:" << fname << " Node:" << node << endl;  
+    cout << inv << endl;
+  }
   SubfarmTaskMon mon(node,&inv);
   mon.start();
   TimeSensor::instance().add(&mon,1,(void*)CMD_DATA);

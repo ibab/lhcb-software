@@ -28,7 +28,12 @@ void PartitionListener::subFarmHandler(void* tag, void* address, int* size) {
   PartitionListener* h = *(PartitionListener**)tag;
   for(const char* data = (char*)address, *end=data+*size;data<end;data += strlen(data)+1)
     f->push_back(data);
-  if ( h->m_name == "LHCb" ) f->push_back("CALD07");
+  if ( h->m_name == "FEST" || h->m_name == "LHCb" )   {
+    f->push_back("CALD07");
+    f->push_back("MONA08");
+    f->push_back("MONA09");
+    f->push_back("STORECTL01");
+  }
   for(StringV::iterator i=f->begin(); i != f->end(); ++i) {
     string& s = *i;
     for(size_t j=0; j<s.length(); ++j) {

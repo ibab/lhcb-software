@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/Requirement.cpp,v 1.5 2008-02-12 17:13:47 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/Requirement.cpp,v 1.6 2009-02-11 16:51:43 frankb Exp $
 //  ====================================================================
 //  Requirements.cpp
 //  --------------------------------------------------------------------
@@ -8,7 +8,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: Requirement.cpp,v 1.5 2008-02-12 17:13:47 frankb Exp $
+// $Id: Requirement.cpp,v 1.6 2009-02-11 16:51:43 frankb Exp $
 // C++ include files
 #include <string>
 
@@ -23,7 +23,7 @@ static const char *rtype_list[] = {"ANY", "ALL"};
 static const char *mode_list[]  = {"NOT ALL", "    ALL", "    ONE" };
 
 Requirement::Requirement() 
-: m_reqActive(false),m_bmID(MBM_INV_DESC),m_evType(1),m_trMask(~0x0),m_veto(0),
+: m_reqActive(false),m_bmID(MBM_INV_DESC),m_evType(2),m_trMask(~0x0),m_veto(0),
   m_reqTyp(BM_MASK_ANY), m_reqMode(BM_NOTALL)
 {
   ::strcpy(m_mode_c,mode_list[0]);
@@ -37,7 +37,7 @@ void Requirement::build(int pg, int menu_id, int cmd_id)   {
   title[16] = '1'+pg;
   openMenu(menu_id,cmd_id,title,"",procName());
   addCommand(C_ADD,"Add Requirement");
-  setParam(&m_evType,C_EVT,"%2d",1,0,10,0,0,0);
+  setParam(&m_evType,C_EVT,"%2d",2,0,10,0,0,0);
   addCommand(C_EVT,"Event type           ^^");
   setParam(tr+0,C_TMASK0,"%8x",*(tr+0),0,0,0,0,0);
   addCommand(C_TMASK0,"Trigger mask [0] 0X^^^^^^^^");

@@ -14,5 +14,5 @@ H=`echo $h|tr a-z A-Z`
 exec -a ${UTGID} `which gentest.exe` libROMon.so run_tasksupervisor \
     -input=file://${ROMONROOT}/xml/${H}.xml \
     -invent=file://${ROMONROOT}/xml/TaskInventory.xml \
-    -node=${h} $*
+    -node=${h} -debug $*
 

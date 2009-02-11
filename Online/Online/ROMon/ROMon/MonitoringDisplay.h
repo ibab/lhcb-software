@@ -1,4 +1,4 @@
-// $Id: MonitoringDisplay.h,v 1.3 2009-01-09 10:30:18 frankb Exp $
+// $Id: MonitoringDisplay.h,v 1.4 2009-02-11 16:51:43 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/MonitoringDisplay.h,v 1.3 2009-01-09 10:30:18 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/MonitoringDisplay.h,v 1.4 2009-02-11 16:51:43 frankb Exp $
 #ifndef ROMON_MONITORINGDISPLAY_H
 #define ROMON_MONITORINGDISPLAY_H 1
 
@@ -34,22 +34,22 @@ namespace ROMon {
   protected:
 
     /// Reference to the Relay info display
-    MonitorDisplay* m_relay;
+    MonitorDisplay*          m_relay;
 
     /// reference to the node display
-    MonitorDisplay* m_nodes;
+    MonitorDisplay*          m_nodes;
 
     /// Reference to the display showing monitoring tasks
-    MonitorDisplay* m_tasks;
+    MonitorDisplay*          m_tasks;
 
     /// Reference node selector display if used as sub-dispay
-    MonitorDisplay* m_select;
+    MonitorDisplay*          m_select;
 
     /// Partition name for projection(s)
-    std::string     m_partName;
+    std::string              m_partName;
 
     /// Name pof relay node
-    std::string     m_relayNode;
+    std::string              m_relayNode;
 
   public:
     /// Standard constructor
@@ -90,6 +90,9 @@ namespace ROMon {
 
     /// Show the relay information
     void showRelay(const Nodeset& ns);
+
+    /// Update selection window information
+    void showSelect(const Nodeset& ns);
 
     /// Update all displays
     virtual void updateDisplay(const Nodeset& ns);

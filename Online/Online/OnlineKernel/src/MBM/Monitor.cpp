@@ -156,20 +156,20 @@ size_t MBM::Monitor::draw_buffer(const char* name, CONTROL* ctr)  {
 int MBM::Monitor::show_information()   {
   int i, j, k;
 #if defined(SHOW_TIMES)
-  static const char* fmt_def  = " %-15s%4x%8d%5s          %40s%5s%7s";
-  static const char* fmt_prod = " %-15s%4x%8d%5s%6s%11d   %3.0f%32s%7s  %7.1e %7.1e %d %d";
-  static const char* fmt_cons = " %-15s%4x%8d%5s%6s               %12d%11d   %3.0f%5s%7s  %7.1e %7.1e %d %d";
-  static const char* head=" Name      Partition     Pid Type State   Produced %%prod     #seen     #freed %%seen Reqs Buffer    UTime  STime";
+  static const char* fmt_def  = " %-15s%5x%7d%5s          %40s%5s%7s";
+  static const char* fmt_prod = " %-15s%5x%7d%5s%6s%11d   %3.0f%32s%7s  %7.1e %7.1e %d %d";
+  static const char* fmt_cons = " %-15s%5x%7d%5s%6s               %12d%11d   %3.0f%5s%7s  %7.1e %7.1e %d %d";
+  static const char* head=" Name       Partition    Pid Type State   Produced %%prod     #seen     #freed %%seen Reqs Buffer    UTime  STime";
 #elif defined(SHOW_SLEEPS)
-  static const char* fmt_def  = " %-15s%4x%8d%5s          %40s%5s%7s";
-  static const char* fmt_prod = " %-15s%4x%8d%5s%6s%11d   %3.0f%32s%7s %d";
-  static const char* fmt_cons = " %-15s%4x%8d%5s%6s               %12d%11d   %3.0f%5s%7s %d";
-  static const char* head=" Name      Partition     Pid Type State   Produced %%prod     #seen     #freed %%seen Reqs Buffer  Sleeps";
+  static const char* fmt_def  = " %-15s%5x%7d%5s          %40s%5s%7s";
+  static const char* fmt_prod = " %-15s%5x%7d%5s%6s%11d   %3.0f%32s%7s %d";
+  static const char* fmt_cons = " %-15s%5x%7d%5s%6s               %12d%11d   %3.0f%5s%7s %d";
+  static const char* head=" Name       Partition    Pid Type State   Produced %%prod     #seen     #freed %%seen Reqs Buffer  Sleeps";
 #else
-  static const char* fmt_def  = " %-36s%4x%8d%5s          %40s%5s%7s";
-  static const char* fmt_prod = " %-36s%4x%8d%5s%6s%11d   %3.0f%32s%7s";
-  static const char* fmt_cons = " %-36s%4x%8d%5s%6s               %12d%11d   %3.0f%5s%7s";
-  static const char* head=" Name                           Partition     Pid Type State   Produced %%prod     #seen     #freed %%seen Reqs Buffer";
+  static const char* fmt_def  = " %-36s%5x%7d%5s          %40s%5s%7s";
+  static const char* fmt_prod = " %-36s%5x%7d%5s%6s%11d   %3.0f%32s%7s";
+  static const char* fmt_cons = " %-36s%5x%7d%5s%6s               %12d%11d   %3.0f%5s%7s";
+  static const char* head=" Name                            Partition    Pid Type State   Produced %%prod     #seen     #freed %%seen Reqs Buffer";
 #endif
   char line[256];
   display()->draw_line();

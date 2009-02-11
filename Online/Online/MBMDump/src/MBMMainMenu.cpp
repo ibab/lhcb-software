@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/MBMMainMenu.cpp,v 1.6 2008-09-26 09:51:36 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/MBMMainMenu.cpp,v 1.7 2009-02-11 16:51:43 frankb Exp $
 //  ====================================================================
 //  BankListWindow.cpp
 //  --------------------------------------------------------------------
@@ -8,7 +8,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: MBMMainMenu.cpp,v 1.6 2008-09-26 09:51:36 frankb Exp $
+// $Id: MBMMainMenu.cpp,v 1.7 2009-02-11 16:51:43 frankb Exp $
 //
 // C++ include files
 #include "MBMDump/MBMDump.h"
@@ -22,7 +22,7 @@ static const char* dsc_type = "Descriptor";
 static const char* mdf_type = "MDF";
 
 static const char* buff_types[]={Unknown_type,mep_type,raw_type,dsc_type,mdf_type};
-static const char* buff_names[]={"MEP","EVENT","RESULT","OUTPUT","RAW","0","1","2","3","4"};
+static const char* buff_names[]={"MEP","EVENT","RESULT","SEND","Events_","OUTPUT","RAW","0","1","2","3","4"};
 
 MBMMainMenu::MBMMainMenu() 
 : m_bmID(MBM_INV_DESC), m_mepID(MEP_INV_DESC), 
@@ -37,8 +37,8 @@ MBMMainMenu::MBMMainMenu()
   openMenu  (0,0,"Event Dump","General purpose MBM Dump",procName()); 
   setParam(m_name,    1,"%16s",procName(),0,0,0,0,0);
   addCommand(C_PROC,     "Process name :  ^^^^^^^^^^^^^^^^");
-  setParam(&m_partID, 2,"%4X",0x14d,0,0XFFFF,0,0,0);
-  addCommand(C_PART,     "Partition ID :     0X^^^^       ");
+  setParam(&m_partID, 2,"%6X",0x7FFF,0,0XFFFFFF,0,0,0);
+  addCommand(C_PART,     "Partition ID :     0X^^^^^^     ");
   setParam(m_buffName,3,"%18s",buff_names[0],0,0,buff_names,num_names,0);
   addCommand(C_BUF,      "Buffer name  :^^^^^^^^^^^^^^^^^^");
   setParam(m_buffType, 4,"%18s",buff_types[0],0,0,buff_types,num_types,1);

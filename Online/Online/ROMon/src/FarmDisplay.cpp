@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.35 2009-01-09 10:30:18 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.36 2009-02-11 16:51:43 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.35 2009-01-09 10:30:18 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.36 2009-02-11 16:51:43 frankb Exp $
 
 #include "ROMon/CtrlSubfarmDisplay.h"
 #include "ROMon/RecSubfarmDisplay.h"
@@ -88,6 +88,8 @@ namespace ROMon {
   InternalDisplay* createFarmSubDisplay(FarmDisplay* parent, const string& title);
   InternalDisplay* createRecFarmSubDisplay(FarmDisplay* parent, const string& title);
   InternalDisplay* createCtrlFarmSubDisplay(FarmDisplay* parent, const string& title);
+  InternalDisplay* createMonitoringSubDisplay(FarmDisplay* parent, const string& title);
+  InternalDisplay* createStorageSubDisplay(FarmDisplay* parent, const string& title);
 }
 namespace {
   struct DisplayUpdate {
@@ -261,11 +263,11 @@ void BufferDisplay::update(const void* data) {
         for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
           const Buffers::value_type::Control& c = (*ib).ctrl;
           bnam = (char*)(*ib).name;
-          if ( ::strlen(bnam)>10 ) {
-            p = strchr(bnam,'_');
-            if ( p ) *p = 0;
-          }
-          ::sprintf(name," Buffer \"%s\"",(*ib).name);
+          //if ( ::strlen(bnam)>10 ) {
+          //  p = strchr(bnam,'_');
+          //  if ( p ) *p = 0;
+          //}
+          ::sprintf(name," Buffer \"%s\"",bnam);
           ::sprintf(txt,"%-26s  Events: Produced:%d Actual:%d Seen:%d Pending:%d Max:%d",
                     name, c.tot_produced, c.tot_actual, c.tot_seen, c.i_events, c.p_emax);
           ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
@@ -300,6 +302,7 @@ void BufferDisplay::update(const void* data) {
         for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
           const Clients& clients = (*ib).clients;
           char* bnam = (char*)(*ib).name;
+	  if ( ::strncmp(bnam,"Events_",7)==0 ) bnam += 7;
           for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
             Clients::const_reference c = (*ic);
             cnam = (char*)c.name;
@@ -899,11 +902,17 @@ int FarmDisplay::showSubfarm()    {
     }
     else if ( strncasecmp(dnam.c_str(),"storectl01",10)==0 && m_name != "ALL" ) {
       const char* argv[] = {"",svc.c_str(), part.c_str(), "-delay=300"};
-      m_subfarmDisplay = new StorageDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
+      m_subfarmDisplay = new StorageDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,4,(char**)argv);
     }
     else if ( strncasecmp(dnam.c_str(),"mona08",6)==0 && m_name != "ALL" ) {
-      const char* argv[] = {"",svc.c_str(), part.c_str(), "-delay=300", "-relayheight=12", "-nodeheight=12"};
-      m_subfarmDisplay = new MonitoringDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
+      string relay = "-namerelay="+dnam+"01";
+      const char* argv[] = {"",svc.c_str(), part.c_str(), "-delay=300", "-relayheight=12", "-nodeheight=12", relay.c_str()};
+      m_subfarmDisplay = new MonitoringDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,7,(char**)argv);
+    }
+    else if ( strncasecmp(dnam.c_str(),"mona09",6)==0 && m_name != "ALL" ) {
+      string relay = "-namerelay="+dnam+"01";
+      const char* argv[] = {"",svc.c_str(), part.c_str(), "-delay=300", "-relayheight=14", "-nodeheight=22", relay.c_str()};
+      m_subfarmDisplay = new MonitoringDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,7,(char**)argv);
     }
     else if ( m_mode == RECO_MODE ) {
       const char* argv[] = {"",svc.c_str(), "-delay=300"};
@@ -1395,6 +1404,10 @@ void FarmDisplay::connect(const vector<string>& farms) {
         copy.insert(make_pair(*i,createRecFarmSubDisplay(this,*i)));
       else if ( m_mode == CTRL_MODE )
         copy.insert(make_pair(*i,createCtrlFarmSubDisplay(this,*i)));
+      else if ( ::strncasecmp((*i).c_str(),"mona0",5)==0 )
+        copy.insert(make_pair(*i,createMonitoringSubDisplay(this,*i)));
+      else if ( ::strncasecmp((*i).c_str(),"storectl",8)==0 )
+        copy.insert(make_pair(*i,createStorageSubDisplay(this,*i)));
       else
         copy.insert(make_pair(*i,createFarmSubDisplay(this,*i)));
     }

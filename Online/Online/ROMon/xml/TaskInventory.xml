@@ -255,6 +255,19 @@
   <Connection name="storestrm02-d1"/>
 </ConnectionList>
 
+<NodeType name="DefaultNode">
+  <TaskList name="FMC"/>
+</NodeType>
+
+<NodeType name="IONode">
+  <TaskList name="FMC"/>
+  <TaskList name="StandardHLT"/>
+  <TaskList name="ControlsPC"/>
+  <Task name="MBMMON_0"/>
+  <ConnectionList name="Standard"/>
+  <ConnectionList name="StorageWorker"/>
+</NodeType>
+
 <NodeType name="HLTControl">
   <TaskList name="FMC"/>
   <TaskList name="StandardHLT"/>

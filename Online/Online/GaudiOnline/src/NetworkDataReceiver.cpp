@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataReceiver.cpp,v 1.21 2008-12-05 19:26:30 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataReceiver.cpp,v 1.22 2009-02-11 16:51:43 frankb Exp $
 //  ====================================================================
 //  NetworkDataReceiver.cpp
 //  --------------------------------------------------------------------
@@ -34,6 +34,8 @@ NetworkDataReceiver::NetworkDataReceiver(const std::string& nam, ISvcLocator* pS
   declareProperty("Buffer",           m_buffer);
   declareProperty("UseEventRequests", m_useEventRequests=false);
   declareProperty("DeclareAsynchonously",m_declareAsynch=false);
+  declareProperty("RoutingMask",m_routingMask=0);
+  declareProperty("VetoMask",   m_vetoMask=0);
 }
 
 // Standard Destructor
@@ -250,6 +252,8 @@ StatusCode NetworkDataReceiver::declareEventData(RecvEntry& entry)  {
       e.len        = entry.size;
       if ( copyEventData(e.data,entry.buffer,entry.size).isSuccess() )  {
         ::memcpy(e.mask,h->subHeader().H1->triggerMask(),sizeof(e.mask));
+	e.mask[3] &= ~m_vetoMask;
+	e.mask[3] |= m_routingMask;
         ret = m_prod->sendEvent();
         if ( MBM_NORMAL == ret )   {
           --m_backlog;
