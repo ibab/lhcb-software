@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-02-11 - Marco Cattaneo
+ - Update reference for fixes to Velo track fit
+
 ! 2009-02-09 - Chris Jones
  - Pass WithMC configuration option to RichRecQCConf()
 
