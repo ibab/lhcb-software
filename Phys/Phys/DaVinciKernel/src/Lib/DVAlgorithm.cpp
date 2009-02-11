@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.40 2009-02-06 16:07:33 jpalac Exp $
+// $Id: DVAlgorithm.cpp,v 1.41 2009-02-11 14:47:02 jpalac Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -71,7 +71,7 @@ DVAlgorithm::DVAlgorithm
   , m_setFilterCalled       ( false )
   , m_countFilterWrite      ( 0 )
   , m_countFilterPassed     ( 0 )
-  , m_refitPVs              ( true )
+  , m_refitPVs              ( false )
 {
   // 
   m_vertexFitNames [ "Offline"       ] = "OfflineVertexFitter" ;
@@ -317,19 +317,41 @@ StatusCode DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p,
   // re-fit vertices, then look for the best one.
   if (m_refitPVs) {
     const IPVReFitter* fitter = primaryVertexReFitter();
+    if (0==fitter) return Error("NULL IPVReFitter", StatusCode::FAILURE, 1);
     LHCb::RecVertex::ConstVector reFittedPVs;
     for (LHCb::RecVertex::Container::const_iterator iPV = PVs->begin();
          iPV != PVs->end(); ++iPV) {
       LHCb::RecVertex reFittedPV = LHCb::RecVertex(**iPV);
       if ( (fitter->remove(p, &reFittedPV)).isSuccess() ) {
         reFittedPVs.push_back(&reFittedPV); 
+      } else {
+        return Error("PV re-fit failed", StatusCode::FAILURE, 1 ) ;
       }
+      
     }
     vertex= *dynamic_cast<LHCb::RecVertex*>(finder->relatedPVs(p, reFittedPVs).relations(p).back().to());
   } else {
     vertex= *dynamic_cast<LHCb::RecVertex*>(finder->relatedPVs(p, *PVs).relations(p).back().to());
   }
   return StatusCode::SUCCESS;
+}
+// ============================================================================
+const LHCb::VertexBase* DVAlgorithm::getRelatedPV(const LHCb::Particle* part) const
+{
+  if (desktop()->particle2Vertices(part).empty()) {
+    // do re-fit, keep vertex, store relation
+    LHCb::RecVertex pv;
+    StatusCode sc = calculateRelatedPV(part, pv);
+    if (sc.isSuccess()) {
+      const LHCb::RecVertex* pPV = desktop()->keep(&pv);
+      relateWithOverwrite(part, pPV);
+    } else {
+      return 0;
+    }
+  }
+  const Particle2Vertex::Range range = desktop()->particle2Vertices(part);
+  return (range.empty()) ? 0 : range.back().to();
+  
 }
 // ============================================================================
 StatusCode DVAlgorithm::fillSelResult () {
