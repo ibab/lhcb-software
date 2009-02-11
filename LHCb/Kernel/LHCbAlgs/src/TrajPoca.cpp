@@ -1,4 +1,4 @@
-// $Id: TrajPoca.cpp,v 1.9 2008-10-30 12:27:12 cattanem Exp $
+// $Id: TrajPoca.cpp,v 1.10 2009-02-11 16:27:14 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -52,6 +52,9 @@ StatusCode TrajPoca::minimize( const LHCb::Trajectory& traj1,
 {
   StatusCode status = StatusCode::SUCCESS;
 
+  unsigned int maxWarnings = 5;
+  if( msgLevel( MSG::DEBUG ) ) maxWarnings = 9999;
+
   static Gaudi::XYZPoint newPos1, newPos2;
   double delta(0), prevdelta(0);
   int nOscillStep(0);
@@ -102,8 +105,8 @@ StatusCode TrajPoca::minimize( const LHCb::Trajectory& traj1,
       else if( prevdelta > prevprevdelta ) {
         // diverging
         if( ++nDivergingStep > m_maxnDivergingStep ) {
-          warning() << "Minimization was diverging." << endreq;
           status = StatusCode::SUCCESS; // "Failed to converge"
+          Warning( "Minimization was diverging.", status, maxWarnings ).ignore();
           finished = true ;
         }
       }
@@ -139,8 +142,8 @@ StatusCode TrajPoca::minimize( const LHCb::Trajectory& traj1,
   }
 
   if( !finished ) {
-    warning() << "Minimization did not converge." << endmsg;
     status = StatusCode::FAILURE;
+    Warning( "Minimization did not converge", status, maxWarnings ).ignore();
   }
   
   return status;

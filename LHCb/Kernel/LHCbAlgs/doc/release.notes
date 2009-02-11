@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2009-02-11 - Marco Cattaneo
+ - Protect against eccessive warnings in TrajPoca.cpp
+
 ! 2009-02-05 - Marco Clemencic
  - Relaxed the check on the ODIN bank size for version < 3 to take into account
    an old bug in BooleInit.
