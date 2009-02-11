@@ -1,8 +1,22 @@
-!$Id: release.notes,v 1.285 2009-02-06 16:07:21 jpalac Exp $
+!$Id: release.notes,v 1.286 2009-02-11 14:47:55 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2009-02-11 - Juan PALACIOS
+ - IPhysDekstop
+  . relatedVertex is now const method.
+  . virtual const LHCb::RecVertex* keep( const LHCb::RecVertex* input ) = 0;
+    The vertices stored with this method should only be stored to the TES if
+    they are related to a particle that is being saved to the TES. I know, I 
+    know, dodgy interface.
+ - Kernel/DVAlgorithm.h
+  . Add  const LHCb::VertexBase* getRelatedPV(const LHCb::Particle* p) const
+    This gets the related PV from the relations table or calls calculateRelatedPV if it isn't there.
+ - src/Lib/DVAlgorithm.cpp
+  . Implementation for getRelatedPV
+  . Default for "RefitPVs" property set to false.
 
 ! 2009-02-06 - Juan PALACIOS
  - DVAlgorithm
