@@ -1,4 +1,4 @@
-// $Id: TupleToolEventInfo.cpp,v 1.2 2009-02-09 09:16:55 pkoppenb Exp $
+// $Id: TupleToolEventInfo.cpp,v 1.3 2009-02-11 18:02:34 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -66,6 +66,7 @@ StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple ) {
   bool test = true;
   test &= tuple->column( "runNumber", run );
   test &= tuple->column( "eventNumber", ev );
-
+  if( msgLevel( MSG::VERBOSE ) )
+    verbose() << "Returns " << test << endreq;
   return StatusCode(test);
 }

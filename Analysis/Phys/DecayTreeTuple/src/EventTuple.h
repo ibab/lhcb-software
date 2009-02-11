@@ -1,4 +1,4 @@
-// $Id: EventTuple.h,v 1.1 2008-07-01 14:50:02 pkoppenb Exp $
+// $Id: EventTuple.h,v 1.2 2009-02-11 18:02:34 pkoppenb Exp $
 #ifndef EVENTTUPLE_H 
 #define EVENTTUPLE_H 1
 
@@ -10,12 +10,23 @@
 /** @class EventTuple EventTuple.h
  *  
  *  \brief Fill event-related variables only
- *
- *  * \verbatim
+ *  
+ * \verbatim
 statseq = GaudiSequencer("StatisticsSeq")
 tuple = EventTuple("TriggerTuple")
 statseq.Members += [tuple ]
-tuple.ToolList = [ "TupleToolTrigger", "TupleToolEventInfo", "TupleToolGeneration" ]
+tuple.ToolList = [ "TupleToolTrigger", "TupleToolEventInfo", "TupleToolGeneration" ]\endverbatim
+ * 
+ * You can also write an event tag collection
+ * 
+ * \verbatim
+tag = EventTuple("TagCreator")
+tag.EvtColsProduce = True
+tag.ToolList = [ "TupleToolEventInfo", "TupleToolRecoStats"  ]
+DaVinci().ETCFile = "DVPresel_ETC2.root"
+\endverbatim
+ * 
+ * 
  * 
  *  \sa DecayTreeTuple
  *
@@ -39,5 +50,7 @@ private:
   std::vector<std::string> m_toolList ; ///< names of tools to be used
   std::vector<IEventTupleTool*> m_tools ; ///< tools to be filled
   std::string m_tupleName; ///< name of Tuple
+  /// ETC name
+  std::string m_collectionName;
 };
 #endif // EVENTTUPLE_H

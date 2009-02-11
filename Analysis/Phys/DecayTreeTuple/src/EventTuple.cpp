@@ -1,8 +1,9 @@
-// $Id: EventTuple.cpp,v 1.2 2008-07-01 15:13:00 pkoppenb Exp $
+// $Id: EventTuple.cpp,v 1.3 2009-02-11 18:02:34 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/IRegistry.h"
 
 #include "Kernel/IEventTupleTool.h"            // Interface
 
@@ -27,8 +28,11 @@ EventTuple::EventTuple( const std::string& name,
   : GaudiTupleAlg ( name , pSvcLocator )
 {
   m_toolList.push_back( "TupleToolEventInfo" );
-  declareProperty("ToolList", m_toolList );
-  declareProperty( "TupleName", m_tupleName="EventTuple" );
+  m_collectionName = name + "/ETC" ;
+  declareProperty("ToolList", m_toolList, "List of tools to be used" );
+  declareProperty("TupleName", m_tupleName="EventTuple", "Name of nTuple" );
+  declareProperty("CollectionName", m_collectionName = "", 
+                  "Default is evtColPath()");
  }
 //=============================================================================
 // Destructor
@@ -49,6 +53,14 @@ StatusCode EventTuple::initialize() {
     info() << *s << ", " ;
   }
   info() << endmsg ;
+
+  if (produceEvtCols ()) {
+    if (m_collectionName == ""){
+      m_collectionName =  evtColPath() ;
+    }
+    info() << "Will be writing an ETC with name " << m_collectionName 
+           << "/" << m_tupleName << endmsg ;
+  }  
   
   return StatusCode::SUCCESS;
 }
@@ -59,16 +71,36 @@ StatusCode EventTuple::initialize() {
 StatusCode EventTuple::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
-
-  Tuple tuple = nTuple( m_tupleName );
-  
   StatusCode sc = StatusCode::SUCCESS ;
+
+  Tuple tuple = ( produceEvtCols () ? evtCol(m_tupleName,m_collectionName) : nTuple( m_tupleName ));
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Got tuple" << endmsg ;
+  if (produceEvtCols ()){
+    // pick up the location of the event --   
+    // this is what makes the tag collection a collection...   
+    DataObject* pObject = get<DataObject>("/Event");
+    if (0!=pObject) {
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Filling Address " << endmsg ;
+      StatusCode sc = tuple->column("Address", pObject->registry()->address() );
+      if (!sc) {
+        err() << "Error writing address" << endmsg ;
+        return sc;
+      }
+    }
+    else {
+      Error("    not able to retrieve IOpaqueAddress");
+      return StatusCode::FAILURE ;
+    }
+  }
+  
   for ( std::vector<IEventTupleTool*>::iterator i = m_tools.begin() ; i!= m_tools.end() ; ++i){
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Filling " << (*i)->name() << endmsg ;
     sc = (*i)->fill(tuple);
+    if (msgLevel(MSG::VERBOSE)) verbose() << (*i)->name() << " returns " << sc << endmsg ;
     if (!sc) return sc;
   }
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Writing tuple" << endmsg ;
   return tuple->write();
-
 }
 
 //=============================================================================

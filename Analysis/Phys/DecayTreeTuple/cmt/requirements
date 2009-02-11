@@ -1,6 +1,6 @@
 #============================================================================
 # Created    : 2007-12-05
-# Maintainer : Jérémie Borel
+# Maintainer : Patrick Koppenburg
 #============================================================================
 package           DecayTreeTuple
 version           v2r0

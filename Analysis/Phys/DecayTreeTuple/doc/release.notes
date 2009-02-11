@@ -1,8 +1,13 @@
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DecayTreeTuple
-! Responsible : Jeremie Borel (orphan)
+! Responsible : Patrick Koppenburg & the WGs
 ! Purpose     : Option-steered tuples. Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
+
+! 2009-02-11 - Patrick Koppenburg
+ - Added TupleToolRecoStats and TupleToolSelResults
+ - EventTuple : Can now save ETC. See examples in DaVinci.
+ - Increment to v2r0
 
 ! 2009-02-09 - Patrick Koppenburg
  - TupleToolEventInfo : remove inactive options to make ETC
