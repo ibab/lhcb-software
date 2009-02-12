@@ -19,11 +19,14 @@ def ConfiguredMasterFitter( Name,
                             NoDriftTimes       = TrackSys().noDrifttimes(),
                             KalmanSmoother     = TrackSys().kalmanSmoother(),
                             LiteClusters       = False ):
-    if allConfigurables.get( Name ) :
-        raise ValueError, 'ConfiguredMasterFitter: instance with name '+Name+' already exists'
-    
+    if isinstance(Name,TrackMasterFitter) :
+        fitter = Name
+    else :
+        if allConfigurables.get( Name ) :
+            raise ValueError, 'ConfiguredMasterFitter: instance with name '+Name+' already exists'
+        fitter = TrackMasterFitter(Name)
+        
     # add the tools that need to be modified
-    fitter = TrackMasterFitter(Name)
     fitter.addTool( TrackMasterExtrapolator(), name = "Extrapolator" )
     fitter.addTool( TrackKalmanFilter(), name = "NodeFitter" )
 
