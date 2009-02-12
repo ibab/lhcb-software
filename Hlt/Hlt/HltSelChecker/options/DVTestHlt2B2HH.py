@@ -1,4 +1,4 @@
-### $Id: DVTestHlt2B2HH.py,v 1.7 2009-01-13 08:36:21 pkoppenb Exp $
+### $Id: DVTestHlt2B2HH.py,v 1.8 2009-02-12 10:17:44 pkoppenb Exp $
  #
  #  Test file for HLT B->hh selection
  #
@@ -12,7 +12,7 @@ signal = "B2HH"
 #
 # Preselection
 #
-importOptions( "$DAVINCIROOT/options/PreloadUnits.opts")
+importOptions( "$STDOPTS/PreloadUnits.opts")
 # BROKEN # importOptions( "$B2UDSROOT/options/DVPreselB2HH.opts")
 #
 # True filter criterion

@@ -9,6 +9,9 @@
 ! end
 !-----------------------------------------------------------------------------
 
+! 2009-02-12 - Patrick Koppenburg
+ - Use STDOPTS/PreloadUnits.opts
+
 ! 2009-02-11 - Patrick Koppenburg
  - options/DVTestHlt2Bs2PhiGamma.py : testfile for Bs2PhiGamma
 

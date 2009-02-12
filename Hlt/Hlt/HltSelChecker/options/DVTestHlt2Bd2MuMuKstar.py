@@ -13,7 +13,7 @@ signal = "Bd2MuMukstar"
 #
 # Preselection
 #
-importOptions( "$DAVINCIROOT/options/PreloadUnits.opts")
+importOptions( "$STDOPTS/PreloadUnits.opts")
 importOptions( "$B2DILEPTONROOT/options/DoDC06SelBd2KstarMuMu.opts")
 dc06sel = GaudiSequencer("SeqDC06SelBd2KstarMuMu")
 # DimuonForDC06SelBd2KstarMuMu.OutputLevel = 3

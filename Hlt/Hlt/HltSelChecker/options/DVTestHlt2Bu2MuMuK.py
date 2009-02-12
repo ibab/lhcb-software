@@ -12,7 +12,7 @@ signal = "Bu2MuMuK"
 #
 # Preselection
 #
-importOptions( "$DAVINCIROOT/options/PreloadUnits.opts")
+importOptions( "$STDOPTS/PreloadUnits.opts")
 importOptions( "$B2DILEPTONROOT/options/DoDC06SelBu2MuMuK.py")
 GaudiSequencer("Hlt2CorrsSeq").Members += [ CheckSelResult("CheckOffline") ]
 CheckSelResult("CheckOffline").Algorithms += [ "PreselBu2LLK" ]

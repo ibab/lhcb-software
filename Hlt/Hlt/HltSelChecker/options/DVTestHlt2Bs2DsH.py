@@ -12,7 +12,7 @@ signal = "Bs2DsH"
 #
 # Preselection
 #
-importOptions( "$DAVINCIROOT/options/PreloadUnits.opts")
+importOptions( "$STDOPTS/PreloadUnits.opts")
 importOptions( "$B2DSXROOT/options/DoPreselBs2DsH.opts")
 #
 # True filter criterion - will only run HLT on TRUE signal

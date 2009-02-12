@@ -1,4 +1,4 @@
-### $Id: DVTestHlt2Bu2D0K_KsHH.py,v 1.8 2009-01-13 08:36:21 pkoppenb Exp $
+### $Id: DVTestHlt2Bu2D0K_KsHH.py,v 1.9 2009-02-12 10:17:44 pkoppenb Exp $
  #
  #  Test file for HLT Bd->D0(Kpi)K*(Kpi) selection
  #
@@ -12,7 +12,7 @@ signal = "Bu2D0K_KsHH"
 #
 # Preselection
 #
-importOptions( "$DAVINCIROOT/options/PreloadUnits.opts")
+importOptions( "$STDOPTS/PreloadUnits.opts")
 importOptions( "$B2D0XROOT/options/PreselBu2D0K_D02KsPiPi.opts" )
 presel = GaudiSequencer("SeqPreselBu2D0K_D02KsPiPi")
 from Configurables import MakeResonances

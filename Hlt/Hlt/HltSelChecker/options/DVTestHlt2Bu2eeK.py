@@ -12,7 +12,7 @@ signal = "Bu2eeK"
 #
 # Preselection
 #
-importOptions( "$DAVINCIROOT/options/PreloadUnits.opts")
+importOptions( "$STDOPTS/PreloadUnits.opts")
 importOptions( "$B2DILEPTONROOT/options/DoDC06SelBu2eeK.opts")
 from Configurables import PrintHeader, PrintTree
 PrintHeader("PrintDiLeptonForPreselBu2LLK").OutputLevel = 4 

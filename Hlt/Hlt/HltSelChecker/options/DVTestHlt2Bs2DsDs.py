@@ -12,7 +12,7 @@ signal = "Bs2DsDs"
 #
 # Preselection
 #
-importOptions( "$DAVINCIROOT/options/PreloadUnits.opts")
+importOptions( "$STDOPTS/PreloadUnits.opts")
 importOptions( "$B2DSXROOT/options/DoPreselBs2DsDs.opts")
 PrintHeader("PrintPreselBs2DsDs").OutputLevel = 4
 #

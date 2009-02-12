@@ -15,7 +15,7 @@ from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, Gaud
 #
 # Preselection
 #
-importOptions( "$DAVINCIROOT/options/PreloadUnits.opts")
+importOptions( "$STDOPTS/PreloadUnits.opts")
 # BROKEN # importOptions( "$B2DSTARXROOT/options/DVPreselDstarNoPID.opts")
 #
 # True filter criterion 

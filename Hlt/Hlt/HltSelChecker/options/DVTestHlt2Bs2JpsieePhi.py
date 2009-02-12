@@ -13,7 +13,7 @@ signal = "Bs2JpsieePhi"
 #
 # Preselection
 #
-importOptions( "$DAVINCIROOT/options/PreloadUnits.opts")
+importOptions( "$STDOPTS/PreloadUnits.opts")
 importOptions( "$CCBARROOT/options/DoDC06SelBs2JpsieePhi.py")
 presel = GaudiSequencer("SeqDC06SelBs2JpsieePhi")
 #

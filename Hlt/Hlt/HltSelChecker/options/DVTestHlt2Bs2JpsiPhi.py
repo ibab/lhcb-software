@@ -12,7 +12,7 @@ signal = "Bs2JpsiPhi"
 #
 # Preselection
 #
-importOptions( "$DAVINCIROOT/options/PreloadUnits.opts")
+importOptions( "$STDOPTS/PreloadUnits.opts")
 importOptions( "$CCBARROOT/options/DoPreselHeavyDimuon.opts")
 presel = GaudiSequencer("SeqPreselHeavyDimuon")
 PrintHeader("PrintPreselHeavyDimuon").OutputLevel = 4
