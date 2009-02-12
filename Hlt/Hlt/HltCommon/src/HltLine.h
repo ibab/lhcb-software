@@ -1,4 +1,4 @@
-// $Id: HltLine.h,v 1.8 2009-02-06 21:56:06 graven Exp $
+// $Id: HltLine.h,v 1.9 2009-02-12 19:48:17 graven Exp $
 #ifndef HLTLINE_H
 #define HLTLINE_H 1
 
@@ -30,10 +30,10 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 
   void resetExecuted();         ///< Called before an event processing
+
 
   class HltStage {
   public:
@@ -107,12 +107,13 @@ private:
         }
         return s_map[s];
   };
+  typedef std::vector<std::pair<const Algorithm*,unsigned> > SubAlgos;
+  SubAlgos retrieveSubAlgorithms() const;
 
   /** Decode a vector of string. */
   StatusCode decodeNames(  );
 
   Algorithm* getSubAlgorithm(const std::string& name);
-private:
   IANNSvc&     annSvc() const;
   IHltDataSvc& dataSvc() const;
 
@@ -122,7 +123,7 @@ private:
 
 
   boost::array<HltStage*,nStages> m_stages; ///< List of algorithms to process.
-  std::list<std::pair<Algorithm*,unsigned> > m_subAlgo; ///< list of subalgorithms and their 'depth'
+  SubAlgos          m_subAlgo;        ///< list of subalgorithms and their sub-count
   ISequencerTimerTool* m_timerTool;      ///< Pointer to the timer tool
   IJobOptionsSvc* m_jos;                 ///< Pointer to job options service
   IAlgManager* m_algMgr;                 ///< Pointer to algorithm manager
@@ -130,6 +131,7 @@ private:
   AIDA::IHistogram1D* m_errorHisto;
   AIDA::IHistogram1D *m_cpuHisto;
   AIDA::IHistogram1D *m_timeHisto;
+  AIDA::IHistogram1D *m_stepHisto;
   mutable IANNSvc *m_hltANNSvc;
   mutable IHltDataSvc *m_hltDataSvc;
   Hlt::Selection* m_selection;

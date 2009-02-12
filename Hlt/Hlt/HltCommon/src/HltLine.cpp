@@ -1,4 +1,4 @@
-// $Id: HltLine.cpp,v 1.11 2009-02-06 21:56:06 graven Exp $
+// $Id: HltLine.cpp,v 1.12 2009-02-12 19:48:17 graven Exp $
 // Include files
 #include "HltLine.h"
 
@@ -67,6 +67,40 @@ HltLine::HltStage::execute(ISequencerTimerTool* timertool) {
     if ( timertool ) timertool->stop( timer() );
     return result;
 }
+
+HltLine::SubAlgos 
+HltLine::retrieveSubAlgorithms() const {
+ typedef std::list<std::pair<const Algorithm*,unsigned> > SubAlgoList;
+ SubAlgoList subAlgo;
+ subAlgo.push_back( std::make_pair(this,0));
+ SubAlgoList::iterator i = subAlgo.begin();
+ while ( i != subAlgo.end() ) {
+    std::vector<Algorithm*> *subs = i->first->subAlgorithms();
+    if (!subs->empty()) {
+        unsigned depth = i->second+1;
+        SubAlgoList::iterator j = i; 
+        ++j;
+        for (std::vector<Algorithm*>::const_iterator k = subs->begin();k!=subs->end();++k) 
+            subAlgo.insert(j, std::make_pair( *k, depth ) );
+    }
+    ++i;
+ }
+ subAlgo.pop_front(); // remove ourselves...
+ debug() << " dumping sub algorithms: " << endmsg;
+ for (SubAlgoList::const_iterator i = subAlgo.begin(); i!= subAlgo.end();++i) {
+    debug() << std::string(3+3*i->second,' ') << i->first->name() << endmsg;
+ }
+ // transform map such that it has algo, # of sub(sub(sub()))algorightms
+
+ SubAlgos table;
+ for (SubAlgoList::const_iterator i = subAlgo.begin(); i!= subAlgo.end();++i) {
+    SubAlgoList::const_iterator j = i; ++j;
+    while ( j!=subAlgo.end() && j->second > i->second ) ++j;
+    table.push_back(std::make_pair( i->first, std::distance(i,j) ) );
+ }
+ return table;
+}
+
 
 IANNSvc& HltLine::annSvc() const {
   if (m_hltANNSvc == 0) {
@@ -151,24 +185,9 @@ StatusCode HltLine::initialize() {
   m_selection = dataSvc().selection(key,this);
 
   //== pick up (recursively!) our sub algorithms and their depth count
- std::list<std::pair<Algorithm*,unsigned> > m_subAlgo;
- m_subAlgo.push_back( std::make_pair(this,0));
- std::list<std::pair<Algorithm*,unsigned> >::iterator i = m_subAlgo.begin();
- while ( i != m_subAlgo.end() ) {
-    std::vector<Algorithm*> *subs = i->first->subAlgorithms();
-    if (!subs->empty()) {
-        unsigned depth = i->second+1;
-        std::list<std::pair<Algorithm*,unsigned> >::iterator j = i; 
-        ++j;
-        for (std::vector<Algorithm*>::const_iterator k = subs->begin();k!=subs->end();++k) m_subAlgo.insert(j, std::make_pair( *k, depth ) );
-    }
-    ++i;
- }
- m_subAlgo.pop_front(); // remove ourselves...
- debug() << " dumping sub algorithms: " << endmsg;
- for (std::list< std::pair<Algorithm*,unsigned> >::const_iterator i = m_subAlgo.begin(); i!= m_subAlgo.end();++i) {
-    debug() << std::string(3+3*i->second,' ') << i->first->name() << endmsg;
- }
+  //   so we can figure out in detail where we stalled...
+ m_subAlgo = retrieveSubAlgorithms();
+
  //NOTE: when checking filterPassed: a sequencer can be 'true' even if some member is false...
  //ANSWER: in case positive, we skip checking all algos with depth count > current one...
  //        in case negative, we descend, and repeat there, or, if next entry has no 
@@ -179,6 +198,8 @@ StatusCode HltLine::initialize() {
   m_stageHisto = book1D(m_decision,     m_decision,     -0.5,7.5,8);
   m_cpuHisto   = book1D(name()+" CPU time",name()+" CPU time",0,1000);
   m_timeHisto  = book1D(name()+" Wall time",name()+" Wall time",0,1000);
+  m_stepHisto  = book1D(name()+" steps", name()+ " steps",-0.5,m_subAlgo.size()-0.5,m_subAlgo.size() );
+  // TODO: if possible add labels to axis... (using AIDA annotations??)
 
   //== and the counters
   declareInfo("#accept","",&counter("#accept"),0,std::string("Events accepted by ") + m_decision);
@@ -217,7 +238,7 @@ StatusCode HltLine::execute() {
   if (report.invalidIntSelectionID()) {
     warning() << " selectionName=" << key->first << " has invalid intSelectionID=" << key->second << endmsg;
   } 
-  bool accept = true; // !m_stages.empty()??
+  bool accept = !m_stages.empty();
   for (unsigned i=0;i<m_stages.size();++i) {
      result = m_stages[i]->execute();
      if (result.isFailure()) {
@@ -229,10 +250,6 @@ StatusCode HltLine::execute() {
      if ( !accept ) break;
      report.setExecutionStage( i+1 );
   }
-  //TODO: see if we have candidates with the 'same' name as the decision
-  //      if so, add the # of them to the report...
-
-
   report.setDecision(accept ? 1u : 0u);
   report.setNumberOfCandidates( m_selection != 0 ? m_selection->size() : 0 );
   if ( !m_ignoreFilter ) setFilterPassed( accept );
@@ -249,8 +266,25 @@ StatusCode HltLine::execute() {
 
   fill( m_stageHisto, report.executionStage(),1.0);
   fill( m_errorHisto, report.errorBits(),1.0);
+  // make automated stair plot
+  SubAlgos::const_iterator i = m_subAlgo.begin();
+  while ( i != m_subAlgo.end() ) {
+     debug() <<  " checking " << i->first->name() << " passed=" << (i->first->filterPassed()?"yes":"no") << endmsg;
+     if (i->first->filterPassed()) {
+        i+=i->second;
+     } else {
+        if (i->second==1) break; // don't have subalgos, so this is where we stopped
+        ++i; // descend into subalgorithms, figure out which one failed.....
+        // Note: what to do if subalgos pass, but parent failed?? 
+        // actually need to invert parent/daughters, such that if daugthers OK,
+        // but parent isn't, we enter the plot at the parent, but that should be
+        // _after_ the daughters...
+     }
+  }
+  debug() <<  " filling histo at " << (i==m_subAlgo.end()?std::string("end"):i->first->name()) << endmsg;
+  fill( m_stepHisto, i-m_subAlgo.begin(), 1.0);
 
-  // Plot the distribution of the # of candidates
+  // Plot the distribution of the # of (output) candidates
 
   // plot the CPU & wall clock time spent...
   longlong elapsedTime = System::currentTime( System::microSec ) - startClock;
@@ -262,16 +296,6 @@ StatusCode HltLine::execute() {
 
   return m_returnOK ? StatusCode::SUCCESS : result;
 };
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode HltLine::finalize() {
-
-  debug() << "==> Finalize" << endreq;
-  //TODO: report statistics
-  return  GaudiAlgorithm::finalize();
-}
 
 //=========================================================================
 // reset the executed status of all members
