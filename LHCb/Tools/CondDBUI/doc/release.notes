@@ -1,10 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.100 2009-02-09 14:56:09 marcocle Exp $
+! $Id: release.notes,v 1.101 2009-02-12 15:40:35 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+! 2009-02-12 - Marco Clemencic
+ - Fix in CondDBAdmin_MakeSnapshot.py to be able to use LFC-based authentication
+   for the connection (not directly supported by PyCoolCopy).
+ 
 ! 2009-02-09 - Marco Clemencic
  - Modified dump_db_to_files.py to make the reference to /Conditions/Online
    always point to the database.

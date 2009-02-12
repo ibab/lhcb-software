@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
-__version__ = "$Id: CondDBAdmin_MakeSnapshot.py,v 1.6 2008-09-25 22:56:16 marcocle Exp $"
+__version__ = "$Id: CondDBAdmin_MakeSnapshot.py,v 1.7 2009-02-12 15:40:35 marcocle Exp $"
 
 import os, sys
 
@@ -127,12 +127,15 @@ connection string. 'destination' must be a connection string.""")
     
     log.info("Copying, please wait...")
     try:
+        from CondDBUI import CondDB
+        # Connect to source database (PyCoolCopy do not support CORAL LFCReplicaService)
+        sourceDb = CondDB(source).db
         selection = Selection( since = since, until = until, tags = options.tags )
         if options.merge:
             log.info("Warning: merge works only on folders that do not exist on the target")
-            PyCoolCopy(source).append(dest, selection)
+            PyCoolCopy(sourceDb).append(dest, selection)
         else:
-            PyCoolCopy(source).copy(dest, selection)
+            PyCoolCopy(sourceDb).copy(dest, selection)
         log.info("Copy completed.")
     except Exception, details:
         log.error('Copy failed with error: %s' % str(details))
