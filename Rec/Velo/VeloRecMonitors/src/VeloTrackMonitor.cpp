@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitor.cpp,v 1.11 2009-02-11 15:53:07 gersabec Exp $
+// $Id: VeloTrackMonitor.cpp,v 1.12 2009-02-12 10:51:22 gersabec Exp $
 // Include files 
 
 // from Gaudi
@@ -62,7 +62,7 @@ Velo::VeloTrackMonitor::VeloTrackMonitor( const std::string& name,
   declareProperty( "ProfileResetEvent", m_resetProfile);
   declareProperty( "ExtraPlots", m_xPlots = true);
   declareProperty( "EventClusterInfo", m_EventClusterInfo = true);
-  declareProperty( "AlignMoniBasic", m_alignMoniBasic = false);
+  declareProperty( "AlignMoniBasic", m_alignMoniBasic = true);
   declareProperty( "AlignNMeasMin", m_alignNMeasMin = 6);
   declareProperty( "ACDCGeometry", m_ACDC = true);
 }
@@ -371,7 +371,7 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
                 << vcID << " "
                 << interStripFr << " "
                 << endmsg;
-        return StatusCode::SUCCESS;
+        continue;
       }
       double pitch;
       if ( sensor->isR() ) {
@@ -624,7 +624,7 @@ StatusCode Velo::VeloTrackMonitor::unbiasedResiduals (LHCb::Track *track )
                 << vcID << " "
                 << interStripFr << " "
                 << endmsg;
-        return StatusCode::SUCCESS;
+        continue;
       }
       double pitch;
       if ( sensor->isR() ) {

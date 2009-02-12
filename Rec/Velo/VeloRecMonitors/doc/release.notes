@@ -4,6 +4,9 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2009-02-12 - Marco Gersabeck
+- change failure behaviour of residual calculation
+
 ! 2009-02-11 - Marco Gersabeck
 - now check for previously still unchecked status codes
 
