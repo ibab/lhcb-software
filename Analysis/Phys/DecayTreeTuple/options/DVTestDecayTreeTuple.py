@@ -25,7 +25,7 @@ from GaudiKernel.SystemOfUnits import *
 #
 # If you want to import .opts options, do this first
 #
-importOptions("$DAVINCIROOT/options/PreloadUnits.opts")
+importOptions("$STDOPTS/PreloadUnits.opts")
 #######################################################################
 #
 # Selection
