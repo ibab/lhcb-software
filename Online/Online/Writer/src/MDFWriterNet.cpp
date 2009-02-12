@@ -202,9 +202,9 @@ StatusCode MDFWriterNet::initialize(void)
   } 
   // initialize named message queue
   if((m_mq = mq_open("/writerqueue", O_RDWR, S_IRUSR|S_IWUSR, NULL)) == (mqd_t) -1)  {
-      *m_log << MSG::ERROR
+      /**m_log << MSG::ERROR
              << "Could not establish connection to message queue"
-             << endmsg;
+             << endmsg;*/
       m_mq_available = false;
   } else {
       *m_log << MSG::INFO
