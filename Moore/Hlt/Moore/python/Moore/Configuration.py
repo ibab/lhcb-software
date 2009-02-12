@@ -1,7 +1,7 @@
 """
-High level configuration tools for Moore
+High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.48 2009-02-03 13:13:42 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.49 2009-02-12 22:07:02 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -10,9 +10,10 @@ from GaudiConf.Configuration import *
 from Configurables import ConfigFileAccessSvc, ConfigDBAccessSvc, HltConfigSvc, HltGenConfig
 from Configurables import EventClockSvc
 from Configurables import GaudiSequencer
+from Configurables import HltConf, LHCbApp
 from Configurables import L0DUMultiConfigProvider
 from Configurables import LHCb__MDFWriter as MDFWriter
-from HltConf.Configuration import *
+# from HltConf.Configuration import *
 
 import GaudiKernel.ProcessJobOptions
 from  ctypes import c_uint
@@ -29,7 +30,8 @@ def _tck(x) :
 
 class Moore(LHCbConfigurableUser):
     ## Possible used Configurables
-    __used_configurables__ = [ HltConf, LHCbApp ]
+    __used_configurables__ = [ HltConf
+                             , LHCbApp ]
 
 
     __slots__ = {
@@ -44,27 +46,28 @@ class Moore(LHCbConfigurableUser):
         , "inputFiles" :       [ ] # input
         , "hltType" :          'Hlt1'
         , "useTCK"     :       False # use TCK instead of options...
-        #, "L0TCK"      :       [ ] # list of L0 TCKs to prefetch
+        , "replaceL0BanksWithEmulated" : False
+        , "L0TCK"      :       ''  # which L0 TCKs to use for configuration
         , "prefetchTCK" :      [ ] # which TCKs to prefetch. Initial TCK used is first one...
         , "generateConfig" :   False # whether or not to generate a configuration
         , "configLabel" :      ''    # label for generated configuration
-        , "configAlgorithms" : ['Hlt']    # which algorithms to configure (including their dependencies!)...
-        , "configServices" : ['ToolSvc','HltDataSvc','HltANNSvc','LumiANNSvc' ]    # which services to configure (including their dependencies!)...
-        , "TCKData" :          '$TCKDATAROOT' # where do we read TCK data from?
+        , "configAlgorithms" : ['Hlt']    # which algorithms to configure (automatically including their children!)...
+        , "configServices" :   ['ToolSvc','HltDataSvc','HltANNSvc','LumiANNSvc' ]    # which services to configure (automatically including their dependencies!)...
+        , "TCKData" :          '$TCKDATAROOT' # where do we read/write TCK data from/to?
         , "TCKpersistency" :   'file' # which method to use for TCK data? valid is 'file' and 'sqlite'
         , "enableAuditor" :    [ ]  # put here eg . [ NameAuditor(), ChronoAuditor(), MemoryAuditor() ]
         , "Verbose" :          True # whether or not to print Hlt sequence
         }   
                 
 
-    def configureInput(self):
+    def _configureInput(self):
         files = self.getProp('inputFiles')
         extensions = { 'RAW' : "' SVC='LHCb::MDFSelector'",
                        'MDF' : "' SVC='LHCb::MDFSelector'",
                        'DST' : "' TYP='POOL_ROOTTREE' OPT='READ'" }
         EventSelector().Input = [ "DATAFILE='PFN:"+ f + extensions[ _ext(f).upper() ] for f in files ]
 
-    def configureOutput(self):
+    def _configureOutput(self):
         fname = self.getProp('outputFile')
         if not fname : return
         if _ext(fname).upper() not in [ 'MDF','RAW' ] : raise NameError('unsupported filetype for file "%s"'%fname)
@@ -99,16 +102,36 @@ class Moore(LHCbConfigurableUser):
         AuditorSvc().Auditors.append( x.name() )
         x.Enable = True
 
+
+    def _generateConfig(self) :
+        importOptions('$L0TCKROOT/options/L0DUConfig.opts')
+        # make sure we load as many L0 TCKs as possible...
+        L0DUMultiConfigProvider('L0DUConfig').Preload = True
+        svcs = self.getProp("configServices")
+        algs = self.getProp("configAlgorithms")
+        # if not algs : algs = [ i.rsplit('/')[-1] if type(i) is str else i.getName() for i in ApplicationMgr().TopAlg ] # WARNING: this doesn't work on Gaudi v20r3 and later...
+        gen = HltGenConfig( ConfigTop = [ i.rsplit('/')[-1] for i in algs ]
+                          , ConfigSvc = [ i.rsplit('/')[-1] for i in svcs ]
+                          , ConfigAccessSvc = self.getConfigAccessSvc().getName()
+                          , hltType = self.getProp('hltType')
+                          , mooreRelease = self.getRelease()
+                          , label = self.getProp('configLabel'))
+        # make sure gen is the very first Top algorithm...
+        ApplicationMgr().TopAlg = [ gen.getFullName() ] + ApplicationMgr().TopAlg
+
     def __apply_configuration__(self):
         GaudiKernel.ProcessJobOptions.PrintOff()
         importOptions('$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts')
         EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
         importOptions('$STDOPTS/DecodeRawEvent.py')
+        if self.getProp('replaceL0BanksWithEmulated') :
+            importOptions('$L0DUROOT/options/ReplaceL0BanksWithEmulated.opts')
         ApplicationMgr().TopAlg.append( GaudiSequencer('Hlt') )
-        # needed for DecodeRawEvent and LoKiTrigger
-        for i in [ 'ToolSvc' , 'AuditorSvc',  'DataOnDemandSvc' , 'LoKiSvc' ] : ApplicationMgr().ExtSvc.append( i ) 
+        # needed for DecodeRawEvent 
+        for i in [  'AuditorSvc',  'DataOnDemandSvc' ] : ApplicationMgr().ExtSvc.append( i ) 
         # forward some settings... 
-        self.setOtherProps( LHCbApp(), ['EvtMax','SkipEvents','Simulation', 'DataType','DDDBtag','CondDBtag','UseOracle' ] )
+        app = LHCbApp()
+        self.setOtherProps( app, ['EvtMax','SkipEvents','Simulation', 'DataType','DDDBtag','CondDBtag','UseOracle' ] )
         # Get the event time (for CondDb) from ODIN 
         EventClockSvc().EventTimeDecoder = 'OdinTimeDecoder'
         # make sure we don't pick up small variations of the read current
@@ -130,30 +153,18 @@ class Moore(LHCbConfigurableUser):
         for i in self.getProp('enableAuditor') : self.addAuditor( i )
         # TODO: check for mutually exclusive options...
         if self.getProp('useTCK') :
+            if (self.getProp('L0TCK')) : raise RunTimeError( 'useTCK and L0TCK are mutually exclusive')
             tcks = [ _tck(i) for i in self.getProp('prefetchTCK') ]
             cfg = HltConfigSvc( prefetchTCK = tcks
                               , initialTCK = tcks[0]
                               , ConfigAccessSvc = self.getConfigAccessSvc().getFullName() ) 
             ApplicationMgr().ExtSvc.append(cfg.getFullName())
         else:
-            for i in [ 'hltType','Verbose' ] : self.setOtherProp( HltConf(), i )
-            log.info( HltConf() )
+            hltConf = HltConf()
+            self.setOtherProps( hltConf,  [ 'hltType','Verbose','L0TCK'])
+            print hltConf
+            log.info( hltConf )
             
-        if self.getProp("generateConfig") :
-            importOptions('$L0TCKROOT/options/L0DUConfig.opts')
-            #if self.getProp('L0TCK') : ### load a subset of L0TCKs..
-            #else : # make sure we load as many L0 TCKs as possible...
-            L0DUMultiConfigProvider('L0DUConfig').Preload = True
-            svcs = self.getProp("configServices")
-            algs = self.getProp("configAlgorithms")
-            # if not algs : algs = [ i.rsplit('/')[-1] if type(i) is str else i.getName() for i in ApplicationMgr().TopAlg ] # WARNING: this doesn't work on Gaudi v20r3 and later...
-            gen = HltGenConfig( ConfigTop = [ i.rsplit('/')[-1] for i in algs ]
-                              , ConfigSvc = [ i.rsplit('/')[-1] for i in svcs ]
-                              , ConfigAccessSvc = self.getConfigAccessSvc().getName()
-                              , hltType = self.getProp('hltType')
-                              , mooreRelease = self.getRelease()
-                              , label = self.getProp('configLabel'))
-            # make sure gen is the very first Top algorithm...
-            ApplicationMgr().TopAlg = [ gen.getFullName() ] + ApplicationMgr().TopAlg
-        self.configureInput()
-        self.configureOutput()
+        if self.getProp("generateConfig") : self._generateConfig()
+        self._configureInput()
+        self._configureOutput()
