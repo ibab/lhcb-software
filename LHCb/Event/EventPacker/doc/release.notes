@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2009-02-12 - Marco Cattaneo
+ - Fix gcc43 warning
+
 ! 2009-02-04 - Marco Clemencic
  - Modified ReadPackedDst to use the ODINDecodeTool to decode the ODIN bank.
 

@@ -1,4 +1,4 @@
-// $Id: ReadPackedDst.cpp,v 1.3 2009-02-06 11:01:19 marcocle Exp $
+// $Id: ReadPackedDst.cpp,v 1.4 2009-02-12 17:46:31 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -71,8 +71,13 @@ StatusCode ReadPackedDst::execute() {
   const std::vector<LHCb::RawBank*>& adds = dstEvent->banks( LHCb::RawBank::DstAddress );
   for (std::vector<LHCb::RawBank*>::const_iterator itA = adds.begin(); adds.end() != itA; ++itA ) {
     unsigned int* iptr  = (*itA)->data();
-    debug() << "Address bank: Class ID " << *iptr++ << " ipar[0] " << *iptr++ << " ipar[1] " << *iptr++
-            << " svcType " << *iptr++;
+    unsigned int clid = *iptr++;
+    unsigned int par0 = *iptr++;
+    unsigned int par1 = *iptr++;
+    unsigned int styp = *iptr++;
+    
+    debug() << "Address bank: Class ID " << clid << " ipar[0] " << par0 << " ipar[1] " << par1
+            << " svcType " << styp;
     char* cptr = (char*) iptr;
     char* dptr = cptr + strlen(cptr) + 1;
     debug() << " par[0]='" << cptr << "' par[1]='" << dptr << "'" << endreq;
