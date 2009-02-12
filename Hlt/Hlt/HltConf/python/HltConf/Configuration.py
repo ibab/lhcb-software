@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.40 2009-02-12 12:25:45 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.41 2009-02-12 19:53:56 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -48,7 +48,6 @@ class HltConf(LHCbConfigurableUser):
                              , Hlt1Conf ]
     __slots__ = { "L0TCK"                      : ''
                 , "hltType"                    : 'Hlt1+Hlt2'
-                , "replaceL0BanksWithEmulated" : False
                 , "Hlt2IgnoreHlt1Decision"     : False # run Hlt2 even if Hlt1 failed
                 , "Verbose"                    : False # print the generated Hlt sequence
                 , "LumiBankKillerAcceptFraction" : 0 # fraction of lumi-only events where raw event is stripped down
@@ -116,11 +115,6 @@ class HltConf(LHCbConfigurableUser):
     def postConfigAction(self) : 
         ## Should find a more elegant way of doing this...
         ## there are too many implicit assumptions in this action...
-        #if self.getProp('replaceL0BanksWithEmulated') : 
-        #    topalg = ApplicationMgr().TopAlg
-        #    topalg.remove('GaudiSequencer/L0DUBankSwap')
-        #    Sequence('Hlt').Members.insert(0,'GaudiSequencer/L0DUBankSwap')
-        ##
         ## add a line for 'not lumi only' 
         ## -- note: before the 'global' otherwise lumi set global, and we have lumi AND global set...
         Line('IgnoringLumi', HLT = "HLT_PASSIGNORING('Hlt1LumiDecision')" )
@@ -160,8 +154,6 @@ class HltConf(LHCbConfigurableUser):
         GaudiKernel.ProcessJobOptions.PrintOff()
         importOptions('$HLTCONFROOT/options/HltInit.py')
         log.info("Loaded HltInit")
-        if self.getProp('replaceL0BanksWithEmulated') : 
-            importOptions('$L0DUROOT/options/ReplaceL0BanksWithEmulated.opts')
         self.setOtherProp( Hlt1Conf(), 'LumiBankKillerAcceptFraction' )
         self.confType(self.getProp('hltType'))
         appendPostConfigAction( self.postConfigAction )
