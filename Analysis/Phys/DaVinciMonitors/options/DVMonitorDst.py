@@ -1,5 +1,5 @@
 ##############################################################################
-# $Id: DVMonitorDst.py,v 1.7 2009-02-12 14:00:46 jonrob Exp $
+# $Id: DVMonitorDst.py,v 1.8 2009-02-12 15:04:07 jonrob Exp $
 #
 # syntax: gaudirun.py $DAVINCIMONITORSROOT/options/DVMonitorDst.py
 #
@@ -54,7 +54,7 @@ JpsiSeq.Members += [ plotter ]
 #
 from Configurables import RichPIDQCConf
 richSeq = GaudiSequencer("RichPIDMoniSeq")
-RichPIDQCConf().CalibSequencer = richSeq
+RichPIDQCConf().setProp("CalibSequencer",richSeq)
 RichPIDQCConf().PIDCalibrations = [ "DsPhiPi" ]  # The PID Calibration selections to run
 #RichPIDQCConf().MCChecks = True                  # Enable MC checking as well
 ##############################################################################
