@@ -3,6 +3,10 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
+! 2009-02-12 - Chris Jones
+ - Add package Rich/RichPIDQC that produces PID Monitoring and calibration
+   plots for the RICH using various (RICH)PID-free selections.
+
 </PRE><H1><A NAME=v8r0>2009-01-15 Phys v8r0 </A></H1><PRE>
 
 ###############################################################################
