@@ -39,7 +39,6 @@ namespace LHCb
 	break ;
       case LHCbID::OT:
 	{
-	  assert( id->isOT() ) ;
 	  LHCb::OTChannelID otid = id->otID() ;
 	  unsigned int uniquelayer = (otid.station()-1)*4 + otid.layer() ;
 	  m_ot[otid.quarter()].set(uniquelayer) ;
