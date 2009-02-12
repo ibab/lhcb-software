@@ -4,12 +4,11 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   10/02/2009
 
-__version__ = "$Id: Configuration.py,v 1.1.1.1 2009-02-12 12:58:14 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.2 2009-02-12 14:54:46 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
-#from Configurables import DsToPhiPiConf
-from RichPIDQC.DsToPhiPi import DsToPhiPiConf
+from DsToPhiPi import DsToPhiPiConf
         
 ## @class RichRecSysConf
 #  Configurable for RICH reconstruction
