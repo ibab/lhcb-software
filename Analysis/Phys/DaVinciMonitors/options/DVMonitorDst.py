@@ -1,5 +1,5 @@
 ##############################################################################
-# $Id: DVMonitorDst.py,v 1.6 2009-02-12 12:55:17 jonrob Exp $
+# $Id: DVMonitorDst.py,v 1.7 2009-02-12 14:00:46 jonrob Exp $
 #
 # syntax: gaudirun.py $DAVINCIMONITORSROOT/options/DVMonitorDst.py
 #
@@ -56,7 +56,7 @@ from Configurables import RichPIDQCConf
 richSeq = GaudiSequencer("RichPIDMoniSeq")
 RichPIDQCConf().CalibSequencer = richSeq
 RichPIDQCConf().PIDCalibrations = [ "DsPhiPi" ]  # The PID Calibration selections to run
-RichPIDQCConf().MCChecks = True                  # Enable MC checking as well
+#RichPIDQCConf().MCChecks = True                  # Enable MC checking as well
 ##############################################################################
 #
 # Add Sequences to Monitors
