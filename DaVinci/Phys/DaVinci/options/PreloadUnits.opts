@@ -1,6 +1,0 @@
-/* $Id : $
- *
- * Preload units of you want to include .opts options from py.
- */
-#units "$STDOPTS/units.opts"
-

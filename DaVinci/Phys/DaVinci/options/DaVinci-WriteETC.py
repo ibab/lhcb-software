@@ -1,6 +1,6 @@
-## $Id: DaVinci-WriteETC.py,v 1.2 2009-02-11 18:05:53 pkoppenb Exp $
+## $Id: DaVinci-WriteETC.py,v 1.3 2009-02-12 10:16:55 pkoppenb Exp $
 ## ============================================================================
-## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 ## ============================================================================
 from Gaudi.Configuration import *
 ######################################################
@@ -18,7 +18,7 @@ tag.TupleToolSelResults.Selections  = [ "PreselB2DiMuon", "PreselB2EMu", "Presel
 
 ####################################################
 # main config
-importOptions("$DAVINCIROOT/options/PreloadUnits.opts")
+importOptions("$STDOPTS/PreloadUnits.opts")
 from Configurables import DaVinci
 DaVinci().MainOptions  = "$STRIPPINGROOT/options/Presel.opts"
 DaVinci().EvtMax = 500

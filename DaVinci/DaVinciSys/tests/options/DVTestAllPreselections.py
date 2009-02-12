@@ -1,9 +1,9 @@
-## $Id: DVTestAllPreselections.py,v 1.2 2009-02-11 09:03:19 pkoppenb Exp $
+## $Id: DVTestAllPreselections.py,v 1.3 2009-02-12 10:18:19 pkoppenb Exp $
 ## ============================================================================
-## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 ## ============================================================================
 from Gaudi.Configuration import *
-importOptions("$DAVINCIROOT/options/PreloadUnits.opts")
+importOptions("$STDOPTS/PreloadUnits.opts")
 from Configurables import DaVinci
 DaVinci().MainOptions  = "$STRIPPINGROOT/options/Presel.opts"
 DaVinci().EvtMax = 100

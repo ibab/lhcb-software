@@ -1,6 +1,6 @@
-## $Id: DVTestBu2D0K_D02KsPiPi.py,v 1.1 2009-01-07 17:05:46 pkoppenb Exp $
+## $Id: DVTestBu2D0K_D02KsPiPi.py,v 1.2 2009-02-12 10:18:19 pkoppenb Exp $
 ## ============================================================================
-## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 ## ============================================================================
 """
 @file DVTestBu2D0K_D02KsPiPi.py
@@ -17,7 +17,7 @@ from Gaudi.Configuration import *
 from Configurables import GaudiSequencer, MakeResonances, PrintHeader
 seqPresel = GaudiSequencer("SeqPreselBu2D0K_D02KsPiPi")
 seqPresel.Members += [ MakeResonances("PreselBu2D0K_D02KsPiPi"), PrintHeader() ]
-importOptions("$DAVINCIROOT/options/PreloadUnits.opts")
+importOptions("$STDOPTS/PreloadUnits.opts")
 importOptions("$B2D0XROOT/options/PreselBu2D0K_D02KsPiPi.opts")
 ##--------------------------------------------------------------
 ##
