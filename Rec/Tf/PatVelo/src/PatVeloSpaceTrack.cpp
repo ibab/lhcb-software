@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTrack.cpp,v 1.7 2009-02-12 12:59:18 cattanem Exp $
+// $Id: PatVeloSpaceTrack.cpp,v 1.8 2009-02-12 14:32:07 cattanem Exp $
 // Include files 
 
 // local
@@ -35,7 +35,7 @@ namespace Tf {
       m_point(0.,0.,0.),
       m_slopeX(0.),
       m_slopeY(0.),
-      m_cov( ),
+      m_cov(Gaudi::TrackSymMatrix()),
       m_maxRSensor(0),
       m_minRSensor(65),
       m_ancestor(0),
