@@ -3,6 +3,8 @@
 ! Responsible : Jose A. Hernando 
 ! Purpose     : Exposing Hlt tools to Python, share common python tools
 !-----------------------------------------------------------------------------
+! 2009-02-12- Gerhard Raven
+   - remove PrepareMC.opts as it uses $STDOPTS/MCDstContent.opts which will be removed
 
 !========================== HltPython v1r12 2009-01-15 ===================
 ! 2009-01-13- Jose A. Hernando
