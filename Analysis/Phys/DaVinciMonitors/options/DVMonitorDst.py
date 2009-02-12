@@ -1,5 +1,5 @@
 ##############################################################################
-# $Id: DVMonitorDst.py,v 1.5 2009-01-12 13:49:15 pkoppenb Exp $
+# $Id: DVMonitorDst.py,v 1.6 2009-02-12 12:55:17 jonrob Exp $
 #
 # syntax: gaudirun.py $DAVINCIMONITORSROOT/options/DVMonitorDst.py
 #
@@ -48,11 +48,21 @@ plotter.PeakCut = "(ADMASS('J/psi(1S)')<5*MeV)"
 plotter.SideBandCut = "(ADMASS('J/psi(1S)')>20*MeV)"
 plotter.PlotTools = [ "PidPlotTool" ]
 JpsiSeq.Members += [ plotter ]
-#############################################################################
+##############################################################################
 #
-# Declare it
+# RICH PID Monitoring from data
 #
-DaVinci().MoniSequence += [ JpsiSeq ]
+from Configurables import RichPIDQCConf
+richSeq = GaudiSequencer("RichPIDMoniSeq")
+RichPIDQCConf().CalibSequencer = richSeq
+RichPIDQCConf().PIDCalibrations = [ "DsPhiPi" ]  # The PID Calibration selections to run
+RichPIDQCConf().MCChecks = True                  # Enable MC checking as well
+##############################################################################
+#
+# Add Sequences to Monitors
+#
+DaVinci().MoniSequence += [ JpsiSeq ] # J/psi sequence
+DaVinci().MoniSequence += [ richSeq ] # RICH sequence
 ##############################################################################
 #
 # Histograms

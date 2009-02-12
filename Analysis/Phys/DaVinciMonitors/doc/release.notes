@@ -4,6 +4,10 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-02-12 - Chris Jones
+ - Add usage of RichPIDQCConf() from Rich/RichPIDQC to produce some standard
+   RICH PID plots.
+
 !========================== DaVinciMonitors v1r0 2009-01-15 ==================
 
 ! 2009-01-12 - Patrick Koppenburg
