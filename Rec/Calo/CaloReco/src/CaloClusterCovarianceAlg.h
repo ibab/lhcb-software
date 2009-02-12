@@ -1,29 +1,4 @@
-// $Id: CaloClusterCovarianceAlg.h,v 1.5 2008-06-30 15:36:33 odescham Exp $
-// ===========================================================================
-// $CVS tag $Name: not supported by cvs2svn $ 
-// ===========================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2006/05/30 09:42:01  odescham
-// first release of the CaloReco migration
-//
-// Revision 1.3  2005/11/07 12:12:41  odescham
-// v3r0 : adapt to the new Track Event Model
-//
-// Revision 1.2  2003/06/23 13:11:54  ibelyaev
-//  fix for gcc3.2
-//
-// Revision 1.1.1.1  2002/11/13 20:46:39  ibelyaev
-// new package 
-//
-// Revision 1.6  2002/04/05 17:12:20  ibelyaev
-//  remove bugs, bugs, bugs ....
-//
-// Revision 1.5  2002/04/02 11:06:30  ibelyaev
-// update for new event model
-//
-// Revision 1.4  2001/11/25 16:25:30  ibelyaev
-//  update for newer CaloKernel package
-//
+// $Id: CaloClusterCovarianceAlg.h,v 1.6 2009-02-12 10:59:37 cattanem Exp $
 // ===========================================================================
 #ifndef CALORECO_CALOCLUSTERCOVARIANCEALG_H 
 #define CALORECO_CALOCLUSTERCOVARIANCEALG_H 1
@@ -53,12 +28,12 @@ class CaloClusterCovarianceAlg : public GaudiAlgorithm
 protected:
 
   /** Standard constructor
-   *  @param   name  algorith name
-   *  @param   svc   pointer to Service Locator
+   *  @param   name          algorith name
+   *  @param   pSvcLocator   pointer to Service Locator
    */
   CaloClusterCovarianceAlg
   ( const std::string& name  , 
-    ISvcLocator*       svc   );
+    ISvcLocator*       pSvcLocator );
   
   /// virtual destructor 
   virtual ~CaloClusterCovarianceAlg();

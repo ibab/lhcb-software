@@ -1,6 +1,5 @@
-// $Id: CellularAutomaton.cpp,v 1.13 2008-09-22 01:41:23 odescham Exp $
+// $Id: CellularAutomaton.cpp,v 1.14 2009-02-12 10:59:37 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
 #include "GaudiKernel/AlgFactory.h" 
 #include "Event/CaloDigit.h"
 #include "Event/CaloCluster.h"
@@ -136,8 +135,8 @@ inline void CellularAutomaton::setEXYCluster( LHCb::CaloCluster* cluster,
  *
  *  Algorithm parameters which can be set at run time must be declared here.
  *  @see Algorithm 
- *  @param name   name of the algorithm
- *  @param svcloc pointer to service locator 
+ *  @param name        name of the algorithm
+ *  @param pSvcLocator pointer to service locator 
  */
 // ============================================================================
 CellularAutomaton::CellularAutomaton

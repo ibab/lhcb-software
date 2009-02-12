@@ -1,7 +1,5 @@
-// $Id: CaloClusterCovarianceAlg.cpp,v 1.9 2008-07-18 00:33:10 odescham Exp $ 
+// $Id: CaloClusterCovarianceAlg.cpp,v 1.10 2009-02-12 10:59:37 cattanem Exp $ 
 //  ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ===========================================================================
 #define CALORECO_CALOCLUSTERCOVARIANCEALG_CPP 1 
 /// ===========================================================================
 // Include files

@@ -1,4 +1,4 @@
-// $Id: CaloClusterizationTool.cpp,v 1.2 2008-09-22 01:41:23 odescham Exp $
+// $Id: CaloClusterizationTool.cpp,v 1.3 2009-02-12 10:59:37 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -266,16 +266,10 @@ StatusCode CaloClusterizationTool::clusterize(std::vector<LHCb::CaloCluster*>&  
   SeqVector taggedCellsSeq                              ;
   typedef std::vector<CelAutoTaggedCell> _Local ;
 
-  int local_size = 0;
-  if( cell_list.empty() ){
-    local_size = hits->size();
-  }
-  else{
-    local_size = out_cells.size();
-  }
+  size_t local_size = cell_list.empty() ? hits->size() : out_cells.size();
+  const CelAutoTaggedCell cell0_ = CelAutoTaggedCell () ; 
+  _Local local_cells ( local_size  , cell0_ ) ;  
 
-  _Local local_cells ( local_size  , CelAutoTaggedCell() ) ;  
-  
   if( cell_list.empty() ){
     taggedCellsDirect.reserve ( hits->size() ) ;
     taggedCellsDirect.setSize ( 14000        ) ;

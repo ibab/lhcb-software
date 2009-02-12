@@ -1,6 +1,4 @@
-// $Id: CaloSelector.cpp,v 1.7 2008-06-30 15:36:33 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// $Id: CaloSelector.cpp,v 1.8 2009-02-12 10:59:37 cattanem Exp $
 // ============================================================================
 // Include files
 // from Gaudi
@@ -26,7 +24,7 @@ DECLARE_TOOL_FACTORY( CaloSelector );
 /** Standard constructor
  *  @param    type   tool type (?)
  *  @param    name   tool name 
- *  @param    paretn tool parent 
+ *  @param    parent tool parent 
  */
 // ============================================================================
 CaloSelector::CaloSelector( const std::string&  type   ,
