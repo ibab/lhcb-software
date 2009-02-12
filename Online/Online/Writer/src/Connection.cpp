@@ -80,8 +80,8 @@ void Connection::connect() {
 
   /*Need to change port to the storage service port.*/
   destAddr.sin_port = htons(m_serverPort);
-  *m_log <<MSG::WARNING << WHERE << "Trying to connect to address "
-         << std::hex << ntohl(destAddr.sin_addr.s_addr) << std::dec
+  *m_log <<MSG::INFO << WHERE << "Trying to connect to address "
+         << destAddr.sin_addr.s_addr << std::dec
          << endmsg;
   m_sockfd = Utils::connectToAddress(&destAddr, m_sndRcvSizes, m_sndRcvSizes, m_log);
   if(m_sockfd < 0)
