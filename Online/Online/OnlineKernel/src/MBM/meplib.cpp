@@ -24,6 +24,8 @@
 #include "RTL/DoubleLinkedQueue.h"
 #define MAGIC_PATTERN int(0xFEEDBABE)
 
+void mbm_print_trace();
+
 static int print_release   = false;
 // static int print_addref = false;
 static bool s_map_unused   = true;
@@ -50,6 +52,7 @@ namespace {
     void* ptr;
     T     fun;
     func_desc(T t) { fun = t; }
+    func_desc(void* t) { ptr = t; }
   };
   class SignalHandler {
   protected:
@@ -71,17 +74,20 @@ SignalHandler::SignalHandler(MEPDESC* dsc) : bmid(dsc)  {
   new_action.sa_handler   = 0;
   new_action.sa_sigaction = handler;
   new_action.sa_flags     = SA_SIGINFO;
-  INSTALL_SIGNAL(SIGABRT,  new_action);
-  INSTALL_SIGNAL(SIGFPE,   new_action);
   INSTALL_SIGNAL(SIGILL,   new_action);
   INSTALL_SIGNAL(SIGINT,   new_action);
-  INSTALL_SIGNAL(SIGSEGV,  new_action);
   INSTALL_SIGNAL(SIGTERM,  new_action);
   INSTALL_SIGNAL(SIGHUP,   new_action);
   // INSTALL_SIGNAL(SIGKILL,  new_action);
   INSTALL_SIGNAL(SIGQUIT,  new_action);
   INSTALL_SIGNAL(SIGBUS,   new_action);
   INSTALL_SIGNAL(SIGXCPU,  new_action);
+  sigaddset(&new_action.sa_mask,SIGSEGV);
+  sigaddset(&new_action.sa_mask,SIGABRT);
+  sigaddset(&new_action.sa_mask,SIGFPE);
+  INSTALL_SIGNAL(SIGABRT,  new_action);
+  INSTALL_SIGNAL(SIGFPE,   new_action);
+  INSTALL_SIGNAL(SIGSEGV,  new_action);
 }
 
 SignalHandler* SignalHandler::instance(MEPDESC* dsc) {
@@ -108,24 +114,30 @@ void SignalHandler::install(int num, const std::string& name, struct sigaction& 
   old_action.first = name;
 }
 
-void SignalHandler::handler(int signum, siginfo_t *info, void * ) {
+void SignalHandler::handler(int signum, siginfo_t *info, void* ptr) {
+  if ( signum <= 0 || signum > 64 || signum == SIGSEGV ) {
+    mbm_print_trace();
+  }
   SignalHandler* h = instance();
-  SigMap& m = h->m_map;
-  SigMap::iterator i=m.find(signum);
+  SigMap& smap = h->m_map;
+  SigMap::iterator i=smap.find(signum);
   MEPDESC* id = (MEPDESC*)h->bmid;
+  MEP_SINGLE_EVT* sevt = 0;
+  MEPEVENT* m = 0;
+
   if ( id && id != MEP_INV_DESC && id->owner != -1 )  {
     BMID bm = id->evtBuffer;
     if ( bm != MBM_INV_DESC ) {
       USER* u = bm->_user();
       if ( u && u->held_eid != MBM::EVTID_NONE ) {
-	const char* tag = "           [ERROR] ";
 	EVENT *e = bm->event+u->held_eid;
 	int* addr = (int*)(e->ev_add+bm->buffer_add);
 	int  size = e->ev_size;
-	MEP_SINGLE_EVT* sevt = (MEP_SINGLE_EVT*)addr;
-	MEPEVENT* m = (MEPEVENT*)(id->mepStart + sevt->begin);
+	sevt = (MEP_SINGLE_EVT*)addr;
+	m = (MEPEVENT*)(id->mepStart + sevt->begin);
 	if ( sevt->evID >= 0 && sevt->evID <= m->packing )    {
 	  m->events[sevt->evID].status = EVENT_TYPE_BADPROC;
+	  m->events[sevt->evID].signal = signum;
 	  ::lib_rtl_output(LIB_RTL_ERROR,"Signal Handler: MEP Event set to ERROR.\n");
 	}
 	::lib_rtl_output(LIB_RTL_ERROR,"Signal handler: called while processing MBM event. This indicates a CRASH!!!!!!\n");
@@ -138,15 +150,17 @@ void SignalHandler::handler(int signum, siginfo_t *info, void * ) {
       }
     }
   }
-  if ( i != m.end() ) {
+  if ( i != smap.end() ) {
     __sighandler_t old = (*i).second.second.sa_handler;
-    func_desc<void (*)(int)> dsc(old);
+    func_desc<void (*)(int)> dsc0(old);
+    func_desc<void (*)(int,siginfo_t*, void*)> dsc(dsc0.ptr);
     ::lib_rtl_output(LIB_RTL_ERROR,"meplib:Handled signal: %d [%s] Old action:%p\n",
 		     info->si_signo,(*i).second.first.c_str(),dsc.ptr);
-    if ( old && old != SIG_IGN ) {
-      (*old)(signum);
+    if ( old && old != SIG_IGN )  {
+      dsc.fun(signum,info,ptr);
+      ::_exit(signum);
     }
-    else if ( old == SIG_DFL ) {
+    else if ( old == SIG_DFL )  {
       ::_exit(0);
     }
   }

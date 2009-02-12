@@ -15,6 +15,7 @@ use  MBMDump       v* Online
 #use GaudiUPI      v* Online
 #use LHCbMath      v* Kernel
 use Writer        v*   Online
+#use Brunel v* Rec
 
 # apply_pattern ld_library_path library=LHCbMath
 apply_pattern ld_library_path

@@ -214,6 +214,7 @@ int LHCb::MEPConverterSvc::declareSubEvent(const EventDesc& evt, int evID, const
   }
   ev->events[evID].begin  = long(ev)-id->mepStart;
   ev->events[evID].status = EVENT_TYPE_OK;
+  ev->events[evID].signal = 0;
   ev->events[evID].evID   = evID;
 
   e.mask[0] = id->partitionID;

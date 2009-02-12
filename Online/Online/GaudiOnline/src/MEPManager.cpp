@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.21 2009-01-23 15:02:48 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.22 2009-02-12 13:00:06 frankb Exp $
 //  ====================================================================
 //  MEPManager.cpp
 //  --------------------------------------------------------------------
@@ -17,10 +17,13 @@
 #include <cctype>
 #include <cstdio>
 
+using namespace std;
+using namespace LHCb;
+
 extern "C" int mep_install(int argc , char** argv);
 
 /// Standard service constructor
-LHCb::MEPManager::MEPManager(const std::string& nam, ISvcLocator* loc)    
+MEPManager::MEPManager(const string& nam, ISvcLocator* loc)    
 : Service(nam, loc), m_partitionID(0x103), m_mepID(MEP_INV_DESC)
 {
   m_procName = RTL::processName();
@@ -35,17 +38,17 @@ LHCb::MEPManager::MEPManager(const std::string& nam, ISvcLocator* loc)
 }
 
 /// Default destructor
-LHCb::MEPManager::~MEPManager()    {
+MEPManager::~MEPManager()    {
 }
 
-StatusCode LHCb::MEPManager::error(const std::string& msg)   const {
+StatusCode MEPManager::error(const string& msg)   const {
   MsgStream err(msgSvc(), name());
   err << MSG::ERROR << msg << endmsg;
   return StatusCode::FAILURE;
 }
 
 /// Query interfaces of Interface
-StatusCode LHCb::MEPManager::queryInterface(const InterfaceID& riid,
+StatusCode MEPManager::queryInterface(const InterfaceID& riid,
                                             void** ppvInterface) 
 {
   if ( IID_IMEPManager.versionMatch(riid) )   {
@@ -57,16 +60,16 @@ StatusCode LHCb::MEPManager::queryInterface(const InterfaceID& riid,
 }
 
 /// Initialize buffers for MEP usage
-StatusCode LHCb::MEPManager::initializeBuffers()  {
+StatusCode MEPManager::initializeBuffers()  {
   MsgStream log(msgSvc(), name());
   if ( !m_initFlags.empty() )  {
     size_t ikey = 0;
     char *p, *items[64], txt[32];
-    std::string tmp = m_initFlags;
+    string tmp = m_initFlags;
     for(char* tok=::strtok((char*)tmp.c_str()," "); tok; tok=::strtok(NULL," ")) {
       if ( m_partitionBuffers && ::toupper(tok[1]) == 'I' )  {
         if(strcmp(tok+3,"MEP") && strcmp(tok+3,"EVENT") && strcmp(tok+3,"RESULT")) {
-          std::string bm_name = tok;
+          string bm_name = tok;
           bm_name += "_";
           if ( m_partitionName.empty() )
 	    bm_name += _itoa(m_partitionID,txt,16);
@@ -93,9 +96,9 @@ StatusCode LHCb::MEPManager::initializeBuffers()  {
 }
 
 /// Connect to optional MBM buffer
-StatusCode LHCb::MEPManager::connectBuffer(const std::string& nam)  {
+StatusCode MEPManager::connectBuffer(const string& nam)  {
   char txt[32];
-  std::string bm_name = nam;
+  string bm_name = nam;
   if ( m_partitionBuffers ) {
     bm_name += "_";
     if ( m_partitionName.empty() )
@@ -116,13 +119,13 @@ StatusCode LHCb::MEPManager::connectBuffer(const std::string& nam)  {
 }
 
 /// Connect to specified buffers
-StatusCode LHCb::MEPManager::connectBuffers()  {
+StatusCode MEPManager::connectBuffers()  {
   if ( m_buffers.size() > 0 )  {
     MsgStream log(msgSvc(), "MEPManager");
-    typedef std::vector<std::string> _V;
+    typedef vector<string> _V;
     int flags = 0;
     for(_V::const_iterator i=m_buffers.begin(); i != m_buffers.end(); ++i )  {
-      const std::string& nam = *i;
+      const string& nam = *i;
       if ( nam == "EVENT" )
         flags |= USE_EVT_BUFFER;
       else if ( nam == "RESULT" )
@@ -151,7 +154,7 @@ StatusCode LHCb::MEPManager::connectBuffers()  {
   return StatusCode::SUCCESS;
 }
 
-StatusCode LHCb::MEPManager::initialize()  {
+StatusCode MEPManager::initialize()  {
   StatusCode sc = Service::initialize();
   if ( !sc.isSuccess() )  {
     return error("Failed to initialize base class Service.");
@@ -168,7 +171,7 @@ StatusCode LHCb::MEPManager::initialize()  {
   return StatusCode::SUCCESS;
 }
 
-StatusCode LHCb::MEPManager::finalize()  {
+StatusCode MEPManager::finalize()  {
   MsgStream log(msgSvc(), "MEPManager");
   log << MSG::INFO << "Excluding from buffers. No more buffer access possible." << endmsg;
   m_buffMap.clear();
@@ -179,7 +182,7 @@ StatusCode LHCb::MEPManager::finalize()  {
     mep_exclude(m_mepID);
     m_mepID = MEP_INV_DESC;
   }
-  for(std::vector<BMID>::iterator i=m_bmIDs.begin(); i != m_bmIDs.end(); ++i)  {
+  for(vector<BMID>::iterator i=m_bmIDs.begin(); i != m_bmIDs.end(); ++i)  {
     if ( *i != MBM_INV_DESC ) ::mbm_exclude(*i);
   }
   m_bmIDs.clear();
@@ -187,20 +190,33 @@ StatusCode LHCb::MEPManager::finalize()  {
 }
 
 /// Cancel connection to specified buffers
-StatusCode LHCb::MEPManager::cancel()  {
+StatusCode MEPManager::cancel()  {
   if ( m_mepID != MEP_INV_DESC ) {
     ::mep_cancel_request(m_mepID);
   }
-  for(std::vector<BMID>::iterator i=m_bmIDs.begin(); i != m_bmIDs.end(); ++i)  {
+  for(vector<BMID>::iterator i=m_bmIDs.begin(); i != m_bmIDs.end(); ++i)  {
     if ( *i != MBM_INV_DESC ) ::mbm_cancel_request(*i);
   }
   return StatusCode::SUCCESS;
 }
 
 /// Create producer
-MBM::Producer* 
-LHCb::MEPManager::createProducer(const std::string& buffer,const std::string& instance) {
-  std::map<std::string,BMID>::iterator i=m_buffMap.find(buffer);
+MBM::Producer* MEPManager::createProducer(const string& buffer,const string& instance) {
+  map<string,BMID>::iterator i=m_buffMap.find(buffer);
+  if ( i == m_buffMap.end() ) {
+    string bm_name = buffer;
+    bm_name += "_";
+    if ( m_partitionName.empty() ) {
+      char txt[32];
+      bm_name += _itoa(m_partitionID,txt,16);
+      i=m_buffMap.find(buffer);
+    }
+    else  {
+      bm_name += m_partitionName;
+      i=m_buffMap.find(buffer);
+    }
+  }
+
   if ( i != m_buffMap.end() ) {
     BMID bmid = (*i).second;
     return new MBM::Producer(bmid,instance,partitionID());

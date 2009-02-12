@@ -45,6 +45,7 @@ fi;
 start_py_task()
 {
   $MINITERM ${1}@${HOST}   -e "export UTGID=${NODENAME}/${1};   exec -a \${UTGID} $Class1_task -opt=command=\"${2}\""&
+  ##bash -c "export UTGID=${NODENAME}/${1};   exec -a \${UTGID} $Class1_task -opt=command=\"${2}\""&
 }
 start_gaudi_task()
 {

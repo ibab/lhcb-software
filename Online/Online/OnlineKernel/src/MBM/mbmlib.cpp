@@ -33,6 +33,28 @@
 #include "RTL/DoubleLinkedQueue.h"
 #define MBM_MAX_BUFF  32
 
+#ifdef _WIN32
+void mbm_print_trace ()   {}
+#else
+#include <execinfo.h>
+void mbm_print_trace ()   {
+  void *array[50];
+  size_t size;
+  char **strings;
+
+  size = backtrace (array, 50);
+  strings = backtrace_symbols (array, size);
+  ::lib_rtl_output(LIB_RTL_ERROR,"Obtained %d stack frames.", int(size));  
+  for (size_t i = 0; i < size; i++)
+    ::lib_rtl_output(LIB_RTL_ERROR,strings[i]);  
+  ::free (strings);
+  //char txt[132];
+  //sprintf(txt, "/usr/bin/gdb --pid %d",::lib_rtl_pid());
+  //::lib_rtl_output(LIB_RTL_ERROR,txt);  
+  //::system(txt);
+}
+#endif
+
 //#ifdef _WIN32  // Default for all !
 #define _MBM_EXPLICIT_SEMAPHORES 1
 //#endif
@@ -179,14 +201,17 @@ public:
     m_status = _mbm_lock_tables(m_bm);
     if ( !(m_status&1) ) {
       lib_rtl_signal_message(LIB_RTL_OS,"%5d: LOCK: System Lock error on BM tables.",lib_rtl_pid());
+      mbm_print_trace();
     }
     _mbm_instrument_lock(m_bm);
   }
   virtual ~Lock() {
     _mbm_deinstrument_lock(m_bm);
+    if ( !(m_status&1) ) return;
     m_status = _mbm_unlock_tables(m_bm);
     if ( !(m_status&1) )  {
       lib_rtl_signal_message(LIB_RTL_OS,"%5d: UNLOCK: System Lock error on BM tables\n",lib_rtl_pid());
+      mbm_print_trace();
     }
   }
   operator int ()   {
@@ -545,15 +570,18 @@ int mbm_get_event(BMID bm, int** ptr, int* size, int* evtype,
 }
 
 int mbm_free_event (BMID bm) {
-  UserLock user(bm, MBM_INTERNAL);
-  USER* us = user.user();
-  if ( us )  {
-    if (us->held_eid == EVTID_NONE)    {
-      _mbm_return_err (MBM_NO_EVENT);
+  if ( bm && bm->lastVar == 0 ) {
+    UserLock user(bm, MBM_INTERNAL);
+    USER* us = user.user();
+    if ( us )  {
+      if (us->held_eid == EVTID_NONE)    {
+	_mbm_return_err (MBM_NO_EVENT);
+      }
+      _mbm_rel_event (bm, us);  /* release event held by him  */
     }
-    _mbm_rel_event (bm, us);  /* release event held by him  */
+    return user.status();
   }
-  return user.status();
+  return MBM_ERROR;
 }
 
 int mbm_pause (BMID bm)  {
@@ -584,6 +612,9 @@ int mbm_pause (BMID bm)  {
 Producer Routines
 */
 int mbm_get_space_a (BMID bm, int size, int** ptr, RTL_ast_t astadd, void* astpar)  {
+  if ( bm && bm->lastVar != 0 ) {
+    return MBM_ERROR;
+  }
   UserLock user(bm);
   USER* us = user.user();
   if ( us )  {
@@ -628,6 +659,9 @@ int mbm_get_space_a (BMID bm, int size, int** ptr, RTL_ast_t astadd, void* astpa
 int mbm_declare_event (BMID bm, int len, int evtype, const unsigned int* trmask,
                        const char* dst, void** free_add, int* free_size, int part_id)
 {
+  if ( bm && bm->lastVar != 0 ) {
+    return MBM_ERROR;
+  }
   Lock lock(bm);
   if ( lock )  {
     return _mbm_declare_event (bm,len,evtype,*(TriggerMask*)trmask,dst,free_add,free_size,part_id);
@@ -1234,26 +1268,39 @@ int mbm_grant_update (BMID bm)   {
 
 // clean-up this user in all buffers
 int _mbm_shutdown (void* /* param */) {
+  static bool cleaning = false;
+  if ( cleaning )   {
+    return MBM_NORMAL;
+  }
+  cleaning = true;
   qentry_t *q, *bmq = desc_head;
   if (bmq == 0)  {
     return MBM_NORMAL;
   }
+  std::vector<BMID> ids;
   for(int sc=remqhi(bmq,&q); lib_rtl_queue_success(sc); sc=remqhi(bmq,&q))  {
-    BMID bm = (BMID )q;
-    if ( bm->lockid )  {
-      int status = lib_rtl_cancel_lock(bm->lockid);
-      if (!lib_rtl_is_success(status))    { 
-        lib_rtl_signal_message(LIB_RTL_OS,"Error cancelling lock %s. Status %d",
-                               bm->mutexName,status);
-      }
-    }
-    else  {
-      lib_rtl_signal_message(0,"Error cancelling lock %s [Invalid Mutex].", bm->mutexName);
-    }
+    BMID bm = (BMID)q;
+    bm->lastVar = 1;
+    ids.push_back(bm);
+  }
+  ::lib_rtl_sleep(500);
+  for(std::vector<BMID>::iterator i=ids.begin(); i!=ids.end();++i) {
+    BMID bm = *i;
     if (disable_rundown == 1)    {
       continue;
     }
+    if ( !bm->lockid ) {
+      continue;
+    }
+    if ( !bm->user || !bm->ctrl ) {
+      ::lib_rtl_output(LIB_RTL_ERROR,"mbmlib: Exit handler called with invalid BMID\n");
+      continue;
+    }
+    if ( bm->ctrl->pid_lock == USER_PID ) {
+      ::lib_rtl_output(LIB_RTL_ERROR,"mbmlib: Exit handler called with lock held by same process:%d\n", bm->ctrl->pid_lock);
+    }
     _mbm_lock_tables(bm);
+    ::lib_rtl_output(LIB_RTL_ERROR,"mbmlib: Emergency shutdown of buffer:%s\n", bm->bm_name);
     _mbm_uclean (bm);
     lib_rtl_delete_event(bm->WES_event_flag);
     lib_rtl_delete_event(bm->WEV_event_flag);
@@ -1272,9 +1319,17 @@ int _mbm_shutdown (void* /* param */) {
     bm->evDesc = 0;
     bm->bitmap = 0;
     bm->buffer_add = 0;
+    bm->WES_event_flag = 0;
+    bm->WEV_event_flag = 0;
+    bm->WSP_event_flag = 0;
+    bm->WSPA_event_flag = 0;
+    bm->WEVA_event_flag = 0;
     _mbm_unlock_tables(bm);
+    ::lib_rtl_output(LIB_RTL_ERROR,"mbmlib: Finished emergency shutdown of buffer %s\n",bm->bm_name);
+    bm->lockid = 0;
   }
   /*  bm_exh_unlink (); */
+  cleaning = false;
   return MBM_NORMAL;
 }
 
@@ -1424,9 +1479,16 @@ int  mbm_wait_event(BMID bm)    {
     _mbm_return_err (MBM_ILL_CONS);
   }
   USER* us = bm->_user();
+  CONTROL** ct = &bm->ctrl;
   if ( us->held_eid != EVTID_NONE )  {
     Lock lock(bm);
+    if ( bm->lastVar != 0 ) {
+      _mbm_return_err (MBM_ILL_CONS);
+    }
     _mbm_printf("WEV: State=%d  %s\n", us->c_state, us->c_state == S_wevent_ast_queued ? "OK" : "BAAAAD");
+    if ( !lock ) {
+      return MBM_ERROR;
+    }
     if ( us->c_state == S_wevent_ast_queued )  {
       // lib_rtl_clear_event(bm->WEV_event_flag);
       us->reason = BM_K_INT_EVENT;
@@ -1438,12 +1500,24 @@ int  mbm_wait_event(BMID bm)    {
   }
 Again:
   sc = 1;
-  if ( us->c_state != S_wevent_ast_queued )  {
+  if ( bm->lastVar != 0 ) {
+    _mbm_return_err (MBM_ILL_CONS);
+  }
+  if ( *ct && us->c_state != S_wevent_ast_queued )  {
     sc = lib_rtl_wait_for_event(bm->WEV_event_flag);
   }
-  if ( lib_rtl_is_success(sc) )  {
+  if ( *ct && lib_rtl_is_success(sc) )  {
     lib_rtl_clear_event(bm->WEV_event_flag);
     Lock lock(bm);
+    if ( !lock ) {
+      _mbm_return_err (MBM_ILL_CONS);
+    }
+    if ( bm->lastVar != 0 ) {
+      _mbm_return_err (MBM_ILL_CONS);
+    }
+    if ( !(*ct) ) {
+      _mbm_return_err (MBM_ILL_CONS);
+    }
     if ( us->held_eid == EVTID_NONE )    {
       if ( us->c_state == S_active )  {
         return MBM_REQ_CANCEL;
@@ -1819,12 +1893,12 @@ int _mbm_lock_tables(BMID bm)  {
   if ( bm && bm != MBM_INV_DESC )  {
     if ( bm->lockid )  {
       int status = ::lib_rtl_lock(bm->lockid);
-      if (lib_rtl_is_success(status)) {
+      if ( lib_rtl_is_success(status) ) {
 	if ( bm->ctrl ) {
 	  bm->ctrl->pid_lock = USER_PID;
 	  bm->ctrl->previous_pid_lock = -1;
 	}
-	return status;
+        return status;
       }
       ::lib_rtl_signal_message(LIB_RTL_OS,"Error in lock tables '%s'. Status %d",
 			       bm->bm_name,status);
@@ -1859,6 +1933,7 @@ int _mbm_unlock_tables(BMID bm)    {
       }
       return status;
     }
+    mbm_print_trace();
     ::lib_rtl_signal_message(0,"Error in unlocking tables %s [Invalid Mutex].",bm->mutexName);
     return 0;
   }
@@ -1885,7 +1960,7 @@ int _mbm_delete_lock(BMID bm)    {
 int _mbm_map_sections(BMID bm)  {
   char text[128];
   const char* bm_name = bm->bm_name;
-  ::sprintf(text, "bm_ctrl_%s", bm->bm_name);
+  ::sprintf(text, "bm_ctrl_%s", bm_name);
   int len, status  = ::lib_rtl_map_section(text, sizeof(CONTROL), &bm->ctrl_add);
   if (!lib_rtl_is_success(status))    {
     ::lib_rtl_signal_message(LIB_RTL_OS,"Error mapping control section for %s.Status=%d",

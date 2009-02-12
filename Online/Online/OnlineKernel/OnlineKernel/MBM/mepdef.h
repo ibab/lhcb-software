@@ -50,6 +50,7 @@ struct MEPEVENT   {
     int begin;
     int evID;
     int status;
+    int signal;
   } events[MEP_MAX_PACKING];
   char data[4];
   static size_t hdrSize() {  return sizeof(MEPEVENT) - 4; }

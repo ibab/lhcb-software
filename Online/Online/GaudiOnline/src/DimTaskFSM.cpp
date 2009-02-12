@@ -91,7 +91,7 @@ namespace  {
 }
 
 DimTaskFSM::DimTaskFSM(IInterface*) 
-: m_name("Exec"), m_stateName(ST_NAME_UNKNOWN), 
+: m_name(RTL::processName()), m_stateName(ST_NAME_UNKNOWN), 
   m_haveEventLoop(false), m_refCount(1)
 {
   m_propertyMgr  = new PropertyMgr(this);

@@ -64,6 +64,7 @@ namespace {
           ev->events[i].begin  = long(ev)-m_mepID->mepStart;
           ev->events[i].evID   = i;
           ev->events[i].status = EVENT_TYPE_OK;
+          ev->events[i].signal = 0;
           m_evtProd->sendEvent();
         }
         else  {

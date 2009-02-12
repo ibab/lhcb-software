@@ -16,7 +16,7 @@ cat >/tmp/CreateMEP.opts <<END-OF-OPTS
 ApplicationMgr.OutStream  = { "LHCb::MEPWriter/Writer_0" };
 Writer_0.Compress       = 0;
 Writer_0.ChecksumType   = 0;
-Writer_0.PackingFactor  = 10;
+Writer_0.PackingFactor  = 11;
 Writer_0.Connection     = "file://mepData_0.dat";
 Writer_0.MakeTAE        = ${CREATETAE};
 END-OF-OPTS

@@ -12,6 +12,7 @@ namespace {
     void* ptr;
     T     fun;
     func_desc(T t) { fun = t; }
+    func_desc(void* t) { ptr = t; }
   };
 }
 #ifdef _WIN32
@@ -98,17 +99,20 @@ RTL::ExitSignalHandler::ExitSignalHandler() {
   new_action.sa_handler   = 0;
   new_action.sa_sigaction = handler;
   new_action.sa_flags     = SA_SIGINFO;
-  INSTALL_SIGNAL(SIGABRT,  new_action);
-  INSTALL_SIGNAL(SIGFPE,   new_action);
   INSTALL_SIGNAL(SIGILL,   new_action);
   INSTALL_SIGNAL(SIGINT,   new_action);
-  INSTALL_SIGNAL(SIGSEGV,  new_action);
   INSTALL_SIGNAL(SIGTERM,  new_action);
   INSTALL_SIGNAL(SIGHUP,   new_action);
   // INSTALL_SIGNAL(SIGKILL,  new_action);
   INSTALL_SIGNAL(SIGQUIT,  new_action);
   INSTALL_SIGNAL(SIGBUS,   new_action);
   INSTALL_SIGNAL(SIGXCPU,  new_action);
+  sigaddset(&new_action.sa_mask,SIGSEGV);
+  sigaddset(&new_action.sa_mask,SIGABRT);
+  sigaddset(&new_action.sa_mask,SIGFPE);
+  INSTALL_SIGNAL(SIGABRT,  new_action);
+  INSTALL_SIGNAL(SIGFPE,   new_action);
+  INSTALL_SIGNAL(SIGSEGV,  new_action);
 }
 
 RTL::ExitSignalHandler::~ExitSignalHandler() {
@@ -130,17 +134,19 @@ void RTL::ExitSignalHandler::install(int num, const std::string& name, struct si
   old_action.first = name;
 }
 
-void RTL::ExitSignalHandler::handler(int signum, siginfo_t *info, void * ) {
+void RTL::ExitSignalHandler::handler(int signum, siginfo_t *info, void *ptr) {
   RTL::ExitHandler::execute();
   SigMap& m = instance().m_map;
   SigMap::iterator i=m.find(signum);
   if ( i != m.end() ) {
     __sighandler_t old = (*i).second.second.sa_handler;
-    func_desc<void (*)(int)> dsc(old);
-    ::lib_rtl_output(LIB_RTL_ERROR,"meplib:Handled signal: %d [%s] Old action:%p\n",
+    func_desc<void (*)(int)> dsc0(old);
+    func_desc<void (*)(int,siginfo_t*, void*)> dsc(dsc0.ptr);
+    ::lib_rtl_output(LIB_RTL_ERROR,"RTL:Handled signal: %d [%s] Old action:%p\n",
 		     info->si_signo,(*i).second.first.c_str(),dsc.ptr);
     if ( old && old != SIG_IGN ) {
-      (*old)(signum);
+      dsc.fun(signum,info,ptr);
+      //::_exit(signum);
     }
     else if ( old == SIG_DFL ) {
       ::_exit(0);
