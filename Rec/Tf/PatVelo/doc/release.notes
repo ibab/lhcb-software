@@ -4,6 +4,10 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2009-02-12 - Marco Cattaneo
+ - Initialise all PatVeloSpaceTrack member variables in the constructor, to 
+   *really* fix the FPE on ia32.
+
 ! 2009-02-03 - David Hutchcroft
  - Made PatVeloSpaceTrack copy constructor explicit (was automatcially created)
    Reported as possible FPE problem

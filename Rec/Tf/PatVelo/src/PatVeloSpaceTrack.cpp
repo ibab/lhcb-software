@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTrack.cpp,v 1.6 2009-02-04 11:42:35 dhcroft Exp $
+// $Id: PatVeloSpaceTrack.cpp,v 1.7 2009-02-12 12:59:18 cattanem Exp $
 // Include files 
 
 // local
@@ -15,21 +15,35 @@ namespace Tf {
   // Standard constructor, initializes variables
   //=============================================================================
   PatVeloSpaceTrack::PatVeloSpaceTrack(  ) 
-    : m_s0(0.)
-    , m_sr(0.)
-    , m_sz(0.)
-    , m_srz(0.)
-    , m_sz2(0.)
-    , m_valid(true)
-    , m_zone(0)
-    , m_backward(false)
-    , m_cov( )
-    , m_maxRSensor(0)
-    , m_minRSensor(65)
-    , m_ancestor(0)
-    , m_angleUtils(-Gaudi::Units::pi,Gaudi::Units::pi)
+    : m_s0(0.),
+      m_sr(0.),
+      m_sz(0.),
+      m_srz(0.),
+      m_sz2(0.),
+      m_valid(true),
+      m_zone(0),
+      m_xZone(false),
+      m_negZone(false),
+      m_backward(false),
+      m_pos0(0.),
+      m_slope(0.),
+      m_firstZ(0.),
+      m_meanZ(0.),
+      m_posErr(0.),
+      m_slopeErr(0.),
+      m_chiSqDof(0.),
+      m_point(0.,0.,0.),
+      m_slopeX(0.),
+      m_slopeY(0.),
+      m_cov( ),
+      m_maxRSensor(0),
+      m_minRSensor(65),
+      m_ancestor(0),
+      m_angleUtils(-Gaudi::Units::pi,Gaudi::Units::pi)
   {
+    m_rCoord.clear();
     m_rCoord.reserve( 20 );
+    m_phiCoord.clear();
     m_phiCoord.reserve( 20 );
   }
 
