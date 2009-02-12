@@ -4,7 +4,7 @@
  *  Implementation file for algorithm class : RichAlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.cpp,v 1.6 2009-02-06 19:44:18 asolomin Exp $
+ *  $Id: RichAlignmentMonitor.cpp,v 1.7 2009-02-12 21:52:56 papanest Exp $
 
  *
  *  @author Antonis Papanestis
@@ -41,13 +41,15 @@ AlignmentMonitor::AlignmentMonitor( const std::string& name,
 {
 
   // Maximum number of tracks
-  declareProperty( "MaxRichRecTracks", m_maxUsedTracks = 200 );
-  declareProperty( "DeltaThetaRange", m_deltaThetaRange = 0.004 );
-  declareProperty( "UseMCTruth",   m_useMCTruth     = false );
-  declareProperty( "PreBookHistos", m_preBookHistos );
-  declareProperty( "ParticleType", m_particleType = 2 ); // default is pion
-  declareProperty( "RichDetector", m_richTemp = 1 ); // default is Rich2
-  declareProperty( "HPDList", m_HPDList );
+  declareProperty( "MaxRichRecTracks",    m_maxUsedTracks = 200 );
+  declareProperty( "DeltaThetaRange",     m_deltaThetaRange = 0.004 );
+  declareProperty( "UseMCTruth",          m_useMCTruth     = false );
+  declareProperty( "PreBookHistos",       m_preBookHistos );
+  declareProperty( "ParticleType",        m_particleType = 2 ); // pion
+  declareProperty( "RichDetector",        m_richTemp = 1 ); // default is Rich2
+  declareProperty( "MinimalHistoOutput",  m_minimalHistoOutput = true );
+  declareProperty( "OnlyPrebookedMirrors",m_onlyPrebookedMirrors = true );
+  declareProperty( "HPDList",             m_HPDList );
 
 }
 //=============================================================================
@@ -93,38 +95,40 @@ StatusCode AlignmentMonitor::initialize()
 
   // prebook histograms
   /*
-  Since the introduction of python-based configuration, elements of a vector
-  like
-  0000,0103,...
-  in the configurable are no longer interpreted as expected, and therefore the
-  vector of mirror segment combinations is now a comma-separated vector of
-  strings, e.g.
-  '0000','0103',...
-  That vector is defined in
-  /REC/REC_vXrY/Rich/RichRecQC/python/RichRecQC/Alignment.py
-  while here it is m_preBookHistos.
-  See below a second usage of this vector and further explanations therein.
-  Anatoly Solomin 2008-11-01.
+    Since the introduction of python-based configuration, elements of a vector
+    like
+    0000,0103,...
+    in the configurable are no longer interpreted as expected, and therefore the
+    vector of mirror segment combinations is now a comma-separated vector of
+    strings, e.g.
+    '0000','0103',...
+    That vector is defined in
+    /REC/REC_vXrY/Rich/RichRecQC/python/RichRecQC/Alignment.py
+    while here it is m_preBookHistos.
+    See below a second usage of this vector and further explanations therein.
+    Anatoly Solomin 2008-11-01.
   */
-  BOOST_FOREACH( std::string strCombi, m_preBookHistos ) {
-    std::string h_id = "dThetavphiRec"+strCombi;
-    std::string sph  = strCombi.substr(0,2);
-    std::string flat = strCombi.substr(2,2);
-    std::string title = "Alignment Histogram: Sph "+sph+" flat "+flat+" R"+(boost::lexical_cast<std::string>(m_rich+1));
-    book2D( hid(rad, h_id), title, 0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange,
-            m_deltaThetaHistoRange, 50 );
-    if ( m_useMCTruth ) {
-      // use MC estimate for cherenkov angle
-      h_id += "MC";
-      title += " MC";
+  if ( !m_minimalHistoOutput )
+    BOOST_FOREACH( std::string strCombi, m_preBookHistos )
+    {
+      std::string h_id = "dThetavphiRec"+strCombi;
+      std::string sph  = strCombi.substr(0,2);
+      std::string flat = strCombi.substr(2,2);
+      std::string title = "Alignment Histogram: Sph "+sph+" flat "+flat+" R"+(boost::lexical_cast<std::string>(m_rich+1));
       book2D( hid(rad, h_id), title, 0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange,
               m_deltaThetaHistoRange, 50 );
-      title += " TrueP";
-      h_id += "TruP";
-      book2D( hid(rad, h_id), title, 0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange,
-              m_deltaThetaHistoRange, 50 );
+      if ( m_useMCTruth ) {
+        // use MC estimate for cherenkov angle
+        h_id += "MC";
+        title += " MC";
+        book2D( hid(rad, h_id), title, 0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange,
+                m_deltaThetaHistoRange, 50 );
+        title += " TrueP";
+        h_id += "TruP";
+        book2D( hid(rad, h_id), title, 0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange,
+                m_deltaThetaHistoRange, 50 );
+      }
     }
-  }
 
   // use of a single 0, plot all HPDs
   if (m_HPDList.size() == 1)
@@ -210,6 +214,9 @@ StatusCode AlignmentMonitor::execute() {
 
     thetaExpected =  m_ckAngle->avgCherenkovTheta( segment, m_pType);
 
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << " Found " << segment->richRecPhotons().size() << " in this segment" << endreq;
+
     for ( LHCb::RichRecSegment::Photons::const_iterator iPhot = segment->richRecPhotons().begin();
           iPhot != segment->richRecPhotons().end(); ++iPhot )
     {
@@ -258,33 +265,47 @@ StatusCode AlignmentMonitor::execute() {
                 -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
       }
 
-      if (!unAmbiguousPhoton) continue;
+      if ( !unAmbiguousPhoton )
+      {
+        plot( delTheta, "deltaThetaAmb","Ch angle error (Ambiguous photons)",
+              -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
+        continue;
+      }
 
       plot( delTheta, "deltaThetaUnamb","Ch angle error (Unambigous photons)",
             -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
 
       int side;
 
-      if ( rich == Rich::Rich1 ) {
+      if ( rich == Rich::Rich1 )
+      {
         plot( sphMirNum, "sphMirR1","Sph Mirror Numbers Rich1",-0.5,3.5,4);
         plot( flatMirNum, "fltMirR1","Flat Mirror Numbers Rich1",-0.5,15.5,16);
-        plot2D( gPhoton.sphMirReflectionPoint().x(),gPhoton.sphMirReflectionPoint().y(),
-                "sphMirReflR1", "Spherical Mirror Refl point Rich1",
-                -700, 700, -800, 800, 100, 100);
-        plot2D( gPhoton.flatMirReflectionPoint().x(),gPhoton.flatMirReflectionPoint().y(),
-                "flatMirReflR1", "Flat Mirror Refl point Rich1",
-                -700, 700, -1000, 1000, 100, 100);
+
+        if ( !m_minimalHistoOutput )
+        {
+          plot2D( gPhoton.sphMirReflectionPoint().x(),gPhoton.sphMirReflectionPoint().y(),
+                  "sphMirReflR1", "Spherical Mirror Refl point Rich1",
+                  -700, 700, -800, 800, 100, 100);
+          plot2D( gPhoton.flatMirReflectionPoint().x(),gPhoton.flatMirReflectionPoint().y(),
+                  "flatMirReflR1", "Flat Mirror Refl point Rich1",
+                  -700, 700, -1000, 1000, 100, 100);
+        }
         side = ( gPhoton.flatMirReflectionPoint().y() > 0.0 ? 0 : 1 );
       }
-      else {
+      else
+      {
         plot( sphMirNum, "sphMirR2","Sph Mirror Numbers Rich2",-0.5,55.5,56);
         plot( flatMirNum, "fltMirR2","Flat Mirror Numbers Rich2",-0.5,39.5,40);
-        plot2D( gPhoton.sphMirReflectionPoint().x(),gPhoton.sphMirReflectionPoint().y(),
-                "sphMirReflR2", "Spherical Mirror Refl point Rich2",
-                -1800, 1800, -1500, 1500, 100, 100);
-        plot2D( gPhoton.flatMirReflectionPoint().x(),gPhoton.flatMirReflectionPoint().y(),
-                "flatMirReflR2", "Flat Mirror Refl point Rich2",
-                -3000, 3000, -1000, 1000, 100, 100);
+        if ( !m_minimalHistoOutput )
+        {
+          plot2D( gPhoton.sphMirReflectionPoint().x(),gPhoton.sphMirReflectionPoint().y(),
+                  "sphMirReflR2", "Spherical Mirror Refl point Rich2",
+                  -1800, 1800, -1500, 1500, 100, 100);
+          plot2D( gPhoton.flatMirReflectionPoint().x(),gPhoton.flatMirReflectionPoint().y(),
+                  "flatMirReflR2", "Flat Mirror Refl point Rich2",
+                  -3000, 3000, -1000, 1000, 100, 100);
+        }
         side = ( gPhoton.flatMirReflectionPoint().x() > 0.0 ? 0 : 1 );
       }
       plot2D( phiRec, delTheta, "dThetavphiRecAll", "dTheta v phi All", 0.0,
@@ -296,6 +317,9 @@ StatusCode AlignmentMonitor::execute() {
       else
         plot2D( phiRec, delTheta, "dThetavphiRecSide1", "dTheta v phi Side 1", 0.0,
                 2*Gaudi::Units::pi, -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50);
+
+      // for minimal histo output (online) stop here
+      if ( m_minimalHistoOutput ) continue;
 
       // now for individual mirror combinations
       std::string title = RAD+" Alignment Histogram: Sph " +
@@ -314,38 +338,21 @@ StatusCode AlignmentMonitor::execute() {
         thisCombiNr +=       boost::lexical_cast<std::string>( flatMirNum );
       else
         thisCombiNr += "0" + boost::lexical_cast<std::string>( flatMirNum );
-      /*
-      Before filling the next histograms, we must check, whether this
-      combination of mirrors belongs to the list of combinations for which
-      the histograms are prebooked. Otherwise, we may have trouble at the
-      root file merging stage (when using ganga's splitter/merger),
-      because merging procedure (known ROOT script) assumes that all the files
-      have exact same structure of histograms. That may be broken, when one
-      data file (in one subjob) yields some rare combination that is not
-      prebooked, while another data file (in a different subjob)
-      does not, or yields a different exotic combination.
-      Both non-prebooked histograms will be booked on fly (and filled)
-      and each will inhabit a different root-file.
-      
-      In such a case the two corresponding root-files will have non-identical
-      structure, and the merging (at least at its shape in Ganga 5.0.10 at the
-      time of writing) will fail.
 
-      Anatoly Solomin 2008-11-01.
-      */
-      bool belongs( false );
-      BOOST_FOREACH( std::string strCombi, m_preBookHistos ) {
-        if ( thisCombiNr == strCombi ) {
-          belongs = true;
-          break;
-        }
-      }
-      if ( belongs ) {
+      // depending on options, make plots only for prebooked mirror combimations.
+      bool allowMirrorCombi( true );
+      if ( m_onlyPrebookedMirrors )
+        // search to see if this mirror combination has been prebooked
+        if ( m_preBookHistos.empty() ||
+             std::find( m_preBookHistos.begin(),m_preBookHistos.end(), thisCombiNr) == m_preBookHistos.end() )
+          allowMirrorCombi = false;
 
+      if ( allowMirrorCombi )
+      {
         h_id += thisCombiNr;
         plot2D( phiRec, delTheta, hid(rad,h_id), title, 0.0, 2*Gaudi::Units::pi,
                 -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 );
-  
+
         if ( m_useMCTruth ) {
           // use MC estimate for cherenkov angle
           h_id += "MC";

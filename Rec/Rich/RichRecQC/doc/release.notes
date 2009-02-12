@@ -4,6 +4,13 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-02-12 - Antonis Papanestis
+ - Introduced variable histogram output to the AlignmentMonitor
+   + Minimal - only the most basic alignment histograms
+   + OnlyPrebooked mirrors - include a predefined list of mirror combinations
+   + Full - as before
+ - Activate alignment histograms by default at level "Minimal" 
+
 ! 2009-02-09 - Chris Jones
  - Update Alignment.py to
   + Not use Brunel() Configurable in order to access the WithMC setting.

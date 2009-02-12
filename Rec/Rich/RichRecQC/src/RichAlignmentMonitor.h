@@ -4,7 +4,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::AlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.h,v 1.4 2009-02-06 19:44:18 asolomin Exp $
+ *  $Id: RichAlignmentMonitor.h,v 1.5 2009-02-12 21:52:56 papanest Exp $
  *
  *  @author Antonis Papanestis   a.papanestis@rl.ac.uk
  *  @date   2004-02-19
@@ -82,9 +82,9 @@ namespace Rich
 
         /**Check whether to produce a histogram for this HPD
            @return The HPD identifier
-         */
+        */
         int makePlotForHPD ( LHCb::RichSmartID smartID ) const;
-        
+
 
       private: // data
 
@@ -108,18 +108,16 @@ namespace Rich
         // keep totals of particle types
         std::vector<int> m_pTypes;
 
+        // histogram output level
+        bool m_minimalHistoOutput;
+        bool m_onlyPrebookedMirrors;
+
         // tools
         const ITrackSelector* m_trSelector;        ///< Track selector
         /// Pointer to RichRecMCTruthTool interface
-        const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth; 
+        const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth;
         const IParticleProperties* m_richPartProp; ///< Rich Particle properties
         const ICherenkovAngle* m_ckAngle;  ///< Pointer to RichCherenkovAngle tool
-
-        // Histograms
-        IHistogram1D* m_sphMirrorNumberHist[2];
-        IHistogram1D* m_flatMirrorNumberHist[2];
-        IHistogram2D* m_sphMirReflPoint[2];
-        IHistogram2D* m_flatMirReflPoint[2];
 
         // Vector of histogram numbers to prebook (helps with merging files).
         // Since the arrival of the python-based configuration, it is
@@ -129,9 +127,9 @@ namespace Rich
 
         // list of HPDs for histograms
         std::vector<int> m_HPDList;
-        /// make plots for all HPDs ignoring the list 
+        /// make plots for all HPDs ignoring the list
         bool m_plotAllHPDs;
-        
+
       };
 
     }

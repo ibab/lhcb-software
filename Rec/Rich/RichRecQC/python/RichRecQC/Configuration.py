@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.18 2009-02-09 15:48:57 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.19 2009-02-12 21:52:56 papanest Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -12,7 +12,7 @@ from Alignment import RichAlignmentConf
 from RichMarkovRingFinder.Configuration import RichMarkovRingFinderConf
 from Configurables import ( GaudiSequencer, MessageSvc )
 from DDDB.Configuration import DDDBConf
-    
+
 # -------------------------------------------------------------------------------------------
 
 ## @class RichRecQCConf
@@ -33,7 +33,7 @@ class RichRecQCConf(RichConfigurableUser):
        ,"PixelMonitoring"           : True
        ,"PhotonMonitoring"          : True
        ,"TracklessRingMonitoring"   : False
-       ,"MirrorAlignmentMonitoring" : False
+       ,"AlignmentMonitoring" : True
        ,"PidMomentumRanges": [ [2,100], [2,10], [10,70], [70,100] ]
        ,"PidTrackTypes":  [ ["All"] ]
        ,"RecoTrackTypes": [ ["All"],
@@ -60,8 +60,8 @@ class RichRecQCConf(RichConfigurableUser):
             mon.NTupleProduce = self.getProp("NTupleProduce")
         if "HistoProduce" in mon.properties() :
             mon.HistoProduce  = self.getProp("HistoProduce")
-            
-    ## Configure a default monitor algorithm of given type 
+
+    ## Configure a default monitor algorithm of given type
     def createMonitor(self,type,name,trackType=None):
         mon = type(name)
         self.setHistosTupleOpts(mon)
@@ -115,7 +115,7 @@ class RichRecQCConf(RichConfigurableUser):
         # RICH data monitoring
         if self.getProp("PixelMonitoring") :
             self.pixelPerf(self.newSeq(sequence,"RichPixelMoni"))
-         
+
         # Reconstruction monitoring
         if self.getProp("PhotonMonitoring") :
             self.recPerf(self.newSeq(sequence,"RichRecoMoni"))
@@ -129,7 +129,7 @@ class RichRecQCConf(RichConfigurableUser):
             self.ringsMoni(self.newSeq(sequence,"RichTracklessRingsMoni"))
 
         # Alignment monitor
-        if self.getProp("MirrorAlignmentMonitoring"):
+        if self.getProp("AlignmentMonitoring"):
             self.setOtherProps(RichAlignmentConf(),["Context","NTupleProduce","HistoProduce","WithMC"])
             RichAlignmentConf().AlignmentSequencer = self.newSeq(sequence,"RichMirrAlignMoni")
 
@@ -139,9 +139,9 @@ class RichRecQCConf(RichConfigurableUser):
 
     ## standalone ring finder monitors
     def ringsMoni(self,sequence):
- 
+
         from Configurables import Rich__Rec__MarkovRingFinder__MC__Moni
-        
+
         conf = RichMarkovRingFinderConf()
 
         # Activate histos in the finder algs themselves
@@ -159,14 +159,14 @@ class RichRecQCConf(RichConfigurableUser):
         isoMoni = self.createMonitor(Rich__Rec__MarkovRingFinder__MC__Moni,"MarkovRingMoniIsolated")
         isoMoni.RingLocation = "Rec/Rich/Markov/RingsIsolated"
         sequence.Members += [isoMoni]
-        
+
     ## Pixel performance monitors
     def pixelPerf(self,sequence):
-        
+
         from Configurables import ( Rich__Rec__MC__PixelQC )
 
         sequence.Members += [ self.createMonitor(Rich__Rec__MC__PixelQC,"RichRecPixelQC") ]
-        
+
     ## Run the PID Performance monitors
     def pidPerf(self,sequence):
 
@@ -189,7 +189,7 @@ class RichRecQCConf(RichConfigurableUser):
                 # Trackselector momentum cuts
                 pidMon.TrackSelector.MinPCut = pRange[0]
                 pidMon.TrackSelector.MaxPCut = pRange[1]
- 
+
                 # Add to sequence
                 sequence.Members += [pidMon]
 
@@ -197,20 +197,20 @@ class RichRecQCConf(RichConfigurableUser):
     def recPerf(self,sequence):
 
         from Configurables import ( Rich__Rec__MC__RecoQC )
-                
+
         # Track Types
-        for trackType in self.getProp("RecoTrackTypes") : 
+        for trackType in self.getProp("RecoTrackTypes") :
 
             # Construct the name for this monitor
             name = "RiCKRes" + self.trackSelName(trackType)
- 
+
             # Make a monitor alg
             mon = self.createMonitor(Rich__Rec__MC__RecoQC,name,trackType)
             mon.HistoPrint = False
-          
+
             # cuts
             if trackType == ["All"] : mon.MinBeta = [ 0.0, 0.0, 0.0 ]
-            
+
             # Add to sequence
             sequence.Members += [mon]
 
@@ -274,7 +274,7 @@ class RichRecQCConf(RichConfigurableUser):
             for trackType in tkTypes :
                 name = "RiRecPhotSig" + self.trackSelName(trackType) + "TkMoni"
                 seq.Members += [ self.createMonitor(Rich__Rec__MC__PhotonSignalMonitor,name,trackType) ]
-        
+
         check = "RichPhotonGeometry"
         if check in checks :
             from Configurables import Rich__Rec__MC__PhotonGeomMonitor
@@ -290,7 +290,7 @@ class RichRecQCConf(RichConfigurableUser):
             for trackType in tkTypes :
                 name = "RiRecPhotTraj" + self.trackSelName(trackType) + "TkMoni"
                 seq.Members += [ self.createMonitor(Rich__Rec__MC__PhotonTrajectoryMonitor,name,trackType) ]
-                
+
         check = "PhotonRecoEfficiency"
         if check in checks :
 
@@ -299,7 +299,7 @@ class RichRecQCConf(RichConfigurableUser):
             RichTools().toolRegistry().Tools += [ "Rich::Rec::SimplePhotonPredictor/ForcedRichPhotonPredictor" ]
 
             context = self.getProp("Context")
-                       
+
             from Configurables import ( Rich__Rec__PhotonCreator, Rich__Rec__SimplePhotonPredictor )
             forcedCreator = Rich__Rec__PhotonCreator(context+".ForcedRichPhotonCreator")
             forcedCreator.MinAllowedCherenkovTheta = [  0.0,     0.0,     0.0    ]
@@ -317,7 +317,7 @@ class RichRecQCConf(RichConfigurableUser):
             for trackType in tkTypes :
                 name = "RiRecPhotEff" + self.trackSelName(trackType) + "TkMoni"
                 seq.Members += [ self.createMonitor(Rich__Rec__MC__PhotonRecoEffMonitor,name,trackType) ]
-                
+
         check = "RichRayTracingTests"
         if check in checks :
             from Configurables import Rich__Rec__MC__PhotonRecoRayTraceTest
@@ -335,7 +335,7 @@ class RichRecQCConf(RichConfigurableUser):
             for trackType in tkTypes :
                 name = "RiRecStereoFitter" + self.trackSelName(trackType) + "TkMoni"
                 seq.Members += [ self.createMonitor(Rich__Rec__MC__StereoPhotonFitTest,name,trackType) ]
-        
+
         check = "RichGhostTracks"
         if check in checks:
             from Configurables import Rich__Rec__MC__GhostTrackMoni
@@ -352,11 +352,11 @@ class RichRecQCConf(RichConfigurableUser):
             moni.PrintSegments = True
             moni.PrintPhotons  = True
             seq.Members += [moni]
-            
+
         check = "RichRecoTiming"
         if check in checks:
             from Configurables import ( AuditorSvc, ChronoAuditor, Rich__Rec__TimeMonitor )
-           
+
             AuditorSvc().Auditors += [ "ChronoAuditor" ]
             ChronoAuditor().Enable = True
 
@@ -373,4 +373,4 @@ class RichRecQCConf(RichConfigurableUser):
             moni.TimingName = "RecoTrSeq"
             moni.Algorithms = [ "RecoTrSeq" ]
             seq.Members += [moni]
-        
+
