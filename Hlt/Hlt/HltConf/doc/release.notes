@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.136 2009-02-10 13:04:54 graven Exp $ 
+! $Id: release.notes,v 1.137 2009-02-12 12:25:45 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-02-12 - Gerhard Raven
+ - remove some old options files
 
 ! 2009-02-10 - Gerhard Raven
  - pythonize the fast track fit setup

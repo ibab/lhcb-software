@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.36 2009-02-11 15:59:41 graven Exp $ 
+# $Id: HltLine.py,v 1.37 2009-02-12 12:25:45 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.36 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.37 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt line itself 
@@ -554,7 +554,7 @@ class Hlt1Tool (object ) :
                    **Args      ) :  ## other arguments 
         if type  == None : raise AttributeError, "Tool must have a type"
         self.Type = type
-        self.Name = name if len(name) > 0 else type().getType()
+        self.Name = name if name else type().getType()
         self.Args = Args
         self.Tools = tools
     

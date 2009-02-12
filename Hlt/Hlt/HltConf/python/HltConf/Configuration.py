@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.39 2009-02-06 15:26:29 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.40 2009-02-12 12:25:45 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -71,10 +71,10 @@ class HltConf(LHCbConfigurableUser):
             #/**
             # * main HLT sequencer
             # */
-            Hlt = GaudiSequencer('Hlt', ModeOR= True, ShortCircuit = False
-                                , Members = [ GaudiSequencer('Hlt1') 
-                                            , GaudiSequencer('Hlt2') # NOTE: Hlt2 checks itself whether Hlt1 passed or not
-                                            , GaudiSequencer('HltEndSequence') 
+            Hlt = Sequence('Hlt', ModeOR= True, ShortCircuit = False
+                                , Members = [ Sequence('Hlt1') 
+                                            , Sequence('Hlt2') # NOTE: Hlt2 checks itself whether Hlt1 passed or not
+                                            , Sequence('HltEndSequence') 
                                             ] )
             trans = { 'Hlt1'   : 'LU+L0+VE+XP+MU+HA+PH+EL'
                     , 'DEFAULT': 'PA+LU+L0+VE+XP'
@@ -112,11 +112,14 @@ class HltConf(LHCbConfigurableUser):
                     Sequence("Hlt2CheckHlt1Passed").Members = [ L0Filter('L0Pass', Code = "L0_DECISION" ) ]
                 else : 
                     Sequence("Hlt2CheckHlt1Passed").Members = [ HltFilter('Hlt1GlobalPass' , Code = "HLT_PASS('Hlt1Global')" ) ]
-            if self.getProp("Verbose") : log.info( Sequence('Hlt')  )
 
     def postConfigAction(self) : 
         ## Should find a more elegant way of doing this...
         ## there are too many implicit assumptions in this action...
+        #if self.getProp('replaceL0BanksWithEmulated') : 
+        #    topalg = ApplicationMgr().TopAlg
+        #    topalg.remove('GaudiSequencer/L0DUBankSwap')
+        #    Sequence('Hlt').Members.insert(0,'GaudiSequencer/L0DUBankSwap')
         ##
         ## add a line for 'not lumi only' 
         ## -- note: before the 'global' otherwise lumi set global, and we have lumi AND global set...
@@ -146,6 +149,7 @@ class HltConf(LHCbConfigurableUser):
         HltANNSvc().Hlt1SelectionID.update( extraDecisions )
         print '# added ' + str(len(missingSelections)) + ' selections to HltANNSvc'
         print '# added ' + str(len(missingDecisions)) + ' decisions to HltANNSvc'
+        if self.getProp("Verbose") : print Sequence('Hlt') 
          
 
     def __apply_configuration__(self):
