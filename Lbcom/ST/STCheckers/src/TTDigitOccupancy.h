@@ -1,4 +1,4 @@
-// $Id: TTDigitOccupancy.h,v 1.2 2008-12-29 12:55:16 mneedham Exp $
+// $Id: TTDigitOccupancy.h,v 1.3 2009-02-12 16:39:10 mneedham Exp $
 
 #ifndef TTDigitOccupancy_H 
 #define TTDigitOccypancy_H !
@@ -29,6 +29,6 @@ inline double TTDigitOccupancy::defaultThreshold() const{
 
 //template class ITOccupancy<LHCb::STDigit>;
 
-DECLARE_ALGORITHM_FACTORY( TTDigitOccupancy );
+DECLARE_NAMED_ALGORITHM_FACTORY( TTDigitOccupancy , TTDigitOccupancy );
 
 #endif

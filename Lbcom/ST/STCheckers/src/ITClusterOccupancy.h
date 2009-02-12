@@ -1,4 +1,4 @@
-// $Id: ITClusterOccupancy.h,v 1.2 2008-12-29 12:55:16 mneedham Exp $
+// $Id: ITClusterOccupancy.h,v 1.3 2009-02-12 16:39:10 mneedham Exp $
 
 #ifndef ITClusterOccupancy_H 
 #define ITClusterOccypancy_H !
@@ -34,6 +34,6 @@ inline unsigned int ITClusterOccupancy::weight(const LHCb::STCluster* obj) const
 
 //template class ITOccupancy<LHCb::STCluster>;
 
-DECLARE_ALGORITHM_FACTORY( ITClusterOccupancy );
+DECLARE_NAMED_ALGORITHM_FACTORY( ITClusterOccupancy, ITClusterOccupancy );
 
 #endif

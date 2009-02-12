@@ -1,4 +1,4 @@
-// $Id: TTClusterOccupancy.h,v 1.2 2009-01-06 13:47:56 mneedham Exp $
+// $Id: TTClusterOccupancy.h,v 1.3 2009-02-12 16:39:10 mneedham Exp $
 
 #ifndef TTClusterOccupancy_H 
 #define TTClusterOccypancy_H !
@@ -34,6 +34,6 @@ inline unsigned int TTClusterOccupancy::weight(const LHCb::STCluster* obj) const
 
 //template class TTOccupancy<LHCb::STCluster>;
 
-DECLARE_ALGORITHM_FACTORY( TTClusterOccupancy );
+DECLARE_NAMED_ALGORITHM_FACTORY( TTClusterOccupancy, TTClusterOccupancy );
 
 #endif
