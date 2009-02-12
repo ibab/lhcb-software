@@ -5,6 +5,7 @@ Purpose: LHCb reconstruction program
 
 ! 2009-02-12 - Marco Cattaneo
  - Update refs for removal of OTTimeCreator
+ - Add refs also for slc4_ia32_gcc34_dbg, different after fixes to Velo and Calo
 
 ! 2009-02-11 - Anatoly Solomin
  - Fix passing configuration options to RichRecQCConf() if RICH in
