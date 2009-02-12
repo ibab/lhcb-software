@@ -1,4 +1,4 @@
-//$Id: MuonDigitization.cpp,v 1.45 2009-01-31 20:42:22 cattanem Exp $
+//$Id: MuonDigitization.cpp,v 1.46 2009-02-12 12:45:18 asatta Exp $
 
 #include <algorithm>
 #include <vector>
@@ -1525,6 +1525,9 @@ addElectronicNoise(MuonDigitizationData
                 MuonPhChID ID;
                 ID.setStation(i);
                 ID.setRegion(k);
+                LHCb::MuonTileID chTile;
+		m_muonDetector->Chamber2Tile(chamber,i,k,chTile);
+                ID.setQuadrant(chTile.quarter());
                 //                ID.setQuadrant(m_pGetInfo->getQuadrantChamber
                 //               (chamber+chamberTillNow));
                 ID.setChamber(chamber);

@@ -3,7 +3,9 @@
 ! Responsible : Alessia Satta
 ! Purpose     : Muon digitisation algorithms
 !-----------------------------------------------------------------------------
-
+! 2009-02-12 - Alessia Satta
+ - Fix an error in electronic noise simulation
+ 
 ! 2009-01-29 - Marco Cattaneo
  - Add EnableSpillover option to MuonDigitization (default False) to avoid
    looking for SpilloverAlg when Spillover is disabled
