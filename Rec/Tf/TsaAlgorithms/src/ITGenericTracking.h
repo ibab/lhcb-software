@@ -1,4 +1,4 @@
-// $Id: ITGenericTracking.h,v 1.9 2009-02-10 13:53:39 mneedham Exp $
+// $Id: ITGenericTracking.h,v 1.10 2009-02-12 17:54:00 cattanem Exp $
 #ifndef ITGenericTracking_H
 #define ITGenericTracking_H 1
 
@@ -105,8 +105,8 @@ private:
 		       std::vector<std::vector<yInfo> >& output ) const;
 
 
-  bool ITGenericTracking::newStereoCandidate(const std::vector<ITGenericTracking::yInfo>& testCand, 
-                                      const CandidateHits& tracks) const;
+  bool newStereoCandidate(const std::vector<ITGenericTracking::yInfo>& testCand, 
+                          const CandidateHits& tracks) const;
 
   void portOccupancy( const LHCb::STClusters* clusters ,std::map<std::string, unsigned int>& occMap ) const;
 

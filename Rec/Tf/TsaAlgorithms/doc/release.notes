@@ -4,6 +4,8 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2009-02-12 - Marco Cattaneo
+ - Fix gcc 43 compilation
 
 ! 2009-02-11 W. Hulsbergen
  - Removed cut on maximum number of T hits in TsaSeed such that it no
