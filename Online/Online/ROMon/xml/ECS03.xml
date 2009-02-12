@@ -1,0 +1,6 @@
+<TaskInventory>
+  <NodeList name="ECS03">
+   <Name>ECS03</Name>
+   <Node name="ecs03"   type="DefaultNode"/>
+  </NodeList>
+</TaskInventory>

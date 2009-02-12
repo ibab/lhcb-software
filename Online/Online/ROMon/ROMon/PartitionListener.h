@@ -1,4 +1,4 @@
-// $Id: PartitionListener.h,v 1.1 2008-11-21 17:20:15 frankb Exp $
+// $Id: PartitionListener.h,v 1.2 2009-02-12 13:09:32 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/PartitionListener.h,v 1.1 2008-11-21 17:20:15 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/PartitionListener.h,v 1.2 2009-02-12 13:09:32 frankb Exp $
 #ifndef ROMON_PARTITIONLISTENER_H
 #define ROMON_PARTITIONLISTENER_H 1
 
@@ -39,7 +39,7 @@ namespace ROMon {
     Interactor* m_parent;
     std::string m_name;
     int         m_subFarmDP;
-
+    int         m_runStateDP;
   public:
     /// Standard constructor with object setup through parameters
     PartitionListener(Interactor* parent,const std::string& name);
@@ -47,6 +47,8 @@ namespace ROMon {
     virtual ~PartitionListener();
     /// DIM command service callback
     static void subFarmHandler(void* tag, void* address, int* size);
+    /// DIM command service callback
+    static void runStateHandler(void* tag, void* address, int* size);
   };
 }      // End namespace ROMon
 #endif /* ROMON_PARTITIONLISTENER_H */

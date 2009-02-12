@@ -17,6 +17,7 @@ namespace ROMon {
     CMD_SHOWPROCS,
     CMD_SHOWHELP,
     CMD_HANDLE_KEY,
+    CMD_RUNSTATE,
     CMD_LAST
   };
 
