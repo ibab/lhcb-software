@@ -73,13 +73,24 @@
 
    <method
         name    = "nLinked" 
-        desc    = "number of links"
+        desc    = "number of links, ie particles or noise contributing "
         type    = "unsigned int" 
         virtual = "FALSE" 
         const   = "TRUE">
    <code> return m_linkMap.size(); </code>
    </method>
 
+  <method 
+     name  = 'fractionNoise'
+     desc = 'fraction of hits linked to noise'
+     type = 'double'
+     virtual = 'FALSE'
+     const = 'TRUE' >
+   <code> 
+    LinkMap::const_iterator iter = m_linkMap.find(0);
+    return (iter == m_linkMap.end() ? 0.0 : iter->second); 
+   </code>
+    </method>
 
    <method
         name    = "bestLink" 

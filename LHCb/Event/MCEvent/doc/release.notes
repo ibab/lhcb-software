@@ -1,14 +1,20 @@
-! $Id: release.notes,v 1.109 2009-02-05 23:32:30 janos Exp $
+! $Id: release.notes,v 1.110 2009-02-12 16:31:12 mneedham Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 !-----------------------------------------------------------------------------
+
+
+! 2009-02-12 M Needham
+ - Add method to return fraction of hits due to noise in GhostTrackInfo
+
 
 ! 2009-02-05 - Jan Amoraal
  - Add isX methods to MCOTDeposit
 
 ! 2009-01-27 - Jan Amoraal
  - Add type enum to MCOTDeposit
+
 
 !======================== MCEvent v2r11 2009-01-08 ===========================
 ! 2008-12-12 - Marco Cattaneo
