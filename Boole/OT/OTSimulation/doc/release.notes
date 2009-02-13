@@ -2,7 +2,11 @@
 ! Package manager : Jan Amoraal
 !--------------------------------------------------------------------------
 
-! 2009-01-27 Jan Amoraal
+! 2009-02-13 - Jan Amoraal
+ - Create double pulse deposits for particles only.
+ - Needs MCEvent >  v2r11
+
+! 2009-01-27 - Jan Amoraal
  - Follow changes in MCOTDeposit
 
 !====================== OTSimulation v4r0 2008-06-04 ======================

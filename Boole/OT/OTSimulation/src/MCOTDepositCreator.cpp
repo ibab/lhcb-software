@@ -1,4 +1,4 @@
-// $Id: MCOTDepositCreator.cpp,v 1.28 2009-01-27 09:55:13 janos Exp $
+// $Id: MCOTDepositCreator.cpp,v 1.29 2009-02-13 18:37:29 janos Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -204,7 +204,7 @@ void MCOTDepositCreator::makeDeposits() const
 
     /// Can't assume that there are hits in spills
     if (!otMCHits) {
-      if (msgLevel(MSG::DEBUG)) debug() << "Spillover missing in the loop " +m_spillNames[iSpill] <<endmsg;
+      if (msgLevel(MSG::DEBUG)) debug() << "Spillover missing in the loop " + m_spillNames[iSpill] <<endmsg;
     } else {
       // found spill - create some digitizations and add them to deposits
       for (MCHits::const_iterator iHit = otMCHits->begin(), iHitEnd = otMCHits->end(); iHit != iHitEnd; ++iHit) {
@@ -226,7 +226,7 @@ void MCOTDepositCreator::makeDeposits() const
                iTend = chanAndDist.end(); iT != iTend; ++iT) {
             const unsigned int toolIndex = (iT->first).station() - m_firstStation;
             const double dist            = iT->second;
-            const int amb                = (dist< 0.0) ? -1 : 1;
+            const int amb                = (dist < 0.0) ? -1 : 1;
             /// create deposit
             MCOTDeposit* deposit = new MCOTDeposit(MCOTDeposit::Signal, aMCHit, iT->first, tTimeOffset, std::abs(dist), amb);
             /// Apply single cell efficiency cut
@@ -281,9 +281,9 @@ void MCOTDepositCreator::addCrossTalk() const
     std::list<OTChannelID>::const_iterator iterChanEnd = neighbours.end();
     while (iterChan != iterChanEnd) {
       const double testVal = m_flat();
-      if ( testVal < m_crossTalkLevel) {
+      if ( testVal < m_crossTalkLevel ) {
         // crosstalk in neighbour - copy hit - this is very ugly
-        crossTalkList.push_back(new MCOTDeposit(MCOTDeposit::XTalk, 0, *iterChan, aDeposit->time(), 
+        crossTalkList.push_back(new MCOTDeposit(MCOTDeposit::XTalk, 0 , *iterChan, aDeposit->time(), 
                                                 aDeposit->driftDistance(), aDeposit->ambiguity()));
       } 
       ++iterChan;
@@ -295,29 +295,25 @@ void MCOTDepositCreator::addCrossTalk() const
   m_deposits.insert(m_deposits.end(), crossTalkList.begin(), crossTalkList.end());
 }
 
-// Add Pulse Reflection
+// Add Double Pulse
 void MCOTDepositCreator::addDoublePulse() const
 {
-  std::list<MCOTDeposit*> DoublePulseList;
-  OTDeposits::const_iterator iterDeposit    = m_deposits.begin();
-  OTDeposits::const_iterator iterDepositEnd = m_deposits.end();
-  while (iterDeposit != iterDepositEnd) {
-    const MCOTDeposit* aDeposit = (*iterDeposit);
+  std::list<MCOTDeposit*> DoublePulses;
+  for ( OTDeposits::const_iterator dep = m_deposits.begin(), depEnd = m_deposits.end(); dep != depEnd; ++dep ) {
+    const MCOTDeposit* aDeposit = (*dep);
+    /// We only want to do this for particles
+    if ( aDeposit->mcHit() == 0  ) continue;
     const double probability = m_flat();
     if ( probability <  m_doublePulseProbability ) {
-      
       // Time - OTChannelID
       const OTChannelID aChan = aDeposit->channel();
-      const double time       = aDeposit->time() + m_doublePulseTime;     
-
-      // New Deposit
-      DoublePulseList.push_back(new MCOTDeposit(MCOTDeposit::DoublePulse, 0, aChan, time, 0, 0));
+      const double time       = aDeposit->time() + m_doublePulseTime;
+      DoublePulses.push_back(new MCOTDeposit(MCOTDeposit::DoublePulse, 0, aChan, time, 0, 0));
     }
-    ++iterDeposit;
   }
- 
+  
   // move hits from double pulse list to deposit vector
-  m_deposits.insert( m_deposits.end(), DoublePulseList.begin(), DoublePulseList.end() );
+  m_deposits.insert( m_deposits.end(), DoublePulses.begin(), DoublePulses.end() );
 }
 
 std::string MCOTDepositCreator::toolName(const std::string& aName, const int id) const
