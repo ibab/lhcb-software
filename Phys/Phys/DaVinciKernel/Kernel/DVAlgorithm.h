@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.h,v 1.36 2009-02-11 14:43:38 jpalac Exp $ 
+// $Id: DVAlgorithm.h,v 1.37 2009-02-13 15:38:06 jpalac Exp $ 
 // ============================================================================
 #ifndef DAVINCIKERNEL_DVALGORITHM_H
 #define DAVINCIKERNEL_DVALGORITHM_H 1
@@ -160,17 +160,16 @@ public:
    * If property "ReFitPVs" is set to true, this triggers a re-fit of the PVs
    * after removing tracks coming from the particle in question. If not, then 
    * it uses the container of PVs obtained from method primaryVertices().
-   * Has no side-effects. Information is returned to user and not stored 
-   * anywhere
+   * Returns a newed pointer to a vertex either from the TES or stored in the
+   * PhysDesktop local array.
    *
    * @author Juan Palacios juan.palacios@nikhef.nl
    * @param p LHCb::Particle to be related
-   * @param vertex RecVertex copy of the related PV
-   * @return StatusCode FAILURE if something went wrong. Resulting vertex should be ignored.
+   * @return newed pointer to related vertex. TES or PhysDesktop in charge of
+   * memory management.
    *
    **/
-  StatusCode calculateRelatedPV(const LHCb::Particle* p, LHCb::RecVertex& v) const;
-
+  const LHCb::VertexBase* calculateRelatedPV(const LHCb::Particle* p) const;
 
   /**
    *

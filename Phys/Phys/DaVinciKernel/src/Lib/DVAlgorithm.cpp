@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.41 2009-02-11 14:47:02 jpalac Exp $
+// $Id: DVAlgorithm.cpp,v 1.42 2009-02-13 15:38:52 jpalac Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -308,16 +308,23 @@ void DVAlgorithm::setFilterPassed  (  bool    state  )
   return;
 }
 // ============================================================================
-StatusCode DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p,
-                                           LHCb::RecVertex& vertex) const
+const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p) const
 {
+  verbose() << "DVAlgorithm::calculateRelatedPV" << endmsg;
   const IRelatedPVFinder* finder = this->relatedPVFinder();
   const LHCb::RecVertex::Container* PVs = this->primaryVertices();
-  if (0==finder || 0==PVs) return Error("NULL IRelatedPVFinder or primary vertex container", StatusCode::FAILURE, 1 ) ;
+  if (0==finder || 0==PVs) {
+    Error("NULL IRelatedPVFinder or primary vertex container", StatusCode::FAILURE, 1 ).ignore() ;
+    return 0;
+  }
   // re-fit vertices, then look for the best one.
   if (m_refitPVs) {
+    verbose() << "Re-fitting PVs" << endmsg;
     const IPVReFitter* fitter = primaryVertexReFitter();
-    if (0==fitter) return Error("NULL IPVReFitter", StatusCode::FAILURE, 1);
+    if (0==fitter) {
+      Error("NULL IPVReFitter", StatusCode::FAILURE, 1).ignore();
+      return 0;
+    }
     LHCb::RecVertex::ConstVector reFittedPVs;
     for (LHCb::RecVertex::Container::const_iterator iPV = PVs->begin();
          iPV != PVs->end(); ++iPV) {
@@ -325,30 +332,41 @@ StatusCode DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p,
       if ( (fitter->remove(p, &reFittedPV)).isSuccess() ) {
         reFittedPVs.push_back(&reFittedPV); 
       } else {
-        return Error("PV re-fit failed", StatusCode::FAILURE, 1 ) ;
-      }
-      
+        Error("PV re-fit failed", StatusCode::FAILURE, 1 ).ignore() ;
+      } 
     }
-    vertex= *dynamic_cast<LHCb::RecVertex*>(finder->relatedPVs(p, reFittedPVs).relations(p).back().to());
+    const LHCb::RecVertex* pv = dynamic_cast<const LHCb::RecVertex*>(finder->relatedPVs(p, reFittedPVs).relations(p).back().to());
+    return (0!=pv) ? desktop()->keep(pv) : 0;
   } else {
-    vertex= *dynamic_cast<LHCb::RecVertex*>(finder->relatedPVs(p, *PVs).relations(p).back().to());
+    verbose() << "Getting related PV from finder" << endmsg;
+    const LHCb::RecVertex* pv = dynamic_cast<const LHCb::RecVertex*>(finder->relatedPVs(p, *PVs).relations(p).back().to());
+    return finder->relatedPVs(p, *PVs).relations(p).back().to();
+    verbose() << "Returning copy of related vertex: " << endmsg;
+    verbose() << *pv <<endmsg;
   }
-  return StatusCode::SUCCESS;
+  
 }
 // ============================================================================
 const LHCb::VertexBase* DVAlgorithm::getRelatedPV(const LHCb::Particle* part) const
 {
+  verbose() << "getRelatedPV! Getting range" << endmsg;
+  if (0==part) error() << "input particle is NULL" << endmsg;
+  Particle2Vertex::Range p2pvRange = desktop()->particle2Vertices(part);
+  verbose() << "getRelatedPV! Got range with size " << endmsg;
+  verbose() << p2pvRange.size() << endmsg;
   if (desktop()->particle2Vertices(part).empty()) {
-    // do re-fit, keep vertex, store relation
-    LHCb::RecVertex pv;
-    StatusCode sc = calculateRelatedPV(part, pv);
-    if (sc.isSuccess()) {
-      const LHCb::RecVertex* pPV = desktop()->keep(&pv);
-      relateWithOverwrite(part, pPV);
+    verbose() << "particle2Vertices empty. Calling calculateRelatedPV" << endmsg;
+    const LHCb::RecVertex* pv = dynamic_cast<const LHCb::RecVertex*>(calculateRelatedPV(part));
+    if (0!=pv) {
+      //      const LHCb::RecVertex* pPV = desktop()->keep(&pv);
+      verbose() << "Found related vertex. Relating it" << endmsg;
+      relateWithOverwrite(part, pv);
     } else {
+      error() << "Found no related vertex"<< endmsg;
       return 0;
     }
   }
+
   const Particle2Vertex::Range range = desktop()->particle2Vertices(part);
   return (range.empty()) ? 0 : range.back().to();
   
