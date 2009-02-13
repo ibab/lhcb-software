@@ -2,6 +2,10 @@ Package         : OTDAQ
 Package manager : J.Amoraal
 !---------------------------------------------------------------------
 
+! 2009-02-13 - Jan Amoraal
+ - TELL1 id should be hex not decimal
+ - Print ids in hex
+
 ! 2009-02-02 - Jan Amoraal
  - use Warning function
 
