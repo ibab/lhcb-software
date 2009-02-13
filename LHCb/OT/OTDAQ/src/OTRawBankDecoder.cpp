@@ -1,4 +1,4 @@
-// $Id: OTRawBankDecoder.cpp,v 1.24 2009-02-02 13:39:41 janos Exp $
+// $Id: OTRawBankDecoder.cpp,v 1.25 2009-02-13 18:19:23 janos Exp $
 // Include files
 #include <algorithm>
 #include <sstream>
@@ -340,7 +340,7 @@ StatusCode OTRawBankDecoder::decodeGolHeadersV3(const LHCb::RawBank& bank, int b
     debug() << "OTSpecificHeader in bank:" << otheader << endmsg ;
   if( otheader.error() ) {
     std::ostringstream mess;
-    mess << "OTSpecificHeader has error bit set in bank " << bank.sourceID();
+    mess << "OTSpecificHeader has error bit set in bank 0x0" << std::hex << bank.sourceID();
     Warning( mess.str(), StatusCode::FAILURE, 0 ).ignore();
     if ( msgLevel( MSG::DEBUG ) ) debug() << mess.str() << endmsg;
   }
