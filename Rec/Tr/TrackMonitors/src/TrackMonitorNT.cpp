@@ -1,4 +1,4 @@
-// $Id: TrackMonitorNT.cpp,v 1.2 2009-01-19 10:22:25 dhcroft Exp $
+// $Id: TrackMonitorNT.cpp,v 1.3 2009-02-13 17:04:18 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -130,6 +130,7 @@ StatusCode TrackMonitorNT::execute()
 {
   
   // get the input data
+  if (!exist<LHCb::Tracks>(m_tracksInContainer)) return StatusCode::SUCCESS ;
   LHCb::Tracks* tracks = get<LHCb::Tracks>(m_tracksInContainer);
 
   std::map<std::string, unsigned int> tMap;

@@ -1,4 +1,4 @@
-// $Id: TrackMonitor.cpp,v 1.10 2009-01-22 18:06:49 dhcroft Exp $
+// $Id: TrackMonitor.cpp,v 1.11 2009-02-13 17:04:18 pkoppenb Exp $
 // Include files 
 #include "TrackMonitor.h"
 
@@ -69,6 +69,7 @@ StatusCode TrackMonitor::execute()
 {
   
   // get the input data
+  if (!exist<LHCb::Tracks>(inputContainer())) return StatusCode::SUCCESS ;
   LHCb::Tracks* tracks = get<LHCb::Tracks>(inputContainer());
 
   std::map<std::string, unsigned int> tMap;

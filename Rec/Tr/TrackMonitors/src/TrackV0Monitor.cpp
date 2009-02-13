@@ -99,6 +99,7 @@ StatusCode TrackV0Monitor::execute()
 { 
   setHistoTopDir("Track/") ;
   
+  if (!exist<LHCb::TwoProngVertices>(  m_v0Location )) return StatusCode::SUCCESS ;
   const LHCb::TwoProngVertices* v0container = get<LHCb::TwoProngVertices>(  m_v0Location ) ;
   plot(v0container->size(),"v0multiplicity","v0multiplicity",-0.5,20.5,21) ;
   
