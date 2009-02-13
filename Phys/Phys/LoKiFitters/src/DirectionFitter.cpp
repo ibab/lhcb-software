@@ -1,4 +1,4 @@
-// $Id: DirectionFitter.cpp,v 1.3 2009-02-11 15:03:55 jpalac Exp $
+// $Id: DirectionFitter.cpp,v 1.4 2009-02-13 16:25:12 jpalac Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -163,27 +163,28 @@ StatusCode LoKi::DirectionFitter::reFit ( LHCb::Particle& particle ) const
   { particle.eraseInfo ( LHCb::Particle::Chi2OfParticleReFitter )  ; }
   
   // try to get the associated primary vertex
-  const DVAlgorithm* dv = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
+    const DVAlgorithm* dv = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ; 
   // 1) get the desktop from the parent
-//   IPhysDesktop* desktop = getDesktop ( parent() ) ;
+  IPhysDesktop* desktop = getDesktop ( parent() ) ;
 
-//   // 1') or get of from the context:
-//   if ( 0 == desktop ) 
-//   {
-//     if ( 0 != dv ) { desktop = dv -> desktop() ;  }
-//   }
-//   if ( 0 == desktop ) 
-//   { return Error ( "No IPhysDesktop is available!"          , NoDesktop ) ; }
+  // 1') or get of from the context:
+  if ( 0 == desktop ) 
+  {
+    if ( 0 != dv ) { desktop = dv -> desktop() ;  }
+  }
+  if ( 0 == desktop ) 
+  { return Error ( "No IPhysDesktop is available!"          , NoDesktop ) ; }
+
   if ( 0 == dv ) 
   { return Error ( "No parent DVAlgorithm is available!"    , NoDesktop ) ; }
-  // 2 ) get the related primary vertex from the DVAlgorithm 
-  LHCb::RecVertex primary;
-  StatusCode sc = dv->calculateRelatedPV(&particle, primary);
-  //  const LHCb::VertexBase* primary =  dv-> calculateRelatedPV ( &particle ) ;
-  if ( sc.isFailure() ) 
+  // 2 ) get the related primary vertex from the desktop
+  //  const LHCb::VertexBase* primary =  dv-> calculateRelatedPV ( &particle );
+  //  const LHCb::VertexBase* primary =  dv-> getRelatedPV ( &particle ) ;
+  const LHCb::VertexBase* primary =  desktop -> relatedVertex( &particle ) ;
+  if ( 0 == primary ) 
   { return Error ( "No associated primary vertex is found!" , NoPrimaryVertex ) ; }
   // 3) use the regular "fit" method 
-  sc = fit ( primary , particle ) ;
+  StatusCode sc = fit ( *primary , particle ) ;
   if ( sc.isFailure () ) 
   { return Error ( "reFit(): The errot from fit()" , sc ) ; }
   
