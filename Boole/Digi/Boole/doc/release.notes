@@ -3,6 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+! 2009-02-13 - Marco Cattaneo
+ - Update test for fix to Muon noise simulation
+
 ! 2009-02-11 - Marco Cattaneo
  - Update test to not complain about fixed spelling of "succesfully" in Gaudi v21
 
