@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.42 2009-02-13 15:38:52 jpalac Exp $
+// $Id: DVAlgorithm.cpp,v 1.43 2009-02-13 16:11:10 jpalac Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -296,7 +296,7 @@ StatusCode DVAlgorithm::sysExecute ()
 
   sc = desktop()->cleanDesktop();
   if (msgLevel(MSG::VERBOSE) && sc) verbose() << "Happily cleaned Desktop" << endmsg ;
-  
+
   return sc ;
 }
 // ============================================================================
@@ -310,7 +310,7 @@ void DVAlgorithm::setFilterPassed  (  bool    state  )
 // ============================================================================
 const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p) const
 {
-  verbose() << "DVAlgorithm::calculateRelatedPV" << endmsg;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "DVAlgorithm::calculateRelatedPV" << endmsg;
   const IRelatedPVFinder* finder = this->relatedPVFinder();
   const LHCb::RecVertex::Container* PVs = this->primaryVertices();
   if (0==finder || 0==PVs) {
@@ -319,7 +319,7 @@ const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p)
   }
   // re-fit vertices, then look for the best one.
   if (m_refitPVs) {
-    verbose() << "Re-fitting PVs" << endmsg;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Re-fitting PVs" << endmsg;
     const IPVReFitter* fitter = primaryVertexReFitter();
     if (0==fitter) {
       Error("NULL IPVReFitter", StatusCode::FAILURE, 1).ignore();
@@ -338,28 +338,32 @@ const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p)
     const LHCb::RecVertex* pv = dynamic_cast<const LHCb::RecVertex*>(finder->relatedPVs(p, reFittedPVs).relations(p).back().to());
     return (0!=pv) ? desktop()->keep(pv) : 0;
   } else {
-    verbose() << "Getting related PV from finder" << endmsg;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Getting related PV from finder" << endmsg;
     const LHCb::RecVertex* pv = dynamic_cast<const LHCb::RecVertex*>(finder->relatedPVs(p, *PVs).relations(p).back().to());
     return finder->relatedPVs(p, *PVs).relations(p).back().to();
-    verbose() << "Returning copy of related vertex: " << endmsg;
-    verbose() << *pv <<endmsg;
+    if (msgLevel(MSG::VERBOSE)) {
+      verbose() << "Returning copy of related vertex: " << endmsg;
+      verbose() << *pv <<endmsg;
+    }
   }
   
 }
 // ============================================================================
 const LHCb::VertexBase* DVAlgorithm::getRelatedPV(const LHCb::Particle* part) const
 {
-  verbose() << "getRelatedPV! Getting range" << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "getRelatedPV! Getting range" << endmsg;
   if (0==part) error() << "input particle is NULL" << endmsg;
   Particle2Vertex::Range p2pvRange = desktop()->particle2Vertices(part);
-  verbose() << "getRelatedPV! Got range with size " << endmsg;
-  verbose() << p2pvRange.size() << endmsg;
+  if (msgLevel(MSG::VERBOSE)) {
+    verbose() << "getRelatedPV! Got range with size " << endmsg;
+    verbose() << p2pvRange.size() << endmsg;
+  }
   if (desktop()->particle2Vertices(part).empty()) {
-    verbose() << "particle2Vertices empty. Calling calculateRelatedPV" << endmsg;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "particle2Vertices empty. Calling calculateRelatedPV" << endmsg;
     const LHCb::RecVertex* pv = dynamic_cast<const LHCb::RecVertex*>(calculateRelatedPV(part));
     if (0!=pv) {
       //      const LHCb::RecVertex* pPV = desktop()->keep(&pv);
-      verbose() << "Found related vertex. Relating it" << endmsg;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Found related vertex. Relating it" << endmsg;
       relateWithOverwrite(part, pv);
     } else {
       error() << "Found no related vertex"<< endmsg;
@@ -378,16 +382,18 @@ StatusCode DVAlgorithm::fillSelResult () {
   LHCb::SelResult myResult;
   myResult.setFound(filterPassed());
   myResult.setLocation( ("/Event/Phys/"+name()));
-  verbose() << "SelResult location set to " << "/Event/Phys/"+name() 
-            << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "SelResult location set to " << "/Event/Phys/"+name() 
+                                        << endmsg;
   myResult.setDecay(m_decayDescriptor);
 
   StatusCode sc = writeSelResult()->write(myResult);
     
   if (filterPassed()) m_countFilterPassed++;
   m_countFilterWrite++;
-  verbose() << "wrote " << filterPassed() << " -> " <<
-    m_countFilterWrite << " & " << m_countFilterPassed << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "wrote " << filterPassed() 
+                                        << " -> " << m_countFilterWrite 
+                                        << " & " 
+                                        << m_countFilterPassed << endmsg ;
 
   return sc ;
 
