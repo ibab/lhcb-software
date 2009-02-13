@@ -2,7 +2,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   10/02/2009
 
-__version__ = "$Id: DsToPhiPi.py,v 1.1.1.1 2009-02-12 12:58:14 jonrob Exp $"
+__version__ = "$Id: DsToPhiPi.py,v 1.2 2009-02-13 12:30:26 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -27,8 +27,7 @@ class DsToPhiPiConf(LHCbConfigurableUser) :
     def __apply_configuration__(self) :
 
         from Configurables import ( GaudiSequencer, PhysDesktop,
-                                    CombineParticles, OfflineVertexFitter,
-                                    Rich__ParticlePIDQCAlg )
+                                    CombineParticles, OfflineVertexFitter )
 
         seq = self.getProp("Sequencer")
         if seq == None : raise RuntimeError("ERROR : Sequence not set")
@@ -60,13 +59,24 @@ class DsToPhiPiConf(LHCbConfigurableUser) :
         # Add selection algs to the sequence
         seq.Members += [Phi2KK,Ds2piPhi]
 
-        # PID plots alg
-        pidPlots = Rich__ParticlePIDQCAlg(Ds2piPhiName+"PID")
-        pidPlots.addTool( PhysDesktop() )
-        pidPlots.PhysDesktop.InputLocations = ["Phys/"+Ds2piPhiName]
-        seq.Members += [pidPlots]
+        # old PID plots alg
+        #from Configurables import Rich__ParticlePIDQCAlg
+        #pidPlots = Rich__ParticlePIDQCAlg(Ds2piPhiName+"PID")
+        #pidPlots.addTool( PhysDesktop() )
+        #pidPlots.PhysDesktop.InputLocations = ["Phys/"+Ds2piPhiName]
+        #seq.Members += [pidPlots]
         #pidPlots.OutputLevel = DEBUG;
 
+        # Particle Monitoring plots
+        from Configurables import ParticleMonitor
+        plotter =  ParticleMonitor(Ds2piPhiName+"Plots")
+        plotter.addTool(PhysDesktop())
+        plotter.PhysDesktop.InputLocations = [ "Phys/"+Ds2piPhiName ]
+        plotter.PeakCut     = "(ADMASS('D_s+')<100*MeV)"
+        plotter.SideBandCut = "(ADMASS('D_s+')>100*MeV)"
+        plotter.PlotTools = [ "MassPlotTool", "PidPlotTool","RichPlotTool" ]
+        seq.Members += [ plotter ]
+        
         # MC Performance checking ?
         if self.getProp("MCChecks") :
 
