@@ -4,6 +4,11 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+! 2000-02-13 - Marco Clemencic
+ - New default tag for 2008:
+   - head-20090213 for DDDB and LHCBCOND
+   - sim-20090212 for SIMCOND
+
 ! 2009-02-13 - Marco Cattaneo
  - New default tags for 2008:
    - head-20090212 for DDDB and LHCBCOND
