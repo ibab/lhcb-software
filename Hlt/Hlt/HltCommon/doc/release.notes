@@ -5,6 +5,7 @@
 !----------------------------------------------------------------------------
 ! 2009-02-13 - Gerhard Raven
  - remove HltL0{Calo,Muon}Prepare -- use HltL0{Calo,Muon}Candidates instead
+ - remove HltL0Filter -- use LoKi::L0Filter instead
 
 ! 2009-02-12 - Gerhard Raven
  - add 'step' plot to HltLine: displays which step rejected the event
