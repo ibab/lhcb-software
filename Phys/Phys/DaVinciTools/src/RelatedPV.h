@@ -1,4 +1,4 @@
-// $Id: RelatedPV.h,v 1.4 2007-02-06 10:17:30 pkoppenb Exp $
+// $Id: RelatedPV.h,v 1.5 2009-02-13 16:26:29 jpalac Exp $
 #ifndef RELATEDPV_H 
 #define RELATEDPV_H 1
 // Include files
@@ -33,8 +33,6 @@ public:
   /// Returns all related PVs ordered by weight and above a given weight 
   StatusCode allPVs(const LHCb::Particle* p, LHCb::VertexBase::ConstVector&, double minweight=0) ;
 
-protected:
-
 private:
   IPhysDesktop* desktop(){return m_desktop;}; ///< return pointer to PhysDesktop of (grand-)parent DVAlgorithm
 
@@ -44,6 +42,6 @@ private:
 
   IContextTool* m_context ; ///< Context tool
   IPhysDesktop* m_desktop; ///< pointer to PhysDesktop of (grand-)parent DVAlgorithm
-  
+
 };
 #endif // RELATEDPV_H
