@@ -1,8 +1,15 @@
-! $Id: release.notes,v 1.402 2009-02-11 15:00:12 jpalac Exp $
+! $Id: release.notes,v 1.403 2009-02-13 16:55:25 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-02-13 - Juan PALACIOS
+ - src/PhysDesktop.h
+  . add some debug to clearLocalContainer.
+ - src/PhysDekstop.cpp
+  . relatedVertex now uses parent DVAlgorithm's getRelatedPV method.
+  . Loads of debug statements.
 
 ! 2009-02-11 - Juan PALACIOS
  - PhysDesktop
