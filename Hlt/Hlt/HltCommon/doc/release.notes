@@ -3,6 +3,9 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2009-02-13 - Gerhard Raven
+ - remove HltL0{Calo,Muon}Prepare -- use HltL0{Calo,Muon}Candidates instead
+
 ! 2009-02-12 - Gerhard Raven
  - add 'step' plot to HltLine: displays which step rejected the event
    Warning: proper functioning depends on https://savannah.cern.ch/bugs/?46919
