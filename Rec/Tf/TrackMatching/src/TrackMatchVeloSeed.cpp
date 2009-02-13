@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.8 2008-12-02 14:40:30 wouter Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.9 2009-02-13 14:13:34 cattanem Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -200,7 +200,6 @@ StatusCode TrackMatchVeloSeed::matchTracks( VeloCandidates& veloTracks,
   // to the lowest chi2-distance and at most chi2=m_chi2MatchingCut.
   // Returns a vector of pointers to these tracks.
 
-  StatusCode sc;
   if ( msgLevel(MSG::DEBUG) ) 
     debug() << "Trying to match velo and seed tracks." << endmsg;
   
@@ -226,7 +225,7 @@ StatusCode TrackMatchVeloSeed::matchTracks( VeloCandidates& veloTracks,
     const double yT = stateAtT.y();
     const double tyT = stateAtT.ty();
 
-    sc = extrapolateSeed(stateAtT, matchZ);
+    StatusCode sc = extrapolateSeed(stateAtT, matchZ);
     if ( sc.isFailure() ) continue;
     const TrackVector& trackVector1 = stateAtT.stateVector();
     const TrackSymMatrix& trackCov1 = stateAtT.covariance();
@@ -381,7 +380,6 @@ StatusCode TrackMatchVeloSeed::storeTracks( Tracks* matchCont )
   // assumed that after this algorithm a re-fit will be done. The
   // 're-fit' expects the current state to be the seeding state.
 
-  StatusCode sc;
   if ( msgLevel(MSG::DEBUG) ) debug() << "Registering the tracks ..." << endmsg;
 
   // fill output container
@@ -411,7 +409,7 @@ StatusCode TrackMatchVeloSeed::storeTracks( Tracks* matchCont )
     
     // Search for tt hits
     if ( m_addTTClusters ) {  
-      sc = addTTClusters( aTrack );
+      StatusCode sc = addTTClusters( aTrack );
       if ( sc.isFailure() )
         return Error( "Unable to add TT Clusters to matched tracks" );
     }
