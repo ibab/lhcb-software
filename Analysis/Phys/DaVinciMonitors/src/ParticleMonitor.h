@@ -1,4 +1,4 @@
-// $Id: ParticleMonitor.h,v 1.1.1.1 2008-12-05 16:41:05 pkoppenb Exp $
+// $Id: ParticleMonitor.h,v 1.2 2009-02-13 12:28:16 jonrob Exp $
 #ifndef PARTICLEMONITOR_H 
 #define PARTICLEMONITOR_H 1
 
@@ -21,28 +21,17 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
-  ///< Configure cut tools. That should go to DVAlgorithm
-  StatusCode configure( LoKi::IHybridFactory* f, std::string & s, LoKi::Types::Cut& c)
-  {
-    StatusCode sc = f -> get ( s , c  ) ;
-    if ( sc.isFailure () ){ return Error ( "Unable to  decode cut: " + s  , sc ) ; }  
-    if ( msgLevel(MSG::DEBUG)) debug () << "The decoded cut is: " << s << endreq ;
-    return sc;
-  }
-  ///< Fill plots
-  StatusCode fillPlots(const LHCb::Particle* d, std::string where){
-    for ( std::map<std::string,IPlotTool*>::iterator s = m_plotTools.begin() ;
-          s != m_plotTools.end() ; ++s){
-      if (msgLevel(MSG::VERBOSE)) verbose() << "Filling " << s->first << endmsg ;
-      if (!s->second->fillPlots(d,where)) return StatusCode::FAILURE;
-    }
-    return StatusCode::SUCCESS ;
-  }
+
+  /// Configure cut tools. That should go to DVAlgorithm
+  StatusCode configure( LoKi::IHybridFactory* f, std::string & s, LoKi::Types::Cut& c);
+
+  /// Fill plots
+  StatusCode fillPlots(const LHCb::Particle* d, const std::string & where);
 
 private:
+
   LoKi::Types::Cut  m_mother       ; ///< Selection cut applied to all mothers
   //  LoKi::Types::Cut  m_final        ; ///< Selection cut applied when plotting
   LoKi::Types::Cut  m_peak         ; ///< Selection cut applied to peak mothers

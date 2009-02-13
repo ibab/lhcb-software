@@ -1,5 +1,5 @@
 ##############################################################################
-# $Id: DVMonitorDst.py,v 1.8 2009-02-12 15:04:07 jonrob Exp $
+# $Id: DVMonitorDst.py,v 1.9 2009-02-13 12:28:16 jonrob Exp $
 #
 # syntax: gaudirun.py $DAVINCIMONITORSROOT/options/DVMonitorDst.py
 #
@@ -41,12 +41,12 @@ JpsiSeq.Members += [ Jpsi2MuPi ]
 # Plot quantities
 #
 from Configurables import ParticleMonitor
-plotter =  ParticleMonitor()
+plotter = ParticleMonitor("Jpsi2MuPiMoni")
 plotter.addTool(PhysDesktop())
 plotter.PhysDesktop.InputLocations = [ "Jpsi2MuPi" ]
 plotter.PeakCut = "(ADMASS('J/psi(1S)')<5*MeV)"
 plotter.SideBandCut = "(ADMASS('J/psi(1S)')>20*MeV)"
-plotter.PlotTools = [ "PidPlotTool" ]
+plotter.PlotTools = [ "MassPlotTool","PidPlotTool","RichPlotTool" ]
 JpsiSeq.Members += [ plotter ]
 ##############################################################################
 #
@@ -74,5 +74,5 @@ DaVinci().HistogramFile = "DVMonitors.root"
 #
 ##############################################################################
 DaVinci().EvtMax = 1000
-DaVinci().DataType = "2008" # Default is "DC06"
+#DaVinci().DataType = "2008" # Default is "DC06"
 DaVinci().Simulation = True

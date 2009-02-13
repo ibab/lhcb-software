@@ -1,5 +1,5 @@
-// $Id: PidPlotTool.cpp,v 1.3 2008-12-10 16:42:17 pkoppenb Exp $
-// Include files 
+// $Id: PidPlotTool.cpp,v 1.4 2009-02-13 12:28:16 jonrob Exp $
+// Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
 // local
@@ -24,56 +24,67 @@ PidPlotTool::PidPlotTool( const std::string& type,
 {
   declareInterface<IPlotTool>(this);
 }
+
 //=============================================================================
 // Standard destructor
 //=============================================================================
-PidPlotTool::~PidPlotTool( ){}; 
+PidPlotTool::~PidPlotTool( ) {}
+
 //=============================================================================
 // Init
 //=============================================================================
-StatusCode PidPlotTool::initialize(){
-  StatusCode sc = BasePlotTool::initialize();
+StatusCode PidPlotTool::initialize()
+{
+  const StatusCode sc = BasePlotTool::initialize();
+  if ( sc.isFailure() ) return sc;
+
+  // book tools etc ...
+
   return sc;
 }
+
 //=============================================================================
 // Daughter plots - just mass plots
 //=============================================================================
-StatusCode PidPlotTool::fillFinal(const LHCb::Particle* p,const std::string trailer){
-  
-  const LHCb::ParticleProperty* pp = ppSvc()->find( p->particleID() );
-  plot(p->p()/GeV, histoName("P",pp,trailer), 
-       "Momentum of "+pp->name()+"_"+trailer, 0, 100);
-  const LHCb::ProtoParticle* proto = p->proto() ;
-  if ( 0==proto) return StatusCode::SUCCESS;
-  
+StatusCode PidPlotTool::fillImpl( const LHCb::Particle* p, 
+                                  const std::string trailer )
+{
+  const LHCb::ParticleProperty* pp = particleProperty( p->particleID() );
+
+  plot( p->p()/GeV, histoName("P",pp,trailer),
+        "Momentum of "+pp->name()+"_"+trailer, 0, 100 );
+
+  const LHCb::ProtoParticle * proto = p->proto() ;
+  if ( !proto ) return StatusCode::SUCCESS;
+
+  // Combined DLLs
   fillPID(proto->info(LHCb::ProtoParticle::CombDLLe, -1000),p->p()/GeV,"e", pp,trailer);
   fillPID(proto->info(LHCb::ProtoParticle::CombDLLmu,-1000),p->p()/GeV,"mu",pp,trailer);
   fillPID(proto->info(LHCb::ProtoParticle::CombDLLk, -1000),p->p()/GeV,"K", pp,trailer);
   fillPID(proto->info(LHCb::ProtoParticle::CombDLLp, -1000),p->p()/GeV,"p", pp,trailer);
 
-  profile1D(p->p()/GeV, double(proto->muonPID()!=0), 
-       histoName("MuonPID",pp,"p_"+trailer),
-       "has MuonPID vs p of "+pp->name()+" in "+trailer,0., 100.);
-
+  // Muon info
+  profile1D( p->p()/GeV, double(proto->muonPID()!=0),
+             histoName("MuonPID",pp,trailer),
+             "has MuonPID vs p of "+pp->name()+" in "+trailer,0., 100. );
+  
   return StatusCode::SUCCESS ;
 }
 
 //=========================================================================
 //  fill PID
 //=========================================================================
-void PidPlotTool::fillPID ( double val, double p, std::string part, 
-                            const LHCb::ParticleProperty* pp, std::string trailer) {
-  plot(val,histoName("DLL"+part,pp,trailer),
-       part+" DLL of "+pp->name()+"_"+trailer,-10., 10.);
-  profile1D(p, double(val>0), histoName("DLL"+part,pp,"p_"+trailer),
-       part+" DLL>0 vs p of "+pp->name()+" in "+trailer,0., 100.);
-  return ;
-  
-}
-//=============================================================================
-// Fill plots using a single Particle
-//=============================================================================
-StatusCode PidPlotTool::fillPlots(const LHCb::Particle* p,const std::string trailer){
-  if ( p->isBasicParticle ()) return fillFinal(p,trailer);
-  else return fillMother(p,trailer);
+void PidPlotTool::fillPID ( double val, double p, 
+                            const std::string & part,
+                            const LHCb::ParticleProperty* pp, 
+                            const std::string & trailer ) 
+{
+  plot ( val,
+         histoName("DLL"+part,pp,trailer),
+         "DLL("+part+"-pi)>0 : "+pp->name()+" in "+trailer,
+         -100., 100., nBins() );
+  profile1D ( p, double(val>0), 
+              histoName("DLLvP"+part,pp,trailer),
+              "DLL("+part+"-pi)>0 vs Momentum : "+pp->name()+" in "+trailer,
+              0., 100., nBins() );
 }

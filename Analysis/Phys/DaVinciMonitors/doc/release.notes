@@ -4,6 +4,10 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-02-13 - Chris Jones
+ - Rework a little the plotting tools, to merge some functionality from 
+   similar RICH tools.
+
 ! 2009-02-12 - Chris Jones
  - Add usage of RichPIDQCConf() from Rich/RichPIDQC to produce some standard
    RICH PID plots.

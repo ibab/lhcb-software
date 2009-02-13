@@ -1,4 +1,4 @@
-// $Id: ParticleMonitor.cpp,v 1.3 2008-12-10 16:42:17 pkoppenb Exp $
+// $Id: ParticleMonitor.cpp,v 1.4 2009-02-13 12:28:16 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -18,6 +18,7 @@
 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( ParticleMonitor );
+
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -39,6 +40,7 @@ ParticleMonitor::ParticleMonitor( const std::string& name,
   m_plotToolNames.push_back("PidPlotTool"); // default
   declareProperty( "PlotTools" , m_plotToolNames, "Names of plot tools");
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -63,13 +65,17 @@ StatusCode ParticleMonitor::initialize() {
 
   release(factory);
 
-  if ( m_plotToolNames.empty() ){
+  if ( m_plotToolNames.empty() )
+  {
     err() << "No plot Tool defined. Will do nothing." << endmsg ;
     return StatusCode::FAILURE ;
-  } else {
+  } 
+  else 
+  {
     if (msgLevel(MSG::DEBUG)) debug() << "Using" ;
     for ( std::vector<std::string>::const_iterator s = m_plotToolNames.begin() ;
-          s != m_plotToolNames.end() ; ++s){
+          s != m_plotToolNames.end() ; ++s)
+    {
       m_plotTools.insert(std::pair<std::string,IPlotTool*>(*s,tool<IPlotTool>(*s,this)));
       if (msgLevel(MSG::DEBUG)) debug() << " " << *s << endmsg ;
     }    
@@ -88,42 +94,55 @@ StatusCode ParticleMonitor::execute() {
 
   // code goes here  
   for ( LHCb::Particle::ConstVector::const_iterator m = desktop()->particles().begin();
-        m != desktop()->particles().end(); ++m){
+        m != desktop()->particles().end(); ++m)
+  {
     counter("# Mothers")++ ;
     if ( !m_mother( *m ) )  { continue ; }   // discard particles with no cuts
+    
     std::string trail = "mother";
-    // fill mother
-    if (!fillPlots(*m,trail)) return StatusCode::FAILURE;
     
     counter("# Accepted Mothers")++;
-    bool peak = m_peak( *m ) ;
-    bool sideband = m_sideband( *m ) ;
-    if (peak) {
+    const bool peak     = m_peak( *m ) ;
+    const bool sideband = m_sideband( *m ) ;
+    if (peak) 
+    {
       counter("# Accepted Mothers in Peak")++;
       trail = "peak";
-    } else if (sideband) {
+    }
+    else if (sideband) 
+    {
       counter("# Accepted Mothers in Sidebands")++;
       trail = "sideband";
-    } else continue ;  // ignore events ouside of sidebands
-    const LHCb::Particle::ConstVector dauts = descendants()->descendants(*m);   
-    for ( LHCb::Particle::ConstVector::const_iterator d = dauts.begin() ; d != dauts.end() ; ++d){
-      // fill final state daughters
-      if (!fillPlots(*d,trail)) return StatusCode::FAILURE;
-    }
+    } 
+    else continue ;  // ignore events ouside of sidebands
+    
+    if (!fillPlots(*m,trail)) return StatusCode::FAILURE;
   }
 
   setFilterPassed(true);  // Mandatory. Set to true if event is accepted. 
   return StatusCode::SUCCESS;
 }
 
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode ParticleMonitor::finalize() {
+StatusCode ParticleMonitor::fillPlots( const LHCb::Particle* d, 
+                                       const std::string & where )
+{
+  for ( std::map<std::string,IPlotTool*>::iterator s = m_plotTools.begin() ;
+        s != m_plotTools.end() ; ++s )
+  {
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Filling " << s->first << endmsg ;
+    if (!s->second->fillPlots(d,where)) return StatusCode::FAILURE;
+  }
+  return StatusCode::SUCCESS;
+}
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return DVAlgorithm::finalize(); //=== For DC04, return StatusCode::SUCCESS;
+StatusCode ParticleMonitor::configure( LoKi::IHybridFactory* f, 
+                                       std::string & s, 
+                                       LoKi::Types::Cut& c )
+{
+  StatusCode sc = f -> get ( s , c  ) ;
+  if ( sc.isFailure () ) { return Error ( "Unable to  decode cut: " + s  , sc ) ; }  
+  if ( msgLevel(MSG::DEBUG)) debug () << "The decoded cut is: " << s << endreq ;
+  return sc;
 }
 
 //=============================================================================
