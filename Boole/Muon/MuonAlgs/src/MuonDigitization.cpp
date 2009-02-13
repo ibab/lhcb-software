@@ -1,4 +1,4 @@
-//$Id: MuonDigitization.cpp,v 1.46 2009-02-12 12:45:18 asatta Exp $
+//$Id: MuonDigitization.cpp,v 1.47 2009-02-13 09:55:16 asatta Exp $
 
 #include <algorithm>
 #include <vector>
@@ -1526,7 +1526,8 @@ addElectronicNoise(MuonDigitizationData
                 ID.setStation(i);
                 ID.setRegion(k);
                 LHCb::MuonTileID chTile;
-		m_muonDetector->Chamber2Tile(chamber,i,k,chTile);
+		StatusCode scchamber=m_muonDetector->Chamber2Tile(chamber,i,k,chTile);
+                if(scchamber.isFailure())warning()<<" failure of chamber 2 tile conversion "<<endreq;
                 ID.setQuadrant(chTile.quarter());
                 //                ID.setQuadrant(m_pGetInfo->getQuadrantChamber
                 //               (chamber+chamberTillNow));
