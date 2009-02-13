@@ -1,3 +1,4 @@
+// $Id: PhysDesktop.cpp,v 1.50 2009-02-13 16:55:16 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -11,6 +12,8 @@
 #include "Kernel/IOnOffline.h"
 #include "Kernel/IRelatedPVFinder.h"
 #include "Kernel/IDistanceCalculator.h"
+#include "Kernel/DVAlgorithm.h"
+#include "Kernel/GetDVAlgorithm.h"
 #include "Event/RecVertex.h"
 
 /*-----------------------------------------------------------------------------
@@ -279,11 +282,14 @@ Particle2Vertex::LightTable& PhysDesktop::Particle2VertexRelations()
 StatusCode PhysDesktop::cleanDesktop(){
 
   if (msgLevel(MSG::VERBOSE)) {
-    verbose() << "cleanDesktop():: Removing all particles from desktop" << endmsg;
+    verbose() << "PhysDesktop::cleanDesktop()" << endmsg;
+    verbose() << "Removing all particles from desktop" << endmsg;
     // Some particle have been saved to the TES, so they belong to it
     // others do not and need to be deleted by the PhysDesktop
     verbose() << "Number of particles before cleaning = "
               << m_parts.size() << endmsg;
+    if (!m_parts.empty())    verbose() << "First element\n" <<  *m_parts[0] << endmsg;
+    
   }
   
   int iTESCount = clearLocalContainer(m_parts);
@@ -306,9 +312,12 @@ StatusCode PhysDesktop::cleanDesktop(){
 
   iTESCount =  clearLocalContainer(m_refitPVs);
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Removing all entries from Particle2Vertex relations" << endmsg;
+    if (msgLevel(MSG::VERBOSE)) 
+      verbose() << "Removing all entries from Particle2Vertex relations" << endmsg;
 
   i_p2PVTable().i_clear();
+
+  if (msgLevel(MSG::VERBOSE)) verbose() << "PhysDesktop::cleanDesktop() DONE" << endmsg;
   
   return StatusCode::SUCCESS;
 
@@ -865,27 +874,32 @@ const LHCb::VertexBase* PhysDesktop::relatedVertex(const LHCb::Particle* part) c
 //     }
 //     storeRelationsInTable(part);
 //   }
-  
-  const Particle2Vertex::Range range = i_p2PVTable().i_relations(part);
+  verbose() << "PhysDesktop::relatedVertex" << endmsg;
 
-  if ( range.empty() ) {
-    if (msgLevel(MSG::VERBOSE)) {
-      verbose() << "particle2Vertices table empty, return NULL" << endmsg;
-    }
-    return NULL ;
-  }
-  
-  if (msgLevel(MSG::VERBOSE)) {
-    verbose() << "P2V returns particle2Vertices" << endmsg ;
-    for (Particle2Vertex::Range::const_iterator i = range.begin();
-         i!=range.end(); ++i) {
-      verbose() << "P2PV weight " << (*i).weight() << endmsg;
-    }
-    verbose() << "Returning PV with weight " 
-              << range.back().weight() << endmsg;
-  }
+  const DVAlgorithm* dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
+  if (0==dva) Error("Couldn't get parent DVAlgorithm", StatusCode::FAILURE).ignore();
+  return (0!=dva) ? dva->getRelatedPV(part) : 0 ;
 
-  return range.back().to();
+//   const Particle2Vertex::Range range = i_p2PVTable().i_relations(part);
+
+//   if ( range.empty() ) {
+//     if (msgLevel(MSG::VERBOSE)) {
+//       verbose() << "particle2Vertices table empty, return NULL" << endmsg;
+//     }
+//     return NULL ;
+//   }
+  
+//   if (msgLevel(MSG::VERBOSE)) {
+//     verbose() << "P2V returns particle2Vertices" << endmsg ;
+//     for (Particle2Vertex::Range::const_iterator i = range.begin();
+//          i!=range.end(); ++i) {
+//       verbose() << "P2PV weight " << (*i).weight() << endmsg;
+//     }
+//     verbose() << "Returning PV with weight " 
+//               << range.back().weight() << endmsg;
+//   }
+
+//   return range.back().to();
 
 }
 //=============================================================================
@@ -916,6 +930,7 @@ double PhysDesktop::weight(const LHCb::Particle*   part,
 Particle2Vertex::Range
 PhysDesktop::particle2Vertices(const LHCb::Particle* part ) const
 {
+  
   if (msgLevel(MSG::VERBOSE)) verbose() << "PhysDesktop::particle2Vertices.empty(): " 
                                         <<  i_p2PVTable().i_relations(part).empty() 
                                         << " .size() " << i_p2PVTable().i_relations(part).size()<< endmsg ;
@@ -948,7 +963,7 @@ void PhysDesktop::storeRelationsInTable(const LHCb::Particle* part){
 void PhysDesktop::overWriteRelations(Particle2Vertex::Range::const_iterator begin,
                                      Particle2Vertex::Range::const_iterator end)
 {
-  //  always() << "overWriteRelations: Storing " << end-begin << " P->PV relations" << endmsg;
+  verbose() << "overWriteRelations: Storing " << end-begin << " P->PV relations" << endmsg;
   for ( Particle2Vertex::Range::const_iterator i = begin ; i!= end ; ++i){
     ( i_p2PVTable().i_removeFrom(i->from()) ).ignore();
     (i_p2PVTable().i_relate(i->from(),i->to(),i->weight())).ignore() ;
