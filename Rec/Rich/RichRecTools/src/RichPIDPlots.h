@@ -5,7 +5,7 @@
  *  Header file for RICH tool : Rich::PIDPlots
  *
  *  CVS Log :-
- *  $Id: RichPIDPlots.h,v 1.3 2008-05-12 14:04:17 jonrob Exp $
+ *  $Id: RichPIDPlots.h,v 1.4 2009-02-13 12:33:05 jonrob Exp $
  *
  *  @author Chris Jones     Christopher.Rob.Jones@cern.ch
  *  @date   2008-04-14
@@ -121,8 +121,9 @@ namespace Rich
       mutable const ITrackSelector * m_trSelector;  ///< Track selector
 
       // Job Options
-      int m_bins;                    ///< Number of bins
-      bool m_extraHistos;            ///< Fill full set of histograms
+      int m_bins;                 ///< Number of bins
+      bool m_extraHistos;         ///< Fill full set of histograms
+      double m_dllCut;            ///< Dll cut value      
 
     };
 

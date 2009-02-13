@@ -4,6 +4,10 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2009-02-13 - Chris Jones
+ - Small changes to PID plots tool to rationalise with those produced by the
+   DaVinciMonitors plot tools.
+
 ! 2009-01-20 - Marco Cattaneo
  - Remove obsolete includes for Gaudi ParticlePropertySvc
 

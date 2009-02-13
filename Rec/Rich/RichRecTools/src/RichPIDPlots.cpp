@@ -1,4 +1,4 @@
-// $Id: RichPIDPlots.cpp,v 1.7 2008-09-19 07:53:49 jonrob Exp $
+// $Id: RichPIDPlots.cpp,v 1.8 2009-02-13 12:33:05 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -28,6 +28,7 @@ PIDPlots::PIDPlots( const std::string& type,
   // JOs
   declareProperty( "HistoBins",   m_bins = 50 );
   declareProperty( "ExtraHistos", m_extraHistos = false );
+  declareProperty( "DllCut",      m_dllCut = 0.0 );
   // turn off histo printing by default
   setProperty("HistoPrint",false);
 }
@@ -82,12 +83,16 @@ void PIDPlots::plots( const LHCb::RichPID * pid,
   // Extra plots (disabled by default)
   if ( m_extraHistos )
   {
+
+    // track momentum
+    const double pTot = trackP( pid->track() );
+
     // Loop over all combinations of PID pairs
-    for ( Rich::Particles::const_iterator i = Rich::particles().begin();
-          i != Rich::particles().end(); ++i )
+    for ( Rich::Particles::const_reverse_iterator i = Rich::particles().rbegin();
+          i != Rich::particles().rend(); ++i )
     {
-      Rich::Particles::const_iterator j = i; ++j;
-      for ( ; j != Rich::particles().end(); ++j )
+      Rich::Particles::const_reverse_iterator j = i; ++j;
+      for ( ; j != Rich::particles().rend(); ++j )
       {
         
         // Dll(X-Y) distributions
@@ -96,6 +101,10 @@ void PIDPlots::plots( const LHCb::RichPID * pid,
         plot1D( dll,
                 hPath(hypo)+title, title,
                -100, 100, m_bins );
+        title = "Eff. DLL("+Rich::text(*i)+"-"+Rich::text(*j)+")>0 Versus Ptot.";
+        profile1D( pTot, double(dll>m_dllCut),
+                   hPath(hypo)+title, title, 
+                   config.minP, config.maxP, m_bins );
         
         // # Sigma distributions
         title = "nSigma("+Rich::text(*i)+"-"+Rich::text(*j)+")";
