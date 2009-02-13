@@ -1,3 +1,4 @@
+// $Id: PhysDesktop.h,v 1.29 2009-02-13 16:53:37 jpalac Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -172,11 +173,24 @@ private:
   {
     if ( container.empty() ) return 0;
     int iCount(0);
+    int i(0);
+    if (msgLevel(MSG::DEBUG)) debug() <<"Clearing container with " << container.size() << " elements" << endmsg;
     for (typename T::const_iterator iObj = container.begin();
          iObj != container.end(); ++iObj) {
-      if( inTES(*iObj) ) ++iCount;
-      else delete *iObj;
+      if (0==*iObj) Warning("Container has null pointer!", StatusCode::FAILURE).ignore();
+      if (msgLevel(MSG::DEBUG)) debug() << "Element " << i << " is " << endmsg;
+      if (msgLevel(MSG::DEBUG)) debug() << **iObj << endmsg;
+      ++i;
+      if( inTES(*iObj) ) {
+        if (msgLevel(MSG::DEBUG)) debug() <<"Element in TES!" << endmsg;
+        ++iCount;
+      } else {
+        if (msgLevel(MSG::DEBUG)) debug() <<"deleting element!" << endmsg;
+        delete *iObj;
+      }
+      
     }
+    if (msgLevel(MSG::DEBUG)) debug() << "Container cleared!" << endmsg;
     container.clear();
     return iCount;
   }
@@ -215,8 +229,8 @@ private:
   inline void printOut(std::string head, const LHCb::Vertex* V)const{
     if (0==V) Exception("Null Vertex");
     always() << head << " position " << V->position()
-                << " d= " << V->outgoingParticles().size()
-                << " par= " << (0!=V->parent())  << endmsg ;
+             << " d= " << V->outgoingParticles().size()
+             << " par= " << (0!=V->parent())  << endmsg ;
     return;
   }
 
