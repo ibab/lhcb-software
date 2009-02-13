@@ -3,6 +3,9 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2009-02-13 - Jose Angel Hernando
+  - HltTFilter add the index in the filters counters to do a printout in order of the filters in finalize 
+
 ! 2009-02-13 - Gerhard Raven
  - remove HltL0{Calo,Muon}Prepare -- use HltL0{Calo,Muon}Candidates instead
  - remove HltL0Filter -- use LoKi::L0Filter instead

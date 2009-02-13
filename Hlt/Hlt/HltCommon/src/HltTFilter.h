@@ -1,4 +1,4 @@
-// $Id: HltTFilter.h,v 1.11 2009-01-06 12:18:26 graven Exp $
+// $Id: HltTFilter.h,v 1.12 2009-02-13 13:41:09 hernando Exp $
 #ifndef HLTCOMMON_HLTTFILTER_H 
 #define HLTCOMMON_HLTTFILTER_H 1
 
@@ -20,10 +20,11 @@ namespace Hlt {
   class TFilterData {
   public:
       template <typename P>
-    TFilterData(const std::string& name, P& parent) 
-        : filtername(name)
-        , counter(parent.counter(name))
-        , counterCandidates(parent.counter(name+" candidates"))
+    TFilterData(const std::string& name, P& parent, 
+                const std::string& prefix) 
+      : filtername(name)
+        , counter(parent.counter(prefix+name))
+        , counterCandidates(parent.counter(prefix+name+" candidates"))
         , minvalue(-1e6)
         , maxvalue(1e6)
     {}
@@ -76,5 +77,8 @@ private:
 
   std::string m_functionFactoryName;
   IFunctionFactory<T>* m_factory;
+
+  // index to keep the counter of the cuts
+  size_t  m_index;
 };
 #endif // HLTTRACKFILTER_H
