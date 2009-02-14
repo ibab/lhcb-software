@@ -293,7 +293,7 @@ class AlConfigurable( LHCbConfigurableUser ) :
             alignSequencer.Members.append(alignAlg)
 
             listOfCondToWrite = self.getProp( "WriteCondSubDetList" )
-            if len(listOfCondToWrite)>0 :
+            if listOfCondToWrite :
                 writeSequencer = GaudiSequencer( "WriteCondSeq" )
                 alignSequencer.Members.append(writeSequencer)
                 from Configurables import WriteAlignmentConditions
@@ -306,7 +306,7 @@ class AlConfigurable( LHCbConfigurableUser ) :
                 if 'IT' in listOfCondToWrite:
                     writeSequencer.Members.append ( self.writeAlg( 'IT','Detectors', [0,1,2,3] ) )
                 if 'OT' in listOfCondToWrite:
-                    writeSequencer.Members.append ( self.writeAlg( 'OT','Detectors', [0,1,2,3] ) )
+                    writeSequencer.Members.append ( self.writeAlg( 'OT','Detectors', [0,1,2,3,4] ) )
                 if 'Muon' in listOfCondToWrite:
                     writeSequencer.Members.append ( self.writeAlg( 'Muon','Detectors', [0,1,2,3] ) )
 
