@@ -1,4 +1,4 @@
-// $Id: HltIsMuonTool.cpp,v 1.9 2008-10-01 09:32:53 leandrop Exp $
+// $Id: HltIsMuonTool.cpp,v 1.10 2009-02-15 14:07:44 depaula Exp $
 // Include files 
 
 // from Gaudi
@@ -78,6 +78,7 @@ double  HltIsMuonTool::function(const Track& ctrack)
   MuonTileID tileM2;
   std::vector<LHCbID>::iterator it;
   bool inFOIM5=false;
+  bool inFOIM4=false;
   bool inFOIM2=false;
   bool muonSeg=false;
   
@@ -133,15 +134,13 @@ double  HltIsMuonTool::function(const Track& ctrack)
         // M5 hit found inside FOI
         if(isInFOI(track,(*iCoord)->key())) inFOIM5=true;
       }else if(station==3){
-        // All M5 hits outside FOI
-        if(!inFOIM5) return 0;
-        // M2, M3, M4 and M5 hits inside FOI
-        if(isInFOI(track,(*iCoord)->key())) return 1;
-      }else{
-        // All M4 hits outside FOI
-        return 0;
+        if(inFOIM4) continue;
+        // M4 hit inside FOI
+        if(isInFOI(track,(*iCoord)->key())) inFOIM4=true;
       }
+      if(inFOIM5 && inFOIM4) return 1;
     }
+    return 0; 
   }else{
     std::vector<std::vector<LHCb::MuonTileID>* > pads;
     std::vector<LHCb::MuonTileID>::iterator iPad;
@@ -156,17 +155,17 @@ double  HltIsMuonTool::function(const Track& ctrack)
       }
     }
     sc=m_muonBuffer->getPadsInStation(3,pads);
-      if(sc.isFailure())return sc;
-      for(iList=pads.begin();iList!=pads.end();iPad++){
-        for(iPad=(*iList)->begin();iPad!=(*iList)->end();iPad++){
-          // All M5 hits outside FOI
-          if(!inFOIM5) return 0;
-          // M2, M3, M4 and M5 hits inside FOI
-          if(isInFOI(track,(*iPad))) return 1;
-        }
-        // All M4 hits outside FOI
-        return 0;
-      }  
+    if(sc.isFailure())return sc;
+    for(iList=pads.begin();iList!=pads.end();iPad++){
+      for(iPad=(*iList)->begin();iPad!=(*iList)->end();iPad++){
+        // All M5 hits outside FOI
+        if(!inFOIM5) return 0;
+        // M2, M3, M4 and M5 hits inside FOI
+        if(isInFOI(track,(*iPad))) return 1;
+      }
+      // All M4 hits outside FOI
+      return 0;
+    }  
   }
   // no muon hits
   return 0;

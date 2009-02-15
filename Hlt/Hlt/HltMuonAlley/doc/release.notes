@@ -4,6 +4,9 @@
 ! Purpose     : Decision Algorithms for the muon trigger
 !-----------------------------------------------------------------------------
 
+! 2009-02-15 - Leandro de Paula
+ - HltIsMuonTool.cpp: Change to run with MC2008. (M4 hits can come before M5 ones)
+
 !========================== HltMuonAlley v2r7p1 2009-01-15 ===================
 !========================== HltMuonAlley v2r7 2008-11-24 ===================
 ! 2008-10-01 - Leandro de Paula 
