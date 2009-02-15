@@ -1,4 +1,4 @@
-// $Id: RichPIDPlots.cpp,v 1.8 2009-02-13 12:33:05 jonrob Exp $
+// $Id: RichPIDPlots.cpp,v 1.9 2009-02-15 13:12:03 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -86,6 +86,8 @@ void PIDPlots::plots( const LHCb::RichPID * pid,
 
     // track momentum
     const double pTot = trackP( pid->track() );
+    // hypo as string
+    const std::string shypo = Rich::text(hypo);
 
     // Loop over all combinations of PID pairs
     for ( Rich::Particles::const_reverse_iterator i = Rich::particles().rbegin();
@@ -96,18 +98,18 @@ void PIDPlots::plots( const LHCb::RichPID * pid,
       {
         
         // Dll(X-Y) distributions
-        std::string title = "DLL("+Rich::text(*i)+"-"+Rich::text(*j)+")";
+        std::string title = "RichDLL("+Rich::text(*i)+"-"+Rich::text(*j)+") : "+shypo;
         const double dll = pid->particleDeltaLL(*i) - pid->particleDeltaLL(*j);
         plot1D( dll,
                 hPath(hypo)+title, title,
                -100, 100, m_bins );
-        title = "Eff. DLL("+Rich::text(*i)+"-"+Rich::text(*j)+")>0 Versus Ptot.";
+        title = "Eff. RichDLL("+Rich::text(*i)+"-"+Rich::text(*j)+")>0 Versus Ptot : "+shypo;
         profile1D( pTot, double(dll>m_dllCut),
                    hPath(hypo)+title, title, 
                    config.minP, config.maxP, m_bins );
         
         // # Sigma distributions
-        title = "nSigma("+Rich::text(*i)+"-"+Rich::text(*j)+")";
+        title = "nSigma("+Rich::text(*i)+"-"+Rich::text(*j)+") : "+shypo;
         const double nsigma = pid->nSigmaSeparation(*i,*j);
         plot1D( nsigma,
                 hPath(hypo)+title, title,
@@ -138,9 +140,11 @@ void PIDPlots::plots( const LHCb::Track * track,
   // Track momentum in GeV/c
   const double tkPtot = trackP( track );
 
+  // hypo as string
+  const std::string shypo = Rich::text(hypo);
+
   // Momentum spectra
   plot1D( tkPtot, hPath(hypo)+"Ptot",
-          "Ptot : "+Rich::text(hypo),
+          "Ptot : "+shypo,
           config.minP, config.maxP, m_bins );
-
 }
