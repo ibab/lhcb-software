@@ -1,4 +1,4 @@
-// $Id: MuonPlotTool.cpp,v 1.1 2009-02-15 17:37:38 jonrob Exp $
+// $Id: MuonPlotTool.cpp,v 1.2 2009-02-15 21:35:03 jonrob Exp $
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
@@ -41,8 +41,9 @@ StatusCode MuonPlotTool::fillImpl( const LHCb::Particle* p,
   if ( !(p->isBasicParticle()) ) return StatusCode::SUCCESS;
 
   const LHCb::ParticleProperty* pp = particleProperty( p->particleID() );
+  if ( !pp ) return StatusCode::SUCCESS;
 
-  const LHCb::ProtoParticle * proto = p->proto() ;
+  const LHCb::ProtoParticle * proto = p->proto();
   if ( !proto ) return StatusCode::SUCCESS;
 
   // HasMuon efficiency
