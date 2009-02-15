@@ -2,7 +2,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   10/02/2009
 
-__version__ = "$Id: DsToPhiPi.py,v 1.2 2009-02-13 12:30:26 jonrob Exp $"
+__version__ = "$Id: DsToPhiPi.py,v 1.3 2009-02-15 17:38:33 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -74,7 +74,9 @@ class DsToPhiPiConf(LHCbConfigurableUser) :
         plotter.PhysDesktop.InputLocations = [ "Phys/"+Ds2piPhiName ]
         plotter.PeakCut     = "(ADMASS('D_s+')<100*MeV)"
         plotter.SideBandCut = "(ADMASS('D_s+')>100*MeV)"
-        plotter.PlotTools = [ "MassPlotTool", "PidPlotTool","RichPlotTool" ]
+        plotter.PlotTools = [ "MassPlotTool","MomentumPlotTool",
+                              "CombinedPidPlotTool",
+                              "RichPlotTool","CaloPlotTool","MuonPlotTool" ]
         seq.Members += [ plotter ]
         
         # MC Performance checking ?
