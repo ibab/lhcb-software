@@ -1,4 +1,4 @@
-// $Id: RichPlotTool.h,v 1.1 2009-02-13 12:28:16 jonrob Exp $
+// $Id: RichPlotTool.h,v 1.2 2009-02-15 13:00:14 jonrob Exp $
 #ifndef RichPlotTool_H
 #define RichPlotTool_H 1
 
@@ -34,8 +34,6 @@ public:
 
   virtual ~RichPlotTool( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< initialization
-
 protected:
 
   /// Fill final state PID plots - overwrites BasePlotTools method
@@ -50,13 +48,21 @@ private:
   /// Get the Rich type enum from the Particle properties object
   const Rich::ParticleIDType pidType( const LHCb::ParticleProperty * prop ) const;
 
+  /// Returns the PID tool instance for the given Particle Name
+  const Rich::Rec::IPIDPlots * pidTool( const std::string & name ) const;
+
+private:
+
+  /// Mapping between trailer and PID tool
+  typedef Rich::HashMap< std::string, const Rich::Rec::IPIDPlots * > PIDToolMap;
+
 private:
 
   /// Pointer to job options service
   mutable IJobOptionsSvc * m_jos;
 
-  /// Rich Plot tool
-  const Rich::Rec::IPIDPlots * m_plots;
+  /// Mapping between particle names and PID plot tools
+  mutable PIDToolMap m_pidTools;
 
   /// Fill full set of histograms
   bool m_extraHistos;       

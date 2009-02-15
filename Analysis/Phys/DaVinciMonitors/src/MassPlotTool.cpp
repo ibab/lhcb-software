@@ -1,4 +1,4 @@
-// $Id: MassPlotTool.cpp,v 1.1 2009-02-13 12:28:16 jonrob Exp $
+// $Id: MassPlotTool.cpp,v 1.2 2009-02-15 13:00:13 jonrob Exp $
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
@@ -39,12 +39,8 @@ StatusCode MassPlotTool::fillImpl( const LHCb::Particle* p,
   // skip stable particles
   if ( p->isBasicParticle() ) return StatusCode::SUCCESS; 
 
-  const LHCb::ParticleProperty* pp = ppSvc()->find( p->particleID() );
-  if (0==pp)
-  {
-    err() << "Unknown PID " << p->particleID() << endmsg ;
-    return StatusCode::SUCCESS ;
-  }
+  const LHCb::ParticleProperty* pp = particleProperty( p->particleID() );
+  if (!pp) { return StatusCode::SUCCESS; }
 
   const double mm = pp->mass() ;
   const double em = mm*0.1; // CRJ : Arbitary I know. To be improved ...

@@ -1,4 +1,4 @@
-// $Id: PidPlotTool.cpp,v 1.4 2009-02-13 12:28:16 jonrob Exp $
+// $Id: PidPlotTool.cpp,v 1.5 2009-02-15 13:00:14 jonrob Exp $
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
@@ -80,11 +80,11 @@ void PidPlotTool::fillPID ( double val, double p,
                             const std::string & trailer ) 
 {
   plot ( val,
-         histoName("DLL"+part,pp,trailer),
-         "DLL("+part+"-pi)>0 : "+pp->name()+" in "+trailer,
+         histoName("CombDLL"+part,pp,trailer),
+         "CombDLL("+part+"-pi)>0 : "+pp->name()+" in "+trailer,
          -100., 100., nBins() );
   profile1D ( p, double(val>0), 
               histoName("DLLvP"+part,pp,trailer),
-              "DLL("+part+"-pi)>0 vs Momentum : "+pp->name()+" in "+trailer,
+              "CombDLL("+part+"-pi)>0 vs Momentum : "+pp->name()+" in "+trailer,
               0., 100., nBins() );
 }

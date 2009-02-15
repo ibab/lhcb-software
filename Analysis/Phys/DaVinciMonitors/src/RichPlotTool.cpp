@@ -1,4 +1,4 @@
-// $Id: RichPlotTool.cpp,v 1.1 2009-02-13 12:28:16 jonrob Exp $
+// $Id: RichPlotTool.cpp,v 1.2 2009-02-15 13:00:14 jonrob Exp $
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
@@ -14,6 +14,7 @@ using namespace Gaudi::Units;
 
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( RichPlotTool ) ;
+
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -21,8 +22,7 @@ RichPlotTool::RichPlotTool( const std::string& type,
                             const std::string& name,
                             const IInterface* parent )
   : BasePlotTool ( type, name , parent ),
-    m_jos        ( NULL ),
-    m_plots      ( NULL )
+    m_jos        ( NULL )
 {
   declareInterface<IPlotTool>(this);
   declareProperty( "ExtraHistos", m_extraHistos = true ); 
@@ -34,28 +34,10 @@ RichPlotTool::RichPlotTool( const std::string& type,
 RichPlotTool::~RichPlotTool( ) {}
 
 //=============================================================================
-// Init
-//=============================================================================
-StatusCode RichPlotTool::initialize()
-{
-  StatusCode sc = BasePlotTool::initialize();
-  if ( sc.isFailure() ) return sc;
-
-  // turn on extra histos for the RICH plot tool
-  const std::string toolname = "RichPlots";
-  BooleanProperty p( "ExtraHistos", m_extraHistos );
-  sc = joSvc()->addPropertyToCatalogue( name()+"."+toolname, p );
-  if ( sc.isFailure() ) { this -> Error( "Error setting property" ); }
-  m_plots = tool<Rich::Rec::IPIDPlots>("Rich::Rec::PIDPlots", toolname, this );
-
-  return sc;
-}
-
-//=============================================================================
 // Daughter plots - just mass plots
 //=============================================================================
 StatusCode RichPlotTool::fillImpl( const LHCb::Particle* p,
-                                   const std::string /* trailer */ )
+                                   const std::string trailer )
 {
   // skip composite particles
   if ( !(p->isBasicParticle()) ) return StatusCode::SUCCESS; 
@@ -67,15 +49,9 @@ StatusCode RichPlotTool::fillImpl( const LHCb::Particle* p,
 
   // stable RICH particle type
   const Rich::ParticleIDType pid = pidType(prop);
-  if ( pid == Rich::Unknown )
-  {
-    std::ostringstream mess;
-    mess << "Unknown RICH stable particle : " << prop->particle();
-    Warning( mess.str() ).ignore();
-  }
   
   // fill the plots
-  m_plots->plots( p->proto()->richPID(), pid );
+  pidTool(trailer)->plots( p->proto()->richPID(), pid );
   
   return StatusCode::SUCCESS;
 }
@@ -89,6 +65,12 @@ RichPlotTool::pidType( const LHCb::ParticleProperty * prop ) const
   else if ( abs(prop->pythiaID()) == 2212 ) type = Rich::Proton;
   else if ( abs(prop->pythiaID()) == 11   ) type = Rich::Electron;
   else if ( abs(prop->pythiaID()) == 13   ) type = Rich::Muon;
+  if ( type == Rich::Unknown )
+  {
+    std::ostringstream mess;
+    mess << "Unknown RICH stable particle : " << prop->particle();
+    Warning( mess.str() ).ignore();
+  }
   return type;
 }
 
@@ -97,4 +79,26 @@ IJobOptionsSvc* RichPlotTool::joSvc() const
   if (!m_jos)
   { m_jos = this -> svc<IJobOptionsSvc>( "JobOptionsSvc" ); }
   return m_jos;
+}
+
+const Rich::Rec::IPIDPlots * 
+RichPlotTool::pidTool( const std::string & toolname ) const
+{
+  PIDToolMap::const_iterator iT = m_pidTools.find(toolname);
+  if ( iT == m_pidTools.end() )
+  {
+    // turn on extra histos for each plots tool
+    const std::string fullname = name()+"."+toolname;
+    BooleanProperty bp( "ExtraHistos", m_extraHistos );
+    StatusCode sc = joSvc()->addPropertyToCatalogue( fullname, bp );
+    // refine the histogram path
+    StringProperty sp1( "HistoTopDir", "" );
+    StringProperty sp2( "HistoDir", '"'+name()+"/"+toolname+'"' );
+    sc = sc && joSvc()->addPropertyToCatalogue( fullname, sp1 );
+    sc = sc && joSvc()->addPropertyToCatalogue( fullname, sp2 );
+    if ( sc.isFailure() ) { Exception( "Error setting properties" ); }
+    // get and return the tool
+    return m_pidTools[toolname] = tool<Rich::Rec::IPIDPlots>("Rich::Rec::PIDPlots",toolname,this);
+  }
+  return iT->second;
 }
