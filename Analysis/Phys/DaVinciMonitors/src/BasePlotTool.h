@@ -1,4 +1,4 @@
-// $Id: BasePlotTool.h,v 1.3 2009-02-13 12:28:16 jonrob Exp $
+// $Id: BasePlotTool.h,v 1.4 2009-02-15 17:37:38 jonrob Exp $
 #ifndef BASEPLOTTOOL_H
 #define BASEPLOTTOOL_H 1
 
@@ -57,9 +57,9 @@ protected:
   /// Fill final state PID plots
   std::string histoName( const std::string & var, 
                          const LHCb::ParticleProperty* pp,
-                         const std::string & trailer )
+                         const std::string & trailer ) const
   {
-    if (0==pp) Exception("Null pp");
+    if (!pp) Exception("Null ParticleProperty");
     //return std::string(var+"_"+Decays::escape(pp->name())+"_"+trailer);
     // CRJ : Too many plots at one level ??
     return ( trailer.empty() ? 
@@ -75,11 +75,21 @@ protected:
   /// Returns the ParticleProperty object for a given ParticleID
   const LHCb::ParticleProperty * particleProperty( const LHCb::ParticleID& id ) const;
 
+  /// Fill Likelihood plots
+  void llPlots( const double var,
+                const std::string & varName,
+                const LHCb::Particle* particle,
+                const LHCb::ParticleProperty* pp,
+                const std::string & trailer,
+                const double dllLimit = 30 ) const;
+
 private:
 
   LHCb::IParticlePropertySvc* m_ppSvc; ///< PPSvc.
 
-  int m_bins;                    ///< Number of bins
+  unsigned int m_bins;                 ///< Number of bins
+
+  double m_dllCut;                     ///< DLL cut value
 
 };
 

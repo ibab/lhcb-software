@@ -1,53 +1,54 @@
-// $Id: MassPlotTool.cpp,v 1.3 2009-02-15 17:37:38 jonrob Exp $
+// $Id: MomentumPlotTool.cpp,v 1.1 2009-02-15 17:37:38 jonrob Exp $
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
 // local
-#include "MassPlotTool.h"
+#include "MomentumPlotTool.h"
 
 using namespace Gaudi::Units;
 //-----------------------------------------------------------------------------
-// Implementation file for class : MassPlotTool
+// Implementation file for class : MomentumPlotTool
 //
 // 2008-12-05 : Patrick Koppenburg
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( MassPlotTool ) ;
+DECLARE_TOOL_FACTORY( MomentumPlotTool ) ;
+
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-MassPlotTool::MassPlotTool( const std::string& type,
-                            const std::string& name,
-                            const IInterface* parent )
+MomentumPlotTool::MomentumPlotTool( const std::string& type,
+                                    const std::string& name,
+                                    const IInterface* parent )
   : BasePlotTool ( type, name , parent )
 {
+  // interface
   declareInterface<IPlotTool>(this);
 }
 
 //=============================================================================
 // Standard destructor
 //=============================================================================
-MassPlotTool::~MassPlotTool( ) {}
+MomentumPlotTool::~MomentumPlotTool( ) {}
 
 //=============================================================================
 // Daughter plots - just mass plots
 //=============================================================================
-StatusCode MassPlotTool::fillImpl( const LHCb::Particle* p,
-                                   const std::string trailer )
+StatusCode MomentumPlotTool::fillImpl( const LHCb::Particle* p,
+                                       const std::string trailer )
 {
-  // skip stable particles
-  if ( p->isBasicParticle() ) return StatusCode::SUCCESS; 
-
   const LHCb::ParticleProperty* pp = particleProperty( p->particleID() );
-  if (!pp) { return StatusCode::SUCCESS; }
+  if ( !pp ) return StatusCode::SUCCESS;
 
-  const double mm = pp->mass() ;
-  const double em = mm*0.1; // CRJ : Arbitary I know. To be improved ...
+  plot1D( p->p()/Gaudi::Units::GeV,
+          histoName("P",pp,trailer),
+          "Ptot of "+pp->name()+" in "+trailer,
+          0, 100, nBins() );
+  plot1D( p->pt()/Gaudi::Units::GeV,
+          histoName("Pt",pp,trailer),
+          "Pt of "+pp->name()+" in "+trailer,
+          0, 10, nBins() );
 
-  plot( p->measuredMass(),
-        histoName("M",pp,trailer),"Mass of "+pp->name()+"_"+trailer, 
-        mm-em, mm+em, nBins() );
-  
   return StatusCode::SUCCESS;
 }

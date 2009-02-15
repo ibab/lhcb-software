@@ -1,4 +1,4 @@
-// $Id: BasePlotTool.cpp,v 1.3 2009-02-13 12:28:16 jonrob Exp $
+// $Id: BasePlotTool.cpp,v 1.4 2009-02-15 17:37:38 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -6,6 +6,9 @@
 
 // local
 #include "BasePlotTool.h"
+
+// boost
+#include "boost/lexical_cast.hpp"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : BasePlotTool
@@ -22,7 +25,10 @@ BasePlotTool::BasePlotTool( const std::string& type,
   : GaudiHistoTool ( type, name , parent )
   , m_ppSvc(0)
 {
+  // interface
   declareInterface<IPlotTool>(this);
+  // JOs
+  declareProperty( "DllCut", m_dllCut = 0 );
   declareProperty( "HistoBins", m_bins = 50 );
 }
 
@@ -80,4 +86,24 @@ BasePlotTool::particleProperty( const LHCb::ParticleID& id ) const
     Warning( mess.str(), StatusCode::SUCCESS, 1 );
   }
   return prop;
+}
+
+// PID DLL plots
+void BasePlotTool::llPlots( const double var, 
+                            const std::string & varName,
+                            const LHCb::Particle* particle,
+                            const LHCb::ParticleProperty* pp,
+                            const std::string & trailer,
+                            const double dllLimit ) const
+{
+  plot1D ( var,
+           histoName(varName,pp,trailer),
+           varName+" : "+pp->name()+" in "+trailer,
+           -dllLimit, dllLimit, nBins() );
+  profile1D ( particle->p()/Gaudi::Units::GeV, double(var>m_dllCut),
+              histoName(varName+"vP",pp,trailer),
+              varName+">"
+              +boost::lexical_cast<std::string>(m_dllCut)+
+              " vs Momentum : "+pp->name()+" in "+trailer,
+              0., 100., nBins() );
 }

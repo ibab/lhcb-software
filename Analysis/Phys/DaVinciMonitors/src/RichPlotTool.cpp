@@ -1,4 +1,4 @@
-// $Id: RichPlotTool.cpp,v 1.2 2009-02-15 13:00:14 jonrob Exp $
+// $Id: RichPlotTool.cpp,v 1.3 2009-02-15 17:37:38 jonrob Exp $
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
@@ -47,11 +47,15 @@ StatusCode RichPlotTool::fillImpl( const LHCb::Particle* p,
   // If not available, just abort
   if ( !prop ) { return StatusCode::SUCCESS; }
 
+  // Does this proto have RichPID info ?
+  const LHCb::RichPID * rpid = p->proto()->richPID();
+  if ( !rpid ) { return StatusCode::SUCCESS; }
+
   // stable RICH particle type
   const Rich::ParticleIDType pid = pidType(prop);
   
-  // fill the plots
-  pidTool(trailer)->plots( p->proto()->richPID(), pid );
+  // fill the plots 
+  pidTool(trailer)->plots( rpid, pid );
   
   return StatusCode::SUCCESS;
 }

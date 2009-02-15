@@ -1,53 +1,59 @@
-// $Id: MassPlotTool.cpp,v 1.3 2009-02-15 17:37:38 jonrob Exp $
+// $Id: MuonPlotTool.cpp,v 1.1 2009-02-15 17:37:38 jonrob Exp $
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
 // local
-#include "MassPlotTool.h"
+#include "MuonPlotTool.h"
 
-using namespace Gaudi::Units;
 //-----------------------------------------------------------------------------
-// Implementation file for class : MassPlotTool
+// Implementation file for class : MuonPlotTool
 //
 // 2008-12-05 : Patrick Koppenburg
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( MassPlotTool ) ;
+DECLARE_TOOL_FACTORY( MuonPlotTool ) ;
+
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-MassPlotTool::MassPlotTool( const std::string& type,
+MuonPlotTool::MuonPlotTool( const std::string& type,
                             const std::string& name,
                             const IInterface* parent )
   : BasePlotTool ( type, name , parent )
 {
+  // interface
   declareInterface<IPlotTool>(this);
 }
 
 //=============================================================================
 // Standard destructor
 //=============================================================================
-MassPlotTool::~MassPlotTool( ) {}
+MuonPlotTool::~MuonPlotTool( ) {}
 
 //=============================================================================
 // Daughter plots - just mass plots
 //=============================================================================
-StatusCode MassPlotTool::fillImpl( const LHCb::Particle* p,
+StatusCode MuonPlotTool::fillImpl( const LHCb::Particle* p,
                                    const std::string trailer )
 {
-  // skip stable particles
-  if ( p->isBasicParticle() ) return StatusCode::SUCCESS; 
+  // skip non-stable particles
+  if ( !(p->isBasicParticle()) ) return StatusCode::SUCCESS;
 
   const LHCb::ParticleProperty* pp = particleProperty( p->particleID() );
-  if (!pp) { return StatusCode::SUCCESS; }
 
-  const double mm = pp->mass() ;
-  const double em = mm*0.1; // CRJ : Arbitary I know. To be improved ...
+  const LHCb::ProtoParticle * proto = p->proto() ;
+  if ( !proto ) return StatusCode::SUCCESS;
 
-  plot( p->measuredMass(),
-        histoName("M",pp,trailer),"Mass of "+pp->name()+"_"+trailer, 
-        mm-em, mm+em, nBins() );
-  
+  // HasMuon efficiency
+  profile1D( p->p()/Gaudi::Units::GeV,
+             double(proto->muonPID()!=NULL),
+             histoName("MuonPID",pp,trailer),
+             "Has MuonPID vs p of "+pp->name()+" in "+trailer,
+             0., 100., nBins() );
+
+  llPlots( proto->info(LHCb::ProtoParticle::MuonMuLL, -1000), "MuonMuLL",  p, pp, trailer );
+  llPlots( proto->info(LHCb::ProtoParticle::MuonBkgLL,-1000), "MuonBkgLL", p, pp, trailer );
+
   return StatusCode::SUCCESS;
 }

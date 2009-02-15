@@ -1,53 +1,61 @@
-// $Id: MassPlotTool.cpp,v 1.3 2009-02-15 17:37:38 jonrob Exp $
+// $Id: CaloPlotTool.cpp,v 1.1 2009-02-15 17:37:38 jonrob Exp $
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
 // local
-#include "MassPlotTool.h"
+#include "CaloPlotTool.h"
 
 using namespace Gaudi::Units;
 //-----------------------------------------------------------------------------
-// Implementation file for class : MassPlotTool
+// Implementation file for class : CaloPlotTool
 //
 // 2008-12-05 : Patrick Koppenburg
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( MassPlotTool ) ;
+DECLARE_TOOL_FACTORY( CaloPlotTool ) ;
+
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-MassPlotTool::MassPlotTool( const std::string& type,
+CaloPlotTool::CaloPlotTool( const std::string& type,
                             const std::string& name,
                             const IInterface* parent )
   : BasePlotTool ( type, name , parent )
 {
+  // interface
   declareInterface<IPlotTool>(this);
 }
 
 //=============================================================================
 // Standard destructor
 //=============================================================================
-MassPlotTool::~MassPlotTool( ) {}
+CaloPlotTool::~CaloPlotTool( ) {}
 
 //=============================================================================
 // Daughter plots - just mass plots
 //=============================================================================
-StatusCode MassPlotTool::fillImpl( const LHCb::Particle* p,
+StatusCode CaloPlotTool::fillImpl( const LHCb::Particle* p,
                                    const std::string trailer )
 {
-  // skip stable particles
-  if ( p->isBasicParticle() ) return StatusCode::SUCCESS; 
+  // skip non-stable particles
+  if ( !(p->isBasicParticle()) ) return StatusCode::SUCCESS;
 
   const LHCb::ParticleProperty* pp = particleProperty( p->particleID() );
-  if (!pp) { return StatusCode::SUCCESS; }
 
-  const double mm = pp->mass() ;
-  const double em = mm*0.1; // CRJ : Arbitary I know. To be improved ...
+  const LHCb::ProtoParticle * proto = p->proto() ;
+  if ( !proto ) return StatusCode::SUCCESS;
 
-  plot( p->measuredMass(),
-        histoName("M",pp,trailer),"Mass of "+pp->name()+"_"+trailer, 
-        mm-em, mm+em, nBins() );
-  
+  llPlots( proto->info(LHCb::ProtoParticle::EcalPIDe, -1000), "EcalPIDe",  p, pp, trailer );
+  llPlots( proto->info(LHCb::ProtoParticle::EcalPIDmu,-1000), "EcalPIDmu", p, pp, trailer );
+
+  llPlots( proto->info(LHCb::ProtoParticle::HcalPIDe, -1000), "HcalPIDe",  p, pp, trailer );
+  llPlots( proto->info(LHCb::ProtoParticle::HcalPIDmu,-1000), "HcalPIDmu", p, pp, trailer );
+
+  llPlots( proto->info(LHCb::ProtoParticle::PrsPIDe,  -1000), "PrsPIDe",   p, pp, trailer );
+
+  llPlots( proto->info(LHCb::ProtoParticle::BremPIDe, -1000), "BremPIDe",  p, pp, trailer );
+
   return StatusCode::SUCCESS;
 }
+

@@ -1,5 +1,5 @@
 ##############################################################################
-# $Id: DVMonitorDst.py,v 1.9 2009-02-13 12:28:16 jonrob Exp $
+# $Id: DVMonitorDst.py,v 1.10 2009-02-15 17:37:38 jonrob Exp $
 #
 # syntax: gaudirun.py $DAVINCIMONITORSROOT/options/DVMonitorDst.py
 #
@@ -46,7 +46,9 @@ plotter.addTool(PhysDesktop())
 plotter.PhysDesktop.InputLocations = [ "Jpsi2MuPi" ]
 plotter.PeakCut = "(ADMASS('J/psi(1S)')<5*MeV)"
 plotter.SideBandCut = "(ADMASS('J/psi(1S)')>20*MeV)"
-plotter.PlotTools = [ "MassPlotTool","PidPlotTool","RichPlotTool" ]
+plotter.PlotTools = [ "MassPlotTool","MomentumPlotTool",
+                      "CombinedPidPlotTool",
+                      "RichPlotTool","CaloPlotTool","MuonPlotTool" ]
 JpsiSeq.Members += [ plotter ]
 ##############################################################################
 #

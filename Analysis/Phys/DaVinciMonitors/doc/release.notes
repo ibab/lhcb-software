@@ -4,6 +4,11 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-02-15 - Chris Jones
+ - Add Calo and Muon specific PID plot tools. 
+ - Rename PidPlotTool CombinedPidPlotTool to better match its function.
+ - Add a momentum plot tool
+
 ! 2009-02-13 - Chris Jones
  - Rework a little the plotting tools, to merge some functionality from 
    similar RICH tools.
