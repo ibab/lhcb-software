@@ -1,4 +1,4 @@
-// $Id: RichPlotTool.cpp,v 1.3 2009-02-15 17:37:38 jonrob Exp $
+// $Id: RichPlotTool.cpp,v 1.4 2009-02-15 22:03:51 jonrob Exp $
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
@@ -37,7 +37,7 @@ RichPlotTool::~RichPlotTool( ) {}
 // Daughter plots - just mass plots
 //=============================================================================
 StatusCode RichPlotTool::fillImpl( const LHCb::Particle* p,
-                                   const std::string trailer )
+                                   const std::string& trailer )
 {
   // skip composite particles
   if ( !(p->isBasicParticle()) ) return StatusCode::SUCCESS; 

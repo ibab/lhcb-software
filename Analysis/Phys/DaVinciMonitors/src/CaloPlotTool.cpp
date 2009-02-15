@@ -1,4 +1,4 @@
-// $Id: CaloPlotTool.cpp,v 1.1 2009-02-15 17:37:38 jonrob Exp $
+// $Id: CaloPlotTool.cpp,v 1.2 2009-02-15 22:03:51 jonrob Exp $
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
@@ -36,7 +36,7 @@ CaloPlotTool::~CaloPlotTool( ) {}
 // Daughter plots - just mass plots
 //=============================================================================
 StatusCode CaloPlotTool::fillImpl( const LHCb::Particle* p,
-                                   const std::string trailer )
+                                   const std::string& trailer )
 {
   // skip non-stable particles
   if ( !(p->isBasicParticle()) ) return StatusCode::SUCCESS;

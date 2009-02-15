@@ -1,4 +1,4 @@
-// $Id: BasePlotTool.h,v 1.4 2009-02-15 17:37:38 jonrob Exp $
+// $Id: BasePlotTool.h,v 1.5 2009-02-15 22:03:51 jonrob Exp $
 #ifndef BASEPLOTTOOL_H
 #define BASEPLOTTOOL_H 1
 
@@ -52,7 +52,7 @@ protected:
 
   /// Fill plots
   virtual StatusCode fillImpl( const LHCb::Particle *p,
-                               const std::string trailer = "" ) = 0;
+                               const std::string & trailer = "" ) = 0;
 
   /// Fill final state PID plots
   std::string histoName( const std::string & var, 

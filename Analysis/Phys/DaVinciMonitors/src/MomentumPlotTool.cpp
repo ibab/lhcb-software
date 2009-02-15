@@ -1,4 +1,4 @@
-// $Id: MomentumPlotTool.cpp,v 1.1 2009-02-15 17:37:38 jonrob Exp $
+// $Id: MomentumPlotTool.cpp,v 1.2 2009-02-15 22:03:51 jonrob Exp $
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
@@ -36,7 +36,7 @@ MomentumPlotTool::~MomentumPlotTool( ) {}
 // Daughter plots - just mass plots
 //=============================================================================
 StatusCode MomentumPlotTool::fillImpl( const LHCb::Particle* p,
-                                       const std::string trailer )
+                                       const std::string& trailer )
 {
   const LHCb::ParticleProperty* pp = particleProperty( p->particleID() );
   if ( !pp ) return StatusCode::SUCCESS;

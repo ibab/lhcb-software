@@ -1,4 +1,4 @@
-// $Id: SimplePlots.h,v 1.1.1.1 2008-12-05 16:41:05 pkoppenb Exp $
+// $Id: SimplePlots.h,v 1.2 2009-02-15 22:03:51 jonrob Exp $
 #ifndef SIMPLEPLOTS_H 
 #define SIMPLEPLOTS_H 1
 
@@ -20,8 +20,11 @@
  *  @author Patrick KOPPENBURG
  *  @date   2004-10-22
  */
-class SimplePlots : public DVAlgorithm {
+class SimplePlots : public DVAlgorithm 
+{
+
 public: 
+
   /// Standard constructor
   SimplePlots( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -31,9 +34,8 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-protected:
-
 private:
+
   IPlotTool* m_plots;
   std::string m_plotTool;
   

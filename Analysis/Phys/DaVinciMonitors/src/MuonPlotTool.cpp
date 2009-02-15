@@ -1,4 +1,4 @@
-// $Id: MuonPlotTool.cpp,v 1.2 2009-02-15 21:35:03 jonrob Exp $
+// $Id: MuonPlotTool.cpp,v 1.3 2009-02-15 22:03:51 jonrob Exp $
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
@@ -35,7 +35,7 @@ MuonPlotTool::~MuonPlotTool( ) {}
 // Daughter plots - just mass plots
 //=============================================================================
 StatusCode MuonPlotTool::fillImpl( const LHCb::Particle* p,
-                                   const std::string trailer )
+                                   const std::string& trailer )
 {
   // skip non-stable particles
   if ( !(p->isBasicParticle()) ) return StatusCode::SUCCESS;
