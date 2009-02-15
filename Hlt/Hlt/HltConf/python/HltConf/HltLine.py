@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.37 2009-02-12 12:25:45 graven Exp $ 
+# $Id: HltLine.py,v 1.38 2009-02-15 10:35:13 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.37 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.38 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt line itself 
@@ -89,8 +89,6 @@ from Configurables import HltVertexFilter        as VertexFilter
 from Configurables import HltVertexUpgrade       as VertexUpgrade 
 from Configurables import HltL0MuonCandidates    as L0MuonCandidates 
 from Configurables import HltL0CaloCandidates    as L0CaloCandidates 
-from Configurables import HltL0MuonPrepare       as L0MuonPrepare 
-from Configurables import HltL0CaloPrepare       as L0CaloPrepare 
 from Configurables import HltVertexToTracks      as VertexToTracks 
 from Configurables import HltAddPhotonToVertex   as AddPhotonToVertex
 
@@ -270,8 +268,6 @@ _types_ = { TrackUpgrade  : 'TU'
           , VertexUpgrade : 'VU'
           , L0CaloCandidates : 'L0Calo'
           , L0MuonCandidates : 'L0Muon'
-          , L0CaloPrepare : 'L0CaloPrepare'
-          , L0MuonPrepare : 'L0MuonPrepare'
           , AddPhotonToVertex : 'AddPhotonToVertex'
           } 
 

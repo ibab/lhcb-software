@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltPhotonLines.py,v 1.4 2009-02-10 13:04:54 graven Exp $
+# $Id: HltPhotonLines.py,v 1.5 2009-02-15 10:35:14 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Photon Lines
@@ -12,7 +12,7 @@
 '''
 # =============================================================================
 __author__  = 'Gerhard Raven Gerhard.Raven@nikhef.nl'
-__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $'
+__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $'
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -20,7 +20,6 @@ from LHCbKernel.Configuration import *
 
 from Configurables import GaudiSequencer
 from Configurables import PatMatchTool
-from Configurables import HltL0CaloPrepare
 from Configurables import HltTrackUpgrade
 
 from HltConf.HltLine import Hlt1Line   as Line
