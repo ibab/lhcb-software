@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc_Item.cpp,v 1.4 2007-07-31 17:36:52 marcocle Exp $
+// $Id: UpdateManagerSvc_Item.cpp,v 1.5 2009-02-16 14:22:56 cattanem Exp $
 // Include files 
 
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -172,7 +172,8 @@ StatusCode UpdateManagerSvc::Item::update(IDataProviderSvc *dp,const Gaudi::Time
     if (!path.empty()) (*log) << " " << path;
     (*log) << endmsg;
   }
-  return StatusCode::SUCCESS;
+  sc = StatusCode::SUCCESS;  
+  return sc;
 }
 //=============================================================================
 // Adds a child item to the given member function

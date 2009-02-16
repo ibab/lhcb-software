@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.63 2009-02-04 18:02:27 marcocle Exp $ 
+! $Id: release.notes,v 1.64 2009-02-16 14:22:56 cattanem Exp $ 
 ! =============================================================================
 ! package DetDescSvc
 ! package manager : Marco Clemencic, Juan Palacios ?
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
+
+! 2009-02-16 - Marco Cattaneo
+ - Fix untested StatusCode in UpdateManagerSvc_item.cpp
 
 ! 2009-02-04 - Marco Clemencic
  - Using the extended RunChangeIncident in RunChangeHandlerSvc to get the run
