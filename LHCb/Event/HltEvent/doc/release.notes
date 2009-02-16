@@ -4,6 +4,9 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+! 2009-02-16 - Jaap Panman
+ - move HltLumiSummary to LumiEvent
+
 !======================== HltEvent v8r14 2009-01-08 ==========================
 ! 2008-12-10 - Tomasz Skwarnicki
  - create custom dictionary for std::vector<const HltObjectSummary*>
