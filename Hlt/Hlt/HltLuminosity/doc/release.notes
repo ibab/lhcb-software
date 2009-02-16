@@ -4,6 +4,9 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+! 2009-02-16 - Jaap Panman
+ - Move HltLumiSummaryDecoder to Event/LumiEvent to avoid dependency on Hlt in Brunel
+
 ! 2009-02-03 - Gerhard Raven
  - fix another gcc 4.x compile error
 
@@ -17,6 +20,7 @@
  - fix gcc 4.x compile error
 
 !========================== HltLuminosity v2r4 2009-01-15 ===================
+
 ! 2009-01-13 - Gerhard Raven
  - follow changes to IHltDataSvc::selection in HltBase
 
