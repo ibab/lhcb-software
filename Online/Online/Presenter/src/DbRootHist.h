@@ -9,11 +9,14 @@
 
 #include <TH1.h>
 #include <TPad.h>
-//class TImage;
+class TImage;
+class TImagePalette;
+class TText;
 class DimInfo;
 class DimInfoMonObject;
 //class TPad;
 class TPave;
+//class TPad;
 class DimBrowser;
 
 enum ReferenceVisibility {
@@ -33,7 +36,7 @@ class DbRootHist : public HistogramIdentifier
                OnlineHistogram* onlineHist,
                pres::MsgLevel verbosity,
                DimBrowser* DimBr);
-
+//TODO: add set drawing mode: image or hist: editor mode vs. viewer
     DbRootHist (const DbRootHist & );
     DbRootHist & operator= (const DbRootHist &);
 
@@ -66,14 +69,17 @@ class DbRootHist : public HistogramIdentifier
     void setDimServiceName(std::string newDimServiceName);
     bool isAnaHist() { return m_isAnaHist;}
     const std::vector<DbRootHist*> *anaSources() {return &m_anaSources;}
-    std::string creationAlgorithm() { return m_creationAlgorithm;}
+    std::string& creationAlgorithm() { return m_creationAlgorithm;}
     std::vector<float> *anaParameters() { return &m_parameters;}
     // actual ROOT histo
     TH1*    rootHistogram;
     // Histos live in pads, so each histo must have a home
     TPad*   hostingPad;
+    void draw(TCanvas* editorCanvas, double xlow, double ylow, double xup, double yup, bool fastHitMapDraw, TPad* ovPad=NULL);
+//    void    setHostingPad(int xlow, int ylow, int xup, int yup);
     // H2Ds are rendered as images
-//    TImage* histogramImage;
+    /// true if histogram is drawn on top of another one
+    bool isOverlap() {return m_isOverlap;}
 
     /// histogram identifier
     std::string identifier()  { return m_identifier;}
@@ -100,7 +106,7 @@ class DbRootHist : public HistogramIdentifier
     bool saveTH1ToDB(TPad* pad = NULL);
     // TH1 drawing methods
     /// calls TH1 Draw method, calls setDrawOptions()
-    virtual void Draw(TPad* &pad);
+//    virtual void Draw(TPad* &pad);
     /// normalize reference (if existing and requested) to current plot
     void normalizeReference();
     int startRun()  { return m_startRun;}
@@ -112,6 +118,7 @@ class DbRootHist : public HistogramIdentifier
     bool isHistoryTrendPlotMode() { return m_historyTrendPlotMode; }  
 
   private:
+    TPad* m_drawPattern;
     DimInfo*  m_gauchocommentDimInfo;
     // TODO: have a stack of offset for bracketing
     // state of histo @ clr/rst
@@ -139,6 +146,7 @@ class DbRootHist : public HistogramIdentifier
 //    bool      m_toRefresh;
     // flag for clear/integrate
     bool  m_cleared;
+    bool m_fastHitmapPlot;
 //    std::string m_hstype;
 //    std::string m_hname;
     int m_instance;
@@ -153,6 +161,9 @@ class DbRootHist : public HistogramIdentifier
     int m_retryInit;
 
     std::string m_refOption;
+    TImage* m_histogramImage;
+    TImagePalette* m_prettyPalette;
+//    TText* m_textTitle;
     TH1* m_reference;
     int  m_startRun;
     std::string m_dataType;
@@ -167,6 +178,8 @@ class DbRootHist : public HistogramIdentifier
     TPave* m_statpave;
 
     bool m_historyTrendPlotMode; 
+
+    bool m_isOverlap;
 
     void cleanAnaSources();
     void loadAnaSources();

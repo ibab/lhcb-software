@@ -1,3 +1,4 @@
+#include <map>
 #include <TSystem.h>
 #include <TGButton.h>
 #include <TGTextEntry.h>
@@ -164,30 +165,59 @@ void PageSaveDialog::ok()
 
     try {
       OnlineHistPage* page = m_histogramDB->getPage(s_slash+folderName+s_slash+pageName);
+      std::map<TPad*,OnlineHistogram*> padOwner;
+      bool thereAreOverlaps;
       page->removeAllHistograms();
       double xlow, ylow, xup, yup;
 
       m_DbHistosOnPageIt = m_mainFrame->dbHistosOnPage.begin();
+      // first, save owners of pads (not overlaps)
       while (m_DbHistosOnPageIt != m_mainFrame->dbHistosOnPage.end()) {
-        if ((*m_DbHistosOnPageIt)->hostingPad) {
-          ((*m_DbHistosOnPageIt)->hostingPad)->GetPadPar(xlow, ylow, xup, yup);
-          OnlineHistogram* onlineHistogram = page->addHistogram((*m_DbHistosOnPageIt)->onlineHistogram(),
-              (float)xlow , (float)ylow, (float)xup, (float)yup);
-          if (0 != onlineHistogram) {
-            (*m_DbHistosOnPageIt)->setOnlineHistogram(onlineHistogram);
+        if( (*m_DbHistosOnPageIt)->isOverlap()) {
+          thereAreOverlaps = true;
+        }
+        else {
+          if ((*m_DbHistosOnPageIt)->hostingPad) {
+            ((*m_DbHistosOnPageIt)->hostingPad)->GetPadPar(xlow, ylow, xup, yup);
+            OnlineHistogram* onlineHistogram =  
+              page->addHistogram((*m_DbHistosOnPageIt)->onlineHistogram(),
+                                 (float)xlow , (float)ylow, (float)xup, (float)yup);
+            if (0 != onlineHistogram) {
+              (*m_DbHistosOnPageIt)->setOnlineHistogram(onlineHistogram);
+            }
+            padOwner[(*m_DbHistosOnPageIt)->hostingPad] = (*m_DbHistosOnPageIt)->onlineHistogram();          
           }
         }
         m_DbHistosOnPageIt++;
       }
 
       if (page->save()) {
+        if (thereAreOverlaps) {
+          int iov=0;
+          // add definitions of overlapped histograms
+          for (m_DbHistosOnPageIt = m_mainFrame->dbHistosOnPage.begin();
+               m_DbHistosOnPageIt != m_mainFrame->dbHistosOnPage.end();
+               m_DbHistosOnPageIt++) {
+            if( (*m_DbHistosOnPageIt)->isOverlap()) {
+              OnlineHistogram* onlineHistogram =
+                page->addOverlapHistogram((*m_DbHistosOnPageIt)->onlineHistogram(),
+                                          padOwner[(*m_DbHistosOnPageIt)->hostingPad],
+                                          (padOwner[(*m_DbHistosOnPageIt)->hostingPad])->instance(),
+                                          iov++);
+              if (0 != onlineHistogram) 
+                (*m_DbHistosOnPageIt)->setOnlineHistogram(onlineHistogram);
+            }
+          }
+          page->save();
+        }
+
         // now save current ROOT display options of histograms on page
         m_DbHistosOnPageIt = m_mainFrame->dbHistosOnPage.begin();
         while (m_DbHistosOnPageIt != m_mainFrame->dbHistosOnPage.end()) {
           if((*m_DbHistosOnPageIt)->onlineHistogram()->page() == page->name()) {
 // TODO: get rid of ->cd() because it stealthily diverts gPad
 // TODO: should rather use hostingPad internally: no args
-(*m_DbHistosOnPageIt)->hostingPad->cd();
+            (*m_DbHistosOnPageIt)->hostingPad->cd();
             (*m_DbHistosOnPageIt)->saveTH1ToDB((*m_DbHistosOnPageIt)->hostingPad);
           }
           m_DbHistosOnPageIt++;

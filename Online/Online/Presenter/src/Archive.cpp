@@ -191,10 +191,11 @@ void Archive::fillHistogram(DbRootHist* histogram,
       OMAHcreatorAlg* creator = dynamic_cast<OMAHcreatorAlg*>
                      (m_analysisLib->getAlg(histogram->creationAlgorithm()));
       if (creator && sourcesOk) {
+        std::string htitle(histogram->onlineHistogram()->htitle());
         histogram->rootHistogram = creator->exec(&sources,
                                                  histogram->anaParameters(),
-                                                 histogram->identifier(),
-                                                 histogram->onlineHistogram()->htitle(),
+                                                 histogram->onlineHistogram()->identifier(),
+                                                 htitle,
                                                  histogram->isEmptyHisto() ? NULL : histogram->rootHistogram);
         histogram->beRegularHisto();
       }
