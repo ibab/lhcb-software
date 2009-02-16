@@ -10,11 +10,17 @@
   </logicalservice>
 
   <logicalservice name="CondDBPrivate">
-    <service name="oracle://CONDDB_RAC/conddb_private_admin" accessMode="update" authentication="password" />
+    <service name="oracle://LHCBONR_COOL/lhcb_online_conddb_private" accessMode="update" authentication="password" />
   </logicalservice>
 
+<!--
+  <logicalservice name="CondDBPrivate">
+    <service name="oracle://CONDDB_RAC/conddb_private_admin" accessMode="update" authentication="password" />
+  </logicalservice>
+-->
+
   <logicalservice name="CondDBOnlineTest">
-    <service name="oracle://CONDITIONSDB/condb_admin" accessMode="update" authentication="password" />
+    <service name="oracle://(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=ora01.lbdaq.cern.ch)(PORT=1526))(ADDRESS=(PROTOCOL=TCP)(HOST=ora01.lbdaq.cern.ch)(PORT=1521))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=CONDITIONSDB)))/condb_admin" accessMode="update" authentication="password" />
   </logicalservice>
 
 </servicelist>

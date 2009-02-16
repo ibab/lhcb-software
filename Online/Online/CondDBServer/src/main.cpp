@@ -163,7 +163,9 @@ void Partition::getContent()
            //if the node is a folder (not a folderSet) look for the condition name  inside
            folder = db->getFolder(*node_name);
            this->foldersMap.insert(std::pair<std::string, FolderBuffer> ( *node_name, FolderBuffer(folder)));  //OPTIMITATION
-           objs = folder->browseObjects(cool::ValidityKeyMin, cool:: ValidityKeyMax, cool::ChannelSelection::all() );
+           
+           //This is not needed any more, bc the folder name and teh condition name, now are always the same.
+           /*objs = folder->browseObjects(cool::ValidityKeyMin, cool:: ValidityKeyMax, cool::ChannelSelection::all() );
            obj = objs->next();
            payloadData = obj->payloadValue("data");
 	   pos =  payloadData.find(conditionTag,0);
@@ -177,7 +179,20 @@ void Partition::getContent()
            {
 		 //If there is no condition in the folder the character "-" is added to the conditions 
                   this->conditions.push_back(strChar);
-          } 
+		  } */
+           pos = (*node_name).find_last_of("/");
+           if( pos == std::string::npos)
+	   {
+             std::cout << "ERROR: can't get condition name in the node:" << *node_name << std::endl;
+             this->conditions.push_back(strChar);
+	   }
+           else
+	   {
+             condition_name = (*node_name).substr(pos+1);
+	     //std::cout << "condition_name:" << condition_name; 
+             this->conditions.push_back(condition_name);
+           }
+
       }
       else
       {
@@ -426,7 +441,7 @@ int main (int argc, char* argv[])
   Command recvCommand;
   DimServer::start("COND_DB_INTERFACE");
   std::cout << std::endl;
-  std::cout << "CONDITIONS DB INTERFACE ... DIM SERVER: START (TEST MODE 10)" << std::endl;
+  std::cout << "CONDITIONS DB INTERFACE ... DIM SERVER: START (PROD MODE 1)" << std::endl;
   std::cout << std::endl;
   while(1)
   {
