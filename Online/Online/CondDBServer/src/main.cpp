@@ -134,9 +134,7 @@ void Partition::getContent()
   std::string payloadData;
   std::string conditionTag = "<condition name=\"";
   std::string::size_type pos;
-  std::string::size_type pos2;
   std::string condition_name;
-
   
 
   std::cout << "--- CONDITIONS DB: " << conexion_str  << std::endl;   

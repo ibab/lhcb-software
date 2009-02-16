@@ -8,6 +8,7 @@
  - Moved the PRIVATE partition to LHCBONR_COOL.
  - Speed up of the start up of the server.
  - Added scripts to automatically grant the privileges to the new folders.
+ - Fixed compilation warning.
 
 ! 2008-09-17 - Maria Del Carmen Barandela Pazos
  - Updated dblookup.xml to use the LHCBONR_COOL Oracle service.
