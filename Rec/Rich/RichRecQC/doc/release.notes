@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-02-16 - Antonis Papanestis
+ - Added braces in line 111 to avoid warning about ambiguous else.
+
 ! 2009-02-12 - Antonis Papanestis
  - Introduced variable histogram output to the AlignmentMonitor
    + Minimal - only the most basic alignment histograms

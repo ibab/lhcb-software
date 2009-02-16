@@ -4,7 +4,7 @@
  *  Implementation file for algorithm class : RichAlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.cpp,v 1.7 2009-02-12 21:52:56 papanest Exp $
+ *  $Id: RichAlignmentMonitor.cpp,v 1.8 2009-02-16 16:03:18 papanest Exp $
 
  *
  *  @author Antonis Papanestis
@@ -109,8 +109,8 @@ StatusCode AlignmentMonitor::initialize()
     Anatoly Solomin 2008-11-01.
   */
   if ( !m_minimalHistoOutput )
-    BOOST_FOREACH( std::string strCombi, m_preBookHistos )
-    {
+  {
+    BOOST_FOREACH( std::string strCombi, m_preBookHistos ){
       std::string h_id = "dThetavphiRec"+strCombi;
       std::string sph  = strCombi.substr(0,2);
       std::string flat = strCombi.substr(2,2);
@@ -129,6 +129,7 @@ StatusCode AlignmentMonitor::initialize()
                 m_deltaThetaHistoRange, 50 );
       }
     }
+  }
 
   // use of a single 0, plot all HPDs
   if (m_HPDList.size() == 1)
