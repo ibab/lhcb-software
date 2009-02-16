@@ -1,4 +1,4 @@
-// $Id: GaudiExample.cpp,v 1.12 2009-02-16 16:19:00 evh Exp $
+// $Id: GaudiExample.cpp,v 1.13 2009-02-16 16:22:22 evh Exp $
 
 // Include files
 #include "GaudiKernel/AlgFactory.h"
@@ -258,7 +258,7 @@ StatusCode GaudiExample::execute() {
         << " rms: " << my1Dhprof->rms() << endreq;
     
     // Track calculations for bin 3 in last my1Dhprof:
-    int ixBin=3;
+    ixBin=3;
     if (int(position.first/400*10) == ixBin ){
       sumOfWeights += position.second;
       sumOfSquaredWeights += position.second*position.second;
