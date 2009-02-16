@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.14 2009-02-16 10:37:43 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.15 2009-02-16 13:57:49 ggiacomo Exp $
 #include <cctype>
 #include "OnlineHistDB/OnlineHistDBEnv.h"
 using namespace std;
@@ -161,11 +161,13 @@ std::string OnlineHistDBEnv::getAlgParName(std::string& AlgName,
   text out[VSIZE_PARAMETERS]="";
   m_StmtMethod = "OnlineHistDB::getAlgParName";
   OCIStmt *stmt=NULL;
+  float defv;
   if (OCI_SUCCESS == 
-      prepareOCIStatement(stmt, "BEGIN ONLINEHISTDB.GETALGOPARNAME(:x1,:x2,:x3); END;") ) {
+      prepareOCIStatement(stmt, "BEGIN ONLINEHISTDB.GETALGOPARNAME(:x1,:x2,:x3, :def); END;") ) {
     myOCIBindString(stmt, ":x1", AlgName);
     myOCIBindInt(stmt, ":x2", Ipar);
     myOCIBindString(stmt, ":x3", out, VSIZE_PARAMETERS);
+    myOCIBindFloat(stmt, ":def", defv);
     myOCIStmtExecute(stmt);
     releaseOCIStatement(stmt);
   }

@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.23 2009-02-16 10:37:43 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.24 2009-02-16 13:57:49 ggiacomo Exp $
 
 #include "OnlineHistDB/OnlineHistPage.h"
 using namespace std;
@@ -338,11 +338,11 @@ bool OnlineHistPage::save() {
   sx <<  ")";
   sy <<  ")";
   stringstream command;
-  command << "BEGIN :1 := ONLINEHISTDB.DECLAREPAGE(theFullName => '"<< m_name;
+  command << "BEGIN :1 := ONLINEHISTDB.DECLAREPAGE(theFullName => '"<< m_name<<"'";
   if (!m_doc.empty())
-    command << "',theDoc => '"<< m_doc <<"'";
+    command << ",theDoc => '"<< m_doc <<"'";
   if (!m_pattern.empty())
-    command << "',thePattern => '"<< m_pattern <<"'";
+    command << ",thePattern => '"<< m_pattern <<"'";
   command << ",hlist => " << hlist.str() <<
     ",Cx => " << cx.str() <<
     ",Cy => " << cy.str() <<
