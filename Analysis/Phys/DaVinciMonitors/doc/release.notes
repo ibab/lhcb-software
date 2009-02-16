@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-02-16 - Patrick Koppenburg
+ - Add EventCounterHisto
+
 ! 2009-02-16 - Chris Jones
  - Update options to include Dstar monitoring from RichPIDQC
 
