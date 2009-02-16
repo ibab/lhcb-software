@@ -3,13 +3,13 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.56 2009-02-11 23:55:58 asolomin Exp $"
+__version__ = "$Id: Configuration.py,v 1.57 2009-02-16 16:53:45 panmanj Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
 import GaudiKernel.ProcessJobOptions
 from Configurables import ( LHCbConfigurableUser, LHCbApp, RecSysConf, TrackSys,
-                            ProcessPhase, GaudiSequencer, RichRecQCConf, DstConf )
+                            ProcessPhase, GaudiSequencer, RichRecQCConf, DstConf, LumiAlgsConf )
 
 ## @class Brunel
 #  Configurable for Brunel application
@@ -18,7 +18,7 @@ from Configurables import ( LHCbConfigurableUser, LHCbApp, RecSysConf, TrackSys,
 class Brunel(LHCbConfigurableUser):
 
     ## Possible used Configurables
-    __used_configurables__ = [ TrackSys, RecSysConf, RichRecQCConf, LHCbApp, DstConf ]
+    __used_configurables__ = [ TrackSys, RecSysConf, RichRecQCConf, LHCbApp, DstConf, LumiAlgsConf ]
 
     ## Known monitoring sequences, all run by default
     KnownMoniSubdets        = ["CALO","RICH","MUON","VELO","Tr","ST"] 
@@ -47,6 +47,7 @@ class Brunel(LHCbConfigurableUser):
        ,"InputType"       : "MDF"
        ,"OutputType"      : "DST"
        ,"PackType"        : "TES"
+       ,"WriteFSR"        : False 
        ,"Histograms"      : "Default"
        ,"NoWarnings"      : False
        ,"DatasetName"     : ""
@@ -54,7 +55,7 @@ class Brunel(LHCbConfigurableUser):
        ,"CondDBtag"       : ""
        ,"UseOracle"       : False
        ,"MainSequence"    : []
-       ,"InitSequence"    : ["Reproc", "Brunel", "Calo"]
+       ,"InitSequence"    : ["Reproc", "Brunel", "Calo", "Lumi"]
        ,"RecoSequence"    : []
        ,"MoniSequence"    : []
        ,"MCCheckSequence" : []
@@ -212,6 +213,16 @@ class Brunel(LHCbConfigurableUser):
         recInit.BrunelMemory.HistoTopDir = "Brunel/"
         recInit.BrunelMemory.HistoDir    = "MemoryTool"
 
+        # add Lumi for MDF input in offline mode
+        inputType = self.getProp( "InputType" ).upper()
+        initSeq = self.getProp( "InitSequence" )
+        if inputType in [ "MDF" ]:
+            if "Lumi" in initSeq :
+                if self.getProp("WriteFSR"):
+                    self.setOtherProps(LumiAlgsConf(),["Context","DataType"])
+                    LumiAlgsConf().LumiSequencer = GaudiSequencer("InitLumiSeq")
+
+
     def configureInput(self, inputType):
         """
         Tune initialisation according to input type
@@ -265,14 +276,27 @@ class Brunel(LHCbConfigurableUser):
             # Do not pack DC06 DSTs, for consistency with existing productions
             if self.getProp("DataType") == "DC06": packType = "NONE"
 
+            # event output
             dstWriter = OutputStream( writerName )
             dstWriter.RequireAlgs += ["Reco"] # Write only if Rec phase completed
-
             # Set a default output file name if not already defined in the user job options
             if not dstWriter.isPropertySet( "Output" ):
                 outputFile = self.outputName()
                 outputFile = outputFile + '.' + self.getProp("OutputType").lower()
                 dstWriter.Output  = "DATAFILE='PFN:" + outputFile + "' TYP='POOL_ROOTTREE' OPT='REC'"
+
+            # FSR output stream
+            if self.getProp("WriteFSR"):
+                FSRWriter = OutputFSRStream( "FSRWriter",
+                                             ItemList = [ "/RunRecords#999" ],
+                                             EvtDataSvc = "RunRecordDataSvc",
+                                             EvtConversionSvc = "RunRecordPersistencySvc", 
+                                             )
+                # Set a default output file name if not already defined in the user job options
+                if not hasattr( FSRWriter, "Output" ):
+                    FSRWriter.Output  = "DATAFILE='PFN:" + self.outputName() + "' TYP='POOL_ROOTTREE' OPT='REC'"
+
+                ApplicationMgr().OutStream.append("FSRWriter")
 
             # Define the file content
             DstConf().Writer     = writerName

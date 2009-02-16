@@ -3,6 +3,11 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-02-16 - Jaap Panman
+ - Changes to Configurable:
+   Activate LumiFSR creation for MDF files
+   Create FSR output stream 
+
 ! 2009-02-13 - Marco Cattaneo
  - Update refs for changes in Rich and Velo monitoring, and for StatusCode fix
    in TrackMatchVeloSeed
@@ -52,6 +57,7 @@ Purpose: LHCb reconstruction program
  - Change version to v34r2
 
 </PRE><H1><A NAME=v34r1>2009-01-14 Brunel v34r1</A></H1><PRE>
+
  - Changes to configurable:
    . Use new DstConf configurable to set up DST/RDST content. 
    . Enable packed DST/RDST by default (not for DC06).
