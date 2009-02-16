@@ -1,0 +1,38 @@
+#============================================================================
+# Created    : 2009-01-19
+# Maintainer : Jaap Panman
+#============================================================================
+package           LumiAlgs
+version           v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src python
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+# use   Package      v1r*    Hat
+use LumiEvent       v* Event
+use DAQEvent        v* Event
+use EventBase       v* Event
+use LHCbKernel      v* Kernel
+use GaudiAlg        v*
+
+include_path      none
+#============================================================================
+# Component library building rule
+#============================================================================
+library          LumiAlgs    ../src/*.cpp 
+
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=LumiAlgs
+
+#============================================================================
+# Setup Python Configurables
+#============================================================================
+apply_pattern install_python_modules
+

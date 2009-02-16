@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : Rec/LumiAlgs
+! Responsible : Jaap Panman
+! Purpose     : Accounting of LumiSummaries (offline code)
+!-----------------------------------------------------------------------------
+
+! 2009-02-16 - Jaap Panman
+ - Package created to do the basic offline accounting of LumiSummary data
+ - LumiAccounting:  read LumiSummaries and create LumiFSR
