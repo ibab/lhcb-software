@@ -18,22 +18,32 @@
  short page description
 
 
+\item    const std::string\& {\bf patternFile}() const ;
+
+ file name containing optional ROOT background pattern 
+
+
 \item    const bool {\bf syncWithDB}() const ;
 
  check if the page object is in sync with the DB
 
 
-\item    bool {\bf setDoc}(std::string Doc) ;
+\item    bool {\bf setDoc}(std::string \&Doc) ;
 
  set short page description
 
 
+\item    bool {\bf setPatternFile}(std::string \&Pattern) ;
+
+ set file name containing optional ROOT background pattern 
+
+
 \item    OnlineHistogram* {\bf declareHistogram}(OnlineHistogram* h,\\\mbox{}~~~~~~~~~
-				    double Xmin,\\\mbox{}~~~~~~~~~
-				    double Ymin,\\\mbox{}~~~~~~~~~
-				    double Xmax,\\\mbox{}~~~~~~~~~
-				    double Ymax,\\\mbox{}~~~~~~~~~
-				    unsigned int instance=1);
+                                    double Xmin,\\\mbox{}~~~~~~~~~
+                                    double Ymin,\\\mbox{}~~~~~~~~~
+                                    double Xmax,\\\mbox{}~~~~~~~~~
+                                    double Ymax,\\\mbox{}~~~~~~~~~
+                                    unsigned int instance=1);
 
  adds or updates an histogram on the page. Use instance $>$ 1 to use the
  same histogram more than once. Returns the object attached to page (the input
@@ -41,17 +51,35 @@
  Positions are relative to the Pad size (i.e. should be numbers from 0 to 1)
 
 
+\item    OnlineHistogram* {\bf declareOverlapHistogram}(OnlineHistogram* h,\\\mbox{}~~~~~~~~~
+                                           OnlineHistogram* onTopOf,\\\mbox{}~~~~~~~~~
+                                           unsigned int instance=1,\\\mbox{}~~~~~~~~~
+                                           int onTopOfInst=1,\\\mbox{}~~~~~~~~~
+                                           int OverlapIndex = 1);
+
+ adds or updates an histogram that has to be overdrawn on an existing histogram
+ in case of overlap of several histograms, use OverlapIndex to specify the overlap order
+
+
 \item    OnlineHistogram* {\bf addHistogram}(OnlineHistogram* h,\\\mbox{}~~~~~~~~~
-				    double Xmin,\\\mbox{}~~~~~~~~~
-				    double Ymin,\\\mbox{}~~~~~~~~~
-				    double Xmax,\\\mbox{}~~~~~~~~~
-				    double Ymax);
+                                double Xmin,\\\mbox{}~~~~~~~~~
+                                double Ymin,\\\mbox{}~~~~~~~~~
+                                double Xmax,\\\mbox{}~~~~~~~~~
+                                double Ymax);
 
  like declareHistogram, but a new instance is always created
 
 
+\item    OnlineHistogram* {\bf addOverlapHistogram}(OnlineHistogram* h,\\\mbox{}~~~~~~~~~
+                                       OnlineHistogram* onTopOf=NULL,\\\mbox{}~~~~~~~~~
+                                       int onTopOfInst=1,\\\mbox{}~~~~~~~~~
+                                       int OverlapIndex = 1);
+
+ like declareOvlapHistogram, but a new instance is always created
+
+
 \item    bool {\bf removeHistogram}(OnlineHistogram* h,\\\mbox{}~~~~~~~~~
-		       unsigned int instance=1);
+                       unsigned int instance=1);
 
  removes histogram from page, or one of its instances, returning true on success
 
@@ -62,25 +90,21 @@
  clean up the page removing all histograms
 
 
+\item    bool {\bf remove}();
+
+
+ remove the page
+
+
 \item    void {\bf rename}(std::string NewName);
 
 
  changes Page name 
 
 
-\item    void {\bf getHistogramList}(std::vector$<$OnlineHistogram*$>$ *hlist) ;
+\item    void {\bf getHistogramList}(std::vector$<$OnlineHistoOnPage*$>$ *hlist) ;
 
  fills the hlist vector with pointers to the histograms attached to this page
-
-
-\item    bool {\bf getHistLayout}(OnlineHistogram* h,\\\mbox{}~~~~~~~~~
-		     double \&Xmin,\\\mbox{}~~~~~~~~~
-		     double \&Ymin,\\\mbox{}~~~~~~~~~
-		     double \&Xmax,\\\mbox{}~~~~~~~~~
-		     double \&Ymax,\\\mbox{}~~~~~~~~~
-		     unsigned int instance=1) const;
-
- get the layout of given histogram. returns false if histogram is not found
 
 
 \item    bool {\bf save}();

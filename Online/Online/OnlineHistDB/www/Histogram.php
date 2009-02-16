@@ -4,7 +4,6 @@
 </HEAD>
 <body class=listing>
 <?
-$debug=0;
 include 'util.php';
 include 'dbforms.php';
 // show histogram set or single histogram depending on the GET input variable that specifies ID: hsid for set, hid for single
@@ -20,7 +19,7 @@ $fulllist =array_key_exists("fulllist",$_GET);
 if(isset($htype) ) {
   $conn=HistDBconnect(1);
   // query general variables
-  $query="select VH.NAME,T.TASKNAME,T.SUBSYS1,T.SUBSYS2,T.SUBSYS3,T.REFERENCE,HS.HSID,HS.NHS,HS.HSALGO,HS.HSTITLE,HS.HSTYPE,HS.NANALYSIS,HS.DESCR,HS.DOC,HS.HSDISPLAY,H.HID,H.IHS,H.SUBTITLE,H.ISTEST,H.ISANALYSISHIST,H.CREATION,H.OBSOLETENESS,H.DISPLAY,TO_CHAR(H.CREATION,'DD-Mon-YYYY') CRE_DATE,H.NBINLABX,H.NBINLABY from VIEWHISTOGRAM VH,HISTOGRAM H,HISTOGRAMSET HS, TASK T where H.HSET=HS.HSID and HS.HSTASK=T.TASKNAME and VH.HID=H.HID AND VH.${htype}='${id}' order by H.IHS";
+  $query="select VH.NAME,T.TASKNAME,T.SUBSYS1,T.SUBSYS2,T.SUBSYS3,T.REFERENCE,HS.HSID,HS.NHS,HS.HSALGO,HS.HSTITLE,HS.HSTYPE,HS.NANALYSIS,HS.DESCR,HS.DOC,HS.HSDISPLAY,H.HID,H.IHS,H.SUBTITLE,H.ISTEST,H.ISANALYSISHIST,H.CREATION,H.OBSOLETENESS,H.DISPLAY,TO_CHAR(H.CREATION,'DD-Mon-YYYY') CRE_DATE,H.NBINLABX,H.NBINLABY,H.REFPAGE from VIEWHISTOGRAM VH,HISTOGRAM H,HISTOGRAMSET HS, TASK T where H.HSET=HS.HSID and HS.HSTASK=T.TASKNAME and VH.HID=H.HID AND VH.${htype}='${id}' order by H.IHS";
   if ($debug) echo "query is $query <br>\n";
   $stid = OCIParse($conn,$query);
   OCIExecute($stid);

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.33 2008-11-20 09:27:51 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.34 2009-02-16 10:37:42 ggiacomo Exp $
 #ifndef ONLINEHISTDBENV_H
 #define ONLINEHISTDBENV_H 1
 /** @class  OnlineHistDBEnv OnlineHistDBEnv.h OnlineHistDB/OnlineHistDBEnv.h
@@ -22,8 +22,8 @@ namespace OnlineHistDBEnv_constants {
   static const std::string DB="HISTDB";
   static const std::string ACCOUNT="HIST_READER";
   static const std::string PASSWORD="reader";
-  static const unsigned int DBschema = 11;
-  static const std::string version = "v4r13";
+  static const unsigned int DBschema = 12;
+  static const std::string version = "v5r0";
 
   static const int NHTYPES=6;
   static const char HistTypeName[][4] = {
@@ -51,6 +51,12 @@ namespace OnlineHistDBEnv_constants {
   static const unsigned int VSIZE_SSNAME      =  11;
   static const unsigned int VSIZE_REFERENCE   = 101;
   static const unsigned int VSIZE_PARAMETERS  =  16;
+  static const unsigned int VSIZE_FITFUN      =  16;
+  static const unsigned int VSIZE_SAVESET     = 501;
+  static const unsigned int VSIZE_ALEVEL      =   8;
+  static const unsigned int VSIZE_MESSAGE     =4001;
+  static const unsigned int VSIZE_ANANAME     = 301;
+  static const unsigned int VSIZE_PGPATTERN   = 101;
 
   static std::string unknown = "unknown";
 }
@@ -96,11 +102,6 @@ class OnlineHistDBEnv {
 
  protected:
   OnlineHistDBEnv(std::string User); 
-  /* OnlineHistDBEnv(OCIEnv *Env, */
-/* 		  OCIError *Err, */
-/* 		  OCISvcCtx *Svc, */
-/*   		  std::string User,  */
-/*   		  int ExcLevel); */
   OnlineHistDBEnv(OnlineHistDBEnv &m);
   virtual ~OnlineHistDBEnv() 
   {  };

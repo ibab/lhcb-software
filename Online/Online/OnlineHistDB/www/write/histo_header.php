@@ -9,16 +9,28 @@ $conn=HistDBconnect(1);
 
 function update_histo_header() {
   global $conn;
-  //  echo $_POST["DESCR"]." cosi'<br>";
+
   $command="UPDATE HISTOGRAMSET SET DESCR='".sqlstring($_POST["DESCR"])."',DOC='".
-    sqlstring($_POST["DOC"])."' WHERE HSID=".$_POST["id"];
-  //echo $command."<br>";
+    sqlstring($_POST["DOC"])."' WHERE HSID=".HistoSet($_POST["id"]);
   $stid = OCIParse($conn,$command);
   OCIExecute($stid);
+
+  if($_POST["htype"] == "HID" || $_POST["NHS"] == 1 && ocirowcount($stid)>0) {
+    $refpage = $_POST["REFPAGE"];
+    if ($refpage == "none") 
+      $rpcom="NULL";
+    else 
+      $rpcom="'${refpage}'";
+    $pcommand = "UPDATE HISTOGRAM set REFPAGE=${rpcom} where HID='".
+      SingleHist($_POST["id"])."'";
+    $stid = OCIParse($conn,$pcommand);
+    OCIExecute($stid);
+  }
+  
+
   return ocirowcount($stid);
 }
 
-$id=$_POST["id"]=preg_replace("/\/.*$/","",$_POST["id"]);
 ?>
 <H2 ALIGN="CENTER">Update header for histogram set <?php echo $id ?></H2><hr>
 
@@ -32,11 +44,11 @@ if ($_POST["Update_header"] == 'Confirm') {
 } 
 else {
   echo "Please check your data and confirm <br><br>";
-  histo_header($id,$_POST["htype"],"Update");
+  histo_header($_POST["id"],$_POST["htype"],"Update");
 }
 
 ocilogoff($conn);
-echo "<br> <a href='../Histogram.php?hsid=${id}> Back to Histogram Set $id </a><br>";
+echo "<br> <a href='../Histogram.php?".strtolower($_POST["htype"])."=${id}> Back to Histogram Set $id </a><br>";
 ?>
 
 </body>

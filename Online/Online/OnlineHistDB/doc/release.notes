@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.37 2008-11-21 17:31:23 ggiacomo Exp $
+! $Id: release.notes,v 1.38 2009-02-16 10:37:42 ggiacomo Exp $
 ! Package     : OnlineHistDB
 ! Responsible : Giacomo Graziani
 !
@@ -6,9 +6,18 @@
 ! or using makedoc script in this folder
 !
 
+! 20090213 OnlineHistDB v5r0
+ - possibility to associate fit functions to histograms, for both display and analysis;
+ - table for alarm logging. New OMAMessage class (moved from OMAlib) in c++ API;
+ - optional "display page" field for histograms (page to be displayed by clicking on histo);
+ - fields for defining overlap of histograms in page. Histogram layout in page is now
+   described by a custom class OnlineHistoOnPage;
+ - new field to associate pattern file to pages 
+ - example of interface python scripts by Nicola Chiapolini (in the doc/python folder).
+
 ! 20081121 OnlineHistDB v4r14
   - add OnlineHistogram::rootName()
-  - increade Pagedoc field max length to 2000
+  - increase Pagedoc field max length to 2000
 
 ! 20081111 OnlineHistDB v4r13
   - new conventions for reference/saveset path (use env variables if available)

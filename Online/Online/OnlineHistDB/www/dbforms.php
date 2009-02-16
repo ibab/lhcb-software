@@ -6,7 +6,7 @@ function show_anahist($id) {
  $stid = OCIParse($conn,"SELECT HCID,ALGORITHM,SOURCEH1,SOURCEH2,SOURCEH3,SOURCEH4,SOURCEH5,SOURCEH6,SOURCEH7,SOURCEH8,SOURCESET from HCREATOR where HCID='".SingleHist($id)."'");
  OCIExecute($stid, OCI_DEFAULT);
  OCIFetchInto($stid, $hcreator, OCI_ASSOC );
- echo "<p>This is a <B> Display Histogram </B> obtained automatically by Analysis Task<br>
+ echo "<p>This is an <B> Analysis Histogram </B> produced by Presenter/Analysis Task<br>
   through Algorithm <span class=normal>".$hcreator["ALGORITHM"]."</span>\n ";
  if ($shsid=$hcreator["SOURCESET"]) 
    echo " from histogram set <a href='Histogram.php?hsid=${shsid}'> ${shsid} </a>\n";
@@ -50,7 +50,7 @@ function histo_header($id,$htype,$mode)
   $script=$_SERVER[PHP_SELF];
   if($mode == "display") {
     $script='write/histo_header.php';
-    foreach (array("DESCR","DOC","TASKNAME","HSALGO","HSTYPE","HSTITLE","SUBTITLE","NHS","NAME") 
+    foreach (array("DESCR","DOC","TASKNAME","HSALGO","HSTYPE","HSTITLE","SUBTITLE","NHS","NAME","REFPAGE") 
 	     as $field)
       $_POST[$field]=$histo[$field];
   }
@@ -121,7 +121,7 @@ function histo_header($id,$htype,$mode)
   echo "<p><table align=\"center\"><tr><td>Description <td><textarea valign='center' cols='66' rows='5' name='DESCR'".
     ($canwrite ? "" : "readonly")
     .">".$_POST["DESCR"]."</textarea></tr></table><br>\n";
-  if($mode == "display") {
+  if ($mode == "display") {
     if($_POST["DOC"]) echo "Documentation <a>".$_POST["DOC"]." </a><br>\n"; 
     echo "<input type='hidden' name='DOC' value='".$_POST["DOC"]."'>\n";
   }
@@ -130,6 +130,16 @@ function histo_header($id,$htype,$mode)
       $_POST["DOC"]."</textarea><br>";
   }
 
+  if ($htype == "HID" || $_POST["NHS"] == 1) {
+    echo "Associated Page (to be displayed when clicking on histogram) <select name='REFPAGE'><option class='normal'>none</option>\n";
+    $stid = OCIParse($conn,"SELECT PAGENAME FROM PAGE order by PAGENAME");
+    OCIExecute($stid);
+    while (OCIFetchInto($stid, $page, OCI_ASSOC )) 
+      printf("<option class='normal' %s> %s </option>\n",($_POST["REFPAGE"] == $page["PAGENAME"]) ? "selected" : "",
+             $page["PAGENAME"]);
+    ocifreestatement($stid);
+    echo "</select> <br>";
+  }
 
   if( $canwrite) {
     $action= ($mode == "display") ? "Update header" : "Confirm";
@@ -147,7 +157,23 @@ function hidpost_displayoptions() {
     echo "<input type='hidden' name='${field}' value='".$_POST[$field]."'>\n";
 }
 
-
+function get_fitoptions($disp) {
+  global $conn;
+  $dstid = OCIParse($conn,"begin OnlineHistDB.GetFitOptions($disp,:ff,:np);end;");
+  ocibindbyname($dstid,":ff",$_POST["FITFUN"],50);
+  ocibindbyname($dstid,":np",$np,50);
+  OCIExecute($dstid);
+  ocifreestatement($dstid);
+  if ($np>0) {
+    $dstid = OCIParse($conn,"begin :p := OnlineHistDB.GetFitParam($disp,:i);end;");
+    for ($i=1 ; $i<=$np ; $i++) {
+      ocibindbyname($dstid,":i",$i);
+      ocibindbyname($dstid,":p",$_POST["FITPAR_$i"],50);
+      OCIExecute($dstid);
+    }
+    ocifreestatement($dstid);
+  }
+}
 
 function histo_display($id,$htype,$mode)
 {
@@ -188,6 +214,7 @@ function histo_display($id,$htype,$mode)
       $_POST["INSTANCE"]=$histo["INSTANCE"];
     }
     get_displayoptions($MYDISPLAY);
+    get_fitoptions($MYDISPLAY);
   }
   echo "<form action='${script}' method='POST'>\n"; 
   if ($mode == "update") {
@@ -305,6 +332,53 @@ function histo_display($id,$htype,$mode)
       echo "<option ".$SELECTED[$val]."> ".$val." </option>";
     }
   echo "</select> &nbsp&nbsp(Possible Normalization is NONE, same AREA, same ENTRies)<br>";
+
+  // fit function
+  echo "<br>Fit to be performed on every display: Function ";
+  echo "<input type='hidden' name='OLDFITFUN' value='".$_POST["FITFUN"]."'>\n";
+  echo "<select name='FITFUN'><option value=0> none</option>\n";
+  $stid = OCIParse($conn,"SELECT NAME,CODE,MUSTINIT,NP from FITFUNCTION order by NAME");
+  OCIExecute($stid);
+  $fitNP=0;
+  while (OCIFetchInto($stid,$myfun,OCI_ASSOC )) {
+    if ($_POST["FITFUN"] == $myfun["CODE"]) {
+      $selected = "selected";
+      $MUSTIN=$myfun["MUSTINIT"];
+      $_POST["FITNP"]=$myfun["NP"];
+      $_POST["FITFUNNAME"] = $myfun["NAME"];
+    }
+    else {
+      $selected = "";
+    }
+    echo "<option class='normal' value='".$myfun["CODE"]."' $selected>".$myfun["NAME"]."</option>\n";
+  }
+  ocifreestatement($stid);
+  echo "</select><br>";
+  echo "<input type='hidden' name='FITFUNNAME' value='".$_POST["FITFUNNAME"]."'>\n";
+  echo "<input type='hidden' name='FITNP' value='".$_POST["FITNP"]."'>\n";
+
+  if ($_POST["FITNP"]>0 && $_POST["FITFUN"]>0) {
+    echo "&nbsp&nbsp&nbsp<table align=center>";
+    echo "<tr><td colspan=2 align=center> Init. values for fit parameters ";
+    if ( $MUSTIN )
+      echo " (MUST BE PROVIDED)";
+    else
+      echo " (leave blank for auto)";
+    echo "</td></tr>\n";
+    $ip=0;
+    while ($ip++ < $_POST["FITNP"]) {
+      $fcode=$_POST["FITFUN"];
+      $dstid = OCIParse($conn,"begin OnlineHistDB.GetFitFunParname($fcode,$ip,:pname); end;");
+      ocibindbyname($dstid,":pname",$pname,500);
+      OCIExecute($dstid);
+      ocifreestatement($dstid);
+      echo "<tr><td><input type='text' name='FITPARNAME_${ip}' value='${pname}' READONLY>";
+      printf("<td><input type='text' name='FITPAR_${ip}' value=%s></tr>\n",$_POST["FITPAR_${ip}"]);
+    }
+    echo "</table>";
+  }
+  echo "<br>\n";
+
   printf("<br>Pattern to be overdrawn on histogram (must be a ROOT file name)<br> \$GROUPDIR/online/Histograms/Reference/%s/",
          $_POST["TASKNAME"]);
   printf("<input name='DRAWPATTERN' size=40 value='%s' ${cw_ro}><br>\n",$_POST["DRAWPATTERN"]);
@@ -443,9 +517,18 @@ function histo_labels($id,$htype,$mode)
   }
 }
 
-function get_ana_parameters($alg,$type,$aid,$ia,$hhid,$mask=1,$names=1,$values=1,$hcvalues=0) {
+function get_ana_parameters($alg,$type,$aid,$ia,$hhid,$mask=1,$names=1,$values=1,$hcvalues=0,$fcode=0) {
   global $conn;
-  
+  if ($alg == "Fit" && $aid >0 ) {
+    // retrieve associated fit function
+    $dstid = OCIParse($conn,"begin OnlineHistDB.GetAnaInput(${aid},'${hhid}',1,:inp); end;");
+    ocibindbyname($dstid,":inp",$fcode,50);
+    OCIExecute($dstid);
+    ocifreestatement($dstid);
+  }
+
+  $wantfitpars = ($alg == "Fit" && $fcode > 0);
+
   if($mask) {
     $stid = OCIParse($conn,"SELECT MASK from ANASETTINGS WHERE ANA='$aid' and HISTO='${hhid}'");
     OCIExecute($stid);
@@ -454,10 +537,16 @@ function get_ana_parameters($alg,$type,$aid,$ia,$hhid,$mask=1,$names=1,$values=1
     ocifreestatement($stid);
   }
   if($names || $values || $hcvalues) {
-    $dstid = OCIParse($conn,"begin OnlineHistDB.GetAlgoNpar('$alg',:np,:ni); end;");
-    ocibindbyname($dstid,":np",$np);
-    ocibindbyname($dstid,":ni",$ni);
+    if ($wantfitpars) { // special case
+      $dstid = OCIParse($conn,"begin OnlineHistDB.GetFitAlgNpar($fcode,:np,:ni); end;");
+    }
+    else {
+      $dstid = OCIParse($conn,"begin OnlineHistDB.GetAlgoNpar('$alg',:np,:ni); end;");
+    }
+    ocibindbyname($dstid,":np",$np,50);
+    ocibindbyname($dstid,":ni",$ni,50);
     OCIExecute($dstid);
+
     $_POST["a${ia}_np"]=$np;
     $_POST["a${ia}_ni"]=$ni;
     ocifreestatement($dstid);
@@ -470,7 +559,12 @@ function get_ana_parameters($alg,$type,$aid,$ia,$hhid,$mask=1,$names=1,$values=1
     //  parameters to be checked for check algorithms (names and values),
     // input parameters for creator algorithms (names and $hcvalues)
     if($names) {
-      $dstid = OCIParse($conn,"begin OnlineHistDB.GetAlgoParname('$alg',$ip,:pname,:pdefv); end;");
+      if ($wantfitpars) { // special case
+        $dstid = OCIParse($conn,"begin OnlineHistDB.GetFitAlgParname($fcode,$ip,:pname,:pdefv); end;");
+      }
+      else {
+        $dstid = OCIParse($conn,"begin OnlineHistDB.GetAlgoParname('$alg',$ip,:pname,:pdefv); end;");
+      }
       ocibindbyname($dstid,":pname",$pname,500);
       ocibindbyname($dstid,":pdefv",$pdefv,50);
       OCIExecute($dstid);
@@ -501,7 +595,13 @@ function get_ana_parameters($alg,$type,$aid,$ia,$hhid,$mask=1,$names=1,$values=1
       // input parameters for check algorithms (names and values)
       $ipa=$ip-$np;
       if($names) {
-        $dstid = OCIParse($conn,"begin OnlineHistDB.GetAlgoParname('$alg',$ip,:pname,:pdefv); end;");
+        if ($wantfitpars) { // special case
+          $dstid = OCIParse($conn,"begin OnlineHistDB.GetFitAlgParname('$fcode',$ip,:pname,:pdefv); end;");
+        }
+        else {
+          $dstid = OCIParse($conn,"begin OnlineHistDB.GetAlgoParname('$alg',$ip,:pname,:pdefv); end;");
+        }
+
         ocibindbyname($dstid,":pname",$pname,500);
         ocibindbyname($dstid,":pdefv",$pdefv,50);
         OCIExecute($dstid);
@@ -520,6 +620,43 @@ function get_ana_parameters($alg,$type,$aid,$ia,$hhid,$mask=1,$names=1,$values=1
   }
 }
 
+
+
+
+function fitfunctionselect($ia,$mode) {
+  global $conn;
+  if($mode=="newfit") {
+    echo "<tr><td>Fit Function </td><td><select name='a${ia}_i1_v' $ro>\n";
+    $stid = OCIParse($conn,"SELECT NAME,CODE,MUSTINIT from FITFUNCTION order by NAME");
+    OCIExecute($stid);
+    while (OCIFetchInto($stid,$myfun,OCI_ASSOC )) {
+      $selected = ($_POST["a${ia}_i1_v"] == $myfun["CODE"]) ? "selected":"";
+      echo "<option class='normal' value='".$myfun["CODE"].
+        "' $selected>".$myfun["NAME"]."</option>\n";
+      $funMI[$myfun["CODE"]]=$myfun["MUSTINIT"];
+    }
+    ocifreestatement($stid);
+    echo "</select></td></tr>";
+    foreach ($funMI as $key => $value) 
+      echo "<input type='hidden' name='mi_$key' value='$value'>\n";
+
+    echo "<tr><td align=center colspan=2> ";
+    echo "<a href=\"javascript:window.open('../fitdoc.php','gal','width=600,height=400');void(0);\"> ";
+    echo " see function descriptions </a></td></tr>\n";
+
+  }
+  else {
+    $fcode=$_POST["a${ia}_i1_v"];
+    echo "<input type='hidden' name='a${ia}_i1_v' value='$fcode'>\n";
+    $stid = OCIParse($conn,"SELECT NAME,MUSTINIT from FITFUNCTION where CODE=$fcode");
+    OCIExecute($stid);
+    OCIFetchInto($stid,$myfun,OCI_ASSOC);
+    echo "<tr><td>Fit Function </td><td><span class='normal'>".$myfun["NAME"]." </span></td></tr>\n";
+    echo "<input type='hidden' name='mi_$fcode' value='".$myfun["MUSTINIT"]."'>\n";
+  }
+  
+}
+
 function histo_analysis($id,$htype,$mode) {
   global $canwrite;
   global $histo;
@@ -530,6 +667,7 @@ function histo_analysis($id,$htype,$mode) {
   $showpars=1;
   if($mode == "display") {
     $script='write/histo_analysis.php';
+    $action= "Update";
     foreach (array("TASKNAME","HSALGO","HSTYPE","HSTITLE","NHS","NANALYSIS") 
 	     as $field)
       $_POST[$field]=$histo[$field];
@@ -562,12 +700,22 @@ function histo_analysis($id,$htype,$mode) {
   }
   else if ($mode == "update") {
     $firstana=$lastana=$_POST["Iana"];
+    $action="Confirm";
   }
   else if ($mode == "newana") {
+    $action="Confirm";
+    $fcode = ($_POST["a1_alg"] == 'Fit') ? $_POST["a1_i1_v"] : 0;
     $_POST["a1_id"]=0;
-    get_ana_parameters($_POST["a1_alg"],"CHECK",0,1,0,0,1,0);
+    get_ana_parameters($_POST["a1_alg"],"CHECK",0,1,0,0,1,0,0,$fcode);
   }
-
+  else if ($mode == "newfit") {
+    $action="Set Fit Parameters";
+    get_ana_parameters($_POST["a1_alg"],"CHECK",0,1,0,0,1,0,0,0);
+  }
+  else if ($mode == "new") {
+    $action="Set Parameters";
+  }
+  // loop on analyses 
   for ($ia=$firstana; $ia<=$lastana; $ia++) {
     echo "<table align='center' rules=none border=1 cellpadding=0> <tr><td><form action='${script}' method='POST'>\n"; 
     foreach (array("TASKNAME","HSALGO","HSTYPE","HSTITLE","NHS","NANALYSIS") as $field)
@@ -585,8 +733,9 @@ function histo_analysis($id,$htype,$mode) {
       echo "<input type='hidden' name='a${ia}_alg' value='".$_POST["a${ia}_alg"],"'>\n";
     } 
     else{
+      // selection of algorithm among the available ones
       echo "Analysis <select name='a${ia}_alg'>\n";
-      $stid = OCIParse($conn,"SELECT ALGNAME,ALGDOC from ALGORITHM WHERE ALGTYPE='CHECK'");
+      $stid = OCIParse($conn,"SELECT ALGNAME,ALGDOC from ALGORITHM WHERE ALGTYPE='CHECK' order by ALGNAME");
       OCIExecute($stid);
       while (OCIFetchInto($stid,$myalg,OCI_ASSOC )) {
 	echo "<option class='normal'>".$myalg["ALGNAME"]."</option>\n";
@@ -594,14 +743,16 @@ function histo_analysis($id,$htype,$mode) {
       }
       ocifreestatement($stid);
       echo "</select>";
+      echo "<a href=\"javascript:window.open('../algdoc.php','gal','width=800,height=400');void(0);\"> ";
+      echo " see algorithm descriptions </a>\n";
       if (isset($algdoc))
 	foreach ($algdoc as $key => $value) 
 	  echo "<input type='hidden' name='doc_$key' value='$value'>\n";
     } 
     if($showpars && $_POST["a${ia}_mask"]) echo "&nbsp <B><font color=red>(masked)</font></B>";
     echo "<br>";
-    if ($mode == "newana") echo "<p>".$_POST["doc_".PutUnderscore($_POST["a${ia}_alg"])]."</p>";
-    if ($mode == 'update') {
+    if ($mode == "newana" || $mode == "newfit") echo "<p>".$_POST["doc_".PutUnderscore($_POST["a${ia}_alg"])]."</p>";
+    if ($mode == 'update') { // print some messages
       if($htype == "HID") {
 	$hsid=HistoSet($id);
 	echo "<B>You are setting parameters for this particular histogram only.<br>
@@ -615,16 +766,29 @@ function histo_analysis($id,$htype,$mode) {
            <a href='../Histogram.php?hsid=${id}&fulllist=1#LIST'> histogram list </a> </B><br>\n";
     }
     if ($showpars &&  ($_POST["a${ia}_np"]>0 || $_POST["a${ia}_ni"]>0) ) {
-      if ($_POST["a${ia}_ni"]>0) {
-        echo "<table align='center'><thead><tr><td><B>Input Parameter</B><td><B>Value</B></tr></thead>\n";
+      if ($_POST["a${ia}_ni"]>0) { // input parameters
+        echo "\n<table align='center'><thead><tr><td><B>Input Parameter</B><td><B>Value</B></tr></thead>\n";
         $ip=0;
         while ($ip++<$_POST["a${ia}_ni"]){
-          printf("<tr><td> <input READONLY type='text' size=15 name='a${ia}_i${ip}_name' value='%s'>\n",$_POST["a${ia}_i${ip}_name"]);
-	  if($mode == "newana") { 
-	    $_POST["a${ia}_i${ip}_v"] = $_POST["a${ia}_i${ip}_defv"]; 
-	  }
-	  $fw=myfloatformat($_POST["a${ia}_i${ip}_v"]);
-          printf("<td> <input type='text' size=8 name='a${ia}_i${ip}_v' value='$fw'>\n",$_POST["a${ia}_i${ip}_v"]);
+          if ($ip==1 && $_POST["a${ia}_alg"] == "Fit") { //special case:convert parameter to fit function name
+            fitfunctionselect($ia,$mode);
+          }
+          else {
+            if($ip==3 && $_POST["a${ia}_alg"] == "Fit") {
+              echo "<tr><td colspan=2>Init. values for fit parameters ";
+              if ( $_POST["mi_".$_POST["a${ia}_i1_v"]])
+                echo " (MUST BE PROVIDED)";
+              else
+                echo " (leave blank for auto)";
+              echo "</td></tr>\n";
+            }
+            printf("<tr><td> <input READONLY type='text' size=15 name='a${ia}_i${ip}_name' value='%s'>\n",$_POST["a${ia}_i${ip}_name"]);
+            if($mode == "newana" || $mode == "newfit") { 
+              $_POST["a${ia}_i${ip}_v"] = $_POST["a${ia}_i${ip}_defv"]; 
+            }
+            $fw=myfloatformat($_POST["a${ia}_i${ip}_v"]);
+            printf("</td><td> <input type='text' size=8 name='a${ia}_i${ip}_v' value='$fw'></td></tr>\n",$_POST["a${ia}_i${ip}_v"]);
+          }
         }
         echo "</table>";
       }
@@ -633,7 +797,7 @@ function histo_analysis($id,$htype,$mode) {
         $ip=0;
         while ($ip++<$_POST["a${ia}_np"]){
           printf("<tr><td> <input READONLY type='text' size=15 name='a${ia}_p${ip}_name' value='%s'>\n",$_POST["a${ia}_p${ip}_name"]);
-	  if($mode == "newana") {
+	  if($mode == "newana" || $mode == "newfit") {
 	    $_POST["a${ia}_p${ip}_w"] = $_POST["a${ia}_p${ip}_defv"];
 	    $_POST["a${ia}_p${ip}_a"] = $_POST["a${ia}_p${ip}_defv"];
 	  }
@@ -655,11 +819,10 @@ function histo_analysis($id,$htype,$mode) {
     }
     if ($canwrite) {
       echo "<table align='center'><tr>";
-      $action= ($mode == "display") ? "Update" : ( ($mode == "new") ? "Set Parameters" : "Confirm");
       echo "<td> <input type='submit' name='Update_analysis' value='${action}'>\n";
       if ($mode=='display' && $showpars) {
-	$action= $_POST["a${ia}_mask"] ? "Unmask" : "Mask";
-	echo "<td> <input type='submit' name='SetMask_Analysis' value='${action}'>\n";
+	$maction= $_POST["a${ia}_mask"] ? "Unmask" : "Mask";
+	echo "<td> <input type='submit' name='SetMask_Analysis' value='${maction}'>\n";
       }
       if ($mode=='display' && $htype == 'HSID')
 	echo "<td> <input type='submit' name='Remove_Analysis' value='Remove'>\n";

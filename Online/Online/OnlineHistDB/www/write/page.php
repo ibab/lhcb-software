@@ -7,7 +7,7 @@
 include '../util.php';
 $conn=HistDBconnect(1);
 $folder= ($_POST["NEWFOLDER"]) ? $_POST["NEWFOLDER"] : $_POST["FOLDER"];
-$page=RemoveSpaces($_POST["PAGENAME"]);
+$page=RemoveSpaces($_POST["SHORTPAGENAME"]);
 $newpagename="$folder/$page";
 if (array_key_exists("ORIGINALNAME",$_POST)) {
   $fullpage=$_POST["ORIGINALNAME"];
@@ -18,30 +18,39 @@ if (array_key_exists("ORIGINALNAME",$_POST)) {
 
 
 $nh=0;
-for ($i=1;$i<=150;$i++) {
+for ($i=1;$i<=$_POST["maxH"] ;$i++) {
   if  ($_POST["HISTO_SH${i}"] && $_POST["REMOVE${i}"] != 1 ) {
     $nh++;
-    foreach (array("HISTO","CENTER_X","CENTER_Y","SIZE_X","SIZE_Y","SDISPLAY")
+    foreach (array("HISTO","CENTER_X","CENTER_Y","SIZE_X","SIZE_Y","SDISPLAY","MOTHERH","IOVERLAP")
 	     as $field)
       $data[$field][$nh]=$_POST[$field."_SH${i}"];
   }
 }
+
+$mainfields = "theFullName => '${fullpage}', theName => :pn,theFolder => :pf";
+if ($_POST["PAGEPATTERN"]) 
+  $mainfields .= ",thePattern => '".$_POST["PAGEPATTERN"]."'";
+if ($_POST["PAGEDOC"]) 
+  $mainfields .= ",theDoc => '".$_POST["PAGEDOC"]."'";
 if ($nh == 0)
-  $command="begin :fn := OnlineHistDB.DeclarePage(theFullName => '${fullpage}' ,theDoc => '".$_POST["PAGEDOC"]."',".
-    "hlist => OnlineHistDB.histotlist(),".
-    "Cx => OnlineHistDB.floattlist(),".
-    "Cy => OnlineHistDB.floattlist(),".
-    "Sx => OnlineHistDB.floattlist(),".
-    "Sy => OnlineHistDB.floattlist(),theName => :pn,theFolder => :pf); end;";
+  $command="begin :fn := OnlineHistDB.DeclarePage(${mainfields} ".
+    ",hlist => OnlineHistDB.histotlist()".
+    ",Cx => OnlineHistDB.floattlist()".
+    ",Cy => OnlineHistDB.floattlist()".
+    ",Sx => OnlineHistDB.floattlist()".
+    ",Sy => OnlineHistDB.floattlist()); end;";
 else {
-  $command="begin :fn := OnlineHistDB.DeclarePage(theFullName => '${fullpage}',theDoc => '".$_POST["PAGEDOC"]."',".
-    "hlist => OnlineHistDB.histotlist('".implode("','",SingleHist($data["HISTO"]))."'),".
-    "Cx => OnlineHistDB.floattlist(".implode(",",$data["CENTER_X"])."),".
-    "Cy => OnlineHistDB.floattlist(".implode(",",$data["CENTER_Y"])."),".
-    "Sx => OnlineHistDB.floattlist(".implode(",",$data["SIZE_X"])."),".
-    "Sy => OnlineHistDB.floattlist(".implode(",",$data["SIZE_Y"])."),theName => :pn,theFolder => :pf); end;";
+  $command="begin :fn := OnlineHistDB.DeclarePage(${mainfields} ".
+    ",hlist => OnlineHistDB.histotlist('".implode("','",SingleHist($data["HISTO"]))."')".
+    ",Cx => OnlineHistDB.floattlist(".implode(",",$data["CENTER_X"]).")".
+    ",Cy => OnlineHistDB.floattlist(".implode(",",$data["CENTER_Y"]).")".
+    ",Sx => OnlineHistDB.floattlist(".implode(",",$data["SIZE_X"]).")".
+    ",Sy => OnlineHistDB.floattlist(".implode(",",$data["SIZE_Y"]).")".
+    ",theOverlap => OnlineHistDB.inttlist(".implode(",",$data["MOTHERH"]).")".
+    ",theOvOrder => OnlineHistDB.inttlist(".implode(",",$data["IOVERLAP"]).")".
+    "); end;";
 }
-echo "command is $command <br>";
+if($debug) echo "command is $command <br>";
 $stid = OCIParse($conn,$command);
 ocibindbyname($stid,":fn",$outpage,500);
 ocibindbyname($stid,":pn",$out_pn,500);

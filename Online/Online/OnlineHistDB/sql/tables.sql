@@ -1,22 +1,25 @@
-drop table DIMSERVICENAME;
+drop table ANAMESSAGE;
 drop table SHOWHISTO;
 drop table PAGE;
 drop table PAGEFOLDER;
 drop table ANASETTINGS;
 drop table ANALYSIS;
 drop table HCREATOR;
+drop table ALGORITHM;
+drop table DIMSERVICENAME;
 drop table HISTOGRAM;
 drop table HISTOGRAMSET;
 drop table DISPLAYOPTIONS;
-drop table ALGORITHM;
 drop table TASK;
 drop table SUBSYSTEM;
 drop table ERGOSUM;
+
 drop type DISPOPT;
 
 drop sequence HistogramSet_ID;
 drop sequence Analysis_ID;
 drop sequence Displayoptions_ID;
+drop sequence AnaMessage_ID;
 
 purge recyclebin;
 CREATE OR REPLACE TYPE thresholds as TABLE OF FLOAT;
@@ -117,7 +120,19 @@ CREATE INDEX TK_SS1_IX on TASK(SUBSYS1) ;
 CREATE INDEX TK_SS2_IX on TASK(SUBSYS2) ;
 CREATE INDEX TK_SS3_IX on TASK(SUBSYS3) ;
 
+CREATE SEQUENCE FunCode_ID START WITH 1
+      NOMAXVALUE
+      NOCACHE; 
 
+create table FITFUNCTION (
+ NAME varchar2(15)  constraint FIT_PK primary key 
+	USING INDEX (create index FIT_PK_IX on FITFUNCTION(NAME) ), 
+ CODE int NOT NULL,
+ DOC varchar2(1000),
+ NP smallint NOT NULL,
+ PARNAMES parameters DEFAULT NULL,
+ MUSTINIT number(1) DEFAULT 0 NOT NULL
+) NESTED TABLE PARNAMES STORE AS FITPARNAMES_STORE ;
 
 CREATE SEQUENCE Displayoptions_ID START WITH 1
       NOMAXVALUE
@@ -127,10 +142,10 @@ create table DISPLAYOPTIONS (
   DOID integer constraint DO_PK primary key 
         USING INDEX (create index DO_PK_IX on DISPLAYOPTIONS(DOID) ),
   OPT dispopt,
-  
-);
-
-
+  FITFUN varchar2(15) CONSTRAINT DO_FITF references FITFUNCTION(NAME) ON DELETE SET NULL,
+  FITPARS thresholds
+) NESTED TABLE FITPARS STORE AS DOFITPARS_STORE ;
+CREATE INDEX DO_FITF_IX on DISPLAYOPTIONS(FITFUN);
 
 
 CREATE SEQUENCE HistogramSet_ID START WITH 1
@@ -176,7 +191,8 @@ create table HISTOGRAM (
  DISPLAY integer  CONSTRAINT H_DISP references DISPLAYOPTIONS(DOID) ON DELETE SET NULL,
  BINLABELS parameters,
  NBINLABX smallint,
- NBINLABY smallint
+ NBINLABY smallint,
+ REFPAGE  varchar2(350) DEFAULT NULL
 ) NESTED TABLE BINLABELS STORE AS BINLABELS_STORE ;
 CREATE INDEX H_SET_IX on HISTOGRAM(HSET) ;
 CREATE INDEX H_SUB_IX on HISTOGRAM(SUBTITLE) ;
@@ -278,11 +294,17 @@ create table PAGE (
        USING INDEX (create index PG_pk_ix on PAGE(PageName) ),
  Folder varchar2(300) NOT NULL CONSTRAINT PG_FD references PAGEFOLDER(PageFolderName),
  NHisto integer,
- PageDoc  varchar2(2000)
+ PageDoc  varchar2(2000),
+ PAGEPATTERN varchar2(100)
 );
 CREATE INDEX PG_FD_IX on PAGE(Folder) ; 
 
+CREATE SEQUENCE SHH_ID START WITH 1
+      NOMAXVALUE
+      NOCACHE; 
+
 create table SHOWHISTO (
+ SHID int constraint SHH_pk  primary key USING INDEX (create index SHH_pk_ix on SHOWHISTO(SHID)),
  PAGE varchar2(350) NOT NULL CONSTRAINT SHH_PAGE references PAGE(PageName) ON DELETE CASCADE,
  PAGEFOLDER varchar2(300) NOT NULL,
  HISTO  varchar2(12) NOT NULL CONSTRAINT SHH_HISTO references HISTOGRAM(HID),
@@ -292,11 +314,34 @@ create table SHOWHISTO (
  CENTER_Y real NOT NULL,
  SIZE_X real NOT NULL,
  SIZE_Y real NOT NULL,
+ MOTHERH int CONSTRAINT SHH_MOTH references SHOWHISTO(SHID) ON DELETE SET NULL,
  IOVERLAP smallint,
  SDISPLAY integer  CONSTRAINT SH_DISP references DISPLAYOPTIONS(DOID) ON DELETE SET NULL
 );
 CREATE INDEX SHH_PAGE_IX on SHOWHISTO(PAGE) ;
 CREATE INDEX SHH_HISTO_IX on SHOWHISTO(HISTO) ;
+
+CREATE SEQUENCE AnaMessage_ID START WITH 1
+      NOMAXVALUE
+      NOCACHE; 
+
+create table ANAMESSAGE (
+ ID int constraint ALR_pk primary key
+       USING INDEX (create index ALR_pk_ix on ANAMESSAGE(ID) ),
+ HISTO varchar2(12) CONSTRAINT ALR_HISTO references HISTOGRAM(HID) ON DELETE CASCADE,
+ SAVESET varchar2(500) NOT NULL,
+ TASK varchar2(64) CONSTRAINT ALR_TASK references TASK(TASKNAME), 
+ ANALYSISTASK varchar2(64),
+ ALEVEL varchar2(7)  NOT NULL CONSTRAINT ALR_LE_CK CHECK (ALEVEL IN ('INFO','WARNING','ALARM')) ,
+ MSGTEXT varchar2(4000),
+ ANAID integer CONSTRAINT ALR_AID references ANALYSIS(AID) ON DELETE CASCADE,
+ ANANAME varchar2(300),
+ MSGTIME TIMESTAMP
+);
+CREATE INDEX ALR_HIIX on ANAMESSAGE(HISTO);
+CREATE INDEX ALR_ANATASK on ANAMESSAGE(ANALYSISTASK);
+
+
 
 CREATE or replace FUNCTION SET_SEPARATOR RETURN VARCHAR2 AS
 BEGIN
@@ -312,6 +357,13 @@ BEGIN
    END IF;
 END;
 /
+
+CREATE or replace FUNCTION TIMEST2UXT(ts IN TIMESTAMP) return int as
+BEGIN
+ RETURN (NEW_TIME(ts,'EST','GMT')-TO_DATE('01-JAN-1970','DD-MON-YYYY'))*(86400);
+END;
+/
+
 
 CREATE or replace FUNCTION parlength(pars parameters) return int as
 begin

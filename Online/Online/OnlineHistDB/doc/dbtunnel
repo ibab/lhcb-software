@@ -1,0 +1,14 @@
+#!/bin/bash
+# script to open ssh tunnels to HISTDB through the offline DQ farm
+# you need to be at CERN and to have an account on pclbocr0X
+NODE=3
+if [ $# -ge 1 ]; then
+ NODE=$1 
+fi;
+echo opening tunnels through pclbocr0${NODE}
+echo   "  port 5121 -> lbrac01-v:10121 ..."
+ssh -f -N -L 5121:lbrac01-v:10121 pclbocr0${NODE}.cern.ch
+echo   "  port 5124 -> lbrac04-v:10121 ..."
+ssh -f -N -L 5124:lbrac04-v:10121 pclbocr0${NODE}.cern.ch
+
+exit

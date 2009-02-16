@@ -4,8 +4,8 @@
 \usepackage{epsfig}
 \title{Histogram DB for Online Monitoring -- User's Manual}
 \doctyp{}
-\dociss{4}
-\docrev{13}
+\dociss{5}
+\docrev{0}
 \doccre{March 21, 2007}
 \docmod{\today}
 \docref{}
@@ -367,6 +367,15 @@ OnlineHistDB object, i.e. a DB transaction, through the {\it getTask} method.
 \input{OnlineHistTask}
 \end{list}
 
+
+\subsection{OnlineHistoOnPage class}
+The OnlineHistoOnPage class represent an histogram instance with a given layout on
+a page. These objects are owned by their OnlineHistPage class and are accessible
+via the {\it OnlineHistPage::getHistogramList()} method.
+
+\begin{list}{$\bullet$}{}
+\input{OnlineHistoOnPage}
+\end{list}
 
 \subsection{OnlineHistPage class}
 

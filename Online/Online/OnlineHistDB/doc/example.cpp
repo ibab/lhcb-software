@@ -1,17 +1,29 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/doc/example.cpp,v 1.10 2008-05-14 15:00:56 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/doc/example.cpp,v 1.11 2009-02-16 10:37:42 ggiacomo Exp $
 #include <iostream>
 #include <OnlineHistDB/OnlineHistDB.h>
+#include <OnlineHistDB/OMAMessage.h>
+using namespace std;
 
 int main ()
 {
-  OnlineHistDB *HistDB = new OnlineHistDB(PASSWORD,
+  OnlineHistDB *HistDB = new OnlineHistDB("PASSWORD",
                                           OnlineHistDBEnv_constants::ACCOUNT,
                                           OnlineHistDBEnv_constants::DB);
+  
   cout << "opened connection with "<<HistDB->nHistograms()<<" Histograms "
        << HistDB->nPages()<<" Pages "
-       << HistDB->nPageFolders()<<" PageFolders "<<endl;
+       << HistDB->nPageFolders()<<" PageFolders "<<endl<<endl;
   
   bool ok=true;
+  
+  // messages from analysis
+  std::vector<int> messID;
+  std::cout <<" You have "<<HistDB->getMessages(messID)<<" messages from Analysis"<<std::endl;
+  for (std::vector<int>::iterator im= messID.begin() ; im !=  messID.end() ; im++) {
+    OMAMessage* message = new OMAMessage(*im, *HistDB);
+    message->dump(&(std::cout));
+    delete message;
+  }
   
   ok &= HistDB->declareTask("EXAMPLE","MUON","GAS","",true,true,false);
   OnlineHistTask* mytask = HistDB->getTask("EXAMPLE");
@@ -38,9 +50,10 @@ int main ()
 
 
   OnlineHistogram* thisH = HistDB->getHistogram("EXAMPLE/Timing/Time_of_flight");
-  if(thisH)
-    thisH->setDimServiceName("H1D/nodeA01_Adder_01/EXAMPLE/Timing/Time_of_flight");
- 
+  if(thisH) {
+    std::string mydns("H1D/nodeA01_Adder_01/EXAMPLE/Timing/Time_of_flight");
+    thisH->setDimServiceName(mydns);
+  } 
  
 
  
@@ -59,6 +72,8 @@ int main ()
       pg->declareHistogram(h1, 0.  ,0.5 ,0.5, 1. ); 
       pg->declareHistogram(h2, 0.5 ,0.5 ,1. , 1. ); 
       pg->declareHistogram(h3, 0.  ,0.  ,0.6 , 0.5);
+      std::string pfile("mytask/myPatternFile");
+      pg->setPatternFile(pfile);
       pg->save(); // needed to sync pg object with DB
       
       int lc=2, fs=7, fc=3;
@@ -107,7 +122,19 @@ int main ()
     }
   }
   
-  
+  if(0) {
+    histos.clear();
+    cout << "-------------Histos with associated page------------"<<endl;
+    HistDB->getAllHistograms(&histos);
+    std::vector<OnlineHistogram*>::iterator ih;
+    for (ih=histos.begin() ; ih != histos.end() ; ih++) {
+      if ( ((*ih)->page2display()).size() > 0)
+        cout << "Histo "<<(*ih)->identifier() << " -> Page "<<
+          (*ih)->page2display() << endl;
+    }
+  }
+
+
   std::vector<string> mylist;
   cout << "----------------------------------------"<<endl;
   int nss=HistDB->getSubsystems(mylist);

@@ -115,17 +115,18 @@
 \item    bool {\bf declareCheckAlgorithm}(std::string Name,\\\mbox{}~~~~~~~~~ 
                              int NoutPars,\\\mbox{}~~~~~~~~~ 
                              std::vector$<$std::string$>$ *outPars = NULL,\\\mbox{}~~~~~~~~~
-			     std::vector$<$float$>$ *outDefv = NULL,\\\mbox{}~~~~~~~~~
+                             std::vector$<$float$>$ *outDefv = NULL,\\\mbox{}~~~~~~~~~
                              int NinPars = 0,\\\mbox{}~~~~~~~~~ 
                              std::vector$<$std::string$>$ *inPars =NULL ,\\\mbox{}~~~~~~~~~
-			     std::vector$<$float$>$ *inDefv = NULL,\\\mbox{}~~~~~~~~~
-                             std::string doc="NONE");
+                             std::vector$<$float$>$ *inDefv = NULL,\\\mbox{}~~~~~~~~~
+                             std::string *doc =NULL);
 
  declares to the DB an Analysis algorithm implemented in the Analysis
  library. NoutPars is the number of algorithm's output parameters to be checked, 
  while NinPars is the number of optional input parameters.
  outPars and inPars should point to arrays containing the parameter names, 
  doc is a short description of the algorithm.
+ (to be used by OMAlib, where algorithm must be implemented)
 
 
 \item    bool {\bf declareCreatorAlgorithm}(std::string Name,\\\mbox{}~~~~~~~~~ 
@@ -135,13 +136,25 @@
 			       int Npars=0,\\\mbox{}~~~~~~~~~ 
 			       std::vector$<$std::string$>$ *pars=NULL,\\\mbox{}~~~~~~~~~
 			       std::vector$<$float$>$ *defv = NULL,\\\mbox{}~~~~~~~~~
-			       std::string doc="NONE");
+			       std::string *doc=NULL);
 
  declares to the DB an available algorithm to produce histograms at
  analysis time. Ninput is the number of input histograms, SetAsInput
  if input can be an histogramset, Npars the
  number of optional parameters (pars containing their names), doc is a short
  description of the algorithm.
+ (to be used by OMAlib, where algorithm must be implemented)
+
+
+\item    bool {\bf declareFitFunction}(std::string Name,\\\mbox{}~~~~~~~~~ 
+                          int Npars,\\\mbox{}~~~~~~~~~
+                          std::vector$<$std::string$>$ *parnames,\\\mbox{}~~~~~~~~~
+                          bool mustInit,\\\mbox{}~~~~~~~~~
+                          std::string \&doc);
+
+ declares an available fit function with Npars parameters. parnames must point to a vector
+ of length Npars, set mustinit=true if parameters must be initialized
+ (to be used by OMAlib, where function must be implemented)
 
 
 \item    int {\bf getAlgListID}() const ;

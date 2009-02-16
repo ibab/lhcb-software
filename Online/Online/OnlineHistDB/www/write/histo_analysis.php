@@ -14,6 +14,7 @@ if (!$conn) {
 
 function update_histo_analysis() {
   global $conn,$id;
+  global $debug;
   $ia=$_POST["Iana"];
   $aid=$_POST["a${ia}_id"];
   $warn=$alr=$inps=array();
@@ -23,7 +24,12 @@ function update_histo_analysis() {
     $alr[$ip]=$_POST["a${ia}_p${ip}_a"];
   }
   for ($ip=1;$ip<=$_POST["a${ia}_ni"];$ip++) {
-    $inps[$ip]=$_POST["a${ia}_i${ip}_v"];
+    if($debug)
+      echo "inp parameters $ip=".$_POST["a${ia}_i${ip}_v"]." length=".strlen($_POST["a${ia}_i${ip}_v"])."<br>\n";
+    if(strlen($_POST["a${ia}_i${ip}_v"])>0) 
+      $inps[$ip]=$_POST["a${ia}_i${ip}_v"];
+    else
+      break;
   }
   $warnings="thresholds(".implode(",",$warn).")";
   $alarms="thresholds(".implode(",",$alr).")";
@@ -117,8 +123,12 @@ else if ($_POST["Update_analysis"] == 'Confirm') {
   else
     echo "<font color=red> <B>Got errors from update_histo_analysis() </B></font><br><br>\n";
 } 
-else if ($_POST["Update_analysis"] == 'Set Parameters') {
+else if ( ($_POST["Update_analysis"] == 'Set Parameters' && $_POST["a1_alg"] != 'Fit' ) ||
+          ($_POST["Update_analysis"] == 'Set Fit Parameters') ) {
   histo_analysis($id,$_POST["htype"],"newana");
+}
+else if ( $_POST["Update_analysis"] == 'Set Parameters' && $_POST["a1_alg"] == 'Fit' ) {
+  histo_analysis($id,$_POST["htype"],"newfit");
 }
 else {
   echo "Please check your data and confirm <br><br>";

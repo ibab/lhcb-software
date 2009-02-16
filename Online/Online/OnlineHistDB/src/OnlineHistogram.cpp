@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.36 2008-11-11 11:10:26 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.37 2009-02-16 10:37:43 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -17,7 +17,7 @@ OnlineHistogram::OnlineHistogram(OnlineHistDBEnv &env,
   m_isAbort(false), m_identifier(Identifier), 
   m_page(Page), m_instance(Instance), m_page_verified(false),
   m_DOinit(false), m_InitDOmode(NONE), m_domode(NONE), m_hsdisp(0), m_hdisp(0), m_shdisp(0),
-  m_dispopt(NULL), m_dispopt_null(NULL),
+  m_dispopt(NULL), m_dispopt_null(NULL), m_fitfun_null(1), 
   m_anadirLoaded(false), m_credirLoaded(false) {
     if (m_page  != "_NONE_") {
       if (!verifyPage(m_page,Instance)) {
@@ -207,7 +207,7 @@ void OnlineHistogram::load() {
   OCIStmt *stmt=NULL;
   m_StmtMethod = "OnlineHistogram::load";
   std::string command = 
-    "BEGIN :out := ONLINEHISTDB.GETHISTOGRAMDATA(:nm,:pg,:in,:hid,:hsd,:ihs,:nhs,:ty,:hst,:sub,:tk,:alg,:na,:des,:doc,:isa,:cre,:obs,:dis,:hdi,:shd, :dsn,:lbl,:nxlb,:nylb); END;";
+    "BEGIN :out := ONLINEHISTDB.GETHISTOGRAMDATA(:nm,:pg,:in,:hid,:hsd,:ihs,:nhs,:ty,:hst,:sub,:tk,:alg,:na,:des,:doc,:isa,:cre,:obs,:dis,:hdi,:shd, :dsn,:lbl,:nxlb,:nylb,:refp); END;";
   if (OCI_SUCCESS == prepareOCITaggedStatement(stmt, command.c_str(), "HLOAD") ) {
     
     text  hid[VSIZE_HID]="";
@@ -219,6 +219,7 @@ void OnlineHistogram::load() {
     text  des[VSIZE_DESCR]="";
     text  doc[VSIZE_DOC]="";
     text  dsn[VSIZE_SN]="";
+    text  pgref[VSIZE_PAGENAME]="";
     int isAnaHist=0;
     OCITable *parameters;
     checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
@@ -250,6 +251,7 @@ void OnlineHistogram::load() {
     myOCIBindObject(stmt,":lbl", (void **) &parameters, OCIparameters );
     myOCIBindInt   (stmt,":nxlb",m_xbinlab, &m_xbinlab_null );
     myOCIBindInt   (stmt,":nylb",m_ybinlab, &m_ybinlab_null );    
+    myOCIBindString(stmt,":refp", pgref, VSIZE_PAGENAME, &m_refPage_null);
 
     sword status=myOCIStmtExecute(stmt);
     
@@ -279,6 +281,7 @@ void OnlineHistogram::load() {
         stringVarrayToVector(parameters, m_binlabels);
         if (m_xbinlab_null) m_xbinlab = 0; 
         if (m_ybinlab_null) m_ybinlab = 0; 
+        m_refPage= m_refPage_null ? "" : std::string((const char *) pgref);
       }
       
     }
@@ -308,6 +311,7 @@ void OnlineHistogram::createDisplayOptions() {
     checkerr( OCIObjectGetInd ( m_envhp,   m_errhp,
 				(dvoid *) m_dispopt,
 				(dvoid **) &m_dispopt_null), SEVERE);
+    
     m_do.reserve(53);
     m_do.push_back(new OnlineDisplayOption("LABEL_X",OnlineDisplayOption::STRING,
 					   (void*) &(m_dispopt->LABEL_X),
@@ -599,9 +603,8 @@ OnlineHistogram::~OnlineHistogram()
   std::vector<OnlineDisplayOption*>::iterator ip;
   for (ip = m_do.begin();ip != m_do.end(); ++ip) 
     delete *ip; 
-  if(m_dispopt) {
+  if(m_dispopt) 
     checkerr(OCIObjectFree ( m_envhp, m_errhp, m_dispopt, OCI_OBJECTFREE_FORCE) );
-  }
 }
 
 
@@ -640,17 +643,28 @@ void OnlineHistogram::getDisplayOptions(int doid) {
   m_StmtMethod = "OnlineHistogram::getDisplayOptions";
 
   if ( OCI_SUCCESS == prepareOCIStatement
-       (stmt, "BEGIN :out := ONLINEHISTDB.GETDISPLAYOPTIONS(:1,:2); END;") ) {
-
-    myOCIBindInt   (stmt,":out", out);
-    myOCIBindInt   (stmt,":1"  , doid);
-    myOCIBindObject(stmt,":2"  , (void **) &m_dispopt, OCIdispopt,(void **) &m_dispopt_null);
+       (stmt, "BEGIN :out := ONLINEHISTDB.GETDISPLAYOPTIONS(:id,:do,:fitf,:fitp); END;") ) {
+    text  fitfun[VSIZE_FITFUN]="";
+    OCITable *fitPars;
+    checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
+                             OCIthresholds, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
+                             (dvoid **) &fitPars));
+    myOCIBindInt   (stmt,":out" , out);
+    myOCIBindInt   (stmt,":id"  , doid);
+    myOCIBindObject(stmt,":do"  , (void **) &m_dispopt, OCIdispopt,(void **) &m_dispopt_null);
+    myOCIBindString(stmt,":fitf", fitfun, VSIZE_FITFUN, &m_fitfun_null);
+    myOCIBindObject(stmt,":fitp", (void **) &fitPars, OCIthresholds);
     if (OCI_SUCCESS == myOCIStmtExecute(stmt, SEVERE)) {
-      if (!out) m_domode = NONE;
+      if (out) {
+        m_fitfun = m_fitfun_null ? "" : std::string((const char *) fitfun);
+        if(!m_fitfun_null) floatVarrayToVector(fitPars, m_fitPars);
+      }
+      else m_domode = NONE;
     }
     else {
       m_domode = NONE;
     }
+    checkerr(OCIObjectFree ( m_envhp, m_errhp, fitPars, OCI_OBJECTFREE_FORCE) );
     releaseOCIStatement(stmt);
   }
 }
@@ -660,14 +674,23 @@ int OnlineHistogram::setDisplayOptions(std::string function) {
   //update the DB with the current display options
   int out=0;
   std::string statement;
-  statement = "BEGIN :out := ONLINEHISTDB." + function + ",theOptions => :opt); END;";
+  statement = "BEGIN :out := ONLINEHISTDB." + function + ",theOptions => :opt" +
+    ",theFitFun => :fitf, theFitPars => :fitp); END;";
   OCIStmt *stmt=NULL;
   if ( OCI_SUCCESS == prepareOCIStatement(stmt, statement.c_str()) ) {
+    OCITable *fitPars;
+    checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
+                             OCIthresholds, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
+                             (dvoid **) &fitPars));
+    floatVectorToVarray(m_fitPars, fitPars);
+
     myOCIBindInt   (stmt,":out", out);  
     myOCIBindObject(stmt,":opt", (void **) &m_dispopt, OCIdispopt, (void**) &m_dispopt_null);
-
+    myOCIBindString(stmt,":fitf", m_fitfun, &m_fitfun_null);
+    myOCIBindObject(stmt,":fitp", (void **) &fitPars, OCIthresholds);
     myOCIStmtExecute(stmt);
     releaseOCIStatement(stmt);
+    checkerr(OCIObjectFree ( m_envhp, m_errhp, fitPars, OCI_OBJECTFREE_FORCE) );
   }
   return out;
 }
@@ -823,25 +846,25 @@ bool OnlineHistogram::initHistoPageDisplayOptionsFromSet(std::string PageName,
     }
     else {
       if (m_shdisp != 0) 
-	warningMessage("HistoPageDisplayOptions were already defined and will be reinitialized");
+        warningMessage("HistoPageDisplayOptions were already defined and will be reinitialized");
       if (m_domode != SET) {
-	getDisplayOptions(m_hsdisp);
-	m_domode = SET;
+        getDisplayOptions(m_hsdisp);
+        m_domode = SET;
       }
       std::stringstream function;
       function << "DECLAREHISTOPAGEDISPLAYOPTIONS(theHID => '" <<
-	m_hid << "',thePage => '" << PageName << "',TheInstance =>" << 
-	Instance;
+        m_hid << "',thePage => '" << PageName << "',TheInstance =>" << 
+        Instance;
       m_StmtMethod = "OnlineHistogram::initHistoPageDisplayOptionsFromSet";
       int newshdisp=  setDisplayOptions(function.str());
       if (newshdisp > 0) {
-	m_shdisp = newshdisp;
-	m_domode = HISTPAGE;
-	m_page = PageName;
-	m_instance = Instance;
+        m_shdisp = newshdisp;
+        m_domode = HISTPAGE;
+        m_page = PageName;
+        m_instance = Instance;
       }
       else 
-	out= false;
+        out= false;
     }
   }
   return out;
@@ -864,22 +887,22 @@ bool OnlineHistogram::initHistoPageDisplayOptionsFromHist(std::string PageName,
     }
     else {
       if (m_shdisp != 0) 
-	warningMessage("HistoPageDisplayOptions were already defined and will be reinitialized");
+        warningMessage("HistoPageDisplayOptions were already defined and will be reinitialized");
       if (m_domode != HIST) {
-	getDisplayOptions(m_hdisp);
-	m_domode = HIST;
+        getDisplayOptions(m_hdisp);
+        m_domode = HIST;
       }
       std::stringstream function;
       function << "DECLAREHISTOPAGEDISPLAYOPTIONS(theHID => '" <<
-	m_hid << "',thePage => '" << PageName << "',TheInstance =>" << 
-	Instance;
+        m_hid << "',thePage => '" << PageName << "',TheInstance =>" << 
+        Instance;
       m_StmtMethod = "OnlineHistogram::initHistoPageDisplayOptionsFromHist";
       int newshdisp=  setDisplayOptions(function.str());
       if (newshdisp > 0) {
-	m_shdisp = newshdisp;
-	m_domode = HISTPAGE;
-	m_page = PageName;
-	m_instance = Instance;
+        m_shdisp = newshdisp;
+        m_domode = HISTPAGE;
+        m_page = PageName;
+        m_instance = Instance;
       }
     }
   }
@@ -932,14 +955,14 @@ bool OnlineHistogram::saveHistoPageDisplayOptions(std::string PageName,
     function << "DECLAREHISTOPAGEDISPLAYOPTIONS(theHID => '" <<
       m_hid << "',thePage => '" << PageName << "',TheInstance =>" << 
       Instance;
-      m_StmtMethod = "OnlineHistogram::saveHistoPageDisplayOptions";
-      out = setDisplayOptions(function.str());
-      if (out > 0) {
-	m_shdisp = out;
-	m_domode = HISTPAGE;
-	m_page = PageName;
-	m_instance = Instance;
-      }
+    m_StmtMethod = "OnlineHistogram::saveHistoPageDisplayOptions";
+    out = setDisplayOptions(function.str());
+    if (out > 0) {
+      m_shdisp = out;
+      m_domode = HISTPAGE;
+      m_page = PageName;
+      m_instance = Instance;
+    }
   }
   return (out>0);
 }
@@ -1036,6 +1059,97 @@ bool OnlineHistogram::changedDisplayOption(std::string ParameterName,
   return out;
 }
 
+
+bool OnlineHistogram::setPage2display(std::string& pageName) {
+  bool out = false;
+  OCIStmt *stmt=NULL;
+  int ans;
+  m_StmtMethod = "OnlineHistogram::setPage2display";
+  if ( OCI_SUCCESS == prepareOCIStatement
+         (stmt, "BEGIN :out := ONLINEHISTDB.SETPAGETODISPLAY(theHID=> :1,thePage => :2); END;") ) {
+    myOCIBindInt   (stmt,":out", ans);
+    myOCIBindString(stmt,":1", m_hid);
+    myOCIBindString(stmt,":2", pageName);
+    if (OCI_SUCCESS == myOCIStmtExecute(stmt)) {
+      if(ans>0) {
+        out = true;
+        m_refPage= pageName;
+      }
+    }
+    releaseOCIStatement(stmt);
+  }
+  return out;
+}
+
+bool OnlineHistogram::getFitFunction(std::string &Name, std::vector<float> *initValues) {
+  if (!m_fitfun_null) {
+    Name=m_fitfun;
+    if(NULL != initValues)
+      initValues->insert(initValues->end(), m_fitPars.begin(), m_fitPars.end());
+  }
+  return (!m_fitfun_null);
+}
+
+void OnlineHistogram::setFitFunction(std::string Name, std::vector<float> *initValues) {
+  m_fitfun_null=0;
+  m_fitfun=Name;
+  if(NULL != initValues)
+    m_fitPars.insert(m_fitPars.end(), initValues->begin(), initValues->end());
+  return;
+}
+
+
+bool OnlineHistogram::setBinLabels(std::vector<std::string> *Xlabels, 
+                                   std::vector<std::string> *Ylabels) {
+  bool out=false;
+  std::vector<std::string> newlabels;
+  int newXsize=m_xbinlab;
+  int newYsize=m_ybinlab;
+  if (Xlabels) {
+    newlabels.insert( newlabels.end(),Xlabels->begin(),
+                      Xlabels->end() );
+    newXsize=Xlabels->size();
+  }
+  else {
+    newlabels.insert( newlabels.end(), m_binlabels.begin(),
+                      m_binlabels.begin()+m_xbinlab );
+  }
+  if (Ylabels) {
+    newlabels.insert( newlabels.end(),Ylabels->begin(),
+                      Ylabels->end() );
+    newYsize=Ylabels->size();
+  }
+  else {
+    newlabels.insert( newlabels.end(), m_binlabels.begin()+m_xbinlab,
+                      m_binlabels.end() );
+  }
+
+  m_StmtMethod = "OnlineHistogram::setBinLabels";
+  OCIStmt *stmt=NULL;
+  if ( OCI_SUCCESS == prepareOCIStatement
+       (stmt,"BEGIN ONLINEHISTDB.DECLAREBINLABELS(theSet => :set, theHID => :hid, labels => :lab, Nx => :nx);END;") ) {
+    OCITable *ocilabels;
+    checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
+                             OCIparameters, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
+                             (dvoid **) &ocilabels));
+    stringVectorToVarray(newlabels, ocilabels);
+    
+    myOCIBindInt   (stmt, ":set", m_hsid);
+    myOCIBindString(stmt, ":hid", m_hid);
+    myOCIBindObject(stmt, ":lab", (void **) &ocilabels, OCIparameters);
+    myOCIBindInt   (stmt, ":nx" , newXsize);
+    out = (OCI_SUCCESS == myOCIStmtExecute(stmt));
+    checkerr(OCIObjectFree (m_envhp, m_errhp, ocilabels, OCI_OBJECTFREE_FORCE) );
+    releaseOCIStatement(stmt);
+  }
+  if (out) {
+    m_xbinlab=newXsize;
+    m_ybinlab=newYsize;
+    m_binlabels.clear();
+    m_binlabels.insert(m_binlabels.end(), newlabels.begin(), newlabels.end());
+  }
+  return out;
+}
 
 
 // private OnlineDisplayOption class to ease handling of many display options
@@ -1305,64 +1419,58 @@ int OnlineHistogram::declareAnalysis(std::string Algorithm,
                                      int instance ) {
   if(!m_anadirLoaded) loadAnalysisDirections();
   // check that Algorithm exists and get number of parameters
-  int out=0, Ninput=0;
+  int out=0;
   bool known = false;
-  int Np=getAlgorithmNpar( Algorithm, &Ninput );
-  if(Np<0) {
-    warningMessage("unknown algorithm "+Algorithm);
-  }
-  else {
-    OCIStmt *stmt=NULL;
-    m_StmtMethod = "OnlineHistogram::declareAnalysis";
-    if ( OCI_SUCCESS == prepareOCIStatement
-         (stmt, "BEGIN :out := ONLINEHISTDB.DECLAREANALYSIS(theSet =>:id,Algo =>:alg,warn=>:w,alr=>:a,instance=>:ins,inputs=>:inp); END;") ) {
-      OCITable *warn,*alarm,*inps;
-      checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
-                               OCIthresholds, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
-                               (dvoid **) &warn));
-      checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
-                               OCIthresholds, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
-                               (dvoid **) &alarm));
-      checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
-                               OCIthresholds, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
-                               (dvoid **) &inps));
-      if(Np>0) {
-        floatVectorToVarray(*warningThr, warn);
-        floatVectorToVarray(*alarmThr, alarm);
-      }
-      if(Ninput>0) {
-        floatVectorToVarray(*inputs, inps);
-      }
-      myOCIBindInt   (stmt,":out", out);
-      myOCIBindInt   (stmt,":id" , m_hsid);
-      myOCIBindString(stmt,":alg", Algorithm);
-      myOCIBindObject(stmt,":w"  , (void **) &warn, OCIthresholds);
-      myOCIBindObject(stmt,":a"  , (void **) &alarm, OCIthresholds);
-      myOCIBindInt   (stmt,":ins", instance);
-      myOCIBindObject(stmt,":inp", (void **) &inps, OCIthresholds);
-      if (OCI_SUCCESS == myOCIStmtExecute(stmt)) {
-        if (out>0) {
-          for (int ia=0;ia<m_nanalysis;ia++) {
-            if (m_anaId[ia] == out) { // analysis already known
-              known = true;
-              break;
-            }
-          }
-          if (!known) {
-            m_anaId.push_back(out);
-            m_anaName.push_back(Algorithm);
-            m_nanalysis++;
-            // update also histograms of save set
-            if(m_nhs > 1)
-              m_HStorage->reloadAnalysisForSet(m_hsid, m_ihs);
+  OCIStmt *stmt=NULL;
+  m_StmtMethod = "OnlineHistogram::declareAnalysis";
+  if ( OCI_SUCCESS == prepareOCIStatement
+       (stmt, "BEGIN :out := ONLINEHISTDB.DECLAREANALYSIS(theSet =>:id,Algo =>:alg,warn=>:w,alr=>:a,instance=>:ins,inputs=>:inp); END;") ) {
+    OCITable *warn,*alarm,*inps;
+    checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
+                             OCIthresholds, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
+                             (dvoid **) &warn));
+    checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
+                             OCIthresholds, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
+                             (dvoid **) &alarm));
+    checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
+                             OCIthresholds, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
+                             (dvoid **) &inps));
+    if(warningThr && alarmThr) {
+      floatVectorToVarray(*warningThr, warn);
+      floatVectorToVarray(*alarmThr, alarm);
+    }
+    if(inputs) {
+      floatVectorToVarray(*inputs, inps);
+    }
+    myOCIBindInt   (stmt,":out", out);
+    myOCIBindInt   (stmt,":id" , m_hsid);
+    myOCIBindString(stmt,":alg", Algorithm);
+    myOCIBindObject(stmt,":w"  , (void **) &warn, OCIthresholds);
+    myOCIBindObject(stmt,":a"  , (void **) &alarm, OCIthresholds);
+    myOCIBindInt   (stmt,":ins", instance);
+    myOCIBindObject(stmt,":inp", (void **) &inps, OCIthresholds);
+    if (OCI_SUCCESS == myOCIStmtExecute(stmt)) {
+      if (out>0) {
+        for (int ia=0;ia<m_nanalysis;ia++) {
+          if (m_anaId[ia] == out) { // analysis already known
+            known = true;
+            break;
           }
         }
+        if (!known) {
+          m_anaId.push_back(out);
+          m_anaName.push_back(Algorithm);
+          m_nanalysis++;
+          // update also histograms of save set
+          if(m_nhs > 1)
+            m_HStorage->reloadAnalysisForSet(m_hsid, m_ihs);
+        }
       }
-      checkerr(OCIObjectFree ( m_envhp, m_errhp, warn, OCI_OBJECTFREE_FORCE) );
-      checkerr(OCIObjectFree ( m_envhp, m_errhp, alarm, OCI_OBJECTFREE_FORCE) );
-      checkerr(OCIObjectFree ( m_envhp, m_errhp, inps, OCI_OBJECTFREE_FORCE) );
-      releaseOCIStatement(stmt);
     }
+    checkerr(OCIObjectFree ( m_envhp, m_errhp, warn, OCI_OBJECTFREE_FORCE) );
+    checkerr(OCIObjectFree ( m_envhp, m_errhp, alarm, OCI_OBJECTFREE_FORCE) );
+    checkerr(OCIObjectFree ( m_envhp, m_errhp, inps, OCI_OBJECTFREE_FORCE) );
+    releaseOCIStatement(stmt);
   }
   return out;
 }
@@ -1374,46 +1482,37 @@ bool OnlineHistogram::setAnalysis(int AnaID,
 {
   if(!m_anadirLoaded) loadAnalysisDirections();
   bool out=false;
-  int Ninput=0;
-  int Np=getAlgorithmNpar(algFromID(AnaID), &Ninput);
-  if(Np<0) {
-    std::stringstream error;
-    error<< "unknown analysis "<<AnaID;
-    warningMessage(error.str());
-  }
-  else {
-    OCIStmt *stmt=NULL;
-    m_StmtMethod = "OnlineHistogram::setAnalysis";
-    if ( OCI_SUCCESS == prepareOCIStatement
-         (stmt, "BEGIN ONLINEHISTDB.SETSPECIALANALYSIS(theAna=>:id,theHisto=>:hid,warn=>:w,alr=>:a,inputs=>:inp);END;"  ) ) {
-      OCITable *warn,*alarm,*inps;
-      checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
-                               OCIthresholds, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
-                               (dvoid **) &warn));
-      checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
-                               OCIthresholds, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
-                               (dvoid **) &alarm));
-      checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
-                               OCIthresholds, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
-                               (dvoid **) &inps));
-      if(Np>0) {
-        floatVectorToVarray(*warningThr, warn);
-        floatVectorToVarray(*alarmThr, alarm);
-      }
-      if(Ninput>0) {
-        floatVectorToVarray(*inputs, inps);
-      }
-      myOCIBindInt   (stmt,":id" , AnaID);
-      myOCIBindString(stmt,":hid", m_hid);
-      myOCIBindObject(stmt,":w"  , (void **) &warn, OCIthresholds);
-      myOCIBindObject(stmt,":a"  , (void **) &alarm, OCIthresholds);
-      myOCIBindObject(stmt,":inp", (void **) &inps, OCIthresholds);
-      out = (OCI_SUCCESS == myOCIStmtExecute(stmt));
-      checkerr(OCIObjectFree ( m_envhp, m_errhp, warn, OCI_OBJECTFREE_FORCE) );
-      checkerr(OCIObjectFree ( m_envhp, m_errhp, alarm, OCI_OBJECTFREE_FORCE) );
-      checkerr(OCIObjectFree ( m_envhp, m_errhp, inps, OCI_OBJECTFREE_FORCE) );
-      releaseOCIStatement(stmt);
+  OCIStmt *stmt=NULL;
+  m_StmtMethod = "OnlineHistogram::setAnalysis";
+  if ( OCI_SUCCESS == prepareOCIStatement
+       (stmt, "BEGIN ONLINEHISTDB.SETSPECIALANALYSIS(theAna=>:id,theHisto=>:hid,warn=>:w,alr=>:a,inputs=>:inp);END;"  ) ) {
+    OCITable *warn,*alarm,*inps;
+    checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
+                             OCIthresholds, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
+                             (dvoid **) &warn));
+    checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
+                             OCIthresholds, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
+                             (dvoid **) &alarm));
+    checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
+                             OCIthresholds, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
+                             (dvoid **) &inps));
+    if(warningThr && alarmThr) {
+      floatVectorToVarray(*warningThr, warn);
+      floatVectorToVarray(*alarmThr, alarm);
     }
+    if(inputs) {
+      floatVectorToVarray(*inputs, inps);
+    }
+    myOCIBindInt   (stmt,":id" , AnaID);
+    myOCIBindString(stmt,":hid", m_hid);
+    myOCIBindObject(stmt,":w"  , (void **) &warn, OCIthresholds);
+    myOCIBindObject(stmt,":a"  , (void **) &alarm, OCIthresholds);
+    myOCIBindObject(stmt,":inp", (void **) &inps, OCIthresholds);
+    out = (OCI_SUCCESS == myOCIStmtExecute(stmt));
+    checkerr(OCIObjectFree ( m_envhp, m_errhp, warn, OCI_OBJECTFREE_FORCE) );
+    checkerr(OCIObjectFree ( m_envhp, m_errhp, alarm, OCI_OBJECTFREE_FORCE) );
+    checkerr(OCIObjectFree ( m_envhp, m_errhp, inps, OCI_OBJECTFREE_FORCE) );
+    releaseOCIStatement(stmt);
   }
   return out;
 }
@@ -1425,62 +1524,45 @@ bool OnlineHistogram::getAnaSettings(int AnaID,
                                      bool &mask)  {
   if(!m_anadirLoaded) loadAnalysisDirections();
   bool out=true;
-  int Np=getAlgorithmNpar(algFromID(AnaID));
-  if (Np>0) { 
-    if (0 == warnTh || 0 == alarmTh) {
-      std::stringstream message;
-      message <<"Error in OnlineHistogram::getAnaSettings : Analysis " << AnaID
-	      << " requires "<<Np<<" parameters";
-      warningMessage(message.str());
-      Np=-1;
-      out=false;
+  
+  int imask=0;
+  OCIStmt *stmt=NULL;
+  m_StmtMethod = "OnlineHistogram::getAnaSettings";
+  if ( OCI_SUCCESS == prepareOCIStatement
+       (stmt, "BEGIN ONLINEHISTDB.GETANASETTINGS(theAna=>:id,theHisto=>:hid,warn=>:w,alr=>:a,mask=>:m,inputs=>:inp); END;" ) ) {
+    OCITable *warn,*alarm,*inps;
+    checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
+                             OCIthresholds, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
+                             (dvoid **) &warn));
+    checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
+                             OCIthresholds, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
+                             (dvoid **) &alarm));
+    checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
+                             OCIthresholds, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
+                             (dvoid **) &inps));
+    myOCIBindInt   (stmt,":id" , AnaID);
+    myOCIBindString(stmt,":hid", m_hid);
+    myOCIBindObject(stmt,":w"  , (void **) &warn, OCIthresholds);
+    myOCIBindObject(stmt,":a"  , (void **) &alarm, OCIthresholds);
+    myOCIBindInt   (stmt,":m"  , imask);
+    myOCIBindObject(stmt,":inp", (void **) &inps, OCIthresholds);
+    if (OCI_SUCCESS == myOCIStmtExecute(stmt)) {
+      mask = (imask == 1);
+      if(warnTh && alarmTh) {
+        floatVarrayToVector(warn, *warnTh);
+        floatVarrayToVector(alarm, *alarmTh);
+      }
+      if(inputs) {
+        floatVarrayToVector(inps, *inputs);
+      }
     }
     else {
-      warnTh->clear();
-      alarmTh->clear();
+      out=false;
     }
-  }
-  
-  if (out) {
-    int imask=0;
-    OCIStmt *stmt=NULL;
-    m_StmtMethod = "OnlineHistogram::getAnaSettings";
-    if ( OCI_SUCCESS == prepareOCIStatement
-         (stmt, "BEGIN ONLINEHISTDB.GETANASETTINGS(theAna=>:id,theHisto=>:hid,warn=>:w,alr=>:a,mask=>:m,inputs=>:inp); END;" ) ) {
-      OCITable *warn,*alarm,*inps;
-      checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
-                               OCIthresholds, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
-                               (dvoid **) &warn));
-      checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
-                               OCIthresholds, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
-                               (dvoid **) &alarm));
-      checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
-                               OCIthresholds, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
-                               (dvoid **) &inps));
-      myOCIBindInt   (stmt,":id" , AnaID);
-      myOCIBindString(stmt,":hid", m_hid);
-      myOCIBindObject(stmt,":w"  , (void **) &warn, OCIthresholds);
-      myOCIBindObject(stmt,":a"  , (void **) &alarm, OCIthresholds);
-      myOCIBindInt   (stmt,":m"  , imask);
-      myOCIBindObject(stmt,":inp", (void **) &inps, OCIthresholds);
-      if (OCI_SUCCESS == myOCIStmtExecute(stmt)) {
-        mask = (imask == 1);
-        if(Np>0) {
-          floatVarrayToVector(warn, *warnTh);
-          floatVarrayToVector(alarm, *alarmTh);
-        }
-        if(inputs) {
-          floatVarrayToVector(inps, *inputs);
-        }
-      }
-      else {
-        out=false;
-      }
-      checkerr(OCIObjectFree ( m_envhp, m_errhp, warn, OCI_OBJECTFREE_FORCE) );
-      checkerr(OCIObjectFree ( m_envhp, m_errhp, alarm, OCI_OBJECTFREE_FORCE) );
-      checkerr(OCIObjectFree ( m_envhp, m_errhp, inps, OCI_OBJECTFREE_FORCE) );
-      releaseOCIStatement(stmt);
-    }
+    checkerr(OCIObjectFree ( m_envhp, m_errhp, warn, OCI_OBJECTFREE_FORCE) );
+    checkerr(OCIObjectFree ( m_envhp, m_errhp, alarm, OCI_OBJECTFREE_FORCE) );
+    checkerr(OCIObjectFree ( m_envhp, m_errhp, inps, OCI_OBJECTFREE_FORCE) );
+    releaseOCIStatement(stmt);
   }
   return out;
 }

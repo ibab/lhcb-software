@@ -1,16 +1,17 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.13 2008-04-30 13:29:16 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.14 2009-02-16 10:37:43 ggiacomo Exp $
 #include <cctype>
 #include "OnlineHistDB/OnlineHistDBEnv.h"
 using namespace std;
 using namespace OnlineHistDBEnv_constants;
 
 OnlineHistDBEnv::OnlineHistDBEnv(std::string User) 
-  : OCIthresholds(NULL), OCIparameters(NULL),
-    OCIintlist(NULL), OCIanalist(NULL), OCIhnalist(NULL), OCIflolist(NULL),    
-    m_TaggedStatement(NULL),
-    m_refRoot(NULL), m_savesetsRoot(NULL),
-    m_TStorage(NULL), m_HStorage(NULL), m_PStorage(NULL), 
-    m_user(User), m_debug(0), m_excLevel(1)
+  :  m_envhp(NULL), m_errhp(NULL), m_svchp(NULL),
+     OCIthresholds(NULL), OCIparameters(NULL),
+     OCIintlist(NULL), OCIanalist(NULL), OCIhnalist(NULL), OCIflolist(NULL),    
+     m_TaggedStatement(NULL),
+     m_refRoot(NULL), m_savesetsRoot(NULL),
+     m_TStorage(NULL), m_HStorage(NULL), m_PStorage(NULL), 
+     m_user(User), m_debug(0), m_excLevel(1)
 {
   toUpper(m_user);
   initOCIBinds();
@@ -483,9 +484,9 @@ void OnlineHistDBEnv::floatVarrayToVector(OCIColl* col, std::vector<float> &v) {
       float num;
       OCIIterNext(m_envhp, m_errhp, iterator,(dvoid **) &element, NULL, &eoc);
       if (!eoc) {
-	checkerr( OCINumberToReal(m_errhp, (OCINumber *) element, 
+        checkerr( OCINumberToReal(m_errhp, (OCINumber *) element, 
 				  sizeof(float),  & num));
-	v.push_back(num );
+        v.push_back(num );
       }
     }
      checkerr(OCIIterDelete(m_envhp, m_errhp, &iterator));
@@ -505,7 +506,7 @@ void OnlineHistDBEnv::stringVarrayToVector(OCIColl* col, std::vector<std::string
       void *element;
       OCIIterNext(m_envhp, m_errhp, iterator,(dvoid **) &element, NULL, &eoc);
       if (!eoc)
-	v.push_back( std::string( (const char*) OCIStringPtr(m_envhp,*(OCIString **)element)) );
+        v.push_back( std::string( (const char*) OCIStringPtr(m_envhp,*(OCIString **)element)) );
     }
      checkerr(OCIIterDelete(m_envhp, m_errhp, &iterator));
   }

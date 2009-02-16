@@ -13,6 +13,7 @@ $conn=HistDBconnect(1);
 function update_histo_display() {
   global $conn;
   global  $DispOpt;
+  global $debug;
   $command="begin :out := OnlineHistDB.".
     ( $_POST["htype"] == "SHID" ? 
       "DeclareHistoPageDisplayOptions('".$_POST["id"]."','".$_POST["PAGE"]."',".$_POST["INSTANCE"] :
@@ -26,8 +27,24 @@ function update_histo_display() {
     $command.= ($_POST[$var] != '') ? "'".$_POST[$var]."'" : "NULL";
     if($i < $nopts-1) $command.=",";
   }
-  $command.=")); END;";
-  if ($debug>1) echo "command is $command <br>";
+  $command.=")";
+  if ($_POST["FITFUN"]) {
+    $command.=",'".$_POST["FITFUNNAME"]."',";
+    $ffpar=array();
+    for ($ip=1 ; $ip< $_POST["FITNP"]; $ip++) {
+      if( strlen($_POST["FITPAR_${ip}"])>0 ) 
+        $ffpar[$ip]=$_POST["FITPAR_${ip}"];
+      else
+        break;
+    }
+    $command .= "thresholds(".implode(",",$ffpar).")";
+  }
+  else {
+    $command.=",NULL,thresholds()";
+  }
+
+  $command .= "); END;";
+  if ($debug>0) echo "command is $command <br>";
   $stid = OCIParse($conn,$command);
   ocibindbyname($stid,":out",$out,10);
   $r=OCIExecute($stid,OCI_DEFAULT);
@@ -46,6 +63,12 @@ function hidtype($Htype) {
     return "hsid";
 }
 
+function fitok() {
+  if ($_POST["FITFUN"] == 0) return 1;
+  if ($_POST["FITFUN"] ==$_POST["OLDFITFUN"]) return 1;
+  return 0;
+}
+
 $id=$_POST["id"];
 ?>
 <H2 ALIGN="CENTER">Update Default Display Options for histogram <?php echo $id ?></H2>
@@ -55,7 +78,7 @@ $page= array_key_exists("PAGE",$_POST) ? $_POST["PAGE"] : 0;
 if ($page)
   echo "<H2 ALIGN='CENTER'> in Page $page</H2>";
 
-if ($_POST["Update_display"] == 'Confirm') {
+if ($_POST["Update_display"] == 'Confirm' && fitok()) {
   if (update_histo_display())
     echo "Histogram Display Options updated successfully<br><br>\n";
   else

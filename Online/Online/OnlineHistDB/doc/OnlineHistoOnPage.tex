@@ -1,0 +1,25 @@
+\item      inline void {\bf setPadSize}(float x1,\\\mbox{}~~~~~~~~~ float y1,\\\mbox{}~~~~~~~~~ float x2,\\\mbox{}~~~~~~~~~ float y2) ;
+
+ set pad size (min and max x and y coordinates relative to canvas size)
+
+
+\item      inline void {\bf setOverlap}(OnlineHistoOnPage* m,\\\mbox{}~~~~~~~~~ int order=1) ;
+
+ declare that histogram must be overlapped on histogram m with an optional order index
+
+
+\item      inline OnlineHistoOnPage* {\bf getOverlap}(int *order=NULL) ;
+
+ get overlap directions
+
+
+\item      inline void {\bf unsetOverlap}() ;
+
+ unset overlap
+
+
+\item      inline bool {\bf isOverlap}() ;
+
+ true if histogram must be overlapped
+
+

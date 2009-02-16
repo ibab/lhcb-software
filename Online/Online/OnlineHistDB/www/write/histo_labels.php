@@ -19,38 +19,38 @@ $id=$_POST["id"];
 <?php
 
 if ($_POST["Update_labels"] == 'Confirm') {
-  $nlabx=$_POST["nlabx"];
-  $nlaby=$_POST["nlaby"];
   $hsid = HistoSet($id);
   $inset = ($htype == "HID") ? "'${id}'" : "NULL";
   $command="begin OnlineHistDB.DeclareBinLabels($hsid,$inset,PARAMETERS(";
   $first=1;
-  $nlx=$nly=0;
+  $nlabx=$nlaby=0;
+  for ($i=1 ; $i<=$_POST["nlabx"]; $i++) {
+     if(strlen($_POST["LABX${i}"]) > 0)
+       $nlabx=$i;
+  }
   for ($i=1 ; $i<=$nlabx; $i++) {
-    if(strlen($_POST["LABX${i}"])>0) {
-      if ($first == 0) $command .= ",";
-      $command .= "'".$_POST["LABX${i}"]."'";
-      $nlx++;
-      $first=0;
-    }
+    if ($first == 0) $command .= ",";
+    $command .= "'".$_POST["LABX${i}"]."'";
+    $first=0;
+  }
+  for ($i=1 ; $i<=$_POST["nlaby"]; $i++) {
+    if(strlen($_POST["LABY${i}"]) >0 )
+      $nlaby=$i;
   }
   for ($i=1 ; $i<=$nlaby; $i++) {
-    if(strlen($_POST["LABY${i}"])>0) {
-      if ($first == 0) $command .= ",";
-      $command .= "'".$_POST["LABY${i}"]."'";
-      $nly++;
-      $first=0;
-    }
+    if ($first == 0) $command .= ",";
+    $command .= "'".$_POST["LABY${i}"]."'";
+    $first=0;
   }
-  $command .= "),$nlx); end;";
+  $command .= "),$nlabx); end;";
   if($debug) echo "command is $command<br>\n";
   $stid = OCIParse($conn,$command);
-  $r=OCIExecute($stid,OCI_DEFAULT);
+  $r=OCIExecute($stid);
   if (!$r) {
     echo "<font color=red> <B>Got errors when updating labels </B></font><br><br>\n";
   }
   else {
-    ocicommit($conn);
+    //   ocicommit($conn);
     echo "Histogram Bin Labels updated successfully<br><br>\n";
   }
   ocifreestatement($stid);   
@@ -62,7 +62,7 @@ else {
 
 
 ocilogoff($conn);
-echo "<br> <a href='../Histogram.php?".strtolower($_POST["htype"])."=${id}> Back to Histogram Record $id </a><br>";
+echo "<br> <a href='../Histogram.php?".strtolower($_POST["htype"])."=${id}'> Back to Histogram Record $id </a><br>";
 ?>
 
 </body>

@@ -1,8 +1,11 @@
 create or replace package OnlineHistDB AUTHID CURRENT_USER as
+ -- some useful types
  TYPE sourceh is VARRAY(8) of HCREATOR.SOURCEH1%TYPE; 
  TYPE histotlist is TABLE OF HISTOGRAM.HID%TYPE;
  TYPE floattlist is TABLE OF real;
  TYPE inttlist is TABLE OF int;
+
+ -- major declarations (task, subsystem, histogram)
  procedure DeclareSubSystem(subsys varchar2);	
  procedure DeclareTask (Name varchar2, ss1 varchar2:='NONE', ss2 varchar2:='NONE', ss3 varchar2:='NONE',
 	KRunOnPhysics number :=1, KRunOnCalib number :=0, KRunOnEmpty number :=0, SFreq float := NULL, 
@@ -17,23 +20,48 @@ create or replace package OnlineHistDB AUTHID CURRENT_USER as
                 newTask IN varchar2, newAlgo IN varchar2, newTitle IN varchar2) return number;
  function RenameHistogram(oldIdentifier IN varchar2, 
                 newTask IN varchar2, newAlgo IN varchar2, newTitle IN varchar2) return number;
+
+ -- setting various histogram properties
  function SetDimServiceName(theHID IN  HISTOGRAM.HID%TYPE, theDSN IN DIMSERVICENAME.SN%TYPE) return number;
+ procedure DeclareBinLabels(theSet IN HISTOGRAMSET.HSID%TYPE, theHID IN HISTOGRAM.HID%TYPE, labels parameters, Nx IN int);
+ function SetPageToDisplay(theHID HISTOGRAM.HID%TYPE, thePage PAGE.PAGENAME%TYPE) return number;
+
+ -- access histogram properties
+ function GetHID(theHistoName IN varchar2,Subindex OUT HISTOGRAM.IHS%TYPE) return number;
+ function GetName(theHID IN varchar2) return varchar2;
+ function GetHistogramData(theName IN varchar2, thePage IN varchar2,  theInstance IN int,
+	theHid OUT varchar2,theHsid OUT int,
+	theIhs OUT int,theNhs OUT int, theHstype OUT varchar2, theHstitle OUT varchar2, theSubtitle OUT varchar2,
+	theTask OUT varchar2, theAlgo OUT varchar2, theNanalysis OUT int,
+	theDescr OUT varchar2, theDoc OUT varchar2, theIsanalysishist OUT int, theCreation OUT int,
+        theObsolete OUT int, theDisplay out int, theHSDisplay out int, theSHDisplay out int,
+	theDIMServiceName OUT varchar2, theLabels OUT parameters, NlabX OUT int, NlabY OUT int,
+        theRefPage OUT varchar2)
+	return number;
+
+ -- declarations of algorithms and fit functions
  procedure DeclareCheckAlgorithm(Name varchar2,pars parameters,doc varchar2:=NULL, nin integer :=0, defVals thresholds);
  procedure DeclareCreatorAlgorithm(Name IN varchar2,Ninp IN number:=0,pars IN parameters,
 			thetype IN varchar2 := 'H1D', doc IN varchar2:=NULL, thegetset in ALGORITHM.GETSET%TYPE := 0,
 			defVals thresholds);
-
- function DeclareAnalysis(theSet IN HISTOGRAMSET.HSID%TYPE, Algo IN varchar2, warn IN thresholds, alr IN thresholds, 
-	instance IN integer:=1, inputs IN thresholds:=thresholds()) return number;
- procedure SetSpecialAnalysis(theAna IN integer, theHisto IN varchar2,  warn IN thresholds, alr IN thresholds,
-	inputs IN thresholds:=thresholds());
+ procedure DeclareFitFunction(theName IN varchar2, theNp IN int, thePnames IN parameters, theMi IN int, theDoc IN varchar2 := NULL); 
 
 
- function DeclareHistDisplayOptions(theHID IN HISTOGRAM.HID%TYPE, theOptions IN dispopt) return number;
- function DeclareHistoSetDisplayOptions(theSet IN HISTOGRAMSET.HSID%TYPE, theOptions IN dispopt) return number;
+ -- display options
+ function DeclareHistDisplayOptions(theHID IN HISTOGRAM.HID%TYPE, theOptions IN dispopt,
+        theFitFun IN varchar2, theFitPars IN thresholds) return number;
+ function DeclareHistoSetDisplayOptions(theSet IN HISTOGRAMSET.HSID%TYPE, theOptions IN dispopt,
+        theFitFun IN varchar2, theFitPars IN thresholds) return number;
  function DeclareHistoPageDisplayOptions(theHID IN HISTOGRAM.HID%TYPE, thePage varchar2, TheInstance IN int := 1, 
-                        theOptions IN dispopt) return number;
- function GetDisplayOptions(theDOID IN int, theOptions OUT dispopt)  return number;
+                        theOptions IN dispopt,
+                        theFitFun IN varchar2, theFitPars IN thresholds) return number;
+ function GetBestDO(theHID IN HISTOGRAM.HID%TYPE, thePage IN varchar2 := NULL,TheInstance IN int := 1) return number;
+ function GetDisplayOptions(theDOID IN int, theOptions OUT dispopt, 
+        theFitFun OUT varchar2, theFitPars OUT thresholds)  return number;
+ procedure GetFitOptions(theDOID IN int, theFitFun OUT int, Np OUT int);
+ function GetFitParam(theDOID IN int, iPar IN int) return number;
+ procedure GetFitFunParname(fcode IN int, Ipar IN integer, name OUT varchar2);
+    -- access function for php4 (produced automatically by  autodispopt.pl)
  procedure GET_DISPLAYOPTIONS(theDOID IN int
   ,LABEL_X OUT VARCHAR2,LABEL_Y OUT VARCHAR2,LABEL_Z OUT VARCHAR2,YMIN OUT FLOAT,YMAX OUT FLOAT,STATS OUT INT
   ,FILLSTYLE OUT INT,FILLCOLOR OUT INT,LINESTYLE OUT INT,LINECOLOR OUT INT,LINEWIDTH OUT INT,DRAWOPTS OUT VARCHAR2
@@ -45,41 +73,62 @@ create or replace package OnlineHistDB AUTHID CURRENT_USER as
   ,STAT_Y_SIZE OUT FLOAT,STAT_Y_OFFS OUT FLOAT,HTIT_X_SIZE OUT FLOAT,HTIT_X_OFFS OUT FLOAT,HTIT_Y_SIZE OUT FLOAT,HTIT_Y_OFFS OUT FLOAT
   ,NDIVX OUT INT,NDIVY OUT INT,MARKERSIZE OUT INT,MARKERCOLOR OUT INT,MARKERSTYLE OUT INT);
 
- function GetBestDO(theHID IN HISTOGRAM.HID%TYPE, thePage IN varchar2 := NULL,TheInstance IN int := 1) return number;
- function GetHID(theHistoName IN varchar2,Subindex OUT HISTOGRAM.IHS%TYPE) return number;
- function GetName(theHID IN varchar2) return varchar2;
+
+ -- analysis
+ function DeclareAnalysis(theSet IN HISTOGRAMSET.HSID%TYPE, Algo IN varchar2, warn IN thresholds, alr IN thresholds, 
+	instance IN integer:=1, inputs IN thresholds:=thresholds()) return number;
+ procedure SetSpecialAnalysis(theAna IN integer, theHisto IN varchar2,  warn IN thresholds, alr IN thresholds,
+	inputs IN thresholds:=thresholds());
  procedure GetAlgoNpar(theAlg IN varchar2, Npar OUT integer, Ninp OUT integer);
  procedure GetAlgoParname(theAlg IN varchar2, Ipar IN integer, name OUT varchar2, defVal OUT float);
+ procedure GetFitAlgNpar(fcode IN int, Npar OUT integer, Ninp OUT integer);
+ procedure GetFitAlgParname(fcode IN int, Ipar IN integer, name OUT varchar2, defVal OUT float);
  procedure GetAnaSettings(theAna IN integer, theHisto IN varchar2, Ipar IN integer, warn OUT float, alr OUT float);
  procedure GetAnaInput(theAna IN integer, theHisto IN varchar2, Ipar IN integer, input OUT float);
  procedure GetAnaSettings(theAna IN integer, theHisto IN varchar2, warn OUT thresholds, alr OUT thresholds,
 	mask OUT int, inputs OUT thresholds);
- procedure GetHCSettings(theHID IN HISTOGRAM.HID%TYPE, Ipar IN integer, value OUT float);
  function GetHistoAnalysis(theHistoSet IN int, anaids OUT intlist, ananames OUT analist) return number;
+
+ -- "analysis" (virtual) histograms
  procedure DeclareAnalysisHistogram(theAlg IN varchar2,theTitle IN varchar2,theSet IN HISTOGRAMSET.HSID%TYPE := 0,
                                   theSources sourceh := NULL, thePars IN thresholds := thresholds(),theName OUT varchar2);
+ procedure GetHCSettings(theHID IN HISTOGRAM.HID%TYPE, Ipar IN integer, value OUT float);
  procedure GetAnaHistDirections(theHCID IN varchar2, Alg OUT varchar2, Sset OUT int, Sources out hnalist, Pars out flolist);
+
+ -- pages 
  function PagenameSyntax(theName IN varchar2,Folder OUT varchar2) return varchar2;
  function DeclarePageFolder(theFolder IN varchar2) return varchar2;
- function DeclarePage(theFullName IN varchar2,theDoc IN varchar2,hlist IN histotlist,
+ function DeclarePage(theFullName IN varchar2,theDoc IN varchar2 := NULL,hlist IN histotlist,
 			Cx IN floattlist,Cy IN floattlist,Sx IN floattlist,Sy IN floattlist,
-                        theName OUT varchar2, theFolder OUT varchar2) return varchar2;
- function GetPage(thePage IN varchar2,theFolder OUT varchar2,theDoc OUT varchar2) return number; 
- function DeletePageFolder(thePageFolder IN varchar2) return number;
- function DeletePage(thePage IN varchar2) return number;
+                        theName OUT varchar2, theFolder OUT varchar2, 
+                        theOverlap IN inttlist := inttlist(), theOvOrder IN inttlist := inttlist(),
+                        thePattern IN varchar2 := NULL) return varchar2;
+ function DeclareHoverlap(theFullName IN varchar2,theHid IN varchar2, theInstance IN int, 
+                         mothHid IN varchar2, mothInstance IN int, ovIndex IN int)
+           return number;
+ function GetPage(thePage IN varchar2,theFolder OUT varchar2,theDoc OUT varchar2, thePattern OUT varchar2) return number; 
  function RenamePage(oldName IN varchar2, newName IN varchar2, newFolder OUT varchar2) return varchar2;
- function GetHistogramData(theName IN varchar2, thePage IN varchar2,  theInstance IN int,
-	theHid OUT varchar2,theHsid OUT int,
-	theIhs OUT int,theNhs OUT int, theHstype OUT varchar2, theHstitle OUT varchar2, theSubtitle OUT varchar2,
-	theTask OUT varchar2, theAlgo OUT varchar2, theNanalysis OUT int,
-	theDescr OUT varchar2, theDoc OUT varchar2, theIsanalysishist OUT int, theCreation OUT int,
-        theObsolete OUT int, theDisplay out int, theHSDisplay out int, theSHDisplay out int,
-	theDIMServiceName OUT varchar2, theLabels OUT parameters, NlabX OUT int, NlabY OUT int)
-	return number;
- procedure DeclareBinLabels(theSet IN HISTOGRAMSET.HSID%TYPE, theHID IN HISTOGRAM.HID%TYPE, labels parameters, Nx IN int);
+
+ -- messages from analysis tasks
+ function StoreMessage(theHName IN HISTOGRAM.NAME%TYPE := NULL, theSaveSet IN varchar2, 
+                theTask IN varchar2 := NULL, theAnalysisTask IN varchar2 := NULL, theLevel IN ANAMESSAGE.ALEVEL%TYPE,
+                theMessage IN varchar2, theAID IN ANALYSIS.AID%TYPE := NULL, theAName IN varchar2 := NULL, 
+                theID IN ANAMESSAGE.ID%TYPE := NULL, outAname OUT varchar2) return number;
+ procedure GetMessages(msgids OUT intlist, theAnaysisTask IN varchar2 := NULL);
+ procedure GetMessage(MsgID IN ANAMESSAGE.ID%TYPE, theHName OUT HISTOGRAM.NAME%TYPE, theSaveSet OUT varchar2, 
+                theTask OUT varchar2, theAnalysisTask OUT varchar2,
+                theLevel OUT varchar2, theMessage OUT varchar2, theAName OUT varchar2, theUXTime OUT int);
+ procedure DeleteAllMessages;
+ procedure DeleteOldMessages(expTime IN int);
+        
+ -- deletion and cleanup
  function DeleteHistogramSet(theSet IN HISTOGRAMSET.HSID%TYPE) return number;
  function DeleteHistogram(theHID IN HISTOGRAM.HID%TYPE) return number;
+ function DeletePageFolder(thePageFolder IN varchar2) return number;
+ function DeletePage(thePage IN varchar2) return number;
  procedure TaskCleanup;
+
+ -- db session calls
  procedure GetTotalCounts(nHist OUT int, nPages OUT int, nPageFolders OUT int);
  procedure CheckSchema(dbschema IN int := 0); 
  procedure CheckSchema(dbschema IN int := 0, algListID OUT int);
@@ -99,16 +148,20 @@ create or replace  package body OnlineHistDB as
 -----------------------
 
 
-function DeclareDisplayOptions(theOptions IN dispopt, theDOID IN DISPLAYOPTIONS.DOID%TYPE := NULL) return number is
+function DeclareDisplayOptions(theOptions IN dispopt, theFitFun IN varchar2, theFitPars IN thresholds,
+                        theDOID IN DISPLAYOPTIONS.DOID%TYPE := NULL) return number is
  myid number := 0;
 begin
  if (theDOID is NULL) then
-  insert into DISPLAYOPTIONS(DOID, OPT) 
-	   VALUES(DISPLAYOPTIONS_ID.NEXTVAL, theOptions);
+  insert into DISPLAYOPTIONS(DOID, OPT, FITFUN) 
+	   VALUES(DISPLAYOPTIONS_ID.NEXTVAL, theOptions, theFitFun);
   SELECT DISPLAYOPTIONS_ID.CURRVAL into myid  from ERGOSUM;
  else
-  UPDATE DISPLAYOPTIONS SET  OPT=theOptions    WHERE DOID=theDOID;
+  UPDATE DISPLAYOPTIONS SET  OPT=theOptions,FITFUN=theFitFun   WHERE DOID=theDOID;
   myid := theDOID;
+ end if;
+ if (theFitFun is not NULL) then
+  UPDATE DISPLAYOPTIONS SET FITPARS=theFitPars WHERE DOID=myid;
  end if;
  return myid;
 end DeclareDisplayOptions;
@@ -587,6 +640,7 @@ end DeclareCheckAlgorithm;
 procedure DeclareCreatorAlgorithm(Name IN varchar2,Ninp IN number:=0,
 	        pars IN parameters, thetype IN varchar2 := 'H1D', doc IN varchar2:=NULL, 
                 thegetset in ALGORITHM.GETSET%TYPE := 0, defVals thresholds) is
+-- here Ninp is the number of input histograms
  cursor al is  select ALGNAME from ALGORITHM where ALGNAME=Name;	
  algo ALGORITHM.ALGNAME%TYPE;
  nin integer := pars.COUNT;
@@ -615,6 +669,22 @@ EXCEPTION
 end DeclareCreatorAlgorithm;
 
 -----------------------
+procedure DeclareFitFunction(theName IN varchar2, theNp IN int, thePnames IN parameters, theMi IN int, theDoc IN varchar2 := NULL) is
+ cursor ff is select NAME from FITFUNCTION where NAME=theName;
+ func FITFUNCTION.NAME%TYPE;
+begin
+ open ff;
+ fetch ff into func;
+ if ff%NOTFOUND then
+   insert into FITFUNCTION(NAME,CODE,NP,PARNAMES,MUSTINIT,DOC) 
+        VALUES(theName,FunCode_ID.NEXTVAL, theNp, thePnames, theMi, theDoc);
+ else 
+   update FITFUNCTION set NP=theNp,PARNAMES=thePnames,MUSTINIT=theMi,DOC=theDoc where NAME=theName;
+ end if;
+end DeclareFitFunction;
+-----------------------
+
+
 
 function DeclareAnalysis(theSet IN HISTOGRAMSET.HSID%TYPE, Algo IN varchar2, warn IN thresholds, alr IN thresholds, 
                          instance IN integer :=1, inputs IN thresholds:=thresholds()) 
@@ -649,24 +719,30 @@ begin
   end if;
  end LOOP;
  if (ana%NOTFOUND) then -- create new analysis
-   open al;
-   fetch al into algotype,algon,algonin;
-   if (al%NOTFOUND or algotype!='CHECK') then
-     raise_application_error(-20002,'Algorithm '||Algo||' does not exist or is not a check histogram');
-   else 
-    if (warn.COUNT != algon or alr.COUNT != algon or inputs.COUNT > algonin ) then
-        raise_application_error(-20003,'Bad number of parameters for Algorithm '||Algo);
-    else
-     INSERT INTO ANALYSIS(AID,HSET,ALGORITHM) VALUES(Analysis_ID.NEXTVAL,theSet,Algo);
-     UPDATE  HISTOGRAMSET set NANALYSIS=NANALYSIS+1 where HSID=theSet;
-     for i IN 1..mynh LOOP
-      hid := theSet||'/'||i;
-       INSERT INTO ANASETTINGS(ANA,HISTO,WARNINGS,ALARMS,INPUTPARS) VALUES(Analysis_ID.CURRVAL,hid,warn,alr,inputs);
-       SELECT Analysis_ID.CURRVAL into myid  from ERGOSUM;
-     end LOOP;
+   if (Algo = 'Fit') then -- sepcial case, first input par is function code
+    if (inputs.COUNT <1) then
+       raise_application_error(-20001,'Fit Algorithm requires function code');
     end if;
+    GetFitAlgNpar(inputs(1),algon,algonin);
+   else 
+    open al;
+    fetch al into algotype,algon,algonin;
+    if (al%NOTFOUND or algotype!='CHECK') then
+     raise_application_error(-20002,'Algorithm '||Algo||' does not exist or is not a check histogram');
+    end if;
+    close al;
    end if;
-   close al;
+   if (warn.COUNT != algon or alr.COUNT != algon or inputs.COUNT > algonin ) then
+        raise_application_error(-20003,'Bad number of parameters for Algorithm '||Algo);
+   else
+    INSERT INTO ANALYSIS(AID,HSET,ALGORITHM) VALUES(Analysis_ID.NEXTVAL,theSet,Algo);
+    SELECT Analysis_ID.CURRVAL into myid  from ERGOSUM;
+    UPDATE  HISTOGRAMSET set NANALYSIS=NANALYSIS+1 where HSID=theSet;
+    for i IN 1..mynh LOOP
+     hid := theSet||'/'||i;
+      INSERT INTO ANASETTINGS(ANA,HISTO,WARNINGS,ALARMS,INPUTPARS) VALUES(Analysis_ID.CURRVAL,hid,warn,alr,inputs);
+    end LOOP;
+   end if;
  else
   -- analysis already exists: update parameters
    UPDATE ANASETTINGS SET WARNINGS=warn,ALARMS=alr,INPUTPARS=inputs where ANA=myid and REGEXP_REPLACE(HISTO,'^(.*)/.*$','\1')=theSet;
@@ -709,7 +785,8 @@ end SetSpecialAnalysis;
 
 -----------------------
 
-function DeclareHistoSetDisplayOptions(theSet IN HISTOGRAMSET.HSID%TYPE,theOptions IN dispopt) return number is
+function DeclareHistoSetDisplayOptions(theSet IN HISTOGRAMSET.HSID%TYPE,theOptions IN dispopt,
+        theFitFun IN varchar2, theFitPars IN thresholds) return number is
  cursor checko is select HSDISPLAY from HISTOGRAMSET where HSID=theSet; 
  mydoid DISPLAYOPTIONS.DOID%TYPE;
  mySetDisp HISTOGRAMSET.HSDISPLAY%TYPE := NULL;
@@ -720,7 +797,7 @@ begin
  if (checko%NOTFOUND) then
   raise_application_error(-20010,'Histogram Set '||theSet||' does not exist!');
  end if;
- mydoid := DeclareDisplayOptions(theOptions ,mySetDisp);
+ mydoid := DeclareDisplayOptions(theOptions, theFitFun, theFitPars, mySetDisp);
  if (mySetDisp is NULL) then
   update HISTOGRAMSET set HSDISPLAY=mydoid where HSID=theSet;
  end if;
@@ -734,7 +811,8 @@ end DeclareHistoSetDisplayOptions;
 
 -----------------------
 
-function DeclareHistDisplayOptions(theHID IN HISTOGRAM.HID%TYPE, theOptions IN dispopt) return number is
+function DeclareHistDisplayOptions(theHID IN HISTOGRAM.HID%TYPE, theOptions IN dispopt,
+        theFitFun IN varchar2, theFitPars IN thresholds) return number is
  cursor checko is select HS.HSID,HS.NHS,H.DISPLAY from HISTOGRAMSET HS,HISTOGRAM H where H.HID=theHID and H.HSET=HS.HSID; 
  mydoid DISPLAYOPTIONS.DOID%TYPE;
  myHSID HISTOGRAMSET.HSID%TYPE;
@@ -747,7 +825,7 @@ begin
  if (checko%NOTFOUND) then
   raise_application_error(-20010,'Histogram '||theHID||' does not exist!');
  end if;
- mydoid := DeclareDisplayOptions(theOptions ,myDisp);
+ mydoid := DeclareDisplayOptions(theOptions, theFitFun, theFitPars ,myDisp);
  if (myDisp is NULL) then
    update HISTOGRAM set DISPLAY=mydoid where HID=theHID;
  end if; 
@@ -763,7 +841,8 @@ end DeclareHistDisplayOptions;
 -----------------------
 
 function DeclareHistoPageDisplayOptions(theHID IN HISTOGRAM.HID%TYPE, thePage varchar2, TheInstance IN int := 1, 
-                        theOptions IN dispopt) return number is
+                        theOptions IN dispopt,
+                        theFitFun IN varchar2, theFitPars IN thresholds) return number is
  cursor checko is select SDISPLAY from SHOWHISTO where HISTO=theHID and PAGE=thePage and INSTANCE=TheInstance; 
  myDisp HISTOGRAM.DISPLAY%TYPE := NULL;
  mydoid DISPLAYOPTIONS.DOID%TYPE;
@@ -774,7 +853,7 @@ begin
  if (checko%NOTFOUND) then
   raise_application_error(-20010,'Histogram '||theHID||' in  Page '||thePage||' not found');
  end if;
- mydoid := DeclareDisplayOptions(theOptions,myDisp);
+ mydoid := DeclareDisplayOptions(theOptions, theFitFun, theFitPars,myDisp);
  if (myDisp is NULL) then
    update SHOWHISTO set SDISPLAY=mydoid where HISTO=theHID and PAGE=thePage and INSTANCE=TheInstance;
  end if;
@@ -787,12 +866,13 @@ EXCEPTION
 end DeclareHistoPageDisplayOptions;
 
 -----------------------
-function GetDisplayOptions(theDOID IN int, theOptions OUT dispopt)   return number is
-cursor mydo is select OPT from DISPLAYOPTIONS where DOID=theDOID;
-out int;
+function GetDisplayOptions(theDOID IN int, theOptions OUT dispopt, 
+        theFitFun OUT varchar2, theFitPars OUT thresholds)   return number is
+ cursor mydo is select OPT,FITFUN,FITPARS from DISPLAYOPTIONS where DOID=theDOID;
+ out int;
 begin
  open mydo;
- fetch mydo into theOptions;
+ fetch mydo into theOptions,theFitFun,theFitPars;
  if (mydo%NOTFOUND) then
   out :=  0;
  else
@@ -802,9 +882,46 @@ begin
  return out;
 end GetDisplayOptions;
 -----------------------
--- this is needed for the web interface since PHP4 doesn't support objects
--- produced automatically by  autodispopt.pl
+-- this is needed for the web interface since PHP4 doesn't support objects.
 
+procedure GetFitOptions(theDOID IN int, theFitFun OUT int, Np OUT int) is
+ theFitPars thresholds;
+ theffname DISPLAYOPTIONS.FITFUN%TYPE;
+begin
+ Np := 0;
+ theFitFun := 0;
+ select FITFUN,FITPARS into theffname,theFitPars from DISPLAYOPTIONS where DOID=theDOID; 
+ if (theffname is not null) then
+   select CODE into theFitFun from FITFUNCTION where NAME=theffname;
+   if (theFitPars is not NULL) then
+     Np := theFitPars.COUNT;
+   end if;
+ end if;
+end GetFitOptions;
+
+function GetFitParam(theDOID IN int, iPar IN int) return number is
+ theFitPars thresholds;
+begin
+ select FITPARS into theFitPars from DISPLAYOPTIONS where DOID=theDOID;
+ if ( iPar >0 and iPar <= theFitPars.COUNT ) then
+  return theFitPars(iPar);
+ else 
+  return NULL;
+ end if;
+end GetFitParam;
+
+procedure GetFitFunParname(fcode IN int, Ipar IN integer, name OUT varchar2) is
+ theFitPars parameters;
+begin 
+ name := NULL;
+ select PARNAMES into theFitPars from FITFUNCTION where CODE=fcode;
+ if ( Ipar >0 and Ipar <= theFitPars.COUNT ) then
+  name := theFitPars(Ipar);
+ end if;
+end GetFitFunParname;
+-----------------------
+
+-- procedure GET_DISPLAYOPTIONS is produced automatically by  autodispopt.pl
 procedure GET_DISPLAYOPTIONS(theDOID IN int
 ,LABEL_X OUT VARCHAR2,LABEL_Y OUT VARCHAR2,LABEL_Z OUT VARCHAR2,YMIN OUT FLOAT,YMAX OUT FLOAT,STATS OUT INT
 ,FILLSTYLE OUT INT,FILLCOLOR OUT INT,LINESTYLE OUT INT,LINECOLOR OUT INT,LINEWIDTH OUT INT,DRAWOPTS OUT VARCHAR2
@@ -926,9 +1043,11 @@ begin
  close np;
 end GetAlgoNpar;
 
------------------------
+------------------------
 
 procedure GetAlgoParname(theAlg IN varchar2, Ipar IN integer, name OUT varchar2, defVal OUT float) is
+-- for check functions Ipar from 1 to NPARS gives output parameter
+-- Ipar from NPARS+1 to NPARS+NINPUT gives input parameter
  cursor np is select ALGPARS,PARDEFVAL from ALGORITHM where ALGNAME=theAlg;
  mypars parameters;
  mydefval thresholds;
@@ -949,7 +1068,106 @@ begin
  close np;
 end GetAlgoParname;
 
+
+
 -----------------------
+-- special versions for the "Fit" algorithm:
+--   the first 2 input parameters are function code and confidence level
+--   the first output parameter is chi2 prob.
+--   the other input (= output) parameters are taken from the fit function
+-----------------------
+
+procedure GetFitAlgNpar(fcode IN int, Npar OUT integer, Ninp OUT integer) is
+ cursor np is select NPARS,NINPUT from ALGORITHM where ALGNAME='Fit';
+ fitnp int;
+ fitni int;
+ cursor nf is select NP from FITFUNCTION where CODE=fcode;
+begin
+ open nf;
+ fetch nf into Npar;
+ if (nf%NOTFOUND) then
+     Npar:=-1;
+     Ninp:=-1;
+     raise_application_error(-20006,'Cannot find FitFunction with code '||fcode);
+ else
+     open np;
+     fetch np into  fitnp,fitni;
+     Ninp := fitni+Npar;
+     Npar := fitnp+2*Npar;
+ end if;
+ close nf;
+end GetFitAlgNpar;
+
+-----------------------
+procedure GetFitAlgParname(fcode IN int, Ipar IN integer, name OUT varchar2, defVal OUT float) is
+ nout int;
+ nin int;
+ noutfa int;
+ ninfa int;
+ fapars parameters;
+ ffpars parameters;
+ isinput int;
+ mydefval thresholds;
+ ffix int :=0;
+ cursor np is select NPARS,NINPUT,ALGPARS,PARDEFVAL from ALGORITHM where ALGNAME='Fit';
+ cursor fp is select PARNAMES from FITFUNCTION where CODE=fcode;
+begin
+ name := 'Unknown';
+ defVal := NULL;
+ GetFitAlgNpar(fcode,nout,nin);
+ open np;
+ fetch np into noutfa,ninfa,fapars,mydefval;
+ if (Ipar<=nout) then -- output parameter
+  if (Ipar <= noutfa) then 
+    name := fapars(Ipar);
+    if (mydefval is not NULL) then
+     defVal := mydefval(Ipar);
+    end if;
+  else 
+    ffix := Ipar-noutfa;
+    isinput := 0;
+  end if;
+ else -- input parameter
+  if (Ipar <= (nout+ninfa) ) then 
+    name := fapars(Ipar-nout+noutfa);
+    if (mydefval is not NULL) then
+     defVal := mydefval(Ipar-nout+noutfa);
+    end if;
+  else 
+    ffix := Ipar-nout-ninfa;
+    isinput := 1;
+  end if;
+ end if;
+ close np;
+
+ if (ffix>0) then -- parameters in FITFUNCTION
+  open fp;
+  fetch fp into ffpars;
+  if (fp%NOTFOUND) then
+     raise_application_error(-20006,'Cannot find FitFunction with code '||fcode);
+  end if;
+  if (isinput = 1) then
+    if (ffix <= ffpars.COUNT ) then
+     name := ffpars(ffix);
+    end if;
+  else -- two parameters for min and max fit result
+    if (ffix <= 2* ffpars.COUNT ) then
+     if (MOD(ffix,2) = 0) then
+      name := 'max_'||ffpars(trunc((ffix-1)/2)+1);
+      defVal := 1.E16;
+     else
+      name := 'min_'||ffpars(trunc((ffix-1)/2)+1);
+      defVal := -1.E16; 
+     end if;
+    end if;
+  end if;
+  close fp;
+ end if;
+ 
+end GetFitAlgParname;
+
+-----------------------
+
 function GetHistoAnalysis(theHistoSet IN int, anaids OUT intlist, ananames OUT analist) return number is
  cursor myhs is select NANALYSIS from HISTOGRAMSET where HSID=theHistoSet;
  cursor mya is select AID,ALGORITHM from ANALYSIS where HSET=theHistoSet order by AID;
@@ -1014,7 +1232,11 @@ begin
      input := -999;
      raise_application_error(-20005,'Cannot find Analysis '||theAna||' for histogram'|| theHisto);
  end if;
- input := myinp(Ipar);
+ if (Ipar <= myinp.COUNT) then
+   input := myinp(Ipar);
+ else
+   input := NULL;
+ end if;
  close anaset;
 EXCEPTION
  when others then
@@ -1264,10 +1486,14 @@ end DeclarePageFolder;
 
 
 -----------------------
-function DeclarePage(theFullName IN varchar2,theDoc IN varchar2,hlist IN histotlist,
+function DeclarePage(theFullName IN varchar2,theDoc IN varchar2 := NULL,hlist IN histotlist,
 		      Cx IN floattlist,Cy IN floattlist,Sx IN floattlist,Sy IN floattlist,
-                      theName OUT varchar2, theFolder OUT varchar2) return varchar2 is
+                      theName OUT varchar2, theFolder OUT varchar2, 
+                      theOverlap IN inttlist := inttlist(), theOvOrder IN inttlist := inttlist(),
+                      thePattern IN varchar2 := NULL) return varchar2 is
  CURSOR cpg(Xpage PAGE.PAGENAME%TYPE) is select PAGENAME from PAGE where PAGENAME=Xpage;
+ CURSOR shck(Xid SHOWHISTO.SHID%TYPE) is select SHID from SHOWHISTO 
+                    where PAGE=theFullName and SHID=Xid and MOTHERH is null;
  myPName  PAGE.PAGENAME%TYPE;
  outName varchar2(350);
  Nin int;
@@ -1277,6 +1503,8 @@ function DeclarePage(theFullName IN varchar2,theDoc IN varchar2,hlist IN histotl
  inst int;
  instlist inttlist := inttlist();
  xFolder PAGEFOLDER.PAGEFOLDERNAME%TYPE;
+ xMotherH SHOWHISTO.MOTHERH%TYPE;
+ xIoverlap SHOWHISTO.IOVERLAP%TYPE;
 begin
  savepoint beforeDPwrite;
  outName := PagenameSyntax(theFullName,xFolder);
@@ -1302,9 +1530,9 @@ begin
  open cpg(theName);
  fetch cpg into myPName;
  if (cpg%NOTFOUND) then -- new page
-  INSERT INTO PAGE(PAGENAME,FOLDER,NHISTO,PAGEDOC) VALUES(theName,theFolder,Nin,theDoc);
+  INSERT INTO PAGE(PAGENAME,FOLDER,NHISTO,PAGEDOC,PAGEPATTERN) VALUES(theName,theFolder,Nin,theDoc,thePattern);
  else  -- update PAGE entry
-  UPDATE PAGE SET  NHISTO=Nin,PAGEDOC=theDoc,FOLDER=theFolder where PAGENAME=theName;
+  UPDATE PAGE SET  NHISTO=Nin,PAGEDOC=theDoc,FOLDER=theFolder,PAGEPATTERN=thePattern where PAGENAME=theName;
   -- remove all showhisto entry related to this page that are no more in the definition
   condition := ' WHERE PAGE='''||theName||'''';
   for i IN 1..Nin LOOP
@@ -1319,14 +1547,32 @@ begin
  close cpg;
  -- now create/update SHOWHISTO entries
  for i IN 1..Nin LOOP
+   xMotherH := NULL;
+   xIoverlap := NULL;
+   if (theOverlap.COUNT = Nin) then
+      if (theOverlap(i) >0) then -- check that the overlap link is legal (exists, it's on the same page and it's not an overlap)
+        open shck(theOverlap(i));
+        fetch shck into xMotherH;
+        if (shck%NOTFOUND) then
+           raise_application_error(-20004,'you can''t overlap on Pad '||theOverlap(i)||' in this page');
+        else
+         if( theOvOrder.COUNT = Nin) then
+            xIoverlap := theOvOrder(i);
+         end if;
+        end if;
+        close shck;
+      end if;
+   end if;
+
    open sh(theName,hlist(i),instlist(i));
    fetch sh into myPName;
    if (sh%NOTFOUND) then
    -- DBMS_OUTPUT.PUT_LINE('inserting '||theName||' '||theFolder||' '||hlist(i)||' '||instlist(i));
-    INSERT INTO SHOWHISTO(PAGE,PAGEFOLDER,HISTO,INSTANCE,CENTER_X,CENTER_Y,SIZE_X,SIZE_Y) 
-	VALUES(theName,theFolder,hlist(i),instlist(i),Cx(i),Cy(i),Sx(i),Sy(i)); 
+    INSERT INTO SHOWHISTO(SHID,PAGE,PAGEFOLDER,HISTO,INSTANCE,CENTER_X,CENTER_Y,SIZE_X,SIZE_Y,MOTHERH,IOVERLAP) 
+	VALUES(SHH_ID.NEXTVAL,theName,theFolder,hlist(i),instlist(i),Cx(i),Cy(i),Sx(i),Sy(i),xMotherH,xIoverlap); 
    else
-    UPDATE SHOWHISTO SET CENTER_X=Cx(i),CENTER_Y=Cy(i),SIZE_X=Sx(i),SIZE_Y=Sy(i) WHERE 
+    UPDATE SHOWHISTO SET CENTER_X=Cx(i),CENTER_Y=Cy(i),SIZE_X=Sx(i),SIZE_Y=Sy(i),
+        MOTHERH=xMotherH,IOVERLAP=xIoverlap WHERE 
 	PAGE=theName AND HISTO=hlist(i) AND INSTANCE=instlist(i);
    end if;
    close sh;
@@ -1340,12 +1586,43 @@ EXCEPTION
 end DeclarePage;
 -----------------------
 
-function GetPage(thePage IN varchar2,theFolder OUT varchar2,theDoc OUT varchar2) return number is
- CURSOR cpg is select NHISTO,FOLDER,PAGEDOC from PAGE where PAGENAME=thePage;
+function DeclareHoverlap(theFullName IN varchar2, theHid IN varchar2, theInstance IN int, 
+                         mothHid IN varchar2, mothInstance IN int, ovIndex IN int)
+           return number is
+ CURSOR msh(Xh SHOWHISTO.HISTO%TYPE, Xinst SHOWHISTO.INSTANCE%TYPE) is 
+      select SHID from SHOWHISTO where  PAGE=theFullName and HISTO=Xh and INSTANCE=Xinst;
+ shmoth SHOWHISTO.SHID%TYPE;
+ theSH SHOWHISTO.SHID%TYPE;
+ out int := 0;
+begin
+ savepoint beforeDHOVwrite;
+ open msh(mothHid,mothInstance);
+ fetch msh into shmoth;
+ if (msh%FOUND) then
+   close msh;
+   open msh(theHid,theInstance);
+   fetch msh into theSH;
+   if (msh%FOUND) then
+     update SHOWHISTO set MOTHERH=shmoth,IOVERLAP=ovIndex where SHID=theSH;
+     out := 1;
+   end if;
+ end if;
+ close  msh;
+ return out;
+EXCEPTION
+ when OTHERS then
+  ROLLBACK TO beforeDHOVwrite;
+  raise_application_error(-20050,SQLERRM);
+end DeclareHoverlap;
+
+-----------------------
+function GetPage(thePage IN varchar2,theFolder OUT varchar2,theDoc OUT varchar2, 
+                 thePattern OUT varchar2) return number is
+ CURSOR cpg is select NHISTO,FOLDER,PAGEDOC,PAGEPATTERN from PAGE where PAGENAME=thePage;
  myNh  PAGE.NHISTO%TYPE;
 begin
  open cpg;
- fetch cpg into myNh,theFolder,theDoc;
+ fetch cpg into myNh,theFolder,theDoc,thePattern;
  if (cpg%NOTFOUND) then 
    myNh := -1;
  end if;  
@@ -1435,14 +1712,13 @@ function GetHistogramData(theName IN varchar2, thePage IN varchar2, theInstance 
 	theTask OUT varchar2, theAlgo OUT varchar2, theNanalysis OUT int,
 	theDescr OUT varchar2, theDoc OUT varchar2, theIsanalysishist OUT int, theCreation OUT int,
         theObsolete OUT int, theDisplay OUT int, theHSDisplay OUT int, theSHDisplay OUT int,
-	theDIMServiceName OUT varchar2, theLabels OUT parameters, NlabX OUT int, NlabY OUT int) 
+	theDIMServiceName OUT varchar2, theLabels OUT parameters, NlabX OUT int, NlabY OUT int,
+        theRefPage OUT varchar2 ) 
 	return number is
 cursor myh(XName HISTOGRAM.NAME%TYPE) is SELECT HS.HSID,HS.NHS,HS.HSTYPE,HS.HSTITLE,HS.HSALGO,HS.HSTASK,
         HS.NANALYSIS,HS.DESCR,HS.DOC,HS.HSDISPLAY,
-        H.HID,H.IHS,H.SUBTITLE,H.ISANALYSISHIST,
-	(NEW_TIME(H.CREATION,'EST','GMT')-TO_DATE('01-JAN-1970','DD-MON-YYYY'))*(86400),
-	(NEW_TIME(H.OBSOLETENESS,'EST','GMT')-TO_DATE('01-JAN-1970','DD-MON-YYYY'))*(86400),
-	H.DISPLAY,H.BINLABELS,H.NBINLABX,H.NBINLABY FROM HISTOGRAMSET HS,HISTOGRAM H 
+        H.HID,H.IHS,H.SUBTITLE,H.ISANALYSISHIST,TIMEST2UXT(H.CREATION), TIMEST2UXT(H.OBSOLETENESS),
+	H.DISPLAY,H.BINLABELS,H.NBINLABX,H.NBINLABY,H.REFPAGE FROM HISTOGRAMSET HS,HISTOGRAM H 
            WHERE H.NAME=XName AND H.HSET=HS.HSID;
 cursor mysh(Xhid HISTOGRAM.HID%TYPE) is SELECT SDISPLAY FROM SHOWHISTO 
 	WHERE PAGE=thePage AND HISTO=Xhid AND INSTANCE=theInstance;
@@ -1452,7 +1728,7 @@ begin
  open myh(theName);
  fetch myh into theHsid,theNhs,theHstype,theHstitle,theAlgo,theTask,theNanalysis,theDescr,
    theDoc,theHSDisplay,theHid,theIhs,theSubtitle,theIsanalysishist,theCreation,theObsolete,theDisplay,
-   theLabels,NlabX,NlabY;
+   theLabels,NlabX,NlabY,theRefPage;
  if (myh%NOTFOUND) then
   close myh;
   raise_application_error(-20050,'Histogram '||theName||' not found');
@@ -1474,6 +1750,7 @@ begin
  return out;
 end GetHistogramData;
 -----------------------
+
 procedure DeclareBinLabels(theSet IN HISTOGRAMSET.HSID%TYPE, theHID IN HISTOGRAM.HID%TYPE, labels parameters, Nx IN int) is
 Ny int;
 begin
@@ -1484,11 +1761,120 @@ if (labels.COUNT > 0 ) then
  else
   UPDATE HISTOGRAM SET BINLABELS=labels,NBINLABX=Nx,NBINLABY=Ny where HSET=theSet;
  end if;
-
+else
+ if (theHID is not NULL) then
+  UPDATE HISTOGRAM SET BINLABELS=NULL,NBINLABX=0,NBINLABY=0 where HID=theHID;
+ else
+  UPDATE HISTOGRAM SET BINLABELS=NULL,NBINLABX=0,NBINLABY=0 where HSET=theSet;
+ end if;
 end if;
 end DeclareBinLabels;
 
 -----------------------
+function SetPageToDisplay(theHID HISTOGRAM.HID%TYPE, thePage PAGE.PAGENAME%TYPE) return number is
+ out int := 0;
+ cursor seep is SELECT 1 from PAGE where PAGENAME=thePage;
+begin
+ open seep;
+ fetch seep into out;
+ if (seep%FOUND) then
+  update HISTOGRAM set REFPAGE=thePage where HID=theHID;
+ end if;
+ return out;
+end SetPageToDisplay;
+-----------------------
+
+function StoreMessage(theHName IN HISTOGRAM.NAME%TYPE := NULL, theSaveSet IN varchar2, 
+                theTask IN varchar2 := NULL, theAnalysisTask IN varchar2 := NULL, theLevel IN ANAMESSAGE.ALEVEL%TYPE,
+                theMessage IN varchar2, theAID IN ANALYSIS.AID%TYPE := NULL, theAName IN varchar2 := NULL, 
+                theID IN ANAMESSAGE.ID%TYPE := NULL,  outAname OUT varchar2)  return number is
+ myID ANAMESSAGE.ID%TYPE;
+ myName ANAMESSAGE.ANANAME%TYPE;
+begin
+ savepoint beforeMSGwrite;
+ if (theID is not NULL) then
+  update ANAMESSAGE set SAVESET = theSaveSet, ALEVEL=theLevel where ID=theID;
+  myID := theID;
+ else 
+  -- new message
+  insert into ANAMESSAGE(ID,SAVESET,ALEVEL) VALUES(ANAMESSAGE_ID.NEXTVAL,theSaveSet,theID);
+  select ANAMESSAGE_ID.CURRVAL into myID  from ERGOSUM;
+ end if;
+ update ANAMESSAGE set MSGTEXT=theMessage,MSGTIME=SYSTIMESTAMP,
+             TASK=theTask,ANALYSISTASK=theAnalysisTask where ID=myID;
+ if (theHName is not NULL) then
+  update ANAMESSAGE set HISTO=(select HID from HISTOGRAM where NAME=theHName);
+ end if;
+ if (theAID is not NULL) then
+  select ALGORITHM||' on '||HSTASK||'/'||HSALGO||'/'||HSTITLE into myName
+    from ANALYSIS A, HISTOGRAMSET HS where A.AID=theAID and A.HSET = HS.HSID;
+  update ANAMESSAGE set ANAID = theAID, ANANAME= myName where ID=myID;
+  outAname := myName;
+ else 
+  update ANAMESSAGE set ANANAME=theAName where ID=myID;
+  outAname := theAName;
+ end if;
+ return myID;
+exception
+ when OTHERS then 
+  ROLLBACK TO beforeMSGwrite;
+  raise_application_error(-20050,SQLERRM);
+end StoreMessage;
+-----------------------
+
+procedure GetMessages(msgids OUT intlist, theAnaysisTask IN varchar2 := NULL) is
+ cursor mym is select ID from ANAMESSAGE;
+ cursor myselm(Xat ANAMESSAGE.ANALYSISTASK%TYPE) is select ID from ANAMESSAGE where ANALYSISTASK=Xat;
+ myID ANAMESSAGE.ID%TYPE;
+ na int := 0;
+begin
+ msgids := intlist();
+ if (theAnaysisTask is null) then
+  open mym;
+  LOOP	
+   fetch mym into myid;
+   EXIT WHEN mym%NOTFOUND;
+   msgids.EXTEND;
+   na := na+1;
+   msgids(na) := myid;
+  end LOOP;
+  close mym;
+ else
+  open myselm(theAnaysisTask);
+  LOOP	
+   fetch myselm into myid;
+   EXIT WHEN myselm%NOTFOUND;
+   msgids.EXTEND;
+   na := na+1;
+   msgids(na) := myid;
+   close myselm;
+  end LOOP;
+ end if;
+end GetMessages;
+-----------------------
+
+procedure GetMessage(MsgID IN ANAMESSAGE.ID%TYPE, theHName OUT HISTOGRAM.NAME%TYPE, theSaveSet OUT varchar2, 
+                theTask OUT varchar2, theAnalysisTask OUT varchar2, 
+                theLevel OUT varchar2, theMessage OUT varchar2, theAName OUT varchar2, theUXTime OUT int) is
+begin
+ select NAME,SAVESET,ALEVEL,MSGTEXT,ANANAME,TIMEST2UXT(MSGTIME),TASK,ANALYSISTASK into
+        theHName,theSaveSet,theLevel,theMessage,theAName,theUXTime,theTask,theAnalysisTask
+        from ANAMESSAGE M, HISTOGRAM H where M.ID=MsgID and M.HISTO=H.HID ;
+end GetMessage;
+-----------------------
+
+procedure DeleteAllMessages is
+begin
+ delete from ANAMESSAGE;
+end DeleteAllMessages;
+-----------------------
+
+procedure DeleteOldMessages(expTime IN int) is
+begin
+ delete from ANAMESSAGE where TIMEST2UXT(SYSTIMESTAMP)-TIMEST2UXT(MSGTIME) > expTime ;
+end DeleteOldMessages;
+-----------------------
+
 function DeleteHistogramSet(theSet IN HISTOGRAMSET.HSID%TYPE) return number is
  cursor vh is SELECT HID from HISTOGRAM where HSET=theSet;
  myhid HISTOGRAM.HID%TYPE;
@@ -1589,7 +1975,7 @@ begin
 end CheckSchema;
 
 -----------------------
-procedure CheckSchema(dbschema IN int := 0, algListID OUT int) is
+procedure CheckSchema(dbschema IN int := 0, algListID OUT int) is -- for backward compatibility
 wP int;
 begin
  CheckSchema(dbschema, algListID, wP);

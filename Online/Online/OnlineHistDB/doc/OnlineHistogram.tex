@@ -58,6 +58,11 @@
  histogram name
 
 
+\item    inline std::string {\bf rootName}() const ;
+
+ name of ROOT object in savesets
+
+
 \item    inline std::string {\bf htitle}() const ;
 
  standard DB histogram title (not necessarly equal to the published ROOT title)
@@ -83,12 +88,12 @@
  algorithm name
 
 
-\item    std::string\& {\bf descr}() ;
+\item    std::string\& {\bf doc}() ;
 
  short description of the histogram
 
 
-\item    std::string\& {\bf doc}() ;
+\item    std::string\& {\bf descr}() ;
 
  link to a more extensive documentation
 
@@ -190,11 +195,29 @@
  checks is display option is set
 
 
-\item    virtual bool {\bf setDisplayOption}(std::string ParameterName,\\\mbox{}~~~~~~~~~
-			void* option);
+\item    bool {\bf getFitFunction}(std::string \&Name,\\\mbox{}~~~~~~~~~ std::vector$<$float$>$ *initValues);
+
+
+ get fit directions: function name and initial parameter values
+ returns false if a fit function is not specified
+
+
+\item    inline bool {\bf hasFitFunction}() ;
+
+ see if a fit function is associated for display
+
+
+\item    virtual bool {\bf setDisplayOption}(std::string ParameterName,\\\mbox{}~~~~~~~~~ void* option);
+
 
  sets a display option (in the current display mode). Change is sent to the DB only 
  after a call to saveDisplayOptions()
+
+
+\item    void {\bf setFitFunction}(std::string Name,\\\mbox{}~~~~~~~~~ std::vector$<$float$>$ *initValues);
+
+
+ specify a fit to be performed at display time: function name and initial parameter values
 
 
 \item    virtual bool {\bf unsetDisplayOption}(std::string ParameterName);
@@ -268,6 +291,12 @@
  success.
 
 
+\item    bool {\bf setBinLabels}(std::vector$<$std::string$>$ *Xlabels,\\\mbox{}~~~~~~~~~ 
+                    std::vector$<$std::string$>$ *Ylabels);
+
+ set custom bin labels for X and/or Y axis. Provide null pointers for not changing labels
+
+
 \item    inline unsigned int {\bf nbinlabels}() ;
 
  number of custom bin labels
@@ -281,6 +310,17 @@
 \item    inline unsigned int {\bf nYbinlabels}() ;
 
  number of custom bin labels for Y axis
+
+
+\item    std::string {\bf page2display}() ;
+
+ get the name of page to be displayed when histogram is clicked on Presenter
+
+
+\item    bool {\bf setPage2display}(std::string\& pageName);
+
+
+ set the name of page to be displayed when histogram is clicked on Presenter
 
 
 \item    bool {\bf getCreationDirections}(std::string\& Algorithm,\\\mbox{}~~~~~~~~~

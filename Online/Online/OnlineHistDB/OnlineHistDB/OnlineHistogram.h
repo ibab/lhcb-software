@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.29 2008-11-20 17:28:12 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.30 2009-02-16 10:37:42 ggiacomo Exp $
 #ifndef ONLINEHISTOGRAM_H
 #define ONLINEHISTOGRAM_H 1
 /** @class  OnlineHistogram OnlineHistogram.h OnlineHistDB/OnlineHistogram.h
@@ -125,10 +125,16 @@ class  OnlineHistogram : public OnlineHistDBEnv
 			void* option);
   /// checks is display option is set
   bool isSetDisplayOption(std::string ParameterName);
+  /// get fit directions: function name and initial parameter values
+  /// returns false if a fit function is not specified
+  bool getFitFunction(std::string &Name, std::vector<float> *initValues);
+  /// see if a fit function is associated for display
+  inline bool hasFitFunction() { return (!m_fitfun_null); }
   /// sets a display option (in the current display mode). Change is sent to the DB only 
   /// after a call to saveDisplayOptions()
-  virtual bool setDisplayOption(std::string ParameterName,
-			void* option);
+  virtual bool setDisplayOption(std::string ParameterName, void* option);
+  /// specify a fit to be performed at display time: function name and initial parameter values
+  void setFitFunction(std::string Name, std::vector<float> *initValues);
   /// unsets a display option (in the current display mode)
   virtual bool unsetDisplayOption(std::string ParameterName);
   /// unsets all display options (in the current display mode)
@@ -168,18 +174,28 @@ class  OnlineHistogram : public OnlineHistDBEnv
   /// success.
   bool initHistoPageDisplayOptionsFromHist(std::string FullPathPageName = "_DEFAULT_",
 					   int Instance=-1); 
+
+
+  /// set custom bin labels for X and/or Y axis. Provide null pointers for not changing labels
+  bool setBinLabels(std::vector<std::string> *Xlabels, 
+                    std::vector<std::string> *Ylabels);
   /// number of custom bin labels
   inline unsigned int nbinlabels() {return m_binlabels.size();}
   /// number of custom bin labels for X axis
   inline unsigned int nXbinlabels() {return m_xbinlab;}
   /// number of custom bin labels for Y axis
   inline unsigned int nYbinlabels() {return m_ybinlab;}
-
   inline std::string binlabel(unsigned int i, int axis=0) { 
     unsigned int j = (0 == axis) ? i : i+m_xbinlab;
     if(j<m_binlabels.size()) return m_binlabels[j];
     else return "";
   }
+
+  /// get the name of page to be displayed when histogram is clicked on Presenter
+  std::string page2display() {return m_refPage;} 
+  /// set the name of page to be displayed when histogram is clicked on Presenter
+  bool setPage2display(std::string& pageName);
+
   // ANALYSIS OPTIONS
   /// for analysis histogram, get the directions for creating histogram
   bool getCreationDirections(std::string& Algorithm,
@@ -325,12 +341,19 @@ class  OnlineHistogram : public OnlineHistDBEnv
   dispopt *m_dispopt;
   dispoptInd *m_dispopt_null;
   std::vector<OnlineDisplayOption*> m_do;
+  std::string m_fitfun;
+  sb2 m_fitfun_null;
+  std::vector<float> m_fitPars;
+
   std::vector<std::string> m_binlabels;
   int m_xbinlab;
   sb2 m_xbinlab_null;
   int m_ybinlab;
   sb2 m_ybinlab_null;
+  std::string m_refPage;
+  sb2 m_refPage_null;
   
+
   bool verifyPage(std::string &Page, int Instance);
   bool checkHSDisplayFromDB();
   bool checkHDisplayFromDB();

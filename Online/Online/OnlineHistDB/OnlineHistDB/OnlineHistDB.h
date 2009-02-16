@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.24 2008-10-03 15:45:30 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.25 2009-02-16 10:37:42 ggiacomo Exp $
 #ifndef ONLINEHISTDB_H
 #define ONLINEHISTDB_H 1
 /** @class  OnlineHistDB OnlineHistDB.h OnlineHistDB/OnlineHistDB.h
@@ -61,19 +61,21 @@ class  OnlineHistDB : public OnlineHistDBEnv,
   /// while NinPars is the number of optional input parameters.
   /// outPars and inPars should point to arrays containing the parameter names, 
   /// doc is a short description of the algorithm.
+  /// (to be used by OMAlib, where algorithm must be implemented)
   bool declareCheckAlgorithm(std::string Name, 
                              int NoutPars, 
                              std::vector<std::string> *outPars = NULL,
-			     std::vector<float> *outDefv = NULL,
+                             std::vector<float> *outDefv = NULL,
                              int NinPars = 0, 
                              std::vector<std::string> *inPars =NULL ,
-			     std::vector<float> *inDefv = NULL,
-                             std::string doc="NONE");
+                             std::vector<float> *inDefv = NULL,
+                             std::string *doc =NULL);
   /// declares to the DB an available algorithm to produce histograms at
   /// analysis time. Ninput is the number of input histograms, SetAsInput
   /// if input can be an histogramset, Npars the
   /// number of optional parameters (pars containing their names), doc is a short
   /// description of the algorithm.
+  /// (to be used by OMAlib, where algorithm must be implemented)
   bool declareCreatorAlgorithm(std::string Name, 
 			       int Ninput,
 			       bool SetAsInput=false,
@@ -81,9 +83,15 @@ class  OnlineHistDB : public OnlineHistDBEnv,
 			       int Npars=0, 
 			       std::vector<std::string> *pars=NULL,
 			       std::vector<float> *defv = NULL,
-			       std::string doc="NONE");
-
-
+			       std::string *doc=NULL);
+  /// declares an available fit function with Npars parameters. parnames must point to a vector
+  /// of length Npars, set mustinit=true if parameters must be initialized
+  /// (to be used by OMAlib, where function must be implemented)
+  bool declareFitFunction(std::string Name, 
+                          int Npars,
+                          std::vector<std::string> *parnames,
+                          bool mustInit,
+                          std::string &doc);
   /// gets the algorithm list version
   int getAlgListID() const {return m_AlgListID;}
   /// sets the algorithm list version (works only for DB admin account)
@@ -159,6 +167,12 @@ class  OnlineHistDB : public OnlineHistDBEnv,
   int getTasks(std::vector<std::string>& list);
   /// gets the list of algorithms, type can be "_ALL_", "CHECK", "HCREATOR"
   int getAlgorithms(std::vector<std::string>& list,std::string type="_ALL_");
+  // gets list of stored messages from analysis by their unique identifier
+  int getMessages(std::vector<int>& list, std::string AnalysisTask="any");
+  // delete all messages from analysis
+  bool deleteAllMessages();
+  // delete messages older than expTime seconds
+  bool deleteOldMessages(int expTime);
 
  private:
   // private dummy copy constructor and assignment operator

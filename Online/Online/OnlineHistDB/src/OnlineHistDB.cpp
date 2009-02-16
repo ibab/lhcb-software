@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.33 2008-10-21 16:12:22 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.34 2009-02-16 10:37:43 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -224,11 +224,11 @@ OnlineHistogram* OnlineHistDB::declareAnalysisHistogram
 bool OnlineHistDB::declareCheckAlgorithm(std::string Name, 
                                          int NoutPars, 
                                          std::vector<std::string> *outPars,
-					 std::vector<float> *outDefv,
+                                         std::vector<float> *outDefv,
                                          int NinPars, 
                                          std::vector<std::string> *inPars,
-					 std::vector<float> *inDefv,
-                                         std::string doc) {
+                                         std::vector<float> *inDefv,
+                                         std::string *doc) {
   bool out=true;
   if(NoutPars>0) {
     if (outPars == NULL || outDefv == NULL) 
@@ -249,7 +249,7 @@ bool OnlineHistDB::declareCheckAlgorithm(std::string Name,
     out=false;
     std::stringstream statement;
     statement << "BEGIN ONLINEHISTDB.DECLARECHECKALGORITHM(Name => :x1,pars => :par";
-    if (doc != "NONE")
+    if ( doc )
       statement << ",doc => :d";
     statement << ",nin => :nin";
     statement << ",defVals => :dv); END;";
@@ -287,8 +287,8 @@ bool OnlineHistDB::declareCheckAlgorithm(std::string Name,
       floatVectorToVarray(allDefv, defvalues);
       myOCIBindObject(stmt, ":dv",(void **) &defvalues , OCIthresholds);
 
-      if (doc != "NONE") 
-        myOCIBindString(stmt, ":d", doc);
+      if (doc) 
+        myOCIBindString(stmt, ":d", *doc);
       myOCIBindInt(stmt, ":nin", NinPars);
 
       out = (OCI_SUCCESS == myOCIStmtExecute(stmt));
@@ -305,8 +305,8 @@ bool OnlineHistDB::declareCreatorAlgorithm(std::string Name,
                                            OnlineHistDBEnv::HistType OutputType,
                                            int Npars, 
                                            std::vector<std::string> *pars, 
-					   std::vector<float> *defv,
-                                           std::string doc) {
+                                           std::vector<float> *defv,
+                                           std::string *doc) {
   bool out=false;
   if(Npars>0) {
     if (pars == NULL || defv == NULL)
@@ -325,7 +325,7 @@ bool OnlineHistDB::declareCreatorAlgorithm(std::string Name,
     if(ipar<Npars) statement << ",";
   } 
   statement << "),thetype=>:type";
-  if (doc != "NONE")
+  if (doc)
     statement << ",doc=>:d";
   statement << ",thegetset=>:setflag,defVals=>THRESHOLDS(";
   ipar=0;
@@ -351,9 +351,50 @@ bool OnlineHistDB::declareCreatorAlgorithm(std::string Name,
     std::string myType( HistTypeName[(int)OutputType] );
     myOCIBindString(stmt,":type",myType);
     myOCIBindInt   (stmt,":setflag",setflag);    
-    if (doc != "NONE") {
-      myOCIBindString(stmt, ":d", doc);
+    if (doc) {
+      myOCIBindString(stmt, ":d", *doc);
     }
+    out = (OCI_SUCCESS == myOCIStmtExecute(stmt));
+    releaseOCIStatement(stmt);
+  }
+  return out;
+}
+
+
+bool OnlineHistDB::declareFitFunction(std::string Name, 
+                                      int Npars,
+                                      std::vector<std::string> *parnames,
+                                      bool mustInit,
+                                      std::string &doc) {
+  bool out=false;
+  if(Npars>0) {
+    if (parnames == NULL )
+      return out;
+    if ((int)parnames->size() != Npars )
+      return out;
+  }
+
+  std::stringstream statement;
+  statement << "BEGIN ONLINEHISTDB.DECLAREFITFUNCTION('" <<Name<<
+    "',"<<Npars <<",PARAMETERS(";
+
+  if (Npars>0) {
+    std::vector<std::string>::iterator ip;
+    ip=parnames->begin();
+    while (ip != parnames->end() ) {
+      statement << "'" << (*ip) << "'";
+      if( ++ip != parnames->end()) statement << ",";
+    } 
+  }
+  statement << ")," << (int)mustInit;
+  if(!doc.empty()) {
+    statement<< ",theDoc => '"<<doc<<"'";
+  }
+  statement<< "); END;";
+  
+  m_StmtMethod = "OnlineHistDB::declareFitFunction";
+  OCIStmt *stmt=NULL;
+  if ( OCI_SUCCESS == prepareOCIStatement(stmt, statement.str().c_str()) ) {
     out = (OCI_SUCCESS == myOCIStmtExecute(stmt));
     releaseOCIStatement(stmt);
   }
@@ -562,6 +603,56 @@ int OnlineHistDB::getAlgorithms(std::vector<string>& list,std::string type) {
   return genericStringQuery(command,list);
 }
 
+int OnlineHistDB::getMessages(std::vector<int>& list,
+                              std::string AnalysisTask) {
+  int out =0;
+  m_StmtMethod = "OnlineHistDB::getMessages";
+  OCIStmt *astmt=NULL;
+  OCIArray *intlist=NULL;
+  std::string command="BEGIN ONLINEHISTDB.GETMESSAGES(:list";
+  if("any" != AnalysisTask)
+    command += ",theAnaysisTask => '"+AnalysisTask +"'";
+  command +="); END;";
+  if ( OCI_SUCCESS == prepareOCIStatement(astmt, command.c_str()) ) {
+    checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_VARRAY,
+                             OCIintlist, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
+                             (dvoid **) &intlist));
+    myOCIBindObject(astmt,":list", (void **) &intlist, OCIintlist);
+    if (OCI_SUCCESS == myOCIStmtExecute(astmt)) {
+      intVarrayToVector(intlist, list);
+      out = list.size();
+    }
+    releaseOCIStatement(astmt);
+  }
+  return out;
+}
+
+bool OnlineHistDB::deleteAllMessages() {
+  bool out=false;
+  m_StmtMethod = "OnlineHistDB::deleteAllMessages";
+  OCIStmt *astmt=NULL;
+  if ( OCI_SUCCESS == prepareOCIStatement
+         (astmt, "BEGIN ONLINEHISTDB.DELETEALLMESSAGES; END;") ) {
+    if (OCI_SUCCESS == myOCIStmtExecute(astmt)) {
+      out=true;
+    }
+  }
+  return true;
+}
+
+bool OnlineHistDB::deleteOldMessages(int expTime) {
+  bool out=false;
+  m_StmtMethod = "OnlineHistDB::deleteOldMessages";
+  OCIStmt *astmt=NULL;
+  if ( OCI_SUCCESS == prepareOCIStatement
+         (astmt, "BEGIN ONLINEHISTDB.DELETEOLDMESSAGES(:t); END;") ) {
+    myOCIBindInt   (astmt, ":t", expTime);
+    if (OCI_SUCCESS == myOCIStmtExecute(astmt)) {
+      out=true;
+    }
+  }
+  return true;
+}
 
 int OnlineHistDB::genericStringQuery(std::string command, std::vector<string>& list) {
   int nout=0;
