@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.57 2009-02-16 16:53:45 panmanj Exp $"
+__version__ = "$Id: Configuration.py,v 1.58 2009-02-16 22:22:48 panmanj Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -77,6 +77,7 @@ class Brunel(LHCbConfigurableUser):
        ,'InputType'    : """ Type of input file. Can be one of ['MDF','DIGI','ETC','RDST','DST'] (default 'MDF') """
        ,'OutputType'   : """ Type of output file. Can be one of ['RDST','DST','NONE'] (default 'DST') """
        ,'PackType'     : """ Type of packing for the output file. Can be one of ['TES','MDF','NONE'] (default 'TES') """
+       ,'WriteFSR'     : """ Flags whether to write out an FSR """
        ,'Histograms'   : """ Type of histograms. Can be one of ['None','Default','Expert'] """
        ,'NoWarnings'   : """ Flag to suppress all MSG::WARNING or below (default False) """ 
        ,'DatasetName'  : """ String used to build output file names """
