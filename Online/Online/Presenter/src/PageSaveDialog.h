@@ -32,6 +32,7 @@ class PageSaveDialog : public TGTransientFrame
     TGTextButton*   m_cancelButton;
     TGTextEntry*    m_folderNameTextEntry;
     TGTextEntry*    m_pageNameTextEntry;
+    TGTextEntry*    m_patternFileTextEntry;
     TGTextEdit*     m_pageDescriptionTextEditor;
     pres::MsgLevel  m_verbosity;
     int             m_msgBoxReturnCode;

@@ -107,7 +107,6 @@ void PageSaveDialog::build()
   m_pageNameTextEntry->Connect("ReturnPressed()", "PageSaveDialog",
                                this, "setOkButton()");
 
-
                                
   TGLabel *pageDescriptionLabel = new TGLabel(this,"Page Comment:");
   pageDescriptionLabel->SetTextJustify(36);
@@ -124,7 +123,21 @@ void PageSaveDialog::build()
                              kLHintsExpandX | kLHintsExpandY,
                              2, 2, 2, 2));
   m_pageDescriptionTextEditor->MoveResize(16, 310, 450, 130);
-                               
+
+  TGLabel *patternFileLabel = new TGLabel(this,"Pattern file:");
+  patternFileLabel->SetTextJustify(36);
+  AddFrame(patternFileLabel,
+           new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
+  patternFileLabel->MoveResize(16, 455, 90, 18);
+
+  m_patternFileTextEntry = new TGTextEntry(this, new TGTextBuffer(15),-1,
+    kSunkenFrame | kDoubleBorder | kOwnBackground);
+  m_patternFileTextEntry->SetMaxLength(255);
+  m_patternFileTextEntry->SetAlignment(kTextLeft);
+//  m_patternFileTextEntry->Resize(376, m_pageNameTextEntry->GetDefaultHeight());
+  AddFrame(m_patternFileTextEntry,
+           new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
+  m_patternFileTextEntry->MoveResize(110, 452, 250, 22);
                                
                                                               
 
@@ -161,12 +174,13 @@ void PageSaveDialog::ok()
     OnlineHistDB* m_histogramDB = m_mainFrame->histogramDB();
     std::string folderName = m_folderNameTextEntry->GetText();
     std::string pageName = m_pageNameTextEntry->GetText();
+    std::string patternFile = m_patternFileTextEntry->GetText();
     std::string pageDescription = ((dynamic_cast<TGTextView*>(m_pageDescriptionTextEditor)->GetText())->AsString()).Data();
 
     try {
       OnlineHistPage* page = m_histogramDB->getPage(s_slash+folderName+s_slash+pageName);
       std::map<TPad*,OnlineHistogram*> padOwner;
-      bool thereAreOverlaps;
+      bool thereAreOverlaps = false;
       page->removeAllHistograms();
       double xlow, ylow, xup, yup;
 
@@ -190,6 +204,7 @@ void PageSaveDialog::ok()
         }
         m_DbHistosOnPageIt++;
       }
+      page->setPatternFile(patternFile);
 
       if (page->save()) {
         if (thereAreOverlaps) {
