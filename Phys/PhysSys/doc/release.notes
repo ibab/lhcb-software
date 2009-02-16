@@ -3,6 +3,9 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
+! 2009-02-16 - Chris Jones
+ - Add Rich/DstCalibSel which contains RICH Dstar selection code
+
 ! 2009-02-12 - Chris Jones
  - Add package Rich/RichPIDQC that produces PID Monitoring and calibration
    plots for the RICH using various (RICH)PID-free selections.

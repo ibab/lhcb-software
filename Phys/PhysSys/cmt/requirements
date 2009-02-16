@@ -1,4 +1,4 @@
-#$Id: requirements,v 1.170 2009-02-12 12:53:47 jonrob Exp $
+#$Id: requirements,v 1.171 2009-02-16 14:29:00 jonrob Exp $
 package PhysSys
 version v8r0
 
@@ -16,6 +16,7 @@ use  VertexFit			v5r5     Phys   # Yuehong Xie
 use  LoKiFitters                v2r0     Phys   # Vanya Belyaev
 use  DaVinciMonitors            v1r0     Phys   # Patrick Koppenburg
 use  RichPIDQC                  v1r0     Rich   # Chris Jones
+use  DstCalibSel                v1r0     Rich   # Andrew Powell
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
