@@ -1,4 +1,4 @@
-// $Id: GaudiExample.cpp,v 1.10 2008-08-27 14:22:41 evh Exp $
+// $Id: GaudiExample.cpp,v 1.11 2009-02-16 15:19:31 evh Exp $
 
 // Include files
 #include "GaudiKernel/AlgFactory.h"
@@ -17,6 +17,9 @@
 
 #include <cstring>
 #include <cmath>
+
+#include "GaudiUtils/Aida2ROOT.h"
+#include "TH1D.h"
 
 #ifdef WIN32
 namespace win {
@@ -209,6 +212,35 @@ StatusCode GaudiExample::execute() {
     else                    mass = 2800+random1()*500;
     
     IHistogram1D * my1Dhisto2 = plot1D(mass,Histo1Db_ID,Histo1Db_Title,2900., 3200., 30);
+    
+    TH1D *h = Gaudi::Utils::Aida2ROOT::aida2root(  my1Dhisto1 );
+    if ( 0 != h ) {
+      // get the axis:
+      TAxis* axis = h->GetXaxis() ;
+      
+      if( 0 != axis ) 
+      {
+        
+        // loop over bins:
+
+     //   for ( int ibin = 1; ibin < 6 ; ++ibin ) {
+
+     //     char * test = "Test label "+ibin;
+     //     msg << MSG::DEBUG << " bin " << ibin << " heeft als naam " << test << endreq;
+          axis-> SetBinLabel ( 1, "bin 1" );
+	  axis-> SetBinLabel ( 2, "bin 2" );
+	  axis-> SetBinLabel ( 3, "bin 3" );
+	  axis-> SetBinLabel ( 4, "bin 4" );
+	  axis-> SetBinLabel ( 5, "bin 5" );
+						                  
+    //    }
+        
+
+     }
+    }
+    
+    
+    
     
     position.first = random1()*400;
     position.second = random1()*300;

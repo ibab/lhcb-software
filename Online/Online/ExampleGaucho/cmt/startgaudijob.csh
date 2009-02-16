@@ -68,10 +68,10 @@ setenv LHCBHOME /afs/cern.ch/lhcb
 source $LHCBHOME/scripts/CMT.csh
 setenv User_release_area /afs/cern.ch/user/e/evh/w0/newcmt
 
-SetupProject Online v4r12
+SetupProject Online v4r19
 
 
-cd /afs/cern.ch/user/e/evh/w0/newcmt/Online_v4r12/Online/ExampleGaucho/v3r0/cmt
+cd /afs/cern.ch/user/e/evh/w0/newcmt/Online_v4r19/Online/ExampleGaucho/cmt
 source setup.csh
 
 echo EXAMPLEGAUCHOROOT = $EXAMPLEGAUCHOROOT

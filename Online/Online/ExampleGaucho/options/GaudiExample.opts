@@ -12,6 +12,9 @@ MonitorSvc.OutputLevel=1;
 UpdateAndReset.OutputLevel=3;
 UpdateAndReset.desiredDeltaTCycle=20;  // in seconds
 UpdateAndReset.disableReadOdin=1;
+UpdateAndReset.saveHistograms=1;
+UpdateAndReset.saverCycle=20;
+UpdateAndReset.saveSetDir="~/w0";
 ApplicationMgr.EvtSel   = "NONE"; // do not use any event input
 
 //---------------------------------------------------------------------------
