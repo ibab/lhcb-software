@@ -4,6 +4,9 @@
 ! Purpose     : RICH reconstruction algorithms that use MC information
 !-----------------------------------------------------------------------------
 
+! 2009-02-16 - Chris Jones
+ - Add a new algorithm that dumps RICH events to a simple text file.
+
 !===================== RichRecMCAlgorithms v1r1 2008-01-28 ===================
 ! 2008-01-25 - Chris Jones
  - Fix bug in missing MCRichTrack adding algorithm (adding the wrong tracks)
