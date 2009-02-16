@@ -1,4 +1,4 @@
-// $Id: GaudiExample.cpp,v 1.11 2009-02-16 15:19:31 evh Exp $
+// $Id: GaudiExample.cpp,v 1.12 2009-02-16 16:19:00 evh Exp $
 
 // Include files
 #include "GaudiKernel/AlgFactory.h"
@@ -200,10 +200,10 @@ StatusCode GaudiExample::execute() {
     IHistogram1D * my1Dhisto1 = plot1D(eventtype,Histo1Da_ID,Histo1Da_Title,0.5, 5.5,5);
     
     msg << MSG::DEBUG << Histo1Da_ID << ": Bin entries: " << my1Dhisto1->binEntries(AIDA::IAxis::UNDERFLOW_BIN) << " -";
-    for(int ixBin=0; ixBin<my1Dhisto1->axis().bins();++ixBin)  msg << MSG::DEBUG << " " <<  my1Dhisto1->binEntries(ixBin);
+    for(int jxBin=0; jxBin<my1Dhisto1->axis().bins();++jxBin)  msg << MSG::DEBUG << " " <<  my1Dhisto1->binEntries(jxBin);
     msg << MSG::DEBUG << " - " <<  my1Dhisto1->binEntries(AIDA::IAxis::OVERFLOW_BIN) ;
     msg << MSG::DEBUG << " errors: "  << my1Dhisto1->binError(AIDA::IAxis::UNDERFLOW_BIN) << " -";
-    for(int ixBin=0; ixBin<my1Dhisto1->axis().bins();++ixBin)  msg << MSG::DEBUG << " " << my1Dhisto1->binError(ixBin);
+    for(int jxBin=0; jxBin<my1Dhisto1->axis().bins();++jxBin)  msg << MSG::DEBUG << " " << my1Dhisto1->binError(jxBin);
     msg << MSG::DEBUG << "  - " <<  my1Dhisto1->binError(AIDA::IAxis::OVERFLOW_BIN) << endreq;
     
     double mass; 
