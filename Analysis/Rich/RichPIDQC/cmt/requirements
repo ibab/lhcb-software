@@ -28,6 +28,5 @@ apply_pattern    component_library   library=RichPIDQC
 #============================================================================
 # Setup Python Configurables
 #============================================================================
-macro RichPIDQCConfUserModules "RichPIDQC.DsToPhiPi RichPIDQC.Configuration"
-#macro RichPIDQCConfUserModules "RichPIDQC.DsToPhiPi"
+macro RichPIDQCConfUserModules "RichPIDQC.DsToPhiPi RichPIDQC.DstarToD0Pi RichPIDQC.Configuration"
 apply_pattern install_python_modules

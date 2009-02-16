@@ -1,15 +1,18 @@
+
+## @package RichRecQC
 #  RICH PID Calibration and Monitoring
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   10/02/2009
 
-__version__ = "$Id: DsToPhiPi.py,v 1.3 2009-02-15 17:38:33 jonrob Exp $"
+__version__ = "$Id: DsToPhiPi.py,v 1.4 2009-02-16 14:23:29 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
         
 ## @class RichRecSysConf
-#  Configurable for RICH reconstruction
+#  Configurable for RICH Ds -> phi(KK) pi PID monitoring
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
+#  @author Conor Fitzpatrick  (Conor.Fitzpatrick@cern.ch)
 #  @date   15/08/2008
 class DsToPhiPiConf(LHCbConfigurableUser) :
 
@@ -58,14 +61,6 @@ class DsToPhiPiConf(LHCbConfigurableUser) :
 
         # Add selection algs to the sequence
         seq.Members += [Phi2KK,Ds2piPhi]
-
-        # old PID plots alg
-        #from Configurables import Rich__ParticlePIDQCAlg
-        #pidPlots = Rich__ParticlePIDQCAlg(Ds2piPhiName+"PID")
-        #pidPlots.addTool( PhysDesktop() )
-        #pidPlots.PhysDesktop.InputLocations = ["Phys/"+Ds2piPhiName]
-        #seq.Members += [pidPlots]
-        #pidPlots.OutputLevel = DEBUG;
 
         # Particle Monitoring plots
         from Configurables import ParticleMonitor

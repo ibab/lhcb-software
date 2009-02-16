@@ -4,11 +4,12 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   10/02/2009
 
-__version__ = "$Id: Configuration.py,v 1.2 2009-02-12 14:54:46 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.3 2009-02-16 14:23:29 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
-from DsToPhiPi import DsToPhiPiConf
+from DsToPhiPi   import DsToPhiPiConf
+from DstarToD0Pi import DstarToD0PiConf
         
 ## @class RichRecSysConf
 #  Configurable for RICH reconstruction
@@ -17,12 +18,12 @@ from DsToPhiPi import DsToPhiPiConf
 class RichPIDQCConf(LHCbConfigurableUser):
 
     ## Possible used Configurables
-    __used_configurables__ = [ DsToPhiPiConf ]
+    __used_configurables__ = [ DsToPhiPiConf, DstarToD0PiConf ]
 
     ## Steering options
     __slots__ = {
          "CalibSequencer"  : None  # The sequencer to add the calibration algorithms too
-        ,"PIDCalibrations" : [ "DsPhiPi" ]
+        ,"PIDCalibrations" : [ "DsPhiPi","DstarD0Pi" ]
         ,"MCChecks"   : False
         ,"MakeNTuple" : False
         }
@@ -47,9 +48,15 @@ class RichPIDQCConf(LHCbConfigurableUser):
         # Which calibrations to run
         calibs = self.getProp("PIDCalibrations")
 
+        self.calibSeq().IgnoreFilterPassed = True
+
         # Run Conor's Ds -> Phi Pi selection and calibration
         if "DsPhiPi" in calibs :
             self.setOtherProps(DsToPhiPiConf(),["MCChecks","MakeNTuple"])
-            DsToPhiPiConf().Sequencer = self.newSeq( self.calibSeq() ,"RichDsToPhiPiSeq" )
+            DsToPhiPiConf().setProp("Sequencer",self.newSeq( self.calibSeq() ,"RichDsToPhiPiSeq"))
 
-
+        # Andrew's D* -> D0(KPi) Pi selection and calibration
+        if "DstarD0Pi" in calibs :
+            self.setOtherProps(DstarToD0PiConf(),["MCChecks","MakeNTuple"])
+            DstarToD0PiConf().setProp("Sequencer",self.newSeq( self.calibSeq() ,"RichDstarToD0PiSeq"))
+            
