@@ -229,7 +229,7 @@ StatusCode OTMultiBXRawBankDecoder::decodeAll() const
     if( !exist<LHCb::RawEvent>(*ilocation) ) {
       // check if the raw event exists atthis location. issue a warning otherwise
       Warning(std::string("No raw event buffer at location ") + *ilocation,
-	      StatusCode::SUCCESS,0) ;
+	      StatusCode::SUCCESS,0).ignore() ;
     } else {
       // get the raw event
       const LHCb::RawEvent* event = get<LHCb::RawEvent>(*ilocation);
