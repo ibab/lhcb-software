@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Jaap Panman -->
+<!--- Created : 2009-01-19 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name='LumiEvent'>
+
+
+<!-- LumiFSR Class -->
+
+    <class
+      name="LumiFSR"
+      author="Jaap Panman"
+      desc="Accounting class for Lumi in FSR"
+      stdVectorTypeDef="TRUE"
+      keyedContTypeDef="TRUE"
+      id="13501"
+      serializers="TRUE"
+      >
+
+
+      <location name="Default"   
+		place="/RunRecords/EOR/LumiFSR"/>
+
+      <base name="KeyedObject&lt;int&gt;"/>
+      &KeyedObject;
+
+      <import name="vector" std="TRUE"/>
+      <import name="GaudiKernel/VectorMap" />
+
+
+      <typedef
+        type="std::pair&lt;  int, longlong &gt;"
+        def="ValuePair"
+        desc="For User information"
+        access="PUBLIC"
+	/>       
+ 
+      <typedef
+        type="GaudiUtils::VectorMap&lt;  int, ValuePair &gt;"
+        def="ExtraInfo"
+        desc="User information"
+        access="PUBLIC"
+	/> 
+  
+      <typedef
+        type="std::vector&lt;unsigned int&gt;"
+        def="RunNumbers"
+        desc="Set of runNumbers"
+        access="PUBLIC"
+	/>
+
+       <typedef
+        type="std::vector&lt;std::string&gt;"
+        def="FileIDs"
+        desc="Set of file IDs"
+        access="PUBLIC"
+	/>
+
+
+      <method
+        desc="Assignment operator"
+        name="operator="
+        type="LHCb::LumiFSR&amp;"
+	>
+	<arg name="rhs" type="LumiFSR" const='TRUE'/>
+        <code>
+   if ( this != &amp;rhs ) {
+      m_runNumbers        = rhs.m_runNumbers;
+      m_fileIDs           = rhs.m_fileIDs;
+      m_extraInfo         = rhs.m_extraInfo;
+   }
+   return *this;
+        </code>
+      </method>
+
+      <attribute 
+	type = "RunNumbers"
+	name = "runNumbers"
+	desc = "Set of run numbers summed up in this job"
+	/>
+      
+      <method
+	type = "void"
+	name = "addRunNumber"
+	desc = "add a RunNumber to the set">
+	<arg type = "unsigned int" name = "number"/> 
+	<code>
+	  m_runNumbers.push_back(number);
+	</code>
+      </method>
+
+      <method
+        name="hasRunNumber"
+        const="TRUE"
+        desc="has information for specified runNumber"
+        argList="unsigned int number"
+        type="bool"
+	> 
+	<code>
+   return m_runNumbers.end() != find(m_runNumbers.begin(), m_runNumbers.end(), number ) ;
+	</code>
+      </method>
+
+      <method
+        desc="Addition operator"
+        name="mergeRuns"
+        type="RunNumbers"
+	>
+	<arg name="rhs" type="RunNumbers" const='TRUE'/>
+        <code>
+   // concatenate run number set (cannot use "set" - have to do it by hand!)
+   RunNumbers::const_iterator iterB;
+   for ( iterB = rhs.begin(); iterB != rhs.end(); iterB++ ) {
+      if ( !hasRunNumber(*(iterB)) ) {
+         m_runNumbers.push_back(*(iterB));
+      }
+   }
+   
+   return m_runNumbers;
+        </code>
+      </method>
+
+      <attribute 
+	type = "FileIDs"
+	name = "fileIDs"
+	desc = "Set of file IDs summed up in this job"
+	/>
+      
+      <method
+	type = "void"
+	name = "addFileID"
+	desc = "add a fileID to the set">
+	<arg type = "std::string" name = "idString"/> 
+	<code>
+	  m_fileIDs.push_back(idString);
+	</code>
+      </method>
+
+      <method
+        name="hasFileID"
+        const="TRUE"
+        desc="has information for specified fileID"
+        argList="std::string idString"
+        type="bool"
+	> 
+	<code>
+   return m_fileIDs.end() != find(m_fileIDs.begin(), m_fileIDs.end(), idString ) ;
+	</code>
+      </method>
+
+      <method
+        desc="Addition operator"
+        name="mergeFileIDs"
+        type="FileIDs"
+	>
+	<arg name="rhs" type="FileIDs" const='TRUE'/>
+        <code>
+   // concatenate fileID set (cannot use "set" - have to do it by hand!)
+   FileIDs::const_iterator iterB;
+   for ( iterB = rhs.begin(); iterB != rhs.end(); iterB++ ) {
+      if ( !hasFileID(*(iterB)) ) {
+         m_fileIDs.push_back(*(iterB));
+      }
+   }
+   return m_fileIDs;
+        </code>
+      </method>
+
+      <attribute
+        name="extraInfo"
+        desc="Some additional user information. Don't use directly. Use *Info() methods."
+        type="ExtraInfo"
+        setMeth="TRUE"
+        getMeth="FALSE"
+	/>
+
+      <method
+        name="extraInfo"
+        const="TRUE"
+        desc="ExtraInformation. Don't use directly, use hasInfo, info, addInfo..."
+        type="const ExtraInfo"
+	> 
+	<code>
+	  return m_extraInfo ;
+	</code>
+      </method>
+
+      <method
+        name="hasInfo"
+        const="TRUE"
+        desc="has information for specified key"
+        argList="int key"
+        type="bool" 
+	> 
+	<code>
+	  return m_extraInfo.end() != m_extraInfo.find( key ) ;
+	</code>
+      </method>
+
+      <method
+        name="addInfo"
+        desc=" Add new information associated with the specified key. This method cannot be used to modify information for a pre-existing key."
+        argList="const int key, const int incr, const longlong count"
+        type="bool"
+	> 
+	<code>
+	  ValuePair info(incr, count);
+	  return m_extraInfo.insert( key , info ).second ;
+	</code>
+      </method>
+
+      <method
+        name="info"
+        desc="extract the information associated with the given key. If there is no such information the default value will be returned."
+        argList="const int key, const ValuePair def"
+        type="ValuePair"
+        const="TRUE"
+	> 
+	<code>
+	  ExtraInfo::iterator i = m_extraInfo.find( key ) ;
+	  return m_extraInfo.end() == i ? def : i->second ;
+	</code>
+      </method>
+
+      <method
+        name="eraseInfo"
+        desc="erase the information associated with the given key"
+        argList="int key"
+        type="int "
+	> 
+	<code>
+	  return m_extraInfo.erase( key ) ; 
+	</code>
+      </method>
+
+      <method
+        desc="sums the values for existing keys and inserts a new key if needed"
+        name="mergeInfo"
+        type="ExtraInfo"
+	>
+	<arg name="rhs" type="ExtraInfo" const="TRUE"/>
+        <code> 
+   // sum info or add new key
+   ExtraInfo::iterator iterB;
+   for ( iterB = rhs.begin(); iterB != rhs.end(); iterB++ ) {
+      int key = (*iterB).first;
+      ValuePair valueB = (*iterB).second;
+      ValuePair valueA = info (key, ValuePair(0,0));
+      if ( hasInfo(key) ) {
+         eraseInfo(key);
+      }
+      addInfo( key, valueA.first+valueB.first, valueA.second+valueB.second );
+   }
+   return m_extraInfo;
+        </code>
+      </method>
+
+      <method
+        desc="increments the values for existing keys and inserts a new key if needed"
+        name="incrementInfo"
+        argList="const int key, const longlong count"
+        type="ExtraInfo"
+	>
+        <code> 
+   // increment info or add new key, only if data exists
+   if ( count != -1 ) {
+      ValuePair value = info (key, ValuePair(0,0));
+      if ( hasInfo(key) ) {
+         eraseInfo(key);
+      }
+      addInfo( key, ++value.first, value.second+count );
+   }
+   return m_extraInfo;
+        </code>
+      </method>
+ 
+      <method
+        desc="Addition operator"
+        name="operator+"
+        type="LHCb::LumiFSR&amp;"
+	>
+	<arg name="rhs" type="LumiFSR" const="TRUE"/>   
+        <code>   
+   if ( this != &amp;rhs ) {
+      // merge run number sets
+      mergeRuns(rhs.m_runNumbers);
+      // merge file ID sets
+      mergeFileIDs(rhs.m_fileIDs);
+      // merge the extraInfo
+      mergeInfo(rhs.m_extraInfo);
+   }
+   return *this;
+        </code>
+      </method> 
+
+
+      <!-- readable printout -->
+
+      <method
+        name='fillStream'
+        type='std::ostream&amp;'
+        argList='std::ostream&amp; s'
+        desc='intelligent printout'
+        const='TRUE' >
+        <code>
+
+    std::ostream&amp; ss = const_cast&lt; std::ostream&amp; &gt;(s);
+    ss &lt;&lt; "{ "
+       &lt;&lt; " runs : " ; 
+
+    RunNumbers::const_iterator run;
+    for ( run = m_runNumbers.begin(); run != m_runNumbers.end(); run++ ) {
+      ss &lt;&lt; *run &lt;&lt; " ";
+    }
+    LHCb::LumiFSR::FileIDs::const_iterator file;
+    ss &lt;&lt; " files : " ; 
+    for ( file = m_fileIDs.begin(); file != m_fileIDs.end(); file++ ) {
+      ss &lt;&lt; *file &lt;&lt; " ";
+    }
+
+    // overall sum info
+    ss &lt;&lt; " info (key/incr/integral) : " ; 
+    ExtraInfo::const_iterator infoIter;
+    for (infoIter = m_extraInfo.begin(); infoIter != m_extraInfo.end(); infoIter++) {
+      // get the key and value of the input info
+      int key = infoIter->first;
+      LHCb::LumiFSR::ValuePair values = infoIter->second;
+      int incr = values.first;
+      longlong count = values.second;
+      ss &lt;&lt; key &lt;&lt; " " 
+         &lt;&lt; incr &lt;&lt; " " 
+         &lt;&lt; count &lt;&lt; " / ";
+    }
+    ss &lt;&lt; " }"; 
+
+    return ss;
+        </code>
+      </method>
+
+
+    </class>
+
+  </package>
+
+
+</gdd>

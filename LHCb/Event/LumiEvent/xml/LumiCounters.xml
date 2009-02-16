@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Jaap Panman -->
+<!--- Created : 2009-01-19 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name='LumiEvent'>
+
+<!-- LumiCounters Class -->
+
+    <class
+      name="LumiCounters"
+      author="Jaap Panman"
+      desc="Enum class for Lumi counters"
+      id="13500"
+      serializers="TRUE"
+      >
+
+      &DataObject;
+      <base name="DataObject"/>
+      <import name="GaudiKernel/VectorMap" />
+
+      <enum
+        desc="lookup table for counter keys"
+        name="counterKey"
+        strTypConv = 'TRUE'
+        access="PUBLIC" >
+        <enumval name="PUMult"     value = "0"   desc="number of PU hits"/>
+        <enumval name="RZVelo"     value = "1"   desc="number of RZVelo tracks"/>
+        <enumval name="RZVeloBW"   value = "2"   desc="number of backward RZVelo tracks"/>
+        <enumval name="Velo"       value = "3"   desc="number of 3D Velo tracks"/>
+        <enumval name="Muon"       value = "4"   desc="number of muon tracks"/>
+        <enumval name="BKMuon"     value = "5"   desc="number of muon tracks NOT pointing to PV"/>
+        <enumval name="SPDMult"    value = "6"   desc="number of SPD hits"/>
+        <enumval name="CaloEt"     value = "7"   desc="Calo Et"/>
+        <enumval name="PV2D"       value = "10"  desc="number of 2D vertices"/>
+        <enumval name="PV3D"       value = "11"  desc="number of 3D vertices"/>
+        <enumval name="PU"         value = "13"  desc="number of PU vertices"/>
+        <enumval name="Unknown"    value = "98"  desc="unknown value"/>
+        <enumval name="LastGlobal" value = "99"  desc="The last official flag value. Private user variables should use
+ flags greater than this value"/>
+
+      </enum>
+
+      <!-- readable printout -->
+
+      <method
+        name='fillStream'
+        type='std::ostream&amp;'
+        argList='std::ostream&amp; s'
+        desc='intelligent printout'
+        const='TRUE' >
+        <code>
+
+    std::ostream&amp; ss = const_cast&lt; std::ostream&amp; &gt;(s);
+    ss &lt;&lt; "{ }"; 
+
+    return ss;
+        </code>
+      </method>
+
+
+    </class>
+
+  </package>
+
+
+</gdd>
