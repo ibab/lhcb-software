@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAalg.h,v 1.6 2008-08-19 22:45:32 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAalg.h,v 1.7 2009-02-16 10:38:21 ggiacomo Exp $
 #ifndef OMALIB_OMAALG_H
 #define OMALIB_OMAALG_H 1
 /** @class  OMAalg OMAalg.h OMAlib/OMAalg.h
@@ -8,7 +8,7 @@
  *  @date 3/10/2007
  */
 #include "OMAlib/OMAcommon.h"
-#include "OMAlib/OMAMessage.h"
+#include "OnlineHistDB/OMAMessage.h"
 #include <TH1.h>
 
 class OMAalg 
@@ -36,8 +36,7 @@ class OMAalg
   void raiseMessage(unsigned int Id,
                     OMAMessage::OMAMsgLevel level,
                     std::string message,
-                    std::string& histogramName,
-                    std::string& taskName );
+                    std::string& histogramName);
   inline void setNeedRef() { m_needRef = true; }
 
   std::string m_name;
@@ -74,7 +73,6 @@ class OMACheckAlg : public OMAalg
                     std::vector<float> & alarm_thresholds,
                     std::vector<float> & input_pars,
                     unsigned int anaID,
-                    std::string& taskName,
                     TH1* Ref) =0;
 
  protected:
@@ -97,8 +95,8 @@ class OMAHcreatorAlg : public OMAalg
   
   virtual TH1*  exec( const std::vector<TH1*> *sources,
                       const std::vector<float> *params,
-                      std::string outName,
-                      std::string outTitle,
+                      std::string &outName,
+                      std::string &outTitle,
                       TH1* existingHisto=0) =0;
   inline OnlineHistDBEnv::HistType outHType() const {return m_outHType;}
   inline bool histSetFlag() { return m_histSetFlag; }

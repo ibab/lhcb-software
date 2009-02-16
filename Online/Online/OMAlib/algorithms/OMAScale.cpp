@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAScale.cpp,v 1.3 2008-08-11 08:05:16 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAScale.cpp,v 1.4 2009-02-16 10:38:21 ggiacomo Exp $
 #include <TH1F.h>
 #include <TH2F.h>
 #include "OMAlib/OMAAlgorithms.h"
@@ -16,8 +16,8 @@ OMAScale::OMAScale(OMAcommon* Env) :
 
 TH1* OMAScale::exec( const std::vector<TH1*> *sources,
 			  const std::vector<float> *params,
-			  std::string outName,
-			  std::string outTitle,
+			  std::string &outName,
+			  std::string &outTitle,
 			  TH1* existingHisto) {
   TH1* out=NULL;
   params=params; // avoid compil. warning
@@ -28,8 +28,8 @@ TH1* OMAScale::exec( const std::vector<TH1*> *sources,
 
 TH1* OMAScale::exec(TH1* H,
 			 TH1* scalefactorH,
-			 std::string outName,
-			 std::string outTitle,
+			 std::string &outName,
+			 std::string &outTitle,
 			 TH1* existingHisto) {  
   TH1* scaledHist=existingHisto;
   bool copied=false;

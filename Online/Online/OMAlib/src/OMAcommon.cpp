@@ -1,6 +1,7 @@
-// $Id: OMAcommon.cpp,v 1.5 2008-10-21 16:27:27 ggiacomo Exp $
+// $Id: OMAcommon.cpp,v 1.6 2009-02-16 10:38:21 ggiacomo Exp $
 
 #include "OMAlib/OMAcommon.h"
+#include "OMAlib/OMAFitFunction.h"
 #include <stdlib.h>
 
 //-----------------------------------------------------------------------------
@@ -59,4 +60,25 @@ TH1* OMAcommon::getReference(OnlineHistogram* h,
     delete f;
   }
   return out;
+}
+
+void OMAcommon::doFitFuncList() {
+  std::vector<std::string> ParNames;
+  ParNames.push_back("Constant"); ParNames.push_back("Mean");ParNames.push_back("Sigma");
+  m_fitfunctions["gaus"] = new
+    OMAFitFunction("gaus",
+                   "gaus",
+                   ParNames,
+                   false,
+                   "gaussian function",
+                   true);
+
+  ParNames.push_back("p0"); ParNames.push_back("p1");
+  m_fitfunctions["gaus+p1"] = new
+    OMAFitFunction("gaus+p1",
+                   "[0]*exp(-((x-[1])/[2])**2)+[3]+[4]*x",
+                   ParNames,
+                   true,
+                   "gaussian function + flat background",
+                   false);
 }

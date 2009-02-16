@@ -1,4 +1,4 @@
-// $Id: OMAcommon.h,v 1.6 2008-11-11 13:39:08 ggiacomo Exp $
+// $Id: OMAcommon.h,v 1.7 2009-02-16 10:38:21 ggiacomo Exp $
 #ifndef OMALIB_OMACOMMON_H 
 
 #define OMALIB_OMACOMMON_H 1
@@ -8,9 +8,12 @@
 #include <TFile.h>
 #include <TH1.h>
 #include <sstream>
+#include <map>
 #include "OMAlib/OMAMsgInterface.h"
+#include "OMAlib/OMAFitFunction.h"
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OnlineHistDB/OnlineHistogram.h"
+
 
 /** @class OMAcommon OMAcommon.h OMAlib/OMAcommon.h
  *  
@@ -19,17 +22,13 @@
  *  @date   2008-08-08 
  */
 
-namespace OMAconstants {
-  static const int AlgListID = 6;
-  static const std::string version = "v1r6";
-  static const double epsilon = 1.e-10;
-}
-
 
 class OMAcommon : public OMAMsgInterface {
 public: 
   /// Standard constructor
-  OMAcommon(OnlineHistDB* HistDB = NULL) : m_histDB(HistDB), m_debug(2) {
+  OMAcommon(OnlineHistDB* HistDB = NULL,  
+            std::string Name="") : 
+    OMAMsgInterface(HistDB, Name), m_debug(2) {
     setDefRefRoot();
   }
   virtual ~OMAcommon( ) {} ///< Destructor
@@ -49,10 +48,13 @@ public:
   TH1* getReference(OnlineHistogram* h,
                     int startrun = 1,
                     std::string DataType = "default");
+  inline OMAFitFunction* getFitFunction(std::string &Name){    
+    return m_fitfunctions[Name];}
 protected:
   void setDefRefRoot();
-  OnlineHistDB* m_histDB;
+  void doFitFuncList();
   int m_debug;
+  std::map<std::string, OMAFitFunction*> m_fitfunctions;
 private:
   std::string m_RefRoot;
 };

@@ -1,11 +1,10 @@
-// $Id: AnalysisTask.cpp,v 1.6 2008-11-11 13:39:08 ggiacomo Exp $
+// $Id: AnalysisTask.cpp,v 1.7 2009-02-16 10:38:21 ggiacomo Exp $
 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 // local
 #include "OMAlib/OMAlib.h"
-#include "OMAlib/IOMAMsgTool.h"
 #include "OMAlib/AnalysisTask.h"
 #include "OMAlib/SavesetFinder.h"
 
@@ -18,7 +17,7 @@
 
 AnalysisTask::AnalysisTask( const std::string& name,
                             ISvcLocator* pSvcLocator)
-  : OMAlib(NULL),
+  : OMAlib(NULL, name),
     GaudiHistoAlg ( name , pSvcLocator ),
     m_inputFiles(0),
     m_inputTasks(0)
@@ -46,9 +45,6 @@ StatusCode AnalysisTask::initialize() {
   StatusCode sc = GaudiHistoAlg::initialize(); 
   if ( sc.isFailure() ) return sc;  
 
-  // where to send messages 
-  m_msgTool = tool<IOMAMsgTool>(m_MessageTool);
-
   // use HistDB if requested
   if(m_useDB)
     openDBSession( m_DBpw, m_DBuser, m_DB );
@@ -72,6 +68,14 @@ StatusCode AnalysisTask::initialize() {
     }
   }
   
+  return StatusCode::SUCCESS;
+}
+
+
+StatusCode AnalysisTask::analyze(std::string& SaveSet,
+                                 std::string Task) {
+  m_savesetName=SaveSet;
+  m_taskname=Task;
   return StatusCode::SUCCESS;
 }
 

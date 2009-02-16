@@ -1,7 +1,7 @@
-// $Id: OMAMsgInterface.cpp,v 1.4 2008-08-19 22:45:32 ggiacomo Exp $
-#include <iostream>
+// $Id: OMAMsgInterface.cpp,v 1.5 2009-02-16 10:38:21 ggiacomo Exp $
+#include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAMsgInterface.h"
-#include "OMAlib/IOMAMsgTool.h"
+#include "GaudiKernel/MsgStream.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : OMAMsgInterface
@@ -9,16 +9,37 @@
 // 2008-02-29 : Giacomo Graziani
 //-----------------------------------------------------------------------------
 
-OMAMsgInterface::OMAMsgInterface(  ) : m_msgTool(NULL)  {
+OMAMsgInterface::OMAMsgInterface( OnlineHistDB* HistDB , 
+                                  std::string Name) : 
+  m_anaTaskname(Name), m_savesetName("") , m_taskname(""), 
+  m_anaName(""), m_anaid(0), m_histDB(HistDB)
+{
   m_MessageStore.clear();
+  if(m_histDB) 
+    loadMessages();
 }
 
-OMAMsgInterface::~OMAMsgInterface() {
+OMAMsgInterface::~OMAMsgInterface() 
+{
   std::vector<OMAMessage*>::iterator iM;
   for (iM=m_MessageStore.begin(); iM != m_MessageStore.end(); iM++) {
     delete (*iM);
   }
 } 
+
+void OMAMsgInterface::loadMessages() {
+  if(m_histDB && "noMessage" != m_anaTaskname) {
+    // clean up old alarms
+    m_histDB->deleteOldMessages(OMAconstants::AlarmExpTime);
+    // load known alarms from DB
+    std::vector<int> messID;
+    m_histDB->getMessages(messID, m_anaTaskname);
+    for (std::vector<int>::iterator im= messID.begin() ; im !=  messID.end() ; im++) {
+      m_MessageStore.push_back( new OMAMessage(*im, *m_histDB));
+    }
+  }
+}
+
 
 void OMAMsgInterface::resetMessages(std::string& TaskName) {
   std::vector<OMAMessage*>::iterator iM;
@@ -34,7 +55,8 @@ void OMAMsgInterface::refreshMessageList(std::string& TaskName) {
   for (iM=m_MessageStore.begin(); iM != m_MessageStore.end(); iM++) {
     if(TaskName == (*iM)->taskName() ) {
       if( false == (*iM)->confirmed()) {
-        if(m_msgTool) m_msgTool->lowerAlarm( (**iM) );
+        lowerAlarm( (**iM) );
+        (*iM)->remove();
         tbdMessage = (*iM);
         iM = m_MessageStore.erase(iM);
         delete tbdMessage;
@@ -44,19 +66,19 @@ void OMAMsgInterface::refreshMessageList(std::string& TaskName) {
 }
 
 
-void OMAMsgInterface::raiseMessage(unsigned int Id,
-                                   OMAMessage::OMAMsgLevel level,
+void OMAMsgInterface::raiseMessage(OMAMessage::OMAMsgLevel level,
                                    std::string& message,
-                                   std::string& histogramName,
-                                   std::string& taskName) {
+                                   std::string& histogramName) {
   bool newMsg = true;
   bool send = true;
   OMAMessage* msg=NULL;
+
+  std::string histIdentifier =m_taskname+"/"+histogramName;
+
   std::vector<OMAMessage*>::iterator iM;
   for (iM=m_MessageStore.begin(); iM != m_MessageStore.end(); iM++) {
-    if( (*iM)->id() == Id && 
-        (*iM)->histogramName() == histogramName &&
-        (*iM)->taskName() == taskName) {
+    if( (*iM)->matchsAnalysis(m_anaTaskname, m_anaName, m_anaid) &&
+        (*iM)->hIdentifier()  == histIdentifier) {
       // message is already known
       msg = (*iM);
       newMsg = false;
@@ -64,7 +86,7 @@ void OMAMsgInterface::raiseMessage(unsigned int Id,
       // send to output only if level grew
       if ( level >  msg->level() ) {
         msg->setLevel(level);
-	msg->setText(message);
+        msg->setText(message);
       }
       else {
         send = false;
@@ -73,10 +95,47 @@ void OMAMsgInterface::raiseMessage(unsigned int Id,
     }
   }
   if (newMsg) {
-    msg = new OMAMessage(Id, histogramName, taskName, message, level);
-    m_MessageStore.push_back( msg);
+    if(m_histDB)
+      msg = new OMAMessage(histIdentifier,  m_taskname, m_anaTaskname, 
+                           m_savesetName, m_anaName,
+                           message, level, *m_histDB, m_anaid);
+    else 
+      msg = new OMAMessage(histIdentifier,  m_taskname, m_anaTaskname, 
+                           m_savesetName, m_anaName,
+                           message, level);
+    m_MessageStore.push_back( msg );
   }
-  if (msg && send && m_msgTool) {
-    m_msgTool->raiseAlarm( (*msg) );
+  if (msg)
+    msg->store();
+  if (msg && send ) {
+    raiseAlarm( (*msg) );
   }
+}
+
+
+
+bool OMAMsgInterface::raiseAlarm(OMAMessage& message) {
+  (*m_outs) << (MSG::Level) message.level() << "********     "<<message.humanTime()<<endmsg;
+  (*m_outs) << (MSG::Level) message.level() << message.levelString() <<" from Analysis Task "<<
+    m_anaTaskname <<"  in analysis "<<    message.ananame() <<endmsg;
+  if(!message.hIdentifier().empty())
+    (*m_outs) << (MSG::Level) message.level() << "   on histogram " 
+              << message.hIdentifier()<<endmsg;
+  (*m_outs) << (MSG::Level) message.level() << "   from saveset "<<message.saveSet()<<endmsg;
+  (*m_outs) << (MSG::Level) message.level() <<  message.msgtext() <<endmsg;
+  (*m_outs) << (MSG::Level) message.level() << "==================================================================="<<endmsg;
+  return true;
+}
+
+
+
+
+bool OMAMsgInterface::lowerAlarm(OMAMessage& message) {
+  (*m_outs) << MSG::INFO <<  "===================== Analysis Task "<<
+    m_anaTaskname <<"  analysis "<<  message.ananame() <<endmsg;
+  if(!message.hIdentifier().empty())
+    (*m_outs) << (MSG::Level) message.level() << "   on histogram "<<message.hIdentifier()<<endmsg;
+  (*m_outs) << MSG::INFO << message.levelString() << " has gone" <<endmsg;
+  (*m_outs)  <<  MSG::INFO <<"==================================================================="<<endmsg;
+  return true;
 }

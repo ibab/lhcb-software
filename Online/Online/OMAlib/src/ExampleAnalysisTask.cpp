@@ -1,4 +1,4 @@
-// $Id: ExampleAnalysisTask.cpp,v 1.4 2008-11-21 09:58:24 ggiacomo Exp $
+// $Id: ExampleAnalysisTask.cpp,v 1.5 2009-02-16 10:38:21 ggiacomo Exp $
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "OMAlib/ExampleAnalysisTask.h"
 
@@ -29,6 +29,8 @@ StatusCode ExampleAnalysisTask::initialize()
 StatusCode ExampleAnalysisTask::analyze(std::string& SaveSet,
                                         std::string Task)
 {
+  AnalysisTask::analyze(SaveSet, Task);
+
   // open saveset (a ROOT file)
   TFile* f = new TFile(SaveSet.c_str(),"READ");
 

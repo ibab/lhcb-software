@@ -1,4 +1,4 @@
-// $Id: OMACheckXRange.cpp,v 1.3 2008-08-19 22:45:32 ggiacomo Exp $
+// $Id: OMACheckXRange.cpp,v 1.4 2009-02-16 10:38:21 ggiacomo Exp $
 
 #include <TH1F.h>
 #include "OMAlib/OMAAlgorithms.h"
@@ -17,14 +17,13 @@ void OMACheckXRange::exec(TH1 &Histo,
                           std::vector<float> & alarm_thresholds,
                           std::vector<float> & input_pars,
                           unsigned int anaID,
-                          std::string& taskName,
                           TH1* Ref) {
   input_pars.empty(); //  avoid compil. warning 
   Ref = NULL; //  avoid compil. warning 
   if(warn_thresholds.size() >= m_npars &&
      alarm_thresholds.size() >= m_npars)
     exec(Histo,warn_thresholds[0],warn_thresholds[1],
-         alarm_thresholds[0],alarm_thresholds[1], anaID, taskName);
+         alarm_thresholds[0],alarm_thresholds[1], anaID);
 }
 
 void OMACheckXRange::exec(TH1 &Histo,
@@ -32,8 +31,7 @@ void OMACheckXRange::exec(TH1 &Histo,
                           float warn_max,
                           float alarm_min,
                           float alarm_max,
-                          unsigned int anaID,
-                          std::string& taskName) {
+                          unsigned int anaID) {
   bool ok=true;
   std::string s1(" entries out of range");
   std::string s2(Histo.GetName());
@@ -41,14 +39,14 @@ void OMACheckXRange::exec(TH1 &Histo,
   if (false == check(Histo,alarm_min,alarm_max) ) { // alarm on
     raiseMessage( anaID,
                   OMAMessage::ALARM , 
-                  s1,s2, taskName);
+                  s1,s2);
     ok = false;
   }
   else {
     if (false == check(Histo,warn_min,warn_max) ) { // warning on
       raiseMessage( anaID,
                     OMAMessage::WARNING , 
-                    s1,s2, taskName);
+                    s1,s2);
       ok = false;
     }
   }

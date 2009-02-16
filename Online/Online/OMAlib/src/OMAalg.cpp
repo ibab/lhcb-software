@@ -1,4 +1,4 @@
-// $Id: OMAalg.cpp,v 1.4 2008-08-19 22:45:32 ggiacomo Exp $
+// $Id: OMAalg.cpp,v 1.5 2009-02-16 10:38:21 ggiacomo Exp $
 #include "OMAlib/OMAalg.h"
 
 OMAalg::OMAalg(std::string Name, OMAcommon* OMAenv) 
@@ -32,12 +32,12 @@ void OMAalg::setParNames(std::vector<std::string> &ParNames) {
 void OMAalg::raiseMessage(unsigned int ID,
                           OMAMessage::OMAMsgLevel level,
                           std::string message,
-                          std::string& histogramName ,
-                          std::string& taskName) {
+                          std::string& histogramName) {
   if(m_omaEnv) {
     std::string msgstring = (" algorithm "+ m_name + " : "+message);
-    m_omaEnv->raiseMessage(ID, level, msgstring, 
-                           histogramName, taskName);
+    m_omaEnv->setAnaId(ID);
+    m_omaEnv->raiseMessage(level, msgstring, 
+                           histogramName);
   }
 }
 

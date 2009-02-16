@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAHMerge.cpp,v 1.2 2008-08-11 08:05:15 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAHMerge.cpp,v 1.3 2009-02-16 10:38:21 ggiacomo Exp $
 #include <TH2D.h>
 #include "OMAlib/OMAAlgorithms.h"
 #include "OMAlib/OMAlib.h"
@@ -15,8 +15,8 @@ OMAHMerge::OMAHMerge(OMAcommon* Env) :
 
 TH1* OMAHMerge::exec( const std::vector<TH1*> *sources,
 			  const std::vector<float> *params,
-			  std::string outName,
-			  std::string outTitle,
+			  std::string &outName,
+			  std::string &outTitle,
 			  TH1* existingHisto) {
   TH1* out=NULL;
   if (!sources) return out;

@@ -1,8 +1,16 @@
-! $Id: release.notes,v 1.16 2008-11-21 09:58:23 ggiacomo Exp $
+! $Id: release.notes,v 1.17 2009-02-16 10:38:21 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
 
+! 20090216 OMAlib v2r0alpha
+  - add persistency to alarm logging using HistDB:
+    * OMAmessage class moved to OnlineHistDB
+  - modifications to AnalysisTask: 
+    * raiseMessage doesn't need the taskname anymore
+    *  AnalysisTask::analyze should be called by derived classes
+  - new class OMAFitFunction  to define any custom fit function for display or analysis
+   
 
 ! 20081121  OMAlib v1r7
  fixes for first test with Saver:

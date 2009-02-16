@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAAlgorithms.h,v 1.8 2008-09-26 14:35:41 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAAlgorithms.h,v 1.9 2009-02-16 10:38:21 ggiacomo Exp $
 #ifndef OMALIB_OMAALGORITHMS_H
 #define OMALIB_OMAALGORITHMS_H 1
 
@@ -19,15 +19,13 @@ class OMACheckXRange : public OMACheckAlg
                     std::vector<float> & alarm_thresholds,
                     std::vector<float> & input_pars,
                     unsigned int anaID,
-                    std::string& taskName,
                     TH1* Ref);
   void exec(TH1 &Histo,
             float warn_min,
             float warn_max,
             float alarm_min,
             float alarm_max,
-            unsigned int anaID,
-            std::string& taskName);
+            unsigned int anaID);
  private:
   bool check(TH1 &Histo,
              float min,
@@ -43,7 +41,6 @@ class OMACheckMeanAndSigma : public OMACheckAlg
                     std::vector<float> & alarm_thresholds,
                     std::vector<float> & input_pars,
                     unsigned int anaID,
-                    std::string& taskName,
                     TH1* Ref);
  private:
   bool checkMean(TH1 &Histo,
@@ -65,7 +62,6 @@ class OMAGaussFit : public OMACheckAlg
                     std::vector<float> & alarm_thresholds,
                     std::vector<float> & input_pars,
                     unsigned int anaID,
-                    std::string& taskName,
                     TH1* Ref);
  private:
   bool checkParam( TF1* fit,
@@ -85,7 +81,6 @@ class OMACheckHolesAndSpikes  : public OMACheckAlg
                     std::vector<float> & alarm_thresholds,
                     std::vector<float> & input_pars,
                     unsigned int anaID,
-                    std::string& taskName,
                     TH1* Ref);
 };
 
@@ -98,7 +93,6 @@ class OMACheckEmptyBins  : public OMACheckAlg
                     std::vector<float> & alarm_thresholds,
                     std::vector<float> & input_pars,
                     unsigned int anaID,
-                    std::string& taskName,
                     TH1* Ref);
 };
 
@@ -111,7 +105,6 @@ class OMACompareToReference : public OMACheckAlg
                     std::vector<float> & alarm_thresholds,
                     std::vector<float> & input_pars,
                     unsigned int anaID,
-                    std::string& taskName,
                     TH1* Ref);
 };
 
@@ -124,10 +117,21 @@ class OMACheckEntriesInRange : public OMACheckAlg
                     std::vector<float> & alarm_thresholds,
                     std::vector<float> & input_pars,
                     unsigned int anaID,
-                    std::string& taskName,
                     TH1* Ref);
 };
 
+class OMAFit : public OMACheckAlg 
+// special one: parameters taken dinamically according to requested fit function
+{
+ public:
+  OMAFit(OMAcommon* Env);
+  virtual void exec(TH1 &Histo,
+                    std::vector<float> & warn_thresholds,
+                    std::vector<float> & alarm_thresholds,
+                    std::vector<float> & input_pars,
+                    unsigned int anaID,
+                    TH1* Ref);
+};
 
 //------ Histogram Creator Algorithms ------------------//
 
@@ -137,13 +141,13 @@ class OMAEfficiency : public OMAHcreatorAlg
   OMAEfficiency(OMAcommon* Env);
   virtual TH1* exec( const std::vector<TH1*> *sources,
                      const std::vector<float> *params,
-                     std::string outName,
-                     std::string outTitle,
+                     std::string &outName,
+                     std::string &outTitle,
                      TH1* existingHisto=0);  
   TH1* exec( TH1* okH,
              TH1* allH,
-             std::string outName,
-             std::string outTitle,
+             std::string &outName,
+             std::string &outTitle,
              TH1* existingHisto=0);
 };
 
@@ -153,13 +157,13 @@ class OMADivide : public OMAHcreatorAlg
   OMADivide(OMAcommon* Env);
   virtual TH1* exec( const std::vector<TH1*> *sources,
                      const std::vector<float> *params,
-                     std::string outName,
-                     std::string outTitle,
+                     std::string &outName,
+                     std::string &outTitle,
                      TH1* existingHisto=0);  
   TH1* exec( TH1* okH,
              TH1* allH,
-             std::string outName,
-             std::string outTitle,
+             std::string &outName,
+             std::string &outTitle,
              TH1* existingHisto=0);
 };
 
@@ -170,8 +174,8 @@ class OMAHMerge : public OMAHcreatorAlg
   OMAHMerge(OMAcommon* Env);
   virtual TH1* exec( const std::vector<TH1*> *sources,
                      const std::vector<float> *params,
-                     std::string outName,
-                     std::string outTitle,
+                     std::string &outName,
+                     std::string &outTitle,
                      TH1* existingHisto=0);  
  private:
   bool approxeq(double x, 
@@ -190,13 +194,13 @@ class OMAScale : public OMAHcreatorAlg
   OMAScale(OMAcommon* Env);
   virtual TH1* exec( const std::vector<TH1*> *sources,
                      const std::vector<float> *params,
-                     std::string outName,
-                     std::string outTitle,
+                     std::string &outName,
+                     std::string &outTitle,
                      TH1* existingHisto=0);  
   TH1* exec( TH1* H,
              TH1* scalefactorH,
-             std::string outName,
-             std::string outTitle,
+             std::string &outName,
+             std::string &outTitle,
              TH1* existingHisto=0);
 };
 

@@ -1,4 +1,4 @@
-// $Id: OMAGaussFit.cpp,v 1.4 2008-08-19 22:45:32 ggiacomo Exp $
+// $Id: OMAGaussFit.cpp,v 1.5 2009-02-16 10:38:21 ggiacomo Exp $
 
 #include <TH1F.h>
 #include <TF1.h>
@@ -24,7 +24,6 @@ void OMAGaussFit::exec(TH1 &Histo,
                        std::vector<float> & alarm_thresholds,
                        std::vector<float> & input_pars,
                        unsigned int anaID,
-                       std::string& taskName,
                        TH1* Ref) {
   float confidence=0.95;
   Ref = NULL; // avoid compil. warning
@@ -47,7 +46,7 @@ void OMAGaussFit::exec(TH1 &Histo,
                              confidence) ) { // alarm on
     raiseMessage( anaID,
                   OMAMessage::ALARM , 
-		  message, hname, taskName);
+		  message, hname);
     }
     else {
       if (false == checkParam( fit,1,
@@ -56,7 +55,7 @@ void OMAGaussFit::exec(TH1 &Histo,
                                confidence) ) { // warning on
         raiseMessage( anaID,
                       OMAMessage::WARNING , 
-                      message, hname, taskName);
+                      message, hname);
       }
     }
     message=" Sigma out of range";
@@ -66,7 +65,7 @@ void OMAGaussFit::exec(TH1 &Histo,
                              confidence) ) { // alarm on
       raiseMessage( anaID,
                     OMAMessage::ALARM , 
-		    message, hname, taskName);
+		    message, hname);
     }
     else {
       if (false == checkParam( fit,2,
@@ -75,7 +74,7 @@ void OMAGaussFit::exec(TH1 &Histo,
                                confidence) ) { // warning on
         raiseMessage( anaID,
                       OMAMessage::WARNING , 
-		      message, hname, taskName);
+		      message, hname);
       }
     }
   }

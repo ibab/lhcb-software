@@ -19,7 +19,6 @@ void OMACompareToReference::exec(TH1 &Histo,
                                  std::vector<float> & alarm_thresholds,
                                  std::vector<float> & input_pars,
                                  unsigned int anaID,
-                                 std::string& taskName,
                                  TH1* Ref) {
   if( warn_thresholds.size() <m_npars ||  alarm_thresholds.size() <m_npars)
     return;
@@ -45,9 +44,9 @@ void OMACompareToReference::exec(TH1 &Histo,
   std::string hname(Histo.GetName());
   message << "Comparison Test p-value= "<<  pvalue;
   if ( pvalue  < alarm_thresholds[0] ) {
-    raiseMessage( anaID, OMAMessage::ALARM , message.str(), hname, taskName);
+    raiseMessage( anaID, OMAMessage::ALARM , message.str(), hname);
   }
   else if( pvalue < warn_thresholds[0] ) {
-    raiseMessage( anaID, OMAMessage::WARNING , message.str(), hname, taskName);
+    raiseMessage( anaID, OMAMessage::WARNING , message.str(), hname);
   }
 }

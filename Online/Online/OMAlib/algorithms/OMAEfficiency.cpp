@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAEfficiency.cpp,v 1.3 2008-08-11 17:52:01 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAEfficiency.cpp,v 1.4 2009-02-16 10:38:21 ggiacomo Exp $
 #include <TH1F.h>
 #include <TH2F.h>
 #include "OMAlib/OMAAlgorithms.h"
@@ -15,8 +15,8 @@ OMAEfficiency::OMAEfficiency(OMAcommon* Env) :
 
 TH1* OMAEfficiency::exec( const std::vector<TH1*> *sources,
 			  const std::vector<float> *params,
-			  std::string outName,
-			  std::string outTitle,
+			  std::string &outName,
+			  std::string &outTitle,
 			  TH1* existingHisto) {
   TH1* out=NULL;
   params=params; // avoid compil. warning
@@ -27,8 +27,8 @@ TH1* OMAEfficiency::exec( const std::vector<TH1*> *sources,
 
 TH1* OMAEfficiency::exec(TH1* okH,
 			 TH1* allH,
-			 std::string outName,
-			 std::string outTitle,
+			 std::string &outName,
+			 std::string &outTitle,
 			 TH1* existingHisto) {  
   TH1* outHist=0;
   if (existingHisto) {

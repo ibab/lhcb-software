@@ -1,4 +1,4 @@
-// $Id: OMACheckMeanAndSigma.cpp,v 1.3 2008-08-19 22:45:32 ggiacomo Exp $
+// $Id: OMACheckMeanAndSigma.cpp,v 1.4 2009-02-16 10:38:21 ggiacomo Exp $
 
 #include <TH1F.h>
 #include <TMath.h>
@@ -23,7 +23,6 @@ void OMACheckMeanAndSigma::exec(TH1 &Histo,
                                 std::vector<float> & alarm_thresholds,
                                 std::vector<float> & input_pars,
                                 unsigned int anaID,
-                                std::string& taskName,
                                 TH1* Ref) {
   float confidence=0.95;
   Ref = NULL; // avoid compil. warning
@@ -38,14 +37,14 @@ void OMACheckMeanAndSigma::exec(TH1 &Histo,
                          confidence) ) { // alarm on
     raiseMessage( anaID,
                   OMAMessage::ALARM , 
-                  message, hname, taskName);
+                  message, hname);
   }
   else {
     if (false == checkMean(Histo,warn_thresholds[0],warn_thresholds[1],
                            confidence) ) { // warning on
       raiseMessage( anaID,
                     OMAMessage::WARNING , 
-                    message, hname, taskName);
+                    message, hname);
     }
   }
   message=" Sigma out of range";
@@ -53,14 +52,14 @@ void OMACheckMeanAndSigma::exec(TH1 &Histo,
                          confidence) ) { // alarm on
     raiseMessage( anaID,
                   OMAMessage::ALARM , 
-                  message, hname, taskName);
+                  message, hname);
   }
   else {
     if (false == checkSigma(Histo,warn_thresholds[2],warn_thresholds[3],
                            confidence) ) { // warning on
       raiseMessage( anaID,
                     OMAMessage::WARNING , 
-                    message, hname, taskName);
+                    message, hname);
     }
   }
 }

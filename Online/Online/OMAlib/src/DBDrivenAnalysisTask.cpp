@@ -1,4 +1,4 @@
-// $Id: DBDrivenAnalysisTask.cpp,v 1.6 2008-11-21 09:58:24 ggiacomo Exp $
+// $Id: DBDrivenAnalysisTask.cpp,v 1.7 2009-02-16 10:38:21 ggiacomo Exp $
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "OMAlib/DBDrivenAnalysisTask.h"
 #include "OnlineHistDB/OnlineHistDB.h"
@@ -28,6 +28,8 @@ StatusCode DBDrivenAnalysisTask::initialize()
 StatusCode DBDrivenAnalysisTask::analyze(std::string& SaveSet,
                                          std::string Task)
 {
+  AnalysisTask::analyze(SaveSet, Task);
+
   TFile* f = new TFile(SaveSet.c_str(),"READ");
   std::vector<int> anaIDs;
   std::vector<std::string> anaAlgs;
@@ -73,7 +75,6 @@ StatusCode DBDrivenAnalysisTask::analyze(std::string& SaveSet,
                             alarmThr,
                             inputs,
                             anaIDs[iana],
-                            Task,
                             thisalg->needRef() ? getReference((*ih)) : NULL);
                 }
                 else {
@@ -155,10 +156,11 @@ TH1* DBDrivenAnalysisTask::onTheFlyHistogram(OnlineHistogram* h,
     
     if (thisalg) {
       if (OMAHcreatorAlg* hca = dynamic_cast<OMAHcreatorAlg*>(thisalg) ) {
+        std::string htitle(h->htitle());
         out = hca->exec(&sources, 
                         &parameters,
                         h->identifier(), 
-                        h->hname(),
+                        htitle,
                         out);
         if (out) {
           m_ownedHisto[h->identifier()]=out;

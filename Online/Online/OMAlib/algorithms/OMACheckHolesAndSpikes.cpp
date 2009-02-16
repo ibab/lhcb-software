@@ -28,7 +28,6 @@ void OMACheckHolesAndSpikes::exec(TH1 &Histo,
                                   std::vector<float> & alarm_thresholds,
                                   std::vector<float> & input_pars,
                                   unsigned int anaID,
-                                  std::string& taskName,
                                   TH1* Ref) {
   if( warn_thresholds.size() <m_npars ||  alarm_thresholds.size() <m_npars 
       || input_pars.size() <m_ninput )
@@ -116,19 +115,19 @@ void OMACheckHolesAndSpikes::exec(TH1 &Histo,
   std::string hname(Histo.GetName());
   if ( MinDelta < alarm_thresholds[0]) {
     message << "Hole detected for x="<<Histo.GetBinCenter(minbin)<< " delta="<<MinDelta;
-    raiseMessage( anaID, OMAMessage::ALARM , message.str(), hname, taskName);
+    raiseMessage( anaID, OMAMessage::ALARM , message.str(), hname);
   }
   else if( MinDelta < warn_thresholds[0]) {
     message << "Hole detected for x="<<Histo.GetBinCenter(minbin)<< " delta="<<MinDelta;
-    raiseMessage( anaID, OMAMessage::WARNING , message.str(), hname, taskName);
+    raiseMessage( anaID, OMAMessage::WARNING , message.str(), hname);
   }
 
   if ( MaxDelta > alarm_thresholds[1]) {
     message2 << "Spike detected for x="<<Histo.GetBinCenter(maxbin)<< " delta="<<MaxDelta;
-    raiseMessage( anaID, OMAMessage::ALARM , message2.str(), hname, taskName);
+    raiseMessage( anaID, OMAMessage::ALARM , message2.str(), hname);
   }
   else if ( MaxDelta > warn_thresholds[1]) {
     message2 << "Spike detected for x="<<Histo.GetBinCenter(maxbin)<< " delta="<<MaxDelta;
-    raiseMessage( anaID, OMAMessage::WARNING , message2.str(), hname, taskName);
+    raiseMessage( anaID, OMAMessage::WARNING , message2.str(), hname);
   }
 }

@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.h,v 1.3 2008-08-19 22:45:32 ggiacomo Exp $
+// $Id: OMAMsgInterface.h,v 1.4 2009-02-16 10:38:21 ggiacomo Exp $
 #ifndef OMALIB_OMAMSGINTERFACE_H 
 #define OMALIB_OMAMSGINTERFACE_H 1
 
@@ -11,13 +11,22 @@
 
 #include <string>
 #include <vector>
-#include "OMAlib/OMAMessage.h"
+#include "OnlineHistDB/OMAMessage.h"
 class TH1;
-class IOMAMsgTool;
+class MsgStream;
+class OnlineHistDB;
+
+namespace OMAconstants {
+  static const int AlgListID = 7;
+  static const std::string version = "v1r6";
+  
+  static const int AlarmExpTime = 28800; // one shift
+  static const double epsilon = 1.e-10;
+}
 
 class OMAMsgInterface {
 public: 
-  OMAMsgInterface( ); 
+  OMAMsgInterface(OnlineHistDB* HistDB = NULL, std::string Name=""); 
   virtual ~OMAMsgInterface( ); 
 
   /// unconfirm all messages (to be called before starting new analysis) 
@@ -25,14 +34,31 @@ public:
   /// lower and delete all unconfirmed messages  (to be called at the end of analysis)
   void refreshMessageList(std::string& TaskName);
   /// declare a message, that is sent to output only if new or if level is higher
-  virtual void raiseMessage(unsigned int Id,
-                            OMAMessage::OMAMsgLevel level,
-                            std::string& message,
-                            std::string& histogramName,
-                            std::string& TaskName); 
+  /// (this can be used only id analysis name has been already declared through setAnaName)
+  void raiseMessage(OMAMessage::OMAMsgLevel level,
+                    std::string& message,
+                    std::string& histogramName);   
+  /// declare a message, that is sent to output only if new or if level is higher
+  void raiseMessage(OMAMessage::OMAMsgLevel level,
+                    std::string& message,
+                    std::string& histogramName,
+                    std::string& AnalysisName);  
+  inline void setAnaId(int id) {m_anaid = id;}
+  inline void setAnaName(std::string &name) {m_anaName = name;}
 protected:
-  IOMAMsgTool* m_msgTool;
+  void loadMessages();
+  void setMsgStream(MsgStream* ms) { m_outs=ms;}  
+  std::string m_anaTaskname;
+  std::string m_savesetName;
+  std::string m_taskname;
+  std::string m_anaName;
+  int m_anaid;
+  OnlineHistDB* m_histDB;
+
 private:
+  bool raiseAlarm(OMAMessage& message);
+  bool lowerAlarm(OMAMessage& message);
+  MsgStream* m_outs;
   std::vector<OMAMessage*> m_MessageStore;
 };
 #endif // OMALIB_OMAMSGINTERFACE_H
