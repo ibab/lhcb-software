@@ -1,4 +1,4 @@
-// $Id: RichPlotTool.h,v 1.3 2009-02-15 22:03:51 jonrob Exp $
+// $Id: RichPlotTool.h,v 1.4 2009-02-16 14:24:37 jonrob Exp $
 #ifndef RichPlotTool_H
 #define RichPlotTool_H 1
 
@@ -33,6 +33,9 @@ public:
                 const IInterface* parent );
 
   virtual ~RichPlotTool( ); ///< Destructor
+
+  /// Initialise
+  StatusCode initialize();
 
 protected:
 

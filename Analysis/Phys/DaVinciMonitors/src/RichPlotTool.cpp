@@ -1,4 +1,4 @@
-// $Id: RichPlotTool.cpp,v 1.4 2009-02-15 22:03:51 jonrob Exp $
+// $Id: RichPlotTool.cpp,v 1.5 2009-02-16 14:24:37 jonrob Exp $
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
@@ -32,6 +32,22 @@ RichPlotTool::RichPlotTool( const std::string& type,
 // Standard destructor
 //=============================================================================
 RichPlotTool::~RichPlotTool( ) {}
+ 
+//=============================================================================
+// initialize
+//=============================================================================
+StatusCode RichPlotTool::initialize()
+{
+  const StatusCode sc = BasePlotTool::initialize();
+  if ( sc.isFailure() ) return sc;
+
+  // pre-load RichPlot tools for common trailer names ...
+  // avoids excessive cpu during first few events
+  pidTool("peak");
+  pidTool("sideband");
+
+  return sc;
+}
 
 //=============================================================================
 // Daughter plots - just mass plots
@@ -57,6 +73,7 @@ StatusCode RichPlotTool::fillImpl( const LHCb::Particle* p,
   // fill the plots 
   pidTool(trailer)->plots( rpid, pid );
   
+  // return
   return StatusCode::SUCCESS;
 }
 

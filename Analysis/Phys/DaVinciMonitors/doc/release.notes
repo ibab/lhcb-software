@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-02-16 - Chris Jones
+ - Update options to include Dstar monitoring from RichPIDQC
+
 ! 2009-02-15 - Chris Jones
  - Add Calo and Muon specific PID plot tools. 
  - Rename PidPlotTool CombinedPidPlotTool to better match its function.

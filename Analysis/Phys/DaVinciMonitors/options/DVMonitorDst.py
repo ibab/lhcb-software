@@ -1,5 +1,5 @@
 ##############################################################################
-# $Id: DVMonitorDst.py,v 1.10 2009-02-15 17:37:38 jonrob Exp $
+# $Id: DVMonitorDst.py,v 1.11 2009-02-16 14:24:37 jonrob Exp $
 #
 # syntax: gaudirun.py $DAVINCIMONITORSROOT/options/DVMonitorDst.py
 #
@@ -57,7 +57,7 @@ JpsiSeq.Members += [ plotter ]
 from Configurables import RichPIDQCConf
 richSeq = GaudiSequencer("RichPIDMoniSeq")
 RichPIDQCConf().setProp("CalibSequencer",richSeq)
-RichPIDQCConf().PIDCalibrations = [ "DsPhiPi" ]  # The PID Calibration selections to run
+#RichPIDQCConf().PIDCalibrations = [ "DsPhiPi" ]  # The PID Calibration selections to run (default is all)
 #RichPIDQCConf().MCChecks = True                  # Enable MC checking as well
 ##############################################################################
 #
@@ -75,6 +75,6 @@ DaVinci().HistogramFile = "DVMonitors.root"
 # Most of this will be configured from Dirac
 #
 ##############################################################################
-DaVinci().EvtMax = 1000
+DaVinci().EvtMax = -1
 #DaVinci().DataType = "2008" # Default is "DC06"
 DaVinci().Simulation = True
