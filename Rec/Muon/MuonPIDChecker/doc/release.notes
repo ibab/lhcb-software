@@ -2,6 +2,9 @@
 ! Responsible : E. Polycarpo, M. Gandelman
 !----------------------------------------------------------------------------
 
+! 2009-02-17 - Patrick Koppenburg
+ - Return warnings when container is not there.
+
 !====================== MuonPIDChecker v3r0 2009-01-12 ======================
 ! 2009-01-12 - Marco Cattaneo
  - Remove empty python ConfigurableUser, python options are sufficient 

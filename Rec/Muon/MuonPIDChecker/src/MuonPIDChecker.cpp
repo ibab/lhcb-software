@@ -124,13 +124,11 @@ StatusCode MuonPIDChecker::execute() {
 
   debug()  << "==> Number of events: " << m_neventsTest << endreq;
 
-  // get  MuonPID objects 
-  LHCb::MuonPIDs* pMuids=get<LHCb::MuonPIDs>(m_MuonPIDsPath);
-  if (!pMuids){
-    error() << " Failed to get MuonPID objects in "
-        <<  m_MuonPIDsPath << endreq;
-    return StatusCode::FAILURE;
+  // get  MuonPID objects
+  if (!exist<LHCb::MuonPIDs>(m_MuonPIDsPath)){
+    return Warning(" Failed to get MuonPID objects in "+m_MuonPIDsPath,StatusCode::SUCCESS,1);
   }
+  LHCb::MuonPIDs* pMuids=get<LHCb::MuonPIDs>(m_MuonPIDsPath);
 
   // MC association 
   LinkedTo<LHCb::MCParticle, LHCb::Track>* myLinkToTrack = NULL;
@@ -139,8 +137,14 @@ StatusCode MuonPIDChecker::execute() {
                                          m_TracksPath );
   }
   // Get tracks to loop over
+  if (!exist<LHCb::Tracks>(m_TracksPath)){
+    return Warning(" Failed to get Track objects in "+m_TracksPath,StatusCode::SUCCESS,1);
+  }
   LHCb::Tracks* trTracks = get<LHCb::Tracks>(m_TracksPath);
   // Get muon tracks to loop over
+  if (!exist<LHCb::Tracks>(m_MuonTracksPath)){
+    return Warning(" Failed to get Muon Track objects in "+m_MuonTracksPath,StatusCode::SUCCESS,1);
+  } 
   LHCb::Tracks* muTracks = get<LHCb::Tracks>(m_MuonTracksPath);
 
   if (!trTracks){
@@ -264,8 +268,7 @@ StatusCode MuonPIDChecker::execute() {
     }
 
   } //end of muTrack loop
-
-    
+  if (!exist<LHCb::MuonCoords>(LHCb::MuonCoordLocation::MuonCoords)) return StatusCode::SUCCESS ;
   LHCb::MuonCoords* coords = get<LHCb::MuonCoords>(LHCb::MuonCoordLocation::MuonCoords);
   if ( coords==0 ) {
        err() << " Cannot retrieve MuonCoords " << endreq;
