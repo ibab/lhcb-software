@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.h,v 1.29 2009-02-13 16:53:37 jpalac Exp $
+// $Id: PhysDesktop.h,v 1.30 2009-02-17 14:29:46 jpalac Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -169,7 +169,7 @@ private:
    *
    **/
   template <class T>
-  inline unsigned int clearLocalContainer(T container) 
+  inline unsigned int clearLocalContainer(T& container) 
   {
     if ( container.empty() ) return 0;
     int iCount(0);
@@ -201,6 +201,7 @@ private:
   inline const Particle2Vertex::LightTable& i_p2PVTable()  const { 
     return m_p2VtxTable; 
   }
+
   inline Particle2Vertex::LightTable& i_p2PVTable() { 
     return m_p2VtxTable; 
   }
