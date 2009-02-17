@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.43 2009-02-13 16:11:10 jpalac Exp $
+// $Id: DVAlgorithm.cpp,v 1.44 2009-02-17 14:42:26 jpalac Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -310,7 +310,7 @@ void DVAlgorithm::setFilterPassed  (  bool    state  )
 // ============================================================================
 const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p) const
 {
-    if (msgLevel(MSG::VERBOSE)) verbose() << "DVAlgorithm::calculateRelatedPV" << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "DVAlgorithm::calculateRelatedPV" << endmsg;
   const IRelatedPVFinder* finder = this->relatedPVFinder();
   const LHCb::RecVertex::Container* PVs = this->primaryVertices();
   if (0==finder || 0==PVs) {
@@ -335,16 +335,23 @@ const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p)
         Error("PV re-fit failed", StatusCode::FAILURE, 1 ).ignore() ;
       } 
     }
+    Particle2Vertex::Range range = finder->relatedPVs(p, reFittedPVs).relations(p);
+    if (range.empty()) return 0;
     const LHCb::RecVertex* pv = dynamic_cast<const LHCb::RecVertex*>(finder->relatedPVs(p, reFittedPVs).relations(p).back().to());
     return (0!=pv) ? desktop()->keep(pv) : 0;
   } else {
     if (msgLevel(MSG::VERBOSE)) verbose() << "Getting related PV from finder" << endmsg;
-    const LHCb::RecVertex* pv = dynamic_cast<const LHCb::RecVertex*>(finder->relatedPVs(p, *PVs).relations(p).back().to());
-    return finder->relatedPVs(p, *PVs).relations(p).back().to();
-    if (msgLevel(MSG::VERBOSE)) {
-      verbose() << "Returning copy of related vertex: " << endmsg;
-      verbose() << *pv <<endmsg;
+    Particle2Vertex::Range range = finder->relatedPVs(p, *PVs).relations(p);
+    if (!range.empty()) {
+      const LHCb::RecVertex* pv =  dynamic_cast<const LHCb::RecVertex*>(finder->relatedPVs(p, *PVs).relations(p).back().to());
+       if (msgLevel(MSG::VERBOSE)) verbose() 
+         << "Returning related vertex\n" << pv << endmsg;
+       return pv;
+    } else {
+      if (msgLevel(MSG::VERBOSE)) verbose() << "no related PV found" << endmsg;
+      return 0;
     }
+
   }
   
 }
@@ -362,7 +369,6 @@ const LHCb::VertexBase* DVAlgorithm::getRelatedPV(const LHCb::Particle* part) co
     if (msgLevel(MSG::VERBOSE)) verbose() << "particle2Vertices empty. Calling calculateRelatedPV" << endmsg;
     const LHCb::RecVertex* pv = dynamic_cast<const LHCb::RecVertex*>(calculateRelatedPV(part));
     if (0!=pv) {
-      //      const LHCb::RecVertex* pPV = desktop()->keep(&pv);
       if (msgLevel(MSG::VERBOSE)) verbose() << "Found related vertex. Relating it" << endmsg;
       relateWithOverwrite(part, pv);
     } else {
