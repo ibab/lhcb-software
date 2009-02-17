@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.50 2009-02-13 16:55:16 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.51 2009-02-17 14:29:54 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -469,8 +469,11 @@ void PhysDesktop::saveParticles(const LHCb::Particle::ConstVector& pToSave) cons
 
   put(particlesToSave,location);
   // now save re-fitted vertices
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Passing " << verticesToSave.size()
+                                        << " to saveReFittedPVs" << endmsg;
   saveRefittedPVs(verticesToSave);
   // now save relations table
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Save P->PV relations" << endmsg;
   saveP2PVRelations(pToSave);
  
 }
@@ -866,40 +869,13 @@ StatusCode PhysDesktop::writeEmptyContainerIfNeeded(){
 //=============================================================================
 const LHCb::VertexBase* PhysDesktop::relatedVertex(const LHCb::Particle* part) const {
 
-//   if (  particle2Vertices(part).empty() ){
-
-//     if (msgLevel(MSG::VERBOSE)) {
-//       verbose() << "Table is empty for particle " << part->key() << " " 
-//                 << part->particleID().pid() << endmsg ;
-//     }
-//     storeRelationsInTable(part);
-//   }
   verbose() << "PhysDesktop::relatedVertex" << endmsg;
 
   const DVAlgorithm* dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
   if (0==dva) Error("Couldn't get parent DVAlgorithm", StatusCode::FAILURE).ignore();
   return (0!=dva) ? dva->getRelatedPV(part) : 0 ;
 
-//   const Particle2Vertex::Range range = i_p2PVTable().i_relations(part);
 
-//   if ( range.empty() ) {
-//     if (msgLevel(MSG::VERBOSE)) {
-//       verbose() << "particle2Vertices table empty, return NULL" << endmsg;
-//     }
-//     return NULL ;
-//   }
-  
-//   if (msgLevel(MSG::VERBOSE)) {
-//     verbose() << "P2V returns particle2Vertices" << endmsg ;
-//     for (Particle2Vertex::Range::const_iterator i = range.begin();
-//          i!=range.end(); ++i) {
-//       verbose() << "P2PV weight " << (*i).weight() << endmsg;
-//     }
-//     verbose() << "Returning PV with weight " 
-//               << range.back().weight() << endmsg;
-//   }
-
-//   return range.back().to();
 
 }
 //=============================================================================
@@ -937,7 +913,7 @@ PhysDesktop::particle2Vertices(const LHCb::Particle* part ) const
   return i_p2PVTable().i_relations(part);
 }
 //=============================================================================
-void PhysDesktop::storeRelationsInTable(const LHCb::Particle* part){
+void PhysDesktop::storeRelationsInTable(const LHCb::Particle* part) {
 
 
   if ( ! particle2Vertices(part).empty() ) return;
