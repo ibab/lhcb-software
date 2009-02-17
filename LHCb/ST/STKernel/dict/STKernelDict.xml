@@ -3,12 +3,14 @@
   <class name = "ISTReadoutTool"       />
   <class name = "ISTSignalToNoiseTool" />
   <class name = "ISTClusterSelector" />
+  <class name = "ISTChannelIDSelector" />
   <class name = "STTell1ID" />
   <class name = "STTell1Board" />
   <class name = "STBitsPolicy" />
   <class name = "STDAQ::BeetleRepresentation" />
   <class name = "STDAQ::PPRepresentation" />
   <class name = "STDAQ::StripRepresentation" />
+
 
   <enum pattern = "STDAQ::version" />
   <enum pattern="STBitsPolicy::bits" />

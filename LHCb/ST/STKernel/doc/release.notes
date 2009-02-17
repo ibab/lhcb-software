@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.52 2009-02-10 07:54:35 mneedham Exp $
+! $Id: release.notes,v 1.53 2009-02-17 10:08:17 mneedham Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
+
+
+! 2009-02-05 M Needham
+ - Add ISTChannelIDSelector interface
+
 
 ! 2009-02-10 M Needham
  - Remove can be recovered function to avoid circular dependency
