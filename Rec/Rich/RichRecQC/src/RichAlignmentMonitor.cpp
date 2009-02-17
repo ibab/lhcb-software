@@ -4,7 +4,7 @@
  *  Implementation file for algorithm class : RichAlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.cpp,v 1.8 2009-02-16 16:03:18 papanest Exp $
+ *  $Id: RichAlignmentMonitor.cpp,v 1.9 2009-02-17 20:18:15 asolomin Exp $
 
  *
  *  @author Antonis Papanestis
@@ -108,9 +108,9 @@ StatusCode AlignmentMonitor::initialize()
     See below a second usage of this vector and further explanations therein.
     Anatoly Solomin 2008-11-01.
   */
-  if ( !m_minimalHistoOutput )
+  if ( !m_minimalHistoOutput && m_onlyPrebookedMirrors )
   {
-    BOOST_FOREACH( std::string strCombi, m_preBookHistos ){
+    BOOST_FOREACH( std::string strCombi, m_preBookHistos ) {
       std::string h_id = "dThetavphiRec"+strCombi;
       std::string sph  = strCombi.substr(0,2);
       std::string flat = strCombi.substr(2,2);
@@ -320,67 +320,67 @@ StatusCode AlignmentMonitor::execute() {
                 2*Gaudi::Units::pi, -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50);
 
       // for minimal histo output (online) stop here
-      if ( m_minimalHistoOutput ) continue;
-
-      // now for individual mirror combinations
-      std::string title = RAD+" Alignment Histogram: Sph " +
-        boost::lexical_cast<std::string>(sphMirNum) + " flat " +
-        boost::lexical_cast<std::string>(flatMirNum) + " R" +
-        boost::lexical_cast<std::string>(rich+1);
-      std::string h_id( "dThetavphiRec" );
-
-      std::string thisCombiNr( "" ); // only the 4-digit combination number (string)
-
-      if ( sphMirNum > 9 )
-        thisCombiNr +=       boost::lexical_cast<std::string>( sphMirNum );
-      else
-        thisCombiNr += "0" + boost::lexical_cast<std::string>( sphMirNum );
-      if ( flatMirNum > 9 )
-        thisCombiNr +=       boost::lexical_cast<std::string>( flatMirNum );
-      else
-        thisCombiNr += "0" + boost::lexical_cast<std::string>( flatMirNum );
-
-      // depending on options, make plots only for prebooked mirror combimations.
-      bool allowMirrorCombi( true );
-      if ( m_onlyPrebookedMirrors )
-        // search to see if this mirror combination has been prebooked
-        if ( m_preBookHistos.empty() ||
-             std::find( m_preBookHistos.begin(),m_preBookHistos.end(), thisCombiNr) == m_preBookHistos.end() )
-          allowMirrorCombi = false;
-
-      if ( allowMirrorCombi )
+      if ( !m_minimalHistoOutput )
       {
-        h_id += thisCombiNr;
-        plot2D( phiRec, delTheta, hid(rad,h_id), title, 0.0, 2*Gaudi::Units::pi,
-                -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 );
+        // now for individual mirror combinations
+        std::string title = RAD+" Alignment Histogram: Sph " +
+          boost::lexical_cast<std::string>(sphMirNum) + " flat " +
+          boost::lexical_cast<std::string>(flatMirNum) + " R" +
+          boost::lexical_cast<std::string>(rich+1);
+        std::string h_id( "dThetavphiRec" );
 
-        if ( m_useMCTruth ) {
-          // use MC estimate for cherenkov angle
-          h_id += "MC";
-          title += " MC";
-          plot2D( phiRec, delThetaTrue, hid(rad,h_id), title, 0.0, 2*Gaudi::Units::pi,
+        std::string thisCombiNr( "" ); // only the 4-digit combination number (string)
+
+        if ( sphMirNum > 9 )
+          thisCombiNr +=       boost::lexical_cast<std::string>( sphMirNum );
+        else
+          thisCombiNr += "0" + boost::lexical_cast<std::string>( sphMirNum );
+        if ( flatMirNum > 9 )
+          thisCombiNr +=       boost::lexical_cast<std::string>( flatMirNum );
+        else
+          thisCombiNr += "0" + boost::lexical_cast<std::string>( flatMirNum );
+
+        // depending on options, make plots only for prebooked mirror combimations.
+        bool allowMirrorCombi( true );
+        if ( m_onlyPrebookedMirrors )
+          // search to see if this mirror combination has been prebooked
+          if ( m_preBookHistos.empty() ||
+               std::find( m_preBookHistos.begin(),m_preBookHistos.end(), thisCombiNr) == m_preBookHistos.end() )
+            allowMirrorCombi = false;
+
+        if ( allowMirrorCombi )
+        {
+          h_id += thisCombiNr;
+          plot2D( phiRec, delTheta, hid(rad,h_id), title, 0.0, 2*Gaudi::Units::pi,
                   -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 );
-          // test to see if this photon was emitted from this track
-          if ( trueParent ) {
-            h_id += "TruP";
-            title += " TrueP";
+
+          if ( m_useMCTruth ) {
+            // use MC estimate for cherenkov angle
+            h_id += "MC";
+            title += " MC";
             plot2D( phiRec, delThetaTrue, hid(rad,h_id), title, 0.0, 2*Gaudi::Units::pi,
                     -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 );
+            // test to see if this photon was emitted from this track
+            if ( trueParent ) {
+              h_id += "TruP";
+              title += " TrueP";
+              plot2D( phiRec, delThetaTrue, hid(rad,h_id), title, 0.0, 2*Gaudi::Units::pi,
+                      -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 );
+            }
           }
         }
+        // end of filling prebooked and non-prebooked histograms for mirror combinations
+
+        const int hpd = ( m_plotAllHPDs ? Rich::DAQ::HPDIdentifier( gPhoton.smartID() ).number()
+                          : makePlotForHPD(gPhoton.smartID()) );
+
+        if ( hpd != 0 )
+        {
+          std::string hpd_id( "HPD_"+boost::lexical_cast<std::string>(hpd) );
+          plot2D( phiRec, delTheta, "HPDs/"+hpd_id, hpd_id, 0.0, 2*Gaudi::Units::pi,
+                  -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 );
+        }
       }
-      // end of filling prebooked and non-prebooked histograms for mirror combinations
-
-      const int hpd = ( m_plotAllHPDs ? Rich::DAQ::HPDIdentifier( gPhoton.smartID() ).number()
-                        : makePlotForHPD(gPhoton.smartID()) );
-
-      if ( hpd != 0 )
-      {
-        std::string hpd_id( "HPD_"+boost::lexical_cast<std::string>(hpd) );
-        plot2D( phiRec, delTheta, "HPDs/"+hpd_id, hpd_id, 0.0, 2*Gaudi::Units::pi,
-                -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 );
-      }
-
     }
   }
 
