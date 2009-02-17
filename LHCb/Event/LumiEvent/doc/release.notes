@@ -4,6 +4,9 @@
 ! Purpose     : EventModel for Lumi data
 !-----------------------------------------------------------------------------
 
+! 2009-02-17 - Marco Cattaneo
+ - Make only the component library, linker library not needed
+
 ! 2009-02-16 - Jaap Panman
  - Package created, contains:
  - HltLumiSummary : model for data created in HLT (moved from HltEvent)

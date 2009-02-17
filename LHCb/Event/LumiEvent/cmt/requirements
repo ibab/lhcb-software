@@ -25,14 +25,10 @@ apply_pattern god_headers files=../xml/*.xml
 #---- Copy the header files to the InstallArea
 apply_pattern install_more_includes more=Event
 
-#---- Implementation files, if any, should be handwritten and
-#---- compiled into a library
-library LumiEvent ../src/*.cpp
-apply_pattern linker_library library=LumiEvent
-
 #============================================================================
 # define component library link options
 #============================================================================
+library LumiEvent ../src/*.cpp
 apply_pattern    component_library library=LumiEvent
 
 # Make custom dictionary. Must be before GOD generation
