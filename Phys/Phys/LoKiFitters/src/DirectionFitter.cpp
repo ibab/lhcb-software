@@ -1,4 +1,4 @@
-// $Id: DirectionFitter.cpp,v 1.4 2009-02-13 16:25:12 jpalac Exp $
+// $Id: DirectionFitter.cpp,v 1.5 2009-02-17 15:11:24 jpalac Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -178,9 +178,9 @@ StatusCode LoKi::DirectionFitter::reFit ( LHCb::Particle& particle ) const
   if ( 0 == dv ) 
   { return Error ( "No parent DVAlgorithm is available!"    , NoDesktop ) ; }
   // 2 ) get the related primary vertex from the desktop
-  //  const LHCb::VertexBase* primary =  dv-> calculateRelatedPV ( &particle );
+  const LHCb::VertexBase* primary =  dv-> calculateRelatedPV ( &particle );
   //  const LHCb::VertexBase* primary =  dv-> getRelatedPV ( &particle ) ;
-  const LHCb::VertexBase* primary =  desktop -> relatedVertex( &particle ) ;
+  //const LHCb::VertexBase* primary =  desktop -> relatedVertex( &particle ) ;
   if ( 0 == primary ) 
   { return Error ( "No associated primary vertex is found!" , NoPrimaryVertex ) ; }
   // 3) use the regular "fit" method 
