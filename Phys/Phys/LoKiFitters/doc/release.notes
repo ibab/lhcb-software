@@ -1,10 +1,14 @@
-! $Id: release.notes,v 1.12 2009-02-13 16:25:24 jpalac Exp $ 
+! $Id: release.notes,v 1.13 2009-02-17 15:11:36 jpalac Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiFitters
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2009-02-17 - Juan PALACIOS
+ - src/DirectionFitter.cpp
+  . Restore use of  new DVAlgorithm::calculateRelatedPV method to get 
+    related PV.
 ! 2009-02-13 - Juan PALACIOS
  - src/DirectionFitter.cpp
   . Temporarilly restore previous behaviour, ie get related PV from 
