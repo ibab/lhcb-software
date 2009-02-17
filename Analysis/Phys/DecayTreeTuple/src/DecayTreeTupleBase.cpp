@@ -1,4 +1,4 @@
-// $Id: DecayTreeTupleBase.cpp,v 1.8 2009-01-22 09:27:33 pkoppenb Exp $
+// $Id: DecayTreeTupleBase.cpp,v 1.9 2009-02-17 09:28:36 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -260,6 +260,10 @@ bool DecayTreeTupleBase::getDecayMatches( const Particle::ConstVector& pool
 {
   const Particle* head(0);
   while( m_dkFinder->findDecay( pool, head ) ){
+    if (0==head){
+      Error("Cannot find head of decay",StatusCode::FAILURE,1) ;
+      return false ;
+    }
     heads.push_back( head ); 
   }
   return !( heads.empty() );  

@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+! 2009-02-17 - Patrick Koppenburg
+ - Protect against absence of decay head
+
 ! 2009-02-11 - Patrick Koppenburg
  - Added TupleToolRecoStats and TupleToolSelResults
  - EventTuple : Can now save ETC. See examples in DaVinci.
