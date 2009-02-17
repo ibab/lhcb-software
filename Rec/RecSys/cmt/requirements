@@ -76,6 +76,9 @@ use GlobalReco           v6r18   Rec   # Chris Jones
 # Velo
 use VeloRecMonitors      v1r3    Velo # Malcom John, Eduardo Rodrigues
 
+# Lumi
+use LumiAlgs             v1r0    Rec  # Jaap Panman
+
 # Setup Python Configurables
 apply_pattern install_python_modules
 

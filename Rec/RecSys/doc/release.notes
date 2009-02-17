@@ -7,6 +7,7 @@ Purpose: LHCb reconstruction packages.
 
 </PRE><H1><A NAME=v6r1>2009-01-13 RecSys v6r1</A></H1><PRE>
 This version uses Gaudi v20r4 and LHCb v26r1.
+- Add Package LumiAlgs v1r0 in requirements file
 
 - Packages modified: CaloPIDs v4r14p1, CaloReco v4r17, NNTools v1r3p1,
    PatChecker v3r4, TrackCheckers v4r5, TrackFitter v2r30, TrackMCTools v2r20,
