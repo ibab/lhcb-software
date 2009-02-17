@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.140 2009-02-17 08:39:31 graven Exp $ 
+! $Id: release.notes,v 1.141 2009-02-17 11:12:57 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-02-17 - Patrick Koppenburg
+ - Correct two obvious typos
 
 ! 2009-02-17 - Gerhard Raven
  - superseed Hlt2IgnoreHl1Decision by Hlt2Requires

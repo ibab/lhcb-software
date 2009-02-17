@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.42 2009-02-17 08:39:31 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.43 2009-02-17 11:12:57 pkoppenb Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -113,7 +113,7 @@ class HltConf(LHCbConfigurableUser):
                                , 'Hlt1' : HltFilter('Hlt1GlobalPass' , Code = "HLT_PASS('Hlt1Global')" )
                                }
                 for i in self.getProp('Hlt2Requires').split('+') :
-                    Sequence("Hlt2CheckHlt1Passed").Members.Append( hlt2requirs[i] )
+                    Sequence("Hlt2CheckHlt1Passed").Members.append( hlt2requires[i] )
 
     def postConfigAction(self) : 
         ## Should find a more elegant way of doing this...
