@@ -50,6 +50,7 @@ use EventBase             v2r5    Event   # Marco Cattaneo, Gloria Corti
 use GenEvent              v5r3    Event   # Gloria Corti
 use HltEvent              v8r14   Event   # Jose Angel Hernando-Morata
 use LinkerEvent           v3r6    Event   # Olivier Callot
+use LumiEvent             v1r0    Event   # Jaap Panman
 use L0Event               v17r3   Event   # Olivier Deschamps, Julien Cogan
 use MCEvent               v2r11   Event   # Gloria Corti and sub-det experts
 use PackedEvent           v3r4    Event   # Marco Cattaneo, Olivier Callot

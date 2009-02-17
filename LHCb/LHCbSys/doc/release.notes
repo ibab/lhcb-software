@@ -8,6 +8,7 @@
 </PRE><H1><A NAME=v26r1>2009-01-13 LHCbSys v26r1</A></H1><PRE>
 This version uses Gaudi v20r4 and LCG_55c
 
+- Packages added    : LumiEvent v1r0 - To handle luminosity accounting
 - Packages added    : PartProp v1r0 - LHCb implementation of ParticlePropertySvc
 - Packages modified : GaudiConf v12r0, KernelSys v11r0, LHCbKernel v11r0,
     LHCbMath v3r5, L0MuonKernel v8r5, ProcessorKernel v5r3p1, Relations v5r6,
