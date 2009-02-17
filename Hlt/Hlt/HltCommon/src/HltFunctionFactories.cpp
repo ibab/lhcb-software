@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactories.cpp,v 1.22 2009-01-20 19:07:12 aperezca Exp $
+// $Id: HltFunctionFactories.cpp,v 1.23 2009-02-17 16:35:22 witekma Exp $
 // Include files 
 
 // from Gaudi
@@ -125,6 +125,8 @@ StatusCode HltVertexFunctionFactory::initialize() {
 
   declare<Hlt::VertexNumberOfASideTracks>("VertexNumberOfASideTracks");
   declare<Hlt::VertexNumberOfCSideTracks>("VertexNumberOfCSideTracks");
+
+  declare<IRecVertexFunctionTool>("VertexDiElectronMass","VertexDiElectronMassTool");
 
   return sc;
 }

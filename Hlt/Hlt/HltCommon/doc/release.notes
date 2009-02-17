@@ -3,6 +3,10 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+
+! 2009-02-17 - Mariusz Witek
+  - add VertexDiElectronMass as new IRecVertexFunctionTool 
+
 ! 2009-02-13 - Jose Angel Hernando
   - HltTFilter add the index in the filters counters to do a printout in order of the filters in finalize 
 

@@ -4,11 +4,17 @@
 ! Purpose     : Ecal alley specific algorithms and tools
 !----------------------------------------------------------------------------
 
-! 2009-13-21 - Mariusz Witek
+! 2009-02-17 - Mariusz Witek
+ - new ecal alley
+ - removed EcalSeedForVeloMatch
+ - modified HltRZVeloEcalMatch HltVeloEcalMatch
+ - new VertexDiElectronMassTool 
+
+! 2009-01-21 - Mariusz Witek
 - correct HltIsPhotonTool.cpp to work properly for photon line
   i.e. photons from not confirmed electrons
 
-! 2009-13-20 - Mariusz Witek
+! 2009-01-20 - Mariusz Witek
 - bug correction. Different results for photon line opt vs debug.
   Usage of pointer outside the scope in HltIsPhotonTool.cpp
 
