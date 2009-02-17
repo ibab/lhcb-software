@@ -1,4 +1,4 @@
-// $Id: TupleToolMCTruth.cpp,v 1.10 2009-01-19 18:07:45 pkoppenb Exp $
+// $Id: TupleToolMCTruth.cpp,v 1.11 2009-02-17 19:43:39 gligorov Exp $
 // Include files
 #include "gsl/gsl_sys.h"
 // from Gaudi
@@ -13,6 +13,9 @@
 #include "Event/Particle.h"
 #include "Event/MCParticle.h"
 
+// kernel
+#include "Kernel/IP2VVMCPartAngleCalculator.h"
+#include "Kernel/IBackgroundCategory.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : EventInfoTupleTool
@@ -35,6 +38,7 @@ TupleToolMCTruth::TupleToolMCTruth( const std::string& type,
   , m_pLink(0)
   , m_pComp(0)
   , m_pChi2(0)
+  , m_bkg(0)
   , m_linkerTool_Links(0)
   , m_linkerTool_Chi2(0)
   , m_linkerTool_Composite(0)
@@ -50,8 +54,18 @@ TupleToolMCTruth::TupleToolMCTruth( const std::string& type,
   // Store the number of associations seen
   declareProperty( "StoreAssociationNumbers", m_storeNumberOfAssoc=false );
 
+  // Store kinetic information from the associated candidate
+  declareProperty( "StoreKineticInfo",  m_storeKinetic = true );
+
+  // Store the end and origin true vertex information
+  declareProperty( "StoreVertexInfo",  m_storeVertexes = true );
+  
+  // Store the propertime information for associated composite particle
+  declareProperty( "StorePropertimeInfo", m_storePT = true );
+
   // Store the true angular information 
   declareProperty( "FillAngles", m_fillangles = false );
+  declareProperty( "Calculator", m_calculator = "MCBd2KstarMuMuAngleCalculator" );
 }
 
 //=============================================================================
@@ -62,15 +76,13 @@ StatusCode TupleToolMCTruth::initialize(){
   m_linkerTool_Links = tool<IDaVinciAssociatorsWrapper>("DaVinciAssociatorsWrapper","Wrapper_Links",this);
   m_linkerTool_Chi2 = tool<IDaVinciAssociatorsWrapper>("DaVinciAssociatorsWrapper","Wrapper_Chi2",this);
   m_linkerTool_Composite = tool<IDaVinciAssociatorsWrapper>("DaVinciAssociatorsWrapper","Wrapper_Composite",this);
-  m_mcTool = tool<IMCParticleTupleTool>("MCTupleToolMCTruth",this);
-  if (m_fillangles) m_mcAngles = tool<IMCParticleTupleTool>("MCTupleToolP2VV",this);
-    
+  m_bkg = tool<IBackgroundCategory>( "BackgroundCategory", this );
+
+   if (m_fillangles) m_angleTool  = tool<IP2VVMCPartAngleCalculator>(m_calculator,this);
+
   return StatusCode::SUCCESS;
 }
 
-//=============================================================================
-// Fill
-//=============================================================================
 StatusCode TupleToolMCTruth::fill( const LHCb::Particle* 
 				 , const LHCb::Particle* P
 				 , const std::string& head
@@ -87,9 +99,15 @@ StatusCode TupleToolMCTruth::fill( const LHCb::Particle*
   
   int assignedPid = 0;
   
+  int mcPid = 0;
+  int nbAss = 0;
+  double mcTau = -1;
+
+  Gaudi::XYZVector endVertex, originVertex;
+  Gaudi::LorentzVector trueP;
+
   const MCParticle* mcp(0);
   bool test = true;
-  int nbAss = 0;
 
   if( P ){
     assignedPid = P->particleID().pid();
@@ -102,24 +120,116 @@ StatusCode TupleToolMCTruth::fill( const LHCb::Particle*
 
     } else {
       if( P->isBasicParticle() ) mcp = m_pLink->firstMCP( P );
-      else                       mcp = m_pComp->firstMCP( P );
+      else                       mcp = m_bkg->origin(P);//m_pComp->firstMCP( P );
+    }
+  }
+ 
+  // pointer is ready, prepare the values:
+  if( mcp ) {
+
+    mcPid = mcp->particleID().pid();
+
+    trueP = mcp->momentum();
+
+    const SmartRefVector< LHCb::MCVertex > & endVertices = mcp->endVertices();
+    if (endVertices.size() != 0) {
+    
+      endVertex = endVertices.front()->position(); // the first item, the other are discarded.
+      originVertex = mcp->originVertex()->position();
+
+      // lifetime
+      if( m_storePT ){
+        Gaudi::XYZVector dist = endVertex - originVertex;
+        // copied from DecayChainNTuple // 
+        mcTau = trueP.M() * dist.Dot( trueP.Vect() ) / trueP.Vect().mag2();
+        mcTau /= Gaudi::Units::picosecond * Gaudi::Units::c_light;
+      }
+    } else{
+      //MC particle has no endvertices
+      endVertex.SetXYZ(-9999.,-9999.,-9999.); 
+      mcTau = -9999.;
     }
   }
 
+  // fill the tuple:
+  test &= tuple->column( head+"_TRUEID", mcPid );  
+
   if( m_storeNumberOfAssoc )
     test &= tuple->column( head + "_MC_ASSOCNUMBER", nbAss );
-  
-  test &= m_mcTool->fill(0,mcp,head,tuple);
-  
+
+  if( m_storeKinetic )
+    test &= tuple->column( head + "_TRUEP_", trueP );
+
+  if( m_storeVertexes ){
+    test &= tuple->column( head + "_TRUEORIGINVERTEX_", originVertex );
+    test &= tuple->column( head + "_TRUEENDVERTEX_", endVertex );
+  }
+
+  if( m_storePT )
+    test &= tuple->column( head + "_TRUETAU", mcTau );
+
   // true angles information:
   if(m_fillangles) {
     // only for Bs or Bd (patch, not meant to be elegant)
     if (abs(assignedPid) == 511 || abs(assignedPid) == 531) {
-      m_mcAngles->fill(0,mcp,head,tuple);
+      
+    //Helicity
+    double thetaL(9999), thetaK(9999), phi(9999);
+
+    StatusCode sc_hel = false;
+    if (mcp) sc_hel = m_angleTool->calculateAngles( mcp, thetaL, thetaK, phi);
+
+    if ( !sc_hel ) {
+      thetaL=9999.;
+      thetaK=9999.;
+      phi=9999.;      
     }
+    
+      
+    if (msgLevel(MSG::DEBUG)) debug() << "Three true helicity angles are theta_L : " 
+                                      << thetaL 
+                                      << " K: "<< thetaK
+                                      << " phi: " << phi << endmsg ;
+      
+      
+    
+      test &= tuple->column( head+"_TRUEThetaL", thetaL );
+      test &= tuple->column( head+"_TRUEThetaK", thetaK );
+      test &= tuple->column( head+"_TRUEPhi",    phi  );
+
+    //Transversity
+    double Theta_tr(9999), Phi_tr(9999), Theta_V(9999);
+      
+    StatusCode sc_tr = false;
+    if (mcp) sc_tr = m_angleTool->calculateTransversityAngles( mcp,Theta_tr,Phi_tr,Theta_V );
+      
+
+    if ( !sc_tr ) {
+      Theta_tr=9999.;
+      Phi_tr=9999.;
+      Theta_V=9999.;
+    }
+    
+
+      if (msgLevel(MSG::DEBUG)) debug() << "Three true transversity angles are Theta_tr : " 
+					<< Theta_tr 
+					<< " Phi_tr: " << Phi_tr
+					<< " Theta_phi_tr: " << Theta_V 
+					<< endmsg ;
+      
+      
+      
+
+          test &= tuple->column( head+"_TRUEThetaTr", Theta_tr );
+          test &= tuple->column( head+"_TRUEPhiTr", Phi_tr );
+          test &= tuple->column( head+"_TRUEThetaVtr", Theta_V  );
+       
+    }
+    
     
   }
   
+
   return StatusCode(test);
 }
 
