@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.41 2009-02-12 19:53:56 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.42 2009-02-17 08:39:31 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -48,7 +48,7 @@ class HltConf(LHCbConfigurableUser):
                              , Hlt1Conf ]
     __slots__ = { "L0TCK"                      : ''
                 , "hltType"                    : 'Hlt1+Hlt2'
-                , "Hlt2IgnoreHlt1Decision"     : False # run Hlt2 even if Hlt1 failed
+                , "Hlt2Requires"               : 'L0+Hlt1'  # require L0 and Hlt1 pass before running Hlt2
                 , "Verbose"                    : False # print the generated Hlt sequence
                 , "LumiBankKillerAcceptFraction" : 0 # fraction of lumi-only events where raw event is stripped down
                 , "ActiveHlt1Lines"            : [] # list of lines to be added
@@ -107,10 +107,13 @@ class HltConf(LHCbConfigurableUser):
                 importOptions('$HLTCONFROOT/options/Hlt2.py')
                 # TODO: this next one should become a property of the Hlt2 configurable, and we
                 #       just forward to it...
-                if self.getProp('Hlt2IgnoreHlt1Decision') :  
-                    Sequence("Hlt2CheckHlt1Passed").Members = [ L0Filter('L0Pass', Code = "L0_DECISION" ) ]
-                else : 
-                    Sequence("Hlt2CheckHlt1Passed").Members = [ HltFilter('Hlt1GlobalPass' , Code = "HLT_PASS('Hlt1Global')" ) ]
+                Sequence("Hlt2CheckHlt1Passed").Members = [ ]
+
+                hlt2requires = { 'L0'   : L0Filter('L0Pass', Code = "L0_DECISION" )
+                               , 'Hlt1' : HltFilter('Hlt1GlobalPass' , Code = "HLT_PASS('Hlt1Global')" )
+                               }
+                for i in self.getProp('Hlt2Requires').split('+') :
+                    Sequence("Hlt2CheckHlt1Passed").Members.Append( hlt2requirs[i] )
 
     def postConfigAction(self) : 
         ## Should find a more elegant way of doing this...

@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.139 2009-02-15 10:35:13 graven Exp $ 
+! $Id: release.notes,v 1.140 2009-02-17 08:39:31 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-02-17 - Gerhard Raven
+ - superseed Hlt2IgnoreHl1Decision by Hlt2Requires
 
 ! 2009-02-15 - Gerhard Raven
  - remove unused references to HltL0{Calo,Muon}Prepare
