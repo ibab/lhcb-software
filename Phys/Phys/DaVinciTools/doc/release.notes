@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.403 2009-02-13 16:55:25 jpalac Exp $
+! $Id: release.notes,v 1.404 2009-02-17 14:30:08 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
 
+! 2009-02-17 - Juan PALACIOS
+ - src/PhysDesktop.h
+  . Fix clearLocalContainer. It was taking container to be cleared by value!
+ - src/PhysDesktop.cpp
+  . Add safety for case where P->PV relations table is empty. Add some debug.
+ 
 ! 2009-02-13 - Juan PALACIOS
  - src/PhysDesktop.h
   . add some debug to clearLocalContainer.
