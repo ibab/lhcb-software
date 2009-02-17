@@ -216,7 +216,8 @@ StatusCode TrackFitMatchMonitor::execute()
 { 
   setHistoTopDir("Track/") ;
 
-  if (!exist<LHCb::Tracks>(m_trackContainerName)) return StatusCode::SUCCESS ;
+  if (!exist<LHCb::Tracks>(m_trackContainerName)) 
+    return Warning( m_trackContainerName+" not found", StatusCode::SUCCESS, 0);
   const LHCb::Tracks* tracks = get<LHCb::Tracks>( m_trackContainerName ) ;
   for( LHCb::Tracks::const_iterator itr = tracks->begin() ;
        itr != tracks->end(); ++itr) {

@@ -181,7 +181,8 @@ struct TrackChisqPredicate
 
 StatusCode TrackVertexMonitor::execute()
 { 
-  if (!exist<LHCb::RecVertices>(m_pvContainerName)) return StatusCode::SUCCESS ;
+  if (!exist<LHCb::RecVertices>(m_pvContainerName)) 
+    return Warning( m_pvContainerName+" not found", StatusCode::SUCCESS, 0);
   const LHCb::RecVertices* pvcontainer = get<LHCb::RecVertices>( m_pvContainerName ) ;
   //const LHCb::Tracks* tracks = get<LHCb::Tracks>( m_trackContainerName );
   

@@ -4,8 +4,11 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-02-17 - Patrick Koppenburg
+ - Add a warning when container does not exist
+
 ! 2009-02-13 - Patrick Koppenburg
- - Protect agains non-existance of containers.
+ - Protect against non-existance of containers.
 
 ! 2009-01-22 - David Hutchcroft
  - Add scales for monitoring of residuals for lite cluster types

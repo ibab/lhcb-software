@@ -1,4 +1,4 @@
-// $Id: TrackMonitor.cpp,v 1.11 2009-02-13 17:04:18 pkoppenb Exp $
+// $Id: TrackMonitor.cpp,v 1.12 2009-02-17 09:59:10 pkoppenb Exp $
 // Include files 
 #include "TrackMonitor.h"
 
@@ -69,7 +69,8 @@ StatusCode TrackMonitor::execute()
 {
   
   // get the input data
-  if (!exist<LHCb::Tracks>(inputContainer())) return StatusCode::SUCCESS ;
+  if (!exist<LHCb::Tracks>(inputContainer())) 
+    return Warning( inputContainer()+" not found", StatusCode::SUCCESS, 0);
   LHCb::Tracks* tracks = get<LHCb::Tracks>(inputContainer());
 
   std::map<std::string, unsigned int> tMap;
@@ -243,18 +244,28 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
     const LHCb::State *firstMState(0), *lastMState(0) ;
     findRefStates(track,firstMState,lastMState) ;
     if( firstMState ) {
-      plot(log(firstMState->covariance()(0,0))*halfOverLog10,type+"/xerrorAtFirst", "10log(x error) at first measurement",-3,2);
-      plot(log(firstMState->covariance()(1,1))*halfOverLog10,type+"/yerrorAtFirst", "10log(y error) at first measurement",-3,2);
-      plot(log(firstMState->covariance()(2,2))*halfOverLog10,type+"/txerrorAtFirst", "10log(tx error) at first measurement",-7,0);
-      plot(log(firstMState->covariance()(3,3))*halfOverLog10,type+"/tyerrorAtFirst", "10log(ty error) at first measurement",-7,0);
-      plot(log(firstMState->covariance()(4,4))*halfOverLog10,type+"/qoperrorAtFirst", "10log(qop error) at first measurement",-8,0);
+      plot(log(firstMState->covariance()(0,0))*halfOverLog10,
+           type+"/xerrorAtFirst", "10log(x error) at first measurement",-3,2);
+      plot(log(firstMState->covariance()(1,1))*halfOverLog10,
+           type+"/yerrorAtFirst", "10log(y error) at first measurement",-3,2);
+      plot(log(firstMState->covariance()(2,2))*halfOverLog10,
+           type+"/txerrorAtFirst", "10log(tx error) at first measurement",-7,0);
+      plot(log(firstMState->covariance()(3,3))*halfOverLog10,
+           type+"/tyerrorAtFirst", "10log(ty error) at first measurement",-7,0);
+      plot(log(firstMState->covariance()(4,4))*halfOverLog10,
+           type+"/qoperrorAtFirst", "10log(qop error) at first measurement",-8,0);
     }
     if( lastMState ) {
-      plot(log(lastMState->covariance()(0,0))*halfOverLog10,type+"/xerrorAtLast", "10log(x error) at last measurement",-3,2);
-      plot(log(lastMState->covariance()(1,1))*halfOverLog10,type+"/yerrorAtLast", "10log(y error) at last measurement",-3,2);
-      plot(log(lastMState->covariance()(2,2))*halfOverLog10,type+"/txerrorAtLast", "10log(tx error) at last measurement",-7,0);
-      plot(log(lastMState->covariance()(3,3))*halfOverLog10,type+"/tyerrorAtLast", "10log(ty error) at last measurement",-7,0);
-      plot(log(lastMState->covariance()(4,4))*halfOverLog10,type+"/qoperrorAtLast", "10log(qop error) at last measurement",-8,0);
+      plot(log(lastMState->covariance()(0,0))*halfOverLog10,
+           type+"/xerrorAtLast", "10log(x error) at last measurement",-3,2);
+      plot(log(lastMState->covariance()(1,1))*halfOverLog10,
+           type+"/yerrorAtLast", "10log(y error) at last measurement",-3,2);
+      plot(log(lastMState->covariance()(2,2))*halfOverLog10,
+           type+"/txerrorAtLast", "10log(tx error) at last measurement",-7,0);
+      plot(log(lastMState->covariance()(3,3))*halfOverLog10,
+           type+"/tyerrorAtLast", "10log(ty error) at last measurement",-7,0);
+      plot(log(lastMState->covariance()(4,4))*halfOverLog10,
+           type+"/qoperrorAtLast", "10log(qop error) at last measurement",-8,0);
     }
     
     // compare to what we expected

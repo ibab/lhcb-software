@@ -1,4 +1,4 @@
-// $Id: TTTrackMonitor.cpp,v 1.2 2009-02-13 17:04:18 pkoppenb Exp $
+// $Id: TTTrackMonitor.cpp,v 1.3 2009-02-17 09:59:10 pkoppenb Exp $
 // Include files 
 #include "TTTrackMonitor.h"
 
@@ -69,7 +69,8 @@ StatusCode TTTrackMonitor::execute()
 {
   
   // get the input data
-  if (!exist<LHCb::Tracks>(inputContainer())) return StatusCode::SUCCESS;
+  if (!exist<LHCb::Tracks>(inputContainer())) 
+    return Warning(inputContainer()+" not found", StatusCode::SUCCESS, 0);    
   LHCb::Tracks* tracks = get<LHCb::Tracks>(inputContainer());
 
   std::map<std::string, unsigned int> tMap;
