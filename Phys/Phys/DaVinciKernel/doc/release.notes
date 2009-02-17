@@ -1,8 +1,12 @@
-!$Id: release.notes,v 1.287 2009-02-13 16:11:28 jpalac Exp $
+!$Id: release.notes,v 1.288 2009-02-17 14:42:58 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2009-02-17 - Juan PALACIOS
+ - src/Lib/DVAlgorithm.cpp
+  . Test whether P->PV relations table is empty before returning related PV.
 
 ! 2009-02-13 - Juan PALACIOS
  - calculateRelatedPV now returns newed pointer to related PV. The pointer is
