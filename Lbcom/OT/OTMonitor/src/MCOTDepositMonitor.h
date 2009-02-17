@@ -1,9 +1,9 @@
-// $Id: MCOTDepositMonitor.h,v 1.8 2009-01-27 10:19:27 janos Exp $
+// $Id: MCOTDepositMonitor.h,v 1.9 2009-02-17 09:04:12 janos Exp $
 #ifndef OTMONITOR_MCOTDEPOSITMONITOR_H
 #define OTMONITOR_MCOTDEPOSITMONITOR_H 1
 
 /// STL
-#include <vector>
+#include <map>
 
 /// Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
@@ -29,6 +29,8 @@ namespace LHCb
   class MCOTDeposit;
 }
 
+class DeOTDetector;
+
 class MCOTDepositMonitor : public GaudiHistoAlg {
 
 public:
@@ -51,19 +53,20 @@ private:
   /// book the histograms
   void initHistograms();
 
+  unsigned depSpectrum( unsigned station )    { return 100u*station + 1; };
+  unsigned noiseSpectrum( unsigned station )  { return 100u*station + 2; };
+  unsigned xTalkSpectrum( unsigned station )  { return 100u*station + 3; };
+  unsigned dPulseSpectrum( unsigned station ) { return 100u*station + 4; };
+    
   /// fill the histograms
-  void fillHistograms( LHCb::MCOTDeposit* aDeposit );
+  void fillHistograms( const LHCb::MCOTDeposit* aDeposit );
 
-  int m_nStations;       ///< number of stations (from geometry)
-  int m_firstStation;    ///< first OT station   (from geometry)  
-
-  AIDA::IHistogram1D* m_nHitsPerStationHisto; ///< Hits per station 
-  AIDA::IHistogram1D* m_nHitsPerLayerHisto;   ///< Hits per layer
-  /// drift time histo for each station
-  std::vector<AIDA::IHistogram1D*> m_driftTimeHistos;
-  /// y vs x of hits for each station 
-  std::vector<AIDA::IHistogram2D*> m_yvsxHistos;
-  AIDA::IHistogram1D* m_driftDistHisto;  ///< drift distance distribution
+private:
+  DeOTDetector*                             m_det           ;
+  /// drift time histo per station
+  std::map< unsigned, AIDA::IHistogram1D* > m_spectrumHistos;
+  /// y vs x of hits per station 
+  std::map< unsigned, AIDA::IHistogram2D* > m_hitDistHistos ;
   
 };
 
