@@ -1,0 +1,39 @@
+//=============================================================================
+// The templated method filling the tuple for Particles and MCParticles
+//=============================================================================
+/// The templated method that does it all
+template<class TYPE>
+StatusCode fill( const std::vector<const TYPE*> dauts
+                 , const std::string head
+                 , Tuples::Tuple& tuple ){
+  
+  bool test = true;
+  
+  typename std::vector<const TYPE*>::const_iterator i, j;
+  for ( i = dauts.begin() ; i!= dauts.end() ; ++i){
+    std::string n1 = name( (*i)->particleID() );
+    Gaudi::LorentzVector p1 = (*i)->momentum() ;
+    for ( j = dauts.begin() ; i!= j ; ++j){
+      std::string n2 = name( (*j)->particleID() );                                        
+      Gaudi::LorentzVector p = p1+(*j)->momentum() ;
+      info() << n1 << " " << n2 << " " << p.M2() << endmsg ;
+      test &= tuple->column( head+"Dalitz_"+n1+"_"+n2+"_M2",p.M2()  );
+    }
+  }
+
+  return StatusCode(test) ;
+  
+}
+
+/// get name of particle or anti-particle
+std::string name(const LHCb::ParticleID& id)const{
+  return Decays::escape( ( id.pid()>0 ?
+                           ppSvc()->find( id )->particle() :
+                           ppSvc()->find( id )->antiParticle()->particle() )) ;
+};
+
+/// get particle property serivce
+const LHCb::IParticlePropertySvc* ppSvc() const{
+  return svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc", true );
+} ;
+

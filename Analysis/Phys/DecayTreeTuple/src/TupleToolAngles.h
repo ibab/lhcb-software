@@ -1,4 +1,4 @@
-// $Id: TupleToolAngles.h,v 1.1 2009-01-23 10:54:36 pkoppenb Exp $
+// $Id: TupleToolAngles.h,v 1.2 2009-02-17 18:07:31 pkoppenb Exp $
 #ifndef TUPLETOOLANGLES_H 
 #define TUPLETOOLANGLES_H 1
 
@@ -35,7 +35,6 @@ public:
 			   , const LHCb::Particle*
 			   , const std::string&
 			   , Tuples::Tuple& );
-
 
 protected:
 

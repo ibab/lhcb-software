@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-02-17 - Patrick Koppenburg
+ - Added (MC)TupleToolDalitz.{cpp,h,icpp}
+
+! 2009-02-17 - Patrick Koppenburg
  - Protect against absence of decay head
 
 ! 2009-02-11 - Patrick Koppenburg
