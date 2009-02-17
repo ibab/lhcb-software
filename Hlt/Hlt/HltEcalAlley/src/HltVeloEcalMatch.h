@@ -1,4 +1,4 @@
-// $Id: HltVeloEcalMatch.h,v 1.1 2008-11-04 08:30:28 witekma Exp $
+// $Id: HltVeloEcalMatch.h,v 1.2 2009-02-17 16:25:04 witekma Exp $
 #ifndef HLTVELOECALMATCH_H 
 #define HLTVELOECALMATCH_H 1
 
@@ -6,9 +6,9 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
-
 #include "HltBase/IBiFunctionTool.h"
 #include "Event/Track.h"
+
 
 /** @class HltVeloEcalMatch HltVeloEcalMatch.h
  *  
@@ -17,8 +17,8 @@
  *  @date   2006-12-08
  */
 class HltVeloEcalMatch : public GaudiTool ,
-                         public ITrackBiFunctionTool
-{
+   	                public ITrackBiFunctionTool {
+
 public:
   
   /// Standard constructor
@@ -35,15 +35,19 @@ public:
 protected:
 
   double match(const LHCb::Track& rzvelo);
+  double ecal_cell_size(const LHCb::Track& track);
   
 protected:
   
   double m_max3DChi2;
 
+
 protected:
 
   double m_ptkickConstant;
   double m_zKick;
+  double m_eres[2]; /// de/e = sqrt( m_eres[0]^2 + m_eres[1]^2 / e )
+  double m_eCorrect;  /// simple energy correction factor
 
   double x,y,z;
   double ex,ey;

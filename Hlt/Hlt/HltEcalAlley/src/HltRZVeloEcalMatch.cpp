@@ -1,4 +1,4 @@
-// $Id: HltRZVeloEcalMatch.cpp,v 1.1 2008-11-04 08:30:28 witekma Exp $
+// $Id: HltRZVeloEcalMatch.cpp,v 1.2 2009-02-17 16:25:04 witekma Exp $
 // Include files 
 
 // from Gaudi
@@ -35,7 +35,9 @@ HltRZVeloEcalMatch::HltRZVeloEcalMatch
   declareProperty("PtkickConstant", m_ptkickConstant = 1.263*Gaudi::Units::GeV);
   //TODO: check that this is in 'natural' Gaudi Units...
   declareProperty("zKick", m_zKick = 525.0);
-
+  declareProperty("eRes0", m_eres[0] = 0.60 );
+  declareProperty("eRes1", m_eres[1] = 0.70 );
+  declareProperty("eCorrect", m_eCorrect = 1.2 );
 }
 //=============================================================================
 // Destructor
@@ -47,14 +49,19 @@ double HltRZVeloEcalMatch::function(const Track& track,
                                      const Track& tcalo)
 {
   //TODO: change this into 'natural' Gaudi Units...
+  double cell_size = ecal_cell_size(tcalo);
+
   const State& state = tcalo.firstState();
   x      = state.x()/Gaudi::Units::cm;
   y      = state.y()/Gaudi::Units::cm;
   z      = state.z()/Gaudi::Units::cm;   // Shower Max
-  ex     = sqrt(state.errX2())/Gaudi::Units::cm;
-  ey     = sqrt(state.errY2())/Gaudi::Units::cm;
-  e      = tcalo.p()/Gaudi::Units::GeV;
+  // trick!!
+  ex     = 2.*cell_size/Gaudi::Units::cm;
+  ey     = ex;
+  e      = tcalo.pt()/Gaudi::Units::GeV;
   
+  e *= m_eCorrect;
+
   double matchChi2 = match(track);
   return matchChi2;
 }
@@ -70,8 +77,7 @@ double HltRZVeloEcalMatch::match(const Track& track)
   double sectorSize = 0.785;  // 2pi/8 (phi takes 8 values)  
   
   // Absolute energy uncertainty:
-  //  double de     = e*(sqrt( m_eres[0]*m_eres[0] + m_eres[1]*m_eres[1]/e ));
-  double de = sqrt(track.firstState().errP2())/Gaudi::Units::GeV;
+  double de     = e*(sqrt( m_eres[0]*m_eres[0] + m_eres[1]*m_eres[1]/e ));
   
   double deltaZ = z - m_zKick;
   double xkick  = deltaZ * (m_ptkickConstant/Gaudi::Units::GeV)/e;
@@ -113,4 +119,28 @@ double HltRZVeloEcalMatch::match(const Track& track)
 
   debug() << " matchChi2 " << matchChi2 << endreq;
   return matchChi2;
+}
+
+double HltRZVeloEcalMatch::ecal_cell_size(const Track& ctrack) {
+
+  static const double cellSizeECal[3] = { 121.7, 60.85, 40.56 };
+    // get LHCbID of coresponding L0CaloCandidate
+  std::vector< LHCb::LHCbID >  lista=   ctrack.lhcbIDs ();
+  int ids_ecal = 0;
+  double siz_ecal =0.;
+  for (std::vector< LHCb::LHCbID >::iterator itid = lista.begin(); itid != lista.end(); itid++) {
+    if( ! itid->isCalo() ) continue;
+    LHCb::CaloCellID cid = itid->caloID();
+    if ( cid.calo() != 2 ) continue;
+    int area = cid.area();
+    if (area < 0 || area > 2 ) continue;
+    ids_ecal++;
+    siz_ecal += cellSizeECal[area];
+  }  
+
+  double cs = cellSizeECal[0];
+  if ( ids_ecal > 0 ) {
+    cs = siz_ecal/ids_ecal;
+  }
+  return cs;
 }
