@@ -54,6 +54,8 @@ public:
   */
   virtual StatusCode initialize();
 
+  std::string conditionsPathName() const;
+
 private:
 
   parent_type* m_parent;

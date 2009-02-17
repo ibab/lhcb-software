@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.48 2009-01-23 14:17:36 mneedham Exp $
+// $Id: DeSTSector.cpp,v 1.49 2009-02-17 15:07:55 jluisier Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -23,11 +23,11 @@
 #include <boost/lambda/lambda.hpp>
 
 /** @file DeSTSector.cpp
-*
-*  Implementation of class :  DeSTSector
-*
-*    @author Matthew Needham
-*/
+ *
+ *  Implementation of class :  DeSTSector
+ *
+ *    @author Matthew Needham
+ */
 
 using namespace boost::lambda;
 using namespace LHCb;
@@ -40,7 +40,7 @@ DeSTSector::DeSTSector( const std::string& name ) :
   m_statusString("Status"),
   m_versionString("DC06")
 { 
-    // constructer (first strip means we number from 1)
+  // constructer (first strip means we number from 1)
 }
 
 DeSTSector::~DeSTSector() {
@@ -71,16 +71,16 @@ MsgStream& DeSTSector::printOut( MsgStream& os ) const{
   // stream to Msg service
   os << " Sector : \n "  << name() << std::endl;
   os   << " Nickname: " << m_nickname 
-     << "\n ID " << id() 
-     << "type \n " << type() 
-     << " pitch \n " << m_pitch 
-     << "n strip \n " << m_nStrip
-     << " capacitance \n " << m_capacitance/Gaudi::Units::picofarad
-     << "dead width \n " << m_deadWidth
-     << "\n center " << globalCentre()
-     << "\n fraction active " << fractionActive() 
-     << "\n version " << m_versionString 
-     << std::endl;
+       << "\n ID " << id() 
+       << "type \n " << type() 
+       << " pitch \n " << m_pitch 
+       << "n strip \n " << m_nStrip
+       << " capacitance \n " << m_capacitance/Gaudi::Units::picofarad
+       << "dead width \n " << m_deadWidth
+       << "\n center " << globalCentre()
+       << "\n fraction active " << fractionActive() 
+       << "\n version " << m_versionString 
+       << std::endl;
 
   return os;
 }
@@ -130,7 +130,7 @@ DeSTSector::trajectory(const STChannelID& aChan, const double offset) const
     msg << MSG::ERROR << "Failed to link " << aChan.uniqueSector() << " " 
         << elementID().uniqueSector() << endmsg; 
     throw GaudiException( "Failed to make trajectory",
-                           "DeSTSector.cpp", StatusCode::FAILURE );
+                          "DeSTSector.cpp", StatusCode::FAILURE );
   }
   
   return createTraj(aChan.strip(), offset);
@@ -147,7 +147,7 @@ std::auto_ptr<LHCb::Trajectory> DeSTSector::trajectoryLastStrip() const
 }
 
 std::auto_ptr<LHCb::Trajectory> DeSTSector::createTraj(const unsigned int strip, 
-                                                      const double offset) const{
+                                                       const double offset) const{
  
   // collect the individual traj
   const Sensors& theSensors = sensors();
@@ -163,7 +163,7 @@ std::auto_ptr<LHCb::Trajectory> DeSTSector::createTraj(const unsigned int strip,
     for (; iterS != theSensors.end(); ++iterS) {                
       std::auto_ptr<LHCb::Trajectory> sensTraj = (*iterS)->trajectory(strip,offset);
       if (traj->numberOfPieces() == 0) {
-         traj->append(sensTraj.release());  
+        traj->append(sensTraj.release());  
       }
       else {
 
@@ -173,12 +173,12 @@ std::auto_ptr<LHCb::Trajectory> DeSTSector::createTraj(const unsigned int strip,
           double mu = sensTraj->muEstimate(traj->endPoint());        
           sensTraj->setRange(mu,sensTraj->endRange());               
           traj->append(sensTraj.release());          
- 	} 
+        } 
         else {                                                           
-	  const double mu = sensTraj->muEstimate(traj->beginPoint());      
-	  sensTraj->setRange(sensTraj->beginRange(),mu);             
-	  traj->prepend(sensTraj.release());                        
-	}
+          const double mu = sensTraj->muEstimate(traj->beginPoint());      
+          sensTraj->setRange(sensTraj->beginRange(),mu);             
+          traj->prepend(sensTraj.release());                        
+        }
       }
     } // loop
     return std::auto_ptr<LHCb::Trajectory>(traj);
@@ -238,15 +238,15 @@ STChannelID DeSTSector::nextLeft(const STChannelID testChan) const
 {
   if ((contains(testChan))&& (isStrip(testChan.strip()- 1u) == true)){
     return STChannelID(testChan.type(),
-                      testChan.station(),
-                      testChan.layer(), 
-                      testChan.detRegion(),
-                      testChan.sector(), 
-                      testChan.strip() - 1u);
-   }
-   else {
-     return LHCb::STChannelID(0u);
-   }
+                       testChan.station(),
+                       testChan.layer(), 
+                       testChan.detRegion(),
+                       testChan.sector(), 
+                       testChan.strip() - 1u);
+  }
+  else {
+    return LHCb::STChannelID(0u);
+  }
 }
 
 STChannelID DeSTSector::nextRight(const LHCb::STChannelID testChan) const
@@ -279,19 +279,19 @@ StatusCode DeSTSector::registerConditionsCallbacks(){
   StatusCode sc = registerCondition(this,sensors().front(),&DeSTSector::cacheInfo,true);
   if (sc.isFailure() ){
     msg << MSG::ERROR << "Failed to register geometry condition for first child" << endreq;
-     return StatusCode::FAILURE; 
+    return StatusCode::FAILURE; 
   }
 
   sc = registerCondition(this,sensors().back(),&DeSTSector::cacheInfo,true);
   if (sc.isFailure() ){
     msg << MSG::ERROR << "Failed to register geometry condition for first child" << endreq;
-     return StatusCode::FAILURE; 
+    return StatusCode::FAILURE; 
   }
 
   return StatusCode::SUCCESS;
 }
 
- StatusCode DeSTSector::updateStatusCondition(){
+StatusCode DeSTSector::updateStatusCondition(){
 
   const Condition* aCon = condition(m_statusString);
   if (aCon == 0){
@@ -310,7 +310,7 @@ StatusCode DeSTSector::registerConditionsCallbacks(){
   toEnumMap(stripMap,m_stripStatus);
  
   return StatusCode::SUCCESS;
- }
+}
 
 void DeSTSector::toEnumMap(const std::map<int,int>& input, DeSTSector::StatusMap& output) {
   output.clear();
@@ -326,7 +326,7 @@ DeSTSensor* DeSTSector::findSensor(const Gaudi::XYZPoint& point) const{
   // return pointer to the layer from point
   std::vector<DeSTSensor*>::const_iterator iter = 
     std::find_if( m_sensors.begin(), m_sensors.end(), 
-                 bind(&DeSTSensor::isInside, _1, point));
+                  bind(&DeSTSensor::isInside, _1, point));
   return (iter != m_sensors.end() ? *iter: 0);
 }
 
@@ -337,7 +337,7 @@ bool DeSTSector::globalInActive(const Gaudi::XYZPoint& point) const{
 }
 
 bool DeSTSector::globalInBondGap(const Gaudi::XYZPoint& point, 
-                                        double tol) const
+                                 double tol) const
 { 
   const DeSTSensor* aSensor =  findSensor(point);
   return (aSensor ?  aSensor->globalInBondGap(point, tol) : false ); 
@@ -357,7 +357,7 @@ double DeSTSector::fractionActive() const {
 }
 
 void DeSTSector::setBeetleStatus(const unsigned int beetle, 
-                            const DeSTSector::Status& newStatus){
+                                 const DeSTSector::Status& newStatus){
 
   // update the beetle status properly...
   MsgStream msg(msgSvc(), name());
@@ -378,7 +378,7 @@ void DeSTSector::setBeetleStatus(const unsigned int beetle,
         m_beetleStatus[beetle] = newStatus;
       } // check is valid state
       else {
-	msg << "Not a valid Beetle state: set request ignored " << endmsg;
+        msg << "Not a valid Beetle state: set request ignored " << endmsg;
       }
     }
   }
@@ -407,7 +407,7 @@ void DeSTSector::setStripStatus(const unsigned int strip,
         m_stripStatus[strip] = newStatus;
       } 
       else {
-	msg << "Strip in protected state: set request ignored " << endmsg;
+        msg << "Strip in protected state: set request ignored " << endmsg;
       }
     }
   }

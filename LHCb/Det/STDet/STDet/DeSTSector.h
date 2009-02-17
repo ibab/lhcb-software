@@ -1,4 +1,4 @@
-// $Id: DeSTSector.h,v 1.34 2009-01-23 14:17:36 mneedham Exp $
+// $Id: DeSTSector.h,v 1.35 2009-02-17 15:07:55 jluisier Exp $
 #ifndef _DeSTSector_H_
 #define _DeSTSector_H_
 
@@ -71,6 +71,11 @@ public:
    * @return StatusCode OK or not
    */
   virtual StatusCode initialize();
+
+  /** get the sector name as expected in the Condition DB
+   * @return std::string "sector name"
+   */
+  virtual std::string conditionsPathName() const = 0;
 
   /** sector identfier
    * @return id

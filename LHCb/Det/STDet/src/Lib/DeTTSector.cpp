@@ -5,6 +5,7 @@
 #include "STDet/STDetFun.h"
 
 #include "Kernel/TTNames.h"
+#include "Kernel/STLexicalCaster.h"
 
 /** @file DeTTSector.cpp
 *
@@ -28,6 +29,11 @@ DeTTSector::~DeTTSector() {
 const CLID& DeTTSector::clID () const
 {
   return DeTTSector::classID() ;
+}
+
+std::string DeTTSector::hybridType() const
+{
+  return m_hybridType;
 }
 
 StatusCode DeTTSector::initialize() {
@@ -93,6 +99,19 @@ StatusCode DeTTSector::initialize() {
     m_sensors.insert(m_sensors.begin(), sensors.begin(), sensors.end());
     m_thickness = m_sensors.front()->thickness();
 
+    if (sensors.size() == 4)
+    {
+      m_hybridType = "L";
+    }
+    else if (sensors.size() == 3)
+      m_hybridType = "K";
+    else
+      m_hybridType = "M";
+
+    m_conditionPathName = TTNames().UniqueLayerToString(chan) + "LayerR"
+      + ST::toString(chan.detRegion()) + "Module" + ST::toString(column())
+      + position() + "Sector" + hybridType();
+
     sc = registerConditionsCallbacks();
     if (sc.isFailure()){
       msg << MSG::ERROR << "Failed to registerConditions call backs" << endmsg;
@@ -111,5 +130,10 @@ StatusCode DeTTSector::initialize() {
 
 unsigned int DeTTSector::prodID() const{
   return m_parent->prodID();
+}
+
+std::string DeTTSector::conditionsPathName() const
+{
+  return m_conditionPathName;
 }
 

@@ -79,3 +79,27 @@ StatusCode DeITSector::initialize() {
 unsigned int DeITSector::prodID() const {
   return m_prodID;
 }
+
+std::string DeITSector::conditionsPathName() const
+{
+  std::string keys[3] =
+    {
+      "Top",
+      "Bottom",
+      "Side"
+    }, name( nickname() );
+
+  size_t loc;
+
+  for (unsigned int i(0); i < 3; i++)
+  {
+    loc =  name.find(keys[i]);
+    if ( loc < std::string::npos )
+    {
+      name.insert(loc + keys[i].length(), "Layer");
+      break;
+    }
+  }
+
+  return name;
+}

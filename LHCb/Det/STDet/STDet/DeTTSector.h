@@ -47,6 +47,11 @@ public:
   */
   const CLID& clID () const;
 
+  /**
+   * Retrives the hybrid type
+   * @return the hybrid type
+   */
+  std::string hybridType() const;
   /** initialization method 
   * @return Status of initialisation
   */
@@ -64,10 +69,14 @@ public:
   /** production ID --> in fact parent ID */
   virtual unsigned int prodID() const;
 
+  std::string conditionsPathName() const;
+
 private:
 
   parent_type* m_parent;
   unsigned int m_row;
+  std::string m_hybridType;
+  std::string m_conditionPathName;
 
 };
 
