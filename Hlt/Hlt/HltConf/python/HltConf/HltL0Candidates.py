@@ -1,6 +1,6 @@
 #
 #==============================================================================
-# $Id: HltL0Candidates.py,v 1.13 2009-02-17 16:05:44 witekma Exp $
+# $Id: HltL0Candidates.py,v 1.14 2009-02-17 17:15:46 witekma Exp $
 #==============================================================================
 #
 # Module to define the conversion of L0 candidates across several HltLines
@@ -38,7 +38,7 @@
 import re
 from Gaudi.Configuration import *
 from Configurables import HltL0CaloCandidates, HltL0MuonCandidates
-from Configurables import HadronSeedTool, EcalSeedForVeloMatch
+from Configurables import HadronSeedTool, ElectronSeedTool
 from Configurables import L0DUMultiConfigProvider
 from GaudiKernel.Configurable import ConfigurableGeneric
 

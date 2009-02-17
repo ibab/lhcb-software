@@ -4,7 +4,6 @@ from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 
 from Configurables import GaudiSequencer
-from Configurables import HltL0CaloPrepare
 from Configurables import HltTrackUpgrade
 from Configurables import PatMatchTool
 from Configurables import L0ConfirmWithT
