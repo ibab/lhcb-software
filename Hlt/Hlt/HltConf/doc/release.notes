@@ -1,16 +1,24 @@
-! $Id: release.notes,v 1.141 2009-02-17 11:12:57 pkoppenb Exp $ 
+! $Id: release.notes,v 1.142 2009-02-17 12:31:16 depaula Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+<<<<<<< release.notes
+! 2009-02-17 - Leandro de Paula
+  - HltMuonLines.py - Shorter muon lines names
+                    - Implement FastFit 
+                    - disentangle MuonNoGlob and MuonGEC Lines
+
+=======
 ! 2009-02-17 - Patrick Koppenburg
  - Correct two obvious typos
 
 ! 2009-02-17 - Gerhard Raven
  - superseed Hlt2IgnoreHl1Decision by Hlt2Requires
 
+>>>>>>> 1.141
 ! 2009-02-15 - Gerhard Raven
  - remove unused references to HltL0{Calo,Muon}Prepare
 
