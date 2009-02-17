@@ -1,0 +1,40 @@
+// $Id: SiClustersToLite.icpp,v 1.1 2009-02-17 09:47:35 mneedham Exp $
+
+// Gaudi
+#include "GaudiKernel/AlgFactory.h"
+
+#include "SiClustersToLite.h"
+#include "SiClusterTraits.h"
+
+template <class TYPE>
+inline SiClustersToLite<TYPE>::~SiClustersToLite()
+{
+  // STClustersToLite destructor
+}
+
+template <class TYPE>
+inline StatusCode SiClustersToLite<TYPE>::execute()
+{
+ 
+ 
+  // get the input data
+  typedef typename SiClusterTraits<TYPE>::CLUSCONT Container;
+  const Container* clusterCont = GaudiAlgorithm::template get<Container>(m_inputLocation);
+
+
+
+  // output
+  typedef typename SiClusterTraits<TYPE>::LITECONT LiteCont; 
+  LiteCont* fCont = new LiteCont();
+  fCont->reserve(clusterCont->size()); 
+  GaudiAlgorithm::template put(fCont, m_outputLocation);
+
+  typename Container::const_iterator iterC = clusterCont->begin();
+  for (; iterC != clusterCont->end() ; ++iterC){
+    fCont->push_back((*iterC)->liteCluster()); 
+  } // loop clusters
+  
+  return StatusCode::SUCCESS;
+}
+
+

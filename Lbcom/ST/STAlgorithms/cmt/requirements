@@ -19,7 +19,7 @@ library STAlgorithms ../src/*.cpp
 apply_pattern component_library library=STAlgorithms
 
 
-
+macro_append cppflags ' -fpermissive ' 
 
 
 
