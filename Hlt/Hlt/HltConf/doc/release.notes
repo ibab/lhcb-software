@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.142 2009-02-17 12:31:16 depaula Exp $ 
+! $Id: release.notes,v 1.143 2009-02-17 16:07:18 witekma Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -6,6 +6,9 @@
 ! -----------------------------------------------------------------------------
 
 <<<<<<< release.notes
+! 2009-02-17 - Mariusz Witek
+  - new version of ecal alley using TConf
+
 ! 2009-02-17 - Leandro de Paula
   - HltMuonLines.py - Shorter muon lines names
                     - Implement FastFit 

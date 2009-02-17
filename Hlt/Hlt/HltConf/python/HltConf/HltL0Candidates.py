@@ -1,6 +1,6 @@
 #
 #==============================================================================
-# $Id: HltL0Candidates.py,v 1.12 2009-02-17 12:31:16 depaula Exp $
+# $Id: HltL0Candidates.py,v 1.13 2009-02-17 16:05:44 witekma Exp $
 #==============================================================================
 #
 # Module to define the conversion of L0 candidates across several HltLines
@@ -69,7 +69,9 @@ def _calo( channel ) :
     ### TODO: this should be triggerd by the 'type' and NOT by channel
     ###       maybe every L0CaloCandidates instance should be configured with 'all' makers
     _calomaker = {  'Hadron'      : HadronSeedTool( decodeCalos = False )
-                 ,  'Electron'    : EcalSeedForVeloMatch() 
+                 ,  'Electron'    : ElectronSeedTool()
+                 ,  'Photon'      : ElectronSeedTool()
+                 ,  'LocalPi0'    : ElectronSeedTool()
                  ## how about photon??
                  }
     #note: explicitly set the OutputSelection so we can pick it up downstream...
