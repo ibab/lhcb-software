@@ -1,3 +1,8 @@
+2009-02-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/LbLogin.py: disable cache on darwin only if the mysiteroot
+	is used.
+
 2009-02-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/LbLogin.py: added PYTHON_BINOFFSET
