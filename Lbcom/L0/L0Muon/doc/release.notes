@@ -1,7 +1,10 @@
-!  $Id: release.notes,v 1.80 2009-02-09 17:07:17 jucogan Exp $
+!  $Id: release.notes,v 1.81 2009-02-18 12:31:43 jucogan Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !---------------------------------------------------------------------------
+
+! 2009-02-18 - Julien Cogan
+ - Possibiliy to disable the decoding of TAE event (DisableTAE property)  
 
 ! 2009-02-09 - Julien Cogan
  - L0MuonCandidatesFromRaw: fix a bug introduce in the last change. Avoid 
