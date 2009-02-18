@@ -4,6 +4,7 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !------------------------------------------------------------------------------
 
+!================ DetDescCnv v4r8 2009-02-18 ==================================
 ! 2009-01-23 - Marco Cattaneo
  - Backwards compatible fixes for Gaudi v21
  - Remove ifdefs for gcc 2.95
