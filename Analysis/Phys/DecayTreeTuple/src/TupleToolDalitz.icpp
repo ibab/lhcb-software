@@ -30,12 +30,17 @@ std::string name(const LHCb::ParticleID& id)const{
   return Decays::escape( ( id.pid()>0 ?
                            ppSvc()->find( id )->particle() :
                            ppSvc()->find( id )->antiParticle()->particle() )) ;
-};
-
-IParticlePropertySvc* m_ppSvc ;
+}
 
 /// get particle property serivce
-const LHCb::IParticlePropertySvc* ppSvc() const{
-  if (0==m_ppSvc) m_ppSvc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc", true );
+const LHCb::IParticlePropertySvc* ppSvc()const{
   return m_ppSvc ;
-} ;
+}
+
+StatusCode initialize(){
+  if (!GaudiTool::initialize()) return StatusCode::FAILURE ;
+  m_ppSvc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc", true );
+  return StatusCode::SUCCESS ;
+}
+
+LHCb::IParticlePropertySvc* m_ppSvc ;

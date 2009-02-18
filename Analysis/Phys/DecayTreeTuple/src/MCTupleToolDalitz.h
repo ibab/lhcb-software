@@ -1,4 +1,4 @@
-// $Id: MCTupleToolDalitz.h,v 1.1 2009-02-17 18:07:31 pkoppenb Exp $
+// $Id: MCTupleToolDalitz.h,v 1.2 2009-02-18 18:41:04 pkoppenb Exp $
 #ifndef MCTUPLETOOLDALITZ_H 
 #define MCTUPLETOOLDALITZ_H 1
 
@@ -6,12 +6,12 @@
 // from Gaudi
 #include "Kernel/IMCParticleTupleTool.h"     
 #include "GaudiAlg/GaudiTool.h"
-#include "Kernel/IParticlePropertySvc.h"
-#include "Kernel/ParticleProperty.h"
 #include "Kernel/Escape.h"
 #include "Event/MCParticle.h" 
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/TupleObj.h"
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 
 /** @class MCTupleToolDalitz MCTupleToolDalitz.h
  *  

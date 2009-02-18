@@ -1,4 +1,4 @@
-// $Id: MCTupleToolDalitz.cpp,v 1.2 2009-02-18 18:34:55 pkoppenb Exp $
+// $Id: MCTupleToolDalitz.cpp,v 1.3 2009-02-18 18:41:04 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -24,7 +24,7 @@ MCTupleToolDalitz::MCTupleToolDalitz( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
   : GaudiTool ( type, name , parent )
-    , m_ppSvc(0)
+  , m_ppSvc(0)
 {
   declareInterface<IMCParticleTupleTool>(this);
 

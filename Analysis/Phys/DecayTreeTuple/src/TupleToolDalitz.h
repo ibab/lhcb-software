@@ -1,4 +1,4 @@
-// $Id: TupleToolDalitz.h,v 1.1 2009-02-17 18:07:31 pkoppenb Exp $
+// $Id: TupleToolDalitz.h,v 1.2 2009-02-18 18:41:04 pkoppenb Exp $
 #ifndef TUPLETOOLDALITZ_H 
 #define TUPLETOOLDALITZ_H 1
 
@@ -6,12 +6,12 @@
 // from Gaudi
 #include "Kernel/IParticleTupleTool.h"     
 #include "GaudiAlg/GaudiTool.h"
-#include "Kernel/IParticlePropertySvc.h"
-#include "Kernel/ParticleProperty.h"
 #include "Kernel/Escape.h"
 #include "Event/Particle.h" 
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/TupleObj.h"
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 
 /** @class TupleToolDalitz TupleToolDalitz.h
  *  
