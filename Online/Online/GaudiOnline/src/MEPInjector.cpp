@@ -8,23 +8,27 @@
 //  Description : 
 //  
 //  This file contains the implementation of the MEP injector. It consists 
-//  in a GAUDI algorithm which reads raw events from MDF files, produces
-//  Tell1's MEPs, and then it sends them to the HLT.
+//  in a GAUDI service which reads raw events from buffer managers, produces
+//  Tell1's MEPs, and then it sends them to the HLT. The buffer managers are feeded 
+//  by slice reader services.
+//  Each slice reader used with the injector is there to provide different kind of events.
+//  At least one slice reader is compulsory to provide events, other are facultatives.
+//
+//  XXX Right now only one reader for plain events and one reader for lumi events can be used
+//  in a very unelegant way, but more tests about reader/injector communication have to be performed 
+//  before to start thinking about it
 //
 //  It implements also a MEP request manager and an Odin MEP manager in order
 //  to be integrated in the DAQ network.
 //
-//  Each task is made by a dedicated thread. 
+//  Each task is carried out by a dedicated thread.
+//
+//  Be sure to allocate buffer manager large enough, else events cannot be stored completely 
+//  and then they are truncated and the hlt will complain about incomplete event. 
 //
 //  ====================================================================
 
 #ifndef _WIN32
-
-/*
-#include <sched.h>
-#include <ctype.h>
-#include <string.h>
-*/
 
 #include <unistd.h>
 #include <sys/stat.h>
@@ -32,35 +36,22 @@
 
 #include <pthread.h>
 
-// Include files from Gaudi
-#include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiOnline/MEPRxSys.h"
-#include "GaudiOnline/MEPHdr.h"
-#include "GaudiKernel/Incident.h"
-#include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/Chrono.h"
-#include "MDF/OnlineRunInfo.h"
-#include "MDF/RawEventHelpers.h"
-#include "MDF/MDFHeader.h"
-#include "MDF/MEPWriter.h"
-#include "MDF/MEPEvent.h"
-#include <MDF/MEPFragment.h>
-#include "Event/RawEvent.h"
-#include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/SvcFactory.h"
 #include "GaudiOnline/MEPRxSvc.h"
 #include <iostream>
 #include <cstdio>
 #include <cstdlib>
 #include <ctime>
 
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/Stat.h"
 
 #include "GaudiOnline/MEPInjector.h"
-
+#include "MBM/Requirement.h"
 
 #include <sys/ioctl.h>
 #include <net/if.h>
@@ -69,7 +60,8 @@
 #include <time.h>
 #include <sys/time.h>
 #include <sys/types.h>
-
+#include <sys/ipc.h>
+#include <sys/msg.h>
 
 #include <math.h>
 
@@ -87,21 +79,24 @@
 #define PUBARRAYCNT(name, desc) do {m_MonSvc->declareInfo(#name, "I", & m_ ## name [0], m_ ## name.size() * sizeof(int), desc, this);} while(0);
 
 
-
-
 //XXX
 static std::map<int, std::map<int, int> > BKSTATMAP;  
 static int BKSTATI=0;
 void saveHisto();
 
-DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb, MEPInjector)
+using MBM::Requirement;
+
+DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb, MEPInjector)
+using namespace LHCb;
+
+#define MSGTAG 			0x1234abcd
 #define MEPEVENTOFFSET		 4
 #define IPHDRSZ			20
 #define MEPHDRSZ	        12
 #define ODFRAGSZ		52 /// Odin Fragment size, with Frag Header and only 1 bank
 #define BKHDRSZ			 8
 #define FRAGHDRSZ		 4
-using namespace LHCb;
+#define MDFHDRSZ 48 //12 word of 32 bits, or 4 bytes
 
 static bool finalSent=false;
 
@@ -128,10 +123,10 @@ static void *extendBuffer(void *p, size_t len)
 
 
 
-MEPInjector::MEPInjector(const std::string & name, ISvcLocator * pSvcLocator):Algorithm(name,
-	  pSvcLocator), m_IncidentSvc(0), m_MonSvc(0) 
+MEPInjector::MEPInjector(const std::string & name, ISvcLocator * pSvcLocator):Service(name, pSvcLocator), m_IncidentSvc(0), m_MonSvc(0) 
 {
-    declareProperty("RemoveDAQStatus", m_RemoveDAQStatus = true);	// To remove bank header (we want this)
+    m_ProcName = RTL::processName(); 
+
     declareProperty("PackingFactor", m_PackingFactor = 10);	 
 
 
@@ -158,9 +153,7 @@ MEPInjector::MEPInjector(const std::string & name, ISvcLocator * pSvcLocator):Al
     declareProperty("TimeOut", m_TimeOut = 10000);
 
     /// Partition ID set to all detectors by default, but copied from Odin in TFC mode
-    declareProperty("PartitionID", m_PartitionID = 0x7fff);
-
-    declareProperty("EventBuffer", m_EvtBuf = 5000);
+    declareProperty("PartitionID", m_PartitionID = 0xffffffff);
 
     declareProperty("Tell1Boards", m_Tell1Boards);
     declareProperty("HLTNodes", m_HLTNodes);
@@ -170,20 +163,182 @@ MEPInjector::MEPInjector(const std::string & name, ISvcLocator * pSvcLocator):Al
     declareProperty("Offline", m_Offline=true);
 
     declareProperty("Debug", m_Debug = false); 
+ 
+    declareProperty("EventBufferFlags", m_EventBufferFlags);
+
+    declareProperty("Requirements", m_Req);
 
     m_InjState = NOT_READY;
 }
 
+// IInterface implementation : queryInterface
+StatusCode MEPInjector::queryInterface(const InterfaceID& riid, void** ppIf)   {
+  if ( riid == IID_IRunable )  {
+    *ppIf = (IRunable*)this;
+    addRef();
+    return StatusCode::SUCCESS;
+  }
+  return Service::queryInterface(riid, ppIf);
+}
 
+
+//"-s=70000 -e=100 -u=20 -b=15 -f -i=NORMALEVENT -c -s=70000 -e=100 -u=20 -b=15 -f -i=LUMIEVENT -c"
+StatusCode MEPInjector::initBuffers()
+{
+    MsgStream msgLog(msgSvc(), name());
+
+    std::vector<std::string> names;
+    std::vector<std::string> probas;
+
+    static char type[64]="mbm_install";
+    if ( !m_EventBufferFlags.empty() )  {
+        char *p;
+        std::vector<char *> items;
+        std::string tmp = m_EventBufferFlags;
+        items.push_back(type);
+
+        for(char* tok=::strtok((char*)tmp.c_str()," "); tok; tok=::strtok(NULL," ")) {
+            if ( ::strchr(items.back(),' ') != 0 ) {
+                *strchr(items.back(),' ') = 0;
+            }   
+            if( ::toupper(tok[1]) == 'P' ) {
+                probas.push_back(tok+3); 
+                continue;
+            }
+
+            if ( ::toupper(tok[1]) == 'I' )  {
+                std::string bm_name(tok);
+                bm_name+="_";
+                char tmp[64];
+                sprintf(tmp, "%x",m_PartitionID);
+                bm_name += tmp;
+                items.push_back(strcpy(p=new char[bm_name.size()],bm_name.c_str()));
+                names.push_back(bm_name.erase(0,3));
+                continue; 
+            }
+            items.push_back(strcpy(p=new char[strlen(tok)+1],tok));
+            if ( (tok[0]=='-' || tok[0]=='/') && ::toupper(tok[1]) == 'C' ) {
+                int sc = mbm_install(items.size(), &items[0]);
+                if ( sc != MBM_NORMAL )  {
+                    ::lib_rtl_output(LIB_RTL_ERROR,"Unable to install MBM buffers...\n");
+                    return StatusCode::FAILURE;
+                }
+                for(size_t j=1; j<items.size(); ++j)  {
+                    delete [] items[j];
+                }
+                items.clear();
+                items.push_back(type);
+            } 
+        }//end for
+    }
+
+    if(names.size() != probas.size()) {
+        msgLog << MSG::ERROR << "Each buffer should have a probability to be read, check your option file and a -p=<proba> to each buffer. Ex: \"-s=10000 -e=100 -u=20 -f -p=75 -i=NORM -c\"." << endmsg;
+        return StatusCode::FAILURE;
+    }
+
+    int probsum=0;
+    std::vector<std::string>::iterator iteProbas=probas.begin(); 
+    /// Attach to the buffers
+    for(std::vector<std::string>::iterator iteNames = names.begin(); iteNames != names.end(), iteProbas!= probas.end(); ++iteNames, ++iteProbas)
+    {
+
+        std::string bm_name = *iteNames;
+/*
+        bm_name+="_";
+        char tmp[64]; 
+        sprintf(tmp, "%x",m_PartitionID);  
+        bm_name += tmp;
+*/
+        BMID bmid= mbm_include(bm_name.c_str(), m_ProcName.c_str(), m_PartitionID); 
+        if(bmid==MBM_INV_DESC)
+        {
+            msgLog << MSG::ERROR << "Unable to attach to buffer manager "<< *iteNames << " as " << m_ProcName << endmsg;
+            return StatusCode::FAILURE;
+        }
+        m_EventBuffers[bm_name]=bmid;  
+        int proba=0;
+        if(sscanf(iteProbas->c_str(), "%d", &proba) != 1) {
+            msgLog << MSG::ERROR << "Invalid probability in job option file for buffer " << bm_name << endmsg;
+            return StatusCode::FAILURE;
+        } 
+        probsum+=proba;
+        if(probsum > 100) {
+            msgLog << MSG::ERROR << "Invalid probabilities in job option file for buffers, sum > 100 until buffer " << bm_name << endmsg;
+            return StatusCode::FAILURE;
+        } 
+        m_ProbEvts[bm_name]= proba;
+    }    
+
+    return StatusCode::SUCCESS;
+}
+
+StatusCode MEPInjector::initConsumers()
+{
+    static MsgStream msgLog(msgSvc(), name());	//Message stream for output
+    for(std::map<std::string, BMID>::iterator ite=m_EventBuffers.begin(); ite != m_EventBuffers.end(); ++ite)
+    {
+        //use the requirem,etns to compute the probability of choosing buffers?
+        for(Requirements::iterator i=m_Req.begin(); i!=m_Req.end(); ++i)  {
+          Requirement r;
+          r.parse(*i);
+   //       pcons->addRequest(r);
+          if(MBM_NORMAL != mbm_add_req(ite->second, r.evtype, r.trmask, r.vetomask, r.maskType, r.userType, r.freqType, r.freq))
+          {
+              msgLog << MSG::ERROR << "Unable to add a request to the queue " << ite->first << endmsg;
+              return StatusCode::FAILURE; 
+          }  
+        }
+        
+        
+    }
+    return StatusCode::SUCCESS; 
+}
+
+StatusCode MEPInjector::deleteConsumers()
+{
+    static MsgStream msgLog(msgSvc(), name());	//Message stream for output
+    for(std::map<std::string, BMID>::iterator ite = m_EventBuffers.begin(); ite != m_EventBuffers.end(); ++ite)
+    {   
+        mbm_cancel_request(ite->second);
+//        mbm_del_req(ite->second);
+        mbm_free_space(ite->second);
+        mbm_exclude(ite->second);
+    }
+
+
+    return StatusCode::SUCCESS;
+}
 
 /// Initialize
 StatusCode MEPInjector::initialize()
 {
+    StatusCode sc = Service::initialize();
     static MsgStream msgLog(msgSvc(), name());	//Message stream for output
+    if (!sc.isSuccess())
+    {
+        msgLog << MSG::ERROR << "Failed to initialize service base class." << endmsg;
+        return sc;
+    }
 
+
+    sc = initBuffers();
+    if(sc.isFailure())
+    {
+        msgLog << MSG::ERROR << "Failed to make buffers" << endmsg;
+        return sc; 
+    }
+
+    sc = initConsumers();
+    if(sc.isFailure())
+    {   
+        msgLog << MSG::ERROR << "Failed to instanciate consumers" << endmsg;
+        return sc;
+    }
 
     m_gotOdin = false;
     m_gotHLT = false; 
+ 
 
     std::string strAllocatedMEPs = "";
 
@@ -208,6 +363,13 @@ StatusCode MEPInjector::initialize()
     msgLog << MSG::INFO << strAllocatedMEPs << endmsg;
     msgLog << MSG::INFO << "Number : " << m_MapTell1MEPs.size() << endmsg; 
    
+    if(!service("IncidentSvc", m_IncidentSvc).isSuccess()) {
+        ERRMSG(msgLog, "Failed to access to incident service.");
+        return StatusCode::FAILURE;
+    }
+    m_IncidentSvc->addListener(this, "DAQ_CANCEL");
+    m_IncidentSvc->addListener(this, "DAQ_ENABLE");
+
     if(!service("MonitorSvc", m_MonSvc).isSuccess()) {
         ERRMSG(msgLog, "Failed to access to monitor service.");
         return StatusCode::FAILURE;
@@ -217,6 +379,8 @@ StatusCode MEPInjector::initialize()
         return error("Failed to setup counters");
       }
     }
+
+    srand(m_InitTime.tv_sec * m_InitTime.tv_usec);
 
     m_OdinBufSize = m_MEPBufSize;
  
@@ -250,7 +414,6 @@ StatusCode MEPInjector::initialize()
     }
     std::string errmsg;
 
-    m_InjectorStop= false;
     m_ManagerStop = false;
 /*
     if (MEPRxSys::parse_addr(m_StrOdinIPAddr, m_BitOdinIPAddr) != 0) {
@@ -269,32 +432,10 @@ StatusCode MEPInjector::initialize()
 	return StatusCode::FAILURE;
     }
 
-
     m_HLTIPAddrTo=0;
-
     m_OdinTell1ID = -1;
 
-    
-
-    if(sem_init(&m_RawEventsCount, 0, 0) == -1) {
-            ERRMSG(msgLog, "Failed to initialize semaphore");
-            perror("sem_init");
-            exit(errno);
-        }
-
-    if (pthread_mutex_init(&m_SyncReadProcess, NULL)) {
-        ERRMSG(msgLog, "Failed to initialize mutex");
-        return StatusCode::FAILURE;
-    }
-
-
     if (!m_AutoMode) {
-        if(!service("IncidentSvc", m_IncidentSvc).isSuccess()) {
-            ERRMSG(msgLog, "Failed to access to incident service.");
-            return StatusCode::FAILURE;
-        }
-        m_IncidentSvc->addListener(this, "DAQ_CANCEL");
-        m_IncidentSvc->addListener(this, "DAQ_ENABLE");
 
         void *memory = extendBuffer(&m_OdinData, m_OdinBufSize);
         m_OdinMEP = new(memory) MEPEvent(0);
@@ -363,11 +504,12 @@ StatusCode MEPInjector::initialize()
     else
         m_EvtID = m_L0ID & 0x0000ffff;
 
-
+/*
     if(pthread_create(&m_InjectorProcessing, NULL, injectorProcessingStartup, this)) {
         ERRMSG(msgLog, "Failed to start Injector Processing Thread ");
         return StatusCode::FAILURE;
     }
+*/
 /*
     cpu_set_t mask;
     CPU_ZERO(&mask);
@@ -402,27 +544,27 @@ StatusCode MEPInjector::initialize()
         return StatusCode::FAILURE;
     }
   */
-/*  
-    std::string strFile = "/tmp/injectorcredits";
-    time_t date = time(NULL);
-    if(date != -1) {
-        strFile.append(ctime(&date));
+
+    if(m_Debug) {  
+        std::string strFile = "/tmp/injectorcredits";
+        time_t date = time(NULL);
+        if(date != -1) {
+            strFile.append(ctime(&date));
+        }
+   
+     
+        if( ( m_CreditsFD = open(strFile.c_str(), O_WRONLY | O_CREAT ) ) < 0) {
+            ERRMSG(msgLog, "credits log file could not be written");
+            return StatusCode::FAILURE;
+        }
     }
-    
-    if( ( m_CreditsFD = open(strFile.c_str(), O_WRONLY | O_CREAT ) ) < 0) {
-        ERRMSG(msgLog, "credits log file could not be written");
-        return StatusCode::FAILURE;
-    }
-*/
-    
 
     return StatusCode::SUCCESS;
 }
 
 StatusCode MEPInjector::logMEPReqs() 
-{/*
+{
     MsgStream msgLog(msgSvc(), name());     //Message stream for output
-
     if(m_CreditsFD < 0) {
         ERRMSG(msgLog, "Bad log file descriptor");
         return StatusCode::FAILURE;
@@ -442,7 +584,7 @@ StatusCode MEPInjector::logMEPReqs()
             ERRMSG(msgLog, "Log bytes were not all written ..."); 
         }
         return StatusCode::FAILURE;
-    }*/
+    }
     return StatusCode::SUCCESS;
 }
 
@@ -453,17 +595,31 @@ StatusCode MEPInjector::pingHLTNodes()
     char icmpDatagram[84];
     bzero(icmpDatagram, 84);
     msgLog << MSG::DEBUG << "ping to HLT nodes" << endmsg;
-    for(std::vector<std::string>::iterator ite = m_HLTNodes.begin(); ite != m_HLTNodes.end(); ++ite)
-    { 
-        msgLog << MSG::DEBUG << " ping from " << m_HLTIfIPAddr << " to " << *ite << endmsg; 
+    if(m_AutoMode) 
+    {
         int n =
             MEPRxSys::send_msg_arb_source(m_ToHLTSock, 0x01, MEPRxSys::IPStringToBits(m_HLTIfIPAddr),
-                                          inet_addr(ite->c_str()), icmpDatagram, 84);
+                                          inet_addr(m_HLTStrIPAddrTo.c_str()), icmpDatagram, 84);
         if(n!=84) {
             msgLog << MSG::ERROR << "Ping failed" << endmsg;
-            return StatusCode::FAILURE;  
-        } 
-        msgLog << MSG::DEBUG << *ite << " pinged in order to add it to the ARP table" << endmsg;
+            return StatusCode::FAILURE;
+        }
+        msgLog << MSG::DEBUG << m_HLTStrIPAddrTo << " pinged in order to add it to the ARP table" << endmsg;
+    }
+    else
+    {
+        for(std::vector<std::string>::iterator ite = m_HLTNodes.begin(); ite != m_HLTNodes.end(); ++ite)
+        { 
+            msgLog << MSG::DEBUG << " ping from " << m_HLTIfIPAddr << " to " << *ite << endmsg; 
+            int n =
+                MEPRxSys::send_msg_arb_source(m_ToHLTSock, 0x01, MEPRxSys::IPStringToBits(m_HLTIfIPAddr),
+                                          inet_addr(ite->c_str()), icmpDatagram, 84);
+            if(n!=84) {
+                msgLog << MSG::ERROR << "Ping failed" << endmsg;
+                return StatusCode::FAILURE;  
+            } 
+            msgLog << MSG::DEBUG << *ite << " pinged in order to add it to the ARP table" << endmsg;
+        }
     }
     return StatusCode::SUCCESS;
 }
@@ -524,7 +680,67 @@ void MEPInjector::copyOdinBank(OnlineRunInfo **dest, OnlineRunInfo **src)
     }
 }
 
-/// Read an event from a MDF file, and store each banks in the future MEP
+void displayBuff(char *buf, int size) 
+{   
+    int *ibuf = (int *) buf;
+    for(int i=0; i<size/4; ++i) {
+        if(i%4 == 0) printf("\n%5x:", i);
+        printf(" %8x ", ibuf[i]);
+    }
+    printf("\n");                                                                    }
+
+
+StatusCode MEPInjector::getEvent()
+{
+    static MsgStream msgLog(msgSvc(), name());
+
+    static int *p;
+    if(p==NULL) 
+        p=new int[TWOMB]; ///XXX BERK
+    Requirement r;
+
+    BMID bmid;
+
+    if(m_EventBuffers.size() < 1) {
+        msgLog << MSG::ERROR << "No input to get event from ..." << endmsg;
+        return StatusCode::FAILURE;
+    } 
+    else if(m_EventBuffers.size() == 1) bmid = m_EventBuffers.begin()->second;
+    else /// Selection of input between all, at first assume that there is only normal and lumi 
+    {
+        msgLog << MSG::ERROR << "More than one buffer, not implemented yet" << endmsg;
+        int p = 1 + (int) (100.0 * rand() / ( RAND_MAX +1.0 ) );
+        
+        
+        std::map<std::string, int>::iterator ite= m_ProbEvts.begin(); 
+        p -= ite->second;
+        while(ite != m_ProbEvts.end() && p>0);
+        { 
+            p -= ite->second;
+            ++ite;
+        }
+        bmid = m_EventBuffers[ite->first]; 
+        
+    }    
+
+    if(mbm_get_event(bmid,&p, &m_CurEventSize, &r.evtype, r.trmask, m_PartitionID) != MBM_NORMAL && m_InjState == RUNNING)
+    {
+        msgLog << MSG::ERROR << "mbm_get_event failed" << endmsg;
+        return StatusCode::FAILURE;
+    }
+    else if(m_InjState != RUNNING) {
+        msgLog << MSG::INFO << "End of injection" << endmsg;
+    }
+    else 
+    {  
+        memcpy(m_CurEvent, p, m_CurEventSize); 
+        mbm_free_event(bmid);
+    }
+    return StatusCode::SUCCESS;
+
+}
+
+/// Read banks from msg queue, and store each banks in the future MEP
 StatusCode MEPInjector::readEvent()
 {
     static int icalled = 0;
@@ -536,131 +752,77 @@ StatusCode MEPInjector::readEvent()
     int tell1id = 0;
     int len = 0;
     int retVal=0;
-   
-    /// Wait for an event to read from the queue
-    /// The loop is compulsory because POSIX semaphore are awaken by any signal  
-//    while((retVal=sem_wait(&m_RawEventsCount))==-1 && errno == EINTR) continue;
+ 
+    ///XXX Get event
+    StatusCode sc = getEvent(); 
 
-    retVal=sem_wait(&m_RawEventsCount);
-    if(retVal==-1)
-    {   
-        ERRMSG(msgLog, "Waiting on the semaphore");
-        perror("sem_wait");
-        exit(errno);
-    }
-
-    /// The queue is shared between this reader process and a writer process, so it is a critical resource 
-    /// protected by a mutex
-
-    if(pthread_mutex_lock(&m_SyncReadProcess)) {
-        ERRMSG(msgLog, " Locking mutex");
-        return StatusCode::FAILURE;
-    }
-
-    RawEvent *raw = NULL;
-
-    if(m_QueueRawEvents.size()) {
-        raw = m_QueueRawEvents.front();
-        m_QueueRawEvents.pop();
-    }
-    else return StatusCode::RECOVERABLE; /// This happens only in the end of the process, when all files were read and all event were sent, this is how the injector knows when to close everything 
-
-
-    if(pthread_mutex_unlock(&m_SyncReadProcess)) {
-        ERRMSG(msgLog, " Unlocking mutex");
-        return StatusCode::FAILURE;
-    }
-
-    if(! raw) {
-        msgLog << MSG::ERROR << "Invalid raw event" << endmsg;
-    }
-    else
+    if(sc.isSuccess() && m_InjState == RUNNING)
     {
+        int bytesRead = MDFHDRSZ;
+        
+        /// for each bank
+        while(bytesRead<m_CurEventSize)
+        { 
+            RawBank *hdr = (RawBank*) (m_CurEvent+bytesRead);
+            bytesRead+=hdr->totalSize();
 
-        if (!m_AutoMode) {
+            if (hdr->totalSize() == 0 || hdr->magic() != 0xCBCB ) {
+                ERRMSG(msgLog, "Severe error in fragment");
+                return StatusCode::FAILURE;  
+	    }
 
-            if(m_OdinMEP->size() == 0) {
-                msgLog << MSG::ERROR << "No Odin MEP received, the algorithm should not be there ..." << endmsg;
-                return StatusCode::FAILURE;
-            }
-
-            msgLog << MSG::DEBUG << "nbEv = " << nbEv << "; packing factor = " << m_PackingFactor << endmsg;   
-
+             
             /// Processing of the Odin banks, basically remove them
-	    std::vector < RawBank * >bnks = raw->banks(RawBank::ODIN);
-            msgLog << MSG::DEBUG << "Number of Odin bank read from file : " << bnks.size() << endmsg; 
-            if(bnks.size() > 1) {
-                msgLog << MSG::WARNING << "More than one ODIN bank in a run" << endmsg;
-                 
-            }
-	    for (std::vector < RawBank * >::iterator ib = bnks.begin();
-		    ib != bnks.end(); ++ib) {
+            if(hdr->type() == RawBank::ODIN && !m_AutoMode)
+            {
+                if(m_OdinMEP->size() == 0) {
+                    msgLog << MSG::ERROR << "No Odin MEP received, the algorithm should not be there ..." << endmsg;
+                    return StatusCode::FAILURE;
+                }
+
+                msgLog << MSG::DEBUG << "nbEv = " << nbEv << "; packing factor = " << m_PackingFactor << endmsg;   
+
                 if(m_Offline) {
                     char *ccur = (((char *) m_OdinMEP) + MEPEVENTOFFSET);
                     OnlineRunInfo *ori_to = ( OnlineRunInfo *) (ccur+IPHDRSZ+MEPHDRSZ+nbEv*(ODFRAGSZ) + FRAGHDRSZ + BKHDRSZ); 
-                    OnlineRunInfo *ori_tape = (OnlineRunInfo * )((*ib)->data());
+                    OnlineRunInfo *ori_tape = (OnlineRunInfo * )(hdr->data());
                     copyOdinBank(&ori_to, &ori_tape);   
 	        }
-                raw->removeBank(*ib);
+                continue; /// Do not process the Odin bank as the others
             } 
             /// END OF ODIN BANKS PROCESSING
-	}
-       
 
-
-        /// Processing of DAQ banks, basically remove them
-        std::vector < RawBank * >bnks = raw->banks(RawBank::DAQ);
-        for (std::vector < RawBank * >::iterator ib = bnks.begin();
-            ib != bnks.end(); ++ib) {
-            raw->removeBank(*ib);
-        }
-        /// END OF DAQ BANKS PROCESSING
-
-/*
+/*	
+///XXX No more OTFIX, if I have to redo it, it will not be so easy ... 
         /// Processing of the OT banks, insert empty banks for the absents
-        int iot = 1;
-        bnks = raw->banks(RawBank::OT);
-        for (std::vector < RawBank * >::iterator ib = bnks.begin();
-            ib != bnks.end(); ++ib) {
-            RawBank *rb = *ib;
-            while(rb->sourceID() > iot && iot < 49) /// insert empty raw bank
-            {
-                OTFIX(iot++, nbEv);
-            }   
-            ++iot;
-        }
-        while(iot < 49) {
-            OTFIX(iot++, nbEv);
+        if(bk->type() == RawBank::OT)
+        {
+            int iot = 1;
+            bnks = raw->banks(RawBank::OT);
+            for (std::vector < RawBank * >::iterator ib = bnks.begin();
+                ib != bnks.end(); ++ib) {
+                RawBank *rb = *ib;
+                while(rb->sourceID() > iot && iot < 49) /// insert empty raw bank
+                { 
+                    OTFIX(iot++, nbEv);
+                }   
+                ++iot;
+           }
+           while(iot < 49) {
+               OTFIX(iot++, nbEv);
+           continue; 
         }
 */
 
         /// END OF OTFIX
         /// THIS IS UGLY !! MAKE A SUB FUNCTION FOR THIS PIECE OF CODE
 
-	for (int bkType = RawBank::L0Calo; bkType < RawBank::LastType;
-	     ++bkType) {
-	    const std::vector < RawBank * >&bks =
-		raw->banks(RawBank::BankType(bkType));
-
-	    for (unsigned int i = 0; i < bks.size(); ++i) {
-		RawBank *hdr = bks[i];
-
-                std::map<int, int>::iterator tite = BKSTATMAP[bkType].find(hdr->sourceID());
-                if(tite == BKSTATMAP[bkType].end())
-                    BKSTATMAP[bkType][hdr->sourceID()]=1;
-                else BKSTATMAP[bkType][hdr->sourceID()]+=1;
-                 
-  
-                if (hdr->totalSize() == 0 || hdr->magic() != 0xCBCB ) {
-		    ERRMSG(msgLog, "Severe error in fragment");
-		    return StatusCode::FAILURE;  
-		}
  
                 MEPEvent *curmep = NULL;
                 char *ccur = NULL;
                 MEPHdr *mh = NULL;
                 MEPFrgHdr *mf = NULL; 
-
+         
                 
 		tell1id = getTell1IP(hdr->type(), hdr->sourceID());
 		if (tell1id == 0) { 
@@ -690,7 +852,8 @@ StatusCode MEPInjector::readEvent()
                 /// Set the MEP Header
                 if(nbEv == 0) 
                 {
-/*                    /// XXX OT FIX
+/*
+                    /// XXX OT FIX
                     if(bkType == RawBank::OT 
                        || bkType == RawBank::OTError 
                        || bkType == RawBank::OTRaw ) 
@@ -698,8 +861,9 @@ StatusCode MEPInjector::readEvent()
                          bzero(curmep, MEPHDRSZ + IPHDRSZ + MEPEVENTOFFSET + m_PackingFactor*(BKHDRSZ + FRAGHDRSZ) + m_PackingFactor*2000 );
                     }
                     else
-*/                        /// Only sets the first headers to 0, and then everything should be fine 
-                        bzero(curmep, MEPHDRSZ + IPHDRSZ + MEPEVENTOFFSET + BKHDRSZ + FRAGHDRSZ );
+*/
+                    /// Only sets the first headers to 0, and then everything should be fine 
+                    bzero(curmep, MEPHDRSZ + IPHDRSZ + MEPEVENTOFFSET + BKHDRSZ + FRAGHDRSZ );
 
                     curmep->setSize(IPHDRSZ + MEPHDRSZ ); 
                     mh->m_totLen  = MEPHDRSZ;
@@ -733,15 +897,15 @@ StatusCode MEPInjector::readEvent()
  
                 /// Copy the bank opaque body + hdr + padding
                 memcpy(ccur, hdr, len); 
-	    }			//end for banks
-	}			//end for banksType
+	}			//end for all banks of the event
         if(++nbEv == m_PackingFactor)
         {
             nbEv=0;
         }
 
-        raw->release();
-    } //end if(raw) 
+    } //end if get event success
+    else
+        return StatusCode::FAILURE; 
     return StatusCode::SUCCESS;
 }
 
@@ -829,79 +993,11 @@ void MEPInjector::printMEP(MEPEvent *me, int size) {
 }
 
 
-
-/// Main execution
-/// It reads data from a MDF transient store
-/// Once it has reached the packing factor, it produces the MEP and then 
-/// send it
-StatusCode MEPInjector::execute()
-{
-    Chrono chrono(chronoSvc(), "execute");
-    static MsgStream msgLog(msgSvc(), name());     //Message stream for output
-  
-    SmartDataPtr < RawEvent > raw(eventSvc(), RawEventLocation::Default);
-
-
-    // InjectorStop should be set by the handler of the incident DAQ_CANCEL, which is the cancel command forwwarded by the GaudiTask specialisation which encapsulate our algorithm, sehr elegant
-    while(m_QueueRawEvents.size() > m_EvtBuf && m_InjState == RUNNING)
-    {
-        MEPRxSys::microsleep(1000);
-    }    
-
-   /// To avoid synchronisation problems ...
-
-
-    if (!raw) {
-        msgLog << MSG::ERROR << "Invalid raw event " << endmsg;
-    }
-    else {
-                                                   /// The use of the semaphore is too slow here
-
-        if(pthread_mutex_lock(&m_SyncReadProcess)) {
-            ERRMSG(msgLog, " Locking mutex");
-            return StatusCode::FAILURE;
-        }
-       
-        RawEvent * nraw = new RawEvent();
-        nraw->addRef();
-        for (int bkType = RawBank::L0Calo; bkType < RawBank::LastType;
-             ++bkType) {
-            if(bkType == RawBank::DAQ) continue;
-            const std::vector < RawBank * >&bks =
-                raw->banks(RawBank::BankType(bkType));
-
-            for (unsigned int i = 0; i < bks.size(); ++i) {
-                RawBank *hdr = bks[i];
-                nraw->addBank(hdr); 
-            }
-        }
-
-        m_QueueRawEvents.push( nraw );
-      
-        m_TotEvtsRead++;
- 
-        if(sem_post(&m_RawEventsCount)==-1)
-        {   
-            ERRMSG(msgLog, "Posting on the semaphore");
-            perror("sem_post");
-            exit(errno);
-        }
-        
-        if(pthread_mutex_unlock(&m_SyncReadProcess)) {
-            ERRMSG(msgLog, " Unocking mutex");
-            return StatusCode::FAILURE;
-        }
-    }
-
-    return StatusCode::SUCCESS;
-}
-
-
 StatusCode MEPInjector::injectorProcessing()
 {
     static MsgStream msgLog(msgSvc(), name());
 
-    /// Try to trap all signals
+///XXX Try to trap all signals
 /*
     sigset_t injSet;
     sigfillset(&injSet);
@@ -913,41 +1009,11 @@ StatusCode MEPInjector::injectorProcessing()
     }
 */
     StatusCode sc = StatusCode::RECOVERABLE;
-   /* 
-    if(!m_AutoMode) {
-        sc = getHLTInfo();
-        if(sc.isRecoverable()) {
-           msgLog << MSG::DEBUG << "getHLTINFO Exited on Recover" << endmsg; 
-           return StatusCode::SUCCESS;
-        }
-        else if(sc.isFailure()) {
-            ERRMSG(msgLog, " Selecting a HLT");
-            return StatusCode::FAILURE;
-        }
-
-        sc= getOdinInfo();
-        if(sc.isRecoverable()) {
-           msgLog << MSG::DEBUG << "getOdinINFO Exited on Recover" << endmsg; 
-           return StatusCode::SUCCESS;
-        } 
-        else if(sc.isFailure()) 
-        {
-            ERRMSG(msgLog, " Copying data from Odin MEP");
-            return StatusCode::FAILURE;
-        }
-    }
-*/
-    while ((sc.isSuccess() || sc.isRecoverable()) && !m_InjectorStop) {
-        if(m_InjState != RUNNING) {
-            MEPRxSys::microsleep(1000); 
-            continue;   //If injector is not running, idle      
-        }
- 
+    while ((sc.isSuccess() || sc.isRecoverable()) && m_InjState == RUNNING ) {
         //XXX optimization, all get HLT et get Odin in main loop, not in alternative inside the readThenSend, 
-        //XXX as we could go back to main loop once mep factor reached, to do after 1st FEST
+        //XXX as we could go back to main loop once mep factor reached, to do when spare time 
         if(sc.isRecoverable()) 
         {
-            msgLog << MSG::DEBUG << "Main procedure exited on recover" << endmsg;
             if(!m_AutoMode) {
                 if(!m_gotHLT) {
                     sc = getHLTInfo();
@@ -978,8 +1044,6 @@ StatusCode MEPInjector::injectorProcessing()
         sc = readThenSend();
     }
  
-
-    
     return StatusCode::SUCCESS;
 }
 
@@ -1003,12 +1067,12 @@ StatusCode MEPInjector::readThenSend()
         msgLog << MSG::INFO << "Credits consumed :     " << m_TotCreditConsumed << endmsg; 
         msgLog << MSG::INFO << "-----------------------" << endmsg;
         msgLog << MSG::INFO << "+++++++++++++++++++++++" << endmsg;
-        logMEPReqs();  
+        if(m_Debug) logMEPReqs();  
     }
 
 
     StatusCode sc;
-    static unsigned int nbEv = 1;	// Used in Odin Mode to read the L0Id of the good bank                            // Used to count nb event read
+    static unsigned int nbEv = 1;	// Used in Odin Mode to read the L0Id of the good bank    // Used to count nb event read
     MEPEvent *me = NULL;
 
     sc = readEvent();
@@ -1018,7 +1082,7 @@ StatusCode MEPInjector::readThenSend()
         return StatusCode::RECOVERABLE;
     }
     if (sc.isFailure()) {
-	ERRMSG(msgLog, " Reading an event from the shared queue");
+	ERRMSG(msgLog, " Reading an event from the buffer managers");
         return StatusCode::FAILURE;
     }
   
@@ -1113,11 +1177,14 @@ StatusCode MEPInjector::readThenSend()
     }///end if(packing_factor)
 
 /*
-    ///XXX To do histograms
-    if(++BKSTATI > 30000) {
-        saveHisto();
-        exit(1);
-    } 
+    if(m_Debug)
+    { 
+        ///XXX To do histograms
+        if(++BKSTATI > 30000) {
+            saveHisto();
+            exit(1);
+        } 
+    }
 */
     return StatusCode::SUCCESS;
 }
@@ -1339,14 +1406,12 @@ in_addr_t MEPInjector::getTell1IP(int type, int src)
 	break;
     case RawBank::OTRaw:	// 32
     case RawBank::OTError:
-    case RawBank::OT: 
-
+    case RawBank::OT:
 	char T = (src >> 8) & 0x0F;   
 	char L = (src >> 4) & 0x0F;
 	char Q = (src >> 0) & 0x0F;
-
-//        if(src > 24)
-	if ((Q & 0x1) == 1)	// A side
+        if(src>24)
+//	if ((Q & 0x1) == 1)	// A side
 	{
           ipNet+=(12<<16); 
 	} 
@@ -1354,8 +1419,8 @@ in_addr_t MEPInjector::getTell1IP(int type, int src)
 	{
           ipNet+=(16<<16); 
 	}
-        return (ipNet+ ( ( (((Q >> 1)& 0x1)*12) + ((T-1)*4) + L + 1 )<< 24) );
-//        return (ipNet+ ((((src) %24)+1) << 24));
+//        return (ipNet+ ( ( (((Q >> 1)& 0x1)*12) + ((T-1)*4) + L + 1 )<< 24) );
+        return (ipNet + ((((src) %24)+1) << 24));
 
     case RawBank::MuonFull:
     case RawBank::MuonError:
@@ -1407,8 +1472,7 @@ in_addr_t MEPInjector::getTell1IP(int type, int src)
     case RawBank::DAQ:
 	return ipNet; //XXX
     case RawBank::ODIN:  ///XXX Not used in TFC mode, maybe wrong when used in AutoMode
-//	return (/*inet_addr("192.169.5.0")*/ ipNet |(5<<16) + ((src+1) << 24));
-        return m_BitOdinIPAddr; 
+        return m_BitOdinIPAddr + ((32<<24)&0xff000000); 
     case RawBank::EcalE:
     case RawBank::EcalTrig: 
     case RawBank::EcalPackedError: 
@@ -1449,28 +1513,6 @@ in_addr_t MEPInjector::getTell1IP(int type, int src)
     }
     return 0;
 }
-/*
-/// Set data in the Odin MEP
-/// For Automode only? Should set the EventType in normal mode too I think, yes but in the received Odin MEP 
-void MEPInjector::setOdinData(MEPEvent ** me)
-{
-    int l0ID = m_L0ID;
-
-    MEPMultiFragment *multFrag = (*me)->first();
-    for (MEPFragment * iterFrag = multFrag->first();
-	 iterFrag < multFrag->last(); iterFrag = multFrag->next(iterFrag))
-    {
-	for (RawBank * iterBank = iterFrag->first();
-	     iterBank < iterFrag->last();
-	     iterBank = iterFrag->next(iterBank)) {
-	    for (OnlineRunInfo * iterOdinData = iterBank->begin < OnlineRunInfo > (); iterOdinData < iterBank->end < OnlineRunInfo > (); ++iterOdinData) {
-		iterOdinData->L0ID = l0ID++;	///XXX
-//        iterOdinData->EventType = smthing; 
-	    }
-	}
-    }
-}
-*/
 
 StatusCode MEPInjector::sendMEP(int tell1IP, MEPEvent * me)
 {
@@ -2069,27 +2111,31 @@ StatusCode MEPInjector::finalize()
 {
     static MsgStream msgLog(msgSvc(), name());
 
- //   close(m_CreditsFD);
+    if(m_Debug) close(m_CreditsFD);
+
 
     StatusCode sc;
+
     MEPEvent *me = NULL;
 
     m_InjState = NOT_READY;
 
-    /// XXX Set this only on dim stop command ???
-    m_InjectorStop = true;
     m_ManagerStop = true;
 
+
+    for(std::map<std::string, BMID>::iterator ite = m_EventBuffers.begin(); ite != m_EventBuffers.end(); ++ite)
+    {   
+          mbm_cancel_request(ite->second);
+//          mbm_del_req(ite->second);
+          mbm_free_space(ite->second);
+          mbm_exclude(ite->second);
+          msgLog << MSG::ALWAYS << "BMID : " << ite->first << " ok" << endmsg;
+    }
+    m_EventBuffers.clear();
 
 
     /// No more need of synchronisation to access to the queues/maps, min value = 1
     /// and they should exit  
-    if(sem_post(&m_RawEventsCount)==-1)
-    {   
-        ERRMSG(msgLog, "Posting on the semaphore");
-        perror("sem_post");
-        exit(errno);
-    }
     if(sem_post(&m_MEPReqCount)==-1)
     {
         ERRMSG(msgLog, "Posting on the semaphore");
@@ -2110,21 +2156,15 @@ StatusCode MEPInjector::finalize()
         return StatusCode::FAILURE;
     }
 */
+/*
     if(pthread_join(m_InjectorProcessing, NULL))
     {
        ERRMSG(msgLog, "injectorProcessing thread join");
        return StatusCode::FAILURE;
     }
+*/
 
-    /// Do not do if here cause of dim stop cmd, only in automode
-    /// XXX AND HOW CAN I CHECK IF IM HERE IN TFC MODE WITHOUT STOP CMD BUT  IN END ??
-    /// This is done to ensure that nothing remains in the queue, the reader thread takes the job of the injectorprocessing thread ... but it's easier
-    if(m_AutoMode) {
-        while(m_QueueRawEvents.size()>0) {
-            readThenSend(); ///XXX NOT REALLY OPTIMIZED BUT THIS IS A POC YET
-        }
-    }
-
+    ///XXX Do something in Automode to empty the buffer? should be done automatically as in automode it should loop in the run procedure 
 
     /// Once the file is completely read, it is possible that we have to send a MEP which has not reached the Packing Factor
     /// Just do as usual, the encodeMEP method deal with that 
@@ -2217,7 +2257,6 @@ StatusCode MEPInjector::finalize()
 
     }
 
-    sem_destroy(&m_RawEventsCount);
     close(m_ToHLTSock);
 
     msgLog << MSG::DEBUG <<"Injector finalized"<<endmsg;
@@ -2234,6 +2273,8 @@ StatusCode MEPInjector::finalize()
         m_MonSvc = 0;
     }
 
+    deleteConsumers();
+
     msgLog << MSG::INFO << "A few stats" << endmsg;
     msgLog << MSG::INFO << "Total of MEPs sent : " << m_TotMEPsTx << endmsg;
     msgLog << MSG::INFO << "Total of MEP Requests received : " << m_TotMEPReqRx << endmsg;
@@ -2242,8 +2283,8 @@ StatusCode MEPInjector::finalize()
 }
 
 StatusCode MEPInjector::run() {
-
-    return StatusCode::SUCCESS;
+    m_InjState = RUNNING; 
+    return injectorProcessing();
 }
 
 
@@ -2313,15 +2354,24 @@ int MEPInjector::setupCounters() {
 
 void MEPInjector::handle(const Incident& inc) {
   MsgStream msgLog(msgSvc(),name());
-  msgLog << MSG::INFO << "Got incident:" << inc.source() << " of type " << inc.type() << endmsg;
+  msgLog << MSG::ALWAYS << "Got incident:" << inc.source() << " of type " << inc.type() << endmsg;
   if (inc.type() == "DAQ_CANCEL")  { //but if I remember well the PVSS interface was leading the injector in not ready no ? XXX check this once Alba is back 
       m_InjState = STOPPED;
+
+      for(std::map<std::string, BMID>::iterator ite = m_EventBuffers.begin(); ite != m_EventBuffers.end(); ++ite)
+      { 
+          mbm_cancel_request(ite->second);
+//          mbm_del_req(ite->second);
+//          mbm_free_space(ite->second);
+//          mbm_exclude(ite->second);
+          msgLog << MSG::ALWAYS << "BMID : " << ite->first << " ok" << endmsg;
+      } 
+
   }
   else if (inc.type() == "DAQ_ENABLE") {
       m_InjState = RUNNING;
   }
 }
-
 
 // These startup functions are helper functions. They have normal C linkage.
 void *MEPReqMgrStartup(void *object)
