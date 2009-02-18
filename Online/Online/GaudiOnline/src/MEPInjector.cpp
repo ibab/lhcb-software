@@ -616,7 +616,7 @@ StatusCode MEPInjector::readEvent()
         }
         /// END OF DAQ BANKS PROCESSING
 
-
+/*
         /// Processing of the OT banks, insert empty banks for the absents
         int iot = 1;
         bnks = raw->banks(RawBank::OT);
@@ -632,7 +632,7 @@ StatusCode MEPInjector::readEvent()
         while(iot < 49) {
             OTFIX(iot++, nbEv);
         }
-
+*/
 
         /// END OF OTFIX
         /// THIS IS UGLY !! MAKE A SUB FUNCTION FOR THIS PIECE OF CODE
@@ -690,7 +690,7 @@ StatusCode MEPInjector::readEvent()
                 /// Set the MEP Header
                 if(nbEv == 0) 
                 {
-                    /// XXX OT FIX
+/*                    /// XXX OT FIX
                     if(bkType == RawBank::OT 
                        || bkType == RawBank::OTError 
                        || bkType == RawBank::OTRaw ) 
@@ -698,7 +698,7 @@ StatusCode MEPInjector::readEvent()
                          bzero(curmep, MEPHDRSZ + IPHDRSZ + MEPEVENTOFFSET + m_PackingFactor*(BKHDRSZ + FRAGHDRSZ) + m_PackingFactor*2000 );
                     }
                     else
-                        /// Only sets the first headers to 0, and then everything should be fine 
+*/                        /// Only sets the first headers to 0, and then everything should be fine 
                         bzero(curmep, MEPHDRSZ + IPHDRSZ + MEPEVENTOFFSET + BKHDRSZ + FRAGHDRSZ );
 
                     curmep->setSize(IPHDRSZ + MEPHDRSZ ); 
@@ -1340,13 +1340,13 @@ in_addr_t MEPInjector::getTell1IP(int type, int src)
     case RawBank::OTRaw:	// 32
     case RawBank::OTError:
     case RawBank::OT: 
-/*
-	char T = (src >> 8) & 0x01;   
+
+	char T = (src >> 8) & 0x0F;   
 	char L = (src >> 4) & 0x0F;
 	char Q = (src >> 0) & 0x0F;
-*/
-        if(src > 24)
-//	if ((Q & 0x1) == 1)	// A side
+
+//        if(src > 24)
+	if ((Q & 0x1) == 1)	// A side
 	{
           ipNet+=(12<<16); 
 	} 
@@ -1354,8 +1354,8 @@ in_addr_t MEPInjector::getTell1IP(int type, int src)
 	{
           ipNet+=(16<<16); 
 	}
-//        return (ipNet+ ( ( (((Q >> 1)& 0x1)*12) + ((T-1)*4) + L + 1 )<< 24) );
-        return (ipNet+ ((((src) %24)+1) << 24));
+        return (ipNet+ ( ( (((Q >> 1)& 0x1)*12) + ((T-1)*4) + L + 1 )<< 24) );
+//        return (ipNet+ ((((src) %24)+1) << 24));
 
     case RawBank::MuonFull:
     case RawBank::MuonError:
