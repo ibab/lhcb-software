@@ -4,6 +4,7 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+!============================ TfKernel v2r10 2009-02-18 ======================
 ! 2009-01-17 - Chris Jones
  - Add missing virtual destructor to Tf::IStationSelector (OSX/gcc4.0 warning)
 
