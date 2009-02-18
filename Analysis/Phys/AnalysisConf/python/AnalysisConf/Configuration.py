@@ -1,7 +1,7 @@
 """
 High level configuration tools for AnalysisConf
 """
-__version__ = "$Id: Configuration.py,v 1.8 2009-01-16 17:55:25 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.9 2009-02-18 15:38:37 pkoppenb Exp $"
 __author__ = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -71,9 +71,17 @@ class AnalysisConf(LHCbConfigurableUser) :
         define standard particles on DoD service
         @todo Use configurable 
         """
-        ApplicationMgr().ExtSvc +=  [ DataOnDemandSvc() ]            
-        importOptions("$COMMONPARTICLESROOT/options/StandardOptions.py")
-#        if (  self.getProp("DataType")=='DC06'):
+        ApplicationMgr().ExtSvc +=  [ DataOnDemandSvc() ]
+        import CommonParticles.StandardBasic
+        import CommonParticles.StandardIntermediate
+#
+# Standard Particles
+#
+    def standardDC06Particles(self):
+        """
+        Temporary DC06 particles
+        @todo Remove
+        """
         importOptions("$COMMONPARTICLESROOT/options/StandardDC06Options.opts")
 
 #
@@ -99,3 +107,4 @@ class AnalysisConf(LHCbConfigurableUser) :
             self.configureMC()
         self.tagging()
         self.standardParticles()
+        self.standardDC06Particles()

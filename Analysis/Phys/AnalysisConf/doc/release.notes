@@ -4,6 +4,10 @@
 ! Purpose     : Configuration for Analysis project
 !-----------------------------------------------------------------------------
 
+! 2009-02-18 - Patrick Koppenburg
+ - Use pythonized CommonParticles
+ - Increment to v1r1
+
 !========================== AnalysisConf v1r0 2009-01-15 =====================
 ! 2009-01-16 - Patrick Koppenburg
  - Moved standardParticles(self) from DaVinci() to here.
