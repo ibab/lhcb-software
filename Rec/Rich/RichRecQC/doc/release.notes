@@ -4,7 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
-! 2009-02-118 - Anatoly Solomin
+! 2009-02-18 - Anatoly Solomin
  - Better structured code RichAlignmentMonitor.cpp.
 
 ! 2009-02-16 - Antonis Papanestis
