@@ -1,4 +1,4 @@
-// $Id: L0MuonCandHistos.cpp,v 1.5 2008-09-15 07:46:40 jucogan Exp $
+// $Id: L0MuonCandHistos.cpp,v 1.6 2009-02-18 13:39:32 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -120,7 +120,7 @@ void L0MuonCandHistos::fillHistos(LHCb::L0MuonCandidates* cands, int ts, int bid
             int x= ix;
             int y= iy;
             L0Muon::MonUtilities::flipCoord(x,y,qua);
-            fill(m_hpos[sta],x,y,1);
+            fill(m_hpos[sta],x,y,1./(1.*f*f));
           }
         }
       }

@@ -1,4 +1,4 @@
-// $Id: L0MuonPadsHistos.cpp,v 1.2 2008-07-25 14:42:59 jucogan Exp $
+// $Id: L0MuonPadsHistos.cpp,v 1.3 2009-02-18 13:39:32 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -104,7 +104,7 @@ void L0MuonPadsHistos::fillHistos(const std::vector<LHCb::MuonTileID> &pads, int
         int x= ix;
         int y= iy;
         L0Muon::MonUtilities::flipCoord(x,y,qua);
-        fill(m_hmap[sta],x,y,1);
+        fill(m_hmap[sta],x,y,1./(1.*f*f));
       }
     }
     ++multi[sta][reg];

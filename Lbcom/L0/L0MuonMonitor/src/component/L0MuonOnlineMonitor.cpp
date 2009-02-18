@@ -1,4 +1,4 @@
-// $Id: L0MuonOnlineMonitor.cpp,v 1.14 2008-11-07 16:31:53 jucogan Exp $
+// $Id: L0MuonOnlineMonitor.cpp,v 1.15 2009-02-18 13:39:32 jucogan Exp $
 // Include files 
 
 #include "boost/format.hpp"
@@ -33,7 +33,7 @@ L0MuonOnlineMonitor::L0MuonOnlineMonitor( const std::string& name,
                                           ISvcLocator* pSvcLocator)
   : L0MuonMonitorBase ( name , pSvcLocator )
 {
-
+  declareProperty( "FullMonitoring"  , m_fullMonitoring  = false ) ;
 }
 //=============================================================================
 // Destructor
@@ -51,72 +51,69 @@ StatusCode L0MuonOnlineMonitor::initialize() {
   debug() << "==> Initialize" << endmsg;
 
   // Tools
-  m_padsHistos      = tool<L0MuonPadsHistos>( "L0MuonPadsHistos" , "Pads" , this );
-  m_channelsHistos  = tool<L0MuonChannelsHistos>( "L0MuonChannelsHistos", "Channels", this);
-  m_info            = tool<L0MuonInfoHistos>( "L0MuonInfoHistos", "Info", this);
-  m_error           = tool<L0MuonErrorHistos>( "L0MuonErrorHistos", "Error", this);
   m_candHistosFinal = tool<L0MuonCandHistos>( "L0MuonCandHistos", "FinalCand", this);
   m_candHistosPU    = tool<L0MuonCandHistos>( "L0MuonCandHistos", "PUCand", this);
+  if (m_fullMonitoring) {
+    m_padsHistos      = tool<L0MuonPadsHistos>( "L0MuonPadsHistos" , "Pads" , this );
+    m_channelsHistos  = tool<L0MuonChannelsHistos>( "L0MuonChannelsHistos", "Channels", this);
+    m_info            = tool<L0MuonInfoHistos>( "L0MuonInfoHistos", "Info", this);
+    m_error           = tool<L0MuonErrorHistos>( "L0MuonErrorHistos", "Error", this);
+  }
   
-
-  //   if (m_shortnames) setHistoDir(""); else setHistoDir("L0Muon/Online");
   if (!m_shortnames) setHistoDir("L0Muon/Online");
 
-  // Run info
-  //   if (m_shortnames) m_info->setHistoDir(""); else m_info->setHistoDir("L0Muon/Online");
-  if (!m_shortnames) m_info->setHistoDir("L0Muon/Online");
-  m_info->bookHistos(m_shortnames);
-  debug() << "==>   -- RunInfo done" << endmsg;
-
-  // Decoding
-  //  if (m_shortnames) m_error->setHistoDir(""); else m_error->setHistoDir("L0Muon/Online");
-  if (!m_shortnames) m_error->setHistoDir("L0Muon/Online");
-  m_error->bookHistos_multi(m_shortnames);
-  m_error->bookHistos_gen(m_shortnames);
-  for (std::vector<int>::iterator itq=m_quarters.begin(); itq<m_quarters.end(); ++itq){
-    int iq = (*itq);
-    m_error->bookHistos_quarter(iq,m_shortnames);
-    for (std::vector<int>::iterator itr=m_regions.begin(); itr<m_regions.end(); ++itr){
-      int reg = (*itr);
-      m_error->bookHistos_board(iq,reg,m_shortnames);
-    }
-  }
-  debug() << "==>   -- Decoding done" << endmsg;
-
-  // Logical channels
-  //   if (m_shortnames) m_channelsHistos->setHistoDir(""); else m_channelsHistos->setHistoDir("L0Muon/Online");
-  if (!m_shortnames) m_channelsHistos->setHistoDir("L0Muon/Online");
-  for (std::vector<int>::iterator itq=m_quarters.begin(); itq<m_quarters.end(); ++itq){
-    int iq = (*itq);
-    for (std::vector<int>::iterator itr=m_regions.begin(); itr<m_regions.end(); ++itr){
-      int reg = (*itr);
-      for (std::vector<int>::iterator its=m_stations.begin(); its<m_stations.end(); ++its){
-        int sta = (*its);
-        m_channelsHistos->bookHistos(iq,reg,sta,m_shortnames);
-      }
-    }
-  }
-  debug() << "==>   -- Logical Channels done" << endmsg;
-  
-  // Logical pads
-  //   if (m_shortnames) m_padsHistos->setHistoDir(""); else  m_padsHistos->setHistoDir("L0Muon/Online");
-  if (!m_shortnames) m_padsHistos->setHistoDir("L0Muon/Online");
-  for (std::vector<int>::iterator its=m_stations.begin(); its<m_stations.end(); ++its){
-    int sta = (*its);
-    m_padsHistos->bookHistos(sta,m_shortnames);
-  }
-  debug() << "==>   -- Logical Pads done" << endmsg;
-
-
   // Candidates
-  //   if (m_shortnames) m_candHistosFinal->setHistoDir(""); else m_candHistosFinal->setHistoDir("L0Muon/Online");
   if (!m_shortnames) m_candHistosFinal->setHistoDir("L0Muon/Online");
   m_candHistosFinal->bookHistos(8,m_shortnames);
-  //   if (m_shortnames) m_candHistosPU->setHistoDir(""); else m_candHistosPU->setHistoDir("L0Muon/Online/PU");
   if (!m_shortnames) m_candHistosPU->setHistoDir("L0Muon/Online/PU");
   m_candHistosPU->bookHistos(100,m_shortnames);
   debug() << "==>   -- Candidates done" << endmsg;
 
+  if (m_fullMonitoring) { // If full monitoring
+    // Run info
+    if (!m_shortnames) m_info->setHistoDir("L0Muon/Online");
+    m_info->bookHistos(m_shortnames);
+    debug() << "==>   -- RunInfo done" << endmsg;
+
+    // Decoding
+    if (!m_shortnames) m_error->setHistoDir("L0Muon/Online");
+    m_error->bookHistos_multi(m_shortnames);
+    m_error->bookHistos_gen(m_shortnames);
+    for (std::vector<int>::iterator itq=m_quarters.begin(); itq<m_quarters.end(); ++itq){
+      int iq = (*itq);
+      m_error->bookHistos_quarter(iq,m_shortnames);
+      for (std::vector<int>::iterator itr=m_regions.begin(); itr<m_regions.end(); ++itr){
+        int reg = (*itr);
+        m_error->bookHistos_board(iq,reg,m_shortnames);
+      }
+    }
+    debug() << "==>   -- Decoding done" << endmsg;
+
+    // Logical channels
+    if (!m_shortnames) m_channelsHistos->setHistoDir("L0Muon/Online");
+    for (std::vector<int>::iterator itq=m_quarters.begin(); itq<m_quarters.end(); ++itq){
+      int iq = (*itq);
+      for (std::vector<int>::iterator itr=m_regions.begin(); itr<m_regions.end(); ++itr){
+        int reg = (*itr);
+        for (std::vector<int>::iterator its=m_stations.begin(); its<m_stations.end(); ++its){
+          int sta = (*its);
+          m_channelsHistos->bookHistos(iq,reg,sta,m_shortnames);
+        }
+      }
+    }
+    debug() << "==>   -- Logical Channels done" << endmsg;
+    
+    // Logical pads
+    if (!m_shortnames) m_padsHistos->setHistoDir("L0Muon/Online");
+    for (std::vector<int>::iterator its=m_stations.begin(); its<m_stations.end(); ++its){
+      int sta = (*its);
+      m_padsHistos->bookHistos(sta,m_shortnames);
+    }
+    debug() << "==>   -- Logical Pads done" << endmsg;
+
+  } // End if full monitoring
+  
+    
   
   return StatusCode::SUCCESS;
 }
@@ -148,39 +145,6 @@ StatusCode L0MuonOnlineMonitor::execute() {
     
     std::string location;
 
-    //Run info
-    sc = m_info->setProperty( "RootInTES", rootInTES() );
-    if ( sc.isFailure() ) continue;// error printed already by GaudiAlgorithm
-    sc = m_info->getInfo();
-    if ( sc.isFailure() ) continue;// error printed already by Tool
-    m_info->fillHistos();
-    if (0==(*it_ts)) bid_ts0=m_info->bunchId();
-    
-    // Error
-    sc = m_error->setProperty( "RootInTES", rootInTES() );
-    if ( sc.isFailure() ) continue;// error printed already by GaudiAlgorithm
-    m_error->fillHistos();
-
-    // Get L0Muon Hits
-    std::vector<LHCb::MuonTileID> l0muontiles;
-    sc = getL0MuonTiles(l0muontiles);
-    if (sc==StatusCode::FAILURE) continue;
-
-    // Build logical channels 
-    std::vector<LHCb::MuonTileID> l0muonpads;
-    L0Muon::MonUtilities::makePads(l0muontiles,l0muonpads);
-
-    // Physical channels histos
-    m_channelsHistos->fillHistos(l0muontiles,*it_ts);
-
-    // Logical channels histos
-    m_padsHistos->fillHistos(l0muonpads,*it_ts);
-
-    // Multiplicity
-    for (std::vector<LHCb::MuonTileID>::iterator itpad=l0muonpads.begin(); itpad<l0muonpads.end();++itpad){
-      ++npad[itpad->station()];
-    }
-
     // Candidates
     location = LHCb::L0MuonCandidateLocation::Default + context();
     if (  exist<LHCb::L0MuonCandidates>(location ) ) {
@@ -196,11 +160,53 @@ StatusCode L0MuonOnlineMonitor::execute() {
       ncandPU+=cands->size();
     }
 
+    if (m_fullMonitoring) { // If full monitoring
+
+      //Run info
+      sc = m_info->setProperty( "RootInTES", rootInTES() );
+      if ( sc==StatusCode::SUCCESS ) {
+        sc = m_info->getInfo();
+        if ( sc==StatusCode::SUCCESS ) {
+          m_info->fillHistos();
+          if (0==(*it_ts)) bid_ts0=m_info->bunchId();
+        }
+      }
+
+      // Error
+      sc = m_error->setProperty( "RootInTES", rootInTES() );
+      if ( sc==StatusCode::SUCCESS ) {
+        m_error->fillHistos();
+      }
+    
+      // Get L0Muon Hits
+      std::vector<LHCb::MuonTileID> l0muontiles;
+      sc = getL0MuonTiles(l0muontiles);
+      if (sc==StatusCode::SUCCESS) {
+
+        // Build logical channels 
+        std::vector<LHCb::MuonTileID> l0muonpads;
+        L0Muon::MonUtilities::makePads(l0muontiles,l0muonpads);
+
+        // Physical channels histos
+        m_channelsHistos->fillHistos(l0muontiles,*it_ts);
+
+        // Logical channels histos
+        m_padsHistos->fillHistos(l0muonpads,*it_ts);
+
+        // Multiplicity
+        for (std::vector<LHCb::MuonTileID>::iterator itpad=l0muonpads.begin(); itpad<l0muonpads.end();++itpad){
+          ++npad[itpad->station()];
+        }
+      }
+
+    } // End if full monitoring
     
   } // End of loop over time slots
 
-  // Multiplicity
-  m_padsHistos->fillHistos(npad);
+  if (m_fullMonitoring) {
+    // Multiplicity
+    m_padsHistos->fillHistos(npad);
+  }
   
   // Candidates
   m_candHistosFinal->fillHistos(ncand,bid_ts0);

@@ -1,5 +1,5 @@
 #define _ERROR_V2_ 1
-// $Id: L0MuonOnlineMonitor.h,v 1.5 2008-07-25 14:42:59 jucogan Exp $
+// $Id: L0MuonOnlineMonitor.h,v 1.6 2009-02-18 13:39:32 jucogan Exp $
 #ifndef COMPONENT_L0MUONONLINEMONITOR_H 
 #define COMPONENT_L0MUONONLINEMONITOR_H 1
 
@@ -34,6 +34,8 @@ protected:
 
 private:
 
+  bool m_fullMonitoring;
+  
   L0MuonPadsHistos*     m_padsHistos;
   L0MuonChannelsHistos* m_channelsHistos;
   L0MuonInfoHistos *    m_info;

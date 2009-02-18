@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.19 2009-02-04 15:12:02 marcocle Exp $
+! $Id: release.notes,v 1.20 2009-02-18 13:39:32 jucogan Exp $
 ! Package     : L0MuonMonitor
 ! Responsible : Julien Cogan
 ! Purpose     : Monitoring of the L0Muon
 !--------------------------------------------------------------------------
+
+! 2009-02-18 - Julien Cogan
+ - Modify weight in 2D hitmaps for full stations
+ - Separate online monitoring into 2 levels (FullMonitoring property)
 
 ! 2009-02-04 - Marco Clemencic
  - Updated to get ODIN from the Transient Store instead of decoding the
