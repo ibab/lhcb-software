@@ -2,6 +2,7 @@ Package         : OTDAQ
 Package manager : J.Amoraal
 !---------------------------------------------------------------------
 
+!======================= OTDAQ v7r5 2009-02-18 =======================
 ! 2009-02-18 - Wouter Hulsbergen
  - OTMultiRawBankDecoder: add missing retrieve/release of ToolHandle
 
