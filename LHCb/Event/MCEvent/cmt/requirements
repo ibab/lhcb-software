@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.36 2009-01-08 13:15:28 cattanem Exp $
+# $Id: requirements,v 1.37 2009-02-18 13:12:31 cattanem Exp $
 # Created    : 08/03/2002
 # Maintainer : Marco Cattaneo
 #
 package           MCEvent
-version           v2r11
+version           v2r12
 branches          cmt doc src xml Event dict
 
 # Used packages. 
