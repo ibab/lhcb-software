@@ -4,6 +4,9 @@
 !----------------------------------------------------------------------------
 
 ! 2009-02-12 - Wouter Hulsbergen
+ - add job option for minimum number of remaining hits in outlier removal
+	
+! 2009-02-12 - Wouter Hulsbergen
  - by request from gerhard: configuredfitter now also takes an instance as argument
 
 ! 2009-02-10 - Wouter Hulsbergen

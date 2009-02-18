@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.h,v 1.19 2008-10-21 14:57:16 wouter Exp $
+// $Id: TrackMasterFitter.h,v 1.20 2009-02-18 09:10:45 wouter Exp $
 #ifndef TRACKFITTER_TRACKMASTERFITTER_H 
 #define TRACKFITTER_TRACKMASTERFITTER_H 1
 
@@ -108,10 +108,15 @@ private:
   double m_minMomentumForELossCorr ; ///< Minimum momentum used in correction for energy loss
   bool m_applyMaterialCorrections ; ///< Apply material corrections
   bool m_applyEnergyLossCorrections ; ///< Apply material corrections
-
+ 
   double m_scatteringPt ;           ///< transverse momentum used for scattering if track has no good momentum estimate
   double m_maxMomentumForScattering ; ///< Maximum momentum used for scattering
-    
+  size_t m_minNumVeloRHits   ; ///< Minimum number of VeloR hits
+  size_t m_minNumVeloPhiHits ; ///< Minimum number of VeloPhi hits
+  size_t m_minNumTTHits      ; ///< Minimum number of TT hits
+  size_t m_minNumTHits       ; ///< Minimum number of T hits
+  size_t m_minNumMuonHits    ; ///< Minimum number of Muon hits
+
   //! helper to print a failure comment
   StatusCode failure( const std::string& comment ) const;
 

@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.64 2009-01-19 10:12:35 dhcroft Exp $
+// $Id: TrackMasterFitter.cpp,v 1.65 2009-02-18 09:10:45 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -89,6 +89,11 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareProperty( "ApplyEnergyLossCorr", m_applyEnergyLossCorrections = true ) ;
   declareProperty( "TransverseMomentumForScattering", m_scatteringPt = 400.*Gaudi::Units::MeV );
   declareProperty( "MaxMomentumForScattering", m_maxMomentumForScattering = 500.*Gaudi::Units::GeV );
+  declareProperty( "MinNumVeloRHitsForOutlierRemoval",   m_minNumVeloRHits   = 2 ) ;
+  declareProperty( "MinNumVeloPhiHitsForOutlierRemoval", m_minNumVeloPhiHits = 2 ) ;
+  declareProperty( "MinNumTTHitsForOutlierRemoval",      m_minNumTTHits      = 2 ) ;
+  declareProperty( "MinNumTHitsForOutlierRemoval",       m_minNumTHits       = 4 ) ;
+  declareProperty( "MinNumMuonHitsForOutlierRemoval",    m_minNumMuonHits    = 4 ) ;
 }
 
 //=========================================================================
@@ -319,7 +324,7 @@ bool TrackMasterFitter::outlierRemoved( Track& track ) const
   // Count the number of hits of each type
   enum HitType {VeloR, VeloPhi, TT, T, Muon, Unknown} ;
   static HitType hittypemap[11] = { Unknown, VeloR, VeloPhi, VeloR, VeloPhi, TT, T, T, Muon, TT, T } ;
-  const size_t minNumHits[5] = {2,2,2,4,4} ; // the bare minimum (FIX ME: job option)
+  const size_t minNumHits[5] = { m_minNumVeloRHits, m_minNumVeloPhiHits, m_minNumTTHits, m_minNumTHits, m_minNumMuonHits } ;
   size_t numHits[5]          = {0,0,0,0,0} ;
   for( LHCb::Track::NodeContainer::const_iterator inode =  track.nodes().begin() ;
        inode != track.nodes().end() ; ++inode) 
