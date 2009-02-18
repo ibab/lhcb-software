@@ -1,5 +1,9 @@
 2009-02-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of version v2r5
+
+2009-02-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* scripts/generateLogin: fixed semicolon replacement on the windows native platform.
 	* python/LbConfiguration/LbLogin.py: disable cache on darwin only if the mysiteroot
 	is used.
