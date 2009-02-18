@@ -1,3 +1,8 @@
+2009-02-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: removed the obsolete python alias on PathStripper. The
+	file has been moved to the python directory.
+
 2009-02-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v2r3

@@ -190,7 +190,6 @@ setup_script $(nocmtpath_script)
 # clean up of the different path
 #---------------------------------------------------
 
-apply_pattern python_alias script=PathStripper
 apply_pattern source_shell_alias script=StripPath
 
 macro strip_script "$(LBSCRIPTSPOLICYROOT)/scripts/StripPath" 
