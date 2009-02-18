@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StandardBasicNeutral.py,v 1.1 2009-01-15 14:22:14 ibelyaev Exp $ 
+# $Id: StandardBasicNeutral.py,v 1.2 2009-02-18 15:29:29 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StandardBasicNeutral.py
 #  configuration file for 'Standard Basic Neutral' 
@@ -11,12 +11,15 @@
 Configuration file for 'Standard Basic Neutral' particles 
 """
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 
 _locations = {} 
 
 from CommonParticles.StandardPhotons import *
+_locations.update ( locations )
+
+from CommonParticles.StandardPi0 import *
 _locations.update ( locations )
 
 # redefine the locations 

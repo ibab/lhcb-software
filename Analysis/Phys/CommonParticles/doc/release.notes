@@ -1,9 +1,19 @@
-!$Id: release.notes,v 1.111 2009-01-15 14:58:24 jpalac Exp $
+!$Id: release.notes,v 1.112 2009-02-18 15:29:28 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
+
+! 2009-02-18 - Patrick Koppenburg
+ - Move all intermediate states to python 
+ - They are now based on Hlt2, not DC06 anymore
+ - Most of this is untested
+ - Removed all options/Standard*.opts
+ - Removed options/StandardOptions.py (requires latest version of AnalysisConf)
+ - Keep only DC06 stuff in options/ 
+ - options/ directory declared obsolete. Do not edit.
+ - Increment to v5r0
 
 !========================== CommonParticles v4r2 2009-01-05 ==================
 
