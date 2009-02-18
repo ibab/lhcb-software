@@ -2,6 +2,11 @@
 ! package manager: Marco Cattaneo
 !-------------------------------------------------------------------------
 
+!======================== EventSys v25r0 2009-02-18 ======================
+! 2009-02-18 - Marco Cattaneo
+ - Remove explicit versions from requirements
+ - Add LumiEvent
+
 !======================== EventSys v24r11 2009-01-08 =====================
 ! 2009-01-08 - Marco Cattaneo
  - Use HltEvent v8r14, LinkerEvent v3r6, MCEvent v2r11, PhysEvent v11r7,

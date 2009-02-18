@@ -1,27 +1,28 @@
 package EventSys
-version v24r11
+version v25r0
 
 branches doc cmt
 
 # LHCb Event libraries
 
-use DAQEvent    v7r17   Event
-use DigiEvent   v2r10   Event
-use EventAssoc  v4r5    Event
-use EventBase   v2r5    Event
-use GenEvent    v5r3    Event
-use HltEvent    v8r14   Event
-use LinkerEvent v3r6    Event
-use L0Event     v17r3   Event
-use MCEvent     v2r11   Event
-use PackedEvent v3r4    Event
-use PhysEvent   v11r7   Event
-use RecEvent    v2r18   Event
-use TrackEvent  v4r17   Event
-use VeloEvent   v16r6p1 Event
+use DAQEvent      v* Event
+use DigiEvent     v* Event
+use EventAssoc    v* Event
+use EventBase     v* Event
+use GenEvent      v* Event
+use HltEvent      v* Event
+use LinkerEvent   v* Event
+use LumiEvent     v* Event
+use L0Event       v* Event
+use MCEvent       v* Event
+use PackedEvent   v* Event
+use PhysEvent     v* Event
+use RecEvent      v* Event
+use TrackEvent    v* Event
+use VeloEvent     v* Event
 
 private
-use RELAX       v*      LCG_Interfaces
+use RELAX         v* LCG_Interfaces
 
 #---- Include relevant RELAX dictionaries into LHCB reflex.rootmap
 pattern copy_relax_rootmap \
