@@ -4,12 +4,14 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+!======================= PackedEvent v3r4 2009-02-18 =========================
 ! 2009-01-27 - Marco Cattaneo
  - Add missing dictionaries for new class
 
 ! 2009-01-26 - Olivier Callot
  - New class for PackedTwoProngVertex.
- - Remove version from Track, CaloHypo, Protoparticle and Vertex: This exists in all DataObjects
+ - Remove version from Track, CaloHypo, Protoparticle and Vertex: 
+   This exists in all DataObjects
  - Some new methods to access internal arrays.
 
 !======================= PackedEvent v3r4 2008-11-17 =========================
