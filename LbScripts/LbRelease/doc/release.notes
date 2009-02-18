@@ -1,3 +1,7 @@
+2008-02-18  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/rcs.py: fixed a problem in the checkout from CVS on Windows.
+
 2008-02-18  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
 	* python/LbRelease/Nightlies/functions.py: use of the copy of configuration.xml
