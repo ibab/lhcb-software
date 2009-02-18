@@ -17,6 +17,19 @@
 #include "MDF/MDFWriter.h"
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IRunable.h"
+#include "GaudiKernel/Incident.h"
+#include "GaudiKernel/IIncidentSvc.h"
+#include "MDF/OnlineRunInfo.h"
+#include "MDF/RawEventHelpers.h"
+#include "MDF/MDFHeader.h"
+#include "MDF/MEPWriter.h"
+#include "MDF/MEPEvent.h"
+#include <MDF/MEPFragment.h>
+#include "Event/RawEvent.h"
+#include "GaudiOnline/MEPHdr.h"
+
+#include "MBM/bmdef.h"
+#include "MBM/Consumer.h"
 
 #include "DimTaskFSM.h"
 
@@ -34,15 +47,16 @@
 
 #include <time.h>
 
+
+
 /*
  *    LHCb namespace
  */
 namespace LHCb {
 
+#define TWOMB 2097152
 #define MEP_REQ_TTL     10
 
-
- 
  /** @class MEPInjector MEPInjector.cpp
   *  Creates and injects MEPs from MDF files. 
   *
@@ -50,57 +64,66 @@ namespace LHCb {
   *          Jean-Christophe Garnier
   *  @date   2008-06-26
   */
-  class MEPInjector : public Algorithm, virtual public IRunable 
+  class MEPInjector : public Service, virtual public IRunable 
                       ,virtual public IIncidentListener
  {
+  public:
+    typedef std::vector<std::string>        Requirements;
+
   protected:
-    ///XXX Volatile not tested
-    int  m_CreditsFD;
- 
-    bool m_gotHLT;
-
-    bool m_gotOdin;  
-   
-    bool m_ARPMe;
- 
-    bool m_Offline;
-
-    bool m_Debug;  
- 
-    enum InjectorState { NOT_READY, READY, RUNNING, STOPPED };
- 
-    InjectorState m_InjState;
-
     /// Protected Attributes
-    IIncidentSvc*               m_IncidentSvc; 
-    IMonitorSvc*                m_MonSvc;
+    Requirements m_Req; /* Vector of strings which tells the options to access to buffer managers,             */
+                        /* Most are useless and should be like this :                                          */
+                        /* "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0; */
+                        /*  MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"                               */
+                        /* But I wanted it to be parameterisable                                               */
+
+    std::string m_ProcName; /* The RTL process name */
+
+    std::string m_EventBufferFlags;             /* The option flags to make the buffer managers */
+    std::map<std::string, BMID> m_EventBuffers; /* map of buffer manager identifiers, the index is their name, read from the flags */
+    std::map<std::string, int> m_ProbEvts;    /* The probability to get the event from the buffer */
+                                              /* Default is 100, 0, ..., 0  */
+
+    char m_CurEvent[TWOMB]; /* Buffer to store one event */
+    int  m_CurEventSize;    /* Size of the event         */ 
+
+    int  m_CreditsFD;       /* DEBUG : File descriptor where to write HLT credits information */
+ 
+    bool m_gotHLT;          /* Tells that a MEP Request was consumed for injection processing */
+    bool m_gotOdin;         /* Tells that an Odin MEP was consumed for injection processing   */ 
+   
+    bool m_ARPMe;           /* Deprecated : The injector will send a few ping answers to the HLTs */
+                            /* in order to get their mac address before the main processing starts*/
+ 
+    bool m_Offline;         /* Offline use of the Odin, i.e. get most of Odin information from tape*/
+
+    bool m_Debug;           /* Debug mode, more verbose and more debugging operations */ 
+ 
+    enum InjectorState { NOT_READY, READY, RUNNING, STOPPED }; /* FSM states of the injector */
+    InjectorState m_InjState;                                  /* Current state              */
+
+    IIncidentSvc*               m_IncidentSvc; /* Service to catch DIM commands */ 
+    IMonitorSvc*                m_MonSvc;      /* Service to publish information*/
 
     char*         m_AllNames;        /* Publish the names of all enabled Tell1s */
 
-    unsigned int  m_EvtBuf;
- 
     sem_t         m_OdinCount;       /* Synchronisation to access to Odin MEP data */
                                      /* = counter of MEPs in the queue */
- 
-    sem_t         m_RawEventsCount;
-  
     sem_t         m_MEPReqCount;     /* Synchronisation to access to HLT Req data */
                                      /* = counter of requests registered */
 
-    std::queue< /*SmartDataPtr<RawEvent>*/ RawEvent* > m_QueueRawEvents;   /* A queue of raw events to be processed */
- 
     /// Data to publish or used to publish monitoring 
+    struct timeval m_InitTime;    /* Date of initialization of the injector */
+    struct timeval m_CurTime;     /* Current date */
+    struct timespec m_RTInitTime; /* Date of initialization of the injector XXX*/
+    struct timespec m_RTCurTime;  /* Current date XXX*/
+    
     int  m_TotBytesTx;          /* Total of bytes transmitted to the farms */ 
     int  m_TotEvtsRead;         /* Total of events read */
     int  m_TotEvtsSent;         /* Total of events sent */
     int  m_TotMEPsTx;           /* Total of MEPs transmitted */
-
-    struct timeval m_InitTime;          /* Date of initialization of the injector */
-    struct timeval m_CurTime;           /* Current date */
-
-    struct timespec m_RTInitTime;
-    struct timespec m_RTCurTime; 
-    int m_RTTotElapsedTime;
+    int m_RTTotElapsedTime;     /* Elapsed time since initialization, in ms, using RDTSC Time Stamp Couner XXX Not used yet */
     int m_TotElapsedTime;       /* Elapsed time since the initialization, in ms */       
     int m_TotCreditConsumed;    /* Total of credits consumed by the injector */
     int m_TotMEPReqTx;          /* Total of MEP request forwarded */
@@ -110,16 +133,10 @@ namespace LHCb {
     int m_TotOdinMEPRx;         /* Total of Odin MEP received */
     int m_TotOdinMEPTx;         /* Total of Odin MEP sent */
 
-    pthread_t     m_ThreadMEPReqManager; 
- 
-    pthread_t     m_ThreadOdinMEPManager;
+    pthread_t     m_ThreadMEPReqManager; /* pthread descriptor for the MEP request management */
+    pthread_t     m_ThreadOdinMEPManager; /* pthread descriptor for the Odin MEPs manager */
+    pthread_t     m_InjectorProcessing; /* The main thread only reads events from a buffer manager, raw use with plain C MBM api */
 
-    pthread_t     m_InjectorProcessing; /// The main thread only reads events from storage
-
-    /// Option to remove DAQStatus (should be true)
-    bool          m_RemoveDAQStatus; /* Option to remove DAQStatus */
-                                     /* Deprecated ? */
-    
     int           m_MEPProto;     /* IP protocol used for MEPs*/
     int           m_MEPReqProto;  /* IP protocol used for MEP Requests*/
     
@@ -133,11 +150,8 @@ namespace LHCb {
     int 	  m_FromOdinSock; /* Socket to receive Odin MEP     */
     int 	  m_ToOdinSock;   /* Socket to forward MEP Requests to Odin */
 
-    
-
     int 	  m_TimeOut;    /* Time Out for every blocking call */
                                 /* Only used for the polling */
-                                 
 
     int 	  m_MEPSize;    /* Size of the MEP on which the algorithm is working on */
 
@@ -158,42 +172,44 @@ namespace LHCb {
     
 
     std::string   m_HLTStrIPAddrTo;/* IP Address to send to, in string */
- 
     u_int32_t     m_HLTIPAddrTo;   /* IP Address to send to */
     
     unsigned short m_EvtID;     /* Id of the event currently processed */
 
     int m_OdinTell1ID;          /* Id of the Odin board */
 
-//    MEPReq m_MEPReq;            /* The MEP request packet */
-
-
-    std::map<unsigned long, StreamBuffer> m_MapStreamBuffers;
-    std::map<unsigned long, MEPEvent *> m_MapTell1MEPs;  
+    std::map<unsigned long, StreamBuffer> m_MapStreamBuffers; /* Streambuffers which manage the memory allocated for the tell1 MEPs */
+    std::map<unsigned long, MEPEvent *> m_MapTell1MEPs;       /* The effective Tell1 MEPs, index is Tell1 IP */
 
     MEPEvent*        m_OdinMEP;    /* The Odin MEP currently processed */  
-
     std::queue<char*> m_QueueOdinMEP; /* A queue of Odin MEP to be processed */
 
     std::map<unsigned int, unsigned int > m_HLTReqs; /* map<HLT IP, counter of request> */
     std::map < unsigned int, unsigned int >::iterator m_HLTReqsIte; /* iterator on the MEP Requests */ 
 
+    u_int32_t     m_PartitionID;   /* Partition ID of the events, read from option file and/or from Odin */	
     ///////////////////////////////////////////////////////////////////////
     /// These attributes are set by Odin MEPs or by Job options in automode
     unsigned int  m_PackingFactor; /* MEP Event packing factor */
 
     u_int32_t     m_L0ID;          /* Level 0 ID               */
-
-    u_int32_t     m_PartitionID;   /* Partition ID of the events*/	
     ///////////////////////////////////////////////////////////////////////
 
-    //int m_probEventID;
-    //int m_probPartID;
-    //int m_probSize;
-    
 
     ///////////////////////////////////////////////////////////////////////
-    /// Private Methods
+    /// Protected Methods
+
+    // Delete the buffer managers
+    StatusCode deleteConsumers();
+
+    // Initialize the use of the buffer managers 
+    StatusCode initConsumers();
+
+    // Make the buffer managers
+    StatusCode initBuffers();
+
+    // Consume one event from the buffer managers, according to probabilities
+    StatusCode getEvent();
 
     /// Log MEP requests received, forwaded and credits consumed
     StatusCode logMEPReqs(); 	
@@ -220,11 +236,7 @@ namespace LHCb {
     StatusCode readEvent();
 
     /// Identify the Tell1 ID from the type and the source of the bank
-    int rawTell1Id(int type, int src);   
     in_addr_t getTell1IP(int type, int src);   
-
-    /// Set Odin MEP banks data
-//    void setOdinData(MEPEvent **me);
 
     /// Get Information from the Odin MEP stored
     StatusCode getInfoFromOdinMEP();
@@ -284,30 +296,27 @@ namespace LHCb {
     /// Handle 
     virtual void handle(const Incident& incident);
     
-    /// Main execution
-    virtual StatusCode execute();     
-  
     /// Main processing of the injector
     StatusCode injectorProcessing(); 
 
     /// Get information from Odin
     StatusCode manageOdinMEP();
 
+    /// Record MEP requests and forward them to TFC
     StatusCode manageMEPRequest();
+
+    /// IInterface implementation in order for the service to be used as a Runable by the Application Manager 
+    virtual StatusCode queryInterface(const InterfaceID& riid, void** ppIf); 
 
     ///////////////////////////////////////////////////////////////////////
     /// Public Attributes
     
-    bool	  m_InjectorStop, m_ManagerStop; /* Boolean to tell the thread to stop the loop */
+    bool	    m_ManagerStop; /* Boolean to tell threads to stop their loops */
 
-    pthread_mutex_t m_SyncMainOdin;  /* Mutex used to synchronise the end of the data send and the right of copy of Odin information */ 
-    
-    pthread_mutex_t m_SyncReqOdin;   /* Mutex used to synchronise the use of the map of HLT request counters */
-
-    pthread_mutex_t m_SyncReadProcess;
+    pthread_mutex_t m_SyncMainOdin;/* Mutex used to synchronise the end of the data send and the right of copy of Odin information */ 
+    pthread_mutex_t m_SyncReqOdin; /* Mutex used to synchronise the use of the map of HLT request counters */
 
     /// Streambuffer to hold uncompressed data. For encoding MEPs, contains everything of the MEP (4 bytes of size + MEP buffer)
-    StreamBuffer  m_Data;
     StreamBuffer  m_OdinData;
     
   };
@@ -326,7 +335,7 @@ extern "C" void *injectorProcessingStartup(void *);
 
 #ifndef MEP_MAPMGT
 #define MEP_MAPMGT
-/// A comparer used to find the HLT farm which has sent the most of MEP Requests
+/// Deprecated : A comparer used to find the HLT farm which has sent the most of MEP Requests
 bool value_comparer(std::map<unsigned int, unsigned int>::value_type &i1, std::map<unsigned int, unsigned int>::value_type &i2)
 {
   return i1.second<i2.second;
