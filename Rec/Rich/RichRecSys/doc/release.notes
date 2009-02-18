@@ -4,6 +4,9 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2009-02-18 - Chris Jones
+ - Fix type in python options in 'HLT' mode.
+
 !====================== RichRecSys v3r15 2009-01-12 ==========================
 ! 2009-01-07 - Ulrich Kerzel
  - Follow changes to updates in Configurable for RichMarkovRingFinder

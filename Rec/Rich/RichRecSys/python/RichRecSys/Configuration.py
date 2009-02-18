@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.13 2009-01-07 13:54:32 ukerzel Exp $"
+__version__ = "$Id: Configuration.py,v 1.14 2009-02-18 18:08:00 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -226,7 +226,7 @@ class RichRecSysConf(RichConfigurableUser):
             
             if pidMode == "FullGlobal" or pidMode == "FastGlobal":
                 pidConf = RichGlobalPIDConfig()
-                if pidMode == "FastGlobal": pidConf.mode = "Fast"
+                if pidMode == "FastGlobal": pidConf.Mode = "Fast"
             elif pidMode == "FastLocal" :
                 pidConf = RichHLTLocalPIDConfig()
             else:
@@ -274,7 +274,7 @@ class RichRecSysConf(RichConfigurableUser):
         pixConf = RichPixelCreatorConfig()
         pixConf.setProp("Detectors",self.usedDetectors())
         self.setOtherProps(pixConf,["Context"])
-
+ 
         # Photons
         photConf = RichPhotonCreatorConfig()
         photConf.setProp("Radiators",self.usedRadiators())
