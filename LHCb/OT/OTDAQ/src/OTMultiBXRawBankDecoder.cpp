@@ -168,14 +168,20 @@ StatusCode OTMultiBXRawBankDecoder::initialize()
   
   StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-  
+
+  sc = m_decoder.retrieve() ;
+  if( sc.isFailure() ) {
+    error() << "Failed to retieve decoder" << endmsg ;
+    return sc ;
+  }
+
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
   
   // initialize the decoder data. this things basically contains the decoded event
   m_hitdata = new LocalHelpers::DetectorHitData() ;
   
-  return StatusCode::SUCCESS;
+  return sc ;
 };
 
 //=============================================================================
@@ -184,6 +190,7 @@ StatusCode OTMultiBXRawBankDecoder::initialize()
 StatusCode OTMultiBXRawBankDecoder::finalize()
 {
   if( m_hitdata ) delete m_hitdata ;
+  m_decoder.release().ignore() ;
   return GaudiTool::finalize() ;
 }
 
