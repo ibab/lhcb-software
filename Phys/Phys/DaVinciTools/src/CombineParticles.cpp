@@ -1,4 +1,4 @@
-// $Id: CombineParticles.cpp,v 1.26 2009-02-03 09:14:45 pkoppenb Exp $
+// $Id: CombineParticles.cpp,v 1.27 2009-02-18 13:06:14 jpalac Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -662,7 +662,13 @@ StatusCode CombineParticles::execute    ()  // standard execution
       
       // apply the cut on "mother" particle
       
-      if ( !m_cut  ( &mother ) )  { continue ; }                    // CONTINUE
+      if ( !m_cut  ( &mother ) )  {
+        /// Hack: remove whatever relations from this candidate have been
+        /// indirectly stored to the P->PV relations table.
+        /// @todo remove once fixes in direct clients of IPhysDesktop::relatedVertex 
+        desktop()->Particle2VertexRelations().i_removeFrom(&mother);
+        continue ; 
+      }                    // CONTINUE
       
       // keep the good candidate:
       
