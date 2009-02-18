@@ -822,8 +822,16 @@ StatusCode MEPInjector::readEvent()
                 char *ccur = NULL;
                 MEPHdr *mh = NULL;
                 MEPFrgHdr *mf = NULL; 
-         
-                
+          
+                if(bkType == RawBank::OT
+                       || bkType == RawBank::OTError
+                       || bkType == RawBank::OTRaw )
+                {
+                    unsigned int src = hdr->sourceID();
+                    unsigned int tmp = (src/100 * 16 * 16) + (((src/10) %10) * 16 ) + (src%10);
+                    hdr->setSourceID(tmp);
+                }
+        
 		tell1id = getTell1IP(hdr->type(), hdr->sourceID());
 		if (tell1id == 0) { 
 //                    msgLog << MSG::DEBUG<<"Unknown source "<<hdr->sourceID()<<" or type "<<RawBank::typeName(hdr->type()) << " no tell1 found, execution continue "<<endmsg; 
