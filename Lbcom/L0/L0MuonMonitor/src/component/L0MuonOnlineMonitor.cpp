@@ -1,4 +1,4 @@
-// $Id: L0MuonOnlineMonitor.cpp,v 1.15 2009-02-18 13:39:32 jucogan Exp $
+// $Id: L0MuonOnlineMonitor.cpp,v 1.16 2009-02-18 14:50:26 jucogan Exp $
 // Include files 
 
 #include "boost/format.hpp"
@@ -122,10 +122,7 @@ StatusCode L0MuonOnlineMonitor::initialize() {
 // Main execution
 //=============================================================================
 StatusCode L0MuonOnlineMonitor::execute() {
-  StatusCode sc;
   
-  debug() << "==> Execute" << endmsg;
-
   setProperty("RootInTes",L0Muon::MonUtilities::timeSlot(0));
   if (excludedBx()) return StatusCode::SUCCESS;
   if (!exclusiveBx()) return StatusCode::SUCCESS;
@@ -145,22 +142,11 @@ StatusCode L0MuonOnlineMonitor::execute() {
     
     std::string location;
 
-    // Candidates
-    location = LHCb::L0MuonCandidateLocation::Default + context();
-    if (  exist<LHCb::L0MuonCandidates>(location ) ) {
-      LHCb::L0MuonCandidates* cands = get<LHCb::L0MuonCandidates>( location );
-      m_candHistosFinal->fillHistos(cands,(*it_ts),m_info->bunchId());
-      ncand+=cands->size();
-    }
-
-    location = LHCb::L0MuonCandidateLocation::PU + context();
-    if (  exist<LHCb::L0MuonCandidates>(location ) ) {
-      LHCb::L0MuonCandidates* cands = get<LHCb::L0MuonCandidates>( location );
-      m_candHistosPU->fillHistos(cands,(*it_ts),m_info->bunchId());
-      ncandPU+=cands->size();
-    }
-
+    int bid=-1;
+    
     if (m_fullMonitoring) { // If full monitoring
+
+      StatusCode sc;
 
       //Run info
       sc = m_info->setProperty( "RootInTES", rootInTES() );
@@ -168,6 +154,7 @@ StatusCode L0MuonOnlineMonitor::execute() {
         sc = m_info->getInfo();
         if ( sc==StatusCode::SUCCESS ) {
           m_info->fillHistos();
+          bid = m_info->bunchId();
           if (0==(*it_ts)) bid_ts0=m_info->bunchId();
         }
       }
@@ -200,14 +187,30 @@ StatusCode L0MuonOnlineMonitor::execute() {
       }
 
     } // End if full monitoring
+
+    // Candidates
+    location = LHCb::L0MuonCandidateLocation::Default + context();
+    if (  exist<LHCb::L0MuonCandidates>(location ) ) {
+      LHCb::L0MuonCandidates* cands = get<LHCb::L0MuonCandidates>( location );
+      m_candHistosFinal->fillHistos(cands,(*it_ts),bid);
+      ncand+=cands->size();
+    }
+
+    location = LHCb::L0MuonCandidateLocation::PU + context();
+    if (  exist<LHCb::L0MuonCandidates>(location ) ) {
+      LHCb::L0MuonCandidates* cands = get<LHCb::L0MuonCandidates>( location );
+      m_candHistosPU->fillHistos(cands,(*it_ts),bid);
+      ncandPU+=cands->size();
+    }
     
   } // End of loop over time slots
 
   if (m_fullMonitoring) {
     // Multiplicity
     m_padsHistos->fillHistos(npad);
-  }
   
+  }
+
   // Candidates
   m_candHistosFinal->fillHistos(ncand,bid_ts0);
   m_candHistosPU->fillHistos(ncandPU,bid_ts0);
