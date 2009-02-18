@@ -1,0 +1,26 @@
+// 
+// SliceReaderSvc.opts
+// $Id: LumiReaderSvc.opts,v 1.1 2009-02-18 08:32:06 garnierj Exp $
+//#include "$ONLINETASKSROOT/options/OnlineEnvironment.opts"
+#include "/group/online/dataflow/options/FEST/Injector_Info.opts"
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+ApplicationMgr.Dlls                  = { "MDF", "GaudiOnline", "Gaucho"};
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::SLICEReaderSvc/LumiReader";
+ApplicationMgr.SvcOptMapping =  { "LHCb::OnlineRunable/EmptyEventLoop" , "LHCb::SLICEReaderSvc/LumiReader" };
+ApplicationMgr.ExtSvc                = { "IncidentSvc"  };
+ApplicationMgr.ExtSvc		     += { "MonitorSvc" };
+
+
+ApplicationMgr.OutputLevel = 5;
+NormalReader.OutputLevel = 3;
+MessageSvc.OutputLevel= 2;
+NormalReader.InputFiles=@OnlineEnv.Lumi_Files;
+NormalReader.Loop=@OnlineEnv.Loop;
+NormalReader.BufferName=@OnlineEnv.LumiBuffer;
+NormalReader.PartitionID=@OnlineEnv.PartitionID;
+NormalReader.Requirements         = {
+"EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
+};
+

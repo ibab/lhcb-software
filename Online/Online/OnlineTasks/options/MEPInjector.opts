@@ -1,86 +1,47 @@
-#include "/group/online/dataflow/options/LHCb/Injector_Info.opts"
-
+// 
+// SliceReaderSvc.opts
+// $Id: MEPInjector.opts,v 1.10 2009-02-18 08:32:06 garnierj Exp $
+//#include "$ONLINETASKSROOT/options/OnlineEnvironment.opts"
+#include "/group/online/dataflow/options/FEST/Injector_Info.opts"
 ApplicationMgr.HistogramPersistency  = "NONE";
-
-
-#pragma print on
-//ApplicationMgr.SvcOptMapping += {"Gaudi::MultiFileCatalog/FileCatalog", "Gaudi::IODataManager/IODataManager"};
-
-ApplicationMgr.Dlls                 += { "MDF", "GaudiOnline", "Gaucho", "GaudiAud", "GaudiAlg"};
-
-//ApplicationMgr.SvcOptMapping        += { "LHCb::OnlineEvtSelector/EventSelector" };
-ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
-EventDataSvc.RootCLID                = 1;
-EventDataSvc.EnableFaultHandler      = true;
-
-StoreExplorerAlg.Load                = true;
-
-ApplicationMgr.ExtSvc               += { "IncidentSvc" };
-ApplicationMgr.ExtSvc               += { "MonitorSvc" };
-
-MessageSvc.OutputLevel      = @OnlineEnv.OutputLevel;
-
-MEPManager.PartitionID               = 65535;
-EventDataSvc.RootCLID                = 1;
-EventDataSvc.EnableFaultHandler      = true ;
-EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc/RawDataCnvSvc" };
-ApplicationMgr.SvcOptMapping += {"LHCb::RawDataCnvSvc/RawDataCnvSvc" };
-
-EventSelector.Input                  = @OnlineEnv.Injector_Files;
-
-
-ApplicationMgr.TopAlg                = {"StoreExplorerAlg"/*, "LHCb::MEPInjector"*//*, "LHCb::EventReader"*/}; 
-AuditorSvc.Auditors = {"ChronoAuditor"};
-
-// L0 Trigger of the injector
-//ApplicationMgr.TopAlg += { "GaudiSequencer/L0FilteredInjectionSeq" };
-//L0FilteredInjectionSeq.Members += { "FastL0DUFilter", "LHCb::MEPInjector"};
-//L0FilteredInjectionSeq.OutputLevel = @OnlineEnv.OutputLevel;
-//FastL0DUFilter.OutputLevel = 5;
-//L0FilteredInjectionSeq.IgnoreFilterPassed = true;
-
-ApplicationMgr.TopAlg += {"LHCb::MEPInjector"};
-
-ChronoStatSvc.PrintEllapsedTime = true;
-ChronoStatSvc.PrintSystemTime = true;
-
-
-//LHCb::EventReader.AuditExecute=true;
-
-LHCb::MEPInjector.AuditExecute=true;
-StoreExplorerAlg.AuditExecute=true;
-
-
-LHCb::MEPInjector.OutputLevel = 2; //@OnlineEnv.OutputLevel;
-
-MessageSvc.OutputLevel = @OnlineEnv.OutputLevel;
-EventSelector.PrintFreq =10000; //just display every 2000 events ~2kHz
-EventDataSvc.OutputLevel = @OnlineEnv.OutputLevel;
-
-IODataManager.UseGFAL = true; // what's this ?
+ApplicationMgr.EvtSel                = "NONE";
+ApplicationMgr.Dlls                  = { "MDF", "GaudiOnline", "Gaucho"};
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::MEPInjector/Injector";
+ApplicationMgr.SvcOptMapping =  { "LHCb::OnlineRunable/EmptyEventLoop" , "LHCb::MEPInjector/Injector" };
+ApplicationMgr.ExtSvc                = { "IncidentSvc"  };
+ApplicationMgr.ExtSvc		     += { "MonitorSvc" };
+ApplicationMgr.ExtSvc		     += { "LHCb::MEPManager/MEPInit" };
+ApplicationMgr.OutputLevel = 5;
+Injector.OutputLevel = 2;
+MessageSvc.OutputLevel= 2;
 
 
 ///////////////////////////////////////////////////////////////////////////////
 //                               My options                                  //
 ///////////////////////////////////////////////////////////////////////////////
 
-LHCb::MEPInjector.HLTNodes = @OnlineEnv.Injector_Nodes;
-LHCb::MEPInjector.Tell1Boards = @OnlineEnv.Tell1Boards;
-LHCb::MEPInjector.OdinIf = @OnlineEnv.Injector_odinIF_Name;  //inj01-d2
-LHCb::MEPInjector.HLTIf = @OnlineEnv.Injector_farmIF_Name;   //inj01-d1
-LHCb::MEPInjector.OdinIPAddr = @OnlineEnv.Injector_ODIN_REQ_Name;     //tfcodinxx-d1
-//OnlineEnv.Injector_ODIN_REQ_IP not used because computed from the first one 
+Injector.HLTNodes = @OnlineEnv.Injector_Nodes;
+Injector.Tell1Boards = @OnlineEnv.Tell1Boards;
+Injector.OdinIf = @OnlineEnv.Injector_odinIF_Name;  //inj01-d2
+Injector.HLTIf = @OnlineEnv.Injector_farmIF_Name;   //inj01-d1
+Injector.OdinIPAddr = @OnlineEnv.Injector_ODIN_REQ_Name;     //tfcodinxx-d1
+//OnlineEnv.Injector_ODIN_REQ_IP not used because computed from the first one
 //OnlineEnv.Injector_odinIF_IP not used for same reason
 //OnlineEnv.Injector_farmIF_IP not used for same reason
 //XXX Change sightly the injector source to use the options and optimize some stuff and names mapping and convention
-LHCb::MEPInjector.PartitionID=@OnlineEnv.PartitionID;
-
-LHCb::MEPInjector.EventBuffer = 300000;
+Injector.PartitionID=@OnlineEnv.PartitionID;
 
 /// Not useful params
-LHCb::MEPInjector.TimeOut = 1000;  //milliseconds
+Injector.TimeOut = 1000;  //milliseconds
 
-LHCb::MEPInjector.AutoMode = false; // Are we running in Auto Mode or in Odin Mode
-LHCb::MEPInjector.HLTIPAddrTo = "192.168.19.252"; //Still used in Automode
+Injector.AutoMode = true;
+Injector.HLTIPAddrTo = "192.168.19.252"; //Still used in Automode
 
-LHCb::MEPInjector.ARPME = false;
+Injector.ARPME = false;
+Injector.EventBufferFlags        = @OnlineEnv.BufferFlags;
+// "-s=70000 -e=1000 -u=20 -f -p=70 -i=NORM -c -s=10000 -e=100 -u=20 -f -p=30 -i=LUMI -c";
+Injector.Requirements         = {
+"EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
+};
+
