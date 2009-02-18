@@ -5,6 +5,7 @@ from LHCbKernel.Configuration import *
 
 from Configurables import GaudiSequencer
 from Configurables import HltTrackUpgrade
+from Configurables import HltTrackUpgradeTool
 from Configurables import PatMatchTool
 from Configurables import L0ConfirmWithT
 from Configurables import ElectronSeedTool, PatConfirmTool
@@ -28,7 +29,6 @@ class HltElectronLinesConf(LHCbConfigurableUser) :
 
     def __apply_configuration__(self) :
         
-        importOptions('$HLTCONFROOT/options/Hlt1ElePatConfirmTool.opts')
         RZVelo = GaudiSequencer('Hlt1RecoRZVeloSequence')
         RecoVelo = HltTrackUpgrade('Hlt1RecoVelo')
 
@@ -41,7 +41,9 @@ class HltElectronLinesConf(LHCbConfigurableUser) :
         
         IP_CUT = str(self.getProp('Ele_IPCut'))
         prepareElectronWithIP = [ Member ( 'TF', 'L0Electrons', FilterDescriptor = [ 'L0ET,>,2600.' ] )
-                                , Member ( 'TU', 'TConf', RecoName = 'TConf' )         
+                                , Member ( 'TU', 'TConf', RecoName = 'TConf',
+                                              tools = [ Tool( HltTrackUpgradeTool,
+                                              tools = [ Tool( L0ConfirmWithT,  particleType = 2 ) ] ) ] )
                                 , RZVelo
                                 , Member ( 'TF', 'RZVelo', InputSelection = 'RZVelo', FilterDescriptor = [ 'RZVeloTMatch_%TUTConf,||<,60.' ] )
                                 , Member ( 'TU', 'Velo', RecoName = 'Velo' )
@@ -62,7 +64,9 @@ class HltElectronLinesConf(LHCbConfigurableUser) :
 
         IP_CUT = "0.0"
         prepareElectronNoIP   = [ Member ( 'TF', 'L0Electrons', FilterDescriptor = [ 'L0ET,>,2600.' ] )
-                                , Member ( 'TU', 'TConf', RecoName = 'TConf' )         
+                                , Member ( 'TU', 'TConf', RecoName = 'TConf',
+                                              tools = [ Tool( HltTrackUpgradeTool,
+                                              tools = [ Tool( L0ConfirmWithT,  particleType = 2 ) ] ) ] )
                                 , RZVelo
                                 , Member ( 'TF', 'RZVelo', InputSelection = 'RZVelo', FilterDescriptor = [ 'RZVeloTMatch_%TUTConf,||<,60.' ] )
                                 , Member ( 'TU', 'Velo', RecoName = 'Velo' )
@@ -150,9 +154,3 @@ class HltElectronLinesConf(LHCbConfigurableUser) :
                                 )
                        ]
             )
-        
-
-
-        
-
- 

@@ -1,11 +1,13 @@
-! $Id: release.notes,v 1.143 2009-02-17 16:07:18 witekma Exp $ 
+! $Id: release.notes,v 1.144 2009-02-18 15:16:39 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
-<<<<<<< release.notes
+! 2009-02-18 - Gerhard Raven
+  - pythonize Hlt1ElePatConfirmTool.opts and remove.
+
 ! 2009-02-17 - Mariusz Witek
   - new version of ecal alley using TConf
 
@@ -14,14 +16,12 @@
                     - Implement FastFit 
                     - disentangle MuonNoGlob and MuonGEC Lines
 
-=======
 ! 2009-02-17 - Patrick Koppenburg
  - Correct two obvious typos
 
 ! 2009-02-17 - Gerhard Raven
  - superseed Hlt2IgnoreHl1Decision by Hlt2Requires
 
->>>>>>> 1.141
 ! 2009-02-15 - Gerhard Raven
  - remove unused references to HltL0{Calo,Muon}Prepare
 

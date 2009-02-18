@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltPhotonLines.py,v 1.6 2009-02-17 16:05:44 witekma Exp $
+# $Id: HltPhotonLines.py,v 1.7 2009-02-18 15:16:39 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Photon Lines
@@ -12,7 +12,7 @@
 '''
 # =============================================================================
 __author__  = 'Gerhard Raven Gerhard.Raven@nikhef.nl'
-__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $'
+__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $'
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -20,8 +20,11 @@ from LHCbKernel.Configuration import *
 
 from Configurables import GaudiSequencer
 from Configurables import PatMatchTool
-from Configurables import HltTrackUpgrade
+from Configurables import HltTrackFunctionFactory
+from Configurables import HltAntiEleConf
 from Configurables import L0ConfirmWithT
+from Configurables import PatConfirmTool
+from Configurables import HltTrackUpgrade
 
 from HltConf.HltLine import Hlt1Line   as Line
 from HltConf.HltLine import Hlt1Member as Member
@@ -52,7 +55,10 @@ class HltPhotonLinesConf(LHCbConfigurableUser):
 
         commonSeq =   [ Member ('TF', 'L0ET' , FilterDescriptor = ['L0ET,>,'+L0ET_CUT]) 
                       , Member ('TF', 'AntiEle' , FilterDescriptor = ['AntiEleConf,>,0.5'] 
-                               , tools = [ Tool( L0ConfirmWithT,  particleType = 2 )]
+                               , tools = [ Tool( HltTrackFunctionFactory,
+                                 tools = [ Tool( HltAntiEleConf, 
+                                 tools = [ Tool( L0ConfirmWithT,  particleType = 2 ,
+                                 tools = [ Tool( PatConfirmTool,  nSigmaX=10, nSigmaTx=10,nSigmaY=10,nSigmaTy=10 )])])])]
                                )
                       , Member ('TF', 'Photon' , FilterDescriptor = ['IsPhoton,>,'+IS_PHOTON])
                       , GaudiSequencer('Hlt1RecoRZVeloSequence')
