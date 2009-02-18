@@ -4,6 +4,7 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+!====================== Magnet v5r2 2009-02-18 ===============================
 ! 2009-01-27 - Marco Cattaneo
  - Fix a releaseTool()
 
