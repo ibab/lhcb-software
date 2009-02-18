@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.39 2009-02-09 08:15:22 cattanem Exp $
+! $Id: release.notes,v 1.40 2009-02-18 14:16:45 cattanem Exp $
 ! Package: IOExample
 ! Package Manager: M.Frank
 ! Purpose: Demonstrate how to write and read back event data using POOL I/O.
 !---------------------------------------------------------------------------
 
+!====================== IOExample v2r8 2009-02-18 =========================
 ! 2009-02-07 - Marco Cattaneo
  - Protect unpackdst test against 10**-8 differences in some variables on 
    slc4_ia32_gcc34 platform
