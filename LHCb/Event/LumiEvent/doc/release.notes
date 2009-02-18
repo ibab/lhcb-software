@@ -4,6 +4,7 @@
 ! Purpose     : EventModel for Lumi data
 !-----------------------------------------------------------------------------
 
+!======================== LumiEvent v1r0 2009-02-18 ==========================
 ! 2009-02-17 - Marco Cattaneo
  - Make only the component library, linker library not needed
 
