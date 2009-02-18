@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.144 2009-02-18 15:16:39 graven Exp $ 
+! $Id: release.notes,v 1.145 2009-02-18 18:17:17 jonrob Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-02-18 - Chris Jones
+ - Add RichRecSysConf to the list of (potentially) used Configurables 
+   in HltConf()
 
 ! 2009-02-18 - Gerhard Raven
   - pythonize Hlt1ElePatConfirmTool.opts and remove.
