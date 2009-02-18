@@ -4,6 +4,7 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+!============================ EventPacker v1r3 2009-02-18 ====================
 ! 2009-02-12 - Marco Cattaneo
  - Fix gcc43 warning
 
