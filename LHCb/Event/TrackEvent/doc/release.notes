@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!======================= TrackEvent v4r18 2009-02-18 =========================
 ! 2009-01-19 - David Hutchcroft
  - Added Velo "Lite" measurements to the list of measurement types 
 
