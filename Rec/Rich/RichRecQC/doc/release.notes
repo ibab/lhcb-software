@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-02-118 - Anatoly Solomin
+ - Better structured code RichAlignmentMonitor.cpp.
+
 ! 2009-02-16 - Antonis Papanestis
  - Added braces in line 111 to avoid warning about ambiguous else.
 

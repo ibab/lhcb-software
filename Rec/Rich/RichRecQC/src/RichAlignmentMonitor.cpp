@@ -4,7 +4,7 @@
  *  Implementation file for algorithm class : RichAlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.cpp,v 1.9 2009-02-17 20:18:15 asolomin Exp $
+ *  $Id: RichAlignmentMonitor.cpp,v 1.10 2009-02-18 10:14:43 asolomin Exp $
 
  *
  *  @author Antonis Papanestis
@@ -108,7 +108,7 @@ StatusCode AlignmentMonitor::initialize()
     See below a second usage of this vector and further explanations therein.
     Anatoly Solomin 2008-11-01.
   */
-  if ( !m_minimalHistoOutput && m_onlyPrebookedMirrors )
+  if ( !m_minimalHistoOutput )
   {
     BOOST_FOREACH( std::string strCombi, m_preBookHistos ) {
       std::string h_id = "dThetavphiRec"+strCombi;
