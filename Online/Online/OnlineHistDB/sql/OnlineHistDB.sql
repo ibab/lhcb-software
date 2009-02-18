@@ -1232,7 +1232,7 @@ end GetAnaSettings;
 -----------------------
 procedure GetAnaInput(theAna IN integer, theHisto IN varchar2, Ipar IN integer, input OUT float) is
  cursor anaset is  select INPUTPARS FROM ANASETTINGS WHERE ANA=theAna and HISTO=theHisto;
- myinp thresholds;
+ myinp thresholds := thresholds();
 begin
  open anaset;
  fetch anaset into myinp;
@@ -1240,10 +1240,11 @@ begin
      input := -999;
      raise_application_error(-20005,'Cannot find Analysis '||theAna||' for histogram'|| theHisto);
  end if;
- if (Ipar <= myinp.COUNT) then
-   input := myinp(Ipar);
- else
-   input := NULL;
+ input := NULL;
+ if (myinp is not NULL) then
+  if (Ipar <= myinp.COUNT) then
+    input := myinp(Ipar);
+  end if;
  end if;
  close anaset;
 EXCEPTION
