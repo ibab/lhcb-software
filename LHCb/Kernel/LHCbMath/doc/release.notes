@@ -6,6 +6,10 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================= LHCbMath v3r5 2009-02-18 ==========================
+! 2009-02-18 - Marco Cattaneo
+ - Removed slc3 cases from GSL linkopts
+
 ! 2009-02-05 - Marco Clemencic
  - Removed the -no_auto_imports of GSL.
 
