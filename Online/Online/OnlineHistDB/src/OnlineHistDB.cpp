@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.34 2009-02-16 10:37:43 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.35 2009-02-18 19:17:05 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -401,6 +401,22 @@ bool OnlineHistDB::declareFitFunction(std::string Name,
   return out;
 }
 
+std::string OnlineHistDB::getFitFunction(int code) {
+   m_StmtMethod = "OnlineHistDB::getFitFunction";
+   OCIStmt *stmt=NULL;
+    if ( OCI_SUCCESS == prepareOCIStatement
+         (stmt, "begin ONLINEHISTDB.GETFITFUNNAME(:code,:name); END;") ) {
+      text Name[VSIZE_FITFUN];
+      myOCIBindInt   (stmt, ":code", code);
+      myOCIBindString(stmt, ":name", Name, VSIZE_FITFUN);
+      if (OCI_SUCCESS == myOCIStmtExecute(stmt)) {
+        return std::string((const char*) Name);
+      }
+      releaseOCIStatement(stmt);
+    }
+    return "";
+}
+
 bool OnlineHistDB::removePageFolder(std::string& Folder) {
   bool out=false;
   int iout=0;
@@ -699,23 +715,23 @@ int OnlineHistDB::getHistograms(std::string query,
       text Name[Nfetch][VSIZE_NAME];
       text HStype[Nfetch][VSIZE_TYPE];
       for (int k=0; k<Nfetch; k++) {
-	Name[k][0]='\0';
-	HStype[k][0]='\0';
+        Name[k][0]='\0';
+        HStype[k][0]='\0';
       }
       myOCIDefineString(stmt, 1, Name[0]  ,VSIZE_NAME);
       myOCIDefineString(stmt, 2, HStype[0],VSIZE_TYPE);
       int xf = Nfetch;
       while ( xf == Nfetch) {
-	xf = myOCIFetch(stmt, Nfetch);
-	if(list) list->reserve(list->size()+xf);
-	if(ids) ids->reserve(ids->size()+xf);
-	if(types) types->reserve(types->size()+xf);
-	for(int j=0; j<xf ; j++) {
-	  if(list) list->push_back(getHistogram( std::string((const char*) Name[j]) ));
-	  if(ids) ids->push_back(std::string((const char*) Name[j] ) );
-	  if(types) types->push_back(std::string((const char*) HStype[j] ) );
-	  nout++;     
-	}      
+        xf = myOCIFetch(stmt, Nfetch);
+        if(list) list->reserve(list->size()+xf);
+        if(ids) ids->reserve(ids->size()+xf);
+        if(types) types->reserve(types->size()+xf);
+        for(int j=0; j<xf ; j++) {
+          if(list) list->push_back(getHistogram( std::string((const char*) Name[j]) ));
+          if(ids) ids->push_back(std::string((const char*) Name[j] ) );
+          if(types) types->push_back(std::string((const char*) HStype[j] ) );
+          nout++;     
+        }      
       }
       myOCIFetch(stmt, 0);
     }

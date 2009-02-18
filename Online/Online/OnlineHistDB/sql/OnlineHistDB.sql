@@ -61,6 +61,7 @@ create or replace package OnlineHistDB AUTHID CURRENT_USER as
  procedure GetFitOptions(theDOID IN int, theFitFun OUT int, Np OUT int);
  function GetFitParam(theDOID IN int, iPar IN int) return number;
  procedure GetFitFunParname(fcode IN int, Ipar IN integer, name OUT varchar2);
+ procedure GetFitFunName(fcode IN int, theName OUT varchar2);
     -- access function for php4 (produced automatically by  autodispopt.pl)
  procedure GET_DISPLAYOPTIONS(theDOID IN int
   ,LABEL_X OUT VARCHAR2,LABEL_Y OUT VARCHAR2,LABEL_Z OUT VARCHAR2,YMIN OUT FLOAT,YMAX OUT FLOAT,STATS OUT INT
@@ -919,6 +920,13 @@ begin
   name := theFitPars(Ipar);
  end if;
 end GetFitFunParname;
+-----------------------
+
+procedure GetFitFunName(fcode IN int, theName OUT varchar2) is
+begin
+ select NAME into theName from FITFUNCTION where CODE=fcode;
+end GetFitFunName;
+
 -----------------------
 
 -- procedure GET_DISPLAYOPTIONS is produced automatically by  autodispopt.pl

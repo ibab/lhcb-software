@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.25 2009-02-16 10:37:42 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.26 2009-02-18 19:17:05 ggiacomo Exp $
 #ifndef ONLINEHISTDB_H
 #define ONLINEHISTDB_H 1
 /** @class  OnlineHistDB OnlineHistDB.h OnlineHistDB/OnlineHistDB.h
@@ -92,6 +92,7 @@ class  OnlineHistDB : public OnlineHistDBEnv,
                           std::vector<std::string> *parnames,
                           bool mustInit,
                           std::string &doc);
+  std::string getFitFunction(int code);
   /// gets the algorithm list version
   int getAlgListID() const {return m_AlgListID;}
   /// sets the algorithm list version (works only for DB admin account)
