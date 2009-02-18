@@ -9,7 +9,6 @@
 L0ProcessorsSeq.Members += { "L0CaloAlg/L0Calo", 
                              "L0MuonAlg/L0Muon",
                              "PuVetoAlg/L0PuVeto"};
-#include "$L0MUONROOT/options/l0muonAlg.opts"
 // Do not create rawBank when re-running L0DU out of Boole
 L0Calo.StoreInBuffer=false;
 L0Muon.StoreInBuffer=false;
@@ -33,6 +32,7 @@ L0DUMoniSeq.Members += { "L0DUReportMonitor" };
 // whole L0 Monitoring sequence
 //------------------------------
 L0MoniSeq.Members += { "L0CaloMonit",
+                       "L0MuonOnlineMonitor",
                        "L0DUReportMonitor" 
 };
 

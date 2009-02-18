@@ -1,0 +1,26 @@
+//__________________________________________________________________________
+// 
+// Sequence to Emulate the whole L0 sequence (including L0Processors) + L0DU monitoring
+//__________________________________________________________________________
+//
+// WARNING : SIMulation and Emulation cannot be run in the same job !
+
+//
+#include "$L0DUROOT/options/L0Sequence.opts"
+L0EmulationSeq.Members += { "GaudiSequencer/L0EmulatorSeq",
+                            "L0DUReportMonitor/L0DUEmulMonitor"
+};
+
+// put/get L0DUReport in/from non-default TES path
+L0DU.WriteOnTES = true;
+L0DU.Context = "Emulator";
+L0DUEmulMonitor.Context = "Emulator";
+
+// DO NOT store rawBanks in rawEvent in Emulation mode
+L0DU.StoreInBuffer = false;
+L0Calo.StoreInBuffer = false;   
+L0Muon.StoreInBuffer = false;   
+
+
+// ----- OVERWRITE DEFAULT TCK ----- //
+// L0DU.TCK = "0xFFFF";  

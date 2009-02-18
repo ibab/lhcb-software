@@ -2,7 +2,7 @@ package		L0DU
 version 	v8r12
 
 # ================ structure =============================================
-branches	src cmt doc options
+branches	src cmt doc options python/L0DU
 include_path none
 
 # ================ options ===============================================
@@ -24,4 +24,4 @@ use L0Muon       v*    L0    -no_auto_imports
 library		L0DU  *.cpp -import=AIDA
 
 apply_pattern component_library library=L0DU
-
+apply_pattern install_python_modules

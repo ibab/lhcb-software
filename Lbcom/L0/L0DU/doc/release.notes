@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.139 2009-01-12 12:32:38 cattanem Exp $
+! $Id: release.notes,v 1.140 2009-02-18 15:30:42 jucogan Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
+
+! 2009-02-18 - Julien Cogan
+ - Add L0Conf configurable. 
+ - Separate the option files containing a sequence definition and an adder 
+   to the TopAlg into 2 files.
+ - Add L0MuonMonitoring in the standard monitoring sequence
 
 !========================== L0DU v8r12 2009-01-12 =========================
 ! 2008-12-10 - Marco Cattaneo
