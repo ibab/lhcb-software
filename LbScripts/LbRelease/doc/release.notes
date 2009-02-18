@@ -8,6 +8,7 @@
 	made for each slot on AFS at first run on first build node; nightlies wait for LCG
 	slot to be ready, for each platform separately (tag <waitfor> in configuration.xml);
 	confSummary.py file is created in slot directory on AFS with cmtProjectPathList
+	* python/LbRelease/Nightlies/setup.py: Dirac added to listOfProjectNames.
 
 2009-02-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
