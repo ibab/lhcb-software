@@ -32,8 +32,10 @@ std::string name(const LHCb::ParticleID& id)const{
                            ppSvc()->find( id )->antiParticle()->particle() )) ;
 };
 
+IParticlePropertySvc* m_ppSvc ;
+
 /// get particle property serivce
 const LHCb::IParticlePropertySvc* ppSvc() const{
-  return svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc", true );
+  if (0==m_ppSvc) m_ppSvc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc", true );
+  return m_ppSvc ;
 } ;
-

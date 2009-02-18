@@ -1,4 +1,4 @@
-// $Id: MCTupleToolDalitz.cpp,v 1.1 2009-02-17 18:07:31 pkoppenb Exp $
+// $Id: MCTupleToolDalitz.cpp,v 1.2 2009-02-18 18:34:55 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -24,6 +24,7 @@ MCTupleToolDalitz::MCTupleToolDalitz( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
   : GaudiTool ( type, name , parent )
+    , m_ppSvc(0)
 {
   declareInterface<IMCParticleTupleTool>(this);
 
@@ -43,12 +44,14 @@ StatusCode MCTupleToolDalitz::fill( const LHCb::MCParticle* mother
                                   , Tuples::Tuple& tuple ){
   
   if (0==part) return StatusCode::FAILURE ;
+  if (msgLevel(MSG::DEBUG)) debug() << "Decay of " << part->particleID().pid() << endmsg ;
   LHCb::MCParticle::ConstVector	dauts ;
   for ( SmartRefVector<LHCb::MCVertex>::const_iterator iv = part->endVertices().begin() ;
        iv != part->endVertices().end() ; ++iv){
     if (!(*iv)->isDecay()) continue ;
     const SmartRefVector< LHCb::MCParticle > pr = (*iv)->products() ;
     for ( SmartRefVector< LHCb::MCParticle >::const_iterator ip = pr.begin() ; ip != pr.end() ; ++ip){
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Pushing back " << (*ip)->particleID().pid() << endmsg ;
       dauts.push_back(*ip);
     }
     break ;

@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+! 2009-02-18 - Patrick Koppenburg
+ - TupleToolDalitz : get svc only once
+
 ! 2009-02-17 - V. Gligorov
  - Fixed TupleToolMCTruth for the case of MC2008 data where
    the MCParticle has no endVertex. Now returns -9999. for all
