@@ -1,4 +1,4 @@
-# $Id: Script.py,v 1.8 2008-10-30 09:11:10 hmdegaud Exp $
+# $Id: Script.py,v 1.9 2009-02-18 17:13:17 hmdegaud Exp $
 from LbUtils.Option import Parser
 from LbUtils import Env
 import logging
@@ -6,9 +6,9 @@ import logging
 import sys
 
 class Script:
-    _version = "$Id: Script.py,v 1.8 2008-10-30 09:11:10 hmdegaud Exp $".replace("$","").replace("Id:","").strip()
+    _version = "$Id: Script.py,v 1.9 2009-02-18 17:13:17 hmdegaud Exp $".replace("$","").replace("Id:","").strip()
     _description = ""
-    def __init__(self, usage=None, version = None, parser=Parser, help_output=sys.stdout, description=None):
+    def __init__(self, usage=None, version=None, parser=Parser, help_output=sys.stdout, description=None):
         """ constructor of the Script. provides default options parser 
         and logger """
         if version is None:

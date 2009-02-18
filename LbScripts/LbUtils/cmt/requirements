@@ -3,7 +3,7 @@ version v1r12
 
 use LbScriptsPolicy v*
 
-apply_pattern python_alias script=showCMTProjects
+# apply_pattern python_alias script=showCMTProjects
 apply_pattern python_alias script=fixWinCVSRoot
 apply_pattern python_alias script=makeSelfExtractScript
 apply_pattern python_alias script=lockdo
