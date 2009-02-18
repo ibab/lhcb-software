@@ -1,3 +1,7 @@
+2009-02-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v2r4
+
 2008-02-18  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/rcs.py: fixed a problem in the checkout from CVS on Windows.
