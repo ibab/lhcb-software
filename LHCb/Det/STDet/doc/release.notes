@@ -1,7 +1,10 @@
-!$Id: release.notes,v 1.155 2009-02-17 15:07:55 jluisier Exp $
+!$Id: release.notes,v 1.156 2009-02-18 07:38:53 jluisier Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
+
+! 2009-02-18 J Luisier
+ - Bug fix
 
 ! 2009-02-17 J Luisier
  - Add conditionPathName method for Sectors

@@ -1,4 +1,4 @@
-// $Id: DeSTSector.h,v 1.35 2009-02-17 15:07:55 jluisier Exp $
+// $Id: DeSTSector.h,v 1.36 2009-02-18 07:38:53 jluisier Exp $
 #ifndef _DeSTSector_H_
 #define _DeSTSector_H_
 
@@ -76,6 +76,36 @@ public:
    * @return std::string "sector name"
    */
   virtual std::string conditionsPathName() const = 0;
+
+  /** get the noise of the corresponding strip
+   * @param aChannel channel
+   * @return double noise of the strip
+   */
+  double noise(const LHCb::STChannelID& aChannel) const;
+
+  /** get the noise of the corresponding strip
+   * @param aStrip strip number
+   * @return double noise of the strip
+   */
+  double noise(const unsigned int& aStrip) const;
+
+  /** get the average noise in the sector
+   * @return double average noise
+   */
+  double sectorNoise() const;
+
+  /** get the average noise of a beetle
+   * @param beetle beetle number (1-4)
+   * @return double average noise
+   */
+  double beetleNoise(const unsigned int& beetle) const;
+
+  /** get the average noise of a beetle port
+   * @param beetle beetle number (1-4)
+   * @param port beetle port number (1-3)
+   * @return double average noise
+   */
+  double portNoise(const unsigned int& beetle, const unsigned int& port) const;
 
   /** sector identfier
    * @return id
@@ -339,7 +369,11 @@ private:
   mutable StatusMap m_stripStatus;
   std::string m_statusString;
   std::string m_versionString;
+
  
+  // Noise info
+  std::string m_noiseString;
+  std::vector< double > m_noiseValues;
 };
 
 inline unsigned int DeSTSector::id() const{

@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.49 2009-02-17 15:07:55 jluisier Exp $
+// $Id: DeSTSector.cpp,v 1.50 2009-02-18 07:38:53 jluisier Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -6,11 +6,11 @@
 
 #include <algorithm>
 
-
 // Kernel
 #include "Kernel/LineTraj.h"
 #include "Kernel/LHCbID.h"
 #include "Kernel/PiecewiseTrajectory.h"
+#include "Kernel/STDAQDefinitions.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/GaudiException.h"
 
@@ -38,7 +38,8 @@ DeSTSector::DeSTSector( const std::string& name ) :
   m_firstBeetle(1),
   m_status(OK),
   m_statusString("Status"),
-  m_versionString("DC06")
+  m_versionString("DC06"),
+  m_noiseString("Noise")
 { 
   // constructer (first strip means we number from 1)
 }
@@ -106,7 +107,9 @@ StatusCode DeSTSector::initialize() {
     m_type = param<std::string>("type");
 
     // guard ring
-    m_deadWidth = param<double>("verticalGuardRing");  
+    m_deadWidth = param<double>("verticalGuardRing");
+
+    m_noiseValues.assign(m_nStrip, 0);
  
     if (m_versionString != "DC06"){
       StatusCode sc = registerCondition(this,m_statusString,
@@ -119,6 +122,99 @@ StatusCode DeSTSector::initialize() {
     } // !DC06
   }
   return StatusCode::SUCCESS;
+}
+
+double DeSTSector::noise(const LHCb::STChannelID& aChannel) const
+{
+  return noise(aChannel.strip() - 1);
+}
+
+double DeSTSector::noise(const unsigned int& aStrip) const
+{
+  return m_noiseValues[aStrip];
+}
+
+double DeSTSector::sectorNoise() const
+{
+  double sum(0);
+
+  std::accumulate(m_noiseValues.begin(), m_noiseValues.end(), sum);
+
+  return sum / static_cast<double>(m_nStrip);
+}
+
+double DeSTSector::beetleNoise(const unsigned int& beetle) const
+{
+  if (beetle > nBeetle())
+   {
+     MsgStream msg(msgSvc(), name() );
+     msg << MSG::WARNING << "You asked for beetle " << beetle
+         << " but there are " << nBeetle() << " of them" << endmsg;
+     return 0.; 
+   }
+  else if (beetle == 0)
+  {
+    MsgStream msg(msgSvc(), name() );
+    msg << MSG::WARNING << "You asked for beetle 0 but is starts at 1"
+        << endmsg;
+     return 0.;
+  }
+ double sum(0);
+
+ std::vector<double>::const_iterator Begin(m_noiseValues.begin()), End;
+
+ Begin += (beetle - 1) * STDAQ::nports * STDAQ::nstrips;
+ End = Begin + STDAQ::nports * STDAQ::nstrips;
+
+ std::accumulate(Begin, End, sum);
+
+ return sum / static_cast<double>(STDAQ::nports * STDAQ::nstrips);
+}
+
+double DeSTSector::portNoise(const unsigned int& beetle,
+                             const unsigned int& port) const
+{
+  if (beetle > nBeetle())
+  {
+    MsgStream msg(msgSvc(), name() );
+    msg << MSG::WARNING << "You asked for beetle " << beetle
+        << " but there are " << nBeetle() << " of them" << endmsg;
+    return 0.;
+  }
+  else if (beetle == 0)
+  {
+    MsgStream msg(msgSvc(), name() );
+    msg << MSG::WARNING << "You asked for beetle 0 but is starts at 1"
+        << endmsg;
+    return 0.;
+  }
+
+  if (port > 4)
+  {
+    MsgStream msg(msgSvc(), name() );
+    msg << MSG::WARNING << "You asked for port " << port
+        << " but there are 4 of them" << endmsg;
+    return 0.;
+  }
+  else if (port == 0)
+  {
+    MsgStream msg(msgSvc(), name() );
+    msg << MSG::WARNING << "You asked for port 0 but is starts at 1"
+        << endmsg;
+    return 0.;
+  }
+
+  double sum(0);
+
+  std::vector<double>::const_iterator Begin(m_noiseValues.begin()), End;
+
+  Begin += (beetle - 1) * STDAQ::nports * STDAQ::nstrips
+    + (port - 1) * STDAQ::nstrips;
+  End = Begin + STDAQ::nports;
+
+  std::accumulate(Begin, End, sum);
+
+  return sum / static_cast<double>(STDAQ::nstrips);
 }
 
 std::auto_ptr<LHCb::Trajectory> 
