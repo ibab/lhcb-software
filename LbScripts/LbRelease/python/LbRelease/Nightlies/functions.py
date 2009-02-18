@@ -1,9 +1,10 @@
 import os, sys, shutil, re, time, pickle
+from pprint import pformat
 from LbUtils.Lock import Lock
 from threading import Thread
 from setup import *
 
-sys.path.append(os.path.abspath(os.environ['LCG_NIGHTLIES_SCRIPTDIR']))
+sys.path = [os.path.abspath(os.environ['LCG_NIGHTLIES_SCRIPTDIR'])] + sys.path
 import configuration
 
 
@@ -71,8 +72,6 @@ def run(slotName, minusj=None, platforms=None):
     """
     if minusj == None: minusj = 0
     else: minusj = int(minusj)
-    if not platforms: platformsparam = ''
-    else: platformsparam = ' --platforms "' + platforms + '"'
     os.environ['LCG_NIGHTLIES_XMLCONFIGCOPIES'] = configurationHistoryPath
     generalConfig, slotList = configuration.readConf(os.path.join(os.environ['LCG_XMLCONFIGDIR'], 'configuration.xml'))
     slot = configuration.findSlot(slotName, slotList)
@@ -89,9 +88,28 @@ def run(slotName, minusj=None, platforms=None):
         releasePath = slot.releaseDir()
         if not os.path.exists(os.path.join(releasePath, 'configuration.xml')):
             shutil.copy2(os.path.join(os.environ['LCG_XMLCONFIGDIR'], 'configuration.xml'), os.path.join(releasePath,'configuration.xml'))
+            confSumm = file(os.path.join(releasePath,'confSummary.py'), 'w')
+            confSumm.write('cmtProjectPathList = ' + pformat(slot.getCmtProjectPaths()))
+            confSumm.close()
         if os.path.exists(os.path.join(releasePath, 'configuration.xml')):
             os.environ['LCG_XMLCONFIGDIR'] = releasePath
-        os.system('python ' + os.path.join(os.environ['LCG_NIGHTLIES_SCRIPTDIR'], 'doBuild.py') + ' --slots ' + slotName + platformsparam)
+        if not platforms:
+            platformlist = slot.getPlatforms()
+        else:
+            platformlist = platforms.split()
+        while platformlist:
+            tmp = False
+            for x in platformlist:
+                if sum([int(os.path.exists(q)) for q in slot.waitForFlag(x)])==len(slot.waitForFlag(x)):
+                #if os.path.exists(slot.waitForFlag(x)):
+                    os.system('python ' + os.path.join(os.environ['LCG_NIGHTLIES_SCRIPTDIR'], 'doBuild.py') + ' --slots ' + slotName + ' --platforms ' + x)
+                    platformlist.remove(x)
+                    tmp = True
+                    break
+            if tmp == False:
+                print 'waiting 5 minutes for LCG slot to be ready...'
+                os.sleep(300)
+
         cleanPycPyoFiles(slot)
 
 def runparallel(slotName, minusj=None):
@@ -302,9 +320,6 @@ def generateBuilders(destPath, projectNames, minusj):
         Creates a set of files and directory structure to act as LCG Nightlies "builders" for each of the project given in the <projectNames> list.
         <minusj> parameter sets the value of "-j" for compiler.
     """
-    actionsFileAbsPath = os.path.dirname(os.path.abspath(__file__))
-    actionsFileAbsPath = os.path.join(actionsFileAbsPath, 'actionLauncher.py')
-
     lines = """
 action pkg_get "mkdir -p logs ; %(launcher)s get $(packageName) 2>&1 | tee -a logs/$(package)_$(CMTCONFIG)_get.log"
 action pkg_config " %(launcher)s config $(packageName) 2>&1"
