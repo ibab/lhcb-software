@@ -47,8 +47,6 @@ L0DUFromRawSeq.Members += { "L0DUFromRawAlg" };
 L0FromRawSeq.Members += {   "L0CaloCandidatesFromRaw/L0CaloFromRaw",
                             "L0MuonCandidatesFromRaw/L0MuonFromRaw",
                             "L0DUFromRawAlg" };
-L0MuonFromRaw.ConfigFile      = "$PARAMFILESROOT/data/L0MuonKernel.xml";
-
 
 //------------------------
 // L0DU Filter From Raw 
