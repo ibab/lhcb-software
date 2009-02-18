@@ -1,30 +1,27 @@
-!$Id: release.notes,v 1.156 2009-02-18 07:38:53 jluisier Exp $
+!$Id: release.notes,v 1.157 2009-02-18 12:56:47 cattanem Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
+!======================== STDet v4r7 2009-02-17 ==========================
 ! 2009-02-18 J Luisier
  - Bug fix
+ - Add missing dependency on STKernel
 
 ! 2009-02-17 J Luisier
  - Add conditionPathName method for Sectors
 
-
 ! 2009-02-03 M Needham
  - bug fix in comment
 
-
 ! 2009-2-2 M Needham
- 
   - Add nickname find by nickname functions
-
 
 ! 2009-01-23 M Needham
  - Add setters for beetle and strip update functions
 
 ! 2009-01-14 M Needham
  - Clean up initialize stage to make it few mus faster
-
 
 !======================== STDet v4r6 2008-11-17 ==========================
 ! 2008-11-04 M Needham
