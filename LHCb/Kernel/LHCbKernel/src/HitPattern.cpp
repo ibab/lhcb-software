@@ -1,4 +1,3 @@
-#include <cassert>
 #include "Kernel/HitPattern.h"
 
 namespace LHCb
