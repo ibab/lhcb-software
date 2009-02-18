@@ -1,4 +1,4 @@
-// $Id: CollectLumiData.h,v 1.4 2008-08-26 14:03:14 panmanj Exp $
+// $Id: CollectLumiData.h,v 1.5 2009-02-18 13:11:13 panmanj Exp $
 #ifndef COLLECTLUMIDATA_H 
 #define COLLECTLUMIDATA_H 1
 
@@ -7,7 +7,6 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiAlg/GaudiTool.h"
-#include "HltBase/ANNSvc.h"
 // from LHCB
 #include "Event/Track.h"
 #include "Event/Vertex.h"

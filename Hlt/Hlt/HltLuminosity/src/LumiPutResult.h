@@ -1,12 +1,10 @@
-// $Id: LumiPutResult.h,v 1.1 2008-08-29 07:52:45 panmanj Exp $
+// $Id: LumiPutResult.h,v 1.2 2009-02-18 13:11:13 panmanj Exp $
 #ifndef LUMIPUTRESULT_H 
 #define LUMIPUTRESULT_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
-
-#include "HltBase/ANNSvc.h"
 
 /** @class LumiPutResult LumiPutResult.h
  *  
@@ -26,7 +24,6 @@ public:
 
 protected:
   std::string m_InputContainerName;
-  std::vector<IANNSvc::minor_value_type> m_items;
   unsigned int m_size;
   double *m_means;
   double *m_thresholds;

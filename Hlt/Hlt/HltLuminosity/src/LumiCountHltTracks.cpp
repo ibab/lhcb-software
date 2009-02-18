@@ -1,12 +1,11 @@
-// $Id: LumiCountHltTracks.cpp,v 1.6 2009-01-14 21:06:50 graven Exp $
+// $Id: LumiCountHltTracks.cpp,v 1.7 2009-02-18 13:11:13 panmanj Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
 
 #include "Event/Track.h"
 #include "Event/HltLumiSummary.h"
-
-#include "HltBase/ANNSvc.h"
+#include "Event/LumiCounters.h"
 
 // local
 #include "LumiCountHltTracks.h"
@@ -52,16 +51,11 @@ StatusCode LumiCountHltTracks::initialize() {
   info() << "OutputContainer        " << m_OutputContainerName << endmsg;
 
   // ------------------------------------------
-  IANNSvc* annSvc = svc<IANNSvc>("LumiANNSvc");
-
-  boost::optional<IANNSvc::minor_value_type> 
-    x = annSvc->value("LumiCounters", m_CounterName);
-
-  if (!x) {
-    warning() << "LumiCounter not found with name: " << m_CounterName <<  endmsg;
+  m_Counter = LHCb::LumiCounters::counterKeyToType(m_CounterName);
+  if ( m_Counter == LHCb::LumiCounters::Unknown ) {
+    info() << "LumiCounter not found with name: " << m_CounterName <<  endmsg;
   } else {
-    m_Counter = x->second;
-    info() << "ExtraInfo key value: " << m_Counter << endmsg;
+    info() << m_CounterName << " key value: " << m_Counter << endmsg;
   }
   // ------------------------------------------
 

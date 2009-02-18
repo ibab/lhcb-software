@@ -1,11 +1,12 @@
-// $Id: HltLumiFillRawBuffer.cpp,v 1.4 2008-08-26 14:03:14 panmanj Exp $
+// $Id: HltLumiFillRawBuffer.cpp,v 1.5 2009-02-18 13:11:13 panmanj Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
-#include "HltBase/ANNSvc.h"
+
+#include "Event/HltLumiSummary.h"
+#include "Event/LumiCounters.h"
 
 // local
-#include "Event/HltLumiSummary.h"
 #include "HltLumiFillRawBuffer.h"
 
 //////////////////////////////////////////
@@ -50,17 +51,7 @@ StatusCode HltLumiFillRawBuffer::initialize() {
   m_totDataSize = 0;
   m_bank.reserve(20);
   m_bankType  = LHCb::RawBank::HltLumiSummary;
-
-  IANNSvc* annSvc = svc<IANNSvc>("LumiANNSvc");
-  boost::optional<IANNSvc::minor_value_type> 
-    x = annSvc->value("LumiCounters", "LastKey");
-  if (!x) {
-    error() << "LastKey not found in LumiCounters. " <<  endmsg;
-    m_LastKey = 0;
-  } else {
-    m_LastKey = x->second;
-    info() << "ExtraInfo LastKey key value: " << m_LastKey << endmsg;
-  }
+  m_LastKey = LHCb::LumiCounters::LastGlobal;
 
   return StatusCode::SUCCESS;
 };

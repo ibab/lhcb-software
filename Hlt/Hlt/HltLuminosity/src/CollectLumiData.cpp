@@ -1,4 +1,4 @@
-// $Id: CollectLumiData.cpp,v 1.6 2008-08-26 14:03:14 panmanj Exp $
+// $Id: CollectLumiData.cpp,v 1.7 2009-02-18 13:11:13 panmanj Exp $
 // Include files 
 
 // from Gaudi
@@ -9,8 +9,7 @@
 #include "Event/Vertex.h"
 #include "Event/RecVertex.h"
 #include "Event/HltLumiSummary.h"
-
-#include "HltBase/ANNSvc.h"
+#include "Event/LumiCounters.h"
 
 // local
 #include "CollectLumiData.h"
@@ -59,26 +58,18 @@ StatusCode CollectLumiData::initialize() {
 
 
   // ------------------------------------------
-  IANNSvc* annSvc = svc<IANNSvc>("LumiANNSvc");
-
-  boost::optional<IANNSvc::minor_value_type> 
-    x = annSvc->value("LumiCounters","PV2D");
-
-  if (!x) {
-    // name1 is not known under major "MyMajorName"
-    info() << "LumiCounters not found" <<  endmsg;
+  int m_iPV2D = LHCb::LumiCounters::counterKeyToType("PV2D");
+  if ( m_iPV2D == LHCb::LumiCounters::Unknown ) {
+    info() << "LumiCounters not found: " << "PV2D" <<  endmsg;
   } else {
-    m_iPV2D = x->second;
     info() << "LumiCounters::PV2D key value: " << m_iPV2D << endmsg;
   }
-    x = annSvc->value("LumiCounters","RZVelo");
 
-  if (!x) {
-    // name1 is not known under major "MyMajorName"
-    info() << "LumiCounters not found" <<  endmsg;
+  int m_iRZVelo = LHCb::LumiCounters::counterKeyToType("RZVelo");
+  if ( m_iRZVelo == LHCb::LumiCounters::Unknown ) {
+    info() << "LumiCounters not found: " << "RZVelo" <<  endmsg;
   } else {
-    m_iRZVelo = x->second;
-    info() << "LumiCounters::PV2D key value: " << m_iRZVelo << endmsg;
+    info() << "LumiCounters::RZVelo key value: " << m_iRZVelo << endmsg;
   }
   // ------------------------------------------
 

@@ -1,4 +1,4 @@
-// $Id: LumiAnalyser.cpp,v 1.7 2009-01-21 12:02:58 graven Exp $
+// $Id: LumiAnalyser.cpp,v 1.8 2009-02-18 13:11:13 panmanj Exp $
 // Include files 
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -9,26 +9,9 @@
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IAxis.h"
 
-#include "HltBase/ANNSvc.h"
+#include "Event/LumiCounters.h"
+#include "Event/HltLumiSummary.h"
 #include "LumiAnalyser.h"
-
-// to access the histos
-#include "GaudiKernel/GaudiException.h" 
-#include "GaudiKernel/Bootstrap.h" 
-#include "GaudiKernel/IUpdateManagerSvc.h"
-
-#include "GaudiKernel/Kernel.h"
-#include "GaudiKernel/IDataManagerSvc.h"
-#include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/IMessageSvc.h"
-
-#include "GaudiKernel/ISvcManager.h"
-#include "GaudiKernel/ISvcLocator.h"
-#include "GaudiKernel/IRegistry.h"
-#include "GaudiKernel/LinkManager.h"
-#include "GaudiKernel/SmartDataPtr.h"
-
-#include "boost/foreach.hpp"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : LumiAnalyser
@@ -92,8 +75,6 @@ StatusCode LumiAnalyser::initialize() {
   }
 
   // ------------------------------------------
-  m_annSvc = svc<IANNSvc>("LumiANNSvc");
-
   m_call_counter = 0;
 
   if (m_Variables.size()!=m_Thresholds.size() && !m_Thresholds.empty()) {
@@ -126,7 +107,7 @@ StatusCode LumiAnalyser::initialize() {
   m_size = m_Variables.size();
   m_means = new double[m_size];            // create a fixed location for DIM to look at
   m_thresholds = new double[m_size];       // create a fixed location for DIM to look at
-  m_infoKeys = new unsigned int[m_size];   // corresponding key in the info 
+
   int k = 0;
   for(std::vector< std::string >::iterator ivar = m_Variables.begin() ; 
       ivar!= m_Variables.end() ; ++ivar, ++k ){  
@@ -196,7 +177,6 @@ StatusCode LumiAnalyser::finalize() {
   // release storage
   delete[] m_means;
   delete[] m_thresholds;
-  delete[] m_infoKeys;
 
   return HltBaseAlg::finalize();
 }
@@ -278,11 +258,11 @@ StatusCode LumiAnalyser::accumulate() {
   int i = 0;
   for (std::vector<std::string>::iterator iVar = m_Variables.begin(); iVar != m_Variables.end(); ++iVar,++i) {
     std::string var=*iVar;
-    boost::optional<IANNSvc::minor_value_type> x = m_annSvc->value("LumiCounters", var);
-    if (!x) {
+    int counter = LHCb::LumiCounters::counterKeyToType(var);
+    if ( counter == LHCb::LumiCounters::Unknown ) {
       warning() << "LumiCounter not found with name: " << var <<  endmsg;
-    } else {
-      int counter = x->second;
+    }
+    else {
       int ivalue = HltLumiSummary->info(counter,-1);
       if (ivalue > -1) {
         ((*theMap)[var])->first += 1;
@@ -290,11 +270,9 @@ StatusCode LumiAnalyser::accumulate() {
         ((*theMap)[var+"_threshold"])->first += 1;
         if ( ivalue > m_Thresholds[i] ) {
           ((*theMap)[var+"_threshold"])->second += 1;
-	  /*
-          warning() << "LumiAnalyser::accumulate()" << bxType << " " << var << " " 
-                    << counter << " " << ivalue << endmsg;
-	  */
         }
+	//warning() << "LumiAnalyser::accumulate()" << bxType << " " << var << " " 
+	//	  << counter << " " << ivalue << endmsg;
       }
     }
   }
@@ -347,10 +325,6 @@ StatusCode LumiAnalyser::analyse() {
       // fill the rawR histos
       if ( m_rawHistos ) {
         (*(m_histoStore[bx]))[var]->fill(R);
-	/*
-	  double entries = (*(m_histoStore[bx]))[var]->entries();
-	  warning() << "Raw Histos: " << bx << " " << var << " " << R << " entries "<< entries << endmsg;
-	*/
       }
       
     }

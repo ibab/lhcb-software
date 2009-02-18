@@ -1,13 +1,12 @@
-// $Id: LumiPutResult.cpp,v 1.1 2008-08-29 07:52:45 panmanj Exp $
+// $Id: LumiPutResult.cpp,v 1.2 2009-02-18 13:11:13 panmanj Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
 
-#include "HltBase/ANNSvc.h"
+#include "Event/LumiCounters.h"
 #include "Event/HltLumiResult.h"
-#include "boost/foreach.hpp"
 
 // local
 #include "LumiPutResult.h"
@@ -59,23 +58,31 @@ StatusCode LumiPutResult::initialize() {
 
   info() << "InputContainer   " << m_InputContainerName << endmsg;
 
-  m_items = svc<IANNSvc>("LumiANNSvc")->items("LumiCounters");
-  m_size = m_items.size();
+  // first count number of valid keys
+  m_size = 0;
+  for ( int iKey = 0; iKey != LHCb::LumiCounters::LastGlobal; iKey++ ) {
+    if ( iKey != LHCb::LumiCounters::Unknown ) {
+      m_size++;
+    }
+  }
+
   // get arrays
   m_means = new double[m_size];            // create a fixed location for DIM to look at
   m_thresholds = new double[m_size];       // create a fixed location for DIM to look at
   m_infoKeys = new unsigned int[m_size];   // corresponding key in the info 
 
   int i=0;
-  BOOST_FOREACH( IANNSvc::minor_value_type iKey, m_items )  {
-    // declare all possible counters
-    std::string name  = iKey.first;
-    m_infoKeys[i] = iKey.second;
-    // announce the values
-    declareInfo("COUNTER_TO_RATE["+name+"_mean]", m_means[i], "mean of "+name);
-    declareInfo("COUNTER_TO_RATE["+name+"_threshold]", m_thresholds[i], "fraction over threshold of "+name);
-    info() << "counter " << name << " declared at " << i << " with key " << m_infoKeys[i] << endmsg;
-    i++;
+  for ( int iKey = 0; iKey != LHCb::LumiCounters::LastGlobal; iKey++ ) {
+    if ( iKey != LHCb::LumiCounters::Unknown ) {
+      // declare all possible counters
+      std::string name = LHCb::LumiCounters::counterKeyToString(iKey);
+      m_infoKeys[i] = iKey;
+      // announce the values
+      declareInfo("COUNTER_TO_RATE["+name+"_mean]", m_means[i], "mean of "+name);
+      declareInfo("COUNTER_TO_RATE["+name+"_threshold]", m_thresholds[i], "fraction over threshold of "+name);
+      info() << "counter " << name << " declared at " << i << " with key " << m_infoKeys[i] << endmsg;
+      i++;
+    }
   }
 
   return StatusCode::SUCCESS;

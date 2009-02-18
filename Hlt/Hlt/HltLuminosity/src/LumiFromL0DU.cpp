@@ -1,4 +1,4 @@
-// $Id: LumiFromL0DU.cpp,v 1.6 2008-09-24 14:15:35 panmanj Exp $
+// $Id: LumiFromL0DU.cpp,v 1.7 2009-02-18 13:11:13 panmanj Exp $
 // Include files 
 
 // from Gaudi
@@ -6,8 +6,7 @@
 #include "GaudiKernel/IAlgManager.h"
 
 #include "Event/HltLumiSummary.h"
-
-#include "HltBase/ANNSvc.h"
+#include "Event/LumiCounters.h"
 
 // local
 #include "LumiFromL0DU.h"
@@ -62,19 +61,13 @@ StatusCode LumiFromL0DU::initialize() {
   m_fromRaw = tool<IL0DUFromRawTool>( m_fromRawTool , m_fromRawTool  );
 
   // ------------------------------------------
-  IANNSvc* annSvc = svc<IANNSvc>("LumiANNSvc");
-
-  boost::optional<IANNSvc::minor_value_type> 
-    x = annSvc->value("LumiCounters", m_CounterName);
-
-  if (!x) {
+  m_Counter = LHCb::LumiCounters::counterKeyToType(m_CounterName);
+  if ( m_Counter == LHCb::LumiCounters::Unknown ) {
     warning() << "LumiCounter not found with name: " << m_CounterName <<  endmsg;
   } else {
-    m_Counter = x->second;
     info() << "ExtraInfo key value: " << m_Counter << endmsg;
   }
   // ------------------------------------------
-  //m_channelmaptool = tool<IOTChannelMapTool>("OTChannelMapTool");
  
   return StatusCode::SUCCESS;
 }

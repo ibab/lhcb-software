@@ -1,4 +1,4 @@
-// $Id: LumiAnalyser.h,v 1.7 2009-01-19 20:08:46 graven Exp $
+// $Id: LumiAnalyser.h,v 1.8 2009-02-18 13:11:13 panmanj Exp $
 #ifndef LUMIANALYSER_H 
 #define LUMIANALYSER_H 1
 
@@ -8,7 +8,6 @@
 #include "Event/RecVertex.h"
 #include "Event/HltLumiSummary.h"
 #include "HltBase/HltBaseAlg.h"
-#include "HltBase/ANNSvc.h"
 
 /** @class LumiAnalyser 
  *  
@@ -65,7 +64,6 @@ protected:
   long m_call_counter;
 
   // counter with all the events with fine inputs
-  IANNSvc* m_annSvc;
   std::string m_DataName;                        // input location of summary data
   bool m_rawHistos;                              // flag to store raw histos of R
 
@@ -94,11 +92,9 @@ protected:
   unsigned long m_gpsPrevious;                                    // to keep previous time when analysed
 
   bool m_publishToDIM;                               // to publish to DIM
-  std::vector<IANNSvc::minor_value_type> m_items;    
   unsigned int m_size;
   double *m_means;
   double *m_thresholds;
-  unsigned int *m_infoKeys;
 
 };
 #endif // LUMIANALYSER_H

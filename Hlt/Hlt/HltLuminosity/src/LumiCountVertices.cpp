@@ -1,4 +1,4 @@
-// $Id: LumiCountVertices.cpp,v 1.5 2008-08-26 14:03:14 panmanj Exp $
+// $Id: LumiCountVertices.cpp,v 1.6 2009-02-18 13:11:13 panmanj Exp $
 // Include files 
 
 // from Gaudi
@@ -8,8 +8,7 @@
 #include "Event/Vertex.h"
 #include "Event/RecVertex.h"
 #include "Event/HltLumiSummary.h"
-
-#include "HltBase/ANNSvc.h"
+#include "Event/LumiCounters.h"
 
 // local
 #include "LumiCountVertices.h"
@@ -58,16 +57,11 @@ StatusCode LumiCountVertices::initialize() {
 
 
   // ------------------------------------------
-  IANNSvc* annSvc = svc<IANNSvc>("LumiANNSvc");
-
-  boost::optional<IANNSvc::minor_value_type> 
-    x = annSvc->value("LumiCounters", m_CounterName);
-
-  if (!x) {
-    warning() << "LumiCounter not found with name: " << m_CounterName <<  endmsg;
+  m_Counter = LHCb::LumiCounters::counterKeyToType(m_CounterName);
+  if ( m_Counter == LHCb::LumiCounters::Unknown ) {
+    info() << "LumiCounter not found with name: " << m_CounterName <<  endmsg;
   } else {
-    m_Counter = x->second;
-    info() << "ExtraInfo key value: " << m_Counter << endmsg;
+    info() << m_CounterName << " key value: " << m_Counter << endmsg;
   }
   // ------------------------------------------
  

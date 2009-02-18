@@ -1,12 +1,11 @@
-// $Id: LumiHistoMaker.cpp,v 1.10 2008-12-30 21:23:13 graven Exp $
+// $Id: LumiHistoMaker.cpp,v 1.11 2009-02-18 13:11:13 panmanj Exp $
 // Include files 
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
 
-#include "HltBase/ANNSvc.h"
+#include "Event/LumiCounters.h"
 
 #include "LumiHistoMaker.h"
-
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : LumiHistoMaker
@@ -44,8 +43,6 @@ StatusCode LumiHistoMaker::initialize() {
   StatusCode sc = HltBaseAlg::initialize(); 
   if ( sc.isFailure() ) return sc;
 
-  IANNSvc* annSvc = svc<IANNSvc>("LumiANNSvc");
-
   // book a histogram for each recognized counter name
   m_Histos.clear();
   m_names.clear();
@@ -74,11 +71,10 @@ StatusCode LumiHistoMaker::initialize() {
   int i=0;
   for(std::vector< std::string >::iterator ivar = m_Variables.begin() ; 
       ivar!= m_Variables.end() ; ++ivar, ++i ){
-    boost::optional<IANNSvc::minor_value_type> x = annSvc->value("LumiCounters", *ivar);
-    if (!x) {
+    int counter = LHCb::LumiCounters::counterKeyToType(*ivar);
+    if ( counter == LHCb::LumiCounters::Unknown ) {
       warning() << "LumiCounter not found with name: " << *ivar <<  endmsg;
     } else {
-      int counter = x->second;
       //Generate Histos using known number and name of variables
       int bins = m_MaxBin;
       if (useMaxBins) {
