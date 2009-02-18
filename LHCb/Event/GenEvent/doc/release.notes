@@ -2,6 +2,7 @@
 ! package coordinator: G.Corti
 !------------------------------------------------------------------------------
 
+!======================= GenEvent v5r4 2009-02-18 =============================
 ! 2009-02-11 - Marco Cattaneo
  - Add missing dictionary for GenVertex. 
    N.B. This dictionary will be provided in HepMCRflx in LCG_56
