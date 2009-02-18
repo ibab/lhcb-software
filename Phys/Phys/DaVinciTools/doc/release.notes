@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.404 2009-02-17 14:30:08 jpalac Exp $
+! $Id: release.notes,v 1.405 2009-02-18 13:06:26 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-02-18 - Juan PALACIOS
+ - src/CombineParticles.cpp
+  . temporary hack to fix wrong related PV bug. Remove P->PV relations from
+    a candidate that does not pass the cuts.
 
 ! 2009-02-17 - Juan PALACIOS
  - src/PhysDesktop.h
