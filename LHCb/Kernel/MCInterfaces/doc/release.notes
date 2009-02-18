@@ -4,6 +4,7 @@
 ! Purpose     : Interfaces with dependency on MC
 !-----------------------------------------------------------------------------
 
+!==================== MCInterfaces v1r7 2009-02-18 ===========================
 ! 2009-01-27 M Needham 
  - Extend IGhostTrackClassification interface with isGhost methods
 
