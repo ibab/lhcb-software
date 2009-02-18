@@ -333,7 +333,7 @@ class CVS(RevisionControlSystem):
         if not isHead:
             options += ("-r", version)
         if vers_dir:
-            options += ("-d", "/".join(module, version))
+            options += ("-d", "/".join([module, version]))
         options += (module,)
         apply(_cvs, options, {"cwd": dest, "stdout": None, "stderr": None})
 
