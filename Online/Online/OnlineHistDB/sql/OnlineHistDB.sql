@@ -1806,7 +1806,7 @@ begin
   myID := theID;
  else 
   -- new message
-  insert into ANAMESSAGE(ID,SAVESET,ALEVEL) VALUES(ANAMESSAGE_ID.NEXTVAL,theSaveSet,theID);
+  insert into ANAMESSAGE(ID,SAVESET,ALEVEL) VALUES(ANAMESSAGE_ID.NEXTVAL,theSaveSet,theLevel);
   select ANAMESSAGE_ID.CURRVAL into myID  from ERGOSUM;
  end if;
  update ANAMESSAGE set MSGTEXT=theMessage,MSGTIME=SYSTIMESTAMP,
