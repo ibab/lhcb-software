@@ -1,9 +1,10 @@
-!$Id: release.notes,v 1.288 2009-02-17 14:42:58 jpalac Exp $
+!$Id: release.notes,v 1.289 2009-02-18 15:54:47 cattanem Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!======================== DaVinciKernel v7r3 2009-02-18 =====================
 ! 2009-02-17 - Juan PALACIOS
  - src/Lib/DVAlgorithm.cpp
   . Test whether P->PV relations table is empty before returning related PV.
