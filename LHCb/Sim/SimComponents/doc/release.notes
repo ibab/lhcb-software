@@ -5,9 +5,15 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+
+! 2009-02-17 M Needham
+  - Add printout of half sample width
+
+
 !====================== SimComponents v2r16 2009-02-18 =======================
 ! 2009-01-16 - Chris Jones
  - Fix memory leak in MCReconstructible
+
 
 !====================== SimComponents v2r15 2009-01-08 =======================
 ! 2009-01-08 - Marco Cattaneo

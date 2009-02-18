@@ -1,4 +1,4 @@
-// $Id: MCHitMonitor.cpp,v 1.6 2008-12-04 14:38:53 mneedham Exp $
+// $Id: MCHitMonitor.cpp,v 1.7 2009-02-18 15:33:02 mneedham Exp $
 //
 // This File contains the implementation of the MCHitMonitor
 //
@@ -146,10 +146,12 @@ StatusCode MCHitMonitor::finalize(){
 
   std::sort(m_energyVec.begin(), m_energyVec.end());
   const double shorth = ModeFunctions::shorth(m_energyVec.begin(), m_energyVec.end());
+  const double halfWidth = ModeFunctions::halfSampleWidth(m_energyVec.begin(), m_energyVec.end());
   info() << "*** Summary ***" << endmsg;
   info() << "#hits per event: " << counter("numberHits").flagMean() << endmsg;
   info() << "Mean beta * gamma: " << counter("betaGamma").flagMean() << endmsg; 
   info() << "Most Probable deposited charge: " << shorth << endmsg;
+  info() << "Half Sample width " << halfWidth << endmsg;
 
   return GaudiHistoAlg::finalize();
 }
@@ -161,10 +163,15 @@ StatusCode MCHitMonitor::fillHistograms(const LHCb::MCHit* aHit) const{
 
   // check 1 can find pointer to MCparticle
   const LHCb::MCParticle* aParticle = aHit->mcParticle();
-
+  
   if (!aParticle){
     err() << "failed to find MCParticle" <<endreq;
     return StatusCode::FAILURE;
+  }
+
+  const LHCb::MCVertex* vertex = aParticle->originVertex();
+  if (vertex){
+    if (vertex->type() == LHCb::MCVertex::DeltaRay) ++counter("DeltaRay");
   }
 
   // p 
