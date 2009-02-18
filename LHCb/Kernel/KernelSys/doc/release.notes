@@ -4,6 +4,11 @@
 ! Purpose     : collect Kernel packages
 !-----------------------------------------------------------------------------
 
+!======================== KernelSys v12r0 2009-02-18 =========================
+! 2009-02-18 - Marco Cattaneo
+ - Remove explicit versions from requirements
+ - Add STKernel, TfKernel
+
 !======================== KernelSys v11r0 2009-01-08 =========================
 ! 2009-01-08 - Marco Cattaneo
  - Add PartProp v1r0
