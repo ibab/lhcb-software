@@ -4,6 +4,7 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+!================ DAQEvent v7r18 2009-02-18 ===========================
 ! 2009-02-03 - Marco Clemencic
  - Moved:
    - RunChangeIncident to Det/DetDesc
