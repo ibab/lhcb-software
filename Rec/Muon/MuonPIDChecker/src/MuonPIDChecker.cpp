@@ -110,7 +110,7 @@ StatusCode MuonPIDChecker::initialize() {
   m_cmisID = 0;
   m_cmisIDDLL = 0;
   m_cmisIDnShared = 0;
-
+  
   return StatusCode::SUCCESS;
 };
 
@@ -124,11 +124,13 @@ StatusCode MuonPIDChecker::execute() {
 
   debug()  << "==> Number of events: " << m_neventsTest << endreq;
 
-  // get  MuonPID objects
-  if (!exist<LHCb::MuonPIDs>(m_MuonPIDsPath)){
-    return Warning(" Failed to get MuonPID objects in "+m_MuonPIDsPath,StatusCode::SUCCESS,1);
-  }
+  // get  MuonPID objects 
   LHCb::MuonPIDs* pMuids=get<LHCb::MuonPIDs>(m_MuonPIDsPath);
+  if (!pMuids){
+    error() << " Failed to get MuonPID objects in "
+        <<  m_MuonPIDsPath << endreq;
+    return StatusCode::FAILURE;
+  }
 
   // MC association 
   LinkedTo<LHCb::MCParticle, LHCb::Track>* myLinkToTrack = NULL;
@@ -137,14 +139,8 @@ StatusCode MuonPIDChecker::execute() {
                                          m_TracksPath );
   }
   // Get tracks to loop over
-  if (!exist<LHCb::Tracks>(m_TracksPath)){
-    return Warning(" Failed to get Track objects in "+m_TracksPath,StatusCode::SUCCESS,1);
-  }
   LHCb::Tracks* trTracks = get<LHCb::Tracks>(m_TracksPath);
   // Get muon tracks to loop over
-  if (!exist<LHCb::Tracks>(m_MuonTracksPath)){
-    return Warning(" Failed to get Muon Track objects in "+m_MuonTracksPath,StatusCode::SUCCESS,1);
-  } 
   LHCb::Tracks* muTracks = get<LHCb::Tracks>(m_MuonTracksPath);
 
   if (!trTracks){
@@ -197,16 +193,16 @@ StatusCode MuonPIDChecker::execute() {
 	   m_TrMuonLhd= (*imuid)->MuonLLMu();
 	   m_TrNMuonLhd = (*imuid)->MuonLLBg();
 	   m_TrNShared = (*imuid)->nShared();
-     if( std::abs( stateP0->qOverP() ) > 0.001 / Gaudi::Units::GeV ) {
-       m_Trp0 = (1./stateP0->qOverP())/Gaudi::Units::GeV; 
-     }
-     else if( stateP0->qOverP() > 0. ) {
-       m_Trp0 = 1000. / Gaudi::Units::GeV;
-     }
-     else {
-       m_Trp0 = -1000. / Gaudi::Units::GeV;
-     }
-     
+	   if( std::abs( stateP0->qOverP() ) > 0.001 / Gaudi::Units::GeV ) {
+	     m_Trp0 = (1./stateP0->qOverP())/Gaudi::Units::GeV; 
+	   }
+	   else if( stateP0->qOverP() > 0. ) {
+	     m_Trp0 = 1000. / Gaudi::Units::GeV;
+	   }
+	   else {
+	     m_Trp0 = -1000. / Gaudi::Units::GeV;
+	   }
+
 	   // Retrieve track type (MC)
            if (m_RunningMC) {
 	     LHCb::MCParticle* mcP = myLinkToTrack->first(*iTrack);
@@ -225,6 +221,10 @@ StatusCode MuonPIDChecker::execute() {
            }
 	   // Fill Track Info
 	   fillTrHistos(0);
+	   char hnameEff[10];
+	   sprintf ( hnameEff, "Eff_IM_%d", m_TrType);
+	   profile1D( m_Trp0, m_TrIsMuon, hnameEff, "Eff. versus Momentum(GeV)", -200., 200., 400 );
+
 	   m_cpresel[m_TrType]++;
 	   if (m_TrIsMuon == 1) {
 	     fillTrHistos(1);
@@ -239,54 +239,125 @@ StatusCode MuonPIDChecker::execute() {
   } // loop over tracks 
 
   // Plot track multiplicity
-  plot1D(m_nTr, "hNtracks","Track multiplicity", 0, 200, 200);
-  plot1D(m_nPSTr, "hNPStracks","Pre-selected Track multiplicity", 0, 200, 200);
-  plot1D(m_nIMTr, "hNIMtracks","IsMuon=1 Track multiplicity", 0, 20, 20);
+  plot1D(m_nTr,   "hNtracks",  "Track multiplicity", -0.5, 199.5, 200);
+  plot1D(m_nPSTr, "hNPStracks","Pre-selected Track multiplicity", -0.5, 199.5, 200);
+  plot1D(m_nIMTr, "hNIMtracks","IsMuon=1 Track multiplicity", -0.5, 19.5, 20);
   if (m_RunningMC) {
-    plot1D(m_nPSGhosts, "hNPSGhosts","Pre-selected ghost multiplicity", 0, 200, 400);
-    plot1D(m_nIMGhosts, "hNIMGhosts","IsMuon=1 ghost multiplicity", 0, 20, 20);
+    plot1D(m_nPSGhosts, "hNPSGhosts","Pre-selected ghost multiplicity", -0.5, 199.5, 200);
+    plot1D(m_nIMGhosts, "hNIMGhosts","IsMuon=1 ghost multiplicity", -0.5, 19.5, 20);
   }
 
   // loop over muon Tracks
   LHCb::Tracks::const_iterator imuTrack;
 
+  debug() << " Loop over Muon Tracks " << endreq;
+  unsigned int nmutracks=0;
+  std::vector<int> assocHits(m_NRegion*m_NStation);
+
   for (imuTrack = muTracks->begin() ; imuTrack != muTracks->end() ; imuTrack++){
     std::vector<LHCb::LHCbID> mucoords = (*imuTrack) -> lhcbIDs();
     std::vector<LHCb::LHCbID>::iterator iID;
-    int nhitsfoi[20]={0};
+    nmutracks++;
+    unsigned int  nhitsfoi[20]={0};
+    double MeanX[5]={0};
+    double MeanY[5]={0};
     for (iID = mucoords.begin(); iID != mucoords.end(); iID++) {
       if (!(iID->isMuon())) continue;
+
       LHCb::MuonTileID mutile = iID->muonID();
       int region = mutile.region();
       int station = mutile.station();
       int nStatReg = station*m_NRegion+region;
       nhitsfoi[nStatReg]++;
+      assocHits[nStatReg]++;
+
+      double x,dx,y,dy,z,dz;
+      StatusCode sc = m_mudet->Tile2XYZ(mutile,x,dx,y,dy,z,dz);
+      MeanX[station] += x;
+      MeanY[station] += y;
+      debug() <<" ntrack and coord info " <<  nmutracks <<" and "<< (*iID) << endreq; 
+      debug() <<" nhitsfoi  " << nhitsfoi[nStatReg]<< endreq;
     } //end of loop over lhcbIDs 
-    for (unsigned int i=0; i<m_NRegion*m_NStation; i++){
-      plot2D(i, nhitsfoi[i],
-      "hNhitsFOIReg", "Hits in FOI per region (per track)", 0, 21, 0, 5, 21, 5);
+    // Fill hit multiplicity within FOI for each station
+    unsigned int nhitsfoiS[5]={0};
+    int TrackRegion[5]={-1,-1,-1,-1,-1};
+    for (unsigned int i=0; i<m_NStation; i++){
+      unsigned int HighestMult=0;
+      // Add hits in different regions and assign most populated region as the track region
+      for (unsigned int j=0; j<m_NRegion;j++){
+         nhitsfoiS[i]+=nhitsfoi[i*m_NRegion+j];  
+	 if (nhitsfoi[i*m_NRegion+j]>HighestMult) {
+	   HighestMult=nhitsfoi[i*m_NRegion+j];
+	   TrackRegion[i] = j;
+	 }
+      }
+    }
+    // Now check if there are hits in all stations and fill histos
+    for (unsigned int i=0; i<m_NStation; i++){
+      debug()<< "1 Track Region and nhitsfoiS  " << TrackRegion[i] <<" "<< nhitsfoiS[i]<< endreq;
+      if (TrackRegion[i]<0){
+        TrackRegion[i]=i*m_NRegion+TrackRegion[2];  // Take same Region as in M3
+	if (i>2) {
+	  TrackRegion[i]= TrackRegion[i]- 2*m_NRegion;
+        // x(z') = x(z) + (z' - z)* dx/dz          // Project from M2-M3 segment
+	  MeanX[i] = MeanX[2] + (m_stationZ[i]-m_stationZ[2])*(MeanX[2]-MeanX[1])/(m_stationZ[2]-m_stationZ[1]);
+	  MeanY[i] = MeanY[2] + (m_stationZ[i]-m_stationZ[2])*(MeanY[2]-MeanY[1])/(m_stationZ[2]-m_stationZ[1]);
+	}else {
+	  TrackRegion[i]=i*m_NRegion+TrackRegion[i];  // Get number from 0 to 19
+	  MeanX[i] = MeanX[2]/nhitsfoiS[2] + (m_stationZ[i]-m_stationZ[2])*         
+	    (MeanX[2]/nhitsfoiS[2] - MeanX[1]/nhitsfoiS[1] )/(m_stationZ[2]-m_stationZ[1]);
+	  MeanY[i] = MeanY[2]/nhitsfoiS[2] + (m_stationZ[i]-m_stationZ[2])*
+	    (MeanY[2]/nhitsfoiS[2] - MeanY[1]/nhitsfoiS[1] )/(m_stationZ[2]-m_stationZ[1]);
+	}
+      }else{
+	TrackRegion[i]=i*m_NRegion+TrackRegion[i];  // Get number from 0 to 19
+	MeanX[i] = MeanX[i]/nhitsfoiS[i];
+	MeanY[i] = MeanY[i]/nhitsfoiS[i];
+      }
+      debug()<< "2 Track Region and nhitsfoiS  " << TrackRegion[i] <<" "<< nhitsfoiS[i]<< endreq;
+      debug()<< " Mean X MeanY " << MeanX[i] <<" "<< MeanY[i]<< endreq;
+      plot2D(nhitsfoiS[i],TrackRegion[i],
+	  "hNhitsFOIReg", "Hits in FOI per region (per track)", -0.5, 9.5,
+	  -0.5, m_NRegion*m_NStation-0.5, 10, m_NRegion*m_NStation); 
+      profile1D ( TrackRegion[i], nhitsfoiS[i], "ProfNhitsReg", "Hits in FOI per region (per track)",
+	  -0.5, m_NRegion*m_NStation-0.5, m_NRegion*m_NStation); 
+	 
+      char hname[15]; 
+      sprintf ( hname, "hNhitsFOIvsX_M%d", i+1);
+      plot2D(nhitsfoiS[i],MeanX[i],
+	  hname, "Hits in FOI vs X (per track)", -0.5, 9.5, -5500, 5500, 10, 100);
+      sprintf ( hname, "hNhitsFOIvsY_M%d", i+1);
+      plot2D(nhitsfoiS[i],MeanY[i],
+	  hname, "Hits in FOI vs Y (per track)", -0.5, 9.5, -5000, 5000, 10, 100);
+      sprintf ( hname, "PNhitsFOIvsX_M%d", i+1);
+      profile1D( MeanX[i], nhitsfoiS[i], hname, "Hits in FOI vs X (per track)", -5500, 5500, 100); 
+      sprintf ( hname, "PNhitsFOIvsY_M%d", i+1);
+      profile1D( MeanY[i], nhitsfoiS[i], hname, "Hits in FOI vs Y (per track)", -5500, 5500, 100); 
     }
 
   } //end of muTrack loop
-  if (!exist<LHCb::MuonCoords>(LHCb::MuonCoordLocation::MuonCoords)) return StatusCode::SUCCESS ;
+   // number of muon hits used for identified muons (can have double counting due to hit sharing)
+  for (unsigned int i=0; i<m_NRegion*m_NStation; i++){
+    profile1D ( i, assocHits[i], "hNhitsAssReg", "Hits in FOI per region",
+	-0.5, m_NRegion*m_NStation-0.5, m_NRegion*m_NStation);
+  }
+
   LHCb::MuonCoords* coords = get<LHCb::MuonCoords>(LHCb::MuonCoordLocation::MuonCoords);
   if ( coords==0 ) {
        err() << " Cannot retrieve MuonCoords " << endreq;
        return StatusCode::FAILURE;
   }
   // loop over the coords
-  unsigned int m_nHit = 0;
   LHCb::MuonCoords::const_iterator iCoord;
-
+  std::vector<int> totMuonHits(m_NRegion*m_NStation);
   for ( iCoord = coords->begin() ; iCoord != coords->end() ; iCoord++ ){
-    int region = (*iCoord)->key().region();
-    int station = (*iCoord)->key().station();
-    int nStatReg = station*m_NRegion+region;
-    m_nHit++;   
-    plot1D(nStatReg, "hNhitsReg", "Total Hit multiplicity per region", 0, 21, 21);
-
+    totMuonHits[ (*iCoord)->key().station()  * m_NRegion + (*iCoord)->key().region()  ]++;
   } // loop over station coords 
-  plot1D(m_nHit, "hNhits","Hit Multiplicity", 0, 3000, 500);
+  for (unsigned int i=0; i<m_NRegion*m_NStation; i++){
+    profile1D(i, totMuonHits[i], "hNhitsReg", "Total Muon Hits per region",
+	-0.5, m_NRegion*m_NStation-0.5, m_NRegion*m_NStation);
+  }
+
   // delete myLinToTrack object if created (RunningMC == true)
   if ( NULL != myLinkToTrack ) delete myLinkToTrack;
 
@@ -299,7 +370,7 @@ StatusCode MuonPIDChecker::execute() {
 void MuonPIDChecker::fillTrHistos(const int Level){ 
   // Level 0 => preselection
   // Level 1 => IsMuon = 1  
-  char hname[10];
+  char hname[10] ;
 
   if (Level<1) { 
     sprintf ( hname, "Mom_PS_%d", m_TrType);
@@ -307,7 +378,7 @@ void MuonPIDChecker::fillTrHistos(const int Level){
     sprintf ( hname, "Mom_IM_%d", m_TrType);
   }
 
-  plot1D( m_Trp0, hname , " Momentum (GeV) ", -200. , 200., 400 ); 
+  plot1D( m_Trp0, hname , " Momentum (GeV) ", -200. , 200. , 400 ); 
 
   if (Level==1) {
     m_cisMuon[m_TrType]++;
@@ -322,13 +393,13 @@ void MuonPIDChecker::fillTrHistos(const int Level){
     if ( m_TrNShared < m_NSHCut) m_cnShared[m_TrType]++;
 
     sprintf ( hname, "hNShared_%d", m_TrType);
-    plot1D( m_TrNShared, hname , "Tracks sharing hits", 0., 10., 10 ); 
+    plot1D( m_TrNShared, hname , "Tracks sharing hits", -0.5, 9.5, 10 ); 
 
     sprintf ( hname, "hDLL_%d", m_TrType);
-    plot1D( (m_TrMuonLhd - m_TrNMuonLhd) ,hname, "DLL", -10., 10., 200 ); 
+    plot1D( (m_TrMuonLhd - m_TrNMuonLhd) ,hname, "DLL", -10., 10, 200 ); 
   } else {
     sprintf ( hname, "hIM_%d", m_TrType);
-    plot1D( m_TrIsMuon, hname , " IsMuon ", 0. , 2., 2 ); 
+    plot1D( m_TrIsMuon, hname , " IsMuon ", -0.5 , 1.5, 2 ); 
     
   }
 
@@ -475,7 +546,7 @@ if (m_RunningMC) {
     misIDnShared = -1.;
   }
 
-  info()<<"------------------MIMIMITotal MuonPID Efficiencies (%)------------------"
+  info()<<"------------------------Total MuonPID Efficiencies (%)------------------"
         <<  endreq;
   info()<<"-------------------          IsMuon             ------------------"
         <<  endreq;

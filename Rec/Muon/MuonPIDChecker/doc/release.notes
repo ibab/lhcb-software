@@ -2,6 +2,10 @@
 ! Responsible : E. Polycarpo, M. Gandelman
 !----------------------------------------------------------------------------
 
+!====================== MuonPIDChecker v3r1 2009-02-18 ======================
+! 2009-02-18 - Erica Polycarpo   
+ - Add histos of hit multiplicity as a function of X,Y and region/station
+
 ! 2009-02-17 - Patrick Koppenburg
  - Return warnings when container is not there.
 
