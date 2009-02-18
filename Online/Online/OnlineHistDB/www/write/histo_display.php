@@ -31,7 +31,7 @@ function update_histo_display() {
   if ($_POST["FITFUN"]) {
     $command.=",'".$_POST["FITFUNNAME"]."',";
     $ffpar=array();
-    for ($ip=1 ; $ip< $_POST["FITNP"]; $ip++) {
+    for ($ip=1 ; $ip<= $_POST["FITNP"]; $ip++) {
       if( strlen($_POST["FITPAR_${ip}"])>0 ) 
         $ffpar[$ip]=$_POST["FITPAR_${ip}"];
       else
