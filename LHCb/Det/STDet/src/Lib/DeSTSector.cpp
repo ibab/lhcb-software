@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.51 2009-02-19 09:28:00 mneedham Exp $
+// $Id: DeSTSector.cpp,v 1.52 2009-02-19 12:30:52 cattanem Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -469,8 +469,8 @@ void DeSTSector::setBeetleStatus(const unsigned int beetle,
     }  
     else {
       // death comes to this beetle, update the map
-      if (std::find(Status::validBeetleStates().begin(),
-                    Status::validBeetleStates().end(), newStatus) != Status::validBeetleStates().end() ){
+		if (std::find(::Status::validBeetleStates().begin(),
+			::Status::validBeetleStates().end(), newStatus) != ::Status::validBeetleStates().end() ){
         m_beetleStatus[beetle] = newStatus;
       } // check is valid state
       else {
@@ -498,8 +498,8 @@ void DeSTSector::setStripStatus(const unsigned int strip,
     else {
       // death comes to this beetle, update the map
       Status oldStatus = m_stripStatus.find(strip)->second;
-      if (std::find(Status::protectedStates().begin(),
-                    Status::protectedStates().end(), oldStatus) != Status::protectedStates().end() ){
+	  if (std::find(::Status::protectedStates().begin(),
+		  ::Status::protectedStates().end(), oldStatus) != ::Status::protectedStates().end() ){
         m_stripStatus[strip] = newStatus;
       } 
       else {

@@ -1,10 +1,13 @@
-!$Id: release.notes,v 1.159 2009-02-19 08:57:42 cattanem Exp $
+!$Id: release.notes,v 1.160 2009-02-19 12:30:52 cattanem Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
 !======================== STDet v4r7 2009-02-19 ==========================
-! 2009-2-18 M Needham
+! 2009-02-19 M.Cattaneo
+ - Fix ambiguous usage of namespace, was breaking Windows compilation
+ 
+! 2009-02-18 M Needham
  - Remove circular dependency on STKernel
  - Remove use of STLexicalCaster
 
