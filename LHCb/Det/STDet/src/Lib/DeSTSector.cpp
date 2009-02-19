@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.50 2009-02-18 07:38:53 jluisier Exp $
+// $Id: DeSTSector.cpp,v 1.51 2009-02-19 09:28:00 mneedham Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -10,13 +10,13 @@
 #include "Kernel/LineTraj.h"
 #include "Kernel/LHCbID.h"
 #include "Kernel/PiecewiseTrajectory.h"
-#include "Kernel/STDAQDefinitions.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/GaudiException.h"
 
 #include "GaudiKernel/IUpdateManagerSvc.h"
-
 #include "STDet/DeSTSensor.h"
+
+#include "Kernel/LHCbConstants.h"
 
 // Boost
 #include <boost/lambda/bind.hpp>
@@ -163,12 +163,12 @@ double DeSTSector::beetleNoise(const unsigned int& beetle) const
 
  std::vector<double>::const_iterator Begin(m_noiseValues.begin()), End;
 
- Begin += (beetle - 1) * STDAQ::nports * STDAQ::nstrips;
- End = Begin + STDAQ::nports * STDAQ::nstrips;
+ Begin += (beetle - 1) * LHCbConstants::nStripsInBeetle ;
+ End = Begin + LHCbConstants::nStripsInBeetle;
 
  std::accumulate(Begin, End, sum);
 
- return sum / static_cast<double>(STDAQ::nports * STDAQ::nstrips);
+ return sum / static_cast<double>(LHCbConstants::nStripsInBeetle);
 }
 
 double DeSTSector::portNoise(const unsigned int& beetle,
@@ -208,13 +208,13 @@ double DeSTSector::portNoise(const unsigned int& beetle,
 
   std::vector<double>::const_iterator Begin(m_noiseValues.begin()), End;
 
-  Begin += (beetle - 1) * STDAQ::nports * STDAQ::nstrips
-    + (port - 1) * STDAQ::nstrips;
-  End = Begin + STDAQ::nports;
+  Begin += (beetle - 1) * LHCbConstants::nStripsInBeetle
+    + (port - 1) * LHCbConstants::nStripsInPort;
+  End = Begin + LHCbConstants::nStripsInPort;
 
   std::accumulate(Begin, End, sum);
 
-  return sum / static_cast<double>(STDAQ::nstrips);
+  return sum / static_cast<double>(LHCbConstants::nStripsInPort);
 }
 
 std::auto_ptr<LHCb::Trajectory> 
