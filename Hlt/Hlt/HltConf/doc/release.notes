@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.145 2009-02-18 18:17:17 jonrob Exp $ 
+! $Id: release.notes,v 1.146 2009-02-19 17:14:27 panmanj Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-02-19 - Jaap Panman
+ - rewrite HltLumiLines to follow modern conventions
 
 ! 2009-02-18 - Chris Jones
  - Add RichRecSysConf to the list of (potentially) used Configurables 
