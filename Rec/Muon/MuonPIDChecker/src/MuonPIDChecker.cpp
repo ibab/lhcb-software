@@ -273,6 +273,10 @@ StatusCode MuonPIDChecker::execute() {
 
       double x,dx,y,dy,z,dz;
       StatusCode sc = m_mudet->Tile2XYZ(mutile,x,dx,y,dy,z,dz);
+      if (sc.isFailure()){
+	warning() << "Failed to get x,y,z of tile " << mutile << endreq;
+	continue;
+      }
       MeanX[station] += x;
       MeanY[station] += y;
       debug() <<" ntrack and coord info " <<  nmutracks <<" and "<< (*iID) << endreq; 

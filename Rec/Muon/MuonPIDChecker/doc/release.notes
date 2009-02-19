@@ -2,6 +2,9 @@
 ! Responsible : E. Polycarpo, M. Gandelman
 !----------------------------------------------------------------------------
 
+! 2009-02-19 - Erica Polycarpo   
+ - Fix lack of  Status Code testing 
+
 !====================== MuonPIDChecker v3r1 2009-02-18 ======================
 ! 2009-02-18 - Erica Polycarpo   
  - Add histos of hit multiplicity as a function of X,Y and region/station
