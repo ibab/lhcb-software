@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.12 2009-01-20 19:07:12 aperezca Exp $
+// $Id: HltFunctions.h,v 1.13 2009-02-19 18:15:19 depaula Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -556,6 +556,18 @@ namespace Hlt {
     zen::function<LHCb::Track>* clone() const {return new FitCleanedChi2OverNdf();}
   };
   
+  class VertexMaxMuChi2: public Hlt::VertexFunction {
+  public:
+    explicit VertexMaxMuChi2(){}
+    double operator() (const LHCb::RecVertex& v) const 
+    {
+      double chi2_0 = Hlt::FitMuChi2()(*(v.tracks()[0]));
+      double chi2_1 = Hlt::FitMuChi2()(*(v.tracks()[1]));
+      return (fabs(chi2_0)>fabs(chi2_1)) ? chi2_0 : chi2_1;
+    }
+    Hlt::VertexFunction* clone() const {return new VertexMaxMuChi2();}
+  };
+
 
   //---------- extra utilities -----------------------------
   

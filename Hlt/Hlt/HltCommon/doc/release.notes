@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2009-02-19 - Leandro de Paula
+  - HltFunction and HltFunctionFactories - new filter (MuChi2) for DiMuonLines
+
 ! 2009-02-17 - Mariusz Witek
   - add VertexDiElectronMass as new IRecVertexFunctionTool 
 
