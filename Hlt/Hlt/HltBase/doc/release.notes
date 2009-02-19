@@ -3,6 +3,9 @@
 ! Responsible : Jose Angel Hernando Morata
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+! 2009-02-19 - Gerhard Raven
+ - add IHltDataSvc and stringKey to python dict
+
 ! 2009-02-06 - Gerhard Raven
  - remove try/catch in HltAlgorithm::execute -- this is now done in HltLine 
  - don't clean selection in HltAlgorithm -- this is already done in HltDataSvc

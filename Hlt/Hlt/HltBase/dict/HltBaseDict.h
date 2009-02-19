@@ -19,6 +19,7 @@
 #include "HltBase/PropertyConfig.h"
 #include "HltBase/IPropertyConfigSvc.h"
 #include "HltBase/IConfigAccessSvc.h"
+#include "HltBase/IHltDataSvc.h"
 
 #include "GaudiAlg/ISequencerTimerTool.h"
 
