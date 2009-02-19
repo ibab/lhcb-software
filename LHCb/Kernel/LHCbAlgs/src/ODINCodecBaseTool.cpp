@@ -74,7 +74,7 @@ LHCb::ODIN* ODINCodecBaseTool::i_decode(const LHCb::RawBank* bank, LHCb::ODIN* o
   unsigned int temp32;
 
   // Check the passed pointers
-  Assert(bank, "Called without a RawBank object (pointer NULL)");
+  Assert((bank!=NULL), "Called without a RawBank object (pointer NULL)");
 
   // ensure that the new object is deleted in case of failure
   std::auto_ptr<LHCb::ODIN> ptr;
@@ -181,10 +181,10 @@ LHCb::ODIN* ODINCodecBaseTool::i_decode(const LHCb::RawBank* bank, LHCb::ODIN* o
 //=============================================================================
 LHCb::RawBank* ODINCodecBaseTool::i_encode(const LHCb::ODIN *odin) {
   // Check the passed pointer
-  Assert(odin, "Called without an ODIN object (pointer NULL)");
+  Assert((odin!=NULL), "Called without an ODIN object (pointer NULL)");
 
   const unsigned int version = odin->version();
-  if (version and (version != bank_version)) {
+  if (version && (version != bank_version)) {
     std::ostringstream msg;
     msg << "Trying to convert ODIN object of version " << version
         << " to bank version " << bank_version;
@@ -202,13 +202,13 @@ LHCb::RawBank* ODINCodecBaseTool::i_encode(const LHCb::ODIN *odin) {
                                 ((odin->calibrationStep() << LHCb::ODIN::CalibrationStepBits) & LHCb::ODIN::CalibrationStepMask);
 
   data[LHCb::ODIN::OrbitNumber] = odin->orbitNumber();
-  data[LHCb::ODIN::L0EventIDHi] = (odin->eventNumber() >> 32) & 0xFFFFFFFF;
-  data[LHCb::ODIN::L0EventIDLo] = (odin->eventNumber()) & 0xFFFFFFFF;
-  data[LHCb::ODIN::GPSTimeHi]   = (odin->gpsTime() >> 32) & 0xFFFFFFFF;
-  data[LHCb::ODIN::GPSTimeLo]   = (odin->gpsTime()) & 0xFFFFFFFF;
+  data[LHCb::ODIN::L0EventIDHi] = unsigned int( (odin->eventNumber() >> 32) & 0xFFFFFFFF );
+  data[LHCb::ODIN::L0EventIDLo] = unsigned int( (odin->eventNumber()) & 0xFFFFFFFF );
+  data[LHCb::ODIN::GPSTimeHi]   = unsigned int( (odin->gpsTime() >> 32) & 0xFFFFFFFF );
+  data[LHCb::ODIN::GPSTimeLo]   = unsigned int( (odin->gpsTime()) & 0xFFFFFFFF );
 
-  data[LHCb::ODIN::Word7] = ((odin->detectorStatus() << LHCb::ODIN::DetectorStatusBits) & LHCb::ODIN::DetectorStatusMask) |
-                            ((odin->errorBits() << LHCb::ODIN::ErrorBits) & LHCb::ODIN::ErrorMask);
+  data[LHCb::ODIN::Word7] = unsigned int( ((odin->detectorStatus() << LHCb::ODIN::DetectorStatusBits) & LHCb::ODIN::DetectorStatusMask) |
+                                          ((odin->errorBits() << LHCb::ODIN::ErrorBits) & LHCb::ODIN::ErrorMask) );
 
   data[LHCb::ODIN::Word8] = ((odin->bunchId() << LHCb::ODIN::BunchIDBits) & LHCb::ODIN::BunchIDMask) |
                             ((odin->timeAlignmentEventWindow() << LHCb::ODIN::TAEWindowBits) & LHCb::ODIN::TAEWindowMask) |

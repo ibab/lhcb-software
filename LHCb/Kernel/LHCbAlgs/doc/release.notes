@@ -4,7 +4,10 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
-!======================== LHCbAlgs v2r24 2009-02-18 ==========================
+!======================== LHCbAlgs v2r24 2009-02-19 ==========================
+! 2009-02-19 - Marco Cattaneo
+ - Fix Windows compilation error and warnings
+
 ! 2009-02-11 - Rob Lambert
  - added EventCountHisto.{h,cpp} an algorithm which adds a histogram with
    one entry, which is the number of events seen by this algorithm.
