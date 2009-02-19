@@ -202,13 +202,13 @@ LHCb::RawBank* ODINCodecBaseTool::i_encode(const LHCb::ODIN *odin) {
                                 ((odin->calibrationStep() << LHCb::ODIN::CalibrationStepBits) & LHCb::ODIN::CalibrationStepMask);
 
   data[LHCb::ODIN::OrbitNumber] = odin->orbitNumber();
-  data[LHCb::ODIN::L0EventIDHi] = unsigned int( (odin->eventNumber() >> 32) & 0xFFFFFFFF );
-  data[LHCb::ODIN::L0EventIDLo] = unsigned int( (odin->eventNumber()) & 0xFFFFFFFF );
-  data[LHCb::ODIN::GPSTimeHi]   = unsigned int( (odin->gpsTime() >> 32) & 0xFFFFFFFF );
-  data[LHCb::ODIN::GPSTimeLo]   = unsigned int( (odin->gpsTime()) & 0xFFFFFFFF );
+  data[LHCb::ODIN::L0EventIDHi] = (unsigned int) ((odin->eventNumber() >> 32) & 0xFFFFFFFF );
+  data[LHCb::ODIN::L0EventIDLo] = (unsigned int) ((odin->eventNumber()) & 0xFFFFFFFF );
+  data[LHCb::ODIN::GPSTimeHi]   = (unsigned int) ((odin->gpsTime() >> 32) & 0xFFFFFFFF );
+  data[LHCb::ODIN::GPSTimeLo]   = (unsigned int) ((odin->gpsTime()) & 0xFFFFFFFF );
 
-  data[LHCb::ODIN::Word7] = unsigned int( ((odin->detectorStatus() << LHCb::ODIN::DetectorStatusBits) & LHCb::ODIN::DetectorStatusMask) |
-                                          ((odin->errorBits() << LHCb::ODIN::ErrorBits) & LHCb::ODIN::ErrorMask) );
+  data[LHCb::ODIN::Word7] = (unsigned int) ( ((odin->detectorStatus() << LHCb::ODIN::DetectorStatusBits) & LHCb::ODIN::DetectorStatusMask) |
+                                             ((odin->errorBits() << LHCb::ODIN::ErrorBits) & LHCb::ODIN::ErrorMask) );
 
   data[LHCb::ODIN::Word8] = ((odin->bunchId() << LHCb::ODIN::BunchIDBits) & LHCb::ODIN::BunchIDMask) |
                             ((odin->timeAlignmentEventWindow() << LHCb::ODIN::TAEWindowBits) & LHCb::ODIN::TAEWindowMask) |
