@@ -798,7 +798,7 @@ StatusCode MuonID::trackExtrapolate(const LHCb::Track *pTrack){
   // get state closest to M1 for extrapolation
   //const LHCb::State * state = &(pTrack->closestState(m_stationZ[0]));
   //change to use z=9540, which is a state that is saved to the DSTs
-  const LHCb::State * state = &(pTrack->closestState(9540.));
+  const LHCb::State * state = &(pTrack->closestState(9450.));
 
   if(!state1){
     err() << " Failed to get 1st state from track " << endreq;
