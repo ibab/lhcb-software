@@ -7,7 +7,7 @@ use DetDescCnv	v* Det
 use DetDesc     v* Det
 use LHCbKernel	v* Kernel
 use Boost       v* LCG_Interfaces
-use STKernel    v* ST
+# use STKernel    v* ST
 
 apply_pattern install_more_includes more=STDet
 

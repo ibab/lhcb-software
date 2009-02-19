@@ -5,7 +5,7 @@
 #include "STDet/STDetFun.h"
 
 #include "Kernel/TTNames.h"
-#include "Kernel/STLexicalCaster.h"
+#include "boost/lexical_cast.hpp"
 
 /** @file DeTTSector.cpp
 *
@@ -108,8 +108,12 @@ StatusCode DeTTSector::initialize() {
     else
       m_hybridType = "M";
 
+    using namespace boost;
+    std::string region = lexical_cast<std::string>(chan.detRegion());
+    std::string col = lexical_cast<std::string>(column());  
+
     m_conditionPathName = TTNames().UniqueLayerToString(chan) + "LayerR"
-      + ST::toString(chan.detRegion()) + "Module" + ST::toString(column())
+      + region + "Module" + col
       + position() + "Sector" + hybridType();
 
     sc = registerConditionsCallbacks();
