@@ -1,4 +1,4 @@
-// $Id: ReadPackedDst.cpp,v 1.4 2009-02-12 17:46:31 cattanem Exp $
+// $Id: ReadPackedDst.cpp,v 1.5 2009-02-19 10:38:03 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -165,7 +165,7 @@ StatusCode ReadPackedDst::execute() {
       LHCb::ProcStatus* procStatus = new LHCb::ProcStatus();
       put( procStatus, name + m_postfix );
       processLinks( procStatus, version );
-      procStatus->setAborted( nextInt() );
+      procStatus->setAborted( (nextInt()!=0) );
       unsigned int nbAlg = nextInt();
       std::string temp;
       for ( unsigned int kk = 0 ; nbAlg > kk ; ++kk ) {
@@ -201,7 +201,7 @@ template <class CLASS> void ReadPackedDst::getFromBlob( std::vector<CLASS>& vect
 
   //== First restore a big vector of int in case the data is split into several blobs
 
-  int temp[ totSize/4 ];
+  int temp[ 50000 ];
 
   while ( totSize > 0 ) {
     LHCb::RawBank* myBank = blobs[blobNb];
