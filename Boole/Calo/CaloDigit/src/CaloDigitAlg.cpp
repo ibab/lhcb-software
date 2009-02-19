@@ -1,4 +1,4 @@
-// $Id: CaloDigitAlg.cpp,v 1.26 2009-01-12 17:46:14 odescham Exp $
+// $Id: CaloDigitAlg.cpp,v 1.27 2009-02-19 17:28:24 odescham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -136,7 +136,7 @@ CaloDigitAlg::CaloDigitAlg( const std::string& name,
     m_detectorName     = DeCalorimeterLocation::Ecal;
     m_inputData        = LHCb::MCCaloDigitLocation::Ecal;
     m_outputData       = LHCb::CaloAdcLocation::FullEcal;
-    m_pedShift         = 0.40;
+    m_pedShift         = 0.60;
     m_triggerName      = LHCb::L0CaloAdcLocation::Ecal;
     m_triggerIsBit     = false;
  
@@ -174,7 +174,7 @@ CaloDigitAlg::CaloDigitAlg( const std::string& name,
     m_detectorName     = DeCalorimeterLocation::Hcal;
     m_inputData        = LHCb::MCCaloDigitLocation::Hcal;
     m_outputData       = LHCb::CaloAdcLocation::FullHcal;
-    m_pedShift         = 0.40;
+    m_pedShift         = 0.60;
     m_triggerName      = LHCb::L0CaloAdcLocation::Hcal;
     m_triggerIsBit     = false;
 

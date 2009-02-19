@@ -4,6 +4,9 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+! 2009-02-19 - Olivier Deschamps
+ - CaloDigitAlg :  - align default pedestalShit value with condDB/simcond value
+                     (yes, I know it better be extracted from DB !) 
 !======================== CaloDigit v2r11 2009-01-13 =========================
 ! 2008-11-17 - Olivier Deschamps
  - CaloDigitAlg :  - default noise for Ecal is 'gaussian' 
