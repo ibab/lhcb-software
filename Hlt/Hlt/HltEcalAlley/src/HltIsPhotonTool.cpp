@@ -1,4 +1,4 @@
-// $Id: HltIsPhotonTool.cpp,v 1.7 2009-01-21 11:21:56 witekma Exp $
+// $Id: HltIsPhotonTool.cpp,v 1.8 2009-02-19 16:02:45 witekma Exp $
 // Include files 
 
 // from Gaudi
@@ -79,25 +79,6 @@ StatusCode HltIsPhotonTool::finalize() {
 double HltIsPhotonTool::function(const Track& ctrack)
 {
 
-  // check if has state at Calo, get xy at the state
-  double xc;
-  double yc;
-  // TODO: Modify HltL0CaloPrepare to have always MidECal states. 
-  // TODO: For photons it is MidHCal but LHCbIDs in a track are from ECal.
-  const LHCb::State* estate = ctrack.stateAt ( LHCb::State::MidECal )  ;
-  const LHCb::State* hstate = ctrack.stateAt ( LHCb::State::MidHCal )  ;
-  if( 0 != estate ) {
-    xc = estate -> x () ;
-    yc = estate -> y () ;
-  }
-  else if ( 0 != hstate ) {
-    xc = hstate -> x () ;
-    yc = hstate -> y () ;      
-  } 
-  else {
-    return -9999999.;                 // RETURN 
-  }
-
   // get LHCbID of coresponding L0CaloCandidate
   const std::vector< LHCb::LHCbID >&  lista=   ctrack.lhcbIDs ();
   LHCb::CaloCellID idL0;
@@ -118,6 +99,10 @@ double HltIsPhotonTool::function(const Track& ctrack)
   }  
 
   if ( ! found_idL0 ) return -9999999.;
+
+  const Gaudi::XYZPoint& pos = m_detector->cellCenter( idL0 );
+  double xc = pos.x() ;
+  double yc = pos.y() ;
 
   // get input data (sequential and simultaneously direct access!)  
   LHCb::CaloDigits* digits = get<LHCb::CaloDigits>( LHCb::CaloDigitLocation::Ecal );

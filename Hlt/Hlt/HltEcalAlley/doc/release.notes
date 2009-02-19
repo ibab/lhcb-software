@@ -4,6 +4,9 @@
 ! Purpose     : Ecal alley specific algorithms and tools
 !----------------------------------------------------------------------------
 
+! 2009-02-19- Mariusz Witek
+ - modify HltIsPhotonTool.cpp which has been forgoten 2009-02-17
+
 ! 2009-02-17 - Mariusz Witek
  - new ecal alley
  - removed EcalSeedForVeloMatch
