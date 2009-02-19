@@ -1,4 +1,4 @@
-// $Id: MCDecayTreeTuple.cpp,v 1.2 2009-01-22 09:27:33 pkoppenb Exp $
+// $Id: MCDecayTreeTuple.cpp,v 1.3 2009-02-19 13:50:41 pkoppenb Exp $
 // Include files 
 
 #include "boost/lexical_cast.hpp" 
@@ -80,7 +80,7 @@ StatusCode MCDecayTreeTuple::execute(){
     return StatusCode::SUCCESS;
   }
 
-  test = fillTuple( tuple, heads );
+  test = fillTuple( tuple, heads, m_mcdkFinder );
 
   if( test ){
     if (msgLevel(MSG::VERBOSE)) verbose() << "NTuple sucessfully filled" << endreq;
@@ -90,41 +90,6 @@ StatusCode MCDecayTreeTuple::execute(){
   // Mandatory. Set to true if event is accepted.  
   return StatusCode::SUCCESS;
   
-}
-//=============================================================================
-StatusCode MCDecayTreeTuple::fillTuple( Tuples::Tuple& tuple
-                                      , const MCParticle::ConstVector& heads ){
-  MCParticle::ConstVector::const_iterator pit = heads.begin();
-  MCParticle::ConstVector row;
-
-  int nCandidates=0;
-  StatusCode test = StatusCode::FAILURE;
-
-  for( ; heads.end()!=pit; ++pit ){
-    test = StatusCode::FAILURE;
-    row.clear();
-    m_mcdkFinder->decayMembers( *pit, row );
-    row.insert( row.begin(), *pit ); // must insert the head as it cant be flagged.
-
-    if( fillParticles( tuple, row ) ){
-      tuple->column( "nCandidate", nCandidates ).ignore();
-      ++nCandidates;
-    } else {
-      Warning("Failed to fill a candidate. Will skip it.").ignore();
-      continue;
-    }
-
-    test = fillEventRelatedVariables( tuple );
-
-    if( test ){
-      test = tuple->write();
-    } else {
-      Warning("Failed to fill some variable, will skip this candidate.");
-    }
-  }
-
-
-  return test;
 }
 //=============================================================================
 //  Finalize

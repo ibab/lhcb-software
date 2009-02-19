@@ -1,4 +1,4 @@
-// $Id: TupleToolMCBackgroundInfo.cpp,v 1.2 2008-07-15 16:18:54 gligorov Exp $
+// $Id: TupleToolMCBackgroundInfo.cpp,v 1.3 2009-02-19 13:50:41 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -59,8 +59,8 @@ StatusCode TupleToolMCBackgroundInfo::fill( const Particle*
 
     int category = (int)(m_bkg->category( P ));
 
-    debug() << "BackgroundCategory decision for "
-	    << head <<": " << category << endreq;
+    if (msgLevel(MSG::DEBUG)) debug() << "BackgroundCategory decision for "
+                                      << head <<": " << category << endreq;
 
     if( tuple->column( head+"_BKGCAT", category ) ) 
       return StatusCode::SUCCESS;

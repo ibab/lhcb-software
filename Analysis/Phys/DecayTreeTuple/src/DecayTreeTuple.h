@@ -1,4 +1,4 @@
-// $Id: DecayTreeTuple.h,v 1.9 2009-01-21 08:57:47 pkoppenb Exp $
+// $Id: DecayTreeTuple.h,v 1.10 2009-02-19 13:50:41 pkoppenb Exp $
 #ifndef JBOREL_DECAYTREETUPLE_H
 #define JBOREL_DECAYTREETUPLE_H 1
 
@@ -140,8 +140,6 @@ class DecayTreeTuple : public DecayTreeTupleBase  {
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
-  //! Trigger all the fill procedures
-  StatusCode fillTuple( Tuples::Tuple&, const LHCb::Particle::ConstVector& );
 };
 
 #endif // JBOREL_DECAYTREETUPLE_H

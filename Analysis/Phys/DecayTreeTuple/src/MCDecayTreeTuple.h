@@ -1,4 +1,4 @@
-// $Id: MCDecayTreeTuple.h,v 1.1 2009-01-21 15:03:42 pkoppenb Exp $
+// $Id: MCDecayTreeTuple.h,v 1.2 2009-02-19 13:50:41 pkoppenb Exp $
 #ifndef MCDECAYTREETUPLE_H
 #define MCDECAYTREETUPLE_H 1
 
@@ -49,8 +49,6 @@ class MCDecayTreeTuple : public DecayTreeTupleBase  {
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
-  //! Trigger all the fill procedures
-  StatusCode fillTuple( Tuples::Tuple&, const LHCb::MCParticle::ConstVector& );
 };
 
 #endif // MCDECAYTREETUPLE_H

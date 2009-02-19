@@ -1,4 +1,4 @@
-// $Id: DecayTreeTuple.cpp,v 1.14 2009-01-22 09:27:33 pkoppenb Exp $
+// $Id: DecayTreeTuple.cpp,v 1.15 2009-02-19 13:50:41 pkoppenb Exp $
 // Include files 
 
 
@@ -81,7 +81,7 @@ StatusCode DecayTreeTuple::execute(){
     return StatusCode::SUCCESS;
   }
 
-  test = fillTuple( tuple, heads );
+  test = fillTuple( tuple, heads, m_dkFinder );
 
   if( test ){
     if (msgLevel(MSG::VERBOSE)) verbose() << "NTuple sucessfully filled" << endreq;
@@ -91,41 +91,6 @@ StatusCode DecayTreeTuple::execute(){
   // Mandatory. Set to true if event is accepted.  
   return StatusCode::SUCCESS;
   
-}
-//=============================================================================
-StatusCode DecayTreeTuple::fillTuple( Tuples::Tuple& tuple
-                                      , const Particle::ConstVector& heads ){
-  Particle::ConstVector::const_iterator pit = heads.begin();
-  Particle::ConstVector row;
-
-  int nCandidates=0;
-  StatusCode test = StatusCode::FAILURE;
-
-  for( ; heads.end()!=pit; ++pit ){
-    test = StatusCode::FAILURE;
-    row.clear();
-    m_dkFinder->decayMembers( *pit, row );
-    row.insert( row.begin(), *pit ); // must insert the head as it cant be flagged.
-
-    if( fillParticles( tuple, row ) ){
-      tuple->column( "nCandidate", nCandidates ).ignore();
-      ++nCandidates;
-    } else {
-      Warning("Failed to fill a candidate. Will skip it.").ignore();
-      continue;
-    }
-
-    test = fillEventRelatedVariables( tuple );
-
-    if( test ){
-      test = tuple->write();
-    } else {
-      Warning("Failed to fill some variable, will skip this candidate.");
-    }
-  }
-
-
-  return test;
 }
 //=============================================================================
 //  Finalize

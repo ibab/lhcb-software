@@ -9,6 +9,47 @@
  * \date 2009-01-20
  */
 //=============================================================================
+//=============================================================================
+//! Trigger all fill procedures
+template<class PARTICLEVECTOR,class DECAYFINDER>
+StatusCode fillTuple( Tuples::Tuple& tuple
+                                      , const PARTICLEVECTOR& heads 
+                                      , DECAYFINDER* dkFinder ){
+  typename PARTICLEVECTOR::const_iterator pit = heads.begin();
+  PARTICLEVECTOR row;
+
+  unsigned int nCandidates=0;
+  counter("Event")++;
+  StatusCode test = StatusCode::FAILURE;
+
+  for( ; heads.end()!=pit; ++pit ){
+    test = StatusCode::FAILURE;
+    row.clear();
+    dkFinder->decayMembers( *pit, row );
+    row.insert( row.begin(), *pit ); // must insert the head as it cant be flagged.
+
+    if( fillParticles( tuple, row ) ){
+      tuple->column( "nCandidate", nCandidates ).ignore();
+      tuple->column( "totCandidates", heads.size()).ignore();
+      tuple->column( "EventInSequence", counter("Event").nEntries()).ignore();
+      ++nCandidates;
+    } else {
+      Warning("Failed to fill a candidate. Will skip it.").ignore();
+      continue;
+    }
+
+    test = fillEventRelatedVariables( tuple );
+
+    if( test ){
+      test = tuple->write();
+    } else {
+      Warning("Failed to fill some variable, will skip this candidate.");
+    }
+  }
+
+
+  return test;
+}
 /// get offset in tree
 template<class PARTICLE> 
 int getOffset( const PARTICLE* p, const std::vector<const PARTICLE*>& v, bool secure=true ){

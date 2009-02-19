@@ -7,6 +7,13 @@
 ! 2009-02-19 - Patrick Koppenburg
  - (MC)DecayTreeTuple : more debugging. 
  - TupleToolDecay : fix bug in decay descriptor return
+ - The main method fillTuple can also be templated
+ - Interesting addition : store the number of candidates as well.
+   -> This allows to get weight fo candidates without 
+      reverse-looping.
+ - Also store event number. Note that this is the number
+   of times execute has been called. Signification may vary
+   with place in sequencer.
 
 ! 2009-02-18 - Patrick Koppenburg
  - TupleToolDalitz : get svc only once
