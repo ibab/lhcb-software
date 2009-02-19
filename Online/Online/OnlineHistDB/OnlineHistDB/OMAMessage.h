@@ -1,4 +1,4 @@
-// $Id: OMAMessage.h,v 1.1 2009-02-16 10:37:42 ggiacomo Exp $
+// $Id: OMAMessage.h,v 1.2 2009-02-19 10:45:26 ggiacomo Exp $
 #ifndef OMALIB_OMAMESSAGE_H 
 #define OMALIB_OMAMESSAGE_H 1
 
@@ -69,13 +69,17 @@ public:
   char * humanTime();
 
   inline bool matchsAnalysis(std::string& AnaTaskName, 
-                             std::string& AnaName, int anaID=0) {
+                             std::string& AnaName, 
+			     std::string& HistoName,
+			     int anaID=0) {
     if(AnaTaskName != m_anaTaskName) return false;
     if (anaID) 
-      return (anaID == m_anaid);
+      return (anaID == m_anaid &&
+	      HistoName == m_histo);
     else 
       return (AnaName == m_ananame);
   }
+  inline bool isAbort() {return m_isAbort;}
 
 private:
   int m_ID;

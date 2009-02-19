@@ -1,4 +1,4 @@
-// $Id: OMAMessage.cpp,v 1.1 2009-02-16 10:37:43 ggiacomo Exp $
+// $Id: OMAMessage.cpp,v 1.2 2009-02-19 10:45:26 ggiacomo Exp $
 #include <time.h>
 #include "OnlineHistDB/OMAMessage.h"
 using namespace std;
@@ -59,7 +59,7 @@ void OMAMessage::load() {
   std::string command =
     "BEGIN ONLINEHISTDB.GETMESSAGE(:id, theHName => :hn, theSaveSet => :ss";
   command += "  ,theTask => :tk, theAnalysisTask => :atk";
-  command += "  ,theLevel => :lev, theMessage => :msg, theAName => :anm, theUXTime => :tim); end;";
+  command += "  ,theLevel => :lev, theMessage => :msg, theAName => :anm, theAid => :aid, theUXTime => :tim); end;";
   if (OCI_SUCCESS == prepareOCITaggedStatement(stmt, command.c_str(), "MSGLOAD") ) {
     text HNAME[VSIZE_NAME]="";
     text SAVESET[VSIZE_SAVESET]="";
@@ -77,17 +77,23 @@ void OMAMessage::load() {
     myOCIBindString(stmt,":lev", LEVEL, VSIZE_ALEVEL);
     myOCIBindString(stmt,":msg", MESSAGE, VSIZE_MESSAGE, &m_msgtext_null);
     myOCIBindString(stmt,":anm", ANANAME, VSIZE_ANANAME, &m_ananame_null);
+    myOCIBindInt   (stmt,":aid", m_anaid);
     myOCIBindInt   (stmt,":tim", m_time);
     if (OCI_SUCCESS == myOCIStmtExecute(stmt) ) {
-      m_histo = m_histo_null ? "" : std::string((const char *) HNAME);
-      m_saveSet= std::string((const char *) SAVESET);
-      m_taskName = m_taskName_null ? "" : std::string((const char *) TASK);
-      m_anaTaskName = m_anaTaskName_null ? "" : std::string((const char *) ANATASK);
-      m_msgtext= m_msgtext_null ? "" : std::string((const char *) MESSAGE);
-      setLevelFromString((const char *) LEVEL);
-      m_ananame = m_ananame_null ? "" : std::string((const char *) ANANAME);
-      m_dbsync=true;
-      m_isAbort=false;
+      if (m_anaid < 0) {
+	m_isAbort=true;
+      }
+      else {
+	m_histo = m_histo_null ? "" : std::string((const char *) HNAME);
+	m_saveSet= std::string((const char *) SAVESET);
+	m_taskName = m_taskName_null ? "" : std::string((const char *) TASK);
+	m_anaTaskName = m_anaTaskName_null ? "" : std::string((const char *) ANATASK);
+	m_msgtext= m_msgtext_null ? "" : std::string((const char *) MESSAGE);
+	setLevelFromString((const char *) LEVEL);
+	m_ananame = m_ananame_null ? "" : std::string((const char *) ANANAME);
+	m_dbsync=true;
+	m_isAbort=false;
+      }
     }
     releaseOCITaggedStatement(stmt, "MSGLOAD");
   }
@@ -118,12 +124,13 @@ void OMAMessage::store() {
     command << ",theAName => '" << m_ananame <<"'";
   if(m_ID)
     command << ",theID => "<< m_ID;
-  command << ", outAname => :newa); end;";
-  
+  command << ",outTime => :newt, outAname => :newa); end;";
+
   if ( OCI_SUCCESS == prepareOCIStatement (stmt, command.str().c_str() ) ) {
     text ANANAME[VSIZE_ANANAME]="";
     myOCIBindInt   (stmt,":id", m_ID); 
     myOCIBindString(stmt,":newa", ANANAME, VSIZE_ANANAME);
+    myOCIBindInt   (stmt,":newt", m_time);
     if (OCI_SUCCESS == myOCIStmtExecute(stmt) ) {
       m_ananame = std::string((const char *) ANANAME);
       m_dbsync=true;
@@ -177,8 +184,6 @@ char * OMAMessage::humanTime() {
   time_t rawtime = m_time;
   struct tm * timeinfo = localtime ( &rawtime );
   return asctime (timeinfo);
-  
-
 }
 
 void OMAMessage::dump(std::ostream *out) {

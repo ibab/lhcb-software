@@ -359,8 +359,9 @@ END;
 /
 
 CREATE or replace FUNCTION TIMEST2UXT(ts IN TIMESTAMP) return int as
+ mydate date := ts;
 BEGIN
- RETURN (NEW_TIME(ts,'EST','GMT')-TO_DATE('01-JAN-1970','DD-MON-YYYY'))*(86400);
+ RETURN (mydate-to_date('1970-01-01','YYYY-MM-DD'))*(86400);
 END;
 /
 

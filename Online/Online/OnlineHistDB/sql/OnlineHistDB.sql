@@ -114,11 +114,12 @@ create or replace package OnlineHistDB AUTHID CURRENT_USER as
  function StoreMessage(theHName IN HISTOGRAM.NAME%TYPE := NULL, theSaveSet IN varchar2, 
                 theTask IN varchar2 := NULL, theAnalysisTask IN varchar2 := NULL, theLevel IN ANAMESSAGE.ALEVEL%TYPE,
                 theMessage IN varchar2, theAID IN ANALYSIS.AID%TYPE := NULL, theAName IN varchar2 := NULL, 
-                theID IN ANAMESSAGE.ID%TYPE := NULL, outAname OUT varchar2) return number;
+                theID IN ANAMESSAGE.ID%TYPE := NULL,  outTime OUT int, outAname OUT varchar2) return number;
  procedure GetMessages(msgids OUT intlist, theAnaysisTask IN varchar2 := NULL);
  procedure GetMessage(MsgID IN ANAMESSAGE.ID%TYPE, theHName OUT HISTOGRAM.NAME%TYPE, theSaveSet OUT varchar2, 
                 theTask OUT varchar2, theAnalysisTask OUT varchar2,
-                theLevel OUT varchar2, theMessage OUT varchar2, theAName OUT varchar2, theUXTime OUT int);
+                theLevel OUT varchar2, theMessage OUT varchar2, theAName OUT varchar2, 
+	       	theAid OUT int, theUXTime OUT int);
  procedure DeleteAllMessages;
  procedure DeleteOldMessages(expTime IN int);
         
@@ -1796,7 +1797,7 @@ end SetPageToDisplay;
 function StoreMessage(theHName IN HISTOGRAM.NAME%TYPE := NULL, theSaveSet IN varchar2, 
                 theTask IN varchar2 := NULL, theAnalysisTask IN varchar2 := NULL, theLevel IN ANAMESSAGE.ALEVEL%TYPE,
                 theMessage IN varchar2, theAID IN ANALYSIS.AID%TYPE := NULL, theAName IN varchar2 := NULL, 
-                theID IN ANAMESSAGE.ID%TYPE := NULL,  outAname OUT varchar2)  return number is
+                theID IN ANAMESSAGE.ID%TYPE := NULL, outTime OUT int, outAname OUT varchar2)  return number is
  myID ANAMESSAGE.ID%TYPE;
  myName ANAMESSAGE.ANANAME%TYPE;
 begin
@@ -1812,7 +1813,7 @@ begin
  update ANAMESSAGE set MSGTEXT=theMessage,MSGTIME=SYSTIMESTAMP,
              TASK=theTask,ANALYSISTASK=theAnalysisTask where ID=myID;
  if (theHName is not NULL) then
-  update ANAMESSAGE set HISTO=(select HID from HISTOGRAM where NAME=theHName);
+  update ANAMESSAGE set HISTO=(select HID from HISTOGRAM where NAME=theHName) where ID=myID;
  end if;
  if (theAID is not NULL) then
   select ALGORITHM||' on '||HSTASK||'/'||HSALGO||'/'||HSTITLE into myName
@@ -1823,6 +1824,7 @@ begin
   update ANAMESSAGE set ANANAME=theAName where ID=myID;
   outAname := theAName;
  end if;
+ select TIMEST2UXT(MSGTIME) into outTime from ANAMESSAGE where ID=myID;
  return myID;
 exception
  when OTHERS then 
@@ -1832,13 +1834,11 @@ end StoreMessage;
 -----------------------
 
 procedure GetMessages(msgids OUT intlist, theAnaysisTask IN varchar2 := NULL) is
- cursor mym is select ID from ANAMESSAGE;
- cursor myselm(Xat ANAMESSAGE.ANALYSISTASK%TYPE) is select ID from ANAMESSAGE where ANALYSISTASK=Xat;
- myID ANAMESSAGE.ID%TYPE;
+ cursor mym is select ID from ANAMESSAGE where theAnaysisTask is NULL or ANALYSISTASK=theAnaysisTask;
+ myid ANAMESSAGE.ID%TYPE := NULL;
  na int := 0;
 begin
  msgids := intlist();
- if (theAnaysisTask is null) then
   open mym;
   LOOP	
    fetch mym into myid;
@@ -1848,27 +1848,30 @@ begin
    msgids(na) := myid;
   end LOOP;
   close mym;
- else
-  open myselm(theAnaysisTask);
-  LOOP	
-   fetch myselm into myid;
-   EXIT WHEN myselm%NOTFOUND;
-   msgids.EXTEND;
-   na := na+1;
-   msgids(na) := myid;
-   close myselm;
-  end LOOP;
- end if;
 end GetMessages;
 -----------------------
 
 procedure GetMessage(MsgID IN ANAMESSAGE.ID%TYPE, theHName OUT HISTOGRAM.NAME%TYPE, theSaveSet OUT varchar2, 
                 theTask OUT varchar2, theAnalysisTask OUT varchar2, 
-                theLevel OUT varchar2, theMessage OUT varchar2, theAName OUT varchar2, theUXTime OUT int) is
+                theLevel OUT varchar2, theMessage OUT varchar2, theAName OUT varchar2, 
+	       	theAid OUT int, theUXTime OUT int) is
+ cursor mes is select HISTO,SAVESET,ALEVEL,MSGTEXT,ANANAME,TIMEST2UXT(MSGTIME),TASK,ANALYSISTASK,ANAID
+	from ANAMESSAGE WHERE ID=MsgID;
+ myH ANAMESSAGE.HISTO%TYPE;
 begin
- select NAME,SAVESET,ALEVEL,MSGTEXT,ANANAME,TIMEST2UXT(MSGTIME),TASK,ANALYSISTASK into
-        theHName,theSaveSet,theLevel,theMessage,theAName,theUXTime,theTask,theAnalysisTask
-        from ANAMESSAGE M, HISTOGRAM H where M.ID=MsgID and M.HISTO=H.HID ;
+ open mes;
+ fetch mes into myH,theSaveSet,theLevel,theMessage,theAName,
+		theUXTime,theTask,theAnalysisTask,theAid;
+ if (mes%NOTFOUND) then
+     theAid := -999;
+ else
+  if (myH is not null) then
+   select NAME into theHName from HISTOGRAM where HID = myH;
+  else
+   theHName := NULL;
+  end if;
+ end if;
+ close mes;
 end GetMessage;
 -----------------------
 
