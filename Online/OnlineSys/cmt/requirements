@@ -1,5 +1,5 @@
 package OnlineSys
-version v4r18
+version v4r20
 
 branches cmt doc
  
@@ -28,9 +28,9 @@ use GaudiSerialize    v0r3     Online
 use HPDMonitor        v1r5     Online
 use InsertDB          v1r3     Online
 use MBMDump           v1r10    Online
-use OMAlib            v1r7     Online
+use OMAlib            v2r0     Online
 use OnlineDummyReader v1r4     Online
-use OnlineHistDB      v4r14    Online
+use OnlineHistDB      v5r0     Online
 use OnlineKernel      v1r22    Online
 use OnlineTools       v1r1     Online
 use OnlineTasks       v1r19    Online
