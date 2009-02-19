@@ -1,4 +1,4 @@
-// $Id: OMAMessage.cpp,v 1.2 2009-02-19 10:45:26 ggiacomo Exp $
+// $Id: OMAMessage.cpp,v 1.3 2009-02-19 19:05:02 ggiacomo Exp $
 #include <time.h>
 #include "OnlineHistDB/OMAMessage.h"
 using namespace std;
@@ -21,11 +21,15 @@ OMAMessage::OMAMessage( std::string& HistName,
                         OnlineHistDBEnv &env,
                         int anaID) :
   OnlineHistDBEnv(env),  m_ID(0), m_histo(HistName), m_saveSet(SaveSet),
-  m_taskName(TaskName), m_anaTaskName(AnaTaskName),
-  m_msgtext(Text), m_level(Level),
+  m_taskName(TaskName), m_anaTaskName(AnaTaskName), m_anaTaskName_null(0),
+  m_msgtext(Text), m_msgtext_null(0), m_level(Level),
   m_anaid(anaID), m_ananame(AnalysisName), m_time(0),
-   m_isAbort(false), m_confirmed(true), m_dbsync(false)
-{}
+  m_isAbort(false), m_confirmed(true), m_dbsync(false)
+{
+  m_histo_null = m_histo.empty() ? 1 : 0;
+  m_taskName_null = m_taskName.empty() ? 1 : 0;
+  m_ananame_null = m_ananame.empty() ? 1 : 0; 
+}
 
 // constructor from OMAlib (no HistDB)
 OMAMessage::OMAMessage( std::string& HistName,
@@ -36,16 +40,22 @@ OMAMessage::OMAMessage( std::string& HistName,
                         std::string& Text,
                         OMAMsgLevel Level) :
   OnlineHistDBEnv(""), m_ID(0), m_histo(HistName), m_saveSet(SaveSet),
-  m_taskName(TaskName), m_anaTaskName(AnaTaskName),
-  m_msgtext(Text), m_level(Level),
+  m_taskName(TaskName),  m_anaTaskName(AnaTaskName), m_anaTaskName_null(0),
+  m_msgtext(Text), m_msgtext_null(0), m_level(Level),
   m_anaid(0), m_ananame(AnalysisName), m_time(0),
   m_isAbort(false), m_confirmed(true), m_dbsync(false)
-{}
+{
+  m_histo_null = m_histo.empty() ? 1 : 0;
+  m_taskName_null = m_taskName.empty() ? 1 : 0;
+  m_ananame_null = m_ananame.empty() ? 1 : 0;
+}
 
 // constructor from DB
 OMAMessage::OMAMessage( int ID,
                         OnlineHistDBEnv &env) : 
-  OnlineHistDBEnv(env), m_ID(ID), m_isAbort(true) {
+  OnlineHistDBEnv(env), m_ID(ID), m_isAbort(true),
+  m_confirmed(true), m_dbsync(false)
+{
   load();
 }
 
@@ -81,18 +91,18 @@ void OMAMessage::load() {
     myOCIBindInt   (stmt,":tim", m_time);
     if (OCI_SUCCESS == myOCIStmtExecute(stmt) ) {
       if (m_anaid < 0) {
-	m_isAbort=true;
+        m_isAbort=true;
       }
       else {
-	m_histo = m_histo_null ? "" : std::string((const char *) HNAME);
-	m_saveSet= std::string((const char *) SAVESET);
-	m_taskName = m_taskName_null ? "" : std::string((const char *) TASK);
-	m_anaTaskName = m_anaTaskName_null ? "" : std::string((const char *) ANATASK);
-	m_msgtext= m_msgtext_null ? "" : std::string((const char *) MESSAGE);
-	setLevelFromString((const char *) LEVEL);
-	m_ananame = m_ananame_null ? "" : std::string((const char *) ANANAME);
-	m_dbsync=true;
-	m_isAbort=false;
+        m_histo = m_histo_null ? "" : std::string((const char *) HNAME);
+        m_saveSet= std::string((const char *) SAVESET);
+        m_taskName = m_taskName_null ? "" : std::string((const char *) TASK);
+        m_anaTaskName = m_anaTaskName_null ? "" : std::string((const char *) ANATASK);
+        m_msgtext= m_msgtext_null ? "" : std::string((const char *) MESSAGE);
+        setLevelFromString((const char *) LEVEL);
+        m_ananame = m_ananame_null ? "" : std::string((const char *) ANANAME);
+        m_dbsync=true;
+        m_isAbort=false;
       }
     }
     releaseOCITaggedStatement(stmt, "MSGLOAD");
@@ -125,6 +135,7 @@ void OMAMessage::store() {
   if(m_ID)
     command << ",theID => "<< m_ID;
   command << ",outTime => :newt, outAname => :newa); end;";
+
 
   if ( OCI_SUCCESS == prepareOCIStatement (stmt, command.str().c_str() ) ) {
     text ANANAME[VSIZE_ANANAME]="";

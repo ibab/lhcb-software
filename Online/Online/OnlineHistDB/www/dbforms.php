@@ -685,17 +685,19 @@ function histo_analysis($id,$htype,$mode) {
     ocifreestatement($stid);
     $showpars=0;
 
+    $hhid=($htype == "HID") ? $id : "${hsid}/1";
     if($htype == "HID" || $_POST["NHS"]==1) { // get parameters to be shown
       $showpars=1;
-      $hhid= ($htype == "HID") ? $id : "${hsid}/1";
       $ia=0;
       while ($ia++<$lastana)
 	get_ana_parameters($_POST["a${ia}_alg"],"CHECK",$_POST["a${ia}_id"],$ia,$hhid);
     }
     else {
+      // don't show parameters but load them 
       $ia=0;
       while ($ia++<$lastana)
-	get_ana_parameters($_POST["a${ia}_alg"],"CHECK",0,1,0,0,1,0);
+	//get_ana_parameters($_POST["a${ia}_alg"],"CHECK",$_POST["a${ia}_id"],1,0,0,1,0);
+        get_ana_parameters($_POST["a${ia}_alg"],"CHECK",$_POST["a${ia}_id"],$ia,$hhid);
     }
   }
   else if ($mode == "update") {
@@ -819,7 +821,8 @@ function histo_analysis($id,$htype,$mode) {
     }
     if ($canwrite) {
       echo "<table align='center'><tr>";
-      echo "<td> <input type='submit' name='Update_analysis' value='${action}'>\n";
+      $disabled = ($mode == "display" && $_POST["a${ia}_alg"] == "Fit") ? "disabled" : "";
+      echo "<td> <input $disabled type='submit' name='Update_analysis' value='${action}'>\n";
       if ($mode=='display' && $showpars) {
 	$maction= $_POST["a${ia}_mask"] ? "Unmask" : "Mask";
 	echo "<td> <input type='submit' name='SetMask_Analysis' value='${maction}'>\n";

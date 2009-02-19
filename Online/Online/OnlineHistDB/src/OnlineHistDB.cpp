@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.35 2009-02-18 19:17:05 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.36 2009-02-19 19:05:02 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -619,24 +619,24 @@ int OnlineHistDB::getAlgorithms(std::vector<string>& list,std::string type) {
   return genericStringQuery(command,list);
 }
 
-int OnlineHistDB::getMessages(std::vector<int>& list,
+int OnlineHistDB::getMessages(std::vector<int>& vlist,
                               std::string AnalysisTask) {
   int out =0;
   m_StmtMethod = "OnlineHistDB::getMessages";
   OCIStmt *astmt=NULL;
-  OCIArray *intlist=NULL;
+  OCIArray *list=NULL;
   std::string command="BEGIN ONLINEHISTDB.GETMESSAGES(:list";
   if("any" != AnalysisTask)
     command += ",theAnaysisTask => '"+AnalysisTask +"'";
   command +="); END;";
   if ( OCI_SUCCESS == prepareOCIStatement(astmt, command.c_str()) ) {
     checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_VARRAY,
-                             OCIintlist, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
-                             (dvoid **) &intlist));
-    myOCIBindObject(astmt,":list", (void **) &intlist, OCIintlist);
+                             OCIinttlist, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
+                             (dvoid **) &list));
+    myOCIBindObject(astmt,":list", (void **) &list, OCIinttlist);
     if (OCI_SUCCESS == myOCIStmtExecute(astmt)) {
-      intVarrayToVector(intlist, list);
-      out = list.size();
+      intVarrayToVector(list, vlist);
+      out = vlist.size();
     }
     releaseOCIStatement(astmt);
   }

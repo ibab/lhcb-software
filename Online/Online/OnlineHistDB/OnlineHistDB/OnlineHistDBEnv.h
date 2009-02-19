@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.34 2009-02-16 10:37:42 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.35 2009-02-19 19:05:02 ggiacomo Exp $
 #ifndef ONLINEHISTDBENV_H
 #define ONLINEHISTDBENV_H 1
 /** @class  OnlineHistDBEnv OnlineHistDBEnv.h OnlineHistDB/OnlineHistDBEnv.h
@@ -185,6 +185,7 @@ class OnlineHistDBEnv {
   OCIType *OCIthresholds;
   OCIType *OCIparameters;
   OCIType *OCIintlist;
+  OCIType *OCIinttlist;
   OCIType *OCIanalist;
   OCIType *OCIhnalist;
   OCIType *OCIflolist;

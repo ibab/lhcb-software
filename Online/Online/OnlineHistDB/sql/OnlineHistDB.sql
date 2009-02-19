@@ -3,7 +3,6 @@ create or replace package OnlineHistDB AUTHID CURRENT_USER as
  TYPE sourceh is VARRAY(8) of HCREATOR.SOURCEH1%TYPE; 
  TYPE histotlist is TABLE OF HISTOGRAM.HID%TYPE;
  TYPE floattlist is TABLE OF real;
- TYPE inttlist is TABLE OF int;
 
  -- major declarations (task, subsystem, histogram)
  procedure DeclareSubSystem(subsys varchar2);	
@@ -115,7 +114,7 @@ create or replace package OnlineHistDB AUTHID CURRENT_USER as
                 theTask IN varchar2 := NULL, theAnalysisTask IN varchar2 := NULL, theLevel IN ANAMESSAGE.ALEVEL%TYPE,
                 theMessage IN varchar2, theAID IN ANALYSIS.AID%TYPE := NULL, theAName IN varchar2 := NULL, 
                 theID IN ANAMESSAGE.ID%TYPE := NULL,  outTime OUT int, outAname OUT varchar2) return number;
- procedure GetMessages(msgids OUT intlist, theAnaysisTask IN varchar2 := NULL);
+ procedure GetMessages(msgids OUT inttlist, theAnaysisTask IN varchar2 := NULL);
  procedure GetMessage(MsgID IN ANAMESSAGE.ID%TYPE, theHName OUT HISTOGRAM.NAME%TYPE, theSaveSet OUT varchar2, 
                 theTask OUT varchar2, theAnalysisTask OUT varchar2,
                 theLevel OUT varchar2, theMessage OUT varchar2, theAName OUT varchar2, 
@@ -1833,12 +1832,12 @@ exception
 end StoreMessage;
 -----------------------
 
-procedure GetMessages(msgids OUT intlist, theAnaysisTask IN varchar2 := NULL) is
+procedure GetMessages(msgids OUT inttlist, theAnaysisTask IN varchar2 := NULL) is
  cursor mym is select ID from ANAMESSAGE where theAnaysisTask is NULL or ANALYSISTASK=theAnaysisTask;
  myid ANAMESSAGE.ID%TYPE := NULL;
  na int := 0;
 begin
- msgids := intlist();
+ msgids := inttlist();
   open mym;
   LOOP	
    fetch mym into myid;

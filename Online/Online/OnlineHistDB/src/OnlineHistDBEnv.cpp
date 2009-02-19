@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.15 2009-02-16 13:57:49 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.16 2009-02-19 19:05:02 ggiacomo Exp $
 #include <cctype>
 #include "OnlineHistDB/OnlineHistDBEnv.h"
 using namespace std;
@@ -7,7 +7,7 @@ using namespace OnlineHistDBEnv_constants;
 OnlineHistDBEnv::OnlineHistDBEnv(std::string User) 
   :  m_envhp(NULL), m_errhp(NULL), m_svchp(NULL),
      OCIthresholds(NULL), OCIparameters(NULL),
-     OCIintlist(NULL), OCIanalist(NULL), OCIhnalist(NULL), OCIflolist(NULL),    
+     OCIintlist(NULL), OCIinttlist(NULL), OCIanalist(NULL), OCIhnalist(NULL), OCIflolist(NULL),    
      m_TaggedStatement(NULL),
      m_refRoot(NULL), m_savesetsRoot(NULL),
      m_TStorage(NULL), m_HStorage(NULL), m_PStorage(NULL), 
@@ -25,6 +25,7 @@ OnlineHistDBEnv::OnlineHistDBEnv(OnlineHistDBEnv &m) {
   OCIthresholds = m.OCIthresholds;
   OCIparameters = m.OCIparameters;
   OCIintlist = m.OCIintlist;
+  OCIinttlist = m.OCIinttlist;
   OCIanalist = m.OCIanalist;
   OCIhnalist = m.OCIhnalist;
   OCIflolist = m.OCIflolist;
@@ -72,6 +73,12 @@ void OnlineHistDBEnv::getOCITypes() {
 			 (CONST text *) 0, (ub4) 0,
 			 OCI_DURATION_SESSION,  OCI_TYPEGET_HEADER,
 			 &OCIintlist)); 
+  checkerr(OCITypeByName(m_envhp, m_errhp, m_svchp, (const text *) 0,
+			 (ub4) 0, (const text *) "INTTLIST",
+			 (ub4) strlen((const char *) "INTTLIST"),
+			 (CONST text *) 0, (ub4) 0,
+			 OCI_DURATION_SESSION,  OCI_TYPEGET_HEADER,
+			 &OCIinttlist));
   checkerr(OCITypeByName(m_envhp, m_errhp, m_svchp, (const text *) 0,
 			 (ub4) 0, (const text *) "ANALIST",
 			 (ub4) strlen((const char *) "ANALIST"),
