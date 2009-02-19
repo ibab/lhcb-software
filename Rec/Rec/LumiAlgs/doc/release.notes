@@ -4,6 +4,10 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2009-02-19 - Marco Cattaneo
+ - Clean up configurable to remove unneccessary imports and fix dependency
+   problem during make
+
 ! 2009-02-16 - Jaap Panman
  - Package created to do the basic offline accounting of LumiSummary data
  - LumiAccounting:  read LumiSummaries and create LumiFSR

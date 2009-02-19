@@ -8,11 +8,8 @@ __version__ = ""
 __author__  = ""
 
 from Gaudi.Configuration  import *
-from Configurables import ( GaudiSequencer, MessageSvc )
 import GaudiKernel.ProcessJobOptions
-from Configurables import ( LHCbConfigurableUser, LHCbApp, 
-                            ProcessPhase, GaudiSequencer,
-                            OdinTypesFilter, LumiAccounting, HltLumiSummaryDecoder )
+from Configurables import LHCbConfigurableUser 
     
 # -------------------------------------------------------------------------------------------
 
@@ -22,9 +19,6 @@ from Configurables import ( LHCbConfigurableUser, LHCbApp,
 #  @date   13/02/2009
 
 class LumiAlgsConf(LHCbConfigurableUser):
-
-    ## Possible used Configurables
-    __used_configurables__ = [ OdinTypesFilter, LumiAccounting, HltLumiSummaryDecoder ]
 
     ## Steering options
     __slots__ = {
@@ -37,7 +31,8 @@ class LumiAlgsConf(LHCbConfigurableUser):
 
     ## Apply the configuration to the given sequence
     def applyConf(self):
-
+        from Configurables import ( OdinTypesFilter, LumiAccounting,
+                                    HltLumiSummaryDecoder, GaudiSequencer )
         debugOPL = INFO
          
         sequence = self.getProp("LumiSequencer")
