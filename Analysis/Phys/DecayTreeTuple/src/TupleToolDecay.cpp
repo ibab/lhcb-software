@@ -1,4 +1,4 @@
-// $Id: TupleToolDecay.cpp,v 1.2 2009-01-20 17:53:49 pkoppenb Exp $
+// $Id: TupleToolDecay.cpp,v 1.3 2009-02-19 11:57:16 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -63,6 +63,8 @@ StatusCode TupleToolDecay::initialize( const std::string& dcy, bool isMC ){
 
   m_isMC = isMC ;
 
+  if (msgLevel(MSG::DEBUG)) debug() << "TupleToolDecay::initialize " << dcy << " " << isMC << endmsg ;
+
   std::string pname; // sets the name to "ToolName" and not to "AlgoParent.ToolName"
   const Algorithm* alg = dynamic_cast<const Algorithm*>( parent() );
   if( alg ) pname = alg->name();
@@ -93,4 +95,7 @@ StatusCode TupleToolDecay::initialize( const std::string& dcy, bool isMC ){
 //=============================================================================
 // get decay
 //=============================================================================
-std::string TupleToolDecay::decay() const {return m_dkFinder->decay();}
+std::string TupleToolDecay::decay() const {
+  if (m_isMC) return m_mcdkFinder->decay();
+  else return m_dkFinder->decay();
+}

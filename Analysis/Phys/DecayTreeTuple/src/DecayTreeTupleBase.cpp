@@ -1,4 +1,4 @@
-// $Id: DecayTreeTupleBase.cpp,v 1.9 2009-02-17 09:28:36 pkoppenb Exp $
+// $Id: DecayTreeTupleBase.cpp,v 1.10 2009-02-19 11:57:16 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -94,7 +94,7 @@ bool DecayTreeTupleBase::initializeDecays( bool isMC) {
   for( mit=m_decayMap.begin(); m_decayMap.end()!=mit; ++mit ){
     if (msgLevel(MSG::DEBUG)) debug() << "Try now to instanciate " << mit->first << endreq;
     TupleToolDecay *m = tool<TupleToolDecay>( "TupleToolDecay", mit->first, this );
-    if( !m->initialize( mit->second, false ) ){
+    if( !m->initialize( mit->second, isMC ) ){
       Error( "Cannot initialize '" + mit->first + "' branch properly, skipping it." );
       continue;
     }
@@ -199,9 +199,15 @@ void DecayTreeTupleBase::printInfos() const {
 void DecayTreeTupleBase::matchSubDecays( const Particle::ConstVector& row ,
                                          Particle::ConstVector& buffer, 
                                          const TupleToolDecay* mit){
+  if ( 0==mit ) Exception("DecayTreeTupleBase::matchSubDecays TupleToolDecay undefined");
+  if ( 0==mit->decayFinder() ) Exception("DecayTreeTupleBase::matchSubDecays TupleToolDecay DecayFinder undefined");
+  if ( 0==row[0] ) Exception("DecayTreeTupleBase::matchSubDecays DecayTreeTupleBase::Null Particle");
 
   const Particle* head = row[0];
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Match subdecay for Particle " << head->particleID().pid() << endmsg ;
   mit->decayFinder()->decayMembers( head, buffer );
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Decay finder gets " << buffer.size() << " particles for " 
+                                        << mit->decay() << endmsg ;
   findAssociatedOneParts( buffer, row, mit, m_pTools );
 }
 // ===============================================================
@@ -209,10 +215,18 @@ void DecayTreeTupleBase::matchSubDecays( const Particle::ConstVector& row ,
 void DecayTreeTupleBase::matchSubDecays( const MCParticle::ConstVector& row,
                                          MCParticle::ConstVector& buffer, 
                                          const TupleToolDecay* mit){
+  if ( 0==mit ) Exception("DecayTreeTupleBase::matchSubDecays TupleToolDecay undefined");
+  if ( 0==mit->mcDecayFinder() ) Exception("DecayTreeTupleBase::matchSubDecays TupleToolDecay MCDecayFinder undefined");
+  if ( 0==row[0] ) Exception("DecayTreeTupleBase::matchSubDecays DecayTreeTupleBase::Null MC Particle");
+
   const MCParticle* head = row[0];
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Match subdecay for MCParticle " << head->particleID().pid() << endmsg ;
   mit->mcDecayFinder()->decayMembers( head, buffer );
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Decay finder gets " << buffer.size() << " mc particles for " 
+                                        << mit->decay() << endmsg ;
   // this is the cause of all the difference between MC particle and Particle occurs
   findAssociatedOneParts( buffer, row, mit, m_mcTools ); 
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Looked for associated Parts " << endmsg ;
 }
 //=============================================================================
 // Moved from OnePart
@@ -223,8 +237,10 @@ bool DecayTreeTupleBase::fillOnePart( Decays::OnePart* op
                             , const Particle* pp )
 {
   bool test = true;
+  if (msgLevel(MSG::DEBUG)) debug() << "FillOnePart " << pp->particleID().pid() << endmsg ;
   for( std::vector< IParticleTupleTool* >::iterator it = op->tools().begin();
        op->tools().end()!=it; ++it ){
+    if (msgLevel(MSG::DEBUG)) debug() << "FillOnePart " << pp->particleID().pid() << " in " << (*it)->type() << endmsg ;
     bool localTest = (*it)->fill( mother, pp, op->headName(), tuple );
     test &= localTest;
     if( localTest ){}
@@ -243,8 +259,10 @@ bool DecayTreeTupleBase::fillOnePart( Decays::OnePart* op
                             , const MCParticle* pp )
 {
   bool test = true;
+  if (msgLevel(MSG::DEBUG)) debug() << "FillOnePart MC " << pp->particleID().pid() << " " << op->headName() << endmsg ;
   for( std::vector< IMCParticleTupleTool* >::iterator it = op->mctools().begin();
        op->mctools().end()!=it; ++it ){
+    if (msgLevel(MSG::DEBUG)) debug() << "FillOnePart MC " << pp->particleID().pid() << " in " << (*it)->type() << endmsg ;
     bool localTest = (*it)->fill( mother, pp, op->headName(), tuple );
     test &= localTest;
     if( localTest ){}

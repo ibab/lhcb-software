@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+! 2009-02-19 - Patrick Koppenburg
+ - (MC)DecayTreeTuple : more debugging. 
+ - TupleToolDecay : fix bug in decay descriptor return
+
 ! 2009-02-18 - Patrick Koppenburg
  - TupleToolDalitz : get svc only once
 

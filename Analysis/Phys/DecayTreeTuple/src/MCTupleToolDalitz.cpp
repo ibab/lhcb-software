@@ -1,4 +1,4 @@
-// $Id: MCTupleToolDalitz.cpp,v 1.3 2009-02-18 18:41:04 pkoppenb Exp $
+// $Id: MCTupleToolDalitz.cpp,v 1.4 2009-02-19 11:57:16 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -44,11 +44,13 @@ StatusCode MCTupleToolDalitz::fill( const LHCb::MCParticle* mother
                                   , Tuples::Tuple& tuple ){
   
   if (0==part) return StatusCode::FAILURE ;
-  if (msgLevel(MSG::DEBUG)) debug() << "Decay of " << part->particleID().pid() << endmsg ;
+  if (msgLevel(MSG::DEBUG)) debug() << "Decay of " << part->particleID().pid() << " with mother " << mother << endmsg ;
   LHCb::MCParticle::ConstVector	dauts ;
   for ( SmartRefVector<LHCb::MCVertex>::const_iterator iv = part->endVertices().begin() ;
        iv != part->endVertices().end() ; ++iv){
     if (!(*iv)->isDecay()) continue ;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Decay vertex of type " << (*iv)->type() << " with " 
+                                          << (*iv)->products().size() << " products" << endmsg ;
     const SmartRefVector< LHCb::MCParticle > pr = (*iv)->products() ;
     for ( SmartRefVector< LHCb::MCParticle >::const_iterator ip = pr.begin() ; ip != pr.end() ; ++ip){
       if (msgLevel(MSG::VERBOSE)) verbose() << "Pushing back " << (*ip)->particleID().pid() << endmsg ;
