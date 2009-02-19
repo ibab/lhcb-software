@@ -3,6 +3,12 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v8r1>2009-02-?? Phys v8r1 </A></H1><PRE>
+
+###############################################################################
+#                                  PHYS v8r1                                  #
+###############################################################################
+
 ! 2009-02-16 - Chris Jones
  - Add Rich/DstCalibSel which contains RICH Dstar selection code
 
