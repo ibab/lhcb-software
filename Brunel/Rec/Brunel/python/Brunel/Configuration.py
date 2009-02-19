@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.58 2009-02-16 22:22:48 panmanj Exp $"
+__version__ = "$Id: Configuration.py,v 1.59 2009-02-19 12:56:04 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -22,7 +22,7 @@ class Brunel(LHCbConfigurableUser):
 
     ## Known monitoring sequences, all run by default
     KnownMoniSubdets        = ["CALO","RICH","MUON","VELO","Tr","ST"] 
-    KnownExpertMoniSubdets  = KnownMoniSubdets+["TT","IT","OT"]
+    KnownExpertMoniSubdets  = KnownMoniSubdets+["TT","IT"]
     ## Known checking sequences, all run by default
     KnownCheckSubdets       = ["Pat","RICH","MUON"] 
     KnownExpertCheckSubdets = KnownCheckSubdets+["TT","IT","OT","Tr"]
@@ -422,9 +422,6 @@ class Brunel(LHCbConfigurableUser):
                 clusMoni.FullDetail = True
                 clusMoni.DetType = "IT"
                 GaudiSequencer("MoniITSeq").Members += [clusMoni]
-            if "OT" in moniSeq :
-                # These histograms should be identical to those already done in Boole.
-                GaudiSequencer("MoniOTSeq").Members  += ["OTTimeMonitor"]
 
     def configureCheck(self,expert):
         # "Check" histograms filled only with simulated data
