@@ -1,13 +1,13 @@
-!$Id: release.notes,v 1.158 2009-02-19 08:51:44 mneedham Exp $
+!$Id: release.notes,v 1.159 2009-02-19 08:57:42 cattanem Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
+!======================== STDet v4r7 2009-02-19 ==========================
 ! 2009-2-18 M Needham
  - Remove circular dependency on STKernel
  - Remove use of STLexicalCaster
 
-!======================== STDet v4r7 2009-02-17 ==========================
 ! 2009-02-18 J Luisier
  - Bug fix
  - Add missing dependency on STKernel
