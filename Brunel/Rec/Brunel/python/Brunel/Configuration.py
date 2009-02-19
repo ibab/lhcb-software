@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.59 2009-02-19 12:56:04 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.60 2009-02-19 13:21:10 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -22,7 +22,7 @@ class Brunel(LHCbConfigurableUser):
 
     ## Known monitoring sequences, all run by default
     KnownMoniSubdets        = ["CALO","RICH","MUON","VELO","Tr","ST"] 
-    KnownExpertMoniSubdets  = KnownMoniSubdets+["TT","IT"]
+    KnownExpertMoniSubdets  = KnownMoniSubdets+["TT","IT","PROTO"]
     ## Known checking sequences, all run by default
     KnownCheckSubdets       = ["Pat","RICH","MUON"] 
     KnownExpertCheckSubdets = KnownCheckSubdets+["TT","IT","OT","Tr"]
@@ -500,7 +500,7 @@ class Brunel(LHCbConfigurableUser):
                 RichRecQCConf().setProp( "ExpertHistos", True )
 
             if "PROTO" in checkSeq :
-                from Configurables import ( NTupleSvc, ChargedProtoParticleTupleAlg )
+                from Configurables import ( GaudiSequencer, NTupleSvc, ChargedProtoParticleTupleAlg )
                 protoChecker = ChargedProtoParticleTupleAlg("ChargedProtoTuple")
                 protoChecker.NTupleLUN = "PROTOTUPLE"
                 GaudiSequencer("CheckPROTOSeq").Members += [protoChecker]
