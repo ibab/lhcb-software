@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonLines.py,v 1.9 2009-02-19 17:30:17 aperezca Exp $
+# $Id: HltMuonLines.py,v 1.10 2009-02-19 18:16:43 depaula Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -29,7 +29,6 @@ from HltConf.HltLine import Hlt1Line   as Line
 from HltConf.HltLine import Hlt1Member as Member
 from HltConf.HltLine import bindMembers
 from HltConf.HltLine import Hlt1Tool   as Tool
-#from HltConf.HltLine import hlt1Lines
 from HltConf.HltL0Candidates import *
 from HltConf.HltFastTrackFit import setupHltFastTrackFit
 
@@ -165,7 +164,7 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
                                 , Member( 'VM1', 'L0DiMuon' , FilterDescriptor = [ 'SumPT,>,'+str(self.getProp('DiMuon_SumPtCut')) ])
                                 , Member( 'VT', 'L0' )
                                 ] + TMatchV + [
-                                Member( 'VM1', 'VeloT', FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('DiMuon_DOCACut')) ])
+                                Member( 'VM1', 'DOCA', FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('DiMuon_DOCACut')) ])
                                 , Member( 'VF', 'VeloT',  
                                         FilterDescriptor = [ 'VertexMatchIDsFraction_%VM1L0DiMuon,>,'+str(self.getProp('DiMuon_IDCut')) ]) 
                                 ] )
@@ -175,7 +174,7 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
         #                            , Member( 'VM1', 'L0DiMuon' , FilterDescriptor = [ 'SumPT,>,'+str(self.getProp('DiMuonNoPV_SumPtCut')) ])
         #                            , Member( 'VT', 'L0' )
         #                            ] + TMatchV + [
-        #                            Member( 'VM1', 'VeloT', FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('DiMuon_DOCACut')) ])
+        #                            Member( 'VM1', 'DOCA', FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('DiMuon_DOCACut')) ])
         #                           , Member( 'VF', 'VeloT',  
         #                                   FilterDescriptor = [ 'VertexMatchIDsFraction_%VM1L0DiMuon,>,'+str(self.getProp('DiMuon_IDCut')) ]) 
         #                           ] )
@@ -272,6 +271,8 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
                                        , Member( 'VF', 'Mass' 
                                                , FilterDescriptor = ['VertexDimuonMass,>,'+str(self.getProp('DiMuon_MassCut'))])
                                        , Member ( 'VU' , 'FitTrack' ,      RecoName = 'FitTrack')
+                                       , Member ( 'VF' , 'Chi2Mu'
+                                                , FilterDescriptor = ["FitVertexMaxMuChi2,<,"+str(self.getProp('Muon_FitMuChi2Cut'))])
                                        , Member ( 'VF' , 'Chi2OverN'
                                                 , OutputSelection = '%Decision'
                                                 , FilterDescriptor = ["FitVertexMaxChi2OverNdf,<,"+str(self.getProp('Muon_FitChiCut'))])
@@ -288,6 +289,8 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
         #                               , Member( 'VF', 'Mass' 
         #                                       , FilterDescriptor = ['VertexDimuonMass,>,'+str(self.getProp('DiMuonNoPV_MassCut'))])
         #                               , Member ( 'VU' , 'FitTrack' ,      RecoName = 'FitTrack')
+        #                               , Member ( 'VF' , 'Chi2Mu'
+        #                                        , FilterDescriptor = ["FitVertexMaxMuChi2,<,"+str(self.getProp('Muon_FitMuChi2Cut'))])
         #                               , Member ( 'VF' , 'Chi2OverN'
         #                                        , OutputSelection = '%Decision'
         #                                        , FilterDescriptor = ["FitVertexMaxChi2OverNdf,<,"+str(self.getProp('Muon_FitChiCut'))])
@@ -306,6 +309,8 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
                                                ,  FilterDescriptor = [ 'FitVertexMinIP_PV2D,||>,'+str(self.getProp('DiMuon_IPCut'))])
                                        , Member( 'VF','Mass' 
                                                , FilterDescriptor = [ 'VertexDimuonMass,>,'+str(self.getProp('DiMuonIP_MassCut')) ])
+                                       , Member ( 'VF' , 'Chi2Mu'
+                                                , FilterDescriptor = ["FitVertexMaxMuChi2,<,"+str(self.getProp('Muon_FitMuChi2Cut'))])
                                        , Member ( 'VF' , 'Chi2OverN'
                                                  , OutputSelection = '%Decision'
                                                  , FilterDescriptor = ["FitVertexMaxChi2OverNdf,<,"+str(self.getProp('Muon_FitChiCut'))])
@@ -325,6 +330,8 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
                                      , Member( 'VF','Mass' 
                                              , FilterDescriptor = [ 'VertexDimuonMass,>,'+str(self.getProp('DiMuon_MassCut')) ])
                                      , Member ( 'VU' , 'FitTrack' ,      RecoName = 'FitTrack')
+                                     , Member ( 'VF' , 'Chi2Mu'
+                                              , FilterDescriptor = ["FitVertexMaxMuChi2,<,"+str(self.getProp('Muon_FitMuChi2Cut'))])
                                      , Member ( 'VF' , 'Chi2OverN'
                                               , OutputSelection = '%Decision'
                                               , FilterDescriptor = ["FitVertexMaxChi2OverNdf,<,"+str(self.getProp('Muon_FitChiCut'))])
@@ -346,6 +353,8 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
                                          , Member( 'VF','Mass' 
                                                  , FilterDescriptor = [ 'VertexDimuonMass,>,'+str(self.getProp('DiMuon_MassCut')) ])
                                          , Member ( 'VU' , 'FitTrack' ,      RecoName = 'FitTrack')
+                                         , Member ( 'VF' , 'Chi2Mu'
+                                                  , FilterDescriptor = ["FitVertexMaxMuChi2,<,"+str(self.getProp('Muon_FitMuChi2Cut'))])
                                          , Member ( 'VF' , 'Chi2OverN'
                                                   , OutputSelection = '%Decision'
                                                   , FilterDescriptor = ["FitVertexMaxChi2OverNdf,<,"+str(self.getProp('Muon_FitChiCut'))])
@@ -363,6 +372,8 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
         #                             , Member( 'VF','Mass' 
         #                                     , FilterDescriptor = [ 'VertexDimuonMass,>,'+str(self.getProp('DiMuonNoPV_MassCut')) ])
         #                             , Member ( 'VU' , 'FitTrack' ,      RecoName = 'FitTrack')
+        #                             , Member ( 'VF' , 'Chi2Mu'
+        #                                      , FilterDescriptor = ["FitVertexMaxMuChi2,<,"+str(self.getProp('Muon_FitMuChi2Cut'))])
         #                             , Member ( 'VF' , 'Chi2OverN'
         #                                      , OutputSelection = '%Decision'
         #                                      , FilterDescriptor = ["FitVertexMaxChi2OverNdf,<,"+str(self.getProp('Muon_FitChiCut'))])
@@ -383,6 +394,8 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
                                             , FilterDescriptor = [ 'FitVertexMinIP_PV2D,||>,'+str(self.getProp('DiMuon_IPCut')) ])
                                     , Member( 'VF','Mass' 
                                             , FilterDescriptor = [ 'VertexDimuonMass,>,'+str(self.getProp('DiMuonIP_MassCut')) ])
+                                    , Member ( 'VF' , 'Chi2Mu'
+                                             , FilterDescriptor = ["FitVertexMaxMuChi2,<,"+str(self.getProp('Muon_FitMuChi2Cut'))])
                                     , Member ( 'VF' , 'Chi2OverN'
                                              , OutputSelection = '%Decision'
                                              , FilterDescriptor = ["FitVertexMaxChi2OverNdf,<,"+str(self.getProp('Muon_FitChiCut'))])
@@ -407,6 +420,8 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
                                               , FilterDescriptor = [ 'FitVertexMinIP_PV2D,||>,'+str(self.getProp('DiMuon_IPCut')) ])
                                       , Member( 'VF','Mass' 
                                               , FilterDescriptor = [ 'VertexDimuonMass,>,'+str(self.getProp('DiMuonIP_MassCut')) ])
+                                      , Member ( 'VF' , 'Chi2Mu'
+                                               , FilterDescriptor = ["FitVertexMaxMuChi2,<,"+str(self.getProp('Muon_FitMuChi2Cut'))])
                                       , Member ( 'VF' , 'Chi2OverN'
                                                , OutputSelection = '%Decision'
                                                , FilterDescriptor = ["FitVertexMaxChi2OverNdf,<,"+str(self.getProp('Muon_FitChiCut'))])
@@ -435,6 +450,8 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
                                           , FilterDescriptor = [ 'VertexDimuonMass,>,'+str(self.getProp('DiMuon_MassCut')) ]
                                           )
                                   , Member ( 'VU' , 'FitTrack' ,      RecoName = 'FitTrack')
+                                  , Member ( 'VF' , 'Chi2Mu'
+                                           , FilterDescriptor = ["FitVertexMaxMuChi2,<,"+str(self.getProp('Muon_FitMuChi2Cut'))])
                                   , Member ( 'VF' , 'Chi2OverN'
                                            , OutputSelection = '%Decision'
                                            , FilterDescriptor = ["FitVertexMaxChi2OverNdf,<,"+str(self.getProp('Muon_FitChiCut'))])
@@ -457,6 +474,8 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
                                                , FilterDescriptor = [ 'VertexDimuonMass,>,'+str(self.getProp('DiMuon_MassCut')) ]
                                                ) 
                                        , Member ( 'VU' , 'FitTrack' ,      RecoName = 'FitTrack')
+                                       , Member ( 'VF' , 'Chi2Mu'
+                                                , FilterDescriptor = ["FitVertexMaxMuChi2,<,"+str(self.getProp('Muon_FitMuChi2Cut'))])
                                        , Member ( 'VF' , 'Chi2OverN'
                                                 , OutputSelection = '%Decision'
                                                 , FilterDescriptor = ["FitVertexMaxChi2OverNdf,<,"+str(self.getProp('Muon_FitChiCut'))])
@@ -479,8 +498,8 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
         #                                      , FilterDescriptor = [ 'VertexDimuonMass,>,'+str(self.getProp('DiMuonNoPV_MassCut')) ]
         #                                      ) 
         #                              , Member ( 'VU' , 'FitTrack' ,      RecoName = 'FitTrack')
-        #                              #, Member ( 'VF' , 'Chi2Mu'
-        #                              #         , FilterDescriptor = ["FitVertexMaxMuChi2,<,"+str(self.getProp('Muon_FitMuChi2Cut'))])
+        #                              , Member ( 'VF' , 'Chi2Mu'
+        #                                       , FilterDescriptor = ["FitVertexMaxMuChi2,<,"+str(self.getProp('Muon_FitMuChi2Cut'))])
         #                              , Member ( 'VF' , 'Chi2OverN'
         #                                       , OutputSelection = '%Decision'
         #                                       , FilterDescriptor = ["FitVertexMaxChi2OverNdf,<,"+str(self.getProp('Muon_FitChiCut'))])
@@ -507,6 +526,8 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
                                      , Member( 'VF','Mass' 
                                              , FilterDescriptor = [ 'VertexDimuonMass,>,'+str(self.getProp('DiMuonIP_MassCut')) ]
                                              )
+                                     , Member ( 'VF' , 'Chi2Mu'
+                                              , FilterDescriptor = ["FitVertexMaxMuChi2,<,"+str(self.getProp('Muon_FitMuChi2Cut'))])
                                      , Member ( 'VF' , 'Chi2OverN'
                                               , OutputSelection = '%Decision'
                                               , FilterDescriptor = ["FitVertexMaxChi2OverNdf,<,"+str(self.getProp('Muon_FitChiCut'))])
@@ -533,6 +554,8 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
                                       , Member( 'VF','Mass' 
                                               , FilterDescriptor = [ 'VertexDimuonMass,>,'+str(self.getProp('DiMuonIP_MassCut')) ]
                                               )
+                                      , Member ( 'VF' , 'Chi2Mu'
+                                               , FilterDescriptor = ["FitVertexMaxMuChi2,<,"+str(self.getProp('Muon_FitMuChi2Cut'))])
                                       , Member ( 'VF' , 'Chi2OverN'
                                                , OutputSelection = '%Decision'
                                                , FilterDescriptor = ["FitVertexMaxChi2OverNdf,<,"+str(self.getProp('Muon_FitChiCut'))])

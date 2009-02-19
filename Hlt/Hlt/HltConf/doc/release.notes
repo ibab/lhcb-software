@@ -1,10 +1,12 @@
-! $Id: release.notes,v 1.147 2009-02-19 17:30:17 aperezca Exp $ 
+! $Id: release.notes,v 1.148 2009-02-19 18:16:43 depaula Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2009-02-19 - Leandro de Paula
+ - Added a filter (MuChi2) for DiMuon Lines
 =======
 
 ! 2009-02-19 - Antonio Perez-Calero
