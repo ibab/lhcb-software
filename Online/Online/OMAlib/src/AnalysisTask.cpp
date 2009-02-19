@@ -1,4 +1,4 @@
-// $Id: AnalysisTask.cpp,v 1.7 2009-02-16 10:38:21 ggiacomo Exp $
+// $Id: AnalysisTask.cpp,v 1.8 2009-02-19 10:49:50 ggiacomo Exp $
 
 
 // from Gaudi
@@ -44,6 +44,9 @@ AnalysisTask::~AnalysisTask() {
 StatusCode AnalysisTask::initialize() {
   StatusCode sc = GaudiHistoAlg::initialize(); 
   if ( sc.isFailure() ) return sc;  
+  setMsgStream(&(always()));
+  // add the partition name to the analysis task identifier
+  m_anaTaskname = m_anaTaskname+"_"+m_partition;
 
   // use HistDB if requested
   if(m_useDB)
@@ -58,7 +61,7 @@ StatusCode AnalysisTask::initialize() {
     std::vector<std::string>::iterator iF;
     for(iF =  m_inputFiles.begin() ; iF != m_inputFiles.end() ; iF++) {
       info() <<"Analyzing histograms on file "<<*iF<<endmsg;
-      analyze( *iF , "any" );
+      analyze( *iF , m_inputTasks.empty() ? "unknownTask" : m_inputTasks[0] );
     }
   }
   else {

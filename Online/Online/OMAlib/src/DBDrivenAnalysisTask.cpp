@@ -1,4 +1,4 @@
-// $Id: DBDrivenAnalysisTask.cpp,v 1.7 2009-02-16 10:38:21 ggiacomo Exp $
+// $Id: DBDrivenAnalysisTask.cpp,v 1.8 2009-02-19 10:49:50 ggiacomo Exp $
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "OMAlib/DBDrivenAnalysisTask.h"
 #include "OnlineHistDB/OnlineHistDB.h"
@@ -54,7 +54,7 @@ StatusCode DBDrivenAnalysisTask::analyze(std::string& SaveSet,
         std::string rootHname = (*ih)->algorithm()+"/"+(*ih)->hname();
         debug() << "looking for histogram object "<<rootHname<<" in source file"<<endmsg;
         rooth = (TH1*) f->Get(rootHname.c_str());
-        if(rooth) rooth->SetName(((*ih)->hname()).c_str()); // avoid cutting of histogram name
+        if(rooth) rooth->SetName(rootHname.c_str()); // be sure the algorithm name is inside
        }
       if (rooth) {
         debug() <<"   histogram found in source"<<endmsg;

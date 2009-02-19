@@ -11,7 +11,6 @@ ApplicationMgr.TopAlg = { "DBDrivenAnalysisTask", "ExampleAnalysisTask"};
 ApplicationMgr.EvtSel = "NONE";
 
 DBDrivenAnalysisTask.OutputLevel = 3;
-DBDrivenAnalysisTask.MessageTool = "OMAMsgStdOut";
 DBDrivenAnalysisTask.useHistDB   = true;
 DBDrivenAnalysisTask.Partition = "LHCb";
 DBDrivenAnalysisTask.InputTasks = {"MuonDAQMon"};
@@ -19,11 +18,7 @@ DBDrivenAnalysisTask.InputTasks = {"MuonDAQMon"};
 // for testing offline on existinf savesets, uncomment the following:
 //ApplicationMgr.EvtMax = 0;
 //DBDrivenAnalysisTask.InputFiles   = {
-// "/afs/cern.ch/user/g/ggiacomo/public/Histograms/Savesets/MuonDAQMon-20080603T172400.root",
-// "/afs/cern.ch/user/g/ggiacomo/public/Histograms/Savesets/MuonDAQMon-20080603T203800.root",
-// "/afs/cern.ch/user/g/ggiacomo/public/Histograms/Savesets/MuonDAQMon-20080605T113100.root",
-// "/afs/cern.ch/user/g/ggiacomo/public/Histograms/Savesets/MuonDAQMon-20080605T124400.root",
-// "/afs/cern.ch/user/g/ggiacomo/public/Histograms/Savesets/MuonDAQMon-20080605T131900.root",
+// "/afs/cern.ch/user/g/ggiacomo/public/Histograms/Savesets/MuonDAQMon-20081126T193149-EOR.root"
 //};
 
 // for using test offline DB

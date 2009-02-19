@@ -1,4 +1,4 @@
-// $Id: OMAFitFunction.h,v 1.1 2009-02-16 10:38:21 ggiacomo Exp $
+// $Id: OMAFitFunction.h,v 1.2 2009-02-19 10:49:50 ggiacomo Exp $
 #ifndef OMALIB_OMAFITFUNCTION_H 
 #define OMALIB_OMAFITFUNCTION_H 1
 #include <string>
@@ -32,10 +32,11 @@ public:
   inline std::string& doc() {return m_doc;}
   inline bool mustInit() {return m_mustInit;}
   std::vector<std::string>& parNames() {return m_parNames;}
-  void fit(TH1* histo, std::vector<float>* initValues);
+  virtual void fit(TH1* histo, std::vector<float>* initValues);
 protected:
+  virtual void init(std::vector<float>* initValues, TH1* histo=NULL);
+  void initfun();
 
-private:
   std::string m_name;
   std::vector<std::string> m_parNames;
   bool m_mustInit;
@@ -44,4 +45,25 @@ private:
   TF1* m_fitfun;
   bool m_predef;
 };
+
+
+class OMAFitDoubleGaus : public OMAFitFunction {
+public: 
+  OMAFitDoubleGaus();
+  virtual ~OMAFitDoubleGaus() {}
+protected:
+  virtual void init(std::vector<float>* initValues, TH1* histo=NULL);
+};
+
+class OMAFitGausPlusBkg : public OMAFitFunction {
+public: 
+  OMAFitGausPlusBkg(unsigned int degree);
+  virtual ~OMAFitGausPlusBkg() {}
+protected:
+  virtual void init(std::vector<float>* initValues, TH1* histo=NULL);
+  unsigned int m_degree;
+};
+
+
+
 #endif // OMALIB_OMAFITFUNCTION_H

@@ -1,4 +1,4 @@
-// $Id: OMAalg.cpp,v 1.5 2009-02-16 10:38:21 ggiacomo Exp $
+// $Id: OMAalg.cpp,v 1.6 2009-02-19 10:49:51 ggiacomo Exp $
 #include "OMAlib/OMAalg.h"
 
 OMAalg::OMAalg(std::string Name, OMAcommon* OMAenv) 
@@ -42,4 +42,20 @@ void OMAalg::raiseMessage(unsigned int ID,
 }
 
 
-
+void OMAalg::raiseMessage(unsigned int Id,
+                          bool warnCondition,
+                          bool alarmCondition,
+                          std::string message,
+                          std::string& histogramName) {
+  OMAMessage::OMAMsgLevel level=OMAMessage::INFO;
+  if (alarmCondition) {
+    level = OMAMessage::ALARM;
+  }
+  else if (warnCondition) {
+    level = OMAMessage::WARNING;
+  }
+  if (level != OMAMessage::INFO) {
+    raiseMessage(Id, level, message, histogramName);
+  }
+  return;
+}

@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.cpp,v 1.5 2009-02-16 10:38:21 ggiacomo Exp $
+// $Id: OMAMsgInterface.cpp,v 1.6 2009-02-19 10:49:50 ggiacomo Exp $
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAMsgInterface.h"
 #include "GaudiKernel/MsgStream.h"
@@ -35,7 +35,13 @@ void OMAMsgInterface::loadMessages() {
     std::vector<int> messID;
     m_histDB->getMessages(messID, m_anaTaskname);
     for (std::vector<int>::iterator im= messID.begin() ; im !=  messID.end() ; im++) {
-      m_MessageStore.push_back( new OMAMessage(*im, *m_histDB));
+      OMAMessage* lmsg = new OMAMessage(*im, *m_histDB);
+      if(false == lmsg->isAbort() ) {
+	m_MessageStore.push_back( lmsg );
+      }
+      else {
+	delete lmsg;
+      }
     }
   }
 }
@@ -63,6 +69,7 @@ void OMAMsgInterface::refreshMessageList(std::string& TaskName) {
       }
     }
   }
+  m_histDB->commit();
 }
 
 
@@ -77,16 +84,18 @@ void OMAMsgInterface::raiseMessage(OMAMessage::OMAMsgLevel level,
 
   std::vector<OMAMessage*>::iterator iM;
   for (iM=m_MessageStore.begin(); iM != m_MessageStore.end(); iM++) {
-    if( (*iM)->matchsAnalysis(m_anaTaskname, m_anaName, m_anaid) &&
-        (*iM)->hIdentifier()  == histIdentifier) {
+    if( (*iM)->matchsAnalysis(m_anaTaskname, m_anaName, 
+			      histIdentifier, m_anaid)) {
       // message is already known
       msg = (*iM);
       newMsg = false;
       msg->confirm();
+      if ( level >=  msg->level() ) {
+        msg->setText(message);
+      }
       // send to output only if level grew
       if ( level >  msg->level() ) {
         msg->setLevel(level);
-        msg->setText(message);
       }
       else {
         send = false;
@@ -105,8 +114,10 @@ void OMAMsgInterface::raiseMessage(OMAMessage::OMAMsgLevel level,
                            message, level);
     m_MessageStore.push_back( msg );
   }
-  if (msg)
+  if (msg) {
     msg->store();
+    m_histDB->commit();
+  }
   if (msg && send ) {
     raiseAlarm( (*msg) );
   }

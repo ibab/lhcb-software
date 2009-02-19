@@ -1,4 +1,4 @@
-// $Id: OMAcommon.h,v 1.7 2009-02-16 10:38:21 ggiacomo Exp $
+// $Id: OMAcommon.h,v 1.8 2009-02-19 10:49:50 ggiacomo Exp $
 #ifndef OMALIB_OMACOMMON_H 
 
 #define OMALIB_OMACOMMON_H 1
@@ -7,7 +7,6 @@
 
 #include <TFile.h>
 #include <TH1.h>
-#include <sstream>
 #include <map>
 #include "OMAlib/OMAMsgInterface.h"
 #include "OMAlib/OMAFitFunction.h"
@@ -31,7 +30,7 @@ public:
     OMAMsgInterface(HistDB, Name), m_debug(2) {
     setDefRefRoot();
   }
-  virtual ~OMAcommon( ) {} ///< Destructor
+  virtual ~OMAcommon();
 
   /// get path of reference histogram files
   inline std::string& refRoot() {return m_RefRoot;}

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAalg.h,v 1.7 2009-02-16 10:38:21 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAalg.h,v 1.8 2009-02-19 10:49:50 ggiacomo Exp $
 #ifndef OMALIB_OMAALG_H
 #define OMALIB_OMAALG_H 1
 /** @class  OMAalg OMAalg.h OMAlib/OMAalg.h
@@ -35,6 +35,11 @@ class OMAalg
   void setParNames(std::vector<std::string> &ParNames);
   void raiseMessage(unsigned int Id,
                     OMAMessage::OMAMsgLevel level,
+                    std::string message,
+                    std::string& histogramName);
+  void raiseMessage(unsigned int Id,
+                    bool warnCondition,
+                    bool alarmCondition,
                     std::string message,
                     std::string& histogramName);
   inline void setNeedRef() { m_needRef = true; }

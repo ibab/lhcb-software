@@ -1,14 +1,22 @@
-// $Id: OMAcommon.cpp,v 1.6 2009-02-16 10:38:21 ggiacomo Exp $
+// $Id: OMAcommon.cpp,v 1.7 2009-02-19 10:49:51 ggiacomo Exp $
 
 #include "OMAlib/OMAcommon.h"
 #include "OMAlib/OMAFitFunction.h"
 #include <stdlib.h>
+#include <sstream>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : OMAcommon
 //
 // 2008-08-11 : Giacomo GRAZIANI
 //-----------------------------------------------------------------------------
+
+OMAcommon::~OMAcommon() {
+  std::map<std::string, OMAFitFunction*>::iterator i;
+  for (i=m_fitfunctions.begin(); i != m_fitfunctions.end(); ++i)
+    delete (*i).second ;
+}
+
 
 // sets the default path of reference histogram files
 void OMAcommon::setDefRefRoot() {
@@ -73,12 +81,60 @@ void OMAcommon::doFitFuncList() {
                    "gaussian function",
                    true);
 
-  ParNames.push_back("p0"); ParNames.push_back("p1");
-  m_fitfunctions["gaus+p1"] = new
-    OMAFitFunction("gaus+p1",
-                   "[0]*exp(-((x-[1])/[2])**2)+[3]+[4]*x",
+  ParNames.clear();
+  ParNames.push_back("Constant"); ParNames.push_back("Slope");
+  m_fitfunctions["expo"] = new
+    OMAFitFunction("expo",
+                   "expo",
                    ParNames,
-                   true,
-                   "gaussian function + flat background",
-                   false);
+                   false,
+                   "exponential function",
+                   true);
+  ParNames.clear();
+  ParNames.push_back("Constant"); ParNames.push_back("Slope");
+  m_fitfunctions["expo"] = new
+    OMAFitFunction("expo",
+                   "expo",
+                   ParNames,
+                   false,
+                   "exponential function",
+                   true);
+
+  ParNames.clear();
+  ParNames.push_back("Constant"); ParNames.push_back("MPV");ParNames.push_back("Sigma");
+  m_fitfunctions["landau"] = new
+    OMAFitFunction("landau",
+                   "landau",
+                   ParNames,
+                   false,
+                   "landau function",
+                   true);
+
+  // polynomials
+  ParNames.clear();
+  for (unsigned int degree=0 ; degree<10; degree++) {
+    std::stringstream pname,fname,fdesc;
+    pname << "P" << degree;
+    fname << "pol" << degree;
+    fdesc << "polynomium of degree "<< degree;
+    ParNames.push_back(pname.str());
+    m_fitfunctions[fname.str()] = new
+      OMAFitFunction(fname.str(),
+                     fname.str(),
+                     ParNames,
+                     false,
+                     fdesc.str(),
+                     true);
+  }
+  OMAFitFunction * newff;
+  // gauss + poly background
+  for (unsigned int degree=0 ; degree<3; degree++) {
+    newff = new OMAFitGausPlusBkg(degree);
+    m_fitfunctions[newff->name()] = newff;
+  }
+  // double gaussian
+  newff = new OMAFitDoubleGaus();
+  m_fitfunctions[newff->name()] = newff;
+
+
 }

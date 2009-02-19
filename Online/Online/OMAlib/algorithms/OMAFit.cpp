@@ -1,4 +1,4 @@
-// $Id: OMAFit.cpp,v 1.1 2009-02-16 10:38:21 ggiacomo Exp $
+// $Id: OMAFit.cpp,v 1.2 2009-02-19 10:49:50 ggiacomo Exp $
 
 #include <TH1F.h>
 #include <TF1.h>
@@ -27,12 +27,71 @@ void OMAFit::exec(TH1 &Histo,
                   std::vector<float> & input_pars,
                   unsigned int anaID,
                   TH1* Ref) {
-  warn_thresholds.size();
-  alarm_thresholds.size();
-  input_pars.size();
-  anaID=anaID;
-  Ref=Ref;
-  // to be implemented
+  Ref=NULL;
+  if (input_pars.size() < 1) return;
+  if (0 == Histo.GetEntries()) return; //skip empty histograms
+
+  // get requested fit function
+  std::string fitfunName = 
+    m_omaEnv->dbSession()->getFitFunction((int)(input_pars[0]+.1));
+  OMAFitFunction* fitfun=m_omaEnv->getFitFunction(fitfunName);
+
+  unsigned int NcheckPars= fitfun->np()*2+1;
+  if (warn_thresholds.size() < NcheckPars ||
+      alarm_thresholds.size() < NcheckPars ) return;
+
+  // perform the fit, with or without init. parameter values
+  if(input_pars.size() > m_ninput) {
+    std::vector<float> fitPars;
+    fitPars.insert(fitPars.end(), input_pars.begin()+m_ninput, input_pars.end());
+    fitfun->fit(&Histo, &fitPars);
+  }
+  else {
+    fitfun->fit(&Histo,NULL);
+  }
+  // check the result
+  std::string hname(Histo.GetName());
+  TF1* fit = Histo.GetFunction(fitfun->name().c_str());
+  float confidence=0.95;
+  if (input_pars.size() > 1)
+    confidence=input_pars[1];
+
+
+  double chi2prob = TMath::Prob( fit->GetChisquare(), fit->GetNDF());
+  std::stringstream chimess;
+  chimess << "Bad Fit with function "<<fitfun->name()<<
+    ": chi2="<< fit->GetChisquare() << " with "<< fit->GetNDF() <<
+    " dof";
+
+  raiseMessage(anaID, 
+               chi2prob < warn_thresholds[0],
+               chi2prob < alarm_thresholds[0],
+               chimess.str(),
+               hname);
+  // convert confidence to upper/lower limits
+  double Nsigma = TMath::NormQuantile(1-confidence);
+  double uplimit,lowlimit;
+  for (int ip=0; ip<fitfun->np() ; ip++) {
+    uplimit = fit->GetParameter(ip)+fit->GetParError(ip)*Nsigma;
+    lowlimit= fit->GetParameter(ip)-fit->GetParError(ip)*Nsigma;
+    std::stringstream mess;
+    mess << "parameter "<< (fitfun->parNames())[ip] << " of fit " <<
+      fitfun->name()<< " is out of range: "<< fit->GetParameter(ip) <<
+      " (alarm range is "<<alarm_thresholds[1+ip*2] << " to "<<
+      alarm_thresholds[2+ip*2]<<")";
+    raiseMessage(anaID,
+                 uplimit < warn_thresholds[1+ip*2],
+                 uplimit < alarm_thresholds[1+ip*2],
+                 mess.str(),
+                 hname);
+    raiseMessage(anaID,
+                 lowlimit > warn_thresholds[2+ip*2],
+                 lowlimit > alarm_thresholds[2+ip*2],
+                 mess.str(),
+                 hname);
+
+  }
+
 }
 
 
