@@ -1,9 +1,19 @@
-! $Id: release.notes,v 1.146 2009-02-19 17:14:27 panmanj Exp $ 
+! $Id: release.notes,v 1.147 2009-02-19 17:30:17 aperezca Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+=======
+
+! 2009-02-19 - Antonio Perez-Calero
+ - Added a new lifetime unbiased line to muon+track as a trigger for JPsi's
+ - Changed muon+track lines structure to "one cut per algorithm" style
+ - Some revision and reordering in the algorithms: 
+		-ask only for a PV2D if any muon cand with enough pt
+		-PV2D not needed for the muon+track for JPsi
+    -fast fit for both lines
 
 ! 2009-02-19 - Jaap Panman
  - rewrite HltLumiLines to follow modern conventions

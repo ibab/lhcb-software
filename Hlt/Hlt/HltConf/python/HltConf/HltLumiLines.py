@@ -150,6 +150,54 @@ class HltLumiLinesConf(LHCbConfigurableUser) :
         counters = LumiCounterDefinitionConf().defineCounters()
         BXTypes=self.getProp('BXTypes')
         BXMembers = []
+<<<<<<< HltLumiLines.py
+        for i in [ 'NoBeam', 'BeamCrossing','SingleBeamRight','SingleBeamLeft'] :
+            HistoMembers=[]
+            if debugging: HistoMembers.append(HltLumiOdinReader('OdinReaderBefore'+i, OutputLevel = debugOPL ))
+            # TODO: move this filter to 'start of line'
+            HistoMembers.append( ODINFilter('Filter'+i, Code = 'ODIN_BXTYP == LHCb.ODIN.'+i, OutputLevel = debugOPL ))
+            if debugging: HistoMembers.append(HltLumiOdinReader('OdinReaderAfter'+i, OutputLevel = debugOPL ))
+            HistoMembers.append(LumiHistoMaker('Histo'+i, InputVariables = createdCounters, OutputLevel = 3 ))
+            HistoMembers.append(LumiHisto2dSPD('Histo2D'+i, HistoTitle=str(i),OutputLevel = 3 )) ##Does this work??
+            BXMembers.append( Sequence('Hlt1Lumi'+i+'Sequence', 
+                                       Members = HistoMembers,
+                                       MeasureTime = True
+                                       ) )
+        BXTypes = Sequence( 'Hlt1LumiBXTypesSequence'
+                          , Members = BXMembers
+                          , ModeOR = True
+                          , ShortCircuit = False
+                          , MeasureTime = True)
+
+        importOptions('$HLTCONFROOT/options/HltRecoSequence.py')
+
+        lumiRecoSequence  = Sequence( 'Hlt1LumiRecoSequence'
+                                    , Members = [ Sequence('HltRecoSequence') ]
+                                    , IgnoreFilterPassed = True
+                                    , MeasureTime = True )
+
+
+
+        lumiSequence = Line ( 'Lumi'
+                            , ODIN = 'ODIN_TRGTYP == LHCb.ODIN.RandomTrigger'# should become 'Random', now 'TimingTrigger' or 'Reserve'
+                            , algos =
+                            [ # lumiRecoSequence
+                            lumiCountSequence
+                            , BXTypes
+                            ] )
+
+
+
+
+
+        #if debugging: lumiSequence( RawEventDump('FullRawDataDump' ) )
+        # @todo Retsore that with LHCb v25r1
+        ####lumiSequence( bankKiller( 'SerialKiller', DefaultIsKill=True, BankTypes=["ODIN","HltLumiSummary"],
+        #                          OutputLevel=debugOPL ) )
+        #if debugging: lumiSequence( RawEventDump('NanoEventDump' ) )
+        ####lumiSequence( HltLumiWriter( OutputLevel=debugOPL )  )
+=======
         for bx in BXTypes:
             BXMembers.append(self.__create_lumi_line__(bx, counters))
             
+>>>>>>> 1.4
