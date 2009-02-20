@@ -1,4 +1,4 @@
-// $Id: CaloDigitsFromRaw.cpp,v 1.13 2008-10-27 18:14:26 odescham Exp $
+// $Id: CaloDigitsFromRaw.cpp,v 1.14 2009-02-20 11:37:30 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -130,11 +130,9 @@ StatusCode CaloDigitsFromRaw::execute() {
   debug() << "==> Execute" << endreq;
 
   if       ( 0 == m_detectorNum ) {
-    if(m_digitOnTES)convertSpd ( m_outputDigits , 3.2 * Gaudi::Units::MeV );
-    if(m_adcOnTES)convertSpd ( m_outputADCs , 0. );
+    convertSpd ( 3.2 * Gaudi::Units::MeV );
   } else {
-    if(m_digitOnTES)convertCaloEnergies ( m_outputDigits );
-    if(m_adcOnTES  )convertCaloEnergies ( m_outputADCs );
+    convertCaloEnergies ( );
   }
   return StatusCode::SUCCESS;
 };
@@ -142,15 +140,14 @@ StatusCode CaloDigitsFromRaw::execute() {
 //=========================================================================
 //  Convert the SPD trigger bits to CaloDigits
 //=========================================================================
-void CaloDigitsFromRaw::convertSpd ( std::string containerName,
-                                     double energyScale ) {
+void CaloDigitsFromRaw::convertSpd ( double energyScale ) {
 
   LHCb::Calo::FiredCells spdCells = m_spdTool->spdCells( );
   if(m_statusOnTES)m_spdTool->putStatusOnTES();
 
   if(m_digitOnTES){
     LHCb::CaloDigits* digits = new LHCb::CaloDigits();
-    put( digits, containerName );
+    put( digits, m_outputDigits );
     for ( std::vector<LHCb::CaloCellID>::const_iterator itD = spdCells.begin();
           spdCells.end() != itD; ++itD ) {
       LHCb::CaloDigit* dig = new LHCb::CaloDigit( *itD, energyScale );
@@ -158,18 +155,18 @@ void CaloDigitsFromRaw::convertSpd ( std::string containerName,
     }
     std::stable_sort ( digits->begin(), digits->end(), 
                        CaloDigitsFromRaw::IncreasingByCellID() );
-    debug() << containerName << " CaloDigit container size " << digits->size() << endreq;
+    debug() << m_outputDigits << " CaloDigit container size " << digits->size() << endreq;
   }
 
   if(m_adcOnTES){
     LHCb::CaloAdcs* adcs = new LHCb::CaloAdcs();
-    put( adcs , containerName );
+    put( adcs ,  m_outputADCs );
     for ( std::vector<LHCb::CaloCellID>::const_iterator itD = spdCells.begin();
           spdCells.end() != itD; ++itD ) {
       LHCb::CaloAdc* adc = new LHCb::CaloAdc( *itD, 1 );
       adcs->insert( adc );
     }
-    debug() << containerName << " CaloAdc container size " << adcs->size() << endreq;
+    debug() <<  m_outputADCs << " CaloAdc container size " << adcs->size() << endreq;
   }
 
 
@@ -178,17 +175,15 @@ void CaloDigitsFromRaw::convertSpd ( std::string containerName,
 //=========================================================================
 //  Converts the standard calorimeter adc-energy
 //=========================================================================
-void CaloDigitsFromRaw::convertCaloEnergies ( std::string containerName ) {
+void CaloDigitsFromRaw::convertCaloEnergies ( ) {
 
 
   if(m_digitOnTES){
 
     LHCb::CaloDigits* digits = new LHCb::CaloDigits();
-    put( digits, containerName );
+    put( digits, m_outputDigits );
     std::vector<LHCb::CaloDigit>& allDigits = m_energyTool->digits( );
     if(m_statusOnTES)m_energyTool->putStatusOnTES();
-
-
 
     for ( std::vector<LHCb::CaloDigit>::const_iterator itD = allDigits.begin();
           allDigits.end() != itD; ++itD ) {
@@ -198,14 +193,14 @@ void CaloDigitsFromRaw::convertCaloEnergies ( std::string containerName ) {
     }
     std::stable_sort ( digits->begin(), digits->end(), 
                        CaloDigitsFromRaw::IncreasingByCellID() );
-    debug() << containerName << " CaloDigit container size " << digits->size() << endreq;
+    debug() << m_outputDigits << " CaloDigit container size " << digits->size() << endreq;
 
   }
   
   if(m_adcOnTES){
     // Channel ADC
     LHCb::CaloAdcs* adcs = new LHCb::CaloAdcs();
-    put( adcs , containerName ); 
+    put( adcs ,  m_outputADCs ); 
     std::vector<LHCb::CaloAdc>& allAdcs = m_energyTool->adcs( );
     for ( std::vector<LHCb::CaloAdc>::const_iterator itA = allAdcs.begin();
           allAdcs.end() != itA; ++itA ) {
@@ -213,7 +208,7 @@ void CaloDigitsFromRaw::convertCaloEnergies ( std::string containerName ) {
       adcs->insert(adc);
       verbose() << "ID " << adc->cellID() << " ADC value " << adc->adc() << endreq;
     }
-    debug() << " CaloAdc container '"  << containerName  << "' -> size = " << adcs->size() << endreq;
+    debug() << " CaloAdc container '"  << m_outputADCs  << "' -> size = " << adcs->size() << endreq;
 
 
     // PinDiode ADC (possibly in a different container)

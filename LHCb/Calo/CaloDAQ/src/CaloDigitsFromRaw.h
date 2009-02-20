@@ -1,4 +1,4 @@
-// $Id: CaloDigitsFromRaw.h,v 1.6 2007-12-06 09:31:24 odescham Exp $
+// $Id: CaloDigitsFromRaw.h,v 1.7 2009-02-20 11:37:30 odescham Exp $
 #ifndef CALOEVENT_CALODIGITSFROMRAW_H 
 #define CALOEVENT_CALODIGITSFROMRAW_H 1
 
@@ -45,9 +45,9 @@ public:
 
 protected:
   
-  void convertSpd( std::string containerName, double energyScale );
+  void convertSpd( double energyScale );
   
-  void convertCaloEnergies( std::string containerName );
+  void convertCaloEnergies( );
 
 private: 
   
