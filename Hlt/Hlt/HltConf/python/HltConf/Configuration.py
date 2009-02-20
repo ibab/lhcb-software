@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.46 2009-02-20 11:12:02 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.47 2009-02-20 11:43:44 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -123,7 +123,7 @@ class HltConf(LHCbConfigurableUser):
         ## add a line for 'not lumi only' 
         ## -- note: before the 'global' otherwise lumi set global, and we have lumi AND global set...
         print hlt1Lines()
-        lumi = [ "'" + i.name() +"'"  for i in hlt1Lines() if i.name().find('Lumi') != -1 ]
+        lumi = [ "'" + i +"'"  for i in hlt1Decisions() if i.find('Lumi') != -1 ]
         if lumi: 
             Line('IgnoringLumi', HLT = "HLT_PASSIGNORING(" + ','.join(lumi) + ")" )
             Line('Lumi', HLT = " | ".join([ "HLT_PASS(" + i + ")" for i in lumi ]))
