@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.54 2009-02-18 14:56:05 cattanem Exp $
+! $Id: release.notes,v 1.55 2009-02-20 08:02:09 mneedham Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
 
+
+! 2009-02-18 M Needham
+  - Move print functions to the cpp for STBoardMapping
+
+
 !====================== STKernel v1r11 2009-02-18 ===========================
+
 ! 2009-02-05 M Needham
  - Add ISTChannelIDSelector interface
 

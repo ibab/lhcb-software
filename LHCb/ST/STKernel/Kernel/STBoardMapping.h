@@ -1,4 +1,4 @@
-// $Id: STBoardMapping.h,v 1.4 2009-02-09 10:38:23 mneedham Exp $
+// $Id: STBoardMapping.h,v 1.5 2009-02-20 08:02:08 mneedham Exp $
 #ifndef STBOARDMAPPING_H 
 #define STBOARDMAPPING_H 1
 
@@ -44,33 +44,5 @@ inline unsigned int STBoardMapping::find(const unsigned int key, const STBoardMa
   STBoardMapping::Map::const_iterator iter = testMap.find(key);
   return (iter == testMap.end() ? (unsigned int)STBoardMapping::notFound : iter->second);
 } 
-
-
-#include <boost/foreach.hpp>
-
-
-inline std::string STBoardMapping::printTTMap(){
-
-  std::ostringstream o;
-  o << " *** TT board to sourceID Map ***" << std::endl;
-  const Map& theMap = TTSourceIDToNumberMap();
-  BOOST_FOREACH(Map::value_type board , theMap) {
-    o << "SourceID: " << board.first << " Flat number: " << board.second << std::endl; 
-  } // for each
-  o << "**************" << std::endl;
-  return o.str();
-}
-
-inline std::string STBoardMapping::printITMap() {
-
-  std::ostringstream o;
-  o << " *** IT board to sourceID Map ***" << std::endl;
-  const Map& theMap = TTSourceIDToNumberMap();
-  BOOST_FOREACH(Map::value_type board , theMap) {
-    o << "SourceID: " << board.first << " Flat number: " << board.second << std::endl; 
-  } // for each
-  o << "**************" << std::endl;  
-  return o.str();
-}
 
 #endif // STBOARDMAPPING_H

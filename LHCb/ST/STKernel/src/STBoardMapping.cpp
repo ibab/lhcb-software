@@ -61,3 +61,31 @@ const STBoardMapping::Map& STBoardMapping::ITNumberToSourceIDMap() {
   }
   return s_map;
 }
+
+
+#include <boost/foreach.hpp>
+
+
+std::string STBoardMapping::printTTMap(){
+
+  std::ostringstream o;
+  o << " *** TT board to sourceID Map ***" << std::endl;
+  const Map& theMap = TTSourceIDToNumberMap();
+  BOOST_FOREACH(Map::value_type board , theMap) {
+    o << "SourceID: " << board.first << " Flat number: " << board.second << std::endl; 
+  } // for each
+  o << "**************" << std::endl;
+  return o.str();
+}
+
+std::string STBoardMapping::printITMap() {
+
+  std::ostringstream o;
+  o << " *** IT board to sourceID Map ***" << std::endl;
+  const Map& theMap = TTSourceIDToNumberMap();
+  BOOST_FOREACH(Map::value_type board , theMap) {
+    o << "SourceID: " << board.first << " Flat number: " << board.second << std::endl; 
+  } // for each
+  o << "**************" << std::endl;  
+  return o.str();
+}
