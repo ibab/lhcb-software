@@ -1,7 +1,6 @@
 package L0MuonMonitor
 version v1r4
 
-
 # =========== structure =======================================================
 
 branches src cmt doc

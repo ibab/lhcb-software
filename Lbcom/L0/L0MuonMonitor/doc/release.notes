@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.21 2009-02-20 09:15:10 jucogan Exp $
+! $Id: release.notes,v 1.22 2009-02-20 12:28:19 cattanem Exp $
 ! Package     : L0MuonMonitor
 ! Responsible : Julien Cogan
 ! Purpose     : Monitoring of the L0Muon
 !--------------------------------------------------------------------------
 
+!========================== L0MuonMonitor v1r4 2009-02-20 =================
 ! 2009-02-20 - Julien Cogan
  - Fix untested status code
 
