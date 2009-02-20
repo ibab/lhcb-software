@@ -3,6 +3,9 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+! 2009-02-20 - Patrick Koppenburg
+ - Move monitors
+
 </PRE><H1><A NAME=v3r0>2009-01-15 Analysis v3r0 </A></H1><PRE>
 
  - Based on LHCb v26r1 and Gaudi v20r4

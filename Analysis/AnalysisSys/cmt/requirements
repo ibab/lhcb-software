@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.82 2009-02-10 17:02:49 pkoppenb Exp $
+# $Id: requirements,v 1.83 2009-02-20 16:18:40 pkoppenb Exp $
 package AnalysisSys
 version v3r0
 
@@ -12,6 +12,10 @@ use  AnalysisConf               v1r0     Phys   # Patrick Koppenburg, Juan Palac
 use  CommonParticles            v4r2     Phys   # Juan Palacios, WGs
 use  FlavourTagging             v8r2     Phys   # Marco Musy
 use  DaVinciFilter              v6r11    Phys   # Patrick Koppenburg - deprecated
+
+use  DaVinciMonitors            v1r1     Phys   # Patrick Koppenburg
+use  RichPIDQC                  v1r0     Rich   # Chris Jones
+use  DstCalibSel                v1r0     Rich   # Andrew Powell
 
 ####################################################################
 use  DaVinciMCTools     	v9r17p2  Phys   # Juan Palacios
