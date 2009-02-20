@@ -4,6 +4,7 @@
 ! Purpose     : Uses a Markov Chain sampler to do ring finding without tracks
 !-----------------------------------------------------------------------------
 
+!=================== Rich/RichMarkovRingFinder v2r5 2009-02-20 ===============
 ! 2009-01-15 - Chris Jones
  - Fix various compilation warnings on OSX with gcc 4.0.1
 
