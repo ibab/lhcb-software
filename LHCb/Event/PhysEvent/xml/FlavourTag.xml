@@ -38,7 +38,7 @@
      <constructor
         desc = "Copy constructor hack for windows..."
         argList  = "const FlavourTag&amp; c"
-        initList = "KeyedObject&lt;int&gt;(), m_decision(c.m_decision), m_decisionOS(c.m_decisionOS), m_category(c.m_category), m_categoryOS(c.m_categoryOS), m_omega(c.m_omega), m_omegaOS(c.m_omegaOS), m_taggers(c.m_taggers), m_taggedB(c.m_taggedB)">
+        initList = "KeyedObject&lt;int&gt;(), m_decision(c.m_decision), m_category(c.m_category), m_omega(c.m_omega), m_taggers(c.m_taggers), m_decisionOS(c.m_decisionOS), m_categoryOS(c.m_categoryOS), m_omegaOS(c.m_omegaOS), m_taggedB(c.m_taggedB)">
         <code/>
       </constructor>
 
@@ -51,12 +51,12 @@
         <code>
           if (this != &amp;rhs) {
              m_decision   = rhs.m_decision;
-             m_decisionOS = rhs.m_decisionOS;
-             m_category   = rhs.m_category;
-             m_categoryOS = rhs.m_categoryOS;
              m_omega      = rhs.m_omega;
              m_omegaOS    = rhs.m_omegaOS;
              m_taggers    = rhs.m_taggers;
+             m_decisionOS = rhs.m_decisionOS;
+             m_category   = rhs.m_category;
+             m_categoryOS = rhs.m_categoryOS;
              m_taggedB    = rhs.m_taggedB;
           }
           return *this;
@@ -70,14 +70,6 @@
         type = "int"
         init = "0"
       />
-
-      <attribute 
-	desc = "decision of opposite side taggers only"
-	name = "decisionOS"
-	type = "int"
-        init = "0"
-      />
-
       <relation
         desc = "The B meson for which this tag has been made"
         name = "taggedB"
@@ -92,20 +84,8 @@
         init = "0"
       />
       <attribute
-        desc = "Category of tag using opposite side only"
-        name = "categoryOS"
-        type = "int"
-        init = "0"
-      />
-      <attribute
         desc = "Wrong tag fraction (predicted)"
         name = "omega"
-        type = "double"
-        init = "0.50"
-      />
-      <attribute
-        desc = "Wrong tag fraction (predicted) using opposite side only"
-        name = "omegaOS"
         type = "double"
         init = "0.50"
       />
@@ -115,6 +95,26 @@
 	name    = "taggers" 
 	type    = "std::vector&lt;LHCb::Tagger&gt;"
       />
+      <attribute 
+	desc = "decision of opposite side taggers only"
+	name = "decisionOS"
+	type = "int"
+        init = "0"
+      />
+      <attribute
+        desc = "Category of tag using opposite side only"
+        name = "categoryOS"
+        type = "int"
+        init = "0"
+      />
+
+      <attribute
+        desc = "Wrong tag fraction (predicted) using opposite side only"
+        name = "omegaOS"
+        type = "double"
+        init = "0.50"
+      />
+
       <method
         name    = "addTagger"
         type    = "void"

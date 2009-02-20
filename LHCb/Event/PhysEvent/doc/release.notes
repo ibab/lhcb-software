@@ -1,12 +1,12 @@
-! $Id: release.notes,v 1.142 2009-02-20 10:47:18 musy Exp $
+! $Id: release.notes,v 1.143 2009-02-20 11:50:23 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
 !----------------------------------------------------------------------------
 
+!======================== PhysEvent v11r8 2009-02-20 ========================
 ! 2009-02-20 - Marco Musy
-- in xml/FlavourTag.xml added information relative to opposite side taggers decision
-  alone, with decisionOS() categoryOS() and omegaOS() methods.
-
+ - in xml/FlavourTag.xml added information relative to opposite side taggers
+   decision alone, with decisionOS() categoryOS() and omegaOS() methods.
 
 !======================== PhysEvent v11r7 2009-01-08 ========================
 ! 2009-01-05 - Juan PALACIOS
