@@ -1,6 +1,6 @@
 // 
 // SliceReaderSvc.opts
-// $Id: NormalReaderSvc.opts,v 1.1 2009-02-18 08:32:06 garnierj Exp $
+// $Id: NormalReaderSvc.opts,v 1.2 2009-02-20 09:05:06 garnierj Exp $
 //#include "$ONLINETASKSROOT/options/OnlineEnvironment.opts"
 #include "/group/online/dataflow/options/FEST/Injector_Info.opts"
 ApplicationMgr.HistogramPersistency  = "NONE";
@@ -15,11 +15,34 @@ ApplicationMgr.ExtSvc		     += { "MonitorSvc" };
 
 ApplicationMgr.OutputLevel = 5;
 NormalReader.OutputLevel = 3;
-MessageSvc.OutputLevel= 2;
-NormalReader.InputFiles=@OnlineEnv.Normal_Files;
-NormalReader.Loop=@OnlineEnv.Loop;
-NormalReader.BufferName=@OnlineEnv.NormalBuffer;
-NormalReader.PartitionID=@OnlineEnv.PartitionID;
+MessageSvc.OutputLevel= 3;
+NormalReader.InputFiles={
+"/daqarea/lhcb/data/INFEST/00004008_00000001_2.mdf",
+"/daqarea/lhcb/data/INFEST/00004008_00000002_2.mdf",
+"/daqarea/lhcb/data/INFEST/00004008_00000003_2.mdf",
+"/daqarea/lhcb/data/INFEST/00004008_00000005_2.mdf",
+"/daqarea/lhcb/data/INFEST/00004008_00000006_2.mdf",
+"/daqarea/lhcb/data/INFEST/00004008_00000007_2.mdf",
+"/daqarea/lhcb/data/INFEST/00004008_00000008_2.mdf",
+"/daqarea/lhcb/data/INFEST/00004008_00000009_2.mdf",
+"/daqarea/lhcb/data/INFEST/00004008_00000010_2.mdf",
+"/daqarea/lhcb/data/INFEST/00004008_00000011_2.mdf",
+"/daqarea/lhcb/data/INFEST/00004008_00000012_2.mdf",
+"/daqarea/lhcb/data/INFEST/00004008_00000014_2.mdf",
+"/daqarea/lhcb/data/INFEST/00004008_00000020_2.mdf",
+"/daqarea/lhcb/data/INFEST/00004008_00000021_2.mdf",
+"/daqarea/lhcb/data/INFEST/00004008_00000022_2.mdf",
+"/daqarea/lhcb/data/INFEST/00004008_00000024_2.mdf",
+"/daqarea/lhcb/data/INFEST/00004008_00000025_2.mdf",
+"/daqarea/lhcb/data/INFEST/00004008_00000027_2.mdf",
+"/daqarea/lhcb/data/INFEST/00004008_00000028_2.mdf"
+};
+
+//@OnlineEnv.Normal_Files;
+NormalReader.Loop= true;
+//@OnlineEnv.Loop;
+NormalReader.BufferName= "NORMAL";//@OnlineEnv.NormalBuffer;
+NormalReader.PartitionID= @OnlineEnv.PartitionID;
 NormalReader.Requirements         = {
 "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 };

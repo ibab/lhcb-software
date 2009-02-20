@@ -18,5 +18,5 @@ HOST=$(hostname --short | awk '{ print toupper($1) }')
 
 . ./setupOnline.sh $1
 
-exec -a ${UTGID} ${gaudi_exe} -tasktype=LHCb::Class1Task -main=${GAUDIONLINEROOT}/options/Main.opts -opt=${ONLINETASKSROOT}/options/LumiReaderSvc.opts&
+exec -a ${UTGID} ${gaudi_exe} -tasktype=LHCb::Class2Task -main=${GAUDIONLINEROOT}/options/Main.opts -opt=${ONLINETASKSROOT}/options/LumiReaderSvc.opts&
 
