@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.140 2009-02-18 15:30:42 jucogan Exp $
+! $Id: release.notes,v 1.141 2009-02-20 12:25:38 cattanem Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+!========================== L0DU v8r13 2009-02-20 =========================
 ! 2009-02-18 - Julien Cogan
  - Add L0Conf configurable. 
  - Separate the option files containing a sequence definition and an adder 

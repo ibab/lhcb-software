@@ -1,8 +1,8 @@
 package		L0DU
-version 	v8r12
+version 	v8r13
 
 # ================ structure =============================================
-branches	src cmt doc options python/L0DU
+branches	src cmt doc options python
 include_path none
 
 # ================ options ===============================================
