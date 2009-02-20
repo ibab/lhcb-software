@@ -2,13 +2,14 @@
 ! Package manager : J. van Tilburg
 !------------------------------------------------------------------------------
 
-! 2009-2-3 M Needham
+!======================= STAssociators v1r6 2009-02-20 ========================
+! 2009-02-03 M Needham
  - Remove -g from cppflags
 
-! 2009-2-2 M Needham
+! 2009-02-02 M Needham
  - Make associators delta-ray aware 
 
-! 2009-1-16 M Needham
+! 2009-01-16 M Needham
  - Migrate to STAlgBase class
 
 !======================= STAssociators v1r5 2007-11-30 ========================
