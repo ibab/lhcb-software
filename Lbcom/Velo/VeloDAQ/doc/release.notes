@@ -3,6 +3,7 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+!=========================  VeloDAQ v4r5 2009-02-20 =======================
 ! 2009-01-19 - David Hutchcroft
  - Added a sort to the decoding of the VELO lite clusters for the track fit
 
