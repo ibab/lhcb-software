@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.162 2009-02-11 11:12:12 pkoppenb Exp $
+! $Id: release.notes,v 1.163 2009-02-20 14:16:47 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+!========================== VertexFit v5r6 2009-02-20 =================
 
 ! 2009-02-11 - Patrick Koppenburg
  - TrgVertexFit: Bug fix for PhiGamma. 
