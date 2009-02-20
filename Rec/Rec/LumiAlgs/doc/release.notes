@@ -4,6 +4,7 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+!========================== LumiAlgs v1r0 2009-02-20 =========================
 ! 2009-02-19 - Marco Cattaneo
  - Clean up configurable to remove unneccessary imports and fix dependency
    problem during make
