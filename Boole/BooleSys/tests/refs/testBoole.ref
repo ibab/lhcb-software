@@ -29,13 +29,13 @@ Collection='EVTTAGS/TagCreator/1' ADDRESS='/Event' DATAFILE='L0ETC.root' TYP='PO
 # |-DDDBtag        = ''
 # |-Monitors       = []  (default: [])
 # \----- (End of User Boole/Boole) -------------------------------------------------------------------
-# WARNING: Default tag requested for partition DDDB (using head-20090112)
-# WARNING: Default tag requested for partition LHCBCOND (using head-20090112)
-# WARNING: Default tag requested for partition SIMCOND (using sim-20090112)
+# WARNING: Default tag requested for partition DDDB (using head-20090213)
+# WARNING: Default tag requested for partition LHCBCOND (using head-20090213)
+# WARNING: Default tag requested for partition SIMCOND (using sim-20090212)
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Boole version v17r2
-                                          running on lxbuild120.cern.ch on Sat Feb  7 23:26:31 2009
+                                          running on lxbuild120.cern.ch on Fri Feb 20 17:08:12 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
@@ -47,7 +47,7 @@ EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEv
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.83 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.39 times the speed of a 2.8 GHz Xeon.
 BooleSequencer       INFO Member list: ProcessPhase/Init, ProcessPhase/Digi, ProcessPhase/Link, ProcessPhase/Moni, ProcessPhase/Filter
 Init                 INFO Member list: GaudiSequencer/InitBooleSeq, GaudiSequencer/InitDataSeq, GaudiSequencer/InitMUONSeq
 InitBooleSeq         INFO Member list: BooleInit
@@ -66,11 +66,11 @@ InitDataSeq          INFO Member list:
 InitMUONSeq          INFO Member list: MuonBackground/MuonLowEnergy, MuonBackground/MuonFlatSpillover
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
-DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r1/db/DDDB.db/DDDB"
-DDDB                 INFO Using TAG "head-20090112"
+DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/user/m/marcocle/public/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
+DDDB                 INFO Using TAG "head-20090213"
 EventClockSvc.F...   INFO Event times generated from 0 with steps of 0
-SIMCOND              INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r1/db/SIMCOND.db/SIMCOND"
-SIMCOND              INFO Using TAG "sim-20090112"
+SIMCOND              INFO Connected to database "sqlite_file:/afs/cern.ch/user/m/marcocle/public/DBASE/Det/SQLDDDB/db/SIMCOND.db/SIMCOND"
+SIMCOND              INFO Using TAG "sim-20090212"
 RFileCnv             INFO opening Root file "/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r0/data/muonlow-G4.root" for reading
 RFileCnv             INFO opening Root file "/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r0/data/muonflat-G4.root" for reading
 Digi                 INFO Member list: GaudiSequencer/DigiVELOSeq, GaudiSequencer/DigiTTSeq, GaudiSequencer/DigiITSeq, GaudiSequencer/DigiOTSeq, GaudiSequencer/DigiRICHSeq, GaudiSequencer/DigiCALOSeq, GaudiSequencer/DigiMUONSeq, GaudiSequencer/DigiL0Seq
@@ -108,11 +108,11 @@ PrsDigit             INFO Subtract 0.2000 of previous BX
 PrsDigit             INFO ZSupThreshold 5
 EcalDigit            INFO Noise:  1.2 +  0.3 (coherent) counts.
 EcalDigit            INFO Gain error  1.0%
-EcalDigit            INFO Pedestal shift  0.60
+EcalDigit            INFO Pedestal shift  0.90
 EcalDigit            INFO Trigger correction factor per area : 1 1.04 1.08
 HcalDigit            INFO Noise:  1.2 +  0.3 (coherent) counts.
 HcalDigit            INFO Gain error  1.0%
-HcalDigit            INFO Pedestal shift  0.60
+HcalDigit            INFO Pedestal shift  0.90
 HcalDigit            INFO Trigger correction factor per area : 1 1.05
 CaloFillPrsSpdR...   INFO Data coding type 3
 EcalFillRawBuffer    INFO Processing 192 FE-Cards and 26 TELL1
@@ -134,7 +134,7 @@ L0Muon               INFO  foiYSize = 0,0,0,1,1
 L0Muon               INFO  ignoreM1 = 0
 L0Muon               INFO  ignoreM2 = 0
 L0Muon               INFO  procVersion = 2
-L0MuonTrigger I...   INFO Time User   : Tot= 1.64  [s]                                             #=  1
+L0MuonTrigger I...   INFO Time User   : Tot= 2.23  [s]                                             #=  1
 ToolSvc.L0DUCon...   INFO **** L0DU Configs loading : TCK = 0xFFFF
 ToolSvc.L0DUCon...   INFO Short description ::  TCK = 0xFFFF : Algorithm[1] Setting[0] lumi[2] - 2007 tuning - gain:Calo[20] : Muon[40]
 L0DU                 INFO The L0DUConfig (TCK=0xFFFF) have been succesfully loaded
@@ -171,7 +171,7 @@ EcalCheck            INFO Monitoring Hits MC/Ecal/Hits   MC Digit   MC/Ecal/Digi
 HcalCheck            INFO Monitoring Hits MC/Hcal/Hits   MC Digit   MC/Hcal/Digits   Digit   Raw/Hcal/Digits, Histograms booked
 MoniMUONSeq          INFO Member list: MuonDigitChecker
 MoniL0Seq            INFO Member list: GaudiSequencer/L0MoniSeq
-L0MoniSeq            INFO Member list: L0CaloMonit, L0DUReportMonitor
+L0MoniSeq            INFO Member list: L0CaloMonit, L0MuonOnlineMonitor, L0DUReportMonitor
 MoniMCSeq            INFO Member list: UnpackMCVertex/TestMCVertex, UnpackMCParticle/TestMCParticle, CompareMCParticle, CompareMCVertex
 Filter               INFO OR Member list:
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootEvtCnvSvc
@@ -264,7 +264,7 @@ ITEffChecker         INFO IT3CSideV eff 9999 +/- 9999
 ITEffChecker         INFO IT3CSideX2 eff 9999 +/- 9999
 ITEffChecker         INFO  -----------------------
 ITEffChecker      SUCCESS Booked 288 Histogram(s) : 1D=192 2D=96
-MCOTDepositMonitorSUCCESS Booked 2 Histogram(s) : 1D=2
+MCOTDepositMonitorSUCCESS Booked 15 Histogram(s) : 1D=12 2D=3
 RiDigitQC            INFO ===============================================================================================
 RiDigitQC            INFO                             RICH Digitisation Simulation Summary
 RiDigitQC            INFO -----------------------------------------------------------------------------------------------
@@ -369,10 +369,12 @@ RootHistSvc       WARNING no ROOT output file name, Histograms cannot be persist
 EventLoopMgr         INFO Histograms converted successfully according to request.
 EvtTupleSvc.EVT...   INFO File sharing enabled. Do not retire files.
 ToolSvc              INFO Removing all tools created by ToolSvc
+L0MuonOnlineMon...SUCCESS Booked 9 Histogram(s) : 1D=5 2D=4
+L0MuonOnlineMon...SUCCESS Booked 9 Histogram(s) : 1D=5 2D=4
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings Statistics : 0/0/1
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.83 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.39 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -507,6 +509,7 @@ TimingAuditor.T...   INFO     MuonDigitChecker          |     0.000 |     0.000 
 TimingAuditor.T...   INFO    MoniL0Seq                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     L0MoniSeq                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      L0CaloMonit              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      L0MuonOnlineMonitor      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      L0DUReportMonitor        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO    MoniMCSeq                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     TestMCVertex              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -525,8 +528,8 @@ DataOnDemandSvc      INFO Handled "DataFault" incidents: 0/0/0(Alg/Node/Total).
 *****Chrono*****     INFO ****************************************************************************************************
 *****Chrono*****     INFO  The Final CPU consumption ( Chrono ) Table (ordered)
 *****Chrono*****     INFO ****************************************************************************************************
-L0MuonTrigger I...   INFO Time User   : Tot= 1.64  [s]                                             #=  1
-ChronoStatSvc        INFO Time User   : Tot= 2.61  [s]                                             #=  1
+L0MuonTrigger I...   INFO Time User   : Tot= 2.23  [s]                                             #=  1
+ChronoStatSvc        INFO Time User   : Tot=  3.4  [s]                                             #=  1
 *****Chrono*****     INFO ****************************************************************************************************
 ChronoStatSvc.f...   INFO  Service finalized succesfully
 ApplicationMgr       INFO Application Manager Finalized successfully
