@@ -5,10 +5,287 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v26r2>2009-02-23 LHCbSys v26r2</A></H1><PRE>
+This version uses Gaudi v20r4 and LCG_55c
+
+- Packages added    : GaudiPatches v1r0 - patches from next Gaudi release
+                      LumiEvent v1r0    - To handle luminosity accounting
+- Packages modified : GaudiConf v12r1, KernelSys v12r0, LHCbKernel v11r1,
+    LHCbMath v3r6, DDDB v1r15, DetCond v12r5p1, DetDesc v18r12, DetDescCnv v4r8,
+    DetDescSvc v2r3, Magnet v5r2, STDet v4r7, EventSys v25r0, DAQEvent v7r18,
+    GenEvent v5r4, HltEvent v8r15, MCEvent v2r12, PackedEvent v3r5,
+    PhysEvent v11r8, TrackEvent v4r18, STTELL1Event v1r7, EventPacker v1r3, 
+    PartProp v1r0p1, DAQSys v6r0, OTDAQ v7r5, CaloDAQ v4r10, CondDBUI v2r16, 
+    DaVinciKernel v7r3, DaVinciMCKernel v3r0, LHCbAlgs v2r24, LoKiPhys v8r2, 
+    MCInterfaces v1r7, MDF v3r17, SimComponents v2r16, STKernel v1r11,
+    TfKernel v2r10, TrackInterfaces v4r1, DetCondExample v11r7, IOExample v2r8
+
+- In GaudiConf v12r1
+  . Backward compatible fix to GaudiMain.cpp for Gaudi v21
+  . Remove extended RICH information from DIGI and DST contents. Now stored
+    entirely in the SIM files.
+  . Modifications in DstContent to use the packed TwoProngVertex.
+  . Modifications in DstConf to allow writing RDST in MDF format.
+  . Add PreloadUnits.opts, previously in $DAVINCIROOT, to allow import of
+    units.opts file from Python.
+  . In LHCbApp configurable, add Gaudi auditors to list of possible Monitors:
+    KnownAuditors = ["NameAuditor","MemoryAuditor","ChronoAuditor"]
+    If given as a Monitor, the auditor is enabled (assumes AuditorSvc is loaded) 
+
+- In KernelSys v12r0, EventSys v25r0, DAQSys v6r0
+  . Remove explicit versions from requirements
+
+- In KernelSys v12r0
+  . Add STKernel, TfKernel
+
+- In LHCbKernel v11r1
+  . Added HitPattern class
+  . In LHCbConfigurableUser, reimplement setOtherProp and setOtherProps
+    functions to delegate to ConfigurableUser implementation (propagateProperty,
+    propagateProperties). Also fixes a bug in propagation of defaults
+  . Add toString method in STChannelID
+  . Add channelToString and stringToChannel to IT and TTNames.
+  . Added a direct accessor to FastClusterContainer (requires container sorted)
+    and a Less_By_Channel to SiDataFunctor to sort the container
+
+- In LHCbMath v3r6
+  . Fixed usage of GSL (-no-as-needed).
+  . Add function to get width of the half sample in ModeFunctions
+
+- In DDDB v1r15
+  . New default tag for 2008:
+    o head-20090213 for DDDB and LHCBCOND
+    o sim-20090212 for SIMCOND
+
+- In DetDesc v18r12
+  . Extended the RunChangeIncident to contain the run number too (avoid
+    dependency on ODIN).
+  . Fixed usage of GSL (-no_auto_imports).
+  . Added the header DetDesc/RunChangeIncident.h (was in Event/DAQEvent).
+  . Fixed some return type qualifiers that were causing problems in the
+    dictionaries with the head version of ROOT.
+
+- In DetDescCnv v4r8
+  . Remove ifdefs for gcc 2.95
+
+- In DetDescSvc v2r3
+  . Using the extended RunChangeIncident in RunChangeHandlerSvc to get the run
+    number (avoid dependency on ODIN).
+  . Added RunChangeHandlesSvc. It listens for a RunChangeIncident and change the
+    source of a set of Condition objects in the Detector Transient Store
+    notifying the UpdateManagerSvc (was in Event/DAQEvent)
+  . Fixed a memory leak occurring when registering without condition but passing
+    the pointer to be filled (happens in GeometryInfoPlus after some recent
+    changes). 
+  . Added hash maps in UpdateManagerSvc to speed-up registration of conditions.
+  . Added usage of GSL (with -no_auto_imports). Not inherited anymore from
+    DetDesc.
+
+- In Magnet v5r2
+  . Fix a releaseTool()
+
+- In STDet v4r7
+  . Add conditionPathName method for Sectors
+  . Add nickname find by nickname functions
+  . Add setters for beetle and strip update functions
+  . Clean up initialize stage to make it few mus faster
+
+- In EventSys v25r0
+  . Add LumiEvent
+
+- In DAQEvent v7r18
+  . Moved:
+    o RunChangeIncident to Det/DetDesc
+    o RunChangeHandlerSvc to Det/DetDescSvc
+    o OdinTimeDecoder, RunChangeTest, TestTimeDecoderOdin to Kernel/LHCbAlgs
+    o Moved and modified the tests accordingly to the changes.
+  . Removed dependency on Det/DetDesc.
+  . Added the method setEventTime to ODIN.
+  . Add new bank types for MDF Dst writing: DstBank, DstData, DstAddress
+
+- In GenEvent v5r4
+  . Add missing dictionary for GenVertex. 
+
+- In HltEvent v8r15
+  . Move HltLumiSummary to LumiEvent
+
+- In MCEvent v2r12
+  . Add method to return fraction of hits due to noise in GhostTrackInfo
+  . Add isX methods to MCOTDeposit
+  . Add type enum to MCOTDeposit
+
+- In PackedEvent v3r5
+  . New class for PackedTwoProngVertex.
+  . Remove version from Track, CaloHypo, Protoparticle and Vertex: 
+    This exists in all DataObjects
+  . Some new methods to access internal arrays.
+
+- In PhysEvent v11r8
+  . In xml/FlavourTag.xml added information relative to opposite side taggers
+    decision alone, with decisionOS() categoryOS() and omegaOS() methods.
+
+- In TrackEvent v4r18
+  . Added Velo "Lite" measurements to the list of measurement types 
+  . Fix compilation warning (from OSX gcc 4.0.01)
+
+- In STTELL1Event v1r7
+  . Printout flat Tell1 number in error bank streamer
+  . Add fillStream methos to STTELL1Data and STTELLEventInfo classes
+  . Add vector of which PPs were sent to STTELL1Data
+
+- In EventPacker v1r3, v1r2
+  . Fix gcc43 and slc4_ia32_gcc34 compilation warnings
+  . New algorithms to pack, unpack and compare TwoProngVertex.
+  . New algorithms ReadPackedDst adn WritePackedDsr to write in a RawEvent the 
+    RDST content. This allows writing a RDST in MDF format.
+  . Change the coding of cov_44 in track state, to be dp/p with a scale factor.
+    Affects PackTrack.cpp, UnpackTrack.cpp and CompareTrack.cpp
+
+- In PartProp v1r0p1
+  . Do not print message about missing anti-particle if extraBits() are set
+    (nuclei, geantino etc.)
+
+- In OTDAQ v7r5
+  . OTMultiRawBankDecoder:
+    o check that banks exist before decoding them
+    o add missing retrieve/release of ToolHandle
+  . Fix TELL1 id encoding, should be hex not decimal
+  . Print ids in hex
+  . Decrease verbosity: use Warning function, change debug -> verbose,
+    remove warning about empty Gol Headers (Headers can be empty)
+  . Only set the headers for known bank versions
+  . Fix unchecked status code
+
+- In CaloDAQ v4r10
+  . CaloDigitFromRaw : bug fix when both ADC &Digits are requested to be stored
+
+- In CondDBUI v2r16
+  . Fix in CondDBAdmin_MakeSnapshot.py to be able to use LFC-based authentication
+    for the connection (not directly supported by PyCoolCopy).
+  . Modified dump_db_to_files.py to make the reference to /Conditions/Online
+    always point to the database.
+
+- In DaVinciKernel v7r3
+  . Kernel/IPhysDesktop.h
+    o Add const accessor to IRelatedPVFinder.
+      virtual const IRelatedPVFinder* relatedPVFinder() const = 0 ;
+    o Add  virtual const LHCb::RecVertex* keep( const LHCb::RecVertex* input )
+      to keep re-fitted PVs.
+    o Add methods to access Particle->PV relations tables.
+    o relatedVertex is now const method.
+    o virtual const LHCb::RecVertex* keep( const LHCb::RecVertex* input ) = 0;
+      The vertices stored with this method should only be stored to the TES if
+      they are related to a particle that is being saved to the TES.
+  . Kernel/DVAlgorithm.h, .cpp
+    o Add const accessor to IPhysDesktop's IRelatedPVFinder.
+    o Add const accessor to IPhysDesktop's primary vertex container.
+    o Add method to get the best related PV for a given LHCb::Particle.
+    o Add ToolMap for IPVReFitters.
+    o Add accessor method primaryVertexReFitter().
+    o Add methods 
+       void storeRelationWithOverwrite(const Particle2Vertex::LightTable& table);
+       void relateWithOverwrite(const LHCb::Particle*   part, 
+                                const LHCb::VertexBase* vert,
+                                const double weight=1.);
+       const LHCb::VertexBase* getRelatedPV(const LHCb::Particle* p) const
+    o Add property "ReFitPVs" controlling whether PVs are re-fitted when the
+      "best" PV for a particle is asked for, default false.
+    o Test whether P->PV relations table is empty before returning related PV.
+    o calculateRelatedPV now returns newed pointer to related PV. The pointer is
+      either from the TES (in the case where no PV re-fitting is done) or stored
+      in the PhysDesktop's local vectors. Thus memory management is taken care of
+
+- In DaVinciMCKernel v3r0
+  . Add some doxygen documentation
+  . Add src/Lib/Particle2MCAssociatorBase.cpp, Kernel/Particle2MCAssociatorBase.h
+      Base class with common implementation for IParticle2MCAssociator interface.
+  . Add Kernel/Particle2MCParticle.h
+      Namespace containing types corresponding to the Particle -> MCParticle 
+      uni-directional weighted relationship.
+  . Kernel/IDaVinciAssociatorsWrapper.h
+    o Add default value to const std::vector< std::string >& myLocations argument
+    o IDaVinciAssociatorsWrapper::linker takes arguments by const reference.
+  . Kernel/Particle2MCLinker.h
+      Remove MCAssociation class
+  . Add Kernel/MCAssociation.h with MCAssociation class
+  . Add Kernel/IParticle2MCAssociator.h
+    o Tool interface to get one to many or many to many Particle->MCParticle
+      associations.
+  . New interface IMCParticleTupleTool for plotting MCParticle-related quantities
+  . Added IDaVinciSmartAssociator, the interface to a new ``smart'' association
+    tool which works for any kind of Particle.
+
+- In LHCbAlgs v2r24
+  . Added EventCountHisto.{h,cpp} an algorithm which adds a histogram with
+    one entry, which is the number of events seen by this algorithm.
+  . Protect against eccessive warnings in TrajPoca.cpp
+  . Relaxed the check on the ODIN bank size for version < 3 to take into account
+    an old bug in BooleInit.
+  . Using the extended RunChangeIncident (DetDesc) in OdinTimeDecoder to pass
+    the run number.
+  . Added OdinTimeDecoder, RunChangeTest, TestTimeDecoderOdin and corresponding
+    tests. (were in Event/DAQEvent)
+  . Added the tools ODINDecodeTool and ODINEncodeTool, both inheriting from
+    ODINCodecBaseTool, which contains the implementation of the ODIN -> RawBank
+    and RawBank -> ODIN functions. Added a test too (lhcbalgs.odin_codec).
+  . Added dependencies on Det/DetDesc to compile RunChangeTest, and to
+    Det/DetDescSvc and Det/DetCond for the tests. 
+
+- In LoKiPhys v8r2
+  . Add new functors:
+      HASTRACK  to check the validity of the track fore the particle
+      TINFO/TRACKINFO to access "extra-info" for the underlying track 
+
+- In MCInterfaces v1r7
+  . Extend IGhostTrackClassification interface with isGhost methods
+
+- In MDF v3r17
+  . Split the MDF library into a pure linker library (MDFLib) and a components
+    library (MDF).
+  . Add status code checks in MDFWriter
+  . Add references to MDF file implementation.
+
+- In SimComponents v2r16
+  . Add printout of half sample width
+  . Fix memory leak in MCReconstructible
+
+- In STKernel v1r11
+  . Add ISTChannelIDSelector, ISTClusterSelector interfaces
+  . Make source id to number mappings static
+  . Add print function for map
+  . Add helper find function to map
+  . Changed maxErrorBankWords to 56
+  . Add toString functions for printing in python
+  . Improve STTell1Board printout
+  . Add Safety [exception catching] to STLexicalCastor from string to Primitive
+    type
+
+- In TfKernel v2r10
+  . Add missing virtual destructor to Tf::IStationSelector (OSX/gcc4.0 warning)
+
+- In TrackInterfaces v4r1
+  . Added "lite" options to IVeloClusterPosition tool interface
+
+- In DetCondExample v11r7
+  . Remove an unneccessary service->release() from DumpDetectorStore.cpp
+
+- In IOExample v2r8
+  . Add conditional use of Castor in QMTest, to run tests on slc5
+  . Protect unpackdst test against 10**-8 differences in some variables on 
+    slc4_ia32_gcc34 platform
+  . Change input file of unpackdst test, to follow fix in track momentum error
+    packing in EventPacker v1r2
+
+- In GaudiConf v12r1, LHCbKernel v11r1, DetDesc v18r12, DetDescCnv v4r8,
+     DetDescSvc v2r3, Magnet v5r2, DAQEvent v7r18, MDF v3r17,DetCondExample v11r7
+  . Backward compatible fixes for Gaudi v21
+
+- In DetCond v12r5p1, DetDescSvc v2r3
+  . Fix compilation warning from Boost 1.38
+
 </PRE><H1><A NAME=v26r1>2009-01-13 LHCbSys v26r1</A></H1><PRE>
 This version uses Gaudi v20r4 and LCG_55c
 
-- Packages added    : LumiEvent v1r0 - To handle luminosity accounting
 - Packages added    : PartProp v1r0 - LHCb implementation of ParticlePropertySvc
 - Packages modified : GaudiConf v12r0, KernelSys v11r0, LHCbKernel v11r0,
     LHCbMath v3r5, L0MuonKernel v8r5, ProcessorKernel v5r3p1, Relations v5r6,
