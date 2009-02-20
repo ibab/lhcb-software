@@ -2,11 +2,11 @@
 # Created    : 2002-06-13
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.49 2009-02-02 10:09:01 jonrob Exp $
+# $Id: requirements,v 1.50 2009-02-20 14:41:40 cattanem Exp $
 #============================================================================
 
 package           RichRecQC
-version           v2r25p1
+version           v2r26
 
 # Structure, i.e. directories to process. 
 #============================================================================
