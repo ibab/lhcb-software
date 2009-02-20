@@ -1,8 +1,11 @@
+!$Id: release.notes,v 1.2 2009-02-20 14:24:47 jpalac Exp $
 !-----------------------------------------------------------------------------
-! Package     : DaVinci_v22r0p2/Rich
+! Package     : Rich/DstCalibSel
 ! Responsible : Andrew Powell
 ! Purpose     : RICH D* -> D0(Kpi) pi PID calbration
 !-----------------------------------------------------------------------------
+
+!========================== DstCalibSel v1r0 2009-02-20 ======================
 
 ! 2009-02-16 - Chris Jones
  - First import
