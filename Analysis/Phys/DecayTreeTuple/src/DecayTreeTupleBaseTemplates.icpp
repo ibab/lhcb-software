@@ -91,9 +91,19 @@ bool sizeCheckOrInit( const std::vector<const PARTICLE*> & row ){
     
   // initializing the particles object.
   m_parts.reserve( size );
+  bool revert = false ;
+  if (m_revertToPositiveID && (row[0]->particleID().pid())<0){
+    info() << "The head of chain is a " << ppSvc()->find(row[0]->particleID() ) 
+           << " -> will change to it antiparticle " << endmsg ;
+    revert = true ;
+  }
+  
   for( unsigned int i=0; i<size; ++i ){
-    Decays::OnePart *p = new Decays::OnePart( ppSvc()->find ( row[i]->particleID() )->particle(), 
-                                              getBranchName(row[i]) );
+    const LHCb::ParticleProperty* pp = (revert ? 
+                                        ppSvc()->find ( row[i]->particleID() )->antiParticle() : 
+                                        ppSvc()->find ( row[i]->particleID() )) ;
+    Decays::OnePart *p = new Decays::OnePart( pp->particle() , 
+                                              getBranchName( pp->particle() ) );
     // inherit the default properties:
     m_parts.push_back( p );
   }
@@ -140,35 +150,6 @@ bool sizeCheckOrInit( const std::vector<const PARTICLE*> & row ){
   if (!checkUnicity()) return false ;
   printInfos();
   return true ;
-}
-// ===============================================================
-/// Get branch name for given particle
-template<class PARTICLE> std::string getBranchName( const PARTICLE* p ){
-  if( m_useLabName )
-    return std::string("lab") 
-      + boost::lexical_cast<std::string>( m_parts.size() );
-    
-  std::string realname = ppSvc()->find( p->particleID() )->particle();
-    
-  std::string name = Decays::escape( realname ), buffer = name;
-    
-  // check that it is not yet used, if yes, append a number until not
-  // used.
-  bool flag = false;
-  int kk = 0;
-  do{
-    flag = false;
-    for( int k=0; k<(int)m_parts.size(); ++k ){
-      if( buffer == m_parts[k]->headName() ){
-        flag = true;
-        break;
-      }
-    }
-    if( !flag ) break;
-    buffer = name + boost::lexical_cast<std::string>( kk );
-    ++kk;
-  } while( kk<100 ); //for security.
-  return buffer;
 }
 //=============================================================================
 /// Find associated OneParts

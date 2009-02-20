@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+! 2009-02-20 - Patrick Koppenburg
+ - (MC)DecayTreeTuple new option RevertToPositiveID : Revert all PID
+   if mother ID is positive.
+
 ! 2009-02-19 - Patrick Koppenburg
  - (MC)DecayTreeTuple : more debugging. 
  - TupleToolDecay : fix bug in decay descriptor return

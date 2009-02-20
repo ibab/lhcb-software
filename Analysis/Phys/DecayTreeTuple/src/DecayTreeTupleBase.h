@@ -1,4 +1,4 @@
-// $Id: DecayTreeTupleBase.h,v 1.8 2009-01-22 09:27:33 pkoppenb Exp $
+// $Id: DecayTreeTupleBase.h,v 1.9 2009-02-20 09:02:40 pkoppenb Exp $
 #ifndef JBOREL_DECAYTREETUPLEBASE_H
 #define JBOREL_DECAYTREETUPLEBASE_H 1
 
@@ -86,13 +86,19 @@ class DecayTreeTupleBase : public DVAlgorithm  {
   /// Initialize the main decay
   bool initializeDecays(bool isMC);
 
+  /// Get branch name for given particle
+  std::string getBranchName( const std::string& realname ) const ;
+
   std::map< std::string, std::string > m_decayMap;
   std::vector<TupleToolDecay*> m_decays;
   std::string m_headDecay;
 
-  std::string m_tupleName; //, m_eventColName;
-  bool m_useLabName;
-  bool m_tupleNameAsToolName;
+  std::string m_tupleName; 
+  bool m_useLabName; ///< use labX_ as particle name
+  bool m_tupleNameAsToolName; 
+  /// force the mother to have a positive ID and revert all other particles.
+  /// This is a neat alternative to m_useLabName
+  bool m_revertToPositiveID ; 
 
   std::vector<std::string> m_toolList;
 

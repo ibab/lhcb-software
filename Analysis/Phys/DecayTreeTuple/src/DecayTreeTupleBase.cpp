@@ -1,4 +1,4 @@
-// $Id: DecayTreeTupleBase.cpp,v 1.10 2009-02-19 11:57:16 pkoppenb Exp $
+// $Id: DecayTreeTupleBase.cpp,v 1.11 2009-02-20 09:02:40 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -29,12 +29,13 @@ DecayTreeTupleBase::DecayTreeTupleBase( const std::string& name,
   : DVAlgorithm ( name , pSvcLocator )
   , m_dkFinder(0)
 {
-  declareProperty( "Branches", m_decayMap );
-  declareProperty( "Decay", m_headDecay );
-  declareProperty( "UseLabXSyntax", m_useLabName = false );
+  declareProperty( "Branches", m_decayMap, "Branches with other tools" );
+  declareProperty( "Decay", m_headDecay, "decay descriptor" );
+  declareProperty( "UseLabXSyntax", m_useLabName = false, "Use labX syntax" );
 
   declareProperty( "UseToolNameForBranchName", m_tupleNameAsToolName = true );
-
+  declareProperty( "RevertToPositiveID", m_revertToPositiveID = false );
+  
 }
 //=============================================================================
 // Destructor
@@ -48,7 +49,11 @@ StatusCode DecayTreeTupleBase::initialize() {
   StatusCode sc = DVAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
 
-  if (msgLevel(MSG::DEBUG)) debug() << "==> Initialize (doing nothing)" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
+  if ( m_revertToPositiveID && m_useLabName ){
+    err() << "UseLabXSyntax and RevertToPositiveID are exclusive. Please fix you options." << endmsg;
+    return StatusCode::FAILURE;
+  }
   return StatusCode::SUCCESS;
 }
 //=============================================================================
@@ -295,5 +300,32 @@ bool DecayTreeTupleBase::getDecayMatches( const MCParticle::ConstVector& pool
     heads.push_back( head ); 
   }
   return !( heads.empty() );  
+}
+// ===============================================================
+/// Get branch name for given particle
+std::string DecayTreeTupleBase::getBranchName( const std::string& realname ) const{
+  if( m_useLabName )
+    return std::string("lab") 
+      + boost::lexical_cast<std::string>( m_parts.size() );
+    
+  std::string name = Decays::escape( realname ), buffer = name;
+    
+  // check that it is not yet used, if yes, append a number until not
+  // used.
+  bool flag = false;
+  int kk = 0;
+  do{
+    flag = false;
+    for( int k=0; k<(int)m_parts.size(); ++k ){
+      if( buffer == m_parts[k]->headName() ){
+        flag = true;
+        break;
+      }
+    }
+    if( !flag ) break;
+    buffer = name + boost::lexical_cast<std::string>( kk );
+    ++kk;
+  } while( kk<100 ); //for security.
+  return buffer;
 }
 
