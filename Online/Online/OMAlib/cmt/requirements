@@ -27,6 +27,8 @@ macro_append OMAlib_shlibflags " -lHist  -lGraf -lRIO  " WIN32 " libHist.lib lib
 
 application  Saveset2HistDB ../main/Saveset2HistDB.cpp
 macro_append Saveset2HistDB_dependencies " OMAlib "
+application  DumpOMAlarms ../main/DumpOMAlarms.cpp
+macro_append DumpOMAlarms_dependencies " OMAlib "
 
 private
 use   GaudiOnline      v*       Online -no_auto_imports

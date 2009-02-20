@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.cpp,v 1.7 2009-02-19 18:35:14 ggiacomo Exp $
+// $Id: OMAMsgInterface.cpp,v 1.8 2009-02-20 15:13:27 ggiacomo Exp $
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAMsgInterface.h"
 #include "GaudiKernel/MsgStream.h"
@@ -127,13 +127,13 @@ void OMAMsgInterface::raiseMessage(OMAMessage::OMAMsgLevel level,
 
 bool OMAMsgInterface::raiseAlarm(OMAMessage& message) {
   (*m_outs) << (MSG::Level) message.level() << "==================================================================="<<endmsg;
-  (*m_outs) << (MSG::Level) message.level() << "********     "<<message.humanTime()<<endmsg;
+  (*m_outs) << (MSG::Level) message.level() << "********     "<<message.humanTime();
   (*m_outs) << (MSG::Level) message.level() << message.levelString() <<" from Analysis Task "<<
     m_anaTaskname <<"  in analysis "<<    message.ananame() <<endmsg;
   if(!message.hIdentifier().empty())
-    (*m_outs) << (MSG::Level) message.level() << "   on histogram " 
+    (*m_outs) << (MSG::Level) message.level() << "      on histogram " 
               << message.hIdentifier()<<endmsg;
-  (*m_outs) << (MSG::Level) message.level() << "   from saveset "<<message.saveSet()<<endmsg;
+  (*m_outs) << (MSG::Level) message.level() <<   "      from saveset "<<message.saveSet()<<endmsg;
   (*m_outs) << (MSG::Level) message.level() <<  message.msgtext() <<endmsg;
   (*m_outs) << (MSG::Level) message.level() << "==================================================================="<<endmsg;
   return true;
