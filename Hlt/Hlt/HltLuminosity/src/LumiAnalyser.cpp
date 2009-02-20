@@ -1,4 +1,4 @@
-// $Id: LumiAnalyser.cpp,v 1.8 2009-02-18 13:11:13 panmanj Exp $
+// $Id: LumiAnalyser.cpp,v 1.9 2009-02-20 16:37:06 panmanj Exp $
 // Include files 
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -35,6 +35,7 @@ LumiAnalyser::LumiAnalyser( const std::string& name,
   declareProperty("RawHistos",              m_rawHistos = true );
   declareProperty("TrendSize"             , m_trendSize = 100 );
   declareProperty("TrendInterval"         , m_trendInterval = 100 );
+  declareProperty("ForceTrend"            , m_forceTrend = false );
   declareProperty("BXTypes"               , m_BXTypes ) ;
   declareProperty("AddBXTypes"            , m_addBXTypes ) ;
   declareProperty("SubtractBXTypes"       , m_subtractBXTypes ) ;
@@ -117,7 +118,7 @@ StatusCode LumiAnalyser::initialize() {
       declareInfo("COUNTER_TO_RATE["+name+"_mean]", m_means[k], "mean of "+name);
       declareInfo("COUNTER_TO_RATE["+name+"_threshold]", m_thresholds[k], "fraction over threshold of "+name);
       declareInfo(name+"_mean", m_means[k], "mean of "+name);
-      info() << "counter " << name << " declared at " << k << endmsg;
+      info() << "counter " << name << " declared at " << k << " with threshold " << m_Thresholds[k] << endmsg;
     }
   }
 
@@ -139,10 +140,13 @@ StatusCode LumiAnalyser::execute() {
   // accumulate the counters with their normalization
   accumulate();
 
-  // analyse at fixed time intervals
-  if ( gpsTimeInterval() ) analyse();
-  //if (  m_call_counter%100 == 0 ) analyse();
-
+  if ( m_forceTrend ) {
+    // analyse at fixed event count intervals (testing only)
+    if (  m_call_counter%m_trendInterval == 0 ) analyse();
+  } else {
+    // analyse at fixed time intervals
+    if ( gpsTimeInterval() ) analyse();
+  }
   setDecision(true);
   return StatusCode::SUCCESS;  
 }

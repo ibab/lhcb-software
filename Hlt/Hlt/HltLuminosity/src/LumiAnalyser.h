@@ -1,4 +1,4 @@
-// $Id: LumiAnalyser.h,v 1.8 2009-02-18 13:11:13 panmanj Exp $
+// $Id: LumiAnalyser.h,v 1.9 2009-02-20 16:37:06 panmanj Exp $
 #ifndef LUMIANALYSER_H 
 #define LUMIANALYSER_H 1
 
@@ -88,7 +88,8 @@ protected:
   histoStore m_histoStore;                                        // main store for raw histos
   histoMap m_trendMap;                                            // trends
   long m_trendSize;                                               // size of trend histos
-  long m_trendInterval;                                           // interval for trending
+  long m_trendInterval;                                           // interval for trending (gpsTime seconds)
+  bool m_forceTrend;                                              // force trending each m_trendInterval events
   unsigned long m_gpsPrevious;                                    // to keep previous time when analysed
 
   bool m_publishToDIM;                               // to publish to DIM

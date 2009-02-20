@@ -50,7 +50,7 @@ class HltLumiLinesConf(LHCbConfigurableUser) :
                 , 'BXTypes'              : ['NoBeam', 'BeamCrossing','SingleBeamRight','SingleBeamLeft']
                 , 'LumiLines'            : ['Count','B1Gas','B2Gas','VDM']
                 , 'FullReco'             : False
-                , 'OutputLevel'          : WARNING
+                , 'OutputLevel'          : INFO
                 , 'Debug'                : False
         }
 
@@ -70,6 +70,7 @@ class HltLumiLinesConf(LHCbConfigurableUser) :
         lumiRecoSequence = Sequence(seqRecoName+BXType +'Seq'
                                     , ModeOR = True
                                     , ShortCircuit = False
+                                    , OutputLevel = debugOPL
                                     , MeasureTime = True)
 
         # define empty sequence to collect counters
@@ -77,6 +78,7 @@ class HltLumiLinesConf(LHCbConfigurableUser) :
         lumiCountSequence = Sequence(seqCountName+BXType +'Seq'
                                     , ModeOR = True
                                     , ShortCircuit = False
+                                    , OutputLevel = debugOPL
                                     , MeasureTime = True)
 
         # populate count sequence from the definition
@@ -93,14 +95,15 @@ class HltLumiLinesConf(LHCbConfigurableUser) :
                 histoThresholds.extend( [threshold] )
                 histoMaxBins.extend( [bins] )
                 if key == 'RZVeloBW': veloBW=True
+                if debugOPL <= INFO:
+                    print '# INFO   : HltLumiLines::HistoMaker:', BXType, key, threshold, bins
                 
 
         # populate reco sequence if needed
         if fullReco:
-            ## todo: create lumiRecoSequence
-            ## HERE RECO sequence
+            # create lumiRecoSequence
             importOptions('$HLTCONFROOT/options/HltRecoSequence.py') 
-           
+            lumiRecoSequence.Members.append( Sequence('HltRecoSequence' , MeasureTime = True ) )
             # filter to get backward tracks (make sure it always passes by wrapping inside a sequence)
             if veloBW:
                 from Configurables import HltTrackFilter, HltSelectionFilter            
@@ -122,13 +125,22 @@ class HltLumiLinesConf(LHCbConfigurableUser) :
         # define histogrammers
         ## todo: add also thresholds, bins
         HistoMembers=[]
-        HistoMembers.append(LumiHistoMaker('Histo'+BXType, InputVariables = createdCounters, OutputLevel = 3 ))
-        HistoMembers.append(LumiHisto2dSPD('Histo2D'+BXType, HistoTitle=str(BXType), OutputLevel = 3 ))
+        HistoMembers.append(LumiHistoMaker('Histo'+BXType,
+                                           InputVariables = createdCounters,
+                                           Thresholds = histoThresholds,
+                                           MaxBins = histoMaxBins,
+                                           OutputLevel = debugOPL
+                                           ))
+        HistoMembers.append(LumiHisto2dSPD('Histo2D'+BXType,
+                                           HistoTitle=str(BXType),
+                                           OutputLevel = debugOPL ))
         lumiHistoSequence = Sequence('LumiHisto'+BXType +'Seq'
                                      , Members = HistoMembers
                                      , ModeOR = True
                                      , ShortCircuit = False
-                                     , MeasureTime = True)
+                                     , MeasureTime = True
+                                     , OutputLevel = debugOPL
+                                     )
 
 
         return Line (

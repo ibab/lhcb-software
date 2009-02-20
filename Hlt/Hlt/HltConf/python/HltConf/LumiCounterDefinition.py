@@ -18,23 +18,24 @@ from Configurables import LHCbConfigurableUser
 class LumiCounterDefinitionConf(LHCbConfigurableUser) :
   __slots__ = {
     'FullReco'   : False ,
+    'Definition' : {},
     }
 
   ####### counter definition...
   def defineCounters( self ):
     fullReco = self.getProp('FullReco')
-    definition = {
+    self.Definition  = {
       'Velo'     : [LumiCountTracks   , fullReco, 'Hlt/Track/Velo'  ,   5,  200],
       'RZVelo'   : [LumiCountTracks   , fullReco, 'Hlt/Track/RZVelo',   5,  200],
       'Muon'     : [LumiCountTracks   , False   , 'Rec/Tracks/Muons',   5,  200],
       'PV2D'     : [LumiCountVertices , fullReco, 'Hlt/Vertex/PV2D' ,   1,   20],
       'PV3D'     : [LumiCountVertices , False   , 'Hlt/Vertex/PV3D' ,   1,   20],
       'RZVeloBW' : [LumiCountHltTracks, False   , 'RZVeloBW'        ,   5,  200],
-      'SPDMult'  : [LumiFromL0DU      , True    , 'Spd(Mult)'       ,   6,  200],
+      'SPDMult'  : [LumiFromL0DU      , True    , 'Spd(Mult)'       ,   6,  500],
       'PUMult'   : [LumiFromL0DU      , True    , 'PUHits(Mult)'    ,   3,  200],
       'CaloEt'   : [LumiFromL0DU      , True    , 'Sum(Et)'         , 500, 6000],
       }
-    return definition
+    return self.Definition
 
 
   def defineHistos(self):
@@ -48,7 +49,9 @@ class LumiCounterDefinitionConf(LHCbConfigurableUser) :
       if flag:
         defs[key]=[threshold, bins]
     return defs
-  
+
+  def __repr__(self):
+    return self.Definition
   
   def __apply_configuration__(self) :
     '''

@@ -4,6 +4,9 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+! 2009-02-20 - Jaap Panman
+ - clearer info in LumiAnalyser, add test option
+
 ! 2009-02-18 - Jaap Panman
  - Remove usage of LumiANNSvc and use Event/LumiCounters for dictionary lookup
  - Functionality was moved to LHCB to avoid dependency on Hlt in Brunel

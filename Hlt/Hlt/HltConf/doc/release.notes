@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.149 2009-02-20 10:39:36 graven Exp $ 
+! $Id: release.notes,v 1.150 2009-02-20 16:36:01 panmanj Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-02-20 - Jaap Panman
+ - new configurable made more consistent to transmit options
+ - create common definition of lumi counters with Hlt and monitoring
+
 ! 2009-02-20 - Gerhard Raven
  - adapt lumi event stripper to new lumi logic
  - fix CVS merges in lumi
