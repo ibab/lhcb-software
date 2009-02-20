@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.60 2009-02-19 13:21:10 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.61 2009-02-20 14:45:13 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -20,6 +20,9 @@ class Brunel(LHCbConfigurableUser):
     ## Possible used Configurables
     __used_configurables__ = [ TrackSys, RecSysConf, RichRecQCConf, LHCbApp, DstConf, LumiAlgsConf ]
 
+    ## Default init sequences
+    DefaultInitSequence     = ["Reproc", "Brunel", "Calo"]
+    
     ## Known monitoring sequences, all run by default
     KnownMoniSubdets        = ["CALO","RICH","MUON","VELO","Tr","ST"] 
     KnownExpertMoniSubdets  = KnownMoniSubdets+["TT","IT","PROTO"]
@@ -47,15 +50,15 @@ class Brunel(LHCbConfigurableUser):
        ,"InputType"       : "MDF"
        ,"OutputType"      : "DST"
        ,"PackType"        : "TES"
-       ,"WriteFSR"        : False 
+       ,"WriteFSR"        : True
        ,"Histograms"      : "Default"
        ,"NoWarnings"      : False
-       ,"DatasetName"     : ""
+       ,"DatasetName"     : "Brunel"
        ,"DDDBtag"         : ""
        ,"CondDBtag"       : ""
        ,"UseOracle"       : False
        ,"MainSequence"    : []
-       ,"InitSequence"    : ["Reproc", "Brunel", "Calo", "Lumi"]
+       ,"InitSequence"    : []
        ,"RecoSequence"    : []
        ,"MoniSequence"    : []
        ,"MCCheckSequence" : []
@@ -129,8 +132,14 @@ class Brunel(LHCbConfigurableUser):
                 log.warning( "WithMC = True, but OutputType = '%s'. Forcing WithMC = False"%inputType )
                 withMC = False # Force it, RDST never contains MC truth
 
+        if self.getProp("WriteFSR") and self.getProp("PackType").upper() in ["MDF"]:
+            if hasattr( self, "WriteFSR" ): log.warning("Don't know how to write FSR to MDF output file")
+            self.setProp("WriteFSR", False)
+
         self.configureSequences( withMC )
 
+        self.configureInit( inputType )
+        
         self.configureInput( inputType )
 
         self.configureOutput( outputType, withMC )
@@ -204,8 +213,22 @@ class Brunel(LHCbConfigurableUser):
                 mainSeq = self.DefaultRealSequence
             self.MainSequence = mainSeq
         brunelSeq.Members += mainSeq
-        ProcessPhase("Init").DetectorList += self.getProp("InitSequence")
+
+
+    def configureInit(self, inputType):
+        # Init sequence
+        initSeq = self.getProp( "InitSequence" )
+        if len( initSeq ) == 0 :
+            if inputType in ["MDF"]:
+                # add Lumi for MDF input in offline mode
+                initSeq = self.DefaultInitSequence + ["Lumi"]
+            else:
+                initSeq = self.DefaultInitSequence
+            self.setProp( "InitSequence", initSeq )
+
+        ProcessPhase("Init").DetectorList += initSeq
         ProcessPhase("Init").Context = self.getProp("Context")
+
         from Configurables import RecInit, MemoryTool
         recInit = RecInit( name = "BrunelInit",
                            PrintFreq = self.getProp("PrintFreq"))
@@ -214,14 +237,11 @@ class Brunel(LHCbConfigurableUser):
         recInit.BrunelMemory.HistoTopDir = "Brunel/"
         recInit.BrunelMemory.HistoDir    = "MemoryTool"
 
-        # add Lumi for MDF input in offline mode
-        inputType = self.getProp( "InputType" ).upper()
-        initSeq = self.getProp( "InitSequence" )
-        if inputType in [ "MDF" ]:
-            if "Lumi" in initSeq :
-                if self.getProp("WriteFSR"):
-                    self.setOtherProps(LumiAlgsConf(),["Context","DataType"])
-                    LumiAlgsConf().LumiSequencer = GaudiSequencer("InitLumiSeq")
+        if "Lumi" in initSeq :
+            if self.getProp("WriteFSR"):
+                self.setOtherProps(LumiAlgsConf(),["Context","DataType"])
+                LumiAlgsConf().LumiSequencer = GaudiSequencer("InitLumiSeq")
+
 
 
     def configureInput(self, inputType):
@@ -284,7 +304,7 @@ class Brunel(LHCbConfigurableUser):
             if not dstWriter.isPropertySet( "Output" ):
                 outputFile = self.outputName()
                 outputFile = outputFile + '.' + self.getProp("OutputType").lower()
-                dstWriter.Output  = "DATAFILE='PFN:" + outputFile + "' TYP='POOL_ROOTTREE' OPT='REC'"
+                dstWriter.Output = "DATAFILE='PFN:" + outputFile + "' TYP='POOL_ROOTTREE' OPT='REC'"
 
             # FSR output stream
             if self.getProp("WriteFSR"):
@@ -293,11 +313,16 @@ class Brunel(LHCbConfigurableUser):
                                              EvtDataSvc = "RunRecordDataSvc",
                                              EvtConversionSvc = "RunRecordPersistencySvc", 
                                              )
-                # Set a default output file name if not already defined in the user job options
-                if not hasattr( FSRWriter, "Output" ):
-                    FSRWriter.Output  = "DATAFILE='PFN:" + self.outputName() + "' TYP='POOL_ROOTTREE' OPT='REC'"
+                # Write the FSRs to the same file as the events
+                if FSRWriter.isPropertySet( "Output" ):
+                    log.warning("Ignoring FSRWriter.Output option, FSRs will be written to same file as the events")
+                FSRWriter.Output = dstWriter.getProp("Output")
 
                 ApplicationMgr().OutStream.append("FSRWriter")
+                # Suppress spurious error when reading POOL files without run records
+                if self.getProp( "InputType" ).upper() not in [ "MDF" ]:
+                    from Configurables import RunRecordDataSvc
+                    RunRecordDataSvc().OutputLevel = FATAL
 
             # Define the file content
             DstConf().Writer     = writerName
