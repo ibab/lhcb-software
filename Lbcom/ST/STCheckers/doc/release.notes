@@ -2,15 +2,13 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
-
+!=========================== STCheckers v2r10 2009-02-20 ======================
 ! 2009-02-11 M Needham
  - Use named algorithm macros for cluster/digit occupancy algorithms. 
    Names printed out are therefore clearer
-   
 
 ! 2009-01-30 - Marco Cattaneo
  - Remove Boole.opts, now done inside Boole configurable.
-
 
 !=========================== STCheckers v2r9 2009-01-12 =======================
 ! 2009-01-09 - Jeroen van Tilburg
