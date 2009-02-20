@@ -6,6 +6,7 @@
 
 ! 2009-02-20 - Gerhard Raven
  - do not allow ':' in configuration comments (confuses online panels)
+ - EParser.h now in HltCommon
 
 ! 2009-02-19 - Gerhard Raven
  - add IHltDataSvc and stringKey to python dict
