@@ -2,7 +2,7 @@
 # <-- End of file '/build/cattanem/Brunel_HEAD/BrunelSys/tests/options/testBrunel.py'
 # applying configuration of Brunel
 # /***** User Brunel/Brunel **************************************************************************
-# |-DatasetName     = ''
+# |-DatasetName     = 'Brunel'
 # |-Histograms      = 'Default'
 # |-SkipEvents      = 0
 # |-PackType        = 'TES'
@@ -22,9 +22,10 @@
 # |-RecoSequence    = []  (default: [])
 # |-Simulation      = True  (default: False)
 # |-MCLinksSequence = ['L0', 'Unpack', 'Tr']  (default: ['L0', 'Unpack', 'Tr'])
-# |-InitSequence    = ['Reproc', 'Brunel', 'Calo']  (default: ['Reproc', 'Brunel', 'Calo'])
+# |-InitSequence    = ['Reproc', 'Brunel', 'Calo']  (default: [])
 # |-DataType        = '2008'
 # |-NoWarnings      = False
+# |-WriteFSR        = True
 # |-RecL0Only       = False
 # |-SpecialData     = []  (default: [])
 # |-Monitors        = ['FPE', 'SC']  (default: [])
@@ -45,13 +46,13 @@
 # |-SpecialData              = []  (default: [])
 # |-TrackPatRecAlgorithms    = []  (default: [])
 # \----- (End of User TrackSys/TrackSys) -------------------------------------------------------------
-# WARNING: Default tag requested for partition DDDB (using head-20090212)
-# WARNING: Default tag requested for partition LHCBCOND (using head-20090212)
+# WARNING: Default tag requested for partition DDDB (using head-20090213)
+# WARNING: Default tag requested for partition LHCBCOND (using head-20090213)
 # WARNING: Default tag requested for partition SIMCOND (using sim-20090212)
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v34r1
-                                          running on lxbuild120.cern.ch on Fri Feb 13 10:04:57 2009
+                                          running on lxbuild120.cern.ch on Fri Feb 20 16:47:55 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -65,7 +66,7 @@ TransportSvc         INFO Recovery of geometry errors is  ENABLED
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   2.08 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.40 times the speed of a 2.8 GHz Xeon.
 BrunelSequencer      INFO Member list: ProcessPhase/Init, ProcessPhase/Reco, ProcessPhase/Moni, ProcessPhase/MCLinks, ProcessPhase/Check, ProcessPhase/Output
 Init                 INFO Member list: GaudiSequencer/InitReprocSeq, GaudiSequencer/InitBrunelSeq, GaudiSequencer/InitCaloSeq, with context 'Offline'
 InitReprocSeq        INFO Member list: , with context 'Offline'
@@ -85,7 +86,7 @@ PrsCheckBanks        INFO  if not (MC) re-create them from packed bank and delet
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
 DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/user/m/marcocle/public/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
-DDDB                 INFO Using TAG "head-20090212"
+DDDB                 INFO Using TAG "head-20090213"
 SIMCOND              INFO Connected to database "sqlite_file:/afs/cern.ch/user/m/marcocle/public/DBASE/Det/SQLDDDB/db/SIMCOND.db/SIMCOND"
 SIMCOND              INFO Using TAG "sim-20090212"
 PrsSpdFillRawBu...   INFO Data coding type 2
@@ -364,26 +365,18 @@ FitVelo              INFO   Tracks output container  : Rec/Track/PreparedVelo
 FitVelo              INFO   Fitter name              : TrackMasterFitter/Fitter
 FitVelo              INFO ==================================================
 FitVelo              INFO
---- Reader       : Parsing option string:
---- Reader       : ""
---- Reader       : The following options are set:
---- Reader       : - By User:
---- Reader       :     <none>
---- Reader       : - Default:
---- Reader       :     V: "False" [verbose flag]
---- Reader       :     Color: "True" [color flag (default on)]
---- Reader       : Parsing option string:
---- Reader       : ""
---- Reader       : The following options are set:
---- Reader       : - By User:
---- Reader       :     <none>
---- Reader       : - Default:
---- Reader       :     V: "False" [verbose flag]
---- Reader       :     Color: "True" [color flag (default on)]
 TrackAddExtraIn...   INFO Member list: GaudiSequencer/TrackClonesSeq, TrackAddLikelihood, NeuralNetTmva
 TrackClonesSeq       INFO Member list: TrackBuildCloneTable/FindTrackClones, TrackCloneCleaner/FlagTrackClones
 FindTrackClones      INFO Will build clone table for z=[0, 990, 9450]mm at 'Rec/Track/BestClones'
 FindTrackClones      INFO Max Kullbeck Liebler Distance = 5000
+--- Reader       : Parsing option string:
+--- Reader       : "Silent"
+--- Reader       : The following options are set:
+--- Reader       : - By User:
+--- Reader       :     <none>
+--- Reader       : - Default:
+--- Reader       :     V: "False" [verbose flag]
+--- Reader       :     Color: "True" [color flag (default on)]
 NeuralNetTmva        INFO The MVAnalysis_m_CFMlpANN.weights.txt weights file is at /afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r0/data/MVAnalysis_m_CFMlpANN.weights.txt
 --- Reader       : Booking method tag "CFMlpANN method"
 --- CFMlpANN     : Reading weight file: [1;34m/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r0/data/MVAnalysis_m_CFMlpANN.weights.txt[0m
@@ -394,6 +387,14 @@ NeuralNetTmva        INFO The MVAnalysis_m_CFMlpANN.weights.txt weights file is 
 --- Reader       : Read method name  : "CFMlpANN"
 --- Reader       :    - method title : "CFMlpANN"
 --- Reader       : Method tag : "CFMlpANN method"
+--- Reader       : Parsing option string:
+--- Reader       : "Silent"
+--- Reader       : The following options are set:
+--- Reader       : - By User:
+--- Reader       :     <none>
+--- Reader       : - Default:
+--- Reader       :     V: "False" [verbose flag]
+--- Reader       :     Color: "True" [color flag (default on)]
 NeuralNetTmva        INFO The MVAnalysis_pf_CFMlpANN.weights.txt weights file is at /afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r0/data/MVAnalysis_pf_CFMlpANN.weights.txt
 --- Reader       : Booking method tag "CFMlpANN method"
 --- CFMlpANN     : Reading weight file: [1;34m/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r0/data/MVAnalysis_pf_CFMlpANN.weights.txt[0m
@@ -692,10 +693,13 @@ CheckMUONSeq         INFO Member list: MuonPIDChecker, with context 'Offline'
 Output               INFO Member list: GaudiSequencer/OutputDSTSeq
 OutputDSTSeq         INFO Member list: TrackToDST, GaudiSequencer/PackDST
 PackDST              INFO Member list: PackTrack, PackCaloHypo/PackElectrons, PackCaloHypo/PackPhotons, PackCaloHypo/PackMergedPi0s, PackCaloHypo/PackSplitPhotons, PackProtoParticle/PackCharged, PackProtoParticle/PackNeutrals, PackRecVertex, PackTwoProngVertex, PackTrack/PackMuons
+RunRecordPersis...   INFO  'CnvServices':[ 'RunRecordCnvSvc' ]
+RunRecordPersis...   INFO Added successfully Conversion service:RunRecordCnvSvc
+FSRWriter            INFO Data source: RunRecordDataSvc output: DATAFILE='PFN:Brunel.dst' TYP='POOL_ROOTTREE' OPT='REC'
 EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootEvtCnvSvc
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
-DstWriter            INFO Data source: EventDataSvc output: DATAFILE='PFN:.dst' TYP='POOL_ROOTTREE' OPT='REC'
+DstWriter            INFO Data source: EventDataSvc output: DATAFILE='PFN:Brunel.dst' TYP='POOL_ROOTTREE' OPT='REC'
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
 ApplicationMgr       INFO Application Manager Stopped successfully
@@ -781,7 +785,6 @@ SpdMon               INFO *************************************************
 SpdMon            SUCCESS Booked 34 Histogram(s) : 1D=16 2D=18
 MuonPIDMonitor       INFO Total number of Tracks after the pre-selection: 0
 MuonPIDMonitor       INFO Total number of Tracks with IsMuon = true: 0
-VeloTrackMonitor  SUCCESS Booked 84 Histogram(s) : 1DProf=84
 TrackVertexMonitorSUCCESS Booked 11 Histogram(s) : 1D=5 1DProf=6
 TrackResChecker      INFO      ************************************
 VeloRZ               INFO              **************                       0 tracks including        0 ghosts [  0.0 %] Event average   0.0  ****
@@ -877,7 +880,7 @@ RiPIDMonAll10To70 WARNING NO ENTRIES -> PID table skipped ...
 RiPIDMonAll70To100WARNING NO ENTRIES -> PID table skipped ...
 RichAlignMoniR1      INFO Number of pions:0; Kaons:0;
 RichAlignMoniR2      INFO Number of pions:0; Kaons:0;
-MuonPIDChecker       INFO ------------------MIMIMITotal MuonPID Efficiencies (%)------------------
+MuonPIDChecker       INFO ------------------------Total MuonPID Efficiencies (%)------------------
 MuonPIDChecker       INFO -------------------          IsMuon             ------------------
 MuonPIDChecker       INFO ------------------------------------------------------------------
 MuonPIDChecker       INFO  Particle   :  These Events  :     Reference value for DC06
@@ -905,6 +908,7 @@ MuonPIDChecker       INFO  Non-muons  :      -1.00     :    (0.85+-0.01) - (1.15
 MuonPIDChecker       INFO  Ghosts     :      -1.00     :    (2.39+-0.02) - (2.24 +-0.01)
 MuonPIDChecker       INFO  Total MisID:      -1.00     :    (2.12+-0.01) - (2.51 +-0.01)
 MuonPIDChecker       INFO ------------------------------------------------------------------
+FSRWriter            INFO Events output: 0
 DstWriter            INFO Events output: 0
 EventLoopMgr         INFO Histograms converted successfully according to request.
 TransportSvc      SUCCESS  GEOMETRY ERRORS: 'Skip'     map has the size 0
@@ -924,7 +928,7 @@ ToolSvc.Offline...SUCCESS  #WARNINGS   = 1        Message = 'No pixels produced'
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings Statistics : 0/0/1
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   2.08 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.40 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -1183,6 +1187,7 @@ TimingAuditor.T...   INFO      PackNeutrals             |     0.000 |     0.000 
 TimingAuditor.T...   INFO      PackRecVertex            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      PackTwoProngVertex       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      PackMuons                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO  FSRWriter                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO  DstWriter                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
 StatusCodeSvc        INFO listing all unchecked return codes:
