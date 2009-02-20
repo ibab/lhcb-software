@@ -1,4 +1,4 @@
-// $Id: IDaVinciSmartAssociator.h,v 1.2 2009-01-19 18:15:51 jpalac Exp $
+// $Id: IDaVinciSmartAssociator.h,v 1.3 2009-02-20 22:41:54 gligorov Exp $
 #ifndef IDAVINCISMARTASSOCIATOR_H 
 #define IDAVINCISMARTASSOCIATOR_H 1
 
@@ -10,6 +10,8 @@
 #include "GaudiKernel/IAlgTool.h"
 
 #include "Kernel/Particle2MCLinker.h"
+#include "Kernel/IParticle2MCAssociator.h"
+#include "Kernel/Particle2MCAssociatorBase.h"
 
 // forward declarations
 namespace LHCb
@@ -35,7 +37,18 @@ public:
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_IDaVinciSmartAssociator; }
 
-  virtual Particle2MCLinker::ToRange associate(const LHCb::Particle*) = 0;
+  //virtual Particle2MCLinker::ToRange associate(const LHCb::Particle*) = 0;
+
+  virtual Particle2MCParticle::ToVector
+  associate(const LHCb::Particle*) const ;
+
+  virtual Particle2MCParticle::ToVector
+  associate(const LHCb::Particle*,
+            const std::string&) const ;
+
+  virtual double
+  weight(const LHCb::Particle*,
+         const LHCb::MCParticle*) const ;
 
 };
 #endif // IDAVINCISMARTASSOCIATOR_H
