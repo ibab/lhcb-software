@@ -1,4 +1,4 @@
-// $Id: L0MuonOnlineMonitor.cpp,v 1.16 2009-02-18 14:50:26 jucogan Exp $
+// $Id: L0MuonOnlineMonitor.cpp,v 1.17 2009-02-20 09:15:10 jucogan Exp $
 // Include files 
 
 #include "boost/format.hpp"
@@ -123,7 +123,10 @@ StatusCode L0MuonOnlineMonitor::initialize() {
 //=============================================================================
 StatusCode L0MuonOnlineMonitor::execute() {
   
-  setProperty("RootInTes",L0Muon::MonUtilities::timeSlot(0));
+  StatusCode sc;
+  sc = setProperty("RootInTes",L0Muon::MonUtilities::timeSlot(0));
+  if (sc.isFailure()) return Error("Can not set RootInTes ",StatusCode::SUCCESS,10);
+
   if (excludedBx()) return StatusCode::SUCCESS;
   if (!exclusiveBx()) return StatusCode::SUCCESS;
   if (!selectedTrigger()) return StatusCode::SUCCESS;
@@ -137,7 +140,9 @@ StatusCode L0MuonOnlineMonitor::execute() {
   // Loop over time slots
   for (std::vector<int>::iterator it_ts=m_time_slots.begin(); it_ts<m_time_slots.end(); ++it_ts){
 
-    setProperty("RootInTes",L0Muon::MonUtilities::timeSlot(*it_ts));
+    sc=setProperty("RootInTes",L0Muon::MonUtilities::timeSlot(*it_ts));
+    if (sc.isFailure()) return Error("Can not set RootInTes ",StatusCode::SUCCESS,10);
+    
     if (!exist<LHCb::RawEvent> (LHCb::RawEventLocation::Default)) continue;
     
     std::string location;
@@ -146,7 +151,6 @@ StatusCode L0MuonOnlineMonitor::execute() {
     
     if (m_fullMonitoring) { // If full monitoring
 
-      StatusCode sc;
 
       //Run info
       sc = m_info->setProperty( "RootInTES", rootInTES() );

@@ -1,4 +1,4 @@
-// $Id: L0MuonCandidatesFromRaw.cpp,v 1.21 2009-02-18 12:31:43 jucogan Exp $
+// $Id: L0MuonCandidatesFromRaw.cpp,v 1.22 2009-02-20 09:16:21 jucogan Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -113,8 +113,11 @@ StatusCode L0MuonCandidatesFromRaw::execute()
   if( msgLevel(MSG::VERBOSE) ) verbose() << "Looping over "<<bunches.size()<<" bunches" << endmsg;
 
   for (std::vector<std::string>::iterator itbunches=bunches.begin(); itbunches<bunches.end(); ++itbunches) {
-    if (!m_disableTAE) setProperty("RootInTes",(*itbunches));
-
+    if (!m_disableTAE) {
+      sc=setProperty("RootInTes",(*itbunches));
+      if (sc.isFailure()) return Error("Can not set RootInTes ",StatusCode::SUCCESS,10);
+    }
+    
     if (!exist<LHCb::RawEvent>( LHCb::RawEventLocation::Default )) continue;
 
     if( msgLevel(MSG::VERBOSE) ) verbose() << "decoding event ... "<<(*itbunches) << endmsg;

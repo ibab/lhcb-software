@@ -1,4 +1,4 @@
-// $Id: L0MuonMonitorBase.cpp,v 1.8 2009-02-04 15:12:02 marcocle Exp $
+// $Id: L0MuonMonitorBase.cpp,v 1.9 2009-02-20 09:15:10 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -35,7 +35,8 @@ L0MuonMonitorBase::L0MuonMonitorBase( const std::string& name,
   : GaudiHistoAlg ( name , pSvcLocator )
 {
   std::vector<int> time_slots;
-  for (int i=-7;i<=7;++i) time_slots.push_back(i);
+  //for (int i=-7;i<=7;++i) time_slots.push_back(i);
+  time_slots.push_back(0);
   declareProperty( "TimeSlots"  , m_time_slots = time_slots);
 
   std::vector<int> quarters;
@@ -185,7 +186,9 @@ StatusCode L0MuonMonitorBase::storeOlsInError() {
   // Loop over time slots
   for (std::vector<int>::iterator it_ts=m_time_slots.begin(); it_ts<m_time_slots.end(); ++it_ts){
 
-    setProperty("RootInTes",L0Muon::MonUtilities::timeSlot(*it_ts));
+    sc=setProperty("RootInTes",L0Muon::MonUtilities::timeSlot(*it_ts));
+    if (sc.isFailure()) return Error("Can not set RootInTes ",StatusCode::SUCCESS,10);
+    
     if (!exist<LHCb::RawEvent>( LHCb::RawEventLocation::Default )) continue;
 
     // Get optical links in error
@@ -270,7 +273,9 @@ StatusCode L0MuonMonitorBase::getL0MuonPadsTAE(std::vector<std::pair<LHCb::MuonT
   // Loop over time slots (for l0muon hits)
   for (std::vector<int>::iterator it_ts=m_time_slots.begin(); it_ts<m_time_slots.end(); ++it_ts){
     
-    setProperty("RootInTes",L0Muon::MonUtilities::timeSlot(*it_ts));
+    sc=setProperty("RootInTes",L0Muon::MonUtilities::timeSlot(*it_ts));
+    if (sc.isFailure()) return Error("Can not set RootInTes ",StatusCode::SUCCESS,10);
+    
     if (!exist<LHCb::RawEvent>( LHCb::RawEventLocation::Default )) continue;
     
     // Get L0Muon Hits
@@ -303,7 +308,9 @@ StatusCode L0MuonMonitorBase::getL0MuonTilesTAE(std::vector<std::pair<LHCb::Muon
   // Loop over time slots (for l0muon hits)
   for (std::vector<int>::iterator it_ts=m_time_slots.begin(); it_ts<m_time_slots.end(); ++it_ts){
 
-    setProperty("RootInTes",L0Muon::MonUtilities::timeSlot(*it_ts));
+    sc=setProperty("RootInTes",L0Muon::MonUtilities::timeSlot(*it_ts));
+    if (sc.isFailure()) return Error("Can not set RootInTes ",StatusCode::SUCCESS,10);
+    
     if (!exist<LHCb::RawEvent>( LHCb::RawEventLocation::Default )) continue;
 
     // Get L0Muon Hits
