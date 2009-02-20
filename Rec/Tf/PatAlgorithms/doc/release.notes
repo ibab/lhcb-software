@@ -4,10 +4,10 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================== PatAlgorithms v3r15 2009-02-20 ===================
 ! 2009-02-09 - Johannes Albrecht
  - add possibility to add TT clusters in matchSingle (for use in HLT1)
 	 option to steer it, true as default
-
 
 ! 2009-01-21 - Marco Cattaneo
  - Fix uninitialised variables in constructor of PatFwdTrackCandidate. Fixes
