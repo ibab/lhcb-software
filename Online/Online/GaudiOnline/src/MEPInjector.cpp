@@ -273,6 +273,8 @@ StatusCode MEPInjector::initBuffers()
     return StatusCode::SUCCESS;
 }
 
+
+
 StatusCode MEPInjector::initConsumers()
 {
     static MsgStream msgLog(msgSvc(), name());	//Message stream for output
@@ -301,11 +303,20 @@ StatusCode MEPInjector::deleteConsumers()
     for(std::map<std::string, BMID>::iterator ite = m_EventBuffers.begin(); ite != m_EventBuffers.end(); ++ite)
     {   
         mbm_cancel_request(ite->second);
-//        mbm_del_req(ite->second);
+
+        for(Requirements::iterator i=m_Req.begin(); i!=m_Req.end(); ++i)  {
+            Requirement r;
+            r.parse(*i);
+            if(MBM_NORMAL != mbm_del_req(ite->second, r.evtype, r.trmask, r.vetomask, r.maskType, r.userType))
+            {
+                msgLog << MSG::WARNING << "Problem deleting request, continue" << endmsg;
+            }
+        } 
         mbm_free_space(ite->second);
         mbm_exclude(ite->second);
     }
 
+    m_EventBuffers.clear();
 
     return StatusCode::SUCCESS;
 }
@@ -328,6 +339,7 @@ StatusCode MEPInjector::initialize()
         msgLog << MSG::ERROR << "Failed to make buffers" << endmsg;
         return sc; 
     }
+
 
     sc = initConsumers();
     if(sc.isFailure())
@@ -755,6 +767,10 @@ StatusCode MEPInjector::readEvent()
  
     ///XXX Get event
     StatusCode sc = getEvent(); 
+    if(m_InjState != RUNNING) {
+        msgLog << MSG::INFO << "End of injection" << endmsg;
+        return StatusCode::RECOVERABLE;
+    } 
 
     if(sc.isSuccess() && m_InjState == RUNNING)
     {
@@ -823,9 +839,9 @@ StatusCode MEPInjector::readEvent()
                 MEPHdr *mh = NULL;
                 MEPFrgHdr *mf = NULL; 
           
-                if(bkType == RawBank::OT
-                       || bkType == RawBank::OTError
-                       || bkType == RawBank::OTRaw )
+                if(hdr->type() == RawBank::OT
+                       || hdr->type() == RawBank::OTError
+                       || hdr->type() == RawBank::OTRaw )
                 {
                     unsigned int src = hdr->sourceID();
                     unsigned int tmp = (src/100 * 16 * 16) + (((src/10) %10) * 16 ) + (src%10);
@@ -1090,7 +1106,7 @@ StatusCode MEPInjector::readThenSend()
         return StatusCode::RECOVERABLE;
     }
     if (sc.isFailure()) {
-	ERRMSG(msgLog, " Reading an event from the buffer managers");
+	msgLog << " Reading an event from the buffer managers" << endmsg;;
         return StatusCode::FAILURE;
     }
   
@@ -1418,8 +1434,8 @@ in_addr_t MEPInjector::getTell1IP(int type, int src)
 	char T = (src >> 8) & 0x0F;   
 	char L = (src >> 4) & 0x0F;
 	char Q = (src >> 0) & 0x0F;
-        if(src>24)
-//	if ((Q & 0x1) == 1)	// A side
+//        if(src>24)
+	if ((Q & 0x1) == 1)	// A side
 	{
           ipNet+=(12<<16); 
 	} 
@@ -1427,8 +1443,8 @@ in_addr_t MEPInjector::getTell1IP(int type, int src)
 	{
           ipNet+=(16<<16); 
 	}
-//        return (ipNet+ ( ( (((Q >> 1)& 0x1)*12) + ((T-1)*4) + L + 1 )<< 24) );
-        return (ipNet + ((((src) %24)+1) << 24));
+        return (ipNet+ ( ( (((Q >> 1)& 0x1)*12) + ((T-1)*4) + L + 1 )<< 24) );
+//        return (ipNet + ((((src) %24)+1) << 24));
 
     case RawBank::MuonFull:
     case RawBank::MuonError:
@@ -1973,6 +1989,14 @@ StatusCode MEPInjector::getHLTInfo()
         exit(errno);
     }
  
+    if(m_InjState != RUNNING) {
+        msgLog << MSG::INFO << "Leaving getHLTInfo without getting info cause end of injector" << endmsg;
+        return StatusCode::RECOVERABLE;
+    }
+    
+
+    msgLog << MSG::DEBUG << "After sem wait" << endmsg; 
+
     if (pthread_mutex_lock(&m_SyncReqOdin)) {
         ERRMSG(msgLog, "Failed locking mutex");
         return StatusCode::FAILURE;
@@ -2034,6 +2058,11 @@ StatusCode MEPInjector::getOdinInfo()
         perror("sem_wait");
         exit(errno);
     }
+
+    if(m_InjState != RUNNING) {
+        msgLog << MSG::INFO << "Leaving getOdin Info without getting info" << endmsg;
+        return StatusCode::RECOVERABLE;
+    } 
 
     if (pthread_mutex_lock(&m_SyncMainOdin)) {
         ERRMSG(msgLog, "Failed locking mutex");
@@ -2130,17 +2159,7 @@ StatusCode MEPInjector::finalize()
 
     m_ManagerStop = true;
 
-
-    for(std::map<std::string, BMID>::iterator ite = m_EventBuffers.begin(); ite != m_EventBuffers.end(); ++ite)
-    {   
-          mbm_cancel_request(ite->second);
-//          mbm_del_req(ite->second);
-          mbm_free_space(ite->second);
-          mbm_exclude(ite->second);
-          msgLog << MSG::ALWAYS << "BMID : " << ite->first << " ok" << endmsg;
-    }
-    m_EventBuffers.clear();
-
+    deleteConsumers();
 
     /// No more need of synchronisation to access to the queues/maps, min value = 1
     /// and they should exit  
@@ -2281,8 +2300,6 @@ StatusCode MEPInjector::finalize()
         m_MonSvc = 0;
     }
 
-    deleteConsumers();
-
     msgLog << MSG::INFO << "A few stats" << endmsg;
     msgLog << MSG::INFO << "Total of MEPs sent : " << m_TotMEPsTx << endmsg;
     msgLog << MSG::INFO << "Total of MEP Requests received : " << m_TotMEPReqRx << endmsg;
@@ -2291,8 +2308,28 @@ StatusCode MEPInjector::finalize()
 }
 
 StatusCode MEPInjector::run() {
-    m_InjState = RUNNING; 
-    return injectorProcessing();
+    static MsgStream msgLog(msgSvc(), name());
+    while(m_InjState != RUNNING){
+        switch(m_InjState) {
+        case STOPPED:
+        case NOT_READY:
+            msgLog << MSG::DEBUG << "Exiting from reading loop" << endmsg;
+            return StatusCode::SUCCESS;
+        case READY:
+            MEPRxSys::microsleep(100000); // 100 ms
+            break;
+        default: continue;
+        }
+    }
+
+//    m_InjState = RUNNING; 
+    StatusCode sc = StatusCode::SUCCESS; 
+    while(sc.isSuccess() && m_InjState == RUNNING)
+    {
+         sc=injectorProcessing();
+    }
+    msgLog << MSG::INFO << "End of run" << endmsg;
+    return sc;
 }
 
 
@@ -2364,20 +2401,41 @@ void MEPInjector::handle(const Incident& inc) {
   MsgStream msgLog(msgSvc(),name());
   msgLog << MSG::ALWAYS << "Got incident:" << inc.source() << " of type " << inc.type() << endmsg;
   if (inc.type() == "DAQ_CANCEL")  { //but if I remember well the PVSS interface was leading the injector in not ready no ? XXX check this once Alba is back 
-      m_InjState = STOPPED;
+      if(m_InjState != STOPPED) 
+      {
+          m_InjState = STOPPED;
+ 
+          for(std::map<std::string, BMID>::iterator ite = m_EventBuffers.begin(); ite != m_EventBuffers.end(); ++ite)
+          { 
+              if(mbm_cancel_request(ite->second)) {
+                  msgLog << MSG::WARNING << "Problem cancelling request, continue" << endmsg;
+              }
 
-      for(std::map<std::string, BMID>::iterator ite = m_EventBuffers.begin(); ite != m_EventBuffers.end(); ++ite)
-      { 
-          mbm_cancel_request(ite->second);
-//          mbm_del_req(ite->second);
-//          mbm_free_space(ite->second);
-//          mbm_exclude(ite->second);
-          msgLog << MSG::ALWAYS << "BMID : " << ite->first << " ok" << endmsg;
-      } 
+              msgLog << MSG::ALWAYS << "BMID : " << ite->first << " ok" << endmsg;
+          }
 
+          if(sem_post(&m_MEPReqCount)==-1)
+          { 
+              ERRMSG(msgLog, "Posting on the semaphore");
+              perror("sem_post");
+              exit(errno);
+          }
+          if(sem_post(&m_OdinCount)==-1) 
+          {
+              ERRMSG(msgLog, "Posting on the semaphore");
+              perror("sem_post");
+              exit(errno);
+          } 
+      }
   }
   else if (inc.type() == "DAQ_ENABLE") {
-      m_InjState = RUNNING;
+/*  
+      if(m_InjState != RUNNING)
+      {
+          initConsumers();
+*/
+          m_InjState = RUNNING;
+//      }
   }
 }
 

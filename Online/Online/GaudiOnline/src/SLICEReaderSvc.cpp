@@ -63,6 +63,8 @@ SLICEReaderSvc::SLICEReaderSvc(const std::string &name, ISvcLocator *pSvcLocator
     declareProperty("BufferName", m_BufferName);
     declareProperty("PartitionID", m_PartitionID=0xffffffff);
     declareProperty("Requirements", m_Req);
+
+    m_BMID = MBM_INV_DESC;
     m_ReaderState = NOT_READY;
 
 } 
@@ -184,11 +186,16 @@ StatusCode SLICEReaderSvc::decodeMDF(char *slice, int size)
         m_CurSliceIte=m_CurEvtLen-m_CurEvtIte;
         m_CurEvtIte=m_CurEvtLen;
 
-        if(pushEvent(m_CurEvent, m_CurEvtLen).isFailure())
+        StatusCode sc = pushEvent(m_CurEvent, m_CurEvtLen);
+        if(sc.isRecoverable()) 
         {
-            msgLog << MSG::ERROR << "Failed to send event to the injector" <<
-endmsg;
-            return StatusCode::FAILURE;
+            msgLog << MSG::INFO << "End of run : exiting decodeMDF" << endmsg;
+            return sc;
+        } 
+        if(sc.isFailure())
+        {
+            msgLog << MSG::ERROR << "Failed to send event to the injector" << endmsg;
+            return sc;
         }
 
             
@@ -224,10 +231,16 @@ endmsg;
         else
         {
             /// Push Event and go to next
-            if(pushEvent(slice+m_OffsetEvt, m_CurEvtLen).isFailure())
+            StatusCode sc = pushEvent(slice+m_OffsetEvt, m_CurEvtLen);
+            if(sc.isRecoverable())
+            {   
+                msgLog << MSG::INFO << "End of run : exiting decodeMDF" << endmsg;
+                return sc;
+            }
+            if(sc.isFailure()) 
             {
                 msgLog << MSG::ERROR << "Failed to send event to the injector" << endmsg;
-                return StatusCode::FAILURE;
+                return sc;
             }  
               
             m_OffsetEvt += m_CurEvtLen;
@@ -272,8 +285,14 @@ StatusCode SLICEReaderSvc::readFile()
         ++nbSlices;
         StatusCode sc=decodeMDF(m_Buffer, ret);
         if(sc.isFailure()) {
-            msgLog << MSG::ERROR << "Problem occured decoding MDF file "<< m_InputFiles[m_CurFile] << endmsg;
-            close(fd);
+            
+            if(sc.isRecoverable()) {
+                msgLog << MSG::INFO << "End of run : exiting readFile" << endmsg;
+            }
+            else {
+                msgLog << MSG::ERROR << "Problem occured decoding MDF file "<< m_InputFiles[m_CurFile] << endmsg;
+                close(fd);
+            }
             return sc;
         }
 
@@ -297,10 +316,23 @@ StatusCode SLICEReaderSvc::readFile()
     
 StatusCode SLICEReaderSvc::run()
 {
-    m_ReaderState = RUNNING;
+//    m_ReaderState = RUNNING;
     static MsgStream msgLog(msgSvc(), name());
-    msgLog << MSG::INFO << "Running" << endmsg;
 
+    while(m_ReaderState != RUNNING){
+        switch(m_ReaderState) {
+        case STOPPED:
+        case NOT_READY:
+            msgLog << MSG::DEBUG << "Exiting from reading loop" << endmsg;
+            return StatusCode::SUCCESS;
+        case READY:
+            MEPRxSys::microsleep(100000); // 100 ms
+            break;
+        default: continue;
+        }
+    }
+
+    msgLog << MSG::INFO << "Reader running" << endmsg;
  
     StatusCode sc=StatusCode::SUCCESS;
     if( m_CurFile == -1) 
@@ -317,8 +349,14 @@ StatusCode SLICEReaderSvc::run()
     }
     while(m_LoopOverFiles && m_ReaderState == RUNNING && sc.isSuccess()); 
 
+   
     if(sc.isFailure()) {
-        msgLog << MSG::ERROR << "File reading procedure failed" << endmsg;
+        if(sc.isRecoverable())
+        {
+            msgLog << MSG::INFO << "End of run : exiting run" << endmsg;
+            return StatusCode::SUCCESS;
+        }
+        else msgLog << MSG::ERROR << "File reading procedure failed" << endmsg;
         return sc;
     }   
  
@@ -333,7 +371,7 @@ StatusCode SLICEReaderSvc::finalize()
     m_ReaderState = NOT_READY;
     m_LoopOverFiles = false;
     msgLog << MSG::INFO << "Finalization" << endmsg;
-
+ 
     if(m_IncidentSvc) {
         m_IncidentSvc->removeListener(this);
         m_IncidentSvc->release();
@@ -346,9 +384,9 @@ StatusCode SLICEReaderSvc::finalize()
         m_MonSvc = 0;
     }
 
-    m_ReaderState = STOPPED;
 //    mbm_free_space(m_BMID);
-    mbm_exclude(m_BMID);
+    if(m_BMID != MBM_INV_DESC) 
+        mbm_exclude(m_BMID);
 
     return StatusCode::SUCCESS;
 }
@@ -358,13 +396,18 @@ void SLICEReaderSvc::handle(const Incident& incident){
   MsgStream msgLog(msgSvc(),name());
   msgLog << MSG::DEBUG << "Got incident:" << incident.source() << " of type " << incident.type() << endmsg;
   if (incident.type() == "DAQ_CANCEL")  {  
-      m_ReaderState = STOPPED;
-      mbm_cancel_request(m_BMID);
-      mbm_free_space(m_BMID);
-      mbm_exclude(m_BMID);
+      if(m_ReaderState != STOPPED) 
+      {
+          m_ReaderState = STOPPED;
+          if(mbm_cancel_request(m_BMID) != MBM_NORMAL) {
+              msgLog << MSG::ERROR << "Could not cancel writing request" << endmsg;
+          }
+          msgLog << MSG::DEBUG << "request cancelled" << endmsg;
+      } 
   }
   else if (incident.type() == "DAQ_ENABLE") {
       m_ReaderState = RUNNING;
+     
   }
 }
 
@@ -381,6 +424,10 @@ StatusCode SLICEReaderSvc::pushEvent(char *event, int size)
     char *buf;
     if(mbm_get_space_a(m_BMID, size, (int **)&buf, NULL, this) != MBM_NORMAL)
     {
+        if(m_ReaderState != RUNNING) {
+            msgLog << MSG::INFO << "End of run : mgm_get_space cancelled" << endmsg;
+            return StatusCode::RECOVERABLE;
+        }
         msgLog << MSG::ERROR << "mbm_get_space_a failed" << endmsg;
         return StatusCode::FAILURE;
     }
@@ -389,6 +436,10 @@ StatusCode SLICEReaderSvc::pushEvent(char *event, int size)
 
     if(mbm_declare_event_and_send(m_BMID, size, r.evtype, r.trmask, 0, (void **) &buf, &size, m_PartitionID) != MBM_NORMAL)
     {
+        if(m_ReaderState != RUNNING) {
+            msgLog << MSG::INFO << "End of run : mgm_declare_event_and_send cancelled" << endmsg;
+            return StatusCode::RECOVERABLE;
+        }
         msgLog << MSG::ERROR << "mbm_declare_event_and_send failed" << endmsg;
         return StatusCode::FAILURE;
     } 
