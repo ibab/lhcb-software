@@ -1,4 +1,4 @@
-#$Id: requirements,v 1.173 2009-02-20 14:47:00 jpalac Exp $
+#$Id: requirements,v 1.174 2009-02-20 16:17:50 pkoppenb Exp $
 package PhysSys
 version v8r1
 
@@ -14,9 +14,6 @@ use  DaVinciTransporter 	v3r8     Phys   # Juan Palacios
 use  ParticleMaker      	v4r2     Phys   # Chris Jones
 use  VertexFit			v5r6     Phys   # Yuehong Xie
 use  LoKiFitters                v2r1     Phys   # Vanya Belyaev
-use  DaVinciMonitors            v1r1     Phys   # Patrick Koppenburg
-use  RichPIDQC                  v1r0     Rich   # Chris Jones
-use  DstCalibSel                v1r0     Rich   # Andrew Powell
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
