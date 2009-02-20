@@ -1,13 +1,13 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.49 2009-02-11 18:05:53 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.50 2009-02-20 16:35:19 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 from Configurables import GaudiSequencer
-from Configurables import ( LHCbConfigurableUser, LHCbApp, PhysConf, AnalysisConf, HltConf, DstConf )
+from Configurables import ( LHCbConfigurableUser, LHCbApp, PhysConf, AnalysisConf, HltConf, DstConf, L0Conf )
 import GaudiKernel.ProcessJobOptions
 
 class DaVinci(LHCbConfigurableUser) :
@@ -35,11 +35,12 @@ class DaVinci(LHCbConfigurableUser) :
        , "UserAlgorithms"     : []            # User algorithms to run.
        , "RedoMCLinks"        : False         # On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association.
        , "InputType"          : "DST"         # or "DIGI" or "ETC" or "RDST" or "DST". Nothing means the input type is compatible with being a DST. 
-         # Hlt running
+         # Trigger running
+       , "L0"                 : False         # Run L0. 
+       , "ReplaceL0BanksWithEmulated" : False # Re-run L0 
        , "HltType"            : ''            # HltType : No Hlt. Use Hlt1+Hlt2 to run Hlt
        , "HltUserAlgorithms"  : [ ]           # put here user algorithms to add
-       , "ReplaceL0BanksWithEmulated" : False # Re-run L0 
-       , "Hlt2IgnoreHlt1Decision" : False     # run Hlt2 even if Hlt1 failed
+       , "Hlt2Requires"       : 'L0+Hlt1'     # Say what Hlt2 requires
        }
 
     _propertyDocDct = {  
@@ -60,14 +61,16 @@ class DaVinci(LHCbConfigurableUser) :
        , "UserAlgorithms"     : """ User algorithms to run. """
        , "RedoMCLinks"        : """ On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association. """
        , "InputType"          : """ 'DST' or 'DIGI' or 'ETC' or 'RDST' or 'DST'. Nothing means the input type is compatible with being a DST.  """
-         # Hlt running
+       , "L0"                 : """ Re-Run L0 """
+       , "ReplaceL0BanksWithEmulated" : """ Re-run L0 and replace all data with emulation  """
        , "HltType"            : """ HltType : No Hlt by default. Use Hlt1+Hlt2 to run Hlt """
        , "HltUserAlgorithms"  : """ Put here user algorithms to add to Hlt """
-       , "ReplaceL0BanksWithEmulated" : """ Re-run L0  """
-       , "Hlt2IgnoreHlt1Decision" : """ Run Hlt2 even if Hlt1 failed """
+       , "Hlt2Requires"       : """ Definition of what Hlt2 requires to run. Default is 'L0+Hlt1'.
+                                    'L0' will require only L0, '' (empty string) will run on all events. 'Hlt1' without L0 does not make any sense.
+                                    """
          }
 
-    __used_configurables__ = [ LHCbApp, PhysConf, AnalysisConf, HltConf, DstConf ]
+    __used_configurables__ = [ LHCbApp, PhysConf, AnalysisConf, HltConf, DstConf, L0Conf ]
 
     ## Known monitoring sequences run by default
     KnownMonitors        = []    
@@ -117,13 +120,31 @@ class DaVinci(LHCbConfigurableUser) :
         """
         Define HLT. Make sure it runs first.
         """
-        HltConf().replaceL0BanksWithEmulated = self.getProp("ReplaceL0BanksWithEmulated") ## enable if you want to rerun L0
-        HltConf().Hlt2IgnoreHlt1Decision =  self.getProp("Hlt2IgnoreHlt1Decision")        ## enable if you want Hlt2 irrespective of Hlt1
-        HltConf().hltType =  self.getProp("HltType")                                      ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
-        from Configurables import (GaudiSequencer, LbAppInit)
-        hltSeq = GaudiSequencer("Hlt")
-        ApplicationMgr().TopAlg += [ hltSeq ]  # catch the Hlt sequence to make sur it's run first
+        if (self.getProp("HltType")!=''):
+            HltConf().Hlt2Requires =  self.getProp("Hlt2Requires")                             ## enable if you want Hlt2 irrespective of Hlt1
+            HltConf().hltType =  self.getProp("HltType")                                       ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
+            from Configurables import (GaudiSequencer, LbAppInit)
+            hltSeq = GaudiSequencer("Hlt")
+            ApplicationMgr().TopAlg += [ hltSeq ]  # catch the Hlt sequence to make sur it's run first
+            log.info("Will run Hlt")
         
+        
+################################################################################
+# L0 setup
+#
+    def l0(self):
+        """
+        Define L0. Make sure it runs before HLT.
+        """
+        if ( self.getProp("ReplaceL0BanksWithEmulated") and (not self.getProp("L0")) ):
+            log.warning("You asked to replace L0 banks with emulation. Will set L0 = True")
+            self.setProp("L0",True)
+        if ( self.getProp("L0") ):
+            l0seq = GaudiSequencer("seqL0")
+            ApplicationMgr().TopAlg += [ l0seq ]
+            L0Conf().setProp( "L0Sequencer", l0seq )
+            L0Conf().setProp( "ReplaceL0BanksWithEmulated", self.getProp("ReplaceL0BanksWithEmulated") ) 
+            log.info("Will run L0")
         
 ################################################################################
 # Check Options are OK
@@ -309,8 +330,8 @@ class DaVinci(LHCbConfigurableUser) :
         self.configureInput()
         # start with init
         self.initSeq()
-        if (self.getProp("HltType")!=''):
-            self.hlt()
+        self.l0()
+        self.hlt()
         self.defineMonitors()
         self.defineEvents()
         self.defineInput()

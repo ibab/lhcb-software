@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.311 2009-02-12 10:16:55 pkoppenb Exp $
+! $Id: release.notes,v 1.312 2009-02-20 16:35:19 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,9 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-02-20 - Patrick Koppenburg
+ - DaVinci() : Use L0
 
 ! 2009-02-12 - Patrick Koppenburg
  - Remove PreloadUnits.opts
