@@ -74,7 +74,7 @@ DaVinciSmartAssociator::associate(const LHCb::Particle* particleToBeAssociated,
                                   const std::string& mcParticleLocation) const 
 {
   if (mcParticleLocation!=LHCb::MCParticleLocation::Default) {
-    Warning("associate(const LHCb::Particle*  particle, const std::string& mcParticleLocation NOT implemented",
+    Warning("associate(const LHCb::Particle*  particle, const std::string& mcParticleLocation) NOT implemented",
             1, StatusCode::SUCCESS).ignore();
     return ProtoParticle2MCLinker::ToRange();
   } else {
