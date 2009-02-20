@@ -1,9 +1,20 @@
 #include "HltBase/ConfigTreeNode.h"
 #include "boost/regex.hpp"
 
+#include "GaudiKernel/GaudiException.h"
+
 using namespace std;
 using Gaudi::Math::MD5;
 
+ConfigTreeNode::ConfigTreeNode(const LeafRef& leaf, const NodeRefs& nodes, const std::string& label)
+      : m_nodes(nodes)
+      , m_leaf(leaf)
+      , m_label(label)
+      , m_digest( digest_type::createInvalid() )
+{ 
+ if (m_label.find(':')!=std::string::npos)
+    throw GaudiException("':' is not allowed in label",label,StatusCode::FAILURE);
+}
 
 istream& ConfigTreeNode::read(istream& is) {
     bool parsing_nodes = false;

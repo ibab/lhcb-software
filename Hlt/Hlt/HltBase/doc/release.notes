@@ -3,6 +3,10 @@
 ! Responsible : Jose Angel Hernando Morata
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+
+! 2009-02-20 - Gerhard Raven
+ - do not allow ':' in configuration comments (confuses online panels)
+
 ! 2009-02-19 - Gerhard Raven
  - add IHltDataSvc and stringKey to python dict
 

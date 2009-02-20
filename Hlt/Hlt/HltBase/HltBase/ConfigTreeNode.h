@@ -51,12 +51,7 @@ public:
       , m_digest( digest_type::createInvalid() )
     { }
 
-    ConfigTreeNode(const LeafRef& leaf, const NodeRefs& nodes, const std::string& label)
-      : m_nodes(nodes)
-      , m_leaf(leaf)
-      , m_label(label)
-      , m_digest( digest_type::createInvalid() )
-    { }
+    ConfigTreeNode(const LeafRef& leaf, const NodeRefs& nodes, const std::string& label);
 
     ConfigTreeNode *clone(boost::optional<const LeafRef&> newLeaf = boost::optional<const LeafRef&>(), 
                           boost::optional<const NodeRefs&> newNodes = boost::optional<const NodeRefs&>(), 
