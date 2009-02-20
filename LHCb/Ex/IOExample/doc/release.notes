@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.40 2009-02-18 14:16:45 cattanem Exp $
+! $Id: release.notes,v 1.41 2009-02-20 13:26:58 cattanem Exp $
 ! Package: IOExample
 ! Package Manager: M.Frank
 ! Purpose: Demonstrate how to write and read back event data using POOL I/O.
 !---------------------------------------------------------------------------
 
-!====================== IOExample v2r8 2009-02-18 =========================
+!====================== IOExample v2r8 2009-02-20 =========================
+! 2009-02-20 - Marco Cattaneo
+ - Add conditional use of Castor in QMTest, to run tests on slc5
+
 ! 2009-02-07 - Marco Cattaneo
  - Protect unpackdst test against 10**-8 differences in some variables on 
    slc4_ia32_gcc34 platform
