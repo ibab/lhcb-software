@@ -1,4 +1,4 @@
-// $Id: STClustersToLite.h,v 1.3 2009-02-17 09:47:35 mneedham Exp $
+// $Id: STClustersToLite.h,v 1.4 2009-02-20 10:46:08 mneedham Exp $
 #ifndef STCLUSTERSTOLITE_H
 #define STCLUSTERSTOLITE_H 1
 
@@ -24,7 +24,7 @@ typedef SiClustersToLite<LHCb::STCluster> STClustersToLite;
 
 
 template <>
-inline SiClustersToLite<LHCb::STCluster>::SiClustersToLite<LHCb::STCluster>( const std::string& name,
+inline SiClustersToLite<LHCb::STCluster>::SiClustersToLite( const std::string& name,
                                     ISvcLocator* pSvcLocator):
   SiClusterTraits<LHCb::STCluster>::BASEALG(name, pSvcLocator){
  

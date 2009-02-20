@@ -1,4 +1,4 @@
-// $Id: VeloClustersToLite.h,v 1.1 2009-02-17 09:47:36 mneedham Exp $
+// $Id: VeloClustersToLite.h,v 1.2 2009-02-20 10:46:08 mneedham Exp $
 #ifndef VELOCLUSTERSTOLITE_H
 #define VELOCLUSTERSTOLITE_H 1
 
@@ -24,7 +24,7 @@ typedef SiClustersToLite<LHCb::VeloCluster> VeloClustersToLite;
 
 /// specialized constructor
 template <>
-inline SiClustersToLite<LHCb::VeloCluster>::SiClustersToLite<LHCb::VeloCluster>( const std::string& name,
+inline SiClustersToLite<LHCb::VeloCluster>::SiClustersToLite( const std::string& name,
                                     ISvcLocator* pSvcLocator):
   SiClusterTraits<LHCb::VeloCluster>::BASEALG(name, pSvcLocator){
  

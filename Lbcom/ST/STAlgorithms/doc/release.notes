@@ -2,6 +2,9 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+! 2009-02-20 M Needham
+ - Bug fixes for gcc 4.3
+
 ! 2009-02-17 M Needham
  - Template SiClustersToLite + add Velo and ST specializations
 
