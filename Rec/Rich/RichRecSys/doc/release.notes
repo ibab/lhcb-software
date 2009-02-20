@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecSys v3r16 2009-02-20 ==========================
 ! 2009-02-18 - Chris Jones
  - Fix type in python options in 'HLT' mode.
 
