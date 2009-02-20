@@ -5,6 +5,7 @@ Purpose: LHCb reconstruction program
 
 ! 2009-02-20 - Marco Cattaneo
  - Enable FSR writing
+ - Update references accordingly, and for MuonPID monitoring changes
 
 ! 2009-02-19 - Marco Cattaneo
  - Remove OT expert monitoring: OTTimes no longer made in Brunel, so pointless
