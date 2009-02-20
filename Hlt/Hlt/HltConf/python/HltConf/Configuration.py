@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.44 2009-02-18 18:17:24 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.45 2009-02-20 10:39:35 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -122,13 +122,17 @@ class HltConf(LHCbConfigurableUser):
         ## there are too many implicit assumptions in this action...
         ## add a line for 'not lumi only' 
         ## -- note: before the 'global' otherwise lumi set global, and we have lumi AND global set...
-        Line('IgnoringLumi', HLT = "HLT_PASSIGNORING('Hlt1LumiDecision')" )
+        print hlt1Lines()
+        lumi = [ "'" + i.name() +"'"  for i in hlt1Lines() if i.name().find('Lumi') != -1 ]
+        if lumi: 
+            Line('IgnoringLumi', HLT = "HLT_PASSIGNORING(" + ','.join(lumi) + ")" )
+            Line('Lumi', HLT = " | ".join([ "HLT_PASS('" + i + "')" for i in lumi ]))
         ## finally, add the Hlt1Global line...
         Line('Global', HLT = 'HLT_DECISION' )
         activeLines = self.getProp('ActiveHlt1Lines') 
         lines = [ i for i in hlt1Lines() if ( not activeLines or i.name() in activeLines ) ]
-        log.info( 'List of configured Hlt1Lines : ' + str(hlt1Lines()) )
-        log.info( 'List of Hlt1Lines to be added to Hlt1 : ' + str(lines) )
+        print '# List of configured Hlt1Lines : ' + str(hlt1Lines()) 
+        print '# List of Hlt1Lines to be added to Hlt1 : ' + str(lines) 
         Sequence('Hlt1').Members = [ i.sequencer() for i in lines ] # note : should verify order (?) -- global should be last hlt1line! 
         ## and tell the monitoring what it should expect..
         HltGlobalMonitor().Hlt1Decisions = [ i.decision() for i in lines ]

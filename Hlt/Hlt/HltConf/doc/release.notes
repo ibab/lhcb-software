@@ -1,13 +1,15 @@
-! $Id: release.notes,v 1.148 2009-02-19 18:16:43 depaula Exp $ 
+! $Id: release.notes,v 1.149 2009-02-20 10:39:36 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2009-02-20 - Gerhard Raven
+ - adapt lumi event stripper to new lumi logic
+ - fix CVS merges in lumi
 
 ! 2009-02-19 - Leandro de Paula
  - Added a filter (MuChi2) for DiMuon Lines
-=======
 
 ! 2009-02-19 - Antonio Perez-Calero
  - Added a new lifetime unbiased line to muon+track as a trigger for JPsi's
