@@ -4,8 +4,10 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+!========================== CaloDAQ v4r10 2009-02-20 =========================
 ! 2009-02-20 - Olivier Deschamps
-  - CaloDigitFromRaw : bug fix when both ADC and Digits are requested to be stored (thanks to Giulia for pointing the bug)
+  - CaloDigitFromRaw : bug fix when both ADC and Digits are requested to be stored
+    (thanks to Giulia for pointing the bug)
 
 !========================== CaloDAQ v4r9 2009-01-08 ==========================
 ! 2008-12-04 - Olivier Deschamps
