@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.55 2009-02-03 14:41:32 cattanem Exp $
+! $Id: release.notes,v 1.56 2009-02-20 12:23:31 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloAssociators
 ! =============================================================================
@@ -6,6 +6,7 @@
 !               Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+!===================== CaloAssociators v6r7 2009-02-20 ========================
 ! 2009-02-03 - Marco Cattaneo
  - Remove obsolete file options/BooleRelations.opts, now in Boole Configurable
 
