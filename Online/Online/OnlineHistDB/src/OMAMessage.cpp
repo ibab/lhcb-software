@@ -1,4 +1,4 @@
-// $Id: OMAMessage.cpp,v 1.4 2009-02-19 19:22:33 ggiacomo Exp $
+// $Id: OMAMessage.cpp,v 1.5 2009-02-20 15:12:08 ggiacomo Exp $
 #include <time.h>
 #include "OnlineHistDB/OMAMessage.h"
 using namespace std;
@@ -198,9 +198,12 @@ char * OMAMessage::humanTime() {
 }
 
 void OMAMessage::dump(std::ostream *out) {
+  *out << "----------------------------------------------------------------------"<<std::endl;
   *out << "********     "<<humanTime();
-  *out << levelString() <<" from analysis "<<m_ananame<<std::endl;
-  *out << "   on saveset "<<m_saveSet<<std::endl;
+  *out << levelString() <<" from analysis Task "<<m_anaTaskName<<"  in analysis "<< m_ananame <<std::endl;
+  if(!m_histo.empty())
+    *out << "      on histogram " << m_histo <<std::endl;
+  *out <<   "      from saveset "<< m_saveSet<<std::endl;
   *out << m_msgtext<<std::endl;
   *out << "----------------------------------------------------------------------"<<std::endl<<std::endl;
 
