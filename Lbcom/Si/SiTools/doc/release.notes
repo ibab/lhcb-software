@@ -2,13 +2,15 @@ Package         : Si/SiTools
 Package manager : Matt Needham
 !------------------------------------------------------------------------------
 
-! 2009-01-27 M Needham Make default not to apply atomic binding 
-             in SiGeantDepositedCharge
+!============================ SiTools v1r6 2009-02-20 =========================
+! 2009-01-27 M Needham
+ - Make default not to apply atomic binding in SiGeantDepositedCharge
 
 ! 2009-01-24 M Needham
  - Add flag to turn on/off atomic binding smearing in SiGeantDepositedCharge
 
-! 2009-01-16 Fixes for gcc 4.3
+! 2009-01-16 M Needham
+ - Fixes for gcc 4.3
 
 ! 2009-01-15 M Needham 
  - Add SiZuriFunction [second order RC-CR shaper function]
