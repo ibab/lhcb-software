@@ -8,9 +8,9 @@
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
-GlobalOR                                                    SUCCESS Number of counters : 1
+TightD02KK_PiPiForB2D0K                                     SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"Passed"                                        |       100 |          7 |(  7.00000 +- 2.55147  )%|   -------   |   -------   |
+ |*"#accept"                                       |       100 |          7 |(  7.00000 +- 2.55147  )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0)
 </text></argument>
 </extension>
