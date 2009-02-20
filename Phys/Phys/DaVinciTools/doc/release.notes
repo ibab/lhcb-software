@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.405 2009-02-18 13:06:26 jpalac Exp $
+! $Id: release.notes,v 1.406 2009-02-20 14:49:49 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+!========================== DaVinciTools v18r2 2009-02-20 ===================
 
 ! 2009-02-18 - Juan PALACIOS
  - src/CombineParticles.cpp
