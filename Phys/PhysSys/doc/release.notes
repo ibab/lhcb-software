@@ -3,18 +3,22 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
-</PRE><H1><A NAME=v8r1>2009-02-?? Phys v8r1 </A></H1><PRE>
+</PRE><H1><A NAME=v8r1>2009-02-20 Phys v8r1 </A></H1><PRE>
 
 ###############################################################################
 #                                  PHYS v8r1                                  #
 ###############################################################################
 
-! 2009-02-16 - Chris Jones
- - Add Rich/DstCalibSel which contains RICH Dstar selection code
+ - Based on LHCb v26r2 and Gaudi v20r4
 
-! 2009-02-12 - Chris Jones
- - Add package Rich/RichPIDQC that produces PID Monitoring and calibration
-   plots for the RICH using various (RICH)PID-free selections.
+  Highlights:
+
+  * PhysConf now handles MuonID re-doing for DC06 data
+  * New handling of related PVs, now merged with PV-refitting.
+  * Bug-fix to CombineParticles wrong related PV bug
+  * Bug fixes to TrgVertexFitter
+  * New package Rich/DstCalibSel, containing RICH Dstar selection code
+  * New package Rich/DstCalibSel, containing RICH Dstar selection code
 
 </PRE><H1><A NAME=v8r0>2009-01-15 Phys v8r0 </A></H1><PRE>
 
