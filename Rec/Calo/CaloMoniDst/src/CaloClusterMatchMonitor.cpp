@@ -1,8 +1,11 @@
-// $Id: CaloClusterMatchMonitor.cpp,v 1.7 2008-09-09 15:37:23 odescham Exp $
+// $Id: CaloClusterMatchMonitor.cpp,v 1.8 2009-02-20 18:03:24 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2008/09/09 15:37:23  odescham
+// review
+//
 // Revision 1.6  2007/07/25 19:49:12  odescham
 // major release : see doc
 //
@@ -118,17 +121,18 @@ StatusCode CaloClusterMatchMonitor::execute()
   if ( !produceHistos() ) return StatusCode::SUCCESS;
 
 // check relations
+  if ( inputs().empty() ) return Error( "No input data are specified" );
+  if( !exist<Table>( inputData() ) ){
+    debug() << "No Table container found at " << inputData() << endreq;
+    return StatusCode::SUCCESS;
+  }  
   Table *table = get<Table>( inputData() );
-  if ( 0 == table ) return StatusCode::SUCCESS;
 
 // total number of links
   hFill1( "1", log10( table->relations().size() + 1. ) );
-  if ( inputs().empty() ) return Error( "No input data are specified" );
-
 // loop over all input constainers
-  for( std::vector<std::string>::const_iterator input = inputs().begin();
-        inputs().end() != input; ++input )
-  { Clusters* clusters = get<Clusters>( *input );
+  for( std::vector<std::string>::const_iterator input = inputs().begin();inputs().end() != input; ++input ){
+    Clusters* clusters = get<Clusters>( *input );
     if ( 0 == clusters ) return StatusCode::SUCCESS;
     // loop over all clusters
     for ( Clusters::const_iterator cluster = clusters->begin();

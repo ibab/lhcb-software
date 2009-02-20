@@ -1,4 +1,4 @@
-// $Id: CaloPi0Checker.cpp,v 1.3 2009-01-20 15:49:30 cattanem Exp $
+// $Id: CaloPi0Checker.cpp,v 1.4 2009-02-20 18:03:24 odescham Exp $
 
 // ============================================================================
 // Include files
@@ -123,8 +123,8 @@ DECLARE_ALGORITHM_FACTORY( CaloPi0Checker );
 // ============================================================================
 // standard execution method
 // ============================================================================
-StatusCode CaloPi0Checker::execute()
-{ typedef const LHCb::CaloHypo            Photon;
+StatusCode CaloPi0Checker::execute(){ 
+  typedef const LHCb::CaloHypo            Photon;
   typedef const LHCb::CaloHypo::Container Hypos;
   typedef std::vector<const Photon*>      Photons;
   typedef LHCb::CaloHypo::Clusters        Clusters;
@@ -139,63 +139,59 @@ StatusCode CaloPi0Checker::execute()
   using namespace LHCb::ClusterFunctors;
 
   if ( inputs().empty() ) return Error( "No input data are specified" );
-
+  if ( !exist<Table>( inputData() ))return StatusCode::SUCCESS;
+  const Table *table = get<Table>( inputData() );
   Photons photons;
-  for( std::vector<std::string>::const_iterator input = inputs().begin();
-       inputs().end() != input; ++input )
-  { const Hypos *hypos = get<Hypos> ( *input );
-    if ( 0 == hypos ) return StatusCode::FAILURE;
+  for( std::vector<std::string>::const_iterator input = inputs().begin();inputs().end() != input; ++input ){    
+    if ( !exist<Hypos> ( *input ) )continue;
+    const Hypos *hypos = get<Hypos> ( *input );
     photons.insert( photons.end(), hypos->begin(), hypos->end() );
   }
-
-  const Table *table = get<Table>( inputData() );
-  if ( 0 == table ) return Error( "Relation Table points to NULL!" );
-
-// loop over the first photon
-  for( photon g1 = photons.begin(); photons.end() != g1; ++g1 )
-  { Photon *photon1 = *g1;
+  
+  
+  // loop over the first photon
+  for( photon g1 = photons.begin(); photons.end() != g1; ++g1 ){
+    Photon *photon1 = *g1;
     if ( 0 == photon1 ) continue;
     LHCb::CaloMomentum momentum1( photon1 );
-
-// get Ecal cluster
+    
+    // get Ecal cluster
     const Clusters &clusters1 = photon1->clusters();
     if ( clusters1.empty() ) continue;
     cluster cluster1 = ( 1 == clusters1.size() ) ? clusters1.begin() :
       std::find_if( clusters1.begin(), clusters1.end(), m_calo );
     if ( clusters1.end() == cluster1 ) continue;
-// get all MCtruth information for this cluster
+    // get all MCtruth information for this cluster
     const float cut1 = (*cluster1)->e() * m_cut;
     const Range range1 = table->relations( *cluster1, cut1, true );
-
-// loop over the second photon
+    
+    // loop over the second photon
     for( photon g2 = g1 + 1; photons.end() != g2; ++g2 )
     { Photon *photon2 = *g2;
       if ( 0 == photon2 ) continue;
       LHCb::CaloMomentum momentum2( photon2 );
-
-// get Ecal cluster
+      
+      // get Ecal cluster
       const Clusters &clusters2 = photon2->clusters();
       if ( clusters2.empty() ) continue;
       cluster cluster2 = ( 1 == clusters2.size() ) ? clusters2.begin() :
         std::find_if( clusters2.begin(), clusters2.end(), m_calo );
       if ( clusters2.end() == cluster2 ) continue;
-// get all MCtruth information for this cluster
+      // get all MCtruth information for this cluster
       const float cut2 = (*cluster2)->e() * m_cut;
       const Range range2 = table->relations( *cluster2, cut2, true );
 
-// double loop for search the common ancestor
+      // double loop for search the common ancestor
       LHCb::MCParticle *pi0 = 0;
-      for( Range::iterator mc1 = range1.begin();
-           ( 0 == pi0 ) && ( range1.end() != mc1 ); ++mc1 )
-      { LHCb::MCParticle *mcp1 = mc1->to();
+      for( Range::iterator mc1 = range1.begin();( 0 == pi0 ) && ( range1.end() != mc1 ); ++mc1 ){
+        LHCb::MCParticle *mcp1 = mc1->to();
         if ( 0 == mcp1 ) continue;
-        for ( Range::iterator mc2 = range2.begin();
-              ( 0 == pi0 ) && ( range2.end() != mc2 ); ++mc2 )
-        { if ( mc1->to() != mc2->to() ) continue; // common ancestor?
+        for ( Range::iterator mc2 = range2.begin(); ( 0 == pi0 ) && ( range2.end() != mc2 ); ++mc2 ){
+          if ( mc1->to() != mc2->to() ) continue; // common ancestor?
           if ( m_pi0ID == mc1->to()->particleID() ) pi0 = mc1->to();
         } // end of second MC loop
       } // end of first MC loop
-
+      
       const double mass = (momentum1.momentum()+momentum2.momentum()).mass();
       hFill1( "1", mass/Gaudi::Units::GeV );
       if ( 0 == pi0 ) continue;

@@ -1,8 +1,11 @@
-// $Id: CaloClusterChecker.cpp,v 1.2 2008-09-09 15:37:23 odescham Exp $
+// $Id: CaloClusterChecker.cpp,v 1.3 2009-02-20 18:03:24 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2008/09/09 15:37:23  odescham
+// review
+//
 // Revision 1.1  2007/07/25 19:49:12  odescham
 // major release : see doc
 //
@@ -117,23 +120,22 @@ StatusCode CaloClusterChecker::execute()
   if ( !produceHistos() ) return StatusCode::SUCCESS;
 
 // get the relation table
+  if( !exist<Table> ( inputData() ))return StatusCode::SUCCESS;
   Table *table = get<Table> ( inputData() );
-  if ( 0 == table ) return StatusCode::FAILURE;
-
-// total number of links
-  hFill1( "1", log10( table->relations().size() + 1. ) );
+  
   if ( inputs().empty() ) return Error( "No input data are specified" );
-
-// loop over all input constainers 
+  // total number of links
+  hFill1( "1", log10( table->relations().size() + 1. ) );
+  // loop over all input constainers 
   for( std::vector<std::string>::const_iterator input = inputs().begin();
         inputs().end() != input; ++input )
   { Clusters* clusters = get<Clusters>( *input );
     if ( 0 == clusters ) return StatusCode::FAILURE;
-// loop over clusters
+    // loop over clusters
     for( Clusters::const_iterator cluster = clusters->begin();
           clusters->end() != cluster ; ++cluster )
     { const Range range = table->relations( *cluster );
-// number of relations per cluster
+    // number of relations per cluster
       hFill1( "2", range.size() );
       if ( range.empty() ) continue;
 // cluster energy

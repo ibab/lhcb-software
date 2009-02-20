@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.29 2009-02-20 14:24:35 cattanem Exp $ 
+! $Id: release.notes,v 1.30 2009-02-20 18:03:24 odescham Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
+
+
+! 2009-02-20 - Olivier Deschamps 
+ - Clean monitoring algorithm
+ - add protection against missing input here and there
+ - new options : CaloDQ.opts : selection of relevant monitoring histo for Data Quality
+
 
 !========================== CaloMoniDst v3r4 2009-02-20 =======================
 ! 2009-01-20 - Marco Cattaneo

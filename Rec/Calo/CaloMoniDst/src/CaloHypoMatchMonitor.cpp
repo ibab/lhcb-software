@@ -1,8 +1,11 @@
-// $Id: CaloHypoMatchMonitor.cpp,v 1.6 2008-09-09 15:37:24 odescham Exp $
+// $Id: CaloHypoMatchMonitor.cpp,v 1.7 2009-02-20 18:03:24 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2008/09/09 15:37:24  odescham
+// review
+//
 // Revision 1.5  2007/07/25 19:49:12  odescham
 // major release : see doc
 //
@@ -112,19 +115,21 @@ StatusCode CaloHypoMatchMonitor::execute()
 
   if ( !produceHistos() ) return StatusCode::SUCCESS;
 
-// check relations
+
+  if ( inputs().empty() ) return Error( "No input data are specified" );
+  // check relations
+  if( !exist<Table>( inputData() ) ){
+    debug() << "No Table container found at " << inputData() << endreq;
+    return StatusCode::SUCCESS;
+  }  
   Table *table = get<Table>( inputData() );
-  if ( 0 == table ) return StatusCode::SUCCESS;
+
 
 // logarithm of ( total number of links + 1 )
   hFill1( "1", log10( table-> inverse()->relations().size() + 1. ) );
-
-  if ( inputs().empty() ) return Error( "No input data are specified" );
-
 // loop over all containers
-  for( std::vector<std::string>::const_iterator input = inputs().begin();
-       inputs().end() != input; ++input )
-  { Hypos* hypos = get<Hypos>( *input );
+  for( std::vector<std::string>::const_iterator input = inputs().begin();inputs().end() != input; ++input ){
+    Hypos* hypos = get<Hypos>( *input );
     if ( 0 == hypos ) return StatusCode::SUCCESS;
 // loop over all hypos
     for( Hypos::const_iterator hypo = hypos->begin();

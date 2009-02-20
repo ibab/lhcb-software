@@ -1,6 +1,6 @@
-// $Id: CaloHypoMonitor.cpp,v 1.8 2008-09-22 00:59:56 odescham Exp $
+// $Id: CaloHypoMonitor.cpp,v 1.9 2009-02-20 18:03:24 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -68,6 +68,7 @@ public:
     hBook1(  "8", "Spd/Hypo      " + inputData(),  m_spdMin,  m_spdMax , m_spdBin  );
     hBook1(  "9", "Prs/Hypo      " + inputData(),  m_prsMin,  m_prsMax , m_prsBin  );
     hBook2( "10", "Hypo barycenter position x vs y   " + inputData(),  m_xMin, m_xMax, m_xBin, m_yMin, m_yMax, m_yBin);
+    hBook2( "11", "Energy-weighted hypo barycenter position x vs y " + inputData(),m_xMin,m_xMax, m_xBin, m_yMin, m_yMax, m_yBin);
     return StatusCode::SUCCESS;
   }
   virtual StatusCode execute();
@@ -121,27 +122,31 @@ DECLARE_ALGORITHM_FACTORY( CaloHypoMonitor );
 // ============================================================================
 // standard execution method
 // ============================================================================
-StatusCode CaloHypoMonitor::execute()
-{ typedef const LHCb::CaloHypo::Container Hypos;
+StatusCode CaloHypoMonitor::execute(){
 
+  typedef const LHCb::CaloHypo::Container Hypos;
   // produce histos ?
   if ( !produceHistos() ) return StatusCode::SUCCESS;
-
   // get input data
+  if( !exist<Hypos> ( inputData() ) ){
+    debug() << "no hypo container found at " << inputData() << endreq;
+    return StatusCode::SUCCESS ;
+  };
+
   Hypos *hypos = get<Hypos> ( inputData() );
-  if ( 0 == hypos ) return StatusCode::SUCCESS;
-
-
-  if ( hypos -> empty() ) return StatusCode::SUCCESS;
-
+  // check data
+  if ( hypos -> empty() ){
+   debug() << "No hypo found in " << inputData() << endreq;
+   return StatusCode::SUCCESS;
+  }  
+  // get functor
   LHCb::CaloDataFunctor::DigitFromCalo spd( DeCalorimeterLocation::Spd );
   LHCb::CaloDataFunctor::DigitFromCalo prs( DeCalorimeterLocation::Prs );
 
-  long count = 0;
-  for( Hypos::const_iterator hypo = hypos->begin();
-       hypos->end () != hypo ; ++hypo ){ 
-    if ( 0 == *hypo ) continue;
 
+  long count = 0;
+  for( Hypos::const_iterator hypo = hypos->begin(); hypos->end () != hypo ; ++hypo ){ 
+    if ( 0 == *hypo ) continue;
     LHCb::CaloMomentum momentum( *hypo );
     const double e = momentum.e();
     const double et= momentum.pt();
@@ -154,31 +159,29 @@ StatusCode CaloHypoMonitor::execute()
     hFill1( "2", e );
     hFill1( "3", et );
     if( inputData() == "Rec/Calo/MergedPi0s" || inputData() == "Hlt/Calo/MergedPi0s" )hFill1( "4", mass );
-    
-
     const LHCb::CaloHypo::Position *position = (*hypo)->position();
     if ( 0 != position ){
       hFill1( "5", position->x() );
       hFill1( "6", position->y() );
     }
-
     hFill1( "7", (*hypo)->clusters().size() );
-
     const LHCb::CaloHypo::Digits& digits = (*hypo)->digits();
     hFill1( "8",  std::count_if( digits.begin(), digits.end(), spd ) );
     hFill1( "9", std::count_if( digits.begin(), digits.end(), prs ) );
-    if( NULL != position)hFill2( "10", position->x(),position->y());
+    if( NULL != position){
+      hFill2( "10", position->x(),position->y());
+      hFill2( "11", position->x(),position->y(),e);
+    }
     if( (*hypo)->clusters().size() == 1){
       SmartRef<LHCb::CaloCluster> cluster= *((*hypo)->clusters().begin());
       LHCb::CaloCellID seed = (*cluster).seed();      
-      fillCalo2D("11", seed , 1. ,  "Hypo position 2Dview " + inputData() );
-      fillCalo2D("12", seed , e  ,  "Hypo Energy 2Dview " + inputData() );
+      if(doHisto("12"))fillCalo2D("12", seed , 1. ,  "Hypo position 2Dview " + inputData() );
+      if(doHisto("13"))fillCalo2D("13", seed , e  ,  "Hypo Energy 2Dview " + inputData() );
     }
     
   }
   // fill multiplicity histogram
   hFill1( "1", count );
-
   return StatusCode::SUCCESS;
 }
 

@@ -1,4 +1,4 @@
-// $Id: CaloMoniAlg.cpp,v 1.3 2008-09-22 00:59:56 odescham Exp $
+// $Id: CaloMoniAlg.cpp,v 1.4 2009-02-20 18:03:24 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -61,7 +61,9 @@ CaloMoniAlg::CaloMoniAlg( const std::string& name,
   declareProperty( "MassWindowMin", m_massFilterMin=-9999999.);
   declareProperty( "MassWindowMax", m_massFilterMax=+9999999.);
                      
-  declareProperty( "histoList"    , m_histoList);
+  declareProperty( "histoList"           , m_histoList);
+  declareProperty( "removeFromHistoList" , m_removeHisto);
+  
   m_histoList.push_back( "All" );
   StatusCode sc=setProperty( "HistoTopDir", "CaloMoniDst/" );
   sc.isSuccess() ? 

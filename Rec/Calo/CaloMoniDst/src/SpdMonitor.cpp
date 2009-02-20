@@ -197,6 +197,11 @@ StatusCode SpdMonitor::execute()
   
   
 // -------------------------------SPD Standalone Histograms---------------------------------------  
+
+  if( !exist<CaloDigits>( CaloDigitLocation::Spd ) ){
+    debug() << "No Table container found at " << CaloDigitLocation::Spd << endreq;
+    return StatusCode::SUCCESS;
+  }
   CaloDigits* digitsSpd = get<CaloDigits>(CaloDigitLocation::Spd);  
 
   
@@ -213,6 +218,7 @@ StatusCode SpdMonitor::execute()
 
   // Determine which cells have a hit
   for(CaloDigits::iterator idig = digitsSpd->begin() ; digitsSpd->end() !=  idig ; idig++){
+    if ( NULL == *idig )continue;
 	  CaloCellID cell = (*idig)->cellID();
     m_cellHit[cell]=1;
     const CaloNeighbors& neigh = m_detSpd->zsupNeighborCells(cell);    

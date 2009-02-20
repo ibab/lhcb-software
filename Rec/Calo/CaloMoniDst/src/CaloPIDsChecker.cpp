@@ -1,4 +1,4 @@
-// $Id: CaloPIDsChecker.cpp,v 1.4 2008-09-09 15:37:24 odescham Exp $
+// $Id: CaloPIDsChecker.cpp,v 1.5 2009-02-20 18:03:24 odescham Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -183,12 +183,10 @@ StatusCode CaloPIDsChecker::execute()
 
 
 
-// get Tr -> CaloPID relation table 
-  const PIDTable *pidTable = get<PIDTable>( inputData() );
-  if ( 0 == pidTable ) return StatusCode::FAILURE;
-
   if ( inputs().empty() ) return Error( "No input data are specified" );
-
+// get Tr -> CaloPID relation table 
+  if ( !exist<PIDTable>( inputData()))return StatusCode::SUCCESS;
+  const PIDTable *pidTable = get<PIDTable>( inputData() );
   for( std::vector<std::string>::const_iterator input = inputs().begin();
         inputs().end() != input; ++input )
   { Tracks *tracks = get<Tracks>( *input );

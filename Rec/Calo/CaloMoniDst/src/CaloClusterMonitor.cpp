@@ -1,6 +1,6 @@
-// $Id: CaloClusterMonitor.cpp,v 1.8 2008-09-22 13:53:35 odescham Exp $
+// $Id: CaloClusterMonitor.cpp,v 1.9 2009-02-20 18:03:24 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -58,7 +58,8 @@ public:
     hBook1( "5", "Cluster x "        + inputData(), m_xMin, m_xMax , m_xBin);
     hBook1( "6", "Cluster y "        + inputData(), m_yMin, m_yMax , m_yBin );
     hBook2( "7", "Cluster barycenter position x vs y   " + inputData(), m_xMin, m_xMax, m_xBin , m_yMin, m_yMax, m_yBin );
-    hBook1( "10", "Cluster digit used for Energy multiplicity     " + inputData(),  m_sizeMin, m_sizeMax , m_sizeBin );
+    hBook2( "8", "Energy-weighted cluster barycenter position x vs y " + inputData(),m_xMin,m_xMax,m_xBin,m_yMin,m_yMax, m_yBin );
+    hBook1( "9", "Cluster digit used for Energy multiplicity     " + inputData(),  m_sizeMin, m_sizeMax , m_sizeBin );
 
     return StatusCode::SUCCESS;
   }
@@ -103,12 +104,12 @@ StatusCode CaloClusterMonitor::execute()
 
 // get input data
  if( !exist<Clusters>(inputData() )){
-   debug() << "No cluster container found " << endreq;
+   debug() << "No cluster container found at " << inputData() << endreq;
    return StatusCode::SUCCESS;
  }
  
  Clusters* clusters = get<Clusters> ( inputData() );
- if ( 0 == clusters || clusters->empty() ){
+ if ( clusters->empty() ){
    debug() << "No cluster found in " << inputData() << endreq;
    return StatusCode::SUCCESS;
  }
@@ -132,20 +133,19 @@ StatusCode CaloClusterMonitor::execute()
     hFill1( "5", x );
     hFill1( "6", y );
     hFill2( "7", x,y );
-    fillCalo2D("8",  (*cluster)->seed() , 1.,  "Cluster position 2Dview " + inputData() );
-    fillCalo2D("9",  (*cluster)->seed() , e ,  "Cluster Energy 2Dview " + inputData() );
+    hFill2( "8", x,y , e);
     int iuse=0;
     for(std::vector<LHCb::CaloClusterEntry>::iterator ie = (*cluster)->entries().begin();
         ie != (*cluster)->entries().end();ie++){
       if( 0 != (LHCb::CaloDigitStatus::UseForEnergy & (*ie).status()) )iuse++;
     }
-    hFill1( "10", iuse );
+    hFill1( "9", iuse );
+    if(doHisto("10"))fillCalo2D("10",  (*cluster)->seed() , 1.,  "Cluster position 2Dview " + inputData() );
+    if(doHisto("11"))fillCalo2D("11",  (*cluster)->seed() , e ,  "Cluster Energy 2Dview " + inputData() );
     
   }
+  // fill counter
   hFill1( "1", count );
-
-
-
 
   return StatusCode::SUCCESS;
 }

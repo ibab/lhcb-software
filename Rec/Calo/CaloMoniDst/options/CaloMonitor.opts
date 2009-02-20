@@ -6,7 +6,6 @@ MoniCALOSeq.Members += { "GaudiSequencer/CaloDigitMon"
                          ,"SpdMonitor/SpdMon"
 };
 
-
 #include "$CALOMONIDSTOPTS/CaloDigitMonitor.opts"
 #include "$CALOMONIDSTOPTS/CaloClusterMonitor.opts"
 #include "$CALOMONIDSTOPTS/CaloHypoMonitor.opts"

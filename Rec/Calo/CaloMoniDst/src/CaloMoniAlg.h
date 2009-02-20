@@ -119,11 +119,22 @@ protected:
   double m_massFilterMin; 
   double m_massFilterMax;
   std::vector<std::string> m_histoList;
+  std::vector<std::string> m_removeHisto;
   bool doHisto(std::string histo){
+    bool ok = false;
     for( std::vector<std::string>::iterator ih = m_histoList.begin() ; m_histoList.end() != ih ; ih++){
-      if( histo == *ih || "All" == *ih )return true;
+      if( histo == *ih || "All" == *ih ){
+        ok= true;
+        break;
+      }
     }
-    return false;
+    for( std::vector<std::string>::iterator ih = m_removeHisto.begin() ; m_removeHisto.end() != ih ; ih++){
+      if( histo == *ih){
+        ok=false;
+        break;
+      }
+    }
+    return ok;
   }
   
 
