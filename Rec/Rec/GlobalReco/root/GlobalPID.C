@@ -11,14 +11,13 @@
 
 GlobalPID::PIDType GlobalPID::getMcType() const
 {
-  //std::cout << "MCtype = " << MCParticleType << std::endl;
-  if      ( 0    == MCParticleType ) { return NoMCInfo; }
+  if      ( 0    == MCParticleType                            ) { return NoMCInfo; }
   else if ( 11   == MCParticleType || 11    == MCParticleType ) { return Electron; }
-  else if ( 13   == MCParticleType || -13   == MCParticleType ) { return Muon; }
-  else if ( 211  == MCParticleType || -211  == MCParticleType ) { return Pion; }
-  else if ( 321  == MCParticleType || -321  == MCParticleType ) { return Kaon; }
-  else if ( 2212 == MCParticleType || -2212 == MCParticleType ) { return Proton; }
-  else    { return UnknownParticle; }
+  else if ( 13   == MCParticleType || -13   == MCParticleType ) { return Muon;     }
+  else if ( 211  == MCParticleType || -211  == MCParticleType ) { return Pion;     }
+  else if ( 321  == MCParticleType || -321  == MCParticleType ) { return Kaon;     }
+  else if ( 2212 == MCParticleType || -2212 == MCParticleType ) { return Proton;   }
+  else                                                   { return UnknownParticle; }
 }
 
 bool GlobalPID::passPIDDetSelection() const
@@ -32,7 +31,8 @@ bool GlobalPID::passPIDDetSelection() const
   if ( config.mustHaveBREM    && !hasBremInfo()    ) return false;
   if ( config.mustHavePRS     && !hasPrsInfo()     ) return false;
   if ( config.mustHaveECALorPRS && !hasPrsInfo() && !hasEcalInfo() ) return false;
-  if ( config.mustHaveECALorPRSorRICH && !hasRichInfo() && !hasPrsInfo() && !hasEcalInfo() ) return false;
+  if ( config.mustHaveECALorPRSorRICH && !hasRichInfo() && 
+       !hasPrsInfo() && !hasEcalInfo() ) return false;
   if ( config.mustHaveMUON    && !hasMuonInfo()    ) return false;
   return true;
 }
