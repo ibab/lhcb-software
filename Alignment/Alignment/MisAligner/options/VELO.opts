@@ -1,0 +1,2 @@
+/dd/Structure/LHCb/BeforeMagnetRegion/Velo/Velo[Left,Right] shift=[GAUSS(0.0,4.0),GAUSS(0.0,0.0),GAUSS(0.0,0.0)] rotate=[GAUSS(0.0,0.01),GAUSS(0.0,0.01),GAUSS(0.0,0.01)]
+/dd/Structure/LHCb/BeforeMagnetRegion/Velo/Module[00,40] shift=[GAUSS(0.0,4.0),GAUSS(0.0,0.0),GAUSS(0.0,0.0)] rotate=[GAUSS(0.0,0.01),GAUSS(0.0,0.01),GAUSS(0.0,0.01)]

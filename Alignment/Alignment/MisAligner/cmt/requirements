@@ -1,0 +1,77 @@
+#============================================================================
+# Created    : 2008-07-18
+# Maintainer : Johan Blouw
+#============================================================================
+package 	MisAligner
+version 	v1r0
+
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches 	src cmt doc options
+include_path	none
+
+#-- CMT and GaudiPolicy
+use GaudiPolicy v*
+
+
+
+#-- External libraries now taken from LCG, version defined by GaudiEnv
+use   GSL             v*     LCG_Interfaces
+use RELAX 		v* LCG_Interfaces          -no_auto_imports
+use Python             v*    LCG_Interfaces -no_auto_imports
+use HepMC              v*    LCG_Interfaces -no_auto_imports
+
+# From GAUDI project
+use GaudiSvc           v*                   -no_auto_imports
+use GaudiKernel        v*
+use GaudiPoolDb        v*                   -no_auto_imports
+use GaudiPython        v*                   -no_auto_imports
+use GaudiAlg		v*			-no_auto_imports
+
+# Databases
+use DDDB               v*  Det            -no_auto_imports
+use FieldMap           v*                 -no_auto_imports
+
+
+#-- Lbcom packages (from LBCOM_v5r8)
+use LbcomSys            v*       -no_auto_imports
+
+#-- LHCb libraries (from LHCB_v21r11)
+use LHCbSys             v*        -no_auto_imports
+use   STDet           v*     Det
+use   OTDet           v*     Det
+use   VeloDet         v*     Det
+use   MuonDet         v*     Det
+
+
+# The whole REC project
+use RecSys             v*                   -no_auto_imports
+
+# From the Alignment project
+use AlignTrTools	v*	Alignment	-no_auto_imports
+
+#============================================================================
+# for the application
+#============================================================================
+apply_pattern application_path
+#============================================================================
+# Component library building rule
+#============================================================================
+library         MisAlignAlg      ../src/*.cpp -import=AIDA
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library      library=MisAlignAlg
+
+
+#===== build Misaligner =========================
+application Misaligner $(GAUDICONFROOT)/src/GaudiMain.cpp
+# ========================= set macros ============================
+macro Misaligner_linkopts	"$(application_linkopts)"
+
+apply_pattern application_path
+
+# Set the default path for Escher options.
+set Misaligner ${MISALIGNERROOT}/options

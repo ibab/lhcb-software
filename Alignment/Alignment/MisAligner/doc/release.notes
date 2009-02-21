@@ -1,0 +1,13 @@
+<PRE>
+Package: AlignmentSys
+Package Coordinator: Johan Blouw/Manuel Schiller
+Purpose: LHCb Alignment packages.
+	 This package contains an executable which can be used to generate
+	 misaligned geometries based on the LHCb geometry database.
+	 Misalignment paramaters will be stored in xml files which then have to
+	 uploaded to the conditions data base by hand, using the tools in Det/ConddbUI
+
+</PRE><H1><A NAME=v1r0>2009-02-21 MisAligner v1r0</A></H1><PRE>
+- J. Blouw/M. Schiller, first release
+</PRE>
+

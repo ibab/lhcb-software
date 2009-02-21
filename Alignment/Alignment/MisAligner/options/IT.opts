@@ -1,0 +1,7 @@
+/dd/Structure/LHCb/AfterMagnetRegion/T/IT/Station1/.*/Layer[V]     shift=[GAUSS(0.0, 1.0),0.0,0.0] rotate=[GAUSS(0.0, 0.01), GAUSS(0.0, 0.01), GAUSS(0.0, 0.01)]
+/dd/Structure/LHCb/AfterMagnetRegion/T/IT/Station1/.*/Layer[X][2]  shift=[GAUSS(0.0, 1.0),0.0,0.0] rotate=[GAUSS(0.0, 0.01), GAUSS(0.0, 0.01), GAUSS(0.0, 0.01)]
+/dd/Structure/LHCb/AfterMagnetRegion/T/IT/Station2/.*/Layer[X][12] shift=[GAUSS(0.0, 1.0),0.0,0.0] rotate=[GAUSS(0.0, 0.01), GAUSS(0.0, 0.01), GAUSS(0.0, 0.01)]
+/dd/Structure/LHCb/AfterMagnetRegion/T/IT/Station2/.*/Layer[UV]    shift=[GAUSS(0.0, 1.0),0.0,0.0] rotate=[GAUSS(0.0, 0.01), GAUSS(0.0, 0.01), GAUSS(0.0, 0.01)]
+/dd/Structure/LHCb/AfterMagnetRegion/T/IT/Station3/.*/Layer[X][1]  shift=[GAUSS(0.0, 1.0),0.0,0.0] rotate=[GAUSS(0.0, 0.01), GAUSS(0.0, 0.01), GAUSS(0.0, 0.01)]
+/dd/Structure/LHCb/AfterMagnetRegion/T/IT/Station3/.*/Layer[U]     shift=[GAUSS(0.0, 1.0),0.0,0.0] rotate=[GAUSS(0.0, 0.01), GAUSS(0.0, 0.01), GAUSS(0.0, 0.01)]
+#/dd/Structure/LHCb/AfterMagnetRegion/T/IT/.* shift=[GAUSS(0.0, 1.0),0.0,0.0] rotate=[GAUSS(0.0, 0.001), GAUSS(0.0, 0.001), GAUSS(0.0, 0.001)]
