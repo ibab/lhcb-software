@@ -5,6 +5,35 @@ Purpose: LHCb Alignment packages.
          This project contains 2 different alignment algorithms
          used by the Gaudi application Escher to align the LHCb detector 
          components.
+
+</PRE><H1><A NAME=v4r0>2009-02-21 AlignmentSys v4r0</A></H1><PRE>
+- General comments/remarks
+	. introduced configurables for the following packages
+		- Escher
+		- TAlignment
+		- AlignTrTools
+	. some of the already existing python scripts have been moved around a bit
+	  (e.g. from TAlignment/python to TAlignment/python/TAlignment, or TAlignment/options)
+	. in cae of TAlignment, the linker library has been removed
+	. The escher configurable is more or less a cc of the Brunel one,
+	  with adaptations, changes etc where deemed necessary.
+	. Note: for this release, only the Kalman sequence & the Millepede sequence for OT layers
+          has been configured & tested. Rest will follow soon...
+ 	. I noticed a small problem in the Millepede sequence, which will be resolved later as well.
+	  - here, the piece of code which is used to convert the alignment constants determined by Millepede 
+	    into constants in the LHCb coordinate system seems to have a bug... certain conditions are not found.
+	. a new package has been introduced, called "MisAligner". It produces an executable which can be used to 
+	  easily generate misaligned xml files (which then have to be manually uploaded into your favourite conditions
+	  databasse. 
+
+- Packages updated:
+		AlignmentSys		v4r0
+		Escher			v3r0
+		TAlignment		v4r0
+		AlignTrTools		v4r0
+		MisAligner		v1r0
+		AlignmentTools		v3r0
+	
 </PRE><H1><A NAME=v3r1>2008-06-17 AlignmentSys v3r1</A></H1><PRE>
 - Packages update:
 		AlignmentInterfaces	v2r8
