@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-02-21 - Chris Jones
+ - Add a (temporary) fix to the RICH reconstruction for DC09 processing that
+   was too late for the REC release.
+
 ! 2009-02-20 - Marco Cattaneo
  - Enable FSR writing
  - Update references accordingly, and for MuonPID monitoring changes

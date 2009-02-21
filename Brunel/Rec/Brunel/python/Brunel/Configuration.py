@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.61 2009-02-20 14:45:13 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.62 2009-02-21 14:32:39 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -535,6 +535,14 @@ class Brunel(LHCbConfigurableUser):
     def __apply_configuration__(self):
         
         GaudiKernel.ProcessJobOptions.PrintOff()
+        # ===============================================================================
+        # CRJ : Temporary Fix. Should be in RichRecSys in REC but missed the deadline :(
+        #     : To be removed next release ...
+        from RichRecSys.PixelCreator import RichPixelCreatorConfig
+        RichPixelCreatorConfig().setProp("PixelCleaning","None")
+        from RichRecSys.RichGlobalPID_ import RichGlobalPIDConfig
+        RichGlobalPIDConfig().setProp("MaxUsedPixels",12000)
+        # ===============================================================================
         self.setOtherProps(RecSysConf(),["SpecialData","RecoSequence","Context","OutputType"])
         self.defineGeometry()
         self.defineEvents()
