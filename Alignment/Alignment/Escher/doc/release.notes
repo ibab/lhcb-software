@@ -4,6 +4,13 @@ Package Coordinator : Johan Blouw
 Purpose : Gaudi application used to perform 
           alignment of the LHCb detector components
 
+</PRE><H1><A NAME=v3r0>2009-02-21 Escher v3r0</A></H1><PRE>
+- 21/02/2009: Johan Blouw
+  . pythonized Escher
+  - added python/Escher/Configuration.py
+    Note: configured only OT Layer sequence for Millepede & Kalman
+
+
 </PRE><H1><A NAME=v2r4>2008-06-18 Escher v2r4</A></H1><PRE>
 - 18/06/2008: Johan Blouw, tagged the package v2r4
 

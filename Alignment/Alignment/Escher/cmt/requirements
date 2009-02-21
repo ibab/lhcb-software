@@ -1,5 +1,5 @@
 package Escher
-version v2r4
+version v3r0
 
 branches doc cmt job options
 
@@ -27,6 +27,10 @@ use XmlDDDB             v*	Det  -no_auto_imports
 use XmlConditions       v*	Det  -no_auto_imports
 use FieldMap		v*           -no_auto_imports
 use ParamFiles          v*           -no_auto_imports
+
+# Packages needed to resolve external dependencies at run time
+use Python             v*    LCG_Interfaces -no_auto_imports
+use HepMC              v*    LCG_Interfaces -no_auto_imports
 
 #-- LHCb libraries (from LHCB_v21r11)
 use LHCbSys             v*        -no_auto_imports
@@ -56,3 +60,9 @@ apply_pattern application_path
 
 # Set the default path for Escher options.
 set ESCHEROPTS ${ESCHERROOT}/options
+
+# ========================= Install configurable ============================
+apply_pattern install_python_modules
+
+# ==========  Export application name and version to gaudirun.py ============
+apply_pattern GaudiApp

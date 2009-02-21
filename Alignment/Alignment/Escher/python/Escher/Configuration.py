@@ -1,0 +1,307 @@
+## @package Escher
+#  High level configuration tools for Escher
+#  @author Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>
+#  @date   15/08/2008
+
+__version__ = "$Id: Configuration.py,v 1.1 2009-02-21 23:46:21 jblouw Exp $"
+__author__  = "Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>"
+
+from Gaudi.Configuration  import *
+import GaudiKernel.ProcessJobOptions
+from Configurables import ( LHCbConfigurableUser, LHCbApp, RecSysConf, TrackSys,
+                            ProcessPhase, GaudiSequencer, DstConf, TAlignment )
+
+## @class Escher
+#  Configurable for Escher application
+#  @author Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>
+#  @date   15/08/2008
+class Escher(LHCbConfigurableUser):
+
+    ## Possible used Configurables
+    __used_configurables__ = [ TAlignment, TrackSys, RecSysConf, LHCbApp, DstConf ]
+
+    ## Default main sequences for real and simulated data
+    DefaultSequence = [   "ProcessPhase/Init"
+			, "ProcessPhase/Reco"
+			, "ProcessPhase/Align" ]
+
+    
+    # Steering options
+    __slots__ = {
+        "EvtMax":          -1 # Maximum number of events to process
+       ,"SkipEvents":   0     # events to skip
+       ,"PrintFreq":    300     # The frequency at which to print event numbers
+       ,"DataType"   : "2008" # Data type, can be ['DC06','2008']
+       ,"WithMC":       False # set to True to use MC truth
+       ,"Simulation":   False # set to True to use SimCond
+       ,"InputType":    "DST" # or "DIGI" or "ETC" or "RDST" or "DST"
+       ,"OutputType":   "NONE" # or "RDST" or "NONE". Also forwarded to RecSys
+       ,"PackedOutput": True  # Flag whether or not to use packed containers
+       ,"NoWarnings":   False # suppress all messages with MSG::WARNING or below 
+       ,"TrackContainer" :   "Long" # Tracktype to be used for alignment (Long, Seed, VeloTT...)
+       ,"Detectors" :   ["VELO", "TT", "IT", "OT", "MUON", "Tr", "Vertex"] # detectors to be aligned
+       ,"AlignmentLevel" : "layers" # level of alignment, stations, layers, quarters, modules, sensors...
+       ,"DatasetName":  ""    # string used to build file names
+       ,"DDDBtag":      "" # Tag for DDDB. Default as set in DDDBConf for DataType
+       ,"CondDBtag":    "" # Tag for CondDB. Default as set in DDDBConf for DataType
+       ,"UseOracle": False  # if False, use SQLDDDB instead
+       ,"MainSequence": []    # The default main sequence, see self.DefaultSequence
+       ,"InitSequence": ["Reproc", "Escher", "Calo"] # default init sequence
+       ,"AlignSequence": []
+        # Following are options forwarded to RecSys
+       ,"RecoSequence"   : [] # The Sub-detector reconstruction sequencing. See RecSys for default
+       ,"SpecialData"    : [] # Various special data processing options. See KnownSpecialData for all options
+       ,"Context":     "Offline" # The context within which to run
+       ,"Kalman" :     False # run the kalman filter type alignment
+       ,"Millepede":   False # run the Millepede type alignment
+       ,"OutputLevel" : 3 # 
+        }
+
+
+
+    def defineGeometry(self):
+        # DIGI is always simulation, as is usage of MC truth!
+        if self.getProp( "WithMC" ) or self.getProp( "InputType" ).upper() == 'DIGI':
+            self.setProp( "Simulation", True )
+
+        # Delegate handling to LHCbApp configurable
+        self.setOtherProps(LHCbApp(),["DataType","CondDBtag","DDDBtag","UseOracle","Simulation"])
+
+    def defineEvents(self):
+        # Delegate handling to LHCbApp configurable
+        self.setOtherProps(LHCbApp(),["EvtMax","SkipEvents"])
+
+    def defineOptions(self):
+        log.info("Defining options!")
+
+        inputType = self.getProp( "InputType" ).upper()
+        if inputType not in [ "MDF", "DST", "DIGI", "ETC", "RDST" ]:
+            raise TypeError( "Invalid inputType '%s'"%inputType )
+
+        outputType = self.getProp( "OutputType" ).upper()
+        if outputType not in [ "NONE", "DST", "RDST" ]:
+            raise TypeError( "Invalid outputType '%s'"%outputType )
+
+        self.configureSequences( )
+
+        self.configureInput( inputType )
+
+        self.configureOutput( outputType )
+
+        # ROOT persistency for histograms
+        importOptions('$STDOPTS/RootHist.opts')
+        from Configurables import RootHistCnv__PersSvc
+        RootHistCnv__PersSvc('RootHistCnv').ForceAlphaIds = True
+
+        # Use a default histogram file name if not already set
+        if not hasattr( HistogramPersistencySvc(), "OutputFile" ):
+            histosName   = self.getProp("DatasetName")
+            if (self.evtMax() > 0): histosName += '-' + str(self.evtMax()) + 'ev'
+            histosName += '-histos.root'
+            HistogramPersistencySvc().OutputFile = histosName
+
+    def configureSequences(self):
+        escherSeq = GaudiSequencer("EscherSequencer")
+        ApplicationMgr().TopAlg = [ escherSeq ]
+        mainSeq = self.getProp("MainSequence")
+        if len( mainSeq ) == 0:
+            self.MainSequence = self.DefaultSequence
+        mainSeq = self.MainSequence
+        escherSeq.Members += mainSeq
+        
+        ProcessPhase("Init").DetectorList += self.getProp("InitSequence")
+        ProcessPhase("Init").Context = self.getProp("Context")
+        from Configurables import RecInit, TrackSys, GAlign, Centipede
+        log.info("Setting up alignment sequence")
+        recInit = RecInit( name = "EscherInit",
+                           PrintFreq = self.getProp("PrintFreq"))
+        GaudiSequencer("InitEscherSeq").Members += [ recInit ]
+        if  self.getProp("Millepede") :
+            self.setProp("Kalman", False )
+            log.info("Using Millepede type alignment!")
+            if "VELO" in self.getProp("Detectors") : # generate the proper tracking sequence depending on which detectors one wants to align            
+               TrackSys.TrackPatRecAlgorithms = ["Velo"] 
+               log.info("Aligning VELO")
+            if "OT" in self.getProp("Detectors") or "OT" in self.getProp("Detectors"):
+	       log.info("Aligning OT")
+               TrackSys.TrackPatRecAlgorithms = ["PatSeed"]
+               GaudiSequencer("RecoRICHSeq").Enable = False 
+               GaudiSequencer("RecoVELOSeq").Enable = False
+	       GaudiSequencer("RecoTTSeq").Enable = False
+	       GaudiSequencer("RecoITSeq").Enable = True
+               log.info("Escher: initalizing TAlignment!")
+
+               AlignSequence = ["OT"]
+               ProcessPhase("Align").DetectorList += AlignSequence
+               ta = TAlignment()
+               ta.Method = "Millepede"
+ 	       ta.TrackContainer = self.getProp("TrackContainer")
+	       ta.Detectors =  self.getProp("Detectors")
+               ta.Sequencer = GaudiSequencer("AlignOTSeq")
+        if self.getProp("Kalman") :
+	    self.setProp("Millepede", False )
+	    log.info("Using Kalman style alignment!")
+	    if "VELO" in self.getProp("Detectors"): 
+                  TrackSys.TrackPatRecAlgorithms = ["Velo"] 
+                  log.info("Aligning VELO")
+                  GaudiSequencer("RecoRICHSeq").Enable = False 
+                  GaudiSequencer("RecoVELOSeq").Enable = True
+                  GaudiSequencer("RecoTTSeq").Enable = False
+                  GaudiSequencer("RecoITSeq").Enable = False
+		  log.info("Escher: initalizing TAlignment!")
+		  AlignSequence = ["VELO"]
+		  ProcessPhase("Align").DetectorList += AlignSequence
+		  ta = TAlignment()
+		  ta.Method = "Kalman"
+		  ta.TrackContainer = "LHCb::TrackLocation::Velo"
+		  ta.Detectors = "Velo"
+		  ta.Sequencer = GaudiSequencer("AlignVELOSeq")
+	    if "OT" in self.getProp("Detectors"):
+		  TrackSys.TrackPatRecAlgorithms = ["PatSeed"]
+                  GaudiSequencer("RecoRICHSeq").Enable = False 
+                  GaudiSequencer("RecoVELOSeq").Enable = False
+                  GaudiSequencer("RecoTTSeq").Enable = False
+                  GaudiSequencer("RecoITSeq").Enable = True
+                  log.info("Escher: initalizing TAlignment!")
+                  AlignSequence = ["OT"]
+                  ProcessPhase("Align").DetectorList += AlignSequence
+                  ta = TAlignment()
+                  ta.Method = "Kalman"
+                  ta.TrackContainer = "Rec/Track/Best"
+                  ta.Detectors =  self.getProp("Detectors")
+		  ta.Level = self.getProp("AlignmentLevel")
+                  ta.Sequencer = GaudiSequencer("AlignOTSeq")
+
+
+	
+                  
+		  
+    def configureInput(self, inputType):
+        """
+        Tune initialisation according to input type
+        """
+
+        # POOL Persistency
+        importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
+
+        # By default, Escher only needs to open one input file at a time
+        IODataManager().AgeLimit = 0 
+        if  inputType in [ "DST", "RDST", "ETC" ]:
+           from Configurables import ( TESCheck, EventNodeKiller )
+           InitReprocSeq = GaudiSequencer( "InitReprocSeq" )
+           InitReprocSeq.Members.append( "TESCheck" )
+           TESCheck().Inputs = ["Link/Rec/Track/Best"]
+           # in case above container is not on input (e.g. RDST)
+           TESCheck().Stop = False
+           TESCheck().OutputLevel = ERROR
+           InitReprocSeq.Members.append( "EventNodeKiller" )
+           EventNodeKiller().Nodes = [ "Rec", "Raw", "Link/Rec" ]
+
+        # Read ETC selection results into TES for writing to DST
+        if inputType == "ETC":
+            from Configurables import ReadStripETC
+            GaudiSequencer("InitEscherSeq").Members.append("ReadStripETC/TagReader")
+            ReadStripETC("TagReader").CollectionName = "TagCreator"
+            IODataManager().AgeLimit += 1
+
+        if inputType not in [ "DIGI", "DST" ]:
+            # In case raw data resides in MDF file
+            EventPersistencySvc().CnvServices.append("LHCb::RawDataCnvSvc")
+
+        # Get the event time (for CondDb) from ODIN
+        from Configurables import EventClockSvc
+        EventClockSvc().EventTimeDecoder = "OdinTimeDecoder";
+
+        # Convert Calo 'packed' banks to 'short' banks if needed
+        GaudiSequencer("InitCaloSeq").Members += ["GaudiSequencer/CaloBanksHandler"]
+        importOptions("$CALODAQROOT/options/CaloBankHandler.opts")
+
+
+    def configureOutput(self, dstType):
+        """
+        Set up output stream
+        """
+        if dstType in [ "DST", "RDST" ]:
+            writerName = "DstWriter"
+            packedDST  = self.getProp( "PackedOutput" )
+            # Do not pack DC06 DSTs, for consistency with existing productions
+            if self.getProp("DataType") == "DC06": packedDST = False
+
+            dstWriter = OutputStream( writerName )
+            dstWriter.RequireAlgs += ["Reco"] # Write only if Rec phase completed
+
+            # Set a default output file name if not already defined in the user job options
+            if not hasattr( dstWriter, "Output" ):
+                dstWriter.Output  = "DATAFILE='PFN:" + self.outputName() + "' TYP='POOL_ROOTTREE' OPT='REC'"
+
+            # Define the file content
+            DstConf().Writer     = writerName
+            DstConf().DstType    = dstType
+            DstConf().EnablePack = packedDST
+
+            from Configurables import TrackToDST
+            if dstType == "DST":
+                # Sequence for altering DST content
+                ProcessPhase("Output").DetectorList += [ "DST" ]
+                # Filter Track States to be written
+                trackFilter = TrackToDST()
+            else:
+                # Sequence for altering content of rDST compared to DST
+                ProcessPhase("Output").DetectorList += [ "L0", "DST" ]
+                # Filter Track States to be written
+                trackFilter = TrackToDST("TrackToRDST")
+                trackFilter.veloStates = ["ClosestToBeam"]
+                trackFilter.longStates = ["ClosestToBeam"]
+                trackFilter.TTrackStates = ["FirstMeasurement"]
+                trackFilter.downstreamStates = ["FirstMeasurement"]
+                trackFilter.upstreamStates = ["ClosestToBeam"]
+                
+            GaudiSequencer("OutputDSTSeq").Members += [ trackFilter ]
+
+            if packedDST:
+                # Add the sequence to pack the DST containers
+                packSeq = GaudiSequencer("PackDST")
+                DstConf().PackSequencer = packSeq
+                GaudiSequencer("OutputDSTSeq").Members += [ packSeq ]
+
+        # Always write an ETC if ETC input
+        if self.getProp( "InputType" ).upper() == "ETC":
+            etcWriter = TagCollectionSvc("EvtTupleSvc")
+            ApplicationMgr().ExtSvc.append(etcWriter)
+            ApplicationMgr().OutStream.append("GaudiSequencer/SeqTagWriter")
+            importOptions( "$ESCHEROPTS/DefineETC.opts" )
+            if not hasattr( etcWriter, "Output" ):
+               etcWriter.Output = [ "EVTTAGS2 DATAFILE='" + self.getProp("DatasetName") + "-etc.root' TYP='POOL_ROOTTREE' OPT='RECREATE' " ]
+
+        # Do not print event number at every event (done already by Brunel)
+        EventSelector().PrintFreq = -1;
+        # Modify printout defaults
+        if self.getProp( "NoWarnings" ):
+            importOptions( "$ESCHEROPTS/SuppressWarnings.opts" )
+
+    def outputName(self):
+        """
+        Build a name for the output file, based in input options
+        """
+        outputName = self.getProp("DatasetName")
+        if ( self.evtMax() > 0 ): outputName += '-' + str(self.evtMax()) + 'ev'
+        outputType = self.getProp("OutputType").lower()
+        return outputName + '.' + outputType
+
+    def evtMax(self):
+        return LHCbApp().evtMax()
+
+    ## Apply the configuration
+    def __apply_configuration__(self):
+        
+        GaudiKernel.ProcessJobOptions.PrintOff()
+        GaudiKernel.ProcessJobOptions.PrintOn()
+        log.info("Initializing sequences!")
+        self.setOtherProps(RecSysConf(),["SpecialData","RecoSequence","Context","OutputType"])
+        self.defineGeometry()
+        self.defineEvents()
+        self.defineOptions()
+        log.info( self )
+        log.info( RecSysConf() )
+        log.info( TrackSys() )
+        GaudiKernel.ProcessJobOptions.PrintOff()
