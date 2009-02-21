@@ -6,14 +6,14 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           AlignmentTools
-version           v2r11
+version           v3r0
 
 #============================================================================
 # This template is an example for a standard Algorithm package
 #
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src
+branches          cmt doc src dict
 
 # =========== own includes ====================================================
 include_dirs  $(ALIGNMENTTOOLSROOT)
@@ -27,14 +27,20 @@ use     GaudiSvc        v*
 use     GSL             v*     LCG_Interfaces
 use     AlignmentInterfaces	v* 	Alignment
 
+# ========================= Install configurable ============================
+apply_pattern install_python_modules
+
 #============================================================================
 # Component library building rule
 #============================================================================
 library          AlignmentTools      ../src/*.cpp 
 
+
 #============================================================================
 # define component library link options
 #============================================================================
-apply_pattern linker_library       library=AlignmentTools
+apply_pattern    component_library library=AlignmentTools
+
+#apply_pattern linker_library       library=AlignmentTools
 
 set ALIGNMENTTOOLSOPTS  ${ALIGNMENTTOOLSROOT}/options
