@@ -4,6 +4,14 @@ Package Coordinator : Johan Blouw
 Responsibles : J. Amoraal, J. Blouw, A. Hicheur, L. Nicolas
 Purpose: LHCb Alignment Tools
 
+</PRE><H1><A NAME=v4r0>2009-02-21 AlignTrTools v4r0 </A></H1><PRE>
+
+! 2009-02-21 Johan Blouw
+- added python/TAlignment/Configuration.py
+- removed linker library
+- added options/TAConfig.py to configure TAConfig tool
+- tagged it v4r0 because of pythonization of Escher.
+
 ! 2008-11-11 - Louis Nicolas
 - Bug fix in "unique" in AlignSelTool, AlignSaveTuple and AlignTrackMonitor
 - Re-add HitX/Y/Z in AlignSaveTuple

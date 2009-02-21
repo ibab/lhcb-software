@@ -3,7 +3,7 @@
  *  Implementation file for Millepede configuration tool : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.cpp,v 1.21 2008-07-17 13:54:40 lnicolas Exp $
+ *  $Id: TAConfig.cpp,v 1.22 2009-02-21 22:05:54 jblouw Exp $
  *
  *  @author J. Blouw (johan.blouw@mpi-hd.mpg.de)
  *          M. Deissenroth (marc.deissenroth@physi.uni-heidelberg.de)
@@ -268,7 +268,7 @@ StatusCode TAConfig::CacheDetElements() {
   info() << "Rank = " << m_rank << endreq;
   info() << "Finished initialization!" << endreq;
   info() << "Configuring Millepede..." << endreq;
-  sc = ConfigMillepede();
+  sc = this->ConfigMillepede();
   if ( sc.isFailure() ) {
     error() << "Error configuring Millepede" << endreq;
     return StatusCode::FAILURE;
@@ -672,6 +672,7 @@ void TAConfig::CreateMap( int & r,  IDetectorElement* id, double &m_zmoy ) {
 }
 
 StatusCode TAConfig::ConfigMillepede() {
+  debug() << "Into ConfigMille...(1)" << endreq;
   int rs = m_rank.size();
   int num_objects = m_n_dof * rs;
   m_derGB.resize( m_n_dof * m_DETmap.size(), 0.0);
