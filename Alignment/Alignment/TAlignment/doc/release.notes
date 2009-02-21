@@ -3,6 +3,15 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+</PRE><H1><A NAME=v4r0>2009-02-21 TAlignment v4r0</A></H1><PRE>
+
+! 2009-02-21 Johan Blouw
+ - introduced Configurable
+ - moved option-type python scripts to options subdir
+ - removed the linker library
+ - changed version to v4r0.
+ . Note: two sequences proven to work (Millepede OT-layers & Kalman OT-layers)
+
 ! 2009-01-13 Wouter Hulsbergen: 
  - Adapted to changes in SolvKernel
  - Added functionality to compute only subset of track-track hit correlations in VertexResidualTool

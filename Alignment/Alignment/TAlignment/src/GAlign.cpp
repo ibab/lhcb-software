@@ -3,7 +3,7 @@
  *  Implementation file for Alignment algorithm : GAlign
  *
  *  CVS Log :-
- *  $Id: GAlign.cpp,v 1.13 2008-07-17 13:54:11 lnicolas Exp $
+ *  $Id: GAlign.cpp,v 1.14 2009-02-21 22:00:25 jblouw Exp $
  *
  *  @author J.Blouw Johan.Blouw@cern.ch
  *  @date   30/12/2005
@@ -20,7 +20,7 @@
 #include "Event/StateTraj.h"
 #include "Event/Track.h"
 #include "Event/MuonMeasurement.h"
-#include "TAlignment/GAlign.h"
+#include "GAlign.h"
 
 #include "STDet/DeSTLayer.h"
 #include "STDet/DeITLayer.h"
@@ -83,7 +83,7 @@ GAlign::GAlign( const std::string& name,
   // define track containers
   declareProperty("TAlignment_Config_Tool", m_AlignConfTool = "TAConfig");
   declareProperty("InputContainer", m_inputcontainer = TrackLocation::Default );
-  declareProperty("Detectors", m_detectors);
+  declareProperty("Detectors", m_detectors );
 
   //define maximum number of iterations
   declareProperty("MaxIterations", m_MaxIterations = 5);
@@ -98,6 +98,15 @@ GAlign::~GAlign() {
 
 StatusCode GAlign::initialize() {
   info() << "Initialising GAlign alignment..." << endreq;
+  info() << "Properties:" << endreq;
+  info() << "            TAlignment_Config_Tool: " << m_AlignConfTool << endreq;
+  info() << "            InputContainer        : " << m_inputcontainer << endreq;
+  info() << "            Detectors             : " << m_detectors << endreq;
+  info() << "            MaxIterations         : " << m_MaxIterations << endreq;
+  info() << "            evtsPerRun            : " << m_evtsPerRun << endreq;
+  info() << "            forceIterations       : " << m_ForceIterations << endreq;
+  info() << "            MinIterations         : " << m_iterationsMin << endreq;
+   
   StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) {
     error() << "Error initialising GAlign" << endreq;
@@ -504,8 +513,10 @@ StatusCode GAlign::GloFit() {
 
 StatusCode GAlign::finalize(){
   debug() << "==> Finalize" << endreq;
-  //  StatusCode sc = this->GloFit();
-  StatusCode sc = m_taConfig->StoreParameters( m_align );
+  StatusCode sc = this->GloFit();
+  if ( sc.isFailure() )
+    error() << "Error calculating alignment parameters"<< endreq;
+  sc = m_taConfig->StoreParameters( m_align );
   if ( sc.isFailure() )
     error() << "Error storing alignment parameters in memory"<< endreq;
   info() << "Alignment parameters = " << m_align << endreq;
