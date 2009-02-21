@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: RichGlobalPID_.py,v 1.2 2008-12-16 14:54:08 jonrob Exp $"
+__version__ = "$Id: RichGlobalPID_.py,v 1.3 2009-02-21 14:34:46 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -33,7 +33,7 @@ class RichGlobalPIDConfig(RichConfigurableUser):
         "InitAlgorithms": True,
         "InitTools": True,
         "NIterations": 0,
-        "MaxUsedPixels": 8000,
+        "MaxUsedPixels": 12000,
         "FinalDLLCheck": [ False, True, True, True ],
         "TrackFreezeOutDLL":    None,
         "TrackForceChangeDLL":  None,

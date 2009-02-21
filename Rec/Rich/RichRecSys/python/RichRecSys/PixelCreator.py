@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: PixelCreator.py,v 1.6 2008-12-16 13:45:36 jonrob Exp $"
+__version__ = "$Id: PixelCreator.py,v 1.7 2009-02-21 14:34:46 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -24,7 +24,7 @@ class RichPixelCreatorConfig(RichConfigurableUser):
     __slots__ = {
         "Context":       "Offline"   # The context within which to run
        ,"Detectors": [True,True]     # Which RICH detectors to use (RICH1/RICH2)
-       ,"PixelCleaning": "HotClusters" # Turn on RICH pixel cleaning (hot HPDs etc.)
+       ,"PixelCleaning": "None" # Turn on RICH pixel cleaning (hot HPDs etc.)
        ,"FindClusters": True # Find clusters in the HPD data
        ,"UseClustersAsPixels": [ False, False ] # Use clusters as the raw pixel objects
        ,"MaxHotPixelClusterSize": [ 10, 8 ] # Max size of clusters for HotClusters pixel cleaning (RICH1,RICH2)
