@@ -7,8 +7,9 @@ version           v3r7
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc dict src options TAlignment
-#include_path      none
+#branches          cmt doc dict src options TAlignment
+branches          cmt doc src 
+include_path      none
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
@@ -19,6 +20,7 @@ use	CLHEP           	v*	LCG_Interfaces
 use   	GaudiAlg          	v*
 use     AlignSolvTools          v*      Alignment
 use 	AlignmentInterfaces	v*	Alignment
+use 	AlignTrTools		v*	Alignment
 use 	DigiEvent		v*	Event
 use   	RecEvent          	v*      Event
 use 	TrackEvent		v*	Event
@@ -31,28 +33,14 @@ use     LHCbMath                v*      Kernel
 use     LoKiCore        	v*      Phys
 use     LinkerEvent		v*	Event
 
-#============================================================================
-# include directories
-#============================================================================
-apply_pattern	install_more_includes	more=TAlignment
+# ========================= Install configurable ============================
+apply_pattern install_python_modules
 #============================================================================
 # Component library building rule
 #============================================================================
-public
 library		TAlignment	../src/*.cpp -import=AIDA
-library		TAlignmentL	../src/GAlign.cpp -import=AIDA
 #============================================================================
 # define component library link options
 #============================================================================
 apply_pattern    component_library	library=TAlignment
-apply_pattern    linker_library		library=TAlignmentL
-# =============== LCG Dictionaries ============================================
-apply_pattern     reflex_dictionary                            \
-                  dictionary=TAlignment                         \
-                  headerfiles=$(TALIGNMENTROOT)/dict/TAlignmentDict.h     \
-                  selectionfile=$(TALIGNMENTROOT)/dict/TAlignmentDict.xml \
-                  options="--debug -U__MINGW32__"
-
-# Hack for cmt v1r19 bug to link dictionary on windows
-macro TAlignmentDict_use_linkopts $(use_linkopts)
-macro TAlignment_linkopts $(Boost_linkopts_regex)
+#============================================================================
