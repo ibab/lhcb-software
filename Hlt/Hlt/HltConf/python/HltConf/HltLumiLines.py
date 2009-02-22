@@ -64,6 +64,7 @@ class HltLumiLinesConf(LHCbConfigurableUser) :
         debugOPL = self.getProp('OutputLevel')
         debugging = self.getProp('Debug')
         fullReco = self.getProp('FullReco')
+        importOptions('$HLTCONFROOT/options/HltRecoSequence.py') 
 
         # define empty reco sequence
         seqRecoName = 'LumiReco'
@@ -102,8 +103,14 @@ class HltLumiLinesConf(LHCbConfigurableUser) :
         # populate reco sequence if needed
         if fullReco:
             # create lumiRecoSequence
-            importOptions('$HLTCONFROOT/options/HltRecoSequence.py') 
-            lumiRecoSequence.Members.append( Sequence('HltRecoSequence' , MeasureTime = True ) )
+            lumiTrackRecoSequence = GaudiSequencer( 'LumiTrackRecoSequence'
+                                                    ,  Members =
+                                                    [  Sequence('HltRecoRZVeloSequence')
+                                                    #,  recoVelo
+                                                    #,  prepareVelo
+                                                    #,  recoPV3D
+                                                   ] )
+            lumiRecoSequence.Members.append( Sequence('LumiTrackRecoSequence' , MeasureTime = True ) )
             # filter to get backward tracks (make sure it always passes by wrapping inside a sequence)
             if veloBW:
                 from Configurables import HltTrackFilter, HltSelectionFilter            
@@ -123,7 +130,6 @@ class HltLumiLinesConf(LHCbConfigurableUser) :
                 
 
         # define histogrammers
-        ## todo: add also thresholds, bins
         HistoMembers=[]
         HistoMembers.append(LumiHistoMaker('Histo'+BXType,
                                            InputVariables = createdCounters,

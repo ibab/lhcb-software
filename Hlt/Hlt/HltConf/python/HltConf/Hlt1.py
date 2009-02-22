@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.3 2009-02-06 15:26:29 graven Exp $
+# $Id: Hlt1.py,v 1.4 2009-02-22 22:32:37 panmanj Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -89,6 +89,6 @@ class Hlt1Conf(LHCbConfigurableUser):
                     , Sequence( 'LumiStripper' , Members = 
                           [ HltFilter('LumiStripperFilter' , Code = "HLT_PASS('Hlt1LumiDecision') & ~HLT_PASS('Hlt1IgnoringLumiDecision') " ) 
                           , Prescale('LumiStripperPrescaler',AcceptFraction=self.getProp('LumiBankKillerAcceptFraction')) 
-                          , bankKiller( BankTypes=[ 'ODIN','HltLumiSummary'],  DefaultIsKill=True )
+                          , bankKiller( BankTypes=[ 'ODIN','HltLumiSummary','DAQ'],  DefaultIsKill=True )
                           ])
                     ] )

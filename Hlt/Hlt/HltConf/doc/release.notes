@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.150 2009-02-20 16:36:01 panmanj Exp $ 
+! $Id: release.notes,v 1.151 2009-02-22 22:32:37 panmanj Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-02-22 - Jaap Panman
+ - bankKiller in HLT1: do not kill "DAQ" bank, will be added by Writer anyway
 
 ! 2009-02-20 - Jaap Panman
  - new configurable made more consistent to transmit options
