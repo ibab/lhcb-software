@@ -27,13 +27,20 @@
 //#include <TGText.h>
 #include <TGToolBar.h>
 #include <TDatime.h>
-#include <TH1.h>
-#include <TH2.h>
+#include <TH1F.h>
+#include <TH2F.h>
+#include <TH1D.h>
+#include <TH2D.h>
+#include <TProfile.h>
 #include <TImage.h>
 //#include <TList.h>
 #include <TMath.h>
 #include <TObjArray.h>
 #include <TObject.h>
+#include <TBox.h>
+#include <TLine.h>
+#include <TText.h>
+#include <TKey.h>
 #include <TPad.h>
 #include <TPRegexp.h>
 #include <TRootEmbeddedCanvas.h>
@@ -73,6 +80,8 @@ PresenterMainFrame* gPresenter = 0;
 ClassImp(PresenterMainFrame)
 
 PresenterMainFrame::PresenterMainFrame(const char* name,
+                                       const std::string & savesetPath,
+                                       const std::string & referencePath,
                                        const int & x,
                                        const int & y,
                                        const int & width,
@@ -84,23 +93,22 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
   global_stepSize("00:15:00"),
   m_verbosity(Silent),
   m_historyMode(s_timeInterval),
-  m_dimDnsNode(""),
   m_currentPartition(s_lhcbPartionName.Data()),
 //  m_currentMonitoringNode(""),
 //  m_currentMonitoringInstance(""),
-  m_archiveRoot(""),
-  m_referencePath(OnlineHistDBEnv_constants::StdRefRoot),
-  m_savesetPath(OnlineHistDBEnv_constants::StdSavesetsRoot),
+  m_referencePath(referencePath),
+  m_savesetPath(savesetPath),
   m_savesetFileName(""),
   m_archive(NULL),
   m_intervalPicker(NULL),
-  m_presenterMode(Online),
+  m_presenterMode(History),
   m_databaseMode(LoggedOut),
   m_pageRefreshTimer(NULL),
   m_clockTimer(NULL),
   m_clearedHistos(false),
   m_historyTrendPlots(false),
   m_referencesOverlayed(false),
+  m_fastHitMapDraw(false),
   m_refreshingPage(false),
   m_histogramDB(NULL),
   m_analysisLib(NULL),
@@ -110,8 +118,10 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
   m_databaseHistogramsDock(NULL),
   m_pageDock(NULL),
   m_mainCanvasInfoDock(NULL),
+  m_drawPattern(NULL),
   m_dimBrowserDock(NULL),
   m_databasePagesDock(NULL),
+  m_histoSvcBrowserGroupFrame(NULL),
   m_treeNode(NULL),
   m_taskNode(NULL),
   m_algorithmNode(NULL),
@@ -180,21 +190,22 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
     new TGMsgBox(fClient->GetRoot(), this, "DIM Error", m_message.c_str(),
                  kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
   } else {
-    refreshDimSvcList(s_withoutTree);
-    refreshPartitionSelectorPopupMenu();
+//      refreshHistogramSvcList(s_withoutTree);      
     m_mainStatusBar->SetText("Ok.");
   }
 
-  m_archive = new Archive(this, m_archiveRoot, m_savesetPath, m_referencePath);
+  m_archive = new Archive(this, m_savesetPath, m_referencePath);
   if (0 != m_archive) { m_archive->setVerbosity(m_verbosity); }
   m_intervalPicker = new IntervalPicker(this);
+  refreshPartitionSelectorPopupMenu();
+  m_presenterMode = Online;  
 }
 
 PresenterMainFrame::~PresenterMainFrame()
 {
-  TGListTreeItem* node = m_dimSvcListTree->GetFirstItem();
+  TGListTreeItem* node = m_histoSvcListTree->GetFirstItem();
   deleteTreeChildrenItemsUserData(node);
-  m_dimSvcListTree->DeleteChildren(node);
+  m_histoSvcListTree->DeleteChildren(node);
 
   node = m_databaseHistogramTreeList->GetFirstItem();
   deleteTreeChildrenItemsUserData(node);
@@ -262,6 +273,7 @@ void PresenterMainFrame::buildGUI()
     m_viewStopRefreshText = new TGHotString("&Stop Page Refresh");
     m_viewToggleHistoryPlotsText = new TGHotString("&History plots");
     m_viewToggleReferenceOverlayText = new TGHotString("&Overlay Reference");
+    m_viewToggleFastHitMapDrawText = new TGHotString("&Fast Hitmap Draw");
     m_viewInspectHistoText = new TGHotString("&Inspect Histogram");
     m_viewHistogramDescriptionText = new TGHotString("Histogram &Description");
     m_viewInspectPageText  = new TGHotString("Inspect &Page");
@@ -271,7 +283,8 @@ void PresenterMainFrame::buildGUI()
 
   m_toolText = new TGHotString("&Tools");
     m_toolMode = new TGHotString("&Mode");
-    m_toolPageEditor = new TGHotString("Page &Editor");
+    m_toolPageEditorOnline = new TGHotString("Page Editor Online");
+    m_toolPageEditorOffline  = new TGHotString("Page Editor Offline");
     m_toolOnline = new TGHotString("&Online");
     m_toolOffline = new TGHotString("&History mode");
 //    m_toolSetUtgidTaskText = new TGHotString("Set &UTGID for Task...");
@@ -290,6 +303,7 @@ void PresenterMainFrame::buildGUI()
   m_databaseSourceIcon =  picpool->GetPicture("databaseSource16",
                                               databaseSource16);
   m_dimOnline16 =  picpool->GetPicture("dimOnline16",dimOnline16);
+  m_iconROOT = gClient->GetPicture("root_t.xpm");
 
   m_iconH1D = gClient->GetPicture("h1_t.xpm");
   m_iconH2D = gClient->GetPicture("h2_t.xpm");
@@ -352,7 +366,11 @@ m_editMenu->DisableEntry(EDIT_PAGE_PROPERTIES_COMMAND);
   m_viewMenu->UnCheckEntry(HISTORY_PLOTS_COMMAND);
   m_viewMenu->AddEntry(m_viewToggleReferenceOverlayText,
                        OVERLAY_REFERENCE_HISTO_COMMAND);
-  m_viewMenu->UnCheckEntry(OVERLAY_REFERENCE_HISTO_COMMAND);                     
+  m_viewMenu->AddEntry(m_viewToggleFastHitMapDrawText,
+                       FAST_HITMAP_DRAW_COMMAND);                       
+                       
+  m_viewMenu->UnCheckEntry(OVERLAY_REFERENCE_HISTO_COMMAND);
+  m_viewMenu->UnCheckEntry(FAST_HITMAP_DRAW_COMMAND);  
   m_viewMenu->AddEntry(m_viewClearHistosText, CLEAR_HISTOS_COMMAND);
   m_viewMenu->UnCheckEntry(CLEAR_HISTOS_COMMAND);
   m_viewMenu->AddSeparator();
@@ -365,8 +383,10 @@ m_viewMenu->DisableEntry(OVERLAY_REFERENCE_HISTO_COMMAND);
 
   // Mode menu
   m_toolMenu = new TGPopupMenu(fClient->GetRoot());
-  m_toolMenu->AddEntry(m_toolPageEditor, PAGE_EDITOR_MODE_COMMAND);
-  m_toolMenu->CheckEntry(PAGE_EDITOR_MODE_COMMAND);
+  m_toolMenu->AddEntry(m_toolPageEditorOnline, PAGE_EDITOR_ONLINE_MODE_COMMAND);
+  m_toolMenu->CheckEntry(PAGE_EDITOR_ONLINE_MODE_COMMAND);
+  m_toolMenu->AddEntry(m_toolPageEditorOffline, PAGE_EDITOR_OFFLINE_MODE_COMMAND);
+  m_toolMenu->UnCheckEntry(PAGE_EDITOR_OFFLINE_MODE_COMMAND);  
   m_toolMenu->AddEntry(m_toolOnline, ONLINE_MODE_COMMAND);
   m_toolMenu->UnCheckEntry(ONLINE_MODE_COMMAND);
   m_toolMenu->AddEntry(m_toolOffline, OFFLINE_MODE_COMMAND);
@@ -756,7 +776,7 @@ m_viewMenu->DisableEntry(OVERLAY_REFERENCE_HISTO_COMMAND);
 
 
   TGGroupFrame* mainCanvasInfoGroupFrame = new TGGroupFrame(m_mainCanvasInfoDock,
-                                                           TGString("Page Description"),
+                                                           TGString("Page Comments"),
                                                            kVerticalFrame |
                                                            kFixedHeight);
   m_mainCanvasInfoDock->AddFrame(mainCanvasInfoGroupFrame,
@@ -827,7 +847,6 @@ m_viewMenu->DisableEntry(OVERLAY_REFERENCE_HISTO_COMMAND);
   m_rightVerticalSplitter = new TGVSplitter(m_mainHorizontalFrame, 2, 2);
     m_rightVerticalSplitter->SetFrame(m_rightMiscFrame, false);
 
-
     m_dimBrowserDock = new TGDockableFrame(m_rightMiscFrame);
     m_dimBrowserDock->SetWindowName("DIM Histogram Browser");
     m_dimBrowserDock->EnableUndock(true);
@@ -840,55 +859,54 @@ m_viewMenu->DisableEntry(OVERLAY_REFERENCE_HISTO_COMMAND);
                                                  kLHintsExpandY,
                                                  0, 0, 0, 0));
 
-    TGGroupFrame* m_dimBrowserGroupFrame = new TGGroupFrame(m_dimBrowserDock,
+    m_histoSvcBrowserGroupFrame = new TGGroupFrame(m_dimBrowserDock,
                                             TGString("DIM Histogram Browser"),
                                             kVerticalFrame | kFixedHeight);
-    m_dimBrowserDock->AddFrame(m_dimBrowserGroupFrame,
+    m_dimBrowserDock->AddFrame(m_histoSvcBrowserGroupFrame,
                                new TGLayoutHints(kLHintsTop |
                                                  kLHintsExpandX |
                                                  kLHintsExpandY,
                                                  0, 0, 0, 0));
 
-    m_dimSvcListTreeContainterCanvas = new TGCanvas(m_dimBrowserGroupFrame,
+    m_dimSvcListTreeContainterCanvas = new TGCanvas(m_histoSvcBrowserGroupFrame,
                                                     220, 100);
     TGViewPort* fViewPort664 = m_dimSvcListTreeContainterCanvas->GetViewPort();
-    m_dimSvcListTree = new TGListTree(m_dimSvcListTreeContainterCanvas,
+    m_histoSvcListTree = new TGListTree(m_dimSvcListTreeContainterCanvas,
                                       kHorizontalFrame);
-  //  m_dimSvcListTree->SetAutoCheckBoxPic(false); ROOT v5.16(?)...
-    m_dimSvcListTree->AddRoot("DIM");
-    (m_dimSvcListTree->GetFirstItem())->SetPictures(m_dimOnline16,
+  //  m_histoSvcListTree->SetAutoCheckBoxPic(false); ROOT v5.16(?)...
+    m_histoSvcListTree->AddRoot("DIM");
+    (m_histoSvcListTree->GetFirstItem())->SetPictures(m_dimOnline16,
                                                     m_dimOnline16);
-    m_dimSvcListTree->SetCheckMode(TGListTree::kRecursive);                                                    
-    m_dimSvcListTree->Connect(
+    m_histoSvcListTree->SetCheckMode(TGListTree::kRecursive);                                                    
+    m_histoSvcListTree->Connect(
       "Clicked(TGListTreeItem*, Int_t, Int_t, Int_t)", "PresenterMainFrame",
-      this, "clickedDimTreeItem(TGListTreeItem*, Int_t, Int_t, Int_t)");
+      this, "clickedHistoSvcTreeItem(TGListTreeItem*, Int_t, Int_t, Int_t)");
 
-    fViewPort664->AddFrame(m_dimSvcListTree);
-    m_dimSvcListTree->SetLayoutManager(new TGHorizontalLayout(
-                                         m_dimSvcListTree));
-    m_dimSvcListTree->MapSubwindows();
-    m_dimSvcListTreeContainterCanvas->SetContainer(m_dimSvcListTree);
+    fViewPort664->AddFrame(m_histoSvcListTree);
+    m_histoSvcListTree->SetLayoutManager(new TGHorizontalLayout(
+                                         m_histoSvcListTree));
+    m_histoSvcListTree->MapSubwindows();
+    m_dimSvcListTreeContainterCanvas->SetContainer(m_histoSvcListTree);
     m_dimSvcListTreeContainterCanvas->MapSubwindows();
-    m_dimBrowserGroupFrame->AddFrame(m_dimSvcListTreeContainterCanvas,
+    m_histoSvcBrowserGroupFrame->AddFrame(m_dimSvcListTreeContainterCanvas,
       new TGLayoutHints(kLHintsRight | kLHintsTop |
                         kLHintsExpandX | kLHintsExpandY,
                         0, 0, 0, 0));
 
-    m_dimContextMenu = new TGPopupMenu(fClient->GetRoot());
-    m_dimContextMenu->AddEntry("Add checked to Database",
-                               M_AddDimToDB_COMMAND);
-    m_dimContextMenu->AddEntry("Add checked to Page",
-                               M_AddDimToPage_COMMAND);
-    m_dimContextMenu->AddSeparator();
-    m_dimContextMenu->AddEntry("Resubscribe to checked",
+    m_histoSvcTreeContextMenu = new TGPopupMenu(fClient->GetRoot());
+    m_histoSvcTreeContextMenu->AddEntry("Add checked to Database",
+                               M_AddHistoToDB_COMMAND);
+    m_histoSvcTreeContextMenu->AddEntry("Add checked to Page",
+                               M_AddHistoToPage_COMMAND);
+    m_histoSvcTreeContextMenu->AddSeparator();
+    m_histoSvcTreeContextMenu->AddEntry("Resubscribe to checked",
                                M_SetDimSourceFromTree);
-    m_dimContextMenu->AddSeparator();
-    m_dimContextMenu->AddEntry("Collsapse all children",
+    m_histoSvcTreeContextMenu->AddSeparator();
+    m_histoSvcTreeContextMenu->AddEntry("Collsapse all children",
                                M_DimCollapseAllChildren_COMMAND);
-    m_dimContextMenu->AddSeparator();
-    m_dimContextMenu->AddEntry("Refresh",
-      M_RefreshHistoDIMListTree_COMMAND);
-    m_dimContextMenu->Connect("Activated(Int_t)","PresenterMainFrame", this,
+    m_histoSvcTreeContextMenu->AddSeparator();
+    m_histoSvcTreeContextMenu->AddEntry("Refresh", M_RefreshHistoSvcListTree);
+    m_histoSvcTreeContextMenu->Connect("Activated(Int_t)","PresenterMainFrame", this,
                               "handleCommand(Command)");
 
     m_databaseHistogramsDock = new TGDockableFrame(m_rightMiscFrame);
@@ -1130,16 +1148,19 @@ void PresenterMainFrame::handleCommand(Command cmd)
     case ONLINE_MODE_COMMAND:
       setPresenterMode(Online);
       break;
-    case PAGE_EDITOR_MODE_COMMAND:
-      setPresenterMode(Editor);
+    case PAGE_EDITOR_ONLINE_MODE_COMMAND:
+      setPresenterMode(EditorOnline);
       break;
+    case PAGE_EDITOR_OFFLINE_MODE_COMMAND:
+      setPresenterMode(EditorOffline);
+      break;      
     case DOCK_ALL_COMMAND:
       dockAllFrames();
       break;
-    case M_AddDimToDB_COMMAND:
+    case M_AddHistoToDB_COMMAND:
       addDimSvcToHistoDB();
       break;
-    case M_AddDimToPage_COMMAND:
+    case M_AddHistoToPage_COMMAND:
       addDimSvcToPage();
       break;
     case M_SetDimSourceFromTree:
@@ -1151,8 +1172,8 @@ void PresenterMainFrame::handleCommand(Command cmd)
     case M_DimCollapseAllChildren_COMMAND:
       dimCollapseAllChildren();
       break;
-    case M_RefreshHistoDIMListTree_COMMAND:
-      refreshDimSvcList(s_withTree);
+    case M_RefreshHistoSvcListTree:
+      refreshHistogramSvcList(s_withTree);
       refreshPartitionSelectorPopupMenu();
       break;
     case M_RefreshKnownPartitions:
@@ -1197,7 +1218,7 @@ void PresenterMainFrame::handleCommand(Command cmd)
     case M_LAST_8_HOURS:
     case M_Last_File: {
       if (Online == m_presenterMode ||
-          (Editor == m_presenterMode && !canWriteToHistogramDB())) {
+          (EditorOffline == m_presenterMode && !canWriteToHistogramDB())) {
         //Bug workaround: maybe fixed in some ROOT > 5.18.00
 //        m_historyIntervalQuickButton->SetState(kButtonDisabled);
       }
@@ -1243,7 +1264,10 @@ void PresenterMainFrame::handleCommand(Command cmd)
       break;
     case OVERLAY_REFERENCE_HISTO_COMMAND:      
       toggleReferenceOverlay();
-      break;          
+      break;
+    case FAST_HITMAP_DRAW_COMMAND:      
+      toggleFastHitMapDraw();
+      break;            
     case SAVE_AS_REFERENCE_HISTO_COMMAND:      
       saveSelectedHistogramAsReference();
       break;
@@ -1293,21 +1317,9 @@ void PresenterMainFrame::setDatabaseMode(const DatabaseMode & databaseMode) {
       break;
   }
 }
-void PresenterMainFrame::setArchiveRoot(const std::string & archiveRoot) {
-  m_archiveRoot = archiveRoot;
-  if (!m_archiveRoot.empty() && m_archive) {
-    m_archive->setArchiveRoot(m_archiveRoot);
-    
-//    m_referencePath = m_archiveRoot + m_referencePath;
-//    m_savesetPath = m_archiveRoot + m_savesetPath;
-        
-//    m_archive->setReferencePath(m_referencePath);
-//    m_archive->setSavesetPath(m_savesetPath);
-  }
-}
 void PresenterMainFrame::setReferencePath(const std::string & referencePath) {
   m_referencePath = referencePath;
-  if (m_analysisLib) m_analysisLib->setRefRoot(m_archiveRoot+m_referencePath);
+  if (m_analysisLib) m_analysisLib->setRefRoot(m_referencePath);
   if (!m_referencePath.empty()) {
     if (0 != m_archive) {
       m_archive->setReferencePath(m_referencePath);
@@ -1331,11 +1343,15 @@ void PresenterMainFrame::setPresenterMode(const PresenterMode & presenterMode)
     case History:
       m_presenterMode = History;
       break;
-    case Editor:
-      m_presenterMode = Editor;
+    case EditorOnline:
+      m_presenterMode = EditorOnline;
       if (ReadWrite != m_databaseMode) { setDatabaseMode(ReadWrite); }
       break;
-    default:
+    case EditorOffline:
+      m_presenterMode = EditorOffline;
+      if (ReadWrite != m_databaseMode) { setDatabaseMode(ReadWrite); }
+      break;      
+    default:    
       if (m_verbosity >= Debug) {
         std::cout << "something went wrong when setting presenter mode."
           << std::endl;
@@ -1385,6 +1401,7 @@ void PresenterMainFrame::savePageToHistogramDB()
 //    statusBar()
   }
 }
+// below is either HISTO DIM sevices, or a ROOT filename
 void PresenterMainFrame::setStartupHistograms(const std::vector<std::string> & histogramList)
 {
   std::vector<std::string>::const_iterator histogramListIt;
@@ -1393,33 +1410,13 @@ void PresenterMainFrame::setStartupHistograms(const std::vector<std::string> & h
     TString inputParamTS = TString(*histogramListIt);
     if (inputParamTS.EndsWith(s_rootFileExtension.c_str())) {
       m_savesetFileName = *histogramListIt;
-    } else {  
+//      m_rightMiscFrame->HideFrame(m_dimBrowserDock);
+//      m_rightMiscFrame-> ShowFrame();
+      
+    } else {
       HistogramIdentifier histogram = HistogramIdentifier(*histogramListIt);
-      if (histogram.isDimFormat()) {
-        int newHistoInstance = 0;
-        // see if the histogram object exists already
-        for (dbHistosOnPageIt = dbHistosOnPage.begin();
-            dbHistosOnPageIt != dbHistosOnPage.end();
-            ++dbHistosOnPageIt) {
-          int existingHistoInstance = (*dbHistosOnPageIt)->instance();
-  
-          if (0 == convDimToHistoID(*histogramListIt)
-                   .compare((*dbHistosOnPageIt)->identifier()) &&
-              (newHistoInstance < existingHistoInstance) ) {
-            newHistoInstance = existingHistoInstance;
-          }
-        }
-        //TODO: ? limit
-        if (newHistoInstance > 998) { newHistoInstance = 0; }
-        newHistoInstance++;
-        //  Identifier, dimServiceName, refreshrate, instance, histogramDB
-        DbRootHist* dbRootHist = new DbRootHist(
-          convDimToHistoID(*histogramListIt),*histogramListIt,
-          2, newHistoInstance, NULL, analysisLib(), NULL, m_verbosity,
-          NULL);
-  
-        dbHistosOnPage.push_back(dbRootHist);
-        paintHist(dbRootHist);
+      if (histogram.isDimFormat()) {      
+        addHistoToPage(*histogramListIt);
       }
     }
     histogramListIt++;
@@ -1449,7 +1446,10 @@ bool PresenterMainFrame::connectToHistogramDB(const std::string & dbPassword,
       m_localDatabaseFolders.reserve(m_histogramDB->nPageFolders());
 
       m_histogramDB->setRefRoot(m_referencePath);
+      m_histogramDB->setSavesetsRoot(m_savesetPath);
+      if (0 != m_analysisLib) { delete m_analysisLib; m_analysisLib = NULL; }
       m_analysisLib = new OMAlib(m_histogramDB);
+      m_analysisLib->setRefRoot(m_referencePath);
       if (0 != m_archive) { m_archive->setAnalysisLib(m_analysisLib); }
 
       m_dbName = dbName;
@@ -1859,24 +1859,62 @@ void PresenterMainFrame::startBenchmark(const std::string &timer)
   { m_benchmark->Start(timer.c_str()) ; }
  
 void PresenterMainFrame::stopBenchmark(const std::string &timer)
-  { m_benchmark->Stop(timer.c_str()) ; }
+  { m_benchmark->Stop(timer.c_str());}
  
 void PresenterMainFrame::printBenchmark(const std::string &timer)
 {
-  std::cout << timer <<" benchmark : "<< (m_benchmark->GetRealTime(timer.c_str())) << std::endl ;
+  std::cout << timer <<";"<< (m_benchmark->GetRealTime(timer.c_str())) << std::endl ;
+  m_benchmark->Reset(); 
 }
+
+
+void PresenterMainFrame::listRootHistogramsFrom(TDirectory* rootFile,
+                                                std::vector<std::string> & histogramList,
+                                                std::vector<std::string> & histogramTypes,
+                                                std::string& taskName) {
+  
+   TDirectory* tmpdir = gDirectory;
+   TIter next(rootFile->GetListOfKeys());
+   TKey* key;
+   
+   std::stringstream histogramIDStream;
+
+   while ((key = (TKey*)next())) {
+      if (key->IsFolder()) {
+         rootFile->cd(key->GetName());
+         TDirectory *subdirectory = gDirectory;
+         std::string pathName = taskName + s_slash + key->GetName();
+         listRootHistogramsFrom(subdirectory, histogramList, histogramTypes,
+                                pathName);
+         tmpdir->cd();
+         continue;
+      }
+      if (std::string(key->GetClassName()) == "TH1D") {
+        histogramTypes.push_back(s_pfixMonH1D);
+        histogramIDStream << s_pfixMonH1D;
+      } else if (std::string(key->GetClassName()) == "TH2D") {
+        histogramTypes.push_back(s_pfixMonH2D);
+        histogramIDStream << s_pfixMonH2D;
+      } else if (std::string(key->GetClassName()) == "TProfile") {
+        histogramTypes.push_back(s_pfixMonProfile);
+        histogramIDStream << s_pfixMonProfile;
+      }
+      histogramIDStream << s_slash << taskName << s_slash << key->GetName();
+      histogramList.push_back(histogramIDStream.str());
+      histogramIDStream.str("");
+   }
+}
+
 
 void PresenterMainFrame::setTreeNodeIcon(TGListTreeItem* node,
                                          const std::string & type)
 {
   const TGPicture*  m_icon;
   if (s_H1D == type || 
-//      s_pfixMonH1D == type ||
-      s_pfixMonH1F == type ) {
+      s_pfixMonH1D == type) {
     m_icon = m_iconH1D;
   } else if (s_H2D == type ||
-//      s_pfixMonH2D == type ||
-      s_pfixMonH2F == type ) {
+      s_pfixMonH2D == type) {
     m_icon = m_iconH2D;
   } else if (s_P1D == type ||
              s_pfixMonProfile == type ||
@@ -2008,63 +2046,82 @@ void PresenterMainFrame::setStatusBarText(const char* text, int slice)
 {
   m_mainStatusBar->SetText(text, slice);
 }
-TH1* PresenterMainFrame::selectedHistogram()
-{
-  if (0 != gPad) {
-    TIter nextPadElem(gPad->GetListOfPrimitives());
-    TObject* histoCandidate;
-    while (0 != (histoCandidate = nextPadElem())) {
-      if (histoCandidate->InheritsFrom(TH1::Class())) {
-// TODO: When refhistos will come... editorFrame->
-// 0 == std::string((*m_DbHistosOnPageIt)->rootHistogram->GetName()).compare(histoCandidate->GetName())) {
-        return dynamic_cast<TH1*>(histoCandidate);
-      }
-    } return 0;
-  } else {
-    return 0;
-  }
-}
 void PresenterMainFrame::editHistogramProperties()
 {
-  TH1* selectedHisto = selectedHistogram();
-  if (0 != selectedHisto) {
-    selectedHisto->DrawPanel();
+  bool referenceOverlay(false);
+  if (m_referencesOverlayed) {
+    disableReferenceOverlay();
+    referenceOverlay = true;
   }
+  DbRootHist* selectedDbHisto = selectedDbRootHistogram();
+  if (0 != selectedDbHisto) {
+    if (0 != selectedDbHisto) {
+      TH1* selectedHisto = selectedDbHisto->rootHistogram;
+      if (0 != selectedHisto) {
+        selectedHisto->DrawPanel();
+      }
+    }
+  }
+  if (referenceOverlay) { enableReferenceOverlay(); }  
 }
 void PresenterMainFrame::inspectHistogram()
 {
   // TODO: draw rather ClonePad
-  if (TH1* selectedHisto = selectedHistogram()) {
-    TCanvas* zoomCanvas =  new TCanvas();
-    zoomCanvas->cd();
-    zoomCanvas->SetTitle(selectedHisto->GetTitle());
-    selectedHisto->DrawCopy();
-    zoomCanvas->ToggleEventStatus();
-    zoomCanvas->ToggleAutoExec();
-    zoomCanvas->ToggleToolBar();
-    zoomCanvas->ToggleEditor();
+  bool referenceOverlay(false);
+  if (m_referencesOverlayed) {
+    disableReferenceOverlay();
+    referenceOverlay = true;
   }
+
+  DbRootHist* selectedDbHisto = selectedDbRootHistogram();
+  if (0 != selectedDbHisto) {
+    if (0 != selectedDbHisto) {
+      TH1* selectedHisto = selectedDbHisto->rootHistogram;
+      if (0 != selectedHisto) {
+        TCanvas* zoomCanvas =  new TCanvas();
+        zoomCanvas->cd();
+    //    zoomCanvas->SetTitle(selectedHisto->GetTitle());
+        selectedHisto->DrawCopy();
+        zoomCanvas->ToggleEventStatus();
+        zoomCanvas->ToggleAutoExec();
+        zoomCanvas->ToggleToolBar();
+        zoomCanvas->ToggleEditor();
+      }
+    }
+  }
+  if (referenceOverlay) { enableReferenceOverlay(); } 
 }
 void PresenterMainFrame::histogramDescription()
 {
+  if (isConnectedToHistogramDB()) {
+    
+    m_currentPageHistogramHelp.clear();
+    std::stringstream currentPageHistogramHelp;
+    
+    DbRootHist* histogram = selectedDbRootHistogram();
+    if (0 != histogram) {
+      
+      currentPageHistogramHelp << "Title:\t\t" << (histogram->onlineHistogram())->htitle() << std::endl << std::endl
+                               << "Name:\t\t" <<  (histogram->onlineHistogram())->hname() << std::endl
+                               << "Type:\t\t" <<  (histogram->onlineHistogram())->hstype() << std::endl
+                               << "Task:\t\t" <<  (histogram->onlineHistogram())->task() << std::endl
+                               << "Algorithm:\t" <<  (histogram->onlineHistogram())->algorithm() << std::endl
+                               << "ROOT name:\t" <<  (histogram->onlineHistogram())->rootName()  << std::endl
+                               << "DIM in DB:\t" <<  (histogram->onlineHistogram())->dimServiceName() << std::endl << std::endl
+                               << "Description:" << std::endl << (histogram->onlineHistogram())->descr() << std::endl
+                               << std::endl;
 
- if (isConnectedToHistogramDB()) {
-  TRootHelpDialog *hd = new TRootHelpDialog(this, "Histogram Description", 600, 400);
-  hd->SetText(Form("%s", m_currentPageHistogramHelp.c_str()));
-  hd->Popup();
- } else {
-  new TGMsgBox(fClient->GetRoot(), this, "Description Unavailable",
-                "Description Unavailable, not logged in!",
-                kMBIconExclamation, kMBClose, &m_msgBoxReturnCode);
- }
-
-
-//  DbRootHist* histogram = selectedDbRootHistogram();
-//    if (histogram && m_histogramDB) {
-//      new TGMsgBox(fClient->GetRoot(), this, ((histogram->onlineHistogram())->htitle()).c_str(),
-//               ((histogram->onlineHistogram())->descr()).c_str(),
-//               kMBIconAsterisk, kMBClose, &m_msgBoxReturnCode);
-//      }  
+      m_currentPageHistogramHelp = currentPageHistogramHelp.str().c_str();
+            
+      TRootHelpDialog *hd = new TRootHelpDialog(this, "Histogram Description", 600, 400);
+      hd->SetText(Form("%s", m_currentPageHistogramHelp.c_str()));
+      hd->Popup();
+    }
+  } else {
+    new TGMsgBox(fClient->GetRoot(), this, "Description Unavailable",
+                 "Description Unavailable, not logged in!",
+                 kMBIconExclamation, kMBClose, &m_msgBoxReturnCode);
+  } 
 }
 void PresenterMainFrame::inspectPage()
 {
@@ -2084,7 +2141,9 @@ void PresenterMainFrame::reconfigureGUI()
   if (isConnectedToHistogramDB()) {
     refreshPagesDBListTree();
     enableAutoCanvasLayoutBtn();
-    if (canWriteToHistogramDB() && Editor == m_presenterMode) {
+    if (canWriteToHistogramDB() && 
+        ((EditorOnline == m_presenterMode) ||
+         (EditorOffline == m_presenterMode))) {
       showDBTools(ReadWrite);
     } else {
       showDBTools(ReadOnly);
@@ -2097,7 +2156,8 @@ void PresenterMainFrame::reconfigureGUI()
     if (m_historyTrendPlots) { toggleHistoryPlots(); }
     
     m_toolMenu->CheckEntry(ONLINE_MODE_COMMAND);
-    m_toolMenu->UnCheckEntry(PAGE_EDITOR_MODE_COMMAND);
+    m_toolMenu->UnCheckEntry(PAGE_EDITOR_ONLINE_MODE_COMMAND);
+    m_toolMenu->UnCheckEntry(PAGE_EDITOR_OFFLINE_MODE_COMMAND);
     m_toolMenu->UnCheckEntry(OFFLINE_MODE_COMMAND);
     m_rightMiscFrame->UnmapWindow();
     m_rightVerticalSplitter->UnmapWindow();
@@ -2129,14 +2189,15 @@ void PresenterMainFrame::reconfigureGUI()
 //    m_partitionSelectorQuickButton->SetState(kButtonUp);
 
     // hide refreshHistoDBListTree
-//    if (!isConnectedToHistogramDB()) { refreshDimSvcList(); }
-//    refreshDimSvcList();
+//    if (!isConnectedToHistogramDB()) { refreshHistogramSvcList(); }
+//    refreshHistogramSvcList();
   } else if (History == m_presenterMode) {
     disablePageRefresh();
 
     m_toolMenu->CheckEntry(OFFLINE_MODE_COMMAND);
     m_toolMenu->UnCheckEntry(ONLINE_MODE_COMMAND);
-    m_toolMenu->UnCheckEntry(PAGE_EDITOR_MODE_COMMAND);
+    m_toolMenu->UnCheckEntry(PAGE_EDITOR_ONLINE_MODE_COMMAND);
+    m_toolMenu->UnCheckEntry(PAGE_EDITOR_OFFLINE_MODE_COMMAND);    
     m_rightMiscFrame->UnmapWindow();
     m_rightVerticalSplitter->UnmapWindow();
 
@@ -2170,13 +2231,14 @@ void PresenterMainFrame::reconfigureGUI()
     m_viewMenu->DisableEntry(SAVE_AS_REFERENCE_HISTO_COMMAND);
 
     // hide refreshHistoDBListTree
-  } else if (Editor == m_presenterMode) {
+  } else if (EditorOnline == m_presenterMode) {
     stopPageRefresh();
     if (m_clearedHistos) { clearHistos(); }
     if (m_referencesOverlayed) { toggleReferenceOverlay(); }
     if (m_historyTrendPlots) { toggleHistoryPlots(); }
     // enable play/stop/reset!
-    m_toolMenu->CheckEntry(PAGE_EDITOR_MODE_COMMAND);
+    m_toolMenu->CheckEntry(PAGE_EDITOR_ONLINE_MODE_COMMAND);
+    m_toolMenu->UnCheckEntry(PAGE_EDITOR_OFFLINE_MODE_COMMAND);    
     m_toolMenu->UnCheckEntry(ONLINE_MODE_COMMAND);
     m_toolMenu->UnCheckEntry(OFFLINE_MODE_COMMAND);
     
@@ -2185,11 +2247,8 @@ void PresenterMainFrame::reconfigureGUI()
     m_rightMiscFrame->MapWindow();
     m_rightVerticalSplitter->MapWindow();
     
-    bool initDimSvcList(m_dimSvcListTree->GetFirstItem()->GetFirstChild() ?
-                        false : true);
-    if (initDimSvcList) {      
-      refreshDimSvcList(s_withTree);
-    }    
+    refreshHistogramSvcList(s_withTree);
+    
     if (isConnectedToHistogramDB()) { refreshHistoDBListTree(); }
 //    m_clearHistoButton->SetState(kButtonUp);
 //    m_viewMenu->EnableEntry(CLEAR_HISTOS_COMMAND);
@@ -2208,21 +2267,61 @@ void PresenterMainFrame::reconfigureGUI()
       m_clearHistoButton->SetState(kButtonUp);
       m_viewMenu->EnableEntry(CLEAR_HISTOS_COMMAND);
 
+      m_histoSvcTreeContextMenu->EnableEntry(M_SetDimSourceFromTree);
+
+      m_historyIntervalQuickButton->SetState(kButtonEngaged);
+      m_historyIntervalQuickButton->SetState(kButtonUp);
+//    m_partitionSelectorQuickButton->SetState(kButtonEngaged);
+//    m_partitionSelectorQuickButton->SetState(kButtonUp);
+
+      m_historyPlotsButton->SetState(kButtonDisabled);
+      m_viewMenu->DisableEntry(HISTORY_PLOTS_COMMAND);
+    
+//    m_overlayReferenceHistoButton->SetState(kButtonDisabled);
+//    m_viewMenu->DisableEntry(OVERLAY_REFERENCE_HISTO_COMMAND);
+//    m_overlayReferenceHistoButton->SetState(kButtonEngaged);
+      m_overlayReferenceHistoButton->SetState(kButtonUp);
+      m_viewMenu->EnableEntry(OVERLAY_REFERENCE_HISTO_COMMAND);
+    
+    // show refreshHistoDBListTree
+  } else if (EditorOffline == m_presenterMode) {
+    stopPageRefresh();
+    if (m_clearedHistos) { clearHistos(); }
+    if (m_referencesOverlayed) { toggleReferenceOverlay(); }
+    if (m_historyTrendPlots) { toggleHistoryPlots(); }
+    // enable play/stop/reset!
+    m_toolMenu->CheckEntry(PAGE_EDITOR_OFFLINE_MODE_COMMAND);
+    m_toolMenu->UnCheckEntry(PAGE_EDITOR_ONLINE_MODE_COMMAND);
+    m_toolMenu->UnCheckEntry(ONLINE_MODE_COMMAND);
+    m_toolMenu->UnCheckEntry(OFFLINE_MODE_COMMAND);
+    
+    if (isConnectedToHistogramDB()) { refreshHistoDBListTree(); }
+    
+    m_previousIntervalButton->SetState(kButtonDisabled);
+    m_nextIntervalButton->SetState(kButtonDisabled);
+    m_rightMiscFrame->MapWindow();
+    m_rightVerticalSplitter->MapWindow();    
+    m_startRefreshButton->SetState(kButtonDisabled);
+    m_viewMenu->DisableEntry(START_COMMAND);
+    m_stopRefreshButton->SetState(kButtonDisabled);
+    m_viewMenu->DisableEntry(STOP_COMMAND);
+    m_clearHistoButton->SetState(kButtonDisabled);
+    m_viewMenu->DisableEntry(CLEAR_HISTOS_COMMAND);
+    
+    m_histoSvcTreeContextMenu->DisableEntry(M_SetDimSourceFromTree);
+    
     m_historyIntervalQuickButton->SetState(kButtonEngaged);
     m_historyIntervalQuickButton->SetState(kButtonUp);
 //    m_partitionSelectorQuickButton->SetState(kButtonEngaged);
 //    m_partitionSelectorQuickButton->SetState(kButtonUp);
 
     m_historyPlotsButton->SetState(kButtonDisabled);
-    m_viewMenu->DisableEntry(HISTORY_PLOTS_COMMAND);
+    m_viewMenu->DisableEntry(HISTORY_PLOTS_COMMAND);    
     
-//    m_overlayReferenceHistoButton->SetState(kButtonDisabled);
-//    m_viewMenu->DisableEntry(OVERLAY_REFERENCE_HISTO_COMMAND);
-//    m_overlayReferenceHistoButton->SetState(kButtonEngaged);
     m_overlayReferenceHistoButton->SetState(kButtonUp);
     m_viewMenu->EnableEntry(OVERLAY_REFERENCE_HISTO_COMMAND);
     
-    // show refreshHistoDBListTree
+    refreshHistogramSvcList(s_withTree);
   }
 
 //  refreshPartitionSelectorPopupMenu();
@@ -2239,8 +2338,8 @@ void PresenterMainFrame::hideDBTools()
 //  m_databaseHistogramTreeList->SetToolTipText(
 //      std::string("Please login to DB for Histogram list").c_str(),
 //      1, 1, 250);
-  m_dimContextMenu->DisableEntry(M_AddDimToDB_COMMAND);
-  m_dimContextMenu->EnableEntry(M_AddDimToPage_COMMAND);
+  m_histoSvcTreeContextMenu->DisableEntry(M_AddHistoToDB_COMMAND);
+  m_histoSvcTreeContextMenu->EnableEntry(M_AddHistoToPage_COMMAND);
   m_loginButton->SetState(kButtonUp);
   m_logoutButton->SetState(kButtonDisabled);
   m_savePageToDatabaseButton->SetState(kButtonDisabled);
@@ -2266,7 +2365,7 @@ void PresenterMainFrame::showDBTools(DatabaseMode databasePermissions)
   m_pagesFromHistoDBViewPort->ShowFrame(m_pagesFromHistoDBListTree);
 
   if (ReadWrite == databasePermissions) {
-    m_dimContextMenu->EnableEntry(M_AddDimToDB_COMMAND);
+    m_histoSvcTreeContextMenu->EnableEntry(M_AddHistoToDB_COMMAND);
 //    m_savePageToDatabaseButton->SetState(kButtonEngaged);
     m_savePageToDatabaseButton->SetState(kButtonUp);
 //    m_pickReferenceHistoButton->SetState(kButtonEngaged);
@@ -2285,7 +2384,7 @@ void PresenterMainFrame::showDBTools(DatabaseMode databasePermissions)
   } else if (ReadOnly == databasePermissions) {
     m_savePageToDatabaseButton->SetState(kButtonDisabled);
     m_fileMenu->DisableEntry(SAVE_PAGE_TO_DB_COMMAND);
-    m_dimContextMenu->DisableEntry(M_AddDimToDB_COMMAND);
+    m_histoSvcTreeContextMenu->DisableEntry(M_AddHistoToDB_COMMAND);
     m_pagesContextMenu->DisableEntry(M_DeletePage_COMMAND);
     m_pagesContextMenu->DisableEntry(M_DeleteFolder_COMMAND);
     m_histoDBContextMenu->DisableEntry(M_SetHistoPropertiesInDB_COMMAND);
@@ -2295,7 +2394,7 @@ void PresenterMainFrame::showDBTools(DatabaseMode databasePermissions)
     m_editMenu->DisableEntry(PICK_REFERENCE_HISTO_COMMAND);    
     m_editMenu->DisableEntry(SAVE_AS_REFERENCE_HISTO_COMMAND);
   }
-  m_dimContextMenu->DisableEntry(M_AddDimToPage_COMMAND);
+  m_histoSvcTreeContextMenu->DisableEntry(M_AddHistoToPage_COMMAND);
 
   enablePageLoading();
 }
@@ -2310,14 +2409,18 @@ void PresenterMainFrame::refreshPagesDBListTree() {
   listFromHistogramDB(m_pagesFromHistoDBListTree, FoldersAndPages,
                       s_withoutHistograms);
 }
-
-void PresenterMainFrame::refreshDimSvcList(bool tree) {
+void PresenterMainFrame::refreshHistogramSvcList(bool tree) {
 gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
 
-  if (Online == m_presenterMode || Editor == m_presenterMode) {
+  m_knownDimServices.clear();
+  m_histogramTypes.clear();
+
+  if (Online == m_presenterMode || EditorOnline == m_presenterMode) {
+    
+    m_dimBrowserDock->SetWindowName("DIM Histogram Browser");
+    m_histoSvcBrowserGroupFrame->SetTitle("DIM Histogram Browser");    
+    
     m_candidateDimServices.clear();
-    m_knownDimServices.clear();
-    m_histogramTypes.clear();
     m_knownOnlinePartitionList->Delete();
     
     char *dimService; 
@@ -2326,22 +2429,7 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
   
   
   //TODO: put known Mon prefixes into a list and cycle through...
-    // s_pfixMonH1F
-    std::string serviceType(s_pfixMonH1F);
-    (serviceType.append(s_slash)).append("*");
-    m_dimBrowser->getServices(serviceType.c_str());
-    while(dimType = m_dimBrowser->getNextService(dimService, dimFormat)) {            
-      m_candidateDimServices.push_back(std::string(dimService));
-    }
-    // s_pfixMonH1D
-    serviceType = s_pfixMonH1D;
-    (serviceType.append(s_slash)).append("*");
-    m_dimBrowser->getServices(serviceType.c_str());
-    while(dimType = m_dimBrowser->getNextService(dimService, dimFormat)) {            
-      m_candidateDimServices.push_back(std::string(dimService));
-    }
-    // s_pfixMonH2F
-    serviceType = s_pfixMonH2F;
+    std::string serviceType = s_pfixMonH1D;
     (serviceType.append(s_slash)).append("*");
     m_dimBrowser->getServices(serviceType.c_str());
     while(dimType = m_dimBrowser->getNextService(dimService, dimFormat)) {            
@@ -2378,7 +2466,7 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
       m_candidateDimServices.push_back(std::string(dimService));
     }
         
-    if (0 != m_dimSvcListTree && 0 != m_dimBrowser) {
+    if (0 != m_histoSvcListTree && 0 != m_dimBrowser) {
       const int nDimServers = m_dimBrowser->getServers();
       
       if (m_verbosity >= Verbose) {
@@ -2400,10 +2488,15 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
   
         setStatusBarText(dimDnsServerNode, 2);
         if (s_withTree == tree) {
-          TGListTreeItem* node = m_dimSvcListTree->GetFirstItem();
-          m_dimSvcListTree->RenameItem(node, dimDnsServerNode);
+          TGListTreeItem* node = m_histoSvcListTree->GetFirstItem();
+          m_histoSvcListTree->RenameItem(node, dimDnsServerNode);
+          
+          (m_histoSvcListTree->GetFirstItem())->SetPictures(m_dimOnline16,
+                                                            m_dimOnline16);
+          
+          
           deleteTreeChildrenItemsUserData(node);
-          m_dimSvcListTree->DeleteChildren(node);          
+          m_histoSvcListTree->DeleteChildren(node);          
         }
   
         m_candidateDimServicesIt = m_candidateDimServices.begin();
@@ -2418,7 +2511,11 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
                 }
                 if (!m_knownOnlinePartitionList->FindObject(histogramService.partitionName().c_str())) {
                   TObjString* partitionName = new TObjString(histogramService.partitionName().c_str());
-                  m_knownOnlinePartitionList->Add(partitionName);
+                  if (!histogramService.isEFF() ||
+                      (histogramService.isEFF() &&
+                      false == partitionName->GetString().BeginsWith(s_hltNodePrefix.c_str()))) {                    
+                    m_knownOnlinePartitionList->Add(partitionName);
+                  }
                 }
               if (m_verbosity >= Verbose) {
                 std::cout << "\t\t\t|_ " << *m_candidateDimServicesIt << std::endl;
@@ -2435,17 +2532,11 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
           }
           ++m_candidateDimServicesIt;
         }
-//        refreshPartitionSelectorPopupMenu();
-        if (s_withTree == tree) {
-          fillTreeNodeWithHistograms(m_dimSvcListTree,
-                                     m_dimSvcListTree->GetFirstItem(),
-                                     &m_knownDimServices,
-                                     &m_histogramTypes);                  
-        }        
+//        refreshPartitionSelectorPopupMenu();       
       }
     } else {
       if (s_withTree == tree) {
-        m_dimSvcListTree->RenameItem(m_dimSvcListTree->GetFirstItem(), "No DIM");
+        m_histoSvcListTree->RenameItem(m_histoSvcListTree->GetFirstItem(), "No DIM");
       }
       if (m_verbosity >= Verbose) {
         std::cout << "Sorry, no DIM server found." << std::endl;
@@ -2454,15 +2545,44 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
                    "Sorry, no DIM server found", kMBIconExclamation,
                    kMBOk, &m_msgBoxReturnCode);
     }
-    if (s_withTree == tree) {    
-      sortTreeChildrenItems(m_dimSvcListTree, m_dimSvcListTree->GetFirstItem());
-      fClient->NeedRedraw(m_dimSvcListTree);      
+  } else if (EditorOffline == m_presenterMode) {
+    if (s_withTree == tree && !m_savesetFileName.empty()) {
+      
+      m_dimBrowserDock->SetWindowName("ROOT Histogram Browser");
+      m_histoSvcBrowserGroupFrame->SetTitle("ROOT Histogram Browser");
+            
+      TGListTreeItem* node = m_histoSvcListTree->GetFirstItem();
+      m_histoSvcListTree->RenameItem(node, m_savesetFileName.c_str());
+      
+      (m_histoSvcListTree->GetFirstItem())->SetPictures(m_iconROOT, m_iconROOT);
+      
+      deleteTreeChildrenItemsUserData(node);
+      m_histoSvcListTree->DeleteChildren(node);
+      
+      TFile rootFile(m_savesetFileName.c_str());
+      
+      if (rootFile.IsZombie()) {
+        new TGMsgBox(fClient->GetRoot(), this, "File Error",
+                     "Sorry, file specified not found", kMBIconExclamation,
+                     kMBOk, &m_msgBoxReturnCode);
+      } else {        
+        std::string taskName(m_archive->taskNameFromFile(std::string(rootFile.GetName())));
+        listRootHistogramsFrom(dynamic_cast<TDirectory*>(&rootFile), m_knownDimServices, m_histogramTypes, taskName);
+      }
+      rootFile.Close();       
     }
-    Resize();DoRedraw(); // wtf would trigger a redraw???
   }
+  if (s_withTree == tree) {
+    fillTreeNodeWithHistograms(m_histoSvcListTree,
+                               m_histoSvcListTree->GetFirstItem(),
+                               &m_knownDimServices,
+                               &m_histogramTypes);        
+    sortTreeChildrenItems(m_histoSvcListTree, m_histoSvcListTree->GetFirstItem());
+    fClient->NeedRedraw(m_histoSvcListTree);   
+  }     
+  Resize();DoRedraw(); // wtf would trigger a redraw???
 gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetDefaultCursor());
 }
-
 void PresenterMainFrame::refreshPartitionSelectorPopupMenu()
 {
   bool updateList(false);
@@ -2476,7 +2596,9 @@ void PresenterMainFrame::refreshPartitionSelectorPopupMenu()
   m_partitionSelectorPopupMenu->AddEntry("refresh partitions", M_RefreshKnownPartitions);
   TIterator* partitionIt = 0;
   
-  if (History == m_presenterMode && 0 != m_archive) {
+  if (((History == m_presenterMode) ||
+       (EditorOffline == m_presenterMode))
+       && 0 != m_archive) {
     updateList = true;
     std::vector<std::string> m_historyPartitionList;
     std::vector<std::string>::const_iterator m_historyPartitionListIt;
@@ -2495,9 +2617,9 @@ void PresenterMainFrame::refreshPartitionSelectorPopupMenu()
     partitionIt = m_knownHistoryPartitionList->MakeIterator();
     
   } else if (Online == m_presenterMode ||
-             Editor == m_presenterMode) {
+             EditorOnline == m_presenterMode) {
     updateList = true;              
-    refreshDimSvcList(s_withoutTree);
+    refreshHistogramSvcList(s_withoutTree);
     partitionIt = m_knownOnlinePartitionList->MakeIterator();
   }
   if (updateList) {
@@ -2530,11 +2652,11 @@ void PresenterMainFrame::refreshPartitionSelectorPopupMenu()
                    std::endl;
   }  
 }
-void PresenterMainFrame::clickedDimTreeItem(TGListTreeItem* node,
+void PresenterMainFrame::clickedHistoSvcTreeItem(TGListTreeItem* node,
                                             EMouseButton btn,
                                             int x, int y) {
   if (0 != node && btn == kButton3) {
-    m_dimContextMenu->PlaceMenu(x, y, 1, 1);
+    m_histoSvcTreeContextMenu->PlaceMenu(x, y, 1, 1);
   }
 }
 void PresenterMainFrame::clickedHistoDBTreeItem(TGListTreeItem* node,
@@ -2551,11 +2673,11 @@ void PresenterMainFrame::clickedPageTreeItem(TGListTreeItem* node,
     m_pagesContextMenu->PlaceMenu(x, y, 1, 1);
   } else if (0 != node &&
              NULL == node->GetFirstChild() &&
-             Editor != m_presenterMode) {
+             ((EditorOnline != m_presenterMode) || (EditorOffline != m_presenterMode))) {
     loadSelectedPageFromDB(s_startupFile, m_savesetFileName);
   } else if (0 != node &&
              NULL == node->GetFirstChild() &&
-             Editor == m_presenterMode) {
+             ((EditorOnline == m_presenterMode) || (EditorOffline == m_presenterMode))) {
     m_pagesContextMenu->PlaceMenu(x, y, 1, 1);
   }
 }
@@ -2565,7 +2687,7 @@ void PresenterMainFrame::addDimSvcToHistoDB()
   disableHistogramClearing();
 
   TGListTree* list = new TGListTree();
-  checkedTreeItems(list, m_dimSvcListTree);
+  checkedTreeItems(list, m_histoSvcListTree);
 
   TGListTreeItem* currentNode;
   currentNode = list->GetFirstItem();
@@ -2604,32 +2726,17 @@ void PresenterMainFrame::addDimSvcToHistoDB()
   delete list;
   list = NULL;
 
-  m_dimSvcListTree->CheckAllChildren(m_dimSvcListTree->GetFirstItem(),
+  m_histoSvcListTree->CheckAllChildren(m_histoSvcListTree->GetFirstItem(),
                                      s_uncheckTreeItems);
-//  fClient->NeedRedraw(m_dimSvcListTree);
+//  fClient->NeedRedraw(m_histoSvcListTree);
 //  Resize();DoRedraw(); // wtf would trigger a redraw???
   enableAutoCanvasLayoutBtn();
 }
-void PresenterMainFrame::addDimSvcToPage()
+void PresenterMainFrame::addHistoToPage(const std::string& histogramUrl)
 {
-  disableAutoCanvasLayoutBtn();
-  // TODO: add locking, exclusive, disable autolayout
-  disableHistogramClearing();
-  
-  stopPageRefresh();
-  if (m_clearedHistos) { clearHistos(); }
-  if (m_referencesOverlayed) { toggleReferenceOverlay(); }
-
-  fClient->WaitFor(dynamic_cast<TGWindow*>(
-                   new HistoPropDialog(this, 646, 435, m_verbosity)));
-
-  TGListTree* list = new TGListTree();
-  checkedTreeItems(list, m_dimSvcListTree);
-
-  TGListTreeItem* currentNode;
-  currentNode = list->GetFirstItem();
-
-  while (0 != currentNode) {
+  HistogramIdentifier histogramID = HistogramIdentifier(histogramUrl);
+  if (histogramID.isDimFormat()) {
+  }  
     int newHistoInstance = 0;
     // see if the histogram object exists already
     for (dbHistosOnPageIt = dbHistosOnPage.begin();
@@ -2637,9 +2744,7 @@ void PresenterMainFrame::addDimSvcToPage()
         ++dbHistosOnPageIt) {
       int existingHistoInstance = (*dbHistosOnPageIt)->instance();
 
-      if (0 == (convDimToHistoID(
-          std::string(*static_cast<TString*>(currentNode->GetUserData()))))
-            .compare((*dbHistosOnPageIt)->identifier()) &&
+      if (0 == (histogramID.histogramIdentifier()).compare((*dbHistosOnPageIt)->identifier()) &&
           (newHistoInstance < existingHistoInstance) ) {
         newHistoInstance = existingHistoInstance;
       }
@@ -2647,16 +2752,47 @@ void PresenterMainFrame::addDimSvcToPage()
     //TODO: ? limit
     if (newHistoInstance > 998) { newHistoInstance = 0; }
     newHistoInstance++;
-    //  Identifier, dimServiceName, refreshrate, instance, histogramDB
+
+    OnlineHistDB*  histogramDB = NULL;
+    OnlineHistogram* dimQuery = NULL;
+    DimBrowser* dimBrowser = NULL;
+    std::string currentPartition(m_currentPartition);
     
-    DbRootHist* dbRootHist = new DbRootHist(
-      convDimToHistoID(
-        std::string(*static_cast<TString*>(currentNode->GetUserData()))),
-        std::string(*static_cast<TString*>(currentNode->GetUserData())),
-      2, newHistoInstance, NULL, analysisLib(), NULL, m_verbosity, m_dimBrowser);
+    if (isConnectedToHistogramDB()) {
+      histogramDB = m_histogramDB;
+      dimQuery = m_histogramDB->getHistogram(histogramID.histogramIdentifier());
+    } else {
+      histogramDB = NULL;
+      dimQuery = NULL;
+    }                   
+    if ((History == m_presenterMode) || (EditorOffline == m_presenterMode)) {
+      dimBrowser = NULL;
+    } else if ((Online == m_presenterMode) || (EditorOnline == m_presenterMode)) {
+      dimBrowser = m_dimBrowser;
+      if (false == isConnectedToHistogramDB()) {
+        currentPartition = histogramID.m_histogramUrl();
+      }
+    }
 
-    dbHistosOnPage.push_back(dbRootHist);
-
+// TODO: merge this with loadSelectedPage()      
+    DbRootHist* dbRootHist;
+    dbRootHist = new DbRootHist(histogramID.histogramIdentifier(),
+                                currentPartition,
+                                2, newHistoInstance,
+                                m_histogramDB, analysisLib(),
+                                dimQuery,
+                                m_verbosity,
+                                dimBrowser);
+    
+     if ((0 != m_archive) && isConnectedToHistogramDB() &&
+          (false == m_savesetFileName.empty()) &&
+          ((History == m_presenterMode) || (EditorOffline == m_presenterMode))) {
+          m_archive->fillHistogram(dbRootHist,
+                                 s_startupFile,
+                                 m_savesetFileName);
+      }
+                                              
+  if (false == isConnectedToHistogramDB()) {
     // Set Properties
     TString paintDrawXLabel = bulkHistoOptions.m_xLabel;
     TString paintDrawYLabel = bulkHistoOptions.m_yLabel;
@@ -2676,35 +2812,56 @@ void PresenterMainFrame::addDimSvcToPage()
       dbRootHist->rootHistogram->SetLineColor(paintLineColour);
       dbRootHist->rootHistogram->SetStats(paintStats);
 
-    TString paintDrawOption;
-    if (s_H1D == dbRootHist->histogramType()) {
-      m_drawOption = bulkHistoOptions.m_1DRootDrawOption;
-      paintDrawOption = TString(m_drawOption + TString(" ") +
-        bulkHistoOptions.m_genericRootDrawOption).Data();
-    } else if (s_P1D == dbRootHist->histogramType() ||
-        s_HPD == dbRootHist->histogramType()) {
-      m_drawOption = bulkHistoOptions.m_1DRootDrawOption;
-      paintDrawOption = TString(m_drawOption + TString(" ") +
-        bulkHistoOptions.m_genericRootDrawOption + TString(" E ")).Data();
-    } else if (s_H2D == dbRootHist->histogramType()) {
-      m_drawOption = bulkHistoOptions.m_2DRootDrawOption;
-      paintDrawOption = TString(m_drawOption + TString(" ") +
-        bulkHistoOptions.m_genericRootDrawOption).Data();
+      TString paintDrawOption;
+      if (s_H1D == dbRootHist->histogramType()) {
+        m_drawOption = bulkHistoOptions.m_1DRootDrawOption;
+        paintDrawOption = TString(m_drawOption + TString(" ") +
+          bulkHistoOptions.m_genericRootDrawOption).Data();
+      } else if (s_P1D == dbRootHist->histogramType() ||
+          s_HPD == dbRootHist->histogramType()) {
+        m_drawOption = bulkHistoOptions.m_1DRootDrawOption;
+        paintDrawOption = TString(m_drawOption + TString(" ") +
+          bulkHistoOptions.m_genericRootDrawOption + TString(" E ")).Data();
+      } else if (s_H2D == dbRootHist->histogramType()) {
+        m_drawOption = bulkHistoOptions.m_2DRootDrawOption;
+        paintDrawOption = TString(m_drawOption + TString(" ") +
+          bulkHistoOptions.m_genericRootDrawOption).Data();
+      }
+      dbRootHist->rootHistogram->SetOption(paintDrawOption.Data());                                           
     }
-
-    dbRootHist->rootHistogram->SetOption(paintDrawOption.Data());
-    paintHist(dbRootHist);
   }
+  dbHistosOnPage.push_back(dbRootHist);
+  paintHist(dbRootHist);
+}
+void PresenterMainFrame::addDimSvcToPage()
+{
+  disableAutoCanvasLayoutBtn();
+  // TODO: add locking, exclusive, disable autolayout
+  disableHistogramClearing();
+  
+  stopPageRefresh();
+  if (m_clearedHistos) { clearHistos(); }
+  if (m_referencesOverlayed) { toggleReferenceOverlay(); }
 
+  fClient->WaitFor(dynamic_cast<TGWindow*>(
+                   new HistoPropDialog(this, 646, 435, m_verbosity)));
 
+  TGListTree* list = new TGListTree();
+  checkedTreeItems(list, m_histoSvcListTree);
+
+  TGListTreeItem* currentNode;
+  currentNode = list->GetFirstItem();
+
+  while (0 != currentNode) {
+    addHistoToPage(std::string(*static_cast<TString*>(currentNode->GetUserData())));
     currentNode = currentNode->GetNextSibling();
   }
   list->Delete();
   delete list;
   list = NULL;
-  m_dimSvcListTree->CheckAllChildren(m_dimSvcListTree->GetFirstItem(),
+  m_histoSvcListTree->CheckAllChildren(m_histoSvcListTree->GetFirstItem(),
                                      s_uncheckTreeItems);
-//  fClient->NeedRedraw(m_dimSvcListTree);
+//  fClient->NeedRedraw(m_histoSvcListTree);
 //  Resize();DoRedraw(); // wtf would trigger a redraw???
 
   editorCanvas->Update();
@@ -2719,36 +2876,8 @@ void PresenterMainFrame::addDbHistoToPage()
       TGListTree* list = new TGListTree();
       checkedTreeItems(list, m_databaseHistogramTreeList);
       TGListTreeItem* currentNode = list->GetFirstItem();
-      while (0 != currentNode) {
-        int newHistoInstance = 0;
-        // see if the histogram object exists already
-        for (dbHistosOnPageIt = dbHistosOnPage.begin();
-             dbHistosOnPageIt != dbHistosOnPage.end();
-             ++dbHistosOnPageIt) {
-          int existingHistoInstance = (*dbHistosOnPageIt)->instance();
-          if (0 == (std::string(*static_cast<TString*>(currentNode->
-                    GetUserData()))).compare((*dbHistosOnPageIt)->
-                    identifier()) &&
-              newHistoInstance < existingHistoInstance) {
-            newHistoInstance = existingHistoInstance;
-          }
-        }
-        // ? limit
-        if (newHistoInstance > 998) { newHistoInstance = 0; }
-        newHistoInstance++;
-
-  OnlineHistogram* dimQuery = m_histogramDB->getHistogram(
-    std::string(*static_cast<TString*>(currentNode->GetUserData())) );
-
-        //  Identifier, dimServiceName, refreshrate, instance, histogramDB
-        DbRootHist* dbRootHist = new DbRootHist(
-          std::string(*static_cast<TString*>(currentNode->GetUserData())),
-          m_currentPartition, 2, newHistoInstance,
-          m_histogramDB, analysisLib(), dimQuery, m_verbosity, m_dimBrowser);
-
-        dbHistosOnPage.push_back(dbRootHist);
-        paintHist(dbRootHist);
-
+      while (0 != currentNode) {        
+        addHistoToPage(std::string(*static_cast<TString*>(currentNode->GetUserData())));
         currentNode = currentNode->GetNextSibling();
       }
       list->Delete();
@@ -2772,9 +2901,6 @@ void PresenterMainFrame::addDbHistoToPage()
   editorCanvas->Update();
   enableAutoCanvasLayoutBtn();
 }
-
-
-
 void PresenterMainFrame::setHistogramDimSource(bool tree)
 {
   bool resumeRefreshAfterLoading(false);
@@ -2791,7 +2917,7 @@ void PresenterMainFrame::setHistogramDimSource(bool tree)
     }    
   } else if (tree == s_withTree) {
     TGListTree* list = new TGListTree();
-    checkedTreeItems(list, m_dimSvcListTree);
+    checkedTreeItems(list, m_histoSvcListTree);
   
     TGListTreeItem* currentNode;
     currentNode = list->GetFirstItem();
@@ -2812,21 +2938,21 @@ void PresenterMainFrame::setHistogramDimSource(bool tree)
     delete list;
     list = NULL;
   
-    m_dimSvcListTree->CheckAllChildren(m_dimSvcListTree->GetFirstItem(),
+    m_histoSvcListTree->CheckAllChildren(m_histoSvcListTree->GetFirstItem(),
                                        s_uncheckTreeItems);
   }
 
-//  fClient->NeedRedraw(m_dimSvcListTree);
+//  fClient->NeedRedraw(m_histoSvcListTree);
 //  Resize();DoRedraw(); // wtf would trigger a redraw???
   if (resumeRefreshAfterLoading) { startPageRefresh(); }
 }
 void PresenterMainFrame::dimCollapseAllChildren()
 {
-  if (0 != m_dimSvcListTree &&
-      m_dimSvcListTree->GetSelected()) {
-    collapseTreeChildrenItems(m_dimSvcListTree,
-                              m_dimSvcListTree->GetSelected());
-    fClient->NeedRedraw(m_dimSvcListTree);
+  if (0 != m_histoSvcListTree &&
+      m_histoSvcListTree->GetSelected()) {
+    collapseTreeChildrenItems(m_histoSvcListTree,
+                              m_histoSvcListTree->GetSelected());
+    fClient->NeedRedraw(m_histoSvcListTree);
 //    Resize();DoRedraw(); // wtf would trigger a redraw???
   }
 }
@@ -2856,10 +2982,9 @@ std::string PresenterMainFrame::convDimToHistoID(const std::string & dimSvcName)
     return 0;
   }
 }
-
 void PresenterMainFrame::toggleHistoryPlots()
 {
-  if(m_historyTrendPlots) {
+  if (m_historyTrendPlots) {
     m_historyPlotsButton->SetState(kButtonUp);
     m_viewMenu->UnCheckEntry(HISTORY_PLOTS_COMMAND);
     m_historyTrendPlots = false;
@@ -2868,9 +2993,7 @@ void PresenterMainFrame::toggleHistoryPlots()
     m_historyTrendPlots = true;
     m_viewMenu->CheckEntry(HISTORY_PLOTS_COMMAND);
   }
-
 }
-
 void PresenterMainFrame::toggleReferenceOverlay()
 {
   if (m_referencesOverlayed) {
@@ -2883,6 +3006,16 @@ void PresenterMainFrame::toggleReferenceOverlay()
     m_referencesOverlayed = true;
     m_viewMenu->CheckEntry(OVERLAY_REFERENCE_HISTO_COMMAND);
     enableReferenceOverlay();
+  }
+}
+void PresenterMainFrame::toggleFastHitMapDraw()
+{
+  if (m_fastHitMapDraw) {
+    m_viewMenu->UnCheckEntry(FAST_HITMAP_DRAW_COMMAND);
+    m_fastHitMapDraw = false;
+  } else {
+    m_fastHitMapDraw = true;
+    m_viewMenu->CheckEntry(FAST_HITMAP_DRAW_COMMAND);
   }
 }
 void PresenterMainFrame::pickReferenceHistogram()
@@ -2936,6 +3069,9 @@ void PresenterMainFrame::setHistogramPropertiesInDB()
           m_xLabel.Data();
         std::string paintDrawYLabel = bulkHistoOptions.
           m_yLabel.Data();
+        std::string drawPatternTextEntry = bulkHistoOptions.
+          m_drawPatternTextEntry.Data();          
+          
         int paintLineWidth = bulkHistoOptions.m_lineWidth;
         int paintFillColour = bulkHistoOptions.m_fillColour;
         int paintFillStyle = bulkHistoOptions.m_fillStyle;
@@ -2945,7 +3081,6 @@ void PresenterMainFrame::setHistogramPropertiesInDB()
 
         if (s_H1D == onlineHistogramToSet->hstype() ||
             s_P1D == onlineHistogramToSet->hstype() ||
-            s_pfixMonH1F == onlineHistogramToSet->hstype() ||
             s_pfixMonH1D == onlineHistogramToSet->hstype() ||
             s_pfixMonProfile == onlineHistogramToSet->hstype() ||
             s_HPD == onlineHistogramToSet->hstype()) {
@@ -2979,6 +3114,9 @@ void PresenterMainFrame::setHistogramPropertiesInDB()
                                                &paintStats);
         onlineHistogramToSet->setDisplayOption("DRAWOPTS",
                                                &paintDrawOption);
+
+        onlineHistogramToSet->setDisplayOption("DRAWPATTERN",
+                                               &drawPatternTextEntry);
 
         onlineHistogramToSet->saveDisplayOptions();
 
@@ -3058,7 +3196,6 @@ void PresenterMainFrame::enablePageLoading() {
 void PresenterMainFrame::loadSelectedPageFromDB(const std::string & timePoint,
                                                 const std::string & pastDuration)
 {
-startBenchmark("PresenterMainFrame::loadSelectedPageFromDB");
   if (isConnectedToHistogramDB()) {
 gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
 
@@ -3076,7 +3213,7 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
     std::string rw_pastDuration(pastDuration);
 
     if (0 != m_archive &&
-        ((History == m_presenterMode) || (Editor == m_presenterMode))) {
+        ((History == m_presenterMode) || (EditorOffline == m_presenterMode))) {
       if ("last 8 hours" == m_historyIntervalQuickButton->GetString()) {
         rw_timePoint = s_Now;
         rw_pastDuration = std::string("08:00:00");
@@ -3102,53 +3239,79 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
     if (0 != node && node->GetUserData()) {
       std::string path = std::string(*static_cast<TString*>(
                                      node->GetUserData()));
+startBenchmark(path);                                     
       try {
-        double xlow = 0.0;
-        double ylow = 0.0;
-        double xup = 0.0;
-        double yup = 0.0;
-
         removeHistogramsFromPage();
         m_onlineHistosOnPage.clear();
         OnlineHistPage* page = m_histogramDB->getPage(path);
         if (m_verbosity >= Verbose) {
           std::cout << "Loading page: "  << path << std::endl;
         }
-        m_currentPageHistogramHelp = path;
         if (m_verbosity >= Debug) {
           page->dump();
         }
 
         if (0 != page) {
+          
+//          if (false == page->patternFile().empty()) {
+////            m_drawPattern;
+//            TFile rootFile(page->patternFile().c_str()); 
+//           if (rootFile.IsZombie()) {
+//                std::cout << "Error opening page pattern file" << std::endl;
+//            } else {
+//               TIter next1(rootFile.GetListOfKeys());
+//               TKey* key;    
+//               while ((key = (TKey*)next1())) {
+//                 if (key->ReadObj()->InheritsFrom(TCanvas::Class())) {
+//               m_drawPattern = (TCanvas*)key->ReadObj();
+//                 }
+//               }        
+//           TPad *padsav = (TPad*)gPad;
+//        //   gPad =   editorCanvas->cd();
+//           TObject *obj; //, *clone;
+//        TPad* pad = editorCanvas;
+//           dynamic_cast<TAttLine*>(m_drawPattern)->Copy((TAttLine&)*pad);
+//           dynamic_cast<TAttFill*>(m_drawPattern)->Copy((TAttFill&)*pad);
+//           dynamic_cast<TAttPad*>(m_drawPattern)->Copy((TAttPad&)*pad);
+//        
+//           TIter next(m_drawPattern->GetListOfPrimitives());
+//           while ((obj=next())) {
+//              pad->cd();
+//              if (TBox::Class() == obj->IsA() ||
+//                  TLine::Class() == obj->IsA() ||
+//                  TText::Class() == obj->IsA()) {
+//                  obj->Draw();
+//        //      clone = obj->Clone();
+//        //      pad->GetListOfPrimitives()->Add(clone,next.GetOption());
+//              }
+//           }
+//           if (padsav) padsav->cd();
+//          }
+//          rootFile.Close();
+//       } else {
+//        editorCanvas->Clear();
+//       }
+////       if (m_verbosity >= Debug) {
+//std::cout << "page pattern file: " << page->patternFile() << std::endl;
+////       } 
           page->getHistogramList(&m_onlineHistosOnPage);
           m_onlineHistosOnPageIt = m_onlineHistosOnPage.begin();
-
-          m_tasksNotRunning.clear();
-          
-          m_currentPageHistogramHelp.clear();
-          std::stringstream currentPageHistogramHelp;          
-          
+          m_tasksNotRunning.clear();          
           while (m_onlineHistosOnPageIt != m_onlineHistosOnPage.end()) {
-            currentPageHistogramHelp << (*m_onlineHistosOnPageIt)->htitle()
-                                     << ":" << std::endl 
-                                     << (*m_onlineHistosOnPageIt)->descr()
-                                     << std::endl
-                                     << std::endl;
-                                       
             DbRootHist* dbRootHist;
-            if(History == m_presenterMode) { // no need for DIM
-              dbRootHist = new DbRootHist((*m_onlineHistosOnPageIt)->identifier(),
+            if((History == m_presenterMode) || (EditorOffline == m_presenterMode)) { // no need for DIM
+              dbRootHist = new DbRootHist((*m_onlineHistosOnPageIt)->histo->identifier(),
                                           std::string(""),
-                                          2, (*m_onlineHistosOnPageIt)->instance(),
+                                          2, (*m_onlineHistosOnPageIt)->instance,
                                           m_histogramDB, analysisLib(),
-                                          *m_onlineHistosOnPageIt,
+                                          (*m_onlineHistosOnPageIt)->histo,
                                           m_verbosity,
                                           NULL);
-            } else {
+            } else if((Online == m_presenterMode) || (EditorOnline == m_presenterMode)) {
               bool taskNotRunning(false);             
               for (m_tasksNotRunningIt = m_tasksNotRunning.begin();
                    m_tasksNotRunningIt != m_tasksNotRunning.end(); m_tasksNotRunningIt++) {
-                if (0 == ((*m_tasksNotRunningIt).compare((*m_onlineHistosOnPageIt)->task()))) {
+                if (0 == ((*m_tasksNotRunningIt).compare((*m_onlineHistosOnPageIt)->histo->task()))) {
                   taskNotRunning = true;            
                 }                          
               }
@@ -3156,95 +3319,81 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
               std::string currentPartition("");
               if (taskNotRunning) {
                 dimBrowser = NULL;
-                currentPartition = "";       
+                currentPartition = "";
               } else {
                 dimBrowser = m_dimBrowser;
                 currentPartition = m_currentPartition;
               } 
-              dbRootHist = new DbRootHist((*m_onlineHistosOnPageIt)->identifier(),
-                                          m_currentPartition,
-                                          2, (*m_onlineHistosOnPageIt)->instance(),
+              dbRootHist = new DbRootHist((*m_onlineHistosOnPageIt)->histo->identifier(),
+                                          currentPartition,
+                                          2, (*m_onlineHistosOnPageIt)->instance,
                                           m_histogramDB, analysisLib(),
-                                          *m_onlineHistosOnPageIt,
+                                          (*m_onlineHistosOnPageIt)->histo,
                                           m_verbosity,
                                           dimBrowser);
                                       
               if (dbRootHist->isEmptyHisto()) {
-                m_tasksNotRunning.push_back((*m_onlineHistosOnPageIt)->task());
+                m_tasksNotRunning.push_back((*m_onlineHistosOnPageIt)->histo->task());
               } 
             }
 
             if (0 != m_archive &&
                 ((History == m_presenterMode) ||
-                 (Editor == m_presenterMode && canWriteToHistogramDB()))) {
+                 (EditorOffline == m_presenterMode && canWriteToHistogramDB()))) {
               m_archive->fillHistogram(dbRootHist,
                                        rw_timePoint,
                                        rw_pastDuration);
-              if (dbRootHist && dbRootHist->isEmptyHisto()) {
+//              if (dbRootHist && dbRootHist->isEmptyHisto()) {
                 resumeRefreshAfterLoading = false;
-              }                                       
+//              }                                       
             }
-// TODO: this could be removed ...to give up sooner.            
-//            if (dbRootHist && dbRootHist->isEmptyHisto() &&
-//               (History != m_presenterMode)) {             
-//              if (m_verbosity >= Verbose) {
-//                std::cout << "Histogram "<<(*m_onlineHistosOnPageIt)->identifier() <<
-//                  " is empty!"<<endl;
-//              }
-//              delete dbRootHist;
-//              dbRootHist = new DbRootHist(
-//                                  (*m_onlineHistosOnPageIt)->identifier(),
-//                                  m_currentPartition,
-//                                  2, (*m_onlineHistosOnPageIt)->instance(),
-//                                  m_histogramDB, analysisLib(),
-//                                  *m_onlineHistosOnPageIt,
-//                                  m_verbosity,
-//                                  m_dimBrowser);                                  
-//            }
             
             dbHistosOnPage.push_back(dbRootHist);
             
             if (m_verbosity >= Verbose) {
               std::cout << "db identifier "
-                        << (*m_onlineHistosOnPageIt)->identifier()
+                        << (*m_onlineHistosOnPageIt)->histo->identifier()
                         << std::endl << "\tdb task "
-                        << (*m_onlineHistosOnPageIt)->task() << std::endl    
+                        << (*m_onlineHistosOnPageIt)->histo->task() << std::endl    
                         << "\tdb dimServiceName "
-                        << (*m_onlineHistosOnPageIt)->dimServiceName()
+                        << (*m_onlineHistosOnPageIt)->histo->dimServiceName()
                         << std::endl;
             }
-            if (m_verbosity >= Debug) { (*m_onlineHistosOnPageIt)->dump(); }            
+            if (m_verbosity >= Debug) { (*m_onlineHistosOnPageIt)->histo->dump(); }            
 
-            page->getHistLayout(*m_onlineHistosOnPageIt,
-                                xlow, ylow, xup, yup,
-                                (*m_onlineHistosOnPageIt)->instance());
-            TPad* pad = new TPad(dbRootHist->histoRootName().c_str(),
-                                 TString(""),
-                                 TMath::Abs(xlow), TMath::Abs(ylow),
-                                 TMath::Abs(xup), TMath::Abs(yup));
-            pad->SetBit(kNoContextMenu);
-            pad->SetFillColor(10);
-            editorCanvas->cd();
-            pad->Draw();
-            pad->cd();
+            double xlow = (*m_onlineHistosOnPageIt)->xmin;
+            double ylow = (*m_onlineHistosOnPageIt)->ymin;
+            double xup  = (*m_onlineHistosOnPageIt)->xmax;
+            double yup  = (*m_onlineHistosOnPageIt)->ymax;
 
-            if (0 != dbRootHist && 0 != pad) {
-              if (0 != (dbRootHist->rootHistogram)) {
-//dbRootHist->Draw();
-                dbRootHist->Draw(pad);
-              }
-              dbRootHist->hostingPad = pad;
-            }
-            m_onlineHistosOnPageIt++;
+           TPad* ovPad=NULL;
+           if((*m_onlineHistosOnPageIt)->isOverlap()) { // histogram must be overdrawn on previous hist: look for the corresponding TPad
+             OnlineHistoOnPage *mother = (*m_onlineHistosOnPageIt)->getOverlap();
+             std::vector<DbRootHist*>::iterator prevh;
+             for (prevh=dbHistosOnPage.begin() ; (*prevh) != dbRootHist ; prevh++) {
+               if ( (*prevh)->onlineHistogram() == mother->histo) {
+                 ovPad = (*prevh)->hostingPad;
+                 break;
+               }
+             }
+           }
+           if (m_verbosity >= Debug) {
+             if (ovPad) {
+               std::cout << "drawing overlap on pad " << ovPad <<std::endl;
+             } else {
+               std::cout << "drawing pad X "<< xlow << " to "<< xup <<
+                 "  Y " << ylow << " to " << yup <<std::endl;
+             }
+           }
+          dbRootHist->draw(editorCanvas, xlow, ylow, xup, yup, m_fastHitMapDraw, ovPad);
+          m_onlineHistosOnPageIt++;
           }
           
-          m_currentPageHistogramHelp =  currentPageHistogramHelp.str().c_str();          
           m_pageDescriptionView->Clear();
           m_pageDescription = page->doc();
           m_pageDescriptionView->LoadBuffer(m_pageDescription.c_str());
           m_pageDescriptionView->DataChanged();          
         }
-
       } catch (std::string sqlException) {
         // TODO: add error logging backend - MsgStream?
         setStatusBarText(sqlException.c_str(), 2);
@@ -3255,6 +3404,8 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
                           sqlException.c_str()),
                      kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
       }
+stopBenchmark(path);
+printBenchmark(path);      
     }
     
     if (resumeRefreshAfterLoading) { startPageRefresh(); }
@@ -3267,11 +3418,9 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetDefaultCursor());
     disableReferenceOverlay();
   }
   editorCanvas->Update();
-  if (Editor == m_presenterMode) {
+  if ((EditorOnline == m_presenterMode) || (EditorOffline == m_presenterMode)) {
     enableAutoCanvasLayoutBtn();
-  }
-stopBenchmark("PresenterMainFrame::loadSelectedPageFromDB");
-printBenchmark("PresenterMainFrame::loadSelectedPageFromDB");  
+  }  
 }
 void PresenterMainFrame::deleteSelectedPageFromDB()
 {
@@ -3367,34 +3516,7 @@ void PresenterMainFrame::paintHist(DbRootHist* histogram)
   if (0.5 == xlow) { m_histoPadOffset = 0; }
 
   m_histoPadOffset++;
-
-  TPad* pad;
-  if (0 != histogram) {
-    pad = new TPad(histogram->histoRootName().c_str(), TString("Title"),
-                   xlow, ylow, xup, yup);
-    pad->SetBit(kNoContextMenu);
-    pad->SetFillColor(10);
-    editorCanvas->cd();
-    pad->Draw();
-    pad->cd();
-
-    if (0 != pad && 0 != (histogram->rootHistogram)) {
-//      if (H2D != histogram->hstype()) {
-
-// histogram->rootHistogram->Draw();
-histogram->Draw(pad);
-
-//      } else {
-//        TImage *img = TImage::Create();
-//        img->SetImage((const Double_t *)(((TH2D*)(histogram->rootHistogram))->GetArray()),
-//                      histogram->rootHistogram->GetNbinsX() + 1,
-//                      histogram->rootHistogram->GetNbinsY() + 1, gHistImagePalette);
-//        img->Draw();
-//      }
-//    histogram->setHostPad(pad);
-      histogram->hostingPad = pad;
-    }
-  }
+  histogram->draw(editorCanvas, xlow, ylow, xup, yup, m_fastHitMapDraw);
 }
 void PresenterMainFrame::autoCanvasLayout()
 {
@@ -3443,6 +3565,11 @@ void PresenterMainFrame::deleteSelectedHistoFromCanvas()
     stopPageRefresh();
     resumeRefreshAfterLoading = true;
   }
+  bool referenceOverlay(false);
+  if (m_referencesOverlayed) {
+    disableReferenceOverlay();
+    referenceOverlay = true;
+  }
   if (m_clearedHistos) { clearHistos(); }
     
   DbRootHist* histogram = selectedDbRootHistogram();
@@ -3475,26 +3602,41 @@ void PresenterMainFrame::deleteSelectedHistoFromCanvas()
     }
   }
   if (resumeRefreshAfterLoading) { startPageRefresh(); }
+  if (referenceOverlay) { enableReferenceOverlay(); } 
 }
 DbRootHist* PresenterMainFrame::selectedDbRootHistogram()
 {
+ DbRootHist* dbRootHist = 0;
+
+  bool referenceOverlay(false);
+  if (m_referencesOverlayed) {
+    disableReferenceOverlay();
+    referenceOverlay = true;
+  }
 
   if (0 != gPad) {
-    for (dbHistosOnPageIt = dbHistosOnPage.begin();
+    TIter nextPadElem(gPad->GetListOfPrimitives());
+    TObject* histoCandidate;
+    while (0 != (histoCandidate = nextPadElem())) {
+      if (histoCandidate->InheritsFrom(TH1::Class())) {
+        for (dbHistosOnPageIt = dbHistosOnPage.begin();
         dbHistosOnPageIt != dbHistosOnPage.end();
-        ++dbHistosOnPageIt) {
-      if (0 == ((*dbHistosOnPageIt)->histoRootName()).
-                compare(selectedHistogram()->GetName())) {
-        return *dbHistosOnPageIt;
-      }
+        dbHistosOnPageIt++) {
+          if (0 == std::string((*dbHistosOnPageIt)->rootHistogram->GetName()).compare(histoCandidate->GetName())) {
+            dbRootHist = *dbHistosOnPageIt;
+          }
+        }
+      }   
     }
+    
+    if (0 == dbRootHist) {
     new TGMsgBox(fClient->GetRoot(), this, "Histogram Selection",
                  "Please select a histogram with the middle mouse button",
                  kMBIconStop, kMBOk, &m_msgBoxReturnCode);
-    return NULL;
-  } else {
-    return NULL;    
+    }
   }
+  if (referenceOverlay) { enableReferenceOverlay(); }
+  return dbRootHist;
 }
 void PresenterMainFrame::refreshClock()
 {
@@ -3665,9 +3807,12 @@ void PresenterMainFrame::about()
             std::string("Connected to Histogram Database: ") << (isConnectedToHistogramDB()? std::string("yes") : std::string("no")) << std::endl;
   if (0 != m_histogramDB) {
      config << std::string("Write access to Histogram Database: ") << (canWriteToHistogramDB()? std::string("yes") : std::string("no")) << std::endl <<
-               std::string("Histograms root directory: ") << m_archiveRoot << std::endl <<
+     
                std::string("Reference histograms directory: ") << m_referencePath << std::endl <<
-               std::string("Savesets directory: ") << m_savesetPath << std::endl;
+               std::string("Savesets directory: ") << m_savesetPath << std::endl <<
+               
+               std::string("DB Reference histograms directory: ") << dynamic_cast<OnlineHistDBEnv*>(m_histogramDB)->refRoot() << std::endl <<
+               std::string("DB Savesets directory: ") << dynamic_cast<OnlineHistDBEnv*>(m_histogramDB)->savesetsRoot() << std::endl;
   }
   new TGMsgBox(fClient->GetRoot(), this, "LHCb Presenter",
                Form("%s", config.str().c_str()),

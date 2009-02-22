@@ -1,3 +1,5 @@
+#!/bin/bash
+
 . $LHCb_release_area/ONLINE/ONLINE_v4r14/OnlineSys/v4r14/cmt/setup.sh
 #. $User_release_area/Online/Gaucho/v6r0/cmt/setup.sh
 #. $User_release_area/Online/ExampleGaucho/v3r0/cmt/setup/sh

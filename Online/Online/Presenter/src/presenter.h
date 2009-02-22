@@ -10,12 +10,13 @@
  #define WIN32_LEAN_AND_MEAN
 #endif
 
-static const std::string s_presenterVersion("v0r14");
+static const std::string s_presenterVersion("v0r15");
 // environment variable for archive mount point (i.e. prefix to paths)
 static const std::string s_histdir("HISTDIR");
 static const std::string s_referencePath("HISTREFPATH");
-static const std::string s_savesetsPath("HISTSAVESETSPATH");
- 
+static const std::string s_savesetPath("HISTSAVESETSPATH");
+static const std::string s_dimDnsNodeEnv("DIM_DNS_NODE");
+static const std::string s_tnsAdminEnv("TNS_ADMIN");
 
 // 4 slots+signals: cint hates namespaces
 enum FilterCriteria
@@ -53,7 +54,8 @@ namespace pres
   enum PresenterMode {
     Online = 0,
     History = 1,
-    Editor = 2
+    EditorOnline = 2,
+    EditorOffline = 3
   };
 
   static const bool s_withHistograms    = true;
@@ -76,13 +78,14 @@ namespace pres
   static const std::string s_P2D("P2D");
   static const std::string s_CNT("CNT");
   static const std::string s_gauchocomment("/gauchocomment");
+  static const std::string s_hltNodePrefix("HLT");
   static const std::string s_PAGE("PAGE");
   static const std::string s_TASK("TASK");
   static const std::string s_ALGORITHM("ALGORITHM");
   static const std::string s_SET("SET");
   static const std::string s_LEVEL("LEVEL");
   static const std::string s_setSwitch("_$");
-  static const std::string s_underscrore("_"); // also for DB folders...
+  static const std::string s_underscore("_");
   static const std::string s_slash("/"); // also for DB folders...
   
   static const std::string s_adder("Adder");
@@ -114,8 +117,10 @@ namespace pres
 //  static TPRegexp s_histogramUrlRegexp("^(H1D|H2D|P1D|HPD|P2D)?/?([^/_]+)_([^/_]+)_([^/]+)_([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
 // so let's process the UTGID separately:
 // TODO: make this lazier...
-  static TPRegexp s_histogramUrlRegexpEFF("^(MonP1|MonH1F|MonH1D|MonH2F|MonH2D|H1D|H2D|P1D|HPD|P2D)?/?([^/]+)/([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
-  static TPRegexp s_histogramUrlRegexp("^(MonP1|MonH1F|MonH1D|MonH2F|MonH2D|H1D|H2D|P1D|HPD|P2D)?/?([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
+//  static TPRegexp s_histogramUrlRegexpEFF("^(MonP1|MonH1F|MonH1D|MonH2F|MonH2D|H1D|H2D|P1D|HPD|P2D)?/?([^/]+)/([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
+//  static TPRegexp s_histogramUrlRegexp("^(MonP1|MonH1F|MonH1D|MonH2F|MonH2D|H1D|H2D|P1D|HPD|P2D)?/?([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
+  static TPRegexp s_histogramUrlRegexpEFF("^(MonP1|MonH1D|MonH2D|H1D|H2D|P1D|HPD|P2D)?/?([^/]+)/([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
+  static TPRegexp s_histogramUrlRegexp("^(MonP1|MonH1D|MonH2D|H1D|H2D|P1D|HPD|P2D)?/?([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
 //  static TPRegexp s_histogramUTGIDRegexp("^([^/_]+)?_?([^/_]+)_([^/]+)_([^/]+)$");
   static TPRegexp s_histogramUTGIDRegexp("^(([^/_]+)_)([^/_]+)_([^/]+)_([^/]+)$");
   static TPRegexp s_histogramUTGIDRegexpEFF("^([^/_]+)_([^/]+)_([^/]+)$");
@@ -135,9 +140,9 @@ namespace pres
   static const std::string s_histWriterPw("histeggia194");  
   static const TString s_lhcbMonGiacomo("LHCB_MON_GIACOMO");
 
-  static const TString s_lbora01("lbora01:1528/HISTOGRAMDB");
   static const TString s_oradev10("devdb10");
   static const TString s_histdb("HISTDB");
+  static const TString s_shistdb("SHISTDB");
   static const TString s_lhcbPartionName("LHCb");
 
   static const std::string s_rootFileExtension(".root");
