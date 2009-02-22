@@ -1,13 +1,15 @@
-// $Id: HltConfigSvc.cpp,v 1.22 2009-02-06 19:47:46 graven Exp $
+// $Id: HltConfigSvc.cpp,v 1.23 2009-02-22 19:52:40 graven Exp $
 // Include files 
 
 #include <algorithm>
 
 #include "boost/lexical_cast.hpp"
-#include "boost/format.hpp"
 #include "boost/regex.hpp"
 #include "boost/foreach.hpp"
 #include "boost/algorithm/string/case_conv.hpp"
+#include "boost/lambda/lambda.hpp"
+#include "boost/lambda/bind.hpp"
+namespace bl=boost::lambda;
 
 // from Gaudi
 #include "GaudiKernel/IIncidentSvc.h"
@@ -55,6 +57,7 @@ HltConfigSvc::TCKrep& HltConfigSvc::TCKrep::set(const std::string& s) {
         return *this;
 }
 
+
 std::ostream& operator<<(std::ostream& os, const HltConfigSvc::TCKrep& tck) { return os << tck.str(); }
 
 
@@ -80,7 +83,7 @@ HltConfigSvc::HltConfigSvc( const string& name, ISvcLocator* pSvcLocator)
   //TODO: Already done -- called propertyhandler...[:w
   declareProperty("TCK2ConfigMap", m_tck2config_)->declareUpdateHandler( &HltConfigSvc::updateMap, this);
   declareProperty("initialTCK", m_initialTCK_ )->declareUpdateHandler( &HltConfigSvc::updateInitial, this); 
-  declareProperty("prefetchTCK", m_prefetchTCK_)->declareUpdateHandler( &HltConfigSvc::updatePrefetch, this); // TODO: load all TCK of same type as initialTCK
+  declareProperty("prefetchDir", m_prefetchDir);
   declareProperty("checkOdin", m_checkOdin = true);
   declareProperty("maskL0TCK", m_maskL0TCK = false);
 }
@@ -97,12 +100,6 @@ void HltConfigSvc::updateInitial(Property&) {
     m_initialTCK = TCKrep(m_initialTCK_);
 }
 
-void HltConfigSvc::updatePrefetch(Property&) {
-  m_prefetchTCK.clear();
-  BOOST_FOREACH( const std::string& i, m_prefetchTCK_ ) {
-    m_prefetchTCK.push_back( TCKrep( i )  );
-  }
-}
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -140,17 +137,49 @@ StatusCode HltConfigSvc::initialize() {
                                  std::numeric_limits<long>::min(),rethrow,oneShot);
   }
 
-  for (vector<TCKrep>::const_iterator i = m_prefetchTCK.begin(); i!=m_prefetchTCK.end(); ++i ) {
-     info() << " loading TCK " << *i << endmsg; 
-     if ( !loadConfig( tck2id( *i) ) ) {
-        error() << " failed to load TCK " << *i << endmsg; 
+  
+  // load all TCKs... (brute force, but OK for now...)
+  std::vector<ConfigTreeNodeAlias> tcks = cas()->configTreeNodeAliases(ConfigTreeNodeAlias::alias_type( std::string("TCK/") ));
+  BOOST_FOREACH( const ConfigTreeNodeAlias& tck, tcks ) tck2id( TCKrep( tck.alias().str().substr(4) ) );
+
+  // find the ID of the initial TCK
+  ConfigTreeNode::digest_type initialID = tck2id( TCKrep( m_initialTCK ) );
+
+  if (std::count(m_prefetchDir.begin(),m_prefetchDir.end(),'/')!=0) {
+    error() << " prefetch directory "  << m_prefetchDir << " is too specific" << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  // load all TOPLEVEL aliases for specified release
+  std::vector<ConfigTreeNodeAlias> tops = cas()->configTreeNodeAliases(ConfigTreeNodeAlias::alias_type( std::string("TOPLEVEL/")+m_prefetchDir+'/' ));
+  std::vector<ConfigTreeNodeAlias>::const_iterator initTop = std::find_if( tops.begin(), tops.end(), bl::bind(&ConfigTreeNodeAlias::ref,bl::_1)==initialID );
+  if (initTop == tops.end() ) {
+    error() << " initial TCK (" << m_initialTCK << "->" << initialID << ") not amongst entries in prefetch directory "  << m_prefetchDir << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  // get pointer into initTop->alias(), to the end of TOPLEVEL/+prefetch, to pick up which type this is...
+  std::string::size_type pos = initTop->alias().str().find('/', std::string("TOPLEVEL/"+m_prefetchDir+'/').size() );
+  if (pos == std::string::npos) {
+    error() << " could not determine type from " << initTop->alias() << " with prefetchdir = " << m_prefetchDir << endmsg;
+    return StatusCode::FAILURE;
+  }
+  // and fetch them, and preload their configurations...
+  info() << " prefetching  from " << initTop->alias().str().substr(0,pos) << endmsg;
+  std::vector<ConfigTreeNodeAlias> sameTypes = cas()->configTreeNodeAliases(ConfigTreeNodeAlias::alias_type( initTop->alias().str().substr(0,pos) ));
+
+  for (std::vector<ConfigTreeNodeAlias>::const_iterator i = sameTypes.begin(); i!=sameTypes.end(); ++i ) {
+     info() << " loading config " << *i << endmsg; 
+     if ( !loadConfig( i->ref() ) ) {
+        error() << " failed to load config " << *i << endmsg; 
         return StatusCode::FAILURE;
      }
   }
-  // configure everyone from an a-priori specified TCK
-  TCKrep initialTCK( m_initialTCK );
-  status = configure( tck2id( initialTCK ), false );
-  if (status.isSuccess()) m_configuredTCK = initialTCK;
+
+  // configure everyone from the a-priori specified TCK
+        
+  status = configure( initialID, false );
+  if (status.isSuccess()) m_configuredTCK = TCKrep( m_initialTCK );
   return status;
 }
 
@@ -163,7 +192,7 @@ HltConfigSvc::tck2id(TCKrep tck) const {
     // if upper bit set, ignore L0... in that case, the L0 TCK is generated by PVSS
     // and not by us, and hence we only know it with the L0 part blanked out...
     if ( m_maskL0TCK || (tck.uint() & 0x80000000)!=0 ) {
-	tck.set( tck.uint() & 0xFFFF0000 );
+        tck &= 0xFFFF0000;
         debug() << " masked L0 part of TCK -- now have " << tck << endmsg;
     }
     ConfigTreeNode::digest_type id = ConfigTreeNode::digest_type::createInvalid();
@@ -176,10 +205,6 @@ HltConfigSvc::tck2id(TCKrep tck) const {
 
     // NOTE: we need to access to the IConfigAccessSvc of the parent to make
     // sure we are consistent...
-
-    //TODO: make dedicated type of TCK (containing an 'unsigned int') which defines
-    //      amongst others its text representation, and allows strong typing in 
-    //      interfaces...
 
     i = m_tck2configCache.find( tck );
     if ( i!=m_tck2configCache.end() )  {

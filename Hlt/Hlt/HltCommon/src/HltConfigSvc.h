@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.h,v 1.10 2009-02-03 18:22:09 graven Exp $
+// $Id: HltConfigSvc.h,v 1.11 2009-02-22 19:52:40 graven Exp $
 #ifndef HLTCONFIGSVC_H 
 #define HLTCONFIGSVC_H 1
 
@@ -38,7 +38,7 @@ public:
   virtual void handle(const Incident&);
 
    //TODO: move in dedicated class in HltBase...
-  class TCKrep : public boost::equality_comparable<ConfigTreeNode> {
+  class TCKrep : public boost::equality_comparable<TCKrep> {
       public:
         TCKrep() : m_unsigned(0) {}
         explicit TCKrep(unsigned int i) : m_unsigned(i) { set(i); }
@@ -46,14 +46,14 @@ public:
         bool operator<(const TCKrep& rhs) const { return m_unsigned  < rhs.m_unsigned; } 
         bool operator==(const TCKrep& rhs) const { return m_unsigned == rhs.m_unsigned; } 
         bool operator==(unsigned int rhs) const { return m_unsigned == rhs; } 
-        bool operator!=(const TCKrep& rhs) const { return !operator==(rhs); }
+        TCKrep& operator&=(unsigned int rhs) { return set( uint() & rhs ); }
         TCKrep& operator++() { return set( ++m_unsigned ); }
         const std::string&  str() const { return m_stringRep; }
         unsigned int uint() const { return m_unsigned;  }
         TCKrep& set(const std::string& s);
         TCKrep& set(unsigned i)           { 
                 m_unsigned = i;
-                m_stringRep = boost::str( boost::format("0x%08x")%m_unsigned ) ;
+                m_stringRep = boost::str( boost::format("0x%08x")%i ) ;
                 return *this;
         }
         bool valid() const { return m_unsigned != 0 ; }
@@ -67,12 +67,12 @@ private:
 
    void updateMap(Property&);
    void updateInitial(Property&);
-   void updatePrefetch(Property&);
 
   typedef std::map<TCKrep,std::string> TCKMap_t;
 
-  std::vector<TCKrep>          m_prefetchTCK;     ///< which TCK to prefetch
-  std::vector<std::string>     m_prefetchTCK_;     ///< which TCK to prefetch
+  std::string                  m_prefetchDir;     ///< which set of configurations 
+                                                  ///< to search for same types as initial TCK
+                                                  ///< and to prefetch...
 
   TCKMap_t                     m_tck2config;      ///< from TCK to configuration ID
   std::map<std::string,std::string> m_tck2config_;      ///< from TCK to configuration ID
