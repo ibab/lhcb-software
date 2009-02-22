@@ -33,6 +33,7 @@ Purpose: LHCb Alignment packages.
 		AlignTrTools		v4r0
 		MisAligner		v1r0
 		AlignmentTools		v3r0
+		SolvKernel		v1r4
 	
 </PRE><H1><A NAME=v3r1>2008-06-17 AlignmentSys v3r1</A></H1><PRE>
 - Packages update:
