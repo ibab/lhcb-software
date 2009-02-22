@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2009-02-22 - Gerhard Raven
+  - update format of counter prefix to two digits
+
 ! 2009-02-19 - Leandro de Paula
   - HltFunction and HltFunctionFactories - new filter (MuChi2) for DiMuonLines
 

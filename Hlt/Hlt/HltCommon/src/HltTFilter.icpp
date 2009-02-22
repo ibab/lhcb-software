@@ -1,4 +1,4 @@
-// $Id: HltTFilter.icpp,v 1.18 2009-02-13 13:41:09 hernando Exp $
+// $Id: HltTFilter.icpp,v 1.19 2009-02-22 19:50:43 graven Exp $
 // Include files
 
 #include "EParser.h"
@@ -6,8 +6,7 @@
 #include "boost/lambda/construct.hpp"
 #include "boost/foreach.hpp"
 #include "boost/ref.hpp"
-#include "boost/iterator/indirect_iterator.hpp"
-#include "boost/lexical_cast.hpp"
+#include "boost/format.hpp"
 
 
 template <typename T> class adaptor {
@@ -74,10 +73,8 @@ StatusCode HltTFilter<T>::initialize() {
 template <class T>
 bool HltTFilter<T>::addTFilterData(const std::string& descriptor) {
   debug() << " filter descriptor " << descriptor << endreq;
-  std::string sindex = boost::lexical_cast<std::string>(m_index);
-  TFilterData* ptf = new TFilterData(descriptor,*this,sindex);
-  // kepp the order of the filters to have a nice printout (m_index++)
-  m_index ++;
+  // keep the order of the filters to have a nice printout (m_index++)
+  TFilterData* ptf = new TFilterData(descriptor,*this,boost::str(boost::format("%02d")%m_index++));
   bool ok = EParser::parseFilter(ptf->filtername, ptf->functionname,
                                  ptf->operation,ptf->minvalue,ptf->maxvalue);
   debug() << " function name " << ptf->functionname
