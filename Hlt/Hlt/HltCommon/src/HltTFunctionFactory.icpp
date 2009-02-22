@@ -1,7 +1,9 @@
-// $Id: HltTFunctionFactory.icpp,v 1.9 2009-01-21 12:04:33 graven Exp $
+// $Id: HltTFunctionFactory.icpp,v 1.10 2009-02-22 19:53:24 graven Exp $
 // Include files
 
 #include "HltBase/EFunctions.h"
+#include "boost/algorithm/string/split.hpp"
+#include "boost/algorithm/string/classification.hpp"
 #include "EParser.h"
 #include "HltBase/ESequences.h"
 
@@ -53,8 +55,10 @@ bool HltTFunctionFactory<T>::command(const std::string& command,
 template <class T>
 zen::function<T>* HltTFunctionFactory<T>::function(const std::string& fn) {
 
-  std::vector<std::string> cromos = EParser::parse(fn,",");
-  std::vector<std::string> gens = EParser::parse(cromos[0],"_");
+  std::vector<std::string> cromos; 
+  boost::algorithm::split(cromos,fn,boost::algorithm::is_any_of(","));
+  std::vector<std::string> gens ;
+  boost::algorithm::split(gens,cromos[0],boost::algorithm::is_any_of("_"));
   std::string name = gens[0];
   
   Assert((m_creators.find(name) != m_creators.end()),

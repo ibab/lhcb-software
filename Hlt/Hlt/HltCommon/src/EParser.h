@@ -1,12 +1,9 @@
-// $Id: EParser.h,v 1.1 2009-01-21 12:04:32 graven Exp $
+// $Id: EParser.h,v 1.2 2009-02-22 19:53:24 graven Exp $
 #ifndef HLTBASE_EPARSER_H 
 #define HLTBASE_EPARSER_H 1
 
 // Include files
 #include <string>
-#include <vector>
-#include "boost/algorithm/string/split.hpp"
-#include "boost/algorithm/string/classification.hpp"
 
 /** @class ParserDescriptor ParserDescriptor.h
  *  Helper class to book histogram from a string
@@ -17,9 +14,6 @@
 
 namespace EParser
 {
-  std::vector<std::string> parse(const std::string& descriptor,
-                                 const std::string& separator);
-  
   bool parseFilter(const std::string& decriptor,
                    std::string& namefilter, std::string& mode,
                    double& x0, double& xf);
