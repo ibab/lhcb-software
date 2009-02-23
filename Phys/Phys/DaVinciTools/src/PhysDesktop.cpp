@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.51 2009-02-17 14:29:54 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.52 2009-02-23 10:50:33 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -455,10 +455,8 @@ void PhysDesktop::saveParticles(const LHCb::Particle::ConstVector& pToSave) cons
       particlesToSave->insert((LHCb::Particle*)*icand); // convert to non-const
       // store the related PV and the table. All relaitons and PVs should
       // already be "kept"
-      const LHCb::RecVertex* pv = 
-        dynamic_cast<const LHCb::RecVertex*>(relatedVertex(*icand));
+      const LHCb::RecVertex* pv =  dynamic_cast<const LHCb::RecVertex*>(i_relatedVertexFromTable(*icand));
       if (0!=pv) verticesToSave.push_back(pv);
-      
     } else {
       if (msgLevel(MSG::VERBOSE)) printOut("Skipping", (*icand));
     }
