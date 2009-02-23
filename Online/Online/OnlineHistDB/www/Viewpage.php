@@ -89,6 +89,7 @@ function page_form($page,$mode) {
   printf("File name containing optional ROOT background pattern  <input class='normal' type='text' size=30 name='PAGEPATTERN' value='%s'><br>\n",
          $_POST["PAGEPATTERN"]);
   echo "displays <span class='normal'> ".$_POST["NHISTO"]." </span> histograms:<br>";
+  echo "<input type='hidden' name='NHISTO'  value='".$_POST["NHISTO"]."'>\n";
   echo "<table border=0 >\n";
   echo"<tr><td colspan=6><hr></tr>\n";
   if ($canwrite) {

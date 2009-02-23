@@ -46,8 +46,8 @@ else {
     ",Cy => OnlineHistDB.floattlist(".implode(",",$data["CENTER_Y"]).")".
     ",Sx => OnlineHistDB.floattlist(".implode(",",$data["SIZE_X"]).")".
     ",Sy => OnlineHistDB.floattlist(".implode(",",$data["SIZE_Y"]).")".
-    ",theOverlap => OnlineHistDB.inttlist(".implode(",",$data["MOTHERH"]).")".
-    ",theOvOrder => OnlineHistDB.inttlist(".implode(",",$data["IOVERLAP"]).")".
+    ",theOverlap => inttlist(".implode(",",$data["MOTHERH"]).")".
+    ",theOvOrder => inttlist(".implode(",",$data["IOVERLAP"]).")".
     "); end;";
 }
 if($debug) echo "command is $command <br>";
