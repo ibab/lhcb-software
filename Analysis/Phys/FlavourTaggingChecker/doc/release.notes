@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.47 2009-01-15 13:56:54 jpalac Exp $
+! $Id: release.notes,v 1.48 2009-02-23 21:04:14 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 !-----------------------------------------------------------------------------
+
+! 2009-02-23 - Marco Musy
+ - adapt python scripts
+ - add variables for the chi2 of the IP
+ - add analysis tools in root/
 
 !=====================FlavourTaggingChecker v3r3 2009-01-15 ================
 
