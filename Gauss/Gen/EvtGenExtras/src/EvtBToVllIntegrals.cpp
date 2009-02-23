@@ -1,3 +1,5 @@
+#include "EvtGenBase/EvtReport.hh"
+
 #include "EvtGenModels/EvtBToVllIntegrals.hh"
 #include "EvtGenModels/EvtBToVllQCDUtils.hh"
 
@@ -282,18 +284,18 @@ double Integrate::doIntegral(const gsl_function& F) const{
 	double error = 0;
 
 	const int nDivisions = 500;
-	const double accuracyGoal = 1e-6;
+	const double accuracyGoal = 1e-8;
 
 	gsl_integration_workspace* w = gsl_integration_workspace_alloc(nDivisions);
 
 	const int intCode = gsl_integration_qag(&F, 0, 1, 0, accuracyGoal,
 			nDivisions, GSL_INTEG_GAUSS61, w, &result, &error);
 	if (intCode != 0) {
-		std::cerr << "Numerical integration did not return cleanly."
+		report(WARNING,"EvtGen") << "Numerical integration did not return cleanly."
 				<< std::endl;
-		std::cerr << "Return code of the integration was " << intCode
+		report(WARNING,"EvtGen") << "Return code of the integration was " << intCode
 				<< std::endl;
-		std::cerr << "Result: " << result << " Error: " << error << std::endl;
+		report(WARNING,"EvtGen") << "Result: " << result << " Error: " << error << std::endl;
 	}
 	gsl_integration_workspace_free(w);
 	return result;
