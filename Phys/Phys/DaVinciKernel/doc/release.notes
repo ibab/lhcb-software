@@ -1,8 +1,14 @@
-!$Id: release.notes,v 1.289 2009-02-18 15:54:47 cattanem Exp $
+!$Id: release.notes,v 1.290 2009-02-23 13:14:11 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2009-02-23 - Juan PALACIOS
+ - src/Lib/DVAlgorithm.cpp
+  . getRelatedPV(const LHCb::Particle* part): Add protection for null particle*
+    being passed as argument. Print 10 warnings if no PV found, instead of
+    infinite errors.
 
 !======================== DaVinciKernel v7r3 2009-02-18 =====================
 ! 2009-02-17 - Juan PALACIOS
