@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-02-23 - Marco Cattaneo
+ - Remove temporary RICH fix, will be part of release...
+
 ! 2009-02-21 - Chris Jones
  - Add a (temporary) fix to the RICH reconstruction for DC09 processing that
    was too late for the REC release.
