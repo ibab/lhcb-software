@@ -7,46 +7,46 @@ branches cmt doc options
 # HLT1 and common packages
 #=======================================================
 
-use HltConf             v2r0    Hlt   # Vanya Belyaev, Gerhard Raven
-use HltBase             v6r0    Hlt   # Jose Angel Hernando-Morata
-use HltCommon           v5r0    Hlt   # Jose Angel Hernando-Morata
+use HltConf             v2r3    Hlt   # Vanya Belyaev, Gerhard Raven
+use HltBase             v6r1    Hlt   # Jose Angel Hernando-Morata
+use HltCommon           v5r1    Hlt   # Jose Angel Hernando-Morata
 
 use HltTracking         v3r8    Hlt   # Jose Angel Hernando-Morata
 use HltHadAlley         v3r3p1  Hlt   # Jose Angel Hernando-Morata
 
-use HltEcalAlley        v1r5    Hlt   # Mariusz Witek
+use HltEcalAlley        v1r6    Hlt   # Mariusz Witek
 
 use HltMuon             v3r4p1  Hlt   # Alessia Satta          
-use HltMuonAlley        v2r7p1  Hlt   # Sandra Amato 
+use HltMuonAlley        v2r8    Hlt   # Sandra Amato 
 use HltL0Conf           v2r8    Hlt   # Johannes Albrecht
 use HltL0MuonConf       v3r5    Hlt   # Alessia Satta/Sandra Amato  
 
-use HltRecChecker	v1r8	Hlt   # Jose Angel Hernando-Morata
-use HltGlobalMonitor	v2r0	Hlt   # Bruno de Paula
-use HltLuminosity       v2r4    Hlt   # Jaap Panman
+use HltRecChecker	v1r9	Hlt   # Jose Angel Hernando-Morata
+use HltGlobalMonitor	v2r1	Hlt   # Bruno de Paula
+use HltLuminosity       v2r5    Hlt   # Jaap Panman
 
-use HltRawData          v1r8    Hlt   # Tomasz Skwarnicki
+use HltRawData          v1r9    Hlt   # Tomasz Skwarnicki
 
 # And now for something completely different
-use HltPython	        v1r12   Hlt   # Jose Angel Hernando-Morata
+use HltPython	        v1r13   Hlt   # Jose Angel Hernando-Morata
 
 #=======================================================
 # HLT2 packages
 #=======================================================
 
-use HltSelections       v8r7    Hlt   # Patrick Koppenburg
+use HltSelections       v8r8    Hlt   # Patrick Koppenburg
 use Fidel               v1r3p1  Phys  # Sara Furcas    
 use HltKshort           v1r6    Hlt   # Jaap Panman
 use HltHidValley        v1r2p1  Hlt   # Marcin Kucharczyk
 
-use HltSelChecker       v7r5    Hlt   # Patrick Koppenburg
+use HltSelChecker       v7r6    Hlt   # Patrick Koppenburg
 
 #=============================================================
 # Stuff added temporarily to allow a fast development cycle
 #=============================================================
 
 use LoKiTrigger         v8r1   Phys   # Vanya Belyaev
-use TisTosTobbing       v3r1   Phys   # Tomasz Skwarnicki  
+use TisTosTobbing       v3r2   Phys   # Tomasz Skwarnicki  
 
 
 # Allow the generation of QMTest summary 
