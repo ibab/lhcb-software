@@ -4,10 +4,11 @@
 open PERM,">permissions.sql";
 open SYNO,">synonyms.sql";
 
-print PERM "
-grant create SYNONYM to HIST_READER;
-grant EXECUTE on ONLINEHISTDB  to HIST_READER;
-grant create SYNONYM to HIST_WRITER;
+
+#grant create SYNONYM to HIST_READER;
+#grant create SYNONYM to HIST_WRITER;
+print PERM 
+"grant EXECUTE on ONLINEHISTDB  to HIST_READER;
 grant EXECUTE on ONLINEHISTDB  to HIST_WRITER;
 grant EXECUTE on INTLIST to HIST_WRITER;
 grant EXECUTE on INTTLIST to HIST_WRITER;
