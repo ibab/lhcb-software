@@ -35,7 +35,6 @@ class QCDFactorisation
 {
 public:
 	
-	//TODO: Replace form factors with something better
 	QCDFactorisation(const qcd::IPhysicsModel& _model, const bdkszmm::PARAMETERIZATIONS _ffModel, bool _calcAFBZero = false);
 	virtual ~QCDFactorisation();
 	
@@ -46,7 +45,6 @@ public:
 	void init();
 	
 	//physics related utility functions
-	void mapAFBDistribution() const;
 	double getAFB(const double q2) const;
 	double findAFBZero() const;
 	double getDstar(const double q2, const std::vector<EvtComplex>& tensors) const;

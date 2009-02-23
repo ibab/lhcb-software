@@ -1,3 +1,5 @@
+#include "EvtGenBase/EvtReport.hh"
+
 #include "EvtGenBase/EvtMathematicaFn.hh"
 #include "EvtGenModels/EvtBToVllBenchMarkPhysicsModels.hh"
 #include "EvtGenModels/EvtBToVllConstants.hh"
@@ -73,17 +75,18 @@ void qcd::GenericModel::parseCommand(const WilsonCoefficients<WilsonType>* C,
 							//do we multiply or replace
 							const WilsonType set = doMultiply ? value*(*C)(coefficientNumber) : value;
 							(*C)(coefficientNumber) = set;
-							std::cout << "C(" << coefficientNumber << ") = " << set << std::endl;
+							report(INFO, "EvtGen") << "C(" << coefficientNumber << ") = " << set << std::endl;
 						}else{
 							//do we multiply or replace
 							const WilsonType set = doMultiply ? value*(*CR)(coefficientNumber) : value;
 							(*CR)(coefficientNumber) = set;
-							std::cout << "R(" << coefficientNumber << ") = " << set << std::endl;
+							report(INFO, "EvtGen") << "R(" << coefficientNumber << ") = " << set << std::endl;
 						}
 					}
 					valueString.str("");
 					coefficientCount--;//count committed WCs
 					doMultiply = false;//default is to replace
+					isRight = false;//default is left-handed
 				}
 				break;
 			case 'r'://start of a Wilson coefficient index
@@ -256,6 +259,42 @@ qcd::WCPtr qcd::FBMSSMPhysicsModel::getRightWilsonCoefficientsMW() const{
 	(*C)(8) = EvtComplex(0.002402061155750922,-0.004007472550665057);
 	(*C)(9) = EvtComplex(0.002381990935713308,-0.000052802454496512474);
 	(*C)(10) = 0.003902447228122236;
+	(*C)(11) = 0.0;
+	(*C)(12) = 0.0;
+	return qcd::WCPtr(C);
+	
+}
+
+qcd::WCPtr qcd::GMSSMPhysicsModel::getLeftWilsonCoefficientsMW() const{
+	
+	qcd::WilsonCoefficients<WilsonType>* C = new qcd::WilsonCoefficients<WilsonType>(constants::MW,12,DIMENSION10);
+	(*C)(1) = 0.16027730228555678;
+	(*C)(2) = 1.001883694120693;
+	(*C)(3) = -0.0003010297434531897;
+	(*C)(4) = -0.0033763414871926236;
+	(*C)(5) = 0.00003470534399433969;
+	(*C)(6) = 0.00006507251998938692;
+	(*C)(7) = EvtComplex(-0.0004803778839307768,0.000016247731584620343);
+	(*C)(8) = EvtComplex(0.0002768848840513995,0.00006166700793876063);
+	(*C)(9) = 0.018878325003090557;
+	(*C)(10) = -0.0410450721295377;
+	(*C)(11) = EvtComplex(0.0002987273062585297,0.0007724666520045042);
+	(*C)(12) = EvtComplex(0.0007818674483701221,0.0006982595368483323);
+	return qcd::WCPtr(C);
+}
+qcd::WCPtr qcd::GMSSMPhysicsModel::getRightWilsonCoefficientsMW() const{
+	
+	qcd::WilsonCoefficients<WilsonType>* C = new qcd::WilsonCoefficients<WilsonType>(constants::MW,12,DIMENSION10);
+	(*C)(1) = 0.0;
+	(*C)(2) = 0.0;
+	(*C)(3) = 0.0;
+	(*C)(4) = 0.0;
+	(*C)(5) = 0.0;
+	(*C)(6) = 0.0;
+	(*C)(7) = EvtComplex(0.1744518871605414,0.1744955440720616);
+	(*C)(8) = EvtComplex(0.4984731347470766,0.5050215413429553);
+	(*C)(9) = EvtComplex(0.018171005138395074,0.018494808888938386);
+	(*C)(10) = EvtComplex(0.0033620098506148494,0.003352657913120917);
 	(*C)(11) = 0.0;
 	(*C)(12) = 0.0;
 	return qcd::WCPtr(C);

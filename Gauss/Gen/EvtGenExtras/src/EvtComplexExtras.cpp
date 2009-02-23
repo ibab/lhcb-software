@@ -8,6 +8,9 @@
 #include "EvtGenBase/EvtComplex.hh"
 #include "EvtGenBase/EvtComplexExtras.hh"
 
+#include "gsl/gsl_complex.h"
+#include "gsl/gsl_complex_math.h"
+
 EvtComplex atan(const EvtComplex& cmp){
 	gsl_complex c = gsl_complex_rect(real(cmp), imag(cmp));
 	c = gsl_complex_arctan(c);

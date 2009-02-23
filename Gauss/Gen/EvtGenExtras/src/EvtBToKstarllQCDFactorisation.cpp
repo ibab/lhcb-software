@@ -76,10 +76,9 @@ void QCDFactorisation::init(){
 	DEBUGPRINT("CR_mb: ", *(parameters->CR_mb));//V
 	DEBUGPRINT("CR_mb3: ", *(parameters->CR_mb3));//V
 	
-	//mapAFBDistribution();
 	if(calcAFBZero){
 		double afbZero = findAFBZero();
-		report(ERROR,"EvtGen") << "AFB Zero Crossing point is: " << afbZero << " (GeV^2)" <<std::endl;
+		report(NOTICE,"EvtGen") << "AFB Zero Crossing point is: " << afbZero << " (GeV^2)" <<std::endl;
 	}
 	
 #if 1
@@ -151,12 +150,10 @@ void QCDFactorisation::getFormFactors(const double q2,
 void QCDFactorisation::getAmp(EvtParticle* parent, EvtAmp& amp) const{
 	
 	EvtVector4R q = parent->getDaug(1)->getP4() + parent->getDaug(2)->getP4();
-	//double MB = parent->mass();
-	//double mK = parent->getDaug(0)->mass();
 	const double q2 = (q.mass2());
 	const double MB = constants::mB;
 	const double mK = constants::mKstar;
-	//const double q2 = 5.0;
+	//const double q2 = 3.9;
 	const double mKhat = mK/MB;
 	DEBUGPRINT("MB: ", MB);
 	
@@ -298,26 +295,6 @@ double QCDFactorisation::getAFB(const double q2) const{
 										(mlhat/mk)*( real(tensS2*conj(tensB))*(1 - shat - mk*mk) - 
 														real(tensS2*conj(tensC))*lambda) );
 	return AFB;
-}
-
-void QCDFactorisation::mapAFBDistribution() const{
-	
-	const double q2min = 0.5;
-	const double q2max = 11.5;
-	const double q2step = 0.05;
-	
-	std::ofstream outputdata("afb_values.dat");
-	
-	double q2 = q2min;
-	while(q2 < q2max){
-	
-		const double AFB = getAFB(q2);
-		std::cout << "AFB: q2: " << q2 << " AFB: " << AFB << std::endl;
-		outputdata << q2 << "\t" << AFB << std::endl;
-		
-		q2 += q2step;
-	}
-	outputdata.close();
 }
 
 double QCDFactorisation::findAFBZero() const{
@@ -674,8 +651,8 @@ void QCDFactorisation::getTnAmplitudes(const double q2, const double MB, const d
 		const EvtComplex tp_2 = t1_int_right.get_t(2, xi, CR1);
 		DEBUGPRINT("tp[2]: ", tp_2);
 		
-		C9p.setVal(1,(2*constants::mb*MB*tp_1)/(q2*xi[1]));
-		C9p.setVal(2,(-2*constants::mb*tp_2)/(MB*xi[2]));
+		C9p.set(1,(2*constants::mb*MB*tp_1)/(q2*xi[1]));
+		C9p.set(2,(-2*constants::mb*tp_2)/(MB*xi[2]));
 		Ceff1_9p = (*(parameters->CR_mb))(9);
 		
 		DEBUGPRINT("C9p[1]: ", C9p[1]);

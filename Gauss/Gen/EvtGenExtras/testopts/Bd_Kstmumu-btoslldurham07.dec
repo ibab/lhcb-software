@@ -1,4 +1,4 @@
-# $Id: Bd_Kstmumu-btoslldurham07.dec,v 1.1 2009-02-02 12:07:28 wreece Exp $
+# $Id: Bd_Kstmumu-btoslldurham07.dec,v 1.2 2009-02-23 14:49:16 wreece Exp $
 #
 # This is the decay file for the decay B0 -> MU+ MU- K*0(-> K+ PI-)
 #
@@ -18,20 +18,22 @@ Alias      MyK*0       K*0
 Alias      Myanti-K*0  anti-K*0
 ChargeConj Myanti-K*0  MyK*0
 #
-EVTBTOKSTARLLDURHAM07_MODEL physicsModel(Standard_Model),calcAFBZero(1)
-#EVTBTOKSTARLLDURHAM07_MODEL physicsModel(LHT_Model)
-#EVTBTOKSTARLLDURHAM07_MODEL physicsModel(UED_Model)
-#EVTBTOKSTARLLDURHAM07_MODEL physicsModel(MSSM_Low_Tan_Beta_Model)
-#EVTBTOKSTARLLDURHAM07_MODEL physicsModel(MSSM_High_Tan_Beta_Model)
+#BTOKSTARLLDURHAM07_MODEL physicsModel(Standard_Model)
+#BTOKSTARLLDURHAM07_MODEL physicsModel(FBMSSM_Model)
+#BTOKSTARLLDURHAM07_MODEL physicsModel(GMSSM_Model)
+#BTOKSTARLLDURHAM07_MODEL physicsModel(LHT_Model)
+#BTOKSTARLLDURHAM07_MODEL physicsModel(UED_Model)
+#BTOKSTARLLDURHAM07_MODEL physicsModel(MSSM_Low_Tan_Beta_Model)
+#BTOKSTARLLDURHAM07_MODEL physicsModel(MSSM_High_Tan_Beta_Model)
 
-#EVTBTOKSTARLLDURHAM07_MODEL physicsModel(MSSM_High_Tan_Beta_Model),calcAFBZero(1),formFactorModel(0)
-#EVTBTOKSTARLLDURHAM07_MODEL physicsModel(Standard_Model),highq2Cut(0.75),lowq2Cut(12),calcAFBZero(1),formFactorModel(0)
-#EVTBTOKSTARLLDURHAM07_MODEL physicsModel(Standard_Model),calcAFBZero(1),formFactorModel(0)
-#EVTBTOKSTARLLDURHAM07_MODEL physicsModel(Generic_Model),wilsonCoefficients(c1=0.16:c9=+0.14-J0.001:c8*0.9:c2=-0.8763-I0.883:)
-#EVTBTOKSTARLLDURHAM07_MODEL physicsModel(LHT_Model),calcAFBZero(1),formFactorModel(0)
+#BTOKSTARLLDURHAM07_MODEL physicsModel(MSSM_High_Tan_Beta_Model),calcAFBZero(1),formFactorModel(0)
+#BTOKSTARLLDURHAM07_MODEL physicsModel(Standard_Model),highq2Cut(0.75),lowq2Cut(12),calcAFBZero(1),formFactorModel(0)
+#BTOKSTARLLDURHAM07_MODEL physicsModel(Standard_Model),calcAFBZero(1),formFactorModel(0)
+#BTOKSTARLLDURHAM07_MODEL physicsModel(Generic_Model),wilsonCoefficients(c1=0.16:r9=+0.14-J0.001:c8*0.9:c2=-0.8763-I0.883:R8*1.10:)
+#BTOKSTARLLDURHAM07_MODEL physicsModel(LHT_Model),calcAFBZero(1),formFactorModel(0)
 #
 Decay B0sig
-  1.000        MyK*0     mu+     mu-     EVTBTOKSTARLLDURHAM07;
+  1.000        MyK*0     mu+     mu-     BTOKSTARLLDURHAM07;
 Enddecay
 CDecay anti-B0sig
 #

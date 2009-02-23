@@ -36,6 +36,9 @@ using constants::Pi;
  * C10 is the 10th Number
  * CQ1 is the 11th Number
  * CQ2 is the 12th Number
+ * 
+ * The same goes for the right-handed versions, although
+ * currently the code only deals with C'_{7-10}.
  */
 
 /**

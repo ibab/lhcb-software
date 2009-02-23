@@ -6,9 +6,6 @@
 #include "EvtGenBase/EvtConst.hh"
 #include "EvtGenBase/EvtComplex.hh"
 
-#include "gsl/gsl_complex.h"
-#include "gsl/gsl_complex_math.h"
-
 //extra functions using the GSL
 EvtComplex atan(const EvtComplex& cmp);
 EvtComplex chop(const EvtComplex& cmp);

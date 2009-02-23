@@ -5,10 +5,6 @@
 #include "EvtBToVllWC.hh"
 #include "EvtBToVllQCDUtils.hh"
 
-#include "EvtGenBase/EvtReport.hh"
-
-#include <utility>
-
 namespace qcd{
 
 class LeftHandedPhysicsModel : public IPhysicsModel {
@@ -113,6 +109,15 @@ public:
 	qcd::WCPtr getLeftWilsonCoefficientsMW() const;
 	qcd::WCPtr getRightWilsonCoefficientsMW() const;
 };	
+
+class GMSSMPhysicsModel : public IPhysicsModel {
+public:	
+	std::string getModelName() const{
+			return "GMSSM_Model";
+		}
+	qcd::WCPtr getLeftWilsonCoefficientsMW() const;
+	qcd::WCPtr getRightWilsonCoefficientsMW() const;
+};
 
 }
 #endif /*BENCHMARKPHYSICSMODELS_H_*/

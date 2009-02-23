@@ -47,11 +47,10 @@
 qcd::IPhysicsModel* EvtBToKStarllDurham07::_model = 0;
 QCDFactorisation* EvtBToKStarllDurham07::_calculator = 0;
 double EvtBToKStarllDurham07::_poleSize = 0;
-//set so the efficientcy is not so terrible!
+
 double EvtBToKStarllDurham07::_lowq2Cut = 0.5;
 double EvtBToKStarllDurham07::_highq2Cut = 18;
 bdkszmm::PARAMETERIZATIONS EvtBToKStarllDurham07::_ffModel = bdkszmm::BALL07PRIVATE;
-unsigned int EvtBToKStarllDurham07::_timesCalled = 0;
 bool EvtBToKStarllDurham07::_calcAFBZero = false;
 
 EvtBToKStarllDurham07::EvtBToKStarllDurham07():
@@ -78,8 +77,6 @@ void EvtBToKStarllDurham07::decay( EvtParticle *parent ){
 	 */
 	setWeight(parent->initializePhaseSpace(getNDaug(),getDaugs(),getPoleSize(),1,2));
 	_calculator->getAmp(parent,_amp2);
-	_timesCalled++;
-	//std::cout << "times called " << _timesCalled << std::endl;
 }
 
 
@@ -91,7 +88,7 @@ void EvtBToKStarllDurham07::initProbMax(){
 		return;
 	}
 	
-	printTime("Beginning of initProbMax");
+	//printTime("Beginning of initProbMax");
 
 	const EvtId parent = getParentId();
 	const EvtId meson = getDaug(0);
@@ -320,7 +317,7 @@ void EvtBToKStarllDurham07::initProbMax(){
 	setProbMax(maxfoundprob);
 	setPoleSize(poleSize);
 	
-	printTime("End of initProbMax");
+	//printTime("End of initProbMax");
 }
 
 /** Set up the physics model to use */
@@ -451,6 +448,7 @@ void EvtBToKStarllDurham07::handleModelCommand(const std::string& modelName){
 	std::list<qcd::IPhysicsModel*> models;
 	models.push_back(new qcd::GenericModel);
 	models.push_back(new qcd::FBMSSMPhysicsModel);
+	models.push_back(new qcd::GMSSMPhysicsModel);
 	models.push_back(new qcd::LHTPhysicsModel);
 	models.push_back(new qcd::MSSMLowTanBeta);
 	models.push_back(new qcd::MSSMHighTanBeta);

@@ -171,7 +171,7 @@ public:
 		return (index == 1) ? values.first : values.second;
 	};
 	
-	void setVal(const unsigned int index, const T& val){
+	void set(const unsigned int index, const T& val){
 		if(index == 1){
 			values.first = val;
 		}else if(index == 2){

@@ -19,7 +19,7 @@ public:
 	virtual ~EvtBToKStarllDurham07();
 
 	void getName(std::string& name) {
-		name = "EVTBTOKSTARLLDURHAM07";
+		name = "BTOKSTARLLDURHAM07";
 	}
 	EvtDecayBase* clone();
 
@@ -28,7 +28,7 @@ public:
 	virtual void initProbMax();
 
 	virtual std::string commandName() {
-		return "EVTBTOKSTARLLDURHAM07_MODEL";
+		return "BTOKSTARLLDURHAM07_MODEL";
 	}
 	virtual void command(std::string cmd);
 	
@@ -46,7 +46,6 @@ private:
 	static double _lowq2Cut;
 	static double _highq2Cut;
 	static bdkszmm::PARAMETERIZATIONS _ffModel;
-	static unsigned int _timesCalled;
 	static bool _calcAFBZero;
 	
 protected:
