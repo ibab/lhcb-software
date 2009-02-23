@@ -1,9 +1,9 @@
 #!/bin/bash
-#. /group/online/dataflow/scripts/pvss_preamble.sh $*
-#cd $RELEASE_DIR/Online/OnlineControls/cmt
-#. setup.vars
-cd /home/frankm/cmtuser/Gaudi_v19r2/Online/OnlineControls/cmt
-. PVSS.setup.RECOTEST
+. /group/online/dataflow/scripts/pvss_preamble.sh $*
+cd $RELEASE_DIR/Online/OnlineControls/cmt
+. setup.vars
+#cd /home/frankm/cmtuser/Gaudi_v19r2/Online/OnlineControls/cmt
+#. PVSS.setup.RECOTEST
 # export PVSS_II=/localdisk/pvss/${PVSS_system}/config/config
 export LD_PRELOAD=${PYTHONHOME}/lib/libpython2.4.so
 #

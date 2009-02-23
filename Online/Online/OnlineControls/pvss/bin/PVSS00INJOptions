@@ -1,0 +1,2 @@
+#!/bin/bash
+. `dirname $0`/PVSS00api.sh -NAME PVSS00INJOptions -DLL PVSSInterface -FUN pvss_pymain $*

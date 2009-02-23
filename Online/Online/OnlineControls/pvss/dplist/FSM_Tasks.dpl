@@ -6,8 +6,8 @@ fwOT_FSM_Tasks	_FwFsmObjectType	168586
 
 # DpValue
 ElementName	TypeName	_original.._value	_original.._status	_original.._stime
-fwOT_FSM_Tasks.panel	_FwFsmObjectType	"StreamControl/FSM_Tasks.pnl"	0x101	19.09.2008 16:09:51.472
-fwOT_FSM_Tasks.components	_FwFsmObjectType		0x141	19.09.2008 16:09:51.474
+fwOT_FSM_Tasks.panel	_FwFsmObjectType	"StreamControl/FSM_Tasks.pnl"	0x101	03.02.2009 07:02:32.647
+fwOT_FSM_Tasks.components	_FwFsmObjectType		0x141	13.10.2008 07:54:16.379
 fwOT_FSM_Tasks.states	_FwFsmObjectType	"NOT_READY", "FwStateAttention1", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
 |when ( $ALL$FwCHILDREN in_state {NOT_READY,READY,RUNNING} )  move_to CONFIGURED
 |when ( $ALL$FwCHILDREN in_state STOPPED )  move_to STOPPED
@@ -36,7 +36,7 @@ fwOT_FSM_Tasks.states	_FwFsmObjectType	"NOT_READY", "FwStateAttention1", "when (
 |when ( $ALL$FwCHILDREN in_state FINALIZED )  move_to FINALIZED
 |when ( $ALL$FwCHILDREN in_state STOPPED )  move_to STOPPED
 |when ( $ALL$FwCHILDREN in_state {OFFLINE,NOT_READY} )  move_to NOT_READY
-|", "", ""	0x101	25.09.2008 13:13:21.407
+|", "", ""	0x101	03.02.2009 07:03:07.509
 fwOT_FSM_Tasks.actions	_FwFsmObjectType	"NOT_READY/Configure", "", "1", "move_to CONFIGURED
 ", "0", "NOT_READY/Unload", "", "1", "do Unload $ALL$FwCHILDREN
 if ( $ALL$FwCHILDREN in_state OFFLINE )  then
@@ -68,10 +68,9 @@ move_to NOT_READY
 if ( $ALL$FwCHILDREN in_state NOT_READY )  then
   move_to CREATED
 endif
-if ( $ANY$FwCHILDREN in_state OFFLINE )  then
-  move_to ERROR
-endif
-", "0", "CONFIGURED/Unload", "", "1", "do Unload $ALL$FwCHILDREN
+!if ( $ANY$FwCHILDREN in_state OFFLINE )  then
+!  move_to ERROR
+!endif", "0", "CONFIGURED/Unload", "", "1", "do Unload $ALL$FwCHILDREN
 if ( $ALL$FwCHILDREN in_state OFFLINE )  then
    move_to NOT_READY
 endif
@@ -359,5 +358,5 @@ if ( $ALL$FwCHILDREN in_state OFFLINE )  then
    move_to NOT_READY 
 endif
 move_to NOT_READY
-", "0"	0x101	25.09.2008 13:13:21.406
-fwOT_FSM_Tasks.parameters	_FwFsmObjectType		0x141	19.09.2008 16:09:51.482
+", "0"	0x101	03.02.2009 07:03:07.507
+fwOT_FSM_Tasks.parameters	_FwFsmObjectType		0x141	13.10.2008 07:54:16.390

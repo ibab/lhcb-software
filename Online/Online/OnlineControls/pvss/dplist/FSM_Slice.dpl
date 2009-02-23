@@ -6,8 +6,8 @@ fwOT_FSM_Slice	_FwFsmObjectType	168583
 
 # DpValue
 ElementName	TypeName	_original.._value	_original.._status	_original.._stime
-fwOT_FSM_Slice.panel	_FwFsmObjectType	"StreamControl/StreamEditor.pnl"	0x101	13.10.2008 09:06:40.754
-fwOT_FSM_Slice.components	_FwFsmObjectType		0x141	13.10.2008 07:10:23.549
+fwOT_FSM_Slice.panel	_FwFsmObjectType	"StreamControl/StreamEditor.pnl"	0x101	03.02.2009 07:02:55.374
+fwOT_FSM_Slice.components	_FwFsmObjectType		0x101	13.10.2008 09:09:13.512
 fwOT_FSM_Slice.states	_FwFsmObjectType	"NOT_READY", "FwStateAttention1", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
 |when ( $ALL$FwCHILDREN in_state {CONFIGURED,CREATED,READY,RUNNING} )  move_to CONFIGURED
 |", "", "", "ERROR", "FwStateAttention3", "when ( ( $ANY$FwCHILDREN in_state NOT_READY ) and
@@ -40,7 +40,7 @@ fwOT_FSM_Slice.states	_FwFsmObjectType	"NOT_READY", "FwStateAttention1", "when (
 |", "", "", "FINALIZED", "FwStateAttention1", "when ( $ANY$FwCHILDREN in_state ERROR )  move_to ERROR
 |when ( $ALL$FwCHILDREN in_state NOT_READY )  move_to NOT_READY
 |when ( $ALL$FwCHILDREN in_state {STOPPED,READY} )  move_to STOPPED
-|", "", ""	0x101	13.10.2008 09:06:40.549
+|", "", ""	0x101	03.02.2009 07:03:06.569
 fwOT_FSM_Slice.actions	_FwFsmObjectType	"NOT_READY/Configure", "", "1", "do Configure $ALL$StreamConfigurator
 if ( $ALL$StreamConfigurator not_in_state {CONFIGURED,CREATED,READY,RUNNING} )  then
         move_to NOT_READY
@@ -158,10 +158,9 @@ if ( $ALL$FwCHILDREN in_state NOT_READY )  then
   move_to NOT_READY 
 endif
 ", "0", "CONFIGURED/Create", "", "1", "do Create $ALL$FwCHILDREN
-if ( $ALL$FwCHILDREN in_state CREATED )  then
+if ( $ALL$FwCHILDREN in_state {CREATED,READY,RUNNING} )  then
         move_to CREATED
-endif
-", "0", "CONFIGURED/Unload", "", "1", "do Unload $ALL$FwCHILDREN
+endif", "0", "CONFIGURED/Unload", "", "1", "do Unload $ALL$FwCHILDREN
 if ( $ALL$FwCHILDREN in_state NOT_READY )  then
    move_to NOT_READY
 endif
@@ -508,5 +507,5 @@ endif
 if ( $ALL$FwCHILDREN in_state {NOT_READY,CONFIGURED} )  then
    move_to NOT_READY 
 endif
-", "0"	0x101	13.10.2008 09:06:40.546
-fwOT_FSM_Slice.parameters	_FwFsmObjectType		0x101	13.10.2008 09:06:40.753
+", "0"	0x101	03.02.2009 07:03:06.566
+fwOT_FSM_Slice.parameters	_FwFsmObjectType		0x101	13.10.2008 09:09:13.518
