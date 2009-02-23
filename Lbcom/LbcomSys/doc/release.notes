@@ -6,6 +6,84 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v6r26>2009-02-24 LbcomSys v6r26</A></H1><PRE>
+This version uses Gaudi v20r4 and LHCb v26r2
+
+- Packages modified: CaloAssociators v6r7, L0DU v8r13, L0Muon v8r5,
+    L0MuonMonitor v1r4, OTMonitor v2r9, RichMCTools v3r11, RichTools v2r25,
+    SiTools v1r6, STAlgorithms v3r4, STAssociators v1r6, STCheckers v2r10,
+    STDAQ v3r15, STTools v3r8, VeloDAQ v4r5, VeloTools v3r3
+
+- In CaloAssociators v6r7
+  . Remove obsolete file options/BooleRelations.opts, now in Boole Configurable
+
+- In L0DU v8r13
+  . Add L0Conf configurable. 
+  . Separate the option files containing a sequence definition and an addition 
+    to the TopAlg into 2 files.
+  . Add L0MuonMonitoring in the standard monitoring sequence
+
+- In L0Muon v8r5
+  . Possibiliy to disable the decoding of TAE event (DisableTAE property)  
+  . L0MuonCandidatesFromRaw: modify the way the TAE are handled in the 
+    decoding. Do not use anymore the exist method to check for raw data since
+    it creates the Prev_i Next_i leaves when data on demand is activated.
+    Instead, check the Event tree by hand.
+  . Fix a bug in the filling of the L0MuonCandidates (pt sign was missing)
+  . Modify the default mode for writing bank (standard instead of light) 	
+
+- In L0MuonMonitor v1r4
+  . Modify weight in 2D hitmaps for full stations
+  . Separate online monitoring into 2 levels (FullMonitoring property)
+  . Updated to get ODIN from the Transient Store instead of decoding the RawBank.
+
+- In OTMonitor v2r9
+  . Add more monitoring to MCOTDeposit
+    o Keep track of deposits and their fractions as well as spills.
+  . Start cleaning up and some more monitoring
+
+- In SiTools v1r6
+  . Add flag to turn on/off atomic binding smearing in SiGeantDepositedCharge.
+    Default is now not to apply atomic binding
+  . Add SiZuriFunction [second order RC-CR shaper function]
+  . Make base class for SiAmplifierResponse [SiAmplifierResponseBase] 
+  . Add print functionality to SiAmplifier classes  
+
+- In STAlgorithms v3r4
+  . Template SiClustersToLite + add Velo and ST specializations
+  . Use clusterselector tool in STClusterKiller
+  . Bug fix in initialization of STClusterKiller
+
+- In STAssociators v1r6
+  . Make associators delta-ray aware 
+  . Migrate to STAlgBase class
+
+- In STCheckers v2r10
+  . Use named algorithm macros for cluster/digit occupancy algorithms. 
+  . Remove Boole.opts, now done inside Boole configurable.
+
+- In STDAQ v3r15
+  . Improve warning messages in case of error bank too short or too long
+
+- In STTools v3r8
+  . Add new cluster selectors 
+
+- In VeloDAQ v4r5
+  . Added a sort to the decoding of the VELO lite clusters for the track fit
+
+- In VeloTools v3r3
+  . Added code to calculate cluster position for "Lite" VELO clusters
+
+- In RichMCTools v3r11, RichTools v2r25
+  . Migrate to LHCb::ParticlePropertySvc
+
+- In L0DU v8r13, L0Muon v8r5, L0MuonMonitor v1r4
+  . Fix untested status codes
+
+- In SiTools v1r6, STAlgorithms v3r4
+  . Fixes for gcc 4.3
+
+
 </PRE><H1><A NAME=v6r25>2009-01-13 LbcomSys v6r25</A></H1><PRE>
 This version uses Gaudi v20r4 and LHCb v26r1
 
