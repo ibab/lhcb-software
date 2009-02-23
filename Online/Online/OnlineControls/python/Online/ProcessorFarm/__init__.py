@@ -63,7 +63,7 @@ def runStorage(project,name='Storage'):
   streamer.fsmManip._startupInfo = _startupInfo
   streamer.fsmManip._optsFile = _optsFile
   #streamer.fsmManip._fifoName = _fifoName
-  streamer.recv_slots_per_node = 4
+  streamer.recv_slots_per_node = 25
   streamer.strm_slots_per_node = 25
   streamer.showSetup()
   #writer = Farm.RecStorageOptionsWriter(mgr,name,info)

@@ -1,0 +1,35 @@
+
+/opt/pvss/pvss2_v3.6/bin/PVSStoolSyncTypes -proj RECMONA07 -config /localdisk/pvss/RECMONA07/config/config -report -autoreg -system 310 RECMONA0733
+
+cd /home/frankm/cmtuser
+setenvGaudi v19r2
+cd Online/OnlineControls/cmt/
+. setup.sh
+unset PVSS_II
+cp -r ../../../../TEMPLATE /localdisk/pvss/RECHLTA08
+/opt/pvss/pvss2_v3.6/bin/PVSStoolSyncTypes -proj RECHLTA08 -config /localdisk/pvss/RECHLTA08/config/config -report -autoreg -system 311 RECHLTA08
+
+python << /EOF
+
+lines = open("/localdisk/pvss/RECHLTA08/config/config","r").readlines()
+fout  = open("/localdisk/pvss/RECHLTA08/config/config","w")
+for l in lines:
+  content = line[:-1]
+  print >>fout,content
+  if content=='distributed = 1':
+    print >>fout, 'pmonPort = 40600'
+    print >>fout, 'dataPort = 40601'
+    print >>fout, 'eventPort = 40602'
+    print >>fout, '[dist]'
+    print >>fout, 'distPort = 40610'
+  elif content.find('pmonPort = ')==0:
+    pass
+  elif content.find('dataPort = ')==0:
+    pass
+  elif content.find('eventPort = ')==0:
+    pass
+  elif content.find('distPort = ')==0:
+    pass
+
+/EOF
+python ../scripts/Install.py INSTALL -project RECHLTA08 -componentsdir /group/online/dataflow/pvss/fwComponents_FARM

@@ -1187,7 +1187,7 @@ class FarmOptionsWriter:
     opts.add('PartitionIDName','%04X'%self.run.partitionID())
     opts.add('Activity',       run_type);
     #opts.add('OutputLevel',    self.run.outputLevel())
-    opts.add('OutputLevel',    2)
+    opts.add('OutputLevel',    4)
     opts.add('LogFifoName' ,  "$LOGFIFO")
     return opts
     
@@ -1226,7 +1226,7 @@ class FarmOptionsWriter:
       opts.add('Sender.DataType                      = 3;')
       opts.add('Sender.InputDataType                 = 3;')
       # Hardcoded options for testing
-      opts.add('EventSelector.REQ1                   = "EvType=2;TriggerMask=0x1,0x1,0x1,0x1;VetoMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0";')
+      # opts.add('EventSelector.REQ1                   = "EvType=2;TriggerMask=0x1,0x1,0x1,0x1;VetoMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0";')
       if not self.writeOptionsFile( partition, 'INPUTSender%02X' %i, opts.value ):
         return None
     # Everything went ok 
