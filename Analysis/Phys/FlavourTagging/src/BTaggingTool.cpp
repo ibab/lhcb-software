@@ -307,7 +307,23 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   //"Prob" approach is based on the wrong tag fraction
 
   debug() <<"combine taggers "<< taggers.size() <<endreq;
-  int category = m_combine -> combineTaggers( theTag, taggers );
+  m_combine -> combineTaggers( theTag, taggers );
+
+  //now only using OS taggers
+  std::vector<Tagger*> taggersOS;
+  taggersOS.push_back(&muon);
+  taggersOS.push_back(&elec);
+  taggersOS.push_back(&kaon);
+  taggersOS.push_back(&vtxCh);
+  FlavourTag tmp_theTagOS = theTag;
+  m_combine -> combineTaggers( tmp_theTagOS, taggersOS );
+  ///fill FlavourTag object
+  theTag.setDecisionOS( tmp_theTagOS.decision() );
+  theTag.setCategoryOS( tmp_theTagOS.category() );
+  theTag.setOmegaOS   ( tmp_theTagOS.omega() );
+  debug() <<"decision="<<theTag.decision()<<"  decisionOS="<< theTag.decisionOS()<<endreq;
+  debug() <<"omega="<<theTag.omega()<<"  omegaOS="<< theTag.omegaOS()<<endreq;
+  debug() <<"category="<<theTag.category()<<"  categoryOS="<< theTag.categoryOS()<<endreq;
 
   ///OUTPUT to Logfile ---------------------------------------------------
   int sameside = kaonS.decision();
@@ -318,8 +334,10 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   info() << "BTAGGING TAG   " 
          << std::setw(9) << evt->runNumber()
          << std::setw(9) << evt->evtNumber()
-         << std::setw(7) << theTag.decision()
-         << std::setw(3) << category
+         << std::setw(5) << theTag.decision()
+         << std::setw(3) << theTag.category()
+         << std::setw(5) << theTag.decisionOS()
+         << std::setw(3) << theTag.categoryOS()
          << std::setw(5) << muon.decision()
          << std::setw(3) << elec.decision()
          << std::setw(3) << kaon.decision()

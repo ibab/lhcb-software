@@ -1,23 +1,11 @@
 /*---------------------------------------------------------------------------
  This program reads the output logfiles of 
- YourSelection + BTaggingTool + BTaggingMonitor
+ YourSelection + BTagging + BTaggingChecker
  and gives tagging performances with correct statistical errors
 
  To run it:
 > c++ summaryof.cpp -o summaryof
-> ./summaryof mylogfile.txt 3 N
-
------------------------------------------------------------------------------
-    Caveat (by O. Awunor):                                               
-    Be aware that since this program is designed to read in the output       
-    from the Monitor algorithms, it may depend on those. 
-    Some event candidates are output twice by the Monitoring 
-    algorithm for cases where 2 genuine B canditates are stored in TES.   
-    When use with DoubleTagging,                                             
-    it cant distinguish between OSChecker output and AllChecker output.     
-    Therefore it counts all events twice, hence doubling the total number of 
-    events.                                                                  
-                                                                             
+> ./summaryof mylogfile.txt ..options..
 -----------------------------------------------------------------------------
 */
 
@@ -37,57 +25,66 @@ int main(int argc, char **argv) {
   int nrt_k=0, nwt_k=0;
   int nrt_s=0, nwt_s=0;
   int nrt_v=0, nwt_v=0;
-  int run, event, tag,truetag,categ,Trig=-1,L0,HLT,nsele=0;
+  long run, event;
+  int tag,tagOS,truetag,categ,categOS,Trig=-1,L0,HLT,nsele=0;
+  int backcat=0;
   int bid,fe,fm,fk,fS,fV;
   string flagstring;
   bool MCBpass=false, MONpass=false, TAGpass=false;
   for(int it=1; it!=20; ++it) nrt[it]=nwt[it]=0;
  
   ifstream in(argv[1]);
-  if(!in) { cout<<"File does not exist! \n\n"; return 0; }
-  if(argc<4){
-    cout << "Usage: summaryof  mylogfile.txt  NR  TYPE" << endl;
+  if(argc<2){
+    cout << "\nUsage: ./summaryof  mylogfile.txt  NR  TYPE  OS-only" << endl;
     cout << "       NR=1   -> Before triggers  " << endl;
     cout << "       NR=2   -> After L0 trigger " << endl;
-    cout << "       NR=3   -> After L0*HLT triggers"    << endl;
-    cout << "       TYPE=T -> TDR categories " << endl;
-    cout << "       TYPE=N -> NNet categories" << endl;
+    cout << "       NR=3   -> After L0+Hlt trigger " << endl;
+    cout << "       OS=1   -> Only consider Opposite-Side taggers" << endl;
+    cout << "       BCK=1  -> Only consider Backg Category= 0 or 50" << endl;
+    cout << endl;
     return 0;
   }
+  if(!in) { cout<<"File does not exist! \n\n"; return 0; }
 
   //LOOP ---
   while(!in.eof()) {
 
     in >> flagstring;    //read in from file
-    if(flagstring != "BTAGGING") continue; else in >> flagstring;  
-
-    if(flagstring == "MCB") { //reads in from BTaggingAnalysis
-      in >> bid;
-      truetag = bid>0? 1:-1;
-      MCBpass=true;
-    }
-    else if(flagstring == "MON") { //reads in from BTaggingMonitor
-      in >> truetag;
-      MONpass=true;
-    }
-    else if(flagstring == "TAG") { //reads in tagging info from BTagging
-      in >> run >> event >> tag >> categ;
+    if(flagstring != "BTAGGING") continue; //else {in >> flagstring;  continue;}
+    in >> flagstring;
+ 
+    if(flagstring == "TAG") { //reads in tagging info from BTagging
+      in >> run >> event >> tag >> categ >> tagOS >> categOS;
       in >> fm >> fe >> fk >> fS >> fV; //taggers
       TAGpass=true;
     } 
-    if( !( (MCBpass||MONpass) && TAGpass ) ) continue;
-    MCBpass=MONpass=TAGpass=false;
-//  cout<<flagstring<<" "<< tag <<" "<< truetag 
-// 	<<"     "<< fm  <<" "<< fe<<" " << fk<<" " << fS<<" " << fV <<endl;
+    if(flagstring == "MON") { //reads in from BTaggingMonitor
+      in >> Trig >> truetag >> backcat;
+      MONpass=true;
+    }
+    if( !( MONpass && TAGpass ) ) continue;
+    MONpass=TAGpass=false;
+    
+    //    cout<<flagstring<<" "<< tag <<" "<< truetag <<" "<< categ 
+    //  <<"     "<< fm  <<" "<< fe<<" " << fk<<" " << fS<<" " << fV <<endl;
 
     //discard untriggered 
     if(Trig>-1) {
       HLT = (int) Trig/10;
       L0  = (int) Trig-10*HLT;
-      if(*argv[2]=='2') if( !L0 ) continue;
-      if(*argv[2]=='3') if( !L0 || !HLT ) continue;
+      if(argc>2)if(*argv[2]=='2') if( !L0 ) continue;
+    }
+    
+    if(argc>3)if(*argv[3]=='1') {
+      fS=0;
+      tag=tagOS;
+      categ=categOS;
     }
 
+    if(argc>4)if(*argv[4]=='1') {
+      if( backcat!=0 && backcat!=50 ) continue;
+    }
+    
     //------------- event passes: count right and wrongs
     nsele++;
 
@@ -116,40 +113,31 @@ int main(int argc, char **argv) {
   cout << "\n========================================================================"<<endl;
   cout << "Summary tagging performance for: " << argv[1] <<endl;
   if(Trig == -1) cout << "Trigger info not available in file." << endl;
-  else if(*argv[2] == '1') cout << "Before triggers, " << endl;
-  else if(*argv[2] == '2') cout << "After L0 trigger only, "<< endl;
-  else if(*argv[2] == '3') cout << "After L0*HLT triggers, " <<endl;
-  else { cout << "Wrong argument NR: " <<*argv[2]<<endl<<endl; return 0; }
+  else if(argc>2) if(*argv[2] == '1') cout << "Before triggers, " << endl;
+  else if(argc>2) if(*argv[2] == '2') cout << "After L0 trigger only, "<< endl;
+  else if(argc>2) if(*argv[2] == '3') cout << "After L0*HLT triggers, " <<endl;
+  if(argc>3)if(*argv[3]=='1')  cout << "ONLY opposite-side taggers considered!"<<endl;
+  if(argc>4)if(*argv[4]=='1')  cout << "Only Backg. Category= 0 or 50 evts. considered!"<<endl;
+
   cout << "------------------------------------------------------------------------"<<endl;
   cout<< " Category            EFF.          Etag         Wrong TF"
       << "      r       w\n";
 
+
+
   for( int it=1; it != 20; it++ ) {
     rtag = wtag = 0; 
     string cats;
-    if(it== 1) cats =  "   mu only";
-    if(it== 2) cats =  "    e only";
-    if(it== 3) cats =  "    k only";
-    if(it== 4) cats =  "    mu + k";
-    if(it== 5) cats =  "     e + k";
-    if(it== 6) cats =  "  vtx only";
-    if(it== 7) cats =  "     ps/ks";
-    if(it== 8) cats =  "   mu + ks";
-    if(it== 9) cats =  "    e + ks";
-    if(it==10) cats =  "    k + ks";
-    if(it==11) cats =  "   mu+k+ks";
-    if(it==12) cats =  "    e+k+ks";
     if(it==13) { cats =  "     muons"; rtag = nrt_m; wtag = nwt_m; }
     if(it==14) { cats =  " electrons"; rtag = nrt_e; wtag = nwt_e; }
     if(it==15) { cats =  "  OS kaons"; rtag = nrt_k; wtag = nwt_k; }
     if(it==16) { cats =  "  SS pi/k "; rtag = nrt_s; wtag = nwt_s; }
     if(it==17) { cats =  "  VertexCh"; rtag = nrt_v; wtag = nwt_v; }
-    if(*argv[3] != 'T' && it<13) cats = "  NNet    "; 
+    if( it<13)   cats =  "       "; 
     else if(it==13) 
       cout<<"------------------------------------------------------------------------"<<endl;
 
     int itmax=6;
-    if(*argv[3] == 'T') itmax=13;
     if(it<itmax) { rtag = nrt[it]; wtag = nwt[it]; }
 
     if(rtag+wtag == 0) continue; //empty category
@@ -180,15 +168,16 @@ int main(int argc, char **argv) {
 
     //PRINT: ----------------------------------
     cout.setf(ios::fixed);
-    if(it<itmax) cout<<setw(2)<< it; else cout<<"**";
-    cout<< cats
+    if(it<itmax) cout<<"   "<<setw(2)<< it; else cout<<"**";
+    cout<<" "<< cats
         <<" "<<setprecision(2)<<setw(8)<< epsil*100 << "+-" << epsilerr*100 
         <<" "<<setw(8)<< eftag*100 << "+-" <<eftag_err*100
         <<" "<<setprecision(1)<<setw(8)<< omtag*100 << "+-" <<omtag_err*100
         <<" "<<setw(7)<< (int) rtag
         <<" "<<setw(7)<< (int) wtag
-	<< endl;
+        << endl;
   }
+
 
   //calculate global tagging performances -------------------------------
 
