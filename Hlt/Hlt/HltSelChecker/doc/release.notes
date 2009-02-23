@@ -9,6 +9,9 @@
 ! end
 !-----------------------------------------------------------------------------
 
+! 2009-02-23 - Patrick Koppenburg
+ - Hlt2Requires = instead of Hlt2Ignores
+
 ! 2009-02-12 - Patrick Koppenburg
  - Use STDOPTS/PreloadUnits.opts
 

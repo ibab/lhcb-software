@@ -1,4 +1,4 @@
-### $Id: DVTestHlt2B2HH.py,v 1.8 2009-02-12 10:17:44 pkoppenb Exp $
+### $Id: DVTestHlt2B2HH.py,v 1.9 2009-02-23 07:40:02 pkoppenb Exp $
  #
  #  Test file for HLT B->hh selection
  #
@@ -42,19 +42,28 @@ importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
 DecayTreeTuple("Hlt2DecayTreeTuple").addTool(PhysDesktop())
 DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Hlt2SelB2HH"]
 DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "B0 -> ^pi+ ^pi-"
+DecayTreeTuple("Hlt2DecayTreeTuple").OutputLevel = 1
+#
+#
+#
+from Configurables import PrintDecayTree
+pt = PrintDecayTree()
+pt.addTool(PhysDesktop())
+pt.PhysDesktop.InputLocations =  ["Hlt2SelB2HH"]
+pt.Context = "HLT"
 #
 # Configuration
 #
 from Configurables import DaVinci
 DaVinci().EvtMax = -1
 DaVinci().HltType = "Hlt1+Hlt2"                # Both Hlt levels
-DaVinci().Hlt2IgnoreHlt1Decision = True        # Ignore Hlt1 in 2
+DaVinci().Hlt2Requires = 'L0'                  # Ignore Hlt1 in 2
 DaVinci().ReplaceL0BanksWithEmulated = False   # Redo L0
 DaVinci().DataType = "DC06" 
 DaVinci().Simulation = True 
 DaVinci().TupleFile =  "HLT-"+signal+".root"
 DaVinci().HistogramFile = "DVHlt2-"+signal+".root"
 DaVinci().UserAlgorithms = [ ] 
-DaVinci().MoniSequence += [ moni, DecayTreeTuple("Hlt2DecayTreeTuple") ]
+DaVinci().MoniSequence += [ moni, pt, DecayTreeTuple("Hlt2DecayTreeTuple") ]
 DaVinci().Input = [
   "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/Bd2Kpi-decprodcut-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]

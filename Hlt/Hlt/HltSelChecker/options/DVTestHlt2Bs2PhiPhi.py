@@ -49,7 +49,7 @@ DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B_s0 -> (^phi(1020) -> ^K+ ^K-)(^
 from Configurables import DaVinci
 DaVinci().EvtMax = -1
 DaVinci().HltType = "Hlt1+Hlt2"                # Both Hlt levels
-DaVinci().Hlt2IgnoreHlt1Decision = True        # Ignore Hlt1 in 2
+DaVinci().Hlt2Requires = 'L0'                  # Ignore Hlt1 in 2
 DaVinci().ReplaceL0BanksWithEmulated = False   # Redo L0
 DaVinci().DataType = "DC06" 
 DaVinci().Simulation = True 

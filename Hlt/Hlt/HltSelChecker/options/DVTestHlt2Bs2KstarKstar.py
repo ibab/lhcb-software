@@ -1,4 +1,4 @@
-### $Id: DVTestHlt2Bs2KstarKstar.py,v 1.7 2009-01-13 08:36:21 pkoppenb Exp $
+### $Id: DVTestHlt2Bs2KstarKstar.py,v 1.8 2009-02-23 07:40:02 pkoppenb Exp $
  #
  #  Test file for HLT Bs->KstarKstar selection
  #
@@ -48,7 +48,7 @@ DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B_s0 -> (^K*(892)0 -> ^K+ ^pi-)(^
 from Configurables import DaVinci
 DaVinci().EvtMax = -1
 DaVinci().HltType = "Hlt1+Hlt2"                # Both Hlt levels
-DaVinci().Hlt2IgnoreHlt1Decision = True        # Ignore Hlt1 in 2
+DaVinci().Hlt2Requires = 'L0'                  # Ignore Hlt1 in 2
 DaVinci().ReplaceL0BanksWithEmulated = False   # Redo L0
 DaVinci().DataType = "DC06" 
 DaVinci().Simulation = True 
