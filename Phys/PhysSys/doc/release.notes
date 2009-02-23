@@ -3,9 +3,6 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
-! 2009-02-20 - Patrick Koppenburg
- - Move Monitors to Analysis
-
 </PRE><H1><A NAME=v8r1>2009-02-20 Phys v8r1 </A></H1><PRE>
 
 ###############################################################################
@@ -20,8 +17,6 @@ Purpose             : LHCb physics packages
   * New handling of related PVs, now merged with PV-refitting.
   * Bug-fix to CombineParticles wrong related PV bug
   * Bug fixes to TrgVertexFitter
-  * New package Rich/DstCalibSel, containing RICH Dstar selection code
-  * New package Rich/DstCalibSel, containing RICH Dstar selection code
 
 </PRE><H1><A NAME=v8r0>2009-01-15 Phys v8r0 </A></H1><PRE>
 
