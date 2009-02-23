@@ -1,4 +1,4 @@
-// $Id: BooleInit.h,v 1.12 2008-10-09 06:28:36 cattanem Exp $
+// $Id: BooleInit.h,v 1.13 2009-02-23 17:07:08 cattanem Exp $
 #ifndef BOOLEINIT_H 
 #define BOOLEINIT_H 1
 
@@ -7,9 +7,9 @@
 #include "GaudiKernel/RndmGenerators.h"
 #include <string>
 #include <vector>
+#include "Event/ODIN.h"
 
 class IGenericTool;
-class IEventTimeDecoder;
 
 /** @class BooleInit BooleInit.h
  *  First TopAlg for Boole. Initializes random number and fills memory histogram
@@ -28,11 +28,11 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
 
 protected:
-  virtual  void modifyOdin(unsigned int *odin);     ///< fills some Odin fields
+  virtual  void modifyOdin(LHCb::ODIN* odin);     ///< fills some Odin fields
   
 private:
-  IGenericTool*    m_memoryTool; ///< Pointer to (private) memory histogram tool
-  IEventTimeDecoder* m_odinTool; ///< Pointer to odin creation tool
+  IGenericTool* m_memoryTool; ///< Pointer to (private) memory histogram tool
+  IGenericTool* m_odinTool;   ///< Pointer to odin encoding tool
 
   bool m_modifyOdin;
   Rndm::Numbers m_FlatDist;

@@ -1,9 +1,8 @@
-// $Id: BooleInit.cpp,v 1.27 2008-10-17 16:06:19 cattanem Exp $
+// $Id: BooleInit.cpp,v 1.28 2009-02-23 17:07:08 cattanem Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
-#include "GaudiKernel/IEventTimeDecoder.h"
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiAlg/IGenericTool.h"
 
@@ -16,8 +15,6 @@
 
 // from DAQEvent
 #include "Event/RawEvent.h"
-#include "Event/RawBank.h"
-#include "Event/ODIN.h"
 
 // local
 #include "BooleInit.h"
@@ -81,8 +78,8 @@ StatusCode BooleInit::initialize() {
   if ( "" == rootInTES() )
     m_memoryTool = tool<IGenericTool>( "MemoryTool", "BooleMemory", this, true );
 
-  // Tool to put the ODIN object on the TES
-  m_odinTool = tool<IEventTimeDecoder>( "OdinTimeDecoder" );
+  // Tool to put add the ODIN object to RawEvent
+  m_odinTool = tool<IGenericTool>( "ODINEncodeTool" );
 
   // Initialize thresholds if we want to modify Odin:
   if ( m_modifyOdin ) {
@@ -141,28 +138,22 @@ StatusCode BooleInit::execute() {
   LHCb::RawEvent* raw = new LHCb::RawEvent();
   put( raw, LHCb::RawEventLocation::Default );
 
-  // Add the ODIN bank (EDMS 704084 v2.0)
-  unsigned int odin[9];
-  odin[LHCb::ODIN::RunNumber]   = evt->runNumber();
-  odin[LHCb::ODIN::EventType]   = 0;
-  odin[LHCb::ODIN::OrbitNumber] = 0;
-  odin[LHCb::ODIN::L0EventIDHi] = 0xFFFFFFFF & (evt->evtNumber() >> 32);
-  odin[LHCb::ODIN::L0EventIDLo] = 0xFFFFFFFF & evt->evtNumber();
-  odin[LHCb::ODIN::GPSTimeHi]   = 0xFFFFFFFF & (evt->evtTime()) >> 32;
-  odin[LHCb::ODIN::GPSTimeLo]   = 0xFFFFFFFF & evt->evtTime();
-  odin[LHCb::ODIN::Word7]       = 0; // Error bits, Detector status
-  odin[LHCb::ODIN::Word8]       = 0; // Bunch current, Force bit, Bx/Readout/Triger type, Bunch ID
-
-  // now modify the Odin bank if requested
+  // Create ODIN
+  LHCb::ODIN* odin = new LHCb::ODIN();
+  put( odin, LHCb::ODINLocation::Default );
+  
+  // Fill ODIN from event header
+  odin->setRunNumber( evt->runNumber() );
+  odin->setEventNumber( evt->evtNumber() );
+  odin->setEventTime( evt->evtTime() );
+  
+  // Simulate ODIN data id requested
   if ( m_modifyOdin ) {
     modifyOdin(odin);
   }
   
-  LHCb::RawBank* odinBank = raw->createBank(0,LHCb::RawBank::ODIN,2, 8+36, odin);
-  raw->adoptBank(odinBank, true);
-
-  // Now decode the bank and put it on the TES, for use by other algorithms
-  m_odinTool->getTime();
+  // Create the Raw Bank
+  m_odinTool->execute();
 
   return StatusCode::SUCCESS;
 };
@@ -171,7 +162,7 @@ StatusCode BooleInit::execute() {
 //=============================================================================
 // modify ODIN bank
 //=============================================================================
-void BooleInit::modifyOdin(unsigned int *odin) {
+void BooleInit::modifyOdin(LHCb::ODIN* odin) {
   
   //Get info from Gen
   LHCb::GenCollisions* Collisions = get<LHCb::GenCollisions>( m_genCollisionLocation, IgnoreRootInTES );
@@ -213,9 +204,9 @@ void BooleInit::modifyOdin(unsigned int *odin) {
   if(msgLevel(MSG::DEBUG)) debug()<<"Random number:"<< randNumber<<endmsg;
     
   // set the types
-  unsigned int TriggerType = 0;
-  unsigned int BXType = 0;
-  unsigned int BunchCurrent = 0;
+  LHCb::ODIN::TriggerType TriggerType  = LHCb::ODIN::Reserve;
+  LHCb::ODIN::BXTypes     BXType       = LHCb::ODIN::NoBeam;
+  unsigned int            BunchCurrent = 0;
   if (interaction==2) {
     if (trigRandNumber > m_threstrigger){
       TriggerType = LHCb::ODIN::PhysicsTrigger;
@@ -256,11 +247,9 @@ void BooleInit::modifyOdin(unsigned int *odin) {
                                    << " BunchCurrent  "  << BunchCurrent
                                    << endmsg;
 
-  unsigned int temp32 = 0;
-  temp32 |= (BXType << LHCb::ODIN::BXTypeBits) & LHCb::ODIN::BXTypeMask;
-  temp32 |= (TriggerType << LHCb::ODIN::TriggerTypeBits) & LHCb::ODIN::TriggerTypeMask;
-  temp32 |= (BunchCurrent << LHCb::ODIN::BunchCurrentBits) & LHCb::ODIN::BunchCurrentMask;
-  odin[LHCb::ODIN::Word8]       = temp32; // Bunch current, Force bit, Bx/Readout/Triger type, Bunch ID
+  odin->setBunchCrossingType( BXType );
+  odin->setTriggerType( TriggerType );
+  odin->setBunchCurrent( BunchCurrent );
   
 }
 
