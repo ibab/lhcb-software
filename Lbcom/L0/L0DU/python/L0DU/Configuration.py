@@ -27,7 +27,9 @@ class L0Conf(LHCbConfigurableUser) :
         ,"LinkSequencer"  : None 
         ,"MoniSequencer"  : None 
         ,"FilterSequencer": None 
-        ,"ETC"            : False
+        ,"ETCSequencer"   : None
+        # Output file
+        ,"ETCOutput"      : "L0ETC.root"
         }
 
     _propertyDocDct = {
@@ -45,7 +47,8 @@ class L0Conf(LHCbConfigurableUser) :
         ,"LinkSequencer"  : """ Sequencer filled with the MC associator algorithms (not configurable)."""
         ,"MoniSequencer"  : """ Sequencer filled with the L0 monitoring sequence (not configurable)."""
         ,"FilterSequencer": """ Sequencer filled with the L0Filter algorithm (not configurable)."""
-        ,"ETC"            : """ If True, import the ETC option file to write out a L0-ETC."""
+        ,"ETCSequencer"   : """ Sequencer filled with the algorithm and stream to write out a L0-ETC."""
+        ,"ETCOutput"      : """ Name of ETC output file."""
         }
 
     def checkOptions(self):
@@ -81,12 +84,15 @@ class L0Conf(LHCbConfigurableUser) :
                 seq.Members+= [ GaudiSequencer("ReplaceL0BanksSeq") ]
                 log.warning("\n  \tEXISTING L0 BANKS WILL BE REMOVED AND REPLACED BY EMULATED BANKS\n\n")
 
+            if self.getProp("DecodeL0") or self.getProp("MonitorL0") or self.getProp("FilterL0FromRaw"):
+                # import the file only once, to avoid multiple inclusion warning
+                importOptions("$L0DUROOT/options/L0Sequence.opts")
+
             if self.getProp("SimulateL0"):
                 importOptions("$L0DUROOT/options/Boole.opts")
                 seq.Members+= [GaudiSequencer("L0SimulationSeq") ]
 
             if self.getProp("DecodeL0"):
-                importOptions("$L0DUROOT/options/L0Sequence.opts")
                 seq.Members+= [ GaudiSequencer("L0FromRawSeq") ]
 
             if self.getProp("EmulateL0"):
@@ -94,11 +100,9 @@ class L0Conf(LHCbConfigurableUser) :
                 seq.Members+= [ GaudiSequencer("L0EmulationSeq") ]
 
             if self.getProp("MonitorL0"):
-                importOptions("$L0DUROOT/options/L0Sequence.opts")
                 seq.Members+= [ GaudiSequencer("L0MoniSeq") ]
                 
             if self.getProp("FilterL0FromRaw"):
-                importOptions("$L0DUROOT/options/L0Sequence.opts")
                 seq.Members+= [ GaudiSequencer("L0FilterFromRawSeq") ]
                 
             if self.getProp("FilterL0"):
@@ -123,8 +127,10 @@ class L0Conf(LHCbConfigurableUser) :
         """
         if self.isPropertySet("MoniSequencer"):
             seq=self.getProp("MoniSequencer")
-            importOptions("$L0DUROOT/options/L0Sequence.opts")
             seq.Members+= [ GaudiSequencer("L0MoniSeq") ]
+            if not (self.getProp("DecodeL0") or self.getProp("MonitorL0") or self.getProp("FilterL0FromRaw")):
+                # import the file only once, to avoid multiple inclusion warning
+                importOptions("$L0DUROOT/options/L0Sequence.opts")
 
     def _defineL0FilterSequence(self):
         """
@@ -140,9 +146,14 @@ class L0Conf(LHCbConfigurableUser) :
         """
         Import the option file for writing a L0-ETC.
         """
-        if self.getProp("ETC"):
-            importOptions( "$L0DUROOT/options/ETC.opts" )
-        
+        if self.isPropertySet("ETCSequencer"):
+            seq=self.getProp("ETCSequencer")
+            seq.Members+= [ Sequencer("SeqWriteTag") ]
+            importOptions( "$L0DUROOT/options/ETCSeq.opts" )
+            MyWriter = TagCollectionStream( "WR" )
+            if not MyWriter.isPropertySet( "Output" ):
+                MyWriter.Output = "Collection='EVTTAGS/TagCreator/1' ADDRESS='/Event' DATAFILE='" + self.getProp("ETCOutput") + "' TYP='POOL_ROOTTREE' OPT='RECREATE'"
+       
     def __apply_configuration__(self):
         """
         L0Conf configuration.

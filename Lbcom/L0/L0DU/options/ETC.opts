@@ -1,41 +1,12 @@
 /*
- * Options for writing an L0-ETC
+ * Options for writing an L0-ETC. For backward compatibility when not using L0Conf
  * 
  * @autor P. Koppenburg
  * @date  13/07/2007
  */
-//----------------------------------------------------------
-// Declare EvtTupleSvc
-//----------------------------------------------------------
-ApplicationMgr.ExtSvc  += { "TagCollectionSvc/EvtTupleSvc" };
-//----------------------------------------------------------
-// Output sequence
-//----------------------------------------------------------
 ApplicationMgr.OutStream += { "Sequencer/SeqWriteTag" } ;
-SeqWriteTag.Members =  { // "L0Filter",  // write always
-                         "L0ETC/TagCreator" ,
-                         "TagCollectionStream/WR" } ;//GP: (53,1)
 
-//----------------------------------------------------------
-// TagCreator options
-//----------------------------------------------------------
-TagCreator.EvtColsProduce = true;
-TagCreator.EvtColSplitDir = false;
-TagCreator.NTupleSplitDir = false;
-TagCreator.NTupleProduce  = false;
-TagCreator.HistoSplitDir  = false;
-TagCreator.HistoProduce   = false;
-TagCreator.EvtColLUN      = "EVTTAGS";
-TagCreator.CollectionName = "EVTTAGS/TagCreator/Strip" ;
-TagWriter.ItemList = { "/NTUPLES/EVTTAGS/TagCreator/1" };
-TagWriter.EvtDataSvc = "EvtTupleSvc";
+#include "$L0DUROOT/options/ETCSeq.opts"
 
-//----------------------------------------------------------
-// Collection writer options
-//----------------------------------------------------------
 WR.Output = "Collection='EVTTAGS/TagCreator/1' ADDRESS='/Event' DATAFILE='L0ETC.root' TYP='POOL_ROOTTREE' OPT='RECREATE'";//GP: (45,1)
-WR.TagCollectionSvc = "TagCollectionSvc/EvtTupleSvc";
-WR.ItemList =  { "/Event#1" } ;
-WR.ItemList += { "DAQ/ODIN#1" };
-EvtTupleSvc.Output =  {  } ;
 
