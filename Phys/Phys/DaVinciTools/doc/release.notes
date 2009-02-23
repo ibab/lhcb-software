@@ -1,8 +1,17 @@
-! $Id: release.notes,v 1.406 2009-02-20 14:49:49 jpalac Exp $
+! $Id: release.notes,v 1.407 2009-02-23 10:50:43 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-02-23 - Juan PALACIOS
+ - src/PhysDesktop.h
+  . Add inline method to get related vertex from local relations table, 
+    return null if none there.
+ - src/PhysDesktop.cpp
+  . saveParticles calls inline method described above, instead of calling
+    relatedVertex, which triggers the calculation of the related vertex
+    if the relation isn't there.
 
 !========================== DaVinciTools v18r2 2009-02-20 ===================
 
