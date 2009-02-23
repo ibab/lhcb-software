@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.50 2009-02-20 16:35:19 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.51 2009-02-23 17:05:04 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -136,6 +136,10 @@ class DaVinci(LHCbConfigurableUser) :
         """
         Define L0. Make sure it runs before HLT.
         """
+        if ( (self.getProp("HltType")!='') and (self.getProp("DataType") == 'DC06') and (not self.getProp("L0")) ):
+            log.warning("It is mandatory to run the L0 emulation on DC06 data to get the HLT to work correctly")
+            log.warning("Will set ReplaceL0BanksWithEmulated = True")
+            self.setProp("ReplaceL0BanksWithEmulated",True) 
         if ( self.getProp("ReplaceL0BanksWithEmulated") and (not self.getProp("L0")) ):
             log.warning("You asked to replace L0 banks with emulation. Will set L0 = True")
             self.setProp("L0",True)
