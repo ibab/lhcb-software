@@ -4,6 +4,7 @@
 ! Purpose     : Check reconstruction algorithms for HLT 
 !-----------------------------------------------------------------------------
 
+!========================== HltRecChecker v1r9 2009-02-23 ===================
 ! 2009-02-03 - V Gligorov
  - update HltRecCheckGhosts to be in sync with Hlt v5r0 and later
 
