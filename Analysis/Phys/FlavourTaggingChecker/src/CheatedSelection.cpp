@@ -24,6 +24,7 @@ CheatedSelection::CheatedSelection( const std::string& name,
   declareProperty( "BMassWindow", m_BMassWindow = 100.0 * Gaudi::Units::MeV ); 
   declareProperty( "AssociatorInputData", m_setInputData );
   m_setInputData.clear();
+  m_setInputData.push_back("Phys/CheatedSelection");
 }
 
 //=============================================================================
@@ -35,20 +36,18 @@ StatusCode CheatedSelection::initialize() {
   debug() << "CheatedSelection initialize"<< endreq;
 
   m_linker = new Particle2MCLinker( this,
-                                    Particle2MCMethod::Chi2,
-                                    //Particle2MCMethod::Links,
+                                    //Particle2MCMethod::Chi2,
+                                    Particle2MCMethod::Links,
                                     m_setInputData );
   if( !m_linker ) {
     fatal()<< "Unable to retrieve Link Associator tool"<<endreq;
     return StatusCode::FAILURE;
   }
-
   m_debug = tool<IPrintMCDecayTreeTool> ( "PrintMCDecayTreeTool", this );
   if( ! m_debug ) {
     fatal() << "Unable to retrieve Debug tool "<< endreq;
     return StatusCode::FAILURE;
   }
-
   m_forcedBtool = tool<IForcedBDecayTool> ( "ForcedBDecayTool", this );
   if( ! m_forcedBtool ) {
     fatal() << "Unable to retrieve ForcedBDecayTool tool "<< endreq;
@@ -66,6 +65,11 @@ StatusCode CheatedSelection::execute() {
   setFilterPassed( false );
 
   debug() << "-> Processing CheatedSelection " <<endreq;
+
+  //look in location where Selection has put the B candidates
+  const LHCb::Particle::ConstVector& parts = desktop()->particles();
+  if( parts.empty() ) return StatusCode::SUCCESS;
+  desktop()->saveDesktop();
 
   ////////////////////////////////////////////////////
   //check what is the B forced to decay

@@ -1,4 +1,4 @@
-// $Id: BTaggingChecker.h,v 1.7 2008-02-14 08:21:40 pkoppenb Exp $
+// $Id: BTaggingChecker.h,v 1.8 2009-02-23 21:04:14 musy Exp $
 #ifndef BTAGGINGCHECKER_H 
 #define BTAGGINGCHECKER_H 1
 
@@ -10,6 +10,11 @@
 #include "Event/GenHeader.h"
 #include "Kernel/IPrintDecayTreeTool.h"
 #include "MCInterfaces/IForcedBDecayTool.h"
+#include "Kernel/IBackgroundCategory.h"
+
+#include "Event/L0DUReport.h"
+#include "Event/HltSummary.h"
+#include "Kernel/IHltSummaryTool.h"
 
 // from DaVinci
 #include "Kernel/DVAlgorithm.h"
@@ -36,13 +41,16 @@ class BTaggingChecker : public DVAlgorithm {
  private:
   /// Vector of locations of the tags to monitor
   std::string m_tags_location; 
-  IPrintDecayTreeTool* m_debug2;
+  IPrintDecayTreeTool* m_debug;
   IForcedBDecayTool* m_forcedBtool;
+  IBackgroundCategory* m_bkg;
+  IHltSummaryTool*   m_hltSummaryTool;
 
   //IForcedBDecayTool* m_forcedBtool;
   const LHCb::MCParticle* forcedB(void);
   LHCb::MCParticle* associatedofHEP(HepMC::GenParticle* );
-
+  bool  m_requireTrigger;
+  
   int nsele,nrt[50],nwt[50];
 
 };

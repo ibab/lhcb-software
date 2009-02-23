@@ -1,4 +1,4 @@
-// $Id: BTaggingAnalysis.h,v 1.15 2008-11-12 11:42:50 musy Exp $
+// $Id: BTaggingAnalysis.h,v 1.16 2009-02-23 21:04:14 musy Exp $
 #ifndef USER_BTAGGINGANALYSIS_H 
 #define USER_BTAGGINGANALYSIS_H 1
 
@@ -16,9 +16,11 @@
 #include "Kernel/ISecondaryVertexTool.h"
 #include "Kernel/IBTaggingTool.h"
 #include "MCInterfaces/IPrintMCDecayTreeTool.h"
+
 #include "Kernel/Particle2MCLinker.h"
-#include "Kernel/IParticleDescendants.h"
 #include "Kernel/IBackgroundCategory.h"
+
+#include "Kernel/IParticleDescendants.h"
 #include "Kernel/ILifetimeFitter.h"
 #include "Kernel/IHltSummaryTool.h"
 #include "Kernel/ITriggerTisTos.h"
@@ -51,7 +53,6 @@ class BTaggingAnalysis : public DVAlgorithm {
   std::string m_SVtype, m_veloChargeName, m_TagLocation;
   IPrintMCDecayTreeTool*           m_debug;
   IGeomDispCalculator*  m_Geom;
-  Particle2MCLinker*    m_linkLinks; 
   ICaloElectron*        m_electron;
   IForcedBDecayTool*    m_forcedBtool;
   IBackgroundCategory*  m_bkgCategory;
@@ -61,7 +62,8 @@ class BTaggingAnalysis : public DVAlgorithm {
   IParticleDescendants* m_descend;
   IHltSummaryTool*      m_hltSummaryTool;
   ITriggerTisTos*       m_TriggerTisTosTool;
-
+  Particle2MCLinker*    m_linkLinks; 
+ 
   double m_IPPU_cut, m_distphi_cut, m_thetaMin;
   std::vector<std::string> m_setInputData;
 
@@ -75,6 +77,9 @@ class BTaggingAnalysis : public DVAlgorithm {
   NTuple::Item<long>      m_Tag;
   NTuple::Item<float>     m_omega;
   NTuple::Item<long>      m_TagCat;
+  NTuple::Item<long>      m_TagOS;
+  NTuple::Item<float>     m_omegaOS;
+  NTuple::Item<long>      m_TagCatOS;
   NTuple::Item<long>      m_type;
   NTuple::Item<long>      m_trigger;
   NTuple::Item<long>      m_L0TisTos;
@@ -93,8 +98,8 @@ class BTaggingAnalysis : public DVAlgorithm {
   NTuple::Array<float>     m_sPt;
   NTuple::Array<float>     m_sPhi;
   NTuple::Array<float>     m_sMass;
-  NTuple::Array<int>      m_sMCID;
-  NTuple::Array<int>      m_sMCMothID;
+  NTuple::Array<int>       m_sMCID;
+  NTuple::Array<int>       m_sMCMothID;
   NTuple::Array<float>     m_sMCP;
   NTuple::Array<float>     m_sMCPt;
   NTuple::Array<float>     m_sMCPhi;
@@ -121,14 +126,18 @@ class BTaggingAnalysis : public DVAlgorithm {
   NTuple::Item<long>      m_kType;
 
   NTuple::Item<long>      m_N;
-  NTuple::Array<int>      m_ID;
+  NTuple::Array<int>       m_ID;
   NTuple::Array<float>     m_P;
   NTuple::Array<float>     m_Pt;
   NTuple::Array<float>     m_phi;
   NTuple::Array<int>       m_ch;
   NTuple::Array<float>     m_IP;
   NTuple::Array<float>     m_IPerr;
+  NTuple::Array<float>     m_IPc;
+  NTuple::Array<float>     m_IPchi2;
   NTuple::Array<float>     m_IPPU;
+  NTuple::Array<float>     m_IPPUc;
+  NTuple::Array<float>     m_IPPUchi2;
   NTuple::Array<int>       m_trtyp;
   NTuple::Array<float>     m_lcs;
   NTuple::Array<float>     m_tsal;
@@ -148,19 +157,19 @@ class BTaggingAnalysis : public DVAlgorithm {
   NTuple::Array<float>     m_MCPt;
   NTuple::Array<float>     m_MCphi;
   NTuple::Array<float>     m_MCz;
-  NTuple::Array<int>      m_mothID;
-  NTuple::Array<int>      m_ancID;
-  NTuple::Array<int>      m_bFlag;
-  NTuple::Array<int>      m_xFlag;
+  NTuple::Array<int>       m_mothID;
+  NTuple::Array<int>       m_ancID;
+  NTuple::Array<int>       m_bFlag;
+  NTuple::Array<int>       m_xFlag;
  
   NTuple::Item<float>      m_RVx;
   NTuple::Item<float>      m_RVy;
   NTuple::Item<float>      m_RVz;
 
   NTuple::Item<long>       m_T;
-  NTuple::Array<int>      m_TaggerDecision;
-  NTuple::Array<int>      m_TaggerType;
-  NTuple::Array<float>    m_TaggerOmega;
+  NTuple::Array<int>       m_TaggerDecision;
+  NTuple::Array<int>       m_TaggerType;
+  NTuple::Array<float>     m_TaggerOmega;
 
 };
 

@@ -1,4 +1,4 @@
-// $Id: BTaggingChecker.cpp,v 1.12 2008-11-11 20:59:05 musy Exp $
+// $Id: BTaggingChecker.cpp,v 1.13 2009-02-23 21:04:14 musy Exp $
 
 // local
 #include "BTaggingChecker.h"
@@ -19,11 +19,13 @@ DECLARE_ALGORITHM_FACTORY( BTaggingChecker );
 BTaggingChecker::BTaggingChecker( const std::string& name,
                                   ISvcLocator* pSvcLocator )
   : DVAlgorithm ( name , pSvcLocator ),
-    m_debug2(0)
-  , m_forcedBtool(0) 
+    m_debug(0)
+    , m_forcedBtool(0) 
+    , m_bkg(0)
 {
   declareProperty("TagsLocation", 
                   m_tags_location = FlavourTagLocation::Default );
+  declareProperty( "RequireTrigger",     m_requireTrigger   = true );
 }
 
 //==========================================================================
@@ -32,9 +34,16 @@ BTaggingChecker::~BTaggingChecker() {};
 //==========================================================================
 StatusCode BTaggingChecker::initialize() {
 
-  m_debug2 = tool<IPrintDecayTreeTool> ( "PrintDecayTreeTool", this );
+  m_debug = tool<IPrintDecayTreeTool> ( "PrintDecayTreeTool", this );
   m_forcedBtool = tool<IForcedBDecayTool> ( "ForcedBDecayTool", this );
+  m_bkg = tool<IBackgroundCategory>( "BackgroundCategory", this );
 
+  if(m_requireTrigger){
+    m_hltSummaryTool = tool<IHltSummaryTool>("HltSummaryTool",this);
+    if(!m_hltSummaryTool){
+      err() << " Unable to retrieve HltSummaryTool" << endreq;
+    }
+  }
   nsele=0;
   for(int i=0; i<50; ++i) { nrt[i]=0; nwt[i]=0; }
 
@@ -50,7 +59,7 @@ StatusCode BTaggingChecker::execute() {
 
   ////////////////////////////////////////////////////
   // Find the forced B
-  const MCParticle* BS =  m_forcedBtool->forcedB();
+  const MCParticle* BS = m_forcedBtool->forcedB();
   ////////////////////////////////////////////////////
 
   int tagdecision=0, ix=0;
@@ -65,24 +74,42 @@ StatusCode BTaggingChecker::execute() {
     return StatusCode::SUCCESS;
   }
   debug()<< tags->size()<<" tags found in "<<m_tags_location << endreq;
-
+  
+  const Particle* P=0;
+  int bkgcat = -1;
+  double pmax=-1;
   FlavourTags::const_iterator ti;
   for( ti=tags->begin(); ti!=tags->end(); ti++ ) {
 
-    tagdecision = (*ti)->decision();
-    ix = (*ti)->category();
-
-    info() << "BTAGGING MON "
-      //<< std::setw(3) << trig
-           << std::setw(3) << truetag
-           << std::setw(3) << tagdecision
-           << std::setw(3) << ix
-           << endreq;
-
-    if( ! tagdecision ) continue;
-
-    m_debug2->printTree( (*ti)->taggedB() );
+    if((*ti)->taggedB()->p()>pmax) {
+      P = (*ti)->taggedB();
+      pmax=(*ti)->taggedB()->p();
+      tagdecision = (*ti)->decision();
+      ix          = (*ti)->category();
+    }
+    
+    //m_debug->printTree( (*ti)->taggedB() );
   }
+
+  if(P) if(m_bkg) if( ! P->isBasicParticle() ){
+    bkgcat = (int)(m_bkg->category( P ));
+    debug() << "BackgroundCategory decision  "<< bkgcat << endreq;
+  }
+ 
+  //----------------------------------------------------------------------
+  long L0Decision = 0;
+  long HLTDecision = 0;
+  int trig=-1;
+  if( exist<L0DUReport>(L0DUReportLocation::Default) ) {
+    L0DUReport* l0 = get<L0DUReport>(L0DUReportLocation::Default);
+    if(l0) L0Decision  = l0->decision();
+    if(m_hltSummaryTool) HLTDecision = m_hltSummaryTool->decision();
+    trig = HLTDecision*10 + L0Decision;
+  }
+
+  //----------------------------------------------------------------------
+  info() << "BTAGGING MON "<< std::setw(3) << trig << std::setw(4) << truetag 
+         << std::setw(4) << bkgcat << endreq;
 
   //count rights and wrongs
   nsele++;
@@ -106,7 +133,7 @@ StatusCode BTaggingChecker::finalize(){
   double epsilerr, epsilerrtot=0;
 
   info()<<"======================================================="<<endreq;
-  info()<< std::setw(40)<< "Summary: EXCLUSIVE BTAGGING PERFORMANCE " <<endmsg; 
+  info()<< std::setw(40)<< "Summary: EXCLUSIVE TAGGING PERFORMANCE " <<endmsg; 
   info()<< "Summary : " <<endreq;
   info()<< " Category            EFF.          Etag         Wrong TF"
         << "      r       w       "<<endreq;
@@ -171,7 +198,7 @@ StatusCode BTaggingChecker::finalize(){
   info()<< "EFFECTIVE COMB. TE =  "
         <<std::setprecision(2)<<std::setw(5)
         << effe_tot*100 << " +/- "<<epsilerrtot*100<< " %"<< endreq;
-  info()<<"==========END OF EXCLUSIVE BTAGGING PERFORMANCE ======="<<endmsg;
+  info()<<"==========END OF EXCLUSIVE TAGGING PERFORMANCE ======="<<endmsg;
   info()<<"========================================================="<<endreq;
 
   return StatusCode::SUCCESS; 

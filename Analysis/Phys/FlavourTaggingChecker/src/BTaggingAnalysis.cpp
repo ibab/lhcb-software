@@ -19,7 +19,6 @@ DECLARE_ALGORITHM_FACTORY( BTaggingAnalysis );
 BTaggingAnalysis::BTaggingAnalysis(const std::string& name,
                                    ISvcLocator* pSvcLocator):
   DVAlgorithm(name, pSvcLocator), 
-  m_linkLinks(0) , 
   m_electron(0), 
   m_forcedBtool(0),
   m_bkgCategory(0) ,
@@ -28,17 +27,22 @@ BTaggingAnalysis::BTaggingAnalysis(const std::string& name,
   m_vtxtool(0),
   m_descend(0),
   m_hltSummaryTool(0),
-  m_TriggerTisTosTool(0)
+  m_TriggerTisTosTool(0),
+  m_linkLinks(0) 
 {
-  declareProperty( "SecondaryVertexType", m_SVtype    = "SVertexTool" );
-  declareProperty( "TagOutputLocation", m_TagLocation = FlavourTagLocation::Default );
-  declareProperty( "AssociatorInputData", m_setInputData );
-  declareProperty( "UseMCTrueFlavour", m_UseMCTrueFlavour = true );
-  declareProperty( "RequireTrigger",     m_requireTrigger = true );
+  declareProperty( "SecondaryVertexType",m_SVtype      = "SVertexTool" );
+  declareProperty( "TagOutputLocation",  m_TagLocation = FlavourTagLocation::Default );
+  declareProperty( "AssociatorInputData",m_setInputData );
+  declareProperty( "UseMCTrueFlavour",   m_UseMCTrueFlavour = true );
+  declareProperty( "RequireTrigger",     m_requireTrigger   = true );
 
   declareProperty( "IPPU_cut",     m_IPPU_cut    = 3.0 );
   declareProperty( "distphi_cut",  m_distphi_cut = 0.005 );
   declareProperty( "thetaMin_cut", m_thetaMin    = 0.012 );
+
+  m_setInputData.clear();
+  m_setInputData.push_back( "Phys/BTaggingAnalysis" );
+  
 }
 
 BTaggingAnalysis::~BTaggingAnalysis() {}; 
@@ -46,9 +50,10 @@ BTaggingAnalysis::~BTaggingAnalysis() {};
 //=============================================================================
 StatusCode BTaggingAnalysis::initialize() {
 
-  m_linkLinks = new Particle2MCLinker( this, 
-                                       //Particle2MCMethod::Chi2,
-                                       Particle2MCMethod::Links, 
+  StatusCode sc = DVAlgorithm::initialize();
+  if ( sc.isFailure() ) return sc;
+
+  m_linkLinks = new Particle2MCLinker( this, Particle2MCMethod::Links, 
                                        m_setInputData);
   if( !m_linkLinks ) {
     fatal() << "Unable to retrieve Link Associator tool"<<endreq;
@@ -60,17 +65,18 @@ StatusCode BTaggingAnalysis::initialize() {
       err() << " Unable to retrieve HltSummaryTool" << endreq;
       return StatusCode::FAILURE;
     }
-//     m_TriggerTisTosTool = tool<ITriggerTisTos>( "TriggerTisTos", this); 
-//     if ( !m_TriggerTisTosTool ) {   
-//       fatal() << "TriggerTisTosTool could not be found" << endreq;
-//       return StatusCode::FAILURE;
-//     }
+    m_TriggerTisTosTool = tool<ITriggerTisTos>( "TriggerTisTos", this); 
+    if ( !m_TriggerTisTosTool ) {   
+      fatal() << "TriggerTisTosTool could not be found" << endreq;
+      return StatusCode::FAILURE;
+    }
   }
   m_Geom = tool<IGeomDispCalculator> ("GeomDispCalculator", this);
   if ( ! m_Geom ) {   
     fatal() << "GeomDispCalculator could not be found" << endreq;
     return StatusCode::FAILURE;
-  }
+  }//becomes obsolete but still used at present
+
   m_bkgCategory = tool<IBackgroundCategory>("BackgroundCategory", this);
   if(!m_bkgCategory){
     fatal() << "Unable to retrieve BackgroundCategory tool" << endreq;
@@ -129,8 +135,11 @@ StatusCode BTaggingAnalysis::initialize() {
     nt->addItem ("Tag",    m_Tag);
     nt->addItem ("Omega",  m_omega);
     nt->addItem ("TagCat", m_TagCat);
-    nt->addItem ("evType", m_type);
-    nt->addItem ("trig",   m_trigger);
+    nt->addItem ("TagOS",   m_TagOS);
+    nt->addItem ("OmegaOS", m_omegaOS);
+    nt->addItem ("TagCatOS",m_TagCatOS);
+    nt->addItem ("evType",  m_type);
+    nt->addItem ("trig",    m_trigger);
     nt->addItem ("L0TisTos",  m_L0TisTos);
     nt->addItem ("HltTisTos", m_HltTisTos);
     nt->addItem ("bkgCat", m_bkgCat);
@@ -140,20 +149,20 @@ StatusCode BTaggingAnalysis::initialize() {
 
     //reconstructed signal
     nt->addItem (       "M",     m_M, 0, 10 ); //limit
-    nt->addIndexedItem ("sID",   m_M, m_sID);
+    nt->addIndexedItem ("sID",    m_M, m_sID);
     nt->addIndexedItem ("sMothID",m_M, m_sMothID);
     nt->addIndexedItem ("sP",     m_M, m_sP);
     nt->addIndexedItem ("sPt",    m_M, m_sPt);
     nt->addIndexedItem ("sPhi",   m_M, m_sPhi);
     nt->addIndexedItem ("sMass",  m_M, m_sMass);
     nt->addIndexedItem ("sMCID",  m_M, m_sMCID);
-    nt->addIndexedItem ("sMCMothID",   m_M, m_sMCMothID);
+    nt->addIndexedItem ("sMCMothID",m_M, m_sMCMothID);
     nt->addIndexedItem ("sMCP",    m_M, m_sMCP);
     nt->addIndexedItem ("sMCPt",   m_M, m_sMCPt);
     nt->addIndexedItem ("sMCPhi",  m_M, m_sMCPhi);
-    nt->addIndexedItem ("sVx",   m_M, m_sVx);
-    nt->addIndexedItem ("sVy",   m_M, m_sVy);
-    nt->addIndexedItem ("sVz",   m_M, m_sVz);
+    nt->addIndexedItem ("sVx",     m_M, m_sVx);
+    nt->addIndexedItem ("sVy",     m_M, m_sVy);
+    nt->addIndexedItem ("sVz",     m_M, m_sVz);
 
     //B opposite
     nt->addItem ("BOID",    m_BOID);
@@ -193,6 +202,10 @@ StatusCode BTaggingAnalysis::initialize() {
     nt->addItem ("ip",     m_N, m_IP);
     nt->addItem ("iperr",  m_N, m_IPerr);
     nt->addItem ("ipPU",   m_N, m_IPPU);
+    nt->addItem ("ipC",    m_N, m_IPc);
+    nt->addItem ("ipChi2", m_N, m_IPchi2);
+    nt->addItem ("ipPUC",  m_N, m_IPPUc);
+    nt->addItem ("ipPUChi2",m_N, m_IPPUchi2);
     nt->addItem ("trtyp",  m_N, m_trtyp);
     nt->addItem ("lcs",    m_N, m_lcs);
     nt->addItem ("tsal",   m_N, m_tsal);
@@ -216,7 +229,6 @@ StatusCode BTaggingAnalysis::initialize() {
     nt->addItem ("xFlag"  ,m_N, m_xFlag);
     nt->addItem ("vFlag",  m_N, m_vFlag);
 
-    ///Added by SPOSS to have the tagger info
     nt->addItem ("T",               m_T, 0 , 10); //limit
     nt->addItem ("TaggerType",      m_T, m_TaggerType);
     nt->addItem ("TaggerDecision",  m_T, m_TaggerDecision);
@@ -244,7 +256,7 @@ StatusCode BTaggingAnalysis::execute() {
   }
 
   //----------------------------------------------------------------------
-  long L0Decision = 0;
+  long L0Decision = -1;
   long HLTDecision = 0;
   if(m_requireTrigger){
     if( !exist<L0DUReport>(L0DUReportLocation::Default) ) {
@@ -338,24 +350,33 @@ StatusCode BTaggingAnalysis::execute() {
   //TIS TOS ----------------------------------------
   m_L0TisTos  = 0;
   m_HltTisTos = 0;
-//   if(m_requireTrigger) {
-//     m_TriggerTisTosTool->setOfflineInput( *AXBS );
-//     // L0 
-//     bool decisionL0, L0Tis, L0Tos;
-//     m_TriggerTisTosTool->triggerTisTos( "L0*Decision" , decisionL0, L0Tis,L0Tos );
-//     // Hlt Alleys
-//     bool decisionHltAlleys, alleysTis, alleysTos;
-//     m_TriggerTisTosTool->triggerTisTos("Hlt1*Decision",decisionHltAlleys, alleysTis, alleysTos);
-//     // Hlt B Selections 
-//     bool decisionHltSelB, selBTis, selBTos;
-//     m_TriggerTisTosTool->triggerTisTos("Hlt2*Decision",decisionHltSelB, selBTis, selBTos );
-//     if(L0Tis) m_L0TisTos += 10;
-//     if(L0Tos) m_L0TisTos +=  1;
-//     if(alleysTis) m_HltTisTos +=  1000;
-//     if(alleysTos) m_HltTisTos +=   100;
-//     if(selBTis)   m_HltTisTos +=    10;
-//     if(selBTos)   m_HltTisTos +=     1;
-//   }
+  if(m_requireTrigger) {
+    m_TriggerTisTosTool->setOfflineInput( *AXBS );
+    // L0 
+    bool decisionL0, L0Tis, L0Tos;
+    m_TriggerTisTosTool->setTriggerInput("Hlt1L0*Decision");
+    std::vector<std::string> vs = m_TriggerTisTosTool->triggerSelectionNames();
+    //Fill the decision, tis and tos parametres for the L0 as a whole
+    m_TriggerTisTosTool->selectionTisTos(vs,decisionL0,L0Tis,L0Tos);
+    // Hlt1
+    bool decisionHltAlleys, alleysTis, alleysTos;
+    m_TriggerTisTosTool->setTriggerInput("Hlt1*Decision");
+    //Fill the decision, tis and tos parametres for the Hlt1 as a whole
+    m_TriggerTisTosTool->triggerTisTos(decisionHltAlleys,alleysTis,alleysTos);
+    // Hlt2
+    bool decisionHltSelB, selBTis, selBTos;
+    m_TriggerTisTosTool->setTriggerInput("Hlt2*Decision");
+    //Fill the decision, tis and tos parametres for the Hlt2 as a whole
+    m_TriggerTisTosTool->triggerTisTos(decisionHltSelB, selBTis, selBTos);
+
+    if(L0Tis) m_L0TisTos += 10;
+    if(L0Tos) m_L0TisTos +=  1;
+
+    if(alleysTis) m_HltTisTos +=  1000;
+    if(alleysTos) m_HltTisTos +=   100;
+    if(selBTis)   m_HltTisTos +=    10;
+    if(selBTos)   m_HltTisTos +=     1;
+  }
 
   //fill signal particle block:
   m_M=0;
@@ -407,17 +428,17 @@ StatusCode BTaggingAnalysis::execute() {
   for ( imc = mcpart->begin(); imc != mcpart->end(); imc++ ) {
     if( (*imc) != BS ) 
       if((*imc)->particleID().hasBottom()) {
-	bool close2BS = false;
-	if(BS) if(fabs((*imc)->originVertex()->position().z() 
-		       - BS->originVertex()->position().z()) /Gaudi::Units::mm < 1.0)
-	  close2BS = true;
+        bool close2BS = false;
+        if(BS) if(fabs((*imc)->originVertex()->position().z() 
+                       - BS->originVertex()->position().z()) /Gaudi::Units::mm < 1.0)
+          close2BS = true;
 	
         if( close2BS || (!BS) ) {
           if( maxBP < (*imc)->momentum().P() ) {
             maxBP = (*imc)->momentum().P();
             BO = (*imc);
           }
-	}
+        }
       }
   }
 
@@ -428,10 +449,8 @@ StatusCode BTaggingAnalysis::execute() {
   }
 
   ////////////////////////////////////////////////////
-  if ( !BO ) {
-    warning() << "Missing Opposite B meson in MC!"<< endreq;
-    //return StatusCode::SUCCESS;                      
-  }
+  if ( !BO ) warning() << "Missing Opposite B meson in MC!"<< endreq;
+ 
   ////////////////////////////////////////////////////
   //debug()<<"SIGNAL B:"<<endreq; m_debug -> printTree(BS);
   //debug()<<"OPPOSITE B (TAGGING B):"<<endreq; m_debug -> printTree(BO);
@@ -439,7 +458,6 @@ StatusCode BTaggingAnalysis::execute() {
 
   //-------------------- OFFICIAL TAG of the Event --------------------
   bool foundb = false;
-  //const std::vector< ProtoParticle* > partsInSV(0);
   ProtoParticle::ConstVector partsInSV;
   FlavourTags*  tags = new FlavourTags;
   FlavourTag* theTag = new FlavourTag;
@@ -473,9 +491,12 @@ StatusCode BTaggingAnalysis::execute() {
     }
   }
 
-  m_Tag    = theTag->decision();
-  m_omega  = theTag->omega();
-  m_TagCat = theTag->category();
+  m_Tag      = theTag->decision();
+  m_omega    = theTag->omega();
+  m_TagCat   = theTag->category();
+  m_TagOS    = theTag->decisionOS();
+  m_omegaOS  = theTag->omegaOS();
+  m_TagCatOS = theTag->categoryOS();
 
   m_TrueTag = 0;
   if(BS) m_TrueTag = BS->particleID().pid()>0 ? 1 : -1; 
@@ -502,9 +523,16 @@ StatusCode BTaggingAnalysis::execute() {
   }
 
   //Background category
-  IBackgroundCategory::categories cat = m_bkgCategory->category(AXBS);
-  debug() << "Result of BackgroundCategory is: " << cat << endreq;
-  m_bkgCat = cat;
+  int bcat = -1;
+  if(AXBS) if(m_bkgCategory) if( ! AXBS->isBasicParticle() ){
+    bcat = (int) m_bkgCategory->category(AXBS);
+    debug() << "Result of BackgroundCategory is: " << bcat << endreq;
+  }
+  m_bkgCat = bcat;
+
+  info() << "BTAGGING MON "<< std::setw(3) << ((int)m_trigger) 
+         << std::setw(4) << ((int)m_TrueTag) << std::setw(4) << bcat << endreq;
+  //----------------------------------------------------------------------------
 
   //true Signal B
   if(BS) {
@@ -536,7 +564,6 @@ StatusCode BTaggingAnalysis::execute() {
     m_BOx=0; m_BOy=0; m_BOz=0; m_BOosc=0;
   }
 
-  //NEED CHANGE:
   //if the prim vtx is not provided by the user,
   //choose as primary vtx the one with smallest IP wrt B signal
   //this is a guess for the actual PV chosen by the selection.
@@ -639,13 +666,32 @@ StatusCode BTaggingAnalysis::execute() {
     double IP, IPerr;
     if(!(axp->particleID().hasBottom())) m_util->calcIP(axp, RecVert, IP, IPerr);
     if(!IPerr) continue;                                      //preselection cut
-    double IPsig = fabs(IP/IPerr);
     //calculate signed IP wrt SecondaryVertex
     //calculate min IP wrt all pileup vtxs 
     double IPPU = 10000;
-    double ip, iperr;
-    m_util->calcIP( axp, PileUpVtx, ip, iperr );
-    if(iperr) IPPU=ip/iperr;
+    double ipval, iperr, IPc=-1, IPchi2=-1;
+    m_util->calcIP( axp, PileUpVtx, ipval, iperr );
+    if(iperr) IPPU=ipval/iperr;
+  
+    //calculate the IP chi2
+    bool testip = distanceCalculator()->distance( axp, RecVert, IPc, IPchi2 );
+    if( !testip ){
+      IPc=-1;
+      IPchi2=-1;
+    }
+    double ippumin = 100000.0, ippuchi=0.;
+    RecVertex::ConstVector::const_iterator iv;
+    for(iv = PileUpVtx.begin(); iv != PileUpVtx.end(); iv++){
+      double ipx, chi;
+      StatusCode sc = 0;
+      sc = distanceCalculator()->distance(axp, *iv, ipx, chi);
+      if( sc ) if( ipx < ippumin ) {
+        ippumin = ipx;
+        ippuchi = chi;
+      } 
+    }
+    double IPPUc    = ippumin;
+    double IPPUchi2 = ippuchi;
 
     //Fill NTP info -------------------------------------------------------
     m_trtyp[m_N] = trtyp;
@@ -656,14 +702,16 @@ StatusCode BTaggingAnalysis::execute() {
     m_ch[m_N]    = (int) axp->charge();
     m_IP[m_N]    = IP;
     m_IPerr[m_N] = IPerr;
-    //    m_IPT[m_N]   = IPT;
+    m_IPc[m_N]   = IPc;
+    m_IPchi2[m_N]= IPchi2;
     m_IPPU[m_N]  = IPPU;
+    m_IPPUc[m_N] = IPPUc;
+    m_IPPUchi2[m_N] = IPPUchi2;
     m_lcs[m_N]   = lcs;
     m_distphi[m_N]= distphi;
-    
+
     // electrons
     m_PIDe[m_N] = proto->info( ProtoParticle::CombDLLe, -1000.0 );
-
     double eOverP  = -999.9;
     if(m_electron->set(axp)){ /// CaloElectron tool
       eOverP  = m_electron->eOverP();
@@ -674,14 +722,12 @@ StatusCode BTaggingAnalysis::execute() {
     // muons
     m_PIDm[m_N] = proto->info( ProtoParticle::CombDLLmu, -1000.0 );
     int muonNSH = (int) proto->info( ProtoParticle::MuonNShared, -1.0 );
-
     // kaons
     m_PIDk[m_N] = proto->info( ProtoParticle::CombDLLk, -1000.0 );
-
     // protons
     m_PIDp[m_N] = proto->info( ProtoParticle::CombDLLp, -1000.0 );
 
-    // global flags 
+   // global flags 
     const bool inEcalACC = proto->info(ProtoParticle::InAccEcal, false);
     const bool inHcalACC = proto->info(ProtoParticle::InAccHcal, false);
     m_PIDfl[m_N]= 0;
@@ -715,7 +761,7 @@ StatusCode BTaggingAnalysis::execute() {
     //-------------------------------------------------------
     debug() << " --- trtyp="<<trtyp<<" ID="<<ID<<" P="<<P<<" Pt="<<Pt <<endreq;
     debug() << " deta="<<deta << " dphi="<<dphi << " dQ="<<dQ <<endreq;
-    debug() << " IPsig="<<IPsig << " IPPU="<<IPPU <<endreq;
+    debug() << " IPsig="<<fabs(IP/IPerr) << " IPPU="<<IPPU <<endreq;
     debug() << " sigPhi="<<m_distphi[m_N]<< " lcs " << lcs << endreq;
     debug() << " DLLe,m,k "<<m_PIDe[m_N]<<" "<<m_PIDm[m_N]<<" "<<m_PIDk[m_N]
             << " mNSH="<<muonNSH<< " vFlag="<<m_vFlag[m_N]<<endreq;
@@ -775,11 +821,9 @@ StatusCode BTaggingAnalysis::execute() {
   else if(m_Tag) info() << "Wrote tagged event to Ntuple." << endreq;
   ///----------------------------------------------------------------------
 
-  //delete theTag;
-
   setFilterPassed( true );
   return StatusCode::SUCCESS;
 }
 //=============================================================================
-StatusCode BTaggingAnalysis::finalize() { return StatusCode::SUCCESS; }
+StatusCode BTaggingAnalysis::finalize() {  return DVAlgorithm::finalize(); }
 
