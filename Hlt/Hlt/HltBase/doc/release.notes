@@ -4,6 +4,7 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+!========================== HltBase v6r1 2009-02-23 ===================
 ! 2009-02-20 - Gerhard Raven
  - do not allow ':' in configuration comments (confuses online panels)
  - EParser.h now in HltCommon
