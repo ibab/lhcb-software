@@ -12,10 +12,14 @@
 
 #include <cassert>
 #include <memory>
+#include <list>
 #include <string>
+#include <utility>
 #include <vector>
 
 typedef qcd::WilsonCoefficients<qcd::WilsonType> WilsonCoefficientsD;
+typedef std::pair<const EvtComplex, const EvtComplex> ComplexPair;
+typedef std::list<ComplexPair> ComplexPairList;
 
 struct EvtBToVllParameters{
 public:
