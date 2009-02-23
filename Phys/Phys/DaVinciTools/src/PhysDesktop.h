@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.h,v 1.30 2009-02-17 14:29:46 jpalac Exp $
+// $Id: PhysDesktop.h,v 1.31 2009-02-23 10:50:23 jpalac Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -205,6 +205,18 @@ private:
   inline Particle2Vertex::LightTable& i_p2PVTable() { 
     return m_p2VtxTable; 
   }
+
+  inline Particle2Vertex::Range i_particle2Vertices(const LHCb::Particle* part ) const 
+  {
+    return i_p2PVTable().i_relations(part);
+  }
+  
+  inline const LHCb::VertexBase* i_relatedVertexFromTable(const LHCb::Particle* part ) const 
+  {
+    return (!i_p2PVTable().i_relations(part).empty()) ? i_p2PVTable().i_relations(part).back().to() : 0;
+
+  }
+
 
   /// Find the position of an LHCb::VertexBase inside a range
   inline Particle2Vertex::Range::iterator findTo(const Particle2Vertex::Range& range, const LHCb::VertexBase* to ) const 
