@@ -1,9 +1,10 @@
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltCommon
-! Responsible : Jose A. Hernando
+! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!========================== HltCommon v5r1 2009-02-23 ===================
 ! 2009-02-22 - Gerhard Raven
   - preload all configurations in given 'directory' matching initial TCK
   - update format of counter prefix to two digits
