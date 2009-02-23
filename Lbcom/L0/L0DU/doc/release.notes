@@ -1,14 +1,14 @@
-! $Id: release.notes,v 1.142 2009-02-23 10:44:19 cattanem Exp $
+! $Id: release.notes,v 1.143 2009-02-23 10:44:53 cattanem Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+!========================== L0DU v8r13 2009-02-23 =========================
 ! 2009-02-23 - Marco Cattaneo
  - Add ETCSequencer and ETCOutput options to L0Conf (and remove "ETC" option)
  - Add a file options/ETCSeq.opts, same as ETC.opts without the sequence 
    defined. ETC.opts and L0Conf both include ETCSeq.opts
 
-!========================== L0DU v8r13 2009-02-20 =========================
 ! 2009-02-18 - Julien Cogan
  - Add L0Conf configurable. 
  - Separate the option files containing a sequence definition and an adder 
