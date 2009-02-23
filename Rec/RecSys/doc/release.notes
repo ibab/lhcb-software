@@ -5,9 +5,157 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+</PRE><H1><A NAME=v6r2>2009-02-24 RecSys v6r2</A></H1><PRE>
+This version uses Gaudi v20r4 and LHCb v26r2.
+
+- Packages added:    LumiAlgs v1r0: Accounting of LumiSummaries 
+- Packages modified: RecCheckers v1r1, CaloMoniDst v3r4, CaloReco v4r17p1,
+    NNTools v1r4, PatChecker v3r4p1, PatFitParams v3r2p2, TrackFitEvent v3r20,
+    TrackFitter v2r31, TrackMCTools v2r21, TrackMonitors v1r7, 
+    TrackProjectors v2r22, TrackTools v3r15, TrackUtils v1r24, TrackSys v4r21,
+    PatAlgorithms v3r15, PatVelo v3r11, TrackMatching v2r21p1, 
+    TsaAlgorithms v3r9, MuonID v6r1, MuonPIDChecker v3r1, 
+    RichMarkovRingFinder v2r5, RichRecMCAlgorithms v1r2, RichRecMCTools v2r20p1,
+    RichRecQC v2r26, RichRecStereoTools v1r5p1, RichRecSys v3r16, 
+    RichRecTools v4r7, RichRecTrackTools v1r8p1, GlobalReco v6r19,
+    VeloRecMonitors v1r4
+
+- In CaloReco v4r17p1
+  . Fix FPE occurring in CaloClusterizationTool on ia32 only
+  . Fix some doxygen warnings
+
+- In NNTools v1r4
+  . Create TMVA::Reader with "Silent" flag, to reduce initialization verbosity
+  . Improve protection against FPE in NeuralNetTmva
+
+- In TrackFitEvent v3r20
+  . Added Velo "Lite" measurements
+  . Cluster size method for STMeasurement now returns value
+    given by STPositionTool [was value from cluster]
+
+- In TrackFitter v2r31
+  . Add job option for minimum number of remaining hits in outlier removal
+  . ConfiguredFitter now also takes an instance as argument
+  . Added flag to use lite clusters
+  . Set up fit for merged OT events when running cosmics
+  . Fixed bug in configuration of FitVelo
+  . Fixed bug due to using unkeyed function arguments everywhere
+  . Added ability to fit Velo "lite" clusters
+  . Added ConfiguredFitForwardLiteOnly and ConfiguredFitVeloLiteOnly to 
+    ConfiguredFitters.py
+
+- In TrackMCTools v2r21
+  . Bug fix in definition of isReal for long tracks
+  . Modify isGhost method for Long tracks: it is a ghost if either T or Velo
+    part is a ghost
+  . Bug fix in isGhost method
+  . Use MCParticleSelector in CleanPatTrackSelector 
+  . Add option to cut on p in CleanPatTrackSelector
+  . Changes to Ghost classification tool interface
+  . Add the trivial real classification
+
+- In TrackMonitors v1r7
+  . Add a warning when container does not exist
+  . Protect against non-existance of containers.
+  . Add scales for monitoring of residuals for lite cluster types
+  . Add TTTrackMonitor algorithm
+  . Added the code to monitor "lite" VELO clusters in measurements
+
+- In TrackProjectors v2r22
+  . Added the VeloLite projectors
+
+- In TrackTools v3r15
+  . Changes to run the track fit with Lite clusters in MeasurementProvider.cpp,h
+	  undid all changes in the last two revisions and added instead the 
+	  properties for the providers for the subdetectors
+  . Added option to correct for error on energy loss error on
+    StateSimpleBetheBlochEnergyCorrectionTool
+  . Added code to handle Velo Lite measurements to tools
+
+- In TrackSys v4r21
+  . Removed OTTimeCreator from sequence
+  . Switch to special OT decoder for cosmics
+
+- In PatAlgorithms v3r15
+  . Add possibility to add TT clusters in matchSingle (for use in HLT1)
+	  option to steer it, true as default
+  . Fix uninitialised variables in constructor of PatFwdTrackCandidate. Fixes
+    slc4_ia32_gcc34_dbg FPE in Brunel
+  . Protect PatMakeV0.cpp to create debug() msg only if msgLevel(MSG::DEBUG)
+  . Fix two gcc 4.3 warnings
+
+- In PatVelo v3r11
+  . Make PatVeloSpaceTrack more robust against FPE on ia32
+
+- In TsaAlgorithms v3r9
+  . Removed cut on maximum number of T hits in TsaSeed such that it no
+    longer needs OTTimes container
+  . Updates to the generic tracking
+
+- In MuonID v6r1
+  . Change the extrapolation Z position to one that is saved to the DST 
+
+- In MuonPIDChecker v3r1
+  . Add histos of hit multiplicity as a function of X,Y and region/station
+  . Return warnings when container is not there.
+
+- In RichRecMCAlgorithms v1r2
+  . Add a new algorithm that dumps RICH events to a simple text file.
+
+- In RichRecQC v2r26
+  . Better structured code RichAlignmentMonitor.cpp.
+  . Introduced variable histogram output to the AlignmentMonitor
+    + Minimal - only the most basic alignment histograms
+    + OnlyPrebooked mirrors - include a predefined list of mirror combinations
+    + Full - as before
+  . Activate alignment histograms by default at level "Minimal" 
+  . Update Alignment.py to
+    + Not use Brunel() Configurable in order to access the WithMC setting.
+      Instead it now has its own setting, which is set from above.
+    + Add an option to conditionally enable Rich1 and/or Rich2 monitoring.
+  . Fix prebooking of histograms for RICH2 Mirror alignment both in the code
+    and in the configurable Alignment.py of RichAlignmentMonitor.
+  . Fix activation of the alignment histos dependence on the WithMC on/off
+    mode.
+  . Fix a few bugs in the activation of the alignment histos
+  . Fix typo in configuration for Markov Ring Finder in Configuration.py
+
+- In RichRecSys v3r16
+  . Change Pixel cleaning options (disable) by default
+  . Fix typo in python options in 'HLT' mode.
+
+- In RichRecTools v4r7
+  . Small changes to PID plots tool to rationalise with those produced by the
+    DaVinciMonitors plot tools.
+
+- In GlobalReco v6r19
+  . Add UpdateMuonPIDInProtoP
+
+- In VeloRecMonitors v1r4
+  . Corrected default options
+  . Change failure behaviour of residual calculation
+  . Reduced number of clusters in VeloClusterMonitor
+  . Fixed and improved offline alignment monitoring in VeloTrackMonitor
+  . Added alignment offline monitoring plots
+
+- In RecCheckers v1r1, CaloMoniDst v3r4, PatChecker v3r4p1, PatFitParams v3r2p2,
+     TrackMonitors v1r7, TrackTools v3r15, TrackUtils v1r24, PatAlgorithms v3r15,
+     RichRecMCTools v2r20p1, RichRecQC v2r26, RichRecStereoTools v1r5p1,
+     RichRecTools v4r7, RichRecTrackTools v1r8p1
+  . Migrate to LHCb::ParticlePropertySvc
+
+- In TrackMatching v2r21p1, MuonPIDChecker v3r1, VeloRecMonitors v1r4
+  . Fix untested StatusCodes
+
+- In PatAlgorithms v3r15, TsaAlgorithms v3r9, RichRecQC v2r26
+  . Fixes for gcc 4.3 compilation
+
+- In RichMarkovRingFinder v2r5
+  . Fix compilation warnings on OSX with gcc 4.0.1
+
+
 </PRE><H1><A NAME=v6r1>2009-01-13 RecSys v6r1</A></H1><PRE>
 This version uses Gaudi v20r4 and LHCb v26r1.
-- Add Package LumiAlgs v1r0 in requirements file
 
 - Packages modified: CaloPIDs v4r14p1, CaloReco v4r17, NNTools v1r3p1,
    PatChecker v3r4, TrackCheckers v4r5, TrackFitter v2r30, TrackMCTools v2r20,
