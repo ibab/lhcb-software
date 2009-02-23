@@ -4,6 +4,10 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
 ! 2009-02-23 - Marco Cattaneo
+ - Add a QMTest for FEST09 configuration. Tests L0 filtering, MDF output,
+   Expert histos
+
+! 2009-02-23 - Marco Cattaneo
  - Use new L0Conf in configurable, update references accordingly
  - Default DatasetName now set to "Boole" (was empty)
 
