@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.127 2009-02-23 02:16:50 musy Exp $
+! $Id: release.notes,v 1.128 2009-02-23 21:11:23 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (marco.musy@cern.ch)
@@ -10,6 +10,7 @@
  - implement OS alone decision
  - cleanup of summaryof.cpp
  - translate BTagging.opts into python
+ - removed obsolete property
 
 
 !======================= FlavourTagging v8r2 2009-01-15 ====================

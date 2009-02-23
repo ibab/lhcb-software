@@ -33,10 +33,6 @@ BTaggingTool::BTaggingTool( const std::string& type,
   declareProperty( "thetaMin_cut", m_thetaMin    = 0.012 );
   declareProperty( "distphi_cut",  m_distphi_cut = 0.005 );
 
-  declareProperty( "RequireTrigger",  m_RequireTrigger = false );
-  declareProperty( "RequireL0",       m_RequireL0      = false );
-  declareProperty( "RequireL1",       m_RequireL1      = false );
-  declareProperty( "RequireHLT",      m_RequireHLT     = false );
   declareProperty( "EnableMuonTagger",    m_EnableMuon    = true );
   declareProperty( "EnableElectronTagger",m_EnableElectron= true );
   declareProperty( "EnableKaonOSTagger",  m_EnableKaonOS  = true );
@@ -44,8 +40,7 @@ BTaggingTool::BTaggingTool( const std::string& type,
   declareProperty( "EnablePionTagger",    m_EnablePionSS  = true );
   declareProperty( "EnableVertexChargeTagger",m_EnableVertexCharge= true);
   declareProperty( "EnableJetSameTagger", m_EnableJetSame = false );
-  declareProperty( "OutputLocation",
-                   m_outputLocation = "/Event/Phys/BTaggingTool" );
+  declareProperty( "OutputLocation", m_outputLocation = "Phys/BTaggingTool" );
   m_util = 0;
   m_descend =0;
   m_taggerMu=m_taggerEle=m_taggerKaon=0;
@@ -143,9 +138,6 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
     return StatusCode::FAILURE;
   }
 
-  //build desktop
-  //const Particle::ConstVector& parts = m_physd->particles();
-  //m_physd->saveDesktop(); 
   Particle::ConstVector parts ;
   if ( !exist<Particles>( m_outputLocation+"/Particles" )) {
     debug() << "Making tagging particles to be saved in " 
@@ -302,7 +294,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   //----------------------------------------------------------------------
   //Now combine the individual tagger decisions into 
   //one final B flavour tagging decision. Such decision 
-  //can be made and categorised in two ways: the "TDR" 
+  //can be made and categorised in two ways: the "PID" 
   //approach is based on the particle type, while the 
   //"Prob" approach is based on the wrong tag fraction
 
@@ -321,8 +313,9 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   theTag.setDecisionOS( tmp_theTagOS.decision() );
   theTag.setCategoryOS( tmp_theTagOS.category() );
   theTag.setOmegaOS   ( tmp_theTagOS.omega() );
+
   debug() <<"decision="<<theTag.decision()<<"  decisionOS="<< theTag.decisionOS()<<endreq;
-  debug() <<"omega="<<theTag.omega()<<"  omegaOS="<< theTag.omegaOS()<<endreq;
+  debug() <<"omega="   <<theTag.omega()   <<"  omegaOS="   << theTag.omegaOS()<<endreq;
   debug() <<"category="<<theTag.category()<<"  categoryOS="<< theTag.categoryOS()<<endreq;
 
   ///OUTPUT to Logfile ---------------------------------------------------

@@ -1,4 +1,4 @@
-// $Id: BTaggingTool.h,v 1.16 2008-11-11 20:47:12 musy Exp $
+// $Id: BTaggingTool.h,v 1.17 2009-02-23 21:11:23 musy Exp $
 #ifndef USER_BTAGGINGTOOL_H 
 #define USER_BTAGGINGTOOL_H 1
 
@@ -76,7 +76,6 @@ private:
 
   std::string m_outputLocation, m_CombineTaggersName;
 
-  bool m_RequireL0, m_RequireL1, m_RequireHLT, m_RequireTrigger;
   bool m_EnableMuon,m_EnableElectron,m_EnableKaonOS;
   bool m_EnableKaonSS,m_EnablePionSS,m_EnableVertexCharge;
   bool m_EnableJetSame;
