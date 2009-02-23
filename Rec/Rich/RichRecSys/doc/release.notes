@@ -4,12 +4,12 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecSys v3r16 2009-02-23 ==========================
 ! 2009-02-21 - Chris Jones
  - Change Pixel cleaning options (disable) by default
 
-!====================== RichRecSys v3r16 2009-02-20 ==========================
 ! 2009-02-18 - Chris Jones
- - Fix type in python options in 'HLT' mode.
+ - Fix typo in python options in 'HLT' mode.
 
 !====================== RichRecSys v3r15 2009-01-12 ==========================
 ! 2009-01-07 - Ulrich Kerzel
