@@ -4,6 +4,7 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+!========================== HltLuminosity v2r5 2009-02-23 ===================
 ! 2009-02-20 - Jaap Panman
  - clearer info in LumiAnalyser, add test option
 
