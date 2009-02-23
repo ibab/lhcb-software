@@ -128,7 +128,7 @@ class L0Conf(LHCbConfigurableUser) :
         if self.isPropertySet("MoniSequencer"):
             seq=self.getProp("MoniSequencer")
             seq.Members+= [ GaudiSequencer("L0MoniSeq") ]
-            if not (self.getProp("DecodeL0") or self.getProp("MonitorL0") or self.getProp("FilterL0FromRaw")):
+            if not (self.getProp("SimulateL0") or self.getProp("DecodeL0") or self.getProp("MonitorL0") or self.getProp("FilterL0FromRaw")):
                 # import the file only once, to avoid multiple inclusion warning
                 importOptions("$L0DUROOT/options/L0Sequence.opts")
 
