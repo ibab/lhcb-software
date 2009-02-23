@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.44 2009-02-17 14:42:26 jpalac Exp $
+// $Id: DVAlgorithm.cpp,v 1.45 2009-02-23 13:13:58 jpalac Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -359,7 +359,10 @@ const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p)
 const LHCb::VertexBase* DVAlgorithm::getRelatedPV(const LHCb::Particle* part) const
 {
   if (msgLevel(MSG::VERBOSE)) verbose() << "getRelatedPV! Getting range" << endmsg;
-  if (0==part) error() << "input particle is NULL" << endmsg;
+  if (0==part) {
+    error() << "input particle is NULL" << endmsg;
+    return 0;
+  }
   Particle2Vertex::Range p2pvRange = desktop()->particle2Vertices(part);
   if (msgLevel(MSG::VERBOSE)) {
     verbose() << "getRelatedPV! Got range with size " << endmsg;
@@ -372,7 +375,7 @@ const LHCb::VertexBase* DVAlgorithm::getRelatedPV(const LHCb::Particle* part) co
       if (msgLevel(MSG::VERBOSE)) verbose() << "Found related vertex. Relating it" << endmsg;
       relateWithOverwrite(part, pv);
     } else {
-      error() << "Found no related vertex"<< endmsg;
+      Warning("Found no related vertex", StatusCode::FAILURE, 10).ignore();
       return 0;
     }
   }
