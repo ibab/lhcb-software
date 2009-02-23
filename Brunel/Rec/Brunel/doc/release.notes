@@ -4,6 +4,10 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
 ! 2009-02-23 - Marco Cattaneo
+ - Add to brunel-2008-mc QMTest testing of expert histos and of RecL0Only flag.
+   Increase tested events to 15 for this test, to have some L0 fails....
+
+! 2009-02-23 - Marco Cattaneo
  - Remove temporary RICH fix, will be part of release...
 
 ! 2009-02-21 - Chris Jones

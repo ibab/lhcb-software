@@ -3,13 +3,13 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.63 2009-02-23 06:51:09 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.64 2009-02-23 17:26:10 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
 import GaudiKernel.ProcessJobOptions
 from Configurables import ( LHCbConfigurableUser, LHCbApp, RecSysConf, TrackSys,
-                            ProcessPhase, GaudiSequencer, RichRecQCConf, DstConf, LumiAlgsConf )
+                            ProcessPhase, GaudiSequencer, RichRecQCConf, DstConf, LumiAlgsConf, L0Conf )
 
 ## @class Brunel
 #  Configurable for Brunel application
@@ -18,7 +18,7 @@ from Configurables import ( LHCbConfigurableUser, LHCbApp, RecSysConf, TrackSys,
 class Brunel(LHCbConfigurableUser):
 
     ## Possible used Configurables
-    __used_configurables__ = [ TrackSys, RecSysConf, RichRecQCConf, LHCbApp, DstConf, LumiAlgsConf ]
+    __used_configurables__ = [ TrackSys, RecSysConf, RichRecQCConf, LHCbApp, DstConf, LumiAlgsConf, L0Conf ]
 
     ## Default init sequences
     DefaultInitSequence     = ["Reproc", "Brunel", "Calo"]
@@ -162,8 +162,8 @@ class Brunel(LHCbConfigurableUser):
         # Setup L0 filtering if requested, runs L0 before Reco
         if self.getProp("RecL0Only"):
             ProcessPhase("Init").DetectorList.append("L0")
-            importOptions( "$L0DUROOT/options/L0Sequence.opts" )
-            GaudiSequencer("InitL0Seq").Members += [ "GaudiSequencer/L0FilterFromRawSeq" ]
+            L0Conf().L0Sequencer = GaudiSequencer("InitL0Seq")
+            L0Conf().FilterL0FromRaw = True
 
         # ROOT persistency for histograms
         importOptions('$STDOPTS/RootHist.opts')
@@ -334,12 +334,10 @@ class Brunel(LHCbConfigurableUser):
             from Configurables import TrackToDST
             if dstType == "DST":
                 # Sequence for altering DST content
-                ProcessPhase("Output").DetectorList += [ "DST" ]
                 # Filter Track States to be written
                 trackFilter = TrackToDST()
             else:
                 # Sequence for altering content of rDST compared to DST
-                ProcessPhase("Output").DetectorList += [ "L0", "DST" ]
                 # Filter Track States to be written
                 trackFilter = TrackToDST("TrackToRDST")
                 trackFilter.veloStates = ["ClosestToBeam"]
@@ -348,6 +346,7 @@ class Brunel(LHCbConfigurableUser):
                 trackFilter.downstreamStates = ["FirstMeasurement"]
                 trackFilter.upstreamStates = ["ClosestToBeam"]
                 
+            ProcessPhase("Output").DetectorList += [ "DST" ]
             GaudiSequencer("OutputDSTSeq").Members += [ trackFilter ]
 
             if packType != "NONE":
@@ -511,7 +510,8 @@ class Brunel(LHCbConfigurableUser):
                 effCheck.DetType = "IT"
                 GaudiSequencer("CheckITSeq").Members += [effCheck]
 
-            if "OT" in checkSeq : GaudiSequencer("CheckOTSeq").Members += ["OTTimeChecker"] # needs MCHits
+            if "OT" in checkSeq :
+                GaudiSequencer("CheckOTSeq").Members += ["OTTimeCreator", "OTTimeChecker"] # needs MCHits
 
             if "Tr" in  checkSeq :
                 # Checking on the tracks in the "best" container - needs MCHits
