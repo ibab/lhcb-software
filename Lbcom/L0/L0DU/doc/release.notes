@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.143 2009-02-23 10:44:53 cattanem Exp $
+! $Id: release.notes,v 1.144 2009-02-23 14:21:19 cattanem Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
@@ -8,6 +8,7 @@
  - Add ETCSequencer and ETCOutput options to L0Conf (and remove "ETC" option)
  - Add a file options/ETCSeq.opts, same as ETC.opts without the sequence 
    defined. ETC.opts and L0Conf both include ETCSeq.opts
+ - Fix untested StatusCode in L0DUFromRawTool
 
 ! 2009-02-18 - Julien Cogan
  - Add L0Conf configurable. 

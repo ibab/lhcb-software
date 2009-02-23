@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.cpp,v 1.18 2008-12-10 07:47:35 cattanem Exp $
+// $Id: L0DUFromRawTool.cpp,v 1.19 2009-02-23 14:21:19 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -606,7 +606,7 @@ bool L0DUFromRawTool::decoding(int ibank){
     // fill L0ProcessorData with input data in rawBank
     fillProcessorData();
     //  emulate the config accordingly for later usage (monitoring) 
-    if(NULL != config)m_emuTool->process(config , m_processorDatas);
+    if(NULL != config)m_emuTool->process(config , m_processorDatas).ignore();
     // Fill report with the consecutive BXs info
     if ( msgLevel( MSG::VERBOSE) )verbose() << " ... filling L0DU Report with consecutive BXs ..." << endreq;
     m_report.setChannelsDecisionSummaries( m_cds );
