@@ -4,6 +4,7 @@
 ! Purpose     : Ecal alley specific algorithms and tools
 !----------------------------------------------------------------------------
 
+!========================== HltEcalAlley v1r6 2009-02-23 ===================
 ! 2009-02-19- Mariusz Witek
  - modify HltIsPhotonTool.cpp which has been forgoten 2009-02-17
 
