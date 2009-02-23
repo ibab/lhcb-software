@@ -1,13 +1,13 @@
-# $Id: requirements,v 1.83 2009-02-20 16:18:40 pkoppenb Exp $
+# $Id: requirements,v 1.84 2009-02-23 15:04:24 jpalac Exp $
 package AnalysisSys
-version v3r0
+version v3r1
 
 branches doc cmt
 
 
 ####################################################################
 
-use  AnalysisConf               v1r0     Phys   # Patrick Koppenburg, Juan Palacios
+use  AnalysisConf               v1r1     Phys   # Patrick Koppenburg, Juan Palacios
 #===================================================================
 use  CommonParticles            v4r2     Phys   # Juan Palacios, WGs
 use  FlavourTagging             v8r2     Phys   # Marco Musy
@@ -18,7 +18,7 @@ use  RichPIDQC                  v1r0     Rich   # Chris Jones
 use  DstCalibSel                v1r0     Rich   # Andrew Powell
 
 ####################################################################
-use  DaVinciMCTools     	v9r17p2  Phys   # Juan Palacios
+use  DaVinciMCTools     	v9r18    Phys   # Juan Palacios
 use  DaVinciAssociators         v9r3p1   Phys   # Philippe Charpentier
 use  VertexFitCheck             v1r3p1   Phys   # Yuehong Xie
 use  MCStandardParticles        v1r2     Phys   # Juan Palacios
@@ -28,15 +28,15 @@ use  ParticleMakerChecker       v1r3     Phys   # Chris Jones
 use  LoKiUser                   v6r1     Phys   # Vanya Belyaev
 use  DecayTreeTuple             v1r10    Phys   # Jeremie Borel
 ####################################################################
-use  PhysSelSys          	v10r11  PhysSel
+use  PhysSelSys          	v10r12  PhysSel
 #===================================================================
 use Ccbar	                v1r9    PhysSel # Jan Amoraal, Miriam Calvo
-use B2Dilepton			v1r8  	PhysSel # Rare Decays Working Group
+use B2Dilepton			v1r8p3  PhysSel # Rare Decays Working Group
 use B2D0X			v1r14p2	PhysSel # WGs
 use B2DplusX			v1r3	PhysSel # WGs
 use B2DsX			v1r6p2	PhysSel # WGs
 use B2DstarX			v1r7p3	PhysSel # WGs
-use B2uds	   		v2r7    PhysSel # Juan Palacios, Gabriel Guerrer, Eric Conte
+use B2uds	   		v2r8    PhysSel # Juan Palacios, Gabriel Guerrer, Eric Conte
 # use JetsSel	    	    	v1r4p2  PhysSel # Jets WG
 use Radiative       	    	v2r4p5  PhysSel # Vanya BELYAEV
 use DSelections                 v1r0    PhysSel # Marco Gersabeck
@@ -49,7 +49,7 @@ use Bd2PiPiPi0       	   	v4r3p4   PhysSel # Olivier Deschamps
 # use $(use_LoKiJets)
 
 ####################################################################
-use  Stripping          	v6r7    Tools   # Patrick Koppenburg
+use  Stripping          	v6r8    Tools   # Patrick Koppenburg
 
 ####################################################################
 use  MicroDSTBase        	v1r2    MicroDST          # Juan Palacios
@@ -59,7 +59,7 @@ use  MicroDSTAlgorithm   	v3r4    MicroDST          # Juan Palacios
 use  MicroDSTConf               v2r0    MicroDST          # Juan Palacios
 
 ####################################################################
-use Analysis            	v8r0    Tutorial          # P. Koppenburg
+use Analysis            	v8r1    Tutorial          # P. Koppenburg
 use LoKiExample         	v8r2    Ex                # Vanya Belyaev
 use MicroDSTExample             v2r1    Ex                # Juan Palacios
 
