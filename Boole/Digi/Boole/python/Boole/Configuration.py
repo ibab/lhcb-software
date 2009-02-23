@@ -1,12 +1,12 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.40 2009-02-06 16:58:50 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.41 2009-02-23 12:17:51 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
 import GaudiKernel.ProcessJobOptions
-from Configurables import LHCbConfigurableUser, LHCbApp, ProcessPhase
+from Configurables import LHCbConfigurableUser, LHCbApp, ProcessPhase, L0Conf
 
 class Boole(LHCbConfigurableUser):
 
@@ -39,7 +39,7 @@ class Boole(LHCbConfigurableUser):
        ,"ExtendedDigi"   : False
        ,"Histograms"     : "Default"
        ,"NoWarnings"     : False
-       ,"DatasetName"    : ''
+       ,"DatasetName"    : "Boole"
        ,"DataType"       : "2008"
        ,"DDDBtag"        : ""
        ,"CondDBtag"      : ""
@@ -81,7 +81,7 @@ class Boole(LHCbConfigurableUser):
        ,'FilterSequence' : """ List of Filter sequences, see KnownFilterSubdets  """
        }
     
-    __used_configurables__ = [ LHCbApp ]
+    __used_configurables__ = [ LHCbApp, L0Conf ]
 
     def defineDB(self):
         # Delegate handling to LHCbApp configurable
@@ -261,8 +261,9 @@ class Boole(LHCbConfigurableUser):
     def configureDigiL0(self, seq, tae ):
         if tae == "":
             # L0 trigger Simulation
-            seq.Members += [ GaudiSequencer("L0SimulationSeq") ]
-            importOptions("$L0DUROOT/options/Boole.opts")
+            from Configurables import L0Conf
+            L0Conf().L0Sequencer = seq
+            L0Conf().SimulateL0  = True
         else:
             raise RuntimeError("TAE not implemented for L0")
                 
@@ -286,7 +287,8 @@ class Boole(LHCbConfigurableUser):
         filterSeq.DetectorList += filterDets
 
         if "L0" in filterDets: 
-            GaudiSequencer("FilterL0Seq").Members += [ "L0Filter" ]
+            from Configurables import L0Conf
+            L0Conf().FilterSequencer = GaudiSequencer("FilterL0Seq")
 
         if "ODIN" in filterDets: 
             from Configurables import OdinTypesFilter
@@ -369,10 +371,8 @@ class Boole(LHCbConfigurableUser):
             seq.Members += [ "MuonTileDigitInfo" ]
 
         if "L0" in linkDets:
-            seq = GaudiSequencer("LinkL0Seq")
-            from Configurables import L0CaloToMCParticleAsct
-            seq.Members += [ L0CaloToMCParticleAsct() ]
-            seq.Members += [ L0CaloToMCParticleAsct("L0CaloFullTruth", InputContainer = "Trig/L0/FullCalo") ]
+            from Configurables import L0Conf
+            L0Conf().LinkSequencer = GaudiSequencer("LinkL0Seq")
 
 
     def enableTAE(self):
@@ -530,11 +530,13 @@ class Boole(LHCbConfigurableUser):
                 taeNext -= 1
 
         if "L0ETC" in outputs:
-            importOptions( "$L0DUROOT/options/ETC.opts" ) # Adds "Sequencer/SeqWriteTag" to OutStreams
+            from Configurables import L0Conf
+            seq = GaudiSequencer("L0ETC")
+            ApplicationMgr().OutStream += [ seq ]
+            L0Conf().ETCSequencer = seq
             MyWriter = TagCollectionStream( "WR" )
             if not MyWriter.isPropertySet( "Output" ):
-                MyWriter.Output = "Collection='EVTTAGS/TagCreator/1' ADDRESS='/Event' DATAFILE='" + self.getProp("DatasetName") + "-L0ETC.root' TYP='POOL_ROOTTREE' OPT='RECREATE'"
-            else: print MyWriter.getProp("Output")
+                L0Conf().ETCOutput = self.getProp("DatasetName") + "-L0ETC.root"
 
         if "MDF" in outputs:
             # Set up the MDF persistency
@@ -663,7 +665,8 @@ class Boole(LHCbConfigurableUser):
             GaudiSequencer("MoniMUONSeq").Members += [ "MuonDigitChecker" ]
 
         if "L0" in moniDets:
-            GaudiSequencer("MoniL0Seq").Members += [ GaudiSequencer("L0MoniSeq") ]
+            from Configurables import L0Conf
+            L0Conf().MoniSequencer = GaudiSequencer("MoniL0Seq")
 
         if "MC" in moniDets:
             from Configurables import UnpackMCVertex, UnpackMCParticle, CompareMCVertex, CompareMCParticle
