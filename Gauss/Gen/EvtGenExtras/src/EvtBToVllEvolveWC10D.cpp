@@ -17,8 +17,8 @@
  * Gorbahn, Haisch, Nucl. Phys. B 713 (2005) 291-332
  */
 
-qcd::EvtBToVllEvolveWC10D::EvtBToVllEvolveWC10D(const qcd::WilsonCoefficients<WilsonType>& _wc):
-	C(_wc){
+qcd::EvtBToVllEvolveWC10D::EvtBToVllEvolveWC10D(const WilsonCoefficients<WilsonType>& _c, const WilsonCoefficients<WilsonType>& _cr):
+	C(_c),CR(_cr){
 }
 
 using constants::CF;
@@ -159,12 +159,18 @@ qcd::EvtBToVllEvolveWC10D::result_type qcd::EvtBToVllEvolveWC10D::operator()(con
 	assert(C.getOperatorBasis() == 12); //all WCs should be included
 
 	//most values stay the same, so copy
-	qcd::WilsonCoefficients<WilsonType> Cmw(C);
-		Cmw.setOperatorBasis(dimension);
-		for(unsigned int i = 1; i <= Cmw.getDimension(); ++i){
-			Cmw(i) = C(i);
+	qcd::WilsonCoefficients<WilsonType> CmwL(C);
+		CmwL.setOperatorBasis(dimension);
+		for(unsigned int i = 1; i <= CmwL.getDimension(); ++i){
+			CmwL(i) = C(i);
 	}
-	assert(Cmw.getOperatorBasis() == dimension);
+	assert(CmwL.getOperatorBasis() == dimension);
+	qcd::WilsonCoefficients<WilsonType> CmwR(C);
+			CmwR.setOperatorBasis(dimension);
+			for(unsigned int i = 1; i <= CmwR.getDimension(); ++i){
+				CmwR(i) = CR(i);
+	}
+	assert(CmwR.getOperatorBasis() == dimension);
 
 	const EvtBToVllEvolveWC10D::argument_type& mu = _scale;
 	const unsigned int nfl = 5;
@@ -269,28 +275,38 @@ qcd::EvtBToVllEvolveWC10D::result_type qcd::EvtBToVllEvolveWC10D::operator()(con
 	//eqn (6) of Ref. A
 	const StdMatrix U = K*U0*KInv;
 	DEBUGPRINT("U: ", U);//V
-	DEBUGPRINT("Cmw: ", Cmw);//V
+	DEBUGPRINT("CmwL: ", CmwL);//V
 
-	const qcd::WilsonCoefficients<qcd::WilsonType> Cm = U * Cmw;
-	DEBUGPRINT("Cm: ", Cm);//V
+	const qcd::WilsonCoefficients<qcd::WilsonType> CmL = U * CmwL;
+	const qcd::WilsonCoefficients<qcd::WilsonType> CmR = U0 * CmwR;//notice order here
+	DEBUGPRINT("CmL: ", CmL);//V
+	DEBUGPRINT("CmR: ", CmR);//V
 		
-	EvtBToVllEvolveWC10D::result_type C_barred(new WilsonCoefficients<WilsonType>(mu,12,dimension));
+	WilsonCoefficients<WilsonType>* C_barred(new WilsonCoefficients<WilsonType>(mu,12,dimension));
+	WilsonCoefficients<WilsonType>* CR_barred(new WilsonCoefficients<WilsonType>(mu,12,dimension));
 	
 	//this is the final result
 	//see Appendix A of hep-ph/0106067
-	(*C_barred)(1) = 0.5*Cm(1);
-	(*C_barred)(2) = Cm(2) - (1/6.)*Cm(1);
-	(*C_barred)(3) = Cm(3) - (1/6.)*Cm(4) + 16*Cm(5) - (8/3.)*Cm(6);
-	(*C_barred)(4) = 0.5*Cm(4) + 8*Cm(6);
-	(*C_barred)(5) = Cm(3) - (1/6.)*Cm(4) + 4*Cm(5) - (2/3.)*Cm(6);
-	(*C_barred)(6) = 0.5*Cm(4) + 2*Cm(6);
-	(*C_barred)(7) = Cm(7)/as1 - Cm(3)/3. - 4*Cm(4)/9. - 20*Cm(5)/3. - 80*Cm(6)/9.;
-	(*C_barred)(8) = Cm(8)/as1 + Cm(3) - Cm(4)/6. + 20*Cm(5) - 10*Cm(6)/3.;
-	(*C_barred)(9) = Cm(9)/as1;
-	(*C_barred)(10) = Cm(10)/as1;
+	(*C_barred)(1) = 0.5*CmL(1);
+	(*C_barred)(2) = CmL(2) - (1/6.)*CmL(1);
+	(*C_barred)(3) = CmL(3) - (1/6.)*CmL(4) + 16*CmL(5) - (8/3.)*CmL(6);
+	(*C_barred)(4) = 0.5*CmL(4) + 8*CmL(6);
+	(*C_barred)(5) = CmL(3) - (1/6.)*CmL(4) + 4*CmL(5) - (2/3.)*CmL(6);
+	(*C_barred)(6) = 0.5*CmL(4) + 2*CmL(6);
+	(*C_barred)(7) = CmL(7)/as1 - CmL(3)/3. - 4*CmL(4)/9. - 20*CmL(5)/3. - 80*CmL(6)/9.;
+	(*C_barred)(8) = CmL(8)/as1 + CmL(3) - CmL(4)/6. + 20*CmL(5) - 10*CmL(6)/3.;
+	(*C_barred)(9) = CmL(9)/as1;
+	(*C_barred)(10) = CmL(10)/as1;
 	(*C_barred)(11) = C(11);
 	(*C_barred)(12) = C(12);
-	return C_barred;
+
+	//now the right handed terms - we neglect CR(1-6) as they will be v. small
+	(*CR_barred)(7) = CmR(7)/as1;
+	(*CR_barred)(8) = CmR(8)/as1;
+	(*CR_barred)(9) = CmR(9)/as1;
+	(*CR_barred)(10) = CmR(10)/as1;	                     
+
+	return new qcd::WilsonPair(C_barred,CR_barred);
 }
 
 

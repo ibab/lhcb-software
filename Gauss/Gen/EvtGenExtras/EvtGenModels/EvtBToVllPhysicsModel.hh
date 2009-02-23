@@ -8,19 +8,23 @@
 
 namespace qcd{
 
-typedef std::auto_ptr<const WilsonCoefficients<WilsonType> > WCPtr;
-
 class IPhysicsModel {
 
 public:
 	
 	/** A Unique model name. Should have no spaces. */ 
 	virtual std::string getModelName() const = 0;
-	/** A set of Wilson Coefficients for the model*/
-	virtual qcd::WCPtr getWilsonCoefficientsMW() const = 0;
+	/** A set of the left handed Wilson Coefficients for the model*/
+	virtual qcd::WCPtr getLeftWilsonCoefficientsMW() const = 0;
+	/** A set of the right handed Wilson Coefficients for the model*/
+	virtual qcd::WCPtr getRightWilsonCoefficientsMW() const = 0;
 	/** The decay file command */
 	virtual void setCommand(const std::string&){
 		//default is to do nothing
+	}
+	/** Allows some optimisations in the case that there are no RHC present. */
+	virtual bool hasRightHandedCurrents() const{
+		return true;
 	}
 	virtual ~IPhysicsModel(){}
 	

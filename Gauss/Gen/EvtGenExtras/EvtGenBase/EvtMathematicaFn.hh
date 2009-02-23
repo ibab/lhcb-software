@@ -166,9 +166,17 @@ public:
 		values(p){
 	};
 	
-	T operator[](const unsigned int index) const{
+	const T& operator[](const unsigned int index) const{
 		assert( (index == 1) || (index == 2));
 		return (index == 1) ? values.first : values.second;
+	};
+	
+	void setVal(const unsigned int index, const T& val){
+		if(index == 1){
+			values.first = val;
+		}else if(index == 2){
+			values.second = val;
+		}
 	};
 	
 private:

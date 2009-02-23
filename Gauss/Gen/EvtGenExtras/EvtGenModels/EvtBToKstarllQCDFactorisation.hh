@@ -19,8 +19,11 @@ typedef qcd::WilsonCoefficients<qcd::WilsonType> WilsonCoefficientsD;
 
 struct EvtBToVllParameters{
 public:
-	std::auto_ptr<WilsonCoefficientsD> C_mb;
-	std::auto_ptr<WilsonCoefficientsD> C_mb3;
+	qcd::WCPtr C_mb;
+	qcd::WCPtr C_mb3;
+	qcd::WCPtr CR_mb;
+	qcd::WCPtr CR_mb3;
+	bool includeRHC;
 };
 
 

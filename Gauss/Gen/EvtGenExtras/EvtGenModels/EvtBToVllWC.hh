@@ -57,6 +57,7 @@ private:
 	
 
 };
+typedef std::auto_ptr<const WilsonCoefficients<WilsonType> > WCPtr;
 
 template<typename T>
 WilsonCoefficients<T>::WilsonCoefficients(const double& _scale, const unsigned int _operatorBasis, const unsigned int _dimension):

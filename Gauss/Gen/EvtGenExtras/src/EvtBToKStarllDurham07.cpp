@@ -333,8 +333,8 @@ void EvtBToKStarllDurham07::command(std::string cmd){
 		handleCommand(it->first,it->second);
 	}
 	
-	//we handle the case where the wilson coefficients here. Its a special case!
-	if( (_model != 0) && (_model->getModelName() == qcd::GenericModel::modelName) ){
+	//set the physics command
+	if(_model){
 		if(options.count(qcd::GenericModel::modelCommand) > 0){
 			_model->setCommand(options[qcd::GenericModel::modelCommand]);
 		}
@@ -450,12 +450,12 @@ void EvtBToKStarllDurham07::handleModelCommand(const std::string& modelName){
 	//the list of models to choose from
 	std::list<qcd::IPhysicsModel*> models;
 	models.push_back(new qcd::GenericModel);
+	models.push_back(new qcd::FBMSSMPhysicsModel);
 	models.push_back(new qcd::LHTPhysicsModel);
 	models.push_back(new qcd::MSSMLowTanBeta);
 	models.push_back(new qcd::MSSMHighTanBeta);
 	models.push_back(new qcd::NegC7PhysicsModel);
 	models.push_back(new qcd::SMPhysicsModel);
-	models.push_back(new qcd::TestPhysicsModel);
 	models.push_back(new qcd::UEDPhysicsModel);
 
 	//look for the specified model

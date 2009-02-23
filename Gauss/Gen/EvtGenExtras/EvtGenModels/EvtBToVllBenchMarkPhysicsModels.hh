@@ -7,66 +7,74 @@
 
 #include "EvtGenBase/EvtReport.hh"
 
+#include <utility>
+
 namespace qcd{
+
+class LeftHandedPhysicsModel : public IPhysicsModel {
+public:
+	/**
+	 * Parent class for all physics models with no
+	 * significant right-handed components. 
+	 */
+	qcd::WCPtr getRightWilsonCoefficientsMW() const;
+	bool hasRightHandedCurrents() const{
+		return false;
+	}
+};
 
 class GenericModel : public IPhysicsModel {
 public:
-	static const std::string modelName;
 	static const std::string modelCommand;
-	
 	std::string getModelName() const{
-			return modelName;
+			return "Generic_Model";
 	}
 	void setCommand(const std::string& _cmd){
 		command = _cmd;
 	}
-	qcd::WCPtr getWilsonCoefficientsMW() const;
+	qcd::WCPtr getLeftWilsonCoefficientsMW() const;
+	qcd::WCPtr getRightWilsonCoefficientsMW() const;
 private:
 	std::string command;
+protected:
+	void parseCommand(const WilsonCoefficients<WilsonType>* C,
+			const WilsonCoefficients<WilsonType>* CR) const;
 };
 
-class TestPhysicsModel : public IPhysicsModel {
-public:	
-	std::string getModelName() const{
-			return "Test_Model";
-	}
-	qcd::WCPtr getWilsonCoefficientsMW() const;
-};
-
-class SMPhysicsModel : public IPhysicsModel {
+class SMPhysicsModel : public LeftHandedPhysicsModel {
 public:	
 	std::string getModelName() const{
 		return "Standard_Model";
 	}
-	qcd::WCPtr getWilsonCoefficientsMW() const;
+	qcd::WCPtr getLeftWilsonCoefficientsMW() const;
 };
 
-class NegC7PhysicsModel : public IPhysicsModel {
+class NegC7PhysicsModel : public LeftHandedPhysicsModel {
 public:	
 	std::string getModelName() const{
 		return "NegC7_Model";
 	}
-	qcd::WCPtr getWilsonCoefficientsMW() const;
+	qcd::WCPtr getLeftWilsonCoefficientsMW() const;
 };
 
-class LHTPhysicsModel : public IPhysicsModel {
+class LHTPhysicsModel : public LeftHandedPhysicsModel {
 public:	
 	std::string getModelName() const{
 			return "LHT_Model";
 		}
-	qcd::WCPtr getWilsonCoefficientsMW() const;
+	qcd::WCPtr getLeftWilsonCoefficientsMW() const;
 };
 
-class UEDPhysicsModel : public IPhysicsModel {
+class UEDPhysicsModel : public LeftHandedPhysicsModel {
 public:	
 	std::string getModelName() const{
 			return "UED_Model";
 		}
-	qcd::WCPtr getWilsonCoefficientsMW() const;
+	qcd::WCPtr getLeftWilsonCoefficientsMW() const;
 
 };
 
-class MSSMLowTanBeta : public IPhysicsModel {
+class MSSMLowTanBeta : public LeftHandedPhysicsModel {
 /** 
  * Point in Parameter space is...
  * MH=650.;
@@ -86,17 +94,25 @@ public:
 	std::string getModelName() const{
 			return "MSSM_Low_Tan_Beta_Model";
 		}
-	qcd::WCPtr getWilsonCoefficientsMW() const;
+	qcd::WCPtr getLeftWilsonCoefficientsMW() const;
 };
 
-class MSSMHighTanBeta : public IPhysicsModel {
+class MSSMHighTanBeta : public LeftHandedPhysicsModel {
 public:	
 	std::string getModelName() const{
 			return "MSSM_High_Tan_Beta_Model";
 		}
-	qcd::WCPtr getWilsonCoefficientsMW() const;
+	qcd::WCPtr getLeftWilsonCoefficientsMW() const;
 };
 
+class FBMSSMPhysicsModel : public IPhysicsModel {
+public:	
+	std::string getModelName() const{
+			return "FBMSSM_Model";
+		}
+	qcd::WCPtr getLeftWilsonCoefficientsMW() const;
+	qcd::WCPtr getRightWilsonCoefficientsMW() const;
+};	
 
 }
 #endif /*BENCHMARKPHYSICSMODELS_H_*/
