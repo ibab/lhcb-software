@@ -3,6 +3,8 @@
 ! Responsible : Alessia Satta
 ! Purpose     : Muon digitisation algorithms
 !-----------------------------------------------------------------------------
+
+!========================= MuonAlgs v6r7 2009-02-20 ==========================
 ! 2009-02-12 - Alessia Satta
  - Fix an error in electronic noise simulation
  
