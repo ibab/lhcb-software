@@ -5,6 +5,7 @@
 !               low energy components, flatspillover
 !-----------------------------------------------------------------------------
 
+!====================== MuonBackground v2r8 2009-02-24 =======================
 ! 2009-01-29 - Marco Cattaneo
  - Add EnableSpillover option to MuonBackground (default False) to avoid
    looking for SpilloverAlg when Spillover is disabled
