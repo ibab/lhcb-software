@@ -46,6 +46,8 @@ public:
   /// Standard destructor
   ~Event() {}
   int iocType() const             {  return type;                      }
+  template <typename T> T* iocPtr() const  {  return (T*)data;         }
+  template <typename T> T iocData() const  {  return (T)data;          }
   unsigned long iocData() const   {  return (unsigned long)data;       }
   int menu() const                {  return menu_id;                   }
   int command() const             {  return command_id;                }

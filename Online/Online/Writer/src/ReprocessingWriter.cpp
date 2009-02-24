@@ -81,6 +81,7 @@ ReprocessingWriter::~ReprocessingWriter()   {
 
 /// Algorithm::execute() override, delegates to MDFWriter::execute().
 StatusCode ReprocessingWriter::execute()   {
+  /*
   long long int max_buff = m_memBufferLen;
   if ( (max_buff<<20) < m_bufferLength ) {
     // while ( !m_cancel && ((max_buff<<20) < m_bufferLength) ) {
@@ -90,11 +91,12 @@ StatusCode ReprocessingWriter::execute()   {
       ::lib_rtl_sleep(1000);
     }
     if ( m_cancel ) {
-      //*m_log << "Request cancelled. Possible drop of " << m_memBufferLen << " MBytes." << endmsg;
+      //    *m_log << "Request cancelled. Possible drop of " << m_memBufferLen << " MBytes." << endmsg;
       m_cancel = false;
       // return StatusCode::SUCCESS;
     }
   }
+  */
   StatusCode sc = MDFWriter::execute();
   if ( m_currFile ) {
     if ( sc.isSuccess() ) m_currFile->incEvents();
