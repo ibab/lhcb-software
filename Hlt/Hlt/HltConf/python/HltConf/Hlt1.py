@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.4 2009-02-22 22:32:37 panmanj Exp $
+# $Id: Hlt1.py,v 1.5 2009-02-24 14:54:58 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -43,7 +43,7 @@ class Hlt1Conf(LHCbConfigurableUser):
 
    def __apply_configuration__(self):
         # add a few thing to our printout
-        addHlt1Prop([ 'routingBitDefinitions', 'Accept', 'FilterDescriptor'
+        addHlt1Prop([ 'RoutingBits', 'Accept', 'FilterDescriptor'
                     , 'Code'
                     , 'DaughtersCuts', 'CombinationCut', 'MotherCut', 'DecayDescriptor'
                     , 'OutputSelection','Context' ])
@@ -56,15 +56,14 @@ class Hlt1Conf(LHCbConfigurableUser):
         # 32-63: reserved for Hlt1
         # 64-91: reserved for Hlt2
 
-        #### TODO: check that the used lines are actually in use!!!
-        ### non-existant strings always evaluate to false, and are not an error (yet)
-        ### empty strings always evaluate to false, and are not an error
-
-        routingBits = { 32 : 'Hlt1Global'
-                      , 33 : 'Hlt1LumiDecision'
-                      , 34 : 'Hlt1IgnoringLumiDecision' 
-                      , 35 : 'Hlt1VeloClosingDecision'
-                      , 36 : 'Hlt1ExpressDecision'
+        ### NOTE: any change in the meaning of any of the following needs to be 
+        ###       communicated with online, to insure the events are still properly
+        ###       routed!!!
+        routingBits = { 32 : "HLT_PASS('Hlt1Global')"
+                      , 33 : "HLT_PASS('Hlt1LumiDecision')"
+                      , 34 : "HLT_PASS('Hlt1IgnoringLumiDecision')"
+                      , 35 : "HLT_PASS('Hlt1VeloClosingDecision')"
+                      , 36 : "HLT_PASS('Hlt1ExpressDecision')"
                       }
 
         ## and record the settings in the ANN service
@@ -72,8 +71,6 @@ class Hlt1Conf(LHCbConfigurableUser):
 
 
         ## finally, define the Hlt1 sequence!!
-        #### TODO: add a setup where only one line is run, so that we can verify the independence
-        ####       of the lines!!!
         Sequence('Hlt1',  ModeOR = True, ShortCircuit = False )
 
         Sequence( 'HltEndSequence', ModeOR = True, ShortCircuit = False , Members = 
@@ -84,7 +81,7 @@ class Hlt1Conf(LHCbConfigurableUser):
                     , HltSelReportsWriter()
                     , HltVertexReportsMaker() # we set this in a postconfig action in HltConf's Configuration.py
                     , HltVertexReportsWriter()
-                    , HltRoutingBitsWriter( routingBitDefinitions = routingBits )
+                    , HltRoutingBitsWriter( RoutingBits = routingBits )
                     , HltLumiWriter()
                     , Sequence( 'LumiStripper' , Members = 
                           [ HltFilter('LumiStripperFilter' , Code = "HLT_PASS('Hlt1LumiDecision') & ~HLT_PASS('Hlt1IgnoringLumiDecision') " ) 
