@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.156 2009-02-24 17:39:51 graven Exp $ 
+! $Id: release.notes,v 1.157 2009-02-24 20:39:18 panmanj Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-02-24 - Jaap Panman
+ - add HltBeamGasLines - first using dummy contents
+ - reserve numbers in HltInit for BeamGas
+ - add BG as HLT Alley option
+
 ! 2009-02-24 - Gerhard Raven
  - routing bits now uses LoKi to specify bit evaluators
  - add a few missing selection to HltInit

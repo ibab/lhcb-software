@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.48 2009-02-24 17:39:51 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.49 2009-02-24 20:39:18 panmanj Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -32,6 +32,7 @@ from HltConf.HltHadronLines   import HltHadronLinesConf
 from HltConf.HltElectronLines import HltElectronLinesConf
 from HltConf.HltPhotonLines   import HltPhotonLinesConf
 from HltConf.HltExpressLines  import HltExpressLinesConf
+from HltConf.HltBeamGasLines  import HltBeamGasLinesConf
 from HltConf.Hlt1             import Hlt1Conf
 import HltConf.HltL0Candidates
 from HltConf.HltL0Candidates  import setupL0Channels, decodeL0Channels
@@ -41,6 +42,7 @@ class HltConf(LHCbConfigurableUser):
     __used_configurables__ = [ HltCommissioningLinesConf
                              , HltVeloLinesConf
                              , HltLumiLinesConf
+                             , HltBeamGasLinesConf
                              , HltL0LinesConf
                              , HltMuonLinesConf
                              , HltHadronLinesConf
@@ -85,6 +87,7 @@ class HltConf(LHCbConfigurableUser):
             for short,full in trans.iteritems() : hlttype = hlttype.replace(short,full)
             type2conf = { 'PA' : HltCommissioningLinesConf # PA for 'PAss-thru' (PT was considered bad)
                         , 'LU' : HltLumiLinesConf
+                        , 'BG' : HltBeamGasLinesConf
                         , 'L0' : HltL0LinesConf
                         , 'VE' : HltVeloLinesConf
                         , 'XP' : HltExpressLinesConf

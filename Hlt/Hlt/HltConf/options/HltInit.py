@@ -21,7 +21,12 @@ HltANNSvc().Hlt1SelectionID = {
     "Hlt1LumiNoBeamDecision"                :   45, 
     "Hlt1LumiBeamCrossingDecision"          :   46, 
     "Hlt1LumiSingleBeamLeftDecision"        :   47, 
-    "Hlt1LumiSingleBeamRightDecision"       :   48, 
+    "Hlt1LumiSingleBeamRightDecision"       :   48,
+    # BG
+    "Hlt1BeamGasDecision"                   :   50, 
+    "Hlt1BeamGasLeftDecision"               :   51,
+    "Hlt1BeamGasRightDecision"              :   52,
+    "Hlt1BeamGasCrossingDecision"           :   53,
     # VE
     "Hlt1VeloClosingDecision"               :   60,
     "Hlt1VeloASideDecision"                 :   61,
