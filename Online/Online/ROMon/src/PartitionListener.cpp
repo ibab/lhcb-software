@@ -13,13 +13,17 @@ PartitionListener::PartitionListener(Interactor* parent, const string& nam) : m_
 {
   string name = "RunInfo/" + m_name + "/HLTsubFarms";
   m_subFarmDP = ::dic_info_service((char*)name.c_str(),MONITORED,0,0,0,subFarmHandler,(long)this,0,0);
-  m_runStateDP = 0;
+  name = "RunInfo/" + m_name + "/RunStatus";
+  m_runStateDP = ::dic_info_service((char*)name.c_str(),MONITORED,0,0,0,runStateHandler,(long)this,0,0);
+  name = "RunInfo/" + m_name + "/partId";
+  m_partIdDP = ::dic_info_service((char*)name.c_str(),MONITORED,0,0,0,partIdHandler,(long)this,0,0);
 }
 
 /// Standard destructor
 PartitionListener::~PartitionListener() {
-  if ( m_subFarmDP  ) ::dic_release_service(m_subFarmDP);
+  if ( m_partIdDP   ) ::dic_release_service(m_partIdDP);
   if ( m_runStateDP ) ::dic_release_service(m_runStateDP);
+  if ( m_subFarmDP  ) ::dic_release_service(m_subFarmDP);
 }
 
 /// DIM command service callback
@@ -47,5 +51,18 @@ void PartitionListener::subFarmHandler(void* tag, void* address, int* size) {
 
 /// DIM command service callback
 void PartitionListener::runStateHandler(void* tag, void* address, int* size) {
-  if ( address && tag && size ) {}
+  if ( address && tag && size && *size>0 ) {
+    PartitionListener* h = *(PartitionListener**)tag;
+    int state = *(int*)address;
+    IocSensor::instance().send(h->m_parent,CMD_RUNSTATE,state);
+  }
+}
+
+/// DIM command service callback
+void PartitionListener::partIdHandler(void* tag, void* address, int* size) {
+  if ( address && tag && size && *size>0 ) {
+    PartitionListener* h = *(PartitionListener**)tag;
+    int pid = *(int*)address;
+    IocSensor::instance().send(h->m_parent,CMD_PARTITIONID,pid);
+  }
 }

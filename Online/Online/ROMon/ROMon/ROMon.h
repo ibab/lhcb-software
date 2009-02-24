@@ -1,4 +1,4 @@
-// $Id: ROMon.h,v 1.9 2008-07-02 14:55:09 frankb Exp $
+// $Id: ROMon.h,v 1.10 2009-02-24 10:38:19 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMon.h,v 1.9 2008-07-02 14:55:09 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMon.h,v 1.10 2009-02-24 10:38:19 frankb Exp $
 #ifndef ROMON_ROMON_H
 #define ROMON_ROMON_H 1
 
@@ -127,6 +127,7 @@ namespace ROMon {
   public:
     typedef VarItems<MBMBuffer> Buffers;
     typedef FixItems<FSMTask>   Tasks;
+    typedef FSMTask             Task;
 
     enum { TYPE = 1 };
     /// First word: Data type descriptor (MUST always be 1)
@@ -186,6 +187,11 @@ namespace ROMon {
 
   typedef VarItems<Nodeset> Processorfarm;
   union ROMonData {
+    char       charVal;
+    short      shortVal;
+    int        intVal;
+    float      floatVal;
+    long       longVal;
     char*      str;
     void*      ptr;
     MBMBuffer* buffer;

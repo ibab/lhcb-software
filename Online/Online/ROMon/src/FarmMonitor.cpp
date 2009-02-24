@@ -1,4 +1,4 @@
-// $Id: FarmMonitor.cpp,v 1.1 2009-02-12 13:09:52 frankb Exp $
+// $Id: FarmMonitor.cpp,v 1.2 2009-02-24 10:38:20 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,23 +11,20 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmMonitor.cpp,v 1.1 2009-02-12 13:09:52 frankb Exp $
-
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmMonitor.cpp,v 1.2 2009-02-24 10:38:20 frankb Exp $
 
 #define MBM_IMPLEMENTATION
 #include "ROMon/ROMon.h"
-#include "ROMon/ROMon.h"
 #include "ROMon/FarmMonitor.h"
-#include "ROMon/CPUMon.h"
-#include "CPP/TimeSensor.h"
 #include "CPP/IocSensor.h"
 #include "CPP/Event.h"
 #include "RTL/rtl.h"
 #include "RTL/Lock.h"
 #include "RTL/strdef.h"
-#include "WT/wtdef.h"
+#include "SCR/scr.h"
 extern "C" {
 #include "dic.h"
+#include "dis.h"
 }
 
 // C++ include files
@@ -38,7 +35,9 @@ extern "C" {
 #include <cstdarg>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <algorithm>
+
 
 #ifdef _WIN32
 #define strcasecmp  _stricmp
@@ -46,16 +45,77 @@ extern "C" {
 #define vsnprintf   _vsnprintf
 #endif
 using namespace ROMon;
+using namespace SCR;
 using namespace std;
-
-// Max. 15 seconds without update allowed
-#define UPDATE_TIME_MAX 40
 
 typedef vector<string> StringV;
 
 static lib_rtl_lock_t    s_lock;
-static const int   INT_max = numeric_limits<int>::max();
-static const float FLT_max = numeric_limits<float>::max();
+
+namespace ROMon {
+  class Alarm;
+
+  struct NullAlarm  {
+    bool operator()(const Alarm* a) const { return a == 0;                 }  
+  };
+  struct DeleteAlarm   {
+    void operator()(pair<const int,vector<Alarm*> >& a)  const
+    {  for_each(a.second.begin(),a.second.end(),DeleteAlarm());            }
+    bool operator()(Alarm* a) const       { if ( a ) delete a; return true;} 
+  };
+  struct FindAlarm {
+    const Alarm&  m_a;
+    FindAlarm(const Alarm& a) : m_a(a) {}
+    void operator()(const pair<const int,vector<Alarm*> >& a)  const
+    {  for_each(a.second.begin(),a.second.end(),FindAlarm(m_a));    }
+    bool operator()(const Alarm& a) const {  return this->operator()(&a);  }
+    bool operator()(const Alarm* a) const  
+    {  return 0 != a && a->code == m_a.code && a->node == m_a.node && a->description == m_a.description;        }
+  };
+  struct PrintAlarm {
+    const string& tag;
+    PrintAlarm(const string& t) : tag(t) {}
+    void operator()(pair<const int,vector<Alarm*> >& a)  const
+    {  for_each(a.second.begin(),a.second.end(),PrintAlarm(tag));          }
+    bool operator()(const Alarm* a) const { cout << setw(8) << left << tag << " " << *a << endl; return true;       }
+  };
+  struct PublishAlarm {
+    const string& tag;
+    FarmMonitor* monitor;
+    PublishAlarm(const string& t, FarmMonitor* m) : tag(t), monitor(m) {}
+    void operator()(pair<const int,vector<Alarm*> >& a)  const
+    {  for_each(a.second.begin(),a.second.end(),PublishAlarm(tag,monitor));          }
+    bool operator()(const Alarm* a) const { monitor->publish(tag,*a); return true;       }
+  };
+  struct CheckMonitor {
+    time_t now;
+    CheckMonitor(time_t n) : now(n) {}
+    void operator()(const pair<const string, InternalMonitor*>& mon) { mon.second->check(now); }
+  };
+  template <class R, class T>
+  struct FarmCount {
+    R& count;
+    T  function;
+    FarmCount(R& cnt, T pmf) : count(cnt), function(pmf) { count = 0;   }
+    void operator()(const pair<string, InternalMonitor*>& mon) 
+    { if ( mon.second->name()[0] == 'h' ) count += (mon.second->*function)();      }
+  };
+  template <class R, class T> FarmCount<R,T> _farmCount(R& cnt, T pmf) { return FarmCount<R,T>(cnt,pmf); }
+  struct AddStateSummary  {
+    StateSummary& sum;
+    AddStateSummary(StateSummary& s) : sum(s){}
+    void operator()(const pair<const char,int>& p) { sum[p.first] += p.second; }
+    void operator()(const pair<const string, InternalMonitor*>& p) { p.second->addStateSummary(sum); }
+  };
+  struct PrintStateSummary  {
+    void operator()(const pair<char,int>& p) const { cout << ' ' << p.first << ':' << p.second; }
+  };
+
+  InternalMonitor* createSubFarmMonitor(FarmMonitor* parent, const string& title);
+  InternalMonitor* createRecSubFarmMonitor(FarmMonitor* parent, const string& title);
+  InternalMonitor* createMonitoringMonitor(FarmMonitor* parent, const string& title);
+  InternalMonitor* createStorageMonitor(FarmMonitor* parent, const string& title);
+}
 
 
 static void help() {
@@ -64,155 +124,105 @@ static void help() {
        << "       -p[artition]=<name>          Partition name providing monitoring information." << endl
        << endl;
 }
-namespace {
-  const char* _procNam(const char* nam) {
-    char* p;
-    if (0 != ::strstr(nam,"MEPRx") ) return nam;
-    p = ::strchr(nam,'_');
-    if ( 0 != p ) return ++p;
-    return "Unknown";
-  }
+
+Alarm::Alarm(const string& txt) : AlarmTag(0,"","") {
+  this->fromString(txt);
 }
 
-namespace ROMon {
-  class Alarm;
-  typedef std::pair<std::string, Alarms> AlarmInfo;
+string Alarm::toString(const string& t)  const {
+  stringstream s;
+  tag = t;
+  char txt[32];
+  ::sprintf(txt,"#%08lx#%08x#",when,code);
+  s << t << txt << subfarm << "#" << node << "#" << description << "#" << optional;
+  return s.str();
+}
 
-  struct NullAlarm  {
-    bool operator()(const Alarm* a) const { return a == 0; } 
-  };
-  struct DeleteAlarm   {
-    void operator()(std::pair<const int,std::vector<Alarm*> >& a)  const
-    {  for_each(a.second.begin(),a.second.end(),DeleteAlarm());    }
-    bool operator()(Alarm* a) const       { if ( a ) delete a; return true; } 
-  };
-  struct FindAlarm {
-    const Alarm&  m_a;
-    FindAlarm(const Alarm& a) : m_a(a) {}
-    void operator()(const std::pair<const int,std::vector<Alarm*> >& a)  const
-    {  for_each(a.second.begin(),a.second.end(),FindAlarm(m_a));    }
-    bool operator()(const Alarm& a) const {  return this->operator()(&a);   }
-    bool operator()(const Alarm* a) const  
-    {  return 0 != a && a->code == m_a.code && a->node == m_a.node;      }
-  };
-  struct PrintAlarm {
-    const std::string& tag;
-    PrintAlarm(const std::string& t) : tag(t) {}
-    void operator()(std::pair<const int,std::vector<Alarm*> >& a)  const
-    {  for_each(a.second.begin(),a.second.end(),PrintAlarm(tag));    }
-    bool operator()(const Alarm* a) const {
-      char txt[32];
-      ::strftime(txt,sizeof(txt),"%H:%M:%S",::localtime(&a->when));
-      cout << left << setw(8) << tag << setw(12) << left << a->node << ":" << left << setw(12) << txt << a->description << endl;
-      return true;
+void Alarm::fromString(const string& str) {
+  string copy(str);
+  char *p1, *p2, *p3, *p4, *p5, *p6, *s = (char*)copy.c_str();
+  if ( (p1=::strchr(s,'#')) ) {
+    *p1 = 0;
+    if ( (p2=::strchr(p1+1,'#')) ) {
+      *p2 = 0;
+      if ( (p3=::strchr(p2+1,'#')) ) {
+	*p3 = 0;
+	if ( (p4=::strchr(p3+1,'#')) ) {
+	  *p4 = 0;
+	  if ( (p5=::strchr(p4+1,'#')) ) {
+	    *p5 = 0;
+	    if ( (p6=::strchr(p5+1,'#')) ) {
+	      *p6 = 0;
+	      tag = s;
+	      ::sscanf(p1+1,"%08lx",&when);
+	      ::sscanf(p2+1,"%08x",&code);
+	      subfarm = p3+1;
+	      node = p4+1;
+	      description = p5+1;
+	      optional = p6+1;
+	    }
+	  }
+	}
+      }
     }
-  };
-  InternalMonitor* createFarmSubMonitor(FarmMonitor* parent, const string& title);
-  InternalMonitor* createRecFarmSubMonitor(FarmMonitor* parent, const string& title);
-  InternalMonitor* createCtrlFarmSubMonitor(FarmMonitor* parent, const string& title);
-  InternalMonitor* createMonitoringSubMonitor(FarmMonitor* parent, const std::string& title);
-  InternalMonitor* createStorageSubMonitor(FarmMonitor* parent, const std::string& title);
-}
-#include <set>
-namespace ROMon {
-
-  enum AlarmCodes {
-    ERR_NO_ERROR=0,
-    ERR_NO_UPDATES=1,
-    ERR_NOT_USED,
-    ERR_SLOTS_LIMIT,
-    ERR_SPACE_LIMIT,
-    ERR_MEPRX_MISSING,
-    ERR_MEPRX_STUCK, 
-    ERR_SENDER_MISSING,
-    ERR_SENDER_STUCK,
-    ERR_MOORE_MISSING,
-    ERR_MOORE_STUCK,
-    ERR_NODAQ_ACTIVITY,
-    ERR_NOHLT_ACTIVITY,
-    ERR_NOSTORAGE_ACTIVITY,
-    ERR_NODE_STUCK,
-    ERR_LAST_ERROR,
-    ERR_REMOVED
-  };
-
-  class FarmSubMonitor : public InternalMonitor {
-    int               m_numUpdate;
-    bool              m_hasProblems;
-    bool              m_inUse;
-
-    struct BuffMon {
-      int produced;
-      int clients;
-      BuffMon() : produced(0), clients(0)
-      {}
-    };
-    struct NodeMon {
-      typedef std::map<std::string,std::pair<int,int> > Clients;
-      int    error;
-      int    numBuffs;
-      int    numClients;
-      int    minEVENT, maxEVENT;
-      int    evtMEP,   evtEVENT,  evtSEND;
-      int    mepRxEvt, senderEvt;
-      float  spacMEP,  spacEVENT, spacSEND;
-      float  slotMEP,  slotEVENT, slotSEND;
-      time_t update;
-      char   inUse;
-      Clients moores;
-      NodeMon() {   reset(); }
-      NodeMon(const NodeMon& c) { *this = c; }
-      NodeMon& operator=(const NodeMon& c);
-      void reset();
-    };
-
-    typedef std::map<std::string,NodeMon*>  Monitors;
-    Monitors   m_nodes;
-    Monitors   m_history;
-    NodeMon    m_sum;
-    NodeMon    m_sumHist;
-
-    /// Set a new alarm
-    void setAlarm(Alarms& alms, const std::string& node, int type, time_t when, const std::string& opt="");
-
-    void extractData(const Nodeset& ns);
-    void analyzeData();
-
-  public:
-    /// Access to problem flag
-    bool hasProblems() const { return m_hasProblems; }
-    /// Initializing constructor
-    FarmSubMonitor(FarmMonitor* parent, const string& title);
-    /// Standard destructor
-    virtual ~FarmSubMonitor();
-    /// Check display for errors
-    void check(time_t now);
-    /// Set timeout error
-    void setTimeoutError();
-
-    /// Update monitor content
-    virtual void update(const void* data);
-    /// Update display content
-    virtual void updateContent(const Nodeset& ns);
-  };
-
-
-  InternalMonitor* _conn(FarmMonitor* p, const string& title) {
-    cout << "Connecting to subfarm " << title << endl;
-    InternalMonitor* m = new FarmSubMonitor(p,title);
-    return m;
   }
-  InternalMonitor* createFarmSubMonitor(FarmMonitor* m, const string& title) { return _conn(m,title);}
-  InternalMonitor* createRecFarmSubMonitor(FarmMonitor* m, const string& title) { return _conn(m,title);}
-  InternalMonitor* createCtrlFarmSubMonitor(FarmMonitor* m, const string& title) { return _conn(m,title);}
-  InternalMonitor* createMonitoringSubMonitor(FarmMonitor* m, const string& title) { return _conn(m,title);}
-  InternalMonitor* createStorageSubMonitor(FarmMonitor* m, const string& title) { return _conn(m,title);}
+}
 
-  struct CheckMonitor {
-    time_t now;
-    CheckMonitor(time_t n) : now(n) {}
-    void operator()(const std::pair<std::string, InternalMonitor*>& mon) { mon.second->check(now); }
-  };
+int Alarm::level() const {
+  static int mask = ERR_LVL_MONITOR|ERR_LVL_WARNING|ERR_LVL_ERROR|ERR_LVL_ALARM;
+  return code&mask;
+}
+
+int Alarm::color() const {
+  int color = NORMAL;
+  if ( code&ERR_LVL_MONITOR ) color = NORMAL;
+  if ( code&ERR_LVL_WARNING ) color = YELLOW;
+  if ( code&ERR_LVL_ERROR   ) color = RED|BOLD;
+  if ( code&ERR_LVL_ALARM   ) color = RED|INVERSE|BOLD;
+  return color;
+}
+
+const char* Alarm::message() const {
+  switch(code) {
+  case ERR_NO_ERROR:              return "No obvious Errors detected... ";
+  case ERR_NO_UPDATES:            return "No update information available ";
+  case ERR_NOT_USED:              return "Node not used.... ";
+  case ERR_SLOTS_LIMIT:           return "MBM buffers: SLOTS at limit ";
+  case ERR_SPACE_LIMIT:           return "MBM buffers: SPACE at limit ";
+  case ERR_NODE_STUCK:            return "MBM buffers at limit ";
+  case ERR_MEPRX_MISSING:         return "Event builder task MEPRX dead ";
+  case ERR_MEPRX_STUCK:           return "Event builder task MEPRx stuck ";
+  case ERR_RECEIVER_MISSING:      return "Event receiver dead ";
+  case ERR_RECEIVER_STUCK:        return "Event receiver stuck ";
+  case ERR_MONITOR_MISSING:       return "Event monitor dead ";
+  case ERR_MONITOR_STUCK:         return "Event monitor stuck ";
+  case ERR_SENDER_MISSING:        return "Sender dead ";
+  case ERR_SENDER_STUCK:          return "Sender stuck ";
+  case ERR_MOORE_MISSING:         return "Event filter task MOORE dead ";
+  case ERR_MOORE_STUCK:           return "Event filter task MOORE stuck ";
+  case ERR_NODAQ_ACTIVITY:        return "No DAQ activity visible ";
+  case ERR_NOHLT_ACTIVITY:        return "No HLT activity visible ";
+  case ERR_NOSTORAGE_ACTIVITY:    return "No STORAGE activity visible ";
+  case ERR_NOMONITORING_ACTIVITY: return "No MONITORING activity visible ";
+  case ERR_REMOVED:               return "Alarm value became normal. Alarm removed";
+  case ERR_REMOVEDALL:            return "All alarms cleared";
+  default:                        return "Unknown Alarm - Never heard of this error code";
+  }
+}
+
+string Alarm::time() const {
+  char txt[32];
+  ::strftime(txt,sizeof(txt),"%H:%M:%S",::localtime(&when));
+  return txt;
+}
+
+ostream& operator<<(ostream& os, const Alarm& a) {
+  os << setw(13) << left << a.node << left << setw(12) << a.time() << " " << a.message() << a.description;
+  return os;
+}
+
+namespace ROMon {
+  InternalMonitor* createRecSubFarmMonitor(FarmMonitor* m, const string& title) { return createSubFarmMonitor(m,title);}
 
 #ifndef OutputLogger_H
 #define OutputLogger_H
@@ -249,8 +259,6 @@ namespace ROMon {
 
 }
 
-
-
 namespace {
   /// Extract node/service name from DNS info
   void getServiceNode(char* s, string& svc, string& node) {
@@ -261,10 +269,8 @@ namespace {
   }
 }
 
-
 /// Standard Constructor
-OutputLogger::OutputLogger()
-{
+OutputLogger::OutputLogger()   {
   _buf = ""; 
   ::printf("Redirecting cout to OutputLogger....\n");
   _old = cout.rdbuf(this);
@@ -305,363 +311,17 @@ int OutputLogger::underflow ()  {
 } 
 
 
-FarmSubMonitor::NodeMon& FarmSubMonitor::NodeMon::operator=(const NodeMon& c) {
-  if ( this != &c ) {
-    error      = c.error;
-    numBuffs   = c.numBuffs;
-    numClients = c.numClients;
-    minEVENT   = c.minEVENT;
-    maxEVENT   = c.maxEVENT;
-    evtMEP     = c.evtMEP;
-    evtEVENT   = c.evtEVENT;
-    evtSEND    = c.evtSEND;
-    spacMEP    = c.spacMEP;
-    spacEVENT  = c.spacEVENT;
-    spacSEND   = c.spacSEND;
-    slotMEP    = c.slotMEP;
-    slotEVENT  = c.slotEVENT;
-    slotSEND   = c.slotSEND;
-    update     = c.update;
-    inUse      = c.inUse;
-    moores     = c.moores;
-    mepRxEvt   = c.mepRxEvt;
-    senderEvt  = c.senderEvt;
-  }
-  return *this;
-}
-
-void FarmSubMonitor::NodeMon::reset() {
-  error = 0;
-  numBuffs = 0;
-  numClients = 0;
-  minEVENT = maxEVENT  = 0;
-  evtMEP   = evtEVENT  = evtSEND  = 0;
-  mepRxEvt = senderEvt = -1;
-  spacMEP  = spacEVENT = spacSEND = 0;
-  slotMEP  = slotEVENT = slotSEND = 0;
-  update   = 0;
-  inUse    = 0;
-  moores.clear();
-}
-
-/// Initializing constructor
-FarmSubMonitor::FarmSubMonitor(FarmMonitor* parent, const string& title) 
-  : InternalMonitor(parent,title) 
+InternalMonitor::InternalMonitor(FarmMonitor* parent, const string& title) 
+: m_parent(parent), m_name(title)
 {
+  m_svc = 0;
+  m_steer = ~0x0;
+  m_numTask = 0;
+  m_numEvent = 0;
   m_numUpdate = 0;
   m_lastUpdate = time(0);
-  string svc = "/";
-  for(size_t i=0; i<title.length();++i) svc += ::tolower(title[i]);
-  svc += "/ROpublish";
-  m_svc = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,dataHandler,(long)this,0,0);
   m_hasProblems = false;
-}
-
-/// Standard destructor
-FarmSubMonitor::~FarmSubMonitor() {
-  for(Monitors::iterator i=m_nodes.begin(); i!=m_nodes.end();++i)
-    delete (*i).second;
-  for(Monitors::iterator j=m_history.begin(); j!=m_history.end();++j)
-    delete (*j).second;
-}
-
-/// Update monitor content
-void FarmSubMonitor::update(const void* address) {
-  if ( address ) {
-    const Nodeset* ns = (const Nodeset*)address;
-    if ( ns->type == Nodeset::TYPE ) {
-      updateContent(*ns);
-    }
-  }
-}
-
-/// Check display for errors
-void FarmSubMonitor::check(time_t now) {
-  if ( hasProblems() ) {
-    if ( now - lastUpdate() > 2*UPDATE_TIME_MAX ) {
-      setTimeoutError();
-    }
-  }
-}
-
-/// Set timeout error
-void FarmSubMonitor::setTimeoutError() {
-  log("ERROR") << "No update information available" << endl;
-}
-
-/// Update display content
-void FarmSubMonitor::updateContent(const Nodeset& ns) {
-  time_t now = time(0);
-
-  std::string snam=std::string(ns.name).substr(0,3);
-  if (snam == "sto" || snam == "cal" || snam == "mon") {
-    m_lastUpdate = now;
-    m_hasProblems = false;
-    //log("WARNING") << "Skip " << ns.name << endl;
-    return;
-  }
-
-  if ( (now - m_lastUpdate) < UPDATE_TIME_MAX ) return;
-
-
-  //log("WARNING") << "Checking " << ns.name << "  " << m_name << endl;
-  extractData(ns);
-  analyzeData();
-}
-
-void FarmSubMonitor::extractData(const Nodeset& ns) {
-  m_lastUpdate = ns.firstUpdate().first;
-  NodeMon sum;
-  sum.minEVENT    = numeric_limits<int>::max();
-  sum.maxEVENT    = numeric_limits<int>::min();
-  sum.spacMEP     = numeric_limits<float>::max();
-  sum.spacEVENT   = numeric_limits<float>::max();
-  sum.spacSEND    = numeric_limits<float>::max();
-  sum.slotMEP     = numeric_limits<float>::max();
-  sum.slotEVENT   = numeric_limits<float>::max();
-  sum.slotSEND    = numeric_limits<float>::max();
-
-  for (Nodeset::Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
-    const Node::Buffers& buffs = *(*n).buffers();
-    const string node = (*n).name;
-    if ( m_history.find(node) == m_history.end() )
-      m_history[node] = new NodeMon();
-    if ( m_nodes.find(node) == m_nodes.end() )
-      m_nodes[node] = new NodeMon();
-    else
-      *(m_history[node]) = *(m_nodes[node]);
-    *(m_history[node]) = *(m_nodes[node]);
-    NodeMon& m = *(m_nodes[node]);
-
-    m.reset();
-    m.update = (*n).time;
-    for(Node::Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
-      char b = (*ib).name[0];
-      const MBMBuffer::Control& ctrl = (*ib).ctrl;
-      const MBMBuffer::Clients& clients = (*ib).clients;
-
-      ++m.numBuffs;
-      switch(b) {
-      case MEP_BUFFER:
-	m.inUse = 1;
-	m.evtMEP  = ctrl.tot_produced;
-	m.spacMEP = float(ctrl.i_space)/float(ctrl.bm_size);
-	m.slotMEP = float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax);
-	break;
-      case EVT_BUFFER:
-	m.inUse = 1;
-	m.evtEVENT  = ctrl.tot_produced;
-	m.spacEVENT = float(ctrl.i_space)/float(ctrl.bm_size);
-	m.slotEVENT = float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax);
-	break;
-      case RES_BUFFER:
-      case SND_BUFFER:
-	m.inUse = 1;
-	m.evtSEND  = ctrl.tot_produced;
-	m.spacSEND = float(ctrl.i_space)/float(ctrl.bm_size);
-	m.slotSEND = float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax);
-	break;
-      default:
-	continue;
-      }
-      m.minEVENT = numeric_limits<int>::max();
-      m.maxEVENT = numeric_limits<int>::min();
-      for (MBMBuffer::Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
-        ++m.numClients;
-        const char* p = _procNam((*ic).name);
-        switch(*p) {
-        case BUILDER_TASK:
-          if( b == MEP_BUFFER ) m.mepRxEvt = (*ic).events;
-          break;
-        case SENDER_TASK:
-          if( b == RES_BUFFER || b == SND_BUFFER ) m.senderEvt = (*ic).events;
-          break;
-        case MOORE_TASK:
-          //  Normal  and        TAE event processing
-          if( b == EVT_BUFFER || b == MEP_BUFFER )  {
-	    m.moores[(*ic).name].first = (*ic).events;
-            m.maxEVENT = max(m.maxEVENT,(*ic).events);
-            m.minEVENT = min(m.minEVENT,(*ic).events);
-          }
-	  else {
-	    m.moores[(*ic).name].second = (*ic).events;
-	  }
-          break;
-        default:
-          break;
-        }
-      }
-    }
-    sum.numBuffs   += m.numBuffs;
-    sum.numClients += m.numClients;
-    sum.evtMEP     += m.evtMEP;
-    sum.evtEVENT   += m.evtEVENT;
-    sum.evtSEND    += m.evtSEND;
-    sum.minEVENT    = min(m.minEVENT,sum.minEVENT);
-    sum.maxEVENT    = max(m.maxEVENT,sum.maxEVENT);
-    sum.spacMEP     = min(m.spacMEP,sum.spacMEP);
-    sum.spacEVENT   = min(m.spacEVENT,sum.spacEVENT);
-    sum.spacSEND    = min(m.spacSEND,sum.spacSEND);
-    sum.slotMEP     = min(m.slotMEP,sum.slotMEP);
-    sum.slotEVENT   = min(m.slotEVENT,sum.slotEVENT);
-    sum.slotSEND    = min(m.slotSEND,sum.slotSEND);
-  }
-
-  m_sumHist    = m_sum;
-  m_sum        = sum;
-}
-
-void FarmSubMonitor::analyzeData() {
-  char txt[128];
-  time_t now = time(0);
-  std::auto_ptr<AlarmInfo> alarms(new AlarmInfo(m_name,Alarms()));
-
-  m_hasProblems = false;
-  for(Monitors::iterator i=m_nodes.begin(); i!=m_nodes.end();++i) {
-    const string& node = (*i).first;
-    NodeMon& m = *((*i).second);
-    NodeMon& h = *(m_history[(*i).first]);
-    time_t   when = m.update;
-    
-    txt[0] = 0;
-    m.error = ERR_NO_ERROR; 
-    if ( now-m.update > UPDATE_TIME_MAX )
-      setAlarm(alarms->second,node, ERR_NO_UPDATES, when);
-    else if ( !m.inUse )
-      setAlarm(alarms->second,node, ERR_NOT_USED, when);
-    else   {
-      NodeMon::Clients::const_iterator ih;
-      if ( m.mepRxEvt < 0 )                                                     // MEPRX DEAD/not present
-	setAlarm(alarms->second,node, ERR_MEPRX_MISSING, when);
-      else if ( m.mepRxEvt == 0 && m_sum.evtMEP >  m_sumHist.evtMEP )           // MEPRX stuck while running
-	setAlarm(alarms->second,node, ERR_MEPRX_STUCK, when);
-      else if ( m.evtMEP   <= h.evtMEP && m_sum.evtMEP >  m_sumHist.evtMEP )    // MEPRX stuck while running
-	setAlarm(alarms->second,node, ERR_MEPRX_STUCK, when);
-      
-      if ( m.senderEvt < 0 )                                                    // SENDER DEAD/not present
-	setAlarm(alarms->second,node, ERR_SENDER_MISSING, when);
-      else if ( m.senderEvt == 0 && m_sum.evtSEND > m_sumHist.evtSEND )         // SENDER stuck while running
-	setAlarm(alarms->second,node, ERR_SENDER_STUCK, when);
-      else if ( m.evtSEND  <= h.evtSEND  && m_sum.evtSEND > m_sumHist.evtSEND ) // SENDER stuck while running
-	setAlarm(alarms->second,node, ERR_SENDER_STUCK, when);
-
-      if ( m.moores.size() != 8 ) {
-	for(int im=1; im<=8; ++im )  {
-	  ::sprintf(txt,"%s_GauchoJob_%d",node.c_str(),im);
-	  for (int in=0; in<4; ++in ) txt[in] = ::toupper(txt[in]);
-	  if ( m.moores.find(txt) == m.moores.end() ) {
-	    setAlarm(alarms->second,node, ERR_MOORE_MISSING, when, txt);
-	  }
-	}
-      }
-      if ( m.mepRxEvt > 0 ) {    // MEPRX is requirement for Moores!
-	if ( m_sum.evtEVENT > m_sumHist.evtEVENT ) {  // Need some minimal activity....
-	  for(NodeMon::Clients::const_iterator ic=m.moores.begin(); ic!=m.moores.end(); ++ic) {
-	    if ( (*ic).second.first <= 1 ) continue;
-	    ih = h.moores.find((*ic).first);
-	    if ( ih == h.moores.end() ) continue;
-	    if ( (*ic).second.first <= (*ih).second.first ) {
-	      ::sprintf(txt,"%s %d %d",(*ic).first.c_str(), (*ic).second.first, (*ih).second.first);
-	      setAlarm(alarms->second,node, ERR_MOORE_STUCK, when, txt);
-	    }
-	  }
-	}
-      }
-
-      if ( m.error == ERR_NO_ERROR ) {
-	txt[0] = 0;
-	if ( m.slotMEP < SLOTS_MIN || m.slotEVENT < SLOTS_MIN || m.slotSEND < SLOTS_MIN ) {
-	  if ( m.slotMEP   < SLOTS_MIN ) ::strcat(txt,"MEP ");
-	  if ( m.slotEVENT < SLOTS_MIN ) ::strcat(txt,"EVENT ");
-	  if ( m.slotSEND  < SLOTS_MIN ) ::strcat(txt,"RES/SEND ");
-	  if ( m.evtMEP == h.evtMEP || m.evtEVENT == h.evtEVENT || m.evtSEND == h.evtSEND )
-	    setAlarm(alarms->second,node, ERR_NODE_STUCK, when, txt);
-	  else
-	    setAlarm(alarms->second,node, ERR_SLOTS_LIMIT, when, txt);
-	}
-	else if ( m.spacMEP < SPACE_MIN || m.spacEVENT < SPACE_MIN || m.spacSEND < SPACE_MIN  ) {
-	  if ( m.spacMEP   < SPACE_MIN ) ::strcat(txt,"MEP ");
-	  if ( m.spacEVENT < SPACE_MIN ) ::strcat(txt,"EVENT ");
-	  if ( m.spacSEND  < SPACE_MIN ) ::strcat(txt,"RES/SEND ");
-	  m.error = ERR_SPACE_LIMIT;
-	  if ( m.evtMEP == h.evtMEP || m.evtEVENT == h.evtEVENT || m.evtSEND == h.evtSEND )
-	    setAlarm(alarms->second,node, ERR_NODE_STUCK, when, txt);
-	  else
-	    setAlarm(alarms->second,node, ERR_SPACE_LIMIT, when, txt);
-	}
-	else if ( m.evtMEP   <= h.evtMEP && m_sum.evtMEP == m_sumHist.evtMEP )    // No activity on any MEP buffer
-	  setAlarm(alarms->second,node, ERR_NODAQ_ACTIVITY, when);
-	else if ( m.evtSEND  <= h.evtSEND  && m_sum.evtSEND == m_sumHist.evtSEND )// No activity on any send buffer
-	  setAlarm(alarms->second,node, ERR_NOSTORAGE_ACTIVITY, when);
-	else if ( m.evtEVENT > 0 && m.evtEVENT <= h.evtEVENT && m_sum.evtEVENT  == m_sumHist.evtEVENT ) // No activity EVENT buffer
-	  setAlarm(alarms->second,node, ERR_NOHLT_ACTIVITY, when);
-      }
-    }
-
-    if ( m.error != ERR_NO_ERROR ) {
-      m_hasProblems = true;
-    }
-  }
-  IocSensor::instance().send(m_parent,CMD_CHECK,alarms.release());
-}
-
-/// Set a new alarm
-void FarmSubMonitor::setAlarm(Alarms& alms, const std::string& node, int typ, time_t when, const std::string& opt) {
-  std::string subfarm = node.substr(0,node.length()-2);
-  switch(typ) {
-  case ERR_NO_ERROR:
-    alms.push_back(Alarm(typ, when, subfarm, node, "No obvious Errors detected...."));
-    break;
-  case ERR_NO_UPDATES:
-    alms.push_back(Alarm(typ, when, subfarm, node, "No update information available"));
-    break;
-  case ERR_NOT_USED:
-    alms.push_back(Alarm(typ, when, subfarm, node, "Node not used....."));
-    break;
-  case ERR_SLOTS_LIMIT: 
-    alms.push_back(Alarm(typ, when, subfarm, node, "SLOTS at limit:"+opt));
-    break;
-  case ERR_SPACE_LIMIT:
-    alms.push_back(Alarm(typ, when, subfarm, node, "SPACE at limit:"+opt));
-    break;
-  case ERR_NODE_STUCK:
-    alms.push_back(Alarm(typ, when, subfarm, node, "Buffer at limit:"+opt));
-    break;
-  case ERR_MEPRX_MISSING:
-    alms.push_back(Alarm(typ, when, subfarm, node, "MEPRX dead."));
-    break;
-  case ERR_MEPRX_STUCK:
-    alms.push_back(Alarm(typ, when, subfarm, node, "MEPRx stuck."));
-    break;
-  case ERR_SENDER_MISSING:
-    alms.push_back(Alarm(typ, when, subfarm, node, "Sender dead."));
-    break;
-  case ERR_SENDER_STUCK:
-    alms.push_back(Alarm(typ, when, subfarm, node, "Sender stuck."));
-    break;
-  case ERR_MOORE_MISSING:
-    alms.push_back(Alarm(typ, when, subfarm, node, "MOORE dead. "+opt));
-    break;
-  case ERR_MOORE_STUCK:
-    alms.push_back(Alarm(typ, when, subfarm, node, "MOORE stuck. "+opt));
-    break;
-  case ERR_NODAQ_ACTIVITY:
-    alms.push_back(Alarm(typ, when, subfarm, node, "No DAQ activity visible."));
-    break;
-  case ERR_NOHLT_ACTIVITY:
-    alms.push_back(Alarm(typ, when, subfarm, node, "No HLT activity visible."));
-    break;
-  case ERR_NOSTORAGE_ACTIVITY:
-    alms.push_back(Alarm(typ, when, subfarm, node, "No STORAGE activity visible."));
-    break;
-  }
-}
-
-
-InternalMonitor::InternalMonitor(FarmMonitor* parent, const string& title) 
-  : m_parent(parent), m_name(title), m_svc(0)
-{
-  m_lastUpdate = time(0);
+  m_snapshotDiff = UPDATE_TIME_MAX;
 }
 
 InternalMonitor::~InternalMonitor() {
@@ -669,7 +329,7 @@ InternalMonitor::~InternalMonitor() {
 }
 
 /// Log message with tag
-ostream& InternalMonitor::log(const std::string& tag,const std::string& node) {
+ostream& InternalMonitor::log(const string& tag,const string& node) {
   if ( node.empty() ) {
     cout << left << setw(8) << tag << setw(12) << left << m_name << ":";
   }
@@ -689,6 +349,77 @@ void InternalMonitor::disconnect() {
 /// Update display content
 void InternalMonitor::update(const void* data, size_t /* len */) {
   return update(data);
+}
+
+/// Add state summary
+void InternalMonitor::addStateSummary(StateSummary& sum) {
+  for_each(m_stateSummary.begin(),m_stateSummary.end(),AddStateSummary(sum));
+}
+
+bool InternalMonitor::useSnapshot() const {
+  time_t now = time(0);
+  return (now - m_lastUpdate) < m_snapshotDiff;
+}
+
+/// Check monitor for errors
+void InternalMonitor::check(time_t now) {
+  if ( hasProblems() ) {
+    if ( now - lastUpdate() > 2*m_snapshotDiff ) {
+      setTimeoutError();
+    }
+  }
+}
+
+
+/// Count the number of tasks
+void InternalMonitor::countTasks(const Nodeset& ns)   {
+  m_numTask = 0;
+  for (Nodeset::Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))
+    m_numTask += (*n).tasks()->size();
+}
+
+/// Count the number of tasks
+void InternalMonitor::countEvents(const Nodeset& ns)   {
+  m_numEvent = 0;
+  for (Nodeset::Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n)) {
+    const Node::Buffers& buffs = *(*n).buffers();
+    for(Node::Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
+      const MBMBuffer::Control& ctrl = (*ib).ctrl;
+      m_numEvent += ctrl.tot_produced;
+    }
+  }
+}
+
+/// Update monitoring content
+void InternalMonitor::updateContent(const Nodeset& ns) {
+  if ( useSnapshot() ) {
+    if ( (m_steer&COUNT_TASKS)  == COUNT_TASKS  ) countTasks(ns);
+    if ( (m_steer&COUNT_EVENTS) == COUNT_EVENTS ) countEvents(ns);
+    extractData(ns);
+    analyzeData();
+  }
+}
+
+/// Set timeout error
+void InternalMonitor::setTimeoutError() {
+  log("ERROR") << "No update information available" << endl;
+}
+
+/// Update monitor content
+void InternalMonitor::update(const void* address) {
+  if ( address ) {
+    const Nodeset* ns = (const Nodeset*)address;
+    if ( ns->type == Nodeset::TYPE ) {
+      updateContent(*ns);
+    }
+  }
+}
+
+/// Set a new alarm
+void InternalMonitor::setAlarm(Alarms& alms, const string& node, int typ, time_t when, const string& dsc, const string& opt) {
+  string subfarm = node.substr(0,node.length()-2);
+  alms.push_back(Alarm(typ,when,subfarm,node,dsc,opt));
+  m_hasProblems = true;
 }
 
 /// DIM command service callback
@@ -731,11 +462,12 @@ FarmMonitor::FarmMonitor(int argc, char** argv) : InternalMonitor(0,""), m_mode(
   char txt[128];
   string anchor;
   RTL::CLI cli(argc,argv,help);
-  cli.getopt("partition",   2, m_name = "ALL");
-  cli.getopt("match",       2, m_match = "*");
+  cli.getopt("partition", 2, m_name = "ALL");
+  cli.getopt("match",     2, m_match = "*");
+  cli.getopt("update",    2, UPDATE_TIME_MAX);
+
   all = 0 != cli.getopt("all",2);
   m_mode = cli.getopt("reconstruction",2) == 0 ? HLT_MODE : RECO_MODE;
-  if ( cli.getopt("taskmonitor",2) != 0 ) m_mode = CTRL_MODE;
 
   ::lib_rtl_create_lock(0,&s_lock);
   if ( m_mode == RECO_MODE && all && m_match=="*" )
@@ -744,12 +476,6 @@ FarmMonitor::FarmMonitor(int argc, char** argv) : InternalMonitor(0,""), m_mode(
     ::sprintf(txt,"Reconstruction farm display of all known subfarms with name '%s'",m_match.c_str());
   else if ( m_mode == RECO_MODE )
     ::sprintf(txt,"Reconstruction farm display of partition %s ",m_name.c_str());
-  else if ( m_mode == CTRL_MODE && all && m_match=="*" )
-    ::sprintf(txt,"Task Control farm display of all known subfarms ");
-  else if ( m_mode == CTRL_MODE && all )
-    ::sprintf(txt,"Task Control farm display of all known subfarms with name '%s'",m_match.c_str());
-  else if ( m_mode == CTRL_MODE )
-    ::sprintf(txt,"Task Control farm display of partition %s ",m_name.c_str());
   else if ( m_match == "*" && all )
     ::sprintf(txt,"HLT Farm display of all known subfarms ");
   else if ( all )
@@ -763,11 +489,13 @@ FarmMonitor::FarmMonitor(int argc, char** argv) : InternalMonitor(0,""), m_mode(
   else
     m_listener = auto_ptr<PartitionListener>(new PartitionListener(this,m_name));
 
-  for(int i=ERR_NO_ERROR; i<ERR_LAST_ERROR; ++i) {
-    m_alarms[i].clear();
-    m_newAlarms[i].clear();
-    m_clrAlarms[i].clear();
-  }
+  string svc = "/"+partition()+"/FarmMonitor/Alarms";
+  //::dic_set_dns_node((char*)name().c_str());
+  m_serviceID = ::dis_add_service((char*)svc.c_str(),(char*)"C",0,0,feedData,(long)this);
+  m_runState  = 0;
+  m_numEvent = 0;
+  svc = "/"+partition()+"/FarmMonitor";
+  ::dis_start_serving((char*)svc.c_str());
 }
 
 /// Standard destructor
@@ -778,6 +506,13 @@ FarmMonitor::~FarmMonitor()  {
   ::printf("Farm display deleted and resources freed......\n");
 }
 
+/// DIM callback on dis_update_service
+void FarmMonitor::feedData(void* tag, void** buf, int* size, int* first) {
+  FarmMonitor* m = *(FarmMonitor**)tag;
+  *size = *first ? 0 : m->m_current.length()+1;
+  *buf = (void*)m->m_current.c_str();
+}
+
 /// DIM command service callback
 void FarmMonitor::dnsDataHandler(void* tag, void* address, int* size) {
   if ( address && tag && *size > 0 ) {
@@ -786,15 +521,27 @@ void FarmMonitor::dnsDataHandler(void* tag, void* address, int* size) {
   }
 }
 
+/// Publish alarm
+void FarmMonitor::publish(const string& tag, const Alarm& alm) {
+  PrintAlarm p(tag);
+  p(&alm);
+  m_current = alm.toString(tag);
+  ::dis_update_service(m_serviceID);
+  m_current = "";
+}
+
 /// Update alarms from a subfarm
 void FarmMonitor::updateAlarms(const string& subfarm, Alarms& alarms) {
   int cnt_new = 0, cnt_clr = 0;
-  for(Alarms::iterator i=alarms.begin(); i!=alarms.end(); ++i) {
-    TypeAlarms& a = m_alarms[(*i).code];
-    if ( find_if(a.begin(),a.end(),FindAlarm(*i)) == a.end() )  {
-      a.push_back(new Alarm(*i));
-      m_newAlarms[(*i).code].push_back(a.back());
-      ++cnt_new;
+  bool canHaveAlarms = true;//m_numEvent>0;  //m_runState < 0 && runState >= 2;
+  if ( canHaveAlarms ) {
+    for(Alarms::iterator i=alarms.begin(); i!=alarms.end(); ++i)   {
+      TypeAlarms& a = m_alarms[(*i).code];
+      if ( find_if(a.begin(),a.end(),FindAlarm(*i)) == a.end() )  {
+	a.push_back(new Alarm(*i));
+	m_newAlarms[(*i).code].push_back(a.back());
+	++cnt_new;
+      }
     }
   }
 
@@ -805,18 +552,28 @@ void FarmMonitor::updateAlarms(const string& subfarm, Alarms& alarms) {
     for(size_t k=0; k<a.size(); ++k) {
       Alarm& alm = *a[k];
       // Only clear alarms which origine from the same subfarm....
-      if ( alm.subfarm == subfarm ) {
-	if ( find_if(alarms.begin(),alarms.end(),FindAlarm(alm)) == alarms.end() ) {
-	  m_clrAlarms[alm.code].push_back(&alm);
-	  a.erase(a.begin()+k);
-	  ++cnt_clr;
-	  --k;
+      if ( canHaveAlarms ) {
+	if ( alm.subfarm == subfarm ) {
+	  if ( find_if(alarms.begin(),alarms.end(),FindAlarm(alm)) == alarms.end() ) {
+	    m_clrAlarms[alm.code].push_back(&alm);
+	    a.erase(a.begin()+k);
+	    ++cnt_clr;
+	    --k;
+	  }
 	}
       }
+      else {
+	m_clrAlarms[alm.code].push_back(&alm);
+	a.erase(a.begin()+k);
+	++cnt_clr;
+	--k;
+      }
     }
-    // a.erase(find_if(a.begin(),a.end(),NullAlarm()),a.end());
   }
-  cout << subfarm << " All:" << alarms.size() << " New:" << cnt_new << " Clear:" << cnt_clr << endl;
+  //cout << subfarm << " All:" << alarms.size() << " New:" << cnt_new << " Clear:" << cnt_clr << endl;
+  //cout << "Statesummary:";
+  //for_each(m_stateSummary.begin(),m_stateSummary.end(),PrintStateSummary());
+  //cout << endl;
 }
 
 /// DIM command service callback
@@ -871,49 +628,75 @@ void FarmMonitor::update(const void* address) {
   }
 }
 
+/// Allow clients to check if the system is running
+bool FarmMonitor::isRunning() const {
+  return (m_lastNumEvt-m_numEvent) > 0;
+}
+
 /// Interactor overload: Monitor callback handler
 void FarmMonitor::handle(const Event& ev) {
-  time_t now = time(0);
-  Farms::iterator i;
-  SubMonitors::iterator k;
-
   RTL::Lock lock(s_lock);
   switch(ev.eventtype) {
   case TimeEvent:
     return;
   case IocEvent:
     switch(ev.type) {
-    case CMD_RUNSTATE:
+    case CMD_RUNSTATE: {
+      m_runState = ev.iocData<long>();
+      /*
+      if ( m_runState == 0 || m_runState == 1 ) {
+	AlarmInfo alms;
+	updateAlarms(alms.first, alms.second);
+	IocSensor::instance().send(this,int(CMD_UPDATE),this);
+	publish("CLEARALL",Alarm(ERR_NO_ERROR,time(0),"",""));
+      }
+      */
+      log("INFO") << "Run State:" << m_runState << endl;
+      break;
+    }
+    case CMD_PARTITIONID:
+      log("INFO") << "Partition ID:" << ev.iocData<long>() << endl;
       break;
     case CMD_SHOW:
       break;
     case CMD_UPDATE:
       /// Check for new alarms
-      for_each(m_clrAlarms.begin(),m_clrAlarms.end(),PrintAlarm("CLEAR  "));
-      for_each(m_newAlarms.begin(),m_newAlarms.end(),PrintAlarm("DECLARE"));
+      for_each(m_clrAlarms.begin(),m_clrAlarms.end(),PublishAlarm("CLEAR  ",this));
+      for_each(m_newAlarms.begin(),m_newAlarms.end(),PublishAlarm("DECLARE",this));
       for_each(m_clrAlarms.begin(),m_clrAlarms.end(),DeleteAlarm());
       m_clrAlarms.clear();
       m_newAlarms.clear();
+      //log("INFO") << "Farm events:" << m_numEvent << endl;
       break;
-    case CMD_ADD:
-      i = find(m_farms.begin(),m_farms.end(),*(string*)ev.data);
-      if ( i == m_farms.end() ) {
-	m_farms.push_back(*(string*)ev.data);
+    case CMD_ADD: {
+      auto_ptr<string> val(ev.iocPtr<string>());
+      if ( find(m_farms.begin(),m_farms.end(),*val.get()) == m_farms.end() ) {
+	m_farms.push_back(*ev.iocPtr<string>());
 	connect(m_farms);
       }
-      delete (string*)ev.data;
       return;
+    }
     case CMD_CONNECT: {
-      m_farms = *(StringV*)ev.data;
+      m_farms = *auto_ptr<StringV>(ev.iocPtr<StringV>()).get();
       connect(m_farms);
-      delete (StringV*)ev.data;
       return;
     }
     case CMD_CHECK: {
-      std::auto_ptr<AlarmInfo> alms((AlarmInfo*)ev.data);
-      updateAlarms(alms->first, alms->second);
-      for_each(m_farmMonitors.begin(),m_farmMonitors.end(),CheckMonitor(now));
-      IocSensor::instance().send(this,int(CMD_UPDATE),this);
+      time_t now = time(0);
+      auto_ptr<AlarmInfo> alms(ev.iocPtr<AlarmInfo>());
+      m_stateSummary.clear();
+      for_each(m_farmMonitors.begin(),m_farmMonitors.end(),_farmCount(m_numTask,&InternalMonitor::taskCount));
+      if ( now - m_lastUpdate > m_snapshotDiff ) {
+	m_lastUpdate = now;
+	m_lastNumEvt = m_numEvent;
+	for_each(m_farmMonitors.begin(),m_farmMonitors.end(),_farmCount(m_numEvent,&InternalMonitor::evtCount));
+      }
+      if ( m_numTask > 0 ) {
+	for_each(m_farmMonitors.begin(),m_farmMonitors.end(),CheckMonitor(now));
+	for_each(m_farmMonitors.begin(),m_farmMonitors.end(),AddStateSummary(m_stateSummary));
+	updateAlarms(alms->first, alms->second);
+	IocSensor::instance().send(this,int(CMD_UPDATE),this);
+      }
       break;
     }
     case CMD_DELETE:
@@ -942,15 +725,13 @@ void FarmMonitor::connect(const vector<string>& farms) {
     k = m_farmMonitors.find(*i);
     if ( k == m_farmMonitors.end() ) {
       if ( m_mode == RECO_MODE )
-	copy.insert(make_pair(*i,createRecFarmSubMonitor(this,*i)));
-      else if ( m_mode == CTRL_MODE )
-	copy.insert(make_pair(*i,createCtrlFarmSubMonitor(this,*i)));
+	copy.insert(make_pair(*i,createRecSubFarmMonitor(this,*i)));
       else if ( ::strncasecmp((*i).c_str(),"mona0",5)==0 )
-	copy.insert(make_pair(*i,createMonitoringSubMonitor(this,*i)));
+	copy.insert(make_pair(*i,createMonitoringMonitor(this,*i)));
       else if ( ::strncasecmp((*i).c_str(),"storectl",8)==0 )
-	copy.insert(make_pair(*i,createStorageSubMonitor(this,*i)));
+	copy.insert(make_pair(*i,createStorageMonitor(this,*i)));
       else
-	copy.insert(make_pair(*i,createFarmSubMonitor(this,*i)));
+	copy.insert(make_pair(*i,createSubFarmMonitor(this,*i)));
     }
     else {
       copy.insert(*k);

@@ -18,6 +18,7 @@ namespace ROMon {
     CMD_SHOWHELP,
     CMD_HANDLE_KEY,
     CMD_RUNSTATE,
+    CMD_PARTITIONID,
     CMD_LAST
   };
 
@@ -36,6 +37,11 @@ namespace ROMon {
     SND_BUFFER =                  'S',
     INPUT_BUFFER =                'I',
     OUTPUT_BUFFER =               'O',
+
+    TASK_FSM_STATE_DEAD =         'D',
+    TASK_FSM_STATE_NOT_READY =    'N',
+    TASK_FSM_STATE_READY =        'r',
+    TASK_FSM_STATE_RUNNING =      'R',
 
     SUBFARM_HEIGHT =              65,
     SUBFARM_WIDTH =              132,

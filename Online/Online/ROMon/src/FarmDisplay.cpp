@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.36 2009-02-11 16:51:43 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.37 2009-02-24 10:38:20 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.36 2009-02-11 16:51:43 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.37 2009-02-24 10:38:20 frankb Exp $
 
 #include "ROMon/CtrlSubfarmDisplay.h"
 #include "ROMon/RecSubfarmDisplay.h"
@@ -24,7 +24,6 @@
 #include "CPP/TimeSensor.h"
 #include "CPP/IocSensor.h"
 #include "CPP/Event.h"
-#include "RTL/rtl.h"
 #include "RTL/Lock.h"
 #include "RTL/strdef.h"
 #include "SCR/scr.h"
@@ -63,7 +62,6 @@ typedef Node::Tasks                  Tasks;
 typedef vector<string> StringV;
 
 static FarmDisplay* s_fd = 0;
-static lib_rtl_lock_t    s_lock;
 static const char *sstat[17] = {" nl", "   ", "*SL","*EV","*SP","WSL","WEV","WSP","wsl","wev","wsp"," ps"," ac", "SPR", "WER", "   "};
 //static const int   INT_min = numeric_limits<int>::min();
 static const int   INT_max = numeric_limits<int>::max();
@@ -109,98 +107,6 @@ namespace {
     *at = 0;
     svc = s;
     node = at+1;
-  }
-}
-
-InternalDisplay::InternalDisplay(FarmDisplay* parent, const string& title) 
-: m_pasteboard(0), m_display(0), m_parent(parent), m_name(title), m_title(title), m_svc(0)
-{
-  m_pasteboard = m_parent ? m_parent->pasteboard() : 0;
-  m_lastUpdate = time(0);
-}
-
-InternalDisplay::~InternalDisplay() {
-  disconnect();
-  close();
-}
-
-void InternalDisplay::close() {
-  if ( m_display ) {
-    ::scrc_unpaste_display(m_display,m_pasteboard);
-    ::scrc_delete_display(m_display);
-    m_display = 0;
-  }
-}
-
-void InternalDisplay::disconnect() {
-  if ( m_svc != 0 ) {
-    ::dic_release_service(m_svc);
-    m_svc = 0;
-  }
-}
-
-void InternalDisplay::show(int row, int col) {
-  ::scrc_paste_display (m_display, m_pasteboard, row, col);
-}
-
-void InternalDisplay::hide() {
-  ::scrc_unpaste_display(m_display,m_pasteboard);
-}
-
-/// Draw bar to show occupancies
-size_t InternalDisplay::draw_bar(int x, int y, float f1, int scale)  {
-  size_t l = size_t(float(scale)*f1);
-  char txt[1024];
-  memset(txt,' ',l);
-  txt[l] = 0;
-  ::scrc_put_chars(m_display,txt,INVERSE,y,x,0);
-  memset(txt,'.',scale-l);
-  txt[scale-l] = 0;
-  ::scrc_put_chars(m_display,txt,NORMAL,y,l+x,1);
-  return 1;
-}
-
-/// Update display content
-void InternalDisplay::update(const void* data, size_t /* len */) {
-  return update(data);
-}
-
-/// DIM command service callback
-void InternalDisplay::dataHandler(void* tag, void* address, int* size) {
-  if ( address && tag && *size > 0 ) {
-    InternalDisplay* disp = *(InternalDisplay**)tag;
-    unsigned char* ptr = new unsigned char[*size+sizeof(int)];
-    *(int*)ptr = *size;
-    ::memcpy(ptr+sizeof(int),address,*size);
-    IocSensor::instance().send(disp,CMD_UPDATE,ptr);
-  }
-}
-
-/// Interactor overload: Display callback handler
-void InternalDisplay::handle(const Event& ev)    {
-  switch(ev.eventtype) {
-  case IocEvent: {
-    switch(ev.type) {
-    case CMD_UPDATE: {
-      RTL::Lock lock(s_lock);
-      Pasteboard* pb = pasteboard();
-      unsigned char* ptr = (unsigned char*)ev.data;
-      ::scrc_cursor_off(pb);
-      ::scrc_begin_pasteboard_update (pb);
-      update(ptr + sizeof(int), *(int*)ptr);
-      ::scrc_end_pasteboard_update(pb);
-      if ( parent() ) parent()->set_cursor();
-      ::scrc_cursor_on(pb);
-      delete [] ptr;
-      break;
-    }
-    default:
-      break;
-    }
-    break;
-  }
-  default:
-    break;
   }
 }
 
@@ -755,7 +661,6 @@ FarmDisplay::FarmDisplay(int argc, char** argv)
   m_mode = cli.getopt("reconstruction",2) == 0 ? HLT_MODE : RECO_MODE;
   if ( cli.getopt("taskmonitor",2) != 0 ) m_mode = CTRL_MODE;
   s_fd = this;
-  ::lib_rtl_create_lock(0,&s_lock);
   if ( m_mode == RECO_MODE && all && m_match=="*" )
     ::sprintf(txt," Reconstruction farm display of all known subfarms ");
   else if ( m_mode == RECO_MODE && all )
@@ -844,6 +749,11 @@ int FarmDisplay::key_action(unsigned int /* fac */, void* /* param */)  {
   int key = ::scrc_read_keyboard(0,0);
   if (!key) return WT_SUCCESS;
   return s_fd->handleKeyboard(key);
+}
+
+/// Set cursor to position
+void FarmDisplay::set_cursor(InternalDisplay* /* updater */) {
+  set_cursor();
 }
 
 /// Set cursor to position
@@ -1105,7 +1015,7 @@ int FarmDisplay::handleKeyboard(int key)    {
   InternalDisplay* d = 0;
   Display* d1;
   SubDisplays& sd = subDisplays();
-  RTL::Lock lock(s_lock);
+  RTL::Lock lock(screenLock());
   try {
     switch (key)    {
     case CTRL_W:
@@ -1247,7 +1157,7 @@ void FarmDisplay::handle(const Event& ev) {
   SubDisplays::iterator k;
   const MouseEvent* m = 0;
 
-  RTL::Lock lock(s_lock);
+  RTL::Lock lock(screenLock());
   switch(ev.eventtype) {
   case ScrMouseEvent:
     m = ev.get<MouseEvent>();
@@ -1273,7 +1183,7 @@ void FarmDisplay::handle(const Event& ev) {
       if ( m->display == disp ) {
         size_t pos = m->y - disp->row - 2;
         if ( m_subfarmDisplay->numNodes()>pos ) {
-          RTL::Lock unlock(s_lock,true);
+          RTL::Lock unlock(screenLock(),true);
           m_subPosCursor = pos + SUBFARM_NODE_OFFSET;
           handleKeyboard(m->button == 0 ? KPD_PERIOD : CTRL_P);
         }
@@ -1294,7 +1204,7 @@ void FarmDisplay::handle(const Event& ev) {
       handleKeyboard(int((long)ev.data));
       break;
     case CMD_SHOWSUBFARM: {
-      RTL::Lock lock(s_lock,true);
+      RTL::Lock lock(screenLock(),true);
       showSubfarm();
       return;
     }
@@ -1316,7 +1226,7 @@ void FarmDisplay::handle(const Event& ev) {
       for(k=m_farmDisplays.begin(); k != m_farmDisplays.end(); ++k, ++cnt) {
         InternalDisplay* d = (*k).second;
         if ( d == ev.data )  {
-          RTL::Lock unlock(s_lock,true);
+          RTL::Lock unlock(screenLock(),true);
           m_posCursor = cnt;
           showSubfarm();
           return;
