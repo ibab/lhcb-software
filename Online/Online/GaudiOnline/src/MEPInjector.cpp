@@ -720,7 +720,7 @@ StatusCode MEPInjector::getEvent()
     else if(m_EventBuffers.size() == 1) bmid = m_EventBuffers.begin()->second;
     else /// Selection of input between all, at first assume that there is only normal and lumi 
     {
-        msgLog << MSG::ERROR << "More than one buffer, not implemented yet" << endmsg;
+        msgLog << MSG::ERROR << "More than one buffer, not tested yet" << endmsg;
         int p = 1 + (int) (100.0 * rand() / ( RAND_MAX +1.0 ) );
         
         
@@ -741,7 +741,8 @@ StatusCode MEPInjector::getEvent()
         return StatusCode::FAILURE;
     }
     else if(m_InjState != RUNNING) {
-        msgLog << MSG::INFO << "End of injection" << endmsg;
+        msgLog << MSG::INFO << "End of injection : mbm_get_event cancelled" << endmsg;
+        return StatusCode::RECOVERABLE;
     }
     else 
     {  
@@ -767,8 +768,8 @@ StatusCode MEPInjector::readEvent()
  
     ///XXX Get event
     StatusCode sc = getEvent(); 
-    if(m_InjState != RUNNING) {
-        msgLog << MSG::INFO << "End of injection" << endmsg;
+    if(sc.isRecoverable()) {
+        msgLog << MSG::INFO << "End of injection : exiting readEvent" << endmsg;
         return StatusCode::RECOVERABLE;
     } 
 
@@ -1102,7 +1103,7 @@ StatusCode MEPInjector::readThenSend()
     sc = readEvent();
     if (sc.isRecoverable() )  /// End of the job
     {
-        msgLog << MSG::INFO<< "End of injection"<<endmsg; 
+        msgLog << MSG::INFO<< "End of injection : Exiting readThenSend"<<endmsg; 
         return StatusCode::RECOVERABLE;
     }
     if (sc.isFailure()) {
@@ -1990,7 +1991,7 @@ StatusCode MEPInjector::getHLTInfo()
     }
  
     if(m_InjState != RUNNING) {
-        msgLog << MSG::INFO << "Leaving getHLTInfo without getting info cause end of injector" << endmsg;
+        msgLog << MSG::INFO << "End of injection : Exiting getHLTInfo" << endmsg;
         return StatusCode::RECOVERABLE;
     }
     
@@ -2060,7 +2061,7 @@ StatusCode MEPInjector::getOdinInfo()
     }
 
     if(m_InjState != RUNNING) {
-        msgLog << MSG::INFO << "Leaving getOdin Info without getting info" << endmsg;
+        msgLog << MSG::INFO << "End of injection : Exiting getOdinInfo" << endmsg;
         return StatusCode::RECOVERABLE;
     } 
 
@@ -2328,7 +2329,7 @@ StatusCode MEPInjector::run() {
     {
          sc=injectorProcessing();
     }
-    msgLog << MSG::INFO << "End of run" << endmsg;
+    msgLog << MSG::INFO << "End of injection : End of run" << endmsg;
     return sc;
 }
 
@@ -2408,10 +2409,10 @@ void MEPInjector::handle(const Incident& inc) {
           for(std::map<std::string, BMID>::iterator ite = m_EventBuffers.begin(); ite != m_EventBuffers.end(); ++ite)
           { 
               if(mbm_cancel_request(ite->second)) {
-                  msgLog << MSG::WARNING << "Problem cancelling request, continue" << endmsg;
+                  msgLog << MSG::WARNING << "End of run : Problem cancelling request, continue" << endmsg;
               }
 
-              msgLog << MSG::ALWAYS << "BMID : " << ite->first << " ok" << endmsg;
+              msgLog << MSG::INFO << "End of run : BMID : " << ite->first << " ok" << endmsg;
           }
 
           if(sem_post(&m_MEPReqCount)==-1)
