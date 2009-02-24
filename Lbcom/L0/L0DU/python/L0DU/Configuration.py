@@ -80,8 +80,8 @@ class L0Conf(LHCbConfigurableUser) :
             seq=self.getProp("L0Sequencer")
 
             if self.getProp("ReplaceL0BanksWithEmulated"):
-                importOptions("$L0DUROOT/options/ReplaceL0BanksWithEmulated.opts")
-                seq.Members+= [ GaudiSequencer("ReplaceL0BanksSeq") ]
+                importOptions("$L0DUROOT/options/ReplaceL0BanksSeq.opts")
+                seq.Members+= [ GaudiSequencer("L0DUBankSwap") ]
                 log.warning("\n  \tEXISTING L0 BANKS WILL BE REMOVED AND REPLACED BY EMULATED BANKS\n\n")
 
             if self.getProp("DecodeL0") or self.getProp("MonitorL0") or self.getProp("FilterL0FromRaw"):
