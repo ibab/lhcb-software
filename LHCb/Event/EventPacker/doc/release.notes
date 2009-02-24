@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2009-02-24 - Olivier Callot
+ - Fix the hack in ReadPackedDst.cpp : Use a std::vector as temporary
+
 !============================ EventPacker v1r3 2009-02-19 ====================
 ! 2009-02-19 - Marco Cattaneo
  - Add hack in ReadPackedDst.cpp to compile on Windows
