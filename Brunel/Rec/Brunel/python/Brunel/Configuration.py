@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.64 2009-02-23 17:26:10 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.65 2009-02-24 11:09:50 pkoppenb Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -236,7 +236,12 @@ class Brunel(LHCbConfigurableUser):
         recInit.addTool( MemoryTool(), name = "BrunelMemory" )
         recInit.BrunelMemory.HistoTopDir = "Brunel/"
         recInit.BrunelMemory.HistoDir    = "MemoryTool"
-
+        # count events
+        from Configurables import EventCountHisto
+        evtC = EventCountHisto("BrunelEventCount")
+        evtC.HistoTopDir = "Brunel/"
+        GaudiSequencer("InitBrunelSeq").Members += [ evtC ]
+        
         if "Lumi" in initSeq :
             if self.getProp("WriteFSR"):
                 self.setOtherProps(LumiAlgsConf(),["Context","DataType"])
