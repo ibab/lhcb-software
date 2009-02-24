@@ -1,4 +1,4 @@
-// $Id: LHCbIDsToMCParticles.cpp,v 1.2 2007-06-27 06:58:53 mneedham Exp $
+// $Id: LHCbIDsToMCParticles.cpp,v 1.3 2009-02-24 16:58:28 mneedham Exp $
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
@@ -54,10 +54,11 @@ StatusCode LHCbIDsToMCParticles::initialize(){
 StatusCode LHCbIDsToMCParticles::link(LHCbIDs::const_iterator& start, 
                                       LHCbIDs::const_iterator& stop, LinkMap& output) const{
 
- 
-
   for ( LHCbIDs::const_iterator iter = start ; iter != stop ; ++iter) {
-    link(*iter,output);
+    StatusCode sc = link(*iter,output);
+    if (sc.isFailure() ){
+      return sc;
+    }
   } // iter
 
   return StatusCode::SUCCESS;

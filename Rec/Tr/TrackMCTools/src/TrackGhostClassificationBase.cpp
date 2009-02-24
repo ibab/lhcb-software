@@ -1,4 +1,4 @@
-// $Id: TrackGhostClassificationBase.cpp,v 1.8 2009-01-30 08:32:39 mneedham Exp $
+// $Id: TrackGhostClassificationBase.cpp,v 1.9 2009-02-24 16:58:28 mneedham Exp $
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
@@ -84,7 +84,11 @@ void TrackGhostClassificationBase::generic(LHCbIDs::const_iterator& start,
 
     // get the information on the track
   ILHCbIDsToMCParticles::LinkMap testMap;
-  linkTool()->link(start,stop,testMap);  
+  StatusCode sc = linkTool()->link(start,stop,testMap);  
+  if (sc.isFailure() ){
+    Warning("Linking failed: no classification possible", StatusCode::FAILURE);
+    return;
+  }
 
   // set the link map
   tinfo.setLinkMap(testMap);
@@ -155,26 +159,6 @@ bool TrackGhostClassificationBase::spillover(const LHCb::GhostTrackInfo::LinkPai
   return (aPair.first  == 0 ? true: false);
 }
 
-
-/*
-bool TrackGhostClassificationBase::isGhost(const ILHCbIDsToMCParticles::LinkMap& lMap) const{
-
-  // is it a ghost ?
-  ILHCbIDsToMCParticles::LinkMap::const_iterator iterMap = lMap.begin();
-  double tot = 0.0;
-  ILHCbIDsToMCParticles::LinkPair best(0,0);
-  for (; iterMap != lMap.end(); ++iterMap){
-    if ( iterMap->second > best.second ){
-      best = *iterMap;
-    }
-    tot+= iterMap->second;
-  } // iterMap
-  
-  double purity = double(best.second)/tot;
-
-  return (purity < m_purityCut ? true : false);
-}
-*/
 
 LHCb::GhostTrackInfo::LinkPair TrackGhostClassificationBase::secondBest(const LHCb::GhostTrackInfo& tinfo,
                                                                         const MCParticle* bestPart) const{
@@ -297,7 +281,12 @@ LHCb::GhostTrackInfo::LinkPair TrackGhostClassificationBase::bestPair(const LHCb
   ILHCbIDsToMCParticles::LinkMap testMap; 
   LHCbIDs::const_iterator start = ids.begin();
   LHCbIDs::const_iterator stop = ids.end();
-  linkTool()->link(start,stop, testMap);
+  StatusCode sc = linkTool()->link(start,stop, testMap);
+  if (sc.isFailure() ){
+    Warning("Linking failed, no best pair", StatusCode::FAILURE);
+    LHCb::MCParticle* mcpart = 0;
+    return std::make_pair(mcpart, 0.0);;
+  }
   return bestPair(testMap);
 
 }
