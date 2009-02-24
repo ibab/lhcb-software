@@ -1,4 +1,4 @@
-// $Id: OMAFitFunction.cpp,v 1.3 2009-02-19 18:35:14 ggiacomo Exp $
+// $Id: OMAFitFunction.cpp,v 1.4 2009-02-24 20:36:07 frankb Exp $
 #include <sstream>
 #include <cmath>
 #include <TF1.h>
@@ -109,7 +109,7 @@ void OMAFitDoubleGaus::init(std::vector<float>* initValues, TH1* histo) {
   }
   if((int) initValues->size() >= np()) {
     // compute normalization
-    double integ=sqrt(2*acos(-1))*
+    double integ=sqrt(2*acos(-1E0))*
       (initValues->at(0)*initValues->at(2) + initValues->at(3)*initValues->at(5));
     if (integ > 0) {
       double k = histo->Integral("width")/integ;  
@@ -160,10 +160,10 @@ void OMAFitGausPlusBkg::init(std::vector<float>* initValues, TH1* histo) {
      // init values available: check normalization
     double Xmin=histo->GetXaxis()->GetXmin();
     double Xmax=histo->GetXaxis()->GetXmax();
-    double integ=sqrt(2*acos(-1))*initValues->at(0)*initValues->at(2) + 
+    double integ=sqrt(2*acos(-1E0))*initValues->at(0)*initValues->at(2) + 
       initValues->at(3)*(Xmax-Xmin);
     for (deg=1 ; deg <= m_degree; deg++) {
-      integ += ( (initValues->at(3+deg)) * (pow(Xmax,deg+1)-pow(Xmin,deg+1))/((double)deg) );
+      integ += ( (initValues->at(3+deg)) * (pow(Xmax,deg+1E0)-pow(Xmin,deg+1E0))/((double)deg) );
     }
     if (integ > 0) {
       double k = histo->Integral("width")/integ;  
@@ -182,7 +182,7 @@ void OMAFitGausPlusBkg::init(std::vector<float>* initValues, TH1* histo) {
     double bkg=(histo->GetXaxis()->GetXmax() - histo->GetXaxis()->GetXmin()) *
       (Ye+Yi)/2.;
     double rms=histo->GetRMS();
-    double gConst = rms >0 ? (histo->Integral("width")-bkg)/(sqrt(2*acos(-1))*rms ) : 0.;
+    double gConst = rms >0 ? (histo->Integral("width")-bkg)/(sqrt(2*acos(-1E0))*rms ) : 0.;
     m_fitfun->SetParameter(0, gConst);
     m_fitfun->SetParameter(1, histo->GetMean() );
     m_fitfun->SetParameter(2, rms);
