@@ -4,10 +4,15 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2009-02-23 - Manuel Tobias Schiller
+ - Added possibility to PatMatch to put its tracks into an existing
+   container, in addition to the tracks that are already there. This is
+   to facilitate the potential use of PatMatch in the HLT.
+
 !========================== PatAlgorithms v3r15 2009-02-20 ===================
 ! 2009-02-09 - Johannes Albrecht
  - add possibility to add TT clusters in matchSingle (for use in HLT1)
-	 option to steer it, true as default
+    option to steer it, true as default
 
 ! 2009-01-21 - Marco Cattaneo
  - Fix uninitialised variables in constructor of PatFwdTrackCandidate. Fixes

@@ -1,4 +1,4 @@
-// $Id: PatMatch.cpp,v 1.7 2008-08-21 18:11:27 smenzeme Exp $
+// $Id: PatMatch.cpp,v 1.8 2009-02-24 09:43:23 mschille Exp $
 // Include files 
 
 // from Gaudi
@@ -49,11 +49,11 @@ StatusCode PatMatch::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode PatMatch::execute() {
-
-  LHCb::Tracks* matchs  = new LHCb::Tracks();
-  matchs->reserve(200);
-  put(matchs, m_matchLocation);
+StatusCode PatMatch::execute()
+{
+  LHCb::Tracks* matchs =
+	  getOrCreate<LHCb::Tracks, LHCb::Tracks>(m_matchLocation);
+  matchs->reserve(200 + matchs->size());
  
   LHCb::Tracks* velos  = get<LHCb::Tracks>( m_veloLocation );
   LHCb::Tracks* seeds  = get<LHCb::Tracks>( m_seedLocation ); 
