@@ -40,7 +40,7 @@ importOptions( "$HLTSELECTIONSROOT/options/Hlt2MonitorPlots.py")
 # Decay Tree Tuple
 #
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
-DecayTreeTuple("Hlt2DecayTreeTuple").addTool(PhysDesktop())
+DecayTreeTuple("Hlt2DecayTreeTuple").addTool(PhysDesktop)
 DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Hlt2SelB2DplusH"]
 DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B_s0 -> (^D+ => ^K+ ^pi+ ^pi- ) ^pi- ]cc" 
 #

@@ -43,7 +43,7 @@ importOptions( "$HLTSELECTIONSROOT/options/Hlt2MonitorPlots.py")
  # Tuple
 ###
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
-DecayTreeTuple("Hlt2DecayTreeTuple").addTool(PhysDesktop())
+DecayTreeTuple("Hlt2DecayTreeTuple").addTool(PhysDesktop)
 DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Hlt2SelBd2JpsiMuMuKsLLUnbiased", "Hlt2SelBd2JpsiMuMuKsDDUnbiased"]
 DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B0 -> (^KS0 => ^pi+ ^pi-) (^J/psi(1S) => ^mu+ ^mu-)]cc"
 # special for head

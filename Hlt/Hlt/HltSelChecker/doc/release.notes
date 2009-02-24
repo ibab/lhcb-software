@@ -10,6 +10,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== HltSelChecker v7r6 2009-02-23 ===================
+! 2009-02-24 - Patrick Koppenburg
+ - PhysDesktop() -> PhysDesktop
+
 ! 2009-02-23 - Patrick Koppenburg
  - Hlt2Requires = instead of Hlt2Ignores
 

@@ -58,7 +58,7 @@ AlgorithmCorrelationsAlg("MuMuK").Algorithms = [ "DC06SelBu2MuMuK", "Hlt2SelBu2L
 ###
 from Configurables import PhysDesktop, DecayTreeTuple
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
-DecayTreeTuple("Hlt2DecayTreeTuple").addTool(PhysDesktop())
+DecayTreeTuple("Hlt2DecayTreeTuple").addTool(PhysDesktop)
 DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Hlt2SelBu2LLKSignal"]
 DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B+ -> (^J/psi(1S) => ^mu+ ^mu-) ^K+]cc"
 #

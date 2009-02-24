@@ -1,4 +1,4 @@
-### $Id: DVTestHlt2B2HH.py,v 1.9 2009-02-23 07:40:02 pkoppenb Exp $
+### $Id: DVTestHlt2B2HH.py,v 1.10 2009-02-24 14:12:54 pkoppenb Exp $
  #
  #  Test file for HLT B->hh selection
  #
@@ -39,7 +39,7 @@ importOptions( "$HLTSELECTIONSROOT/options/Hlt2MonitorPlots.py")
  # Tuple
 ###
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
-DecayTreeTuple("Hlt2DecayTreeTuple").addTool(PhysDesktop())
+DecayTreeTuple("Hlt2DecayTreeTuple").addTool(PhysDesktop)
 DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Hlt2SelB2HH"]
 DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "B0 -> ^pi+ ^pi-"
 DecayTreeTuple("Hlt2DecayTreeTuple").OutputLevel = 1
@@ -48,7 +48,7 @@ DecayTreeTuple("Hlt2DecayTreeTuple").OutputLevel = 1
 #
 from Configurables import PrintDecayTree
 pt = PrintDecayTree()
-pt.addTool(PhysDesktop())
+pt.addTool(PhysDesktop)
 pt.PhysDesktop.InputLocations =  ["Hlt2SelB2HH"]
 pt.Context = "HLT"
 #
