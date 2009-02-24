@@ -33,8 +33,38 @@ public:
 	RpcStruct(char *name) :	DimRpcInfo(name, "dead") {};
 };
 
+void do_work(void *tag)
+{
+	DimRpcInfo *myRpc;
+	char name[64];
+	int out, in;
+	
+	sprintf(name,"TESTRPC%d/INT",(long)tag);
+	myRpc = new DimRpcInfo(name,-1);
+
+	out = 1;
+	while(1)
+	{
+		sleep(5);
+		myRpc->setData(out);
+		in = myRpc->getInt();
+cout << "Instance "<<(long)tag<<" sent "<<out<< " got "<<in <<endl;
+		out++;
+	}
+}
+
 int main()
 {
+	int i;
+
+	dim_init();
+	for(i = 0; i < 10; i++)
+	{
+		dim_start_thread(do_work,(void *)i);
+	}
+	while(1)
+		pause();
+	/*
 	int rpcValue = 0;
 //	DimRpcInfo rpc("TESTRPC/INT",-1);
 	Rpc rpcCB("TESTRPC/INT");
@@ -59,4 +89,5 @@ int main()
 		sleep(10);
 	}
 	return 0;
+	*/
 }

@@ -49,6 +49,8 @@ _DIM_PROTOE( char *dic_get_error_services,	() );
 _DIM_PROTOE( char *dic_get_server_services,	(int conn_id) );
 _DIM_PROTOE( int dic_get_server,       (char *name ) );
 _DIM_PROTOE( int dic_get_conn_id,      () );
+_DIM_PROTOE( void dic_stop,      () );
+_DIM_PROTOE( int dic_get_server_pid,       (int *pid ) );
 
 #endif
 

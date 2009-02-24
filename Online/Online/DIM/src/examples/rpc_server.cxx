@@ -81,9 +81,17 @@ public:
 int main()
 {
 	RpcInt myRpcInt("TESTRPC/INT");
+	RpcInt *myRpcP;
 	RpcStruct myRpcStruct("TESTRPC/STRUCT");
 	JeffRpcStruct jeffRpcStruct("TESTJEFF");
+	int i;
+	char name[64];
 
+	for(i = 0; i < 10; i++)
+	{
+		sprintf(name,"TESTRPC%d/INT",i);
+		myRpcP = new RpcInt(name);
+	}
 	DimServer::start("TESTRPC");
 	while(1)
 		pause();

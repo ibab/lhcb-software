@@ -16,6 +16,7 @@ int N_servers = 0;
 int N_services = 0;	
 int no_link_int = -1;
 FILE	*fptr;
+
 char *Service_content_str;
 char *Service_buffer;
 int Service_size;
@@ -26,6 +27,9 @@ Widget Curr_client_id;
 Widget Curr_service_list_id;
 SERVER *Got_Service_List = 0;
 SERVER *Got_Client_List = 0;
+
+Widget SubscribeButton;
+Widget Subscribe10Button;
 
 int Timer_q;
 
@@ -1218,6 +1222,7 @@ void *buffer_ptr;
 char timestr[128], aux[10];
 int quality = 0, secs = 0, mili = 0; 
 int did_write_string();
+time_t tsecs;
 
   sprintf(Service_content_str,
 	  "Service %s (%s) Contents :\n  \n", Curr_service_name,
@@ -1235,7 +1240,8 @@ int did_write_string();
 	ctime_r((time_t *)&secs, timestr);
 #endif
 */
-	my_ctime((time_t *)&secs, timestr, 128);
+	tsecs = secs;
+	my_ctime(&tsecs, timestr, 128);
     ptr = strrchr(timestr,' ');
     strcpy(aux, ptr);
     sprintf(ptr,".%03d",mili);
@@ -2190,12 +2196,38 @@ unsigned long	*reason;
 		 (!strstr(Curr_service_name,"/CLIENT_LIST")) &&
 		 (!strstr(Curr_service_name,"/SERVER_LIST")))
 		{
+		  if(Curr_service_id)
+		  {
+		      dic_release_service(Curr_service_id);
+		      Curr_service_id = 0;
+		  }
 		  Curr_service_id = dic_info_service_stamped(Curr_service_name,
 						     MONITORED,10,0,0,
 						     recv_service_info,0,
 						     &no_link_int,4);
 		}
 		XtSetSensitive(w, False);
+		XtSetSensitive(SubscribeButton, True);
+	}
+	else if(tag == MAX_POP_UPS+5)
+	{
+
+	      if((!strstr(Curr_service_name,"/SERVICE_LIST")) && 
+		 (!strstr(Curr_service_name,"/CLIENT_LIST")) &&
+		 (!strstr(Curr_service_name,"/SERVER_LIST")))
+		{
+		  if(Curr_service_id)
+		  {
+		      dic_release_service(Curr_service_id);
+		      Curr_service_id = 0;
+		  }
+		  Curr_service_id = dic_info_service_stamped(Curr_service_name,
+						     MONITORED,0,0,0,
+						     recv_service_info,0,
+						     &no_link_int,4);
+		}
+		XtSetSensitive(w, False);
+		XtSetSensitive(Subscribe10Button, True);
 	}
 /*
 	else if(tag == 5)
@@ -3454,7 +3486,7 @@ int n, par, reason;
     XtSetArg(ar[n],XmNborderWidth, 0); n++;
     XtSetArg(ar[n],XmNentryAlignment, XmALIGNMENT_CENTER); n++;
     XtSetArg(ar[n],XmNorientation, XmVERTICAL); n++;
-    XtSetArg(ar[n],XmNnumColumns, 2); n++;
+    XtSetArg(ar[n],XmNnumColumns, 3); n++;
     XtSetArg(ar[n],XmNpacking, XmPACK_COLUMN); n++;
     rc1 = XmCreateRowColumn ( rc, "buttons", ar, n );
     XtManageChild(rc1);
@@ -3463,7 +3495,9 @@ int n, par, reason;
     create_push_button(rc1,"View Float",MAX_POP_UPS+2); 
     create_push_button(rc1,"View Double",MAX_POP_UPS+3); 
     */
-    create_push_button(rc1,"                  Subscribe                  ",
+    SubscribeButton = create_push_button(rc1,"            Subscribe (On Change)            ",
+		       MAX_POP_UPS+5); 
+  Subscribe10Button = create_push_button(rc1,"      Subscribe (Update Rate 10 seconds)     ",
 		       MAX_POP_UPS+4); 
     create_push_button(rc1,"Dismiss",DID_SERVICE);
     Curr_service_print_type = 0;

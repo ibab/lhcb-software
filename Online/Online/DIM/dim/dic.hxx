@@ -446,9 +446,11 @@ public:
 	static void addErrorHandler(DimErrorHandler *handler);
 	void addErrorHandler();
 	virtual void errorHandler(int /* severity */, int /* code */, char* /* msg */) {};
-	// Get Current Server Identifier	
 	static char *serverName;
+	// Get Current Server Identifier	
 	static int getServerId();
+	// Get Current Server Process Identifier	
+	static int getServerPid();
 	// Get Current Server Name	
 	static char *getServerName();
 	static char **getServerServices();
@@ -472,15 +474,17 @@ public :
 	int getServerClients(const char *serverName);
 	int getNextService(char *&service, char *&format);
 	int getNextServer(char *&server, char *&node);
+	int getNextServer(char *&server, char *&node, int &pid);
 	int getNextServerService(char *&service, char *&format);
 	int getNextServerClient(char *&client, char *&node);
 
 private:
 
-	TokenString *itsData[4];
+	TokenString *itsData[5];
 	int currIndex; 
 	char *currToken;
 	char none;
+	DimRpcInfo *browserRpc;
 };
 
 #endif

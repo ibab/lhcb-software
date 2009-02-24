@@ -131,6 +131,8 @@ typedef long long int	longlong;
 
 _DIM_PROTOE( void dim_lock,		() );
 _DIM_PROTOE( void dim_unlock,	() );
+_DIM_PROTOE( void dim_wait_cond,		() );
+_DIM_PROTOE( void dim_signal_cond,	() );
 
 #define DIM_LOCK 	dim_lock();
 #define DIM_UNLOCK	dim_unlock();
@@ -213,7 +215,7 @@ _DIM_PROTOE( void dim_win_usleep,	(unsigned int t) );
 #if defined (__linux__) || defined (__Lynx__)
 #define my_ctime(t,str,size) ctime_r(t,str)
 #else
-#define my_ctime(t,str,size) strcpy(str,ctime(t))
+#define my_ctime(t,str,size) strcpy(str,(const char *)ctime(t))
 #endif
 #endif
 
@@ -243,8 +245,6 @@ typedef enum { DIM_INFO, DIM_WARNING, DIM_ERROR, DIM_FATAL }DIM_SEVERITIES;
 #define DIMDNSCNEST	0x31	/* Connection to DNS established	INFO */
 		
 #endif                         
-
-
 
 
 

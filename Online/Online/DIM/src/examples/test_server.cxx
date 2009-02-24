@@ -120,6 +120,8 @@ int main()
 	DimCommand *cmndp;
 	char str[132];
 */
+//	float farr[4];
+//	DimService *farrp;
 
 	s1 = "hello";
 	add_serv(ival);
@@ -130,6 +132,11 @@ int main()
 	CmndServ cmdsvr;
 
 	testServ = new ServWithHandler("MY_NEW_TEST_SERVICE_WITH_HANDLER");
+
+//	farr[0] = 1.2;
+//	farr[1] = 2.3;
+//	farrp = new DimService("/PCITCO147/sensors/fan/input","F", farr, sizeof(farr));
+
 	DimServer::start("TEST");
 
 /*

@@ -889,6 +889,11 @@ int DimCommand::getSize()
 	return itsSize;
 }
 
+char *DimCommand::getFormat()
+{
+	return itsFormat;
+}
+
 void DimCommand::commandHandler() 
 {
 	CmndInfo *cmndptr;

@@ -1,5 +1,6 @@
 #define DIMLIB
 #include <dic.hxx>
+#include <stdio.h>
 
 char *DimClient::dimDnsNode = 0;
 DimErrorHandler *DimClient::itsCltError = 0;
@@ -585,32 +586,39 @@ DimRpcInfo::~DimRpcInfo()
 DimBrowser::DimBrowser()
 {
 	int i;
-	for(i = 0; i<4; i++)
+	for(i = 0; i<5; i++)
 	{
 		itsData[i] = 0;
 		itsData[i] = 0;
 	}
 	currIndex = -1;
 	none = 0;
+	browserRpc = 0;
 }
 
 DimBrowser::~DimBrowser()
 {
 	int i;
-	for(i = 0; i<4; i++)
+	for(i = 0; i<5; i++)
 	{
 		if(itsData[i])
 			delete itsData[i];
 	}
+	if(browserRpc)
+		delete browserRpc;
 }
 
 int DimBrowser::getServices(const char * serviceName) 
 {
 	char *str;
 
-	DimRpcInfo rpc((char *)"DIS_DNS/SERVICE_INFO",(char *)"\0");
-	rpc.setData((char *)serviceName);
-	str = rpc.getString();	
+//	DimRpcInfo rpc((char *)"DIS_DNS/SERVICE_INFO",(char *)"\0");
+//	rpc.setData((char *)serviceName);
+//	str = rpc.getString();
+	if(!browserRpc)
+		browserRpc = new DimRpcInfo((char *)"DIS_DNS/SERVICE_INFO",(char *)"\0");
+	browserRpc->setData((char *)serviceName);
+	str = browserRpc->getString();	
 	if(itsData[0])
 		delete itsData[0];
 	itsData[0] = new TokenString(str,(char *)"|\n"); 
@@ -622,15 +630,26 @@ int DimBrowser::getServices(const char * serviceName)
 
 int DimBrowser::getServers() 
 {
-	char *str;
+	char *str, *pid_str;
+	int size, totsize;
 	DimCurrentInfo srv((char *)"DIS_DNS/SERVER_LIST",(char *)"\0");
-	str = srv.getString();	
+	str = srv.getString();
+	size = strlen(str)+1;
+	totsize = srv.getSize();
+
 	if(itsData[1])
 		delete itsData[1];
 	itsData[1] = new TokenString(str,(char *)"|@\n"); 
 	currIndex = 1;
 	if(!str[0])
 		return(0);
+	if(totsize > size)
+	{
+		pid_str = str + strlen(str) + 1;
+		if(itsData[4])
+			delete itsData[4];
+		itsData[4] = new TokenString(pid_str,(char *)"|"); 
+	}
 	return(itsData[1]->getNTokens((char *)"|") +1); 
 }
 	
@@ -729,6 +748,27 @@ int DimBrowser::getNextServer(char *&server, char *&node)
 	}
 	if(!itsData[1]->cmpToken((char *)"|"))
 		itsData[1]->popToken();
+	return 1;
+}
+
+int DimBrowser::getNextServer(char *&server, char *&node, int &pid)
+{
+	int ret, lpid = 0;
+	char *tok;
+
+	ret = getNextServer(server, node);
+	if(ret && itsData[4])
+	{
+		ret = itsData[4]->getToken(tok);
+		if(ret)
+		{
+			sscanf(tok,"%d",&lpid);
+			pid = lpid;
+		}
+	}
+	if(!ret) 
+		return 0;
+	ret = itsData[4]->getToken(tok);
 	return 1;
 }
 	
@@ -965,7 +1005,17 @@ int DimClient::getServerId()
 	serverName[0] = '\0';
 	return dic_get_server(serverName);
 }
-	
+
+int DimClient::getServerPid()
+{
+	int pid, ret;
+
+	ret = dic_get_server_pid(&pid);
+	if(!ret)
+		return 0;
+	return pid;
+}
+
 char *DimClient::getServerName()
 {
 	if(!serverName)

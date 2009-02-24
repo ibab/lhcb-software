@@ -28,39 +28,8 @@
 #define TMP_DISABLE_AST     if (ast_enable != SS$_WASSET) sys$setast(0);
 #endif
 
-typedef enum {
-	NOT_PENDING, WAITING_DNS_UP, WAITING_DNS_ANSWER, WAITING_SERVER_UP,
-	WAITING_CMND_ANSWER, DELETED
-} PENDING_STATES;
-
 #define BAD_CONN_TIMEOUT 10
 
-typedef struct dic_serv {
-	struct dic_serv *next;
-	struct dic_serv *prev;
-	char serv_name[MAX_NAME];
-	int serv_id;
-	FORMAT_STR format_data[MAX_NAME/4];
-	char def[MAX_NAME];
-	int format;
-	int type;
-	int timeout;
-	int curr_timeout;
-	int *serv_address;
-	int serv_size;
-	int *fill_address;
-	int fill_size;
-	void (*user_routine)();
-	long tag;
-	TIMR_ENT *timer_ent;
-	int conn_id;
-	PENDING_STATES pending;
-	int tmout_done;
-	int stamped;
-	int time_stamp[2];
-	int quality;
-    int tid;
-} DIC_SERVICE;
 
 typedef struct bad_conn {
 	struct bad_conn *next;
@@ -1407,7 +1376,7 @@ DNS_DIC_PACKET *packet;
 	DIC_SERVICE *servp;
 	char *node_name, *task_name;
 	char node_info[MAX_NODE_NAME+4];
-	int i, port, protocol, format, ret;
+	int i, port, protocol, format, ret, pid;
 	register DIC_CONNECTION *dic_connp ;
 	DIC_DNS_PACKET dic_dns_packet;
 	register DIC_DNS_PACKET *dic_dns_p = &dic_dns_packet;
@@ -1445,6 +1414,7 @@ DNS_DIC_PACKET *packet;
 	for(i = 0; i < 4; i ++)
 		node_info[strlen(node_name)+i+1] = packet->node_addr[i];
 	port = vtohl(packet->port); 
+	pid = vtohl(packet->pid); 
 	protocol = vtohl(packet->protocol);
 	format = vtohl(packet->format);
 
@@ -1530,6 +1500,7 @@ DNS_DIC_PACKET *packet;
 			strncpy( dic_connp->task_name, task_name,
 				 MAX_TASK_NAME);
 			dic_connp->port = port;
+			dic_connp->pid = pid;
 			if(Debug_on)
 			{
 				dim_print_date_time();
@@ -2333,6 +2304,30 @@ char *name;
 	}
 	ENABLE_AST
 	return(ret);
+}
+
+int dic_get_server_pid(pid)
+int *pid;
+{
+	int ret = 0;
+
+	DISABLE_AST
+
+	*pid = 0;
+	if(Curr_conn_id)
+	{
+		*pid = Dic_conns[Curr_conn_id].pid;
+		ret = Curr_conn_id;
+	}
+	ENABLE_AST
+	return(ret);
+}
+
+void dic_stop()
+{
+	dtq_delete(Dic_timer_q);
+	dic_close_dns();
+	dim_stop();
 }
 
 #ifdef VMS

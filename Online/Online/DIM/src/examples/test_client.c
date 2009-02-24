@@ -34,6 +34,10 @@ int *tag, *size;
 }
 */
 
+void got_servers( int *tag, char *list, int *size)
+{
+	printf("%s",list);
+}
 
 void rout( tag, buf, size )
 char *buf;
@@ -49,6 +53,8 @@ int *tag, *size;
 	{
 		char node[128], str[256];
 		int secs, millis;
+		time_t tsecs;
+
 		dic_get_dns_node(node);
 		printf("DNS node = %s\n",node);
 		printf("size = %d\n",*size);
@@ -56,7 +62,8 @@ int *tag, *size;
 		printf("t.i = %d, t.d = %2.2f, t.s = %d, t.c = %c, t.f = %2.2f, t.str = %s\n",
 			t.i,t.d,t.s,t.c,t.f,t.str);
 		dic_get_timestamp(0, &secs, &millis);
-		my_ctime((time_t *)&secs, str, 128);
+		tsecs = secs;
+		my_ctime(&tsecs, str, 128);
 		str[strlen(str)-1] = '\0';
 		printf("timestamp = %s.%d\n",str,millis);
 
@@ -88,19 +95,23 @@ char **argv;
 */
 
 	sprintf(str,"%s/SET_EXIT_HANDLER",argv[2]);
+/*	sprintf(str,"%s/SET_EXIT_HANDLER","xx");  */
 	dic_cmnd_service(str, &id, 4);
 	dic_get_id(aux);
 	printf("%s\n",aux);
 	strcpy(client_str,argv[1]);
+/*	strcpy(client_str,"yy");     */
 
 	for(i = 0; i< 10; i++)
 	{
 		sprintf(str,"%s/Service_%03d",argv[2],i);
+/*		sprintf(str,"%s/Service_%03d","xx",i);     */
 		dic_info_service( str, TIMED, 10, 0, 0, rout, i,
 			  "No Link", 8 );
 	}
 	
 	sprintf(aux,"%s/TEST_SWAP",argv[2]);
+/*	sprintf(aux,"%s/TEST_SWAP","xx");     */
 	dic_info_service_stamped( aux, TIMED, 5, 0, 0, rout, 1200,
 			  &no_link, 4 );
 
@@ -111,6 +122,9 @@ char **argv;
 */
 
 	sprintf(aux,"%s/TEST_CMD",argv[2]);
+/*	sprintf(aux,"%s/TEST_CMD","xx");     */
+	dic_info_service("DIS_DNS/SERVER_LIST",MONITORED, 0, 0, 0, got_servers, 0,
+		"not there", 10);
 	while(1)
 	{
 		sleep(10);

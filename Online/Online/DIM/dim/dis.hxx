@@ -203,6 +203,7 @@ public :
 	short getShort();
 	char *getString();
 	int getSize();
+	char *getFormat();
 
 	virtual void commandHandler();
 

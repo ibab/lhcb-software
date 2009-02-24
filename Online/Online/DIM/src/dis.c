@@ -1202,7 +1202,7 @@ int req_id;
 			ftime(&timebuf);
 			aux = timebuf.millitm;
 			Dis_packet->time_stamp[0] = htovl(aux);
-			Dis_packet->time_stamp[1] = htovl(timebuf.time);
+			Dis_packet->time_stamp[1] = htovl((int)timebuf.time);
 #else
 			tz = 0;
 		        gettimeofday(&tv, tz);
@@ -2537,7 +2537,8 @@ SERVICE *servp;
 	int i;
 
 	servp->registered = 1;
-	N_unregistered_services--;
+	if(N_unregistered_services > 0)
+		N_unregistered_services--;
 	for( i = 0; i < MAX_REGISTRATION_UNIT; i++)
 	{
 		if(Unregistered_services[i] == servp)

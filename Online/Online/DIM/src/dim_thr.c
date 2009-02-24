@@ -21,13 +21,19 @@ pthread_t INIT_thread = 0;
 pthread_t MAIN_thread = 0;
 #ifndef darwin
 sem_t DIM_INIT_Sema;
+/*
 sem_t DIM_WAIT_Sema;
+*/
 #else
 sem_t *DIM_INIT_Semap;
+/*
 sem_t *DIM_WAIT_Semap;
+*/
 #endif
 int INIT_count = 0;
+/*
 int WAIT_count = 0;
+*/
 int DIM_THR_init_done = 0;
 
 void *dim_tcpip_thread(void *tag)
@@ -52,11 +58,14 @@ void *dim_tcpip_thread(void *tag)
 			sem_post(DIM_INIT_Semap);
 #endif
 		tcpip_task();
+		/*
 #ifndef darwin
 		sem_post(&DIM_WAIT_Sema);
 #else
 		sem_post(DIM_WAIT_Semap);
 #endif
+		*/
+		dim_signal_cond();
     }
 }
 
@@ -84,11 +93,14 @@ void *dim_dtq_thread(void *tag)
 #endif
 		  }
 		dtq_task();
+		/*
 #ifndef darwin
 		sem_post(&DIM_WAIT_Sema);
 #else
 		sem_post(DIM_WAIT_Semap);
 #endif
+		*/
+		dim_signal_cond();
     }
 }
 
@@ -119,13 +131,16 @@ void dim_init()
 		INIT_thread = pthread_self();
 		MAIN_thread = INIT_thread;
 		
-#ifndef darwin 
-		
+#ifndef darwin 	
 		sem_init(&DIM_INIT_Sema, 0, INIT_count);
+		/*
 		sem_init(&DIM_WAIT_Sema, 0, WAIT_count);
+		*/
 #else
 		DIM_INIT_Semap = sem_open("/Dim_INIT_Sem", O_CREAT, S_IRUSR | S_IWUSR, INIT_count);
+		/*
 		DIM_WAIT_Semap = sem_open("/Dim_WAIT_Sem", O_CREAT, S_IRUSR | S_IWUSR, WAIT_count);
+		*/
 #endif
 		
 		ignore_sigpipe();
@@ -181,12 +196,18 @@ void dim_stop()
 	ALRM_thread = 0;
 #ifndef darwin 		
 	sem_destroy(&DIM_INIT_Sema);
+	/*
 	sem_destroy(&DIM_WAIT_Sema);
+	*/
 #else
 	sem_unlink("/Dim_INIT_Sem");
+	/*
 	sem_unlink("/Dim_WAIT_Sem");
+	*/
 	sem_close(DIM_INIT_Semap);
+	/*
 	sem_close(DIM_WAIT_Semap);
+	*/
 #endif
 	dim_tcpip_stop();
 	dim_dtq_stop();	
@@ -382,12 +403,14 @@ int dim_wait(void)
 	  {
 		return(-1);
 	  }
+	/*
 #ifndef darwin
 	sem_wait(&DIM_WAIT_Sema);
 #else
 	sem_wait(DIM_WAIT_Semap);
 #endif
-
+	*/
+	dim_wait_cond();
 	return(-1);
 }
 
@@ -406,8 +429,12 @@ pthread_t Dim_thr_locker = 0;
 int Dim_thr_counter = 0;
 #ifdef LYNXOS
 pthread_mutex_t Global_DIM_mutex;
+pthread_mutex_t Global_cond_mutex;
+pthread_cond_t Global_cond;
 #else
 pthread_mutex_t Global_DIM_mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t Global_cond_mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t Global_cond = PTHREAD_COND_INITIALIZER;
 #endif
 
 void dim_lock()
@@ -436,6 +463,19 @@ void dim_unlock()
 	/*     printf("\n");*/
 }
 
+void dim_wait_cond()
+{
+  pthread_mutex_lock(&Global_cond_mutex);
+  pthread_cond_wait(&Global_cond, &Global_cond_mutex);
+  pthread_mutex_unlock(&Global_cond_mutex);
+}
+
+void dim_signal_cond()
+{
+  pthread_mutex_lock(&Global_cond_mutex);
+  pthread_cond_broadcast(&Global_cond);
+  pthread_mutex_unlock(&Global_cond_mutex);
+}
 
 #else
 
@@ -780,7 +820,7 @@ void dim_pause()
 {
 	if(!Global_DIM_event)
 	{ 
-		Global_DIM_event = CreateEvent(NULL,FALSE,FALSE,NULL);
+		Global_DIM_event = CreateEvent(NULL,TRUE,FALSE,NULL);
 	}
 	else 
 	{
@@ -790,7 +830,11 @@ void dim_pause()
 
 void dim_wake_up()
 {
-	SetEvent(Global_DIM_event);
+	if(Global_DIM_event)
+	{
+		SetEvent(Global_DIM_event);
+		ResetEvent(Global_DIM_event);
+	}
 }
 
 void dim_sleep(unsigned int t)

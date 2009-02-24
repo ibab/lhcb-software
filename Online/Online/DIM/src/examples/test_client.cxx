@@ -49,9 +49,10 @@ int main()
 	StrService servstr;
 	char *server, *ptr, *ptr1;
 	DimBrowser br;
-	int type, n;
+	int type, n, pid;
 
 //	DimClient::addErrorHandler(errHandler);
+	
 	n = br.getServices("*");
 	cout << "found " << n << " services" << endl; 
 	
@@ -61,9 +62,9 @@ int main()
 	}
 	
 	br.getServers();
-	while(br.getNextServer(server, ptr1))
+	while(br.getNextServer(server, ptr1, pid))
 	{
-		cout << server << " @ " << ptr1 << endl;
+		cout << server << " @ " << ptr1 << ", pid = " << pid << endl;
 	}
 
 	br.getServerClients("DIS_DNS");
@@ -71,6 +72,7 @@ int main()
 	{
 		cout << ptr << " @ " << ptr1 << endl;
 	}
+
 	DimInfo servint("TEST/INTVAL",-1); 
 	
 	while(1)

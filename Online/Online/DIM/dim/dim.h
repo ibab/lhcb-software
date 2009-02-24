@@ -13,7 +13,7 @@
 
 #include "dim_common.h"
 
-#define DIM_VERSION_NUMBER 1711
+#define DIM_VERSION_NUMBER 1804
 
 #define MY_LITTLE_ENDIAN	0x1
 #define MY_BIG_ENDIAN 		0x2
@@ -416,6 +416,7 @@ typedef struct {
 	char node_name[MAX_NODE_NAME];
 	char task_name[MAX_TASK_NAME];
 	int port;
+	int pid;
 	char *service_head;
 } DIC_CONNECTION;
 
@@ -442,9 +443,40 @@ extern DllExp DIM_NOSHARE DNS_CONNECTION *Dns_conns;
 
 extern DllExp DIM_NOSHARE int Curr_N_Conns;
 
+/* Client definitions needed by dim_jni.c (from H.Essel GSI) */
+typedef enum {
+	NOT_PENDING, WAITING_DNS_UP, WAITING_DNS_ANSWER, WAITING_SERVER_UP,
+	WAITING_CMND_ANSWER, DELETED
+} PENDING_STATES;
+
+typedef struct dic_serv {
+	struct dic_serv *next;
+	struct dic_serv *prev;
+	char serv_name[MAX_NAME];
+	int serv_id;
+	FORMAT_STR format_data[MAX_NAME/4];
+	char def[MAX_NAME];
+	int format;
+	int type;
+	int timeout;
+	int curr_timeout;
+	int *serv_address;
+	int serv_size;
+	int *fill_address;
+	int fill_size;
+	void (*user_routine)();
+	long tag;
+	TIMR_ENT *timer_ent;
+	int conn_id;
+	PENDING_STATES pending;
+	int tmout_done;
+	int stamped;
+	int time_stamp[2];
+	int quality;
+    int tid;
+} DIC_SERVICE;
 
 /* PROTOTYPES */
-
 
 /* DNA */
 _DIM_PROTOE( int dna_start_read,    (int conn_id, int size) );

@@ -8,7 +8,7 @@
  * Version history:
  * 20000911MJJ       First Released Version (Not 100% complete yet)
  * 31-Oct-2007 Adjustments for 64bit platforms Joern Adamczewski, gsi
- * 
+ * 03-Dec-2008 Fix in dim_Client releaseService Hans Essel, gsi
  *
  */
 /* TODO Remove these kludges */
@@ -951,7 +951,7 @@ JNIEXPORT jint JNICALL Java_dim_Client_infoService
 	jint  ret;
 	int   no_link;
 	int   stamped = 0;
-	int   service_type = mode & 0x0F;
+	int   service_type = mode & 0x0FFF;
   void  (*callback_function)();
   jobject callback_param;
   jobject theReceiveSynchronizer;
@@ -1045,20 +1045,24 @@ JNIEXPORT void JNICALL Java_dim_Client_releaseService
   (JNIEnv* env, jclass This, jint sid)
 {
 
-//	DIC_SERVICE *servp;
+  DIC_SERVICE *servp;
 
   DBGe(dim_Dbg_INFO_SERVICE) ; /* Trap only, report later */
 
-//  servp = (DIC_SERVICE *)id_get_ptr(sid);
+  servp = (DIC_SERVICE *)id_get_ptr(sid, SRC_DIC);
 
-  // test if the service exists
-//  if(servp ==NULL) return;    // I should throw a runtimeError but I will be forgiving... (Actually I am lazy)
-//  DBGx(dim_Dbg_INFO_SERVICE) printf("DimJNI: Client.releaseService(%d (%s))\n", sid, servp->serv_name);
-
-  //TODO Look at this code, see why and if this is still needed
-//  servp->user_routine = NULL; // make sure this is not called anymore
-//  (*env)->DeleteGlobalRef(env, (jobject) servp->tag);
-//  servp->tag = 0;
+/*
+Hans Essel, 3.12.08
+Without deleting the global reference, the Java GC could not free the object!
+Any DimInfo object would stay forever. This is a memory leak.
+*/
+  if(servp != NULL)
+  {
+	  //  DBGx(dim_Dbg_INFO_SERVICE) printf("DimJNI: Client.releaseService(%d (%s))\n", sid, servp->serv_name);
+	  servp->user_routine = NULL; // make sure this is not called anymore
+	  (*env)->DeleteGlobalRef(env, (jobject) servp->tag);
+	  servp->tag = 0;
+  }
 
   dic_release_service(sid);
 	return;
@@ -1267,6 +1271,22 @@ JNIEXPORT jstring JNICALL Java_dim_Server_getServices
 		return (*env)->NewStringUTF(env, dis_get_client_services(id));
 	else
 		return NULL;
+}
+
+/*
+ * Class:     dim_Client
+ * Method:    getServerPID
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_dim_Client_getServerPID
+  (JNIEnv* env, jclass This)
+{
+	int pid, ret;
+
+	ret = dic_get_server_pid(&pid);
+	if(!ret)
+		return 0;
+	return pid;
 }
 
 /*

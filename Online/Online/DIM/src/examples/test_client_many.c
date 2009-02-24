@@ -58,6 +58,8 @@ int *tag, *size;
 	{
 		char node[128], str[256];
 		int secs, millis;
+		time_t tsecs;
+
 		dic_get_dns_node(node);
 		printf("DNS node = %s\n",node);
 		printf("size = %d\n",*size);
@@ -65,7 +67,8 @@ int *tag, *size;
 		printf("t.i = %d, t.d = %2.2f, t.s = %d, t.c = %c, t.f = %2.2f, t.str = %s\n",
 			t.i,t.d,t.s,t.c,t.f,t.str);
 		dic_get_timestamp(0, &secs, &millis);
-		my_ctime((time_t *)&secs, str, 128);
+		tsecs = secs;
+		my_ctime(&tsecs, str, 128);
 		str[strlen(str)-1] = '\0';
 		printf("timestamp = %s.%d\n",str,millis);
 

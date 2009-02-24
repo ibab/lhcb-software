@@ -1,6 +1,7 @@
 #include <dis.hxx>
 #include <iostream>
 #include <stdio.h>
+#include <time.h>
 using namespace std;
 
 typedef struct{
@@ -142,6 +143,20 @@ int main()
 		complexService.updateService();
 
 //		simpleService.setQuality(complexData.bitset);
+/*
+		{
+			int secs;
+			time_t tsecs;
+
+			tsecs = time((time_t)NULL);
+			secs = (int)tsecs;
+			secs -=60;
+			simpleService.setTimestamp(secs, 123);
+			simpleService.setQuality(index);
+			tsecs = (time_t)secs;
+			cout << "quality "<< index << " time "<< ctime(&tsecs) << endl;
+		}
+*/
 		simpleService.updateService();
 //		simpleData += (float)1;
 //		simpleService.updateService();

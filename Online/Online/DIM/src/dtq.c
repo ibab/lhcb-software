@@ -220,7 +220,7 @@ int *millies;
 
 #ifdef WIN32
 	ftime(&timebuf);
-	secs = timebuf.time;
+	secs = (int)timebuf.time;
 	*millies = timebuf.millitm;
 #else
 	tz = 0;
@@ -234,10 +234,10 @@ int *millies;
 static int get_elapsed_time()
 {
 	int millies, deltat;
-	time_t now;
+	int now;
 
 	now = get_current_time(&millies);
-	deltat = now - DIM_last_time;
+	deltat = now - (int)DIM_last_time;
 	if((millies + 50) < DIM_last_time_millies)
 	{
 		deltat --;

@@ -11,9 +11,9 @@
 
 /* include files */
 
+#include <errno.h>
 #define DIMLIB
 #define DNA
-#include <errno.h>
 #include <dim.h>
 
 /* global definitions */
@@ -117,6 +117,9 @@ register int conn_id;
 	} 
 	else
 	{
+/*
+printf("passing up %d bytes, conn_id %d\n",dna_connp->full_size, conn_id); 
+*/
 		dna_connp->read_ast(conn_id, dna_connp->buffer,
 			dna_connp->full_size, STA_DATA);
 	}
