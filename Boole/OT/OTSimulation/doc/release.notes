@@ -2,6 +2,7 @@
 ! Package manager : Jan Amoraal
 !--------------------------------------------------------------------------
 
+!====================== OTSimulation v4r1 2009-02-24 ======================
 ! 2009-02-13 - Jan Amoraal
  - Create double pulse deposits for particles only.
  - Needs MCEvent >  v2r11
