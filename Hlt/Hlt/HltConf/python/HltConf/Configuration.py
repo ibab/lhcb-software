@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.47 2009-02-20 11:43:44 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.48 2009-02-24 17:39:51 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -18,6 +18,7 @@ from Configurables       import HltVertexReportsMaker
 from Configurables       import HltSelReportsMaker
 from Configurables       import L0DUMultiConfigProvider
 from Configurables       import HltANNSvc 
+from Configurables       import HltRoutingBitsWriter
 from HltConf.HltLine     import Hlt1Line   as Line
 from HltConf.HltLine     import hlt1Lines
 from HltConf.HltLine     import hlt1Selections
@@ -117,31 +118,35 @@ class HltConf(LHCbConfigurableUser):
                 for i in self.getProp('Hlt2Requires').split('+') :
                     Sequence("Hlt2CheckHlt1Passed").Members.append( hlt2requires[i] )
 
-    def postConfigAction(self) : 
-        ## Should find a more elegant way of doing this...
-        ## there are too many implicit assumptions in this action...
-        ## add a line for 'not lumi only' 
-        ## -- note: before the 'global' otherwise lumi set global, and we have lumi AND global set...
-        print hlt1Lines()
-        lumi = [ "'" + i +"'"  for i in hlt1Decisions() if i.find('Lumi') != -1 ]
-        if lumi: 
-            Line('IgnoringLumi', HLT = "HLT_PASSIGNORING(" + ','.join(lumi) + ")" )
-            Line('Lumi', HLT = " | ".join([ "HLT_PASS(" + i + ")" for i in lumi ]))
-        ## finally, add the Hlt1Global line...
-        Line('Global', HLT = 'HLT_DECISION' )
-        activeLines = self.getProp('ActiveHlt1Lines') 
-        lines = [ i for i in hlt1Lines() if ( not activeLines or i.name() in activeLines ) ]
-        print '# List of configured Hlt1Lines : ' + str(hlt1Lines()) 
-        print '# List of Hlt1Lines to be added to Hlt1 : ' + str(lines) 
-        Sequence('Hlt1').Members = [ i.sequencer() for i in lines ] # note : should verify order (?) -- global should be last hlt1line! 
-        ## and tell the monitoring what it should expect..
-        HltGlobalMonitor().Hlt1Decisions = [ i.decision() for i in lines ]
+    def configureRoutingBits(self) :
+        ## set triggerbits
+        #  0-31: reserved for L0  // need to add L0DU support to routing bit writer
+        # 32-63: reserved for Hlt1
+        # 64-91: reserved for Hlt2
+
+        ### NOTE: any change in the meaning of any of the following needs to be 
+        ###       communicated with online, to insure the events are still properly
+        ###       routed!!!
+        routingBits = { 32 : "HLT_PASS('Hlt1Global')"
+                      , 33 : "HLT_PASS('Hlt1LumiDecision')"         ## TODO: make it accept wildcards.. then use HLT_PASS('Hlt1.*Lumi.*Decision')
+                      , 34 : "HLT_PASS('Hlt1IgnoringLumiDecision')" ## TODO: make it accept wildcards.. then use HLT_PASSIGNORING('Hlt1.*Lumi.*Decision')
+                      , 35 : "HLT_PASS('Hlt1VeloClosingDecision')"  ## TODO: make it accept wildcards.. then use HLT_PASS('Hlt1.*Velo.*Decision')
+                      , 36 : "HLT_PASS('Hlt1ExpressDecision')"
+                      }
+
+        ## and record the settings in the ANN service
+        HltANNSvc().RoutingBits = dict( [ (v,k) for k,v in routingBits.iteritems() ] )
+        HltRoutingBitsWriter().RoutingBits = routingBits
+
+    def configureVertexPersistence(self) :
         ## and persist some vertices...
         ## uhhh... need to pick only those in ActiveHlt1Lines...
         vertices = [ i for i in hlt1Selections()['All'] if i is 'PV2D' or   ( i.startswith('Hlt1Velo') and i.endswith('Decision') ) ]
         HltVertexReportsMaker().VertexSelections = vertices
         ## do not write out the candidates for the vertices we store 
         HltSelReportsMaker().SelectionMaxCandidates.update( dict( [ (i,0) for i in vertices if i.endswith('Decision') ] ) )
+
+    def configureANNSelections(self) :
         ### Make sure that the ANN Svc has everything it will need
         missing = [ i for i in sorted(set(hlt1Selections()['All']) - set(HltANNSvc().Hlt1SelectionID.keys())) if not i.startswith('TES:') ]
         missingSelections = [ i for i in missing if not i.endswith('Decision') ]
@@ -151,7 +156,37 @@ class HltConf(LHCbConfigurableUser):
         extraDecisions = dict(zip( missingDecisions , range( 1000,  1000 + len(missingDecisions) ) ))
         HltANNSvc().Hlt1SelectionID.update( extraDecisions )
         print '# added ' + str(len(missingSelections)) + ' selections to HltANNSvc'
-        print '# added ' + str(len(missingDecisions)) + ' decisions to HltANNSvc'
+        print '# added ' + str(len(missingDecisions)) + ' decisions to HltANNSvc' 
+
+    def configureHltMonitoring(self, lines) :
+        ## and tell the monitoring what it should expect..
+        HltGlobalMonitor().Hlt1Decisions = [ i.decision() for i in lines ]
+
+    def postConfigAction(self) : 
+        ## Should find a more elegant way of doing this...
+        ## there are too many implicit assumptions in this action...
+        ##
+        ## add a line for 'not lumi only' 
+        ## -- note: before the 'global' otherwise lumi set global, and we have lumi AND global set...
+        lumi = [ "'" + i +"'"  for i in hlt1Decisions() if i.find('Lumi') != -1 ]
+        if lumi: 
+            lumi = ','.join(lumi) # Note: at max 4 entries... then should switch to a list..
+            Line('IgnoringLumi', HLT = "HLT_PASSIGNORING(" + lumi + ")" )
+            Line('Lumi',         HLT = "HLT_PASS("         + lumi + ")" )
+        ## finally, add the Hlt1Global line...
+        Line('Global', HLT = 'HLT_DECISION' )
+
+        activeLines = self.getProp('ActiveHlt1Lines') 
+        lines = [ i for i in hlt1Lines() if ( not activeLines or i.name() in activeLines ) ]
+        print '# List of configured Hlt1Lines : ' + str(hlt1Lines()) 
+        print '# List of Hlt1Lines added to Hlt1 : ' + str(lines) 
+        Sequence('Hlt1').Members = [ i.sequencer() for i in lines ] # note : should verify order (?) -- global should be last hlt1line! 
+
+        self.configureHltMonitoring(lines)
+        self.configureRoutingBits()
+        self.configureVertexPersistence()
+        self.configureANNSelections()
+
         if self.getProp("Verbose") : print Sequence('Hlt') 
          
 
