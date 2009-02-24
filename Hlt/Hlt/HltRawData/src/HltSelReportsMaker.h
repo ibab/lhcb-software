@@ -1,4 +1,4 @@
-// $Id: HltSelReportsMaker.h,v 1.3 2009-02-02 18:00:25 tskwarni Exp $
+// $Id: HltSelReportsMaker.h,v 1.4 2009-02-24 13:50:27 graven Exp $
 #ifndef HLTSELREPORTSMAKER_H 
 #define HLTSELREPORTSMAKER_H 1
 
@@ -102,9 +102,6 @@ private:
 
   /// location of input Hlt Dec Reports
   StringProperty m_inputHltDecReportsLocation;
-
-  /// location of input Hlt Summary (optional)
-  StringProperty m_inputHltSummaryLocation;
 
   /// location of output Hlt Summary
   StringProperty m_outputHltSelReportsLocation;

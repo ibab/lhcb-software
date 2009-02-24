@@ -1,4 +1,4 @@
-// $Id: HltDecReportsMaker.h,v 1.3 2008-10-24 19:33:22 tskwarni Exp $
+// $Id: HltDecReportsMaker.h,v 1.4 2009-02-24 13:50:27 graven Exp $
 #ifndef HLTDECREPORTSMAKER_H 
 #define HLTDECREPORTSMAKER_H 1
 
@@ -51,9 +51,6 @@ protected:
 
   /// determine if and how selection should be saved (bit output see selectionPersistencyFlagBits enum)
   unsigned int infoLevelFlag( const std::string & selectionName );  
-
-  /// location of input Hlt Summary
-  StringProperty m_inputHltSummaryLocation;
 
   /// location of output Hlt Summary
   StringProperty m_outputHltDecReportsLocation;

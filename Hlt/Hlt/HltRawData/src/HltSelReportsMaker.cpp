@@ -1,11 +1,10 @@
-// $Id: HltSelReportsMaker.cpp,v 1.8 2009-02-02 18:00:25 tskwarni Exp $
+// $Id: HltSelReportsMaker.cpp,v 1.9 2009-02-24 13:50:27 graven Exp $
 // #define DEBUGCODE
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
-#include "Event/HltSummary.h"
 #include "Event/HltSelReports.h"
 #include "Event/HltObjectSummary.h"
 #include "Event/HltDecReports.h"
@@ -40,8 +39,6 @@ HltSelReportsMaker::HltSelReportsMaker( const std::string& name,
   : HltBaseAlg ( name , pSvcLocator )
 {
 
-  declareProperty("InputHltSummaryLocation",
-    m_inputHltSummaryLocation= LHCb::HltSummaryLocation::Default);  
   declareProperty("OutputHltSelReportsLocation",
     m_outputHltSelReportsLocation= LHCb::HltSelReportsLocation::Default);  
   declareProperty("HltMuonTrackLocation",
@@ -145,12 +142,6 @@ StatusCode HltSelReportsMaker::execute() {
     Warning( " No HltDecReports at " + m_inputHltDecReportsLocation.value(), StatusCode::SUCCESS, 20 );
   }
 
-  // get input HltSummary if exists
-  HltSummary* inputSummary(0);  
-  if( exist<HltSummary>(m_inputHltSummaryLocation) ){    
-    inputSummary = get<HltSummary>(m_inputHltSummaryLocation);
-  }
-
 
   // get string-to-int selection ID map
   std::vector<IANNSvc::minor_value_type> selectionNameToIntMap;  
@@ -167,26 +158,6 @@ StatusCode HltSelReportsMaker::execute() {
     for( std::vector<stringKey>::const_iterator i=selectionIDs.begin();i!=selectionIDs.end();++i){
       verbose() << i->str() << " ";
     }
-  }
-#endif  
-  // if HltSummary has any extras add them
-  if( inputSummary ){
-    // selection names in HltSummary
-    std::vector<std::string> selIDs = inputSummary->selectionSummaryIDs();
-    for( std::vector<std::string>::const_iterator is=selIDs.begin();is!=selIDs.end();++is){
-      stringKey name(*is);
-      if( find( selectionIDs.begin(),selectionIDs.end(),name) == selectionIDs.end() ){
-        selectionIDs.push_back(name);
-#ifdef DEBUGCODE
-        if ( msgLevel(MSG::VERBOSE) ){
-          verbose() << name.str() << "(hs) ";
-        }
-#endif  
-      }
-    }
-  }
-#ifdef DEBUGCODE
-  if ( msgLevel(MSG::VERBOSE) ){
     verbose() << endmsg;
   }
 #endif  
@@ -254,21 +225,7 @@ StatusCode HltSelReportsMaker::execute() {
          
        }
        
-     } else if( inputSummary ){
-
-       const LHCb::HltSelectionSummary& selSumIn = inputSummary->selectionSummary(selName);
-
-       // unsuccessful selections can't save candidates
-       if( !selSumIn.decision() )continue;
-
-       if( selSumIn.data().size() ){
-         candidate = (ContainedObject*)(*(selSumIn.data().begin()));
-       } else if( selSumIn.particles().size() ){
-         const Particle* candi = *(selSumIn.particles().begin());
-         candidate = (ContainedObject*)(candi);
-       }
-       
-     }
+     } 
 
      // empty selections have nothing to save
      if( !candidate )continue;
@@ -373,27 +330,6 @@ StatusCode HltSelReportsMaker::execute() {
          Warning( " Unsupported data type  - skip selection ID=" 
                   +selName,StatusCode::SUCCESS, 20 );
          continue;
-         
-       }
-       
-     } else if( inputSummary ){
-
-       const LHCb::HltSelectionSummary& selSumIn = inputSummary->selectionSummary(selName);
-
-       // unsuccessful selections can't save candidates
-       if( !selSumIn.decision() )continue;
-
-       candidates = selSumIn.data();
-       if(  !candidates.size() ){
-
-         const SmartRefVector< LHCb::Particle > & candidatesP = selSumIn.particles();       
-         for(SmartRefVector<LHCb::Particle>::const_iterator  ic = candidatesP.begin();
-             ic != candidatesP.end(); ++ic) {
-           const Particle* candi = *ic;
-           if( candi ){
-             candidates.push_back( (ContainedObject*)candi );               
-           }
-         }
          
        }
        

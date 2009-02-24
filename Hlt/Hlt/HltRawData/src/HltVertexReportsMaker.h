@@ -1,4 +1,4 @@
-// $Id: HltVertexReportsMaker.h,v 1.2 2008-09-17 16:14:56 tskwarni Exp $
+// $Id: HltVertexReportsMaker.h,v 1.3 2009-02-24 13:50:27 graven Exp $
 #ifndef HLTVERTEXREPORTSMAKER_H 
 #define HLTVERTEXREPORTSMAKER_H 1
 
@@ -31,15 +31,9 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-protected:
-
 private:
 
-
   // ----------------------- data members 
-
-  /// location of input Hlt Summary
-  StringProperty m_inputHltSummaryLocation;
 
   /// location of output Hlt Summary
   StringProperty m_outputHltVertexReportsLocation;

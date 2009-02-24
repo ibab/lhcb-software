@@ -1,4 +1,4 @@
-// $Id: HltRawDataMonitor.cpp,v 1.1 2009-01-26 06:24:49 tskwarni Exp $
+// $Id: HltRawDataMonitor.cpp,v 1.2 2009-02-24 13:50:27 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -105,10 +105,8 @@ StatusCode HltRawDataMonitor::execute() {
   sc = fillRawBank();
   sc = fillHltSelRep();
 
-  if( m_diagnosticsFrequency>0 ){
-    if( (m_event % m_diagnosticsFrequency) ==0 ){
+  if( m_diagnosticsFrequency>0  && (m_event % m_diagnosticsFrequency) == 0 ){
       selectionDiagnostics();
-    }
   }
 
   return StatusCode::SUCCESS;
@@ -122,7 +120,7 @@ StatusCode HltRawDataMonitor::finalize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
-  if( m_diagnosticsFrequency>=0 )selectionDiagnostics();
+  if ( m_diagnosticsFrequency>=0 ) selectionDiagnostics();
 
   return GaudiHistoAlg::finalize();  // must be called after all other actions
 }
@@ -164,6 +162,9 @@ StatusCode HltRawDataMonitor::fillRawBank()
   }
   bankSize = (bankSize+3)/4; // from bytes to words
   // need to copy it to local array to get rid of const restriction
+  // ???? WHY ???? you're not going to modify it here (should not!), 
+  // so if there are (member0functions you want to call which are not 
+  // declared const, but which could be, those ought to be fixed!
   unsigned int* pBank = new unsigned int[bankSize];
   HltSelRepRawBank hltSelReportsBank( pBank );
 
@@ -200,90 +201,89 @@ StatusCode HltRawDataMonitor::fillRawBank()
 
   } else {
 
-  ic = hltSelReportsBank.integrityCode();
-  if( ic ){
-    std::ostringstream mess;
-    mess << " HltSelReportsRawBank fails integrity check with code " 
-         << ic << " " << HltSelRepRBEnums::IntegrityCodesToString(ic) ;
-    Error( mess.str(), StatusCode::SUCCESS, 100 );
-    errors=true;
-  }
+    ic = hltSelReportsBank.integrityCode();
+    if( ic ){
+      std::ostringstream mess;
+      mess << " HltSelReportsRawBank fails integrity check with code " 
+           << ic << " " << HltSelRepRBEnums::IntegrityCodesToString(ic) ;
+      Error( mess.str(), StatusCode::SUCCESS, 100 );
+      errors=true;
+    }
 
-  ic = hitsSubBank.integrityCode();
-  if( ic ){
-    std::ostringstream mess;
-    mess << " HltSelRepRBHits fails integrity check with code " 
-         << ic << " " << HltSelRepRBEnums::IntegrityCodesToString(ic) ;
-    Error( mess.str(), StatusCode::SUCCESS, 100 );
-    errors=true;
-  }
+    ic = hitsSubBank.integrityCode();
+    if( ic ){
+      std::ostringstream mess;
+      mess << " HltSelRepRBHits fails integrity check with code " 
+           << ic << " " << HltSelRepRBEnums::IntegrityCodesToString(ic) ;
+      Error( mess.str(), StatusCode::SUCCESS, 100 );
+      errors=true;
+    }
 
-  ic = objTypSubBank.integrityCode();
-  if( ic ){
-    std::ostringstream mess;
-    mess << " HltSelRepRBObjTyp fails integrity check with code " 
-         << ic << " " << HltSelRepRBEnums::IntegrityCodesToString(ic) ;
-    Error( mess.str(), StatusCode::SUCCESS, 100 );
-    errors=true;
-  }
+    ic = objTypSubBank.integrityCode();
+    if( ic ){
+      std::ostringstream mess;
+      mess << " HltSelRepRBObjTyp fails integrity check with code " 
+           << ic << " " << HltSelRepRBEnums::IntegrityCodesToString(ic) ;
+      Error( mess.str(), StatusCode::SUCCESS, 100 );
+      errors=true;
+    }
 
-  ic = substrSubBank.integrityCode();
-  if( ic ){
-    std::ostringstream mess;
-    mess << " HltSelRepRBSubstr fails integrity check with code " 
-         << ic << " " << HltSelRepRBEnums::IntegrityCodesToString(ic) ;
-    Error( mess.str(), StatusCode::SUCCESS, 100 );
-    errors=true;
-  }
-  if( nObj != substrSubBank.numberOfObj() ){
-    std::ostringstream mess;
-    mess << " HltSelRepRBSubstr has number of objects " 
-         << substrSubBank.numberOfObj()
-         << " which is different than HltSelRepRBObjTyp " << nObj ;
-    Error( mess.str(), StatusCode::SUCCESS, 100 );
-    errors=true;
-  }
+    ic = substrSubBank.integrityCode();
+    if( ic ){
+      std::ostringstream mess;
+      mess << " HltSelRepRBSubstr fails integrity check with code " 
+           << ic << " " << HltSelRepRBEnums::IntegrityCodesToString(ic) ;
+      Error( mess.str(), StatusCode::SUCCESS, 100 );
+      errors=true;
+    }
+    if( nObj != substrSubBank.numberOfObj() ){
+      std::ostringstream mess;
+      mess << " HltSelRepRBSubstr has number of objects " 
+           << substrSubBank.numberOfObj()
+           << " which is different than HltSelRepRBObjTyp " << nObj ;
+      Error( mess.str(), StatusCode::SUCCESS, 100 );
+      errors=true;
+    }
 
-  ic = stdInfoSubBank.integrityCode();
-  if( ic ){
-    std::ostringstream mess;
-    mess << " HltSelRepRBStdInfo fails integrity check with code " 
-         << ic << " " << HltSelRepRBEnums::IntegrityCodesToString(ic) ;
-    Error( mess.str(), StatusCode::SUCCESS, 100 );
-    errors=true;
-  }
-  if( nObj != stdInfoSubBank.numberOfObj() ){
-    std::ostringstream mess;
-    mess << " HltSelRepRBStdInfo has number of objects " 
-         << stdInfoSubBank.numberOfObj()
-         << " which is different than HltSelRepRBObjTyp " << nObj ;
-    Error( mess.str(), StatusCode::SUCCESS, 100 );
-    errors=true;
-  }
+    ic = stdInfoSubBank.integrityCode();
+    if( ic ){
+      std::ostringstream mess;
+      mess << " HltSelRepRBStdInfo fails integrity check with code " 
+           << ic << " " << HltSelRepRBEnums::IntegrityCodesToString(ic) ;
+      Error( mess.str(), StatusCode::SUCCESS, 100 );
+      errors=true;
+    }
+    if( nObj != stdInfoSubBank.numberOfObj() ){
+      std::ostringstream mess;
+      mess << " HltSelRepRBStdInfo has number of objects " 
+           << stdInfoSubBank.numberOfObj()
+           << " which is different than HltSelRepRBObjTyp " << nObj ;
+      Error( mess.str(), StatusCode::SUCCESS, 100 );
+      errors=true;
+    }
 
-  ic = extraInfoSubBank.integrityCode();
-  if( ic ){
-    std::ostringstream mess;
-    mess << " HltSelRepRBExtraInfo fails integrity check with code " 
-         << ic << " " << HltSelRepRBEnums::IntegrityCodesToString(ic) ;
-    Error( mess.str(), StatusCode::SUCCESS, 100 );
-    exInfOn=false; // the only non-fatal info corruption
-  }
-  if( nObj != extraInfoSubBank.numberOfObj() ){
-    std::ostringstream mess;
-    mess << " HltSelRepRBExtraInfo has number of objects " 
-         << extraInfoSubBank.numberOfObj()
-         << " which is different than HltSelRepRBObjTyp " << nObj ;
-    Error( mess.str(), StatusCode::SUCCESS, 100 );
-    exInfOn=false;
-  }
-
+    ic = extraInfoSubBank.integrityCode();
+    if( ic ){
+      std::ostringstream mess;
+      mess << " HltSelRepRBExtraInfo fails integrity check with code " 
+           << ic << " " << HltSelRepRBEnums::IntegrityCodesToString(ic) ;
+      Error( mess.str(), StatusCode::SUCCESS, 100 );
+      exInfOn=false; // the only non-fatal info corruption
+    }
+    if( nObj != extraInfoSubBank.numberOfObj() ){
+      std::ostringstream mess;
+      mess << " HltSelRepRBExtraInfo has number of objects " 
+           << extraInfoSubBank.numberOfObj()
+           << " which is different than HltSelRepRBObjTyp " << nObj ;
+      Error( mess.str(), StatusCode::SUCCESS, 100 );
+      exInfOn=false;
+    }
   }
 
   
   if( errors ){
     hltSelReportsBank.deleteBank();
-    return Error("Quiting becasue of the possible data corruption", StatusCode::SUCCESS, 10 );
+    return Error("Quiting because of the possible data corruption", StatusCode::SUCCESS, 10 );
   }
   
   fill(m_bankSize, (hltSelReportsBank.size()*4)/1000., 1);
@@ -293,26 +293,11 @@ StatusCode HltRawDataMonitor::fillRawBank()
   fill(m_stdinfoSize, (stdInfoSubBank.size()*4)/1000., 1);
   fill(m_extinfoSize, (extraInfoSubBank.size()*4)/1000., 1);
 
-  std::string trigName="HLTSELREPORTS TOTAL SIZE (Bytes)";
-  float length = hltSelReportsBank.size()*4;
-  fillDiag(trigName,length);
-
-  trigName="HLTSELREPORTS HIT SUBBANK";
-  length = hitsSubBank.size()*4;
-  fillDiag(trigName,length);
-
-  trigName="HLTSELREPORTS STD INFO SUBBANK";
-  length = stdInfoSubBank.size()*4;
-  fillDiag(trigName,length);
-
-  trigName="HLTSELREPORTS EXTRA INFO SUBBANK";
-  length = extraInfoSubBank.size()*4;
-  fillDiag(trigName,length);
-
-  trigName="HLTSELREPORTS SUBSTR SUBBANK";
-  length = substrSubBank.size()*4;
-  fillDiag(trigName,length);
-
+  fillDiag("HLTSELREPORTS TOTAL SIZE (Bytes)",hltSelReportsBank.size()*4);
+  fillDiag("HLTSELREPORTS HIT SUBBANK",       hitsSubBank.size()*4);
+  fillDiag("HLTSELREPORTS STD INFO SUBBANK",  stdInfoSubBank.size()*4);
+  fillDiag("HLTSELREPORTS EXTRA INFO SUBBANK",extraInfoSubBank.size()*4);
+  fillDiag("HLTSELREPORTS SUBSTR SUBBANK",    substrSubBank.size()*4);
 
   // clean-up
   hltSelReportsBank.deleteBank();
@@ -321,13 +306,13 @@ StatusCode HltRawDataMonitor::fillRawBank()
 }
 
 
-void HltRawDataMonitor::fillDiag(std::string trigName, float length )
+void HltRawDataMonitor::fillDiag(const char* trigName, double length )
 {
-  const float maxlen=20000.0;
-  float lenn = (length<maxlen)?length:(maxlen-1.);
+  const double maxlen=20000.0;
+  double lenn = (length<maxlen)?length:(maxlen-1.);
   for (std::vector<std::pair<std::string, AIDA::IHistogram1D*> >::const_iterator i = m_hltSelNameList.begin(); 
        i != m_hltSelNameList.end(); ++i) { 
-    if ( trigName == i->first ) { 
+    if (  i->first == trigName ) { 
       fill(i->second, lenn, 1); 
       return;        
     }
@@ -350,9 +335,7 @@ StatusCode HltRawDataMonitor::fillHltSelRep()
     // individual L0/Hlt1/Hlt2 trigger line
     for (  LHCb::HltSelReports::Container::const_iterator it = selReports->begin(); it != selReports->end(); ++it ) {
       //      info() << "trigger:" << it->first << endmsg;
-      std::string trigName = it->first; 
-      int nlength = nLength(&(it->second));
-      fillDiag( trigName, float(nlength) );
+      fillDiag( it->first.c_str(),double(nLength(it->second)));
     }
   }
   return StatusCode::SUCCESS; 
@@ -361,12 +344,11 @@ StatusCode HltRawDataMonitor::fillHltSelRep()
 //=============================================================================
 //  the size of HltObjectSummary    
 //=============================================================================
-int HltRawDataMonitor::nLength (const LHCb::HltObjectSummary* p)
+int HltRawDataMonitor::nLength (const LHCb::HltObjectSummary& p)
 {
-  if(!p)return 0;
-  unsigned int nlength    = (2+4*(p->lhcbIDs().size())) + (2+2*(p->substructure().size()));
+  unsigned int nlength    = (2+4*(p.lhcbIDs().size())) + (2+2*(p.substructure().size()));
   // loop over numericalInfo
-  for ( LHCb::HltObjectSummary::Info::const_iterator k = p->numericalInfo().begin(); k != p->numericalInfo().end(); ++k) {
+  for ( LHCb::HltObjectSummary::Info::const_iterator k = p.numericalInfo().begin(); k != p.numericalInfo().end(); ++k) {
     if ( k->first.find("#") != std::string::npos ) { 
       nlength += 2;
     } else { 
@@ -374,9 +356,9 @@ int HltRawDataMonitor::nLength (const LHCb::HltObjectSummary* p)
     }
   }
   // loop over substructure
-  for ( SmartRefVector< LHCb::HltObjectSummary >::const_iterator j = p->substructure().begin(); 
-        j != p->substructure().end(); ++j){
-    nlength += nLength(*j);
+  for ( SmartRefVector< LHCb::HltObjectSummary >::const_iterator j = p.substructure().begin(); 
+        j != p.substructure().end(); ++j){
+    nlength += nLength(**j);
   }
   return nlength;
 }
@@ -384,55 +366,53 @@ int HltRawDataMonitor::nLength (const LHCb::HltObjectSummary* p)
 //===============================================================================
 //  the Sum, the Average, the Median, the Root Mean Square (for w/o trigger-off)
 //===============================================================================
-double HltRawDataMonitor::nMedian(const AIDA::IHistogram1D* q)
+double HltRawDataMonitor::nMedian(const AIDA::IHistogram1D& q)
 {
   unsigned int i         = 0;
   unsigned int sum       = 0;
-  unsigned int midEvt    = ((*q).allEntries())/2;
-  unsigned int nBinX     = (*q).axis().bins();
+  unsigned int midEvt    = q.allEntries()/2;
+  unsigned int nBinX     = q.axis().bins();
 
   for ( i = 0; i < nBinX; i++ ) {
-    sum += (*q).binEntries(i);
-    if ( sum > midEvt ) {
-      break;
-    } 
+    sum += q.binEntries(i);
+    if ( sum > midEvt ) break;
   }
-  return (*q).axis().binLowerEdge(i);
+  return q.axis().binLowerEdge(i);
 }
 
 //==========================================================================
 //  the Median (for w/ trigger-Off)
 //==========================================================================
-double HltRawDataMonitor::nMedian2(unsigned int NumOfEvt, const AIDA::IHistogram1D* q)
+double HltRawDataMonitor::nMedian2(unsigned int NumOfEvt, const AIDA::IHistogram1D& q)
 {
   unsigned int i         = 0;
 
-  unsigned int nBinX     = (*q).axis().bins();
-  unsigned int allEvt    = (*q).allEntries(); // trigger-on
+  unsigned int nBinX     = q.axis().bins();
+  unsigned int allEvt    = q.allEntries(); // trigger-on
   unsigned int sum       = NumOfEvt - allEvt; // trigger-off
 
   for ( i = 0; i < nBinX; i++ ) { // trigger-on 
-    sum +=  (*q).binEntries(i);
+    sum +=  q.binEntries(i);
     if ( sum > NumOfEvt/2 ) {// trigger-on & trigger-off
       break;
     }
   }
-  return (*q).axis().binLowerEdge(i);
+  return q.axis().binLowerEdge(i);
 }
 
 //==========================================================================
 //  the Mean (for w/ trigger-Off)
 //==========================================================================
-double HltRawDataMonitor::nMean2(unsigned int NumOfEvt, const AIDA::IHistogram1D* q)
+double HltRawDataMonitor::nMean2(unsigned int NumOfEvt, const AIDA::IHistogram1D& q)
 {
   unsigned int i         = 0;
 
-  unsigned int nBinX     = (*q).axis().bins();
+  unsigned int nBinX     = q.axis().bins();
   double       sum       = 0;
   double       mean      = 0;
 
   for ( i = 0; i < nBinX; i++ ) { // trigger-on 
-    sum += (*q).binEntries(i) * (*q).axis().binLowerEdge(i);
+    sum += q.binEntries(i) * q.axis().binLowerEdge(i);
   }
   mean = sum / NumOfEvt;
   return mean;
@@ -441,16 +421,16 @@ double HltRawDataMonitor::nMean2(unsigned int NumOfEvt, const AIDA::IHistogram1D
 //==========================================================================
 //  the RMS (for w/ trigger-Off)
 //==========================================================================
-double HltRawDataMonitor::nRMS2(unsigned int NumOfEvt, const AIDA::IHistogram1D* q)
+double HltRawDataMonitor::nRMS2(unsigned int NumOfEvt, const AIDA::IHistogram1D& q)
 {
   unsigned int i         = 0;
 
-  unsigned int nBinX     = (*q).axis().bins();
+  unsigned int nBinX     = q.axis().bins();
   double       sum       = 0;
   double       rms       = 0;
 
   for ( i = 0; i < nBinX; i++ ) { // trigger-on 
-    sum += (*q).axis().binLowerEdge(i) * (*q).axis().binLowerEdge(i) * (*q).binEntries(i);
+    sum += q.axis().binLowerEdge(i) * q.axis().binLowerEdge(i) * q.binEntries(i);
   }
   double mean=nMean2(NumOfEvt,q);
   rms = sqrt(fabs(sum/NumOfEvt -mean*mean));
@@ -463,11 +443,7 @@ double HltRawDataMonitor::nRMS2(unsigned int NumOfEvt, const AIDA::IHistogram1D*
 bool HltRawDataMonitor::sort::operator()(const HltRawDataMonitor::HltSortedSelName & q1, 
                                       const HltRawDataMonitor::HltSortedSelName & q2) const
 {  
-  if ( q1.second > q2.second ) { 
-    return true;
-  } else { 
-    return false;
-  } 
+  return  q1.second > q2.second ;
 }
 
 //=============================================================================
@@ -480,7 +456,7 @@ StatusCode HltRawDataMonitor::selectionDiagnostics()
   for (std::vector<std::pair<std::string, AIDA::IHistogram1D*> >::const_iterator k = m_hltSelNameList.begin();
        k != m_hltSelNameList.end(); ++k) {
     std::pair<std::string, AIDA::IHistogram1D*> m_HltSelected(k->first,k->second);
-    m_hltRankedSelName.push_back(HltSortedSelName(m_HltSelected,nMean2(m_event,k->second)));
+    m_hltRankedSelName.push_back(HltSortedSelName(m_HltSelected,nMean2(m_event,*k->second)));
    }
 
   std::ostringstream mess;
@@ -496,22 +472,22 @@ StatusCode HltRawDataMonitor::selectionDiagnostics()
     % "" % "entry" % "mean" % "RMS" % "median";
 
   mess << boost::format( " | %1$=20.20s || %2$=15.1f  %3$=15.1f  %4$=15.1f  %5$=15.1f | \n" ) 
-    % "TotalSize" %  m_bankSize->allEntries() %  m_bankSize->mean() %  m_bankSize->rms() % nMedian(m_bankSize);
+    % "TotalSize" %  m_bankSize->allEntries() %  m_bankSize->mean() %  m_bankSize->rms() % nMedian(*m_bankSize);
 
   mess << boost::format( " | %1$=20.20s  || %2$=15.1f  %3$=15.1f  %4$=15.1f  %5$=15.1f | \n" ) 
-    % "HitSize" %  m_hitSize->allEntries() %  m_hitSize->mean() %  m_hitSize->rms() % nMedian(m_hitSize);
+    % "HitSize" %  m_hitSize->allEntries() %  m_hitSize->mean() %  m_hitSize->rms() % nMedian(*m_hitSize);
 
   mess << boost::format( " | %1$=20.20s  || %2$=15.1f  %3$=15.1f  %4$=15.1f  %5$=15.1f | \n" ) 
-    % "ObjTypSize" %  m_objtypSize->allEntries() %  m_objtypSize->mean() %  m_objtypSize->rms() % nMedian(m_objtypSize);
+    % "ObjTypSize" %  m_objtypSize->allEntries() %  m_objtypSize->mean() %  m_objtypSize->rms() % nMedian(*m_objtypSize);
 
   mess << boost::format( " | %1$=20.20s  || %2$=15.1f  %3$=15.1f  %4$=15.1f  %5$=15.1f | \n" ) 
-    % "SubStrSize" %  m_substrSize->allEntries() %  m_substrSize->mean() %  m_substrSize->rms() % nMedian(m_substrSize);
+    % "SubStrSize" %  m_substrSize->allEntries() %  m_substrSize->mean() %  m_substrSize->rms() % nMedian(*m_substrSize);
 
   mess << boost::format( " | %1$=20.20s  || %2$=15.1f  %3$=15.1f  %4$=15.1f  %5$=15.1f | \n" ) 
-    % "StdInfoSize" %  m_stdinfoSize->allEntries() %  m_stdinfoSize->mean() %  m_stdinfoSize->rms() % nMedian(m_stdinfoSize);
+    % "StdInfoSize" %  m_stdinfoSize->allEntries() %  m_stdinfoSize->mean() %  m_stdinfoSize->rms() % nMedian(*m_stdinfoSize);
 
   mess << boost::format( " | %1$=20.20s  || %2$=15.1f  %3$=15.1f  %4$=15.1f  %5$=15.1f | \n" ) 
-    % "ExtInfoSize" %  m_extinfoSize->allEntries() %  m_extinfoSize->mean() %  m_extinfoSize->rms() % nMedian(m_extinfoSize);
+    % "ExtInfoSize" %  m_extinfoSize->allEntries() %  m_extinfoSize->mean() %  m_extinfoSize->rms() % nMedian(*m_extinfoSize);
 
   // print-out results 
   mess << boost::format( " | %1$=35.15s | | %2$=16.16s | %3$=16.16s | | %4$=14.12s | %5$=14.12s | | %6$=8s | | %7$=14.8s | %8$=14.8s | \n" ) 
@@ -520,8 +496,8 @@ StatusCode HltRawDataMonitor::selectionDiagnostics()
   for ( std::vector< HltSortedSelName >::const_iterator j = m_hltRankedSelName.begin(); 
         j != m_hltRankedSelName.end(); ++j) {
     mess << boost::format( " | %1$-35.35s | | %2$16.1f | %3$16.1f | | %4$14.1f | %5$14.1f | | %6$8.1f | | %7$14.1f | %8$14.1f | \n" ) 
-      % j->first.first %  j->second % (j->first.second)->mean() % nMedian2(m_event,j->first.second) 
-      % nMedian(j->first.second) % j->first.second->allEntries() %  nRMS2(m_event,j->first.second) % j->first.second->rms();
+      % j->first.first %  j->second % (j->first.second)->mean() % nMedian2(m_event,*j->first.second) 
+      % nMedian(*j->first.second) % j->first.second->allEntries() %  nRMS2(m_event,*j->first.second) % j->first.second->rms();
   }
 
   info() <<  mess.str() << endmsg;

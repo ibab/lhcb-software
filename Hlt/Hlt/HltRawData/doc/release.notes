@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.31 2009-02-23 08:44:30 pkoppenb Exp $
+!$Id: release.notes,v 1.32 2009-02-24 13:50:27 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltRawData
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Writers and Readers, Makers of persisted TES info
 !-----------------------------------------------------------------------------
+
+! 2009-02-24 - Gerhard Raven
+ - HltRoutingBitsWriter uses LoKi hybrid to set bits
+ - remove usage of HltSummary
 
 !========================== HltRawData v1r9 2009-02-23 ===================
 ! 2009-02-02 - Tomasz Skwarnicki

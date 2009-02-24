@@ -1,4 +1,4 @@
-// $Id: HltRawDataMonitor.h,v 1.1 2009-01-26 06:24:49 tskwarni Exp $
+// $Id: HltRawDataMonitor.h,v 1.2 2009-02-24 13:50:27 graven Exp $
 #ifndef HLTRAWDATAMONITOR_H 
 #define HLTRAWDATAMONITOR_H 1
 
@@ -51,17 +51,17 @@ private:
     bool   operator() (const HltSortedSelName & q1, const HltSortedSelName & q2) const;
   };
 
-  void fillDiag( std::string trigName, float length );
+  void fillDiag( const char* trigName, double length );
 
   StatusCode fillRawBank();
   StatusCode fillHltSelRep();
   StatusCode selectionDiagnostics();
 
-  int     nLength(const LHCb::HltObjectSummary* p);
-  double  nMedian(const AIDA::IHistogram1D* q);
-  double  nMedian2(unsigned int NumOfEvt, const AIDA::IHistogram1D* q);
-  double  nMean2(unsigned int NumOfEvt, const AIDA::IHistogram1D* q);
-  double  nRMS2(unsigned int NumOfEvt, const AIDA::IHistogram1D* q);
+  int     nLength(const LHCb::HltObjectSummary& p);
+  double  nMedian(const AIDA::IHistogram1D& q);
+  double  nMedian2(unsigned int NumOfEvt, const AIDA::IHistogram1D& q);
+  double  nMean2(unsigned int NumOfEvt, const AIDA::IHistogram1D& q);
+  double  nRMS2(unsigned int NumOfEvt, const AIDA::IHistogram1D& q);
 
 
   // lots of different sorts of histograms are declared here

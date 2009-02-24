@@ -1,11 +1,10 @@
-// $Id: HltDecReportsMaker.cpp,v 1.7 2009-01-16 06:14:20 tskwarni Exp $
+// $Id: HltDecReportsMaker.cpp,v 1.8 2009-02-24 13:50:27 graven Exp $
 #define DEBUGCODE
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
-#include "Event/HltSummary.h"
 #include "Event/HltDecReports.h"
 
 // local
@@ -32,8 +31,6 @@ HltDecReportsMaker::HltDecReportsMaker( const std::string& name,
   : HltBaseAlg ( name , pSvcLocator )
 {
 
-  declareProperty("InputHltSummaryLocation",
-    m_inputHltSummaryLocation= LHCb::HltSummaryLocation::Default);  
   declareProperty("OutputHltDecReportsLocation",
     m_outputHltDecReportsLocation= LHCb::HltDecReportsLocation::Default);  
 
@@ -110,92 +107,6 @@ StatusCode HltDecReportsMaker::execute() {
   std::vector<IANNSvc::minor_value_type> hlt2 = m_hltANNSvc->items("Hlt2SelectionID");
   selectionNameToIntMap.insert( selectionNameToIntMap.end(),hlt2.begin(),hlt2.end() );
 
-
-  // --------------------------------------------------------------------
-  // if HltSummary exists then add their decisions to the decision reports
-  // --------------------------------------------------------------------
-
-  if( exist<HltSummary>(m_inputHltSummaryLocation) ){    
-    HltSummary* inputSummary = get<HltSummary>(m_inputHltSummaryLocation);
-    for( GaudiUtils::VectorMap< std::string,LHCb::HltSelectionSummary >::const_iterator 
-           is=inputSummary->selections().begin();
-           is!=inputSummary->selections().end();
-         ++is){
-      const std::string & selName = is->first;
-
-      // skip if already there
-      if( outputSummary->hasSelectionName( selName ) )continue;
-      
-     // filter selection for persistency
-     unsigned int infoLevel = infoLevelFlag( selName );
-     if( !infoLevel )continue;
-
-     const LHCb::HltSelectionSummary& selSumIn = is->second;
-
-     if( !(kAlwaysInfoLevel & infoLevel) ){       
-       if( infoLevel & kPassInfoLevel ){      
-         if( !selSumIn.decision() )continue;
-       }
-       //if( infoLevel & kErrorsInfoLevel ){
-       //  if( !selSumIn.errors() )continue;
-       //}
-     }
-
-     // save selection decision ---------------------------
-
-     // int selection id
-     int intSelID(0);   
-     for( std::vector<IANNSvc::minor_value_type>::const_iterator si=selectionNameToIntMap.begin();
-          si!=selectionNameToIntMap.end();++si){
-       if( si->first == selName ){
-         intSelID=si->second;
-         break;
-       }
-     }
-     if( !intSelID ){
-       Warning( " selectionName="+selName+ " not found in HltANNSvc. Skipped. ",StatusCode::SUCCESS, 20 );
-       continue;
-     }
-
-   
-     // decision
-     int dec(0);
-     // errorbits
-     unsigned int errorBits(0);
-     // number of candidates
-     int noc(0);
-     
-     if( selSumIn.decision() )dec=1;
-     // errorBits = selSumIn.errors(); 
-     noc = selSumIn.data().size();
-     if( !noc ){ noc=selSumIn.particles().size();   }      
-     
-     HltDecReport selSumOut( dec, errorBits, noc, intSelID );
-
-     if( selSumOut.invalidIntSelectionID() ){
-       std::ostringstream mess;
-       mess << " selectionName=" << selName << " has invalid intSelectionID=" << intSelID << " Skipped. ";
-       Warning( mess.str(), StatusCode::SUCCESS, 20 );
-       continue;
-     }
-     
-     // insert selection into the container
-     if( outputSummary->insert( selName, selSumOut ) == StatusCode::FAILURE ){
-       Warning( " Failed to add HltDecReport selectionName=" + selName 
-                + " to its container ", StatusCode::SUCCESS, 20 );
-     }    
-#ifdef DEBUGCODE    
-     else
-     {
-       if ( msgLevel(MSG::VERBOSE) ){
-         verbose() <<" Selection name=" << selName << " HltDecReport created from HltSummary " << endmsg;
-       }
-     }
-#endif     
-           
-      
-    }
-  }
 
   // ----------------------------------------------------------------
   // form Global decisions if missing 

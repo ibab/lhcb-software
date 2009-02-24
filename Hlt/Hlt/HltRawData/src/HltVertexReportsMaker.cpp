@@ -1,10 +1,9 @@
-// $Id: HltVertexReportsMaker.cpp,v 1.5 2009-01-14 21:05:42 graven Exp $
+// $Id: HltVertexReportsMaker.cpp,v 1.6 2009-02-24 13:50:27 graven Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
-#include "Event/HltSummary.h"
 #include "Event/RecVertex.h"
 
 // local
@@ -31,8 +30,6 @@ HltVertexReportsMaker::HltVertexReportsMaker( const std::string& name,
   : HltBaseAlg ( name , pSvcLocator )
 {
 
-  declareProperty("InputHltSummaryLocation",
-    m_inputHltSummaryLocation= LHCb::HltSummaryLocation::Default);  
   declareProperty("OutputHltVertexReportsLocation",
     m_outputHltVertexReportsLocation= LHCb::HltVertexReportsLocation::Default);  
 
@@ -73,12 +70,6 @@ StatusCode HltVertexReportsMaker::execute() {
   // create output container for vertex selections keyed with string and put it on TES
   HltVertexReports* outputSummary = new HltVertexReports();
   put( outputSummary, m_outputHltVertexReportsLocation );
-
-  // get input HltSummary if exists
-  HltSummary* inputSummary(0);  
-  if( exist<HltSummary>(m_inputHltSummaryLocation) ){    
-    inputSummary = get<HltSummary>(m_inputHltSummaryLocation);
-  }
 
   
   // get string-to-int selection ID map
@@ -124,33 +115,9 @@ StatusCode HltVertexReportsMaker::execute() {
          candidates.push_back( (const ContainedObject*)(*it) );
        }
          
-     } else if( inputSummary ) {
-       
-       if( ! inputSummary->hasSelectionSummary( selName ) )continue;
-
-       const LHCb::HltSelectionSummary& selSumIn = inputSummary->selectionSummary(selName);
-
-       // unsuccessful selections can't save candidates
-       if( !selSumIn.decision() )continue;
-
-       // number of candidates
-       int noc = selSumIn.data().size();
-       // empty selections have nothing to save
-       if( !noc )continue;
-  
-       // const std::vector<ContainedObject*>& candidates = selSumIn.data();
-       candidates.insert(candidates.end(), selSumIn.data().begin(),selSumIn.data().end());
-
-       std::vector<const ContainedObject*>::const_iterator ic0 = candidates.begin();
-       const RecVertex* candi = dynamic_cast<const RecVertex*>(*ic0);
-       if( !candi ){
-         Error(" Selection name "+selName+" did not select vertices. ");
-         continue;
-       }
-       
      } else {
 
-       Error(" Selection name "+selName+" not in dataSvc and no HltSummary at "+ m_inputHltSummaryLocation.value()
+       Error(" Selection name "+selName+" not in dataSvc "
              ,StatusCode::SUCCESS, 20 );
        continue;
        

@@ -1,4 +1,4 @@
-#$Id: requirements,v 1.11 2009-01-26 06:24:48 tskwarni Exp $
+#$Id: requirements,v 1.12 2009-02-24 13:50:27 graven Exp $
 #============================================================================
 # Created    : 2008-07-12
 # Maintainer : Tomasz Skwarnicki
@@ -23,6 +23,7 @@ end_private
 
 use GaudiAlg            v*
 use HltBase             v*    Hlt
+use LoKiHlt             v*    Phys
 
 use HltEvent            v*    Event
 use DAQEvent            v*    Event
