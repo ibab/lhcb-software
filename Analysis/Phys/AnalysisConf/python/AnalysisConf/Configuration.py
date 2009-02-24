@@ -1,7 +1,7 @@
 """
 High level configuration tools for AnalysisConf
 """
-__version__ = "$Id: Configuration.py,v 1.9 2009-02-18 15:38:37 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.10 2009-02-24 15:15:09 pkoppenb Exp $"
 __author__ = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -69,7 +69,6 @@ class AnalysisConf(LHCbConfigurableUser) :
     def standardParticles(self):
         """
         define standard particles on DoD service
-        @todo Use configurable 
         """
         ApplicationMgr().ExtSvc +=  [ DataOnDemandSvc() ]
         import CommonParticles.StandardBasic
