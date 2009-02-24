@@ -4,6 +4,7 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+!========================== DigiAlg v4r15 2009-02-24 =========================
 ! 2009-02-23 - Marco Cattaneo
  - BooleInit now uses ODINEncodeTool to fill ODIN object and encode the bank
    Fixes wrong size of ODIN RawBank. Version encoded is latest version
