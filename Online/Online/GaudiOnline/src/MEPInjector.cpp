@@ -587,7 +587,7 @@ StatusCode MEPInjector::logMEPReqs()
     memcpy(buf + sizeof(int), &m_TotCreditConsumed, sizeof(int));
     memcpy(buf + 2*sizeof(int), &m_TotMEPReqTx, sizeof(int));
     memcpy(buf + 3*sizeof(int), &m_TotMEPReqRx, sizeof(int));
-    if( (err= write(m_CreditsFD, buf, sizeof(buf)) )< sizeof(buf)) {
+    if( (unsigned int) (err= write(m_CreditsFD, buf, sizeof(buf)) )< sizeof(buf)) {
         if(err < 0) { 
             ERRMSG(msgLog, "Error on write");
         }
@@ -764,7 +764,6 @@ StatusCode MEPInjector::readEvent()
     static unsigned int nbEv =0;
     int tell1id = 0;
     int len = 0;
-    int retVal=0;
  
     ///XXX Get event
     StatusCode sc = getEvent(); 

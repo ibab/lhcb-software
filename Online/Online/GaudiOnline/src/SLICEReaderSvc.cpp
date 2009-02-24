@@ -343,7 +343,7 @@ StatusCode SLICEReaderSvc::run()
 
     do
     {
-        for(m_CurFile = 0; m_CurFile < m_InputFiles.size() && m_ReaderState==RUNNING && sc.isSuccess(); ++m_CurFile) {
+        for(m_CurFile = 0; (unsigned int) m_CurFile < m_InputFiles.size() && m_ReaderState==RUNNING && sc.isSuccess(); ++m_CurFile) {
             sc=readFile();
         }
     }
