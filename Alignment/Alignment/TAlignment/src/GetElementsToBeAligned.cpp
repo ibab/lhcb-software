@@ -1,4 +1,4 @@
-// $Id: GetElementsToBeAligned.cpp,v 1.23 2009-01-21 16:27:19 wouter Exp $
+// $Id: GetElementsToBeAligned.cpp,v 1.24 2009-02-24 21:11:07 wouter Exp $
 // Include files
 
 //from STL
@@ -159,6 +159,7 @@ StatusCode GetElementsToBeAligned::initialize() {
     // Check that we have found elements to align, else exit gracefully
     if ( detelements.empty() ) {
       error() << "\n ==> Couldn't find any elements that matched the given regular expression! \n"
+	      << " expression=\'" << *i << "\'" << std::endl
               << " ==> The syntax of the property Elements is a list of : \"Group : Regex representing path of det elems : dofs\" \n" 
               << " ==> where group and dofs are optional.\n" 
               << " ==> Check the regular expression and also check if there are no whitespaces.\n" << endmsg;
