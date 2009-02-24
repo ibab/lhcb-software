@@ -1,5 +1,5 @@
 ##############################################################################
-#$Id: DVTestB2DiMuon.py,v 1.1 2009-01-07 17:05:46 pkoppenb Exp $
+#$Id: DVTestB2DiMuon.py,v 1.2 2009-02-24 14:21:30 pkoppenb Exp $
 #
 # Example Qm test option using configurables.
 #
@@ -26,24 +26,24 @@ MCTruthFilter.addTool(MCDecayFinder(), name="MCDecayFinder")
 MCTruthFilter.MCDecayFinder.Decay = mcDecayDescriptor
 
 selectTrueNoPIDsDecay = OldFilterDesktop(trueNoPIDsName)
-selectTrueNoPIDsDecay.addTool( PhysDesktop() )
+selectTrueNoPIDsDecay.addTool( PhysDesktop )
 selectTrueNoPIDsDecay.PhysDesktop.InputLocations = ["StdDC06NoPIDs"+particles]
 selectTrueNoPIDsDecay.addTool( MCTruthFilter, name="FilterCriterion" )
 
 allTrueNoPIDsDecay = MakeResonances("AllTrueNoPIDsDecay")
-allTrueNoPIDsDecay.addTool( PhysDesktop() )
+allTrueNoPIDsDecay.addTool( PhysDesktop )
 allTrueNoPIDsDecay.PhysDesktop.InputLocations = [trueNoPIDsName]
 allTrueNoPIDsDecay.DecayDescriptor = decayDescriptor
 findTrueDecay.Members += [ allTrueNoPIDsDecay ]
 
 selectTrueLooseDecay = OldFilterDesktop(trueLooseName)
-selectTrueLooseDecay.addTool( PhysDesktop() )
+selectTrueLooseDecay.addTool( PhysDesktop )
 selectTrueLooseDecay.PhysDesktop.InputLocations = [ "StdDC06Loose"+particles ]
 selectTrueLooseDecay.addTool( MCTruthFilter, name = "FilterCriterion" )
 findTrueDecay.Members += [ selectTrueLooseDecay ]
 
 allTrueLooseDecay = MakeResonances("AllTrueLooseDecay")
-allTrueLooseDecay.addTool( PhysDesktop() )
+allTrueLooseDecay.addTool( PhysDesktop )
 allTrueLooseDecay.PhysDesktop.InputLocations = [trueLooseName]
 allTrueLooseDecay.DecayDescriptor = decayDescriptor
 findTrueDecay.Members += [ allTrueLooseDecay ]
