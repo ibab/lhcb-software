@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.56 2009-02-20 08:05:47 cattanem Exp $
+! $Id: release.notes,v 1.57 2009-02-24 14:56:02 jluisier Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
+
+! 2009-02-24 J Luisier
+ - Bug fix in TTNumberToSourceIDMap
 
 !====================== STKernel v1r11 2009-02-20 ===========================
 ! 2009-02-20 M Needham
