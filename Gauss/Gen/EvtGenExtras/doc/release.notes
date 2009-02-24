@@ -6,6 +6,12 @@
 
 !======================= EvtGenExtras v1r0 2009-02-09 ========================
 
+! 2009-02-23 - Will REECE
+ - Adds support for a the right-handed operators O7', O8', O9' and
+   O10'. Two models that take advantage of these are added, and some
+   general code clean-up has been done. The model is still 
+   *not production ready*.
+
 ! 2009-02-09 - Will REECE
  - Adds a new model for the decay of Bd->K*mumu based on work with 
    A. Bhurucha. Reference for theory side is arXiv:0811.1214 (hep-ph).
