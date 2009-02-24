@@ -79,6 +79,7 @@ namespace ROMon {
 extern "C" {
 #include "dic.h"
 }
+#include <limits>
 
 using namespace ROMon;
 using namespace std;

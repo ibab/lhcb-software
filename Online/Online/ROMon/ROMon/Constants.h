@@ -54,8 +54,15 @@ namespace ROMon {
     NUM_UPDATE_DIFF =              5
   };
 
-  static const float SLOTS_MIN =  .1;
-  static const float SPACE_MIN =  .1;
+  static const float SLOTS_MIN =  float(0.1E0);
+  static const float SPACE_MIN =  float(0.1E0);
 }
+#ifdef _WIN32
+inline int strcasecmp(const char* a, const char* b) { return _stricmp(a,b); }
+inline int strncasecmp(const char* a, const char* b, size_t n) { return _strnicmp(a,b,n); }
+#ifndef vsnprintf
+#define vsnprintf   _vsnprintf
+#endif
+#endif
 
 #endif // ROMON_CONSTANTS_H

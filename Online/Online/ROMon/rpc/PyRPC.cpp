@@ -459,7 +459,7 @@ Time::Time(const char* date) {
 }
 
 bool Time::operator<(const Time& c)  const  {
-  return ::memcmp(&time,&c.time,sizeof(time));
+  return ::memcmp(&time,&c.time,sizeof(time)) < 0;
 }
 
 /// Equality operator

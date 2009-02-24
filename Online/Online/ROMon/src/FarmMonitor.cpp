@@ -1,4 +1,4 @@
-// $Id: FarmMonitor.cpp,v 1.2 2009-02-24 10:38:20 frankb Exp $
+// $Id: FarmMonitor.cpp,v 1.3 2009-02-24 16:05:42 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmMonitor.cpp,v 1.2 2009-02-24 10:38:20 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmMonitor.cpp,v 1.3 2009-02-24 16:05:42 frankb Exp $
 
 #define MBM_IMPLEMENTATION
 #include "ROMon/ROMon.h"
@@ -38,12 +38,6 @@ extern "C" {
 #include <sstream>
 #include <algorithm>
 
-
-#ifdef _WIN32
-#define strcasecmp  _stricmp
-#define strncasecmp _strnicmp
-#define vsnprintf   _vsnprintf
-#endif
 using namespace ROMon;
 using namespace SCR;
 using namespace std;

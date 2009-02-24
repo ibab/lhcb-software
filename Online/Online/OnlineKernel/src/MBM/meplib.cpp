@@ -45,7 +45,15 @@ struct MEPDESC : public _MEPID  {
     mepBuffer = MBM_INV_DESC; 
   }
 };
-
+#ifdef _WIN32
+struct siginfo_t;
+namespace {
+  class SignalHandler {
+  public:
+    static SignalHandler* instance(MEPDESC* dsc=0) { static SignalHandler _inst; return &_inst;}
+  };
+}
+#else
 #define INSTALL_SIGNAL(x,y) install(x , #x , y);
 namespace {
   template<class T> union func_desc   {
@@ -165,6 +173,7 @@ void SignalHandler::handler(int signum, siginfo_t *info, void* ptr) {
     }
   }
 }
+#endif
 
 void mep_map_unused_buffers(bool value) {
   s_map_unused = value;
