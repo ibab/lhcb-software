@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.154 2009-02-24 16:05:01 graven Exp $ 
+! $Id: release.notes,v 1.155 2009-02-24 16:06:21 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -7,6 +7,7 @@
 ! 2009-02-24 - Gerhard Raven
  - routing bits now uses LoKi to specify bit evaluators
  - add a few missing selection to HltInit
+ - add HltRawData in requirements
 
 !========================== HltConf v2r3 2009-02-23 ===================
 ! 2009-02-22 - Jaap Panman

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.17 2009-02-19 18:16:43 depaula Exp $ 
+# $Id: requirements,v 1.18 2009-02-24 16:06:21 graven Exp $ 
 # =============================================================================
 # The helper package for configuration of Hlt(1)
 # =============================================================================
@@ -17,6 +17,8 @@ use       PatVelo     v*  Tf
 use       PatAlgorithms  v*  Tf
 ### and these by the L0 candidate code
 use       L0DU        v*  L0
+### and these for the Hlt{Sel,Vertex}ReportMakser
+use       HltRawData  v* Hlt
 # =============================================================================
 
 # =============================================================================
