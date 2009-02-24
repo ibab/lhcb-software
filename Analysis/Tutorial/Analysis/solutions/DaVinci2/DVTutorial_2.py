@@ -1,5 +1,5 @@
 ########################################################################
-# $Id: DVTutorial_2.py,v 1.7 2009-01-08 17:38:25 pkoppenb Exp $
+# $Id: DVTutorial_2.py,v 1.8 2009-02-24 15:10:50 pkoppenb Exp $
 #
 # Options for exercise 2
 #
@@ -22,7 +22,7 @@ tutorialseq = GaudiSequencer("TutorialSeq")
 from Configurables import TutorialAlgorithm, PhysDesktop
 jpsi2mumu = TutorialAlgorithm("Jpsi2MuMu")
 tutorialseq.Members += [ jpsi2mumu ]
-jpsi2mumu.addTool( PhysDesktop() )
+jpsi2mumu.addTool( PhysDesktop )
 jpsi2mumu.PhysDesktop.InputLocations = [ "StdLooseMuons" ]
 from GaudiKernel.SystemOfUnits import MeV
 jpsi2mumu.MassWindow = 30*MeV

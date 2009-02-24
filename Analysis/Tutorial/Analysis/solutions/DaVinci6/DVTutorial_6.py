@@ -19,7 +19,7 @@ tutorialseq = GaudiSequencer("TutorialSeq")
 #
 from Configurables import DecayTreeTuple, PhysDesktop
 tuple = DecayTreeTuple() 
-tuple.addTool( PhysDesktop() )
+tuple.addTool( PhysDesktop )
 tuple.PhysDesktop.InputLocations = [ "Bs2JpsiPhi" ]
 tuple.ToolList +=  [
 #      "TupleToolTrigger"
