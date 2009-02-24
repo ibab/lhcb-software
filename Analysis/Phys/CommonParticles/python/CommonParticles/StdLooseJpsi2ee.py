@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseJpsi2ee.py,v 1.1 2009-02-18 15:29:30 pkoppenb Exp $ 
+# $Id: StdLooseJpsi2ee.py,v 1.2 2009-02-24 14:19:27 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseJpsi2ee.py
 #  configuration file for 'Standard Loose Jpsi2ee' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Loose Jpsi2ee'
 """
 __author__  = "Patrick Koppenburg"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 __all__ = (
     'StdLooseJpsi2ee' ,
@@ -25,7 +25,7 @@ from CommonParticles.Utils import *
 ## ============================================================================
 ## create the algorithm 
 StdLooseJpsi2ee = CombineParticles ( 'StdLooseJpsi2ee' )
-StdLooseJpsi2ee.addTool(PhysDesktop())
+StdLooseJpsi2ee.addTool(PhysDesktop)
 StdLooseJpsi2ee.PhysDesktop.InputLocations = [ "StdLooseElectron" ]
 StdLooseJpsi2ee.DecayDescriptor = "J/psi(1S) -> e+ e-" 
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseDplus.py,v 1.1 2009-02-18 15:29:29 pkoppenb Exp $ 
+# $Id: StdLooseDplus.py,v 1.2 2009-02-24 14:19:26 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseDplus.py
 #  configuration file for 'Standard Loose Dplus' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Loose Dplus'
 """
 __author__  = "Patrick Koppenburg"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 __all__ = (
     'StdLooseDplus2KPiPi' ,
@@ -28,7 +28,7 @@ from CommonParticles.Utils import *
 ## create the algorithm 
 StdLooseDplus2KPiPi = CombineParticles ( 'StdLooseDplus2KPiPi' )
 
-StdLooseDplus2KPiPi.addTool(PhysDesktop())
+StdLooseDplus2KPiPi.addTool(PhysDesktop)
 StdLooseDplus2KPiPi.PhysDesktop.InputLocations = [ "StdLooseKaons", "StdLoosePions" ]
 StdLooseDplus2KPiPi.DecayDescriptor = "[D+ -> K- pi+ pi+]cc" 
 StdLooseDplus2KPiPi.DaughtersCuts = { "K+"  : "ALL", "pi+" : "ALL" }

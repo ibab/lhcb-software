@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseRho0.py,v 1.1 2009-02-18 15:29:30 pkoppenb Exp $ 
+# $Id: StdLooseRho0.py,v 1.2 2009-02-24 14:19:27 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseRho0.py
 #  configuration file for 'Standard Loose Rho0' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Loose '
 """
 __author__  = "Patrick Koppenburg"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 __all__ = (
     'StdLooseRho0' ,
@@ -26,7 +26,7 @@ from CommonParticles.Utils import *
 ## create the algorithm 
 StdLooseRho0 = CombineParticles ( 'StdLooseRho0' )
 
-StdLooseRho0.addTool(PhysDesktop())
+StdLooseRho0.addTool(PhysDesktop)
 StdLooseRho0.PhysDesktop.InputLocations  = [ "StdLoosePions" ]
 StdLooseRho0.DecayDescriptor = "[rho(770)0 -> pi+ pi-]cc"
 StdLooseRho0.DaughtersCuts =  { "pi+" : "TRUE"  }

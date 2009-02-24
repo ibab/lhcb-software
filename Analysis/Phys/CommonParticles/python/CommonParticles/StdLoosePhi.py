@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLoosePhi.py,v 1.1 2009-02-18 15:29:30 pkoppenb Exp $ 
+# $Id: StdLoosePhi.py,v 1.2 2009-02-24 14:19:27 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLoosePhi2KK.py
 #  configuration file for 'Standard Loose ' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Loose Phi2KK'
 """
 __author__  = "Patrick Koppenburg"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 __all__ = (
     'StdLoosePhi2KK' ,
@@ -25,7 +25,7 @@ from CommonParticles.Utils import *
 ## ============================================================================
 ## create the algorithm 
 StdLoosePhi2KK = CombineParticles ( 'StdLoosePhi2KK' )
-StdLoosePhi2KK.addTool(PhysDesktop())
+StdLoosePhi2KK.addTool(PhysDesktop)
 StdLoosePhi2KK.PhysDesktop.InputLocations = [ "StdLooseKaons" ]
 StdLoosePhi2KK.DecayDescriptor = "phi(1020) -> K+ K-" 
 StdLoosePhi2KK.DaughtersCuts = { "K+" : "(MIPCHI2DV(PRIMARY)>4)"} 
@@ -43,7 +43,7 @@ locations = updateDoD ( StdLoosePhi2KK )
 #
 ##
 StdLooseUnbiasedPhi2KK = CombineParticles("StdLooseUnbiasedPhi2KK")
-StdLooseUnbiasedPhi2KK.addTool(PhysDesktop())
+StdLooseUnbiasedPhi2KK.addTool(PhysDesktop)
 StdLooseUnbiasedPhi2KK.PhysDesktop.InputLocations = [ "StdLooseKaons" ]
 StdLooseUnbiasedPhi2KK.DecayDescriptor = "phi(1020) -> K+ K-" 
 StdLooseUnbiasedPhi2KK.DaughtersCuts = { "K+" : "(PT>500)" } 

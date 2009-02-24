@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseD02KsHH.py,v 1.1 2009-02-18 15:29:29 pkoppenb Exp $ 
+# $Id: StdLooseD02KsHH.py,v 1.2 2009-02-24 14:19:26 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseD02KsHH.py
 #  configuration file for 'Standard Loose D0 -> KsHH' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Loose D0 -> KsHH'
 """
 __author__  = "Patrick Koppenburg"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 __all__ = (
     'StdLooseD02KsPiPi' ,
@@ -30,7 +30,7 @@ from CommonParticles.Utils import *
 #
 StdLooseD02KsPiPi = CombineParticles("StdLooseD02KsPiPi")
 
-StdLooseD02KsPiPi.addTool(PhysDesktop())
+StdLooseD02KsPiPi.addTool(PhysDesktop)
 StdLooseD02KsPiPi.PhysDesktop.InputLocations = [ "StdLoosePions", "StdLooseKsLL" ]
 StdLooseD02KsPiPi.DecayDescriptor = "[D0 -> KS0 pi+ pi-]cc" 
 
@@ -48,7 +48,7 @@ locations = updateDoD ( StdLooseD02KsPiPi )
 #
 StdLooseD02KsKK = StdLooseD02KsPiPi.clone("StdLooseD02KsKK")
 
-StdLooseD02KsKK.addTool(PhysDesktop())
+StdLooseD02KsKK.addTool(PhysDesktop)
 StdLooseD02KsKK.PhysDesktop.InputLocations = [ "StdLooseKaons", "StdLooseKsLL" ]
 StdLooseD02KsKK.DecayDescriptor = "[D0 -> KS0 K+ K-]cc" 
 

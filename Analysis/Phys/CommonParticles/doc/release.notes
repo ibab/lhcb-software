@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.112 2009-02-18 15:29:28 pkoppenb Exp $
+!$Id: release.notes,v 1.113 2009-02-24 14:19:26 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
+
+! 2009-02-24 - Patrick Koppenburg
+ - PhysDesktop() -> PhysDesktop
 
 ! 2009-02-18 - Patrick Koppenburg
  - Move all intermediate states to python 

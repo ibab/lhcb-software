@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseRhoPlus.py,v 1.1 2009-02-18 15:29:30 pkoppenb Exp $ 
+# $Id: StdLooseRhoPlus.py,v 1.2 2009-02-24 14:19:27 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseRhoPlus.py
 #  configuration file for 'Standard Loose RhoPlus' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Loose RhoPlus'
 """
 __author__  = "Yasmine Amhis"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 __all__ = (
     'StdLooseRhoPlus' ,
@@ -27,7 +27,7 @@ from CommonParticles.Utils import *
 StdLooseRhoPlus = CombineParticles ( 'StdLooseRhoPlus' )
 
 StdLooseRhoPlus = CombineParticles("StdLooseRhoPlus")
-StdLooseRhoPlus.addTool(PhysDesktop())
+StdLooseRhoPlus.addTool(PhysDesktop)
 StdLooseRhoPlus.PhysDesktop.InputLocations = [ "StdLooseMergedPi0",
 					       "StdLooseResolvedPi0",
                                                "StdLoosePions",

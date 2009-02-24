@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseD02HH.py,v 1.1 2009-02-18 15:29:29 pkoppenb Exp $ 
+# $Id: StdLooseD02HH.py,v 1.2 2009-02-24 14:19:26 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseD02HH.py
 #  configuration file for 'Standard Loose D0 -> HH' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Loose D0 -> HH'
 """
 __author__  = "Patrick Koppenburg"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 __all__ = (
     'StdLooseD02KPi' ,
@@ -29,7 +29,7 @@ from CommonParticles.Utils import *
 ## create the algorithm 
 StdLooseD02KPi = CombineParticles ( 'StdLooseD02KPi' )
 
-StdLooseD02KPi.addTool(PhysDesktop())
+StdLooseD02KPi.addTool(PhysDesktop)
 StdLooseD02KPi.PhysDesktop.InputLocations = [ "StdLooseKaons", "StdLoosePions" ]
 StdLooseD02KPi.DecayDescriptor = "[D0 -> K- pi+]cc" 
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseKs.py,v 1.1 2009-02-18 15:29:30 pkoppenb Exp $ 
+# $Id: StdLooseKs.py,v 1.2 2009-02-24 14:19:27 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseKs.py
 #  configuration file for 'Standard Loose ' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Loose Ks'
 """
 __author__  = "Patrick Koppenburg"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 __all__ = (
     'StdLooseKsLL' ,
@@ -28,7 +28,7 @@ StdLooseKsLL = CombineParticles ( 'StdLooseKsLL' )
 
 StdLooseKsLL = CombineParticles("StdLooseKsLL")
 
-StdLooseKsLL.addTool(PhysDesktop())
+StdLooseKsLL.addTool(PhysDesktop)
 StdLooseKsLL.PhysDesktop.InputLocations = [ "StdLoosePions" ]
 StdLooseKsLL.DecayDescriptor = "KS0 -> pi+ pi-" 
 
