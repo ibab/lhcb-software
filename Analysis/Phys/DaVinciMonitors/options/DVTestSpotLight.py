@@ -12,7 +12,7 @@ from Configurables import SpotLight, PhysDesktop, CheckSelResult
 from Configurables import LoKi__Hybrid__FilterCriterion as LoKiFilterCriterion
 
 spot = SpotLight()
-spot.addTool(PhysDesktop())
+spot.addTool(PhysDesktop)
 # @todo Get thet from python
 spot.Algorithms = [ "PreselB2DiMuon",
   "PreselBd2KstarMuMu",

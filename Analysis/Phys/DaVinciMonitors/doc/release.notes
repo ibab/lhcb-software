@@ -6,6 +6,9 @@
 
 !========================== DaVinciMonitors v1r1 2009-02-20 ==================
 
+! 2009-02-24 - Patrick Koppenburg
+ - PhysDesktop() -> PhysDesktop
+
 ! 2009-02-19 - Juan PALACIOS
  - cmt/requirements
   . Increase version to v1r1

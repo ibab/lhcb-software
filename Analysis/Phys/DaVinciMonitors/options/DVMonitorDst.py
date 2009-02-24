@@ -1,5 +1,5 @@
 ##############################################################################
-# $Id: DVMonitorDst.py,v 1.12 2009-02-16 17:00:03 pkoppenb Exp $
+# $Id: DVMonitorDst.py,v 1.13 2009-02-24 14:04:57 pkoppenb Exp $
 #
 # syntax: gaudirun.py $DAVINCIMONITORSROOT/options/DVMonitorDst.py
 #
@@ -29,7 +29,7 @@ JpsiSeq.Members += [ EventCountHisto("DaVinciMonitor") ]
 #
 from Configurables import CombineParticles, PhysDesktop
 Jpsi2MuPi = CombineParticles("Jpsi2MuPi")
-Jpsi2MuPi.addTool(PhysDesktop())
+Jpsi2MuPi.addTool(PhysDesktop)
 Jpsi2MuPi.PhysDesktop.InputLocations = [ "StdLooseMuons", "StdNoPIDsPions" ]
 Jpsi2MuPi.DecayDescriptor = "[J/psi(1S) -> mu+ pi-]cc"
 # a good muon and any pion
@@ -44,7 +44,7 @@ JpsiSeq.Members += [ Jpsi2MuPi ]
 #
 from Configurables import ParticleMonitor
 plotter = ParticleMonitor("Jpsi2MuPiMoni")
-plotter.addTool(PhysDesktop())
+plotter.addTool(PhysDesktop)
 plotter.PhysDesktop.InputLocations = [ "Jpsi2MuPi" ]
 plotter.PeakCut = "(ADMASS('J/psi(1S)')<5*MeV)"
 plotter.SideBandCut = "(ADMASS('J/psi(1S)')>20*MeV)"
