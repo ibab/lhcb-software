@@ -3,67 +3,41 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-! 2009-02-23 - Marco Cattaneo
- - Add a QMTest for FEST09 configuration. Tests L0 filtering, MDF output,
-   Expert histos
+</PRE><H1><A NAME=v17r3>2009-02-24 Boole v17r3</A></H1><PRE>
+ - Changes to Configurable:
+   . Use new L0Conf configurable to set up L0 sequences
+   . Default DatasetName now set to "Boole" (was empty)
+   . Replace Trigger sequence by Filter sequence and run it as last sequence
+     o Instrument Filter sequence to filter also on OdinTypeFilter
+     o Filtering enabled by adding subdets ["L0","ODIN"] to FilterSequence
+     o When enabled, OdinTypesFilter selects ["RandomTrigger"] by deafult
+     o WriteL0Only option is obsolete, equivalent to FilterSequence += ["L0"]
+   . Options added to define each sequence, names of some sequences changed
+   . TT now monitored before IT, for consistency with Digi phase
+   . Remove RICH extended information linker algorithms. Now run in Gauss.
+   . Move ProcessPhases into a top sequence, defined in configurable
+   . Replace EnableTAE option by TAEPrev and TAENext, number of TAE to generate
+   . Fix TAE (was broken in v17r2). Now supports arbitrary numbers of TAE events
+   . Remove all configuration *.opts, everything now done in configurable
+   . Remove "MainOptions" Boole option
+   . Remove explicit use of Auditors, now all available as LHCbApp().Monitors
 
-! 2009-02-23 - Marco Cattaneo
- - Use new L0Conf in configurable, update references accordingly
- - Default DatasetName now set to "Boole" (was empty)
+ - Changes to options:
+   . Boole-FEST09.py updated to write out only L0Yes or RandomTrigger
 
-! 2009-02-20 - Marco Cattaneo
- - Update references for CaloDigit change, and OT+L0Muon monitoring changes
+ - Changes to references to reflect changes in Boole v17r3 output:
+   . CaloDigit calibration change
+   . OT + L0Muon monitoring changes
+   . OT simulation changes
+   . Fix to Muon noise simulation
+   . Change in L0Muon raw bank size
+   . Changes to Silicon simulation
+   . Move to LHCb::ParticlePropertySvc
 
-! 2009-02-16 - Marco Cattaneo
- - Update references following OT simulation changes
-
-! 2009-02-13 - Marco Cattaneo
- - Update references for fix to Muon noise simulation
-
-! 2009-02-11 - Marco Cattaneo
- - Update test to not complain about fixed spelling of "succesfully" in Gaudi v21
-
-! 2009-02-06 - Marco Cattaneo
- - Replace Trigger sequence by Filter sequence and run it as last sequence
-   . Instrument Filter sequence to filter also on OdinTypeFilter
-   . Filtering enabled by adding subdets ["L0","ODIN"] to FilterSequence
-   . When enabled, OdinTypesFilter selects ["RandomTrigger"] by deafult
-   . WriteL0Only option is obsolete, equivalent to FilterSequence += ["L0"]
- - Boole-FEST09.py updated to write out only L0Yes or RandomTrigger
-
-! 2009-02-03 - Marco Cattaneo
- - Remove Boole.opts and TAE*.opts, everything now done in configurable
- - Remove "MainOptions" Boole option
- - Options added to define each sequence, names of some sequences changed
- - Internal restructuring of Configurable
- - TT now monitored befor IT, for consistency with Digi phase
-
-! 2009-02-02 - Marco Cattaneo
- - Update references for change in L0Muon raw bank size
-
-! 2009-01-30 - Marco Cattaneo
- - Remove obsolete TAE.opts
- - Move ProcessPhases into a top sequence, defined in configurable
- - Replace EnableTAE option by TAEPrev and TAENext, number of TAE to generate
- - TAE now supports arbitrary numbers of TAE events (partially implemented)
-
-! 2009-01-29 - Marco Cattaneo
- - Remove ExpertCheck.opts and BooleMoni.opts, now done in Configurable
-
-! 2009-01-28 - Marco Cattaneo
- - Fix TAE option in configurable
- - Update references for changes to Silicon simulation
- - Move definition of monitoring phase into Configurable
-
-! 2009-01-26 - Chris Jones
- - Remove RICH extended information linker algorithms. Now run in Gauss.
-
-! 2009-01-21 - Marco Cattaneo
- - Remove Auditors from ExpertCheck.opts, now available as LHCbApp().Monitors
-
-! 2009-01-20 - Marco Cattaneo
- - Update references for move to LHCb::ParticlePropertySvc
- - Change version to v17r3
+ - Changes to QMTests
+   . Add a QMTest for FEST09 configuration. 
+     Tests L0 filtering, MDF output, Expert histos
+   . Do not complain about fixed spelling of "succesfully" in Gaudi v21
 
 </PRE><H1><A NAME=v17r2>2009-01-14 Boole v17r2</A></H1><PRE>
  - Explicit setting of database tag now compulsory, update options files
