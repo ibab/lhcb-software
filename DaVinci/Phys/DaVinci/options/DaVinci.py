@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DaVinci.py,v 1.32 2009-02-20 16:35:19 pkoppenb Exp $
+# $Id: DaVinci.py,v 1.33 2009-02-24 14:07:16 pkoppenb Exp $
 #
 # Options for a typical DaVinci job
 #
@@ -35,7 +35,7 @@ from Configurables import GaudiSequencer, PrintDecayTree, PhysDesktop
 exampleSeq = GaudiSequencer("ExampleSeq")
 tree = PrintDecayTree("PrintBu2LLK")
 exampleSeq.Members += [ tree ]
-tree.addTool( PhysDesktop() )
+tree.addTool( PhysDesktop )
 tree.PhysDesktop.InputLocations = [ "PreselBu2LLK" ]
 ########################################################################
 #
@@ -43,7 +43,7 @@ tree.PhysDesktop.InputLocations = [ "PreselBu2LLK" ]
 #
 from Configurables import BTagging, PhysDesktop
 tag = BTagging("BTagging")
-tag.addTool( PhysDesktop() )
+tag.addTool( PhysDesktop )
 tag.PhysDesktop.InputLocations = [ "PreselBu2LLK" ]
 ########################################################################
 #

@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DaVinci-WriteDst.py,v 1.7 2009-02-20 16:35:19 pkoppenb Exp $
+# $Id: DaVinci-WriteDst.py,v 1.8 2009-02-24 14:07:16 pkoppenb Exp $
 #
 # Options for a DaVinci job creating DSTs
 #
@@ -18,7 +18,7 @@ from Configurables import GaudiSequencer, FilterDesktop, PhysDesktop, Determinis
 # Get a J/psi
 #
 jpsi = FilterDesktop('MyJpsi')
-jpsi.addTool(PhysDesktop())
+jpsi.addTool(PhysDesktop)
 jpsi.PhysDesktop.InputLocations = [ 'StdLooseJpsi2MuMu' ]
 # @todo This does not work properly
 # jpsi.CloneTree = True # Write the muons as well
@@ -39,7 +39,7 @@ for i in MassRanges :
     j = jpsi.clone("Jpsi_"+name)
     j.Code = "(MM>"+ln+") & (MM<"+hn+")"
     p = PrintDecayTree("Print_"+name)
-    p.addTool(PhysDesktop())
+    p.addTool(PhysDesktop)
     p.PhysDesktop.InputLocations = [ "Jpsi_"+name ]
     seq.Members += [ d, j, p ] 
     DaVinciWriteDst().DstFiles[ "Jpsi_"+name+".dst" ] = seq
