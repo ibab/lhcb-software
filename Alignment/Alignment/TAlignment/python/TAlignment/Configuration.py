@@ -10,8 +10,7 @@ from Gaudi.Configuration  import *
 import GaudiKernel.ProcessJobOptions
 from DetCond.Configuration import *
 from TrackSys.Configuration import TrackSys
-from Configurables import ( LHCbConfigurableUser, LHCbApp, GaudiSequencer, AlignTrTools )
-
+from Configurables import ( LHCbConfigurableUser, LHCbApp, GaudiSequencer )
 
 class TAlignment( LHCbConfigurableUser ):
     INFO=3
@@ -61,8 +60,6 @@ class TAlignment( LHCbConfigurableUser ):
         , "OutputLevel"                  : INFO                        # Output level
         , "LogFile"                      : "alignlog.txt"    
         }
-    
-    __used_configurables__ = [ AlignTrTools ]
     
     def __apply_configuration__(self):
         print "******* calling ", self.name()
