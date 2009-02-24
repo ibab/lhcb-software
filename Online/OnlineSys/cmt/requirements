@@ -16,7 +16,7 @@ branches cmt doc
 use $(CCPCHist_use)
 macro CCPCHist_use "CCPCHist v2r6 Online" slc4-amd64 ""
 use Camera            v1r1     Online
-use DIM               v17r12   Online
+use DIM               v18r4    Online
 use ExampleGaucho     v3r1     Online
 # Does not work on WIN32
 # use FarmMonitor     v1r0     Online
