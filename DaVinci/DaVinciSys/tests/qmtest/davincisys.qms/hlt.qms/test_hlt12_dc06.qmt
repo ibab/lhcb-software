@@ -7,14 +7,19 @@
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
-Hlt2Decision                                                SUCCESS Number of counters : 6
+Hlt2Decision                                                SUCCESS Number of counters : 11
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"Accepted Events"                               |        96 |          3 |(  3.12500 +- 1.77580  )%|   -------   |   -------   |
- | "Candidates"                                    |         4 |         20 |     5.0000 |     5.3385 |      1.0000 |      14.000 |
- | "Hlt2SelB2DVec Candidates"                      |         1 |          1 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
- | "Hlt2SelBs2JpsieePhi Candidates"                |         2 |         18 |     9.0000 |     5.0000 |      4.0000 |      14.000 |
+ |*"Accepted Events"                               |       995 |         49 |(  4.92462 +- 0.685976 )%|   -------   |   -------   |
+ | "Candidates"                                    |        55 |        270 |     4.9091 |     7.4156 |      1.0000 |      44.000 |
+ | "Hlt2SelB2DVec Candidates"                      |         3 |         58 |     19.333 |     18.117 |      1.0000 |      44.000 |
+ | "Hlt2SelBd2D0Kstar Candidates"                  |         1 |          1 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "Hlt2SelBiasedDiElectron Candidates"            |         3 |          3 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "Hlt2SelBs2DsRho Candidates"                    |         1 |          1 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "Hlt2SelBs2JpsieePhi Candidates"                |        44 |        203 |     4.6136 |     5.4281 |      1.0000 |      26.000 |
+ | "Hlt2SelBu2LLKHighMass Candidates"              |         1 |          2 |     2.0000 |     0.0000 |      2.0000 |      2.0000 |
+ | "Hlt2SelDstar Candidates"                       |         1 |          1 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
  | "Hlt2SelSingleMuon Candidates"                  |         1 |          1 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
- | "Unique Selections"                             |         3 |          4 |     1.3333 |    0.47140 |      1.0000 |      2.0000 |
+ | "Unique Selections"                             |        49 |         55 |     1.1224 |    0.32780 |      1.0000 |      2.0000 |
 """, stdout, result, causes, signature_offset = 0)
 </text></argument>
 </extension>

@@ -7,14 +7,13 @@
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
-Hlt2Decision                                                SUCCESS Number of counters : 6
+Hlt2Decision                                                SUCCESS Number of counters : 5
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"Accepted Events"                               |        89 |          3 |(  3.37079 +- 1.91304  )%|   -------   |   -------   |
- | "Candidates"                                    |         4 |          6 |     1.5000 |    0.50000 |      1.0000 |      2.0000 |
- | "Hlt2SelB2DVec Candidates"                      |         1 |          1 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ |*"Accepted Events"                               |        89 |          2 |(  2.24719 +- 1.57105  )%|   -------   |   -------   |
+ | "Candidates"                                    |         2 |          3 |     1.5000 |    0.50000 |      1.0000 |      2.0000 |
  | "Hlt2SelBs2DsRho Candidates"                    |         1 |          2 |     2.0000 |     0.0000 |      2.0000 |      2.0000 |
- | "Hlt2SelBs2JpsieePhi Candidates"                |         2 |          3 |     1.5000 |    0.50000 |      1.0000 |      2.0000 |
- | "Unique Selections"                             |         3 |          4 |     1.3333 |    0.47140 |      1.0000 |      2.0000 |
+ | "Hlt2SelBs2JpsieePhi Candidates"                |         1 |          1 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "Unique Selections"                             |         2 |          2 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
 """, stdout, result, causes, signature_offset = 0)
 </text></argument>
 </extension>
