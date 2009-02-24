@@ -24,6 +24,7 @@ Purpose: LHCb Digitization program
 
  - Changes to options:
    . Boole-FEST09.py updated to write out only L0Yes or RandomTrigger
+   . Boole depends on AppConfig v2r*, to be used for production steering options
 
  - Changes to references to reflect changes in Boole v17r3 output:
    . CaloDigit calibration change
