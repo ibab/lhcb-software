@@ -8,7 +8,7 @@
 </PRE><H1><A NAME=v4r20>2009-01-10 OnlineSys v4r20</A></H1><PRE>
      New version v4r20 built against LHCb v26r2 and GAUDI v20r4.
      - Updates to ExampleGaucho, Gaucho, GaudiOnline, OnlineKernel, OnlineTasks, 
-       ROMon, GaudiSerialize, MBMDump and Writer
+       OMAlib, Presenter, ROMon, GaudiSerialize, MBMDump and Writer
 
 </PRE><H1><A NAME=v4r19>2009-01-10 OnlineSys v4r19</A></H1><PRE>
      New version v4r19 built against LHCb v26r1 and GAUDI v20r4.
