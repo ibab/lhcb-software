@@ -40,7 +40,7 @@ Particle2MCLinker* DaVinciAssociatorsWrapper::linker(const Particle2MCMethod::As
                                                     ) {
   //If the linker already exists, just return a pointer to it
   if ( m_linker != NULL) {
-    warning() << "Linker already exists, returning it!" << endmsg;
+    Warning("Linker already exists, returning it!",StatusCode::SUCCESS,0);
     return m_linker ;
   }
   if ((method <= Particle2MCMethod::No) || (method >= Particle2MCMethod::Max)) {

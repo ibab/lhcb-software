@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.247 2009-02-20 22:40:02 gligorov Exp $
+! $Id: release.notes,v 1.248 2009-02-24 14:15:45 pkoppenb Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2009-02-24 - Patrick Koppenburg
+ - Remove warning
 
 ! 2009-02-20 - V. Gligorov
  - src/DaVinciAssociatorisWrapper.cpp
