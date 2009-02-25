@@ -1,17 +1,16 @@
 package BrunelSys
-version v34r1p1
+version v34r2
 
-branches cmt doc
+branches cmt doc tests
  
 #=======================================================
 # packages included in the BRUNEL project
 #=======================================================
 
 # Brunel application
-use Brunel v34r1p1 Rec
+use Brunel v34r2 Rec
 
-# Component libraries added as patches
-#use EventPacker v1r2 Event
+# Add here any component libraries to be added as patches
 
 # Allow the generation of the SAM QMTest
 apply_pattern QMTest
