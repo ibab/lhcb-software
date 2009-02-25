@@ -1,10 +1,9 @@
-// $Id: LumiAnalyser.h,v 1.9 2009-02-20 16:37:06 panmanj Exp $
+// $Id: LumiAnalyser.h,v 1.10 2009-02-25 09:01:42 graven Exp $
 #ifndef LUMIANALYSER_H 
 #define LUMIANALYSER_H 1
 
 // Include files
 #include "GaudiKernel/IHistogramSvc.h"
-#include "Event/HltSummary.h"
 #include "Event/RecVertex.h"
 #include "Event/HltLumiSummary.h"
 #include "HltBase/HltBaseAlg.h"

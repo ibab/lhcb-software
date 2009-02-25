@@ -1,10 +1,9 @@
-// $Id: LumiHistoCollector.h,v 1.5 2009-02-03 17:31:13 graven Exp $
+// $Id: LumiHistoCollector.h,v 1.6 2009-02-25 09:01:42 graven Exp $
 #ifndef LUMIHISTOCOLLECTOR_H 
 #define LUMIHISTOCOLLECTOR_H 1
 
 // Include files
 #include "GaudiKernel/IHistogramSvc.h"
-#include "Event/HltSummary.h"
 #include "Event/RecVertex.h"
 #include "Event/HltLumiSummary.h"
 #include "HltBase/HltBaseAlg.h"
