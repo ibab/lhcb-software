@@ -3392,9 +3392,19 @@ startBenchmark(path);
           m_pageDescriptionView->Clear();
           m_pageDescription = page->doc();
           m_pageDescriptionView->LoadBuffer(m_pageDescription.c_str());
-          m_pageDescriptionView->DataChanged();          
+          m_pageDescriptionView->DataChanged();    
+  // workaround attempt for ROOT painter objects
+  editorCanvas->Update();
+  dbHistosOnPageIt = dbHistosOnPage.begin();
+  while( dbHistosOnPageIt !=  dbHistosOnPage.end() ) {
+     (*dbHistosOnPageIt)->setDrawOptionsFromDB((*dbHistosOnPageIt)->hostingPad);
+     dbHistosOnPageIt++;
+  }
+  editorCanvas->Update();        
+                
         }
-      } catch (std::string sqlException) {
+        
+        } catch (std::string sqlException) {
         // TODO: add error logging backend - MsgStream?
         setStatusBarText(sqlException.c_str(), 2);
         if (m_verbosity >= Verbose) { std::cout << sqlException << std::endl; }
@@ -3417,7 +3427,7 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetDefaultCursor());
   } else {
     disableReferenceOverlay();
   }
-  editorCanvas->Update();
+//  editorCanvas->Update();
   if ((EditorOnline == m_presenterMode) || (EditorOffline == m_presenterMode)) {
     enableAutoCanvasLayoutBtn();
   }  

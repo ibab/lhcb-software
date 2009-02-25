@@ -10,6 +10,8 @@
  #define WIN32_LEAN_AND_MEAN
 #endif
 
+void setSystemEnvironment(const char* environmentVariable, const char* value);
+
 static const std::string s_presenterVersion("v0r15");
 // environment variable for archive mount point (i.e. prefix to paths)
 static const std::string s_histdir("HISTDIR");

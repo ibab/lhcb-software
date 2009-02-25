@@ -2,6 +2,8 @@
 #include <fstream>
 #include <iterator>
 
+#include <malloc.h>
+
 #include <TSystem.h>
 #include <TSysEvtHandler.h>
 #include <TROOT.h>
@@ -23,6 +25,33 @@
 using namespace pres;
 using namespace boost::program_options;
 using namespace boost::filesystem;
+
+void setSystemEnvironment(const char* environmentVariable, const char* value) {
+// inspired by VirtualBox Open Source Edition, innotek/Sun Microsystems, Inc.
+#if defined(_WIN32)
+  const size_t envVarLen = strlen(environmentVariable);
+  const size_t envVarValue = strlen(value);
+  char *tmpEnvVar = (char *)alloca(envVarLen + envVarValue + 2 + !*value);
+  memcpy(tmpEnvVar, environmentVariable, envVarLen);
+  tmpEnvVar[envVarLen] = '=';
+if (*value) {
+  memcpy(tmpEnvVar + envVarLen + 1, value, envVarValue + 1);
+} else {
+  tmpEnvVar[envVarLen + 1] = ' ';
+  tmpEnvVar[envVarLen + 2] = '\0';
+}
+
+if (!putenv(tmpEnvVar)) {
+//  return 0;
+//  return errno;
+}
+#else
+if (!setenv(environmentVariable, value, 1)) {
+//  return ok;
+//  return errno;
+}
+#endif
+}
 
 //TODO: ACLiC
 #define STANDALONE
@@ -181,17 +210,15 @@ int main(int argc, char* argv[])
     }
 
     if (startupSettings.count("tnsnames-path")) {
-      setenv(s_tnsAdminEnv.c_str(),
-             startupSettings["tnsnames-path"].as<std::string>().c_str(),
-             1);
+      setSystemEnvironment(s_tnsAdminEnv.c_str(),
+             startupSettings["tnsnames-path"].as<std::string>().c_str());
     }
 
     if (startupSettings.count("dim-dns-node")) {
-      setenv(s_dimDnsNodeEnv.c_str(),
-             startupSettings["dim-dns-node"].as<std::string>().c_str(),
-             1);
+      setSystemEnvironment(s_dimDnsNodeEnv.c_str(),
+             startupSettings["dim-dns-node"].as<std::string>().c_str());
     } else {
-        setenv(s_dimDnsNodeEnv.c_str(), "127.0.0.1", 0);
+        setSystemEnvironment(s_dimDnsNodeEnv.c_str(), "127.0.0.1");
     }
     
     PresenterMainFrame presenterMainFrame("LHCb Online Presenter",
