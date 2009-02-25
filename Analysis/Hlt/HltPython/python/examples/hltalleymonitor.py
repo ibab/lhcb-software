@@ -51,18 +51,50 @@ from hltmonitortools import FiltersTOS
 
 # configure channel and alleys to monitor
 #----------------------------------
-DEBUG = arguments.argument("dbg"," debug ",False)
-NEVENTS = arguments.argument("n"," number of events ",1000)
+DEBUG = arguments.argument("dbg"," debug ",True)
+NEVENTS = arguments.argument("n"," number of events ",100)
 #CHANNEL = arguments.argument("c"," channel name ","mblumi2")
-CHANNEL = arguments.argument("c"," channel name ","Bs2PhiPhi")
-ALLEYS = arguments.argument_list("a"," alleys list to monitor ", ["SingleHadron"])
-CANDOTOS = (CHANNEL.find("mb")<0)
+#CHANNEL = arguments.argument("c"," channel name ","mbL0lumi2")
+#CHANNEL = arguments.argument("c"," channel name ","mb2008lumi2")
+#CHANNEL = arguments.argument("c"," channel name ","Bs2PhiPhi")
+CHANNEL = arguments.argument("c"," channel name ","Bs2Jpsi2MuMuPhi")
+#CHANNEL = arguments.argument("c"," channel name ","Bd2Jpsi2MuMuKs")
+#CHANNEL = arguments.argument("c"," channel name ","Bs2MuMu")
+#CHANNEL = arguments.argument("c"," channel name ","Bs2MuMu2008")
+#CHANNEL = arguments.argument("c"," channel name ","LumiNoPV")
+#CHANNEL = arguments.argument("c"," channel name ","LumiAll")
+#CHANNEL = arguments.argument("c"," channel name ","Neutralino")
+#ALLEYS = arguments.argument_list("a"," alleys list to monitor ", [
+                                 #"MuonNoIPL0",
+                                 #"MuonNoIPGEC",
+                                 #"MuonIPCL0",
+                                 #"MuonIPCGEC",
+                                 #"DiMuonNoIPL0Di",
+                                 #"DiMuonNoIP2L0",
+                                 #"DiMuonNoIPL0GEC",
+                                 #"DiMuonNoIPL0Seg",
+                                 #"DiMuonNoIPGECSeg",
+                                 #"DiMuonIPCL0Di",
+                                 #"DiMuonIPC2L0",
+                                 #"DiMuonIPCL0GEC",
+                                 #"DiMuonIPCL0Seg",
+                                 #"DiMuonIPCGECSeg"#,
+                                 #"DiMuonNoPVL0Di",
+                                 #"DiMuonNoPV2L0",
+                                 #"DiMuonNoPVL0Seg"
+                                 #] )
+ALLEYS = arguments.argument_list("a"," alleys list to monitor ", [
+                                 "SingleHadron",
+                                 "DiHadron"
+                                 ] )
+#CANDOTOS = ((CHANNEL.find("mb") or CHANNEL.find("Lumi"))<0)
+CANDOTOS = True 
 
 # define the moniroting tasks
 #----------------------------------
 ALGTYPES = []
-TIME = arguments.argument("mtime"," monitor time ", True)
-if (TIME): ALGTYPES.append([Time,"Time"])
+#TIME = arguments.argument("mtime"," monitor time ", True)
+#if (TIME): ALGTYPES.append([Time,"Time"])
 RATE = arguments.argument("mrate"," monitor rate ", True)
 if (RATE): ALGTYPES.append([Rate,"Rate"])
 RATETOS = arguments.argument("mtos"," monitor TisTos ", True)
@@ -80,15 +112,22 @@ if ((FILTERSTOS) and CANDOTOS):
 
 # import the HLT that you want to monitor!
 from Configurables import DaVinci
+from Configurables import HltConf
+
+#from HltConf.HltMuonLines import HltMuonLinesConf
+
+HltConf().L0TCK = "0xFFFF"
 DV = DaVinci()
 DV.ReplaceL0BanksWithEmulated = True
 DV.DataType = "DC06"
-#DV.HistogramFile = "hltalleymonitor_"+CHANNEL+".root"
-DV.HistogramFile = "DVHistos_1.root"
-DV.HltType = 'Hlt1'
+#DV.DataType = "2008"
+DV.HistogramFile = "hltalleymonitor_"+CHANNEL+".root"
+#DV.HistogramFile = "DVHistos_1.root"
+#DV.HltType = 'MU'
+DV.HltType = 'MU+HA+PH+EL'
+DV.PrintFreq = 100
 DV.applyConf()
 #--- end HLT configuration
-
 
 EOPTS = []
 datacards = bch.createOptLines(CHANNEL)   
@@ -97,9 +136,14 @@ PATH = bch.TESPath[CHANNEL]
 print PATH
 EOPTS.append(datacards)
 
-EOPTS.append("HltSummaryWriter.SaveAll = true")
-if (CANDOTOS):
-    EOPTS.append("HltSelReportsMaker.MaxCandidatesNonDecision=500");
+from Configurables import HltSelReportsMaker
+HltSelReportsMaker().MaxCandidatesNonDecision = 500
+
+#EOPTS.append("HltSummaryWriter.SaveAll = true")
+#if (CANDOTOS):
+    #EOPTS.append("HltSelReportsMaker.MaxCandidatesNonDecision=500");
+
+
 
 # set the range for booking histograms variables
 hltconf.VARIABLE_RANGE["L0ET"]=[1500.,5100.]
@@ -107,9 +151,15 @@ hltconf.VARIABLE_RANGE["L0ET"]=[1500.,5100.]
 # create the application
 gaudi = GaudiPython.AppMgr(outputlevel=3)
 gaudi.config(options=EOPTS)
+# To fix the problem of L0 order of running
+topalg = gaudi.TopAlg
+topalg.remove('GaudiSequencer/L0DUBankSwap')
+topalg.insert(1,'GaudiSequencer/L0DUBankSwap') 
+gaudi.TopAlg = topalg
 
 # create the moniroting tasks
 for alley in ALLEYS:
+    print 'Line - (1) ', alley
     for algtype in ALGTYPES:
         alg = desktop.addAlgorithm(gaudi,algtype[0],alley+algtype[1])
         setattr(alg,"alleyname",alley)
@@ -119,19 +169,18 @@ gaudi.initialize()
 HIS = desktop.ROOTOBJECTS
 TES = gaudi.evtsvc()
 ANNSVC = gaudi.service("HltANNSvc",IANNSvc)
-HLTSUM = gaudi.toolsvc().create("HltSummaryTool",interface="IHltSummaryTool")
+#HLTSUM = gaudi.toolsvc().create("HltSummaryTool",interface="IHltSummaryTool")
 TISTOS = gaudi.toolsvc().create("TriggerTisTos",interface="ITriggerTisTos")
 TIMER = gaudi.toolsvc().create("SequencerTimerTool",interface="ISequencerTimerTool")
-
-alley = hltconf.confAlley(gaudi,"SingleHadron")
 
 # initialize the monitoring tasks
 for alg in desktop.ALGOS:
     alleyname = alg.alleyname
+    print 'Line - (2) ', alleyname
     alley = hltconf.confAlley(gaudi,alleyname)
     setattr(alg,"alley",alley)
     setattr(alg,"PATH",PATH)
-    setattr(alg,"HLTSUM",HLTSUM)
+    #setattr(alg,"HLTSUM",HLTSUM)
     setattr(alg,"TISTOS",TISTOS)
     setattr(alg,"TIMER",TIMER)
     setattr(alg,"ANNSVC",ANNSVC)

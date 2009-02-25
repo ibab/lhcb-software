@@ -79,10 +79,10 @@ class Rate(GaudiPython.PyAlgorithm):
             if (not ok): continue
             algo = self.steps[i]
             sel = algo.property("OutputSelection")
-            if (sel): ok = self.HLTSUM.selectionDecision(sel)
+            if (sel): ok = self.TISTOS.triggerTisTos(sel).decision()
             if (ok): desktop.my(self.alleyname+":Rate").Fill(i,1.)
             if (DEBUG):
-                print " Rate: algo ",algo.name,':',stepname(algo),' ? ',ok
+               print " Rate: algo ",algo.name,':',stepname(algo),' ? ',ok
         return True
 
     def finalize(self):
@@ -137,7 +137,7 @@ class RateTOS(GaudiPython.PyAlgorithm):
             algo = self.steps[i]
             sel = algo.property("OutputSelection")
             if (not sel): continue
-            if (sel): ok = self.HLTSUM.selectionDecision(sel)
+            if (sel): ok = self.TISTOS.selectionTisTos(sel).decision()
             if (not ok): continue
 #            btistos = self.TISTOS.triggerTisTos(sel,self.TISTOS.kAllTriggerSelections)
             btistos = self.TISTOS.triggerTisTos(sel)
@@ -168,7 +168,7 @@ def typeCandidates(algo):
     return ""
     
 
-def getCandidates(algo,HLTSUM,isel="OutputSelection"):
+def getCandidates(algo,TISTOS,isel="OutputSelection"):
     """ return the candidates of an algorithm
     @param algo, hltalgo class
     @param sel, the candidates of the selection
@@ -178,9 +178,10 @@ def getCandidates(algo,HLTSUM,isel="OutputSelection"):
     if (not sel): return can
     type = typeCandidates(algo)
     if (not type): return can
-    if (type == "Track"): return HLTSUM.selectionTracks(sel)
-    if (type == "Vertex"): return HLTSUM.selectionVertices(sel)
-
+    #if (type == "Track"): return HLTSUM.selectionTracks(sel)
+    objs =  TISTOS.hltSelectionObjectSummaries(sel)
+    can = map(lambda x: x.summarizedObject(),objs)
+    return can
 
 def getTOSCandidates(algo,TISTOS,isel="OutputSelection"):
     """ return the candidates of an algorithm
@@ -192,7 +193,7 @@ def getTOSCandidates(algo,TISTOS,isel="OutputSelection"):
     if (not sel): return can
     type = typeCandidates(algo)
     if (not type): return can
-    if (type == "Track"): return TISTOS.matchedTOSTracks(sel)
+    if (type == "Track"): return TISTOS.matchedTOSParticles(sel)
     if (type == "Vertex"): return TISTOS.matchedTOSVertices(sel)
 
 
@@ -228,7 +229,7 @@ class Candidates(GaudiPython.PyAlgorithm):
         for i in range(len(self.steps)):
             algo = self.steps[i]
             sel = algo.property("OutputSelection")
-            can = getCandidates(algo,self.HLTSUM)
+            can = getCandidates(algo,self.TISTOS)
             ncan = len(can)
             if (ncan<=0): continue
             title = self.alleyname+":"+algo.name+":Candidates"
@@ -374,7 +375,7 @@ class Filters(GaudiPython.PyAlgorithm):
         for algo in self.alley:
             if (not algo.type.find("Filter")>0): continue
             fils = algo.filters
-            candis = getCandidates(algo,self.HLTSUM,"InputSelection")
+            candis = getCandidates(algo,self.TISTOS,"InputSelection")
             if (len(candis) <=0): continue
             for fil in fils:
                 h0 = desktop.my(algo.name+":"+fil.name)

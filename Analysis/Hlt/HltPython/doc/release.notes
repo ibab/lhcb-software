@@ -3,7 +3,9 @@
 ! Responsible : Jose A. Hernando 
 ! Purpose     : Exposing Hlt tools to Python, share common python tools
 !-----------------------------------------------------------------------------
-
+! 2009-02-25- Sandra Amato
+   - hltalleymonitor.py and hltmonitortools.py : Remove HltSummaryTool, substitute by TisTosTool
+  
 !========================== HltPython v1r13 2009-02-23 ===================
 ! 2009-02-12- Gerhard Raven
    - remove PrepareMC.opts as it uses $STDOPTS/MCDstContent.opts which will be removed
