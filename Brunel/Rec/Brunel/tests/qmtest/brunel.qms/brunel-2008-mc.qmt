@@ -19,6 +19,7 @@ preprocessor = normalizeExamples + \
     LineSkipper(["INFO Opened magnetic field file"]) + \
     LineSkipper(["--- Reader", "--- CFMlpANN", "PARAM/ParamFiles"]) + \
     LineSkipper(["INFO Connected to database"]) + \
+    LineSkipper(["INFO Connecting to database"]) + \
     LineSkipper(["INFO Disconnect from database after being idle"]) + \
     LineSkipper(["ChronoStatSvc.f...   INFO  Service finalized succes"])
 validateWithReference(preproc = preprocessor)

@@ -3,80 +3,38 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-! 2009-02-24 - Patrick Koppenburg
- - Add EventCountHisto in init sequence. 
+</PRE><H1><A NAME=v34r2>2009-02-25 Brunel v34r2</A></H1><PRE>
 
-! 2009-02-23 - Marco Cattaneo
- - Add to brunel-2008-mc QMTest testing of expert histos and of RecL0Only flag.
-   Increase tested events to 15 for this test, to have some L0 fails....
+ - Changes to configurable:
+   . Add EventCountHisto in init sequence. 
+   . Remove OT expert monitoring: OTTimes no longer made in Brunel, so pointless
+     to run OTTimeMonitor 
+   . Activate LumiFSR creation for MDF files
+   . Create FSR output stream and enable FSR writing by default
+   . Pass "WithMC" option to RichRecQCConf() if RICH in MCCheckSequence.
+   . Improve documentation of options
+   . Fix default histogram file name when one is not given in options
+   . Add "pRec" to nodes to be killed when reprocessing from DST etc.
+   . Set histo name and directory for MemoryTool
+   . Adapt to latest DstConf changes
+   . Protect against missing #units when Calo not in monitoring sequence
 
-! 2009-02-23 - Marco Cattaneo
- - Remove temporary RICH fix, will be part of release...
+ - Added QTMests for DC06, 2008 real data and simulation, cosmics. Also:
+   . Extend timeout period to 1200 seconds
+   . Add to brunel-2008-mc QMTest testing of expert histos and RecL0Only flag.
+     Increase tested events to 15 for this test, to have some L0 fails....
+   . Add FPE checking
+   . Add a QMTest for initialisation with MDF writing
 
-! 2009-02-21 - Chris Jones
- - Add a (temporary) fix to the RICH reconstruction for DC09 processing that
-   was too late for the REC release.
-
-! 2009-02-20 - Marco Cattaneo
- - Enable FSR writing
- - Update references accordingly, and for MuonPID monitoring changes
-
-! 2009-02-19 - Marco Cattaneo
- - Remove OT expert monitoring: OTTimes no longer made in Brunel, so pointless
-   to run OTTimeMonitor 
-
-! 2009-02-16 - Jaap Panman
- - Changes to Configurable:
-   Activate LumiFSR creation for MDF files
-   Create FSR output stream 
-
-! 2009-02-13 - Marco Cattaneo
- - Update refs for changes in Rich and Velo monitoring, and for StatusCode fix
-   in TrackMatchVeloSeed
-
-! 2009-02-12 - Marco Cattaneo
- - Update refs for removal of OTTimeCreator
- - Add refs also for slc4_ia32_gcc34_dbg, different after fixes to Velo and Calo
-
-! 2009-02-11 - Anatoly Solomin
- - Fix passing configuration options to RichRecQCConf() if RICH in
-   MCCheckSequence.
-
-! 2009-02-11 - Marco Cattaneo
- - Improve documentation of options in configurable
- - Update reference for fixes to Velo track fit
- - Fix default histogram file name when one is not given in options
- - Add "pRec" to nodes to be killed when reprocessing from DST etc.
-
-! 2009-02-09 - Chris Jones
- - Pass WithMC configuration option to RichRecQCConf()
-
-! 2009-02-07 - Marco Cattaneo
- - Update reference for changes to OTDAQ warnings, and MuonID
- 
-! 2009-01-30 - Marco Cattaneo
- - Set histo name and directory for MemoryTool
-
-! 2009-01-28 - Marco Cattaneo
- - Adapt configurable to latest DstConf changes
- - Add FPE checking to QMTests
- - Add a QMTest for initialisation with MDF writing
-
-! 2009-01-27 - Marco Cattaneo
- - Update references for new algorithm to pack V0s
-
-! 2009-01-23 - Marco Cattaneo
- - Update references following fix to untested StatusCodes in VeloMonitor
- - Protect against missing #units when Calo not in monitoring sequence
-
-! 2009-01-21 - Marco Cattaneo
- - Update QMTest references for OTDAQ fixes (fix untested StatusCode, no
-   warning for empty GOL headers)
- - Add platform dependent test references
-
-! 2009-01-20 - Marco Cattaneo
- - Add QMTests
- - Change version to v34r2
+ - Changes to references to reflect changes in Brunel v34r2 output:
+   . Changes in MuonPID, Rich and Velo monitoring
+   . Fix to Velo track fit
+   . Removal of OTTimeCreator
+   . Add refs also for slc4_ia32_gcc34_dbg, needed after fixes to Velo and Calo
+   . Changes to MuonID
+   . Changes to OTDAQ warning messages
+   . New algorithm to pack V0s
+   . Fix to untested StatusCodes in VeloMonitor, TrackMatchVeloSeed, OTDAQ
 
 </PRE><H1><A NAME=v34r1>2009-01-14 Brunel v34r1</A></H1><PRE>
 
