@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.408 2009-02-23 11:04:12 jpalac Exp $
+! $Id: release.notes,v 1.409 2009-02-25 15:19:01 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-02-25 - Juan PALACIOS
+ - src/PhysDesktop.cpp
+  . Fix bug in cloneTrees. Cloning of P->PV relations was affecting a container
+    within a loop over iterators to that container, making an iterator mess.
 
 !========================== DaVinciTools v18r2p1 2009-02-23 =================
 
