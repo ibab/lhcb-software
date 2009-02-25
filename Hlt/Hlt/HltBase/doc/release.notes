@@ -3,6 +3,9 @@
 ! Responsible : Jose Angel Hernando Morata
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+! 2009-02-25 - Gerhard Raven
+ - remove HltSummaryHelper.h and IHltDecisionPredicateFactory.h
+
 
 !========================== HltBase v6r1 2009-02-23 ===================
 ! 2009-02-20 - Gerhard Raven
