@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.52 2009-02-23 10:50:33 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.53 2009-02-25 15:18:46 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -586,20 +586,49 @@ StatusCode PhysDesktop::saveTrees( int partid ) const {
 StatusCode PhysDesktop::cloneTrees( const LHCb::Particle::ConstVector& pToSave ) {
 
   LHCb::Particle::ConstVector cloned;
-  for (p_iter i=pToSave.begin();
-       i!=pToSave.end();++i) {
+  Particle2Vertex::LightTable tmpTable;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "cloneTrees cloning " 
+                                        << pToSave.size() << " Particles"
+                                        << endmsg;
+
+  for (p_iter i=pToSave.begin(); i!=pToSave.end(); ++i) {
     LHCb::Particle *clone = (*i)->clone();
     cloned.push_back(clone);
     if (msgLevel(MSG::VERBOSE)) printOut("Cloning", (*i));
     // now clone the relations too
-    Particle2Vertex::Range r = i_p2PVTable().i_relations(*i);
+    const Particle2Vertex::Range r = i_p2PVTable().i_relations(*i);
+    if (msgLevel(MSG::VERBOSE)) verbose() << "cloneTrees cloning " 
+                                          << r.size() 
+                                          << " relations" << endmsg;
+
     for ( Particle2Vertex::Range::const_iterator j = r.begin() ; j!= r.end() ; ++j){
-      i_p2PVTable().i_relate(clone,j->to(),j->weight());
-      if (msgLevel(MSG::VERBOSE)) verbose() << "Cloning a " << clone->key() 
-                                            << " " << clone->particleID().pid() << " related to " 
-                                            <<  j->to()->position() << " at " << j->weight() << endmsg ;
+      tmpTable.i_push(clone,j->to(),j->weight());
+      if (msgLevel(MSG::VERBOSE)) {
+        verbose() << "Cloning relation between P\n"
+                  << *clone 
+                  << "\and PV " << *(j->to())
+                  << "\nwith weight " << j->weight()
+                  << endmsg;
+      }
     }
+  } // particle loop
+
+  const Particle2Vertex::Range tmpRange = tmpTable.i_relations();
+  if (msgLevel(MSG::VERBOSE)) verbose() << "cloneTrees copying " 
+                                        << tmpRange.size() << " relations" 
+                                        << endmsg;
+  
+  for (Particle2Vertex::Range::const_iterator j = tmpRange.begin();
+       j!=tmpRange.end(); ++j) {
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Cloning relation between P\n"
+                                          << *(j->from()) 
+                                          << "\nand PV " << *(j->to())
+                                          << "\nwith weight " << j->weight()
+                                          << endmsg;
+    i_p2PVTable().i_push(j->from(), j->to(), j->weight());
   }
+  i_p2PVTable().i_sort();
+
   return saveTrees(cloned);
 
 }
