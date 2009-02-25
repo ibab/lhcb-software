@@ -1,4 +1,4 @@
-// $Id: BTaggingChecker.h,v 1.8 2009-02-23 21:04:14 musy Exp $
+// $Id: BTaggingChecker.h,v 1.9 2009-02-25 09:45:18 musy Exp $
 #ifndef BTAGGINGCHECKER_H 
 #define BTAGGINGCHECKER_H 1
 
@@ -13,8 +13,7 @@
 #include "Kernel/IBackgroundCategory.h"
 
 #include "Event/L0DUReport.h"
-#include "Event/HltSummary.h"
-#include "Kernel/IHltSummaryTool.h"
+#include "Event/HltDecReports.h"
 
 // from DaVinci
 #include "Kernel/DVAlgorithm.h"
@@ -44,12 +43,11 @@ class BTaggingChecker : public DVAlgorithm {
   IPrintDecayTreeTool* m_debug;
   IForcedBDecayTool* m_forcedBtool;
   IBackgroundCategory* m_bkg;
-  IHltSummaryTool*   m_hltSummaryTool;
 
   //IForcedBDecayTool* m_forcedBtool;
   const LHCb::MCParticle* forcedB(void);
   LHCb::MCParticle* associatedofHEP(HepMC::GenParticle* );
-  bool  m_requireTrigger;
+  bool  m_requireHltTrigger;
   
   int nsele,nrt[50],nwt[50];
 

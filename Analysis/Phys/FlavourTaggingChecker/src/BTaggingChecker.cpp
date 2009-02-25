@@ -1,4 +1,4 @@
-// $Id: BTaggingChecker.cpp,v 1.13 2009-02-23 21:04:14 musy Exp $
+// $Id: BTaggingChecker.cpp,v 1.14 2009-02-25 09:45:18 musy Exp $
 
 // local
 #include "BTaggingChecker.h"
@@ -25,7 +25,7 @@ BTaggingChecker::BTaggingChecker( const std::string& name,
 {
   declareProperty("TagsLocation", 
                   m_tags_location = FlavourTagLocation::Default );
-  declareProperty( "RequireTrigger",     m_requireTrigger   = true );
+  declareProperty( "RequireHltTrigger", m_requireHltTrigger = false );
 }
 
 //==========================================================================
@@ -38,12 +38,6 @@ StatusCode BTaggingChecker::initialize() {
   m_forcedBtool = tool<IForcedBDecayTool> ( "ForcedBDecayTool", this );
   m_bkg = tool<IBackgroundCategory>( "BackgroundCategory", this );
 
-  if(m_requireTrigger){
-    m_hltSummaryTool = tool<IHltSummaryTool>("HltSummaryTool",this);
-    if(!m_hltSummaryTool){
-      err() << " Unable to retrieve HltSummaryTool" << endreq;
-    }
-  }
   nsele=0;
   for(int i=0; i<50; ++i) { nrt[i]=0; nwt[i]=0; }
 
@@ -98,14 +92,25 @@ StatusCode BTaggingChecker::execute() {
  
   //----------------------------------------------------------------------
   long L0Decision = 0;
-  long HLTDecision = 0;
+  long HLT1Decision = 0;
+  long HLT2Decision = 0;
   int trig=-1;
   if( exist<L0DUReport>(L0DUReportLocation::Default) ) {
     L0DUReport* l0 = get<L0DUReport>(L0DUReportLocation::Default);
     if(l0) L0Decision  = l0->decision();
-    if(m_hltSummaryTool) HLTDecision = m_hltSummaryTool->decision();
-    trig = HLTDecision*10 + L0Decision;
+    trig = L0Decision;
   }
+  if (m_requireHltTrigger) {
+    const HltDecReports* decReports =
+      get<HltDecReports>(LHCb::HltDecReportsLocation::Default);
+    if(decReports) {
+      HLT1Decision = (int) decReports->decReport("Hlt1Global")->decision();
+      HLT2Decision = (int) decReports->decReport("Hlt2Global")->decision();
+      trig += HLT2Decision*100 + HLT1Decision*10;
+    }
+  }
+  
+  
 
   //----------------------------------------------------------------------
   info() << "BTAGGING MON "<< std::setw(3) << trig << std::setw(4) << truetag 
