@@ -5,6 +5,9 @@ Purpose: LHCb reconstruction program
 
 </PRE><H1><A NAME=v34r2>2009-02-25 Brunel v34r2</A></H1><PRE>
 
+ - Changes to requirements:
+   . Add dependency to AppConfig v2r*, to pick up options for production
+
  - Changes to configurable:
    . Add EventCountHisto in init sequence. 
    . Remove OT expert monitoring: OTTimes no longer made in Brunel, so pointless
