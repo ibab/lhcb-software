@@ -3,6 +3,8 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2009-02-25 - Gerhard Raven
+ - remove obsolete HltDecisionPredicateFactory
 
 !========================== HltCommon v5r1 2009-02-23 ===================
 ! 2009-02-22 - Gerhard Raven
