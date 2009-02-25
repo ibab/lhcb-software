@@ -1,3 +1,10 @@
+2008-02-25  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+
+	* python/LbRelease/Nightlies/functions.py: CMTEXTRATAGS variable is set before
+	every cmt action according to value given in configuration.xml for the slot;
+	fixes for Windows (os.path.join -> os.sep.join)
+	* python/LbRelease/Nightlies/setup.py: fixes for Windows
+
 2009-02-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v2r4

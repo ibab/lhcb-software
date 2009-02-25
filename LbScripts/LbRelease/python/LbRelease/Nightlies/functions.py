@@ -108,7 +108,7 @@ def run(slotName, minusj=None, platforms=None):
                     break
             if tmp == False:
                 print 'waiting 5 minutes for LCG slot to be ready...'
-                os.sleep(300)
+                time.sleep(300)
 
         cleanPycPyoFiles(slot)
 
@@ -190,9 +190,9 @@ def setCmtProjectPath(slot):
     if slot.getCmtProjectPaths():
         cmtProjectPathEntities += slot.getCmtProjectPaths()
     else:
-        cmtProjectPathEntities.append('/afs/cern.ch/lhcb/software/releases')
-        cmtProjectPathEntities.append('/afs/cern.ch/sw/Gaudi/releases')
-        cmtProjectPathEntities.append('/afs/cern.ch/sw/lcg/app/releases')
+        cmtProjectPathEntities.append(os.sep.join([os.environ['AFSROOT'], 'cern.ch', 'lhcb', 'software', 'releases']))
+        cmtProjectPathEntities.append(os.sep.join([os.environ['AFSROOT'], 'cern.ch', 'sw', 'Gaudi', 'releases']))
+        cmtProjectPathEntities.append(os.sep.join([os.environ['AFSROOT'], 'cern.ch', 'sw', 'lcg', 'app', 'releases']))
     for e in cmtProjectPathEntities:
         cmtProjectPathNew += e + os.pathsep
     cmtProjectPathNew = cmtProjectPathNew[:-len(os.pathsep)]
@@ -372,12 +372,21 @@ def disableLCG_NIGHTLIES_BUILD():
         cmtExtraTags = ','.join(listOfCmtExtraTags)
         os.environ['CMTEXTRATAGS'] = cmtExtraTags
 
+def setCMTEXTRATAGS(slotName):
+    global configuration
+    tmp = reload(configuration)
+    generalConfig, slotList = configuration.readConf(os.path.join(os.environ['LCG_XMLCONFIGDIR'], 'configuration.xml'))
+    slot = configuration.findSlot(slotName, slotList)
+    if slot is not None and slot.cmtExtraTags is not None:
+        os.environ['CMTEXTRATAGS'] = slot.cmtExtraTags
+
 def config(slotName, projectName):
     """ config(slotName, projectName)
 
         action function. Starts cmt "config" action (launched from LCG Nightlies "builder").
     """
     disableLCG_NIGHTLIES_BUILD()
+    setCMTEXTRATAGS(slotName)
     slot, project = getSlotAndProject(slotName, projectName)
     setCmtProjectPath(slot)
 
@@ -394,6 +403,7 @@ def clean(slotName):
     slot = configuration.findSlot(slotName, slotList)
     if slot is not None: setCmtProjectPath(slot)
     disableLCG_NIGHTLIES_BUILD()
+    setCMTEXTRATAGS(slotName)
     #remove contents of build directory:
     shutil.rmtree(slot.buildDir(), ignore_errors=True)
     os.makedirs(slot.buildDir())
@@ -408,6 +418,7 @@ def install(slotName, projectName):
     slot, project = getSlotAndProject(slotName, projectName)
     setCmtProjectPath(slot)
     disableLCG_NIGHTLIES_BUILD()
+    setCMTEXTRATAGS(slotName)
     os.chdir(generatePath(slot, project, 'SYSPACKAGECMT', projectName))
     os.system(cmtCommand + ' br "' + cmtCommand + ' config"')
     # copying logs
@@ -438,6 +449,7 @@ def make(slotName, projectName, minusj):
     if minusj > 1: minusjcmd = ' -j ' + str(minusj)
     else: minusjcmd = ''
     disableLCG_NIGHTLIES_BUILD()
+    setCMTEXTRATAGS(slotName)
     slot, project = getSlotAndProject(slotName, projectName)
     setCmtProjectPath(slot)
     os.chdir(generatePath(slot, project, 'SYSPACKAGECMT', projectName))
@@ -481,6 +493,7 @@ def test(slotName, projectName):
         action function. Starts cmt "test" action (launched from LCG Nightlies "builder").
     """
     disableLCG_NIGHTLIES_BUILD()
+    setCMTEXTRATAGS(slotName)
     slot, project = getSlotAndProject(slotName, projectName)
     setCmtProjectPath(slot)
     os.chdir(generatePath(slot, project, 'SYSPACKAGECMT', projectName))
@@ -533,6 +546,7 @@ def get(slotName, projectName):
         action function. Starts cmt "get" action (launched from LCG Nightlies "builder").
     """
     disableLCG_NIGHTLIES_BUILD()
+    setCMTEXTRATAGS(slotName)
     slot, project = getSlotAndProject(slotName, projectName)
     setCmtProjectPath(slot)
 
