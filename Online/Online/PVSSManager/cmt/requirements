@@ -3,6 +3,7 @@ version v1r0
 
 branches  cmt doc
 use PVSS v* Online -no_auto_imports
+
 apply_pattern install_more_includes more=PVSSManager offset=PVSS
 
 library PVSSManager *.cpp -import=PVSS
@@ -13,8 +14,8 @@ application  PVSS00api  ../main/*.cpp
 set PVSS00api "$(PVSSMANAGERROOT)/$(CMTCONFIG)/PVSS00api.exe"
 
 private
-macro_remove cppflags "-W "
-macro_append PVSS00api_cppflags " -m32 " WIN32 ""
-macro_append PVSS00apilinkopts " -m32  $(PVSS_link) " WIN32 ""
-macro_append  PVSS00api_dependencies    " PVSSManager "
+macro_remove cppflags                  "-W "
+macro_append PVSS00api_cppflags        " -m32 " WIN32 ""
+macro_append PVSS00apilinkopts         " -m32  $(PVSS_link) " WIN32 ""
+macro_append PVSS00api_dependencies    " PVSSManager "
 

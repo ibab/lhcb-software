@@ -1,5 +1,5 @@
 #!/bin/bash
-cd /home/frankm/cmtuser/Gaudi_v19r2/Online/OnlineControls/cmt
+cd `dirname $0`/../cmt
 source PVSS.setup.sh
 unset PVSS_II
 start=`date`

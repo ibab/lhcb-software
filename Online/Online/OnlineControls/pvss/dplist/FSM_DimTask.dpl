@@ -5,10 +5,11 @@ DpName	TypeName	ID
 fwOT_FSM_DimTask	_FwFsmObjectType	52820
 
 # DpValue
-ElementName	TypeName	_original.._value	_original.._status	_original.._stime
-fwOT_FSM_DimTask.panel	_FwFsmObjectType	"FSM_DimTask.pnl"	0x101	11.11.2008 17:52:13.747
+ElementName	TypeName	_original.._value	_original.._status64	_original.._stime
+fwOT_FSM_DimTask.panel	_FwFsmObjectType	"FSM_DimTask.pnl"	0x101	24.02.2009 09:27:06.631
 fwOT_FSM_DimTask.components	_FwFsmObjectType	"string State
-", "", "#uses \"fwExternalAlertHandler/fwExternalAlertHandler.ctl\"
+", "", "//#uses \"fwExternalAlertHandler/fwExternalAlertHandler.ctl\"
+#uses \"fwExternalAlertHandler/fwExternalAlertHandlerUser.ctl\"
 dyn_string     m_lastCommand;
 dyn_string     m_lastState;
 dyn_string     m_targetState;
@@ -235,7 +236,7 @@ int stopFSM_DimTask(string domain, string device)  {
     dpSetWait(device+\".State\",\"ERROR\");
   }
 } 
-"	0x101	03.02.2009 07:03:03.635
-fwOT_FSM_DimTask.states	_FwFsmObjectType	"OFFLINE", "FwStateAttention2", "", "", "", "NOT_READY", "FwStateAttention1", "", "", "", "READY", "FwStateOKNotPhysics", "", "", "", "STOPPED", "FwStateAttention1", "", "", "", "RUNNING", "FwStateOKPhysics", "", "", "", "ERROR", "FwStateAttention3", "", "", ""	0x101	03.02.2009 07:03:03.627
-fwOT_FSM_DimTask.actions	_FwFsmObjectType	"OFFLINE/Load", "", "1", "", "0", "OFFLINE/Kill", "", "1", "", "0", "OFFLINE/Unload", "", "1", "", "0", "NOT_READY/Configure", "", "1", "", "0", "NOT_READY/Unload", "", "1", "", "0", "NOT_READY/Kill", "", "1", "", "0", "READY/Start", "", "1", "", "0", "READY/Reset", "", "1", "", "0", "READY/Kill", "", "1", "", "0", "READY/Unload", "", "1", "", "0", "STOPPED/Reset", "", "1", "", "0", "STOPPED/Kill", "", "1", "", "0", "STOPPED/Start", "", "1", "", "0", "STOPPED/Unload", "", "1", "", "0", "RUNNING/Stop", "", "1", "", "0", "RUNNING/Kill", "", "1", "", "0", "ERROR/Unload", "", "1", "", "0", "ERROR/Kill", "", "1", "", "0", "ERROR/Reset", "", "1", "", "0", "ERROR/Start", "", "1", "", "0"	0x101	03.02.2009 07:03:03.626
-fwOT_FSM_DimTask.parameters	_FwFsmObjectType		0x141	13.10.2008 07:54:15.023
+"	0x101	24.02.2009 09:27:59.194
+fwOT_FSM_DimTask.states	_FwFsmObjectType	"OFFLINE", "FwStateAttention2", "", "", "", "NOT_READY", "FwStateAttention1", "", "", "", "READY", "FwStateOKNotPhysics", "", "", "", "STOPPED", "FwStateAttention1", "", "", "", "RUNNING", "FwStateOKPhysics", "", "", "", "ERROR", "FwStateAttention3", "", "", ""	0x101	24.02.2009 09:27:59.190
+fwOT_FSM_DimTask.actions	_FwFsmObjectType	"OFFLINE/Load", "", "1", "", "0", "OFFLINE/Kill", "", "1", "", "0", "OFFLINE/Unload", "", "1", "", "0", "NOT_READY/Configure", "", "1", "", "0", "NOT_READY/Unload", "", "1", "", "0", "NOT_READY/Kill", "", "1", "", "0", "READY/Start", "", "1", "", "0", "READY/Reset", "", "1", "", "0", "READY/Kill", "", "1", "", "0", "READY/Unload", "", "1", "", "0", "STOPPED/Reset", "", "1", "", "0", "STOPPED/Kill", "", "1", "", "0", "STOPPED/Start", "", "1", "", "0", "STOPPED/Unload", "", "1", "", "0", "RUNNING/Stop", "", "1", "", "0", "RUNNING/Kill", "", "1", "", "0", "ERROR/Unload", "", "1", "", "0", "ERROR/Kill", "", "1", "", "0", "ERROR/Reset", "", "1", "", "0", "ERROR/Start", "", "1", "", "0"	0x101	24.02.2009 09:27:59.190
+fwOT_FSM_DimTask.parameters	_FwFsmObjectType		0x141	23.02.2009 17:22:09.307

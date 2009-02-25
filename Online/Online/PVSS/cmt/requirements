@@ -4,23 +4,23 @@ version v3r1
 branches  cmt doc
 use LCG_Settings v* 
 use GaudiPolicy  v*
-#macro PVSS_home "$(SITEROOT)/lhcb/online/control/pvss/3.8" \
+#macro PVSS_installation "$(SITEROOT)/lhcb/online/control/pvss/3.8" \
 #  WIN32         "C:/PGM/PVSS2_3.8"
-macro PVSS_home "/opt/pvss/pvss2_v3.8"
+macro PVSS_installation "/opt/pvss/pvss2_v3.8"
 
 macro PVSS_major_version "V38"
 macro PVSS_native_version $(PVSS_major_version)_320
-macro PVSS_api   "$(PVSS_home)/api"
+macro PVSS_api   "$(PVSS_installation)/api"
 macro PVSS_inc   "$(PVSS_api)/include"
 set PVSS_II      '/localdisk/pvss/STORAGE/config/config'
-set PVSS_II_HOME "$(PVSS_home)"
-set PVSS_SYSTEM_ROOT "$(PVSS_home)"
+set PVSS_II_HOME "$(PVSS_installation)"
+set PVSS_SYSTEM_ROOT "$(PVSS_installation)"
 set PROJECT_ROOT     "."
 set PLATFORM         "linux_RHEL4"
 
-path_append PATH            "$(PVSS_home)/bin"
-path_append LD_LIBRARY_PATH "$(PVSS_home)/api/lib.linux" WIN32 ""
-path_append LD_LIBRARY_PATH "$(PVSS_home)/bin"           WIN32 ""
+path_prepend PATH            "$(PVSS_installation)/bin"
+path_prepend LD_LIBRARY_PATH "$(PVSS_installation)/api/lib.linux" WIN32 ""
+path_prepend LD_LIBRARY_PATH "$(PVSS_installation)/bin"           WIN32 ""
 
 include_dirs "$(PVSS_inc)"
 
@@ -33,7 +33,7 @@ macro_append PVSS_cppflags \
 macro_append PVSS_cppflags " -D__PC -D__UNIX -DHAS_TEMPLATES=1 -DBC_DESTRUCTOR -Dbcm_boolean_h -DOS_LINUX -DLINUX -DLINUX2 -D__STDC_LIMIT_MACROS -D__STDC_FORMAT_MACROS -Wno-deprecated -DDLLEXP_BASICS= -DDLLEXP_DATAPOINT= -DDLLEXP_CONFIGS= -DDLLEXP_MANAGER=  -DDLLEXP_MESSAGES= -DDLLEXP_CTRL= -DGCC3 -DUSES_NEW_IOSTREAMS -m32 " \
   WIN32 ' -I"$(PVSS_inc)/winnt/pvssincl" '
 
-macro PVSS_link "-lstdc++ -lc  $(PVSS_home)/bin/libwklin.so -L$(PVSS_api)/lib.linux -lManager$(PVSS_native_version) -lMessages$(PVSS_native_version) -lDatapoint$(PVSS_native_version) -lBasics$(PVSS_native_version) -lbcm$(PVSS_native_version) -lConfigs$(PVSS_native_version) -lPVSSUtil$(PVSS_major_version) -lV24 -lm -m32 -lpthread -lrt " \
+macro PVSS_link "-lstdc++ -lc  $(PVSS_installation)/bin/libwklin.so -L$(PVSS_api)/lib.linux -lManager$(PVSS_native_version) -lMessages$(PVSS_native_version) -lDatapoint$(PVSS_native_version) -lBasics$(PVSS_native_version) -lbcm$(PVSS_native_version) -lConfigs$(PVSS_native_version) -lPVSSUtil$(PVSS_major_version) -lV24 -lm -m32 -lpthread -lrt " \
   WIN32 ' /LIBPATH:"$(PVSS_api)/lib.winnt" libManager.lib libMessages.lib libDatapoint.lib libBasics.lib bcm.lib'
 
 macro PVSS_link_Ctrl -lCtrl$(PVSS_native_version) 

@@ -12,6 +12,8 @@ def pvssCTRL():        return os.environ['PVSS_SYSTEM_ROOT']+'/bin/PVSS00ctrl -p
 def pvssPMON():        return os.environ['PVSS_SYSTEM_ROOT']+'/bin/PVSS00pmon -proj '+projectName()+' '
 #def pvssPMON():        return os.environ['PVSS_SYSTEM_ROOT']+'/bin/PVSS00pmon '
 def pvssASCII():       return os.environ['PVSS_SYSTEM_ROOT']+'/bin/PVSS00ascii -proj '+projectName()+' '
+def pvssConsole():     return '/usr/local/bin/startConsole 3.8'
+def pvssTool():        return os.environ['PVSS_SYSTEM_ROOT']+'/bin/PVSStoolSyncTypes -proj '+projectName()+' '
 
 def usage():
   print "usage: Install.py <action> -project <project-name> [-opt [-opt]]"
@@ -242,6 +244,7 @@ def install():
 def copyProject():
   start = time.time()
   src = sourceDir()+os.sep+'farmTemplate'
+  src = '/group/online/dataflow/pvss/TEMPLATE/project.mona07'
   nam = projectName()
   sysN = systemNumber()
   cfg = '/localdisk/pvss/'+nam+'/config/config'
@@ -264,6 +267,7 @@ def copyProject():
       print >>fout, '[dist]'
       print >>fout, 'distPort = '+str(sysN+100)+'10'
       print >>fout, 'distPeer= "storectl01:49910" 399 # LBECS'
+      print >>fout, 'distPeer= "storectl01:40710" 399 # RECSTORAGE'
       print >>fout, 'distPeer= "mona07:40610"     306 # RECCTRL'
       print >>fout, 'distPeer= "mona07:40310"     303 # RECFARM'
     elif content.find('[dist]')==0:
@@ -277,14 +281,14 @@ def copyProject():
     elif content.find('distPort = ')==0:
       pass
   print '......... --> Patching project name and project number'
-  execCmd('/opt/pvss/pvss2_v3.6/bin/PVSStoolSyncTypes -proj '+nam+' -config '+\
-          cfg+' -report -autoreg -system '+str(sysN)+' '+nam)
+  execCmd(pvssTool()+' -config '+cfg+' -report -autoreg -system '+str(sysN)+' '+nam)
   print '......... --> Project',nam,' System number',sysN,' is ready for farm installation'
   print '......... 1rst. Installation step finished. This took %d seconds.'%(time.time()-start,)
 
 def copyProject2():
   start = time.time()
   src = sourceDir()+os.sep+'farmTemplate'
+  src = '/group/online/dataflow/pvss/TEMPLATE/project.mona07'
   nam = projectName()
   sysN = systemNumber()
   cfg = '/localdisk/pvss/'+nam+'/config/config'
@@ -293,7 +297,7 @@ def copyProject2():
   print '......... --> Project',nam,' System number',sysN,' started.'
   print '......... --> Project',nam,' Continue to install after the project is up....'
   time.sleep(5)
-  execCmd('/usr/local/bin/startConsole')
+  execCmd(pvssConsole())
   time.sleep(15)
   install()
   print '......... --> Project',nam,' All installation actions have finished. The subfarm should be operational.'
