@@ -4,6 +4,13 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-02-25 - Manuel Tobias Schiller
+ - Added CreateFastTrackCollection algorithm which copies pointers to tracks
+   from a list of input container to a SharedObjectsContainer on the TES.
+   This gives the possibility to quickly create custom track collections
+   without the cost of keyed containers and deep-copying the tracks. Potential
+   use case might be a collection of all long tracks in the HLT.
+
 !========================== TrackUtils v1r24 2009-02-20 ======================
 ! 2009-01-20 - Marco Cattaneo
  - Migrate to LHCb::ParticlePropertySvc
@@ -96,8 +103,8 @@
 
 ! 2007-09-14 - Louis Nicolas
  - new algorithm TrackRemoveDoubleITHits: when two hits are found in the same IT
-	 ladder, remove both lhcbIDs from the track's lhcbIDs. Probably useful for
-	 alignment.
+    ladder, remove both lhcbIDs from the track's lhcbIDs. Probably useful for
+    alignment.
 
 ! 2007-09-14 - Chris Jones
  - Clean up TrackBuildClone table a little for speed
