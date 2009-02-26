@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.h,v 1.18 2008-12-01 16:35:30 mneedham Exp $
+// $Id: STDecodingBaseAlg.h,v 1.19 2009-02-26 14:46:21 mneedham Exp $
 #ifndef STDECODINGBASEALG_H 
 #define STDECODINGBASEALG_H 1
 
@@ -50,8 +50,8 @@ protected:
 
  bool forceVersion() const;  
 
- void createSummaryBlock(const unsigned int& nclus, const unsigned int& pcn, 
-                         const bool pcnsync, const std::vector<unsigned int>& bankList,
+ void createSummaryBlock(LHCb::RawEvent* rawEvt, const unsigned int& nclus, const unsigned int& pcn, 
+                         const bool pcnsync, const unsigned int bytes,  const std::vector<unsigned int>& bankList,
                          const std::vector<unsigned int>& missing, 
                          const LHCb::STSummary::RecoveredInfo& recoveredBanks ) const;
 
@@ -83,6 +83,8 @@ protected:
  /** return spill offset */
  LHCb::STCluster::Spill spill() const;
 
+ unsigned int byteSize(const std::vector<LHCb::RawBank*>& banks) const;
+ 
  bool m_skipErrors;
  std::string m_bankTypeString;
  std::string m_rawEventLocation;
@@ -102,7 +104,12 @@ private:
 
   std::string m_errorLocation;
   std::string m_errorBankString;
+  std::string m_pedestalBankString;
+  std::string m_fullBankString;
   LHCb::RawBank::BankType m_errorType; 
+  LHCb::RawBank::BankType m_pedestalType; 
+  LHCb::RawBank::BankType m_fullType; 
+ 
 
   std::string m_summaryLocation;
   LHCb::RawBank::BankType m_bankType;

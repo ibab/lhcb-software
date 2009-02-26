@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.52 2008-12-01 16:35:30 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.53 2009-02-26 14:46:20 mneedham Exp $
 
 #include <algorithm>
 
@@ -63,6 +63,7 @@ StatusCode RawBankToSTClusterAlg::initialize() {
     
 StatusCode RawBankToSTClusterAlg::execute() {
 
+
   // make a new digits container
   STClusters* clusCont = new STClusters();
   clusCont->reserve(2000);
@@ -109,7 +110,7 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
   if (missing.empty() == false){
     counter("lost Banks") += missing.size();
     if (tBanks.size() == 0){
-      createSummaryBlock(0, STDAQ::inValidPcn, false, bankList, missing, recoveredBanks);
+      createSummaryBlock(rawEvt,0, STDAQ::inValidPcn, false, 0,  bankList, missing, recoveredBanks);
       ++counter("no banks found");
       return StatusCode::SUCCESS;
     }
@@ -223,7 +224,8 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
 
   } // iterBank
    
-  createSummaryBlock(clusCont->size(), pcn, pcnSync, bankList, missing, recoveredBanks);
+  const unsigned int bsize = byteSize(tBanks);
+  createSummaryBlock(rawEvt, clusCont->size(), pcn, pcnSync, bsize, bankList, missing, recoveredBanks);
 
   return StatusCode::SUCCESS;
 

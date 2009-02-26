@@ -4,7 +4,12 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2009-02-26 M Needham
+ - Follow changes in STSummary block content
+
+
 !=============================== STDAQ v3r15 2009-02-20 ======================
+
 ! 2009-02-05 J Luisier
  - Improve warning messages in case of error bank too short or too long
 

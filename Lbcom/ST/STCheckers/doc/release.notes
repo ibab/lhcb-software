@@ -2,6 +2,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2009-02-26 M Needham
+ - Follow changes in STSummary class
+
 !=========================== STCheckers v2r10 2009-02-20 ======================
 ! 2009-02-11 M Needham
  - Use named algorithm macros for cluster/digit occupancy algorithms. 

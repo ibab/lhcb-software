@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.cpp,v 1.26 2009-02-05 13:41:30 jluisier Exp $
+// $Id: STDecodingBaseAlg.cpp,v 1.27 2009-02-26 14:46:20 mneedham Exp $
 
 #include <algorithm>
 
@@ -29,6 +29,9 @@
 
 #include "STDet/DeSTDetector.h"
 
+#include <boost/foreach.hpp>
+
+
 using namespace LHCb;
 
 
@@ -50,6 +53,8 @@ m_bankTypeString(""){
  declareSTConfigProperty("ErrorLocation",m_errorLocation, STTELL1BoardErrorBankLocation::TTErrors );
  declareSTConfigProperty("summaryLocation", m_summaryLocation , STSummaryLocation::TTSummary);
  declareSTConfigProperty("ErrorBank", m_errorBankString , "TTError"); 
+ declareSTConfigProperty("PedestalBank", m_pedestalBankString , "TTPedestal"); 
+ declareSTConfigProperty("FullBank", m_fullBankString , "TTFull"); 
  
  declareProperty("skipBanksWithErrors", m_skipErrors = false );
  declareProperty("recoverMode", m_recoverMode = true);
@@ -88,20 +93,53 @@ StatusCode STDecodingBaseAlg::initialize() {
   // bank type
   m_errorType =  STRawBankMap::stringToType(m_errorBankString);
   if (m_errorType ==  LHCb::RawBank::Velo){
-   fatal() << "Wrong detector type: only IT or TT error banks!"<< endmsg;
-   return StatusCode::FAILURE; 
+    fatal() << "Wrong detector type: only IT or TT error banks!"<< endmsg;
+    return StatusCode::FAILURE; 
   } 
+
+  // pedestal bank
+  m_pedestalType =  STRawBankMap::stringToType(m_pedestalBankString);
+  if (m_bankType ==  LHCb::RawBank::Velo){
+    fatal() << "Wrong detector type: only IT or TT !"<< endmsg;
+    return StatusCode::FAILURE; 
+  }
+
+  // full bank
+  m_fullType =  STRawBankMap::stringToType(m_fullBankString);
+  if (m_fullType ==  LHCb::RawBank::Velo){
+    fatal() << "Wrong detector type: only IT or TT !"<< endmsg;
+    return StatusCode::FAILURE; 
+  }
 
   return StatusCode::SUCCESS;
 }
     
 
-void STDecodingBaseAlg::createSummaryBlock(const unsigned int& nclus, const unsigned int& pcn, 
-                                           const bool pcnsync, const std::vector<unsigned int>& bankList, 
+void STDecodingBaseAlg::createSummaryBlock(RawEvent* rawEvt, const unsigned int& nclus, const unsigned int& pcn, 
+                                           const bool pcnsync, const unsigned int bytes,
+                                           const std::vector<unsigned int>& bankList, 
                                            const std::vector<unsigned int>& missing,
                                            const LHCb::STSummary::RecoveredInfo& recoveredBanks) const{
+  unsigned totalBytes = bytes;
+  
+  // get the error banks
+  const std::vector<LHCb::RawBank*>& errorBanks = rawEvt->banks(LHCb::RawBank::BankType(m_errorType));
+  totalBytes += byteSize(errorBanks);
+ 
+  // get the pedestal banks
+  const std::vector<LHCb::RawBank*>& pBanks = rawEvt->banks(LHCb::RawBank::BankType(m_pedestalType));
+  totalBytes += byteSize(pBanks);
+ 
+  // get the full banks
+  const std::vector<LHCb::RawBank*>& fullBanks = rawEvt->banks(LHCb::RawBank::BankType(m_fullType));
+  totalBytes += byteSize(fullBanks);
+ 
+  STSummary* sum = new STSummary(nclus,pcn,pcnsync, totalBytes, 
+                                 fullBanks.size(), pBanks.size(), 
+                                 errorBanks.size() , bankList, missing, recoveredBanks);
 
-  STSummary* sum = new STSummary(nclus,pcn,pcnsync,bankList, missing, recoveredBanks);   
+  info() << name() << " " <<  *sum << endmsg;
+   
   put(sum, m_summaryLocation);
 }
 
@@ -333,8 +371,6 @@ StatusCode STDecodingBaseAlg::decodeErrors() const{
 } 
 
 
-
-
 std::string STDecodingBaseAlg::toSpill(const std::string& location) const{
 
   std::string theSpill = "";
@@ -366,3 +402,16 @@ bool STDecodingBaseAlg::validSpill() const{
   const unsigned int numberOfSpills = odin->timeAlignmentEventWindow();
   return (unsigned int)abs(m_spillOffset) <= numberOfSpills ;
 }
+
+
+unsigned int STDecodingBaseAlg::byteSize(const std::vector<RawBank*>& banks) const{
+
+  unsigned int totalSize = 0u;
+  BOOST_FOREACH(RawBank* bank, banks) {
+    totalSize += bank->totalSize();
+  }
+
+  return totalSize;
+}
+
+

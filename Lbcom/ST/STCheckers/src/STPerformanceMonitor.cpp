@@ -1,4 +1,4 @@
-// $Id: STPerformanceMonitor.cpp,v 1.6 2008-12-03 09:31:39 mneedham Exp $
+// $Id: STPerformanceMonitor.cpp,v 1.7 2009-02-26 14:45:11 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -74,7 +74,7 @@ StatusCode STPerformanceMonitor::execute()
   std::vector<DeSTSector*> deadSectors;
 
   // some are lost because of errors in decoding
-  getDeadSectors(deadSectors,summary->banksWithError());
+  getDeadSectors(deadSectors,summary->corruptedBanks());
   
   // some were lost [ie tell1 not readout] 
   getDeadSectors(deadSectors,summary->missingBanks());
