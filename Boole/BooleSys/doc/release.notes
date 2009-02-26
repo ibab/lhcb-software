@@ -3,11 +3,100 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-! 2009-01-29 - Marco Cattaneo
- - Adapt QMTest reference to OT and Boole configurable updates
+</PRE><H1><A NAME=v17r3>2009-02-26 Boole v17r3</A></H1><PRE>
+This version uses projects Gaudi v20r4, LHCb v26r2, Lbcom v6r26
+ and SQLDDDB v5r2, ParamFiles v8r0, FieldMap v5r2, L0TCK v1r0, AppConfig v2r*
 
-! 2009-01-27 - Marco Cattaneo
- - Adapt QMTest reference to removal of Rich extended info
+Pre-production version for DC09. Output needs Brunel v34r1 or later
+
+ - Configuration changes:
+   . In requirements, use AppConfig v2r* for production configuration options
+   . In Boole configurable:
+     o Use new L0Conf configurable to set up L0 sequences
+     o Default DatasetName now set to "Boole" (was empty)
+     o Replace Trigger sequence by Filter sequence and run it as last sequence
+       + Instrument Filter sequence to filter also on OdinTypeFilter
+       + Filtering enabled by adding subdets ["L0","ODIN"] to FilterSequence
+       + When enabled, OdinTypesFilter selects ["RandomTrigger"] by default
+     o WriteL0Only option is obsolete, equivalent to FilterSequence += ["L0"]
+     o Options added to define each sequence, names of some sequences changed
+     o TT now monitored before IT, for consistency with Digi phase
+     o Remove RICH extended information linker algorithms. Now run in Gauss.
+     o Move ProcessPhases into a top sequence, defined in configurable
+     o Replace EnableTAE option by TAEPrev and TAENext, number of TAE to generate
+       Now supports arbitrary numbers of TAE events
+     o Remove "MainOptions" option
+   . Remove all configuration *.opts, everything now done in configurable
+   . Remove explicit use of Auditors, now all available as LHCbApp().Monitors
+   . Boole-FEST09.py updated to write out only L0Yes or RandomTrigger
+   . Add EnableSpillover option to MuonDigitization and MuonBackground (default
+     False) to avoid looking for SpilloverAlg when Spillover is disabled
+     (MuonAlgs v6r7, MuonBackground v2r8)
+   . Use LHCb::ParticlePropertySvc instead of Gaudi ParticlePropertySvc
+
+ - New functionality
+   . Make associators delta-ray aware (STAssociators v1r6)
+   . Add SiZuriFunction [second order RC-CR shaper function] (SiTools v1r6)
+
+ - Persistency changes
+   . Fix wrong size of ODIN RawBank. Now encodes latest ODIN bank version
+     (DigiAlg v4r15, LHCbAlgs v2r24, DAQEvent v7r18)
+   . Modify the default mode for L0Muon bank (standard instead of light) 
+     (L0Muon v8r5)
+   . Fix OT TELL1 id encoding, should be hex not decimal (OTDAQ v7r5)
+
+ - New tuning:
+   . Align default Calo pedestalShift value with condDB/simcond value
+     (CaloDigit v2r12)
+   . OTSimulation keeps track of deposit type (OTSimulation v4r1, MCEvent v2r12)
+   . Create OT double pulse deposits for particles only (OTSimulation v4r1)
+   . Silicon simulation now has flag to turn on/off atomic binding smearing in
+     SiGeantDepositedCharge. Default is now not to apply atomic binding
+     (SiTools v1r6)
+   . Improvements to speed up initialisation of geometry
+     (DetDescSvc v2r3, STDet v4r7)
+
+ - Changes to references to reflect changes in Boole v17r3 output:
+   . OT simulation changes
+
+ - Changes to monitoring
+   . Add more monitoring to MCOTDeposit: keep track of deposits and their 
+     fractions as well as spills (OTMonitor v2r9)
+   . Add L0MuonMonitoring in the standard monitoring sequence (L0DU v8r13)
+   . In LHCbApp configurable, add Gaudi auditors to list of possible Monitors:
+     KnownAuditors = ["NameAuditor","MemoryAuditor","ChronoAuditor"]
+     If given as a Monitor, the auditor is enabled (GaudiConf v12r1)
+
+ - Changes to QMTests
+   . Add a QMTest for FEST09 configuration. 
+     Tests L0 filtering, MDF output, Expert histos
+
+ - Bug fixes:
+   . Fix TAE (was broken in v17r2). 
+   . Fix an error in Muon electronic noise simulation (MuonAlgs v6r7)
+   . Fix missing pt sign in L0MuonCandidates (L0Muon v8r5)
+   . Fix memory leak in MCReconstructible (SimComponents v2r16)
+   . Add status code checks in MDFWriter (MDF v3r17)
+   . Fixed a minor memory leak in GeometryInfoPlus (DetDescSvc v2r3)
+   . Fix bug in propagation of default properties to used configurables
+     (LHCbKernel v11r1)
+
+
+</PRE><H1><A NAME=v17r2p1>2009-02-06 Boole v17r2p1</A></H1><PRE>
+This version uses projects Gaudi v20r4, LHCb v26r1, Lbcom v6r25
+ and SQLDDDB v5r1, ParamFiles v8r0, FieldMap v5r2, L0TCK v1r0.
+
+Production version for second FEST09 production.
+Output needs Brunel v34r1 or later
+
+- New tuning:
+  . Adapt Boole-FEST09.py and Configuration.py to:
+    o Write only events filtered by L0 OR with ODIN RandomTrigger bit set
+    o Write MDF uncompressed format for faster reading by FEST injector
+
+- Persistency change:
+  . Set L0Muon.DAQMode=1 to save "standard" bank by default, instead of "light"
+    bank (Boole.opts)
 
 </PRE><H1><A NAME=v17r2>2009-01-14 Boole v17r2</A></H1><PRE>
 This version uses projects Gaudi v20r4, LHCb v26r1, Lbcom v6r25
