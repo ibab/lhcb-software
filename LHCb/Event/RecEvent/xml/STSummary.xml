@@ -19,19 +19,23 @@
         access = "PUBLIC"
        />
 
-       <constructor argList="unsigned int nClusters, unsigned int pcn, bool pcnSynch , std::vector&lt; unsigned int &gt; banksWithError, std::vector&lt; unsigned int &gt; missing , RecoveredInfo recoveredBanks" 
-                    initList="m_nClusters(nClusters), m_pcn(pcn), m_pcnSynch(pcnSynch), m_banksWithError(banksWithError), m_missingBanks(missing), m_recoveredBanks(recoveredBanks)" desc="special constructor">
+       <constructor argList="unsigned int nClusters, unsigned int pcn, bool pcnSynch , unsigned int nBytes, unsigned int nFull, unsigned int nPed, unsigned int nError, std::vector&lt; unsigned int &gt; corruptedBanks, std::vector&lt; unsigned int &gt; missing , RecoveredInfo recoveredBanks" 
+                    initList="m_nClusters(nClusters), m_pcn(pcn), m_pcnSynch(pcnSynch), m_rawBufferSize(nBytes), m_nFullBanks(nFull), m_nPedestalBanks(nPed), m_nErrorBanks(nError),  m_corruptedBanks(corruptedBanks), m_missingBanks(missing), m_recoveredBanks(recoveredBanks)" desc="special constructor">
        <code></code>
       </constructor>
       <attribute name="nClusters" type="unsigned int" setMeth = "FALSE" desc="number of clusters"/>
       <attribute name="pcn" type="unsigned int" setMeth = "FALSE" desc="pcn"/>
       <attribute name="pcnSynch" type="bool" setMeth = "FALSE" desc="pcn agree"/>
-      <attribute name="banksWithError" type="std::vector &lt; unsigned int &gt;" setMeth = "FALSE" desc="banks with error"/>
+      <attribute name ="rawBufferSize" type = "unsigned int" setMeth = "FALSE" desc="data size of raw bank [bytes]" />
+      <attribute name = "nFullBanks" type = "unsigned int" setMeth = "FALSE" desc  = "# full banks"/>
+      <attribute name = "nPedestalBanks" type = "unsigned int" setMeth = "FALSE" desc  = "# pedestal banks"/>
+      <attribute name = "nErrorBanks" type = "unsigned int" setMeth = "FALSE" desc =  "# of error banks" />
+      <attribute name="corruptedBanks" type="std::vector &lt; unsigned int &gt;" setMeth = "FALSE" desc="banks with error"/>
       <attribute name="missingBanks" type="std::vector &lt; unsigned int &gt;" setMeth = "FALSE" desc="banks missed"/>
       <attribute name="recoveredBanks" type="RecoveredInfo" setMeth = "FALSE" desc="banks recovered"/>
       <method name = "hasError" type = "bool" const = "TRUE" desc = "data is good or not">
          <code>
-            bool good = m_pcnSynch &amp; m_banksWithError.empty(); 
+            bool good = m_pcnSynch &amp; m_corruptedBanks.empty(); 
             return !good; 
          </code>
       </method>
