@@ -21,7 +21,7 @@ OMAFitTH2withSinCosC::OMAFitTH2withSinCosC() :
   m_parNames.push_back("CosAmp");
   m_parNames.push_back("Shift");
 
-  m_mustInit=true;
+  m_mustInit=false;
   m_doc="custom fit for RICH 2d histograms";
   m_predef=false;
 
