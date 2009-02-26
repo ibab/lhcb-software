@@ -183,6 +183,8 @@ EvtDecayBase* EvtParticleDecayList::getDecayModel(EvtParticle *p){
   for (i=0;i<getNMode();i++) {
 
     if ( getDecay(i).getMassMin() < p->mass() ) {
+      // PR/LHCb is it a bug ? 
+      p->setChannel(i);
       return getDecay(i).getDecayModel(); 
     }
   }
