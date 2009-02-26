@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichPixelPositionMonitor
  *
- *  $Id: RichPixelPositionMonitor.cpp,v 1.18 2008-11-18 18:02:21 jonrob Exp $
+ *  $Id: RichPixelPositionMonitor.cpp,v 1.19 2009-02-26 21:57:10 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -227,7 +227,7 @@ StatusCode PixelPositionMonitor::execute()
 
     // background value distribution
     const double logPixBkg =
-      ( pixel->currentBackground() > 1e-20 ? log(pixel->currentBackground()) : -20 );
+      ( pixel->currentBackground() > 1e-20 ? log10(pixel->currentBackground()) : -20 );
     plot1D( logPixBkg, hid(rich,"pixLogBkg"), "Pixel log(background)",-20,0);
 
     // True radiator hits
@@ -256,6 +256,9 @@ StatusCode PixelPositionMonitor::execute()
         {
           // Compare position on HPD entrance window
           const Gaudi::XYZPoint & mcPoint = mcPhot->pdIncidencePoint();
+	  plot2D( mcPoint.x(), mcPoint.y(), 
+		  hid(rich,"mcRichHitGloXvY"), "MCRichHits : Global coordinates",
+		  xMinPDGlo[rich], xMaxPDGlo[rich], yMinPDGlo[rich], yMaxPDGlo[rich], m_n2DBins,m_n2DBins );
           plot1D( gPos.X()-mcPoint.X(), hid(rich,"pdImpX"),
                   "dX global on HPD entry window : CK signal only", -30, 30 );
           plot1D( gPos.Y()-mcPoint.Y(), hid(rich,"pdImpY"),
@@ -266,41 +269,28 @@ StatusCode PixelPositionMonitor::execute()
                   "dR global on HPD entry window : CK signal only",  0,  10 );
           // MC point in local coordinates
           const Gaudi::XYZPoint mcPointLoc = m_idTool->globalToPDPanel(mcPoint);
+	  plot2D( mcPointLoc.x(), mcPointLoc.y(), 
+		  hid(rich,"mcRichHitLocXvY"), "MCRichHits : Local coordinates",
+		  xMinPDLoc[rich],xMaxPDLoc[rich],yMinPDLoc[rich],yMaxPDLoc[rich], m_n2DBins,m_n2DBins );
           plot1D( lPos.X()-mcPointLoc.X(), hid(rich,"pdImpXloc"),
                   "dX local on HPD entry window : CK signal only", -30, 30 );
           plot1D( lPos.Y()-mcPointLoc.Y(), hid(rich,"pdImpYloc"),
                   "dY local on HPD entry window : CK signal only", -30, 30 );
           plot1D( lPos.Z()-mcPointLoc.Z(), hid(rich,"pdImpZloc"),
                   "dZ local on HPD entry window : CK signal only", -30, 30 );
-          plot1D( sqrt((lPos-mcPointLoc).Mag2()), hid(rich,"pdImpRloc"),
+          plot1D( std::sqrt((lPos-mcPointLoc).Mag2()), hid(rich,"pdImpRloc"),
                   "dR local on HPD entry window : CK signal only",  0,  10 );
           // differences as a function of position on HPD
           plot2D( lPos.X()-hpdLoc.X(), lPos.X()-mcPointLoc.X(), hid(rich,"pdImpXlocVX"),
                   "dX V X local on HPD entry window : CK signal only", -35, 35, -8, 8 );
           plot2D( lPos.Y()-hpdLoc.Y(), lPos.Y()-mcPointLoc.Y(), hid(rich,"pdImpYlocVY"),
                   "dY V Y local on HPD entry window : CK signal only", -35, 35, -8, 8 );
-          const double R   = sqrt( gsl_pow_2(lPos.X()-hpdLoc.X()) +
-                                   gsl_pow_2(lPos.Y()-hpdLoc.Y()) );
-          const double McR = sqrt( gsl_pow_2(mcPointLoc.X()-hpdLoc.X()) +
-                                   gsl_pow_2(mcPointLoc.Y()-hpdLoc.Y()) );
+          const double R   = std::sqrt( gsl_pow_2(lPos.X()-hpdLoc.X()) +
+					gsl_pow_2(lPos.Y()-hpdLoc.Y()) );
+          const double McR = std::sqrt( gsl_pow_2(mcPointLoc.X()-hpdLoc.X()) +
+					gsl_pow_2(mcPointLoc.Y()-hpdLoc.Y()) );
           plot2D( R, R-McR, hid(rich,"pdImpRlocVR"),
                   "dR V R local on HPD entry window : CK signal only", 0, 40, -10, 10 );
-          // MC to rec position on HPD anode
-          const Gaudi::XYZPoint & mcPointOnAnode = (*iHit)->entry();
-          // position on anode in local coords
-          const Gaudi::XYZPoint mcPointOnAnodeLoc = m_idTool->globalToPDPanel(mcPointOnAnode);
-          plot1D( anodeGlobal.x() - mcPointOnAnode.x(), hid(rich,side,"anodeXDiffGlobal"), 
-                  "dX on HPD Anode : Global LHCb Coords", -1, 1 );
-          plot1D( anodeGlobal.y() - mcPointOnAnode.y(), hid(rich,side,"anodeYDiffGlobal"), 
-                  "dY on HPD Anode : Global LHCb Coords", -1, 1 );
-          plot1D( anodeGlobal.z() - mcPointOnAnode.z(), hid(rich,side,"anodeZDiffGlobal"), 
-                  "dZ on HPD Anode : Global LHCb Coords", -1, 1 );
-          plot1D( anodeLocal.x() - mcPointOnAnodeLoc.x(), hid(rich,side,"anodeXDiffLocal"), 
-                  "dX on HPD Anode : HPD Panel local Coords", -1, 1 );
-          plot1D( anodeLocal.y() - mcPointOnAnodeLoc.y(), hid(rich,side,"anodeYDiffLocal"), 
-                  "dY on HPD Anode : HPD Panel local Coords", -1, 1 );
-          plot1D( anodeLocal.z() - mcPointOnAnodeLoc.z(), hid(rich,side,"anodeZDiffLocal"), 
-                  "dZ on HPD Anode : HPD Panel local Coords", -1, 1 );
           if ( msgLevel(MSG::VERBOSE) )
           {
             verbose() << "Global : Pixel = " << (*iHit)->entry()
@@ -309,6 +299,22 @@ StatusCode PixelPositionMonitor::execute()
                       << " : MC HPD window = " << mcPointLoc << endreq;
           }
         }
+        // MC to rec position on HPD anode
+	const Gaudi::XYZPoint & mcPointOnAnode = (*iHit)->entry();
+	// position on anode in local coords
+	const Gaudi::XYZPoint mcPointOnAnodeLoc = m_idTool->globalToPDPanel(mcPointOnAnode);
+	plot1D( anodeGlobal.x() - mcPointOnAnode.x(), hid(rich,side,"anodeXDiffGlobal"), 
+		"dX on HPD Anode : Global LHCb Coords", -1, 1 );
+	plot1D( anodeGlobal.y() - mcPointOnAnode.y(), hid(rich,side,"anodeYDiffGlobal"), 
+		"dY on HPD Anode : Global LHCb Coords", -1, 1 );
+	plot1D( anodeGlobal.z() - mcPointOnAnode.z(), hid(rich,side,"anodeZDiffGlobal"), 
+		"dZ on HPD Anode : Global LHCb Coords", -1, 1 );
+	plot1D( anodeLocal.x() - mcPointOnAnodeLoc.x(), hid(rich,side,"anodeXDiffLocal"), 
+		"dX on HPD Anode : HPD Panel local Coords", -1, 1 );
+	plot1D( anodeLocal.y() - mcPointOnAnodeLoc.y(), hid(rich,side,"anodeYDiffLocal"), 
+		"dY on HPD Anode : HPD Panel local Coords", -1, 1 );
+	plot1D( anodeLocal.z() - mcPointOnAnodeLoc.z(), hid(rich,side,"anodeZDiffLocal"), 
+		"dZ on HPD Anode : HPD Panel local Coords", -1, 1 );
       }
     }
 

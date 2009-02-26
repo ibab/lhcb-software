@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichCherenkovAngleMonitor
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngleMonitor.cpp,v 1.16 2008-06-24 11:17:19 jonrob Exp $
+ *  $Id: RichCherenkovAngleMonitor.cpp,v 1.17 2009-02-26 21:57:10 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -71,8 +71,8 @@ StatusCode CherenkovAngleMonitor::execute()
 
   // Histogramming
   const Rich::HistoID hid;
-  //            Radiator          Aerogel  Rich1Gas    Rich2Gas
-  const double ckRange[]      = { 0.015,   0.01,    0.005   };
+  //            Radiator          Aerogel  Rich1Gas  Rich2Gas
+  const double ckRange[]      = { 0.015,   0.01,     0.005   };
   MAX_CKTHETA_RAD;
   MIN_CKTHETA_RAD;
 
