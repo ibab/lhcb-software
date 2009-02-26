@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StandardProtons.py,v 1.1 2009-01-15 14:22:14 ibelyaev Exp $ 
+# $Id: StandardProtons.py,v 1.2 2009-02-26 16:53:14 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StandardProtons.py
 #  configuration file for 'Standard Protons' 
@@ -11,12 +11,15 @@
 Configuration file for 'Standard Protons'
 """
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 
 _locations = {} 
 
 from CommonParticles.StdNoPIDsProtons import *
+_locations.update ( locations )
+
+from CommonParticles.StdNoPIDsDownProtons import *
 _locations.update ( locations )
 
 from CommonParticles.StdLooseProtons  import *

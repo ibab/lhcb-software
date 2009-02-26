@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StandardPions.py,v 1.1 2009-01-15 14:22:14 ibelyaev Exp $ 
+# $Id: StandardPions.py,v 1.2 2009-02-26 16:53:13 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StandardPions.py
 #  configuration file for 'Standard Pions' 
@@ -11,12 +11,15 @@
 Configuration file for 'Standard Pions'
 """
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 
 _locations = {} 
 
 from CommonParticles.StdNoPIDsPions import *
+_locations.update ( locations )
+
+from CommonParticles.StdNoPIDsDownPions import *
 _locations.update ( locations )
 
 from CommonParticles.StdLoosePions import *

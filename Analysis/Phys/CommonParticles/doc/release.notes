@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.113 2009-02-24 14:19:26 pkoppenb Exp $
+!$Id: release.notes,v 1.114 2009-02-26 16:53:13 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
+
+! 2009-02-26 - Patrick Koppenburg for Alessio Sarti
+ - Added down pions and protons
 
 ! 2009-02-24 - Patrick Koppenburg
  - PhysDesktop() -> PhysDesktop
