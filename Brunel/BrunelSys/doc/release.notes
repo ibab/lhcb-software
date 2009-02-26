@@ -3,14 +3,100 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-! 2009-01-27 - Marco Cattaneo
- - Update test for Packed V0s
 
-! 2009-01-23 - Marco Cattaneo
- - Tweak the doxygen appearance
+</PRE><H1><A NAME=v34r2>2009-02-25 Brunel v34r2</A></H1><PRE>
+This version uses projects Gaudi v20r4, LHCb v26r2, Lbcom v6r26, Rec v6r2
+ and SQLDDDB v5r2, ParamFiles v8r0, FieldMap v5r2, AppConfig v2r*
 
-! 2009-01-20 - Marco Cattaneo
-  - Adapt to LHCb::ParticlePropertySvc in test
+This is a pre-production version for the 2009 MC production. 
+Output requires DaVinci v22r1 or greater
+
+ - New packaging:
+   . Add dependency to AppConfig v2r*, to pick up options for production
+   . Added QMTests for:
+     o DC06, 2008 real data and simulation, cosmics data processing
+     o Expert histos and RecL0Only options
+     o FPE checking
+     o MDF writing
+   . Improve python documentation of Brunel() configurable options
+   . Tweak the doxygen appearance
+   . Use new L0Conf configurable to set up L0 filtering (L0DU v8r13)
+
+ - Persistency changes
+   . Create FSR output stream and enable FSR writing by default
+   . V0s now written as PackedTwoProngVertex
+     (GaudiConf v12r1, PackedEvent v3r5, EventPacker v1r3)
+   . Remove version from packed Track, CaloHypo, Protoparticle and Vertex: 
+     This exists in all DataObjects (PackedEvent v3r5)
+   . Add possibility to write RDST in MDF format
+     (GaudiConf v12r1, DAQEvent v7r18, EventPacker v1r3, MDF v3r17)
+
+ - New functionality
+   . Activate LumiFSR creation when reading MDF files (LumiEvent v1r0)
+   . Use LHCb::ParticlePropertySvc instead of Gaudi version
+
+ - New tuning
+   . Improvements to speed up initialisation of geometry
+     (DetDescSvc v2r3, STDet v4r7)
+   . Improvements to OTDAQ error handling, decrease verbosity (OTDAQ v7r5)
+   . Protect against eccessive warnings in TrajPoca.cpp (LHCbAlgs v2r24)
+   . Create TMVA::Reader with "Silent" flag, to reduce initialization verbosity
+     (NNTools v1r4)
+   . Cluster size method for STMeasurement now returns value given by
+     STPositionTool [was value from cluster] (TrackFitEvent v3r20)
+   . Change Rich pixel cleaning options (disable by default) (RichRecSys v3r16)
+   . Change the MuonID extrapolation Z position to one that is saved to the DST 
+     (MuonID v6r1)
+   . Removed cut on maximum number of T hits in TsaSeed (TsaAlgorithms v3r9)
+   . Removed OTTimeCreator from sequence (TrackSys v4r21)
+   . Switch to special OT decoder for cosmics (TrackSys v4r21)
+   . Changes to run the track fit with Lite clusters
+     (TrackTools v3r15, TrackFitter v2r31, TrackProjectors v2r22, 
+      TrackFitEvent v3r20, VeloDAQ v4r5, STAlgorithms v3r4, TrackInterfaces v4r1,
+      VeloTools v3r3, TrackEvent v4r18, LHCbKernel v11r1)
+   . Use clusterselector tool in STClusterKiller
+     (STAlgorithms v3r4, STKernel v1r11, STTools v3r8)
+   . Updates to the generic tracking (TsaAlgorithms v3r9)
+   . Add job option for minimum number of remaining hits in outlier removal
+     (TrackFitter v2r31)
+   . Set up fit for merged OT events when running cosmics (TrackFitter v2r31)
+
+ - Monitoring changes
+ 	 . Add EventCountHisto in init sequence (LHCbAlgs v2r24) 
+   . Remove OT expert monitoring: OTTimes no longer made in Brunel, so pointless
+     to run OTTimeMonitor 
+   . Set histo name and directory for MemoryTool
+   . In LHCbApp configurable, add Gaudi auditors to list of possible Monitors:
+     KnownAuditors = ["NameAuditor","MemoryAuditor","ChronoAuditor"]
+     If given as a Monitor, the auditor is enabled (GaudiConf v12r1)
+   . Improvements in Velo Monitoring (VeloRecMonitors v1r4)
+   . Improvements in OT Monitoring (OTMonitor v2r9)
+   . Small changes to Rich PID plots tool to rationalise with those produced by
+     the DaVinciMonitors plot tools (RichRecTools v4r7)
+   . Addition of Rich alignement monitors (RichRecQC v2r26)
+   . Add histos of muon hit multiplicity as a function of X,Y and region/station
+     (MuonPIDChecker v3r1)
+   . Adaptations to monitor lite cluster types (TrackMonitors v1r7)
+   . Changes to ghost track classification
+     (TrackMCTools v2r21, MCEvent v2r12, MCInterfaces v1r7)
+
+ - Bug fixes
+   . In Brunel() configurable:
+     o Fix default histogram file name when one is not given in options
+     o Add "pRec" to nodes to be killed when reprocessing from DST etc.
+     o Protect against missing #units when Calo not in monitoring sequence
+     o Fix bug in propagation of default properties to used configurables
+       (LHCbKernel v11r1)
+   . Fixed bug in configuration of FitVelo (TrackFitter v2r31)
+   . Fixed a minor memory leak in GeometryInfoPlus (DetDescSvc v2r3)
+   . Fix untested StatusCodes (OTDAQ v7r5, TrackMatching v2r21p1,
+                               MuonPIDChecker v3r1, VeloRecMonitors v1r4)
+   . Fix FPE occurring in CaloClusterizationTool on ia32 only (CaloReco v4r17p1)
+   . Improve protection against FPE in NeuralNetTmva (NNTools v1r4)
+   . Make PatVeloSpaceTrack more robust against FPE on ia32 (PatVelo v3r11)
+   . Fix uninitialised variables in constructor of PatFwdTrackCandidate. Fixes
+     slc4_ia32_gcc34_dbg FPE in Brunel (PatAlgorithms v3r15)
+   . Protect against non-existance of containers (TrackMonitors v1r7)
 
 </PRE><H1><A NAME=v34r1p1>2009-01-21 Brunel v34r1p1</A></H1><PRE>
 This version uses projects Gaudi v20r4, LHCb v26r1, Lbcom v6r25, Rec v6r1
