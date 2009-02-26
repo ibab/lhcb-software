@@ -1,4 +1,4 @@
-// $Id: MuonEfficiencyMonitor.cpp,v 1.1.1.1 2009-02-26 09:29:59 ggiacomo Exp $
+// $Id: MuonEfficiencyMonitor.cpp,v 1.2 2009-02-26 11:17:16 ggiacomo Exp $
 // Include files 
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "Event/MuonPID.h"
@@ -51,6 +51,7 @@ StatusCode MuonEfficiencyMonitor::execute() {
     const LHCb::Track *mutrack = (*ip)->muonTrack () ;
     if (mutrack) {
       info() << " found MuonTrack of type " << (*ip)->idTrack()->type() << endmsg; 
+      info() << "   of momentum="<< (*ip)->idTrack()->p() << "   pT="<<(*ip)->idTrack()->pt() << endmsg; 
       info() << " with "<< (*ip)->muonTrack ()->nLHCbIDs() << " muon hits:"  << endmsg; 
       int nH[5]={0};
       const std::vector< LHCb::LHCbID > & mucoords =  (*ip)->muonTrack ()->lhcbIDs();
