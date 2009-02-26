@@ -16,7 +16,7 @@
 //=============================================================================
 
 OMAFitTH2withSinCosC::OMAFitTH2withSinCosC() :
-  OMAFitFunction("FitTH2withSinCosC") {
+  OMAFitFunction("Rich2DSinCosC") {
   m_parNames.push_back("SinAmp");
   m_parNames.push_back("CosAmp");
   m_parNames.push_back("Shift");
