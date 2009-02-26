@@ -3,6 +3,9 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2009-02-26 - Gerhard Raven
+ - fix bug in HltVertexMaker when not producing histograms...
+
 ! 2009-02-25 - Gerhard Raven
  - remove obsolete HltDecisionPredicateFactory
 

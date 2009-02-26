@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.cpp,v 1.32 2009-02-05 10:45:17 graven Exp $
+// $Id: HltVertexMaker.cpp,v 1.33 2009-02-26 15:53:58 graven Exp $
 // Include files 
 
 
@@ -133,9 +133,7 @@ StatusCode HltVertexMaker<Selections>::initialize() {
     
     m_tcounters.push_back(0);   
 
-    if (produceHistos()) {
-      m_histos.push_back( initializeHisto(funname,0.,100.,100) );
-    }
+    if (produceHistos()) m_histos.push_back( initializeHisto(funname,0.,100.,100) );
 
     if (msgLevel(MSG::DEBUG)) debug() << " filter " << filtername << " " << id << " "
                          << mode << x0 << "," << xf << endreq;
@@ -184,7 +182,7 @@ StatusCode HltVertexMaker<Selections>::execute() {
         double val = (*m_functions[i])(*track1,*track2);
         rejected = !(*m_filters[i])(val);
         verbose() << " value " << val << " rejected? " << rejected << endreq;
-        fillHisto(*m_histos[i],val,1.);
+        if (produceHistos()) { fillHisto(*m_histos[i],val,1.); }
         if (rejected) break;
         m_tcounters[i] += 1;
         m_vals.push_back(val);
