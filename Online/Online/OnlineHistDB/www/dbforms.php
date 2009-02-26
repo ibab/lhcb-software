@@ -821,7 +821,7 @@ function histo_analysis($id,$htype,$mode) {
     }
     if ($canwrite) {
       echo "<table align='center'><tr>";
-      $disabled = ($mode == "display" && $_POST["a${ia}_alg"] == "Fit") ? "disabled" : "";
+      $disabled = ($mode == "display" && $_POST["a${ia}_alg"] == "Fit" && $htype == "HSID" && $_POST["NHS"]>1 ) ? "disabled" : "";
       echo "<td> <input $disabled type='submit' name='Update_analysis' value='${action}'>\n";
       if ($mode=='display' && $showpars) {
 	$maction= $_POST["a${ia}_mask"] ? "Unmask" : "Mask";
