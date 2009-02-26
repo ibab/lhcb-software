@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2009-02-26 - Patrick Robbe
+ - EvtParticleDecayList.cpp: fix case when decay mode is forced
+
 !========================== EvtGen v10r2 2009-02-09 ==========================
 ! 2009-01-20 - Will REECE
  - EvtGen, EvtModelReg. Adds a hook so new decay models can be passed in from
