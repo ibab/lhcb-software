@@ -4,6 +4,8 @@
 #include "EvtGenModels/EvtBToVllBenchMarkPhysicsModels.hh"
 #include "EvtGenModels/EvtBToVllConstants.hh"
 
+#include <functional>
+#include <map>
 #include <sstream>
 
 qcd::WCPtr qcd::LeftHandedPhysicsModel::getRightWilsonCoefficientsMW() const{
@@ -44,21 +46,22 @@ void qcd::GenericModel::parseCommand(const WilsonCoefficients<WilsonType>* C,
 	std::ostringstream valueString;
 	unsigned int coefficientNumber = 0;
 	unsigned int coefficientCount = 0;
-	bool doMultiply = false;//'*' or '='
 	bool isRight = false;
+	char op = '=';
 	
 	/**
 	 * The following parser allows for the setting or modification
 	 * of arbitrary wilson coefficients. The syntax is as follows:
 	 * 
-	 * wilsonCoefficients(C1=0.16:C2=0.05:R10*0.95:)
+	 * wilsonCoefficients(L1=0.16:L2=0.05:R10*0.95:)
 	 * 
 	 * So the individual values can either be set directly, or the SM
 	 * values modified by a factor. In each case, the statement must
 	 * be ended with a ':' to be stored. The parser is probably
 	 * not super reliable, so be careful! 
 	 * 
-	 * C means left handed, R means right handed (C' in other notation)
+	 * L means left handed (C in other notation)
+	 * R means right handed (C' in other notation)
 	 */
 	for (std::string::const_iterator it = command.begin(); it != command.end(); ++it) {
 			const char c = *it;
@@ -72,45 +75,106 @@ void qcd::GenericModel::parseCommand(const WilsonCoefficients<WilsonType>* C,
 						in >> value;
 						//choose C or C' here
 						if(!isRight){
-							//do we multiply or replace
-							const WilsonType set = doMultiply ? value*(*C)(coefficientNumber) : value;
+							//const WilsonType smValue = (*C)(coefficientNumber);
+							const WilsonType smValue = 1.0;
+							//do we apply an operator?
+							WilsonType set;
+							if(op == '='){
+								set = value;
+							}else{
+								switch (op) {
+								case '+':
+									set = smValue + value;
+									break;
+								case '-':
+									set = smValue - value;
+									break;
+								case '/':
+									set = smValue/value;
+									break;
+								case '*':
+									set = smValue*value;
+									break;
+								};
+							}
 							(*C)(coefficientNumber) = set;
-							report(INFO, "EvtGen") << "C(" << coefficientNumber << ") = " << set << std::endl;
+							//report(INFO, "EvtGen") << "L(" << coefficientNumber << ") = " << set << std::endl;
+							std::cout << "L(" << coefficientNumber << ") = " << set << std::endl;
 						}else{
-							//do we multiply or replace
-							const WilsonType set = doMultiply ? value*(*CR)(coefficientNumber) : value;
+							const WilsonType smValue = (*CR)(coefficientNumber);
+							//do we apply an operator?
+							WilsonType set;
+							if(op == '='){
+								set = value;
+							}else{
+								switch (op) {
+								case '+':
+									set = smValue + value;
+									break;
+								case '-':
+									set = smValue - value;
+									break;
+								case '/':
+									set = smValue/value;
+									break;
+								case '*':
+									set = smValue*value;
+									break;
+								};
+							}
 							(*CR)(coefficientNumber) = set;
-							report(INFO, "EvtGen") << "R(" << coefficientNumber << ") = " << set << std::endl;
+							//report(INFO, "EvtGen") << "R(" << coefficientNumber << ") = " << set << std::endl;
+							std::cout << "R(" << coefficientNumber << ") = " << set << std::endl;
 						}
 					}
 					valueString.str("");
 					coefficientCount--;//count committed WCs
-					doMultiply = false;//default is to replace
 					isRight = false;//default is left-handed
+					op = '=';
 				}
 				break;
 			case 'r'://start of a Wilson coefficient index
 			case 'R':
 				isRight = true;//note fall-through here
+			case 'l':
+			case 'L':
 			case 'c':
 			case 'C':
 				coefficientCount++;//start of a new WC;
 				break;
-			case '*'://note fall-through here
-				doMultiply = true;
+			case '+'://operators
+			case '-':
+			case '/':
+			case '*':
+				{
+					//operators are *=, +=, %= etc.
+					std::string::const_iterator n = it + 1;
+					if( (n != command.end()) && (*n == '=')){
+						op = *it;
+					}else{
+						if( (*it == '+') || (*it == '-')){
+							valueString << c;
+						}else{
+							report(ERROR, "EvtGen")
+							<< "BTOKSTARLLDURHAM07_MODEL: Unsupported operator. Use +=, -=, *=, /=." << std::endl;
+							::abort();
+						}
+					}
+					break;
+				}
 			case '=':
 				{
 					const std::string index = valueString.str();
 					if(index == ""){
 						report(ERROR, "EvtGen")
-						<< "EVTBTOKSTARLLDURHAM07_MODEL: Wilson coefficient without number found. Check your decay file." << std::endl;
+						<< "BTOKSTARLLDURHAM07_MODEL: Wilson coefficient without number found. Check your decay file." << std::endl;
 						::abort();
 					}
 					std::istringstream(index) >> coefficientNumber;
 					assert(C->getOperatorBasis() == CR->getOperatorBasis());//implicit assumption here
 					if( (coefficientNumber < 1) || (coefficientNumber > C->getOperatorBasis()) || (coefficientNumber > CR->getOperatorBasis())){
 						report(ERROR, "EvtGen")
-						<< "EVTBTOKSTARLLDURHAM07_MODEL: Wilson coefficient index outside of allowed range. Check your decay file." << std::endl;
+						<< "BTOKSTARLLDURHAM07_MODEL: Wilson coefficient index outside of allowed range. Check your decay file." << std::endl;
 						::abort();
 					}
 					valueString.str("");
@@ -123,7 +187,7 @@ void qcd::GenericModel::parseCommand(const WilsonCoefficients<WilsonType>* C,
 	
 	if(coefficientCount){
 		report(ERROR, "EvtGen")
-		<< "EVTBTOKSTARLLDURHAM07_MODEL: Wilson coefficient not saved. Each must end with a ':'. Check your decay file." << std::endl;
+		<< "BTOKSTARLLDURHAM07_MODEL: Wilson coefficient not saved. Each must end with a ':'. Check your decay file." << std::endl;
 		::abort();
 	}
 }

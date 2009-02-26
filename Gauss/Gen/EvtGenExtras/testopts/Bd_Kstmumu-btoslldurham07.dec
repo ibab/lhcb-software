@@ -1,4 +1,4 @@
-# $Id: Bd_Kstmumu-btoslldurham07.dec,v 1.2 2009-02-23 14:49:16 wreece Exp $
+# $Id: Bd_Kstmumu-btoslldurham07.dec,v 1.3 2009-02-26 13:20:04 wreece Exp $
 #
 # This is the decay file for the decay B0 -> MU+ MU- K*0(-> K+ PI-)
 #
@@ -29,7 +29,7 @@ ChargeConj Myanti-K*0  MyK*0
 #BTOKSTARLLDURHAM07_MODEL physicsModel(MSSM_High_Tan_Beta_Model),calcAFBZero(1),formFactorModel(0)
 #BTOKSTARLLDURHAM07_MODEL physicsModel(Standard_Model),highq2Cut(0.75),lowq2Cut(12),calcAFBZero(1),formFactorModel(0)
 #BTOKSTARLLDURHAM07_MODEL physicsModel(Standard_Model),calcAFBZero(1),formFactorModel(0)
-#BTOKSTARLLDURHAM07_MODEL physicsModel(Generic_Model),wilsonCoefficients(c1=0.16:r9=+0.14-J0.001:c8*0.9:c2=-0.8763-I0.883:R8*1.10:)
+#BTOKSTARLLDURHAM07_MODEL physicsModel(Generic_Model),wilsonCoefficients(L1=0.16:R9=+-0.14-J0.001:L8*=0.9:L2=-0.8763-I0.883:L8+=1.10:R10-=-0.56+I2.0:)
 #BTOKSTARLLDURHAM07_MODEL physicsModel(LHT_Model),calcAFBZero(1),formFactorModel(0)
 #
 Decay B0sig
