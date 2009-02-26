@@ -1,4 +1,4 @@
-// $Id: OMAcommon.cpp,v 1.7 2009-02-19 10:49:51 ggiacomo Exp $
+// $Id: OMAcommon.cpp,v 1.8 2009-02-26 12:37:49 ggiacomo Exp $
 
 #include "OMAlib/OMAcommon.h"
 #include "OMAlib/OMAFitFunction.h"
@@ -136,5 +136,8 @@ void OMAcommon::doFitFuncList() {
   newff = new OMAFitDoubleGaus();
   m_fitfunctions[newff->name()] = newff;
 
+  // custom functions
+  OMAFitFunction * richfit = new OMAFitTH2withSinCosC();
+  m_fitfunctions[richfit->name()] = richfit;
 
 }

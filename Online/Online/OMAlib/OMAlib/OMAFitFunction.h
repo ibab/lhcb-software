@@ -1,4 +1,4 @@
-// $Id: OMAFitFunction.h,v 1.2 2009-02-19 10:49:50 ggiacomo Exp $
+// $Id: OMAFitFunction.h,v 1.3 2009-02-26 12:37:49 ggiacomo Exp $
 #ifndef OMALIB_OMAFITFUNCTION_H 
 #define OMALIB_OMAFITFUNCTION_H 1
 #include <string>
@@ -64,6 +64,14 @@ protected:
   unsigned int m_degree;
 };
 
-
+class OMAFitTH2withSinCosC: public OMAFitFunction {
+ public: 
+  OMAFitTH2withSinCosC();
+  virtual ~OMAFitTH2withSinCosC();
+  virtual void fit(TH1* histo, std::vector<float>* initValues);
+private:
+  TF1* GausP1;
+};
+ 
 
 #endif // OMALIB_OMAFITFUNCTION_H
