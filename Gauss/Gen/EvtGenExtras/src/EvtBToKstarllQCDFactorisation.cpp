@@ -76,6 +76,18 @@ void QCDFactorisation::init(){
 	DEBUGPRINT("CR_mb: ", *(parameters->CR_mb));//V
 	DEBUGPRINT("CR_mb3: ", *(parameters->CR_mb3));//V
 	
+	report(NOTICE,"EvtGen") << "Using physics model: " << model.getModelName() << std::endl;
+	report(NOTICE,"EvtGen") << "Left-handed Wilson coefficients are: " << std::endl;
+	report(NOTICE,"EvtGen") << "\t(m_W): " << (*C_mw) <<std::endl;
+	report(NOTICE,"EvtGen") << "\t(m_b): " << *(parameters->C_mb) <<std::endl;
+	report(NOTICE,"EvtGen") << "\t(m_h): " << *(parameters->C_mb3) <<std::endl;
+	
+	report(NOTICE,"EvtGen") << "Right-handed Wilson coefficients are: " << std::endl;
+	report(NOTICE,"EvtGen") << "\t(m_W): " << (*CR_mw) <<std::endl;
+	report(NOTICE,"EvtGen") << "\t(m_b): " << *(parameters->CR_mb) <<std::endl;
+	report(NOTICE,"EvtGen") << "\t(m_h): " << *(parameters->CR_mb3) <<std::endl;
+	
+	
 	if(calcAFBZero){
 		double afbZero = findAFBZero();
 		report(NOTICE,"EvtGen") << "AFB Zero Crossing point is: " << afbZero << " (GeV^2)" <<std::endl;
@@ -592,7 +604,7 @@ void QCDFactorisation::getTnAmplitudes(const double q2, const double MB, const d
 	DEBUGPRINT("F[1,7]: ", F_1_7);//V
 	DEBUGPRINT("F[2,7]: ", F_2_7);//V
 	
-	const double reg = 0;//TODO: Understand this in numerical case
+	const double reg = 0;
 	//do the integration
 	const EvtComplex c00 = inner::getC0(s2);
 	const EvtComplex b10 = inner::B10(q2, constants::mb*constants::mb, reg);

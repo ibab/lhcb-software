@@ -98,8 +98,7 @@ void qcd::GenericModel::parseCommand(const WilsonCoefficients<WilsonType>* C,
 								};
 							}
 							(*C)(coefficientNumber) = set;
-							//report(INFO, "EvtGen") << "L(" << coefficientNumber << ") = " << set << std::endl;
-							std::cout << "L(" << coefficientNumber << ") = " << set << std::endl;
+							report(NOTICE, "EvtGen") << "L(" << coefficientNumber << ") = " << set << std::endl;
 						}else{
 							const WilsonType smValue = (*CR)(coefficientNumber);
 							//do we apply an operator?
@@ -123,8 +122,7 @@ void qcd::GenericModel::parseCommand(const WilsonCoefficients<WilsonType>* C,
 								};
 							}
 							(*CR)(coefficientNumber) = set;
-							//report(INFO, "EvtGen") << "R(" << coefficientNumber << ") = " << set << std::endl;
-							std::cout << "R(" << coefficientNumber << ") = " << set << std::endl;
+							report(NOTICE, "EvtGen") << "R(" << coefficientNumber << ") = " << set << std::endl;
 						}
 					}
 					valueString.str("");
