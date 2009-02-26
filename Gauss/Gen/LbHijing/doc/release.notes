@@ -4,6 +4,13 @@
 ! Purpose     : "Interface" to Hijing 
 !-----------------------------------------------------------------------------
 
+! 2009-02-26 - Patrick Robbe
+ - ran.F: revert to original function name (ran) to allow overriding of 
+   HIJING random generator
+ - requirement: remove ran.F when compiling on OSX
+ - HijingProduction: remove beam particles from HepMC event to prevent wrong
+   primary vertex assignment in Geant4
+
 !========================= LbHijing v4r1 2009-02-09 ==========================
 ! 2009-01-19 - Chris Jones
  - Fix for name conflicit between local ran function and implicit function 

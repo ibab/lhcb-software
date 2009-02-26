@@ -141,6 +141,9 @@ StatusCode HijingProduction::generateEvent( HepMC::GenEvent * theEvent ,
     (*v) -> set_position( newPos ) ;
   }
   
+  // beam particles in HepMC do not make sense, erase them:
+  theEvent -> set_beam_particles( 0 , 0 ) ;
+  
   return StatusCode::SUCCESS ;
 }
 

@@ -59,7 +59,7 @@ C...first call
 C...decide if beam1 or beam2 in case of random beams
 C...use LbHijing ran function as generator
       revert=0
-      if(hijing_ran(dummy).gt.0.5) revert=1
+      if(ran(dummy).gt.0.5) revert=1
       
 C...Conversion
       NEVHEP=NEVHEP + 1
