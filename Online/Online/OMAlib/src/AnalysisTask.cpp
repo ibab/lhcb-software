@@ -1,4 +1,4 @@
-// $Id: AnalysisTask.cpp,v 1.8 2009-02-19 10:49:50 ggiacomo Exp $
+// $Id: AnalysisTask.cpp,v 1.9 2009-02-26 13:59:18 ggiacomo Exp $
 
 
 // from Gaudi
@@ -29,7 +29,6 @@ AnalysisTask::AnalysisTask( const std::string& name,
   declareProperty ( "HistRefRoot"  , m_myRefRoot = "default");
   declareProperty ( "InputFiles"   , m_inputFiles);
   declareProperty ( "InputTasks"   , m_inputTasks);
-  declareProperty ( "MessageTool"  , m_MessageTool = "OMAMsgStdOut" );
   declareProperty ( "Partition"    , m_partition = "LHCb" );
 }
 

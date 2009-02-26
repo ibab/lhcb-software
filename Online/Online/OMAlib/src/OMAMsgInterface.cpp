@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.cpp,v 1.9 2009-02-26 13:36:56 ggiacomo Exp $
+// $Id: OMAMsgInterface.cpp,v 1.10 2009-02-26 13:59:18 ggiacomo Exp $
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAMsgInterface.h"
 #include "GaudiKernel/MsgStream.h"
@@ -30,9 +30,11 @@ OMAMsgInterface::~OMAMsgInterface()
 
 
 void OMAMsgInterface::checkWritePermissions() {
-  if(false == m_histDB->canwrite() && m_outs) {
-    (*m_outs) << MSG::WARNING << "You don't have write permissions on HistDB" <<endmsg;
-    (*m_outs) << MSG::WARNING << "No persistency available for analysis messages" <<endmsg;
+  if (NULL != m_histDB && NULL != m_outs) {
+    if(false == m_histDB->canwrite()) {
+      (*m_outs) << MSG::WARNING << "You don't have write permissions on HistDB" <<endmsg;
+      (*m_outs) << MSG::WARNING << "No persistency available for analysis messages" <<endmsg;
+    }
   }
 }
 
