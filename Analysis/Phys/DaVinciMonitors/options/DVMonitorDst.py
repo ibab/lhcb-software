@@ -1,5 +1,5 @@
 ##############################################################################
-# $Id: DVMonitorDst.py,v 1.13 2009-02-24 14:04:57 pkoppenb Exp $
+# $Id: DVMonitorDst.py,v 1.14 2009-02-26 17:11:09 pkoppenb Exp $
 #
 # syntax: gaudirun.py $DAVINCIMONITORSROOT/options/DVMonitorDst.py
 #
@@ -10,12 +10,10 @@ from DaVinci.Configuration import *
 from Gaudi.Configuration import *
 ##############################################################################
 #
-# Make a sequence and take only events from given Hlt selections
+# Count Events
 #
-from Configurables import GaudiSequencer
-JpsiSeq = GaudiSequencer("JpsiMonitorSeq")
 from Configurables import EventCountHisto
-JpsiSeq.Members += [ EventCountHisto("DaVinciMonitor") ] 
+DaVinci().MoniSequence += [EventCountHisto("DaVinciMonitor") ] 
 ##############################################################################
 #
 # Get right selection @todo does not work yet 
@@ -23,50 +21,13 @@ JpsiSeq.Members += [ EventCountHisto("DaVinciMonitor") ]
 # from Configurables import LoKi__HDRFilter   as HltDecReportsFilter
 # HltDecReportsFilter  ( 'myname', Code = "HLT_PASS('somedecisionname')" )
 #
-##############################################################################
 #
-# Make a J/psi with only one side mu-IDed
+# Imported stuff
 #
-from Configurables import CombineParticles, PhysDesktop
-Jpsi2MuPi = CombineParticles("Jpsi2MuPi")
-Jpsi2MuPi.addTool(PhysDesktop)
-Jpsi2MuPi.PhysDesktop.InputLocations = [ "StdLooseMuons", "StdNoPIDsPions" ]
-Jpsi2MuPi.DecayDescriptor = "[J/psi(1S) -> mu+ pi-]cc"
-# a good muon and any pion
-Jpsi2MuPi.DaughtersCuts = { "pi+" : "(P>1*GeV)",
-                            "mu+" : "(P>10*GeV) & (PT>1*GeV)" }
-Jpsi2MuPi.CombinationCut = "(ADAMASS('J/psi(1S)')<100*MeV)"
-Jpsi2MuPi.MotherCut = "(ALL)"
-JpsiSeq.Members += [ Jpsi2MuPi ]
-##############################################################################
-#
-# Plot quantities
-#
-from Configurables import ParticleMonitor
-plotter = ParticleMonitor("Jpsi2MuPiMoni")
-plotter.addTool(PhysDesktop)
-plotter.PhysDesktop.InputLocations = [ "Jpsi2MuPi" ]
-plotter.PeakCut = "(ADMASS('J/psi(1S)')<5*MeV)"
-plotter.SideBandCut = "(ADMASS('J/psi(1S)')>20*MeV)"
-plotter.PlotTools = [ "MassPlotTool","MomentumPlotTool",
-                      "CombinedPidPlotTool",
-                      "RichPlotTool","CaloPlotTool","MuonPlotTool" ]
-JpsiSeq.Members += [ plotter ]
-##############################################################################
-#
-# RICH PID Monitoring from data
-#
-from Configurables import RichPIDQCConf
-richSeq = GaudiSequencer("RichPIDMoniSeq")
-RichPIDQCConf().setProp("CalibSequencer",richSeq)
-#RichPIDQCConf().MCChecks = True                  # Enable MC checking as well
-#RichPIDQCConf().PIDCalibrations = [ "DsPhiPi" ]  # The PID Calibration selections to run (default is all)
-##############################################################################
-#
-# Add Sequences to Monitors
-#
-DaVinci().MoniSequence += [ JpsiSeq ] # J/psi sequence
-DaVinci().MoniSequence += [ richSeq ] # RICH sequence
+importOptions( "$DAVINCIMONITORSROOT/options/Jpsi2MuPi.py") 
+importOptions( "$DAVINCIMONITORSROOT/options/RichCalib.py") 
+importOptions( "$DAVINCIMONITORSROOT/options/MuonPidJpCalib.py") 
+importOptions( "$DAVINCIMONITORSROOT/options/MuonPidLaCalib.py") 
 ##############################################################################
 #
 # Histograms
