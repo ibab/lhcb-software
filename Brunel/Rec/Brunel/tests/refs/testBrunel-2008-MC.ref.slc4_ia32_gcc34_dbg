@@ -52,8 +52,8 @@
 # \----- (End of User TrackSys/TrackSys) -------------------------------------------------------------
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Brunel version v34r1
-                                          running on lxbuild120.cern.ch on Tue Feb 24 18:03:54 2009
+                                                   Welcome to Brunel version v34r2
+                                          running on lxbuild120.cern.ch on Thu Feb 26 11:03:42 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -62,11 +62,12 @@ ToolSvc.CondDBE...   INFO Initializing...
 ToolSvc.CondDBE...   INFO Successfully initialized.
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
 DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
+Note: (file "(tmpfile)", line 2) File "set" already loaded
 EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.36 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.24 times the speed of a 2.8 GHz Xeon.
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
 BrunelSequencer      INFO Member list: ProcessPhase/Init, ProcessPhase/Reco, ProcessPhase/Moni, ProcessPhase/MCLinks, ProcessPhase/Check, ProcessPhase/Output
@@ -375,42 +376,16 @@ TrackAddExtraIn...   INFO Member list: GaudiSequencer/TrackClonesSeq, TrackAddLi
 TrackClonesSeq       INFO Member list: TrackBuildCloneTable/FindTrackClones, TrackCloneCleaner/FlagTrackClones
 FindTrackClones      INFO Will build clone table for z=[0, 990, 9450]mm at 'Rec/Track/BestClones'
 FindTrackClones      INFO Max Kullbeck Liebler Distance = 5000
---- Reader       : Parsing option string:
---- Reader       : "Silent"
---- Reader       : The following options are set:
---- Reader       : - By User:
---- Reader       :     <none>
---- Reader       : - Default:
---- Reader       :     V: "False" [verbose flag]
---- Reader       :     Color: "True" [color flag (default on)]
+--- Reader         : Parsing option string:
+--- Reader         : "Silent"
+--- Reader         : The following options are set:
+--- Reader         : - By User:
+--- Reader         :     Silent: "True" [Boolean silent flag (default off)]
+--- Reader         : - Default:
+--- Reader         :     V: "False" [Verbose flag]
+--- Reader         :     Color: "False" [Color flag (default on)]
 NeuralNetTmva        INFO The MVAnalysis_m_CFMlpANN.weights.txt weights file is at /afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r0/data/MVAnalysis_m_CFMlpANN.weights.txt
---- Reader       : Booking method tag "CFMlpANN method"
---- CFMlpANN     : Reading weight file: [1;34m/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r0/data/MVAnalysis_m_CFMlpANN.weights.txt[0m
---- CFMlpANN     : Read method with name <CFMlpANN> and title <CFMlpANN>
---- CFMlpANN     : Create VariableTransformation "None"
---- CFMlpANN     : Use configuration (nodes per layer): in=8:8:8:2=out
---- Reader       : Booked classifier CFMlpANN with title: "CFMlpANN"
---- Reader       : Read method name  : "CFMlpANN"
---- Reader       :    - method title : "CFMlpANN"
---- Reader       : Method tag : "CFMlpANN method"
---- Reader       : Parsing option string:
---- Reader       : "Silent"
---- Reader       : The following options are set:
---- Reader       : - By User:
---- Reader       :     <none>
---- Reader       : - Default:
---- Reader       :     V: "False" [verbose flag]
---- Reader       :     Color: "True" [color flag (default on)]
 NeuralNetTmva        INFO The MVAnalysis_pf_CFMlpANN.weights.txt weights file is at /afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r0/data/MVAnalysis_pf_CFMlpANN.weights.txt
---- Reader       : Booking method tag "CFMlpANN method"
---- CFMlpANN     : Reading weight file: [1;34m/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r0/data/MVAnalysis_pf_CFMlpANN.weights.txt[0m
---- CFMlpANN     : Read method with name <CFMlpANN> and title <CFMlpANN>
---- CFMlpANN     : Create VariableTransformation "None"
---- CFMlpANN     : Use configuration (nodes per layer): in=8:8:8:2=out
---- Reader       : Booked classifier CFMlpANN with title: "CFMlpANN"
---- Reader       : Read method name  : "CFMlpANN"
---- Reader       :    - method title : "CFMlpANN"
---- Reader       : Method tag : "CFMlpANN method"
 RecoVertexSeq        INFO Member list: PatPVOffline, TrackV0Finder
 ToolSvc.Simplif...   INFO SimplifiedMaterialLocator::initialize()
 ToolSvc.Simplif...   INFO Found TrackfitGeometry volume with 17 daughters.
@@ -985,15 +960,15 @@ DstWriter            INFO Data source: EventDataSvc output: DATAFILE='PFN:111441
 EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v17r2/11144101-100ev-20090112.digi' TYP='POOL_ROOTTREE' OPT='READ'
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
-castor:/castor/...SUCCESS Root file version:51800
-castor:/castor/...SUCCESS Root file version:51800
+RootDBase.open    SUCCESS castor:/castor/cern.ch/user/c/cattanem/Boole/v17r2/11144101-100ev-20090112.digi File version:51800
+RootDBase.open    SUCCESS castor:/castor/cern.ch/user/c/cattanem/Boole/v17r2/11144101-100ev-20090112.digi File version:51800
 PoolRootTreeEvt...   INFO No RunRecords present in:6A3370ED-61E1-DD11-A1DC-0030487C5E0E
 BrunelInit           INFO Evt 1,  Run 1082,  Nr. in job = 1
 ToolSvc.L0DUCon...   INFO **** L0DU Configs loading : TCK = 0xFFFF
 ToolSvc.L0DUCon...   INFO Short description ::  TCK = 0xFFFF : Algorithm[1] Setting[0] lumi[2] - 2007 tuning - gain:Calo[20] : Muon[40]
 ChronoStatSvc        INFO  Number of skipped events for MemStat-1
 ToolSvc.Offline...WARNING Rich::Rec::IsolatedTrackTool:: The WARNING message is suppressed : 'Not yet implemented for Aerogel'
-/castor/cern.ch...SUCCESS Root file version:51800
+RootDBase.open    SUCCESS /castor/cern.ch/user/g/gcorti/Gauss/2009/v36r1/11144101-100ev-20090112.sim File version:51800
 PoolRootTreeEvt...   INFO No RunRecords present in:620A8970-CFE0-DD11-AA83-000CF1F44509
 LinkedTo::MC/Pa...  ERROR *** Link container Link/MC/Particles2MCRichTracks not found.
 ToolSvc.Offline...WARNING Rich::SnellsLawRefraction:: aerogelToGas:: photonEnergy = 0 StatusCode=FAILURE
@@ -1024,7 +999,7 @@ RCWNTupleCnv         INFO Booked TTree with ID: ckResTuple "CKTuple" in director
 RCWNTupleCnv         INFO Booked TTree with ID: ckResTuple "CKTuple" in directory rich.tuples.root:/RICH/RiRecPhotAngVeloTTMoni/Rich1Gas
 RCWNTupleCnv         INFO Booked TTree with ID: ckResTuple "CKTuple" in directory rich.tuples.root:/RICH/RiRecPhotAngSeedMoni/Rich2Gas
 RCWNTupleCnv         INFO Booked TTree with ID: ghosts "GhostTracksTuple" in directory rich.tuples.root:/RICH/RichGhostsMoni
-11144101-100ev-...SUCCESS Root file version:51800
+RootDBase.open    SUCCESS 11144101-100ev-20090112-L0Yes-15ev.dst File version:52200
 BrunelInit           INFO Evt 2,  Run 1082,  Nr. in job = 2
 LinkedTo::MC/Pa...  ERROR *** Link container Link/MC/Particles2MCRichTracks not found.
 RCWNTupleCnv         INFO Booked TTree with ID: ckResTuple "CKTuple" in directory rich.tuples.root:/RICH/RiRecPhotAngMatchMoni/Rich2Gas
@@ -1140,7 +1115,7 @@ PreFitDownstream     INFO   Fitting performance   :   100.00 %
 PreFitDownstream  SUCCESS Number of counters : 5
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "badChisq"                                      |       599 |        191 |    0.31886 |    0.46604 |      0.0000 |      1.0000 |
- | "chisqprobSum"                                  |       599 |   157.5514 |    0.26302 |    0.29070 |      0.0000 |     0.99996 |
+ | "chisqprobSum"                                  |       599 |   157.0651 |    0.26221 |    0.29041 |      0.0000 |     0.99996 |
  | "nFitted"                                       |        13 |        599 |     46.077 |     38.094 |      7.0000 |      136.00 |
  | "nTracks"                                       |        13 |        599 |     46.077 |     38.094 |      7.0000 |      136.00 |
  | "numOutliers"                                   |       599 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
@@ -1148,10 +1123,10 @@ FitDownstream        INFO   Fitting performance   :   100.00 %
 FitDownstream     SUCCESS Number of counters : 5
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "badChisq"                                      |       599 |        187 |    0.31219 |    0.46339 |      0.0000 |      1.0000 |
- | "chisqprobSum"                                  |       599 |   193.0364 |    0.32226 |    0.33473 |      0.0000 |     0.99828 |
+ | "chisqprobSum"                                  |       599 |   193.1684 |    0.32248 |    0.33482 |      0.0000 |     0.99828 |
  | "nFitted"                                       |        13 |        599 |     46.077 |     38.094 |      7.0000 |      136.00 |
  | "nTracks"                                       |        13 |        599 |     46.077 |     38.094 |      7.0000 |      136.00 |
- | "numOutliers"                                   |       599 |        598 |    0.99833 |    0.89610 |      0.0000 |      2.0000 |
+ | "numOutliers"                                   |       599 |        599 |     1.0000 |    0.89517 |      0.0000 |      2.0000 |
 FitVeloTT            INFO   Fitting performance   :   100.00 %
 FitVeloTT         SUCCESS Number of counters : 5
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
@@ -1178,9 +1153,9 @@ EcalClust            INFO Built 82.0769 cellular automaton clusters/event  with 
 ClusterMatch      SUCCESS Number of counters : 5
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "#calos"                                        |        13 |       1067 |     82.077 |     52.766 |      12.000 |      186.00 |
- | "#chi2"                                         |     19568 |    9006560 |     460.27 |     293.02 |   0.0016789 |      999.82 |
- | "#links"                                        |        13 |      19568 |     1505.2 |     1887.7 |      15.000 |      6068.0 |
- | "#overflow"                                     |        13 |      81745 |     6288.1 |     7798.9 |      69.000 |      26110. |
+ | "#chi2"                                         |     19567 |    9005674 |     460.25 |     293.00 |   0.0016789 |      999.82 |
+ | "#links"                                        |        13 |      19567 |     1505.2 |     1887.6 |      15.000 |      6068.0 |
+ | "#overflow"                                     |        13 |      81746 |     6288.2 |     7799.0 |      69.000 |      26110. |
  | "#tracks"                                       |        13 |        828 |     63.692 |     49.557 |      7.0000 |      173.00 |
 ElectronMatch     SUCCESS Number of counters : 5
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
@@ -1253,15 +1228,15 @@ NeutralProtoPAlg     INFO   -> 0.307692 proto/event with CaloHypo::Hypothesis = 
 NeutralProtoPAlg     INFO   -> 50.0769 proto/event with CaloHypo::Hypothesis = Photons
 NeutralProtoPAlg     INFO   -> 0.615385 proto/event with CaloHypo::Hypothesis = SplitPhotons
 NeutralProtoPAlg     INFO  -----------------------
-EcalDigitMon      SUCCESS Booked 5 Histogram(s) : 1D=3 2D=2
-HcalDigitMon      SUCCESS Booked 5 Histogram(s) : 1D=3 2D=2
-PrsDigitMon       SUCCESS Booked 4 Histogram(s) : 1D=2 2D=2
-SpdDigitMon       SUCCESS Booked 2 Histogram(s) : 1D=1 2D=1
-EcalClusterMon    SUCCESS Booked 10 Histogram(s) : 1D=7 2D=3
-ElectronMon       SUCCESS Booked 11 Histogram(s) : 1D=8 2D=3
-PhotonMon         SUCCESS Booked 11 Histogram(s) : 1D=8 2D=3
-SplitPhotonMon    SUCCESS Booked 9 Histogram(s) : 1D=8 2D=1
-MergedPi0Mon      SUCCESS Booked 12 Histogram(s) : 1D=9 2D=3
+EcalDigitMon      SUCCESS Booked 9 Histogram(s) : 1D=5 2D=4
+HcalDigitMon      SUCCESS Booked 9 Histogram(s) : 1D=5 2D=4
+PrsDigitMon       SUCCESS Booked 8 Histogram(s) : 1D=4 2D=4
+SpdDigitMon       SUCCESS Booked 6 Histogram(s) : 1D=3 2D=3
+EcalClusterMon    SUCCESS Booked 11 Histogram(s) : 1D=7 2D=4
+ElectronMon       SUCCESS Booked 12 Histogram(s) : 1D=8 2D=4
+PhotonMon         SUCCESS Booked 12 Histogram(s) : 1D=8 2D=4
+SplitPhotonMon    SUCCESS Booked 10 Histogram(s) : 1D=8 2D=2
+MergedPi0Mon      SUCCESS Booked 13 Histogram(s) : 1D=9 2D=4
 ResolvedPi0Mon    SUCCESS Booked 4 Histogram(s) : 1D=4
 PhotonMatchMon    SUCCESS Booked 5 Histogram(s) : 1D=5
 ElectronMatchMon  SUCCESS Booked 5 Histogram(s) : 1D=5
@@ -2528,8 +2503,8 @@ EffLong              INFO    long, p > 5 GeV  :          277 from      282 [ 98.
 EffLong           SUCCESS Booked 162 Histogram(s) : 1D=160 2D=2
 EffLong           SUCCESS Number of counters : 14
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "Conversion"                                    |        20 |         20 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
- | "EM"                                            |        79 |         79 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "Conversion"                                    |        21 |         21 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "EM"                                            |        78 |         78 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
  | "GhostParent"                                   |       173 |        173 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
  | "HadronicInteraction"                           |        90 |         90 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
  | "None"                                          |         1 |          1 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
@@ -2549,574 +2524,574 @@ RFileCnv             INFO dumping contents of /NTUPLES/RICHTUPLE1
 TFile: name=rich.tuples.root, title=Gaudi Trees, option=CREATE
 ******************************************************************************
 *Tree    :ckResTuple: CKTuple                                                *
-*Entries :     5501 : Total =          136299 bytes  File  Size =      44006 *
-*        :          : Tree compression factor =   1.00                       *
+*Entries :     5501 : Total =          135847 bytes  File  Size =      43079 *
+*        :          : Tree compression factor =   3.13                       *
 ******************************************************************************
 *Br    0 :RecoPtot  : RecoPtot/F                                             *
-*Entries :     5501 : Total  Size=      22660 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     5501 : Total  Size=      22579 bytes  File Size  =       1710 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  12.92     *
 *............................................................................*
 *Br    1 :RecoCKtheta : RecoCKtheta/F                                        *
-*Entries :     5501 : Total  Size=      22678 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     5501 : Total  Size=      22594 bytes  File Size  =      18762 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.18     *
 *............................................................................*
 *Br    2 :RecoCKphi : RecoCKphi/F                                            *
-*Entries :     5501 : Total  Size=      22666 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     5501 : Total  Size=      22584 bytes  File Size  =      19752 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.12     *
 *............................................................................*
 *Br    3 :McCKtheta : McCKtheta/F                                            *
-*Entries :     5501 : Total  Size=      22666 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     5501 : Total  Size=      22584 bytes  File Size  =        228 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  96.87     *
 *............................................................................*
 *Br    4 :McCKphi   : McCKphi/F                                              *
-*Entries :     5501 : Total  Size=      22654 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     5501 : Total  Size=      22574 bytes  File Size  =        226 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  97.72     *
 *............................................................................*
 *Br    5 :ExpCKtheta : ExpCKtheta/F                                          *
-*Entries :     5501 : Total  Size=      22672 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     5501 : Total  Size=      22589 bytes  File Size  =       1680 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  13.15     *
 *............................................................................*
 ******************************************************************************
 *Tree    :ckResTuple: CKTuple                                                *
-*Entries :     3972 : Total =           99603 bytes  File  Size =      32147 *
-*        :          : Tree compression factor =   1.00                       *
+*Entries :     3972 : Total =           99151 bytes  File  Size =      31409 *
+*        :          : Tree compression factor =   3.12                       *
 ******************************************************************************
 *Br    0 :RecoPtot  : RecoPtot/F                                             *
-*Entries :     3972 : Total  Size=      16544 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     3972 : Total  Size=      16463 bytes  File Size  =       1339 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  11.93     *
 *............................................................................*
 *Br    1 :RecoCKtheta : RecoCKtheta/F                                        *
-*Entries :     3972 : Total  Size=      16562 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     3972 : Total  Size=      16478 bytes  File Size  =      13374 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.19     *
 *............................................................................*
 *Br    2 :RecoCKphi : RecoCKphi/F                                            *
-*Entries :     3972 : Total  Size=      16550 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     3972 : Total  Size=      16468 bytes  File Size  =      14260 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.12     *
 *............................................................................*
 *Br    3 :McCKtheta : McCKtheta/F                                            *
-*Entries :     3972 : Total  Size=      16550 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     3972 : Total  Size=      16468 bytes  File Size  =        198 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  80.66     *
 *............................................................................*
 *Br    4 :McCKphi   : McCKphi/F                                              *
-*Entries :     3972 : Total  Size=      16538 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     3972 : Total  Size=      16458 bytes  File Size  =        196 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  81.47     *
 *............................................................................*
 *Br    5 :ExpCKtheta : ExpCKtheta/F                                          *
-*Entries :     3972 : Total  Size=      16556 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     3972 : Total  Size=      16473 bytes  File Size  =       1312 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  12.17     *
 *............................................................................*
 ******************************************************************************
 *Tree    :ckResTuple: CKTuple                                                *
-*Entries :     1158 : Total =           32067 bytes  File  Size =      11435 *
-*        :          : Tree compression factor =   1.00                       *
+*Entries :     1158 : Total =           31615 bytes  File  Size =      11245 *
+*        :          : Tree compression factor =   2.69                       *
 ******************************************************************************
 *Br    0 :RecoPtot  : RecoPtot/F                                             *
-*Entries :     1158 : Total  Size=       5288 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     1158 : Total  Size=       5207 bytes  File Size  =       1066 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   4.42     *
 *............................................................................*
 *Br    1 :RecoCKtheta : RecoCKtheta/F                                        *
-*Entries :     1158 : Total  Size=       5306 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     1158 : Total  Size=       5222 bytes  File Size  =       3899 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.21     *
 *............................................................................*
 *Br    2 :RecoCKphi : RecoCKphi/F                                            *
-*Entries :     1158 : Total  Size=       5294 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     1158 : Total  Size=       5212 bytes  File Size  =       4250 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.11     *
 *............................................................................*
 *Br    3 :McCKtheta : McCKtheta/F                                            *
-*Entries :     1158 : Total  Size=       5294 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     1158 : Total  Size=       5212 bytes  File Size  =        143 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  32.97     *
 *............................................................................*
 *Br    4 :McCKphi   : McCKphi/F                                              *
-*Entries :     1158 : Total  Size=       5282 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     1158 : Total  Size=       5202 bytes  File Size  =        141 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  33.42     *
 *............................................................................*
 *Br    5 :ExpCKtheta : ExpCKtheta/F                                          *
-*Entries :     1158 : Total  Size=       5300 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     1158 : Total  Size=       5217 bytes  File Size  =       1019 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   4.63     *
 *............................................................................*
 ******************************************************************************
 *Tree    :ckResTuple: CKTuple                                                *
-*Entries :     4595 : Total =          114555 bytes  File  Size =      36545 *
-*        :          : Tree compression factor =   1.00                       *
+*Entries :     4595 : Total =          114103 bytes  File  Size =      36062 *
+*        :          : Tree compression factor =   3.13                       *
 ******************************************************************************
 *Br    0 :RecoPtot  : RecoPtot/F                                             *
-*Entries :     4595 : Total  Size=      19036 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     4595 : Total  Size=      18955 bytes  File Size  =       1400 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  13.19     *
 *............................................................................*
 *Br    1 :RecoCKtheta : RecoCKtheta/F                                        *
-*Entries :     4595 : Total  Size=      19054 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     4595 : Total  Size=      18970 bytes  File Size  =      15626 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.18     *
 *............................................................................*
 *Br    2 :RecoCKphi : RecoCKphi/F                                            *
-*Entries :     4595 : Total  Size=      19042 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     4595 : Total  Size=      18960 bytes  File Size  =      16531 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.12     *
 *............................................................................*
 *Br    3 :McCKtheta : McCKtheta/F                                            *
-*Entries :     4595 : Total  Size=      19042 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     4595 : Total  Size=      18960 bytes  File Size  =        211 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  87.50     *
 *............................................................................*
 *Br    4 :McCKphi   : McCKphi/F                                              *
-*Entries :     4595 : Total  Size=      19030 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     4595 : Total  Size=      18950 bytes  File Size  =        209 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  88.33     *
 *............................................................................*
 *Br    5 :ExpCKtheta : ExpCKtheta/F                                          *
-*Entries :     4595 : Total  Size=      19048 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     4595 : Total  Size=      18965 bytes  File Size  =       1361 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  13.57     *
 *............................................................................*
 ******************************************************************************
 *Tree    :ckResTuple: CKTuple                                                *
-*Entries :     2699 : Total =           69051 bytes  File  Size =      22363 *
-*        :          : Tree compression factor =   1.00                       *
+*Entries :     2699 : Total =           68599 bytes  File  Size =      21767 *
+*        :          : Tree compression factor =   3.10                       *
 ******************************************************************************
 *Br    0 :RecoPtot  : RecoPtot/F                                             *
-*Entries :     2699 : Total  Size=      11452 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     2699 : Total  Size=      11371 bytes  File Size  =        943 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  11.53     *
 *............................................................................*
 *Br    1 :RecoCKtheta : RecoCKtheta/F                                        *
-*Entries :     2699 : Total  Size=      11470 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     2699 : Total  Size=      11386 bytes  File Size  =       9101 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.20     *
 *............................................................................*
 *Br    2 :RecoCKphi : RecoCKphi/F                                            *
-*Entries :     2699 : Total  Size=      11458 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     2699 : Total  Size=      11376 bytes  File Size  =       9726 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.12     *
 *............................................................................*
 *Br    3 :McCKtheta : McCKtheta/F                                            *
-*Entries :     2699 : Total  Size=      11458 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     2699 : Total  Size=      11376 bytes  File Size  =        173 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  62.88     *
 *............................................................................*
 *Br    4 :McCKphi   : McCKphi/F                                              *
-*Entries :     2699 : Total  Size=      11446 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     2699 : Total  Size=      11366 bytes  File Size  =        171 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  63.60     *
 *............................................................................*
 *Br    5 :ExpCKtheta : ExpCKtheta/F                                          *
-*Entries :     2699 : Total  Size=      11464 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     2699 : Total  Size=      11381 bytes  File Size  =        932 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  11.67     *
 *............................................................................*
 ******************************************************************************
 *Tree    :ckResTuple: CKTuple                                                *
-*Entries :      966 : Total =           27459 bytes  File  Size =       9692 *
-*        :          : Tree compression factor =   1.00                       *
+*Entries :      966 : Total =           27007 bytes  File  Size =       9605 *
+*        :          : Tree compression factor =   2.66                       *
 ******************************************************************************
 *Br    0 :RecoPtot  : RecoPtot/F                                             *
-*Entries :      966 : Total  Size=       4520 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      966 : Total  Size=       4439 bytes  File Size  =        896 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   4.40     *
 *............................................................................*
 *Br    1 :RecoCKtheta : RecoCKtheta/F                                        *
-*Entries :      966 : Total  Size=       4538 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      966 : Total  Size=       4454 bytes  File Size  =       3274 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.21     *
 *............................................................................*
 *Br    2 :RecoCKphi : RecoCKphi/F                                            *
-*Entries :      966 : Total  Size=       4526 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      966 : Total  Size=       4444 bytes  File Size  =       3575 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.10     *
 *............................................................................*
 *Br    3 :McCKtheta : McCKtheta/F                                            *
-*Entries :      966 : Total  Size=       4526 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      966 : Total  Size=       4444 bytes  File Size  =        139 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  28.39     *
 *............................................................................*
 *Br    4 :McCKphi   : McCKphi/F                                              *
-*Entries :      966 : Total  Size=       4514 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      966 : Total  Size=       4434 bytes  File Size  =        137 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  28.79     *
 *............................................................................*
 *Br    5 :ExpCKtheta : ExpCKtheta/F                                          *
-*Entries :      966 : Total  Size=       4532 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      966 : Total  Size=       4449 bytes  File Size  =        864 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   4.57     *
 *............................................................................*
 ******************************************************************************
 *Tree    :ckResTuple: CKTuple                                                *
-*Entries :     3027 : Total =           76923 bytes  File  Size =      24772 *
-*        :          : Tree compression factor =   1.00                       *
+*Entries :     3027 : Total =           76471 bytes  File  Size =      24262 *
+*        :          : Tree compression factor =   3.11                       *
 ******************************************************************************
 *Br    0 :RecoPtot  : RecoPtot/F                                             *
-*Entries :     3027 : Total  Size=      12764 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     3027 : Total  Size=      12683 bytes  File Size  =       1005 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  12.13     *
 *............................................................................*
 *Br    1 :RecoCKtheta : RecoCKtheta/F                                        *
-*Entries :     3027 : Total  Size=      12782 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     3027 : Total  Size=      12698 bytes  File Size  =      10308 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.18     *
 *............................................................................*
 *Br    2 :RecoCKphi : RecoCKphi/F                                            *
-*Entries :     3027 : Total  Size=      12770 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     3027 : Total  Size=      12688 bytes  File Size  =      10892 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.12     *
 *............................................................................*
 *Br    3 :McCKtheta : McCKtheta/F                                            *
-*Entries :     3027 : Total  Size=      12770 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     3027 : Total  Size=      12688 bytes  File Size  =        179 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  68.10     *
 *............................................................................*
 *Br    4 :McCKphi   : McCKphi/F                                              *
-*Entries :     3027 : Total  Size=      12758 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     3027 : Total  Size=      12678 bytes  File Size  =        177 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  68.86     *
 *............................................................................*
 *Br    5 :ExpCKtheta : ExpCKtheta/F                                          *
-*Entries :     3027 : Total  Size=      12776 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     3027 : Total  Size=      12693 bytes  File Size  =        974 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  12.52     *
 *............................................................................*
 ******************************************************************************
 *Tree    :ckResTuple: CKTuple                                                *
-*Entries :     2084 : Total =           54291 bytes  File  Size =      17554 *
-*        :          : Tree compression factor =   1.00                       *
+*Entries :     2084 : Total =           53839 bytes  File  Size =      17110 *
+*        :          : Tree compression factor =   3.08                       *
 ******************************************************************************
 *Br    0 :RecoPtot  : RecoPtot/F                                             *
-*Entries :     2084 : Total  Size=       8992 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     2084 : Total  Size=       8911 bytes  File Size  =        755 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  11.15     *
 *............................................................................*
 *Br    1 :RecoCKtheta : RecoCKtheta/F                                        *
-*Entries :     2084 : Total  Size=       9010 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     2084 : Total  Size=       8926 bytes  File Size  =       7038 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.20     *
 *............................................................................*
 *Br    2 :RecoCKphi : RecoCKphi/F                                            *
-*Entries :     2084 : Total  Size=       8998 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     2084 : Total  Size=       8916 bytes  File Size  =       7536 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.12     *
 *............................................................................*
 *Br    3 :McCKtheta : McCKtheta/F                                            *
-*Entries :     2084 : Total  Size=       8998 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     2084 : Total  Size=       8916 bytes  File Size  =        162 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  51.96     *
 *............................................................................*
 *Br    4 :McCKphi   : McCKphi/F                                              *
-*Entries :     2084 : Total  Size=       8986 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     2084 : Total  Size=       8906 bytes  File Size  =        160 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  52.60     *
 *............................................................................*
 *Br    5 :ExpCKtheta : ExpCKtheta/F                                          *
-*Entries :     2084 : Total  Size=       9004 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     2084 : Total  Size=       8921 bytes  File Size  =        733 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  11.49     *
 *............................................................................*
 ******************************************************************************
 *Tree    :ckResTuple: CKTuple                                                *
-*Entries :      542 : Total =           17283 bytes  File  Size =       5852 *
-*        :          : Tree compression factor =   1.00                       *
+*Entries :      542 : Total =           16831 bytes  File  Size =       6093 *
+*        :          : Tree compression factor =   2.51                       *
 ******************************************************************************
 *Br    0 :RecoPtot  : RecoPtot/F                                             *
-*Entries :      542 : Total  Size=       2824 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      542 : Total  Size=       2743 bytes  File Size  =        583 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   3.86     *
 *............................................................................*
 *Br    1 :RecoCKtheta : RecoCKtheta/F                                        *
-*Entries :      542 : Total  Size=       2842 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      542 : Total  Size=       2758 bytes  File Size  =       1908 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.18     *
 *............................................................................*
 *Br    2 :RecoCKphi : RecoCKphi/F                                            *
-*Entries :      542 : Total  Size=       2830 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      542 : Total  Size=       2748 bytes  File Size  =       2067 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.09     *
 *............................................................................*
 *Br    3 :McCKtheta : McCKtheta/F                                            *
-*Entries :      542 : Total  Size=       2830 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      542 : Total  Size=       2748 bytes  File Size  =        127 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  17.72     *
 *............................................................................*
 *Br    4 :McCKphi   : McCKphi/F                                              *
-*Entries :      542 : Total  Size=       2818 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      542 : Total  Size=       2738 bytes  File Size  =        125 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  17.98     *
 *............................................................................*
 *Br    5 :ExpCKtheta : ExpCKtheta/F                                          *
-*Entries :      542 : Total  Size=       2836 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      542 : Total  Size=       2753 bytes  File Size  =        563 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   4.00     *
 *............................................................................*
 ******************************************************************************
 *Tree    :ckResTuple: CKTuple                                                *
-*Entries :      424 : Total =           14451 bytes  File  Size =       4759 *
-*        :          : Tree compression factor =   1.00                       *
+*Entries :      424 : Total =           13999 bytes  File  Size =       5081 *
+*        :          : Tree compression factor =   2.45                       *
 ******************************************************************************
 *Br    0 :RecoPtot  : RecoPtot/F                                             *
-*Entries :      424 : Total  Size=       2352 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      424 : Total  Size=       2271 bytes  File Size  =        463 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   3.84     *
 *............................................................................*
 *Br    1 :RecoCKtheta : RecoCKtheta/F                                        *
-*Entries :      424 : Total  Size=       2370 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      424 : Total  Size=       2286 bytes  File Size  =       1542 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.15     *
 *............................................................................*
 *Br    2 :RecoCKphi : RecoCKphi/F                                            *
-*Entries :      424 : Total  Size=       2358 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      424 : Total  Size=       2276 bytes  File Size  =       1663 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.07     *
 *............................................................................*
 *Br    3 :McCKtheta : McCKtheta/F                                            *
-*Entries :      424 : Total  Size=       2358 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      424 : Total  Size=       2276 bytes  File Size  =        122 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  14.57     *
 *............................................................................*
 *Br    4 :McCKphi   : McCKphi/F                                              *
-*Entries :      424 : Total  Size=       2346 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      424 : Total  Size=       2266 bytes  File Size  =        120 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  14.80     *
 *............................................................................*
 *Br    5 :ExpCKtheta : ExpCKtheta/F                                          *
-*Entries :      424 : Total  Size=       2364 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      424 : Total  Size=       2281 bytes  File Size  =        446 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   3.99     *
 *............................................................................*
 ******************************************************************************
 *Tree    :ckResTuple: CKTuple                                                *
-*Entries :     1568 : Total =           41907 bytes  File  Size =      13368 *
-*        :          : Tree compression factor =   1.00                       *
+*Entries :     1568 : Total =           41455 bytes  File  Size =      13249 *
+*        :          : Tree compression factor =   3.04                       *
 ******************************************************************************
 *Br    0 :RecoPtot  : RecoPtot/F                                             *
-*Entries :     1568 : Total  Size=       6928 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     1568 : Total  Size=       6847 bytes  File Size  =        560 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  11.34     *
 *............................................................................*
 *Br    1 :RecoCKtheta : RecoCKtheta/F                                        *
-*Entries :     1568 : Total  Size=       6946 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     1568 : Total  Size=       6862 bytes  File Size  =       5414 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.17     *
 *............................................................................*
 *Br    2 :RecoCKphi : RecoCKphi/F                                            *
-*Entries :     1568 : Total  Size=       6934 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     1568 : Total  Size=       6852 bytes  File Size  =       5706 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.11     *
 *............................................................................*
 *Br    3 :McCKtheta : McCKtheta/F                                            *
-*Entries :     1568 : Total  Size=       6934 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     1568 : Total  Size=       6852 bytes  File Size  =        152 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  41.80     *
 *............................................................................*
 *Br    4 :McCKphi   : McCKphi/F                                              *
-*Entries :     1568 : Total  Size=       6922 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     1568 : Total  Size=       6842 bytes  File Size  =        150 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  42.35     *
 *............................................................................*
 *Br    5 :ExpCKtheta : ExpCKtheta/F                                          *
-*Entries :     1568 : Total  Size=       6940 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :     1568 : Total  Size=       6857 bytes  File Size  =        546 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  11.64     *
 *............................................................................*
 ******************************************************************************
 *Tree    :ckResTuple: CKTuple                                                *
-*Entries :      615 : Total =           19035 bytes  File  Size =       5926 *
-*        :          : Tree compression factor =   1.00                       *
+*Entries :      615 : Total =           18583 bytes  File  Size =       6181 *
+*        :          : Tree compression factor =   2.79                       *
 ******************************************************************************
 *Br    0 :RecoPtot  : RecoPtot/F                                             *
-*Entries :      615 : Total  Size=       3116 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      615 : Total  Size=       3035 bytes  File Size  =        328 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   7.75     *
 *............................................................................*
 *Br    1 :RecoCKtheta : RecoCKtheta/F                                        *
-*Entries :      615 : Total  Size=       3134 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      615 : Total  Size=       3050 bytes  File Size  =       2209 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.15     *
 *............................................................................*
 *Br    2 :RecoCKphi : RecoCKphi/F                                            *
-*Entries :      615 : Total  Size=       3122 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      615 : Total  Size=       3040 bytes  File Size  =       2333 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.09     *
 *............................................................................*
 *Br    3 :McCKtheta : McCKtheta/F                                            *
-*Entries :      615 : Total  Size=       3122 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      615 : Total  Size=       3040 bytes  File Size  =        130 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  19.55     *
 *............................................................................*
 *Br    4 :McCKphi   : McCKphi/F                                              *
-*Entries :      615 : Total  Size=       3110 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      615 : Total  Size=       3030 bytes  File Size  =        128 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  19.84     *
 *............................................................................*
 *Br    5 :ExpCKtheta : ExpCKtheta/F                                          *
-*Entries :      615 : Total  Size=       3128 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      615 : Total  Size=       3045 bytes  File Size  =        332 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   7.66     *
 *............................................................................*
 ******************************************************************************
 *Tree    :ckResTuple: CKTuple                                                *
-*Entries :      510 : Total =           16515 bytes  File  Size =       5071 *
-*        :          : Tree compression factor =   1.00                       *
+*Entries :      510 : Total =           16063 bytes  File  Size =       5374 *
+*        :          : Tree compression factor =   2.73                       *
 ******************************************************************************
 *Br    0 :RecoPtot  : RecoPtot/F                                             *
-*Entries :      510 : Total  Size=       2696 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      510 : Total  Size=       2615 bytes  File Size  =        298 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   7.12     *
 *............................................................................*
 *Br    1 :RecoCKtheta : RecoCKtheta/F                                        *
-*Entries :      510 : Total  Size=       2714 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      510 : Total  Size=       2630 bytes  File Size  =       1851 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.15     *
 *............................................................................*
 *Br    2 :RecoCKphi : RecoCKphi/F                                            *
-*Entries :      510 : Total  Size=       2702 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      510 : Total  Size=       2620 bytes  File Size  =       1965 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.08     *
 *............................................................................*
 *Br    3 :McCKtheta : McCKtheta/F                                            *
-*Entries :      510 : Total  Size=       2702 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      510 : Total  Size=       2620 bytes  File Size  =        125 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  16.98     *
 *............................................................................*
 *Br    4 :McCKphi   : McCKphi/F                                              *
-*Entries :      510 : Total  Size=       2690 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      510 : Total  Size=       2610 bytes  File Size  =        123 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  17.24     *
 *............................................................................*
 *Br    5 :ExpCKtheta : ExpCKtheta/F                                          *
-*Entries :      510 : Total  Size=       2708 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      510 : Total  Size=       2625 bytes  File Size  =        298 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   7.12     *
 *............................................................................*
 ******************************************************************************
 *Tree    :ckResTuple: CKTuple                                                *
-*Entries :      311 : Total =           11739 bytes  File  Size =       3452 *
-*        :          : Tree compression factor =   1.00                       *
+*Entries :      311 : Total =           11287 bytes  File  Size =       3804 *
+*        :          : Tree compression factor =   2.57                       *
 ******************************************************************************
 *Br    0 :RecoPtot  : RecoPtot/F                                             *
-*Entries :      311 : Total  Size=       1900 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      311 : Total  Size=       1819 bytes  File Size  =        208 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   6.37     *
 *............................................................................*
 *Br    1 :RecoCKtheta : RecoCKtheta/F                                        *
-*Entries :      311 : Total  Size=       1918 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      311 : Total  Size=       1834 bytes  File Size  =       1184 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.12     *
 *............................................................................*
 *Br    2 :RecoCKphi : RecoCKphi/F                                            *
-*Entries :      311 : Total  Size=       1906 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      311 : Total  Size=       1824 bytes  File Size  =       1258 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.05     *
 *............................................................................*
 *Br    3 :McCKtheta : McCKtheta/F                                            *
-*Entries :      311 : Total  Size=       1906 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      311 : Total  Size=       1824 bytes  File Size  =        117 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  11.33     *
 *............................................................................*
 *Br    4 :McCKphi   : McCKphi/F                                              *
-*Entries :      311 : Total  Size=       1894 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      311 : Total  Size=       1814 bytes  File Size  =        115 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  11.51     *
 *............................................................................*
 *Br    5 :ExpCKtheta : ExpCKtheta/F                                          *
-*Entries :      311 : Total  Size=       1912 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      311 : Total  Size=       1829 bytes  File Size  =        210 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   6.32     *
 *............................................................................*
 ******************************************************************************
 *Tree    :ckResTuple: CKTuple                                                *
-*Entries :       56 : Total =            5619 bytes  File  Size =       1428 *
-*        :          : Tree compression factor =   1.00                       *
+*Entries :       56 : Total =            5167 bytes  File  Size =       1860 *
+*        :          : Tree compression factor =   1.60                       *
 ******************************************************************************
 *Br    0 :RecoPtot  : RecoPtot/F                                             *
-*Entries :       56 : Total  Size=        880 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :       56 : Total  Size=        799 bytes  File Size  =        161 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.89     *
 *............................................................................*
 *Br    1 :RecoCKtheta : RecoCKtheta/F                                        *
-*Entries :       56 : Total  Size=        898 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :       56 : Total  Size=        814 bytes  File Size  =        308 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.00     *
 *............................................................................*
 *Br    2 :RecoCKphi : RecoCKphi/F                                            *
-*Entries :       56 : Total  Size=        886 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :       56 : Total  Size=        804 bytes  File Size  =        306 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.00     *
 *............................................................................*
 *Br    3 :McCKtheta : McCKtheta/F                                            *
-*Entries :       56 : Total  Size=        886 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :       56 : Total  Size=        804 bytes  File Size  =        106 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   2.89     *
 *............................................................................*
 *Br    4 :McCKphi   : McCKphi/F                                              *
-*Entries :       56 : Total  Size=        874 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :       56 : Total  Size=        794 bytes  File Size  =        104 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   2.92     *
 *............................................................................*
 *Br    5 :ExpCKtheta : ExpCKtheta/F                                          *
-*Entries :       56 : Total  Size=        892 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :       56 : Total  Size=        809 bytes  File Size  =        161 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.91     *
 *............................................................................*
 ******************************************************************************
 *Tree    :ckResTuple: CKTuple                                                *
-*Entries :      396 : Total =           13779 bytes  File  Size =       4190 *
-*        :          : Tree compression factor =   1.00                       *
+*Entries :      396 : Total =           13327 bytes  File  Size =       4547 *
+*        :          : Tree compression factor =   2.62                       *
 ******************************************************************************
 *Br    0 :RecoPtot  : RecoPtot/F                                             *
-*Entries :      396 : Total  Size=       2240 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      396 : Total  Size=       2159 bytes  File Size  =        270 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   6.17     *
 *............................................................................*
 *Br    1 :RecoCKtheta : RecoCKtheta/F                                        *
-*Entries :      396 : Total  Size=       2258 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      396 : Total  Size=       2174 bytes  File Size  =       1490 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.12     *
 *............................................................................*
 *Br    2 :RecoCKphi : RecoCKphi/F                                            *
-*Entries :      396 : Total  Size=       2246 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      396 : Total  Size=       2164 bytes  File Size  =       1553 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.07     *
 *............................................................................*
 *Br    3 :McCKtheta : McCKtheta/F                                            *
-*Entries :      396 : Total  Size=       2246 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      396 : Total  Size=       2164 bytes  File Size  =        121 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  13.77     *
 *............................................................................*
 *Br    4 :McCKphi   : McCKphi/F                                              *
-*Entries :      396 : Total  Size=       2234 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      396 : Total  Size=       2154 bytes  File Size  =        119 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  13.98     *
 *............................................................................*
 *Br    5 :ExpCKtheta : ExpCKtheta/F                                          *
-*Entries :      396 : Total  Size=       2252 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      396 : Total  Size=       2169 bytes  File Size  =        269 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   6.20     *
 *............................................................................*
 ******************************************************************************
 *Tree    :ckResTuple: CKTuple                                                *
-*Entries :      136 : Total =            7539 bytes  File  Size =       2187 *
-*        :          : Tree compression factor =   1.00                       *
+*Entries :      136 : Total =            7087 bytes  File  Size =       2628 *
+*        :          : Tree compression factor =   1.96                       *
 ******************************************************************************
 *Br    0 :RecoPtot  : RecoPtot/F                                             *
-*Entries :      136 : Total  Size=       1200 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      136 : Total  Size=       1119 bytes  File Size  =        234 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   2.67     *
 *............................................................................*
 *Br    1 :RecoCKtheta : RecoCKtheta/F                                        *
-*Entries :      136 : Total  Size=       1218 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      136 : Total  Size=       1134 bytes  File Size  =        601 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.04     *
 *............................................................................*
 *Br    2 :RecoCKphi : RecoCKphi/F                                            *
-*Entries :      136 : Total  Size=       1206 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      136 : Total  Size=       1124 bytes  File Size  =        626 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.00     *
 *............................................................................*
 *Br    3 :McCKtheta : McCKtheta/F                                            *
-*Entries :      136 : Total  Size=       1206 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      136 : Total  Size=       1124 bytes  File Size  =        111 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   5.64     *
 *............................................................................*
 *Br    4 :McCKphi   : McCKphi/F                                              *
-*Entries :      136 : Total  Size=       1194 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      136 : Total  Size=       1114 bytes  File Size  =        109 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   5.72     *
 *............................................................................*
 *Br    5 :ExpCKtheta : ExpCKtheta/F                                          *
-*Entries :      136 : Total  Size=       1212 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      136 : Total  Size=       1129 bytes  File Size  =        235 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   2.67     *
 *............................................................................*
 ******************************************************************************
 *Tree    :ckResTuple: CKTuple                                                *
-*Entries :      962 : Total =           27363 bytes  File  Size =       8705 *
-*        :          : Tree compression factor =   1.00                       *
+*Entries :      962 : Total =           26911 bytes  File  Size =       8791 *
+*        :          : Tree compression factor =   2.92                       *
 ******************************************************************************
 *Br    0 :RecoPtot  : RecoPtot/F                                             *
-*Entries :      962 : Total  Size=       4504 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      962 : Total  Size=       4423 bytes  File Size  =        443 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   8.87     *
 *............................................................................*
 *Br    1 :RecoCKtheta : RecoCKtheta/F                                        *
-*Entries :      962 : Total  Size=       4522 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      962 : Total  Size=       4438 bytes  File Size  =       3362 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.17     *
 *............................................................................*
 *Br    2 :RecoCKphi : RecoCKphi/F                                            *
-*Entries :      962 : Total  Size=       4510 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      962 : Total  Size=       4428 bytes  File Size  =       3547 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.11     *
 *............................................................................*
 *Br    3 :McCKtheta : McCKtheta/F                                            *
-*Entries :      962 : Total  Size=       4510 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      962 : Total  Size=       4428 bytes  File Size  =        139 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  28.27     *
 *............................................................................*
 *Br    4 :McCKphi   : McCKphi/F                                              *
-*Entries :      962 : Total  Size=       4498 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      962 : Total  Size=       4418 bytes  File Size  =        137 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=  28.67     *
 *............................................................................*
 *Br    5 :ExpCKtheta : ExpCKtheta/F                                          *
-*Entries :      962 : Total  Size=       4516 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      962 : Total  Size=       4433 bytes  File Size  =        437 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   9.00     *
 *............................................................................*
 ******************************************************************************
 *Tree    :ghosts    : GhostTracksTuple                                       *
-*Entries :      848 : Total =          114174 bytes  File  Size =      39628 *
-*        :          : Tree compression factor =   1.00                       *
+*Entries :      848 : Total =          113598 bytes  File  Size =      38462 *
+*        :          : Tree compression factor =   2.91                       *
 ******************************************************************************
 *Br    0 :IsGhost   : IsGhost/I                                              *
-*Entries :      848 : Total  Size=       4034 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      848 : Total  Size=       3958 bytes  File Size  =        382 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   9.08     *
 *............................................................................*
 *Br    1 :RecoVertPtot : RecoVertPtot/F                                      *
-*Entries :      848 : Total  Size=       4064 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      848 : Total  Size=       3983 bytes  File Size  =       3196 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.09     *
 *............................................................................*
 *Br    2 :NExpectAero : NExpectAero[5]/F                                     *
-*Entries :      848 : Total  Size=      17632 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      848 : Total  Size=      17552 bytes  File Size  =       7498 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   2.27     *
 *............................................................................*
 *Br    3 :NExpectR1Gas : NExpectR1Gas[5]/F                                   *
-*Entries :      848 : Total  Size=      17638 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      848 : Total  Size=      17557 bytes  File Size  =       8832 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.93     *
 *............................................................................*
 *Br    4 :NExpectR2Gas : NExpectR2Gas[5]/F                                   *
-*Entries :      848 : Total  Size=      17638 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      848 : Total  Size=      17557 bytes  File Size  =       5944 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   2.87     *
 *............................................................................*
 *Br    5 :NRecAero  : NRecAero[5]/F                                          *
-*Entries :      848 : Total  Size=      17614 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      848 : Total  Size=      17537 bytes  File Size  =       3978 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   4.28     *
 *............................................................................*
 *Br    6 :NRecR1Gas : NRecR1Gas[5]/F                                         *
-*Entries :      848 : Total  Size=      17620 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      848 : Total  Size=      17542 bytes  File Size  =       4624 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   3.68     *
 *............................................................................*
 *Br    7 :NRecR2Gas : NRecR2Gas[5]/F                                         *
-*Entries :      848 : Total  Size=      17620 bytes  One basket in memory    *
-*Baskets :        0 : Basket Size=      32000 bytes  Compression=   1.00     *
+*Entries :      848 : Total  Size=      17542 bytes  File Size  =       3128 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   5.45     *
 *............................................................................*
 NTupleSvc            INFO NTuples saved successfully
 TransportSvc      SUCCESS  GEOMETRY ERRORS: 'Skip'     map has the size 0
 
 TransportSvc      SUCCESS  GEOMETRY ERRORS: 'Recover'  map has the size 4
    |                      Logical Volume                     |    |  #          mean             RMS          min              max    |
-   | BeforeMagnetRegion/Rich1/lvRich1AerogelContainerRight   | mm | 1       1.2398973       8.2383892e-09 1.2398973           1.23989 |
-   | BeforeMagnetRegion/Rich1/lvRich1AerogelContainerRight   | X0 | 1       0.00047859105               0 0.00047859105   0.000478591 |
+   | BeforeMagnetRegion/Rich1/lvRich1AerogelContainerRight   | mm | 1       1.2398973       9.7009664e-09 1.2398973           1.23989 |
+   | BeforeMagnetRegion/Rich1/lvRich1AerogelContainerRight   | X0 | 1       0.00047859105   1.6669763e-12 0.00047859105   0.000478591 |
    | BeforeMagnetRegion/Velo/PipeSections/lvVeloPipe         | mm | 1       5.0002992                   0 5.0002992           5.00029 |
    | BeforeMagnetRegion/Velo/PipeSections/lvVeloPipe         | X0 | 1       6.3154777e-18               0 6.3154777e-18   6.3154777e- |
    | BeforeMagnetRegion/Velo/RFFoil/lvRFDownStreamSection    | mm | 54      0.039081505       0.016830431 0.0064985665       0.061285 |
-   | BeforeMagnetRegion/Velo/RFFoil/lvRFDownStreamSection    | X0 | 54      1.8062071e-20    1.405469e-20 7.6100616e-22   5.2992499e- |
+   | BeforeMagnetRegion/Velo/RFFoil/lvRFDownStreamSection    | X0 | 54      1.7402532e-20   1.3664864e-20 1.8859718e-21   5.2992499e- |
    | MagnetRegion/lvMagnetRegion                             | mm | 2       0.30023081                  0 0.30023081         0.300230 |
    | MagnetRegion/lvMagnetRegion                             | X0 | 2       0.0028795381    1.9314721e-11 0.0028795381     0.00287953 |
 
@@ -3341,407 +3316,404 @@ ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings Statistics : 0/0/2
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 63'
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.36 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.24 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO EVENT LOOP                    | 43662.695 | 44238.684 |   71.339  152835.5 |      15 |   663.580 |
-TimingAuditor.T...   INFO  BrunelSequencer              | 42801.160 | 43322.661 |   30.059  152412.0 |      15 |   649.840 |
-TimingAuditor.T...   INFO   Init                        |    31.929 |    32.256 |   21.214     101.6 |      15 |     0.484 |
-TimingAuditor.T...   INFO    InitReprocSeq              |     0.067 |     0.061 |    0.013       0.5 |      15 |     0.001 |
-TimingAuditor.T...   INFO    InitBrunelSeq              |     0.800 |     1.023 |    0.512       4.7 |      15 |     0.015 |
-TimingAuditor.T...   INFO     BrunelInit                |     0.667 |     0.938 |    0.469       4.5 |      15 |     0.014 |
-TimingAuditor.T...   INFO     BrunelEventCount          |     0.067 |     0.014 |    0.011       0.0 |      15 |     0.000 |
-TimingAuditor.T...   INFO    InitCaloSeq                |    24.263 |    24.255 |   17.961      35.1 |      15 |     0.364 |
-TimingAuditor.T...   INFO     CaloBanksHandler          |    24.263 |    24.232 |   17.939      35.1 |      15 |     0.363 |
-TimingAuditor.T...   INFO      PrsBanksHandler          |     7.665 |     7.632 |    5.414      18.3 |      15 |     0.114 |
-TimingAuditor.T...   INFO       PrsCheckBanks           |     0.067 |     0.076 |    0.043       0.4 |      15 |     0.001 |
-TimingAuditor.T...   INFO       PrsADCs                 |     2.600 |     2.682 |    1.726       6.9 |      15 |     0.040 |
-TimingAuditor.T...   INFO       PrsL0Bit                |     1.666 |     1.759 |    1.371       4.0 |      15 |     0.026 |
-TimingAuditor.T...   INFO       SpdL0Bit                |     1.800 |     1.832 |    1.413       2.6 |      15 |     0.027 |
-TimingAuditor.T...   INFO       PrsSpdFillRawBuffer     |     1.000 |     0.911 |    0.603       3.1 |      15 |     0.014 |
-TimingAuditor.T...   INFO       RemovePrsPackedBanks    |     0.133 |     0.241 |    0.132       1.5 |      15 |     0.004 |
-TimingAuditor.T...   INFO      EcalBanksHandler         |    12.998 |    12.987 |    9.517      18.6 |      15 |     0.195 |
-TimingAuditor.T...   INFO       EcalCheckBanks          |     0.000 |     0.032 |    0.025       0.1 |      15 |     0.000 |
-TimingAuditor.T...   INFO       EcalADCs                |     8.865 |     8.823 |    6.720      12.8 |      15 |     0.132 |
-TimingAuditor.T...   INFO       EcalTrigFromRaw         |     3.199 |     3.289 |    2.129       4.7 |      15 |     0.049 |
-TimingAuditor.T...   INFO       EcalFillRawBuffer       |     0.467 |     0.382 |    0.133       1.1 |      15 |     0.006 |
-TimingAuditor.T...   INFO       RemoveEcalPackedBanks   |     0.267 |     0.354 |    0.306       0.4 |      15 |     0.005 |
-TimingAuditor.T...   INFO      HcalBanksHandler         |     3.599 |     3.559 |    2.954       4.5 |      15 |     0.053 |
-TimingAuditor.T...   INFO       HcalCheckBanks          |     0.000 |     0.029 |    0.024       0.0 |      15 |     0.000 |
-TimingAuditor.T...   INFO       HcalADCs                |     2.200 |     2.079 |    1.739       2.5 |      15 |     0.031 |
-TimingAuditor.T...   INFO       HcalTrigFromRaw         |     1.000 |     1.078 |    0.803       1.5 |      15 |     0.016 |
-TimingAuditor.T...   INFO       HcalFillRawBuffer       |     0.267 |     0.138 |    0.089       0.2 |      15 |     0.002 |
-TimingAuditor.T...   INFO       RemoveHcalPackedBanks   |     0.133 |     0.138 |    0.119       0.2 |      15 |     0.002 |
-TimingAuditor.T...   INFO    InitL0Seq                  |     6.732 |     6.768 |    2.391      61.3 |      15 |     0.102 |
-TimingAuditor.T...   INFO     L0FilterFromRawSeq        |     6.666 |     6.744 |    2.371      61.3 |      15 |     0.101 |
-TimingAuditor.T...   INFO      L0DUFromRawSeq           |     6.666 |     6.636 |    2.312      60.7 |      15 |     0.100 |
-TimingAuditor.T...   INFO       L0DUFromRawAlg          |     6.666 |     6.596 |    2.278      60.6 |      15 |     0.099 |
-TimingAuditor.T...   INFO      L0Filter                 |     0.000 |     0.067 |    0.028       0.5 |      15 |     0.001 |
-TimingAuditor.T...   INFO   Reco                        | 13335.742 | 13377.604 | 1902.796   41763.9 |      13 |   173.909 |
-TimingAuditor.T...   INFO    RecoVELOSeq                |    49.685 |    49.509 |   13.071     106.7 |      13 |     0.644 |
-TimingAuditor.T...   INFO     DecodeVeloRawBuffer       |     1.846 |     1.882 |    0.697       6.7 |      13 |     0.024 |
-TimingAuditor.T...   INFO     PatVeloRTracking          |     5.922 |     5.895 |    1.747      22.7 |      13 |     0.077 |
-TimingAuditor.T...   INFO     PatVeloSpaceTracking      |    23.151 |    23.123 |    5.338      54.5 |      13 |     0.301 |
-TimingAuditor.T...   INFO     PatVeloGeneralTracking    |    12.075 |    12.085 |    1.656      32.1 |      13 |     0.157 |
-TimingAuditor.T...   INFO     DecodeVeloClusters        |     6.384 |     6.339 |    2.597      12.7 |      13 |     0.082 |
-TimingAuditor.T...   INFO    RecoTTSeq                  |    10.921 |    11.077 |    3.416      25.4 |      13 |     0.144 |
-TimingAuditor.T...   INFO     CreateTTClusters          |     8.691 |     8.734 |    2.276      20.1 |      13 |     0.114 |
-TimingAuditor.T...   INFO     CreateTTLiteClusters      |     2.230 |     2.283 |    1.087       5.2 |      13 |     0.030 |
-TimingAuditor.T...   INFO    RecoITSeq                  |     7.999 |     8.064 |    2.801      19.1 |      13 |     0.105 |
-TimingAuditor.T...   INFO     CreateITClusters          |     6.384 |     6.400 |    1.937      15.7 |      13 |     0.083 |
-TimingAuditor.T...   INFO     CreateITLiteClusters      |     1.615 |     1.615 |    0.816       3.3 |      13 |     0.021 |
+TimingAuditor.T...   INFO EVENT LOOP                    | 44324.462 | 44641.903 |   61.193  157089.6 |      15 |   669.629 |
+TimingAuditor.T...   INFO  BrunelSequencer              | 43412.334 | 43670.687 |   26.878  156582.8 |      15 |   655.060 |
+TimingAuditor.T...   INFO   Init                        |    31.862 |    32.069 |   19.906     118.6 |      15 |     0.481 |
+TimingAuditor.T...   INFO    InitReprocSeq              |     0.067 |     0.053 |    0.013       0.2 |      15 |     0.001 |
+TimingAuditor.T...   INFO    InitBrunelSeq              |     1.000 |     1.129 |    0.636       6.2 |      15 |     0.017 |
+TimingAuditor.T...   INFO     BrunelInit                |     0.933 |     1.064 |    0.582       6.0 |      15 |     0.016 |
+TimingAuditor.T...   INFO     BrunelEventCount          |     0.000 |     0.014 |    0.011       0.0 |      15 |     0.000 |
+TimingAuditor.T...   INFO    InitCaloSeq                |    23.263 |    23.323 |   16.443      40.7 |      15 |     0.350 |
+TimingAuditor.T...   INFO     CaloBanksHandler          |    23.263 |    23.300 |   16.423      40.6 |      15 |     0.349 |
+TimingAuditor.T...   INFO      PrsBanksHandler          |     7.466 |     7.496 |    5.070      22.1 |      15 |     0.112 |
+TimingAuditor.T...   INFO       PrsCheckBanks           |     0.067 |     0.086 |    0.039       0.5 |      15 |     0.001 |
+TimingAuditor.T...   INFO       PrsADCs                 |     2.599 |     2.585 |    1.514       8.1 |      15 |     0.039 |
+TimingAuditor.T...   INFO       PrsL0Bit                |     1.666 |     1.762 |    1.346       5.0 |      15 |     0.026 |
+TimingAuditor.T...   INFO       SpdL0Bit                |     1.733 |     1.733 |    1.309       2.3 |      15 |     0.026 |
+TimingAuditor.T...   INFO       PrsSpdFillRawBuffer     |     0.933 |     0.905 |    0.586       3.6 |      15 |     0.014 |
+TimingAuditor.T...   INFO       RemovePrsPackedBanks    |     0.267 |     0.265 |    0.136       1.9 |      15 |     0.004 |
+TimingAuditor.T...   INFO      EcalBanksHandler         |    12.331 |    12.327 |    8.401      16.3 |      15 |     0.185 |
+TimingAuditor.T...   INFO       EcalCheckBanks          |     0.133 |     0.033 |    0.026       0.1 |      15 |     0.001 |
+TimingAuditor.T...   INFO       EcalADCs                |     8.065 |     8.117 |    6.009      10.8 |      15 |     0.122 |
+TimingAuditor.T...   INFO       EcalTrigFromRaw         |     3.266 |     3.274 |    1.869       4.9 |      15 |     0.049 |
+TimingAuditor.T...   INFO       EcalFillRawBuffer       |     0.467 |     0.422 |    0.094       1.4 |      15 |     0.006 |
+TimingAuditor.T...   INFO       RemoveEcalPackedBanks   |     0.333 |     0.340 |    0.305       0.4 |      15 |     0.005 |
+TimingAuditor.T...   INFO      HcalBanksHandler         |     3.466 |     3.420 |    2.803       4.2 |      15 |     0.051 |
+TimingAuditor.T...   INFO       HcalCheckBanks          |     0.000 |     0.031 |    0.025       0.1 |      15 |     0.000 |
+TimingAuditor.T...   INFO       HcalADCs                |     2.066 |     1.944 |    1.670       2.4 |      15 |     0.029 |
+TimingAuditor.T...   INFO       HcalTrigFromRaw         |     1.133 |     1.061 |    0.750       1.4 |      15 |     0.016 |
+TimingAuditor.T...   INFO       HcalFillRawBuffer       |     0.133 |     0.143 |    0.089       0.2 |      15 |     0.002 |
+TimingAuditor.T...   INFO       RemoveHcalPackedBanks   |     0.133 |     0.136 |    0.119       0.2 |      15 |     0.002 |
+TimingAuditor.T...   INFO    InitL0Seq                  |     7.332 |     7.356 |    2.441      71.0 |      15 |     0.110 |
+TimingAuditor.T...   INFO     L0FilterFromRawSeq        |     7.266 |     7.332 |    2.420      71.0 |      15 |     0.110 |
+TimingAuditor.T...   INFO      L0DUFromRawSeq           |     7.132 |     7.206 |    2.355      70.2 |      15 |     0.108 |
+TimingAuditor.T...   INFO       L0DUFromRawAlg          |     7.066 |     7.169 |    2.325      70.1 |      15 |     0.108 |
+TimingAuditor.T...   INFO      L0Filter                 |     0.133 |     0.080 |    0.029       0.7 |      15 |     0.001 |
+TimingAuditor.T...   INFO   Reco                        | 13955.801 | 14012.108 | 2142.672   43892.8 |      13 |   182.157 |
+TimingAuditor.T...   INFO    RecoVELOSeq                |    49.685 |    49.775 |   10.909     122.1 |      13 |     0.647 |
+TimingAuditor.T...   INFO     DecodeVeloRawBuffer       |     2.000 |     1.931 |    0.571       8.6 |      13 |     0.025 |
+TimingAuditor.T...   INFO     PatVeloRTracking          |     6.076 |     6.171 |    1.508      28.3 |      13 |     0.080 |
+TimingAuditor.T...   INFO     PatVeloSpaceTracking      |    22.766 |    22.810 |    4.617      56.0 |      13 |     0.297 |
+TimingAuditor.T...   INFO     PatVeloGeneralTracking    |    12.767 |    12.763 |    1.748      33.1 |      13 |     0.166 |
+TimingAuditor.T...   INFO     DecodeVeloClusters        |     5.845 |     5.829 |    2.317      10.8 |      13 |     0.076 |
+TimingAuditor.T...   INFO    RecoTTSeq                  |    10.383 |    10.491 |    2.704      30.3 |      13 |     0.136 |
+TimingAuditor.T...   INFO     CreateTTClusters          |     8.153 |     8.319 |    1.857      24.1 |      13 |     0.108 |
+TimingAuditor.T...   INFO     CreateTTLiteClusters      |     2.153 |     2.089 |    0.803       6.0 |      13 |     0.027 |
+TimingAuditor.T...   INFO    RecoITSeq                  |     7.460 |     7.317 |    2.184      15.8 |      13 |     0.095 |
+TimingAuditor.T...   INFO     CreateITClusters          |     5.845 |     5.771 |    1.509      13.0 |      13 |     0.075 |
+TimingAuditor.T...   INFO     CreateITLiteClusters      |     1.538 |     1.474 |    0.631       2.7 |      13 |     0.019 |
 TimingAuditor.T...   INFO    RecoOTSeq                  |     0.000 |     0.012 |    0.010       0.0 |      13 |     0.000 |
-TimingAuditor.T...   INFO    RecoTrSeq                  |  8587.771 |  8603.405 | 1366.521   25242.8 |      13 |   111.844 |
-TimingAuditor.T...   INFO     Track                     |  8587.771 |  8603.381 | 1366.499   25242.8 |      13 |   111.844 |
-TimingAuditor.T...   INFO      TrackForwardPatSeq       |   237.349 |   237.668 |   10.201    1064.8 |      13 |     3.090 |
-TimingAuditor.T...   INFO       PatForward              |   237.272 |   237.605 |   10.157    1064.8 |      13 |     3.089 |
-TimingAuditor.T...   INFO      TrackForwardPreFitSeq    |  1385.328 |  1388.509 |  238.275    3903.2 |      13 |    18.051 |
-TimingAuditor.T...   INFO       PreFitForward           |  1385.328 |  1388.434 |  238.190    3903.1 |      13 |    18.050 |
-TimingAuditor.T...   INFO      TrackForwardFitSeq       |   547.455 |   547.918 |  101.022    1648.8 |      13 |     7.123 |
-TimingAuditor.T...   INFO       FitForward              |   547.455 |   547.853 |  100.980    1648.7 |      13 |     7.122 |
-TimingAuditor.T...   INFO      TrackSeedPatSeq          |   358.330 |   358.227 |   16.637    1393.1 |      13 |     4.657 |
-TimingAuditor.T...   INFO       TsaSeed                 |   354.177 |   354.080 |   15.890    1384.0 |      13 |     4.603 |
-TimingAuditor.T...   INFO       TsaSeedTrackCnv         |     4.076 |     4.060 |    0.686       9.1 |      13 |     0.053 |
-TimingAuditor.T...   INFO      TrackSeedPreFitSeq       |     0.000 |     0.012 |    0.011       0.0 |      13 |     0.000 |
-TimingAuditor.T...   INFO      TrackSeedFitSeq          |   793.033 |   793.920 |  118.951    1988.9 |      13 |    10.321 |
-TimingAuditor.T...   INFO       FitSeed                 |   792.879 |   793.860 |  118.894    1988.8 |      13 |    10.320 |
-TimingAuditor.T...   INFO      TrackMatchPatSeq         |    55.915 |    55.852 |    7.350     169.7 |      13 |     0.726 |
-TimingAuditor.T...   INFO       TrackMatch              |    55.838 |    55.796 |    7.303     169.6 |      13 |     0.725 |
-TimingAuditor.T...   INFO      TrackMatchPreFitSeq      |  1004.232 |  1004.863 |  225.812    2859.4 |      13 |    13.063 |
-TimingAuditor.T...   INFO       PreFitMatch             |  1004.232 |  1004.796 |  225.742    2859.4 |      13 |    13.062 |
-TimingAuditor.T...   INFO      TrackMatchFitSeq         |   412.245 |   412.569 |   98.194    1166.0 |      13 |     5.363 |
-TimingAuditor.T...   INFO       FitMatch                |   412.245 |   412.509 |   98.156    1165.9 |      13 |     5.363 |
-TimingAuditor.T...   INFO      TrackDownstreamPatSeq    |    33.380 |    33.346 |    1.398     194.1 |      13 |     0.434 |
-TimingAuditor.T...   INFO       PatDownstream           |    33.380 |    33.294 |    1.361     194.0 |      13 |     0.433 |
-TimingAuditor.T...   INFO      TrackDownstreamPreFitSeq |  1045.072 |  1045.388 |  171.949    2866.8 |      13 |    13.590 |
-TimingAuditor.T...   INFO       PreFitDownstream        |  1045.072 |  1045.321 |  171.865    2866.7 |      13 |    13.589 |
-TimingAuditor.T...   INFO      TrackDownstreamFitSeq    |   405.707 |   405.841 |   53.343    1210.6 |      13 |     5.276 |
-TimingAuditor.T...   INFO       FitDownstream           |   405.707 |   405.778 |   53.227    1210.5 |      13 |     5.275 |
-TimingAuditor.T...   INFO      TrackVeloTTPatSeq        |   526.843 |   528.012 |   48.028    1835.8 |      13 |     6.864 |
-TimingAuditor.T...   INFO       PatVeloTT               |   526.843 |   527.950 |   47.970    1835.7 |      13 |     6.863 |
-TimingAuditor.T...   INFO      TrackVeloTTPreFitSeq     |     0.154 |     0.016 |    0.014       0.0 |      13 |     0.000 |
-TimingAuditor.T...   INFO      TrackVeloTTFitSeq        |   273.651 |   274.401 |   59.666     533.4 |      13 |     3.567 |
-TimingAuditor.T...   INFO       FitVeloTT               |   273.651 |   274.356 |   59.628     533.3 |      13 |     3.567 |
-TimingAuditor.T...   INFO      TrackPostFitSeq          |   617.983 |   617.231 |   16.918    2609.7 |      13 |     8.024 |
-TimingAuditor.T...   INFO       TrackEventCloneKiller   |   617.983 |   617.170 |   16.878    2609.6 |      13 |     8.023 |
-TimingAuditor.T...   INFO      TrackVeloPreFitSeq       |     1.923 |     1.808 |    0.514       5.5 |      13 |     0.024 |
-TimingAuditor.T...   INFO       TrackPrepareVelo        |     1.923 |     1.775 |    0.486       5.5 |      13 |     0.023 |
-TimingAuditor.T...   INFO      TrackVeloFitSeq          |   343.871 |   346.882 |  124.268    1113.1 |      13 |     4.509 |
-TimingAuditor.T...   INFO       FitVelo                 |   340.948 |   344.033 |  123.057    1104.0 |      13 |     4.472 |
-TimingAuditor.T...   INFO       CopyVelo                |     2.846 |     2.752 |    1.117       8.9 |      13 |     0.036 |
-TimingAuditor.T...   INFO      TrackAddExtraInfoSeq     |   545.148 |   550.543 |   53.978    1762.3 |      13 |     7.157 |
-TimingAuditor.T...   INFO       TrackClonesSeq          |   290.263 |   295.487 |   12.483    1123.4 |      13 |     3.841 |
-TimingAuditor.T...   INFO        FindTrackClones        |   288.341 |   293.585 |   12.277    1121.8 |      13 |     3.817 |
-TimingAuditor.T...   INFO        FlagTrackClones        |     1.769 |     1.814 |    0.157      15.9 |      13 |     0.024 |
-TimingAuditor.T...   INFO       TrackAddLikelihood      |   252.961 |   253.001 |   41.044     634.8 |      13 |     3.289 |
-TimingAuditor.T...   INFO       NeuralNetTmva           |     1.846 |     1.943 |    0.371       6.6 |      13 |     0.025 |
-TimingAuditor.T...   INFO    RecoVertexSeq              |    61.145 |    61.029 |    4.603     319.3 |      13 |     0.793 |
-TimingAuditor.T...   INFO     PatPVOffline              |    15.844 |    15.910 |    4.272      39.8 |      13 |     0.207 |
-TimingAuditor.T...   INFO     TrackV0Finder             |    45.224 |    45.051 |    0.187     292.4 |      13 |     0.586 |
-TimingAuditor.T...   INFO    RecoRICHSeq                |  3909.175 |  3913.234 |  347.650   14739.4 |      13 |    50.872 |
-TimingAuditor.T...   INFO     RichRecInitOfflineSeq     |  2273.424 |  2276.745 |  223.396    6811.3 |      13 |    29.598 |
-TimingAuditor.T...   INFO      CheckProcOfflineStatus   |     0.154 |     0.252 |    0.118       1.6 |      13 |     0.003 |
-TimingAuditor.T...   INFO      RichOfflinePixelsSeq     |    77.065 |    77.042 |   18.501     148.8 |      13 |     1.002 |
-TimingAuditor.T...   INFO       DecodeRawRichOffline    |    13.690 |    13.673 |    4.702      38.2 |      13 |     0.178 |
-TimingAuditor.T...   INFO       CreateOfflinePixels     |    63.222 |    63.285 |   13.744     127.9 |      13 |     0.823 |
-TimingAuditor.T...   INFO      RichOfflineTracksSeq     |   519.767 |   522.639 |  102.668    1209.6 |      13 |     6.794 |
-TimingAuditor.T...   INFO       CreateOfflineTracks     |   519.767 |   522.570 |  102.612    1209.6 |      13 |     6.793 |
-TimingAuditor.T...   INFO      RichOfflinePhotonsSeq    |  1676.130 |  1676.714 |  102.035    5462.0 |      13 |    21.797 |
-TimingAuditor.T...   INFO       CreateOfflinePhotons    |  1675.976 |  1676.639 |  101.949    5461.9 |      13 |    21.796 |
-TimingAuditor.T...   INFO     RichOfflinePIDSeq         |  1635.751 |  1636.440 |  124.214    7928.0 |      13 |    21.274 |
-TimingAuditor.T...   INFO      RichOfflineGPIDInitSeq   |     1.769 |     1.862 |    0.570      10.5 |      13 |     0.024 |
-TimingAuditor.T...   INFO       RichOfflineGPIDInit     |     0.000 |     0.023 |    0.010       0.2 |      13 |     0.000 |
-TimingAuditor.T...   INFO       RichOfflineGPIDDigSel   |     0.231 |     0.142 |    0.042       1.2 |      13 |     0.002 |
-TimingAuditor.T...   INFO       RichOfflineGPIDTrSel    |     1.538 |     1.617 |    0.461       8.8 |      13 |     0.021 |
-TimingAuditor.T...   INFO      RichOfflineGPIDLLSeq     |  1632.598 |  1633.304 |  123.209    7924.9 |      13 |    21.233 |
-TimingAuditor.T...   INFO       RichOfflineBckEstIt0    |     7.153 |     7.200 |    1.598      15.7 |      13 |     0.094 |
-TimingAuditor.T...   INFO       RichOfflineGPIDLLIt0    |   830.181 |   830.511 |  114.118    3001.3 |      13 |    10.797 |
-TimingAuditor.T...   INFO       RichOfflineBckEstIt1    |     7.384 |     7.506 |    1.724      15.2 |      13 |     0.098 |
-TimingAuditor.T...   INFO       RichOfflineGPIDLLIt1    |   787.726 |   787.883 |    5.590    4895.0 |      13 |    10.242 |
-TimingAuditor.T...   INFO      RichOfflineGPIDFin       |     0.462 |     0.515 |    0.098       3.7 |      13 |     0.007 |
-TimingAuditor.T...   INFO      MergeOfflineRichPIDs     |     0.692 |     0.660 |    0.219       4.3 |      13 |     0.009 |
-TimingAuditor.T...   INFO    RecoCALOSeq                |   231.888 |   231.993 |   15.128     743.7 |      13 |     3.016 |
-TimingAuditor.T...   INFO     CaloDigits                |     5.384 |     5.516 |    1.474      11.5 |      13 |     0.072 |
-TimingAuditor.T...   INFO      EcalZSup                 |     3.000 |     3.085 |    0.631       6.8 |      13 |     0.040 |
-TimingAuditor.T...   INFO      HcalZSup                 |     0.692 |     0.598 |    0.292       1.1 |      13 |     0.008 |
-TimingAuditor.T...   INFO      PrsFromRaw               |     1.307 |     1.309 |    0.285       3.7 |      13 |     0.017 |
-TimingAuditor.T...   INFO      SpdFromRaw               |     0.385 |     0.436 |    0.162       0.9 |      13 |     0.006 |
-TimingAuditor.T...   INFO     CaloClusters              |    30.534 |    30.509 |    2.330      85.6 |      13 |     0.397 |
-TimingAuditor.T...   INFO      EcalClust                |    17.536 |    17.376 |    1.324      46.5 |      13 |     0.226 |
-TimingAuditor.T...   INFO      EcalShare                |     9.460 |     9.489 |    0.395      32.9 |      13 |     0.123 |
-TimingAuditor.T...   INFO      EcalCovar                |     3.461 |     3.519 |    0.535       7.4 |      13 |     0.046 |
-TimingAuditor.T...   INFO     CaloTrackMatch            |    88.679 |    88.593 |    3.459     297.2 |      13 |     1.152 |
-TimingAuditor.T...   INFO      CaloAcceptance           |    51.607 |    51.486 |    2.853     152.5 |      13 |     0.669 |
-TimingAuditor.T...   INFO       InSPD                   |    14.075 |    14.029 |    0.715      38.0 |      13 |     0.182 |
-TimingAuditor.T...   INFO       InPRS                   |    11.921 |    11.875 |    0.493      36.6 |      13 |     0.154 |
-TimingAuditor.T...   INFO       InECAL                  |    12.152 |    12.022 |    0.654      37.0 |      13 |     0.156 |
-TimingAuditor.T...   INFO       InHCAL                  |    11.767 |    11.869 |    0.541      37.0 |      13 |     0.154 |
-TimingAuditor.T...   INFO       InBREM                  |     1.615 |     1.559 |    0.350       3.7 |      13 |     0.020 |
-TimingAuditor.T...   INFO      ClusterMatch             |    36.995 |    37.049 |    0.543     144.6 |      13 |     0.482 |
-TimingAuditor.T...   INFO     CaloRec                   |    24.919 |    25.142 |    3.184      55.6 |      13 |     0.327 |
-TimingAuditor.T...   INFO      MergedPi0Rec             |     0.846 |     1.072 |    0.148       4.5 |      13 |     0.014 |
-TimingAuditor.T...   INFO      PhotonFromMergedRec      |     0.231 |     0.161 |    0.025       1.2 |      13 |     0.002 |
-TimingAuditor.T...   INFO      SinglePhotonRec          |    14.767 |    14.876 |    1.961      34.6 |      13 |     0.193 |
-TimingAuditor.T...   INFO      ElectronRec              |     8.922 |     8.926 |    0.966      23.7 |      13 |     0.116 |
-TimingAuditor.T...   INFO     CaloPIDs                  |    82.295 |    82.153 |    4.617     293.9 |      13 |     1.068 |
-TimingAuditor.T...   INFO      CaloMatch                |    57.914 |    57.845 |    0.944     234.2 |      13 |     0.752 |
-TimingAuditor.T...   INFO       ElectronMatch           |    23.996 |    23.890 |    0.134     115.4 |      13 |     0.311 |
-TimingAuditor.T...   INFO       BremMatch               |    33.918 |    33.896 |    0.765     118.8 |      13 |     0.441 |
-TimingAuditor.T...   INFO      CaloEnergy               |    21.458 |    21.276 |    2.704      54.2 |      13 |     0.277 |
-TimingAuditor.T...   INFO       SpdE                    |     2.846 |     2.627 |    0.288      11.3 |      13 |     0.034 |
-TimingAuditor.T...   INFO       PrsE                    |     1.846 |     1.887 |    0.269       4.8 |      13 |     0.025 |
-TimingAuditor.T...   INFO       EcalE                   |     8.229 |     8.196 |    1.026      21.4 |      13 |     0.107 |
-TimingAuditor.T...   INFO       HcalE                   |     8.460 |     8.472 |    1.041      23.1 |      13 |     0.110 |
-TimingAuditor.T...   INFO      CaloDLLs                 |     2.923 |     2.972 |    0.920       9.1 |      13 |     0.039 |
-TimingAuditor.T...   INFO       EcalChi22ID             |     0.538 |     0.473 |    0.095       2.6 |      13 |     0.006 |
-TimingAuditor.T...   INFO       BremChi22ID             |     0.231 |     0.326 |    0.107       0.7 |      13 |     0.004 |
-TimingAuditor.T...   INFO       ClusChi22ID             |     0.615 |     0.535 |    0.099       2.5 |      13 |     0.007 |
-TimingAuditor.T...   INFO       PrsPIDe                 |     0.231 |     0.373 |    0.080       2.0 |      13 |     0.005 |
-TimingAuditor.T...   INFO       BremPIDe                |     0.462 |     0.242 |    0.091       0.5 |      13 |     0.003 |
-TimingAuditor.T...   INFO       EcalPIDe                |     0.231 |     0.241 |    0.077       0.5 |      13 |     0.003 |
-TimingAuditor.T...   INFO       HcalPIDe                |     0.077 |     0.197 |    0.068       0.4 |      13 |     0.003 |
-TimingAuditor.T...   INFO       EcalPIDmu               |     0.385 |     0.210 |    0.068       0.5 |      13 |     0.003 |
-TimingAuditor.T...   INFO       HcalPIDmu               |     0.154 |     0.199 |    0.069       0.4 |      13 |     0.003 |
-TimingAuditor.T...   INFO    RecoMUONSeq                |   434.549 |   456.923 |  145.273    1403.6 |      13 |     5.940 |
-TimingAuditor.T...   INFO     MuonRec                   |     3.307 |     3.236 |    1.115      12.6 |      13 |     0.042 |
-TimingAuditor.T...   INFO     MuonID                    |   431.242 |   453.609 |  143.808    1390.8 |      13 |     5.897 |
-TimingAuditor.T...   INFO    RecoPROTOSeq               |    42.301 |    42.196 |    4.175     122.3 |      13 |     0.549 |
-TimingAuditor.T...   INFO     ChargedProtoPAlg          |    34.149 |    34.082 |    2.800     106.0 |      13 |     0.443 |
-TimingAuditor.T...   INFO     ChargedProtoCombineDLLsAlg|     1.769 |     1.654 |    0.290       3.8 |      13 |     0.022 |
-TimingAuditor.T...   INFO     NeutralProtoPAlg          |     6.384 |     6.370 |    1.027      14.0 |      13 |     0.083 |
-TimingAuditor.T...   INFO   Moni                        |   426.089 |   426.341 |  110.782    1155.6 |      13 |     5.542 |
-TimingAuditor.T...   INFO    MoniCALOSeq                |   114.444 |   114.534 |   51.372     198.3 |      13 |     1.489 |
-TimingAuditor.T...   INFO     CaloDigitMon              |    58.068 |    58.094 |   11.803     120.2 |      13 |     0.755 |
-TimingAuditor.T...   INFO      EcalDigitMon             |    38.302 |    38.209 |    7.327      79.3 |      13 |     0.497 |
-TimingAuditor.T...   INFO      HcalDigitMon             |     2.846 |     3.028 |    1.283       5.5 |      13 |     0.039 |
-TimingAuditor.T...   INFO      PrsDigitMon              |    12.460 |    12.383 |    2.375      27.6 |      13 |     0.161 |
-TimingAuditor.T...   INFO      SpdDigitMon              |     4.461 |     4.387 |    0.758       9.1 |      13 |     0.057 |
-TimingAuditor.T...   INFO     CaloClusterMon            |     5.384 |     5.396 |    0.832      17.2 |      13 |     0.070 |
-TimingAuditor.T...   INFO      EcalClusterMon           |     5.384 |     5.366 |    0.810      17.1 |      13 |     0.070 |
-TimingAuditor.T...   INFO     CaloHypoMon               |     8.306 |     8.420 |    0.884      35.1 |      13 |     0.109 |
-TimingAuditor.T...   INFO      ElectronMon              |     1.615 |     1.739 |    0.027      15.9 |      13 |     0.023 |
-TimingAuditor.T...   INFO      PhotonMon                |     4.230 |     4.148 |    0.579      13.3 |      13 |     0.054 |
-TimingAuditor.T...   INFO      SplitPhotonMon           |     0.077 |     0.043 |    0.023       0.1 |      13 |     0.001 |
-TimingAuditor.T...   INFO      MergedPi0Mon             |     0.846 |     0.851 |    0.022      10.6 |      13 |     0.011 |
-TimingAuditor.T...   INFO      ResolvedPi0Mon           |     1.384 |     1.543 |    0.093       5.5 |      13 |     0.020 |
-TimingAuditor.T...   INFO     CaloPIDsMon               |     3.615 |     3.511 |    0.302      10.2 |      13 |     0.046 |
-TimingAuditor.T...   INFO      PhotonMatchMon           |     2.461 |     2.401 |    0.131       8.1 |      13 |     0.031 |
-TimingAuditor.T...   INFO      ElectronMatchMon         |     0.461 |     0.402 |    0.048       3.5 |      13 |     0.005 |
-TimingAuditor.T...   INFO      BremMatchMon             |     0.615 |     0.650 |    0.080       1.7 |      13 |     0.008 |
-TimingAuditor.T...   INFO     SpdMon                    |    39.071 |    39.015 |   37.450      43.7 |      13 |     0.507 |
-TimingAuditor.T...   INFO    MoniRICHSeq                |     0.000 |     0.012 |    0.011       0.0 |      13 |     0.000 |
-TimingAuditor.T...   INFO    MoniMUONSeq                |     2.923 |     2.897 |    0.719       9.8 |      13 |     0.038 |
-TimingAuditor.T...   INFO     MuonPIDMonitor            |     2.923 |     2.870 |    0.696       9.8 |      13 |     0.037 |
-TimingAuditor.T...   INFO    MoniVELOSeq                |   204.892 |   204.994 |   32.834     731.0 |      13 |     2.665 |
-TimingAuditor.T...   INFO     VeloClusterMonitor        |   122.366 |   122.285 |   10.412     549.7 |      13 |     1.590 |
-TimingAuditor.T...   INFO     VeloTrackMonitor          |    82.526 |    82.643 |   22.370     186.6 |      13 |     1.074 |
-TimingAuditor.T...   INFO    MoniTrSeq                  |    81.141 |    81.089 |   21.813     185.3 |      13 |     1.054 |
-TimingAuditor.T...   INFO     TrackMonitor              |    30.534 |    30.493 |    6.193      65.7 |      13 |     0.396 |
-TimingAuditor.T...   INFO     TrackVertexMonitor        |    41.609 |    41.631 |   13.728     110.3 |      13 |     0.541 |
-TimingAuditor.T...   INFO     TrackFitMatchMonitor      |     8.383 |     8.427 |    1.691      20.3 |      13 |     0.110 |
-TimingAuditor.T...   INFO     TrackV0Monitor            |     0.461 |     0.434 |    0.040       3.3 |      13 |     0.006 |
-TimingAuditor.T...   INFO    MoniSTSeq                  |    22.689 |    22.659 |    3.900      54.2 |      13 |     0.295 |
-TimingAuditor.T...   INFO     TTClusterMonitor          |    12.075 |    12.147 |    1.968      29.6 |      13 |     0.158 |
-TimingAuditor.T...   INFO     ITClusterMonitor          |    10.537 |    10.465 |    1.897      24.6 |      13 |     0.136 |
-TimingAuditor.T...   INFO    MoniTTSeq                  |     0.000 |     0.012 |    0.010       0.0 |      13 |     0.000 |
+TimingAuditor.T...   INFO    RecoTrSeq                  |  8879.804 |  8934.033 | 1475.305   25521.3 |      13 |   116.142 |
+TimingAuditor.T...   INFO     Track                     |  8879.804 |  8934.007 | 1475.281   25521.3 |      13 |   116.142 |
+TimingAuditor.T...   INFO      TrackForwardPatSeq       |   235.964 |   235.958 |    8.940    1039.9 |      13 |     3.067 |
+TimingAuditor.T...   INFO       PatForward              |   235.964 |   235.880 |    8.901    1039.8 |      13 |     3.066 |
+TimingAuditor.T...   INFO      TrackForwardPreFitSeq    |  1456.086 |  1508.751 |  253.398    4955.1 |      13 |    19.614 |
+TimingAuditor.T...   INFO       PreFitForward           |  1456.009 |  1508.671 |  253.286    4955.0 |      13 |    19.613 |
+TimingAuditor.T...   INFO      TrackForwardFitSeq       |   539.072 |   539.300 |  105.450    1666.6 |      13 |     7.011 |
+TimingAuditor.T...   INFO       FitForward              |   538.995 |   539.222 |  105.333    1666.5 |      13 |     7.010 |
+TimingAuditor.T...   INFO      TrackSeedPatSeq          |   356.869 |   356.941 |   18.348    1409.5 |      13 |     4.640 |
+TimingAuditor.T...   INFO       TsaSeed                 |   352.562 |   352.732 |   17.425    1400.1 |      13 |     4.586 |
+TimingAuditor.T...   INFO       TsaSeedTrackCnv         |     4.076 |     4.107 |    0.815       9.3 |      13 |     0.053 |
+TimingAuditor.T...   INFO      TrackSeedPreFitSeq       |     0.000 |     0.013 |    0.011       0.0 |      13 |     0.000 |
+TimingAuditor.T...   INFO      TrackSeedFitSeq          |   823.413 |   823.688 |  131.812    2009.4 |      13 |    10.708 |
+TimingAuditor.T...   INFO       FitSeed                 |   823.337 |   823.617 |  131.707    2009.3 |      13 |    10.707 |
+TimingAuditor.T...   INFO      TrackMatchPatSeq         |    56.991 |    57.129 |    7.996     148.2 |      13 |     0.743 |
+TimingAuditor.T...   INFO       TrackMatch              |    56.914 |    57.065 |    7.903     148.1 |      13 |     0.742 |
+TimingAuditor.T...   INFO      TrackMatchPreFitSeq      |  1024.075 |  1022.846 |  248.249    2656.6 |      13 |    13.297 |
+TimingAuditor.T...   INFO       PreFitMatch             |  1023.998 |  1022.770 |  248.138    2656.6 |      13 |    13.296 |
+TimingAuditor.T...   INFO      TrackMatchFitSeq         |   423.628 |   423.724 |  101.980    1150.9 |      13 |     5.508 |
+TimingAuditor.T...   INFO       FitMatch                |   423.397 |   423.648 |  101.865    1150.8 |      13 |     5.507 |
+TimingAuditor.T...   INFO      TrackDownstreamPatSeq    |    34.995 |    35.184 |    1.474     203.2 |      13 |     0.457 |
+TimingAuditor.T...   INFO       PatDownstream           |    34.995 |    35.128 |    1.407     203.1 |      13 |     0.457 |
+TimingAuditor.T...   INFO      TrackDownstreamPreFitSeq |  1116.753 |  1117.578 |  179.206    2926.4 |      13 |    14.529 |
+TimingAuditor.T...   INFO       PreFitDownstream        |  1116.753 |  1117.503 |  179.087    2926.3 |      13 |    14.528 |
+TimingAuditor.T...   INFO      TrackDownstreamFitSeq    |   428.935 |   428.727 |   47.612    1206.1 |      13 |     5.573 |
+TimingAuditor.T...   INFO       FitDownstream           |   428.781 |   428.658 |   47.501    1206.1 |      13 |     5.573 |
+TimingAuditor.T...   INFO      TrackVeloTTPatSeq        |   551.916 |   552.312 |   52.043    1782.6 |      13 |     7.180 |
+TimingAuditor.T...   INFO       PatVeloTT               |   551.839 |   552.238 |   51.946    1782.5 |      13 |     7.179 |
+TimingAuditor.T...   INFO      TrackVeloTTPreFitSeq     |     0.000 |     0.016 |    0.014       0.0 |      13 |     0.000 |
+TimingAuditor.T...   INFO      TrackVeloTTFitSeq        |   293.724 |   293.638 |   64.268     640.1 |      13 |     3.817 |
+TimingAuditor.T...   INFO       FitVeloTT               |   293.494 |   293.577 |   64.199     640.1 |      13 |     3.817 |
+TimingAuditor.T...   INFO      TrackPostFitSeq          |   617.599 |   617.694 |   17.817    2655.7 |      13 |     8.030 |
+TimingAuditor.T...   INFO       TrackEventCloneKiller   |   617.445 |   617.625 |   17.729    2655.6 |      13 |     8.029 |
+TimingAuditor.T...   INFO      TrackVeloPreFitSeq       |     1.846 |     1.803 |    0.550       5.5 |      13 |     0.023 |
+TimingAuditor.T...   INFO       TrackPrepareVelo        |     1.769 |     1.767 |    0.518       5.5 |      13 |     0.023 |
+TimingAuditor.T...   INFO      TrackVeloFitSeq          |   348.716 |   348.907 |  110.472     986.7 |      13 |     4.536 |
+TimingAuditor.T...   INFO       FitVelo                 |   346.024 |   346.061 |  109.385     979.0 |      13 |     4.499 |
+TimingAuditor.T...   INFO       CopyVelo                |     2.692 |     2.746 |    1.009       7.6 |      13 |     0.036 |
+TimingAuditor.T...   INFO      TrackAddExtraInfoSeq     |   568.913 |   569.371 |   65.642    1825.0 |      13 |     7.402 |
+TimingAuditor.T...   INFO       TrackClonesSeq          |   287.341 |   287.795 |   13.169    1115.6 |      13 |     3.741 |
+TimingAuditor.T...   INFO        FindTrackClones        |   285.264 |   285.709 |   12.762    1114.0 |      13 |     3.714 |
+TimingAuditor.T...   INFO        FlagTrackClones        |     2.000 |     1.993 |    0.150      18.4 |      13 |     0.026 |
+TimingAuditor.T...   INFO       TrackAddLikelihood      |   279.188 |   279.300 |   51.833     704.8 |      13 |     3.631 |
+TimingAuditor.T...   INFO       NeuralNetTmva           |     2.230 |     2.152 |    0.494       7.3 |      13 |     0.028 |
+TimingAuditor.T...   INFO    RecoVertexSeq              |    64.298 |    64.344 |    5.433     336.2 |      13 |     0.836 |
+TimingAuditor.T...   INFO     PatPVOffline              |    16.997 |    17.063 |    5.038      46.4 |      13 |     0.222 |
+TimingAuditor.T...   INFO     TrackV0Finder             |    47.301 |    47.208 |    0.299     308.3 |      13 |     0.614 |
+TimingAuditor.T...   INFO    RecoRICHSeq                |  4153.599 |  4155.219 |  405.999   16359.1 |      13 |    54.018 |
+TimingAuditor.T...   INFO     RichRecInitOfflineSeq     |  2457.088 |  2458.214 |  258.636    7922.0 |      13 |    31.957 |
+TimingAuditor.T...   INFO      CheckProcOfflineStatus   |     0.154 |     0.299 |    0.138       2.0 |      13 |     0.004 |
+TimingAuditor.T...   INFO      RichOfflinePixelsSeq     |    83.218 |    83.481 |   21.154     163.0 |      13 |     1.085 |
+TimingAuditor.T...   INFO       DecodeRawRichOffline    |    14.305 |    14.423 |    4.976      44.3 |      13 |     0.187 |
+TimingAuditor.T...   INFO       CreateOfflinePixels     |    68.836 |    68.953 |   15.924     138.8 |      13 |     0.896 |
+TimingAuditor.T...   INFO      RichOfflineTracksSeq     |   574.605 |   574.525 |  121.999    1335.8 |      13 |     7.469 |
+TimingAuditor.T...   INFO       CreateOfflineTracks     |   574.451 |   574.455 |  121.887    1335.8 |      13 |     7.468 |
+TimingAuditor.T...   INFO      RichOfflinePhotonsSeq    |  1799.034 |  1799.805 |  115.216    6437.2 |      13 |    23.397 |
+TimingAuditor.T...   INFO       CreateOfflinePhotons    |  1798.957 |  1799.731 |  115.099    6437.1 |      13 |    23.397 |
+TimingAuditor.T...   INFO     RichOfflinePIDSeq         |  1696.435 |  1696.950 |  147.316    8437.0 |      13 |    22.060 |
+TimingAuditor.T...   INFO      RichOfflineGPIDInitSeq   |     2.077 |     2.071 |    0.597      13.2 |      13 |     0.027 |
+TimingAuditor.T...   INFO       RichOfflineGPIDInit     |     0.000 |     0.028 |    0.010       0.2 |      13 |     0.000 |
+TimingAuditor.T...   INFO       RichOfflineGPIDDigSel   |     0.231 |     0.167 |    0.039       1.5 |      13 |     0.002 |
+TimingAuditor.T...   INFO       RichOfflineGPIDTrSel    |     1.769 |     1.788 |    0.485      11.1 |      13 |     0.023 |
+TimingAuditor.T...   INFO      RichOfflineGPIDLLSeq     |  1692.820 |  1693.344 |  146.043    8433.5 |      13 |    22.013 |
+TimingAuditor.T...   INFO       RichOfflineBckEstIt0    |     7.384 |     7.538 |    1.699      18.7 |      13 |     0.098 |
+TimingAuditor.T...   INFO       RichOfflineGPIDLLIt0    |   878.482 |   878.711 |  136.393    3339.3 |      13 |    11.423 |
+TimingAuditor.T...   INFO       RichOfflineBckEstIt1    |     7.383 |     7.390 |    1.962      15.4 |      13 |     0.096 |
+TimingAuditor.T...   INFO       RichOfflineGPIDLLIt1    |   799.340 |   799.485 |    5.632    5062.7 |      13 |    10.393 |
+TimingAuditor.T...   INFO      RichOfflineGPIDFin       |     0.538 |     0.588 |    0.110       4.7 |      13 |     0.008 |
+TimingAuditor.T...   INFO      MergeOfflineRichPIDs     |     0.923 |     0.828 |    0.223       6.5 |      13 |     0.011 |
+TimingAuditor.T...   INFO    RecoCALOSeq                |   246.039 |   246.225 |   16.866     806.6 |      13 |     3.201 |
+TimingAuditor.T...   INFO     CaloDigits                |     5.076 |     5.203 |    1.524      10.6 |      13 |     0.068 |
+TimingAuditor.T...   INFO      EcalZSup                 |     2.538 |     2.766 |    0.645       6.0 |      13 |     0.036 |
+TimingAuditor.T...   INFO      HcalZSup                 |     0.538 |     0.541 |    0.261       1.0 |      13 |     0.007 |
+TimingAuditor.T...   INFO      PrsFromRaw               |     1.384 |     1.355 |    0.296       5.0 |      13 |     0.018 |
+TimingAuditor.T...   INFO      SpdFromRaw               |     0.385 |     0.420 |    0.174       0.9 |      13 |     0.005 |
+TimingAuditor.T...   INFO     CaloClusters              |    30.765 |    30.717 |    2.557      85.6 |      13 |     0.399 |
+TimingAuditor.T...   INFO      EcalClust                |    17.228 |    17.128 |    1.429      44.9 |      13 |     0.223 |
+TimingAuditor.T...   INFO      EcalShare                |     9.537 |     9.735 |    0.445      33.4 |      13 |     0.127 |
+TimingAuditor.T...   INFO      EcalCovar                |     3.846 |     3.693 |    0.569       8.0 |      13 |     0.048 |
+TimingAuditor.T...   INFO     CaloTrackMatch            |    95.447 |    95.499 |    3.880     329.2 |      13 |     1.241 |
+TimingAuditor.T...   INFO      CaloAcceptance           |    55.299 |    55.453 |    3.199     172.0 |      13 |     0.721 |
+TimingAuditor.T...   INFO       InSPD                   |    14.997 |    15.056 |    0.841      42.1 |      13 |     0.196 |
+TimingAuditor.T...   INFO       InPRS                   |    13.152 |    13.043 |    0.585      42.1 |      13 |     0.170 |
+TimingAuditor.T...   INFO       InECAL                  |    12.767 |    12.785 |    0.625      41.4 |      13 |     0.166 |
+TimingAuditor.T...   INFO       InHCAL                  |    12.767 |    12.684 |    0.612      41.5 |      13 |     0.165 |
+TimingAuditor.T...   INFO       InBREM                  |     1.538 |     1.708 |    0.389       4.4 |      13 |     0.022 |
+TimingAuditor.T...   INFO      ClusterMatch             |    40.148 |    39.986 |    0.630     157.1 |      13 |     0.520 |
+TimingAuditor.T...   INFO     CaloRec                   |    26.611 |    26.530 |    3.661      59.4 |      13 |     0.345 |
+TimingAuditor.T...   INFO      MergedPi0Rec             |     1.000 |     1.126 |    0.170       4.5 |      13 |     0.015 |
+TimingAuditor.T...   INFO      PhotonFromMergedRec      |     0.231 |     0.198 |    0.025       1.7 |      13 |     0.003 |
+TimingAuditor.T...   INFO      SinglePhotonRec          |    15.921 |    15.893 |    2.242      42.4 |      13 |     0.207 |
+TimingAuditor.T...   INFO      ElectronRec              |     9.229 |     9.179 |    1.059      25.5 |      13 |     0.119 |
+TimingAuditor.T...   INFO     CaloPIDs                  |    87.910 |    88.181 |    5.171     321.7 |      13 |     1.146 |
+TimingAuditor.T...   INFO      CaloMatch                |    61.760 |    61.737 |    1.106     255.0 |      13 |     0.803 |
+TimingAuditor.T...   INFO       ElectronMatch           |    26.381 |    26.586 |    0.198     129.1 |      13 |     0.346 |
+TimingAuditor.T...   INFO       BremMatch               |    35.148 |    35.077 |    0.849     125.7 |      13 |     0.456 |
+TimingAuditor.T...   INFO      CaloEnergy               |    22.996 |    23.109 |    2.979      60.7 |      13 |     0.300 |
+TimingAuditor.T...   INFO       SpdE                    |     2.846 |     3.050 |    0.342      14.5 |      13 |     0.040 |
+TimingAuditor.T...   INFO       PrsE                    |     2.000 |     2.047 |    0.304       5.5 |      13 |     0.027 |
+TimingAuditor.T...   INFO       EcalE                   |     8.922 |     8.833 |    1.057      24.1 |      13 |     0.115 |
+TimingAuditor.T...   INFO       HcalE                   |     8.922 |     9.058 |    1.159      24.9 |      13 |     0.118 |
+TimingAuditor.T...   INFO      CaloDLLs                 |     3.153 |     3.265 |    1.031      12.0 |      13 |     0.042 |
+TimingAuditor.T...   INFO       EcalChi22ID             |     0.461 |     0.548 |    0.114       3.5 |      13 |     0.007 |
+TimingAuditor.T...   INFO       BremChi22ID             |     0.231 |     0.334 |    0.115       0.8 |      13 |     0.004 |
+TimingAuditor.T...   INFO       ClusChi22ID             |     0.538 |     0.605 |    0.112       3.4 |      13 |     0.008 |
+TimingAuditor.T...   INFO       PrsPIDe                 |     0.615 |     0.436 |    0.097       2.7 |      13 |     0.006 |
+TimingAuditor.T...   INFO       BremPIDe                |     0.385 |     0.260 |    0.101       0.6 |      13 |     0.003 |
+TimingAuditor.T...   INFO       EcalPIDe                |     0.077 |     0.252 |    0.083       0.6 |      13 |     0.003 |
+TimingAuditor.T...   INFO       HcalPIDe                |     0.308 |     0.207 |    0.074       0.5 |      13 |     0.003 |
+TimingAuditor.T...   INFO       EcalPIDmu               |     0.154 |     0.218 |    0.073       0.5 |      13 |     0.003 |
+TimingAuditor.T...   INFO       HcalPIDmu               |     0.154 |     0.206 |    0.073       0.5 |      13 |     0.003 |
+TimingAuditor.T...   INFO    RecoMUONSeq                |   499.078 |   499.233 |  171.257    1515.3 |      13 |     6.490 |
+TimingAuditor.T...   INFO     MuonRec                   |     3.538 |     3.477 |    1.105      15.9 |      13 |     0.045 |
+TimingAuditor.T...   INFO     MuonID                    |   495.540 |   495.671 |  170.049    1499.2 |      13 |     6.444 |
+TimingAuditor.T...   INFO    RecoPROTOSeq               |    45.301 |    45.271 |    4.685     132.6 |      13 |     0.589 |
+TimingAuditor.T...   INFO     ChargedProtoPAlg          |    36.763 |    36.634 |    3.041     115.2 |      13 |     0.476 |
+TimingAuditor.T...   INFO     ChargedProtoCombineDLLsAlg|     1.769 |     1.733 |    0.319       3.9 |      13 |     0.023 |
+TimingAuditor.T...   INFO     NeutralProtoPAlg          |     6.691 |     6.787 |    1.212      15.3 |      13 |     0.088 |
+TimingAuditor.T...   INFO   Moni                        |   465.391 |   466.066 |  125.845    1277.8 |      13 |     6.059 |
+TimingAuditor.T...   INFO    MoniCALOSeq                |   137.441 |   137.692 |   61.669     243.1 |      13 |     1.790 |
+TimingAuditor.T...   INFO     CaloDigitMon              |    73.912 |    73.986 |   15.202     157.6 |      13 |     0.962 |
+TimingAuditor.T...   INFO      EcalDigitMon             |    46.916 |    46.911 |    8.663     100.1 |      13 |     0.610 |
+TimingAuditor.T...   INFO      HcalDigitMon             |     5.076 |     4.926 |    2.068       9.3 |      13 |     0.064 |
+TimingAuditor.T...   INFO      PrsDigitMon              |    15.690 |    15.884 |    3.086      36.8 |      13 |     0.206 |
+TimingAuditor.T...   INFO      SpdDigitMon              |     5.999 |     6.119 |    1.178      13.6 |      13 |     0.080 |
+TimingAuditor.T...   INFO     CaloClusterMon            |     6.153 |     6.104 |    0.976      18.3 |      13 |     0.079 |
+TimingAuditor.T...   INFO      EcalClusterMon           |     6.076 |     6.061 |    0.946      18.3 |      13 |     0.079 |
+TimingAuditor.T...   INFO     CaloHypoMon               |     8.999 |     9.156 |    0.990      38.9 |      13 |     0.119 |
+TimingAuditor.T...   INFO      ElectronMon              |     1.923 |     1.936 |    0.045      17.6 |      13 |     0.025 |
+TimingAuditor.T...   INFO      PhotonMon                |     4.461 |     4.449 |    0.658      14.2 |      13 |     0.058 |
+TimingAuditor.T...   INFO      SplitPhotonMon           |     0.000 |     0.069 |    0.031       0.2 |      13 |     0.001 |
+TimingAuditor.T...   INFO      MergedPi0Mon             |     0.769 |     0.863 |    0.028      10.6 |      13 |     0.011 |
+TimingAuditor.T...   INFO      ResolvedPi0Mon           |     1.692 |     1.718 |    0.115       6.6 |      13 |     0.022 |
+TimingAuditor.T...   INFO     CaloPIDsMon               |     4.307 |     4.211 |    0.386      12.3 |      13 |     0.055 |
+TimingAuditor.T...   INFO      PhotonMatchMon           |     2.846 |     2.814 |    0.171       9.6 |      13 |     0.037 |
+TimingAuditor.T...   INFO      ElectronMatchMon         |     0.538 |     0.546 |    0.057       5.0 |      13 |     0.007 |
+TimingAuditor.T...   INFO      BremMatchMon             |     0.923 |     0.766 |    0.101       2.1 |      13 |     0.010 |
+TimingAuditor.T...   INFO     SpdMon                    |    43.917 |    44.109 |   41.554      48.3 |      13 |     0.573 |
+TimingAuditor.T...   INFO    MoniRICHSeq                |     0.000 |     0.013 |    0.011       0.0 |      13 |     0.000 |
+TimingAuditor.T...   INFO    MoniMUONSeq                |     3.153 |     3.129 |    0.793      10.9 |      13 |     0.041 |
+TimingAuditor.T...   INFO     MuonPIDMonitor            |     3.153 |     3.092 |    0.768      10.8 |      13 |     0.040 |
+TimingAuditor.T...   INFO    MoniVELOSeq                |   216.429 |   216.491 |   35.084     792.8 |      13 |     2.814 |
+TimingAuditor.T...   INFO     VeloClusterMonitor        |   131.518 |   131.514 |   10.802     601.8 |      13 |     1.710 |
+TimingAuditor.T...   INFO     VeloTrackMonitor          |    84.833 |    84.883 |   24.154     199.8 |      13 |     1.103 |
+TimingAuditor.T...   INFO    MoniTrSeq                  |    84.833 |    84.845 |   23.768     197.8 |      13 |     1.103 |
+TimingAuditor.T...   INFO     TrackMonitor              |    31.611 |    31.467 |    6.747      70.9 |      13 |     0.409 |
+TimingAuditor.T...   INFO     TrackVertexMonitor        |    43.224 |    43.492 |   12.008     117.5 |      13 |     0.565 |
+TimingAuditor.T...   INFO     TrackFitMatchMonitor      |     9.383 |     9.208 |    2.031      22.8 |      13 |     0.120 |
+TimingAuditor.T...   INFO     TrackV0Monitor            |     0.461 |     0.516 |    0.044       4.1 |      13 |     0.007 |
+TimingAuditor.T...   INFO    MoniSTSeq                  |    23.458 |    23.711 |    4.195      57.8 |      13 |     0.308 |
+TimingAuditor.T...   INFO     TTClusterMonitor          |    12.691 |    12.795 |    2.105      31.6 |      13 |     0.166 |
+TimingAuditor.T...   INFO     ITClusterMonitor          |    10.691 |    10.837 |    2.024      26.0 |      13 |     0.141 |
+TimingAuditor.T...   INFO    MoniTTSeq                  |     0.077 |     0.014 |    0.010       0.0 |      13 |     0.000 |
 TimingAuditor.T...   INFO    MoniITSeq                  |     0.000 |     0.011 |    0.010       0.0 |      13 |     0.000 |
-TimingAuditor.T...   INFO    MoniPROTOSeq               |     0.000 |     0.010 |    0.009       0.0 |      13 |     0.000 |
-TimingAuditor.T...   INFO   MCLinks                     |    61.375 |   137.618 |   49.929     335.6 |      13 |     1.789 |
-TimingAuditor.T...   INFO    MCLinksL0Seq               |     0.000 |     0.010 |    0.009       0.0 |      13 |     0.000 |
-TimingAuditor.T...   INFO    MCLinksUnpackSeq           |    39.610 |    94.833 |   39.623     181.7 |      13 |     1.233 |
-TimingAuditor.T...   INFO     UnpackMCParticle          |    21.458 |    55.204 |   13.010      97.6 |      13 |     0.718 |
-TimingAuditor.T...   INFO     UnpackMCVertex            |    17.920 |    39.547 |   10.936      84.0 |      13 |     0.514 |
-TimingAuditor.T...   INFO    MCLinksTrSeq               |    21.612 |    42.720 |    4.659     207.0 |      13 |     0.555 |
-TimingAuditor.T...   INFO     TrackAssociator           |    21.612 |    42.671 |    4.626     206.9 |      13 |     0.555 |
-TimingAuditor.T...   INFO   Check                       | 35515.139 | 35998.203 | 2402.297  109407.4 |      13 |   467.977 |
-TimingAuditor.T...   INFO    CheckPatSeq                |   418.167 |   435.755 |  104.170     980.6 |      13 |     5.665 |
-TimingAuditor.T...   INFO     AssocVeloRZ               |     1.692 |     1.835 |    0.699       4.1 |      13 |     0.024 |
-TimingAuditor.T...   INFO     AssocVelo                 |     2.769 |     2.745 |    0.901       6.7 |      13 |     0.036 |
-TimingAuditor.T...   INFO     AssocVeloTT               |     0.692 |     0.832 |    0.271       1.7 |      13 |     0.011 |
-TimingAuditor.T...   INFO     AssocForward              |     4.691 |     4.574 |    1.008      15.3 |      13 |     0.059 |
-TimingAuditor.T...   INFO     AssocTTrack               |     3.692 |     3.894 |    0.670      11.8 |      13 |     0.051 |
-TimingAuditor.T...   INFO     AssocMatch                |     3.769 |     3.590 |    1.045      11.1 |      13 |     0.047 |
-TimingAuditor.T...   INFO     AssocDownstream           |     3.384 |     3.339 |    0.600      10.4 |      13 |     0.043 |
-TimingAuditor.T...   INFO     TrackResChecker           |   198.816 |   199.055 |   64.349     331.9 |      13 |     2.588 |
-TimingAuditor.T...   INFO     VeloRZ                    |     9.922 |    10.638 |    2.232      36.0 |      13 |     0.138 |
-TimingAuditor.T...   INFO     Velo                      |     6.307 |     6.170 |    1.477      15.0 |      13 |     0.080 |
-TimingAuditor.T...   INFO     VeloTT                    |     3.922 |     4.077 |    0.975       9.7 |      13 |     0.053 |
-TimingAuditor.T...   INFO     Forward                   |     8.076 |     8.102 |    1.713      25.0 |      13 |     0.105 |
-TimingAuditor.T...   INFO     TTrack                    |     6.615 |     6.529 |    1.540      15.9 |      13 |     0.085 |
-TimingAuditor.T...   INFO     Match                     |     6.460 |     6.597 |    1.700      15.8 |      13 |     0.086 |
-TimingAuditor.T...   INFO     Downstream                |     5.615 |     5.706 |    1.427      13.3 |      13 |     0.074 |
-TimingAuditor.T...   INFO     BestTracks                |     8.229 |     8.173 |    1.863      18.8 |      13 |     0.106 |
-TimingAuditor.T...   INFO     PVOfflineCheck            |   142.978 |   159.513 |   21.343     483.4 |      13 |     2.074 |
-TimingAuditor.T...   INFO    CheckRICHSeq               | 30291.549 | 30556.630 | 1904.509   91733.1 |      13 |   397.236 |
-TimingAuditor.T...   INFO     RichRawMoni               |    12.921 |    12.828 |    4.450      22.5 |      13 |     0.167 |
-TimingAuditor.T...   INFO      RichRawDataDBCheck       |    12.921 |    12.791 |    4.422      22.5 |      13 |     0.166 |
-TimingAuditor.T...   INFO     RichPixelMoni             |   103.369 |   113.215 |   23.916     236.6 |      13 |     1.472 |
-TimingAuditor.T...   INFO      RichRecPixelQC           |   103.215 |   113.090 |   23.826     236.5 |      13 |     1.470 |
-TimingAuditor.T...   INFO     RichRecoMoni              |  1435.474 |  1437.382 |  104.211    4675.2 |      13 |    18.686 |
-TimingAuditor.T...   INFO      RiCKResAll               |   693.202 |   693.645 |   46.319    2190.5 |      13 |     9.017 |
-TimingAuditor.T...   INFO      RiCKResLong              |   309.415 |   309.623 |   27.309     993.7 |      13 |     4.025 |
-TimingAuditor.T...   INFO      RiCKResForward           |   208.199 |   208.153 |   14.528     766.7 |      13 |     2.706 |
-TimingAuditor.T...   INFO      RiCKResMatch             |   101.600 |   102.717 |   12.701     334.4 |      13 |     1.335 |
-TimingAuditor.T...   INFO      RiCKResKsTrack           |    64.144 |    64.123 |    0.042     290.9 |      13 |     0.834 |
-TimingAuditor.T...   INFO      RiCKResVeloTT            |    33.841 |    33.863 |    0.141     138.6 |      13 |     0.440 |
-TimingAuditor.T...   INFO      RiCKResSeed              |    24.919 |    24.990 |    0.181      78.2 |      13 |     0.325 |
-TimingAuditor.T...   INFO     RichPIDMoni               |    45.993 |    46.092 |   11.724     156.3 |      13 |     0.599 |
-TimingAuditor.T...   INFO      RiPIDMonAll2To100        |     5.845 |     5.943 |    0.862      35.2 |      13 |     0.077 |
-TimingAuditor.T...   INFO      RiPIDMonAll2To10         |     3.153 |     3.206 |    0.561       9.8 |      13 |     0.042 |
-TimingAuditor.T...   INFO      RiPIDMonAll10To70        |     2.538 |     2.565 |    0.271       8.8 |      13 |     0.033 |
-TimingAuditor.T...   INFO      RiPIDMonAll70To100       |     1.461 |     1.307 |    0.140       5.4 |      13 |     0.017 |
-TimingAuditor.T...   INFO      RiPIDMonLong2To100       |     2.769 |     2.942 |    0.452      10.7 |      13 |     0.038 |
-TimingAuditor.T...   INFO      RiPIDMonLong2To10        |     2.153 |     2.203 |    0.347       8.5 |      13 |     0.029 |
-TimingAuditor.T...   INFO      RiPIDMonLong10To70       |     2.231 |     1.942 |    0.285       6.4 |      13 |     0.025 |
-TimingAuditor.T...   INFO      RiPIDMonLong70To100      |     0.692 |     0.810 |    0.097       4.2 |      13 |     0.011 |
-TimingAuditor.T...   INFO      RiPIDMonForward2To100    |     2.384 |     2.428 |    0.243       8.8 |      13 |     0.032 |
-TimingAuditor.T...   INFO      RiPIDMonForward2To10     |     1.846 |     1.879 |    0.192       6.5 |      13 |     0.024 |
-TimingAuditor.T...   INFO      RiPIDMonForward10To70    |     1.692 |     1.807 |    0.145       6.3 |      13 |     0.023 |
-TimingAuditor.T...   INFO      RiPIDMonForward70To100   |     0.692 |     0.753 |    0.088       4.4 |      13 |     0.010 |
-TimingAuditor.T...   INFO      RiPIDMonMatch2To100      |     1.846 |     1.694 |    0.268       4.7 |      13 |     0.022 |
-TimingAuditor.T...   INFO      RiPIDMonMatch2To10       |     1.615 |     1.606 |    0.244       4.5 |      13 |     0.021 |
-TimingAuditor.T...   INFO      RiPIDMonMatch10To70      |     1.154 |     1.153 |    0.146       3.3 |      13 |     0.015 |
-TimingAuditor.T...   INFO      RiPIDMonMatch70To100     |     0.385 |     0.538 |    0.088       2.4 |      13 |     0.007 |
-TimingAuditor.T...   INFO      RiPIDMonKsTrack2To100    |     1.538 |     1.450 |    0.075       6.3 |      13 |     0.019 |
-TimingAuditor.T...   INFO      RiPIDMonKsTrack2To10     |     1.461 |     1.304 |    0.075       6.0 |      13 |     0.017 |
-TimingAuditor.T...   INFO      RiPIDMonKsTrack10To70    |     0.846 |     0.988 |    0.078       2.9 |      13 |     0.013 |
-TimingAuditor.T...   INFO      RiPIDMonKsTrack70To100   |     0.538 |     0.428 |    0.074       3.0 |      13 |     0.006 |
-TimingAuditor.T...   INFO      RiPIDMonVeloTT2To100     |     1.384 |     1.474 |    0.140       6.2 |      13 |     0.019 |
-TimingAuditor.T...   INFO      RiPIDMonVeloTT2To10      |     1.308 |     1.361 |    0.137       5.1 |      13 |     0.018 |
-TimingAuditor.T...   INFO      RiPIDMonVeloTT10To70     |     0.692 |     0.741 |    0.087       4.3 |      13 |     0.010 |
-TimingAuditor.T...   INFO      RiPIDMonVeloTT70To100    |     0.692 |     0.511 |    0.085       3.8 |      13 |     0.007 |
-TimingAuditor.T...   INFO      RiPIDMonSeed2To100       |     1.615 |     1.715 |    0.169       4.7 |      13 |     0.022 |
-TimingAuditor.T...   INFO      RiPIDMonSeed2To10        |     1.077 |     0.810 |    0.103       2.4 |      13 |     0.011 |
-TimingAuditor.T...   INFO      RiPIDMonSeed10To70       |     1.231 |     1.367 |    0.131       3.2 |      13 |     0.018 |
-TimingAuditor.T...   INFO      RiPIDMonSeed70To100      |     0.538 |     0.593 |    0.099       2.5 |      13 |     0.008 |
-TimingAuditor.T...   INFO     RichMirrAlignMoni         |    83.218 |    83.309 |    7.221     335.6 |      13 |     1.083 |
-TimingAuditor.T...   INFO      RichAlignMoniR1          |    49.146 |    49.274 |    2.028     171.0 |      13 |     0.641 |
-TimingAuditor.T...   INFO      RichAlignMoniR2          |    33.918 |    33.969 |    2.991     165.3 |      13 |     0.442 |
-TimingAuditor.T...   INFO     RichExpertChecks          | 28610.420 | 28863.696 | 1752.899   86398.4 |      13 |   375.228 |
-TimingAuditor.T...   INFO      RichPixelPositions       |   566.222 |   798.850 |  127.243    3804.9 |      13 |    10.385 |
-TimingAuditor.T...   INFO       RiRecPixelPosMoni       |   566.222 |   798.778 |  127.172    3804.8 |      13 |    10.384 |
-TimingAuditor.T...   INFO      RichTrackGeometry        |    80.526 |    80.432 |   15.731     182.9 |      13 |     1.046 |
-TimingAuditor.T...   INFO       RiRecAllGeomMoni        |    35.533 |    35.371 |    7.304      84.5 |      13 |     0.460 |
-TimingAuditor.T...   INFO       RiRecLongGeomMoni       |    15.229 |    15.246 |    3.180      38.0 |      13 |     0.198 |
-TimingAuditor.T...   INFO       RiRecForwardGeomMoni    |    11.229 |    11.145 |    1.390      28.6 |      13 |     0.145 |
-TimingAuditor.T...   INFO       RiRecMatchGeomMoni      |     5.614 |     5.679 |    1.241      21.7 |      13 |     0.074 |
-TimingAuditor.T...   INFO       RiRecKsTrackGeomMoni    |     5.076 |     5.094 |    0.027      22.8 |      13 |     0.066 |
-TimingAuditor.T...   INFO       RiRecVeloTTGeomMoni     |     5.768 |     5.668 |    0.584      15.1 |      13 |     0.074 |
-TimingAuditor.T...   INFO       RiRecSeedGeomMoni       |     2.000 |     2.036 |    0.290       8.7 |      13 |     0.026 |
-TimingAuditor.T...   INFO      RichTrackResolution      |    18.766 |    18.913 |    4.661      42.9 |      13 |     0.246 |
-TimingAuditor.T...   INFO       RiRecAllTkResMoni       |     6.999 |     6.977 |    1.642      15.6 |      13 |     0.091 |
-TimingAuditor.T...   INFO       RiRecLongTkResMoni      |     4.153 |     4.313 |    1.069      10.9 |      13 |     0.056 |
-TimingAuditor.T...   INFO       RiRecForwardTkResMoni   |     3.076 |     2.937 |    0.482       7.7 |      13 |     0.038 |
-TimingAuditor.T...   INFO       RiRecMatchTkResMoni     |     1.615 |     1.565 |    0.531       3.4 |      13 |     0.020 |
-TimingAuditor.T...   INFO       RiRecKsTrackTkResMoni   |     0.692 |     0.870 |    0.045       2.0 |      13 |     0.011 |
-TimingAuditor.T...   INFO       RiRecVeloTTTkResMoni    |     1.615 |     1.509 |    0.211       2.7 |      13 |     0.020 |
-TimingAuditor.T...   INFO       RiRecSeedTkResMoni      |     0.385 |     0.594 |    0.126       1.6 |      13 |     0.008 |
-TimingAuditor.T...   INFO      RichCKThetaResolution    |  3742.354 |  3743.711 |  491.576   10592.5 |      13 |    48.668 |
-TimingAuditor.T...   INFO       RiRecPhotAngAllMoni     |  1397.634 |  1398.180 |  166.522    3976.3 |      13 |    18.176 |
-TimingAuditor.T...   INFO       RiRecPhotAngLongMoni    |   993.849 |   994.156 |  159.000    2891.7 |      13 |    12.924 |
-TimingAuditor.T...   INFO       RiRecPhotAngForwardMoni |   680.204 |   680.576 |   87.286    2062.5 |      13 |     8.847 |
-TimingAuditor.T...   INFO       RiRecPhotAngMatchMoni   |   332.257 |   332.017 |   72.096     925.0 |      13 |     4.316 |
-TimingAuditor.T...   INFO       RiRecPhotAngKsTrackMoni |   138.748 |   138.674 |    0.022     382.4 |      13 |     1.803 |
-TimingAuditor.T...   INFO       RiRecPhotAngVeloTTMoni  |   102.292 |   102.389 |    0.024     312.1 |      13 |     1.331 |
-TimingAuditor.T...   INFO       RiRecPhotAngSeedMoni    |    97.370 |    97.416 |    6.444     279.4 |      13 |     1.266 |
-TimingAuditor.T...   INFO      RichTrackCKResolutions   |  1007.386 |  1007.899 |   80.320    2854.3 |      13 |    13.103 |
-TimingAuditor.T...   INFO       RiRecAllCKResMoni       |   379.865 |   379.963 |   28.635    1065.0 |      13 |     4.940 |
-TimingAuditor.T...   INFO       RiRecLongCKResMoni      |   248.347 |   248.592 |   22.910     738.5 |      13 |     3.232 |
-TimingAuditor.T...   INFO       RiRecForwardCKResMoni   |   162.360 |   162.459 |   10.006     509.2 |      13 |     2.112 |
-TimingAuditor.T...   INFO       RiRecMatchCKResMoni     |    84.833 |    84.901 |   12.961     261.3 |      13 |     1.104 |
-TimingAuditor.T...   INFO       RiRecKsTrackCKResMoni   |    31.457 |    31.447 |    0.021      79.1 |      13 |     0.409 |
-TimingAuditor.T...   INFO       RiRecVeloTTCKResMoni    |    82.065 |    82.353 |    3.765     206.8 |      13 |     1.071 |
-TimingAuditor.T...   INFO       RiRecSeedCKResMoni      |    18.074 |    17.940 |    1.212      57.8 |      13 |     0.233 |
-TimingAuditor.T...   INFO      RichPhotonSignal         |   104.599 |   104.574 |   25.998     206.1 |      13 |     1.359 |
-TimingAuditor.T...   INFO       RiRecPhotSigAllTkMoni   |    37.994 |    38.039 |    9.720      75.4 |      13 |     0.495 |
-TimingAuditor.T...   INFO       RiRecPhotSigLongTkMoni  |    24.304 |    24.397 |    6.242      54.6 |      13 |     0.317 |
-TimingAuditor.T...   INFO       RiRecPhotSigForwardTkMon|    16.921 |    16.876 |    2.777      38.1 |      13 |     0.219 |
-TimingAuditor.T...   INFO       RiRecPhotSigMatchTkMoni |     8.922 |     8.921 |    2.826      17.2 |      13 |     0.116 |
-TimingAuditor.T...   INFO       RiRecPhotSigKsTrackTkMon|     4.769 |     4.571 |    0.021      15.1 |      13 |     0.059 |
-TimingAuditor.T...   INFO       RiRecPhotSigVeloTTTkMoni|     8.460 |     8.548 |    0.856      15.5 |      13 |     0.111 |
-TimingAuditor.T...   INFO       RiRecPhotSigSeedTkMoni  |     2.922 |     3.064 |    0.446       6.4 |      13 |     0.040 |
-TimingAuditor.T...   INFO      RichPhotonGeometry       |  2055.457 |  2060.088 |  123.521    6674.2 |      13 |    26.781 |
-TimingAuditor.T...   INFO       RiRecPhotGeomAllTkMoni  |   788.726 |   788.935 |   44.108    2559.3 |      13 |    10.256 |
-TimingAuditor.T...   INFO       RiRecPhotGeomLongTkMoni |   476.389 |   476.589 |   35.144    1589.1 |      13 |     6.196 |
-TimingAuditor.T...   INFO       RiRecPhotGeomForwardTkMo|   325.643 |   327.367 |   14.818    1169.4 |      13 |     4.256 |
-TimingAuditor.T...   INFO       RiRecPhotGeomMatchTkMoni|   151.362 |   152.728 |   20.477     500.5 |      13 |     1.985 |
-TimingAuditor.T...   INFO       RiRecPhotGeomKsTrackTkMo|   116.290 |   117.254 |    0.024     400.2 |      13 |     1.524 |
-TimingAuditor.T...   INFO       RiRecPhotGeomVeloTTTkMon|   166.975 |   167.203 |    5.981     472.8 |      13 |     2.174 |
-TimingAuditor.T...   INFO       RiRecPhotGeomSeedTkMoni |    29.765 |    29.735 |    1.798      87.3 |      13 |     0.387 |
-TimingAuditor.T...   INFO      RichPhotonTrajectory     |  1110.831 |  1112.888 |   72.368    3457.2 |      13 |    14.468 |
-TimingAuditor.T...   INFO       RiRecPhotTrajAllTkMoni  |   423.320 |   423.544 |   25.663    1309.5 |      13 |     5.506 |
-TimingAuditor.T...   INFO       RiRecPhotTrajLongTkMoni |   260.960 |   261.058 |   20.968     833.2 |      13 |     3.394 |
-TimingAuditor.T...   INFO       RiRecPhotTrajForwardTkMo|   177.511 |   179.440 |    9.118     610.3 |      13 |     2.333 |
-TimingAuditor.T...   INFO       RiRecPhotTrajMatchTkMoni|    84.295 |    84.265 |   11.841     276.6 |      13 |     1.095 |
-TimingAuditor.T...   INFO       RiRecPhotTrajKsTrackTkMo|    57.684 |    57.709 |    0.020     189.2 |      13 |     0.750 |
-TimingAuditor.T...   INFO       RiRecPhotTrajVeloTTTkMon|    90.371 |    90.278 |    3.146     248.3 |      13 |     1.174 |
-TimingAuditor.T...   INFO       RiRecPhotTrajSeedTkMoni |    16.459 |    16.362 |    0.971      47.7 |      13 |     0.213 |
-TimingAuditor.T...   INFO      PhotonRecoEfficiency     | 19837.907 | 19850.011 |  793.974   61029.8 |      13 |   258.050 |
-TimingAuditor.T...   INFO       RiRecPhotEffAllTkMoni   |  7581.078 |  7587.395 |  299.313   22406.0 |      13 |    98.636 |
-TimingAuditor.T...   INFO       RiRecPhotEffLongTkMoni  |  4790.426 |  4793.945 |  195.243   16249.7 |      13 |    62.321 |
-TimingAuditor.T...   INFO       RiRecPhotEffForwardTkMon|  3228.894 |  3229.852 |   83.017   11310.1 |      13 |    41.988 |
-TimingAuditor.T...   INFO       RiRecPhotEffMatchTkMoni |  1553.918 |  1554.640 |  111.400    4957.6 |      13 |    20.210 |
-TimingAuditor.T...   INFO       RiRecPhotEffKsTrackTkMon|   617.214 |   617.389 |    0.028    1780.8 |      13 |     8.026 |
-TimingAuditor.T...   INFO       RiRecPhotEffVeloTTTkMoni|  1704.433 |  1705.040 |   58.787    4104.1 |      13 |    22.166 |
-TimingAuditor.T...   INFO       RiRecPhotEffSeedTkMoni  |   361.330 |   361.419 |   21.552    1099.7 |      13 |     4.698 |
-TimingAuditor.T...   INFO      RichGhostTracks          |    86.218 |    86.141 |   17.353     213.3 |      13 |     1.120 |
-TimingAuditor.T...   INFO       RichGhostsMoni          |    86.218 |    86.094 |   17.322     213.2 |      13 |     1.119 |
-TimingAuditor.T...   INFO    CheckMUONSeq               |     3.461 |     3.407 |    0.845      10.4 |      13 |     0.044 |
-TimingAuditor.T...   INFO     MuonPIDChecker            |     3.461 |     3.378 |    0.820      10.3 |      13 |     0.044 |
-TimingAuditor.T...   INFO    CheckTTSeq                 |    90.986 |   214.007 |    7.194    1499.0 |      13 |     2.782 |
-TimingAuditor.T...   INFO     TTEffChecker              |    90.909 |   213.961 |    7.161    1498.9 |      13 |     2.781 |
-TimingAuditor.T...   INFO    CheckITSeq                 |    70.143 |    90.747 |   19.617     287.3 |      13 |     1.180 |
-TimingAuditor.T...   INFO     ITEffChecker              |    70.066 |    90.703 |   19.586     287.2 |      13 |     1.179 |
-TimingAuditor.T...   INFO    CheckOTSeq                 |   192.817 |   220.645 |   40.998     648.1 |      13 |     2.868 |
-TimingAuditor.T...   INFO     OTTimeCreator             |     5.845 |     5.814 |    1.084      15.2 |      13 |     0.076 |
-TimingAuditor.T...   INFO     OTTimeChecker             |   186.895 |   214.755 |   39.863     632.8 |      13 |     2.792 |
-TimingAuditor.T...   INFO    CheckTrSeq                 |  4447.939 |  4476.873 |  324.858   15382.4 |      13 |    58.199 |
-TimingAuditor.T...   INFO     CheckLongTrack            |  4169.058 |  4197.796 |  318.649   14261.5 |      13 |    54.571 |
-TimingAuditor.T...   INFO     EffLong                   |   278.881 |   278.981 |    6.132    1120.8 |      13 |     3.627 |
-TimingAuditor.T...   INFO   Output                      |     7.230 |     7.233 |    1.760      30.6 |      13 |     0.094 |
-TimingAuditor.T...   INFO    OutputDSTSeq               |     7.230 |     7.207 |    1.738      30.6 |      13 |     0.094 |
-TimingAuditor.T...   INFO     TrackToDST                |     0.923 |     0.957 |    0.222       2.1 |      13 |     0.012 |
-TimingAuditor.T...   INFO     PackDST                   |     6.230 |     6.213 |    1.484      28.8 |      13 |     0.081 |
-TimingAuditor.T...   INFO      PackTrack                |     3.077 |     3.068 |    0.634       9.7 |      13 |     0.040 |
-TimingAuditor.T...   INFO      PackElectrons            |     0.538 |     0.481 |    0.077       4.8 |      13 |     0.006 |
-TimingAuditor.T...   INFO      PackPhotons              |     0.308 |     0.301 |    0.093       1.4 |      13 |     0.004 |
+TimingAuditor.T...   INFO    MoniPROTOSeq               |     0.000 |     0.011 |    0.010       0.0 |      13 |     0.000 |
+TimingAuditor.T...   INFO   MCLinks                     |    62.759 |   128.163 |   22.520     341.1 |      13 |     1.666 |
+TimingAuditor.T...   INFO    MCLinksL0Seq               |     0.077 |     0.010 |    0.009       0.0 |      13 |     0.000 |
+TimingAuditor.T...   INFO    MCLinksUnpackSeq           |    40.455 |    83.475 |   16.050     154.3 |      13 |     1.085 |
+TimingAuditor.T...   INFO     UnpackMCParticle          |    21.074 |    47.250 |    8.725     105.4 |      13 |     0.614 |
+TimingAuditor.T...   INFO     UnpackMCVertex            |    19.151 |    36.117 |    7.271      78.1 |      13 |     0.470 |
+TimingAuditor.T...   INFO    MCLinksTrSeq               |    22.150 |    44.616 |    4.965     201.9 |      13 |     0.580 |
+TimingAuditor.T...   INFO     TrackAssociator           |    21.996 |    44.556 |    4.933     201.8 |      13 |     0.579 |
+TimingAuditor.T...   INFO   Check                       | 35558.979 | 35734.697 | 2489.428  111381.5 |      13 |   464.551 |
+TimingAuditor.T...   INFO    CheckPatSeq                |   449.163 |   460.018 |  118.934     997.6 |      13 |     5.980 |
+TimingAuditor.T...   INFO     AssocVeloRZ               |     1.846 |     1.920 |    0.682       4.0 |      13 |     0.025 |
+TimingAuditor.T...   INFO     AssocVelo                 |     2.846 |     2.775 |    0.795       6.4 |      13 |     0.036 |
+TimingAuditor.T...   INFO     AssocVeloTT               |     0.769 |     0.864 |    0.283       1.8 |      13 |     0.011 |
+TimingAuditor.T...   INFO     AssocForward              |     4.538 |     4.594 |    0.930      14.1 |      13 |     0.060 |
+TimingAuditor.T...   INFO     AssocTTrack               |     3.999 |     3.924 |    0.643      10.0 |      13 |     0.051 |
+TimingAuditor.T...   INFO     AssocMatch                |     3.538 |     3.659 |    0.938      10.0 |      13 |     0.048 |
+TimingAuditor.T...   INFO     AssocDownstream           |     3.538 |     3.463 |    0.546      10.0 |      13 |     0.045 |
+TimingAuditor.T...   INFO     TrackResChecker           |   203.892 |   203.836 |   69.638     366.6 |      13 |     2.650 |
+TimingAuditor.T...   INFO     VeloRZ                    |     9.614 |    10.840 |    2.769      41.1 |      13 |     0.141 |
+TimingAuditor.T...   INFO     Velo                      |     5.845 |     5.893 |    1.699      14.4 |      13 |     0.077 |
+TimingAuditor.T...   INFO     VeloTT                    |     4.000 |     3.875 |    1.094       9.0 |      13 |     0.050 |
+TimingAuditor.T...   INFO     Forward                   |     7.691 |     7.779 |    1.864      23.2 |      13 |     0.101 |
+TimingAuditor.T...   INFO     TTrack                    |     6.076 |     6.281 |    1.706      13.8 |      13 |     0.082 |
+TimingAuditor.T...   INFO     Match                     |     6.461 |     6.336 |    1.871      13.7 |      13 |     0.082 |
+TimingAuditor.T...   INFO     Downstream                |     5.461 |     5.408 |    1.565      11.5 |      13 |     0.070 |
+TimingAuditor.T...   INFO     BestTracks                |     7.768 |     7.702 |    1.994      16.2 |      13 |     0.100 |
+TimingAuditor.T...   INFO     PVOfflineCheck            |   170.820 |   180.388 |   29.475     491.6 |      13 |     2.345 |
+TimingAuditor.T...   INFO    CheckRICHSeq               | 30385.073 | 30462.937 | 2000.814   94234.9 |      13 |   396.018 |
+TimingAuditor.T...   INFO     RichRawMoni               |    12.383 |    12.636 |    4.658      20.8 |      13 |     0.164 |
+TimingAuditor.T...   INFO      RichRawDataDBCheck       |    12.383 |    12.588 |    4.608      20.7 |      13 |     0.164 |
+TimingAuditor.T...   INFO     RichPixelMoni             |   132.595 |   139.466 |   26.582     254.6 |      13 |     1.813 |
+TimingAuditor.T...   INFO      RichRecPixelQC           |   132.364 |   139.318 |   26.480     254.6 |      13 |     1.811 |
+TimingAuditor.T...   INFO     RichRecoMoni              |  1363.947 |  1364.967 |  108.802    4477.8 |      13 |    17.745 |
+TimingAuditor.T...   INFO      RiCKResAll               |   641.595 |   642.640 |   45.656    2113.2 |      13 |     8.354 |
+TimingAuditor.T...   INFO      RiCKResLong              |   301.262 |   301.038 |   29.712    1008.5 |      13 |     3.913 |
+TimingAuditor.T...   INFO      RiCKResForward           |   204.661 |   204.957 |   15.805     751.5 |      13 |     2.664 |
+TimingAuditor.T...   INFO      RiCKResMatch             |    97.293 |    97.087 |   13.730     349.6 |      13 |     1.262 |
+TimingAuditor.T...   INFO      RiCKResKsTrack           |    59.683 |    59.742 |    0.066     248.3 |      13 |     0.777 |
+TimingAuditor.T...   INFO      RiCKResVeloTT            |    34.149 |    34.259 |    0.117     156.0 |      13 |     0.445 |
+TimingAuditor.T...   INFO      RiCKResSeed              |    24.919 |    24.931 |    0.226      66.8 |      13 |     0.324 |
+TimingAuditor.T...   INFO     RichPIDMoni               |    40.763 |    40.930 |   12.402     132.8 |      13 |     0.532 |
+TimingAuditor.T...   INFO      RiPIDMonAll2To100        |     5.768 |     5.901 |    0.924      35.3 |      13 |     0.077 |
+TimingAuditor.T...   INFO      RiPIDMonAll2To10         |     2.923 |     2.941 |    0.582       8.2 |      13 |     0.038 |
+TimingAuditor.T...   INFO      RiPIDMonAll10To70        |     2.461 |     2.301 |    0.290       7.1 |      13 |     0.030 |
+TimingAuditor.T...   INFO      RiPIDMonAll70To100       |     0.923 |     1.107 |    0.156       4.7 |      13 |     0.014 |
+TimingAuditor.T...   INFO      RiPIDMonLong2To100       |     2.846 |     2.657 |    0.465       8.4 |      13 |     0.035 |
+TimingAuditor.T...   INFO      RiPIDMonLong2To10        |     2.000 |     1.962 |    0.367       6.7 |      13 |     0.026 |
+TimingAuditor.T...   INFO      RiPIDMonLong10To70       |     1.846 |     1.721 |    0.215       5.0 |      13 |     0.022 |
+TimingAuditor.T...   INFO      RiPIDMonLong70To100      |     0.538 |     0.686 |    0.099       3.2 |      13 |     0.009 |
+TimingAuditor.T...   INFO      RiPIDMonForward2To100    |     2.077 |     2.143 |    0.247       6.9 |      13 |     0.028 |
+TimingAuditor.T...   INFO      RiPIDMonForward2To10     |     1.769 |     1.606 |    0.197       5.1 |      13 |     0.021 |
+TimingAuditor.T...   INFO      RiPIDMonForward10To70    |     1.385 |     1.525 |    0.150       5.0 |      13 |     0.020 |
+TimingAuditor.T...   INFO      RiPIDMonForward70To100   |     0.692 |     0.651 |    0.092       3.7 |      13 |     0.008 |
+TimingAuditor.T...   INFO      RiPIDMonMatch2To100      |     1.384 |     1.411 |    0.282       3.7 |      13 |     0.018 |
+TimingAuditor.T...   INFO      RiPIDMonMatch2To10       |     1.230 |     1.367 |    0.252       3.7 |      13 |     0.018 |
+TimingAuditor.T...   INFO      RiPIDMonMatch10To70      |     0.846 |     0.967 |    0.154       2.9 |      13 |     0.013 |
+TimingAuditor.T...   INFO      RiPIDMonMatch70To100     |     0.538 |     0.457 |    0.089       1.9 |      13 |     0.006 |
+TimingAuditor.T...   INFO      RiPIDMonKsTrack2To100    |     1.230 |     1.246 |    0.079       4.9 |      13 |     0.016 |
+TimingAuditor.T...   INFO      RiPIDMonKsTrack2To10     |     1.154 |     1.086 |    0.077       4.6 |      13 |     0.014 |
+TimingAuditor.T...   INFO      RiPIDMonKsTrack10To70    |     0.846 |     0.849 |    0.076       2.4 |      13 |     0.011 |
+TimingAuditor.T...   INFO      RiPIDMonKsTrack70To100   |     0.615 |     0.351 |    0.076       2.2 |      13 |     0.005 |
+TimingAuditor.T...   INFO      RiPIDMonVeloTT2To100     |     1.077 |     1.260 |    0.114       4.8 |      13 |     0.016 |
+TimingAuditor.T...   INFO      RiPIDMonVeloTT2To10      |     1.000 |     1.115 |    0.115       3.4 |      13 |     0.014 |
+TimingAuditor.T...   INFO      RiPIDMonVeloTT10To70     |     0.615 |     0.650 |    0.091       3.4 |      13 |     0.008 |
+TimingAuditor.T...   INFO      RiPIDMonVeloTT70To100    |     0.769 |     0.451 |    0.089       3.3 |      13 |     0.006 |
+TimingAuditor.T...   INFO      RiPIDMonSeed2To100       |     1.384 |     1.502 |    0.179       3.8 |      13 |     0.020 |
+TimingAuditor.T...   INFO      RiPIDMonSeed2To10        |     0.769 |     0.759 |    0.106       2.8 |      13 |     0.010 |
+TimingAuditor.T...   INFO      RiPIDMonSeed10To70       |     1.000 |     1.126 |    0.153       2.6 |      13 |     0.015 |
+TimingAuditor.T...   INFO      RiPIDMonSeed70To100      |     0.538 |     0.541 |    0.100       2.5 |      13 |     0.007 |
+TimingAuditor.T...   INFO     RichMirrAlignMoni         |    85.525 |    85.398 |    7.661     334.9 |      13 |     1.110 |
+TimingAuditor.T...   INFO      RichAlignMoniR1          |    50.454 |    50.295 |    2.201     189.5 |      13 |     0.654 |
+TimingAuditor.T...   INFO      RichAlignMoniR2          |    35.072 |    35.031 |    3.089     167.0 |      13 |     0.455 |
+TimingAuditor.T...   INFO     RichExpertChecks          | 28749.706 | 28819.422 | 1840.601   89093.7 |      13 |   374.652 |
+TimingAuditor.T...   INFO      RichPixelPositions       |   612.984 |   662.628 |  112.132    1795.1 |      13 |     8.614 |
+TimingAuditor.T...   INFO       RiRecPixelPosMoni       |   612.907 |   662.551 |  112.060    1795.0 |      13 |     8.613 |
+TimingAuditor.T...   INFO      RichTrackGeometry        |    83.756 |    83.960 |   17.177     199.3 |      13 |     1.091 |
+TimingAuditor.T...   INFO       RiRecAllGeomMoni        |    37.840 |    37.974 |    8.163      91.9 |      13 |     0.494 |
+TimingAuditor.T...   INFO       RiRecLongGeomMoni       |    15.305 |    15.315 |    3.365      39.5 |      13 |     0.199 |
+TimingAuditor.T...   INFO       RiRecForwardGeomMoni    |    11.229 |    11.301 |    1.465      29.5 |      13 |     0.147 |
+TimingAuditor.T...   INFO       RiRecMatchGeomMoni      |     6.076 |     6.013 |    1.293      26.0 |      13 |     0.078 |
+TimingAuditor.T...   INFO       RiRecKsTrackGeomMoni    |     5.153 |     5.234 |    0.028      24.2 |      13 |     0.068 |
+TimingAuditor.T...   INFO       RiRecVeloTTGeomMoni     |     5.691 |     5.787 |    0.587      16.0 |      13 |     0.075 |
+TimingAuditor.T...   INFO       RiRecSeedGeomMoni       |     2.231 |     2.083 |    0.296       9.1 |      13 |     0.027 |
+TimingAuditor.T...   INFO      RichTrackResolution      |    18.535 |    18.452 |    4.734      42.0 |      13 |     0.240 |
+TimingAuditor.T...   INFO       RiRecAllTkResMoni       |     6.768 |     6.783 |    1.682      15.3 |      13 |     0.088 |
+TimingAuditor.T...   INFO       RiRecLongTkResMoni      |     4.153 |     4.181 |    1.065      10.7 |      13 |     0.054 |
+TimingAuditor.T...   INFO       RiRecForwardTkResMoni   |     2.846 |     2.840 |    0.477       7.6 |      13 |     0.037 |
+TimingAuditor.T...   INFO       RiRecMatchTkResMoni     |     1.461 |     1.526 |    0.544       3.3 |      13 |     0.020 |
+TimingAuditor.T...   INFO       RiRecKsTrackTkResMoni   |     0.923 |     0.856 |    0.050       2.2 |      13 |     0.011 |
+TimingAuditor.T...   INFO       RiRecVeloTTTkResMoni    |     1.384 |     1.500 |    0.213       2.7 |      13 |     0.019 |
+TimingAuditor.T...   INFO       RiRecSeedTkResMoni      |     0.692 |     0.603 |    0.126       1.7 |      13 |     0.008 |
+TimingAuditor.T...   INFO      RichCKThetaResolution    |  3926.326 |  3930.096 |  539.661   11598.1 |      13 |    51.091 |
+TimingAuditor.T...   INFO       RiRecPhotAngAllMoni     |  1459.394 |  1461.667 |  183.060    4322.1 |      13 |    19.002 |
+TimingAuditor.T...   INFO       RiRecPhotAngLongMoni    |  1083.835 |  1084.602 |  173.540    3401.3 |      13 |    14.100 |
+TimingAuditor.T...   INFO       RiRecPhotAngForwardMoni |   702.355 |   702.691 |   95.223    2170.1 |      13 |     9.135 |
+TimingAuditor.T...   INFO       RiRecPhotAngMatchMoni   |   336.180 |   336.457 |   80.086     946.9 |      13 |     4.374 |
+TimingAuditor.T...   INFO       RiRecPhotAngKsTrackMoni |   139.825 |   139.739 |    0.032     393.7 |      13 |     1.817 |
+TimingAuditor.T...   INFO       RiRecPhotAngVeloTTMoni  |   103.830 |   104.024 |    0.029     330.3 |      13 |     1.352 |
+TimingAuditor.T...   INFO       RiRecPhotAngSeedMoni    |   100.600 |   100.556 |    7.333     251.3 |      13 |     1.307 |
+TimingAuditor.T...   INFO      RichTrackCKResolutions   |   996.156 |   997.191 |   92.449    3152.7 |      13 |    12.963 |
+TimingAuditor.T...   INFO       RiRecAllCKResMoni       |   373.943 |   374.693 |   32.130    1167.9 |      13 |     4.871 |
+TimingAuditor.T...   INFO       RiRecLongCKResMoni      |   244.347 |   244.693 |   26.762     796.2 |      13 |     3.181 |
+TimingAuditor.T...   INFO       RiRecForwardCKResMoni   |   162.591 |   162.491 |   11.901     527.2 |      13 |     2.112 |
+TimingAuditor.T...   INFO       RiRecMatchCKResMoni     |    85.372 |    85.465 |   14.983     302.4 |      13 |     1.111 |
+TimingAuditor.T...   INFO       RiRecKsTrackCKResMoni   |    31.226 |    31.181 |    0.032      91.3 |      13 |     0.405 |
+TimingAuditor.T...   INFO       RiRecVeloTTCKResMoni    |    80.603 |    80.700 |    3.970     226.3 |      13 |     1.049 |
+TimingAuditor.T...   INFO       RiRecSeedCKResMoni      |    17.766 |    17.696 |    1.210      50.2 |      13 |     0.230 |
+TimingAuditor.T...   INFO      RichPhotonSignal         |   110.522 |   110.701 |   30.221     224.4 |      13 |     1.439 |
+TimingAuditor.T...   INFO       RiRecPhotSigAllTkMoni   |    40.148 |    40.304 |   11.072      82.2 |      13 |     0.524 |
+TimingAuditor.T...   INFO       RiRecPhotSigLongTkMoni  |    25.919 |    25.856 |    7.153      57.5 |      13 |     0.336 |
+TimingAuditor.T...   INFO       RiRecPhotSigForwardTkMon|    17.843 |    17.870 |    3.495      39.7 |      13 |     0.232 |
+TimingAuditor.T...   INFO       RiRecPhotSigMatchTkMoni |     9.460 |     9.512 |    3.780      20.1 |      13 |     0.124 |
+TimingAuditor.T...   INFO       RiRecPhotSigKsTrackTkMon|     4.845 |     4.749 |    0.030      15.5 |      13 |     0.062 |
+TimingAuditor.T...   INFO       RiRecPhotSigVeloTTTkMoni|     8.922 |     9.037 |    0.936      16.4 |      13 |     0.117 |
+TimingAuditor.T...   INFO       RiRecPhotSigSeedTkMoni  |     3.000 |     3.195 |    0.464       6.5 |      13 |     0.042 |
+TimingAuditor.T...   INFO      RichPhotonGeometry       |  2054.072 |  2054.491 |  135.140    6530.7 |      13 |    26.708 |
+TimingAuditor.T...   INFO       RiRecPhotGeomAllTkMoni  |   796.802 |   796.976 |   49.652    2490.4 |      13 |    10.361 |
+TimingAuditor.T...   INFO       RiRecPhotGeomLongTkMoni |   471.159 |   471.225 |   38.410    1548.6 |      13 |     6.126 |
+TimingAuditor.T...   INFO       RiRecPhotGeomForwardTkMo|   323.105 |   323.166 |   15.796    1145.2 |      13 |     4.201 |
+TimingAuditor.T...   INFO       RiRecPhotGeomMatchTkMoni|   149.362 |   149.463 |   21.623     492.1 |      13 |     1.943 |
+TimingAuditor.T...   INFO       RiRecPhotGeomKsTrackTkMo|   116.213 |   116.181 |    0.041     398.0 |      13 |     1.510 |
+TimingAuditor.T...   INFO       RiRecPhotGeomVeloTTTkMon|   167.513 |   167.649 |    6.237     465.5 |      13 |     2.179 |
+TimingAuditor.T...   INFO       RiRecPhotGeomSeedTkMoni |    29.534 |    29.534 |    1.817      86.0 |      13 |     0.384 |
+TimingAuditor.T...   INFO      RichPhotonTrajectory     |  1103.140 |  1103.585 |   77.658    3395.2 |      13 |    14.347 |
+TimingAuditor.T...   INFO       RiRecPhotTrajAllTkMoni  |   424.166 |   424.507 |   27.695    1286.0 |      13 |     5.519 |
+TimingAuditor.T...   INFO       RiRecPhotTrajLongTkMoni |   256.038 |   256.055 |   22.354     821.3 |      13 |     3.329 |
+TimingAuditor.T...   INFO       RiRecPhotTrajForwardTkMo|   174.512 |   174.566 |    9.904     601.0 |      13 |     2.269 |
+TimingAuditor.T...   INFO       RiRecPhotTrajMatchTkMoni|    82.911 |    82.842 |   12.601     271.4 |      13 |     1.077 |
+TimingAuditor.T...   INFO       RiRecPhotTrajKsTrackTkMo|    57.914 |    58.146 |    0.026     184.9 |      13 |     0.756 |
+TimingAuditor.T...   INFO       RiRecPhotTrajVeloTTTkMon|    90.294 |    90.222 |    3.214     242.7 |      13 |     1.173 |
+TimingAuditor.T...   INFO       RiRecPhotTrajSeedTkMoni |    16.997 |    16.953 |    0.990      55.2 |      13 |     0.220 |
+TimingAuditor.T...   INFO      PhotonRecoEfficiency     | 19748.844 | 19762.638 |  811.613   62869.6 |      13 |   256.914 |
+TimingAuditor.T...   INFO       RiRecPhotEffAllTkMoni   |  7515.473 |  7521.802 |  306.107   23431.6 |      13 |    97.783 |
+TimingAuditor.T...   INFO       RiRecPhotEffLongTkMoni  |  4863.107 |  4864.900 |  199.304   16310.9 |      13 |    63.244 |
+TimingAuditor.T...   INFO       RiRecPhotEffForwardTkMon|  3197.514 |  3198.455 |   84.831   11467.3 |      13 |    41.580 |
+TimingAuditor.T...   INFO       RiRecPhotEffMatchTkMoni |  1554.840 |  1555.404 |  113.930    4975.2 |      13 |    20.220 |
+TimingAuditor.T...   INFO       RiRecPhotEffKsTrackTkMon|   604.062 |   604.040 |    0.054    1739.0 |      13 |     7.853 |
+TimingAuditor.T...   INFO       RiRecPhotEffVeloTTTkMoni|  1654.210 |  1657.912 |   56.400    4443.3 |      13 |    21.553 |
+TimingAuditor.T...   INFO       RiRecPhotEffSeedTkMoni  |   359.330 |   359.737 |   21.209    1117.7 |      13 |     4.677 |
+TimingAuditor.T...   INFO      RichGhostTracks          |    95.293 |    95.465 |   19.616     268.1 |      13 |     1.241 |
+TimingAuditor.T...   INFO       RichGhostsMoni          |    95.217 |    95.405 |   19.545     268.0 |      13 |     1.240 |
+TimingAuditor.T...   INFO    CheckMUONSeq               |     3.769 |     3.679 |    1.029      10.6 |      13 |     0.048 |
+TimingAuditor.T...   INFO     MuonPIDChecker            |     3.692 |     3.643 |    0.993      10.5 |      13 |     0.047 |
+TimingAuditor.T...   INFO    CheckTTSeq                 |   101.215 |   161.358 |    6.874     875.2 |      13 |     2.098 |
+TimingAuditor.T...   INFO     TTEffChecker              |   101.215 |   161.306 |    6.838     875.1 |      13 |     2.097 |
+TimingAuditor.T...   INFO    CheckITSeq                 |    77.065 |    82.482 |    6.597     298.6 |      13 |     1.072 |
+TimingAuditor.T...   INFO     ITEffChecker              |    76.988 |    82.427 |    6.560     298.5 |      13 |     1.072 |
+TimingAuditor.T...   INFO    CheckOTSeq                 |   201.200 |   212.276 |   31.485     668.0 |      13 |     2.760 |
+TimingAuditor.T...   INFO     OTTimeCreator             |     5.999 |     6.017 |    1.016      15.4 |      13 |     0.078 |
+TimingAuditor.T...   INFO     OTTimeChecker             |   195.201 |   206.164 |   30.367     652.5 |      13 |     2.680 |
+TimingAuditor.T...   INFO    CheckTrSeq                 |  4341.186 |  4351.781 |  323.561   14842.1 |      13 |    56.573 |
+TimingAuditor.T...   INFO     CheckLongTrack            |  4307.730 |  4318.184 |  316.814   14766.9 |      13 |    56.136 |
+TimingAuditor.T...   INFO     EffLong                   |    33.379 |    33.492 |    6.644      95.9 |      13 |     0.435 |
+TimingAuditor.T...   INFO   Output                      |     7.691 |     7.680 |    2.010      35.6 |      13 |     0.100 |
+TimingAuditor.T...   INFO    OutputDSTSeq               |     7.691 |     7.654 |    1.983      35.5 |      13 |     0.100 |
+TimingAuditor.T...   INFO     TrackToDST                |     1.077 |     1.015 |    0.270       2.3 |      13 |     0.013 |
+TimingAuditor.T...   INFO     PackDST                   |     6.614 |     6.599 |    1.678      33.3 |      13 |     0.086 |
+TimingAuditor.T...   INFO      PackTrack                |     3.153 |     3.269 |    0.690      12.2 |      13 |     0.042 |
+TimingAuditor.T...   INFO      PackElectrons            |     0.538 |     0.533 |    0.071       5.4 |      13 |     0.007 |
+TimingAuditor.T...   INFO      PackPhotons              |     0.385 |     0.322 |    0.109       1.5 |      13 |     0.004 |
 TimingAuditor.T...   INFO      PackMergedPi0s           |     0.077 |     0.051 |    0.041       0.1 |      13 |     0.001 |
-TimingAuditor.T...   INFO      PackSplitPhotons         |     0.000 |     0.052 |    0.039       0.1 |      13 |     0.001 |
-TimingAuditor.T...   INFO      PackCharged              |     1.077 |     1.030 |    0.198       4.6 |      13 |     0.013 |
-TimingAuditor.T...   INFO      PackNeutrals             |     0.154 |     0.159 |    0.072       0.3 |      13 |     0.002 |
-TimingAuditor.T...   INFO      PackRecVertex            |     0.308 |     0.382 |    0.078       3.8 |      13 |     0.005 |
-TimingAuditor.T...   INFO      PackTwoProngVertex       |     0.385 |     0.405 |    0.049       4.3 |      13 |     0.005 |
-TimingAuditor.T...   INFO      PackMuons                |     0.077 |     0.106 |    0.065       0.3 |      13 |     0.001 |
-TimingAuditor.T...   INFO  FSRWriter                    |     0.933 |     0.998 |    0.270      10.4 |      15 |     0.015 |
-TimingAuditor.T...   INFO  DstWriter                    |   232.831 |   276.291 |    0.013    1778.1 |      15 |     4.144 |
-TimingAuditor.T...   INFO *     MCP2TTMCHitAlg          |    16.767 |    16.667 |    0.649      77.1 |      13 |     0.217 |
-TimingAuditor.T...   INFO *     MCP2ITMCHitAlg          |    14.075 |    13.970 |    0.598      59.2 |      13 |     0.182 |
-TimingAuditor.T...   INFO *     MCP2TrackerHitAlg       |  2162.979 |  2190.618 |  117.850    8684.9 |      13 |    28.478 |
-TimingAuditor.T...   INFO *      MCP2VeloMCHitAlg       |   173.820 |   189.189 |   24.295     640.1 |      13 |     2.459 |
-TimingAuditor.T...   INFO *      MCP2OTMCHitAlg         |   107.984 |   107.964 |    0.843     446.1 |      13 |     1.404 |
-TimingAuditor.T...   INFO *      MCP2MuonMCHitAlg       |    24.689 |    35.362 |    4.352     109.5 |      13 |     0.460 |
+TimingAuditor.T...   INFO      PackSplitPhotons         |     0.231 |     0.053 |    0.039       0.1 |      13 |     0.001 |
+TimingAuditor.T...   INFO      PackCharged              |     0.769 |     1.074 |    0.215       5.2 |      13 |     0.014 |
+TimingAuditor.T...   INFO      PackNeutrals             |     0.308 |     0.157 |    0.076       0.3 |      13 |     0.002 |
+TimingAuditor.T...   INFO      PackRecVertex            |     0.308 |     0.400 |    0.078       4.0 |      13 |     0.005 |
+TimingAuditor.T...   INFO      PackTwoProngVertex       |     0.615 |     0.434 |    0.048       4.7 |      13 |     0.006 |
+TimingAuditor.T...   INFO      PackMuons                |     0.000 |     0.115 |    0.065       0.3 |      13 |     0.001 |
+TimingAuditor.T...   INFO  FSRWriter                    |     0.800 |     6.725 |    0.266      96.2 |      15 |     0.101 |
+TimingAuditor.T...   INFO  DstWriter                    |   308.220 |   352.339 |    0.013    2597.8 |      15 |     5.285 |
+TimingAuditor.T...   INFO *     MCP2TTMCHitAlg          |    18.459 |    18.503 |    0.587      84.1 |      13 |     0.241 |
+TimingAuditor.T...   INFO *     MCP2ITMCHitAlg          |    15.382 |    15.329 |    0.568      64.9 |      13 |     0.199 |
+TimingAuditor.T...   INFO *     MCP2TrackerHitAlg       |  2220.893 |  2230.525 |  111.474    8722.8 |      13 |    28.997 |
+TimingAuditor.T...   INFO *      MCP2VeloMCHitAlg       |   198.585 |   202.413 |   25.444     673.6 |      13 |     2.631 |
+TimingAuditor.T...   INFO *      MCP2OTMCHitAlg         |   117.597 |   118.537 |    0.857     469.6 |      13 |     1.541 |
+TimingAuditor.T...   INFO *      MCP2MuonMCHitAlg       |    28.534 |    31.767 |    7.695      97.6 |      13 |     0.413 |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
 DataOnDemandSvc      INFO Handled "DataFault" incidents: 78/0/1020(Alg/Node/Total).
-RunRecordCnvSvc      INFO Disconnected data IO:EAA3F7BD-CB01-DE11-9602-0030487C5E0E[11144101-100ev-20090112-L0Yes-15ev.dst]
+RunRecordCnvSvc      INFO Disconnected data IO:8A83E0FE-DE03-DE11-8A42-0030487C5E0E[11144101-100ev-20090112-L0Yes-15ev.dst]
 PoolRootTreeEvt...   INFO Disconnected data IO:620A8970-CFE0-DD11-AA83-000CF1F44509[/castor/cern.ch/user/g/gcorti/Gauss/2009/v36r1/11144101-100ev-20090112.sim]
 PoolRootTreeEvt...   INFO Disconnected data IO:6A3370ED-61E1-DD11-A1DC-0030487C5E0E[castor:/castor/cern.ch/user/c/cattanem/Boole/v17r2/11144101-100ev-20090112.digi]
 *****Chrono*****     INFO ****************************************************************************************************
 *****Chrono*****     INFO  The Final CPU consumption ( Chrono ) Table (ordered)
 *****Chrono*****     INFO ****************************************************************************************************
-DetailedMateria...   INFO Time User   : Tot= 41.5  [s] Ave/Min/Max= 2.22(+- 7.76)/    0/  508 [ms] #=18689
-ChronoStatSvc        INFO Time User   : Tot= 11.1[min]                                             #=  1
+DetailedMateria...   INFO Time User   : Tot=   44  [s] Ave/Min/Max= 2.35(+- 8.37)/    0/  547 [ms] #=18689
+ChronoStatSvc        INFO Time User   : Tot= 11.2[min]                                             #=  1
 *****Chrono*****     INFO ****************************************************************************************************
-ChronoStatSvc.f...   INFO  Service finalized succesfully
+ChronoStatSvc.f...   INFO  Service finalized successfully
 StatusCodeSvc        INFO listing all unchecked return codes:
 StatusCodeSvc        INFO
 Num | Function                       | Source Library
 ----+--------------------------------+------------------------------------------
-18363 | LHCbIDsToMCParticles::link(__gnu_cxx::__normal_iterator<LHCb::LHCbID const*, std::vector<LHCb::LHCbID, std::allocator<LHCb::LHCbID> > >&, __gnu_cxx::__normal_iterator<LHCb::LHCbID const*, std::vector<LHCb::LHCbID, std::allocator<LHCb::LHCbID> > >&, std::map<LHCb::MCParticle*, unsigned int, std::less<LHCb::MCParticle*>, std::allocator<std::pair<LHCb::MCParticle* const, unsigned int> > >&) const | libTrackMCTools.so
 177132 | Rich::Rec::MC::CherenkovAngleMonitor::execute() | libRichRecMonitors.so
 6784 | Rich::Rec::MC::GhostTrackMoni::execute() | libRichRecMonitors.so
 2945 | Rich::Rec::MC::MCTruthTool::trueOpticalPhoton(LHCb::RichRecSegment const*, LHCb::RichRecPixel const*) const | libRichRecMCTools.so
-988 | TrackGhostClassificationBase::bestPair(std::vector<LHCb::LHCbID, std::allocator<LHCb::LHCbID> > const&) const | libTrackMCTools.so
-429 | TrackGhostClassificationBase::generic(__gnu_cxx::__normal_iterator<LHCb::LHCbID const*, std::vector<LHCb::LHCbID, std::allocator<LHCb::LHCbID> > >&, __gnu_cxx::__normal_iterator<LHCb::LHCbID const*, std::vector<LHCb::LHCbID, std::allocator<LHCb::LHCbID> > >&, LHCb::GhostTrackInfo&) const | libTrackMCTools.so
 
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

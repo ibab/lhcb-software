@@ -3,6 +3,11 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+ - Update references for:
+   . Fix to untested StatusCode in LHCbIDsToMCParticles and in 
+     TrackGhostClassificationBase
+   . Changes to Calo monitoring
+
 </PRE><H1><A NAME=v34r2>2009-02-25 Brunel v34r2</A></H1><PRE>
 
  - Changes to requirements:
