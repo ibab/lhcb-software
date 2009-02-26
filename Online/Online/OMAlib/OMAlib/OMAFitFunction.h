@@ -1,4 +1,4 @@
-// $Id: OMAFitFunction.h,v 1.3 2009-02-26 12:37:49 ggiacomo Exp $
+// $Id: OMAFitFunction.h,v 1.4 2009-02-26 15:50:57 ggiacomo Exp $
 #ifndef OMALIB_OMAFITFUNCTION_H 
 #define OMALIB_OMAFITFUNCTION_H 1
 #include <string>
@@ -33,6 +33,7 @@ public:
   inline bool mustInit() {return m_mustInit;}
   std::vector<std::string>& parNames() {return m_parNames;}
   virtual void fit(TH1* histo, std::vector<float>* initValues);
+  TF1* fittedfun() {return m_fitfun;}
 protected:
   virtual void init(std::vector<float>* initValues, TH1* histo=NULL);
   void initfun();
