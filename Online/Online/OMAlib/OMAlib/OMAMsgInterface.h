@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.h,v 1.6 2009-02-26 12:37:49 ggiacomo Exp $
+// $Id: OMAMsgInterface.h,v 1.7 2009-02-26 13:36:56 ggiacomo Exp $
 #ifndef OMALIB_OMAMSGINTERFACE_H 
 #define OMALIB_OMAMSGINTERFACE_H 1
 
@@ -46,6 +46,7 @@ public:
   inline void setAnaId(int id) {m_anaid = id;}
   inline void setAnaName(std::string &name) {m_anaName = name;}
 protected:
+  void checkWritePermissions();
   void loadMessages();
   void setMsgStream(MsgStream* ms) { m_outs=ms;}  
   std::string m_anaTaskname;

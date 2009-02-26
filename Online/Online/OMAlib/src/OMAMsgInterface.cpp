@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.cpp,v 1.8 2009-02-20 15:13:27 ggiacomo Exp $
+// $Id: OMAMsgInterface.cpp,v 1.9 2009-02-26 13:36:56 ggiacomo Exp $
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAMsgInterface.h"
 #include "GaudiKernel/MsgStream.h"
@@ -12,7 +12,7 @@
 OMAMsgInterface::OMAMsgInterface( OnlineHistDB* HistDB , 
                                   std::string Name) : 
   m_anaTaskname(Name), m_savesetName("") , m_taskname(""), 
-  m_anaName(""), m_anaid(0), m_histDB(HistDB)
+  m_anaName(""), m_anaid(0), m_histDB(HistDB), m_outs(NULL)
 {
   m_MessageStore.clear();
   if(m_histDB) 
@@ -27,20 +27,31 @@ OMAMsgInterface::~OMAMsgInterface()
   }
 } 
 
+
+
+void OMAMsgInterface::checkWritePermissions() {
+  if(false == m_histDB->canwrite() && m_outs) {
+    (*m_outs) << MSG::WARNING << "You don't have write permissions on HistDB" <<endmsg;
+    (*m_outs) << MSG::WARNING << "No persistency available for analysis messages" <<endmsg;
+  }
+}
+
+
 void OMAMsgInterface::loadMessages() {
   if(m_histDB && "noMessage" != m_anaTaskname) {
     // clean up old alarms
-    m_histDB->deleteOldMessages(OMAconstants::AlarmExpTime);
+    if (m_histDB->canwrite())
+      m_histDB->deleteOldMessages(OMAconstants::AlarmExpTime);
     // load known alarms from DB
     std::vector<int> messID;
     m_histDB->getMessages(messID, m_anaTaskname);
     for (std::vector<int>::iterator im= messID.begin() ; im !=  messID.end() ; im++) {
       OMAMessage* lmsg = new OMAMessage(*im, *m_histDB);
       if(false == lmsg->isAbort() ) {
-	m_MessageStore.push_back( lmsg );
+        m_MessageStore.push_back( lmsg );
       }
       else {
-	delete lmsg;
+        delete lmsg;
       }
     }
   }
@@ -62,7 +73,8 @@ void OMAMsgInterface::refreshMessageList(std::string& TaskName) {
     if(TaskName == (*iM)->taskName() ) {
       if( false == (*iM)->confirmed()) {
         lowerAlarm( (**iM) );
-        (*iM)->remove();
+        if (m_histDB->canwrite())
+          (*iM)->remove();
         tbdMessage = (*iM);
         iM = m_MessageStore.erase(iM);
         delete tbdMessage;
@@ -115,7 +127,8 @@ void OMAMsgInterface::raiseMessage(OMAMessage::OMAMsgLevel level,
     m_MessageStore.push_back( msg );
   }
   if (msg) {
-    msg->store();
+    if(m_histDB->canwrite())
+      msg->store();
     m_histDB->commit();
   }
   if (msg && send ) {

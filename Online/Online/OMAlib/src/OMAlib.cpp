@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.11 2009-02-16 10:38:22 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.12 2009-02-26 13:36:56 ggiacomo Exp $
 /*
   Online Monitoring Analysis library
   G. Graziani (INFN Firenze)
@@ -14,6 +14,7 @@ OMAlib::OMAlib(OnlineHistDB* HistDB,
                std::string Name) : 
   OMAcommon(HistDB, Name) { 
   m_localDBsession=false;
+  checkWritePermissions();
   doFitFuncList();
   doAlgList(); 
 }
@@ -24,16 +25,19 @@ OMAlib::OMAlib(std::string DBpasswd,
                std::string DB,
                std::string Name) : 
   OMAcommon(new OnlineHistDB(DBpasswd , DBuser, DB), Name) {
+  checkWritePermissions();
   if(m_histDB) 
     m_localDBsession=true;
   doFitFuncList();
   doAlgList();   
+  
 }
 
 // constructor with a new default (read-only) DB session
 OMAlib::OMAlib(std::string Name) : 
   OMAcommon(new OnlineHistDB(), Name) {
   if(m_histDB) m_localDBsession=true;
+  checkWritePermissions();
   doFitFuncList();
   doAlgList(); 
 }
@@ -49,6 +53,7 @@ void OMAlib::openDBSession(std::string DBpasswd,
   m_histDB = new OnlineHistDB(DBpasswd , DBuser, DB);
   if(m_histDB) {
     m_localDBsession=true;
+    checkWritePermissions();
     loadMessages();
     if (m_histDB->canwrite())
       syncList();
