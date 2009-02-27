@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.145 2009-02-24 08:01:38 jucogan Exp $
+! $Id: release.notes,v 1.146 2009-02-27 16:05:58 pkoppenb Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+!========================== L0DU v8r14 2009-02-27 =========================
 ! 2009-02-24 - Julien Cogan
  - Bug fix in L0Conf
 
