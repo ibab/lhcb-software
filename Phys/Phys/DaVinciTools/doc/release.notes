@@ -1,8 +1,18 @@
-! $Id: release.notes,v 1.410 2009-02-26 13:37:37 jpalac Exp $
+! $Id: release.notes,v 1.411 2009-02-27 16:35:06 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-02-27 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v18r3
+ - src/PhysDesktop.h
+  . inTES and clearLocalContainer methofs moved to Kernel/DaVinciFun.h Davinci
+    namespace
+ - src/PhysDesktop.cpp
+  . Use DaVinci::inTES and DaVinci::safeContainerClear
+
 
 !========================== DaVinciTools v18r2p2 2009-02-26 =================
 
