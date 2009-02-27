@@ -1,4 +1,4 @@
-// $Id: PartitionListener.cpp,v 1.17 2009-01-09 10:31:20 frankb Exp $
+// $Id: PartitionListener.cpp,v 1.18 2009-02-27 15:32:34 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionListener.cpp,v 1.17 2009-01-09 10:31:20 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionListener.cpp,v 1.18 2009-02-27 15:32:34 frankb Exp $
 
 // Framework include files
 #include "ROLogger/PartitionListener.h"
@@ -59,7 +59,7 @@ PartitionListener::PartitionListener(Interactor* parent,const string& nam, const
   m_storSliceDP    = ::dic_info_service((char*)name.c_str(),MONITORED,0,0,0,storSliceHandler,(long)this,0,0);
   m_recSliceDP = 0;
   ::upic_write_message2("Storage slice info for %s_RunInfo from:%s",m_name.c_str(),name.c_str());
-  if ( m_name == "LHCb" ) {
+  if ( m_name.substr(0,4) == "LHCb" || m_name.substr(0,4) == "FEST" ) {
     name = "RunInfo/" + m_name + "/ReconstructionSlice";
     m_recSliceDP     = ::dic_info_service((char*)name.c_str(),MONITORED,0,0,0,recSliceHandler,(long)this,0,0);
     ::upic_write_message2("Reconstruction slice info for %s_RunInfo from:%s",m_name.c_str(),name.c_str());
@@ -161,6 +161,7 @@ void PartitionListener::nodeHandler(void* tag, void* address, int* size) {
   char txt[132];
   auto_ptr<_SV> n(new _SV());
   PartitionListener* h = *(PartitionListener**)tag;
+  std::string nam = h->name().substr(0,4);
   get_nodes(address,size,n.get());
   n->push_back("STORECTL01");
   n->push_back("STORERECV01");
@@ -172,7 +173,7 @@ void PartitionListener::nodeHandler(void* tag, void* address, int* size) {
     ::sprintf(txt,"MONA08%02d",int(j));
     n->push_back(txt);
   }
-  if ( h->name() == "LHCb" ) {
+  if ( nam == "LHCb" || nam == "FEST" ) {
     n->push_back("MONA09");
     n->push_back("CALD0701");
     for(size_t j=1; j<=20; ++j) {
