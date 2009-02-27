@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.411 2009-02-27 16:35:06 jpalac Exp $
+! $Id: release.notes,v 1.412 2009-02-27 16:46:17 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
@@ -8,8 +8,8 @@
  - cmt/requirements
   . Increase version to v18r3
  - src/PhysDesktop.h
-  . inTES and clearLocalContainer methofs moved to Kernel/DaVinciFun.h Davinci
-    namespace
+  . inTES, findTo and clearLocalContainer methods moved to Kernel/DaVinciFun.h 
+    under Davinci namespace
  - src/PhysDesktop.cpp
   . Use DaVinci::inTES and DaVinci::safeContainerClear
 

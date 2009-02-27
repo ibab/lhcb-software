@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.h,v 1.32 2009-02-27 16:34:40 jpalac Exp $
+// $Id: PhysDesktop.h,v 1.33 2009-02-27 16:46:17 jpalac Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -168,18 +168,6 @@ private:
   inline const LHCb::VertexBase* i_relatedVertexFromTable(const LHCb::Particle* part ) const 
   {
     return DaVinci::bestVertexBase(i_p2PVTable().i_relations(part));
-  }
-
-
-  /// Find the position of an LHCb::VertexBase inside a range
-  inline Particle2Vertex::Range::iterator findTo(const Particle2Vertex::Range& range, const LHCb::VertexBase* to ) const 
-  {
-    for (Particle2Vertex::Range::iterator r = range.begin(); 
-         range.end()!=r; 
-         ++r) {
-      if ( to == r->to() ) { return r; }  
-    }
-    return range.end();
   }
 
   /// print out particle in verbose mode

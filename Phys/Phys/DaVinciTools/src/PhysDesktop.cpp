@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.54 2009-02-27 16:34:31 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.55 2009-02-27 16:46:17 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -925,7 +925,7 @@ double PhysDesktop::weight(const LHCb::Particle*   part,
                            const LHCb::VertexBase* vert ) const 
 {
   const Particle2Vertex::Range range = particle2Vertices(part);
-  Particle2Vertex::Range::iterator ifind = findTo(range, vert);
+  Particle2Vertex::Range::iterator ifind = DaVinci::findPos(range, vert);
   return (range.end() == ifind ) ? 0. : ifind->weight();
 }
 //=============================================================================
