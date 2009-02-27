@@ -358,6 +358,9 @@ class AlConfigurable( LHCbConfigurableUser ) :
             print "\n ****************************************************************************** \n"
         
     def __apply_configuration__( self ) :
+        from Configurables import EventClockSvc
+        EventClockSvc().EventTimeDecoder = 'OdinTimeDecoder'
+
         # just to make sure we don't forget
         if self.getProp( "SimplifiedGeom" ) : TrackSys().ExpertTracking += ['simplifiedGeometry']
         TrackSys().ExpertTracking += ['kalmanSmoother']
@@ -373,13 +376,15 @@ class AlConfigurable( LHCbConfigurableUser ) :
         # this is normally done from RecoTracking.py
         if TrackSys().fieldOff() :
             from Configurables import MagneticFieldSvc
+            MagneticFieldSvc().UseConstantField = True
+            MagneticFieldSvc().UseConditions    = False
             MagneticFieldSvc().ScaleFactor = 0
 
         # this is normally done from Brunel
         importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
 
-        from Configurables import ApplicationMgr, HistogramPersistencySvc
-        ApplicationMgr().HistogramPersistency = 'ROOT'
-        HistogramPersistencySvc().OutputFile = 'alignhistos.root'
+        #from Configurables import ApplicationMgr, HistogramPersistencySvc
+        #ApplicationMgr().HistogramPersistency = 'ROOT'
+        #HistogramPersistencySvc().OutputFile = 'alignhistos.root'
 
         self.sequencers( )
