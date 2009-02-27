@@ -7,6 +7,8 @@
 #include "STDet/DeTTHalfModule.h"
 #include "STDet/DeTTSector.h"
 
+#include "Kernel/TTNames.h"
+
 /** @file DeTTDetector.cpp
 *
 *  Implementation of class: DeTTDetector
@@ -73,6 +75,25 @@ DeSTSector* DeTTDetector::findSector(const Gaudi::XYZPoint& aPoint){
   return aSector;
 }
 
+DeSTBaseElement* DeTTDetector::findTopLevelElement(const std::string& nickname){
+
+  const STChannelID chan = TTNames().stringToChannel(nickname);
+  if (chan.sector() != 0){
+    // its a sector
+    return this->DeSTDetector::findSector(chan);
+  }
+  else if (chan.layer() != 0){
+    return findLayer(chan);
+  } 
+  else if (chan.station() != 0u) {
+    // its a station
+    return findStation(chan);
+  } 
+  else {
+    // too bad 
+  }
+  return 0;
+}
 
 void DeTTDetector::flatten(){
 

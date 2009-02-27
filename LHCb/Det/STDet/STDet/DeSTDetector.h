@@ -1,4 +1,4 @@
-// $Id: DeSTDetector.h,v 1.27 2009-02-02 15:36:48 mneedham Exp $
+// $Id: DeSTDetector.h,v 1.28 2009-02-27 12:17:50 mneedham Exp $
 #ifndef _DeSTDetector_H_
 #define _DeSTDetector_H_
 
@@ -10,6 +10,7 @@
 #include "Kernel/LHCbID.h"
 
 #include "DetDesc/DetectorElement.h"
+#include "STDet/DeSTBaseElement.h"
 
 #include "GaudiKernel/VectorMap.h"
 
@@ -23,6 +24,7 @@
  * \li <a href="http://doc.cern.ch//archive/electronic/cern/others/LHB/internal/lhcb-2006-034.pdf"><b>LHCb note on STDet</b></a>
    \li  <a href="http://ckm.physik.unizh.ch/software"><b>ST Software page</b></a><p>
 */
+
 
 class DeSTStation;
 class DeSTSector;
@@ -156,6 +158,13 @@ public:
   * @return sector 
   */
   DeSTSector* findSector(const std::string& nickname); 
+
+  /** 
+  *  find top level DeSTBaseElement by nickname
+  * @param nickname
+  * @return base element
+  */
+  virtual DeSTBaseElement* findTopLevelElement(const std::string& nickname) = 0;
 
   /** get the next channel left */
   LHCb::STChannelID nextLeft(const LHCb::STChannelID testChan);

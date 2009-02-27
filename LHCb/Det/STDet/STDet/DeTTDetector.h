@@ -1,4 +1,4 @@
-// $Id: DeTTDetector.h,v 1.6 2007-03-01 11:08:00 cattanem Exp $
+// $Id: DeTTDetector.h,v 1.7 2009-02-27 12:17:50 mneedham Exp $
 #ifndef _DeTTDetector_H_
 #define _DeTTDetector_H_
 
@@ -55,12 +55,12 @@ public:
   */
   virtual DeSTSector* findSector(const Gaudi::XYZPoint& aPoint); 
 
-  /** 
-  *  short cut to pick up the wafer corresponding to a channel
-  * @param  aChannel channel 
-  * @return sector 
+ /** 
+  *  find top level DeSTBaseElement by nickname
+  * @param nickname
+  * @return base element
   */
-  //virtual DeSTSector* findSector(const LHCb::STChannelID aChannel); 
+  DeSTBaseElement* findTopLevelElement(const std::string& nickname);
   
 private:
 

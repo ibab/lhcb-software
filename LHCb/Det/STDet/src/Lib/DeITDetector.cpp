@@ -4,6 +4,7 @@
 #include "STDet/DeITStation.h"
 #include "STDet/DeITLayer.h"
 #include "STDet/DeITBox.h"
+#include "Kernel/ITNames.h"
 
 /** @file DeITDetector.cpp
 *
@@ -113,3 +114,27 @@ DeITBox* DeITDetector::findBox(const Gaudi::XYZPoint& point){
   return (iter != m_boxes.end() ? *iter: 0);
 }
 
+DeSTBaseElement* DeITDetector::findTopLevelElement(const std::string& nickname){
+
+  const STChannelID chan = ITNames().stringToChannel(nickname);
+  if (chan.sector() != 0){
+    // its a sector
+    return this->DeSTDetector::findSector(chan);
+  }
+  else if (chan.layer() != 0u){
+    // its a layer
+    return findLayer(chan);
+  }
+  else if (chan.detRegion() != 0u){
+    // its a box
+    return findBox(chan);
+  } 
+  else if (chan.station() != 0u) {
+    // its a station
+    return findStation(chan);
+  } 
+  else {
+    // too bad 
+  }
+  return 0;
+}

@@ -1,4 +1,4 @@
-// $Id: DeITDetector.h,v 1.9 2007-10-13 11:21:34 mneedham Exp $
+// $Id: DeITDetector.h,v 1.10 2009-02-27 12:17:50 mneedham Exp $
 #ifndef _DeITDetector_H_
 #define _DeITDetector_H_
 
@@ -55,6 +55,14 @@ public:
   * @return sector 
   */
   virtual DeSTSector* findSector(const Gaudi::XYZPoint& aPoint); 
+
+  /** 
+  *  find top level DeSTBaseElement by nickname
+  * @param nickname
+  * @return base element
+  */
+  DeSTBaseElement* findTopLevelElement(const std::string& nickname) ;
+
 
   /** flat vector of boxes
   * @return vector of boxes
