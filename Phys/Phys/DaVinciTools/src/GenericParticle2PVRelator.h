@@ -1,4 +1,4 @@
-// $Id: GenericParticle2PVRelator.h,v 1.4 2008-10-22 13:47:01 jpalac Exp $
+// $Id: GenericParticle2PVRelator.h,v 1.5 2009-02-27 16:18:30 jpalac Exp $
 #ifndef GENERICPARTICLE2PVRELATOR_H 
 #define GENERICPARTICLE2PVRELATOR_H 1
 
@@ -62,7 +62,7 @@ public:
   const Particle2Vertex::LightTable relatedPVs(const LHCb::Particle* particle,
                                                const LHCb::RecVertex::Container& PVs) const
   {
-    return relatedPVs<>(particle, PVs.begin(), PVs.end() );
+    return relatedPVs(particle, PVs.begin(), PVs.end() );
   }
   
 
