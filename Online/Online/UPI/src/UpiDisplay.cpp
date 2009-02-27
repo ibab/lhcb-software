@@ -153,6 +153,7 @@ void UpiDisplay::end_update() {
     print_char(j+1,m_currLine,HORZ_BAR);
   print_char(m_area.width,m_currLine,RIGHT_LOW_EDGE);      
   m_currLine++;
+  if ( m_currLine > m_area.height ) m_currLine = m_area.height;
   for(int i=1,last=m_currLine;i<last;++i) {
     int cmd = CMD_CLOSE+1+i;
     bool isCmd = cmd%20 == 0;
@@ -202,15 +203,15 @@ UpiDisplay::UpiDisplay(size_t w, size_t h)
   upic_close_menu();
   UpiSensor::instance().add(this,m_menuID);
   m_lastCMD = CMD_CLOSE;
-  m_lines = new char*[m_area.height];
-  for(int i=0; i<m_area.height; ++i) m_lines[i] = new char[m_area.width+1];
+  m_lines = new char*[m_area.height+1];
+  for(int i=0; i<=m_area.height; ++i) m_lines[i] = new char[m_area.width+1];
   m_quit = new ReallyClose(m_menuID,CMD_CLOSE);
 }
 
 UpiDisplay::~UpiDisplay() {
   UpiSensor::instance().remove(this,m_menuID);
   upic_delete_menu(m_menuID);
-  for(int i=0; i<m_area.height; ++i) delete [] m_lines[i];
+  for(int i=0; i<=m_area.height; ++i) delete [] m_lines[i];
   delete [] m_lines;
   delete m_quit;
 }
