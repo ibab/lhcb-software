@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.cpp,v 1.27 2009-02-26 14:46:20 mneedham Exp $
+// $Id: STDecodingBaseAlg.cpp,v 1.28 2009-02-27 08:27:03 mneedham Exp $
 
 #include <algorithm>
 
@@ -138,7 +138,6 @@ void STDecodingBaseAlg::createSummaryBlock(RawEvent* rawEvt, const unsigned int&
                                  fullBanks.size(), pBanks.size(), 
                                  errorBanks.size() , bankList, missing, recoveredBanks);
 
-  info() << name() << " " <<  *sum << endmsg;
    
   put(sum, m_summaryLocation);
 }
