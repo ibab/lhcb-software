@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-02-27 - Marco Gersabeck
+ - Add six plots for vertex x,y,z positions for left/right half respectively
+
 !============================ TrackMonitors v1r7 2009-02-20 ==================
 ! 2009-02-17 - Patrick Koppenburg
  - Add a warning when container does not exist

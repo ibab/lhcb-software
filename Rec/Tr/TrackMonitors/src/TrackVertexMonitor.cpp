@@ -240,7 +240,17 @@ StatusCode TrackVertexMonitor::execute()
     if( lefttracks.size() >= 2 && righttracks.size() >= 2 ) {
       // fit two vertices
       LHCb::RecVertex* leftvertex  = m_vertexer->fit( lefttracks ) ;
+      if( leftvertex ) {
+	plot( leftvertex->position().x(), "PV left x",-m_rpvmax,m_rpvmax) ;
+	plot( leftvertex->position().y(), "PV left y",-m_rpvmax,m_rpvmax) ;
+	plot( leftvertex->position().z(), "PV left z", m_zpvmin,m_zpvmax) ;
+      }
       LHCb::RecVertex* rightvertex = m_vertexer->fit( righttracks ) ;
+      if( rightvertex) {
+	plot( rightvertex->position().x(), "PV right x",-m_rpvmax,m_rpvmax) ;
+	plot( rightvertex->position().y(), "PV right y",-m_rpvmax,m_rpvmax) ;
+	plot( rightvertex->position().z(), "PV right z", m_zpvmin,m_zpvmax) ;
+      }
       if( leftvertex && rightvertex) {
 	// draw the difference
 	Gaudi::XYZVector dx = leftvertex->position() - rightvertex->position() ;
