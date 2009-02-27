@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.313 2009-02-23 17:05:04 pkoppenb Exp $
+! $Id: release.notes,v 1.314 2009-02-27 14:44:00 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,9 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-02-27 - Patrick Koppenburg
+ - Patch Dst Writing options. Now works.
 
 ! 2009-02-23 - Patrick Koppenburg
  - Always do L0 for Dc06

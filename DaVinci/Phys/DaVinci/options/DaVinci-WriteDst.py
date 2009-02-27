@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DaVinci-WriteDst.py,v 1.8 2009-02-24 14:07:16 pkoppenb Exp $
+# $Id: DaVinci-WriteDst.py,v 1.9 2009-02-27 14:44:00 pkoppenb Exp $
 #
 # Options for a DaVinci job creating DSTs
 #
@@ -11,6 +11,7 @@
 # @date 2009-02-03
 #
 ##############################################################################
+from Gaudi.Configuration import *
 from Configurables import DaVinci, DaVinciWriteDst
 ##############################################################################
 from Configurables import GaudiSequencer, FilterDesktop, PhysDesktop, DeterministicPrescaler, PrintDecayTree
@@ -20,6 +21,7 @@ from Configurables import GaudiSequencer, FilterDesktop, PhysDesktop, Determinis
 jpsi = FilterDesktop('MyJpsi')
 jpsi.addTool(PhysDesktop)
 jpsi.PhysDesktop.InputLocations = [ 'StdLooseJpsi2MuMu' ]
+jpsi.Code = "ALL"
 # @todo This does not work properly
 # jpsi.CloneTree = True # Write the muons as well
 #
@@ -41,21 +43,23 @@ for i in MassRanges :
     p = PrintDecayTree("Print_"+name)
     p.addTool(PhysDesktop)
     p.PhysDesktop.InputLocations = [ "Jpsi_"+name ]
-    seq.Members += [ d, j, p ] 
+    seq.Members += [ d, j, p ]
+    #
+    # This the bit that declares the sequence to the Dst writer
+    # The second line allows to sdae particles (not yet 100% functional)
+    #
     DaVinciWriteDst().DstFiles[ "Jpsi_"+name+".dst" ] = seq
     DaVinciWriteDst().Items += [ "/Event/Phys/Jpsi_"+name+"#2" ] # will not save StdLooseMuos
 ##############################################################################
 # get write out sequence. Pass it to DaVinci()
 #
 seq =  DaVinciWriteDst().dstSequence()
-DaVinci().UserAlgorithms = [ seq ]
+DaVinci().UserAlgorithms = [ jpsi, seq ]
 #
 ##############################################################################
-DaVinci().EvtMax = 500
+DaVinci().EvtMax = 1000
 DaVinci().PrintFreq = 1 
 # DaVinci().SkipEvents = 0
 DaVinci().DataType = "2008" # Default is "DC06"
 # DaVinci().Simulation   = False
-# DaVinci().Input = []
-# DaVinci().MainOptions  = "$DAVINCIROOT/options/DaVinci.py" # Default is ""
 ##############################################################################

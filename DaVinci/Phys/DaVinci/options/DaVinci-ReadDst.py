@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DaVinci-ReadDst.py,v 1.3 2009-02-24 14:07:48 pkoppenb Exp $
+# $Id: DaVinci-ReadDst.py,v 1.4 2009-02-27 14:44:00 pkoppenb Exp $
 #
 # Options for a typical DaVinci job creating DSTs
 #
@@ -34,4 +34,8 @@ DaVinci().Input = [ "DATAFILE='PFN:Jpsi_3050_3150.dst' TYP='POOL_ROOTTREE' OPT='
                     ]
 DaVinci().UserAlgorithms = [  ph, pJpsi ]
 ##############################################################################
-# DaVinci().DstFiles = { "Test.dst" : dstSeq }
+#
+# Test as much stuff as possible
+#
+DaVinci().HltType = 'Hlt1+Hlt2'
+DaVinci().MainOptions = "$STRIPPINGROOT/options/Presel.opts"

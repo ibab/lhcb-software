@@ -1,7 +1,7 @@
 """
 Dst Writing for DaVinci
 """
-__version__ = "$Id: DaVinciWriteDst.py,v 1.2 2009-02-12 10:16:55 pkoppenb Exp $"
+__version__ = "$Id: DaVinciWriteDst.py,v 1.3 2009-02-27 14:44:00 pkoppenb Exp $"
 __author__  = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -60,12 +60,12 @@ class DaVinciWriteDst(ConfigurableUser):
         writer.RequireAlgs = [ seq.getName() ]  # require the sequencer 
         writer.Output = "DATAFILE='PFN:" + filename + "' TYP='POOL_ROOTTREE' OPT='REC'"
         writer.OptItemList = self.getProp("Items")
-# suggetsed by Marco. Say nothing produced fewer errors
+# suggested by Marco. Say nothing produced fewer errors
 #        writer.ItemList = [ '/Event/MC#999', '/Event/DAQ#999', '/Event/Rec#999', '/Event/Link#999',
 #                            '/Event/pSim#999' ]
         writer.TakeOptionalFromTES = True
-        writer.Preload = True
-        writer.PreloadOptItems = True
+        writer.Preload = False          # True makes LoKi crash (why?)
+        writer.PreloadOptItems = False  # True makes LoKi crash (why?)
 #        writer.OutputLevel = 1 
         return 
 
