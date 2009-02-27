@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program"><text>gaudirun.py</text></argument>
+<argument name="timeout"><integer>3600</integer></argument>
+<argument name="args"><set>
+  <text>../options/DVTestWriteDst.py</text>
+</set></argument>
+<argument name="validator"><text>
+findReferenceBlock("""
+DSTJpsi_3000_3500                                              INFO Events output: 10
+DSTJpsi_3050_3150                                              INFO Events output: 56
+DSTJpsi_2600_3200                                              INFO Events output: 7
+""", stdout, result, causes, signature_offset = 0)
+</text></argument>
+</extension>
