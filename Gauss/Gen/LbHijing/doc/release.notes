@@ -4,6 +4,9 @@
 ! Purpose     : "Interface" to Hijing 
 !-----------------------------------------------------------------------------
 
+! 2009-02-27 - Patrick Robbe
+ - add rlu.F, another random function used in Hijing to override it.
+
 ! 2009-02-26 - Patrick Robbe
  - ran.F: revert to original function name (ran) to allow overriding of 
    HIJING random generator
