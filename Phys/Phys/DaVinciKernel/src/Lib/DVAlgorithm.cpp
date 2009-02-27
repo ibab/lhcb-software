@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.45 2009-02-23 13:13:58 jpalac Exp $
+// $Id: DVAlgorithm.cpp,v 1.46 2009-02-27 16:49:11 jpalac Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -11,6 +11,7 @@
 #include "Kernel/DVAlgorithm.h"
 #include "Kernel/IOnOffline.h"
 #include "Kernel/IRelatedPVFinder.h"
+#include "Kernel/DaVinciFun.h"
 // ============================================================================
 /** @file
  *  The implementation for class DVAlgorithm
@@ -319,7 +320,8 @@ const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p)
   }
   // re-fit vertices, then look for the best one.
   if (m_refitPVs) {
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Re-fitting PVs" << endmsg;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Re-fitting " 
+                                          << PVs->size() << " PVs"<< endmsg;
     const IPVReFitter* fitter = primaryVertexReFitter();
     if (0==fitter) {
       Error("NULL IPVReFitter", StatusCode::FAILURE, 1).ignore();
@@ -328,30 +330,44 @@ const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p)
     LHCb::RecVertex::ConstVector reFittedPVs;
     for (LHCb::RecVertex::Container::const_iterator iPV = PVs->begin();
          iPV != PVs->end(); ++iPV) {
-      LHCb::RecVertex reFittedPV = LHCb::RecVertex(**iPV);
-      if ( (fitter->remove(p, &reFittedPV)).isSuccess() ) {
-        reFittedPVs.push_back(&reFittedPV); 
+      LHCb::RecVertex* reFittedPV = new LHCb::RecVertex(**iPV);
+      if ( (fitter->remove(p, reFittedPV)).isSuccess() ) {
+        reFittedPVs.push_back(reFittedPV); 
       } else {
+        delete  reFittedPV;
         Error("PV re-fit failed", StatusCode::FAILURE, 1 ).ignore() ;
       } 
     }
+    if (msgLevel(MSG::VERBOSE)) verbose() << "have " << reFittedPVs.size()
+                                          << " re-fitted PVs" 
+                                          << endmsg;
+
     Particle2Vertex::Range range = finder->relatedPVs(p, reFittedPVs).relations(p);
-    if (range.empty()) return 0;
-    const LHCb::RecVertex* pv = dynamic_cast<const LHCb::RecVertex*>(finder->relatedPVs(p, reFittedPVs).relations(p).back().to());
-    return (0!=pv) ? desktop()->keep(pv) : 0;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "have " << range.size()
+                                          << " related, re-fitted PVs" 
+                                          << endmsg;    
+    const LHCb::RecVertex* pv = DaVinci::bestRecVertex(range);
+    if (0==pv) {
+      Warning("VertexBase -> RecVertex dynamic cast failed",StatusCode::FAILURE, 10).ignore();
+      return 0;
+    } else {
+      const LHCb::RecVertex* returnPV = desktop()->keep(pv);
+      // clear container
+      for (LHCb::RecVertex::ConstVector::const_iterator iObj = reFittedPVs.begin();
+           iObj != reFittedPVs.end(); ++iObj) delete *iObj;
+      reFittedPVs.clear();
+      return returnPV;
+    }
   } else {
     if (msgLevel(MSG::VERBOSE)) verbose() << "Getting related PV from finder" << endmsg;
-    Particle2Vertex::Range range = finder->relatedPVs(p, *PVs).relations(p);
-    if (!range.empty()) {
-      const LHCb::RecVertex* pv =  dynamic_cast<const LHCb::RecVertex*>(finder->relatedPVs(p, *PVs).relations(p).back().to());
-       if (msgLevel(MSG::VERBOSE)) verbose() 
-         << "Returning related vertex\n" << pv << endmsg;
-       return pv;
+    const Particle2Vertex::Range range = finder->relatedPVs(p, *PVs).relations(p);
+    const LHCb::VertexBase* pv = DaVinci::bestVertexBase(range);
+    if (0!=pv) {
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Returning related vertex\n" << pv << endmsg;
     } else {
       if (msgLevel(MSG::VERBOSE)) verbose() << "no related PV found" << endmsg;
-      return 0;
     }
-
+    return pv;
   }
   
 }
@@ -381,8 +397,7 @@ const LHCb::VertexBase* DVAlgorithm::getRelatedPV(const LHCb::Particle* part) co
   }
 
   const Particle2Vertex::Range range = desktop()->particle2Vertices(part);
-  return (range.empty()) ? 0 : range.back().to();
-  
+  return DaVinci::bestVertexBase(range);
 }
 // ============================================================================
 StatusCode DVAlgorithm::fillSelResult () {
