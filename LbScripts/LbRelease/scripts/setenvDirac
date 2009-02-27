@@ -8,6 +8,13 @@ if verbose:
 force = "-f" in args
 if force:
     args.remove('-f')
+dev = "-d" in args
+if dev:
+    args.remove('-d')
+else:
+    dev = "--dev" in args
+    if dev:
+        args.remove('--dev')
         
     
 if len(args)>1:
@@ -15,8 +22,12 @@ if len(args)>1:
 else:
     version = ''
 
+if dev:
+    opt = " --dev"
+else:
+    opt = ""
 if verbose: print "Calling setenvProject"
-fc = os.popen(". `which setenvProject.sh` Dirac "+version)
+fc = os.popen(". setenvProject.sh  Dirac "+version+ opt)
 out = fc.read().split('\n')
 rc = fc.close()
 if rc:
@@ -68,9 +79,12 @@ if not os.path.exists(installArea):
 
 #Find the DIRAC release area
 projectPaths = os.environ["CMTPROJECTPATH"].split(":")
+if dev:
+    projectPaths.insert(0, os.environ["LHCBDEV"])
 
 for path in projectPaths:
     releaseDir = os.path.join( path, "DIRAC", "DIRAC_"+version)
+    if releaseDir == DiracDir: continue
     if os.path.isdir(releaseDir):
         if verbose: print "Copying __init__.py and dirac-make"
         os.symlink( os.path.join(releaseDir, "etc"), os.path.join(DiracDir, "etc"))
