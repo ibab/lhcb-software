@@ -1,3 +1,4 @@
 <lcgdict>
   <class name = "std::vector<const LHCb::HltObjectSummary*>" />
+  <class name = "LHCb::HltObjectSummary::Info" /> 
 </lcgdict>
