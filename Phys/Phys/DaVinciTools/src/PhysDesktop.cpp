@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.53 2009-02-25 15:18:46 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.54 2009-02-27 16:34:31 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -15,7 +15,6 @@
 #include "Kernel/DVAlgorithm.h"
 #include "Kernel/GetDVAlgorithm.h"
 #include "Event/RecVertex.h"
-
 /*-----------------------------------------------------------------------------
  * Implementation file for class : PhysDesktop base class
  *
@@ -292,7 +291,7 @@ StatusCode PhysDesktop::cleanDesktop(){
     
   }
   
-  int iTESCount = clearLocalContainer(m_parts);
+  int iTESCount = DaVinci::safeContainerClear(m_parts);
 
   if (msgLevel(MSG::VERBOSE)) {
     verbose() << "LHCb::Particle in TES = " << iTESCount << endmsg;
@@ -301,7 +300,7 @@ StatusCode PhysDesktop::cleanDesktop(){
               << m_secVerts.size() << endmsg;
   }
 
-  iTESCount =  clearLocalContainer(m_secVerts);
+  iTESCount =  DaVinci::safeContainerClear(m_secVerts);
 
   if (msgLevel(MSG::VERBOSE)) {
     verbose() << "LHCb::Vertex in TES = " << iTESCount << endmsg;
@@ -310,7 +309,7 @@ StatusCode PhysDesktop::cleanDesktop(){
               << m_refitPVs.size() << endmsg;
   }
 
-  iTESCount =  clearLocalContainer(m_refitPVs);
+  iTESCount =  DaVinci::safeContainerClear(m_refitPVs);
 
     if (msgLevel(MSG::VERBOSE)) 
       verbose() << "Removing all entries from Particle2Vertex relations" << endmsg;
@@ -341,7 +340,7 @@ const LHCb::Particle* PhysDesktop::keep( const LHCb::Particle* keptP ){
   if (msgLevel(MSG::VERBOSE)) printOut("Put Particle on desktop", keptP);
   
   // Input particle is given check if it already exist in the stack
-  if( inTES( keptP ) ) {
+  if( DaVinci::inTES( keptP ) ) {
     if (msgLevel(MSG::VERBOSE)) verbose() << "   -> Particle is in desktop" << endmsg ;
     return keptP;
   }
@@ -379,7 +378,7 @@ const LHCb::Vertex* PhysDesktop::keep( const LHCb::Vertex* keptV ){
   if (msgLevel(MSG::VERBOSE)) printOut("keep in Desktop", keptV);
 
   // Input vertex is given check if it already exist in the stack
-  if( inTES( keptV ) ) {
+  if( DaVinci::inTES( keptV ) ) {
     if (msgLevel(MSG::VERBOSE)) verbose() << " Vertex is in TES" << endmsg;
     return keptV;
   }
@@ -422,7 +421,7 @@ const LHCb::RecVertex* PhysDesktop::keep( const LHCb::RecVertex* keptV ){
   //  if (msgLevel(MSG::VERBOSE)) printOut("keep in Desktop", keptV);
 
   // Input vertex is given check if it already exist in the stack
-  if( inTES( keptV ) ) {
+  if( DaVinci::inTES( keptV ) ) {
     if (msgLevel(MSG::VERBOSE)) verbose() << " Vertex is in TES" << endmsg;
     return keptV;
   }
@@ -450,7 +449,7 @@ void PhysDesktop::saveParticles(const LHCb::Particle::ConstVector& pToSave) cons
 
   for( p_iter icand = pToSave.begin(); icand != pToSave.end(); icand++ ) {
     // Check if this was already in a Gaudi container (hence in TES)
-    if (  !inTES(*icand) ) {
+    if (  !DaVinci::inTES(*icand) ) {
       if (msgLevel(MSG::VERBOSE)) printOut("  Saving", (*icand));
       particlesToSave->insert((LHCb::Particle*)*icand); // convert to non-const
       // store the related PV and the table. All relaitons and PVs should
@@ -482,7 +481,7 @@ void PhysDesktop::saveVertices(const LHCb::Vertex::ConstVector& vToSave) const
   LHCb::Vertices* verticesToSave = new LHCb::Vertices();
   for( v_iter iver = vToSave.begin(); iver != vToSave.end(); iver++ ) {
     // Check if this was already in a Gaudi container (hence in TES)
-    if( !inTES(*iver) ) {
+    if( !DaVinci::inTES(*iver) ) {
       verticesToSave->insert((LHCb::Vertex*)*iver); // insert non-const
     }
   }
@@ -503,7 +502,7 @@ void PhysDesktop::saveRefittedPVs(const LHCb::RecVertex::ConstVector& vToSave) c
   for(rv_iter iver = vToSave.begin(); 
       iver != vToSave.end(); ++iver ) {
     // Check if this was already in a Gaudi container (hence in TES)
-    if( !inTES(*iver) ) {
+    if( !DaVinci::inTES(*iver) ) {
       verticesToSave->insert(const_cast<LHCb::RecVertex*>(*iver)); // insert non-const
     }
   }
