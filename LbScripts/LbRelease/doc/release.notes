@@ -1,3 +1,8 @@
+2009-02-27  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/startNightlies.bat: fixed the argument list of the wrapper as well
+	as the call to "python -m". Now runpy.bat is used
+
 2008-02-25  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
 	* python/LbRelease/Nightlies/functions.py: CMTEXTRATAGS variable is set before
