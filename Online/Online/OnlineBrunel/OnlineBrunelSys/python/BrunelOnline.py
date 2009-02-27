@@ -3,7 +3,7 @@
 
      @author M.Frank
 """
-__version__ = "$Id: BrunelOnline.py,v 1.6 2009-01-16 14:26:10 frankb Exp $"
+__version__ = "$Id: BrunelOnline.py,v 1.7 2009-02-27 14:43:25 frankb Exp $"
 __author__  = "Markus Frank <Markus.Frank@cern.ch>"
 
 import os
@@ -32,9 +32,10 @@ def patchBrunel(true_online_version):
 
   brunel.Simulation = True
   if true_online_version:
-    brunel.__repr__       = dummy
+    #brunel.__repr__       = dummy
     brunel.NoWarnings     = True
     brunel.PrintFreq      = -1
+    brunel.Histograms     = 'None'
   Brunel.Configuration.ProcessPhase("Output").DetectorList += [ 'DST' ]
   # Set the property, used to build other file names
   brunel.setProp( "DatasetName", 'GaudiSerialize' )
@@ -61,10 +62,10 @@ def setupOnline():
   app.ExtSvc.append(mep)
   app.ExtSvc.append(sel)
 
-  DstConf().Writer     = 'DstWriter'
-  DstConf().DstType    = 'DST'
-  DstConf().EnablePack = False
-  DstConf().Simulation = False
+  DstConf().Writer       = 'DstWriter'
+  DstConf().DstType      = 'DST'
+  DstConf().EnablePack   = False
+  DstConf().Simulation   = False
   Serialisation().Writer = 'Writer'
   
   app.AuditAlgorithms = False
@@ -81,10 +82,12 @@ def patchMessages():
   app=Gaudi.ApplicationMgr()
   Configs.AuditorSvc().Auditors = []
   app.MessageSvcType = 'LHCb::FmcMessageSvc'
-  del Gaudi.allConfigurables['MessageSvc']
+  if Gaudi.allConfigurables.has_key('MessageSvc'):
+    del Gaudi.allConfigurables['MessageSvc']
   msg=Configs.LHCb__FmcMessageSvc('MessageSvc')
-  msg.fifoPath = os.environ['LOGFIFO']
-  msg.OutputLevel = 4
+  msg.fifoPath     = os.environ['LOGFIFO']
+  msg.LoggerOnly   = True
+  msg.OutputLevel  = 4
   msg.doPrintAlways = False
 
 def start():
