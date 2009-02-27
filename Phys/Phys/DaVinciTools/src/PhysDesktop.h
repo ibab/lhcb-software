@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.h,v 1.31 2009-02-23 10:50:23 jpalac Exp $
+// $Id: PhysDesktop.h,v 1.32 2009-02-27 16:34:40 jpalac Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -12,6 +12,7 @@
 #include "GaudiAlg/GaudiTool.h"
 // from DaVinci
 #include "Kernel/IPhysDesktop.h"
+#include "Kernel/DaVinciFun.h"
 // Forward declarations
 class IDataProviderSvc;
 class IParticleMaker;
@@ -149,53 +150,6 @@ private:
   StatusCode getInputRelations(std::vector<std::string>::const_iterator begin,
                                std::vector<std::string>::const_iterator end);       ///< get Relation table
 
-  ///  Is in TES
-  template <class T>
-  inline bool inTES(const T* P) const {
-    if (0==P) Exception("NULL Pointer");
-    return (0!=P->parent()) ;
-  }
-
-  /**
-   *
-   * delete contents of local container of newed pointers unless they are
-   * also in the TES.
-   *
-   * @param container STL container of ContainedObject pointers
-   * @return number of elements that are also in the TES.
-   *
-   * @author Juan Palacios juan.palacios@nikhef.nl
-   * @date 10/02/2009
-   *
-   **/
-  template <class T>
-  inline unsigned int clearLocalContainer(T& container) 
-  {
-    if ( container.empty() ) return 0;
-    int iCount(0);
-    int i(0);
-    if (msgLevel(MSG::DEBUG)) debug() <<"Clearing container with " << container.size() << " elements" << endmsg;
-    for (typename T::const_iterator iObj = container.begin();
-         iObj != container.end(); ++iObj) {
-      if (0==*iObj) Warning("Container has null pointer!", StatusCode::FAILURE).ignore();
-      if (msgLevel(MSG::DEBUG)) debug() << "Element " << i << " is " << endmsg;
-      if (msgLevel(MSG::DEBUG)) debug() << **iObj << endmsg;
-      ++i;
-      if( inTES(*iObj) ) {
-        if (msgLevel(MSG::DEBUG)) debug() <<"Element in TES!" << endmsg;
-        ++iCount;
-      } else {
-        if (msgLevel(MSG::DEBUG)) debug() <<"deleting element!" << endmsg;
-        delete *iObj;
-      }
-      
-    }
-    if (msgLevel(MSG::DEBUG)) debug() << "Container cleared!" << endmsg;
-    container.clear();
-    return iCount;
-  }
-  
-
   /// Add to list of Particles known to be in TES
   /// inline private method for speed.
   inline const Particle2Vertex::LightTable& i_p2PVTable()  const { 
@@ -213,8 +167,7 @@ private:
   
   inline const LHCb::VertexBase* i_relatedVertexFromTable(const LHCb::Particle* part ) const 
   {
-    return (!i_p2PVTable().i_relations(part).empty()) ? i_p2PVTable().i_relations(part).back().to() : 0;
-
+    return DaVinci::bestVertexBase(i_p2PVTable().i_relations(part));
   }
 
 
