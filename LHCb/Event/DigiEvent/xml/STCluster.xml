@@ -41,12 +41,12 @@
 
 
 
-     <constructor desc="Constructor" 
+     <!-- constructor desc="Constructor" 
        argList='&liteClusterName; lCluster, 
                 ADCVector strips,
                 double neighbourSum'
         initList='m_liteCluster(lCluster), m_stripValues(strips),m_neighbourSum(neighbourSum) , m_sourceID(999), m_tell1Channel(9999), m_spill(STCluster::Central)' >
-     </constructor>
+     </constructor -->
 
     <constructor desc="Constructor with source id" 
        argList='&liteClusterName; lCluster, 
@@ -85,12 +85,14 @@
  <attribute 
    name="sourceID"
    type ="unsigned int"
+   setMeth="FALSE" 
    desc = "Identifier of the tell1 giving the cluster "
  />
 
   <attribute 
     name = "tell1Channel"
     type= "unsigned int"
+    setMeth="FALSE" 
     desc = "tell1 channel number"
   />
 

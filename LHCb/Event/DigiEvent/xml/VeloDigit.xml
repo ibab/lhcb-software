@@ -24,8 +24,23 @@
    initList="KeyedObject&lt;LHCb::VeloChannelID&gt;(key),
    m_ADCValue(0)"
   >
-   <arg type="LHCb::VeloChannelID" name="key" const="TRUE"/>
+  <arg type="LHCb::VeloChannelID" name="key" const="TRUE"/>
   </constructor>
+ 
+  <constructor desc = 'copy constructor'
+      initList = "KeyedObject&lt;LHCb::VeloChannelID&gt;(),m_ADCValue(digit.m_ADCValue)" > 
+      <arg const = 'TRUE' name = "digit" type = "LHCb::VeloDigit" />
+  </constructor>
+
+  <method desc= 'clone method'
+   name = 'clone' 
+   const = 'TRUE'
+   type = "LHCb::VeloDigit*"
+   access = "PUBLIC">
+   <code>
+     return new LHCb::VeloDigit( *this );
+   </code>
+  </method>
  
   <method 
    name="channelID" 

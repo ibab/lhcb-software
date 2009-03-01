@@ -35,7 +35,7 @@
    </code>
   </method>
 
-      <attribute name="depositedCharge" type="double" setMeth = "FALSE" desc="charge deposited on strip"/>
+      <attribute name="depositedCharge" type="double" desc="charge deposited on strip"/>
       <method type='LHCb::STChannelID' name='channelID' const='TRUE'  desc='channel = key'>
         <code>return key();</code>
       </method>
