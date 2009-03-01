@@ -10,7 +10,7 @@
 #include "Kernel/IParticle2MCAssociator.h"
 #include "Kernel/Particle2MCAssociatorBase.h"
 #include "Kernel/MCAssociation.h"
-#include "Kernel/IDaVinciSmartAssociator.h"
+
 /** @class DaVinciSmartAssociator DaVinciSmartAssociator.h
  *  
  *  A ``smart'' associator for any kind of particle. Returns a vector of
