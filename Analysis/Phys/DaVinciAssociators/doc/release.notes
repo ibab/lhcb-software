@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.129 2009-01-26 15:35:47 cattanem Exp $
+! $Id: release.notes,v 1.130 2009-03-01 19:51:47 jpalac Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Vladimir Gligorov
 !==============================================================================
+
+!========================== DaVinciAssociators v9r3p2 2009-03-01 ==============
 
 ! 2009-01-26 - Marco Cattaneo
  - Backwards compatible fix for Gaudi v21
