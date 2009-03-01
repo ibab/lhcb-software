@@ -9,7 +9,8 @@ branches doc cmt
 use  DaVinci                 	v22r1   Phys  
 
 # Component libraries added as patches
-use L0DU v8r14 L0
+use     DaVinciTools            v18r2p2  Phys
+use     L0DU                    v8r14    L0
 
 
 alias DaVinciTests "cmt qmtest_run"
