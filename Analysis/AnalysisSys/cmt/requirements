@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.85 2009-02-23 15:11:20 jpalac Exp $
+# $Id: requirements,v 1.86 2009-03-01 20:06:37 jpalac Exp $
 package AnalysisSys
 version v3r1
 
@@ -10,7 +10,7 @@ branches doc cmt
 use  AnalysisConf               v1r1     Phys   # Patrick Koppenburg, Juan Palacios
 #===================================================================
 use  CommonParticles            v5r0     Phys   # Juan Palacios, WGs
-use  FlavourTagging             v8r2     Phys   # Marco Musy
+use  FlavourTagging             v8r3     Phys   # Marco Musy
 use  DaVinciFilter              v6r11    Phys   # Patrick Koppenburg - deprecated
 
 use  DaVinciMonitors            v1r1     Phys   # Patrick Koppenburg
@@ -22,7 +22,7 @@ use  DaVinciMCTools     	v9r18    Phys   # Juan Palacios
 use  DaVinciAssociators         v9r3p2   Phys   # Philippe Charpentier
 use  VertexFitCheck             v1r3p1   Phys   # Yuehong Xie
 use  MCStandardParticles        v1r2     Phys   # Juan Palacios
-use  FlavourTaggingChecker      v3r3     Phys   # Marco Musy
+use  FlavourTaggingChecker      v3r4     Phys   # Marco Musy
 use  DaVinciUser      	        v8r5p2   Phys   # Juan Palacios
 use  ParticleMakerChecker       v1r3     Phys   # Chris Jones
 use  LoKiUser                   v6r1     Phys   # Vanya Belyaev
@@ -30,10 +30,10 @@ use  DecayTreeTuple             v2r0     Phys   # Jeremie Borel
 ####################################################################
 use  PhysSelSys          	v10r12  PhysSel
 #===================================================================
-use Ccbar	                v1r9    PhysSel # Jan Amoraal, Miriam Calvo
+use Ccbar	                v1r9p1  PhysSel # Jan Amoraal, Miriam Calvo
 use B2Dilepton			v1r8p3  PhysSel # Rare Decays Working Group
 use B2D0X			v1r14p2	PhysSel # WGs
-use B2DplusX			v1r3	PhysSel # WGs
+use B2DplusX			v1r3p1	PhysSel # WGs
 use B2DsX			v1r6p2	PhysSel # WGs
 use B2DstarX			v1r7p3	PhysSel # WGs
 use B2uds	   		v2r8    PhysSel # Juan Palacios, Gabriel Guerrer, Eric Conte
