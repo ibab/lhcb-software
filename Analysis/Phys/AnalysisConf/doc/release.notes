@@ -4,6 +4,8 @@
 ! Purpose     : Configuration for Analysis project
 !-----------------------------------------------------------------------------
 
+!========================== AnalysisConf v1r1 2009-03-01 =====================
+
 ! 2009-02-18 - Patrick Koppenburg
  - Use pythonized CommonParticles
  - Increment to v1r1
