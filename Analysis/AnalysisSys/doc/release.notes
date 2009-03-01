@@ -3,6 +3,23 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v3r1>2009-03-01 Analysis v3r1 </A></H1><PRE>
+
+ - Based on LHCb v26r2 and Gaudi v20r4
+
+  Highlights:
+  * New package Rich/DstCalibSel, containing RICH Dstar selection code
+  * New package Rich/DstCalibSel, containing RICH Dstar selection code
+  * CommonParticles in python configurables
+  * Stripping: options now frozen
+  * DecayTreeTuple: Complete re-structuring (PK)
+   . New MCDecayTreeTuple using MCParticles
+   . (MC)DecayTreeTuple new option RevertToPositiveID : Revert all PID
+     if mother ID is positive (avoid incompatible formats)
+   . Many new tools
+  * DaVinciMCTools: DaVinciSmartAssociator using bk cat tool to associate 
+    composites
+
 ! 2009-02-20 - Patrick Koppenburg
  - Move monitors
 
