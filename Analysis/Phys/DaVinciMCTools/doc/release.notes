@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.248 2009-02-24 14:15:45 pkoppenb Exp $
+! $Id: release.notes,v 1.249 2009-03-01 19:08:22 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+!========================== DaVinciMCTools v9r18 2009-02-01 ==================
+
+! 2009-03-01 - Juan Palacios
+ - src/DaVinciSmartAssociator.h
+ - Remove unnecessary include.
 
 ! 2009-02-24 - Patrick Koppenburg
  - Remove warning
