@@ -4,7 +4,7 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
-! 2009-02-27 Mark Tobin
+! 2009-03-02 Mark Tobin
  - Merge STDAQ and STOnline
  - Add STPedestalDecoding and STFullDecoding
 
