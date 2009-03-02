@@ -35,6 +35,7 @@ if ("$list_arg" == "") then
    set list_arg = "-g lhcb_user"
 endif
 
+unsetenv User_release_area
 source `which SetupProject.csh` Dirac $version >&! /dev/null
 if $SetupProjectStatus != 0 then
    echo Problem to set the Dirac environment

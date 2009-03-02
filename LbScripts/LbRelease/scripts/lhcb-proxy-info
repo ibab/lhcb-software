@@ -1,6 +1,7 @@
 #!/bin/csh
 
 if ! $?DIRACROOT then
+   unsetenv User_release_area
    source `which SetupProject.csh` Dirac >&! /dev/null
    if $SetupProjectStatus != 0 then
       echo Problem to set the Dirac environment
