@@ -4,6 +4,10 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2009-02-27 Mark Tobin
+ - Merge STDAQ and STOnline
+ - Add STPedestalDecoding and STFullDecoding
+
 ! 2009-02-27 M Needham
  - Remove info message in event loop
 
