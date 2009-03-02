@@ -5,7 +5,7 @@
  * Implementation file for tool TrackVelodEdxCharge
  *
  * CVS Log :-
- * $Id: TrackVelodEdxCharge.cpp,v 1.4 2008-12-01 16:43:59 mneedham Exp $
+ * $Id: TrackVelodEdxCharge.cpp,v 1.5 2009-03-02 15:15:16 dhcroft Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 18/07/2006
@@ -33,7 +33,7 @@ TrackVelodEdxCharge::TrackVelodEdxCharge(const std::string& type,
   // tool interface
   declareInterface<ITrackVelodEdxCharge>(this);
   // job options
-  declareProperty( "Normalisation", m_Normalisation = 22.4 );
+  declareProperty( "Normalisation", m_Normalisation = 47.1 );
   declareProperty( "Ratio",         m_Ratio         = 0.6  );
 }
 

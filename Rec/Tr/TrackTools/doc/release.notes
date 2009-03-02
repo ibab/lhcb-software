@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2009-03-02 - David Hutchcroft
+ - Changed default tune of TrackVelodEdxCharge to expect 47.1 ADC per cluster
+
 !======================== TrackTools v3r14 2009-02-20 ========================
 ! 2009-02-09 - Johannes Albrecht
  - changes to run the track fit with Lite clusters in MeasurementProvider.cpp,h
