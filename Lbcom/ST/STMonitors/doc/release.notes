@@ -1,0 +1,13 @@
+!-----------------------------------------------------------------------------
+! Package     : ST/STMonitors 
+! Responsible : Mark Tobin, Mathias Knecht Jeroen van Tilburg, Nicola Chiapolini
+! Purpose     : Standard package for monitoring NZS and ZS data.
+!-----------------------------------------------------------------------------
+
+! 2009-03-02 Mark Tobin
+ - First release of package
+ - Merge of STMonitoring and STZSMonitoring
+ - Renamed STMonitor from STMonitoring package to be STNZSMonitor
+ - Added STFullEventDump from STOnline
+
+! ====================================================================
