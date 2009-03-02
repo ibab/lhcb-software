@@ -4,6 +4,9 @@
 ! Purpose     : Ecal alley specific algorithms and tools
 !----------------------------------------------------------------------------
 
+! 2009-03-02- Gerhard Raven
+ - fix memory leak in VertexDiElectronMassTool
+
 !========================== HltEcalAlley v1r6 2009-02-23 ===================
 ! 2009-02-19- Mariusz Witek
  - modify HltIsPhotonTool.cpp which has been forgoten 2009-02-17

@@ -1,4 +1,4 @@
-// $Id: VertexDiElectronMassTool.cpp,v 1.1 2009-02-17 16:24:03 witekma Exp $
+// $Id: VertexDiElectronMassTool.cpp,v 1.2 2009-03-02 20:02:09 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -138,6 +138,8 @@ void VertexDiElectronMassTool::getRadiationFromClusters(const LHCb::Track& tra, 
 
   phorad.SetXYZ(0.,0.,0.);   
 
+  if (!tra.hasStateAt(LHCb::State::AtT)) return;   // RETURN
+
   const LHCb::State &astate =  tra.firstState();
 
   double x_tra  =  astate.x();
@@ -163,7 +165,6 @@ void VertexDiElectronMassTool::getRadiationFromClusters(const LHCb::Track& tra, 
   // remember to delete cluster
   m_tool->clusterize(clusters, digits, m_detector, idL0, level);
  
-  if (!tra.hasStateAt(LHCb::State::AtT)) return;   // RETURN
 
   const LHCb::State &tstate =  *(tra.stateAt(LHCb::State::AtT));
   
@@ -212,5 +213,6 @@ void VertexDiElectronMassTool::getRadiationFromClusters(const LHCb::Track& tra, 
       }
     }
   }
-
+  for( std::vector<CaloCluster*>::iterator cluster = clusters.begin();
+       clusters.end() != cluster; ++cluster ) delete *cluster;
 }
