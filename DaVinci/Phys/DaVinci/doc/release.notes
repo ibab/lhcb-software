@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.314 2009-02-27 14:44:00 pkoppenb Exp $
+! $Id: release.notes,v 1.315 2009-03-02 08:21:16 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,12 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+!========================== DaVinci v22r1 2000-03-02 =====================
+
+! 2009-03-02 - Juan Palacios
+ - job/DaVinci_Ganga.py
+  . Increase version to v22r1
 
 ! 2009-02-27 - Patrick Koppenburg
  - Patch Dst Writing options. Now works.

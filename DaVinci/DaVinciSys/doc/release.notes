@@ -3,6 +3,30 @@ Package             : Phys/DaVinci
 Package Coordinator : Juan Palacios
 Purpose             : LHCb analysis program 
 
+</PRE><H1><A NAME=v22r1>2009-03-02 DaVinci v22r1</A></H1><PRE>
+Based on Phys v8r1, Analysis v3r1, Rec v6r2, HLT v5r1, Lbcom v6r26, LHCb v26r2, Gaudi v20r4, LCGCMT 55c
+
+  Highlights:
+
+  * Bug-fix to CombineParticles wrong related PV bug (Juan)
+  * DaVinci configurable: improvements (Hlt, L0,...), DST and ETC I/O now supported (Patrick)
+  * PhysConf now handles MuonID re-doing for DC06 data (Patrick)
+  * New handling of related PVs, now merged with PV-refitting. (Juan)
+  * Bug-fix to PhysDesktop::cloneTrees P->PV relations bug (Juan, Patrick Spradlin)
+  * Bug fixes to TrgVertexFitter (Patrick)
+  * CommonParticles in python configurables (Vanya, Patrick)
+  * New package Rich/RichPIDQC, containing RICH PID calibration (Chris Jones)
+  * New package Rich/DstCalibSel, containing RICH Dstar selection code (A. Powell)
+  * Stripping: options now frozen (PK)
+  * DecayTreeTuple: Complete re-structuring (PK)
+   . New MCDecayTreeTuple using MCParticles
+   . (MC)DecayTreeTuple new option RevertToPositiveID : Revert all PID
+     if mother ID is positive (avoid incompatible formats)
+   . Many new tools
+  * DaVinciMCTools: DaVinciSmartAssociator using bk cat tool to associate 
+    composites and linkers for stable particles (Vava)
+
+
 </PRE><H1><A NAME=v22r0p2>2009-01-26 DaVinci v22r0p2</A></H1><PRE>
 Based on Phys v8r0, Analysis v3r0, Rec v6r1, HLT v5r0, Lbcom v6r25, LHCb v26r1, Gaudi v20r4, LCGCMT 55c
 
