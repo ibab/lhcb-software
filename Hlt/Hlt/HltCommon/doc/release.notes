@@ -3,6 +3,10 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2009-03-02 - Gerhard Raven
+  - bug fix to prefetching configurations: filtering on directory didn't
+    filter...
+
 ! 2009-02-26 - Gerhard Raven
  - fix bug in HltVertexMaker when not producing histograms...
 

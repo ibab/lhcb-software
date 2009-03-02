@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.cpp,v 1.23 2009-02-22 19:52:40 graven Exp $
+// $Id: HltConfigSvc.cpp,v 1.24 2009-03-02 14:19:56 graven Exp $
 // Include files 
 
 #include <algorithm>
@@ -169,7 +169,9 @@ StatusCode HltConfigSvc::initialize() {
   std::vector<ConfigTreeNodeAlias> sameTypes = cas()->configTreeNodeAliases(ConfigTreeNodeAlias::alias_type( initTop->alias().str().substr(0,pos) ));
 
   for (std::vector<ConfigTreeNodeAlias>::const_iterator i = sameTypes.begin(); i!=sameTypes.end(); ++i ) {
-     info() << " loading config " << *i << endmsg; 
+     info() << " considering " << i->alias().str() << endmsg; 
+     if ( i->alias().str().substr(0,pos) != initTop->alias().str().substr(0,pos) ) continue;
+     info() << " loading config " << i->alias().str() << " -> " << i->ref() << endmsg; 
      if ( !loadConfig( i->ref() ) ) {
         error() << " failed to load config " << *i << endmsg; 
         return StatusCode::FAILURE;
