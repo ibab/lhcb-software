@@ -261,13 +261,13 @@ def copyProject():
       content = 'proj_path = "/localdisk/pvss/'+nam+'"'
     print >>fout,content
     if content=='distributed = 1':
-      print >>fout, 'pmonPort = '+str(sysN+100)+'00'
-      print >>fout, 'dataPort = '+str(sysN+100)+'01'
-      print >>fout, 'eventPort = '+str(sysN+100)+'02'
+      print >>fout, 'pmonPort= '+str(sysN+100)+'00'
+      print >>fout, 'dataPort= '+str(sysN+100)+'01'
+      print >>fout, 'eventPort= '+str(sysN+100)+'02'
       print >>fout, '[dist]'
-      print >>fout, 'distPort = '+str(sysN+100)+'10'
+      print >>fout, 'distPort= '+str(sysN+100)+'10'
       print >>fout, 'distPeer= "storectl01:49910" 399 # LBECS'
-      print >>fout, 'distPeer= "storectl01:40710" 399 # RECSTORAGE'
+      print >>fout, 'distPeer= "storectl01:40710" 307 # RECSTORAGE'
       print >>fout, 'distPeer= "mona07:40610"     306 # RECCTRL'
       print >>fout, 'distPeer= "mona07:40310"     303 # RECFARM'
     elif content.find('[dist]')==0:
@@ -287,8 +287,6 @@ def copyProject():
 
 def copyProject2():
   start = time.time()
-  src = sourceDir()+os.sep+'farmTemplate'
-  src = '/group/online/dataflow/pvss/TEMPLATE/project.mona07'
   nam = projectName()
   sysN = systemNumber()
   cfg = '/localdisk/pvss/'+nam+'/config/config'
@@ -296,7 +294,13 @@ def copyProject2():
   execCmd(pvssPMON()+' -config '+cfg+' -autoreg &')
   print '......... --> Project',nam,' System number',sysN,' started.'
   print '......... --> Project',nam,' Continue to install after the project is up....'
+  time.sleep(20)
+  execCmd(pvssPMON()+' -config '+cfg+' -stopWait')
   time.sleep(5)
+  execCmd(pvssTool()+' -config '+cfg+' -report -autoreg -system '+str(sysN)+' '+nam)
+  time.sleep(5)
+  execCmd(pvssPMON()+' -config '+cfg+' -autoreg &')
+  time.sleep(15)
   execCmd(pvssConsole())
   time.sleep(15)
   install()

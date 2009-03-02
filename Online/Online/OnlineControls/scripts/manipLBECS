@@ -1,0 +1,61 @@
+#/bin/sh
+export SCRIPTS_DIR=`dirname $0`
+cd ${SCRIPTS_DIR=}
+export PVSS_PROJECT_NAME=LBECS
+export PVSSACTION=
+#
+#
+#
+#
+vals=`python <<EE_EOF
+args = '$*'.split(' ')
+i=0
+while(i<len(args)):
+  a = str(args[i]).upper()[:2]
+  if a == '-E':
+    print 'export PVSSACTION=EXTRACT; shift 1;'
+    i = i + 1
+  elif a == '-L':
+    print 'export PVSSACTION=LOAD; shift 1;'
+    i = i + 1
+  else:
+    print 'echo "Unknown option:'+args[i]+'";'
+    print 'exit 1;'
+    break
+EE_EOF
+`
+echo $vals
+eval $vals
+if test -z "${PVSS_PROJECT_NAME}" -o -z "${PVSSACTION}";
+    then
+    echo "No Project name given!";
+    echo "usage: Install.sh -project <project-name> <install_name>";
+    echo "  -project <name>: Choose one of: STORAGE MONITORING default:LBECS, ...";
+    echo "   -e(xtract)      Extract job options (types+data)";
+    echo "   -l(oad)         Load    job options (types+data)";
+    exit 0;
+fi;
+#
+export PVSS_PROJECT_BASE=/localdisk/pvss/${PVSS_PROJECT_NAME}
+export PVSS_II=${PVSS_PROJECT_BASE}/config/config
+. ../cmt/setup.sh
+export PVSS_II="/localdisk/pvss/${PVSS_PROJECT_NAME}/config/config"
+export PVSS_PROJECT_BASE=/localdisk/pvss/${PVSS_PROJECT_NAME}
+#
+#
+#
+if test  -n "${PVSS_PROJECT_NAME}" -a "${PVSSACTION}" = "EXTRACT";
+then
+	${PVSS_II_HOME}/bin/PVSS00ascii \
+		-proj LBECS \
+		-out ${SCRIPTS_DIR}/../pvss/dplist/JobOptions.dpl \
+		-filter TDOP \
+		-filterDpType JobOptionsActivity \
+		-filterDpType JobOptionsPartition \
+		-filterDpType JobOptionsControl \
+		-filterDpType JobOptionsTaskType
+else
+	${PVSS_II_HOME}/bin/PVSS00ascii \
+		-proj LBECS \
+		-in ${SCRIPTS_DIR}/../pvss/dplist/JobOptions.dpl
+fi;

@@ -12,7 +12,7 @@ main()   {
   // Only need 4!!!!
   for(int i=0; i<4; ++i)  {
     sprintf(node,"Slice%02X",i);
-    StreamTaskMgr_createTree(stream,node,35,50,"",0,0,1);
+    StreamTaskMgr_createTree(stream,node,50,50,"",0,0,1);
   }
   fwFsmTree_refreshTree();
   StreamTaskMgr_connectTaskManager(stream);

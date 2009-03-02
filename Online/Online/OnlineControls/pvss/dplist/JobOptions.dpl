@@ -1,0 +1,723 @@
+# ascii dump of database
+
+# DpType
+TypeName
+JobOptionsControl.JobOptionsControl	1#1
+	State	25#2
+	Command	25#3
+JobOptionsPartition.JobOptionsPartition	1#1
+	State	25#2
+	Command	25#3
+	PartitionID	27#4
+	Activity	27#5
+	Tell1Boards	27#6
+	Vars	1#7
+JobOptionsActivity.JobOptionsActivity	29#1
+JobOptionsTaskType.JobOptionsTaskType	1#1
+	Options	25#2
+	NeedTell1s	23#3
+	NeedDefaults	23#4
+	ScriptPath	25#5
+	RunAs	25#6
+	Detector	25#7
+
+# Datapoint/DpId
+DpName	TypeName	ID
+JobOptionsPartition_ECAL	JobOptionsPartition	378
+JobOptionsPartition_LHCb	JobOptionsPartition	379
+JobOptionsPartition_MUON	JobOptionsPartition	380
+JobOptionsPartition_PRS	JobOptionsPartition	381
+JobOptionsPartition_RICH	JobOptionsPartition	382
+JobOptionsPartition_VELO	JobOptionsPartition	383
+JobOptionsActivity_HLT_PHYSICS	JobOptionsActivity	410
+JobOptionsActivity_RECV_PHYSICS	JobOptionsActivity	411
+JobOptionsActivity_STREAM_PHYSICS	JobOptionsActivity	412
+JobOptionsActivity_HLT_SDET	JobOptionsActivity	413
+JobOptionsActivity_RECV_SDET	JobOptionsActivity	414
+JobOptionsActivity_STREAM_SDET	JobOptionsActivity	415
+JobOptionsActivity_MONRELAY_PHYSICS	JobOptionsActivity	425
+JobOptionsActivity_MONI_PHYSICS	JobOptionsActivity	426
+JobOptionsTaskType_ErrSrv	JobOptionsTaskType	435
+JobOptionsTaskType_EventBuilder	JobOptionsTaskType	436
+JobOptionsTaskType_HLTMBM	JobOptionsTaskType	437
+JobOptionsTaskType_HLTMoore	JobOptionsTaskType	438
+JobOptionsTaskType_HLTSend	JobOptionsTaskType	439
+JobOptionsTaskType_RecvMBM	JobOptionsTaskType	440
+JobOptionsTaskType_HLTRec	JobOptionsTaskType	441
+JobOptionsTaskType_SNDEvents	JobOptionsTaskType	442
+JobOptionsTaskType_StrmMBM	JobOptionsTaskType	448
+JobOptionsTaskType_RCVEvents	JobOptionsTaskType	449
+JobOptionsTaskType_WRTEvents	JobOptionsTaskType	450
+JobOptionsTaskType_MBMRelay	JobOptionsTaskType	461
+JobOptionsTaskType_SNDStream1	JobOptionsTaskType	462
+JobOptionsTaskType_RCVStream1	JobOptionsTaskType	463
+JobOptionsTaskType_MBMMon	JobOptionsTaskType	469
+JobOptionsPartition_RICH2	JobOptionsPartition	479
+JobOptionsActivity_MONI_SDET	JobOptionsActivity	480
+HLTJobOptions	JobOptionsControl	482
+HLTJobOptionsWriter_00	JobOptionsControl	568
+HLTJobOptionsWriter_01	JobOptionsControl	569
+HLTJobOptionsWriter_02	JobOptionsControl	570
+HLTJobOptionsWriter_03	JobOptionsControl	571
+HLTJobOptionsWriter_04	JobOptionsControl	572
+HLTJobOptionsWriter_05	JobOptionsControl	573
+HLTJobOptionsWriter_06	JobOptionsControl	574
+HLTJobOptionsWriter_07	JobOptionsControl	575
+HLTJobOptionsWriter_08	JobOptionsControl	576
+HLTJobOptionsWriter_09	JobOptionsControl	577
+HLTJobOptionsWriter_0A	JobOptionsControl	578
+HLTJobOptionsWriter_0B	JobOptionsControl	579
+HLTJobOptionsWriter_0C	JobOptionsControl	580
+HLTJobOptionsWriter_0D	JobOptionsControl	581
+HLTJobOptionsWriter_0E	JobOptionsControl	582
+HLTJobOptionsWriter_0F	JobOptionsControl	583
+JobOptionsTaskType_RichDAQMon	JobOptionsTaskType	589
+JobOptionsTaskType_MonEvents	JobOptionsTaskType	591
+JobOptionsTaskType_CaloDAQMon	JobOptionsTaskType	592
+JobOptionsTaskType_Adder	JobOptionsTaskType	598
+JobOptionsTaskType_MuonDAQMon	JobOptionsTaskType	599
+JobOptionsTaskType_CaloDAQDisplay	JobOptionsTaskType	600
+JobOptionsTaskType_CaloDAQCalib	JobOptionsTaskType	601
+JobOptionsTaskType_L0CaloDAQMon	JobOptionsTaskType	602
+JobOptionsTaskType_L0DUDAQMon	JobOptionsTaskType	603
+JobOptionsTaskType_GlobalDAQMon	JobOptionsTaskType	604
+JobOptionsTaskType_L0MuonDAQMon	JobOptionsTaskType	605
+JobOptionsTaskType_RawSizeONLMon	JobOptionsTaskType	606
+JobOptionsTaskType_EventSrv	JobOptionsTaskType	607
+JobOptionsTaskType_STDAQMon	JobOptionsTaskType	608
+JobOptionsTaskType_OTDAQMon	JobOptionsTaskType	609
+JobOptionsTaskType_MonSaver	JobOptionsTaskType	610
+JobOptionsTaskType_CaloDAQCosmicsMon	JobOptionsTaskType	611
+JobOptionsTaskType_EvtMBM	JobOptionsTaskType	612
+JobOptionsTaskType_RCVMon	JobOptionsTaskType	613
+JobOptionsTaskType_RecStorageSend	JobOptionsTaskType	617
+JobOptionsTaskType_RecStorageRecv	JobOptionsTaskType	618
+JobOptionsTaskType_RecMBM	JobOptionsTaskType	619
+JobOptionsTaskType_RecStorageWrite	JobOptionsTaskType	620
+JobOptionsTaskType_RecStorageRead	JobOptionsTaskType	621
+JobOptionsTaskType_RecFarmRecv	JobOptionsTaskType	622
+JobOptionsTaskType_RecBrunel_vXYrZ	JobOptionsTaskType	624
+JobOptionsTaskType_RecFarmSend	JobOptionsTaskType	625
+JobOptionsTaskType_RecStorageMBM	JobOptionsTaskType	626
+JobOptionsTaskType_VeloDAQMon	JobOptionsTaskType	628
+JobOptionsTaskType_ITDAQMon	JobOptionsTaskType	629
+JobOptionsTaskType_TTDAQMon	JobOptionsTaskType	630
+JobOptionsTaskType_CaloRECMon	JobOptionsTaskType	631
+JobOptionsTaskType_MBM	JobOptionsTaskType	632
+JobOptionsTaskType_SND	JobOptionsTaskType	633
+JobOptionsTaskType_RCV	JobOptionsTaskType	634
+JobOptionsTaskType_RecBrunel_v33r2	JobOptionsTaskType	636
+JobOptionsTaskType_SND_Storage2Rec	JobOptionsTaskType	638
+JobOptionsTaskType_SND_Rec2Storage	JobOptionsTaskType	639
+JobOptionsTaskType_RecFarmRecv2	JobOptionsTaskType	640
+JobOptionsTaskType_WRTNiko	JobOptionsTaskType	641
+JobOptionsTaskType_RecMBMOnline	JobOptionsTaskType	643
+JobOptionsTaskType_LumiDAQMon	JobOptionsTaskType	644
+JobOptionsTaskType_SNDExpress	JobOptionsTaskType	645
+JobOptionsTaskType_RCVExpress	JobOptionsTaskType	646
+JobOptionsTaskType_WRTExpress	JobOptionsTaskType	647
+JobOptionsTaskType_RecMBMRelay	JobOptionsTaskType	648
+JobOptionsTaskType_RecBrunel	JobOptionsTaskType	649
+JobOptionsTaskType_VeloBeamMon	JobOptionsTaskType	650
+JobOptionsTaskType_TTNZSAna	JobOptionsTaskType	651
+JobOptionsTaskType_TTDAQNZSMon	JobOptionsTaskType	652
+
+# DpValue
+ElementName	TypeName	_original.._value	_original.._status	_original.._stime
+JobOptionsPartition_ECAL.PartitionID	JobOptionsPartition	ECAL_RunInfo.general.partId:_original.._value	0x101	17.09.2007 13:44:02.386
+JobOptionsPartition_ECAL.Activity	JobOptionsPartition	ECAL_RunInfo.general.runType:_original.._value	0x101	17.09.2007 13:44:02.386
+JobOptionsPartition_ECAL.Tell1Boards	JobOptionsPartition	ECAL_RunInfo.SubDetectors.tell1List:_original.._value	0x101	17.09.2007 13:44:02.386
+JobOptionsPartition_LHCb.PartitionID	JobOptionsPartition	LHCb_RunInfo.general.partId:_original.._value	0x101	17.09.2007 13:44:02.400
+JobOptionsPartition_LHCb.Activity	JobOptionsPartition	LHCb_RunInfo.general.runType:_original.._value	0x101	17.09.2007 13:44:02.400
+JobOptionsPartition_LHCb.Tell1Boards	JobOptionsPartition	LHCb_RunInfo.SubDetectors.tell1List:_original.._value	0x101	17.09.2007 13:44:02.400
+JobOptionsPartition_MUON.PartitionID	JobOptionsPartition	MUON_RunInfo.general.partId:_original.._value	0x101	17.09.2007 13:44:02.413
+JobOptionsPartition_MUON.Activity	JobOptionsPartition	MUON_RunInfo.general.runType:_original.._value	0x101	17.09.2007 13:44:02.413
+JobOptionsPartition_MUON.Tell1Boards	JobOptionsPartition	MUON_RunInfo.SubDetectors.tell1List:_original.._value	0x101	17.09.2007 13:44:02.413
+JobOptionsPartition_PRS.PartitionID	JobOptionsPartition	PRS_RunInfo.general.partId:_original.._value	0x101	17.09.2007 13:44:02.426
+JobOptionsPartition_PRS.Activity	JobOptionsPartition	PRS_RunInfo.general.runType:_original.._value	0x101	17.09.2007 13:44:02.426
+JobOptionsPartition_PRS.Tell1Boards	JobOptionsPartition	PRS_RunInfo.SubDetectors.tell1List:_original.._value	0x101	17.09.2007 13:44:02.426
+JobOptionsPartition_RICH.PartitionID	JobOptionsPartition	RICH_RunInfo.general.partId:_original.._value	0x101	17.09.2007 13:44:02.439
+JobOptionsPartition_RICH.Activity	JobOptionsPartition	RICH_RunInfo.general.runType:_original.._value	0x101	17.09.2007 13:44:02.439
+JobOptionsPartition_RICH.Tell1Boards	JobOptionsPartition	RICH_RunInfo.SubDetectors.tell1List:_original.._value	0x101	17.09.2007 13:44:02.439
+JobOptionsPartition_VELO.PartitionID	JobOptionsPartition	VELO_RunInfo.general.partId:_original.._value	0x101	17.09.2007 13:44:02.452
+JobOptionsPartition_VELO.Activity	JobOptionsPartition	VELO_RunInfo.general.runType:_original.._value	0x101	17.09.2007 13:44:02.452
+JobOptionsPartition_VELO.Tell1Boards	JobOptionsPartition	VELO_RunInfo.SubDetectors.tell1List:_original.._value	0x101	17.09.2007 13:44:02.452
+JobOptionsActivity_HLT_PHYSICS.	JobOptionsActivity	JobOptionsTaskType_HLTMBM, JobOptionsTaskType_EventBuilder, JobOptionsTaskType_HLTMoore, JobOptionsTaskType_HLTSend	0x101	18.09.2007 12:29:03.689
+JobOptionsActivity_RECV_PHYSICS.	JobOptionsActivity	JobOptionsTaskType_ErrSrv, JobOptionsTaskType_RecvMBM, JobOptionsTaskType_HLTRec, , , , , 	0x101	17.09.2007 13:44:02.775
+JobOptionsActivity_STREAM_PHYSICS.	JobOptionsActivity	JobOptionsTaskType_ErrSrv, JobOptionsTaskType_StrmMBM, , , , , , , , , , 	0x101	17.09.2007 13:44:02.787
+JobOptionsActivity_HLT_SDET.	JobOptionsActivity	JobOptionsTaskType_ErrSrv, JobOptionsTaskType_HLTMBM, JobOptionsTaskType_EventBuilder, JobOptionsTaskType_HLTMoore, JobOptionsTaskType_HLTSend	0x101	17.09.2007 13:44:02.795
+JobOptionsActivity_RECV_SDET.	JobOptionsActivity	JobOptionsTaskType_ErrSrv, JobOptionsTaskType_RecvMBM, JobOptionsTaskType_HLTRec, JobOptionsTaskType_SNDEvents	0x101	17.09.2007 13:44:02.802
+JobOptionsActivity_STREAM_SDET.	JobOptionsActivity	JobOptionsTaskType_ErrSrv, JobOptionsTaskType_StrmMBM, JobOptionsTaskType_RCVEvents, JobOptionsTaskType_WRTEvents	0x101	17.09.2007 13:44:02.810
+JobOptionsActivity_MONRELAY_PHYSICS.	JobOptionsActivity	JobOptionsTaskType_ErrSrv, JobOptionsTaskType_MBMRelay, JobOptionsTaskType_RCVStream1, JobOptionsTaskType_SNDStream1, , , , 	0x101	17.09.2007 13:44:02.967
+JobOptionsActivity_MONI_PHYSICS.	JobOptionsActivity	JobOptionsTaskType_ErrSrv, JobOptionsTaskType_MBMMon, , , , , , , 	0x101	17.09.2007 13:44:02.975
+JobOptionsTaskType_ErrSrv.Options	JobOptionsTaskType	"#include \"$ONLINETASKS/options/ErrorServer.opts\""	0x101	17.09.2007 13:44:02.472
+JobOptionsTaskType_ErrSrv.NeedTell1s	JobOptionsTaskType	0	0x101	17.09.2007 13:44:02.472
+JobOptionsTaskType_ErrSrv.NeedDefaults	JobOptionsTaskType	1	0x101	17.09.2007 13:44:02.472
+JobOptionsTaskType_ErrSrv.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runGaudi.sh"	0x101	19.11.2007 12:32:14.098
+JobOptionsTaskType_ErrSrv.RunAs	JobOptionsTaskType	"online"	0x101	19.11.2007 16:39:28.923
+JobOptionsTaskType_ErrSrv.Detector	JobOptionsTaskType	"ANY"	0x101	23.11.2007 15:40:38.017
+JobOptionsTaskType_EventBuilder.Options	JobOptionsTaskType	"#include \"$ONLINETASKS/options/EbSetup.opts\""	0x101	17.09.2007 13:44:02.479
+JobOptionsTaskType_EventBuilder.NeedTell1s	JobOptionsTaskType	1	0x101	17.09.2007 13:44:02.479
+JobOptionsTaskType_EventBuilder.NeedDefaults	JobOptionsTaskType	1	0x101	17.09.2007 13:44:02.479
+JobOptionsTaskType_EventBuilder.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runGaudi.sh"	0x101	19.11.2007 12:32:14.098
+JobOptionsTaskType_EventBuilder.RunAs	JobOptionsTaskType	"online"	0x101	19.11.2007 16:39:28.923
+JobOptionsTaskType_EventBuilder.Detector	JobOptionsTaskType	"ANY"	0x101	23.11.2007 15:40:38.017
+JobOptionsTaskType_HLTMBM.Options	JobOptionsTaskType	"#include \"$ONLINETASKS/options/HLTMBM.opts\"
+"	0x101	01.09.2008 16:22:04.037
+JobOptionsTaskType_HLTMBM.NeedTell1s	JobOptionsTaskType	0	0x101	01.09.2008 16:22:04.037
+JobOptionsTaskType_HLTMBM.NeedDefaults	JobOptionsTaskType	1	0x101	01.09.2008 16:22:04.037
+JobOptionsTaskType_HLTMBM.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runMBM.sh"	0x101	01.09.2008 16:22:04.037
+JobOptionsTaskType_HLTMBM.RunAs	JobOptionsTaskType	"online"	0x101	01.09.2008 16:22:04.037
+JobOptionsTaskType_HLTMBM.Detector	JobOptionsTaskType	"ANY"	0x101	01.09.2008 16:22:04.037
+JobOptionsTaskType_HLTMoore.Options	JobOptionsTaskType	"#include \"$ONLINETASKS/options/Moore.opts\""	0x101	17.09.2007 13:44:02.497
+JobOptionsTaskType_HLTMoore.NeedTell1s	JobOptionsTaskType	0	0x101	17.09.2007 13:44:02.497
+JobOptionsTaskType_HLTMoore.NeedDefaults	JobOptionsTaskType	1	0x101	17.09.2007 13:44:02.497
+JobOptionsTaskType_HLTMoore.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runGaudi.sh"	0x101	19.11.2007 12:32:14.098
+JobOptionsTaskType_HLTMoore.RunAs	JobOptionsTaskType	"online"	0x101	19.11.2007 16:39:28.923
+JobOptionsTaskType_HLTMoore.Detector	JobOptionsTaskType	"ANY"	0x101	23.11.2007 15:40:38.017
+JobOptionsTaskType_HLTSend.Options	JobOptionsTaskType	"#include \"$ONLINETASKS/options/HLTSend.opts\""	0x101	11.12.2007 14:12:41.016
+JobOptionsTaskType_HLTSend.NeedTell1s	JobOptionsTaskType	0	0x101	11.12.2007 14:12:41.016
+JobOptionsTaskType_HLTSend.NeedDefaults	JobOptionsTaskType	1	0x101	11.12.2007 14:12:41.016
+JobOptionsTaskType_HLTSend.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runGaudi.sh"	0x101	11.12.2007 14:12:41.016
+JobOptionsTaskType_HLTSend.RunAs	JobOptionsTaskType	"online"	0x101	11.12.2007 14:12:41.016
+JobOptionsTaskType_HLTSend.Detector	JobOptionsTaskType	"ANY"	0x101	11.12.2007 14:12:41.016
+JobOptionsTaskType_RecvMBM.Options	JobOptionsTaskType	"#include \"$ONLINETASKS/options/MBM.opts\""	0x101	01.09.2008 16:22:27.386
+JobOptionsTaskType_RecvMBM.NeedTell1s	JobOptionsTaskType	0	0x101	01.09.2008 16:22:27.386
+JobOptionsTaskType_RecvMBM.NeedDefaults	JobOptionsTaskType	1	0x101	01.09.2008 16:22:27.386
+JobOptionsTaskType_RecvMBM.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runMBM.sh"	0x101	01.09.2008 16:22:27.386
+JobOptionsTaskType_RecvMBM.RunAs	JobOptionsTaskType	"online"	0x101	01.09.2008 16:22:27.386
+JobOptionsTaskType_RecvMBM.Detector	JobOptionsTaskType	"ANY"	0x101	01.09.2008 16:22:27.386
+JobOptionsTaskType_HLTRec.Options	JobOptionsTaskType	"#include \"$ONLINETASKS/options/HLTRec.opts\""	0x101	17.09.2007 13:44:02.518
+JobOptionsTaskType_HLTRec.NeedTell1s	JobOptionsTaskType	0	0x101	17.09.2007 13:44:02.518
+JobOptionsTaskType_HLTRec.NeedDefaults	JobOptionsTaskType	1	0x101	17.09.2007 13:44:02.518
+JobOptionsTaskType_HLTRec.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runGaudi.sh"	0x101	19.11.2007 12:32:14.098
+JobOptionsTaskType_HLTRec.RunAs	JobOptionsTaskType	"online"	0x101	19.11.2007 16:39:28.923
+JobOptionsTaskType_HLTRec.Detector	JobOptionsTaskType	"ANY"	0x101	23.11.2007 15:40:38.017
+JobOptionsTaskType_SNDEvents.Options	JobOptionsTaskType	"#include \"$ONLINETASKS/options/SND.opts\"
+EventSelector.REQ1= \"EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xfffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0\";
+EventSelector.REQ1 = \"EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0x1;VetoMask=0,0,0,0x10;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0\";
+"	0x101	28.01.2009 09:09:55.676
+JobOptionsTaskType_SNDEvents.NeedTell1s	JobOptionsTaskType	0	0x101	28.01.2009 09:09:55.676
+JobOptionsTaskType_SNDEvents.NeedDefaults	JobOptionsTaskType	1	0x101	28.01.2009 09:09:55.676
+JobOptionsTaskType_SNDEvents.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runGaudi.sh"	0x101	28.01.2009 09:09:55.676
+JobOptionsTaskType_SNDEvents.RunAs	JobOptionsTaskType	"online"	0x101	28.01.2009 09:09:55.676
+JobOptionsTaskType_SNDEvents.Detector	JobOptionsTaskType	"ANY"	0x101	28.01.2009 09:09:55.676
+JobOptionsTaskType_StrmMBM.Options	JobOptionsTaskType	"#include \"$ONLINETASKS/options/MBM.opts\""	0x101	01.09.2008 16:22:36.511
+JobOptionsTaskType_StrmMBM.NeedTell1s	JobOptionsTaskType	0	0x101	01.09.2008 16:22:36.511
+JobOptionsTaskType_StrmMBM.NeedDefaults	JobOptionsTaskType	1	0x101	01.09.2008 16:22:36.511
+JobOptionsTaskType_StrmMBM.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runMBM.sh"	0x101	01.09.2008 16:22:36.511
+JobOptionsTaskType_StrmMBM.RunAs	JobOptionsTaskType	"online"	0x101	01.09.2008 16:22:36.511
+JobOptionsTaskType_StrmMBM.Detector	JobOptionsTaskType	"ANY"	0x101	01.09.2008 16:22:36.511
+JobOptionsTaskType_RCVEvents.Options	JobOptionsTaskType	"#include \"$ONLINETASKS/options/RCV.opts\"
+Receiver.VetoMask = 18;
+//Receiver.RoutingMask = 1;
+"	0x101	28.01.2009 18:06:33.623
+JobOptionsTaskType_RCVEvents.NeedTell1s	JobOptionsTaskType	0	0x101	28.01.2009 18:06:33.623
+JobOptionsTaskType_RCVEvents.NeedDefaults	JobOptionsTaskType	1	0x101	28.01.2009 18:06:33.623
+JobOptionsTaskType_RCVEvents.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runGaudi.sh"	0x101	28.01.2009 18:06:33.623
+JobOptionsTaskType_RCVEvents.RunAs	JobOptionsTaskType	"online"	0x101	28.01.2009 18:06:33.623
+JobOptionsTaskType_RCVEvents.Detector	JobOptionsTaskType	"ANY"	0x101	28.01.2009 18:06:33.623
+JobOptionsTaskType_WRTEvents.Options	JobOptionsTaskType	"#include \"$ONLINETASKS/options/WRT.opts\"
+EventSelector.REQ1 = \"EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0x1;VetoMask=0,0,0,0x12;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0\";
+"	0x101	28.01.2009 18:09:48.600
+JobOptionsTaskType_WRTEvents.NeedTell1s	JobOptionsTaskType	0	0x101	28.01.2009 18:09:48.600
+JobOptionsTaskType_WRTEvents.NeedDefaults	JobOptionsTaskType	1	0x101	28.01.2009 18:09:48.600
+JobOptionsTaskType_WRTEvents.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runGaudi.sh"	0x101	28.01.2009 18:09:48.600
+JobOptionsTaskType_WRTEvents.RunAs	JobOptionsTaskType	"online"	0x101	28.01.2009 18:09:48.600
+JobOptionsTaskType_WRTEvents.Detector	JobOptionsTaskType	"ANY"	0x101	28.01.2009 18:09:48.600
+JobOptionsTaskType_MBMRelay.Options	JobOptionsTaskType	"#include \"$ONLINETASKS/options/MBM.opts\""	0x101	09.10.2008 13:04:44.112
+JobOptionsTaskType_MBMRelay.NeedTell1s	JobOptionsTaskType	0	0x101	09.10.2008 13:04:44.112
+JobOptionsTaskType_MBMRelay.NeedDefaults	JobOptionsTaskType	1	0x101	09.10.2008 13:04:44.112
+JobOptionsTaskType_MBMRelay.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runMBMEvents.sh"	0x101	09.10.2008 13:04:44.112
+JobOptionsTaskType_MBMRelay.RunAs	JobOptionsTaskType	"online"	0x101	09.10.2008 13:04:44.112
+JobOptionsTaskType_MBMRelay.Detector	JobOptionsTaskType	"ANY"	0x101	09.10.2008 13:04:44.112
+JobOptionsTaskType_SNDStream1.Options	JobOptionsTaskType	"#include \"$ONLINETASKS/options/SND.opts\"
+
+EventSelector.REQ1=\"EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=USER;Frequency=PERC;Perc=100.0\";
+
+EventSelector.REQ1 = \"EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0x1;VetoMask=0,0,0,0x10;MaskType=ANY;UserType=USER;Frequency=PERC;Perc=100.0\";
+"	0x101	28.01.2009 10:34:41.480
+JobOptionsTaskType_SNDStream1.NeedTell1s	JobOptionsTaskType	0	0x101	28.01.2009 10:34:41.480
+JobOptionsTaskType_SNDStream1.NeedDefaults	JobOptionsTaskType	1	0x101	28.01.2009 10:34:41.480
+JobOptionsTaskType_SNDStream1.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runGaudi.sh"	0x101	28.01.2009 10:34:41.480
+JobOptionsTaskType_SNDStream1.RunAs	JobOptionsTaskType	"online"	0x101	28.01.2009 10:34:41.480
+JobOptionsTaskType_SNDStream1.Detector	JobOptionsTaskType	"ANY"	0x101	28.01.2009 10:34:41.480
+JobOptionsTaskType_RCVStream1.Options	JobOptionsTaskType	"#include \"$ONLINETASKS/options/RCV.opts\""	0x101	16.06.2008 06:19:58.804
+JobOptionsTaskType_RCVStream1.NeedTell1s	JobOptionsTaskType	0	0x101	16.06.2008 06:19:58.804
+JobOptionsTaskType_RCVStream1.NeedDefaults	JobOptionsTaskType	1	0x101	16.06.2008 06:19:58.804
+JobOptionsTaskType_RCVStream1.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runGaudi.sh"	0x101	16.06.2008 06:19:58.804
+JobOptionsTaskType_RCVStream1.RunAs	JobOptionsTaskType	"online"	0x101	16.06.2008 06:19:58.804
+JobOptionsTaskType_RCVStream1.Detector	JobOptionsTaskType	"ANY"	0x101	16.06.2008 06:19:58.804
+JobOptionsTaskType_MBMMon.Options	JobOptionsTaskType	"#include \"$ONLINETASKS/options/MBM.opts\""	0x101	09.10.2008 13:04:56.023
+JobOptionsTaskType_MBMMon.NeedTell1s	JobOptionsTaskType	0	0x101	09.10.2008 13:04:56.023
+JobOptionsTaskType_MBMMon.NeedDefaults	JobOptionsTaskType	1	0x101	09.10.2008 13:04:56.023
+JobOptionsTaskType_MBMMon.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runMBMEvents.sh"	0x101	09.10.2008 13:04:56.023
+JobOptionsTaskType_MBMMon.RunAs	JobOptionsTaskType	"online"	0x101	09.10.2008 13:04:56.023
+JobOptionsTaskType_MBMMon.Detector	JobOptionsTaskType	"ANY"	0x101	09.10.2008 13:04:56.023
+JobOptionsActivity_MONI_SDET.	JobOptionsActivity		0x101	31.08.2007 08:40:18.001
+HLTJobOptions.State	JobOptionsControl	"CONFIGURED"	0x101	19.09.2007 11:45:26.603
+HLTJobOptions.Command	JobOptionsControl	"CONFIGURE/HLTAlloc/LHCb/1/ECSLHCb:LHCb_RunInfo/LBECS:HLTJobOptions.State/CONFIGURED/ERROR"	0x101	19.09.2007 12:34:29.685
+JobOptionsTaskType_RichDAQMon.Options	JobOptionsTaskType	"//
+// responsible person: Ulrich.Kerzel@cern.ch
+//
+#include \"$PANOPTESROOT/options/RichOnlineMonitor.opts\"
+MEPManager.PartitionID               = @OnlineEnv.PartitionID;
+"	0x101	23.05.2008 13:00:52.199
+JobOptionsTaskType_RichDAQMon.NeedTell1s	JobOptionsTaskType	0	0x101	23.05.2008 13:00:52.199
+JobOptionsTaskType_RichDAQMon.NeedDefaults	JobOptionsTaskType	1	0x101	23.05.2008 13:00:52.199
+JobOptionsTaskType_RichDAQMon.ScriptPath	JobOptionsTaskType	"/group/rich/scripts/RichDAQMon.sh"	0x101	23.05.2008 13:00:52.199
+JobOptionsTaskType_RichDAQMon.RunAs	JobOptionsTaskType	"online"	0x101	23.05.2008 13:00:52.199
+JobOptionsTaskType_RichDAQMon.Detector	JobOptionsTaskType	"RICH"	0x101	23.05.2008 13:00:52.199
+JobOptionsTaskType_MonEvents.Options	JobOptionsTaskType	"#include \"$ONLINETASKS/options/MON.opts\"
+"	0x101	16.06.2008 16:23:04.118
+JobOptionsTaskType_MonEvents.NeedTell1s	JobOptionsTaskType	0	0x101	16.06.2008 16:23:04.118
+JobOptionsTaskType_MonEvents.NeedDefaults	JobOptionsTaskType	1	0x101	16.06.2008 16:23:04.118
+JobOptionsTaskType_MonEvents.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runGaudi.sh"	0x101	16.06.2008 16:23:04.118
+JobOptionsTaskType_MonEvents.RunAs	JobOptionsTaskType	"online"	0x101	16.06.2008 16:23:04.118
+JobOptionsTaskType_MonEvents.Detector	JobOptionsTaskType	"ANY"	0x101	16.06.2008 16:23:04.118
+JobOptionsTaskType_CaloDAQMon.Options	JobOptionsTaskType	"//
+// responsible person: O.Dechamps  Olivier.Dechamps@cern.ch
+//
+#include \"$ORWELLROOT/options/CaloDAQMon.opts\"
+MEPManager.PartitionID               = @OnlineEnv.PartitionID;
+MessageSvc.fifoPath                  = \"/tmp/logGaudi.fifo\";
+
+
+"	0x101	04.09.2008 11:30:08.932
+JobOptionsTaskType_CaloDAQMon.NeedTell1s	JobOptionsTaskType	0	0x101	04.09.2008 11:30:08.932
+JobOptionsTaskType_CaloDAQMon.NeedDefaults	JobOptionsTaskType	1	0x101	04.09.2008 11:30:08.932
+JobOptionsTaskType_CaloDAQMon.ScriptPath	JobOptionsTaskType	"/group/calo/sw/scripts/CaloDAQMon.sh"	0x101	04.09.2008 11:30:08.932
+JobOptionsTaskType_CaloDAQMon.RunAs	JobOptionsTaskType	"online"	0x101	04.09.2008 11:30:08.932
+JobOptionsTaskType_CaloDAQMon.Detector	JobOptionsTaskType	"CALO"	0x101	04.09.2008 11:30:08.932
+JobOptionsTaskType_Adder.Options	JobOptionsTaskType	"#include \"$ONLINETASKS/options/Adder.opts\""	0x101	14.02.2008 10:05:02.814
+JobOptionsTaskType_Adder.NeedTell1s	JobOptionsTaskType	0	0x101	14.02.2008 10:05:02.814
+JobOptionsTaskType_Adder.NeedDefaults	JobOptionsTaskType	1	0x101	14.02.2008 10:05:02.814
+JobOptionsTaskType_Adder.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runGaudi.sh"	0x101	14.02.2008 10:05:02.814
+JobOptionsTaskType_Adder.RunAs	JobOptionsTaskType	"online"	0x101	14.02.2008 10:05:02.814
+JobOptionsTaskType_Adder.Detector	JobOptionsTaskType	"ANY"	0x101	14.02.2008 10:05:02.814
+JobOptionsTaskType_MuonDAQMon.Options	JobOptionsTaskType	"//
+// responsible person: Giacomo.Graziani@cern.ch
+//
+#include \"$MUONONLINEMONITORROOT/options/MonitoringFarm.opts\"
+MEPManager.PartitionID               = @OnlineEnv.PartitionID;
+MessageSvc.fifoPath                  = \"/tmp/logGaudi.fifo\";
+
+
+"	0x101	01.09.2008 16:54:49.012
+JobOptionsTaskType_MuonDAQMon.NeedTell1s	JobOptionsTaskType	0	0x101	01.09.2008 16:54:49.012
+JobOptionsTaskType_MuonDAQMon.NeedDefaults	JobOptionsTaskType	1	0x101	01.09.2008 16:54:49.012
+JobOptionsTaskType_MuonDAQMon.ScriptPath	JobOptionsTaskType	"/group/muon/scripts/MuonDAQMon.sh"	0x101	01.09.2008 16:54:49.012
+JobOptionsTaskType_MuonDAQMon.RunAs	JobOptionsTaskType	"online"	0x101	01.09.2008 16:54:49.012
+JobOptionsTaskType_MuonDAQMon.Detector	JobOptionsTaskType	"MUON"	0x101	01.09.2008 16:54:49.012
+JobOptionsTaskType_CaloDAQDisplay.Options	JobOptionsTaskType	"//
+// responsible person: O.Dechamps  Olivier.Dechamps@cern.ch
+//
+#include \"$ORWELLROOT/options/CaloDAQDisplay.opts\"
+MEPManager.PartitionID               = @OnlineEnv.PartitionID;
+MessageSvc.fifoPath                  = \"/tmp/logGaudi.fifo\";
+"	0x101	14.05.2008 07:24:24.373
+JobOptionsTaskType_CaloDAQDisplay.NeedTell1s	JobOptionsTaskType	0	0x101	14.05.2008 07:24:24.373
+JobOptionsTaskType_CaloDAQDisplay.NeedDefaults	JobOptionsTaskType	1	0x101	14.05.2008 07:24:24.373
+JobOptionsTaskType_CaloDAQDisplay.ScriptPath	JobOptionsTaskType	"/group/calo/sw/scripts/CaloDAQMon.sh"	0x101	14.05.2008 07:24:24.373
+JobOptionsTaskType_CaloDAQDisplay.RunAs	JobOptionsTaskType	"online"	0x101	14.05.2008 07:24:24.373
+JobOptionsTaskType_CaloDAQDisplay.Detector	JobOptionsTaskType	"CALO"	0x101	14.05.2008 07:24:24.373
+JobOptionsTaskType_CaloDAQCalib.Options	JobOptionsTaskType	"//
+// responsible person: O.Dechamps  Olivier.Dechamps@cern.ch
+//
+#include \"$ORWELLROOT/options/CaloDAQCalib.opts\"
+MEPManager.PartitionID               = @OnlineEnv.PartitionID;
+MessageSvc.fifoPath                  = \"/tmp/logGaudi.fifo\";
+"	0x101	14.05.2008 07:24:19.103
+JobOptionsTaskType_CaloDAQCalib.NeedTell1s	JobOptionsTaskType	0	0x101	14.05.2008 07:24:19.103
+JobOptionsTaskType_CaloDAQCalib.NeedDefaults	JobOptionsTaskType	1	0x101	14.05.2008 07:24:19.103
+JobOptionsTaskType_CaloDAQCalib.ScriptPath	JobOptionsTaskType	"/group/calo/sw/scripts/CaloDAQMon.sh"	0x101	14.05.2008 07:24:19.103
+JobOptionsTaskType_CaloDAQCalib.RunAs	JobOptionsTaskType	"online"	0x101	14.05.2008 07:24:19.103
+JobOptionsTaskType_CaloDAQCalib.Detector	JobOptionsTaskType	"CALO"	0x101	14.05.2008 07:24:19.103
+JobOptionsTaskType_L0CaloDAQMon.Options	JobOptionsTaskType	"//
+// responsible person: O.Dechamps  Olivier.Dechamps@cern.ch
+//
+#include \"$ORWELLROOT/options/L0CaloDAQMon.opts\"
+MEPManager.PartitionID               = @OnlineEnv.PartitionID;
+MessageSvc.fifoPath                  = \"/tmp/logGaudi.fifo\";
+"	0x101	14.05.2008 07:24:37.795
+JobOptionsTaskType_L0CaloDAQMon.NeedTell1s	JobOptionsTaskType	0	0x101	14.05.2008 07:24:37.795
+JobOptionsTaskType_L0CaloDAQMon.NeedDefaults	JobOptionsTaskType	1	0x101	14.05.2008 07:24:37.795
+JobOptionsTaskType_L0CaloDAQMon.ScriptPath	JobOptionsTaskType	"/group/calo/sw/scripts/CaloDAQMon.sh"	0x101	14.05.2008 07:24:37.795
+JobOptionsTaskType_L0CaloDAQMon.RunAs	JobOptionsTaskType	"online"	0x101	14.05.2008 07:24:37.795
+JobOptionsTaskType_L0CaloDAQMon.Detector	JobOptionsTaskType	"ECAL"	0x101	14.05.2008 07:24:37.795
+JobOptionsTaskType_L0DUDAQMon.Options	JobOptionsTaskType	"#include \"$ORWELLROOT/options/L0DUDAQMon.opts\"
+MEPManager.PartitionID               = @OnlineEnv.PartitionID;
+MessageSvc.fifoPath                  = \"/tmp/logGaudi.fifo\";
+"	0x101	19.09.2008 15:50:51.475
+JobOptionsTaskType_L0DUDAQMon.NeedTell1s	JobOptionsTaskType	0	0x101	19.09.2008 15:50:51.475
+JobOptionsTaskType_L0DUDAQMon.NeedDefaults	JobOptionsTaskType	1	0x101	19.09.2008 15:50:51.475
+JobOptionsTaskType_L0DUDAQMon.ScriptPath	JobOptionsTaskType	"/group/calo/sw/scripts/CaloDAQMon.sh"	0x101	19.09.2008 15:50:51.475
+JobOptionsTaskType_L0DUDAQMon.RunAs	JobOptionsTaskType	"online"	0x101	19.09.2008 15:50:51.475
+JobOptionsTaskType_L0DUDAQMon.Detector	JobOptionsTaskType	"L0DU"	0x101	19.09.2008 15:50:51.475
+JobOptionsTaskType_GlobalDAQMon.Options	JobOptionsTaskType	"#include \"$ORWELLROOT/options/GlobalDAQMon.opts\"
+MEPManager.PartitionID               = @OnlineEnv.PartitionID;
+MessageSvc.fifoPath                  = \"/tmp/logGaudi.fifo\";
+"	0x101	30.04.2008 17:01:02.556
+JobOptionsTaskType_GlobalDAQMon.NeedTell1s	JobOptionsTaskType	0	0x101	30.04.2008 17:01:02.556
+JobOptionsTaskType_GlobalDAQMon.NeedDefaults	JobOptionsTaskType	1	0x101	30.04.2008 17:01:02.556
+JobOptionsTaskType_GlobalDAQMon.ScriptPath	JobOptionsTaskType	"/group/calo/sw/scripts/CaloDAQMon.sh"	0x101	30.04.2008 17:01:02.556
+JobOptionsTaskType_GlobalDAQMon.RunAs	JobOptionsTaskType	"online"	0x101	30.04.2008 17:01:02.556
+JobOptionsTaskType_GlobalDAQMon.Detector	JobOptionsTaskType	"ANY"	0x101	30.04.2008 17:01:02.556
+JobOptionsTaskType_L0MuonDAQMon.Options	JobOptionsTaskType	"//
+// responsible person: Julien.Cogan@cern.ch
+//
+#include \"/group/trg/l0muon/sw/online_monitoring/L0MuonDAQMon.opts\" 
+MEPManager.PartitionID               = @OnlineEnv.PartitionID;
+MessageSvc.fifoPath                  = \"/tmp/logGaudi.fifo\";
+"	0x101	14.05.2008 07:24:59.181
+JobOptionsTaskType_L0MuonDAQMon.NeedTell1s	JobOptionsTaskType	0	0x101	14.05.2008 07:24:59.181
+JobOptionsTaskType_L0MuonDAQMon.NeedDefaults	JobOptionsTaskType	1	0x101	14.05.2008 07:24:59.181
+JobOptionsTaskType_L0MuonDAQMon.ScriptPath	JobOptionsTaskType	"/group/trg/l0muon/sw/online_monitoring/L0MuonDAQMon.sh"	0x101	14.05.2008 07:24:59.181
+JobOptionsTaskType_L0MuonDAQMon.RunAs	JobOptionsTaskType	"online"	0x101	14.05.2008 07:24:59.181
+JobOptionsTaskType_L0MuonDAQMon.Detector	JobOptionsTaskType	"MUON"	0x101	14.05.2008 07:24:59.181
+JobOptionsTaskType_RawSizeONLMon.Options	JobOptionsTaskType	"// Monitoring task to histogram raw bank sizes
+// Responsible person: Beat Jost
+#include \"$RAWOPTIONS/RawSizeMon.opts\"
+UpdateAndReset.disableReadOdin=1;
+
+
+"	0x101	04.09.2008 14:48:05.016
+JobOptionsTaskType_RawSizeONLMon.NeedTell1s	JobOptionsTaskType	0	0x101	04.09.2008 14:48:05.016
+JobOptionsTaskType_RawSizeONLMon.NeedDefaults	JobOptionsTaskType	1	0x101	04.09.2008 14:48:05.016
+JobOptionsTaskType_RawSizeONLMon.ScriptPath	JobOptionsTaskType	"/home/beat/RawBankMonitoring.sh"	0x101	04.09.2008 14:48:05.016
+JobOptionsTaskType_RawSizeONLMon.RunAs	JobOptionsTaskType	"online"	0x101	04.09.2008 14:48:05.016
+JobOptionsTaskType_RawSizeONLMon.Detector	JobOptionsTaskType	"ANY"	0x101	04.09.2008 14:48:05.016
+JobOptionsTaskType_EventSrv.Options	JobOptionsTaskType	"#include \"$ONLINETASKS/options/EventSrv.opts\""	0x101	09.04.2008 11:36:51.457
+JobOptionsTaskType_EventSrv.NeedTell1s	JobOptionsTaskType	0	0x101	09.04.2008 11:36:51.457
+JobOptionsTaskType_EventSrv.NeedDefaults	JobOptionsTaskType	1	0x101	09.04.2008 11:36:51.457
+JobOptionsTaskType_EventSrv.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/EventSrv.sh"	0x101	09.04.2008 11:36:51.457
+JobOptionsTaskType_EventSrv.RunAs	JobOptionsTaskType	"online"	0x101	09.04.2008 11:36:51.457
+JobOptionsTaskType_EventSrv.Detector	JobOptionsTaskType	"ANY"	0x101	09.04.2008 11:36:51.457
+JobOptionsTaskType_STDAQMon.Options	JobOptionsTaskType	"// TT monitoring task. Responsible person: Mathias Knecht
+#include \"/group/st/sw/scripts/TTDAQMon.opts\""	0x101	19.02.2009 13:39:51.946
+JobOptionsTaskType_STDAQMon.NeedTell1s	JobOptionsTaskType	0	0x101	19.02.2009 13:39:51.946
+JobOptionsTaskType_STDAQMon.NeedDefaults	JobOptionsTaskType	1	0x101	19.02.2009 13:39:51.946
+JobOptionsTaskType_STDAQMon.ScriptPath	JobOptionsTaskType	"/group/st/sw/scripts/STDAQMon.sh"	0x101	19.02.2009 13:39:51.946
+JobOptionsTaskType_STDAQMon.RunAs	JobOptionsTaskType	"online"	0x101	19.02.2009 13:39:51.946
+JobOptionsTaskType_STDAQMon.Detector	JobOptionsTaskType	"ST"	0x101	19.02.2009 13:39:51.946
+JobOptionsTaskType_OTDAQMon.Options	JobOptionsTaskType	"//
+// responsible person: Herve.Terrier@cern.ch
+//
+#include \"$OTMONITORINGROOT/options/OTDAQMon.opts\" 
+"	0x101	23.09.2008 09:56:38.164
+JobOptionsTaskType_OTDAQMon.NeedTell1s	JobOptionsTaskType	0	0x101	23.09.2008 09:56:38.164
+JobOptionsTaskType_OTDAQMon.NeedDefaults	JobOptionsTaskType	1	0x101	23.09.2008 09:56:38.164
+JobOptionsTaskType_OTDAQMon.ScriptPath	JobOptionsTaskType	"/group/ot/bin/OTDAQMon.sh"	0x101	23.09.2008 09:56:38.164
+JobOptionsTaskType_OTDAQMon.RunAs	JobOptionsTaskType	"online"	0x101	23.09.2008 09:56:38.164
+JobOptionsTaskType_OTDAQMon.Detector	JobOptionsTaskType	"OT"	0x101	23.09.2008 09:56:38.164
+JobOptionsTaskType_MonSaver.Options	JobOptionsTaskType	"#include \"$ONLINETASKS/options/MonitoringSaver.opts\"
+"	0x101	21.05.2008 15:06:25.108
+JobOptionsTaskType_MonSaver.NeedTell1s	JobOptionsTaskType	0	0x101	21.05.2008 15:06:25.108
+JobOptionsTaskType_MonSaver.NeedDefaults	JobOptionsTaskType	1	0x101	21.05.2008 15:06:25.108
+JobOptionsTaskType_MonSaver.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/MonitoringSaver.sh"	0x101	21.05.2008 15:06:25.108
+JobOptionsTaskType_MonSaver.RunAs	JobOptionsTaskType	"online"	0x101	21.05.2008 15:06:25.108
+JobOptionsTaskType_MonSaver.Detector	JobOptionsTaskType	"ANY"	0x101	21.05.2008 15:06:25.108
+JobOptionsTaskType_CaloDAQCosmicsMon.Options	JobOptionsTaskType	"//
+// responsible person: O.Dechamps  Olivier.Dechamps@cern.ch
+//
+//    #include \"$ORWELLROOT/options/CaloDAQCosmicsMon.opts\"
+#include \"$ORWELLOPTS/CaloDAQCosmicsMon.opts\"
+MEPManager.PartitionID             = @OnlineEnv.PartitionID;
+MessageSvc.fifoPath                  = \"/tmp/logGaudi.fifo\";
+"	0x101	03.06.2008 15:04:05.481
+JobOptionsTaskType_CaloDAQCosmicsMon.NeedTell1s	JobOptionsTaskType	0	0x101	03.06.2008 15:04:05.481
+JobOptionsTaskType_CaloDAQCosmicsMon.NeedDefaults	JobOptionsTaskType	1	0x101	03.06.2008 15:04:05.481
+JobOptionsTaskType_CaloDAQCosmicsMon.ScriptPath	JobOptionsTaskType	"/group/calo/sw/scripts/CaloDAQMon.sh"	0x101	03.06.2008 15:04:05.481
+JobOptionsTaskType_CaloDAQCosmicsMon.RunAs	JobOptionsTaskType	"online"	0x101	03.06.2008 15:04:05.481
+JobOptionsTaskType_CaloDAQCosmicsMon.Detector	JobOptionsTaskType	"CALO"	0x101	03.06.2008 15:04:05.481
+JobOptionsTaskType_EvtMBM.Options	JobOptionsTaskType	"#include \"$ONLINETASKS/options/MBM.opts\""	0x101	01.09.2008 16:21:46.761
+JobOptionsTaskType_EvtMBM.NeedTell1s	JobOptionsTaskType	0	0x101	01.09.2008 16:21:46.761
+JobOptionsTaskType_EvtMBM.NeedDefaults	JobOptionsTaskType	1	0x101	01.09.2008 16:21:46.761
+JobOptionsTaskType_EvtMBM.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runMBM.sh"	0x101	01.09.2008 16:21:46.761
+JobOptionsTaskType_EvtMBM.RunAs	JobOptionsTaskType	"online"	0x101	01.09.2008 16:21:46.761
+JobOptionsTaskType_EvtMBM.Detector	JobOptionsTaskType	"ANY"	0x101	01.09.2008 16:21:46.761
+JobOptionsTaskType_RCVMon.Options	JobOptionsTaskType	"#include \"$ONLINETASKS/options/RCV.opts\""	0x101	01.09.2008 16:23:00.994
+JobOptionsTaskType_RCVMon.NeedTell1s	JobOptionsTaskType	0	0x101	01.09.2008 16:23:00.994
+JobOptionsTaskType_RCVMon.NeedDefaults	JobOptionsTaskType	1	0x101	01.09.2008 16:23:00.994
+JobOptionsTaskType_RCVMon.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runMBM.sh"	0x101	01.09.2008 16:23:00.994
+JobOptionsTaskType_RCVMon.RunAs	JobOptionsTaskType	"online"	0x101	01.09.2008 16:23:00.994
+JobOptionsTaskType_RCVMon.Detector	JobOptionsTaskType	"ANY"	0x101	01.09.2008 16:23:00.994
+JobOptionsTaskType_RecStorageSend.Options	JobOptionsTaskType	"#include \"$ONLINETASKS/options/NetPROD.opts\"
+"	0x101	01.10.2008 18:03:07.933
+JobOptionsTaskType_RecStorageSend.NeedTell1s	JobOptionsTaskType	0	0x101	01.10.2008 18:03:07.933
+JobOptionsTaskType_RecStorageSend.NeedDefaults	JobOptionsTaskType	1	0x101	01.10.2008 18:03:07.933
+JobOptionsTaskType_RecStorageSend.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runReco.sh"	0x101	01.10.2008 18:03:07.933
+JobOptionsTaskType_RecStorageSend.RunAs	JobOptionsTaskType	"online"	0x101	01.10.2008 18:03:07.933
+JobOptionsTaskType_RecStorageSend.Detector	JobOptionsTaskType	"ANY"	0x101	01.10.2008 18:03:07.933
+JobOptionsTaskType_RecStorageRecv.Options	JobOptionsTaskType	"#include \"$ONLINETASKS/options/RCV.opts\"
+"	0x101	01.10.2008 18:28:11.242
+JobOptionsTaskType_RecStorageRecv.NeedTell1s	JobOptionsTaskType	0	0x101	01.10.2008 18:28:11.242
+JobOptionsTaskType_RecStorageRecv.NeedDefaults	JobOptionsTaskType	1	0x101	01.10.2008 18:28:11.242
+JobOptionsTaskType_RecStorageRecv.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runReco.sh"	0x101	01.10.2008 18:28:11.242
+JobOptionsTaskType_RecStorageRecv.RunAs	JobOptionsTaskType	"online"	0x101	01.10.2008 18:28:11.242
+JobOptionsTaskType_RecStorageRecv.Detector	JobOptionsTaskType	"ANY"	0x101	01.10.2008 18:28:11.242
+JobOptionsTaskType_RecMBM.Options	JobOptionsTaskType	"//
+//  Online prompt reconstruction facility: MBM
+//
+#include \"$ONLINETASKS/options/MBM.opts\"
+MEPManager.InitFlags                 = \"-i=Input -s=16384 -b=12 -e=16 -u=32 -f -c -i=Output -s=16384 -b=12 -e=16 -u=32 -f -c\";
+MEPManager.InitFlags                 = \"-i=Input -s=64000 -b=12 -e=16 -u=32 -f -c -i=Output -s=64000 -b=12 -e=16 -u=32 -f -c\";
+"	0x101	18.11.2008 18:15:13.692
+JobOptionsTaskType_RecMBM.NeedTell1s	JobOptionsTaskType	0	0x101	18.11.2008 18:15:13.692
+JobOptionsTaskType_RecMBM.NeedDefaults	JobOptionsTaskType	1	0x101	18.11.2008 18:15:13.692
+JobOptionsTaskType_RecMBM.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runMBM.sh"	0x101	18.11.2008 18:15:13.692
+JobOptionsTaskType_RecMBM.RunAs	JobOptionsTaskType	"online"	0x101	18.11.2008 18:15:13.692
+JobOptionsTaskType_RecMBM.Detector	JobOptionsTaskType	"ANY"	0x101	18.11.2008 18:15:13.692
+JobOptionsTaskType_RecStorageWrite.Options	JobOptionsTaskType	"#include \"$ONLINETASKS/options/ReproWriterNet.opts\"
+"	0x101	09.12.2008 17:58:08.240
+JobOptionsTaskType_RecStorageWrite.NeedTell1s	JobOptionsTaskType	0	0x101	09.12.2008 17:58:08.240
+JobOptionsTaskType_RecStorageWrite.NeedDefaults	JobOptionsTaskType	1	0x101	09.12.2008 17:58:08.240
+JobOptionsTaskType_RecStorageWrite.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runReco.sh"	0x101	09.12.2008 17:58:08.240
+JobOptionsTaskType_RecStorageWrite.RunAs	JobOptionsTaskType	"online"	0x101	09.12.2008 17:58:08.240
+JobOptionsTaskType_RecStorageWrite.Detector	JobOptionsTaskType	"ANY"	0x101	09.12.2008 17:58:08.240
+JobOptionsTaskType_RecStorageRead.Options	JobOptionsTaskType	"#include \"$ONLINETASKS/options/RCV.opts\"
+"	0x101	18.11.2008 18:40:08.696
+JobOptionsTaskType_RecStorageRead.NeedTell1s	JobOptionsTaskType	0	0x101	18.11.2008 18:40:08.696
+JobOptionsTaskType_RecStorageRead.NeedDefaults	JobOptionsTaskType	1	0x101	18.11.2008 18:40:08.696
+JobOptionsTaskType_RecStorageRead.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runReco.sh"	0x101	18.11.2008 18:40:08.696
+JobOptionsTaskType_RecStorageRead.RunAs	JobOptionsTaskType	"online"	0x101	18.11.2008 18:40:08.696
+JobOptionsTaskType_RecStorageRead.Detector	JobOptionsTaskType	"ANY"	0x101	18.11.2008 18:40:08.696
+JobOptionsTaskType_RecFarmRecv.Options	JobOptionsTaskType	"//
+//  Reprocessing reconstruction facility: 
+//  Event sender from reconstruction facility to storage
+//
+#include \"$SUBFARMOPTS\"
+#include \"$ONLINETASKS/options/NetCONS.opts\"
+MEPManager.Buffers = {\"Input\"};
+Output.Buffer = \"Input\";
+EventSelector.Input = @OnlineEnv.reqTask;
+"	0x101	08.10.2008 16:06:50.192
+JobOptionsTaskType_RecFarmRecv.NeedTell1s	JobOptionsTaskType	0	0x101	08.10.2008 16:06:50.192
+JobOptionsTaskType_RecFarmRecv.NeedDefaults	JobOptionsTaskType	1	0x101	08.10.2008 16:06:50.192
+JobOptionsTaskType_RecFarmRecv.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runReco.sh"	0x101	08.10.2008 16:06:50.192
+JobOptionsTaskType_RecFarmRecv.RunAs	JobOptionsTaskType	"online"	0x101	08.10.2008 16:06:50.192
+JobOptionsTaskType_RecFarmRecv.Detector	JobOptionsTaskType	"ANY"	0x101	08.10.2008 16:06:50.192
+JobOptionsTaskType_RecBrunel_vXYrZ.Options	JobOptionsTaskType	"#include \"$ONLINETASKS/options/RecSIM.opts\"
+ApplicationMgr.TopAlg             += {\"LHCb::DelaySleepAlg/Delay\" };
+Delay.DelayTime                      = 20;
+"	0x101	18.02.2009 09:41:09.774
+JobOptionsTaskType_RecBrunel_vXYrZ.NeedTell1s	JobOptionsTaskType	0	0x101	18.02.2009 09:41:09.774
+JobOptionsTaskType_RecBrunel_vXYrZ.NeedDefaults	JobOptionsTaskType	1	0x101	18.02.2009 09:41:09.774
+JobOptionsTaskType_RecBrunel_vXYrZ.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runReco.sh"	0x101	18.02.2009 09:41:09.774
+JobOptionsTaskType_RecBrunel_vXYrZ.RunAs	JobOptionsTaskType	"online"	0x101	18.02.2009 09:41:09.774
+JobOptionsTaskType_RecBrunel_vXYrZ.Detector	JobOptionsTaskType	"ANY"	0x101	18.02.2009 09:41:09.774
+JobOptionsTaskType_RecFarmSend.Options	JobOptionsTaskType	"#include \"$SUBFARMOPTS\"
+#include \"$ONLINETASKS/options/SND.opts\"
+MEPManager.Buffers              = {\"Output\"};
+EventSelector.Input                  = \"Output\";
+Sender.DataSink                      = @OnlineEnv.targetTask;
+"	0x101	01.10.2008 17:29:43.809
+JobOptionsTaskType_RecFarmSend.NeedTell1s	JobOptionsTaskType	0	0x101	01.10.2008 17:29:43.809
+JobOptionsTaskType_RecFarmSend.NeedDefaults	JobOptionsTaskType	1	0x101	01.10.2008 17:29:43.809
+JobOptionsTaskType_RecFarmSend.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runReco.sh"	0x101	01.10.2008 17:29:43.809
+JobOptionsTaskType_RecFarmSend.RunAs	JobOptionsTaskType	"online"	0x101	01.10.2008 17:29:43.809
+JobOptionsTaskType_RecFarmSend.Detector	JobOptionsTaskType	"ANY"	0x101	01.10.2008 17:29:43.809
+JobOptionsTaskType_RecStorageMBM.Options	JobOptionsTaskType	"#include \"$ONLINETASKS/options/MBM.opts\""	0x101	02.10.2008 06:43:19.081
+JobOptionsTaskType_RecStorageMBM.NeedTell1s	JobOptionsTaskType	0	0x101	02.10.2008 06:43:19.081
+JobOptionsTaskType_RecStorageMBM.NeedDefaults	JobOptionsTaskType	1	0x101	02.10.2008 06:43:19.081
+JobOptionsTaskType_RecStorageMBM.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runMBM.sh"	0x101	02.10.2008 06:43:19.081
+JobOptionsTaskType_RecStorageMBM.RunAs	JobOptionsTaskType	"online"	0x101	02.10.2008 06:43:19.081
+JobOptionsTaskType_RecStorageMBM.Detector	JobOptionsTaskType	"ANY"	0x101	02.10.2008 06:43:19.081
+JobOptionsTaskType_VeloDAQMon.Options	JobOptionsTaskType	"// ---------------- Task specific inofrmation:
+//
+// responsible person: kurt.rinnert@cern.ch
+//
+#include \"$VETRAROOT/options/Velo/online/VeloDAQMon.opts\" 
+//"	0x101	16.02.2009 13:07:17.699
+JobOptionsTaskType_VeloDAQMon.NeedTell1s	JobOptionsTaskType	0	0x101	16.02.2009 13:07:17.699
+JobOptionsTaskType_VeloDAQMon.NeedDefaults	JobOptionsTaskType	1	0x101	16.02.2009 13:07:17.699
+JobOptionsTaskType_VeloDAQMon.ScriptPath	JobOptionsTaskType	"/group/velo/sw/online/scripts/VeloDAQMon.sh"	0x101	16.02.2009 13:07:17.699
+JobOptionsTaskType_VeloDAQMon.RunAs	JobOptionsTaskType	"online"	0x101	16.02.2009 13:07:17.699
+JobOptionsTaskType_VeloDAQMon.Detector	JobOptionsTaskType	"VELO"	0x101	16.02.2009 13:07:17.699
+JobOptionsTaskType_ITDAQMon.Options	JobOptionsTaskType	"// IT monitoring task. Responsible person: Mathias Knecht
+#include \"/group/st/sw/scripts/ITDAQMon.opts\"
+"	0x101	04.09.2008 13:50:20.298
+JobOptionsTaskType_ITDAQMon.NeedTell1s	JobOptionsTaskType	0	0x101	04.09.2008 13:50:20.298
+JobOptionsTaskType_ITDAQMon.NeedDefaults	JobOptionsTaskType	1	0x101	04.09.2008 13:50:20.298
+JobOptionsTaskType_ITDAQMon.ScriptPath	JobOptionsTaskType	"/group/st/sw/scripts/STDAQMon.sh"	0x101	04.09.2008 13:50:20.298
+JobOptionsTaskType_ITDAQMon.RunAs	JobOptionsTaskType	"online"	0x101	04.09.2008 13:50:20.298
+JobOptionsTaskType_ITDAQMon.Detector	JobOptionsTaskType	"IT"	0x101	04.09.2008 13:50:20.298
+JobOptionsTaskType_TTDAQMon.Options	JobOptionsTaskType	"// TT monitoring task. Responsible person: Mathias Knecht
+#include \"/group/st/sw/scripts/TTDAQMon.opts\"
+"	0x101	19.02.2009 13:40:14.929
+JobOptionsTaskType_TTDAQMon.NeedTell1s	JobOptionsTaskType	0	0x101	19.02.2009 13:40:14.929
+JobOptionsTaskType_TTDAQMon.NeedDefaults	JobOptionsTaskType	1	0x101	19.02.2009 13:40:14.929
+JobOptionsTaskType_TTDAQMon.ScriptPath	JobOptionsTaskType	"/group/st/sw/scripts/STDAQMon.sh"	0x101	19.02.2009 13:40:14.929
+JobOptionsTaskType_TTDAQMon.RunAs	JobOptionsTaskType	"online"	0x101	19.02.2009 13:40:14.929
+JobOptionsTaskType_TTDAQMon.Detector	JobOptionsTaskType	"TT"	0x101	19.02.2009 13:40:14.929
+JobOptionsTaskType_CaloRECMon.Options	JobOptionsTaskType	"#include \"$ORWELLROOT/options/CaloRECMon.opts\"
+MEPManager.PartitionID               = @OnlineEnv.PartitionID;
+MessageSvc.fifoPath                  = \"/tmp/logGaudi.fifo\";
+"	0x101	19.09.2008 17:32:23.883
+JobOptionsTaskType_CaloRECMon.NeedTell1s	JobOptionsTaskType	0	0x101	19.09.2008 17:32:23.883
+JobOptionsTaskType_CaloRECMon.NeedDefaults	JobOptionsTaskType	1	0x101	19.09.2008 17:32:23.883
+JobOptionsTaskType_CaloRECMon.ScriptPath	JobOptionsTaskType	"/group/calo/sw/scripts/CaloDAQMon.sh"	0x101	19.09.2008 17:32:23.883
+JobOptionsTaskType_CaloRECMon.RunAs	JobOptionsTaskType	"online"	0x101	19.09.2008 17:32:23.883
+JobOptionsTaskType_CaloRECMon.Detector	JobOptionsTaskType	"CALO"	0x101	19.09.2008 17:32:23.883
+JobOptionsTaskType_MBM.Options	JobOptionsTaskType	"#include \"$ONLINETASKS/options/MBM.opts\""	0x101	22.09.2008 06:28:04.429
+JobOptionsTaskType_MBM.NeedTell1s	JobOptionsTaskType	0	0x101	22.09.2008 06:28:04.429
+JobOptionsTaskType_MBM.NeedDefaults	JobOptionsTaskType	1	0x101	22.09.2008 06:28:04.429
+JobOptionsTaskType_MBM.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runMBM.sh"	0x101	22.09.2008 06:28:04.429
+JobOptionsTaskType_MBM.RunAs	JobOptionsTaskType	"online"	0x101	22.09.2008 06:28:04.429
+JobOptionsTaskType_MBM.Detector	JobOptionsTaskType	"ANY"	0x101	22.09.2008 06:28:04.429
+JobOptionsTaskType_SND.Options	JobOptionsTaskType	"#include \"$ONLINETASKS/options/SND.opts\""	0x101	22.09.2008 06:30:17.443
+JobOptionsTaskType_SND.NeedTell1s	JobOptionsTaskType	0	0x101	22.09.2008 06:30:17.443
+JobOptionsTaskType_SND.NeedDefaults	JobOptionsTaskType	1	0x101	22.09.2008 06:30:17.443
+JobOptionsTaskType_SND.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runGaudi.sh"	0x101	22.09.2008 06:30:17.443
+JobOptionsTaskType_SND.RunAs	JobOptionsTaskType	"online"	0x101	22.09.2008 06:30:17.443
+JobOptionsTaskType_SND.Detector	JobOptionsTaskType	"ANY"	0x101	22.09.2008 06:30:17.443
+JobOptionsTaskType_RCV.Options	JobOptionsTaskType	"//
+//  Standard online data receiver task.
+//  Used for Storage, Monitoring and Reconstruction facilities
+//
+#include \"$ONLINETASKS/options/RCV.opts\""	0x101	23.09.2008 18:44:54.746
+JobOptionsTaskType_RCV.NeedTell1s	JobOptionsTaskType	0	0x101	23.09.2008 18:44:54.746
+JobOptionsTaskType_RCV.NeedDefaults	JobOptionsTaskType	1	0x101	23.09.2008 18:44:54.746
+JobOptionsTaskType_RCV.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runGaudi.sh"	0x101	23.09.2008 18:44:54.746
+JobOptionsTaskType_RCV.RunAs	JobOptionsTaskType	"online"	0x101	23.09.2008 18:44:54.746
+JobOptionsTaskType_RCV.Detector	JobOptionsTaskType	"ANY"	0x101	23.09.2008 18:44:54.746
+JobOptionsTaskType_RecBrunel_v33r2.Options	JobOptionsTaskType	""	0x101	25.09.2008 13:17:43.497
+JobOptionsTaskType_RecBrunel_v33r2.NeedTell1s	JobOptionsTaskType	0	0x101	25.09.2008 13:17:43.497
+JobOptionsTaskType_RecBrunel_v33r2.NeedDefaults	JobOptionsTaskType	1	0x101	25.09.2008 13:17:43.497
+JobOptionsTaskType_RecBrunel_v33r2.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/cmtuser/OnlineBrunel/OnlineBrunelSys/scripts/runBrunel.sh"	0x101	25.09.2008 13:17:43.497
+JobOptionsTaskType_RecBrunel_v33r2.RunAs	JobOptionsTaskType	"online"	0x101	25.09.2008 13:17:43.497
+JobOptionsTaskType_RecBrunel_v33r2.Detector	JobOptionsTaskType	"ANY"	0x101	25.09.2008 13:17:43.497
+JobOptionsTaskType_SND_Storage2Rec.Options	JobOptionsTaskType	"//
+//  Online prompt reconstruction facility: 
+//  Event sender from storage to reconstruction facility 
+//
+#include \"$ONLINETASKS/options/SND.opts\"
+EventSelector.REQ1 = \"EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0x1;VetoMask=0,0,0,0x10;MaskType=ANY;UserType=USER;Frequency=PERC;Perc=100.0\";
+"	0x101	28.01.2009 10:20:51.307
+JobOptionsTaskType_SND_Storage2Rec.NeedTell1s	JobOptionsTaskType	0	0x101	28.01.2009 10:20:51.307
+JobOptionsTaskType_SND_Storage2Rec.NeedDefaults	JobOptionsTaskType	1	0x101	28.01.2009 10:20:51.307
+JobOptionsTaskType_SND_Storage2Rec.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runGaudi.sh"	0x101	28.01.2009 10:20:51.307
+JobOptionsTaskType_SND_Storage2Rec.RunAs	JobOptionsTaskType	"online"	0x101	28.01.2009 10:20:51.307
+JobOptionsTaskType_SND_Storage2Rec.Detector	JobOptionsTaskType	"ANY"	0x101	28.01.2009 10:20:51.307
+JobOptionsTaskType_SND_Rec2Storage.Options	JobOptionsTaskType	"//
+//  Online prompt reconstruction facility: 
+//  Event sender from reconstruction facility to storage
+//
+#include \"$ONLINETASKS/options/SND.opts\"
+MEPManager.Buffers              = {\"Output\"};
+EventSelector.Input                  = \"Output\";
+EventSelector.REQ1 = \"EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0x10;VetoMask=0,0,0,0x1;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0\";
+"	0x101	28.01.2009 09:11:00.030
+JobOptionsTaskType_SND_Rec2Storage.NeedTell1s	JobOptionsTaskType	0	0x101	28.01.2009 09:11:00.030
+JobOptionsTaskType_SND_Rec2Storage.NeedDefaults	JobOptionsTaskType	1	0x101	28.01.2009 09:11:00.030
+JobOptionsTaskType_SND_Rec2Storage.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runGaudi.sh"	0x101	28.01.2009 09:11:00.030
+JobOptionsTaskType_SND_Rec2Storage.RunAs	JobOptionsTaskType	"online"	0x101	28.01.2009 09:11:00.030
+JobOptionsTaskType_SND_Rec2Storage.Detector	JobOptionsTaskType	"ANY"	0x101	28.01.2009 09:11:00.030
+JobOptionsTaskType_RecFarmRecv2.Options	JobOptionsTaskType	"//
+//  Reprocessing reconstruction facility: 
+//  Event sender from reconstruction facility to storage
+//
+#include \"$SUBFARMOPTS\"
+#include \"$ONLINETASKS/options/NetCONS.opts\"
+MEPManager.Buffers = {\"Input\"};
+Output.Buffer = \"Input\";
+EventSelector.Input = @OnlineEnv.reqTask;
+"	0x101	08.10.2008 16:07:17.102
+JobOptionsTaskType_RecFarmRecv2.NeedTell1s	JobOptionsTaskType	0	0x101	08.10.2008 16:07:17.102
+JobOptionsTaskType_RecFarmRecv2.NeedDefaults	JobOptionsTaskType	1	0x101	08.10.2008 16:07:17.102
+JobOptionsTaskType_RecFarmRecv2.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runReco.sh"	0x101	08.10.2008 16:07:17.102
+JobOptionsTaskType_RecFarmRecv2.RunAs	JobOptionsTaskType	"online"	0x101	08.10.2008 16:07:17.102
+JobOptionsTaskType_RecFarmRecv2.Detector	JobOptionsTaskType	"ANY"	0x101	08.10.2008 16:07:17.102
+JobOptionsTaskType_WRTNiko.Options	JobOptionsTaskType	"#include \"$ONLINETASKS/options/WRT.opts\""	0x101	14.10.2008 09:06:23.699
+JobOptionsTaskType_WRTNiko.NeedTell1s	JobOptionsTaskType	0	0x101	14.10.2008 09:06:23.699
+JobOptionsTaskType_WRTNiko.NeedDefaults	JobOptionsTaskType	1	0x101	14.10.2008 09:06:23.699
+JobOptionsTaskType_WRTNiko.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runGaudi.sh"	0x101	14.10.2008 09:06:23.699
+JobOptionsTaskType_WRTNiko.RunAs	JobOptionsTaskType	"online"	0x101	14.10.2008 09:06:23.699
+JobOptionsTaskType_WRTNiko.Detector	JobOptionsTaskType	"ANY"	0x101	14.10.2008 09:06:23.699
+JobOptionsTaskType_RecMBMOnline.Options	JobOptionsTaskType	"//
+//  Online prompt reconstruction facility: MBM
+//
+#include \"$ONLINETASKS/options/MBM.opts\"
+MEPManager.InitFlags=\"-i=Events -s=64000 -b=12 -e=10 -u=32 -f -c -i=Output -s=64000 -b=12 -e=16 -u=32 -f -c\";
+"	0x101	30.01.2009 09:50:29.634
+JobOptionsTaskType_RecMBMOnline.NeedTell1s	JobOptionsTaskType	0	0x101	30.01.2009 09:50:29.634
+JobOptionsTaskType_RecMBMOnline.NeedDefaults	JobOptionsTaskType	1	0x101	30.01.2009 09:50:29.634
+JobOptionsTaskType_RecMBMOnline.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runMBM.sh"	0x101	30.01.2009 09:50:29.634
+JobOptionsTaskType_RecMBMOnline.RunAs	JobOptionsTaskType	"online"	0x101	30.01.2009 09:50:29.634
+JobOptionsTaskType_RecMBMOnline.Detector	JobOptionsTaskType	"ANY"	0x101	30.01.2009 09:50:29.634
+JobOptionsTaskType_LumiDAQMon.Options	JobOptionsTaskType	"#include \"$LUMIDAQMONOPTS/opts.opts\"
+"	0x101	21.11.2008 10:41:27.991
+JobOptionsTaskType_LumiDAQMon.NeedTell1s	JobOptionsTaskType	0	0x101	21.11.2008 10:41:27.991
+JobOptionsTaskType_LumiDAQMon.NeedDefaults	JobOptionsTaskType	1	0x101	21.11.2008 10:41:27.991
+JobOptionsTaskType_LumiDAQMon.ScriptPath	JobOptionsTaskType	"/group/hlt/hltscript/LumiDAQMon.sh"	0x101	21.11.2008 10:41:27.991
+JobOptionsTaskType_LumiDAQMon.RunAs	JobOptionsTaskType	"online"	0x101	21.11.2008 10:41:27.991
+JobOptionsTaskType_LumiDAQMon.Detector	JobOptionsTaskType	"ANY"	0x101	21.11.2008 10:41:27.991
+JobOptionsTaskType_SNDExpress.Options	JobOptionsTaskType	"#include \"$ONLINETASKS/options/SND.opts\"
+EventSelector.REQ1 = \"EvType=2;TriggerMask=0x0,0x10,0x0,0x0;VetoMask=0,0,0,0x10;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0\";
+"	0x101	29.01.2009 12:53:46.801
+JobOptionsTaskType_SNDExpress.NeedTell1s	JobOptionsTaskType	0	0x101	29.01.2009 12:53:46.801
+JobOptionsTaskType_SNDExpress.NeedDefaults	JobOptionsTaskType	1	0x101	29.01.2009 12:53:46.801
+JobOptionsTaskType_SNDExpress.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runGaudi.sh"	0x101	29.01.2009 12:53:46.801
+JobOptionsTaskType_SNDExpress.RunAs	JobOptionsTaskType	"online"	0x101	29.01.2009 12:53:46.801
+JobOptionsTaskType_SNDExpress.Detector	JobOptionsTaskType	"ANY"	0x101	29.01.2009 12:53:46.801
+JobOptionsTaskType_RCVExpress.Options	JobOptionsTaskType	"#include \"$ONLINETASKS/options/RCV.opts\"
+Receiver.VetoMask = 17;
+Receiver.RoutingMask = 2;
+"	0x101	28.01.2009 17:18:39.740
+JobOptionsTaskType_RCVExpress.NeedTell1s	JobOptionsTaskType	0	0x101	28.01.2009 17:18:39.740
+JobOptionsTaskType_RCVExpress.NeedDefaults	JobOptionsTaskType	1	0x101	28.01.2009 17:18:39.740
+JobOptionsTaskType_RCVExpress.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runGaudi.sh"	0x101	28.01.2009 17:18:39.740
+JobOptionsTaskType_RCVExpress.RunAs	JobOptionsTaskType	"online"	0x101	28.01.2009 17:18:39.740
+JobOptionsTaskType_RCVExpress.Detector	JobOptionsTaskType	"ANY"	0x101	28.01.2009 17:18:39.740
+JobOptionsTaskType_WRTExpress.Options	JobOptionsTaskType	"#include \"$ONLINETASKS/options/WRT.opts\"
+Writer.StreamID = \"EXPRESS\";
+EventSelector.REQ1 = \"EvType=2;TriggerMask=0x0,0xf,0x0,0x2;VetoMask=0,0,0,0x11;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0\";
+"	0x101	28.01.2009 16:21:34.538
+JobOptionsTaskType_WRTExpress.NeedTell1s	JobOptionsTaskType	0	0x101	28.01.2009 16:21:34.538
+JobOptionsTaskType_WRTExpress.NeedDefaults	JobOptionsTaskType	1	0x101	28.01.2009 16:21:34.538
+JobOptionsTaskType_WRTExpress.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runGaudi.sh"	0x101	28.01.2009 16:21:34.538
+JobOptionsTaskType_WRTExpress.RunAs	JobOptionsTaskType	"online"	0x101	28.01.2009 16:21:34.538
+JobOptionsTaskType_WRTExpress.Detector	JobOptionsTaskType	"ANY"	0x101	28.01.2009 16:21:34.538
+JobOptionsTaskType_RecMBMRelay.Options	JobOptionsTaskType	"//
+//  Online prompt reconstruction facility: MBM
+//
+#include \"$ONLINETASKS/options/MBM.opts\"
+MEPManager.InitFlags=\"-i=Events -s=64000 -b=12 -e=5 -u=32 -f -c -i=Output -s=64000 -b=12 -e=16 -u=32 -f -c\";
+"	0x101	30.01.2009 14:20:48.663
+JobOptionsTaskType_RecMBMRelay.NeedTell1s	JobOptionsTaskType	0	0x101	30.01.2009 14:20:48.663
+JobOptionsTaskType_RecMBMRelay.NeedDefaults	JobOptionsTaskType	1	0x101	30.01.2009 14:20:48.663
+JobOptionsTaskType_RecMBMRelay.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/scripts/runMBM.sh"	0x101	30.01.2009 14:20:48.663
+JobOptionsTaskType_RecMBMRelay.RunAs	JobOptionsTaskType	"online"	0x101	30.01.2009 14:20:48.663
+JobOptionsTaskType_RecMBMRelay.Detector	JobOptionsTaskType	"ANY"	0x101	30.01.2009 14:20:48.663
+JobOptionsTaskType_RecBrunel.Options	JobOptionsTaskType	""	0x101	30.01.2009 14:02:50.705
+JobOptionsTaskType_RecBrunel.NeedTell1s	JobOptionsTaskType	0	0x101	30.01.2009 14:02:50.705
+JobOptionsTaskType_RecBrunel.NeedDefaults	JobOptionsTaskType	1	0x101	30.01.2009 14:02:50.705
+JobOptionsTaskType_RecBrunel.ScriptPath	JobOptionsTaskType	"/group/online/dataflow/cmtuser/OnlineBrunel/OnlineBrunelSys/scripts/runBrunel.sh"	0x101	30.01.2009 14:02:50.705
+JobOptionsTaskType_RecBrunel.RunAs	JobOptionsTaskType	"online"	0x101	30.01.2009 14:02:50.705
+JobOptionsTaskType_RecBrunel.Detector	JobOptionsTaskType	"ANY"	0x101	30.01.2009 14:02:50.705
+JobOptionsTaskType_VeloBeamMon.Options	JobOptionsTaskType	"// ---------------- Task specific information:
+//
+// responsible person: malcolm.john@cern.ch
+//
+#include \"$GAUDIONLINEROOT/options/Velo/online/VeloBeamMon.opts\" 
+//"	0x101	03.02.2009 14:49:20.666
+JobOptionsTaskType_VeloBeamMon.NeedTell1s	JobOptionsTaskType	0	0x101	03.02.2009 14:49:20.666
+JobOptionsTaskType_VeloBeamMon.NeedDefaults	JobOptionsTaskType	1	0x101	03.02.2009 14:49:20.666
+JobOptionsTaskType_VeloBeamMon.ScriptPath	JobOptionsTaskType	"/group/velo/sw/online/scripts/VeloBeamMon.sh"	0x101	03.02.2009 14:49:20.666
+JobOptionsTaskType_VeloBeamMon.RunAs	JobOptionsTaskType	"online"	0x101	03.02.2009 14:49:20.666
+JobOptionsTaskType_VeloBeamMon.Detector	JobOptionsTaskType	"VELO"	0x101	03.02.2009 14:49:20.666
+JobOptionsTaskType_TTNZSAna.Options	JobOptionsTaskType	"// TT NZS monitoring task. Responsible person: Nicola Chiapolini
+#include \"/group/st/sw/scripts/TTNZSAna.opts.raw\""	0x101	19.02.2009 15:26:36.634
+JobOptionsTaskType_TTNZSAna.NeedTell1s	JobOptionsTaskType	0	0x101	19.02.2009 15:26:36.634
+JobOptionsTaskType_TTNZSAna.NeedDefaults	JobOptionsTaskType	1	0x101	19.02.2009 15:26:36.634
+JobOptionsTaskType_TTNZSAna.ScriptPath	JobOptionsTaskType	"/group/st/sw/scripts/STDAQMon.sh"	0x101	19.02.2009 15:26:36.634
+JobOptionsTaskType_TTNZSAna.RunAs	JobOptionsTaskType	"online"	0x101	19.02.2009 15:26:36.634
+JobOptionsTaskType_TTNZSAna.Detector	JobOptionsTaskType	"TT"	0x101	19.02.2009 15:26:36.634
+JobOptionsTaskType_TTDAQNZSMon.Options	JobOptionsTaskType	"// TT NZS monitoring task. Responsible person: Mathias Knecht
+#include \"/group/st/sw/scripts/TTDAQNZSMon.opts\"
+"	0x101	19.02.2009 15:44:36.651
+JobOptionsTaskType_TTDAQNZSMon.NeedTell1s	JobOptionsTaskType	0	0x101	19.02.2009 15:44:36.651
+JobOptionsTaskType_TTDAQNZSMon.NeedDefaults	JobOptionsTaskType	1	0x101	19.02.2009 15:44:36.651
+JobOptionsTaskType_TTDAQNZSMon.ScriptPath	JobOptionsTaskType	"/group/st/sw/scripts/STDAQMon.sh"	0x101	19.02.2009 15:44:36.651
+JobOptionsTaskType_TTDAQNZSMon.RunAs	JobOptionsTaskType	"online"	0x101	19.02.2009 15:44:36.651
+JobOptionsTaskType_TTDAQNZSMon.Detector	JobOptionsTaskType	"TT"	0x101	19.02.2009 15:44:36.651

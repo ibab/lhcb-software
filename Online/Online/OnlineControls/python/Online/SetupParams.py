@@ -80,6 +80,18 @@ stroage_control_node= "STORECTRL01"
 storage_recv_nodes  = ['STORERECV01','STORERECV02']
 storage_strm_nodes  = ['STORESTRM01','STORESTRM02']
 
+def setUpStorage(project):
+  global daq_numPartition
+  global storage_system_name
+  global storage_streams_per_node
+  storage_system_name = project
+  if project=='RECSTORAGE':
+    storage_streams_per_node = 25
+    daq_numPartition         = 4
+  else:
+    storage_streams_per_node = 15
+    daq_numPartition    = 16
+
 # Monitoring parameters
 #
 # monitor_system_name       Generic setup: Defines the PVSS system name

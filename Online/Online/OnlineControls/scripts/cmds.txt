@@ -1,3 +1,15 @@
+# Change LBECS project name/number
+/opt/pvss/pvss2_v3.8/bin/PVSStoolSyncTypes -proj LBECS -config /localdisk/pvss/LBECS/config/config  -report -autoreg -system 399 LBECS
+# Extract job options datapoints
+../scripts/manipLHECS -ECTRACT
+# Load job options datapoints
+../scripts/manipLHECS -LOAD
+
+
+
+
+
+
 cmt broadcast "${CMTROOT}/mgr/cmt setup -sh -pack= -version= -path=  -no_cleanup>setup.vars"
 tmStart -m store* -e -o /group/online/dataflow/cmtuser/Gaudi_v19r2/Online/OnlineControls/scripts/tan_server.sh
 tmStart -m store* -e -o /group/online/dataflow/cmtuser/Gaudi_v19r2/Online/OnlineControls/scripts/MBMMON.web.sh

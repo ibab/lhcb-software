@@ -14,7 +14,7 @@ import Online.SetupParams, Online.PVSSSystems, Online.Streaming.StreamInstaller
 # =============================================================================
 def install(name,system=Online.SetupParams.storage_system_name):
   "Install required components for the storage"
-  
+  Online.SetupParams.setUpStorage(system)
   inst = Online.Streaming.StreamInstaller.Installer(Online.PVSSSystems.controlsMgr(system),name)
   inst.numPartition     = Online.SetupParams.daq_numPartition
   inst.recvNodes        = Online.SetupParams.storage_recv_nodes
