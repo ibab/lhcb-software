@@ -140,10 +140,9 @@ StatusCode SLICEReaderSvc::initialize()
         return StatusCode::FAILURE;  
     } 
 
-    m_CurFile=-1;
-
-    if(m_InputFiles.size() > 0) 
-        m_CurFile =0;
+    m_CurFile =0;
+    if(m_InputFiles.size() == 0) 
+        msgLog << MSG::WARNING << "No input files -> no injection" << endmsg;
 
     for(std::vector<std::string>::iterator ite = m_InputFiles.begin(); ite != m_InputFiles.end(); ++ite)
     {
@@ -335,12 +334,6 @@ StatusCode SLICEReaderSvc::run()
     msgLog << MSG::INFO << "Reader running" << endmsg;
  
     StatusCode sc=StatusCode::SUCCESS;
-    if( m_CurFile == -1) 
-    {
-        msgLog << MSG::WARNING << "No input files" << endmsg;
-        return StatusCode::SUCCESS;
-    }
-
     do
     {
         for(m_CurFile = 0; (unsigned int) m_CurFile < m_InputFiles.size() && m_ReaderState==RUNNING && sc.isSuccess(); ++m_CurFile) {

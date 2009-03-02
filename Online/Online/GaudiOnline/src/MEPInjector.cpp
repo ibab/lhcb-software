@@ -587,14 +587,14 @@ StatusCode MEPInjector::logMEPReqs()
     memcpy(buf + sizeof(int), &m_TotCreditConsumed, sizeof(int));
     memcpy(buf + 2*sizeof(int), &m_TotMEPReqTx, sizeof(int));
     memcpy(buf + 3*sizeof(int), &m_TotMEPReqRx, sizeof(int));
-    if( (unsigned int) (err= write(m_CreditsFD, buf, sizeof(buf)) )< sizeof(buf)) {
-        if(err < 0) { 
-            ERRMSG(msgLog, "Error on write");
-        }
-        else 
-        {
-            ERRMSG(msgLog, "Log bytes were not all written ..."); 
-        }
+    err= write(m_CreditsFD, buf, sizeof(buf));
+    if(err < 0) { 
+        ERRMSG(msgLog, "Error on write");
+        return StatusCode::FAILURE;
+    }
+    if(err < (int) sizeof(buf)) 
+    {
+        ERRMSG(msgLog, "Log bytes were not all written ..."); 
         return StatusCode::FAILURE;
     }
     return StatusCode::SUCCESS;
