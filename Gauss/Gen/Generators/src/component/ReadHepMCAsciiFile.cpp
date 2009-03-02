@@ -1,8 +1,11 @@
-// $Id: ReadHepMCAsciiFile.cpp,v 1.4 2008-07-09 14:37:50 robbep Exp $
+// $Id: ReadHepMCAsciiFile.cpp,v 1.5 2009-03-02 12:12:35 robbep Exp $
 // ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2008/07/09 14:37:50  robbep
+// Gaudi Units
+//
 // Revision 1.3  2007/03/08 13:41:06  robbep
 // Adapt to new production tool interface
 //
@@ -31,7 +34,7 @@
 // ===========================================================================
 // HepMC 
 // ===========================================================================
-#include "HepMC/IO_Ascii.h"
+#include "HepMC/IO_GenEvent.h"
 // ===========================================================================
 // Local 
 // ===========================================================================
@@ -71,9 +74,9 @@ public:
     if ( m_input.empty() ) 
     { return Error ( "Input file name is not specified!" ) ; }
     // open the file 
-    m_file = new HepMC::IO_Ascii ( m_input.c_str() , std::ios::in ) ;
+    m_file = new HepMC::IO_GenEvent ( m_input.c_str() , std::ios::in ) ;
     //  
-    if ( 0 == m_file || m_file->rdstate() == std::ios::failbit ) 
+    if ( ( 0 == m_file ) || ( m_file->rdstate() == std::ios::failbit ) ) 
     { return Error ( "Failure to input the file '"+m_input+"'" ) ; }
     //
     return StatusCode::SUCCESS ;
@@ -192,7 +195,7 @@ private:
   // rescale event from Pythia to LHCb units ?
   bool             m_rescale ; ///< rescale event to LHCb units ?  
   // the output file ;
-  HepMC::IO_Ascii* m_file   ; ///< the input file ;
+  HepMC::IO_GenEvent* m_file   ; ///< the input file ;
 } ;
 // =====================================================================
 /// Declaration of the Tool Factory
@@ -217,7 +220,11 @@ StatusCode ReadHepMCAsciiFile::generateEvent
   Assert ( 0 != m_file , "Invalid input file!" ) ;
   //
   if ( !m_file->fill_next_event( theEvent ) ) 
-  { return Error ( "Error in event reading!" ) ; }
+  { if ( m_file -> rdstate() != std::ios::eofbit ) 
+	return Error ( "Error in event reading!" ) ; 
+    else return Error( "No more events in input file, set correct number of events in options" ) ;
+    ;
+  }
   // rescale if needed (convert to LHCb units) 
   if ( m_rescale ) 
     { GeneratorUtils::scale ( theEvent , Gaudi::Units::GeV ,
