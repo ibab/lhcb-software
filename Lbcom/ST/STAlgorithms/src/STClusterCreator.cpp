@@ -1,4 +1,4 @@
-// $Id: STClusterCreator.cpp,v 1.17 2007-11-21 13:21:11 mneedham Exp $
+// $Id: STClusterCreator.cpp,v 1.18 2009-03-02 08:10:50 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -8,6 +8,7 @@
 #include "Kernel/STDetSwitch.h"
 #include "Kernel/ISTClusterPosition.h"
 #include "Kernel/ISTSignalToNoiseTool.h"
+#include "Kernel/ISTReadoutTool.h"
 #include "Kernel/LHCbConstants.h"
 
 // xml geometry
@@ -23,8 +24,7 @@ DECLARE_ALGORITHM_FACTORY( STClusterCreator );
 
 STClusterCreator::STClusterCreator( const std::string& name,
                                     ISvcLocator* pSvcLocator):
-  GaudiAlgorithm(name, pSvcLocator),
-  m_tracker(0),
+  ST::AlgBase(name, pSvcLocator),
   m_sigNoiseTool(0),
   m_positionTool(0)
 {
@@ -33,13 +33,16 @@ STClusterCreator::STClusterCreator( const std::string& name,
   declareProperty("HighSignal2Noise",m_highThreshold = 10.0);
   declareProperty("SigNoiseTool",m_sigNoiseToolName = "STSignalToNoiseTool");
   declareProperty("PositionTool",m_positionToolName = "STOnlinePosition");
-  declareProperty("InputLocation",m_inputLocation= STDigitLocation::TTDigits);
-  declareProperty("OutputLocation",
-                  m_outputLocation = STClusterLocation::TTClusters);
+  declareSTConfigProperty("InputLocation",m_inputLocation, STDigitLocation::TTDigits);
+  declareSTConfigProperty("OutputLocation",
+                  m_outputLocation , STClusterLocation::TTClusters);
   declareProperty("OutputVersion", m_outputVersion = 1);
   declareProperty("Size", m_maxSize = 4);
-  declareProperty("DetType", m_detType = "TT");
   declareProperty("ByBeetle", m_byBeetle = true);  
+  declareProperty("Spill", m_spillName = "Central");
+
+  setForcedInit();
+
 }
 
 STClusterCreator::~STClusterCreator()
@@ -49,34 +52,27 @@ STClusterCreator::~STClusterCreator()
 
 StatusCode STClusterCreator::initialize()
 {
-  StatusCode sc = GaudiAlgorithm::initialize();
+  StatusCode sc = ST::AlgBase::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
-
-  // geometry   
-  m_tracker = getDet<DeSTDetector>(DeSTDetLocation::location(m_detType));
-
-  STDetSwitch::flip(m_detType,m_inputLocation);
-  STDetSwitch::flip(m_detType,m_outputLocation);
 
   // sig to noise tool
   m_sigNoiseTool = tool<ISTSignalToNoiseTool>(m_sigNoiseToolName, 
-                                              m_sigNoiseToolName+m_detType);
+                                              m_sigNoiseToolName+detType());
 
   // calculate cut values
-  const std::vector<DeSTSector*>& tSectors = m_tracker->sectors(); 
+  const std::vector<DeSTSector*>& tSectors = tracker()->sectors(); 
   std::vector<DeSTSector*>::const_iterator iterS = tSectors.begin();
   for ( ; iterS != tSectors.end(); ++iterS ){
-    double adc =  m_sigNoiseTool->noiseInADC(*iterS);
+    const double adc =  m_sigNoiseTool->noiseInADC(*iterS);
     m_digitSig2NoiseCut[*iterS] = m_digitSig2NoiseThreshold*adc;
     m_clusterSig2NoiseCut[*iterS] = m_clusterSig2NoiseThreshold*adc; 
-    m_highSig2NoiseCut[*iterS] = m_highThreshold*adc;
-    //  std::cout << (*iterS)->name() << " " <<   m_digitSig2NoiseCut[*iterS]
-    //          << " "<< m_clusterSig2NoiseCut[*iterS] << std::endl;
-  } // iterS
- 
+    m_highSig2NoiseCut[*iterS] = m_highThreshold*adc; 
+  }
   // position tool
   m_positionTool = tool<ISTClusterPosition>(m_positionToolName);
  
+  m_spill = STCluster::SpillToType(m_spillName);
+
   return StatusCode::SUCCESS;
 }
 
@@ -84,17 +80,21 @@ StatusCode STClusterCreator::initialize()
 StatusCode STClusterCreator::execute()
 {
   // retrieve Digitizations
-  STDigits* digitCont = get<STDigits>(m_inputLocation);
+  const STDigits* digitCont = get<STDigits>(m_inputLocation);
 
   // clusterize
   STClusters* clusterCont = new STClusters();
-  StatusCode sc = createClusters(digitCont, clusterCont);
-  
-  // version number
+  // set version number
   clusterCont->setVersion(m_outputVersion);
-
   // register STClusters in the transient data store
   put(clusterCont,m_outputLocation);
+
+
+  // mak the clusters
+  StatusCode sc = createClusters(digitCont, clusterCont);
+  if (sc.isFailure()){
+    return Warning("Failed to create clusters, register empty container", StatusCode::FAILURE);
+  }  
 
   return sc;
 }
@@ -111,7 +111,7 @@ StatusCode STClusterCreator::createClusters( const STDigits* digitCont,
     jterDigit = iterDigit;
     ++jterDigit;
     
-    DeSTSector* aSector= m_tracker->findSector((*iterDigit)->channelID()); ;
+    DeSTSector* aSector= tracker()->findSector((*iterDigit)->channelID()); ;
     if (aboveDigitSignalToNoise(*iterDigit, aSector)) {
 
       // make a cluster !
@@ -133,19 +133,31 @@ StatusCode STClusterCreator::createClusters( const STDigits* digitCont,
   
       if (aboveClusterSignalToNoise(totCharge, aSector)){
 
+	// calculate the interstrip fraction a la Tell1
         ISTClusterPosition::Info measValue = 
           m_positionTool->estimate(clusteredDigits);
       
-        double nSum = neighbourSum(startCluster,iterDigit,digitCont );
+        const double nSum = neighbourSum(startCluster,iterDigit,digitCont );
 
         // make cluster +set things
-        STLiteCluster clusterLite(measValue.strip, measValue.fractionalPosition,
+        const STLiteCluster clusterLite(measValue.strip, measValue.fractionalPosition,
                                   clusteredDigits.size(),
                                   hasHighThreshold(totCharge,aSector) );
 
+        // link to the tell
+        STDAQ::chanPair aPair = readoutTool()->offlineChanToDAQ(measValue.strip,
+                                                                measValue.fractionalPosition);
+        if (aPair.first.id() == STTell1ID::nullBoard) {
+        // screwed
+         err()  << "failed to link " << uniqueSector(measValue.strip) << endreq;
+         return Error("Failed to find Tell1 board" ,  StatusCode::FAILURE);
+        }       
+
         STCluster* newCluster = new STCluster(clusterLite,
                                               strips(clusteredDigits,
-                                              measValue.strip), nSum);
+                                              measValue.strip), nSum,
+                                              aPair.first.id() ,
+                                              aPair.second, m_spill);
         // add to container
         clusterCont->insert(newCluster,measValue.strip);
       }
@@ -201,9 +213,10 @@ bool STClusterCreator::keepClustering(const STDigit* firstDigit,
 bool STClusterCreator::sameBeetle( const STChannelID firstChan, 
                                    const STChannelID secondChan ) const
 {
-  unsigned int firstBeetle = (firstChan.strip() - 1) / 
+  // check channels are on the sameBeetle
+  const unsigned int firstBeetle = (firstChan.strip() - 1) / 
     LHCbConstants::nStripsInBeetle;
-  unsigned int secondBeetle = (secondChan.strip() - 1) / 
+  const unsigned int secondBeetle = (secondChan.strip() - 1) / 
     LHCbConstants::nStripsInBeetle;
   return (firstBeetle == secondBeetle);
 }
@@ -217,7 +230,7 @@ double STClusterCreator::neighbourSum( LHCb::STDigits::const_iterator start,
   if (start != digits->begin()){
     STDigits::const_iterator iter = start;
     --iter;
-    if ((*iter)->channelID() == m_tracker->nextLeft((*start)->channelID())) {
+    if ((*iter)->channelID() == tracker()->nextLeft((*start)->channelID())) {
       nSum += (*iter)->depositedCharge();
     }
   }
@@ -226,7 +239,7 @@ double STClusterCreator::neighbourSum( LHCb::STDigits::const_iterator start,
     STDigits::const_iterator iter = stop;
     ++iter;
     if (iter != digits->end() && 
-        ((*iter)->channelID() == m_tracker->nextRight((*start)->channelID()))) {
+        ((*iter)->channelID() == tracker()->nextRight((*start)->channelID()))) {
       nSum += (*iter)->depositedCharge();
     }
   }
@@ -237,10 +250,12 @@ STCluster::ADCVector
 STClusterCreator::strips(const SmartRefVector<STDigit>& clusteredDigits,
                          const STChannelID closestChan) const
 {
+
+  // make the vector of ADC values stored in the cluster
   SmartRefVector<STDigit>::const_iterator iter  = clusteredDigits.begin();
   STCluster::ADCVector tVec;
   for (; iter != clusteredDigits.end(); ++iter){
-    int strip = (*iter)->channelID().strip() - closestChan.strip();
+    const int strip = (*iter)->channelID().strip() - closestChan.strip();
     tVec.push_back(std::make_pair(strip,
                                   (unsigned int)((*iter)->depositedCharge())));
   } // i

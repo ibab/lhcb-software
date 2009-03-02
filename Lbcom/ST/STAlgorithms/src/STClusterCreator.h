@@ -1,8 +1,8 @@
-// $Id: STClusterCreator.h,v 1.3 2007-01-09 15:34:34 jvantilb Exp $
+// $Id: STClusterCreator.h,v 1.4 2009-03-02 08:10:50 mneedham Exp $
 #ifndef STCLUSTERCREATOR_H
 #define STCLUSTERCREATOR_H 1
 
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "Kernel/STAlgBase.h"
 #include "Event/STDigit.h"
 #include "Event/STCluster.h"
 
@@ -19,7 +19,7 @@ class ISTClusterPosition;
  *  @date   07/03/2002
  */
 
-class STClusterCreator :public GaudiAlgorithm {
+class STClusterCreator :public ST::AlgBase {
 
 public:
   
@@ -76,9 +76,9 @@ private:
 
   std::string m_inputLocation;
   std::string m_outputLocation;
+  std::string m_spillName;
+  LHCb::STCluster::Spill m_spill;
   
-  std::string m_detType;
-  DeSTDetector* m_tracker;
   ISTSignalToNoiseTool* m_sigNoiseTool;
   ISTClusterPosition* m_positionTool;
  
