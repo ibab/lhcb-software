@@ -1,10 +1,16 @@
-! $Id: release.notes,v 1.130 2009-03-01 19:51:47 jpalac Exp $
+! $Id: release.notes,v 1.131 2009-03-02 15:28:31 jpalac Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Vladimir Gligorov
 !==============================================================================
 
-!========================== DaVinciAssociators v9r3p2 2009-03-01 ==============
+!========================== DaVinciAssociators v9r3p2 2009-03-02 ==============
+
+! 2009-03-02 - Juan PALACIOS
+ - src/article2MCWithChi2.cpp
+  . Fix windows compilation problem: SmartIF<IProperty> has no comparison to 
+    int.
+ - Re-tag as v9r3p2.
 
 ! 2009-01-26 - Marco Cattaneo
  - Backwards compatible fix for Gaudi v21
