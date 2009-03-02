@@ -1,6 +1,6 @@
 !-----------------------------------------------------------------------------
 ! Package     : ST/STMonitors 
-! Responsible : Mark Tobin, Mathias Knecht Jeroen van Tilburg, Nicola Chiapolini
+! Responsible : Mark Tobin, Mathias Knecht, Jeroen van Tilburg, Nicola Chiapolini
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
