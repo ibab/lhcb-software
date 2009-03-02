@@ -1,4 +1,4 @@
-// $Id: Dstar2D0Pi.cpp,v 1.2 2009-02-16 14:20:52 jonrob Exp $
+// $Id: Dstar2D0Pi.cpp,v 1.3 2009-03-02 17:09:16 jpalac Exp $
 // Include files
 
 // from Gaudi
@@ -228,7 +228,7 @@ StatusCode Dstar2D0Pi::MakeDstar2D0Pi(const LHCb::Particle::ConstVector& daughte
                   = (&candDstar)->endVertex()->outgoingParticles() ;
                 SmartRefVector<LHCb::Particle>::const_iterator dstit;
                 for ( dstit = Combin2.begin(); dstit != Combin2.end(); dstit++ ) {
-                  if ( fabs((*dstit)->particleID().pid()) == 421){
+                  if ( abs((*dstit)->particleID().pid()) == 421){
 
                     /*plot( (*dstit)->momentum().M(),
                       "D0 Mass",
