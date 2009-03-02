@@ -14,11 +14,11 @@ signal = "Bu2eeK"
 #
 importOptions( "$STDOPTS/PreloadUnits.opts")
 importOptions( "$B2DILEPTONROOT/options/DoDC06SelBu2eeK.opts")
-from Configurables import PrintHeader, PrintTree
+from Configurables import PrintHeader, PrintDecayTree
 PrintHeader("PrintDiLeptonForPreselBu2LLK").OutputLevel = 4 
 PrintHeader("PrintPreselBu2LLK").OutputLevel = 4
 PrintHeader("PrintDC06SelBu2eeK").OutputLevel = 4
-PrintTree("PrintTreeDC06SelBu2eeK").OutputLevel = 4
+PrintDecayTree("PrintTreeDC06SelBu2eeK").OutputLevel = 4
 presel = GaudiSequencer("SeqDC06SelBu2eeK")
 #
 # True filter criterion

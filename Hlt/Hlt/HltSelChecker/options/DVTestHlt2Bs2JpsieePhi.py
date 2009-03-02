@@ -6,7 +6,7 @@
  #  @date 2008-10-18
 ###
 from Gaudi.Configuration import *
-from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, PhysDesktop, DecayTreeTuple, PrintHeader, PrintTree
+from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, PhysDesktop, DecayTreeTuple, PrintHeader, PrintDecayTree
 from Configurables import CheckSelResult
 #--------------------------------------------------------------
 signal = "Bs2JpsieePhi"

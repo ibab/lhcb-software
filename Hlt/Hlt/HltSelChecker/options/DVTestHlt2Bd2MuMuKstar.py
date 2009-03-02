@@ -6,7 +6,7 @@
  #  @date 2007-07-20
 ###
 from Gaudi.Configuration import *
-from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, PhysDesktop, DecayTreeTuple, TupleToolDecay, ReadHltSummary, PrintTree, PrintMCTree, TupleToolTrigger, CheckSelResult, PrintHeader
+from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, PhysDesktop, DecayTreeTuple, TupleToolDecay, ReadHltSummary, PrintDecayTree, PrintMCTree, TupleToolTrigger, CheckSelResult, PrintHeader
 # from Configurables ChargedProtoPAlg, PreLoadParticles, CombineParticles, FilterDesktop
 #--------------------------------------------------------------
 signal = "Bd2MuMukstar"

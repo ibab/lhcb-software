@@ -1,4 +1,4 @@
-### $Id: DVTestHlt2B2HH.py,v 1.10 2009-02-24 14:12:54 pkoppenb Exp $
+### $Id: DVTestHlt2B2HH.py,v 1.11 2009-03-02 16:09:13 pkoppenb Exp $
  #
  #  Test file for HLT B->hh selection
  #
@@ -6,7 +6,7 @@
  #  @date 2007-05-05
 ###
 from Gaudi.Configuration import *
-from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, PhysDesktop, DecayTreeTuple, PrintTree, CheckSelResult
+from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, PhysDesktop, DecayTreeTuple, PrintDecayTree, CheckSelResult
 #--------------------------------------------------------------
 signal = "B2HH"
 #
