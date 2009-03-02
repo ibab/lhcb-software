@@ -1,4 +1,4 @@
-// $Id: Particle2MCWithChi2.cpp,v 1.17 2009-01-26 15:35:47 cattanem Exp $
+// $Id: Particle2MCWithChi2.cpp,v 1.18 2009-03-02 15:26:34 jpalac Exp $
 // Include files 
 #include <math.h>
 
@@ -89,7 +89,7 @@ StatusCode Particle2MCWithChi2::initialize() {
   StatusCode sc = algMgr->getAlgorithm( pname, algo );
   if ( NULL!=algo ){
     SmartIF<IProperty> prop(algo);
-    if ( NULL!=prop ){
+    if ( !prop ){
       DoubleProperty value;
       value.assign(prop->getProperty( "Chi2Cut" ));
       m_chi2SpeedUpCut = value ;
