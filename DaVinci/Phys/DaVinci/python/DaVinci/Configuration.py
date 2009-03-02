@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.51 2009-02-23 17:05:04 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.52 2009-03-02 21:08:30 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -97,11 +97,12 @@ class DaVinci(LHCbConfigurableUser) :
         """
         Initialisation sequence
         """
-        from Configurables import (GaudiSequencer, LbAppInit, PhysConf, AnalysisConf)
+        from Configurables import (GaudiSequencer, DaVinciInit, PhysConf, AnalysisConf)
         init = GaudiSequencer("DaVinciInitSeq")
         log.info("Resetting ApplicationMgr")
         ApplicationMgr().TopAlg = [ init ]  # Note the = here
-        init.Members += [ LbAppInit("DaVinciAppInit") ]
+#        init.Members += [ LbAppInit("DaVinciAppInit") ]
+        init.Members += [ DaVinciInit() ]
         init.IgnoreFilterPassed = True
         # Phys
         inputType = self.getProp( "InputType" ).upper()
@@ -181,7 +182,11 @@ class DaVinci(LHCbConfigurableUser) :
         SequencerTimerTool().OutputLevel = 4
         MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
         # Do not print event number at every event
-        EventSelector().PrintFreq = self.getProp("PrintFreq");
+        printfreq = self.getProp("PrintFreq")
+        if ( printfreq == 0 ):
+            log.warning("Print frequence cannot be 0")
+            printfreq = 100
+        EventSelector().PrintFreq = printfreq
 
 ################################################################################
 # set EvtMax

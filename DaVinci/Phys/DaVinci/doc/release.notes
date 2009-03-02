@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.315 2009-03-02 08:21:16 jpalac Exp $
+! $Id: release.notes,v 1.316 2009-03-02 21:08:30 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,10 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-03-02 - Patrick Koppenburg
+ - Protect agaisnt 0 print frequency
+ - Add DaVinciInit algorithm (needs today's DaVinciTools)
 
 !========================== DaVinci v22r1 2000-03-02 =====================
 
