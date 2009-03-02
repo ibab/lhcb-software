@@ -54,7 +54,6 @@ corrs = GaudiSequencer("Corrs")
 corrs.Members += [ CheckSelResult("CheckOffline"), L0Filter(), AlgorithmCorrelationsAlg("eeK") ]
 CheckSelResult("CheckOffline").Algorithms = [ "DC06SelBu2eeK" ]
 AlgorithmCorrelationsAlg("eeK").Algorithms = [ "DC06SelBu2eeK", "Hlt2SelBu2LLK", "Hlt2SelBu2LLKSignal", "Hlt2SelBu2LLKHighMass", "Hlt2SelBu2LLKJpsi", "Hlt2SelBiasedDiElectron", "Hlt2SelBiasedDiMuon", "Hlt2SelUnbiasedDiMuon", "Hlt2Decision" ]
-CheckSelResult("CheckOffline").OutputLevel = 1 
 ###
  # Tuple
 ###
@@ -68,6 +67,8 @@ DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B+ -> (^J/psi(1S) => ^e+ ^e-) ^K+
 #
 from Configurables import DaVinci
 DaVinci().EvtMax = -1
+DaVinci().PrintFreq = 1
+DaVinci().SkipEvents = 0
 DaVinci().HltType = "Hlt1+Hlt2"                # Both Hlt levels
 DaVinci().Hlt2Requires = 'L0'                  # Ignore Hlt1 in 2
 DaVinci().ReplaceL0BanksWithEmulated = False   # Redo L0
