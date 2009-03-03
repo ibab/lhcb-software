@@ -168,6 +168,9 @@ MEPInjector::MEPInjector(const std::string & name, ISvcLocator * pSvcLocator):Se
 
     declareProperty("Requirements", m_Req);
 
+    declareProperty("TFCMask", m_TFCMask = 0x0000ffff);
+    declareProperty("TapeMask", m_TapeMask = 0xffff0000);
+
     m_InjState = NOT_READY;
 }
 
@@ -681,7 +684,7 @@ void MEPInjector::copyOdinBank(OnlineRunInfo **dest, OnlineRunInfo **src)
             word9tape = (((unsigned int *) (*src))+8); 
             if(m_Debug) 
                 msgLog << MSG::DEBUG << "Word 9  |"<< *word9tfc   << " | " << *word9tape << endmsg;  
-            *word9tfc = ((*word9tfc)&0xfff00000) | ((*word9tape)&0x000fffff);
+            *word9tfc = ((*word9tfc)&m_TFCMask) | ((*word9tape)&m_TapeMask);
 
         }     
         else
