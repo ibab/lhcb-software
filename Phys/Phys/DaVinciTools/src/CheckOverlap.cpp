@@ -1,4 +1,4 @@
-// $Id: CheckOverlap.cpp,v 1.15 2008-07-08 16:41:47 pkoppenb Exp $
+// $Id: CheckOverlap.cpp,v 1.16 2009-03-03 15:19:55 pkoppenb Exp $
 
 // Include files 
 
@@ -167,8 +167,7 @@ StatusCode  CheckOverlap::addOrigins( const LHCb::Particle::ConstVector& parts,
     if ( (*c)->proto() ){
       if (msgLevel(MSG::VERBOSE)) verbose() << "has an origin " << (*c)->proto() << endmsg ;
       protos.push_back((*c)->proto());
-    } else if ( (*c)->endVertex() ){
-      if (msgLevel(MSG::VERBOSE)) verbose() << "has a vertex" << (*c)->endVertex() << endmsg ;
+    } else if ( !((*c)->daughters().empty()) ){
       if (msgLevel(MSG::VERBOSE)) verbose() << "has a daughters " << (*c)->daughters().size() << endmsg ;
       LHCb::Particle::ConstVector dau = (*c)->daughtersVector()  ;
       StatusCode sc = addOrigins(dau, protos);

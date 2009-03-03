@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.413 2009-03-02 21:10:02 pkoppenb Exp $
+! $Id: release.notes,v 1.414 2009-03-03 15:19:55 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-03-03 - Patrick Koppenburg
+ - CheckOverlaps and FindClones : pi0 are not from MC. Look for daughters
+   instead of vertex.
 
 ! 2009-03-02 - Patrick Koppenburg
  - New algorithm DaVinciInit for memory checks

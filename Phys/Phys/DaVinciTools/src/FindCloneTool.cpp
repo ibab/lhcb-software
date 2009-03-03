@@ -1,4 +1,4 @@
-// $Id: FindCloneTool.cpp,v 1.2 2008-08-04 16:31:29 pkoppenb Exp $
+// $Id: FindCloneTool.cpp,v 1.3 2009-03-03 15:19:55 pkoppenb Exp $
 
 // Include files 
 
@@ -369,9 +369,8 @@ StatusCode  FindCloneTool::addOrigins( const LHCb::Particle* part,
     if (msgLevel(MSG::VERBOSE)) verbose() << "has an origin " << part->proto() << endmsg ;
     protos.push_back(part->proto());
   }
-  else if ( part->endVertex() ) //it decayed
+  else if ( !(part->daughters().empty()) )
   {
-    if (msgLevel(MSG::VERBOSE)) verbose() << "has a vertex" << part->endVertex() << endmsg ;
     if (msgLevel(MSG::VERBOSE)) verbose() << "has a daughters " << part->daughters().size() << endmsg ;
 
     LHCb::Particle::ConstVector dau = part->daughtersVector()  ;    
