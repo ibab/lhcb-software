@@ -1,4 +1,4 @@
-// $Id: HltAntiEleConf.cpp,v 1.1 2008-12-13 13:01:58 witekma Exp $
+// $Id: HltAntiEleConf.cpp,v 1.2 2009-03-03 10:02:07 witekma Exp $
 // Include files 
 
 // from Gaudi
@@ -62,6 +62,11 @@ double HltAntiEleConf::function(const Track& ctrack)
 
   // anti confirmation. If T confirmed then return 0. If not return 1.
   if(tracks.size()<1) return 1.; 
+
+  // delete tracks. They will not be used
+  for( std::vector<LHCb::Track*>::iterator itr = tracks.begin(); 
+       tracks.end() != itr; ++itr) delete *itr;
+
   return 0.;
 
 } 

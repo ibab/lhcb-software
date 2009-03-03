@@ -4,6 +4,9 @@
 ! Purpose     : Ecal alley specific algorithms and tools
 !----------------------------------------------------------------------------
 
+! 2009-03-03- Mariusz Witek
+ - fix memory leak in HltAntiEleConf.cpp
+
 ! 2009-03-02- Gerhard Raven
  - fix memory leak in VertexDiElectronMassTool
 
