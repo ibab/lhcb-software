@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.74 2009-01-27 08:30:02 cattanem Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.75 2009-03-03 13:00:36 niko Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -796,13 +796,18 @@ StatusCode MEPRxSvc::run() {
 // IInterface implementation: Query interface
 StatusCode 
 MEPRxSvc::queryInterface(const InterfaceID& riid,void** ppvInterface) {
-  if ( IRunable::interfaceID() )   {
+  if ( IRunable::interfaceID().versionMatch(riid) )   {
     *ppvInterface = (IRunable*)this;
-    addRef();
-    return StatusCode::SUCCESS; 
   }
-  // Interface is not directly availible: try a base class
-  return Service::queryInterface(riid, ppvInterface);
+  else if ( IIncidentListener::interfaceID().versionMatch(riid) )   {
+    *ppvInterface = (IIncidentListener*)this;
+  }
+  else {
+    // Interface is not directly availible: try a base class
+    return Service::queryInterface(riid, ppvInterface);
+  }
+  addRef();
+  return StatusCode::SUCCESS; 
 }
 
 StatusCode MEPRxSvc::error(const std::string& msg) {
