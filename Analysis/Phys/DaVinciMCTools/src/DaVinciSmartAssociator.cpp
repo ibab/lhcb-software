@@ -83,18 +83,16 @@ DaVinciSmartAssociator::associate(const LHCb::Particle* particleToBeAssociated,
 
 }
 //=============================================================================
-double DaVinciSmartAssociator::weight(const LHCb::Particle* particle, 
-                                      const LHCb::MCParticle* mcParticle) const
+bool DaVinciSmartAssociator::isMatched(const LHCb::Particle* particle, 
+                                       const LHCb::MCParticle* mcParticle) const
 {
   Particle2MCParticle::ToVector assocVector = associate(particle);
 
-  double w(0.);
-
   for (Particle2MCParticle::ToVector::const_iterator it = assocVector.begin();
        it != assocVector.end(); ++it) 
-    if (it->to() == mcParticle) w = it->weight();
+    if (it->to() == mcParticle) return true;
 
-  return w;
+  return false;
 }
 //=============================================================================
 // initialize

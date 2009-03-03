@@ -57,9 +57,9 @@ public:
   associate(const LHCb::Particle* particle,
             const std::string& mcParticleLocation) const ;
 
-  virtual double 
-  weight(const LHCb::Particle* particle, 
-         const LHCb::MCParticle* mcParticle) const ;
+  virtual bool  
+  isMatched(const LHCb::Particle* particle, 
+            const LHCb::MCParticle* mcParticle) const ;
 
 private:
 
