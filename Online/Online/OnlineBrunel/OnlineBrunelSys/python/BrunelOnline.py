@@ -3,7 +3,7 @@
 
      @author M.Frank
 """
-__version__ = "$Id: BrunelOnline.py,v 1.8 2009-03-03 13:31:30 frankb Exp $"
+__version__ = "$Id: BrunelOnline.py,v 1.9 2009-03-03 13:45:44 frankb Exp $"
 __author__  = "Markus Frank <Markus.Frank@cern.ch>"
 
 import os
@@ -20,7 +20,7 @@ def patchBrunel(true_online_version):
         @author M.Frank
   """
   import Brunel.Configuration
-
+  from Configurables import HistogramPersistencySvc
   brunel = Brunel.Configuration.Brunel()
   # Brunel.Configuration.Brunel.defineMonitors = dummy
   Brunel.Configuration.Brunel.configureOutput = dummy
