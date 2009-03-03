@@ -4,7 +4,7 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecRing.xml,v 1.16 2008-06-14 10:39:46 jonrob Exp $
+  * $Id: RichRecRing.xml,v 1.17 2009-03-03 10:57:08 jonrob Exp $
   *****************************************************************************
   * XML-description of RichRecRing class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -33,6 +33,7 @@
 
         <location name="SegmentHypoRings" place="Rec/Rich/OfflineEvent/SegmentHypoRings"/>
         <location name="MarkovRings"      place="Rec/Rich/Markov/Rings"/>
+        <location name="TemplateRings"    place="Rec/Rich/Template/Rings"/>
 
 	<typedef 
 		desc   = "type for internal storage for floating point data" 
@@ -98,12 +99,14 @@
           <enumval name="UndefinedType" value="0"  desc="The ring type is undefined"/>
           <enumval name="RayTracedCK"   value="1"  desc="The ring was formed by ray tracing photons at a given Cherenkov angle around the associated RichRecSegment"/>
           <enumval name="TracklessRing" value="2"  desc="The ring was produced by a trackless ring finding algorithm"/>
+          <enumval name="TemplateRing"  value="3"  desc="The ring uses RichRecSegment projection and template rings from saturated tracks"/>
         </enum>
 
         <enum name="RingAlgorithm" desc="The algorithm used to create the ring" access="PUBLIC" >
           <enumval name="UndefinedAlg"  value="0"  desc="The ring algorithm is undefined"/>
           <enumval name="Markov"        value="1"  desc="Markov Chain Monte Carlo ring finder"/>
           <enumval name="Hough"         value="2"  desc="Hough Transform ring finder"/>
+          <enumval name="Template"      value="3"  desc="RingFinder using Fourier Correlations from Template Rings"/>
         </enum>
 
         <attribute 
