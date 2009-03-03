@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.20 2009-03-03 10:55:43 graven Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.21 2009-03-03 11:04:45 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -166,7 +166,7 @@ void HltGlobalMonitor::monitorODIN(const LHCb::ODIN* odin,
 
 void HltGlobalMonitor::monitorL0DU(const LHCb::ODIN*,
                                    const LHCb::L0DUReport* l0du,
-                                   const LHCb::HltDecReports* hlt) {
+                                   const LHCb::HltDecReports* ) {
   if (l0du == 0) return;
 
   counter("L0Accept") += l0du->decision();
@@ -192,7 +192,7 @@ void HltGlobalMonitor::monitorL0DU(const LHCb::ODIN*,
       TAxis* axiso = ho->GetXaxis() ;
       if( 0 != axiso) 
       {
-        for ( int ibin = 0; ibin < repsL.size() ; ibin++ ) {
+        for ( unsigned ibin = 0; ibin < repsL.size() ; ibin++ ) {
           debug() << "ibin = " << ibin << " repsL[ibin].first = " << repsL[ibin].first <<
             " repsL[ibin].second = " << repsL[ibin].second << endreq;
           const char * test = repsL[ibin].first.c_str();
@@ -398,7 +398,7 @@ void HltGlobalMonitor::monitorHLT(const LHCb::ODIN*,
         for ( int iabin = 1; iabin <= alleybins ; ++iabin ) {        
           axisa->SetBinLabel(iabin,label[iabin-1]);
         }
-        for ( int ibin = 1; ibin <= reps.size() ; ++ibin ) {
+        for ( unsigned ibin = 1; ibin <= reps.size() ; ++ibin ) {
           if(ibin < reps.size()){
             // cut the last 8 (=decision) letters off
            reps[ibin-1].first.resize(reps[ibin-1].first.size()-8);
