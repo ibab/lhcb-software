@@ -15,10 +15,10 @@ apply_pattern python_alias script=CreateBatAliases
 
 
 # give public (rl) access to the current directory
-alias mkpublic "find . -type d -print -exec fs setacl {} system:anyuser rl \;"
+alias mkpublic "" CERN "find . -type d -print -exec fs setacl {} system:anyuser rl \;"
 
 # remove public (l) access to the current directory
-alias mkprivate "find . -type d -print -exec fs setacl {} system:anyuser l \;"
+alias mkprivate "" CERN "find . -type d -print -exec fs setacl {} system:anyuser l \;"
 
 make_fragment create_bat_aliases -header=create_bat_aliases_header -dependencies
 
