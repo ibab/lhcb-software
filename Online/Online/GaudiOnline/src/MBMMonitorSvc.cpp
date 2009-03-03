@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMMonitorSvc.cpp,v 1.7 2007-06-01 17:28:55 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMMonitorSvc.cpp,v 1.8 2009-03-03 12:04:59 frankb Exp $
 //  ====================================================================
 //  MBMMonitorSvc.cpp
 //  --------------------------------------------------------------------
@@ -263,7 +263,7 @@ LHCb::MBMMonitorSvc::~MBMMonitorSvc()    {
 StatusCode LHCb::MBMMonitorSvc::queryInterface(const InterfaceID& riid,
                                             void** ppvInterface) 
 {
-  if ( IID_IMBMMonitorSvc.versionMatch(riid) )   {
+  if ( IMBMMonitorSvc::interfaceID().versionMatch(riid) )   {
     *ppvInterface = (IMBMMonitorSvc*)this;
     addRef();
     return SUCCESS;

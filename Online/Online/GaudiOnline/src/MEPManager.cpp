@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.22 2009-02-12 13:00:06 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.23 2009-03-03 12:04:59 frankb Exp $
 //  ====================================================================
 //  MEPManager.cpp
 //  --------------------------------------------------------------------
@@ -51,7 +51,7 @@ StatusCode MEPManager::error(const string& msg)   const {
 StatusCode MEPManager::queryInterface(const InterfaceID& riid,
                                             void** ppvInterface) 
 {
-  if ( IID_IMEPManager.versionMatch(riid) )   {
+  if ( IMEPManager::interfaceID().versionMatch(riid) )   {
     *ppvInterface = (IMEPManager*)this;
     addRef();
     return SUCCESS;

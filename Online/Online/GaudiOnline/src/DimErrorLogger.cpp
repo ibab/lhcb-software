@@ -1,4 +1,4 @@
-// $Id: DimErrorLogger.cpp,v 1.15 2008-10-21 16:15:15 frankb Exp $
+// $Id: DimErrorLogger.cpp,v 1.16 2009-03-03 12:04:59 frankb Exp $
 
 #if !(defined(i386) || defined(_WIN32))
 #define GAUDIKERNEL_KERNEL_H    // disable include
@@ -117,7 +117,7 @@ LHCb::DimErrorLogger::~DimErrorLogger()
 
 // IInterface implementation : queryInterface
 StatusCode LHCb::DimErrorLogger::queryInterface(const InterfaceID& riid, void** ppIf)   {
-  if ( IID_IErrorLogger == riid )
+  if ( IErrorLogger::interfaceID().versionMatch(riid) )
     *ppIf = (IErrorLogger*)this;
   else
     return OnlineRunable::queryInterface(riid, ppIf);

@@ -173,7 +173,7 @@ MEPInjector::MEPInjector(const std::string & name, ISvcLocator * pSvcLocator):Se
 
 // IInterface implementation : queryInterface
 StatusCode MEPInjector::queryInterface(const InterfaceID& riid, void** ppIf)   {
-  if ( riid == IID_IRunable )  {
+  if ( IRunable::interfaceID().versionMatch(riid) )  {
     *ppIf = (IRunable*)this;
     addRef();
     return StatusCode::SUCCESS;

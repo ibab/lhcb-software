@@ -1,4 +1,4 @@
-// $Id: DimMessageSvc.cpp,v 1.6 2008-10-21 16:15:16 frankb Exp $
+// $Id: DimMessageSvc.cpp,v 1.7 2009-03-03 12:04:59 frankb Exp $
 #if !defined(i386) && !defined(_WIN32)
 #define GAUDIKERNEL_KERNEL_H    // disable include
 #endif
@@ -54,7 +54,7 @@ LHCb::DimMessageSvc::~DimMessageSvc() {
 
 /// IInterface implementation : queryInterface
 StatusCode LHCb::DimMessageSvc::queryInterface(const InterfaceID& riid, void** ppIf)   {
-  if ( IID_IErrorLogger == riid )  {
+  if ( IErrorLogger::interfaceID().versionMatch(riid) )  {
     *ppIf = (IErrorLogger*)this;
     addRef();
     return StatusCode::SUCCESS;

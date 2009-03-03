@@ -46,7 +46,7 @@ LHCb::FmcMessageSvc::~FmcMessageSvc()
 StatusCode LHCb::FmcMessageSvc::queryInterface(const InterfaceID& riid,
                                                void **ppIf)
 {
-  if(IID_IErrorLogger==riid)
+  if( IErrorLogger::interfaceID().versionMatch(riid) )
   {
     *ppIf=(IErrorLogger*)this;
     addRef();

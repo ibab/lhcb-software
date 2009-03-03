@@ -73,7 +73,7 @@ SLICEReaderSvc::SLICEReaderSvc(const std::string &name, ISvcLocator *pSvcLocator
 
 // IInterface implementation : queryInterface
 StatusCode SLICEReaderSvc::queryInterface(const InterfaceID& riid, void** ppIf)   {
-  if ( riid == IID_IRunable )  {
+  if ( IRunable::interfaceID().versionMatch(riid) )  {
     *ppIf = (IRunable*)this;
     addRef();
     return StatusCode::SUCCESS;
