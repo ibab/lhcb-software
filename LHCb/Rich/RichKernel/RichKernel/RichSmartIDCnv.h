@@ -5,7 +5,7 @@
  *  Header file for RichSmartID conversion utilities
  *
  *  CVS Log :-
- *  $Id: RichSmartIDCnv.h,v 1.6 2008-09-26 12:56:55 rogers Exp $
+ *  $Id: RichSmartIDCnv.h,v 1.7 2009-03-03 12:01:00 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   05/02/2008
@@ -217,7 +217,7 @@ namespace Rich
       {
         Offset = (smartID().hpdCol()%2) * 0.5;
       }
-      
+
       return Offset;
     }
 
@@ -269,6 +269,162 @@ namespace Rich
     PixelMode m_mode;       ///< The data mode (Forced ALICE or LHCb, or automatic based on the data)
 
   };
+
+  // Returns the number of pixel rows per HPD (depending on data mode)
+  inline unsigned int SmartIDGlobalOrdering::_nPixelRowsPerHPD() const
+  {
+    return ( pixelMode() == ALICEMode           ? Rich::DAQ::MaxDataSizeALICE :
+             pixelMode() == LHCbMode            ? Rich::DAQ::MaxDataSize      :
+             smartID().pixelSubRowDataIsValid() ? Rich::DAQ::MaxDataSizeALICE :
+             Rich::DAQ::MaxDataSize );
+  }
+
+  // Returns the HPD column offset number
+  inline unsigned int SmartIDGlobalOrdering::_panelHPDColOffset() const
+  {
+    return ( Rich::Rich2 == smartID().rich() ?
+             ( Rich::left == smartID().panel() ? _nHPDCols() : 0 ) :
+             ( Rich::top  == smartID().panel() ? _nHPDCols() : 0 ) );
+  }
+
+  // Returns the 'global' HPD column number
+  inline int SmartIDGlobalOrdering::_hpdCol() const
+  {
+    return ( ( Rich::Rich1 == smartID().rich() && Rich::top == smartID().panel() ) ?
+             ( _panelHPDColOffset() + _nHPDCols() - 1 - smartID().hpdCol() ) :
+             ( _panelHPDColOffset() + smartID().hpdCol() ) );
+  }
+
+  /// Returns the maximum 'local' pixel x-coordinate
+  inline int SmartIDGlobalOrdering::maxLocalPixelX() const
+  {
+    return ( Rich::Rich2 == smartID().rich() ?
+             _nPixelColsPerHPD() :
+             _nPixelRowsPerHPD() );
+  }
+
+  /// Returns the maximum 'local' pixel y-coordinate
+  inline int SmartIDGlobalOrdering::maxLocalPixelY() const
+  {
+    return ( Rich::Rich1 == smartID().rich() ?
+             _nPixelColsPerHPD() :
+             _nPixelRowsPerHPD() );
+  }
+
+  // Returns the maximum 'global' pixel x-coordinate
+  inline int SmartIDGlobalOrdering::maxGlobalPixelX() const
+  {
+    return ( Rich::Rich2 == smartID().rich() ?
+             _nPixelColsPerHPD() * _nHPDCols() * 2 :
+             (int)( _nPixelRowsPerHPD() * ( _nHPDsPerCol() + 0.5 ) ) );
+  }
+
+  // Returns the maximum 'global' pixel column number with a given HPD size.
+  inline int SmartIDGlobalOrdering::maxGlobalPixelX(int sizeX) const
+  {
+    return ( Rich::Rich2 == smartID().rich() ?
+             sizeX * _nHPDCols() * 2 :
+             (int)( sizeX * ( _nHPDsPerCol() + 0.5 ) ) );
+  }
+
+  // Returns the maximum 'global' pixel y-coordinate
+  inline int SmartIDGlobalOrdering::maxGlobalPixelY() const
+  {
+    return ( Rich::Rich1 == smartID().rich() ?
+             _nPixelColsPerHPD() * _nHPDCols() * 2 :
+             (int)( _nPixelRowsPerHPD() * ( _nHPDsPerCol() + 0.5 ) ) );
+  }
+
+  // Returns the maximum 'global' pixel y-coordinate with a given HPD size.
+  inline int SmartIDGlobalOrdering::maxGlobalPixelY(int sizeY) const
+  {
+    return ( Rich::Rich1 == smartID().rich() ?
+             sizeY * _nHPDCols() * 2 :
+             (int)( sizeY * ( _nHPDsPerCol() + 0.5 ) ) );
+  }
+
+  // Returns the 'correct' HPD pixel row number (ALICE or LHCb mode)
+  inline int SmartIDGlobalOrdering::_pixelRowNum() const
+  {
+    return ( smartID().pixelSubRowDataIsValid() ?
+             (Rich::DAQ::NumAlicePixelsPerLHCbPixel*smartID().pixelRow()) + smartID().pixelSubRow() :
+             smartID().pixelRow() );
+  }
+
+  // Returns a 'global' pixel column number
+  inline int SmartIDGlobalOrdering::globalPixelX() const
+  {
+    return ( Rich::Rich1 == smartID().rich() ?
+             // Rich1
+             ( _pixelRowNum() +
+               (_numInCol()*_nPixelRowsPerHPD()) +
+               (int)(globalHpdNumInColOffset()*_nPixelRowsPerHPD()) ) :
+             // Rich2
+             ( smartID().pixelCol() + (_hpdCol()*_nPixelColsPerHPD()) )
+             );
+  }
+
+  // Returns a 'global' pixel row number
+  inline int SmartIDGlobalOrdering::globalPixelY() const
+  {
+    return ( Rich::Rich1 == smartID().rich() ?
+             // RICH1
+             ( smartID().pixelCol() +
+               (_hpdCol()*_nPixelColsPerHPD()) ) :
+             // RICH2
+             ( _pixelRowNum() +
+               (_numInCol()*_nPixelRowsPerHPD()) +
+               (int)(globalHpdNumInColOffset()*_nPixelRowsPerHPD()) )
+             );
+  }
+
+  // Returns a 'global' pixel X coordinate number from a given local coordinate and size of X HPD direction.
+  inline int SmartIDGlobalOrdering::globalPixelX(int localX, int sizeX) const
+  {
+    return ( Rich::Rich1 == smartID().rich() ?
+             // RICH1
+             ( localX +
+               (_numInCol()*sizeX) +
+               (int)(globalHpdNumInColOffset()*sizeX) ) :
+             // RICH2
+             ( localX + (_hpdCol()*sizeX) )
+             );
+  }
+
+  // Returns a 'global' pixel y coordinate from a given local coordinate and size of the y HPD direction.
+  inline int SmartIDGlobalOrdering::globalPixelY(int localY, int sizeY) const
+  {
+    return ( Rich::Rich1 == smartID().rich() ?
+             // RICH1
+             ( localY + (_hpdCol()*sizeY) ) :
+             // RICH1
+             ( localY +
+               (_numInCol()*sizeY) +
+               (int)(globalHpdNumInColOffset()*sizeY) )
+             );
+  }
+
+  // Returns a 'local' pixel column number
+  inline int SmartIDGlobalOrdering::localPixelX() const
+  {
+    return ( Rich::Rich1 == smartID().rich() ?
+             // RICH1
+             _pixelRowNum() :
+             // RICH2
+             smartID().pixelCol()
+             );
+  }
+
+  // Returns a 'local' pixel row number
+  inline int SmartIDGlobalOrdering::localPixelY() const
+  {
+    return ( Rich::Rich1 == smartID().rich() ?
+             // RICH1
+             smartID().pixelCol() :
+             // RICH2
+             _pixelRowNum()
+             );
+  }
 
 }
 
