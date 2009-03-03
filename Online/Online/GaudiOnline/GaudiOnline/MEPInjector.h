@@ -80,6 +80,8 @@ namespace LHCb {
 
     std::string m_ProcName; /* The RTL process name */
 
+    unsigned int m_TFCMask, m_TapeMask;
+
     std::string m_EventBufferFlags;             /* The option flags to make the buffer managers */
     std::map<std::string, BMID> m_EventBuffers; /* map of buffer manager identifiers, the index is their name, read from the flags */
     std::map<std::string, int> m_ProbEvts;    /* The probability to get the event from the buffer */
