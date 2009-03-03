@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.22 2009-03-03 12:09:50 graven Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.23 2009-03-03 14:26:47 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -10,6 +10,7 @@
 // BOOST
 // ============================================================================
 #include "boost/regex.hpp"
+#include "boost/assign/list_of.hpp"
 // ============================================================================
 // AIDA
 // ============================================================================
@@ -50,6 +51,23 @@ using namespace LHCb;
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( HltGlobalMonitor );
 
+// utilities
+
+namespace {
+    bool setBinLabels( AIDA::IHistogram1D* hist, const std::vector<std::pair<unsigned,std::string> >& labels ) {
+        if (hist==0) return false;
+        TH1D *h1d = Gaudi::Utils::Aida2ROOT::aida2root( hist );  
+        if (h1d==0) return false;
+        TAxis* axis = h1d->GetXaxis() ;
+        if (axis==0) return false;
+        for (std::vector<std::pair<unsigned,std::string> >::const_iterator i = labels.begin();i!=labels.end();++i ) {
+            //TODO: check bin exists...
+            axis -> SetBinLabel(i->first  ,i->second.c_str() );
+        }
+        return true;
+    }
+};
+
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -79,7 +97,18 @@ StatusCode HltGlobalMonitor::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   m_L0Input         = book1D("L0 channel",-0.5,16.5,17);
-  m_odin            = book1D("ODIN type",  "ODIN Type ",0., 4., 4);
+  m_odin            = book1D("ODIN type",  "ODIN Type ",-0.5, 7.5, 8);
+
+  setBinLabels( m_odin, boost::assign::list_of< std::pair<unsigned,std::string> >
+                (ODIN::Reserve,           "Reserve")
+                (ODIN::PhysicsTrigger,    "Physics")
+                (ODIN::AuxilliaryTrigger, "Auxilliary")
+                (ODIN::RandomTrigger,     "Random")
+                (ODIN::PeriodicTrigger,   "Periodic")
+                (ODIN::NonZSupTrigger,    "NonZSup")
+                (ODIN::TimingTrigger,     "Timing")
+                (ODIN::CalibrationTrigger,"Calibration") );
+  
   m_hlt1alley       = book1D("Hlt1 Alleys", "Hlt1 Alleys", -0.5, 15.5 , 16 );
   m_hltAcc          = book1D("Hlt1 lines Accept", "Hlt1 Lines Accept",
                              -0.5, m_Hlt1Lines.size()+0.5,m_Hlt1Lines.size()+1);
@@ -142,22 +171,6 @@ void HltGlobalMonitor::monitorODIN(const LHCb::ODIN* odin,
   if ( hlt == 0 ) return;
 
 
-  //labels
-  if ( 0 != m_odin )
-  {
-    TH1D *ho = Gaudi::Utils::Aida2ROOT::aida2root( m_odin );  
-    if ( 0 != ho) {
-      TAxis* axiso = ho->GetXaxis() ;
-      if( 0 != axiso){
-        if(odin->triggerType()==ODIN::RandomTrigger){
-          axiso-> SetBinLabel (odin ->triggerType()+1, "Random");
-        }
-        if(odin->triggerType()!=ODIN::RandomTrigger){
-          axiso-> SetBinLabel (odin ->triggerType()+1, "NotRandom");
-        }
-      }
-    }
-  }
 }
 
 
@@ -181,6 +194,7 @@ void HltGlobalMonitor::monitorL0DU(const LHCb::ODIN*,
     fill( m_L0Input  , i->second->id(), acc );
   }
   
+  //TODO: only do this once...
   //labels  
   if ( 0 != m_L0Input )
   {
@@ -192,8 +206,7 @@ void HltGlobalMonitor::monitorL0DU(const LHCb::ODIN*,
         for ( unsigned ibin = 0; ibin < repsL.size() ; ++ibin ) {
           debug() << "ibin = " << ibin << " repsL[ibin].first = " << repsL[ibin].first <<
             " repsL[ibin].second = " << repsL[ibin].second << endreq;
-          const char * test = repsL[ibin].first.c_str();
-          axiso-> SetBinLabel ((repsL[ibin].second)+1 , test );
+          axiso-> SetBinLabel ((repsL[ibin].second)+1 , repsL[ibin].first.c_str() );
         }
       } 
     } 
