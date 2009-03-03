@@ -329,6 +329,7 @@ void StreamControlPanel_setupAllocWidgets()  {
 //=============================================================================
 void StreamControlPanel_runInfoDP(string stream, string partition, string& info, int& res) {
   string dp = strtoupper(stream)+":"+m_runInfoDP.text;
+  res = 0;
   if ( !dpExists(dp) ) {
     res = -1;
     StreamControl_trace("StreamControlPanel_initAllocData-1> dpExists(dp):"+res+" Dp="+dp);
@@ -495,9 +496,10 @@ int StreamControlPanel_AllocSave(string stream, string partition)  {
       dynAppend(types,items[1]);
       if ( isMonitoring ) dynAppend(strm,items[3]);
     }
-    int res = -1;
+    int res = 0;
     StreamControlPanel_runInfoDP(stream,partition,info,res);
     if ( isStorage && 0 == res )  {
+      StreamControl_trace("Saving Storage information....");
       res = dpSet(info+".Storage.recvInfrastructure", rcvInfra,
 		  info+".Storage.streamInfrastructure", strmInfra,
 		  info+".Storage.streamMultiplicity", mult,
@@ -506,6 +508,7 @@ int StreamControlPanel_AllocSave(string stream, string partition)  {
 		  info+".Storage.strmStrategy", strmStrategy);
     }
     else if ( isMonitoring && 0 == res )  {
+      StreamControl_trace("Saving Monitoring information....");
       res = dpSet(info+".MonFarm.relayInfrastructure", rcvInfra,
 		  info+".MonFarm.monInfrastructure", strmInfra,
 		  info+".MonFarm.monMultiplicity", mult,
@@ -513,6 +516,10 @@ int StreamControlPanel_AllocSave(string stream, string partition)  {
 		  info+".MonFarm.monStreams", strm,
 		  info+".MonFarm.recvStrategy", recvStrategy,
 		  info+".MonFarm.strmStrategy", strmStrategy);
+    }
+    else  {
+      info = m_runInfoDP.text;
+      StreamControl_trace("NOT Saving ANY information.... runIfnoDP:"+info+" Stream:"+stream+" partition:"+partition+" info:"+info+ " res:"+res);
     }
     ctrlUtils_checkErrors(res);
     StreamControlPanel_initAllocData(stream,partition);
