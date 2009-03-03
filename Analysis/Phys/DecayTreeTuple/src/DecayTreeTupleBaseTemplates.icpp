@@ -50,6 +50,7 @@ StatusCode fillTuple( Tuples::Tuple& tuple
 
   return test;
 }
+//=============================================================================
 /// get offset in tree
 template<class PARTICLE> 
 int getOffset( const PARTICLE* p, const std::vector<const PARTICLE*>& v, bool secure=true ){
@@ -118,17 +119,18 @@ bool sizeCheckOrInit( const std::vector<const PARTICLE*> & row ){
   std::vector<TupleToolDecay*>::iterator mit;
   std::vector<const PARTICLE*> buffer;
   
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Decays size " << m_decays.size() << endmsg ;
   // is there any special name for this MCParticle ?:
   for( mit=m_decays.begin(); m_decays.end()!=mit; ++mit ){
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Looping over Decays " << *mit << endmsg ;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Looping over Decays" << *mit << endmsg ;
     if( 0==*mit ) continue;
     buffer.clear();
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Cleared buffer " << *mit << endmsg ;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Cleared buffer" << *mit << endmsg ;
     matchSubDecays( row, buffer, *mit );
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Matched sub decays " << *mit << endmsg ;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Matched sub decays" << *mit << endmsg ;
   }
   
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Going to re-recreate daughter-mother relationship " << *mit << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Going to re-recreate daughter-mother relationship" << endmsg ;
 
   // re-creating mother->daughter relationship,
   // allows better printout later on
@@ -138,6 +140,7 @@ bool sizeCheckOrInit( const std::vector<const PARTICLE*> & row ){
     std::vector<const PARTICLE*> dau = daughtersVector(row[i]); // row[i]->daughtersVector()
     typename std::vector<const PARTICLE*>::const_iterator dauit, f ;
     for( dauit=dau.begin(); dau.end()!=dauit; ++dauit ){
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Looping over daughter " << (*dauit)->particleID().pid() << endmsg ;
       // am I in the search decay ?
       f = std::find( row.begin(), row.end(), *dauit );
       if( f==row.end() ) continue;
