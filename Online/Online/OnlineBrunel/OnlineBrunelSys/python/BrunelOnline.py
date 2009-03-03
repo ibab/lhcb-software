@@ -3,7 +3,7 @@
 
      @author M.Frank
 """
-__version__ = "$Id: BrunelOnline.py,v 1.7 2009-02-27 14:43:25 frankb Exp $"
+__version__ = "$Id: BrunelOnline.py,v 1.8 2009-03-03 13:31:30 frankb Exp $"
 __author__  = "Markus Frank <Markus.Frank@cern.ch>"
 
 import os
@@ -22,23 +22,24 @@ def patchBrunel(true_online_version):
   import Brunel.Configuration
 
   brunel = Brunel.Configuration.Brunel()
-  Brunel.Configuration.Brunel.defineMonitors = dummy
+  # Brunel.Configuration.Brunel.defineMonitors = dummy
   Brunel.Configuration.Brunel.configureOutput = dummy
   #if debug: print dir(brunel)
   #brunel.DDDBtag   = 'default'
   #brunel.CondDBtag = 'default'
   brunel.DDDBtag   = "head-20090112"
   brunel.CondDBtag = "sim-20090112"
-
+  brunel.WriteFSR  = False # This crashes Jaap's stuff
   brunel.Simulation = True
   if true_online_version:
-    #brunel.__repr__       = dummy
+    #brunel.__repr__      = dummy
     brunel.NoWarnings     = True
     brunel.PrintFreq      = -1
     brunel.Histograms     = 'None'
   Brunel.Configuration.ProcessPhase("Output").DetectorList += [ 'DST' ]
   # Set the property, used to build other file names
   brunel.setProp( "DatasetName", 'GaudiSerialize' )
+  HistogramPersistencySvc().OutputFile = ""
 
 def setupOnline():
   """
@@ -64,7 +65,7 @@ def setupOnline():
 
   DstConf().Writer       = 'DstWriter'
   DstConf().DstType      = 'DST'
-  DstConf().EnablePack   = False
+  DstConf().PackType     = 'NONE'
   DstConf().Simulation   = False
   Serialisation().Writer = 'Writer'
   
