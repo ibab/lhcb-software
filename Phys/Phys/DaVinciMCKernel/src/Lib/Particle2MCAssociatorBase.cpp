@@ -1,4 +1,4 @@
-// $Id: Particle2MCAssociatorBase.cpp,v 1.3 2009-02-02 13:04:27 jpalac Exp $
+// $Id: Particle2MCAssociatorBase.cpp,v 1.4 2009-03-03 16:06:49 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -44,7 +44,7 @@ Particle2MCAssociatorBase::associate(const LHCb::Particle* particle,
   Particle2MCParticle::LightTable::Range r = table.i_relations(particle);
   for (Particle2MCParticle::LightTable::Range::const_iterator i = r.begin();
        i!=r.end(); ++i) {
-    MCAssociation myMCAssoc(i->to(), i->weight());
+    MCAssociation myMCAssoc(i->to(), 1.);
     assocVector.push_back(myMCAssoc);
   }
   return assocVector;
@@ -119,11 +119,11 @@ Particle2MCAssociatorBase::associations(const LHCb::Particle::Container& particl
   return i_associations(particles.begin(), particles.end(), mcParticles.begin(), mcParticles.end());          
 }
 //=============================================================================
-double
-Particle2MCAssociatorBase::weight(const LHCb::Particle* /*particle */, 
-                                  const LHCb::MCParticle* /* mcParticle */) const
+bool
+Particle2MCAssociatorBase::isMatched(const LHCb::Particle* /*particle */, 
+                                     const LHCb::MCParticle* /* mcParticle */) const
 {
-  return 0.;
+  return false;
 }
 //=============================================================================
 // initialize
