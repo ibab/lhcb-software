@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.13 2009-02-19 18:15:19 depaula Exp $
+// $Id: HltFunctions.h,v 1.14 2009-03-03 17:37:06 aperezca Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -195,6 +195,30 @@ namespace Hlt {
     Hlt::VertexBiFunction* clone() const {return new VertexMinIP();}
   };
 
+  class VertexTrack1IP: public Hlt::VertexBiFunction {
+  public:
+    explicit VertexTrack1IP(){}
+    double operator() (const LHCb::RecVertex& v,
+                       const LHCb::RecVertex& pv) const{
+      const LHCb::Track& track1 = *(v.tracks()[0]);
+      double ip1 = HltUtils::impactParameter(pv,track1);
+      return ip1;
+    }
+    Hlt::VertexBiFunction* clone() const {return new VertexTrack1IP();}
+  };
+
+  class VertexTrack2IP: public Hlt::VertexBiFunction {
+  public:
+    explicit VertexTrack2IP(){}
+    double operator() (const LHCb::RecVertex& v,
+                       const LHCb::RecVertex& pv) const{
+      const LHCb::Track& track2 = *(v.tracks()[1]);
+      double ip2 = HltUtils::impactParameter(pv,track2);
+      return ip2;
+    }
+    Hlt::VertexBiFunction* clone() const {return new VertexTrack2IP();}
+  };
+  
   class VertexMaxChi2OverNdf: public Hlt::VertexFunction {
   public:
     explicit VertexMaxChi2OverNdf(){}
@@ -398,6 +422,28 @@ namespace Hlt {
     {return new VertexSumPT();}
   };
   
+  class VertexTrack1PT : public Hlt::VertexFunction {
+  public:
+    explicit VertexTrack1PT() {}
+    double operator() (const LHCb::RecVertex& vertex) const {
+      const LHCb::Track& track1 = *(vertex.tracks()[0]);
+      return track1.pt();
+    }
+    zen::function<LHCb::RecVertex>* clone() const
+    {return new VertexTrack1PT();}
+  };
+
+  class VertexTrack2PT : public Hlt::VertexFunction {
+  public:
+    explicit VertexTrack2PT() {}
+    double operator() (const LHCb::RecVertex& vertex) const {
+      const LHCb::Track& track2 = *(vertex.tracks()[1]);
+      return track2.pt();
+    }
+    zen::function<LHCb::RecVertex>* clone() const
+    {return new VertexTrack2PT();}
+  };
+
   ///* Return the number of tracks of a vertex
   class VertexNumberOfASideTracks : public Hlt::VertexFunction {
   public:

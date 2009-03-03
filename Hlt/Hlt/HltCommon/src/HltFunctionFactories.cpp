@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactories.cpp,v 1.25 2009-02-20 11:47:54 graven Exp $
+// $Id: HltFunctionFactories.cpp,v 1.26 2009-03-03 17:37:06 aperezca Exp $
 // Include files 
 
 // from Gaudi
@@ -106,8 +106,14 @@ StatusCode HltVertexFunctionFactory::initialize() {
   declare<Hlt::DZ,zen::abs_min,Hlt::VertexSelection>("FitVertexDz");
   declare<Hlt::FC,zen::abs_min,Hlt::VertexSelection>("VertexPointing");
   declare<Hlt::FC,zen::abs_min,Hlt::VertexSelection>("FitVertexPointing");
+  
   declare<Hlt::VertexMinIP,zen::abs_min,Hlt::VertexSelection>("VertexMinIP");
   declare<Hlt::VertexMinIP,zen::abs_min,Hlt::VertexSelection>("FitVertexMinIP");
+  declare<Hlt::VertexTrack1IP,zen::abs_min,Hlt::VertexSelection>("VertexTrack1IP");
+  declare<Hlt::VertexTrack1IP,zen::abs_min,Hlt::VertexSelection>("FitVertexTrack1IP");
+  declare<Hlt::VertexTrack2IP,zen::abs_min,Hlt::VertexSelection>("VertexTrack2IP");
+  declare<Hlt::VertexTrack2IP,zen::abs_min,Hlt::VertexSelection>("FitVertexTrack2IP");
+
   declare<Hlt::VertexMatchIDsFraction,zen::abs_max,Hlt::VertexSelection>("VertexMatchIDsFraction");
   
   declare<Hlt::VertexAngle>("VertexAngle");
@@ -121,6 +127,11 @@ StatusCode HltVertexFunctionFactory::initialize() {
   declare<Hlt::VertexMaxPT>("VertexMaxPT");
   declare<Hlt::VertexMinPT>("FitVertexMinPT");
   declare<Hlt::VertexMaxPT>("FitVertexMaxPT");
+  declare<Hlt::VertexTrack1PT>("VertexTrack1PT");
+  declare<Hlt::VertexTrack1PT>("FitVertexTrack1PT");
+  declare<Hlt::VertexTrack2PT>("VertexTrack2PT");
+  declare<Hlt::VertexTrack2PT>("FitVertexTrack2PT");
+
   declare<Hlt::VertexMaxChi2OverNdf>("FitVertexMaxChi2OverNdf");
   declare<Hlt::VertexMaxMuChi2>("FitVertexMaxMuChi2");
 
