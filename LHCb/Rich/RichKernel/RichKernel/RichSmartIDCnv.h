@@ -5,7 +5,7 @@
  *  Header file for RichSmartID conversion utilities
  *
  *  CVS Log :-
- *  $Id: RichSmartIDCnv.h,v 1.7 2009-03-03 12:01:00 jonrob Exp $
+ *  $Id: RichSmartIDCnv.h,v 1.8 2009-03-03 12:03:19 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   05/02/2008
@@ -397,7 +397,7 @@ namespace Rich
     return ( Rich::Rich1 == smartID().rich() ?
              // RICH1
              ( localY + (_hpdCol()*sizeY) ) :
-             // RICH1
+             // RICH2
              ( localY +
                (_numInCol()*sizeY) +
                (int)(globalHpdNumInColOffset()*sizeY) )
