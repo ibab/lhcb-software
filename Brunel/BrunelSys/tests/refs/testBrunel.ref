@@ -51,8 +51,8 @@
 # WARNING: Default tag requested for partition SIMCOND (using sim-20090212)
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Brunel version v34r1
-                                          running on lxbuild120.cern.ch on Tue Feb 24 18:05:25 2009
+                                                   Welcome to Brunel version v34r2
+                                          running on lxbuild120.cern.ch on Tue Mar  3 11:22:09 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -64,7 +64,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.81 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.50 times the speed of a 2.8 GHz Xeon.
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
 BrunelSequencer      INFO Member list: ProcessPhase/Init, ProcessPhase/Reco, ProcessPhase/Moni, ProcessPhase/MCLinks, ProcessPhase/Check, ProcessPhase/Output
@@ -545,7 +545,7 @@ HcalPIDmu            INFO  Check Tracks: YES Rejected flags: [  'Invalid'  'Clon
 RecoMUONSeq          INFO Member list: MuonRec, MuonID
 MuonID               INFO  MuonID v5r2
 RecoPROTOSeq         INFO Member list: ChargedProtoPAlg, ChargedProtoCombineDLLsAlg, NeutralProtoPAlg, with context 'Offline'
-ChargedProtoPAl...   INFO VELO dE/dx charge parameters : normalisation = 22.4 ratio = 0.6
+ChargedProtoPAl...   INFO VELO dE/dx charge parameters : normalisation = 47.1 ratio = 0.6
 ChargedProtoCom...   INFO Using retuned RICH el and mu DLL values in combined DLLs
 NeutralProtoPAlg     INFO  Hypothesis loaded from Rec/Calo/Photons
 NeutralProtoPAlg     INFO  Hypothesis loaded from Rec/Calo/SplitPhotons
@@ -766,15 +766,15 @@ FitVelo           SUCCESS Number of counters : 1
 EcalClust            INFO Built 0 cellular automaton clusters/event  with 0 iterations (min,max)=(999999,0) on average
 ChargedProtoPAlg     INFO Number of events processed = 0
 NeutralProtoPAlg     INFO  0 event processed ==> 0 Neutral ProtoParticle produced !
-EcalDigitMon      SUCCESS Booked 3 Histogram(s) : 1D=3
-HcalDigitMon      SUCCESS Booked 3 Histogram(s) : 1D=3
-PrsDigitMon       SUCCESS Booked 2 Histogram(s) : 1D=2
-SpdDigitMon       SUCCESS Booked 1 Histogram(s) : 1D=1
-EcalClusterMon    SUCCESS Booked 8 Histogram(s) : 1D=7 2D=1
-ElectronMon       SUCCESS Booked 9 Histogram(s) : 1D=8 2D=1
-PhotonMon         SUCCESS Booked 9 Histogram(s) : 1D=8 2D=1
-SplitPhotonMon    SUCCESS Booked 9 Histogram(s) : 1D=8 2D=1
-MergedPi0Mon      SUCCESS Booked 10 Histogram(s) : 1D=9 2D=1
+EcalDigitMon      SUCCESS Booked 7 Histogram(s) : 1D=5 2D=2
+HcalDigitMon      SUCCESS Booked 7 Histogram(s) : 1D=5 2D=2
+PrsDigitMon       SUCCESS Booked 6 Histogram(s) : 1D=4 2D=2
+SpdDigitMon       SUCCESS Booked 5 Histogram(s) : 1D=3 2D=2
+EcalClusterMon    SUCCESS Booked 9 Histogram(s) : 1D=7 2D=2
+ElectronMon       SUCCESS Booked 10 Histogram(s) : 1D=8 2D=2
+PhotonMon         SUCCESS Booked 10 Histogram(s) : 1D=8 2D=2
+SplitPhotonMon    SUCCESS Booked 10 Histogram(s) : 1D=8 2D=2
+MergedPi0Mon      SUCCESS Booked 11 Histogram(s) : 1D=9 2D=2
 ResolvedPi0Mon    SUCCESS Booked 4 Histogram(s) : 1D=4
 PhotonMatchMon    SUCCESS Booked 5 Histogram(s) : 1D=5
 ElectronMatchMon  SUCCESS Booked 5 Histogram(s) : 1D=5
@@ -908,7 +908,10 @@ MuonPIDChecker       INFO  Non-muons  :      -1.00     :    (0.85+-0.01) - (1.15
 MuonPIDChecker       INFO  Ghosts     :      -1.00     :    (2.39+-0.02) - (2.24 +-0.01)
 MuonPIDChecker       INFO  Total MisID:      -1.00     :    (2.12+-0.01) - (2.51 +-0.01)
 MuonPIDChecker       INFO ------------------------------------------------------------------
-FSRWriter            INFO Events output: 0
+FSRWriter            INFO Set up File Summary Record
+IODataManager        INFO Referring to dataset Brunel.dst by its file ID:D43C875C-DD07-DE11-9BB1-0030487C5E0E
+RootDBase.open    SUCCESS Brunel.dst File version:51800
+FSRWriter            INFO Events output: 1
 DstWriter            INFO Events output: 0
 EventLoopMgr         INFO Histograms converted successfully according to request.
 TransportSvc      SUCCESS  GEOMETRY ERRORS: 'Skip'     map has the size 0
@@ -928,7 +931,7 @@ ToolSvc.Offline...SUCCESS  #WARNINGS   = 1        Message = 'No pixels produced'
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings Statistics : 0/0/1
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.81 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.50 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -1191,6 +1194,8 @@ TimingAuditor.T...   INFO      PackMuons                |     0.000 |     0.000 
 TimingAuditor.T...   INFO  FSRWriter                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO  DstWriter                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
+RunRecordCnvSvc      INFO Disconnected data IO:D43C875C-DD07-DE11-9BB1-0030487C5E0E[Brunel.dst]
+XMLCatalog           INFO File 'test_catalog.xml' does not exist. New file created.
 StatusCodeSvc        INFO listing all unchecked return codes:
 StatusCodeSvc        INFO
 Num | Function                       | Source Library
