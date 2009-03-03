@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.49 2009-02-24 20:39:18 panmanj Exp $"
+__version__ = "$Id: Configuration.py,v 1.50 2009-03-03 13:35:53 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -164,6 +164,27 @@ class HltConf(LHCbConfigurableUser):
     def configureHltMonitoring(self, lines) :
         ## and tell the monitoring what it should expect..
         HltGlobalMonitor().Hlt1Decisions = [ i.decision() for i in lines ]
+        ## group lines into 'alleys'
+        groupingRules = [ ( 'Hlt1L0.*Decision' , 'L0' )
+                        , ( '.*IgnoreLumi.*'   , 'IgnoreLumi' )
+                        , ( '.*Global.*'       , 'Global' )
+                        ] 
+        for i in [ 'XPress','Hadron','SingleMuon','DiMuon','MuonTrack','Lumi','Velo','Electron','Pho' ] :
+            groupingRules.append( ( 'Hlt1.*'+i+'.*Decision' ,  i ) )
+
+        grouping = { }
+        import re
+        for i in [ j.decision() for j in lines ] :
+            for rule in groupingRules :
+                if re.match(rule[0],i) :
+                    # print 'matched ' + i + ' against ' + rule[0] + ' with value ' + rule[1]
+                    if i not in grouping.keys() : grouping[i] = rule[1] 
+                    #else :
+                    #    print 'WARNING: could not make unique assignement for %s'%i 
+        # print '\n\ngenerated grouping table:'
+        # print grouping
+        # print '\n\n'
+        # TODO: HltGlobalMonitor().AlleyMap = grouping
 
     def postConfigAction(self) : 
         ## Should find a more elegant way of doing this...

@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.157 2009-02-24 20:39:18 panmanj Exp $ 
+! $Id: release.notes,v 1.158 2009-03-03 13:35:53 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-03-03 - Gerhard Raven
+ - add skeleton python to group lines into alleys for monitoring 
+   note: the above isn't used yet
 
 ! 2009-02-24 - Jaap Panman
  - add HltBeamGasLines - first using dummy contents
