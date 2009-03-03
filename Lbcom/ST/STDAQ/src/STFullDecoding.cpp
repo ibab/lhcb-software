@@ -1,4 +1,4 @@
-// $Id: STFullDecoding.cpp,v 1.1 2009-03-02 16:27:44 mtobin Exp $
+// $Id: STFullDecoding.cpp,v 1.2 2009-03-03 13:11:04 mtobin Exp $
 // Include files
 
 // from Gaudi
@@ -260,7 +260,7 @@ StatusCode STFullDecoding::execute()
             error() << "Attention: You have a Sync Event size ERROR! For the "
                     << "PP-FPGA " << cntPP << ", Value (One bit per link): "
                     << std::bitset<6>((*w & 0x0003f000)/0x1000) << endmsg;
-          if( *w & 0x0000003f != 0 ) 
+          if( (*w & 0x0000003f) != 0 ) 
             error() << "Attention: You have an Optical Link no Event ERROR! "
                     << "For the PP-FPGA " << cntPP 
                     << ", Value (One bit per link): " 

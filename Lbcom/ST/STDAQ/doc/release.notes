@@ -4,6 +4,9 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2009-03-03 Mark Tobin
+ - Fix gcc4.3 warning in STFullDecoding
+
 ! 2009-03-02 Mark Tobin
  - Merge STDAQ and STOnline
  - Add STPedestalDecoding and STFullDecoding
