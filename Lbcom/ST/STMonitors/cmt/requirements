@@ -2,7 +2,7 @@
 # Created    : 2009-02-24
 # Maintainer : Mark Tobin
 #            : Mathias Knecht
-#            : Nicola
+#            : Nicola Chiapolini
 #
 # Documentation on the requirement file can be found at
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
@@ -22,15 +22,14 @@ branches STMonitors src cmt doc
 #============================================================================
 
  
-use STTELL1Event v*  ST
-use STKernel     v*  ST
+use STTELL1Event  *  ST
+use STKernel      *  ST
+
 apply_pattern ld_library_path
 private
 
-
-use GaudiAlg      v* 
-
-use AIDA          v*    LCG_Interfaces
+use GaudiAlg      * 
+use AIDA          *    LCG_Interfaces
 
 #-----------------------------------------------------------------
 # library building rule
