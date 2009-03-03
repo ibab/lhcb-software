@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.23 2009-03-03 14:26:47 graven Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.24 2009-03-03 15:13:35 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -54,18 +54,47 @@ DECLARE_ALGORITHM_FACTORY( HltGlobalMonitor );
 // utilities
 
 namespace {
+    bool setBinLabels( TAxis* axis,  const std::vector<std::pair<unsigned,std::string> >& labels ) {
+        if (axis==0) return false;
+        for (std::vector<std::pair<unsigned,std::string> >::const_iterator i = labels.begin();i!=labels.end();++i ) {
+            //TODO: check bin exists... 
+            // Argh... ROOT bins start counting at '1' instead of '0'
+            axis -> SetBinLabel(1 + i->first  ,i->second.c_str() );
+        }
+        return true;
+    }
+
     bool setBinLabels( AIDA::IHistogram1D* hist, const std::vector<std::pair<unsigned,std::string> >& labels ) {
         if (hist==0) return false;
         TH1D *h1d = Gaudi::Utils::Aida2ROOT::aida2root( hist );  
         if (h1d==0) return false;
-        TAxis* axis = h1d->GetXaxis() ;
-        if (axis==0) return false;
-        for (std::vector<std::pair<unsigned,std::string> >::const_iterator i = labels.begin();i!=labels.end();++i ) {
-            //TODO: check bin exists...
-            axis -> SetBinLabel(i->first  ,i->second.c_str() );
-        }
-        return true;
+        return setBinLabels(  h1d->GetXaxis(), labels );
     }
+
+    bool setBinLabels( AIDA::IHistogram1D* hist, const std::vector<std::string>& labels ) {
+        std::vector<std::pair<unsigned,std::string> > l;
+        for (unsigned i = 0;i<labels.size();++i) {
+            l.push_back(std::make_pair( i , labels[i] ) );
+        }
+        return setBinLabels(hist,l);
+    }
+
+    bool setBinLabels( AIDA::IHistogram2D* hist, const std::vector<std::string>& xlabels,
+                                                 const std::vector<std::string>& ylabels) {
+        if (hist==0) return false;
+        std::vector<std::pair<unsigned,std::string> > lx;
+        for (unsigned i = 0;i<xlabels.size();++i) {
+            lx.push_back(std::make_pair( i , xlabels[i] ) );
+        }
+        std::vector<std::pair<unsigned,std::string> > ly;
+        for (unsigned i = 0;i<ylabels.size();++i) {
+            ly.push_back(std::make_pair( i , ylabels[i] ) );
+        }
+        TH2D *h2d = Gaudi::Utils::Aida2ROOT::aida2root( hist );  
+        if (h2d==0) return false;
+        return setBinLabels(  h2d->GetXaxis(), lx) && setBinLabels( h2d->GetYaxis(), ly );
+    }
+
 };
 
 //=============================================================================
@@ -98,8 +127,7 @@ StatusCode HltGlobalMonitor::initialize() {
 
   m_L0Input         = book1D("L0 channel",-0.5,16.5,17);
   m_odin            = book1D("ODIN type",  "ODIN Type ",-0.5, 7.5, 8);
-
-  setBinLabels( m_odin, boost::assign::list_of< std::pair<unsigned,std::string> >
+  std::vector<std::pair<unsigned,std::string> > odinLabels = boost::assign::list_of< std::pair<unsigned,std::string> >
                 (ODIN::Reserve,           "Reserve")
                 (ODIN::PhysicsTrigger,    "Physics")
                 (ODIN::AuxilliaryTrigger, "Auxilliary")
@@ -107,19 +135,46 @@ StatusCode HltGlobalMonitor::initialize() {
                 (ODIN::PeriodicTrigger,   "Periodic")
                 (ODIN::NonZSupTrigger,    "NonZSup")
                 (ODIN::TimingTrigger,     "Timing")
-                (ODIN::CalibrationTrigger,"Calibration") );
+                (ODIN::CalibrationTrigger,"Calibration");
+  setBinLabels( m_odin, odinLabels );
   
-  m_hlt1alley       = book1D("Hlt1 Alleys", "Hlt1 Alleys", -0.5, 15.5 , 16 );
+  //TODO: grab alley names (and mapping) from job options, count instead of hardwiring 12..
+  m_hlt1alley       = book1D("Hlt1 Alleys", "Hlt1 Alleys", -0.5, 11.5 , 12 );
+  std::vector<std::string> alleyLabels = boost::assign::list_of<std::string> 
+                ( "L0" )( "XPress" )( "Hadron" )
+                ( "SingleMuon" )( "DiMuon" )( "MuonTrack" )
+                ( "Lumi" )( "Velo" )
+                ( "Electron" )( "Photon" )
+                ( "IgnoreLumi" )( "Global" );
+  setBinLabels( m_hlt1alley, alleyLabels );
+
+  std::vector<std::string> labels;
+  for (std::vector<std::string>::const_iterator i = m_Hlt1Lines.begin(); i!=m_Hlt1Lines.end();++i) {
+      std::string s = *i;
+      // remove "Hlt1" and "Decision"
+      std::string::size_type i =  s.find("Hlt1");
+      if (i != std::string::npos) s.erase(i,i+4);
+      i =  s.find("Decision");
+      if (i != std::string::npos) s.erase(i,i+8);
+      labels.push_back(s);  
+  }
+
+
   m_hltAcc          = book1D("Hlt1 lines Accept", "Hlt1 Lines Accept",
                              -0.5, m_Hlt1Lines.size()+0.5,m_Hlt1Lines.size()+1);
+  setBinLabels(m_hltAcc, labels);
+
   m_hltNAcc         = book1D("# positive HltLines ", -0.5,m_Hlt1Lines.size()+0.5,
                              m_Hlt1Lines.size()+1);
   m_hltInclusive    = book1D("HltLines Inclusive",   -0.5,m_Hlt1Lines.size()-0.5,
                              m_Hlt1Lines.size());
+
+  setBinLabels( m_hltInclusive,  labels );
+
   m_hltCorrelations = book2D("HltLines Correlations",-0.5,m_Hlt1Lines.size()-0.5,
                              m_Hlt1Lines.size(),-0.5,m_Hlt1Lines.size()-0.5,
                              m_Hlt1Lines.size());
-
+  setBinLabels( m_hltCorrelations, labels, labels );
 
 
   for (std::vector<std::string>::const_iterator i = m_Hlt1Lines.begin(); i!=m_Hlt1Lines.end();++i) {
@@ -260,11 +315,6 @@ void HltGlobalMonitor::monitorHLT(const LHCb::ODIN*,
                           "Hlt1.*Lumi.*Decision", "Hlt1.*Velo.*Decision",
                           "Hlt1.*Electron.*Decision", "Hlt1.*Pho.*Decision",
                           ".*IgnoreLumi.*", ".*Global.*",0 };
-  const char *label[] = {"L0", "XPress", "Hadron", 
-                         "SingleMuon", "DiMuon", "MuonTrack", 
-                         "Lumi", "Velo",
-                         "Electron", "Photon", 
-                         "IgnoreLumi", "Global", 0};
 
   for(size_t j = 0; j < reps.size(); ++j) {
     for (size_t i=0;names[i]!=0;++i) {
@@ -274,40 +324,5 @@ void HltGlobalMonitor::monitorHLT(const LHCb::ODIN*,
             fill(m_hlt1alley, i, reps[j].second->decision());
         }
     }
-  }
-
-  //labels //TODO: move to initialize!!!
-  static bool m_first(true);
-  if (m_first && 0 != m_hltInclusive && m_hltCorrelations && m_hlt1alley) 
-  {
-    m_first = false;
-    TH1D *h = Gaudi::Utils::Aida2ROOT::aida2root( m_hltInclusive );
-    TH1D *ha = Gaudi::Utils::Aida2ROOT::aida2root( m_hlt1alley );
-    TH2D *hc = Gaudi::Utils::Aida2ROOT::aida2root( m_hltCorrelations );
-    if ( 0 != h && 0 != hc) {
-      TAxis* axis   = h->GetXaxis() ;
-      TAxis* axisa  = ha->GetXaxis() ;
-      TAxis* axiscx = hc->GetXaxis() ;
-      TAxis* axiscy = hc->GetYaxis() ;
-
-      if( 0 != axis && 0 != axiscx && 0 != axiscy && 0 != axisa) 
-      {
-        for ( unsigned iabin = 0; label[iabin]!=0 ; ++iabin ) {        
-          axisa->SetBinLabel(1+iabin,label[iabin]);
-        }
-        for ( unsigned ibin = 1; ibin <= reps.size() ; ++ibin ) {
-          if(ibin < reps.size()){
-            // cut the last 8 (=decision) letters off
-            std::string& s = reps[ibin-1].first;
-            s.resize(s.size()-8);
-          }
-          // cut the first 4 letters off (=Hlt1)
-          const char * test = reps[ibin-1].first.c_str() + 4;
-          axis-> SetBinLabel ( ibin, test );
-          axiscx-> SetBinLabel ( ibin, test );
-          axiscy-> SetBinLabel ( ibin, test );
-        }
-      } 
-    } 
   }
 }

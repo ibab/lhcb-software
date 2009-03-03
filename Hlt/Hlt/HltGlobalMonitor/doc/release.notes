@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.24 2009-03-03 14:26:47 graven Exp $
+!$Id: release.notes,v 1.25 2009-03-03 15:13:35 graven Exp $
 Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
@@ -7,6 +7,7 @@ Purpose     : LHCb HLT Global Monitoring
 !2009-03-03 - Gerhard Raven
  - slight change of logic to avoid using TISTOS tool 
  - add helper function to help set axis labels
+ - move axis labeling to 'initialize'
 
 !2009-02-27 - Kim Vervink
  - labels on the histogram
