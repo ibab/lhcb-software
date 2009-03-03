@@ -1,4 +1,4 @@
-// $Id: IParticle2MCAssociator.h,v 1.5 2009-02-02 14:33:13 jpalac Exp $
+// $Id: IParticle2MCAssociator.h,v 1.6 2009-03-03 16:05:38 jpalac Exp $
 #ifndef KERNEL_IPARTICLE2MCASSOCIATOR_H 
 #define KERNEL_IPARTICLE2MCASSOCIATOR_H 1
 
@@ -127,7 +127,7 @@ public:
    * implementations
    * @param particles Container of LHCb::Particles to be associated
    * @return Particle2MCParticle::LightTable Relations table containing 
-   * sorted weighted relations between the LHCb::Particle and the LCHb::MCParticles
+   * relations between the LHCb::Particle and the LCHb::MCParticles
    * @author Juan Palacios juan.palacios@nikhef.nl
    * @date   2009-02-02
    *
@@ -137,13 +137,13 @@ public:
 
   /**
    *
-   * Calculate and return the weighted associations between a container of
+   * Calculate and return the associations between a container of
    * LHCb::Particles and a container of LHCb::MCParticles on the TES
    * @param particles Container of LHCb::Particles to be associated
    * @param mcParticleLocation TES location of LHCb::MCParticles to base the
    * association on.
    * @return Particle2MCParticle::LightTable Relations table containing 
-   * sorted weighted relations between the LHCb::Particles and the LCHb::MCParticles
+   * relations between the LHCb::Particles and the LCHb::MCParticles
    * @author Juan Palacios juan.palacios@nikhef.nl
    * @date   2009-02-02
    *
@@ -154,13 +154,13 @@ public:
 
   /**
    *
-   * Calculate and return the weighted associations between a container of  
+   * Calculate and return the associations between a container of  
    * LHCb::Particle and a container of LHCb::MCParticles on the TES
    * The TES location of the LHCb::MCParticles is handled by the 
    * implementations
    * @param particles Container of LHCb::Particles to be associated
    * @return Particle2MCParticle::LightTable Relations table containing 
-   * sorted weighted relations between the LHCb::Particle and the LCHb::MCParticles
+   * relations between the LHCb::Particle and the LCHb::MCParticles
    * @author Juan Palacios juan.palacios@nikhef.nl
    * @date   2009-02-02
    *
@@ -171,13 +171,13 @@ public:
 
   /**
    *
-   * Calculate and return the weighted associations between a container of  
+   * Calculate and return the associations between a container of  
    * LHCb::Particle and a container of LHCb::MCParticles on the TES
    * The TES location of the LHCb::MCParticles is handled by the 
    * implementations
    * @param particles Container of LHCb::Particles to be associated
    * @return Particle2MCParticle::LightTable Relations table containing 
-   * sorted weighted relations between the LHCb::Particle and the LCHb::MCParticles
+   * relations between the LHCb::Particle and the LCHb::MCParticles
    * @author Juan Palacios juan.palacios@nikhef.nl
    * @date   2009-02-02
    *
@@ -187,13 +187,13 @@ public:
 
   /**
    *
-   * Calculate and return the weighted associations between a container of
+   * Calculate and return the associations between a container of
    * LHCb::Particles and a container of LHCb::MCParticles on the TES
    * @param particles Container of LHCb::Particles to be associated
    * @param mcParticleLocation TES location of LHCb::MCParticles to base the
    * association on.
    * @return Particle2MCParticle::LightTable Relations table containing 
-   * sorted weighted relations between the LHCb::Particles and the LCHb::MCParticles
+   * relations between the LHCb::Particles and the LCHb::MCParticles
    * @author Juan Palacios juan.palacios@nikhef.nl
    * @date   2009-02-02
    *
@@ -204,13 +204,13 @@ public:
 
   /**
    *
-   * Calculate and return the weighted associations between a container of  
+   * Calculate and return the associations between a container of  
    * LHCb::Particle and a container of LHCb::MCParticles on the TES
    * The TES location of the LHCb::MCParticles is handled by the 
    * implementations
    * @param particles Container of LHCb::Particles to be associated
    * @return Particle2MCParticle::LightTable Relations table containing 
-   * sorted weighted relations between the LHCb::Particle and the LCHb::MCParticles
+   * relations between the LHCb::Particle and the LCHb::MCParticles
    * @author Juan Palacios juan.palacios@nikhef.nl
    * @date   2009-02-02
    *
@@ -226,9 +226,9 @@ public:
    * @date   2009-02-02
    *
    **/
-  virtual double 
-  weight(const LHCb::Particle* particle, 
-         const LHCb::MCParticle* mcParticle) const = 0;
+  virtual bool 
+  isMatched(const LHCb::Particle* particle, 
+            const LHCb::MCParticle* mcParticle) const = 0;
 
 };
 #endif // KERNEL_IPARTICLE2MCASSOCIATOR_H

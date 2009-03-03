@@ -1,4 +1,4 @@
-// $Id: Particle2MCAssociatorBase.h,v 1.4 2009-02-02 14:33:13 jpalac Exp $
+// $Id: Particle2MCAssociatorBase.h,v 1.5 2009-03-03 16:05:38 jpalac Exp $
 #ifndef PARTICLE2MCASSOCIATORBASE_H 
 #define PARTICLE2MCASSOCIATORBASE_H 1
 
@@ -18,7 +18,7 @@
  *  Set of methods is self-consistent. Derived classes only need to implement
  *  method
  *  @code 
- *  double weight(const LHCb::Particle*, const LHCb::MCParticle)
+ *  bool isMatched(const LHCb::Particle*, const LHCb::MCParticle)
  *  @endcode
  *
  *  @author Juan PALACIOS
@@ -78,9 +78,9 @@ public:
   associations(const LHCb::Particle::Container& particles,
                const LHCb::MCParticle::ConstVector& mcParticles) const ;
 
-  virtual double 
-  weight(const LHCb::Particle* particle, 
-         const LHCb::MCParticle* mcParticle) const ;
+  virtual bool 
+  isMatched(const LHCb::Particle* particle, 
+            const LHCb::MCParticle* mcParticle) const ;
   
 private:
 
@@ -101,8 +101,8 @@ private:
     Particle2MCParticle::LightTable table;
     if (0!=particle) {
       for ( Iter iMCP = begin ; iMCP != end ; ++iMCP){
-        const double wt = weight(particle, *iMCP);
-        if (wt > 0. ) table.i_push(particle,*iMCP, wt );
+        const bool match = isMatched(particle, *iMCP);
+        if ( match ) table.i_push(particle,*iMCP );
       }
       table.i_sort();
     } else {
@@ -123,9 +123,9 @@ private:
 
     for (pIter part = pBegin; part != pEnd; ++part) {
       for ( mcPIter iMCP = mcBegin ; iMCP != mcEnd ; ++iMCP){
-        const double wt = weight(*part, *iMCP);
-        if (wt > 0. ) {
-          table.i_push( *part, *iMCP,  wt );
+        const bool match = isMatched(*part, *iMCP);
+        if (match ) {
+          table.i_push( *part, *iMCP );
         }
       }
     }
