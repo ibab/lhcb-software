@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.61 2009-02-20 22:43:31 gligorov Exp $
+! $Id: release.notes,v 1.62 2009-03-03 16:06:36 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
+
+! 2009-03-03 - Juan PALACIOS
+ - Kernel/IParticle2MCAssociator.h, Particle2MCAssociatorBase
+  . Deal with unweighted relations now.
+ - Kernel/IDaVinciSmartAssociator.h
+  . Removed. Superceded by IParticle2MCAssociator.h
+ - cmt/requirements
+  . Increase version to v3r1
 
 ! 2009-02-20 - V. Gligorov
  - Kernel/IDaVinciSmartAssociator.h
