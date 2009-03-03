@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.21 2009-03-03 11:04:45 graven Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.22 2009-03-03 12:09:50 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -6,6 +6,10 @@
 // ============================================================================
 #include <string>
 #include <vector>
+// ============================================================================
+// BOOST
+// ============================================================================
+#include "boost/regex.hpp"
 // ============================================================================
 // AIDA
 // ============================================================================
@@ -53,7 +57,6 @@ HltGlobalMonitor::HltGlobalMonitor( const std::string& name,
                     ISvcLocator* pSvcLocator)
   : HltBaseAlg ( name , pSvcLocator )
   , m_gpstimesec(0)
-  , m_TriggerTisTosTool(0)
 
 {
   // se nao tiver declarado no options, ele usa este
@@ -98,12 +101,6 @@ StatusCode HltGlobalMonitor::initialize() {
   }
   m_gpstimesec=0;
 
-  m_TriggerTisTosTool = tool<ITriggerTisTos>( "TriggerTisTos", this); 
-  if ( !m_TriggerTisTosTool ) {   
-    fatal() << "TriggerTisTosTool could not be found" << endreq;
-    return StatusCode::FAILURE;
-  }
-  
   declareInfo("L0Accept",        "",&counter("L0Accept"),        0,std::string("L0Accept"));
   declareInfo("COUNTER_TO_RATE[GpsTimeoflast]",m_gpstimesec,"Gps time of last event");
 
@@ -192,7 +189,7 @@ void HltGlobalMonitor::monitorL0DU(const LHCb::ODIN*,
       TAxis* axiso = ho->GetXaxis() ;
       if( 0 != axiso) 
       {
-        for ( unsigned ibin = 0; ibin < repsL.size() ; ibin++ ) {
+        for ( unsigned ibin = 0; ibin < repsL.size() ; ++ibin ) {
           debug() << "ibin = " << ibin << " repsL[ibin].first = " << repsL[ibin].first <<
             " repsL[ibin].second = " << repsL[ibin].second << endreq;
           const char * test = repsL[ibin].first.c_str();
@@ -243,143 +240,34 @@ void HltGlobalMonitor::monitorHLT(const LHCb::ODIN*,
     }
   }
 
+  //TODO: move this into python configuration...
+  //      make a map once such that we do not do regex matches / searches every event...
+  const char *names[] = { "Hlt1L0.*Decision", "Hlt1.*XPress.*Decision", "Hlt1.*Hadron.*Decision",
+                          "Hlt1.*SingleMuon.*Decision", "Hlt1.*DiMuon.*Decision", "Hlt1.*MuonTrack.*Decision",
+                          "Hlt1.*Lumi.*Decision", "Hlt1.*Velo.*Decision",
+                          "Hlt1.*Electron.*Decision", "Hlt1.*Pho.*Decision",
+                          ".*IgnoreLumi.*", ".*Global.*",0 };
+  const char *label[] = {"L0", "XPress", "Hadron", 
+                         "SingleMuon", "DiMuon", "MuonTrack", 
+                         "Lumi", "Velo",
+                         "Electron", "Photon", 
+                         "IgnoreLumi", "Global", 0};
 
-  std::vector<std::string> hlt1L0Triggers     
-    = m_TriggerTisTosTool->triggerSelectionNames("Hlt1L0*Decision");
-  std::vector<std::string> hlt1XPressTriggers 
-    = m_TriggerTisTosTool->triggerSelectionNames("Hlt1*XPress*Decision");
-  std::vector<std::string> hlt1HadronTriggers 
-    = m_TriggerTisTosTool->triggerSelectionNames("Hlt1*Hadron*Decision");
-  std::vector<std::string> hlt1SMuonTriggers  
-    = m_TriggerTisTosTool->triggerSelectionNames("Hlt1*SingleMuon*Decision");
-  std::vector<std::string> hlt12MuonTriggers  
-    = m_TriggerTisTosTool->triggerSelectionNames("Hlt1*DiMuon*Decision");
-  std::vector<std::string> hlt1TrackTriggers  
-    = m_TriggerTisTosTool->triggerSelectionNames("Hlt1*MuonTrack*Decision");
-  std::vector<std::string> hlt1LumiTriggers   
-    = m_TriggerTisTosTool->triggerSelectionNames("Hlt1LumiDecision");
-  std::vector<std::string> hlt1VeloTriggers   
-    = m_TriggerTisTosTool->triggerSelectionNames("Hlt1*Velo*Decision");
-  std::vector<std::string> hlt1ElecTriggers   
-    = m_TriggerTisTosTool->triggerSelectionNames("Hlt1*Electron*Decision");
-  std::vector<std::string> hlt1PhoTriggers    
-    = m_TriggerTisTosTool->triggerSelectionNames("Hlt1*Pho*Decision");
-  std::vector<std::string> hlt1IgnTriggers    
-    = m_TriggerTisTosTool->triggerSelectionNames("*Ignor*");
-  std::vector<std::string> hlt1GlobTriggers   
-    = m_TriggerTisTosTool->triggerSelectionNames("*Global*");
-  
-  
-  
-  for (size_t k = 0; k<hlt1L0Triggers.size(); ++k) {
-    for(size_t j = 0; j < reps.size(); j++){
-      if (hlt1L0Triggers[k] == reps[j].first ){
-        fill(m_hlt1alley, 0, reps[j].second->decision());
-      }
+  for(size_t j = 0; j < reps.size(); ++j) {
+    for (size_t i=0;names[i]!=0;++i) {
+        boost::regex exp( names[i] );
+        boost::smatch what;
+        if (boost::regex_match(reps[j].first,what,exp)) {
+            fill(m_hlt1alley, i, reps[j].second->decision());
+        }
     }
   }
-  
-  for (size_t k = 0; k<hlt1XPressTriggers.size(); ++k) {
-    for(size_t j = 0; j < reps.size(); j++){  
-      if (hlt1XPressTriggers[k] == reps[j].first) {
-        fill(m_hlt1alley, 1, reps[j].second->decision());
-      }
-    }
-  }
-  
-  
-  for (size_t k = 0; k<hlt1HadronTriggers.size(); ++k) {
-    for(size_t j = 0; j < reps.size(); j++){  
-      if (hlt1HadronTriggers[k] == reps[j].first ){
-        fill(m_hlt1alley, 2, reps[j].second->decision());
-      }
-    }   
-  }
-  
-  
-  for (size_t k = 0; k<hlt1SMuonTriggers.size(); ++k) { 
-    for(size_t j = 0; j < reps.size(); j++){
-      if (hlt1SMuonTriggers[k] == reps[j].first ){
-        fill(m_hlt1alley, 3, reps[j].second->decision());
-      }
-    } 
-  }
-  
-  
-  for (size_t k = 0; k<hlt12MuonTriggers.size(); ++k) {
-    for(size_t j = 0; j < reps.size(); j++){
-      if (hlt12MuonTriggers[k] == reps[j].first ){
-        fill(m_hlt1alley, 4, reps[j].second->decision());
-      }
-    }   
-  }
-  
-  
-  for (size_t k = 0; k<hlt1TrackTriggers.size(); ++k) {
-    for(size_t j = 0; j < reps.size(); j++){
-      if (hlt1TrackTriggers[k] == reps[j].first ){
-        fill(m_hlt1alley, 5, reps[j].second->decision());
-      }
-    }   
-  }
-  
-  
-  for (size_t k = 0; k<hlt1LumiTriggers.size(); ++k) {
-    for(size_t j = 0; j < reps.size(); ++j){
-      if (hlt1LumiTriggers[k] == reps[j].first ){
-        fill(m_hlt1alley, 6, reps[j].second->decision());
-      }
-    }   
-  }
-  
-  
-  for (size_t k = 0; k<hlt1VeloTriggers.size(); ++k) { 
-    for(size_t j = 0; j < reps.size(); j++){
-      if (hlt1VeloTriggers[k] == reps[j].first ){
-        fill(m_hlt1alley, 7, reps[j].second->decision());
-      }
-    }   
-  }
-  
-  
-  for (size_t k = 0; k<hlt1ElecTriggers.size(); ++k) { 
-    for(size_t j = 0; j < reps.size(); j++){
-      if (hlt1ElecTriggers[k] == reps[j].first ){
-        fill(m_hlt1alley, 8, reps[j].second->decision());
-      }
-    }   
-  }
-  
-  for (size_t k = 0; k<hlt1PhoTriggers.size(); ++k) { 
-    for(size_t j = 0; j < reps.size(); j++){  
-      if (hlt1PhoTriggers[k] == reps[j].first ){
-        fill(m_hlt1alley, 9, reps[j].second->decision());
-      }
-    }   
-  }
-  
-  
-  for (size_t k = 0; k<hlt1IgnTriggers.size(); ++k) { 
-    for(size_t j = 0; j < reps.size(); j++){  
-      if (hlt1IgnTriggers[k] == reps[j].first ){
-        fill(m_hlt1alley, 10, reps[j].second->decision());
-      }
-    }   
-  }
-  
-  
-  for (size_t k = 0; k<hlt1GlobTriggers.size(); ++k) {
-    for(size_t j = 0; j < reps.size(); j++){
-      if (hlt1GlobTriggers[k] == reps[j].first ){
-        fill(m_hlt1alley, 11, reps[j].second->decision());
-      }
-    }   
-  }
 
-
-  //labels
-  if ( 0 != m_hltInclusive && m_hltCorrelations && m_hlt1alley) 
+  //labels //TODO: move to initialize!!!
+  static bool m_first(true);
+  if (m_first && 0 != m_hltInclusive && m_hltCorrelations && m_hlt1alley) 
   {
+    m_first = false;
     TH1D *h = Gaudi::Utils::Aida2ROOT::aida2root( m_hltInclusive );
     TH1D *ha = Gaudi::Utils::Aida2ROOT::aida2root( m_hlt1alley );
     TH2D *hc = Gaudi::Utils::Aida2ROOT::aida2root( m_hltCorrelations );
@@ -389,19 +277,16 @@ void HltGlobalMonitor::monitorHLT(const LHCb::ODIN*,
       TAxis* axiscx = hc->GetXaxis() ;
       TAxis* axiscy = hc->GetYaxis() ;
 
-      const Int_t alleybins = 12;
-      char *label[alleybins] = {"L0", "XPress", "Hadron", "SingleMuon", "DiMuon", "MuonTrack", 
-                         "Lumi", "Velo", "Electron", "Photon", "IgnoreLumi", "Global"};
-      
       if( 0 != axis && 0 != axiscx && 0 != axiscy && 0 != axisa) 
       {
-        for ( int iabin = 1; iabin <= alleybins ; ++iabin ) {        
-          axisa->SetBinLabel(iabin,label[iabin-1]);
+        for ( unsigned iabin = 0; label[iabin]!=0 ; ++iabin ) {        
+          axisa->SetBinLabel(1+iabin,label[iabin]);
         }
         for ( unsigned ibin = 1; ibin <= reps.size() ; ++ibin ) {
           if(ibin < reps.size()){
             // cut the last 8 (=decision) letters off
-           reps[ibin-1].first.resize(reps[ibin-1].first.size()-8);
+            std::string& s = reps[ibin-1].first;
+            s.resize(s.size()-8);
           }
           // cut the first 4 letters off (=Hlt1)
           const char * test = reps[ibin-1].first.c_str() + 4;
@@ -413,37 +298,3 @@ void HltGlobalMonitor::monitorHLT(const LHCb::ODIN*,
     } 
   }
 }
-
-
-
-//=============================================================================
-
-#if 0
-// taken from $L0DUROOT/src/L0DUReportMonitor.cpp 
-// correlations
-      if( report->channelDecision( id ) ){
-        for(LHCb::L0DUChannel::Map::iterator jt = channels.begin() ;jt!=channels.end();jt++){
-          int jd = ((*jt).second)->id() ;
-          if( report->channelDecision( jd ) ){
-            // inclusive 2D counters
-
-            plot2D( (double) id , (double) jd , base.str() + "/L0Channels/Counters2D/1"
-                    , "L0DU Channels Decision 2D INclusive counters (TCK = " + ttck.str() + ")"
-                    , -1. ,(double) cBin, -1. ,(double) cBin , cBin+1 , cBin+1);
-            //exclusive 2D counters
-            bool isX = true;
-            for(LHCb::L0DUChannel::Map::iterator kt = channels.begin();kt!=channels.end();kt++){
-              int kd = ((*kt).second)->id() ;
-              if( kd == id || kd == jd)continue;
-              if( report->channelDecision( kd ) ){
-                isX = false;
-                break;
-              }
-            }
-            if(isX)plot2D( (double) id , (double) jd , base.str() + "/L0Channels/Counters2D/2"
-                           , "L0DU Channels Decision 2D EXclusive counters (TCK = " + ttck.str() + ")"
-                           , -1. ,(double) cBin, -1. ,(double) cBin , cBin+1 , cBin+1);
-          }
-        }
-      }
-#endif

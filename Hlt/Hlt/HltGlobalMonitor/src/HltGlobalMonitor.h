@@ -6,7 +6,6 @@
 #include "Event/HltDecReports.h"
 
 #include "HltBase/HltBaseAlg.h"
-#include "Kernel/ITriggerTisTos.h"
 
 
 
@@ -42,8 +41,6 @@ private:
   std::vector<std::string>  m_Hlt1Lines;
   
   int m_gpstimesec;
-  ITriggerTisTos*       m_TriggerTisTosTool;  
-
 
   template <typename T> T* fetch(const std::string& location) {
        T* t =  this->exist<T>( location ) ?  this->get<T>( location ) 
