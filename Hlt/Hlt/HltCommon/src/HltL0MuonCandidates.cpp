@@ -1,4 +1,4 @@
-// $Id: HltL0MuonCandidates.cpp,v 1.9 2009-01-07 13:14:07 graven Exp $
+// $Id: HltL0MuonCandidates.cpp,v 1.10 2009-03-03 21:23:51 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -76,11 +76,8 @@ std::vector<int>
 HltL0MuonCandidates::generateCutList(const LHCb::L0DUChannel& channel) {
   const LHCb::L0DUElementaryCondition::Map& conditions = channel.elementaryConditions();
   typedef std::vector<std::string> map_t;
-  static map_t map;
-  if (map.empty()) {
-     map.push_back("Muon1(Pt)");
-     map.push_back("DiMuon(Pt)");
-  }
+  static map_t map = boost::assign::list_of(std::string( "Muon1(Pt)"))
+                                           (std::string("DiMuon(Pt)"));
   std::vector<int> cuts;
   for (LHCb::L0DUElementaryCondition::Map::const_iterator condition = conditions.begin();
        condition!=conditions.end(); ++condition) {

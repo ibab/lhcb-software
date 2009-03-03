@@ -1,4 +1,4 @@
-// $Id: HltLine.cpp,v 1.12 2009-02-12 19:48:17 graven Exp $
+// $Id: HltLine.cpp,v 1.13 2009-03-03 21:23:51 graven Exp $
 // Include files
 #include "HltLine.h"
 
@@ -14,6 +14,39 @@
 #include "boost/foreach.hpp"
 #include "boost/lambda/lambda.hpp"
 #include "boost/lambda/construct.hpp"
+
+#include "TH1D.h"
+#include "GaudiUtils/Aida2ROOT.h"
+
+
+namespace {
+    bool setBinLabels( TAxis* axis,  const std::vector<std::pair<unsigned,std::string> >& labels ) {
+        if (axis==0) return false;
+        for (std::vector<std::pair<unsigned,std::string> >::const_iterator i = labels.begin();i!=labels.end();++i ) {
+            //TODO: check bin exists...
+            // Argh... ROOT bins start counting at '1' instead of '0'
+            axis -> SetBinLabel(1 + i->first  ,i->second.c_str() );
+        }
+        return true;
+    }
+
+    bool setBinLabels( AIDA::IHistogram1D* hist, const std::vector<std::pair<unsigned,std::string> >& labels ) {
+        if (hist==0) return false;
+        TH1D *h1d = Gaudi::Utils::Aida2ROOT::aida2root( hist );
+        if (h1d==0) return false;
+        return setBinLabels(  h1d->GetXaxis(), labels );
+    }
+
+    bool setBinLabels( AIDA::IHistogram1D* hist, const std::vector<std::string>& labels ) {
+        std::vector<std::pair<unsigned,std::string> > l;
+        for (unsigned i = 0;i<labels.size();++i) {
+            l.push_back(std::make_pair( i , labels[i] ) );
+        }
+        return setBinLabels(hist,l);
+    }
+
+};
+
 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( HltLine );
@@ -199,7 +232,13 @@ StatusCode HltLine::initialize() {
   m_cpuHisto   = book1D(name()+" CPU time",name()+" CPU time",0,1000);
   m_timeHisto  = book1D(name()+" Wall time",name()+" Wall time",0,1000);
   m_stepHisto  = book1D(name()+" steps", name()+ " steps",-0.5,m_subAlgo.size()-0.5,m_subAlgo.size() );
-  // TODO: if possible add labels to axis... (using AIDA annotations??)
+  // if possible, add labels to axis...
+  std::vector<std::string> stepLabels;
+  for (SubAlgos::const_iterator i = m_subAlgo.begin();i!=m_subAlgo.end();++i) {
+      stepLabels.push_back( i->first->name() );
+  }
+  setBinLabels( m_stepHisto, stepLabels );
+
 
   //== and the counters
   declareInfo("#accept","",&counter("#accept"),0,std::string("Events accepted by ") + m_decision);
@@ -266,7 +305,7 @@ StatusCode HltLine::execute() {
 
   fill( m_stageHisto, report.executionStage(),1.0);
   fill( m_errorHisto, report.errorBits(),1.0);
-  // make automated stair plot
+  // make stair plot
   SubAlgos::const_iterator i = m_subAlgo.begin();
   while ( i != m_subAlgo.end() ) {
      debug() <<  " checking " << i->first->name() << " passed=" << (i->first->filterPassed()?"yes":"no") << endmsg;
@@ -284,7 +323,7 @@ StatusCode HltLine::execute() {
   debug() <<  " filling histo at " << (i==m_subAlgo.end()?std::string("end"):i->first->name()) << endmsg;
   fill( m_stepHisto, i-m_subAlgo.begin(), 1.0);
 
-  // Plot the distribution of the # of (output) candidates
+  // Plot the distribution of the # of (output) candidates (in case we have any)
 
   // plot the CPU & wall clock time spent...
   longlong elapsedTime = System::currentTime( System::microSec ) - startClock;
