@@ -1,8 +1,16 @@
-! $Id: release.notes,v 1.249 2009-03-01 19:08:22 jpalac Exp $
+! $Id: release.notes,v 1.250 2009-03-03 16:15:17 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2009-03-03 - Juan PALACIOS
+ - cmt/requirements
+  . Increase to v9r19
+ - src/DaVinciSmartAssociator{.cpp, .h}
+  . IParticle2MCAssociator now deals with unweighted relations. Adapt to 
+    interface. 
+    double DaVinciSmartAssociator::weight -> bool DaVinciSmartAssociator::isMatched
 
 !========================== DaVinciMCTools v9r18 2009-02-01 ==================
 
