@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # =============================================================================
+# $Id: HelloWorld.py,v 1.12 2009-03-04 12:56:49 ibelyaev Exp $ 
+# =============================================================================
 """
 Standard 'Hello, world!' example.
 No way to avoid it!
@@ -13,7 +15,7 @@ No way to avoid it!
 # @date   2004-10-12
 # =============================================================================
 __author__  = ' Vanya BELYAEV  Ivan.Belyaev@nikhef.nl '
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $  '  
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $  '  
 # =============================================================================
 ## import everything from BENDER
 from Bender.Main import *
@@ -44,10 +46,14 @@ class HelloWorld(Algo):
 ## The configuration of the job
 def configure() :
     
-
-    ## get some external configuration
-    importOptions ( '$DAVINCIROOT/options/DaVinciCommon.opts' )
-
+    
+    from Configurables import DaVinci
+    
+    DaVinci (
+        DataType   = 'DC06'     , # default  
+        Simulation = True       ,
+        HltType    = '' ) 
+    
     ## get/create application manager
     gaudi = appMgr() 
     

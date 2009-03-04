@@ -1,12 +1,16 @@
-# $Id: Minimalistic_0.py,v 1.9 2008-10-09 13:11:41 ibelyaev Exp $
+# $Id: Minimalistic_0.py,v 1.10 2009-03-04 12:56:49 ibelyaev Exp $
 # =============================================================================
 
 
 # =============================================================================
 from Bender.Main import *
 
+from Configurables import DaVinci
 
-importOptions( '$DAVINCIROOT/options/DaVinci.opts')
+DaVinci (
+    DataType   = 'DC06'     , # default  
+    Simulation = True       ,
+    HltType    = '' ) 
 
 ## get or create application manager 
 gaudi = appMgr() 

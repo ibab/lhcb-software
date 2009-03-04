@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # =============================================================================
+# $Id: RCSelect.py,v 1.13 2009-03-04 12:56:49 ibelyaev Exp $ 
+# =============================================================================
 """
 'Solution'-file for 'RCselect.py' example (Bender Tutorial)
 """ 
@@ -12,7 +14,7 @@
 # @date   2004-10-12
 # =============================================================================
 __author__  = ' Vanya BELYAEV  Ivan.Belyaev@nikhef.nl '
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $  '  
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $  '  
 # =============================================================================
 ## import everything from BENDER
 from Bender.Main import *
@@ -100,11 +102,13 @@ def configure() :
     The Job configuration
     """ 
     
-    ## get some external configuration 
-    importOptions ( '$DAVINCIROOT/options/DaVinciCommon.opts' ) 
-    importOptions ( '$COMMONPARTICLESROOT/options/StandardKaons.opts' ) 
-    importOptions ( '$COMMONPARTICLESROOT/options/StandardMuons.opts' )
+    from Configurables import DaVinci
     
+    DaVinci (
+        DataType   = 'DC06'     , # default  
+        Simulation = True       ,
+        HltType    = '' ) 
+   
     from Gaudi.Configuration import HistogramPersistencySvc
     HistogramPersistencySvc ( OutputFile = 'RCselect_histos.root' ) 
 

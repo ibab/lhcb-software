@@ -1,18 +1,20 @@
 #!/usr/bin/env python
 # =============================================================================
+# $Id: HandsOn1.py,v 1.12 2009-03-04 12:56:49 ibelyaev Exp $ 
+# =============================================================================
 """
-'Solution'-file for 'DataAccess/GetData' example (Bender Tutorial)
+'Solution'-file for 'Hands-On-1' example (Bender Tutorial)
 """
 # =============================================================================
 # @file
 #
-# "Solution"-file for 'DataAccess/GetData' example (Bender Tutorial)
+# "Solution"-file for 'Hands-On-1' example (Bender Tutorial)
 #
 # @author Vanya BELYAEV  ibelyaev@physics.syr.edu
 # @date   2004-10-12
 # =============================================================================
 __author__  = ' Vanya BELYAEV  Ivan.Belyaev@nikhef.nl '
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $  '  
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $  '  
 # =============================================================================
 ## import everything from BENDER
 from Bender.MainMC import *
@@ -49,9 +51,13 @@ def configure() :
     The configurtaion of the job
     """
     
-    ## general configuration :
-    importOptions( '$DAVINCIROOT/options/DaVinciCommon.opts') 
+    from Configurables import DaVinci
 
+    DaVinci (
+        DataType   = 'DC06'     , # default  
+        Simulation = True       ,
+        HltType    = '' ) 
+    
     ## get/create the application manager
     gaudi = appMgr()
     

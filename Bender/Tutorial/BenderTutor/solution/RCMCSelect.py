@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # =============================================================================
+# $Id: RCMCSelect.py,v 1.14 2009-03-04 12:56:49 ibelyaev Exp $
+# =============================================================================
 """
 'Solution'-file for 'RCMCselect.py' example (Bender Tutorial)
 """
@@ -10,7 +12,7 @@
 #  @date   2004-10-12
 # =============================================================================
 __author__  = ' Vanya BELYAEV  Ivan.Belyaev@nikhef.nl '
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $  '  
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $  '  
 # =============================================================================
 ## import everything from BENDER
 from Bender.MainMC import *
@@ -116,11 +118,13 @@ def configure() :
     Job configuration
     """
     
-
-    importOptions ( '$DAVINCIROOT/options/DaVinciCommon.opts' )
-    importOptions ( '$COMMONPARTICLESROOT/options/StandardKaons.opts' )
-    importOptions ( '$COMMONPARTICLESROOT/options/StandardMuons.opts' )
-
+    from Configurables import DaVinci
+    
+    DaVinci (
+        DataType   = 'DC06'     , # default  
+        Simulation = True       ,
+        HltType    = '' ) 
+    
     from Gaudi.Configuration import HistogramPersistencySvc
     HistogramPersistencySvc ( OutputFile = 'RCMCselect_histos.root' ) 
 

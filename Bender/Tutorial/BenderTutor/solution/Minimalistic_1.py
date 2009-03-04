@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # =============================================================================
+# $Id: Minimalistic_1.py,v 1.10 2009-03-04 12:56:49 ibelyaev Exp $
+# =============================================================================
 """
 Simple script to run 'DaVinci' job in Bender environment
 """
@@ -10,7 +12,7 @@ Simple script to run 'DaVinci' job in Bender environment
 #  @date 2006-11-16
 # =============================================================================
 __author__  = ' Vanya BELYAEV  Ivan.Belyaev@nikhef.nl '
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $  '  
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $  '  
 # =============================================================================
 ## import everything from bender 
 from Bender.Main import *
@@ -21,9 +23,13 @@ def configure() :
     This is the configuration method for module Minimalistic_1.py
     """
     
-    ## get the confgigurtaion for *.opts file
-    importOptions('$DAVINCIROOT/options/DaVinci.opts')
-
+    from Configurables import DaVinci
+    
+    DaVinci (
+        DataType   = 'DC06'     , # default  
+        Simulation = True       ,
+        HltType    = '' ) 
+    
     ## get/create application manager
     gaudi = appMgr() 
    

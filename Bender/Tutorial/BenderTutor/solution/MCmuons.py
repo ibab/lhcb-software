@@ -1,18 +1,20 @@
 #!/usr/bin/env python
 # =============================================================================
+# $Id: MCmuons.py,v 1.13 2009-03-04 12:56:49 ibelyaev Exp $ 
+# =============================================================================
 """
-'Solution'-file for 'MCmuons.py' example (Bender Tutorial)
+'Solution'-file for 'MC-muons' example (Bender Tutorial)
 """
 # =============================================================================
 # @file
 #
-# "Solution"-file for 'MCmuons.py' example (Bender Tutorial)
+# "Solution"-file for 'MC-muons' example (Bender Tutorial)
 #
 # @author Vanya BELYAEV  ibelyaev@physics.syr.edu
 # @date   2004-10-12
 # =============================================================================
 __author__  = ' Vanya BELYAEV  Ivan.Belyaev@nikhef.nl '
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $  '  
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $  '  
 # =============================================================================
 ## import everything from BENDER
 from Bender.MainMC import *
@@ -59,10 +61,15 @@ def configure() :
     """
     The configuration of the job
     """
-
-    ## get some external configuration 
-    importOptions ( '$DAVINCIROOT/options/DaVinciCommon.opts' )
-
+    
+    from Configurables import DaVinci
+    
+    DaVinci (
+        DataType   = 'DC06'     , # default  
+        Simulation = True       ,
+        HltType    = ''
+        ) 
+    
     ## get/create application manager
     gaudi = appMgr() 
    

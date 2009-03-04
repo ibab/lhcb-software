@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # =============================================================================
+# $Id: Minimalistic.py,v 1.12 2009-03-04 12:56:49 ibelyaev Exp $
+# =============================================================================
 """
 This is the simplest  Bender module to run the analysis job
 using '*'.opts configuration
@@ -11,7 +13,7 @@ using '*'.opts configuration
 #  @date 2006-11-16
 # =============================================================================
 __author__  = ' Vanya BELYAEV  Ivan.Belyaev@nikhef.nl '
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $  '  
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $  '  
 # =============================================================================
 ## get EVERYTHING from Bender
 from Bender.Main import *
@@ -21,10 +23,14 @@ def configure() :
     """
     The  basic configuration method
     """
-
-    ## get the confgigurtaion for *.opts file
-    importOptions ( '$DAVINCIROOT/options/DaVinci.opts' )
-
+    
+    from Configurables import DaVinci
+    
+    DaVinci (
+        DataType   = 'DC06'     , # default  
+        Simulation = True       ,
+        HltType    = '' ) 
+    
     ## get/create application manager
     gaudi = appMgr() 
 

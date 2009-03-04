@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # =============================================================================
+# $Id: TEMPLATE.py,v 1.4 2009-03-04 12:59:26 ibelyaev Exp $ 
+# =============================================================================
 ## @file
 #  This a template file for the Bender-based scriopt/module
 #  @author ...
@@ -10,7 +12,7 @@ This a template file for the Bender-based scriopt/module
 """
 # =============================================================================
 __author__  = " Do not forget your name here "
-__verison__ = "CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.3 $"
+__verison__ = "CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.4 $"
 # =============================================================================
 ## import all nesessary stuff from Bender
 from Bender.MainMC import * 
@@ -43,10 +45,13 @@ def configure ( **args ) :
     Configure the job
     """
     
-    ## read external configruation files
-    importOptions ( '$DAVINCIROOT/options/DaVinciCommon.opts' )
-    importOptions ( '$COMMONPARTICLESROOT/options/StandardKaons.opts' )
-
+    from Configurables import DaVinci
+    
+    DaVinci (
+        DataType   = 'DC06'     , # default  
+        Simulation = True       ,
+        HltType    = '' ) 
+    
     from Gaudi.Configuration import NTupleSvc, HistogramPersistencySvc
     HistogramPersistencySvc ( OutputFile = 'TEMPLATE_histos.root' )
     NTupleSvc ( Output = [ "FILE1 DATAFILE='TEMPLATE.root' OPT='NEW' TYP='ROOT'" ] )

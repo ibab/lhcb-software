@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 # =============================================================================
+# $Id: DataAccess.py,v 1.12 2009-03-04 12:56:49 ibelyaev Exp $ 
+# =============================================================================
 """
 'Solution'-file for 'DataAccess/GetData' example (Bender Tutorial)
 """
 # =============================================================================
-## @file
+## @file 
 #
 #  "Solution"-file for 'DataAccess/GetData' example (Bender Tutorial)
 #
@@ -12,7 +14,7 @@
 #  @date   2004-10-12
 # =============================================================================
 __author__  = ' Vanya BELYAEV  Ivan.Belyaev@nikhef.nl '
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $  '  
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $  '  
 # =============================================================================
 ## import everything from BENDER
 from Bender.MainMC import *
@@ -67,10 +69,13 @@ def configure( **args ) :
     """
     The configuration of the job
     """
-    
-    ## general configuration :
-    importOptions ( '$DAVINCIROOT/options/DaVinciCommon.opts' )
+    from Configurables import DaVinci
 
+    DaVinci (
+        DataType   = 'DC06'     , # default  
+        Simulation = True       ,
+        HltType    = '' ) 
+    
     ## get/create Application Manager
     gaudi = appMgr()
     

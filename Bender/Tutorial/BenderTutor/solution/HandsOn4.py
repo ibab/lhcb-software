@@ -1,18 +1,20 @@
 #!/usr/bin/env python
 # =============================================================================
+# Id:$ 
+# =============================================================================
 """
-'Solution'-file for RC-kaons cexample (Bender Tutorial)
+'Solution'-file for 'Hands-on-4' example (Bender Tutorial)
 """ 
 # =============================================================================
 # @file
 #
-# "Solution"-file for 'RCKaons.py' example (Bender Tutorial)
+# "Solution"-file for 'Hands-on-4' example (Bender Tutorial)
 #
 # @author Vanya BELYAEV ibelyaev@physics.syr.edu
 # @date   2004-10-12
 # =============================================================================
 __author__  = ' Vanya BELYAEV  Ivan.Belyaev@nikhef.nl '
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $  '  
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $  '  
 # =============================================================================
 ## import everything from BENDER
 from Bender.MainMC import *
@@ -96,11 +98,14 @@ def configure() :
     """
     configure the job
     """
+    
+    from Configurables import DaVinci
+    
+    DaVinci (
+        DataType   = 'DC06'     , # default  
+        Simulation = True       ,
+        HltType    = '' ) 
 
-
-    ## get some expernal configuration
-    importOptions ( '$DAVINCIROOT/options/DaVinciCommon.opts' ) 
-    importOptions ('$COMMONPARTICLESROOT/options/StandardKaons.opts')
     
     ## configure histograms & n-tuples 
     from Gaudi.Configuration import NTupleSvc, HistogramPersistencySvc 
