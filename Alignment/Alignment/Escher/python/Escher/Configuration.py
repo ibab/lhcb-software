@@ -3,7 +3,7 @@
 #  @author Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.3 2009-03-04 18:00:22 jblouw Exp $"
+__version__ = "$Id: Configuration.py,v 1.4 2009-03-04 18:03:07 jblouw Exp $"
 __author__  = "Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>"
 
 from Gaudi.Configuration  import *
@@ -11,7 +11,7 @@ import GaudiKernel.ProcessJobOptions
 from Configurables import ( LHCbConfigurableUser, LHCbApp, RecSysConf, TrackSys,
                             ProcessPhase, GaudiSequencer, DstConf, TAlignment )
 
-importOptions('$STDOPTS/PreloadUnits.opts')
+#importOptions('$STDOPTS/PreloadUnits.opts')
 
 
 ## @class Escher
