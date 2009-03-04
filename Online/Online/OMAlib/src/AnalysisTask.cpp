@@ -1,4 +1,4 @@
-// $Id: AnalysisTask.cpp,v 1.11 2009-03-04 09:46:15 ggiacomo Exp $
+// $Id: AnalysisTask.cpp,v 1.12 2009-03-04 10:33:12 ggiacomo Exp $
 
 
 // from Gaudi
@@ -73,8 +73,12 @@ StatusCode AnalysisTask::initialize() {
       info()<< "listening to latest saveset for task "<<*iF << endmsg;
       m_saveset.push_back( new SavesetFinder(this, *iF, m_partition) );
     }
+    // stay here until killed
+    while (1) {
+      sleep(99999);
+    }
   }
-  
+
   return StatusCode::SUCCESS;
 }
 

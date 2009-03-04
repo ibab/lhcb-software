@@ -13,8 +13,13 @@ ApplicationMgr.EvtSel = "NONE";
 
 DBDrivenAnalysisTask.OutputLevel = 3;
 DBDrivenAnalysisTask.useHistDB   = true;
+<<<<<<< AutoAnalysis.opts
+DBDrivenAnalysisTask.Partition = "Giacomo";
+DBDrivenAnalysisTask.InputTasks = {"MuonDAQMon"};
+=======
 DBDrivenAnalysisTask.Partition = "FEST";
 DBDrivenAnalysisTask.InputTasks = {"any"};
+>>>>>>> 1.6
 
 // for testing offline on existinf savesets, uncomment the following:
 //ApplicationMgr.EvtMax = 0;

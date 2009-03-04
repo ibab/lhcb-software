@@ -1,4 +1,4 @@
-// $Id: ExampleAnalysisTask.cpp,v 1.6 2009-03-04 09:33:52 ggiacomo Exp $
+// $Id: ExampleAnalysisTask.cpp,v 1.7 2009-03-04 10:33:12 ggiacomo Exp $
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "OMAlib/ExampleAnalysisTask.h"
 
@@ -18,6 +18,7 @@ ExampleAnalysisTask::~ExampleAnalysisTask()
 
 StatusCode ExampleAnalysisTask::initialize() 
 {
+  // mandatory: call default initialize method 
   StatusCode sc = AnalysisTask::initialize(); 
   if ( sc.isFailure() ) return sc;  
   
@@ -29,7 +30,9 @@ StatusCode ExampleAnalysisTask::initialize()
 StatusCode ExampleAnalysisTask::analyze(std::string& SaveSet,
                                         std::string Task)
 {
-  AnalysisTask::analyze(SaveSet, Task);
+  // mandatory: call default analyze method 
+  StatusCode sc = AnalysisTask::analyze(SaveSet, Task);
+  if ( sc.isFailure() ) return sc;  
 
   // open saveset (a ROOT file)
   TFile* f = new TFile(SaveSet.c_str(),"READ");
