@@ -23,10 +23,10 @@ presel = GaudiSequencer("SeqDC06SelBu2eeK")
 #
 # True filter criterion
 #
-from Configurables import FilterTrueTracks, MCDecayFinder
-importOptions( "$HLTSELCHECKERROOT/options/FilterTrueTracks.py")
-FilterTrueTracks().addTool(MCDecayFinder())
-FilterTrueTracks().MCDecayFinder.Decay =  "{[B+ -> ^K+ ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}{,gamma}]cc, [B+ -> ^K+ ^e+ ^e- {,gamma}{,gamma}{,gamma}{,gamma}{,gamma}]cc}"
+#from Configurables import FilterTrueTracks, MCDecayFinder
+#importOptions( "$HLTSELCHECKERROOT/options/FilterTrueTracks.py")
+#FilterTrueTracks().addTool(MCDecayFinder())
+#FilterTrueTracks().MCDecayFinder.Decay =  "{[B+ -> ^K+ ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}{,gamma}]cc, [B+ -> ^K+ ^e+ ^e- {,gamma}{,gamma}{,gamma}{,gamma}{,gamma}]cc}"
 #
 from Configurables import GaudiSequencer
 #
@@ -67,7 +67,7 @@ DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B+ -> (^J/psi(1S) => ^e+ ^e-) ^K+
 #
 from Configurables import DaVinci
 DaVinci().EvtMax = -1
-DaVinci().PrintFreq = 1
+DaVinci().PrintFreq = 100
 DaVinci().SkipEvents = 0
 DaVinci().HltType = "Hlt1+Hlt2"                # Both Hlt levels
 DaVinci().Hlt2Requires = 'L0'                  # Ignore Hlt1 in 2

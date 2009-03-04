@@ -38,3 +38,6 @@ Hlt2DecayTreeTuple.ToolList += [
     , "TupleToolPrimaries"
     , "TupleToolEventInfo"
     , "LoKi::Hybrid::TupleTool/LoKiTool" ]
+
+Hlt2DecayTreeTuple.RevertToPositiveID = True
+
