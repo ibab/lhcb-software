@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Xb_three.py,v 1.1 2009-03-04 11:53:39 ibelyaev Exp $ 
+# $Id: Xb_three.py,v 1.2 2009-03-04 15:09:12 ibelyaev Exp $ 
 # =============================================================================
 ## @file BenderExample/Xb_three.py
 #  The simple Bender-based example: find recontructed Xb -> h h h candidates 
@@ -28,7 +28,7 @@ The simple Bender-based example: find recontructed Xb -> h h h candidates
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
 # =============================================================================
 ## import everything form bender
 import GaudiKernel.SystemOfUnits as Units 
@@ -444,8 +444,7 @@ if __name__ == '__main__' :
     configure()
 
     ## run the job
-    run(5000)
-    
+    run(1000)    
 
 # =============================================================================
 # The END 

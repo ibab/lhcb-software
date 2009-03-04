@@ -28,7 +28,7 @@ The simple Bender-based example: find recontructed D0 -> mumu candidates
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ "
 # =============================================================================
 ## import everything form bender
 import GaudiKernel.SystemOfUnits as Units 
@@ -106,7 +106,6 @@ def configure ( **args ) :
     from Configurables import DaVinci, HistogramPersistencySvc , EventSelector 
     
     daVinci = DaVinci (
-        SkipEvents = 10000      ,
         DataType   = 'DC06'      , # default  
         Simulation = True        ,
         HltType    = '' ) 

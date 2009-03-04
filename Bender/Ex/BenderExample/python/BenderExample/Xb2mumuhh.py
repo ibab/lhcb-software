@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Xb2mumuhh.py,v 1.1 2009-03-04 11:53:39 ibelyaev Exp $
+# $Id: Xb2mumuhh.py,v 1.2 2009-03-04 15:09:12 ibelyaev Exp $
 # =============================================================================
 ## @file BenderExample/Bs2DsK.py
 #  The simple Bender-based example: find recontructed Xv -> mu mu h+ h- candidates 
@@ -28,7 +28,7 @@ The simple Bender-based example: find recontructed Xv -> mu mu h+ h- candidates
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
 # =============================================================================
 ## import everything form bender
 import GaudiKernel.SystemOfUnits as Units 
@@ -117,7 +117,7 @@ class Xb2mumuhh(AlgoMC) :
         hadrons = self.select ( 'h'  ,
                                 ( ( 'pi+' == ABSID ) |
                                   ( 'K+'  == ABSID ) |
-                                  ( 'p'   == ABSID ) ) & mcXb )
+                                  ( 'p+'  == ABSID ) ) & mcXb )
         
         if hadrons.size() < 2 : return SUCCESS
         
@@ -161,9 +161,9 @@ def configure ( **args ) :
     EventSelector (
         PrintFreq = 100 ,
         Input = [
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Xb2mumuhh_1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ,
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Xb2mumuhh_2.dst' TYP='POOL_ROOTTREE' OPT='READ'" ,
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Xb2mumuhh_3.dst' TYP='POOL_ROOTTREE' OPT='READ'" ,
+        #"DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Xb2mumuhh_1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ,
+        #"DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Xb2mumuhh_2.dst' TYP='POOL_ROOTTREE' OPT='READ'" ,
+        #"DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Xb2mumuhh_3.dst' TYP='POOL_ROOTTREE' OPT='READ'" ,
         "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2PsiPhi.dst'   TYP='POOL_ROOTTREE' OPT='READ'" ,
         "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2PsiPhi_1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ,
         "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2PsiPhi_2.dst' TYP='POOL_ROOTTREE' OPT='READ'" ,
@@ -176,8 +176,8 @@ def configure ( **args ) :
     ## create local algorithm:
     alg = Xb2mumuhh()
     
-    ##gaudi.addAlgorithm ( alg ) 
-    gaudi.setAlgorithms( [alg] )
+    gaudi.addAlgorithm ( alg ) 
+    ##gaudi.setAlgorithms( [alg] )
     
     alg.PP2MCs = [ 'Relations/Rec/ProtoP/Charged' ]
     ## print histos 

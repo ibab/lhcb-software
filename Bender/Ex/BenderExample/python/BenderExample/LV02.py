@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: LV02.py,v 1.1 2009-03-04 11:53:39 ibelyaev Exp $ 
+# $Id: LV02.py,v 1.2 2009-03-04 15:09:12 ibelyaev Exp $ 
 # =============================================================================
 ## @file BenderExample/LV02.py
 # The simple Bender-based example:
@@ -30,7 +30,7 @@ show 'Bs -> Ds pi' to 'Bs -> Ds K' reflection
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
 # =============================================================================
 ## import everything form bender
 import GaudiKernel.SystemOfUnits as Units 
@@ -236,7 +236,7 @@ if __name__ == '__main__' :
     configure()
 
     ## run the job
-    run(-1)
+    run(1000)
     
 
 # =============================================================================

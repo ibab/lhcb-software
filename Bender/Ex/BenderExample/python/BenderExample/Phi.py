@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # =============================================================================
+# $Id: Phi.py,v 1.8 2009-03-04 15:09:12 ibelyaev Exp $
+# =============================================================================
 ## The simple Bender-based example: plot dikaon mass peak
 #
 #  This file is a part of 
@@ -25,7 +27,7 @@ The simple Bender-based example plot dikaon mass peak
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $ "
 # =============================================================================
 ## import everything form bender 
 from Bender.Main import * 

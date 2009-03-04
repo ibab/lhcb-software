@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: D02hh.py,v 1.1 2009-03-04 11:53:39 ibelyaev Exp $
+# $Id: D02hh.py,v 1.2 2009-03-04 15:09:12 ibelyaev Exp $
 # =============================================================================
-## @fil3 BenderExample/D02hh.py
+## @file BenderExample/D02hh.py
 #  The simple Bender-based example: find recontructed D0 -> hh candidates 
 #
 #  This file is a part of 
@@ -28,7 +28,7 @@ The simple Bender-based example: find recontructed D0 -> hh candidates
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
 # =============================================================================
 ## import everything from bender
 import GaudiKernel.SystemOfUnits as Units 
@@ -62,7 +62,7 @@ class D02hh(AlgoMC) :
         d0 += Nodes.Pid('pi-') | Nodes.Pid('K-')
         d0 += Nodes.Pid('pi+') | Nodes.Pid('K+')
         
-        d0 = Trees.MCPhotos ( d1 )
+        d0 = Trees.MCPhotos ( d0 )
         
         st =  d0.validate ( self.ppSvc() )
         if st.isFailure()  : return st
