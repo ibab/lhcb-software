@@ -14,7 +14,7 @@ GaudiSequencer( 'MoniVELOSeq' ).Members +=\
                   , Velo__VeloTrackMonitor  ( 'VeloTrackMonitor'   )
                   ]
 
-TrackUser = Velo__VeloTrackMonitor( 'VeloTrackMonitor' )
+#TrackUser = Velo__VeloTrackMonitor( 'VeloTrackMonitor' )
 #TrackUser.TrackLocation     = "Rec/Track/Best"
 #TrackUser.TrackLocation     = "Rec/Track/Forward"
 #TrackUser.OutputLevel       = 2
