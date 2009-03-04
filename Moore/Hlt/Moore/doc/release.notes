@@ -3,7 +3,7 @@ Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
 ! 2009-03-04 - Gerhard Raven
- - updates in online options files for Moore v6r1
+ - updates in online options & setup files for Moore v6r1
 
 ! 2009-02-12 - Gerhard Raven
  - replaceL0Banks no longer in HltConf, as it has no control over TopAlg order...
