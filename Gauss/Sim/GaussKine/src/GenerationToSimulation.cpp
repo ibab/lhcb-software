@@ -1,4 +1,4 @@
-// $Id: GenerationToSimulation.cpp,v 1.7 2009-03-04 14:13:15 robbep Exp $
+// $Id: GenerationToSimulation.cpp,v 1.8 2009-03-04 15:03:44 robbep Exp $
 // Include files 
 // local
 #include "GenerationToSimulation.h"
@@ -460,13 +460,18 @@ Gaudi::LorentzVector GenerationToSimulation::primaryVertex( const HepMC::GenEven
     result = V -> position() ;
     return result ;
   } else {
-  // Last option, take the production vertex of the particle with bar code 1
+  // Last option, take the production or end vertex of the particle with bar code 1
     HepMC::GenParticle * P = genEvent -> barcode_to_particle( 1 ) ;
     HepMC::GenVertex   * V = 0 ;
     if ( 0 != P ) {
       V = P -> production_vertex() ;
       if ( 0 != V ) result = V -> position() ;
-      else error() << "The first particle has no production vertex !" << endreq ;
+      else {
+        V = P -> end_vertex() ;
+        if ( 0 != V ) result = V -> position() ;
+        else error() << "The first particle has no production vertex and no end vertex !" 
+                     << endreq ;
+      }
     } else error() << "No particle with barcode equal to 1 !" << endreq ;
     return result ;
   }
