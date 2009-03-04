@@ -3,13 +3,16 @@
 #  @author Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.1 2009-02-21 23:46:21 jblouw Exp $"
+__version__ = "$Id: Configuration.py,v 1.2 2009-03-04 09:13:52 jblouw Exp $"
 __author__  = "Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>"
 
 from Gaudi.Configuration  import *
 import GaudiKernel.ProcessJobOptions
 from Configurables import ( LHCbConfigurableUser, LHCbApp, RecSysConf, TrackSys,
                             ProcessPhase, GaudiSequencer, DstConf, TAlignment )
+
+importOptions('$STDOPTS/PreloadUnits.opts')
+
 
 ## @class Escher
 #  Configurable for Escher application
@@ -39,7 +42,7 @@ class Escher(LHCbConfigurableUser):
        ,"PackedOutput": True  # Flag whether or not to use packed containers
        ,"NoWarnings":   False # suppress all messages with MSG::WARNING or below 
        ,"TrackContainer" :   "Long" # Tracktype to be used for alignment (Long, Seed, VeloTT...)
-       ,"Detectors" :   ["VELO", "TT", "IT", "OT", "MUON", "Tr", "Vertex"] # detectors to be aligned
+       ,"Detectors" :   ["VELO", "TT", "IT", "OT", "MUON"] # detectors to be aligned
        ,"AlignmentLevel" : "layers" # level of alignment, stations, layers, quarters, modules, sensors...
        ,"DatasetName":  ""    # string used to build file names
        ,"DDDBtag":      "" # Tag for DDDB. Default as set in DDDBConf for DataType
@@ -55,6 +58,8 @@ class Escher(LHCbConfigurableUser):
        ,"Kalman" :     False # run the kalman filter type alignment
        ,"Millepede":   False # run the Millepede type alignment
        ,"OutputLevel" : 3 # 
+       , "Incident"     :  ""     # for Millepede style alignment, there are two incident handles: GlobalMPedeFit and Converged
+                                  # for Kalman style alignment, there is one handle: UpdateConstants.
         }
 
 
@@ -119,10 +124,11 @@ class Escher(LHCbConfigurableUser):
         if  self.getProp("Millepede") :
             self.setProp("Kalman", False )
             log.info("Using Millepede type alignment!")
+            self.setProp("Incident", "GlobalMPedeFit")
             if "VELO" in self.getProp("Detectors") : # generate the proper tracking sequence depending on which detectors one wants to align            
                TrackSys.TrackPatRecAlgorithms = ["Velo"] 
                log.info("Aligning VELO")
-            if "OT" in self.getProp("Detectors") or "OT" in self.getProp("Detectors"):
+            if "OT" in self.getProp("Detectors") or "ot" in self.getProp("Detectors"):
 	       log.info("Aligning OT")
                TrackSys.TrackPatRecAlgorithms = ["PatSeed"]
                GaudiSequencer("RecoRICHSeq").Enable = False 
@@ -130,47 +136,53 @@ class Escher(LHCbConfigurableUser):
 	       GaudiSequencer("RecoTTSeq").Enable = False
 	       GaudiSequencer("RecoITSeq").Enable = True
                log.info("Escher: initalizing TAlignment!")
-
-               AlignSequence = ["OT"]
-               ProcessPhase("Align").DetectorList += AlignSequence
+               ProcessPhase("Align").DetectorList += ["OT"]
                ta = TAlignment()
                ta.Method = "Millepede"
  	       ta.TrackContainer = self.getProp("TrackContainer")
 	       ta.Detectors =  self.getProp("Detectors")
                ta.Sequencer = GaudiSequencer("AlignOTSeq")
+               seqname= [ta.Sequencer.getName()]
+               ta.Level = self.getProp("AlignmentLevel")
+               self.AlignSequence += seqname
         if self.getProp("Kalman") :
 	    self.setProp("Millepede", False )
 	    log.info("Using Kalman style alignment!")
+            self.setProp("Incident", "UpdateConstants")
 	    if "VELO" in self.getProp("Detectors"): 
                   TrackSys.TrackPatRecAlgorithms = ["Velo"] 
                   log.info("Aligning VELO")
                   GaudiSequencer("RecoRICHSeq").Enable = False 
                   GaudiSequencer("RecoVELOSeq").Enable = True
-                  GaudiSequencer("RecoTTSeq").Enable = False
-                  GaudiSequencer("RecoITSeq").Enable = False
+                  GaudiSequencer("RecoTTSeq").Enable = True
+                  GaudiSequencer("RecoITSeq").Enable = True
 		  log.info("Escher: initalizing TAlignment!")
-		  AlignSequence = ["VELO"]
-		  ProcessPhase("Align").DetectorList += AlignSequence
+		  ProcessPhase("Align").DetectorList += ["VELO"]
 		  ta = TAlignment()
 		  ta.Method = "Kalman"
-		  ta.TrackContainer = "LHCb::TrackLocation::Velo"
-		  ta.Detectors = "Velo"
+		  ta.Level = self.getProp("AlignmentLevel")
+		  ta.Detectors = self.getProp("Detectors")
 		  ta.Sequencer = GaudiSequencer("AlignVELOSeq")
+                  seqname= [ta.Sequencer.getName()]
+                  self.AlignSequence += seqname
+                  log.info("Seqname = ", seqname)
 	    if "OT" in self.getProp("Detectors"):
 		  TrackSys.TrackPatRecAlgorithms = ["PatSeed"]
+                  log.info("Aligning OT")
                   GaudiSequencer("RecoRICHSeq").Enable = False 
                   GaudiSequencer("RecoVELOSeq").Enable = False
                   GaudiSequencer("RecoTTSeq").Enable = False
                   GaudiSequencer("RecoITSeq").Enable = True
                   log.info("Escher: initalizing TAlignment!")
-                  AlignSequence = ["OT"]
-                  ProcessPhase("Align").DetectorList += AlignSequence
+                  ProcessPhase("Align").DetectorList += ["OT"]
                   ta = TAlignment()
-                  ta.Method = "Kalman"
+		  ta.Sequencer = GaudiSequencer("AlignOTSeq")
+                  seqname= [ta.Sequencer.getName()]
                   ta.TrackContainer = "Rec/Track/Best"
                   ta.Detectors =  self.getProp("Detectors")
 		  ta.Level = self.getProp("AlignmentLevel")
-                  ta.Sequencer = GaudiSequencer("AlignOTSeq")
+                  self.AlignSequence += seqname
+                  log.info("Seqname = ", seqname)
 
 
 	

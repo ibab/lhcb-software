@@ -6,6 +6,7 @@
 ##############################################################################
 
 from Configurables import ( Escher, TrackSys )
+importOptions('$STDOPTS/PreloadUnits.opts')
 
 Escher().DataType     = "2008"
 #-- DC06 database tags are backwards compatible by construction, use default
