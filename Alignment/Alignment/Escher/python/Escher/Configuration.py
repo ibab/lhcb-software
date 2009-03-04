@@ -3,7 +3,7 @@
 #  @author Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.2 2009-03-04 09:13:52 jblouw Exp $"
+__version__ = "$Id: Configuration.py,v 1.3 2009-03-04 18:00:22 jblouw Exp $"
 __author__  = "Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>"
 
 from Gaudi.Configuration  import *
@@ -31,35 +31,35 @@ class Escher(LHCbConfigurableUser):
     
     # Steering options
     __slots__ = {
-        "EvtMax":          -1 # Maximum number of events to process
-       ,"SkipEvents":   0     # events to skip
-       ,"PrintFreq":    300     # The frequency at which to print event numbers
-       ,"DataType"   : "2008" # Data type, can be ['DC06','2008']
-       ,"WithMC":       False # set to True to use MC truth
-       ,"Simulation":   False # set to True to use SimCond
-       ,"InputType":    "DST" # or "DIGI" or "ETC" or "RDST" or "DST"
-       ,"OutputType":   "NONE" # or "RDST" or "NONE". Also forwarded to RecSys
-       ,"PackedOutput": True  # Flag whether or not to use packed containers
-       ,"NoWarnings":   False # suppress all messages with MSG::WARNING or below 
-       ,"TrackContainer" :   "Long" # Tracktype to be used for alignment (Long, Seed, VeloTT...)
-       ,"Detectors" :   ["VELO", "TT", "IT", "OT", "MUON"] # detectors to be aligned
-       ,"AlignmentLevel" : "layers" # level of alignment, stations, layers, quarters, modules, sensors...
-       ,"DatasetName":  ""    # string used to build file names
-       ,"DDDBtag":      "" # Tag for DDDB. Default as set in DDDBConf for DataType
-       ,"CondDBtag":    "" # Tag for CondDB. Default as set in DDDBConf for DataType
-       ,"UseOracle": False  # if False, use SQLDDDB instead
-       ,"MainSequence": []    # The default main sequence, see self.DefaultSequence
-       ,"InitSequence": ["Reproc", "Escher", "Calo"] # default init sequence
-       ,"AlignSequence": []
+         "EvtMax"		: -1       # Maximum number of events to process
+       , "SkipEvents"		: 0        # events to skip
+       , "PrintFreq"		: 300      # The frequency at which to print event numbers
+       , "DataType"   		: "2008"   # Data type, can be ['DC06','2008']
+       , "WithMC"		: False    # set to True to use MC truth
+       , "Simulation"		: False    # set to True to use SimCond
+       , "InputType"		: "DST"    # or "DIGI" or "ETC" or "RDST" or "DST"
+       , "OutputType"		: "NONE"   # or "RDST" or "NONE". Also forwarded to RecSys
+       , "PackedOutput"		: True     # Flag whether or not to use packed containers
+       , "NoWarnings"		: False    # suppress all messages with MSG::WARNING or below 
+       , "TrackContainer" 	: "Long"   # Tracktype to be used for alignment (Long, Seed, VeloTT...)
+       , "Detectors" 		: ["VELO", "TT", "IT", "OT", "MUON", "Tr", "Vertex"] # detectors to be aligned
+       , "AlignmentLevel" 	: "layers" # level of alignment, stations, layers, quarters, modules, sensors...
+       , "DatasetName"		: ""       # string used to build file names
+       , "DDDBtag"		: ""       # Tag for DDDB. Default as set in DDDBConf for DataType
+       , "CondDBtag"		: ""       # Tag for CondDB. Default as set in DDDBConf for DataType
+       , "UseOracle"		: False    # if False, use SQLDDDB instead
+       , "MainSequence"		: []       # The default main sequence, see self.DefaultSequence
+       , "InitSequence"		: ["Reproc", "Escher", "Calo"] # default init sequence
+       , "AlignSequence"	: []
+       , "Kalman" 		: False    # run the kalman filter type alignment
+       , "Millepede"		: False    # run the Millepede type alignment
+       , "OutputLevel" 		: 3        # 
+       , "Incident"     	:  ""      # for Millepede style alignment, there are two incident handles: GlobalMPedeFit and Converged
+                                           # for Kalman style alignment, there is a handle: UpdateConstants.
         # Following are options forwarded to RecSys
-       ,"RecoSequence"   : [] # The Sub-detector reconstruction sequencing. See RecSys for default
-       ,"SpecialData"    : [] # Various special data processing options. See KnownSpecialData for all options
-       ,"Context":     "Offline" # The context within which to run
-       ,"Kalman" :     False # run the kalman filter type alignment
-       ,"Millepede":   False # run the Millepede type alignment
-       ,"OutputLevel" : 3 # 
-       , "Incident"     :  ""     # for Millepede style alignment, there are two incident handles: GlobalMPedeFit and Converged
-                                  # for Kalman style alignment, there is one handle: UpdateConstants.
+       , "RecoSequence"   	: [] # The Sub-detector reconstruction sequencing. See RecSys for default
+       , "SpecialData"    	: [] # Various special data processing options. See KnownSpecialData for all options
+       , "Context"		: "Offline" # The context within which to run
         }
 
 
