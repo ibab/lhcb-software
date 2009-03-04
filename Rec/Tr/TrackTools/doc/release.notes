@@ -3,6 +3,39 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+! 2009-03-02 - Pavel Krokovny
+- New tool is implemented: "TrackStateInitTool"
+  This tool re-initialize the track starting from LHCbIDs. It can be used to get
+	the same fit results without dependence on previous fitting history.
+	Input: LHCb track.
+  It cleans the states, nodes and measurement the the tracks. Then it obtains
+  a new states using Velo and TT hits. The PatVeloFitLHCbIDs and
+  PatSeedingTool are used for the Velo and T-stations respectively.
+  This tool should be used after the pattern recognition algorithms.
+  
+-	New algorithm is implemented: "TrackStateInitAlg".
+	It apply the TrackStateInitTool for the all tracks in container.
+  Properties: default tracks container = LHCb::TrackLocation::Default,
+							clear existing states on track = true.	     
+
+! 2009-03-02 - David Hutchcroft
+ - Changed default tune of TrackVelodEdxCharge to expect 47.1 ADC per cluster
+
+!======================== TrackTools v3r14 2009-02-20 ========================
+! 2009-02-09 - Johannes Albrecht
+ - changes to run the track fit with Lite clusters in MeasurementProvider.cpp,h
+	 undid all changes in the last two revisions and added instead the 
+	 properties for the providers for the subdetectors
+
+! 2009-01-22 - Wouter Hulsbergen
+ - Added option to correct for error on energy loss error on
+   StateSimpleBetheBlochEnergyCorrectionTool
+
+! 2009-01-20 - Marco Cattaneo
+ - Migrate to LHCb::ParticlePropertySvc
+
+! 2009-01-19 David Hutchcroft
+ - Added code to handle Velo Lite measurements to tools
 
 ! 2009-03-02 - David Hutchcroft
  - Changed default tune of TrackVelodEdxCharge to expect 47.1 ADC per cluster
