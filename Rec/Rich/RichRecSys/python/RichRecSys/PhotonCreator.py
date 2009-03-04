@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: PhotonCreator.py,v 1.5 2008-11-14 17:14:05 jonrob Exp $"
+__version__ = "$Id: PhotonCreator.py,v 1.6 2009-03-04 12:05:13 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -36,8 +36,13 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
     ## Apply configurations
     def applyConf(self):
 
+        # Context
         context = self.getProp("Context")
-      
+
+        # Photon selection criteria
+        selMode = self.getProp("SelectionMode")
+        if selMode == "" : selMode = "Tight"
+        
         # -----------------------------------------------------------------------
         # Photon maker
 
@@ -46,10 +51,10 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
         # -----------------------------------------------------------------------
         # Photon predictor (a.k.a. pre-selection)
 
-        pred = RichTools().photonPredictor()
+        predictor = RichTools().photonPredictor()
 
         # Configure creator with the correct predictor
-        creator.addTool( pred, name = "Predictor" )
+        creator.addTool( predictor, name = "Predictor" )
 
         # -----------------------------------------------------------------------
         # Photon reconstruction (i.e. calculating the CK theta/phi values)
@@ -62,19 +67,51 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
 
         # -----------------------------------------------------------------------
 
-        # Photon selection criteria
-        if self.getProp("SelectionMode") == "" : self.setProp("SelectionMode","Tight")
-        selMode = self.getProp("SelectionMode")
         if selMode == "Tight" :
-            # DO nothing as yet
+            
+            # Default cuts are 'tight', so do nothing
             pass
+        
         elif selMode == "Loose" :
-            # Options to be defined ...
-            raise RuntimeError("Photon selection mode Loose not yet defined. Bug CRJ")
+            
+            # ================================================================
+            # Photon Predictor cuts
+            # ================================================================
+            # No # sigma cut
+            predictor.NSigma                 = [ 99999, 99999, 99999 ]
+            # ================================================================
+
+            # ================================================================
+            # Photon Creator cuts
+            # ================================================================
+            # No # sigma cut
+            creator.NSigma                   = [ 99999, 99999, 99999 ]
+            # ================================================================
+        
         elif selMode == "All" :
+
+            # ================================================================
+            # Photon Predictor cuts
+            # ================================================================
+            # Min and max search window for track centre - hit seperation
+            predictor.MinTrackROI            = [ 0,     0,     0     ]
+            predictor.MaxTrackROI            = [ 99999, 99999, 99999 ]
+               # No # sigma cut
+            predictor.NSigma                 = [ 99999, 99999, 99999 ]
+            # ================================================================
+
+            # ================================================================
+            # Photon Creator cuts
+            # ================================================================
+            # Allow all photon CK theta values
             creator.MaxAllowedCherenkovTheta = [ 99999, 99999, 99999 ]
             creator.MinAllowedCherenkovTheta = [ 0,     0,     0     ]
+            # No # sigma cut
             creator.NSigma                   = [ 99999, 99999, 99999 ]
+            # Any probability
             creator.MinPhotonProbability     = [ 0,     0,     0     ]
+            # ================================================================
+                      
         else:
+            
             raise RuntimeError("ERROR : Unknown selection mode '%s'"%selMode)

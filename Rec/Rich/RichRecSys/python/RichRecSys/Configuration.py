@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.14 2009-02-18 18:08:00 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.15 2009-03-04 12:05:13 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -13,6 +13,7 @@ from PixelCreator  import *
 from PhotonCreator import *
 from CKThetaResolution import *
 from RichMarkovRingFinder.Configuration import *
+from Configurables import RichTemplateRingFinderConf
 from RichGlobalPID_ import RichGlobalPIDConfig
 from RichHLTLocalPID_ import RichHLTLocalPIDConfig
 from Configurables import GaudiSequencer
@@ -28,6 +29,7 @@ class RichRecSysConf(RichConfigurableUser):
     ## Possible used Configurables
     __used_configurables__ = [ RichHLTLocalPIDConfig,
                                RichMarkovRingFinderConf,
+                               RichTemplateRingFinderConf,
                                RichGlobalPIDConfig,
                                RichTrackCreatorConfig,
                                RichPixelCreatorConfig,
@@ -51,7 +53,7 @@ class RichRecSysConf(RichConfigurableUser):
        ,"InitPixels":      True   # Run an initialisation algorithm to create the pixels
        ,"InitTracks":      True   # Run an initialisation algorithm to create the tracks
        ,"InitPhotons":     True   # Run an initialisation algorithm to create the photons
-       ,"TracklessRings":  False  # Run the trackless ring finding algorithms
+       ,"TracklessRingAlgs": [""]   # Run the given Trackless ring finding algorithms
        ,"CheckProcStatus": True   # Check the status of the ProcStatus object
        ,"PidConfig": "FullGlobal" # The PID algorithm configuration
        ,"MakeSummaryObjects": False # Make the reconstruction summary TES data objects
@@ -205,14 +207,21 @@ class RichRecSysConf(RichConfigurableUser):
         #-----------------------------------------------------------------------------
         # Trackless rings
         #-----------------------------------------------------------------------------
-        if self.getProp("TracklessRings"):
-            print "Using RichMarkovRingFinderConf 1"
-            finderSeq                           = GaudiSequencer("Rich"+cont+"RingFinderSeq")
-            finderSeq.MeasureTime               = True
-            sequence.Members                   += [ finderSeq ]
-            #self.setOtherProp(RichMarkovRingFinderConf(),"context")
-            RichMarkovRingFinderConf().Context  = self.getProp("Context")
-            RichMarkovRingFinderConf().setProp("Sequencer", finderSeq)
+        ringalgs = self.getProp("TracklessRingAlgs")
+
+        if "Markov" in ringalgs :
+            mfinderSeq                           = GaudiSequencer("Rich"+cont+"MarkovRingFinderSeq")
+            mfinderSeq.MeasureTime               = True
+            sequence.Members                    += [ mfinderSeq ]
+            self.setOtherProp(RichMarkovRingFinderConf(),"Context")
+            RichMarkovRingFinderConf().setProp("Sequencer",mfinderSeq)
+            
+        if "Template" in ringalgs :
+            tfinderSeq = GaudiSequencer("Rich"+cont+"TemplateRingFinderSeq")
+            tfinderSeq.MeasureTime               = True
+            sequence.Members                    += [ tfinderSeq ]
+            self.setOtherProp(RichTemplateRingFinderConf(),"Context")
+            RichTemplateRingFinderConf().setProp("Sequencer",tfinderSeq)
            
         #-----------------------------------------------------------------------------
         # PID
