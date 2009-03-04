@@ -1,8 +1,9 @@
-!$Id: release.notes,v 1.25 2009-03-03 15:13:35 graven Exp $
+!$Id: release.notes,v 1.26 2009-03-04 08:58:17 graven Exp $
 Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
 
+!========================== HltGlobalMonitor v2r2 2009-03-04 ===============
 
 !2009-03-03 - Gerhard Raven
  - slight change of logic to avoid using TISTOS tool 
