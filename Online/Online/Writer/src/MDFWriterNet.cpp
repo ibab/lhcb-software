@@ -309,7 +309,8 @@ std::string MDFWriterNet::createNewFile(unsigned int runNumber)
 {
   // override this if the m_rpcObj looks different
   *m_log << MSG::INFO << "createAndOpenFile: " << m_streamID << "runNumber: " << runNumber << endmsg;
-  return m_rpcObj->createNewFile(runNumber, m_streamID);
+  std::string identifier( getenv("UTGID") );
+  return m_rpcObj->createNewFile(runNumber, m_streamID, identifier);
 }
 
 /**

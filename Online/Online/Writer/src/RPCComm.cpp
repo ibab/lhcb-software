@@ -190,7 +190,7 @@ std::string RPCComm::createNewFile(unsigned int runNumber)
   return file;
 }
 
-std::string RPCComm::createNewFile(unsigned int runNumber, std::string streamID)
+std::string RPCComm::createNewFile(unsigned int runNumber, std::string streamID, std::string identifier)
 {
   char headerData[1024], xmlData[1024], response[1024];
   int ret;
@@ -199,7 +199,7 @@ std::string RPCComm::createNewFile(unsigned int runNumber, std::string streamID)
   char endStr[] = "</string>";
   size_t start, end;
 
-  snprintf(xmlData, sizeof(xmlData), NEWFILE_TEMPLATE_STREAM, runNumber, streamID.c_str());
+  snprintf(xmlData, sizeof(xmlData), NEWFILE_TEMPLATE_STREAM, runNumber, streamID.c_str(), identifier.c_str());
   snprintf(headerData, sizeof(headerData), HEADER_TEMPLATE,
           "WriterHost", (long unsigned) strlen(xmlData));
 

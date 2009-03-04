@@ -67,7 +67,7 @@ namespace LHCb {
       
       std::string createNewFile(unsigned int runNumber);
 
-      std::string createNewFile(unsigned int runNumber, std::string streamID);
+      std::string createNewFile(unsigned int runNumber, std::string streamID, std::string identifier);
       
       /**Simple constructor.*/
       RPCComm(const char *serverURL) { m_serverURL = new URL(serverURL); }
@@ -113,6 +113,9 @@ namespace LHCb {
   "  <params>\n"   \
   "    <param><value>\n" \
   "      <string>%u</string>\n" \
+  "    </value></param>\n" \
+  "    <param><value>\n" \
+  "      <string>%s</string>\n" \
   "    </value></param>\n" \
   "    <param><value>\n" \
   "      <string>%s</string>\n" \
