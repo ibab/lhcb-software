@@ -4,6 +4,9 @@
 ! Purpose     : "Interface" to Hijing 
 !-----------------------------------------------------------------------------
 
+! 2009-03-04 - Patrick Robbe
+ - ran.F: set as double precision
+
 ! 2009-02-27 - Patrick Robbe
  - add rlu.F, another random function used in Hijing to override it.
 
