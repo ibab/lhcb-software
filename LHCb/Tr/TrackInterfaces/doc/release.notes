@@ -3,6 +3,8 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
+! 2009-03-02 - Pavel Krokovny
+- New interface is created for TrackStateInitTool
 
 !====================== TrackInterfaces v4r1 2009-02-18 ======================
 ! 2009-01-19 - David Hutchcroft
