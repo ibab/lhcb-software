@@ -3,13 +3,17 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
-! 2009-03-03 - Gerhard Raven
-  - add labels to step plot in HltLine
-
 ! 2009-03-03 - Antonio Perez-Calero
   - In HltFunctions.h and HltFunctionFactories.cpp: added filters VertexTrack1PT, VertexTrack1IP 
   	and similar for track2. Given a vertex, apply a filter in each of the daughter tracks, to 
   	distinguish between muon and the extra track
+
+! 2009-02-25 - Gerhard Raven
+ - remove obsolete HltDecisionPredicateFactory
+
+!========================== HltCommon v5r2 2009-03-04 ===================
+! 2009-03-03 - Gerhard Raven
+  - add labels to step plot in HltLine
 
 ! 2009-03-02 - Gerhard Raven
   - bug fix to prefetching configurations: filtering on directory didn't
@@ -17,9 +21,6 @@
 
 ! 2009-02-26 - Gerhard Raven
  - fix bug in HltVertexMaker when not producing histograms...
-
-! 2009-02-25 - Gerhard Raven
- - remove obsolete HltDecisionPredicateFactory
 
 !========================== HltCommon v5r1 2009-02-23 ===================
 ! 2009-02-22 - Gerhard Raven

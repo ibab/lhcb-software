@@ -3,7 +3,7 @@
 # Maintainer : Jose Angel Hernando Morata 
 #============================================================================
 package           HltCommon
-version           v5r1
+version           v5r2
 
 # Structure
 #============================================================================
