@@ -4,6 +4,10 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-03-04 - Patrick Robbe
+ - GenerationToSimulation.cpp: fixes for "skipGeant4" option to allow
+   transfering directly from HepMC to MCParticles/MCVertices
+
 !========================= GaussKine v3r3 2009-01-14 ========================= 
 ! 2008-12-12 - Patrick Robbe
  - GenerationToSimulation: processing of particles coming from 
