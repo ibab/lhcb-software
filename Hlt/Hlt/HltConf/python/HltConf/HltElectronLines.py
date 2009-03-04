@@ -22,9 +22,10 @@ class HltElectronLinesConf(LHCbConfigurableUser) :
     # steering variables
     __slots__ = { 'Compan_PtCut'         :  1000.    # for global optimization 1
                 , 'Ele_IPCut'            :  0.1      # for global optimization 2
-                , 'SingleEle_PtCut'      :  3000.
+                , 'SingleEle_PtCut'      :  3000.    # for global optimization 3 optional
                 , 'Jpsi_LowMassCut'      :  2400.
                 , 'Jpsi_HighMassCut'     :  3200.
+                , 'Ele_EtCut'            :  2600.
                 }
 
     def __apply_configuration__(self) :
@@ -36,11 +37,12 @@ class HltElectronLinesConf(LHCbConfigurableUser) :
         SINGLEELE_PTCUT = str(self.getProp('SingleEle_PtCut'))
         LOWMASS         = str(self.getProp('Jpsi_LowMassCut'))
         HIGHMASS        = str(self.getProp('Jpsi_HighMassCut'))
+        L0ET_CUT        = str(self.getProp('Ele_EtCut'))
 
         ##### common bodies IP
         
         IP_CUT = str(self.getProp('Ele_IPCut'))
-        prepareElectronWithIP = [ Member ( 'TF', 'L0Electrons', FilterDescriptor = [ 'L0ET,>,2600.' ] )
+        prepareElectronWithIP = [ Member ( 'TF', 'L0Electrons', FilterDescriptor = [ 'L0ET,>,'+L0ET_CUT ] )
                                 , Member ( 'TU', 'TConf', RecoName = 'TConf',
                                               tools = [ Tool( HltTrackUpgradeTool,
                                               tools = [ Tool( L0ConfirmWithT,  particleType = 2 ) ] ) ] )
@@ -63,7 +65,7 @@ class HltElectronLinesConf(LHCbConfigurableUser) :
         ##### common bodies no IP
 
         IP_CUT = "0.0"
-        prepareElectronNoIP   = [ Member ( 'TF', 'L0Electrons', FilterDescriptor = [ 'L0ET,>,2600.' ] )
+        prepareElectronNoIP   = [ Member ( 'TF', 'L0Electrons', FilterDescriptor = [ 'L0ET,>,'+L0ET_CUT ] )
                                 , Member ( 'TU', 'TConf', RecoName = 'TConf',
                                               tools = [ Tool( HltTrackUpgradeTool,
                                               tools = [ Tool( L0ConfirmWithT,  particleType = 2 ) ] ) ] )

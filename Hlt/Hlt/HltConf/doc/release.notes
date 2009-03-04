@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.158 2009-03-03 13:35:53 graven Exp $ 
+! $Id: release.notes,v 1.159 2009-03-04 15:12:59 witekma Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-03-04 - Mariusz Witek
+ - add slot into HltElectronLines.py for global optimization
 
 ! 2009-03-03 - Gerhard Raven
  - add skeleton python to group lines into alleys for monitoring 
