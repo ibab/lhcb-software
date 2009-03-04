@@ -1,5 +1,5 @@
 #include "$MOOREOPTS/DEFAULT.opts"
 
-HltConfigSvc.prefetchTCK = { "0x80240000", "0x80250000", "0x80260000", "0x80270000", "0x80280000", "0x80290000", "0x802a0000","0x802b0000" };
+HltConfigSvc.prefetchDir = "MOORE_v6r1"
 HltConfigSvc.initialTCK  = @OnlineEnv.InitialTCK;
 HltConfigSvc.checkOdin   = true;

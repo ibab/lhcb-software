@@ -2,12 +2,16 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2009-03-04 - Gerhard Raven
+ - updates in online options files for Moore v6r1
+
 ! 2009-02-12 - Gerhard Raven
  - replaceL0Banks no longer in HltConf, as it has no control over TopAlg order...
 
 ! 2009-02-05 - Gerhard Raven
  - Moore.py: verbose now Verbose
 
+!========================== Moore v6r0 2009-02-03 ===================
 ! 2009-02-03 - Gerhard Raven
  - add settings for LHCb and FEST partitions
  - use the above in CreateRunMooreOnline
