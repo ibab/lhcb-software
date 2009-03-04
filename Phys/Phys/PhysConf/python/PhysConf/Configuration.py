@@ -1,7 +1,7 @@
 """
 High level configuration tools for PhysConf
 """
-__version__ = "$Id: Configuration.py,v 1.12 2009-02-09 16:50:14 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.13 2009-03-04 13:21:48 jpalac Exp $"
 __author__ = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -17,8 +17,6 @@ class PhysConf(LHCbConfigurableUser) :
      ,  "Simulation"      : True                               # set to True to use SimCond
      ,  "InputType"       : 'DST'                              # Hopefully irrelevant
         }
-
-    __used_configurables__ = [ LHCbApp ]
 
 #
 # configure reconstruction to be redone
