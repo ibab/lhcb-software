@@ -1,4 +1,4 @@
-// $Id: OMAMessage.cpp,v 1.5 2009-02-20 15:12:08 ggiacomo Exp $
+// $Id: OMAMessage.cpp,v 1.6 2009-03-04 11:43:45 ggiacomo Exp $
 #include <time.h>
 #include "OnlineHistDB/OMAMessage.h"
 using namespace std;
@@ -193,6 +193,8 @@ void OMAMessage::setLevelFromString(const char* slevel) {
 
 char * OMAMessage::humanTime() {
   time_t rawtime = m_time;
+  if (m_time == 0)
+    time( &rawtime);
   struct tm * timeinfo = gmtime ( &rawtime );
   return asctime (timeinfo);
 }
