@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : Phys/Particle2MCTruth
+! Responsible : Juan PALACIOS
+! Purpose     : Collection of implementations of IParticle2MCAssociator and
+!               Particle2MCAssociatorBase for Particle -> MCTruth matching
+!-----------------------------------------------------------------------------
+
+! 2009-03-04 - Juan PALACIOS
+ - First import. Add MCMatchObjP2MCRelator, uses LoKi stuff.
