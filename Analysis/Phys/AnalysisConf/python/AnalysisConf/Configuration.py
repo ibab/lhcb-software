@@ -1,7 +1,7 @@
 """
 High level configuration tools for AnalysisConf
 """
-__version__ = "$Id: Configuration.py,v 1.10 2009-02-24 15:15:09 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.11 2009-03-04 13:19:39 jpalac Exp $"
 __author__ = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -17,7 +17,6 @@ class AnalysisConf(LHCbConfigurableUser) :
         , "RedoMCLinks"     : False                              # On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association. 
          }
 
-    __used_configurables__ = [ LHCbApp ]
 #
 # configure reconstruction to be redone
 #
