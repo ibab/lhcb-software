@@ -3,6 +3,8 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2009-03-02 - Pavel Krokovny
+- add new seed fitting class
 
 !========================== PatAlgorithms v3r15 2009-02-20 ===================
 ! 2009-02-09 - Johannes Albrecht
