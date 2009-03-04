@@ -1,4 +1,4 @@
-from Configurables import ( AlignmentTools, TAConfig, Derivatives, AlignTrTools, AlignmentTools, Centipede, MuonMeasurementProvider )
+from Configurables import ( TAConfig, Derivatives, AlignTrTools, Centipede, MuonMeasurementProvider )
 import AlignTrTools.Configuration
 
 #tac = AlignTrTools.Configuration.AligTrTools()
