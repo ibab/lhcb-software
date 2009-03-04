@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.cpp,v 1.12 2009-03-04 14:42:35 ggiacomo Exp $
+// $Id: OMAMsgInterface.cpp,v 1.13 2009-03-04 17:31:11 ggiacomo Exp $
 #include <cstring>
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAMsgInterface.h"
@@ -63,25 +63,26 @@ void OMAMsgInterface::loadMessages() {
 void OMAMsgInterface::resetMessages(std::string& TaskName) {
   std::vector<OMAMessage*>::iterator iM;
   for (iM=m_MessageStore.begin(); iM != m_MessageStore.end(); iM++) {
-    if(TaskName == (*iM)->taskName() )
+    if(TaskName == (*iM)->taskName()  || TaskName == "any")
       (*iM)->unconfirm();
   }
 }
 
 void OMAMsgInterface::refreshMessageList(std::string& TaskName) {
-  OMAMessage* tbdMessage;
-  std::vector<OMAMessage*>::iterator iM;
-  for (iM=m_MessageStore.begin(); iM != m_MessageStore.end(); iM++) {
-    if(TaskName == (*iM)->taskName() ) {
+  std::vector<OMAMessage*>::iterator iM = m_MessageStore.begin();
+  while( iM != m_MessageStore.end() ) {
+    bool kept=true;
+    if(TaskName == (*iM)->taskName() || TaskName == "any") {
       if( false == (*iM)->confirmed()) {
+        kept=false;
         lowerAlarm( (**iM) );
         if (m_histDB->canwrite())
           (*iM)->remove();
-        tbdMessage = (*iM);
+        delete (*iM);
         iM = m_MessageStore.erase(iM);
-        delete tbdMessage;
       }
     }
+    if (kept) iM++;
   }
   m_histDB->commit();
 }

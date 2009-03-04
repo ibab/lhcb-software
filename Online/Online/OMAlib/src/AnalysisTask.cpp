@@ -1,4 +1,4 @@
-// $Id: AnalysisTask.cpp,v 1.12 2009-03-04 10:33:12 ggiacomo Exp $
+// $Id: AnalysisTask.cpp,v 1.13 2009-03-04 17:31:11 ggiacomo Exp $
 
 
 // from Gaudi
@@ -58,9 +58,13 @@ StatusCode AnalysisTask::initialize() {
   if ( ! m_inputFiles.empty() ) {
     // single shot: analyze these files now 
     std::vector<std::string>::iterator iF;
+    std::string task =  m_inputTasks.empty() ? "any" : m_inputTasks[0];
     for(iF =  m_inputFiles.begin() ; iF != m_inputFiles.end() ; iF++) {
       info() <<"Analyzing histograms on file "<<*iF<<endmsg;
-      analyze( *iF , m_inputTasks.empty() ? "any" : m_inputTasks[0] );
+      resetMessages(task);
+      analyze( *iF , task);
+      refreshMessageList(task);
+      sleep(5);
     }
   }
   else {
