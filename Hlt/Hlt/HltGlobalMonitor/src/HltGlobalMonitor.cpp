@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.24 2009-03-03 15:13:35 graven Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.25 2009-03-04 10:51:08 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -298,8 +298,10 @@ void HltGlobalMonitor::monitorHLT(const LHCb::ODIN*,
 
   for (size_t i = 0; i<reps.size();++i) {
    
+    ++m_allCall[i];
     fill( m_hltInclusive, i, reps[i].second->decision() );
     if (!reps[i].second->decision()) continue;
+    ++m_allAcc[i];
    
     if (nAcc==1) fill( m_hltExclusive, i, reps[i].second->decision() );
 
