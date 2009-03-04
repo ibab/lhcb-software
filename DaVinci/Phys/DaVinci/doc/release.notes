@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.316 2009-03-02 21:08:30 pkoppenb Exp $
+! $Id: release.notes,v 1.317 2009-03-04 13:54:17 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,9 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-03-04 - Patrick Koppenburg
+ - Do not impose MessageSvc format
 
 ! 2009-03-02 - Patrick Koppenburg
  - Protect agaisnt 0 print frequency
