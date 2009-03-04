@@ -1,11 +1,19 @@
-!$Id: release.notes,v 1.14 2009-02-20 14:12:28 jpalac Exp $
+!$Id: release.notes,v 1.15 2009-03-04 13:22:01 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/PhysConf
 ! Responsible : Patrick Koppenburg
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
-!========================== PhysConf v1r0 2009-02-20 =========================
+!========================== PhysConf v1r1p1 2009-03-04 =======================
+
+! 2009-03-04 - Juan PALACIOS
+ - python/PhysConf/Configuration.py
+  . Remove __used_configurables__ = [ LHCbApp ]
+ - cmt/requirements
+  . Increase to v1r1p1
+
+!========================== PhysConf v1r1 2009-02-20 =========================
 
 ! 2009-02-09 - Patrick Koppenburg
  - Protect against doing muon ID in RSDTs. The raw buffer is not there.
