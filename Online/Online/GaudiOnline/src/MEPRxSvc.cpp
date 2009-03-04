@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.75 2009-03-03 13:00:36 niko Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.76 2009-03-04 17:37:56 niko Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -53,7 +53,10 @@ typedef unsigned int uint;
 #define MAX_SRC 320
 #endif 
 
-#define RAWBANKSIZE (sizeof(RawBank) - sizeof(int)) /* f*** C99 */ 
+#define RAWBHDRSIZ (sizeof(RawBank) - sizeof(int)) /* f*** C99 */ 
+#define MEPHDRSIZ   sizeof(MEPHdr)
+#define MEPFHDRSIZ  sizeof(MEPFrgHdr)  
+
 #ifdef _WIN32
 #define ERRMSG(a,x) do {  \
   a <<  MSG::ERROR << x << " " << MEPRxSys::sys_err_msg() << " in " << __FUNCDNAME__ << ":" << __LINE__ << endmsg;} while(0);
@@ -172,11 +175,6 @@ namespace LHCb  {
       m_log << "]" << endmsg;
       (m_parent->m_totBadMEP)++;
     }
-
-#define RAWBHDRSIZ (sizeof(RawBank) - 4)
-#define MEPHDRSIZ   sizeof(MEPHdr)
-#define MEPFHDRSIZ  sizeof(MEPFrgHdr)  
-
     /// We create a MEP fragment with the required error bank
     int createDAQErrorBankEntries();
     int setupDAQErrorBankHdr();
@@ -342,7 +340,7 @@ void MEPRx::addODINInfo(int n) {
     else {
 	LHCb::RawBank *bank = (LHCb::RawBank *) (((u_int8_t *) m_odinMEP) + 
 						MEPHDRSIZ + MEPFHDRSIZ + 
-						n * (sizeof(LHCb::RawBank) + 
+						n * (RAWBHDRSIZ + 
 						     sizeof(LHCb::OnlineRunInfo) +
 						     MEPFHDRSIZ));
 	LHCb::OnlineRunInfo *odin = bank->begin<LHCb::OnlineRunInfo>(); // raetselhaft
