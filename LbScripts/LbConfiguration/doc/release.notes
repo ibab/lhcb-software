@@ -1,3 +1,8 @@
+2009-03-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/LbLogin.py: added default value at CERN for STAGE_HOST,
+	RFIO_USE_CASTOR_V2 and CASTOR_HOME (if it has not been already defined)
+
 2009-03-03  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: don't set the mkpublic and mkprivate if we are not at CERN.

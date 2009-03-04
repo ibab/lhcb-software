@@ -42,7 +42,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.15 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.16 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -272,6 +272,16 @@ class LbLoginScript(Script):
                 self._add_echo( ' as an example ')
                 self._add_echo(' setenv $MYSITEROOT /home/ranjard/Install')
 
+# sites defaults
+
+        if opts.cmtsite == "CERN" :
+            ev["STAGE_HOST"] = "castor_lhcb"
+            ev["RFIO_USE_CASTOR_V2"] = "YES"
+            # set CASTOR_HOME if it has not been defined
+            if sys.platform != "win32" :
+                if not ev.has_key("CASTOR_HOME") and ev.has_key("HOME") :
+                    if ev["HOME"].startswith("/afs/") :
+                        ev["CASTOR_HOME"] = ev["HOME"].replace("/afs/", "/castor/")
 #-----------------------------------------------------------------------------------
 # Core CMT business
 
