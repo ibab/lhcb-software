@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.13 2009-03-04 09:33:52 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.14 2009-03-04 14:42:35 ggiacomo Exp $
 /*
   Online Monitoring Analysis library
   G. Graziani (INFN Firenze)
@@ -83,13 +83,12 @@ TH1* OMAlib::findRootHistogram(OnlineHistogram* h,
     std::string rootHname = h->algorithm()+"/"+h->hname();
     out =  (TH1*) f->Get(rootHname.c_str());
     if(!out) { // try w/o algorithm name (bkw compatibility)
-      out = (TH1*) f->Get(h->hname().c_str());
+      out= (TH1*) f->Get(h->hname().c_str());
     }
     if (out) {
+      out->AddDirectory(kFALSE); // be sure the object stays in memory when closing the file
       out->SetName(rootHname.c_str()); // be sure the algorithm name is inside
-      out->SetDirectory(0); // be sure the object stays in memory when closing the file
     }
-      
   }
   else { // analysis (virtual) histogram
     std::string Algorithm;
@@ -130,6 +129,11 @@ TH1* OMAlib::findRootHistogram(OnlineHistogram* h,
                           h->identifier(), 
                           htitle,
                           out);
+          // delete sources
+          for (std::vector<TH1*>::iterator ih= sources.begin() ; 
+               ih != sources.end() ; ih++) {
+            delete (*ih);
+          }
         }
       }
     }
@@ -141,15 +145,16 @@ TH1* OMAlib::findRootHistogram(OnlineHistogram* h,
 
 
 TH1* OMAlib::getReference(OnlineHistogram* h,
-                             int startrun,
-                             std::string DataType) {
-  TH1* out=0;
+                          int startrun,
+                          std::string DataType,
+                          TH1* existingHisto) {
+  TH1* out=NULL;
   if(h) {
     std::stringstream refFile;
     std::string task= h->task();
     if(h->isAnaHist()) { // remove _ANALYSIS from task name
       task = task.substr(0,task.find("_ANALYSIS"));
-      // note that this works only if all sources are from the same task!!
+      // note that all sources must be from the same task!!
     }
     refFile << refRoot() << "/"
             << task << "/" << DataType << "_"
@@ -157,11 +162,11 @@ TH1* OMAlib::getReference(OnlineHistogram* h,
     TFile* f = new TFile(refFile.str().c_str(),"READ");
     if(f) {
       if (false == f->IsZombie() ) {        
-        out = findRootHistogram(h, f);
+        out = findRootHistogram(h, f, existingHisto);
+        f->Close();
       }
-      f->Close();
+      delete f;
     }
-    delete f;
   }
   return out;
 }

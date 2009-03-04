@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAlib.h,v 1.9 2009-03-04 09:33:52 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAlib.h,v 1.10 2009-03-04 14:42:35 ggiacomo Exp $
 #ifndef OMALIB_OMALIB_H
 #define OMALIB_OMALIB_H 1
 /** @class  OMAlib OMAlib.h OMAlib/OMAlib.h
@@ -43,7 +43,8 @@ class OMAlib : public OMAcommon
   /// get reference histogram. RETURNED TH1 OBJECT IS OWNED BY USER
   TH1* getReference(OnlineHistogram* h,
                     int startrun = 1,
-                    std::string DataType = "default");
+                    std::string DataType = "default",
+                    TH1* existingHisto = NULL);
 
  private:
   void doAlgList();

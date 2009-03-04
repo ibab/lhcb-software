@@ -1,4 +1,4 @@
-// $Id: DBDrivenAnalysisTask.cpp,v 1.11 2009-03-04 10:34:25 ggiacomo Exp $
+// $Id: DBDrivenAnalysisTask.cpp,v 1.12 2009-03-04 14:42:35 ggiacomo Exp $
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "OMAlib/DBDrivenAnalysisTask.h"
 #include "OnlineHistDB/OnlineHistDB.h"
@@ -11,6 +11,9 @@ DBDrivenAnalysisTask::~DBDrivenAnalysisTask()
 {
   std::map<std::string, TH1*>::iterator ih;
   for (ih=m_ownedHisto.begin(); ih != m_ownedHisto.end(); ++ih) {
+    delete (*ih).second;
+  }
+  for (ih=m_ownedRefs.begin(); ih != m_ownedRefs.end(); ++ih) {
     delete (*ih).second;
   }
 }
@@ -69,12 +72,20 @@ StatusCode DBDrivenAnalysisTask::analyze(std::string& SaveSet,
               OMAalg* thisalg= getAlg(anaAlgs[iana]);
               if (thisalg) {
                 if (OMACheckAlg* cka = dynamic_cast<OMACheckAlg*>(thisalg) ) {
+                  TH1* myref = NULL;
+                  if (thisalg->needRef()) {
+                    myref=getReference((*ih),1,"default",m_ownedRefs[(*ih)->identifier()]);
+                    if ( (*ih)->isAnaHist() ) { // keep track for later use
+                      m_ownedRefs[(*ih)->identifier()] = myref;
+                    }
+                  }
                   cka->exec(*(rooth),
                             warningThr,
                             alarmThr,
                             inputs,
                             anaIDs[iana],
-                            thisalg->needRef() ? getReference((*ih)) : NULL);
+                            myref);
+                  if (myref) delete myref;
                 }
                 else {
                   err()<<"algorithm "<<anaAlgs[iana]<< " is not a check algorithm"<<endmsg;

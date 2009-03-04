@@ -1,4 +1,5 @@
-// $Id: OMAMsgInterface.cpp,v 1.11 2009-03-04 09:33:52 ggiacomo Exp $
+// $Id: OMAMsgInterface.cpp,v 1.12 2009-03-04 14:42:35 ggiacomo Exp $
+#include <cstring>
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAMsgInterface.h"
 #include "GaudiKernel/MsgStream.h"
@@ -141,7 +142,9 @@ void OMAMsgInterface::raiseMessage(OMAMessage::OMAMsgLevel level,
 
 bool OMAMsgInterface::raiseAlarm(OMAMessage& message) {
   (*m_outs) << (MSG::Level) message.level() << "==================================================================="<<endmsg;
-  (*m_outs) << (MSG::Level) message.level() << "********     "<<message.humanTime();
+  char* time = message.humanTime();
+  std::remove(time, time+strlen(time)+1,'\n');
+  (*m_outs) << (MSG::Level) message.level() << "********     "<<time <<endmsg;
   (*m_outs) << (MSG::Level) message.level() << message.levelString() <<" from Analysis Task "<<
     m_anaTaskname <<"  in analysis "<<    message.ananame() <<endmsg;
   if(!message.hIdentifier().empty())
