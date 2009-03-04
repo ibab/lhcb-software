@@ -1,0 +1,16 @@
+!-----------------------------------------------------------------------------
+! Package      : Rich/RichRingRec
+! Responsible  : Sajan Easo
+! Purpose      : Reconstruct Cherenkov Rings for Particle Identification
+!----------------------------------------------------------------------------
+
+! 2007-08-23  Sajan Easo
+ - Output put into the RichPID class
+
+! 2007-07-23  Sajan Easo
+ - modifications to the way the info from the radiators are combined.
+
+! 2007-07-13  Sajan Easo
+ - Release of first version.
+
+!=====================================================================

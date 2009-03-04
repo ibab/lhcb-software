@@ -1,0 +1,49 @@
+#============================================================================
+# Created    : 20/08/2007
+# Maintainer : Sajan Easo
+#============================================================================
+# $Id: requirements,v 1.1.1.1 2009-03-04 12:01:45 jonrob Exp $
+#============================================================================
+
+package RichRecTemplateRings
+version v1r0
+
+# ================ structure ================================================
+branches src cmt doc python
+include_path none
+
+# ================ dependencies =============================================
+use RichRecBase    v*  Rich
+use MCInterfaces   v*  Kernel
+use AIDA           v*  LCG_Interfaces
+use fftw           v*  LCG_Interfaces
+private
+use GaudiObjDesc v* -no_auto_imports
+end_private
+
+# Produce Header-Files from XML description and export include directories
+#============================================================================
+#apply_pattern god_headers files=../xml/*.xml
+#apply_pattern install_more_includes more=RichRecTemplateRings offset=Event
+
+#============================================================================
+# Setup Python Configurables
+#============================================================================
+apply_pattern install_python_modules
+
+# ================ component library=========================================
+library RichRecTemplateRings  ../src/*.cpp  \
+                              ../src/base/*.cpp \
+                              ../src/TargetData/*.cpp \  
+                              ../src/TemplateData/*.cpp \
+                              ../src/Utility/*.cpp \
+                              ../src/FFPlan/*.cpp \
+                              ../src/HistoMonitor/*.cpp \
+                              ../src/RingFit/*.cpp \          
+                              ../src/MCTruth/*.cpp
+apply_pattern component_library library=RichRecTemplateRings
+
+# Private stuff
+#============================================================================
+private
+include_dirs $(RICHRECTEMPLATERINGSROOT)/src
