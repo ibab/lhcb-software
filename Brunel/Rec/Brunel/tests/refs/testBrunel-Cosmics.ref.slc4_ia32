@@ -3050,8 +3050,6 @@ StatusCodeSvc        INFO
 Num | Function                       | Source Library
 ----+--------------------------------+------------------------------------------
   6 | GaudiException::~GaudiException() | libGaudiPythonLib.so
- 38 | Rich::DAQ::RawDataFormatTool::decodeToSmartIDs_2007(LHCb::RawBank const&, std::map<Rich::DAQ::Level1HardwareID const, std::map<Rich::DAQ::L1IngressID const, Rich::DAQ::IngressInfo, std::less<Rich::DAQ::L1IngressID const>, std::allocator<std::pair<Rich::DAQ::L1IngressID const, Rich::DAQ::IngressInfo> > >, std::less<Rich::DAQ::Level1HardwareID const>, std::allocator<std::pair<Rich::DAQ::Level1HardwareID const, std::map<Rich::DAQ::L1IngressID const, Rich::DAQ::IngressInfo, std::less<Rich::DAQ::L1IngressID const>, std::allocator<std::pair<Rich::DAQ::L1IngressID const, Rich::DAQ::IngressInfo> > > > > >&) const | libRichDAQ.so
- 10 | Velo::VeloTrackMonitor::execute() | libVeloRecMonitors.so
 
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

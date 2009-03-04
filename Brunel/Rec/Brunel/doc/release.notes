@@ -3,6 +3,17 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-03-04 - Marco Cattaneo
+ - Update references for fix to untested StatusCode in RichDAQ and
+   VeloTrackMonitor
+
+! 2009-03-03 - Marco Cattaneo
+ - Remove obsolete DQ directory
+ - Bug fix: use RunRecordStream for writing FSR, not OutputFSRStream
+   (was writing one FSR per event!)
+ - Update references Velo dE/dx normalisation change, TrackVertexMonitor update
+
+! 2009-02-27 - Marco Cattaneo
  - Update references for:
    . Fix to untested StatusCode in LHCbIDsToMCParticles and in 
      TrackGhostClassificationBase
