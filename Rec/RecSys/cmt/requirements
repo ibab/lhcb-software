@@ -69,6 +69,7 @@ use RichRecStereoTools   v1r5p1  Rich # Chris Jones
 use RichRecSys           v3r16   Rich # Chris Jones
 use RichRecTools         v4r7    Rich # Chris Jones
 use RichRecTrackTools    v1r8p1  Rich # Chris Jones
+use RichRecTemplateRings v1r0    Rich # Sajan Easo
 
 # Global reco
 use GlobalReco           v6r19   Rec  # Chris Jones
