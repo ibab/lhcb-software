@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitor.cpp,v 1.14 2009-03-03 14:49:36 skhalil Exp $
+// $Id: VeloTrackMonitor.cpp,v 1.15 2009-03-04 07:08:10 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -130,17 +130,19 @@ StatusCode Velo::VeloTrackMonitor::execute() {
   
   // Retrieve the VeloClusters and VeloTracks
   // ----------------------------------------
-  StatusCode sc1 = getVeloTracks();
-  StatusCode sc2 = getVeloClusters();
-  if(!(sc1.isSuccess() && sc2.isSuccess())){
-    return StatusCode::SUCCESS;
-  }
-
+  bool moniTracks = true;
+  StatusCode sc = getVeloTracks();
+  if( sc.isFailure() ) moniTracks = false;
+  sc = getVeloClusters();
+  if( sc.isFailure() ) moniTracks = false;
+  
   //Monitor the Tracks
   //------------------
-  StatusCode sc3 = monitorTracks();  
-  if ( !( sc3.isSuccess() ) ) {
-    return StatusCode::SUCCESS;
+  if( moniTracks ) {
+    sc = monitorTracks();  
+    if( sc.isFailure() ) {
+      return StatusCode::SUCCESS;
+    }
   }
   
   return StatusCode::SUCCESS;
