@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.317 2009-03-04 13:54:17 pkoppenb Exp $
+! $Id: release.notes,v 1.318 2009-03-04 16:25:00 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -11,6 +11,7 @@
 
 ! 2009-03-04 - Patrick Koppenburg
  - Do not impose MessageSvc format
+ - Small changes for DB access
 
 ! 2009-03-02 - Patrick Koppenburg
  - Protect agaisnt 0 print frequency

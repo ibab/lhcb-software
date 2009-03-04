@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.53 2009-03-04 13:54:17 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.54 2009-03-04 16:25:00 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -52,7 +52,7 @@ class DaVinci(LHCbConfigurableUser) :
        , "Simulation"         : """ set to True to use SimCond. Forwarded to PhysConf """
        , "DDDBtag"            : """ Tag for DDDB. Default as set in DDDBConf for DataType """
        , "CondDBtag"          : """ Tag for CondDB. Default as set in DDDBConf for DataType """
-       , "UseOracle"          : """ if False, use SQLDDDB instead """
+       , "UseOracle"          : """ if False, use SQLDDDB instead. Needs SetupProject DaVinci [vers] vomsapic"""
        , "Input"              : """ Input data. Can also be passed as a second option file. """
        , "HistogramFile"      : """ Write name of output Histogram file """
        , "TupleFile"          : """ Write name of output Tuple file """
@@ -70,7 +70,7 @@ class DaVinci(LHCbConfigurableUser) :
                                     """
          }
 
-    __used_configurables__ = [ LHCbApp, PhysConf, AnalysisConf, HltConf, DstConf, L0Conf ]
+    __used_configurables__ = [ PhysConf, AnalysisConf, HltConf, DstConf, L0Conf, LHCbApp ]
 
     ## Known monitoring sequences run by default
     KnownMonitors        = []    
@@ -83,9 +83,12 @@ class DaVinci(LHCbConfigurableUser) :
         Define DB and so on
         """
         # Delegate handling to LHCbApp configurable
-        self.setOtherProps(LHCbApp(),["DataType","UseOracle","Simulation"])
-        LHCbApp.DDDBtag = self.getProp("DDDBtag")
-        LHCbApp.CondDBtag = self.getProp("CondDBtag")
+#        self.setOtherProps(LHCbApp(),["DataType","CondDBtag","DDDBtag","UseOracle","Simulation"])
+        self.setOtherProps(LHCbApp(),["DataType","Simulation"])
+        # that's a hack. Why does setOtherProps not work?
+        LHCbApp().CondDBtag = self.getProp("CondDBtag")
+        LHCbApp().DDDBtag = self.getProp("DDDBtag")
+        LHCbApp().UseOracle = self.getProp("UseOracle")
         log.info("Set DDDBtag "+self.getProp("DDDBtag"))
         self.setOtherProps(PhysConf(),["DataType","Simulation","InputType"])
         self.setOtherProps(AnalysisConf(),["DataType","Simulation"])

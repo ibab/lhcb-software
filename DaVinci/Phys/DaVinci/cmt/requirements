@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.409 2009-03-04 13:54:17 pkoppenb Exp $
+# $Id: requirements,v 1.410 2009-03-04 16:25:00 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : J. Palacios
 #
@@ -23,7 +23,7 @@ use Python             v*    LCG_Interfaces -no_auto_imports
 use HepMC              v*    LCG_Interfaces -no_auto_imports
 
 # Databases
-use DDDB               v1r*  Det            -no_auto_imports
+use DDDB               v*    Det            -no_auto_imports
 use ParamFiles         v8r0                 -no_auto_imports
 use FieldMap           v5r*                 -no_auto_imports
 
