@@ -1,4 +1,4 @@
-// $Id: DBDrivenAnalysisTask.cpp,v 1.8 2009-02-19 10:49:50 ggiacomo Exp $
+// $Id: DBDrivenAnalysisTask.cpp,v 1.9 2009-03-04 09:33:52 ggiacomo Exp $
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "OMAlib/DBDrivenAnalysisTask.h"
 #include "OnlineHistDB/OnlineHistDB.h"
@@ -42,20 +42,14 @@ StatusCode DBDrivenAnalysisTask::analyze(std::string& SaveSet,
     m_histDB->getHistogramsWithAnalysis( &hlist);
     std::vector<OnlineHistogram*>::iterator ih;
     for(ih = hlist.begin(); ih != hlist.end(); ih++) {
-      if( Task != "any" &&
-          Task != (*ih)->task() ) continue;
+      if( Task != (*ih)->task() ) continue;
       debug() << "histogram with analysis found in DB: "<<(*ih)->identifier() <<
         "  virtual="<<  (*ih)->isAnaHist() <<endmsg;
-      TH1* rooth = NULL;
-      if ( (*ih)->isAnaHist() ) { //load sources and produce ROOT histograms
-        rooth = onTheFlyHistogram( (*ih), f);
+      TH1* rooth = findRootHistogram(*ih, f ,m_ownedHisto[(*ih)->identifier()]);
+      if ( (*ih)->isAnaHist() ) { // keep track for later use
+        m_ownedHisto[(*ih)->identifier()] = rooth;
       }
-      else {
-        std::string rootHname = (*ih)->algorithm()+"/"+(*ih)->hname();
-        debug() << "looking for histogram object "<<rootHname<<" in source file"<<endmsg;
-        rooth = (TH1*) f->Get(rootHname.c_str());
-        if(rooth) rooth->SetName(rootHname.c_str()); // be sure the algorithm name is inside
-       }
+      
       if (rooth) {
         debug() <<"   histogram found in source"<<endmsg;
         (*ih)->getAnalyses(anaIDs,anaAlgs);
@@ -94,6 +88,7 @@ StatusCode DBDrivenAnalysisTask::analyze(std::string& SaveSet,
             err() << " error loading analysis parameters"<<endmsg;
           }
         } // end loop on analyses to be done on this histogram
+        if ( false == (*ih)->isAnaHist() ) delete rooth;
       } // end check on root object existence
       else {
         err() << " histogram "<< (*ih)->hname() << " NOT FOUND in source file"<<endmsg;
@@ -106,76 +101,3 @@ StatusCode DBDrivenAnalysisTask::analyze(std::string& SaveSet,
   return StatusCode::SUCCESS;
 }
 
-TH1* DBDrivenAnalysisTask::onTheFlyHistogram(OnlineHistogram* h,
-					     TFile* f)
-{
-  std::string Algorithm;
-  std::vector<std::string> sourcenames;
-  std::vector<std::string>::iterator is;
-  std::vector<TH1*> sources;
-  std::vector<float> parameters;
-  TH1* out=m_ownedHisto[h->identifier()];
-  
-  h->getCreationDirections(Algorithm,sourcenames,parameters);
-  verbose() << "  Got analysis histo made with algo "<<Algorithm <<
-    " ,"<<sourcenames.size() << " sources and "<<parameters.size()
-            << " parameters"<<endmsg;
-  bool loadok=true;
-  for (is= sourcenames.begin(); is != sourcenames.end() ; is++) {
-    verbose() << "   trying to load " << (*is) << endmsg;
-    TH1* hh=NULL;
-    OnlineHistogram* dbhh=m_histDB->getHistogram(is->c_str());
-    if(!dbhh) {
-      err() <<"histogram "<<(*is)<<" unknown to HistDB "<<endmsg;
-      loadok=false;
-      break;
-    }
-    else {
-      if( dbhh->isAnaHist() )
-        hh = onTheFlyHistogram(m_histDB->getHistogram(is->c_str()), f);
-      else
-        hh =(TH1*) f->Get((dbhh->algorithm()+"/"+dbhh->hname()).c_str());
-    }
-    if (hh) {
-      verbose() <<"OK: histogram "<<(*is)<<" loaded"<<endmsg;
-      sources.push_back(hh);
-    }
-    else {
-      err() <<"histogram "<<(*is)<<" NOT FOUND"<<endmsg;
-      loadok=false;
-      break;
-    }
-  }
-  if(!loadok) {
-    err()<<" ERROR loading sources"<<endmsg;
-  }
-  else {
-    verbose() << "   calling creation algorithm ..."<<endmsg;
-    
-    OMAalg* thisalg=getAlg(Algorithm);
-    
-    if (thisalg) {
-      if (OMAHcreatorAlg* hca = dynamic_cast<OMAHcreatorAlg*>(thisalg) ) {
-        std::string htitle(h->htitle());
-        out = hca->exec(&sources, 
-                        &parameters,
-                        h->identifier(), 
-                        htitle,
-                        out);
-        if (out) {
-          m_ownedHisto[h->identifier()]=out;
-        }
-        else {
-          err() <<" SOMETHING WRONG calling creator algorithm "<< Algorithm<< endmsg;
-        }
-      }
-      else {
-        err() <<"ERROR: "<<Algorithm<< " is not an Hcreator algorithm"<<endmsg;
-      }
-    }
-    else {
-      verbose()<<"ERROR: alg "<<Algorithm<< " apparently not implemented in OMAlib"<<endmsg;
-    }
-  }
-  return out;
-}

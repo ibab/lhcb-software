@@ -1,18 +1,18 @@
-// $Id: OMAcommon.h,v 1.8 2009-02-19 10:49:50 ggiacomo Exp $
+// $Id: OMAcommon.h,v 1.9 2009-03-04 09:33:52 ggiacomo Exp $
 #ifndef OMALIB_OMACOMMON_H 
 
 #define OMALIB_OMACOMMON_H 1
 
 // Include files
 
-#include <TFile.h>
-#include <TH1.h>
 #include <map>
 #include "OMAlib/OMAMsgInterface.h"
 #include "OMAlib/OMAFitFunction.h"
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OnlineHistDB/OnlineHistogram.h"
 
+class TFile;
+class TH1;
 
 /** @class OMAcommon OMAcommon.h OMAlib/OMAcommon.h
  *  
@@ -43,10 +43,7 @@ public:
   inline int omaDebugLevel() { return m_debug; }
   /// set debug level (0 for nothing, the higher the more verbose)
   inline void setDebug(int DebugLevel) { m_debug = DebugLevel;}
-  /// get reference histogram
-  TH1* getReference(OnlineHistogram* h,
-                    int startrun = 1,
-                    std::string DataType = "default");
+  /// get OMAlib fit function
   inline OMAFitFunction* getFitFunction(std::string &Name){    
     return m_fitfunctions[Name];}
 protected:

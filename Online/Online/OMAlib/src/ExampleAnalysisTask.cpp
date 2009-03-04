@@ -1,4 +1,4 @@
-// $Id: ExampleAnalysisTask.cpp,v 1.5 2009-02-16 10:38:21 ggiacomo Exp $
+// $Id: ExampleAnalysisTask.cpp,v 1.6 2009-03-04 09:33:52 ggiacomo Exp $
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "OMAlib/ExampleAnalysisTask.h"
 
@@ -44,10 +44,14 @@ StatusCode ExampleAnalysisTask::analyze(std::string& SaveSet,
       m_histDB->getHistogramsByTask( Task, &hlist );
       std::vector<OnlineHistogram*>::iterator ih;
       for( ih = hlist.begin() ; ih != hlist.end() ; ih++) {
-        TH1* rooth =(TH1*) f->Get( ((*ih)->algorithm()+"/"+(*ih)->hname()).c_str() );
+        TH1* rooth = findRootHistogram(*ih, f);
         if (! rooth) {
           warning() << "Histogram "<< (*ih)->hname() <<" missing in input file"
                     <<endmsg;
+        }
+        else {
+           debug() <<"   histogram "<< (*ih)->hname() <<"found in input file"<<endmsg;
+           delete rooth;
         }
       }
     }

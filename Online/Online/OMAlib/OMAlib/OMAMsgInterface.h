@@ -1,9 +1,11 @@
-// $Id: OMAMsgInterface.h,v 1.7 2009-02-26 13:36:56 ggiacomo Exp $
+// $Id: OMAMsgInterface.h,v 1.8 2009-03-04 09:33:52 ggiacomo Exp $
 #ifndef OMALIB_OMAMSGINTERFACE_H 
 #define OMALIB_OMAMSGINTERFACE_H 1
 
 /** @class OMAMsgInterface OMAMsgInterface.h OMAlib/OMAMsgInterface.h
  *  Output interface for Online Monitoring Analysis messages 
+ *  supports MsgStream when available (analysis tasks),
+ *  uses HistDB to log alarms   
  *
  *  @author Giacomo Graziani
  *  @date   2008-02-29
@@ -12,8 +14,8 @@
 #include <string>
 #include <vector>
 #include "OnlineHistDB/OMAMessage.h"
-class TH1;
 class MsgStream;
+class TH1;
 class OnlineHistDB;
 
 namespace OMAconstants {

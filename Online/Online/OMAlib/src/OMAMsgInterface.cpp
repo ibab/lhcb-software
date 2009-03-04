@@ -1,11 +1,10 @@
-// $Id: OMAMsgInterface.cpp,v 1.10 2009-02-26 13:59:18 ggiacomo Exp $
+// $Id: OMAMsgInterface.cpp,v 1.11 2009-03-04 09:33:52 ggiacomo Exp $
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAMsgInterface.h"
 #include "GaudiKernel/MsgStream.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : OMAMsgInterface
-//
 // 2008-02-29 : Giacomo Graziani
 //-----------------------------------------------------------------------------
 

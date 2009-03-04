@@ -1,6 +1,7 @@
-// $Id: OMAcommon.cpp,v 1.8 2009-02-26 12:37:49 ggiacomo Exp $
+// $Id: OMAcommon.cpp,v 1.9 2009-03-04 09:33:52 ggiacomo Exp $
 
 #include "OMAlib/OMAcommon.h"
+#include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAFitFunction.h"
 #include <stdlib.h>
 #include <sstream>
@@ -42,33 +43,7 @@ void OMAcommon::setDefRefRoot() {
   }
 }
 
-TH1* OMAcommon::getReference(OnlineHistogram* h,
-                             int startrun,
-                             std::string DataType) {
-  TH1* out=0;
-  if(h) {
-    std::stringstream refFile;
-    refFile << refRoot() << "/"
-            << h->task() << "/" << DataType << "_"
-            << startrun << ".root";
-    TFile* f = new TFile(refFile.str().c_str(),"READ");
-    if(f) {
-      if (false == f->IsZombie() ) {        
-        TH1* ref = (TH1*) f->Get((h->algorithm()+"/"+h->hname()).c_str());
-        if(!ref) { // try w/o algorithm name
-           ref = (TH1*) f->Get(h->hname().c_str());
-        }
-        if (ref) {
-          ref->SetDirectory(0);
-          out = ref;
-        }
-      }
-      f->Close();
-    }
-    delete f;
-  }
-  return out;
-}
+
 
 void OMAcommon::doFitFuncList() {
   std::vector<std::string> ParNames;

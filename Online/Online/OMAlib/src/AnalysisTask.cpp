@@ -1,4 +1,4 @@
-// $Id: AnalysisTask.cpp,v 1.9 2009-02-26 13:59:18 ggiacomo Exp $
+// $Id: AnalysisTask.cpp,v 1.10 2009-03-04 09:33:52 ggiacomo Exp $
 
 
 // from Gaudi
@@ -65,7 +65,12 @@ StatusCode AnalysisTask::initialize() {
   }
   else {
     std::vector<std::string>::iterator iF;
+    if(m_inputTasks.size()>0) {
+      if (m_inputTasks[0]=="any") 
+        getAllTasks();
+    }
     for(iF =  m_inputTasks.begin() ; iF != m_inputTasks.end() ; iF++) {
+      info()<< "listening to latest saveset for task "<<*iF << endmsg;
       m_saveset.push_back( new SavesetFinder(this, *iF, m_partition) );
     }
   }
@@ -90,4 +95,9 @@ StatusCode AnalysisTask::finalize() {
   return GaudiHistoAlg::finalize();  
 }
 
-
+void AnalysisTask::getAllTasks() {
+  if(m_histDB) {
+    m_inputTasks.clear();
+    m_histDB->getTasks(m_inputTasks);
+  }
+}

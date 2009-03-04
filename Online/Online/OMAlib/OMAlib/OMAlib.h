@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAlib.h,v 1.8 2009-02-16 10:38:21 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAlib.h,v 1.9 2009-03-04 09:33:52 ggiacomo Exp $
 #ifndef OMALIB_OMALIB_H
 #define OMALIB_OMALIB_H 1
 /** @class  OMAlib OMAlib.h OMAlib/OMAlib.h
@@ -34,6 +34,16 @@ class OMAlib : public OMAcommon
   /// retrieve algorithm from the known algorithm list
   inline OMAalg* getAlg(std::string &Name){    
     return m_algorithms[Name];}
+  /// find the ROOT object in a TFile of the histogram described by an OnlineHistogram. 
+  /// the optional existingHisto field can be used to refresh an analysis histogram without having to recreate it.
+  /// RETURNED TH1 OBJECT IS OWNED BY USER
+  TH1* findRootHistogram(OnlineHistogram* h,
+                         TFile* f,
+                         TH1* existingHisto = NULL);
+  /// get reference histogram. RETURNED TH1 OBJECT IS OWNED BY USER
+  TH1* getReference(OnlineHistogram* h,
+                    int startrun = 1,
+                    std::string DataType = "default");
 
  private:
   void doAlgList();

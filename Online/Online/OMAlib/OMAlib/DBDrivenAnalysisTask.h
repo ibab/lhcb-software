@@ -1,4 +1,4 @@
-// $Id: DBDrivenAnalysisTask.h,v 1.4 2008-08-11 08:05:15 ggiacomo Exp $
+// $Id: DBDrivenAnalysisTask.h,v 1.5 2009-03-04 09:33:52 ggiacomo Exp $
 #ifndef OMALIB_DBDRIVENANALYSISTASK_H
 #define OMALIB_DBDRIVENANALYSISTASK_H 1
 #include <map>
@@ -21,8 +21,6 @@ class DBDrivenAnalysisTask : public AnalysisTask
 
  private:
   std::map<std::string, TH1*> m_ownedHisto;
-  TH1* onTheFlyHistogram(OnlineHistogram* h,
-			 TFile* f);
 };
 
 

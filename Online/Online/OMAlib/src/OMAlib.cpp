@@ -1,12 +1,16 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.12 2009-02-26 13:36:56 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.13 2009-03-04 09:33:52 ggiacomo Exp $
 /*
   Online Monitoring Analysis library
   G. Graziani (INFN Firenze)
 
 */
-#include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAlib.h"
+#include "OMAlib/OMAalg.h"
 #include "OMAlib/OMAAlgorithms.h"
+#include "OnlineHistDB/OnlineHistDB.h"
+#include <TH1.h>
+#include <TFile.h>
+
 using namespace std;
 
 // constructor to be used if already connected to HistDB (use NULL for not using HistDB)
@@ -68,6 +72,100 @@ OMAlib::~OMAlib() {
   if (m_localDBsession)
     delete m_histDB;
 }
+
+
+TH1* OMAlib::findRootHistogram(OnlineHistogram* h,
+                               TFile* f,
+                               TH1* existingHisto)
+{
+  TH1* out=NULL;
+  if(false == h->isAnaHist()) {
+    std::string rootHname = h->algorithm()+"/"+h->hname();
+    out =  (TH1*) f->Get(rootHname.c_str());
+    if(!out) { // try w/o algorithm name (bkw compatibility)
+      out = (TH1*) f->Get(h->hname().c_str());
+    }
+    if (out) {
+      out->SetName(rootHname.c_str()); // be sure the algorithm name is inside
+      out->SetDirectory(0); // be sure the object stays in memory when closing the file
+    }
+      
+  }
+  else { // analysis (virtual) histogram
+    std::string Algorithm;
+    std::vector<std::string> sourcenames;
+    std::vector<std::string>::iterator is;
+    std::vector<TH1*> sources;
+    std::vector<float> parameters;
+    out=existingHisto;
+  
+    h->getCreationDirections(Algorithm,sourcenames,parameters);
+    bool loadok=true;
+    for (is= sourcenames.begin(); is != sourcenames.end() ; is++) {
+      TH1* hh=NULL;
+      OnlineHistogram* dbhh=m_histDB->getHistogram(is->c_str());
+      if(!dbhh) {
+        loadok=false;
+        break;
+      }
+      else {
+        hh = findRootHistogram(m_histDB->getHistogram(is->c_str()), f, NULL);
+      }
+      if (hh) {
+        sources.push_back(hh);
+      }
+      else {
+        loadok=false;
+        break;
+      }
+    }
+    if(loadok) {
+      OMAalg* thisalg=getAlg(Algorithm);
+      
+      if (thisalg) {
+        if (OMAHcreatorAlg* hca = dynamic_cast<OMAHcreatorAlg*>(thisalg) ) {
+          std::string htitle(h->htitle());
+          out = hca->exec(&sources, 
+                          &parameters,
+                          h->identifier(), 
+                          htitle,
+                          out);
+        }
+      }
+    }
+  }
+
+  return out;
+}
+
+
+
+TH1* OMAlib::getReference(OnlineHistogram* h,
+                             int startrun,
+                             std::string DataType) {
+  TH1* out=0;
+  if(h) {
+    std::stringstream refFile;
+    std::string task= h->task();
+    if(h->isAnaHist()) { // remove _ANALYSIS from task name
+      task = task.substr(0,task.find("_ANALYSIS"));
+      // note that this works only if all sources are from the same task!!
+    }
+    refFile << refRoot() << "/"
+            << task << "/" << DataType << "_"
+            << startrun << ".root";
+    TFile* f = new TFile(refFile.str().c_str(),"READ");
+    if(f) {
+      if (false == f->IsZombie() ) {        
+        out = findRootHistogram(h, f);
+      }
+      f->Close();
+    }
+    delete f;
+  }
+  return out;
+}
+
 
 // initialize available algorithms and synchronize with DB algorithm list
 void OMAlib::doAlgList() {
