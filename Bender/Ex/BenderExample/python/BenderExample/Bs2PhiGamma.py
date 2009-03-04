@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Bs2PhiGamma.py,v 1.1 2009-01-15 15:08:37 ibelyaev Exp $ 
+# $Id: Bs2PhiGamma.py,v 1.2 2009-03-04 11:53:39 ibelyaev Exp $ 
 # =============================================================================
 ## @file BenderExample/Bs2PhiGamma.py
 #  Simple module to test/verify MC-association problem for the photons
@@ -14,7 +14,7 @@ claimed by Victor Yakovenko (LAL)
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 from Bender.MainMC import * 
 import GaudiKernel.SystemOfUnits as Units

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: GammaForThomas.py,v 1.1 2009-02-10 11:09:01 ibelyaev Exp $ 
+# $Id: GammaForThomas.py,v 1.2 2009-03-04 11:53:39 ibelyaev Exp $ 
 # =============================================================================
 ## @file BenderExample/GammaForThomas.py
 #  Simple module to test/verify MC-association for the photons
@@ -12,7 +12,7 @@ Simple module to test/verify MC-association for the photons
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 from Bender.MainMC import * 
 import GaudiKernel.SystemOfUnits as Units
@@ -72,8 +72,7 @@ class GammaForThomas(AlgoMC) :
         inEcal = ( 0 < MCPZ )  & (   abs(MCPX/MCPZ)<(4000./12500.) )    # check the numbers here! 
         inEcal = inEcal        & (   abs(MCPY/MCPZ)<(3000./12500.) )    # check the numbers here!
         inEcal = inEcal        & ( ( abs(MCPX/MCPZ)>(300. /12500.) ) | 
-                                   ( abs(MCPY/MCPZ)>(300. /12500.) ) )  # check the numbers here!
-        
+                                   ( abs(MCPY/MCPZ)>(300. /12500.) ) )  # check the numbers here!        
 
         cnt = self.counter ('in Ecal')
 
@@ -81,7 +80,7 @@ class GammaForThomas(AlgoMC) :
         ## MC -> Clusters
 
         
-        # 1) loop over true MC-photons form the decay:
+        # 1) loop over true MC-photons from the decay:
         for g in mcg :
 
             # use the 'in Ecal acceptance' counter
@@ -149,7 +148,6 @@ class GammaForThomas(AlgoMC) :
         mcK      = MCTRUTH ( mc , mck )
 
 
-
         return SUCCESS 
 
     
@@ -160,12 +158,14 @@ def configure() :
     """
     Perform the real configuration of the job
     """
-    importOptions ('$DAVINCIROOT/options/DaVinciCommon.opts')
-    importOptions ('$COMMONPARTICLESROOT/options/StandardPhotons.opts')
-    importOptions ('$CALOASSOCIATORSROOT/options/CaloAssociators.opts')
 
-
-    from Configurables import HistogramPersistencySvc, EventSelector, CellularAutomaton 
+    from Configurables import DaVinci, HistogramPersistencySvc, EventSelector, CellularAutomaton 
+    
+    daVinci = DaVinci (
+        DataType   = 'DC06'     , # default  
+        Simulation = True       ,
+        HltType    = '' ) 
+    
     HistogramPersistencySvc ( OutputFile = 'PhiGamma_Histos.root' ) 
 
     CellularAutomaton ( 'EcalClust' , Sort = False ) 
@@ -211,14 +211,17 @@ def configure() :
     
     ## print histos 
     alg.HistoPrint = True
+
+    ## be efficient: (not needed here)... 
+    alg.PP2MCs = []
     
-    gaudi.addAlgorithm ( alg ) 
-    ##gaudi.setAlgorithms( [alg] )
+    ## gaudi.addAlgorithm ( alg ) 
+    gaudi.setAlgorithms( [alg] )
      
     ## configure the desktop
     desktop = gaudi.tool ( 'Gamma.PhysDesktop' )
     desktop.InputLocations = [
-        #'Phys/StdLooseKaons' ,
+        ## NB: empty !!!
         #'Phys/StdLooseAllPhotons'
         ]    
     

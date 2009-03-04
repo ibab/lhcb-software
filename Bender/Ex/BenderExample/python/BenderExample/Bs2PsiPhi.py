@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # =============================================================================
+# $Id: Bs2PsiPhi.py,v 1.7 2009-03-04 11:53:39 ibelyaev Exp $ 
+# =============================================================================
 ## The simple Bender-based example for Bs-> Jpsi phi selection
 #
 #  This file is a part of 
@@ -25,7 +27,7 @@ The simple Bender-based example for Bs-> Jpsi phi selection
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ "
 # =============================================================================
 ## import everything from bender 
 from Bender.All                import *
@@ -202,7 +204,7 @@ class Bs2PsiPhi(AlgoMC) :
 def configure ( **args ) :
     """ Configure the job """
     
-    from Configurables import NTupleSvc, HistogramPersistencySvc, DaVinci
+    from Configurables import NTupleSvc, HistogramPersistencySvc, DaVinci, EventSelector
     
     daVinci = DaVinci (
         DataType   = 'DC06'      , # default  
@@ -212,6 +214,15 @@ def configure ( **args ) :
     HistogramPersistencySvc ( OutputFile = 'Bs2PsiPhi_Histos.root' ) 
     NTupleSvc ( Output = [ "PsiPhi DATAFILE='Bs2PsiPhi_Tuples.root' TYPE='ROOT' OPT='NEW'"] )
     
+    EventSelector ( 
+        PrintFreq = 100 ,
+        Input = [
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2PsiPhi.dst'    TYP='POOL_ROOTTREE' OPT='READ'"
+        ,"DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2PsiPhi_1.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
+        ,"DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2PsiPhi_2.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+        ,"DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2PsiPhi_3.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+        ]
+        )
     ## get the actual application manager (create if needed)
     gaudi = appMgr()
     
@@ -221,8 +232,7 @@ def configure ( **args ) :
     ## print histos 
     alg.HistoPrint = True
     alg.NTupleLUN = "PsiPhi"
-             
-               
+                            
     ## get the application manager (create if needed)
     gaudi = appMgr()
     
@@ -238,12 +248,6 @@ def configure ( **args ) :
         '/Event/Phys/StdTightKaons' ,
         '/Event/Phys/StdTightMuons' 
         ]
-    
-    ## get input data 
-    import LoKiExample.Bs2Jpsiphi_mm_data as input
-    evtSel = gaudi.evtSel()    
-    evtSel.open ( input.Files ) 
-    evtSel.PrintFreq = 100
     
     return SUCCESS 
     
