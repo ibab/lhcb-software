@@ -7,13 +7,14 @@ ApplicationMgr.ExtSvc += { "MonitorSvc" };
 ApplicationMgr.DLLs += {"Gaucho"};
 
 
-ApplicationMgr.TopAlg = { "DBDrivenAnalysisTask", "ExampleAnalysisTask"};
+
+ApplicationMgr.TopAlg = { "DBDrivenAnalysisTask"};
 ApplicationMgr.EvtSel = "NONE";
 
 DBDrivenAnalysisTask.OutputLevel = 3;
 DBDrivenAnalysisTask.useHistDB   = true;
-DBDrivenAnalysisTask.Partition = "LHCb";
-DBDrivenAnalysisTask.InputTasks = {"MuonDAQMon"};
+DBDrivenAnalysisTask.Partition = "FEST";
+DBDrivenAnalysisTask.InputTasks = {"any"};
 
 // for testing offline on existinf savesets, uncomment the following:
 //ApplicationMgr.EvtMax = 0;

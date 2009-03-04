@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.19 2009-02-26 12:37:49 ggiacomo Exp $
+! $Id: release.notes,v 1.20 2009-03-04 09:46:15 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
 
+! 20090304
+ - improve code to get histograms from root files
+ - correct support for "any" task
 
 ! 20090226 
  - new custom fit function FitTH2withSinCosC by Christopher Blanks

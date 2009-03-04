@@ -1,4 +1,4 @@
-// $Id: DBDrivenAnalysisTask.cpp,v 1.9 2009-03-04 09:33:52 ggiacomo Exp $
+// $Id: DBDrivenAnalysisTask.cpp,v 1.10 2009-03-04 09:46:15 ggiacomo Exp $
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "OMAlib/DBDrivenAnalysisTask.h"
 #include "OnlineHistDB/OnlineHistDB.h"
@@ -42,6 +42,9 @@ StatusCode DBDrivenAnalysisTask::analyze(std::string& SaveSet,
     m_histDB->getHistogramsWithAnalysis( &hlist);
     std::vector<OnlineHistogram*>::iterator ih;
     for(ih = hlist.begin(); ih != hlist.end(); ih++) {
+      if (Task == "any") {
+        m_taskname = Task = (*ih)->task();
+      }
       if( Task != (*ih)->task() ) continue;
       debug() << "histogram with analysis found in DB: "<<(*ih)->identifier() <<
         "  virtual="<<  (*ih)->isAnaHist() <<endmsg;

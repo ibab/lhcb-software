@@ -1,4 +1,4 @@
-// $Id: AnalysisTask.cpp,v 1.10 2009-03-04 09:33:52 ggiacomo Exp $
+// $Id: AnalysisTask.cpp,v 1.11 2009-03-04 09:46:15 ggiacomo Exp $
 
 
 // from Gaudi
@@ -60,7 +60,7 @@ StatusCode AnalysisTask::initialize() {
     std::vector<std::string>::iterator iF;
     for(iF =  m_inputFiles.begin() ; iF != m_inputFiles.end() ; iF++) {
       info() <<"Analyzing histograms on file "<<*iF<<endmsg;
-      analyze( *iF , m_inputTasks.empty() ? "unknownTask" : m_inputTasks[0] );
+      analyze( *iF , m_inputTasks.empty() ? "any" : m_inputTasks[0] );
     }
   }
   else {
