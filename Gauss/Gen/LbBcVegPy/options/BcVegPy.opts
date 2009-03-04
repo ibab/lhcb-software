@@ -1,4 +1,4 @@
-// $Id: BcVegPy.opts,v 1.2 2007-05-08 13:45:03 robbep Exp $ 
+// $Id: BcVegPy.opts,v 1.3 2009-03-04 15:24:13 robbep Exp $ 
 
 /** @file 
  * 
@@ -10,7 +10,7 @@
  *
  */
 
-ApplicationMgr.DLLs += { "LbBcVegPy" };
+ApplicationMgr.Dlls += { "LbBcVegPy" };
 
 Generation.SampleGenerationTool       = "Special";
 Generation.Special.ProductionTool = "BcVegPyProduction";
