@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::IsolatedTrackTool
  *
  *  CVS Log :-
- *  $Id: RichIsolatedTrackTool.cpp,v 1.7 2008-06-05 09:06:26 jonrob Exp $
+ *  $Id: RichIsolatedTrackTool.cpp,v 1.8 2009-03-04 15:02:03 jonrob Exp $
  *
  *  @author Susan Haines  Susan.Carol.Haines@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -132,7 +132,7 @@ bool IsolatedTrackTool::isIsolated( const LHCb::RichRecSegment * segment,
   const Rich::DetectorType rich = segment->trackSegment().rich();
   if ( rad == Rich::Aerogel /* || rad == Rich::Rich1Gas */ ) 
   { 
-    Warning("Not yet implemented for "+Rich::text(rad),StatusCode::SUCCESS,1).ignore(); 
+    //Warning("Not yet implemented for "+Rich::text(rad),StatusCode::SUCCESS,1).ignore(); 
     return false;
   }
 
