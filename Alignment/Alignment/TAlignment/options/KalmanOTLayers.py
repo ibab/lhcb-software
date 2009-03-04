@@ -17,10 +17,10 @@ solver             = "gslSVDSolver"
 from Configurables import TAlignment
 from TAlignment import Alignables
 
-ali = Alignables.Alignables()
-elements           = ali.OTLayers()
+elements = Alignables.Alignables()
+elements.OTLayers("Tx")
 
-
+print "OT: aligning elements ", elements
 trackingOpts       = "$TALIGNMENTROOT/options/OTTrackFitSel.py"
 
 # Go past this line only when you know what you are doing
@@ -42,7 +42,7 @@ TAlignment().Pat                          = True
 TAlignment().OutputLevel                  = INFO
 
 ## Configure alignment
-TAlignment().ElementsToAlign              = elements
+TAlignment().setProp("ElementsToAlign", elements.__getslice__(1,elements.__len__()) )
 TAlignment().NumIterations                = nIter
 TAlignment().TrackContainer               = "Alignment/AlignmentTracks"
 TAlignment().UseCorrelations              = True
