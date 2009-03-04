@@ -16,6 +16,7 @@ from Configurables import ( ProcessPhase, MagneticFieldSvc,
                             Tf__Tsa__Seed, Tf__Tsa__SeedTrackCnv,
                             PatSeeding,
                             TrackMatchVeloSeed, PatDownstream, PatVeloTT,
+                            TrackStateInitAlg,
                             TrackEventCloneKiller, TrackPrepareVelo,
                             TrackAddLikelihood, TrackLikelihood, NeuralNetTmva, Tf__OTHitCreator,
                             TrackBuildCloneTable, TrackCloneCleaner, AlignMuonRec
@@ -100,6 +101,9 @@ if "Forward" in trackAlgs :
    track.DetectorList += [ "ForwardPat", "ForwardPreFit", "ForwardFit" ]
    GaudiSequencer("TrackForwardPatSeq").Members +=  [ PatForward("PatForward") ]
    importOptions("$PATALGORITHMSROOT/options/PatForward.py")
+   ## Forward fit initialization
+   GaudiSequencer("TrackForwardPreFitSeq").Members += [TrackStateInitAlg("InitForwardFit")]
+   TrackStateInitAlg("InitForwardFit").TrackLocation = "Rec/Track/Forward"
    ## Forward prefit
    GaudiSequencer("TrackForwardPreFitSeq").Members += [ConfiguredPreFitForward()]
    ## Forward fit
@@ -122,8 +126,11 @@ if "PatSeed" in trackAlgs :
    if TrackSys().cosmics() :
       importOptions("$PATALGORITHMSROOT/options/PatSeedingTool-Cosmics.opts")
 if "TsaSeed" in trackAlgs or "PatSeed" in trackAlgs :
-   ## Seed fit
    track.DetectorList += [ "SeedPreFit","SeedFit" ]
+   ## Seed fit initialization
+   GaudiSequencer("TrackSeedPreFitSeq").Members += [TrackStateInitAlg("InitSeedFit")]
+   TrackStateInitAlg("InitSeedFit").TrackLocation = "Rec/Track/Seed"
+   ## Seed fit
    GaudiSequencer("TrackSeedFitSeq").Members += [ConfiguredFitSeed()]
    ## Add to output best tracks
    cloneKiller.TracksInContainers += ["Rec/Track/Seed"]
@@ -133,6 +140,10 @@ if "Match" in trackAlgs :
    track.DetectorList += [ "MatchPat", "MatchPreFit", "MatchFit" ]
    GaudiSequencer("TrackMatchPatSeq").Members += [ TrackMatchVeloSeed("TrackMatch") ]
    importOptions("$TRACKMATCHINGROOT/options/TrackMatch.py")
+   TrackMatchVeloSeed("TrackMatch").LikCut = -99999.
+   ## Match fit initialization
+   GaudiSequencer("TrackMatchPreFitSeq").Members += [TrackStateInitAlg("InitMatchFit")]
+   TrackStateInitAlg("InitMatchFit").TrackLocation = "Rec/Track/Match"
    ## Match prefit
    GaudiSequencer("TrackMatchPreFitSeq").Members += [ConfiguredPreFitMatch()]
    ## Match fit
@@ -144,6 +155,9 @@ if "Match" in trackAlgs :
 if "Downstream" in trackAlgs and TrackSys().fieldOff() == False :
    track.DetectorList += [ "DownstreamPat","DownstreamPreFit","DownstreamFit" ]
    GaudiSequencer("TrackDownstreamPatSeq").Members += [ PatDownstream() ];
+   ## downstream fit initialization
+   GaudiSequencer("TrackDownstreamPreFitSeq").Members += [TrackStateInitAlg("InitDownstreamFit")]
+   TrackStateInitAlg("InitDownstreamFit").TrackLocation = "Rec/Track/Downstream"
    ## Downstream prefit
    GaudiSequencer("TrackDownstreamPreFitSeq").Members += [ConfiguredPreFitDownstream()]
    ## Downstream fit
@@ -156,6 +170,9 @@ if "VeloTT" in trackAlgs :
    track.DetectorList += ["VeloTTPat", "VeloTTPreFit", "VeloTTFit"]
    GaudiSequencer("TrackVeloTTPatSeq").Members += [ PatVeloTT("PatVeloTT")] 
    importOptions ("$PATVELOTTROOT/options/PatVeloTT.py")
+   ## Velo-TT fit initialization
+   GaudiSequencer("TrackVeloTTPreFitSeq").Members += [TrackStateInitAlg("InitVeloTTFit")]
+   TrackStateInitAlg("InitVeloTTFit").TrackLocation = "Rec/Track/VeloTT"
    ## Velo-TT fit
    GaudiSequencer("TrackVeloTTFitSeq").Members += [ ConfiguredFitVeloTT() ]
    ## Add to output best tracks
@@ -169,7 +186,7 @@ GaudiSequencer("TrackPostFitSeq").Members += [ cloneKiller ]
 if "Velo" in trackAlgs :
    ## Prepare the velo tracks for the fit
    track.DetectorList += ["VeloPreFit", "VeloFit"]
-   GaudiSequencer("TrackVeloPreFitSeq").Members += [ TrackPrepareVelo() ] 
+   GaudiSequencer("TrackVeloPreFitSeq").Members += [ TrackPrepareVelo()]
    ## Fit the velo tracks
    GaudiSequencer("TrackVeloFitSeq").Members += [ ConfiguredFitVelo() ]
    ## copy the velo tracks to the "best" container (except in RDST case)
