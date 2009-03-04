@@ -14,8 +14,9 @@ GaudiSequencer( 'MoniVELOSeq' ).Members +=\
                   , Velo__VeloTrackMonitor  ( 'VeloTrackMonitor'   )
                   ]
 
-#TrackUser = Velo__VeloTrackMonitor( 'VeloTrackMonitor' )
+TrackUser = Velo__VeloTrackMonitor( 'VeloTrackMonitor' )
 #TrackUser.TrackLocation     = "Rec/Track/Best"
+#TrackUser.TrackLocation     = "Rec/Track/Forward"
 #TrackUser.OutputLevel       = 2
 #TrackUser.HitMapHistos      = True
 #TrackUser.ProfileResetEvent = 1000
@@ -25,6 +26,9 @@ GaudiSequencer( 'MoniVELOSeq' ).Members +=\
 #TrackUser.EventClusterInfo  = True
 #TrackUser.AlignMoniBasic    = True
 #TrackUser.ACDCGeometry      = True
-#To get unbiased residuals only, change the TrackLocation to "Rec/Track/Best"
 
+#To get unbiased residuals change the TrackLocation to "Rec/Track/Best"
+# or "Rec/Track/Forward" 
+#For biased/unbiased residuals vs momentum change TrackLocation to
+# "Rec/Track/Forward"
 ##############################################################################
