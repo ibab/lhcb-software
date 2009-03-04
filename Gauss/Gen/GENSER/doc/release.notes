@@ -4,6 +4,10 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2009-03-04 - Patrick Robbe
+ - Rename xsection.F to xsectionPsiStart.F because of a name conflict
+   with BcVegPy
+
 !========================== GENSER v5r0 2008-12-08 ===========================
 ! 2008-25-11 - Patrick Robbe
  - Add xsection.F (Nick Brook) which computes cross section for psi(3770)

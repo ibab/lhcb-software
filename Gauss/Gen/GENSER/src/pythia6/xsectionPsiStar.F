@@ -1,4 +1,8 @@
-      Double Precision Function xsection(as,sqm3,sh,th)
+C $Id: xsectionPsiStar.F,v 1.1 2009-03-04 17:04:24 robbep Exp $
+C Function to compute the cross-section for psi(3770) by N. Brook
+C
+C
+      Double Precision Function xsectionPsiStar(as,sqm3,sh,th)
       Implicit Double Precision (A-H,O-Z)
 *     as = 0.2
 *     sqm3 = 3.770**2

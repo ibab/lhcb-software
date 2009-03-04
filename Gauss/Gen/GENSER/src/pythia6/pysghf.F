@@ -1,4 +1,4 @@
-C $Id: pysghf.F,v 1.2 2008-11-25 14:58:24 robbep Exp $   
+C $Id: pysghf.F,v 1.3 2009-03-04 17:04:44 robbep Exp $   
 C*********************************************************************
  
 C...PYSGHF
@@ -373,7 +373,7 @@ C...PR/Nick Brook/LHCb ... Hack for Psi(3770)
 	PGTW=(SH*TH+TH*UH+UH*SH)/SH2
 	QGTW=(SH*TH*UH)/SH**3
 	RGTW=SQM3/SH
-	FACQQG = COMFAC * XSECTION(AS,SQM3,SH,TH)
+	FACQQG = COMFAC * XSECTIONPSISTAR(AS,SQM3,SH,TH)
 	IF(KFAC(1,21)*KFAC(2,21).NE.0) THEN
 	  NCHN=NCHN+1
 	  ISIG(NCHN,1)=21
