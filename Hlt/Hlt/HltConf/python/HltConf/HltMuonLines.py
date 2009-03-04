@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonLines.py,v 1.10 2009-02-19 18:16:43 depaula Exp $
+# $Id: HltMuonLines.py,v 1.11 2009-03-04 17:37:44 aperezca Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -64,7 +64,7 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
         ,'MuTrackTrIP'    : 0.050
         ,'MuTrackDoca'    : 0.4
         ,'MuTrackDZ'      : 1.5
-        ,'MuTrackAngle'   : 0.
+        #,'MuTrackAngle'   : 0.
         ,'MuTrackDimuMass': 1000.
         ,'MuTrackPoint'   : 0.4
         ,'MuTrackTrChi2'  : 10.
@@ -611,7 +611,7 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
                          
                          , Member( 'VF', 'VeloVertex' # // Filter velo vertices in DZ. Angle cut only here to fill extra info!
                                    , FilterDescriptor = ['VertexDz_PV2D,>,'+str(self.getProp('MuTrackDZ')),
-                                                         'VertexAngle,>,'+str(self.getProp('MuTrackAngle'))]
+                                                         'VertexAngle,>,0.']
                                    , HistogramUpdatePeriod = 0
                                    , HistoDescriptor = { 'VertexDz': ( 'VertexDz',-10.,50.,100), 'VertexDzBest': ( 'VertexDzBest',-10.,50.,100) }
                                    )
@@ -621,9 +621,10 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
                                    )
                          
                          , Member( 'VF', 'VertexPt' # // Select vertices if Pt
-                                   , FilterDescriptor = ['VertexMinPT,>,'+str(self.getProp('MuTrackTrPt'))]
-                                   , HistogramUpdatePeriod = 0
-                                   , HistoDescriptor = {'VertexMinPT': ('PT',0.,6000.,100), 'VertexMinPTBest': ('PTBest',0.,6000.,100)}
+                                   , FilterDescriptor = ['VertexTrack1PT,>,'+str(self.getProp('MuTrackMuPt')),
+                                                         'VertexTrack2PT,>,'+str(self.getProp('MuTrackTrPt'))]
+                                   #, HistogramUpdatePeriod = 0
+                                   #, HistoDescriptor = {'VertexMinPT': ('PT',0.,6000.,100), 'VertexMinPTBest': ('PTBest',0.,6000.,100)}
                                    )
                          
                          , Member( 'VF', 'VertexMass' # // Select vertices if Mass
@@ -651,11 +652,13 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
                          
                          , Member ( 'VF', 'Decision' # // Final filter, redo all cuts with improved tracking
                                     , OutputSelection = '%Decision'
-                                    , FilterDescriptor = ['FitVertexMinIP_PV2D,||>,'+str(self.getProp('MuTrackMuIP')),
+                                    , FilterDescriptor = ['FitVertexTrack1IP_PV2D,||>,'+str(self.getProp('MuTrackMuIP')),
+                                                          'FitVertexTrack2IP_PV2D,||>,'+str(self.getProp('MuTrackTrIP')),
                                                           'FitVertexDOCA,<,'+str(self.getProp('MuTrackDoca')),
-                                                          'FitVertexAngle,>,'+str(self.getProp('MuTrackAngle')),
+                                                          'FitVertexAngle,>,0.',
                                                           'FitVertexDz_PV2D,>,'+str(self.getProp('MuTrackDZ')),
-                                                          'FitVertexMinPT,>,'+str(self.getProp('MuTrackTrPt')),
+                                                          'FitVertexTrack1PT,>,'+str(self.getProp('MuTrackMuPt')),
+                                                          'FitVertexTrack2PT,>,'+str(self.getProp('MuTrackTrPt')),
                                                           'FitVertexDimuonMass,>,'+str(self.getProp('MuTrackDimuMass')),
                                                           'FitVertexPointing_PV2D,<,'+str(self.getProp('MuTrackPoint'))
                                                           ]
@@ -700,9 +703,10 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
                                         )
                               
                               , Member( 'VF', 'VertexPt' # // Select vertices if Pt
-                                        , FilterDescriptor = ['VertexMinPT,>,'+str(self.getProp('MuTrackTrPt4JPsi'))]
-                                        , HistogramUpdatePeriod = 0
-                                        , HistoDescriptor = { 'VertexMinPT': ('PT',0.,6000.,100), 'VertexMinPTBest': ('PTBest',0.,6000.,100)}
+                                        , FilterDescriptor = ['VertexTrack1PT,>,'+str(self.getProp('MuTrackMuPt4JPsi')),
+                                                              'VertexTrack2PT,>,'+str(self.getProp('MuTrackTrPt4JPsi'))]
+                                        #, HistogramUpdatePeriod = 0
+                                        #, HistoDescriptor = { 'VertexMinPT': ('PT',0.,6000.,100), 'VertexMinPTBest': ('PTBest',0.,6000.,100)}
                                         )
                               
                               , Member( 'VF', 'VertexMass' # // Select vertices if mass
@@ -725,7 +729,8 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
                                          , OutputSelection = '%Decision'
                                          , FilterDescriptor = ['FitVertexDOCA,<,'+str(self.getProp('MuTrackDoca4JPsi')),
                                                                'FitVertexAngle,<,'+str(self.getProp('MuTrackAngle4JPsi')),
-                                                               'FitVertexMinPT,>,'+str(self.getProp('MuTrackTrPt4JPsi')),
+                                                               'FitVertexTrack1PT,>,'+str(self.getProp('MuTrackMuPt4JPsi')),
+                                                               'FitVertexTrack2PT,>,'+str(self.getProp('MuTrackTrPt4JPsi')),
                                                                'FitVertexDimuonMass,>,'+str(self.getProp('MuTrackDimuMass4JPsiLow')),
                                                                'FitVertexDimuonMass,<,'+str(self.getProp('MuTrackDimuMass4JPsiHigh'))
                                                                ]

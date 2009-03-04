@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.159 2009-03-04 15:12:59 witekma Exp $ 
+! $Id: release.notes,v 1.160 2009-03-04 17:37:44 aperezca Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-03-04 - Antonio Perez-Calero
+ - Changes in muon+track lines in HltMuonLines.py to use VertexTrack1PT, VertexTrack2PT and same for IPs.
+   This way, we can control the cuts on IP and Pt being applied to the first track of our selected vertex 
+   (muon) or the second, extra track, both before and after the fast track fit.
 
 ! 2009-03-04 - Mariusz Witek
  - add slot into HltElectronLines.py for global optimization
