@@ -10,7 +10,7 @@ from Gaudi.Configuration  import *
 import GaudiKernel.ProcessJobOptions
 from DetCond.Configuration import *
 from TrackSys.Configuration import TrackSys
-from Configurables import ( LHCbConfigurableUser, LHCbApp, GaudiSequencer )
+from Configurables import ( LHCbConfigurableUser, LHCbApp, GaudiSequencer, AlignTrTools )
 
 class TAlignment( LHCbConfigurableUser ):
     INFO=3
@@ -19,11 +19,11 @@ class TAlignment( LHCbConfigurableUser ):
     __author__= "Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>"
 
     __slots__ = {
-        "Sequencer" : GaudiSequencer("TAlignmentSequencer")            # the sequencer to add algorithms to
-        , "Method" : 'Millepede'                                       # Millepede or Kalman type alignment
-        , "TrackContainer" : "TrackLocation::Default"                  # track container to be used for alignment
-        , "Level" : "layers"                                           # level of lalignment (stations, c-frames, layers, modules, boxes, halves)
-        , "Detectors" : []                                             # list of detectors to align
+          "Sequencer" : GaudiSequencer("TAlignmentSequencer")          # the sequencer to add algorithms to
+        , "Method"                       : 'Millepede'                 # Millepede or Kalman type alignment
+        , "TrackContainer"               : "TrackLocation::Default"    # track container to be used for alignment
+        , "Level"                        : "layers"                    # level of alignment (stations, c-frames, layers, modules, boxes, halves)
+        , "Detectors"                    : []                          # list of detectors to align
         , "CondDBTag"                    : "DC06-latest"               # Default database to use
         , "CondDBOverride"               : []                          # Overwrite conditions
         , "AlternativeDDDB"              : ""                          # Path to alternative DDDB
@@ -46,7 +46,7 @@ class TAlignment( LHCbConfigurableUser ):
         , "MinNumberOfHits"              : 1                           # Min number of hits per element
         , "Chi2Outlier"                  : 10000                       # Chi2 cut for outliers
         , "UsePreconditioning"           : False                       # Pre-conditioning
-        , "SolvTool"                     : "gslSVDsolver"              # Solver to use
+        , "SolvTool"                     : "gslSolver"                 # Solver to use
         , "WriteCondToXML"               : False                       # Write conditions to xml file
         , "WriteCondSubDetList"          : []                          # List of sub-detectors for which to write out the conditions
         , "CondFileName"                 : "Detectors.xml"             # Name of xml file for conditions
@@ -58,8 +58,11 @@ class TAlignment( LHCbConfigurableUser ):
         , "CondDepths"                   : []                          # Condition levels to write to xml
         , "Precision"                    : 16                          # Set precision for conditions
         , "OutputLevel"                  : INFO                        # Output level
-        , "LogFile"                      : "alignlog.txt"    
+        , "LogFile"                      : "alignlog.txt"              # log file for kalman type alignment
+        , "Incident"                     : ""                          # name of handle to be executed on incident by incident server
         }
+
+    __used_configurables__ = [ AlignTrTools ]
     
     def __apply_configuration__(self):
         print "******* calling ", self.name()
@@ -70,8 +73,9 @@ class TAlignment( LHCbConfigurableUser ):
             mainseq = GaudiSequencer("Align")
         import  TAlignment.TAlignmentConf 
         if self.getProp("Method") == 'Millepede' :
+            self.setProp("Incident", 'GlobalMPedeFit')
             ga = TAlignment.TAlignmentConf.GAlign()
-            print "Adding ", ga.name(), " to sequence ", seq.name()
+            print "Adding ", ga.name(), " to sequence ", mainseq.name()
             mainseq.Members += [ga]
             importOptions("$TALIGNMENTROOT/options/GAlign.py")
             if len( self.getProp("TrackContainer") ) == 0 :
@@ -83,16 +87,29 @@ class TAlignment( LHCbConfigurableUser ):
                 #              importOptions("$ALIGNTRTOOLS/options/AlignTrTools.py")
                     
 	if self.getProp("Method") == 'Kalman' :
-            print "****** setting up Kalman type OT alignemnt!"
+            self.setProp("Incident", 'UpdateConstants')
+            print "****** setting up Kalman type alignemnt!"
+	    print "Detector(s) to be aligned: ", self.getProp("Detectors")
 	    if "OT" in  self.getProp("Detectors"):
                if self.getProp("Level") == "stations":
+                  print "***** aligning OT stations ! *****"
+                  print "Aligning elements: ", self.getProp("ElementsToAlign")
 		  importOptions("$TALIGNMENTROOT/options/KalmanOTStations.py")
+		  self.sequencers()
                   
 	       if self.getProp("Level") == "layers" :
+                  print "***** aligning OT layers ! *****"
+                  print "Aligning elements: ", self.getProp("ElementsToAlign")
 		  self.sequencers()
 		  importOptions("$TALIGNMENTROOT/options/KalmanOTLayers.py")
 		   
-#            if "VELO" in self.getProp("Detectors"):
+            if "VELO" in self.getProp("Detectors"):
+               print "Aligning VeLo ", self.getProp("Level")
+               print "Aligning elements: ", self.getProp("ElementsToAlign")
+	       if self.getProp("Level") == "halves":
+                  print "***** aligning VeLo halves ! *****"
+		  importOptions("$TALIGNMENTROOT/options/KalmanVELOHalves.py")
+		  self.sequencers()
 
 
 
@@ -194,6 +211,7 @@ class TAlignment( LHCbConfigurableUser ):
             alignAlg = AlignAlgorithm( "Alignment" )
             alignAlg.OutputLevel                  = outputLevel
             alignAlg.NumberOfIterations           = self.getProp( "NumIterations"       )
+            print "Getting tracks from ", self.getProp( "TrackContainer" )
             alignAlg.TracksLocation               = self.getProp( "TrackContainer" )
             alignAlg.VertexLocation               = self.getProp( "VertexLocation"      )
             alignAlg.UseCorrelations              = self.getProp( "UseCorrelations"     )
@@ -202,22 +220,24 @@ class TAlignment( LHCbConfigurableUser ):
             #print alignAlg
             # and also the update tool is in the toolsvc
             updatetool = Al__AlignUpdateTool("Al::AlignUpdateTool")
-            updatetool.MinNumberOfHits              = self.getProp( "MinNumberOfHits"              )
-            updatetool.UsePreconditioning           = self.getProp( "UsePreconditioning"           )
-            updatetool.LogFile                      = self.getProp( "LogFile"             )
-            updatetool.MatrixSolverTool = self.getProp( "SolvTool" )
-                
+            updatetool.MinNumberOfHits            = self.getProp( "MinNumberOfHits"              )
+            updatetool.UsePreconditioning         = self.getProp( "UsePreconditioning"           )
+            updatetool.LogFile                    = self.getProp( "LogFile"             )
+            updatetool.addTool(gslSVDsolver)
+            updatetool.MatrixSolverTool           = self.getProp( "SolvTool" )
+
             # configure in the tool service
-            elementtool = GetElementsToBeAligned( "GetElementsToBeAligned" )
-            elementtool.OutputLevel = outputLevel
-            elementtool.Elements    = self.getProp( "ElementsToAlign" )
-            elementtool.UseLocalFrame = self.getProp( "UseLocalFrame"   )  
+            elementtool 			  = GetElementsToBeAligned( "GetElementsToBeAligned" )
+            elementtool.OutputLevel               = outputLevel
+            print "(1)I will try to aling ", self.getProp( "ElementsToAlign" ), " elements!"
+            elementtool.Elements                  = self.getProp( "ElementsToAlign" )
+            elementtool.UseLocalFrame             = self.getProp( "UseLocalFrame"   )  
             #alignAlg.addTool( elementtool )
             
             # this one is in the toolsvc, for now
-            constrainttool = Al__AlignConstraintTool("Al::AlignConstraintTool")
-            constrainttool.Constraints = self.getProp( "Constraints" )
-            constrainttool.UseWeightedAverage = self.getProp( "UseWeightedAverageConstraint" )
+            constrainttool                        = Al__AlignConstraintTool("Al::AlignConstraintTool")
+            constrainttool.Constraints            = self.getProp( "Constraints" )
+            constrainttool.UseWeightedAverage     = self.getProp( "UseWeightedAverageConstraint" )
             
             alignSequencer.Members.append(alignAlg)
 
@@ -249,7 +269,8 @@ class TAlignment( LHCbConfigurableUser ):
         print "**** setting the main kalman aligment sequence!"
         ## The main sequence
         mainSeq = self.getProp("Sequencer")
-#        mainSeq.MeasureTime = True
+        mainSeq.MeasureTime = True
+        print "(2)I will try to aling ", self.getProp( "ElementsToAlign" ), " elements!"
 #        ApplicationMgr().TopAlg.append( mainSeq )        
 
         # Different sequencers depending on whether we use pat or not
