@@ -3,7 +3,6 @@ import AlignTrTools.Configuration
 
 #tac = AlignTrTools.Configuration.AligTrTools()
 TAConfig().addTool(Centipede)
-AlignmentTools().Tool = "Centipede"
 TAConfig().MillepedeTool = "Centipede"
 art = AlignTrTools.Configuration.AlignTrTools()
 art.Tools = ["Derivatives"]
