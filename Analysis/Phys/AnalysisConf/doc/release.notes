@@ -4,6 +4,14 @@
 ! Purpose     : Configuration for Analysis project
 !-----------------------------------------------------------------------------
 
+!========================== AnalysisConf v1r1p2 2009-03-04 ===================
+
+! 2009-03-04 - Juan PALACIOS
+ - python/AnalysisConf/Configuration.py
+  . Remove __used_configurables__ = [ LHCbApp ]
+ - cmt/requirements
+  . Increase to v1r1p1
+
 !========================== AnalysisConf v1r1 2009-03-01 =====================
 
 ! 2009-02-18 - Patrick Koppenburg
