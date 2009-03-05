@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTrack.cpp,v 1.8 2009-02-12 14:32:07 cattanem Exp $
+// $Id: PatVeloSpaceTrack.cpp,v 1.9 2009-03-05 14:27:57 dhcroft Exp $
 // Include files 
 
 // local
@@ -11,9 +11,9 @@
 //-----------------------------------------------------------------------------
 
 namespace Tf {
-  //=============================================================================
+  //========================================================================
   // Standard constructor, initializes variables
-  //=============================================================================
+  //========================================================================
   PatVeloSpaceTrack::PatVeloSpaceTrack(  ) 
     : m_s0(0.),
       m_sr(0.),
@@ -22,12 +22,9 @@ namespace Tf {
       m_sz2(0.),
       m_valid(true),
       m_zone(0),
-      m_xZone(false),
-      m_negZone(false),
       m_backward(false),
       m_pos0(0.),
       m_slope(0.),
-      m_firstZ(0.),
       m_meanZ(0.),
       m_posErr(0.),
       m_slopeErr(0.),
@@ -46,38 +43,6 @@ namespace Tf {
     m_phiCoord.clear();
     m_phiCoord.reserve( 20 );
   }
-
-  PatVeloSpaceTrack::PatVeloSpaceTrack( const PatVeloSpaceTrack & track ) 
-    : m_s0(track.m_s0),
-      m_sr(track.m_sr),
-      m_sz(track.m_sz),
-      m_srz(track.m_srz),
-      m_srz2(track.m_srz2),
-      m_sz2(track.m_sz2),
-      m_valid(track.m_valid),
-      m_zone(track.m_zone),
-      m_xZone(track.m_xZone),
-      m_negZone(track.m_negZone),
-      m_backward(track.m_backward),
-      m_pos0(track.m_pos0),
-      m_slope(track.m_slope),
-      m_firstZ(track.m_firstZ),
-      m_meanZ(track.m_meanZ),
-      m_posErr(track.m_posErr),
-      m_slopeErr(track.m_slopeErr),
-      m_chiSqDof(track.m_chiSqDof),
-      m_rCoord(track.m_rCoord),
-      m_phiCoord(track.m_phiCoord),
-      m_point(track.m_point),
-      m_slopeX(track.m_slopeX),
-      m_slopeY(track.m_slopeY),
-      m_cov(track.m_cov),
-      m_maxRSensor(track.m_maxRSensor),
-      m_minRSensor(track.m_minRSensor),
-      m_ancestor(track.m_ancestor),
-      m_angleUtils(track.m_angleUtils)
-  {};
-
 
   /// add and R coordinate: update rz parameters
   void PatVeloSpaceTrack::addRCoord( PatVeloRHit* coord )  {  
@@ -131,13 +96,6 @@ namespace Tf {
 
     double phi = m_angleUtils.mean(phi1,zRatio,phi2,(1.-zRatio));
     
-    //Handle the 2.pi modulation.  
-    //if ( phi1 < phi2 - Gaudi::Units::pi ) phi1 += 2*Gaudi::Units::pi;
-    //if ( phi1 > phi2 + Gaudi::Units::pi ) phi1 -= 2*Gaudi::Units::pi;
-    //double phi = ( zRatio * phi1 + (1.-zRatio) * phi2 );
-    //if      ( phi >  Gaudi::Units::pi ) phi -= 2*Gaudi::Units::pi;
-    //else if ( phi < -Gaudi::Units::pi ) phi += 2*Gaudi::Units::pi;
-
     myCoord->setRadiusAndPhi( myCoord->coordHalfBox(), phi );
   }
 

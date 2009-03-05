@@ -1,4 +1,4 @@
-// $Id: PatVeloLiteClusterPromoter.cpp,v 1.1 2008-10-16 17:00:31 dhcroft Exp $
+// $Id: PatVeloLiteClusterPromoter.cpp,v 1.2 2009-03-05 14:27:57 dhcroft Exp $
 // Include files 
 
 // from Gaudi
@@ -6,7 +6,6 @@
 
 // local
 #include "PatVeloLiteClusterPromoter.h"
-#include "PatVeloSpaceTrack.h"
 #include "PatVeloRHitManager.h"
 #include "PatVeloPhiHitManager.h"
 #include "Event/Track.h"

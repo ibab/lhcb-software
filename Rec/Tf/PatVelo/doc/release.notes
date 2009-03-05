@@ -4,6 +4,12 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2009-03-05 - David Hutchcroft
+ - Removed three unused variables from PatVeloSpaceTrack
+   Added more DOxygen comments to PatVeloSpaceTrack
+   Removed an unnessary dependance from PatVeloLiteClusterPromoter.cpp
+   Removed copy constructor from PatVeloSpaceTrack as it did not cure FPEs
+
 !========================== PatVelo v3r11 2009-02-20 =========================
 ! 2009-02-12 - Marco Cattaneo
  - Initialise all PatVeloSpaceTrack member variables in the constructor, to 
