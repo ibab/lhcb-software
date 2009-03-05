@@ -1,4 +1,4 @@
-// $Id: MCDecayFinder.h,v 1.9 2009-01-08 09:44:37 cattanem Exp $
+// $Id: MCDecayFinder.h,v 1.10 2009-03-05 13:55:07 rlambert Exp $
 #ifndef TOOLS_MCDECAYFINDER_H 
 #define TOOLS_MCDECAYFINDER_H 1
 
@@ -111,6 +111,11 @@ struct yy_buffer_state;
  *
  *  @author Olivier Dormond
  *  @date   12/03/2002
+ * 
+ * Edited by R Lambert 2009-03-04
+ * Check the decay string for syntax errors before parsing
+ * this avoids most segfaults
+ *
  */
 class MCDecayFinder : public GaudiTool, virtual public IMCDecayFinder
 {
@@ -383,6 +388,13 @@ private:
   static const char * const yname[];
   static const char * const yrule[];
 #endif
+
+
+  ///extra sanity checks to avoid segfaults, R. Lambert 04-03-2009
+  bool sanityCheck(const std::string & decay);
+
+  const std::string m_brackets;//="{}()[]" sanity check the brackets in the decay descriptor
+
 public:
   static YYSTYPE ylval;
 };

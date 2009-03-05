@@ -1,4 +1,4 @@
-// $Id: MCDecayFinder.cpp,v 1.6 2009-01-08 09:44:37 cattanem Exp $
+// $Id: MCDecayFinder.cpp,v 1.7 2009-03-05 13:55:07 rlambert Exp $
 // Include files 
 #include <list>
 #include <functional>
@@ -31,7 +31,7 @@ MCDecayFinder::MCDecayFinder( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
   : GaudiTool ( type, name , parent ),
-    m_ppSvc(0), m_source("B0 -> pi+ pi-"), m_decay(0), m_members(0)
+    m_ppSvc(0), m_source("B0 -> pi+ pi-"), m_decay(0), m_members(0), m_brackets("{}()[]")
 {
 
   declareInterface<IMCDecayFinder>(this);
@@ -83,7 +83,7 @@ StatusCode MCDecayFinder::setDecay( std::string decay ){
   m_members = NULL;
 
   debug() << "Setting decay to " << decay << endreq;
-  if( compile(decay) ) {
+  if( sanityCheck(decay) && compile(decay) ) {
     debug() << "The compilation of the decay was successfull"
             << endreq;
     m_source = decay;
@@ -111,7 +111,7 @@ StatusCode MCDecayFinder::setDecay( std::string decay ){
     delete m_members;
   }
   m_members = old_members;
-  err() << "Could not compile the decay description" << endreq;
+  err() << "Could not compile the decay description: " << decay << endreq;
 
   return StatusCode::FAILURE;
 }
@@ -377,10 +377,12 @@ bool MCDecayFinder::Descriptor::test( const LHCb::MCParticle *part,
       for ( vi = part->endVertices().begin();
             vi != part->endVertices().end(); vi++)
       {
+	if(! *vi) continue;
         SmartRefVector<LHCb::MCParticle>::const_iterator idau;
         for ( idau = (*vi)->products().begin();
               idau != (*vi)->products().end(); idau++ )
         {
+	  if(! *idau) continue;
           parts.push_back(*idau);
         }
       }
@@ -425,6 +427,7 @@ MCDecayFinder::Descriptor::testDaughters(std::list<const LHCb::MCParticle*> &par
   for( di = daughters.begin();
        (di != daughters.end()) && !parts.empty(); di++ )
   {
+	if(! *di) continue;
     std::list<const LHCb::MCParticle *>::iterator p = parts.begin();
     while( p != parts.end() && ((*di)->test(*p,collect,subtrees) == false) )
       p++;
@@ -471,11 +474,21 @@ void MCDecayFinder::Descriptor::addNonResonnantDaughters(
   for ( vi = part->endVertices().begin();
         vi != part->endVertices().end(); vi++ )
   {
+    if(! *vi) break;
     SmartRefVector<LHCb::MCParticle>::const_iterator idau;
     for ( idau = (*vi)->products().begin();
-          idau != (*vi)->products().end(); idau++ )
+          m_ppSvc && idau != (*vi)->products().end(); idau++ )
     {
+      if(! *idau) break;
+      
       const LHCb::ParticleProperty *pp = m_ppSvc->find( (*idau)->particleID() );
+      if(!pp)
+	{
+	  throw DescriptorError(std::string("Unknown particle '")+"'");
+	  //warning() << "Particle property not obtainable for " << (*idau)->particleID() << endmsg;
+	  continue;
+	}
+      
       if( pp->lifetime() >= m_resThreshold )
         parts.push_front(*idau);
       else
@@ -489,9 +502,16 @@ void MCDecayFinder::Descriptor::filterResonnances( std::list<const LHCb::MCParti
 {
   std::list<const LHCb::MCParticle*>::iterator pi;
   std::list<const LHCb::MCParticle*>::iterator npi;
-  for( pi=parts.begin(); pi!=parts.end(); pi = npi )
+  for( pi=parts.begin(); m_ppSvc && pi!=parts.end(); pi = npi )
   {
     const LHCb::ParticleProperty *pp = m_ppSvc->find( (*pi)->particleID() );
+      if(!pp)
+	{
+	  throw DescriptorError(std::string("Unknown particle '")+"'");
+	  //warning() << "Particle property not obtainable for " << (*idau)->particleID() << endmsg;
+	  continue;
+	}
+    
     if( pp->lifetime() < m_resThreshold )
     {
       const LHCb::MCParticle *part = *pi;
@@ -603,6 +623,8 @@ std::string MCDecayFinder::ParticleMatcher::describe( void )
     result += "## MUST NOT COMPILE ##";
     break;
   case id:
+    if(!m_ppSvc) break;
+    if(!m_ppSvc->find(LHCb::ParticleID(parms.stdHepID))) throw DescriptorError(std::string("Unknown particle"));;
     result += m_ppSvc->find(LHCb::ParticleID(parms.stdHepID))->particle();
     break;
   case quark:
@@ -882,6 +904,21 @@ void MCDecayFinder::ParticleMatcher::conjugateID( void )
 
 int MCDecayFinder::ParticleMatcher::conjugatedID( int id )
 {
+  if(m_ppSvc)
+    {
+      const LHCb::ParticleProperty * pp=m_ppSvc->find(LHCb::ParticleID(id));
+      if(pp)
+	{
+	  const LHCb::ParticleProperty *anti=pp->antiParticle();
+	  if(anti) return anti->pid().pid();
+	  else return id; //assume it has no antiparticle
+	  
+	}
+    throw DescriptorError("A particle was not known in the prop service");
+      
+    }
+  //else warning() << "Particle property service not defined, guessing conjugate ID" << endmsg;
+      
   int cc_id = -id;
   switch( cc_id )
   { // Particles which are their own anti-particle
@@ -921,4 +958,158 @@ int MCDecayFinder::ParticleMatcher::conjugatedID( int id )
     break;
   }
   return cc_id;
+  
+}
+bool MCDecayFinder::sanityCheck(const std::string & decay)
+{
+  //check for f_0(980), can probably remove this now...
+  //std::size_t apos = decay.find("f_0(980)");
+  //
+  //if(apos!=std::string::npos)
+  //  {
+  //    warning() << "Sorry, but for some strage reason f_0(980) doesn't work in a decay descriptor... don't ask me why" << endmsg;
+  //    return false;
+  //  }
+    
+  //check for more than one lot of '...'
+    std::size_t apos = decay.find("...");
+    if(apos!=std::string::npos)
+      {
+	apos++;
+	apos = decay.find("...",apos);
+	if(apos!=std::string::npos)
+	  {
+	    warning() << "The decay descriptor " << decay 
+		      << " has two lots of |...|. This would cause a segfault if I hadn't caught it here." 
+		      << endmsg;
+	    return false;
+	  }
+	
+      }
+    //check for mismatched brackets, first make the string with only brackets
+    std::string bstring="";
+    
+    for(std::string::const_iterator itd=decay.begin(); itd != decay.end(); itd++)
+      {
+	for(std::string::const_iterator itb=m_brackets.begin(); itb != m_brackets.end() && itd != decay.end(); itb++)
+	  {
+	    if(*itb == *itd)
+	      {
+		bstring += *itb;
+		break;
+	      }
+	    
+	  }
+	
+      }
+    //check the number of brackets matches up
+    verbose() << "Checking brackets " << bstring << endmsg;
+    if(bstring.size()==0) return true;
+    if(bstring.size()%2!=0)
+      {
+	warning() << "There is an uneven number of brackets in: " << bstring << endmsg;
+	return false;
+      }
+    
+    
+    //loop until there is no string
+    while(bstring.size()>1)
+      {
+	const unsigned int start=bstring.size();
+	
+	//loop over possible bracket combinations
+	//iterate over n and n+1, to get opening and closing bracket
+	for(unsigned int itb=0; bstring.size()>1 && itb < m_brackets.size()-1; itb+=2)
+	  {
+	    //loop over the string
+	    for(unsigned int itd=0; bstring.size()>1 && itd < bstring.size()-1; itd+=1)
+	      {
+		//remove matching brackets
+		if(bstring[itd]==m_brackets[itb] && bstring[itd+1]==m_brackets[itb+1])
+		  {
+		    verbose() << "Removing : " << bstring[itd] << bstring[itd+1] << endmsg;
+		    bstring.erase(itd,2);
+		    //reduced loop counter by two, to move to previous location
+		    if(itd >= 2) itd-=2;
+		    else itd=0; 
+		    itb=0;
+		    //unless I am at the beginning, then just go to back to zero
+		  }
+	      }
+	    
+	  }
+	
+	//break if the string is the same size at beginning and at end
+	if (start==bstring.size()) break;
+      }
+    verbose() << "Removed matching brackets now: " << bstring << endmsg;
+    if(bstring.size()>0)
+      {
+	warning() << "There are mismatched brackets in this decay descriptor. The non-matching brackets are: " << bstring << endmsg;
+	return false;
+      }
+    //now check for at least one comma between all curly brackets
+ 
+    bstring=decay;
+    
+    while(bstring.size()!=0)
+      {
+	const unsigned int start=bstring.size();
+    
+	//find the first closing bracket }
+	
+	for(unsigned int iclose=0; bstring.size()!=0 && iclose<bstring.size(); iclose++)
+	  {
+	    if(bstring[iclose]==m_brackets[1])
+	      {
+		//find the opening bracket for this
+		for(unsigned int iopen=iclose-1; true; iopen--)
+		  {
+		    if(bstring[iopen]==m_brackets[0]) 
+		      {
+			//check there is at least one comma
+			unsigned int comma=iopen+1;
+			char acomma=',';
+			while(comma<iclose)
+			  {
+			    if(bstring[comma]==acomma) break;
+			    else comma++;
+			  }
+			if(bstring[comma]!=acomma)
+			  {
+			    warning() << "every {} must contain at least one alternative. "<< bstring << " does not" << endmsg;
+			    return false;
+			  }
+			else
+			  {
+			    //OK so far, erase this bracket
+			    bstring.erase(iopen, iclose-iopen+1);
+			    //start from the beginning of this bracket
+			    iclose=iopen-1;
+			    //stop looping over iopen, go on to the next closing bracket
+			    verbose() << "OK so far, moving onto the next curly bracket in " << bstring << endmsg;
+			    break;
+			  }
+		      }
+		    else if(iopen <=0 || iopen>=iclose)
+		      {
+			warning() << "there is something odd with the descriptor: "<< bstring << endmsg;
+			return false;
+		      }
+		    
+		  }
+
+	      }
+	    
+	  }
+	
+	if (start==bstring.size()) break;
+      }
+    //find the opening bracket for this
+    //check that there is at least one comma
+    //replace all with a #
+    verbose() << "Sanity check passed for decay: " << decay << endmsg;
+    
+    return true;
+  
 }

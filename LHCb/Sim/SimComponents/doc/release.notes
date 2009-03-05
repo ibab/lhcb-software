@@ -5,6 +5,11 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+! 2009-03-05 - Rob Lambert
+ - Added sanity checking of the decay string, and use of the ppSvc to get 
+   charge conjugated associates. Fixed some odd dereferencing segfaults.
+   MCDecayFinder now works much better.
+
 !====================== SimComponents v2r16 2009-02-18 =======================
 ! 2009-02-17 M Needham
   - Add printout of half sample width

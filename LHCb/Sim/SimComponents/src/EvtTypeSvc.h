@@ -1,16 +1,26 @@
-// $Id: EvtTypeSvc.h,v 1.1.1.1 2005-12-15 14:29:30 gcorti Exp $
+// $Id: EvtTypeSvc.h,v 1.2 2009-03-05 13:55:07 rlambert Exp $
 #ifndef EVTTYPESVC_H 
 #define EVTTYPESVC_H 1
 
 // Include files
 #include "GaudiKernel/Service.h"
+// from Gaudi
 #include "Kernel/IEvtTypeSvc.h"
 #include "EvtTypeInfo.h"
+#include <sstream>
+#include <string>
+#include <cstdlib>
+#include <iostream>
+#include <fstream>
+//#include <set>
 
 #include <vector>
 
 // Forward declarations
 template <class TYPE> class SvcFactory;
+class IToolSvc; //forward declaration
+//class IMCDecayFinder; //forward declaration
+
 
 /** @class EvtTypeSvc EvtTypeSvc.h
  *
@@ -18,6 +28,10 @@ template <class TYPE> class SvcFactory;
  *
  *  @author Gloria CORTI
  *  @date   2004-04-30
+ *
+ *  Edited R. Lambert  2009-03-04
+ *  Added implimentation of allTypes(void), returning a std::set of all known types
+ *
  */
 class EvtTypeSvc : public Service
                  , virtual public IEvtTypeSvc 
@@ -49,6 +63,11 @@ public:
    */
   virtual bool typeExists( const int evtCode );
 
+  /** return a set of all known event types
+   *  @see IEvtTypeSvc
+   */
+  virtual LHCb::EventTypeSet allTypes( void );
+
 protected:
 
   /** Standard Constructor.
@@ -68,8 +87,10 @@ protected:
     inline bool operator() ( const EvtTypeInfo* type ) {
       return ( type->evtCode() == m_code );
     }
+
   private:
     int m_code;
+   
   };
   
 protected:

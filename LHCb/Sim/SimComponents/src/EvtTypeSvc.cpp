@@ -1,17 +1,15 @@
-// $Id: EvtTypeSvc.cpp,v 1.2 2007-01-12 10:01:00 cattanem Exp $
+// $Id: EvtTypeSvc.cpp,v 1.3 2009-03-05 13:55:07 rlambert Exp $
 // Include files 
 
+// from Gaudi
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/MsgStream.h"
 
-#include <cstdlib>
-#include <fstream>
-#include <string>
-#include <algorithm>
 
 // local
 #include "EvtTypeSvc.h"
+
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : EvtTypeSvc
@@ -29,6 +27,7 @@ DECLARE_SERVICE_FACTORY(EvtTypeSvc)
 EvtTypeSvc::EvtTypeSvc( const std::string& name, ISvcLocator* svc ) 
   : Service( name, svc )
 {
+  //m_mcFinder=NULL; //don't make it unless needed
   
   // Default file to parse
   if( getenv("DECFILESROOT") != NULL ) {
@@ -91,6 +90,7 @@ StatusCode EvtTypeSvc::initialize()
     return StatusCode::FAILURE;
   }
 
+  
   return parseFile( inputFile() );
   
 }
@@ -117,7 +117,7 @@ StatusCode EvtTypeSvc::finalize()
   
   msg << MSG::DEBUG << "Table size after clean up" << m_evtTypeInfos.size()
       << endmsg;
-
+  
   return Service::finalize();
   
 }
@@ -221,11 +221,12 @@ std::string EvtTypeSvc::nickName( const int evtCode ) {
   iEvtTypeInfo = std::find_if( m_evtTypeInfos.begin(), 
                                m_evtTypeInfos.end(), 
                                EvtCodeEqual(evtCode) );
-  if( m_evtTypeInfos.end() == iEvtTypeInfo ) {
-    MsgStream msg( msgSvc(), name() );
-    msg << MSG::WARNING << evtCode << "not known" << endmsg;
-    return "";
-  }
+  if( m_evtTypeInfos.end() == iEvtTypeInfo ) 
+    {
+      MsgStream msg( msgSvc(), name() );
+      msg << MSG::WARNING << evtCode << "not known" << endmsg;
+      return "";
+    }
   return (*iEvtTypeInfo)->nickName();
   
 }  
@@ -248,3 +249,20 @@ std::string EvtTypeSvc::decayDescriptor( const int evtCode ) {
 
 }
 
+
+//=============================================================================
+// Returns a LHCb::EventTypeSet of all known types
+// this is a typedef of std::set<long unsigned int, std::greater<long unsigned int> >
+// an ordered, unique, list
+//=============================================================================
+LHCb::EventTypeSet EvtTypeSvc::allTypes( void )
+{
+
+  LHCb::EventTypeSet types;
+
+  for(EvtTypeInfos::const_iterator iEvtTypeInfo=m_evtTypeInfos.begin(); iEvtTypeInfo!=m_evtTypeInfos.end(); iEvtTypeInfo++)
+    types.insert((*iEvtTypeInfo)->evtCode());
+  
+  return types;
+
+}
