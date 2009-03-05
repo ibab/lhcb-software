@@ -5,13 +5,15 @@ use GaudiKernel v*
 branches cmt doc Event src tests xml
 private
   use GaudiAlg     v*      -no_auto_imports
-  use GaudiObjDesc v*      -no_auto_imports
+  use GaudiObjDesc v*      -no_auto_imports  
 end_private
 
 # Produce Header-Files from XML description
 #============================================================================
 apply_pattern god_headers files=../xml/*.xml
 apply_pattern install_more_includes more=Event
+
+
 
 # ==================== Produce LCG dictionary ===============================
 macro DAQEventGen_dependencies DAQEventObj2Doth
@@ -23,14 +25,16 @@ apply_pattern     reflex_dictionary                            \
 
 # ==================== linker library =======================================
 macro DAQEventLib_dependencies DAQEventObj2Doth
-library DAQEventLib     *.cpp
+library DAQEventLib     *.cpp 
 
 # ==================== component libraries ==================================
-library DAQEvent        component/*.cpp  -import=GaudiAlg
+library DAQEvent  component/*.cpp -import=GaudiAlg 
 
 # ==================== Standard patterns (order is important!) ==============
-apply_pattern component_library library=DAQEvent
+apply_pattern component_library library=DAQEvent 
 apply_pattern linker_library    library=DAQEventLib
+
+macro_append ROOT_linkopts " -lHist"
 
 # Set up the test application with packages needed at run time
 private

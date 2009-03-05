@@ -4,6 +4,11 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+! 2009-02-25 - Deschamps Olivier
+ - src/components/RawBankReadoutStatusMonitor : implement automatic bin labels + few minor fixes
+ - cmt/requirements : explicit link libHist in ROOT_linkOpts
+
+
 !================ DAQEvent v7r18 2009-02-18 ===========================
 ! 2009-02-03 - Marco Clemencic
  - Moved:
