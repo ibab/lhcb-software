@@ -9,10 +9,10 @@
 	</set>
   </argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
-  <argument name="reference"><text>../refs/rtl_testque.ref</text></argument>
   <argument name="validator"><text>
-    preprocessor = normalizeExamples 
-    validateWithReference(preproc = preprocessor)
-  </text></argument>
-
+expected_string = &quot;[RTL Test]  rtl_testque>   Successfully completed.&quot; 
+if stdout.find(expected_string) == -1:
+    causes.append('missing string')
+    result['GaudiTest.expected_string'] = result.Quote(expected_string)
+</text></argument>
 </extension>

@@ -114,5 +114,6 @@ extern "C" int rtl_testque2(int,char **) {
 extern "C" int rtl_testque(int , char **) {
   rtl_testqhi();
   rtl_testqti();
-  return 1;
+  printf("[RTL Test]  rtl_testque>   Successfully completed.\n");
+  return 0;
 }

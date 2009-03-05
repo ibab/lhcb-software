@@ -10,9 +10,4 @@
   </argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="reference"><text>../refs/rtl_testscreen.ref</text></argument>
-  <argument name="validator"><text>
-    preprocessor = normalizeExamples 
-    validateWithReference(preproc = preprocessor)
-  </text></argument>
-
 </extension>
