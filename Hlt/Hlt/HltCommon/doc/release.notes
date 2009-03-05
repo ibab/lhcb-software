@@ -3,6 +3,9 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2009-03-05 - Gerhard Raven
+ - check for illegal bin numbers
+
 ! 2009-03-03 - Antonio Perez-Calero
   - In HltFunctions.h and HltFunctionFactories.cpp: added filters VertexTrack1PT, VertexTrack1IP 
   	and similar for track2. Given a vertex, apply a filter in each of the daughter tracks, to 

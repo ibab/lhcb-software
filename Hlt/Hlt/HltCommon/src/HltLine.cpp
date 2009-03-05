@@ -1,4 +1,4 @@
-// $Id: HltLine.cpp,v 1.13 2009-03-03 21:23:51 graven Exp $
+// $Id: HltLine.cpp,v 1.14 2009-03-05 09:41:38 graven Exp $
 // Include files
 #include "HltLine.h"
 
@@ -22,8 +22,9 @@
 namespace {
     bool setBinLabels( TAxis* axis,  const std::vector<std::pair<unsigned,std::string> >& labels ) {
         if (axis==0) return false;
+        int nbins = axis->GetNbins(); 
         for (std::vector<std::pair<unsigned,std::string> >::const_iterator i = labels.begin();i!=labels.end();++i ) {
-            //TODO: check bin exists...
+            if (1+i->first <= 0 ||  1+i->first > nbins ) return false;
             // Argh... ROOT bins start counting at '1' instead of '0'
             axis -> SetBinLabel(1 + i->first  ,i->second.c_str() );
         }
@@ -231,13 +232,15 @@ StatusCode HltLine::initialize() {
   m_stageHisto = book1D(m_decision,     m_decision,     -0.5,7.5,8);
   m_cpuHisto   = book1D(name()+" CPU time",name()+" CPU time",0,1000);
   m_timeHisto  = book1D(name()+" Wall time",name()+" Wall time",0,1000);
-  m_stepHisto  = book1D(name()+" steps", name()+ " steps",-0.5,m_subAlgo.size()-0.5,m_subAlgo.size() );
+  m_stepHisto  = book1D(name()+" rejection stage", name()+ " rejection stage",-0.5,m_subAlgo.size()-0.5,m_subAlgo.size() );
   // if possible, add labels to axis...
   std::vector<std::string> stepLabels;
   for (SubAlgos::const_iterator i = m_subAlgo.begin();i!=m_subAlgo.end();++i) {
       stepLabels.push_back( i->first->name() );
   }
-  setBinLabels( m_stepHisto, stepLabels );
+  if (!setBinLabels( m_stepHisto, stepLabels )) {
+    error() << " Could not set bin labels " << endmsg;
+  }
 
 
   //== and the counters
