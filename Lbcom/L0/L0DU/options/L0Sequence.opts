@@ -64,5 +64,5 @@ L0FilterFromEmulSeq.Members += {  "GaudiSequencer/L0EmulatorSeq",
 
 
 // THE L0 TRIGGER CONFIGURATIONS KEYS:
-#include "$L0TCK/DefaultTCK.opts"  // default TCK for SIM/E-mulation
+#include "$L0DUOPTS/DefaultTCK.opts"  // default TCK for SIM/E-mulation
 
