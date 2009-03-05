@@ -1,4 +1,4 @@
-// $Id: LbAppInit.cpp,v 1.12 2009-01-23 10:30:08 cattanem Exp $
+// $Id: LbAppInit.cpp,v 1.13 2009-03-05 14:49:59 cattanem Exp $
 // Include files
 #include <string>
 #include <vector>
@@ -41,6 +41,7 @@ LbAppInit::LbAppInit( const std::string& name,
   declareProperty( "SingleSeed",      m_singleSeed = false );
   declareProperty( "PreloadGeometry", m_preload    = false );
   declareProperty( "PrintFreq",       m_printFreq  = 1     );
+  declareProperty( "PrintEventTime",  m_printTime  = false );
 }
 //=============================================================================
 // Destructor
@@ -138,12 +139,16 @@ StatusCode LbAppInit::finalize() {
 
 //=============================================================================
 void LbAppInit::printEventRun( longlong event, int run,
-                               std::vector<long int>* seeds ) const
+                               std::vector<long int>* seeds,
+                               Gaudi::Time time ) const
 {
   if ( this->okToPrint() )
   {
-    info() << "Evt " << event << ",  Run " << run
-           << ",  Nr. in job = " << m_eventCounter;
+    info() << "Evt " << event << ",  Run " << run;
+    if( m_printTime ) info() << ", UTC time " 
+                             << time.format(false,"%Y-%m-%d %H:%M:%S") 
+                             << "." << time.nanoformat(6);
+    info() << ",  Nr. in job = " << m_eventCounter;
     if( 0 != seeds ) info() << " with seeds " << *seeds;
     info() << endmsg;
   }

@@ -1,4 +1,4 @@
-// $Id: LbAppInit.h,v 1.8 2007-05-18 08:33:45 cattanem Exp $
+// $Id: LbAppInit.h,v 1.9 2009-03-05 14:49:58 cattanem Exp $
 #ifndef LBAPPINIT_H 
 #define LBAPPINIT_H 1
 
@@ -8,6 +8,7 @@
 
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiKernel/Time.h"
 
 // from LHCbKernel
 #include "Kernel/ICondDBInfo.h"
@@ -66,8 +67,12 @@ protected:
    *  @param[in] evt event number
    *  @param[in] run run number
    *  @param[in] seeds (optional) vector of seeds
+   *  @param[in] time (optional) time of the event
    */
-  void printEventRun( longlong evt, int run, std::vector<long int> *seeds = 0 ) const;
+  void printEventRun( longlong evt,
+                      int run, 
+                      std::vector<long int> *seeds = 0, 
+                      Gaudi::Time time = 0              ) const;
 
   /** Initialize the random number engine with the given seeds
    *  @param[in] seeds Vector of seeds
@@ -111,6 +116,9 @@ private:
    */
   int m_printFreq;
 
+  /// Property to print also the event time (default is false)
+  bool m_printTime;
+  
   // Member data
   IRndmEngine*  m_engine;       ///< Pointer to random number engine
   IRndmGenSvc*  m_randSvc;      ///< Pointer to random number service
