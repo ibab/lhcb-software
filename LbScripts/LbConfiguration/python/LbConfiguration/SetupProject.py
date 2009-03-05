@@ -4,12 +4,13 @@ import os, sys, tempfile, re, sys, time
 from xml.sax import parse, ContentHandler
 from stat import S_ISDIR
 import getopt
+from fnmatch import fnmatch
 
-_cvs_id = "$Id: SetupProject.py,v 1.6 2009-01-30 17:01:05 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.7 2009-03-05 14:14:33 marcocle Exp $"
 
 try:
     from LbUtils.CVS import CVS2Version
-    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.6 $")
+    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.7 $")
 except ImportError :
     __version__ = _cvs_id
 
@@ -282,7 +283,7 @@ def FindProjectVersions(project, search_path, user_area = None):
                                if isProject(os.path.join(p,v)) ]
     return versions
 
-def SortVersions(versions):
+def SortVersions(versions, reverse = False):
     """Give a list of version numbers, return a list with only unique elements
     ordered by version.
     """
@@ -311,7 +312,7 @@ def SortVersions(versions):
                     sortable_list.append( ((10000,0,0), v) )
                 else:
                     sortable_list.append( ((0,0,v), v) )
-    sortable_list.sort()
+    sortable_list.sort(reverse = reverse)
     return [ v[1] for v in sortable_list ]
 
 
@@ -320,13 +321,21 @@ def LatestVersion(versions):
     (output of FindProjectVersions)."""
     return SortVersions([ v[1] for v in versions ])[-1]
 
+def VersionMatch(version, pattern):
+	"""Compare a version string with a pattern. The pattern can be
+	the exact match, a glob pattern or None (in which case matches an None version).
+	"""
+	return version == pattern or \
+	    ((pattern is not None) and fnmatch(version, pattern))
+
 def _GetVersionTuple(v, versions):
-    """Extract the version tuple corresponding to version v.
+    """Extract the version tuple corresponding to version v (it can be a pattern).
     """
     if not versions:
         return None
+    # Try exact match
     for vers_tuple in versions:
-        if vers_tuple[1] == v:
+        if VersionMatch(vers_tuple[1], v):
             return vers_tuple
     if v is None: # take the latest
         return _GetVersionTuple(LatestVersion(versions), versions)
@@ -1420,7 +1429,14 @@ class SetupProject:
 
         #------------- project version
         if self.args:
-            if self.args[0] in [ v[1] for v in versions ]:
+            # check if the next argument can be interpreted as a version for the requested project
+            found = False
+            pattern = self.args[0]
+            for v in versions:
+            	if VersionMatch(v[1], pattern):
+                    found = True
+                    break
+            if found:
                 self.project_version = self.args.pop(0)
             elif re.match('v[0-9]*r[0-9p]*|HEAD',self.args[0]):
                 self._error("Cannot find version '%s' of %s. Try with --list-versions." % (self.args[0], self.project_name))
@@ -1441,7 +1457,7 @@ class SetupProject:
                                             versions = versions)
         if not self.project_info:
             # we should never get here
-            self._error("PANIC: Cannot find version '%s' of %s after initial check" % (self.project_name, self.project_version))
+            self._error("PANIC: Cannot find version '%s' of %s after initial check" % (self.project_version, self.project_name))
             return 1
         
         # runtime projects

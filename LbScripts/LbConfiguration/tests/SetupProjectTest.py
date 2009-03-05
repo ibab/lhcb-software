@@ -407,6 +407,17 @@ class SetupProjectTestCase(unittest.TestCase):
         
         self._check_env(s,"Brunel",v)
         
+    def test_122_main(self):
+        """main (Brunel explicit version wildcard)
+        """
+        l = get_all_versions("Brunel")
+        v = l[-1]
+        pattern = v[:v.find('r')+1] + '*'
+        x = os.popen4((launcher + " LbConfiguration.SetupProject --shell=%s Brunel %s")%(_shell,pattern))
+        s = x[1].read()
+        
+        self._check_env(s,"Brunel",v)
+        
     def test_125_main(self):
         """main (Brunel with runtime project Online, explicit versions)
         """

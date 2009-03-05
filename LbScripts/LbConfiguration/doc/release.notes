@@ -1,3 +1,8 @@
+2009-03-05  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/SetupProject.py: added support for patterns in project
+	versions (e.g. SetupProject Brunel "v34r*").
+
 2009-03-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/LbLogin.py: added default value at CERN for STAGE_HOST,
