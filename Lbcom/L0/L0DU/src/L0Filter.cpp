@@ -1,4 +1,4 @@
-// $Id: L0Filter.cpp,v 1.3 2008-03-27 16:32:14 odescham Exp $
+// $Id: L0Filter.cpp,v 1.4 2009-03-05 15:32:45 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -26,6 +26,8 @@ DECLARE_ALGORITHM_FACTORY( L0Filter );
 L0Filter::L0Filter( const std::string& name,
                     ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
+  ,m_count(0)
+  ,m_sel(0)
 {
   m_l0channels.clear();
   declareProperty("L0DULocation", m_l0Location = LHCb::L0DUReportLocation::Default );
@@ -77,7 +79,7 @@ StatusCode L0Filter::initialize() {
 StatusCode L0Filter::execute() {
 
   debug() << "==> Execute" << endmsg;
-
+  m_count++;
   const  LHCb::L0DUReport* l0 = get<LHCb::L0DUReport>(m_l0Location);
 
   setFilterPassed(false); // switch off by default
@@ -118,7 +120,7 @@ StatusCode L0Filter::execute() {
     if ( filterPassed()) debug() << "Event is accepted" << endmsg ;
     else debug() << "Event is rejected" << endmsg ;
   }
-  
+  if(filterPassed())m_sel++;
   return StatusCode::SUCCESS;
 }
 
@@ -128,7 +130,7 @@ StatusCode L0Filter::execute() {
 StatusCode L0Filter::finalize() {
 
   debug() << "==> Finalize" << endmsg;
-
+  info() << "Filtering : " << m_sel << " events among " << m_count << " processed " << endreq;
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 

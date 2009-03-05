@@ -10,7 +10,6 @@ ReplaceL0DUBankSeq.Members   = { "bankKiller/RemoveL0DUBank",        // remove t
                                  "GaudiSequencer/L0EmulatorSeq"   // and re-run the whole L0 stuff
 };
 
-
 // Remove the L0DU bank
 RemoveL0DUBank.bankTypes ={ "L0DU" };
 

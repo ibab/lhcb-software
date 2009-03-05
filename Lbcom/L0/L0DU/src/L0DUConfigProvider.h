@@ -1,4 +1,4 @@
-// $Id: L0DUConfigProvider.h,v 1.4 2008-07-03 18:33:11 odescham Exp $
+// $Id: L0DUConfigProvider.h,v 1.5 2009-03-05 15:32:45 odescham Exp $
 #ifndef L0DUCONFIGPROVIDER_H 
 #define L0DUCONFIGPROVIDER_H 1
 
@@ -7,6 +7,7 @@
 #include "GaudiAlg/GaudiTool.h"
 // Interfaces
 #include "L0Interfaces/IL0DUConfigProvider.h"            
+#include "Event/L0DUBase.h"
 
 /** @class L0DUConfigProvider L0DUConfigProvider.h
  *  
@@ -64,17 +65,22 @@ private:
   ConfigType m_triggers;
   
 
-  bool m_print;
+  bool m_detail;
 
   void printConfig(LHCb::L0DUConfig config);
 
   void constantData();
-  void predefinedData(const std::string& name);
+  void predefinedData(const std::string& ,const int param[L0DUBase::Conditions::LastIndex] );
   void hardcodedData();
   StatusCode createData();
   StatusCode createConditions();
   StatusCode createChannels();
   StatusCode createTriggers();
+  void predefinedTriggers();
+  bool getDataList(const std::string, std::vector<std::string>& );
+  std::vector<std::string> triggerNameFromData( std::vector<std::string> );  
+  bool configChecker();
+  
 
   //options-defined data/conditions/channels
   LHCb::L0DUElementaryData::Map m_dataMap;
@@ -102,6 +108,10 @@ private:
   std::vector<std::string> m_condFlags;
   std::vector<std::string> m_chanFlags;
   std::vector<std::string> m_trigFlags;
-  
+  std::map<std::string,int> m_tIndices;
+  std::map<std::string,int > m_conditionOrder;
+  std::map<std::string,int > m_conditionInputs;
+  std::map<std::string,int > m_conditionNumber;
+  std::map<std::string,int > m_conditionOperator;
 };
 #endif // L0DUCONFIGPROVIDER_H

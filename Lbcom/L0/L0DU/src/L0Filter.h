@@ -1,4 +1,4 @@
-// $Id: L0Filter.h,v 1.2 2008-03-27 16:32:14 odescham Exp $
+// $Id: L0Filter.h,v 1.3 2009-03-05 15:32:45 odescham Exp $
 #ifndef L0FILTER_H 
 #define L0FILTER_H 1
 
@@ -47,5 +47,7 @@ private:
   std::string m_l0Location ;              ///< Location of L0 decision
   std::vector<std::string> m_l0channels ; ///< required channels (Or-ed)
   std::string m_trig;
+  unsigned long m_count;
+  unsigned long m_sel;
 };
 #endif // L0FILTER_H

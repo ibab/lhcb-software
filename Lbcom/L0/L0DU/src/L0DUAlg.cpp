@@ -1,4 +1,4 @@
-// $Id: L0DUAlg.cpp,v 1.8 2008-07-17 16:16:07 odescham Exp $
+// $Id: L0DUAlg.cpp,v 1.9 2009-03-05 15:32:45 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -45,8 +45,8 @@ L0DUAlg::L0DUAlg( const std::string& name,
   //
   declareProperty( "TCK"                     , m_tck="");
   declareProperty( "L0DUConfigProviderName"  , m_configName="L0DUConfig");
+  declareProperty( "BankSourceID"            ,  m_rawSrcID = 0);
 
-  m_rawSrcID = 0 ;// hardcoded rawBank srcID
   m_rawBankType  = LHCb::RawBank::L0DU; // rawBank Type
 
 

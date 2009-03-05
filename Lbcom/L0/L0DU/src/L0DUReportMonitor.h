@@ -1,4 +1,4 @@
-// $Id: L0DUReportMonitor.h,v 1.5 2008-05-29 14:01:15 odescham Exp $
+// $Id: L0DUReportMonitor.h,v 1.6 2009-03-05 15:32:45 odescham Exp $
 #ifndef L0DUREPORTMONITOR_H 
 #define L0DUREPORTMONITOR_H 1
 
@@ -7,7 +7,9 @@
 #include "GaudiAlg/GaudiHistoAlg.h"
 // from Event
 #include "Event/L0DUReport.h"
-
+#include <TH1D.h>
+#include <TH2D.h>
+#include <TAxis.h>
 
 /** @class L0DUReportMonitor L0DUReportMonitor.h
  *  
@@ -69,5 +71,11 @@ private:
   bool m_full;
   int m_bin;
   bool m_split;
+  std::string m_lab;
+  void label( AIDA::IHistogram1D* h1d , std::map<int,std::string>  labels);
+  void label( AIDA::IHistogram2D* h2d , std::map<int,std::string>  labels);
+  bool m_generic;
+  bool m_first;
+  bool m_swap;
 };
 #endif // L0DUREPORTMONITOR_H

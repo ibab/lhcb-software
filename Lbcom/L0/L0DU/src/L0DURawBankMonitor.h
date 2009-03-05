@@ -1,4 +1,4 @@
-// $Id: L0DURawBankMonitor.h,v 1.6 2008-07-21 14:35:50 cattanem Exp $
+// $Id: L0DURawBankMonitor.h,v 1.7 2009-03-05 15:32:45 odescham Exp $
 #ifndef L0DURAWBANKMONITOR_H 
 #define L0DURAWBANKMONITOR_H 1
 
@@ -9,6 +9,10 @@
 #include "L0Interfaces/IL0DUEmulatorTool.h"
 #include "GaudiKernel/IEventTimeDecoder.h"
 #include "Event/RawBankReadoutStatus.h"
+#include "CaloDAQ/ICaloDataProvider.h"
+#include <TH1D.h>
+#include <TH2D.h>
+#include <TAxis.h>
 // Base class
 #include "CaloUtils/Calo2Dview.h"
 
@@ -30,6 +34,7 @@ namespace L0DUBase{
                InputData     = 6,
                EmulatorCheck = 7,
                UnknownTCK    = 8,
+               WrongSpdMult  = 9
     };
   }
 }
@@ -57,11 +62,11 @@ private:
 
   std::string m_fromRawTool;
   std::string m_emulatorTool;
-  IL0DUFromRawTool*    m_fromRaw;
-  IL0DUEmulatorTool*     m_emuTool;
-  IL0CondDBProvider*   m_condDB;  
+  IL0DUFromRawTool*  m_fromRaw;
+  IL0DUEmulatorTool* m_emuTool;
+  IL0CondDBProvider* m_condDB;  
   IEventTimeDecoder* m_odin;
-
+  ICaloDataProvider* m_prs;
   bool m_conv;
   bool m_data;
   bool m_proc;
@@ -72,5 +77,10 @@ private:
   std::vector<std::vector<std::string> > m_locs;
   bool m_decode;
   bool m_warn;
+  std::string m_lab;
+  bool m_generic;
+  std::string m_caloTool;
+  GaudiAlg::HistoID toHistoID(std::string unit);
+  bool m_first;
 };
 #endif // L0DURAWBANKMONITOR_H

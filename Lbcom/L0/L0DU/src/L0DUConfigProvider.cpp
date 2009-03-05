@@ -1,4 +1,4 @@
-// $Id: L0DUConfigProvider.cpp,v 1.9 2008-07-17 16:16:07 odescham Exp $
+// $Id: L0DUConfigProvider.cpp,v 1.10 2009-03-05 15:32:45 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -47,6 +47,7 @@ L0DUConfigProvider::L0DUConfigProvider( const std::string& type,
   declareProperty( "Description"             , m_def     = "NO DESCRIPTION");  
   declareProperty( "Name"                    , m_recipe  = "");  
   declareProperty( "Separators"              , m_sepMap);
+  declareProperty( "FullDescription"         , m_detail  = false);
 
 
   // TCK from name
@@ -91,7 +92,11 @@ L0DUConfigProvider::L0DUConfigProvider( const std::string& type,
   m_operators.push_back(std::make_pair("-",2));
   m_operators.push_back(std::make_pair("&",2));
   m_operators.push_back(std::make_pair("^",2));
-
+  // index of the predefined triggers
+  m_tIndices["L0Ecal" ] = 0 ;
+  m_tIndices["L0Hcal" ] = 1 ;
+  m_tIndices["L0Muon" ] = 2 ;
+  m_tIndices["Other"  ] = 3 ;
 }
 //============================================================================= 
 // Destructor 
@@ -129,7 +134,6 @@ StatusCode L0DUConfigProvider::finalize(){
 
   //delete m_config;
   m_configs.release();
-  
   
   return GaudiTool::finalize();
 }
@@ -172,8 +176,6 @@ StatusCode L0DUConfigProvider::initialize(){
 
   // create L0DU configuration 
   m_config = new LHCb::L0DUConfig(m_tckopts);
-
-
   sc = createTriggers();  // the main method
 
 
@@ -213,7 +215,7 @@ void L0DUConfigProvider::printConfig(LHCb::L0DUConfig config){
   debug() << "              - " << config.channels().size()   << " Channels " << endreq;
   debug() << " " << endreq;
   info() <<  "Short description :: " << config.definition()  << endreq;
-  verbose() << "Full description  :: " << config.description() << endreq;
+  if(m_detail)info() << "Full description  :: " << config.description() << endreq;
 }
 
 
@@ -223,43 +225,45 @@ void L0DUConfigProvider::printConfig(LHCb::L0DUConfig config){
 //-----------------
 //=============================================================================
 void L0DUConfigProvider::hardcodedData( ) {
+  using namespace L0DUBase::Conditions;  
   
   // 1- content fields (Et/Pt/Multiplicity) ...
-  predefinedData("Electron(Et)"       );
-  predefinedData("Photon(Et)"         );    
-  predefinedData("Hadron(Et)"         );  
-  predefinedData("LocalPi0(Et)"       );
-  predefinedData("GlobalPi0(Et)"      );
-  predefinedData("Sum(Et)"            );
-  predefinedData("Spd(Mult)"          );
-  predefinedData("Muon1(Pt)"          );
-  predefinedData("Muon2(Pt)"          );
-  predefinedData("Muon3(Pt)"          );
-  predefinedData("DiMuon(Pt)"         );
-  predefinedData("PUHits(Mult)"       );
-  predefinedData("PUPeak1(Cont)"      );
-  predefinedData("PUPeak2(Cont)"      );
+  predefinedData("Electron(Et)"       , Electron  );
+  predefinedData("Photon(Et)"         , Photon    );    
+  predefinedData("Hadron(Et)"         , Hadron    );  
+  predefinedData("LocalPi0(Et)"       , LocalPi0  );
+  predefinedData("GlobalPi0(Et)"      , GlobalPi0 );
+  predefinedData("Sum(Et)"            , SumEt     );
+  predefinedData("Spd(Mult)"          , SpdMult   );
+  predefinedData("Muon1(Pt)"          , Muon1     );
+  predefinedData("Muon2(Pt)"          , Muon2     );
+  predefinedData("Muon3(Pt)"          , Muon3     );
+  predefinedData("DiMuon(Pt)"         , DiMuon    );
+  predefinedData("PUHits(Mult)"       , PuHits    );
+  predefinedData("PUPeak1(Cont)"      , PuPeak1   );
+  predefinedData("PUPeak2(Cont)"      , PuPeak2   );
   // 2- addresses Fields
-  predefinedData("Electron(Add)"      );
-  predefinedData("Photon(Add)"        );
-  predefinedData("Hadron(Add)"        );
-  predefinedData("LocalPi0(Add)"      );
-  predefinedData("GlobalPi0(Add)"     );
-  predefinedData("Muon1(Add)"         );
-  predefinedData("Muon2(Add)"         );
-  predefinedData("Muon3(Add)"         );
-  predefinedData("PUPeak1(Add)"       );
-  predefinedData("PUPeak2(Add)"       );
+  predefinedData("Electron(Add)"      , CaloAddress );
+  predefinedData("Photon(Add)"        , CaloAddress );
+  predefinedData("Hadron(Add)"        , CaloAddress );
+  predefinedData("LocalPi0(Add)"      , CaloAddress );
+  predefinedData("GlobalPi0(Add)"     , CaloAddress );
+  predefinedData("Muon1(Add)"         , MuonAddress );
+  predefinedData("Muon2(Add)"         , MuonAddress );
+  predefinedData("Muon3(Add)"         , MuonAddress );
+  predefinedData("PUPeak1(Add)"       , PuPeak1Pos  );
+  predefinedData("PUPeak2(Add)"       , PuPeak2Pos  );
   // 3 - additional elementary data field (muon sign ... )
-  predefinedData("Muon1(Sgn)"         );
-  predefinedData("Muon2(Sgn)"         );
-  predefinedData("Muon3(Sgn)"         );  
+  predefinedData("Muon1(Sgn)"         , MuonSign );
+  predefinedData("Muon2(Sgn)"         , MuonSign );
+  predefinedData("Muon3(Sgn)"         , MuonSign );  
 }
 
 //=============================================================================
-void L0DUConfigProvider::predefinedData(const std::string& name){
+void L0DUConfigProvider::predefinedData(const std::string& name,const int param[L0DUBase::Conditions::LastIndex]){
   LHCb::L0DUElementaryData* data = 
     new LHCb::L0DUElementaryData(m_pData,LHCb::L0DUElementaryData::Predefined,name,"Id",name);
+  m_conditionOrder[name] = param[L0DUBase::Conditions::Order];
   m_dataMap[name]=data ;
   debug() << "Predefined Data : " << data->description() << endreq;
   m_pData++;
@@ -793,9 +797,14 @@ StatusCode L0DUConfigProvider::createChannels(){
 //===============================================================
 StatusCode L0DUConfigProvider::createTriggers(){
 
+  // crate channels -> conditions (-> compound data)
   StatusCode sc = createChannels();
-  if(sc.isFailure())return sc;
 
+  // pre-defined triggers
+  predefinedTriggers();
+  
+  // Additional user-defined triggers
+  if(sc.isFailure())return sc;
   int id = m_triggersMap.size();  
   for(ConfigIterator iconfig = m_triggers.begin(); iconfig != m_triggers.end() ; ++iconfig){
     
@@ -840,6 +849,7 @@ StatusCode L0DUConfigProvider::createTriggers(){
     LHCb::L0DUTrigger::Map::iterator ic = m_triggersMap.find(triggerName);
     if( ic != m_triggersMap.end() ){
       warning() << "A L0DU Trigger with name  '" << triggerName <<"' already exists " 
+                << " (NB : 'L0Ecal', 'L0Hcal', 'L0Muon' and 'Other' triggers are predefined)" 
                 << " - Please check your settings" << endreq;
       return StatusCode::FAILURE;
     }
@@ -919,3 +929,85 @@ StatusCode L0DUConfigProvider::createTriggers(){
 
   return StatusCode::SUCCESS;
 }
+
+
+//===============================================================
+void L0DUConfigProvider::predefinedTriggers(){
+
+
+
+  // create predefined triggers
+  for(std::map<std::string,int>::iterator imap = m_tIndices.begin() ; m_tIndices.end() != imap ; imap++){
+    LHCb::L0DUTrigger* trigger = new LHCb::L0DUTrigger((*imap).second,  (*imap).first ) ;
+    m_triggersMap[ (*imap).first ] = trigger;
+  }    
+
+  // Associate one channel to one (or several) trigger(s) according to elementary data
+  for(  LHCb::L0DUChannel::Map::iterator ic  = m_channelsMap.begin() ; ic != m_channelsMap.end() ; ic++){
+    LHCb::L0DUChannel* channel = (*ic).second;
+    if( !channel->enable() )continue;
+    // loop over conditions
+    std::vector<std::string> dataList;
+    for( LHCb::L0DUElementaryCondition::Map::const_iterator ie = channel->elementaryConditions().begin(); 
+         ie != channel->elementaryConditions().end() ; ie++){
+      const LHCb::L0DUElementaryCondition* condition = (*ie).second;
+      const LHCb::L0DUElementaryData* data = condition->data();
+      if( !getDataList( data->name() , dataList ) );
+    }
+    std::vector<std::string> name = triggerNameFromData( dataList );
+    if( *(name.begin()) == "Unknown" ){
+      error() << "The channel " << channel->name() << " cannot be associated to any predefined trigger" << endreq;
+      continue;
+    }
+    for( std::vector<std::string>::iterator it = name.begin() ; it != name.end() ; it++){
+      LHCb::L0DUTrigger::Map::iterator imap = m_triggersMap.find( *it );
+      if( imap == m_triggersMap.end()){
+        error() << " Unknow trigger name '" << *it << "'" << endreq;
+        continue;
+      }
+      ((*imap).second)->addChannel( channel );
+    }
+  } 
+} 
+
+bool L0DUConfigProvider::getDataList(const std::string dataName, std::vector<std::string>& dataList){
+  LHCb::L0DUElementaryData::Map::iterator it = m_dataMap.find( dataName );
+  if( it == m_dataMap.end() )return false;
+  LHCb::L0DUElementaryData* data = (*it).second;
+  bool ok = true;
+  if( LHCb::L0DUElementaryData::Predefined == data->type() ){
+    dataList.push_back( data->name() );
+    return ok;
+  }else if(  LHCb::L0DUElementaryData::Compound == data->type() ){
+    for(std::vector<std::string>::const_iterator op = data->operandsName().begin() ; op != data->operandsName().end() ; op++ ){
+      ok = ok && getDataList( *op , dataList );
+    }    
+  }
+  return ok;
+}
+
+std::vector<std::string> L0DUConfigProvider::triggerNameFromData( std::vector<std::string> dataList ){
+
+  std::vector<std::string> name;
+
+  // The actual trigger->data association definition
+
+  // 1st pass for the main trigger : L0Muon, L0Ecal, L0Hcal
+  bool hasTrigger = false;
+  for(std::vector<std::string>::iterator id = dataList.begin() ; id != dataList.end() ; id++){
+    std::string dataName = (*id).substr(0,2);
+    if( dataName == "Mu" || dataName == "Di" ){ 
+      name.push_back( "L0Muon" ) ;
+      hasTrigger = true;
+    } else if( dataName == "El" || dataName == "Ph" || dataName == "Lo" || dataName == "Gl" ){
+      name.push_back( "L0Ecal" );
+      hasTrigger = true;
+    } else if( dataName == "Ha" ){
+      name.push_back( "L0Hcal" );
+      hasTrigger = true;
+    }
+  }
+  if( !hasTrigger)name.push_back( "Other" );
+  return name;
+}
+
