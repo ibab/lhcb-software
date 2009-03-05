@@ -34,7 +34,9 @@ library DAQEvent  component/*.cpp -import=GaudiAlg
 apply_pattern component_library library=DAQEvent 
 apply_pattern linker_library    library=DAQEventLib
 
-macro_append ROOT_linkopts " -lHist"
+macro_append ROOT_linkopts " -lHist" \
+                     WIN32 " libHist.lib "\
+                                
 
 # Set up the test application with packages needed at run time
 private
