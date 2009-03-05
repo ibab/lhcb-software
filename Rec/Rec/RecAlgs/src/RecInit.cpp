@@ -1,4 +1,4 @@
-// $Id: RecInit.cpp,v 1.7 2008-07-21 14:39:30 cattanem Exp $
+// $Id: RecInit.cpp,v 1.8 2009-03-05 14:51:27 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -91,7 +91,7 @@ StatusCode RecInit::execute() {
   unsigned int runNumber = odin->runNumber();
   ulonglong    evtNumber = odin->eventNumber();
   
-  this->printEventRun( evtNumber, runNumber );
+  this->printEventRun( evtNumber, runNumber, 0, odin->eventTime() );
 
   // Initialize the random number
   std::vector<long int> seeds = getSeeds( runNumber, evtNumber );
