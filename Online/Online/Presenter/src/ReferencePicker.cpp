@@ -72,7 +72,7 @@ ReferencePicker::ReferencePicker(PresenterMainFrame* gui, DbRootHist* histogram)
 
         TH1* histo;
         TIter next(list);
-        while (histo = (TH1 *) next()) {
+        while ((histo = (TH1 *) next())) {
           gPad = c125->GetPad(numberOfRefs);
           histo->DrawCopy();
           --numberOfRefs;

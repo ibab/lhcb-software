@@ -166,7 +166,7 @@ void Archive::fillHistogram(DbRootHist* histogram,
 
       TH1* histo;
       TIter next(list);
-      while (histo = (TH1 *) next()) {
+      while ((histo = (TH1 *) next())) {
         list->Remove(histo);
         delete histo;
       }
