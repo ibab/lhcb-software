@@ -1,4 +1,4 @@
-// $Id: OMAMessage.cpp,v 1.7 2009-03-04 14:04:06 ggiacomo Exp $
+// $Id: OMAMessage.cpp,v 1.8 2009-03-05 09:55:37 ggiacomo Exp $
 #include <time.h>
 #include "OnlineHistDB/OMAMessage.h"
 using namespace std;
@@ -163,6 +163,7 @@ void OMAMessage::remove() {
       m_ID=0;
       m_dbsync=false;
     }
+    releaseOCIStatement(stmt);
   }
 }
 
