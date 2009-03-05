@@ -1,7 +1,13 @@
-!$Id: release.notes,v 1.28 2009-03-05 09:40:26 graven Exp $
+!$Id: release.notes,v 1.29 2009-03-05 14:07:06 kvervink Exp $
 Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
+
+!2009-02-27 - Kim Vervink
+ - add memory histograms
+ - add axis titles 
+
+!========================== HltGlobalMonitor v2r2 2009-03-05 ===============
 
 !2009-03-05 - Gerhard Raven
  - check for illegal bin numbers

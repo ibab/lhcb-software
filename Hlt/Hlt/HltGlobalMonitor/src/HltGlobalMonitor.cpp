@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.26 2009-03-05 09:40:26 graven Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.27 2009-03-05 14:07:06 kvervink Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -33,6 +33,15 @@
 // ============================================================================
 #include "TH1D.h"
 #include "TH2D.h"
+// ============================================================================
+// Memory Usage
+// ============================================================================
+#include "/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v20r4/GaudiAud/src/ProcStats.h"
+#include "/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v20r4/GaudiAud/src/ProcStats.cpp"
+// ============================================================================
+// Time
+// ============================================================================
+#include <ctime>
 // ============================================================================
 // local
 // ============================================================================
@@ -97,6 +106,14 @@ namespace {
         return setBinLabels(  h2d->GetXaxis(), lx) && setBinLabels( h2d->GetYaxis(), ly );
     }
 
+  bool setAxisLabels( AIDA::IHistogram1D* hist, const std::string & xAxis,const std::string & yAxis  ) {
+    if (hist==0) return false;
+    TH1D *h1d = Gaudi::Utils::Aida2ROOT::aida2root( hist );  
+    if (h1d==0) return false;
+    h1d->SetXTitle(xAxis.c_str());
+    h1d->SetYTitle(yAxis.c_str());
+    return true;
+  }
 };
 
 //=============================================================================
@@ -105,14 +122,18 @@ namespace {
 HltGlobalMonitor::HltGlobalMonitor( const std::string& name,
                     ISvcLocator* pSvcLocator)
   : HltBaseAlg ( name , pSvcLocator )
-  , m_gpstimesec(0)
+    , m_gpstimesec(0), m_time(0), m_scanevents(200),  m_totaltime(2000), m_totalmem(5000)
+
 
 {
   // se nao tiver declarado no options, ele usa este
-  declareProperty("ODIN",                   m_ODINLocation = LHCb::ODINLocation::Default);
-  declareProperty("L0DUReport",       m_L0DUReportLocation = LHCb::L0DUReportLocation::Default);
-  declareProperty("HltDecReports", m_HltDecReportsLocation = LHCb::HltDecReportsLocation::Default);
-  declareProperty("Hlt1Decisions", m_Hlt1Lines );
+  declareProperty("ODIN",              m_ODINLocation = LHCb::ODINLocation::Default);
+  declareProperty("L0DUReport",        m_L0DUReportLocation = LHCb::L0DUReportLocation::Default);
+  declareProperty("HltDecReports",     m_HltDecReportsLocation = LHCb::HltDecReportsLocation::Default);
+  declareProperty("Hlt1Decisions",     m_Hlt1Lines );
+  declareProperty("ScanEvents",        m_scanevents = 2000 );
+  declareProperty("TotalTime",         m_totaltime  = 2000 );
+  declareProperty("TotalMemory",       m_totalmem   = 5000 );
 
 }
 //=============================================================================
@@ -127,6 +148,19 @@ StatusCode HltGlobalMonitor::initialize() {
   StatusCode sc = HltBaseAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
+  m_counter     = 0;
+  m_scanevents  = 10;
+  m_totaltime   = 200;
+  m_totalmem    = 2000;
+
+  
+  //do i have to do this here again????? 
+  
+  m_time_ref    = time(NULL);
+  
+  //  info() << "reference time = " << m_time_ref << endreq;
+  
+
   m_L0Input         = book1D("L0 channel",-0.5,16.5,17);
   m_odin            = book1D("ODIN type",  "ODIN Type ",-0.5, 7.5, 8);
   std::vector<std::pair<unsigned,std::string> > odinLabels = boost::assign::list_of< std::pair<unsigned,std::string> >
@@ -138,7 +172,7 @@ StatusCode HltGlobalMonitor::initialize() {
                 (ODIN::NonZSupTrigger,    "NonZSup")
                 (ODIN::TimingTrigger,     "Timing")
                 (ODIN::CalibrationTrigger,"Calibration");
-  if (!setBinLabels( m_odin, odinLabels )) {
+   if (!setBinLabels( m_odin, odinLabels )) {
     error() << "failed to set binlables on ODIN hist" << endmsg;
   }
   
@@ -166,9 +200,11 @@ StatusCode HltGlobalMonitor::initialize() {
   }
 
 
+
+
   m_hltAcc          = book1D("Hlt1 lines Accept", "Hlt1 Lines Accept",
                              -0.5, m_Hlt1Lines.size()+0.5,m_Hlt1Lines.size()+1);
-  if (!setBinLabels(m_hltAcc, labels)) {
+   if (!setBinLabels(m_hltAcc, labels)) {
     error() << "failed to set binlables on accept hist" << endmsg;
   }
 
@@ -180,25 +216,54 @@ StatusCode HltGlobalMonitor::initialize() {
   if (!setBinLabels( m_hltInclusive,  labels )) {
     error() << "failed to set binlables on inclusive hist" << endmsg;
   }
-
+  
   m_hltCorrelations = book2D("HltLines Correlations",-0.5,m_Hlt1Lines.size()-0.5,
                              m_Hlt1Lines.size(),-0.5,m_Hlt1Lines.size()-0.5,
                              m_Hlt1Lines.size());
-  if (!setBinLabels( m_hltCorrelations, labels, labels )) {
+
+   if (!setBinLabels( m_hltCorrelations, labels, labels )) {
     error() << "failed to set binlables on correlation hist" << endmsg;
   }
 
 
+  m_hltVirtinTime  = book1D("Virtual memory per event",   -0.5, (double)m_totaltime, m_totaltime);
+
+  setAxisLabels( m_hltVirtinTime, "time[s]", "memory[MB]");
+
+  m_hltResinTime   = book1D("Resident memory per event",  -0.5,(double)m_totaltime,m_totaltime);
+
+  setAxisLabels( m_hltResinTime, "time[s]", "memory[MB]");
+
+  m_hltVirtMem    = book1D("Virtual Memory",   -0.5, (double)m_totalmem, m_totalmem);
+  
+  setAxisLabels( m_hltVirtMem, "memory[MB]", "");
+
+  m_hltResMem    = book1D("Resident Memory",   -0.5, (double)m_totalmem, m_totalmem);
+
+  setAxisLabels( m_hltResMem, "memory[MB]", "");
+
+  m_hltEventsTime  = book1D("time per event",   -0.5, (double)m_totaltime, m_totaltime);
+
+  setAxisLabels( m_hltEventsTime, "time/event[10^-2 s]", "10^2 event");
+
+
+  
   for (std::vector<std::string>::const_iterator i = m_Hlt1Lines.begin(); i!=m_Hlt1Lines.end();++i) {
      m_allAcc.push_back(0);
      declareInfo("COUNTER_TO_RATE["+*i+"Acc]",  m_allAcc.back(),  "Hlt1 "+*i+" Line Accepts");
      m_allCall.push_back(0);
      declareInfo("COUNTER_TO_RATE["+*i+"Call]", m_allCall.back(), "Hlt1 "+*i+" Line Calls");
   }
+
+  declareInfo("COUNTER_TO_RATE", m_vsize, "Virtual memory");
+  declareInfo("COUNTER_TO_RATE", m_rss, "Residual memory");
+  
   m_gpstimesec=0;
 
   declareInfo("L0Accept",        "",&counter("L0Accept"),        0,std::string("L0Accept"));
   declareInfo("COUNTER_TO_RATE[GpsTimeoflast]",m_gpstimesec,"Gps time of last event");
+
+  declareInfo("#accept","",&counter("#accept"),0,std::string("Events accepted"));
 
   return StatusCode::SUCCESS;
 };
@@ -222,7 +287,12 @@ StatusCode HltGlobalMonitor::execute() {
   monitorODIN(odin,l0du,hlt);
   monitorL0DU(odin,l0du,hlt);
   monitorHLT(odin,l0du,hlt);
+
+  if(  (counter("#accept").nEntries())%m_scanevents ==0) monitorMemory();
+  
+  counter("#accept") += 1;
   return StatusCode::SUCCESS;
+  
 }
 
 void HltGlobalMonitor::monitorODIN(const LHCb::ODIN* odin,
@@ -292,7 +362,6 @@ void HltGlobalMonitor::monitorHLT(const LHCb::ODIN*,
 
   if (hlt==0) return;
 
- 
   ///////////////////////////////////////////////////////////////////////////////
   std::vector<std::pair<std::string,const LHCb::HltDecReport*> > reps;
   unsigned nAcc = 0;
@@ -307,11 +376,11 @@ void HltGlobalMonitor::monitorHLT(const LHCb::ODIN*,
   }
   
   fill( m_hltNAcc, nAcc, 1.0);  //by how many lines did 1 event get accepted?
-
+  
   for (size_t i = 0; i<reps.size();++i) {
-   
+
     ++m_allCall[i];
-    fill( m_hltInclusive, i, reps[i].second->decision() );
+    fill( m_hltInclusive, i, reps[i].second->decision());
     if (!reps[i].second->decision()) continue;
     ++m_allAcc[i];
    
@@ -340,3 +409,32 @@ void HltGlobalMonitor::monitorHLT(const LHCb::ODIN*,
     }
   }
 }
+
+
+
+void HltGlobalMonitor::monitorMemory() {
+  m_time = time(NULL)- m_time_ref;
+
+  ProcStats* p = ProcStats::instance();
+  procInfo info;
+  if( p->fetch(info) == true) {
+    //std::cout <<" virtual size = " << info.vsize << " MB"  <<
+    //  " resident set size = " << info.rss << " MB" << 
+    //  " time is " << m_time << std::endl;
+    m_vsize = info.vsize;
+    m_rss   = info.rss;
+    
+    fill(m_hltVirtinTime, m_time, m_vsize);
+    fill(m_hltResinTime,  m_time, m_rss);
+    if(counter("#accept").nEntries() >0){
+      fill(m_hltEventsTime, (double)m_time*100./(double)(counter("#accept").nEntries()),
+           (counter("#accept").nEntries())/100);
+      }
+    fill(m_hltVirtMem   , m_vsize, 1);
+    fill(m_hltResMem    , m_rss  , 1);
+    
+}else {
+    debug() << "could not get memory information out" << endreq;
+  }
+}
+

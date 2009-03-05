@@ -34,6 +34,8 @@ private:
   void monitorODIN(const LHCb::ODIN*,const LHCb::L0DUReport*,const LHCb::HltDecReports*);
   void monitorL0DU(const LHCb::ODIN*,const LHCb::L0DUReport*,const LHCb::HltDecReports*);
   void monitorHLT (const LHCb::ODIN*,const LHCb::L0DUReport*,const LHCb::HltDecReports*);
+  void monitorMemory();
+  
 
   std::string m_ODINLocation;
   std::string m_L0DUReportLocation;
@@ -41,6 +43,15 @@ private:
   std::vector<std::string>  m_Hlt1Lines;
   
   int m_gpstimesec;
+  int m_time;
+  int m_time_ref;
+  int m_counter;
+  double m_vsize;
+  double m_rss;
+  int m_scanevents;
+  int m_totaltime;
+  int m_totalmem;
+    
 
   template <typename T> T* fetch(const std::string& location) {
        T* t =  this->exist<T>( location ) ?  this->get<T>( location ) 
@@ -61,6 +72,12 @@ private:
   AIDA::IHistogram1D* m_hltNAcc;
   AIDA::IHistogram1D* m_hltInclusive;
   AIDA::IHistogram1D* m_hltExclusive;
+  AIDA::IHistogram1D* m_hltVirtMem;
+  AIDA::IHistogram1D* m_hltResMem;
+  AIDA::IHistogram1D* m_hltVirtinTime;
+  AIDA::IHistogram1D* m_hltResinTime;
+  AIDA::IHistogram1D* m_hltEventsTime;
+
   AIDA::IHistogram2D* m_hltCorrelations;
 };
 #endif // HLTGLOBALMONITOR_H
