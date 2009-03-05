@@ -77,8 +77,8 @@ namespace {
       ::lib_rtl_output(LIB_RTL_INFO," MEP    buffer start: %08X\n",m_mepID->mepStart);
       ::lib_rtl_output(LIB_RTL_INFO," EVENT  buffer start: %08X\n",m_mepID->evtStart);
       ::lib_rtl_output(LIB_RTL_INFO," RESULT buffer start: %08X\n",m_mepID->resStart);
-      mbm_register_free_event(m_mepID->evtBuffer,  0, 0);
-      mbm_register_alloc_event(m_mepID->resBuffer, 0, 0);
+      //mbm_register_free_event(m_mepID->evtBuffer,  0, 0);
+      //mbm_register_alloc_event(m_mepID->resBuffer, 0, 0);
     }
     ~Cons()  {
       if ( m_evtProd ) delete m_evtProd;

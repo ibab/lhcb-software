@@ -19,6 +19,7 @@ $MINITERM "$EXEC mep_reform_a -i=EVENT  -o=RESULT -n=Moore_2" &
 $MINITERM "$EXEC mep_reform_a -i=EVENT  -o=RESULT -n=Moore_3" &
 $MINITERM "$EXEC mep_reform_a -i=EVENT  -o=RESULT -n=Moore_4" &
 $MINITERM "$EXEC mep_cons_a   -i=RESULT -n=Diskwr_0" &
+$MINITERM "$EXEC mep_cons_a   -i=EVENT -n=Diskwr_0" &
 $MINITERM "$EXEC mep_cons_a   -i=RESULT -n=LBMonit_0" &
 $MINITERM "$EXEC mep_cons_a   -i=RESULT -n=LBMonit_1" &
 $MINITERM "$EXEC mep_holder_a -i=MEP    -n=MepHold_0" &
