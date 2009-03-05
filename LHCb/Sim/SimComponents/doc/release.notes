@@ -9,6 +9,7 @@
  - Added sanity checking of the decay string, and use of the ppSvc to get 
    charge conjugated associates. Fixed some odd dereferencing segfaults.
    MCDecayFinder now works much better.
+	 Added method to EvtTypeSvc to get all known types
 
 !====================== SimComponents v2r16 2009-02-18 =======================
 ! 2009-02-17 M Needham
