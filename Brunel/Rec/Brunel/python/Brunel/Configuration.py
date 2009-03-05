@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.66 2009-03-04 07:46:45 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.67 2009-03-05 14:57:05 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -56,7 +56,6 @@ class Brunel(LHCbConfigurableUser):
        ,"DatasetName"     : "Brunel"
        ,"DDDBtag"         : ""
        ,"CondDBtag"       : ""
-       ,"UseOracle"       : False
        ,"MainSequence"    : []
        ,"InitSequence"    : []
        ,"RecoSequence"    : []
@@ -86,7 +85,6 @@ class Brunel(LHCbConfigurableUser):
        ,'DatasetName'  : """ String used to build output file names """
        ,'DDDBtag'      : """ Tag for DDDB """
        ,'CondDBtag'    : """ Tag for CondDB """
-       ,'UseOracle'    : """ Flag to enable Oracle CondDB. Default False (use SQLDDDB) """
        ,'MainSequence' : """ List of main sequences, default self.DefaultSequence """
        ,'InitSequence' : """ List of initialisation sequences """
        ,'RecoSequence' : """ List of reconstruction sequences, default defined in RecSys """
@@ -103,7 +101,7 @@ class Brunel(LHCbConfigurableUser):
             self.setProp( "Simulation", True )
 
         # Delegate handling to LHCbApp configurable
-        self.setOtherProps(LHCbApp(),["DataType","CondDBtag","DDDBtag","UseOracle","Simulation"])
+        self.setOtherProps(LHCbApp(),["DataType","CondDBtag","DDDBtag","Simulation"])
 
     def defineEvents(self):
         # Delegate handling to LHCbApp configurable
@@ -230,7 +228,7 @@ class Brunel(LHCbConfigurableUser):
         ProcessPhase("Init").Context = self.getProp("Context")
 
         from Configurables import RecInit, MemoryTool
-        recInit = RecInit( name = "BrunelInit",
+        recInit = RecInit( "BrunelInit",
                            PrintFreq = self.getProp("PrintFreq"))
         GaudiSequencer("InitBrunelSeq").Members += [ recInit ]
         recInit.addTool( MemoryTool(), name = "BrunelMemory" )
