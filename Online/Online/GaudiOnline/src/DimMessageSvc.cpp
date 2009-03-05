@@ -1,7 +1,5 @@
-// $Id: DimMessageSvc.cpp,v 1.7 2009-03-03 12:04:59 frankb Exp $
-#if !defined(i386) && !defined(_WIN32)
-#define GAUDIKERNEL_KERNEL_H    // disable include
-#endif
+// $Id: DimMessageSvc.cpp,v 1.8 2009-03-05 10:22:12 frankb Exp $
+#define NO_LONGLONG_TYPEDEF
 #include "dis.hxx"
 #include "RTL/rtl.h"
 #include "GaudiKernel/SvcFactory.h"

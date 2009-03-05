@@ -1,8 +1,6 @@
-// $Id: DimErrorLogger.cpp,v 1.16 2009-03-03 12:04:59 frankb Exp $
+// $Id: DimErrorLogger.cpp,v 1.17 2009-03-05 10:22:12 frankb Exp $
+#define NO_LONGLONG_TYPEDEF
 
-#if !(defined(i386) || defined(_WIN32))
-#define GAUDIKERNEL_KERNEL_H    // disable include
-#endif
 #include "dis.hxx"
 #include "GaudiOnline/DimMessageSvc.h"
 #include "GaudiOnline/DimErrorLogger.h"

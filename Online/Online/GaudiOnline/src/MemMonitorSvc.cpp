@@ -1,6 +1,5 @@
 // Include files
-#define GAUDIKERNEL_KERNEL_H    // disable include
-#include <memory>
+#define NO_LONGLONG_TYPEDEF
 #include "dis.hxx"
 
 #include "GaudiKernel/IAlgorithm.h"

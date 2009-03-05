@@ -1,4 +1,4 @@
-#define GAUDIKERNEL_KERNEL_H    // disable include
+#define NO_LONGLONG_TYPEDEF
 #include "dic.hxx"
 #include "dis.hxx"
 #include "WT/wtdef.h"

@@ -1,7 +1,4 @@
-#if !defined(i386) && !defined(_WIN32)
-#define GAUDIKERNEL_KERNEL_H    // disable include
-#endif
-
+#define NO_LONGLONG_TYPEDEF
 #include "dis.hxx"
 #include "RTL/rtl.h"
 #include "GaudiKernel/SvcFactory.h"

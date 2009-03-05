@@ -1,6 +1,4 @@
-#if !defined(i386) && !defined(_WIN32)
-#define GAUDIKERNEL_KERNEL_H    // disable include
-#endif
+#define NO_LONGLONG_TYPEDEF
 #ifdef _WIN32
 #define vsnprintf _vsnprintf
 #endif
