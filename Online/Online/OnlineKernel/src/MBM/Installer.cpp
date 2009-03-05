@@ -337,3 +337,9 @@ extern "C" int mbm_remove(int argc, char** argv) {
   MBM::Installer inst(argc,argv);
   return inst.deinstall();
 }
+
+extern "C" int mbm_install_qmtest(int argc , char** argv) {
+  int ret = mbm_install(argc,argv);
+  return (ret == 1) ? 0 : ret;
+}
+

@@ -73,6 +73,8 @@ protected:
   NetworkConnection*   m_connection;
   /// Service port
   NetworkChannel::Port m_port;
+  /// Shutdown flag    
+  bool                 m_shutdown;
 
 public:
   //@Man Public member functions
@@ -179,7 +181,7 @@ public:
 //                                      M.Frank
 // ----------------------------------------------------------------------------
 NameService::NameService(NetworkConnection* ptr, bool verbose) 
-: m_tandb(TanDataBase::Instance()), m_connection(ptr), m_port(NAME_SERVICE_PORT)
+  : m_tandb(TanDataBase::Instance()), m_connection(ptr), m_port(NAME_SERVICE_PORT), m_shutdown(false)
 {
   if ( verbose )  {
     ::lib_rtl_output(LIB_RTL_INFO,"+======================================================================+\n");
@@ -260,6 +262,13 @@ void NameService::handleMessage( TanDataBase::Entry*& ent, TanMessage& rec_msg, 
       _printEntry("DUMP",ent);
       m_tandb.Dump(std::cout);
       break;
+    case TanMessage::SHUTDOWN:
+      _printEntry("SHUTDOWN",ent);
+      ::lib_rtl_output(LIB_RTL_ALWAYS,"+======================================================================+\n");
+      ::lib_rtl_output(LIB_RTL_ALWAYS,"|                  TAN NAMESERVER SHUTDOWN requested.                  |\n");
+      ::lib_rtl_output(LIB_RTL_ALWAYS,"+======================================================================+\n");
+      m_shutdown = true;
+      break;
     case TanMessage::INQUIRE:                                 // Inquire service...
       _printEntry("INQUIRE",ent);
       if ( (port=m_tandb.findPort(rec_msg)) == 0 )  {
@@ -334,6 +343,7 @@ void UdpNameService::handle ()   {
         inet_ntoa(rep.address()), rep.port());
     }
   }
+  if ( m_shutdown ) ::exit(0);
 }
 
 // ----------------------------------------------------------------------------
@@ -397,11 +407,13 @@ void TcpNameService::handle()   {
 //                                      M.Frank
 // ----------------------------------------------------------------------------
 int TcpNameService::handle ( EventHandler* handler )  {
+  int status = NAME_SERVER_SUCCESS;
   if ( handler == m_pAccepthandler )
-    return handleAcceptRequest ( handler );
+    status=handleAcceptRequest ( handler );
   else if ( handler != 0 )
-    return handleReceiveRequest ( handler );
-  return NAME_SERVER_SUCCESS;
+    status=handleReceiveRequest ( handler );
+  if ( m_shutdown ) ::exit(0);
+  return status;
 }
 
 // ----------------------------------------------------------------------------

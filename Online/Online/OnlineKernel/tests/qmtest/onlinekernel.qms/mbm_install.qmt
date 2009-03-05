@@ -5,10 +5,19 @@
   <argument name="args">
 	<set>
 	<text>libOnlineKernel.so</text>
-	<text>rtl_testscreen</text>
-	<text>-nowait</text>
+	<text>mbm_install_qmtest</text>
+	<text>-s=8096</text>
+	<text>-e=64</text>
+	<text>-u=64</text>
+	<text>-i=0</text>
+	<text>-c</text>
 	</set>
   </argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
-  <argument name="reference"><text>../refs/rtl_testscreen.ref</text></argument>
+  <argument name="validator"><text>
+expected_string = &quot;++bm_init++ BM installation [0] finished successfully.&quot; 
+if stdout.find(expected_string) == -1:
+    causes.append('missing string')
+    result['GaudiTest.expected_string'] = result.Quote(expected_string)
+</text></argument>
 </extension>

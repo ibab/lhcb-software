@@ -55,7 +55,8 @@ public:
     INQUIRE,
     ALIAS,
     DEALIAS,
-    DUMP
+    DUMP,
+    SHUTDOWN
   };
 public:
   //@Man: Public interface: 

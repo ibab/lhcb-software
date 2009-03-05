@@ -56,21 +56,22 @@ extern "C" int amsc_bounce(int argc, char **argv)  {
 
   if ( length==0 ) length=10;
   if (length > SIZE) length = SIZE;
-  printf (" Starting ams test task (%s) %s for %d turns\n",
-          (fanout) ? "Sender" : "Reader", amsname.c_str(),loop);
+  ::printf (" Starting ams test task (%s) %s for %d turns\n",
+	    (fanout) ? "Sender" : "Reader", amsname.c_str(),loop);
   if (fanout)  {
-    strcpy(source,target.c_str());
-    printf(" task %s: size %d\n",source,length);
+    ::strcpy(source,target.c_str());
+    ::printf(" task %s: size %d\n",source,length);
   }
   int ams_status = amsc_init (amsname.c_str());
   if (ams_status != AMS_SUCCESS)  {
-    printf ("Can't initialise ams\n");
-    exit (ams_status);
+    ::printf ("Can't initialise ams\n");
+    ::exit (ams_status);
   }
   amsc_get_node( node );
 
   // receive some messages and bounce them
   int  wsize =  length;
+  int mx_loop = loop;
   if (fanout)  {
     srand(length);
     fill (wmessage, wsize);
@@ -78,11 +79,12 @@ extern "C" int amsc_bounce(int argc, char **argv)  {
     if (ams_status != AMS_SUCCESS)
       err_print (ams_status);
   }
+  ::fflush(stdout);
   while (1)  {
     do    {
       unsigned int ams_fac;
       rsize = SIZE;
-      wtc_wait(&facility,&dummy,&substatus); 
+      ::wtc_wait(&facility,&dummy,&substatus); 
       ams_status = amsc_read_message (rmessage, &rsize, source, &ams_fac, 0);
 
       /* for no wt_wait 
@@ -102,7 +104,25 @@ extern "C" int amsc_bounce(int argc, char **argv)  {
       ams_status = amsc_send_message (rmessage, rsize, source, 0, 0);
     }
     if (ams_status != AMS_SUCCESS) err_print (ams_status);
-    if (++loop % 100 == 0) printf ("%d -- Last msg from:%s\n", loop, source);
+    if (++loop % 200 == 0)   {
+      char* p = source, *q = source;
+      while ( (p=strchr(p,':')) ) *p++ = 0, q = p; 
+      if ( 0 == q ) q = source;
+      ::printf("%s %d -- Last msg from:%s\n", amsname.c_str(), loop, q);
+      ::fflush(stdout);
+    }
+    if (--mx_loop == 0 ) {
+      ::printf ("%s AMS Test successfully ended.\n", amsname.c_str());
+      ::printf ("%s Exiting....\n", amsname.c_str());
+      ::fflush(stdout);
+      ::lib_rtl_sleep(1000);
+      ::amsc_close();
+      ::lib_rtl_sleep(1000);
+      ::printf ("%s Shutdown done....\n", amsname.c_str());
+      ::fflush(stdout);
+      ::exit(0);
+      return 0;
+    }
   }
   return 0;
 }

@@ -5,10 +5,9 @@
   <argument name="args">
 	<set>
 	<text>libOnlineKernel.so</text>
-	<text>rtl_testscreen</text>
-	<text>-nowait</text>
+	<text>wtc_test_qmtest</text>
 	</set>
   </argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
-  <argument name="reference"><text>../refs/rtl_testscreen.ref</text></argument>
+  <argument name="reference"><text>../refs/wtc_test.ref</text></argument>
 </extension>

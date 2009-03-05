@@ -54,10 +54,14 @@ protected:
     int fatalError(int code);
     /// Convert TAN error codes to operating system specific ones
     int errorCode(int tan_error);
+    /// Send shutdown request to nameserver
+    int sendAction(int which, const char* node);
 public:
     //@Man: Public member functions
     /// Instanciator
     static TanInterface& instance();
+    /// Dump remote database on server node
+    int      shutdown         (const char* node);
     /// Dump remote database on server node
     int      dumpDB           (const char* node);
     /// Get local host name
@@ -88,6 +92,7 @@ extern "C"  {
     int tan_declare_alias          (__CXX_CONST__ char *name);
     int tan_remove_alias           (__CXX_CONST__ char *name);
     int tan_dump_dbase             (__CXX_CONST__ char *node);
+    int tan_shutdown               (__CXX_CONST__ char *node);
     int tan_host_name              (char* node, size_t siz);
 #ifdef __cplusplus
 }

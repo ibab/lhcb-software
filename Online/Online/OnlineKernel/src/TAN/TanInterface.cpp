@@ -60,6 +60,12 @@ extern "C" int tan_dump_dbase(const char* node)   {
   return TanInterface::instance().dumpDB(node);
 }
 // ----------------------------------------------------------------------------
+// C Interface:
+// ----------------------------------------------------------------------------
+extern "C" int tan_shutdown(const char* node)   {
+  return TanInterface::instance().shutdown(node);
+}
+// ----------------------------------------------------------------------------
 // C++ Interface:
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
@@ -398,13 +404,28 @@ int TanInterface::removeAlias ( const char* name )  {
   }                                              return errorCode(TAN_SS_ERROR);
 }
 // ----------------------------------------------------------------------------
+//  Send shutdown request to nameserver
+//                                      M.Frank
+// ----------------------------------------------------------------------------
+int TanInterface::shutdown( const char* node )  {
+  return sendAction(TanMessage::SHUTDOWN,node);
+}
+// ----------------------------------------------------------------------------
 //  Dump remote database...
 //                                      M.Frank
 // ----------------------------------------------------------------------------
 int TanInterface::dumpDB (const char* node)   {
+  return sendAction(TanMessage::DUMP,node);
+}
+// ----------------------------------------------------------------------------
+//  Send shutdown request to nameserver
+//                                      M.Frank
+// ----------------------------------------------------------------------------
+int TanInterface::sendAction(int which,const char* node) {
+  if ( node == 0 || *node == 0 ) node = m_pcHostName;
   if ( Status() == TAN_SS_SUCCESS )  {
     NetworkChannel::Address radd;
-    TanMessage msg(TanMessage::DUMP);
+    TanMessage msg(which);
     if ( setInquireAddr(node,msg.m_sin,radd) == TAN_SS_SUCCESS )  {
 #if defined(__USING_TCP_ALLOCATOR) // || defined(_WIN32)
       TcpNetworkChannel c;
