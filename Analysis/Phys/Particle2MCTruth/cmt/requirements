@@ -1,4 +1,4 @@
-#$Id: requirements,v 1.1.1.1 2009-03-04 14:26:10 jpalac Exp $
+#$Id: requirements,v 1.2 2009-03-05 11:27:42 jpalac Exp $
 #============================================================================
 # Created    : 2009-03-04
 # Maintainer : Juan PALACIOS
@@ -16,6 +16,7 @@ include_path             none
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
+use   LoKiAlgoMC           v*    Phys
 use   DaVinciMCKernel      v*    Phys
 
 include_path      none
