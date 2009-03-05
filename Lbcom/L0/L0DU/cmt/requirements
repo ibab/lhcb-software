@@ -23,7 +23,9 @@ use L0Muon       v*    L0    -no_auto_imports
 # ================ component library =====================================
 library		L0DU  *.cpp -import=AIDA
 
-macro_append ROOT_linkopts " -lHist"
+macro_append ROOT_linkopts " -lHist" \ 
+                     WIN32 " libHist.lib "\
+                                
 
 apply_pattern component_library library=L0DU
 apply_pattern install_python_modules
