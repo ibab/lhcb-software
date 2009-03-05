@@ -1,6 +1,10 @@
 #include <cstdio>
 #include "rtl_internal.h"
-  
+#ifdef USE_PTHREADS
+#include <signal.h>
+#endif
+
+
 namespace {   // Don't clutter global namespace
   typedef int (*timer_ast_t)(void*);
   struct timer_t  {

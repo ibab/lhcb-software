@@ -149,12 +149,12 @@ void UpiDisplay::begin_update()  {
 
 void UpiDisplay::end_update() { 
   print_char(1,m_currLine,LEFT_LOW_EDGE);
-  for(int j=1; j < m_area.width-1; ++j)
+  for(size_t j=1,jlast=m_area.width-1; j < jlast; ++j)
     print_char(j+1,m_currLine,HORZ_BAR);
   print_char(m_area.width,m_currLine,RIGHT_LOW_EDGE);      
   m_currLine++;
   if ( m_currLine > m_area.height ) m_currLine = m_area.height;
-  for(int i=1,last=m_currLine;i<last;++i) {
+  for(size_t i=1,last=m_currLine;i<last;++i) {
     int cmd = CMD_CLOSE+1+i;
     bool isCmd = cmd%20 == 0;
     const char* ptr = m_lines[i]+1;
@@ -170,7 +170,7 @@ void UpiDisplay::end_update() {
     else
       upic_replace_comment(m_menuID,cmd,ptr,"");
   }
-  for(int k=m_currLine, klast=m_lastCMD;k<=klast;++k) {
+  for(size_t k=m_currLine, klast=m_lastCMD;k<=klast;++k) {
     int cmd = CMD_CLOSE+1+k;
     bool isCmd = cmd%20 == 0;
     isCmd ? upic_delete_command(m_menuID,cmd) : upic_delete_comment(m_menuID,cmd);
