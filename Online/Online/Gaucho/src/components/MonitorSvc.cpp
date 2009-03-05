@@ -64,7 +64,7 @@ MonitorSvc::MonitorSvc(const std::string& name, ISvcLocator* sl):
    declareProperty("disableDeclareInfoPair", m_disableDeclareInfoPair = 0);
    declareProperty("disableDeclareInfoFormat", m_disableDeclareInfoFormat = 0);
    declareProperty("disableDeclareInfoHistos", m_disableDeclareInfoHistos = 0);
-   declareProperty("maxNumCountersMonRate", m_maxNumCountersMonRate = 120);
+   declareProperty("maxNumCountersMonRate", m_maxNumCountersMonRate = 1000);
       
    declareProperty("teste", m_teste);
  
@@ -78,10 +78,10 @@ MonitorSvc::~MonitorSvc() {
 // @param riid       ID of Interface to be retrieved
 // @param ppvUnknown Pointer to Location for interface pointer
 StatusCode MonitorSvc::queryInterface(const InterfaceID& riid, void** ppvIF) {
-  if(IID_IMonitorSvc == riid) {
+  if(IMonitorSvc::interfaceID().versionMatch(riid)) {
     *ppvIF = dynamic_cast<IMonitorSvc*> (this);
   } 
-  else if (IID_IGauchoMonitorSvc == riid) {
+  else if (IGauchoMonitorSvc::interfaceID().versionMatch(riid)) {
     *ppvIF = dynamic_cast<IGauchoMonitorSvc*> (this);
   }
   else {
