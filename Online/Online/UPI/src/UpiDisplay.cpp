@@ -153,7 +153,7 @@ void UpiDisplay::end_update() {
     print_char(j+1,m_currLine,HORZ_BAR);
   print_char(m_area.width,m_currLine,RIGHT_LOW_EDGE);      
   m_currLine++;
-  if ( m_currLine > m_area.height ) m_currLine = m_area.height;
+  if ( m_currLine > size_t(m_area.height) ) m_currLine = size_t(m_area.height);
   for(size_t i=1,last=m_currLine;i<last;++i) {
     int cmd = CMD_CLOSE+1+i;
     bool isCmd = cmd%20 == 0;
