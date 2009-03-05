@@ -1,4 +1,4 @@
-// $Id: CaloCellCode.h,v 1.5 2008-10-27 16:36:01 cattanem Exp $ 
+// $Id: CaloCellCode.h,v 1.6 2009-03-05 15:47:13 odescham Exp $ 
 // ============================================================================
 #ifndef      KERNEL_CALOCELLCODE_H 
 #define      KERNEL_CALOCELLCODE_H 1
@@ -112,6 +112,23 @@ namespace CaloCellCode
       ( num >= (int) CaloNums ) ? std::string("????") : 
       std::string( CaloNames[num] ) ; 	
   };
+  static inline const std::string CaloAreaFromNum( const int calo , const int num){
+    if( CaloNameFromNum( calo ) == "Hcal" ){
+      if( num == 0 )return "Outer";
+      else if( num == 1 )return "Inner";
+      else if( num == 3 )return "PinArea";
+      else return "????";
+    }
+    else{
+      if( num == 0 )return "Outer";
+      else if( num == 1 )return "Middle";
+      else if( num == 2 )return "Inner"; 
+      else if( num == 3 )return "PinArea";
+      else return "????";
+    }  
+  };
+
+
   ///
 };
 

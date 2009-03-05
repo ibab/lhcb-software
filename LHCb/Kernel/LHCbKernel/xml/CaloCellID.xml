@@ -3,7 +3,7 @@
 <gdd>
 
 <!-- **************************************************************************
-  * $Id: CaloCellID.xml,v 1.10 2006-08-02 11:24:19 cattanem Exp $
+  * $Id: CaloCellID.xml,v 1.11 2009-03-05 15:47:13 odescham Exp $
   *****************************************************************************
   * XML-description of CaloCellIDclass                                        *
   * author: Vanya BELYAEV Ivan.Belyaev@itep.ru                                *
@@ -48,7 +48,7 @@
   <constructor
     desc     = "Explicit constructor from Calo, Area, Row and Column"
     argList  = "unsigned int Calo, unsigned int Area, unsigned int Row, unsigned int Column "
-    initList = "m_all( 0 )" > 
+    initList = "m_all( 0 )"> 
     <code>
       setCalo ( Calo   ) ;
       setArea ( Area   ) ;
@@ -163,8 +163,8 @@
       if( 0 != rest() ) { os &lt;&lt; "?" &lt;&lt; std::setw(4) &lt;&lt; rest() &lt;&lt; "?," ; }  
       return 
       os 
-      &lt;&lt; CaloCellCode::CaloNameFromNum( calo() ) [0] &lt;&lt; "," 
-      &lt;&lt; std::setw(1) &lt;&lt; area () &lt;&lt; "," 
+      &lt;&lt; CaloCellCode::CaloNameFromNum( calo() )   &lt;&lt; "," 
+      &lt;&lt; std::setw(1) &lt;&lt; CaloCellCode::CaloAreaFromNum( calo() , area () )   &lt;&lt; "," 
       &lt;&lt; std::setw(2) &lt;&lt; row  () &lt;&lt; "," 
       &lt;&lt; std::setw(2) &lt;&lt; col  () &lt;&lt; "]" ;  
     </code>
@@ -216,10 +216,21 @@
     name      = "setCalo"
     type      = "LHCb::CaloCellID&amp;"
     const     = "FALSE"
-    access    = "PRIVATE" >
+    access    = "PUBLIC" >
     <arg name = "Calo" type = "unsigned int" inout = "INPUT" />
     <code>
       return set( Calo  , CaloCellCode::ShiftCalo , CaloCellCode::MaskCalo ) ;
+    </code>
+  </method>
+  <method
+    desc      = "Update Calorimeter identifier"
+    name      = "setCalo"
+    type      = "LHCb::CaloCellID&amp;"
+    const     = "FALSE"
+    access    = "PUBLIC" >
+    <arg name = "CaloName" type = "std::string" inout = "INPUT" />
+    <code>
+      return setCalo( CaloCellCode::CaloNumFromName( CaloName ) ) ;
     </code>
   </method>
 

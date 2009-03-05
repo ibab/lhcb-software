@@ -4,6 +4,15 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+<<<<<<< release.notes
+
+! 2009-02-25 - Olivier Deschamps 
+ - CaloCellID.xml : make setCalo() method public
+                    change fillstream output
+ - CaloCellCode.h : new static method : CaloAreaFromNum( calo, num) return the area for a given calo as string 
+
+
+=======
 ! 2009-03-05 - Marco Cattaneo
  - Add option PrintEventTime to LbAppInit, if set prints the event time
    together with the run and event number
@@ -12,6 +21,7 @@
  - Extended IEvtTypeSvc. allTypes returns a set of all known types
 	 Added typdefs LHCb::EventTypeSet, as an ordered set of types
 
+>>>>>>> 1.425
 !===================== LHCbKernel v11r1 2009-02-18 ========================
 ! 2009-02-05 - Wouter Hulsbergen
  - Added HitPattern
