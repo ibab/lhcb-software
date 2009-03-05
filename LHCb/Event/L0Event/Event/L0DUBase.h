@@ -1,4 +1,4 @@
-// $Id: L0DUBase.h,v 1.7 2008-02-12 14:51:33 odescham Exp $
+// $Id: L0DUBase.h,v 1.8 2009-03-05 15:35:10 odescham Exp $
 //
 #ifndef      L0MUON_L0DUBASE_H
 #define      L0MUON_L0DUBASE_H 1
@@ -6,6 +6,49 @@
 namespace L0DUBase{
   
 
+  /*
+    L0DU firmware limitation (as quoted in EDMS-XXXX)
+  */
+  namespace NumberOf{
+    static const unsigned int Channels   = 32;
+    static const unsigned int Conditions = 128;
+  }  
+  namespace Conditions{
+    enum Parameters {Order=0, Number , Inputs,  OperatorType, LastIndex }; 
+    static const  int Electron[Conditions::LastIndex]          = {  0 , 10 , 1 , 0 }; // OperatorType 0 = {Id}
+    static const  int Photon[Conditions::LastIndex]            = {  1 ,  6 , 1 , 0 };
+    static const  int GlobalPi0[Conditions::LastIndex]         = {  2 ,  6 , 1 , 0 };
+    static const  int LocalPi0[Conditions::LastIndex]          = {  3 ,  6 , 1 , 0 };
+    static const  int Hadron[Conditions::LastIndex]            = {  4 ,  6 , 1 , 0 };
+    static const  int SumEt[Conditions::LastIndex]             = {  5 ,  4 , 1 , 0 };
+    static const  int SpdMult[Conditions::LastIndex]           = {  6 ,  4 , 1 , 0 };
+    static const  int PuPeak1[Conditions::LastIndex]           = {  7 ,  4 , 1 , 0 };
+    static const  int PuPeak2[Conditions::LastIndex]           = {  8 ,  4 , 1 , 0 };
+    static const  int PuHits[Conditions::LastIndex]            = {  9 ,  4 , 1 , 0 };
+    static const  int PuPeak1Pos[Conditions::LastIndex]        = { 10 ,  1 , 1 , 0 };
+    static const  int PuPeak2Pos[Conditions::LastIndex]        = { 11 ,  1 , 1 , 0 };
+    static const  int Muon1[Conditions::LastIndex]             = { 12 , 10 , 1 , 0 };
+    static const  int Muon2[Conditions::LastIndex]             = { 13 ,  6 , 1 , 0 };
+    static const  int Muon3[Conditions::LastIndex]             = { 14 ,  6 , 1 , 0 };
+    static const  int DiMuon[Conditions::LastIndex]            = { 15 , 10 , 1 , 0 };
+    static const  int BCID[Conditions::LastIndex]              = { 16 ,  4 , 1 , 0 };
+    static const  int CompoundCaloEt[Conditions::LastIndex]    = { 17 ,  4 , 3 , 1 }; // OperatorType 1 = {+/1}
+    static const  int CompoundCaloAdd[Conditions::LastIndex]   = { 18 , 10 , 2 , 2 }; // OperatorType 2 = {&/^}
+    static const  int CompoundPuCont[Conditions::LastIndex]    = { 19 ,  4 , 2 , 1 };
+    static const  int CompoundPuPos[Conditions::LastIndex]     = { 20 ,  2 , 2 , 1 };
+    static const  int CompoundMuonPt[Conditions::LastIndex]    = { 21 ,  4 , 3 , 1 };
+    static const  int CompoundMuonAdd[Conditions::LastIndex]   = { 22 ,  6 , 2 , 2 };
+    static const  int CompoundMuonSign[Conditions::LastIndex]  = { 23 ,  6 , 2 , 1 };
+    // void conditions (only exists for compound data building)
+    static const  int CaloAddress[Conditions::LastIndex]             = { 24 ,  0 , 1 , 0 };
+    static const  int MuonAddress[Conditions::LastIndex]             = { 25 ,  0 , 1 , 0 };
+    static const  int MuonSign[Conditions::LastIndex]                = { 26 ,  0 , 1 , 0 };
+
+  };
+  
+  
+  
+  
 
   /*
     Empty L0Processor data  

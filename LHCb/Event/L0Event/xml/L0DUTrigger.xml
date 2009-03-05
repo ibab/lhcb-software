@@ -48,7 +48,7 @@
       <method name      = "emulatedDecision" desc = "get the trigger emulated decision" type  = "bool" >
         <code> 
           for(LHCb::L0DUChannel::Map::iterator ic = m_channels.begin();ic!= m_channels.end() ; ic++ ){
-           if( (*ic).second-&gt;emulatedDecision() ) return true;
+           if( (*ic).second-&gt;enable() &amp;&amp; (*ic).second-&gt;emulatedDecision() ) return true;
           }
 	  return false;
         </code>

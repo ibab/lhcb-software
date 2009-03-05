@@ -477,10 +477,9 @@
               return false;
            }
           }
-
           LHCb::L0DUChannel::Map channels = (*it).second-&gt;channels();
           for(LHCb::L0DUChannel::Map::iterator ic = channels.begin();ic != channels.end();++ic){
-           if( channelDecisionByName( (*ic).second-&gt;name(), bx) )return true;
+           if( (*ic).second-&gt;enable()  &amp;&amp; channelDecisionByName( (*ic).second-&gt;name(), bx) )return true;
           }
           return false;
         </code>
