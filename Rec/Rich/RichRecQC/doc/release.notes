@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-03-05 - Chris Jones
+ - Suppress empty plot in MC free running from Rich::Rec::MC::PixelQC
+
 !======================= RichRecQC v2r26 2009-02-20 ==========================
 ! 2009-02-18 - Anatoly Solomin
  - Better structured code RichAlignmentMonitor.cpp.
