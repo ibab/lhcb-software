@@ -3,6 +3,9 @@
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2009/03/05 15:56:28  odescham
+// preliminary DC09 tuning
+//
 // Revision 1.5  2008/06/30 15:36:33  odescham
 // prepare for HLT processing
 //
@@ -56,7 +59,7 @@ ToolSvc.ECorrection.Corr3_slopeY={   0.00        , 3.62        , 4.79         } 
 // Preshower leakage 
 ToolSvc.ECorrection.CorrPrs={        8.3         , 8.8         , 9.5          } ;
 // Global rescaling                     No Spd   Spd/No Spd    SplitPhotons  Electrons
-ToolSvc.ECorrection.GlobalFactor={   1.000   , 0.977      , 1.000     ,      0.94} ;
+ToolSvc.ECorrection.GlobalFactor={   1.000   , 0.977      , 1.000     ,      1.000} ;
 // ============================================================================
 // The End 
 // ============================================================================
