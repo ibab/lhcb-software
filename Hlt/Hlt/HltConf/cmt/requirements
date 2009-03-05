@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.18 2009-02-24 16:06:21 graven Exp $ 
+# $Id: requirements,v 1.19 2009-03-05 21:35:57 graven Exp $ 
 # =============================================================================
 # The helper package for configuration of Hlt(1)
 # =============================================================================
@@ -11,14 +11,15 @@ use       GaudiPolicy v*
 use       Python      v* LCG_Interfaces 
 use       HltCommon   v*  Hlt
 
+### The following are 'configuration time'(python runtime)  dependencies...
 ### next ones are used by the VeloLines
-use       VeloDAQ     v*  Velo 
-use       PatVelo     v*  Tf
-use       PatAlgorithms  v*  Tf
+#use       VeloDAQ     v*  Velo 
+#use       PatVelo     v*  Tf
+#use       PatAlgorithms  v*  Tf
 ### and these by the L0 candidate code
-use       L0DU        v*  L0
+#use       L0DU        v*  L0
 ### and these for the Hlt{Sel,Vertex}ReportMakser
-use       HltRawData  v* Hlt
+#use       HltRawData  v* Hlt
 # =============================================================================
 
 # =============================================================================

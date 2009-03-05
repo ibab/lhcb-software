@@ -1,9 +1,11 @@
-! $Id: release.notes,v 1.160 2009-03-04 17:37:44 aperezca Exp $ 
+! $Id: release.notes,v 1.161 2009-03-05 21:35:56 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2009-03-05 - Gerhard Raven
+ - remove "configuration" (python runtime) dependencies from requirements
 
 ! 2009-03-04 - Antonio Perez-Calero
  - Changes in muon+track lines in HltMuonLines.py to use VertexTrack1PT, VertexTrack2PT and same for IPs.
