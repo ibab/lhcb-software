@@ -8,7 +8,7 @@ import os
 project_names = ["Gaudi", "LHCb", "Lbcom", "Rec", "Boole", "Brunel" , 
                  "Gauss", "Phys", "Analysis", "Hlt", "Alignment", "Moore",
                  "Online", "Euler", "Geant4", "DaVinci", "Bender", "Orwell",
-                 "Panoramix", "LbScripts"]
+                 "Panoramix", "LbScripts", "Dirac"]
 
 
 class ProjectConfException(Exception):
@@ -52,6 +52,9 @@ class ProjectConf(ProjectBaseConf):
         self._cmtextratags = []
         self._fullsize = 5000000
         self._steeringpackage = projectname + "Sys"
+        self._afsvolumename = self.NAME()
+        self._afsvolumeroot = "lhcb"
+        self._afslibgroup = "z5"
         self._aliases = dict()
         self._applicationpackage = projectname
         self._aliases["setenv%s" % projectname] = "setenvProject %s" % projectname
@@ -85,10 +88,21 @@ class ProjectConf(ProjectBaseConf):
         self._applicationpackage = packname
     def ApplicationPackage(self):
         return self._applicationpackage
-    def setReleaseArea(self, release_area):
-        self._release_area = release_area
-    def ReleaseArea(self):
-        return self._release_area
+    def setAFSVolumeName(self, volname):
+        """set the name of the volume name to be used for new AFS volume"""
+        self._afsvolumename = volname
+    def AFSVolumeName(self):
+        return self._afsvolumename
+    def setAFSVolumeRoot(self, volroot):
+        """set the name of the volume name to be used for new AFS volume"""
+        self._afsvolumeroot = volroot
+    def AFSVolumeRoot(self):
+        return self._afsvolumeroot
+    def setAFSLibrarianGroup(self, group):
+        """set the name of the volume name to be used for new AFS volume"""
+        self._afslibgroup = group
+    def AFSLibrarianGroup(self):
+        return self._afslibgroup
     def __str__(self):
         """ return string representation for printing """
         rep = super(ProjectConf, self).__str__()
@@ -127,11 +141,15 @@ Gaudi.setSteeringPackage("GaudiRelease") #IGNORE:E0602
 Gaudi.setApplicationPackage("GaudiExamples")#IGNORE:E0602
 if os.environ.has_key("GAUDISOFT") :
     Gaudi.setReleaseArea(os.environ["GAUDISOFT"])#IGNORE:E0602
-
+Gaudi.setAFSVolumeRoot("Gaudi") #IGNORE:E0602
+Gaudi.setAFSLibrarianGroup("gaudi") #IGNORE:E0602
 
 # LHCb
 LHCb.setApplicationPackage("Ex")#IGNORE:E0602
 
+
+# Geant4
+Geant4.setAFSVolumeName("G4")#IGNORE:E0602
 
 #Gauss
 Gauss.addCMTExtraTags("Hijing", "Herwig", #IGNORE:E0602
@@ -145,10 +163,14 @@ Boole.setApplicationPackage("Digi/Boole")#IGNORE:E0602
 # Brunel
 Brunel.setApplicationPackage("Rec/Brunel")#IGNORE:E0602
 
-#DaVinci
-DaVinci.setApplicationPackage("Phys/DaVinci")#IGNORE:E0602
+# Analysis
+Analysis.setAFSVolumeName("ANALY")#IGNORE:E0602
 
-#Moore
+# DaVinci
+DaVinci.setApplicationPackage("Phys/DaVinci")#IGNORE:E0602
+DaVinci.setAFSVolumeName("DAV")#IGNORE:E0602
+
+# Moore
 Moore.setApplicationPackage("Hlt/Moore")#IGNORE:E0602
 
 # Euler
@@ -156,13 +178,18 @@ Euler.setApplicationPackage("Trig/Euler")#IGNORE:E0602
 
 # Alignment
 Alignment.setApplicationPackage("Alignment/Escher")#IGNORE:E0602
+Alignment.setAFSVolumeName("ALIGN")#IGNORE:E0602
 
 # Orwell
 Orwell.setApplicationPackage("Calib/Orwell")#IGNORE:E0602
 
 # Panoramix
 Panoramix.setApplicationPackage("Vis/Panoramix")#IGNORE:E0602
+Panoramix.setAFSVolumeName("PANORA") #IGNORE:E0602
 
 # Bender
 Bender.setApplicationPackage("Phys/Bender")#IGNORE:E0602
 
+
+#LbScripts
+LbScripts.setAFSVolumeName("LB")#IGNORE:E0602
