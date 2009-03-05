@@ -1,4 +1,4 @@
-// $Id: CaloCosmicsTool.cpp,v 1.6 2008-08-22 10:48:33 odescham Exp $
+// $Id: CaloCosmicsTool.cpp,v 1.7 2009-03-05 15:51:21 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -332,7 +332,7 @@ StatusCode CaloCosmicsTool::fit2D(){
 
 
   if( sw<=0 ){
-    info()<< "Weight = 0 - fit failed "<<endreq;
+    Warning( "Weight = 0 - fit failed ").ignore();
     return StatusCode::FAILURE;
   }
   else{
@@ -376,7 +376,7 @@ StatusCode CaloCosmicsTool::fit2D(){
 
   debug() << " m_cosmicsADCs.size() " << m_cosmicsADCs.size() << endreq;
   if(m_cosmicsADCs.size()== 0){
-    info()<< "Empty 2D segment - fit failed"<<endreq;
+    Warning( "Empty 2D segment - fit failed").ignore();
     return StatusCode::FAILURE;
   }
 

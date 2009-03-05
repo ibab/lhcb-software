@@ -1,4 +1,4 @@
-// $Id: CaloCosmicsTrackTool.cpp,v 1.8 2008-12-05 16:57:09 odescham Exp $
+// $Id: CaloCosmicsTrackTool.cpp,v 1.9 2009-03-05 15:51:21 odescham Exp $
 // Include files 
 
 // From std
@@ -116,8 +116,8 @@ StatusCode CaloCosmicsTrackTool::processing() {
   //
   StatusCode esc = ecal()->processing();
   StatusCode hsc = hcal()->processing();
-  if(esc.isFailure() )info() << "EcalCosmic processing failed"<<endreq;
-  if(hsc.isFailure() )info() << "HcalCosmic processing failed"<<endreq;
+  if(esc.isFailure() )debug() << "EcalCosmic processing failed"<<endreq;
+  if(hsc.isFailure() )debug() << "HcalCosmic processing failed"<<endreq;
   
 
   if( !ecal()->tracked() || !hcal()->tracked() ){
