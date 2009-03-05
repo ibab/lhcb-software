@@ -48,7 +48,7 @@ public:
   StatusCode initialize();
   virtual StatusCode fit(LHCb::Track& track, bool clearStates = true) const;
   virtual StatusCode initializeRefStates(LHCb::Track& track,
-					 LHCb::ParticleID pid = 211 ) const ;
+					 LHCb::ParticleID pid = LHCb::ParticleID(211) ) const ;
 
 protected:
   StatusCode createTStationStates(LHCb::Track& track) const;
