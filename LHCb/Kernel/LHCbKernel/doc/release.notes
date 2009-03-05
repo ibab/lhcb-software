@@ -4,7 +4,6 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
-<<<<<<< release.notes
 
 ! 2009-02-25 - Olivier Deschamps 
  - CaloCellID.xml : make setCalo() method public
@@ -21,7 +20,6 @@
  - Extended IEvtTypeSvc. allTypes returns a set of all known types
 	 Added typdefs LHCb::EventTypeSet, as an ordered set of types
 
->>>>>>> 1.425
 !===================== LHCbKernel v11r1 2009-02-18 ========================
 ! 2009-02-05 - Wouter Hulsbergen
  - Added HitPattern
