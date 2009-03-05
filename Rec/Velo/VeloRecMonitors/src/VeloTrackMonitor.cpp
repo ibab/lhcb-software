@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitor.cpp,v 1.15 2009-03-04 07:08:10 cattanem Exp $
+// $Id: VeloTrackMonitor.cpp,v 1.16 2009-03-05 16:11:00 erodrigu Exp $
 // Include files 
 
 // from Gaudi
@@ -374,9 +374,9 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
       
       Gaudi::XYZPoint trackInterceptGlobal= extrapolateToZ(track, sensor->z());
       Gaudi::XYZPoint trackInterceptLocal(0,0,0) ;      
-      trackInterceptLocal = sensor->globalToLocal(trackInterceptGlobal);
+      trackInterceptLocal    = sensor -> globalToLocal( trackInterceptGlobal );
       double interceptRadius = trackInterceptLocal.Rho();
-      double interceptAngle = trackInterceptLocal.Phi();  
+      double interceptAngle  = trackInterceptLocal.Phi();  
       
       LHCb::VeloCluster* cluster = m_clusters->object(vcID);
       
@@ -385,7 +385,8 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
       double interStripFr = toolInfo.fractionalPosition; 
       double biasedResid;
       double chi2;
-      StatusCode sc3 = sensor->residual(trackInterceptGlobal, vcID, interStripFr, biasedResid, chi2);
+      StatusCode sc3 = sensor -> residual( trackInterceptGlobal, vcID,
+                                           interStripFr, biasedResid, chi2 );
       if ( !( sc3.isSuccess() ) ) {
         debug() << "Residual calculation failed for " 
                 << trackInterceptGlobal.x() << " "
@@ -499,9 +500,11 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
       }
       
       
-      plot1D(rCoor[i]/mm, "RCoord", "R coordinate(mm)", 0, 50, 500);
+      plot1D( rCoor[i]/mm, "RCoord", "R coordinate(mm)", 0, 50, 500 );
       
-      plot1D(correct_phi/degree, "LocalPhiCoord", "Local Phi Coordinate(degree)", -200 , 200, 200);
+      plot1D( correct_phi/degree,
+              "LocalPhiCoord", "Local Phi Coordinate(degree)",
+              -100 , 100, 100 );
       
       if(m_hitmapHistos){ 
         
@@ -543,11 +546,14 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
     
     //No of R Clusters per Event 
     //--------------------------
-    plot1D(nRClusEvent, "# R clusters", "Number of R-Clusters per event", -0.5, 2000.5, 2001 );
+    plot1D( nRClusEvent, "# R clusters", "Number of R-Clusters per event",
+            0., 2000, 400 );
     
     //No of R+Phi Clusters per Event 
     //------------------------------
-    plot1D(nSumClusEvent, "# R+Phi clusters", "Number of R and Phi Clusters per event", -0.5, 2000.5, 2001 );
+    plot1D( nSumClusEvent,
+            "# R+Phi clusters", "Number of R and Phi Clusters per event",
+            0., 2000, 400 );
     
   }
   

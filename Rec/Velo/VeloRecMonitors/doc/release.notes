@@ -4,6 +4,9 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2009-03-05 - Eduardo Rodrigues
+ - reduced (unnecessary high) binning of a few histos in VeloTrackMonitor
+
 ! 2009-03-04 - Marco Cattaneo
  - Fix an untested StatusCode
 
