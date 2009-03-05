@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.25 2009-03-04 10:51:08 graven Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.26 2009-03-05 09:40:26 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -56,8 +56,10 @@ DECLARE_ALGORITHM_FACTORY( HltGlobalMonitor );
 namespace {
     bool setBinLabels( TAxis* axis,  const std::vector<std::pair<unsigned,std::string> >& labels ) {
         if (axis==0) return false;
+        int nbins = axis->GetNbins(); 
         for (std::vector<std::pair<unsigned,std::string> >::const_iterator i = labels.begin();i!=labels.end();++i ) {
             //TODO: check bin exists... 
+            if (1+i->first <= 0 ||  1+i->first > nbins ) return false;
             // Argh... ROOT bins start counting at '1' instead of '0'
             axis -> SetBinLabel(1 + i->first  ,i->second.c_str() );
         }
@@ -136,7 +138,9 @@ StatusCode HltGlobalMonitor::initialize() {
                 (ODIN::NonZSupTrigger,    "NonZSup")
                 (ODIN::TimingTrigger,     "Timing")
                 (ODIN::CalibrationTrigger,"Calibration");
-  setBinLabels( m_odin, odinLabels );
+  if (!setBinLabels( m_odin, odinLabels )) {
+    error() << "failed to set binlables on ODIN hist" << endmsg;
+  }
   
   //TODO: grab alley names (and mapping) from job options, count instead of hardwiring 12..
   m_hlt1alley       = book1D("Hlt1 Alleys", "Hlt1 Alleys", -0.5, 11.5 , 12 );
@@ -146,7 +150,9 @@ StatusCode HltGlobalMonitor::initialize() {
                 ( "Lumi" )( "Velo" )
                 ( "Electron" )( "Photon" )
                 ( "IgnoreLumi" )( "Global" );
-  setBinLabels( m_hlt1alley, alleyLabels );
+  if (!setBinLabels( m_hlt1alley, alleyLabels )) {
+    error() << "failed to set binlables on Alley hist" << endmsg;
+  }
 
   std::vector<std::string> labels;
   for (std::vector<std::string>::const_iterator i = m_Hlt1Lines.begin(); i!=m_Hlt1Lines.end();++i) {
@@ -162,19 +168,25 @@ StatusCode HltGlobalMonitor::initialize() {
 
   m_hltAcc          = book1D("Hlt1 lines Accept", "Hlt1 Lines Accept",
                              -0.5, m_Hlt1Lines.size()+0.5,m_Hlt1Lines.size()+1);
-  setBinLabels(m_hltAcc, labels);
+  if (!setBinLabels(m_hltAcc, labels)) {
+    error() << "failed to set binlables on accept hist" << endmsg;
+  }
 
   m_hltNAcc         = book1D("# positive HltLines ", -0.5,m_Hlt1Lines.size()+0.5,
                              m_Hlt1Lines.size()+1);
   m_hltInclusive    = book1D("HltLines Inclusive",   -0.5,m_Hlt1Lines.size()-0.5,
                              m_Hlt1Lines.size());
 
-  setBinLabels( m_hltInclusive,  labels );
+  if (!setBinLabels( m_hltInclusive,  labels )) {
+    error() << "failed to set binlables on inclusive hist" << endmsg;
+  }
 
   m_hltCorrelations = book2D("HltLines Correlations",-0.5,m_Hlt1Lines.size()-0.5,
                              m_Hlt1Lines.size(),-0.5,m_Hlt1Lines.size()-0.5,
                              m_Hlt1Lines.size());
-  setBinLabels( m_hltCorrelations, labels, labels );
+  if (!setBinLabels( m_hltCorrelations, labels, labels )) {
+    error() << "failed to set binlables on correlation hist" << endmsg;
+  }
 
 
   for (std::vector<std::string>::const_iterator i = m_Hlt1Lines.begin(); i!=m_Hlt1Lines.end();++i) {
