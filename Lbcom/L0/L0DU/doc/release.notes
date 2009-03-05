@@ -1,16 +1,16 @@
-! $Id: release.notes,v 1.147 2009-03-05 15:32:45 odescham Exp $
+! $Id: release.notes,v 1.148 2009-03-05 17:38:02 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
 ! 2009-03-05 - Olivier Deschamps
- - options/ : DefaultTCK.opts moved to DBASE/TCK/L0TCK/options
  - src/L0DUAlg.cpp  : m_sourceID can be changed by options
  - src/L0Filter.cpp : printout statistics in finalize()
  - src/L0DURawBankMonitor.cpp : implement bin labelling + few improvements.
  - src/L0DUReportMonitor.cpp  : implement dynamic bin labelling
  - src/L0DUConfigProvider.cpp : automatic L0DUTrigger definition
  - cmt/requirement : append libHist explicitely
+                     use L0TCK v1r* (instead of v*)
  
 !========================== L0DU v8r14 2009-02-27 =========================
 ! 2009-02-24 - Julien Cogan
