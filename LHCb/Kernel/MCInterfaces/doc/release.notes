@@ -4,6 +4,10 @@
 ! Purpose     : Interfaces with dependency on MC
 !-----------------------------------------------------------------------------
 
+! 2009-03-05 - Rob Lambert
+ - Extended IEvtTypeSvc with allTypes, to return all known types.
+   Added typdefs for LHCb::EventTypeSet, an ordered unique set.
+
 !==================== MCInterfaces v1r7 2009-02-18 ===========================
 ! 2009-01-27 M Needham 
  - Extend IGhostTrackClassification interface with isGhost methods
