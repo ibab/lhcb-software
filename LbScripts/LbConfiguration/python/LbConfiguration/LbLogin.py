@@ -42,7 +42,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.16 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.17 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -275,7 +275,7 @@ class LbLoginScript(Script):
 # sites defaults
 
         if opts.cmtsite == "CERN" :
-            ev["STAGE_HOST"] = "castor_lhcb"
+            ev["STAGE_HOST"] = "castorlhcb"
             ev["RFIO_USE_CASTOR_V2"] = "YES"
             # set CASTOR_HOME if it has not been defined
             if sys.platform != "win32" :
@@ -379,6 +379,7 @@ class LbLoginScript(Script):
         ev["CMTCONFIG"] = self.setCMTSystem()
 
     def setCMT(self):
+        log = logging.getLogger()
         opts = self.options
         ev = self._env
         if opts.cmtsite == "CERN" :
@@ -396,6 +397,7 @@ class LbLoginScript(Script):
         if not os.path.isdir(ev["CMTROOT"]) :
             ev["CMTROOT"] = self._currentcmtroot
         
+        log.debug("The CMT version is %s" % opts.cmtvers)
         self.setCMTInternals()
 #-----------------------------------------------------------------------------------
     def setSoftLocations(self):
@@ -669,6 +671,7 @@ class LbLoginScript(Script):
         
         cachefile = getLoginCacheName(shell=opts.targetshell, location=_scripts_dir)
         if opts.use_cache and os.path.exists(cachefile):
+            log.debug("Using the cache file %s" % cachefile)
             if self.output_name :
                 outf = open(self.output_name, "a")
             else :
@@ -708,6 +711,8 @@ class LbLoginScript(Script):
             SetupProject().main(setupprojargs)
     
     def setEnv(self, debug=False):
+        log = logging.getLogger()
+        log.debug("Entering the environment setup")
         self.setPath()
         self.setCVSEnv()
         self.setSite()

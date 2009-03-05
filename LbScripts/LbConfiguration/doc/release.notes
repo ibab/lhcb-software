@@ -1,5 +1,7 @@
 2009-03-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbConfiguration/LbLogin.py: fixed the value of STAGE_HOST for the CERN
+	site
 	* python/LbConfiguration/Project.py: added the Dirac project.
 
 2009-03-05  Marco Clemencic  <Marco.Clemencic@cern.ch>
