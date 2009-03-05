@@ -4,6 +4,10 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+!============ Presenter v0r16 2009-03-05 =============
+! 2009-03-05
+0 fix histo zoom
+
 !============ Presenter v0r15 2009-02-01 =============
 ! 2009-02-01
 0 drop MonH1F and MonH2F support
