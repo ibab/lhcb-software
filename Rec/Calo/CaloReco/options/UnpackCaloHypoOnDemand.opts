@@ -1,0 +1,19 @@
+ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
+DataOnDemandSvc.AlgMap += { "/Event/Rec/Calo/Photons"     : "UnpackCaloHypo/UnpackPhotons" , 
+                            "/Event/Rec/Calo/MergedPi0s"  : "UnpackCaloHypo/UnpackMergedPi0s",
+                            "/Event/Rec/Calo/Electrons"   : "UnpackCaloHypo/UnpackElectrons",
+                            "/Event/Rec/Calo/SplitPhotons": "UnpackCaloHypo/UnpackSplitPhotons"
+                          }; 
+
+
+
+UnpackPhotons.InputName      = "/Event/pRec/Calo/Photons" ;
+UnpackMergedPi0s.InputName   = "/Event/pRec/Calo/MergedPi0s";
+UnpackElectrons.InputName    = "/Event/pRec/Calo/Electrons";
+UnpackSplitPhotons.InputName = "/Event/pRec/Calo/SplitPhotons";
+
+UnpackPhotons.OutputName      = "/Event/Rec/Calo/Photons" ;
+UnpackMergedPi0s.OutputName   = "/Event/Rec/Calo/MergedPi0s";
+UnpackElectrons.OutputName    = "/Event/Rec/Calo/Electrons";
+UnpackSplitPhotons.OutputName = "/Event/Rec/Calo/SplitPhotons";
+
