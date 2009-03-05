@@ -156,6 +156,10 @@ StatusCode SpdMonitor::initialize()
     const CaloNeighbors& neigh = m_detSpd->zsupNeighborCells(cell);    
     m_neighN.addEntry( neigh.size() , cell);      
   }  
+  if( m_split ){
+    Warning( "No area spliting allowed for CaloSpdMonitor").ignore();
+    m_split = false;
+  }
   return StatusCode::SUCCESS;
 }
   
@@ -235,7 +239,7 @@ StatusCode SpdMonitor::execute()
 	  if( 0 == cell.area()) {		  
       // OUTER CALORIMETER
       hFill2("o_flat",cell.row(), cell.col());  // Generation of a flat histogram
-      hFill2("o_neigh",cell.row(), cell.col(), neighAve);
+      hFill2("o_neigh",cell.row(), cell.col() , neighAve);
       if ( m_cellHit[cell]){  // The cell has has been hit
         mult[0]++;
         hFill2("o_occupancy",cell.row(), cell.col());

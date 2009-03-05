@@ -1,4 +1,4 @@
-// $Id: CaloPIDsChecker.cpp,v 1.5 2009-02-20 18:03:24 odescham Exp $
+// $Id: CaloPIDsChecker.cpp,v 1.6 2009-03-05 15:52:51 odescham Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -97,7 +97,10 @@ public:
     hBook1( "33", "Eff " + mom + cut + "for 'Background'", 0, 1.02, 51 );
 
     m_track2MCLink = new Object2MCLinker<LHCb::Track>( this, "", "", inputs() );
-
+    if( m_split ){
+      Warning( "No area spliting allowed for CaloPIDsChecker").ignore();
+      m_split = false;
+    }
     return StatusCode::SUCCESS;    
   }
   /// standard algorithm execution

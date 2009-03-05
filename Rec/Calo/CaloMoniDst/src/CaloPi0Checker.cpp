@@ -1,4 +1,4 @@
-// $Id: CaloPi0Checker.cpp,v 1.4 2009-02-20 18:03:24 odescham Exp $
+// $Id: CaloPi0Checker.cpp,v 1.5 2009-03-05 15:52:51 odescham Exp $
 
 // ============================================================================
 // Include files
@@ -71,7 +71,10 @@ public:
 
     hBook1( "1", "Gamma-Gamma mass       " , 0, 1, 500 );
     hBook1( "2", "Gamma-Gamma mass (MCpi0 match)" , 0, 1, 500 );
-
+    if( m_split ){
+      Warning( "No area spliting allowed for CaloPi0Checker").ignore();
+      m_split = false;
+    }
     return StatusCode::SUCCESS;
   }
   

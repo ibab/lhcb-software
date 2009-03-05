@@ -1,8 +1,11 @@
-// $Id: CaloHypoMatchMonitor.cpp,v 1.7 2009-02-20 18:03:24 odescham Exp $
+// $Id: CaloHypoMatchMonitor.cpp,v 1.8 2009-03-05 15:52:51 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2009/02/20 18:03:24  odescham
+// prepare for DQ
+//
 // Revision 1.6  2008/09/09 15:37:24  odescham
 // review
 //
@@ -81,6 +84,10 @@ public:
     hBook1( "3", "Min weight      " + common, 0,  100, 200 );
     hBook1( "4", "Max weight      " + common, 0, 1000, 200 );
     hBook1( "5", "Weights         " + common, 0, 1000, 500 );
+    if( m_split ){
+      Warning( "No area spliting allowed for CaloHypoMatchMonitor").ignore();
+      m_split = false;
+    }    
     return StatusCode::SUCCESS;
   }
   /// standard algorithm execution

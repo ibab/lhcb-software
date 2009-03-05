@@ -92,8 +92,8 @@ StatusCode CaloDigitMonitor::initialize(){
     return Error( "Unknown detector name "+detData() );
   }
   hBook1( "1", detData() + " : # of Digits"   , m_multMin   ,   m_multMax,  m_multBin   );
-  if( detData() != "Spd" ) hBook1( "2", detData() + " : digits energy" , m_energyMin ,   m_energyMax,  m_energyBin );
-  if( detData() != "Spd" && detData() != "Prs")hBook1( "3", detData() + " : digits Et"     , m_etMin ,   m_etMax  , m_etBin);
+  if( detData() != "Spd" ) hBook1( "2", detData() + "  digits energy" , m_energyMin ,   m_energyMax,  m_energyBin );
+  if( detData() != "Spd" && detData() != "Prs")hBook1( "3", detData() + "  digits Et"     , m_etMin ,   m_etMax  , m_etBin);
   hBook1(  "4", "Hypo X        " + inputData(),  m_xMin      ,    m_xMax      , m_xBin    );
   hBook1(  "5", "Hypo Y        " + inputData(),  m_yMin      ,    m_yMax      , m_yBin );
   hBook2(  "6", "Digit position x vs y   " + inputData(),  m_xMin, m_xMax, m_xBin, m_yMin, m_yMax, m_yBin);
@@ -109,8 +109,8 @@ StatusCode CaloDigitMonitor::initialize(){
 StatusCode CaloDigitMonitor::execute(){
   typedef const LHCb::CaloDigit::Container Digits;
   debug() << name() << " execute " << endreq;
- 
-// produce histos ?
+  
+  // produce histos ?
   debug() << " Producing histo " << produceHistos() << endreq;
   if ( !produceHistos() ) return StatusCode::SUCCESS;
   
@@ -121,12 +121,11 @@ StatusCode CaloDigitMonitor::execute(){
   }
   Digits* digits = get<Digits> ( inputData() );
   if ( digits -> empty() ){
-   debug() << "No hypo found in " << inputData() << endreq;
-   return StatusCode::SUCCESS;
+    debug() << "No hypo found in " << inputData() << endreq;
+    return StatusCode::SUCCESS;
   }  
   
-
-  long count = 0;
+  initCounters();
   for( Digits::const_iterator digit = digits->begin(); digits->end() != digit ; ++digit ){
     if ( 0 == *digit ) continue;
     const LHCb::CaloCellID  id     = (*digit)->cellID();
@@ -134,24 +133,21 @@ StatusCode CaloDigitMonitor::execute(){
     const double            et     = e * m_calo->cellSine( id );
     if( e  < m_eFilter)continue;
     if( et < m_etFilter)continue;    
-    count++;
-    hFill1( "2", e );
-    if( detData() != "Spd" && detData() != "Prs")hFill1( "3", et ); 
+    count( id );
+    hFill1(id , "2", e  );
+    if( detData() != "Spd" && detData() != "Prs")hFill1(id, "3", et ); 
     double x = m_calo->cellCenter(id).X();
     double y = m_calo->cellCenter(id).Y();
-    hFill1( "4", x );
-    hFill1( "5", y );
-    hFill2( "6", x, y);
-    hFill2( "7", x, y, e);
+    hFill1(id, "4", x  );
+    hFill1(id, "5", y  );
+    hFill2(id, "6", x, y );
+    hFill2(id, "7", x, y, e );
     if(doHisto("8"))fillCalo2D("8", id , 1. , detData() + " digits position 2D view");
     if( detData() != "Spd" && doHisto("9") )fillCalo2D("9", id , e  , detData() + " digits energy 2D view");
   }
-  hFill1( "1", count );
-  
+  fillCounters("1");  
   return StatusCode::SUCCESS;
 }
-
-
 
 StatusCode CaloDigitMonitor::finalize() {
   debug() << "==> Finalize" << endmsg;

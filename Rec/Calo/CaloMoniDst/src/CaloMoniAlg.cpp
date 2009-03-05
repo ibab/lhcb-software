@@ -1,4 +1,4 @@
-// $Id: CaloMoniAlg.cpp,v 1.4 2009-02-20 18:03:24 odescham Exp $
+// $Id: CaloMoniAlg.cpp,v 1.5 2009-03-05 15:52:51 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -23,10 +23,11 @@ DECLARE_ALGORITHM_FACTORY( CaloMoniAlg );
 CaloMoniAlg::CaloMoniAlg( const std::string& name,
                           ISvcLocator* pSvcLocator)
     : Calo2Dview(name, pSvcLocator )
-    , m_inputData( "" ) // no default value
-    , m_inputs()        // no default value
-    , m_detData( "" ){   // no default value
-  
+      , m_inputData( "" ) // no default value
+      , m_inputs()        // no default value
+      , m_detData( "" )   // no default value
+      , m_nAreas(){
+
   declareProperty( "Input",    m_inputData );
   declareProperty( "Inputs",   m_inputs );
   declareProperty( "Detector", m_detData );
@@ -63,25 +64,32 @@ CaloMoniAlg::CaloMoniAlg( const std::string& name,
                      
   declareProperty( "histoList"           , m_histoList);
   declareProperty( "removeFromHistoList" , m_removeHisto);
+  declareProperty( "splitAreas"          , m_split=false);
+  declareProperty( "listOfAreas"         , m_areas); // list of areas to be split
   
   m_histoList.push_back( "All" );
   StatusCode sc=setProperty( "HistoTopDir", "CaloMoniDst/" );
   sc.isSuccess() ? 
     info() << "HistoTopDir set to 'CaloMoniDst/' " << endreq :
     info() << "HistoTopDir setProperty failed " << endreq ;      
+
+  // Areas
+  m_nAreas = 1 << (CaloCellCode::BitsArea +1);
+  m_mcount.reserve(m_nAreas);
+  m_areas.push_back("Outer");
+  m_areas.push_back("Middle");
+  m_areas.push_back("Inner");  
   
   //set default detectorName
   int index = name.find_last_of(".") +1 ; // return 0 if '.' not found --> OK !!
   m_detData = name.substr( index, 4 ); 
   if ( name.substr(index,3) == "Prs" ) {
     m_detData = "Prs";
-    m_energyMax = 250.* Gaudi::Units::MeV;
-    m_etMax     = 10.*Gaudi::Units::MeV;
+    m_energyMax = 300.* Gaudi::Units::MeV;
   }  
   if ( name.substr(index,3) == "Spd" ) {
     m_detData = "Spd";
     m_energyMax = 10.* Gaudi::Units::MeV;
-    m_etMax     = 10.*Gaudi::Units::MeV;
   }
 }
 //=============================================================================

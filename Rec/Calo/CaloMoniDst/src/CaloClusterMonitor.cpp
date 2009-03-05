@@ -1,6 +1,6 @@
-// $Id: CaloClusterMonitor.cpp,v 1.9 2009-02-20 18:03:24 odescham Exp $
+// $Id: CaloClusterMonitor.cpp,v 1.10 2009-03-05 15:52:51 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -94,28 +94,28 @@ DECLARE_ALGORITHM_FACTORY( CaloClusterMonitor );
 // ============================================================================
 // standard execution method
 // ============================================================================
-StatusCode CaloClusterMonitor::execute()
-{ typedef const LHCb::CaloCluster::Container Clusters;
+StatusCode CaloClusterMonitor::execute(){
+  typedef const LHCb::CaloCluster::Container Clusters;
 
 
- debug() << " Producing histo " << produceHistos() << endreq;
- // produce histos ?
- if ( !produceHistos() ) return StatusCode::SUCCESS;
-
-// get input data
- if( !exist<Clusters>(inputData() )){
-   debug() << "No cluster container found at " << inputData() << endreq;
-   return StatusCode::SUCCESS;
- }
- 
- Clusters* clusters = get<Clusters> ( inputData() );
- if ( clusters->empty() ){
-   debug() << "No cluster found in " << inputData() << endreq;
-   return StatusCode::SUCCESS;
- }
+  debug() << " Producing histo " << produceHistos() << endreq;
+  // produce histos ?
+  if ( !produceHistos() ) return StatusCode::SUCCESS;
   
-// fill multiplicity histogram
-  long count = 0;
+  // get input data
+  if( !exist<Clusters>(inputData() )){
+    debug() << "No cluster container found at " << inputData() << endreq;
+    return StatusCode::SUCCESS;
+  }
+  
+  Clusters* clusters = get<Clusters> ( inputData() );
+  if ( clusters->empty() ){
+    debug() << "No cluster found in " << inputData() << endreq;
+    return StatusCode::SUCCESS;
+  }
+  
+  // fill multiplicity histogram
+  initCounters();
   for( Clusters::const_iterator cluster = clusters->begin();
        clusters->end() != cluster ; ++cluster ){
     if ( 0 == *cluster ) continue;
@@ -126,26 +126,27 @@ StatusCode CaloClusterMonitor::execute()
     const double et = e * sqrt( x*x + y*y ) / sqrt( x*x+y*y+z*z);
     if( e  < m_eFilter)continue;
     if( et < m_etFilter)continue;
-    count++;
-    hFill1( "2", (*cluster)->entries().size() );    
-    hFill1( "3", e );
-    hFill1( "4", et );
-    hFill1( "5", x );
-    hFill1( "6", y );
-    hFill2( "7", x,y );
-    hFill2( "8", x,y , e);
+    LHCb::CaloCellID id = (*cluster)->seed();
+    count( id );
+    hFill1(id, "2", (*cluster)->entries().size() );    
+    hFill1(id, "3", e  );
+    hFill1(id, "4", et );
+    hFill1(id, "5", x  );
+    hFill1(id, "6", y  );
+    hFill2(id, "7", x,y );
+    hFill2(id, "8", x,y,e);
     int iuse=0;
     for(std::vector<LHCb::CaloClusterEntry>::iterator ie = (*cluster)->entries().begin();
         ie != (*cluster)->entries().end();ie++){
       if( 0 != (LHCb::CaloDigitStatus::UseForEnergy & (*ie).status()) )iuse++;
     }
-    hFill1( "9", iuse );
+    hFill1(id,"9", iuse );
     if(doHisto("10"))fillCalo2D("10",  (*cluster)->seed() , 1.,  "Cluster position 2Dview " + inputData() );
     if(doHisto("11"))fillCalo2D("11",  (*cluster)->seed() , e ,  "Cluster Energy 2Dview " + inputData() );
     
   }
   // fill counter
-  hFill1( "1", count );
+  fillCounters("1");
 
   return StatusCode::SUCCESS;
 }

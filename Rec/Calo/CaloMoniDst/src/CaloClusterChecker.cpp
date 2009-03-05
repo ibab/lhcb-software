@@ -1,8 +1,11 @@
-// $Id: CaloClusterChecker.cpp,v 1.3 2009-02-20 18:03:24 odescham Exp $
+// $Id: CaloClusterChecker.cpp,v 1.4 2009-03-05 15:52:51 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2009/02/20 18:03:24  odescham
+// prepare for DQ
+//
 // Revision 1.2  2008/09/09 15:37:23  odescham
 // review
 //
@@ -75,6 +78,10 @@ public:
     hBook1( "3", "Minimal weight/e '" + inputData() + "'", 0,  2.0 );
     hBook1( "4", "Maximal weight/e '" + inputData() + "'", 0,  2.0 );
     hBook1( "5", "        Weight/e '" + inputData() + "'", 0,  2.0 );
+    if( m_split ){
+      Warning( "No area spliting allowed for CaloClusterChecker").ignore();
+      m_split = false;
+    }    
     return StatusCode::SUCCESS;
   }
   /// standard algorithm execution

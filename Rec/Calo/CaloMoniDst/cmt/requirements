@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.13 2009-01-20 15:49:30 cattanem Exp $ 
+# $Id: requirements,v 1.14 2009-03-05 15:52:51 odescham Exp $ 
 # ============================================================================
 # Created    : 2004-10-25
 # Maintainer : Olivier Deschamps odescham@in2p3.fr
@@ -24,7 +24,7 @@ use DaVinciMCKernel v*    Phys
 use PartProp        v*    Kernel
 
 # =============== constituents ===============================================
-library           CaloMoniDst   -import=AIDA *.cpp
+library           CaloMoniDst   *.cpp
 
 # =============== patterns ===================================================
 apply_pattern     component_library library=CaloMoniDst

@@ -1,6 +1,6 @@
-// $Id: CaloHypoMonitor.cpp,v 1.9 2009-02-20 18:03:24 odescham Exp $
+// $Id: CaloHypoMonitor.cpp,v 1.10 2009-03-05 15:52:51 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -143,8 +143,7 @@ StatusCode CaloHypoMonitor::execute(){
   LHCb::CaloDataFunctor::DigitFromCalo spd( DeCalorimeterLocation::Spd );
   LHCb::CaloDataFunctor::DigitFromCalo prs( DeCalorimeterLocation::Prs );
 
-
-  long count = 0;
+  initCounters();
   for( Hypos::const_iterator hypo = hypos->begin(); hypos->end () != hypo ; ++hypo ){ 
     if ( 0 == *hypo ) continue;
     LHCb::CaloMomentum momentum( *hypo );
@@ -154,34 +153,36 @@ StatusCode CaloHypoMonitor::execute(){
     if(e    < m_eFilter)continue;
     if(et   < m_etFilter)continue;
     if(mass < m_massFilterMin || mass > m_massFilterMax)continue;
-
-    count++;
-    hFill1( "2", e );
-    hFill1( "3", et );
-    if( inputData() == "Rec/Calo/MergedPi0s" || inputData() == "Hlt/Calo/MergedPi0s" )hFill1( "4", mass );
+    LHCb::CaloCellID id = LHCb::CaloCellID();
+    if ( (*hypo)->clusters().size() > 0 ){
+      SmartRef<LHCb::CaloCluster> cluster= *((*hypo)->clusters().begin());
+      id = (*cluster).seed();      
+    }
+    count(id);
+    hFill1(id, "2", e  );
+    hFill1(id, "3", et );
+    if( inputData() == "Rec/Calo/MergedPi0s" || inputData() == "Hlt/Calo/MergedPi0s" )hFill1(id, "4", mass );
     const LHCb::CaloHypo::Position *position = (*hypo)->position();
     if ( 0 != position ){
-      hFill1( "5", position->x() );
-      hFill1( "6", position->y() );
+      hFill1(id, "5", position->x() );
+      hFill1(id, "6", position->y() );
     }
-    hFill1( "7", (*hypo)->clusters().size() );
+    hFill1(id, "7", (*hypo)->clusters().size() );
     const LHCb::CaloHypo::Digits& digits = (*hypo)->digits();
-    hFill1( "8",  std::count_if( digits.begin(), digits.end(), spd ) );
-    hFill1( "9", std::count_if( digits.begin(), digits.end(), prs ) );
+    hFill1(id, "8",  std::count_if( digits.begin(), digits.end(), spd ) );
+    hFill1(id, "9", std::count_if( digits.begin(), digits.end(), prs )  );
     if( NULL != position){
-      hFill2( "10", position->x(),position->y());
-      hFill2( "11", position->x(),position->y(),e);
+      hFill2(id, "10", position->x(),position->y() );
+      hFill2(id, "11", position->x(),position->y() , e);
     }
-    if( (*hypo)->clusters().size() == 1){
-      SmartRef<LHCb::CaloCluster> cluster= *((*hypo)->clusters().begin());
-      LHCb::CaloCellID seed = (*cluster).seed();      
-      if(doHisto("12"))fillCalo2D("12", seed , 1. ,  "Hypo position 2Dview " + inputData() );
-      if(doHisto("13"))fillCalo2D("13", seed , e  ,  "Hypo Energy 2Dview " + inputData() );
+    if( !(id == LHCb::CaloCellID()) ){
+      if(doHisto("12"))fillCalo2D("12", id , 1. ,  "Hypo position 2Dview " + inputData() );
+      if(doHisto("13"))fillCalo2D("13", id , e  ,  "Hypo Energy 2Dview " + inputData() );
     }
     
   }
   // fill multiplicity histogram
-  hFill1( "1", count );
+  fillCounters("1");
   return StatusCode::SUCCESS;
 }
 

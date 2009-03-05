@@ -1,8 +1,11 @@
-// $Id: CaloClusterMatchMonitor.cpp,v 1.8 2009-02-20 18:03:24 odescham Exp $
+// $Id: CaloClusterMatchMonitor.cpp,v 1.9 2009-03-05 15:52:51 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2009/02/20 18:03:24  odescham
+// prepare for DQ
+//
 // Revision 1.7  2008/09/09 15:37:23  odescham
 // review
 //
@@ -80,6 +83,10 @@ public:
     hBook1( "3", "Minimal weight",                    0,  100, 200 );
     hBook1( "4", "Maximal weight",                    0, 1000, 200 );
     hBook1( "5", "Weights",                           0, 1000, 500 );
+    if( m_split ){
+      Warning( "No area spliting allowed for CaloClusterMatchMonitor").ignore();
+      m_split = false;
+    }    
     return StatusCode::SUCCESS;
   }
   virtual StatusCode execute();

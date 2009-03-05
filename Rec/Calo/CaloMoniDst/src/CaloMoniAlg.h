@@ -8,6 +8,7 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "CaloUtils/Calo2Dview.h"
+#include "Kernel/CaloCellID.h"
 // ============================================================================
 // AIDA 
 // ============================================================================
@@ -20,8 +21,7 @@
 //   @see      Algorithm
 //   @see     IAlgorithm
 
-class CaloMoniAlg : public Calo2Dview
-{
+class CaloMoniAlg : public Calo2Dview{
 public:
 // Standard constructor
 //   @param   name        algorithm name
@@ -44,52 +44,122 @@ public:
 // set address/location/name in Transient Store of detector data
   void setDetData(   const std::string &addr ) { m_detData = addr; }
 // booking histogram
-  inline AIDA::IHistogram1D *hBook1( const std::string hid,
-                                    const std::string titl,
-                                   const double low=0,
-                                 const double high=100,
-                                const unsigned long bins=100 ){ 
-    if(!doHisto(hid))return NULL;
-    h1[hid] = book1D( hid, titl, low, high, bins );
-    return h1[hid];
+  inline void initCounters(){
+    m_count = 0;
+    for(unsigned int i = 0 ;i != m_nAreas ; ++i){
+      m_mcount[i]=0;
+    }
   }
-  inline AIDA::IHistogram2D *hBook2( const std::string hid,
-                                    const std::string titl,
-                                    const double lowx=0,
-                                    const double highx=100,
-                                    const unsigned long binsx=100,
-                                    const double lowy=0,
-                                    const double highy=100,
-                                    const unsigned long binsy=100 ){ 
-    if(!doHisto(hid))return NULL;
-    h2[hid] = book2D( hid, titl, lowx, highx, binsx, lowy, highy, binsy );
-    return h2[hid];
+  inline void count(LHCb::CaloCellID id = LHCb::CaloCellID() ){
+    m_count++;
+    if( !(id == LHCb::CaloCellID()) ){
+      int area = id.area();
+      m_mcount[area]++;
+    }
+  }
+  inline void fillCounters(std::string unit){
+    fill(h1[unit], m_count , 1);
+    if( m_split ){
+      for(unsigned int i = 0;i != m_nAreas;++i){
+        std::string area = CaloCellCode::CaloAreaFromNum( CaloCellCode::CaloNumFromName( m_detData ), i );
+        if( !validArea( area )||  m_mcount[i] == 0)continue;
+        GaudiAlg::HistoID id(area + "/"+unit);
+        fill(h1[id], m_mcount[i] , 1);
+      }    
+    }
+  }
+  inline void hBook1( const std::string hid,
+                      const std::string titl,
+                      const double low=0,
+                      const double high=100,
+                      const unsigned long bins=100 ){ 
+    if(!doHisto(hid))return;
+    if(m_split){
+      for(unsigned int i = 0;i != m_nAreas;++i){
+        std::string area = CaloCellCode::CaloAreaFromNum( CaloCellCode::CaloNumFromName( m_detData ), i );
+        if( !validArea( area ))continue;
+        GaudiAlg::HistoID id(area + "/" + hid);
+        std::string tit = titl + " (" + area + ")";
+        h1[id] = book1D( id, tit, low, high, bins );
+      }
+      h1[hid] = book1D( hid, titl, low, high, bins );
+    }else{
+      h1[hid] = book1D( hid, titl, low, high, bins );
+    }    
+  }
+  
+  inline void hBook2( const std::string hid,
+                      const std::string titl,
+                      const double lowx=0,
+                      const double highx=100,
+                      const unsigned long binsx=100,
+                      const double lowy=0,
+                      const double highy=100,
+                      const unsigned long binsy=100 ){ 
+    if(!doHisto(hid))return;
+    if( m_split ){
+      for(unsigned int i = 0;i != m_nAreas;++i){
+        std::string area = CaloCellCode::CaloAreaFromNum( CaloCellCode::CaloNumFromName( m_detData ), i );
+        if( !validArea( area ))continue;
+        GaudiAlg::HistoID id(area + "/" + hid);
+        std::string tit = titl + " (" + area + ")";
+        h2[id] = book2D( id, tit, lowx, highx, binsx, lowy, highy, binsy );
+      }
+      h2[hid] = book2D( hid, titl, lowx, highx, binsx, lowy, highy, binsy );
+    }else{
+      h2[hid] = book2D( hid, titl, lowx, highx, binsx, lowy, highy, binsy );
+    }
   }
   
 // fill histogram
-  inline AIDA::IHistogram1D* hFill1( std::string hid, double value, double w=1. ){ 
-    if(!doHisto(hid))return NULL;
-    return  fill(h1[hid],value,w);
+  inline void hFill1(std::string hid, double value, double w=1. ){ 
+    if(!doHisto(hid))return;
+    fill(h1[hid],value,w);
   }
-  
-  inline AIDA::IHistogram2D* hFill2( std::string hid, double x, double y, double w=1. ){ 
-    if(!doHisto(hid))return NULL;
-    return fill(h2[hid],x,y,w); 
+  inline void hFill2(std::string hid, double x, double y, double w=1. ){ 
+    if(!doHisto(hid))return;
+    fill(h2[hid],x,y,w); 
+  }
+  inline void hFill1(LHCb::CaloCellID cellID , std::string hid, double value, double w=1. ){ 
+    if(!doHisto(hid))return;
+    if( m_split && !(cellID == LHCb::CaloCellID()) ) {
+      std::string area = CaloCellCode::CaloAreaFromNum( CaloCellCode::CaloNumFromName( m_detData ), cellID.area() );
+      if( validArea( area ) ){
+        GaudiAlg::HistoID id(area + "/" + hid);
+        fill(h1[id],value,w);
+      }
+      fill(h1[hid],value,w);
+    }else{
+      fill(h1[hid],value,w);
+    } 
+  }
+  inline void hFill2( LHCb::CaloCellID cellID , std::string hid, double x, double y, double w=1. ){ 
+    if(!doHisto(hid))return;
+    if( m_split && !(cellID == LHCb::CaloCellID()) ){
+      std::string area = CaloCellCode::CaloAreaFromNum( CaloCellCode::CaloNumFromName( m_detData ), cellID.area() );
+      if( validArea( area )  ){
+        GaudiAlg::HistoID id(area + "/" + hid);
+        fill(h2[id],x,y,w); 
+      }      
+      fill(h2[hid],x,y,w); 
+    }else{
+      fill(h2[hid],x,y,w); 
+    } 
   }
 protected:
-//
-// Histogram Map
+  //
+  // Histogram Map
   std::map< std::string, AIDA::IHistogram1D * > h1;
   std::map< std::string, AIDA::IHistogram2D * > h2;
-//
+  //
 private:
-// address/location/name in Transient Store of input data container
+  // address/location/name in Transient Store of input data container
   std::string              m_inputData;
-// vector of addresses in the case of 'few' inputs
+  // vector of addresses in the case of 'few' inputs
   std::vector<std::string> m_inputs;
 // address/location/name in Transient Store of detector data
   std::string              m_detData;
-
+  
 protected:
   //
   double m_energyMin;
@@ -120,6 +190,13 @@ protected:
   double m_massFilterMax;
   std::vector<std::string> m_histoList;
   std::vector<std::string> m_removeHisto;
+  bool m_split;
+  std::vector<std::string> m_areas;
+  unsigned int m_nAreas;
+  unsigned int m_count;
+  std::vector<unsigned int> m_mcount;
+
+
   bool doHisto(std::string histo){
     bool ok = false;
     for( std::vector<std::string>::iterator ih = m_histoList.begin() ; m_histoList.end() != ih ; ih++){
@@ -136,10 +213,11 @@ protected:
     }
     return ok;
   }
-  
-
+  bool validArea( std::string area ){
+    for(std::vector<std::string>::iterator  i = m_areas.begin();i != m_areas.end();++i){
+      if( *i == area)return true;
+    }    
+    return false;
+  }
 };
-// ============================================================================
-// The END 
-// ============================================================================
 #endif // CALOMONIDST_CALOMONIALG_H

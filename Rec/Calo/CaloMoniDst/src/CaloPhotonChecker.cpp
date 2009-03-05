@@ -264,6 +264,10 @@ StatusCode CaloPhotonChecker::initialize()
                               1310, std::string("Background Shower Shape SpdHit"),
                               directory,nEbin);
    }
+  if( m_split ){
+    Warning( "No area spliting allowed for CaloPhotonChecker").ignore();
+    m_split = false;
+  }    
   return StatusCode::SUCCESS;
 };
 // ============================================================================
@@ -770,8 +774,8 @@ std::vector<AIDA::IHistogram1D*> CaloPhotonChecker::defHisto1d(
     sprintf(histoname,"%s #%i",hname.c_str(),nhisto+i);
     std::stringstream hid("");
     hid << nhisto+i ;
-    histo  = hBook1( dir + hid.str() , histoname ,  int(xmin), int(xmax),bin );
-
+    hBook1( dir + hid.str() , histoname ,  int(xmin), int(xmax),bin );
+    histo = h1[ dir + hid.str() ];
 		debug() <<"booking Histo ..."<<histoname<<endreq; 
 
     if( 0 == histo  ) {

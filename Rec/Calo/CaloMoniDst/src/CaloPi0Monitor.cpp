@@ -1,8 +1,11 @@
-// $Id: CaloPi0Monitor.cpp,v 1.7 2009-02-20 18:03:24 odescham Exp $
+// $Id: CaloPi0Monitor.cpp,v 1.8 2009-03-05 15:52:51 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2009/02/20 18:03:24  odescham
+// prepare for DQ
+//
 // Revision 1.6  2008/09/12 09:50:34  odescham
 // fix compilation warning
 //
@@ -124,7 +127,7 @@ StatusCode CaloPi0Monitor::execute()
   if ( photons.empty() )return StatusCode::SUCCESS;  
 
 // loop over the first photon
-  long count = 0;
+  initCounters();
   for( photon g1 = photons.begin(); photons.end() != g1; ++g1 ){
     if ( 0 == *g1 ) continue;
     LHCb::CaloMomentum momentum1( *g1 );
@@ -135,7 +138,6 @@ StatusCode CaloPi0Monitor::execute()
       if ( 0 == *g2 ) continue;
       LHCb::CaloMomentum momentum2( *g2 );
       if(momentum2.pt() < m_ptPhoton)continue;
-
       Gaudi::LorentzVector v2( momentum2.momentum() );
       Gaudi::LorentzVector pi0( v1 + v2 );
       const double mass = pi0.mass() ;
@@ -144,14 +146,24 @@ StatusCode CaloPi0Monitor::execute()
       if( e < m_eFilter)continue;
       if( et< m_etFilter)continue;
       if( mass<m_massFilterMin || mass>m_massFilterMax)continue;
-      count++;
-      hFill1( "2", e );
-      hFill1( "3", et );
-      hFill1( "4", mass );
+      LHCb::CaloCellID id1 = LHCb::CaloCellID();
+      LHCb::CaloCellID id2 = LHCb::CaloCellID();
+      if ( (*g1)->clusters().size() > 0 ){
+        SmartRef<LHCb::CaloCluster> cluster= *((*g1)->clusters().begin());
+        id1 = (*cluster).seed();      
+      }
+      if ( (*g2)->clusters().size() > 0 ){
+        SmartRef<LHCb::CaloCluster> cluster= *((*g2)->clusters().begin());
+        id2 = (*cluster).seed();      
+      }
+      LHCb::CaloCellID id = (id1.area() == id2.area() ) ? id1 : LHCb::CaloCellID();
+      count(id);
+      hFill1(id, "2", e   );
+      hFill1(id, "3", et  );
+      hFill1(id, "4", mass);      
     }
   }
-  hFill1( "1", count );
-
+  fillCounters("1");
   return StatusCode::SUCCESS;
 }
 

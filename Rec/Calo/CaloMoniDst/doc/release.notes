@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.30 2009-02-20 18:03:24 odescham Exp $ 
+! $Id: release.notes,v 1.31 2009-03-05 15:52:51 odescham Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
@@ -7,10 +7,10 @@
 
 
 ! 2009-02-20 - Olivier Deschamps 
- - Clean monitoring algorithm
- - add protection against missing input here and there
- - new options : CaloDQ.opts : selection of relevant monitoring histo for Data Quality
-
+ - Clean monitoring algorithms
+ - add protection against missing data inputs here and there
+ - new options : CaloDQ.opts : selection of relevant monitoring histo for Data Quality stuff
+ - CaloMoniAlg : new property 'splitAreas' allow to produce histo per area (all cpp adapted)
 
 !========================== CaloMoniDst v3r4 2009-02-20 =======================
 ! 2009-01-20 - Marco Cattaneo
