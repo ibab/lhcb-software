@@ -1,4 +1,4 @@
-// $Id: TrackV0Finder.cpp,v 1.9 2009-01-20 15:49:30 cattanem Exp $
+// $Id: TrackV0Finder.cpp,v 1.10 2009-03-06 17:19:42 cattanem Exp $
 // Include files 
 
 
@@ -184,7 +184,7 @@ StatusCode TrackV0Finder::initialize() {
   m_pionProperty   = propertysvc->find( "pi+" ) ;
   m_protonProperty = propertysvc->find( "p+" ) ;
   if( m_ksProperty==0 ||  m_lambdaProperty==0 || m_pionProperty==0 || m_protonProperty==0) {
-    error() << "Did not find all properties." << endreq ;
+    error() << "Did not find all properties." << endmsg ;
     sc = StatusCode::FAILURE ;
   }
   
@@ -216,14 +216,13 @@ inline bool inAnyVertex( const LHCb::Track& track,
 //=============================================================================
 StatusCode TrackV0Finder::execute() 
 {
-  //info() << "TrackV0Finder::execute" << std::endl ;
   // Get the primary vertices. Locate the one that's most downstream.
   const LHCb::RecVertices* pvcontainer(0) ;
   try {
     if(exist<LHCb::RecVertices>( m_pvContainerName ))
       pvcontainer = get<LHCb::RecVertices>( m_pvContainerName ) ;
   } catch (const GaudiException & exp) {
-    warning() << "caught exception when asking for primary vertices! " << exp << endreq ;
+    warning() << "caught exception when asking for primary vertices! " << exp << endmsg ;
   }
 
   double zprimary(0) ;
@@ -335,13 +334,13 @@ StatusCode TrackV0Finder::execute()
 		if( (*ipos)->nodes().empty() ) sc = m_extrapolator->propagate( **ipos, z, posstate ) ;
 		else                           sc = m_interpolator->interpolate( **ipos, z, posstate ) ;
 		if(!sc.isSuccess() ) {
-		  Warning("Extrapolation failed. Rely on trajectory interpolation.",StatusCode::SUCCESS,0) ;
+		  Warning("Extrapolation failed. Rely on trajectory interpolation.",StatusCode::SUCCESS,0).ignore() ;
 		  posstate = postraj.state(z) ;
 		}
 		if( (*ineg)->nodes().empty() ) sc = m_extrapolator->propagate( **ineg, z, negstate ) ;
 		else                           sc = m_interpolator->interpolate( **ineg, z, negstate ) ;
 		if(!sc.isSuccess() ) {
-		  Warning("Extrapolation failed. Rely on trajectory interpolation.",StatusCode::SUCCESS,0) ;
+		  Warning("Extrapolation failed. Rely on trajectory interpolation.",StatusCode::SUCCESS,0).ignore() ;
 		  negstate = negtraj.state(z) ;
 		}
 	      } else {
@@ -393,7 +392,7 @@ StatusCode TrackV0Finder::execute()
 	    }
 	  }
 	} else {
-	  Warning("TrajPoca Failure",StatusCode::SUCCESS,0) ;
+	  Warning("TrajPoca Failure",StatusCode::SUCCESS,0).ignore() ;
 	}
       }
   

@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-03-06 - Marco Cattaneo
+ - Fix untested StatusCode in TrackV0Finder
+
 ! 2009-02-25 - Manuel Tobias Schiller
  - Added CreateFastTrackCollection algorithm which copies pointers to tracks
    from a list of input container to a SharedObjectsContainer on the TES.
