@@ -15,6 +15,16 @@ GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxPhotonsPerCherenkovStepInRich1Gas=40
 GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxPhotonsPerCherenkovStepInRich2Gas=40;
 GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxNumPhotPerCherenkovStep=40;
 
+// The following options allow the possibility of switching off RICH specific physics processes in order to
+// study the simulation performance of other subdetectors without RICH. By default they are
+// switched on so that RICH is switched on by default. 
+//
+// The following options allow the possibility to 
+// turn on the RICH geometry, but have the RICH specific physics processes switched off at the same time.
+// This is in addition to the possibility of switching off RICH geometry and the RICH physics process.
+// GiGa.ModularPL.GiGaPhysConstructorOp.RichOpticalPhysicsProcessActivate=true;
+// GiGa.ModularPL.GiGaPhysConstructorHpd.RichHpdPhysicsProcessActivate=true;
+
 
 // to create  'extended output info' for detailed analysis, 
 // (a) uncomment the line in this file with RichVerbose.opts.
