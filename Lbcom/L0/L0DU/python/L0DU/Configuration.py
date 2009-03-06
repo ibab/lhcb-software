@@ -30,6 +30,7 @@ class L0Conf(LHCbConfigurableUser) :
         ,"ETCSequencer"   : None
         # Output file
         ,"ETCOutput"      : "L0ETC.root"
+        ,"TCK"            : "0xDC09"
         }
 
     _propertyDocDct = {
@@ -49,6 +50,7 @@ class L0Conf(LHCbConfigurableUser) :
         ,"FilterSequencer": """ Sequencer filled with the L0Filter algorithm (not configurable)."""
         ,"ETCSequencer"   : """ Sequencer filled with the algorithm and stream to write out a L0-ETC."""
         ,"ETCOutput"      : """ Name of ETC output file."""
+        ,"TCK"            : """ TCK for emulation. """
         }
 
     def checkOptions(self):
@@ -76,6 +78,17 @@ class L0Conf(LHCbConfigurableUser) :
         The filling of the sequencer is done according to the L0Conf properties. 
         """
         if self.isPropertySet("L0Sequencer"):
+
+            # Set up the TCK to use
+            tck  = self.getProp("TCK")
+            from Configurables import L0DUAlg
+            l0du = L0DUAlg("L0DU")
+            if self.isPropertySet("TCK"):       # Use L0Conf().TCK if set
+                if l0du.isPropertySet("TCK"):
+                    log.warning("L0DU.TCK and L0Conf().TCK both set, using L0Conf().TCK = %s"%tck)
+                l0du.TCK = tck
+            elif not l0du.isPropertySet("TCK"): # Use default if L0DU.TCK not set 
+                l0du.TCK = tck
 
             seq=self.getProp("L0Sequencer")
 
