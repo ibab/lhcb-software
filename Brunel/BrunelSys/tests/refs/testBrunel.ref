@@ -12,7 +12,6 @@
 # |                 (default: [])
 # |-OutputType      = 'DST'
 # |-MoniSequence    = ['CALO', 'RICH', 'MUON', 'VELO', 'Tr', 'ST']  (default: [])
-# |-UseOracle       = False
 # |-MCCheckSequence = ['Pat', 'RICH', 'MUON']  (default: [])
 # |-InputType       = 'DIGI'  (default: 'MDF')
 # |-PrintFreq       = 1
@@ -52,7 +51,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v34r2
-                                          running on lxbuild120.cern.ch on Tue Mar  3 11:22:09 2009
+                                          running on lxbuild120.cern.ch on Fri Mar  6 18:12:19 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -64,7 +63,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.50 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.83 times the speed of a 2.8 GHz Xeon.
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
 BrunelSequencer      INFO Member list: ProcessPhase/Init, ProcessPhase/Reco, ProcessPhase/Moni, ProcessPhase/MCLinks, ProcessPhase/Check, ProcessPhase/Output
@@ -155,7 +154,7 @@ MagneticFieldSv...   INFO Opened magnetic field file : /afs/cern.ch/user/m/marco
 MagneticFieldSv...   INFO Opened magnetic field file : /afs/cern.ch/user/m/marcocle/public/DBASE/FieldMap/v5r2/cdf/field048.c3.vp.cdf
 MagneticFieldSv...   INFO Opened magnetic field file : /afs/cern.ch/user/m/marcocle/public/DBASE/FieldMap/v5r2/cdf/field048.c4.vp.cdf
 MagneticFieldSv...   INFO Map scaled by factor 1
-TrackForwardPre...   INFO Member list: TrackEventFitter/PreFitForward
+TrackForwardPre...   INFO Member list: TrackStateInitAlg/InitForwardFit, TrackEventFitter/PreFitForward
 ToolSvc.OTNoDri...   INFO Use drifttime           = 0
 ToolSvc.OTNoDri...   INFO Fit drifttime residuals = 0
 PreFitForward.F...   INFO
@@ -195,7 +194,7 @@ TrackSeedPatSeq      INFO Member list: Tf::Tsa::Seed/TsaSeed, Tf::Tsa::SeedTrack
 ToolSvc.TsaData...   INFO Max OT cluster size     = 5
 ToolSvc.TsaData...   INFO Max OT module occupancy = 0.4
 ToolSvc.TsaData...   INFO Max ST sector occupancy = 48
-TrackSeedPreFitSeq   INFO Member list:
+TrackSeedPreFitSeq   INFO Member list: TrackStateInitAlg/InitSeedFit
 TrackSeedFitSeq      INFO Member list: TrackEventFitter/FitSeed
 FitSeed.Fitter       INFO
 FitSeed.Fitter       INFO ============ TrackMasterFitter Settings ===========
@@ -213,7 +212,7 @@ FitSeed              INFO   Fitter name              : TrackMasterFitter/Fitter
 FitSeed              INFO ==================================================
 FitSeed              INFO
 TrackMatchPatSeq     INFO Member list: TrackMatchVeloSeed/TrackMatch
-TrackMatchPreFi...   INFO Member list: TrackEventFitter/PreFitMatch
+TrackMatchPreFi...   INFO Member list: TrackStateInitAlg/InitMatchFit, TrackEventFitter/PreFitMatch
 PreFitMatch.Fitter   INFO
 PreFitMatch.Fitter   INFO ============ TrackMasterFitter Settings ===========
 PreFitMatch.Fitter   INFO  Upstream fit
@@ -256,7 +255,7 @@ PatDownstream        INFO  MaxChisq           = 10
 PatDownstream        INFO ========================================
 PatDownstream        INFO zMagnetParams 5372.42 -3372.25 370.484
 PatDownstream        INFO momentumParams 1226.32 479.859 2859.75
-TrackDownstream...   INFO Member list: TrackEventFitter/PreFitDownstream
+TrackDownstream...   INFO Member list: TrackStateInitAlg/InitDownstreamFit, TrackEventFitter/PreFitDownstream
 PreFitDownstrea...   INFO
 PreFitDownstrea...   INFO ============ TrackMasterFitter Settings ===========
 PreFitDownstrea...   INFO  Upstream fit
@@ -319,7 +318,7 @@ PatVeloTT.Fitter     INFO  first measurement, 990, 2165
 PatVeloTT.Fitter     INFO ==================================================
 PatVeloTT            INFO  InputTracksName    = Rec/Track/Velo
 PatVeloTT            INFO  OutputTracksName   = Rec/Track/VeloTT
-TrackVeloTTPreF...   INFO Member list:
+TrackVeloTTPreF...   INFO Member list: TrackStateInitAlg/InitVeloTTFit
 TrackVeloTTFitSeq    INFO Member list: TrackEventFitter/FitVeloTT
 FitVeloTT.Fitter     INFO
 FitVeloTT.Fitter     INFO ============ TrackMasterFitter Settings ===========
@@ -909,7 +908,6 @@ MuonPIDChecker       INFO  Ghosts     :      -1.00     :    (2.39+-0.02) - (2.24
 MuonPIDChecker       INFO  Total MisID:      -1.00     :    (2.12+-0.01) - (2.51 +-0.01)
 MuonPIDChecker       INFO ------------------------------------------------------------------
 FSRWriter            INFO Set up File Summary Record
-IODataManager        INFO Referring to dataset Brunel.dst by its file ID:D43C875C-DD07-DE11-9BB1-0030487C5E0E
 RootDBase.open    SUCCESS Brunel.dst File version:51800
 FSRWriter            INFO Events output: 1
 DstWriter            INFO Events output: 0
@@ -931,7 +929,7 @@ ToolSvc.Offline...SUCCESS  #WARNINGS   = 1        Message = 'No pixels produced'
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings Statistics : 0/0/1
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.50 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.83 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -981,6 +979,7 @@ TimingAuditor.T...   INFO     Track                     |     0.000 |     0.000 
 TimingAuditor.T...   INFO      TrackForwardPatSeq       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       PatForward              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      TrackForwardPreFitSeq    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO       InitForwardFit          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       PreFitForward           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      TrackForwardFitSeq       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       FitForward              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -988,23 +987,27 @@ TimingAuditor.T...   INFO      TrackSeedPatSeq          |     0.000 |     0.000 
 TimingAuditor.T...   INFO       TsaSeed                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       TsaSeedTrackCnv         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      TrackSeedPreFitSeq       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO       InitSeedFit             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      TrackSeedFitSeq          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       FitSeed                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      TrackMatchPatSeq         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       TrackMatch              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      TrackMatchPreFitSeq      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO       InitMatchFit            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       PreFitMatch             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      TrackMatchFitSeq         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       FitMatch                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      TrackDownstreamPatSeq    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       PatDownstream           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      TrackDownstreamPreFitSeq |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO       InitDownstreamFit       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       PreFitDownstream        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      TrackDownstreamFitSeq    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       FitDownstream           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      TrackVeloTTPatSeq        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       PatVeloTT               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      TrackVeloTTPreFitSeq     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO       InitVeloTTFit           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      TrackVeloTTFitSeq        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       FitVeloTT               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      TrackPostFitSeq          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -1195,7 +1198,6 @@ TimingAuditor.T...   INFO  FSRWriter                    |     0.000 |     0.000 
 TimingAuditor.T...   INFO  DstWriter                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
 RunRecordCnvSvc      INFO Disconnected data IO:D43C875C-DD07-DE11-9BB1-0030487C5E0E[Brunel.dst]
-XMLCatalog           INFO File 'test_catalog.xml' does not exist. New file created.
 StatusCodeSvc        INFO listing all unchecked return codes:
 StatusCodeSvc        INFO
 Num | Function                       | Source Library
