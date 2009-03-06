@@ -1,14 +1,16 @@
-! $Id: release.notes,v 1.21 2009-03-04 15:26:31 ggiacomo Exp $
+! $Id: release.notes,v 1.22 2009-03-06 09:42:20 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
 
-! 20090304
+! 20090306 v2r2
  - improve and unify code to get histograms from root files (savesets 
    and references)
  - correct support for "any" task
  - avoid Gaudi looping eating all CPU
  - improve OMACheckHolesAndSpikes (normalize ref before comparison)
+ - bug fix in OMAMsgInterface
+ - fix compilation problems with gcc 4.3 and root 5.22
 
 ! 20090226 
  - new custom fit function FitTH2withSinCosC by Christopher Blanks

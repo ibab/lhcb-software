@@ -1,4 +1,4 @@
-// $Id: SavesetFinder.cpp,v 1.5 2008-11-21 09:58:24 ggiacomo Exp $
+// $Id: SavesetFinder.cpp,v 1.6 2009-03-06 09:42:20 ggiacomo Exp $
 
 #include "OMAlib/SavesetFinder.h"
 #include "OMAlib/AnalysisTask.h"
@@ -7,8 +7,9 @@ SavesetFinder::SavesetFinder(AnalysisTask* Ana,
                              std::string &TaskName,
                              std::string &PartitionName) :
   DimInfo(std::string(PartitionName + "/" + TaskName + OMAconstants::SavesetServicePath).c_str(), "SAVESETLOCATION" ),
-  m_analysis(Ana), m_taskname(TaskName), m_lastSaveset("SAVESETLOCATION")
+  m_analysis(Ana), m_taskname(TaskName)
 {
+  m_lastSaveset = "SAVESETLOCATION";
 }
 
 void SavesetFinder::infoHandler() {

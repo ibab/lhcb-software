@@ -87,18 +87,7 @@ void OMACheckHolesAndSpikes::exec(TH1 &Histo,
       double &xrefer=refErrors[(ihx-1)*nBy +(ihy-1)];
       switch(mode) {
       case Ratio:
-        // take the ratio, except for cases where both values are very small 
-        delta=1.;
-        if (xref < 0.1 ) {
-          if (content > 0.99)
-            delta= (xref>0.01) ? content/xref : 99.;
-        }
-        else {
-          if (content > 0.1) 
-            delta = content/xref;
-          else if(xref > 0.99)
-            delta= (content>0.01) ? content/xref : .01;
-        }
+        delta= (xref>OMAconstants::epsilon) ? content/xref : 99.;
         break;
       case AbsDiff:
         delta = content - xref;
