@@ -1,4 +1,4 @@
-// $Id: BooleInit.cpp,v 1.28 2009-02-23 17:07:08 cattanem Exp $
+// $Id: BooleInit.cpp,v 1.29 2009-03-06 08:12:32 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -114,7 +114,8 @@ StatusCode BooleInit::execute() {
   // Get the run and event number from the MC Header
   LHCb::MCHeader* evt = get<LHCb::MCHeader>( LHCb::MCHeaderLocation::Default,
                                              IgnoreRootInTES                 );
-  if ( "" == rootInTES() ) printEventRun( evt->evtNumber(), evt->runNumber() );
+  if ( "" == rootInTES() ) 
+    printEventRun( evt->evtNumber(), evt->runNumber(), 0, evt->evtTime() );
   
   
   // Initialize the random number: 
