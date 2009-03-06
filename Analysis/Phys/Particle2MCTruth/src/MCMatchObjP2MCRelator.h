@@ -1,4 +1,4 @@
-// $Id: MCMatchObjP2MCRelator.h,v 1.2 2009-03-05 11:27:24 jpalac Exp $
+// $Id: MCMatchObjP2MCRelator.h,v 1.3 2009-03-06 14:24:01 jpalac Exp $
 #ifndef MCMATCHOBJP2MCRELATOR_H 
 #define MCMATCHOBJP2MCRELATOR_H 1
 
@@ -20,8 +20,8 @@ namespace LoKi
  *  @author Juan PALACIOS
  *  @date   2009-03-04
  */
-class MCMatchObjP2MCRelator : public Particle2MCAssociatorBase, 
-                               virtual public IParticle2MCAssociator {
+class MCMatchObjP2MCRelator : public Particle2MCAssociatorBase,
+                              virtual public IParticle2MCAssociator {
 public: 
   /// Standard constructor
   MCMatchObjP2MCRelator( const std::string& type, 
@@ -38,6 +38,10 @@ public:
                          const LHCb::MCParticle* mcParticle) const ;
 
 private:
+
+  virtual LHCb::MCParticle::ConstVector sort(const LHCb::MCParticle::ConstVector& mcParticles) const;
+  
+  virtual LHCb::MCParticle::ConstVector sort(const LHCb::MCParticle::Container* mcParticles) const;
 
   LoKi::MCMatch matcher() const;
 
