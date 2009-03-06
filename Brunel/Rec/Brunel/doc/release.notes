@@ -3,6 +3,11 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-03-06 - Marco Cattaneo
+ - Pass DataType to L0Conf()
+ - Add event time printout to brunel-2008-MC test
+ - Update references for new fit initialisation, new calorimeter tuning
+
 ! 2009-03-05 - Marco Cattaneo
  - Remove UseOracle option of Configurable, use DetCond() directly
 

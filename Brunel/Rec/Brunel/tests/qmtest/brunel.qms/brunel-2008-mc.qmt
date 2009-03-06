@@ -7,7 +7,7 @@
     <text>$BRUNELOPTS/Brunel-2008-MC.py</text>
     <text>$BRUNELOPTS/2008-Files.py</text>
     <text>--option</text>
-    <text>from Brunel.Configuration import *; Brunel().Histograms="Expert"; Brunel().RecL0Only=True; Brunel().EvtMax=15</text>
+    <text>from Brunel.Configuration import *; Brunel().Histograms="Expert"; Brunel().RecL0Only=True; Brunel().EvtMax=15; from Configurables import RecInit; RecInit("BrunelInit").PrintEventTime=True</text>
   </set></argument>
   <argument name="reference"><text>../refs/testBrunel-2008-MC.ref</text></argument>
   <argument name="validator"><text>
