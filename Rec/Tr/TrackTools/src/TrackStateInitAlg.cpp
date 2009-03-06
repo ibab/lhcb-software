@@ -31,7 +31,8 @@ StatusCode TrackStateInitAlg::execute()
   for (LHCb::Tracks::const_iterator it = tracks->begin(); 
        tracks->end() != it; ++it) {
     LHCb::Track* track = *it;
-    m_trackTool->fit(*track, clearStates);
+    StatusCode sc = m_trackTool->fit(*track, clearStates);
+    if ( sc.isFailure() ) return sc;
   }
   return StatusCode::SUCCESS ;
 }
