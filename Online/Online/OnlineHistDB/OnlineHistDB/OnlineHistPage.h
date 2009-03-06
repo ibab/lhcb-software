@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistPage.h,v 1.18 2009-02-16 10:37:42 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistPage.h,v 1.19 2009-03-06 09:26:54 ggiacomo Exp $
 #ifndef ONLINEHISTPAGE_H
 #define ONLINEHISTPAGE_H 1
 /** @class  OnlineHistPage OnlineHistPage.h OnlineHistDB/OnlineHistPage.h
@@ -29,7 +29,7 @@ class OnlineHistPage : public OnlineHistDBEnv
   /// file name containing optional ROOT background pattern 
   const std::string& patternFile() const { return m_pattern;}
   /// check if the page object is in sync with the DB
-  const bool syncWithDB() const { return  m_syncWithDB;}
+  bool syncWithDB() const { return  m_syncWithDB;}
   
   
   /// set short page description

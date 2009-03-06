@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.36 2009-02-19 19:05:02 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.37 2009-03-06 09:26:54 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -106,8 +106,9 @@ bool OnlineHistDB::commit() {
   if ( OCI_SUCCESS == prepareOCIStatement(stmt, "BEGIN ONLINEHISTDB.MYCOMMIT(:x1); END;") ) {
     if ( OCI_SUCCESS == myOCIBindInt(stmt, ":x1", schema) ) {
       m_StmtMethod = "OnlineHistDB::commit";
-      if (out = (OCI_SUCCESS == myOCIStmtExecute(stmt, SEVERE))) {
-	if (debug()>2) cout << "session terminated"<<endl; 
+      out = (OCI_SUCCESS == myOCIStmtExecute(stmt, SEVERE));
+      if (out) {
+        if (debug()>2) cout << "session terminated"<<endl; 
       }
     }
     releaseOCIStatement(stmt);

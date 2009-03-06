@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.24 2009-02-16 13:57:49 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.25 2009-03-06 09:26:54 ggiacomo Exp $
 
 #include "OnlineHistDB/OnlineHistPage.h"
 using namespace std;
@@ -467,11 +467,11 @@ bool OnlinePageStorage::removePage(OnlineHistPage* Page) {
     std::vector<OnlineHistPage*>::iterator ip = m_myPage.begin();
     while (ip != m_myPage.end()) {
       if( (*ip)->name() == Page->name() ) {
-	if (Page != (*ip)) delete *ip;
-	ip=m_myPage.erase(ip);
+        if (Page != (*ip)) delete *ip;
+        ip=m_myPage.erase(ip);
       }
       else {
-	ip++;
+        ip++;
       }
     }
     delete Page;
