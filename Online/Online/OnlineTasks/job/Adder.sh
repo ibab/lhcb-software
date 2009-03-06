@@ -6,6 +6,10 @@
 #need to cd incase script is launched outside the taskmanager
 #get online version
 
+ulimit -d 1048576
+ulimit -m 1048576
+ulimit -v 1048576
+
 
 test -n "$1" ; export PARENT=$( echo $1 | tr "[:upper:]" "[:lower:]" )
 
@@ -22,7 +26,7 @@ if test -n "$4" ; then
 fi
 echo UTGID ${UTGID} PARENT ${PARENT} PARTNAME ${PARTNAME}
 
-cd /home/online/ONLINE/Online_v4r18dev/Online/OnlineTasks/job
+cd /home/online/ONLINE/Online_v4r20/Online/OnlineTasks/job
 export DEBUGGING=YES
 
 # remove the args because they interfere with the cmt scripts

@@ -12,7 +12,7 @@ fi
 
 #${GAUDIKERNELROOT}/../InstallArea/$CMTCONFIG/bin/Gaudi.exe ../options/MEPInjector.opts
 
-cd /home/online/ONLINE/Online_v4r19/Online/OnlineTasks/job
+cd /home/online/ONLINE/Online_v4r20/Online/OnlineTasks/job
 
 HOST=$(hostname --short | awk '{ print toupper($1) }')
 

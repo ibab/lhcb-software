@@ -6,7 +6,7 @@
 #runtype is the activity (empty: use DummyRead.opts)
 printenv
 
-cd /home/online/Online_v4r17/Online/OnlineTasks/job
+cd /home/online/ONLINE/Online_v4r20/Online/OnlineTasks/job
 export DEBUGGING=YES
 
 test -n "$1" ; export PARENT=$( echo $1 | tr "[:lower:]" "[:upper:]" )

@@ -9,9 +9,9 @@ ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.EvtSel                = "NONE";
 Runable.Wait                         = 3;  // 1 of running as daemon
 
-AdderSvc.OutputLevel = 1;
+AdderSvc.OutputLevel = 3;
 AdderSvc.publishRates=1;
-MessageSvc.OutputLevel = 1;
+MessageSvc.OutputLevel = 3;
 
 AdderSvc.taskname={"GauchoJob"}; // Could be empty.
 AdderSvc.refreshTime=10;

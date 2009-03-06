@@ -6,5 +6,6 @@ ApplicationMgr.SvcOptMapping += { "Gaudi::IODataManager/IODataManager"  };
 ApplicationMgr.SvcOptMapping += { "Gaudi::MultiFileCatalog/FileCatalog" };
 ApplicationMgr.ExtSvc        += { "MonitorSvc/MonitorSvc" };
 ApplicationMgr.Dlls          += { "Gaucho" };
-//MessageSvc.OutputLevel        = 4;
+//MessageSvc.OutputLevel      = 4;
 MessageSvc.fifoPath           = "/tmp/logGaudi.fifo";
+MessageSvc.LoggerOnly         = 1;

@@ -99,7 +99,7 @@ fi;
 
 export gaudi_exe="$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe $GAUDIONLINEROOT/$CMTCONFIG/libGaudiOnline.so OnlineTask -msgsvc=LHCb::FmcMessageSvc"  
 export HLTOPTS=${ONLINETASKSROOT}/hltopts
-export CLASS1_TASK="${gaudi_exe} -tasktype=LHCb::Class1Task -main=${HLTOPTS}/Main.opts"
+export CLASS1_TASK="${gaudi_exe} -tasktype=LHCb::Class1Task -main=/group/online/dataflow/templates/options/Main.opts"
 export CLASS0_TASK="${gaudi_exe} -tasktype=LHCb::Class0Task -opt=${GAUDIONLINEROOT}/options/Daemon.opts"
 
 export gaudi_exe3="$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe $GAUDIONLINEROOT/$CMTCONFIG/libGaudiOnline.so GaudiOnline -msgsvc=LHCb::FmcMessageSvc"  
