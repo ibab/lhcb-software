@@ -2,6 +2,10 @@
 ! Responsible : Erica Polycarpo, Miriam Gandelman
 !---------------------------------------------------------------------
 
+!======================== MuonID v6r2 2009-03-06 =====================
+! 2009-03-06 - Miriam Gandelman
+ - Changed the FOIfactor to 1.2 to recover some efficiency (2009 settings) 
+
 !======================== MuonID v6r1 2009-02-02 =====================
 ! 2009-02-02 - Miriam Gandelman
  - Change the extrapolation Z position to one that is saved to the DST 
