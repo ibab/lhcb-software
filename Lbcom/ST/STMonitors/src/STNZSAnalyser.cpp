@@ -1,4 +1,4 @@
-// $Id: STNZSAnalyser.cpp,v 1.1.1.1 2009-03-02 19:13:44 mtobin Exp $
+// $Id: STNZSAnalyser.cpp,v 1.2 2009-03-06 16:42:19 nchiapol Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -69,29 +69,29 @@ StatusCode STNZSAnalyser::initialize()
 
   STDetSwitch::flip(m_detType,m_dataLocation);
 
-  const Map *NumberToSourceIDMap;
+  //const Map *NumberToSourceIDMap;
   //const std::map<unsigned int, unsigned int> *NumberToSourceIDMap;
   if (m_detType == "TT") {
     m_TELL1Mapping      = &TTSourceIDToNumberMap();
-    NumberToSourceIDMap = &TTNumberToSourceIDMap();
+    //NumberToSourceIDMap = &TTNumberToSourceIDMap();
   } else {
     m_TELL1Mapping      = &ITSourceIDToNumberMap();
-    NumberToSourceIDMap = &ITNumberToSourceIDMap();
+    //NumberToSourceIDMap = &ITNumberToSourceIDMap();
   }
 
   m_basenameHisto += "_$tell";
   m_evtNumber = 0;
 
-        std::map<unsigned int, unsigned int>::const_iterator iterMap = NumberToSourceIDMap->begin();
-  const std::map<unsigned int, unsigned int>::const_iterator endMap  = NumberToSourceIDMap->end();
-  for ( ; iterMap != endMap ; iterMap++ ) {
-    int tellID = iterMap->first;
-    if (m_useSourceID) {
-      tellID = iterMap->second;
-    }
-    std::string title = m_basenameHisto + boost::lexical_cast<std::string>(tellID);
-    book(title, 0, nStripsPerBoard, nStripsPerBoard);
-  }
+//        std::map<unsigned int, unsigned int>::const_iterator iterMap = NumberToSourceIDMap->begin();
+//  const std::map<unsigned int, unsigned int>::const_iterator endMap  = NumberToSourceIDMap->end();
+//  for ( ; iterMap != endMap ; iterMap++ ) {
+//    int tellID = iterMap->first;
+//    if (m_useSourceID) {
+//      tellID = iterMap->second;
+//    }
+//    std::string title = m_basenameHisto + boost::lexical_cast<std::string>(tellID);
+//    book(title, 0, nStripsPerBoard, nStripsPerBoard);
+//  }
 
   return StatusCode::SUCCESS;
 }
@@ -131,10 +131,6 @@ StatusCode STNZSAnalyser::execute()
       m_meanMap[tellID].resize(3072,0.0);
       m_meanSqMap[tellID].resize(3072, 0.0);
       m_nEvents[tellID] = 0;
-      //std::string title = m_basenameHisto + boost::lexical_cast<std::string>(tellID);
-      //IHistogram1D* histo = book(title, 0, nStripsPerBoard, nStripsPerBoard);
-      //declareInfo(title, histo, title);
-      //debug() << "Histogram " << title << " declared" << endmsg;
     }
     m_nEvents[tellID]++;
 
@@ -193,19 +189,27 @@ StatusCode STNZSAnalyser::finalize()
 void STNZSAnalyser::updateNoiseHistogram(int tellID)
 {
   // Create a title for the histogram
-  std::string title = m_basenameHisto + boost::lexical_cast<std::string>(tellID);
+  //std::string title = m_basenameHisto + boost::lexical_cast<std::string>(tellID);
+  std::string strTellID  = boost::lexical_cast<std::string>(tellID);
+  std::string histoID    = m_basenameHisto + strTellID;
+  std::string histoTitle = "Noise for Tell" + strTellID;
 
-  IHistogram1D* hist = histo1D( title ) ;
-  if ( hist == 0 ) {
-    error() << "Histogram " << title << " not found" << endmsg;
-    return;
-  }
-  hist->reset();
+  IHistogram1D* hist = histo1D( histoID ) ;
+  //if ( hist == 0 ) {
+    //error() << "Histogram " << histoID << " not found" << endmsg;
+    //return;
+  //}
+  //hist->reset();
 
   // Loop over strips in tell1
   for (unsigned int strip = 0u; strip < nStripsPerBoard; ++strip) {
     double rms = sqrt( m_meanSqMap[tellID][strip] 
                        - gsl_pow_2(m_meanMap[tellID][strip]));
-    hist->fill(strip, rms);
+    if ( hist ) {
+      hist->reset();
+      hist->fill(strip, rms);
+    } else {
+      plot1D( strip, histoID, histoTitle, 0, nStripsPerBoard, nStripsPerBoard, rms );
+    }
   }
 }
