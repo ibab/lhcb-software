@@ -1,4 +1,4 @@
-// $Id: DaVinciMCKernelDict.h,v 1.6 2008-06-27 13:00:49 jpalac Exp $
+// $Id: DaVinciMCKernelDict.h,v 1.7 2009-03-06 16:32:45 jpalac Exp $
 #ifndef DICT_DAVINCIMCKERNELDICT_H 
 #define DICT_DAVINCIMCKERNELDICT_H 1
 
@@ -20,6 +20,7 @@
 #include "Kernel/IHepMC2MC.h"
 #include "Kernel/IMCParticleArrayFilter.h"
 #include "Kernel/IMC2Collision.h"
+#include "Kernel/IParticle2MCAssociator.h"
 #include "Kernel/IP2VVMCPartAngleCalculator.h"
 #include "Kernel/IPrintDecayTreeTool.h"
 #include "Kernel/IPV2MC.h"

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.63 2009-03-06 14:17:02 jpalac Exp $
+! $Id: release.notes,v 1.64 2009-03-06 16:32:45 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
@@ -6,6 +6,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-03-06 - Juan PALACIOS
+ - dict/DaVinciMCKernelDict.*
+  . Add IParticle2MCAssociator to reflex dictionaries
  - Kernel/Particle2MCAssociatorBase.h
   . Add concept of MCParticle sorting for relations via virtual private sort
     methods, to be over-ridden by derived classes.
