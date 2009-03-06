@@ -1,0 +1,13 @@
+#units "$STDOPTS/units.opts"
+MoniCALOSeq.Members += { "GaudiSequencer/CaloDigitMon"
+                         ,"GaudiSequencer/CaloClusterMon"
+                         ,"GaudiSequencer/CaloHypoMon"
+                         ,"GaudiSequencer/CaloPIDsMon"
+                         ,"SpdMonitor/SpdMon"
+};
+
+#include "$CALOMONIDSTOPTS/CaloDigitMonitor.opts"
+#include "$CALOMONIDSTOPTS/CaloClusterMonitor.opts"
+#include "$CALOMONIDSTOPTS/CaloHypoMonitor.opts"
+#include "$CALOMONIDSTOPTS/SpdMonitor.opts"
+#include "$CALOMONIDSTOPTS/CaloPIDsMonitor.opts"

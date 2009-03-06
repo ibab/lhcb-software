@@ -1,5 +1,3 @@
-#include "$CALOMONIDSTOPTS/CaloMonitor.opts"
-
 EcalDigitMon.histoList   = { "1", "2" , "3" , "6" , "7" };
 HcalDigitMon.histoList   = { "1", "2" , "3" , "6" , "7" };
 PrsDigitMon.histoList    = { "1", "2" , "3" , "6" , "7" };
