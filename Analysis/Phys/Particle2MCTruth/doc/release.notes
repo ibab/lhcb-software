@@ -5,5 +5,11 @@
 !               Particle2MCAssociatorBase for Particle -> MCTruth matching
 !-----------------------------------------------------------------------------
 
+! 2009-03-06 - Juan PALACIOS
+ - src/MCMatchObjP2MCRelator.h
+  . Add virtual private sort methods to over-ride those defined in Particle2MCAssociatorBase
+ - src/MCMatchObjP2MCRelator.cpp
+  . Implement sort methods and add relations tables for PP->MCP
+
 ! 2009-03-04 - Juan PALACIOS
  - First import. Add MCMatchObjP2MCRelator, uses LoKi stuff.
