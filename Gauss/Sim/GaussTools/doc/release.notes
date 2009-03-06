@@ -4,6 +4,20 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2009-03-06 - Gloria CORTI
+ - Extent to passing commands to list of G4Tracks instead of a single one:
+    CommandTrackAction.TrackID = 53 for example is replace by
+    CommandTrackAction.TrackIDs = { 53 }
+   by default the list is empty.
+   New option to print G4TrackID for each track 
+    CommandTrackAction.PrintTrackIDs = true/false
+   by default is true to help finding track with problem
+   New option to print parameters of each track (parentID, origin and momentum)
+    CommandTrackAction.TrackInfos = true/false
+   by default is false, when track is in list the information is anyway
+   printed.
+   . CommandTrackAction.{h,cpp}
+
 !======================= GaussTools v15r1p1 2008-12-08 =======================
 ! 2008-12-12 - Gloria CORTI
  - Include <string> to fix compilation error on Win32

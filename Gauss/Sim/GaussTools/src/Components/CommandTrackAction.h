@@ -75,7 +75,7 @@ public:
    *  @param pointer to new track opbject 
    */
   virtual void PostUserTrackingAction ( const G4Track* ) ;
-
+  
 
   ///
 private:
@@ -84,30 +84,17 @@ private:
   CommandTrackAction( const CommandTrackAction& ) ; ///< no copy 
   CommandTrackAction& operator=( const CommandTrackAction& ) ; 
 
-private:
+  void printInfo(const G4Track*, bool tkInfo = true); ///< Print info about track
 
+private:
+  
   bool m_test;
-  int m_trackid;
+  std::vector<int> m_trackIDs;
+  bool m_printIDs;
+  bool m_trackInfos;
   std::vector<std::string> m_precommand;
   std::vector<std::string> m_postcommand;
 };
 
-// ============================================================================
+
 #endif  //    GIGA_CommandTrackAction_H
-// ============================================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
