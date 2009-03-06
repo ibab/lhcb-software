@@ -102,6 +102,10 @@ public:
   bool HpdQEUseNominalTable(){    return m_HpdQEUseNominalTable;}
   void setHpdQEUseNominalTable(bool aQEOption){m_HpdQEUseNominalTable=aQEOption;}
   
+  bool activateRICHOpticalPhysProcStatus()  {  return m_ActivateRICHOpticalPhysProc;}
+  void setRICHOpticalPhysProcActivation(bool aAct) 
+  {m_ActivateRICHOpticalPhysProc=aAct;}
+  
     
       
   
@@ -125,6 +129,7 @@ private:
   bool m_UseHpdMagDistortions;
   bool m_IsPSFPreDc06Flag;
   bool m_HpdQEUseNominalTable;
+  bool m_ActivateRICHOpticalPhysProc;
   
   
     

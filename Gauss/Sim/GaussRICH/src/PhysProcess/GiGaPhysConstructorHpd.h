@@ -31,6 +31,12 @@ public:
   
   void ConstructParticle ();
   void ConstructProcess  ();
+  bool activateRICHHPDPhysProcStatus() 
+  {  return m_ActivateRICHHPDPhysProc;}
+  
+  void setRICHHPDPhysProcActivation(bool bAct) 
+  { m_ActivateRICHHPDPhysProc=bAct;  }
+  
   ///
 
 private:
@@ -48,6 +54,7 @@ private:
   double  m_RichHpdSiDetEfficiency;
   double m_RichHpdPixelChipEfficiency;
   double m_RichHpdPeBackScatterProb;
+  bool m_ActivateRICHHPDPhysProc;
   
 };
 // ============================================================================

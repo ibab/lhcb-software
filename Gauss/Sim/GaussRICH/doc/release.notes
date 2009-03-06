@@ -3,6 +3,25 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
+! 2009-03-03 - Sajan Easo
+ - Added the options to run Gauss without RICH, for special studies. This
+   gives three possibilities: run with RICH ON which is default, run with
+   RICH geometry but without RICH simulation , run without RICH geometry and
+   without RICH simulation.
+   To switch off the RICH simulation one should, in RICH.opts, change the default values
+   GiGa.ModularPL.GiGaPhysConstructorOp.RichOpticalPhysicsProcessActivate=true;
+   GiGa.ModularPL.GiGaPhysConstructorHpd.RichHpdPhysicsProcessActivate=true;
+   to false. To switch off rich geometry, one can comment out the following in
+   $GAUSSROOT/options/SimGeometry.opts:
+         Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/Rich1"};
+         Geo.StreamItems      += {"/dd/Geometry/BeforeMagnetRegion/Rich1/Rich1Surfaces"};
+         Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/Rich2"};
+         Geo.StreamItems      += {"/dd/Geometry/AfterMagnetRegion/Rich2/Rich2Surfaces"};
+         Geo.StreamItems      += {"/dd/Geometry/BeforeMagnetRegion/Rich1/RichHPDSurfaces"};
+   - Files modified for running without RICH are : 
+       GiGaPhysConstructorHpd.h, GiGaPhysConstructorHpd.cpp, 
+       GiGaPhysConstructorHpd.h,GiGaPhysConstructorHpd.cpp,RichG4EventHitCount.cpp
+       The Rich.opts has two extra lines as indicated above.
 
 !========================= GaussRICH v9r3 2009-02-09 =========================
 ! 2009-02-04 - Gloria CORTI

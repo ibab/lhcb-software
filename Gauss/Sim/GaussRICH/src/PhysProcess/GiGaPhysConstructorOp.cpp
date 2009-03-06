@@ -1,4 +1,4 @@
-// $Id: GiGaPhysConstructorOp.cpp,v 1.22 2008-08-08 09:23:41 seaso Exp $
+// $Id: GiGaPhysConstructorOp.cpp,v 1.23 2009-03-06 10:52:36 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -33,6 +33,10 @@
 #include "RichG4GaussPathNames.h"
 #include "RichG4MatRadIdentifier.h"
 
+// #include "RichG4GaussPathNames.h"
+// #include "DetDesc/DetectorElement.h"
+// #include "RichDet/DeRichSystem.h"
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : GiGaPhysConstructorOp
 //
@@ -66,7 +70,8 @@ GiGaPhysConstructorOp::GiGaPhysConstructorOp
     m_MaxNumberRayleighScatAllowed(50),
     m_UseHpdMagDistortions(false),
     m_IsPSFPreDc06Flag(false),
-    m_HpdQEUseNominalTable(false)
+    m_HpdQEUseNominalTable(false),
+    m_ActivateRICHOpticalPhysProc(true)
 {
   // in the above 3 is for the three radiators.
 
@@ -96,6 +101,7 @@ GiGaPhysConstructorOp::GiGaPhysConstructorOp
   declareProperty("RichPSFPreDc06Flag", m_IsPSFPreDc06Flag);
 
   declareProperty("RichHpdUseNominalQETable", m_HpdQEUseNominalTable);
+  declareProperty("RichOpticalPhysicsProcessActivate", m_ActivateRICHOpticalPhysProc);
   
 
 }
@@ -119,8 +125,23 @@ void GiGaPhysConstructorOp::ConstructParticle()
 //=============================================================================
 void GiGaPhysConstructorOp::ConstructProcess()
 {
+  // activate RICH Optical Physics process only when the RICH Geometry
+  // exists. This is done by checking the existence of the RICH1 detector element.
+   MsgStream msg(msgSvc(), name());
+  
+
+
+   // IDetectorElement* Rich1DE = getDet<IDetectorElement> (Rich1DeStructurePathName );
+   // if( !Rich1DE ){
+   //  msg << MSG::INFO <<" No RICH1 detector element. Possibly RICH system not activated. " 
+   //        <<" Hence No RICH Optical Physics Process Activated"<<endreq;
+   //  setRICHOpticalPhysProcActivation(false); 
+   // }
+  
+   msg << MSG::DEBUG <<"RICH Optical Process activation status "<< activateRICHOpticalPhysProcStatus ()<<endreq;
+  
   //  ConstructPeProcess();
-  ConstructOp();
+  if( activateRICHOpticalPhysProcStatus () )  ConstructOp();
 }
 
 //=============================================================================

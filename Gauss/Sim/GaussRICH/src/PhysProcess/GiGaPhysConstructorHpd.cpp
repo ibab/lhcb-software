@@ -1,4 +1,4 @@
-// $Id: GiGaPhysConstructorHpd.cpp,v 1.11 2008-01-25 16:01:53 seaso Exp $
+// $Id: GiGaPhysConstructorHpd.cpp,v 1.12 2009-03-06 10:52:36 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -22,6 +22,10 @@
 #include "GiGaPhysConstructorHpd.h"
 #include "RichPhotoElectron.h"
 
+//#include "RichG4GaussPathNames.h"
+//#include "DetDesc/DetectorElement.h"
+//#include "RichDet/DeRichSystem.h"
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : GiGaPhysConstructorHpd
 //
@@ -44,12 +48,13 @@ GiGaPhysConstructorHpd::GiGaPhysConstructorHpd
   : GiGaPhysConstructorBase( type , name , parent ),
     m_RichHpdSiDetEfficiency(0.85),
     m_RichHpdPixelChipEfficiency(1.0),
-    m_RichHpdPeBackScatterProb(0.005823) /*RWL change 8th Nov 06*/ 
+    m_RichHpdPeBackScatterProb(0.005823), /*RWL change 8th Nov 06*/
+    m_ActivateRICHHPDPhysProc(true)   
 { 
   declareProperty("RichHpdSiDetEfficiency", m_RichHpdSiDetEfficiency);
   declareProperty("RichHpdPixelChipEfficiency", m_RichHpdPixelChipEfficiency);
   declareProperty("RichHpdBackScatterProb" , m_RichHpdPeBackScatterProb);
-
+  declareProperty("RichHpdPhysicsProcessActivate",m_ActivateRICHHPDPhysProc); 
  }
 
 
@@ -72,10 +77,27 @@ void GiGaPhysConstructorHpd::ConstructParticle()
 // ConstructProcess
 //=============================================================================
 void GiGaPhysConstructorHpd::ConstructProcess()
-{  
-  ConstructPeGenericProcess();
-  ConstructHpdSiEnLoss();
+{
+  MsgStream msg(msgSvc(), name());
 
+
+  //  IDetectorElement* Rich1DE = getDet<IDetectorElement> (Rich1DeStructurePathName );
+  // if( !Rich1DE ){
+  //  msg << MSG::INFO  <<" No RICH1 detector element. Possibly RICH system not activated. " 
+  //         <<" Hence No RICH HPD Physics Process Activated"<<endreq;
+  //  setRICHHPDPhysProcActivation(false); 
+  // }
+
+
+    ConstructPeGenericProcess();
+    msg << MSG::DEBUG <<" RICHHPDPhysProcess Activation status  " << activateRICHHPDPhysProcStatus() << endreq;
+    
+
+    if( activateRICHHPDPhysProcStatus() ){    
+
+      ConstructHpdSiEnLoss();
+    }
+  
 }
 
 //=============================================================================

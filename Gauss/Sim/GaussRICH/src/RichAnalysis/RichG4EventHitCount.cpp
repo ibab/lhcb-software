@@ -1,4 +1,4 @@
-// $Id: RichG4EventHitCount.cpp,v 1.13 2008-01-21 16:55:33 seaso Exp $
+// $Id: RichG4EventHitCount.cpp,v 1.14 2009-03-06 10:53:44 seaso Exp $
 // Include files
 
 
@@ -1043,13 +1043,15 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
 
   G4HCofThisEvent * HCE;
   RichG4Counters* aRichCounter =  RichG4Counters::getInstance();
+  //  G4cout<<" Now in RichG4CountSaturated Hits "<< G4endl;
+  
   if(aRichCounter ) {
 
     G4int NumRichCollection= NumRichColl;
 
     int Current_RichG4CollectionID=0;
     for (int ihcol=0; ihcol<NumRichCollection; ihcol++) {
-      Current_RichG4CollectionID =RichG4CollectionID[ihcol];
+      Current_RichG4CollectionID =RichG4CollectionID[ihcol];      
       if(Current_RichG4CollectionID >=0 ) {
         HCE = anEvent->GetHCofThisEvent();
         RichG4HitsCollection* RHC=NULL;
@@ -1063,9 +1065,8 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
 
             RichG4Hit* aHit = (*RHC)[iha];
             int ChtkId =  (int) (aHit-> GetChTrackID());
-            
 
-            //          G4cout<<" TRkId for rich1 hits  "<< ChtkId <<G4endl;
+            //G4cout<<" TRkId for rich1 hits  "<< ChtkId <<G4endl;
 
             bool trajAlreadyStoredR1=true;;
             bool trajtraversedRich1=false;
@@ -1183,18 +1184,19 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
         }
 
 
-
+        
       }
+      
 
 
 
     }  // end loop over collections
 
 
-//     G4cout<<"TrajIdR1VectSize and  TrajIdR1AgelVectSize "
-//           << TrajIdVectR1.size()
-//           <<"     "<< TrajIdVectR1Agel.size()<<G4endl;
-//     G4cout<<"TrajIdVectRich2Size =  "<< TrajIdVectR2.size()<<G4endl;
+    //G4cout<<"TrajIdR1VectSize and  TrajIdR1AgelVectSize "
+    //       << TrajIdVectR1.size()
+    //       <<"     "<< TrajIdVectR1Agel.size()<<G4endl;
+    // G4cout<<"TrajIdVectRich2Size =  "<< TrajIdVectR2.size()<<G4endl;
 
     // store the trackid info.
 
@@ -1203,6 +1205,7 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
     aRichCounter-> setTrackIdTraverseRich2Gas(TrajIdVectR2);
 
 
+    
     int NumTrajR1=  TrajIdVectR1.size();
     int NumTrajR1Agel = TrajIdVectR1Agel.size();
     int NumTrajR2=  TrajIdVectR2.size();
@@ -1220,9 +1223,14 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
     std::vector<int>TrajSatNumHitGasRich2( NumTrajR2,0);
     std::vector<int>TrajSatNumHitGasRich2NoHpdRefl( NumTrajR2,0);
 
+
+    
     for (int ihcolb=0; ihcolb<NumRichCollection; ihcolb++) {
 
       Current_RichG4CollectionID =RichG4CollectionID[ihcolb];
+
+      if(Current_RichG4CollectionID >=0 ) {
+     
       HCE = anEvent->GetHCofThisEvent();
       RichG4HitsCollection* RHCB=NULL;
       if(HCE){
@@ -1236,7 +1244,9 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
           RichG4Hit* bHit = (*RHCB)[ihb];
 
           //is it a reflected hit?    
+
 	       std::vector<bool> aHpdRefl = bHit->DecodeRichHpdReflectionFlag();
+
 	       bool areflectedInHpd= bHit->ElectronBackScatterFlag(); //plot without any bsc or refl
          for(int ii=0; ii<(int)aHpdRefl.size() ; ++ii) 
          {
@@ -1244,6 +1254,7 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
 	       }
 
           G4double aChTrackTotMom =  bHit->ChTrackTotMom() ;
+
           int ChtkId =  (int) (bHit-> GetChTrackID()) ;
           G4int aRadiatorNum=  bHit->GetRadiatorNumber();
 
@@ -1256,7 +1267,8 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
           if( ChTkEnergy > 0.0 ) {
 
             ChTkBeta = aChTrackTotMom/ChTkEnergy;
-            //             G4cout<<"trackId  Beta  Mom Mass  "
+
+            // G4cout<<"trackId  Beta  Mom Mass  "
             //    <<ChtkId<<"   "<< ChTkBeta <<"    "
             //    <<aChTrackTotMom<<"    "
             //    <<ChTkPDGMass
@@ -1350,7 +1362,7 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
 
                 TrajNumHitGasRich2[it2]++;
 
-                //              G4cout<<" Beta and BetaCut  "
+                //             G4cout<<" Beta and BetaCut  "
                 //    << ChTkBeta<<"   "<< ChTkBetaSaturatedCut<<G4endl;
 
                 if( ChTkBeta >  ChTkBetaSaturatedCut) {
@@ -1389,7 +1401,9 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
         
       }
       
-
+      
+      }
+      
 
 
     }   //end loop over collections
@@ -1449,7 +1463,7 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
 
 
 
-//   G4cout<<"End of   RichG4CountSaturatedHits " <<G4endl;
+  //   G4cout<<"End of   RichG4CountSaturatedHits " <<G4endl;
 
 };
 
