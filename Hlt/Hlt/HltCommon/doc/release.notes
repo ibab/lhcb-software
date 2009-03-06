@@ -3,6 +3,9 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2009-03-06 - Jose A. Hernando
+ - HltLine.h/cpp add stepHistoNorma with a normalized stair plot histogram
+
 ! 2009-03-05 - Gerhard Raven
  - check for illegal bin numbers
 

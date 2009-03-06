@@ -1,4 +1,4 @@
-// $Id: HltLine.cpp,v 1.14 2009-03-05 09:41:38 graven Exp $
+// $Id: HltLine.cpp,v 1.15 2009-03-06 14:41:06 hernando Exp $
 // Include files
 #include "HltLine.h"
 
@@ -17,14 +17,16 @@
 
 #include "TH1D.h"
 #include "GaudiUtils/Aida2ROOT.h"
-
+#include "AIDA/IHistogram1D.h"
+#include "AIDA/IHistogram.h"
+#include "AIDA/IAxis.h"
 
 namespace {
     bool setBinLabels( TAxis* axis,  const std::vector<std::pair<unsigned,std::string> >& labels ) {
         if (axis==0) return false;
         int nbins = axis->GetNbins(); 
         for (std::vector<std::pair<unsigned,std::string> >::const_iterator i = labels.begin();i!=labels.end();++i ) {
-            if (1+i->first <= 0 ||  1+i->first > nbins ) return false;
+          if (1+i->first <= 0 ||  1+i->first > nbins ) return false;
             // Argh... ROOT bins start counting at '1' instead of '0'
             axis -> SetBinLabel(1 + i->first  ,i->second.c_str() );
         }
@@ -233,15 +235,20 @@ StatusCode HltLine::initialize() {
   m_cpuHisto   = book1D(name()+" CPU time",name()+" CPU time",0,1000);
   m_timeHisto  = book1D(name()+" Wall time",name()+" Wall time",0,1000);
   m_stepHisto  = book1D(name()+" rejection stage", name()+ " rejection stage",-0.5,m_subAlgo.size()-0.5,m_subAlgo.size() );
+  m_stepHistoNorma  = book1D(name()+" rejection stage norma", 
+                             name()+ " rejection stage norma",
+                             -0.5,m_subAlgo.size()-0.5,m_subAlgo.size() );
   // if possible, add labels to axis...
   std::vector<std::string> stepLabels;
   for (SubAlgos::const_iterator i = m_subAlgo.begin();i!=m_subAlgo.end();++i) {
       stepLabels.push_back( i->first->name() );
   }
   if (!setBinLabels( m_stepHisto, stepLabels )) {
-    error() << " Could not set bin labels " << endmsg;
+    error() << " Could not set bin labels in step histo " << endmsg;
   }
-
+  if (!setBinLabels( m_stepHistoNorma, stepLabels )) {
+    error() << " Could not set bin labels in step normal histo" << endmsg;
+  }
 
   //== and the counters
   declareInfo("#accept","",&counter("#accept"),0,std::string("Events accepted by ") + m_decision);
@@ -325,6 +332,16 @@ StatusCode HltLine::execute() {
   }
   debug() <<  " filling histo at " << (i==m_subAlgo.end()?std::string("end"):i->first->name()) << endmsg;
   fill( m_stepHisto, i-m_subAlgo.begin(), 1.0);
+  /// fill the step normalized histogram 
+  int n0 = m_stepHisto->allEntries();
+  for (size_t i = 0; i < m_subAlgo.size(); i++) {
+    double ni = m_stepHisto->binEntries(i);
+    double fi0 = m_stepHistoNorma->binHeight(i);
+    double fi  = ni/double(n0);
+    double x = m_stepHisto->axis().binLowerEdge(i) + 0.5*m_stepHisto->axis().binWidth(i);
+    m_stepHistoNorma->fill(x,-fi0+fi);
+  }
+  
 
   // Plot the distribution of the # of (output) candidates (in case we have any)
 

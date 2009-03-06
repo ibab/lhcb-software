@@ -1,4 +1,4 @@
-// $Id: HltLine.h,v 1.9 2009-02-12 19:48:17 graven Exp $
+// $Id: HltLine.h,v 1.10 2009-03-06 14:41:06 hernando Exp $
 #ifndef HLTLINE_H
 #define HLTLINE_H 1
 
@@ -132,6 +132,7 @@ private:
   AIDA::IHistogram1D *m_cpuHisto;
   AIDA::IHistogram1D *m_timeHisto;
   AIDA::IHistogram1D *m_stepHisto;
+  AIDA::IHistogram1D *m_stepHistoNorma;
   mutable IANNSvc *m_hltANNSvc;
   mutable IHltDataSvc *m_hltDataSvc;
   Hlt::Selection* m_selection;
