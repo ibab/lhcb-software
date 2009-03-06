@@ -1,4 +1,4 @@
-// $Id: Particle2MCAssociatorBase.cpp,v 1.4 2009-03-03 16:06:49 jpalac Exp $
+// $Id: Particle2MCAssociatorBase.cpp,v 1.5 2009-03-06 14:16:48 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -124,6 +124,18 @@ Particle2MCAssociatorBase::isMatched(const LHCb::Particle* /*particle */,
                                      const LHCb::MCParticle* /* mcParticle */) const
 {
   return false;
+}
+//=============================================================================
+LHCb::MCParticle::ConstVector 
+Particle2MCAssociatorBase::sort(const LHCb::MCParticle::ConstVector& mcParticles) const 
+{
+  return i_sort(mcParticles.begin(), mcParticles.end());
+}
+//=============================================================================
+LHCb::MCParticle::ConstVector 
+Particle2MCAssociatorBase::sort(const LHCb::MCParticle::Container* mcParticles) const
+{
+  return i_sort(mcParticles->begin(), mcParticles->end());
 }
 //=============================================================================
 // initialize
