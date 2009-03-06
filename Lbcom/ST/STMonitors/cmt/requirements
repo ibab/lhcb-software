@@ -24,6 +24,7 @@ branches STMonitors src cmt doc
  
 use STTELL1Event  *  ST
 use STKernel      *  ST
+use RecEvent      *  Event
 
 apply_pattern ld_library_path
 private
