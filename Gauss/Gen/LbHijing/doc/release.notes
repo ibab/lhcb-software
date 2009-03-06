@@ -4,6 +4,10 @@
 ! Purpose     : "Interface" to Hijing 
 !-----------------------------------------------------------------------------
 
+! 2009-03-06 - Patrick Robbe
+ - Move ran.F and rlu.F to GENSER package and update requirements to
+   pick them from there.
+
 ! 2009-03-04 - Patrick Robbe
  - ran.F: set as double precision
 

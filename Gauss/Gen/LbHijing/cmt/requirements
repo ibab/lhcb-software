@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.12 2009-02-26 18:15:39 robbep Exp $ 
+# $Id: requirements,v 1.13 2009-03-06 13:25:08 robbep Exp $ 
 #============================================================================
 # Created    : 2006-07-03
 # Maintainer : Vincenzo Vagnoni
@@ -18,16 +18,14 @@ include_dirs  $(LBHIJINGROOT)
 
 ### NOTE: the order of these use is important, for the wrong order
 ###       GaussHijing.exe complains about vanishing process and stops
+use  GENSER      v*  Gen
 use  hijing      v*  LCG_GeneratorsInterfaces    
 use  LbPythia    v*  Gen
 
 
 # Component and linker library building rule
 #============================================================================
-macro         LbHijingLibSrc    " Lib/*.cpp Lib/*.F "
-macro_append  LbHijingLibSrc    "" \
-                      Darwin       "-x=ran.F"
-library       LbHijingLib       $(LbHijingLibSrc)
+library       LbHijingLib       " Lib/*.cpp Lib/*.F "
 library       LbHijing          component/*.cpp
 
 
