@@ -1,10 +1,11 @@
-// $Id: MCMatchObjP2MCRelator.cpp,v 1.2 2009-03-05 11:27:24 jpalac Exp $
+// $Id: MCMatchObjP2MCRelator.cpp,v 1.3 2009-03-06 14:24:14 jpalac Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 // LoKi
 #include "LoKi/IReporter.h"
+#include "LoKi/MCTrees.h"
 // local
 #include "MCMatchObjP2MCRelator.h"
 
@@ -55,7 +56,16 @@ StatusCode MCMatchObjP2MCRelator::finalize()
 bool MCMatchObjP2MCRelator::isMatched(const LHCb::Particle* particle, 
                                       const LHCb::MCParticle* mcParticle) const
 {
-  return false;
+  const bool match = matcher()->match(particle, mcParticle);
+  if (match) {
+    verbose() << "match Particle PID " << particle->particleID().pid() 
+              << " to MCParticle PID " << mcParticle->particleID().pid() 
+              << endmsg;
+  } else {
+    verbose() << "No match for Particle PID " << particle->particleID().pid() 
+              << endmsg;
+  }
+  return match;
 }
 //=============================================================================
 LoKi::MCMatch MCMatchObjP2MCRelator::matcher() const
@@ -69,10 +79,30 @@ LoKi::MCMatch MCMatchObjP2MCRelator::matcher() const
     m_matcher->addRef() ;
   }
   m_matcher->clear();
-  
   // feed it the relations tables
-
+  for (Addresses::const_iterator item = m_PP2MC.begin(); item!=m_PP2MC.end(); ++item) {
+    const std::string& address = *item;
+    if (exist<LoKi::Types::TablePP2MC>(address) ) {
+      LoKi::Types::TablePP2MC table* = get<LoKi::Types::TablePP2MC>(address);
+      m_matcher->addMatchInfo(table);
+    } else {
+      Error ( " There is no valid data at '" + address + "'" ) ; 
+    }
+  }
+  
   return  LoKi::MCMatch( m_matcher ) ;
+}
+//=============================================================================
+LHCb::MCParticle::ConstVector 
+MCMatchObjP2MCRelator::sort(const LHCb::MCParticle::ConstVector& mcParticles) const 
+{
+  return LoKi::MCTrees::buildTrees(mcParticles);
+}
+//=============================================================================
+LHCb::MCParticle::ConstVector 
+MCMatchObjP2MCRelator::sort(const LHCb::MCParticle::Container* mcParticles) const 
+{
+  return LoKi::MCTrees::buildTrees(mcParticles);
 }
 //=============================================================================
 // Destructor
