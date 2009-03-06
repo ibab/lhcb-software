@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.41 2009-02-23 12:17:51 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.42 2009-03-06 16:03:52 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -43,7 +43,6 @@ class Boole(LHCbConfigurableUser):
        ,"DataType"       : "2008"
        ,"DDDBtag"        : ""
        ,"CondDBtag"      : ""
-       ,"UseOracle"      : False
        ,"Monitors"       : []
        ,"MainSequence"   : []
        ,"InitSequence"   : []
@@ -71,7 +70,6 @@ class Boole(LHCbConfigurableUser):
        ,'DataType'     : """ Data type, can be ['DC06','2008']. Default '2008' """
        ,'DDDBtag'      : """ Tag for DDDB """
        ,'CondDBtag'    : """ Tag for CondDB """
-       ,'UseOracle'    : """ Flag to enable Oracle CondDB. Default False (use SQLDDDB) """
        ,'Monitors'     : """ List of monitors to execute """
        ,'MainSequence' : """ The default main sequence, see self.DefaultSequence """
        ,'InitSequence' : """ List of initialisation sequences, see KnownInitSubdets """
@@ -85,7 +83,7 @@ class Boole(LHCbConfigurableUser):
 
     def defineDB(self):
         # Delegate handling to LHCbApp configurable
-        self.setOtherProps(LHCbApp(),["CondDBtag","DDDBtag","UseOracle","DataType"])
+        self.setOtherProps(LHCbApp(),["CondDBtag","DDDBtag","DataType"])
         LHCbApp().Simulation = True
 
 
@@ -264,6 +262,7 @@ class Boole(LHCbConfigurableUser):
             from Configurables import L0Conf
             L0Conf().L0Sequencer = seq
             L0Conf().SimulateL0  = True
+            self.setOtherProps( L0Conf(), ["DataType"] )
         else:
             raise RuntimeError("TAE not implemented for L0")
                 
