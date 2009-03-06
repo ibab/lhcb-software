@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.149 2009-03-06 13:23:10 cattanem Exp $
+! $Id: release.notes,v 1.150 2009-03-06 14:35:11 cattanem Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
 ! 2009-03-06 - Marco Cattaneo
- - Add "TCK" property to L0DUConf(), default is "0xDC09"
+ - Add "DataType" property to L0DUConf(), used to define default TCK 
+   Default TCK is "0xFFFF" if DataType is "DC06", "0xDC09" otherwise
  - Remove options/DefaultTCK.opts, obsoleted by above change
 
 ! 2009-03-05 - Olivier Deschamps
