@@ -1,4 +1,4 @@
-// $Id: L0DUReportMonitor.cpp,v 1.20 2009-03-05 15:32:45 odescham Exp $
+// $Id: L0DUReportMonitor.cpp,v 1.21 2009-03-06 21:41:35 cattanem Exp $
 // Include files 
 #include <cmath>
 // from Gaudi
@@ -9,6 +9,7 @@
 // local
 #include "L0DUReportMonitor.h"
 #include <bitset>
+#include <limits.h>
 // local
 //-----------------------------------------------------------------------------
 // Implementation file for class : L0DUReportMonitor
