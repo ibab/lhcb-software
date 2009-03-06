@@ -1,4 +1,4 @@
-// $Id: DebugG4Track.opts,v 1.4 2008-05-08 20:29:48 gcorti Exp $ 
+// $Id: DebugG4Track.opts,v 1.5 2009-03-06 13:54:13 gcorti Exp $ 
 
 /** @file 
  * 
@@ -11,12 +11,34 @@
 
 
 GiGa.TrackSeq.Members      += { "CommandTrackAction" };
-GiGa.TrackSeq.CommandTrackAction.TrackID     = 9961;
+//GiGa.TrackSeq.CommandTrackAction.PrintTrackIDs = true; // default
+//GiGa.TrackSeq.CommandTrackAction.TrackInfos    = true; // default=false
+GiGa.TrackSeq.CommandTrackAction.TrackIDs      = { 67101};
+// Verbose level of tracking category
+// -1/0 : Silent.
+// 1 : Minium information of each Step.
+// 2 : Addition to Level=1, info of secondary particles.
+// 3 : Addition to Level=1, pre/postStepoint information
+//     after all AlongStep/PostStep process executions.
+// 4 : Addition to Level=3, pre/postStepoint information
+//     at each AlongStepPostStep process execuation.
+// 5 : Addition to Level=4, proposed Step length information
+//     from each AlongStepPostStep process.
 GiGa.TrackSeq.CommandTrackAction.PreCommand  = {
-  "/tracking/verbose 1",
-  "/geometry/navigator/verbose 4"
+   "/tracking/verbose 3"                      // default
+// ,  "/geometry/navigator/verbose 4"
 };
 GiGa.TrackSeq.CommandTrackAction.PostCommand = {
-  "/tracking/verbose 0",
-  "/geometry/navigator/verbose 0"
+   "/tracking/verbose 0"
+// ,  "/geometry/navigator/verbose 0"
 };
+
+// GiGaGeo.OutputLevel = 2;
+// GiGa.RunSeq.RunCommand.BeginOfRunCommands  = {
+//   "/event/verbose 1",
+//   "/tracking/verbose 0",
+//   "/tracking/storeTrajectory  1",
+//   "/process/eLoss/verbose -1"
+// };
+
+GenMonitorAlg.OutputLevel = 2;
