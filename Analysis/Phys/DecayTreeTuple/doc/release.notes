@@ -4,6 +4,12 @@
 ! Purpose     : Option-steered tuples. Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+! 2009-03-06 - Rob Lambert
+ - Two new tuple tools.
+   MCEventType, for searching for Event Types in the MCTruth
+   MCDecayType for classifying the decay of an MCParticle
+   See the Sim/SimComponents/EventTypeFinder tool
+
 ! 2009-03-03 - Patrick Koppenburg
  - DecayTreeTupleTemplates : fix a crash happening only in VERBOSE
 
