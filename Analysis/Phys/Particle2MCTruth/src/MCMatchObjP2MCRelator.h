@@ -1,4 +1,4 @@
-// $Id: MCMatchObjP2MCRelator.h,v 1.3 2009-03-06 14:24:01 jpalac Exp $
+// $Id: MCMatchObjP2MCRelator.h,v 1.4 2009-03-06 15:02:13 jpalac Exp $
 #ifndef MCMATCHOBJP2MCRELATOR_H 
 #define MCMATCHOBJP2MCRELATOR_H 1
 
@@ -44,6 +44,8 @@ private:
   virtual LHCb::MCParticle::ConstVector sort(const LHCb::MCParticle::Container* mcParticles) const;
 
   LoKi::MCMatch matcher() const;
+
+  void addTables(LoKi::MCMatchObj* matcher) const;
 
 private:
 
