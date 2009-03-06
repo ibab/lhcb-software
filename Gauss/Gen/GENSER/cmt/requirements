@@ -83,6 +83,17 @@ apply_pattern linker_library library=photosforgauss
 # force the order of link for photos
 macro_append GENSER_linkopts " $(photos_linkopts) "
 
+#-- Hijing
+#============================================================================
+macro         hijingforgaussSrc    " hijing/*.F "
+macro_append  hijingforgaussSrc   "" \
+                      Darwin       "-x=ran.F"
+library      hijingforgauss   $(hijingforgaussSrc)
+
+apply_pattern linker_library library=hijingforgauss
+
+# force the order of link for hijing
+macro_append GENSER_linkopts " $(hijing_linkopts) "
 
 private
 macro_remove libraryshr_linkopts "-Wl,--no-undefined"

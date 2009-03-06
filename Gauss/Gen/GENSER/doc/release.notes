@@ -4,6 +4,9 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2009-03-06 - Patrick Robbe
+ - Add hijing subdirectoy to contain HIJING functions overwriten in Gauss
+
 ! 2009-03-04 - Patrick Robbe
  - Rename xsection.F to xsectionPsiStart.F because of a name conflict
    with BcVegPy
