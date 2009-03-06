@@ -1,13 +1,13 @@
-#units "$STDOPTS/units.opts"
-MoniCALOSeq.Members += { "GaudiSequencer/CaloDigitMon"
-                         ,"GaudiSequencer/CaloClusterMon"
-                         ,"GaudiSequencer/CaloHypoMon"
-                         ,"GaudiSequencer/CaloPIDsMon"
-                         ,"SpdMonitor/SpdMon"
-};
-
-#include "$CALOMONIDSTOPTS/CaloDigitMonitor.opts"
-#include "$CALOMONIDSTOPTS/CaloClusterMonitor.opts"
-#include "$CALOMONIDSTOPTS/CaloHypoMonitor.opts"
-#include "$CALOMONIDSTOPTS/SpdMonitor.opts"
-#include "$CALOMONIDSTOPTS/CaloPIDsMonitor.opts"
+// Define the monitoring sequence
+#include "$CALOMONIDSTOPTS/CaloMonitor.opts"
+// force the complete histo set production 
+EcalDigitMon.histoList   += { "All" };
+HcalDigitMon.histoList   += { "All" };
+PrsDigitMon.histoList    += { "All" };
+SpdDigitMon.histoList    += { "All" }; 
+EcalClusterMon.histoList += { "All" }; 
+ElectronMon.histoList    += { "All" }; 
+PhotonMon.histoList      += { "All" }; 
+SplitPhotonMon.histoList += { "All" };
+MergedPi0Mon.histoList   += { "All" }; 
+ResolvedPi0Mon.histoList += { "All" };
