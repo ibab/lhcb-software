@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.cpp,v 1.25 2009-03-02 14:21:11 graven Exp $
+// $Id: HltConfigSvc.cpp,v 1.26 2009-03-07 10:36:22 graven Exp $
 // Include files 
 
 #include <algorithm>
@@ -154,7 +154,7 @@ StatusCode HltConfigSvc::initialize() {
   std::vector<ConfigTreeNodeAlias> tops = cas()->configTreeNodeAliases(ConfigTreeNodeAlias::alias_type( std::string("TOPLEVEL/")+m_prefetchDir+'/' ));
   std::vector<ConfigTreeNodeAlias>::const_iterator initTop = std::find_if( tops.begin(), tops.end(), bl::bind(&ConfigTreeNodeAlias::ref,bl::_1)==initialID );
   if (initTop == tops.end() ) {
-    error() << " initial TCK (" << m_initialTCK << "->" << initialID << ") not amongst entries in prefetch directory "  << m_prefetchDir << endmsg;
+    error() << " initial TCK ( " << m_initialTCK << " -> " << initialID << " ) not amongst entries in prefetch directory "  << m_prefetchDir << endmsg;
     return StatusCode::FAILURE;
   }
 

@@ -1,4 +1,4 @@
-// $Id: HltLine.cpp,v 1.15 2009-03-06 14:41:06 hernando Exp $
+// $Id: HltLine.cpp,v 1.16 2009-03-07 10:36:22 graven Exp $
 // Include files
 #include "HltLine.h"
 
@@ -24,7 +24,7 @@
 namespace {
     bool setBinLabels( TAxis* axis,  const std::vector<std::pair<unsigned,std::string> >& labels ) {
         if (axis==0) return false;
-        int nbins = axis->GetNbins(); 
+        unsigned nbins = axis->GetNbins(); 
         for (std::vector<std::pair<unsigned,std::string> >::const_iterator i = labels.begin();i!=labels.end();++i ) {
           if (1+i->first <= 0 ||  1+i->first > nbins ) return false;
             // Argh... ROOT bins start counting at '1' instead of '0'
