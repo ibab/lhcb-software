@@ -1,18 +1,18 @@
-!$Id: release.notes,v 1.30 2009-03-06 16:39:37 kvervink Exp $
+!$Id: release.notes,v 1.31 2009-03-07 10:32:22 graven Exp $
 Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
-!========================== HltGlobalMonitor v2r2 2009-03-06 ===============
+
+!2009-03-07 - Gerhard Raven
+ - fix compiler warning about signed <-> unsigned comparison
+ - minor esthetic changes
+
 !2009-03-06 - Kim Vervink
  - obtain the virtual memory and time from GaudiKernel instead of ProcStat
-
-!========================== HltGlobalMonitor v2r2 2009-03-05 ===============
 
 !2009-03-05 - Kim Vervink
  - add memory histograms
  - add axis titles 
-
-!========================== HltGlobalMonitor v2r2 2009-03-05 ===============
 
 !2009-03-05 - Gerhard Raven
  - check for illegal bin numbers

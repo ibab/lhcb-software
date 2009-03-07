@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.28 2009-03-06 16:39:37 kvervink Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.29 2009-03-07 10:32:22 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -60,7 +60,7 @@ DECLARE_ALGORITHM_FACTORY( HltGlobalMonitor );
 namespace {
     bool setBinLabels( TAxis* axis,  const std::vector<std::pair<unsigned,std::string> >& labels ) {
         if (axis==0) return false;
-        int nbins = axis->GetNbins(); 
+        unsigned nbins = axis->GetNbins(); 
         for (std::vector<std::pair<unsigned,std::string> >::const_iterator i = labels.begin();i!=labels.end();++i ) {
             //TODO: check bin exists... 
             if (1+i->first <= 0 ||  1+i->first > nbins ) return false;
@@ -213,19 +213,14 @@ StatusCode HltGlobalMonitor::initialize() {
 
 
   m_hltVirtinTime  = book1D("Virtual memory per event",   -0.5, (double)m_totaltime, m_totaltime);
-
   setAxisLabels( m_hltVirtinTime, "time[min]", "memory[MB]");
 
   m_hltVirtMem    = book1D("Virtual Memory",   -0.5, (double)m_totalmem, m_totalmem);
-  
   setAxisLabels( m_hltVirtMem, "memory[MB]", "");
 
   m_hltEventsTime  = book1D("time per event",   -0.5, (double)m_totaltime, m_totaltime);
-
   setAxisLabels( m_hltEventsTime, "time/event[min]", "10^2 event");
 
-
-  
   for (std::vector<std::string>::const_iterator i = m_Hlt1Lines.begin(); i!=m_Hlt1Lines.end();++i) {
      m_allAcc.push_back(0);
      declareInfo("COUNTER_TO_RATE["+*i+"Acc]",  m_allAcc.back(),  "Hlt1 "+*i+" Line Accepts");
@@ -394,17 +389,8 @@ void HltGlobalMonitor::monitorMemory() {
 
   //should this also come in the configuration.py?
 
-
-  System::InfoType fetchT = System::Times;
-  System::InfoType fetchM = System::Memory;
-  System::TimeType typ    = System::Min; 
-  System::MemoryUnit unit = System::MByte;
-  long pid = -1;
-  ////////////////////////////////////////////////////
-
-
-  m_time   = ellapsedTime(typ, fetchT, pid);
-  m_virtmem  = virtualMemory(unit, fetchM, pid);
+  m_time     = ellapsedTime(System::Min, System::Times);
+  m_virtmem  = virtualMemory(System::MByte, System::Memory);
   
   fill(m_hltVirtinTime, m_time, m_virtmem);
   if(counter("#accept").nEntries() >0){
