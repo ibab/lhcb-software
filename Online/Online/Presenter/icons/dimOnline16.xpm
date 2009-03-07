@@ -1,5 +1,5 @@
 /* XPM */
-static char * dimOnline16[] = {
+char * dimOnline16[] = {
 "16 16 118 2",
 "  	c None",
 ". 	c #8A8C87",

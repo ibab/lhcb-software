@@ -1,5 +1,5 @@
 /* XPM */
-static char * clear16[] = {
+char * clear16[] = {
 "16 16 108 2",
 "  	c None",
 ". 	c #7C4B00",

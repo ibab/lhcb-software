@@ -1,5 +1,5 @@
 /* XPM */
-static char * savePageToDb16[] = {
+char * savePageToDb16[] = {
 "16 16 106 2",
 "  	c None",
 ". 	c #222222",

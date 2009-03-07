@@ -1,5 +1,5 @@
 /* XPM */
-static char * databaseSource16[] = {
+char * databaseSource16[] = {
 "16 16 68 1",
 " 	c None",
 ".	c #222222",
