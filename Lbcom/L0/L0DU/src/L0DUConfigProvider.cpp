@@ -1,4 +1,4 @@
-// $Id: L0DUConfigProvider.cpp,v 1.10 2009-03-05 15:32:45 odescham Exp $
+// $Id: L0DUConfigProvider.cpp,v 1.11 2009-03-08 22:36:14 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -952,13 +952,10 @@ void L0DUConfigProvider::predefinedTriggers(){
          ie != channel->elementaryConditions().end() ; ie++){
       const LHCb::L0DUElementaryCondition* condition = (*ie).second;
       const LHCb::L0DUElementaryData* data = condition->data();
-      if( !getDataList( data->name() , dataList ) );
+      if( !getDataList( data->name() , dataList ) )
+        Warning("Cannot associate the data name '" + data->name() +"' to any (list of) L0DUElementaryData").ignore();
     }
     std::vector<std::string> name = triggerNameFromData( dataList );
-    if( *(name.begin()) == "Unknown" ){
-      error() << "The channel " << channel->name() << " cannot be associated to any predefined trigger" << endreq;
-      continue;
-    }
     for( std::vector<std::string>::iterator it = name.begin() ; it != name.end() ; it++){
       LHCb::L0DUTrigger::Map::iterator imap = m_triggersMap.find( *it );
       if( imap == m_triggersMap.end()){
