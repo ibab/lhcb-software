@@ -3,7 +3,9 @@
 ! Responsible  : Sajan Easo
 ! Purpose      : Reconstruct Cherenkov Rings for Particle Identification
 !----------------------------------------------------------------------------
-
+! 2009-03-08  Sajan Easo
+  Fixed a typo in RichRingRecMass
+ 
 ! 2007-08-23  Sajan Easo
  - Output put into the RichPID class
 
