@@ -1,4 +1,4 @@
-// $Id: MCEventTypeFinder.cpp,v 1.1 2009-03-06 16:40:54 rlambert Exp $
+// $Id: MCEventTypeFinder.cpp,v 1.2 2009-03-08 17:38:15 rlambert Exp $
 // Include files 
 #include <sstream>
 
@@ -141,7 +141,7 @@ StatusCode MCEventTypeFinder::fillMCTools()
   if(!m_allTypes.count(m_mbias))
     {
       
-      for(LHCb::EventTypeSet::const_iterator iType=m_allTypes.begin(),;
+      for(LHCb::EventTypeSet::const_iterator iType=m_allTypes.begin();
 	  iType!=m_allTypes.end(); iType++)
 	{
 	  if(!(*iType)) break;
@@ -161,7 +161,7 @@ StatusCode MCEventTypeFinder::fillMCTools()
   debug() << "Min bias is set to EventType " << m_mbias << endmsg;
   
 
-  for(LHCb::EventTypeSet::const_iterator iType=m_allTypes.begin(),;
+  for(LHCb::EventTypeSet::const_iterator iType=m_allTypes.begin();
       iType!=m_allTypes.end(); iType++)
   {
     if(!(*iType)) break;
@@ -247,7 +247,7 @@ StatusCode MCEventTypeFinder::findDecayType(LHCb::EventTypeSet& found, const LHC
   std::vector<IMCDecayFinder*>::const_reverse_iterator iD=m_mcFinders.rbegin();
   std::vector<bool>::const_reverse_iterator iB=m_decProdCut.rbegin();
   
-  for(LHCb::EventTypeSet::const_reverse_iterator iType=m_allTypes.rbegin(),;
+  for(LHCb::EventTypeSet::const_reverse_iterator iType=m_allTypes.rbegin();
       iType!=m_allTypes.rend();// && i!=m_mcFinders.rend();
       iType++, iD++, iB++) //lowest to highest
   {

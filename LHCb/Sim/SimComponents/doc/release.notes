@@ -5,6 +5,10 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+! 2009-03-08 - Rob Lambert
+ - Bugfix, small problem with MCEventTypeFinder. noticed by Marco,
+   produced errors with gcc 4. Now fixed.
+
 ! 2009-03-06 - Rob Lambert
  - Added implimentation of EventTypeFinder tool. 
    This is a new tool, based on the IEventTypeFinder interface,
