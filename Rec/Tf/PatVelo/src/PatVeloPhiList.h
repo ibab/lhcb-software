@@ -1,4 +1,4 @@
-// $Id: PatVeloPhiList.h,v 1.2 2007-08-28 12:02:56 jonrob Exp $
+// $Id: PatVeloPhiList.h,v 1.3 2009-03-08 20:22:47 cattanem Exp $
 #ifndef TF_PATVELOPHILIST_H 
 #define TF_PATVELOPHILIST_H 1
 
@@ -16,7 +16,7 @@ namespace Tf {
   class PatVeloPhiList {
     public: 
       /// Standard constructor
-      PatVeloPhiList( ) { m_coord.reserve( 30 ); };
+      PatVeloPhiList( );
 
       /// initialising constructor
       PatVeloPhiList( double phi, PatVeloPhiHit* coord ) ;

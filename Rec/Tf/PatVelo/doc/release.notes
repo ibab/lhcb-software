@@ -4,6 +4,10 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2009-03-08 - Marco Cattaneo
+ - Changed default constructor of PatVeloPhiList to initialise all members,
+   fixes another FPE in scl4_ia32_gcc34_dbg
+
 ! 2009-03-05 - David Hutchcroft
  - Removed three unused variables from PatVeloSpaceTrack
    Added more DOxygen comments to PatVeloSpaceTrack

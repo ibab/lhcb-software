@@ -1,4 +1,4 @@
-// $Id: PatVeloPhiList.cpp,v 1.1.1.1 2007-08-26 21:03:29 krinnert Exp $
+// $Id: PatVeloPhiList.cpp,v 1.2 2009-03-08 20:22:47 cattanem Exp $
 // Include files 
 
 // local
@@ -11,6 +11,31 @@
 //-----------------------------------------------------------------------------
 
 namespace Tf {
+  //=============================================================================
+  // Default constructor, initializes variables
+  //=============================================================================
+  PatVeloPhiList::PatVeloPhiList( ) {
+    m_coord.reserve( 30 );
+    m_coord.clear();
+    m_phi    = 0.;
+    m_cosPhi = 1.;
+    m_sinPhi = 0.;
+    m_bestCoord = 0;
+
+    m_predX = 0.;
+    m_predY = 0.;
+    m_tol   = 0.;
+    m_chi2  = -1.;
+    m_posX = 0.;
+    m_slopeX = 0.;
+    m_posY = 0.;
+    m_slopeY = 0.;
+    m_lastZ = 0;
+    m_valid = true;
+
+    m_s0 = m_sx = m_sz = m_sxz=  m_sz2 = m_t0 =  m_ty = m_tz = m_tyz = m_tz2 =0.;
+  }
+
   //=============================================================================
   // Standard constructor, initializes variables
   //=============================================================================
