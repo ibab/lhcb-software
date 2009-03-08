@@ -34,13 +34,14 @@ def ConfiguredMasterFitter( Name,
     if SimplifiedGeometry:
         fitter.addTool(SimplifiedMaterialLocator(), name="MaterialLocator")
         fitter.Extrapolator.addTool(SimplifiedMaterialLocator(), name="MaterialLocator")
-    else:
-        fitter.addTool(DetailedMaterialLocator(), name="MaterialLocator")
-        fitter.MaterialLocator.GeneralDedxToolName="StateDetailedBetheBlochEnergyCorrectionTool"
-        fitter.Extrapolator.addTool(DetailedMaterialLocator(), name="MaterialLocator")
-        fitter.Extrapolator.GeneralDedxToolName = "StateDetailedBetheBlochEnergyCorrectionTool"
-        fitter.Extrapolator.addTool(DetailedMaterialLocator(), name="MaterialLocator")
-        fitter.Extrapolator.MaterialLocator.GeneralDedxToolName = "StateDetailedBetheBlochEnergyCorrectionTool"
+    # not yet used for DC09 production    
+    # else:
+    #    fitter.addTool(DetailedMaterialLocator(), name="MaterialLocator")
+    #    fitter.MaterialLocator.GeneralDedxToolName="StateDetailedBetheBlochEnergyCorrectionTool"
+    #    fitter.Extrapolator.addTool(DetailedMaterialLocator(), name="MaterialLocator")
+    #    fitter.Extrapolator.GeneralDedxToolName = "StateDetailedBetheBlochEnergyCorrectionTool"
+    #    fitter.Extrapolator.addTool(DetailedMaterialLocator(), name="MaterialLocator")
+    #    fitter.Extrapolator.MaterialLocator.GeneralDedxToolName = "StateDetailedBetheBlochEnergyCorrectionTool"
         
     # special settings for field-off
     if FieldOff:
