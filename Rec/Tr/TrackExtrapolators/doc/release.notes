@@ -3,6 +3,10 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
+! 2009-03-08 - Stephanie Hansmann-Menzemer
+ - add switches to configure the fitter/extrapolator/locator to choose
+   dedx tool, default still simple, however switched to detailed for
+   extrapolator and locator used in the fitter
 
 !======================= TrackExtrapolators v2r20 2008-09-05 =================
 ! 2008-08-27 - Wouter Hulsbergen

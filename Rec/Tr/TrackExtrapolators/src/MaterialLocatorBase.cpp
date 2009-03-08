@@ -14,18 +14,22 @@ MaterialLocatorBase::MaterialLocatorBase(const std::string& type,
     m_maxDeviationAtRefstates( 2*Gaudi::Units::mm),
     m_maxDeviationAtVeloRefstates( 0.5*Gaudi::Units::mm),
     m_scatteringtool("StateThickMSCorrectionTool"),
-    m_dedxtool("StateSimpleBetheBlochEnergyCorrectionTool"),
     m_elecdedxtool("StateElectronEnergyCorrectionTool")
 {
   declareInterface<IMaterialLocator>(this);
+  declareProperty( "GeneralDedxToolName" , m_dedxtoolname="StateSimpleBetheBlochEnergyCorrectionTool");
+
 }
 
 StatusCode MaterialLocatorBase::initialize()
 {
+    StatusCode sc = GaudiTool::initialize();
+    
+    m_dedxtool     = tool<IStateCorrectionTool>( m_dedxtoolname, "GeneralDedxTool", this);
+
   return 
-    GaudiTool::initialize() &&
+    sc &&
     m_scatteringtool.retrieve() && 
-    m_dedxtool.retrieve() && 
     m_elecdedxtool.retrieve() ;
 }
 
@@ -33,8 +37,7 @@ StatusCode MaterialLocatorBase::finalize()
 {
   return 
     m_scatteringtool.release() && 
-    m_dedxtool.release() && 
-    m_elecdedxtool.release() && 
+      m_elecdedxtool.release() && 
     GaudiTool::finalize() ;
 }
 

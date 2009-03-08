@@ -2,6 +2,8 @@
 ! Package     : Tr/TrackFitter
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
+! 2009-03-08 - Stephanie Hansmann-Menzemer
+ - use StateDetailedBetheBlochEnergyCorrectionTool as default in the fit
 
 !=========================== TrackFitter v2r31 2009-02-20 ===================
 ! 2009-02-12 - Wouter Hulsbergen

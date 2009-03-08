@@ -1,4 +1,4 @@
-// $Id: TrackMasterExtrapolator.h,v 1.16 2007-10-05 16:45:57 wouter Exp $
+// $Id: TrackMasterExtrapolator.h,v 1.17 2009-03-08 17:31:54 smenzeme Exp $
 #ifndef TRACKEXTRAPOLATORS_TRACKMASTEREXTRAPOLATOR_H
 #define TRACKEXTRAPOLATORS_TRACKMASTEREXTRAPOLATOR_H 1
 
@@ -84,10 +84,11 @@ class TrackMasterExtrapolator: public TrackExtrapolator
   /// extra selector
   ITrackExtraSelector* m_extraSelector;
 
-  /// Pointer to the transport service
-  ToolHandle<IMaterialLocator> m_materialLocator ;
+  /// transport service
+  IMaterialLocator* m_materialLocator ;
   
   // job options
+  std::string m_materialLocatorname;   ///< name of materialLocator
   std::string m_thinmstoolname;    ///< name of thin MS correction tool
   std::string m_thickmstoolname;   ///< name of thick MS correction tool
   std::string m_dedxtoolname;      ///< name of dE/dx correction tool

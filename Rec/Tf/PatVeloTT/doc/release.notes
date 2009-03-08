@@ -3,6 +3,8 @@
 ! Responsible : Mariusz Witek
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+! 2009-03-08 - Stephanie Hansmann-Menzemer
+  - use pre configured fitter in steering script
 
 !========================== PatVeloTT v3r5 2009-12-01 ========================
 ! 2008-12-02 - Wouter Hulsbergen

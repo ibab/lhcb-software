@@ -11,7 +11,7 @@ from Configurables import ( TrackEventFitter, TrackMasterFitter, TrackKalmanFilt
                             TrackSimpleExtraSelector, TrackDistanceExtraSelector,
                             TrackHerabExtrapolator,
                             SimplifiedMaterialLocator, DetailedMaterialLocator,
-                            MeasurementProvider)
+                            MeasurementProvider, StateDetailedBetheBlochEnergyCorrectionTool)
 
 def ConfiguredMasterFitter( Name,
                             FieldOff = TrackSys().fieldOff(),
@@ -32,9 +32,16 @@ def ConfiguredMasterFitter( Name,
 
     # set up the material locator
     if SimplifiedGeometry:
-        fitter.MaterialLocator = "SimplifiedMaterialLocator"
-        fitter.Extrapolator.MaterialLocator = "SimplifiedMaterialLocator"
-
+        fitter.addTool(SimplifiedMaterialLocator(), name="MaterialLocator")
+        fitter.Extrapolator.addTool(SimplifiedMaterialLocator(), name="MaterialLocator")
+    else:
+        fitter.addTool(DetailedMaterialLocator(), name="MaterialLocator")
+        fitter.MaterialLocator.GeneralDedxToolName="StateDetailedBetheBlochEnergyCorrectionTool"
+        fitter.Extrapolator.addTool(DetailedMaterialLocator(), name="MaterialLocator")
+        fitter.Extrapolator.GeneralDedxToolName = "StateDetailedBetheBlochEnergyCorrectionTool"
+        fitter.Extrapolator.addTool(DetailedMaterialLocator(), name="MaterialLocator")
+        fitter.Extrapolator.MaterialLocator.GeneralDedxToolName = "StateDetailedBetheBlochEnergyCorrectionTool"
+        
     # special settings for field-off
     if FieldOff:
         fitter.Extrapolator.addTool(TrackSimpleExtraSelector(), name="ExtraSelector")

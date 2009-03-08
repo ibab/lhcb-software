@@ -1,4 +1,4 @@
-// $Id: TrackMasterExtrapolator.cpp,v 1.33 2008-04-01 06:36:22 mneedham Exp $
+// $Id: TrackMasterExtrapolator.cpp,v 1.34 2009-03-08 17:31:54 smenzeme Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -34,8 +34,7 @@ DECLARE_TOOL_FACTORY( TrackMasterExtrapolator );
 TrackMasterExtrapolator::TrackMasterExtrapolator( const std::string& type,
                                                   const std::string& name,
                                                   const IInterface* parent )
-  : TrackExtrapolator(type, name, parent),
-    m_materialLocator("DetailedMaterialLocator")
+  : TrackExtrapolator(type, name, parent)
 {
   //job options
   declareProperty( "ExtraSelector",
@@ -51,7 +50,7 @@ TrackMasterExtrapolator::TrackMasterExtrapolator( const std::string& type,
                    m_thinmstoolname  = "StateThinMSCorrectionTool" );
   declareProperty( "ThickMSCorrectionTool",
                    m_thickmstoolname  = "StateThickMSCorrectionTool" );
-  declareProperty( "GeneralDedxCorrectionTool",
+  declareProperty( "GeneralDedxToolName",
                    m_dedxtoolname     = "StateSimpleBetheBlochEnergyCorrectionTool" );
   declareProperty( "ElectronDedxCorrectionTool",
                    m_elecdedxtoolname = "StateElectronEnergyCorrectionTool" );
@@ -60,7 +59,7 @@ TrackMasterExtrapolator::TrackMasterExtrapolator( const std::string& type,
                    m_applyElectronEnergyLossCorr = true );
   declareProperty( "StartElectronCorr", m_startElectronCorr = 2500.*mm );
   declareProperty( "StopElectronCorr",  m_stopElectronCorr  = 9000.*mm );
-  declareProperty("MaterialLocator",m_materialLocator ) ;
+  declareProperty("MaterialLocator", m_materialLocatorname = "DetailedMaterialLocator" ) ;
 }
 
 //=============================================================================
@@ -81,7 +80,7 @@ StatusCode TrackMasterExtrapolator::initialize()
   m_thickmstool = tool<IStateCorrectionTool>( m_thickmstoolname,"ThickMSTool",this  );
 
   // tools for dE/dx corrections
-  m_dedxtool     = tool<IStateCorrectionTool>( m_dedxtoolname     );
+  m_dedxtool     = tool<IStateCorrectionTool>( m_dedxtoolname, "GeneralDedxTool", this);
   m_elecdedxtool = tool<IStateCorrectionTool>( m_elecdedxtoolname );
 
   // selector
@@ -89,9 +88,8 @@ StatusCode TrackMasterExtrapolator::initialize()
                                                "ExtraSelector",this );
 
   // initialize transport service
-  sc = m_materialLocator.retrieve() ;
-  if( !sc.isSuccess() ) return Error( "Failed to retrieve material intersector", sc ) ;
-  
+  m_materialLocator = tool <IMaterialLocator> (m_materialLocatorname, "MaterialLocator", this);
+    
   m_debugLevel = msgLevel( MSG::DEBUG );
   
   return StatusCode::SUCCESS;
@@ -99,9 +97,7 @@ StatusCode TrackMasterExtrapolator::initialize()
 
 StatusCode TrackMasterExtrapolator::finalize()
 {
-  StatusCode sc = m_materialLocator.release() ;
-  if( !sc.isSuccess() ) return Error( "Failed to finalize material locator", sc );
-  
+    
   return TrackExtrapolator::finalize() ;
 }
 

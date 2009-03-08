@@ -58,12 +58,13 @@ public:
 				 LHCb::ParticleID pid) const ;
   
 private:
+  std::string m_dedxtoolname;
   size_t m_maxNumIntervals ;
   double m_maxDeviation ;
   double m_maxDeviationAtRefstates ;
   double m_maxDeviationAtVeloRefstates ;
   ToolHandle<IStateCorrectionTool> m_scatteringtool;
-  ToolHandle<IStateCorrectionTool> m_dedxtool;
+  IStateCorrectionTool* m_dedxtool;
   ToolHandle<IStateCorrectionTool> m_elecdedxtool;
 };
 
