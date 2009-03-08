@@ -1,5 +1,5 @@
 /* XPM */
-char * stock_new_formula_xpm[] = {
+const char * stock_new_formula_xpm[] = {
 "16 16 52 1",
 " 	c None",
 ".	c #000000",

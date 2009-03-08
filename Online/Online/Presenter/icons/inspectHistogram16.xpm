@@ -1,5 +1,5 @@
 /* XPM */
-char * inspectHistogram16[] = {
+const char * inspectHistogram16[] = {
 "16 16 38 1",
 " 	c None",
 ".	c #000000",

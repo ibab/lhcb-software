@@ -1,5 +1,5 @@
 /* XPM */
-char * folder16[] = {
+const char * folder16[] = {
 "16 16 51 1",
 " 	c None",
 ".	c #6A6C68",

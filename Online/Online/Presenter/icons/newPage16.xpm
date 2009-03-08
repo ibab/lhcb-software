@@ -1,5 +1,5 @@
 /* XPM */
-char * newPage16[] = {
+const char * newPage16[] = {
 "16 16 90 1",
 " 	c None",
 ".	c #888A85",

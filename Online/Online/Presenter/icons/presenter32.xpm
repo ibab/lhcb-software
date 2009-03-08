@@ -1,5 +1,5 @@
 /* XPM */
-char * presenter32[] = {
+const char * presenter32[] = {
 "32 32 877 2",
 "  	c None",
 ". 	c #376A70",

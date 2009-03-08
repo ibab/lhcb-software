@@ -1,5 +1,5 @@
 /* XPM */
-char * editProperties16[] = {
+const char * editProperties16[] = {
 "16 16 79 1",
 " 	c None",
 ".	c #888A85",
