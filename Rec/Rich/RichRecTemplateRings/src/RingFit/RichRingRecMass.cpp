@@ -1,4 +1,4 @@
-// $Id: RichRingRecMass.cpp,v 1.1.1.1 2009-03-04 12:01:45 jonrob Exp $
+// $Id: RichRingRecMass.cpp,v 1.2 2009-03-08 18:38:20 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -292,9 +292,9 @@ int RichRingRecMass::SelectFromPairOfBGA (double aBG1, double aBG2, double aMom 
    // }else {
    // end test selection
 
-      if( aBG1 > aMaxBGLim & aBG1 <  aMaxBGLim ) {
+      if( (aBG1 > aMaxBGLim) && (aBG2 <  aMaxBGLim) ) {
              aradSel =irad2;
-      }else if ( aBG1 < aMaxBGLim & aBG2 >  aMaxBGLim ) {
+      }else if ( (aBG1 < aMaxBGLim) && (aBG2 >  aMaxBGLim) ) {
              aradSel = irad1;
       }else if ( aBG1 < aBG2 ) {
              aradSel =irad2;
@@ -344,9 +344,9 @@ int RichRingRecMass::SelectFromPairOfBGB (double aBG1, double aBG2, double aMom 
     }else {
    // end test selection
 
-      if( aBG1 > aMaxBGLim & aBG1 <  aMaxBGLim ) {
+      if( (aBG1 > aMaxBGLim) && (aBG2 <  aMaxBGLim) ) {
              aradSel =irad2;
-      }else if ( aBG1 < aMaxBGLim & aBG2 >  aMaxBGLim ) {
+      }else if ( (aBG1 < aMaxBGLim) && (aBG2 >  aMaxBGLim) ) {
              aradSel = irad1;
       }else if ( aBG1 < aBG2 ) {
              aradSel =irad2;
