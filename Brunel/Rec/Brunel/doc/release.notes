@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-03-08 - Marco Cattaneo
+ - Update references for MuonPID update, Calo monitoring changes
+
 ! 2009-03-06 - Marco Cattaneo
  - Pass DataType to L0Conf()
  - Add event time printout to brunel-2008-MC test
