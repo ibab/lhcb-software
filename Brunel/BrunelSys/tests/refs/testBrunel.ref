@@ -51,7 +51,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v34r2
-                                          running on lxbuild120.cern.ch on Fri Mar  6 18:12:19 2009
+                                          running on lxbuild120.cern.ch on Mon Mar  9 12:01:45 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -63,7 +63,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.83 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.85 times the speed of a 2.8 GHz Xeon.
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
 BrunelSequencer      INFO Member list: ProcessPhase/Init, ProcessPhase/Reco, ProcessPhase/Moni, ProcessPhase/MCLinks, ProcessPhase/Check, ProcessPhase/Output
@@ -405,8 +405,8 @@ NeuralNetTmva        INFO The MVAnalysis_pf_CFMlpANN.weights.txt weights file is
 --- Reader       :    - method title : "CFMlpANN"
 --- Reader       : Method tag : "CFMlpANN method"
 RecoVertexSeq        INFO Member list: PatPVOffline, TrackV0Finder
-ToolSvc.Simplif...   INFO SimplifiedMaterialLocator::initialize()
-ToolSvc.Simplif...   INFO Found TrackfitGeometry volume with 17 daughters.
+TrackV0Finder.T...   INFO SimplifiedMaterialLocator::initialize()
+TrackV0Finder.T...   INFO Found TrackfitGeometry volume with 17 daughters.
 RecoRICHSeq          INFO Member list: GaudiSequencer/RichRecInitOfflineSeq, GaudiSequencer/RichOfflinePIDSeq, with context 'Offline'
 RichRecInitOffl...   INFO Member list: Rich::Rec::Initialise/CheckProcOfflineStatus, GaudiSequencer/RichOfflinePixelsSeq, GaudiSequencer/RichOfflineTracksSeq, GaudiSequencer/RichOfflinePhotonsSeq, with context 'Offline'
 RichOfflinePixe...   INFO Member list: Rich::DAQ::RawBufferToRichDigitsAlg/DecodeRawRichOffline, Rich::Rec::Initialise/CreateOfflinePixels, with context 'Offline'
@@ -765,15 +765,15 @@ FitVelo           SUCCESS Number of counters : 1
 EcalClust            INFO Built 0 cellular automaton clusters/event  with 0 iterations (min,max)=(999999,0) on average
 ChargedProtoPAlg     INFO Number of events processed = 0
 NeutralProtoPAlg     INFO  0 event processed ==> 0 Neutral ProtoParticle produced !
-EcalDigitMon      SUCCESS Booked 7 Histogram(s) : 1D=5 2D=2
-HcalDigitMon      SUCCESS Booked 7 Histogram(s) : 1D=5 2D=2
-PrsDigitMon       SUCCESS Booked 6 Histogram(s) : 1D=4 2D=2
-SpdDigitMon       SUCCESS Booked 5 Histogram(s) : 1D=3 2D=2
-EcalClusterMon    SUCCESS Booked 9 Histogram(s) : 1D=7 2D=2
-ElectronMon       SUCCESS Booked 10 Histogram(s) : 1D=8 2D=2
-PhotonMon         SUCCESS Booked 10 Histogram(s) : 1D=8 2D=2
-SplitPhotonMon    SUCCESS Booked 10 Histogram(s) : 1D=8 2D=2
-MergedPi0Mon      SUCCESS Booked 11 Histogram(s) : 1D=9 2D=2
+EcalDigitMon      SUCCESS Booked 5 Histogram(s) : 1D=3 2D=2
+HcalDigitMon      SUCCESS Booked 5 Histogram(s) : 1D=3 2D=2
+PrsDigitMon       SUCCESS Booked 4 Histogram(s) : 1D=2 2D=2
+SpdDigitMon       SUCCESS Booked 2 Histogram(s) : 1D=1 2D=1
+EcalClusterMon    SUCCESS Booked 7 Histogram(s) : 1D=5 2D=2
+ElectronMon       SUCCESS Booked 8 Histogram(s) : 1D=6 2D=2
+PhotonMon         SUCCESS Booked 8 Histogram(s) : 1D=6 2D=2
+SplitPhotonMon    SUCCESS Booked 8 Histogram(s) : 1D=6 2D=2
+MergedPi0Mon      SUCCESS Booked 7 Histogram(s) : 1D=7
 ResolvedPi0Mon    SUCCESS Booked 4 Histogram(s) : 1D=4
 PhotonMatchMon    SUCCESS Booked 5 Histogram(s) : 1D=5
 ElectronMatchMon  SUCCESS Booked 5 Histogram(s) : 1D=5
@@ -929,7 +929,7 @@ ToolSvc.Offline...SUCCESS  #WARNINGS   = 1        Message = 'No pixels produced'
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings Statistics : 0/0/1
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.83 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.85 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
