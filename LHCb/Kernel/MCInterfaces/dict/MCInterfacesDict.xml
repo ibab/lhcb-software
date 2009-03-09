@@ -5,6 +5,7 @@
   <class name = "ILHCbIDsToMCParticles"       />                               
   <class name = "ILHCbIDsToMCHits"            />
   <class name = "IMCDecayFinder"              />
+  <class name = "IMCEventTypeFinder"          />
   <class name = "IMCParticleSelector"         />
   <class name = "IMCReconstructed"            />
   <class name = "IMCReconstructible"          />

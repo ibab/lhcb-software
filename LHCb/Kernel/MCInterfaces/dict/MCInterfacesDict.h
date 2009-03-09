@@ -29,6 +29,7 @@
 #include "MCInterfaces/IPrintMCDecayTreeTool.h"
 
 // New since merge
+#include "MCInterfaces/IMCEventTypeFinder.h"
 #include "MCInterfaces/IMCReconstructed.h"
 
 #endif // DICT_MCINTERFACESDICT_H

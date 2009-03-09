@@ -4,10 +4,10 @@
 ! Purpose     : Interfaces with dependency on MC
 !-----------------------------------------------------------------------------
 
+!==================== MCInterfaces v1r8 2009-03-09 ===========================
 ! 2009-03-06 - Rob Lambert
- - Added an interface, IMCEventTypeFinder,
-   to define a tool allowing us to search for a given
-	 event type. Implimented in Sim/SimComponents
+ - Added an interface, IMCEventTypeFinder, to define a tool allowing us to 
+   search for a given event type. Implemented in Sim/SimComponents
 
 !==================== MCInterfaces v1r7 2009-02-18 ===========================
 ! 2009-01-27 M Needham 
