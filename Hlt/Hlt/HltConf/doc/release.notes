@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.161 2009-03-05 21:35:56 graven Exp $ 
+! $Id: release.notes,v 1.162 2009-03-09 14:49:36 jonrob Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-03-09 - Chris Jones
+ - Fix the option "Hlt2Requires = ''" in Configuration.py
+
 ! 2009-03-05 - Gerhard Raven
  - remove "configuration" (python runtime) dependencies from requirements
 

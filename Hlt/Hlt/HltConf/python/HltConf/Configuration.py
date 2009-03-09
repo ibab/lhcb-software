@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.51 2009-03-05 10:29:29 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.52 2009-03-09 14:49:36 jonrob Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -118,8 +118,10 @@ class HltConf(LHCbConfigurableUser):
                 hlt2requires = { 'L0'   : L0Filter('L0Pass', Code = "L0_DECISION" )
                                , 'Hlt1' : HltFilter('Hlt1GlobalPass' , Code = "HLT_PASS('Hlt1Global')" )
                                }
-                for i in self.getProp('Hlt2Requires').split('+') :
-                    Sequence("Hlt2CheckHlt1Passed").Members.append( hlt2requires[i] )
+                confs = self.getProp('Hlt2Requires')
+                if confs != "" and confs != "None" :
+                    for i in confs.split('+') :
+                        Sequence("Hlt2CheckHlt1Passed").Members.append( hlt2requires[i] )
 
     def configureRoutingBits(self) :
         ## set triggerbits
