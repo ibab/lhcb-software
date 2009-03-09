@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!===================== RichRecBase v3r20 2009-03-09 ==========================
 ! 2009-03-03 - Chris Jones
  - Extend definitions in RichRecRing for new 'Template' ring finding from
    Sajan Easo.
