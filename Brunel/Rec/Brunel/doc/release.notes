@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-03-09 - Marco Cattaneo
+ - Update references, SimplifiedMaterialLocator is now a private tool
+
 ! 2009-03-08 - Marco Cattaneo
  - Update references for MuonPID update, Calo monitoring changes
 
