@@ -4,6 +4,10 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2009-03-09 - Jeroen van Tilburg
+ - Added FilterByBankType algorithm. Can be used to select events based 
+   on which banks are present in the RawEvent.
+
 !======================== LHCbAlgs v2r24 2009-02-19 ==========================
 ! 2009-02-19 - Marco Cattaneo
  - Fix Windows compilation error and warnings
