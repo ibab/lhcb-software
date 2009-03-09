@@ -1,4 +1,4 @@
-// $Id: MCEventTypeFinder.cpp,v 1.2 2009-03-08 17:38:15 rlambert Exp $
+// $Id: MCEventTypeFinder.cpp,v 1.3 2009-03-09 12:54:36 cattanem Exp $
 // Include files 
 #include <sstream>
 
@@ -105,7 +105,7 @@ StatusCode MCEventTypeFinder::findEventTypes(LHCb::EventTypeSet& found)
   if(m_mcFinders.empty()) fillMCTools();  //fill the vector of tools on the first use
   std::vector<IMCDecayFinder*>::const_reverse_iterator iD=m_mcFinders.rbegin();
   
-  for(LHCb::EventTypeSet::const_reverse_iterator iType=m_allTypes.rbegin(),;
+  for(LHCb::EventTypeSet::const_reverse_iterator iType=m_allTypes.rbegin();
       iType!=m_allTypes.rend();// && iD!=m_mcFinders.rend();
       iType++, iD++)//lowest to highest
     {
