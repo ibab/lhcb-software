@@ -156,14 +156,14 @@ int Process::wait()    {
     return INVALID;
   }
   else if( WIFEXITED(m_status) )      {
-    cerr << "waitpid() exited: Status=" << WEXITSTATUS(m_status) << endl;
+    cout << "waitpid() exited: Status=" << WEXITSTATUS(m_status) << endl;
     return ENDED;
   }
   else if( WIFSTOPPED(m_status) )      {
     return STOPPED;
   }
   else if( WIFSIGNALED(m_status) )      {
-    cerr << "waitpid() exited due to a signal: " << WTERMSIG(m_status) << endl;
+    cout << "waitpid() exited due to a signal: " << WTERMSIG(m_status) << endl;
     return ENDED;
   }
   return RUNNING;
