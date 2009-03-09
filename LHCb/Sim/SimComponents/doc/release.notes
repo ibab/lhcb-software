@@ -5,6 +5,7 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+!====================== SimComponents v2r17 2009-03-09 =======================
 ! 2009-03-09 - Rob Lambert
  - Bugfix, added in extra headers to EvtTypeSvc.
    Could have produced differences with different compilers.
