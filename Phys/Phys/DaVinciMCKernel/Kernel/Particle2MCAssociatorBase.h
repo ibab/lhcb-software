@@ -1,4 +1,4 @@
-// $Id: Particle2MCAssociatorBase.h,v 1.6 2009-03-06 14:16:48 jpalac Exp $
+// $Id: Particle2MCAssociatorBase.h,v 1.7 2009-03-09 14:12:36 jpalac Exp $
 #ifndef PARTICLE2MCASSOCIATORBASE_H 
 #define PARTICLE2MCASSOCIATORBASE_H 1
 
@@ -129,7 +129,7 @@ private:
     for (pIter part = pBegin; part != pEnd; ++part) {
       table.merge( i_relatedMCPs(*part, mcBegin, mcEnd).relations() );
     }
-    table.i_sort();
+    //    table.i_sort();
     return table;
   }
   
@@ -156,7 +156,7 @@ private:
     for ( Iter iMCP = mcBegin ; iMCP != mcEnd ; ++iMCP) {
       table.i_push( particle, *iMCP );
     }
-    table.i_sort();
+    //    table.i_sort();
     return table;
   }
 
