@@ -5,7 +5,7 @@
  *  Header file for algorithm base class : ST::AlgBase
  *
  *  CVS Log :-
- *  $Id: STTupleToolBase.h,v 1.1 2008-10-14 08:47:06 mneedham Exp $
+ *  $Id: STTupleToolBase.h,v 1.2 2009-03-09 15:14:26 akeune Exp $
  *
  *  @author Matthew Needham
  *  @date   11/10/2008
@@ -39,14 +39,15 @@ namespace ST
   {
 
   public:
-
+    
     /// Standard constructor
-    TupleToolBase( const std::string& name,
-             ISvcLocator* pSvcLocator )
-      : ST::CommonBase<GaudiTupleTool> ( name, pSvcLocator ) { }
-
+    TupleToolBase(const std::string& type, 
+                  const std::string& name,
+                  const IInterface* parent )
+      : ST::CommonBase<GaudiTupleTool> ( type, name, parent ) { }
+    
   };
-
+  
 }
 
 

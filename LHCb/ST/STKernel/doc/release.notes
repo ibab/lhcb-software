@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.58 2009-03-09 14:16:15 cattanem Exp $
+! $Id: release.notes,v 1.59 2009-03-09 15:14:26 akeune Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
@@ -8,6 +8,9 @@
  - Bug fix in TTNumberToSourceIDMap
 
 !====================== STKernel v1r11 2009-02-20 ===========================
+! 2009-03-09 A Keune
+	- Swapped constructors STTupleAlgBase and STTupleToolBase
+
 ! 2009-02-20 M Needham
   - Move print functions to the cpp for STBoardMapping
 
