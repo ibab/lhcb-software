@@ -2,6 +2,9 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2009-03-09 - Marco Cattaneo
+ - Remove LHCbApp().UseOracle property. Use CondDB().UseOracle instead
+
 !======================== GaudiConf v12r1 2009-02-18 ========================
 ! 2009-01-28 - Marco Cattaneo
  - Clean up DstConf following modifications for MDF format

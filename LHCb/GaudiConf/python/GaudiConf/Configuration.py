@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: Configuration.py,v 1.18 2009-01-21 17:08:51 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.19 2009-03-09 07:57:48 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from os import environ
@@ -16,7 +16,6 @@ class LHCbApp(LHCbConfigurableUser):
        ,"DataType"   : "2008"
        ,"DDDBtag"    : ""
        ,"CondDBtag"  : ""
-       ,"UseOracle"  : False
        ,"Simulation" : False
        ,"Monitors"   : []
         }
@@ -27,7 +26,6 @@ class LHCbApp(LHCbConfigurableUser):
        ,'DataType'   : """ Data type, can be ['DC06','2008']. Default '2008' """
        ,'DDDBtag'    : """ Tag for DDDB. Default as set in DDDBConf for DataType """
        ,'CondDBtag'  : """ Tag for CondDB. Default as set in DDDBConf for DataType """
-       ,'UseOracle'  : """ Flag to enable Oracle CondDB. Default False (use SQLDDDB) """
        ,'Simulation' : """ Flag to indicate usage of simulation conditions """
        ,'Monitors'   : """ List of monitors to execute """
        }
@@ -42,7 +40,7 @@ class LHCbApp(LHCbConfigurableUser):
 
     def defineDB(self):
         # Delegate handling of properties to DDDBConf
-        self.setOtherProps( DDDBConf(), ["Simulation", "UseOracle", "DataType" ] )
+        self.setOtherProps( DDDBConf(), ["Simulation", "DataType" ] )
         # CondDB tags must be set
         from Configurables import CondDB
         tagsOK = True
