@@ -1,4 +1,4 @@
-// $Id: OMAcommon.cpp,v 1.9 2009-03-04 09:33:52 ggiacomo Exp $
+// $Id: OMAcommon.cpp,v 1.10 2009-03-09 15:41:04 ggiacomo Exp $
 
 #include "OMAlib/OMAcommon.h"
 #include "OnlineHistDB/OnlineHistDB.h"
@@ -65,16 +65,6 @@ void OMAcommon::doFitFuncList() {
                    false,
                    "exponential function",
                    true);
-  ParNames.clear();
-  ParNames.push_back("Constant"); ParNames.push_back("Slope");
-  m_fitfunctions["expo"] = new
-    OMAFitFunction("expo",
-                   "expo",
-                   ParNames,
-                   false,
-                   "exponential function",
-                   true);
-
   ParNames.clear();
   ParNames.push_back("Constant"); ParNames.push_back("MPV");ParNames.push_back("Sigma");
   m_fitfunctions["landau"] = new

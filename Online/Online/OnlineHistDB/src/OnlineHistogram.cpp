@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.38 2009-03-06 09:26:54 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.39 2009-03-09 15:40:47 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -313,6 +313,7 @@ void OnlineHistogram::createDisplayOptions() {
 				(dvoid *) m_dispopt,
 				(dvoid **) &m_dispopt_null), SEVERE);
     
+    m_do.clear();
     m_do.reserve(53);
     m_do.push_back(new OnlineDisplayOption("LABEL_X",OnlineDisplayOption::STRING,
 					   (void*) &(m_dispopt->LABEL_X),
@@ -604,6 +605,7 @@ OnlineHistogram::~OnlineHistogram()
   std::vector<OnlineDisplayOption*>::iterator ip;
   for (ip = m_do.begin();ip != m_do.end(); ++ip) 
     delete *ip; 
+  m_do.clear();
   if(m_dispopt) 
     checkerr(OCIObjectFree ( m_envhp, m_errhp, m_dispopt, OCI_OBJECTFREE_FORCE) );
 }
@@ -1596,8 +1598,8 @@ OnlineHistogramStorage::~OnlineHistogramStorage()
   if (m_Histenv->debug() > 2) cout << "Deleting "<<
     m_myHist.size() << " OnlineHistogram objects"<<endl;
   std::vector<OnlineHistogram*>::iterator ih;
-  //for (ih = m_myHist.begin();ih != m_myHist.end(); ++ih) 
-  //delete *ih; 
+  for (ih = m_myHist.begin();ih != m_myHist.end(); ++ih) 
+    delete *ih; 
 }
 
 void OnlineHistogramStorage::updateHistograms() {
@@ -1654,12 +1656,12 @@ bool OnlineHistogramStorage::removeHistogram(OnlineHistogram* h,
     std::vector<OnlineHistogram*>::iterator ih = m_myHist.begin();
     while (ih != m_myHist.end()) {
       if((RemoveWholeSet && (*ih)->hsid() == h->hsid()) ||
-	 (*ih)->hid() == h->hid() ) {
-	if (h != (*ih)) delete *ih;
-	ih=m_myHist.erase(ih);
+         (*ih)->hid() == h->hid() ) {
+        if (h != (*ih)) delete *ih;
+        ih=m_myHist.erase(ih);
       }
       else {
-	ih++;
+        ih++;
       }
     }
     delete h;
