@@ -1,10 +1,11 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.116 2009-02-26 14:43:53 mneedham Exp $
+! $Id: release.notes,v 1.117 2009-03-09 13:11:46 cattanem Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+!========================= RecEvent v2r19 2009-03-09 =========================
 ! 2009-02-26 M Needham
  - Add ST event size in bytes, #full + # pedestal banks to STSummary
 
