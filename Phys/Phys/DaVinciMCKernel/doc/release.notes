@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.64 2009-03-06 16:32:45 jpalac Exp $
+! $Id: release.notes,v 1.65 2009-03-09 14:12:50 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
+
+! 2009-03-09 - Juan PALACIOS
+ - Kernel/Particle2MCAssociatorBase.h
+  . Remove internal sorting of relations table. This was messing things up.
 
 ! 2009-03-06 - Juan PALACIOS
  - dict/DaVinciMCKernelDict.*
