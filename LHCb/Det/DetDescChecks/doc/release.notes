@@ -1,11 +1,14 @@
 ! ------------------------------------------------------------------------------
-! $Id: release.notes,v 1.43 2008-11-17 14:34:28 cattanem Exp $ 
+! $Id: release.notes,v 1.44 2009-03-09 07:37:57 cattanem Exp $ 
 ! ------------------------------------------------------------------------------
 ! Package     : Det/DetDescChecks
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! Purpose     : Collection of useful components for checking of 
 !               Detector Description, Material Budget etc 
 ! ------------------------------------------------------------------------------
+
+! 2009-03-09 - Marco Cattaneo
+ - Fix example for using Oracle CondDB
 
 !======================= DetDescChecks v4r10 2008-11-17 ========================
 ! 2008-11-17 - Marco Cattaneo

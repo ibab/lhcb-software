@@ -6,10 +6,11 @@ from DDDB.Configuration import *
 from Configurables import LoadDDDB 
 
 DDDBConf() # Configure the detector description
+#DDDBConf().DataType = "DC06"
 
 # ---------- option to use Oracle CondDB instead of SQLDDDB
-#DDDBConf().UseOracle = True
-#DDDBConf().DataType = "DC06"
+#from Configurables import CondDB
+#CondDB(UseOracle = True)
 
 ApplicationMgr().EvtSel = "NONE"
 ApplicationMgr().EvtMax = 1

@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.35 2008-11-17 11:18:23 cattanem Exp $
+# $Id: requirements,v 1.36 2009-03-09 07:37:57 cattanem Exp $
 # =============================================================================
 # Created    : 2002-05-25
 # Maintainer : Vanya Belyaev ibelyaev@physics.syr.edu
 # =============================================================================
 package           DetDescChecks
-version           v4r10
+version           v4r10p1
 
 # =============== structure ===================================================
 branches          cmt doc src options python
