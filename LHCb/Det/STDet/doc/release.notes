@@ -1,8 +1,9 @@
-!$Id: release.notes,v 1.161 2009-02-27 12:17:50 mneedham Exp $
+!$Id: release.notes,v 1.162 2009-03-09 13:03:11 cattanem Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
+!======================== STDet v4r8 2009-03-09 ==========================
 ! 2009-02-27 M Needham
  - Add findTopElement method to DeSTDetector
 
