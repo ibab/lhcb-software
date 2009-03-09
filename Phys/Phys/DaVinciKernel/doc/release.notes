@@ -1,9 +1,10 @@
-!$Id: release.notes,v 1.291 2009-02-27 16:49:58 jpalac Exp $
+!$Id: release.notes,v 1.292 2009-03-09 14:20:18 cattanem Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!======================== DaVinciKernel v7r4 2009-03-09 =====================
 ! 2009-02-27 - Juan PALACIOS
  - Added Kernel/DaVinciFun.h with useful free functions
  - src/Lib/DVAlgorithm.cpp
