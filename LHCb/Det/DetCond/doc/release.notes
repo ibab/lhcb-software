@@ -1,9 +1,13 @@
-# $Id: release.notes,v 1.162 2009-02-18 12:42:56 cattanem Exp $
+# $Id: release.notes,v 1.163 2009-03-09 08:15:03 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+! 2009-03-09 - Marco Cattaneo
+ - Add options/UseOracle.py: additional options for gaudirun.py command line
+   to get conditions from Oracle DB
 
 !===================== Det/DetCond v12r5p1 2009-02-18 ========================
 ! 2009-01-29 - Marco Cattaneo
