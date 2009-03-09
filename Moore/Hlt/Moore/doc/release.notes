@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2009-03-09 - Marco Cattaneo
+ - Remove Moore().UseOracle option. Use CondDB().UseOracle if needed
+
 ! 2009-03-05 - Gerhard Raven
  - fix ';' in options file for LHCb  partition
 

@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.49 2009-02-12 22:07:02 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.50 2009-03-09 07:50:35 cattanem Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -41,7 +41,6 @@ class Moore(LHCbConfigurableUser):
         , "DataType":          '2008' # Data type, can be [ 'DC06','2008' ]
         , "DDDBtag" :          'default' # default as set in DDDBConf for DataType
         , "CondDBtag" :        'default' # default as set in DDDBConf for DataType
-        , "UseOracle":         False  # if False, use SQLDDDB instead
         , "outputFile" :       '' # output filename
         , "inputFiles" :       [ ] # input
         , "hltType" :          'Hlt1'
@@ -131,7 +130,7 @@ class Moore(LHCbConfigurableUser):
         for i in [  'AuditorSvc',  'DataOnDemandSvc' ] : ApplicationMgr().ExtSvc.append( i ) 
         # forward some settings... 
         app = LHCbApp()
-        self.setOtherProps( app, ['EvtMax','SkipEvents','Simulation', 'DataType','DDDBtag','CondDBtag','UseOracle' ] )
+        self.setOtherProps( app, ['EvtMax','SkipEvents','Simulation', 'DataType','DDDBtag','CondDBtag' ] )
         # Get the event time (for CondDb) from ODIN 
         EventClockSvc().EventTimeDecoder = 'OdinTimeDecoder'
         # make sure we don't pick up small variations of the read current
