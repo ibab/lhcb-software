@@ -1,9 +1,11 @@
-! $Id: release.notes,v 1.162 2009-03-09 14:49:36 jonrob Exp $ 
+! $Id: release.notes,v 1.163 2009-03-09 15:26:47 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2009-03-09 - Gerhard Raven
+ - keep HltRoutingBits rawbank in lumi events
 
 ! 2009-03-09 - Chris Jones
  - Fix the option "Hlt2Requires = ''" in Configuration.py
