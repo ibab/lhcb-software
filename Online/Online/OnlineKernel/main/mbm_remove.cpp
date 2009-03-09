@@ -2,7 +2,7 @@
 #include <iostream>
 
 int main (int argc, char** argv)  {
-  void* handle = LOAD_LIB("OnlineKernel");
+  void* handle = LOAD_LIB2( "OnlineKernel" );
   if ( 0 != handle )  {
     Function fun(GETPROC(handle,"mbm_remove"));
     if ( fun.function ) {

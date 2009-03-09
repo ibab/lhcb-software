@@ -2,12 +2,6 @@
 
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>test.exe</text></argument>
-  <argument name="args"><set><text>rtl_testque</text></set></argument>
+  <argument name="args"><set><text>rtl_test_process_group</text></set></argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
-  <argument name="validator"><text>
-expected_string = &quot;[RTL Test]  rtl_testque>   Successfully completed.&quot; 
-if stdout.find(expected_string) == -1:
-    causes.append('missing string')
-    result['GaudiTest.expected_string'] = result.Quote(expected_string)
-</text></argument>
 </extension>

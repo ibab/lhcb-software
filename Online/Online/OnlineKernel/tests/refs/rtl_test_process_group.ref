@@ -1,0 +1,7 @@
+Starting process:SLEEPER_1
+Starting process:SLEEPER_3
+Stop process SLEEPER_2
+Process SLEEPER_2 ended.
+Process SLEEPER_1 ended.
+Process SLEEPER_3 ended.
+All processes ended

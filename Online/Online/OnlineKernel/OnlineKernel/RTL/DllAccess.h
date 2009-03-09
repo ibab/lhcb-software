@@ -32,7 +32,10 @@ union Function {
 #else
   #include <dlfcn.h>
   #include <unistd.h>
-  #define LOAD_LIB(x)  ::dlopen( x , RTLD_NOW)
+  #include <string>
+  //#define LOAD_LIB(x)  ::dlopen( x , RTLD_NOW)
+  inline void* LOAD_LIB(const std::string& x) {   return ::dlopen(x.c_str(),RTLD_NOW);  }
+  inline void* LOAD_LIB2(const std::string& x) {  return LOAD_LIB("lib"+x+".so"); }
   inline void* GETPROC(void* h, const char* x) {  return ::dlsym(h,x); }
   #define DLERROR      ::dlerror()
 #endif
