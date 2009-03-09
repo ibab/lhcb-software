@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.318 2009-03-04 16:25:00 pkoppenb Exp $
+! $Id: release.notes,v 1.319 2009-03-09 07:46:47 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,9 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-03-09 - Marco Cattaneo
+ - Remove UseOracle option. Set directly CondDB().UseOracle option if needed
 
 ! 2009-03-04 - Patrick Koppenburg
  - Do not impose MessageSvc format
