@@ -1,4 +1,4 @@
-// $Id: CaloHypo2Calo.cpp,v 1.1 2008-09-22 00:47:12 odescham Exp $
+// $Id: CaloHypo2Calo.cpp,v 1.2 2009-03-09 13:33:22 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -34,7 +34,7 @@ CaloHypo2Calo::CaloHypo2Calo( const std::string& type,
   declareInterface<ICaloHypo2Calo>(this);
 
 
-  declareProperty("Seed"         , m_seed   = false );
+  declareProperty("Seed"         , m_seed   = true );
   declareProperty("PhotonLine"   , m_line   = true);
   declareProperty("AddNeighbors" , m_neighb = true );
   declareProperty("xTolerance"   , m_x      =  5.*Gaudi::Units::mm);
@@ -98,6 +98,7 @@ std::vector<LHCb::CaloCellID> CaloHypo2Calo::cellIDs(LHCb::CaloHypo fromHypo, st
 
 
 std::vector<LHCb::CaloCellID> CaloHypo2Calo::cellIDs(LHCb::CaloCluster fromCluster, std::string toCalo){
+  debug() << " toCalo " << toCalo << endreq;
   reset();
   LHCb::CaloCellID seedID = fromCluster.seed();
   if ( msgLevel( MSG::DEBUG) ) debug() << "-----  cluster energy " <<  fromCluster.e()<< " " << seedID << endreq;
@@ -111,7 +112,7 @@ std::vector<LHCb::CaloCellID> CaloHypo2Calo::cellIDs(LHCb::CaloCluster fromClust
     LHCb::CaloCellID cellID = entry.digit()->cellID();
     if( !(m_seed      &&  (LHCb::CaloDigitStatus::SeedCell & entry.status())    != 0 ) &&
         !(m_seed && m_neighb &&   m_neighbour(seedID , cellID)                       ) &&
-        !(m_status && entry.status() != 0                                            ) &&
+        !( (m_status & entry.status()) != 0                                          ) &&
         !(m_whole) )continue;
     SmartRef<LHCb::CaloDigit> digit = (*ent).digit();
     Calo2Calo::cellIDs( (*digit).cellID() , toCalo, false );

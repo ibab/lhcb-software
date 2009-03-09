@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.56 2009-03-05 15:51:21 odescham Exp $
+! $Id: release.notes,v 1.57 2009-03-09 13:33:22 odescham Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+! 2009-03-09 Olivier Deschamps
+ - Fix bad default setting for CaloHypo2Calo.cpp (Seed=false -> true)  + minor bug fix
 
 ! 2009-03-05 Olivier Deschamps
  - improve verbosity for CaloCosmics stuff
