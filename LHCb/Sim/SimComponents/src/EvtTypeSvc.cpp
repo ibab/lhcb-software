@@ -1,4 +1,4 @@
-// $Id: EvtTypeSvc.cpp,v 1.3 2009-03-05 13:55:07 rlambert Exp $
+// $Id: EvtTypeSvc.cpp,v 1.4 2009-03-09 13:04:16 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -10,6 +10,10 @@
 // local
 #include "EvtTypeSvc.h"
 
+#include <cstdlib>
+#include <iostream>
+#include <fstream>
+#include <algorithm>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : EvtTypeSvc

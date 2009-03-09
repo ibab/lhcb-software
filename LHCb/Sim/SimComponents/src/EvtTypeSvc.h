@@ -1,4 +1,4 @@
-// $Id: EvtTypeSvc.h,v 1.2 2009-03-05 13:55:07 rlambert Exp $
+// $Id: EvtTypeSvc.h,v 1.3 2009-03-09 13:04:16 rlambert Exp $
 #ifndef EVTTYPESVC_H 
 #define EVTTYPESVC_H 1
 
@@ -7,13 +7,12 @@
 // from Gaudi
 #include "Kernel/IEvtTypeSvc.h"
 #include "EvtTypeInfo.h"
-#include <sstream>
+
 #include <string>
 #include <cstdlib>
 #include <iostream>
-#include <fstream>
-//#include <set>
 
+#include <set>
 #include <vector>
 
 // Forward declarations

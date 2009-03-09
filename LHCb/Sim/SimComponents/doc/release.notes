@@ -5,6 +5,10 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+! 2009-03-09 - Rob Lambert
+ - Bugfix, added in extra headers to EvtTypeSvc.
+   Could have produced differences with different compilers.
+
 ! 2009-03-08 - Rob Lambert
  - Bugfix, small problem with MCEventTypeFinder. noticed by Marco,
    produced errors with gcc 4. Now fixed.
