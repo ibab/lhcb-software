@@ -2,6 +2,7 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+!======================== GaudiConf v12r2 2009-03-09 ========================
 ! 2009-03-09 - Marco Cattaneo
  - Remove LHCbApp().UseOracle property. Use CondDB().UseOracle instead
 
