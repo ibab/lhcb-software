@@ -176,7 +176,11 @@
         
         <enumval name = "CaloMatchChi2"  value = "201" desc="Chi2 from the 2D Ecal-Hcal matching (cosmics tracks)"/>
         <enumval name = "CaloTimeInfo"   value = "202" desc="Time info from Calo "/>
-
+        <enumval name = "IsMuon"   value = "300" desc="Probability of been a muon according with the hits distribution in the muon stations and its momentum"/>
+        <enumval name = "IsMuonLoose"   value = "301" desc="Probability of been a loose muon according with the hits distribution in the muon stations and momentum"/>
+        <enumval name = "MuonQuality"   value = "302" desc="Quality of the muon (chi2 in the muon stations)"/>
+        <enumval name = "MuonCL"   value = "303" desc="Confidence level to be a muon"/>
+        <enumval name = "MuonDLL"   value = "304" desc="Delta log likelihood between a muon and no muon hipothesis"/>
        </enum>
 
    <typedef

@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2009-03-09 - Jose A. Hernando
+ - Adding enums for extra info for the muon tracks
+
 !======================= TrackEvent v4r18 2009-02-18 =========================
 ! 2009-01-19 - David Hutchcroft
  - Added Velo "Lite" measurements to the list of measurement types 
