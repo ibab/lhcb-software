@@ -4,7 +4,11 @@ rm -f /dev/shm/sem.BM*
 rm -f /dev/shm/sem.bm*
 rm -f /dev/shm/sem.MEP*
 EXEC=../${CMTCONFIG}/test.exe
-MINITERM='xterm -geometry 60x6 -e '
+MINITERM='sh -c '
+if test "${1}" = "xterm";
+then
+  MINITERM='xterm -geometry 60x6 -e ';
+fi;
 $MINITERM "$EXEC mbm_install -s=8096 -e=5  -u=4 -i=MEP" &
 sleep 1
 $MINITERM "$EXEC mbm_install -s=4096 -e=30 -u=10 -i=EVENT" &
@@ -23,4 +27,4 @@ $MINITERM "$EXEC mep_cons_a   -i=RESULT -n=LBMonit_0" &
 $MINITERM "$EXEC mep_cons_a   -i=RESULT -n=LBMonit_1" &
 $MINITERM "$EXEC mep_holder_a -i=MEP    -n=MepHold_0" &
 sleep 2
-$MINITERM "$EXEC mep_prod_a -n=Mep_0" &
+$MINITERM "$EXEC mep_prod_a -n=Mep_0 -count=1000" &

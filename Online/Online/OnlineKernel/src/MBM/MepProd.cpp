@@ -2,6 +2,7 @@
 #include "MBM/Producer.h"
 #include "RTL/rtl.h"
 #include "WT/wtdef.h"
+#include <cstring>
 
 #define PACKING_FACTOR 20
 namespace {
@@ -12,8 +13,9 @@ namespace {
   }
   struct Prod  : public MEP::Producer  {
     int mep_identifier;
+    int num_event;
     MBM::Producer* m_evtProd;
-    Prod(const std::string& nam) : MEP::Producer(nam, 0x103), mep_identifier(0)   
+    Prod(const std::string& nam,int nevt) : MEP::Producer(nam, 0x103), mep_identifier(0), num_event(nevt)
     {
       m_flags = USE_EVT_BUFFER+USE_MEP_BUFFER;
       include();
@@ -27,6 +29,7 @@ namespace {
     }
     ~Prod()  {
       delete m_evtProd;
+      exclude();
     }
     int spaceRearm(int) {
       return Producer::spaceRearm(sizeof(MEPEVENT)+PACKING_FACTOR*sizeof(MEP_SINGLE_EVT));
@@ -87,19 +90,26 @@ namespace {
     // Run the application in synchonous mode
     int runSynchronous() {
       spaceRearm(0);
-      return spaceAction();
+      int ret = spaceAction();
+      if ( --num_event == 0 ) {
+	delete this;
+	::exit(0);
+      }
+      return ret;
     }
   };
 }
 
 extern "C" int mep_prod_a(int argc,char **argv) {
   RTL::CLI cli(argc, argv, help);
+  int nevt = 10000000;
   std::string name = "producer";
   bool async = cli.getopt("asynchronous",1) != 0;
   cli.getopt("name",1,name);
+  cli.getopt("count",1,nevt);
   ::lib_rtl_output(LIB_RTL_ALWAYS,"%synchronous MEP Producer \"%s\" (pid:%d) included in buffers.\n",
 	   async ? "As" : "S", name.c_str(),Prod::pid());
-  Prod p(name);
+  Prod p(name,nevt);
   if ( async ) p.setNonBlocking(WT_FACILITY_DAQ_SPACE, true);
   return p.run();
 }

@@ -7,6 +7,9 @@
 #include <cstring>
 #include <iostream>
 #include <fcntl.h>
+
+using namespace std;
+
 namespace {
   template<class T> union func_desc   {
     void* ptr;
@@ -25,7 +28,7 @@ namespace {
       static WSADATA g_WSAData;
       memset(&g_WSAData, 0, sizeof(WSADATA));
       if (WSAStartup ( MAKEWORD(1,1), &g_WSAData) != 0)    {
-        throw std::runtime_error("RTL: WSAStartup failed!");
+        throw runtime_error("RTL: WSAStartup failed!");
       }
     }
   };
@@ -47,11 +50,11 @@ namespace RTL  {
     void *exit_param;
     int  *exit_status;
   };
-  struct ExitHandler : public std::vector<EXHDEF>  {
+  struct ExitHandler : public vector<EXHDEF>  {
     ExitHandler();
     ~ExitHandler();
     static void execute();
-    static std::vector<EXHDEF>& exitHandlers();
+    static vector<EXHDEF>& exitHandlers();
   };
 }
 
@@ -76,13 +79,13 @@ namespace RTL {
    */
   class ExitSignalHandler {
   protected:
-    typedef std::map<int,std::pair<std::string, struct sigaction> > SigMap;
+    typedef map<int,pair<string, struct sigaction> > SigMap;
     SigMap m_map;
     ExitSignalHandler();
     ~ExitSignalHandler();
   public:
     static ExitSignalHandler& instance();
-    void install(int num, const std::string& name, struct sigaction& action);
+    void install(int num, const string& name, struct sigaction& action);
     static void handler(int signum, siginfo_t *info,void * );
   };
 
@@ -123,14 +126,14 @@ RTL::ExitSignalHandler& RTL::ExitSignalHandler::instance() {
   return inst;
 }
 
-void RTL::ExitSignalHandler::install(int num, const std::string& name, struct sigaction& action) {
-  std::pair<std::string, struct sigaction>& old_action = m_map[num];
+void RTL::ExitSignalHandler::install(int num, const string& name, struct sigaction& action) {
+  pair<string, struct sigaction>& old_action = m_map[num];
   int res = sigaction (num, &action, &old_action.second);
   if ( res != 0 ) {
-    std::cout << "Failed to install exit handler for " << name << std::endl;
+    cout << "Failed to install exit handler for " << name << endl;
     return;
   }
-  //std::cout << "Successfully installed handler for " << name << std::endl;
+  //cout << "Successfully installed handler for " << name << endl;
   old_action.first = name;
 }
 
@@ -206,8 +209,8 @@ void RTL::ExitHandler::execute()  {
   static bool executing = false;
   if ( !executing )  {
     executing = true;
-    const std::vector<EXHDEF>& v = exitHandlers();
-    for (std::vector<EXHDEF>::const_reverse_iterator i=v.rbegin(); i != v.rend(); ++i)  {
+    const vector<EXHDEF>& v = exitHandlers();
+    for (vector<EXHDEF>::const_reverse_iterator i=v.rbegin(); i != v.rend(); ++i)  {
       const EXHDEF& hdlr = *i;
       if ( hdlr.exit_handler )  {
         (*hdlr.exit_handler)(hdlr.exit_param);
@@ -221,7 +224,7 @@ void RTL::ExitHandler::execute()  {
   }
 }
 
-std::vector<RTL::EXHDEF>& RTL::ExitHandler::exitHandlers() {
+vector<RTL::EXHDEF>& RTL::ExitHandler::exitHandlers() {
   static ExitHandler s_exitHandlers;
   return s_exitHandlers;
 }
@@ -284,7 +287,7 @@ int lib_rtl_remove_exit(int (*hdlr)(void*), void* param) {
 }
 
 extern "C" void* lib_rtl_alloc_int_pointer_map()   {
-  return new std::map<int,void*>;
+  return new map<int,void*>;
 }
 
 int lib_rtl_run_ast (RTL_ast_t astadd, void* param, int)    {
@@ -466,7 +469,7 @@ void lib_rtl_install_printer(size_t (*func)(void*, int, const char*, va_list arg
 }
 
 extern "C" int rtl_test_main(int /* argc */, char** /* argv */)  {
-  std::cout << "Executing empty test action ..... finished ......" << std::endl;
+  cout << "Executing empty test action ..... finished ......" << endl;
   return 1;
 }
 
@@ -495,8 +498,8 @@ extern "C" const char* lib_rtl_gmtimestr(const char* fmt, const time_t* tp)  {
 }
 
 namespace RTL {
-  const std::string& processName()  {
-    static std::string s;
+  const string& processName()  {
+    static string s;
     if ( s.empty() )  {
       char txt[64];
       ::lib_rtl_get_process_name(txt, sizeof(txt));
@@ -504,8 +507,8 @@ namespace RTL {
     }
     return s;
   }
-  const std::string& dataInterfaceName()  {
-    static std::string s;
+  const string& dataInterfaceName()  {
+    static string s;
     if ( s.empty() )  {
       char txt[64];
       ::lib_rtl_get_datainterface_name(txt, sizeof(txt));
@@ -513,20 +516,20 @@ namespace RTL {
     }
     return s;
   }
-  const std::string& nodeName()  {
-    static std::string s;
+  const string& nodeName()  {
+    static string s;
     if ( s.empty() )  {
       char txt[64];
-      ::lib_rtl_get_node_name(txt, sizeof(txt));
+      ::lib_rtl_get_node_name(txt,sizeof(txt));
       s = txt;
     }
     return s;
   }
-  const std::string& nodeNameShort()  {
-    static std::string s;
+  const string& nodeNameShort()  {
+    static string s;
     if ( s.empty() )  {
       s = nodeName();
-      if ( s.find(".") != std::string::npos )  {
+      if ( s.find(".") != string::npos )  {
         s = s.substr(0,s.find("."));
       }
     }
