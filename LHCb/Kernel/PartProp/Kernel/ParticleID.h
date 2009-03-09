@@ -1,4 +1,4 @@
-// $Id: ParticleID.h,v 1.3 2008-12-11 15:23:05 gcorti Exp $ 
+// $Id: ParticleID.h,v 1.4 2009-03-09 17:27:45 ibelyaev Exp $ 
 // ============================================================================
 #ifndef LHCbKernel_ParticleID_H
 #define LHCbKernel_ParticleID_H 1
@@ -123,27 +123,26 @@ namespace LHCb
     /// Quark contents
     bool hasTop     () const { return hasQuark ( top     ) ; }
     /// Quark contents
-    bool hasQuark ( const Quark& q ) const;
+    bool hasQuark   ( const Quark& q ) const;
     /// Contains quarks but not a nucleus
-    bool hasQuarks  () const;
+    bool hasQuarks  () const ;
     /// Atomic number if a nucleus
-    int Z() const;
+    int  Z          () const ;
     /// Nucleon number if a nucleus
-    int A() const;
+    int  A          () const ;
     /// nLambda if this is a nucleus
-    int nLambda() const;
-    
+    int  nLambda    () const ;
     // ========================================================================
   public:
     // ========================================================================
     /// Three times the charge (in positron charge units)
-    int threeCharge() const;
+    int threeCharge () const;
     /// Returns 2J+1, where J is the total spin
-    int jSpin () const;
+    int jSpin       () const;
     /// Returns 2S+1, where S is the spin
-    int sSpin () const;
+    int sSpin       () const;
     /// Returns 2L+1, where L is the orbital angular momentum
-    int lSpin () const;
+    int lSpin       () const;
     // ========================================================================
   public: // some semitechnical stuff 
     // ========================================================================

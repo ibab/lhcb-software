@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: decorators.py,v 1.3 2008-12-03 17:35:54 ibelyaev Exp $ 
+# $Id: decorators.py,v 1.4 2009-03-09 17:27:45 ibelyaev Exp $ 
 # =============================================================================
 ## @file PartProp/decorators.py
 #  The set of basic decorator for objects from Kernel/PartProp package 
@@ -12,7 +12,7 @@ The set of basic decorators for objects from Kernel/PartProp package
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl" 
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $" 
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $" 
 # =============================================================================
 
 import PyCintex
@@ -129,6 +129,19 @@ def _prnt_as_table_ ( self , *args ) :
     """
     return LHCb.ParticleProperties.printAsTable ( self , *args )
 
+# ============================================================================
+# delegate the evaluation of unknown atrributes to LHCb.ParticleID class
+def _get_attr_from_PID_ ( self , attr ) :
+    """
+    Delegate the evaluation of unknown atrributes to LHCb.ParticleID class
+
+    >>> pp = ...
+    >>> print pp.jSpin()
+    
+    """
+    _pid = self.pid() 
+    if hasattr ( _pid , attr ) : return getattr ( _pid , attr )
+    raise AttributeError ( 'Unknown attribute: %s ' % attr )
 
 
 ## decorate the vector of properties 
@@ -146,6 +159,8 @@ LHCb.IParticlePropertySvc.ParticleProperties.__str__  = _prnt_as_table_
 LHCb.ParticleProperty .__str__  = LHCb.ParticleProperty.toString
 LHCb.ParticleProperty .__repr__ = LHCb.ParticleProperty.toString
 
+## decorate the attribute access for LHCb.ParticleProperty
+LHCb.ParticleProperty .__getattr__ = _get_attr_from_PID_
 
 ## decorate the printout for LHCb::ParticleID 
 LHCb.ParticleID       .__str__  = LHCb.ParticleID.toString

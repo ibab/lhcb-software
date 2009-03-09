@@ -1,4 +1,4 @@
-// $Id: ParticleProperty.h,v 1.1.1.1 2008-12-01 18:27:10 ibelyaev Exp $
+// $Id: ParticleProperty.h,v 1.2 2009-03-09 17:27:45 ibelyaev Exp $
 // ============================================================================
 #ifndef LHCBKERNEL_PARTICLEPROPERTY_H
 #define LHCBKERNEL_PARTICLEPROPERTY_H 1
@@ -34,7 +34,7 @@ namespace LHCb
   public:
     // ========================================================================
     /** @struct Compare
-     *  The comparion criteria for particl eproperties 
+     *  The comparion criteria for particle properties 
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-10-14
      */
@@ -121,7 +121,19 @@ namespace LHCb
     /// Get the max width deviation
     double maxWidth () const { return m_maxWidth ; }     // max-width 
     /// get the pointer to the anti-particle
-    const LHCb::ParticleProperty* antiParticle () const { return m_anti   ; }
+    const LHCb::ParticleProperty* antiParticle () const { return anti() ; }
+    /// get the pointer to the anti-particle
+    const LHCb::ParticleProperty* anti         () const { return m_anti ; }
+    // ========================================================================
+  public:
+    // ========================================================================
+    /// self-charge conjugated? 
+    bool selfcc      () const { return m_anti == this ; }
+    // ========================================================================
+  public: // some trivial delegation to ParticleID 
+    // ========================================================================
+    ///  Three times the charge (in positron charge units)
+    int  threeCharge () const { return m_pid . threeCharge () ; } 
     // ========================================================================
   public: // the only one setter 
     // ========================================================================
@@ -148,9 +160,9 @@ namespace LHCb
     inline bool operator<( const LHCb::ParticleProperty& right ) const 
     {
       return 
-        ( m_pid < right.m_pid ) ? true  : 
-        ( right.m_pid < m_pid ) ? false :
-        ( m_name < right.m_name ) ;
+        ( m_pid       < right.m_pid  ) ? true  : 
+        ( right.m_pid < m_pid        ) ? false :
+        ( m_name      < right.m_name )         ;
     }
     // ========================================================================
   public: // Other minor details

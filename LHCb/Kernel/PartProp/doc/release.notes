@@ -1,9 +1,30 @@
-! $Id: release.notes,v 1.12 2009-02-18 14:39:25 cattanem Exp $ 
+! $Id: release.notes,v 1.13 2009-03-09 17:27:45 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/PartProp
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
+
+! 2009-03-09 - Vanya BELYAEV
+
+ - add few very simple methods to LHCb::ParticlProperty class
+
+    - selfcc
+    - threeCharge 
+
+ - src/Component/PartPropAlg.cpp
+
+    -  modifty a little bit the test/demo algorithm LHCb::Example::PartPropAlg
+
+ - python/PartProp/decorators.py
+
+    - instrument LHCb.ParticleProperty.__getattr__ to delegate the search 
+      for attributes to underlyig LHCb.ParticleID object. 
+      It allows to ask LHCb.ParticleProperty directly all the 
+      attributes for LHCbParticleID objects      
+
+ - cmt/requirments
+    - version increment to v1r1 
 
 !======================== PartProp v1r0p1 2009-02-18 ==========================
 ! 2009-01-20 - Marco Cattaneo

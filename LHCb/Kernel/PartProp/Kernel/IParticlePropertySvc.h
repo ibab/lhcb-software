@@ -1,4 +1,4 @@
-// $Id: IParticlePropertySvc.h,v 1.3 2008-12-03 13:43:50 ibelyaev Exp $
+// $Id: IParticlePropertySvc.h,v 1.4 2009-03-09 17:27:45 ibelyaev Exp $
 // ============================================================================
 #ifndef LHCBKERNEL_IPARTICLEPROPERTYSVC_H
 #define LHCBKERNEL_IPARTICLEPROPERTYSVC_H
@@ -498,7 +498,8 @@ namespace LHCb
      *  // use the function 
      *  LHCb::ParticleProperties::get 
      *    ( svc , 
-     *      bind ( &LHCb::ParticleID::isLepton , bind ( &LHCb::ParticleProperty::particleID , _1 ) ) ,
+     *      bind ( &LHCb::ParticleID::isLepton , 
+     *      bind ( &LHCb::ParticleProperty::particleID , _1 ) ) ,
      *      std::back_inserter ( leptons ) ) ; // output 
      *
      *  @endcode
