@@ -16,13 +16,11 @@ class DDDBConf(ConfigurableUser):
     ConfigurableUser for the configuration of the detector description.
     """
     __slots__ = { "DbRoot"    : "conddb:/lhcb.xml",
-                  "UseOracle" : False,
                   "DataType"  : "2008",
                   "Simulation": False,
                    }
     _propertyDocDct = { 
                        'DbRoot' : """ Root file of the detector description """,
-                       'UseOracle' : """ Boolean flag to enable the usage of the CondDB from Oracle servers """,
                        'DataType' : """ Symbolic name for the data type. Allowed values: ["2008", "DC06"] """,
                        'Simulation' : """ Boolean flag to select the simulation or real-data configuration """,
                        }
