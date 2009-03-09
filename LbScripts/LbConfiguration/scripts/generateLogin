@@ -207,7 +207,13 @@ def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None,
     SetupProject().main(setupprojargs)
     if os.path.exists(cachefilename) :
         fixNative(cachefilename)
-        removeVariables(cachefilename, ["CMTCONFIG", "ROOTSYS"] )
+        vartoremove = ["CMTCONFIG", "ROOTSYS"]
+        if shell == "bat" :
+            vartoremove += "lib"
+            vartoremove += "LIB"
+            vartoremove += "INCLUDE"
+            vartoremove += "include"
+        removeVariables(cachefilename, vartoremove )
         fixPathes(cachefilename)
         fixPython(cachefilename)
         

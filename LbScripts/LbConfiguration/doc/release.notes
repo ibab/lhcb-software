@@ -1,3 +1,8 @@
+2009-03-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/generateLogin: removed the tempering of LIB and INCLUDE variable in the
+	cache. The windows compiler relies on them and they were unset.
+
 2009-03-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/LbLogin.py: fixed the value of STAGE_HOST for the CERN
