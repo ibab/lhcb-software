@@ -6,6 +6,7 @@
   <class name    = "IMatchTool"              />
   <class name    = "IMeasurementProvider"    />
   <class name    = "IPatForwardTool"         />
+  <class name    = "IPatSeedFit"             />
   <class name    = "IPatSeedingTool"         />
   <class name    = "IPromoteClusters"        />
   <class name    = "IPtTransporter"          />
@@ -27,6 +28,7 @@
   <class name    = "ITrackProjectorSelector" />
   <class name    = "ITrackSelector"          />
   <class name    = "ITracksFromTrack"        />
+  <class name    = "ITrackStateInit"         />
   <class name    = "ITrackVelodEdxCharge"    />
   <class name    = "ITrackVertexer"          />
   <class name    = "ITrajectoryProvider"     />

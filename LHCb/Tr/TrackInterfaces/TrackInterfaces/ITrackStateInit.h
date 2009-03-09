@@ -5,6 +5,10 @@
 #include "GaudiKernel/IAlgTool.h"
 #include "Kernel/ParticleID.h"
 
+namespace LHCb {
+  class Track;
+}
+
 /** @class ITrackStateInit ITrackStateInit.h 
  *
  * An interface to the TrackStateInitTool

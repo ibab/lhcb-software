@@ -1,9 +1,11 @@
-// $Id: IPatSeedFit.h,v 1.1 2009-03-04 15:12:07 smenzeme Exp $
+// $Id: IPatSeedFit.h,v 1.2 2009-03-09 13:47:02 cattanem Exp $
 #ifndef TRACKINTERFACES_IPATSEEDFIT_H
 #define TRACKINTERFACES_IPATSEEDFIT_H 1
 
+#include <vector>
 #include "GaudiKernel/IAlgTool.h"
-#include "Event/Track.h"
+#include "Kernel/LHCbID.h"
+#include "Event/State.h"
 
 static const InterfaceID IID_IPatSeedFit("IPatSeedFit", 1, 0);
 
