@@ -1,12 +1,12 @@
-! $Id: release.notes,v 1.116 2009-03-05 15:35:10 odescham Exp $
+! $Id: release.notes,v 1.117 2009-03-09 13:07:59 cattanem Exp $
 ! Package : L0Event
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
 
-! 2009-05-03 - Olivier Deschamps
+!======================== L0Event v17r4 2009-03-09 ===========================
+! 2009-03-05 - Olivier Deschamps
  - Event/L0DUBase.h : define hardware limitation parameters
  - xml/L0DUTrigger.xml & xml/L0DUReport.xml : minor fix
-
 
 !======================== L0Event v17r3 2008-11-17 ===========================
 ! 2008-11-06 - Marco Cattaneo
