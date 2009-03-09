@@ -4,7 +4,8 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
-! 20009-03-01 M Needham
+!========================== DigiEvent v2r11 2009-03-09 =======================
+! 2009-03-01 M Needham
  - Remove unused constructor and set functions from STCluster
  - Add setDepositedCharge method to STDigit
  - Add clone and copy constructor to VeloDigit 
