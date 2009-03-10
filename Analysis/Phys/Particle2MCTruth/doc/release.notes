@@ -5,6 +5,17 @@
 !               Particle2MCAssociatorBase for Particle -> MCTruth matching
 !-----------------------------------------------------------------------------
 
+! 2009-03-10 - Juan PALACIOS
+ - cmt/requirements
+  . Add linker library and export include P2MCP
+ - Add:
+  . P2MCP/IP2MCP.h : IParticle2MCAssociator.h clone
+  . P2MCP/P2MCPBase.h : Base implementation of IP2MCP
+  . src/Lib/P2MCPBase.cpp : "      "         "    "
+  . dict/Particle2MCTruthDict{.h, .xml} : dictionaries for IP2MCP
+ - src/MCMatchObjP2MCRelator{.cpp, .h}
+  . Inherit from IP2MCP and P2MCPBase
+
 ! 2009-03-06 - Juan PALACIOS
  - src/MCMatchObjP2MCRelator.h
   . Add virtual private sort methods to over-ride those defined in Particle2MCAssociatorBase
