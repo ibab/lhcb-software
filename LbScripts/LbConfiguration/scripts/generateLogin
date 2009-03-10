@@ -217,7 +217,8 @@ def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None,
         fixPathes(cachefilename)
         fixPython(cachefilename)
         
-def generateLogin(targetlocation, script, version="", mysiteroot=None, building=False, withoutpython=False):
+def generateLogin(targetlocation, script, version="", mysiteroot=None, building=False, 
+                  withoutpython=False, withoutcache=False):
     knownshells = ["sh", "csh", "tcsh", "zsh", "bat"]
     shell = os.path.splitext(script)[1][1:]
     if not shell in knownshells :
@@ -284,9 +285,11 @@ set LbLogin_tmpfile=
 
     fixNative(script)
 
-    generateLoginCache(mysiteroot, shell, version, targetlocation, building, withoutpython)
+    if not withoutcache :
+        generateLoginCache(mysiteroot, shell, version, targetlocation, building, withoutpython)
 
-def generateLogins(version, targetlocation=None, scripts=None, mysiteroot=None, building=False, withoutpython=False):
+def generateLogins(version, targetlocation=None, scripts=None, mysiteroot=None, building=False, 
+                   withoutpython=False, withoutcache=False):
     if not targetlocation : 
         targetlocation = os.path.realpath(_base_dir)
     if not scripts :
@@ -295,7 +298,7 @@ def generateLogins(version, targetlocation=None, scripts=None, mysiteroot=None, 
         scripts.append(os.path.join(_scripts_dir, "LbLogin.sh"))
         scripts.append(os.path.join(_scripts_dir, "LbLogin.bat"))
     for s in scripts :
-        generateLogin(targetlocation, s, version, mysiteroot, building, withoutpython)
+        generateLogin(targetlocation, s, version, mysiteroot, building, withoutpython, withoutcache)
 
 
 if __name__ == '__main__':
@@ -313,6 +316,9 @@ if __name__ == '__main__':
     parser.add_option("--without-python", dest="withoutpython", action="store_true",
                       help="prevents the setup of python from LCGCMT")
     
+    parser.set_defaults(withoutcache=False)
+    parser.add_option("--no-cache", dest="withoutcache", action="store_true",
+                      help="prevents the generation of the cache")
 
     opts, args = parser.parse_args()
 
@@ -333,6 +339,7 @@ if __name__ == '__main__':
     if len(args) > 2 :
         scripts = args[2:]
         
-    generateLogins(version, targetlocation, scripts, opts.mysiteroot, opts.building, opts.withoutpython)
+    generateLogins(version, targetlocation, scripts, opts.mysiteroot, opts.building,
+                   opts.withoutpython, opts.withoutcache)
 
 

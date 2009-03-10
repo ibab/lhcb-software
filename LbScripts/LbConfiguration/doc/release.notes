@@ -1,3 +1,9 @@
+2009-03-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/generateLogin: added option to avoid the cache generation. This is
+	needed by install_project. At that moment we don't know if there is a LCGCMT/python
+	or not 
+
 2009-03-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/generateLogin: removed the tempering of LIB and INCLUDE variable in the
