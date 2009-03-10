@@ -1,4 +1,4 @@
-// $Id: MCEventTypeFinder.cpp,v 1.3 2009-03-09 12:54:36 cattanem Exp $
+// $Id: MCEventTypeFinder.cpp,v 1.4 2009-03-10 08:50:56 cattanem Exp $
 // Include files 
 #include <sstream>
 
@@ -486,7 +486,7 @@ StatusCode MCEventTypeFinder::appendParents(LHCb::EventTypeSet & aset)
     if(aset.empty()) { aset.insert(m_mbias); return StatusCode::SUCCESS;}
     
     
-    for(LHCb::EventTypeSet::iterator n=parents.begin(); n!=parents.end(); n++)
+    for(LHCb::EventTypeSet::const_iterator n=parents.begin(); n!=parents.end(); n++)
       {
         parentEventTypes(*n, aset); //append parents to aset
       }
