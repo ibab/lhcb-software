@@ -2,11 +2,35 @@ from MicroDSTExample import Helpers
 from GaudiKernel import SystemOfUnits
 from ROOT import Double
 #==============================================================================
-class MassRes:
+class AssocMCPFromTable :
     def __init__(self, table) :
         self.table = table
+        def __call__(self, particle) :
+            return Helpers.assocMCP(particle, self.table)
+#==============================================================================
+class MCAssociator :
+    def __init__(self, MCAssociatorTool, verbose = False ) :
+        self.mcAssoc = MCAssociatorTool
+        self.verbose = verbose
+    def __call__(self, p) :
+        table = self.mcAssoc.relatedMCPs(p)
+        if self.verbose and (table == None) :
+            print "Found no table"
+        else :
+            rels = table.relations()
+            if rels.size() > 0 :
+                mcp = rels.back().to()
+                if (Helpers.pid(p) != Helpers.pid(mcp) ) and self.verbose :
+                    print "ASSOC MISMATCH!!\tP ", Helpers.pid(p), "\tMCP ", Helpers.pid(mcp)
+                    for rel in rels :
+                        print "\t MCP ", Helpers.pid(rel.to())
+                return rels.back().to()
+#==============================================================================
+class MassRes:
+    def __init__(self, assocFun) :
+        self.assocFun = assocFun
     def __call__(self, particle) :
-        mcp = Helpers.assocMCP(particle, self.table)
+        mcp = self.assocFun(particle)
         if (mcp != None) :
             return particle.momentum().mass()-mcp.momentum().mass()
 #==============================================================================
