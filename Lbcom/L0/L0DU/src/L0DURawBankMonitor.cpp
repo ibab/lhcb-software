@@ -1,4 +1,4 @@
-// $Id: L0DURawBankMonitor.cpp,v 1.9 2009-03-05 15:32:45 odescham Exp $
+// $Id: L0DURawBankMonitor.cpp,v 1.10 2009-03-10 14:40:57 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -456,8 +456,8 @@ bool L0DURawBankMonitor::emulatorCheck(LHCb::L0DUConfig* config, int unit, std::
           "L0DU conditions value emulator check (" + txt + ")",-1. ,(double) ecBin  , ecBin+1);
 
 
-  TAxis* ax1;
-  TAxis* ax2;
+  TAxis* ax1=0;
+  TAxis* ax2=0;
   if(m_first){
     TH1D* th1 = Gaudi::Utils::Aida2ROOT::aida2root( h1 );        
     TH1D* th2 = Gaudi::Utils::Aida2ROOT::aida2root( h2 );        
