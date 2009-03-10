@@ -1,4 +1,4 @@
-// $Id: STSummaryAnalyser.h,v 1.1 2009-03-06 16:43:21 nchiapol Exp $
+// $Id: STSummaryAnalyser.h,v 1.2 2009-03-10 13:55:07 cattanem Exp $
 #ifndef STSummaryAnalyser_H
 #define STSummaryAnalyser_H 1
 
@@ -43,9 +43,9 @@ private:
   static const int    c_title          = 1;
 
   static const int    c_nErrorBins     = 3;
-  static const double c_binIDaSynch   = 0.5;
-  static const double c_binIDmissing   = 1.5; 
-  static const double c_binIDcorrupted = 2.5;
+  const double c_binIDaSynch;
+  const double c_binIDmissing; 
+  const double c_binIDcorrupted;
 
   /// Tell1 mapping from tell1 name to source ID.
   const std::map<unsigned int, unsigned int>* m_TELL1Mapping;

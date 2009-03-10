@@ -1,4 +1,4 @@
-// $Id: STSummaryAnalyser.cpp,v 1.1 2009-03-06 16:43:21 nchiapol Exp $
+// $Id: STSummaryAnalyser.cpp,v 1.2 2009-03-10 13:55:07 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -37,7 +37,10 @@ DECLARE_ALGORITHM_FACTORY( STSummaryAnalyser);
 
 STSummaryAnalyser::STSummaryAnalyser( const std::string& name, ISvcLocator* pSvcLocator ) :
   GaudiHistoAlg(name, pSvcLocator),
-  m_pcnHisto("pcnEvent")
+  m_pcnHisto("pcnEvent"),
+  c_binIDaSynch(0.5),
+  c_binIDmissing(1.5), 
+  c_binIDcorrupted(2.5)
 {
   // constructer
   declareProperty("DetType", m_detType = "TT" );
