@@ -4,6 +4,7 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================== GlobalReco v6r20 2009-03-10 ======================
 ! 2009-03-10 - Chris Jones
  - Improvements to the ROOT scripts for monitoring the PID performance
    from ProtoParticles.
