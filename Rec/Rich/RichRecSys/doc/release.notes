@@ -4,10 +4,10 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecSys v3r17 2009-03-10 ==========================
 ! 2009-03-10 - Chris Jones
  - Temporarily disable Sajan's package for DC09 release.
 
-!====================== RichRecSys v3r17 2009-03-10 ==========================
 ! 2009-03-04 - Chris Jones
  - Integrate new package from Sajan for ring reconstruction.
 
