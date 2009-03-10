@@ -85,7 +85,7 @@ StatusCode OTTrackMonitor::finalize()
 //=========================================================================
 StatusCode OTTrackMonitor::execute()
 { 
-  setHistoTopDir("Track/") ;
+  setHistoTopDir("OT/") ;
   const int numUniqueModule = 432 ;
 
   const LHCb::Tracks* tracks = get<LHCb::Tracks>( m_trackLocation ) ;
@@ -144,15 +144,18 @@ StatusCode OTTrackMonitor::execute()
 	double respull = fitnode->residual()/fitnode->errResidual() ;
 	
 	// plots by module
-	profile1D( uniquemodule, drifttimeresidual, "timeresvsmodule", "unbiased drifttime residual versus module", -0.5,numUniqueModule-0.5,numUniqueModule) ;
-	profile1D( uniquemodule, residual, "resvsmodule", "unbiased residual versus module", -0.5,numUniqueModule-0.5,numUniqueModule) ;
-	plot(uniquemodule,"moduleocch1","number of HOTs per module",-0.5,numUniqueModule-0.5,numUniqueModule) ;
+	profile1D( uniquemodule, drifttimeresidual, "timeresvsmodule", "unbiased drifttime residual versus module", 
+		   -0.5,numUniqueModule-0.5,numUniqueModule) ;
+	profile1D( uniquemodule, residual, "resvsmodule", "unbiased residual versus module", 
+		   -0.5,numUniqueModule-0.5,numUniqueModule) ;
+	plot(uniquemodule,"moduleocch1","number of HOTs per module",
+	     -0.5,numUniqueModule-0.5,numUniqueModule) ;
 	
 	// residuals distributions, by layer
 	plot(drifttime,nameprefix + "drifttime","drifttime",-25,75) ;
 	plot(radius,nameprefix + "driftradius","driftradius",0,5) ;
 	plot(trkdist,nameprefix + "trkdist","unbiased distance",-5,5) ;
-	plot(drifttimeresidual*resscalefactor,nameprefix + "drifttimeresidual","drifttime residual (rms unbiased)",-25,25) ;
+	plot(drifttimeresidual*resscalefactor,nameprefix + "drifttimeresidual","drifttime residual (rms unbiased)",-20,20) ;
 	plot(residual*resscalefactor,nameprefix + "residual","drifttime residual (rms unbiased)",-2,2) ;
 	plot(respull,nameprefix + "residualpull","residual pull",-5,5) ;
 	
@@ -162,7 +165,7 @@ StatusCode OTTrackMonitor::execute()
 	if( goodtrack ) {
 	  plot(drifttime,nameprefix + "drifttimegood","drifttime (good tracks)",-25,75) ;
 	  plot(trkdist,nameprefix + "trkdistgood","unbiased distance (good tracks)",-5,5) ;
-	  plot(drifttimeresidual*resscalefactor,nameprefix + "drifttimeresidualgood","drifttime residual (rms unbiased, good tracks)",-25,25) ;
+	  plot(drifttimeresidual*resscalefactor,nameprefix + "drifttimeresidualgood","drifttime residual (rms unbiased, good tracks)",-20,20) ;
 	  plot(residual*resscalefactor,nameprefix + "residualgood","drifttime residual (rms unbiased, good tracks)",-2,2) ;
 	  plot(respull,nameprefix + "residualpullgood","residual pull (good tracks)",-5,5) ;
 	}
@@ -174,7 +177,10 @@ StatusCode OTTrackMonitor::execute()
 	sumtimeresidual += drifttimeresidual ;
 	++sumn ;
       }
-    if(sumn>0)  plot( sumtimeresidual/sumn,"avtimeres","average time residual on track",-50,50) ;
+    if(sumn>0)  {
+      plot( sumtimeresidual/sumn,"avtimeres","average time residual on track",-10,10) ;
+      plot2D( (*itr)->p()/1000,sumtimeresidual/sumn,"avtimeresvsmom","average time residual versus momentum",0,20,-20,20,20,40) ;
+    }
   }
   return StatusCode::SUCCESS ;
 }
