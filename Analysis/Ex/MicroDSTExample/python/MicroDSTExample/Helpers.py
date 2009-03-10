@@ -21,9 +21,9 @@ class EventLoop:
         pidx = gbl.LHCb.ParticleID(pid)
         return self.partSvc.find( pidx )
 
-    def getEvtStuff(self, location) :
+    def getEvtStuff(self, location, verbose = False) :
         stuff = self.evt[location]
-        if (stuff ==None):
+        if (verbose == False) and (stuff == None) :
             print "Found no stuff in ", location
         return stuff
     
@@ -161,4 +161,11 @@ def bestVertex(particle, table) :
         print "Found no particle->PV associations"
         return
 
+#==============================================================================
+def particleTreeLoop(particles, functor):
+    for p in particles:
+        p = deSmartRef(p)
+        functor(p)
+        daughters = p.daughters()
+        particleTreeLoop(daughters, functor)
 #==============================================================================
