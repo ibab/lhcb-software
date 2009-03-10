@@ -4,6 +4,7 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+!=============================== STDAQ v3r16 2009-03-10 ======================
 ! 2009-03-03 Mark Tobin
  - Fix gcc4.3 warning in STFullDecoding
 
@@ -17,9 +18,7 @@
 ! 2009-02-26 M Needham
  - Follow changes in STSummary block content
 
-
 !=============================== STDAQ v3r15 2009-02-20 ======================
-
 ! 2009-02-05 J Luisier
  - Improve warning messages in case of error bank too short or too long
 
