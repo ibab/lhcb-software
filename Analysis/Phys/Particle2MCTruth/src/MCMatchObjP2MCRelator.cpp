@@ -1,4 +1,4 @@
-// $Id: MCMatchObjP2MCRelator.cpp,v 1.4 2009-03-06 15:02:13 jpalac Exp $
+// $Id: MCMatchObjP2MCRelator.cpp,v 1.5 2009-03-10 18:12:06 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -26,7 +26,7 @@ MCMatchObjP2MCRelator::MCMatchObjP2MCRelator( const std::string& type,
                                               const std::string& name,
                                               const IInterface* parent )
   : 
-  Particle2MCAssociatorBase( type, name , parent ),
+  P2MCPBase( type, name , parent ),
   m_reporter(0),
   m_matcher(0),
   m_PP2MC()
@@ -36,13 +36,13 @@ MCMatchObjP2MCRelator::MCMatchObjP2MCRelator( const std::string& type,
   m_PP2MC.push_back ( "Relations/" + LHCb::ProtoParticleLocation::Upstream ) ;
   m_PP2MC.push_back ( "Relations/" + LHCb::ProtoParticleLocation::Neutrals ) ;
 
-  declareInterface<IParticle2MCAssociator>(this);
+  declareInterface<IP2MCP>(this);
 
 }
 //=============================================================================
 StatusCode MCMatchObjP2MCRelator::initialize()
 {
-  StatusCode sc =  Particle2MCAssociatorBase::initialize();
+  StatusCode sc =  P2MCPBase::initialize();
   if (sc.isFailure()) return sc;
   m_reporter = tool<LoKi::IReporter>( "LoKi::Reporter", this ) ;
   return (0!=m_reporter) ? StatusCode::SUCCESS : StatusCode::FAILURE;
@@ -50,7 +50,7 @@ StatusCode MCMatchObjP2MCRelator::initialize()
 //=============================================================================
 StatusCode MCMatchObjP2MCRelator::finalize()
 {
-  return Particle2MCAssociatorBase::finalize();
+  return P2MCPBase::finalize();
 }
 //=============================================================================
 bool MCMatchObjP2MCRelator::isMatched(const LHCb::Particle* particle, 
@@ -88,7 +88,31 @@ LoKi::MCMatch MCMatchObjP2MCRelator::matcher() const
 LHCb::MCParticle::ConstVector 
 MCMatchObjP2MCRelator::sort(const LHCb::MCParticle::ConstVector& mcParticles) const 
 {
-  return LoKi::MCTrees::buildTrees(mcParticles);
+  //  return mcParticles;
+//   std::cout << "MCMatchObjP2MCRelator::sort" << std::endl;
+  LHCb::MCParticle::ConstVector head = LoKi::MCTrees::buildTrees(mcParticles);
+  int size = head.size();
+  if ( size > 1) {
+    std::cout << "BEWARE! Association from " << size
+              << " TREES!!!" << std::endl;
+  } else if (size ==1 ){
+    std::cout << "ALL'S GOOD! Association from " << size
+              << " TREE!!!" << std::endl;
+  } else {
+    std::cout << "BEWARE! " << size << " Associations " << std::endl;
+  }
+  
+  LHCb::MCParticle::ConstVector output(mcParticles);
+  
+//   std::cout << "SORTING " << mcParticles.size() << " MCPs " << std::endl;
+//   printMCPIDs(mcParticles);
+  std::stable_sort( output.begin() , output.end() , MCSortLogic() ) ;
+//   std::cout << "SORTED and got " << output.size() << " MCPs" << std::endl;
+//   printMCPIDs(output);
+  
+  return output;
+  
+//  return LoKi::MCTrees::buildTrees(mcParticles);
 }
 //=============================================================================
 LHCb::MCParticle::ConstVector 
