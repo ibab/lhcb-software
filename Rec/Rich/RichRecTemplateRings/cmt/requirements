@@ -2,7 +2,7 @@
 # Created    : 20/08/2007
 # Maintainer : Sajan Easo
 #============================================================================
-# $Id: requirements,v 1.1.1.1 2009-03-04 12:01:45 jonrob Exp $
+# $Id: requirements,v 1.2 2009-03-10 10:33:23 cattanem Exp $
 #============================================================================
 
 package RichRecTemplateRings
@@ -18,7 +18,7 @@ use MCInterfaces   v*  Kernel
 use AIDA           v*  LCG_Interfaces
 use fftw           v*  LCG_Interfaces
 private
-use GaudiObjDesc v* -no_auto_imports
+#use GaudiObjDesc v* -no_auto_imports
 end_private
 
 # Produce Header-Files from XML description and export include directories

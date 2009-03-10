@@ -2,7 +2,9 @@
 ! Package      : Rich/RichRingRec
 ! Responsible  : Sajan Easo
 ! Purpose      : Reconstruct Cherenkov Rings for Particle Identification
-!----------------------------------------------------------------------------
+!-----------------------------------------------------------------------------
+
+!==================== RichRecTemplateRings v1r0 2009-03-10 ===================
 ! 2009-03-08  Sajan Easo
   Fixed a typo in RichRingRecMass
  
