@@ -1,4 +1,4 @@
-// $Id: AParticles.h,v 1.11 2008-12-05 09:39:59 ibelyaev Exp $
+// $Id: AParticles.h,v 1.12 2009-03-10 22:56:26 spradlin Exp $
 // ============================================================================
 #ifndef LOKI_APARTICLES_H 
 #define LOKI_APARTICLES_H 1
@@ -1555,6 +1555,75 @@ namespace LoKi
         const { return std::fabs ( dmass ( a ) ) ; }
       // ======================================================================      
     } ;
+    // ========================================================================
+    /** @class MinDOCA
+     *  Simple function that evaluates the minimal 
+     *  distance of the closest approach for all two-particle 
+     *  subcombinations using IDistanceCalculator tool.
+     *  A straightforward adaptation of MaxDOCA.
+     *  @see LoKi::Cuts::AMINDOCA
+     *  @see IDistanceCalculator
+     *  @author 
+     *  @date 
+     */
+    class MinDOCA : public DOCA 
+    {
+    public:
+      // ======================================================================
+      /// constructor from the tool:
+      MinDOCA ( const                 IDistanceCalculator*  doca ) ;
+      /// constructor from the tool:
+      MinDOCA ( const LoKi::Interface<IDistanceCalculator>& doca ) ;
+      /// constructor from the tool nickname 
+      MinDOCA ( const std::string& doca ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~MinDOCA () {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  MinDOCA* clone() const { return new MinDOCA(*this) ; }
+      /// MANDATORY: the only one essential method 
+      virtual  result_type  operator() ( argument v ) const ;
+      /// OPTIONALLY: the nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled
+      MinDOCA() ; // the default constructor is disabled
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class AllSameBestPV
+     *
+     *  Predicate to determine if all daughter particles have the same
+     *  related PV.  The related PV for each daughter is obtained from the
+     *  IPhysDesktop tool.
+     *
+     *  @see LoKi::Cuts::AALLSAMEBPV
+     *
+     *  @author
+     *  @date
+     */
+    class AllSameBestPV
+      : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate
+      , public virtual LoKi::AuxDesktopBase
+    {
+    public:
+      // ======================================================================
+      /// the default constructor (creates the object in invalid state)
+      AllSameBestPV () ;
+      /// copy constructor 
+      AllSameBestPV ( const AllSameBestPV& right) ;
+      /// MANDATORY: virual destructor
+      virtual ~AllSameBestPV(){};
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  AllSameBestPV* clone() const { return new AllSameBestPV(*this) ; }
+      /// MANDATORY: the only one essential method 
+      result_type operator() ( argument v ) const ;
+      /// OPTIONAL: specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const
+      { return s << "AALLSAMEBPV" ; }
+      // ======================================================================
+    };
     // ========================================================================
   } // end of namespace LoKi::AParticles
 } // end of namespace LoKi 

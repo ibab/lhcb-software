@@ -1,4 +1,4 @@
-// $Id: AParticles.cpp,v 1.8 2008-12-05 09:40:00 ibelyaev Exp $
+// $Id: AParticles.cpp,v 1.9 2009-03-10 22:56:26 spradlin Exp $
 // ============================================================================
 // Include files 
 // ===========================================================================
@@ -1368,6 +1368,115 @@ std::ostream& LoKi::AParticles::DOCAChi2::fillStream ( std::ostream& s ) const
            << ",'" << toolName ( m_eval , m_nick )  << "')" ; }
 // ============================================================================
 
+
+// ============================================================================
+// constructor from the tool:
+// ============================================================================
+LoKi::AParticles::MinDOCA::MinDOCA ( const IDistanceCalculator*  doca  ) 
+  : LoKi::AParticles::DOCA ( 1 , 1 , doca ) 
+{}
+// ============================================================================
+// constructor from the tool:
+// ============================================================================
+LoKi::AParticles::MinDOCA::MinDOCA
+( const LoKi::Interface<IDistanceCalculator>& doca  ) 
+  : LoKi::AParticles::DOCA ( 1 , 1 , doca ) 
+{}
+// ============================================================================
+// constructor from the tool:
+// ============================================================================
+LoKi::AParticles::MinDOCA::MinDOCA
+( const std::string& doca  ) 
+  : LoKi::AParticles::DOCA ( 1 , 1 , doca ) 
+{}
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::AParticles::MinDOCA::result_type
+LoKi::AParticles::MinDOCA::operator()
+  ( LoKi::AParticles::MinDOCA::argument a ) const 
+{
+  //
+  if ( !tool() ) 
+  {
+    const IDistanceCalculator* dc = getDC ( nickname() , *this ) ;
+    setTool ( dc ) ;
+  }
+  //
+  double result = std::numeric_limits<double>::max() ;
+  typedef LoKi::ATypes::Combination A ;
+  for ( A::const_iterator i = a.begin() ; a.end() != i ; ++i )
+  {
+    for ( A::const_iterator j = i + 1 ; a.end() != j ; ++j )
+    {
+      const double dist = doca ( *j, *i ) ;
+      /// get the minimum
+      result = std::min ( result , dist ) ;              // get the minimum
+    } 
+  }
+  return result ;
+}
+// ============================================================================
+std::ostream& 
+LoKi::AParticles::MinDOCA::fillStream ( std::ostream& s ) const 
+{ return s << "AMINDOCA('" << nickname() << "')" ; }
+
+
+// ============================================================================
+// the default constructor (creates the object in invalid state)
+// ============================================================================
+LoKi::AParticles::AllSameBestPV::AllSameBestPV()
+  : LoKi::AuxDesktopBase()
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate ()
+{}
+// ============================================================================
+// copy constructor
+// ============================================================================
+LoKi::AParticles::AllSameBestPV::AllSameBestPV ( const AllSameBestPV& right)
+  : AuxFunBase ( right ) 
+  , LoKi::AuxDesktopBase( right )
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate ( right ) 
+{}
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::AParticles::AllSameBestPV::result_type
+LoKi::AParticles::AllSameBestPV::operator()
+  ( LoKi::AParticles::AllSameBestPV::argument v ) const
+{
+  // load the desktop if needed
+  if ( !validDesktop() ) { loadDesktop() ; }
+  // check it!
+  Assert ( validDesktop () , "No valid IPhysDesktop is found" );
+
+  // Get key for the related PV of each daughter.
+  // Key comparison assumes that all related PVs come from the same container.
+  bool havePVs = true;
+  std::vector< LHCb::VertexBase::key_type > pvkeys;
+  // Is there a way to derive this iterator type from the argument or base
+  //   class type?
+  LoKi::ATypes::Combination::const_iterator iter;
+  for( iter = v.begin(); iter != v.end(); ++iter )
+  {
+    // Does the desktop issue a warning if no PV is found, or should a
+    //   suppressable warning be included here?
+    const LHCb::VertexBase *relPV = desktop()->relatedVertex( *iter );
+    if( relPV )
+      pvkeys.push_back(relPV->key());
+    else
+      havePVs = false;
+  }
+
+  // Using sort and unique are unnecessary overhead here, but might be more
+  //   useful in a more general functor that would return the number of
+  //   unique best pv, but would that be useful?
+  std::sort(pvkeys.begin(), pvkeys.end());
+  std::vector< LHCb::Vertex::key_type >::iterator
+        enduniq = std::unique(pvkeys.begin(), pvkeys.end());
+
+  // Return true if all have the same related PV
+  return havePVs && (std::distance(pvkeys.begin(), enduniq) == 1);
+}
 
 
 

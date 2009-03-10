@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: functions.py,v 1.12 2008-11-28 17:08:25 ibelyaev Exp $ 
+# $Id: functions.py,v 1.13 2009-03-10 22:56:26 spradlin Exp $ 
 # =============================================================================
 ## @file
 #  The set of basic objects from LoKiHlt library
@@ -197,6 +197,14 @@ AWRONGMASS    = LoKi.AParticles.WrongMass
 
 ## @see LoKi::Cuts::DAMASS
 DAMASS        = LoKi.AParticles.DeltaMass 
+
+## @see LoKi::Cuts::ADOCAMIN
+ADOCAMIN      = LoKi.AParticles.MinDOCA
+## @see LoKi::Cuts::AMINDOCA
+AMINDOCA      = LoKi.AParticles.MinDOCA
+
+## @see LoKi::Cuts::AALLSAMEBPV
+AALLSAMEBPV   = LoKi.AParticles.AllSameBestPV ()
 
 
 ## functional part

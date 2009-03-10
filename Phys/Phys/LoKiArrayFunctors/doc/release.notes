@@ -1,9 +1,19 @@
-$Id: release.notes,v 1.34 2009-01-08 17:10:39 cattanem Exp $ 
+$Id: release.notes,v 1.35 2009-03-10 22:56:26 spradlin Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiArrayFunctors
 ! Responsible : Vanya BELYAEV
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
+
+! 2009-03-10 - Patrick SPRADLIN
+- add new functors:
+
+    ADOCAMIN & AMINDOCA: retruns minimum doca of any pair of input particles.
+    AALLSAMEBPV:  Checks if all input particles have the same related PV.
+
+- cmt/requirements
+
+   version increment to v8r2
 
 !======================== LoKiArrayFunctors v8r1 2009-01-08 ===================
 ! 2008-11-28 - Vanya BELYAEV

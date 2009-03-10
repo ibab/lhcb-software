@@ -1,4 +1,4 @@
-// $Id: AParticleCuts.h,v 1.5 2008-04-16 11:33:30 ibelyaev Exp $
+// $Id: AParticleCuts.h,v 1.6 2009-03-10 22:56:26 spradlin Exp $
 // ============================================================================
 #ifndef LOKI_APARTICLECUTS_H 
 #define LOKI_APARTICLECUTS_H 1
@@ -1648,6 +1648,62 @@ namespace LoKi
      *  @date 2007-06-09
      */
     typedef LoKi::AParticles::DeltaMass                          DAMASS ;
+    // ========================================================================
+    /** @typedef ADOCAMIN 
+     *  The evaluator of the minimal distance of the closest approach 
+     *  for all two-particle subcombinations
+     *  
+     *  @code
+     * 
+     *  IGeomDispCalculator* doca = ... ;
+     *  AFun docaMIN = ADOCAMIN ( doca ) ;
+     *
+     *  const LHCb::Particle::ConstVector& combination = ... ;
+     *
+     *  const double minDOCA = fun ( combination ) ;
+     *
+     *  @endcode
+     *  
+     *  @see IGeomDispCalculator
+     *  @see LoKi::AParticles::MinDOCA
+     *  @see LoKi::Cuts::AMINDOCA
+     *  @author
+     *  @date
+     */
+    typedef LoKi::AParticles::MinDOCA                                ADOCAMIN ;
+    // ========================================================================
+    /** @typedef AMINDOCA 
+     *  The evaluator of the minimal distance of the closest approach 
+     *  for all two-particle subcombinations
+     *  
+     *  @code
+     * 
+     *  IGeomDispCalculator* doca = ... ;
+     *  AFun docaMIN = AMINDOCA ( doca ) ;
+     *
+     *  const LHCb::Particle::ConstVector& combination = ... ;
+     *
+     *  const double minDOCA = fun ( combination ) ;
+     *
+     *  @endcode
+     *  
+     *  @see IGeomDispCalculator
+     *  @see LoKi::AParticles::MinDOCA
+     *  @see LoKi::Cuts::ADOCAMIN
+     *  @author
+     *  @date
+     */
+    typedef LoKi::AParticles::MinDOCA                                AMINDOCA ;
+    // ========================================================================
+    /** @typedef AALLSAMEBPV 
+     *  Predicate to determine if all daughter particles have the same
+     *  related PV.
+     *  
+     *  @see LoKi::AParticles::AllSameBestPV
+     *  @author patrick spradlin
+     *  @date   10 March 2009
+     */
+    typedef LoKi::AParticles::AllSameBestPV                      AALLSAMEBPV ;
   } // end of namespace LoKi::Cuts 
 } // end of namespace LoKi
 // ============================================================================
