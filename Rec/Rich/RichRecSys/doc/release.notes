@@ -4,8 +4,9 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecSys v3r17 2009-03-10 ==========================
 ! 2009-03-04 - Chris Jones
- - Intergrate new package from Sajan for ring reconstruction.
+ - Integrate new package from Sajan for ring reconstruction.
 
 !====================== RichRecSys v3r16 2009-02-23 ==========================
 ! 2009-02-21 - Chris Jones
