@@ -1,9 +1,22 @@
-!$Id: release.notes,v 1.15 2009-01-15 14:36:46 jpalac Exp $
+!$Id: release.notes,v 1.16 2009-03-10 15:29:21 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Ex/MicroDSTExample
 ! Responsible : Juan PALACIOS
 ! Purpose     : MicroDST making and reading examples.
 !-----------------------------------------------------------------------------
+
+! 2009-03-10 - Juan PALACIOS
+ - python/MicroDSTExample/Functors.py
+  . Add Particle -> MC association functors
+  . Change MassRes functor to use assoc functors.
+ - python/MicroDSTExample/Helpers.py
+  . Add particleTreeLoop function to iteratively loop over container and 
+    "daughters" of container elements, which should also be a container.
+  . Add verbose member to getEvtStuff function
+ - python/MicroDSTReadingExample.py
+  . Adapt to changes above
+ - cmt/requirements
+  . Increase version to v2r2
 
 !======================= Ex/MicroDSTExample v2r1 2009-01-15 ==================
 
