@@ -1,4 +1,4 @@
-// $Id: Particles20.cpp,v 1.7 2008-12-05 09:09:21 ibelyaev Exp $
+// $Id: Particles20.cpp,v 1.8 2009-03-10 22:49:57 spradlin Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -1594,6 +1594,42 @@ std::ostream& LoKi::Particles::MinVertexChi2DistanceTES::fillStream
 // ============================================================================
 
 
+// ============================================================================
+// the default constructor: create the object in invalid state
+// ============================================================================
+LoKi::Particles::TrgPointingScoreWithBestPV::
+TrgPointingScoreWithBestPV()
+  : LoKi::AuxDesktopBase()
+  , LoKi::Particles::TrgPointingScore ( s_VERTEX ) 
+{}
+// ============================================================================
+// MANDATORY: the clone method ("virtual constructor")
+// ============================================================================
+LoKi::Particles::TrgPointingScoreWithBestPV* 
+LoKi::Particles::TrgPointingScoreWithBestPV::clone() const 
+{ return new TrgPointingScoreWithBestPV ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Particles::TrgPointingScoreWithBestPV::result_type 
+LoKi::Particles::TrgPointingScoreWithBestPV::operator() 
+  ( LoKi::Particles::TrgPointingScoreWithBestPV::argument p ) const 
+{
+  if ( 0 == p ) 
+  {
+    Error ( "LHCb::Particle* points to NULL, retuen -1000" ) ;
+    return -1000 ;                                                     // RETURN 
+  }
+  // load the desktop if needed 
+  if ( !validDesktop() ) { loadDesktop() ; }
+  // check it!
+  Assert ( validDesktop () , "No valid IPhysDesktop is found" );
+  // get the best vertex from desktop and use it 
+  setVertex ( desktop() -> relatedVertex ( p ) ) ;
+  //
+  return pointing ( p ) ;
+}
+// ============================================================================
 
  
 

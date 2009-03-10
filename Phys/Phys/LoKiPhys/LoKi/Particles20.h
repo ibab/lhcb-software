@@ -1,4 +1,4 @@
-// $Id: Particles20.h,v 1.8 2008-11-02 20:13:32 ibelyaev Exp $
+// $Id: Particles20.h,v 1.9 2009-03-10 22:49:57 spradlin Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES20_H 
 #define LOKI_PARTICLES20_H 1
@@ -1342,6 +1342,42 @@ namespace LoKi
       // ======================================================================
       /// The actual functor 
       LoKi::Vertices::MinVertexChi2DistanceTES m_fun ; // The actual functor 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class TrgPointingScoreWithBestPV
+     *  The special version of LoKi::Particles::TrgPointingScore functor,
+     *  which gets the related primary vertex from IPhysDesktop tool
+     *
+     *  @see LoKi::Cuts::BPVTRGPOINTING
+     *  @see IPhysDesktop 
+     *  @see LoKi::getPhysDesktop
+     *  @see LoKi::Particles::TrgPointingScore
+     *
+     *  @attention There are no direct needs to use this "Context" 
+     *             functor inside the native LoKi-based C++ code, 
+     *             there are more efficient, transparent, 
+     *             clear and safe analogues...
+     * 
+     *  @author
+     *  @date
+     */
+    class TrgPointingScoreWithBestPV
+      : public LoKi::Particles::TrgPointingScore 
+      , public virtual LoKi::AuxDesktopBase 
+    {
+    public:
+      /// the default constructor, creates the object in invalid state 
+      TrgPointingScoreWithBestPV () ;
+      /// MANDATORY: virtual destructor 
+      virtual ~TrgPointingScoreWithBestPV () {} ;
+      /// MANDATORY: the clone method ("virtual constructor")
+      virtual  TrgPointingScoreWithBestPV* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout
+      virtual  std::ostream& fillStream ( std::ostream& s ) const 
+      { return s << "BPVTRGPOINTING" ; }
       // ======================================================================
     } ;
   } // end of namespace LoKi::Particles    

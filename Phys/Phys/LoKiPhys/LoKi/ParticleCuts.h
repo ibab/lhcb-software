@@ -1,4 +1,4 @@
-// $Id: ParticleCuts.h,v 1.34 2009-02-11 12:41:48 ibelyaev Exp $
+// $Id: ParticleCuts.h,v 1.35 2009-03-10 22:49:57 spradlin Exp $
 // ============================================================================
 #ifndef LOKI_PHYSPARTICLECUTS_H 
 #define LOKI_PHYSPARTICLECUTS_H 1
@@ -6397,6 +6397,24 @@ namespace LoKi
      *  @date 2006-02-15
      */
     const LoKi::Constant<const LHCb::Particle*,double>             ZERO ( 0 ) ;
+    // ========================================================================
+    /** @typedef TRGPOINTING
+     *  Simple function that evaluates to the custom 'pointing angle'
+     *  sometimes used in trigger applications:
+     *  \f[
+     *    a = (1 + \frac{\sum_{\mathrm{daug}} p_{i} \sin\theta_{i}}{p \sin\theta})^{-1}
+     *  \f]
+     *  where \f$p\f$ is the total momentum of the particle,
+     *  the \f$p_{i}\f$ are the momenta of the particle descendents, and
+     *  \f$\sin\theta_{(i)}\f$ are the angles between the particle's 
+     *  (descendents') momentum and the parent displacement from the specified
+     *  vertex.
+     *
+     *  @see LoKi::Particles::TrgPointingScore
+     *  @author patrick spradlin
+     *  @date   10 March 2009
+     */
+    typedef LoKi::Particles::TrgPointingScore              TRGPOINTING ;
     // ========================================================================
   }  // end of namespace LoKi::Cuts  
 }  // end of namespace LoKi

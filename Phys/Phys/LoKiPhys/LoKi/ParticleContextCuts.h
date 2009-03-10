@@ -1,4 +1,4 @@
-// $Id: ParticleContextCuts.h,v 1.3 2008-03-30 13:43:36 ibelyaev Exp $
+// $Id: ParticleContextCuts.h,v 1.4 2009-03-10 22:49:57 spradlin Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLECONTEXTCUTS_H 
 #define LOKI_PARTICLECONTEXTCUTS_H 1
@@ -1323,6 +1323,24 @@ namespace LoKi
      *  @date 2008-03-29
      */
     typedef LoKi::Particles::MinVertexChi2DistanceTES           MINVDCHI2TES ;
+    // ========================================================================
+    /** @var BPVTRGPOINTING
+     *  The special "context-dependent" version of TRGPOINTING functor.
+     *  It takes the best primary vertex from IPhysDesktop tool
+     *
+     *  @attention There are no direct needs to use this "Context" 
+     *             functor inside the native LoKi-based C++ code, 
+     *             there are more efficient, transparent, 
+     *             clear and safe analogues...
+     * 
+     *
+     *  @see LoKi::Cuts::TRGPOINTING
+     *  @see LoKi::Particles::TrgPointingScore
+     *  @see LoKi::Particles::TrgPointingScoreWithBestPV
+     *  @author patrick spradlin
+     *  @date   10 March 2009
+     */
+    const LoKi::Particles::TrgPointingScoreWithBestPV  BPVTRGPOINTING ;
     // ========================================================================
   } // end of namespace LoKi::Cuts 
 } // end of namespace LoKi

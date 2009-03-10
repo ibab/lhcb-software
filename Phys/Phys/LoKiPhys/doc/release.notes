@@ -1,9 +1,26 @@
-! $Id: release.notes,v 1.87 2009-02-18 14:48:11 cattanem Exp $ 
+! $Id: release.notes,v 1.88 2009-03-10 22:49:57 spradlin Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2009-03-10 - Patrick SPRADLIN
+
+- add new functors:
+
+   TRGPOINTINGWPT     the original version of the trigger pointing cut. 
+                        Implemented in the Legacy section.
+   BPVTRGPOINTINGWPT  Related primary vertex version of the above.
+   TRGPOINTING        A version of the trigger pointing cut that uses the
+                        transvserse momenta of the daughters with respect to
+			the particle's displacement vector, rather than with
+			respect to the z-axis.
+   BPVTRGPOINTING     Related primary vertex version of the above.
+
+- cmt/requirements
+
+   version increment to v8r3
 
 !========================== LoKiPhys v8r2 2009-02-18 ==========================
 ! 2009-02-11 - Vanya BELYAEV 

@@ -1,4 +1,4 @@
-// $Id: Particles16.h,v 1.6 2008-11-02 20:13:32 ibelyaev Exp $
+// $Id: Particles16.h,v 1.7 2009-03-10 22:49:57 spradlin Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES16_H 
 #define LOKI_PARTICLES16_H 1
@@ -70,6 +70,64 @@ namespace LoKi
       // ======================================================================
       /// default constructor is private 
       CosineDirectionAngle();
+      // ======================================================================
+    } ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @class TrgPointingScore
+     *  Evaluator of the custom 'pointing angle' sometimes used in
+     *  trigger applications:
+     *  \f[
+     *    a = (1 + \frac{\sum_{\mathrm{daug}} p_{i} \sin\theta_{i}}{p \sin\theta})^{-1}
+     *  \f]
+     *  where \f$p\f$ is the total momentum of the particle,
+     *  the \f$p_{i}\f$ are the momenta of the particle descendents, and
+     *  \f$\sin\theta_{(i)}\f$ are the angles between the particle momenta and
+     *  the parent displacement from the specified vertex.
+     *
+     *  Not exactly a pointing angle. Rather, a normalized transverse momentum
+     *  with respect to the flight displacement, transformed to lay within
+     *  the range [0, 1].
+     *
+     *  @see LoKi::Cuts::TRGPOINTING
+     *  @author patrick spradlin
+     *  @date   10 March 2009
+     */
+    class TrgPointingScore 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
+      , public LoKi::Vertices::VertexHolder
+    {
+    public:
+      // ======================================================================
+      /// constructor from vertex 
+      TrgPointingScore ( const LHCb::VertexBase* vertex ) ;
+      /// constructor from point 
+      TrgPointingScore ( const LoKi::Point3D&    point  ) ;
+      /// constructor from the holder 
+      TrgPointingScore ( const LoKi::Vertices::VertexHolder& holder ) ;
+      /// copy constructor 
+      TrgPointingScore ( const TrgPointingScore& right ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~TrgPointingScore() {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  TrgPointingScore* clone() const 
+      { return new LoKi::Particles::TrgPointingScore(*this) ; }
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument p ) const
+      { return pointing ( p ) ; }  
+      /// OPTIONAL: the specific printout
+      virtual std::ostream& fillStream( std::ostream& s ) const
+      { return s << "TRGPOINTING" ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      result_type pointing ( argument p ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// default constructor is private 
+      TrgPointingScore();
       // ======================================================================
     } ;
     // ========================================================================

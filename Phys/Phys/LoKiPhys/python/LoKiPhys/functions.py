@@ -380,6 +380,9 @@ DR2      = LoKi.Particles.DeltaR2
 ## @see LoKi::Cuts::TRPCHI2 
 TRPCHI2  = LoKi.Particles.TrackChi2Prob ()
 
+## @see LoKi::Cuts::TRGPOINTING
+TRGPOINTING     = LoKi.Particles.TrgPointingScore 
+
 ## @see LoKi::Cuts::QPT 
 QPT      = LoKi.Particles.TransverseMomentumQ 
 ## @see LoKi::Cuts::QPT1 
@@ -628,6 +631,8 @@ D2DVVDDOT       = LoKi.Particles.DaughterVertexDistanceDot
 ## @see LoKi::Cuts::D2DVVDSIGN
 D2DVVDSIGN      = LoKi.Particles.DaughterVertexSignedDistance
 
+## @see LoKi::Cuts::BPVTRGPOINTING
+BPVTRGPOINTING     = LoKi.Particles.TrgPointingScoreWithBestPV()
 
 # =============================================================================
 # Functional part: 
@@ -681,6 +686,8 @@ VSOURCEDESKTOP = LoKi.Vertices.SourceDesktop
 
 ## Legacy stuff
 BPVVDS_LEGACY = LoKi.Legacy.DistanceSignificanceWithBestPV () 
+TRGPOINTINGWPT = LoKi.Legacy.TrgPointingScoreWithPt
+BPVTRGPOINTINGWPT = LoKi.Legacy.TrgPointingScoreWithPtWithBestPV ()
 
 
 # =============================================================================
