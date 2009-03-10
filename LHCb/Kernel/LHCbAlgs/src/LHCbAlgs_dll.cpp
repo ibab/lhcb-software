@@ -1,7 +1,7 @@
-// $Id: LHCbAlgs_dll.cpp,v 1.4 2007-02-28 17:44:39 cattanem Exp $
+// $Id: LHCbAlgs_dll.cpp,v 1.5 2009-03-10 07:20:05 cattanem Exp $
 // Include files 
-#include "GaudiKernel/LoadFactoryEntries.h"
 #include "Kernel/LbAppInit.h"
+#include "GaudiKernel/LoadFactoryEntries.h"
 #include "GaudiKernel/AlgFactory.h"
 
 // Put LbAppInit base class factory in this library, to avoid having it in
