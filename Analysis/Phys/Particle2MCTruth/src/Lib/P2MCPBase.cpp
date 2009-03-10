@@ -1,4 +1,4 @@
-// $Id: P2MCPBase.cpp,v 1.1 2009-03-10 18:10:48 jpalac Exp $
+// $Id: P2MCPBase.cpp,v 1.2 2009-03-10 18:31:28 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -26,23 +26,23 @@ P2MCPBase::P2MCPBase( const std::string& type,
   declareProperty ( "MCParticleDefaultLocation" , m_defMCLoc  ) ;
 }
 //=============================================================================
-Particle2MCParticle::ToVector 
+P2MCPTypes::ToVector 
 P2MCPBase::associate(const LHCb::Particle* particle) const 
 {
   return associate(particle, m_defMCLoc);
 }
 //=============================================================================
-Particle2MCParticle::ToVector 
+P2MCPTypes::ToVector 
 P2MCPBase::associate(const LHCb::Particle* particle,
                      const std::string& mcParticleLocation) const 
 {
-  Particle2MCParticle::ToVector assocVector;
-  Particle2MCParticle::LightTable table = this->relatedMCPs(particle,
-                                                            mcParticleLocation);
+  P2MCPTypes::ToVector assocVector;
+  P2MCPTypes::LightTable table = this->relatedMCPs(particle,
+                                                   mcParticleLocation);
   
 
-  Particle2MCParticle::LightTable::Range r = table.i_relations(particle);
-  for (Particle2MCParticle::LightTable::Range::const_iterator i = r.begin();
+  P2MCPTypes::LightTable::Range r = table.i_relations(particle);
+  for (P2MCPTypes::LightTable::Range::const_iterator i = r.begin();
        i!=r.end(); ++i) {
     MCAssociation myMCAssoc(i->to(), 1.);
     assocVector.push_back(myMCAssoc);
@@ -50,13 +50,13 @@ P2MCPBase::associate(const LHCb::Particle* particle,
   return assocVector;
 }
 //=============================================================================
-Particle2MCParticle::LightTable 
+P2MCPTypes::LightTable 
 P2MCPBase::relatedMCPs(const LHCb::Particle* particle) const
 {
   return relatedMCPs(particle, m_defMCLoc);
 }
 //=============================================================================
-Particle2MCParticle::LightTable 
+P2MCPTypes::LightTable 
 P2MCPBase::relatedMCPs(const LHCb::Particle* particle,
                        const std::string& mcParticleLocation) const
 {
@@ -64,31 +64,31 @@ P2MCPBase::relatedMCPs(const LHCb::Particle* particle,
   if (0!=mcps) {
     return i_relatedMCPs(particle,  mcps->begin(), mcps->end());
   } else {
-    return Particle2MCParticle::LightTable();
+    return P2MCPTypes::LightTable();
   }   
 }
 //=============================================================================
-Particle2MCParticle::LightTable 
+P2MCPTypes::LightTable 
 P2MCPBase::relatedMCPs(const LHCb::Particle* particle,
                        const LHCb::MCParticle::ConstVector& mcParticles) const
 {
   return i_relatedMCPs(particle,  mcParticles.begin(), mcParticles.end());
 }
 //=============================================================================
-Particle2MCParticle::LightTable 
+P2MCPTypes::LightTable 
 P2MCPBase::associations(const LHCb::Particle::ConstVector& particles) const
 {
   return i_associations(particles.begin(), particles.end(), m_defMCLoc);
 }
 //=============================================================================
-Particle2MCParticle::LightTable 
+P2MCPTypes::LightTable 
 P2MCPBase::associations(const LHCb::Particle::ConstVector& particles,
                         const std::string& mcParticleLocation) const
 {
   return i_associations(particles.begin(), particles.end(), mcParticleLocation);
 }
 //=============================================================================
-Particle2MCParticle::LightTable 
+P2MCPTypes::LightTable 
 P2MCPBase::associations(const LHCb::Particle::ConstVector& particles,
                         const LHCb::MCParticle::ConstVector& mcParticles) const
 {
@@ -99,20 +99,20 @@ P2MCPBase::associations(const LHCb::Particle::ConstVector& particles,
   
 }
 //=============================================================================
-Particle2MCParticle::LightTable 
+P2MCPTypes::LightTable 
 P2MCPBase::associations(const LHCb::Particle::Container& particles) const
 {
   return i_associations(particles.begin(), particles.end(), m_defMCLoc);
 }
 //=============================================================================
-Particle2MCParticle::LightTable 
+P2MCPTypes::LightTable 
 P2MCPBase::associations(const LHCb::Particle::Container& particles,
                         const std::string& mcParticleLocation) const
 {
   return i_associations(particles.begin(), particles.end(), mcParticleLocation);  
 }
 //=============================================================================
-Particle2MCParticle::LightTable 
+P2MCPTypes::LightTable 
 P2MCPBase::associations(const LHCb::Particle::Container& particles,
                         const LHCb::MCParticle::ConstVector& mcParticles) const
 {
