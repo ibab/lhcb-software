@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.414 2009-03-03 15:19:55 pkoppenb Exp $
+! $Id: release.notes,v 1.415 2009-03-10 10:52:50 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
 
+!========================== DaVinciTools v18r2p3 2009-03-10 =================
 ! 2009-03-03 - Patrick Koppenburg
  - CheckOverlaps and FindClones : pi0 are not from MC. Look for daughters
    instead of vertex.
