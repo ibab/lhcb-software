@@ -1,4 +1,4 @@
-// $Id: WriteAlignmentConditions.h,v 1.4 2008-05-27 16:49:48 gersabec Exp $
+// $Id: WriteAlignmentConditions.h,v 1.5 2009-03-10 13:46:58 wouter Exp $
 #ifndef WriteAlignmentConditions_H
 #define WriteAlignmentConditions_H 1
 
@@ -50,6 +50,7 @@ private:
   std::string strip(const std::string& conString) const;
   void replaceChars(std::string& conString) const;
   void replace(std::string& conString,std::string in, std::string out ) const;
+  void createDirectory( const std::string& dir ) const ;
 
   std::string m_outputFileName;
   std::ofstream m_outputFile;

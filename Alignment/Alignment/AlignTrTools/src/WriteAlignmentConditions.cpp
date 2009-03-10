@@ -1,4 +1,8 @@
-// $Id: WriteAlignmentConditions.cpp,v 1.5 2008-05-27 16:49:48 gersabec Exp $
+// $Id: WriteAlignmentConditions.cpp,v 1.6 2009-03-10 13:46:58 wouter Exp $
+
+// std
+#include <fcntl.h>
+#include <errno.h>
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -81,6 +85,19 @@ void WriteAlignmentConditions::children(DetectorElement* parent, std::ofstream& 
   }
 }
 
+void WriteAlignmentConditions::createDirectory( const std::string& dirname ) const
+{
+  // recursively create a directory
+  size_t pos = dirname.find_last_of('/') ;
+  if( pos != std::string::npos ) createDirectory( std::string(dirname.substr(0,pos)) ) ;
+  std::cout << "creating dirname: " << dirname << std::endl ;
+  if(mkdir(dirname.c_str(),0xFFFF)==0) {
+    info() << "Creating directory: " << dirname << endreq ;
+  } else if( errno != EEXIST ) {
+    warning() << "Problem creating directory: mkdir returns " << errno << endreq ;
+  }
+}
+
 StatusCode WriteAlignmentConditions::finalize()
 {
   info() << "Writing alignment conditions to file" << endreq;
@@ -89,6 +106,11 @@ StatusCode WriteAlignmentConditions::finalize()
 
   DetectorElement* det =getDet<DetectorElement>(m_topElement);
 
+  // make output dir if necessary
+  size_t pos = m_outputFileName.find_last_of('/') ;
+  if(  pos != std::string::npos ) 
+    createDirectory( std::string(m_outputFileName.substr(0,pos)) ) ;
+   
   std::ofstream outputFile(m_outputFileName.c_str());
   if (outputFile.fail() ){
     return Warning("Failed to open output file",StatusCode::FAILURE);
@@ -132,8 +154,6 @@ void WriteAlignmentConditions::replaceChars(std::string& conString) const{
 
   std::string blank = " ";
   replace(conString, ",", blank);
-  replace(conString, "[", blank);
-  replace(conString, "]", blank);
   replace(conString, "\"/", "\"");
 }
 
