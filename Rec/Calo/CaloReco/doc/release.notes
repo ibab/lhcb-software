@@ -1,16 +1,20 @@
-! $Id: release.notes,v 1.130 2009-03-10 11:12:57 odescham Exp $
+! $Id: release.notes,v 1.131 2009-03-10 12:50:42 cattanem Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
-
+!========================== CaloReco v4r18 2009-03-10 =========================
+! 2009-03-10 - Marco Cattaneo
+ - Clean up messages in CaloMergedPi0Alg:
+   . Protect debug() with MsgLevel(MSG::DEBUG)
+   . Fix untested status codes from Warning() and Error()
+   . Replace endreq with endmsg
 
 ! 2009-03-10 - Olivier Deschamps
  - Fix FPE occurring in CaloMergedPi0Alg (missing initialization)
 
-!========================== CaloReco v4r18 2009-03-10 =========================
 ! 2009-03-09 - Olivier Deschamps
  - options/CaloECorrectionParam.opts : 2nd iteration of DC09 tuning (Ecorrection for electron from e/p)
 

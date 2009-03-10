@@ -1,6 +1,4 @@
-// $Id: CaloMergedPi0Alg.cpp,v 1.23 2009-03-10 11:12:57 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// $Id: CaloMergedPi0Alg.cpp,v 1.24 2009-03-10 12:50:42 cattanem Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -140,7 +138,7 @@ CaloMergedPi0Alg::~CaloMergedPi0Alg() {};
 StatusCode CaloMergedPi0Alg::initialize() 
 {
   
-  debug()<< "==> Initialise" << endreq;
+  debug()<< "==> Initialise" << endmsg;
   
   StatusCode sc = GaudiAlgorithm::initialize();
   if( sc.isFailure() ) 
@@ -148,7 +146,7 @@ StatusCode CaloMergedPi0Alg::initialize()
 
   //
   if(m_createClusterOnly)warning() << "only SplitClusters to be produced" 
-                                   << endreq;
+                                   << endmsg;
   
   // locate tools
   for ( Names::const_iterator it = m_toolTypeNames.begin() ;
@@ -205,7 +203,7 @@ long CaloMergedPi0Alg::numberOfDigits
 {
   /// check arguments 
   if( 0 == cluster ) 
-  { Error(" numberOfDigits! CaloCluster* points to NULL!"); return -1;}
+  { Error(" numberOfDigits! CaloCluster* points to NULL!").ignore(); return -1;}
   ///
   long num = 0 ;
   for( LHCb::CaloCluster::Entries::const_iterator entry = 
@@ -368,9 +366,7 @@ double CaloMergedPi0Alg::BarXY(const int axis,
 // ============================================================================
 StatusCode CaloMergedPi0Alg::execute() 
 {
-  
-  MsgStream  log( msgSvc(), name() );
-  log << MSG::DEBUG << "==> Execute" << endreq;
+  if ( msgLevel ( MSG::DEBUG ) ){ debug() << "==> Execute" << endmsg; }
 
   /// avoid long names
   
@@ -402,17 +398,17 @@ StatusCode CaloMergedPi0Alg::execute()
   // count all clusters 
   // modified by V.B. 2004-10-27
   const size_t cluscount = clusters->size() ;
-  log << MSG::DEBUG << " -----> #cluster " << cluscount << endreq;
+  if ( msgLevel ( MSG::DEBUG ) ){ 
+    debug() << " -----> #cluster " << cluscount << endmsg;
+  }
   
   // SpdHit in front of Cluster Seed (new 09/02/2004)
   // (moved from internal loop)
   LHCb::CaloDigits* spds = get<LHCb::CaloDigits>( LHCb::CaloDigitLocation::Spd );
-  if( 0 == spds ) { return StatusCode::FAILURE ;}
   
   // Prs deposit in front of Cluster Seed (new 09/02/2004)
   // (moved from internal loop)
   LHCb::CaloDigits* prss = get<LHCb::CaloDigits>( LHCb::CaloDigitLocation::Prs );
-  if( 0 == prss ) { return StatusCode::FAILURE ;}
   
   // added by V.B 2004-10-27: estimator of cluster transverse energy 
   LHCb::CaloDataFunctor::EnergyTransverse<const LHCb::CaloCluster*,const DeCalorimeter*> eT ( detector ) ;
@@ -423,11 +419,14 @@ StatusCode CaloMergedPi0Alg::execute()
     LHCb::CaloCluster* cluster = *icluster ;
     if( 0 == cluster )                { continue ; }   ///< CONTINUE!
     ik++;
-    debug() << "Cluster " << ik << "/" << cluscount << endreq;
+    if ( msgLevel ( MSG::DEBUG ) ){
+      debug() << "Cluster " << ik << "/" << cluscount << endmsg;
+    }
     // added by V.B. 2004-10-27
     if ( 0 < m_eT_Cut &&  m_eT_Cut > eT( cluster ) ) { continue ; }
-    debug() << " selected clusters " << eT( cluster ) << endreq;
-
+    if ( msgLevel ( MSG::DEBUG ) ){ 
+      debug() << " selected clusters " << eT( cluster ) << endmsg;
+    }
  
     //----------------------//
     //        My code       //
@@ -452,7 +451,9 @@ StatusCode CaloMergedPi0Alg::execute()
     int seedcol  = idseed.col();
     
     // 
-    debug() << " get Spd/Prs digits " << endreq;
+    if ( msgLevel ( MSG::DEBUG ) ){ 
+      debug() << " get Spd/Prs digits " << endmsg;
+    }
     double SpdHit = 0 ;
     const LHCb::CaloDigit* spddigit = spds->object( seed->key() );
     if( 0 != spddigit ) { SpdHit = spddigit->e() ; }
@@ -460,8 +461,9 @@ StatusCode CaloMergedPi0Alg::execute()
     const LHCb::CaloDigit* prsdigit = prss->object( seed->key() );
     if( 0 != prsdigit ) { PrsDep = prsdigit->e() ; }
       
-
-    log << MSG::DEBUG << " -----> Find SubSeed " << endreq;
+    if ( msgLevel ( MSG::DEBUG ) ){ 
+      debug() << " -----> Find SubSeed " << endmsg;
+    }
     /// Find SubSeed  - Loop on Cluster CaloCluster:Digits
     // (New DigitStatus to be defined)
     
@@ -472,7 +474,9 @@ StatusCode CaloMergedPi0Alg::execute()
     int    subrow = -1000    ;
     int    subcol = -1000    ;
       
-    debug() << " Loop over digits " << endreq;
+    if ( msgLevel ( MSG::DEBUG ) ){ 
+      debug() << " Loop over digits " << endmsg;
+    }
     for( LHCb::CaloCluster::Digits::const_iterator it1 =cluster->entries().begin() ;
          cluster->entries().end() != it1 ; ++it1 ){
       const LHCb::CaloDigit* dig = it1->digit() ;    // CaloDigit
@@ -492,9 +496,11 @@ StatusCode CaloMergedPi0Alg::execute()
     }
       
     if ( -1000 == subrow && -1000 == subcol ) 
-    { Warning("Cluster without 'subcel' is found, skip it") ; continue ; }
+    { Warning("Cluster without 'subcel' is found, skip it").ignore() ; continue ; }
     
-    log << MSG::DEBUG << " -----> Define large Cluster " << endreq;
+    if ( msgLevel ( MSG::DEBUG ) ){ 
+      debug() << " -----> Define large Cluster " << endmsg;
+    }
 
       /// Fill  3x3 SubClusters - Loop on all CaloCluster:Digits
       //   +-----+-----+-----+
@@ -542,8 +548,9 @@ StatusCode CaloMergedPi0Alg::execute()
       }
     }
     
-    
-    log << MSG::DEBUG << " -----> Split cluster " << endreq;
+    if ( msgLevel ( MSG::DEBUG ) ){ 
+      debug() << " -----> Split cluster " << endmsg;
+    }
     /// Defined proto-SubCluster from SubClusEne (split procedure)
     
     double Emax[2];
@@ -626,7 +633,9 @@ StatusCode CaloMergedPi0Alg::execute()
     
       
     /// Iterative reconstruction of SubClusters
-    log << MSG::DEBUG << " -----> Iterative reconstruction " << endreq;
+    if ( msgLevel ( MSG::DEBUG ) ){ 
+      debug() << " -----> Iterative reconstruction " << endmsg;
+    }
     double SubSize[2],SubX[2],SubY[2],SubZ[2] ;
     
     long mxiter = m_mX_Iter;
@@ -659,7 +668,9 @@ StatusCode CaloMergedPi0Alg::execute()
         SubX[is]=SubX[is]-BarXY(1,area,Etemp)*SubSize[is];
         SubY[is]=SubY[is]-BarXY(2,area,Etemp)*SubSize[is];
         SubZ[is]=BarZ(Ene3x3[is],PrsDep,area,SubX[is],SubY[is],SubZ[is]);
-        log << MSG::DEBUG << "==> Lcorr " << SubZ[is] << endreq;
+        if ( msgLevel ( MSG::DEBUG ) ){ 
+          debug() << "==> Lcorr " << SubZ[is] << endmsg;
+        }
       }
       // Reconstructing Overlap
       
@@ -724,8 +735,10 @@ StatusCode CaloMergedPi0Alg::execute()
     /// End of Reconstruction aLgorithm 
     /// Define photon and pi0 from Subcluster
     
+    if ( msgLevel ( MSG::DEBUG ) ){ 
+      debug() << " -----> Compute Pi0 mass " << endmsg;
+    }
     
-    log << MSG::DEBUG << " -----> Compute Pi0 mass " << endreq;
     // energy
     double Ene3x3[2];
     double PosX[2];
@@ -812,10 +825,9 @@ StatusCode CaloMergedPi0Alg::execute()
     // double epi0=(ep1+ep2)/GeV;
     // double dmin=zpos*2*mpi0/epi0/csiz; 
     
-    
-    
-    log << MSG::DEBUG << " Pi0Mas =  " <<RecPi0Mas << endreq;
-    
+    if ( msgLevel ( MSG::DEBUG ) ){ 
+      debug() << " Pi0Mas =  " <<RecPi0Mas << endmsg;
+    }
     
     /*
       Mid June 2002 
@@ -837,9 +849,14 @@ StatusCode CaloMergedPi0Alg::execute()
     /*
       Fill CaloHypos and SubClusters if "good" MergePi0
     */
-    debug() << "Keep MergedPi0 ? " << KeepPi0 << endreq;
-    if( 1 == KeepPi0){      
-      log << MSG::DEBUG << " Store Merged Pi0 " << endreq;
+    if ( msgLevel ( MSG::DEBUG ) ){ 
+      debug() << "Keep MergedPi0 ? " << KeepPi0 << endmsg;
+    }
+    
+    if( 1 == KeepPi0){
+      if ( msgLevel ( MSG::DEBUG ) ){ 
+        debug() << " Store Merged Pi0 " << endmsg;
+      }
       //Defined new Calo SubCluster pointed by PhotonFromMergedPi0 CaloHypos
       LHCb::CaloCluster* cl1 = new LHCb::CaloCluster();
       LHCb::CaloCluster* cl2 = new LHCb::CaloCluster();
@@ -847,7 +864,10 @@ StatusCode CaloMergedPi0Alg::execute()
       LHCb::CaloCellID seed2;
       // Init the 2 new CaloClusters 
       // with the original cluster digits, owned-status'ed and  0-weighted
-      debug() << "Loop over cluster entries " << cluster->entries().size() << endreq;
+      if ( msgLevel ( MSG::DEBUG ) ){ 
+        debug() << "Loop over cluster entries " << cluster->entries().size() << endmsg;
+      }
+      
       for( LHCb::CaloCluster::Digits::const_iterator it3 = cluster->entries().begin() ;
            cluster->entries().end() != it3 ; ++it3 ){
         const LHCb::CaloDigit* d = it3->digit() ;   
@@ -897,19 +917,29 @@ StatusCode CaloMergedPi0Alg::execute()
             }
           }
         }
-        debug() << "Logging cluster entry " << w1 << "/" << w2 << endreq;
+        if ( msgLevel ( MSG::DEBUG ) ){ 
+          debug() << "Logging cluster entry " << w1 << "/" << w2 << endreq;
+        }
         LHCb::CaloClusterEntry entry1( d , s1 , w1 );
         cl1->entries().push_back( entry1 );
         LHCb::CaloClusterEntry entry2( d , s2 , w2 );
         cl2->entries().push_back( entry2 );
-        log << MSG::DEBUG << " s1 after loop =  " <<s1<< endreq;
+        if ( msgLevel ( MSG::DEBUG ) ){ 
+          debug() << " s1 after loop =  " <<s1<< endmsg;
+        }
       }  
       
-      debug() << "Set seed " << endreq;
+      if ( msgLevel ( MSG::DEBUG ) ){ 
+        debug() << "Set seed " << endmsg;
+      }
+      
       cl1->setSeed( seed1 );
       cl2->setSeed( seed2 );
       
-      debug() << "Calculate position " << endreq;
+      if ( msgLevel ( MSG::DEBUG ) ){ 
+        debug() << "Calculate position " << endmsg;
+      }
+      
       // OD calculate position for cluster
       LHCb::CaloPosition pp1 ;
       pp1.parameters()( LHCb::CaloPosition::X ) = PosX[0];
@@ -929,21 +959,29 @@ StatusCode CaloMergedPi0Alg::execute()
       pp2.center()( LHCb::CaloPosition::Y ) = PosY[1];
       cl2 -> setPosition( pp2 );
       
-      debug() << "Store clusters " << endreq;
-      
+      if ( msgLevel ( MSG::DEBUG ) ){ 
+        debug() << "Store clusters " << endmsg;
+      }
+
       clusts->insert( cl1 ) ;
       clusts->insert( cl2 ) ;
       
       
       if(!m_createClusterOnly){
-        debug() << "Store Pi0 CaloHypo" << endreq;
+        if ( msgLevel ( MSG::DEBUG ) ){ 
+          debug() << "Store Pi0 CaloHypo" << endmsg;
+        }
+        
         // new CaloHypo for pi0      
         LHCb::CaloHypo* pi0 = new LHCb::CaloHypo();          
         pi0 -> setHypothesis( LHCb::CaloHypo::Pi0Merged ) ;
         pi0 -> addToClusters( *icluster );
         
         // new CaloHypo for gamma's
-        debug() << "Store gamma1 CaloHypo" << endreq;
+        if ( msgLevel ( MSG::DEBUG ) ){ 
+          debug() << "Store gamma1 CaloHypo" << endmsg;
+        }
+        
         LHCb::CaloHypo* g1   = new LHCb::CaloHypo() ;
         g1 -> setHypothesis( LHCb::CaloHypo::PhotonFromMergedPi0 ) ;
         g1 -> addToClusters( *icluster )                ;
@@ -961,7 +999,10 @@ StatusCode CaloMergedPi0Alg::execute()
         g1 -> setPosition( p1);
         pi0 -> addToHypos ( g1 );
         
-        debug() << "Store gamma2 CaloHypo" << endreq;
+        if ( msgLevel ( MSG::DEBUG ) ){ 
+          debug() << "Store gamma2 CaloHypo" << endmsg;
+        }
+        
         LHCb::CaloHypo* g2   = new LHCb::CaloHypo() ;
         g2 -> setHypothesis( LHCb::CaloHypo::PhotonFromMergedPi0 ) ;
         g2 -> addToClusters( *icluster )                ;
@@ -983,20 +1024,26 @@ StatusCode CaloMergedPi0Alg::execute()
         phots ->insert( g2  ) ;
         
         { // Apply the tool 
-          debug() << "Apply hypo tools ("<< m_tools.size() << ")" << endreq;
+          if ( msgLevel ( MSG::DEBUG ) ){ 
+            debug() << "Apply hypo tools ("<< m_tools.size() << ")" << endmsg;
+          }
+          
           int i = 0;
           for( Tools::iterator it = m_tools.begin() ; m_tools.end() != it ; ++it ){
             i++;
-            debug() << " apply tool " << i << "/" << m_tools.size() << endreq;
+            if ( msgLevel ( MSG::DEBUG ) ){ 
+              debug() << " apply tool " << i << "/" << m_tools.size() << endmsg;
+            }
+            
             ICaloHypoTool* t = *it ;
             if( 0 == t ) { continue; } 
             StatusCode sc         = StatusCode::SUCCESS ;
             sc                    = (*t) ( g1 ) ;
             if( sc.isFailure() )
-            { Error("Error from 'Tool' for g1 " , sc ) ; }
+            { Error("Error from 'Tool' for g1 " , sc ).ignore() ; }
             sc                    = (*t) ( g2 ) ;          
             if( sc.isFailure() ) 
-            { Error("Error from 'Tool' for g2 " , sc ) ; }
+            { Error("Error from 'Tool' for g2 " , sc ).ignore() ; }
           }
         } 
       }
@@ -1011,17 +1058,16 @@ StatusCode CaloMergedPi0Alg::execute()
   */ 
   
   if ( msgLevel ( MSG::DEBUG ) ){ 
-    debug() << " # of created MergedPi0 Hypos is  " << pi0s -> size() << endreq ;
-    debug() << " # of created Split Photons   is  " << phots -> size() << endreq ;
-    debug() << " # of created Split Clusters  is  " << clusts -> size() << endreq ;
+    debug() << " # of created MergedPi0 Hypos is  " << pi0s -> size() << endmsg ;
+    debug() << " # of created Split Photons   is  " << phots -> size() << endmsg ;
+    debug() << " # of created Split Clusters  is  " << clusts -> size() << endmsg ;
+    debug() << "post-processing cleaning" << endmsg;
   }
 
   // delete (empty) container* if not on TES 
-  debug() << "post-processing cleaning" << endreq;
   if(m_createClusterOnly){
     if( 0 != pi0s->size() || 0 != phots->size() ){
-      error() << "Container* to be deleted are not empty" << endreq;
-      return StatusCode::FAILURE;
+      return Error( "Container* to be deleted are not empty", StatusCode::FAILURE);
     }
     delete pi0s;
     delete phots;
