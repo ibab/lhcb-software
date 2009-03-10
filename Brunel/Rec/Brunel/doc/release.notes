@@ -6,6 +6,7 @@ Purpose: LHCb reconstruction program
 ! 2009-03-10 - Marco Cattaneo
  - Explicitly use CASTOR from LCG_Interfaces for QMTests
  - No longer disable FPE check for MergedPi0Rec, now fixed
+ - Update references after adding OTMonitor
 
 ! 2009-03-09 - Marco Cattaneo
  - Update references, SimplifiedMaterialLocator is now a private tool
