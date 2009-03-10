@@ -15,30 +15,26 @@ version v1r0
 # Structure, i.e. directories to process. 
 #============================================================================
 
-branches STMonitors src cmt doc
+branches src cmt doc
 
 #============================================================================
 # Used packages. 
 #============================================================================
 
- 
-use STTELL1Event  *  ST
-use STKernel      *  ST
-use RecEvent      *  Event
-
-apply_pattern ld_library_path
-private
-
-use GaudiAlg      * 
-use AIDA          *    LCG_Interfaces
+use STTELL1Event  v*  ST
+use STKernel      v*  ST
+use RecEvent      v*  Event
+use GaudiAlg      v* 
+use AIDA          v*  LCG_Interfaces -no_auto_imports
 
 #-----------------------------------------------------------------
 # library building rule
 
-library STMonitors ../src/*.cpp
+library STMonitors ../src/*.cpp -import=AIDA
 
 #-----------------------------------------------------------------
 # component library link options
 apply_pattern component_library library=STMonitors
 
-macro_append cppflags ' -ggdb -g3 -O0'
+#apply_pattern ld_library_path
+#macro_append cppflags ' -ggdb -g3 -O0'
