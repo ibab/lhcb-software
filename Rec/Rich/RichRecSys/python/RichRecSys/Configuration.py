@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.15 2009-03-04 12:05:13 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.16 2009-03-10 16:17:47 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -13,7 +13,7 @@ from PixelCreator  import *
 from PhotonCreator import *
 from CKThetaResolution import *
 from RichMarkovRingFinder.Configuration import *
-from Configurables import RichTemplateRingFinderConf
+#from Configurables import RichTemplateRingFinderConf
 from RichGlobalPID_ import RichGlobalPIDConfig
 from RichHLTLocalPID_ import RichHLTLocalPIDConfig
 from Configurables import GaudiSequencer
@@ -29,7 +29,7 @@ class RichRecSysConf(RichConfigurableUser):
     ## Possible used Configurables
     __used_configurables__ = [ RichHLTLocalPIDConfig,
                                RichMarkovRingFinderConf,
-                               RichTemplateRingFinderConf,
+                               #RichTemplateRingFinderConf,
                                RichGlobalPIDConfig,
                                RichTrackCreatorConfig,
                                RichPixelCreatorConfig,
@@ -216,12 +216,12 @@ class RichRecSysConf(RichConfigurableUser):
             self.setOtherProp(RichMarkovRingFinderConf(),"Context")
             RichMarkovRingFinderConf().setProp("Sequencer",mfinderSeq)
             
-        if "Template" in ringalgs :
-            tfinderSeq = GaudiSequencer("Rich"+cont+"TemplateRingFinderSeq")
-            tfinderSeq.MeasureTime               = True
-            sequence.Members                    += [ tfinderSeq ]
-            self.setOtherProp(RichTemplateRingFinderConf(),"Context")
-            RichTemplateRingFinderConf().setProp("Sequencer",tfinderSeq)
+        #if "Template" in ringalgs :
+        #    tfinderSeq = GaudiSequencer("Rich"+cont+"TemplateRingFinderSeq")
+        #    tfinderSeq.MeasureTime               = True
+        #    sequence.Members                    += [ tfinderSeq ]
+        #    self.setOtherProp(RichTemplateRingFinderConf(),"Context")
+        #    RichTemplateRingFinderConf().setProp("Sequencer",tfinderSeq)
            
         #-----------------------------------------------------------------------------
         # PID
