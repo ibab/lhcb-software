@@ -4,6 +4,9 @@ Package Coordinator : Johan Blouw
 Responsibles : J. Amoraal, J. Blouw, A. Hicheur, L. Nicolas
 Purpose: LHCb Alignment Tools
 
+! 2009-03-10 Wouter Hulsbergen
+- WriteAlignmentConditions: fixed bug and added mkdir for output
+
 </PRE><H1><A NAME=v4r0>2009-02-21 AlignTrTools v4r0 </A></H1><PRE>
 
 ! 2009-02-21 Johan Blouw
