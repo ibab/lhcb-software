@@ -78,7 +78,7 @@ use DaVinciKernel         v7r4   Phys    # Juan Palacios
 use DaVinciMCKernel       v3r1   Phys    # Juan Palacios
 use HepMCBack             v1r1   Gen     # Gloria Corti, Patrick Robbe
 use HltInterfaces         v2r0   Kernel  # Patrick Koppenburg
-use LHCbAlgs              v2r24  Kernel  # Marco Cattaneo
+use LHCbAlgs              v2r25  Kernel  # Marco Cattaneo
 use LinkerInstances       v3r4   Event   # Thomas Ruf
 use LoKi                  v8r1   Phys    # Ivan Belyaev
 use LoKiAlgo              v8r1   Phys    # Ivan Belyaev
