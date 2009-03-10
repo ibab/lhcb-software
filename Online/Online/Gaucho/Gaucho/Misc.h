@@ -17,7 +17,7 @@ public:
   static bool compareCharsCaseIns(char ch1, char ch2);
   static std::string stringToUpper(std::string strToConvert);
   static int min(int a, int b) {if (a < b) return a; return b;}
-  static void printSerializedString(char * c, int size);
+  static void printSerializedString(const char * c, int size);
 
 };
 

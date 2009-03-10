@@ -25,6 +25,7 @@ MonProfile::~MonProfile(){
 //  if (binErr!=0) delete []binErr;
 //   msgStream <<MSG::DEBUG<<"deleting binLabelX" << endreq;
 //   msgStream <<MSG::DEBUG<<"deleting m_fSumw2" << endreq;
+  if (binEntries !=0) delete []binEntries;
   if (m_fSumw2!=0) delete []m_fSumw2;
 // BUGG...I dont know yet why I can't do it..  
 /*  if (m_profile!=0) {

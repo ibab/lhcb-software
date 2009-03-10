@@ -84,7 +84,7 @@ std::string Misc::stringToUpper(std::string strToConvert)
 } 
 
 
-void Misc::printSerializedString(char * c, int size)
+void Misc::printSerializedString(const char * c, int size)
 {
   int i=0;
   std::cout << "content (" << size << " bytes):" << std::endl;
