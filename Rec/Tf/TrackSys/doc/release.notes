@@ -3,7 +3,9 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
- 2009-02-11 - Stephanie Hansmann-Menzemer
+
+!============================ TrackSys v4r22 2009-03-10 ======================
+! 2009-03-04 - Stephanie Hansmann-Menzemer
  - add fitter initialization tool in track fitting sequence
 
 !============================ TrackSys v4r21 2009-02-20 ======================
