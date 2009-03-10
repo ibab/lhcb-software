@@ -5,6 +5,10 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+! 2009-03-10 - Rob Lambert
+ - Bugfix, MCEventTypeFinder. It seems the const_reverse_iterator is 
+   not implimented or has no != operator under windows for the std::set.
+
 !====================== SimComponents v2r17 2009-03-09 =======================
 ! 2009-03-09 - Rob Lambert
  - Bugfix, added in extra headers to EvtTypeSvc.

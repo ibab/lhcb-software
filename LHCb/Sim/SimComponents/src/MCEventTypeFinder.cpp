@@ -1,6 +1,7 @@
-// $Id: MCEventTypeFinder.cpp,v 1.4 2009-03-10 08:50:56 cattanem Exp $
+// $Id: MCEventTypeFinder.cpp,v 1.5 2009-03-10 10:04:08 rlambert Exp $
 // Include files 
 #include <sstream>
+#include <math.h>
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -39,11 +40,10 @@ MCEventTypeFinder::MCEventTypeFinder( const std::string& type,
     m_diMuon(12000),
     m_muonp(-13),
     m_muonm(13),
-    m_acc_min(2.0),
-    m_acc_max(4.9),
+    m_acc_min(-1.0*log(tan(0.4/2.0))), //~1.60
+    m_acc_max(9999.0),
     m_decProdStr1("DecProdCut"),
     m_decProdStr2("InAcc")
-    //m_brackets("{}()[]")
 {
 
   declareInterface<IMCEventTypeFinder>(this);
@@ -51,11 +51,13 @@ MCEventTypeFinder::MCEventTypeFinder( const std::string& type,
   //override the total list of types taken from the decfiles to a smaller sub-class of types
   declareProperty( "Types", m_inputTypes=std::vector<long unsigned int>(0) );
   
-  //define the minimum acceptance for a decprodcut
-  declareProperty( "acc_min", m_acc_min=2.0);
+  //define the minimum acceptance for a decprodcut,  by default this is 400 mrad, eta > 1.60-ish
+  //you could set this to 2.0 if you really want "in the acceptance" 
+  declareProperty( "acc_min", m_acc_min=-1.0*log(tan(0.4/2.0)));
   
-  //define the maximum acceptance for a decprodcut
-  declareProperty( "acc_max", m_acc_max=4.9);
+  //define the maximum acceptance for a decprodcut, default beyond elastic limit.
+  //could set to 4.9 if you really want "in the acceptance" 
+  declareProperty( "acc_max", m_acc_max=9999.0);
   
 }
 
@@ -98,32 +100,24 @@ StatusCode MCEventTypeFinder::findEventTypes(LHCb::EventTypeSet& found)
 { 
   debug() << "findEventTypes called, with no passsed container"  << endmsg;
   
-  //LHCb::EventTypeSet aset;
-  
-  //EvtTypeInfos::const_iterator iEvtTypeInfo=m_evtTypeInfos.begin();
+  //I should get the container, and iterate myself!
 
-  if(m_mcFinders.empty()) fillMCTools();  //fill the vector of tools on the first use
-  std::vector<IMCDecayFinder*>::const_reverse_iterator iD=m_mcFinders.rbegin();
+  //get all MC particles,
+  LHCb::MCParticles* mcparts = 
+    get<LHCb::MCParticles>(LHCb::MCParticleLocation::Default );
+  if( !mcparts )
+  {
+    fatal() << "Unable to find MC particles at '"
+            << LHCb::MCParticleLocation::Default << "'" << endreq;
+    return StatusCode::FAILURE;
+  }
+
+  //send the result to the vector version
+
+  StatusCode sc=findDecayType(found, *mcparts);
   
-  for(LHCb::EventTypeSet::const_reverse_iterator iType=m_allTypes.rbegin();
-      iType!=m_allTypes.rend();// && iD!=m_mcFinders.rend();
-      iType++, iD++)//lowest to highest
-    {
-      //std::string sdecay = m_evtTypeSvc->decayDescriptor(*iType);
-      if( ! (*iD) ) continue;
-      if( (*iD)->hasDecay() ) found.insert(*iType);
-    }
-  
-  if(found.size()>0)
-    {
-      appendParents(found);
-      //set2vec(aset,found);
-      debug() << "findEventTypes completed, with whole event container, found:" << found.size()  << endmsg;
-      return StatusCode::SUCCESS; 
-    }
-  
-  warning() <<  "No Event types for this event" << endmsg;
-  return StatusCode::FAILURE; 
+  debug() << "findEventTypes completed, with no container, returning :" << found.size() << endmsg;
+  return sc; 
 }
 
 StatusCode MCEventTypeFinder::fillMCTools()
@@ -244,11 +238,11 @@ StatusCode MCEventTypeFinder::findDecayType(LHCb::EventTypeSet& found, const LHC
   dummyvec.push_back(mc_mother);
 
   if(m_mcFinders.empty()) fillMCTools();  //fill the vector of tools on the first use
-  std::vector<IMCDecayFinder*>::const_reverse_iterator iD=m_mcFinders.rbegin();
-  std::vector<bool>::const_reverse_iterator iB=m_decProdCut.rbegin();
+  std::vector<IMCDecayFinder*>::const_iterator iD=m_mcFinders.begin();
+  std::vector<bool>::const_iterator iB=m_decProdCut.begin();
   
-  for(LHCb::EventTypeSet::const_reverse_iterator iType=m_allTypes.rbegin();
-      iType!=m_allTypes.rend();// && i!=m_mcFinders.rend();
+  for(LHCb::EventTypeSet::const_iterator iType=m_allTypes.begin();
+      iType!=m_allTypes.end() && iD!=m_mcFinders.end() && iB!=m_decProdCut.end();
       iType++, iD++, iB++) //lowest to highest
   {
  
@@ -647,7 +641,7 @@ int MCEventTypeFinder::determineDecay(const LHCb::MCParticle * mc_mother, bool &
     {
       
       if(neut%2 < 1 && abs(mID.pid())==310 ) neut+=1; //Ks0
-      if(mID.pid()==443)  nJPsi+=1;
+      if(mID.pid()==443)  nJPsi=true;
       else ncharm+=mID.hasCharm();
       
     }
