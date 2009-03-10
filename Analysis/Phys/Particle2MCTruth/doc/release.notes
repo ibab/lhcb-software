@@ -13,6 +13,7 @@
   . P2MCP/P2MCPBase.h : Base implementation of IP2MCP
   . src/Lib/P2MCPBase.cpp : "      "         "    "
   . dict/Particle2MCTruthDict{.h, .xml} : dictionaries for IP2MCP
+  . P2MCP/P2MCPTypes.h : typedefs for IP2MCP
  - src/MCMatchObjP2MCRelator{.cpp, .h}
   . Inherit from IP2MCP and P2MCPBase
 
