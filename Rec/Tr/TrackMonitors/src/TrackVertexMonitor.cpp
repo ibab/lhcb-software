@@ -255,9 +255,9 @@ StatusCode TrackVertexMonitor::execute()
 	// draw the difference
 	Gaudi::XYZVector dx = leftvertex->position() - rightvertex->position() ;
 
-	plot( dx.x(), "PV left-right delta x",-m_ipmax,m_ipmax) ;
-	plot( dx.y(), "PV left-right delta y",-m_ipmax,m_ipmax) ;
-	plot( dx.z(), "PV left-right delta z",-m_dzmax,m_dzmax) ;
+	plot( dx.x(), "PV left-right delta x",-0.1,0.1) ;
+	plot( dx.y(), "PV left-right delta y",-0.1,0.1) ;
+	plot( dx.z(), "PV left-right delta z",-1,1) ;
 	if( fabs( dx.y() ) < m_ipmax ) 
 	  profile1D( pv->position().z(), dx.y(),"PV left-right delta y versus z",m_zpvmin,m_zpvmax,m_nprbins) ;
 	if( fabs( dx.x() ) < m_ipmax ) 
