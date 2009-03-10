@@ -3,11 +3,11 @@
 # Maintainer : Christopher Rob Jones
 #            : Expert monitor algorithms for RICH reconstruction
 #============================================================================
-# $Id: requirements,v 1.29 2008-12-17 16:01:59 jonrob Exp $
+# $Id: requirements,v 1.30 2009-03-10 16:08:03 cattanem Exp $
 #============================================================================
 
 package RichRecMonitors
-version v2r21
+version v2r22
 
 # ================ structure ================================================
 branches src cmt doc 
