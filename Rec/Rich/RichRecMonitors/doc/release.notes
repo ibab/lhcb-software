@@ -4,6 +4,9 @@
 ! Purpose     : MC based detailed monitor algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-03-10 - Chris Jones
+ - Miscellaneous minor improvements to the detailed MC monitors
+
 !====================== RichRecMonitors v2r21 2009-01-12 =====================
 ! 2008-12-17 - Chris Jones
  - Remove all Job Option files. How handled by python ConfigurableUser in
