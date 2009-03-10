@@ -1,4 +1,4 @@
-// $Id: MCEventTypeFinder.cpp,v 1.5 2009-03-10 10:04:08 rlambert Exp $
+// $Id: MCEventTypeFinder.cpp,v 1.6 2009-03-10 12:51:22 rlambert Exp $
 // Include files 
 #include <sstream>
 #include <math.h>
@@ -7,6 +7,7 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/SystemOfUnits.h"
+#include "GaudiKernel/MsgStream.h"
 
 // from PartProp
 #include "Kernel/IEvtTypeSvc.h"
@@ -41,7 +42,7 @@ MCEventTypeFinder::MCEventTypeFinder( const std::string& type,
     m_muonp(-13),
     m_muonm(13),
     m_acc_min(-1.0*log(tan(0.4/2.0))), //~1.60
-    m_acc_max(9999.0),
+    m_acc_max(-1.0*log(tan(0.05/2.0))), //~6
     m_decProdStr1("DecProdCut"),
     m_decProdStr2("InAcc")
 {
@@ -55,9 +56,9 @@ MCEventTypeFinder::MCEventTypeFinder( const std::string& type,
   //you could set this to 2.0 if you really want "in the acceptance" 
   declareProperty( "acc_min", m_acc_min=-1.0*log(tan(0.4/2.0)));
   
-  //define the maximum acceptance for a decprodcut, default beyond elastic limit.
+  //define the maximum acceptance for a decprodcut, by default this is 5 mrad eta < 6-ish.
   //could set to 4.9 if you really want "in the acceptance" 
-  declareProperty( "acc_max", m_acc_max=9999.0);
+  declareProperty( "acc_max", m_acc_max=-1.0*log(tan(0.05/2.0)));
   
 }
 
@@ -76,7 +77,7 @@ StatusCode MCEventTypeFinder::initialize(){
   StatusCode sc = GaudiTool::initialize();
   if (!sc) return sc;
   
-  debug() << "==> Initializing" << endreq;
+  if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "==> Initializing" << endreq;
 
   // Retrieve the EvtTypeSvc here so that it is always done at initialization
   m_evtTypeSvc = svc<IEvtTypeSvc>( "EvtTypeSvc", true );
@@ -86,7 +87,7 @@ StatusCode MCEventTypeFinder::initialize(){
 
   //m_allTypes=m_evtTypeSvc->allTypes();
 
-  debug() << "Number of event types to look for: m_allTypes.size() " << m_allTypes.size() << endmsg;
+  if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "Number of event types to look for: m_allTypes.size() " << m_allTypes.size() << endmsg;
   
   
   return sc;
@@ -98,7 +99,7 @@ StatusCode MCEventTypeFinder::initialize(){
 //=============================================================================
 StatusCode MCEventTypeFinder::findEventTypes(LHCb::EventTypeSet& found)
 { 
-  debug() << "findEventTypes called, with no passsed container"  << endmsg;
+  if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "findEventTypes called, with no passsed container"  << endmsg;
   
   //I should get the container, and iterate myself!
 
@@ -116,14 +117,14 @@ StatusCode MCEventTypeFinder::findEventTypes(LHCb::EventTypeSet& found)
 
   StatusCode sc=findDecayType(found, *mcparts);
   
-  debug() << "findEventTypes completed, with no container, returning :" << found.size() << endmsg;
+  if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "findEventTypes completed, with no container, returning :" << found.size() << endmsg;
   return sc; 
 }
 
 StatusCode MCEventTypeFinder::fillMCTools()
 {
   
-  debug() << "filling all MCDecayTools"  << endmsg;
+  if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "filling all MCDecayTools"  << endmsg;
   m_mcFinders.clear();
   m_decProdCut.clear();
   m_mcFinders.reserve(m_allTypes.size());
@@ -152,7 +153,7 @@ StatusCode MCEventTypeFinder::fillMCTools()
     }
   //if it still doesn't exist, just add it in, all events are min bias, generally
   if(!m_allTypes.count(m_mbias)) m_allTypes.insert(m_mbias);
-  debug() << "Min bias is set to EventType " << m_mbias << endmsg;
+  if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "Min bias is set to EventType " << m_mbias << endmsg;
   
 
   for(LHCb::EventTypeSet::const_iterator iType=m_allTypes.begin();
@@ -162,7 +163,7 @@ StatusCode MCEventTypeFinder::fillMCTools()
     std::string sname=m_evtTypeSvc->nickName(*iType);
     std::string sdecay=m_evtTypeSvc->decayDescriptor(*iType);
     
-    verbose() << "Preparing to set decay for EvtCode " << *iType << endmsg;
+    if(msgLevel(MSG::VERBOSE)) verbose() << "Preparing to set decay for EvtCode " << *iType << endmsg;
     //is it a DecProdCut?
     m_decProdCut.push_back(
 			   sname.find(m_decProdStr1)!=std::string::npos ||
@@ -177,14 +178,14 @@ StatusCode MCEventTypeFinder::fillMCTools()
     
     if(sdecay=="Unknown" || sdecay=="" || strcompNoSpace(sdecay,minbias)) //skip it
     {
-      debug() << "Ignoring: " << *iType << endmsg;
+      if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "Ignoring: " << *iType << endmsg;
       m_mcFinders.push_back(NULL);
       continue;
     }
     
     if(*iType > m_mbias+m_incb) //ignore it, shouldn't allow decays above min bias
     {
-      debug() << "Ignoring: " << *iType << endmsg;
+      if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "Ignoring: " << *iType << endmsg;
       m_mcFinders.push_back(NULL);
       continue;
     }
@@ -202,7 +203,7 @@ StatusCode MCEventTypeFinder::fillMCTools()
       continue;
     }
     
-    verbose() << strEventCode << " DecayFinder is looking for " << sdecay << endmsg;
+    if(msgLevel(MSG::VERBOSE)) verbose() << strEventCode << " DecayFinder is looking for " << sdecay << endmsg;
 
     if( (anIMCD->setDecay( sdecay )).isFailure() ) 
     {
@@ -226,7 +227,7 @@ StatusCode MCEventTypeFinder::fillMCTools()
 StatusCode MCEventTypeFinder::findDecayType(LHCb::EventTypeSet& found, const LHCb::MCParticle * mc_mother ) 
 {
   
-  debug() << "findDecayType called, with MCParticle*"  << endmsg;
+  if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "findDecayType called, with MCParticle*"  << endmsg;
 
   if(!mc_mother) 
     {
@@ -262,7 +263,7 @@ StatusCode MCEventTypeFinder::findDecayType(LHCb::EventTypeSet& found, const LHC
   
   if(found.size()>0)
   {
-    debug() << "findDecayType completed, with an MCParticle * container, found:" << found.size()  << endmsg;
+    if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "findDecayType completed, with an MCParticle * container, found:" << found.size()  << endmsg;
     return StatusCode::SUCCESS; 
   }
   
@@ -275,7 +276,7 @@ StatusCode MCEventTypeFinder::findDecayType(LHCb::EventTypeSet& found, const LHC
 //=============================================================================
 StatusCode MCEventTypeFinder::findDecayType(LHCb::EventTypeSet& found, const LHCb::MCParticle::ConstVector & mc_mothers ) 
 { 
-  debug() << "findDecayType called, with MCParticle::ConstVector"  << endmsg;
+  if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "findDecayType called, with MCParticle::ConstVector"  << endmsg;
   if(mc_mothers.empty()) 
     {
       warning() << "passed empty MCParticle vector" << endmsg;
@@ -297,7 +298,7 @@ StatusCode MCEventTypeFinder::findDecayType(LHCb::EventTypeSet& found, const LHC
   
   if(found.size()>0)
     {
-      debug() << "findDecayType completed, with an MCParticle::ConstVector container, found:" << found.size()  << endmsg;
+      if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "findDecayType completed, with an MCParticle::ConstVector container, found:" << found.size()  << endmsg;
       return StatusCode::SUCCESS; 
     }
   
@@ -309,7 +310,7 @@ StatusCode MCEventTypeFinder::findDecayType(LHCb::EventTypeSet& found, const LHC
 //=============================================================================
 StatusCode MCEventTypeFinder::findDecayType(LHCb::EventTypeSet& found, const LHCb::MCParticles & mc_mothers ) 
 { 
-  debug() << "findDecayType called, with MCParticles"  << endmsg;
+  if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "findDecayType called, with MCParticles"  << endmsg;
 
   if(mc_mothers.empty()) 
     {
@@ -332,7 +333,7 @@ StatusCode MCEventTypeFinder::findDecayType(LHCb::EventTypeSet& found, const LHC
 
   if(found.size()>0)
     {
-      debug() << "findDecayType completed, with an MCParticles container, found:" << found.size()  << endmsg;
+      if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "findDecayType completed, with an MCParticles container, found:" << found.size()  << endmsg;
       return StatusCode::SUCCESS; 
     }
   
@@ -345,7 +346,7 @@ StatusCode MCEventTypeFinder::findDecayType(LHCb::EventTypeSet& found, const LHC
 //=============================================================================
 StatusCode MCEventTypeFinder::constructEventTypes(LHCb::EventTypeSet& found) 
 { 
-  debug() << "constructEventTypes called, with no container"  << endmsg;
+  if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "constructEventTypes called, with no container"  << endmsg;
 
   //get all MC particles,
   LHCb::MCParticles* mcparts = 
@@ -361,7 +362,7 @@ StatusCode MCEventTypeFinder::constructEventTypes(LHCb::EventTypeSet& found)
 
   StatusCode sc=constructDecayType(found, *mcparts);
   
-  debug() << "constructEventTypes completed, with no container, returning :" << found.size() << endmsg;
+  if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "constructEventTypes completed, with no container, returning :" << found.size() << endmsg;
   return sc;
   
 
@@ -372,7 +373,7 @@ StatusCode MCEventTypeFinder::constructEventTypes(LHCb::EventTypeSet& found)
 //=============================================================================
 StatusCode MCEventTypeFinder::constructDecayType(LHCb::EventTypeSet& found, const LHCb::MCParticle * mc_mother ) 
 {
-  debug() << "constructDecayType called, with an MCParticle*"  << endmsg;
+  if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "constructDecayType called, with an MCParticle*"  << endmsg;
 
   if(!mc_mother) return StatusCode::SUCCESS;
   bool dimuon=false;
@@ -383,7 +384,7 @@ StatusCode MCEventTypeFinder::constructDecayType(LHCb::EventTypeSet& found, cons
 
   if(dimuon) appendDiMuon(found);
   
-  debug() << "constructDecayType completed, with an MCParticle *, found:" << found.size()  << endmsg;
+  if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "constructDecayType completed, with an MCParticle *, found:" << found.size()  << endmsg;
   return StatusCode::SUCCESS; 
 }
   
@@ -392,7 +393,7 @@ StatusCode MCEventTypeFinder::constructDecayType(LHCb::EventTypeSet& found, cons
 //=============================================================================
 StatusCode MCEventTypeFinder::constructDecayType(LHCb::EventTypeSet& found, const LHCb::MCParticle::ConstVector & mc_mothers ) 
 {
-  debug() << "constructDecayType called, with an MCParticle::ConstVector"  << endmsg;
+  if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "constructDecayType called, with an MCParticle::ConstVector"  << endmsg;
 
   bool posmuon=false;
   bool negmuon=false;
@@ -413,7 +414,7 @@ StatusCode MCEventTypeFinder::constructDecayType(LHCb::EventTypeSet& found, cons
   appendParents(found);
   if(posmuon && negmuon) appendDiMuon(found);// it's a dimuon event
   
-  debug() << "constructDecayType completed, with an MCParticle::ConstVector container, found:" << found.size()  << endmsg;
+  if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "constructDecayType completed, with an MCParticle::ConstVector container, found:" << found.size()  << endmsg;
   return StatusCode::SUCCESS; 
 }
 //=============================================================================
@@ -421,7 +422,7 @@ StatusCode MCEventTypeFinder::constructDecayType(LHCb::EventTypeSet& found, cons
 //=============================================================================
 StatusCode MCEventTypeFinder::constructDecayType(LHCb::EventTypeSet& found, const LHCb::MCParticles & mc_mothers ) 
 {
-  debug() << "constructDecayType called, with an MCParticles container"  << endmsg;
+  if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "constructDecayType called, with an MCParticles container"  << endmsg;
 
   bool posmuon=false;
   bool negmuon=false;
@@ -442,7 +443,7 @@ StatusCode MCEventTypeFinder::constructDecayType(LHCb::EventTypeSet& found, cons
   appendParents(found);
   if(posmuon && negmuon) appendDiMuon(found);// it's a dimuon event
   
-  debug() << "constructDecayType completed, with an MCParticles container, found:" << found.size()  << endmsg;
+  if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "constructDecayType completed, with an MCParticles container, found:" << found.size()  << endmsg;
   return StatusCode::SUCCESS; 
 }
 
@@ -455,7 +456,7 @@ StatusCode MCEventTypeFinder::constructDecayType(LHCb::EventTypeSet& found, cons
 
 StatusCode MCEventTypeFinder::parentEventTypes(long unsigned int evtType, LHCb::EventTypeSet & parents)
 {
-  debug() << "looking for parents to event " << evtType << endmsg;
+  if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "looking for parents to event " << evtType << endmsg;
   //MsgStream msg( msgSvc(), name() );
     
     if(evtType < 10000000) return StatusCode::FAILURE; 
@@ -466,14 +467,14 @@ StatusCode MCEventTypeFinder::parentEventTypes(long unsigned int evtType, LHCb::
     parents.insert(evtType-evtType%10000000); //inclusive
     if(evtType< m_mbias+m_incb) parents.insert(m_mbias);//min bias
     
-    debug() << "found parents " << parents.size() << " first in list " << *(parents.begin()) << endmsg;
+    if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "found parents " << parents.size() << " first in list " << *(parents.begin()) << endmsg;
     
     return StatusCode::SUCCESS;
     
 }
 StatusCode MCEventTypeFinder::appendParents(LHCb::EventTypeSet & aset)
 {
-  debug() << "appending all parents, starting size:" << aset.size() << endmsg;
+  if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "appending all parents, starting size:" << aset.size() << endmsg;
 
     const LHCb::EventTypeSet parents=aset;
     
@@ -484,7 +485,7 @@ StatusCode MCEventTypeFinder::appendParents(LHCb::EventTypeSet & aset)
       {
         parentEventTypes(*n, aset); //append parents to aset
       }
-    debug() << "parents appended, final size:" << aset.size() << endmsg;
+    if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "parents appended, final size:" << aset.size() << endmsg;
     return StatusCode::SUCCESS;
     
 }
@@ -514,7 +515,7 @@ bool MCEventTypeFinder::vec2set(std::vector<long unsigned int>& avec, LHCb::Even
 //=============================================================================
 long int MCEventTypeFinder::constructDecayType(const LHCb::MCParticle * mc_mother, bool & dimuon ) 
 {
-  verbose() << "constructing the decay type of mother located at " << mc_mother << endmsg;
+  if(msgLevel(MSG::VERBOSE)) verbose() << "constructing the decay type of mother located at " << mc_mother << endmsg;
 
   
   if(!mc_mother) return 0;
@@ -563,8 +564,8 @@ long int MCEventTypeFinder::constructDecayType(const LHCb::MCParticle * mc_mothe
   
   int dctnxu = determineDecay(mc_mother, dimuon);
 
-  verbose() << "found the decay type " << (g*10000000+s*1000000+dctnxu) << endmsg;
-  if(dimuon) verbose() << "--which is a dimuon type " << endmsg;
+  if(msgLevel(MSG::VERBOSE)) verbose() << "found the decay type " << (g*10000000+s*1000000+dctnxu) << endmsg;
+  if(dimuon && msgLevel(MSG::VERBOSE)) verbose() << "--which is a dimuon type " << endmsg;
   
   return(g*10000000+s*1000000+dctnxu);
   

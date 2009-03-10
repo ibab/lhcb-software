@@ -1,4 +1,4 @@
-// $Id: MCEventTypeFinder.h,v 1.2 2009-03-10 10:04:08 rlambert Exp $
+// $Id: MCEventTypeFinder.h,v 1.3 2009-03-10 12:51:22 rlambert Exp $
 #ifndef TOOLS_MCEVENTTYPEFINDER_H 
 #define TOOLS_MCEVENTTYPEFINDER_H 1
 
@@ -80,7 +80,7 @@ class IEvtTypeSvc;
  *                      by default this is -ln tan (0.4 /2), i.e. 400 mrad, eta > 1.60-ish
  *                      you could set this to 2.0 if you really want "in the acceptance" 
  *  acc_max  double     define the maximum acceptance, in pseudorapisity, for a decprodcut
- *                      by default this is 9999.0, beyond the elastic limit
+ *                      by default this is -ln tan (0.005 /2), i.e. 5mrad eta<6-ish
  *                      you could set this to 4.9 if you really want "in the acceptance" 
  *
  */
@@ -152,8 +152,8 @@ public:
     const long unsigned int m_diMuon;///=12000
     const int m_muonp;///=-13
     const int m_muonm;///=13
-    double m_acc_min;///n=2.0
-    double m_acc_max;///n=20 ///beyond elastic limit. could set to 4.9 if you really want "in the acceptance"
+    double m_acc_min;///n=1.6-ish, 400 mrad, set using option acc_min
+    double m_acc_max;///n=6-ish, 5 mrad, set using option acc_max
     const std::string m_decProdStr1; ///<"DecProdCut"
     const std::string m_decProdStr2; ///<"InAcc"
     

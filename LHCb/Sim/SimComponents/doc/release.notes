@@ -7,6 +7,10 @@
 
 !====================== SimComponents v2r17 2009-03-10 =======================
 ! 2009-03-10 - Rob Lambert
+ - MCEventTypeFinder, changed default acceptance, closer to true
+   definition. Added checks for msgLevel to improve speed.
+
+! 2009-03-10 - Rob Lambert
  - Bugfix, MCEventTypeFinder. It seems the const_reverse_iterator is 
    not implimented or has no != operator under windows for the std::set.
 
