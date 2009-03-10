@@ -1,10 +1,17 @@
-!$Id: release.notes,v 1.20 2008-09-10 07:05:00 jpalac Exp $
+!$Id: release.notes,v 1.21 2009-03-10 15:52:59 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTBase
 ! Responsible : Juan Palacios
 ! Purpose     : Base classes for MicroDST algorithms and tools, plus helper
 !               functions and functors.
 !-----------------------------------------------------------------------------
+
+! 2009-03-10 - Juan PALACIOS
+ - MicroDST/MicroDSTCommon.icpp
+  . Add more informative warning/error messages when input containers not 
+    found or cloning process fails.
+ - cmt/requitements
+  . Increase version to v1r2p1
 
 !====================== MicroDSTBase v1r2 2008-09-10 ======================
 
