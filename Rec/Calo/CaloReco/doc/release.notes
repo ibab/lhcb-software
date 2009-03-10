@@ -1,15 +1,15 @@
-! $Id: release.notes,v 1.128 2009-03-09 13:35:40 odescham Exp $
+! $Id: release.notes,v 1.129 2009-03-10 10:24:36 cattanem Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
-
-! 2009-05-09 - Olivier Deschamps
+!========================== CaloReco v4r18 2009-03-10 =========================
+! 2009-03-09 - Olivier Deschamps
  - options/CaloECorrectionParam.opts : 2nd iteration of DC09 tuning (Ecorrection for electron from e/p)
 
-! 2009-05-03 - Olivier Deschamps
+! 2009-03-05 - Olivier Deschamps
  - options/CaloECorrectionParam.opts : preliminary DC09 tuning
  - options/UnpackCaloHypoOnDemand.opts : new options to unpack packed CaloHypo on-demand (same as done in DstConf.py)
 
