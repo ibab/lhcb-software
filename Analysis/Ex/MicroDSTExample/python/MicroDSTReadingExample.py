@@ -1,5 +1,6 @@
 # Imports and typedefs
 from GaudiConf.Configuration import *
+from Gaudi.Configuration import EventSelector
 import sys, getopt
 from ROOT import TCanvas, TH1D, Double
 from GaudiPython import gbl, AppMgr, Helper
@@ -9,13 +10,6 @@ from LHCbMath import XYZVector, XYZPoint
 from MicroDSTExample import Helpers, Functors
 GenPlotter = Functors.GenericPlotter
 import PartProp.Service
-#==============================================================================
-def particleTreeLoop(particles, plotter):
-    for p in particles:
-        p = Helpers.deSmartRef(p)
-        plotter(p)
-        daughters = p.daughters()
-        particleTreeLoop(daughters, plotter)
 #==============================================================================
 def EventDataPlots(data, plotter) :
     if (data != None):
@@ -37,7 +31,11 @@ def printHelp():
     
 locationRoot = '/Event/microDST'
 selection = 'DC06selBs2JpsiPhi_unbiased'
-microDSTFile = '/afs/cern.ch/lhcb/group/davinci/vol1/DEV/data/DV_v20r2/testBs2JpsiPhi_5Kevt_pythonConfig.dst'
+#microDSTFile = '/afs/cern.ch/lhcb/group/davinci/vol1/DEV/data/DV_v20r2/testBs2JpsiPhi_5Kevt_pythonConfig.dst'
+#microDSTFile = '/afs/cern.ch/user/j/jpalac/w0/cmtDaVinci/DaVinci_HEAD/DaVinciSys/Ex/MicroDSTExample/cmt/testBs2JpsiPhi_WithMC_0.2Kevt_1.dst,/afs/cern.ch/user/j/jpalac/w0/cmtDaVinci/DaVinci_HEAD/DaVinciSys/Ex/MicroDSTExample/cmt/testBs2JpsiPhi_WithMC_0.2Kevt_2.dst'
+microDSTFile = ['/afs/cern.ch/user/j/jpalac/w0/cmtDaVinci/DaVinci_HEAD/DaVinciSys/Ex/MicroDSTExample/cmt/testBs2JpsiPhi_WithMC_0.2Kevt_2.dst',
+                '/afs/cern.ch/user/j/jpalac/w0/cmtDaVinci/DaVinci_HEAD/DaVinciSys/Ex/MicroDSTExample/cmt/testBs2JpsiPhi_WithMC_0.2Kevt_1.dst']
+#microDSTFile = ['/afs/cern.ch/user/j/jpalac/w0/cmtDaVinci/DaVinci_HEAD/DaVinciSys/Ex/MicroDSTExample/cmt/testBs2JpsiPhi_WithMC_0.2Kevt_2.dst']
 
 opts, args = getopt.getopt(sys.argv[1:], "s:i:r:h", ["selection=","input=", "root=", "help"])
 
@@ -70,7 +68,6 @@ properTimeFitter = eventLoop.tools.create('PropertimeFitter',
                                           interface='ILifetimeFitter')
 
 eventLoop.sel.open(microDSTFile)
-
 mcMassPlots = Helpers.Plots("MC mass")
 mcPropTimePlots = Helpers.Plots("MC proper time")
 massPlots = Helpers.Plots("Mass")
@@ -159,15 +156,16 @@ while (eventLoop.nextEvent() ) :
         stdBestVertexAssoc = eventLoop.getEvtStuff(stdVertexAssocPath)
         refitBestVertexAssoc = eventLoop.getEvtStuff(refitVertexAssocPath)
         p2MCPTable = eventLoop.getEvtStuff(particle2mcPath)
-        massResFunc = Functors.MassRes(p2MCPTable)
+        MCAssocFun = Functors.AssocMCPFromTable(p2MCPTable)
+        massResFunc = Functors.MassRes(MCAssocFun)
         particleMassResPlotter = GenPlotter(massResPlots,
                                             massResFunc,
                                             Helpers.pid,
                                             particleNameFunc,
                                             Helpers.HistoAttributes(100,-100., 100.),
                                             "rec mass - MC mass")
-        particleTreeLoop(particles, particleMassPlotter)
-        particleTreeLoop(particles, particleMassResPlotter)
+        Helpers.particleTreeLoop(particles, particleMassPlotter)
+        Helpers.particleTreeLoop(particles, particleMassResPlotter)
 
         stdTauFunc = Functors.PropTime(Functors.BestVertex(stdBestVertexAssoc),
                                        properTimeFitter)
