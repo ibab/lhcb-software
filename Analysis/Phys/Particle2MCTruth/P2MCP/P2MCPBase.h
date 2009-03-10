@@ -1,6 +1,6 @@
-// $Id: P2MCPBase.h,v 1.1 2009-03-10 18:10:39 jpalac Exp $
-#ifndef P2MCPBASE_H 
-#define P2MCPBASE_H 1
+// $Id: P2MCPBase.h,v 1.2 2009-03-10 18:29:38 jpalac Exp $
+#ifndef P2MCP_P2MCPBASE_H 
+#define P2MCP_P2MCPBASE_H 1
 
 // Include files
 // from Gaudi
@@ -42,43 +42,43 @@ public:
   
   virtual ~P2MCPBase( );
 
-  virtual Particle2MCParticle::ToVector 
+  virtual P2MCPTypes::ToVector 
   associate(const LHCb::Particle* particle) const ;
 
-  virtual Particle2MCParticle::ToVector 
+  virtual P2MCPTypes::ToVector 
   associate(const LHCb::Particle* particle,
             const std::string& mcParticleLocation) const ;
 
-  virtual Particle2MCParticle::LightTable 
+  virtual P2MCPTypes::LightTable 
   relatedMCPs(const LHCb::Particle*) const ;
 
-  virtual Particle2MCParticle::LightTable 
+  virtual P2MCPTypes::LightTable 
   relatedMCPs(const LHCb::Particle*,
               const std::string& mcParticleLocation) const ;
   
-  virtual Particle2MCParticle::LightTable 
+  virtual P2MCPTypes::LightTable 
   relatedMCPs(const LHCb::Particle*,
               const LHCb::MCParticle::ConstVector& mcParticles) const ;
 
-  virtual Particle2MCParticle::LightTable 
+  virtual P2MCPTypes::LightTable 
   associations(const LHCb::Particle::ConstVector& particles) const ;
   
-  virtual Particle2MCParticle::LightTable 
+  virtual P2MCPTypes::LightTable 
   associations(const LHCb::Particle::ConstVector& particles,
                const std::string& mcParticleLocation) const ;
 
-  virtual Particle2MCParticle::LightTable 
+  virtual P2MCPTypes::LightTable 
   associations(const LHCb::Particle::ConstVector& particles,
                const LHCb::MCParticle::ConstVector& mcParticles) const ;
 
-  virtual Particle2MCParticle::LightTable 
+  virtual P2MCPTypes::LightTable 
   associations(const LHCb::Particle::Container& particles) const ;
 
-  virtual Particle2MCParticle::LightTable 
+  virtual P2MCPTypes::LightTable 
   associations(const LHCb::Particle::Container& particles,
                const std::string& mcParticleLocation) const ;
 
-  virtual Particle2MCParticle::LightTable 
+  virtual P2MCPTypes::LightTable 
   associations(const LHCb::Particle::Container& particles,
                const LHCb::MCParticle::ConstVector& mcParticles) const ;
 
@@ -97,12 +97,12 @@ private:
   
 
   template <typename Iter> 
-  Particle2MCParticle::LightTable 
+  P2MCPTypes::LightTable 
   i_relatedMCPs(const LHCb::Particle* particle,
                 Iter begin,
                 Iter end     ) const
   {
-    Particle2MCParticle::LightTable table;
+    P2MCPTypes::LightTable table;
     if (0!=particle) {
       LHCb::MCParticle::ConstVector mcps;
       for ( Iter iMCP = begin ; iMCP != end ; ++iMCP){
@@ -113,19 +113,19 @@ private:
       return i_buildTable(particle, mcps.begin(), mcps.end() );
     } else {
       Warning("No particle!").ignore();
-      return Particle2MCParticle::LightTable();
+      return P2MCPTypes::LightTable();
     }
   }
 
   template <typename pIter, typename mcPIter>
-  Particle2MCParticle::LightTable 
+  P2MCPTypes::LightTable 
   i_associations(const pIter pBegin, 
                  const pIter pEnd, 
                  const mcPIter mcBegin, 
                  const mcPIter mcEnd) const
   {
 
-    Particle2MCParticle::LightTable table;
+    P2MCPTypes::LightTable table;
     for (pIter part = pBegin; part != pEnd; ++part) {
       table.merge( i_relatedMCPs(*part, mcBegin, mcEnd).relations() );
     }
@@ -134,7 +134,7 @@ private:
   }
   
   template <typename Iter> 
-  inline Particle2MCParticle::LightTable 
+  inline P2MCPTypes::LightTable 
   i_associations(const Iter pBegin,
                  const Iter pEnd,
                  const std::string& mcParticleLocation) const
@@ -143,16 +143,16 @@ private:
     if (0!=mcps) {
       return i_associations(pBegin, pEnd, mcps->begin(), mcps->end());
     } else {
-      return Particle2MCParticle::LightTable();
+      return P2MCPTypes::LightTable();
     }
   }
 
   template <typename Iter>
-  Particle2MCParticle::LightTable i_buildTable(const LHCb::Particle* particle,
-                                               const Iter mcBegin,
-                                               const Iter mcEnd) const
+  P2MCPTypes::LightTable i_buildTable(const LHCb::Particle* particle,
+                                      const Iter mcBegin,
+                                      const Iter mcEnd) const
   {
-    Particle2MCParticle::LightTable table;
+    P2MCPTypes::LightTable table;
     for ( Iter iMCP = mcBegin ; iMCP != mcEnd ; ++iMCP) {
       table.i_push( particle, *iMCP );
     }
@@ -177,4 +177,4 @@ private:
   std::string m_defMCLoc;
 
 };
-#endif // P2MCPBASE_H
+#endif // P2MCP_P2MCPBASE_H
