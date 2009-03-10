@@ -4,6 +4,7 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+!========================== RichDAQ v3r23p1 2009-03-10 =======================
 ! 2009-03-03 - Marco Cattaneo
  - Fix untested StatusCodes in RichRawDataFormatTool (Warning().ignore())
  - Replace obsolescent endreq by endmsg 
