@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Juan PALACIOS -->
+<!--- Created : 2009-03-10 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<lcgdict>
+
+<!-- P2MCP -->
+  <class name = "IP2MCP"/>
+
+</lcgdict>
