@@ -3,6 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+! 2009-03-10 - Marco Cattaneo
+ - Explicitly use CASTOR from LCG_Interfaces for QMTests
+
 ! 2009-03-05 - Marco Cattaneo
  - Remove UseOracle flag, set it directly in CondDB configurable
  - Propagate "DataType" to L0Conf()

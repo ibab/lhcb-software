@@ -59,5 +59,7 @@ apply_pattern GaudiApp
 
 # Run the tests
 private
+  macro CASTOR_use "" QMTest "CASTOR v* LCG_Interfaces"
+  use $(CASTOR_use)
   apply_pattern QMTest
 end_private
