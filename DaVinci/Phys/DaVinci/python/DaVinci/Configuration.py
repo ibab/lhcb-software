@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.55 2009-03-09 07:46:47 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.56 2009-03-10 10:45:50 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -338,7 +338,7 @@ class DaVinci(LHCbConfigurableUser) :
 
         self.checkOptions()
         self.configureSubPackages()
-        importOptions("$STDOPTS/LHCbApplication.opts") # to get units in .opts files
+        importOptions("$STDOPTS/PreloadUnits.opts") # to get units in .opts files
         self.configureInput()
         # start with init
         self.initSeq()
