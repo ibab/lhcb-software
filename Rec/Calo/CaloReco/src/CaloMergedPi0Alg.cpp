@@ -1,4 +1,4 @@
-// $Id: CaloMergedPi0Alg.cpp,v 1.22 2008-09-22 01:41:23 odescham Exp $
+// $Id: CaloMergedPi0Alg.cpp,v 1.23 2009-03-10 11:12:57 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -417,17 +417,18 @@ StatusCode CaloMergedPi0Alg::execute()
   // added by V.B 2004-10-27: estimator of cluster transverse energy 
   LHCb::CaloDataFunctor::EnergyTransverse<const LHCb::CaloCluster*,const DeCalorimeter*> eT ( detector ) ;
   
-
+  int ik = 0;
   /// loop over all clusters 
-  for( Iterator icluster = clusters->begin() ;
-       clusters->end() != icluster ; ++icluster )
-  {
+  for( Iterator icluster = clusters->begin() ; clusters->end() != icluster ; ++icluster ){
     LHCb::CaloCluster* cluster = *icluster ;
     if( 0 == cluster )                { continue ; }   ///< CONTINUE!
-    
+    ik++;
+    debug() << "Cluster " << ik << "/" << cluscount << endreq;
     // added by V.B. 2004-10-27
     if ( 0 < m_eT_Cut &&  m_eT_Cut > eT( cluster ) ) { continue ; }
-    
+    debug() << " selected clusters " << eT( cluster ) << endreq;
+
+ 
     //----------------------//
     //        My code       //
     //----------------------//
@@ -438,62 +439,62 @@ StatusCode CaloMergedPi0Alg::execute()
     if( 1 >= m_cluDigs )                { return 0; }   ///< CONTINUE!
 
 
-      /// Find Cluster Seed 
-      const LHCb::CaloCluster::Digits::const_iterator iSeed = 
-        clusterLocateDigit( cluster->entries().begin() ,
-                            cluster->entries().end  () ,
-                            LHCb::CaloDigitStatus::SeedCell     );
-      const LHCb::CaloDigit* seed = iSeed->digit() ;
-      if( 0 == seed) { continue ; }   ///< CONTINUE!
-      const LHCb::CaloCellID  idseed = seed->cellID() ;
-      double seede  = seed->e();
-      int seedrow  = idseed.row();
-      int seedcol  = idseed.col();
-      
-      double SpdHit = 0 ;
-      const LHCb::CaloDigit* spddigit = spds->object( seed->key() );
-      if( 0 != spddigit ) { SpdHit = spddigit->e() ; }
-      double PrsDep = 0 ;
-      const LHCb::CaloDigit* prsdigit = prss->object( seed->key() );
-      if( 0 != prsdigit ) { PrsDep = prsdigit->e() ; }
+    /// Find Cluster Seed 
+    const LHCb::CaloCluster::Digits::const_iterator iSeed = 
+      clusterLocateDigit( cluster->entries().begin() ,
+                          cluster->entries().end  () ,
+                          LHCb::CaloDigitStatus::SeedCell     );
+    const LHCb::CaloDigit* seed = iSeed->digit() ;
+    if( 0 == seed) { continue ; }   ///< CONTINUE!
+    const LHCb::CaloCellID  idseed = seed->cellID() ;
+    double seede  = seed->e();
+    int seedrow  = idseed.row();
+    int seedcol  = idseed.col();
+    
+    // 
+    debug() << " get Spd/Prs digits " << endreq;
+    double SpdHit = 0 ;
+    const LHCb::CaloDigit* spddigit = spds->object( seed->key() );
+    if( 0 != spddigit ) { SpdHit = spddigit->e() ; }
+    double PrsDep = 0 ;
+    const LHCb::CaloDigit* prsdigit = prss->object( seed->key() );
+    if( 0 != prsdigit ) { PrsDep = prsdigit->e() ; }
       
 
-      log << MSG::DEBUG << " -----> Find SubSeed " << endreq;
-      /// Find SubSeed  - Loop on Cluster CaloCluster:Digits
-      // (New DigitStatus to be defined)
+    log << MSG::DEBUG << " -----> Find SubSeed " << endreq;
+    /// Find SubSeed  - Loop on Cluster CaloCluster:Digits
+    // (New DigitStatus to be defined)
+    
+    // double sube=-99; commented by I.B 2004-08-20
+    // int subrow=0;
+    // int subcol=0;
+    double sube   = -1 * Gaudi::Units::TeV ;
+    int    subrow = -1000    ;
+    int    subcol = -1000    ;
       
-      // double sube=-99; commented by I.B 2004-08-20
-      // int subrow=0;
-      // int subcol=0;
-      double sube   = -1 * Gaudi::Units::TeV ;
-      int    subrow = -1000    ;
-      int    subcol = -1000    ;
+    debug() << " Loop over digits " << endreq;
+    for( LHCb::CaloCluster::Digits::const_iterator it1 =cluster->entries().begin() ;
+         cluster->entries().end() != it1 ; ++it1 ){
+      const LHCb::CaloDigit* dig = it1->digit() ;    // CaloDigit
+      if( 0 == dig) { continue ; }   ///< CONTINUE!
+      const LHCb::CaloCellID  id = dig->cellID() ;
+      int cellrow  = id.row();
+      int cellcol  = id.col();
+      double ecel = dig->e()*it1->fraction();
+      if (ecel>sube 
+          && ecel < seede 
+          && abs(cellrow-seedrow)<=1 
+          && abs(cellcol-seedcol)<=1){
+        sube=ecel;
+        subrow=cellrow;
+        subcol=cellcol;
+      }
+    }
       
-      for( LHCb::CaloCluster::Digits::const_iterator it1 =
-           cluster->entries().begin() ;
-           cluster->entries().end() != it1 ; ++it1 ) 
-      {
-          const LHCb::CaloDigit* dig = it1->digit() ;    // CaloDigit
-          if( 0 == dig) { continue ; }   ///< CONTINUE!
-          const LHCb::CaloCellID  id = dig->cellID() ;
-          int cellrow  = id.row();
-          int cellcol  = id.col();
-          double ecel = dig->e()*it1->fraction();
-          if (ecel>sube 
-              && ecel < seede 
-              && abs(cellrow-seedrow)<=1 
-              && abs(cellcol-seedcol)<=1)
-            {
-              sube=ecel;
-              subrow=cellrow;
-              subcol=cellcol;
-            }
-        }
-      
-      if ( -1000 == subrow && -1000 == subcol ) 
-      { Warning("Cluster without 'subcel' is found, skip it") ; continue ; }
-      
-      log << MSG::DEBUG << " -----> Define large Cluster " << endreq;
+    if ( -1000 == subrow && -1000 == subcol ) 
+    { Warning("Cluster without 'subcel' is found, skip it") ; continue ; }
+    
+    log << MSG::DEBUG << " -----> Define large Cluster " << endreq;
 
       /// Fill  3x3 SubClusters - Loop on all CaloCluster:Digits
       //   +-----+-----+-----+
@@ -505,466 +506,468 @@ StatusCode CaloMergedPi0Alg::execute()
       //^  +-----+-----+-----+
       //| -> col    
     
-      double SubClusEne[2][3][3];
-      int SubClusMask[2][3][3];
-      const LHCb::CaloDigit* SubClus[2][3][3];
-      for(int iss=0;iss<2;++iss){
-        for(int irr=0;irr<3;++irr){  
-          for(int icc=0;icc<3;++icc){  
-            SubClusMask[iss][irr][icc]=1;
-            SubClusEne[iss][irr][icc]=0;
-            SubClus[iss][irr][icc]=0;
-          }
+    double SubClusEne[2][3][3];
+    int SubClusMask[2][3][3];
+    const LHCb::CaloDigit* SubClus[2][3][3];
+    for(int iss=0;iss<2;++iss){
+      for(int irr=0;irr<3;++irr){  
+        for(int icc=0;icc<3;++icc){  
+          SubClusMask[iss][irr][icc]=1;
+          SubClusEne[iss][irr][icc]=0;
+          SubClus[iss][irr][icc]=0;
         }
       }
-      int ir,ic;
-      for( LHCb::CaloCluster::Digits::const_iterator it2 =
-           cluster->entries().begin() ;
-           cluster->entries().end() != it2 ; ++it2 ) 
-        {
-          const LHCb::CaloDigit* dig = it2->digit() ;    
-          if( 0 == dig) { continue ; }   ///< CONTINUE!
-          const LHCb::CaloCellID  id = dig->cellID() ;
-          int cellrow  = id.row();
-          int cellcol  = id.col();
-          double ecel = dig->e()*it2->fraction();
-
-          if (abs(seedrow-cellrow)<=1 && abs(seedcol-cellcol)<=1) 
-            {
-              ir=cellrow-seedrow+1;
-              ic=cellcol-seedcol+1;
-              SubClusEne[0][ir][ic]=std::max(ecel,0.) ;
+    }
+    int ir,ic;
+    for( LHCb::CaloCluster::Digits::const_iterator it2 =cluster->entries().begin() ;
+           cluster->entries().end() != it2 ; ++it2 ){
+      const LHCb::CaloDigit* dig = it2->digit() ;    
+      if( 0 == dig) { continue ; }   ///< CONTINUE!
+      const LHCb::CaloCellID  id = dig->cellID() ;
+      int cellrow  = id.row();
+      int cellcol  = id.col();
+      double ecel = dig->e()*it2->fraction();
+      
+      if (abs(seedrow-cellrow)<=1 && abs(seedcol-cellcol)<=1){
+        ir=cellrow-seedrow+1;
+        ic=cellcol-seedcol+1;
+        SubClusEne[0][ir][ic]=std::max(ecel,0.) ;
               SubClus[0][ir][ic]=dig;
-            }
-          if (abs(subrow-cellrow)<=1 && abs(subcol-cellcol)<=1) 
-            {
-              ir=cellrow-subrow+1;
-              ic=cellcol-subcol+1;
-              SubClusEne[1][ir][ic]=std::max(ecel,0.) ;
-              SubClus[1][ir][ic]=dig;
-            }
-        }
-      
-      
-      log << MSG::DEBUG << " -----> Split cluster " << endreq;
-      /// Defined proto-SubCluster from SubClusEne (split procedure)
-      
-      double Emax[2];
-      Emax[0]=-99;
-      Emax[1]=-99;
-      int idr[2];
-      int idc[2];
-      idr[0]=0;
-      idc[0]=0;
-      idr[1]=0;
-      idc[1]=0;
-      for(int is1=0;is1<2;++is1){
-        for(int ir1=0;ir1<3;++ir1){  
-          for(int ic1=0;ic1<3;++ic1){  
-            if(SubClusEne[is1][ir1][ic1]>Emax[is1]  && ir1*ic1 !=1 ){
-              Emax[is1]=SubClusEne[is1][ir1][ic1];
-              idr[is1]=ir1-1;
-              idc[is1]=ic1-1;
-            }
+      }
+      if (abs(subrow-cellrow)<=1 && abs(subcol-cellcol)<=1){
+        ir=cellrow-subrow+1;
+        ic=cellcol-subcol+1;
+        SubClusEne[1][ir][ic]=std::max(ecel,0.) ;
+        SubClus[1][ir][ic]=dig;
+      }
+    }
+    
+    
+    log << MSG::DEBUG << " -----> Split cluster " << endreq;
+    /// Defined proto-SubCluster from SubClusEne (split procedure)
+    
+    double Emax[2];
+    Emax[0]=-99;
+    Emax[1]=-99;
+    int idr[2];
+    int idc[2];
+    idr[0]=0;
+    idc[0]=0;
+    idr[1]=0;
+    idc[1]=0;
+    for(int is1=0;is1<2;++is1){
+      for(int ir1=0;ir1<3;++ir1){  
+        for(int ic1=0;ic1<3;++ic1){  
+          if(SubClusEne[is1][ir1][ic1]>Emax[is1]  && ir1*ic1 !=1 ){
+            Emax[is1]=SubClusEne[is1][ir1][ic1];
+            idr[is1]=ir1-1;
+            idc[is1]=ic1-1;
           }
         }
       }
+    }
 
 
-      int erasel[2];
-      int erasec[2];
-      erasel[0]=-1;
-      erasec[0]=-1;
-      erasel[1]=-1;
-      erasec[1]=-1;
-      // Define working array
-      double Ework[2][3][3];
-      double Weight[2][3][3];
-      for(int is=0;is<2;++is){
-        if( 0 == idr[is]*idc[is]){
-          if(idc[is] == 0){
-            erasel[is]=idr[is]+1;
-          }
-          if( 0 == idr[is] ){
-            erasec[is]=idc[is]+1;
-          }
+    int erasel[2];
+    int erasec[2];
+    erasel[0]=-1;
+    erasec[0]=-1;
+    erasel[1]=-1;
+    erasec[1]=-1;
+    // Define working array
+    double Ework[2][3][3];
+    double Weight[2][3][3];
+    for(int is=0;is<2;++is){
+      if( 0 == idr[is]*idc[is]){
+        if(idc[is] == 0){
+          erasel[is]=idr[is]+1;
         }
-        if( 1 == abs(idr[is]*idc[is]) ){
-          if( 0 == is 
-             && SubClusEne[is][idr[is]+1][1] <= SubClusEne[is][1][idc[is]+1]){
-            erasel[is]=idr[is]+1;
-          }
-          if( 0 == is 
-             && SubClusEne[is][idr[is]+1][1] >= SubClusEne[is][1][idc[is]+1]){
-            erasec[is]=idc[is]+1;
-          }
-          if( 1 == is 
-             && SubClusEne[is][idr[is]+1][1] >= SubClusEne[is][1][idc[is]+1]){
-            erasel[is]=idr[is]+1;
-          }
-          if( 1 == is 
-             && SubClusEne[is][idr[is]+1][1] <= SubClusEne[is][1][idc[is]+1]){
-            erasec[is]=idc[is]+1;
-          }
-        }
-      }
-
-      for(int is2=0;is2<2;++is2){
-        for(int ik=0;ik<3;++ik){
-          if(-1 != erasel[is2] ){
-            SubClusEne[is2][erasel[is2]][ik]=0;
-            SubClusMask[is2][erasel[is2]][ik]=0;
-          }
-          if(-1 != erasec[is2] ){
-            SubClusEne[is2][ik][erasec[is2]]=0;
-            SubClusMask[is2][ik][erasec[is2]]=0;
-          }
-        }
-      }
-
-      for(int isi=0;isi<2;++isi){
-        for(int iri=0;iri<3;++iri){
-          for(int ici=0;ici<3;++ici){
-            Ework[isi][iri][ici]=SubClusEne[isi][iri][ici];
-          }
-        }
-      }
-
-      
-      /// Iterative reconstruction of SubClusters
-      log << MSG::DEBUG << " -----> Iterative reconstruction " << endreq;
-      double SubSize[2],SubX[2],SubY[2],SubZ[2] ;
-      
-      long mxiter = m_mX_Iter;
-      // long mxiter=16;
-
-      long iter=0;
-      for( long iterat = 0 ; iterat < mxiter ; ++iterat){
-        // SubClusters X/Y/Z barycenter
-        iter++;
-        double Etemp[3][3];
-        double Ene3x3[2];
-        
-        for(int is=0;is<2;++is){
-          const LHCb::CaloDigit* digit   = SubClus[is][1][1];
-          if( 0 == SubClus[is][1][1]) { continue ; }   ///< CONTINUE!
-          const LHCb::CaloCellID  idigit = digit->cellID() ;
-          SubSize[is] = detector->cellSize( idigit ) ;
-          SubX[is]    = detector->cellX   ( idigit ) ;
-          SubY[is]    = detector->cellY   ( idigit ) ;
-          SubZ[is]    = detector->cellZ   ( idigit ) ;
-          unsigned int area = idigit.area();
-          Ene3x3[is]=0;
-          for(int ir=0;ir<3;++ir){
-            for(int ic=0;ic<3;++ic){
-              Etemp[ir][ic]=Ework[is][ir][ic];
-              Ene3x3[is]=Ene3x3[is]+Ework[is][ir][ic];
-              Ework[is][ir][ic]=SubClusEne[is][ir][ic];
-            }
-          }
-          SubX[is]=SubX[is]-BarXY(1,area,Etemp)*SubSize[is];
-          SubY[is]=SubY[is]-BarXY(2,area,Etemp)*SubSize[is];
-          SubZ[is]=BarZ(Ene3x3[is],PrsDep,area,SubX[is],SubY[is],SubZ[is]);
-          log << MSG::DEBUG << "==> Lcorr " << SubZ[is] << endreq;
-        }
-        // Reconstructing Overlap
-        
-        
-        for(int is=0;is<2;++is){
-          int js = 0 ;
-          if ( 0 == is ){ js = 1; }
-          if ( 1 == is ){ js = 0; }
-          for(int ir=0;ir<3;++ir){
-            for(int ic=0;ic<3;++ic){
-              if(1 == SubClusMask[js][ir][ic] ) {
-                const LHCb::CaloDigit* seed    = SubClus[is][1][1];;
-                if( 0 == seed) { continue ; }   ///< CONTINUE!
-                const LHCb::CaloCellID  idseed = seed->cellID() ;
-                const LHCb::CaloDigit* cel      = SubClus[js][ir][ic];;
-                if( 0 == cel) { continue ; }   ///< CONTINUE!
-                const LHCb::CaloCellID  idcel   = cel->cellID() ;
-                unsigned int area = idcel.area();
-                int rowc = idcel.row();
-                int colc = idcel.col();
-                int rows = idseed.row();
-                int cols = idseed.col();
-                double CelSize = detector->cellSize( idcel);
-                double CelX    = detector->cellX   ( idcel);
-                double CelY    = detector->cellY   ( idcel);
-                // 3D  distance from the current cell to 
-                // the other SubCluster barycenter
-                double CelZ=(  SubX[is]*SubX[is]+
-                               SubY[is]*SubY[is]+
-                               SubZ[is]*SubZ[is]-
-                               SubX[is]*CelX-
-                               SubY[is]*CelY)/SubZ[js];
-                double D3D=sqrt((SubX[is]-CelX)*(SubX[is]-CelX)+
-                                (SubY[is]-CelY)*(SubY[is]-CelY)+
-                                (SubZ[is]-CelZ)*(SubZ[is]-CelZ))/CelSize;
-                double D2D=sqrt((SubX[is]-CelX)*(SubX[is]-CelX)+
-                                (SubY[is]-CelY)*(SubY[is]-CelY))/CelSize;
-                int Neig=1;
-                if(0.5 > D2D)Neig=0;
-                double Frac=TrShape(Neig,area,SpdHit,D3D);
-                double EFrac=Ene3x3[is]*Frac;
-                int jr=rowc-rows+1;
-                int jc=colc-cols+1;
-                Weight[js][ir][ic]=1.;
-                if(1 >= abs(jr-1) && 1 >= abs(jc-1))Weight[is][jr][jc]=0.;
-                if( EFrac < Ework[js][ir][ic]  ){
-                  Ework[js][ir][ic]=Ework[js][ir][ic]-EFrac;
-                  Weight[js][ir][ic]=1.-Frac;
-                  if(1 >= abs(jr-1) && 1 >= abs(jc-1)){
-                    Ework[is][jr][jc]=EFrac;
-                    Weight[is][jr][jc]=Frac;
-                  }
-                }
-              }
-            }
-          }
+        if( 0 == idr[is] ){
+          erasec[is]=idc[is]+1;
         }
       }
       
+      if( 1 == abs(idr[is]*idc[is]) ){
+        if( 0 == is           && SubClusEne[is][idr[is]+1][1] <= SubClusEne[is][1][idc[is]+1]){
+          erasel[is]=idr[is]+1;
+        }
+        if( 0 == is && SubClusEne[is][idr[is]+1][1] >= SubClusEne[is][1][idc[is]+1]){
+          erasec[is]=idc[is]+1;
+        }
+        if( 1 == is && SubClusEne[is][idr[is]+1][1] >= SubClusEne[is][1][idc[is]+1]){
+          erasel[is]=idr[is]+1;
+        }
+        if( 1 == is           && SubClusEne[is][idr[is]+1][1] <= SubClusEne[is][1][idc[is]+1]){
+          erasec[is]=idc[is]+1;
+        }
+      }
+    }
+    for(int is2=0;is2<2;++is2){
+      for(int ik=0;ik<3;++ik){
+        if(-1 != erasel[is2] ){
+          SubClusEne[is2][erasel[is2]][ik]=0;
+          SubClusMask[is2][erasel[is2]][ik]=0;
+        }
+        if(-1 != erasec[is2] ){
+          SubClusEne[is2][ik][erasec[is2]]=0;
+          SubClusMask[is2][ik][erasec[is2]]=0;
+        }
+      }
+    }
+    
+    for(int isi=0;isi<2;++isi){
+      for(int iri=0;iri<3;++iri){
+        for(int ici=0;ici<3;++ici){
+          Ework[isi][iri][ici]=SubClusEne[isi][iri][ici];
+          Weight[isi][iri][ici] = 0.;
+        }
+      }
+    }
+    
       
-
-      /// End of Reconstruction aLgorithm 
-      /// Define photon and pi0 from Subcluster
-
-
-      log << MSG::DEBUG << " -----> Compute Pi0 mass " << endreq;
-      // energy
+    /// Iterative reconstruction of SubClusters
+    log << MSG::DEBUG << " -----> Iterative reconstruction " << endreq;
+    double SubSize[2],SubX[2],SubY[2],SubZ[2] ;
+    
+    long mxiter = m_mX_Iter;
+    // long mxiter=16;
+    
+    long iter=0;
+    for( long iterat = 0 ; iterat < mxiter ; ++iterat){
+      // SubClusters X/Y/Z barycenter
+      iter++;
+      double Etemp[3][3];
       double Ene3x3[2];
-      double PosX[2];
-      double PosY[2];
       
       for(int is=0;is<2;++is){
-        const LHCb::CaloDigit* digit   = SubClus[is][1][1];;
+        const LHCb::CaloDigit* digit   = SubClus[is][1][1];
         if( 0 == SubClus[is][1][1]) { continue ; }   ///< CONTINUE!
         const LHCb::CaloCellID  idigit = digit->cellID() ;
-        unsigned int area = idigit.area();
         SubSize[is] = detector->cellSize( idigit ) ;
         SubX[is]    = detector->cellX   ( idigit ) ;
         SubY[is]    = detector->cellY   ( idigit ) ;
         SubZ[is]    = detector->cellZ   ( idigit ) ;
-        double Etemp[3][3];
+        unsigned int area = idigit.area();
         Ene3x3[is]=0;
         for(int ir=0;ir<3;++ir){
           for(int ic=0;ic<3;++ic){
             Etemp[ir][ic]=Ework[is][ir][ic];
             Ene3x3[is]=Ene3x3[is]+Ework[is][ir][ic];
+            Ework[is][ir][ic]=SubClusEne[is][ir][ic];
           }
         }
         SubX[is]=SubX[is]-BarXY(1,area,Etemp)*SubSize[is];
         SubY[is]=SubY[is]-BarXY(2,area,Etemp)*SubSize[is];
         SubZ[is]=BarZ(Ene3x3[is],PrsDep,area,SubX[is],SubY[is],SubZ[is]);
-        PosX[is]=detector->cellX( SubClus[is][1][1]->cellID() )
-          -SubSize[is]*(+ Etemp[0][0] + Etemp[1][0] + Etemp[2][0]
-                        - Etemp[0][2] - Etemp[1][2] - Etemp[2][2])/Ene3x3[is];
-        PosY[is]=detector->cellY( SubClus[is][1][1]->cellID() )
-          -SubSize[is]*(+ Etemp[0][0] + Etemp[0][1] + Etemp[0][2]
-                        - Etemp[2][0] - Etemp[2][1] - Etemp[2][2])/Ene3x3[is];
+        log << MSG::DEBUG << "==> Lcorr " << SubZ[is] << endreq;
       }
-      
-      double ep1=0;
-      double ep2=0;
-      ep1=Ene3x3[0];
-      ep2=Ene3x3[1];
-      
-      // momenta
-      double xp1,yp1,zp1,xn1;
-      double xp2,yp2,zp2,xn2;
-      
-      xp1=SubX[0];
-      yp1=SubY[0];
-      zp1=SubZ[0];
-      xn1=sqrt(xp1*xp1+yp1*yp1+zp1*zp1);
+      // Reconstructing Overlap
       
       
-      xp1=xp1*ep1/xn1;
-      yp1=yp1*ep1/xn1;
-      zp1=zp1*ep1/xn1;
-      
-
-      xp2=SubX[1];
-      yp2=SubY[1];
-      zp2=SubZ[1];
-      xn2=sqrt(xp2*xp2+yp2*yp2+zp2*zp2);
-      xp2=xp2*ep2/xn2;
-      yp2=yp2*ep2/xn2;
-      zp2=zp2*ep2/xn2;
-      
-      // invariant mass
-      
-      double RecPi0Mas;
-      double RecPi0Masq;
-      RecPi0Masq=(ep1+ep2)*(ep1+ep2);
-      RecPi0Masq=RecPi0Masq-(xp1+xp2)*(xp1+xp2);
-      RecPi0Masq=RecPi0Masq-(yp1+yp2)*(yp1+yp2);
-      RecPi0Masq=RecPi0Masq-(zp1+zp2)*(zp1+zp2);
-      
-      RecPi0Mas=0;
-
-      if ( 0 < RecPi0Masq){
-        RecPi0Mas=sqrt(RecPi0Masq);
-      }
-  
-
-      const LHCb::CaloDigit*  seedig   = SubClus[0][1][1];;
-      const LHCb::CaloCellID  idig     = seedig->cellID() ;
-      // commented by I.B. 2004-08-20
-      // double zpos                = detector->cellZ   ( idig ) ;
-      // double csiz                = detector->cellSize( idig ) ;
-      // double mpi0=0.1349;
-      // double epi0=(ep1+ep2)/GeV;
-      // double dmin=zpos*2*mpi0/epi0/csiz; 
-
-      
-
-      log << MSG::DEBUG << " Pi0Mas =  " <<RecPi0Mas << endreq;
-      
-
-      /*
-        Mid June 2002 
-       */
-
-      unsigned int KeepPi0=1;
-      const double TruePi0Mas=134.9;
-      const double SigmaRec=16.;
-      const double LowMasSigmaCut=7.0;
-      const double HighMasSigmaCut=999.0;
-      // revision 1.7 (February 2004) : 
-      // remove dmin cut and relax HighMasSigmaCut ...
-        
-      if(RecPi0Mas < TruePi0Mas - LowMasSigmaCut*SigmaRec){KeepPi0=0;}
-      if(RecPi0Mas > TruePi0Mas + HighMasSigmaCut*SigmaRec){KeepPi0=0;}
-      //if(dmin      >  3.){KeepPi0=0;}
-      //if(dmin      <= 0.){KeepPi0=0;}
-      
-      /*
-         Fill CaloHypos and SubClusters if "good" MergePi0
-      */
-      if( 1 == KeepPi0){
-        
-        //Defined new Calo SubCluster pointed by PhotonFromMergedPi0 CaloHypos
-        LHCb::CaloCluster* cl1 = new LHCb::CaloCluster();
-        LHCb::CaloCluster* cl2 = new LHCb::CaloCluster();
-        LHCb::CaloCellID seed1;
-        LHCb::CaloCellID seed2;
-        // Init the 2 new CaloClusters 
-        // with the original cluster digits, owned-status'ed and  0-weighted
-        for( LHCb::CaloCluster::Digits::const_iterator it3 =
-               cluster->entries().begin() ;
-             cluster->entries().end() != it3 ; ++it3 ){
-          const LHCb::CaloDigit* d = it3->digit() ;   
-          LHCb::CaloDigitStatus::Status s1   = LHCb::CaloDigitStatus::OwnedCell    ;
-          LHCb::CaloDigitStatus::Status s2   = LHCb::CaloDigitStatus::OwnedCell    ;
-          double     w1=0;
-          double     w2=0;
-          // Then fill correctly the 3x3 matrix cells around seed and subseed
-          for(int ir=0;ir<3;++ir){
-            for(int ic=0;ic<3;++ic){
-              const LHCb::CaloDigit* d1 = SubClus[0][ir][ic];
-              if (d == d1 ) {
-                w1 = Weight[0][ir][ic] ;      
-                s1   = LHCb::CaloDigitStatus::OwnedCell      | 
-                  LHCb::CaloDigitStatus::UseForEnergy   | 
-                  LHCb::CaloDigitStatus::UseForPosition | 
-                  LHCb::CaloDigitStatus::UseForCovariance  ;
-                if(1 == ir && 1==ic){
-                  s1   =  LHCb::CaloDigitStatus::SeedCell       | 
-                    LHCb::CaloDigitStatus::LocalMaximum   | 
-                    LHCb::CaloDigitStatus::UseForEnergy   | 
-                    LHCb::CaloDigitStatus::UseForPosition | 
-                    LHCb::CaloDigitStatus::UseForCovariance  ;
-                  seed1 = d1->cellID();
+      for(int is=0;is<2;++is){
+        int js = 0 ;
+        if ( 0 == is ){ js = 1; }
+        if ( 1 == is ){ js = 0; }
+        for(int ir=0;ir<3;++ir){
+          for(int ic=0;ic<3;++ic){
+            if(1 == SubClusMask[js][ir][ic] ) {
+              const LHCb::CaloDigit* seed    = SubClus[is][1][1];;
+              if( 0 == seed) { continue ; }   ///< CONTINUE!
+              const LHCb::CaloCellID  idseed = seed->cellID() ;
+              const LHCb::CaloDigit* cel      = SubClus[js][ir][ic];;
+              if( 0 == cel) { continue ; }   ///< CONTINUE!
+              const LHCb::CaloCellID  idcel   = cel->cellID() ;
+              unsigned int area = idcel.area();
+              int rowc = idcel.row();
+              int colc = idcel.col();
+              int rows = idseed.row();
+              int cols = idseed.col();
+              double CelSize = detector->cellSize( idcel);
+              double CelX    = detector->cellX   ( idcel);
+              double CelY    = detector->cellY   ( idcel);
+              // 3D  distance from the current cell to 
+              // the other SubCluster barycenter
+              double CelZ=(  SubX[is]*SubX[is]+
+                             SubY[is]*SubY[is]+
+                             SubZ[is]*SubZ[is]-
+                             SubX[is]*CelX-
+                             SubY[is]*CelY)/SubZ[js];
+              double D3D=sqrt((SubX[is]-CelX)*(SubX[is]-CelX)+
+                              (SubY[is]-CelY)*(SubY[is]-CelY)+
+                              (SubZ[is]-CelZ)*(SubZ[is]-CelZ))/CelSize;
+              double D2D=sqrt((SubX[is]-CelX)*(SubX[is]-CelX)+
+                              (SubY[is]-CelY)*(SubY[is]-CelY))/CelSize;
+              int Neig=1;
+              if(0.5 > D2D)Neig=0;
+              double Frac=TrShape(Neig,area,SpdHit,D3D);
+              double EFrac=Ene3x3[is]*Frac;
+              int jr=rowc-rows+1;
+              int jc=colc-cols+1;
+              Weight[js][ir][ic]=1.;
+              if(1 >= abs(jr-1) && 1 >= abs(jc-1))Weight[is][jr][jc]=0.;
+              if( EFrac < Ework[js][ir][ic]  ){
+                Ework[js][ir][ic]=Ework[js][ir][ic]-EFrac;
+                Weight[js][ir][ic]=1.-Frac;
+                if(1 >= abs(jr-1) && 1 >= abs(jc-1)){
+                  Ework[is][jr][jc]=EFrac;
+                  Weight[is][jr][jc]=Frac;
                 }
               }
             }
           }
-          for(int ir=0;ir<3;++ir){
-            for(int ic=0;ic<3;++ic){
-              const LHCb::CaloDigit* d2 = SubClus[1][ir][ic];
-              if (d == d2 ) {
-                w2 = Weight[1][ir][ic] ;      
-                s2   =  LHCb::CaloDigitStatus::OwnedCell      | 
+        }
+      }
+    }
+    
+    
+    
+    /// End of Reconstruction aLgorithm 
+    /// Define photon and pi0 from Subcluster
+    
+    
+    log << MSG::DEBUG << " -----> Compute Pi0 mass " << endreq;
+    // energy
+    double Ene3x3[2];
+    double PosX[2];
+    double PosY[2];
+    
+    for(int is=0;is<2;++is){
+      const LHCb::CaloDigit* digit   = SubClus[is][1][1];;
+      if( 0 == SubClus[is][1][1]) { continue ; }   ///< CONTINUE!
+      const LHCb::CaloCellID  idigit = digit->cellID() ;
+      unsigned int area = idigit.area();
+      SubSize[is] = detector->cellSize( idigit ) ;
+      SubX[is]    = detector->cellX   ( idigit ) ;
+      SubY[is]    = detector->cellY   ( idigit ) ;
+      SubZ[is]    = detector->cellZ   ( idigit ) ;
+      double Etemp[3][3];
+      Ene3x3[is]=0;
+      for(int ir=0;ir<3;++ir){
+        for(int ic=0;ic<3;++ic){
+          Etemp[ir][ic]=Ework[is][ir][ic];
+          Ene3x3[is]=Ene3x3[is]+Ework[is][ir][ic];
+        }
+        }
+      SubX[is]=SubX[is]-BarXY(1,area,Etemp)*SubSize[is];
+      SubY[is]=SubY[is]-BarXY(2,area,Etemp)*SubSize[is];
+      SubZ[is]=BarZ(Ene3x3[is],PrsDep,area,SubX[is],SubY[is],SubZ[is]);
+      PosX[is]=detector->cellX( SubClus[is][1][1]->cellID() )
+        -SubSize[is]*(+ Etemp[0][0] + Etemp[1][0] + Etemp[2][0]
+                      - Etemp[0][2] - Etemp[1][2] - Etemp[2][2])/Ene3x3[is];
+      PosY[is]=detector->cellY( SubClus[is][1][1]->cellID() )
+        -SubSize[is]*(+ Etemp[0][0] + Etemp[0][1] + Etemp[0][2]
+                      - Etemp[2][0] - Etemp[2][1] - Etemp[2][2])/Ene3x3[is];
+    }
+    
+    double ep1=0;
+    double ep2=0;
+    ep1=Ene3x3[0];
+    ep2=Ene3x3[1];
+    
+    // momenta
+    double xp1,yp1,zp1,xn1;
+    double xp2,yp2,zp2,xn2;
+    
+    xp1=SubX[0];
+    yp1=SubY[0];
+    zp1=SubZ[0];
+    xn1=sqrt(xp1*xp1+yp1*yp1+zp1*zp1);
+    
+    
+    xp1=xp1*ep1/xn1;
+    yp1=yp1*ep1/xn1;
+    zp1=zp1*ep1/xn1;
+    
+    
+    xp2=SubX[1];
+    yp2=SubY[1];
+    zp2=SubZ[1];
+    xn2=sqrt(xp2*xp2+yp2*yp2+zp2*zp2);
+    xp2=xp2*ep2/xn2;
+    yp2=yp2*ep2/xn2;
+    zp2=zp2*ep2/xn2;
+    
+    // invariant mass
+    
+    double RecPi0Mas;
+    double RecPi0Masq;
+    RecPi0Masq=(ep1+ep2)*(ep1+ep2);
+    RecPi0Masq=RecPi0Masq-(xp1+xp2)*(xp1+xp2);
+    RecPi0Masq=RecPi0Masq-(yp1+yp2)*(yp1+yp2);
+    RecPi0Masq=RecPi0Masq-(zp1+zp2)*(zp1+zp2);
+    
+    RecPi0Mas=0;
+
+    if ( 0 < RecPi0Masq){
+      RecPi0Mas=sqrt(RecPi0Masq);
+    }
+    
+    
+    const LHCb::CaloDigit*  seedig   = SubClus[0][1][1];;
+    const LHCb::CaloCellID  idig     = seedig->cellID() ;
+    // commented by I.B. 2004-08-20
+    // double zpos                = detector->cellZ   ( idig ) ;
+    // double csiz                = detector->cellSize( idig ) ;
+    // double mpi0=0.1349;
+    // double epi0=(ep1+ep2)/GeV;
+    // double dmin=zpos*2*mpi0/epi0/csiz; 
+    
+    
+    
+    log << MSG::DEBUG << " Pi0Mas =  " <<RecPi0Mas << endreq;
+    
+    
+    /*
+      Mid June 2002 
+    */
+    
+    unsigned int KeepPi0=1;
+    const double TruePi0Mas=134.9;
+    const double SigmaRec=16.;
+    const double LowMasSigmaCut=7.0;
+    const double HighMasSigmaCut=999.0;
+    // revision 1.7 (February 2004) : 
+    // remove dmin cut and relax HighMasSigmaCut ...
+    
+    if(RecPi0Mas < TruePi0Mas - LowMasSigmaCut*SigmaRec){KeepPi0=0;}
+    if(RecPi0Mas > TruePi0Mas + HighMasSigmaCut*SigmaRec){KeepPi0=0;}
+    //if(dmin      >  3.){KeepPi0=0;}
+    //if(dmin      <= 0.){KeepPi0=0;}
+    
+    /*
+      Fill CaloHypos and SubClusters if "good" MergePi0
+    */
+    debug() << "Keep MergedPi0 ? " << KeepPi0 << endreq;
+    if( 1 == KeepPi0){      
+      log << MSG::DEBUG << " Store Merged Pi0 " << endreq;
+      //Defined new Calo SubCluster pointed by PhotonFromMergedPi0 CaloHypos
+      LHCb::CaloCluster* cl1 = new LHCb::CaloCluster();
+      LHCb::CaloCluster* cl2 = new LHCb::CaloCluster();
+      LHCb::CaloCellID seed1;
+      LHCb::CaloCellID seed2;
+      // Init the 2 new CaloClusters 
+      // with the original cluster digits, owned-status'ed and  0-weighted
+      debug() << "Loop over cluster entries " << cluster->entries().size() << endreq;
+      for( LHCb::CaloCluster::Digits::const_iterator it3 = cluster->entries().begin() ;
+           cluster->entries().end() != it3 ; ++it3 ){
+        const LHCb::CaloDigit* d = it3->digit() ;   
+        if(NULL == d)continue;
+        LHCb::CaloDigitStatus::Status s1   = LHCb::CaloDigitStatus::OwnedCell    ;
+        LHCb::CaloDigitStatus::Status s2   = LHCb::CaloDigitStatus::OwnedCell    ;
+        double     w1=0.;
+        double     w2=0.;
+        // Then fill correctly the 3x3 matrix cells around seed and subseed
+        for(int ir=0;ir<3;++ir){
+          for(int ic=0;ic<3;++ic){
+            const LHCb::CaloDigit* d1 = SubClus[0][ir][ic];
+            if (d == d1 ) {
+              w1 = Weight[0][ir][ic] ;      
+              s1   = LHCb::CaloDigitStatus::OwnedCell      | 
+                LHCb::CaloDigitStatus::UseForEnergy   | 
+                LHCb::CaloDigitStatus::UseForPosition | 
+                LHCb::CaloDigitStatus::UseForCovariance  ;
+              if(1 == ir && 1==ic){
+                s1   =  LHCb::CaloDigitStatus::SeedCell       | 
+                  LHCb::CaloDigitStatus::LocalMaximum   | 
                   LHCb::CaloDigitStatus::UseForEnergy   | 
                   LHCb::CaloDigitStatus::UseForPosition | 
                   LHCb::CaloDigitStatus::UseForCovariance  ;
-                if(1 == ir && 1==ic){
-                  s2   = LHCb::CaloDigitStatus::SeedCell       | 
-                    LHCb::CaloDigitStatus::UseForEnergy   | 
-                    LHCb::CaloDigitStatus::LocalMaximum   | 
-                    LHCb::CaloDigitStatus::UseForPosition | 
-                    LHCb::CaloDigitStatus::UseForCovariance  ;
-                  seed2 = d2->cellID();
-                }
+                seed1 = d1->cellID();
               }
             }
           }
-          LHCb::CaloClusterEntry entry1( d , s1 , w1 );
-          cl1->entries().push_back( entry1 );
-          LHCb::CaloClusterEntry entry2( d , s2 , w2 );
-          cl2->entries().push_back( entry2 );
-          log << MSG::DEBUG << " s1 after loop =  " <<s1<< endreq;
-        }  
-        cl1->setSeed( seed1 );
-        cl2->setSeed( seed2 );
+        }
+        for(int ir=0;ir<3;++ir){
+          for(int ic=0;ic<3;++ic){
+            const LHCb::CaloDigit* d2 = SubClus[1][ir][ic];
+            if (d == d2 ) {
+              w2 = Weight[1][ir][ic] ;      
+              s2   =  LHCb::CaloDigitStatus::OwnedCell      | 
+                LHCb::CaloDigitStatus::UseForEnergy   | 
+                LHCb::CaloDigitStatus::UseForPosition | 
+                LHCb::CaloDigitStatus::UseForCovariance  ;
+              if(1 == ir && 1==ic){
+                s2   = LHCb::CaloDigitStatus::SeedCell       | 
+                  LHCb::CaloDigitStatus::UseForEnergy   | 
+                  LHCb::CaloDigitStatus::LocalMaximum   | 
+                  LHCb::CaloDigitStatus::UseForPosition | 
+                  LHCb::CaloDigitStatus::UseForCovariance  ;
+                seed2 = d2->cellID();
+              }
+            }
+          }
+        }
+        debug() << "Logging cluster entry " << w1 << "/" << w2 << endreq;
+        LHCb::CaloClusterEntry entry1( d , s1 , w1 );
+        cl1->entries().push_back( entry1 );
+        LHCb::CaloClusterEntry entry2( d , s2 , w2 );
+        cl2->entries().push_back( entry2 );
+        log << MSG::DEBUG << " s1 after loop =  " <<s1<< endreq;
+      }  
+      
+      debug() << "Set seed " << endreq;
+      cl1->setSeed( seed1 );
+      cl2->setSeed( seed2 );
+      
+      debug() << "Calculate position " << endreq;
+      // OD calculate position for cluster
+      LHCb::CaloPosition pp1 ;
+      pp1.parameters()( LHCb::CaloPosition::X ) = PosX[0];
+      pp1.parameters()( LHCb::CaloPosition::Y ) = PosY[0];
+      pp1.setZ( SubZ[0] ) ;
+      pp1.parameters()( LHCb::CaloPosition::E ) = ep1    ;
+      pp1.center()( LHCb::CaloPosition::X ) = PosX[0];
+      pp1.center()( LHCb::CaloPosition::Y ) = PosY[0];
+      cl1->setPosition( pp1 );
+      
+      LHCb::CaloPosition pp2;
+      pp2.parameters()( LHCb::CaloPosition::X ) = PosX[1];
+      pp2.parameters()( LHCb::CaloPosition::Y ) = PosY[1];
+      pp2.setZ( SubZ[1] ) ;
+      pp2.parameters()( LHCb::CaloPosition::E ) = ep2    ;
+      pp2.center()( LHCb::CaloPosition::X ) = PosX[1];        
+      pp2.center()( LHCb::CaloPosition::Y ) = PosY[1];
+      cl2 -> setPosition( pp2 );
+      
+      debug() << "Store clusters " << endreq;
+      
+      clusts->insert( cl1 ) ;
+      clusts->insert( cl2 ) ;
+      
+      
+      if(!m_createClusterOnly){
+        debug() << "Store Pi0 CaloHypo" << endreq;
+        // new CaloHypo for pi0      
+        LHCb::CaloHypo* pi0 = new LHCb::CaloHypo();          
+        pi0 -> setHypothesis( LHCb::CaloHypo::Pi0Merged ) ;
+        pi0 -> addToClusters( *icluster );
         
-        // OD calculate position for cluster
-        LHCb::CaloPosition pp1 ;
-        pp1.parameters()( LHCb::CaloPosition::X ) = PosX[0];
-        pp1.parameters()( LHCb::CaloPosition::Y ) = PosY[0];
-        pp1.setZ( SubZ[0] ) ;
-        pp1.parameters()( LHCb::CaloPosition::E ) = ep1    ;
-        pp1.center()( LHCb::CaloPosition::X ) = PosX[0];
-        pp1.center()( LHCb::CaloPosition::Y ) = PosY[0];
-        cl1->setPosition( pp1 );
-
-        LHCb::CaloPosition pp2;
-        pp2.parameters()( LHCb::CaloPosition::X ) = PosX[1];
-        pp2.parameters()( LHCb::CaloPosition::Y ) = PosY[1];
-        pp2.setZ( SubZ[1] ) ;
-        pp2.parameters()( LHCb::CaloPosition::E ) = ep2    ;
-        pp2.center()( LHCb::CaloPosition::X ) = PosX[1];        
-        pp2.center()( LHCb::CaloPosition::Y ) = PosY[1];
-        cl2 -> setPosition( pp2 );
-
-
-        clusts->insert( cl1 ) ;
-        clusts->insert( cl2 ) ;
-
-        if(!m_createClusterOnly){
-          // new CaloHypo for pi0      
-          LHCb::CaloHypo* pi0 = new LHCb::CaloHypo();          
-          pi0 -> setHypothesis( LHCb::CaloHypo::Pi0Merged ) ;
-          pi0 -> addToClusters( *icluster );
-
-          // new CaloHypo for gamma's
-          LHCb::CaloHypo* g1   = new LHCb::CaloHypo() ;
-          g1 -> setHypothesis( LHCb::CaloHypo::PhotonFromMergedPi0 ) ;
-          g1 -> addToClusters( *icluster )                ;
-          g1 -> addToClusters( cl1       )                ;
-          
-          LHCb::CaloPosition* p1 = new LHCb::CaloPosition(pp1);//@todo use previously define pp1
-          /*
+        // new CaloHypo for gamma's
+        debug() << "Store gamma1 CaloHypo" << endreq;
+        LHCb::CaloHypo* g1   = new LHCb::CaloHypo() ;
+        g1 -> setHypothesis( LHCb::CaloHypo::PhotonFromMergedPi0 ) ;
+        g1 -> addToClusters( *icluster )                ;
+        g1 -> addToClusters( cl1       )                ;
+        LHCb::CaloPosition* p1 = new LHCb::CaloPosition(pp1);//@todo use previously define pp1
+        /*
           p1 ->parameters()( LHCb::CaloPosition::X ) = PosX[0];
           p1 ->parameters()( LHCb::CaloPosition::Y ) = PosY[0];
           p1 ->setZ( SubZ[0] ) ;
           p1 ->parameters()( LHCb::CaloPosition::E ) = ep1    ;
-
+          
           p1 ->center()( LHCb::CaloPosition::X ) = PosX[0];
           p1 ->center()( LHCb::CaloPosition::Y ) = PosY[0];
-          */
-          g1 -> setPosition( p1);
-          pi0 -> addToHypos ( g1 );
-          
-          
-          LHCb::CaloHypo* g2   = new LHCb::CaloHypo() ;
-          g2 -> setHypothesis( LHCb::CaloHypo::PhotonFromMergedPi0 ) ;
-          g2 -> addToClusters( *icluster )                ;
-          g2 -> addToClusters( cl2       )                ;
-          LHCb::CaloPosition* p2 = new LHCb::CaloPosition(pp2);//@todo use previously define pp2
-          /*
+        */
+        g1 -> setPosition( p1);
+        pi0 -> addToHypos ( g1 );
+        
+        debug() << "Store gamma2 CaloHypo" << endreq;
+        LHCb::CaloHypo* g2   = new LHCb::CaloHypo() ;
+        g2 -> setHypothesis( LHCb::CaloHypo::PhotonFromMergedPi0 ) ;
+        g2 -> addToClusters( *icluster )                ;
+        g2 -> addToClusters( cl2       )                ;
+        LHCb::CaloPosition* p2 = new LHCb::CaloPosition(pp2);//@todo use previously define pp2
+        /*
           p2 ->parameters()( LHCb::CaloPosition::X ) = PosX[1];
           p2 ->parameters()( LHCb::CaloPosition::Y ) = PosY[1];
           p2 ->setZ( SubZ[1] ) ;
@@ -972,47 +975,49 @@ StatusCode CaloMergedPi0Alg::execute()
           
           p2 ->center()( LHCb::CaloPosition::X ) = PosX[1];
           p2 ->center()( LHCb::CaloPosition::Y ) = PosY[1];
-          */
-          g2 -> setPosition( p2);
-          pi0 -> addToHypos ( g2 );
-          pi0s -> insert( pi0 ) ;
-          phots ->insert( g1  ) ;
-          phots ->insert( g2  ) ;
-          
-          { // Apply the tool 
-            for( Tools::iterator it = m_tools.begin() ; 
-                 m_tools.end() != it ; ++it ) 
-            {
-              ICaloHypoTool* t = *it ;
-              if( 0 == t ) { continue; } 
-              StatusCode sc         = StatusCode::SUCCESS ;
-              sc                    = (*t) ( g1 ) ;
-              if( sc.isFailure() )
-              { Error("Error from 'Tool' for g1 " , sc ) ; }
-              sc                    = (*t) ( g2 ) ;          
-              if( sc.isFailure() ) 
-              { Error("Error from 'Tool' for g2 " , sc ) ; }
-            }
-          } 
-        }
-      } //End of "good" MergedPi0 condition      
-    } // End of cluster loop
-
+        */
+        g2 -> setPosition( p2);
+        pi0 -> addToHypos ( g2 );
+        pi0s -> insert( pi0 ) ;
+        phots ->insert( g1  ) ;
+        phots ->insert( g2  ) ;
+        
+        { // Apply the tool 
+          debug() << "Apply hypo tools ("<< m_tools.size() << ")" << endreq;
+          int i = 0;
+          for( Tools::iterator it = m_tools.begin() ; m_tools.end() != it ; ++it ){
+            i++;
+            debug() << " apply tool " << i << "/" << m_tools.size() << endreq;
+            ICaloHypoTool* t = *it ;
+            if( 0 == t ) { continue; } 
+            StatusCode sc         = StatusCode::SUCCESS ;
+            sc                    = (*t) ( g1 ) ;
+            if( sc.isFailure() )
+            { Error("Error from 'Tool' for g1 " , sc ) ; }
+            sc                    = (*t) ( g2 ) ;          
+            if( sc.isFailure() ) 
+            { Error("Error from 'Tool' for g2 " , sc ) ; }
+          }
+        } 
+      }
+    } //End of "good" MergedPi0 condition      
+  } // End of cluster loop
+  
   /* OD COMMENTS for next version
      - Split code and use standard S/L correction
      - Energy from 3x3 matrix w/o energy calibration 
      - No correlations matrices
      - No Mass versus energy correction
-   */ 
+  */ 
   
-  if ( msgLevel ( MSG::DEBUG ) )  
-  { 
+  if ( msgLevel ( MSG::DEBUG ) ){ 
     debug() << " # of created MergedPi0 Hypos is  " << pi0s -> size() << endreq ;
     debug() << " # of created Split Photons   is  " << phots -> size() << endreq ;
     debug() << " # of created Split Clusters  is  " << clusts -> size() << endreq ;
   }
 
   // delete (empty) container* if not on TES 
+  debug() << "post-processing cleaning" << endreq;
   if(m_createClusterOnly){
     if( 0 != pi0s->size() || 0 != phots->size() ){
       error() << "Container* to be deleted are not empty" << endreq;
