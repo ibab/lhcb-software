@@ -3,11 +3,16 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2009-03-11 - Antonio Perez-Calero
+  - In HltFunctions.h and HltFunctionFactories.cpp: added filters VertexTrack1Chi2OverNdf and also
+  	for track2, to apply chi2 filter to each of the daughter tracks, in order to distinguish between 
+    muon and the extra track in muon+track line.
+
 ! 2009-03-06 - Jose A. Hernando
- - HltLine.h/cpp add stepHistoNorma with a normalized stair plot histogram
+  - HltLine.h/cpp add stepHistoNorma with a normalized stair plot histogram
 
 ! 2009-03-05 - Gerhard Raven
- - check for illegal bin numbers
+  - check for illegal bin numbers
 
 ! 2009-03-03 - Antonio Perez-Calero
   - In HltFunctions.h and HltFunctionFactories.cpp: added filters VertexTrack1PT, VertexTrack1IP 
@@ -15,7 +20,7 @@
   	distinguish between muon and the extra track
 
 ! 2009-02-25 - Gerhard Raven
- - remove obsolete HltDecisionPredicateFactory
+  - remove obsolete HltDecisionPredicateFactory
 
 !========================== HltCommon v5r2 2009-03-04 ===================
 ! 2009-03-03 - Gerhard Raven
@@ -26,7 +31,7 @@
     filter...
 
 ! 2009-02-26 - Gerhard Raven
- - fix bug in HltVertexMaker when not producing histograms...
+  - fix bug in HltVertexMaker when not producing histograms...
 
 !========================== HltCommon v5r1 2009-02-23 ===================
 ! 2009-02-22 - Gerhard Raven
@@ -43,20 +48,20 @@
   - HltTFilter add the index in the filters counters to do a printout in order of the filters in finalize 
 
 ! 2009-02-13 - Gerhard Raven
- - remove HltL0{Calo,Muon}Prepare -- use HltL0{Calo,Muon}Candidates instead
- - remove HltL0Filter -- use LoKi::L0Filter instead
+  - remove HltL0{Calo,Muon}Prepare -- use HltL0{Calo,Muon}Candidates instead
+  - remove HltL0Filter -- use LoKi::L0Filter instead
 
 ! 2009-02-12 - Gerhard Raven
- - add 'step' plot to HltLine: displays which step rejected the event
+  - add 'step' plot to HltLine: displays which step rejected the event
    Warning: proper functioning depends on https://savannah.cern.ch/bugs/?46919
 
 ! 2009-02-06 - Gerhard Raven
- - fix boost 1.38 warnings,
- - lowercase TCK hex rep
- - instrument HltLine to grab (recursive) sub Algorithms
+  - fix boost 1.38 warnings,
+  - lowercase TCK hex rep
+  - instrument HltLine to grab (recursive) sub Algorithms
 
 ! 2009-02-05 - Gerhard Raven
- - fixes for gcc 4.3
+  - fixes for gcc 4.3
 
 ! 2009-02-03 - Gerhard Raven
  - make sure that all TCKs zero their L0 part if the sign bit is set

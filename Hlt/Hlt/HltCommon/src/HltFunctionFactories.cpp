@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactories.cpp,v 1.26 2009-03-03 17:37:06 aperezca Exp $
+// $Id: HltFunctionFactories.cpp,v 1.27 2009-03-11 11:45:04 aperezca Exp $
 // Include files 
 
 // from Gaudi
@@ -133,6 +133,8 @@ StatusCode HltVertexFunctionFactory::initialize() {
   declare<Hlt::VertexTrack2PT>("FitVertexTrack2PT");
 
   declare<Hlt::VertexMaxChi2OverNdf>("FitVertexMaxChi2OverNdf");
+  declare<Hlt::VertexTrack1Chi2OverNdf>("FitVertexTrack1Chi2OverNdf");
+  declare<Hlt::VertexTrack2Chi2OverNdf>("FitVertexTrack2Chi2OverNdf");
   declare<Hlt::VertexMaxMuChi2>("FitVertexMaxMuChi2");
 
   declare<Hlt::VertexNumberOfASideTracks>("VertexNumberOfASideTracks");

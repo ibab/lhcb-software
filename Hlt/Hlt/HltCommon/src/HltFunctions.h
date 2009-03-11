@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.14 2009-03-03 17:37:06 aperezca Exp $
+// $Id: HltFunctions.h,v 1.15 2009-03-11 11:45:04 aperezca Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -229,6 +229,28 @@ namespace Hlt {
       return (fabs(chi2_0)>fabs(chi2_1)) ? chi2_0 : chi2_1;
     }
     Hlt::VertexFunction* clone() const {return new VertexMaxChi2OverNdf();}
+  };
+
+  class VertexTrack1Chi2OverNdf: public Hlt::VertexFunction {
+  public:
+    explicit VertexTrack1Chi2OverNdf(){}
+    double operator() (const LHCb::RecVertex& v) const 
+    {
+      double chi2 = (v.tracks()[0])->chi2PerDoF();
+      return chi2;
+    }
+    Hlt::VertexFunction* clone() const {return new VertexTrack1Chi2OverNdf();}
+  };
+
+  class VertexTrack2Chi2OverNdf: public Hlt::VertexFunction {
+  public:
+    explicit VertexTrack2Chi2OverNdf(){}
+    double operator() (const LHCb::RecVertex& v) const 
+    {
+      double chi2 = (v.tracks()[1])->chi2PerDoF();
+      return chi2;
+    }
+    Hlt::VertexFunction* clone() const {return new VertexTrack2Chi2OverNdf();}
   };
 
   template <class T, class ITOOL>
