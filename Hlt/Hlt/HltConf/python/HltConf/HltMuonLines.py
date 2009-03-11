@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonLines.py,v 1.11 2009-03-04 17:37:44 aperezca Exp $
+# $Id: HltMuonLines.py,v 1.12 2009-03-11 12:15:45 aperezca Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.12 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -57,7 +57,8 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
         ,'DiMuon_IPCut'             :    0.15
         
         # For the Muon+Track lines
-        ,'MuTrackL0DU'     :"L0_CHANNEL('Muon') | L0_CHANNEL('MuonNoGlob')"  
+        ,'MuTrackL0DU'     :"L0_CHANNEL('MuonNoGlob')"
+        #,'MuTrackL0DU'     :"L0_CHANNEL('Muon') | L0_CHANNEL('MuonNoGlob')"
         ,'MuTrackMuPt'    : 1000.
         ,'MuTrackMuIP'    : 0.025
         ,'MuTrackTrPt'    : 800.
@@ -67,15 +68,18 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
         #,'MuTrackAngle'   : 0.
         ,'MuTrackDimuMass': 1000.
         ,'MuTrackPoint'   : 0.4
+        ,'MuTrackMuChi2'  : 10.
         ,'MuTrackTrChi2'  : 10.
-        
-        ,'MuTrackMuPt4JPsi'         : 1200.
+  
+        ,'MuTrackMuPt4JPsi'         : 1600.
         ,'MuTrackTrPt4JPsi'         : 400.
-        ,'MuTrackDoca4JPsi'         : 0.2
-        ,'MuTrackAngle4JPsi'        : 0.2
-        ,'MuTrackDimuMass4JPsiLow'  : 3000.
-        ,'MuTrackDimuMass4JPsiHigh' : 3200.,'MuTrackL0DU'    :"L0_CHANNEL('Muon') | L0_CHANNEL('MuonNoGlob')"  
-                 }
+        ,'MuTrackDoca4JPsi'         : 0.1
+        ,'MuTrackAngle4JPsi'        : 0.3
+        ,'MuTrackDimuMass4JPsiLow'  : 2900.
+        ,'MuTrackDimuMass4JPsiHigh' : 3300.
+        ,'MuTrackMuChi24JPsi'       : 4.
+        ,'MuTrackTrChi24JPsi'       : 8.
+        }
 
 
     def __apply_configuration__(self) : 
@@ -564,13 +568,14 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
         setupHltFastTrackFit('Hlt1DiMuonIPCGECSegVUFitTrack')
 
         #-----------------------------------------------------
-        # MUON+TRACK ALLEY (Antonio Perez-Calero, aperez@ecm.ub.es):
+        # MUON+TRACK ALLEY Lines (Antonio Perez-Calero, aperez@ecm.ub.es):
         #-----------------------------------------------------
         
         MuTrack= Line( 'MuTrack'
                        , L0DU = str(self.getProp('MuTrackL0DU'))
                        , algos =
-                       [ SingleMuonPrep
+                       #[ SingleMuonPrep
+                       [ MuonPrep
                          , Member( 'TF','MuonPt' # // Select Muons with pT
                                    , HistogramUpdatePeriod = 0
                                    , FilterDescriptor = ['PT,>,'+str(self.getProp('MuTrackMuPt'))]
@@ -624,7 +629,7 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
                                    , FilterDescriptor = ['VertexTrack1PT,>,'+str(self.getProp('MuTrackMuPt')),
                                                          'VertexTrack2PT,>,'+str(self.getProp('MuTrackTrPt'))]
                                    #, HistogramUpdatePeriod = 0
-                                   #, HistoDescriptor = {'VertexMinPT': ('PT',0.,6000.,100), 'VertexMinPTBest': ('PTBest',0.,6000.,100)}
+                                   #, HistoDescriptor = {'VertexTrack1PT': ('PT',0.,6000.,100), 'VertexTrack1PTBest': ('PTBest',0.,6000.,100)}
                                    )
                          
                          , Member( 'VF', 'VertexMass' # // Select vertices if Mass
@@ -644,10 +649,11 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
                                     )
                          
                          , Member ( 'VF', 'TrackChi2' # // Filter on track quality (Chi2 cut taken from hadron line)
-                                    , FilterDescriptor = ['FitVertexMaxChi2OverNdf,<,'+str(self.getProp('MuTrackTrChi2'))]
-                                    , HistogramUpdatePeriod = 0
-                                    , HistoDescriptor = { 'FitVertexMaxChi2OverNdf': ( 'FitVertexMaxChi2OverNdf',0.,100.,100),
-                                                          'FitVertexMaxChi2OverNdfBest': ( 'FitVertexMaxChi2OverNdfBest',0.,100.,100)}
+                                    , FilterDescriptor = ['FitVertexTrack1Chi2OverNdf,<,'+str(self.getProp('MuTrackMuChi2')),
+                                                          'FitVertexTrack2Chi2OverNdf,<,'+str(self.getProp('MuTrackTrChi2'))]
+                                    #, HistogramUpdatePeriod = 0
+                                    #, HistoDescriptor = { 'FitVertexMaxChi2OverNdf': ( 'FitVertexMaxChi2OverNdf',0.,100.,100),
+                                    #                      'FitVertexMaxChi2OverNdfBest': ( 'FitVertexMaxChi2OverNdfBest',0.,100.,100)}
                                     )
                          
                          , Member ( 'VF', 'Decision' # // Final filter, redo all cuts with improved tracking
@@ -670,7 +676,8 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
         MuTrack4JPsi= Line( 'MuTrack4JPsi'
                             , L0DU = str(self.getProp('MuTrackL0DU'))
                             , algos =
-                            [ SingleMuonPrep
+                            #[ SingleMuonPrep
+                            [ MuonPrep
                               , Member( 'TF','Muon' # // Select Muons with pT
                                         , HistogramUpdatePeriod = 0
                                         , FilterDescriptor = ['PT,>,'+str(self.getProp('MuTrackMuPt4JPsi'))]
@@ -722,7 +729,8 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
                                          )
                               
                               , Member ( 'VF', 'TrackChi2' # // Filter on track quality (Chi2 cut taken from hadron line)
-                                         , FilterDescriptor = ['FitVertexMaxChi2OverNdf,<,'+str(self.getProp('MuTrackTrChi2'))]
+                                         , FilterDescriptor = ['FitVertexTrack1Chi2OverNdf,<,'+str(self.getProp('MuTrackMuChi24JPsi')),
+                                                               'FitVertexTrack2Chi2OverNdf,<,'+str(self.getProp('MuTrackTrChi24JPsi'))]
                                          )
                               
                               , Member ( 'VF', 'Decision' # // Final filter redo cuts
@@ -740,7 +748,7 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
         
         setupHltFastTrackFit('Hlt1MuTrackVUVTrackFit')
         setupHltFastTrackFit('Hlt1MuTrack4JPsiVUVTrackFit')
-
+        
 
         
         

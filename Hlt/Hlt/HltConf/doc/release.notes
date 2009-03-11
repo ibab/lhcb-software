@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.163 2009-03-09 15:26:47 graven Exp $ 
+! $Id: release.notes,v 1.164 2009-03-11 12:15:45 aperezca Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2009-03-11 - Antonio Perez-Calero
+ - changes in muon+track lines in HltMuonLines.py to use FitVertexTrack1Chi2OverNdf and for track2
+ - changes in muon+track lines to adapt to single muon no GEC only (L0DU filter and MuonPrep)
+ - changes in some of the cut values in mutrack for jpsi line
+
 ! 2009-03-09 - Gerhard Raven
  - keep HltRoutingBits rawbank in lumi events
 
