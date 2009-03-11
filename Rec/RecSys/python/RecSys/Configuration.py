@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.8 2009-01-12 12:38:37 wouter Exp $"
+__version__ = "$Id: Configuration.py,v 1.9 2009-03-11 20:28:32 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -38,6 +38,7 @@ class RecSysConf(LHCbConfigurableUser):
        ,"ExpertHistos":  False   # set to True to write out expert histos
        ,"Context":     "Offline" # The context within which to run the reco sequences
        ,"OutputType": "" # some sequences are different for RDST
+       ,"DataType": "" # Type of data, propagated from application
         }
 
     ## Apply the configuration
@@ -91,6 +92,11 @@ class RecSysConf(LHCbConfigurableUser):
         if "CALO" in recoSeq:
             importOptions("$CALORECOOPTS/Brunel.opts")
             importOptions("$CALOPIDSOPTS/PhotonPDF.opts")
+            from Configurables import HistogramDataSvc
+            if self.getProp("DataType") == "DC06":
+                HistogramDataSvc().Input += ["CaloPIDs DATAFILE='$PARAMFILESROOT/data/CaloPIDs_DC06_v2.root' TYP='ROOT'"]
+            else:
+                HistogramDataSvc().Input += ["CaloPIDs DATAFILE='$PARAMFILESROOT/data/CaloPIDs_DC09_v1.root' TYP='ROOT'"]
 
         # MUON
         if "MUON" in recoSeq:
