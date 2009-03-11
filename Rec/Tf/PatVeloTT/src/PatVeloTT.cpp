@@ -1,4 +1,4 @@
-// $Id: PatVeloTT.cpp,v 1.6 2007-10-15 06:55:18 cattanem Exp $
+// $Id: PatVeloTT.cpp,v 1.7 2009-03-11 18:09:59 smenzeme Exp $
 // Include files 
 
 // from Gaudi
@@ -59,7 +59,7 @@ StatusCode PatVeloTT::initialize() {
 
   if(msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
 
-  m_veloTTTool = tool<PatVeloTTTool>("PatVeloTTTool", "PatVeloTTTool", this);
+  m_veloTTTool = tool<PatVeloTTTool>("PatVeloTTTool", "PatVeloTTTool");
   
   m_trackSelector = NULL;
   if (m_trackSelectorName != "None")

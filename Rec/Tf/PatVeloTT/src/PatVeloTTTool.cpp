@@ -1,4 +1,4 @@
-// $Id: PatVeloTTTool.cpp,v 1.8 2009-03-11 15:30:53 smenzeme Exp $
+// $Id: PatVeloTTTool.cpp,v 1.9 2009-03-11 18:09:59 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -71,28 +71,28 @@ StatusCode PatVeloTTTool::initialize ( ) {
   m_debug = msgLevel( MSG::DEBUG );
   m_verbose = msgLevel( MSG::VERBOSE );
 
-  m_PatTTMagnetTool = tool<PatTTMagnetTool>( "PatTTMagnetTool","PatTTMagnetTool", this );
+  m_PatTTMagnetTool = tool<PatTTMagnetTool>( "PatTTMagnetTool","PatTTMagnetTool");
 
   m_zMidTT    = m_PatTTMagnetTool->zMidTT();
   m_zMidField = m_PatTTMagnetTool->zMidField();
   m_distToMomentum = m_PatTTMagnetTool->averageDist2mom();
 
-  info()       << " MaxXSize           = " << m_maxXSize         << " mm"  << endmsg;
-  info()       << " MaxYSize           = " << m_maxYSize         << " mm"  << endmsg;
-  info()       << " MaxXSlope          = " << m_maxXSlope                  << endmsg;
-  info()       << " MaxYSlope          = " << m_maxYSlope                  << endmsg;
-  info()       << " centralHoleSize    = " << m_centralHoleSize  << " mm"  << endmsg;
-  info()       << " minMomentum        = " << m_minMomentum      << " MeV" << endmsg;
-  info()       << " maxPseudoChi2      = " << m_maxPseudoChi2    << "   "  << endmsg;
-  info()       << " distToMomentum     = " << m_distToMomentum             << endmsg;
-  info()       << " zMidField          = " << m_zMidField        << " mm"  << endmsg;
-  info()       << " xTolerance         = " << m_xTol             << " mm"  << endmsg;
-  info()       << " xTolSlope          = " << m_xTolSlope        << " mm"  << endmsg;
-  info()       << " yTolerance         = " << m_yTol             << " mm"  << endmsg;
-  info()       << " YTolSlope          = " << m_yTolSlope                  << endmsg;
-  info()       << " DxGroupTol         = " << m_dxGroupTol       << " mm " << endmsg;
-  info()       << " DxGroupFactor      = " << m_dxGroupFactor    << "    " << endmsg;
-  info()       << " zMidTT             = " << m_zMidTT           << " mm"  << endmsg;
+  debug()       << " MaxXSize           = " << m_maxXSize         << " mm"  << endmsg;
+  debug()       << " MaxYSize           = " << m_maxYSize         << " mm"  << endmsg;
+  debug()       << " MaxXSlope          = " << m_maxXSlope                  << endmsg;
+  debug()       << " MaxYSlope          = " << m_maxYSlope                  << endmsg;
+  debug()       << " centralHoleSize    = " << m_centralHoleSize  << " mm"  << endmsg;
+  debug()       << " minMomentum        = " << m_minMomentum      << " MeV" << endmsg;
+  debug()       << " maxPseudoChi2      = " << m_maxPseudoChi2    << "   "  << endmsg;
+  debug()       << " distToMomentum     = " << m_distToMomentum             << endmsg;
+  debug()       << " zMidField          = " << m_zMidField        << " mm"  << endmsg;
+  debug()       << " xTolerance         = " << m_xTol             << " mm"  << endmsg;
+  debug()       << " xTolSlope          = " << m_xTolSlope        << " mm"  << endmsg;
+  debug()       << " yTolerance         = " << m_yTol             << " mm"  << endmsg;
+  debug()       << " YTolSlope          = " << m_yTolSlope                  << endmsg;
+  debug()       << " DxGroupTol         = " << m_dxGroupTol       << " mm " << endmsg;
+  debug()       << " DxGroupFactor      = " << m_dxGroupFactor    << "    " << endmsg;
+  debug()       << " zMidTT             = " << m_zMidTT           << " mm"  << endmsg;
 
   std::vector<double> nfact;
   for (double dydz = -0.3; dydz < 0.3; dydz+=0.02) {

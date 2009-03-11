@@ -1,4 +1,4 @@
-// $Id: PatVeloTTFit.cpp,v 1.1 2009-03-11 15:30:53 smenzeme Exp $
+// $Id: PatVeloTTFit.cpp,v 1.2 2009-03-11 18:09:59 smenzeme Exp $
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRegistry.h"
 #include "STDet/DeSTDetector.h"
@@ -41,8 +41,8 @@ StatusCode PatVeloTTFit::initialize()
   StatusCode sc = GaudiTool::initialize(); // must be executed first
   if (sc.isFailure()) return sc;  // error printed already by GaudiTool
 
-  m_patVTTTool = tool<PatVeloTTTool>("PatVeloTTTool", this);
-  m_PatTTMagnetTool = tool<PatTTMagnetTool>( "PatTTMagnetTool","PatTTMagnetTool", this );
+  m_patVTTTool = tool<PatVeloTTTool>("PatVeloTTTool");
+  m_PatTTMagnetTool = tool<PatTTMagnetTool>( "PatTTMagnetTool","PatTTMagnetTool");
 
   m_ttDet = getDet<DeSTDetector>(DeSTDetLocation::TT);
 
