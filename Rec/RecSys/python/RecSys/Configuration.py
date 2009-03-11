@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.9 2009-03-11 20:28:32 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.10 2009-03-11 21:31:31 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -91,13 +91,12 @@ class RecSysConf(LHCbConfigurableUser):
         # CALO
         if "CALO" in recoSeq:
             importOptions("$CALORECOOPTS/Brunel.opts")
-            importOptions("$CALOPIDSOPTS/PhotonPDF.opts")
-            from Configurables import HistogramDataSvc
             if self.getProp("DataType") == "DC06":
-                HistogramDataSvc().Input += ["CaloPIDs DATAFILE='$PARAMFILESROOT/data/CaloPIDs_DC06_v2.root' TYP='ROOT'"]
+                importOptions("$CALORECOOPTS/CaloPIDs-DC06.opts")
             else:
-                HistogramDataSvc().Input += ["CaloPIDs DATAFILE='$PARAMFILESROOT/data/CaloPIDs_DC09_v1.root' TYP='ROOT'"]
-
+                importOptions("$CALORECOOPTS/CaloPIDs.opts")
+            importOptions("$CALOPIDSOPTS/PhotonPDF.opts")
+            
         # MUON
         if "MUON" in recoSeq:
             GaudiSequencer("RecoMUONSeq").Members += [ "MuonRec", "MuonID" ]
