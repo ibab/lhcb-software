@@ -42,7 +42,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.18 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.19 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -359,7 +359,7 @@ class LbLoginScript(Script):
         for p in ev["PATH"].split(os.pathsep) :
             if p.find(os.sep + "CMT" + os.sep) == -1 :
                 newpath.append(p)
-        newpath.append(os.path.join(ev["CMTROOT"], ev["CMTBIN"]))
+        newpath.insert(0, os.path.join(ev["CMTROOT"], ev["CMTBIN"]))
         ev["PATH"] = os.pathsep.join(newpath)
 
         self._aliases["cmt"] = os.path.join(ev["CMTROOT"], ev["CMTBIN"], "cmt.exe")
@@ -494,7 +494,7 @@ class LbLoginScript(Script):
                 os.mkdir(opts.userarea)
                 newdir = True
     
-            if opts.cmtsite == "CERN" :
+            if opts.cmtsite == "CERN" and sys.platform != "win32" and self.hasCommand("fs"):
                 if newdir :
                     os.system("fs setacl %s system:anyuser rl" % opts.userarea )
                     self._add_echo( " --- with public access (readonly)" )

@@ -75,45 +75,55 @@ def fixPathes(filename):
     inf = open(filename, "r")
     data = inf.readlines()
     inf.close()
-    out = open(filename, "w")
-    pathlist = ["PATH", "LD_LIBRARY_PATH", "PYTHONPATH", "HPATH"]
+    marker = "# Pathes already fixed"
+    if filename.endswith(".bat") :
+        marker = "REM Pathes already fixed"
+    found = False
     for l in data :
-        words = l.split()
-        written = False
-        if len(words) > 1 :
-            for p in pathlist :
-                sp = "SAVED_%s" % p
-                if words[1] == p or words[1].startswith("%s=" % p) :
-                    if filename.endswith(".csh") :
-                        out.write("if ( $?%s ) then\n" % p )
-                        out.write("  setenv %s ${%s}\n" % (sp, p))
-                        out.write("endif\n")
-                        out.write(" ".join(words) + "\n")
-                        out.write("if ( $?%s ) then\n" % sp )
-                        out.write("  setenv %s ${%s}:${%s}\n" % (p, p, sp) )
-                        out.write("endif\n")
-                        written = True
-                    elif filename.endswith(".sh") :
-                        out.write("if test -n \"${%s}\"; then\n" % p )
-                        out.write("  export %s=${%s}\n" % (sp, p))
-                        out.write("fi\n")
-                        out.write(" ".join(words) + "\n")
-                        out.write("if test -n \"${%s}\"; then\n" % sp )
-                        out.write("  export %s=${%s}:${%s}\n" % (p, p, sp) )
-                        out.write("fi\n")
-                        written = True
-                    elif filename.endswith(".bat") :
-                        out.write("IF DEFINED %s (\n" % p)                        
-                        out.write("  set %s=%%%s%%\n" % (sp,p))
-                        out.write(")\n")                        
-                        out.write(" ".join(words) + "\n")
-                        out.write("IF DEFINED %s (\n" % sp)                        
-                        out.write("  set %s=%%%s%%;%%%s%%\n" % (p, p, sp) )
-                        out.write(")\n")                        
-                        written = True
-        if not written :
-            out.write(" ".join(words) + "\n")
-    out.close()
+        if l.find(marker) != -1 :
+            found = True
+            break
+    if not found :
+        out = open(filename, "w")
+        data.insert(0, marker + "\n")
+        pathlist = ["PATH", "LD_LIBRARY_PATH", "PYTHONPATH", "HPATH"]
+        for l in data :
+            words = l.split()
+            written = False
+            if len(words) > 1 :
+                for p in pathlist :
+                    sp = "SAVED_%s" % p
+                    if words[1] == p or words[1].startswith("%s=" % p) :
+                        if filename.endswith(".csh") :
+                            out.write("if ( $?%s ) then\n" % p )
+                            out.write("  setenv %s ${%s}\n" % (sp, p))
+                            out.write("endif\n")
+                            out.write(" ".join(words) + "\n")
+                            out.write("if ( $?%s ) then\n" % sp )
+                            out.write("  setenv %s ${%s}:${%s}\n" % (p, p, sp) )
+                            out.write("endif\n")
+                            written = True
+                        elif filename.endswith(".sh") :
+                            out.write("if test -n \"${%s}\"; then\n" % p )
+                            out.write("  export %s=${%s}\n" % (sp, p))
+                            out.write("fi\n")
+                            out.write(" ".join(words) + "\n")
+                            out.write("if test -n \"${%s}\"; then\n" % sp )
+                            out.write("  export %s=${%s}:${%s}\n" % (p, p, sp) )
+                            out.write("fi\n")
+                            written = True
+                        elif filename.endswith(".bat") :
+                            out.write("IF DEFINED %s (\n" % p)                        
+                            out.write("  set %s=%%%s%%\n" % (sp,p))
+                            out.write(")\n")                        
+                            out.write(" ".join(words) + "\n")
+                            out.write("IF DEFINED %s (\n" % sp)                        
+                            out.write("  set %s=%%%s%%;%%%s%%\n" % (p, p, sp) )
+                            out.write(")\n")                        
+                            written = True
+            if not written :
+                out.write(" ".join(words) + "\n")
+        out.close()
 
 def fixPython(filename):
     inf = open(filename, "r")
@@ -175,7 +185,8 @@ def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None,
     if targetlocation :
         location = os.path.join(targetlocation, "scripts")
     cachefilename = getLoginCacheName(shell=shell, location=location)
-    
+    if os.path.exists(cachefilename) :
+        os.remove(cachefilename)
     
     os.environ["CMTCONFIG"] = "slc4_ia32_gcc34"
     llsargs = []
@@ -219,6 +230,7 @@ def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None,
         
 def generateLogin(targetlocation, script, version="", mysiteroot=None, building=False, 
                   withoutpython=False, withoutcache=False):
+    # @todo: use template system instead of hardcoding the files
     knownshells = ["sh", "csh", "tcsh", "zsh", "bat"]
     shell = os.path.splitext(script)[1][1:]
     if not shell in knownshells :
