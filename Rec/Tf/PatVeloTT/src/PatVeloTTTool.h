@@ -1,4 +1,4 @@
-// $Id: PatVeloTTTool.h,v 1.6 2008-11-06 14:47:51 cattanem Exp $
+// $Id: PatVeloTTTool.h,v 1.7 2009-03-11 15:30:53 smenzeme Exp $
 #ifndef PATVELOTTTOOL_H
 #define PATVELOTTTOOL_H 1
 
@@ -44,10 +44,10 @@ static const InterfaceID IID_PatVeloTTTool ( "PatVeloTTTool", 1, 0 );
 
 
     void recoVeloTT(LHCb::Track & velotrack, std::vector<LHCb::Track*>& outtracks );
+    void simpleFit( PatVTTTrack& vtt);
 
   protected:
 
-    void simpleFit( PatVTTTrack& vttt );
     void simpleFitTracks( std::vector<PatVTTTrack>&);
     void selectBestTracks( std::vector<PatVTTTrack>& vttTracks);
     void prepareOutputTracks( std::vector<PatVTTTrack>& vttTracks, std::vector<LHCb::Track*>& outtracks);

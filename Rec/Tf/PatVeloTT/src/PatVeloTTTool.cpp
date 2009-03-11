@@ -1,4 +1,4 @@
-// $Id: PatVeloTTTool.cpp,v 1.7 2008-12-02 14:38:29 wouter Exp $
+// $Id: PatVeloTTTool.cpp,v 1.8 2009-03-11 15:30:53 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -533,6 +533,7 @@ void PatVeloTTTool::simpleFit(PatVTTTrack& vtttr) {
   }
 
   // update track state (qOverP and chiSquared only)
+
   vtttr.setQOverP(qp);
 
   vtttr.setChi2PerDoF(chi2Global);
