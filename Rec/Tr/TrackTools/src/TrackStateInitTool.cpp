@@ -91,6 +91,12 @@ StatusCode TrackStateInitTool::createVeloStates( LHCb::Track& track ) const
   return m_veloFitter->fit(track) ;
 }
 
+StatusCode TrackStateInitTool::createVeloTTStates( LHCb::Track& track) const
+{
+    return m_veloTTFit->fitVTT(track);
+}
+
+
 StatusCode TrackStateInitTool::createTStationStates( LHCb::Track& track ) const
 {
   
