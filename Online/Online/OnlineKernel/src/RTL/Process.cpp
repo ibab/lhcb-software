@@ -146,11 +146,19 @@ int Process::kill()    {
 }
 
 /// Wait for process to terminate
-int Process::wait()    {
+int Process::wait(int flag)    {
 #ifdef __linux
   int ret = -1;
+  int opt = WNOHANG;
+  switch(flag) {
+  case WAIT_BLOCK:
+    opt = WUNTRACED|WCONTINUED;
+  case WAIT_NOBLOCK:
+  default:
+    break;
+  }
   do {
-    ret = ::waitpid(m_pid,&m_status,WNOHANG);
+    ret = ::waitpid(m_pid,&m_status,opt);
   } while (ret == -1 && errno == EINTR);
   if ( ret == -1 ) {
     return INVALID;

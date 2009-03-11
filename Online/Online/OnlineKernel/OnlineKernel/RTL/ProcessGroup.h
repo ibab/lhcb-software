@@ -45,7 +45,7 @@ namespace RTL {
     /// Start process group
     virtual int start();
     /// Wait for process group.end
-    virtual int wait();
+    virtual int wait(int flag=WAIT_NOBLOCK);
   };
 } // End namespace RTL
 #endif  // ONLINEKERNEL_RTL_PROCESSGROUP_H

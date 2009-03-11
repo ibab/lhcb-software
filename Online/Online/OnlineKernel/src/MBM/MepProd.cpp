@@ -92,7 +92,7 @@ namespace {
       spaceRearm(0);
       int ret = spaceAction();
       if ( --num_event == 0 ) {
-	delete this;
+	//delete this;
 	::exit(0);
       }
       return ret;

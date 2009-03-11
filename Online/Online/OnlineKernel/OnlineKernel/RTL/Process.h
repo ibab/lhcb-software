@@ -19,6 +19,7 @@ namespace RTL {
   public:
     typedef std::vector<std::string> Arguments;
     enum { INVALID=0, RUNNING, ENDED, STOPPED };
+    enum { WAIT_BLOCK, WAIT_NOBLOCK };
   protected:
     /// Process identifier
     int m_pid;
@@ -82,7 +83,7 @@ namespace RTL {
     /// Kill the process (SIGKILL)
     virtual int kill();
     /// Wait for process to terminate
-    virtual int wait();
+    virtual int wait(int flag=WAIT_NOBLOCK);
   };
 } // End namespace RTL
 #endif  // ONLINEKERNEL_RTL_PROCESS_H

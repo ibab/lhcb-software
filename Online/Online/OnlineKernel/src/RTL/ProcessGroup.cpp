@@ -47,13 +47,24 @@ int ProcessGroup::start()    {
 }
 
 /// Wait for process group.end
-int ProcessGroup::wait()    {
+int ProcessGroup::wait(int flag)    {
 #ifdef __linux
   int status = 1;
   int cnt = m_procs.size();
+  int opt = WNOHANG;
+  switch(flag) {
+  case WAIT_BLOCK:
+    opt = WUNTRACED|WCONTINUED;
+  case WAIT_NOBLOCK:
+  default:
+    break;
+  }
   while(cnt>=0) {
     int status = 0;
-    pid_t pid = waitpid(0,&status,0);
+    pid_t pid = -1;
+    do {
+      pid = waitpid(0,&status,opt);
+    } while (pid == -1 && errno == EINTR);
     if ( pid > 0 ) {
       Process* p = get(pid);
       if ( Process::debug() ) {
