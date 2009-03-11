@@ -51,7 +51,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v34r2
-                                          running on lxbuild120.cern.ch on Tue Mar 10 19:40:15 2009
+                                          running on lxbuild120.cern.ch on Wed Mar 11 18:53:41 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -63,7 +63,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.82 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   2.13 times the speed of a 2.8 GHz Xeon.
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
 BrunelSequencer      INFO Member list: ProcessPhase/Init, ProcessPhase/Reco, ProcessPhase/Moni, ProcessPhase/MCLinks, ProcessPhase/Check, ProcessPhase/Output
@@ -155,6 +155,30 @@ MagneticFieldSv...   INFO Opened magnetic field file : /afs/cern.ch/lhcb/softwar
 MagneticFieldSv...   INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r2/cdf/field048.c4.vp.cdf
 MagneticFieldSv...   INFO Map scaled by factor 1
 TrackForwardPre...   INFO Member list: TrackStateInitAlg/InitForwardFit, TrackEventFitter/PreFitForward
+ToolSvc.PatVelo...   INFO Start generation of VeloTT Bdl LUTs
+ToolSvc.PatVelo...   INFO Generation of VeloTT Bdl LUTs finished
+ToolSvc.PatVelo...   INFO Start generation of VeloTT deflection LUTs
+ToolSvc.PatVelo...   INFO Generation of VeloTT deflection LUTs finished
+ToolSvc.PatVelo...   INFO  MaxXSize           = 660 mm
+ToolSvc.PatVelo...   INFO  MaxYSize           = 580 mm
+ToolSvc.PatVelo...   INFO  MaxXSlope          = 0.35
+ToolSvc.PatVelo...   INFO  MaxYSlope          = 0.3
+ToolSvc.PatVelo...   INFO  centralHoleSize    = 39 mm
+ToolSvc.PatVelo...   INFO  minMomentum        = 800 MeV
+ToolSvc.PatVelo...   INFO  maxPseudoChi2      = 10000
+ToolSvc.PatVelo...   INFO  distToMomentum     = 4.06932e-05
+ToolSvc.PatVelo...   INFO  zMidField          = 1891.11 mm
+ToolSvc.PatVelo...   INFO  xTolerance         = 0.35 mm
+ToolSvc.PatVelo...   INFO  xTolSlope          = 350 mm
+ToolSvc.PatVelo...   INFO  yTolerance         = 0.8 mm
+ToolSvc.PatVelo...   INFO  YTolSlope          = 0.2
+ToolSvc.PatVelo...   INFO  DxGroupTol         = 0.8 mm
+ToolSvc.PatVelo...   INFO  DxGroupFactor      = 0.25
+ToolSvc.PatVelo...   INFO  zMidTT             = 2485 mm
+ToolSvc.PatVelo...   INFO Start generation of VeloTT Bdl LUTs
+ToolSvc.PatVelo...   INFO Generation of VeloTT Bdl LUTs finished
+ToolSvc.PatVelo...   INFO Start generation of VeloTT deflection LUTs
+ToolSvc.PatVelo...   INFO Generation of VeloTT deflection LUTs finished
 ToolSvc.OTNoDri...   INFO Use drifttime           = 0
 ToolSvc.OTNoDri...   INFO Fit drifttime residuals = 0
 PreFitForward.F...   INFO
@@ -929,7 +953,7 @@ ToolSvc.Offline...SUCCESS  #WARNINGS   = 1        Message = 'No pixels produced'
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings Statistics : 0/0/1
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.82 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   2.13 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
