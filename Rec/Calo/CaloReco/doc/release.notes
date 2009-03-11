@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.133 2009-03-11 20:17:36 cattanem Exp $
+! $Id: release.notes,v 1.134 2009-03-11 21:28:13 cattanem Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
@@ -6,6 +6,11 @@
 ! -----------------------------------------------------------------------------
 
 !========================== CaloReco v4r18 2009-03-11 =========================
+! 2009-03-11 - Marco Cattaneo
+ - Added file CaloPIDs-DC06.opts, for DC06 pdf histograms
+ - Brunel.opts no longer includes CaloPIDs.opts. Instead, RecSysConf includes
+   either CaloPIDs.opts or CaloPIDs-DC06.opts
+
 ! 2009-03-11 - Victor Egorychev
  - CaloPIDs_DC09_v1.root file with new PDF for DC09 in BrunelPID.opts and CaloPIDs.opt 
 

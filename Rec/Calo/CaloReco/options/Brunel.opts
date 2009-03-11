@@ -1,6 +1,6 @@
-// $Id: Brunel.opts,v 1.24 2009-01-09 14:50:30 odescham Exp $ 
+// $Id: Brunel.opts,v 1.25 2009-03-11 21:27:09 cattanem Exp $ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.24 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.25 $ 
 // ============================================================================
 
 /** @file
@@ -98,7 +98,7 @@ CaloDLLs.Members +=
     , "HcalPIDmuAlg/HcalPIDmu" 
   };
 
-#include "$CALORECOOPTS/CaloPIDs.opts"
+//#include "$CALORECOOPTS/CaloPIDs.opts" // Histogram file defined in RecSysConf()
 
 
 CaloDigits.MeasureTime     = true ;
