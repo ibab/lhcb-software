@@ -3,8 +3,8 @@
 if ( -e ${HOME}/.newLHCBLoginscript ) then
   if ( $?LB_BANNER ) then
     cat ${LB_BANNER}
-	rm -f ${LB_BANNER}
-	unsetenv LB_BANNER
+    rm -f ${LB_BANNER}
+    unsetenv LB_BANNER
   else
     source /afs/cern.ch/lhcb/software/releases/LBSCRIPTS/prod/InstallArea/scripts/LbLogin.csh --quiet
   endif

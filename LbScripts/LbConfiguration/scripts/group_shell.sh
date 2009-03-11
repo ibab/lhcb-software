@@ -6,5 +6,5 @@ if [ -e ${HOME}/.newLHCBLoginscript ]; then
   else
     export LB_BANNER=`mktemp -t LbLogin_banner.XXXXXXXX`
     . /afs/cern.ch/lhcb/software/releases/LBSCRIPTS/prod/InstallArea/scripts/LbLogin.sh --quiet >! ${LB_BANNER}
-  fi     
+  fi
 fi 

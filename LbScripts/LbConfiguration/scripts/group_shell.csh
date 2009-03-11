@@ -6,5 +6,5 @@ if ( -e ${HOME}/.newLHCBLoginscript ) then
   else
     setenv LB_BANNER `mktemp -t LbLogin_banner.XXXXXXXX`
     source /afs/cern.ch/lhcb/software/releases/LBSCRIPTS/prod/InstallArea/scripts/LbLogin.csh --quiet >! ${LB_BANNER}
-  endif     
+  endif
 endif 

@@ -226,10 +226,18 @@ def generateLogin(targetlocation, script, version="", mysiteroot=None, building=
     f = open(script, "w")
     if shell == "sh" or shell == "zsh" :
         if mysiteroot :
-            content = """LbLogin_tmpfile=`%s/python/LbConfiguration/LbLogin.py --shell=sh --mktemp --mysiteroot=%s --scripts-version="%s" "$@"`
+            if withoutcache :
+                content = """LbLogin_tmpfile=`%s/python/LbConfiguration/LbLogin.py --shell=sh --mktemp --mysiteroot=%s --scripts-version="%s" --no-cache "$@"`
+""" % (targetlocation, mysiteroot, version)
+            else :
+                content = """LbLogin_tmpfile=`%s/python/LbConfiguration/LbLogin.py --shell=sh --mktemp --mysiteroot=%s --scripts-version="%s" "$@"`
 """ % (targetlocation, mysiteroot, version)
         else :
-            content = """LbLogin_tmpfile=`%s/python/LbConfiguration/LbLogin.py --shell=sh --mktemp --scripts-version="%s" "$@"`
+            if withoutcache :
+                content = """LbLogin_tmpfile=`%s/python/LbConfiguration/LbLogin.py --shell=sh --mktemp --scripts-version="%s" --no-cache "$@"`
+""" % (targetlocation, version)
+            else :
+                content = """LbLogin_tmpfile=`%s/python/LbConfiguration/LbLogin.py --shell=sh --mktemp --scripts-version="%s" "$@"`
 """ % (targetlocation, version)
         content += """LbLoginStatus="$?"
 if [ "$LbLoginStatus" = 0 ]; then
@@ -241,11 +249,20 @@ unset LbLogin_tmpfile
 """
     elif shell == "csh" or shell == "tcsh" :
         if mysiteroot :
-            content = """set LbLogin_tmpfile = `%s/python/LbConfiguration/LbLogin.py --shell=csh --mktemp --mysiteroot=%s --scripts-version="%s" ${*:q}`
+            if withoutcache :
+                content = """set LbLogin_tmpfile = `%s/python/LbConfiguration/LbLogin.py --shell=csh --mktemp --mysiteroot=%s --scripts-version="%s" --no-cache ${*:q}`
+""" % (targetlocation, mysiteroot, version)
+            else :
+                content = """set LbLogin_tmpfile = `%s/python/LbConfiguration/LbLogin.py --shell=csh --mktemp --mysiteroot=%s --scripts-version="%s" ${*:q}`
 """ % (targetlocation, mysiteroot, version)
         else :
-            content = """set LbLogin_tmpfile = `%s/python/LbConfiguration/LbLogin.py --shell=csh --mktemp --scripts-version="%s" ${*:q}`
+            if withoutcache :
+                content = """set LbLogin_tmpfile = `%s/python/LbConfiguration/LbLogin.py --shell=csh --mktemp --scripts-version="%s" --no-cache ${*:q}`
 """ % (targetlocation, version)
+            else :
+                content = """set LbLogin_tmpfile = `%s/python/LbConfiguration/LbLogin.py --shell=csh --mktemp --scripts-version="%s" ${*:q}`
+""" % (targetlocation, version)
+
         content += """set LbLoginStatus = $?
 if ( ! $LbLoginStatus ) then
     source $LbLogin_tmpfile
@@ -256,19 +273,35 @@ unset LbLogin_tmpfile
 """
     elif shell == "bat" :
         if mysiteroot :
-            content = """ @echo off
+            if withoutcache :
+                content = """ @echo off
+        
+set LbLogin_tmpfile="%%TEMP%%\LbLogin_tmpsetup.bat"
+
+python %s\python\LbConfiguration\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% --mysiteroot=%s --scripts-version="%s" --no-cache %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9
+""" % (targetlocation, mysiteroot, version)
+            else :
+                content = """ @echo off
         
 set LbLogin_tmpfile="%%TEMP%%\LbLogin_tmpsetup.bat"
 
 python %s\python\LbConfiguration\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% --mysiteroot=%s --scripts-version="%s" %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9
-""" % (targetlocation, mysiteroot, version)
+""" % (targetlocation, mysiteroot, version)                
         else :
-            content = """@echo off
+            if withoutcache :
+                content = """@echo off
+        
+set LbLogin_tmpfile="%%TEMP%%\LbLogin_tmpsetup.bat"
+
+python %s\python\LbConfiguration\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% --scripts-version="%s" --no-cache %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9
+""" % (targetlocation, version)
+            else :
+                content = """@echo off
         
 set LbLogin_tmpfile="%%TEMP%%\LbLogin_tmpsetup.bat"
 
 python %s\python\LbConfiguration\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% --scripts-version="%s" %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9
-""" % (targetlocation, version)
+""" % (targetlocation, version)                
         content += """set LbLoginStatus=%ERRORLEVEL%
 
 if %LbLoginStatus% EQU 0 (
