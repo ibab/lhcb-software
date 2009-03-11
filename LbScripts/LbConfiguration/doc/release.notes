@@ -1,3 +1,7 @@
+2009-03-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/generateLogin: removed SITEROOT from the cache
+
 2009-03-11  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/SetupProject.py: fixed problem when version is None.
