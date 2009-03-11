@@ -3,46 +3,29 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-! 2009-03-10 - Marco Cattaneo
- - Explicitly use CASTOR from LCG_Interfaces for QMTests
- - No longer disable FPE check for MergedPi0Rec, now fixed
- - Update references after adding OTMonitor
-
-! 2009-03-09 - Marco Cattaneo
- - Update references, SimplifiedMaterialLocator is now a private tool
-
-! 2009-03-08 - Marco Cattaneo
- - Update references for MuonPID update, Calo monitoring changes
-
-! 2009-03-06 - Marco Cattaneo
- - Pass DataType to L0Conf()
- - Add event time printout to brunel-2008-MC test
- - Update references for new fit initialisation, new calorimeter tuning
-
-! 2009-03-05 - Marco Cattaneo
- - Remove UseOracle option of Configurable, use DetCond() directly
-
-! 2009-03-04 - Marco Cattaneo
- - Update references for fix to untested StatusCode in RichDAQ and
-   VeloTrackMonitor
-
-! 2009-03-03 - Marco Cattaneo
- - Remove obsolete DQ directory
- - Bug fix: use RunRecordStream for writing FSR, not OutputFSRStream
-   (was writing one FSR per event!)
- - Update references Velo dE/dx normalisation change, TrackVertexMonitor update
-
-! 2009-02-27 - Marco Cattaneo
- - Update references for:
-   . Fix to untested StatusCode in LHCbIDsToMCParticles and in 
-     TrackGhostClassificationBase
-   . Changes to Calo monitoring
-
-</PRE><H1><A NAME=v34r2>2009-02-25 Brunel v34r2</A></H1><PRE>
-
+</PRE><H1><A NAME=v34r3>2009-03-10 Brunel v34r3</A></H1><PRE>
  - Changes to requirements:
    . Add dependency to AppConfig v2r*, to pick up options for production
+   . Add explicit use CASTOR from LCG_Interfaces for QMTests
 
+ - Changes to Configurable
+   . Bug fix: use RunRecordStream for writing FSR, not OutputFSRStream
+     (was writing one FSR per event!)
+   . Remove UseOracle option of Configurable, use DetCond() directly
+   . Pass DataType to L0Conf()
+
+ - Changes to Tests:
+   . No longer disable FPE check for MergedPi0Rec, now fixed
+   . Add event time printout to brunel-2008-MC test
+   . Remove obsolete DQ directory
+
+ - Changes to references to reflect changes in Brunel v34r3 output:
+   . New track fit initialisation, SimplifiedMaterialLocator now a private tool
+   . New tuning for MuonPID, Calo, Velo dE/dx
+   . Monitoring changes in Calo, OT, Vertex
+   . Fix to untested StatusCode in LHCbIDsToMCParticles, TrackGhostClassificationBase
+
+</PRE><H1><A NAME=v34r2>2009-02-25 Brunel v34r2</A></H1><PRE>
  - Changes to configurable:
    . Add EventCountHisto in init sequence. 
    . Remove OT expert monitoring: OTTimes no longer made in Brunel, so pointless
