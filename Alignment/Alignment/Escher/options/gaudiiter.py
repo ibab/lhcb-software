@@ -1,13 +1,5 @@
 #!/usr/bin/env python
 
-#from GaudiPython import *
-#from GaudiPython import gbl
-#import Gaudi
-from Gaudi.Configuration import *
-#import GaudiKernel.ProcessJobOptions
-#from Configurables import Escher
-#from TAlignment import TAlignmentConf
-
 # first parse all options
 from optparse import OptionParser
 parser = OptionParser(usage = "%prog [options] <opts_file> ...")
@@ -28,6 +20,7 @@ options = [ "importOptions(%r)" % f for f in args ]
 #   options.insert(pos,l)
     
 # "execute" the configuration script generated (if any)
+from Gaudi.Configuration import logging
 if options:
    g = {}
    l = {}
@@ -49,41 +42,30 @@ from Configurables import TAlignment
 TAlignment().NumIterations = opts.numiter
 TAlignment().UpdateInFinalize = False
 
+# This does not work yet, so I comment it out.
 # Hack to overide default EvtSel open
-from GaudiPython.Bindings import iEventSelector
-iEventSelector.__open_orig__ = iEventSelector.open
-def _my_open_(self,stream, typ = 'POOL_ROOT', opt = 'READ', sel = None, fun = None, collection = None):
-   if typ == "MDF":
-       if type(stream) != list : stream = [stream]
-       fixpart = "TYP=\'%s\' OPT=\'%s\' SVC='LHCb::MDFSelector'" % ( typ, opt )
-       if sel        : fixpart += " SEL=\'%s\'" % sel
-       if fun        : fixpart += " FUN=\'%s\'" % fun
-       if collection : fixpart += " COLLECTION=\'%s\'" % collection
-       cstream = ["DATAFILE=\'%s\' %s" % ( s, fixpart) for s in stream]
-       self.Input = cstream
-       self.reinitialize()
-   else:
-      self.__open_orig__(stream,typ,opt,sel,fun,collection)
-iEventSelector.open = _my_open_
-
+#from GaudiPython.Bindings import iEventSelector
+#iEventSelector.__open_orig__ = iEventSelector.open
+#def _my_open_(self,stream, typ = 'POOL_ROOT', opt = 'READ', sel = None, fun = None, collection = None):
+#   if typ == "MDF":
+#       if type(stream) != list : stream = [stream]
+#       fixpart = "TYP=\'%s\' OPT=\'%s\' SVC='LHCb::MDFSelector'" % ( typ, opt )
+#       if sel        : fixpart += " SEL=\'%s\'" % sel
+#       if fun        : fixpart += " FUN=\'%s\'" % fun
+#       if collection : fixpart += " COLLECTION=\'%s\'" % collection
+#       cstream = ["DATAFILE=\'%s\' %s" % ( s, fixpart) for s in stream]
+#       self.Input = cstream
+#       self.reinitialize()
+#   else:
+#      self.__open_orig__(stream,typ,opt,sel,fun,collection)
+#iEventSelector.open = _my_open_
 
 ## Instantiate application manager
 from GaudiPython.Bindings import AppMgr
 appMgr = AppMgr()
 evtSel = appMgr.evtSel()
 evtSel.OutputLevel = 1
-#print "Sequence name ", escher.getProp("EscherSequencer")
 mainSeq = appMgr.algorithm( "EscherSequencer" )
-#mainSeq = appMgr.algorithm( 'AlignmentMainSeq' )
-
-## Print flow of application
-#alignment.printFlow(appMgr)
-
-#evtSel.printfreq = 1000
-##evtSel.FirstEvent = 604
-   
-#evtSel.open( data, typ = "MDF")
-#evtSel.open( data )
 
 print evtSel.Input
 
