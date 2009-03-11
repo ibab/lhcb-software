@@ -1,8 +1,10 @@
-# $Id: Log.py,v 1.4 2009-03-11 20:45:47 hmdegaud Exp $
+# $Id: Log.py,v 1.5 2009-03-11 21:55:31 hmdegaud Exp $
 """ implement the default logging settings to the parser"""
 
 import logging
 import sys
+
+_default_log_format = "%(levelname)-8s: %(message)s"
 
 def setLogLevelCallBack(option, opt_str, value, parser):
     log = logging.getLogger()
@@ -23,13 +25,13 @@ def setLogLevelCallBack(option, opt_str, value, parser):
         log.info("setting log level to DEBUG")
         if not sys.version_info < (2,5,1,0,0) : # when funcName was not available
             formatter = logging.Formatter("%(levelname)-8s: %(funcName)-25s %(message)s")
-        for h in log.handlers :
-            h.setFormatter(formatter)
+            for h in log.handlers :
+                h.setFormatter(formatter)
 
 def addDefaultLogger(parser, format=None):
     console = logging.StreamHandler()
     if not format:
-        format = "%(levelname)-8s: %(message)s"
+        format = _default_log_format
     formatter = logging.Formatter(format)
     console.setFormatter(formatter)
     log = logging.getLogger()
