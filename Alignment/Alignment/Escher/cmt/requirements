@@ -1,5 +1,5 @@
 package Escher
-version v3r0
+version v4r1
 
 branches doc cmt job options
 
@@ -23,10 +23,11 @@ use RootHistCnv         v*         -no_auto_imports
 # the 2 lines below to enable reading the xml versions of the dbase
 # Note that in the options file (v200601.opts) some changes are needed as well.
 #use SQLDDDB 		v*	Det  -no_auto_imports
-use XmlDDDB             v*	Det  -no_auto_imports
-use XmlConditions       v*	Det  -no_auto_imports
-use FieldMap		v*           -no_auto_imports
-use ParamFiles          v*           -no_auto_imports
+#use XmlDDDB             v*	Det  -no_auto_imports
+#use XmlConditions       v*	Det  -no_auto_imports
+use DDDB               v*    Det            -no_auto_imports
+use ParamFiles         v*                 -no_auto_imports
+use FieldMap           v*                 -no_auto_imports
 
 # Packages needed to resolve external dependencies at run time
 use Python             v*    LCG_Interfaces -no_auto_imports
@@ -49,14 +50,6 @@ use SolvKernel		v*    Alignment -no_auto_imports
 use AlignSolvTools      v*    Alignment -no_auto_imports
 use TAlignment		v*    Alignment -no_auto_imports
 use VeloAlignment       v*    Alignment -no_auto_imports
-#
-#===== build Escher =========================
-application Escher $(GAUDICONFROOT)/src/GaudiMain.cpp
-# ========================= set macros ============================
-
-macro Escher_linkopts    "$(application_linkopts)"
-
-apply_pattern application_path
 
 # Set the default path for Escher options.
 set ESCHEROPTS ${ESCHERROOT}/options
