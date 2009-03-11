@@ -3,7 +3,7 @@
 #  @author Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.4 2009-03-04 18:03:07 jblouw Exp $"
+__version__ = "$Id: Configuration.py,v 1.5 2009-03-11 16:28:45 wouter Exp $"
 __author__  = "Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>"
 
 from Gaudi.Configuration  import *
@@ -26,7 +26,7 @@ class Escher(LHCbConfigurableUser):
     ## Default main sequences for real and simulated data
     DefaultSequence = [   "ProcessPhase/Init"
 			, "ProcessPhase/Reco"
-			, "ProcessPhase/Align" ]
+			, GaudiSequencer("AlignSequence") ]
 
     
     # Steering options
@@ -121,6 +121,7 @@ class Escher(LHCbConfigurableUser):
         recInit = RecInit( name = "EscherInit",
                            PrintFreq = self.getProp("PrintFreq"))
         GaudiSequencer("InitEscherSeq").Members += [ recInit ]
+        alignSeq = GaudiSequencer("AlignSequence")
         if  self.getProp("Millepede") :
             self.setProp("Kalman", False )
             log.info("Using Millepede type alignment!")
@@ -136,57 +137,25 @@ class Escher(LHCbConfigurableUser):
 	       GaudiSequencer("RecoTTSeq").Enable = False
 	       GaudiSequencer("RecoITSeq").Enable = True
                log.info("Escher: initalizing TAlignment!")
+               
                ProcessPhase("Align").DetectorList += ["OT"]
                ta = TAlignment()
                ta.Method = "Millepede"
  	       ta.TrackContainer = self.getProp("TrackContainer")
 	       ta.Detectors =  self.getProp("Detectors")
                ta.Sequencer = GaudiSequencer("AlignOTSeq")
-               seqname= [ta.Sequencer.getName()]
-               ta.Level = self.getProp("AlignmentLevel")
-               self.AlignSequence += seqname
+               seqname= ta.Sequencer.getName()
+               alignSeq.Members.append(seqname)
+               self.AlignSequence += alignSeq
         if self.getProp("Kalman") :
-	    self.setProp("Millepede", False )
+            TrackSys().ExpertTracking += [ "kalmanSmoother" ]
 	    log.info("Using Kalman style alignment!")
             self.setProp("Incident", "UpdateConstants")
-	    if "VELO" in self.getProp("Detectors"): 
-                  TrackSys.TrackPatRecAlgorithms = ["Velo"] 
-                  log.info("Aligning VELO")
-                  GaudiSequencer("RecoRICHSeq").Enable = False 
-                  GaudiSequencer("RecoVELOSeq").Enable = True
-                  GaudiSequencer("RecoTTSeq").Enable = True
-                  GaudiSequencer("RecoITSeq").Enable = True
-		  log.info("Escher: initalizing TAlignment!")
-		  ProcessPhase("Align").DetectorList += ["VELO"]
-		  ta = TAlignment()
-		  ta.Method = "Kalman"
-		  ta.Level = self.getProp("AlignmentLevel")
-		  ta.Detectors = self.getProp("Detectors")
-		  ta.Sequencer = GaudiSequencer("AlignVELOSeq")
-                  seqname= [ta.Sequencer.getName()]
-                  self.AlignSequence += seqname
-                  log.info("Seqname = ", seqname)
-	    if "OT" in self.getProp("Detectors"):
-		  TrackSys.TrackPatRecAlgorithms = ["PatSeed"]
-                  log.info("Aligning OT")
-                  GaudiSequencer("RecoRICHSeq").Enable = False 
-                  GaudiSequencer("RecoVELOSeq").Enable = False
-                  GaudiSequencer("RecoTTSeq").Enable = False
-                  GaudiSequencer("RecoITSeq").Enable = True
-                  log.info("Escher: initalizing TAlignment!")
-                  ProcessPhase("Align").DetectorList += ["OT"]
-                  ta = TAlignment()
-		  ta.Sequencer = GaudiSequencer("AlignOTSeq")
-                  seqname= [ta.Sequencer.getName()]
-                  ta.TrackContainer = "Rec/Track/Best"
-                  ta.Detectors =  self.getProp("Detectors")
-		  ta.Level = self.getProp("AlignmentLevel")
-                  self.AlignSequence += seqname
-                  log.info("Seqname = ", seqname)
+            ta = TAlignment()
+            ta.Method = "Kalman"
+            ta.Sequencer = GaudiSequencer("KalmanAlignSeq")
+            alignSeq.Members.append( ta.Sequencer )
 
-
-	
-                  
 		  
     def configureInput(self, inputType):
         """
@@ -286,7 +255,7 @@ class Escher(LHCbConfigurableUser):
                etcWriter.Output = [ "EVTTAGS2 DATAFILE='" + self.getProp("DatasetName") + "-etc.root' TYP='POOL_ROOTTREE' OPT='RECREATE' " ]
 
         # Do not print event number at every event (done already by Brunel)
-        EventSelector().PrintFreq = -1;
+        #EventSelector().PrintFreq = -1
         # Modify printout defaults
         if self.getProp( "NoWarnings" ):
             importOptions( "$ESCHEROPTS/SuppressWarnings.opts" )
@@ -303,6 +272,28 @@ class Escher(LHCbConfigurableUser):
     def evtMax(self):
         return LHCbApp().evtMax()
 
+    # method to print an algorithm in the sequence
+    def printAlgo( self, algName, appMgr, prefix = ' ') :
+        #""" print algorithm name, and, if it is a sequencer, recursively those algorithms it calls"""
+        print prefix + algName
+        alg = appMgr.algorithm( algName.split( "/" )[ -1 ] )
+        prop = alg.properties()
+        if prop.has_key( "Members" ) :
+            subs = prop[ "Members" ].value()
+            for i in subs : self.printAlgo( i.strip( '"' ), appMgr, prefix + "     " )
+        elif prop.has_key( "DetectorList" ) :
+            subs = prop[ "DetectorList" ].value()
+            for i in subs : self.printAlgo( algName.split( "/" )[ -1 ] + i.strip( '"' ) + "Seq", appMgr, prefix + "     ")
+
+    # method to print all algorithms        
+    def printFlow( self ) :
+        from GaudiPython.Bindings import AppMgr
+        appMgr = AppMgr()
+        mp = appMgr.properties()
+        print "\n ****************************** Application Flow ****************************** \n"
+        for i in mp["TopAlg"].value(): self.printAlgo( i, appMgr )
+        print "\n ****************************************************************************** \n"
+        
     ## Apply the configuration
     def __apply_configuration__(self):
         
@@ -316,4 +307,10 @@ class Escher(LHCbConfigurableUser):
         log.info( self )
         log.info( RecSysConf() )
         log.info( TrackSys() )
+        log.info( TAlignment() )
+        log.info( RecSysConf() )
+        log.info( LHCbApp() )
         GaudiKernel.ProcessJobOptions.PrintOff()
+
+        from GaudiKernel.Configurable import appendPostConfigAction
+        appendPostConfigAction(self.printFlow)
