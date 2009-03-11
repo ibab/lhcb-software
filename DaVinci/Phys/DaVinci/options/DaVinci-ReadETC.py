@@ -1,10 +1,9 @@
-## $Id: DaVinci-ReadETC.py,v 1.3 2009-03-11 17:56:30 pkoppenb Exp $
+## $Id: DaVinci-ReadETC.py,v 1.4 2009-03-11 18:07:00 pkoppenb Exp $
 ## ============================================================================
-## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 ## ============================================================================
 from Gaudi.Configuration import *
 from Configurables import DaVinci
-from Configurables import CheckSelResult
 
 DaVinci().MainOptions = "$B2DILEPTONROOT/options/DoPreselBd2KstarMuMu.opts"
 DaVinci().EvtMax = -1
