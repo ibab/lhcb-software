@@ -16,6 +16,7 @@ AuditorSvc.Auditors +=  { "TimingAuditor/TIMER" } ;
 
 EventPersistencySvc.CnvServices += {"LHCb::RawDataCnvSvc"};
 HistogramPersistencySvc.Warnings = false;
+EventLoopMgr.Warnings = false;
 
 #include "$ONLINETASKSROOT/hltopts/OnlineEnvironment.opts"
 ApplicationMgr.TopAlg += { "UpdateAndReset" };
