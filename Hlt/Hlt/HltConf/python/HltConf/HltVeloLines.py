@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltVeloLines.py,v 1.3 2009-01-22 14:22:27 graven Exp $
+# $Id: HltVeloLines.py,v 1.4 2009-03-11 16:05:40 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines for the VELO closing proceure
@@ -9,25 +9,16 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
 # =============================================================================
 
 #
-# VELO specific HLT trigger lines
+# VELO (closing procedure) specific HLT trigger lines
 #
-from Configurables import VeloClusterFilter
-from Configurables import Velo__VeloHltLiteClusterMonitor
-from Configurables import Tf__PatVeloRTracking, Tf__PatVeloSpaceTracking, Tf__PatVeloGeneralTracking
-from Configurables import Tf__PatVeloSpaceTool, Tf__PatVeloTrackTool
-from Configurables import Tf__DefaultVeloRHitManager, Tf__DefaultVeloPhiHitManager
-from Configurables import Tf__PatVeloRHitManager, Tf__PatVeloPhiHitManager
-from Configurables import PatPV3D, PVOfflineTool
-#from Configurables import PatVeloAlignTrackFilter
 from LHCbKernel.Configuration import *
 from Configurables import GaudiSequencer
 from HltConf.HltLine import Hlt1Line   as Line
 from HltConf.HltLine import Hlt1Member as Member
-
 
 class HltVeloLinesConf(LHCbConfigurableUser):
    __slots__ = { 'Prescale'  : 0.0001
@@ -37,6 +28,17 @@ class HltVeloLinesConf(LHCbConfigurableUser):
                , 'ODIN'                       :"( ODIN_TRGTYP != LHCb.ODIN.RandomTrigger )" # on what trigger types do we run?
                }
    def __apply_configuration__(self):
+        from Configurables import VeloClusterFilter
+        from Configurables import Tf__DefaultVeloRHitManager as DefaultVeloRHitManager
+        from Configurables import Tf__DefaultVeloPhiHitManager as DefaultVeloPhiHitManager
+        from Configurables import Tf__PatVeloTrackTool as PatVeloTrackTool
+        from Configurables import Tf__PatVeloRTracking as PatVeloRTracking
+        from Configurables import Tf__PatVeloSpaceTracking as PatVeloSpaceTracking
+        from Configurables import Tf__PatVeloSpaceTool as PatVeloSpaceTool
+        from Configurables import Tf__PatVeloGeneralTracking as PatVeloGeneralTracking
+        from Configurables import Tf__PatVeloRHitManager as PatVeloRHitManager
+        from Configurables import Tf__PatVeloPhiHitManager as PatVeloPhiHitManager
+        from Configurables import PatPV3D, PVOfflineTool
         ### find primary vertices seperately in each side
         for side in [ 'ASide', 'CSide' ] :
             cf = VeloClusterFilter( side + 'ClusterFilter'
@@ -47,36 +49,35 @@ class HltVeloLinesConf(LHCbConfigurableUser):
                                   , OutputClusterLocation = "/Event/Raw/Velo/" + side + "Clusters"
                                   , FilterOption = { 'ASide' : 'Left', 'CSide' : 'Right' }[ side ]
                                   )
-            rt = Tf__PatVeloRTracking( side + 'RTracking'
+            rt = PatVeloRTracking( side + 'RTracking'
                                      , OutputTracksName = 'Hlt/Track/' + side + 'RZVelo'
                                      , HitManagerName = side + 'DefaultVeloRHitManager')
-            Tf__DefaultVeloRHitManager( side + 'DefaultVeloRHitManager'
+            DefaultVeloRHitManager( side + 'DefaultVeloRHitManager'
                                       , ClusterLocation = '/Event/Raw/Velo/' + side + 'Clusters'
                                       , LiteClusterLocation = '/Event/Raw/Velo/' + side + 'LiteClusters' )
-            Tf__DefaultVeloPhiHitManager( side + 'DefaultVeloPhiHitManager'
+            DefaultVeloPhiHitManager( side + 'DefaultVeloPhiHitManager'
                                         , ClusterLocation = '/Event/Raw/Velo/' + side + 'Clusters'
                                         , LiteClusterLocation = '/Event/Raw/Velo/' + side + 'LiteClusters' )
-            st = Tf__PatVeloSpaceTracking( side + 'SpaceTracking'
+            st = PatVeloSpaceTracking( side + 'SpaceTracking'
                                          , InputTracksName = 'Hlt/Track/'+side+'RZVelo'
                                          , OutputTracksName = 'Hlt/Track/'+side+'Velo'
                                          , SpaceToolName = side + "SpaceTool")
-            Tf__PatVeloSpaceTool( side + 'SpaceTool'
+            PatVeloSpaceTool( side + 'SpaceTool'
                                 , RHitManagerName= side+"RHitManager"
                                 , PhiHitManagerName= side + "PhiHitManager"
                                 , TrackToolName= side + "TrackTool" )
-            gt = Tf__PatVeloGeneralTracking( side + 'GeneralTracking'
+            gt = PatVeloGeneralTracking( side + 'GeneralTracking'
                                            , RHitManagerName = side + 'RHitManager'
                                            , PhiHitManagerName= side + 'PhiHitManager'
                                            , TrackToolName= side + 'TrackTool'
                                            , OutputTracksLocation = 'Hlt/Track/' + side + 'Velo')
-            Tf__PatVeloTrackTool( side + 'TrackTool'
+            PatVeloTrackTool( side + 'TrackTool'
                                 , RHitManagerName= side + "RHitManager"
                                 , PhiHitManagerName= side + "PhiHitManager")
-            Tf__PatVeloRHitManager(   side + 'RHitManager',   DefaultHitManagerName= side + "DefaultVeloRHitManager")
-            Tf__PatVeloPhiHitManager( side + 'PhiHitManager', DefaultHitManagerName= side + "DefaultVeloPhiHitManager")
+            PatVeloRHitManager(   side + 'RHitManager',   DefaultHitManagerName= side + "DefaultVeloRHitManager")
+            PatVeloPhiHitManager( side + 'PhiHitManager', DefaultHitManagerName= side + "DefaultVeloPhiHitManager")
 
-            pv3D = PatPV3D( side + 'PatPV3D'
-                          , OutputVerticesName = 'Hlt/Vertex/' + side + 'PV3D')
+            pv3D = PatPV3D( side + 'PatPV3D', OutputVerticesName = 'Hlt/Vertex/' + side + 'PV3D')
             pv3D.addTool( PVOfflineTool, name = 'PVOfflineTool')
             pv3D.PVOfflineTool.InputTracks = ['Hlt/Track/' + side + 'Velo']
             pv3D.PVOfflineTool.PVFitterName = "LSAdaptPV3DFitter"
@@ -97,4 +98,3 @@ class HltVeloLinesConf(LHCbConfigurableUser):
                       ] )
 
         Line( 'VeloClosing' , HLT = "HLT_PASS('Hlt1VeloCSideDecision') | HLT_PASS('Hlt1VeloASideDecision')" )
-

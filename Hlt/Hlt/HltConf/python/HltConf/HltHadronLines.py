@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltHadronLines.py,v 1.4 2009-02-10 13:04:54 graven Exp $
+# $Id: HltHadronLines.py,v 1.5 2009-03-11 16:05:40 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hadron Lines
@@ -11,14 +11,12 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
 from LHCbKernel.Configuration import *
 
-from Configurables import GaudiSequencer
-from Configurables import HltTrackUpgrade
 
 from HltConf.HltLine import Hlt1Line   as Line
 from HltConf.HltLine import bindMembers
@@ -65,6 +63,8 @@ class HltHadronLinesConf(LHCbConfigurableUser) :
                 }
 
     def __apply_configuration__(self) : 
+        from Configurables import GaudiSequencer
+        from Configurables import HltTrackUpgrade
         importOptions('$HLTCONFROOT/options/HltRecoSequence.py')
 
         # depending variables
@@ -94,7 +94,6 @@ class HltHadronLinesConf(LHCbConfigurableUser) :
                        , MatchName = 'VeloCalo' , MaxQuality = 4.
                        )
             , Member ( 'TU', 'GuidedForward'
-                       , InputSelection  = '%TMVeloCalo'
                        , RecoName = 'GuidedForward'
                        , HistogramUpdatePeriod = 1
                        )
@@ -126,14 +125,13 @@ class HltHadronLinesConf(LHCbConfigurableUser) :
                        , MatchName = 'VeloCalo' , MaxQuality = 4.
                        )
             , Member ( 'TU', 'GuidedForward'
-                       , InputSelection  = '%TMVeloCalo'
                        , RecoName = 'GuidedForward'
                        , HistogramUpdatePeriod = 1
                        )        
             , Member ( 'TF', 'GuidedForward' , FilterDescriptor = ['PT,>,'+str(self.getProp('HadMain_PtCut'))])
             , HltTrackUpgrade( 'Hlt1RecoVelo' )
             , Member ( 'TF', '1Velo2'
-                       , InputSelection = HltTrackUpgrade('Hlt1RecoVelo')
+                       , InputSelection = HltTrackUpgrade('Hlt1RecoVelo') # this line shouldn't be needed
                        , FilterDescriptor = [ 'IP_PV2D,||>,'+str(self.getProp('HadMain_IPCut'))])
             , Member ( 'TF', '2Velo2'
                        , InputSelection = HltTrackUpgrade('Hlt1RecoVelo')

@@ -6,10 +6,6 @@ from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 
-from Configurables import GaudiSequencer as Sequence
-from Configurables import HltTrackFilter, HltSelectionFilter
-from Configurables import LumiHistoMaker, LumiHisto2dSPD
-from Configurables import LoKi__ODINFilter  as ODINFilter
 from HltConf.HltLine import Hlt1Line   as Line
 from HltConf.HltLine import Hlt1Member as Member
 
@@ -43,8 +39,7 @@ def _combine( op, arg ) :
 
 ############# start building the lumi line(s)...
 class HltLumiLinesConf(LHCbConfigurableUser) :
-    __used_configurables__ = [ LumiCounterDefinitionConf
-                               ]
+    __used_configurables__ = [ LumiCounterDefinitionConf ]
 
     __slots__ = { 'TriggerTypes'         : ['RandomTrigger']  # ODIN trigger type accepted
                 , 'BXTypes'              : ['NoBeam', 'BeamCrossing','SingleBeamRight','SingleBeamLeft']
@@ -60,6 +55,8 @@ class HltLumiLinesConf(LHCbConfigurableUser) :
         returns an Hlt1 "Line" including input filter, reconstruction sequence and counting
         adds histogramming
         '''
+        from Configurables import GaudiSequencer as Sequence
+
         # debugging options
         debugOPL = self.getProp('OutputLevel')
         debugging = self.getProp('Debug')
@@ -113,7 +110,7 @@ class HltLumiLinesConf(LHCbConfigurableUser) :
             lumiRecoSequence.Members.append( Sequence('LumiTrackRecoSequence' , MeasureTime = True ) )
             # filter to get backward tracks (make sure it always passes by wrapping inside a sequence)
             if veloBW:
-                from Configurables import HltTrackFilter, HltSelectionFilter            
+                from Configurables import HltTrackFilter
                 lumiRecoSequence.Members.append(
                     Sequence('HltRZVeloBWSequence'
                              , Members  = [ HltTrackFilter('HltPrepareRZVeloBW'
@@ -130,6 +127,7 @@ class HltLumiLinesConf(LHCbConfigurableUser) :
                 
 
         # define histogrammers
+        from Configurables import LumiHistoMaker, LumiHisto2dSPD
         HistoMembers=[]
         HistoMembers.append(LumiHistoMaker('Histo'+BXType,
                                            InputVariables = createdCounters,
@@ -149,13 +147,10 @@ class HltLumiLinesConf(LHCbConfigurableUser) :
                                      )
 
 
-        return Line (
-            'Lumi'+BXType
+        return Line ( 'Lumi'+BXType
             , ODIN = ' ( ODIN_TRGTYP == LHCb.ODIN.RandomTrigger ) & ( ODIN_BXTYP == LHCb.ODIN.'+BXType+' ) '
-            , algos = [ lumiRecoSequence,
-                        lumiCountSequence,
-                        lumiHistoSequence ] )
-
+                    , algos = [ lumiRecoSequence, lumiCountSequence, lumiHistoSequence ] 
+                    ) 
 
     def __apply_configuration__(self) :
         '''

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.165 2009-03-11 16:03:46 graven Exp $ 
+! $Id: release.notes,v 1.166 2009-03-11 16:05:40 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -6,6 +6,8 @@
 ! -----------------------------------------------------------------------------
 ! 2009-03-11 - Gerhard Raven
  - improve HltFastTrackFit.py using new feature ConfiguredFastTrackFitter.ConfiguredFitters' ConfiguredFastFitter
+ - move 'import' statements closer to place they are used to 
+   attempt to avoid warnings about missing dependencies
 
 ! 2009-03-11 - Antonio Perez-Calero
  - changes in muon+track lines in HltMuonLines.py to use FitVertexTrack1Chi2OverNdf and for track2

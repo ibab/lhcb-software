@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltPhotonLines.py,v 1.7 2009-02-18 15:16:39 graven Exp $
+# $Id: HltPhotonLines.py,v 1.8 2009-03-11 16:05:40 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Photon Lines
@@ -12,19 +12,12 @@
 '''
 # =============================================================================
 __author__  = 'Gerhard Raven Gerhard.Raven@nikhef.nl'
-__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $'
+__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $'
 # =============================================================================
 
 from Gaudi.Configuration import * 
 from LHCbKernel.Configuration import *
 
-from Configurables import GaudiSequencer
-from Configurables import PatMatchTool
-from Configurables import HltTrackFunctionFactory
-from Configurables import HltAntiEleConf
-from Configurables import L0ConfirmWithT
-from Configurables import PatConfirmTool
-from Configurables import HltTrackUpgrade
 
 from HltConf.HltLine import Hlt1Line   as Line
 from HltConf.HltLine import Hlt1Member as Member
@@ -47,6 +40,12 @@ class HltPhotonLinesConf(LHCbConfigurableUser):
                }
 
    def __apply_configuration__(self):
+        from Configurables import GaudiSequencer
+        from Configurables import HltTrackFunctionFactory
+        from Configurables import HltAntiEleConf
+        from Configurables import L0ConfirmWithT
+        from Configurables import PatConfirmTool
+        from Configurables import HltTrackUpgrade
 
         TRACK_PT_CUT = str(self.getProp('Track_PtCut'))
         TRACK_IP_CUT = str(self.getProp('Track_IPCut3D'))
@@ -61,7 +60,7 @@ class HltPhotonLinesConf(LHCbConfigurableUser):
                                  tools = [ Tool( PatConfirmTool,  nSigmaX=10, nSigmaTx=10,nSigmaY=10,nSigmaTy=10 )])])])]
                                )
                       , Member ('TF', 'Photon' , FilterDescriptor = ['IsPhoton,>,'+IS_PHOTON])
-                      , GaudiSequencer('Hlt1RecoRZVeloSequence')
+                      , GaudiSequencer('Hlt1RecoRZVeloSequence') # TODO: make call to python procedure..
                       , Member ('TF', 'RZVelo'
                                , InputSelection     = 'RZVelo'
                                , FilterDescriptor = ['rIP_PV2D,||[],0.10,3.0']
@@ -74,7 +73,7 @@ class HltPhotonLinesConf(LHCbConfigurableUser):
                                , HistogramUpdatePeriod = 0
                                , HistoDescriptor = { 'IP' : ('IP',-1.,3.,400), 'IPBest' : ('IPBest',-1.,3.,400) }
                                )
-                      , HltTrackUpgrade( 'Hlt1RecoVelo' )
+                      , HltTrackUpgrade( 'Hlt1RecoVelo' ) # TODO: make call to python procedure..
                       , Member ('TF', 'SecondVelo' 
                                , InputSelection     = 'Velo'
                                , FilterDescriptor = ['IP_PV2D,||[],'+TRACK_IP_CUT+',3.0']

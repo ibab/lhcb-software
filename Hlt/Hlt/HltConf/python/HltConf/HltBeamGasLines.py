@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltBeamGasLines.py,v 1.1 2009-02-24 20:39:18 panmanj Exp $
+# $Id: HltBeamGasLines.py,v 1.2 2009-03-11 16:05:40 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of BeamGas Lines
@@ -11,14 +11,12 @@
 """
 # =============================================================================
 __author__  = "Jaap Panman jaap.panman@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.1 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
 from LHCbKernel.Configuration import *
 
-from Configurables import GaudiSequencer
-from Configurables import LoKi__ODINFilter  as ODINFilter
 
 from HltConf.HltLine import Hlt1Line   as Line
 from HltConf.HltLine import bindMembers
@@ -50,6 +48,7 @@ class HltBeamGasLinesConf(LHCbConfigurableUser) :
 
         # SingleBeamLeft BeamGas Alley
         #-----------------------------------
+        from Configurables import GaudiSequencer
         Line ( 'BeamGasLeft' 
                , ODIN  = " ODIN_BXTYP == LHCb.ODIN.SingleBeamLeft "
                , L0DU  = "L0_CHANNEL('"+L0ChannelLeft+"')"

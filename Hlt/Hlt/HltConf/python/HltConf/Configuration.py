@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.52 2009-03-09 14:49:36 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.53 2009-03-11 16:05:40 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -9,16 +9,8 @@ from pprint import *
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
-import GaudiKernel.ProcessJobOptions
 from Configurables       import GaudiSequencer as Sequence
-from Configurables       import LoKi__L0Filter    as L0Filter
-from Configurables       import LoKi__HDRFilter   as HltFilter
-from Configurables       import HltGlobalMonitor
-from Configurables       import HltVertexReportsMaker
-from Configurables       import HltSelReportsMaker
-from Configurables       import L0DUMultiConfigProvider
 from Configurables       import HltANNSvc 
-from Configurables       import HltRoutingBitsWriter
 from HltConf.HltLine     import Hlt1Line   as Line
 from HltConf.HltLine     import hlt1Lines
 from HltConf.HltLine     import hlt1Selections
@@ -34,8 +26,7 @@ from HltConf.HltPhotonLines   import HltPhotonLinesConf
 from HltConf.HltExpressLines  import HltExpressLinesConf
 from HltConf.HltBeamGasLines  import HltBeamGasLinesConf
 from HltConf.Hlt1             import Hlt1Conf
-import HltConf.HltL0Candidates
-from HltConf.HltL0Candidates  import setupL0Channels, decodeL0Channels
+# import HltConf.HltL0Candidates
 from RichRecSys.Configuration import *
 
 class HltConf(LHCbConfigurableUser):
@@ -57,24 +48,28 @@ class HltConf(LHCbConfigurableUser):
                 , "Verbose"                    : False # print the generated Hlt sequence
                 , "LumiBankKillerAcceptFraction" : 0 # fraction of lumi-only events where raw event is stripped down
                 , "ActiveHlt1Lines"            : [] # list of lines to be added
+                , "HistogrammingLevel"         : 'None' # or 'Line'
                 }   
                 
     def defineL0Channels(self, L0TCK = None) :
             if L0TCK :
                 importOptions('$L0TCK/L0DUConfig.opts')
+                from Configurables import L0DUMultiConfigProvider
                 if L0TCK not in L0DUMultiConfigProvider('L0DUConfig').registerTCK :
                     raise KeyError('requested L0 TCK %s is not known'%L0TCK)
+                from HltConf.HltL0Candidates import decodeL0Channels
                 channels = decodeL0Channels( L0TCK )
             else :
                 channels = [ 'Muon','DiMuon','MuonNoGlob','Electron','Photon','Hadron' ,'LocalPi0','GlobalPi0' ]
+            from HltConf.HltL0Candidates import setupL0Channels
             setupL0Channels( channels ) 
 
 
     def confType(self,hlttype) :
             self.defineL0Channels( self.getProp('L0TCK') )
-            #/**
-            # * main HLT sequencer
-            # */
+            #
+            #  main HLT sequencer
+            # 
             Hlt = Sequence('Hlt', ModeOR= True, ShortCircuit = False
                                 , Members = [ Sequence('Hlt1') 
                                             , Sequence('Hlt2') # NOTE: Hlt2 checks itself whether Hlt1 passed or not
@@ -115,6 +110,8 @@ class HltConf(LHCbConfigurableUser):
                 #       just forward to it...
                 Sequence("Hlt2CheckHlt1Passed").Members = [ ]
 
+                from Configurables import LoKi__HDRFilter   as HltFilter
+                from Configurables import LoKi__L0Filter    as L0Filter
                 hlt2requires = { 'L0'   : L0Filter('L0Pass', Code = "L0_DECISION" )
                                , 'Hlt1' : HltFilter('Hlt1GlobalPass' , Code = "HLT_PASS('Hlt1Global')" )
                                }
@@ -141,14 +138,17 @@ class HltConf(LHCbConfigurableUser):
 
         ## and record the settings in the ANN service
         HltANNSvc().RoutingBits = dict( [ (v,k) for k,v in routingBits.iteritems() ] )
+        from Configurables import HltRoutingBitsWriter
         HltRoutingBitsWriter().RoutingBits = routingBits
 
     def configureVertexPersistence(self) :
         ## and persist some vertices...
         ## uhhh... need to pick only those in ActiveHlt1Lines...
         vertices = [ i for i in hlt1Selections()['All'] if i is 'PV2D' or   ( i.startswith('Hlt1Velo') and i.endswith('Decision') ) ]
+        from Configurables import HltVertexReportsMaker
         HltVertexReportsMaker().VertexSelections = vertices
         ## do not write out the candidates for the vertices we store 
+        from Configurables import HltSelReportsMaker
         HltSelReportsMaker().SelectionMaxCandidates.update( dict( [ (i,0) for i in vertices if i.endswith('Decision') ] ) )
 
     def configureANNSelections(self) :
@@ -165,6 +165,7 @@ class HltConf(LHCbConfigurableUser):
 
     def configureHltMonitoring(self, lines) :
         ## and tell the monitoring what it should expect..
+        from Configurables import HltGlobalMonitor
         HltGlobalMonitor().Hlt1Decisions = [ i.decision() for i in lines ]
         ## group lines into 'alleys'
         groupingRules = [ ( 'Hlt1L0.*Decision' , 'L0' )
@@ -179,7 +180,6 @@ class HltConf(LHCbConfigurableUser):
         for i in [ j.decision() for j in lines ] :
             for rule in groupingRules :
                 if re.match(rule[0],i) :
-                    # print 'matched ' + i + ' against ' + rule[0] + ' with value ' + rule[1]
                     if i not in grouping.keys() : grouping[i] = rule[1] 
                     #else :
                     #    print 'WARNING: could not make unique assignement for %s'%i 
@@ -188,11 +188,27 @@ class HltConf(LHCbConfigurableUser):
         # print '\n\n'
         # TODO: HltGlobalMonitor().AlleyMap = grouping
 
+        def disableHistograms(c,filter = lambda x : True) :
+            if 'HistoProduce' in c.getProperties() :
+                if not filter(c) : 
+                    c.HistoProduce = False
+                    print 'disabling histograms for ' + c.getFullName()
+            for p in [ 'Members','Filter0','Filter1' ] :
+                if hasattr(c,p) : 
+                    x = getattr(c,p)
+                    if list is not type(x) : x = [ x ]
+                    [ disableHistograms(i,filter) for i in x ]
+        if self.getProp('HistogrammingLevel') == 'None' : 
+            [ disableHistograms( i.sequencer() ) for i in hlt1Lines() ]
+        elif self.getProp('HistogrammingLevel') == 'Line' : 
+            [ disableHistograms( i.sequencer(), lambda x: x.getType!='HltLine' ) for i in hlt1Lines() ]
+            
+
     def postConfigAction(self) : 
         ## Should find a more elegant way of doing this...
         ## there are too many implicit assumptions in this action...
         ##
-        ## add a line for 'not lumi only' 
+        ## add a line for 'not lumi only' aka not lumi exclusive
         ## -- note: before the 'global' otherwise lumi set global, and we have lumi AND global set...
         lumi = [ "'" + i +"'"  for i in hlt1Decisions() if i.find('Lumi') != -1 ]
         if lumi: 
@@ -221,6 +237,7 @@ class HltConf(LHCbConfigurableUser):
         Apply Hlt configuration
         """
         log.info("Hlt configuration")
+        import GaudiKernel.ProcessJobOptions
         GaudiKernel.ProcessJobOptions.PrintOff()
         importOptions('$HLTCONFROOT/options/HltInit.py')
         log.info("Loaded HltInit")

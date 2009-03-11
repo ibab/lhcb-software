@@ -1,6 +1,6 @@
 #
 #==============================================================================
-# $Id: HltL0Candidates.py,v 1.14 2009-02-17 17:15:46 witekma Exp $
+# $Id: HltL0Candidates.py,v 1.15 2009-03-11 16:05:40 graven Exp $
 #==============================================================================
 #
 # Module to define the conversion of L0 candidates across several HltLines
@@ -68,18 +68,17 @@ def _calo( channel ) :
     name = _name(channel)
     ### TODO: this should be triggerd by the 'type' and NOT by channel
     ###       maybe every L0CaloCandidates instance should be configured with 'all' makers
-    _calomaker = {  'Hadron'      : HadronSeedTool( decodeCalos = False )
-                 ,  'Electron'    : ElectronSeedTool()
-                 ,  'Photon'      : ElectronSeedTool()
-                 ,  'LocalPi0'    : ElectronSeedTool()
-                 ## how about photon??
+    _calomaker = {  'Hadron'      : HadronSeedTool
+                 ,  'Electron'    : ElectronSeedTool
+                 ,  'Photon'      : ElectronSeedTool
+                 ,  'LocalPi0'    : ElectronSeedTool
                  }
     #note: explicitly set the OutputSelection so we can pick it up downstream...
     x = { channel: HltL0CaloCandidates(name, L0Channel = channel, OutputSelection = name) }
     c = channel.lstrip('All')
     if c in _calomaker :
         HltL0CaloCandidates(name).addTool(_calomaker[c],name='CaloMakerTool')
-        HltL0CaloCandidates(name).CaloMakerTool = _calomaker[c]
+        HltL0CaloCandidates(name).CaloMakerTool = _calomaker[c].__name__
     return x
 
 def _converter( channel ) :

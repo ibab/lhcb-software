@@ -3,12 +3,6 @@
 from Gaudi.Configuration import * 
 from LHCbKernel.Configuration import *
 
-from Configurables import GaudiSequencer
-from Configurables import HltTrackUpgrade
-from Configurables import HltTrackUpgradeTool
-from Configurables import PatMatchTool
-from Configurables import L0ConfirmWithT
-from Configurables import ElectronSeedTool, PatConfirmTool
 
 from HltConf.HltLine import Hlt1Line   as Line
 from HltConf.HltLine import Hlt1Member as Member
@@ -29,6 +23,10 @@ class HltElectronLinesConf(LHCbConfigurableUser) :
                 }
 
     def __apply_configuration__(self) :
+        from Configurables import GaudiSequencer
+        from Configurables import HltTrackUpgrade
+        from Configurables import HltTrackUpgradeTool
+        from Configurables import L0ConfirmWithT
         
         RZVelo = GaudiSequencer('Hlt1RecoRZVeloSequence')
         RecoVelo = HltTrackUpgrade('Hlt1RecoVelo')
