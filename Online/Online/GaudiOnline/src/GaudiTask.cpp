@@ -313,6 +313,13 @@ int GaudiTask::startApplication()  {
     SmartIF<ISvcLocator> loc(m_subMgr);
     if ( 0 == m_handle )  {
       if ( ip && loc )  {
+	if ( 0 == m_incidentSvc ) {  // In case we were removed during stop(): reconnect
+	  if ( !loc->service("IncidentSvc",m_incidentSvc, true).isSuccess() )  {
+	    log << MSG::ERROR << "Failed to access incident service." << endmsg;
+	    return 0;
+	  }
+	  m_incidentSvc->addListener(this,"DAQ_ERROR");
+	}
 	StatusCode sc = m_subMgr->start();
 	if ( sc.isSuccess() )   {
 	  if ( ip->getProperty("Runable",nam).isSuccess() )  {

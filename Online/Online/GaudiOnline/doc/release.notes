@@ -1,6 +1,10 @@
 Package: GaudiOnline
 Author:  Markus Frank
 
+
+! 2009-03-11 Markus Frank
+ - GaudiTask.cpp Reconnect to incident service in start() if disconnected during stop()
+
 ! 2009-01-27 - Marco Cattaneo
  - Backward compatible fixes for Gaudi v21
 
