@@ -3,10 +3,11 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+
+!======================== TrackTools v3r16 2009-03-11 ========================
 ! 2009-03-11 - Stephanie Hansmann-Menzemer
 - add momentum computation for upstream tracks to TrackStateInitTool
 
-!======================== TrackTools v3r16 2009-03-10 ========================
 ! 2009-03-02 - Pavel Krokovny
 - New tool is implemented: "TrackStateInitTool"
   This tool re-initialize the track starting from LHCbIDs. It can be used to get

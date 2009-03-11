@@ -3,10 +3,11 @@
 ! Responsible : Mariusz Witek
 ! Purpose     : 
 !-----------------------------------------------------------------------------
-! - 2009-03-08 - Stephanie Hansmann-Menzemer
+
+!========================== PatVeloTT v3r6 2009-03-11 ========================
+! 2009-03-11 - Stephanie Hansmann-Menzemer
   - add interface to fit of PatVeloTT fit
 
-!========================== PatVeloTT v3r6 2009-03-10 ========================
 ! 2009-03-08 - Stephanie Hansmann-Menzemer
   - use pre configured fitter in steering script
 
