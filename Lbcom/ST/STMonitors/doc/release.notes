@@ -4,7 +4,10 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
-!======================= STMonitors v1r0 2009-03-10 ==========================
+!======================= STMonitors v1r0 2009-03-11 ==========================
+! 2009-03-11 - Marco Cattaneo
+ - Fix STZSMonitor compilation warnings about possible uninitialized variables
+
 ! 2009-03-10 - Marco Cattaneo
  - Clean up requirements for release
 

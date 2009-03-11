@@ -1,4 +1,4 @@
-// $Id: STZSMonitor.cpp,v 1.1.1.1 2009-03-02 19:13:44 mtobin Exp $
+// $Id: STZSMonitor.cpp,v 1.2 2009-03-11 07:19:00 cattanem Exp $
 // Include files 
 
 
@@ -141,13 +141,13 @@ StatusCode STZSMonitor::initialize() {
     
  
  
-  int m_stationMax;
-  int m_regionMax;
-  int m_layerMax;
-  int m_sectorMax;
-  std::string m_detRegion;
-  std::string m_station;
-  std::string m_layer;   
+  int m_stationMax=0;
+  int m_regionMax=0;
+  int m_layerMax=0;
+  int m_sectorMax=0;
+  std::string m_detRegion="Invalid";
+  std::string m_station="Invalid";
+  std::string m_layer="Invalid";   
    
   if(m_detType=="IT"){
     m_stationMax=3;
