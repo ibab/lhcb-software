@@ -1,6 +1,10 @@
 2009-03-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* cmt/requirements: separate the call to generateLogin for every shell type.
+	* cmt/requirements: release of version v2r6
+
+2009-03-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: separate the call to generateLogin for every shell type.	
 	* scripts/group_login.csh: New file.
 	* scripts/group_shell.csh: New file.
 	* scripts/group_shell.sh: New file.
