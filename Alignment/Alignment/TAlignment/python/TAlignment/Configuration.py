@@ -26,7 +26,7 @@ class TAlignment( LHCbConfigurableUser ):
         , "Detectors"                    : []                          # list of detectors to align
         , "ElementsToAlign"              : []                          # Elements to align
         , "UseLocalFrame"                : True                        # Use local frame?
-        , "NumIterations"                : 10                          # Number of iterations
+        , "NumIterations"                : 1                           # Number of iterations
         , "VertexLocation"               : ""                          # Location of input vertex list
         , "UseCorrelations"              : True                        # Correlations
         , "ApplyMS"                      : True                        # Multiple Scattering
@@ -76,8 +76,7 @@ class TAlignment( LHCbConfigurableUser ):
                 #              importOptions("$ALIGNTRTOOLS/options/AlignTrTools.py")
                     
 	if self.getProp("Method") == 'Kalman' :
-            print "****** setting up Kalman type alignemnt!"
-            print "Detector(s) to be aligned: ", self.getProp("Detectors")
+            print "****** setting up Kalman type alignment!"
             self.setProp("Incident", 'UpdateConstants')
             self.sequencers()
 
@@ -204,8 +203,6 @@ class TAlignment( LHCbConfigurableUser ):
         mainSeq.Members.append( self.alignmentSeq( self.getProp( "OutputLevel" ) ) )
 
         listOfCondToWrite = self.getProp( "WriteCondSubDetList" )
-        print "listOfCondToWrite: ", listOfCondToWrite
         if listOfCondToWrite:
-            print "hoi"
             mainSeq.Members.append( self.writeSeq( listOfCondToWrite ) )
         
