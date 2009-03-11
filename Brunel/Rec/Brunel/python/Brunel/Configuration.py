@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.68 2009-03-06 17:37:28 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.69 2009-03-11 22:12:30 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -538,7 +538,7 @@ class Brunel(LHCbConfigurableUser):
     def __apply_configuration__(self):
         
         GaudiKernel.ProcessJobOptions.PrintOff()
-        self.setOtherProps(RecSysConf(),["SpecialData","RecoSequence","Context","OutputType"])
+        self.setOtherProps(RecSysConf(),["SpecialData","RecoSequence","Context","OutputType","DataType"])
         self.defineGeometry()
         self.defineEvents()
         self.defineOptions()

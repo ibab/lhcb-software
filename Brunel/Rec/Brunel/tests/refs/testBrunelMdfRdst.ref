@@ -34,10 +34,11 @@
 # \----- (End of User Brunel/Brunel) -----------------------------------------------------------------
 # /***** User RecSysConf/RecSysConf ******************************************************************
 # |-ExpertHistos = False
+# |-DataType     = '2008'
+# |-OutputType   = 'RDST'  (default: '')
+# |-Context      = 'Offline'
 # |-RecoSequence = []  (default: [])
 # |-SpecialData  = []  (default: [])
-# |-Context      = 'Offline'
-# |-OutputType   = 'RDST'  (default: '')
 # \----- (End of User RecSysConf/RecSysConf) ---------------------------------------------------------
 # /***** User TrackSys/TrackSys **********************************************************************
 # |-ExpertTracking           = []  (default: [])
@@ -54,7 +55,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v34r2
-                                          running on lxbuild120.cern.ch on Wed Mar 11 17:55:30 2009
+                                          running on lxbuild120.cern.ch on Wed Mar 11 22:42:40 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -79,7 +80,7 @@ BrunelInit        SUCCESS ======================================================
 HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 RootHistSvc          INFO Writing ROOT histograms to: Brunel-histos.root
 HistogramPersis...   INFO Added successfully Conversion service:RootHistSvc
-HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r0/data/CaloPIDs_DC06_v2.root as CaloPIDs
+HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r1/data/CaloPIDs_DC09_v1.root as CaloPIDs
 InitCaloSeq          INFO Member list: GaudiSequencer/CaloBanksHandler, with context 'Offline'
 CaloBanksHandler     INFO Member list: GaudiSequencer/PrsBanksHandler, GaudiSequencer/EcalBanksHandler, GaudiSequencer/HcalBanksHandler, with context 'Offline'
 PrsBanksHandler      INFO Member list: CheckCaloBank/PrsCheckBanks, CaloDigitsFromRaw/PrsADCs, CaloTriggerBitsFromRawAlg/PrsL0Bit, CaloTriggerBitsFromRawAlg/SpdL0Bit, CaloFillPrsSpdRawBuffer/PrsSpdFillRawBuffer, bankKiller/RemovePrsPackedBanks, with context 'Offline'
@@ -158,30 +159,10 @@ MagneticFieldSv...   INFO Opened magnetic field file : /afs/cern.ch/lhcb/softwar
 MagneticFieldSv...   INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r2/cdf/field048.c4.vp.cdf
 MagneticFieldSv...   INFO Map scaled by factor 1
 TrackForwardPre...   INFO Member list: TrackStateInitAlg/InitForwardFit, TrackEventFitter/PreFitForward
-ToolSvc.PatVelo...   INFO Start generation of VeloTT Bdl LUTs
-ToolSvc.PatVelo...   INFO Generation of VeloTT Bdl LUTs finished
-ToolSvc.PatVelo...   INFO Start generation of VeloTT deflection LUTs
-ToolSvc.PatVelo...   INFO Generation of VeloTT deflection LUTs finished
-ToolSvc.PatVelo...   INFO  MaxXSize           = 660 mm
-ToolSvc.PatVelo...   INFO  MaxYSize           = 580 mm
-ToolSvc.PatVelo...   INFO  MaxXSlope          = 0.35
-ToolSvc.PatVelo...   INFO  MaxYSlope          = 0.3
-ToolSvc.PatVelo...   INFO  centralHoleSize    = 39 mm
-ToolSvc.PatVelo...   INFO  minMomentum        = 800 MeV
-ToolSvc.PatVelo...   INFO  maxPseudoChi2      = 10000
-ToolSvc.PatVelo...   INFO  distToMomentum     = 4.06932e-05
-ToolSvc.PatVelo...   INFO  zMidField          = 1891.11 mm
-ToolSvc.PatVelo...   INFO  xTolerance         = 0.35 mm
-ToolSvc.PatVelo...   INFO  xTolSlope          = 350 mm
-ToolSvc.PatVelo...   INFO  yTolerance         = 0.8 mm
-ToolSvc.PatVelo...   INFO  YTolSlope          = 0.2
-ToolSvc.PatVelo...   INFO  DxGroupTol         = 0.8 mm
-ToolSvc.PatVelo...   INFO  DxGroupFactor      = 0.25
-ToolSvc.PatVelo...   INFO  zMidTT             = 2485 mm
-ToolSvc.PatVelo...   INFO Start generation of VeloTT Bdl LUTs
-ToolSvc.PatVelo...   INFO Generation of VeloTT Bdl LUTs finished
-ToolSvc.PatVelo...   INFO Start generation of VeloTT deflection LUTs
-ToolSvc.PatVelo...   INFO Generation of VeloTT deflection LUTs finished
+ToolSvc.PatTTMa...   INFO Start generation of VeloTT Bdl LUTs
+ToolSvc.PatTTMa...   INFO Generation of VeloTT Bdl LUTs finished
+ToolSvc.PatTTMa...   INFO Start generation of VeloTT deflection LUTs
+ToolSvc.PatTTMa...   INFO Generation of VeloTT deflection LUTs finished
 ToolSvc.OTNoDri...   INFO Use drifttime           = 0
 ToolSvc.OTNoDri...   INFO Fit drifttime residuals = 0
 PreFitForward.F...   INFO
@@ -315,26 +296,6 @@ FitDownstream        INFO   Fitter name              : TrackMasterFitter/Fitter
 FitDownstream        INFO ==================================================
 FitDownstream        INFO
 TrackVeloTTPatSeq    INFO Member list: PatVeloTT
-PatVeloTT.PatVe...   INFO Start generation of VeloTT Bdl LUTs
-PatVeloTT.PatVe...   INFO Generation of VeloTT Bdl LUTs finished
-PatVeloTT.PatVe...   INFO Start generation of VeloTT deflection LUTs
-PatVeloTT.PatVe...   INFO Generation of VeloTT deflection LUTs finished
-PatVeloTT.PatVe...   INFO  MaxXSize           = 660 mm
-PatVeloTT.PatVe...   INFO  MaxYSize           = 580 mm
-PatVeloTT.PatVe...   INFO  MaxXSlope          = 0.35
-PatVeloTT.PatVe...   INFO  MaxYSlope          = 0.3
-PatVeloTT.PatVe...   INFO  centralHoleSize    = 39 mm
-PatVeloTT.PatVe...   INFO  minMomentum        = 800 MeV
-PatVeloTT.PatVe...   INFO  maxPseudoChi2      = 10000
-PatVeloTT.PatVe...   INFO  distToMomentum     = 4.06932e-05
-PatVeloTT.PatVe...   INFO  zMidField          = 1891.11 mm
-PatVeloTT.PatVe...   INFO  xTolerance         = 0.35 mm
-PatVeloTT.PatVe...   INFO  xTolSlope          = 350 mm
-PatVeloTT.PatVe...   INFO  yTolerance         = 0.8 mm
-PatVeloTT.PatVe...   INFO  YTolSlope          = 0.2
-PatVeloTT.PatVe...   INFO  DxGroupTol         = 0.8 mm
-PatVeloTT.PatVe...   INFO  DxGroupFactor      = 0.25
-PatVeloTT.PatVe...   INFO  zMidTT             = 2485 mm
 PatVeloTT.Fitter     INFO
 PatVeloTT.Fitter     INFO ============ TrackMasterFitter Settings ===========
 PatVeloTT.Fitter     INFO  Upstream fit
@@ -403,9 +364,9 @@ FindTrackClones      INFO Max Kullbeck Liebler Distance = 5000
 --- Reader       : - Default:
 --- Reader       :     V: "False" [verbose flag]
 --- Reader       :     Color: "True" [color flag (default on)]
-NeuralNetTmva        INFO The MVAnalysis_m_CFMlpANN.weights.txt weights file is at /afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r0/data/MVAnalysis_m_CFMlpANN.weights.txt
+NeuralNetTmva        INFO The MVAnalysis_m_CFMlpANN.weights.txt weights file is at /afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r1/data/MVAnalysis_m_CFMlpANN.weights.txt
 --- Reader       : Booking method tag "CFMlpANN method"
---- CFMlpANN     : Reading weight file: [1;34m/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r0/data/MVAnalysis_m_CFMlpANN.weights.txt[0m
+--- CFMlpANN     : Reading weight file: [1;34m/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r1/data/MVAnalysis_m_CFMlpANN.weights.txt[0m
 --- CFMlpANN     : Read method with name <CFMlpANN> and title <CFMlpANN>
 --- CFMlpANN     : Create VariableTransformation "None"
 --- CFMlpANN     : Use configuration (nodes per layer): in=8:8:8:2=out
@@ -421,9 +382,9 @@ NeuralNetTmva        INFO The MVAnalysis_m_CFMlpANN.weights.txt weights file is 
 --- Reader       : - Default:
 --- Reader       :     V: "False" [verbose flag]
 --- Reader       :     Color: "True" [color flag (default on)]
-NeuralNetTmva        INFO The MVAnalysis_pf_CFMlpANN.weights.txt weights file is at /afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r0/data/MVAnalysis_pf_CFMlpANN.weights.txt
+NeuralNetTmva        INFO The MVAnalysis_pf_CFMlpANN.weights.txt weights file is at /afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r1/data/MVAnalysis_pf_CFMlpANN.weights.txt
 --- Reader       : Booking method tag "CFMlpANN method"
---- CFMlpANN     : Reading weight file: [1;34m/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r0/data/MVAnalysis_pf_CFMlpANN.weights.txt[0m
+--- CFMlpANN     : Reading weight file: [1;34m/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r1/data/MVAnalysis_pf_CFMlpANN.weights.txt[0m
 --- CFMlpANN     : Read method with name <CFMlpANN> and title <CFMlpANN>
 --- CFMlpANN     : Create VariableTransformation "None"
 --- CFMlpANN     : Use configuration (nodes per layer): in=8:8:8:2=out
@@ -562,7 +523,7 @@ EcalChi22ID          INFO  Check Tracks: YES Rejected flags: [  'Invalid'  'Clon
 BremChi22ID          INFO  Check Tracks: YES Rejected flags: [  'Invalid'  'Clone'  'Backward' ] Accepted FitStatus: [ 'Fitted' ]; Accepted Types: [ 'Velo'  'Long'  'Upstream' ]; Rejected History: [];
 ClusChi22ID          INFO  Check Tracks: YES Rejected flags: [  'Invalid'  'Clone'  'Backward' ] Accepted FitStatus: [ 'Fitted' ]; Accepted Types: [ 'Long'  'Ttrack'  'Downstream' ]; Rejected History: [];
 PrsPIDe              INFO  Check Tracks: YES Rejected flags: [  'Invalid'  'Clone'  'Backward' ] Accepted FitStatus: [ 'Fitted' ]; Accepted Types: [ 'Long'  'Ttrack'  'Downstream' ]; Rejected History: [];
-RFileCnv             INFO opening Root file "/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r0/data/CaloPIDs_DC06_v2.root" for reading
+RFileCnv             INFO opening Root file "/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r1/data/CaloPIDs_DC09_v1.root" for reading
 BremPIDe             INFO  Check Tracks: YES Rejected flags: [  'Invalid'  'Clone'  'Backward' ] Accepted FitStatus: [ 'Fitted' ]; Accepted Types: [ 'Velo'  'Long'  'Upstream' ]; Rejected History: [];
 EcalPIDe             INFO  Check Tracks: YES Rejected flags: [  'Invalid'  'Clone'  'Backward' ] Accepted FitStatus: [ 'Fitted' ]; Accepted Types: [ 'Long'  'Ttrack'  'Downstream' ]; Rejected History: [];
 HcalPIDe             INFO  Check Tracks: YES Rejected flags: [  'Invalid'  'Clone'  'Backward' ] Accepted FitStatus: [ 'Fitted' ]; Accepted Types: [ 'Long'  'Ttrack'  'Downstream' ]; Rejected History: [];

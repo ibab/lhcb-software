@@ -7,12 +7,13 @@ Purpose: LHCb reconstruction program
  - Changes to requirements:
    . Add dependency to AppConfig v2r*, to pick up options for production
    . Add explicit use CASTOR from LCG_Interfaces for QMTests
+   . Use ParamFiles v8r1 (for DC09 Calo PIDs pdf)
 
  - Changes to Configurable
    . Bug fix: use RunRecordStream for writing FSR, not OutputFSRStream
      (was writing one FSR per event!)
    . Remove UseOracle option of Configurable, use DetCond() directly
-   . Pass DataType to L0Conf()
+   . Pass DataType to L0Conf() and RecSysConf()
 
  - Changes to Tests:
    . No longer disable FPE check for MergedPi0Rec, now fixed
