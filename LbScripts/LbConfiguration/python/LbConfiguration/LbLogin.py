@@ -42,7 +42,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.17 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.18 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -682,7 +682,7 @@ class LbLoginScript(Script):
                 outf.close()
         else :
             if not os.path.exists(cachefile) :
-                log.debug("Cache file % doesn't exist" % cachefile)
+                log.debug("Cache file %s doesn't exist" % cachefile)
                 log.debug("Calling SetupProject directly")
 
             setupprojargs=[]

@@ -1,5 +1,6 @@
 2009-03-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbConfiguration/LbLogin.py: fixed debug message format
 	* scripts/generateLogin: removed SITEROOT from the cache
 
 2009-03-11  Marco Clemencic  <Marco.Clemencic@cern.ch>
