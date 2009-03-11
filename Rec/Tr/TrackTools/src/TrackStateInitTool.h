@@ -11,6 +11,8 @@
 #include "TrackInterfaces/ITrackManipulator.h"
 #include "TrackInterfaces/IMaterialLocator.h"
 #include "TrackInterfaces/IMeasurementProvider.h"
+#include "TrackInterfaces/IPatVeloTTFit.h"
+
 // from LHCb
 #include "LHCbMath/LHCbMath.h"
 
@@ -53,10 +55,14 @@ public:
 protected:
   StatusCode createTStationStates(LHCb::Track& track) const;
   StatusCode createVeloStates(LHCb::Track& track ) const ;
+  StatusCode createVeloTTStates(LHCb::Track& track ) const ;
   
 private:
   IPatSeedFit* m_seedFit ;
-  ITrackFitter* m_veloFitter ;
+  ITrackFitter* m_veloFitter ;  
+  IPatVeloTTFit* m_veloTTFit;
+
+
   ITrackExtrapolator* m_extrapolator;
   } ;
 

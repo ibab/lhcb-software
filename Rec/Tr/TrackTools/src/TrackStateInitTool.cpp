@@ -23,6 +23,7 @@ StatusCode TrackStateInitTool::initialize()
   StatusCode sc = GaudiTool::initialize();
   m_seedFit = tool<IPatSeedFit>( "PatSeedFit" );
   m_veloFitter = tool<ITrackFitter>("Tf::PatVeloFitLHCbIDs", "FitVelo", this) ;
+  m_veloTTFit = tool<IPatVeloTTFit>("PatVeloTTFit");
   m_extrapolator = tool<ITrackExtrapolator>("TrackMasterExtrapolator", 
 					    "Extrapolator",this);
   return sc ;
@@ -50,9 +51,10 @@ StatusCode TrackStateInitTool::fit( LHCb::Track& track, bool clearStates ) const
       LHCb::Track::ExtraInfo extraInfo = track.extraInfo();
 
       const SmartRefVector<LHCb::Track>& ancestors = track.ancestors();      
-
-      createVeloStates( track ).ignore() ;
       
+      StatusCode sc = createVeloStates( track );
+      if( sc.isFailure() ) Warning("TrackStateInitTool fit Velo failed",sc,0).ignore();
+
       track.clearAncestors();
 
       // copy the ancestors
@@ -67,12 +69,19 @@ StatusCode TrackStateInitTool::fit( LHCb::Track& track, bool clearStates ) const
   track.setType(savedType);
   track.setFlags(flags);
 
+  // set momentum for veloTT tracks
+  if(savedType == LHCb::Track::Upstream) {
+      StatusCode sc = createVeloTTStates( track );
+      if( sc.isFailure() ) Warning("TrackStateInitTool fit TT failed",sc,0).ignore();
+  }
+
   // set the T-station states
   if(savedType == LHCb::Track::Long ||
      savedType == LHCb::Track::Downstream ||
-     savedType == LHCb::Track::Ttrack)
-    createTStationStates( track ).ignore() ;
-  
+     savedType == LHCb::Track::Ttrack){
+      StatusCode sc = createTStationStates( track ) ;
+      if( sc.isFailure() ) Warning("TrackStateInitTool fit T failed",sc,0).ignore();
+  }
     return StatusCode::SUCCESS ;
 } ;
 
