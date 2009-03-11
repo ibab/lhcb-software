@@ -8,6 +8,7 @@
   <class name    = "IPatForwardTool"         />
   <class name    = "IPatSeedFit"             />
   <class name    = "IPatSeedingTool"         />
+  <class name    = "IPatVeloTTFit"           />
   <class name    = "IPromoteClusters"        />
   <class name    = "IPtTransporter"          />
   <class name    = "IPVOfflineTool"          />
