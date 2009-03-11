@@ -11,12 +11,12 @@ while ($nar <= $narg)
      @ nar = ${nar} + 1
      set version = $argv[${nar}]
   else if ("$argv[${nar}]" == "-h") then
-     echo "Usage : lhcb-proxy-info [-h] [-t] [-d dirac_version]"
+     echo "Usage : lhcb-proxy-info [-h] [--dev] [-d dirac_version]"
      echo "      -h : provide this help"
-     echo "      -t : to use the Dirac version which is DEV"
+     echo "      --dev : to use the Dirac version which is DEV"
      echo "      -d : to specify which version of DIRAC you want to use"
      exit 0
-  else if ("$argv[${nar}]" == "-t") then
+  else if ("$argv[${nar}]" == "--dev") then
      set dirac_dev = " --dev"
      @ nar = ${nar} + 1
   else
