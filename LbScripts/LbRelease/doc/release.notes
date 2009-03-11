@@ -1,3 +1,8 @@
+2009-03-11  Joel Closier  <joel.closier@cern.ch>
+
+	* scripts/lhcb-proxy-in(it/fo) : add the option --dev to let the user test the DEV area for DIRAC
+
+	
 2009-02-27  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/startNightlies.bat: fixed the argument list of the wrapper as well
