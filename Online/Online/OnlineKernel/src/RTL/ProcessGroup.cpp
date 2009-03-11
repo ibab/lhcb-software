@@ -65,10 +65,10 @@ int ProcessGroup::wait(int flag)    {
     do {
       pid = waitpid(0,&status,opt);
     } while (pid == -1 && errno == EINTR);
-    if ( pid > 0 ) {
+    if ( pid != -1 ) {
       Process* p = get(pid);
-      if ( Process::debug() ) {
-	cout << "Process " << p->name() << " ended.";
+      if ( p && Process::debug() ) {
+	cout << "Process " << p->name() << " ended. Status=" << status;
 	if ( !p->output().empty() ) cout << " output redirected to:" << p->output();
 	cout << endl;
       }

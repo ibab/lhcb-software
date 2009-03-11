@@ -56,20 +56,20 @@ extern "C" int mep_test(int /* ac  */, char** /* av */)  {
   Process* prod=new Process("Mep_0",command(),a13,"/dev/null");
   prod->start();
   ::lib_rtl_sleep(4000);
-  prod->wait();
+  prod->wait(Process::WAIT_BLOCK);
   delete prod;
   cout << "Producer finished work.. " << endl;
   ::lib_rtl_sleep(4000);
   Process* summary=new Process("Summary_0",command(),a14);
   summary->start();
-  summary->wait();
+  summary->wait(Process::WAIT_BLOCK);
   delete summary;
   cout << "Summary task finished work.. " << endl;
 
   ::lib_rtl_sleep(3000);
   for(int i=11; i>=0; --i) p[i]->stop();
   ::lib_rtl_sleep(1000);
-  for(int i=11; i>=0; --i) p[i]->wait();
+  for(int i=11; i>=0; --i) p[i]->wait(Process::WAIT_BLOCK);
   cout << "All processes finished work.. " << endl;
   ::lib_rtl_sleep(1000);
 
