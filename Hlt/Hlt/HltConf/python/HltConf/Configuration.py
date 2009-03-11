@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.53 2009-03-11 16:05:40 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.54 2009-03-11 17:31:04 depaula Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -60,7 +60,7 @@ class HltConf(LHCbConfigurableUser):
                 from HltConf.HltL0Candidates import decodeL0Channels
                 channels = decodeL0Channels( L0TCK )
             else :
-                channels = [ 'Muon','DiMuon','MuonNoGlob','Electron','Photon','Hadron' ,'LocalPi0','GlobalPi0' ]
+                channels = [ 'MuonNoGlob','DiMuon','Muon,lowMult','DiMuon,lowMult','Electron','Photon','Hadron' ,'LocalPi0','GlobalPi0' ]
             from HltConf.HltL0Candidates import setupL0Channels
             setupL0Channels( channels ) 
 
@@ -172,7 +172,7 @@ class HltConf(LHCbConfigurableUser):
                         , ( '.*IgnoreLumi.*'   , 'IgnoreLumi' )
                         , ( '.*Global.*'       , 'Global' )
                         ] 
-        for i in [ 'XPress','Hadron','SingleMuon','DiMuon','MuonTrack','Lumi','Velo','Electron','Pho' ] :
+        for i in [ 'XPress','Hadron','SingleMuon','DiMuon','MuTrack','Lumi','Velo','Electron','Pho' ] :
             groupingRules.append( ( 'Hlt1.*'+i+'.*Decision' ,  i ) )
 
         grouping = { }
