@@ -1,17 +1,14 @@
-! $Id: release.notes,v 1.132 2009-03-11 19:05:40 vegorych Exp $
+! $Id: release.notes,v 1.133 2009-03-11 20:17:36 cattanem Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
-!========================== CaloReco v4r19 2009-03-11 ===================
-
+!========================== CaloReco v4r18 2009-03-11 =========================
 ! 2009-03-11 - Victor Egorychev
  - CaloPIDs_DC09_v1.root file with new PDF for DC09 in BrunelPID.opts and CaloPIDs.opt 
- - version was increased
 
-!========================== CaloReco v4r18 2009-03-10 =========================
 ! 2009-03-10 - Marco Cattaneo
  - Clean up messages in CaloMergedPi0Alg:
    . Protect debug() with MsgLevel(MSG::DEBUG)
