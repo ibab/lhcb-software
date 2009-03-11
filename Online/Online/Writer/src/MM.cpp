@@ -39,6 +39,7 @@ MM::MM()
   pthread_cond_init(&m_emptyCondition, NULL);
   m_sendPointer = NULL;
   m_queueLength = 0;
+  m_queueSize = 0;
   m_allocCmdCount = 0;
   m_allocByteCount = 0;
 }
@@ -62,6 +63,9 @@ MM::~MM()
  */
 struct cmd_header* MM::allocAndCopyCommand(struct cmd_header *header, void *data)
 {
+  if(m_queueSize > (2 << 30)) {
+      return NULL;
+  }
   struct cmd_header *newHeader;
   void *newData;
   int dataSize = 0;
@@ -78,6 +82,9 @@ struct cmd_header* MM::allocAndCopyCommand(struct cmd_header *header, void *data
 
   newHeader = (struct cmd_header*)malloc_blocking(dataSize + sizeof(struct cmd_header));
   newData = ((unsigned char*)newHeader) + sizeof(struct cmd_header);
+  
+  m_queueSize += datasize + sizeof(struct cmd_header);
+  
   if(newHeader) {
     pthread_mutex_lock(&m_allocLock);
     MM::m_allocByteCount+=dataSize + sizeof(struct cmd_header);
@@ -130,6 +137,10 @@ void MM::freeCommand(struct cmd_header *cmd)
  */
 void MM::enqueueCommand(struct cmd_header *cmd)
 {
+  if(cmd == NULL) {
+      return; // should only be the case when allocAndCopyCommand
+              // return NULL because the m_queueSize was too big
+  }
   struct list_head *newElem;
 
   newElem = (struct list_head *)malloc_blocking(sizeof(struct list_head));

@@ -45,6 +45,9 @@ namespace LHCb {
 
       /// The number of elements in the queue.
       unsigned int m_queueLength;
+      
+      /// The current size of the elements in the queue
+      size_t m_queueSize;
 
       /// A condition variable to enable the sender thread to sleep on.
       pthread_cond_t m_emptyCondition;
