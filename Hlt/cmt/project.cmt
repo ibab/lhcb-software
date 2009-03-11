@@ -1,8 +1,6 @@
 project HLT
 
 use LHCB  LHCB_v26r2
-use REC   REC_v6r2
-use LBCOM LBCOM_v6r26
 
 build_strategy with_installarea
 setup_strategy root
