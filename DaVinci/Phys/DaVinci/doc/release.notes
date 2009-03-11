@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.320 2009-03-10 10:45:50 pkoppenb Exp $
+! $Id: release.notes,v 1.321 2009-03-11 17:56:30 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -9,16 +9,16 @@
 !
 !-----------------------------------------------------------------------------
 
-<<<<<<< release.notes
+! 2009-03-11 - Patrick Koppenburg
+ - ReadETC.py : no need to include GaudiPoolDB.
+
 !========================== DaVinci v22r1p1 2000-03-10 =====================
 ! 2009-03-10 - Patrick Koppenburg
  - Tag as v22r1p1 for Panoramix.
 
-=======
 ! 2009-03-09 - Marco Cattaneo
  - Remove UseOracle option. Set directly CondDB().UseOracle option if needed
 
->>>>>>> 1.319
 ! 2009-03-04 - Patrick Koppenburg
  - Do not impose MessageSvc format
  - Small changes for DB access
