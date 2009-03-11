@@ -1,8 +1,11 @@
-// $Id: HcalEnergyForTrack.cpp,v 1.4 2008-05-13 12:25:51 odescham Exp $
+// $Id: HcalEnergyForTrack.cpp,v 1.5 2009-03-11 19:05:40 vegorych Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2008/05/13 12:25:51  odescham
+// restore _setProperty()
+//
 // Revision 1.3  2008/01/24 10:22:42  vegorych
 // _setProperty was removed, AddNeigbours warning was solved
 //
@@ -36,7 +39,7 @@ protected:
   {
     _setProperty ( "DataAddress"   , LHCb::CaloDigitLocation::Hcal ) ;
     _setProperty ( "MorePlanes"    , "5"    ) ; ///  3 additional planes 
-    _setProperty ( "AddNeigbours"  , "true" ) ;  
+    _setProperty ( "AddNeigbours"  , "false" ) ;  
     _setProperty ( "Tolerance"     , "15"   ) ; /// 15 * Gaudi::Units::mm  
     _setProperty ( "Calorimeter"   , DeCalorimeterLocation::Hcal   ) ;
   } ;
