@@ -5,6 +5,7 @@ Purpose: LHCb Digitization program
 
 ! 2009-03-10 - Marco Cattaneo
  - Explicitly use CASTOR from LCG_Interfaces for QMTests
+ - Use ParamFiles v8r1
 
 ! 2009-03-05 - Marco Cattaneo
  - Remove UseOracle flag, set it directly in CondDB configurable
