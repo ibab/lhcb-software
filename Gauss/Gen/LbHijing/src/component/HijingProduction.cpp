@@ -119,11 +119,15 @@ StatusCode HijingProduction::generateEvent( HepMC::GenEvent * theEvent ,
   for ( HepMC::GenEvent::particle_iterator p = theEvent -> particles_begin() ;
         p != theEvent -> particles_end() ; ++p ) {
     HepMC::FourVector newMom ;
-    newMom.setX( (*p) -> momentum() . x() * Gaudi::Units::GeV ) ;
-    newMom.setY( (*p) -> momentum() . y() * Gaudi::Units::GeV ) ;
-    newMom.setZ( (*p) -> momentum() . z() * Gaudi::Units::GeV ) ;
-    newMom.setT( (*p) -> momentum() . t() * Gaudi::Units::GeV ) ;
+    newMom.setX( (*p) -> momentum() . px() * Gaudi::Units::GeV ) ;
+    newMom.setY( (*p) -> momentum() . py() * Gaudi::Units::GeV ) ;
+    newMom.setZ( (*p) -> momentum() . pz() * Gaudi::Units::GeV ) ;
+    newMom.setT( (*p) -> momentum() . e() * Gaudi::Units::GeV ) ;
     (*p) -> set_momentum( newMom );
+    // Change generated mass 
+    (*p) -> 
+      set_generated_mass( (*p) -> generated_mass() * Gaudi::Units::GeV ) ;
+    
   }
   
   // Not really needed since all particles come from (0,0,0,0)
