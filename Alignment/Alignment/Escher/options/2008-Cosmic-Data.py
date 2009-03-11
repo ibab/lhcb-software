@@ -14,21 +14,32 @@ LHCbApp().DDDBtag   = "default"
 LHCbApp().CondDBtag = "default"
 
 # Latest cosmic run, with CALO, OT and (!!) RICH2 (35569 events)
-datasetName = "025941_0000061136"
-EventSelector().Input = ["DATAFILE='PFN:/data/data/" + datasetName + ".raw'  SVC='LHCb::MDFSelector'"]
+Escher().DatasetName = 'Cosmics'
 
-# Default output files names are set up using value Brunel().DatasetName property
-Escher().DatasetName = datasetName
-Escher().InputType = "MDF"
+# wouter's dsts
+Escher().InputType = 'DST'
+data = [
+    'PFN:castor:/castor/cern.ch/user/w/wouter/otcosmics/run34083.dst',
+    'PFN:castor:/castor/cern.ch/user/w/wouter/otcosmics/run34117.dst',
+    'PFN:castor:/castor/cern.ch/user/w/wouter/otcosmics/run34120.dst'
+    ]
 
-# Redefine defaults by uncommenting one or more of options below 
+EventSelector().Input = []
+for d in data:
+    name = "DATAFILE='" + d + "' TYP='POOL_ROOTTREE' OPT='READ'" 
+    EventSelector().Input.append( name )
 
-# Monitoring histograms
-#HistogramPersistencySvc().OutputFile = "SomeFile.root"
+EventSelector().PrintFreq = 100
+Escher().PrintFreq = 100
 
-#-- Dst or rDst file
-#OutputStream("DstWriter").Output = "DATAFILE='PFN:someFile.dst' TYP='POOL_ROOTTREE' OPT='REC'"
-#OutputStream("DstWriter").Output = "DATAFILE='PFN:someFile.rdst' TYP='POOL_ROOTTREE' OPT='REC'"
+# do not do the TES check because these data do not have the required lists
+GaudiSequencer("InitReprocSeq").Enable = False
 
-#-- ETC output in case of ETC input
-#TagCollectionSvc("EvtTupleSvc").Output = [ "EVTTAGS2 DATAFILE='some-etc.root' TYP='POOL_ROOTTREE' OPT='RECREATE' " ]
+# raw data
+#Escher().InputType = 'MDF'
+#data = [
+#   'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/34120/034120_0000085567.raw' ]
+#EventSelector().Input = []
+#for d in data:
+#    name = "DATAFILE='" + d + "' SVC='LHCb::MDFSelector'"
+#    EventSelector().Input.append( name )
