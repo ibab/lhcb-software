@@ -1,7 +1,10 @@
+2009-03-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v2r5
+
 2009-03-11  Joel Closier  <joel.closier@cern.ch>
 
 	* scripts/lhcb-proxy-in(it/fo) : add the option --dev to let the user test the DEV area for DIRAC
-
 	
 2009-02-27  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
