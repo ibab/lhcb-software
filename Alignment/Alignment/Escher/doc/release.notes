@@ -4,6 +4,9 @@ Package Coordinator : Johan Blouw
 Purpose : Gaudi application used to perform 
           alignment of the LHCb detector components
 
+- 11/03/2009: Wouter Hulsbergen
+  - changes and cleanup to get some working examples. See options/AlignOTCosmics and options/AlignVeloHalves for details.
+
 </PRE><H1><A NAME=v3r0>2009-02-21 Escher v3r0</A></H1><PRE>
 - 21/02/2009: Johan Blouw
   . pythonized Escher
