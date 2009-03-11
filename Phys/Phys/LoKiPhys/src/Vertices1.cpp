@@ -1,4 +1,4 @@
-// $Id: Vertices1.cpp,v 1.11 2008-10-31 17:27:46 ibelyaev Exp $
+// $Id: Vertices1.cpp,v 1.12 2009-03-11 17:24:13 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -63,10 +63,44 @@ LoKi::Vertices::VertexDistance::result_type
 LoKi::Vertices::VertexDistance::distance  
 ( LoKi::Vertices::VertexDistance::argument v ) const 
 {
-  if ( !valid() ) { Warning("VertexHiolder bas eis invalid!") ; }
+  if ( !valid() ) { Warning("VertexHiolder base is invalid!") ; }
   if ( 0 != v ) {  return ( v->position() - this->position()).R() ; } //RETURN 
   Error ( " Invalid Vertex, return 'InvalidDistance'") ;
   return LoKi::Constants::InvalidDistance ;      // RETURN 
+}
+// ============================================================================
+LoKi::Vertices::VertexDeltaZ::result_type 
+LoKi::Vertices::VertexDeltaZ::deltaZ
+( LoKi::Vertices::VertexDeltaZ::argument v ) const
+{
+  if ( 0 == v ) 
+  {
+    Error ( " Invalid Vertex, return 'InvalidDistance'") ;
+    return LoKi::Constants::InvalidDistance ;      // RETURN 
+  }
+  if ( !valid() ) 
+  { 
+    Warning("VertexHolder base is invalid, return 'InvalidDistance'") ; 
+    return LoKi::Constants::InvalidDistance ;      // RETURN 
+  }
+  return v->position().Z() - this->position().Z() ;
+}
+// ============================================================================
+LoKi::Vertices::VertexAbsDeltaZ::result_type 
+LoKi::Vertices::VertexAbsDeltaZ::absDeltaZ
+( LoKi::Vertices::VertexAbsDeltaZ::argument v ) const
+{
+  if ( 0 == v ) 
+  {
+    Error ( " Invalid Vertex, return 'InvalidDistance'") ;
+    return LoKi::Constants::InvalidDistance ;      // RETURN 
+  }
+  if ( !valid() ) 
+  { 
+    Warning("VertexHolder base is invalid, return 'InvalidDistance'") ; 
+    return LoKi::Constants::InvalidDistance ;      // RETURN 
+  }
+  return std::fabs ( v->position().Z() - this->position().Z() ) ;
 }
 // ============================================================================
 LoKi::Vertices::VertexSignedDistance::result_type 

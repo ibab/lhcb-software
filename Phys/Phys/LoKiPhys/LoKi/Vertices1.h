@@ -1,4 +1,4 @@
-// $Id: Vertices1.h,v 1.13 2008-11-02 20:13:32 ibelyaev Exp $
+// $Id: Vertices1.h,v 1.14 2009-03-11 17:24:13 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_VERTICES1_H 
 #define LOKI_VERTICES1_H 1
@@ -104,6 +104,7 @@ namespace LoKi
     class VertexSignedDistance : public LoKi::Vertices::VertexDistance 
     {
     public:
+      // ======================================================================
       /// constructor 
       VertexSignedDistance 
       ( const LHCb::VertexBase*  vertex ) 
@@ -135,12 +136,110 @@ namespace LoKi
        *  @return the estimate of the distance between vertex and the 'vertex'
        */
       result_type signedDistance   ( argument v ) const ;
-      // =====================================================================
+      // ======================================================================
     private :
-      // =====================================================================
+      // ======================================================================
       /// default constructor is private 
       VertexSignedDistance();
-      // =====================================================================
+      // ======================================================================
+    };
+    // ========================================================================
+    /** @class VertexDeltaZ 
+     *  Trivial functor to evaluate the delta-Z with respect to "the vertex"
+     *  @see LoKi::Cuts::VDZ 
+     *  @author Vanya BELYAEV Ivan.Belyaev@inkhef.nl
+     *  @date 2009-03-11
+     */
+    class VertexDeltaZ : public LoKi::Vertices::VertexDistance 
+    {
+    public:
+      // ======================================================================
+      /// constructor 
+      VertexDeltaZ 
+      ( const LHCb::VertexBase*  vertex ) 
+        : LoKi::Vertices::VertexDistance( vertex ) {}
+      /// constructor 
+      VertexDeltaZ 
+      ( const LoKi::Point3D& vertex )       
+        : LoKi::Vertices::VertexDistance( vertex  ) {}
+      /// constructor 
+      VertexDeltaZ  
+      ( const LoKi::Vertices::VertexHolder& base ) 
+        : LoKi::Vertices::VertexDistance( base   ) {}
+      /// destructor 
+      virtual ~VertexDeltaZ() {}
+      /// clone method (mandatory!)
+      virtual VertexDeltaZ* clone() const 
+      { return new VertexDeltaZ ( *this ) ; }
+      /** the only one essential method 
+       *  @param v pointer to the vertex 
+       *  @return the estimate of the distance between vertex and the 'vertex'
+       */
+      virtual result_type operator() ( argument v ) const 
+      { return deltaZ ( v ) ; }
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const 
+      { return s << "VDZ" ; }
+      /** the only one essential method 
+       *  @param p pointer to the vertex 
+       *  @return the estimate of the distance between vertex and the 'vertex'
+       */
+      result_type deltaZ( argument v ) const ;
+      // ======================================================================
+    private :
+      // ======================================================================
+      /// default constructor is private 
+      VertexDeltaZ();                         // default constructor is private 
+      // ======================================================================
+    };
+    // ========================================================================
+    /** @class VertexAbsDeltaZ 
+     *  Trivial functor to evaluate the abs(deltaZ) with respect to "the vertex"
+     *  @see LoKi::Cuts::VABSDZ 
+     *  @author Vanya BELYAEV Ivan.Belyaev@inkhef.nl
+     *  @date 2009-03-11
+     */
+    class VertexAbsDeltaZ : public LoKi::Vertices::VertexDeltaZ
+    {
+    public:
+      // ======================================================================
+      /// constructor 
+      VertexAbsDeltaZ 
+      ( const LHCb::VertexBase*  vertex ) 
+        : LoKi::Vertices::VertexDeltaZ ( vertex ) {}
+      /// constructor 
+      VertexAbsDeltaZ 
+      ( const LoKi::Point3D& vertex )       
+        : LoKi::Vertices::VertexDeltaZ ( vertex  ) {}
+      /// constructor 
+      VertexAbsDeltaZ  
+      ( const LoKi::Vertices::VertexHolder& base ) 
+        : LoKi::Vertices::VertexDeltaZ ( base   ) {}
+      /// destructor 
+      virtual ~VertexAbsDeltaZ() {}
+      /// clone method (mandatory!)
+      virtual VertexAbsDeltaZ* clone() const 
+      { return new VertexAbsDeltaZ ( *this ) ; }
+      /** the only one essential method 
+       *  @param v pointer to the vertex 
+       *  @return the estimate of the distance between vertex and the 'vertex'
+       */
+      virtual result_type operator() ( argument v ) const 
+      { return absDeltaZ ( v ) ; }
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const 
+      { return s << "VABSDZ" ; }
+      /** the only one essential method 
+       *  @param p pointer to the vertex 
+       *  @return the estimate of the distance between vertex and the 'vertex'
+       */
+      result_type absDeltaZ ( argument v ) const ;
+      // ======================================================================
+    private :
+      // ======================================================================
+      /// default constructor is private 
+      VertexAbsDeltaZ();                      // default constructor is private 
+      // ======================================================================
     };
     // ========================================================================    
     /** @class VertexChi2Distance

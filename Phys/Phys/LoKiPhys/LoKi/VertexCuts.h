@@ -1,4 +1,4 @@
-// $Id: VertexCuts.h,v 1.11 2008-06-20 10:05:59 ibelyaev Exp $
+// $Id: VertexCuts.h,v 1.12 2009-03-11 17:24:13 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_VERTEXCUTS_H 
 #define LOKI_VERTEXCUTS_H 1
@@ -36,6 +36,27 @@ namespace LoKi
 {
   namespace Cuts 
   {   
+    // ========================================================================    
+    /** @typedef VABSDZ 
+     *  Simple evaluator of abs(Delta-Z) with the reference vertex or point 
+     *  
+     *  @code
+     *
+     *  const LHCb::VertexBase* primary = ... ;
+     *  const VABSDZ absDZ = VABSDZ ( primary ) ; 
+     *
+     *  const LHCb::VertexBase* vertex = ... ;
+     *
+     *  const double absDeltaZ = absDZ ( vertex ) ;
+     *
+     *  @endcode
+     * 
+     *  @see LoKi::Vertices::VertexDeltaZ 
+     *
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    typedef  LoKi::Vertices::VertexAbsDeltaZ                           VABSDZ ;
     // ========================================================================
     /** @var VALL
      *  the trivial functor which always evaluates to "true"
@@ -115,6 +136,27 @@ namespace LoKi
      *  @date 2006-02-15
      */
     const LoKi::Valid<const LHCb::VertexBase*>                     VVALID ;
+    // ========================================================================
+    /** @typedef VDZ 
+     *  Simple evaluator of 'Delta-Z' with the reference vertex or point 
+     *  
+     *  @code
+     *
+     *  const LHCb::VertexBase* primary = ... ;
+     *  const VDZ dz = VDZ ( primary ) ; 
+     *
+     *  const LHCb::VertexBase* vertex = ... ;
+     *
+     *  const double deltaZ = dz ( vertex ) ;
+     *
+     *  @endcode
+     * 
+     *  @see LoKi::Vertices::VertexDeltaZ 
+     *
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    typedef  LoKi::Vertices::VertexDeltaZ                                 VDZ ;
     // ========================================================================
     /** @var PRIMARY
      *     

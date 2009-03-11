@@ -1,4 +1,4 @@
-// $Id: PhysSources.h,v 1.3 2008-03-30 13:43:36 ibelyaev Exp $
+// $Id: PhysSources.h,v 1.4 2009-03-11 17:24:13 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSSOURCES_H 
 #define LOKI_PHYSSOURCES_H 1
@@ -41,8 +41,11 @@ namespace LoKi
     class SourceTES 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Source 
     { 
+      // ======================================================================
       typedef LoKi::BasicFunctors<const LHCb::Particle*>::Source _Source;
+      // ======================================================================
     public:
+      // ======================================================================
       /// constructor from the service, TES location and cuts 
       SourceTES 
       ( const std::string&           path                                 , 
@@ -95,16 +98,22 @@ namespace LoKi
       virtual result_type operator() () const ;
       /// OPTIONAL: the nice printout
       virtual std::ostream& fillStream ( std::ostream& o ) const ;
+      // ======================================================================
     private:
-      // the default constructor is disabled 
-      SourceTES() ; ///< the default constructor is disabled 
+      // ======================================================================
+      /// the default constructor is disabled 
+      SourceTES() ; // the default constructor is disabled 
+      // ======================================================================
     public:
+      // ======================================================================
       /// get the path 
       const std::vector<std::string>& paths() const { return m_path ; }
       /// get the service
       const LoKi::Interface<IDataProviderSvc>& dataSvc() const 
       { return m_dataSvc ; }      
+      // ======================================================================
     public:
+      // ======================================================================
       /// set the  paths
       void setPaths  ( const std::vector<std::string>& value ) { m_path = value ; }
       /// set the  paths
@@ -115,17 +124,22 @@ namespace LoKi
       /// set the  service 
       void setDataSvc ( const LoKi::Interface<IDataProviderSvc>& value ) 
       { m_dataSvc = value ; }
+      // ======================================================================
     private:
+      // ======================================================================
       /// get the particles from the certain  TES location 
       std::size_t get ( const std::string&           location , 
                         LHCb::Particle::ConstVector& output   ) const ;
+      // ======================================================================
     private:
-      // TES locations of Particles 
-      std::vector<std::string>  m_path ; ///< TES locations of HepMC events 
+      // ======================================================================
+      /// TES locations of Particles 
+      std::vector<std::string>  m_path ; // TES locations of Particles 
       /// data provder service 
       mutable LoKi::Interface<IDataProviderSvc>  m_dataSvc ;
       /// 'on-flight' filter
       LoKi::PhysTypes::Cut m_cut ;
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class SourceDesktop
@@ -139,8 +153,11 @@ namespace LoKi
     class SourceDesktop
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Source 
     { 
+      // ======================================================================
       typedef LoKi::BasicFunctors<const LHCb::Particle*>::Source _Source;
+      // ======================================================================
     public:
+      // ======================================================================
       /// constructor from the desktop and cuts 
       SourceDesktop 
       ( const IPhysDesktop*          desktop = 0                          , 
@@ -169,11 +186,15 @@ namespace LoKi
       virtual result_type operator() () const ;
       /// OPTIONAL: the nice printout
       virtual std::ostream& fillStream ( std::ostream& o ) const ;
+      // ======================================================================
     public:
+      // ======================================================================
       /// get the desktop
       const LoKi::Interface<IPhysDesktop>& desktop() const 
       { return m_desktop ; }      
+      // ======================================================================
     public:
+      // ======================================================================
       /// set the  desktop
       void setDesktop ( const                 IPhysDesktop*  value ) 
       { m_desktop = value ; }
@@ -182,17 +203,21 @@ namespace LoKi
       { m_desktop = value ; }
       /// set the  desktop
       void setDesktop ( const                 DVAlgorithm*   value ) ;
+      // ======================================================================
     private:
+      // ======================================================================
       /// data provder service 
       mutable LoKi::Interface<IPhysDesktop>  m_desktop ;
       /// 'on-flight' filter
       LoKi::PhysTypes::Cut m_cut ;
+      // ======================================================================
     } ;    
     // ========================================================================
   } // end of namespace LoKi::Particles  
   // ==========================================================================
   namespace Vertices 
   {
+    // ========================================================================
     /** @class SourceTES 
      * 
      *  @see LoKi::Cuts::VSOURCE
@@ -203,8 +228,11 @@ namespace LoKi
     class SourceTES 
       : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Source 
     { 
+      // ======================================================================
       typedef LoKi::BasicFunctors<const LHCb::VertexBase*>::Source _Source;
+      // ======================================================================
     public:
+      // ======================================================================
       /// constructor from the service, TES location and cuts 
       SourceTES 
       ( const std::string&            path                                 , 
@@ -257,16 +285,22 @@ namespace LoKi
       virtual result_type operator() () const ;
       /// OPTIONAL: the nice printout
       virtual std::ostream& fillStream ( std::ostream& o ) const ;
+      // ======================================================================
     private:
-      // the default constructor is disabled 
-      SourceTES() ; ///< the default constructor is disabled 
+      // ======================================================================
+      /// the default constructor is disabled 
+      SourceTES() ;                      // the default constructor is disabled 
+      // ======================================================================
     public:
+      // ======================================================================
       /// get the path 
       const std::vector<std::string>& paths() const { return m_path ; }
       /// get the service
       const LoKi::Interface<IDataProviderSvc>& dataSvc() const 
       { return m_dataSvc ; }      
+      // ======================================================================
     public:
+      // ======================================================================
       /// set the  paths
       void setPaths  ( const std::vector<std::string>& value ) { m_path = value ; }
       /// set the  paths
@@ -277,18 +311,23 @@ namespace LoKi
       /// set the  service 
       void setDataSvc ( const LoKi::Interface<IDataProviderSvc>& value ) 
       { m_dataSvc = value ; }
+      // ======================================================================
     private:
+      // ======================================================================
       /// get the particles from the certain  TES location 
       std::size_t get
       ( const std::string&             location , 
         LHCb::VertexBase::ConstVector& output   ) const ;
+      // ======================================================================
     private:
-      // TES locations of Particles 
-      std::vector<std::string>  m_path ; ///< TES locations of vertices 
+      // ======================================================================
+      /// TES locations of vertices  
+      std::vector<std::string>  m_path ; // TES locations of vertices 
       /// data provder service 
       mutable LoKi::Interface<IDataProviderSvc>  m_dataSvc ;
       /// 'on-flight' filter
       LoKi::PhysTypes::VCut m_cut ;
+      // ======================================================================
     } ;    
     // ========================================================================
     /** @class SourceDesktop

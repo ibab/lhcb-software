@@ -1,4 +1,4 @@
-// $Id: ParticleContextCuts.h,v 1.4 2009-03-10 22:49:57 spradlin Exp $
+// $Id: ParticleContextCuts.h,v 1.5 2009-03-11 17:24:12 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLECONTEXTCUTS_H 
 #define LOKI_PARTICLECONTEXTCUTS_H 1
@@ -8,6 +8,7 @@
 // LoKi
 // ============================================================================
 #include "LoKi/Particles20.h"
+#include "LoKi/Particles25.h"
 // ============================================================================
 /** @file
  *  The file with the collection of "context-dependent" functors 

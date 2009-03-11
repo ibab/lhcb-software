@@ -1,4 +1,4 @@
-// $Id: Particles20.h,v 1.9 2009-03-10 22:49:57 spradlin Exp $
+// $Id: Particles20.h,v 1.10 2009-03-11 17:24:12 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES20_H 
 #define LOKI_PARTICLES20_H 1
@@ -1359,8 +1359,8 @@ namespace LoKi
      *             there are more efficient, transparent, 
      *             clear and safe analogues...
      * 
-     *  @author
-     *  @date
+     *  @author Patrick SPRADLIN P.Spradlin1@physics.ox.ac.uk
+     *  @date 2009-03-10
      */
     class TrgPointingScoreWithBestPV
       : public LoKi::Particles::TrgPointingScore 
@@ -1380,7 +1380,9 @@ namespace LoKi
       { return s << "BPVTRGPOINTING" ; }
       // ======================================================================
     } ;
-  } // end of namespace LoKi::Particles    
+    // ========================================================================
+  } // end of namespace LoKi::Particles
+  // ==========================================================================
 } // end of namespace LoKi   
 // ============================================================================
 // The end 

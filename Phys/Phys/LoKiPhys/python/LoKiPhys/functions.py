@@ -514,7 +514,10 @@ MINVVDCHI2 = LoKi.Vertices.MinVertexChi2Distance
 VIP        = LoKi.Vertices.ImpPar
 ## @see LoKi::Vertices::ImpParChi2
 VIPCHI2    = LoKi.Vertices.ImpParChi2
-
+## @see LoKi::Cuts::VDZ
+VDZ        = LoKi.Vertices.VertexDeltaZ 
+## @see LoKi::Cuts::VABSDZ
+VABSDZ     = LoKi.Vertices.VertexAbsDeltaZ 
 
 
 # =============================================================================
@@ -600,6 +603,18 @@ VMINVDTES             = LoKi.Vertices.MinVertexDistanceTES
 VMINVDCHI2SOURCE      = LoKi.Vertices.MinVertexChi2DistanceWithSource
 VMINVDCHI2DV          = LoKi.Vertices.MinVertexChi2DistanceDV
 VMINVDCHI2TES         = LoKi.Vertices.MinVertexChi2DistanceTES
+
+# functors rerquired by Rob Lambert:
+
+## @see LoKi::Cuts::MAXDIRASOURCE 
+MAXDIRASOURCE         = LoKi.Particles.MaxCosineDirectionAngleWithSource
+## @see LoKi::Cuts::MAXDIRADV 
+MAXDIRADV             = LoKi.Particles.MaxCosineDirectionAngleDV 
+## @see LoKi::Cuts::MAXDIRATES
+MAXDIRATES            = LoKi.Particles.MaxCosineDirectionAngleTES
+
+
+
 
 
 # the functors, required by Sean BRISBANE :

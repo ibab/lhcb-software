@@ -1,4 +1,4 @@
-// $Id: PhysHelpers.h,v 1.5 2008-10-31 17:27:46 ibelyaev Exp $
+// $Id: PhysHelpers.h,v 1.6 2009-03-11 17:24:12 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSHELPERS_H 
 #define LOKI_PHYSHELPERS_H 1
@@ -25,6 +25,7 @@
 // ============================================================================
 namespace LoKi 
 {
+  // ==========================================================================
   /** @namespace LoKi::Helpers Helpers.h LoKi/Helpers.h
    *  Namespace with pure technical ("private") helper functions 
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -34,16 +35,16 @@ namespace LoKi
   {
     // ========================================================================
     /** Helper function to evaluate minimal value of 
-     *  impact parameter, distance, chi2 etc... for 
-     *  the funtions. which are based on VertexHolder
+     *  something etc... for 
+     *  the functions, which are based on VertexHolder
      * 
-     *  @param first 'begin'-itrator for the sequence of vertices or 3D-points
-     *  @param last  'end'-itrator for the sequence of vertices or 3D-points
+     *  @param first 'begin'-iterator for the sequence of vertices or 3D-points
+     *  @param last  'end'-iterator for the sequence of vertices or 3D-points
      *  @param fun   'VertexHolder' based function to be evaluated 
      *  @param arg   the argument value for the function 
      *  @param result *OUTPUT* the minumum value of the function
      *  @return iterator to the vertex for which 
-     *          the function has a minuma value 
+     *          the function has MINIMAL value 
      *
      *  @see LoKi::Vertices::VertexHolder
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -58,17 +59,127 @@ namespace LoKi
       typename FUNCTION::argument     arg    ,
       typename FUNCTION::result_type& result ) // *OUTPUT*
     {
-      if ( first == last ) { return  last ; } 
+      VERTEX found = last ;                    // INIT
+      for ( ; first != last ; ++first ) 
+      {
+        fun.setVertex( *first ) ;              // THE MOST IMPORTANT LINE HERE!
+        typename FUNCTION::result_type _res = fun( arg ) ;
+        if ( _res < result || last == found ) 
+        { result = _res  ; found = first ; }  
+      }
+      return found ;
+    };
+    // ========================================================================
+    /** Helper function to evaluate minimal value of 
+     *  something etc... for 
+     *  the functions, which are based on VertexHolder
+     * 
+     *  @param first 'begin'-iterator for the sequence of vertices or 3D-points
+     *  @param last  'end'-iterator for the sequence of vertices or 3D-points
+     *  @param cut    selection criteria for the vertices 
+     *  @param fun   'VertexHolder' based function to be evaluated 
+     *  @param arg   the argument value for the function 
+     *  @param result *OUTPUT* the minumum value of the function
+     *  @return iterator to the vertex for which 
+     *          the function has MINIMAL value 
+     *
+     *  @see LoKi::Vertices::VertexHolder
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2006-02-19
+     */
+    template <class VERTEX,class FUNCTION, class PREDICATE>
+    inline 
+    VERTEX _Min_vertex 
+    ( VERTEX                          first  , 
+      VERTEX                          last   ,
+      const    PREDICATE&             cut    ,
+      const    FUNCTION&              fun    ,
+      typename FUNCTION::argument     arg    ,
+      typename FUNCTION::result_type& result )  // *OUTPUT*
+    {
+      VERTEX found = last ;                     // INIT
+      for ( ; first != last ; ++first ) 
+      {
+        if ( !cut ( *first ) ) { continue ; }   // CONTINUE 
+        fun.setVertex ( *first ) ;              // THE MOST IMPORTANT LINE 
+        typename FUNCTION::result_type _res = fun( arg ) ;
+        if ( _res < result || last == found ) 
+        { result = _res  ; found = first ; }          
+      }
+      return found ;
+    };
+    // ========================================================================
+    /** Helper function to evaluate maximal value of 
+     *  something etc... for 
+     *  the funtions, which are based on VertexHolder
+     * 
+     *  @param first 'begin'-iterator for the sequence of vertices or 3D-points
+     *  @param last  'end'-iterator for the sequence of vertices or 3D-points
+     *  @param fun   'VertexHolder' based function to be evaluated 
+     *  @param arg   the argument value for the function 
+     *  @param result *OUTPUT* the maximal value of the function
+     *  @return iterator to the vertex for which 
+     *          the function has MAXIMAL value 
+     *
+     *  @see LoKi::Vertices::VertexHolder
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2006-02-19
+     */
+    template <class VERTEX,class FUNCTION>
+    inline 
+    VERTEX _Max_vertex 
+    ( VERTEX                          first  , 
+      VERTEX                          last   ,
+      const    FUNCTION&              fun    ,  
+      typename FUNCTION::argument     arg    ,
+      typename FUNCTION::result_type& result ) // *OUTPUT*
+    {
       //
-      VERTEX found = first ;      // INIT
-      fun.setVertex( *found ) ;   // NB! CONFIGURE FUNCTION 
-      result = fun( arg ) ;       // EVALUATE THE INITIAL RESULT 
-      ++first ;                                     // ADVANCE 
+      VERTEX found = last ;      // INIT
       for ( ; first != last ; ++first ) 
       {
         fun.setVertex( *first ) ;     // THE MOST IMPORTANT LINE HERE!
         typename FUNCTION::result_type _res = fun( arg ) ;
-        if ( _res < result ) { result = _res  ; found = first ; }  
+        if ( _res > result || last == found ) 
+        { result = _res  ; found = first ; }  
+      }
+      return found ;
+    };
+    // ========================================================================
+    /** Helper function to evaluate maximal value of 
+     *  something etc... for 
+     *  the functions, which are based on VertexHolder
+     * 
+     *  @param first 'begin'-iterator for the sequence of vertices or 3D-points
+     *  @param last  'end'-iterator for the sequence of vertices or 3D-points
+     *  @param fun   'VertexHolder' based function to be evaluated 
+     *  @param arg   the argument value for the function 
+     *  @param result *OUTPUT* the maximal value of the function
+     *  @return iterator to the vertex for which 
+     *          the function has MAXIMAL value 
+     *
+     *  @see LoKi::Vertices::VertexHolder
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2006-02-19
+     */
+    template <class VERTEX,class FUNCTION, class PREDICATE>
+    inline 
+    VERTEX _Max_vertex 
+    ( VERTEX                          first  , 
+      VERTEX                          last   ,
+      const    PREDICATE&             cut    , 
+      const    FUNCTION&              fun    ,  
+      typename FUNCTION::argument     arg    ,
+      typename FUNCTION::result_type& result ) // *OUTPUT*
+    {
+      VERTEX found = last  ;      // INIT
+      for ( ; first != last ; ++first ) 
+      {
+        if ( !cut ( *first ) ) { continue ; } // CONTINUE
+        fun.setVertex( *first ) ;     // THE MOST IMPORTANT LINE HERE!
+        typename FUNCTION::result_type _res = fun( arg ) ;
+        if ( _res > result || last == found ) 
+        { result = _res  ; found = first ; }  
       }
       return found ;
     };
@@ -77,8 +188,8 @@ namespace LoKi
      *  impact parameter, distance, chi2 etc... for 
      *  the funtions.
      * 
-     *  @param first 'begin'-itrator for the sequence of particles
-     *  @param last  'end'-itrator for the sequence of particles 
+     *  @param first 'begin'-iterator for the sequence of particles
+     *  @param last  'end'-iterator for the sequence of particles 
      *  @param fun   the function to be evaluated 
      *  @param arg   the argument value for the function 
      *  @param result *OUTPUT* the minumum value of the function
@@ -97,17 +208,13 @@ namespace LoKi
       typename FUNCTION::argument     arg    ,
       typename FUNCTION::result_type& result ) // *OUTPUT*
     {
-      if ( first == last ) { return  last ; } 
-      //
-      PARTICLE found = first ;      // INIT
-      fun.setParticle( *found ) ;   // NB! CONFIGURE FUNCTION 
-      result = fun( arg ) ;       // EVALUATE THE INITIAL RESULT 
-      ++first ;                                     // ADVANCE 
+      PARTICLE found = last  ;      // INIT
       for ( ; first != last ; ++first ) 
       {
         fun.setParticle( *first ) ;     // THE MOST IMPORTAN LINE HERE!
         typename FUNCTION::result_type _res = fun( arg ) ;
-        if ( _res < result ) { result = _res  ; found = first ; }  
+        if ( _res < result || last == found )
+        { result = _res  ; found = first ; }  
       }
       return found ;
     };
