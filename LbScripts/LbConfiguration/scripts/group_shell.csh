@@ -4,7 +4,7 @@ if ( -e ${HOME}/.newLHCBLoginscript ) then
   if ( $?LBLOGIN_DONE ) then
     source /afs/cern.ch/lhcb/software/releases/LBSCRIPTS/prod/InstallArea/scripts/LbLogin.csh --silent
   else
-    setenv LB_BANNER ${HOME}/.LbLogin_banner
+    setenv LB_BANNER `mktemp -t LbLogin_banner.XXXXXXXX`
     source /afs/cern.ch/lhcb/software/releases/LBSCRIPTS/prod/InstallArea/scripts/LbLogin.csh --quiet >! ${LB_BANNER}
   endif     
 endif 
