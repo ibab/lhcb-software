@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.88 2009-03-10 22:49:57 spradlin Exp $ 
+! $Id: release.notes,v 1.89 2009-03-11 10:31:16 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2009-03-11 - Vanya BELYAEV
+
+ - dict/LoKiPhys.xml 
+
+    fix to prevent geenration of dictionaries for disabled 
+    assignment operators  
+
 
 ! 2009-03-10 - Patrick SPRADLIN
 

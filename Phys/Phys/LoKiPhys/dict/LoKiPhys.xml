@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiPhys.xml,v 1.22 2008-12-18 15:27:25 ibelyaev Exp $ 
+     * $Id: LoKiPhys.xml,v 1.23 2009-03-11 10:31:16 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiPhys package
@@ -125,6 +125,9 @@
       <method name="=" />
     </class>
     <class pattern="LoKi::Vertices::*">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::Legacy::*">
       <method name="=" />
     </class>
 
