@@ -17,9 +17,9 @@ while ($nar <= $narg)
      @ nar = ${nar} + 1
      set list_arg = "$list_arg -g $argv[${nar}]"
   else if ("$argv[${nar}]" == "-h") then
-     echo "Usage : lhcb-proxy-init [-h] [-t] [-d dirac_version] [-v validity] [-g dirac group]"
+     echo "Usage : lhcb-proxy-init [-h] [--dev] [-d dirac_version] [-v validity] [-g dirac group]"
      echo "      -h : provide this help"
-     echo "      -t : to use the Dirac version which is DEV"
+     echo "      --dev : to use the Dirac version which is DEV"
      echo "      -d : to specify which version of DIRAC you want to use"
      echo "      -p : to read password from stdin"
      echo "      -g : tp specify the DIRAC groupe that you want to use (default lhcb_user)"
@@ -28,7 +28,7 @@ while ($nar <= $narg)
   else if ("$argv[${nar}]" == "-p") then
      set list_arg = "$list_arg -p"
      @ nar = ${nar} + 1
-  else if ("$argv[${nar}]" == "-t") then
+  else if ("$argv[${nar}]" == "--dev") then
      set dirac_dev = " --dev"
      @ nar = ${nar} + 1
   else
