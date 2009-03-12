@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonLines.py,v 1.15 2009-03-12 10:36:12 graven Exp $
+# $Id: HltMuonLines.py,v 1.16 2009-03-12 14:18:41 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.15 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.16 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -588,7 +588,6 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
                          , HltTrackUpgrade('Hlt1RecoVelo') # // Velo Reco-> Can this be improved filtering 2d tracks before full 3D?
                          
                          , Member( 'TF', 'VeloCompDOCA' # // Select Velo tracks with good DOCA to Muon
-                                   , InputSelection  = HltTrackUpgrade('Hlt1RecoVelo') # shoud be able to delete this line..; NOT YET!
                                    , HistogramUpdatePeriod = 0
                                    , FilterDescriptor = ['DOCA_%TFMuonIP,<,'+str(self.getProp('MuTrackDoca')) ]
                                    , HistoDescriptor = { 'DOCA': ( 'DOCA',0.,2.,400), 'DOCABest': ( 'DOCABest',0.,1.,400)}
@@ -681,7 +680,6 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
                               , HltTrackUpgrade('Hlt1RecoVelo') # // Velo Reco.
                               
                               , Member( 'TF', 'CompanionVelo' # // Select Velo tracks with good DOCA to Muon
-                                        , InputSelection  = HltTrackUpgrade('Hlt1RecoVelo') # should be able to delete this line; NOT YET!
                                         , HistogramUpdatePeriod = 0
                                         , FilterDescriptor = ['DOCA_%TFMuon,<,'+str(self.getProp('MuTrackDoca4JPsi')) ]
                                         , HistoDescriptor = {'DOCA': ( 'DOCA',0.,2.,400), 'DOCABest': ( 'DOCABest',0.,1.,400)}

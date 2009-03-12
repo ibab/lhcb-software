@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.38 2009-02-15 10:35:13 graven Exp $ 
+# $Id: HltLine.py,v 1.39 2009-03-12 14:18:41 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.38 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.39 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt line itself 
@@ -450,6 +450,11 @@ class bindMembers (object) :
             # if not Hlt1Member, blindly copy -- not much else we can do
             if type(alg) is not Hlt1Member:
                 self._members += [ alg ]
+                if hasattr ( type(alg) , 'OutputSelection' ) :
+                    if hasattr ( alg , 'OutputSelection' ) :
+                        self._outputsel = alg.OutputSelection 
+                    else :
+                        self._outputsel = alg.name()
                 continue
                 
             # if Hlt1Member, verify, expand, and chain
@@ -775,8 +780,13 @@ class Hlt1Line(object):
         if L0DU : mdict.update( { 'L0DU' : L0Filter   ( l0entryName  ( line ) , Code = self._L0DU )  } )
         ## TODO: in case of HLT, we have a dependency... dangerous, as things become order dependent...
         if HLT  : mdict.update( { 'HLT'  : HDRFilter  ( hltentryName ( line ) , Code = self._HLT  ) } )
-        # TODO: if len(_members) = 1, we don't need a sequencer...
-        if _members : mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line ) , Members = _members ) })
+        if _members : 
+            # TODO: if len(_members) = 1, we don't need a sequencer...
+            # TODO: but what about the name of the algorithm?
+            #if len(_members) == 1 : 
+            #    mdict.update( { 'Filter1' : _members[0] })
+            #else :
+            mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line ) , Members = _members ) })
         # final cloning of all parameters:
         __mdict = deepcopy ( mdict ) 
         self._configurable = Line ( self.name() , **__mdict )
