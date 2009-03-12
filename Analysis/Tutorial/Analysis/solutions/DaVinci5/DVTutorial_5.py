@@ -1,5 +1,5 @@
 6########################################################################
-# $Id: DVTutorial_5.py,v 1.6 2009-02-24 15:10:50 pkoppenb Exp $
+# $Id: DVTutorial_5.py,v 1.7 2009-03-12 13:00:28 pkoppenb Exp $
 #
 # Options for exercise 5
 #
@@ -23,7 +23,7 @@ from Configurables import PrintDecayTree, PrintDecayTreeTool, PhysDesktop
 tree = PrintDecayTree("PrintFoundBs")
 tree.addTool( PhysDesktop )
 tree.PhysDesktop.InputLocations = [ "Bs2JpsiPhi" ]
-tree.addTool( PrintDecayTreeTool() )
+tree.addTool( PrintDecayTreeTool )
 tree.PrintDecayTreeTool.Information = "Name M P Px Py Pz Pt chi2" 
 tutorialseq.Members += [ tree ]
 #######################################################################
@@ -32,7 +32,7 @@ tutorialseq.Members += [ tree ]
 #
 from Configurables import PrintMCTree, PrintMCDecayTreeTool
 mctree = PrintMCTree("PrintTrueBs")
-mctree.addTool( PrintMCDecayTreeTool() )
+mctree.addTool( PrintMCDecayTreeTool )
 mctree.PrintMCDecayTreeTool.Information = "Name M P Px Py Pz Pt chi2" 
 mctree.ParticleNames = [  "B_s0", "B_s~0" ]
 mctree.Depth = 2  # down to the K and mu
