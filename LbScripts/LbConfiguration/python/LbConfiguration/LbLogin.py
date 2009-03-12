@@ -42,7 +42,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.19 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.20 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -423,6 +423,7 @@ class LbLoginScript(Script):
             ev["GAUDISOFT"] = os.path.join(ev["SITEROOT"], "sw", "Gaudi", "releases")
             ev["LHCBPROJECTPATH"] = os.pathsep.join([ev["LHCBRELEASES"], ev["GAUDISOFT"], ev["LCG_release_area"]])
             ev["LHCBDEV"] = os.path.join(ev["SITEROOT"], "lhcb", "software", "DEV" )
+            ev["LHCBTAR"] = os.path.join(ev["SITEROOT"], "lhcb", "distribution" )
             ev["LHCBDOC"] = os.path.join(ev["LHCBRELEASES"], "DOC")
             ev["EMACSDIR"] = os.path.join(ev["LHCBRELEASES"], "TOOLS", "Tools", "Emacs", "pro")
             ev["LHCBSTYLE"] = os.path.join(ev["LHCBRELEASES"], "TOOLS", "Tools", "Styles", "pro")
