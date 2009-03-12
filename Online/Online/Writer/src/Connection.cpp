@@ -35,7 +35,7 @@ using namespace LHCb;
  * Does nothing except initialise member variables.
  */
 Connection::Connection(std::string serverAddr, int serverPort, int sndRcvSizes,
-    MsgStream * log, INotifyClient *nClient) {
+    MsgStream * log, INotifyClient *nClient, size_t maxQueueSize) : m_mmObj(maxQueueSize)  {
 
   m_state = Connection::STATE_CONN_CLOSED;
   m_serverAddr = serverAddr;
@@ -260,10 +260,22 @@ void Connection::sendCommand(struct cmd_header *header, void *data)
       totalSize += sizeof(struct cmd_header);
       break;
   }
-
-  newHeader = m_mmObj.allocAndCopyCommand(header, data);  /* Will always succeed. */
-
-  m_mmObj.enqueueCommand(newHeader);
+  newHeader = NULL;
+  int retry = 0;
+  int maxRetries = 3;
+  do {
+      newHeader = m_mmObj.allocAndCopyCommand(header, data);  /* Will always succeed. */
+      if(newHeader == NULL) {
+          *m_log << MSG::FATAL << "Buffer is full!" << endmsg;
+          sleep(5);
+          retry++;
+      }
+  } while(newHeader == NULL and retry < maxRetries);
+  if(newHeader != NULL) {
+      m_mmObj.enqueueCommand(newHeader);
+  } else {
+        *m_log << MSG::FATAL << "ERROR: Buffer is sill full, giving up. Event is lost!" << endmsg;
+    }
 }
 
 #endif /* _WIN32 */

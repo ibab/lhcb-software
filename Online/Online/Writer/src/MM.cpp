@@ -29,7 +29,7 @@ static inline void* malloc_blocking(size_t size)
  * semaphore is used to synchronize access to the list
  * between the sender and the MDFWriter threads.
  */
-MM::MM()
+MM::MM(size_t maxQueueSize)
 {
   m_head = NULL;
   m_tail = NULL;
@@ -40,6 +40,7 @@ MM::MM()
   m_sendPointer = NULL;
   m_queueLength = 0;
   m_queueSize = 0;
+  m_maxQueueSize = maxQueueSize;
   m_allocCmdCount = 0;
   m_allocByteCount = 0;
 }
@@ -63,7 +64,7 @@ MM::~MM()
  */
 struct cmd_header* MM::allocAndCopyCommand(struct cmd_header *header, void *data)
 {
-  if(m_queueSize > (2 << 30)) {
+  if(m_queueSize > (size_t) (2 << 30)) {
       return NULL;
   }
   struct cmd_header *newHeader;
@@ -83,7 +84,7 @@ struct cmd_header* MM::allocAndCopyCommand(struct cmd_header *header, void *data
   newHeader = (struct cmd_header*)malloc_blocking(dataSize + sizeof(struct cmd_header));
   newData = ((unsigned char*)newHeader) + sizeof(struct cmd_header);
   
-  m_queueSize += datasize + sizeof(struct cmd_header);
+  m_queueSize += dataSize + sizeof(struct cmd_header);
   
   if(newHeader) {
     pthread_mutex_lock(&m_allocLock);

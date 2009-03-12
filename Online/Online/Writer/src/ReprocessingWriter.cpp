@@ -68,6 +68,8 @@ ReprocessingWriter::ReprocessingWriter(const string& nam, ISvcLocator* pSvc)
   declareProperty("SndRcvSizes",           m_sndRcvSizes=6553600);
   declareProperty("RunFileTimeoutSeconds", m_runFileTimeoutSeconds=30);
   declareProperty("MaxMemBufferMB",        m_memBufferLen=1024);
+  declareProperty("MaxQueueSizeBytes",     m_maxQueueSizeBytes=1073741824);
+
 }
 
 /// Destructor: Checks if a file is open, and closes it before closing the connection.
@@ -141,7 +143,7 @@ StatusCode ReprocessingWriter::initialize(void)   {
   m_currFile = 0;
   m_bufferLength = 0;
   m_srvConnection = new Connection(m_serverAddr, m_serverPort,
-				   m_sndRcvSizes, m_log, this);
+				   m_sndRcvSizes, m_log, this, m_maxQueueSizeBytes);
   m_rpcObj = new RPCComm(m_runDBURL.c_str());
   *m_log << MSG::INFO << "rundb url: " << m_runDBURL.c_str() <<endmsg;
   try {

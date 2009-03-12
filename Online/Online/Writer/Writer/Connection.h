@@ -162,7 +162,7 @@ namespace LHCb {
 
       /// Constructor
       Connection(std::string serverAddr, int serverPort, int sndRcvSizes,
-          MsgStream * log, INotifyClient *nClient);
+          MsgStream * log, INotifyClient *nClient, size_t maxQueueSize);
   };
 
   /** @class An interface that can be used to register for notifications.

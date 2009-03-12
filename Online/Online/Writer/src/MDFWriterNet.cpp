@@ -162,16 +162,17 @@ void MDFWriterNet::constructNet()
 
   //This should ideally be provided as a name and not an
   //IP address, so that the round-robin DNS can kick in.
-  declareProperty("StorageServerAddr",  m_serverAddr="");
-  declareProperty("StorageServerPort",  m_serverPort=45247);
-  declareProperty("RunDBServiceURL",    m_runDBURL="");
-  declareProperty("MaxFileSizeMB",      m_maxFileSizeMB=1);
-  declareProperty("SndRcvSizes",        m_sndRcvSizes=6553600);
-  declareProperty("FilePrefix",         m_filePrefix="MDFWriterNet_File_");
-  declareProperty("Directory",          m_directory=".");
-  declareProperty("FileExtension",      m_fileExtension="raw");
-  declareProperty("StreamID",           m_streamID="NONE");
+  declareProperty("StorageServerAddr",     m_serverAddr="");
+  declareProperty("StorageServerPort",     m_serverPort=45247);
+  declareProperty("RunDBServiceURL",       m_runDBURL="");
+  declareProperty("MaxFileSizeMB",         m_maxFileSizeMB=1);
+  declareProperty("SndRcvSizes",           m_sndRcvSizes=6553600);
+  declareProperty("FilePrefix",            m_filePrefix="MDFWriterNet_File_");
+  declareProperty("Directory",             m_directory=".");
+  declareProperty("FileExtension",         m_fileExtension="raw");
+  declareProperty("StreamID",              m_streamID="NONE");
   declareProperty("RunFileTimeoutSeconds", m_runFileTimeoutSeconds=30);
+  declareProperty("MaxQueueSizeBytes",     m_maxQueueSizeBytes=1073741824);
 
   m_log = new MsgStream(msgSvc(), name());
 }
@@ -185,7 +186,7 @@ StatusCode MDFWriterNet::initialize(void)
 
   m_currFile = NULL;
   m_srvConnection = new Connection(m_serverAddr, m_serverPort,
-				   m_sndRcvSizes, m_log, this);
+				   m_sndRcvSizes, m_log, this, m_maxQueueSizeBytes);
   m_rpcObj = new RPCComm(m_runDBURL.c_str());
   *m_log << MSG::INFO << "rundb url: " << m_runDBURL.c_str() <<endmsg;
   try {

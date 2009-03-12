@@ -36,6 +36,9 @@ namespace LHCb {
 
       /// The maximum file size (in MB) to write before creating a new file.
       size_t m_maxFileSizeMB;
+      
+      /// The maximum size for the message queue
+      size_t m_maxQueueSizeBytes;
 
       /// The socket send/receive buffer sizes.
       int m_sndRcvSizes;

@@ -49,6 +49,9 @@ namespace LHCb {
       /// The current size of the elements in the queue
       size_t m_queueSize;
 
+      /// The maximum size of the queue
+      size_t m_maxQueueSize;
+
       /// A condition variable to enable the sender thread to sleep on.
       pthread_cond_t m_emptyCondition;
 
@@ -62,7 +65,7 @@ namespace LHCb {
 
     public:
       /// Constructor.
-      MM();
+      MM(size_t maxQueueSize);
 
       /// Destructor.
       ~MM();
