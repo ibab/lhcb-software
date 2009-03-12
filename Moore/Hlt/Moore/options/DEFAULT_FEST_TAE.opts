@@ -1,0 +1,8 @@
+#include "$MOOREOPTS/DEFAULT_LHCb_TAE.opts"
+
+//////  For FEST data only... (I hope this is enough!)
+SIMCOND.DefaultTAG = 'sim-20090112';
+CondDBCnvSvc.CondDBReader = 'CondDBDispatcherSvc/SimulationCondDBReader';
+SimulationCondDBReader.Alternatives = {'/Conditions': 'CondDBAccessSvc/SIMCOND'};
+SimulationCondDBReader.MainAccessSvc = 'CondDBAccessSvc/DDDB';
+//////

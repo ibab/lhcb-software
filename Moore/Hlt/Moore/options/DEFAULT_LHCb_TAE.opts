@@ -1,0 +1,5 @@
+#include "$MOOREOPTS/DEFAULT_TAE.opts"
+
+HltConfigSvc.prefetchDir = "MOORE_v6r1";
+HltConfigSvc.initialTCK  = @OnlineEnv.InitialTCK;
+HltConfigSvc.checkOdin   = true;

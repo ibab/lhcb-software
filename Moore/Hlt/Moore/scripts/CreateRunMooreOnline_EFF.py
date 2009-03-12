@@ -29,8 +29,8 @@ source ./setupOnline.sh $*
 source %(setup)s
 # and the options to be used
 export USEROPTS=%(moore)s/options/DEFAULT${IS_TAE_RUN}.opts
-[[ 'x'$PARTNAME == 'xFEST' ]] && USEROPTS=%(moore)s/options/DEFAULT_FEST.opts
-[[ 'x'$PARTNAME == 'xLHCb' ]] && USEROPTS=%(moore)s/options/DEFAULT_LHCb.opts
+[[ 'x'$PARTNAME == 'xFEST' ]] && USEROPTS=%(moore)s/options/DEFAULT_FEST${IS_TAE_RUN}.opts
+[[ 'x'$PARTNAME == 'xLHCb' ]] && USEROPTS=%(moore)s/options/DEFAULT_LHCb${IS_TAE_RUN}.opts
 export CORAL_SQLITE_TEMP_STORE_MEMORY=yes
 # and run them!
 echo exec -a ${UTGID} ${CLASS1_TASK} -opt=${USEROPTS}

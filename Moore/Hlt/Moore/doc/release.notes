@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2009-03-12 - Gerhard Raven for Eric Van Herwijnen
+ - add options for TAE data in LHCb and FEST partitions
+
 !========================== Moore v6r1 2009-03-11 ===================
 ! 2009-03-10 - Gerhard Raven
  - kill some more messages during online running
