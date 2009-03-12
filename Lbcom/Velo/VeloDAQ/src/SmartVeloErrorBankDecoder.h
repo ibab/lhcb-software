@@ -1,4 +1,4 @@
-// $Id: SmartVeloErrorBankDecoder.h,v 1.2 2008-10-17 16:17:24 szumlat Exp $
+// $Id: SmartVeloErrorBankDecoder.h,v 1.3 2009-03-12 14:38:50 szumlat Exp $
 #ifndef SMARTVELOERRORBANKDECODER_H 
 #define SMARTVELOERRORBANKDECODER_H 1
 
@@ -69,13 +69,14 @@ protected:
 
 private:
 
+  bool m_isDebug;
   LHCb::RawEvent* m_rawEvent;          /// pointer to RawEvent container
   std::string m_rawEventLoc;           /// location of RawEvent container
   VeloErrorBanks* m_errorBank;             /// container to store error banks
   std::string m_errorBankLoc;
   int m_printBankHeader;
   BANKS m_cachedBanks;
-  unsigned int m_bankLength;
+  std::map<unsigned int, unsigned int> m_bankLength;
   unsigned int m_bankVersion;
   unsigned int m_bankType;
   unsigned int m_magicPattern;

@@ -1,4 +1,4 @@
-// $Id: SmartVeloErrorBankDecoder.cpp,v 1.3 2008-10-28 10:03:52 szumlat Exp $
+// $Id: SmartVeloErrorBankDecoder.cpp,v 1.4 2009-03-12 14:38:50 szumlat Exp $
 // Include files 
 
 // from Gaudi
@@ -30,7 +30,8 @@ SmartVeloErrorBankDecoder::SmartVeloErrorBankDecoder( const std::string& name,
                                                       ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
     m_rawEvent ( 0 ),
-    m_errorBank ( 0 )
+    m_errorBank ( 0 ),
+    m_bankLength ( )
 {
   declareProperty("PrintBankHeader", m_printBankHeader=0);
   declareProperty("RawEventLocation",
@@ -59,8 +60,9 @@ StatusCode SmartVeloErrorBankDecoder::initialize() {
 // Main execution
 //=============================================================================
 StatusCode SmartVeloErrorBankDecoder::execute() {
-
-  debug() << "==> Execute" << endmsg;
+  m_isDebug=msgLevel(MSG::DEBUG);
+  
+  if(m_isDebug) debug() << "==> Execute" << endmsg;
   //
   StatusCode rawEvtStatus=getRawEvent();
   StatusCode bankStatus;
@@ -80,15 +82,15 @@ StatusCode SmartVeloErrorBankDecoder::execute() {
 //=============================================================================
 StatusCode SmartVeloErrorBankDecoder::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if(m_isDebug) debug() << "==> Finalize" << endmsg;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 //=============================================================================
 StatusCode SmartVeloErrorBankDecoder::getRawEvent()
 {
-  debug()<< " ==> getRawEvent() " <<endmsg;
-  debug()<< "--------------------" <<endmsg;
+  if(m_isDebug) debug()<< " ==> getRawEvent() " <<endmsg;
+  if(m_isDebug) debug()<< "--------------------" <<endmsg;
   //
   if(!exist<LHCb::RawEvent>(m_rawEventLoc)){
     error()<< " ==> There is no RawEvent at: "
@@ -97,7 +99,7 @@ StatusCode SmartVeloErrorBankDecoder::getRawEvent()
   }else{  
     // get the RawEvent from default TES location
     m_rawEvent=get<LHCb::RawEvent>(m_rawEventLoc);
-    debug()<< " ==> The RawEvent has been read-in from location: "
+    if(m_isDebug) debug()<< " ==> The RawEvent has been read-in from location: "
            << LHCb::RawEventLocation::Default <<endmsg;  
   }
   //
@@ -106,8 +108,10 @@ StatusCode SmartVeloErrorBankDecoder::getRawEvent()
 //=============================================================================
 StatusCode SmartVeloErrorBankDecoder::cacheErrorRawBanks()
 {
-  debug()<< " ==> cacheErrorRawBanks() " <<endmsg;
+  if(m_isDebug) debug()<< " ==> cacheErrorRawBanks() " <<endmsg;
   // check if there is error bank present
+  m_cachedBanks.clear();
+  m_bankLength.clear();
   const std::vector<LHCb::RawBank*>& errorBank=
     m_rawEvent->banks(LHCb::RawBank::VeloError);
   std::vector<LHCb::RawBank*>::const_iterator bIt;
@@ -115,13 +119,13 @@ StatusCode SmartVeloErrorBankDecoder::cacheErrorRawBanks()
   if(errorBank.size()!=0){
     m_errorBank=new VeloErrorBanks();
     //
-    debug()<< " --> Error bank detected of size: " << errorBank.size() <<endmsg;
+    if(m_isDebug) debug()<< " --> Error bank detected of size: " << errorBank.size() <<endmsg;
     ITPair data;
     for(bIt=errorBank.begin(); bIt!=errorBank.end(); ++bIt){
       LHCb::RawBank* aBank=(*bIt);
       // get the sensor number == sourceID if there is no full data
       unsigned int tell1=aBank->sourceID();
-      m_bankLength=aBank->size();
+      m_bankLength[tell1]=aBank->size();
       m_bankVersion=aBank->version();
       m_bankType=aBank->type();
       m_magicPattern=aBank->magic();
@@ -134,23 +138,30 @@ StatusCode SmartVeloErrorBankDecoder::cacheErrorRawBanks()
       }
       // get pointer to the bank data
       data.first=aBank->begin<unsigned int>();
+      unsigned int* inIT=aBank->begin<unsigned int>();
+      unsigned int* dat=aBank->data();
+      if(m_isDebug) debug()<< " --> src Id: " << tell1 <<endmsg;
+      for(int step=0; step<6; ++step){
+        if(m_isDebug) debug()<< " data ptr: " << step << " : " << (*(inIT+step)) <<endmsg;
+        if(m_isDebug) debug()<< " data tab: " << step << " : " << (*(dat+step)) <<endmsg;
+      }
       data.second=aBank->end<unsigned int>();
       m_cachedBanks[tell1]=data;
       int dist=std::distance(data.first, data.second);
-      debug()<< " --> bank body size: " << (dist*sizeof(unsigned int)) <<endmsg;
+      if(m_isDebug) debug()<< " --> bank body size: " << (dist*sizeof(unsigned int)) <<endmsg;
     }
   }else{
     Warning(" --> No error bank detected - skipping to the next event ");
     return ( StatusCode::FAILURE );
   }
-  debug()<< " --> cached error bank strucure's size:" 
+  if(m_isDebug) debug()<< " --> cached error bank strucure's size:" 
          << (m_cachedBanks.size()) <<endmsg;
   return ( StatusCode::SUCCESS );
 }
 //=============================================================================
 StatusCode SmartVeloErrorBankDecoder::storeErrorRawBanks()
 {
-  debug()<< " ==> storeErrorRawBanks() " <<endmsg;
+  if(m_isDebug) debug()<< " ==> storeErrorRawBanks() " <<endmsg;
   //
   std::map<unsigned int, ITPair>::iterator bankIT;
   bankIT=m_cachedBanks.begin();
@@ -163,7 +174,7 @@ StatusCode SmartVeloErrorBankDecoder::storeErrorRawBanks()
     // get information on error sources
     SECTORS sectors=errorDetector(bankIT->first);
     if(sectors.size()!=SOURCES)
-      debug()<< " --> Error detected for " << (sectors.size()) 
+      if(m_isDebug) debug()<< " --> Error detected for " << (sectors.size()) 
              << " PPFPGA(s) "<<endmsg;
     // store words in error bank
     SECTORS::iterator secIT=sectors.begin();
@@ -203,11 +214,13 @@ StatusCode SmartVeloErrorBankDecoder::storeErrorRawBanks()
     anEvtInfo.setEvtInfo(evtInfoData);
     err->setEvtInfoSection(anEvtInfo);
     err->setErrorInfoSection(errorInfoData);
-    err->setBankLength(m_bankLength);
+    if(m_isDebug) debug()<< " bank lenght: " << m_bankLength[bankIT->first] 
+           << " for tell1: " << (bankIT->first) <<endmsg;
+    err->setBankLength(m_bankLength[bankIT->first]);
     err->setBankType(m_bankType);
     err->setBankVersion(m_bankVersion);
     err->setMagicPattern(m_magicPattern);
-    debug()<< " --> Detected errors: " << (sources.size()) <<endmsg;
+    if(m_isDebug) debug()<< " --> Detected errors: " << (sources.size()) <<endmsg;
     err->setErrorSources(sources); 
     m_errorBank->insert(err);       
   }
@@ -220,7 +233,7 @@ StatusCode SmartVeloErrorBankDecoder::storeErrorRawBanks()
 std::map<unsigned int, ITPair> SmartVeloErrorBankDecoder::errorDetector(
                                  unsigned int tell1)
 {
-  debug()<< " ==> errorDetector() " <<endmsg;
+  if(m_isDebug) debug()<< " ==> errorDetector() " <<endmsg;
   //
   unsigned int fpga=0;
   SECTORS sectors;

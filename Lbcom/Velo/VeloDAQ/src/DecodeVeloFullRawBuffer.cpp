@@ -1,4 +1,4 @@
-// $Id: DecodeVeloFullRawBuffer.cpp,v 1.4 2008-08-31 16:05:46 krinnert Exp $
+// $Id: DecodeVeloFullRawBuffer.cpp,v 1.5 2009-03-12 14:38:50 szumlat Exp $
 // Include files 
 
 // from Gaudi
@@ -9,6 +9,9 @@
 
 // Kernel
 #include "Kernel/VeloEventFunctor.h"
+
+// STL
+#include <vector>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : DecodeVeloFullRawBuffer
@@ -50,13 +53,19 @@ DecodeVeloFullRawBuffer::DecodeVeloFullRawBuffer( const std::string& name,
   m_HeaderDecoder(VeloHeader),
   m_PedDecoder(VeloPedestal)
 { 
-  declareProperty("ADCLocation", m_veloADCLocation = VeloFullBankLocation::Default );
-  declareProperty("PedestalLocation", m_veloPedLocation = VeloFullBankLocation::Pedestals );
-  declareProperty("DecodedADCLocation", m_decodedADCLocation = VeloTELL1DataLocation::ADCs );
-  declareProperty("DecodedPedestalLocation", m_decodedPedLocation = VeloTELL1DataLocation::Pedestals );
-  declareProperty("DecodedHeaderLocation", m_decodedHeaderLocation = VeloTELL1DataLocation::Headers );
-  declareProperty("EventInfoLocation", m_evtInfoLocation = EvtInfoLocation::Default );
-  declareProperty("SectorCorrection", m_sectorCorrection=false);
+  declareProperty("ADCLocation",
+                  m_veloADCLocation=VeloFullBankLocation::Default );
+  declareProperty("PedestalLocation",
+                  m_veloPedLocation=VeloFullBankLocation::Pedestals );
+  declareProperty("DecodedADCLocation",
+                  m_decodedADCLocation=VeloTELL1DataLocation::ADCs );
+  declareProperty("DecodedPedestalLocation",
+                  m_decodedPedLocation=VeloTELL1DataLocation::Pedestals );
+  declareProperty("DecodedHeaderLocation",
+                  m_decodedHeaderLocation=VeloTELL1DataLocation::Headers );
+  declareProperty("EventInfoLocation", 
+                  m_evtInfoLocation=EvtInfoLocation::Default );
+  declareProperty("SectorCorrection", m_sectorCorrection=true);
   declareProperty("CableOrder", m_cableOrder);
 }
 //=============================================================================
@@ -80,6 +89,7 @@ StatusCode DecodeVeloFullRawBuffer::initialize() {
     for (unsigned int i=0; i<4; ++i) {
       m_cableOrder.push_back(i);
     }
+    std::reverse(m_cableOrder.begin(), m_cableOrder.end());
    } else if (4 != m_cableOrder.size()) {
      error() << "The cable order configuration must have exactly 4 entries." << endmsg;
      return StatusCode::FAILURE;

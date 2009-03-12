@@ -1,4 +1,4 @@
-// $Id: PrepareVeloFullRawBuffer.cpp,v 1.4 2008-10-28 10:03:52 szumlat Exp $
+// $Id: PrepareVeloFullRawBuffer.cpp,v 1.5 2009-03-12 14:38:50 szumlat Exp $
 // Include files 
 #include <stdexcept>
 #include <exception>
@@ -41,9 +41,12 @@ PrepareVeloFullRawBuffer::PrepareVeloFullRawBuffer( const std::string& name,
     m_pedBankPresent ( false )
 {
   declareProperty("RunWithODIN", m_runWithODIN=true);
-  declareProperty("RawEventLoc", m_rawEventLoc=LHCb::RawEventLocation::Default);
-  declareProperty("ADCLoc", m_veloADCDataContainer=VeloFullBankLocation::Default);
-  declareProperty("PedLoc", m_veloPedestalsContainer=VeloFullBankLocation::Pedestals);
+  declareProperty("RawEventLoc",
+                  m_rawEventLoc=LHCb::RawEventLocation::Default);
+  declareProperty("ADCLoc",
+                  m_veloADCDataContainer=VeloFullBankLocation::Default);
+  declareProperty("PedLoc",
+                  m_veloPedestalsContainer=VeloFullBankLocation::Pedestals);
 }
 //=============================================================================
 // Destructor
@@ -108,13 +111,13 @@ StatusCode PrepareVeloFullRawBuffer::getRawEvent()
   //
   if(!exist<LHCb::RawEvent>(m_rawEventLoc)){
     error()<< " ==> There is no RawEvent at: "
-           << LHCb::RawEventLocation::Default <<endmsg;
+           << m_rawEventLoc <<endmsg;
     return ( StatusCode::FAILURE );
   }else{  
     // get the RawEvent from default TES location
     m_rawEvent=get<LHCb::RawEvent>(m_rawEventLoc);
     debug()<< " ==> The RawEvent has been read-in from location: "
-           << LHCb::RawEventLocation::Default <<endmsg;  
+           << m_rawEventLoc <<endmsg;  
   }
   //
   return ( StatusCode::SUCCESS );
