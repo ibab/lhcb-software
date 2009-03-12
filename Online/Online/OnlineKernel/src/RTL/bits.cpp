@@ -374,9 +374,10 @@ int lib_rtl_ffc (int* start, int* len, const void* base, int* position)  {
 int lib_rtl_ffs (int* pos, int* size, const void* base, int* ret)  {
   int retval;
   int val= *(int*)base;
-  if ((*pos)<=32) {
-    if (*pos)
-      val&=~(1<<((*pos)-1));
+  int p = *pos;
+  if (p<=32) {
+    if (p)
+      val&=~(1<<(p-1));
     retval=ffs(val);
     if (retval==0) {
       *ret=*size;

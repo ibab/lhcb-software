@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <cstring>
 #include "SCR/scr.h"
+#include "RTL/rtl.h"
 using namespace SCR;
 
 static Pasteboard* pb;
@@ -230,3 +231,12 @@ extern "C" int scr_test(int argc, char** argv)  {
   return 0;
 }
 
+extern "C" int scr_qmtest(int /* argc */, char** /* argv */)  {
+  FILE* input = ::popen("test.exe scr_test","w");
+  for(size_t i=0; i<13; ++i) {
+    ::fwrite("\n",2,1,input);
+    ::fflush(input);
+    ::lib_rtl_sleep(500);
+  }
+  return 0;
+}

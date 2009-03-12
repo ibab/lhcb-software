@@ -17,16 +17,16 @@ extern "C" int rtl_testffx(int,char **) {
   };
   for (size_t i=0; i<sizeof(mask)/sizeof(mask[0]); ++i)  {
     for (int start=0; start < 32; ++start)  {
-      int val = mask[i];
+      int val[2] = {mask[i], 0};
       int len = 32-start;
       int pos = 0;
       int s = start;
-      int sc = lib_rtl_ffc (&s,&len,&val,&pos);
-      printf("FFC: %2ld  %2d  sc=%d %08X  %2d\t\t\t\t", long(i), s, sc, val, pos);
-      val = ~val;
+      int sc = lib_rtl_ffc (&s,&len,val,&pos);
+      printf("FFC: %2ld  %2d  sc=%d %08X  %2d\t\t\t\t", long(i), s, sc, val[0], pos);
+      val[0] = ~val[0];
       s = start;
-      sc = lib_rtl_ffs (&s,&len,&val,&pos);
-      printf("FFX: %2ld  %2d  sc=%d %08X  %2d\n", long(i), s, sc, val, pos);
+      sc = lib_rtl_ffs (&s,&len,val,&pos);
+      printf("FFX: %2ld  %2d  sc=%d %08X  %2d\n", long(i), s, sc, val[0], pos);
     }
   }
   return 0;
