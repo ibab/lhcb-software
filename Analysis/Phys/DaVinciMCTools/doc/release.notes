@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.250 2009-03-03 16:15:17 jpalac Exp $
+! $Id: release.notes,v 1.251 2009-03-12 13:48:32 pkoppenb Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2009-03-12 - Patrick Koppenburg
+ - BackgroundCategory:
+   . protect verbose
+   . indent
+   . add print tree in verbose
 
 ! 2009-03-03 - Juan PALACIOS
  - cmt/requirements

@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.h,v 1.24 2008-07-03 13:49:18 gligorov Exp $
+// $Id: BackgroundCategory.h,v 1.25 2009-03-12 13:48:32 pkoppenb Exp $
 #ifndef BACKGROUNDCATEGORY_H 
 #define BACKGROUNDCATEGORY_H 1
 
@@ -15,6 +15,7 @@
 #include "Kernel/Particle2MCLinker.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
+#include "Kernel/IPrintDecay.h"
 
 typedef std::vector<const LHCb::MCParticle*> MCParticleVector;
 typedef std::vector<const LHCb::Particle*> ParticleVector;
@@ -112,6 +113,7 @@ private:
   Particle2MCLinker* m_pChi2PPAsct; 
   const LHCb::MCParticle* m_commonMother;
   DaughterAndPartnerVector m_daughtersAndPartners;
+  IPrintDecay* m_printDecay ;
 
   
   int m_inclusiveDecay; //are we studying an inclusive decay?
