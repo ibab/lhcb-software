@@ -1,6 +1,6 @@
 #
 #==============================================================================
-# $Id: HltL0Candidates.py,v 1.16 2009-03-11 17:31:04 depaula Exp $
+# $Id: HltL0Candidates.py,v 1.17 2009-03-12 10:14:46 graven Exp $
 #==============================================================================
 #
 # Module to define the conversion of L0 candidates across several HltLines
@@ -37,9 +37,6 @@
 
 import re
 from Gaudi.Configuration import *
-from Configurables import HltL0CaloCandidates, HltL0MuonCandidates
-from Configurables import HadronSeedTool, ElectronSeedTool
-from Configurables import L0DUMultiConfigProvider
 from GaudiKernel.Configurable import ConfigurableGeneric
 
 # utilities to pack and unpack L0 conditions into Condition property...
@@ -60,11 +57,14 @@ def _name(i) :
     return 'Hlt1L0'+i+'Candidates' if i.startswith('All') else 'Hlt1L0'+i+'Decision'
 
 def _muon( channel ) :
+    from Configurables import HltL0MuonCandidates
     name = _name(channel)
     #note: explicitly set the OutputSelection so we can pick it up downstream...
     return { channel : HltL0MuonCandidates(name, L0Channel = channel, OutputSelection = name) }
 
 def _calo( channel ) :
+    from Configurables import HltL0CaloCandidates
+    from Configurables import HadronSeedTool, ElectronSeedTool
     name = _name(channel)
     ### TODO: this should be triggerd by the 'type' and NOT by channel
     ###       maybe every L0CaloCandidates instance should be configured with 'all' makers

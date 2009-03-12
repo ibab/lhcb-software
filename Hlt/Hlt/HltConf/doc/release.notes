@@ -1,11 +1,14 @@
-! $Id: release.notes,v 1.167 2009-03-11 17:31:04 depaula Exp $ 
+! $Id: release.notes,v 1.168 2009-03-12 10:14:46 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2009-03-12 - Gerhard Raven
+ - more 'import' movements to reduce dependency warnings
+
 ! 2009-03-11 - Leandro de Paula
- - changes in MuonLines to coop with DC09 L0TCK:
+ - changes in MuonLines to cope with DC09 L0TCK:
    . no more GEC Lines
    . new noPV Lines
 - New lines included and obsolete deleted in HltInit.py, HltL0Candidates.py and Configuration.py
