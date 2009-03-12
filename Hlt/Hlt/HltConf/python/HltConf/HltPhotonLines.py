@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltPhotonLines.py,v 1.8 2009-03-11 16:05:40 graven Exp $
+# $Id: HltPhotonLines.py,v 1.9 2009-03-12 16:33:40 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Photon Lines
@@ -12,7 +12,7 @@
 '''
 # =============================================================================
 __author__  = 'Gerhard Raven Gerhard.Raven@nikhef.nl'
-__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $'
+__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $'
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -75,7 +75,6 @@ class HltPhotonLinesConf(LHCbConfigurableUser):
                                )
                       , HltTrackUpgrade( 'Hlt1RecoVelo' ) # TODO: make call to python procedure..
                       , Member ('TF', 'SecondVelo' 
-                               , InputSelection     = 'Velo'
                                , FilterDescriptor = ['IP_PV2D,||[],'+TRACK_IP_CUT+',3.0']
                                , HistogramUpdatePeriod = 0
                                , HistoDescriptor = { 'IP' : ('IP',-1.,3.,400), 'IPBest' : ('IPBest',-1.,3.,400) }

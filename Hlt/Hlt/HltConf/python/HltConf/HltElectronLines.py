@@ -52,7 +52,7 @@ class HltElectronLinesConf(LHCbConfigurableUser) :
                                 ]
 
         companionTrackWithIP  = [ RecoVelo
-                                , Member ( 'TF', 'CompanionVelo', InputSelection    = 'Velo',
+                                , Member ( 'TF', 'CompanionVelo',
                                            FilterDescriptor = [ 'IP_PV2D,||[],'+IP_CUT+',3.', 'DOCA_%TFVeloT,<,0.2' ])
                                 , Member ( 'TU', 'CompanionForward', RecoName = 'Forward' )
                                 , Member ( 'TF', 'CompanionForward',  FilterDescriptor = ['PT,>,'+COMPAN_PTCUT])
@@ -75,7 +75,7 @@ class HltElectronLinesConf(LHCbConfigurableUser) :
                                 ]
 
         companionTrackNoIP    = [ RecoVelo
-                                , Member ( 'TF', 'CompanionVelo', InputSelection    = 'Velo',
+                                , Member ( 'TF', 'CompanionVelo', 
                                            FilterDescriptor = [ 'IP_PV2D,||[],'+IP_CUT+',3.', 'DOCA_%TFVeloT,<,0.2' ])
                                 , Member ( 'TU', 'CompanionForward', RecoName = 'Forward' )
                                 , Member ( 'TF', 'CompanionForward',  FilterDescriptor = ['PT,>,'+COMPAN_PTCUT])

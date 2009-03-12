@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.169 2009-03-12 14:18:41 graven Exp $ 
+! $Id: release.notes,v 1.170 2009-03-12 16:34:04 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -8,7 +8,7 @@
  - more 'import' movements to reduce dependency warnings
  - improve daisychaining of output and input -- recognize algorithms which have 
    the OutputSelection attribute.
- - use the above in HltMuonLines.py
+ - use the above in HltMuonLines.py, HltElectronLines.py and HltPhotonLines.py
 
 ! 2009-03-11 - Leandro de Paula
  - changes in MuonLines to cope with DC09 L0TCK:
