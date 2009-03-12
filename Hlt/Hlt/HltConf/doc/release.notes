@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.170 2009-03-12 16:34:04 graven Exp $ 
+! $Id: release.notes,v 1.171 2009-03-12 16:36:40 gligorov Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2009-03-12 - V. Gligorov & P. Spradlin
+ - Added fast-fit options used by topological in Hlt2TrackFitForTopo.py 
+
 ! 2009-03-12 - Gerhard Raven
  - more 'import' movements to reduce dependency warnings
  - improve daisychaining of output and input -- recognize algorithms which have 
