@@ -1,19 +1,8 @@
-// $Id: MCMatchObj.cpp,v 1.5 2007-04-16 16:16:48 pkoppenb Exp $
+// $Id: MCMatchObj.cpp,v 1.6 2009-03-12 12:54:13 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.4  2006/10/10 09:16:53  ibelyaev
-//  tiny fixes needed for good&valid dictionaries
-//
-// Revision 1.3  2006/08/29 11:40:47  ibelyaev
-//  many fixed to simplify MC-match
-//
-// Revision 1.2  2006/04/09 20:14:25  ibelyaev
-//  fix for Win32
-//
-// Revision 1.1.1.1  2006/03/14 19:12:21  ibelyaev
-// New package : RC <---> MC links for LoKi 
 // 
 // ============================================================================
 // Include files
@@ -23,8 +12,7 @@
 #include "LoKi/MCExtract.h"
 // ============================================================================
 #include "LoKi/MCMatchObj.h"
-// ============================================================================
-
+#include "LoKi/MCChild.h"
 // ============================================================================
 /** @file
  *
@@ -42,9 +30,7 @@
  *  @date 2006-03-10
  */
 // ============================================================================
-
-// ============================================================================
-/** Standard constructor
+/* Standard constructor
  *  @param name object name 
  *  @param reporter error reporter 
  */
@@ -53,14 +39,13 @@ LoKi::MCMatchObj::MCMatchObj
 ( const std::string&     name     , 
   const LoKi::IReporter* reporter )
   : LoKi::Base ( name , reporter ) 
-{};
+{}
 // ============================================================================
-/// destructor 
+// destructor 
 // ============================================================================
-LoKi::MCMatchObj::~MCMatchObj()
-{};
+LoKi::MCMatchObj::~MCMatchObj() {}
 // ============================================================================
-/** check the match of MC truth information 
+/*  check the match of MC truth information 
  *  @param  particle    pointer to Particle object 
  *  @param  range       range of MC particles 
  *  @return true if particle matches at least 1 MC particle from range 
@@ -71,7 +56,7 @@ bool LoKi::MCMatchObj::match
   const LoKi::Types::MCRange& range    ) const 
 { return range.end() != match ( particle , range.begin() , range.end() ) ; }
 // ============================================================================
-/** check the match of MC truth information  
+/*  check the match of MC truth information  
  *  @param  particle    pointer to Particle object  
  *  @param  mcparticle  pointer to MCParticle object 
  *  @return true        if the particle and mcparticle has "match"
@@ -87,7 +72,7 @@ bool LoKi::MCMatchObj::match
   { Warning ( "match(): MCParticle* points to NULL" ) ; return false ; }
   
   // look throught the existing tables:
-
+  
   // 1) Particle->MCParticle 
   if ( matchInTables
        ( m_tableP2MC   , particle , mcparticle  ) ) { return true ; } // RETURN  
@@ -115,15 +100,10 @@ bool LoKi::MCMatchObj::match
     }
   }
   
-  /// expand the whole MC-tree into the the flat list 
+  /// get the list of daughters to initiate the recursion 
   LoKi::MCTypes::MCContainer children ;
-  children.reserve ( 100 ) ;
-  // get all particles except the tree head  itself 
-  LoKi::Extract::mcParticles
-    ( mcparticle , 
-      std::back_inserter ( children ) , 
-      std::not1 ( std::bind2nd ( std::equal_to<const LHCb::MCParticle*>(),
-                                 mcparticle ) ) ) ;
+  children.reserve ( 20 ) ;
+  LoKi::MCChild::daughters ( mcparticle , children ) ;
   
   // the further action differ for composed and basic particles:
   
@@ -141,18 +121,18 @@ bool LoKi::MCMatchObj::match
                  particle->daughters() .end   () , 
                  children              .begin () , 
                  children              .end   () ) ;
-} ;
+} 
 // ============================================================================
-/// clear th einetrnal storage
+// clear the internal storage
 // ============================================================================
 void LoKi::MCMatchObj::clear() 
 {
-  m_tableP2MC   .clear() ;
-  m_tableP2MCW  .clear() ;
-  m_tablePP2MC  .clear() ;
-  m_tableT2MC   .clear() ;
-  m_tableT2MC   .clear() ;
-};
+  m_tableP2MC   . clear() ;
+  m_tableP2MCW  . clear() ;
+  m_tablePP2MC  . clear() ;
+  m_tableT2MC   . clear() ;
+  m_tableT2MC   . clear() ;
+}
 // ============================================================================
 // The END 
 // ============================================================================

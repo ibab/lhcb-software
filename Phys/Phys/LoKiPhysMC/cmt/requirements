@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.35 2009-01-10 20:15:13 jonrob Exp $ 
+# $Id: requirements,v 1.36 2009-03-12 12:54:13 ibelyaev Exp $ 
 # ============================================================================
 # Created    : 2006-03-11
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # ============================================================================
 package           LoKiPhysMC
-version           v8r1
+version           v8r2
 
 # =============== structure ==================================================
 branches          cmt doc src dict python LoKi
@@ -16,6 +16,7 @@ use               LoKiPhys           v* Phys
 use               LoKiGenMC          v* Phys 
 use               LinkerEvent        v* Event
 use               DaVinciMCKernel    v* Phys
+
 private
 macro CLHEP_use "" osx105 "CLHEP v* LCG_Interfaces"
 use ${CLHEP_use}
