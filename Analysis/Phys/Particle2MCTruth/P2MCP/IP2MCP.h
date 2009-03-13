@@ -1,4 +1,4 @@
-// $Id: IP2MCP.h,v 1.2 2009-03-10 18:29:38 jpalac Exp $
+// $Id: IP2MCP.h,v 1.3 2009-03-13 18:03:37 jpalac Exp $
 #ifndef P2MCP_IP2MCP_H 
 #define P2MCP_IP2MCP_H 1
 
@@ -40,49 +40,53 @@ public:
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_IP2MCP; }
 
+
   /**
    *
-   * Calculate the weighted associations between an LHCb::Particle and
-   * and some LHCb::MCParticles from the TES. The location handling is defined
-   * by the implementation.
-   * @param particle LHCb::Particle* to be associated
-   * @return P2MCPTypes::ToVector containing sorted weighted associations
+   *
    *
    * @author Juan Palacios juan.palacios@nikhef.nl
-   * @date   2009-02-02
-   *
    **/
-  virtual P2MCPTypes::ToVector 
-  associate(const LHCb::Particle* particle) const = 0;
+  virtual 
+  const LHCb::MCParticle* 
+  bestRelatedMCP(const LHCb::Particle* particle) const = 0;
+
   /**
    *
-   * Calculate the weighted associations between an LHCb::Particle and
-   * and some LHCb::MCParticles from a TES locaiton.
-   * Return the result as P2MCPTypes::ToVector
-   * @param particle LHCb::Particle* to be associated
-   * @param mcParticleLocation TES location of LHCb::MCParticles to base the
-   * association on.
-   * @return P2MCPTypes::ToVector containing sorted weighted associations
-   * @author Juan Palacios juan.palacios@nikhef.nl
-   * @date   2009-02-02
    *
+   *
+   * @author Juan Palacios juan.palacios@nikhef.nl
    **/
-  virtual P2MCPTypes::ToVector 
-  associate(const LHCb::Particle* particle,
-            const std::string& mcParticleLocation) const = 0;
+  virtual 
+  const LHCb::MCParticle* 
+  bestRelatedMCP(const LHCb::Particle* particle,
+                 const LHCb::MCParticle::ConstVector& mcParticles) const = 0;
+
+  /**
+   *
+   *
+   *
+   * @author Juan Palacios juan.palacios@nikhef.nl
+   **/
+  virtual 
+  const LHCb::MCParticle* 
+  bestRelatedMCP(const LHCb::Particle* particle,
+                 const LHCb::MCParticle::Container& mcParticles) const = 0;
+
 
   /**
    * Calculate and return the weighted associations between an 
    * LHCb::Particle and some LHCb::MCParticles from a TES locaiton.
    * @param particle LHCb::Particle* to be associated
-   * @return P2MCPTypes::LightTable Relations table containing 
-   * sorted weighted relations between the LHCb::Particle and the LCHb::MCParticles
+   * @return P2MCP::Types::FlatTrees  containing 
+   * tree-sorted weighted relations between the 
+   * LHCb::Particle and the LCHb::MCParticles
    * @author Juan Palacios juan.palacios@nikhef.nl
    * @date   2009-02-02
    *
    **/
-  virtual P2MCPTypes::LightTable 
-  relatedMCPs(const LHCb::Particle*) const = 0;
+  virtual P2MCP::Types::FlatTrees
+  relatedMCPs(const LHCb::Particle* particle) const = 0;
 
   /**
    *
@@ -91,14 +95,14 @@ public:
    * @param particle LHCb::Particle* to be associated
    * @param mcParticleLocation TES location of LHCb::MCParticles to base the
    * association on.
-   * @return P2MCPTypes::LightTable Relations table containing 
-   * sorted weighted relations between the LHCb::Particle and the LCHb::MCParticles
+   * @return P2MCP::Types::FlatTrees containing tree-sorted 
+   * weighted relations between the LHCb::Particle and the LCHb::MCParticles
    * @author Juan Palacios juan.palacios@nikhef.nl
    * @date   2009-02-02
    *
    **/
-  virtual P2MCPTypes::LightTable 
-  relatedMCPs(const LHCb::Particle*,
+  virtual P2MCP::Types::FlatTrees
+  relatedMCPs(const LHCb::Particle* particle,
               const std::string& mcParticleLocation) const = 0;
 
 
@@ -109,117 +113,37 @@ public:
    * @param particles Container of LHCb::Particles to be associated
    * @param mcParticles Container of LHCb::MCParticles to base the
    * association on.
-   * @return P2MCPTypes::LightTable Relations table containing 
-   * sorted weighted relations between the LHCb::Particles and the LCHb::MCParticles
+   * @return P2MCP::Types::FlatTrees containing tree-sorted
+   * relations between the LHCb::Particles and the LCHb::MCParticles
    * @author Juan Palacios juan.palacios@nikhef.nl
    * @date   2009-02-02
    *
    **/ 
-  virtual P2MCPTypes::LightTable 
-  relatedMCPs(const LHCb::Particle* particles,
+  virtual P2MCP::Types::FlatTrees
+  relatedMCPs(const LHCb::Particle* particle,
               const LHCb::MCParticle::ConstVector& mcParticles) const = 0;
 
   /**
    *
-   * Calculate and return the weighted associations between a container of  
-   * LHCb::Particle and a container of LHCb::MCParticles on the TES
-   * The TES location of the LHCb::MCParticles is handled by the 
-   * implementations
+   * Calculate and return the weighted associations between a container of
+   * LHCb::Particles and a container of LHCb::MCParticles.
    * @param particles Container of LHCb::Particles to be associated
-   * @return P2MCPTypes::LightTable Relations table containing 
-   * relations between the LHCb::Particle and the LCHb::MCParticles
-   * @author Juan Palacios juan.palacios@nikhef.nl
-   * @date   2009-02-02
-   *
-   **/ 
-  virtual P2MCPTypes::LightTable 
-  associations(const LHCb::Particle::ConstVector& particles) const = 0;
-
-  /**
-   *
-   * Calculate and return the associations between a container of
-   * LHCb::Particles and a container of LHCb::MCParticles on the TES
-   * @param particles Container of LHCb::Particles to be associated
-   * @param mcParticleLocation TES location of LHCb::MCParticles to base the
+   * @param mcParticles Container of LHCb::MCParticles to base the
    * association on.
-   * @return P2MCPTypes::LightTable Relations table containing 
+   * @return P2MCP::Types::FlatTrees Relations table containing tree-sorted
    * relations between the LHCb::Particles and the LCHb::MCParticles
    * @author Juan Palacios juan.palacios@nikhef.nl
    * @date   2009-02-02
    *
    **/ 
-  virtual P2MCPTypes::LightTable 
-  associations(const LHCb::Particle::ConstVector& particles,
-               const std::string& mcParticleLocation) const = 0;
+  virtual P2MCP::Types::FlatTrees
+  relatedMCPs(const LHCb::Particle* particle,
+              const LHCb::MCParticle::Container& mcParticles) const = 0;
+
+
 
   /**
-   *
-   * Calculate and return the associations between a container of  
-   * LHCb::Particle and a container of LHCb::MCParticles on the TES
-   * The TES location of the LHCb::MCParticles is handled by the 
-   * implementations
-   * @param particles Container of LHCb::Particles to be associated
-   * @return P2MCPTypes::LightTable Relations table containing 
-   * relations between the LHCb::Particle and the LCHb::MCParticles
-   * @author Juan Palacios juan.palacios@nikhef.nl
-   * @date   2009-02-02
-   *
-   **/ 
-  virtual P2MCPTypes::LightTable 
-  associations(const LHCb::Particle::ConstVector& particles,
-               const LHCb::MCParticle::ConstVector& mcParticles) const = 0;
-
-  /**
-   *
-   * Calculate and return the associations between a container of  
-   * LHCb::Particle and a container of LHCb::MCParticles on the TES
-   * The TES location of the LHCb::MCParticles is handled by the 
-   * implementations
-   * @param particles Container of LHCb::Particles to be associated
-   * @return P2MCPTypes::LightTable Relations table containing 
-   * relations between the LHCb::Particle and the LCHb::MCParticles
-   * @author Juan Palacios juan.palacios@nikhef.nl
-   * @date   2009-02-02
-   *
-   **/ 
-  virtual P2MCPTypes::LightTable 
-  associations(const LHCb::Particle::Container& particles) const = 0;
-
-  /**
-   *
-   * Calculate and return the associations between a container of
-   * LHCb::Particles and a container of LHCb::MCParticles on the TES
-   * @param particles Container of LHCb::Particles to be associated
-   * @param mcParticleLocation TES location of LHCb::MCParticles to base the
-   * association on.
-   * @return P2MCPTypes::LightTable Relations table containing 
-   * relations between the LHCb::Particles and the LCHb::MCParticles
-   * @author Juan Palacios juan.palacios@nikhef.nl
-   * @date   2009-02-02
-   *
-   **/ 
-  virtual P2MCPTypes::LightTable 
-  associations(const LHCb::Particle::Container& particles,
-               const std::string& mcParticleLocation) const = 0;
-
-  /**
-   *
-   * Calculate and return the associations between a container of  
-   * LHCb::Particle and a container of LHCb::MCParticles on the TES
-   * The TES location of the LHCb::MCParticles is handled by the 
-   * implementations
-   * @param particles Container of LHCb::Particles to be associated
-   * @return P2MCPTypes::LightTable Relations table containing 
-   * relations between the LHCb::Particle and the LCHb::MCParticles
-   * @author Juan Palacios juan.palacios@nikhef.nl
-   * @date   2009-02-02
-   *
-   **/ 
-  virtual P2MCPTypes::LightTable 
-  associations(const LHCb::Particle::Container& particles,
-               const LHCb::MCParticle::ConstVector& mcParticles) const = 0;
-  /**
-   * Calculate the association weight between an LHCb::Particle and an
+   * Calculate the association between an LHCb::Particle and an
    * LHCb::MCParticle.
    *
    * @author Juan Palacios juan.palacios@nikhef.nl
