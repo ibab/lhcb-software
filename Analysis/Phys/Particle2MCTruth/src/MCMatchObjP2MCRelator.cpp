@@ -1,4 +1,4 @@
-// $Id: MCMatchObjP2MCRelator.cpp,v 1.6 2009-03-13 18:09:26 jpalac Exp $
+// $Id: MCMatchObjP2MCRelator.cpp,v 1.7 2009-03-13 18:21:45 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -95,7 +95,10 @@ MCMatchObjP2MCRelator::sort(const LHCb::MCParticle::ConstVector& mcParticles) co
 P2MCP::Types::FlatTrees
 MCMatchObjP2MCRelator::sort(const LHCb::MCParticle::Container& mcParticles) const 
 {
-  return m_treeSorter(mcParticles);
+  ///@todo use m_treeSorter once LHCb v27r0 comes out.
+  return sort(LHCb::MCParticle::ConstVector(mcParticles.begin(), 
+                                            mcParticles.end()));
+  //  return m_treeSorter(mcParticles);
 }
 //=============================================================================
 void MCMatchObjP2MCRelator::addTables(LoKi::MCMatchObj* matcher) const 
