@@ -4,6 +4,10 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2009-03-13 - Olivier Callot
+ - Modify the VeloRHit and VeloPhiHit constuctors to define the width as
+   sqrt(12) * pitch, not taking into account the cluster size.
+
 !============================ TfKernel v2r10 2009-02-18 ======================
 ! 2009-01-17 - Chris Jones
  - Add missing virtual destructor to Tf::IStationSelector (OSX/gcc4.0 warning)
