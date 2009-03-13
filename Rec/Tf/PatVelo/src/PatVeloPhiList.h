@@ -1,4 +1,4 @@
-// $Id: PatVeloPhiList.h,v 1.3 2009-03-08 20:22:47 cattanem Exp $
+// $Id: PatVeloPhiList.h,v 1.4 2009-03-13 16:17:32 ocallot Exp $
 #ifndef TF_PATVELOPHILIST_H 
 #define TF_PATVELOPHILIST_H 1
 
@@ -60,6 +60,14 @@ namespace Tf {
       }
       double computeChi2();
 
+    /// Compute the quality factor
+    double qFactor() {
+      if ( -100 <= m_qFact ) return m_qFact;
+      m_qFact = chiSq() - 0.5 * nbUnused();
+      return m_qFact;
+    }    
+
+
       /// Number of uniquely used clusters
       int nbUnused();
 
@@ -67,7 +75,8 @@ namespace Tf {
       void addExtraPhi( PatVeloPhiHit* coord ) {
         m_coord.push_back( coord );
         m_chi2 = -1;
-      }
+        m_qFact = -1000.;
+     }
 
     private:
       bool       m_valid;   ///< is the combination OK 
@@ -87,6 +96,7 @@ namespace Tf {
       double m_predY;       ///< predicted Y of track at current z
       double m_tol;         ///< current tolerance between coord and extrapolation
       double m_chi2;        ///< current chiSq
+    double m_qFact;       ///< Quality factor, from chi2 and nbUnused.
 
 
       // local fit parameters

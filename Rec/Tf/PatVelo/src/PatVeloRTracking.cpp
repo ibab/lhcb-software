@@ -1,4 +1,4 @@
-// $Id: PatVeloRTracking.cpp,v 1.5 2008-06-03 13:02:07 dhcroft Exp $
+// $Id: PatVeloRTracking.cpp,v 1.6 2009-03-13 16:17:32 ocallot Exp $
 // Include files
 
 // from Gaudi
@@ -37,7 +37,7 @@ namespace Tf {
       declareProperty( "rMatchTol"       , m_rMatchTol        = 0.90      );
       declareProperty( "rExtraTol"       , m_rExtraTol        = 3.5       );
       declareProperty( "rOverlapTol"     , m_rOverlapTol      = 0.6       );
-      declareProperty( "MaxMissed"       , m_maxMissed        = 3         );
+      declareProperty( "MaxMissed"       , m_maxMissed        = 1         );
       declareProperty( "MinToTag"        , m_minToTag         = 4         );
       declareProperty( "ChargeThreshold" , m_chargeThreshold  = 15        );
       declareProperty( "highChargeFract" , m_highChargeFract  = .5        );

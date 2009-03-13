@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTool.cpp,v 1.14 2008-06-02 09:33:49 dhcroft Exp $
+// $Id: PatVeloSpaceTool.cpp,v 1.15 2009-03-13 16:17:32 ocallot Exp $
 // Include files
 
 // from Gaudi
@@ -40,7 +40,7 @@ namespace Tf {
 
       declareProperty( "FractionFound"   , m_fractionFound    = 0.35      );
       declareProperty( "PhiAngularTol"   , m_phiAngularTol    = 0.005     );
-      declareProperty( "PhiMatchTol"     , m_phiMatchTol      = 0.16      );
+      declareProperty( "PhiMatchTol"     , m_phiMatchTol      = 0.11      );
       declareProperty( "PhiFirstTol"     , m_phiFirstTol      = 0.09       );
       declareProperty( "AdjacentSectors" , m_adjacentSectors = false      );
       declareProperty( "FractionPhiMerge", m_fractionPhiMerge = 0.5       );
@@ -241,10 +241,18 @@ namespace Tf {
         << " z " << z << " r " << r  << endreq;
 
       const DeVeloPhiType* sensor = station->sensor();
-      if ( sensor->outerRadius() < r ) continue; // point outside detector
+      if ( sensor->outerRadius() < r ) {
+        if ( sensor->outerRadius() < r-0.05 ) continue; // point outside detector, with tolerance
+        r = sensor->outerRadius() - 0.001;
+      }
+      //if ( sensor->outerRadius() < r ) continue; // point outside detector
 
       unsigned int phiZone = 0;
-      if ( sensor->halfboxRRange(phiZone).first  > r ) break; // point outside Phi sector
+      if ( sensor->halfboxRRange(phiZone).first > r ) {
+        if ( sensor->halfboxRRange(phiZone).first > r + 0.05 ) break; // point outside Phi sector
+        r = sensor->halfboxRRange(phiZone).first + 0.001;
+      }
+      //if ( sensor->halfboxRRange(phiZone).first  > r ) break; // point outside Phi sector
       if ( sensor->halfboxRRange(phiZone).second < r ) { //point outside phi sector
         phiZone = 1;
       }
@@ -409,10 +417,10 @@ namespace Tf {
     for ( iPhiList = m_phiPt.begin(); m_phiPt.end() != iPhiList; ++iPhiList ) {
       if ( iPhiList->size() < 5 && 0 ==  iPhiList->nbUnused()  ) continue;
       if ( minExpected == iPhiList->size() ) {
-        if ( minChi2 > iPhiList->chiSq() ) minChi2 = iPhiList->chiSq();
+        if ( minChi2 > iPhiList->qFactor() ) minChi2 = iPhiList->qFactor();
       } else if ( iPhiList->size() >= minExpected ) {
         minExpected = iPhiList->size();
-        minChi2 = iPhiList->chiSq();
+        minChi2 = iPhiList->qFactor();
       }
     }
     //== Tolerance for other lists
@@ -429,7 +437,7 @@ namespace Tf {
       }
       if ( iPhiList->size() < 5 && 0 ==  iPhiList->nbUnused()  ) continue;
       if ( minExpected > nbFound       ) continue;
-      if ( minChi2 < iPhiList->chiSq() ) continue;
+      if ( minChi2 < iPhiList->qFactor() ) continue;
       good = true; 
       std::vector<PatVeloPhiHit*>::iterator itP;
       PatVeloSpaceTrack* phiCan = new PatVeloSpaceTrack( track );

@@ -1,4 +1,4 @@
-// $Id: PatVeloPhiList.cpp,v 1.2 2009-03-08 20:22:47 cattanem Exp $
+// $Id: PatVeloPhiList.cpp,v 1.3 2009-03-13 16:17:32 ocallot Exp $
 // Include files 
 
 // local
@@ -26,6 +26,7 @@ namespace Tf {
     m_predY = 0.;
     m_tol   = 0.;
     m_chi2  = -1.;
+    m_qFact = -1000.;
     m_posX = 0.;
     m_slopeX = 0.;
     m_posY = 0.;
@@ -55,6 +56,7 @@ namespace Tf {
     m_predY = 0.;
     m_tol   = 0.;
     m_chi2  = -1.;
+    m_qFact = -1000.;
     m_lastZ = 0;
     m_valid = true;
 
@@ -87,7 +89,9 @@ namespace Tf {
       double tol, double tol2 ) { 
     m_bestCoord = 0;
 
-    m_tol = tol * (m_lastZ-z) / 60;
+    m_tol = tol;
+    if ( fabs( m_lastZ-z ) > 40 ) m_tol = tol * (m_lastZ-z) / 40;
+    if ( fabs( m_lastZ-z ) > 60 ) m_tol = tol * 60 / 40;
 
     if ( 1 < m_coord.size() ) {
       m_predX = m_posX + z * m_slopeX;

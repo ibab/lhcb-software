@@ -4,6 +4,16 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2009-03-13 - Olivier Callot
+ - Several changes for performance improvements:
+   PatVeloPhiList: o Compute a quality factor = chi2 - .5 * nbUnused for better
+                     selection of best lists
+                   o Tolerance is scaled by fabs(dz) only between 40 and 60 mm.
+  PatVeloRTracking:  Change MaxMissed from 3 to 1.
+  PatVeloSpaceTol: o Change default match tolerance
+                   o Allow some tolerance for checking if r is inside.
+                   o Select teh best Phi list by qFact, not chi2.
+
 !========================== PatVelo v3r12 2009-03-10 =========================
 ! 2009-03-08 - Marco Cattaneo
  - Changed default constructor of PatVeloPhiList to initialise all members,
