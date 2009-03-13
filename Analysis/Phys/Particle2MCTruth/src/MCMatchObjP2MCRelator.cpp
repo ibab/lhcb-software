@@ -1,11 +1,12 @@
-// $Id: MCMatchObjP2MCRelator.cpp,v 1.5 2009-03-10 18:12:06 jpalac Exp $
+// $Id: MCMatchObjP2MCRelator.cpp,v 1.6 2009-03-13 18:09:26 jpalac Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 // LoKi
 #include "LoKi/IReporter.h"
-#include "LoKi/BuildMCTrees.h"
+// P2MCP
+#include "P2MCP/P2MCPFunctors.h"
 // local
 #include "MCMatchObjP2MCRelator.h"
 
@@ -27,6 +28,7 @@ MCMatchObjP2MCRelator::MCMatchObjP2MCRelator( const std::string& type,
                                               const IInterface* parent )
   : 
   P2MCPBase( type, name , parent ),
+  m_treeSorter(),
   m_reporter(0),
   m_matcher(0),
   m_PP2MC()
@@ -72,7 +74,6 @@ LoKi::MCMatch MCMatchObjP2MCRelator::matcher() const
 {
 
   if (0==m_matcher) {
-    // get the reporter 
     // create the new matcher 
     m_matcher = new LoKi::MCMatchObj( "P2MCRelator" , m_reporter ) ;
     // increment the reference counter 
@@ -85,40 +86,16 @@ LoKi::MCMatch MCMatchObjP2MCRelator::matcher() const
   return  LoKi::MCMatch( m_matcher ) ;
 }
 //=============================================================================
-LHCb::MCParticle::ConstVector 
+P2MCP::Types::FlatTrees
 MCMatchObjP2MCRelator::sort(const LHCb::MCParticle::ConstVector& mcParticles) const 
 {
-  //  return mcParticles;
-//   std::cout << "MCMatchObjP2MCRelator::sort" << std::endl;
-  LHCb::MCParticle::ConstVector head = LoKi::MCTrees::buildTrees(mcParticles);
-  int size = head.size();
-  if ( size > 1) {
-    std::cout << "BEWARE! Association from " << size
-              << " TREES!!!" << std::endl;
-  } else if (size ==1 ){
-    std::cout << "ALL'S GOOD! Association from " << size
-              << " TREE!!!" << std::endl;
-  } else {
-    std::cout << "BEWARE! " << size << " Associations " << std::endl;
-  }
-  
-  LHCb::MCParticle::ConstVector output(mcParticles);
-  
-//   std::cout << "SORTING " << mcParticles.size() << " MCPs " << std::endl;
-//   printMCPIDs(mcParticles);
-  std::stable_sort( output.begin() , output.end() , MCSortLogic() ) ;
-//   std::cout << "SORTED and got " << output.size() << " MCPs" << std::endl;
-//   printMCPIDs(output);
-  
-  return output;
-  
-//  return LoKi::MCTrees::buildTrees(mcParticles);
+   return m_treeSorter(mcParticles);
 }
 //=============================================================================
-LHCb::MCParticle::ConstVector 
-MCMatchObjP2MCRelator::sort(const LHCb::MCParticle::Container* mcParticles) const 
+P2MCP::Types::FlatTrees
+MCMatchObjP2MCRelator::sort(const LHCb::MCParticle::Container& mcParticles) const 
 {
-  return LoKi::MCTrees::buildTrees(mcParticles);
+  return m_treeSorter(mcParticles);
 }
 //=============================================================================
 void MCMatchObjP2MCRelator::addTables(LoKi::MCMatchObj* matcher) const 
@@ -126,7 +103,7 @@ void MCMatchObjP2MCRelator::addTables(LoKi::MCMatchObj* matcher) const
   for (Addresses::const_iterator item = m_PP2MC.begin(); item!=m_PP2MC.end(); ++item) {
     const std::string& address = *item;
     if (exist<LoKi::Types::TablePP2MC>(address) ) {
-      verbose() << "Adding table " << address << std::endl;
+      verbose() << "Adding table " << address << endmsg;;
       LoKi::Types::TablePP2MC* table = get<LoKi::Types::TablePP2MC>(address);
       matcher->addMatchInfo(table);
     } else {

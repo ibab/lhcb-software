@@ -1,4 +1,4 @@
-// $Id: MCMatchObjP2MCRelator.h,v 1.5 2009-03-10 18:12:06 jpalac Exp $
+// $Id: MCMatchObjP2MCRelator.h,v 1.6 2009-03-13 18:09:26 jpalac Exp $
 #ifndef MCMATCHOBJP2MCRELATOR_H 
 #define MCMATCHOBJP2MCRELATOR_H 1
 
@@ -29,8 +29,8 @@ class MCMatchObjP2MCRelator : public P2MCPBase,
 public: 
   /// Standard constructor
   MCMatchObjP2MCRelator( const std::string& type, 
-                          const std::string& name,
-                          const IInterface* parent);
+                         const std::string& name,
+                         const IInterface* parent);
 
   virtual ~MCMatchObjP2MCRelator( ); ///< Destructor
 
@@ -43,28 +43,20 @@ public:
 
 private:
 
-  virtual LHCb::MCParticle::ConstVector sort(const LHCb::MCParticle::ConstVector& mcParticles) const;
+  virtual P2MCP::Types::FlatTrees sort(const LHCb::MCParticle::ConstVector& mcParticles) const;
   
-  virtual LHCb::MCParticle::ConstVector sort(const LHCb::MCParticle::Container* mcParticles) const;
+  virtual P2MCP::Types::FlatTrees sort(const LHCb::MCParticle::Container& mcParticles) const;
 
   LoKi::MCMatch matcher() const;
 
   void addTables(LoKi::MCMatchObj* matcher) const;
 
-  struct MCSortLogic : public std::binary_function<const LHCb::MCParticle*,const LHCb::MCParticle* , bool>
-  {
-    
-    bool operator() ( const LHCb::MCParticle* p1 , 
-                      const LHCb::MCParticle* p2 ) const
-      {
-        LoKi::MCParticles::FromMCDecayTree fromDecay( p1 ) ;
-        return fromDecay ( p2 );
-      }
-  };
 
+  
   
   void printMCPIDs(const LHCb::MCParticle::ConstVector& mcps) const
   {
+    std::cout << "==================================" << std::endl;
     for (LHCb::MCParticle::ConstVector::const_iterator mcp = mcps.begin();
          mcp!=mcps.end(); ++mcp) {
       std::cout << "\tMCP PID " << (*mcp)->particleID().pid() << std::endl;
@@ -74,6 +66,8 @@ private:
 
 private:
 
+  P2MCP::Functors::SortIntoTrees<P2MCP::Functors::InTree, 
+                                 P2MCP::Functors::SortInTrees > m_treeSorter;
   LoKi::IReporter* m_reporter;
   mutable LoKi::MCMatchObj* m_matcher;
   typedef std::vector<std::string> Addresses ;
