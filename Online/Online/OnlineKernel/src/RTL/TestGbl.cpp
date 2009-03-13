@@ -8,7 +8,6 @@
 extern "C" int rtl_test_gbl(int argc, char** argv) {
   int msecs = 300;
   lib_rtl_lock_t id;
-  int pid = lib_rtl_pid();
   char txt[132];
   int turns = 20;
   const char* name = "Sem_test"; // argv[1];
