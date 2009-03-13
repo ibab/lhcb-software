@@ -5,6 +5,20 @@
 !               Particle2MCAssociatorBase for Particle -> MCTruth matching
 !-----------------------------------------------------------------------------
 
+! 2009-03-13 - Juan PALACIOS
+ - P2MCP/IP2MCP.h
+  . Clean up. Return P2MCPTypes::FlatTrees
+ - P2MCP/P2MCPBase.h, src/Lib/P2MCP/P2MCPBase.cpp
+  . Big changes adapt to IP2MCP.
+ - P2MCP/P2MCPTypes.h
+  . Nested P2MCP::Types namespace.
+  . Clean up.
+ - Add P2MCP/P2MCPFunctors.h
+  . Useful sorting and other functors in P2MCP::Functors namespace.
+ - src/MCMatchObjP2MCRelator.h src/MCMatchObjP2MCRelator.cpp
+  . Use new functors
+ - dict/Particle2MCTruthDict{.h, .xml}
+  . Add dicts and instantiations for P2MCP::Types::FlatTree and P2MCP::Types::FlatTree
 ! 2009-03-10 - Juan PALACIOS
  - cmt/requirements
   . Add linker library and export include P2MCP
