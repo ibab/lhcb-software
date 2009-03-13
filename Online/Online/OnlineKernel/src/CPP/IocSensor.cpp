@@ -48,3 +48,4 @@ IocSensor& IocSensor::instance()  {
   static IocSensor* sensor = new IocSensor;
   return *sensor;
 }
+
