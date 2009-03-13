@@ -4,6 +4,11 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+
+! 2009-03-13 - Olivier Deschamps
+  - CaloReadoutTool : reduce verbosity 
+
+
 !========================== CaloDAQ v4r10 2009-02-20 =========================
 ! 2009-02-20 - Olivier Deschamps
   - CaloDigitFromRaw : bug fix when both ADC and Digits are requested to be stored
