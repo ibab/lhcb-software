@@ -8,5 +8,6 @@
 
 <!-- P2MCP -->
   <class name = "IP2MCP"/>
-
+  <class name = "P2MCP::Types::FlatTree"/>
+  <class name = "P2MCP::Types::FlatTrees"/>
 </lcgdict>
