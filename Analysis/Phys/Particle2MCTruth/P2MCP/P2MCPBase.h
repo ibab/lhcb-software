@@ -1,4 +1,4 @@
-// $Id: P2MCPBase.h,v 1.2 2009-03-10 18:29:38 jpalac Exp $
+// $Id: P2MCPBase.h,v 1.3 2009-03-13 18:08:07 jpalac Exp $
 #ifndef P2MCP_P2MCPBASE_H 
 #define P2MCP_P2MCPBASE_H 1
 
@@ -42,45 +42,34 @@ public:
   
   virtual ~P2MCPBase( );
 
-  virtual P2MCPTypes::ToVector 
-  associate(const LHCb::Particle* particle) const ;
+  virtual 
+  const LHCb::MCParticle* 
+  bestRelatedMCP(const LHCb::Particle* particle) const ;
 
-  virtual P2MCPTypes::ToVector 
-  associate(const LHCb::Particle* particle,
-            const std::string& mcParticleLocation) const ;
+  virtual 
+  const LHCb::MCParticle* 
+  bestRelatedMCP(const LHCb::Particle* particle,
+                 const LHCb::MCParticle::ConstVector& mcParticles) const ;
 
-  virtual P2MCPTypes::LightTable 
-  relatedMCPs(const LHCb::Particle*) const ;
+  virtual 
+  const LHCb::MCParticle* 
+  bestRelatedMCP(const LHCb::Particle* particle,
+                 const LHCb::MCParticle::Container& mcParticles) const ;
 
-  virtual P2MCPTypes::LightTable 
-  relatedMCPs(const LHCb::Particle*,
+  virtual P2MCP::Types::FlatTrees
+  relatedMCPs(const LHCb::Particle* particle) const ;
+
+  virtual P2MCP::Types::FlatTrees
+  relatedMCPs(const LHCb::Particle* particle,
               const std::string& mcParticleLocation) const ;
   
-  virtual P2MCPTypes::LightTable 
-  relatedMCPs(const LHCb::Particle*,
+  virtual P2MCP::Types::FlatTrees
+  relatedMCPs(const LHCb::Particle* particle,
               const LHCb::MCParticle::ConstVector& mcParticles) const ;
 
-  virtual P2MCPTypes::LightTable 
-  associations(const LHCb::Particle::ConstVector& particles) const ;
-  
-  virtual P2MCPTypes::LightTable 
-  associations(const LHCb::Particle::ConstVector& particles,
-               const std::string& mcParticleLocation) const ;
-
-  virtual P2MCPTypes::LightTable 
-  associations(const LHCb::Particle::ConstVector& particles,
-               const LHCb::MCParticle::ConstVector& mcParticles) const ;
-
-  virtual P2MCPTypes::LightTable 
-  associations(const LHCb::Particle::Container& particles) const ;
-
-  virtual P2MCPTypes::LightTable 
-  associations(const LHCb::Particle::Container& particles,
-               const std::string& mcParticleLocation) const ;
-
-  virtual P2MCPTypes::LightTable 
-  associations(const LHCb::Particle::Container& particles,
-               const LHCb::MCParticle::ConstVector& mcParticles) const ;
+  virtual P2MCP::Types::FlatTrees
+  relatedMCPs(const LHCb::Particle* particle,
+              const LHCb::MCParticle::Container& mcParticles) const ;
 
   virtual bool 
   isMatched(const LHCb::Particle* particle, 
@@ -95,81 +84,52 @@ private:
       get<LHCb::MCParticle::Container>( location ) : 0 ;
   }
   
+  template <typename Iter>
+  const LHCb::MCParticle*
+  i_bestMCP(const LHCb::Particle* particle,
+            Iter begin,
+            Iter end ) const 
+  {
+    P2MCP::Types::FlatTrees trees = i_relatedMCPs(particle, begin, end);
+    return (trees.empty() ) ? 0 : trees[0].back();
+
+  }
+  
 
   template <typename Iter> 
-  P2MCPTypes::LightTable 
+  P2MCP::Types::FlatTrees 
   i_relatedMCPs(const LHCb::Particle* particle,
                 Iter begin,
                 Iter end     ) const
   {
-    P2MCPTypes::LightTable table;
     if (0!=particle) {
       LHCb::MCParticle::ConstVector mcps;
       for ( Iter iMCP = begin ; iMCP != end ; ++iMCP){
         const bool match = isMatched(particle, *iMCP);
         if ( match ) mcps.push_back(*iMCP);
       }
-      mcps = sort(mcps);
-      return i_buildTable(particle, mcps.begin(), mcps.end() );
+      return sort( mcps );
     } else {
       Warning("No particle!").ignore();
-      return P2MCPTypes::LightTable();
+      P2MCP::Types::FlatTrees trees(0);
+      return trees;
     }
-  }
-
-  template <typename pIter, typename mcPIter>
-  P2MCPTypes::LightTable 
-  i_associations(const pIter pBegin, 
-                 const pIter pEnd, 
-                 const mcPIter mcBegin, 
-                 const mcPIter mcEnd) const
-  {
-
-    P2MCPTypes::LightTable table;
-    for (pIter part = pBegin; part != pEnd; ++part) {
-      table.merge( i_relatedMCPs(*part, mcBegin, mcEnd).relations() );
-    }
-    //    table.i_sort();
-    return table;
-  }
-  
-  template <typename Iter> 
-  inline P2MCPTypes::LightTable 
-  i_associations(const Iter pBegin,
-                 const Iter pEnd,
-                 const std::string& mcParticleLocation) const
-  {
-    LHCb::MCParticle::Container* mcps = i_MCParticles(mcParticleLocation);
-    if (0!=mcps) {
-      return i_associations(pBegin, pEnd, mcps->begin(), mcps->end());
-    } else {
-      return P2MCPTypes::LightTable();
-    }
-  }
-
-  template <typename Iter>
-  P2MCPTypes::LightTable i_buildTable(const LHCb::Particle* particle,
-                                      const Iter mcBegin,
-                                      const Iter mcEnd) const
-  {
-    P2MCPTypes::LightTable table;
-    for ( Iter iMCP = mcBegin ; iMCP != mcEnd ; ++iMCP) {
-      table.i_push( particle, *iMCP );
-    }
-    //    table.i_sort();
-    return table;
   }
 
 private :
 
-  virtual LHCb::MCParticle::ConstVector sort(const LHCb::MCParticle::ConstVector& mcParticles) const;
+  virtual 
+  P2MCP::Types::FlatTrees 
+  sort(const LHCb::MCParticle::ConstVector& mcParticles) const;
 
-  virtual LHCb::MCParticle::ConstVector sort(const LHCb::MCParticle::Container* mcParticles) const;
+  virtual 
+  P2MCP::Types::FlatTrees 
+  sort(const LHCb::MCParticle::Container& mcParticles) const;
 
   template <typename Iter> 
-  LHCb::MCParticle::ConstVector i_sort(const Iter begin, const Iter end) const
+  P2MCP::Types::FlatTrees i_sort(const Iter begin, const Iter end) const
   {
-    return LHCb::MCParticle::ConstVector(begin, end);
+    return P2MCP::Types::FlatTrees(1,P2MCP::Types::FlatTree(begin, end));
   }
 
 private:

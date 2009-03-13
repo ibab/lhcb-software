@@ -1,4 +1,4 @@
-// $Id: P2MCPBase.cpp,v 1.2 2009-03-10 18:31:28 jpalac Exp $
+// $Id: P2MCPBase.cpp,v 1.3 2009-03-13 18:08:07 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -26,37 +26,36 @@ P2MCPBase::P2MCPBase( const std::string& type,
   declareProperty ( "MCParticleDefaultLocation" , m_defMCLoc  ) ;
 }
 //=============================================================================
-P2MCPTypes::ToVector 
-P2MCPBase::associate(const LHCb::Particle* particle) const 
+const LHCb::MCParticle* 
+P2MCPBase::bestRelatedMCP(const LHCb::Particle* particle) const 
 {
-  return associate(particle, m_defMCLoc);
+  const LHCb::MCParticle::Container* mcParticles = i_MCParticles(m_defMCLoc);
+  return (0==mcParticles) ? 0 : i_bestMCP(particle, 
+                                          mcParticles->begin(), 
+                                          mcParticles->end() );
 }
 //=============================================================================
-P2MCPTypes::ToVector 
-P2MCPBase::associate(const LHCb::Particle* particle,
-                     const std::string& mcParticleLocation) const 
+const LHCb::MCParticle* 
+P2MCPBase::bestRelatedMCP(const LHCb::Particle* particle,
+                          const LHCb::MCParticle::ConstVector& mcParticles) const
 {
-  P2MCPTypes::ToVector assocVector;
-  P2MCPTypes::LightTable table = this->relatedMCPs(particle,
-                                                   mcParticleLocation);
-  
-
-  P2MCPTypes::LightTable::Range r = table.i_relations(particle);
-  for (P2MCPTypes::LightTable::Range::const_iterator i = r.begin();
-       i!=r.end(); ++i) {
-    MCAssociation myMCAssoc(i->to(), 1.);
-    assocVector.push_back(myMCAssoc);
-  }
-  return assocVector;
+  return i_bestMCP(particle, mcParticles.begin(), mcParticles.end());
 }
 //=============================================================================
-P2MCPTypes::LightTable 
+const LHCb::MCParticle* 
+P2MCPBase::bestRelatedMCP(const LHCb::Particle* particle,
+                          const LHCb::MCParticle::Container& mcParticles) const 
+{
+  return i_bestMCP(particle, mcParticles.begin(), mcParticles.end());
+}
+//=============================================================================
+P2MCP::Types::FlatTrees 
 P2MCPBase::relatedMCPs(const LHCb::Particle* particle) const
 {
   return relatedMCPs(particle, m_defMCLoc);
 }
 //=============================================================================
-P2MCPTypes::LightTable 
+P2MCP::Types::FlatTrees 
 P2MCPBase::relatedMCPs(const LHCb::Particle* particle,
                        const std::string& mcParticleLocation) const
 {
@@ -64,59 +63,22 @@ P2MCPBase::relatedMCPs(const LHCb::Particle* particle,
   if (0!=mcps) {
     return i_relatedMCPs(particle,  mcps->begin(), mcps->end());
   } else {
-    return P2MCPTypes::LightTable();
+    return P2MCP::Types::FlatTrees();
   }   
 }
 //=============================================================================
-P2MCPTypes::LightTable 
+P2MCP::Types::FlatTrees 
 P2MCPBase::relatedMCPs(const LHCb::Particle* particle,
                        const LHCb::MCParticle::ConstVector& mcParticles) const
 {
   return i_relatedMCPs(particle,  mcParticles.begin(), mcParticles.end());
 }
 //=============================================================================
-P2MCPTypes::LightTable 
-P2MCPBase::associations(const LHCb::Particle::ConstVector& particles) const
+P2MCP::Types::FlatTrees 
+P2MCPBase::relatedMCPs(const LHCb::Particle* particle,
+                       const LHCb::MCParticle::Container& mcParticles) const
 {
-  return i_associations(particles.begin(), particles.end(), m_defMCLoc);
-}
-//=============================================================================
-P2MCPTypes::LightTable 
-P2MCPBase::associations(const LHCb::Particle::ConstVector& particles,
-                        const std::string& mcParticleLocation) const
-{
-  return i_associations(particles.begin(), particles.end(), mcParticleLocation);
-}
-//=============================================================================
-P2MCPTypes::LightTable 
-P2MCPBase::associations(const LHCb::Particle::ConstVector& particles,
-                        const LHCb::MCParticle::ConstVector& mcParticles) const
-{
-  return i_associations(particles.begin(),
-                        particles.end(),
-                        mcParticles.begin(),
-                        mcParticles.end());
-  
-}
-//=============================================================================
-P2MCPTypes::LightTable 
-P2MCPBase::associations(const LHCb::Particle::Container& particles) const
-{
-  return i_associations(particles.begin(), particles.end(), m_defMCLoc);
-}
-//=============================================================================
-P2MCPTypes::LightTable 
-P2MCPBase::associations(const LHCb::Particle::Container& particles,
-                        const std::string& mcParticleLocation) const
-{
-  return i_associations(particles.begin(), particles.end(), mcParticleLocation);  
-}
-//=============================================================================
-P2MCPTypes::LightTable 
-P2MCPBase::associations(const LHCb::Particle::Container& particles,
-                        const LHCb::MCParticle::ConstVector& mcParticles) const
-{
-  return i_associations(particles.begin(), particles.end(), mcParticles.begin(), mcParticles.end());          
+  return i_relatedMCPs(particle,  mcParticles.begin(), mcParticles.end());
 }
 //=============================================================================
 bool
@@ -126,16 +88,16 @@ P2MCPBase::isMatched(const LHCb::Particle* /*particle */,
   return false;
 }
 //=============================================================================
-LHCb::MCParticle::ConstVector 
+P2MCP::Types::FlatTrees
 P2MCPBase::sort(const LHCb::MCParticle::ConstVector& mcParticles) const 
 {
   return i_sort(mcParticles.begin(), mcParticles.end());
 }
 //=============================================================================
-LHCb::MCParticle::ConstVector 
-P2MCPBase::sort(const LHCb::MCParticle::Container* mcParticles) const
+P2MCP::Types::FlatTrees
+P2MCPBase::sort(const LHCb::MCParticle::Container& mcParticles) const
 {
-  return i_sort(mcParticles->begin(), mcParticles->end());
+  return i_sort(mcParticles.begin(), mcParticles.end());
 }
 //=============================================================================
 // initialize
