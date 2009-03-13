@@ -1,4 +1,4 @@
-// $Id: P2MCPTypes.h,v 1.1 2009-03-10 18:29:05 jpalac Exp $
+// $Id: P2MCPTypes.h,v 1.2 2009-03-13 18:05:06 jpalac Exp $
 #ifndef P2MCP_P2MCPTYPES_H 
 #define P2MCP_P2MCPTYPES_H 1
 
@@ -18,23 +18,27 @@
  *  @author Juan PALACIOS
  *  @date   2009-03-10
  */
-namespace P2MCPTypes {
+namespace P2MCP {
 
-  typedef LHCb::MCParticle::ConstVector  FlatTree;
-  typedef std::vector<const FlatTree>    FlatTrees;
+  namespace Types 
+  {
 
-  typedef LHCb::Relation1D<LHCb::Particle, 
-                           LHCb::MCParticle  >            Table      ;
+    typedef LHCb::MCParticle::ConstVector  FlatTree;
+    typedef std::vector<FlatTree>    FlatTrees;
 
-  typedef Relations::Relation<LHCb::Particle, 
-                              LHCb::MCParticle >          LightTable ;
-  typedef Table::Range                                    Range      ;
-  typedef Table::IBase::TypeTraits::Entry                 Relation   ;
-  typedef Table::IBase::TypeTraits::Entries               Relations  ;
-  typedef Table::To                                       To         ;
-  typedef Table::From                                     From       ;
+    typedef LHCb::Relation1D<LHCb::Particle, 
+                             LHCb::MCParticle  >            Table      ;
 
-  typedef std::vector<MCAssociation>                      ToVector;
+    typedef Relations::Relation<LHCb::Particle, 
+                                LHCb::MCParticle >          LightTable ;
+    typedef Table::Range                                    Range      ;
+    typedef Table::IBase::TypeTraits::Entry                 Relation   ;
+    typedef Table::IBase::TypeTraits::Entries               Relations  ;
+    typedef Table::To                                       To         ;
+    typedef Table::From                                     From       ;
+
+    typedef std::vector<MCAssociation>                      ToVector;
+  }
   
 }
 #endif // P2MCP_P2MCPTYPES_H
