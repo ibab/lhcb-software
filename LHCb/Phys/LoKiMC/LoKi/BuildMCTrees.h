@@ -1,4 +1,4 @@
-// $Id: BuildMCTrees.h,v 1.7 2008-06-12 08:16:49 ibelyaev Exp $
+// $Id: BuildMCTrees.h,v 1.8 2009-03-13 16:22:44 jpalac Exp $
 // ============================================================================
 #ifndef LOKI_BUILDMCTREES_H 
 #define LOKI_BUILDMCTREES_H 1
@@ -162,6 +162,24 @@ namespace LoKi
     LHCb::MCParticle::ConstVector
     buildTrees 
     ( const LHCb::MCParticle::ConstVector& input ) ;
+    // ========================================================================
+    /** Simple function which 'builds' the trees
+     *
+     *  @code
+     *
+     *  LHCb::MCParticle::Container& input = ... ;
+     *
+     *  LHCb::MCParticle::ConstVector output = 
+     *    LoKi::MCTrees::buldTrees ( input ) ;
+     *
+     *  @endcode 
+     *
+     *  @param input input container of MCParticles  
+     *  @return container of MCtrees  
+     */
+    LHCb::MCParticle::ConstVector
+    buildTrees 
+    ( const LHCb::MCParticle::Container& input ) ;
     // ========================================================================
     /** Simple function which 'builds' the trees
      *

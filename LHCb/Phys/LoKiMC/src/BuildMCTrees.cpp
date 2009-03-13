@@ -1,4 +1,4 @@
-// $Id: BuildMCTrees.cpp,v 1.2 2007-07-23 17:27:31 ibelyaev Exp $
+// $Id: BuildMCTrees.cpp,v 1.3 2009-03-13 16:22:44 jpalac Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -35,17 +35,25 @@ LoKi::MCTrees::buildTrees
   output.reserve ( input.size() ) ;
   buildTrees ( input.begin() , input.end() , std::back_inserter( output ) ) ;
   return output ;
-} 
+}
+// ============================================================================
+LHCb::MCParticle::ConstVector
+LoKi::MCTrees::buildTrees 
+( const LHCb::MCParticle::Container& input ) 
+{
+  if (input.empty())  { return LHCb::MCParticle::ConstVector() ;}
+  LHCb::MCParticle::ConstVector output ;
+  output.reserve ( input.size() ) ;
+  buildTrees ( input.begin() , input.end() , std::back_inserter( output ) ) ;
+  return output ;
+}  
 // ============================================================================
 LHCb::MCParticle::ConstVector
 LoKi::MCTrees::buildTrees 
 ( const LHCb::MCParticle::Container* input ) 
 {
   if ( 0 == input ) { return LHCb::MCParticle::ConstVector() ;}
-  LHCb::MCParticle::ConstVector output ;
-  output.reserve ( input->size() ) ;
-  buildTrees ( input->begin() , input->end() , std::back_inserter( output ) ) ;
-  return output ;
+  return LoKi::MCTrees::buildTrees(*input);
 } 
 // ============================================================================
 LHCb::MCParticle::ConstVector
