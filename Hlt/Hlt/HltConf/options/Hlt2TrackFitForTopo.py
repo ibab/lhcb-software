@@ -55,15 +55,9 @@ SeqHlt2TFCharged.Members += [ Hlt2TFTrackFit ]
 Hlt2TFTrackFit.TracksInContainer  = "Hlt/Track/Forward"
 Hlt2TFTrackFit.TracksOutContainer = "Hlt/Track/TFForward"
 
-Hlt2TFTrackFit.addTool(TrackMasterFitter('Fitter'))
-Hlt2TFTrackFit.Fitter.NumberFitIterations = 1
-Hlt2TFTrackFit.Fitter.MaxNumberOutliers = 0
-Hlt2TFTrackFit.Fitter.MaterialLocator = "SimplifiedMaterialLocator"
-Hlt2TFTrackFit.Fitter.addTool(TrackKalmanFilter('NodeFitter'))
-Hlt2TFTrackFit.Fitter.NodeFitter.BiDirectionalFit = 0
-Hlt2TFTrackFit.Fitter.NodeFitter.Smooth = 0
-Hlt2TFTrackFit.Fitter.addTool(TrackMasterExtrapolator('Extrapolator'))
-Hlt2TFTrackFit.Fitter.Extrapolator.MaterialLocator = "SimplifiedMaterialLocator"
+Hlt2TFTrackFit.addTool(TrackMasterFitter, name = 'Fitter')
+from TrackFitter.ConfiguredFitters import ConfiguredFastFitter
+ConfiguredFastFitter( getattr(Hlt2TFTrackFit,'Fitter'))
 
 #---------------------------------------------------------------------
 # Calo Reco & PIDs --------
