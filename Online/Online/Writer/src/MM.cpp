@@ -39,7 +39,6 @@ MM::MM(size_t maxQueueSize)
   pthread_cond_init(&m_emptyCondition, NULL);
   m_sendPointer = NULL;
   m_queueLength = 0;
-  m_queueSize = 0;
   m_maxQueueSize = maxQueueSize;
   m_allocCmdCount = 0;
   m_allocByteCount = 0;
@@ -64,7 +63,7 @@ MM::~MM()
  */
 struct cmd_header* MM::allocAndCopyCommand(struct cmd_header *header, void *data)
 {
-  if(m_queueSize > m_maxQueueSize) {
+  if(MM::m_allocByteCount > m_maxQueueSize) {
       return NULL;
   }
   struct cmd_header *newHeader;
@@ -84,7 +83,6 @@ struct cmd_header* MM::allocAndCopyCommand(struct cmd_header *header, void *data
   newHeader = (struct cmd_header*)malloc_blocking(dataSize + sizeof(struct cmd_header));
   newData = ((unsigned char*)newHeader) + sizeof(struct cmd_header);
   
-  m_queueSize += dataSize + sizeof(struct cmd_header);
   
   if(newHeader) {
     pthread_mutex_lock(&m_allocLock);
@@ -119,8 +117,11 @@ void MM::freeCommand(struct cmd_header *cmd)
       return;
       break;
   }
+  pthread_mutex_unlock(&m_listLock);
+
   free(cmd);
   pthread_mutex_lock(&m_allocLock);
+  
   m_allocByteCount -= totLen;
   m_allocCmdCount--;
   pthread_mutex_unlock(&m_allocLock);
@@ -140,7 +141,7 @@ void MM::enqueueCommand(struct cmd_header *cmd)
 {
   if(cmd == NULL) {
       return; // should only be the case when allocAndCopyCommand
-              // return NULL because the m_queueSize was too big
+              // return NULL because the queueSize was too big
   }
   struct list_head *newElem;
 
@@ -271,8 +272,6 @@ struct cmd_header* MM::dequeueCommand(unsigned int sequenceNum, unsigned int run
         prev->next = tmp->next;
       }
       m_queueLength--;
-      m_queueSize = m_queueSize - tmp->cmd->data.chunk_data.size - sizeof(struct cmd_header);
-      pthread_mutex_unlock(&m_listLock);
       retCmd = tmp->cmd;
       free(tmp);
       return retCmd;

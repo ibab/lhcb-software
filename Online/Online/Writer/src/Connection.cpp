@@ -41,6 +41,7 @@ Connection::Connection(std::string serverAddr, int serverPort, int sndRcvSizes,
   m_serverAddr = serverAddr;
   m_serverPort = serverPort;
   m_log = log;
+  m_maxQueueSize = maxQueueSize;
   m_notifyClient = nClient;
   m_sndRcvSizes = sndRcvSizes;
   m_failoverMonitor = NULL;

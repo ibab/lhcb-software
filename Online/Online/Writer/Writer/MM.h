@@ -46,8 +46,6 @@ namespace LHCb {
       /// The number of elements in the queue.
       unsigned int m_queueLength;
       
-      /// The current size of the elements in the queue
-      size_t m_queueSize;
 
       /// The maximum size of the queue
       size_t m_maxQueueSize;

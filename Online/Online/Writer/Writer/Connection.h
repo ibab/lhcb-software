@@ -84,6 +84,10 @@ namespace LHCb {
       /// The destination address in a struct.
       struct sockaddr_in m_destAddr;
 
+      /// maximum size of the queue, only used in Connection to print out this valu
+      /// real use is only in m_mmObj
+      size_t m_maxQueueSize;
+
       /// An MM object to manage memory.
       MM m_mmObj;
 
