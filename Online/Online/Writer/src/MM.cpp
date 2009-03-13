@@ -64,7 +64,7 @@ MM::~MM()
  */
 struct cmd_header* MM::allocAndCopyCommand(struct cmd_header *header, void *data)
 {
-  if(m_queueSize > (size_t) (2 << 30)) {
+  if(m_queueSize > m_maxQueueSize) {
       return NULL;
   }
   struct cmd_header *newHeader;
@@ -271,6 +271,7 @@ struct cmd_header* MM::dequeueCommand(unsigned int sequenceNum, unsigned int run
         prev->next = tmp->next;
       }
       m_queueLength--;
+      m_queueSize = m_queueSize - tmp->cmd->data.chunk_data.size - sizeof(struct cmd_header);
       pthread_mutex_unlock(&m_listLock);
       retCmd = tmp->cmd;
       free(tmp);

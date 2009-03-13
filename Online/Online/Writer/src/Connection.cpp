@@ -266,7 +266,7 @@ void Connection::sendCommand(struct cmd_header *header, void *data)
   do {
       newHeader = m_mmObj.allocAndCopyCommand(header, data);  /* Will always succeed. */
       if(newHeader == NULL) {
-          *m_log << MSG::FATAL << "Buffer is full!" << endmsg;
+          *m_log << MSG::FATAL << "Buffer is full! MaxQueueSizeBytes=" << m_maxQueueSize << endmsg;
           sleep(5);
           retry++;
       }
@@ -274,7 +274,7 @@ void Connection::sendCommand(struct cmd_header *header, void *data)
   if(newHeader != NULL) {
       m_mmObj.enqueueCommand(newHeader);
   } else {
-        *m_log << MSG::FATAL << "ERROR: Buffer is sill full, giving up. Event is lost!" << endmsg;
+        *m_log << MSG::FATAL << "ERROR: Buffer is still full, giving up. Event is lost!" << endmsg;
     }
 }
 
