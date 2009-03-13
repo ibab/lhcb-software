@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonLines.py,v 1.16 2009-03-12 14:18:41 graven Exp $
+# $Id: HltMuonLines.py,v 1.17 2009-03-13 12:37:04 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.16 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.17 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -23,7 +23,6 @@ from LHCbKernel.Configuration import *
 from Configurables import GaudiSequencer
 from Configurables import HltMuonRec
 from Configurables import HltTrackUpgrade
-from Configurables import PatMatchTool
 
 from HltConf.HltLine import Hlt1Line   as Line
 from HltConf.HltLine import Hlt1Member as Member
@@ -94,6 +93,7 @@ class HltMuonLinesConf(LHCbConfigurableUser) :
                                 , DecodingFromCoord=True )
 
         ### Matching Confirmed T Tracks with VELO
+        from Configurables import PatMatchTool
         TMatchV = [ Member ('TU', 'TConf' , RecoName = 'TConf' )
                   , Member ('TF', 'DeltaP' 
                            , FilterDescriptor = ['DeltaP,>,'+str(self.getProp('Muon_DeltaPCut')) ])
