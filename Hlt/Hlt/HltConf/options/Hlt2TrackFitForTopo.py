@@ -141,28 +141,28 @@ Hlt2TFPions = PreLoadParticles('Hlt2TFPions')
 Hlt2TFKaons = PreLoadParticles('Hlt2TFKaons')
 SeqHlt2TFParticles.Members += [ Hlt2TFPions, Hlt2TFKaons ]
 
-Hlt2TFPions.addTool(PhysDesktop())
+Hlt2TFPions.addTool(PhysDesktop)
 Hlt2TFPions.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker"
-Hlt2TFPions.PhysDesktop.addTool(NoPIDsParticleMaker())
+Hlt2TFPions.PhysDesktop.addTool(NoPIDsParticleMaker)
 Hlt2TFPions.PhysDesktop.NoPIDsParticleMaker.Inputs = [ "Hlt/ProtoP/TFCharged" ]
 Hlt2TFPions.PhysDesktop.NoPIDsParticleMaker.Particle = "pion"
 Hlt2TFPions.DecayDescriptor = "Pion"
 
-Hlt2TFKaons.addTool(PhysDesktop())
+Hlt2TFKaons.addTool(PhysDesktop)
 Hlt2TFKaons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker"
-Hlt2TFKaons.PhysDesktop.addTool(NoPIDsParticleMaker())
+Hlt2TFKaons.PhysDesktop.addTool(NoPIDsParticleMaker)
 Hlt2TFKaons.PhysDesktop.NoPIDsParticleMaker.Inputs = [ "Hlt/ProtoP/TFCharged" ]
 Hlt2TFKaons.PhysDesktop.NoPIDsParticleMaker.Particle = "kaon"
 Hlt2TFKaons.DecayDescriptor = "Kaon"
 
 #* To get the RICH kaons
-#Hlt2TFKaons.addTool(PhysDesktop())
+#Hlt2TFKaons.addTool(PhysDesktop)
 #Hlt2TFKaons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker"
-#Hlt2TFKaons.PhysDesktop.addTool(CombinedParticleMaker())
+#Hlt2TFKaons.PhysDesktop.addTool(CombinedParticleMaker)
 #Hlt2TFKaons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = 0
 #Hlt2TFKaons.PhysDesktop.CombinedParticleMaker.InputProtoParticles = "Hlt/ProtoP/TFCharged"
 #Hlt2TFKaons.PhysDesktop.CombinedParticleMaker.Particles = ["kaon"]
-#Hlt2TFKaons.PhysDesktop.CombinedParticleMaker.addTool(TrackSelector())
+#Hlt2TFKaons.PhysDesktop.CombinedParticleMaker.addTool(TrackSelector)
 #Hlt2TFKaons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = ["Long"]
 #Hlt2TFKaons.PhysDesktop.CombinedParticleMaker.addTool(ProtoParticleCALOFilter('Kaon'))
 #Hlt2TFKaons.PhysDesktop.CombinedParticleMaker.Kaon.Selection = [ "RequiresDet='RICH' CombDLL(k-pi)>'-5.0'" ]
@@ -175,9 +175,9 @@ Hlt2TFKaons.DecayDescriptor = "Kaon"
 HltRichPIDsKaons = PreLoadParticles('HltRichPIDsKaons')
 SeqHlt2TFParticles.Members += [ HltRichPIDsKaons ]
 
-HltRichPIDsKaons.addTool(PhysDesktop())
+HltRichPIDsKaons.addTool(PhysDesktop)
 HltRichPIDsKaons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker"
-HltRichPIDsKaons.PhysDesktop.addTool(CombinedParticleMaker())
+HltRichPIDsKaons.PhysDesktop.addTool(CombinedParticleMaker)
 HltRichPIDsKaons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = 0
 HltRichPIDsKaons.PhysDesktop.CombinedParticleMaker.InputProtoParticles = "Hlt/ProtoP/TFCharged"
 HltRichPIDsKaons.PhysDesktop.CombinedParticleMaker.Particles = ["kaon"]
@@ -200,16 +200,16 @@ SeqHlt2TFMuons.IgnoreFilterPassed = 1
 Hlt2TFMuons = PreLoadParticles('Hlt2TFMuons')
 SeqHlt2TFMuons.Members += [ Hlt2TFMuons ]
 
-Hlt2TFMuons.addTool(PhysDesktop())
+Hlt2TFMuons.addTool(PhysDesktop)
 Hlt2TFMuons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
-Hlt2TFMuons.PhysDesktop.addTool(CombinedParticleMaker())
+Hlt2TFMuons.PhysDesktop.addTool(CombinedParticleMaker)
 Hlt2TFMuons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = 0
+Hlt2TFMuons.PhysDesktop.CombinedParticleMaker.InputProtoParticles =  "/Event/Hlt/ProtoP/TFCharged"
 Hlt2TFMuons.PhysDesktop.CombinedParticleMaker.Particles = ["muon"]
 Hlt2TFMuons.PhysDesktop.CombinedParticleMaker.addTool(ProtoParticleMUONFilter('Muon'))
 Hlt2TFMuons.PhysDesktop.CombinedParticleMaker.Muon.Selection = ["RequiresDet='MUON'"]
 Hlt2TFMuons.PhysDesktop.CombinedParticleMaker.addTool(TrackSelector())
 Hlt2TFMuons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = ["Long"]
-Hlt2TFMuons.PhysDesktop.CombinedParticleMaker.InputProtoParticles =  "/Event/Hlt/ProtoP/TFCharged"
 Hlt2TFMuons.DecayDescriptor = "Muon"
 
 #---------------------------------------------------------------------
@@ -218,9 +218,9 @@ Hlt2TFMuons.DecayDescriptor = "Muon"
 Hlt2TFElectrons = PreLoadParticles('Hlt2TFElectrons')
 SeqHlt2TFParticles.Members += [ Hlt2TFElectrons ]
 
-Hlt2TFElectrons.addTool(PhysDesktop())
+Hlt2TFElectrons.addTool(PhysDesktop)
 Hlt2TFElectrons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker"
-Hlt2TFElectrons.PhysDesktop.addTool(CombinedParticleMaker())
+Hlt2TFElectrons.PhysDesktop.addTool(CombinedParticleMaker)
 Hlt2TFElectrons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = 0
 Hlt2TFElectrons.PhysDesktop.CombinedParticleMaker.Particles =  ["electron"]
 Hlt2TFElectrons.PhysDesktop.CombinedParticleMaker.InputProtoParticles =  "/Event/Hlt/ProtoP/TFCharged"

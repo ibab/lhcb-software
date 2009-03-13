@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.173 2009-03-13 12:37:04 graven Exp $ 
+! $Id: release.notes,v 1.174 2009-03-13 12:39:55 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -8,6 +8,11 @@
 ! 2009-03-13 - Gerhard Raven
  - update fast-fit options in Hlt2TrackFitForTopo.py: delegate details to TrackFitter
  - one more 'import' movements to reduce dependency warnings
+ - use XYZ.addTool(PhysDesktop) instead of XYZ.addTool(PhysDesktop())
+   to avoid picking up an existing instance of PhysDesktop (which is what
+   PhysDesktop() returns!) which could already have been configured by someone 
+   else...
+
 
 ! 2009-03-12 - V. Gligorov & P. Spradlin
  - Added fast-fit options used by topological in Hlt2TrackFitForTopo.py 
