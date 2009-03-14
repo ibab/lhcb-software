@@ -1,4 +1,4 @@
-// $Id: DeSTBaseElement.h,v 1.15 2009-01-14 13:26:02 mneedham Exp $
+// $Id: DeSTBaseElement.h,v 1.16 2009-03-14 09:18:07 mneedham Exp $
 #ifndef _DeSTBaseElement_H_
 #define _DeSTBaseElement_H_
 
@@ -59,6 +59,12 @@ public:
 
   /** detector element id  - for experts only !*/
   LHCb::STChannelID elementID() const;
+  
+  /** check whether contains 
+  *  @param  aChannel channel
+  *  @return bool
+  */ 
+  virtual bool contains(const LHCb::STChannelID aChannel) const = 0; 
 
   /** set detector element id  - for experts only !*/
   void setElementID(const LHCb::STChannelID& chanID);

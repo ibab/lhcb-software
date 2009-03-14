@@ -9,6 +9,7 @@
 #include "STDet/DeSTSector.h"
 
 namespace Status{
+ 
   typedef std:: map<DeSTSector::Status,std::string> StatusToStringMap;
   typedef std::vector<DeSTSector::Status> StatusVector;
 

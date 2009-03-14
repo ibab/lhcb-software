@@ -1,4 +1,4 @@
-// $Id: DeSTSensor.h,v 1.5 2009-01-14 13:26:02 mneedham Exp $
+// $Id: DeSTSensor.h,v 1.6 2009-03-14 09:18:07 mneedham Exp $
 #ifndef _DeSTSensor_H_
 #define _DeSTSensor_H_
 
@@ -42,6 +42,12 @@ public:
    * @return StatusCode OK or not
    */
   virtual StatusCode initialize();
+
+  /** check whether contains
+  *  @param  aChannel channel
+  *  @return bool
+  */
+  virtual bool contains(const LHCb::STChannelID aChannel) const;
 
   /** sector identfier
    * @return id
@@ -195,6 +201,10 @@ private:
   double m_stripLength;
 
 };
+
+inline bool DeSTSensor::contains(const LHCb::STChannelID aChannel) const{
+  return (aChannel.uniqueSector() == elementID().uniqueSector());
+}
 
 inline unsigned int DeSTSensor::id() const{
   return m_id;

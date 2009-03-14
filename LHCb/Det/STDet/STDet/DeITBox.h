@@ -1,4 +1,4 @@
-// $Id: DeITBox.h,v 1.6 2008-07-14 07:38:36 mneedham Exp $
+// $Id: DeITBox.h,v 1.7 2009-03-14 09:18:07 mneedham Exp $
 #ifndef _DeITBox_H_
 #define _DeITBox_H_
 
@@ -64,7 +64,7 @@ public:
    *  @param aChannel channel
    *  @return bool
    */ 
-   bool contains(const LHCb::STChannelID aChannel) const; 
+   virtual bool contains(const LHCb::STChannelID aChannel) const; 
 
    /** identifier */
    unsigned int id() const;

@@ -1,7 +1,10 @@
-!$Id: release.notes,v 1.162 2009-03-09 13:03:11 cattanem Exp $
+!$Id: release.notes,v 1.163 2009-03-14 09:18:07 mneedham Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
+
+! 20009-03-14 M. Needham
+ - Move contains function to DeSTBaseElement class + make virtual
 
 !======================== STDet v4r8 2009-03-09 ==========================
 ! 2009-02-27 M Needham

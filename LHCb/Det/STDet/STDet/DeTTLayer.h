@@ -1,4 +1,4 @@
-// $Id: DeTTLayer.h,v 1.7 2008-10-22 11:06:08 cattanem Exp $
+// $Id: DeTTLayer.h,v 1.8 2009-03-14 09:18:07 mneedham Exp $
 #ifndef _DeTTLayer_H_
 #define _DeTTLayer_H_
 
@@ -72,7 +72,7 @@ public:
   *  @param  aChannel channel
   *  @return bool
   */ 
-  bool contains(const LHCb::STChannelID aChannel) const; 
+  virtual bool contains(const LHCb::STChannelID aChannel) const; 
 
   /** vector of children */
   const Children& halfModules() const;

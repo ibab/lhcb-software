@@ -1,4 +1,4 @@
-// $Id: DeSTSector.h,v 1.36 2009-02-18 07:38:53 jluisier Exp $
+// $Id: DeSTSector.h,v 1.37 2009-03-14 09:18:07 mneedham Exp $
 #ifndef _DeSTSector_H_
 #define _DeSTSector_H_
 
@@ -119,7 +119,7 @@ public:
    *  @param  aChannel channel
    *  @return bool
    */
-  bool contains(const LHCb::STChannelID aChannel) const;
+  virtual bool contains(const LHCb::STChannelID aChannel) const;
 
   /** detector pitch
    * @return pitch

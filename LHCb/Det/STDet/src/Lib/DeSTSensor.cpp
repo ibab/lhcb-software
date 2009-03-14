@@ -1,4 +1,4 @@
-// $Id: DeSTSensor.cpp,v 1.4 2009-01-14 13:26:02 mneedham Exp $
+// $Id: DeSTSensor.cpp,v 1.5 2009-03-14 09:18:07 mneedham Exp $
 #include "STDet/DeSTSensor.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -256,6 +256,6 @@ void DeSTSensor::cacheParentProperties(const DeSTSector* parent) {
   m_pitch = parent->pitch();
   m_nStrip = parent->nStrip();
   m_deadWidth = parent->deadWidth();
-
+  setElementID(parent->elementID());
 }
 

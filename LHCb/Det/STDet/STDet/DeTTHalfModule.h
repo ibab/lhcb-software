@@ -1,4 +1,4 @@
-// $Id: DeTTHalfModule.h,v 1.8 2009-02-03 13:40:04 mneedham Exp $
+// $Id: DeTTHalfModule.h,v 1.9 2009-03-14 09:18:07 mneedham Exp $
 
 #ifndef _DeTTHalfModule_H_
 #define _DeTTHalfModule_H_
@@ -91,7 +91,7 @@ public:
   * @param  aChannel test channel
   * @return bool 
   */
-  bool contains(const LHCb::STChannelID aChannel) const; 
+  virtual bool contains(const LHCb::STChannelID aChannel) const; 
  
   /** print to stream */
   std::ostream& printOut( std::ostream& os ) const;

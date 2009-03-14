@@ -1,4 +1,4 @@
-// $Id: DeSTStation.h,v 1.4 2008-06-16 14:24:03 mneedham Exp $
+// $Id: DeSTStation.h,v 1.5 2009-03-14 09:18:07 mneedham Exp $
 #ifndef _DeSTStation_H_
 #define _DeSTStation_H_
 
@@ -57,7 +57,7 @@ public:
   *  @param  aChannel channel
   *  @return bool
   */
-  bool contains(const LHCb::STChannelID aChannel) const;
+  virtual bool contains(const LHCb::STChannelID aChannel) const;
 
   /** 
   * Nickname for the station
