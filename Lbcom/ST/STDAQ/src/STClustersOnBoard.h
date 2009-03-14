@@ -27,7 +27,7 @@ public:
 
  ~STClustersOnBoard();
 
- void addCluster(LHCb::STCluster* aCluster, const unsigned int daqChan);  
+ void addCluster(LHCb::STCluster* aCluster);  
 
  ClusterVector clusters() const;
 
@@ -78,9 +78,10 @@ inline STClustersOnBoard::ClusterVector STClustersOnBoard::clusters() const{
   return m_clusCont;
 }
 
-inline void STClustersOnBoard::addCluster(LHCb::STCluster* aCluster, const unsigned int daqChan){
+inline void STClustersOnBoard::addCluster(LHCb::STCluster* aCluster){
 
-  unsigned int ppx = daqChan/STDAQ::nStripPerPPx;
+  const unsigned int daqChan = aCluster->tell1Channel();
+  const unsigned int ppx = daqChan/STDAQ::nStripPerPPx;
   if (inOverflow(ppx) == false){
     m_clusCont.push_back(std::make_pair(aCluster, daqChan));
     ++m_ppxCount[ppx];

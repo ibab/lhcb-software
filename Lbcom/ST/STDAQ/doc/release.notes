@@ -4,6 +4,9 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2009-03-14 M Needham
+ - Clean up STClustersToRawBank to follow changes in STClusterCreator
+
 !=============================== STDAQ v3r16 2009-03-10 ======================
 ! 2009-03-03 Mark Tobin
  - Fix gcc4.3 warning in STFullDecoding

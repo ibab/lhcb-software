@@ -1,4 +1,4 @@
-// $Id: STClustersToRawBankAlg.cpp,v 1.10 2008-10-17 14:10:22 mneedham Exp $
+// $Id: STClustersToRawBankAlg.cpp,v 1.11 2009-03-14 09:17:34 mneedham Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -136,10 +136,10 @@ StatusCode STClustersToRawBankAlg::execute() {
   }
 
   // convert to a bank and add to buffer
-  unsigned int nBoard = readoutTool()->nBoard();
+  const unsigned int nBoard = readoutTool()->nBoard();
   for (unsigned int iBoard = 0u; iBoard < nBoard; ++iBoard){   
     // get the data ....
-    STTell1ID aBoardID = m_bankMapping->findBoard(iBoard);
+    const STTell1ID aBoardID = m_bankMapping->findBoard(iBoard);
     STClustersOnBoard::ClusterVector clusCont = m_clusVectors[iBoard]->clusters();
 
     if ( m_clusVectors[iBoard]->inOverflow() == true) ++m_overflow;
@@ -149,13 +149,14 @@ StatusCode STClustersToRawBankAlg::execute() {
 
     writeBank(clusCont,bWriter,aBoardID);
 
+   
     RawBank* tBank = tEvent->createBank(STDAQ::rawInt(aBoardID.id()),
                                         m_bankType ,STDAQ::v4, 
                                         bWriter.byteSize(),
                                         &(bWriter.dataBank()[0]));
 
     tEvent->adoptBank(tBank,true);
-
+    
   } // iBoard
 
   // flag overflow
@@ -185,30 +186,16 @@ StatusCode STClustersToRawBankAlg::groupByBoard(const STClusters* clusCont){
        iterClus != clusCont->end(); ++iterClus ){
 
     // find the online channel and board
-    STChannelID chan = (*iterClus)->channelID();
-    double isf = (*iterClus)->interStripFraction();
-    STDAQ::chanPair aPair = readoutTool()->offlineChanToDAQ(chan,isf);
-
-    if (aPair.first.id() == STTell1ID::nullBoard) {
-      // screwed
-      err()  << "failed to link "   
-             << uniqueSector(chan) << endreq;
-      return StatusCode::FAILURE;
+    const STChannelID chan = (*iterClus)->channelID();
+    ClusterMap::iterator iterMap = m_clusMap.find(STTell1ID((*iterClus)->sourceID()));
+    if (iterMap != m_clusMap.end() ){
+      STClustersOnBoard* tVec = iterMap->second;
+      tVec->addCluster(*iterClus);
     }
     else {
-      ClusterMap::iterator iterMap = m_clusMap.find(aPair.first);
-      if (iterMap != m_clusMap.end() ){
-        STClustersOnBoard* tVec = iterMap->second;
-        tVec->addCluster(*iterClus,aPair.second);
-      }
-      else {
-        warning() << "Failed to find board in map " << endreq;
-      }
-    }
-    
-     
+     return Warning("Failed to find board in map ", StatusCode::SUCCESS);
+    }    
   } // iterClus
-
   return StatusCode::SUCCESS;
 }
 
