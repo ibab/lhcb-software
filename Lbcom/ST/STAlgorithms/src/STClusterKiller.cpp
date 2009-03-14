@@ -1,4 +1,4 @@
-// $Id: STClusterKiller.cpp,v 1.4 2009-02-10 09:44:15 mneedham Exp $
+// $Id: STClusterKiller.cpp,v 1.5 2009-03-14 09:18:49 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -20,7 +20,7 @@ STClusterKiller::STClusterKiller( const std::string& name,
   m_clusterSelector(0)
  {
 
-  declareProperty("Selector", m_selectorType = "STRndmClusterSelector");
+  declareProperty("Selector", m_selectorType = "STSelectClustersByChannel");
   declareSTConfigProperty("InputLocation",m_inputLocation, STClusterLocation::TTClusters); 
 }
 
@@ -34,7 +34,7 @@ StatusCode STClusterKiller::initialize()
   StatusCode sc = ST::AlgBase::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
 
-  m_clusterSelector = tool<ISTClusterSelector>(m_selectorType, "Selector", this);
+  m_clusterSelector = tool<ISTClusterSelector>(m_selectorType, detType()+"Killer");
 
   return StatusCode::SUCCESS;
 }
@@ -49,12 +49,13 @@ StatusCode STClusterKiller::execute()
   std::vector<STChannelID> chanList; chanList.reserve(100);
   removedClusters(clusterCont,chanList);
 
-
+ 
   // remove from the container
   std::vector<STChannelID>::reverse_iterator iterVec = chanList.rbegin(); 
   for (;  iterVec != chanList.rend(); ++iterVec){
     clusterCont->erase(*iterVec);
   } // iterVec
+
 
   return StatusCode::SUCCESS;
 }
@@ -67,7 +68,7 @@ void STClusterKiller::removedClusters(const LHCb::STClusters* clusterCont,
   STClusters::const_iterator iterC = clusterCont->begin();
   for ( ; iterC != clusterCont->end(); ++iterC){
     const bool select = (*m_clusterSelector)(*iterC);
-    if (!select){
+    if (select == true){;
       deadClusters.push_back((*iterC)->key());
     }
   } // iterC

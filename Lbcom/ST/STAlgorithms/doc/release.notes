@@ -2,6 +2,13 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+! 2009-03-14 M Needham
+ - Add digit merging classes
+ - Add Clusters to digits algorithm
+ - Follow changes in STTools [STClusterKiller]
+ - Add STLiteClusterKiller
+ - Add examples of cluster killing in options file
+
 !======================= STAlgorithms v3r5 2009-03-10 ========================
 ! 2009-03-02 M Needham
  - Move STClusterCreator to new base class

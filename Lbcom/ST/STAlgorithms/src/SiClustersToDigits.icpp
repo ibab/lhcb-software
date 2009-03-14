@@ -1,0 +1,65 @@
+// $Id: SiClustersToDigits.icpp,v 1.1 2009-03-14 09:18:49 mneedham Exp $
+
+// Gaudi
+#include "GaudiKernel/AlgFactory.h"
+
+#include "SiClustersToDigits.h"
+#include "SiClusterTraits.h"
+
+#include <algorithm>
+#include "Kernel/SiDataFunctor.h"
+
+
+#include <boost/lambda/bind.hpp>
+#include <boost/lambda/lambda.hpp>
+
+using namespace boost::lambda;
+using namespace LHCb;
+
+template <class TYPE>
+inline SiClustersToDigits<TYPE>::~SiClustersToDigits()
+{
+  // STClustersToDigits destructor
+}
+
+template <class TYPE>
+inline StatusCode SiClustersToDigits<TYPE>::execute()
+{
+  
+  // get the input data
+  typedef typename SiClusterTraits<TYPE>::CLUSCONT Container;
+  const Container* clusterCont = GaudiAlgorithm::template get<Container>(m_inputLocation);
+
+  // output
+  typedef typename SiClusterTraits<TYPE>::DIGIT DigitType;
+  typedef typename DigitType::Container DigitCont; 
+  DigitCont* dCont = new DigitCont();
+  dCont->reserve(clusterCont->size()*4u); 
+  GaudiAlgorithm::put(dCont, m_outputLocation);
+
+  // typedef for the key
+  typedef typename Container::key_type key_type;
+
+  typename Container::const_iterator iterC = clusterCont->begin();
+  for (; iterC != clusterCont->end() ; ++iterC){
+
+    // get vector of channels + adc
+    std::vector<key_type> vec = (*iterC)->channels();
+    for (unsigned int iStrip = 0 ; iStrip < vec.size() ; ++iStrip){
+      key_type key = vec[iStrip];
+      if (dCont->object(key) == 0){
+        DigitType* newDigit = createDigit((*iterC)->adcValue(iStrip));
+        dCont->insert(newDigit,key);
+      }  
+    } // loop channels     
+    // add neighbour info
+    if (m_addNeighbourInfo == true) addNeighbours(*iterC, dCont);  
+  } // loop clusters
+
+  // sort
+  std::sort(dCont->begin(),dCont->end(), bind(&DigitType::channelID,_1) < bind(&DigitType::channelID,_2));
+
+  return StatusCode::SUCCESS;
+}
+
+

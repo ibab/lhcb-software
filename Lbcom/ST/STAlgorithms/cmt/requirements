@@ -1,7 +1,7 @@
 package STAlgorithms
-version v3r5
+version v3r6
 
-branches cmt doc src
+branches cmt doc src options
 
 include_path none
 

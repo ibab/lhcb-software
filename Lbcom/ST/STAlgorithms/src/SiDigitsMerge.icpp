@@ -1,0 +1,79 @@
+// $Id: SiDigitsMerge.icpp,v 1.1 2009-03-14 09:18:49 mneedham Exp $
+
+// Gaudi
+#include "GaudiKernel/AlgFactory.h"
+
+#include "SiDigitsMerge.h"
+#include "SiClusterTraits.h"
+
+
+#include <boost/lambda/bind.hpp>
+#include <boost/lambda/lambda.hpp>
+
+using namespace boost::lambda;
+using namespace LHCb;
+
+template <class TYPE>
+inline SiDigitsMerge<TYPE>::~SiDigitsMerge()
+{
+  // STClustersToDigits destructor
+}
+
+template <class TYPE>
+StatusCode SiDigitsMerge<TYPE>::initialize()
+{
+  StatusCode sc = SiClusterTraits<TYPE>::BASEALG::initialize();
+  if (sc.isFailure()) return GaudiAlgorithm::Error("Failed to initialize", sc);
+
+  m_maxValue = 2 << m_nBits;
+  m_minValue = -m_maxValue;
+ 
+  std::vector<std::string>::const_iterator iSpillName = m_spillsVector.begin();
+  while( iSpillName != m_spillsVector.end()) {
+    m_spillsPath.push_back("/Event"+(*iSpillName)+m_inputLocation);
+    ++iSpillName;
+  } // spillnames
+  
+  return StatusCode::SUCCESS;
+}
+
+
+template <class TYPE>
+inline StatusCode SiDigitsMerge<TYPE>::execute()
+{
+
+  // output
+  typedef typename SiClusterTraits<TYPE>::DIGIT::Container DigitCont; 
+  typedef typename SiClusterTraits<TYPE>::DIGIT DigitType;
+  DigitCont* dCont = new DigitCont();
+  dCont->reserve(10000); 
+  GaudiAlgorithm::put(dCont, m_outputLocation);
+
+
+  // loop over the input spills
+  std::vector<std::string>::const_iterator iterS = m_spillsPath.begin();
+  for ( ;iterS != m_spillsPath.end(); ++iterS){
+    // loop over this container
+    DigitCont* aCont = GaudiAlgorithm::template get<DigitCont>(*iterS);
+    typename DigitCont::iterator iterD = aCont->begin();
+    for (; iterD != aCont->end() ; ++iterD){
+      DigitType* tDigit = dCont->object((*iterD)->key());
+      if (tDigit == 0){
+        // if channel not hit, just add it...
+        DigitType* newdigit = (*iterD)->clone();
+        typename DigitCont::key_type key = (*iterD)->key();
+        dCont->insert(newdigit, key );
+      }
+      else {
+        // we should merge it 
+        updateCharge(tDigit, *iterD );
+      }
+    } // digits
+  } // spills
+  
+   std::sort(dCont->begin(),dCont->end(), bind(&DigitType::channelID,_1) < bind(&DigitType::channelID,_2));
+
+  return StatusCode::SUCCESS;
+}
+
+
