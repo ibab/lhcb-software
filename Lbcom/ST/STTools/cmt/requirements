@@ -3,7 +3,7 @@
 # Maintainer : Jeroen van Tilburg
 #============================================================================
 package           STTools
-version           v3r8
+version           v3r9
 
 branches          cmt doc src options
 include_path      none

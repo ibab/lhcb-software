@@ -1,6 +1,6 @@
-// $Id: STRndmClusterSelector.h,v 1.1 2009-02-10 09:18:38 mneedham Exp $
-#ifndef STRndmClusterSelector_H
-#define STRndmClusterSelector_H 1
+// $Id: STRndmChannelIDSelector.h,v 1.1 2009-03-14 09:16:34 mneedham Exp $
+#ifndef STRndmChannelIDSelector_H
+#define STRndmChannelIDSelector_H 1
 
 // ST tool base class
 #include "Kernel/STToolBase.h"
@@ -8,9 +8,9 @@
 #include "GaudiKernel/IRndmGen.h"
 
 // LHCbKernel
-#include "Kernel/ISTClusterSelector.h"
+#include "Kernel/ISTChannelIDSelector.h"
 
-/** @class STRndmClusterSelector STRndmClusterSelector.h
+/** @class STRndmChannelIDSelector STRndmChannelIDSelector.h
  *
  *  Tool for selecting clusters at random
  *
@@ -18,18 +18,18 @@
  *  @date   3/2/2009
  */
 
-class STRndmClusterSelector: public ST::ToolBase, 
-                         virtual public ISTClusterSelector {
+class STRndmChannelIDSelector: public ST::ToolBase, 
+                         virtual public ISTChannelIDSelector {
 
  public: 
    
   /// constructer
-  STRndmClusterSelector( const std::string& type,
+  STRndmChannelIDSelector( const std::string& type,
                          const std::string& name,
                          const IInterface* parent );
 
   /// destructer
-  virtual ~STRndmClusterSelector();
+  virtual ~STRndmChannelIDSelector();
 
   /** intialize */
   StatusCode initialize();
@@ -37,30 +37,30 @@ class STRndmClusterSelector: public ST::ToolBase,
   /**  @param  cluster pointer to calo cluster object to be selected 
   *  @return true if cluster is selected
   */
-  virtual bool select     ( const LHCb::STCluster* cluster ) const ;
+  virtual bool select     ( const LHCb::STChannelID& id ) const ;
   
   /** "select"/"preselect" method (functor interface)
    *  @param  cluster pointer to calo cluster object to be selected 
    *  @return true if cluster is selected
    */
-  virtual bool operator() ( const LHCb::STCluster* cluster ) const  ;
+  virtual bool operator() ( const LHCb::STChannelID& id ) const  ;
 
  private:
 
   ///   default  constructor  is  private 
-  STRndmClusterSelector();
+  STRndmChannelIDSelector();
 
   ///   copy     constructor  is  private 
-  STRndmClusterSelector (const STRndmClusterSelector& );
+  STRndmChannelIDSelector (const STRndmChannelIDSelector& );
 
   ///   assignement operator  is  private 
-  STRndmClusterSelector& operator=(const STRndmClusterSelector& );  
+  STRndmChannelIDSelector& operator=(const STRndmChannelIDSelector& );  
 
   // smart interface to generator
   SmartIF<IRndmGen> m_uniformDist; 
 
-  double m_fractionToAccept; 
+  double m_fractionToReject; 
  
 };
 
-#endif // STRndmClusterSelector_H
+#endif // STRndmChannelIDSelector_H

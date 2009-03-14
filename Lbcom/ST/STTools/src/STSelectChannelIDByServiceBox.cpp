@@ -1,12 +1,9 @@
-// $Id: STSelectClustersByServiceBox.cpp,v 1.1 2009-02-10 09:18:38 mneedham Exp $
+// $Id: STSelectChannelIDByServiceBox.cpp,v 1.1 2009-03-14 09:16:35 mneedham Exp $
  
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
  
-// Event
-#include "Event/STCluster.h"
-
-#include "STSelectClustersByServiceBox.h"
+#include "STSelectChannelIDByServiceBox.h"
 
 #include <vector>
 #include <algorithm>
@@ -15,24 +12,24 @@
 #include "Kernel/STChannelID.h"
 #include "Kernel/ISTReadoutTool.h"
 
-DECLARE_TOOL_FACTORY( STSelectClustersByServiceBox);
+DECLARE_TOOL_FACTORY( STSelectChannelIDByServiceBox );
  
-STSelectClustersByServiceBox::STSelectClustersByServiceBox( const std::string& type, 
+STSelectChannelIDByServiceBox::STSelectChannelIDByServiceBox( const std::string& type, 
                                     const std::string& name,
                                     const IInterface* parent ) :
   ST::ToolBase(type, name, parent)
 {
   setForcedInit();
   declareProperty("serviceBoxes", m_serviceBoxes); 
-  declareInterface<ISTClusterSelector>(this);
+  declareInterface<ISTChannelIDSelector>(this);
 }
 
-STSelectClustersByServiceBox::~STSelectClustersByServiceBox()
+STSelectChannelIDByServiceBox::~STSelectChannelIDByServiceBox()
 {
   //destructer
 }
 
-StatusCode STSelectClustersByServiceBox::initialize() {
+StatusCode STSelectChannelIDByServiceBox::initialize() {
   
   StatusCode sc = ST::ToolBase::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
@@ -51,11 +48,10 @@ StatusCode STSelectClustersByServiceBox::initialize() {
   return StatusCode::SUCCESS;
 }
 
-bool STSelectClustersByServiceBox::select( const LHCb::STCluster* cluster ) const{
-  return (*this) (cluster);  
+bool STSelectChannelIDByServiceBox::select( const LHCb::STChannelID& id ) const{
+  return (*this) (id);  
 }
   
-bool STSelectClustersByServiceBox::operator()( const LHCb::STCluster* cluster ) const{
-  const LHCb::STChannelID chan = cluster->channelID();
-  return std::binary_search(m_sectors.begin(), m_sectors.end(), chan.uniqueSector());
+bool STSelectChannelIDByServiceBox::operator()( const LHCb::STChannelID& id) const{
+  return std::binary_search(m_sectors.begin(), m_sectors.end(), id.uniqueSector());
 }

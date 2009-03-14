@@ -1,4 +1,4 @@
-// $Id: STClusterSelectorOR.cpp,v 1.2 2009-03-14 09:16:34 mneedham Exp $
+// $Id: STChannelIDSelectorOR.cpp,v 1.1 2009-03-14 09:16:34 mneedham Exp $
 // ============================================================================
 // Include files 
 
@@ -6,20 +6,22 @@
 #include "GaudiKernel/ToolFactory.h"
 
 // local
-#include "STClusterSelectorOR.h"
+#include "STChannelIDSelectorOR.h"
 
+
+#include "Kernel/STChannelID.h"
 
 // ============================================================================
 /** @file 
  * 
- *  Implementation file for class : STClusterSelectorOR
+ *  Implementation file for class : STChannelIDSelectorOR
  * 
  *  @author M Needham
  *  @date 03/02/2009 
  */
 // ============================================================================
 
-DECLARE_TOOL_FACTORY( STClusterSelectorOR );
+DECLARE_TOOL_FACTORY( STChannelIDSelectorOR );
 
 // ============================================================================
 /** StORard constructor
@@ -31,7 +33,7 @@ DECLARE_TOOL_FACTORY( STClusterSelectorOR );
  *  @param parent tool parent   
  */
 // ============================================================================
-STClusterSelectorOR::STClusterSelectorOR
+STChannelIDSelectorOR::STChannelIDSelectorOR
 ( const std::string& type,
   const std::string& name,
   const IInterface* parent )
@@ -39,7 +41,7 @@ STClusterSelectorOR::STClusterSelectorOR
   , m_selectorsTypeNames ()
   , m_selectors          () 
 {
-  declareInterface<ISTClusterSelector> (this);
+  declareInterface<ISTChannelIDSelector> (this);
   declareProperty( "SelectorTools" , m_selectorsTypeNames );
 };
 // ============================================================================
@@ -47,7 +49,7 @@ STClusterSelectorOR::STClusterSelectorOR
 // ============================================================================
 /// destructor (virtual OR protected)
 // ============================================================================
-STClusterSelectorOR::~STClusterSelectorOR(){} ; 
+STChannelIDSelectorOR::~STChannelIDSelectorOR(){} ; 
 // ============================================================================
 
 // ============================================================================
@@ -58,7 +60,7 @@ STClusterSelectorOR::~STClusterSelectorOR(){} ;
  *  @return status code 
  */
 // ============================================================================
-StatusCode STClusterSelectorOR::initialize () 
+StatusCode STChannelIDSelectorOR::initialize () 
 {
   // initialize the base class
   StatusCode sc = GaudiTool::initialize() ;
@@ -68,7 +70,7 @@ StatusCode STClusterSelectorOR::initialize ()
   for( Names::const_iterator it = m_selectorsTypeNames.begin() ;
        m_selectorsTypeNames.end() != it ; ++it )
   {
-    ISTClusterSelector* selector = tool<ISTClusterSelector>( *it );
+    ISTChannelIDSelector* selector = tool<ISTChannelIDSelector>( *it );
     m_selectors.push_back( selector );
   };     
   ///
@@ -77,29 +79,29 @@ StatusCode STClusterSelectorOR::initialize ()
 // ============================================================================
 
 /** "select"/"preselect" method 
- *  @see ISTClusterSelector
- *  @param  cluster pointer to ST cluster object to be selected 
+ *  @see ISTChannelIDSelector
+ *  @param  cluster pointer to calo cluster object to be selected 
  *  @return true if cluster is selected
  */
 // ============================================================================
-bool STClusterSelectorOR::select     
-( const LHCb::STCluster* cluster ) const { return (*this) ( cluster ) ; }
+bool STChannelIDSelectorOR::select     
+( const LHCb::STChannelID& id ) const { return (*this) ( id ) ; }
 // ============================================================================
 
 // ============================================================================
 /** "select"/"preselect" method (functor interface)
- *  @see ISTClusterSelector
- *  @param  cluster pointer to ST cluster object to be selected 
+ *  @see ISTChannelIDSelector
+ *  @param  cluster pointer to calo cluster object to be selected 
  *  @return true if cluster is selected
  */
 // ============================================================================
-bool STClusterSelectorOR::operator() ( const LHCb::STCluster* cluster ) const
+bool STChannelIDSelectorOR::operator() ( const LHCb::STChannelID& id ) const
 {
   ///
   bool select = false ;
   for( Selectors::const_iterator selector = m_selectors.begin() ;
        !select && m_selectors.end() != selector ; ++selector )
-    { select = (**selector)( cluster ); }
+    { select = (**selector)( id ); }
   ///
   return select ;
 };

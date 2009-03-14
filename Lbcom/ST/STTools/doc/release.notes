@@ -2,6 +2,12 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2009-03-14 M needham
+ - Modifications to cluster selectors
+ - Add STChannelID based selectors 
+ - Remove STCluster based selectors + replace with STSelectClustersByChannel
+ - add cluster selector by charge
+
 !=========================== STTools v3r8 2009-02-20 ==========================
 ! 2009-02-10 M Needham
  - Add new cluster selectors 

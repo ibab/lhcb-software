@@ -1,36 +1,36 @@
-// $Id: STRndmClusterSelector.cpp,v 1.1 2009-02-10 09:18:38 mneedham Exp $
+// $Id: STRndmChannelIDSelector.cpp,v 1.1 2009-03-14 09:16:34 mneedham Exp $
  
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
  
 // Event
-#include "Event/STCluster.h"
+#include "Kernel/STChannelID.h"
 
-#include "STRndmClusterSelector.h"
+#include "STRndmChannelIDSelector.h"
 
 // for rndm numbers
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
 
 
-DECLARE_TOOL_FACTORY( STRndmClusterSelector);
+DECLARE_TOOL_FACTORY( STRndmChannelIDSelector);
  
-STRndmClusterSelector::STRndmClusterSelector( const std::string& type, 
+STRndmChannelIDSelector::STRndmChannelIDSelector( const std::string& type, 
                                     const std::string& name,
                                     const IInterface* parent ) :
   ST::ToolBase(type, name, parent),
   m_uniformDist( (IRndmGen*)0 )
 {
-  declareProperty("FractionToAccept", m_fractionToAccept = 0.995); 
-  declareInterface<ISTClusterSelector>(this);
+  declareProperty("FractionToReject", m_fractionToReject = 0.005); 
+  declareInterface<ISTChannelIDSelector>(this);
 }
 
-STRndmClusterSelector::~STRndmClusterSelector()
+STRndmChannelIDSelector::~STRndmChannelIDSelector()
 {
   //destructer
 }
 
-StatusCode STRndmClusterSelector::initialize()
+StatusCode STRndmChannelIDSelector::initialize()
 {
   StatusCode sc = ST::ToolBase::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
@@ -46,10 +46,10 @@ StatusCode STRndmClusterSelector::initialize()
 };
 
 
-bool STRndmClusterSelector::select( const LHCb::STCluster* cluster ) const{
-  return (*this) (cluster);  
+bool STRndmChannelIDSelector::select( const LHCb::STChannelID& id ) const{
+  return (*this) (id);  
 }
   
-bool STRndmClusterSelector::operator()( const LHCb::STCluster*  ) const{
-  return m_uniformDist->shoot() < m_fractionToAccept;
+bool STRndmChannelIDSelector::operator()( const LHCb::STChannelID&  ) const{
+  return m_uniformDist->shoot() < m_fractionToReject;
 }

@@ -1,14 +1,14 @@
-// $Id: STSelectClustersByServiceBox.h,v 1.1 2009-02-10 09:18:38 mneedham Exp $
-#ifndef STSelectClustersByServiceBox_H
-#define STSelectClustersByServiceBox_H 1
+// $Id: STSelectChannelIDByServiceBox.h,v 1.1 2009-03-14 09:16:35 mneedham Exp $
+#ifndef STSelectChannelIDByServiceBox_H
+#define STSelectChannelIDByServiceBox_H 1
 
 // ST tool base class
 #include "Kernel/STToolBase.h"
 
 // LHCbKernel
-#include "Kernel/ISTClusterSelector.h"
+#include "Kernel/ISTChannelIDSelector.h"
 
-/** @class STSelectClustersByServiceBox STSelectClustersByServiceBox.h
+/** @class STSelectChannelIDByServiceBox STSelectChannelIDByServiceBox.h
  *
  *  Tool for selecting clusters using a list of service boxes
  *
@@ -20,18 +20,18 @@ namespace LHCb{
   class STChannelID;
 }
 
-class STSelectClustersByServiceBox: public ST::ToolBase, 
-                         virtual public ISTClusterSelector {
+class STSelectChannelIDByServiceBox: public ST::ToolBase, 
+                         virtual public ISTChannelIDSelector {
 
  public: 
    
   /// constructer
-  STSelectClustersByServiceBox( const std::string& type,
+  STSelectChannelIDByServiceBox( const std::string& type,
                          const std::string& name,
                          const IInterface* parent );
 
   /// destructer
-  virtual ~STSelectClustersByServiceBox();
+  virtual ~STSelectChannelIDByServiceBox();
 
   /// initialize
   virtual StatusCode initialize();
@@ -39,26 +39,26 @@ class STSelectClustersByServiceBox: public ST::ToolBase,
   /**  @param  cluster pointer to ST cluster object to be selected 
   *  @return true if cluster is selected
   */
-  virtual bool select     ( const LHCb::STCluster* cluster ) const ;
+  virtual bool select     ( const LHCb::STChannelID& id ) const ;
   
   /** "select"/"preselect" method (functor interface)
    *  @param  cluster pointer to ST cluster object to be selected 
    *  @return true if cluster is selected
    */
-  virtual bool operator() ( const LHCb::STCluster* cluster ) const  ;
+  virtual bool operator() ( const LHCb::STChannelID& id ) const  ;
 
  private:
 
   ///   default  constructor  is  private 
-  STSelectClustersByServiceBox();
+  STSelectChannelIDByServiceBox();
   ///   copy     constructor  is  private 
-  STSelectClustersByServiceBox (const STSelectClustersByServiceBox& );
+  STSelectChannelIDByServiceBox (const STSelectChannelIDByServiceBox& );
   ///   assignement operator  is  private 
-  STSelectClustersByServiceBox& operator= (const STSelectClustersByServiceBox& );  
+  STSelectChannelIDByServiceBox& operator= (const STSelectChannelIDByServiceBox& );  
 
   std::vector<std::string> m_serviceBoxes;
   std::vector<unsigned int> m_sectors;
 
 };
 
-#endif // STSelectClustersByServiceBox_H
+#endif // STSelectChannelIDByServiceBox_H

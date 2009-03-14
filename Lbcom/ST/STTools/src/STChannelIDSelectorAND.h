@@ -1,52 +1,52 @@
-// $Id: STClusterSelectorOR.h,v 1.2 2009-03-14 09:16:34 mneedham Exp $
-#ifndef STTTOOLS_STCLUSTERSELECTOR_H 
-#define STTTOOLS_STCLUSTERSELECTOR_H 1
+// $Id: STChannelIDSelectorAND.h,v 1.1 2009-03-14 09:16:34 mneedham Exp $
+#ifndef STCHANNELIDSELECTORAND_H 
+#define STCHANNELIDSELECTORAND_H 1
 // Include files
 // from STL
 #include <string>
 // from GaudiAlg
 #include "GaudiAlg/GaudiTool.h"
 // From CaloInterfaces
-#include "Kernel/ISTClusterSelector.h"
+#include "Kernel/ISTChannelIDSelector.h"
 
-/** @class STClusterSelectorOR STClusterSelectorOR.h
+/** @class STChannelIDSelectorAND STChannelIDSelectorAND.h
  *   
- *  Helper concrete tool for selection of STCluster objects 
+ *  Helper concrete tool for selection of stcluster objects
  *  This selector selects the cluster if 
- *  at least one  of its daughter selector select it!
+ *  all of its daughter selector select it!
  *
- *  @author M Needham
+ *  @author M Needhams
  *  @date   03/02/2009
  */
-class STClusterSelectorOR : 
-  public virtual ISTClusterSelector ,
+class STChannelIDSelectorAND : 
+  public virtual ISTChannelIDSelector ,
   public          GaudiTool 
 {
   /// friend factory for instantiation
-  friend class ToolFactory<STClusterSelectorOR>;
+  friend class ToolFactory<STChannelIDSelectorAND>;
 public:
   /// container of types&names 
-  typedef std::vector<std::string> Names     ;
+  typedef std::vector<std::string>           Names     ;
   /// container of selectors 
-  typedef std::vector<ISTClusterSelector*> Selectors ;
+  typedef std::vector<ISTChannelIDSelector*> Selectors ;
 
 public:
 
   /** "select"/"preselect" method 
-   *  @see ISTClusterSelector
-   *  @param  cluster pointer to ST cluster object to be selected 
+   *  @see ISTChannelIDSelector
+   *  @param  cluster pointer to st cluster object to be selected 
    *  @return true if cluster is selected
    */
   virtual bool select     
-  ( const LHCb::STCluster* cluster ) const  ;
+  ( const LHCb::STChannelID& id ) const  ;
 
   /** "select"/"preselect" method (functor interface)
-   *  @see ISTClusterSelector
-   *  @param  cluster pointer to ST cluster object to be selected 
+   *  @see ICaloSTChannelIDSelector
+   *  @param  cluster pointer to st cluster object to be selected 
    *  @return true if cluster is selected
    */
   virtual bool operator () 
-    ( const LHCb::STCluster* cluster ) const  ;
+    ( const LHCb::STChannelID& id ) const  ;
   
   /** standard initialization of the tool 
    *  @see IAlgTool 
@@ -55,7 +55,7 @@ public:
    *  @return status code 
    */
   virtual StatusCode initialize () ;
-    
+  
 protected:
   
   /** Standard constructor
@@ -66,24 +66,24 @@ protected:
    *  @param name   tool name 
    *  @param parent tool parent   
    */
-  STClusterSelectorOR
+  STChannelIDSelectorAND
   ( const std::string& type, 
     const std::string& name,
     const IInterface* parent);
   
-  /// destructor (virtual OR protected)
-  virtual ~STClusterSelectorOR() ; 
+  /// destructor (virtual and protected)
+  virtual ~STChannelIDSelectorAND() ; 
   
 private:
 
   ///   default  constructor  is  private 
-  STClusterSelectorOR();
+  STChannelIDSelectorAND();
   ///   copy     constructor  is  private 
-  STClusterSelectorOR
-  (const STClusterSelectorOR& );
+  STChannelIDSelectorAND
+  (const STChannelIDSelectorAND& );
   ///   assignement operator  is  private 
-  STClusterSelectorOR& operator=
-  (const STClusterSelectorOR& );  
+  STChannelIDSelectorAND& operator=
+  (const STChannelIDSelectorAND& );  
   
 private:
   
@@ -95,5 +95,5 @@ private:
 // ============================================================================
 // The END 
 // ============================================================================
-#endif // STTTOOLS_STCLUSTERSELECTOROR_H
+#endif // STTTOOLS_STCLUSTERSELECTORAND_H
 // ============================================================================

@@ -1,4 +1,4 @@
-// $Id: STClusterSelectorAND.cpp,v 1.1 2009-02-10 09:18:38 mneedham Exp $
+// $Id: STClusterSelectorAND.cpp,v 1.2 2009-03-14 09:16:34 mneedham Exp $
 // Include files 
 
 // from Gaudi
@@ -13,8 +13,8 @@
  * 
  *  Implementation file for class : STClusterSelectorAND
  *
- *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
- *  @date 27 Apr 2002 
+ *  @author M Needham
+ *  @date 10/2/09 
  */
 // ============================================================================
 
@@ -78,7 +78,7 @@ StatusCode STClusterSelectorAND::initialize ()
 // ============================================================================
 /** "select"/"preselect" method 
  *  @see ISTClusterSelector
- *  @param  cluster pointer to calo cluster object to be selected 
+ *  @param  cluster pointer to ST cluster object to be selected 
  *  @return true if cluster is selected
  */
 // ============================================================================
@@ -89,19 +89,22 @@ bool STClusterSelectorAND::select
 // ============================================================================
 /** "select"/"preselect" method (functor interface)
  *  @see ISTClusterSelector
- *  @param  cluster pointer to calo cluster object to be selected 
+ *  @param  cluster pointer to ST cluster object to be selected 
  *  @return true if cluster is selected
  */
 // ============================================================================
 bool STClusterSelectorAND::operator() ( const LHCb::STCluster* cluster ) const
 {
+
+
   // no selectors!
   if( m_selectors.empty() ) { return false ; }
   //
   bool select = true ;
   for( Selectors::const_iterator selector = m_selectors.begin() ;
-       select && m_selectors.end() != selector ; ++selector )
-    { select = (**selector)( cluster ); }
+    select && m_selectors.end() != selector ; ++selector ) { 
+    select = (**selector)( cluster );
+    }
   ///
   return select ;
 };

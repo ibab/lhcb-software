@@ -1,6 +1,6 @@
-// $Id: STSelectClustersByBoard.h,v 1.1 2009-02-10 09:18:38 mneedham Exp $
-#ifndef STSelectClustersByBoard_H
-#define STSelectClustersByBoard_H 1
+// $Id: STSelectClustersByChannel.h,v 1.1 2009-03-14 09:16:35 mneedham Exp $
+#ifndef STSelectClustersByChannel_H
+#define STSelectClustersByChannel_H 1
 
 // ST tool base class
 #include "Kernel/STToolBase.h"
@@ -8,30 +8,32 @@
 // LHCbKernel
 #include "Kernel/ISTClusterSelector.h"
 
-/** @class STSelectClustersByBoard STSelectClustersByBoard.h
+/** @class STSelectClustersByChannel STSelectClustersByChannel.h
  *
- *  Tool for selecting clusters using a list of Tell1 boards
+ *  Tool for selecting clusters using a list of service boxes
  *
  *  @author M.Needham
  *  @date   3/2/2009
  */
 
+class ISTChannelIDSelector;
+
 namespace LHCb{
   class STChannelID;
 }
 
-class STSelectClustersByBoard: public ST::ToolBase, 
+class STSelectClustersByChannel: public ST::ToolBase, 
                          virtual public ISTClusterSelector {
 
  public: 
    
   /// constructer
-  STSelectClustersByBoard( const std::string& type,
+  STSelectClustersByChannel( const std::string& type,
                          const std::string& name,
                          const IInterface* parent );
 
   /// destructer
-  virtual ~STSelectClustersByBoard();
+  virtual ~STSelectClustersByChannel();
 
   /// initialize
   virtual StatusCode initialize();
@@ -50,14 +52,15 @@ class STSelectClustersByBoard: public ST::ToolBase,
  private:
 
   ///   default  constructor  is  private 
-  STSelectClustersByBoard();
+  STSelectClustersByChannel();
   ///   copy     constructor  is  private 
-  STSelectClustersByBoard (const STSelectClustersByBoard& );
+  STSelectClustersByChannel (const STSelectClustersByChannel& );
   ///   assignement operator  is  private 
-  STSelectClustersByBoard& operator= (const STSelectClustersByBoard& );  
+  STSelectClustersByChannel& operator= (const STSelectClustersByChannel& );  
 
-  std::vector<unsigned int> m_boards;
-
+  ISTChannelIDSelector* m_selector;
+  std::string m_selectorType;
+  std::string m_selectorName;
 };
 
-#endif // STSelectClustersByBoard_H
+#endif // STSelectClustersByChannel_H
