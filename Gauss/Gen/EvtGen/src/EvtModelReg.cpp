@@ -18,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <iostream>
 #include <iomanip>
 #include <fstream>
@@ -32,6 +33,8 @@
 #include "EvtGenModels/EvtISGW2.hh"
 #include "EvtGenModels/EvtMelikhov.hh"
 #include "EvtGenModels/EvtSLPole.hh"
+#include "EvtGenModels/EvtPropSLPole.hh"
+#include "EvtGenModels/EvtSLBKPole.hh"
 #include "EvtGenModels/EvtISGW.hh"
 #include "EvtGenModels/EvtBHadronic.hh"
 #include "EvtGenModels/EvtVSS.hh"
@@ -73,9 +76,20 @@
 #include "EvtGenModels/EvtTauScalarnu.hh"
 #include "EvtGenModels/EvtKstarnunu.hh"
 #include "EvtGenModels/EvtbTosllBall.hh"
-#include "EvtGenModels/EvtbTosllAli.hh"
 #include "EvtGenModels/EvtSingleParticle.hh"
 #include "EvtGenModels/EvtVectorIsr.hh"
+#include "EvtGenModels/EvtBToPlnuBK.hh"
+#include "EvtGenModels/EvtBToVlnuBall.hh"
+
+#include "EvtGenModels/EvtSVVHelCPMix.hh"
+#include "EvtGenModels/EvtLb2Lll.hh"
+#include "EvtGenModels/EvtHypNonLepton.hh"
+
+#include "EvtGenModels/EvtbTosllAli.hh"
+//#include "EvtGenModels/EvtBToDDalitzCPK.hh"
+//#include "EvtGenModels/EvtPVVCPLH.hh"
+//#include "EvtGenModels/EvtLambdaB2LambdaV.hh"
+//#include "EvtGenModels/EvtSSD_DirectCP.hh"
 
 #include "EvtGenModels/EvtHQET.hh"
 #include "EvtGenModels/EvtHQET2.hh"
@@ -88,6 +102,10 @@
 #include "EvtGenModels/EvtBtoKpiCPiso.hh"
 #include "EvtGenModels/EvtSVSCPiso.hh"
 #include "EvtGenModels/EvtVVpipi.hh"
+#include "EvtGenModels/EvtY3SToY1SpipiMoxhay.hh"
+#include "EvtGenModels/EvtYmSToYnSpipiCLEO.hh"
+#include "EvtGenModels/EvtVVPIPI_WEIGHTED.hh"
+#include "EvtGenModels/EvtVPHOtoVISRHi.hh"
 
 #include "EvtGenModels/EvtBTo4piCP.hh"
 #include "EvtGenModels/EvtBTo3piCP.hh"
@@ -100,16 +118,26 @@
 #include "EvtGenModels/EvtLNuGamma.hh"
 
 #include "EvtGenModels/EvtVub.hh"
+//#include "EvtGenModels/EvtVubAFR.hh"
+#include "EvtGenModels/EvtVubHybrid.hh"
+#include "EvtGenModels/EvtVubNLO.hh"
+#include "EvtGenModels/EvtVubBLNP.hh"
+#include "EvtGenModels/EvtVubBLNPHybrid.hh"
+
 #include "EvtGenModels/EvtPto3P.hh"
+#include "EvtGenModels/EvtBtoKD3P.hh"
 #include "EvtGenModels/EvtKstarstargamma.hh"
 #include "EvtGenModels/EvtFlatQ2.hh"
 #include "EvtGenModels/EvtLambdaP_BarGamma.hh"
+#include "EvtGenModels/EvtBBScalar.hh"
+#include "EvtGenModels/EvtKKLambdaC.hh"
+#include "EvtGenModels/EvtMultibody.hh"
 
-#include "EvtGenModels/EvtBToDDalitzCPK.hh"
-#include "EvtGenModels/EvtPVVCPLH.hh"
+//#include "EvtGenModels/EvtJetSetCDF.hh"
+//#include "EvtGenModels/EvtJscontCDF.hh"
+
 
 #ifndef EVTSTANDALONE
-#include "EvtGenModels/EvtUclaII.hh"
 #include "EvtGenModels/EvtJetSet.hh"
 #include "EvtGenModels/EvtJscont.hh"
 #else
@@ -118,117 +146,151 @@
 //#include "EvtGenModels/EvtPycont.hh"
 #endif
 
-#include "EvtGenModels/EvtLambdaB2LambdaV.hh"
-#include "EvtGenModels/EvtSSD_DirectCP.hh"
+#include "EvtGenModels/EvtDMix.hh"
+#include "EvtGenModels/EvtD0mixDalitz.hh"
+
 #include "EvtGenModels/EvtModelReg.hh"
+using std::fstream;
+using std::cout;
+using std::endl;
 
-EvtModelReg::EvtModelReg(const EvtModelList* extraModels) {
+EvtModelReg::EvtModelReg(const std::list<EvtDecayBase*>* extraModels) 
+{
 
-  EvtModel &modelist=EvtModel::instance();
-  
-  //if there are models to register, then do so before others
-  if(extraModels){
-	  for(EvtModelList::const_iterator it = extraModels->begin(); 
-	  	it != extraModels->end(); ++it){
-		  modelist.Register(*it);
-	  }
-  }
+    EvtModel &modelist=EvtModel::instance();
 
-  modelist.Register(new EvtLambdaP_BarGamma);
-  modelist.Register(new EvtFlatQ2);
-  modelist.Register(new EvtTauHadnu);
-  modelist.Register(new EvtTauVectornu);
-  modelist.Register(new EvtVVP);
-  modelist.Register(new EvtSLN);
-  modelist.Register(new EvtISGW2);
-  modelist.Register(new EvtMelikhov);
-  modelist.Register(new EvtSLPole);
-  modelist.Register(new EvtHQET);
-  modelist.Register(new EvtHQET2);
-  modelist.Register(new EvtISGW);
-  modelist.Register(new EvtBHadronic);
-  modelist.Register(new EvtVSS);
-  modelist.Register(new EvtVSSMix);
-  modelist.Register(new EvtVSSBMixCPT);
-  modelist.Register(new EvtVSPPwave);
-  modelist.Register(new EvtGoityRoberts);
-  modelist.Register(new EvtSVS);
-  modelist.Register(new EvtTSS);
-  modelist.Register(new EvtTVSPwave);
-  modelist.Register(new EvtSVVHelAmp);
-  modelist.Register(new EvtSVPHelAmp);
-  modelist.Register(new EvtSVPCP);
-  modelist.Register(new EvtVVSPwave);
-  modelist.Register(new EvtDDalitz);
-  modelist.Register(new EvtOmegaDalitz);
-  modelist.Register(new EvtEtaDalitz);
-  modelist.Register(new EvtPhsp);
-  modelist.Register(new EvtBtoXsgamma);
-  modelist.Register(new EvtBtoXsll);
-  modelist.Register(new EvtBtoXsEtap);
-  modelist.Register(new EvtSSSCP);
-  modelist.Register(new EvtSSSCPpng);
-  modelist.Register(new EvtSTSCP);
-  modelist.Register(new EvtSTS);
-  modelist.Register(new EvtSSSCPT);
-  modelist.Register(new EvtSVSCP);
-  modelist.Register(new EvtSSDCP);
-  modelist.Register(new EvtSVSNONCPEIGEN);
-  modelist.Register(new EvtSVVNONCPEIGEN);
-  modelist.Register(new EvtSVVCP);
-  modelist.Register(new EvtSVVCPLH);
-  modelist.Register(new EvtSVSCPLH);
-  modelist.Register(new EvtSll);
-  modelist.Register(new EvtVll);
-  modelist.Register(new EvtTaulnunu);
-  modelist.Register(new EvtTauScalarnu);
-  modelist.Register(new EvtKstarnunu);
-  modelist.Register(new EvtbTosllBall);
-  modelist.Register(new EvtbTosllAli);
-  modelist.Register(new EvtBto2piCPiso);
-  modelist.Register(new EvtBtoKpiCPiso);
-  modelist.Register(new EvtSVSCPiso);
-  modelist.Register(new EvtSingleParticle);
-  modelist.Register(new EvtVectorIsr);
-  modelist.Register(new EvtPi0Dalitz);
-  modelist.Register(new EvtHelAmp);
-  modelist.Register(new EvtPartWave);
-  modelist.Register(new EvtVVpipi);
-  modelist.Register(new EvtBsquark);
-  modelist.Register(new EvtPhiDalitz); 
+    if(extraModels){
+      for(std::list<EvtDecayBase*>::const_iterator it = extraModels->begin(); 
+	  it != extraModels->end(); ++it){
+	modelist.registerModel(*it);
+      }
+    }
 
-  modelist.Register(new EvtBTo4piCP);
-  modelist.Register(new EvtBTo3piCP);
-  modelist.Register(new EvtCBTo3piP00);
-  modelist.Register(new EvtCBTo3piMPP);
-  modelist.Register(new EvtBToKpipiCP);
+    modelist.registerModel(new EvtBBScalar);
+    modelist.registerModel(new EvtLambdaP_BarGamma);
+    modelist.registerModel(new EvtFlatQ2);
+    modelist.registerModel(new EvtTauHadnu);
+    modelist.registerModel(new EvtTauVectornu);
+    modelist.registerModel(new EvtVVP);
+    modelist.registerModel(new EvtSLN);
+    modelist.registerModel(new EvtISGW2);
+    modelist.registerModel(new EvtMelikhov);
+    modelist.registerModel(new EvtSLPole);
+    modelist.registerModel(new EvtPropSLPole);
+    modelist.registerModel(new EvtSLBKPole);
+    modelist.registerModel(new EvtHQET);
+    modelist.registerModel(new EvtHQET2);
+    modelist.registerModel(new EvtISGW);
+    modelist.registerModel(new EvtBHadronic);
+    modelist.registerModel(new EvtVSS);
+    modelist.registerModel(new EvtVSSMix);
+    modelist.registerModel(new EvtVSSBMixCPT);
+    modelist.registerModel(new EvtVSPPwave);
+    modelist.registerModel(new EvtGoityRoberts);
+    modelist.registerModel(new EvtSVS);
+    modelist.registerModel(new EvtTSS);
+    modelist.registerModel(new EvtTVSPwave);
+    modelist.registerModel(new EvtSVVHelAmp);
+    modelist.registerModel(new EvtSVPHelAmp);
+    modelist.registerModel(new EvtSVPCP);
+    modelist.registerModel(new EvtVVSPwave);
+    modelist.registerModel(new EvtDDalitz);
+    modelist.registerModel(new EvtOmegaDalitz);
+    modelist.registerModel(new EvtEtaDalitz);
+    modelist.registerModel(new EvtPhsp);
+    modelist.registerModel(new EvtBtoXsgamma);
+    modelist.registerModel(new EvtBtoXsll);
+    modelist.registerModel(new EvtBtoXsEtap);
+    modelist.registerModel(new EvtSSSCP);
+    modelist.registerModel(new EvtSSSCPpng);
+    modelist.registerModel(new EvtSTSCP);
+    modelist.registerModel(new EvtSTS);
+    modelist.registerModel(new EvtSSSCPT);
+    modelist.registerModel(new EvtSVSCP);
+    modelist.registerModel(new EvtSSDCP);
+    modelist.registerModel(new EvtSVSNONCPEIGEN);
+    modelist.registerModel(new EvtSVVNONCPEIGEN);
+    modelist.registerModel(new EvtSVVCP);
+    modelist.registerModel(new EvtSVVCPLH);
+    modelist.registerModel(new EvtSVSCPLH);
+    modelist.registerModel(new EvtSll);
+    modelist.registerModel(new EvtVll);
+    modelist.registerModel(new EvtTaulnunu);
+    modelist.registerModel(new EvtTauScalarnu);
+    modelist.registerModel(new EvtKstarnunu);
+    modelist.registerModel(new EvtbTosllBall);
+    modelist.registerModel(new EvtBto2piCPiso);
+    modelist.registerModel(new EvtBtoKpiCPiso);
+    modelist.registerModel(new EvtSVSCPiso);
+    modelist.registerModel(new EvtSingleParticle);
+    modelist.registerModel(new EvtVectorIsr);
+    modelist.registerModel(new EvtPi0Dalitz);
+    modelist.registerModel(new EvtHelAmp);
+    modelist.registerModel(new EvtPartWave);
+    modelist.registerModel(new EvtVVpipi);
+    modelist.registerModel(new EvtY3SToY1SpipiMoxhay);
+    modelist.registerModel(new EvtYmSToYnSpipiCLEO);
+    modelist.registerModel(new EvtBsquark);
+    modelist.registerModel(new EvtPhiDalitz); 
+    modelist.registerModel(new EvtBToPlnuBK); 
+    modelist.registerModel(new EvtBToVlnuBall); 
+    modelist.registerModel(new EvtVVPIPI_WEIGHTED);
+    modelist.registerModel(new EvtVPHOtoVISRHi);
 
-  modelist.Register(new EvtLNuGamma);
-  modelist.Register(new EvtKstarstargamma);
+    modelist.registerModel(new EvtBTo4piCP);
+    modelist.registerModel(new EvtBTo3piCP);
+    modelist.registerModel(new EvtCBTo3piP00);
+    modelist.registerModel(new EvtCBTo3piMPP);
+    modelist.registerModel(new EvtBToKpipiCP);
 
-  modelist.Register(new EvtVub);
-  modelist.Register(new EvtPto3P);
+    modelist.registerModel(new EvtLb2Lll);
+    modelist.registerModel(new EvtHypNonLepton);
+    modelist.registerModel(new EvtSVVHelCPMix);
 
-  modelist.Register( new EvtBToDDalitzCPK ) ;
-  modelist.Register(new EvtLambdaB2LambdaV);
-  modelist.Register(new EvtLambda2PPiForLambdaB2LambdaV);  
-  modelist.Register(new EvtV2VpVmForLambdaB2LambdaV);  
+    modelist.registerModel(new EvtLNuGamma);
+    modelist.registerModel(new EvtKstarstargamma);
 
-  modelist.Register( new EvtPVVCPLH ) ;
-  modelist.Register( new EvtSSD_DirectCP ) ;
+    modelist.registerModel(new EvtVub); 
+    //modelist.registerModel(new EvtVubAFR);
+
+    modelist.registerModel(new EvtVubHybrid);
+    modelist.registerModel(new EvtVubNLO);
+    modelist.registerModel(new EvtVubBLNP);
+    modelist.registerModel(new EvtVubBLNPHybrid);
+
+    modelist.registerModel(new EvtPto3P);
+    modelist.registerModel(new EvtBtoKD3P);
+    modelist.registerModel(new EvtKKLambdaC);
+    modelist.registerModel(new EvtMultibody);
+    modelist.registerModel(new EvtDMix);
+    modelist.registerModel(new EvtD0mixDalitz);
+
+//    modelist.registerModel(new EvtJetSetCDF);
+//    modelist.registerModel(new EvtJscontCDF);
+
+    modelist.registerModel(new EvtbTosllAli);
+    //    modelist.registerModel(new EvtBToDDalitzCPK);
+    //    modelist.registerModel(new EvtLambdaB2LambdaV);
+    //    modelist.registerModel(new EvtLambda2PPiForLambdaB2LambdaV);
+    //    modelist.registerModel(new EvtV2VpVmForLambdaB2LambdaV);
+    //    modelist.registerModel(new EvtPVVCPLH);
+    //   modelist.registerModel(new EvtSSD_DirectCP);
+
 
 #ifndef EVTSTANDALONE
-  modelist.Register(new EvtUclaII);
-  modelist.Register(new EvtJetSet);
-  modelist.Register(new EvtJscont);
+    cout << "Will registerModel EvtJetSet"<<endl;
+    modelist.registerModel(new EvtJetSet);
+    modelist.registerModel(new EvtJscont);
 #else
-  //  modelist.Register(new EvtPycont);
-  modelist.Register(new EvtPythia);
-  //  modelist.Register(new EvtPyGaGa);
+//    modelist.registerModel(new EvtPycont);
+//    cout << "Will register EvtPythia"<<endl;
+    modelist.registerModel(new EvtPythia);
+//    modelist.registerModel(new EvtPyGaGa);
 #endif
 
-}
+    
 
+}
 
 
 

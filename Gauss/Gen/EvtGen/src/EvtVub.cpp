@@ -10,7 +10,7 @@
 //
 // Module: EvtVub.cc
 //
-// Description: Routine to decay a particle according th phase space
+// Description: Routine to decay a particle according th phase space 
 //
 // Modification history:
 //
@@ -18,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 //
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
@@ -26,22 +27,20 @@
 #include "EvtGenModels/EvtVub.hh"
 #include <string>
 #include "EvtGenBase/EvtVector4R.hh"
-#include "EvtGenModels/EvtHepRandomEngine.hh"
 #include "EvtGenModels/EvtPFermi.hh"
 #include "EvtGenModels/EvtVubdGamma.hh"
-#include "CLHEP/Random/RandGeneral.h"
 #include "EvtGenBase/EvtRandom.hh"
+using std::endl;
 
 EvtVub::~EvtVub() {
-  if ( _dGamma ) delete _dGamma;
-  if ( _pFermi ) delete _pFermi;
-  if ( _masses ) delete [] _masses;
-  if ( _weights ) delete [] _weights;
+  if (_dGamma) delete _dGamma;
+  if (_masses) delete [] _masses;
+  if (_weights) delete [] _weights;
 }
 
-void EvtVub::getName(std::string& model_name){
+std::string EvtVub::getName(){
 
-  model_name="VUB";     
+  return "VUB";     
 
 }
 
@@ -59,10 +58,9 @@ void EvtVub::init(){
   if (getNArg()<6) {
 
     report(ERROR,"EvtGen") << "EvtVub generator expected "
-                           << " at least 6 arguments "
-                           << "(mb,a,alpha_s,Nbins,m1,w1,...) but found: "
-			   <<getNArg()<<std::endl;
-    report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
+                           << " at least 6 arguments (mb,a,alpha_s,Nbins,m1,w1,...) but found: "
+			   <<getNArg()<<endl;
+    report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
     ::abort();
 
   }
@@ -78,8 +76,8 @@ void EvtVub::init(){
   if (getNArg()-4 != 2*_nbins) {
     report(ERROR,"EvtGen") << "EvtVub generator expected " 
                            << _nbins << " masses and weights but found: "
-			   <<(getNArg()-4)/2 <<std::endl;
-    report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
+			   <<(getNArg()-4)/2 <<endl;
+    report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
     ::abort();
   }
   int i,j = 4;
@@ -89,15 +87,15 @@ void EvtVub::init(){
     if (i>0 && _masses[i] <= _masses[i-1]) {
       report(ERROR,"EvtGen") << "EvtVub generator expected " 
 			     << " mass bins in ascending order!"
-			     << "Will terminate execution!"<<std::endl;
+			     << "Will terminate execution!"<<endl;
       ::abort();
     }
     _weights[i] = getArg(j++);
     if (_weights[i] < 0) {
       report(ERROR,"EvtGen") << "EvtVub generator expected " 
 			     << " weights >= 0, but found: " 
-			     <<_weights[i] <<std::endl;
-      report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
+			     <<_weights[i] <<endl;
+      report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
       ::abort();
     }
     if ( _weights[i] > maxw ) maxw = _weights[i];
@@ -105,7 +103,7 @@ void EvtVub::init(){
   if (maxw == 0) {
     report(ERROR,"EvtGen") << "EvtVub generator expected at least one " 
 			   << " weight > 0, but found none! " 
-			   << "Will terminate execution!"<<std::endl;
+			   << "Will terminate execution!"<<endl;
     ::abort();
   }
   for (i=0;i<_nbins;i++) _weights[i]/=maxw;
@@ -133,16 +131,23 @@ void EvtVub::init(){
   const int aSize = 10000;
 
   EvtPFermi pFermi(_a,mB,_mb);
-  HepDouble pf[aSize];
-
+  // pf is the cumulative distribution
+  // normalized to 1.
+  _pf.resize(aSize);
   for(i=0;i<aSize;i++){
     double kplus = xlow + (double)(i+0.5)/((double)aSize)*(xhigh-xlow);
-    pf[i] = pFermi.getFPFermi(kplus);
+    if ( i== 0 )
+      _pf[i] = pFermi.getFPFermi(kplus);
+    else
+      _pf[i] = _pf[i-1] + pFermi.getFPFermi(kplus);
+  }
+  for (size_t index=0; index<_pf.size(); index++) {
+    _pf[index]/=_pf[_pf.size()-1];
   }
 
-  static EvtHepRandomEngine myEngine;
+  //  static EvtHepRandomEngine myEngine;
 
-  _pFermi = new RandGeneral(myEngine,pf,aSize,0);
+  //  _pFermi = new RandGeneral(myEngine,pf,aSize,0);
   _dGamma = new EvtVubdGamma(_alphas);
   
   // check that there are 3 daughters
@@ -164,8 +169,13 @@ void EvtVub::decay( EvtParticle *p ){
   EvtVector4R p4;
   // R. Faccini 21/02/03
   // move the reweighting up , before also shooting the fermi distribution
-  double x,z,p2,sh(0.),mB,ml,xlow,xhigh,qplus,El,Eh(0.),kplus;
-  const double p2epsilon=1e-10;
+  double x,z,p2;
+  double sh=0.0;
+  double mB,ml,xlow,xhigh,qplus;
+  double El=0.0;
+  double Eh=0.0;
+  double kplus;
+  const double lp2epsilon=-10;
   bool rew(true);
   while(rew){
     
@@ -194,18 +204,20 @@ void EvtVub::decay( EvtParticle *p ){
     while( kplus >= xhigh || kplus <= xlow 
 	   || (_alphas == 0 && kplus >= mB/2-_mb 
 	       + sqrt(mB*mB/4-_masses[0]*_masses[0]))) {
-      kplus = _pFermi->shoot();
+      kplus = findPFermi(); //_pFermi->shoot();
       kplus = xlow + kplus*(xhigh-xlow);
     }
+    qplus = mB-_mb-kplus;
+    if( (mB-qplus)/2.<=ml)continue;
+   
     int tryit = 1;
-    
     while (tryit) {
       
       x = EvtRandom::Flat();
       z = EvtRandom::Flat(0,2);
-      p2 = pow(10.,log10(p2epsilon) - log10(p2epsilon)*EvtRandom::Flat());
+      p2=EvtRandom::Flat();
+      p2 = pow(10.0,lp2epsilon*p2);
       
-      qplus = mB-_mb-kplus;
       El = x*(mB-qplus)/2;
       if ( El > ml && El < mB/2) {
 	
@@ -220,8 +232,7 @@ void EvtVub::decay( EvtParticle *p ){
 	    
 	    double y = _dGamma->getdGdxdzdp(x,z,p2)/_dGMax*p2;
 	    
-	    if ( y > 1 ) report(WARNING,"EvtGen")
-        <<"EvtVub decay probability > 1 found: " << y << std::endl;
+	    if ( y > 1 ) report(WARNING,"EvtGen")<<"EvtVub decay probability > 1 found: " << y << endl;
 	    if ( y >= xran ) tryit = 0;
 	  }
 	}
@@ -326,9 +337,8 @@ void EvtVub::decay( EvtParticle *p ){
       +          ctL         *ptmp*zW[j];
 
   double apLW = ptmp;
-
-  // boost them back in the B Meson restframe
-  
+    
+  // boost them back in the B Meson restframe  
   double appLB = beta*gamma*pLW[0] + gamma*ctL*apLW;
  
   ptmp = sqrt(El*El-ml*ml);
@@ -355,3 +365,35 @@ void EvtVub::decay( EvtParticle *p ){
 }
 
 
+double EvtVub::findPFermi() {
+
+  double ranNum=EvtRandom::Flat();
+  double oOverBins= 1.0/(float(_pf.size()));
+  int nBinsBelow = 0;	  // largest k such that I[k] is known to be <= rand
+  int nBinsAbove = _pf.size();  // largest k such that I[k] is known to be >  rand
+  int middle;
+  
+  while (nBinsAbove > nBinsBelow+1) {
+    middle = (nBinsAbove + nBinsBelow+1)>>1;
+    if (ranNum >= _pf[middle]) {
+      nBinsBelow = middle;
+    } else {
+      nBinsAbove = middle;
+    }
+  } 
+
+  double bSize = _pf[nBinsAbove] - _pf[nBinsBelow];
+  // binMeasure is always aProbFunc[nBinsBelow], 
+  
+  if ( bSize == 0 ) { 
+    // rand lies right in a bin of measure 0.  Simply return the center
+    // of the range of that bin.  (Any value between k/N and (k+1)/N is 
+    // equally good, in this rare case.)
+    return (nBinsBelow + .5) * oOverBins;
+  }
+  
+  double bFract = (ranNum - _pf[nBinsBelow]) / bSize;
+  
+  return (nBinsBelow + bFract) * oOverBins;
+
+} 

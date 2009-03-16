@@ -18,11 +18,13 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <iostream>
 #include <math.h>
 #include <stdlib.h>
 #include "EvtGenBase/EvtStringParticle.hh"
 #include "EvtGenBase/EvtVector4R.hh"
+#include "EvtGenBase/EvtReport.hh"
 
 
 EvtStringParticle::~EvtStringParticle(){
@@ -105,10 +107,9 @@ EvtSpinDensity EvtStringParticle::rotateToHelicityBasis() const{
 
 }
 
-EvtSpinDensity EvtStringParticle::rotateToHelicityBasis(double /*alpha*/,
-                                                        double /*beta*/,
-                                                        double /*gamma*/) 
-  const{
+EvtSpinDensity EvtStringParticle::rotateToHelicityBasis(double,
+							double,
+							double) const{
 
   report(ERROR,"EvtGen") << "rotateToHelicityBasis(alpha,beta,gamma) not implemented for string particle."; 
   report(ERROR,"EvtGen") << "Will terminate execution."; 

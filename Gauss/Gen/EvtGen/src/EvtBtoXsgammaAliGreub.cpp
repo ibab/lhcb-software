@@ -30,6 +30,7 @@
 //                                                class to allow choice of input models.
 //------------------------------------------------------------------------
 //
+#include "EvtGenBase/EvtPatches.hh"
 
 #include <stdlib.h>
 #include "EvtGenBase/EvtRandom.hh"
@@ -40,6 +41,7 @@
 #include "EvtGenBase/EvtGenKine.hh"
 #include "EvtGenBase/EvtPDL.hh"
 #include "EvtGenBase/EvtReport.hh"
+using std::endl;
 
 
 EvtBtoXsgammaAliGreub::~EvtBtoXsgammaAliGreub(){}
@@ -50,8 +52,8 @@ void EvtBtoXsgammaAliGreub::init(int nArg, double* /*args*/){
     
     report(ERROR,"EvtGen") << "EvtBtoXsgamma generator model "
 			   << "EvtBtoXsgammaAliGreub expected " 
-			   << "zero arguments but found: "<<nArg-1<<std::endl;
-    report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
+			   << "zero arguments but found: "<<nArg-1<<endl;
+    report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
     ::abort();
   
   }
@@ -116,7 +118,7 @@ double EvtBtoXsgammaAliGreub::GetMass(int Xscode) {
     par[16]=1522.4024658203;
     par[17]=-82.379623413086;
   } else {
-    report(DEBUG,"EvtGen") << "In EvtBtoXsgammaAliGreub: Particle with id " << Xscode << " is not a Xss particle"<<std::endl;
+    report(DEBUG,"EvtGen") << "In EvtBtoXsgammaAliGreub: Particle with id " << Xscode << " is not a Xss particle"<<endl;
     return 0;
   }
 

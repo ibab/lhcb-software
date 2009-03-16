@@ -18,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
@@ -31,9 +32,9 @@
 
 EvtVSSMix::~EvtVSSMix() {}
 
-void EvtVSSMix::getName(std::string& model_name){
+std::string EvtVSSMix::getName(){
 
-  model_name="VSS_MIX";     
+  return "VSS_MIX";     
 
 }
 
@@ -87,13 +88,12 @@ void EvtVSSMix::decay( EvtParticle *p ){
 
   dm=getArg(0)/EvtConst::c;
 
-  double mix_amp(0.);
-
   EvtId d1,d2;
 
   d1=s1->getId();
   d2=s2->getId();
 
+  double mix_amp=0.;
   if (d1==B0&&d2==B0B) mix_amp=cos(0.5*dm*(t1-t2));
   if (d1==B0B&&d2==B0) mix_amp=cos(0.5*dm*(t1-t2));
   if (d1==B0&&d2==B0) mix_amp=sin(0.5*dm*(t1-t2));

@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------
 // File and Version Information: 
-//      $Id: EvtMultiChannelParser.cpp,v 1.3 2008-07-10 21:25:15 robbep Exp $
+//      $Id: EvtMultiChannelParser.cpp,v 1.4 2009-03-16 15:46:01 robbep Exp $
 // 
 // Environment:
 //      This software is part of the EvtGen package developed jointly
@@ -13,6 +13,7 @@
 // Module creator:
 //      Alexei Dvoretskii, Caltech, 2001-2002.
 //-----------------------------------------------------------------------
+#include "EvtGenBase/EvtPatches.hh"
 
 #include <assert.h>
 #include <stdlib.h>
@@ -23,7 +24,7 @@
 #include "EvtGenBase/EvtParser.hh"
 #include "EvtGenBase/EvtMultiChannelParser.hh"
 #include "EvtGenBase/EvtDecayMode.hh"
-#include "EvtGenBase/EvtPartPropDb.hh"
+#include "EvtGenBase/EvtPDL.hh"
 
 using std::string;
 using std::vector;
@@ -33,7 +34,7 @@ EvtDecayMode EvtMultiChannelParser::getDecayMode(const char* file)
   // Open file, read tokens
 
   EvtParser parser;
-  parser.Read(file);
+  parser.read(file);
 
   // Seek Decay
 
@@ -57,14 +58,13 @@ EvtDecayMode EvtMultiChannelParser::getDecayMode(const char* file)
 
     std::string d = parser.getToken(i++);
 
-    if(EvtPartPropDb::initialized()) 
-      if(EvtPartPropDb::getStdHepID(d.c_str()) == 0) break;
+    if(EvtPDL::getStdHep(EvtPDL::getId(d.c_str())) == 0) break;
     
     dauV.push_back(string(d.c_str()));
   }
   
   EvtDecayMode mode(mother,dauV);
-  printf("Decay File defines mode %s\n",mode.mode());
+  printf("Decay File defines mode %s\n",mode.mode().c_str());
 
   return mode;
 }
@@ -76,7 +76,7 @@ void EvtMultiChannelParser::parse(const char* file, const char* model)
   // Open file, read tokens
 
   EvtParser parser;
-  parser.Read(file);
+  parser.read(file);
 
 
   // Get parameters (tokens between the model name and ;)
@@ -147,12 +147,12 @@ void EvtMultiChannelParser::parse(const std::vector<std::string>& v)
   // Now parse the rest of file for amplitude specifications.
 
   bool conjugate = false;
-  int i = 2;
+  size_t i = 2;
   assert(isKeyword(v[2]));
   
-  while(i < ((int) v.size())) {
+  while(i  < v.size()) {
   
-    int i0 = i;
+    size_t i0 = i;
   
     // Switch to conjugate amplitudes after keyword
     if(v[i] == std::string("CONJUGATE")) {
@@ -160,10 +160,12 @@ void EvtMultiChannelParser::parse(const std::vector<std::string>& v)
       assert(conjugate == false);
       conjugate = true;
       assert(!isKeyword(v[++i]));
-      _dm =  strtod(v[i].c_str(),tc);
-      i++;
+      _dm =  strtod(v[i++].c_str(),tc);
+      _mixAmpli = strtod(v[i++].c_str(),tc);
+      _mixPhase = strtod(v[i++].c_str(),tc);
     }
 
+    if (i >= v.size()) break;
     std::vector<std::string> params;
     EvtComplex c;
     int format;
@@ -199,15 +201,14 @@ void EvtMultiChannelParser::parse(const std::vector<std::string>& v)
   }
 
   printf("PARSING SUCCESSFUL\n");
-  printf("%d amplitude terms\n",(int) _amp.size());
-  printf("%d conj amplitude terms\n",(int) _ampConj.size());
+  printf("%d amplitude terms\n",(int)_amp.size());
+  printf("%d conj amplitude terms\n",(int)_ampConj.size());
 }
 
 
 
-void EvtMultiChannelParser::parseComplexCoef(int& i, 
-                                             const std::vector<std::string>& v,
-                                             EvtComplex& c, int& format) 
+void EvtMultiChannelParser::parseComplexCoef(size_t& i, const std::vector<std::string>& v,
+					     EvtComplex& c, int& format) 
 {
   // place holder for strtod
   char** tc = 0;
@@ -246,8 +247,7 @@ void EvtMultiChannelParser::parseComplexCoef(int& i,
 }
 
 
-double EvtMultiChannelParser::parseRealCoef(int& i, 
-                                            const std::vector<std::string>& v)
+double EvtMultiChannelParser::parseRealCoef(int& i, const std::vector<std::string>& v)
 {
   // place holder for strtod
   char** tc = 0;
@@ -273,7 +273,6 @@ bool EvtMultiChannelParser::isKeyword(const std::string& s)
   if(s == std::string("COEFFICIENT")) return true;
   return false;
 }
-
 
 
 

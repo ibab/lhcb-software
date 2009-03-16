@@ -20,6 +20,7 @@
 //------------------------------------------------------------------------
 //
 #include "EvtGenBase/EvtPatches.hh"
+#include "EvtGenBase/EvtPatches.hh"
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
 #include "EvtGenBase/EvtPDL.hh"
@@ -38,7 +39,6 @@ void EvtbTosllVectorAmp::CalcAmp( EvtParticle *parent,
 				  EvtAmp& amp,
 				  EvtbTosllFF *formFactors ) {
 
-  
   //Add the lepton and neutrino 4 momenta to find q2
 
   EvtVector4R q = parent->getDaug(1)->getP4() 
@@ -56,17 +56,18 @@ void EvtbTosllVectorAmp::CalcAmp( EvtParticle *parent,
                            mesonmass,
                            a1,a2,a0,v,t1,t2,t3);
 
+
   EvtId daught = parent->getDaug(0)->getId();
   bool btod = false;
   bool nnlo = true;
-  if 
-    (
-     daught == EvtPDL::getId(std::string("rho+")) ||
-     daught == EvtPDL::getId(std::string("rho-")) ||
-     daught == EvtPDL::getId(std::string("rho0")) ||
-     daught == EvtPDL::getId(std::string("omega"))
-     ) 
-    btod = true;
+ if 
+  (
+   daught == EvtPDL::getId(std::string("rho+")) ||
+   daught == EvtPDL::getId(std::string("rho-")) ||
+   daught == EvtPDL::getId(std::string("rho0")) ||
+   daught == EvtPDL::getId(std::string("omega"))
+  ) 
+   btod = true;
 
   EvtVector4R p4b;
   p4b.set(parent->mass(),0.0,0.0,0.0);
@@ -103,11 +104,11 @@ void EvtbTosllVectorAmp::CalcAmp( EvtParticle *parent,
   b=(1+mhatkstar)*(c9eff*a1+2*mhatb*(1-mhatkstar)*c7eff*t2/shat);
   EvtComplex c;
   c=((1-mhatkstar)*c9eff*a2+
-     2*mhatb*c7eff*(t3+(1-mhatkstar*mhatkstar)*t2/shat))/
+	    2*mhatb*c7eff*(t3+(1-mhatkstar*mhatkstar)*t2/shat))/
     (1-mhatkstar*mhatkstar);
   EvtComplex d;
   d=(c9eff*((1+mhatkstar)*a1-(1-mhatkstar)*a2-2*mhatkstar*a0)
-     -2*mhatb*c7eff*t3)/shat;
+	    -2*mhatb*c7eff*t3)/shat;
   EvtComplex e;
   e=2*c10eff*v/(1+mhatkstar);
   EvtComplex f;
@@ -116,7 +117,6 @@ void EvtbTosllVectorAmp::CalcAmp( EvtParticle *parent,
   g=c10eff*a2/(1+mhatkstar);
   EvtComplex h;
   h=c10eff*((1+mhatkstar)*a1-(1-mhatkstar)*a2-2*mhatkstar*a0)/shat;
-  
   
   EvtTensor4C T1,T2;
   
@@ -132,21 +132,17 @@ void EvtbTosllVectorAmp::CalcAmp( EvtParticle *parent,
   lepPlus = (charge1 > charge2) ? parent->getDaug(1) : parent->getDaug(2);
   lepMinus = (charge1 < charge2) ? parent->getDaug(1) : parent->getDaug(2);
 
-//  static EvtIdSet leptons("e-","mu-","tau-");
-//  static EvtIdSet antileptons("e+","mu+","tau+");
-  
-//  if (leptons.contains(l_num)){
   if (bmesons.contains(parentID)) {
 
     T1=a*dual(directProd(pbhat,pkstarhat))
-      -b*uniti*EvtTensor4C::g()
-      +c*uniti*directProd(pbhat,phat)
-      +d*uniti*directProd(pbhat,qhat);
+       -b*uniti*EvtTensor4C::g()
+       +c*uniti*directProd(pbhat,phat)
+       +d*uniti*directProd(pbhat,qhat);
     
     T2=e*dual(directProd(pbhat,pkstarhat))
-      -f*uniti*EvtTensor4C::g()
-      +g*uniti*directProd(pbhat,phat)
-      +h*uniti*directProd(pbhat,qhat);
+       -f*uniti*EvtTensor4C::g()
+       +g*uniti*directProd(pbhat,phat)
+       +h*uniti*directProd(pbhat,qhat);
     
     l11=EvtLeptonVCurrent(lepPlus->spParent(0),
                           lepMinus->spParent(0));
@@ -171,14 +167,14 @@ void EvtbTosllVectorAmp::CalcAmp( EvtParticle *parent,
     if (bbarmesons.contains(parentID)) {
 
       T1=-a*dual(directProd(pbhat,pkstarhat))
-        -b*uniti*EvtTensor4C::g()
-        +c*uniti*directProd(pbhat,phat)
-        +d*uniti*directProd(pbhat,qhat);
+         -b*uniti*EvtTensor4C::g()
+         +c*uniti*directProd(pbhat,phat)
+         +d*uniti*directProd(pbhat,qhat);
       
       T2=-e*dual(directProd(pbhat,pkstarhat))
-        -f*uniti*EvtTensor4C::g()
-        +g*uniti*directProd(pbhat,phat)
-        +h*uniti*directProd(pbhat,qhat);
+         -f*uniti*EvtTensor4C::g()
+         +g*uniti*directProd(pbhat,phat)
+         +h*uniti*directProd(pbhat,qhat);
       
       l11=EvtLeptonVCurrent(lepPlus->spParent(1),
                             lepMinus->spParent(1));
@@ -219,6 +215,7 @@ void EvtbTosllVectorAmp::CalcAmp( EvtParticle *parent,
     amp.vertex(i,1,1,l22*E1+a22*E2);
   } 
 }
+
 
 
 

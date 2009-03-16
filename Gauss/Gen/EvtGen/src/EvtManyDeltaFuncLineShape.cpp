@@ -18,6 +18,7 @@
 //    Dvoretskii June  03, 2002        Reimplemented rollMass()
 //
 //------------------------------------------------------------------------
+#include "EvtGenBase/EvtPatches.hh"
 
 #include "EvtGenBase/EvtPatches.hh"
 #include "EvtGenBase/EvtManyDeltaFuncLineShape.hh"
@@ -36,10 +37,7 @@ EvtManyDeltaFuncLineShape::EvtManyDeltaFuncLineShape() {
 EvtManyDeltaFuncLineShape::~EvtManyDeltaFuncLineShape() {
 }
 
-EvtManyDeltaFuncLineShape::EvtManyDeltaFuncLineShape(double mass, double width,
-                                                     double maxRange, 
-                                                     EvtSpinType::spintype sp)
-{ 
+EvtManyDeltaFuncLineShape::EvtManyDeltaFuncLineShape(double mass, double width, double maxRange, EvtSpinType::spintype sp) { 
 
   _mass=mass;
   _width=width;
@@ -55,8 +53,8 @@ EvtManyDeltaFuncLineShape::EvtManyDeltaFuncLineShape(double mass, double width,
 
 }
 
-EvtManyDeltaFuncLineShape::EvtManyDeltaFuncLineShape
-(const EvtManyDeltaFuncLineShape& x): EvtAbsLineShape( x )  {
+EvtManyDeltaFuncLineShape::EvtManyDeltaFuncLineShape(const EvtManyDeltaFuncLineShape& x):
+EvtAbsLineShape( x ) {
   _mass=x._mass;
   _width=x._width;
   _spin=x._spin;
@@ -66,8 +64,7 @@ EvtManyDeltaFuncLineShape::EvtManyDeltaFuncLineShape
 
 }
 
-EvtManyDeltaFuncLineShape& EvtManyDeltaFuncLineShape::operator=(const
-    EvtManyDeltaFuncLineShape& x){
+EvtManyDeltaFuncLineShape& EvtManyDeltaFuncLineShape::operator=(const EvtManyDeltaFuncLineShape& x){
   _mass=x._mass;
   _massMax=x._massMax;
   _massMin=x._massMin;
@@ -84,8 +81,7 @@ EvtAbsLineShape* EvtManyDeltaFuncLineShape::clone() {
 }
 
 
-double EvtManyDeltaFuncLineShape::getMassProb(double mass, double massPar,
-                                              int nDaug, double *massDau) {
+double EvtManyDeltaFuncLineShape::getMassProb(double mass, double massPar,int nDaug, double *massDau) {
 
   
   double dTotMass=0.;
@@ -103,11 +99,7 @@ double EvtManyDeltaFuncLineShape::getMassProb(double mass, double massPar,
   return 1.;
 }
 
-double EvtManyDeltaFuncLineShape::getRandMass(EvtId *,int , 
-                                              EvtId *, 
-                                              EvtId *, 
-                                              double , 
-                                              double *) {
+double EvtManyDeltaFuncLineShape::getRandMass(EvtId*,int, EvtId*, EvtId*, double, double *) {
 
   int nDelta = int((_massMax - _massMin)/_width);
   nDelta++;

@@ -18,12 +18,15 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <iostream>
 #include <math.h>
 #include <assert.h>
 #include "EvtGenBase/EvtComplex.hh"
 #include "EvtGenBase/EvtVector4C.hh"
 #include "EvtGenBase/EvtTensor4C.hh"
+using std::endl;
+using std::ostream;
 
 
 
@@ -198,27 +201,16 @@ void EvtTensor4C::zero(){
 }
 
 
-EvtTensor4C::EvtTensor4C(){
-  
-  //  int i,j;
-  
-  //  for(i=0;i<4;i++){
-  //  for(j=0;j<4;j++){
-  //    t[i][j]=EvtComplex(0.0,0.0);
-  //  }
-  // }
 
-}
-
-std::ostream& operator<<(std::ostream& s,const EvtTensor4C& t){
+ostream& operator<<(ostream& s,const EvtTensor4C& t){
 
   int i,j;
-  s<< std::endl;
+  s<< endl;
   for(i=0;i<4;i++){
     for(j=0;j<4;j++){
       s << t.t[i][j];
     }
-   s << std::endl;
+   s << endl;
   }
   return s;
 }
@@ -242,24 +234,6 @@ void EvtTensor4C::setdiag(double g00, double g11, double g22, double g33){
   t[3][2] = EvtComplex(0.0);
 }
 
-EvtTensor4C::EvtTensor4C(double g00, double g11, double g22, double g33){
-  t[0][0]=EvtComplex(g00);
-  t[1][1]=EvtComplex(g11);
-  t[2][2]=EvtComplex(g22);
-  t[3][3]=EvtComplex(g33);
-  t[0][1] = EvtComplex(0.0);
-  t[0][2] = EvtComplex(0.0);
-  t[0][3] = EvtComplex(0.0);
-  t[1][0] = EvtComplex(0.0);
-  t[1][2] = EvtComplex(0.0);
-  t[1][3] = EvtComplex(0.0);
-  t[2][0] = EvtComplex(0.0);
-  t[2][1] = EvtComplex(0.0);
-  t[2][3] = EvtComplex(0.0);
-  t[3][0] = EvtComplex(0.0);
-  t[3][1] = EvtComplex(0.0);
-  t[3][2] = EvtComplex(0.0);
-}
 
 EvtTensor4C& EvtTensor4C::operator+=(const EvtTensor4C& t2){
   

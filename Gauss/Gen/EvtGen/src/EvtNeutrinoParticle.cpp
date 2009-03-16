@@ -18,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <iostream>
 #include <math.h>
 #include <stdlib.h>
@@ -26,6 +27,7 @@
 #include "EvtGenBase/EvtVector4R.hh"
 #include "EvtGenBase/EvtPDL.hh"
 #include "EvtGenBase/EvtReport.hh"
+using std::endl;
 
 
 EvtNeutrinoParticle::~EvtNeutrinoParticle(){}
@@ -49,7 +51,7 @@ void EvtNeutrinoParticle::init(EvtId part_n,const EvtVector4R& p4){
 
   if (EvtPDL::getStdHep(part_n)==0){
     report(ERROR,"EvtGen") << "Error in EvtNeutrinoParticle::init, part_n="
-			   << part_n.getId()<<std::endl;
+			   << part_n.getId()<<endl;
   }
 
   if (EvtPDL::getStdHep(part_n)>0){  
@@ -132,18 +134,21 @@ EvtSpinDensity EvtNeutrinoParticle::rotateToHelicityBasis() const{
   
 }
 
-EvtSpinDensity EvtNeutrinoParticle::rotateToHelicityBasis(double /*alpha*/,
-                                                          double /*beta*/,
-                                                          double /*gamma*/) 
-  const{
+EvtSpinDensity EvtNeutrinoParticle::rotateToHelicityBasis(double,
+							  double,
+							  double) const{
 
-  report(ERROR,"EvtGen") << "rotateToHelicityBasis(alpha,beta,gamma) not implemented for neutrino."; 
+  report(ERROR,"EvtGen") << "rotateToHelicityBasis(alpha,beta,gama) not implemented for neutrino."; 
   report(ERROR,"EvtGen") << "Will terminate execution."; 
 
   ::abort();
 
-  EvtSpinDensity rho;
-  return rho;
-
+  EvtSpinDensity R;
+  R.setDiag(1);
+      
+  return R;
 
 }
+
+
+

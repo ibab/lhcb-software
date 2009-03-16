@@ -1,8 +1,5 @@
 //--------------------------------------------------------------------------
 //
-//
-// Copyright Information: See EvtGen/COPYRIGHT
-//
 // Environment:
 //      This software is part of the EvtGen package developed jointly
 //      for the BaBar and CLEO collaborations.  If you use all or part
@@ -24,10 +21,14 @@
 //
 // Modification history:
 //
-//    Stephane Willocq        Jan  19, 2001       Module created
+//    Stephane Willocq    Jan 19, 2001   Module created
 //    Stephane Willocq    Nov  6, 2003   Update Wilson Coeffs & dG's
 //    &Jeff Berryhill
+//
 //------------------------------------------------------------------------
+//
+#include "EvtGenBase/EvtPatches.hh"
+//
 #include <stdlib.h>
 #include "EvtGenBase/EvtRandom.hh"
 #include "EvtGenBase/EvtParticle.hh"
@@ -84,9 +85,15 @@ EvtComplex EvtBtoXsllUtil::GetC7Eff1(double sh, double mbeff, bool nnlo)
   // change energy scale to 5.0 for full NNLO calculation below shat = 0.25
   double muscale = 5.0;
   double alphas = 0.215;
+  //double A7 = -0.312 + 0.008;
   double A8 = -0.148;
+  //double A9 = 4.174 + (-0.035);
+  //double A10 = -4.592 + 0.379;
   double C1 = -0.487;
   double C2 = 1.024;
+  //double T9 = 0.374 + 0.252;
+  //double U9 = 0.033 + 0.015;
+  //double W9 = 0.032 + 0.012;
   double Lmu = log(muscale/mbeff);
 
   EvtComplex F71;
@@ -174,6 +181,7 @@ EvtComplex EvtBtoXsllUtil::GetC9Eff0(double sh, double mbeff,
   EvtComplex hc;
   double xarg;
   xarg = 4.0*mch/sh;
+
   hc = -4.0/9.0*log(mch*mch) + 8.0/27.0 + 4.0*xarg/9.0;
   if (xarg < 1.0)
   { 
@@ -184,7 +192,7 @@ EvtComplex EvtBtoXsllUtil::GetC9Eff0(double sh, double mbeff,
   else
   {
     hc = hc - 2.0/9.0*(2.0 + xarg)*sqrt(fabs(1.0 - xarg))*
-      2.0*atan(1.0/sqrt(xarg - 1.0));
+      2.0*atan(1.0/sqrt(xarg-1.0));
   }
 
   EvtComplex h1;
@@ -199,7 +207,7 @@ EvtComplex EvtBtoXsllUtil::GetC9Eff0(double sh, double mbeff,
   else
   {
     h1 = h1 - 2.0/9.0*(2.0 + xarg)*sqrt(fabs(1.0 - xarg))*
-      2.0*atan(1.0/sqrt(xarg - 1.0));
+      2.0*atan(1.0/sqrt(xarg-1.0));
   }
 
   EvtComplex h0;
@@ -353,21 +361,25 @@ double EvtBtoXsllUtil::dGdsProb(double mb, double ms, double ml,
   // in this latter paper reduces to Eq.(12) in ALGH's 2002 paper
   // for ml = 0 and ms = 0.
 
-  bool btod = false ;
-  bool nnlo = true ;
+  bool btod = false;
+  bool nnlo = true;
 
   double delta, lambda, prob;
   double f1, f2, f3, f4;
   double msh, mlh, sh;
-  double mbeff = 4.8 ;
+  double mbeff = 4.8;
 
   mlh = ml / mb;
   msh = ms / mb;
-// set lepton and strange-quark masses to 0 if need to
+  // set lepton and strange-quark masses to 0 if need to
   // be in strict agreement with ALGH 2002 paper
   //  mlh = 0.0; msh = 0.0;
   //  sh  = s  / (mb*mb);
   sh  = s  / (mbeff*mbeff);
+
+  // if sh >1.0 code will return a nan. so just skip it
+  if ( sh > 1.0 ) return 0.0;
+
 
   EvtComplex c7eff0 = EvtBtoXsllUtil::GetC7Eff0(sh,nnlo);
   EvtComplex c7eff1 = EvtBtoXsllUtil::GetC7Eff1(sh,mbeff,nnlo);
@@ -379,32 +391,29 @@ double EvtBtoXsllUtil::dGdsProb(double mb, double ms, double ml,
      (1 + 0.119*log(pow(4.8,2)/pow(91.1867,2))*23.0/12.0/EvtConst::pi);
 
   double omega7 = -8.0/3.0*log(4.8/mb)
-    -4.0/3.0*EvtDiLog::DiLog(sh) 
-    -2.0/9.0*EvtConst::pi*EvtConst::pi
-    -2.0/3.0*log(sh)*log(1.0-sh)
-    -log(1-sh)*(8.0+sh)/(2.0+sh)/3.0 
+                  -4.0/3.0*EvtDiLog::DiLog(sh) 
+                  -2.0/9.0*EvtConst::pi*EvtConst::pi
+                  -2.0/3.0*log(sh)*log(1.0-sh)
+                  -log(1-sh)*(8.0+sh)/(2.0+sh)/3.0 
     -2.0/3.0*sh*(2.0 - 2.0*sh - sh*sh)*log(sh)/pow((1.0 - sh),2)/(2.0 + sh)
     -(16.0 - 11.0*sh - 17.0*sh*sh)/18.0/(2.0 + sh)/(1.0 - sh);
   double eta7 = 1.0 + alphas*omega7/EvtConst::pi;
 
   double omega79 = -4.0/3.0*log(4.8/mb)
-    -4.0/3.0*EvtDiLog::DiLog(sh) 
-    -2.0/9.0*EvtConst::pi*EvtConst::pi
-    -2.0/3.0*log(sh)*log(1.0-sh)
-    -1.0/9.0*(2.0+7.0*sh)*log(1.0 - sh)/sh
-    -2.0/9.0*sh*(3.0 - 2.0*sh)*log(sh)/pow((1.0 - sh),2) 
-    +1.0/18.0*(5.0 - 9.0*sh)/(1.0 - sh);
-
+                   -4.0/3.0*EvtDiLog::DiLog(sh) 
+                   -2.0/9.0*EvtConst::pi*EvtConst::pi
+                   -2.0/3.0*log(sh)*log(1.0-sh)
+                   -1.0/9.0*(2.0+7.0*sh)*log(1.0 - sh)/sh
+                   -2.0/9.0*sh*(3.0 - 2.0*sh)*log(sh)/pow((1.0 - sh),2) 
+                   +1.0/18.0*(5.0 - 9.0*sh)/(1.0 - sh);
   double eta79 = 1.0 + alphas*omega79/EvtConst::pi;
 
-  double omega9 = -2.0/9.0*EvtConst::pi*EvtConst::pi 
-    - 4.0/3.0*EvtDiLog::DiLog(sh)
-    - 2.0/3.0*log(sh)*log(1.0-sh)
-    - (5.0+4.0*sh)/(3.0*(1.0+2.0*sh)) * log(1.0-sh)
-    - 2.0*sh*(1.0+sh)*(1.0-2.0*sh)
-    /(3.0*pow(1.0-sh,2)*(1.0+2.0*sh)) * log(sh)
-    + (5.0+9.0*sh-6.0*sh*sh)/(6.0*(1.0-sh)*(1.0+2.0*sh));
-
+  double omega9 = -2.0/9.0*EvtConst::pi*EvtConst::pi - 4.0/3.0*EvtDiLog::DiLog(sh)
+                 - 2.0/3.0*log(sh)*log(1.0-sh)
+                 - (5.0+4.0*sh)/(3.0*(1.0+2.0*sh)) * log(1.0-sh)
+                 - 2.0*sh*(1.0+sh)*(1.0-2.0*sh)
+                 /(3.0*pow(1.0-sh,2)*(1.0+2.0*sh)) * log(sh)
+                 + (5.0+9.0*sh-6.0*sh*sh)/(6.0*(1.0-sh)*(1.0+2.0*sh));
   double eta9 = 1.0 + alphas*omega9/EvtConst::pi;
 
   EvtComplex c7eff = eta7*c7eff0 + c7eff1;
@@ -454,22 +463,47 @@ double EvtBtoXsllUtil::dGdsProb(double mb, double ms, double ml,
 
   // end of power corrections section
   // now back to Kruger & Sehgal expressions
-  lambda = 1.0 + sh*sh + pow(msh,4) - 2.0*(sh + sh*msh*msh + msh*msh);
 
-  f1 = pow(1.0-msh*msh,2) - sh*(1.0 + msh*msh);
-  f2 = 2.0*(1.0 + msh*msh) * pow(1.0-msh*msh,2)
-       - sh*(1.0 + 14.0*msh*msh + pow(msh,4)) - sh*sh*(1.0 + msh*msh);
-  f3 = pow(1.0-msh*msh,2) + sh*(1.0 + msh*msh) - 2.0*sh*sh
+  double msh2=msh*msh;
+  lambda = 1.0 + sh*sh + msh2*msh2 - 2.0*(sh + sh*msh2 + msh2);
+  // negative lambda screw up sqrt below!
+  if ( lambda < 0.0 ) return 0.0;
+
+  f1 = pow(1.0-msh2,2) - sh*(1.0 + msh2);
+  f2 = 2.0*(1.0 + msh2) * pow(1.0-msh2,2)
+       - sh*(1.0 + 14.0*msh2 + pow(msh,4)) - sh*sh*(1.0 + msh2);
+  f3 = pow(1.0-msh2,2) + sh*(1.0 + msh2) - 2.0*sh*sh
        + lambda*2.0*mlh*mlh/sh;
-  f4 = 1.0 - sh + msh*msh;
+  f4 = 1.0 - sh + msh2;
 
   delta = (  12.0*c7c9*f1*G3 + 4.0*c7c7*f2*G2/sh ) * (1.0 + 2.0*mlh*mlh/sh)
             + c9c9plusc10c10*f3*G1 
             + 6.0*mlh*mlh*c9c9minusc10c10*f4
             + Gc;
 
-  prob =  sqrt(lambda*(1.0 - 4.0*mlh*mlh/sh)) * delta;
+  // avoid negative probs
+  if ( delta < 0.0 ) delta=0.;
+  // negative when sh < 4*mlh*mlh
+  //               s < 4*ml*ml
+  ///  prob =  sqrt(lambda*(1.0 - 4.0*mlh*mlh/sh)) * delta;
+  prob =  sqrt(lambda*(1.0 - 4.0*ml*ml/s)) * delta;
 
+  //   if ( !(prob>=0.0) && !(prob<=0.0) ) {
+    //nan
+     //     std::cout << lambda << " " << mlh << " " << sh << " " << delta << " " << mb << " " << mbeff << std::endl;
+     // std::cout << 4.0*mlh*mlh/sh << " " << 4.0*ml*ml/s <<  " " << s-4.0*ml*ml << " " << ml << std::endl;
+     //	std::cout << sh << " " << sh*sh << " " << msh2*msh2 << " " << msh << std::endl;
+     //std::cout <<  (  12.0*c7c9*f1*G3 + 4.0*c7c7*f2*G2/sh ) * (1.0 + 2.0*mlh*mlh/sh)
+     //	      <<" " << c9c9plusc10c10*f3*G1 
+     //	      << " "<< 6.0*mlh*mlh*c9c9minusc10c10*f4
+     //	      << " "<< Gc << std::endl;
+     //std::cout << C2 << " " << C1 << " "<< lambda_2 << " " << mc <<  " " << real(F*(conj(c9eff)*(2.0+sh)+conj(c7eff)*(1.0 + 6.0*sh - sh*sh)/sh)) << " " << sh << " " << r << std::endl;
+     //std::cout << c9eff << " " << eta9 << " " <<c9eff0 << " " <<  c9eff1 << " " << alphas << " " << omega9 << " " << sh << std::endl;
+
+     //}
+//  else{
+//    if ( sh > 1.0) std::cout << "not a nan \n";
+//  }
   return prob;
 }
 
@@ -483,13 +517,15 @@ double EvtBtoXsllUtil::dGdsdupProb(double mb, double ms, double ml,
   bool btod = false;
   bool nnlo = true;
 
-  double prob/*, prob_max*/;
+  double prob;
   double f1sp, f2sp, f3sp;
-  //  double u_ext;
-  double mbeff = 4.8 ;
+  double mbeff = 4.8;
 
   //  double sh = s / (mb*mb);
   double sh  = s  / (mbeff*mbeff);
+
+  // if sh >1.0 code will return a nan. so just skip it
+  if ( sh > 1.0 ) return 0.0;
 
   EvtComplex c7eff0 = EvtBtoXsllUtil::GetC7Eff0(sh,nnlo);
   EvtComplex c7eff1 = EvtBtoXsllUtil::GetC7Eff1(sh,mbeff,nnlo);
@@ -501,30 +537,29 @@ double EvtBtoXsllUtil::dGdsdupProb(double mb, double ms, double ml,
      (1 + 0.119*log(pow(4.8,2)/pow(91.1867,2))*23.0/12.0/EvtConst::pi);
 
   double omega7 = -8.0/3.0*log(4.8/mb)
-    -4.0/3.0*EvtDiLog::DiLog(sh) 
-    -2.0/9.0*EvtConst::pi*EvtConst::pi
-    -2.0/3.0*log(sh)*log(1.0-sh)
-    -log(1-sh)*(8.0+sh)/(2.0+sh)/3.0 
+                  -4.0/3.0*EvtDiLog::DiLog(sh) 
+                  -2.0/9.0*EvtConst::pi*EvtConst::pi
+                  -2.0/3.0*log(sh)*log(1.0-sh)
+                  -log(1-sh)*(8.0+sh)/(2.0+sh)/3.0 
     -2.0/3.0*sh*(2.0 - 2.0*sh - sh*sh)*log(sh)/pow((1.0 - sh),2)/(2.0 + sh)
     -(16.0 - 11.0*sh - 17.0*sh*sh)/18.0/(2.0 + sh)/(1.0 - sh);
   double eta7 = 1.0 + alphas*omega7/EvtConst::pi;
 
   double omega79 = -4.0/3.0*log(4.8/mb)
-    -4.0/3.0*EvtDiLog::DiLog(sh) 
-    -2.0/9.0*EvtConst::pi*EvtConst::pi
-    -2.0/3.0*log(sh)*log(1.0-sh)
-    -1.0/9.0*(2.0+7.0*sh)*log(1.0 - sh)/sh
-    -2.0/9.0*sh*(3.0 - 2.0*sh)*log(sh)/pow((1.0 - sh),2) 
-    +1.0/18.0*(5.0 - 9.0*sh)/(1.0 - sh);
+                   -4.0/3.0*EvtDiLog::DiLog(sh)
+                   -2.0/9.0*EvtConst::pi*EvtConst::pi
+                   -2.0/3.0*log(sh)*log(1.0-sh)
+                   -1.0/9.0*(2.0+7.0*sh)*log(1.0 - sh)/sh
+                   -2.0/9.0*sh*(3.0 - 2.0*sh)*log(sh)/pow((1.0 - sh),2) 
+                   +1.0/18.0*(5.0 - 9.0*sh)/(1.0 - sh);
   double eta79 = 1.0 + alphas*omega79/EvtConst::pi;
 
-  double omega9 = - 2.0/9.0*EvtConst::pi*EvtConst::pi 
-    - 4.0/3.0*EvtDiLog::DiLog(sh)
-    - 2.0/3.0*log(sh)*log(1.0-sh)
-    - (5.0+4.0*sh)/(3.0*(1.0+2.0*sh)) * log(1.0-sh)
-    - 2.0*sh*(1.0+sh)*(1.0-2.0*sh)
-    /(3.0*pow(1.0-sh,2)*(1.0+2.0*sh)) * log(sh)
-    + (5.0+9.0*sh-6.0*sh*sh)/(6.0*(1.0-sh)*(1.0+2.0*sh));
+  double omega9 = - 2.0/9.0*EvtConst::pi*EvtConst::pi - 4.0/3.0*EvtDiLog::DiLog(sh)
+                 - 2.0/3.0*log(sh)*log(1.0-sh)
+                 - (5.0+4.0*sh)/(3.0*(1.0+2.0*sh)) * log(1.0-sh)
+                 - 2.0*sh*(1.0+sh)*(1.0-2.0*sh)
+                 /(3.0*pow(1.0-sh,2)*(1.0+2.0*sh)) * log(sh)
+                 + (5.0+9.0*sh-6.0*sh*sh)/(6.0*(1.0-sh)*(1.0+2.0*sh));
   double eta9 = 1.0 + alphas*omega9/EvtConst::pi;
 
   EvtComplex c7eff = eta7*c7eff0 + c7eff1;
@@ -553,6 +588,7 @@ double EvtBtoXsllUtil::dGdsdupProb(double mb, double ms, double ml,
          *(1.0 + 2.0*ml*ml/s);
 
   prob = (f1sp + f2sp*u + f3sp*u*u)/ pow(mb,3);
+  if ( prob < 0.0 ) prob=0.;
 
   return prob;
 }
@@ -586,3 +622,4 @@ double EvtBtoXsllUtil::FermiMomentumProb(double pb, double pf)
 
   return prob;
 }
+

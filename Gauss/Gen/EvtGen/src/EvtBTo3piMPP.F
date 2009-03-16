@@ -41,7 +41,7 @@ C                 meaning of the above is made explicit in the HowToUse
 C                 routine.
 C [1] first_step_MPP
 C                 Generation of the kinematics of the 3 pions 
-C                 It uses the function evtranf which is a random number 
+C                 It uses the function ranf which is a random number 
 C                 generator providing an uniform distribution 
 C                 of Real*4 random number between 0 and 1	
 C [2] compute

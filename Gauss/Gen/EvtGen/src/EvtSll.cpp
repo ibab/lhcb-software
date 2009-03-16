@@ -20,6 +20,7 @@
 //
 //------------------------------------------------------------------------
 //
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include <iostream>
 #include <string>
@@ -33,9 +34,9 @@
 
 EvtSll::~EvtSll() {}
 
-void EvtSll::getName(std::string& model_name){
+std::string EvtSll::getName(){
 
-  model_name="SLL";     
+  return "SLL";     
 
 }
 

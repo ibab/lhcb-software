@@ -18,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <iostream>
 #include <iomanip>
 #include <fstream>
@@ -28,13 +29,12 @@
 #include "EvtGenBase/EvtRandom.hh"
 #include "EvtGenBase/EvtModel.hh"
 #include "EvtGenBase/EvtPDL.hh"
-#include "EvtGenBase/EvtDecayParm.hh"
-#include "EvtGenBase/EvtSymTable.hh"
 #include "EvtGenBase/EvtDecayBase.hh"
 #include "EvtGenBase/EvtParticleDecayList.hh"
 #include "EvtGenBase/EvtParser.hh"
 #include "EvtGenBase/EvtReport.hh"
 #include <string>
+using std::fstream;
 
 EvtModel* EvtModel::_instance=0;
 
@@ -42,7 +42,7 @@ EvtModel::EvtModel() {
 
 }
 
-EvtDecayBase* EvtModel::GetFcn(std::string model_name){
+EvtDecayBase* EvtModel::getFcn(std::string model_name){
 
   EvtDecayBase *model=0;
   if ( _modelNameHash.find(model_name)!=_modelNameHash.end() ) {
@@ -60,10 +60,9 @@ EvtDecayBase* EvtModel::GetFcn(std::string model_name){
 }
 
 
-void EvtModel::Register(EvtDecayBase* prototype){
+void EvtModel::registerModel(EvtDecayBase* prototype){
 
-  std::string modelName;
-  prototype->getName(modelName);
+  std::string modelName= prototype->getName();
 
   _modelNameHash[modelName]=prototype;
 
@@ -71,20 +70,10 @@ void EvtModel::Register(EvtDecayBase* prototype){
   
   if (commandName!=""){
 
-    //report(DEBUG,"EvtGen") << "Adding command:"<<commandName<<std::endl;
-
     _commandNameHash[commandName]=prototype;
 
   }
 
-}
-
-void EvtModel::UnRegisterAll( ) { 
-  for ( std::map<std::string,EvtDecayBase*>::iterator it = _modelNameHash.begin() ;
-        it != _modelNameHash.end() ; ++it ) {
-    delete it -> second ;
-   }
-  _modelNameHash.clear() ;
 }
 
 int EvtModel::isModel(std::string model_name){
@@ -117,16 +106,6 @@ void EvtModel::storeCommand(std::string cmd,std::string cnfgstr){
 
 }
 
-EvtModel& EvtModel::instance() {
-  if ( _instance == 0 )  _instance=new EvtModel;
-  return *_instance;
-}
 
-void EvtModel::deleteInstance() { 
-  if ( _instance ) { 
-    _instance -> UnRegisterAll() ;
-    delete _instance ;
-  }
-  _instance = 0 ;
-}
+
 

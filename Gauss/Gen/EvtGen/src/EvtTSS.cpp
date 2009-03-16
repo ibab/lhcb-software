@@ -17,19 +17,9 @@
 //    RYD     November 24, 1996         Module created
 //
 //------------------------------------------------------------------------
-// -*- C++ -*-
-//
-// Package:     EVT
-// Module:      EvtTSS
-// 
-//
-// Implimentation:
-//     
-//
-// Author:      ryd
-// Created:     Nov 24, 1996
 //
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtVector4C.hh"
 #include "EvtGenBase/EvtParticle.hh"
@@ -42,9 +32,9 @@
 
 EvtTSS::~EvtTSS() {}
 
-void EvtTSS::getName(std::string& model_name){
+std::string EvtTSS::getName(){
 
-  model_name="TSS";     
+  return "TSS";     
 
 }
 

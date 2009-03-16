@@ -18,12 +18,14 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <iostream>
 #include <math.h>
 #include "EvtGenBase/EvtComplex.hh"
+using std::ostream;
 
 
-std::ostream& operator<<(std::ostream& s, const EvtComplex& c){
+ostream& operator<<(ostream& s, const EvtComplex& c){
 
   s<<"("<<c._rpart<<","<<c._ipart<<")";
   return s;

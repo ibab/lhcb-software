@@ -18,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
@@ -31,9 +32,9 @@
 
 EvtGoityRoberts::~EvtGoityRoberts() {}
 
-void EvtGoityRoberts::getName(std::string& model_name){
+std::string EvtGoityRoberts::getName(){
 
-  model_name="GOITY_ROBERTS";     
+  return "GOITY_ROBERTS";     
 
 }
 
@@ -80,11 +81,11 @@ void EvtGoityRoberts::decay( EvtParticle *p){
   EvtId meson=getDaug(0);
 
   if (meson==DST0||meson==DSTP||meson==DSTM||meson==DSTB) {
-    DecayBDstarpilnuGR(p,getDaug(0),getDaug(1),getDaug(2),getDaug(3));
+    DecayBDstarpilnuGR(p,getDaug(0),getDaug(2),getDaug(3));
   }
   else{
     if (meson==D0||meson==DP||meson==DM||meson==D0B) {
-      DecayBDpilnuGR(p,getDaug(0),getDaug(1),getDaug(2),getDaug(3));
+      DecayBDpilnuGR(p,getDaug(0),getDaug(2),getDaug(3));
     }
     else{
       report(ERROR,"EvtGen") << "Wrong daugther in EvtGoityRoberts!\n";
@@ -94,8 +95,7 @@ void EvtGoityRoberts::decay( EvtParticle *p){
 }
 
 void EvtGoityRoberts::DecayBDstarpilnuGR(EvtParticle *pb,EvtId ndstar,
-                                         EvtId /*npion*/, EvtId nlep, 
-                                         EvtId /*nnu*/)
+					 EvtId nlep, EvtId nnu)
 {
 
   pb->initializePhaseSpace(getNDaug(),getDaugs());
@@ -165,14 +165,14 @@ void EvtGoityRoberts::DecayBDstarpilnuGR(EvtParticle *pb,EvtId ndstar,
                pow((2*betas*betad/(betasd)),3.5)*
                exp(lambdabar*lambdabar*(1.0-w*w)/(2*betasd));
 
-  //report(INFO,"EvtGen") <<"rho's:"<<rho1<<rho2<<std::endl;
+  //report(INFO,"EvtGen") <<"rho's:"<<rho1<<rho2<<endl;
 
   EvtComplex h1nr,h2nr,h3nr,f1nr,f2nr;
   EvtComplex f3nr,f4nr,f5nr,f6nr,knr,g1nr,g2nr,g3nr,g4nr,g5nr;
   EvtComplex h1r,h2r,h3r,f1r,f2r,f3r,f4r,f5r,f6r,kr,g1r,g2r,g3r,g4r,g5r;
   EvtComplex h1,h2,h3,f1,f2,f3,f4,f5,f6,k,g1,g2,g3,g4,g5;
 
-// Non-resonance part
+  // Non-resonance part
   h1nr = -g*xi*(p4_pi*v)/(f0*mb*md*(EvtComplex(p4_pi*v,0.0)+dmb));
   h2nr = -g*xi/(f0*mb*(EvtComplex(p4_pi*v,0.0)+dmb));
   h3nr = -(g*xi/(f0*md))*(1.0/(EvtComplex(p4_pi*v,0.0)+dmb)
@@ -197,7 +197,7 @@ void EvtGoityRoberts::DecayBDstarpilnuGR(EvtParticle *pb,EvtId ndstar,
   g4nr = (g*xi)/(f0*md*EvtComplex(p4_pi*vp));
   g5nr = EvtComplex(0.0);
 
-// Resonance part (D** removed by hand - alainb)
+  // Resonance part (D** removed by hand - alainb)
   h1r = -alpha1*rho1*(p4_pi*v)/(f0*mb*md*(EvtComplex(p4_pi*v,0.0)+dmt1)) +
         alpha2*rho2*(p4_pi*(v+2.0*w*v-vp))
         /(3*f0*mb*md*(EvtComplex(p4_pi*v,0.0)+dmt2)) -
@@ -307,8 +307,7 @@ void EvtGoityRoberts::DecayBDstarpilnuGR(EvtParticle *pb,EvtId ndstar,
 }
 
 void EvtGoityRoberts::DecayBDpilnuGR(EvtParticle *pb,EvtId nd,
-                                     EvtId /*npion*/, EvtId nlep, 
-                                     EvtId /*nnu*/)
+                EvtId nlep, EvtId nnu)
 
 {
   //added by Lange Jan4,2000
@@ -317,7 +316,6 @@ void EvtGoityRoberts::DecayBDpilnuGR(EvtParticle *pb,EvtId nd,
   static EvtId MUM=EvtPDL::getId("mu-");
   static EvtId MUP=EvtPDL::getId("mu+");
 
-  //  double m_b;
   EvtParticle *d, *pion, *lepton, *neutrino;
 
   pb->initializePhaseSpace(getNDaug(),getDaugs());

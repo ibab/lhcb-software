@@ -18,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <math.h>
 #include "EvtGenBase/EvtVector4R.hh"
 #include "EvtGenBase/EvtKine.hh"
@@ -27,8 +28,6 @@
 #include "EvtGenBase/EvtConst.hh"
 
 EvtResonance2::~EvtResonance2(){}
-
-//operator
 
 EvtResonance2& EvtResonance2::operator = ( const EvtResonance2  &n)
 {
@@ -41,18 +40,18 @@ EvtResonance2& EvtResonance2::operator = ( const EvtResonance2  &n)
   _gamma = n._gamma;
   _spin = n._spin;
   _bwm = n._bwm;
+  _invmass_angdenom = n._invmass_angdenom;
    return  *this;
 }
 
-//constructor
  
 EvtResonance2::EvtResonance2(const EvtVector4R& p4_p, const EvtVector4R& p4_d1,
-			   const  EvtVector4R& p4_d2, double ampl, 
-			   double theta, double gamma, double bwm, int spin): 
+			     const  EvtVector4R& p4_d2, double ampl, 
+			     double theta, double gamma, double bwm, int spin,
+			     bool invmass_angdenom): 
   _p4_p(p4_p),_p4_d1(p4_d1), _p4_d2(p4_d2),_ampl(ampl), _theta(theta), 
-  _gamma(gamma), _bwm(bwm), _spin(spin) {}
+  _gamma(gamma), _bwm(bwm), _spin(spin), _invmass_angdenom(invmass_angdenom) {}
 
-//amplitude function
 
 EvtComplex EvtResonance2::resAmpl() {
  
@@ -70,7 +69,7 @@ EvtComplex EvtResonance2::resAmpl() {
   //listed particles (12)
  
   //angle 3 makes with 2 in rest frame of 12 (CS3)  
-  EvtDecayAngle(_p4_p, _p4_d1+_p4_d2, _p4_d1);
+  //double cos_phi_0 = EvtDecayAngle(_p4_p, _p4_d1+_p4_d2, _p4_d1);
   //angle 3 makes with 1 in 12 is, of course, -cos_phi_0
 
   //first compute several quantities...follow CLEO preprint 00-23
@@ -85,6 +84,7 @@ EvtComplex EvtResonance2::resAmpl() {
   
   double mR=_bwm;
   double gammaR=_gamma;
+  double mdenom = _invmass_angdenom ? mAB : mR;
   double pAB=sqrt( (((mAB*mAB-mA*mA-mB*mB)*(mAB*mAB-mA*mA-mB*mB)/4.0) -
 		    mA*mA*mB*mB)/(mAB*mAB));
   double pR=sqrt( (((mR*mR-mA*mA-mB*mB)*(mR*mR-mA*mA-mB*mB)/4.0) -
@@ -97,42 +97,31 @@ EvtComplex EvtResonance2::resAmpl() {
 		   mAB*mAB*mC*mC)/(mD*mD));
 
 
-  //    report(INFO,"EvtGen") << mAB<<" "<< mBC<<" "<< mAC<<" "<< mA<<" "
-  //<< mB<<" "<< mC<<" "
-  //     << mD<<" "<< mR<<" "<< gammaR<<" "<< pAB<<" "<< pR<<" "<< pD<<" "
-  //<<pDAB<<std::endl;
 
   double fR=1;
   double fD=1;
-  int power(0);
+  int power=0;
   switch (_spin) {
   case 0:
     fR=1.0;
     fD=1.0;
     power=1;
-    //report(INFO,"EvtGen") << "fR="<<fR<<" fD="<<fD<<std::endl;
     break;
   case 1:
     fR=sqrt(1.0+1.5*1.5*pR*pR)/sqrt(1.0+1.5*1.5*pAB*pAB);
     fD=sqrt(1.0+5.0*5.0*pD*pD)/sqrt(1.0+5.0*5.0*pDAB*pDAB);
-    //report(INFO,"EvtGen") << "fR="<<fR<<" fD="<<fD<<std::endl;
     power=3;
     break;
   case 2:
-    // include tensor resonances (code from Belle) 
-    fR=sqrt(9.0+3.*pow(1.5*pR,2) +pow(1.5*pR,4))/
-      sqrt(9.0+3.*pow(1.5*pAB,2)+pow(1.5*pAB,4));
-    fD=sqrt(9.0+3.*pow(5.*pD,2)  +pow(5.*pD,4))/
-      sqrt(9.0+3.*pow(5.*pDAB,2)+pow(5.*pDAB,4));
-    power = 5;
+    fR = sqrt( (9+3*pow((1.5*pR),2)+pow((1.5*pR),4))/(9+3*pow((1.5*pAB),2)+pow((1.5*pAB),4)) );
+    fD = sqrt( (9+3*pow((5.0*pD),2)+pow((5.0*pD),4))/(9+3*pow((5.0*pDAB),2)+pow((5.0*pDAB),4)) );
+    power=5;
     break;
   default:
     report(INFO,"EvtGen") << "Incorrect spin in EvtResonance22.cc\n";
   }
   
   double gammaAB= gammaR*pow(pAB/pR,power)*(mR/mAB)*fR*fR;
-  double num ;
-  //report(INFO,"EvtGen") << gammaAB<<std::endl;
   switch (_spin) {
   case 0:
     ampl=_ampl*EvtComplex(cos(_theta*pi180inv),sin(_theta*pi180inv))*
@@ -140,22 +129,21 @@ EvtComplex EvtResonance2::resAmpl() {
     break;
   case 1:
     ampl=_ampl*EvtComplex(cos(_theta*pi180inv),sin(_theta*pi180inv))*
-      (fR*fD*(mAC*mAC-mBC*mBC+((mD*mD-mC*mC)*(mB*mB-mA*mA)/(mR*mR)))/
+      (fR*fD*(mAC*mAC-mBC*mBC+((mD*mD-mC*mC)*(mB*mB-mA*mA)/(mdenom*mdenom)))/
        (mR*mR-mAB*mAB-EvtComplex(0.0,mR*gammaAB)));
     break;
   case 2:
-    // tensor particles, code taken from Belle
-    num = pow(mBC*mBC-mAC*mAC+(mD*mD-mC*mC)*(mA*mA-mB*mB)/(mR*mR),2)-
-      1./3.*(mAB*mAB-2.*(mD*mD+mC*mC)+pow(mD*mD-mC*mC,2)/(mR*mR))*
-      (mAB*mAB-2.*(mA*mA+mB*mB)+pow(mA*mA-mB*mB,2)/(mR*mR));
-    ampl = _ampl*EvtComplex(cos(_theta*pi180inv),sin(_theta*pi180inv))*
-      (fR*fD*num/(mR*mR-mAB*mAB-EvtComplex(0.0,mR*gammaAB)));
-    break;
+    ampl=_ampl*EvtComplex(cos(_theta*pi180inv),sin(_theta*pi180inv))*
+      fR*fD/(mR*mR-mAB*mAB-EvtComplex(0.0,mR*gammaAB))*
+      (pow((mBC*mBC-mAC*mAC+(mD*mD-mC*mC)*(mA*mA-mB*mB)/(mdenom*mdenom)),2)-
+       (1.0/3.0)*(mAB*mAB-2*mD*mD-2*mC*mC+pow((mD*mD- mC*mC)/mdenom, 2))*
+       (mAB*mAB-2*mA*mA-2*mB*mB+pow((mA*mA-mB*mB)/mdenom,2))); 
+  break;
+
   default:
     report(INFO,"EvtGen") << "Incorrect spin in EvtResonance22.cc\n";
   }
 
-  //report(INFO,"EvtGen") <<"The amplitude is "<<ampl<<std::endl;
   return ampl;
 }
 

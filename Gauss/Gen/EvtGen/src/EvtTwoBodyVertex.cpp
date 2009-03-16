@@ -1,7 +1,8 @@
+#include "EvtGenBase/EvtPatches.hh"
 /*******************************************************************************
  * Project: BaBar detector at the SLAC PEP-II B-factory
  * Package: EvtGenBase
- *    File: $Id: EvtTwoBodyVertex.cpp,v 1.2 2004-07-12 16:13:34 robbep Exp $
+ *    File: $Id: EvtTwoBodyVertex.cpp,v 1.3 2009-03-16 15:38:39 robbep Exp $
  *  Author: Alexei Dvoretskii, dvoretsk@slac.stanford.edu, 2001-2002
  *
  * Copyright (C) 2002 Caltech
@@ -12,6 +13,8 @@
 #include <assert.h>
 #include "EvtGenBase/EvtMacros.hh"
 #include "EvtGenBase/EvtTwoBodyVertex.hh"
+using std::endl;
+using std::ostream;
 
 
 // Default ctor can sometimes be useful
@@ -83,17 +86,17 @@ double EvtTwoBodyVertex::formFactor(EvtTwoBodyKine x) const
   return ff;
 }
 
-void EvtTwoBodyVertex::print(std::ostream& os) const
+void EvtTwoBodyVertex::print(ostream& os) const
 {
-  os << " mA = " << mA() << std::endl;
-  os << " mB = " << mB() << std::endl;
-  os << "mAB = " << mAB() << std::endl;
-  os << "  L = " << _LL << std::endl;
-  os << " p0 = " << _p0 << std::endl;
+  os << " mA = " << mA() << endl;
+  os << " mB = " << mB() << endl;
+  os << "mAB = " << mAB() << endl;
+  os << "  L = " << _LL << endl;
+  os << " p0 = " << _p0 << endl;
 }
 
 
-std::ostream& operator<<(std::ostream& os, const EvtTwoBodyVertex& v)
+ostream& operator<<(ostream& os, const EvtTwoBodyVertex& v)
 {
   v.print(os);
   return os;

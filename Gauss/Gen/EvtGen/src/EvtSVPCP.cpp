@@ -18,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
@@ -30,15 +31,15 @@
 #include "EvtGenBase/EvtComplex.hh"
 #include "EvtGenModels/EvtSVPCP.hh"
 #include "EvtGenBase/EvtId.hh"
-#include "EvtGenBase/EvtIncoherentMixing.hh"
+#include "EvtGenBase/EvtCPUtil.hh"
 #include <string>
 #include "EvtGenBase/EvtConst.hh"
 
 EvtSVPCP::~EvtSVPCP() {}
 
-void EvtSVPCP::getName(std::string& model_name){
+std::string EvtSVPCP::getName(){
 
-  model_name="SVP_CP";     
+  return "SVP_CP";     
 
 }
 
@@ -77,7 +78,7 @@ void EvtSVPCP::decay( EvtParticle *p ){
   double t;
   EvtId other_b;
 
-  EvtIncoherentMixing::OtherB(p,t,other_b,0.5);
+  EvtCPUtil::OtherB(p,t,other_b);
 
   EvtComplex G1P,G1M, G1_T_even, G1_T_odd;
 

@@ -19,9 +19,10 @@
 //
 //------------------------------------------------------------------------
 //
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
-#include "EvtGenBase/EvtIncoherentMixing.hh"
+#include "EvtGenBase/EvtCPUtil.hh"
 #include "EvtGenBase/EvtPDL.hh"
 #include "EvtGenBase/EvtReport.hh"
 #include "EvtGenModels/EvtBTo3piCP.hh"
@@ -32,8 +33,8 @@
 #ifdef WIN32
 extern "C" {
   extern void __stdcall EVT3PIONS(double *,int *,double *,
-			 double *,double *,double *,double *,
-                                  double *,double *,double *);
+				  double *,double *,double *,double *,
+				  double *,double *,double *);
 }
 #else
 extern "C" {
@@ -46,9 +47,9 @@ extern "C" {
 EvtBTo3piCP::~EvtBTo3piCP() {}
 
 
-void EvtBTo3piCP::getName(std::string& model_name){
+std::string EvtBTo3piCP::getName(){
 
-  model_name="BTO3PI_CP";     
+  return "BTO3PI_CP";     
 
 }
 
@@ -76,25 +77,6 @@ void EvtBTo3piCP::init(){
 
 void EvtBTo3piCP::initProbMax(){
 
-  // perform common blocks initialization before
-  // first use
-  double alpha=getArg(1);
-  int iset;
-
-  iset=10000;
-
-  double p4piplus[4],p4piminus[4],p4gamm1[4],p4gamm2[4]; 
-
-  double realA,imgA,realbarA,imgbarA;
-
-#ifdef WIN32
-  EVT3PIONS(&alpha,&iset,p4piplus,p4piminus,p4gamm1,p4gamm2,
-	     &realA,&imgA,&realbarA,&imgbarA);
-#else
-  evt3pions_(&alpha,&iset,p4piplus,p4piminus,p4gamm1,p4gamm2,
-	     &realA,&imgA,&realbarA,&imgbarA);
-#endif
-
   setProbMax(1.5);
 
 }
@@ -108,7 +90,7 @@ void EvtBTo3piCP::decay( EvtParticle *p){
   double t;
   EvtId other_b;
 
-  EvtIncoherentMixing::OtherB(p,t,other_b,0.5);
+  EvtCPUtil::OtherB(p,t,other_b);
 
   EvtParticle *pip,*pim,*pi0;
 
@@ -125,15 +107,23 @@ void EvtBTo3piCP::decay( EvtParticle *p){
   double alpha=getArg(1);
   int iset;
 
-  iset=0;
-  
+  static int first=1;
+
+  if (first==1) {
+    iset=10000;
+    first=0;
+  }
+  else{
+    iset=0;
+  }
+
   double p4piplus[4],p4piminus[4],p4gamm1[4],p4gamm2[4]; 
 
   double realA,imgA,realbarA,imgbarA;
 
 #ifdef WIN32
   EVT3PIONS(&alpha,&iset,p4piplus,p4piminus,p4gamm1,p4gamm2,
-	     &realA,&imgA,&realbarA,&imgbarA);
+	    &realA,&imgA,&realbarA,&imgbarA);
 #else
   evt3pions_(&alpha,&iset,p4piplus,p4piminus,p4gamm1,p4gamm2,
 	     &realA,&imgA,&realbarA,&imgbarA);

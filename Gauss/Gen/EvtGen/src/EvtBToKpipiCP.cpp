@@ -27,10 +27,11 @@
 //
 //------------------------------------------------------------------------
 //
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
-#include "EvtGenBase/EvtIncoherentMixing.hh"
+#include "EvtGenBase/EvtCPUtil.hh"
 #include "EvtGenBase/EvtPDL.hh"
 #include "EvtGenBase/EvtReport.hh"
 #include "EvtGenModels/EvtBToKpipiCP.hh"
@@ -40,23 +41,23 @@
 #ifdef WIN32
 extern "C" {
   extern void __stdcall EVTKPIPI(double *, double *, int *,double *,
-			 double *,double *,double *,double *,
-                                 double *,double *,double *);
+				 double *,double *,double *,double *,
+				 double *,double *,double *);
 }
 #else
 extern "C" {
   extern void evtkpipi_(double *, double *, int *,double *,
-			 double *,double *,double *,double *,
-			 double *,double *,double *);
+			double *,double *,double *,double *,
+			double *,double *,double *);
 }
 #endif
 
 EvtBToKpipiCP::~EvtBToKpipiCP() {}
 
 
-void EvtBToKpipiCP::getName(std::string& model_name){
+std::string EvtBToKpipiCP::getName(){
 
-  model_name="BTOKPIPI_CP";     
+  return "BTOKPIPI_CP";     
 
 }
 
@@ -79,22 +80,6 @@ void EvtBToKpipiCP::init(){
   checkSpinDaughter(1,EvtSpinType::SCALAR);
   checkSpinDaughter(2,EvtSpinType::SCALAR);
 
-  double alpha=getArg(1);
-  double beta=getArg(2);
-  int iset;
-  iset=10000;
-
-  double p4Kplus[4],p4piminus[4],p4gamm1[4],p4gamm2[4]; 
-
-  double realA,imgA,realbarA,imgbarA;
-
-#ifdef WIN32
-  EVTKPIPI(&alpha,&beta,&iset,p4Kplus,p4piminus,p4gamm1,p4gamm2,
-	     &realA,&imgA,&realbarA,&imgbarA);
-#else
-  evtkpipi_(&alpha,&beta,&iset,p4Kplus,p4piminus,p4gamm1,p4gamm2,
-	     &realA,&imgA,&realbarA,&imgbarA);
-#endif
 }
 
 
@@ -107,7 +92,7 @@ void EvtBToKpipiCP::decay( EvtParticle *p){
   double t;
   EvtId other_b;
 
-  EvtIncoherentMixing::OtherB(p,t,other_b,0.5);
+  EvtCPUtil::OtherB(p,t,other_b);
 
   EvtParticle *Kp,*pim,*pi0;
 
@@ -123,18 +108,26 @@ void EvtBToKpipiCP::decay( EvtParticle *p){
   double beta=getArg(2);
   int iset;
 
-  iset=0;
+  static int first=1;
+
+  if (first==1) {
+    iset=10000;
+    first=0;
+  }
+  else{
+    iset=0;
+  }
 
   double p4Kplus[4],p4piminus[4],p4gamm1[4],p4gamm2[4]; 
 
   double realA,imgA,realbarA,imgbarA;
 
 #ifdef WIN32
-  EVTKPIPI(&alpha,&beta,&iset,p4Kplus,p4piminus,p4gamm1,p4gamm2,
+    EVTKPIPI(&alpha,&beta,&iset,p4Kplus,p4piminus,p4gamm1,p4gamm2,
 	     &realA,&imgA,&realbarA,&imgbarA);
 #else
   evtkpipi_(&alpha,&beta,&iset,p4Kplus,p4piminus,p4gamm1,p4gamm2,
-	     &realA,&imgA,&realbarA,&imgbarA);
+	    &realA,&imgA,&realbarA,&imgbarA);
 #endif
 
   p4[0].set(p4Kplus[3],p4Kplus[0],p4Kplus[1],p4Kplus[2]);

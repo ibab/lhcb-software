@@ -18,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include <iostream>
 #include <math.h>
@@ -46,78 +47,51 @@ void EvtTensorParticle::init(EvtId part_n,double e,double px,double py,double pz
   setp(e,px,py,pz);
   setpart_num(part_n);
   
-  eps1.setdiag(0.0,-1.0/sqrt(6.0),-1.0/sqrt(6.0),
+  eps[0].setdiag(0.0,-1.0/sqrt(6.0),-1.0/sqrt(6.0),
 	       2.0/sqrt(6.0));
-  eps2.setdiag(0.0,1.0/sqrt(2.0),-1.0/sqrt(2.0),0.0);
-  eps3.setdiag(0.0,0.0,0.0,0.0);
-  eps4.setdiag(0.0,0.0,0.0,0.0);
-  eps5.setdiag(0.0,0.0,0.0,0.0);
-  eps3.set(0,1,EvtComplex(0.0,0.0));
-  eps3.set(0,2,EvtComplex(0.0,0.0));
-  eps3.set(0,3,EvtComplex(0.0,0.0));
-  eps3.set(1,0,EvtComplex(0.0,0.0));
-  eps3.set(2,0,EvtComplex(0.0,0.0));
-  eps3.set(3,0,EvtComplex(0.0,0.0));
-  eps4.set(0,1,EvtComplex(0.0,0.0));
-  eps4.set(0,2,EvtComplex(0.0,0.0));
-  eps4.set(0,3,EvtComplex(0.0,0.0));
-  eps4.set(1,0,EvtComplex(0.0,0.0));
-  eps4.set(2,0,EvtComplex(0.0,0.0));
-  eps4.set(3,0,EvtComplex(0.0,0.0));
-  eps5.set(0,1,EvtComplex(0.0,0.0));
-  eps5.set(0,2,EvtComplex(0.0,0.0));
-  eps5.set(0,3,EvtComplex(0.0,0.0));
-  eps5.set(1,0,EvtComplex(0.0,0.0));
-  eps5.set(2,0,EvtComplex(0.0,0.0));
-  eps5.set(3,0,EvtComplex(0.0,0.0));
-  eps3.set(1,2,EvtComplex(1.0/sqrt(2.0),0.0));
-  eps3.set(2,1,EvtComplex(1.0/sqrt(2.0),0.0));
-  eps4.set(1,3,EvtComplex(1.0/sqrt(2.0),0.0));
-  eps4.set(3,1,EvtComplex(1.0/sqrt(2.0),0.0));
-  eps5.set(2,3,EvtComplex(1.0/sqrt(2.0),0.0));
-  eps5.set(3,2,EvtComplex(1.0/sqrt(2.0),0.0));
-  eps3.set(1,3,EvtComplex(0.0,0.0));
-  eps3.set(3,1,EvtComplex(0.0,0.0));
-  eps3.set(2,3,EvtComplex(0.0,0.0));
-  eps3.set(3,2,EvtComplex(0.0,0.0));
-  eps4.set(1,2,EvtComplex(0.0,0.0));
-  eps4.set(2,1,EvtComplex(0.0,0.0));
-  eps4.set(2,3,EvtComplex(0.0,0.0));
-  eps4.set(3,2,EvtComplex(0.0,0.0));
-  eps5.set(1,3,EvtComplex(0.0,0.0));
-  eps5.set(3,1,EvtComplex(0.0,0.0));
-  eps5.set(2,1,EvtComplex(0.0,0.0));
-  eps5.set(1,2,EvtComplex(0.0,0.0));
+  eps[1].setdiag(0.0,1.0/sqrt(2.0),-1.0/sqrt(2.0),0.0);
+  eps[2].setdiag(0.0,0.0,0.0,0.0);
+  eps[3].setdiag(0.0,0.0,0.0,0.0);
+  eps[4].setdiag(0.0,0.0,0.0,0.0);
+
+  eps[2].set(1,2,EvtComplex(1.0/sqrt(2.0),0.0));
+  eps[2].set(2,1,EvtComplex(1.0/sqrt(2.0),0.0));
+  eps[3].set(1,3,EvtComplex(1.0/sqrt(2.0),0.0));
+  eps[3].set(3,1,EvtComplex(1.0/sqrt(2.0),0.0));
+  eps[4].set(2,3,EvtComplex(1.0/sqrt(2.0),0.0));
+  eps[4].set(3,2,EvtComplex(1.0/sqrt(2.0),0.0));
 
   setLifetime();
   
 }
 
+
+void EvtTensorParticle::init(EvtId part_n,const EvtVector4R& p4,
+			     const EvtTensor4C& epsin1, 
+			     const EvtTensor4C& epsin2,
+			     const EvtTensor4C& epsin3, 
+			     const EvtTensor4C& epsin4,
+			     const EvtTensor4C& epsin5){
+ 
+  _validP4=true;
+  setp(p4);
+  setpart_num(part_n);
+
+  eps[0]=epsin1;
+  eps[1]=epsin2;
+  eps[2]=epsin3;
+  eps[3]=epsin4;
+  eps[4]=epsin5;
+
+  setLifetime();
+  
+}
+
+
+
 EvtTensor4C EvtTensorParticle::epsTensorParent(int i) const {
 
-  EvtTensor4C temp;
-  //  EvtVector4R p4_temp;
-
-  switch (i){
-  case 0:
-    temp = eps1;
-    break;
-  case 1:
-    temp = eps2;
-    break;
-  case 2:
-    temp = eps3;
-    break;
-  case 3:
-    temp = eps4;
-    break;
-  case 4:
-    temp = eps5;
-    break;
-  default:
-    report(ERROR,"EvtGen") << "only 5 componets in EvtTensorParticle. ERROR \n";
-    ::abort();
-  } // switch
+  EvtTensor4C temp=eps[i];
 
   temp.applyBoostTo(this->getP4());
   return temp;
@@ -127,25 +101,7 @@ EvtTensor4C EvtTensorParticle::epsTensorParent(int i) const {
 
 EvtTensor4C EvtTensorParticle::epsTensor(int i) const {
    
-  EvtTensor4C temp;
-
-  switch (i){
-  case 0:
-    return eps1;
-  case 1:
-    return eps2;
-  case 2:
-    return eps3;
-  case 3:
-    return eps4;
-  case 4:
-    return eps5;
-  default:
-    report(ERROR,"EvtGen") << "only 5 componets in EvtTensorParticle. ERROR \n";
-    ::abort();
-  } // switch
-
-  return temp;
+  return eps[i];
 
 } //eps
 
@@ -154,73 +110,37 @@ EvtTensor4C EvtTensorParticle::epsTensor(int i) const {
 EvtSpinDensity EvtTensorParticle::rotateToHelicityBasis() const{
 
 
-  EvtTensor4C epp,ep,ez,em,emm;
-
-  EvtVector4C eplus(0.0,-1.0/sqrt(2.0),EvtComplex(0.0,-1.0/sqrt(2.0)),0.0);
-  EvtVector4C ezero(0.0,0.0,0.0,1.0);
-  EvtVector4C eminus(0.0,1.0/sqrt(2.0),EvtComplex(0.0,-1.0/sqrt(2.0)),0.0);
-      
-  epp.zero();
-  ep.zero();
-  ez.zero();
-  em.zero();
-  emm.zero();
+  static EvtVector4C eplus(0.0,-1.0/sqrt(2.0),EvtComplex(0.0,-1.0/sqrt(2.0)),0.0);
+  static EvtVector4C ezero(0.0,0.0,0.0,1.0);
+  static EvtVector4C eminus(0.0,1.0/sqrt(2.0),EvtComplex(0.0,-1.0/sqrt(2.0)),0.0);
   
-  epp=directProd(eplus,eplus);
-  ep =(1/sqrt(2.0))*directProd(eplus,ezero)
-    +(1/sqrt(2.0))*directProd(ezero,eplus);
-  ez =(1/sqrt(6.0))*directProd(eplus,eminus)
-    +(2/sqrt(6.0))*directProd(ezero,ezero)
-    +(1/sqrt(6.0))*directProd(eminus,eplus);
-  em =(1/sqrt(2.0))*directProd(eminus,ezero)
-    +(1/sqrt(2.0))*directProd(ezero,eminus);
-  emm=directProd(eminus,eminus);
-      
-  epp=conj(epp);
-  ep=conj(ep);
-  ez=conj(ez);
-  em=conj(em);
-  emm=conj(emm);
+  static EvtTensor4C dPpp(directProd(eplus,eplus));
+  static EvtTensor4C dPp0(directProd(eplus,ezero));
+  static EvtTensor4C dP0p(directProd(ezero,eplus));
+  static EvtTensor4C dPpm(directProd(eplus,eminus));
+  static EvtTensor4C dP00(directProd(ezero,ezero));
+  static EvtTensor4C dPmp(directProd(eminus,eplus));
+  static EvtTensor4C dPmm(directProd(eminus,eminus));
+  static EvtTensor4C dPm0(directProd(eminus,ezero));
+  static EvtTensor4C dP0m(directProd(ezero,eminus));
 
-  EvtTensor4C e1=epsTensor(0);
-  EvtTensor4C e2=epsTensor(1);
-  EvtTensor4C e3=epsTensor(2);
-  EvtTensor4C e4=epsTensor(3);
-  EvtTensor4C e5=epsTensor(4);
+  static EvtTensor4C es0(conj(dPpp));
+  static EvtTensor4C es1(conj((1/sqrt(2.0))*dPp0 +(1/sqrt(2.0))*dP0p));
+  static EvtTensor4C es2(conj((1/sqrt(6.0))*dPpm +(2/sqrt(6.0))*dP00 +(1/sqrt(6.0))*dPmp));
+  static EvtTensor4C es3(conj((1/sqrt(2.0))*dPm0  +(1/sqrt(2.0))*dP0m));
+  static EvtTensor4C es4(conj(dPmm));
+
 
   EvtSpinDensity R;
-  R.SetDim(5);
+  R.setDim(5);
 
-  R.Set(0,0,cont(epp,e1));      
-  R.Set(0,1,cont(epp,e2));      
-  R.Set(0,2,cont(epp,e3));      
-  R.Set(0,3,cont(epp,e4));      
-  R.Set(0,4,cont(epp,e5));      
-
-  R.Set(1,0,cont(ep,e1));      
-  R.Set(1,1,cont(ep,e2));      
-  R.Set(1,2,cont(ep,e3));      
-  R.Set(1,3,cont(ep,e4));      
-  R.Set(1,4,cont(ep,e5));      
-
-  R.Set(2,0,cont(ez,e1));      
-  R.Set(2,1,cont(ez,e2));      
-  R.Set(2,2,cont(ez,e3));      
-  R.Set(2,3,cont(ez,e4));      
-  R.Set(2,4,cont(ez,e5));      
-
-  R.Set(3,0,cont(em,e1));      
-  R.Set(3,1,cont(em,e2));      
-  R.Set(3,2,cont(em,e3));      
-  R.Set(3,3,cont(em,e4));      
-  R.Set(3,4,cont(em,e5));      
-
-  R.Set(4,0,cont(emm,e1));      
-  R.Set(4,1,cont(emm,e2));      
-  R.Set(4,2,cont(emm,e3));      
-  R.Set(4,3,cont(emm,e4));      
-  R.Set(4,4,cont(emm,e5));      
-
+  for (int j=0; j<5; j++) {
+    R.set(0,j,cont(es0,eps[j]));
+    R.set(1,j,cont(es1,eps[j]));
+    R.set(2,j,cont(es2,eps[j]));
+    R.set(3,j,cont(es3,eps[j]));
+    R.set(4,j,cont(es4,eps[j]));
+  }
   return R;
 
 }
@@ -230,85 +150,36 @@ EvtSpinDensity EvtTensorParticle::rotateToHelicityBasis(double alpha,
 							double beta,
 							double gamma) const{
 
-  EvtTensor4C epp,ep,ez,em,emm;
+  EvtTensor4C es[5];
 
-  EvtVector4C eplus(0.0,-1.0/sqrt(2.0),EvtComplex(0.0,-1.0/sqrt(2.0)),0.0);
-  EvtVector4C ezero(0.0,0.0,0.0,1.0);
-  EvtVector4C eminus(0.0,1.0/sqrt(2.0),EvtComplex(0.0,-1.0/sqrt(2.0)),0.0);
+  static EvtVector4C eplus(0.0,-1.0/sqrt(2.0),EvtComplex(0.0,-1.0/sqrt(2.0)),0.0);
+  static EvtVector4C ezero(0.0,0.0,0.0,1.0);
+  static EvtVector4C eminus(0.0,1.0/sqrt(2.0),EvtComplex(0.0,-1.0/sqrt(2.0)),0.0);
 
   eplus.applyRotateEuler(alpha,beta,gamma);
   ezero.applyRotateEuler(alpha,beta,gamma);
   eminus.applyRotateEuler(alpha,beta,gamma);
 
-      
-  epp.zero();
-  ep.zero();
-  ez.zero();
-  em.zero();
-  emm.zero();
+  for (int i=0; i<5; i++) es[i].zero();    
   
-  epp=directProd(eplus,eplus);
-  ep =(1/sqrt(2.0))*directProd(eplus,ezero)
+  es[0]=directProd(eplus,eplus);
+  es[1] =(1/sqrt(2.0))*directProd(eplus,ezero)
     +(1/sqrt(2.0))*directProd(ezero,eplus);
-  ez =(1/sqrt(6.0))*directProd(eplus,eminus)
+  es[2] =(1/sqrt(6.0))*directProd(eplus,eminus)
     +(2/sqrt(6.0))*directProd(ezero,ezero)
     +(1/sqrt(6.0))*directProd(eminus,eplus);
-  em =(1/sqrt(2.0))*directProd(eminus,ezero)
+  es[3] =(1/sqrt(2.0))*directProd(eminus,ezero)
     +(1/sqrt(2.0))*directProd(ezero,eminus);
-  emm=directProd(eminus,eminus);
+  es[4]=directProd(eminus,eminus);
 
-
-      
-  //epp.applyRotateEuler(alpha,beta,gamma);
-  //ep.applyRotateEuler(alpha,beta,gamma);
-  //ez.applyRotateEuler(alpha,beta,gamma);
-  //em.applyRotateEuler(alpha,beta,gamma);
-  //emm.applyRotateEuler(alpha,beta,gamma);
-      
-  epp=conj(epp);
-  ep=conj(ep);
-  ez=conj(ez);
-  em=conj(em);
-  emm=conj(emm);
-
-  EvtTensor4C e1=epsTensor(0);
-  EvtTensor4C e2=epsTensor(1);
-  EvtTensor4C e3=epsTensor(2);
-  EvtTensor4C e4=epsTensor(3);
-  EvtTensor4C e5=epsTensor(4);
+  for (int i=0; i<5; i++) es[i]=conj(es[i]);    
 
   EvtSpinDensity R;
-  R.SetDim(5);
+  R.setDim(5);
 
-  R.Set(0,0,cont(epp,e1));      
-  R.Set(0,1,cont(epp,e2));      
-  R.Set(0,2,cont(epp,e3));      
-  R.Set(0,3,cont(epp,e4));      
-  R.Set(0,4,cont(epp,e5));      
-
-  R.Set(1,0,cont(ep,e1));      
-  R.Set(1,1,cont(ep,e2));      
-  R.Set(1,2,cont(ep,e3));      
-  R.Set(1,3,cont(ep,e4));      
-  R.Set(1,4,cont(ep,e5));      
-
-  R.Set(2,0,cont(ez,e1));      
-  R.Set(2,1,cont(ez,e2));      
-  R.Set(2,2,cont(ez,e3));      
-  R.Set(2,3,cont(ez,e4));      
-  R.Set(2,4,cont(ez,e5));      
-
-  R.Set(3,0,cont(em,e1));      
-  R.Set(3,1,cont(em,e2));      
-  R.Set(3,2,cont(em,e3));      
-  R.Set(3,3,cont(em,e4));      
-  R.Set(3,4,cont(em,e5));      
-
-  R.Set(4,0,cont(emm,e1));      
-  R.Set(4,1,cont(emm,e2));      
-  R.Set(4,2,cont(emm,e3));      
-  R.Set(4,3,cont(emm,e4));      
-  R.Set(4,4,cont(emm,e5));      
+  for (int i=0; i<5; i++)
+    for (int j=0; j<5; j++)
+	R.set(i,j,cont(es[i],eps[j]));
 
   return R;
 

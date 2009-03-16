@@ -21,6 +21,7 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtPDL.hh"
@@ -31,11 +32,12 @@
 #include "EvtGenBase/EvtConst.hh"
 #include "EvtGenBase/EvtdFunction.hh"
 #include "EvtGenBase/EvtAmp.hh"
+using std::endl;
 
 
 EvtEvalHelAmp::~EvtEvalHelAmp() {
 
-  //allocate memory
+  //deallocate memory
   delete [] _lambdaA2;
   delete [] _lambdaB2;
   delete [] _lambdaC2;
@@ -82,10 +84,15 @@ EvtEvalHelAmp::~EvtEvalHelAmp() {
 }
 
 
-EvtEvalHelAmp::EvtEvalHelAmp(EvtSpinType::spintype typeA,
-			     EvtSpinType::spintype typeB,
-			     EvtSpinType::spintype typeC,
+EvtEvalHelAmp::EvtEvalHelAmp(EvtId idA,
+			     EvtId idB,
+			     EvtId idC,
 			     EvtComplexPtrPtr HBC){
+
+
+  EvtSpinType::spintype typeA=EvtPDL::getSpinType(idA);
+  EvtSpinType::spintype typeB=EvtPDL::getSpinType(idB);
+  EvtSpinType::spintype typeC=EvtPDL::getSpinType(idC);
 
   //find out how many states each particle have
   _nA=EvtSpinType::getSpinStates(typeA);
@@ -137,15 +144,11 @@ EvtEvalHelAmp::EvtEvalHelAmp(EvtSpinType::spintype typeA,
     }
   }
 
-
-
-
-  //  int i;
   //find the allowed helicities (actually 2*times the helicity!)
 
-  fillHelicity(_lambdaA2,_nA,_JA2);
-  fillHelicity(_lambdaB2,_nB,_JB2);
-  fillHelicity(_lambdaC2,_nC,_JC2);
+  fillHelicity(_lambdaA2,_nA,_JA2,idA);
+  fillHelicity(_lambdaB2,_nB,_JB2,idB);
+  fillHelicity(_lambdaC2,_nC,_JC2,idC);
 
   for(ib=0;ib<_nB;ib++){
     for(ic=0;ic<_nC;ic++){
@@ -256,7 +259,6 @@ void EvtEvalHelAmp::evalAmp( EvtParticle *p, EvtAmp& amp){
 	    }
 	    else{
 	      amp.vertex(ib,ic,_amp[ia][ib][ic]);
-	      //report(INFO,"EvtGen") << "ib,ic:"<<ib<<" "<<ic<<" "<<_amp[ia][ib][ic]<<std::endl;
 	    }
 	  }
 	}else{
@@ -282,7 +284,7 @@ void EvtEvalHelAmp::evalAmp( EvtParticle *p, EvtAmp& amp){
   }
 
   if (fabs(prob1-prob2)>0.000001*prob1){
-    report(INFO,"EvtGen") << "prob1,prob2:"<<prob1<<" "<<prob2<<std::endl;
+    report(INFO,"EvtGen") << "prob1,prob2:"<<prob1<<" "<<prob2<<endl;
     ::abort();
   }
     
@@ -291,7 +293,7 @@ void EvtEvalHelAmp::evalAmp( EvtParticle *p, EvtAmp& amp){
 }
 
 
-void EvtEvalHelAmp::fillHelicity(int* lambda2,int n,int J2){
+void EvtEvalHelAmp::fillHelicity(int* lambda2,int n,int J2, EvtId id){
   
   int i;
   
@@ -302,6 +304,19 @@ void EvtEvalHelAmp::fillHelicity(int* lambda2,int n,int J2){
     return;
   }
   
+  //and so is the neutrino!
+  if (n==1&&J2==1) {
+    if (EvtPDL::getStdHep(id)>0){
+	//particle i.e. lefthanded
+        lambda2[0]=-1;
+    }else{
+	//anti particle i.e. righthanded
+        lambda2[0]=1;
+    }
+    return;
+  }
+
+
   assert(n==J2+1);
 
   for(i=0;i<n;i++){
@@ -326,14 +341,14 @@ void EvtEvalHelAmp::setUpRotationMatrices(EvtParticle* p,double theta, double ph
       
       int i,j,n;
       
-      n=R.GetDim();
+      n=R.getDim();
       
       assert(n==_nA);
 	
       
       for(i=0;i<n;i++){
 	for(j=0;j<n;j++){
-	  _RA[i][j]=R.Get(i,j);
+	  _RA[i][j]=R.get(i,j);
 	}
       }
 
@@ -342,7 +357,7 @@ void EvtEvalHelAmp::setUpRotationMatrices(EvtParticle* p,double theta, double ph
     break;
 
   default:
-    report(ERROR,"EvtGen") << "Spin2(_JA2)="<<_JA2<<" not supported!"<<std::endl;
+    report(ERROR,"EvtGen") << "Spin2(_JA2)="<<_JA2<<" not supported!"<<endl;
     ::abort();
   }
   
@@ -358,15 +373,13 @@ void EvtEvalHelAmp::setUpRotationMatrices(EvtParticle* p,double theta, double ph
 
       EvtSpinDensity R=p->getDaug(0)->rotateToHelicityBasis(phi,theta,-phi);
       
-      n=R.GetDim();
+      n=R.getDim();
       
       assert(n==_nB);
 	
-      //report(INFO,"EvtGen") << "RB:"<< R <<std::endl; 
-     
       for(i=0;i<n;i++){
 	for(j=0;j<n;j++){
-	  _RB[i][j]=conj(R.Get(i,j));
+	  _RB[i][j]=conj(R.get(i,j));
 	}
       }
 
@@ -375,7 +388,7 @@ void EvtEvalHelAmp::setUpRotationMatrices(EvtParticle* p,double theta, double ph
     break;
 
   default:
-    report(ERROR,"EvtGen") << "Spin2(_JB2)="<<_JB2<<" not supported!"<<std::endl;
+    report(ERROR,"EvtGen") << "Spin2(_JB2)="<<_JB2<<" not supported!"<<endl;
     ::abort();
   }
   
@@ -389,15 +402,13 @@ void EvtEvalHelAmp::setUpRotationMatrices(EvtParticle* p,double theta, double ph
 
       EvtSpinDensity R=p->getDaug(1)->rotateToHelicityBasis(phi,EvtConst::pi+theta,phi-EvtConst::pi);
             
-      n=R.GetDim();
-
-      //report(INFO,"EvtGen") << "RC:"<< R <<std::endl;
+      n=R.getDim();
 
       assert(n==_nC);
 
       for(i=0;i<n;i++){
 	for(j=0;j<n;j++){
-	  _RC[i][j]=conj(R.Get(i,j));
+	  _RC[i][j]=conj(R.get(i,j));
 	}
       }
 
@@ -406,7 +417,7 @@ void EvtEvalHelAmp::setUpRotationMatrices(EvtParticle* p,double theta, double ph
     break;
 
   default:
-    report(ERROR,"EvtGen") << "Spin2(_JC2)="<<_JC2<<" not supported!"<<std::endl;
+    report(ERROR,"EvtGen") << "Spin2(_JC2)="<<_JC2<<" not supported!"<<endl;
     ::abort();
   }
   

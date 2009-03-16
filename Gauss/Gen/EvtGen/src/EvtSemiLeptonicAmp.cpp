@@ -10,8 +10,7 @@
 //
 // Module: EvtSemiLeptonicAmp.cc
 //
-// Description: Routine to implement semileptonic decays to pseudo-scalar
-//              mesons.
+// Description: Base class for semileptonic decays
 //
 // Modification history:
 //
@@ -19,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 //
+#include "EvtGenBase/EvtPatches.hh"
 #include "EvtGenBase/EvtPatches.hh"
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
@@ -62,7 +62,6 @@ double EvtSemiLeptonicAmp::CalcMaxProb( EvtId parent, EvtId meson,
   p_init.set(EvtPDL::getMass(parent),0.0,0.0,0.0);
   scalar_part->init(parent,p_init);
   root_part=(EvtParticle *)scalar_part;
-//  root_part->set_type(EvtSpinType::SCALAR);
   root_part->setDiagonalSpinDensity();      
 
   EvtParticle *daughter, *lep, *trino;
@@ -90,7 +89,7 @@ double EvtSemiLeptonicAmp::CalcMaxProb( EvtId parent, EvtId meson,
   //Initial particle is unpolarized, well it is a scalar so it is 
   //trivial
   EvtSpinDensity rho;
-  rho.SetDiag(root_part->getSpinStates());
+  rho.setDiag(root_part->getSpinStates());
   
   double mass[3];
   
@@ -167,7 +166,7 @@ double EvtSemiLeptonicAmp::CalcMaxProb( EvtId parent, EvtId meson,
         //and compare to maxfoundprob.
 
 	//Do a little magic to get the probability!!
-	prob = rho.NormalizedProb(amp.getSpinDensity());
+	prob = rho.normalizedProb(amp.getSpinDensity());
 
 	probctl[j]=prob;
       }
@@ -191,11 +190,6 @@ double EvtSemiLeptonicAmp::CalcMaxProb( EvtId parent, EvtId meson,
 	} 
 
       }
-
-      //report(DEBUG,"EvtGen") << "prob,probctl:"<<prob<<" "
-      //			    << probctl[0]<<" "
-      //			    << probctl[1]<<" "
-      //			    << probctl[2]<<std::endl;
 
       if ( prob > maxfoundprob ) {
 	maxfoundprob = prob; 

@@ -25,19 +25,21 @@
 #include <string>
 #include "EvtGenBase/EvtPDL.hh"
 #include <math.h>
+#include <stdlib.h>
 
 EvtSLPoleFF::EvtSLPoleFF(int numarg, double *arglist) {
-   numSLPoleargs = numarg;
-   for (int i=0; i<numarg; i++) {
+  //arg - maybe ignore the last argument - if odd ... Sigh
+  numSLPoleargs = numarg - (numarg % 2);
+   for (int i=0; i<numSLPoleargs; i++) {
      SLPoleargs[i] = arglist[i]; }
 
    return;
 }
 
 
-void EvtSLPoleFF::getscalarff(EvtId parent,EvtId /*daught*/,
-                              double t, double /*mass*/, double *fpf,
-                              double *f0f ) {
+void EvtSLPoleFF::getscalarff(EvtId parent,EvtId,
+                       double t, double, double *fpf,
+			    double *f0f ) {
 
 // Form factors have a general form, with parameters passed in
 // from the arguements.
@@ -68,9 +70,9 @@ void EvtSLPoleFF::getscalarff(EvtId parent,EvtId /*daught*/,
   return;
 }
 
-void EvtSLPoleFF::getvectorff(EvtId parent,EvtId /*daught*/,
-                              double t, double /*mass*/, double *a1f,
-                              double *a2f, double *vf, double *a0f ){
+ void EvtSLPoleFF::getvectorff(EvtId parent,EvtId,
+                       double t, double, double *a1f,
+			     double *a2f, double *vf, double *a0f ){
 
   if ( numSLPoleargs !=16 ) {
      report(ERROR,"EvtGen") << "Problem in EvtSLPoleFF::getvectorff\n";
@@ -114,9 +116,9 @@ void EvtSLPoleFF::getvectorff(EvtId parent,EvtId /*daught*/,
 
 
 
-void EvtSLPoleFF::gettensorff(EvtId parent,EvtId /*daught*/,
-                              double t, double /*mass*/, double *hf,
-                              double *kf, double *bpf, double *bmf ){
+ void EvtSLPoleFF::gettensorff(EvtId parent,EvtId,
+                       double t, double, double *hf,
+			     double *kf, double *bpf, double *bmf ){
 
   if ( numSLPoleargs !=16 ) {
      report(ERROR,"EvtGen") << "Problem in EvtSLPoleFF::gettensorff\n";
@@ -156,4 +158,13 @@ void EvtSLPoleFF::gettensorff(EvtId parent,EvtId /*daught*/,
   *bmf = f0/(pow( 1.0 + (af*t/mb2) + (bf*((t/mb2)*(t/mb2))),powf));
   return;
  }
+
+
+void EvtSLPoleFF::getbaryonff(EvtId, EvtId, double, double, double*, 
+			       double*, double*, double*){
+  
+  report(ERROR,"EvtGen") << "Not implemented :getbaryonff in EvtSLPoleFF.\n";  
+  ::abort();
+
+}
 

@@ -18,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 //
+#include "EvtGenBase/EvtPatches.hh"
 
 #include "EvtGenBase/EvtIdSet.hh"
 #include "EvtGenBase/EvtPDL.hh"

@@ -1,7 +1,8 @@
+#include "EvtGenBase/EvtPatches.hh"
 /*******************************************************************************
  * Project: BaBar detector at the SLAC PEP-II B-factory
  * Package: EvtGenBase
- *    File: $Id: EvtPropBreitWigner.cpp,v 1.2 2004-07-12 16:13:32 robbep Exp $
+ *    File: $Id: EvtPropBreitWigner.cpp,v 1.3 2009-03-16 15:44:41 robbep Exp $
  *  Author: Alexei Dvoretskii, dvoretsk@slac.stanford.edu, 2001-2002
  *
  * Copyright (C) 2002 Caltech

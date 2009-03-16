@@ -41,7 +41,7 @@ C                 meaning of the above is made explicit in the HowToUse
 C                 routine.
 C [1] first_step_Kpipi
 C                 Generation of the kinematics of the 3 prongs
-C                 It uses the function Evtranf which is a random number 
+C                 It uses the function evtranf which is a random number 
 C                 generator providing an uniform distribution 
 C                 of Real*4 random number between 0 and 1	
 C [2] compute
@@ -113,7 +113,7 @@ c communication of data is done by argument only <<<<<<<<
      + Real_B0,Imag_B0,real_B0bar,Imag_B0bar)     
 C that is it !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  
 c select the Tag 
-      Tag   =Evtranf()
+      Tag   =evtranf()
 c generate acording to the tag 
       If(Tag.gt.0.5) Then
       
@@ -127,7 +127,7 @@ c a B0    tag =>  the decay is one from a B0bar
       
       End If
 		      
-      If(Weight.Gt.Evtranf()) Then
+      If(Weight.Gt.evtranf()) Then
 c----------------------------------------------------------------------------         
 c unweighted event production
 c---------------------------------------------------------------------------- 
@@ -142,6 +142,7 @@ C here is just a Dalitz plot and a few prints
       m_rhom  =m_rhom   -(p_pi_minus (j)+p_gamma_1(j)+p_gamma_2(j))**2
       m_Kstar0=m_Kstar0 -(p_K_plus   (j)+p_pi_minus (j))           **2        
       end do                 
+
 c here is the Dalitz plot when assuming the pion mass for the Kaon
 c the energy is redefined
       Wrong =0.  
@@ -366,7 +367,7 @@ c	----------------------------------------------------------
 c 	--- Used Functions 
 c	----------------------------------------------------------
 
-	real Evtranf
+	real evtranf
 
 c	----------------------------------------------------------
 c 	--- Variables in Argument
@@ -415,50 +416,50 @@ c	--- z is the Flag needed to choose between the generation
 c	--- of a K*+, K*0 or rho- resonance
 c	----------------------------------------------------------
 
-	z = 3.*Evtranf()
+	z = 3.*evtranf()
 
         MC2 = M_B**2
 	
 	If(z.lt.1.) Then
 c K*+ production
 		If(Phase_space) Then
-		m13 = Evtranf()*(max_m13-min_m13)+min_m13
+		m13 = evtranf()*(max_m13-min_m13)+min_m13
 		Else
-    	        y = Evtranf()*PI - PI/2.
+    	        y = evtranf()*PI - PI/2.
 	        x = Dtan(y)
 	        mass = x*Gam_Kstarp/2. +Mass_Kstarp		
 	 	m13 = mass**2
 		End If	
 			
-	m12 = Evtranf()*(max_m12-min_m12)+min_m12
+	m12 = evtranf()*(max_m12-min_m12)+min_m12
 	m23 = MC2 - m12 - m13
 	
 	ElseIf(z.lt.2.) Then
 c K*0 production
 		If(Phase_space) Then
-		m12 = Evtranf()*(max_m12-min_m12)+min_m12
+		m12 = evtranf()*(max_m12-min_m12)+min_m12
 		Else
-    	        y = Evtranf()*PI - PI/2.
+    	        y = evtranf()*PI - PI/2.
 	        x = Dtan(y)
 	        mass = x*Gam_Kstar0/2. +Mass_Kstar0				
 		m12 =  mass**2
 		End If
 		
-	m13 = Evtranf()*(max_m13-min_m13)+min_m13
+	m13 = evtranf()*(max_m13-min_m13)+min_m13
 	m23 = MC2 - m12 - m13
 	
 	Else		
 c rho- production
 		If(Phase_space) Then
-		m23 = Evtranf()*(max_m23-min_m23)+min_m23
+		m23 = evtranf()*(max_m23-min_m23)+min_m23
 		Else
-    	        y = Evtranf()*PI - PI/2.
+    	        y = evtranf()*PI - PI/2.
 	        x = Dtan(y)
 	        mass = x*Gam_rho/2. +Mass_rho				
 		m23 =  mass**2
 		End If
 		
-	m13 = Evtranf()*(max_m13-min_m13)+min_m13
+	m13 = evtranf()*(max_m13-min_m13)+min_m13
 	m12 = MC2 - m23 - m13
 	
 	Endif

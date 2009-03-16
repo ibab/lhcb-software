@@ -22,6 +22,7 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include <assert.h>
 #include "EvtGenBase/EvtParticle.hh"
@@ -33,6 +34,7 @@
 #include "EvtGenBase/EvtSemiLeptonicVectorAmp.hh"
 #include "EvtGenBase/EvtSemiLeptonicScalarAmp.hh"
 #include <string>
+using std::endl;
 
 EvtHQET::EvtHQET():
   hqetffmodel(0)
@@ -46,9 +48,9 @@ EvtHQET::~EvtHQET() {
   calcamp=0;
 }
 
-void EvtHQET::getName(std::string& model_name){
+std::string EvtHQET::getName(){
 
-  model_name="HQET";     
+  return "HQET";     
 
 }
 
@@ -110,7 +112,7 @@ void EvtHQET::init(){
     calcamp = new EvtSemiLeptonicVectorAmp; 
   }
   else{
-    report(ERROR,"EvtGen") << "HQET model handles only scalar and vector meson daughters. Sorry."<<std::endl;
+    report(ERROR,"EvtGen") << "HQET model handles only scalar and vector meson daughters. Sorry."<<endl;
     ::abort();
   }
 

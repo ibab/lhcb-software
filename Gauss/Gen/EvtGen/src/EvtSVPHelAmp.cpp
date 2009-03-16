@@ -19,6 +19,7 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
@@ -33,9 +34,9 @@
 
 EvtSVPHelAmp::~EvtSVPHelAmp() {}
 
-void EvtSVPHelAmp::getName(std::string& model_name){
+std::string EvtSVPHelAmp::getName(){
 
-  model_name="SVP_HELAMP";     
+  return "SVP_HELAMP";     
 
 }
 

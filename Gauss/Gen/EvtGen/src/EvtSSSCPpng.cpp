@@ -19,11 +19,12 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtRandom.hh"
 #include "EvtGenBase/EvtGenKine.hh"
-#include "EvtGenBase/EvtIncoherentMixing.hh"
+#include "EvtGenBase/EvtCPUtil.hh"
 #include "EvtGenBase/EvtPDL.hh"
 #include "EvtGenBase/EvtReport.hh"
 #include "EvtGenModels/EvtSSSCPpng.hh"
@@ -33,9 +34,9 @@
 
 EvtSSSCPpng::~EvtSSSCPpng() {}
 
-void EvtSSSCPpng::getName(std::string& model_name){
+std::string EvtSSSCPpng::getName(){
 
-  model_name="SSS_CP_PNG";     
+  return "SSS_CP_PNG";     
 
 }
 
@@ -119,7 +120,7 @@ void EvtSSSCPpng::decay( EvtParticle *p ){
   //fraction of B0 _tags_
   double fract =(Abar2*(1+ rbarf2 + (1 - rbarf2)*ratio))/(Abar2*(1+ rbarf2 + (1 - rbarf2)*ratio) + A2*(1+ rf2 + (1 - rf2)*ratio)); 
   
-  EvtIncoherentMixing::OtherB(p,t,other_b,fract);
+  EvtCPUtil::OtherB(p,t,other_b,fract);
 
 //this method works just as well -- NK
 //randomly generate the tag (B0 or B0B) 

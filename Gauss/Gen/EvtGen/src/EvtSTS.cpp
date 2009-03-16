@@ -19,10 +19,10 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
-#include "EvtGenBase/EvtIncoherentMixing.hh"
 #include "EvtGenBase/EvtTensor4C.hh"
 #include "EvtGenBase/EvtVector4C.hh"
 #include "EvtGenBase/EvtPDL.hh"
@@ -33,9 +33,9 @@
 
 EvtSTS::~EvtSTS() {}
 
-void EvtSTS::getName(std::string& model_name){
+std::string EvtSTS::getName(){
 
-  model_name="STS";     
+  return "STS";     
 
 }
 

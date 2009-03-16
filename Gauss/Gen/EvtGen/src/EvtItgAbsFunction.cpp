@@ -20,6 +20,7 @@
 //                                                     EvtGen
 //
 //------------------------------------------------------------------------
+#include "EvtGenBase/EvtPatches.hh"
 
 #include "EvtGenModels/EvtItgAbsFunction.hh"
 
@@ -30,6 +31,7 @@ extern "C" {
 }
 #include "assert.h"
 #include "EvtGenBase/EvtReport.hh"
+using std::endl;
 
 EvtItgAbsFunction::EvtItgAbsFunction(double lowerRange, double upperRange):
   _upperRange(upperRange),
@@ -44,7 +46,7 @@ EvtItgAbsFunction::value( double x) const{
   if (x >= _lowerRange && x <= _upperRange) return myFunction(x);
    report(ERROR,"EvtGen") << "Error in EvtItgAbsFunction::value.  Given co-ordinate " << x
                 << " is outside of allowed range [" << _lowerRange << ", "
-                << _upperRange << "].  Returning 0.0" << std::endl;
+                << _upperRange << "].  Returning 0.0" << endl;
   return 0.0;  // Never get here
 }
    

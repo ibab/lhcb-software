@@ -1,42 +1,43 @@
-/*****************************************************************************
+#include "EvtGenBase/EvtPatches.hh"
+/*******************************************************************************
  * Project: BaBar detector at the SLAC PEP-II B-factory
  * Package: EvtGenBase
- *    File: $Id: EvtBlattWeisskopf.cpp,v 1.2 2004-07-12 16:13:27 robbep Exp $
+ *    File: $Id: EvtBlattWeisskopf.cpp,v 1.3 2009-03-16 15:56:37 robbep Exp $
  *  Author: Alexei Dvoretskii, dvoretsk@slac.stanford.edu, 2001-2002
  *
  * Copyright (C) 2002 Caltech
- *****************************************************************************/
+ *******************************************************************************/
 
 #include <iostream>
 #include <assert.h>
 #include <math.h>
 #include "EvtGenBase/EvtBlattWeisskopf.hh"
 #include "EvtGenBase/EvtReport.hh"
+using std::endl;
 
 EvtBlattWeisskopf::EvtBlattWeisskopf(int LL, double R, double p0)
-  : _LL(LL), _R(R), _p0(p0)
+  : _LL(LL), _radial(R), _p0(p0)
 {
   if(R < 0) {
 
-    report(INFO,"EvtGen") << "Radius " << R << " negative" << std::endl;
+    report(INFO,"EvtGen") << "Radius " << R << " negative" << endl;
     assert(0);
   }
 
-  _R = R;
+  _radial = R;
 
   // compute formula for nominal momentum
 
   _F0 = compute(_p0);
   if(_F0 <= 0) {
     
-    report(INFO,"EvtGen") << "Invalid nominal form factor computed " 
-                          << _F0 << std::endl;
+    report(INFO,"EvtGen") << "Invalid nominal form factor computed " << _F0 << endl;
     assert(0);
   } 
 }
 
 EvtBlattWeisskopf::EvtBlattWeisskopf(const EvtBlattWeisskopf& other)
-  : _LL(other._LL), _R(other._R), _p0(other._p0), _F0(other._F0)
+  : _LL(other._LL), _radial(other._radial), _p0(other._p0), _F0(other._F0)
 {}
 
 EvtBlattWeisskopf::~EvtBlattWeisskopf()
@@ -45,8 +46,7 @@ EvtBlattWeisskopf::~EvtBlattWeisskopf()
 double EvtBlattWeisskopf::operator()(double p) const
 {
   double ret = compute(p)/_F0;
-  //  report(INFO,"EvtGen") << p << " " << _p0 << " " << _F0 << " " 
-  //<< _LL << " " << _R << " " << ret << std::endl;
+  //  report(INFO,"EvtGen") << p << " " << _p0 << " " << _F0 << " " << _LL << " " << _radial << " " << ret << endl;
   return ret;
 }
 
@@ -66,14 +66,12 @@ double EvtBlattWeisskopf::compute(double p) const
 {
   if(p < 0) {
     
-    report(INFO,"EvtGen") << "Momentum " << p 
-                          << " negative in form factor calculation" 
-                          << std::endl;
+    report(INFO,"EvtGen") << "Momentum " << p << " negative in form factor calculation" << endl;
     assert(0);
   }
   else {
     
-    double x = p*p*_R*_R;
+    double x = p*p*_radial*_radial;
     
     if(0 == _LL) return 1.;
     else
@@ -81,8 +79,7 @@ double EvtBlattWeisskopf::compute(double p) const
       else
 	if(2 == _LL) return sqrt(1.0/(1.0+x/3.0+x*x/9.0));
 	else {
-	  report(INFO,"EvtGen") << "Angular momentum " << _LL 
-                          << " not implemented" << std::endl;
+	  report(INFO,"EvtGen") << "Angular momentum " << _LL << " not implemented" << endl;
 	  assert(0);
 	}
   }

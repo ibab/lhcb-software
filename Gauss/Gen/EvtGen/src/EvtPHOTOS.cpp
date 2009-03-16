@@ -21,28 +21,15 @@
 //------------------------------------------------------------------------
 // 
 #include "EvtGenBase/EvtPatches.hh"
+#include "EvtGenBase/EvtPatches.hh"
+#include "EvtGenBase/EvtIdSet.hh"
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtPhotonParticle.hh"
 #include "EvtGenBase/EvtPDL.hh"
 #include "EvtGenModels/EvtPHOTOS.hh"
+#include "EvtGenBase/EvtReport.hh"
+#include <stdlib.h>
 
-#ifdef WIN32
-extern "C" {
-  void __stdcall BEGEVTGENSTOREX(int *,int *,int *,int *,
-                                int *,int *,int *,int *,
-                                double *,double *,double *, 
-                                double *,double *,double *, 
-                                double *,double *,double *);
-  void __stdcall BEGEVTGENGETX(int *,int *,int *,int *,
-			      int *,int *,int *,int *,
-			      double *,double *,double *, 
-			      double *,double *,double *, 
-			      double *,double *,double *);
-  //  void __stdcall HEPLST(int *);
-  void __stdcall PHOTOS(int *);
-  void __stdcall PHOINI( ) ;
-}
-#else
 extern "C" void begevtgenstorex_(int *,int *,int *,int *,
                                 int *,int *,int *,int *,
                                 double *,double *,double *, 
@@ -55,29 +42,39 @@ extern "C" void begevtgengetx_(int *,int *,int *,int *,
 			      double *,double *,double *, 
 			      double *,double *,double *);
 
-// extern "C" void heplst_(int *);
+extern "C" void heplst_(int *);
 
 extern "C" void photos_(int *);
 
 extern "C" void phoini_();
-#endif
+
+
+EvtPHOTOS::EvtPHOTOS(std::string photontype){
+
+    _photontype=photontype;
+  
+}
 
 void EvtPHOTOS::doRadCorr( EvtParticle *p){
 
   static int first=1;
 
   //added by Lange Jan4,2000
-  static EvtId GAMM=EvtPDL::getId("gamma");
+  //allow to set photon tupe
+  static EvtId GAMM=EvtPDL::getId(_photontype);
+
+  if (GAMM==EvtId(-1,-1)) {
+    report(ERROR,"EvtGen") << "In EvtPHOTOS::doRadCorr():Particle:"<<
+      _photontype<<" is not in EvtPDL"<<std::endl;
+     ::abort();
+  }
 
   if (first) {
-
     first=0;
-#ifdef WIN32
-    PHOINI() ;
-#else
     phoini_();
-#endif
   }
+
+  double mpho=EvtPDL::getMeanMass(GAMM);
 
   int entry,eventnum,numparticle,istat,partnum,mother;
   int daugfirst,dauglast;
@@ -85,6 +82,25 @@ void EvtPHOTOS::doRadCorr( EvtParticle *p){
   int numparticlephotos;
 
   double px,py,pz,e,m,x,y,z,t;
+
+  static EvtId dq=EvtPDL::getId("d");
+  static EvtId adq=EvtPDL::getId("anti-d");
+  static EvtId uq=EvtPDL::getId("u");
+  static EvtId auq=EvtPDL::getId("anti-u");
+  static EvtId sq=EvtPDL::getId("s");
+  static EvtId asq=EvtPDL::getId("anti-s");
+  static EvtId cq=EvtPDL::getId("c");
+  static EvtId acq=EvtPDL::getId("anti-c");
+  static EvtId bq=EvtPDL::getId("b");
+  static EvtId abq=EvtPDL::getId("anti-b");
+  static EvtId tq=EvtPDL::getId("t");
+  static EvtId atq=EvtPDL::getId("anti-t");
+  static EvtId vpho=EvtPDL::getId("vpho");
+
+  static EvtIdSet quarks(dq,adq,uq,auq,sq,asq,cq,acq,bq,abq,tq,atq);
+
+  if ( p->getId() == vpho ) return;
+  if ( p->getNDaug() > 10 ) return;
 
   px=0.0;
   py=0.0;
@@ -105,19 +121,15 @@ void EvtPHOTOS::doRadCorr( EvtParticle *p){
   daugfirst=2;
   dauglast=1+p->getNDaug();
 
-#ifdef WIN32
-  BEGEVTGENSTOREX(&entry,&eventnum,&numparticle,&istat,&partnum,
-                  &mother,&daugfirst,&dauglast,
-		  &px,&py,&pz,&e,&m,&x,&y,&z,&t);
-#else
   begevtgenstorex_(&entry,&eventnum,&numparticle,&istat,&partnum,
                   &mother,&daugfirst,&dauglast,
 		  &px,&py,&pz,&e,&m,&x,&y,&z,&t);
-#endif
 
-  int i;
+  //  std::cout << EvtPDL::name(p->getId()) <<" " ;
+  for(size_t i=0;i<p->getNDaug();i++){
 
-  for(i=0;i<p->getNDaug();i++){
+    //No quarks to photos
+    if (quarks.contains(p->getDaug(i)->getId())==1) continue;
 
     px=p->getDaug(i)->getP4().get(1);
     py=p->getDaug(i)->getP4().get(2);
@@ -128,7 +140,8 @@ void EvtPHOTOS::doRadCorr( EvtParticle *p){
     y=0.0;
     z=0.0;
     t=0.0;
-    
+
+    //    std::cout << EvtPDL::name(p->getDaug(i)->getId()) << " " ;
     entry+=1;
     eventnum=1;
     numparticle+=1;
@@ -138,18 +151,13 @@ void EvtPHOTOS::doRadCorr( EvtParticle *p){
     daugfirst=0;
     dauglast=0;    
 
-#ifdef WIN32
-    BEGEVTGENSTOREX(&entry,&eventnum,&numparticle,&istat,&partnum,
-		    &mother,&daugfirst,&dauglast,
-		    &px,&py,&pz,&e,&m,&x,&y,&z,&t);
-#else
     begevtgenstorex_(&entry,&eventnum,&numparticle,&istat,&partnum,
 		    &mother,&daugfirst,&dauglast,
 		    &px,&py,&pz,&e,&m,&x,&y,&z,&t);
-#endif    
+    
 
   }
-
+  //  std::cout << std::endl;
   //can't use heplst since the common block used by the BaBar
   //implementation of PHOTOS  is renamed due to real*4 vs real*8
   //problems.
@@ -160,26 +168,15 @@ void EvtPHOTOS::doRadCorr( EvtParticle *p){
 
   entry=1;
 
-  //  report(INFO,"EvtGen") << "Doing photos " << 
-  // EvtPDL::name(p->getId()) << std::endl;
-#ifdef WIN32
-  PHOTOS(&entry);
-#else
+  //  report(INFO,"EvtGen") << "Doing photos " << EvtPDL::name(p->getId()) << endl;
   photos_(&entry);
-#endif
   //  report(INFO,"EvtGen") << "done\n";
-#ifdef WIN32
-  BEGEVTGENGETX(&entry,&eventnum,&numparticlephotos,&istat,&partnum,
-		    &mother,&daugfirst,&dauglast,
-		    &px,&py,&pz,&e,&m,&x,&y,&z,&t);
-#else
   begevtgengetx_(&entry,&eventnum,&numparticlephotos,&istat,&partnum,
 		    &mother,&daugfirst,&dauglast,
 		    &px,&py,&pz,&e,&m,&x,&y,&z,&t);
-#endif    
+    
 
-  //report(INFO,"EvtGen") << "numparticlephotos:"<<numparticlephotos
-  // <<std::endl;
+  //report(INFO,"EvtGen") << "numparticlephotos:"<<numparticlephotos<<endl;
   
   if (numparticle==numparticlephotos) return;
 
@@ -187,19 +184,13 @@ void EvtPHOTOS::doRadCorr( EvtParticle *p){
 
   int np;
 
-  for(i=0;i<p->getNDaug();i++){
+  for(size_t i=0;i<p->getNDaug();i++){
 
     entry=i+2;
 
-#ifdef WIN32
-    BEGEVTGENGETX(&entry,&eventnum,&np,&istat,&partnum,
-		    &mother,&daugfirst,&dauglast,
-		    &px,&py,&pz,&e,&m,&x,&y,&z,&t);
-#else
     begevtgengetx_(&entry,&eventnum,&np,&istat,&partnum,
 		    &mother,&daugfirst,&dauglast,
 		    &px,&py,&pz,&e,&m,&x,&y,&z,&t);
-#endif
 
     //this is needed to ensure that photos does not
     //change the masses. But it will violate energy conservation!
@@ -208,22 +199,20 @@ void EvtPHOTOS::doRadCorr( EvtParticle *p){
         
     new4mom.set(e,px,py,pz);
 
-    p->getDaug(i)->setP4(new4mom);
+    p->getDaug(i)->setP4WithFSR(new4mom);
+
+    
 
   }
 
   for(entry=numparticle+1;entry<=numparticlephotos;entry++){
 
-#ifdef WIN32
-    BEGEVTGENGETX(&entry,&eventnum,&np,&istat,&partnum,
-		    &mother,&daugfirst,&dauglast,
-		    &px,&py,&pz,&e,&m,&x,&y,&z,&t);
-#else
     begevtgengetx_(&entry,&eventnum,&np,&istat,&partnum,
 		    &mother,&daugfirst,&dauglast,
 		    &px,&py,&pz,&e,&m,&x,&y,&z,&t);
-#endif
         
+    //Hack here to give the photon the mass of the generated particle
+    e=sqrt(mpho*mpho+px*px+py*py+pz*pz);
     new4mom.set(e,px,py,pz);
 
     //new4mom.dump();
@@ -231,10 +220,8 @@ void EvtPHOTOS::doRadCorr( EvtParticle *p){
     EvtPhotonParticle* gamma;
     gamma=new EvtPhotonParticle;
     gamma->init(GAMM,new4mom);
-    //    report(INFO,"EvtGen") << gamma << " " << p << " "<< px << " " 
-    //<< py << " " << pz << " " << p->getNDaug() << " " << 
-    //EvtPDL::name(p->getId())<<" " << entry << " " <<numparticlephotos
-    //<<std::endl;
+    gamma->setFSRP4toZero();
+    //    report(INFO,"EvtGen") << gamma << " " << p << " "<< px << " " << py << " " << pz << " " << p->getNDaug() << " " << EvtPDL::name(p->getId())<<" " << entry << " " <<numparticlephotos<<endl;
     gamma->addDaug(p);
 
 //    p->getDaug(i)->set_type(EvtSpinType::PHOTON);

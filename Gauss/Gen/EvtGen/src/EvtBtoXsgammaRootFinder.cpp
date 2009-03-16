@@ -17,12 +17,14 @@
 //
 //      Jane Tinslay       March 21, 2001       Module created
 //------------------------------------------------------------------------
+#include "EvtGenBase/EvtPatches.hh"
 
 #include "EvtGenModels/EvtBtoXsgammaRootFinder.hh"
 #include "EvtGenModels/EvtItgTwoCoeffFcn.hh"
 #include "EvtGenModels/EvtItgSimpsonIntegrator.hh"
 #include "EvtGenBase/EvtReport.hh"
 #include <math.h>
+using std::endl;
 
 //-------------
 // C Headers --
@@ -56,7 +58,7 @@ EvtBtoXsgammaRootFinder::GetRootSingleFunc(const EvtItgAbsFunction* theFunc, dou
   double f2 = theFunc->value(upperValue) - functionValue;
 
   if ( f1*f2 > 0.0 ) {
-    report(WARNING,"EvtGen") << "EvtBtoXsgammaRootFinder: No root in specified range !"<<std::endl;  
+    report(WARNING,"EvtGen") << "EvtBtoXsgammaRootFinder: No root in specified range !"<<endl;  
     return 0;
   }
 
@@ -109,7 +111,7 @@ EvtBtoXsgammaRootFinder::GetRootSingleFunc(const EvtItgAbsFunction* theFunc, dou
   
   report(WARNING,"EvtGen") << "EvtBtoXsgammaRootFinder: Maximum number of iterations "
 			   <<"in EvtBtoXsgammaRootFinder::foundRoot exceeded!" 
-			   <<" Returning false."<<std::endl;
+			   <<" Returning false."<<endl;
   return 0;
   
 }
@@ -139,7 +141,7 @@ EvtBtoXsgammaRootFinder::GetGaussIntegFcnRoot(EvtItgAbsFunction *theFunc1, EvtIt
   double root=0;
 
   if ( f1*f2 > 0.0 ) {
-    report(WARNING,"EvtGen") << "EvtBtoXsgammaRootFinder: No root in specified range !"<<std::endl;  
+    report(WARNING,"EvtGen") << "EvtBtoXsgammaRootFinder: No root in specified range !"<<endl;  
     return false;
   }
 
@@ -196,7 +198,7 @@ EvtBtoXsgammaRootFinder::GetGaussIntegFcnRoot(EvtItgAbsFunction *theFunc1, EvtIt
   
   report(WARNING,"EvtGen") << "EvtBtoXsgammaRootFinder: Maximum number of iterations "
 			   <<"in EvtBtoXsgammaRootFinder::foundRoot exceeded!" 
-			   <<" Returning false."<<std::endl;
+			   <<" Returning false."<<endl;
   return 0;
   
 }

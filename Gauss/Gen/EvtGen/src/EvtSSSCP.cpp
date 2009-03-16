@@ -18,10 +18,11 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
-#include "EvtGenBase/EvtIncoherentMixing.hh"
+#include "EvtGenBase/EvtCPUtil.hh"
 #include "EvtGenBase/EvtPDL.hh"
 #include "EvtGenBase/EvtReport.hh"
 #include "EvtGenModels/EvtSSSCP.hh"
@@ -30,9 +31,9 @@
 
 EvtSSSCP::~EvtSSSCP() {}
 
-void EvtSSSCP::getName(std::string& model_name){
+std::string EvtSSSCP::getName(){
 
-  model_name="SSS_CP";     
+  return "SSS_CP";     
 
 }
 
@@ -73,7 +74,7 @@ void EvtSSSCP::decay( EvtParticle *p ){
   double t;
   EvtId other_b;
 
-  EvtIncoherentMixing::OtherB(p,t,other_b,0.5);
+  EvtCPUtil::OtherB(p,t,other_b);
 
   p->initializePhaseSpace(getNDaug(),getDaugs());
 

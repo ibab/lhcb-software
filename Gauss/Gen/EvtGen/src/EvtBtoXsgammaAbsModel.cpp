@@ -18,6 +18,7 @@
 //    Jane Tinslay            March 21, 2000      Module Created
 //------------------------------------------------------------------------
 //
+#include "EvtGenBase/EvtPatches.hh"
 
 #include <stdlib.h>
 #include "EvtGenModels/EvtBtoXsgammaAbsModel.hh"

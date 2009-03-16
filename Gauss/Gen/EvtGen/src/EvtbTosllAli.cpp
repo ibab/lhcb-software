@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------
-// $Id: EvtbTosllAli.cpp,v 1.4 2008-12-16 14:49:57 robbep Exp $
+//
 // Environment:
 //      This software is part of the EvtGen package developed jointly
 //      for the BaBar and CLEO collaborations.  If you use all or part
@@ -18,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
@@ -30,15 +31,13 @@
 #include "EvtGenModels/EvtbTosllVectorAmp.hh"
 
 #include <string>
+using std::endl;
 
-EvtbTosllAli::~EvtbTosllAli() {
-  if ( _aliffmodel ) delete _aliffmodel ;
-  if ( _calcamp ) delete _calcamp ;
-}
+EvtbTosllAli::~EvtbTosllAli() {}
 
-void EvtbTosllAli::getName(std::string& model_name){
+std::string EvtbTosllAli::getName(){
 
-  model_name="BTOSLLALI";     
+  return "BTOSLLALI";     
 }
 
 
@@ -92,8 +91,8 @@ void EvtbTosllAli::init(){
 	mesontype == EvtSpinType::SCALAR)) {
     report(ERROR,"EvtGen") << "EvtbTosllAli generator expected "
                            << " a SCALAR or VECTOR 1st daughter, found:"<<
-                           EvtPDL::name(getDaug(0)).c_str()<<std::endl;
-    report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
+                           EvtPDL::name(getDaug(0)).c_str()<<endl;
+    report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
     ::abort();
   }
 

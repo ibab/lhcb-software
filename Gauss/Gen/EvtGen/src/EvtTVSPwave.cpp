@@ -19,6 +19,7 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
@@ -31,9 +32,9 @@
 
 EvtTVSPwave::~EvtTVSPwave() {}
 
-void EvtTVSPwave::getName(std::string& model_name){
+std::string EvtTVSPwave::getName(){
 
-  model_name="TVS_PWAVE";     
+  return "TVS_PWAVE";     
 
 }
 

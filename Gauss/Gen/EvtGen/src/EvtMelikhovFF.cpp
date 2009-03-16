@@ -19,13 +19,14 @@
 //------------------------------------------------------------------------
 // 
 #include "EvtGenBase/EvtPatches.hh"
+#include "EvtGenBase/EvtPatches.hh"
 #include "EvtGenBase/EvtReport.hh"
 #include "EvtGenModels/EvtMelikhovFF.hh"
 #include "EvtGenBase/EvtId.hh"
 #include <string>
 #include <math.h>
 #include "EvtGenBase/EvtPDL.hh"
-
+#include <stdlib.h>
 
 EvtMelikhovFF::EvtMelikhovFF(double arg1) {
 
@@ -33,13 +34,13 @@ EvtMelikhovFF::EvtMelikhovFF(double arg1) {
   return;
 }
 
-void EvtMelikhovFF::getvectorff(EvtId parent,EvtId /*daught*/,
+void EvtMelikhovFF::getvectorff(EvtId parent,EvtId,
                        double t, double mass, double *a1f,
 			     double *a2f, double *vf, double *a0f ){
 
-  double ma1(0.),ra1(0.),na1(0.);
-  double ma2(0.),ra2(0.),na2(0.);
-  double mv(0.),rv(0.),nv(0.);
+  double ma1(0.0),ra1(0.0),na1(0.0);
+  double ma2(0.0),ra2(0.0),na2(0.0);
+  double mv(0.0),rv(0.0),nv(0.0);
 
   if ( whichfit==1) {
      ma1 = 7.07;
@@ -102,4 +103,32 @@ void EvtMelikhovFF::getvectorff(EvtId parent,EvtId /*daught*/,
   return;
  }
 
+
+void EvtMelikhovFF::getscalarff(EvtId, EvtId, double, double, double*, 
+			       double*){
+  
+  report(ERROR,"EvtGen") << "Not implemented :getvectorff in EvtMelikhovFF.\n";  
+  ::abort();
+
+}
+
+
+
+void EvtMelikhovFF::gettensorff(EvtId, EvtId, double, double, double*, 
+			       double*, double*, double*){
+  
+  report(ERROR,"EvtGen") << "Not implemented :gettensorff in EvtMelikhovFF.\n";  
+  ::abort();
+
+}
+
+
+
+void EvtMelikhovFF::getbaryonff(EvtId, EvtId, double, double, double*, 
+			       double*, double*, double*){
+  
+  report(ERROR,"EvtGen") << "Not implemented :getbaryonff in EvtMelikhovFF.\n";  
+  ::abort();
+
+}
 

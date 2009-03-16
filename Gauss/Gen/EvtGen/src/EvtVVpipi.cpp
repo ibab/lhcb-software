@@ -19,6 +19,7 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
@@ -28,12 +29,13 @@
 #include "EvtGenBase/EvtReport.hh"
 #include "EvtGenModels/EvtVVpipi.hh"
 #include <string>
+using std::endl;
 
 EvtVVpipi::~EvtVVpipi() {}
 
-void EvtVVpipi::getName(std::string& model_name){
+std::string EvtVVpipi::getName(){
 
-  model_name="VVPIPI";     
+  return "VVPIPI";     
 
 }
 
@@ -63,8 +65,8 @@ void EvtVVpipi::init(){
       (!(getDaug(1)==PI0&&getDaug(2)==PI0))) {
     report(ERROR,"EvtGen") << "EvtVVpipi generator expected "
                            << " pi+ and pi- (or pi0 and pi0) "
-			   << "as 2nd and 3rd daughter. "<<std::endl;
-    report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
+			   << "as 2nd and 3rd daughter. "<<endl;
+    report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
     ::abort();
   }
 

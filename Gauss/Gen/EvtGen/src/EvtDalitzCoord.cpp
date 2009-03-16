@@ -1,7 +1,8 @@
+#include "EvtGenBase/EvtPatches.hh"
 /*******************************************************************************
  * Project: BaBar detector at the SLAC PEP-II B-factory
  * Package: EvtGenBase
- *    File: $Id: EvtDalitzCoord.cpp,v 1.2 2004-07-12 16:13:28 robbep Exp $
+ *    File: $Id: EvtDalitzCoord.cpp,v 1.3 2009-03-16 15:55:13 robbep Exp $
  *  Author: Alexei Dvoretskii, dvoretsk@slac.stanford.edu, 2001-2002
  *
  * Copyright (C) 2002 Caltech
@@ -10,6 +11,8 @@
 #include <assert.h>
 #include <iostream>
 #include "EvtGenBase/EvtDalitzCoord.hh"
+using std::endl;
+using std::ostream;
 using EvtCyclic3::Pair;
 
 
@@ -40,14 +43,14 @@ bool EvtDalitzCoord::operator==(const EvtDalitzCoord& other) const
 	  _q1 == other._q1 && _q2 == other._q2);
 }
 
-void EvtDalitzCoord::print(std::ostream& os) const
+void EvtDalitzCoord::print(ostream& os) const
 {
-  os << _i1 << " " << _q1 << std::endl;
-  os << _i2 << " " << _q2 << std::endl;
+  os << _i1 << " " << _q1 << endl;
+  os << _i2 << " " << _q2 << endl;
 }
 
 
-std::ostream& operator<<(std::ostream& os,const EvtDalitzCoord& p)
+ostream& operator<<(ostream& os,const EvtDalitzCoord& p)
 {
   p.print(os);
   return os;

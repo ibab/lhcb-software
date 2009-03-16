@@ -18,12 +18,14 @@
 //
 //------------------------------------------------------------------------
 //
+#include "EvtGenBase/EvtPatches.hh"
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
 #include <ctype.h>
 #include "EvtGenBase/EvtDecayParm.hh"
 #include <string>
+using std::fstream;
 
 void EvtDecayParm::init(fcnPtr pfcn, int ndaug, int *daugs, int narg,
 	       double *args, std::string name) {

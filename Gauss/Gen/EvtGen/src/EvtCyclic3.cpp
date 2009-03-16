@@ -1,7 +1,8 @@
+#include "EvtGenBase/EvtPatches.hh"
 /*******************************************************************************
  * Project: BaBar detector at the SLAC PEP-II B-factory
  * Package: EvtGenBase
- *    File: $Id: EvtCyclic3.cpp,v 1.2 2004-07-12 16:13:28 robbep Exp $
+ *    File: $Id: EvtCyclic3.cpp,v 1.3 2009-03-16 15:55:13 robbep Exp $
  *  Author: Alexei Dvoretskii, dvoretsk@slac.stanford.edu, 2001-2002
  *
  * Copyright (C) 2002 Caltech
@@ -11,6 +12,7 @@
 #include <string.h>
 #include <iostream>
 #include "EvtGenBase/EvtCyclic3.hh"
+using std::ostream;
 
 using namespace EvtCyclic3;
 
@@ -48,7 +50,8 @@ Index EvtCyclic3::permute(Index i, Perm p)
     else if(i == B) return C;
     else if(i == C) return B;
   }
-  return i ;
+  assert(0);
+  return A;
 }
 
 Perm EvtCyclic3::permutation(Index i1,Index i2,Index i3)
@@ -57,7 +60,8 @@ Perm EvtCyclic3::permutation(Index i1,Index i2,Index i3)
   if(i1 == A) return (i2 == B) ? ABC : ACB;
   if(i1 == B) return (i2 == C) ? BCA : BAC;
   if(i1 == C) return (i2 == A) ? CAB : CBA;
-  return ABC ;
+  assert(0);
+  return ABC;
 }
 
 
@@ -117,24 +121,23 @@ Index EvtCyclic3::other(Index i, Index j)
 {
   assert(i != j);
   switch(i) {
-    
   case A:
     switch(j) {
     case B: return C;
     case C: return B;
-    case A: return A; /** should not happen **/
+    default: assert(0);
     }
   case B:
     switch(j) {
     case C: return A;
     case A: return C;
-    case B: return B; /** should not happen **/
+    default: assert(0);
     }
   case C:
     switch(j) {
     case A: return B;
     case B: return A;
-    case C: return C; /** should not happen **/
+    default: assert(0);
     }
   }
   assert(0); return A; // should never get here
@@ -248,7 +251,7 @@ Pair EvtCyclic3::strToPair(const char* str)
 }
 
 
-char* EvtCyclic3::c_str(Index i)
+const char* EvtCyclic3::c_str(Index i)
 {
   switch(i) {
   case A: return "A";
@@ -259,7 +262,7 @@ char* EvtCyclic3::c_str(Index i)
 }
 
 
-char* EvtCyclic3::c_str(Pair i)
+const char* EvtCyclic3::c_str(Pair i)
 {
   switch(i) {
   case BC: return "BC";
@@ -269,7 +272,7 @@ char* EvtCyclic3::c_str(Pair i)
   assert(0); return 0; // sngh
 }
 
-char* EvtCyclic3::c_str(Perm p)
+const char* EvtCyclic3::c_str(Perm p)
 {
   if(p == ABC) return "ABC";
   if(p == BCA) return "BCA";
@@ -277,7 +280,8 @@ char* EvtCyclic3::c_str(Perm p)
   if(p == CBA) return "CBA";
   if(p == BAC) return "BAC";
   if(p == ACB) return "ACB";
-  return "ABC" ;
+  assert(0);
+  return "ABC";
 }
 
 char* EvtCyclic3::append(const char* str, EvtCyclic3::Index i)
@@ -301,7 +305,7 @@ char* EvtCyclic3::append(const char* str, EvtCyclic3::Pair i)
 }
 
 
-std::ostream& operator<<(std::ostream& os, EvtCyclic3::Index i) 
+ostream& operator<<(ostream& os, EvtCyclic3::Index i) 
 {
   switch(i) {
   case A: { os << "A"; return os; }
@@ -312,7 +316,7 @@ std::ostream& operator<<(std::ostream& os, EvtCyclic3::Index i)
 }
 
 
-std::ostream& operator<<(std::ostream& os, EvtCyclic3::Pair i)
+ostream& operator<<(ostream& os, EvtCyclic3::Pair i)
 {
   switch(i) {
   case BC: { os << "BC"; return os; }

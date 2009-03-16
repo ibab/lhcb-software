@@ -19,6 +19,7 @@
 //
 //------------------------------------------------------------------------
 //
+#include "EvtGenBase/EvtPatches.hh"
 #include "EvtGenBase/EvtConst.hh"
 #include "EvtGenBase/EvtPatches.hh"
 #include "EvtGenBase/EvtParticle.hh"
@@ -39,7 +40,6 @@ void EvtbTosllScalarAmp::CalcAmp( EvtParticle *parent,
 				  EvtAmp& amp,
 				  EvtbTosllFF *formFactors ) {
 
-  
   //Add the lepton and neutrino 4 momenta to find q2
 
   EvtVector4R q = parent->getDaug(1)->getP4() 
@@ -60,15 +60,15 @@ void EvtbTosllScalarAmp::CalcAmp( EvtParticle *parent,
   bool btod = false;
   bool nnlo = true;
   if (daught == EvtPDL::getId(std::string("pi+")) ||
-      daught == EvtPDL::getId(std::string("pi-")) ||
-      daught == EvtPDL::getId(std::string("pi0")) ||
-      daught == EvtPDL::getId(std::string("eta")) ||
-      daught == EvtPDL::getId(std::string("eta'"))
-      )  btod = true;
-  
+	  daught == EvtPDL::getId(std::string("pi-")) ||
+          daught == EvtPDL::getId(std::string("pi0")) ||
+          daught == EvtPDL::getId(std::string("eta")) ||
+          daught == EvtPDL::getId(std::string("eta'"))
+         )  btod = true;
+
+
   EvtVector4R p4b;
   p4b.set(parent->mass(),0.0,0.0,0.0);
-  EvtVector4R p4meson = parent->getDaug(0)->getP4();
  
   EvtVector4C l11,l12;
   EvtVector4C l21,l22;
@@ -166,6 +166,17 @@ void EvtbTosllScalarAmp::CalcAmp( EvtParticle *parent,
   amp.vertex(1,1,l22*T1+a22*T2);
 
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

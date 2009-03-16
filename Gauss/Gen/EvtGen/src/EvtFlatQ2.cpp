@@ -18,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 //
+#include "EvtGenBase/EvtPatches.hh"
 #include "EvtGenModels/EvtFlatQ2.hh"
 
 #include <stdlib.h>
@@ -31,12 +32,13 @@
 #include "EvtGenBase/EvtDiracSpinor.hh"
 #include "EvtGenBase/EvtVector4C.hh"
 #include "EvtGenBase/EvtTensor4C.hh"
+using std::fstream;
 
 EvtFlatQ2::~EvtFlatQ2() {}
 
-void EvtFlatQ2::getName(std::string& model_name){
+std::string EvtFlatQ2::getName(){
 
-    model_name="FLATQ2";
+    return "FLATQ2";
 
 }
 

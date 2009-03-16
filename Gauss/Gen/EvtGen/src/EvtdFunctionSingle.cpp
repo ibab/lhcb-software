@@ -19,6 +19,7 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include <math.h>
 #include <iostream>
@@ -61,25 +62,17 @@ void EvtdFunctionSingle::init(int j,int m1,int m2){
   for(k=_kmin;k<=_kmax;k+=2){
     int sign=1;
     if ((k-_m2+_m1)%4!=0) sign=-sign;
-    //fkw change to satisfy KCC
-    double fkwTmp = fact((_j+_m2)/2)*fact((_j-_m2)/2)
+    double tmp = fact((_j+_m2)/2)*fact((_j-_m2)/2)
                    *fact((_j+_m1)/2)*fact((_j-_m1)/2);
-    _coef[(k-_kmin)/2]=sign*sqrt(fkwTmp)/
+    _coef[(k-_kmin)/2]=sign*sqrt(tmp)/
       (fact((_j+_m2-k)/2)*fact(k/2)*fact((_j-_m1-k)/2)*fact((k-_m2+_m1)/2));
 
-    //fkw _coef[(k-_kmin)/2]=sign*sqrt(fact((_j+_m2)/2)*fact((_j-_m2)/2)*
-    //fkw			fact((_j+_m1)/2)*fact((_j-_m1)/2))/
-    //fkw  (fact((_j+_m2-k)/2)*fact(k/2)*fact((_j-_m1-k)/2)*fact((k-_m2+_m1)/2));
-
-    //report(INFO,"EvtGen") << "k, coef:"<<k/2<<" "<<_coef[(k-_kmin)/2]<<std::endl;
   }
 
 }
 
 
 double EvtdFunctionSingle::d(int j,int m1,int m2, double theta){
-
-  //report(INFO,"EvtGen") << "j,m1,m2:"<<j<<","<<m1<<","<<m2<<" theta:"<<theta<<std::endl;
 
   assert(j==_j);
   assert(m1==_m1);

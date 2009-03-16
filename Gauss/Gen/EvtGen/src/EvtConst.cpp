@@ -18,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 //
+#include "EvtGenBase/EvtPatches.hh"
 #include "EvtGenBase/EvtConst.hh"
 
 const double EvtConst::pi           =  3.14159265358979323846;

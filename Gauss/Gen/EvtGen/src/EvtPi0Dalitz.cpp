@@ -18,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 //
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include <fstream>
 #include <stdio.h>
@@ -31,12 +32,13 @@
 #include "EvtGenBase/EvtDiracSpinor.hh"
 #include "EvtGenBase/EvtVector4C.hh"
 #include "EvtGenBase/EvtTensor4C.hh"
+using std::fstream;
 
 EvtPi0Dalitz::~EvtPi0Dalitz() {}
 
-void EvtPi0Dalitz::getName(std::string& model_name){
+std::string EvtPi0Dalitz::getName(){
 
-    model_name="PI0_DALITZ";
+    return "PI0_DALITZ";
 
 }
 
@@ -73,7 +75,8 @@ void EvtPi0Dalitz::init(){
 void EvtPi0Dalitz::decay( EvtParticle *p){
 
   EvtParticle *ep, *em, *gamma;
-  setWeight(p->initializePhaseSpace(getNDaug(),getDaugs(),0.00000002,0,1));
+  setWeight(p->initializePhaseSpace(getNDaug(),getDaugs(),false,
+				    0.00000002,0,1));
 
   ep=p->getDaug(0);
   em=p->getDaug(1);
@@ -104,7 +107,7 @@ void EvtPi0Dalitz::decay( EvtParticle *p){
   prob *=(1.0/( (0.768*0.768-m2)*(0.768*0.768-m2)
            +0.768*0.768*0.151*0.151));
 
-  //  report(INFO,"EvtGen") << "prob is "<<prob<<std::endl;
+  //  report(INFO,"EvtGen") << "prob is "<<prob<<endl;
   setProb(prob);
 
   return;

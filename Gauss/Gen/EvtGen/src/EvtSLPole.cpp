@@ -19,6 +19,7 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
@@ -33,9 +34,9 @@
 
 EvtSLPole::~EvtSLPole() {}
 
-void EvtSLPole::getName(std::string& model_name){
+std::string EvtSLPole::getName(){
 
-  model_name="SLPOLE";     
+  return "SLPOLE";     
 
 }
 
@@ -48,8 +49,7 @@ EvtDecayBase* EvtSLPole::clone(){
 
 void EvtSLPole::decay( EvtParticle *p ){
 
-  p->initializePhaseSpace(getNDaug(),getDaugs());
-
+  p->initializePhaseSpace(getNDaug(),getDaugs(),_resetDaughterTree);
   calcamp->CalcAmp(p,_amp2,SLPoleffmodel);
   return;
 }
@@ -95,6 +95,9 @@ void EvtSLPole::init(){
   if ( mesontype==EvtSpinType::TENSOR ) { 
     calcamp = new EvtSemiLeptonicTensorAmp; 
   }
+
+  _resetDaughterTree=false;
+  if ( getArgStr(getNArg()-1) == "true") _resetDaughterTree=true;
   
 }
 

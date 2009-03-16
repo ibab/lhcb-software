@@ -8,7 +8,7 @@
 // Copyright Information: See EvtGen/COPYRIGHT
 //      Copyright (C) 1998      Caltech, UCSB
 //
-// Module: EvtSemiLeptonicAmp.cc
+// Module: EvtbTosllAmp.cc
 //
 // Description: Routine to implement semileptonic decays to pseudo-scalar
 //              mesons.
@@ -19,6 +19,7 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include "EvtGenBase/EvtPatches.hh"
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
@@ -90,7 +91,7 @@ double EvtbTosllAmp::CalcMaxProb( EvtId parent, EvtId meson,
   //Initial particle is unpolarized, well it is a scalar so it is 
   //trivial
   EvtSpinDensity rho;
-  rho.SetDiag(root_part->getSpinStates());
+  rho.setDiag(root_part->getSpinStates());
   
   double mass[3];
   
@@ -125,7 +126,7 @@ double EvtbTosllAmp::CalcMaxProb( EvtId parent, EvtId meson,
     q2max = (m-mass[0])*(m-mass[0]);
     
     //loop over q2
-
+    //cout << "m " << m << "mass[0] " << mass[0] << " q2max "<< q2max << endl;
     for (i=0;i<25;i++) {
       //want to avoid picking up the tail of the photon propagator
       q2 = ((i+1.5)*q2max)/26.0;
@@ -173,11 +174,11 @@ double EvtbTosllAmp::CalcMaxProb( EvtId parent, EvtId meson,
 
 	//Do a little magic to get the probability!!
 
-	//report(INFO,"EvtGen") <<"amp:"<<amp.getSpinDensity()<<std::endl;
+	//cout <<"amp:"<<amp.getSpinDensity()<<endl;
 
-	prob = rho.NormalizedProb(amp.getSpinDensity());
+	prob = rho.normalizedProb(amp.getSpinDensity());
 
-	//report(INFO,"EvtGen") << "prob:"<<q2<<" "<<costl<<" "<<prob<<std::endl;
+	//cout << "prob:"<<q2<<" "<<costl<<" "<<prob<<endl;
 
 	probctl[j]=prob;
       }
@@ -205,7 +206,7 @@ double EvtbTosllAmp::CalcMaxProb( EvtId parent, EvtId meson,
       //report(DEBUG,"EvtGen") << "prob,probctl:"<<prob<<" "
       //			    << probctl[0]<<" "
       //			    << probctl[1]<<" "
-      //			    << probctl[2]<<std::endl;
+      //			    << probctl[2]<<endl;
 
       if (i==0) {
 	maxpole=prob;
@@ -216,7 +217,7 @@ double EvtbTosllAmp::CalcMaxProb( EvtId parent, EvtId meson,
 	maxfoundprob = prob; 
       }
 
-      //report(INFO,"EvtGen") << "q2,maxfoundprob:"<<q2<<" "<<maxfoundprob<<std::endl;
+      //cout << "q2,maxfoundprob:"<<q2<<" "<<maxfoundprob<<endl;
 
     }
     if ( EvtPDL::getWidth(meson) <= 0.0 ) {
@@ -232,14 +233,15 @@ double EvtbTosllAmp::CalcMaxProb( EvtId parent, EvtId meson,
 
   //poleSize=0.002;
 
-  //report(INFO,"EvtGen") <<"maxfoundprob,maxpole,poleSize:"<<maxfoundprob<<" "
-  //     <<maxpole<<" "<<poleSize<<std::endl;
+  //cout <<"maxfoundprob,maxpole,poleSize:"<<maxfoundprob<<" "
+  //     <<maxpole<<" "<<poleSize<<endl;
 
   maxfoundprob *=1.15;
 
   return maxfoundprob;
   
 }
+
 
 EvtComplex EvtbTosllAmp::GetC7Eff(double q2, bool nnlo) 
 {
@@ -390,32 +392,34 @@ EvtComplex EvtbTosllAmp::GetC9Eff(double q2, bool nnlo, bool btod)
   double xarg;
   xarg = 4.0*mchat/shat;
   hc = -4.0/9.0*log(mchat*mchat) + 8.0/27.0 + 4.0*xarg/9.0;
-  if (xarg < 1.0)
-  { 
+
+if (xarg < 1.0)
+  {
     hc = hc - 2.0/9.0*(2.0 + xarg)*sqrt(fabs(1.0 - xarg))*
-      (log((sqrt(1.0 - xarg)+1.0)/(sqrt(1.0 - xarg) - 1.0)) - 
+      (log(fabs((sqrt(1.0 - xarg)+1.0)/(sqrt(1.0 - xarg) - 1.0))) -
        uniti*EvtConst::pi);
-  } 
+  }
   else
   {
     hc = hc - 2.0/9.0*(2.0 + xarg)*sqrt(fabs(1.0 - xarg))*
       2.0*atan(1.0/sqrt(xarg - 1.0));
   }
-
+                                                                                                                                                             
   EvtComplex h1;
   xarg = 4.0/shat;
   h1 = 8.0/27.0 + 4.0*xarg/9.0;
   if (xarg < 1.0)
-  { 
+  {
     h1 = h1 - 2.0/9.0*(2.0 + xarg)*sqrt(fabs(1.0 - xarg))*
-      (log((sqrt(1.0 - xarg)+1.0)/(sqrt(1.0 - xarg) - 1.0)) - 
+      (log(fabs((sqrt(1.0 - xarg)+1.0)/(sqrt(1.0 - xarg) - 1.0))) -
        uniti*EvtConst::pi);
-  } 
+  }
   else
   {
     h1 = h1 - 2.0/9.0*(2.0 + xarg)*sqrt(fabs(1.0 - xarg))*
       2.0*atan(1.0/sqrt(xarg - 1.0));
   }
+
 
   EvtComplex h0;
   h0 = 8.0/27.0 - 4.0*log(2.0)/9.0 + 4.0*uniti*EvtConst::pi/9.0;
@@ -549,31 +553,29 @@ double EvtbTosllAmp::dGdsProb(double mb, double ms, double ml,
 
   double alphas = 0.119/
      (1 + 0.119*log(pow(4.8,2)/pow(91.1867,2))*23.0/12.0/EvtConst::pi);
-  double omega9 = -2.0/9.0*EvtConst::pi*EvtConst::pi - 
-    4.0/3.0*EvtDiLog::DiLog(sh)
-    - 2.0/3.0*log(sh)*log(1.0-sh)
-    - (5.0+4.0*sh)/(3.0*(1.0+2.0*sh)) * log(1.0-sh)
-    - 2.0*sh*(1.0+sh)*(1.0-2.0*sh)
-    /(3.0*pow(1.0-sh,2)*(1.0+2.0*sh)) * log(sh)
-    + (5.0+9.0*sh-6.0*sh*sh)/(6.0*(1.0-sh)*(1.0+2.0*sh));
-
+  double omega9 = -2.0/9.0*EvtConst::pi*EvtConst::pi - 4.0/3.0*EvtDiLog::DiLog(sh)
+                 - 2.0/3.0*log(sh)*log(1.0-sh)
+                 - (5.0+4.0*sh)/(3.0*(1.0+2.0*sh)) * log(1.0-sh)
+                 - 2.0*sh*(1.0+sh)*(1.0-2.0*sh)
+                 /(3.0*pow(1.0-sh,2)*(1.0+2.0*sh)) * log(sh)
+                 + (5.0+9.0*sh-6.0*sh*sh)/(6.0*(1.0-sh)*(1.0+2.0*sh));
   double eta9 = 1.0 + alphas*omega9/EvtConst::pi;
   double omega7 = -8.0/3.0*log(4.8/mb)
-    -4.0/3.0*EvtDiLog::DiLog(sh) 
-    -2.0/9.0*EvtConst::pi*EvtConst::pi
-    -2.0/3.0*log(sh)*log(1.0-sh)
-    -log(1-sh)*(8.0+sh)/(2.0+sh)/3.0 
+                  -4.0/3.0*EvtDiLog::DiLog(sh) 
+                  -2.0/9.0*EvtConst::pi*EvtConst::pi
+                  -2.0/3.0*log(sh)*log(1.0-sh)
+                  -log(1-sh)*(8.0+sh)/(2.0+sh)/3.0 
     -2.0/3.0*sh*(2.0 - 2.0*sh - sh*sh)*log(sh)/pow((1.0 - sh),2)/(2.0 + sh)
     -(16.0 - 11.0*sh - 17.0*sh*sh)/18.0/(2.0 + sh)/(1.0 - sh);
   double eta7 = 1.0 + alphas*omega7/EvtConst::pi;
 
   double omega79 = -4.0/3.0*log(4.8/mb)
-    -4.0/3.0*EvtDiLog::DiLog(sh) 
-    -2.0/9.0*EvtConst::pi*EvtConst::pi
-    -2.0/3.0*log(sh)*log(1.0-sh)
-    -1.0/9.0*(2.0+7.0*sh)*log(1.0 - sh)/sh
-    -2.0/9.0*sh*(3.0 - 2.0*sh)*log(sh)/pow((1.0 - sh),2) 
-    +1.0/18.0*(5.0 - 9.0*sh)/(1.0 - sh);
+                   -4.0/3.0*EvtDiLog::DiLog(sh) 
+                   -2.0/9.0*EvtConst::pi*EvtConst::pi
+                   -2.0/3.0*log(sh)*log(1.0-sh)
+                   -1.0/9.0*(2.0+7.0*sh)*log(1.0 - sh)/sh
+                   -2.0/9.0*sh*(3.0 - 2.0*sh)*log(sh)/pow((1.0 - sh),2) 
+                   +1.0/18.0*(5.0 - 9.0*sh)/(1.0 - sh);
   double eta79 = 1.0 + alphas*omega79/EvtConst::pi;
 
   double c7c9 = abs(c7eff)*real(c9eff);
@@ -621,31 +623,29 @@ double EvtbTosllAmp::dGdsdupProb(double mb, double ms, double ml,
 
   double alphas = 0.119/
      (1 + 0.119*log(pow(4.8,2)/pow(91.1867,2))*23.0/12.0/EvtConst::pi);
-  double omega9 = - 2.0/9.0*EvtConst::pi*EvtConst::pi 
-    - 4.0/3.0*EvtDiLog::DiLog(sh)
-    - 2.0/3.0*log(sh)*log(1.0-sh)
-    - (5.0+4.0*sh)/(3.0*(1.0+2.0*sh)) * log(1.0-sh)
-    - 2.0*sh*(1.0+sh)*(1.0-2.0*sh)
-    /(3.0*pow(1.0-sh,2)*(1.0+2.0*sh)) * log(sh)
-    + (5.0+9.0*sh-6.0*sh*sh)/(6.0*(1.0-sh)*(1.0+2.0*sh));
+  double omega9 = - 2.0/9.0*EvtConst::pi*EvtConst::pi - 4.0/3.0*EvtDiLog::DiLog(sh)
+                 - 2.0/3.0*log(sh)*log(1.0-sh)
+                 - (5.0+4.0*sh)/(3.0*(1.0+2.0*sh)) * log(1.0-sh)
+                 - 2.0*sh*(1.0+sh)*(1.0-2.0*sh)
+                 /(3.0*pow(1.0-sh,2)*(1.0+2.0*sh)) * log(sh)
+                 + (5.0+9.0*sh-6.0*sh*sh)/(6.0*(1.0-sh)*(1.0+2.0*sh));
   double eta9 = 1.0 + alphas*omega9/EvtConst::pi;
-
   double omega7 = -8.0/3.0*log(4.8/mb)
-    -4.0/3.0*EvtDiLog::DiLog(sh) 
-    -2.0/9.0*EvtConst::pi*EvtConst::pi
-    -2.0/3.0*log(sh)*log(1.0-sh)
-    -log(1-sh)*(8.0+sh)/(2.0+sh)/3.0 
+                  -4.0/3.0*EvtDiLog::DiLog(sh) 
+                  -2.0/9.0*EvtConst::pi*EvtConst::pi
+                  -2.0/3.0*log(sh)*log(1.0-sh)
+                  -log(1-sh)*(8.0+sh)/(2.0+sh)/3.0 
     -2.0/3.0*sh*(2.0 - 2.0*sh - sh*sh)*log(sh)/pow((1.0 - sh),2)/(2.0 + sh)
     -(16.0 - 11.0*sh - 17.0*sh*sh)/18.0/(2.0 + sh)/(1.0 - sh);
   double eta7 = 1.0 + alphas*omega7/EvtConst::pi;
-  
+
   double omega79 = -4.0/3.0*log(4.8/mb)
-    -4.0/3.0*EvtDiLog::DiLog(sh) 
-    -2.0/9.0*EvtConst::pi*EvtConst::pi
-    -2.0/3.0*log(sh)*log(1.0-sh)
-    -1.0/9.0*(2.0+7.0*sh)*log(1.0 - sh)/sh
-    -2.0/9.0*sh*(3.0 - 2.0*sh)*log(sh)/pow((1.0 - sh),2) 
-    +1.0/18.0*(5.0 - 9.0*sh)/(1.0 - sh);
+                   -4.0/3.0*EvtDiLog::DiLog(sh) 
+                   -2.0/9.0*EvtConst::pi*EvtConst::pi
+                   -2.0/3.0*log(sh)*log(1.0-sh)
+                   -1.0/9.0*(2.0+7.0*sh)*log(1.0 - sh)/sh
+                   -2.0/9.0*sh*(3.0 - 2.0*sh)*log(sh)/pow((1.0 - sh),2) 
+                   +1.0/18.0*(5.0 - 9.0*sh)/(1.0 - sh);
   double eta79 = 1.0 + alphas*omega79/EvtConst::pi;
 
   double c7c9 = abs(c7eff)*real(c9eff);
@@ -681,4 +681,16 @@ double EvtbTosllAmp::dGdsdupProb(double mb, double ms, double ml,
 
   return prob;
 }
+
+
+
+
+
+
+
+
+
+
+
+
 

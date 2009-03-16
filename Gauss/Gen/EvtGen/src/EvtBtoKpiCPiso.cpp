@@ -18,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
@@ -28,9 +29,9 @@
 
 EvtBtoKpiCPiso::~EvtBtoKpiCPiso() {}
 
-void EvtBtoKpiCPiso::getName(std::string& model_name){
+std::string EvtBtoKpiCPiso::getName(){
 
-  model_name="BTOKPI_CP_ISO";     
+  return "BTOKPI_CP_ISO";     
 
 }
 

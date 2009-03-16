@@ -18,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
@@ -30,9 +31,9 @@
 
 EvtVSPPwave::~EvtVSPPwave() {}
 
-void EvtVSPPwave::getName(std::string& model_name){
+std::string EvtVSPPwave::getName(){
 
-  model_name="VSP_PWAVE";     
+  return "VSP_PWAVE";     
 
 }
 
@@ -71,11 +72,11 @@ void EvtVSPPwave::decay( EvtParticle *p){
   double m_p=p->mass();
   EvtVector4R momgamma = gamma->getP4();
 
-//work in the parent ,p,  rest frame.
+  //work in the parent ,p,  rest frame.
   EvtVector4R p4_p;
   p4_p.set(m_p, 0.0, 0.0, 0.0 );
 
-//  Put phase space results into the daughters.
+  //  Put phase space results into the daughters.
  
   EvtTensor4C tds;
 

@@ -1,7 +1,8 @@
+#include "EvtGenBase/EvtPatches.hh"
 /*******************************************************************************
  * Project: BaBar detector at the SLAC PEP-II B-factory
  * Package: EvtGenBase
- *    File: $Id: EvtTwoBodyKine.cpp,v 1.2 2004-07-12 16:13:34 robbep Exp $
+ *    File: $Id: EvtTwoBodyKine.cpp,v 1.3 2009-03-16 15:37:54 robbep Exp $
  *  Author: Alexei Dvoretskii, dvoretsk@slac.stanford.edu, 2001-2002
  *
  * Copyright (C) 2002 Caltech
@@ -12,6 +13,8 @@
 #include <math.h>
 #include "EvtGenBase/EvtTwoBodyKine.hh"
 #include "EvtGenBase/EvtReport.hh"
+using std::endl;
+using std::ostream;
 
 
 EvtTwoBodyKine::EvtTwoBodyKine()
@@ -23,7 +26,7 @@ EvtTwoBodyKine::EvtTwoBodyKine(double mA, double mB, double mAB)
 {
   if(mAB < mA + mB) {
 
-    report(INFO,"EvtGen") << mAB << " < " << mA << " + " << mB << std::endl;
+    report(INFO,"EvtGen") << mAB << " < " << mA << " + " << mB << endl;
     assert(0);
   }
 }
@@ -87,15 +90,15 @@ double EvtTwoBodyKine::e(Index i, Index j) const
 }
 
 
-void EvtTwoBodyKine::print(std::ostream& os) const
+void EvtTwoBodyKine::print(ostream& os) const
 {
-  os << " mA = " << _mA << std::endl;
-  os << " mB = " << _mB << std::endl;
-  os << "mAB = " << _mAB << std::endl;
+  os << " mA = " << _mA << endl;
+  os << " mB = " << _mB << endl;
+  os << "mAB = " << _mAB << endl;
 }
 
 
-std::ostream& operator<<(std::ostream& os, const EvtTwoBodyKine& p)
+ostream& operator<<(ostream& os, const EvtTwoBodyKine& p)
 {
   p.print(os);
   return os;

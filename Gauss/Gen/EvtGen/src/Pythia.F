@@ -20,7 +20,7 @@ C
 C------------------------------------------------------------------------
       SUBROUTINE EVTPYTHIAINIT(FNAME)
       IMPLICIT NONE
-CCC      EXTERNAL PYDATA
+      EXTERNAL PYDATA
       
       CHARACTER*(*) FNAME
       
@@ -31,62 +31,62 @@ CC      PRINT *,'PYUPDA : : ',FNAME
 CC      WRITE (*,*) 'PYUPDA DONE'
       RETURN
       END
-ccc      SUBROUTINE INITPYTHIA(GAGA)
-ccc      IMPLICIT NONE
-ccc      INTEGER PYCOMP
-ccc      EXTERNAL PYDATA,PYCOMP
-ccc      LOGICAL FIRST
-ccc      SAVE FIRST
-ccc      DATA FIRST / .TRUE. /
-ccc      DOUBLE PRECISION MAXIMUM
-ccc      COMMON/CBBEAM/MAXIMUM
-ccc      INTEGER IDC,GAGA
+CCC      SUBROUTINE INITPYTHIA(GAGA)
+CCC      IMPLICIT NONE
+CCC      INTEGER PYCOMP
+CCC      EXTERNAL PYDATA,PYCOMP
+CCC      LOGICAL FIRST
+CCC      SAVE FIRST
+CCC      DATA FIRST / .TRUE. /
+CCC      DOUBLE PRECISION MAXIMUM
+CCC      COMMON/CBBEAM/MAXIMUM
+CCC     INTEGER IDC,GAGA
 C...Decay information.
-ccc      INTEGER MDCY,MDME,KFDP
-ccc      DOUBLE PRECISION BRAT
-ccc      COMMON/PYDAT3/MDCY(500,3),MDME(8000,2),BRAT(8000),KFDP(8000,5)
+CCC      INTEGER MDCY,MDME,KFDP
+CCC      DOUBLE PRECISION BRAT
+CCC      COMMON/PYDAT3/MDCY(500,3),MDME(8000,2),BRAT(8000),KFDP(8000,5)
       
-ccc      CHARACTER CH1*16,CH2*16
+CCC      CHARACTER CH1*16,CH2*16
       
-ccc      INTEGER DC,CDC
+CCC      INTEGER DC,CDC
 C     order of DC is d u s c b t b' t' ...
 C     ... e nu_e mu nu_mu tau nu_tau tau' nu_tau'
-ccc      COMMON/DECAYCH/DC(18)
+CCC      COMMON/DECAYCH/DC(18)
       
-ccc      IF(FIRST) THEN
-ccc         MAXIMUM=10.6
-ccc         WRITE (*,*) "Decay of Z0/gamma to"
+CCC      IF(FIRST) THEN
+CCC         MAXIMUM=10.6
+CCC         WRITE (*,*) "Decay of Z0/gamma to"
 C...  Only allow Z0 decay to quarks (i.e. no leptonic final states).
 C     RS veto also b quarks
-ccc         DO IDC=MDCY(23,2),MDCY(23,2)+MDCY(23,3)-1
+CCC         DO IDC=MDCY(23,2),MDCY(23,2)+MDCY(23,3)-1
 C     first switch channel off
-ccc            MDME(IDC,1)=MIN(0,MDME(IDC,1))
-ccc            CDC=IABS(KFDP(IDC,1))
+CCC            MDME(IDC,1)=MIN(0,MDME(IDC,1))
+CCC            CDC=IABS(KFDP(IDC,1))
 C     then switch on again if requested
-ccc            CALL PYNAME(CDC,CH1)
-ccc            CALL PYNAME(-CDC,CH2)
-ccc            IF(DC(CDC).EQ.1) THEN
-ccc               MDME(IDC,1)=1
-ccc               WRITE (*,*) "  ",ch1,"+ ",ch2," ALLOWED"
-ccc            ELSE
-ccc               WRITE (*,*) "  ",ch1,"+ ",ch2," DISABLED"
-ccc            ENDIF
-ccc         ENDDO
+CCC            CALL PYNAME(CDC,CH1)
+CCC            CALL PYNAME(-CDC,CH2)
+CCC            IF(DC(CDC).EQ.1) THEN
+CCC               MDME(IDC,1)=1
+CCC               WRITE (*,*) "  ",ch1,"+ ",ch2," ALLOWED"
+CCC            ELSE
+CCC               WRITE (*,*) "  ",ch1,"+ ",ch2," DISABLED"
+CCC            ENDIF
+CCC         ENDDO
 C     CALL PYSTAT(2)
          
-ccc         IF(GAGA.EQ.0) THEN
-ccc            CALL PYINIT('CMS','E+','E-',MAXIMUM)
-ccc         ELSE
-ccc            CALL PYINIT('CMS','GAMMA/E+','GAMMA/E-',MAXIMUM)
-ccc         ENDIF
+CCC         IF(GAGA.EQ.0) THEN
+CCC            CALL PYINIT('CMS','E+','E-',MAXIMUM)
+CCC         ELSE
+CCC            CALL PYINIT('CMS','GAMMA/E+','GAMMA/E-',MAXIMUM)
+CCC         ENDIF
 C     CALL PYLIST(0)
 C         WRITE (*,*) 'done PYTHIA initialization'//
 C     >        ' with varying beam energy'
 C         WRITE (*,*) 'maximum allowed energy is ',MAXIMUM,' GeV'
-ccc         FIRST=.FALSE.
-ccc      ENDIF
-ccc      RETURN
-ccc      END
+CCC         FIRST=.FALSE.
+CCC     ENDIF
+CCC      RETURN
+CCC      END
       
 C--------------------------------------------------------------------------
 C
@@ -108,44 +108,42 @@ C    DJL/RYD     August 11, 1998         Module created
 C     26-Sep-2002 - RS : changed to PYTHIA
 C
 C------------------------------------------------------------------------
-      SUBROUTINE PYCONTINUUM(ENERGY,NDAUG,KF,PX,PY,PZ,E)
-      IMPLICIT NONE
-      DOUBLE PRECISION MAXIMUM
-      COMMON/CBBEAM/MAXIMUM
+CCC      SUBROUTINE PYCONTINUUM(ENERGY,NDAUG,KF,PX,PY,PZ,E)
+CCC      IMPLICIT NONE
+CCC      DOUBLE PRECISION MAXIMUM
+CCC      COMMON/CBBEAM/MAXIMUM
       
-      DOUBLE PRECISION P,V,GAMMA
-      COMMON/PYJETS/N,NPAD,K(4000,5),P(4000,5),V(4000,5)
+CCC      DOUBLE PRECISION P,V
+CCC      COMMON/PYJETS/N,NPAD,K(4000,5),P(4000,5),V(4000,5)
       
-      INTEGER MSTU,MSTJ
-      DOUBLE PRECISION PARU,PARJ
-      COMMON/PYDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200)
+CCC      INTEGER MSTU,MSTJ
+CCC      DOUBLE PRECISION PARU,PARJ
+CCC      COMMON/PYDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200)
       
-      INTEGER MSTP,MSTI
-      DOUBLE PRECISION PARP,PARI
-      COMMON/PYPARS/MSTP(200),PARP(200),MSTI(200),PARI(200)
+CCC      INTEGER MSTP,MSTI
+CCC      DOUBLE PRECISION PARP,PARI
+CCC      COMMON/PYPARS/MSTP(200),PARP(200),MSTI(200),PARI(200)
 C...Decay information.
-      INTEGER MDCY,MDME,KFDP
-      DOUBLE PRECISION BRAT
-      COMMON/PYDAT3/MDCY(500,3),MDME(8000,2),BRAT(8000),KFDP(8000,5)
+CCC      INTEGER MDCY,MDME,KFDP
+CCC      DOUBLE PRECISION BRAT
+CCC      COMMON/PYDAT3/MDCY(500,3),MDME(8000,2),BRAT(8000),KFDP(8000,5)
       
-      INTEGER N,NPAD,K,IMSTJ,LASTPRODFLAV,IDC
-      SAVE LastProdFLav
-      DATA LastProdFLav / 0 /
+CCC      INTEGER N,NPAD,K,IMSTJ
       
-      REAL*8 PXSUM,PYSUM,PZSUM
+CCC      REAL*8 PXSUM,PYSUM,PZSUM
       
-      REAL*8 ENERGY,PBEAM
+CCC      REAL*8 ENERGY
       
-      INTEGER PYCOMP
-      EXTERNAL PYCOMP
+CCC      INTEGER PYCOMP
+CCC      EXTERNAL PYCOMP
       
-      INTEGER FLAVOR,KF(100),I,NDAUG,ISTART
-      REAL*8  PX(100),PY(100),PZ(100),E(100)
+CCC      INTEGER KF(100),I,NDAUG
+CCC      REAL*8  PX(100),PY(100),PZ(100),E(100)
 
 C     RS Particles should not decay at this stage
 C     but remember the previous setting
-      IMSTJ=MSTJ(21)
-      MSTJ(21)=0
+CCC      IMSTJ=MSTJ(21)
+CCC      MSTJ(21)=0
       
 C      IF(FLAVOR.NE.LastProdFLav) THEN
 C...  Only allow Z0 decay to decay to certain flavour
@@ -155,50 +153,50 @@ C     >           MDME(IDC,1)=MIN(0,MDME(IDC,1))
 C         ENDDO
 C      ENDIF
       
- 4    PARP(171)=Energy/Maximum
-      CALL PYEVNT
+CCC 4    PARP(171)=Energy/Maximum
+CCC      CALL PYEVNT
       
 C--- only primary quarks and stable particles remain in the event record
-      CALL PYEDIT(5)
+CCC      CALL PYEDIT(5)
       
 C     RS and allow decays
-      MSTJ(21)=IMSTJ
+CCC      MSTJ(21)=IMSTJ
       
-      NDAUG=0
+CCC      NDAUG=0
 C     sum to check that we preserve momentum
-      PXSUM=0.0
-      PYSUM=0.0
-      PZSUM=0.0
+CCC      PXSUM=0.0
+CCC      PYSUM=0.0
+CCC      PZSUM=0.0
       
-      DO 1,I=1,N
-         NDAUG=NDAUG+1
-         KF(NDAUG)=K(I,2)
-         PX(NDAUG)=P(I,1)
-         PY(NDAUG)=P(I,2)
-         PZ(NDAUG)=P(I,3)
-         E(NDAUG) =P(I,4)
-         IF(K(I,1).LT.10)THEN
-            PXSUM=PXSUM+PX(NDAUG)
-            PYSUM=PYSUM+PY(NDAUG)
-            PZSUM=PZSUM+PZ(NDAUG)
-         ENDIF
-1     CONTINUE
+CCC      DO 1,I=1,N
+CCC         NDAUG=NDAUG+1
+CCC         KF(NDAUG)=K(I,2)
+CCC         PX(NDAUG)=P(I,1)
+CCC         PY(NDAUG)=P(I,2)
+CCC         PZ(NDAUG)=P(I,3)
+CCC         E(NDAUG) =P(I,4)
+CCC         IF(K(I,1).LT.10)THEN
+CCC            PXSUM=PXSUM+PX(NDAUG)
+CCC            PYSUM=PYSUM+PY(NDAUG)
+CCC            PZSUM=PZSUM+PZ(NDAUG)
+CCC         ENDIF
+CCC1     CONTINUE
       
-      IF (ABS(PXSUM).GT.0.001.OR.
-     +       ABS(PYSUM).GT.0.001.OR.
-     +       ABS(PZSUM).GT.0.001) THEN
+CCC      IF (ABS(PXSUM).GT.0.001.OR.
+CCC     +       ABS(PYSUM).GT.0.001.OR.
+CCC     +       ABS(PZSUM).GT.0.001) THEN
 
 
-         PRINT *, 'Momentum not conserved in jetset fragmentation:'
-         PRINT *,'dPx:',pxsum,' dPy:',pysum,' dPz:',pzsum
+CCC      PRINT *, 'Momentum not conserved in jetset fragmentation:'
+CCC         PRINT *,'dPx:',pxsum,' dPy:',pysum,' dPz:',pzsum
 
-         CALL PYLIST(2)
+CCC         CALL PYLIST(2)
 
-         GOTO 4
+CCC         GOTO 4
          
-      ENDIF
-      RETURN
-      END
+CCC      ENDIF
+CCC      RETURN
+CCC      END
 C--------------------------------------------------------------------------
 C
 C Environment:
@@ -234,10 +232,7 @@ C
       SAVE /PYDAT1/
       DOUBLE PRECISION P,V
       COMMON/PYJETS/N,NPAD,K(4000,5),P(4000,5),V(4000,5)
-      INTEGER MINT
-      DOUBLE PRECISION VINT
-      COMMON/PYINT1/MINT(400),VINT(400)
-
+      
       INTEGER N,NPAD,K
       
       INTEGER NDMAX
@@ -248,12 +243,13 @@ C
       
       INTEGER IP,KF(NDMAX),I,NDAUG,KM(NDMAX)
       INTEGER KP,KID,IPART1,IPART
-      DOUBLE PRECISION  M,PX(NDMAX),PY(NDMAX),PZ(NDMAX),E(NDMAX)
+      REAL*8  M,PX(NDMAX),PY(NDMAX),PZ(NDMAX),E(NDMAX)
       
       INTEGER IP1,IMSTJ
       DOUBLE PRECISION QMAX
       
 C      CALL PY1ENT(1,IP,M,0D0,0D0)
+ 
       K(1,1)=1
       K(1,2)=ip
       P(1,5)=m
@@ -273,21 +269,22 @@ C     but remember the previous setting
 C     RS and allow decays
       MSTJ(21)=IMSTJ
 
+
+
+
 C code copied from LUEXEC to avoid error with shower
 C switched on
 C...Decay products may develop a shower.
         IF(MSTJ(92).GT.0) THEN
           IP1=MSTJ(92)
-          QMAX=SQRT(MAX(0.D0,(P(IP1,4)+P(IP1+1,4))**2-(P(IP1,1)+P(IP1+1,
+          QMAX=SQRT(MAX(0.,(P(IP1,4)+P(IP1+1,4))**2-(P(IP1,1)+P(IP1+1,
      &    1))**2-(P(IP1,2)+P(IP1+1,2))**2-(P(IP1,3)+P(IP1+1,3))**2))
-	  MINT(33)=0
           CALL PYSHOW(IP1,IP1+1,QMAX)
           CALL PYPREP(IP1)
           MSTJ(92)=0
         ELSEIF(MSTJ(92).LT.0) THEN
           IP1=-MSTJ(92)
-          MINT(33)=0
-          CALL PYSHOW(IP1,-3,P(1,5))
+          CALL PYSHOW(IP1,-3,P(IP,5))
           CALL PYPREP(IP1)
           MSTJ(92)=0
         ENDIF
@@ -352,4 +349,3 @@ C      ENDDO
 
       RETURN
       END
- 

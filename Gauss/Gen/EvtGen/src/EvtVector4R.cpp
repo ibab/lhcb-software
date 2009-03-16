@@ -18,11 +18,16 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <iostream>
 #include <math.h>
 #include <assert.h>
 #include "EvtGenBase/EvtVector4R.hh"
 #include "EvtGenBase/EvtVector3R.hh"
+#include "EvtGenBase/EvtVector4C.hh"
+#include "EvtGenBase/EvtTensor4C.hh"
+
+using std::ostream;
 
 
 
@@ -92,7 +97,7 @@ void EvtVector4R::applyRotateEuler(double phi,double theta,double ksi){
   
 }
 
-std::ostream& operator<<(std::ostream& s, const EvtVector4R& v){
+ostream& operator<<(ostream& s, const EvtVector4R& v){
 
   s<<"("<<v.v[0]<<","<<v.v[1]<<","<<v.v[2]<<","<<v.v[3]<<")";
 
@@ -205,4 +210,43 @@ double EvtVector4R::dot ( const EvtVector4R& p2 )const{
   return temp;
 
 } //dot
+
+// Functions below added by AJB
+
+// Calculate ( \vec{p1} cross \vec{p2} ) \cdot \vec{p3} in rest frame of object
+double EvtVector4R::scalartripler3( const EvtVector4R& p1,
+        const EvtVector4R& p2, const EvtVector4R& p3 ) const
+{
+    EvtVector4C lc=dual(directProd(*this, p1)).cont2(p2);
+    EvtVector4R  l(real(lc.get(0)), real(lc.get(1)), real(lc.get(2)),
+            real(lc.get(3)));
+
+    return -1.0/mass() * (l * p3);
+}
+
+// Calculate the 3-d dot product of 4-vectors p1 and p2 in the rest frame of
+// 4-vector p0
+double EvtVector4R::dotr3( const EvtVector4R& p1, const EvtVector4R& p2 ) const
+{
+    return 1/mass2() * ((*this) * p1) * ((*this) * p2) - p1 * p2;
+}
+
+// Calculate the 3-d magnitude squared of 4-vector p1 in the rest frame of
+// 4-vector p0
+double EvtVector4R::mag2r3( const EvtVector4R& p1 ) const
+{
+    return Square((*this) * p1)/mass2() - p1.mass2();
+}
+
+// Calculate the 3-d magnitude 4-vector p1 in the rest frame of 4-vector p0.
+double EvtVector4R::magr3( const EvtVector4R& p1 ) const
+{
+    return sqrt(mag2r3(p1));
+}
+
+
+
+
+
+
 

@@ -21,6 +21,7 @@
 //                                                     EvtGen
 //
 //------------------------------------------------------------------------
+#include "EvtGenBase/EvtPatches.hh"
 
 #include "EvtGenModels/EvtItgSimpsonIntegrator.hh"
 
@@ -42,6 +43,7 @@ extern "C" {
 
 #include "EvtGenModels/EvtItgAbsFunction.hh"
 #include "EvtGenBase/EvtReport.hh"
+using std::endl;
 
 
 EvtItgSimpsonIntegrator::EvtItgSimpsonIntegrator(const EvtItgAbsFunction &theFunction, double precision, int maxLoop):
@@ -61,7 +63,7 @@ EvtItgSimpsonIntegrator::~EvtItgSimpsonIntegrator()
 double
 EvtItgSimpsonIntegrator::evaluateIt(double lower, double higher) const{
   
-  // report(INFO,"EvtGen")<<"in evaluate"<<std::endl;
+  // report(INFO,"EvtGen")<<"in evaluate"<<endl;
   int j;
   double result(0.0);
   double s, st, ost(0.0);
@@ -90,7 +92,7 @@ EvtItgSimpsonIntegrator::evaluateIt(double lower, double higher) const{
   }
   
   report(ERROR,"EvtGen") << "Severe error in EvtItgSimpsonIntegrator.  Failed to converge after loop with 2**"
-		 << _maxLoop << " calls to the integrand in." << std::endl;
+		 << _maxLoop << " calls to the integrand in." << endl;
   
   return 0.0;
     

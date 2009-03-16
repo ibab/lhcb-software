@@ -21,11 +21,12 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtRandom.hh"
 #include "EvtGenBase/EvtGenKine.hh"
-#include "EvtGenBase/EvtIncoherentMixing.hh"
+#include "EvtGenBase/EvtCPUtil.hh"
 #include "EvtGenBase/EvtPDL.hh"
 #include "EvtGenBase/EvtReport.hh"
 #include "EvtGenBase/EvtVector4C.hh"
@@ -36,9 +37,9 @@
 
 EvtSVSCPiso::~EvtSVSCPiso() {}
 
-void EvtSVSCPiso::getName(std::string& model_name){
+std::string EvtSVSCPiso::getName(){
 
-  model_name="SVS_CP_ISO";     
+  return "SVS_CP_ISO";     
 
 }
 
@@ -96,12 +97,9 @@ if ((EvtPDL::chg3(getDaug(0)) < 0) && (EvtPDL::chg3(getDaug(1)) > 0)) {
 }
 
 if ((EvtPDL::chg3(getDaug(0)) == 0) && (EvtPDL::chg3(getDaug(1)) == 0)) {
-   setProbMax(2.0*(getArg(7)*getArg(7) + getArg(3)*getArg(3) 
-                   + getArg(11)*getArg(11) + 
-                  getArg(15)*getArg(15) + 4.0*getArg(19)*getArg(19) 
-                   + getArg(9)*getArg(9)+
-                   getArg(5)*getArg(5) + getArg(13)*getArg(13) 
-                   + getArg(17)*getArg(17) + 
+   setProbMax(2.0*(getArg(7)*getArg(7) + getArg(3)*getArg(3) + getArg(11)*getArg(11) + 
+                  getArg(15)*getArg(15) + 4.0*getArg(19)*getArg(19) + getArg(9)*getArg(9)+
+                   getArg(5)*getArg(5) + getArg(13)*getArg(13) + getArg(17)*getArg(17) + 
                    4.0*getArg(21)*getArg(21)));
 }
 
@@ -116,7 +114,7 @@ void EvtSVSCPiso::decay( EvtParticle *p){
 
   double t;
   EvtId other_b;
-  int charged(10);
+  int charged(0);
 
   int first_time=0;
   int flip=0;
@@ -125,7 +123,17 @@ void EvtSVSCPiso::decay( EvtParticle *p){
 
 //randomly generate the tag (B0 or B0B) 
 
-  EvtIncoherentMixing::OtherB(p,t,other_b,0.5);
+   double tag = EvtRandom::Flat(0.0,1.0);
+   if (tag < 0.5) {
+ 
+    EvtCPUtil::OtherB(p,t,other_b,1.0);
+    other_b = B0;
+   }
+   else {
+    
+    EvtCPUtil::OtherB(p,t,other_b,0.0);
+    other_b = B0B;
+   }
 
   if (p->getNDaug()==0) first_time=1;
 

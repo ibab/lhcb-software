@@ -20,6 +20,7 @@
 //    Adlene Hicheur       January 10, 2001       Module created
 //------------------------------------------------------------------------
 //
+#include "EvtGenBase/EvtPatches.hh"
 
 #include <stdlib.h>
 #include "EvtGenBase/EvtRandom.hh"
@@ -30,12 +31,13 @@
 #include "EvtGenModels/EvtBtoXsEtap.hh"
 #include <string>
 #include "EvtGenBase/EvtConst.hh"
+using std::endl;
 
 EvtBtoXsEtap::~EvtBtoXsEtap() {}
 
-void EvtBtoXsEtap::getName(std::string& model_name){
+std::string EvtBtoXsEtap::getName(){
 
-  model_name="BTOXSETAP";     
+  return "BTOXSETAP";     
 
 }
 
@@ -64,7 +66,7 @@ void EvtBtoXsEtap::decay( EvtParticle *p ){
   // useless
   //  if ( p->getNDaug() != 0 ) {
   //  //Will end up here because maxrate multiplies by 1.2
-  //  report(DEBUG,"EvtGen") << "In EvtBtoXsEtap: X_s daughters should not be here!"<<std::endl;
+  //  report(DEBUG,"EvtGen") << "In EvtBtoXsEtap: X_s daughters should not be here!"<<endl;
   //  return;
   //}
 
@@ -86,7 +88,7 @@ void EvtBtoXsEtap::decay( EvtParticle *p ){
 
   mass[1] = EvtPDL::getMass(getDaug(1));
 
-  double xbox, ybox, /*alifit,*/ min, max,hichfit;
+  double xbox, ybox, min, max,hichfit;
   min=0.493;
   max=4.3;
   const double TwoPi = EvtConst::twoPi;
@@ -125,7 +127,7 @@ void EvtBtoXsEtap::decay( EvtParticle *p ){
     //    par[16]=1000.8093261719;
     //    par[17]=-53.834449768066;
   } else {
-    report(DEBUG,"EvtGen") << "In EvtBtoXsEtap: Particle with id " << Xscode << " is not a Xsd/u particle"<<std::endl;
+    report(DEBUG,"EvtGen") << "In EvtBtoXsEtap: Particle with id " << Xscode << " is not a Xsd/u particle"<<endl;
     return;
   }
 
@@ -155,7 +157,7 @@ void EvtBtoXsEtap::decay( EvtParticle *p ){
     }
   }
 
-  // debug stuff:  report(INFO,"EvtGen") << "Xscode " << Xscode << " daughter 1 mass " << mass[0] << " daughter 2 mass " << mass[1] << std::endl;
+  // debug stuff:  report(INFO,"EvtGen") << "Xscode " << Xscode << " daughter 1 mass " << mass[0] << " daughter 2 mass " << mass[1] << endl;
 
   EvtGenKine::PhaseSpace( getNDaug(), mass, p4, m_b );
 

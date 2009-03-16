@@ -19,10 +19,11 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
-#include "EvtGenBase/EvtIncoherentMixing.hh"
+#include "EvtGenBase/EvtCPUtil.hh"
 #include "EvtGenBase/EvtTensor4C.hh"
 #include "EvtGenBase/EvtVector4C.hh"
 #include "EvtGenBase/EvtPDL.hh"
@@ -34,9 +35,9 @@
 
 EvtSTSCP::~EvtSTSCP() {}
 
-void EvtSTSCP::getName(std::string& model_name){
+std::string EvtSTSCP::getName(){
 
-  model_name="STS_CP";     
+  return "STS_CP";     
 
 }
 
@@ -85,7 +86,7 @@ void EvtSTSCP::decay( EvtParticle *p){
   EvtVector4R moms = p->getDaug(1)->getP4();
   double masst = t1->mass();
 
-  EvtIncoherentMixing::OtherB(p,t,other_b,0.5);
+  EvtCPUtil::OtherB(p,t,other_b);
 
   double m_parent = p->mass();
 

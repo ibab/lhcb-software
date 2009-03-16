@@ -19,11 +19,12 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtRandom.hh"
 #include "EvtGenBase/EvtGenKine.hh"
-#include "EvtGenBase/EvtIncoherentMixing.hh"
+#include "EvtGenBase/EvtCPUtil.hh"
 #include "EvtGenBase/EvtPDL.hh"
 #include "EvtGenBase/EvtReport.hh"
 #include "EvtGenBase/EvtVector4C.hh"
@@ -33,9 +34,9 @@
 
 EvtSVSNONCPEIGEN::~EvtSVSNONCPEIGEN() {}
 
-void EvtSVSNONCPEIGEN::getName(std::string& model_name){
+std::string EvtSVSNONCPEIGEN::getName(){
 
-  model_name="SVS_NONCPEIGEN";     
+  return "SVS_NONCPEIGEN";     
 
 }
 
@@ -52,20 +53,11 @@ void EvtSVSNONCPEIGEN::init(){
   checkNArg(11,7);
   checkNDaug(2);
 
-  if ( getParentId() != EvtPDL::getId("B0") ) {
-    report(ERROR, "EvtGen") << "EvtSVSNONCPEIGEN cannot decay "
-			    << EvtPDL::name(getParentId()).c_str() 
-			    << ". Must be specified to decay"
-			    << " only B0 or a B0 alias." << std::endl;
-    report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
-    ::abort();
-  }
-
   checkSpinDaughter(0,EvtSpinType::VECTOR);
   checkSpinDaughter(1,EvtSpinType::SCALAR);
 
   _dm=getArg(1);
-  _phickm=getArg(0);
+  _phickm=2*getArg(0)+getArg(2);
 
   _A_f=EvtComplex(getArg(3)*cos(getArg(4)),getArg(3)*sin(getArg(4)));
   _Abar_f=EvtComplex(getArg(5)*cos(getArg(6)),getArg(5)*sin(getArg(6)));
@@ -99,60 +91,50 @@ void EvtSVSNONCPEIGEN::decay( EvtParticle *p){
   EvtId other_b;
   EvtId daugs[2];
 
-  int flip=0;
-  if (EvtRandom::Flat(0.0,1.0)<getArg(2)) flip=1;
-
-  if (!flip) {
-    daugs[0]=getDaug(0);
-    daugs[1]=getDaug(1);
-  }
-  else{
-    daugs[0]=EvtPDL::chargeConj(getDaug(0));
-    daugs[1]=EvtPDL::chargeConj(getDaug(1));
-  }
-
-  EvtParticle *v;
+  // MB: flip selects the final of the decay
+  int flip = ((p->getId() == B0) ? 0 : 1);
+  daugs[0]=getDaug(0);
+  daugs[1]=getDaug(1);
   p->initializePhaseSpace(2, daugs);
-  v= p->getDaug(0);
-  EvtVector4R momv = v->getP4();
-  EvtVector4R moms = p->getDaug(1)->getP4();
-  
-  EvtComplex amp;
 
-  EvtIncoherentMixing::OtherB(p,t,other_b,0.5);
-  
+  EvtCPUtil::OtherB(p,t,other_b,0.5);
+
+  EvtComplex amp;
+  double dmt2 = (_dm * t) / (2 * EvtConst::c);
+  EvtComplex ePlusIPhi(cos(_phickm), sin(_phickm));
+  EvtComplex eMinusIPhi(cos(-_phickm), -sin(_phickm));
+
+  // flip == 0 : D-rho+
+  // flip == 1 : D+rho-
+
    if (!flip) {
      if (other_b==B0B){
-
-       amp=_A_f*cos(_dm*t/(2*EvtConst::c))+
-	 EvtComplex(cos(-2.0*_phickm),sin(-2.0*_phickm))*
-	 EvtComplex(0.0,1.0)*_Abar_f*sin(_dm*t/(2*EvtConst::c));
+       // At t=0 we have a B0
+       amp = cos(dmt2)*_A_f + eMinusIPhi*EvtComplex(0.0,sin(dmt2))*_Abar_f;
      }
      if (other_b==B0){
-            
-       amp=_A_f*EvtComplex(cos(2.0*_phickm),sin(2.0*_phickm))*
-	 EvtComplex(0.0,1.0)*sin(_dm*t/(2*EvtConst::c))+       
-	 _Abar_f*cos(_dm*t/(2*EvtConst::c));
+       // At t=0 we have a B0bar
+       amp = ePlusIPhi*EvtComplex(0.0,sin(dmt2))*_A_f + cos(dmt2)*_Abar_f;
      }
    }
    else{
      if (other_b==B0B){
-
-       amp=_A_fbar*cos(_dm*t/(2*EvtConst::c))+
-	 EvtComplex(cos(-2.0*_phickm),sin(-2.0*_phickm))*
-	 EvtComplex(0.0,1.0)*_Abar_fbar*sin(_dm*t/(2*EvtConst::c));
+       // At t=0 we have a B0
+       amp = cos(dmt2)*_A_fbar + eMinusIPhi*EvtComplex(0.0,sin(dmt2))*_Abar_fbar;
      }
      if (other_b==B0){
-
-       amp=_A_fbar*EvtComplex(cos(2.0*_phickm),sin(2.0*_phickm))*
-	 EvtComplex(0.0,1.0)*sin(_dm*t/(2*EvtConst::c))+       
-	 _Abar_fbar*cos(_dm*t/(2*EvtConst::c));
+       // At t=0 we have a B0bar
+       amp = ePlusIPhi*EvtComplex(0.0,sin(dmt2))*_A_fbar + cos(dmt2)*_Abar_fbar;
      }
    }
 
-  EvtVector4R p4_parent;
 
-  p4_parent=momv+moms;
+  EvtParticle *v;
+  v= p->getDaug(0);
+
+  EvtVector4R momv = p->getDaug(0)->getP4();
+  EvtVector4R moms = p->getDaug(1)->getP4();
+  EvtVector4R p4_parent=momv+moms;
 
   double norm=momv.mass()/(momv.d3mag()*p->mass());
 

@@ -18,6 +18,7 @@
 //
 //      Jane Tinslay       March 21, 2001       Module created
 //------------------------------------------------------------------------
+#include "EvtGenBase/EvtPatches.hh"
 
 //-----------------------
 // This Class's Header --
@@ -34,26 +35,27 @@
 //---------------
 #include <iostream>
 #include <math.h>
+using std::endl;
 
-double EvtBtoXsgammaFermiUtil::FermiExpFunc(double y, const HepVector &coeffs) {
+double EvtBtoXsgammaFermiUtil::FermiExpFunc(double y, const std::vector<double> &coeffs) {
 
   //coeffs: 1 = lambdabar, 2 = a, 3 = lam1, 4 = norm
-  // report(INFO,"EvtGen")<<coeffs[4]<<std::endl;
+  // report(INFO,"EvtGen")<<coeffs[4]<<endl;
   return (pow(1. - (y/coeffs[1]),coeffs[2])*exp((-3.*pow(coeffs[1],2.)/coeffs[3])*y/coeffs[1]))/coeffs[4];
 
 }
 
-double EvtBtoXsgammaFermiUtil::FermiGaussFunc(double y, const HepVector &coeffs) {
+double EvtBtoXsgammaFermiUtil::FermiGaussFunc(double y, const std::vector<double> &coeffs) {
 
   //coeffs: 1 = lambdabar, 2 = a, 3 = c, 4 = norm
   return (pow(1. - (y/coeffs[1]),coeffs[2])*exp(-pow(coeffs[3],2.)*pow(1. - (y/coeffs[1]),2.)))/coeffs[4];
 
 }
 
-double EvtBtoXsgammaFermiUtil::FermiGaussFuncRoot(double lambdabar, double lam1, double mb, HepVector &gammaCoeffs) {
+double EvtBtoXsgammaFermiUtil::FermiGaussFuncRoot(double lambdabar, double lam1, double mb, std::vector<double> &gammaCoeffs) {
  
-  HepVector coeffs1(3);
-  HepVector coeffs2(3);
+  std::vector<double> coeffs1(3);
+  std::vector<double> coeffs2(3);
 
   coeffs1[0]=0.2;
   coeffs1[1]=lambdabar;
@@ -77,7 +79,7 @@ double EvtBtoXsgammaFermiUtil::FermiGaussFuncRoot(double lambdabar, double lam1,
 
 }
 
-double EvtBtoXsgammaFermiUtil::FermiGaussRootFcnA(double y, const HepVector &coeffs1, const HepVector &coeffs2) {
+double EvtBtoXsgammaFermiUtil::FermiGaussRootFcnA(double y, const std::vector<double> &coeffs1, const std::vector<double> &coeffs2) {
 
   
   //coeffs1: 0=ap, 1=lambdabar, coeffs2=gamma function coeffs
@@ -87,7 +89,7 @@ double EvtBtoXsgammaFermiUtil::FermiGaussRootFcnA(double y, const HepVector &coe
 
 }
 
-double EvtBtoXsgammaFermiUtil::FermiGaussRootFcnB(double y, const HepVector &coeffs1, const HepVector &coeffs2) {
+double EvtBtoXsgammaFermiUtil::FermiGaussRootFcnB(double y, const std::vector<double> &coeffs1, const std::vector<double> &coeffs2) {
 
   //coeffs1: 0=ap, 1=lambdabar, coeffs2=gamma function coeffs
   double cp = Gamma((2.0 + coeffs1[0])/2., coeffs2)/Gamma((1.0 + coeffs1[0])/2., coeffs2);
@@ -95,7 +97,7 @@ double EvtBtoXsgammaFermiUtil::FermiGaussRootFcnB(double y, const HepVector &coe
 
 }
 
-double EvtBtoXsgammaFermiUtil::Gamma(double z, const HepVector &coeffs) {
+double EvtBtoXsgammaFermiUtil::Gamma(double z, const std::vector<double> &coeffs) {
 
   //Lifted from Numerical Recipies in C
   double x, y, tmp, ser;
@@ -121,7 +123,7 @@ double EvtBtoXsgammaFermiUtil::BesselK1(double x) {
 
   //Lifted from Numerical Recipies in C : Returns the modified Bessel
   //function K_1(x) for positive real x
-  if (x<0.0) report(INFO,"EvtGen") <<"x is negative !"<<std::endl;
+  if (x<0.0) report(INFO,"EvtGen") <<"x is negative !"<<endl;
   
   double y, ans;
 
@@ -144,7 +146,8 @@ double EvtBtoXsgammaFermiUtil::BesselI1(double x) {
   double ax, ans;
   double y;
 
-  if ((ax=fabs(x)) < 3.75) {
+  ax=fabs(x);
+  if ( ax  < 3.75) {
     y=x/3.75;
     y*=y;
     ans=ax*(0.5+y*(0.87890594+y*(0.51498869+y*(0.15084934+y*(0.2658733e-1+y*(0.301532e-2+y*0.32411e-3))))));
@@ -167,9 +170,9 @@ double EvtBtoXsgammaFermiUtil::FermiRomanFuncRoot(double lambdabar, double lam1)
 
   double rho = rootFinder->GetRootSingleFunc(lhFunc, rhSide, 0.1, 0.4, 1.0e-6);
   //rho=0.250353;
-  report(INFO,"EvtGen")<<"rho/2 "<<rho/2.<<" bessel "<<BesselK1(rho/2.)<<std::endl;
+  report(INFO,"EvtGen")<<"rho/2 "<<rho/2.<<" bessel "<<BesselK1(rho/2.)<<endl;
   double pF = lambdabar*sqrt(EvtConst::pi)/(rho*exp(rho/2.)*BesselK1(rho/2.));
-  report(INFO,"EvtGen")<<"rho "<<rho<<" pf "<<pF<<std::endl;
+  report(INFO,"EvtGen")<<"rho "<<rho<<" pf "<<pF<<endl;
   
   delete lhFunc; lhFunc=0;
   delete rootFinder; rootFinder=0;
@@ -182,25 +185,25 @@ double EvtBtoXsgammaFermiUtil::FermiRomanRootFcnA(double y) {
    return EvtConst::pi*(2. + y)*pow(y,-2.)*exp(-y)*pow(BesselK1(y/2.),-2.);
 
 }
-double EvtBtoXsgammaFermiUtil::FermiRomanFunc(double y, const HepVector &coeffs) {
+double EvtBtoXsgammaFermiUtil::FermiRomanFunc(double y, const std::vector<double> &coeffs) {
   if (y == (coeffs[1]-coeffs[2])) y=0.99999999*(coeffs[1]-coeffs[2]);
 
   //coeffs: 1 = mB, 2=mb, 3=rho, 4=lambdabar, 5=norm
   double pF = coeffs[4]*sqrt(EvtConst::pi)/(coeffs[3]*exp(coeffs[3]/2.)*BesselK1(coeffs[3]/2.));
-  //  report(INFO,"EvtGen")<<" pf "<<y<<" "<<pF<<" "<<coeffs[1]<<" "<<coeffs[2]<<" "<<coeffs[3]<<" "<<coeffs[4]<<" "<<coeffs[5]<<std::endl;
+  //  report(INFO,"EvtGen")<<" pf "<<y<<" "<<pF<<" "<<coeffs[1]<<" "<<coeffs[2]<<" "<<coeffs[3]<<" "<<coeffs[4]<<" "<<coeffs[5]<<endl;
   //double pF=0.382533;
 
-  //report(INFO,"EvtGen")<<(coeffs[1]-coeffs[2])*(1./(sqrt(EvtConst::pi)*pF))<<std::endl;
-  //report(INFO,"EvtGen")<<(1.-y/(coeffs[1]-coeffs[2]))<<std::endl;
-  //report(INFO,"EvtGen")<<(coeffs[1]-coeffs[2])<<std::endl;
-  //report(INFO,"EvtGen")<<(coeffs[1]-coeffs[2])*(1.-y/(coeffs[1]-coeffs[2]))<<std::endl;
+  //report(INFO,"EvtGen")<<(coeffs[1]-coeffs[2])*(1./(sqrt(EvtConst::pi)*pF))<<endl;
+  //report(INFO,"EvtGen")<<(1.-y/(coeffs[1]-coeffs[2]))<<endl;
+  //report(INFO,"EvtGen")<<(coeffs[1]-coeffs[2])<<endl;
+  //report(INFO,"EvtGen")<<(coeffs[1]-coeffs[2])*(1.-y/(coeffs[1]-coeffs[2]))<<endl;
 
-  //report(INFO,"EvtGen")<<" "<<pF*coeffs[3]/((coeffs[1]-coeffs[2])*(1.-y/(coeffs[1]-coeffs[2])))<<std::endl;
-  // report(INFO,"EvtGen")<<" "<<((coeffs[1]-coeffs[2])/pF)*(1. -y/(coeffs[1]-coeffs[2]))<<std::endl;
+  //report(INFO,"EvtGen")<<" "<<pF*coeffs[3]/((coeffs[1]-coeffs[2])*(1.-y/(coeffs[1]-coeffs[2])))<<endl;
+  // report(INFO,"EvtGen")<<" "<<((coeffs[1]-coeffs[2])/pF)*(1. -y/(coeffs[1]-coeffs[2]))<<endl;
 
   //report(INFO,"EvtGen")<<"result "<<(coeffs[1]-coeffs[2])*(1./(sqrt(EvtConst::pi)*pF))*exp(-(1./4.)*pow(pF*(coeffs[3]/((coeffs[1]-coeffs[2])*(1.-y/(coeffs[1]-coeffs[2])))) - ((coeffs[1]-coeffs[2])/pF)*(1. -y/(coeffs[1]-coeffs[2])),2.))/coeffs[5];
 
-  //report(INFO,"EvtGen")<<"leaving"<<std::endl;
+  //report(INFO,"EvtGen")<<"leaving"<<endl;
   return (coeffs[1]-coeffs[2])*(1./(sqrt(EvtConst::pi)*pF))*exp(-(1./4.)*pow(pF*(coeffs[3]/((coeffs[1]-coeffs[2])*(1.-y/(coeffs[1]-coeffs[2])))) - ((coeffs[1]-coeffs[2])/pF)*(1. -y/(coeffs[1]-coeffs[2])),2.))/coeffs[5];
  
 

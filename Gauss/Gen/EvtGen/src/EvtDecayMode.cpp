@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------
 // File and Version Information: 
-//      $Id: EvtDecayMode.cpp,v 1.2 2004-07-12 16:13:29 robbep Exp $
+//      $Id: EvtDecayMode.cpp,v 1.3 2009-03-16 15:53:27 robbep Exp $
 // 
 // Environment:
 //      This software is part of the EvtGen package developed jointly
@@ -13,6 +13,7 @@
 // Module creator:
 //      Alexei Dvoretskii, Caltech, 2001-2002.
 //-----------------------------------------------------------------------
+#include "EvtGenBase/EvtPatches.hh"
 
 // Parses a decay string to identify the name
 // of the mother and of the daughters. The string should 
@@ -23,34 +24,24 @@
 #include <iostream>
 #include "EvtGenBase/EvtDecayMode.hh"
 #include "EvtGenBase/EvtReport.hh"
+using std::endl;
+using std::ostream;
 
 using std::string;
 using std::vector;
 
 
 EvtDecayMode::EvtDecayMode(std::string mother,vector<string> dau)
-  : _mother(mother)
+  : _mother(mother),
+    _dau(dau)
 {
-  unsigned i;
-  for(i=0;i<dau.size();i++) {
-    
-    string s;
-    s.append(dau[i]);
-    _dau.push_back(s);
-  }
 }
 
 
 EvtDecayMode::EvtDecayMode(const EvtDecayMode& other)
-  : _mother(other._mother)
+  : _mother(other._mother),
+    _dau(other._dau)
 {
-  unsigned i;
-  for(i=0;i<other._dau.size();i++) {
-    
-    string s;
-    s.append(other._dau[i]);
-    _dau.push_back(s);
-  }
 }
 
 
@@ -60,22 +51,21 @@ EvtDecayMode::EvtDecayMode(const char* decay)
   // format, e.g. "B+ -> pi+ pi+ pi-" with all spaces
   
   string s(decay);
-  size_t i,j;
 
   // mother
 
-  i = s.find_first_not_of(" ");
-  j = s.find_first_of(" ",i);
+  string::size_type i = s.find_first_not_of(" ");
+  string::size_type j = s.find_first_of(" ",i);
 
   if(i == string::npos) {
 
-    report(INFO,"EvtGen") << "No non-space character found" << std::endl;
+    report(INFO,"EvtGen") << "No non-space character found" << endl;
     assert(0);
   }
 
   if(j == string::npos) {
     
-    report(INFO,"EvtGen") << "No space before -> found" << std::endl;
+    report(INFO,"EvtGen") << "No space before -> found" << endl;
     assert(0);
   }
 
@@ -85,7 +75,7 @@ EvtDecayMode::EvtDecayMode(const char* decay)
   j = s.find_first_of("->",j);
   if(i != j) {
 
-    report(INFO,"EvtGen") << "Multiple mothers?" << i << "," << j << std::endl;
+    report(INFO,"EvtGen") << "Multiple mothers?" << i << "," << j << endl;
     assert(0);
   }
   j += 2;
@@ -129,57 +119,60 @@ const char* EvtDecayMode::dau(int i) const
   return _dau[i].c_str();
 }
 
-const char* EvtDecayMode::mode() const
+std::string EvtDecayMode::mode() const
 {
   string ret = _mother + string(" -> ");
-  unsigned int i;
-  for(i=0;i<_dau.size()-1;i++) ret += string(_dau[i]) + string(" ");
+
+  for(size_t i=0;i<_dau.size()-1;i++) {
+    ret += string(_dau[i]) + string(" ");
+  }
   ret += _dau[_dau.size()-1];
-  return ret.c_str();
+  return ret;
 }
 
 
-std::ostream& EvtDecayMode::print(std::ostream& os) const
+ostream& EvtDecayMode::print(ostream& os) const
 {
   os << _mother.c_str() << " ->";
-  unsigned i;
-  for(i=0;i<_dau.size();i++) os << " " << _dau[i].c_str();
+  for(size_t i=0;i<_dau.size();i++) {
+    os << " " << _dau[i].c_str();
+  }
   return os;
 }
 
 
-const char* EvtDecayMode::m(EvtCyclic3::Pair i) const
+std::string EvtDecayMode::m(EvtCyclic3::Pair i) const
 {
   string s("m(");
   s.append(dau(EvtCyclic3::first(i)));
   s.append(",");
   s.append(dau(EvtCyclic3::second(i)));
   s.append(")");
-  return s.c_str();
+  return s;
 }
 
 
-const char* EvtDecayMode::q(EvtCyclic3::Pair i) const
+std::string EvtDecayMode::q(EvtCyclic3::Pair i) const
 {
   string s("q(");
   s.append(dau(EvtCyclic3::first(i)));
   s.append(",");
   s.append(dau(EvtCyclic3::second(i)));
   s.append(")");
-  return s.c_str();
+  return s;
 }
 
 
-const char* EvtDecayMode::dal(EvtCyclic3::Pair i, EvtCyclic3::Pair j) const
+std::string EvtDecayMode::dal(EvtCyclic3::Pair i, EvtCyclic3::Pair j) const
 {
   string s(q(i));
   s.append(":");
   s.append(q(j));
-  return s.c_str();
+  return s;
 }
 
 
-std::ostream& operator<<(std::ostream& os, const EvtDecayMode& mode)
+ostream& operator<<(ostream& os, const EvtDecayMode& mode)
 {
   mode.print(os);
   return os;

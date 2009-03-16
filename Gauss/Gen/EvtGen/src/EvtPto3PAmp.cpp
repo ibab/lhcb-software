@@ -1,10 +1,15 @@
+#include "EvtGenBase/EvtPatches.hh"
 /*******************************************************************************
  * Project: BaBar detector at the SLAC PEP-II B-factory
  * Package: EvtGenBase
- *    File: $Id: EvtPto3PAmp.cpp,v 1.2 2004-07-12 16:13:32 robbep Exp $
+ *    File: $Id: EvtPto3PAmp.cpp,v 1.3 2009-03-16 15:44:04 robbep Exp $
  *  Author: Alexei Dvoretskii, dvoretsk@slac.stanford.edu, 2001-2002
  *
  * Copyright (C) 2002 Caltech
+ *
+ * Modified: May 30, 2005, Denis Dujmic (ddujmic@slac.stanford.edu): flip sign 
+ *           for vector resonances (-i -> i at resonance mass).
+ *           Introduce Flatte lineshape.
  *******************************************************************************/
 
 #include <assert.h>
@@ -15,6 +20,9 @@
 #include "EvtGenBase/EvtDalitzCoord.hh"
 #include "EvtGenBase/EvtdFunction.hh"
 #include "EvtGenBase/EvtCyclic3.hh"
+#include "EvtGenBase/EvtReport.hh"
+
+using std::endl;
 using EvtCyclic3::Index;
 using EvtCyclic3::Pair;
 
@@ -28,6 +36,8 @@ EvtPto3PAmp::EvtPto3PAmp(EvtDalitzPlot dp, Pair pairAng, Pair pairRes,
   _typeN(typeN),
   _prop((EvtPropagator*) prop.clone()), 
   _g0(prop.g0()),
+  _min(0),
+  _max(0),
   _vb(prop.m0(),dp.m(EvtCyclic3::other(pairRes)),dp.bigM(),spin), 
   _vd(dp.m(EvtCyclic3::first(pairRes)),dp.m(EvtCyclic3::second(pairRes)),prop.m0(),spin)
 {}
@@ -42,6 +52,8 @@ EvtPto3PAmp::EvtPto3PAmp(const EvtPto3PAmp& other)
   _typeN(other._typeN),
   _prop( (other._prop) ? (EvtPropagator*) other._prop->clone() : 0),
   _g0(other._g0),
+  _min(other._min),
+  _max(other._max),
   _vb(other._vb), _vd(other._vd)
 {}
 
@@ -62,12 +74,15 @@ void EvtPto3PAmp::set_fb(double R)
   _vb.set_f(R);
 }
 
-
+ 
 EvtComplex EvtPto3PAmp::amplitude(const EvtDalitzPoint& x) const
 {
   EvtComplex amp(1.0,0.0);
 
   double m = sqrt(x.q(_pairRes));
+
+  if ((_max>0 && m > _max) || (_min>0 && m < _min))  return EvtComplex(0.0,0.0);
+
   EvtTwoBodyKine vd(x.m(EvtCyclic3::first(_pairRes)),
 		    x.m(EvtCyclic3::second(_pairRes)),m);
   EvtTwoBodyKine vb(m,x.m(EvtCyclic3::other(_pairRes)),x.bigM());
@@ -75,14 +90,17 @@ EvtComplex EvtPto3PAmp::amplitude(const EvtDalitzPoint& x) const
 
   // Compute mass-dependent width for relativistic propagators
 
-  if(_typeN != NBW) {
+  if(_typeN!=NBW && _typeN!=FLATTE) {
     
     _prop->set_g0(_g0*_vd.widthFactor(vd));
   }
   
+
   // Compute propagator
 
-  amp *= _prop->evaluate(m);
+  amp *= evalPropagator(m);
+
+
 
   // Compute form-factors
 
@@ -90,7 +108,7 @@ EvtComplex EvtPto3PAmp::amplitude(const EvtDalitzPoint& x) const
   amp *= _vb.formFactor(vb);
 
   amp *= numerator(x);
-  
+
   return amp;
 }
 
@@ -145,7 +163,7 @@ EvtComplex EvtPto3PAmp::numerator(const EvtDalitzPoint& x) const
   // therefore exchange AB to get rid of the sign flip.
   
 
-  if(RBW_CLEO == _typeN) {
+  if(RBW_CLEO == _typeN || FLATTE == _typeN || GS == _typeN) {
 
     Index iA = EvtCyclic3::other(_pairAng);           // A = other(BC)
     Index iB = EvtCyclic3::common(_pairRes,_pairAng); // B = common(AB,BC)
@@ -159,22 +177,26 @@ EvtComplex EvtPto3PAmp::numerator(const EvtDalitzPoint& x) const
     double qBC = x.q(EvtCyclic3::combine(iB,iC));
     double qCA = x.q(EvtCyclic3::combine(iC,iA));
     
-    double m0 = _prop->m0();
+    //double m0 = _prop->m0();
 
     if(_spin == EvtSpinType::SCALAR) ret = EvtComplex(1.,0.);
     else
       if(_spin == EvtSpinType::VECTOR) {
-	
-	ret = qBC - qCA + (M*M - mC*mC)*(mA*mA - mB*mB)/m0/m0;;
+
+	//ret = qCA - qBC - (M*M - mC*mC)*(mA*mA - mB*mB)/m0/m0;
+	ret = qCA - qBC - (M*M - mC*mC)*(mA*mA - mB*mB)/qAB;
       }
       else
 	if(_spin == EvtSpinType::TENSOR) {
       
-	  double x1 = qBC - qCA + (M*M - mC*mC)*(mA*mA - mB*mB)/m0/m0;       
+	  //double x1 = qBC - qCA + (M*M - mC*mC)*(mA*mA - mB*mB)/m0/m0;       
+	  double x1 = qBC - qCA + (M*M - mC*mC)*(mA*mA - mB*mB)/qAB;       
 	  double x2 = M*M - mC*mC;      
-	  double x3 = qAB - 2*M*M - 2*mC*mC + x2*x2/m0/m0;      
+	  //double x3 = qAB - 2*M*M - 2*mC*mC + x2*x2/m0/m0;      
+	  double x3 = qAB - 2*M*M - 2*mC*mC + x2*x2/qAB;      
 	  double x4 = mB*mB - mA*mA;
-	  double x5 = qAB - 2*mB*mB - 2*mA*mA + x4*x4/m0/m0;
+	  //double x5 = qAB - 2*mB*mB - 2*mA*mA + x4*x4/m0/m0;
+	  double x5 = qAB - 2*mB*mB - 2*mA*mA + x4*x4/qAB;
 	  ret = (x1*x1 - 1./3.*x3*x5);
 	}
 	else assert(0);
@@ -192,7 +214,7 @@ double EvtPto3PAmp::angDep(const EvtDalitzPoint& x) const
   double cosTh = x.cosTh(_pairAng,_pairRes);  
   if(fabs(cosTh) > 1.) {
     
-    report(INFO,"EvtGen") << "cosTh " << cosTh << std::endl; 
+    report(INFO,"EvtGen") << "cosTh " << cosTh << endl; 
     assert(0);
   }
   

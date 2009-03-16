@@ -17,13 +17,14 @@
 //    RYD       March 11, 1998       Module created
 //
 //------------------------------------------------------------------------
+#include "EvtGenBase/EvtPatches.hh"
 
 #include <iostream>
 #include <iomanip>
 #include "EvtGenBase/EvtVector4R.hh"
 #include "EvtGenBase/EvtStdHep.hh"
+using namespace std;
 
-//typedef long std::_Ios_Fmtflags;
 
 void EvtStdHep::init(){
   _npart=0;
@@ -71,19 +72,16 @@ void EvtStdHep::translate(EvtVector4R d){
 }
 
  
-
-std::ostream& operator<<(std::ostream& s, const EvtStdHep& stdhep){
+/*
+ostream& operator<<(ostream& s, const EvtStdHep& stdhep){
 
   int w=s.width();
   int p=s.precision();
-#if defined (__GNUC__) && ( __GNUC__ < 3 )
-  std::ios::fmtflags f = s.flags() ;
-#else
-  std::ios_base::fmtflags f=s.flags();
-#endif
+  std::ios::fmtflags f=s.flags();
 
-  s <<std::endl;
-  s << "  N      Id Ist   M1   M2   DF   DL      px      py      pz       E       t       x       y       z"<<std::endl;
+
+  s <<endl;
+  s << "  N      Id Ist   M1   M2   DF   DL      px      py      pz       E       t       x       y       z"<<endl;
   int i;
   for(i=0;i<stdhep._npart;i++){
     
@@ -103,47 +101,47 @@ std::ostream& operator<<(std::ostream& s, const EvtStdHep& stdhep){
     s<<stdhep._dauglast[i]<<" ";
     s.width(7);
     s.precision(4);
-    s<<std::setiosflags( std::ios::right|std::ios::fixed );
+    s<<setiosflags( ios::right|ios::fixed );
     s<<stdhep._p4[i].get(1)<<" ";
     s.width(7);
     s.precision(4);
-    s<<std::setiosflags( std::ios::right|std::ios::fixed );
+    s<<setiosflags( ios::right|ios::fixed );
     s<<stdhep._p4[i].get(2)<<" ";
     s.width(7);
     s.precision(4);
-    s<<std::setiosflags( std::ios::right|std::ios::fixed );
+    s<<setiosflags( ios::right|ios::fixed );
     s<<stdhep._p4[i].get(3)<<" ";
     s.width(7);
     s.precision(4);
-    s<<std::setiosflags( std::ios::right|std::ios::fixed );
+    s<<setiosflags( ios::right|ios::fixed );
     s<<stdhep._p4[i].get(0)<<" ";
     s.width(7);
     s.precision(4);
-    s<<std::setiosflags( std::ios::right|std::ios::fixed );
+    s<<setiosflags( ios::right|ios::fixed );
     s<<stdhep._x[i].get(0)<<" ";
     s.width(7);
     s.precision(4);
-    s<<std::setiosflags( std::ios::right|std::ios::fixed );
+    s<<setiosflags( ios::right|ios::fixed );
     s<<stdhep._x[i].get(1)<<" ";
     s.width(7);
     s.precision(4);
-    s<<std::setiosflags( std::ios::right|std::ios::fixed );
+    s<<setiosflags( ios::right|ios::fixed );
     s<<stdhep._x[i].get(2)<<" ";
     s.width(7);
     s.precision(4);
-    s<<std::setiosflags( std::ios::right|std::ios::fixed );
-    s<<stdhep._x[i].get(3)<<std::endl;
+    s<<setiosflags( ios::right|ios::fixed );
+    s<<stdhep._x[i].get(3)<<endl;
     s.width(0);
   }
   
-  s<<std::endl;
+  s<<endl;
 
   s.width(w);
   s.precision(p);
-  s.flags(f);
+  s.flags((std::ios::fmtflags)f);
   
   return s;
 
 }  
 
-
+*/

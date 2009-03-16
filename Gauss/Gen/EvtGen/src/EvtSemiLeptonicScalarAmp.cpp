@@ -20,6 +20,7 @@
 //------------------------------------------------------------------------
 //
 #include "EvtGenBase/EvtPatches.hh"
+#include "EvtGenBase/EvtPatches.hh"
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
 #include "EvtGenBase/EvtPDL.hh"

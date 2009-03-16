@@ -18,16 +18,11 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <iostream>
-#include <fstream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
-#if defined (__GNUC__) && ( __GNUC__ <= 2 )
-#include <strstream>
-#else
-#include <sstream>
-#endif
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtId.hh"
 #include "EvtGenBase/EvtPDL.hh"
@@ -42,9 +37,9 @@
 #include "EvtGenBase/EvtHighSpinParticle.hh"
 #include "EvtGenBase/EvtReport.hh"
 #include "EvtGenBase/EvtParticleFactory.hh"
+using std::endl;
 
-EvtParticle* EvtParticleFactory::particleFactory(EvtSpinType::spintype 
-                                                 spinType){
+EvtParticle* EvtParticleFactory::particleFactory(EvtSpinType::spintype spinType){
 
   if ( spinType == EvtSpinType::SCALAR ) {
     return new EvtScalarParticle;
@@ -84,11 +79,10 @@ EvtParticle* EvtParticleFactory::particleFactory(EvtSpinType::spintype
     return new EvtHighSpinParticle;
   }
 
-  report(ERROR,"EvtGen")<<"Error in EvtParticleFactory::particleFactory"
-                        <<std::endl;
+  report(ERROR,"EvtGen")<<"Error in EvtParticleFactory::particleFactory"<<endl;
   report(ERROR,"EvtGen")<<"Tried to create non-existing particle"
-			<<" with spin type:"<<spinType<<std::endl;
-  report(ERROR,"EvtGen")<<"Will terminate execution"<<std::endl;
+			<<" with spin type:"<<spinType<<endl;
+  report(ERROR,"EvtGen")<<"Will terminate execution"<<endl;
 
 
   ::abort();
@@ -191,12 +185,11 @@ EvtParticle* EvtParticleFactory::particleFactory(EvtId id,
     return myPart;
   }
 
-  report(ERROR,"EvtGen")<<"Error in EvtParticleFactory::particleFactory"
-                        <<std::endl;
+  report(ERROR,"EvtGen")<<"Error in EvtParticleFactory::particleFactory"<<endl;
   report(ERROR,"EvtGen")<<"Tried to create non-existing particle"
 			<<" with spin type:"<<thisSpin
-			<<"  and name:"<<EvtPDL::name(id).c_str()<<std::endl;
-  report(ERROR,"EvtGen")<<"Will terminate execution"<<std::endl;
+			<<"  and name:"<<EvtPDL::name(id).c_str()<<endl;
+  report(ERROR,"EvtGen")<<"Will terminate execution"<<endl;
 
 
 
@@ -211,7 +204,7 @@ EvtParticle* EvtParticleFactory::particleFactory(EvtId id,
 						 EvtVector4R p4){
 
   EvtSpinDensity rho;
-  rho.SetDiag(EvtSpinType::getSpinStates(EvtPDL::getSpinType(id)));
+  rho.setDiag(EvtSpinType::getSpinStates(EvtPDL::getSpinType(id)));
 
   return particleFactory(id,p4,rho);
 

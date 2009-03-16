@@ -20,6 +20,7 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
@@ -30,16 +31,18 @@
 #include <string>
 #include "EvtGenBase/EvtConst.hh"
 #include "EvtGenBase/EvtEvalHelAmp.hh"
+using std::endl;
 
 
 EvtHelAmp::~EvtHelAmp() {
 
-  if ( _evalHelAmp ) delete _evalHelAmp;
+  delete _evalHelAmp;
+
 }
 
-void EvtHelAmp::getName(std::string& model_name){
+std::string EvtHelAmp::getName(){
 
-  model_name="HELAMP";     
+  return "HELAMP";     
 
 }
 
@@ -60,13 +63,9 @@ void EvtHelAmp::init(){
   int _nB=EvtSpinType::getSpinStates(EvtPDL::getSpinType(getDaug(0)));
   int _nC=EvtSpinType::getSpinStates(EvtPDL::getSpinType(getDaug(1)));
 
-  EvtId _idA=getParentId();
-  EvtId _idB=getDaug(0);
-  EvtId _idC=getDaug(1);
-
   if (verbose()){
     report(INFO,"EvtGen")<<"_nA,_nB,_nC:"
-			 <<_nA<<","<<_nB<<","<<_nC<<std::endl;
+			 <<_nA<<","<<_nB<<","<<_nC<<endl;
   }
 
   //find out what 2 times the spin is
@@ -76,7 +75,7 @@ void EvtHelAmp::init(){
 
   if (verbose()){
     report(INFO,"EvtGen")<<"_JA2,_JB2,_JC2:"
-			 <<_JA2<<","<<_JB2<<","<<_JC2<<std::endl;
+			 <<_JA2<<","<<_JB2<<","<<_JC2<<endl;
   }
 
   //allocate memory
@@ -85,32 +84,31 @@ void EvtHelAmp::init(){
   int* _lambdaC2=new int[_nC];
 
   EvtComplexPtr* _HBC=new EvtComplexPtr[_nB];
-  int /*ia,*/ib,ic;
-  for(ib=0;ib<_nB;ib++){
+  for(int ib=0;ib<_nB;ib++){
     _HBC[ib]=new EvtComplex[_nC];
   }
 
   int i;
   //find the allowed helicities (actually 2*times the helicity!)
 
-  fillHelicity(_lambdaA2,_nA,_JA2);
-  fillHelicity(_lambdaB2,_nB,_JB2);
-  fillHelicity(_lambdaC2,_nC,_JC2);
+  fillHelicity(_lambdaA2,_nA,_JA2,getParentId());
+  fillHelicity(_lambdaB2,_nB,_JB2,getDaug(0));
+  fillHelicity(_lambdaC2,_nC,_JC2,getDaug(1));
 
   if (verbose()){
-    report(INFO,"EvtGen")<<"Helicity states of particle A:"<<std::endl;
+    report(INFO,"EvtGen")<<"Helicity states of particle A:"<<endl;
     for(i=0;i<_nA;i++){
-      report(INFO,"EvtGen")<<_lambdaA2[i]<<std::endl;
+      report(INFO,"EvtGen")<<_lambdaA2[i]<<endl;
     }
 
-    report(INFO,"EvtGen")<<"Helicity states of particle B:"<<std::endl;
+    report(INFO,"EvtGen")<<"Helicity states of particle B:"<<endl;
     for(i=0;i<_nB;i++){
-      report(INFO,"EvtGen")<<_lambdaB2[i]<<std::endl;
+      report(INFO,"EvtGen")<<_lambdaB2[i]<<endl;
     }
 
-    report(INFO,"EvtGen")<<"Helicity states of particle C:"<<std::endl;
+    report(INFO,"EvtGen")<<"Helicity states of particle C:"<<endl;
     for(i=0;i<_nC;i++){
-      report(INFO,"EvtGen")<<_lambdaC2[i]<<std::endl;
+      report(INFO,"EvtGen")<<_lambdaC2[i]<<endl;
     }
   }
 
@@ -118,8 +116,8 @@ void EvtHelAmp::init(){
 
   int argcounter=0;
 
-  for(ib=0;ib<_nB;ib++){
-    for(ic=0;ic<_nC;ic++){
+  for(int ib=0;ib<_nB;ib++){
+    for(int ic=0;ic<_nC;ic++){
       _HBC[ib][ic]=0.0;
       if (abs(_lambdaB2[ib]-_lambdaC2[ic])<=_JA2) argcounter+=2;
     }
@@ -129,36 +127,32 @@ void EvtHelAmp::init(){
 
   argcounter=0;
 
-  for(ib=0;ib<_nB;ib++){
-    for(ic=0;ic<_nC;ic++){
+  for(int ib=0;ib<_nB;ib++){
+    for(int ic=0;ic<_nC;ic++){
       if (abs(_lambdaB2[ib]-_lambdaC2[ic])<=_JA2) {
 	_HBC[ib][ic]=getArg(argcounter)*exp(EvtComplex(0.0,getArg(argcounter+1)));;
 	argcounter+=2;
 	if (verbose()){
 	  report(INFO,"EvtGen")<<"_HBC["<<ib<<"]["<<ic<<"]="
-			       <<_HBC[ib][ic]<<std::endl;
+			       <<_HBC[ib][ic]<<endl;
 	}
       }
     }
   }
 
-  _evalHelAmp=new EvtEvalHelAmp(EvtPDL::getSpinType(getParentId()),
-				EvtPDL::getSpinType(getDaug(0)),
-				EvtPDL::getSpinType(getDaug(1)),
+  _evalHelAmp=new EvtEvalHelAmp(getParentId(),
+				getDaug(0),
+				getDaug(1),
 				_HBC);
 
-  // Delete all created pointers
-  delete [] _lambdaA2 ;
-  delete [] _lambdaB2 ;
-  delete [] _lambdaC2 ;
-  
-  for ( ib = 0 ;
-        ib < _nB ;
-        ib++ ) {
-    delete [] _HBC[ib] ;
+  // Note: these are not class data members but local variables.
+  delete [] _lambdaA2;
+  delete [] _lambdaB2;
+  delete [] _lambdaC2;
+  for(int ib=0;ib<_nB;ib++){    
+    delete [] _HBC[ib];
   }
-  
-  delete [] _HBC ;
+  delete [] _HBC;  // _HBC is copied in ctor of EvtEvalHelAmp above.
 
 }
 
@@ -168,7 +162,7 @@ void EvtHelAmp::initProbMax(){
   double maxprob=_evalHelAmp->probMax();
 
   if (verbose()){
-    report(INFO,"EvtGen")<<"Calculated probmax"<<maxprob<<std::endl;
+    report(INFO,"EvtGen")<<"Calculated probmax"<<maxprob<<endl;
   }
 
   setProbMax(maxprob);
@@ -188,7 +182,7 @@ void EvtHelAmp::decay( EvtParticle *p){
 }
 
 
-void EvtHelAmp::fillHelicity(int* lambda2,int n,int J2){
+void EvtHelAmp::fillHelicity(int* lambda2,int n,int J2, EvtId id){
   
   int i;
   
@@ -198,7 +192,19 @@ void EvtHelAmp::fillHelicity(int* lambda2,int n,int J2){
     lambda2[1]=-2;
     return;
   }
-  
+
+  //and so is the neutrino!
+  if (n==1&&J2==1) {
+    if (EvtPDL::getStdHep(id)>0){
+	//particle i.e. lefthanded
+        lambda2[0]=-1;
+    }else{
+	//anti particle i.e. righthanded
+        lambda2[0]=1;
+    }
+    return;
+  }
+
   assert(n==J2+1);
 
   for(i=0;i<n;i++){

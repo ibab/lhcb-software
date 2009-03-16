@@ -18,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 //
+#include "EvtGenBase/EvtPatches.hh"
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
@@ -30,6 +31,7 @@
 #include "EvtGenBase/EvtId.hh"
 #include <string>
 #include <vector>
+using std::fstream;
 void EvtParticleDecay::printSummary(){
 
   if (_decay!=0) _decay->printSummary();
@@ -46,8 +48,7 @@ void EvtParticleDecay::chargeConj(EvtParticleDecay *decay){
   int ndaug=decay->_decay->getNDaug();
   int narg=decay->_decay->getNArg();
   double brfr=decay->_decay->getBranchingFraction();
-  std::string name;
-  decay->_decay->getName(name);
+  std::string name=decay->_decay->getName();
   EvtId ipar=EvtPDL::chargeConj(decay->_decay->getParentId());
   int i;
   EvtId* daug=new EvtId[ndaug];

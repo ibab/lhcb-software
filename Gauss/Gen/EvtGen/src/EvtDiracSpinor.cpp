@@ -18,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <math.h>
 #include <assert.h>
 #include "EvtGenBase/EvtDiracSpinor.hh"
@@ -26,9 +27,15 @@
 #include "EvtGenBase/EvtReport.hh"
 #include "EvtGenBase/EvtVector4C.hh"
 #include "EvtGenBase/EvtTensor4C.hh"
+using std::ostream;
 
 
 EvtDiracSpinor::~EvtDiracSpinor(){}
+
+EvtDiracSpinor::EvtDiracSpinor(const EvtComplex& sp0,const EvtComplex& sp1,
+				    const EvtComplex& sp2,const EvtComplex& sp3){
+  set(sp0,sp1,sp2,sp3);
+}
 
 void EvtDiracSpinor::set(const EvtComplex& sp0,const EvtComplex& sp1,
 			 const EvtComplex& sp2,const EvtComplex& sp3){
@@ -41,7 +48,7 @@ void EvtDiracSpinor::set_spinor(int i,const EvtComplex& sp){
   spinor[i]=sp;
 }
 
-std::ostream& operator<<(std::ostream& s, const EvtDiracSpinor& sp){
+ostream& operator<<(ostream& s, const EvtDiracSpinor& sp){
 
   s <<"["<<sp.spinor[0]<<","<<sp.spinor[1]<<","
     <<sp.spinor[2]<<","<<sp.spinor[3]<<"]";
@@ -118,14 +125,14 @@ void EvtDiracSpinor::applyBoostTo(const EvtVector3R& boost) {
   f1=sqrt((gamma+1.0)/2.0);
   f2=f1*gamma/(gamma+1.0);
 
-  spinorp[0]=f1*get_spinor(0)+f2*bz*get_spinor(2)+
-    f2*EvtComplex(bx,-by)*get_spinor(3);
-  spinorp[1]=f1*get_spinor(1)+f2*EvtComplex(bx,by)*get_spinor(2)-
-    f2*bz*get_spinor(3);
-  spinorp[2]=f2*bz*get_spinor(0)+f2*EvtComplex(bx,-by)*get_spinor(1)+
-    f1*get_spinor(2);
-  spinorp[3]=f2*EvtComplex(bx,by)*get_spinor(0)-
-    f2*bz*get_spinor(1)+f1*get_spinor(3);
+  spinorp[0]=f1*spinor[0]+f2*bz*spinor[2]+
+    f2*EvtComplex(bx,-by)*spinor[3];
+  spinorp[1]=f1*spinor[1]+f2*EvtComplex(bx,by)*spinor[2]-
+    f2*bz*spinor[3];
+  spinorp[2]=f2*bz*spinor[0]+f2*EvtComplex(bx,-by)*spinor[1]+
+    f1*spinor[2];
+  spinorp[3]=f2*EvtComplex(bx,by)*spinor[0]-
+    f2*bz*spinor[1]+f1*spinor[3];
   
   spinor[0]=spinorp[0];
   spinor[1]=spinorp[1];
@@ -171,10 +178,8 @@ EvtDiracSpinor EvtDiracSpinor::conj() const {
 
   EvtDiracSpinor sp;
 
-  sp.set_spinor(0,::conj(get_spinor(0)));
-  sp.set_spinor(1,::conj(get_spinor(1)));
-  sp.set_spinor(2,::conj(get_spinor(2)));
-  sp.set_spinor(3,::conj(get_spinor(3)));
+  for ( int i=0; i<4; i++)
+    sp.set_spinor(i,::conj(spinor[i]));
   
   return sp;
 }
@@ -323,27 +328,25 @@ EvtTensor4C EvtLeptonTCurrent(const EvtDiracSpinor& d,const EvtDiracSpinor& dp){
   return temp;
 }
 
+
 EvtDiracSpinor operator*(const EvtComplex& c, const EvtDiracSpinor& d) {
-  EvtDiracSpinor result;
-  result.spinor[0] = c*d.spinor[0];
-  result.spinor[1] = c*d.spinor[1];
-  result.spinor[2] = c*d.spinor[2];
-  result.spinor[3] = c*d.spinor[3];
-  return result;
-}
+     EvtDiracSpinor result;
+     result.spinor[0] = c*d.spinor[0];
+     result.spinor[1] = c*d.spinor[1];
+     result.spinor[2] = c*d.spinor[2];
+     result.spinor[3] = c*d.spinor[3];
+     return result;
+ }
 
 EvtDiracSpinor EvtDiracSpinor::adjoint() const
 {
-  EvtDiracSpinor d = this->conj(); 
-  // first conjugate, then multiply with gamma0
-  EvtGammaMatrix g0 = EvtGammaMatrix::g0();
-  EvtDiracSpinor result; // automatically initialized to 0
-  
-  for (int i=0; i<4; ++i)
-    for (int j=0; j<4; ++j)
-      result.spinor[i] += d.spinor[j] * g0.gamma[i][j];
-  
-  return result;
+    EvtDiracSpinor d = this->conj(); // first conjugate, then multiply with gamma0
+    EvtGammaMatrix g0 = EvtGammaMatrix::g0();
+    EvtDiracSpinor result; // automatically initialized to 0
+
+    for (int i=0; i<4; ++i)
+        for (int j=0; j<4; ++j)
+            result.spinor[i] += d.spinor[j] * g0._gamma[i][j];
+
+    return result;
 }
-
-

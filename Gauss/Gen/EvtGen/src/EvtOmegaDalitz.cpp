@@ -18,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
@@ -31,9 +32,9 @@
 
 EvtOmegaDalitz::~EvtOmegaDalitz() {}
 
-void EvtOmegaDalitz::getName(std::string& model_name){
+std::string EvtOmegaDalitz::getName(){
 
-  model_name="OMEGA_DALITZ";     
+  return "OMEGA_DALITZ";     
 
 }
 

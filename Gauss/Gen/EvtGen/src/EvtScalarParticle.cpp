@@ -18,8 +18,10 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <iostream>
 #include <math.h>
+#include "EvtGenBase/EvtPatches.hh"
 #include "EvtGenBase/EvtScalarParticle.hh"
 #include "EvtGenBase/EvtVector4R.hh"
 
@@ -50,24 +52,23 @@ void EvtScalarParticle::init(EvtId part_n,const EvtVector4R& p4){
 EvtSpinDensity EvtScalarParticle::rotateToHelicityBasis() const{
 
   EvtSpinDensity R;
-  R.SetDim(1);
+  R.setDim(1);
       
-  R.Set(0,0,1.0);
+  R.set(0,0,1.0);
 
   return R;
 
 }
 
 
-EvtSpinDensity EvtScalarParticle::rotateToHelicityBasis(double /*alpha*/,
-                                                        double /*beta*/,
-                                                        double /*gamma*/) 
-  const{
+EvtSpinDensity EvtScalarParticle::rotateToHelicityBasis(double,
+						       double,
+						       double) const{
 
   EvtSpinDensity R;
-  R.SetDim(1);
+  R.setDim(1);
       
-  R.Set(0,0,1.0);
+  R.set(0,0,1.0);
 
   return R;
 

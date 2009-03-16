@@ -19,6 +19,7 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
@@ -31,9 +32,9 @@
 
 EvtMelikhov::~EvtMelikhov() {}
 
-void EvtMelikhov::getName(std::string& model_name){
+std::string EvtMelikhov::getName(){
 
-  model_name="MELIKHOV";     
+  return "MELIKHOV";     
 }
 
 

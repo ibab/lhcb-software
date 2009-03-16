@@ -61,7 +61,7 @@ C                 in addition incorporate the contributions of three
 C                 rho resonances [rho(770:1450:1700)]. The parameters
 C                 used are the ones resulting from the ALEPH analysis
 C                 which might be found in CERN-PPE:97013 (submitted to
-C                 Zeitschrift fï¿½r Physik C). The two parametrizations
+C                 Zeitschrift für Physik C). The two parametrizations
 C                 of the relativistic Breit-Wigners are the ones of 	
 C                 Kuhn-SantaMaria [default] and of Gounaris-Sakurai.            
 C                 The default setting is the non-relativistic Breit-
@@ -89,7 +89,7 @@ c      End
       Real*8  t3pions,ttag,t,Weight,Weight_max
       Real*8  AB0,AB0bar,Ainter,xd
       Real*8  m_rhop_2,m_rhom_2
-      Real*8  Evtranf,Tag
+      Real*4  Evtranf,Tag
       Real*8  Kin_moy,Kin_moy2,Kin,Lambda
       
       alphaCP      = 0.4
@@ -127,11 +127,11 @@ c what follows is just to show how the ouput of EVT3pions
 C should be used at the time dependant level.     
 c Decay time of the B->-3 pions
  1    Continue
-      t3pions=-Dlog(Evtranf())
+      t3pions=-Alog(Evtranf())
       If(t3pions.gt.10.) Go to 1
 c Decay time of the tagging B
  2    Continue
-      ttag   =-Dlog(Evtranf())                
+      ttag   =-Alog(Evtranf())                
       If(ttag   .gt.10.) Go to 2
 c time-difference between the 3pi decay and the tagging decay     
       t=t3pions-ttag      
@@ -250,7 +250,6 @@ c end of the loop over events
      +      Kin_moy/Kin_moy2
       Print*,' true value                             = ',Lambda
       
-      
       End
 C===================================================================
       subroutine Evt3pions(
@@ -324,6 +323,7 @@ c     First, generate the kinematics
 
  10   continue
 
+
       call Evtfirst_step(p1,p2,p3)
       
 c     Then, compute the amplitudes 
@@ -378,7 +378,7 @@ c     pre-run
       Do number=1,iset
       
  20   continue
-      
+
       call Evtfirst_step(p1,p2,p3)
  
       Call EvtCompute(p1,p2,p3,Real_B0,Imag_B0,Real_B0bar,
@@ -459,7 +459,7 @@ c	----------------------------------------------------------
 c 	--- Used Functions 
 c	----------------------------------------------------------
 
-	real*8 evtranf
+	real evtranf
 
 c	----------------------------------------------------------
 c 	--- Variables in Argument
@@ -497,6 +497,7 @@ C Note that in that case, the generation is no longer correct.
        	  
 c       initialize to avoid warning on Linux.
         mass=0.0
+
 c	----------------------------------------------------------
 c	--- Computation
 c	----------------------------------------------------------
@@ -508,6 +509,7 @@ c	----------------------------------------------------------
       
       	max_m23 = M_B**2 
       	min_m23 = P2(5) + P3(5)
+      	
 
 100   	Continue
 
@@ -520,12 +522,14 @@ c	----------------------------------------------------------
 	x = Dtan(y)
 	mass = x*Gam_rho/2. +Mass_rho
         End If
-
+	
 c	----------------------------------------------------------	
 c	--- z is the Flag needed to choose between the generation 
 c	--- of a Rho+, a Rho-,or a Rho0
 c	----------------------------------------------------------
+
 	z = 3.* evtranf()
+	
 	if(z.lt.1.) Then
 
 	If(Phase_space) Then
@@ -559,10 +563,11 @@ c	----------------------------------------------------------
 c	--- Check that the physics is OK :
 c	--- Are the invariant Masses in allowed ranges ?
 c	----------------------------------------------------------
+
       	If(m23.lt.min_m23.or.m23.gt.max_m23) Go to 100
       	If(m13.lt.min_m13.or.m13.gt.max_m13) Go to 100
       	If(m12.lt.min_m12.or.m12.gt.max_m12) Go to 100
-
+      	
 c	----------------------------------------------------------
 c	--- Are the Cosines of the angles between particles 
 c	--- Between -1 and +1 ?
@@ -599,7 +604,7 @@ c	----------------------------------------------------------
       	Do i=1,3
       	P2(i)=-p1(i)-p3(i)
       	End do
-12345   continue
+
 	END
 	
 	
@@ -935,7 +940,7 @@ c --- commons
 	
 c --- Used Functions 
 
-	Real*8 evtranf	
+	Real evtranf	
 
 c --- Variables in Argument
 
@@ -1048,7 +1053,7 @@ c------------------------------------------------------------------
       	Real*8 c1,c2,c3,s1,s2,s3
       	Real*8 MatRot(3,3)
         save MatRot
-      	Real*8 evtranf
+      	Real evtranf
       	Integer new,i,j
       
       	If(new.ne.0) Then

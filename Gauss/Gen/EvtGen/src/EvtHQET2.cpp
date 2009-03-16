@@ -22,6 +22,7 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include <assert.h>
 #include "EvtGenBase/EvtParticle.hh"
@@ -33,6 +34,7 @@
 #include "EvtGenBase/EvtSemiLeptonicVectorAmp.hh"
 #include "EvtGenBase/EvtSemiLeptonicScalarAmp.hh"
 #include <string>
+using std::endl;
 
 EvtHQET2::EvtHQET2():
   hqetffmodel(0)
@@ -46,9 +48,9 @@ EvtHQET2::~EvtHQET2() {
   calcamp=0;
 }
 
-void EvtHQET2::getName(std::string& model_name){
+std::string EvtHQET2::getName(){
 
-  model_name="HQET2";     
+  return "HQET2";     
 
 }
 
@@ -70,17 +72,17 @@ void EvtHQET2::decay( EvtParticle *p ){
 
 void EvtHQET2::initProbMax(){
 
-EvtId parnum,mesnum,lnum,nunum;
+  EvtId parnum,mesnum,lnum,nunum;
 
-parnum = getParentId();
-mesnum = getDaug(0);
-lnum = getDaug(1);
-nunum = getDaug(2);
+  parnum = getParentId();
+  mesnum = getDaug(0);
+  lnum = getDaug(1);
+  nunum = getDaug(2);
 
-double mymaxprob = calcamp->CalcMaxProb(parnum,mesnum,
+  double mymaxprob = calcamp->CalcMaxProb(parnum,mesnum,
                            lnum,nunum,hqetffmodel);
 
-setProbMax(mymaxprob);
+  setProbMax(mymaxprob);
 
 }
 
@@ -101,7 +103,7 @@ void EvtHQET2::init(){
     if ( getNArg()==2 ) {hqetffmodel = new EvtHQET2FF(getArg(0),getArg(1)); 
     calcamp = new EvtSemiLeptonicScalarAmp;} 
     else {
-    report(ERROR,"EvtGen") << "HQET2 model for scalar meson daughters needs 2 arguments. Sorry."<<std::endl;
+    report(ERROR,"EvtGen") << "HQET2 model for scalar meson daughters needs 2 arguments. Sorry."<<endl;
     ::abort();
   }  
   }
@@ -109,12 +111,12 @@ void EvtHQET2::init(){
     if ( getNArg()==4 ){ hqetffmodel = new EvtHQET2FF(getArg(0),getArg(1),getArg(2),getArg(3));
     calcamp = new EvtSemiLeptonicVectorAmp; }
     else  {
-    report(ERROR,"EvtGen") << "HQET2 model for vector meson daughtersneeds 4 arguments. Sorry."<<std::endl;
+    report(ERROR,"EvtGen") << "HQET2 model for vector meson daughtersneeds 4 arguments. Sorry."<<endl;
     ::abort();
     }
   }
   else{
-    report(ERROR,"EvtGen") << "HQET2 model handles only scalar and vector meson daughters. Sorry."<<std::endl;
+    report(ERROR,"EvtGen") << "HQET2 model handles only scalar and vector meson daughters. Sorry."<<endl;
     ::abort();
   }
 

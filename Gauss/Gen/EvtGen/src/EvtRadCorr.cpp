@@ -19,43 +19,45 @@
 //
 //------------------------------------------------------------------------
 //
+#include "EvtGenBase/EvtPatches.hh"
 
 #include <stdlib.h>
 #include <iostream>
 #include "EvtGenBase/EvtAbsRadCorr.hh"
 #include "EvtGenBase/EvtRadCorr.hh"
 #include "EvtGenBase/EvtReport.hh"
+using std::endl;
 
 
-EvtAbsRadCorr* EvtRadCorr::_isrEngine=0;
+EvtAbsRadCorr* EvtRadCorr::_fsrEngine=0;
 bool EvtRadCorr::_alwaysRadCorr=false;
 bool EvtRadCorr::_neverRadCorr=false;
 
 EvtRadCorr::EvtRadCorr() {
-  _isrEngine=0;
+  _fsrEngine=0;
   _alwaysRadCorr=false;
   _neverRadCorr=false;
 }
 
 EvtRadCorr::~EvtRadCorr() {
-  if ( _isrEngine ) delete _isrEngine;
-  _isrEngine=0;
+  if ( _fsrEngine ) delete _fsrEngine;
+  _fsrEngine=0;
 }
 
-void EvtRadCorr::setRadCorrEngine(EvtAbsRadCorr* isrEngine){
-  _isrEngine=isrEngine;
+void EvtRadCorr::setRadCorrEngine(EvtAbsRadCorr* fsrEngine){
+  _fsrEngine=fsrEngine;
 }
 
 
 void EvtRadCorr::doRadCorr(EvtParticle *p){
 
-  if (_isrEngine==0){
+  if (_fsrEngine==0){
     report(ERROR,"EvtGen") <<"No RadCorr model available in "
-			   <<"EvtRadCorr::doRadCorr()."<<std::endl;
+			   <<"EvtRadCorr::doRadCorr()."<<endl;
     ::abort();
   }
 
-  if ( !_neverRadCorr) _isrEngine->doRadCorr(p);
+  if ( !_neverRadCorr) _fsrEngine->doRadCorr(p);
   return;
 }
 

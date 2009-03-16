@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------
 // File and Version Information: 
-//      $Id: EvtPto3P.cpp,v 1.3 2004-07-12 16:13:32 robbep Exp $
+//      $Id: EvtPto3P.cpp,v 1.4 2009-03-16 15:46:31 robbep Exp $
 // 
 // Environment:
 //      This software is part of the EvtGen package developed jointly
@@ -13,6 +13,7 @@
 // Module creator:
 //      Alexei Dvoretskii, Caltech, 2001-2002.
 //-----------------------------------------------------------------------
+#include "EvtGenBase/EvtPatches.hh"
 
 #include "EvtGenBase/EvtPatches.hh"
 #include "EvtGenBase/EvtPDL.hh"
@@ -58,7 +59,7 @@ std::vector<EvtVector4R> EvtPto3P::initDaughters(const EvtDalitzPoint& x) const
   assert(x.isValid());
   
   // Calculate in the r.f. of AB
-                                                                                             
+                                                                              
   double eA = x.e(A,AB);
   double eB = x.e(B,AB);
   double eC = x.e(C,AB);
@@ -66,8 +67,8 @@ std::vector<EvtVector4R> EvtPto3P::initDaughters(const EvtDalitzPoint& x) const
   double pC = x.p(C,AB);
   double cos = x.cosTh(CA,AB);
   double sin = sqrt(1.0-cos*cos);
-                                                                                             
-  EvtVector4R vA(eA,0,0,pA);                                                                                           
+                                                                                  
+  EvtVector4R vA(eA,0,0,pA);                                                   
   EvtVector4R vB(eB,0,0,-pA); 
   EvtVector4R vC(eC,0,pC*sin,pC*cos);
 
@@ -84,24 +85,24 @@ std::vector<EvtVector4R> EvtPto3P::initDaughters(const EvtDalitzPoint& x) const
   vC.applyBoostTo(vboost);
   
   // Rotate
-                                                                                              
+                                                                                
   double alpha = EvtRandom::Flat( EvtConst::twoPi );
   double beta = acos(EvtRandom::Flat( -1.0, 1.0 ));
   double gamma = EvtRandom::Flat( EvtConst::twoPi );
-                                                                                             
+                                                                                
   vA.applyRotateEuler( alpha, beta, gamma );
   vB.applyRotateEuler( alpha, beta, gamma );
   vC.applyRotateEuler( alpha, beta, gamma );
-                                                                                             
+                                                                                 
    // Fill vector
-                                                                                             
+                                                                                 
   assert(v.size() == 0);  
   v.push_back(vA);
   v.push_back(vB);
   v.push_back(vC);
 
   return v;
-}                                                                                            
+}                                                                             
 
 
 

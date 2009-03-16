@@ -19,6 +19,7 @@
 //------------------------------------------------------------------------
 //
 #include "EvtGenBase/EvtPatches.hh"
+#include "EvtGenBase/EvtPatches.hh"
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
@@ -29,6 +30,8 @@
 #include "EvtGenBase/EvtReport.hh"
 #include "EvtGenBase/EvtPDL.hh"
 #include "EvtGenBase/EvtStatus.hh"
+using std::endl;
+using std::fstream;
 
 EvtParticleDecayList::EvtParticleDecayList(const EvtParticleDecayList &o) {
   _nmode=o._nmode;
@@ -64,7 +67,6 @@ EvtParticleDecayList::EvtParticleDecayList(const EvtParticleDecayList &o) {
 			     tModel->getBranchingFraction());
     _decaylist[i]->setDecayModel(tModelNew);
     
-    //_decaylist[i]->setDecayModel(tModel);
     _decaylist[i]->setBrfrSum(o._decaylist[i]->getBrfrSum());
     _decaylist[i]->setMassMin(o._decaylist[i]->getMassMin());
   }
@@ -131,13 +133,13 @@ EvtDecayBase* EvtParticleDecayList::getDecayModel(EvtParticle *p){
   }
   
   if (p->getChannel() >(-1)) {
-    report(ERROR,"EvtGen") << "Internal error!!!"<<std::endl;
+    report(ERROR,"EvtGen") << "Internal error!!!"<<endl;
     ::abort();
   }
 
   int j;
 
-  for (j=0;j<1000;j++){
+  for (j=0;j<10000000;j++){
 
     double u=EvtRandom::Flat();
 
@@ -157,16 +159,13 @@ EvtDecayBase* EvtParticleDecayList::getDecayModel(EvtParticle *p){
 	} 
 
 	if ( p->hasValidP4() ) {
-	  //report(INFO,"EvtGen") << "amazing " << EvtPDL::name(p->getId()) 
-    // << " " << getDecay(i).getMassMin() << " "<<p->mass() << " " << i 
-    // << std::endl;
 	  if (getDecay(i).getMassMin() < p->mass() ) {
 	    p->setChannel(i);
 	    return getDecay(i).getDecayModel(); 
 	  }
 	}
 	else{
-	//Lange apr29-2002 - dont know the mass yet
+	    //Lange apr29-2002 - dont know the mass yet
 	    p->setChannel(i);
 	    return getDecay(i).getDecayModel(); 
 	}
@@ -174,29 +173,34 @@ EvtDecayBase* EvtParticleDecayList::getDecayModel(EvtParticle *p){
     }
   }
 
-  //Ok, we tried 1000 times above to pick a decay channel that is
+  //Ok, we tried 10000000 times above to pick a decay channel that is
   //kinematically allowed! Now we give up and search all channels!
   //if that fails, the particle will not be decayed!
   
+  report(ERROR,"EvtGen") << "Tried 10000000 times to generate decay of "
+                         << EvtPDL::name(p->getId())<< " with mass="<<p->mass()<<endl;
+  report(ERROR,"EvtGen") << "Will take first kinematically allowed decay in the decay table" 
+			 <<endl;
+
   int i;
 
+  //Need to check that we don't use modes with 0 branching fractions.
+  double previousBrSum=0.0;
   for (i=0;i<getNMode();i++) {
-
-    if ( getDecay(i).getMassMin() < p->mass() ) {
-      // PR/LHCb is it a bug ? 
-      p->setChannel(i);
-      return getDecay(i).getDecayModel(); 
-    }
+      if(getDecay(i).getBrfrSum()!=previousBrSum){
+	  if ( getDecay(i).getMassMin() < p->mass() ) {
+	      p->setChannel(i);
+	      return getDecay(i).getDecayModel(); 
+	  }
+      }
+      previousBrSum=getDecay(i).getBrfrSum();
   }
 
   report(ERROR,"EvtGen") << "Could not decay:"
 			 <<EvtPDL::name(p->getId()).c_str()
 			 <<" with mass:"<<p->mass()
-			 <<" will throw event away! "<<std::endl;
+			 <<" will throw event away! "<<endl;
   
-  //  report(ERROR,"EvtGen") << "Will terminate execution."<<std::endl;
-
-  //  ::abort();  
   EvtStatus::setRejectFlag();
   return 0;
 
@@ -206,12 +210,14 @@ EvtDecayBase* EvtParticleDecayList::getDecayModel(EvtParticle *p){
 void EvtParticleDecayList::setNMode(int nmode){
 
   EvtParticleDecayPtr* _decaylist_new= new EvtParticleDecayPtr[nmode];
-  //  int i;
+
   if (_nmode!=0){
-    report(ERROR,"EvtGen") << "Error _nmode not equal to zero!!!"<<std::endl;
+    report(ERROR,"EvtGen") << "Error _nmode not equal to zero!!!"<<endl;
     ::abort();
   }
-  if ( _decaylist != 0 ) delete [] _decaylist ;
+  if (_decaylist!=0) {
+    delete [] _decaylist;
+  }
   _decaylist=_decaylist_new;
   _nmode=nmode;
 
@@ -222,7 +228,7 @@ EvtParticleDecay& EvtParticleDecayList::getDecay(int nchannel) {
   if (nchannel>=_nmode) {
     report(ERROR,"EvtGen") <<"Error getting channel:"
 			   <<nchannel<<" with only "<<_nmode
-			   <<" stored!"<<std::endl;
+			   <<" stored!"<<endl;
     ::abort();
   }
   return *(_decaylist[nchannel]);
@@ -261,6 +267,24 @@ void EvtParticleDecayList::addMode(EvtDecayBase* decay, double brfrsum,
   newlist[_nmode]->setBrfrSum(brfrsum);
   newlist[_nmode]->setMassMin(massmin);
 
+  EvtDecayBase *newDec=newlist[_nmode]->getDecayModel();
+  for(i=0;i<_nmode;i++){
+    if ( newDec->matchingDecay(*(newlist[i]->getDecayModel())) ) {
+
+      //sometimes its ok..
+      if ( newDec->getModelName() == "JETSET" || newDec->getModelName() == "PYTHIA" ) continue;
+      if ( newDec->getModelName() == "JSCONT" || newDec->getModelName() == "PYCONT" ) continue;
+      if ( newDec->getModelName() == "PYGAGA"  ) continue;
+      if ( newDec->getModelName() == "LUNDAREALAW" ) continue;
+      report(ERROR,"EvtGen") << "Two matching decays with same parent in decay table\n";
+      report(ERROR,"EvtGen") << "Please fix that\n";
+      report(ERROR,"EvtGen") << "Parent " << EvtPDL::name(newDec->getParentId()).c_str() << endl;
+      for (int j=0; j<newDec->getNDaug(); j++)
+	report(ERROR,"EvtGen") << "Daughter " << EvtPDL::name(newDec->getDaug(j)).c_str() << endl;
+      assert(0);
+    }
+  }
+
   if (_nmode!=0){
     delete [] _decaylist;
   }
@@ -284,10 +308,9 @@ void EvtParticleDecayList::finalize(){
     }
     if (fabs(_rawbrfrsum-1.0)>0.0001) {
       report(INFO,"EvtGen") <<"Warning, sum of branching fractions for "
-                            <<EvtPDL::name
-        (_decaylist[0]->getDecayModel()->getParentId()).c_str()
-      			    <<" is "<<_rawbrfrsum<<std::endl;
-      report(INFO,"EvtGen") << "rescaled to one! "<<std::endl;
+      			    <<EvtPDL::name(_decaylist[0]->getDecayModel()->getParentId()).c_str()
+      			    <<" is "<<_rawbrfrsum<<endl;
+      report(INFO,"EvtGen") << "rescaled to one! "<<endl;
       
     }
 
@@ -302,18 +325,129 @@ void EvtParticleDecayList::finalize(){
 
 }
 
-bool EvtParticleDecayList::isJetSet() 
-{
+
+EvtParticleDecayList& EvtParticleDecayList::operator=(const EvtParticleDecayList &o) {
+   if (this != &o) {
+      removeDecay();
+      _nmode=o._nmode;
+      _rawbrfrsum=o._rawbrfrsum;
+      _decaylist=new EvtParticleDecayPtr[_nmode];
+      
+      int i;
+      for(i=0;i<_nmode;i++){
+       _decaylist[i]=new EvtParticleDecay;  
+       
+       EvtDecayBase *tModel=o._decaylist[i]->getDecayModel();
+       
+       EvtDecayBase *tModelNew=tModel->clone();
+       if (tModel->getPHOTOS()){
+          tModelNew->setPHOTOS();
+       }
+       if (tModel->verbose()){
+          tModelNew->setVerbose();
+       }
+       if (tModel->summary()){
+          tModelNew->setSummary();
+       }
+       std::vector<std::string> args;
+       int j;
+       for(j=0;j<tModel->getNArg();j++){
+          args.push_back(tModel->getArgStr(j));
+       }
+       tModelNew->saveDecayInfo(tModel->getParentId(),tModel->getNDaug(),
+                                tModel->getDaugs(),
+                                tModel->getNArg(),
+                                args,
+                                tModel->getModelName(),
+                                tModel->getBranchingFraction());
+       _decaylist[i]->setDecayModel(tModelNew);
+       
+       //_decaylist[i]->setDecayModel(tModel);
+       _decaylist[i]->setBrfrSum(o._decaylist[i]->getBrfrSum());
+       _decaylist[i]->setMassMin(o._decaylist[i]->getMassMin());
+      }
+   }
+   return *this;
+
+
+}
+
+
+void EvtParticleDecayList::removeMode(EvtDecayBase* decay) {
+   // here we will delete a decay with the same final state particles
+   // and recalculate the branching fractions for the remaining modes
+   int match = -1;
+   int i;
+   double match_bf;
+
+   for(i=0;i<_nmode;i++){
+      if ( decay->matchingDecay(*(_decaylist[i]->getDecayModel())) ) {
+       match = i;
+      }
+   }
+
+   if (match < 0) {
+      report(ERROR,"EvtGen") << " Attempt to remove undefined mode for" << endl
+                           << "Parent " << EvtPDL::name(decay->getParentId()).c_str() << endl
+                           << "Daughters: ";
+      for (int j=0; j<decay->getNDaug(); j++)
+      report(ERROR,"") << EvtPDL::name(decay->getDaug(j)).c_str() << " ";
+      report(ERROR,"") << endl;
+      ::abort();
+   }
+
+   if (match == 0) {
+      match_bf = _decaylist[match]->getBrfrSum();
+   } else {
+      match_bf = (_decaylist[match]->getBrfrSum()
+                -_decaylist[match-1]->getBrfrSum());
+   }
+
+   double divisor = 1-match_bf;
+   if (divisor < 0.000001 && _nmode > 1) {
+      report(ERROR,"EvtGen") << "Removing requested mode leaves "
+                           <<  EvtPDL::name(decay->getParentId()).c_str()
+                           << " with zero sum branching fraction," << endl
+                           << "but more than one decay mode remains. Aborting."
+                           << endl;
+      ::abort();
+   }
+
+   EvtParticleDecayPtr* newlist=new EvtParticleDecayPtr[_nmode-1];
+
+   for(i=0;i<match;i++){
+      newlist[i]=_decaylist[i];
+      newlist[i]->setBrfrSum(newlist[i]->getBrfrSum()/divisor);
+   }
+   for(i=match+1; i<_nmode; i++) {
+      newlist[i-1]=_decaylist[i];
+      newlist[i-1]->setBrfrSum((newlist[i-1]->getBrfrSum()-match_bf)/divisor);
+   }
+
+
+   delete [] _decaylist;
+
+  _nmode--;
+
+  _decaylist=newlist;
+
+  if (_nmode == 0) {
+     delete [] _decaylist;
+  }
+
+}
+
+
+bool EvtParticleDecayList::isJetSet() {
   int i ;
   EvtDecayBase * decayer ;
-  
+ 
   for ( i = 0 ;
         i < getNMode() ;
-        i++ ) {
+	i++ ) {
     decayer = getDecay( i ).getDecayModel ( ) ;
     if ( decayer -> getModelName() == "PYTHIA" ) return true ;
   }
   
   return false ;
 }
-

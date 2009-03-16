@@ -18,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 //
+#include "EvtGenBase/EvtPatches.hh"
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
@@ -25,6 +26,10 @@
 #include "EvtGenBase/EvtSymTable.hh"
 #include "EvtGenBase/EvtReport.hh"
 #include <string>
+using std::endl;
+using std::fstream;
+
+std::map<std::string,std::string> EvtSymTable::_symMap;
 
 
 EvtSymTable::~EvtSymTable(){}
@@ -33,13 +38,11 @@ EvtSymTable::EvtSymTable() {
 
 }
 
-void EvtSymTable::Define(const std::string& symname,std::string d) {
-
-  //  int i;
+void EvtSymTable::define(const std::string& symname,std::string d) {
 
   if ( _symMap.find(symname)!=_symMap.end() ) {
     report(INFO,"EvtGen") << "Symbol:"<<symname.c_str()<<
-      " redefined, old value:"<<_symMap[symname].c_str()<<" new value:"<<d.c_str()<<std::endl;
+      " redefined, old value:"<<_symMap[symname].c_str()<<" new value:"<<d.c_str()<<endl;
     _symMap[symname]=d;
     return;
   }
@@ -48,10 +51,7 @@ void EvtSymTable::Define(const std::string& symname,std::string d) {
   return;
 }
 
-//double EvtSymTable::Get(const std::string& symname,int& ierr) {
-std::string EvtSymTable::Get(const std::string& symname,int& ierr) {
-
-  //  int i;
+std::string EvtSymTable::get(const std::string& symname,int& ierr) {
 
   ierr=0;
 

@@ -16,8 +16,10 @@
 //
 //    Ryd     January 5, 2000        Module created
 //
+//    jjhollar October 7, 2005       Option to select form factors at runtime
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
@@ -30,15 +32,16 @@
 #include "EvtGenModels/EvtbTosllVectorAmp.hh"
 
 #include <string>
+using std::endl;
 
 EvtbTosllBall::~EvtbTosllBall() {
-  if ( _ballffmodel ) delete _ballffmodel ;
-  if ( _calcamp ) delete _calcamp ;
+  delete _calcamp;
+  delete _ballffmodel;
 }
 
-void EvtbTosllBall::getName(std::string& model_name){
+std::string EvtbTosllBall::getName(){
 
-  model_name="BTOSLLBALL";     
+  return "BTOSLLBALL";     
 }
 
 
@@ -78,7 +81,21 @@ void EvtbTosllBall::initProbMax(){
 
 void EvtbTosllBall::init(){
 
-  checkNArg(0);
+  // First choose form factors from the .DEC file
+  // 1 = Ali-Ball '01 LCSR
+  // 2 = Ali-Ball '99 LCSR
+  // 3 = Colangelo 3pt QCD
+  // 4 = Melikhov Lattice/Quark dispersion
+  // 5 = ???
+  // 6 = Ball-Zwicky '05 LCSR (mb = 480)
+  // 7 = Ball-Zwicky '05 LCSR (mb = 460 - pseudoscalar modes only)
+
+  // The default is Ali '01
+  int theFormFactorModel = 1;
+
+  if(getNArg() == 1)
+    theFormFactorModel = (int)getArg(0);
+
   checkNDaug(3);
 
   //We expect the parent to be a scalar 
@@ -92,23 +109,33 @@ void EvtbTosllBall::init(){
 	mesontype == EvtSpinType::SCALAR)) {
     report(ERROR,"EvtGen") << "EvtbTosllBall generator expected "
                            << " a SCALAR or VECTOR 1st daughter, found:"<<
-                           EvtPDL::name(getDaug(0)).c_str()<<std::endl;
-    report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
+                           EvtPDL::name(getDaug(0)).c_str()<<endl;
+    report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
     ::abort();
   }
 
   checkSpinDaughter(1,EvtSpinType::DIRAC);
   checkSpinDaughter(2,EvtSpinType::DIRAC);
 
-  _ballffmodel = new EvtbTosllBallFF();
+  _ballffmodel = new EvtbTosllBallFF(theFormFactorModel);
   if (mesontype == EvtSpinType::SCALAR){
     _calcamp = new EvtbTosllScalarAmp(-0.313,4.344,-4.669); 
-  }
-  if (mesontype == EvtSpinType::VECTOR){
+  } else if (mesontype == EvtSpinType::VECTOR){
     _calcamp = new EvtbTosllVectorAmp(-0.313,4.344,-4.669); 
   }
 
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

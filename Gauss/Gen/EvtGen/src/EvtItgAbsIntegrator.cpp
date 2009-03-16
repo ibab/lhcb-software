@@ -19,6 +19,7 @@
 //                                                     EvtGen
 //
 //------------------------------------------------------------------------
+#include "EvtGenBase/EvtPatches.hh"
 #include "EvtGenModels/EvtItgAbsIntegrator.hh"
 
 //-------------
@@ -32,6 +33,7 @@ extern "C" {
 
 #include "EvtGenBase/EvtReport.hh"
 #include "EvtGenModels/EvtItgAbsFunction.hh"
+using std::endl;
 
 
 EvtItgAbsIntegrator::EvtItgAbsIntegrator(const EvtItgAbsFunction &theFunction):
@@ -89,14 +91,14 @@ EvtItgAbsIntegrator::boundsCheck(double &lower, double &upper) const{
   if (lower < _myFunction.lowerRange() ) {
     report(WARNING,"EvtGen") << "Warning in EvtItgAbsIntegrator::evaluate.  Lower bound " << lower << " of integral " 
 		    << " is less than lower bound " << _myFunction.lowerRange() 
-		    << " of function.  No contribution from this range will be counted." << std::endl;
+		    << " of function.  No contribution from this range will be counted." << endl;
     lower = _myFunction.lowerRange();
   }
 
   if (upper > _myFunction.upperRange() ) {
     report(WARNING,"EvtGen") << "Warning in EvtItgAbsIntegrator::evaluate.  Upper bound " << upper << " of integral "
 		    << " is greater than upper bound " << _myFunction.upperRange() 
-		    << " of function.  No contribution from this range will be counted." << std::endl;  
+		    << " of function.  No contribution from this range will be counted." << endl;  
     upper = _myFunction.upperRange();
   }
 

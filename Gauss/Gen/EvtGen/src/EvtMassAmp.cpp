@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------
 // File and Version Information: 
-//      $Id: EvtMassAmp.cpp,v 1.2 2004-07-12 16:13:31 robbep Exp $
+//      $Id: EvtMassAmp.cpp,v 1.3 2009-03-16 15:47:10 robbep Exp $
 // 
 // Environment:
 //      This software is part of the EvtGen package developed jointly
@@ -13,6 +13,7 @@
 // Module creator:
 //      Alexei Dvoretskii, Caltech, 2001-2002.
 //-----------------------------------------------------------------------
+#include "EvtGenBase/EvtPatches.hh"
 
 #include "EvtGenBase/EvtMassAmp.hh"
 
@@ -65,6 +66,8 @@ EvtComplex EvtMassAmp::amplitude(const EvtPoint1D& p) const
     if ( (m+_vb->mB()) < _vb->mAB() ) {  
       EvtTwoBodyKine vb(m,_vb->mB(),_vb->mAB());
       amp *= _vb->phaseSpaceFactor(vb,EvtTwoBodyKine::AB);
+      amp *= sqrt((vb.p() / _vb->pD()));
+
       if(_useBirthFactFF) {
 	
 	assert(_vb);
@@ -79,7 +82,10 @@ EvtComplex EvtMassAmp::amplitude(const EvtPoint1D& p) const
 
   // Decay vertex factors
 
-  if(_useDeathFact) amp *= _vd.phaseSpaceFactor(vd,EvtTwoBodyKine::AB);
+  if(_useDeathFact) {
+    amp *= _vd.phaseSpaceFactor(vd,EvtTwoBodyKine::AB);
+    amp *= sqrt((vd.p() / _vd.pD()));
+  }
   if(_useDeathFactFF) amp *= _vd.formFactor(vd);
 
   return amp;

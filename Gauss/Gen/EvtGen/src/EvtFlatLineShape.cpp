@@ -18,6 +18,7 @@
 //    Dvoretskii June  03, 2002        Reimplemented rollMass()
 //
 //------------------------------------------------------------------------
+#include "EvtGenBase/EvtPatches.hh"
 
 #include "EvtGenBase/EvtPatches.hh"
 #include "EvtGenBase/EvtFlatLineShape.hh"
@@ -36,8 +37,7 @@ EvtFlatLineShape::EvtFlatLineShape() {
 EvtFlatLineShape::~EvtFlatLineShape() {
 }
 
-EvtFlatLineShape::EvtFlatLineShape(double mass, double width, double maxRange,
-                                   EvtSpinType::spintype sp) { 
+EvtFlatLineShape::EvtFlatLineShape(double mass, double width, double maxRange, EvtSpinType::spintype sp) { 
 
   _mass=mass;
   _width=width;
@@ -53,8 +53,8 @@ EvtFlatLineShape::EvtFlatLineShape(double mass, double width, double maxRange,
 
 }
 
-EvtFlatLineShape::EvtFlatLineShape(const EvtFlatLineShape& x) :
-  EvtAbsLineShape( x ) {
+EvtFlatLineShape::EvtFlatLineShape(const EvtFlatLineShape& x):
+EvtAbsLineShape( x ) {
   _mass=x._mass;
   _width=x._width;
   _spin=x._spin;
@@ -81,8 +81,7 @@ EvtAbsLineShape* EvtFlatLineShape::clone() {
 }
 
 
-double EvtFlatLineShape::getMassProb(double mass, double massPar,int nDaug, 
-                                     double *massDau) {
+double EvtFlatLineShape::getMassProb(double mass, double massPar,int nDaug, double *massDau) {
 
   
   double dTotMass=0.;
@@ -100,12 +99,10 @@ double EvtFlatLineShape::getMassProb(double mass, double massPar,int nDaug,
   return 1.;
 }
 
-double EvtFlatLineShape::getRandMass(EvtId *,int , 
-                                     EvtId *, EvtId *, 
-                                     double , double *)
-{
+double EvtFlatLineShape::getRandMass(EvtId*,int, EvtId*, EvtId*, double, double*) {
 
   return EvtRandom::Flat(_massMin,_massMax);
+
 }
 
 

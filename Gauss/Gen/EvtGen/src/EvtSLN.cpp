@@ -18,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 //
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include <iostream>
 #include <string>
@@ -31,9 +32,9 @@
 
 EvtSLN::~EvtSLN() {}
 
-void EvtSLN::getName(std::string& model_name){
+std::string EvtSLN::getName(){
 
-  model_name="SLN";     
+  return "SLN";     
 
 }
 
@@ -60,40 +61,13 @@ void EvtSLN::init(){
 
 void EvtSLN::initProbMax(){
 
-  static EvtId EM=EvtPDL::getId("e-");
-  static EvtId MUM=EvtPDL::getId("mu-");
-  static EvtId TAUM=EvtPDL::getId("tau-");
-  static EvtId EP=EvtPDL::getId("e+");
-  static EvtId MUP=EvtPDL::getId("mu+");
-  static EvtId TAUP=EvtPDL::getId("tau+");
+  double M=EvtPDL::getMeanMass(getParentId());
+  double m=EvtPDL::getMeanMass(getDaug(0));
 
-  static EvtId DP=EvtPDL::getId("D+");
-  static EvtId DM=EvtPDL::getId("D-");
-  static EvtId BP=EvtPDL::getId("B+");
-  static EvtId BM=EvtPDL::getId("B-");
-  static EvtId DSP=EvtPDL::getId("D_s+");
-  static EvtId DSM=EvtPDL::getId("D_s-");
-  static EvtId BCP = EvtPDL::getId( "B_c+" ) ;
-  static EvtId BCM = EvtPDL::getId( "B_c-" ) ;
+  double probMax=8.0*(M*M-m*m)*m*m;
 
+  setProbMax(probMax);
 
-  if (getParentId()==DP||getParentId()==DM){
-    if (getDaug(0)==TAUM||getDaug(0)==TAUP) setProbMax(18.2);
-    if (getDaug(0)==MUM||getDaug(0)==MUP) setProbMax(0.35);    
-  }
-  if (getParentId()==DSP||getParentId()==DSM){
-    if (getDaug(0)==TAUM||getDaug(0)==TAUP) setProbMax(18.2);
-    if (getDaug(0)==MUM||getDaug(0)==MUP) setProbMax(0.35);    
-    if (getDaug(0)==EM||getDaug(0)==EP) setProbMax(0.035);
-  }
-  if (getParentId()==BP||getParentId()==BM){
-    if (getDaug(0)==TAUM||getDaug(0)==TAUP) setProbMax(625.0);
-    if (getDaug(0)==MUM||getDaug(0)==MUP) setProbMax(3.0);    
-    if (getDaug(0)==EM||getDaug(0)==EP) setProbMax(0.00006);
-  }
-  if ( getParentId() == BCM || getParentId() == BCP ) {
-    if ( getDaug(0)==TAUP || getDaug(0) == TAUM ) setProbMax(1500.) ;
-  }
 }
 
 

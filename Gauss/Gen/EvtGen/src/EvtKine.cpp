@@ -18,12 +18,16 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <math.h>
 #include "EvtGenBase/EvtKine.hh"
 #include "EvtGenBase/EvtConst.hh"
 #include "EvtGenBase/EvtVector4R.hh"
 #include "EvtGenBase/EvtVector4C.hh"
 #include "EvtGenBase/EvtTensor4C.hh"
+#include "EvtGenBase/EvtdFunction.hh"
+#include "EvtGenBase/EvtReport.hh"
+
 
 
 double EvtDecayAngle(const EvtVector4R& p,const EvtVector4R& q,
@@ -100,6 +104,38 @@ double EvtDecayPlaneNormalAngle(const EvtVector4R& p,const EvtVector4R& q,
   return q.mass()*(p*l)/sqrt(-(pq*pq-p.mass2()*q.mass2())*l.mass2());
 
 
+}
+
+
+// Calculate phi using the given 4 vectors (all in the same frame)
+double EvtDecayAnglePhi( const EvtVector4R& z, const EvtVector4R& p, const
+        EvtVector4R& q, const EvtVector4R& d )
+{
+    double eq = (p * q) / p.mass();
+    double ed = (p * d) / p.mass();
+    double mq = q.mass();
+    double q2 = p.mag2r3(q);
+    double qd = p.dotr3(q,d);
+    double zq = p.dotr3(z,q);
+    double zd = p.dotr3(z,d);
+    double alpha = (eq - mq)/(q2 * mq) * qd - ed/mq;
+
+    double y = p.scalartripler3(z,q,d) + alpha * p.scalartripler3(z,q,q);
+    double x = (zq * (qd + alpha * q2) - q2 * (zd + alpha * zq)) / sqrt(q2);
+
+    double phi = atan2(y,x);
+
+    return phi<0 ? (phi+EvtConst::twoPi) : phi;
+}
+
+EvtComplex wignerD( int j, int m1, int m2, double phi, 
+		    double theta, double gamma )
+{
+
+    EvtComplex gp(0.0, -phi*m1);
+    EvtComplex gm(0.0, -gamma*m2);
+
+    return exp( gp ) * EvtdFunction::d(j, m1, m2, theta) * exp( gm );
 }
 
 

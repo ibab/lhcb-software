@@ -19,6 +19,7 @@
 //                                                     EvtGen
 //
 //------------------------------------------------------------------------
+#include "EvtGenBase/EvtPatches.hh"
 
 #include "EvtGenModels/EvtItgPtrFunction.hh"
 
@@ -31,7 +32,7 @@ extern "C" {
 //----------------
 // Constructors --
 //----------------
-EvtItgPtrFunction::EvtItgPtrFunction( double (*theFunction)(double, const HepVector &), double lowerRange, double upperRange, const HepVector &coeffs1):
+EvtItgPtrFunction::EvtItgPtrFunction( double (*theFunction)(double, const std::vector<double> &), double lowerRange, double upperRange, const std::vector<double> &coeffs1):
   EvtItgAbsFunction(lowerRange, upperRange),
   _myFunction(theFunction),
   _coeffs1(coeffs1)

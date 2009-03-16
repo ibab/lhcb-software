@@ -19,6 +19,7 @@
 //
 //------------------------------------------------------------------------
 //
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
@@ -33,10 +34,10 @@
 #ifdef WIN32
 extern "C" {
   extern void EVT3PIONSP00(double *,int *,
-			     double *,
-			     double *,double *,
-			     double *,double *,
-			     double *,double *,double *,double *);
+			   double *,
+			   double *,double *,
+			   double *,double *,
+			   double *,double *,double *,double *);
 }
 #else
 extern "C" {
@@ -50,9 +51,9 @@ extern "C" {
 
 EvtCBTo3piP00::~EvtCBTo3piP00() {}
 
-void EvtCBTo3piP00::getName(std::string& model_name){
+std::string EvtCBTo3piP00::getName(){
 
-  model_name="CB3PI-P00";     
+  return "CB3PI-P00";     
 
 }
 
@@ -80,28 +81,7 @@ void EvtCBTo3piP00::init(){
 
 
 void EvtCBTo3piP00::initProbMax(){
-  double alpha = getArg(0);
-  int iset;
-  iset=10000;
 
-  double p4pi1[4],p4Gamma11[4],p4Gamma12[4];
-  double p4Gamma21[4],p4Gamma22[4];
-
-  double realA,imgA,realbarA,imgbarA;
-
-#ifdef WIN32
-  EVT3PIONSP00(&alpha,&iset,
-		 p4pi1,
-		 p4Gamma11,p4Gamma12,
-		 p4Gamma21,p4Gamma22,
-		 &realA,&imgA,&realbarA,&imgbarA);
-#else
-  evt3pionsp00_(&alpha,&iset,
-		 p4pi1,
-		 p4Gamma11,p4Gamma12,
-		 p4Gamma21,p4Gamma22,
-		 &realA,&imgA,&realbarA,&imgbarA);
-#endif
 
   setProbMax(1.5);
 
@@ -124,26 +104,26 @@ void EvtCBTo3piP00::decay( EvtParticle *p ){
   EvtVector4R p4[3];
   double alpha = getArg(0);
   int iset;
-  iset=0;
+  static int first=1;
+
+  if (first==1) {
+    iset=10000;
+    first=0;
+  }
+  else{
+    iset=0;
+  }
 
   double p4pi1[4],p4Gamma11[4],p4Gamma12[4];
   double p4Gamma21[4],p4Gamma22[4];
 
   double realA,imgA,realbarA,imgbarA;
 
-#ifdef WIN32
-  EVT3PIONSP00(&alpha,&iset,
-		 p4pi1,
-		 p4Gamma11,p4Gamma12,
-		 p4Gamma21,p4Gamma22,
-		 &realA,&imgA,&realbarA,&imgbarA);
-#else
   evt3pionsp00_(&alpha,&iset,
 		 p4pi1,
 		 p4Gamma11,p4Gamma12,
 		 p4Gamma21,p4Gamma22,
 		 &realA,&imgA,&realbarA,&imgbarA);
-#endif
 
   p4[0].set(p4pi1[3],p4pi1[0],p4pi1[1],p4pi1[2]);
   p4[1].set(p4Gamma11[3]+p4Gamma12[3],

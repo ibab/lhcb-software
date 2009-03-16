@@ -18,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtScalarParticle.hh"
@@ -37,9 +38,9 @@
 
 EvtKstarstargamma::~EvtKstarstargamma() {}
 
-void EvtKstarstargamma::getName(std::string& model_name){
+std::string EvtKstarstargamma::getName(){
 
-  model_name="KSTARSTARGAMMA"; 
+  return "KSTARSTARGAMMA"; 
     
 }
 
@@ -72,6 +73,10 @@ void EvtKstarstargamma::initProbMax() {
 }      
 
 void EvtKstarstargamma::decay( EvtParticle *p){
+
+/*
+
+  The EvtEvalHelAmp is completely broken...
 
   p->initializePhaseSpace(getNDaug(),getDaugs());
 
@@ -170,6 +175,8 @@ void EvtKstarstargamma::decay( EvtParticle *p){
 	   amp1._amp[7]*amp2._amp[2]+
 	   amp1._amp[8]*amp2._amp[3]+
            amp1._amp[9]*amp2._amp[4]));
+
+*/
 	   
   return;
 }

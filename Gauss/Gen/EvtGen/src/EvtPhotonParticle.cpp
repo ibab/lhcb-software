@@ -18,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include <iostream>
 #include <math.h>
@@ -25,6 +26,7 @@
 #include "EvtGenBase/EvtPhotonParticle.hh"
 #include "EvtGenBase/EvtVector4C.hh"
 #include "EvtGenBase/EvtReport.hh"
+using std::endl;
 
 EvtPhotonParticle::~EvtPhotonParticle(){}
 
@@ -89,7 +91,7 @@ EvtVector4C EvtPhotonParticle::epsParentPhoton(int i){
     break;
   default:
     report(ERROR,"EvtGen") << "EvtPhotonParticle.cc: Asked "
-			   << "for state:"<<i<<std::endl;
+			   << "for state:"<<i<<endl;
     ::abort();
     break;
   }
@@ -97,10 +99,10 @@ EvtVector4C EvtPhotonParticle::epsParentPhoton(int i){
   return temp;
 }
 
-EvtVector4C EvtPhotonParticle::epsPhoton(int /*i*/){
+EvtVector4C EvtPhotonParticle::epsPhoton(int ){
 
   report(ERROR,"EvtGen") << "EvtPhotonParticle.cc: Can not get "
-			 << "state in photons restframe."<<std::endl;;
+			 << "state in photons restframe."<<endl;;
   ::abort();
   return EvtVector4C();
 
@@ -121,13 +123,13 @@ EvtSpinDensity EvtPhotonParticle::rotateToHelicityBasis() const {
 
 
   EvtSpinDensity R;
-  R.SetDim(2);
+  R.setDim(2);
 
-  R.Set(0,0,(eplus.conj())*e1);
-  R.Set(0,1,(eplus.conj())*e2);
+  R.set(0,0,(eplus.conj())*e1);
+  R.set(0,1,(eplus.conj())*e2);
   
-  R.Set(1,0,(eminus.conj())*e1);
-  R.Set(1,1,(eminus.conj())*e2);
+  R.set(1,0,(eminus.conj())*e1);
+  R.set(1,1,(eminus.conj())*e2);
   
   return R;
 	
@@ -153,13 +155,13 @@ EvtSpinDensity EvtPhotonParticle::rotateToHelicityBasis(double alpha,
   EvtVector4C e2=((EvtParticle*)this)->epsParentPhoton(1);
   
   EvtSpinDensity R;
-  R.SetDim(2);
+  R.setDim(2);
   
-  R.Set(0,0,(eplus.conj())*e1);
-  R.Set(0,1,(eplus.conj())*e2);
+  R.set(0,0,(eplus.conj())*e1);
+  R.set(0,1,(eplus.conj())*e2);
   
-  R.Set(1,0,(eminus.conj())*e1);
-  R.Set(1,1,(eminus.conj())*e2);
+  R.set(1,0,(eminus.conj())*e1);
+  R.set(1,1,(eminus.conj())*e2);
   
   return R;
 

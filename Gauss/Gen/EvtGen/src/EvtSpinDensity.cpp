@@ -18,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include <iostream>
 #include <math.h>
@@ -25,6 +26,8 @@
 #include "EvtGenBase/EvtComplex.hh"
 #include "EvtGenBase/EvtSpinDensity.hh"
 #include "EvtGenBase/EvtReport.hh"
+using std::endl;
+using std::ostream;
 
 
 EvtSpinDensity::EvtSpinDensity(const EvtSpinDensity& density){
@@ -32,7 +35,7 @@ EvtSpinDensity::EvtSpinDensity(const EvtSpinDensity& density){
   rho=0;
 
   int i,j;
-  SetDim(density.dim);
+  setDim(density.dim);
 
   for(i=0;i<dim;i++){
     for(j=0;j<dim;j++){
@@ -43,7 +46,7 @@ EvtSpinDensity::EvtSpinDensity(const EvtSpinDensity& density){
 
 EvtSpinDensity& EvtSpinDensity::operator=(const EvtSpinDensity& density){
   int i,j;
-  SetDim(density.dim);
+  setDim(density.dim);
 
   for(i=0;i<dim;i++){
     for(j=0;j<dim;j++){
@@ -71,7 +74,7 @@ EvtSpinDensity::EvtSpinDensity(){
   rho=0;
 }
 
-void EvtSpinDensity::SetDim(int n){
+void EvtSpinDensity::setDim(int n){
   if (dim==n) return;
   if (dim!=0){
     int i;
@@ -91,22 +94,22 @@ void EvtSpinDensity::SetDim(int n){
 
 }
 
-int EvtSpinDensity::GetDim() const {
+int EvtSpinDensity::getDim() const {
   return dim;
 }
 
-void EvtSpinDensity::Set(int i,int j,const EvtComplex& rhoij){
+void EvtSpinDensity::set(int i,int j,const EvtComplex& rhoij){
   assert(i<dim&&j<dim);
   rho[i][j]=rhoij;
 }
 
-const EvtComplex& EvtSpinDensity::Get(int i,int j)const{
+const EvtComplex& EvtSpinDensity::get(int i,int j)const{
   assert(i<dim&&j<dim);
   return rho[i][j];
 }
 
-void EvtSpinDensity::SetDiag(int n){
-  SetDim(n);
+void EvtSpinDensity::setDiag(int n){
+  setDim(n);
   int i,j;
 
   for(i=0;i<n;i++){
@@ -117,14 +120,14 @@ void EvtSpinDensity::SetDiag(int n){
   }
 }
 
-double EvtSpinDensity::NormalizedProb(const EvtSpinDensity& d){
+double EvtSpinDensity::normalizedProb(const EvtSpinDensity& d){
 
   int i,j;
   EvtComplex prob(0.0,0.0);
   double norm=0.0;
 
   if (dim!=d.dim) {
-    report(ERROR,"EvtGen")<<"Not matching dimensions in NormalizedProb"<<std::endl;
+    report(ERROR,"EvtGen")<<"Not matching dimensions in NormalizedProb"<<endl;
     ::abort();
   }
 
@@ -136,20 +139,20 @@ double EvtSpinDensity::NormalizedProb(const EvtSpinDensity& d){
   }
 
   if (imag(prob)>0.00000001*real(prob)) {
-    report(ERROR,"EvtGen")<<"Imaginary probability:"<<prob<<" "<<norm<<std::endl;
+    report(ERROR,"EvtGen")<<"Imaginary probability:"<<prob<<" "<<norm<<endl;
   }
   if (real(prob)<0.0) {
-    report(ERROR,"EvtGen")<<"Negative probability:"<<prob<<" "<<norm<<std::endl;
+    report(ERROR,"EvtGen")<<"Negative probability:"<<prob<<" "<<norm<<endl;
   }
 
   return real(prob)/norm;
 
 }
 
-int EvtSpinDensity::Check(){
+int EvtSpinDensity::check(){
 
   if (dim<1) {
-    report(ERROR,"EvtGen")<<"dim="<<dim<<"in SpinDensity::Check"<<std::endl;
+    report(ERROR,"EvtGen")<<"dim="<<dim<<"in SpinDensity::Check"<<endl;
   }
 
   int i,j;
@@ -158,7 +161,7 @@ int EvtSpinDensity::Check(){
 
     if (real(rho[i][i])<0.0) return 0;
     if (imag(rho[i][i])*1000000.0>abs(rho[i][i])) {
-      report(INFO,"EvtGen") << "Failing 1"<<std::endl;
+      report(INFO,"EvtGen") << "Failing 1"<<endl;
       return 0;
     }
   }
@@ -167,12 +170,12 @@ int EvtSpinDensity::Check(){
     for(j=i+1;j<dim;j++){
       if (fabs(real(rho[i][j]-rho[j][i]))>
 	  0.00000001*(abs(rho[i][i])+abs(rho[j][j]))) {
-	report(INFO,"EvtGen") << "Failing 2"<<std::endl;
+	report(INFO,"EvtGen") << "Failing 2"<<endl;
 	return 0;
       }
       if (fabs(imag(rho[i][j]+rho[j][i]))>
 	  0.00000001*(abs(rho[i][i])+abs(rho[j][j]))) {
-	report(INFO,"EvtGen") << "Failing 3"<<std::endl;
+	report(INFO,"EvtGen") << "Failing 3"<<endl;
 	return 0;
       }
     }
@@ -181,18 +184,18 @@ int EvtSpinDensity::Check(){
   return 1;
 }
 
-std::ostream& operator<<(std::ostream& s,const EvtSpinDensity& d){
+ostream& operator<<(ostream& s,const EvtSpinDensity& d){
 
   int i,j;
 
-  s << std::endl;
-  s << "Dimension:"<<d.dim<<std::endl;
+  s << endl;
+  s << "Dimension:"<<d.dim<<endl;
 
   for (i=0;i<d.dim;i++){
     for (j=0;j<d.dim;j++){
      s << d.rho[i][j]<<" ";
     }
-    s <<std::endl;
+    s <<endl;
   }
 
   return s;

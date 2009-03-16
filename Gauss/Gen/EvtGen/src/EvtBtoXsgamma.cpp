@@ -10,7 +10,6 @@
 // Description: Routine to perform two-body non-resonant B->Xs,gamma decays.
 //              Set the first input parameter to 1 to use the Ali-Greub model,
 //              or 2 to use the Kagan-Neubert model.
-
 //
 // Modification history:
 //
@@ -29,6 +28,7 @@
 //------------------------------------------------------------------------
 //
 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
@@ -41,17 +41,17 @@
 #include "EvtGenModels/EvtBtoXsgammaKagan.hh"
 #include "EvtGenModels/EvtBtoXsgammaFixedMass.hh"
 #include "EvtGenModels/EvtBtoXsgammaFlatEnergy.hh"
+using std::endl;
 
 EvtBtoXsgamma::~EvtBtoXsgamma() {
 
-  if ( _model ) delete _model; 
-  _model=0;
+  delete _model; _model=0;
 
 }
 
-void EvtBtoXsgamma::getName(std::string& model_name){
+std::string EvtBtoXsgamma::getName(){
 
-  model_name="BTOXSGAMMA";     
+  return "BTOXSGAMMA";     
 
 }
 
@@ -73,25 +73,10 @@ void EvtBtoXsgamma::init(){
   if (getNArg() == 0) {
     
     report(ERROR,"EvtGen") << "EvtBtoXsgamma generator expected "
-                           << " at least 1 argument but found: "<<getNArg()<<std::endl;
-    report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
+                           << " at least 1 argument but found: "<<getNArg()<<endl;
+    report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
     ::abort();
-    
-  }
-  
-  if (getArg(0) == 1) _model = new EvtBtoXsgammaAliGreub();
-  else if (getArg(0) == 2) _model = new EvtBtoXsgammaKagan();
-  else if (getArg(0) == 3) _model = new EvtBtoXsgammaFixedMass();
-  else if (getArg(0) == 4) _model = new EvtBtoXsgammaFlatEnergy();
-  else{
-    report(ERROR,"EvtGen") << "No valid EvtBtoXsgamma generator model selected "
-                           << "Set arg(0) to 1 for Ali-Greub model or 2 for "
-			   <<" Kagan model or 3 for a fixed mass"<<std::endl;
-    report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
-    ::abort();
-
-   }
-  _model->init(getNArg(),getArgs());
+  }    
 }
 
 void EvtBtoXsgamma::initProbMax(){
@@ -102,9 +87,29 @@ void EvtBtoXsgamma::initProbMax(){
 
 void EvtBtoXsgamma::decay( EvtParticle *p ){
 
+  //initialize here. -- its too damn slow otherwise.
+
+  if ( _model == 0 ) {
+    
+    if (getArg(0) == 1) _model = new EvtBtoXsgammaAliGreub();
+    else if (getArg(0) == 2) _model = new EvtBtoXsgammaKagan();
+    else if (getArg(0) == 3) _model = new EvtBtoXsgammaFixedMass();
+    else if (getArg(0) == 4) _model = new EvtBtoXsgammaFlatEnergy();
+    else{
+      report(ERROR,"EvtGen") << "No valid EvtBtoXsgamma generator model selected "
+			     << "Set arg(0) to 1 for Ali-Greub model or 2 for "
+			     <<" Kagan model or 3 for a fixed mass"<<endl;
+      report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
+      ::abort();
+      
+    }
+    _model->init(getNArg(),getArgs());
+  }
+
+
   //  if ( p->getNDaug() != 0 ) {
     //Will end up here because maxrate multiplies by 1.2
-  //  report(DEBUG,"EvtGen") << "In EvtBtoXsgamma: X_s daughters should not be here!"<<std::endl;
+  //  report(DEBUG,"EvtGen") << "In EvtBtoXsgamma: X_s daughters should not be here!"<<endl;
   //  return;
   //}
 

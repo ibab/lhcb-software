@@ -17,6 +17,7 @@
 //    Jane Tinslay                March 21, 2001       Module created
 //
 //------------------------------------------------------------------------
+#include "EvtGenBase/EvtPatches.hh"
 #include "EvtGenModels/EvtItgFourCoeffFcn.hh"
 
 //-------------
@@ -25,7 +26,7 @@
 extern "C" {
 }
 
-EvtItgFourCoeffFcn::EvtItgFourCoeffFcn( double (*theFunction)(double, const HepVector &, const HepVector &, const HepVector &, const HepVector &), double lowerRange, double upperRange, const HepVector &coeffs1, const HepVector &coeffs2, const HepVector &coeffs3, const HepVector &coeffs4):
+EvtItgFourCoeffFcn::EvtItgFourCoeffFcn( double (*theFunction)(double, const std::vector<double> &, const std::vector<double> &, const std::vector<double> &, const std::vector<double> &), double lowerRange, double upperRange, const std::vector<double> &coeffs1, const std::vector<double> &coeffs2, const std::vector<double> &coeffs3, const std::vector<double> &coeffs4):
   EvtItgAbsFunction(lowerRange, upperRange),
   _myFunction(theFunction),
   _coeffs1(coeffs1),

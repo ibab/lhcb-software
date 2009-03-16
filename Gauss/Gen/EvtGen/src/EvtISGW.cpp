@@ -19,6 +19,7 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
@@ -33,9 +34,9 @@
 
 EvtISGW::~EvtISGW() {}
 
-void EvtISGW::getName(std::string& model_name){
+std::string EvtISGW::getName(){
 
-  model_name="ISGW";     
+  return "ISGW";     
 
 }
 

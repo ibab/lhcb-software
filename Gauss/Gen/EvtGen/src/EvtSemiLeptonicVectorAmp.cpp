@@ -20,6 +20,7 @@
 //------------------------------------------------------------------------
 //
 #include "EvtGenBase/EvtPatches.hh"
+#include "EvtGenBase/EvtPatches.hh"
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
 #include "EvtGenBase/EvtPDL.hh"
@@ -31,6 +32,7 @@
 #include "EvtGenBase/EvtId.hh"
 #include "EvtGenBase/EvtAmp.hh"
 #include "EvtGenBase/EvtSemiLeptonicFF.hh"
+using std::endl;
 
 void EvtSemiLeptonicVectorAmp::CalcAmp( EvtParticle *parent,
 					EvtAmp& amp,
@@ -96,11 +98,9 @@ void EvtSemiLeptonicVectorAmp::CalcAmp( EvtParticle *parent,
   if (l_num==EM||l_num==MUM||l_num==TAUM){
 
     tds = a1f*(m_b+m_meson)*EvtTensor4C::g();
-    //tds-=directProd((a2f/(m_b+m_meson))*p4b,p4b+p4meson);
     tds.addDirProd((-a2f/(m_b+m_meson))*p4b,p4b+p4meson);
     tds+=EvtComplex(0.0,vf/(m_b+m_meson))
                   *dual(directProd(p4meson+p4b,p4b-p4meson));
-    //tds-=directProd((a3f-a0f)*2.0*(m_meson/q2)*p4b,p4b-p4meson);
     tds.addDirProd((a0f-a3f)*2.0*(m_meson/q2)*p4b,p4b-p4meson);
 
     l1=EvtLeptonVACurrent(parent->getDaug(1)->spParent(0),
@@ -111,11 +111,9 @@ void EvtSemiLeptonicVectorAmp::CalcAmp( EvtParticle *parent,
   else{
     if (l_num==EP||l_num==MUP||l_num==TAUP){
     tds = a1f*(m_b+m_meson)*EvtTensor4C::g();
-    //tds-=directProd((a2f/(m_b+m_meson))*p4b,p4b+p4meson);
     tds.addDirProd((-a2f/(m_b+m_meson))*p4b,p4b+p4meson);
     tds-=EvtComplex(0.0,vf/(m_b+m_meson))
                   *dual(directProd(p4meson+p4b,p4b-p4meson));
-    //tds-=directProd((a3f-a0f)*2.0*(m_meson/q2)*p4b,p4b-p4meson);
     tds.addDirProd((a0f-a3f)*2.0*(m_meson/q2)*p4b,p4b-p4meson);
 
     l1=EvtLeptonVACurrent(parent->getDaug(2)->spParentNeutrino(),
@@ -124,7 +122,7 @@ void EvtSemiLeptonicVectorAmp::CalcAmp( EvtParticle *parent,
 			    parent->getDaug(1)->spParent(1));
     }
     else{
-      report(ERROR,"EvtGen") << "Wrong lepton number"<<std::endl;
+      report(ERROR,"EvtGen") << "Wrong lepton number"<<endl;
     }
   }
 

@@ -18,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 //
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
@@ -28,9 +29,9 @@
 
 EvtPhsp::~EvtPhsp() {}
 
-void EvtPhsp::getName(std::string& model_name){
+std::string EvtPhsp::getName(){
 
-  model_name="PHSP";     
+  return "PHSP";     
 
 }
 
@@ -60,7 +61,7 @@ void EvtPhsp::decay( EvtParticle *p ){
   //if ( p->getNDaug() != 0 ) {
     //Will end up here because maxrate multiplies by 1.2
   //  report(DEBUG,"EvtGen") << "In EvtPhsp: has "
-  //			   <<" daugthers should not be here!"<<std::endl;
+  //			   <<" daugthers should not be here!"<<endl;
   //  return;
   //}
 

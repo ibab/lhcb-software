@@ -29,6 +29,7 @@
 // Created:     Sept. 29 1997
 //
 //
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include <iostream>
 #include <string>
@@ -43,9 +44,9 @@
 
 EvtKstarnunu::~EvtKstarnunu() {}
 
-void EvtKstarnunu::getName(std::string& model_name){
+std::string EvtKstarnunu::getName(){
 
-  model_name="KSTARNUNU";     
+  return "KSTARNUNU";     
 
 }
 

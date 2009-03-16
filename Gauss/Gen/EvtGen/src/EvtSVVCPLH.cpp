@@ -20,10 +20,11 @@
 //
 //------------------------------------------------------------------------
 //
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
-#include "EvtGenBase/EvtIncoherentMixing.hh"
+#include "EvtGenBase/EvtCPUtil.hh"
 #include "EvtGenBase/EvtPDL.hh"
 #include "EvtGenModels/EvtSVVHelAmp.hh"
 #include "EvtGenBase/EvtReport.hh"
@@ -31,12 +32,13 @@
 #include "EvtGenBase/EvtId.hh"
 #include <string>
 #include "EvtGenBase/EvtConst.hh"
+using std::endl;
 
 EvtSVVCPLH::~EvtSVVCPLH() {}
 
-void EvtSVVCPLH::getName(std::string& model_name){
+std::string EvtSVVCPLH::getName(){
 
-  model_name="SVV_CPLH";     
+  return "SVV_CPLH";     
 
 }
 
@@ -78,7 +80,7 @@ void EvtSVVCPLH::decay( EvtParticle *p){
   double t;
   EvtId other_b;
 
-  EvtIncoherentMixing::OtherB(p,t,other_b,0.5);
+  EvtCPUtil::OtherB(p,t,other_b);
 
   EvtComplex G0P,G1P,G1M;
   
@@ -92,14 +94,15 @@ void EvtSVVCPLH::decay( EvtParticle *p){
   double sdmt=sin(getArg(1)*t/(2*EvtConst::c));
 
   EvtComplex cG0P,cG1P,cG1M;
-  
-  static double deltaGamma = EvtIncoherentMixing::getdGammas() / EvtConst::c ;
-  
-  //I'm not sure if the std::fabs() is right when t can be
+
+  static double ctauL=EvtPDL::getctau(EvtPDL::getId("B_s0L"));
+  static double ctauH=EvtPDL::getctau(EvtPDL::getId("B_s0H"));
+
+  //I'm not sure if the fabs() is right when t can be
   //negative as in the case of Bs produced coherently.
   double pt=1;
-  double mt = exp( - fabs( t * deltaGamma ) ) ;
-  
+  double mt=exp(-fabs(t*(ctauL-ctauH)/(ctauL*ctauH)));
+
   if (other_b==BSB){
     cG0P=pt*G0P*(cdmt+lambda_km*EvtComplex(0.0,getArg(2)*sdmt));
     cG1P=pt*G1P*(cdmt+lambda_km*EvtComplex(0.0,getArg(2)*sdmt));
@@ -111,17 +114,17 @@ void EvtSVVCPLH::decay( EvtParticle *p){
     cG1M=-mt*G1M*(cdmt-(1.0/lambda_km)*EvtComplex(0.0,getArg(2)*sdmt));
   }
   else{
-    report(ERROR,"EvtGen") << "other_b was not BSB or BS0!"<<std::endl;
+    report(ERROR,"EvtGen") << "other_b was not BSB or BS0!"<<endl;
     ::abort();
   }
-  
-  EvtComplex A0,AP,AM;
-  
-  A0=cG0P/sqrt(2.0);
-  AP=(cG1P+cG1M)/sqrt(2.0);
-  AM=(cG1P-cG1M)/sqrt(2.0); 
 
-  EvtSVVHelAmp::SVVHel(p,_amp2,getDaug(0),getDaug(1),AP,A0,AM);
+   EvtComplex A0,AP,AM;
+
+   A0=cG0P/sqrt(2.0);
+   AP=(cG1P+cG1M)/sqrt(2.0); 
+   AM=(cG1P-cG1M)/sqrt(2.0); 
+
+   EvtSVVHelAmp::SVVHel(p,_amp2,getDaug(0),getDaug(1),AP,A0,AM);
 
   return ;
 }

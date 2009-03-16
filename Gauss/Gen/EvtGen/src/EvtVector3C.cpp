@@ -18,10 +18,12 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <iostream>
 #include <math.h>
 #include "EvtGenBase/EvtComplex.hh"
 #include "EvtGenBase/EvtVector3C.hh"
+using std::ostream;
 
 
 
@@ -90,7 +92,7 @@ void EvtVector3C::applyRotateEuler(double phi,double theta,double ksi){
 
 
 
-std::ostream& operator<<(std::ostream& s,const EvtVector3C& v){
+ostream& operator<<(ostream& s,const EvtVector3C& v){
 
   s<<"("<<v.v[0]<<","<<v.v[1]<<","<<v.v[2]<<")";
   

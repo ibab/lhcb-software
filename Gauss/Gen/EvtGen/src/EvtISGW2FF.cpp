@@ -20,6 +20,7 @@
 //------------------------------------------------------------------------
 // 
 #include "EvtGenBase/EvtPatches.hh"
+#include "EvtGenBase/EvtPatches.hh"
 #include "EvtGenBase/EvtReport.hh"
 #include "EvtGenModels/EvtISGW2FF.hh"
 #include "EvtGenBase/EvtPDL.hh"
@@ -28,6 +29,8 @@
 #include "EvtGenBase/EvtConst.hh"
 #include <string>
 #include <math.h>
+#include <stdlib.h>
+using std::endl;
 
 void EvtISGW2FF::getscalarff(EvtId parent,EvtId daught,
                        double t, double mass, double *fpf,
@@ -583,12 +586,12 @@ void EvtISGW2FF::getscalarff(EvtId parent,EvtId daught,
 void EvtISGW2FF::EvtISGW2FF1S0 (EvtId parent,EvtId daugt,
 			  double t, double mass, double *fpf, double *fmf ) {
 
-  double mtb, mbb(0.);
-  double msd(0.), mx,mb,nf(0.),nfp(0.); 
-  double msq(0.),bx2(0.),mbx(0.),mtx;
+  double mtb, mbb(0.0);
+  double msd(0.0), mx,mb,nf(0.0),nfp(0.0); 
+  double msq(0.0),bx2(0.0),mbx(0.0),mtx;
   double zji,cji,w,gammaji,chiji,betaji_fppfm;
   double rfppfm,rfpmfm,f3fppfm,f3fpmfm,fppfm,fpmfm,al,ai,rcji,f3; 
-  double mqm,msb(0.),bb2(0.),mup,mum,bbx2,tm,wt,r2,betaji_fpmfm;
+  double mqm,msb(0.0),bb2(0.0),mup,mum,bbx2,tm,wt,r2,betaji_fpmfm;
 
   EvtId prnt=parent;
   EvtId dgt=daugt;
@@ -767,8 +770,7 @@ void EvtISGW2FF::EvtISGW2FF1S0 (EvtId parent,EvtId daugt,
 	nfp = 3.0;
       }
       else{
-      report(ERROR,"EvtGen") << "Not implemented daugt:"<<daugt.getId()
-                             <<" in get_isgw_ff_1S0.\n";
+      report(ERROR,"EvtGen") << "Not implemented daugt:"<<daugt.getId()<<" in get_isgw_ff_1S0.\n";
       }
     }
   }
@@ -794,8 +796,7 @@ void EvtISGW2FF::EvtISGW2FF1S0 (EvtId parent,EvtId daugt,
 	  nfp = 2.0;
 	}
 	else{
-      report(ERROR,"EvtGen") << "Not implemented daugt:"<<daugt.getId()
-                             <<" in get_isgw_ff_1S0.\n";
+      report(ERROR,"EvtGen") << "Not implemented daugt:"<<daugt.getId()<<" in get_isgw_ff_1S0.\n";
 	}
       }
     }
@@ -807,24 +808,23 @@ void EvtISGW2FF::EvtISGW2FF1S0 (EvtId parent,EvtId daugt,
 	mbb=1.968;
 	nf = 3.0;
     
-	if  (dgt==PI0||dgt==ETA||dgt==ETAPR) {
+	if  (dgt==K0||dgt==K0S||dgt==K0L||dgt==KB) {
       
 	  msq=0.33;
-	  bx2=0.406*0.406;
+	  bx2=0.44*0.44;
 	  mbx=0.75*0.770+0.25*0.14;
 	  nfp = 0.0;
 	}
 	else{
-	  if  (dgt==K0||dgt==K0S||dgt==K0L||dgt==KB) {
-	    msq=0.55;
-	    bx2=0.44*0.44;
+	  if  (dgt==PI0||dgt==ETA||dgt==ETAPR) {
+	    msq=0.33;
+	    bx2=0.53*0.53;
 	    mbx=0.75*0.892+0.25*0.49767;
-	    nfp = 2.0;
+	    nfp = 0.0;
 	  }
 	  else{
 
-	    report(ERROR,"EvtGen") << "Not implemented daugt:"<<daugt.getId()
-                             <<" in get_isgw_ff_1S0.\n";
+	    report(ERROR,"EvtGen") << "Not implemented daugt:"<<daugt.getId()<<" in get_isgw_ff_1S0.\n";
 	  }
 	}
       }
@@ -853,14 +853,13 @@ void EvtISGW2FF::EvtISGW2FF1S0 (EvtId parent,EvtId daugt,
 	  nfp = 2.0;
 	}
 	else{
-	    report(ERROR,"EvtGen") << "Not implemented daugt:"<<daugt.getId()
-                             <<" in get_isgw_ff_1S0.\n";
+	    report(ERROR,"EvtGen") << "Not implemented daugt:"<<daugt.getId()<<" in get_isgw_ff_1S0.\n";
 	  }
 	}
     
       else{
 	report(ERROR,"EvtGen") << "Not implemented parent in get_isgw_ff_1S0.\n";
-	report(ERROR,"EvtGen") << "Parent:"<<parent.getId()<<std::endl;
+	report(ERROR,"EvtGen") << "Parent:"<<parent.getId()<<endl;
       }
     }
     }
@@ -901,10 +900,8 @@ void EvtISGW2FF::EvtISGW2FF1S0 (EvtId parent,EvtId daugt,
   chiji = -1.0 - ( gammaji / ( 1- zji ));
   betaji_fppfm = gammaji - (2.0/3.0)*chiji;
   betaji_fpmfm = gammaji + (2.0/3.0)*chiji;
-  rfppfm = cji *
-    (1.0 + betaji_fppfm*EvtGetas( msq,sqrt(msb*msq) )/EvtConst::pi);
-  rfpmfm = cji *
-    (1.0 + betaji_fpmfm*EvtGetas( msq,sqrt(msb*msq) )/EvtConst::pi);
+  rfppfm = cji *(1.0 + betaji_fppfm*EvtGetas( msq,sqrt(msb*msq) )/EvtConst::pi);
+  rfpmfm = cji *(1.0 + betaji_fpmfm*EvtGetas( msq,sqrt(msb*msq) )/EvtConst::pi);
   f3fppfm = f3*pow(( mbb / mtb ),-0.5)*pow((mbx/mtx),0.5);
   f3fpmfm = f3*pow(( mbb / mtb ),0.5)*pow((mbx/mtx),-0.5);
   fppfm = f3fppfm* rfppfm * ( 2.0 - ( ( mtx/msq)*(1- ( (msd*msq*bb2)
@@ -1079,12 +1076,12 @@ void  EvtISGW2FF::EvtISGW2FF3S1(EvtId parent,EvtId daugt,double t,double mass,
   static EvtId BSB=EvtPDL::getId("anti-B_s0");
   static EvtId BS0=EvtPDL::getId("B_s0");
 
-  double cf(0.),mtb,wt,msd(0.),mup,f3f,msq(0.),bb2(0.),mum,mtx,bbx2,f3g;
-  double cji,bx2(0.),f3appam,msb(0.),tm,mbb(0.),mbx(0.);
+  double cf(0.0),mtb,wt,msd(0.0),mup,f3f,msq(0.0),bb2(0.0),mum,mtx,bbx2,f3g;
+  double cji,bx2(0.0),f3appam,msb(0.0),tm,mbb(0.0),mbx(0.0);
   double f3apmam,appam,apmam,mb,mx,f3;
   double r_f,r_g,r_appam,r_apmam, betaji_f,betaji_g;
   double betaji_appam, betaji_apmam;
-  double w,mqm,r2,chiji,zji,ai,al,rcji,nf(0.),nfp(0.),gammaji;
+  double w,mqm,r2,chiji,zji,ai,al,rcji,nf(0.0),nfp(0.0),gammaji;
 
   EvtId prnt=parent;
   EvtId dgt=daugt;
@@ -1115,8 +1112,7 @@ void  EvtISGW2FF::EvtISGW2FF3S1(EvtId parent,EvtId daugt,double t,double mass,
 	nfp = 0.0;
       }
       else{
-	report(ERROR,"EvtGen") << "Not implemented daugt:"<<daugt.getId()
-                         <<" in get_isgw_ff_3S1.\n";
+	report(ERROR,"EvtGen") << "Not implemented daugt:"<<daugt.getId()<<" in get_isgw_ff_3S1.\n";
       }
     }
   }
@@ -1146,8 +1142,7 @@ void  EvtISGW2FF::EvtISGW2FF3S1(EvtId parent,EvtId daugt,double t,double mass,
 	  nfp = 0.0;
 	}
 	else{
-	  report(ERROR,"EvtGen") << "Not implemented daugt:"<<daugt.getId()
-                           <<" in get_isgw_ff_3S1.\n";
+	  report(ERROR,"EvtGen") << "Not implemented daugt:"<<daugt.getId()<<" in get_isgw_ff_3S1.\n";
 	}
       }
     }
@@ -1177,8 +1172,7 @@ void  EvtISGW2FF::EvtISGW2FF3S1(EvtId parent,EvtId daugt,double t,double mass,
 	    nfp = 2.0;
 	  }
 	  else{
-	report(ERROR,"EvtGen") << "Not implemented daugt:"<<daugt.getId()
-                         <<" in get_isgw_ff_3S1.\n";
+	report(ERROR,"EvtGen") << "Not implemented daugt:"<<daugt.getId()<<" in get_isgw_ff_3S1.\n";
 	  }
 	}
       }
@@ -1209,8 +1203,7 @@ void  EvtISGW2FF::EvtISGW2FF3S1(EvtId parent,EvtId daugt,double t,double mass,
 	  nfp = 2.0;
 	}
 	else{
-	    report(ERROR,"EvtGen") << "Not implemented daugt:"<<daugt.getId()
-                             <<" in get_isgw_ff_1S0.\n";
+	    report(ERROR,"EvtGen") << "Not implemented daugt:"<<daugt.getId()<<" in get_isgw_ff_1S0.\n";
 	  }
 	}
       
@@ -1452,12 +1445,12 @@ void EvtISGW2FF::EvtISGW2FF21S0 (EvtId parent,EvtId daugt,
   static EvtId BSB=EvtPDL::getId("anti-B_s0");
   static EvtId BS0=EvtPDL::getId("B_s0");
 
-  double mtb, mbb(0.);
-  double msd(0.), mx,mb,nf,nfp(0.); 
-  double msq(0.),bx2(0.),mbx(0.),mtx;
+  double mtb, mbb(0.0);
+  double msd(0.0), mx,mb,nf,nfp(0.0); 
+  double msq(0.0),bx2(0.0),mbx(0.0),mtx;
   double f3fppfm,f3fpmfm,fppfm,fpmfm,f3;
-  double mqm,msb(0.);
-  double mum,mup,r2,wt,tm,bb2(0.),bbx2;
+  double mqm,msb(0.0);
+  double mum,mup,r2,wt,tm,bb2(0.0),bbx2;
   double tau,udef,vdef;
 
   EvtId prnt=parent;
@@ -1487,8 +1480,7 @@ void EvtISGW2FF::EvtISGW2FF21S0 (EvtId parent,EvtId daugt,
       }
       else{
 
-      report(ERROR,"EvtGen") 
-        << "Not implemented daugt in get_EvtISGW2_ff_21S0.\n";
+      report(ERROR,"EvtGen") << "Not implemented daugt in get_EvtISGW2_ff_21S0.\n";
       }
     }
   }
@@ -1510,8 +1502,7 @@ void EvtISGW2FF::EvtISGW2FF21S0 (EvtId parent,EvtId daugt,
       }
     }
     else{
-      report(ERROR,"EvtGen") 
-        << "Not implemented parent in get_EvtISGW2_ff_21S0.\n";
+      report(ERROR,"EvtGen") << "Not implemented parent in get_EvtISGW2_ff_21S0.\n";
     }
   }
   
@@ -1711,12 +1702,12 @@ void EvtISGW2FF::EvtISGW2FF23S1 (EvtId parent,EvtId daugt,
   static EvtId BSB=EvtPDL::getId("anti-B_s0");
   static EvtId BS0=EvtPDL::getId("B_s0");
 
-  double mtb,  mbb(0.);
-  double msd(0.), mx,mb,nf,nfp(0.); 
-  double msq(0.),bx2(0.),mbx(0.),mtx;
+  double mtb,  mbb(0.0);
+  double msd(0.0), mx,mb,nf,nfp(0.0); 
+  double msq(0.0),bx2(0.0),mbx(0.0),mtx;
   double f3appam,f3apmam,f3,appam,apmam,f3fp,f3gp;
-  double udef,tau,mum,mup,bb2(0.),bbx2,tm,wt,mqm,r2,msb(0.);
-  double cfp(0.);
+  double udef,tau,mum,mup,bb2(0.0),bbx2,tm,wt,mqm,r2,msb(0.0);
+  double cfp(0.0);
 
   EvtId prnt=parent;
   EvtId dgt=daugt;
@@ -1747,8 +1738,7 @@ void EvtISGW2FF::EvtISGW2FF23S1 (EvtId parent,EvtId daugt,
 	nfp=3.0;
       }
       else{
-      report(ERROR,"EvtGen") 
-        << "Not implemented daugt in get_isgw_ff_23P1.\n";
+      report(ERROR,"EvtGen") << "Not implemented daugt in get_isgw_ff_23P1.\n";
       }
     }
   }
@@ -1768,13 +1758,11 @@ void EvtISGW2FF::EvtISGW2FF23S1 (EvtId parent,EvtId daugt,
 	nfp = 0.0;
       }
       else{      
-	report(ERROR,"EvtGen") 
-    << "Not implemented daugt in get_isgw_ff_23P1.\n";
+	report(ERROR,"EvtGen") << "Not implemented daugt in get_isgw_ff_23P1.\n";
       }
     }
     else{
-      report(ERROR,"EvtGen") 
-        << "Not implemented parent in get_isgw_ff_23P1.\n";
+      report(ERROR,"EvtGen") << "Not implemented parent in get_isgw_ff_23P1.\n";
     }
   }
 
@@ -1986,12 +1974,12 @@ void EvtISGW2FF::EvtISGW2FF1P1 (EvtId parent,EvtId daugt,
   static EvtId BSB=EvtPDL::getId("anti-B_s0");
   static EvtId BS0=EvtPDL::getId("B_s0");
 
-  double mtb, mbb(0.);
-  double msd(0.), mx,mb,nf,nfp(0.); 
-  double msq(0.),bx2(0.),mbx(0.),mtx,f5;
+  double mtb, mbb(0.0);
+  double msd(0.0), mx,mb,nf,nfp(0.0); 
+  double msq(0.0),bx2(0.0),mbx(0.0),mtx,f5;
   double f5sppsm,f5spmsm;
   double f5v,f5r,mup,mum,vv,rr,spmsm,sppsm;
-  double mqm,msb(0.),bb2(0.),bbx2,tm,wt,r2;
+  double mqm,msb(0.0),bb2(0.0),bbx2,tm,wt,r2;
   EvtId prnt=parent;
   EvtId dgt=daugt;
   if (prnt==B0||prnt==B0B||prnt==BP||prnt==BM) {
@@ -2311,11 +2299,11 @@ void EvtISGW2FF::EvtISGW2FF3P1 (EvtId parent,EvtId daugt,
   static EvtId BSB=EvtPDL::getId("anti-B_s0");
   static EvtId BS0=EvtPDL::getId("B_s0");
 
-  double mtb,  mbb(0.);
-  double msd(0.), mx,mb,nf,nfp(0.); 
-  double msq(0.),bx2(0.),mbx(0.),mtx;
+  double mtb,  mbb(0.0);
+  double msd(0.0), mx,mb,nf,nfp(0.0); 
+  double msq(0.0),bx2(0.0),mbx(0.0),mtx;
   double f5cppcm,f5cpmcm,f5,ql,ll,cppcm,cpmcm,f5q,f5l;
-  double mqm,msb(0.),bb2(0.),mup,mum,bbx2,tm,wt,r2;
+  double mqm,msb(0.0),bb2(0.0),mup,mum,bbx2,tm,wt,r2;
   EvtId prnt=parent;
   EvtId dgt=daugt;
 
@@ -2342,8 +2330,7 @@ void EvtISGW2FF::EvtISGW2FF3P1 (EvtId parent,EvtId daugt,
 	nfp = 3.0;
       }
       else{
-	report(ERROR,"EvtGen") << "Not implemented daugt:"<<daugt.getId()
-                         <<" in get_isgw_ff_3P1.\n";
+	report(ERROR,"EvtGen") << "Not implemented daugt:"<<daugt.getId()<<" in get_isgw_ff_3P1.\n";
       }
     }
   }
@@ -2371,8 +2358,7 @@ void EvtISGW2FF::EvtISGW2FF3P1 (EvtId parent,EvtId daugt,
 	  nfp = 2.0;
 	}
 	else{
-	  report(ERROR,"EvtGen") << "Not implemented daugt:"<<daugt.getId()
-                           <<" in get_isgw_ff_3P1.\n";
+	  report(ERROR,"EvtGen") << "Not implemented daugt:"<<daugt.getId()<<" in get_isgw_ff_3P1.\n";
 	}
       }
     }
@@ -2400,8 +2386,7 @@ void EvtISGW2FF::EvtISGW2FF3P1 (EvtId parent,EvtId daugt,
 	  nfp = 2.0;
 	}
 	else{
-	    report(ERROR,"EvtGen") << "Not implemented daugt:"<<daugt.getId()
-                             <<" in get_isgw_ff_1S0.\n";
+	    report(ERROR,"EvtGen") << "Not implemented daugt:"<<daugt.getId()<<" in get_isgw_ff_1S0.\n";
 	  }
 	}
     
@@ -2640,11 +2625,11 @@ void EvtISGW2FF::EvtISGW2FF3P0 (EvtId parent,EvtId daugt,
   static EvtId BSB=EvtPDL::getId("anti-B_s0");
   static EvtId BS0=EvtPDL::getId("B_s0");
 
-  double mtb, mbb(0.);
-  double msd(0.), mx,mb,nf,nfp(0.); 
-  double msq(0.),bx2(0.),mbx(0.),mtx;
+  double mtb, mbb(0.0);
+  double msd(0.0), mx,mb,nf,nfp(0.0); 
+  double msq(0.0),bx2(0.0),mbx(0.0),mtx;
   double f5uppum,f5upmum,uppum,upmum,f5;
-  double mqm,mum,mup,wt,r2,bb2(0.),bbx2,msb(0.),tm;
+  double mqm,mum,mup,wt,r2,bb2(0.0),bbx2,msb(0.0),tm;
 
   EvtId prnt=parent;
   EvtId dgt=daugt;
@@ -2697,47 +2682,70 @@ void EvtISGW2FF::EvtISGW2FF3P0 (EvtId parent,EvtId daugt,
 	  nfp = 2.0;
 	}
 	else{
-	  report(ERROR,"EvtGen") 
-      << "Not implemented daugt in get_EvtISGW2_ff_3P0.\n";
+	  report(ERROR,"EvtGen") << "Not implemented daugt in get_EvtISGW2_ff_3P0.\n";
 	}
       }
     }
     else{
-      //BS -> cs constants added by djl on Jan. 21,1998
-      if (prnt==BS0||prnt==BSB){
-
-	msb=5.2;
+      if (prnt==DSP||prnt==DSM){
+	msb=1.82;
 	msd=0.55;
-	bb2=0.54*0.54;
-	mbb=5.38;
-	nf = 4.0;
-    
-	if  (dgt==D3P0SP||dgt==D3P0SN) {
-      
-	  msq=1.82;
-	  bx2=0.41*0.41;
-	  mbx=(3.0*2.54+2.46)/4.0;
-	  nfp = 3.0;
-	}
-	else if (dgt==K0STM||dgt==K0STB||dgt==K0STP||dgt==K0ST0) {
+	bb2=0.56*0.56;
+	mbb=1.968;
+	nf = 3.0;
+	
+	if (dgt==F0||dgt==F0PR||dgt==A00||dgt==A0P||dgt==A0M) {
 	  msq=0.55;
-	  bx2=0.30*0.30;
+	  bx2=0.33*0.33;
 	  mbx=(3.0*1.40+1.43+5.0*1.43+3.0*1.27)/12.0;
 	  nfp = 2.0;
 	}
 	else{
-	    report(ERROR,"EvtGen") << "Not implemented daugt:"<<daugt.getId()
-                             <<" in get_isgw_ff_1S0.\n";
+	  if (dgt==K0STM||dgt==K0STB||dgt==K0STP||dgt==K0ST0) {
+	    msq=0.33;
+	    bx2=0.30*0.30;
+	    mbx=(3.0*1.23+0.98+5.0*1.32+3.0*1.26)/12.0;
+	    nfp = 0.0;
+	  }
+	  else{
+	    report(ERROR,"EvtGen") << "Not implemented daugt in get_EvtISGW2_ff_3P0.\n";
 	  }
 	}
-    
-    else{
-      report(ERROR,"EvtGen") 
-        << "Not implemented parent in get_EvtISGW2_ff_3P0.\n";
-    }
+      }
+      else{
+	//BS -> cs constants added by djl on Jan. 21,1998
+	if (prnt==BS0||prnt==BSB){
+
+	  msb=5.2;
+	  msd=0.55;
+	  bb2=0.54*0.54;
+	  mbb=5.38;
+	  nf = 4.0;
+	  
+	  if  (dgt==D3P0SP||dgt==D3P0SN) {
+	    
+	    msq=1.82;
+	    bx2=0.41*0.41;
+	    mbx=(3.0*2.54+2.46)/4.0;
+	    nfp = 3.0;
+	  }
+	  else if (dgt==K0STM||dgt==K0STB||dgt==K0STP||dgt==K0ST0) {
+	    msq=0.55;
+	    bx2=0.30*0.30;
+	    mbx=(3.0*1.40+1.43+5.0*1.43+3.0*1.27)/12.0;
+	    nfp = 2.0;
+	  }
+	  else{
+	    report(ERROR,"EvtGen") << "Not implemented daugt:"<<daugt.getId()<<" in get_isgw_ff_1S0.\n";
+	  }
+	}
+	else{
+	  report(ERROR,"EvtGen") << "Not implemented parent in get_EvtISGW2_ff_3P0.\n";
+	}
+      }
     }
   }
-
+  
 
   mtb = msb + msd;
   mtx = msq + msd;
@@ -2772,6 +2780,7 @@ void EvtISGW2FF::EvtISGW2FF3P0 (EvtId parent,EvtId daugt,
   return;
 
 }
+
 
 void EvtISGW2FF::EvtISGW2FF3P2 (EvtId parent,EvtId daugt,
        double t, double mass, double *hf, double *kf, 
@@ -2933,12 +2942,12 @@ void EvtISGW2FF::EvtISGW2FF3P2 (EvtId parent,EvtId daugt,
   static EvtId BS0=EvtPDL::getId("B_s0");
 
 
-  double mtb, mbb(0.);
-  double msd(0.), mx,mb,nf,nfp(0.); 
-  double msq(0.),bx2(0.),mbx(0.),mtx,f5;
+  double mtb, mbb(0.0);
+  double msd(0.0), mx,mb,nf,nfp(0.0); 
+  double msq(0.0),bx2(0.0),mbx(0.0),mtx,f5;
   double f5h,f5k,f5bppbm,f5bpmbm,bppbm,bpmbm;
-  double mqm,mum,mup,tm,wt,r2,bb2(0.),bbx2;
-  double msb(0.);
+  double mqm,mum,mup,tm,wt,r2,bb2(0.0),bbx2;
+  double msb(0.0);
   EvtId prnt=parent;
   EvtId dgt=daugt;
 
@@ -3023,8 +3032,7 @@ void EvtISGW2FF::EvtISGW2FF3P2 (EvtId parent,EvtId daugt,
 	  nfp = 2.0;
 	}
 	else{
-	    report(ERROR,"EvtGen") << "Not implemented daugt:"<<daugt.getId()
-                             <<" in get_isgw_ff_1S0.\n";
+	    report(ERROR,"EvtGen") << "Not implemented daugt:"<<daugt.getId()<<" in get_isgw_ff_1S0.\n";
 	  }
       }
     
@@ -3125,4 +3133,13 @@ double EvtISGW2FF::EvtGetas ( double mass )
   
 } //EvtGetas
 
+
+void EvtISGW2FF::getbaryonff(EvtId, EvtId, double, double, double*, 
+			     double*, double*, double*){
+  
+  report(ERROR,"EvtGen") << "Not implemented :getbaryonff in EvtISGW2FF.\n";  
+
+  ::abort();
+
+}
 

@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------
 // File and Version Information:
-//      $Id: EvtRanFor.cpp,v 1.4 2004-07-12 16:13:32 robbep Exp $
+//      $Id: EvtRanFor.cpp,v 1.5 2009-03-16 15:44:04 robbep Exp $
 //
 // Description:
 //	subroutine emcranfor_.
@@ -18,6 +18,7 @@
 // Copyright Information: See EvtGen/COPYRIGHT
 //
 //------------------------------------------------------------------------
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>

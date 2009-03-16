@@ -19,6 +19,7 @@
 //
 //------------------------------------------------------------------------
 //
+#include "EvtGenBase/EvtPatches.hh"
 #include <iostream>
 #include "EvtGenBase/EvtGenKine.hh"
 #include "EvtGenBase/EvtRandom.hh"
@@ -26,6 +27,7 @@
 #include "EvtGenBase/EvtReport.hh"
 #include "EvtGenBase/EvtConst.hh"
 #include <math.h>
+using std::endl;
 
 
 double EvtPawt(double a,double b,double c)
@@ -33,12 +35,7 @@ double EvtPawt(double a,double b,double c)
   double temp=(a*a-(b+c)*(b+c))*(a*a-(b-c)*(b-c));
 
   if (temp<=0) {
-
-    //report(ERROR,"EvtGen")<<"Sqrt of negative number in EvtPhaseSpace\n"<<
-    //   "This seems to happen on AIX but I do not know why yet!"<<std::endl;
-
      return 0.0;
-
   }
 
   return sqrt(temp)/(2.0*a);
@@ -64,7 +61,7 @@ double EvtGenKine::PhaseSpace( int ndaug, double mass[30], EvtVector4R p4[30],
 
   if ( ndaug == 2 ) {
 
-//  Two body phase space
+     //Two body phase space
 
      energy = ( mp*mp + mass[0]*mass[0] -
               mass[1]*mass[1] ) / ( 2.0 * mp );
@@ -77,7 +74,7 @@ double EvtGenKine::PhaseSpace( int ndaug, double mass[30], EvtVector4R p4[30],
      p3 = -1.0*p3;
      p4[1].set( energy, 0.0, 0.0, p3 );
 
-//   Now rotate four vectors.
+     //Now rotate four vectors.
 
      alpha = EvtRandom::Flat( EvtConst::twoPi );
      beta = acos(EvtRandom::Flat( -1.0, 1.0 ));
@@ -90,10 +87,12 @@ double EvtGenKine::PhaseSpace( int ndaug, double mass[30], EvtVector4R p4[30],
 
   if ( ndaug != 2 ) {
 
-     double pm[5][30],to[4],pmin,pmax,psum,wtmax(0.),rnd[30];
-     double ran,wt,pa,costh,sinth,phi,p[4][30],be[4],bep,temp;
-     int i,il,ilr,i1,il1u,il1,il2(0),il2r,ilu;
-
+    double wtmax=0.0;
+    double pm[5][30],to[4],pmin,pmax,psum,rnd[30];
+    double ran,wt,pa,costh,sinth,phi,p[4][30],be[4],bep,temp;
+    int i,il,ilr,i1,il1u,il1,il2r,ilu;
+    int il2=0;
+    
      for(i=0;i<ndaug;i++){
        pm[4][i]=0.0;
        rnd[i]=0.0;
@@ -165,8 +164,7 @@ double EvtGenKine::PhaseSpace( int ndaug, double mass[30], EvtVector4R p4[30],
        wtmax=1.0/15.0;
        break;
      default:
-       report(ERROR,"EvtGen") << "too many daughters for phase space..." 
-                              << ndaug << " "<< mp <<std::endl;;
+       report(ERROR,"EvtGen") << "too many daughters for phase space..." << ndaug << " "<< mp <<endl;;
        break;
      }
 
@@ -180,8 +178,6 @@ double EvtGenKine::PhaseSpace( int ndaug, double mass[30], EvtVector4R p4[30],
        pmin=pmin+mass[il+1-1];
        wtmax=wtmax*EvtPawt(pmax,pmin,mass[il-1]);
      }
-
-     //report(INFO,"EvtGen") << "wtmax:"<<wtmax<<std::endl;
 
      do{
 
@@ -209,7 +205,7 @@ double EvtGenKine::PhaseSpace( int ndaug, double mass[30], EvtVector4R p4[30],
        }
        if (wt>wtmax) {
 	 report(ERROR,"EvtGen") << "wtmax to small in EvtPhaseSpace with "
-				<< ndaug <<" daughters"<<std::endl;;
+				<< ndaug <<" daughters"<<endl;;
        }
      } while (wt<EvtRandom::Flat(wtmax));
      
@@ -289,8 +285,6 @@ double EvtGenKine::PhaseSpacePole(double M, double m1, double m2, double m3,
 
   double r=v1/(v1+v2);
 
-  //report(INFO,"EvtGen") << "v1,v2:"<<v1<<","<<v2<<std::endl;
-
   double m13min,m13max;
 
   do{
@@ -324,21 +318,21 @@ double EvtGenKine::PhaseSpacePole(double M, double m1, double m2, double m3,
   double p3mom=sqrt(E3*E3-m3*m3);
   double cost13=(2.0*E1*E3+m1*m1+m3*m3-m13sq)/(2.0*p1mom*p3mom);
 
-  //report(INFO,"EvtGen") << m13sq << std::endl;
-  //report(INFO,"EvtGen") << m12sq << std::endl;
-  //report(INFO,"EvtGen") << E1 << std::endl;
-  //report(INFO,"EvtGen") << E2 << std::endl;
-  //report(INFO,"EvtGen") << E3 << std::endl;
-  //report(INFO,"EvtGen") << p1mom << std::endl;
-  //report(INFO,"EvtGen") << p3mom << std::endl;
-  //report(INFO,"EvtGen") << cost13 << std::endl;
+  //report(INFO,"EvtGen") << m13sq << endl;
+  //report(INFO,"EvtGen") << m12sq << endl;
+  //report(INFO,"EvtGen") << E1 << endl;
+  //report(INFO,"EvtGen") << E2 << endl;
+  //report(INFO,"EvtGen") << E3 << endl;
+  //report(INFO,"EvtGen") << p1mom << endl;
+  //report(INFO,"EvtGen") << p3mom << endl;
+  //report(INFO,"EvtGen") << cost13 << endl;
   
 
   p4[2].set(E3,0.0,0.0,p3mom);
   p4[0].set(E1,p1mom*sqrt(1.0-cost13*cost13),0.0,p1mom*cost13);
   p4[1].set(E2,-p1mom*sqrt(1.0-cost13*cost13),0.0,-p1mom*cost13-p3mom);
 
-  //report(INFO,"EvtGen") << "p4:"<<p4[0]<<p4[1]<<p4[2]<<std::endl;
+  //report(INFO,"EvtGen") << "p4:"<<p4[0]<<p4[1]<<p4[2]<<endl;
 
   double alpha = EvtRandom::Flat( EvtConst::twoPi );
   double beta = acos(EvtRandom::Flat( -1.0, 1.0 ));

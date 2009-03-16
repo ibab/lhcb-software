@@ -18,10 +18,14 @@
 //------------------------------------------------------------------------
 //
 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenModels/EvtBtoXsgamma.hh"
 #include "EvtGenModels/EvtBtoXsgammaFixedMass.hh"
+#include "EvtGenBase/EvtReport.hh"
 #include <fstream>
+using std::endl;
+using std::fstream;
 
 EvtBtoXsgammaFixedMass::~EvtBtoXsgammaFixedMass(){
 }
@@ -32,8 +36,8 @@ void EvtBtoXsgammaFixedMass::init(int nArg, double* args){
   
   report(ERROR,"EvtGen") << "EvtBtoXsgamma generator model "
 			 << "EvtBtoXsgammaFixedMass expected " 
-			 << "either 1(default config) or two arguments but found: "<<nArg<<std::endl;
-  report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
+			 << "either 1(default config) or two arguments but found: "<<nArg<<endl;
+  report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
     ::abort();  
   }
   

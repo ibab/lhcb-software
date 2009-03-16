@@ -18,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
@@ -30,9 +31,9 @@
 
 EvtVSS::~EvtVSS() {}
 
-void EvtVSS::getName(std::string& model_name){
+std::string EvtVSS::getName(){
 
-  model_name="VSS"; 
+  return "VSS"; 
     
 }
 
@@ -67,13 +68,11 @@ void EvtVSS::decay( EvtParticle *p){
 
   p->initializePhaseSpace(getNDaug(),getDaugs());
 
-  EvtVector4R pdaug = p->getDaug(0)->getP4();
+  EvtVector4R pDaug = p->getDaug(0)->getP4();
   
-  double norm=1.0/pdaug.d3mag();
+  double norm=1.0/pDaug.d3mag();
 
-  vertex(0,norm*pdaug*(p->eps(0)));
-  vertex(1,norm*pdaug*(p->eps(1)));
-  vertex(2,norm*pdaug*(p->eps(2)));
+  for (int i=0; i<3; i++) vertex(i,norm*pDaug*(p->eps(i)));
 
   return;
 }

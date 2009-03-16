@@ -1,7 +1,8 @@
+#include "EvtGenBase/EvtPatches.hh"
 /*******************************************************************************
  * Project: BaBar detector at the SLAC PEP-II B-factory
  * Package: EvtGenBase
- *    File: $Id: EvtValError.cpp,v 1.2 2004-07-12 16:13:34 robbep Exp $
+ *    File: $Id: EvtValError.cpp,v 1.3 2009-03-16 15:39:28 robbep Exp $
  *  Author: Alexei Dvoretskii, dvoretsk@slac.stanford.edu, 2001-2002
  *
  * Copyright (C) 2002 Caltech
@@ -11,6 +12,8 @@
 #include <math.h>
 #include <iostream>
 #include "EvtGenBase/EvtValError.hh"
+using std::endl;
+using std::ostream;
 
 EvtValError::EvtValError() 
   : _valKnown(0), _val(0.), _errKnown(0), _err(0.)
@@ -73,14 +76,14 @@ void EvtValError::operator/=(const EvtValError& other)
 }
 
 
-void EvtValError::print(std::ostream& os) const
+void EvtValError::print(ostream& os) const
 {
   if(_valKnown) os << _val;
   else os << "Undef";
   os << " +/- ";
   if(_errKnown) os << _err;
   else os << "Undef";
-  os << std::endl;
+  os << endl;
 }
 
 
@@ -148,7 +151,7 @@ EvtValError operator*(double c,const EvtValError& x)
 }
 
 
-std::ostream& operator<<(std::ostream& os, const EvtValError& other)
+ostream& operator<<(ostream& os, const EvtValError& other)
 {
   other.print(os);
   return os;

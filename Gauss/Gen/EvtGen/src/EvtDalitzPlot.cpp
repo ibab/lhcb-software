@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------
 // File and Version Information: 
-//      $Id: EvtDalitzPlot.cpp,v 1.2 2004-07-12 16:13:28 robbep Exp $
+//      $Id: EvtDalitzPlot.cpp,v 1.3 2009-03-16 15:53:27 robbep Exp $
 // 
 // Environment:
 //      This software is part of the EvtGen package developed jointly
@@ -13,17 +13,18 @@
 // Module creator:
 //      Alexei Dvoretskii, Caltech, 2001-2002.
 //-----------------------------------------------------------------------
+#include "EvtGenBase/EvtPatches.hh"
 
 // Global 3-body Dalitz decay kinematics as defined by the mass
 // of the mother and the daughters. Spins are not considered.
 
-#include "EvtGenBase/EvtPatches.hh"
 #include <math.h>
 #include <assert.h>
 #include <stdio.h>
+#include "EvtGenBase/EvtPatches.hh"
 #include "EvtGenBase/EvtDalitzPlot.hh"
 #include "EvtGenBase/EvtTwoBodyVertex.hh"
-#include "EvtGenBase/EvtPartPropDb.hh"
+#include "EvtGenBase/EvtPDL.hh"
 #include "EvtGenBase/EvtDecayMode.hh"
 
 using namespace EvtCyclic3;
@@ -45,11 +46,11 @@ EvtDalitzPlot::EvtDalitzPlot(double mA, double mB, double mC, double bigM,
 
 EvtDalitzPlot::EvtDalitzPlot(const EvtDecayMode& mode, double ldel, double rdel )
 {
-  assert(EvtPartPropDb::initialized());
-  _mA = EvtPartPropDb::getMass(mode.dau(A));
-  _mB = EvtPartPropDb::getMass(mode.dau(B));
-  _mC = EvtPartPropDb::getMass(mode.dau(C));
-  _bigM = EvtPartPropDb::getMass(mode.mother());
+  _mA = EvtPDL::getMeanMass(EvtPDL::getId(mode.dau(A)));
+  _mB = EvtPDL::getMeanMass(EvtPDL::getId(mode.dau(B)));
+  _mC = EvtPDL::getMeanMass(EvtPDL::getId(mode.dau(C)));
+  _bigM = EvtPDL::getMeanMass(EvtPDL::getId(mode.mother()));
+
   _ldel = ldel;
   _rdel = rdel;
   

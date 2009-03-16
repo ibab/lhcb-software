@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------
 // File and Version Information:
-// 	$Id: EvtItgFunction.cpp,v 1.3 2004-07-12 16:13:30 robbep Exp $
+// 	$Id: EvtItgFunction.cpp,v 1.4 2009-03-16 15:47:39 robbep Exp $
 //
 // Description:
 //	Class EvtItgFunction
@@ -17,6 +17,7 @@
 //	Copyright (C) 1998	LBNL
 //
 //------------------------------------------------------------------------
+#include "EvtGenBase/EvtPatches.hh"
 
 //-----------------------
 // This Class's Header --

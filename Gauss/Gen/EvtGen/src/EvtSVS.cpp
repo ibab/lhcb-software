@@ -18,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
@@ -29,9 +30,9 @@
 
 EvtSVS::~EvtSVS() {}
 
-void EvtSVS::getName(std::string& model_name){
+std::string EvtSVS::getName(){
 
-  model_name="SVS";     
+  return "SVS";     
 
 }
 
@@ -67,9 +68,7 @@ void EvtSVS::initProbMax(){
 void EvtSVS::decay( EvtParticle *p){
 
   p->initializePhaseSpace(getNDaug(),getDaugs());
-  //report(INFO,"EvtGen") << "par " << p->getP4() << " " << p->getDaug(0)->getP4() << " " << 
-  //  p->getDaug(1)->getP4() << " " << p->mass() << " " <<
-  //  p->getDaug(0)->mass() << " " << p->getDaug(1)->mass() <<std::endl;
+
   EvtParticle *v;
   v = p->getDaug(0);
   double massv = v->mass();

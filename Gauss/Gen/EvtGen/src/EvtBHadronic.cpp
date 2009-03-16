@@ -18,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 //
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenModels/EvtISGW2FF.hh"
@@ -30,12 +31,13 @@
 #include "EvtGenModels/EvtBHadronic.hh"
 #include "EvtGenBase/EvtReport.hh"
 #include <string>
+using std::endl;
 
 EvtBHadronic::~EvtBHadronic() {}
 
-void EvtBHadronic::getName(std::string& model_name){
+std::string EvtBHadronic::getName(){
 
-  model_name="BHADRONIC";    
+  return "BHADRONIC";    
 
 }
 
@@ -69,7 +71,7 @@ void EvtBHadronic::decay( EvtParticle *p){
   static EvtISGW2FF ffmodel;
 
   p->initializePhaseSpace(getNDaug(),getDaugs());
-  
+
   EvtVector4R p4[MAX_DAUG];
   double m;
 
@@ -83,7 +85,8 @@ void EvtBHadronic::decay( EvtParticle *p){
   }
 
   int bcurrent,wcurrent;
-  int nbcurrent(0) ,nwcurrent(0);
+  int nbcurrent=0;
+  int nwcurrent=0;
 
   bcurrent=(int)getArg(0);
   wcurrent=(int)getArg(1);
@@ -216,8 +219,7 @@ void EvtBHadronic::decay( EvtParticle *p){
     jb[0]=fp*(p4b+p4[0])+fm*q;
     break;
   default:
-    report(ERROR,"EvtGen")<<"In EvtBHadronic, unknown hadronic current."
-                          <<std::endl;
+    report(ERROR,"EvtGen")<<"In EvtBHadronic, unknown hadronic current."<<endl;
     
   }  
 
@@ -241,7 +243,7 @@ void EvtBHadronic::decay( EvtParticle *p){
 
 
   default:
-    report(ERROR,"EvtGen")<<"In EvtBHadronic, unknown W current."<<std::endl;
+    report(ERROR,"EvtGen")<<"In EvtBHadronic, unknown W current."<<endl;
 
   }  
 
@@ -251,14 +253,9 @@ void EvtBHadronic::decay( EvtParticle *p){
   }
 
   if (nbcurrent==1){
-    //report(INFO,"EvtGen") << "Amplitudes:";
-    //EvtComplex a=0.0;
     for(j=0;j<nwcurrent;j++){
-      //report(INFO,"EvtGen") << jb[0]*jw[j] << " ";
-      //a+=(jb[0]*jw[j]*jb[0]*jw[j]);
       vertex(j,jb[0]*jw[j]);
     }
-    //report(INFO,"EvtGen") << " prob:"<<a<<" mass:"<<p4[1].mass()<< std::endl;
     return;
   }
 

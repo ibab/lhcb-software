@@ -19,6 +19,7 @@
 //
 //------------------------------------------------------------------------
 //
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include <iostream>
 #include <string>
@@ -39,9 +40,9 @@ EvtLNuGamma::EvtLNuGamma(){
 
 EvtLNuGamma::~EvtLNuGamma() {}
 
-void EvtLNuGamma::getName(std::string& model_name){
+std::string EvtLNuGamma::getName(){
 
-  model_name="LNUGAMMA";     
+  return "LNUGAMMA";     
 
 }
 
@@ -81,6 +82,7 @@ void EvtLNuGamma::init(){
 
 void EvtLNuGamma::initProbMax(){
 
+
   setProbMax(7000.0);
 
 }
@@ -88,6 +90,7 @@ void EvtLNuGamma::initProbMax(){
 void EvtLNuGamma::decay(EvtParticle *p){
 
   static EvtId BM=EvtPDL::getId("B-");
+  static EvtId DM=EvtPDL::getId("D-");
   p->initializePhaseSpace(getNDaug(),getDaugs());
 
   EvtComplex myI(0,1);
@@ -99,7 +102,7 @@ void EvtLNuGamma::decay(EvtParticle *p){
 
   EvtVector4C lept1,lept2,photon1,photon2;
 
-  if (p->getId()==BM) {
+  if (p->getId()==BM||p->getId()==DM) {
     lept1=EvtLeptonVACurrent(lept->spParent(0),neut->spParentNeutrino());
     lept2=EvtLeptonVACurrent(lept->spParent(1),neut->spParentNeutrino());
   }
@@ -124,7 +127,7 @@ void EvtLNuGamma::decay(EvtParticle *p){
   if (_fafvzero){
     fa = 0.0;
   }
-  else if (p->getId()==BM) {
+  else if (p->getId()==BM||p->getId()==DM) {
     fa = - fv;
   }
   else{

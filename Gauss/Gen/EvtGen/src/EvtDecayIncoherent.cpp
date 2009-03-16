@@ -17,6 +17,7 @@
 //    DJL/RYD     August 11, 1998         Module created
 //
 //------------------------------------------------------------------------
+#include "EvtGenBase/EvtPatches.hh"
 
 #include "EvtGenBase/EvtDecayBase.hh"
 #include "EvtGenBase/EvtDecayIncoherent.hh"
@@ -26,18 +27,22 @@
 #include "EvtGenBase/EvtPDL.hh"
 
 
-void EvtDecayIncoherent::makeDecay(EvtParticle* p){
+void EvtDecayIncoherent::makeDecay(EvtParticle* p, bool recursive){
 
-  int i;
   //initialize this the hard way..
   //Lange June 26, 2000
-  for (i=0; i<MAX_DAUG; i++ ) { spinDensitySet[i]=0;}
+  for (size_t i=0; i<static_cast<unsigned int>(MAX_DAUG); i++ ) { 
+    spinDensitySet[i]=0;
+  }
+
+  _daugsDecayedByParentModel=false;
 
   decay(p);
+  p->setDecayProb(1.0);
 
   EvtSpinDensity rho;
 
-  rho.SetDiag(p->getSpinStates());
+  rho.setDiag(p->getSpinStates());
 
   p->setSpinDensityBackward(rho);
 
@@ -45,27 +50,32 @@ void EvtDecayIncoherent::makeDecay(EvtParticle* p){
     EvtRadCorr::doRadCorr(p);
   }
 
+  if(!recursive) return;
+
   //Now decay the daughters.
-  for(i=0;i<p->getNDaug();i++){
-    //Need to set the spin density of the daughters to be
-    //diagonal.
-    rho.SetDiag(p->getDaug(i)->getSpinStates());
-    //if (p->getDaug(i)->getNDaug()==0){
+
+  if ( !daugsDecayedByParentModel()) {
+    
+    for(size_t i=0;i<p->getNDaug();i++){
+      //Need to set the spin density of the daughters to be
+      //diagonal.
+      rho.setDiag(p->getDaug(i)->getSpinStates());
+      //if (p->getDaug(i)->getNDaug()==0){
       //only do this if the user has not already set the 
       //spin density matrix herself.
-     //Lange June 26, 2000
+      //Lange June 26, 2000
       if ( isDaughterSpinDensitySet(i)==0 ) { 
 	p->getDaug(i)->setSpinDensityForward(rho);
       }
       else{
 	//report(INFO,"EvtGen") << "spinDensitymatrix already set!!!\n";
 	EvtSpinDensity temp=p->getDaug(i)->getSpinDensityForward();
-	//	report(INFO,"EvtGen") <<temp<<std::endl;
+	//	report(INFO,"EvtGen") <<temp<<endl;
       }
       //Now decay the daughter.  Really!
       p->getDaug(i)->decay();
-      //}
-  } 
+    } 
+  }
 			    
 }
 

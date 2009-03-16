@@ -21,6 +21,7 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtConst.hh"
 #include "EvtGenBase/EvtParticle.hh"
@@ -32,11 +33,12 @@
 #include "EvtGenBase/EvtId.hh"
 #include <string>
 #include "EvtGenBase/EvtRandom.hh"
+using std::endl;
 
 EvtVSSBMixCPT::~EvtVSSBMixCPT() {}
 
-void EvtVSSBMixCPT::getName(std::string& model_name){
-  model_name="VSS_BMIX";
+std::string EvtVSSBMixCPT::getName(){
+  return "VSS_BMIX";
 }
 
 
@@ -46,13 +48,12 @@ EvtDecayBase* EvtVSSBMixCPT::clone(){
 
 void EvtVSSBMixCPT::init(){
 
-  // check that there we are provided exactly one parameter
-  if ( getNArg()>3) checkNArg(14,12,8);
+  if ( getNArg()>4) checkNArg(14,12,8);
 
   if (getNArg()<1) {
     report(ERROR,"EvtGen") << "EvtVSSBMix generator expected "
-                           << " at least 1 argument (deltam) but found:"<<getNArg()<<std::endl;
-    report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
+                           << " at least 1 argument (deltam) but found:"<<getNArg()<<endl;
+    report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
     ::abort();
   }
   // check that we are asked to produced exactly 2 daughters
@@ -63,8 +64,8 @@ void EvtVSSBMixCPT::init(){
     if ( getDaug(0)!=getDaug(2)||getDaug(1)!=getDaug(3)){
       report(ERROR,"EvtGen") << "EvtVSSBMixCPT generator allows "
 			     << " 4 daughters only if 1=3 and 2=4"
-			     << " (but 3 and 4 are aliased "<<std::endl;
-      report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
+			     << " (but 3 and 4 are aliased "<<endl;
+      report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
       ::abort();
     }
   }
@@ -79,20 +80,20 @@ void EvtVSSBMixCPT::init(){
   // check that our daughter particles are charge conjugates of each other
   if(!(EvtPDL::chargeConj(getDaug(0)) == getDaug(1))) {
     report(ERROR,"EvtGen") << "EvtVSSBMixCPT generator expected daughters "
-			   << "to be charge conjugate." << std::endl
+			   << "to be charge conjugate." << endl
 			   << "  Found " << EvtPDL::name(getDaug(0)).c_str() << " and "
-			   << EvtPDL::name(getDaug(1)).c_str() << std::endl;
-    report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
+			   << EvtPDL::name(getDaug(1)).c_str() << endl;
+    report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
     ::abort();
   }
   // check that both daughter particles have the same lifetime
   if(EvtPDL::getctau(getDaug(0)) != EvtPDL::getctau(getDaug(1))) {
     report(ERROR,"EvtGen") << "EvtVSSBMixCPT generator expected daughters "
-			   << "to have the same lifetime." << std::endl
+			   << "to have the same lifetime." << endl
 			   << "  Found ctau = "
 			   << EvtPDL::getctau(getDaug(0)) << " mm and "
-			   << EvtPDL::getctau(getDaug(1)) << " mm" << std::endl;
-    report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
+			   << EvtPDL::getctau(getDaug(1)) << " mm" << endl;
+    report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
     ::abort();
   }
   // precompute quantities that will be used to generate events
@@ -111,7 +112,7 @@ void EvtVSSBMixCPT::init(){
   }
   // q/p
   _qoverp = EvtComplex(1.0,0.0);
-  if ( getNArg() == 3){
+  if ( getNArg() > 2){
     _qoverp = EvtComplex(getArg(2),0.0); 
   } 
   if ( getNArg() > 3) {
@@ -124,7 +125,7 @@ void EvtVSSBMixCPT::init(){
   _Abar_f=EvtComplex(0.0,0.0);
   _A_fbar=_Abar_f;  // CPT conservation
   _Abar_fbar=_A_f;  // CPT conservation
-  if ( getNArg() > 3){
+  if ( getNArg() > 4){
     _A_f=getArg(4)*EvtComplex(cos(getArg(5)),sin(getArg(5)));    // this allows for DCSD
     _Abar_f=getArg(6)*EvtComplex(cos(getArg(7)),sin(getArg(7))); // this allows for DCSD 
     if ( getNArg() > 8 ){
@@ -154,27 +155,29 @@ void EvtVSSBMixCPT::init(){
   _chib0_b0bar=qop2*(x*x+y*y)/(qop2*(x*x+y*y)+2+x*x-y*y);  // does not include CPT in mixing
   _chib0bar_b0=(1/qop2)*(x*x+y*y)/((1/qop2)*(x*x+y*y)+2+x*x-y*y); // does not include CPT in mixing 
 
-  report(INFO,"EvtGen") << "VSS_BMIXCPT will generate mixing and CPT/CP effects in mixing:"
-			<< std::endl << std::endl
-			<< "    " << EvtPDL::name(getParentId()).c_str() << " --> "
-			<< EvtPDL::name(getDaug(0)).c_str() << " + "
-			<< EvtPDL::name(getDaug(1)).c_str() << std::endl << std::endl
-			<< "using parameters:" << std::endl << std::endl
-			<< "  delta(m)  = " << dm << " hbar/ps" << std::endl
-			<< "  _freq     = " << _freq << " hbar/mm" << std::endl
-                        << "  dgog      = "  << dgog <<std::endl
-                        << "  dGamma    = "  << _dGamma <<" hbar/mm" <<std::endl
-                        << "  q/p       = " << _qoverp << std::endl  
-                        << "  z         = " << _z << std::endl  
-			<< "  tau       = " << tau << " ps" << std::endl
-			<< "  x         = " << x << std::endl
-			<< " chi(B0->B0bar) = " << _chib0_b0bar << std::endl
-			<< " chi(B0bar->B0) = " << _chib0bar_b0 << std::endl 
-                        << " Af         = " << _A_f << std::endl
-                        << " Abarf      = " << _Abar_f << std::endl
-                        << " Afbar      = " << _A_fbar << std::endl
-                        << " Abarfbar   = " << _Abar_fbar << std::endl
-                        << std::endl;
+  if ( verbose() ) {
+    report(INFO,"EvtGen") << "VSS_BMIXCPT will generate mixing and CPT/CP effects in mixing:"
+			  << endl << endl
+			  << "    " << EvtPDL::name(getParentId()).c_str() << " --> "
+			  << EvtPDL::name(getDaug(0)).c_str() << " + "
+			  << EvtPDL::name(getDaug(1)).c_str() << endl << endl
+			  << "using parameters:" << endl << endl
+			  << "  delta(m)  = " << dm << " hbar/ps" << endl
+			  << "  _freq     = " << _freq << " hbar/mm" << endl
+			  << "  dgog      = "  << dgog <<endl
+			  << "  dGamma    = "  << _dGamma <<" hbar/mm" <<endl
+			  << "  q/p       = " << _qoverp << endl  
+			  << "  z         = " << _z << endl  
+			  << "  tau       = " << tau << " ps" << endl
+			  << "  x         = " << x << endl
+			  << " chi(B0->B0bar) = " << _chib0_b0bar << endl
+			  << " chi(B0bar->B0) = " << _chib0bar_b0 << endl 
+			  << " Af         = " << _A_f << endl
+			  << " Abarf      = " << _Abar_f << endl
+			  << " Afbar      = " << _A_fbar << endl
+			  << " Abarfbar   = " << _Abar_fbar << endl
+			  << endl;
+  }
 }
 
 void EvtVSSBMixCPT::initProbMax(){

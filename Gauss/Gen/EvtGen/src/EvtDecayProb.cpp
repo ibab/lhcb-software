@@ -17,6 +17,7 @@
 //    DJL/RYD     August 11, 1998         Module created
 //
 //------------------------------------------------------------------------
+#include "EvtGenBase/EvtPatches.hh"
 
 #include "EvtGenBase/EvtDecayBase.hh"
 #include "EvtGenBase/EvtDecayProb.hh"
@@ -25,8 +26,9 @@
 #include "EvtGenBase/EvtRandom.hh"
 #include "EvtGenBase/EvtPDL.hh"
 #include "EvtGenBase/EvtReport.hh"
+using std::endl;
 
-void EvtDecayProb::makeDecay(EvtParticle* p){
+void EvtDecayProb::makeDecay(EvtParticle* p, bool recursive){
 
   int ntimes=10000;
 
@@ -34,54 +36,56 @@ void EvtDecayProb::makeDecay(EvtParticle* p){
 
   do{
     _weight=1.0;
+    _daugsDecayedByParentModel=false;
 
     decay(p);
-    //report(INFO,"EvtGen") << _weight << std::endl;
+
     ntimes--;
     
     _prob = _prob/_weight;
     
     dummy=getProbMax(_prob)*EvtRandom::Flat();
+    p->setDecayProb(_prob/getProbMax(_prob));
 
-    //  report(INFO,"EvtGen") << _prob <<" "<<dummy<<" "<<ntimes<<std::endl;
   }while(ntimes&&(_prob<dummy));
-  //report(INFO,"EvtGen") << ntimes <<std::endl;
+
   if (ntimes==0){
     report(DEBUG,"EvtGen") << "Tried accept/reject:10000"
-			   <<" times, and rejected all the times!"<<std::endl;
-    report(DEBUG,"EvtGen") << "Is therefore accepting the last event!"<<std::endl;
+			   <<" times, and rejected all the times!"<<endl;
+    report(DEBUG,"EvtGen") << "Is therefore accepting the last event!"<<endl;
     report(DEBUG,"EvtGen") << "Decay of particle:"<<
       EvtPDL::name(p->getId()).c_str()<<"(channel:"<<
-      p->getChannel()<<") with mass "<<p->mass()<<std::endl;
+      p->getChannel()<<") with mass "<<p->mass()<<endl;
     
-    int ii;
-    for(ii=0;ii<p->getNDaug();ii++){
+    for(size_t ii=0;ii<p->getNDaug();ii++){
       report(DEBUG,"EvtGen") <<"Daughter "<<ii<<":"<<
 	EvtPDL::name(p->getDaug(ii)->getId()).c_str()<<" with mass "<<
-	p->getDaug(ii)->mass()<<std::endl;
+	p->getDaug(ii)->mass()<<endl;
     }				   
   }
 
 
   EvtSpinDensity rho;
-  rho.SetDiag(p->getSpinStates());
+  rho.setDiag(p->getSpinStates());
   p->setSpinDensityBackward(rho);
   if (getPHOTOS() || EvtRadCorr::alwaysRadCorr()) {
     EvtRadCorr::doRadCorr(p);
   }
 
+  if(!recursive) return;
 
   //Now decay the daughters.
-  int i;
-  for(i=0;i<p->getNDaug();i++){
-    //Need to set the spin density of the daughters to be
-    //diagonal.
-    rho.SetDiag(p->getDaug(i)->getSpinStates());
-    p->getDaug(i)->setSpinDensityForward(rho);
-
-    //Now decay the daughter.  Really!
-    p->getDaug(i)->decay();
-  } 
+  if ( !daugsDecayedByParentModel()) {
+    for(size_t i=0;i<p->getNDaug();i++){
+      //Need to set the spin density of the daughters to be
+      //diagonal.
+      rho.setDiag(p->getDaug(i)->getSpinStates());
+      p->getDaug(i)->setSpinDensityForward(rho);
+      
+      //Now decay the daughter.  Really!
+      p->getDaug(i)->decay();
+    } 
+  }
 			    
 }
 

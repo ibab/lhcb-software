@@ -20,6 +20,7 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
@@ -29,12 +30,13 @@
 #include "EvtGenBase/EvtReport.hh"
 #include "EvtGenModels/EvtVVSPwave.hh"
 #include <string>
+using std::endl;
 
 EvtVVSPwave::~EvtVVSPwave() {}
 
-void EvtVVSPwave::getName(std::string& model_name){
+std::string EvtVVSPwave::getName(){
 
-  model_name="VVS_PWAVE";     
+  return "VVS_PWAVE";     
 
 }
 
@@ -73,8 +75,8 @@ void EvtVVSPwave::decay( EvtParticle *p){
   EvtComplex ad(getArg(4)*cos(getArg(5)),getArg(4)*sin(getArg(5)));
 
   if (ap!=EvtComplex(0.0,0.0)) {
-    report(ERROR,"EvtGen") << "In EvtVectorToVectorScalar.cc"<<std::endl;
-    report(ERROR,"EvtGen") << "P wave not yet implemented!!"<<std::endl;
+    report(ERROR,"EvtGen") << "In EvtVectorToVectorScalar.cc"<<endl;
+    report(ERROR,"EvtGen") << "P wave not yet implemented!!"<<endl;
     ::abort();
   }
     

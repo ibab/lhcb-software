@@ -19,6 +19,7 @@
 //
 //------------------------------------------------------------------------
 //
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
@@ -33,8 +34,8 @@
 
 #ifdef WIN32
 extern "C" void __stdcall EVT3PIONSMPP(double *,int *,double *,
-			 double *,double *,double *,
-			 double *,double *,double *);
+				       double *,double *,double *,
+				       double *,double *,double *);
 #else
 extern "C" void evt3pionsmpp_(double *,int *,double *,
 			 double *,double *,double *,
@@ -43,9 +44,9 @@ extern "C" void evt3pionsmpp_(double *,int *,double *,
 
 EvtCBTo3piMPP::~EvtCBTo3piMPP() {}
 
-void EvtCBTo3piMPP::getName(std::string& model_name){
+std::string EvtCBTo3piMPP::getName(){
 
-  model_name="CB3PI-MPP";     
+  return "CB3PI-MPP";     
 
 }
 
@@ -71,22 +72,7 @@ void EvtCBTo3piMPP::init(){
 }
 
 void EvtCBTo3piMPP::initProbMax(){
-  double alpha = getArg(0);
 
-  int iset;
-  iset=10000;
-
-  double p4pi1[4],p4pi2[4],p4pi3[4]; 
-
-  double realA,imgA,realbarA,imgbarA;
-
-#ifdef WIN32
-  EVT3PIONSMPP(&alpha,&iset,p4pi1,p4pi2,p4pi3,
-  	     &realA,&imgA,&realbarA,&imgbarA);
-#else
-  evt3pionsmpp_(&alpha,&iset,p4pi1,p4pi2,p4pi3,
-  	     &realA,&imgA,&realbarA,&imgbarA);
-#endif
   setProbMax(1.5);
 
 }
@@ -108,7 +94,16 @@ void EvtCBTo3piMPP::decay( EvtParticle *p ){
   double alpha = getArg(0);
 
   int iset;
-  iset=0;
+
+  static int first=1;
+
+  if (first==1) {
+    iset=10000;
+    first=0;
+  }
+  else{
+    iset=0;
+  }
 
   double p4pi1[4],p4pi2[4],p4pi3[4]; 
 
@@ -116,10 +111,10 @@ void EvtCBTo3piMPP::decay( EvtParticle *p ){
 
 #ifdef WIN32
   EVT3PIONSMPP(&alpha,&iset,p4pi1,p4pi2,p4pi3,
-  	     &realA,&imgA,&realbarA,&imgbarA);
+	       &realA,&imgA,&realbarA,&imgbarA);
 #else
   evt3pionsmpp_(&alpha,&iset,p4pi1,p4pi2,p4pi3,
-  	     &realA,&imgA,&realbarA,&imgbarA);
+		&realA,&imgA,&realbarA,&imgbarA);
 #endif
 
   p4[0].set(p4pi1[3],p4pi1[0],p4pi1[1],p4pi1[2]);

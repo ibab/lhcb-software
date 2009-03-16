@@ -12,13 +12,14 @@
 //------------------------------------------------------------------------
 // 
 #include "EvtGenBase/EvtPatches.hh"
+#include "EvtGenBase/EvtPatches.hh"
 #include "EvtGenBase/EvtReport.hh"
 #include "EvtGenModels/EvtHQET2FF.hh"
 #include "EvtGenBase/EvtId.hh"
 #include <string>
 #include "EvtGenBase/EvtPDL.hh"
 #include <math.h>
-
+#include <stdlib.h>
 
 
 EvtHQET2FF::EvtHQET2FF(double hqetrho2, double hqetha1_1 , double hqetr1_1, double hqetr2_1) {
@@ -40,7 +41,7 @@ EvtHQET2FF::EvtHQET2FF(double hqetrho2, double hqetv1_1) {
 }
 
 
-void EvtHQET2FF::getscalarff(EvtId parent,EvtId /*daught*/,
+void EvtHQET2FF::getscalarff(EvtId parent,EvtId,
 			    double t, double mass, double *f0p, double *f0m) {
 
 
@@ -62,7 +63,7 @@ void EvtHQET2FF::getscalarff(EvtId parent,EvtId /*daught*/,
   return;
  }
 
-void EvtHQET2FF::getvectorff(EvtId parent,EvtId /*daught*/,
+void EvtHQET2FF::getvectorff(EvtId parent,EvtId,
 			    double t, double mass, double *a1f,
 			    double *a2f, double *vf, double *a0f ){
 
@@ -92,3 +93,20 @@ void EvtHQET2FF::getvectorff(EvtId parent,EvtId /*daught*/,
   return;
  }
 
+void EvtHQET2FF::gettensorff(EvtId, EvtId, double, double, double*, 
+			       double*, double*, double*){
+  
+  report(ERROR,"EvtGen") << "Not implemented :gettensorff in EvtHQET2FF.\n";  
+  ::abort();
+
+}
+
+
+
+void EvtHQET2FF::getbaryonff(EvtId, EvtId, double, double, double*, 
+			       double*, double*, double*){
+  
+  report(ERROR,"EvtGen") << "Not implemented :getbaryonff in EvtHQET2FF.\n";  
+  ::abort();
+
+}

@@ -19,6 +19,7 @@
 //
 //------------------------------------------------------------------------
 //
+#include "EvtGenBase/EvtPatches.hh"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -27,6 +28,9 @@
 #include "EvtGenBase/EvtRandomEngine.hh"
 #include "EvtGenBase/EvtRandom.hh"
 #include "EvtGenBase/EvtReport.hh"
+#include "EvtGenBase/EvtConst.hh"
+
+using std::endl;
 
 
 EvtRandomEngine* EvtRandom::_randomEngine=0;
@@ -40,7 +44,7 @@ double EvtRandom::random(){
 
   if (_randomEngine==0){
     report(ERROR,"EvtGen") <<"No random engine available in "
-			   <<"EvtRandom::random()."<<std::endl;
+			   <<"EvtRandom::random()."<<endl;
     ::abort();
   }
 
@@ -54,7 +58,7 @@ double EvtRandom::random(){
 double EvtRandom::Flat( double min, double max){
 
   if ( min > max ) {
-    report(ERROR,"EvtGen") << "min>max in EvtRandom::Flat(" << min << "," << max << ")" <<std::endl;
+    report(ERROR,"EvtGen") << "min>max in EvtRandom::Flat(" << min << "," << max << ")" <<endl;
     ::abort();
   }
 
@@ -74,5 +78,13 @@ double EvtRandom::Flat(){
 
 } 
 
+double EvtRandom::Gaussian(){
+
+  double x=EvtRandom::random();
+  double y=EvtRandom::random();
+
+  return cos(x*EvtConst::twoPi)*sqrt(-2.0*log(1-y));
+
+}
 
 

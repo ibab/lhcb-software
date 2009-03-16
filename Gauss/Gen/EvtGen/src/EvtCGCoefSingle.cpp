@@ -19,6 +19,7 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include <math.h>
 #include <iostream>
@@ -26,15 +27,6 @@
 #include "EvtGenBase/EvtCGCoefSingle.hh"
 #include "EvtGenBase/EvtOrthogVector.hh"
 
-EvtCGCoefSingle::EvtCGCoefSingle(){
-
-  _j1=0;
-  _j2=0;
-
-  _Jmax=0;
-  _Jmin=0;
-
-}
 
 
 EvtCGCoefSingle::~EvtCGCoefSingle(){
@@ -76,20 +68,20 @@ void EvtCGCoefSingle::init(int j1,int j2){
       std::vector<double>* vectors=new std::vector<double>[n-1];
       int i,k;
       for(i=0;i<n-1;i++){
-        // i corresponds to J=Jmax-2*i
-        vectors[i].resize(n);
-        for(k=0;k<n;k++){
-          double tmp=_table[(_Jmax-_Jmin)/2-i][(J+_Jmax-2*i)/2][k];
-          vectors[i][k]=tmp;
-        }
+	// i corresponds to J=Jmax-2*i
+	vectors[i].resize(n);
+	for(k=0;k<n;k++){
+	  double tmp=_table[(_Jmax-_Jmin)/2-i][(J+_Jmax-2*i)/2][k];
+	  vectors[i][k]=tmp;
+	}
       }
       EvtOrthogVector getOrth(n,vectors);
       std::vector<double> orth=getOrth.getOrthogVector();
       int sign=1;
       if (orth[n-1]<0.0) sign=-1;
       for(k=0;k<n;k++){
-        _table[(J-_Jmin)/2][J][k]=sign*orth[k];
-      } 
+	_table[(J-_Jmin)/2][J][k]=sign*orth[k];
+      }
       delete [] vectors ;
     }
     for(M=J-2;M>=-J;M-=2){

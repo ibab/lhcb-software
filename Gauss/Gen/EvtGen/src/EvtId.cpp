@@ -18,12 +18,15 @@
 //
 //------------------------------------------------------------------------
 //
+#include "EvtGenBase/EvtPatches.hh"
 
 #include "EvtGenBase/EvtId.hh"
+#include "EvtGenBase/EvtPDL.hh"
 #include <iostream>
+using std::ostream;
 
 
-std::ostream& operator<<(std::ostream& s, const EvtId& id){
+ostream& operator<<(ostream& s, const EvtId& id){
 
   s<<"(Id="<<id._id<<" Alias="<<id._alias<<")";
 
@@ -32,5 +35,7 @@ std::ostream& operator<<(std::ostream& s, const EvtId& id){
 }
 
 
-
+int EvtId::isConjugate(const EvtId & id) const {
+  return EvtPDL::getStdHep(*this) == - EvtPDL::getStdHep(id);
+}
 

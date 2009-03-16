@@ -18,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
@@ -28,9 +29,9 @@
 
 EvtEtaDalitz::~EvtEtaDalitz() {}
 
-void EvtEtaDalitz::getName(std::string& model_name){
+std::string EvtEtaDalitz::getName(){
 
-  model_name="ETA_DALITZ";     
+  return "ETA_DALITZ";     
 
 }
 
@@ -73,8 +74,7 @@ void EvtEtaDalitz::decay( EvtParticle *p){
 
   double y;
 
-  //The decay amplitude coems from Layter et al PRD 7 pA2M5.
-  //this reference doesn't make sence!!!
+  //The decay amplitude coems from Layter et al PRD 7 2565 (1973).
 
   y=(mompi0.get(0)-masspi0)*(3.0/(m_eta-masspip-masspim-masspi0))-1.0;
 

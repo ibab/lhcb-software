@@ -17,6 +17,7 @@
 // Lange August 11, 2000 Created
 //
 //------------------------------------------------------------------------
+#include "EvtGenBase/EvtPatches.hh"
 
 #include <iostream>
 #include <fstream>
@@ -24,6 +25,7 @@
 #include <ctype.h>
 #include <string.h>
 #include "EvtGenBase/EvtOrthogVector.hh"
+using std::fstream;
 
 EvtOrthogVector::EvtOrthogVector(int n, std::vector<double> *vectors){
 

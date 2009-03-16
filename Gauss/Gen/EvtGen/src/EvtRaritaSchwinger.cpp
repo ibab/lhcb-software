@@ -17,9 +17,12 @@
 //    RYD     April 23, 2000         Module created
 //
 //------------------------------------------------------------------------
+#include "EvtGenBase/EvtPatches.hh"
 
 
 #include "EvtGenBase/EvtRaritaSchwinger.hh"
+using std::endl;
+using std::ostream;
 
 EvtRaritaSchwinger::~EvtRaritaSchwinger(){}
 
@@ -133,15 +136,15 @@ void EvtRaritaSchwinger::applyBoostTo(const EvtVector3R boost){
 }
 
 
-std::ostream& operator<<(std::ostream& s, const EvtRaritaSchwinger& rs){
+ostream& operator<<(ostream& s, const EvtRaritaSchwinger& rs){
 
   int i,j;
-  s<< std::endl;
+  s<< endl;
   for(i=0;i<4;i++){
     for(j=0;j<4;j++){
       s << rs._rs[i][j];
     }
-    s << std::endl;
+    s << endl;
   }
   return s;
   
