@@ -81,19 +81,35 @@ StatusCode SLICEReaderSvc::queryInterface(const InterfaceID& riid, void** ppIf) 
   return Service::queryInterface(riid, ppIf);
 }
 
+void SLICEReaderSvc::clearCounters()
+{
+    m_TotEvtsRead = 0;
+    m_TotFilesRead = 0;
+}
+
+void SLICEReaderSvc::publishCounters()
+{
+    PUBCNT(TotEvtsRead,     "Total of event reads");
+    PUBCNT(TotFilesRead,    "Total of files read");
+}
+
 int SLICEReaderSvc::setupCounters() 
 {
+    MsgStream msgLog(msgSvc(),name());
+    clearCounters();
+    publishCounters();
+
     return 0;
 }
 
 BMID SLICEReaderSvc::getBuffer()
 {
-
+/*
     m_BufferName+="_";
     char tmp[64];
     sprintf(tmp, "%x",m_PartitionID);
     m_BufferName += tmp;
- 
+*/ 
    return mbm_include(m_BufferName.c_str(), m_ProcName.c_str(), m_PartitionID);  
 }
 
@@ -406,6 +422,7 @@ void SLICEReaderSvc::handle(const Incident& incident){
 
 StatusCode SLICEReaderSvc::pushEvent(char *event, int size)
 {
+
     static MsgStream msgLog(msgSvc(), name());
 
     Requirement r;

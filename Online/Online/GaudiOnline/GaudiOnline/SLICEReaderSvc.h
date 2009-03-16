@@ -87,7 +87,7 @@ namespace LHCb  {
   
     bool m_LoopOverFiles; /* Once all files have been read, starts from beginning */          
 
-    int m_CurFile; /* Current file descriptor */ 
+    unsigned int m_CurFile; /* Current file descriptor */ 
 
     int m_SliceLen;   /* Length of the slice read, most of the time 2MB except when last slice of the file */   
     int m_CurEvtLen;  /* Length of the current event */
@@ -105,9 +105,11 @@ namespace LHCb  {
     IMonitorSvc*                m_MonSvc;      /* Service to publish information*/
 
     int m_TotEvtsRead; /* Total of events read */
+    int m_TotFilesRead;/* Total of files read */ 
 
     BMID getBuffer(); /* The method to connect to the buffer manager */
   public:
+
     // IInterface implementation : queryInterface
     virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvInterface); 
     /// Standard Constructor
@@ -137,6 +139,12 @@ namespace LHCb  {
 
     /// Setup counters for monitoring
     int setupCounters();  
+
+    /// Publish counters for monitoring
+    void publishCounters();
+
+    /// Clear counters
+    void clearCounters();
 
   private:
   };

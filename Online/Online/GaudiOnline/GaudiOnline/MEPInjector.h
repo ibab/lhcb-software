@@ -57,6 +57,16 @@ namespace LHCb {
 #define TWOMB 2097152
 #define MEP_REQ_TTL     10
 
+#define LUMI "LUMI"
+#define PHYS "PHYS"
+#define PERA "PERA"
+#define PERB "PERB"
+#define AUXI "AUXI"
+#define SEQU "SEQU"
+#define TIMI "TIMI"
+#define CALX "CALX"
+#define UNKN "UNKN"
+
  /** @class MEPInjector MEPInjector.cpp
   *  Creates and injects MEPs from MDF files. 
   *
@@ -82,10 +92,11 @@ namespace LHCb {
 
     unsigned int m_TFCMask, m_TapeMask;
 
-    std::string m_EventBufferFlags;             /* The option flags to make the buffer managers */
-    std::map<std::string, BMID> m_EventBuffers; /* map of buffer manager identifiers, the index is their name, read from the flags */
-    std::map<std::string, int> m_ProbEvts;    /* The probability to get the event from the buffer */
-                                              /* Default is 100, 0, ..., 0  */
+    std::vector<std::string> m_BufferNames;
+    std::vector<std::string> m_BufferOptions;
+    //std::string m_EventBufferFlags;             /* The option flags to make the buffer managers */
+//    std::map<std::string, BMID> m_EventBuffers; /* map of buffer manager identifiers, the index is their name, read from the flags */
+    std::map<std::string, BMID> m_EventBuffers;
 
     char m_CurEvent[TWOMB]; /* Buffer to store one event */
     int  m_CurEventSize;    /* Size of the event         */ 
@@ -135,6 +146,9 @@ namespace LHCb {
     int m_TotOdinMEPRx;         /* Total of Odin MEP received */
     int m_TotOdinMEPTx;         /* Total of Odin MEP sent */
 
+    int m_CurOdinMEPs;          /* Current number of Odin MEP in reception buffer */
+    int m_CurMEPReqCredits;     /* Current number of credits asked by HLTs to be processed */
+ 
     pthread_t     m_ThreadMEPReqManager; /* pthread descriptor for the MEP request management */
     pthread_t     m_ThreadOdinMEPManager; /* pthread descriptor for the Odin MEPs manager */
     pthread_t     m_InjectorProcessing; /* The main thread only reads events from a buffer manager, raw use with plain C MBM api */
@@ -210,8 +224,9 @@ namespace LHCb {
     // Make the buffer managers
     StatusCode initBuffers();
 
-    // Consume one event from the buffer managers, according to probabilities
-    StatusCode getEvent();
+    // Consume one event from the buffer managers, 
+    // according to the trigger type of the online TFC
+    StatusCode getEvent(int nbEv);
 
     /// Log MEP requests received, forwaded and credits consumed
     StatusCode logMEPReqs(); 	

@@ -164,7 +164,10 @@ MEPInjector::MEPInjector(const std::string & name, ISvcLocator * pSvcLocator):Se
 
     declareProperty("Debug", m_Debug = false); 
  
-    declareProperty("EventBufferFlags", m_EventBufferFlags);
+//    declareProperty("EventBufferFlags", m_EventBufferFlags);
+
+    declareProperty("BufferNames", m_BufferNames);
+    declareProperty("BufferOptions", m_BufferOptions);
 
     declareProperty("Requirements", m_Req);
 
@@ -190,88 +193,58 @@ StatusCode MEPInjector::initBuffers()
 {
     MsgStream msgLog(msgSvc(), name());
 
-    std::vector<std::string> names;
-    std::vector<std::string> probas;
-
+    std::vector<char *> items;
+//    items.push_back(strcpy(new char[16], "mbm_install"));
     static char type[64]="mbm_install";
-    if ( !m_EventBufferFlags.empty() )  {
-        char *p;
-        std::vector<char *> items;
-        std::string tmp = m_EventBufferFlags;
-        items.push_back(type);
-
-        for(char* tok=::strtok((char*)tmp.c_str()," "); tok; tok=::strtok(NULL," ")) {
-            if ( ::strchr(items.back(),' ') != 0 ) {
-                *strchr(items.back(),' ') = 0;
-            }   
-            if( ::toupper(tok[1]) == 'P' ) {
-                probas.push_back(tok+3); 
-                continue;
-            }
-
-            if ( ::toupper(tok[1]) == 'I' )  {
-                std::string bm_name(tok);
-                bm_name+="_";
-                char tmp[64];
-                sprintf(tmp, "%x",m_PartitionID);
-                bm_name += tmp;
-                items.push_back(strcpy(p=new char[bm_name.size()],bm_name.c_str()));
-                names.push_back(bm_name.erase(0,3));
-                continue; 
-            }
-            items.push_back(strcpy(p=new char[strlen(tok)+1],tok));
-            if ( (tok[0]=='-' || tok[0]=='/') && ::toupper(tok[1]) == 'C' ) {
-                int sc = mbm_install(items.size(), &items[0]);
-                if ( sc != MBM_NORMAL )  {
-                    ::lib_rtl_output(LIB_RTL_ERROR,"Unable to install MBM buffers...\n");
-                    return StatusCode::FAILURE;
-                }
-                for(size_t j=1; j<items.size(); ++j)  {
-                    delete [] items[j];
-                }
-                items.clear();
-                items.push_back(type);
-            } 
-        }//end for
-    }
-
-    if(names.size() != probas.size()) {
-        msgLog << MSG::ERROR << "Each buffer should have a probability to be read, check your option file and a -p=<proba> to each buffer. Ex: \"-s=10000 -e=100 -u=20 -f -p=75 -i=NORM -c\"." << endmsg;
-        return StatusCode::FAILURE;
-    }
-
-    int probsum=0;
-    std::vector<std::string>::iterator iteProbas=probas.begin(); 
-    /// Attach to the buffers
-    for(std::vector<std::string>::iterator iteNames = names.begin(); iteNames != names.end(), iteProbas!= probas.end(); ++iteNames, ++iteProbas)
+    items.push_back(type);
+    if(m_BufferOptions.size() < 3) 
     {
+        msgLog << MSG::WARNING << "Invalid buffer options, the injector will use default values" << endmsg;
+        items.push_back(strcpy(new char[10], "-s=70000"));
+        items.push_back(strcpy(new char[10], "-e=100"));
+        items.push_back(strcpy(new char[10], "-u=20"));
+    }
+    else
+    {
+        for(std::vector<std::string>::iterator ite = m_BufferOptions.begin(); ite != m_BufferOptions.end(); ++ite) 
+            items.push_back(strcpy(new char[ite->size()], ite->c_str()));
+    }
 
-        std::string bm_name = *iteNames;
-/*
-        bm_name+="_";
-        char tmp[64]; 
-        sprintf(tmp, "%x",m_PartitionID);  
-        bm_name += tmp;
-*/
-        BMID bmid= mbm_include(bm_name.c_str(), m_ProcName.c_str(), m_PartitionID); 
+    items.push_back(new char[64]);
+    char **pName = &(items.back());
+    items.push_back(strcpy(new char[3], "-c")); 
+    
+
+    /// Attach to the buffers
+    for(std::vector<std::string>::iterator iteNames = m_BufferNames.begin(); iteNames != m_BufferNames.end(); ++iteNames)
+    {
+        std::string tmp = "-i="+*iteNames;
+        strcpy(*pName, tmp.c_str());
+
+        int sc = mbm_install(items.size(), &items[0]);
+        if ( sc != MBM_NORMAL )  {
+           ::lib_rtl_output(LIB_RTL_ERROR,"Unable to install MBM buffers...\n");
+           return StatusCode::FAILURE;
+        }
+    
+        msgLog << MSG::DEBUG << "Buffer " << *iteNames << " installed" << endmsg;
+        
+        BMID bmid= mbm_include(iteNames->c_str(), m_ProcName.c_str(), m_PartitionID); 
         if(bmid==MBM_INV_DESC)
         {
             msgLog << MSG::ERROR << "Unable to attach to buffer manager "<< *iteNames << " as " << m_ProcName << endmsg;
             return StatusCode::FAILURE;
         }
-        m_EventBuffers[bm_name]=bmid;  
-        int proba=0;
-        if(sscanf(iteProbas->c_str(), "%d", &proba) != 1) {
-            msgLog << MSG::ERROR << "Invalid probability in job option file for buffer " << bm_name << endmsg;
-            return StatusCode::FAILURE;
-        } 
-        probsum+=proba;
-        if(probsum > 100) {
-            msgLog << MSG::ERROR << "Invalid probabilities in job option file for buffers, sum > 100 until buffer " << bm_name << endmsg;
-            return StatusCode::FAILURE;
-        } 
-        m_ProbEvts[bm_name]= proba;
+        msgLog << MSG::DEBUG << "Buffer " << *iteNames << " included" << endmsg;
+        m_EventBuffers[*iteNames]=bmid;  
     }    
+
+    for(std::vector<char *>::iterator ite=items.begin()+1; ite!=items.end(); ++ite) {
+        delete [] *ite;
+    }
+    items.clear(); 
+
+    msgLog << MSG::INFO << "Buffer initialized" << endmsg;
 
     return StatusCode::SUCCESS;
 }
@@ -317,6 +290,43 @@ StatusCode MEPInjector::deleteConsumers()
         } 
         mbm_free_space(ite->second);
         mbm_exclude(ite->second);
+//        mbm_deinstall(
+    }
+
+    std::vector<char *> items;
+    static char type[64]="mbm_install";
+    items.push_back(type);
+    if(m_BufferOptions.size() < 3)
+    {   
+        msgLog << MSG::WARNING << "Invalid buffer options, the injector will use default values" << endmsg;
+        items.push_back(strcpy(new char[10], "-s=70000"));
+        items.push_back(strcpy(new char[10], "-e=100"));
+        items.push_back(strcpy(new char[10], "-u=20"));
+    }
+    else
+    {   
+        for(std::vector<std::string>::iterator ite = m_BufferOptions.begin(); ite != m_BufferOptions.end(); ++ite)
+            items.push_back(strcpy(new char[ite->size()], ite->c_str()));
+    }
+
+    items.push_back(new char[64]);
+    char **pName = &(items.back());
+    items.push_back(strcpy(new char[3], "-c"));
+
+
+    /// Attach to the buffers
+    for(std::vector<std::string>::iterator iteNames = m_BufferNames.begin(); iteNames != m_BufferNames.end(); ++iteNames)
+    {
+        std::string tmp = "-i="+*iteNames;
+        strcpy(*pName, tmp.c_str());
+
+        int sc = mbm_deinstall(items.size(), &items[0]);
+        if ( sc != MBM_NORMAL )  {
+           ::lib_rtl_output(LIB_RTL_ERROR,"Unable to install MBM buffers...\n");
+           return StatusCode::FAILURE;
+        }
+
+        msgLog << MSG::DEBUG << "Buffer " << *iteNames << " deinstalled" << endmsg;
     }
 
     m_EventBuffers.clear();
@@ -329,10 +339,30 @@ StatusCode MEPInjector::initialize()
 {
     StatusCode sc = Service::initialize();
     static MsgStream msgLog(msgSvc(), name());	//Message stream for output
+    msgLog << MSG::ALWAYS << __PRETTY_FUNCTION__ << endmsg;
     if (!sc.isSuccess())
     {
         msgLog << MSG::ERROR << "Failed to initialize service base class." << endmsg;
         return sc;
+    }
+
+    if(!service("IncidentSvc", m_IncidentSvc).isSuccess()) {
+        ERRMSG(msgLog, "Failed to access to incident service.");
+        return StatusCode::FAILURE;
+    }
+/*
+    m_IncidentSvc->addListener(this, "DAQ_CANCEL", 0, true, true);
+    m_IncidentSvc->addListener(this, "DAQ_ENABLE", 0, true, true);
+*/
+
+    if(!service("MonitorSvc", m_MonSvc).isSuccess()) {
+        ERRMSG(msgLog, "Failed to access to monitor service.");
+        return StatusCode::FAILURE;
+    }
+    else {
+      if (setupCounters()) {
+        return error("Failed to setup counters");
+      }
     }
 
 
@@ -378,24 +408,6 @@ StatusCode MEPInjector::initialize()
     msgLog << MSG::INFO << strAllocatedMEPs << endmsg;
     msgLog << MSG::INFO << "Number : " << m_MapTell1MEPs.size() << endmsg; 
    
-    if(!service("IncidentSvc", m_IncidentSvc).isSuccess()) {
-        ERRMSG(msgLog, "Failed to access to incident service.");
-        return StatusCode::FAILURE;
-    }
-    m_IncidentSvc->addListener(this, "DAQ_CANCEL");
-    m_IncidentSvc->addListener(this, "DAQ_ENABLE");
-
-    if(!service("MonitorSvc", m_MonSvc).isSuccess()) {
-        ERRMSG(msgLog, "Failed to access to monitor service.");
-        return StatusCode::FAILURE;
-    }
-    else {
-      if (setupCounters()) {
-        return error("Failed to setup counters");
-      }
-    }
-
-    srand(m_InitTime.tv_sec * m_InitTime.tv_usec);
 
     m_OdinBufSize = m_MEPBufSize;
  
@@ -541,6 +553,8 @@ StatusCode MEPInjector::initialize()
 
     if(m_ARPMe)
         pingHLTNodes();
+
+
     if(!m_AutoMode)
     {
         m_InjState = READY;
@@ -548,7 +562,7 @@ StatusCode MEPInjector::initialize()
     }
     else
     { 
-        m_InjState = RUNNING;
+        m_InjState = READY; //RUNNING
         msgLog << MSG::DEBUG << "Injector initialized in automode" << endmsg;
     }
 
@@ -705,7 +719,7 @@ void displayBuff(char *buf, int size)
     printf("\n");                                                                    }
 
 
-StatusCode MEPInjector::getEvent()
+StatusCode MEPInjector::getEvent(int nbEv)
 {
     static MsgStream msgLog(msgSvc(), name());
 
@@ -716,42 +730,75 @@ StatusCode MEPInjector::getEvent()
 
     BMID bmid;
 
-    if(m_EventBuffers.size() < 1) {
-        msgLog << MSG::ERROR << "No input to get event from ..." << endmsg;
-        return StatusCode::FAILURE;
-    } 
-    else if(m_EventBuffers.size() == 1) bmid = m_EventBuffers.begin()->second;
-    else /// Selection of input between all, at first assume that there is only normal and lumi 
+    int eventActual = 0;
+    do 
     {
-        msgLog << MSG::ERROR << "More than one buffer, not tested yet" << endmsg;
-        int p = 1 + (int) (100.0 * rand() / ( RAND_MAX +1.0 ) );
-        
-        
-        std::map<std::string, int>::iterator ite= m_ProbEvts.begin(); 
-        p -= ite->second;
-        while(ite != m_ProbEvts.end() && p>0);
-        { 
-            p -= ite->second;
-            ++ite;
+        if(m_EventBuffers.size() < 1) {
+            msgLog << MSG::ERROR << "No input to get event from ..." << endmsg;
+            return StatusCode::FAILURE;
+        } 
+        else if(m_EventBuffers.size() == 1 || m_AutoMode) 
+        {
+            bmid = m_EventBuffers.begin()->second;
         }
-        bmid = m_EventBuffers[ite->first]; 
-        
-    }    
+        else  
+        {
+            // Select the stream according to the trigger type
+            char *ccur = (((char *) m_OdinMEP) + MEPEVENTOFFSET);
+            OnlineRunInfo *ori = ( OnlineRunInfo *) (ccur+IPHDRSZ+MEPHDRSZ+nbEv*(ODFRAGSZ) + FRAGHDRSZ + BKHDRSZ);
+            msgLog << MSG::INFO << "Online Trigger Type: " << ori->triggerType << endmsg; 
+            switch(ori->triggerType) {
+                    // Static "map" not very elegant but easier to implement and to control via job options 
+                case 1 : //LUMI
+                        msgLog << MSG::INFO << "LUMI event selected"<<endmsg;
+                        bmid = m_EventBuffers[LUMI];
+                        break;
+                case 0 : //PHYS, should not be seen, process it like PERA (periodic A)
+                      
+                case 2 : //AUXI, should not be seen, process it like PERA
+                case 3 : //SEQU, don't know what it is, process it like PERA
+                case 5 : //UNKN
+                case 6 : //TIMI, don't know what it is, process it like PERA
+                case 7 : //CALX, don't know what it is, process it like PERA
+                case 4 : //PERA or PERB
+                        msgLog << MSG::INFO << "PERA event selected"<<endmsg;
+                        bmid = m_EventBuffers[PERA];
+                        break;
+                default : msgLog << MSG::ERROR << "Odin trigger type decoding error" << endmsg;
+                        return StatusCode::FAILURE;
+            
+            } 
+      
+        }   
+        if(mbm_events_actual(bmid, &eventActual) != MBM_NORMAL)
+        {   
+            msgLog << MSG::WARNING << "Error checking number of event in buffer " << LUMI << endmsg;
+        }
+        else
+        {
+            if(eventActual <= 0) {
+                static int i = 0;
+                if(++i %1000 == 0) msgLog << MSG::WARNING << "oups ca fait longtemps" << endmsg;
+                MEPRxSys::microsleep(1000);
+            }
+        }
 
-    if(mbm_get_event(bmid,&p, &m_CurEventSize, &r.evtype, r.trmask, m_PartitionID) != MBM_NORMAL && m_InjState == RUNNING)
+    }
+    while(eventActual <= 0 && m_InjState == RUNNING);
+
+    if(m_InjState != RUNNING) { 
+        msgLog << MSG::INFO << "End of injection : mbm_get_event cancelled" << endmsg;
+        return StatusCode::RECOVERABLE;
+    }
+
+    if(mbm_get_event(bmid,&p, &m_CurEventSize, &r.evtype, r.trmask, m_PartitionID) != MBM_NORMAL)
     {
         msgLog << MSG::ERROR << "mbm_get_event failed" << endmsg;
         return StatusCode::FAILURE;
     }
-    else if(m_InjState != RUNNING) {
-        msgLog << MSG::INFO << "End of injection : mbm_get_event cancelled" << endmsg;
-        return StatusCode::RECOVERABLE;
-    }
-    else 
-    {  
-        memcpy(m_CurEvent, p, m_CurEventSize); 
-        mbm_free_event(bmid);
-    }
+    memcpy(m_CurEvent, p, m_CurEventSize); 
+    mbm_free_event(bmid);
+    ++m_TotEvtsRead;
     return StatusCode::SUCCESS;
 
 }
@@ -769,7 +816,7 @@ StatusCode MEPInjector::readEvent()
     int len = 0;
  
     ///XXX Get event
-    StatusCode sc = getEvent(); 
+    StatusCode sc = getEvent(nbEv); 
     if(sc.isRecoverable()) {
         msgLog << MSG::INFO << "End of injection : exiting readEvent" << endmsg;
         return StatusCode::RECOVERABLE;
@@ -1858,8 +1905,8 @@ StatusCode MEPInjector::manageMEPRequest()
 
 	m_TotMEPReqRx += mreq->nmep;
 	m_TotMEPReqPktRx++;
-
-
+ 
+        m_CurMEPReqCredits += mreq->nmep;    
   
         if(m_Debug) {
             msgLog << MSG::DEBUG << "FARM IP ADDRESS : "<< MEPRxSys::dotted_addr(hdr->saddr) <<" ; Credit asked " << m_HLTReqs[hdr->saddr] <<endmsg;
@@ -1934,7 +1981,8 @@ StatusCode MEPInjector::manageOdinMEP()
         memcpy(tmp+4, bufMEP, len);
         int *itmp = (int *) tmp;
         itmp[0] = len;
-        m_QueueOdinMEP.push(tmp); 
+        m_QueueOdinMEP.push(tmp);
+        m_CurOdinMEPs = m_QueueOdinMEP.size(); 
 
         msgLog << MSG::DEBUG << "SIZE OF ODIN MEP BUFFER : " << m_QueueOdinMEP.size() << endmsg; 
         int testsem = 0;
@@ -2023,6 +2071,7 @@ StatusCode MEPInjector::getHLTInfo()
             m_HLTIPAddrTo = m_HLTReqsIte->first;
 
             --(m_HLTReqsIte->second);
+            --m_CurMEPReqCredits;
             ++m_TotCreditConsumed;
             if(m_Debug) {
                 msgLog << MSG::DEBUG << "Get HLT information" << endmsg; 
@@ -2111,6 +2160,7 @@ StatusCode MEPInjector::getOdinInfo()
     else {
         m_OdinMEP->setSize(0);
     } 
+    m_CurOdinMEPs = m_QueueOdinMEP.size(); 
 
     if (pthread_mutex_unlock(&m_SyncMainOdin)) {
         ERRMSG(msgLog, "Failed unlocking mutex");
@@ -2150,6 +2200,8 @@ void saveHisto()
 StatusCode MEPInjector::finalize()
 {
     static MsgStream msgLog(msgSvc(), name());
+
+    msgLog << MSG::ALWAYS << __PRETTY_FUNCTION__ << endmsg;
 
     if(m_Debug) close(m_CreditsFD);
 
@@ -2290,6 +2342,7 @@ StatusCode MEPInjector::finalize()
     close(m_ToHLTSock);
 
     msgLog << MSG::DEBUG <<"Injector finalized"<<endmsg;
+
  
     if(m_IncidentSvc) {
         m_IncidentSvc->removeListener(this);
@@ -2303,6 +2356,7 @@ StatusCode MEPInjector::finalize()
         m_MonSvc = 0;
     }
 
+    msgLog << MSG::INFO << "Finalization done" << endmsg;
     msgLog << MSG::INFO << "A few stats" << endmsg;
     msgLog << MSG::INFO << "Total of MEPs sent : " << m_TotMEPsTx << endmsg;
     msgLog << MSG::INFO << "Total of MEP Requests received : " << m_TotMEPReqRx << endmsg;
@@ -2312,6 +2366,9 @@ StatusCode MEPInjector::finalize()
 
 StatusCode MEPInjector::run() {
     static MsgStream msgLog(msgSvc(), name());
+    m_IncidentSvc->addListener(this, "DAQ_CANCEL", 0, true, true);
+
+/*
     while(m_InjState != RUNNING){
         switch(m_InjState) {
         case STOPPED:
@@ -2324,15 +2381,27 @@ StatusCode MEPInjector::run() {
         default: continue;
         }
     }
+*/
 
-//    m_InjState = RUNNING; 
+    msgLog << MSG::ALWAYS << __PRETTY_FUNCTION__ << endmsg;
+
+    m_InjState = RUNNING;
+
     StatusCode sc = StatusCode::SUCCESS; 
     while(sc.isSuccess() && m_InjState == RUNNING)
     {
          sc=injectorProcessing();
     }
+/*
+    if(m_IncidentSvc) {
+        m_IncidentSvc->removeListener(this);
+        m_IncidentSvc->release();
+        m_IncidentSvc = 0;
+    }
+*/
     msgLog << MSG::INFO << "End of injection : End of run" << endmsg;
-    return sc;
+
+    return StatusCode::SUCCESS;
 }
 
 
@@ -2355,8 +2424,11 @@ void MEPInjector::publishCounters()
     PUBCNT(TotEvtsSent,        "Total sent events");
     PUBCNT(TotElapsedTime,     "Total time since last initialization");
     PUBCNT(TotMEPsTx,          "Total sent MEPs");   
-   
-/// PUBCNT(TotOdinMEPTx,       "Total Odin MEPs sent");
+ 
+    PUBCNT(TotCreditConsumed,  "Total of MEP Requests managed"); 
+    PUBCNT(CurMEPReqCredits,   "MEP credits stored for each farm node");
+ 
+    PUBCNT(CurOdinMEPs,        "Current number of Odin MEP in reception buffer");
  
 //  PUBCNT(totRxOct,           "Total received bytes");
 //  PUBARRAYCNT(badLenPkt,     "MEPs with mismatched length");
@@ -2365,6 +2437,9 @@ void MEPInjector::publishCounters()
 void MEPInjector::clearCounters() {
 //  resetCounters(m_rxOct, m_nSrc);
 //  m_totMEPReq          = 0;
+
+    m_CurOdinMEPs = 0;
+    m_CurMEPReqCredits = 0 ;
 
     m_TotBytesTx = 0;
     m_TotMEPReqRx = 0;
@@ -2394,7 +2469,7 @@ int MEPInjector::setupCounters() {
    ::memcpy(m_AllNames, (const char *) all_names.data(), all_names.size() +1);
   
   m_MonSvc->declareInfo("srcName", "C:", m_AllNames, sizeof(m_Tell1Boards), "Source IP names", this);
-  msgLog << MSG::INFO << all_names << ", " << m_Tell1Boards.size() << endmsg;
+//  msgLog << MSG::INFO << all_names << ", " << m_Tell1Boards.size() << endmsg;
   return 0;
 }
 
@@ -2402,43 +2477,28 @@ int MEPInjector::setupCounters() {
 
 void MEPInjector::handle(const Incident& inc) {
   MsgStream msgLog(msgSvc(),name());
+  msgLog << MSG::ALWAYS << __PRETTY_FUNCTION__ << endmsg;
   msgLog << MSG::ALWAYS << "Got incident:" << inc.source() << " of type " << inc.type() << endmsg;
   if (inc.type() == "DAQ_CANCEL")  { //but if I remember well the PVSS interface was leading the injector in not ready no ? XXX check this once Alba is back 
-      if(m_InjState != STOPPED) 
+      m_InjState = STOPPED;
+      /// No more need of synchronisation to access to the queues/maps, min value = 1
+      /// and they should exit  
+      if(sem_post(&m_MEPReqCount)==-1)
       {
-          m_InjState = STOPPED;
- 
-          for(std::map<std::string, BMID>::iterator ite = m_EventBuffers.begin(); ite != m_EventBuffers.end(); ++ite)
-          { 
-              if(mbm_cancel_request(ite->second)) {
-                  msgLog << MSG::WARNING << "End of run : Problem cancelling request, continue" << endmsg;
-              }
-
-              msgLog << MSG::INFO << "End of run : BMID : " << ite->first << " ok" << endmsg;
-          }
-
-          if(sem_post(&m_MEPReqCount)==-1)
-          { 
-              ERRMSG(msgLog, "Posting on the semaphore");
-              perror("sem_post");
-              exit(errno);
-          }
-          if(sem_post(&m_OdinCount)==-1) 
-          {
-              ERRMSG(msgLog, "Posting on the semaphore");
-              perror("sem_post");
-              exit(errno);
-          } 
+          ERRMSG(msgLog, "Posting on the semaphore");
+          perror("sem_post");
+          exit(errno);
       }
+      if(sem_post(&m_OdinCount)==-1)
+      {
+          ERRMSG(msgLog, "Posting on the semaphore");
+          perror("sem_post");
+          exit(errno);
+      }
+
   }
   else if (inc.type() == "DAQ_ENABLE") {
-/*  
-      if(m_InjState != RUNNING)
-      {
-          initConsumers();
-*/
-          m_InjState = RUNNING;
-//      }
+      m_InjState = RUNNING;
   }
 }
 
