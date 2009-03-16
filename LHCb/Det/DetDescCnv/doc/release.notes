@@ -4,6 +4,9 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !------------------------------------------------------------------------------
 
+! 2009-03-16 - Marco Clemencic
+ - Removed a dynamic_cast that should have not been there.
+
 !================ DetDescCnv v4r8 2009-02-18 ==================================
 ! 2009-01-23 - Marco Cattaneo
  - Backwards compatible fixes for Gaudi v21
