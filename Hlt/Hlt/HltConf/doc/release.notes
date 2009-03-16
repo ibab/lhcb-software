@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.174 2009-03-13 12:39:55 graven Exp $ 
+! $Id: release.notes,v 1.175 2009-03-16 09:56:34 depaula Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-03-16 - Leandro de Paula
+ - Change in HltMuonLines.py to make it more readable
 
 ! 2009-03-13 - Gerhard Raven
  - update fast-fit options in Hlt2TrackFitForTopo.py: delegate details to TrackFitter
