@@ -6,11 +6,11 @@ from stat import S_ISDIR
 import getopt
 from fnmatch import fnmatch
 
-_cvs_id = "$Id: SetupProject.py,v 1.8 2009-03-11 12:40:27 hmdegaud Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.9 2009-03-16 10:10:10 marcocle Exp $"
 
 try:
     from LbUtils.CVS import CVS2Version
-    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.8 $")
+    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.9 $")
 except ImportError :
     __version__ = _cvs_id
 
@@ -312,7 +312,10 @@ def SortVersions(versions, reverse = False):
                     sortable_list.append( ((10000,0,0), v) )
                 else:
                     sortable_list.append( ((0,0,v), v) )
-    sortable_list.sort(reverse = reverse)
+    ## @FIXME: in Python 2.3 the "reverse" argument is not available 
+    # sortable_list.sort(reverse = reverse)
+    sortable_list.sort()
+    if reverse: sortable_list.reverse()
     return [ v[1] for v in sortable_list ]
 
 
