@@ -3,6 +3,7 @@
 #include "CPP/IocSensor.h"
 #include "CPP/Event.h"
 #include <iostream>
+#include <cstdlib>
 #include <vector>
 using namespace std;
 
@@ -73,8 +74,6 @@ namespace {
       }
     }
     virtual void handle(const Event& ev) {
-      size_t i;
-      SensorTester* source = 0;
       switch(ev.eventtype) {
       case IocEvent:
 	handleIoc((SensorTester*)ev.data,ev.type);
