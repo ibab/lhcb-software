@@ -1,4 +1,4 @@
-// $Id: OnlineMessageSvc.cpp,v 1.15 2009-01-27 08:30:02 cattanem Exp $
+// $Id: OnlineMessageSvc.cpp,v 1.16 2009-03-16 08:53:18 frankb Exp $
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiOnline/IErrorLogger.h"
@@ -55,10 +55,11 @@ StatusCode LHCb::OnlineMessageSvc::initialize() {
   StatusCode sc = Service::initialize();
   if( sc.isFailure() ) return sc;
   // Release pointer to myself done in Service base class
-  if( m_messageSvc ) {
-    m_messageSvc->release();
-    m_messageSvc = 0;
-  }
+  // Seems to be broken with new Gaudi.....
+  //if( m_messageSvc ) {
+  //  m_messageSvc->release();
+  //  m_messageSvc = 0;
+  //}
   // Set my own properties
   setProperties();
   
