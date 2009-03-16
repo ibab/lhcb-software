@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------
 // File and Version Information: 
-//      $Id: EvtMassAmp.hh,v 1.1 2003-10-02 17:25:53 robbep Exp $
+//      $Id: EvtMassAmp.hh,v 1.2 2009-03-16 16:42:03 robbep Exp $
 // 
 // Environment:
 //      This software is part of the EvtGen package developed jointly
@@ -58,7 +58,6 @@ private:
   bool _useDeathFact;
   bool _useBirthFactFF;
   bool _useDeathFactFF;
-
 };
 
 

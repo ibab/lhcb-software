@@ -18,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include "EvtGenBase/EvtAmpIndex.hh"
 #include <vector>
 using std::vector;
@@ -31,7 +32,7 @@ EvtAmpIndex::EvtAmpIndex(std::vector<int> ind):
 {
   int i;
   
-  for (i=0 ; i<_size ; i++) {
+  for(i=0;i<_size;i++) {
     _state[i]=0;
     if (i==0){
       _nstate[i]=1;
@@ -45,22 +46,20 @@ EvtAmpIndex::EvtAmpIndex(std::vector<int> ind):
 
 void EvtAmpIndex::reset(){
   int i;
-  // initial version not correct ?  for(i=0;i++;i<_size) {
-  for (i=0 ; i<_size ; i++) {
+  for(i=0;i<_size;i++) {
     _state[i]=0;
   }
 }
 
 bool EvtAmpIndex::next(){
   int i;
-  // initial version not correct ?  for(i=0;i++;i<_size) {
-  for (i=0 ; i<_size ; i++) {
+  for(i=0;i<_size;i++) {
     _state[i]++;
     if (_state[i]<_ind[i]){
       return true;
     }
     else{
-      _state[i]=0 ;
+      _state[i]=0;
     }
   }
   return false;
@@ -71,8 +70,7 @@ int EvtAmpIndex::index(){
   int i;
   int ind=0;
 
-  // initial version not correct ?  for(i=0;i++;i<_size) {
-  for (i=0 ; i<_size ; i++ ) {
+  for(i=0;i<_size;i++) {
     ind+=_state[i]*_nstate[i];
   }
 

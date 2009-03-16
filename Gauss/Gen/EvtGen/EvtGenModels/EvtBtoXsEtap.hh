@@ -33,7 +33,7 @@ public:
   EvtBtoXsEtap() {}
   virtual ~EvtBtoXsEtap();
 
-  void getName(std::string& name);
+  std::string getName();
 
   EvtDecayBase* clone();
 

@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------
 // File and Version Information: 
-//      $Id: EvtMultiChannelParser.hh,v 1.1 2003-10-02 17:25:54 robbep Exp $
+//      $Id: EvtMultiChannelParser.hh,v 1.2 2009-03-16 16:41:09 robbep Exp $
 // 
 // Environment:
 //      This software is part of the EvtGen package developed jointly
@@ -40,7 +40,7 @@ public:
   void parse(const char* file, const char* model);
   void parse(const std::vector<std::string>& v);
 
-  static void parseComplexCoef(int& i, const std::vector<std::string>& v,
+  static void parseComplexCoef(size_t& i, const std::vector<std::string>& v,
 			       EvtComplex& c, int& format);
   static double parseRealCoef(int& i, const std::vector<std::string>& v);
   static bool isKeyword(const std::string& s);
@@ -48,6 +48,8 @@ public:
   inline double pdfMax() const { return _pdfMax; }
   inline int nScan() const { return _nScan; }
   inline double dm() const { return _dm; }
+  inline double mixPhase() const { return _mixPhase; }
+  inline double mixAmpli() const { return _mixAmpli; }
 
   inline std::vector<std::string> amp(int i) const { return _amp[i]; }
   inline std::vector<std::string> ampConj(int i) const { return _ampConj[i]; }
@@ -65,6 +67,8 @@ private:
   double _pdfMax;
   int _nScan;
   double _dm;
+  double _mixPhase;
+  double _mixAmpli;
 
   std::vector<std::vector<std::string> >  _amp;
   std::vector<std::vector<std::string> >  _ampConj;

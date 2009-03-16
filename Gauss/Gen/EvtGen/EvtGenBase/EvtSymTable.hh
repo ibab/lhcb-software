@@ -30,17 +30,22 @@ class EvtSymTable {
 public:
 
   EvtSymTable(); 
-  virtual ~EvtSymTable();
+  ~EvtSymTable();
 
-  void Define(const std::string& name,std::string d);
+  static void define(const std::string& name,std::string d);
 
-  std::string Get(const std::string& name,int &ierr);
+  static std::string get(const std::string& name,int &ierr);
 
 private:
 
-  std::map<std::string,std::string> _symMap;
+  static std::map<std::string,std::string> _symMap;
   
 }; 
 
 #endif
+
+
+
+
+
 

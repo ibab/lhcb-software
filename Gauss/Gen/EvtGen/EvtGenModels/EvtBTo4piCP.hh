@@ -32,7 +32,7 @@ public:
   EvtBTo4piCP() {}
   virtual ~EvtBTo4piCP();
 
-  void getName(std::string& name);
+  std::string getName();
   EvtDecayBase* clone();
 
   void init();

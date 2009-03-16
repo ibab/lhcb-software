@@ -59,6 +59,9 @@ public:
     _amp = new EvtAmplitudeSum<T>();
     _ampConj = new EvtAmplitudeSum<T>();
     _pc = new EvtPdfSum<T>();
+    _dm = parser.dm();
+    _mixAmpli = parser.mixAmpli();
+    _mixPhase = parser.mixPhase();
 
     printf("Amplitude with %d terms\n",parser.getNAmp());
     int i;
@@ -79,7 +82,7 @@ public:
    
     printf("Calculating pole compensator integrals %d steps\n",nItg);
     if(nItg > 0) _pc->getItg(nItg);
- 
+    
     printf("End build\n");
   }
   
@@ -87,6 +90,8 @@ public:
 
   inline bool isCPModel() const { return (_ampConj->nTerms() > 0 ? true : false); } 
   inline double dm() const { return _dm; }
+  inline double mixAmpli() const { return _mixAmpli; }
+  inline double mixPhase() const { return _mixPhase; }
 
   void setVerbose() { _verbose = true; }
 
@@ -117,10 +122,12 @@ protected:
 
   EvtAmplitudeSum<T> *_amp;      // _owned_ amplitude
   EvtAmplitudeSum<T> *_ampConj;  // _owned_ conjugate amplitude
-  EvtPdfSum<T> *_pc;             // _ownded_ pole compensator
+  EvtPdfSum<T> *_pc;             // _owned_ pole compensator
   std::vector<std::string> _names;     // names of partial amplitudes
   
   double _dm;                   // Mass difference for conjugate amplitude
+  double _mixPhase;// mixing phase
+  double _mixAmpli;// cpv in mixing
   bool _verbose;
 };
 

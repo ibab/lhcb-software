@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Project: BaBar detector at the SLAC PEP-II B-factory
  * Package: EvtGenBase
- *    File: $Id: EvtTwoBodyVertex.hh,v 1.1 2003-10-02 17:25:57 robbep Exp $
+ *    File: $Id: EvtTwoBodyVertex.hh,v 1.2 2009-03-16 16:34:38 robbep Exp $
  *  Author: Alexei Dvoretskii, dvoretsk@slac.stanford.edu, 2001-2002
  *
  * Copyright (C) 2002 Caltech
@@ -16,7 +16,7 @@
 #include "EvtGenBase/EvtTwoBodyKine.hh"
 #include "EvtGenBase/EvtBlattWeisskopf.hh"
 
-#include <iosfwd> 
+#include <iosfwd>
 
 class EvtTwoBodyVertex {
 

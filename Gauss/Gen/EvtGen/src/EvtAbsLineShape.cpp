@@ -18,8 +18,8 @@
 //
 //------------------------------------------------------------------------
 //
+#include "EvtGenBase/EvtPatches.hh"
 #include <iostream>
-#include <fstream>
 #include <stdlib.h>
 #include <ctype.h>
 #include <math.h>
@@ -29,6 +29,9 @@
 #include "EvtGenBase/EvtTwoBodyVertex.hh"
 #include "EvtGenBase/EvtPropBreitWigner.hh"
 #include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
+
+using namespace std;
 
 EvtAbsLineShape::EvtAbsLineShape() {
 }
@@ -36,11 +39,11 @@ EvtAbsLineShape::EvtAbsLineShape() {
 EvtAbsLineShape::~EvtAbsLineShape() {
 }
 
-EvtAbsLineShape::EvtAbsLineShape(double mass, double width, double maxRange, 
-                                 EvtSpinType::spintype sp) {
+EvtAbsLineShape::EvtAbsLineShape(double mass, double width, double maxRange, EvtSpinType::spintype sp) {
 
   _includeDecayFact = false;
   _includeBirthFact = false;
+  _applyFixForSP8 = false;
   _mass=mass;
   _width=width;
   _spin=sp;
@@ -69,8 +72,9 @@ EvtAbsLineShape::EvtAbsLineShape(const EvtAbsLineShape& x){
   _massMax=x._massMax;
   _massMin=x._massMin;
   _width=x._width;
+  _spin=x._spin;
   _maxRange=x._maxRange;
-
+  _applyFixForSP8 = x._applyFixForSP8;
 }
 
 EvtAbsLineShape& EvtAbsLineShape::operator=(const EvtAbsLineShape& x){
@@ -83,6 +87,7 @@ EvtAbsLineShape& EvtAbsLineShape::operator=(const EvtAbsLineShape& x){
   _width=x._width;
   _spin=x._spin;
   _maxRange=x._maxRange;
+  _applyFixForSP8 = x._applyFixForSP8;
   return *this; 
 }
 
@@ -109,11 +114,18 @@ double EvtAbsLineShape::rollMass() {
     return temp;
   }
 }
-double EvtAbsLineShape::getRandMass(EvtId *, int , EvtId * , 
-                                    EvtId *, double maxMass, double *) {
+double EvtAbsLineShape::getRandMass(EvtId *parId, int nDaug, EvtId *dauId, EvtId *othDaugId, double maxMass, double *dauMasses) {
 
   if ( _width< 0.0001) return _mass;
   //its not flat - but generated according to a BW
+
+  if (maxMass>0&&maxMass<_massMin) {
+    report(ERROR,"EvtGen") << "In EvtAbsLineShape::getRandMass"<<endl;
+    report(ERROR,"EvtGen") << "Decaying particle "<<EvtPDL::name(*parId)
+                           << " with mass "<<maxMass<<endl;
+    report(ERROR,"EvtGen") << " to particle" 
+                           << " with a minimal mass of "<< _massMin<<endl;
+  }
 
   double mMin=_massMin;
   double mMax=_massMax;
@@ -125,8 +137,7 @@ double EvtAbsLineShape::getRandMass(EvtId *, int , EvtId * ,
   //  return EvtRandom::Flat(_massMin,_massMax);
 };
 
-double EvtAbsLineShape::getMassProb(double mass, double massPar, int nDaug, 
-                                    double *massDau) {
+double EvtAbsLineShape::getMassProb(double mass, double massPar, int nDaug, double *massDau) {
 
   double dTotMass=0.;
   if ( nDaug>1) {
@@ -134,8 +145,7 @@ double EvtAbsLineShape::getMassProb(double mass, double massPar, int nDaug,
     for (i=0; i<nDaug; i++) {
       dTotMass+=massDau[i];
     }
-    //report(INFO,"EvtGen") << mass << " " << massPar << " " 
-    // << dTotMass << " "<< std::endl;
+    //report(INFO,"EvtGen") << mass << " " << massPar << " " << dTotMass << " "<< endl;
     //    if ( (mass-dTotMass)<0.0001 ) return 0.;
     if ( (mass<dTotMass) ) return 0.;
   }

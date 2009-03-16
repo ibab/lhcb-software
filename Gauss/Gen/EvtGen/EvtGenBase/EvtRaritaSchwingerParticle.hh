@@ -35,6 +35,11 @@ public:
   EvtRaritaSchwingerParticle();
   virtual ~EvtRaritaSchwingerParticle();
   void init(EvtId id,const EvtVector4R& p4);
+  void init(EvtId id,const EvtVector4R& p4,
+	    const EvtRaritaSchwinger &,const EvtRaritaSchwinger &,
+	    const EvtRaritaSchwinger &,const EvtRaritaSchwinger &,
+	    const EvtRaritaSchwinger &,const EvtRaritaSchwinger &,
+	    const EvtRaritaSchwinger &,const EvtRaritaSchwinger &);
   EvtRaritaSchwinger spRSParent(int) const;
   EvtRaritaSchwinger spRS(int) const;   
   EvtSpinDensity rotateToHelicityBasis() const;

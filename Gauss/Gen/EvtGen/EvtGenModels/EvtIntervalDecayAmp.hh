@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------
 // File and Version Information: 
-//      $Id: EvtIntervalDecayAmp.hh,v 1.3 2006-04-23 20:36:33 robbep Exp $
+//      $Id: EvtIntervalDecayAmp.hh,v 1.4 2009-03-16 16:39:16 robbep Exp $
 // 
 // Environment:
 //      This software is part of the EvtGen package developed jointly
@@ -31,8 +31,10 @@
 #include "EvtGenBase/EvtAmpFactory.hh"
 #include "EvtGenBase/EvtMultiChannelParser.hh"
 #include "EvtGenBase/EvtAmpPdf.hh"
-#include "EvtGenBase/EvtIncoherentMixing.hh"
+#include "EvtGenBase/EvtCPUtil.hh"
 #include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtCyclic3.hh"
+#include "EvtGenBase/EvtReport.hh"
 
 template <class T>
 class EvtIntervalDecayAmp : public  EvtDecayAmp {
@@ -70,7 +72,6 @@ public:
     
     if(VERBOSE) report(INFO,"EvtGen") << "Create factory and interval" << std::endl;
     _fact = createFactory(parser);
-    
     
     // Maximum PDF value over the Dalitz plot can be specified, or a scan 
     // can be performed.
@@ -115,37 +116,51 @@ public:
     EvtComplex ampl(0.,0.);
     
     // Sample using pole-compensator pdf
-    
-    EvtPdfSum<T>* pc = _fact->getPC();
-    T x = pc->randomPoint();
+
+    EvtPdfSum<T>* pc = getPC();
+    _x = pc->randomPoint();
     
     if(_fact->isCPModel()) {
-      
-      EvtIncoherentMixing::OtherB(p,t,other_b);
-      EvtComplex A = _fact->getAmp()->evaluate(x);
-      EvtComplex Abar = _fact->getAmpConj()->evaluate(x);
+
+      // Time-dependent Dalitz plot changes
+      // Dec 2005 (ddujmic@slac.stanford.edu)
+
+      EvtComplex A    = _fact->getAmp()->evaluate(_x);
+      EvtComplex Abar = _fact->getAmpConj()->evaluate(_x);
+
+      EvtCPUtil::OtherB(p,t,other_b);
+
       double dm = _fact->dm();
-      
-      if (other_b==B0B) ampl=A*cos(dm*t/(2*EvtConst::c))+Abar*sin(dm*t/(2*EvtConst::c));
-      if (other_b==B0) ampl=A*cos(dm*t/(2*EvtConst::c))-Abar*sin(dm*t/(2*EvtConst::c));
+      double mixAmpli = _fact->mixAmpli();
+      double mixPhase = _fact->mixPhase();
+      EvtComplex qoverp( cos(mixPhase)*mixAmpli,  sin(mixPhase)*mixAmpli);
+      EvtComplex poverq( cos(mixPhase)/mixAmpli, -sin(mixPhase)/mixAmpli);
+
+
+      if (other_b==B0B) ampl = A*cos(dm*t/(2*EvtConst::c))  +
+			  EvtComplex(0.,1.)*Abar*sin(dm*t/(2*EvtConst::c))*qoverp;
+      if (other_b==B0)  ampl = Abar*cos(dm*t/(2*EvtConst::c))  +
+			  EvtComplex(0.,1.)*A*sin(dm*t/(2*EvtConst::c))*poverq;
+
+
     }
     else {
       
-      ampl = _fact->getAmp()->evaluate(x);
+      ampl = amplNonCP(_x);
     }
     
     // Pole-compensate
-    
-    double comp = sqrt(pc->evaluate(x));
+
+    double comp = sqrt(pc->evaluate(_x));
     assert(comp > 0);
     vertex(ampl/comp);
     
     // Now generate random angles, rotate and setup 
     // the daughters
     
-    std::vector<EvtVector4R> v = initDaughters(x);
+    std::vector<EvtVector4R> v = initDaughters(_x);
     
-    unsigned int N = p->getNDaug();  
+    size_t N = p->getNDaug();  
     if(v.size() != N) {
       
       report(INFO,"EvtGen") << "Number of daughters " << N << std::endl;
@@ -153,8 +168,7 @@ public:
       assert(0);
     }
     
-    unsigned int i;
-    for(i=0;i<N;i++){
+    for(size_t i=0;i<N;i++){
       
       p->getDaug(i)->init(getDaugs()[i],v[i]);
     }    
@@ -163,17 +177,22 @@ public:
   virtual EvtAmpFactory<T>* createFactory(const EvtMultiChannelParser& parser) = 0;
   virtual std::vector<EvtVector4R> initDaughters(const T& p) const = 0;
 
-protected:
+  // provide access to the decay point and to the amplitude of any decay point.
+  // this is used by EvtBtoKD3P:
+  const T & x() const {return _x;}
+  EvtComplex amplNonCP(const T & x) {return _fact->getAmp()->evaluate(x);}
+  EvtPdfSum<T>* getPC() {return _fact->getPC();}
 
+protected:
   double _probMax;          // Maximum probability
   int _nScan;               // Number of points for max prob DP scan
+  T _x;                     // Decay point
 
   EvtAmpFactory<T>*  _fact; // factory
 };
 
 
 #endif
-
 
 
 

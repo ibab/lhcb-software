@@ -1,4 +1,4 @@
-// $Id: EvtSSD_DirectCP.hh,v 1.1 2006-11-08 23:16:11 robbep Exp $
+// $Id: EvtSSD_DirectCP.hh,v 1.2 2009-03-16 16:31:53 robbep Exp $
 // Generation of direct CP violation in hadronic environment
 // Patrick Robbe, LHCb,  08 Nov 2006
 // 
@@ -17,7 +17,7 @@ public:
   EvtSSD_DirectCP() {}
   virtual ~EvtSSD_DirectCP();
   
-  void getName(std::string& name);
+  virtual std::string getName();
   EvtDecayBase* clone();
 
   void initProbMax();
@@ -25,6 +25,8 @@ public:
   void decay(EvtParticle *p); 
 
 private:
+  bool isB0Mixed( EvtParticle * p ) ;
+  bool isBsMixed( EvtParticle * p ) ;
 
   //Arguments
 

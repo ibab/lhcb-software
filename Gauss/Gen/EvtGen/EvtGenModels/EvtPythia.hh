@@ -26,7 +26,7 @@
 #include "EvtGenBase/EvtParticle.hh"
 #include <string>
 
-class ofstream;
+#include <iosfwd>
 
 typedef EvtDecayBase* EvtDecayBasePtr;
 
@@ -37,7 +37,7 @@ public:
   EvtPythia();
   virtual ~EvtPythia();
   
-  void getName(std::string& name);
+  std::string getName();
   EvtDecayBase* clone();
   void decay(EvtParticle *p); 
   
@@ -67,7 +67,6 @@ private:
 				     double width, double maxwidth,double ctau,
 				     int stable,double rawbrfrsum);
   static bool diquark(int);
-  static bool isPythiaSpecial(int) ;
   static double NominalMass(int);
   static int njetsetdecays;
   static EvtDecayBasePtr* jetsetdecays;

@@ -28,9 +28,9 @@ EvtLambdaB2LambdaV::~EvtLambdaB2LambdaV()
 //------------------------------------------------------------------------
 // Method 'getName'
 //------------------------------------------------------------------------
-void EvtLambdaB2LambdaV::getName(std::string& model_name)
+std::string EvtLambdaB2LambdaV::getName()
 {
-  model_name="LAMBDAB2LAMBDAV";
+  return  "LAMBDAB2LAMBDAV";
 }
 
 
@@ -357,9 +357,9 @@ EvtLambda2PPiForLambdaB2LambdaV::~EvtLambda2PPiForLambdaB2LambdaV()
 //------------------------------------------------------------------------
 // Method 'getName'
 //------------------------------------------------------------------------
-void EvtLambda2PPiForLambdaB2LambdaV::getName(std::string& model_name)
+std::string EvtLambda2PPiForLambdaB2LambdaV::getName()
 {
-  model_name="LAMBDA2PPIFORLAMBDAB2LAMBDAV";
+  return "LAMBDA2PPIFORLAMBDAB2LAMBDAV";
 }
 
 
@@ -598,9 +598,9 @@ EvtV2VpVmForLambdaB2LambdaV::~EvtV2VpVmForLambdaB2LambdaV()
 //------------------------------------------------------------------------
 // Method 'getName'
 //------------------------------------------------------------------------
-void EvtV2VpVmForLambdaB2LambdaV::getName(std::string& model_name)
+std::string EvtV2VpVmForLambdaB2LambdaV::getName()
 {
-  model_name="V2VPVMFORLAMBDAB2LAMBDAV";
+  return "V2VPVMFORLAMBDAB2LAMBDAV";
 }
 
 //------------------------------------------------------------------------

@@ -10,13 +10,14 @@
 //
 // Module: Evt3Rank3C.cc
 //
-// Description: Implementation of 3 Rank tensors.
+// Description: Implementation of complex 3Rank 3D tensors.
 //
 // Modification history:
 //
 //    RYD     September 14, 1996         Module created
 //
 //------------------------------------------------------------------------
+#include "EvtGenBase/EvtPatches.hh"
 
 #include <iostream>
 #include <math.h>
@@ -66,7 +67,7 @@ Evt3Rank3C Evt3Rank3C::conj() const {
   for(i=0;i<3;i++) {
     for(j=0;j<3;j++) {
       for(k=0;k<3;k++) {
-	temp.set(j,i,k,::conj(t[i][j][k]));
+	temp.set(i,j,k,::conj(t[i][j][k]));
       }
     }
   }
@@ -99,16 +100,17 @@ Evt3Rank3C::Evt3Rank3C(){
 
 }
 
-void Evt3Rank3C::dump() const {
+std::ostream& operator<<(std::ostream& s, const Evt3Rank3C& t2){
   int i,j,k;
   for(k=0;k<3;k++){
     for(i=0;i<3;i++){
       for(j=0;j<3;j++){
-	report(INFO,"EvtGen") <<t[k][i][j];
+	report(INFO,"EvtGen") <<t2.t[k][i][j];
       }
       report(INFO,"EvtGen") << "\n";
     }
   }
+  return s;
 }
 
 Evt3Rank3C& Evt3Rank3C::operator+=(const Evt3Rank3C& t2){
@@ -118,7 +120,7 @@ Evt3Rank3C& Evt3Rank3C::operator+=(const Evt3Rank3C& t2){
   for (i=0;i<3;i++) {
     for (j=0;j<3;j++) {
       for (k=0;k<3;k++) {
-	t[i][j][k]+=t2.get(i,j,k);
+	t[i][j][k]+=t2.t[i][j][k];
       }
     }
   }
@@ -132,7 +134,7 @@ Evt3Rank3C& Evt3Rank3C::operator-=(const Evt3Rank3C& t2) {
   for (i=0;i<3;i++) {
     for (j=0;j<3;j++) {
       for (k=0;k<3;k++) {
-	t[i][j][k]-=t2.get(i,j,k);
+	t[i][j][k]-=t2.t[i][j][k];
       }
     }
   }
@@ -162,7 +164,7 @@ Evt3Rank3C& Evt3Rank3C::operator*=(const double c){
   for (i=0;i<3;i++) {
     for (j=0;j<3;j++) {
       for (k=0;k<3;k++) {
-	t[i][j][k]*=EvtComplex(c);
+	t[i][j][k]*=c;
       }
     }
   }
@@ -179,7 +181,7 @@ Evt3Rank3C conj(const Evt3Rank3C& t2) {
   for(i=0;i<3;i++){ 
     for(j=0;j<3;j++){ 
       for(k=0;k<3;k++){ 
-	temp.set(i,j,k,::conj((t2.get(i,j,k))));
+	temp.t[i][j][k]=::conj(t2.t[i][j][k]);
       }
     }
   }

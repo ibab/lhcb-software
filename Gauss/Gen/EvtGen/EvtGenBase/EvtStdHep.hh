@@ -21,7 +21,6 @@
 #ifndef EVTSTDHEP_HH
 #define EVTSTDHEP_HH
 
-//#include <iostream>
 #include "EvtGenBase/EvtVector4R.hh"
 #include <iosfwd>
 

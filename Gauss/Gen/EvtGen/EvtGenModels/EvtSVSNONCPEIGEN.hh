@@ -32,7 +32,7 @@ public:
   EvtSVSNONCPEIGEN() {}
   virtual ~EvtSVSNONCPEIGEN();
 
-  void getName(std::string& name);
+  std::string getName();
   EvtDecayBase* clone();
 
   void initProbMax();

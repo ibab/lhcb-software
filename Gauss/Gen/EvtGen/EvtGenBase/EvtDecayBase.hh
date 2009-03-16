@@ -35,9 +35,9 @@ class EvtDecayBase{
 
   //These pure virtual methods has to be implemented
   //by any derived class
-  virtual void getName(std::string& name)=0;
+  virtual std::string getName()=0;
   virtual void decay(EvtParticle *p)=0;
-  virtual void makeDecay(EvtParticle *p)=0;
+  virtual void makeDecay(EvtParticle *p,bool recursive=true)=0;
   virtual EvtDecayBase* clone()=0;
 
 
@@ -55,31 +55,36 @@ class EvtDecayBase{
   EvtDecayBase();
   virtual ~EvtDecayBase();
 
-  EvtId getParentId() {return _parent;}
-  double getBranchingFraction() {return _brfr;}
+  virtual bool matchingDecay(const EvtDecayBase &other) const;
+
+  EvtId getParentId() const {return _parent;}
+  double getBranchingFraction() const {return _brfr;}
   void disableCheckQ() {_chkCharge=0;};
   void checkQ();
-  int getNDaug() {return _ndaug;}
+  int getNDaug() const {return _ndaug;}
   EvtId* getDaugs() {return _daug;}
-  EvtId getDaug(int i) {return _daug[i];}
-  int getNArg() {return _narg;}
-  int getPHOTOS() {return _photos;}
+  EvtId getDaug(int i) const {return _daug[i];}
+  int getNArg() const {return _narg;}
+  int getPHOTOS() const {return _photos;}
   void setPHOTOS() {_photos=1;}
   void setVerbose() {_verbose=1;}
   void setSummary() {_summary=1;}
   double* getArgs();
   std::string* getArgsStr() {return _args;}
-  double getArg(int j); 
-  std::string getArgStr(int j) {return _args[j];}
-  std::string   getModelName() {return _modelname; }
-  int getDSum() {return _dsum; }
-  int summary() {return _summary; }
-  int verbose() {return _verbose; }
+  double getArg(unsigned int j) ; 
+  double getStoredArg(int j) const {return _storedArgs.at(j);}
+  double getNStoredArg() const {return _storedArgs.size();}
+  std::string getArgStr(int j) const {return _args[j];}
+  std::string   getModelName() const {return _modelname; }
+  int getDSum() const {return _dsum; }
+  int summary() const {return _summary; }
+  int verbose() const {return _verbose; }
 
   void saveDecayInfo(EvtId ipar, int ndaug,EvtId *daug,
 		     int narg, std::vector<std::string>& args, 
 		     std::string name, double brfr);
-  void printSummary();
+  void printSummary() const ;
+  void printInfo() const ;
 
   
   //Does not really belong here but I don't have a better place.
@@ -102,9 +107,11 @@ class EvtDecayBase{
   // than they really have to fool aliases (VSSBMIX for example)
   virtual int nRealDaughters() { return _ndaug;}
 
+
 protected:
 
-
+  bool _daugsDecayedByParentModel;
+  bool daugsDecayedByParentModel() {return _daugsDecayedByParentModel;}
 
 private:
 
@@ -113,6 +120,7 @@ private:
   int _ndaug;
   EvtId _parent;
   int _narg;
+  std::vector<double> _storedArgs;
   EvtId *_daug;
   double *_argsD;
   std::string *_args;
@@ -121,7 +129,6 @@ private:
   int _dsum;
   int _summary;
   int _verbose;
-
 
 
   int defaultprobmax;

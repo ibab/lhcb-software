@@ -18,8 +18,8 @@ public:
 	EvtBToKStarllDurham07();
 	virtual ~EvtBToKStarllDurham07();
 
-	void getName(std::string& name) {
-		name = "BTOKSTARLLDURHAM07";
+	virtual std::string getName() {
+		return "BTOKSTARLLDURHAM07";
 	}
 	EvtDecayBase* clone();
 

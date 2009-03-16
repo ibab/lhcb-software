@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Project: BaBar detector at the SLAC PEP-II B-factory
  * Package: EvtGenBase
- *    File: $Id: EvtCyclic3.hh,v 1.1 2003-10-02 17:25:52 robbep Exp $
+ *    File: $Id: EvtCyclic3.hh,v 1.2 2009-03-16 16:42:46 robbep Exp $
  *  Author: Alexei Dvoretskii, dvoretsk@slac.stanford.edu, 2001-2002
  *
  * Copyright (C) 2002 Caltech
@@ -63,9 +63,9 @@ namespace EvtCyclic3 {
 
   // To string conversions
 
-  char* c_str(Index i);
-  char* c_str(Pair i);
-  char* c_str(Perm i);
+  const char* c_str(Index i);
+  const char* c_str(Pair i);
+  const char* c_str(Perm i);
 
   // Useful name strings
 
@@ -75,7 +75,7 @@ namespace EvtCyclic3 {
 };
 
 //where should these go?
-//std::ostream& operator<<(std::ostream&, EvtCyclic3::Index);
-//std::ostream& operator<<(std::ostream&, EvtCyclic3::Pair);
+//ostream& operator<<(ostream&, EvtCyclic3::Index);
+//ostream& operator<<(ostream&, EvtCyclic3::Pair);
 
 #endif

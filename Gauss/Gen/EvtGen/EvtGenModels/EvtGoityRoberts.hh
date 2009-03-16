@@ -33,7 +33,7 @@ public:
   EvtGoityRoberts() {}
   virtual ~EvtGoityRoberts();
 
-  void getName(std::string& name);
+  std::string getName();
   EvtDecayBase* clone();
   
   void init();
@@ -43,10 +43,10 @@ public:
  private:
 
   void DecayBDstarpilnuGR(EvtParticle *pb,EvtId ndstar,
-                                        EvtId npion, EvtId nlep, EvtId nnu);
+			  EvtId nlep, EvtId nnu);
 
   void DecayBDpilnuGR(EvtParticle *pb,EvtId nd,
-                                        EvtId npion, EvtId nlep, EvtId nnu);
+		      EvtId nlep, EvtId nnu);
 
 
 

@@ -28,7 +28,7 @@ public:
   EvtParser();
   ~EvtParser();
 
-  int Read(const std::string filename);
+  int read(const std::string filename);
   int getNToken();
   const std::string& getToken(int i);
   int getLineofToken(int i);

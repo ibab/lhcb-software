@@ -10,7 +10,8 @@
 //
 // Module: EvtGen/EvtSemiLeptonicVectorAmp.hh
 //
-// Description:
+// Description: Class for calcultaion of amplitude for semileptonic
+//              decay to a vector particle.
 //
 // Modification history:
 //

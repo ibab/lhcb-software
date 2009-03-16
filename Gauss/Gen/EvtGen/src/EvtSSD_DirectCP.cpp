@@ -1,4 +1,4 @@
-// $Id: EvtSSD_DirectCP.cpp,v 1.1 2006-11-08 23:16:11 robbep Exp $
+// $Id: EvtSSD_DirectCP.cpp,v 1.2 2009-03-16 16:24:05 robbep Exp $
 // Generation of direct CP violation in hadronic environment
 // Patrick Robbe, LHCb,  08 Nov 2006
 // 
@@ -6,7 +6,7 @@
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtRandom.hh"
 #include "EvtGenBase/EvtGenKine.hh"
-#include "EvtGenBase/EvtIncoherentMixing.hh"
+#include "EvtGenBase/EvtCPUtil.hh"
 #include "EvtGenBase/EvtPDL.hh"
 #include "EvtGenBase/EvtReport.hh"
 #include "EvtGenBase/EvtVector4C.hh"
@@ -17,9 +17,9 @@
 
 EvtSSD_DirectCP::~EvtSSD_DirectCP() {}
 
-void EvtSSD_DirectCP::getName(std::string& model_name){
+std::string EvtSSD_DirectCP::getName( ){
 
-  model_name="SSD_DirectCP";     
+  return "SSD_DirectCP" ;
 
 }
 
@@ -86,8 +86,7 @@ void EvtSSD_DirectCP::decay( EvtParticle *p) {
   }
   
   if ( flip ) {
-    if ( ( EvtIncoherentMixing::isB0Mixed( p ) ) || 
-         ( EvtIncoherentMixing::isBsMixed( p ) ) ) {
+    if ( ( isB0Mixed( p ) ) || ( isBsMixed( p ) ) ) {
       p->getParent()
         ->setId( EvtPDL::chargeConj( p->getParent()->getId() ) ) ;
       p->setId( EvtPDL::chargeConj( p->getId() ) ) ;
@@ -157,3 +156,30 @@ void EvtSSD_DirectCP::decay( EvtParticle *p) {
   }
 }
 
+bool EvtSSD_DirectCP::isB0Mixed ( EvtParticle * p ) {
+  if ( ! ( p->getParent() ) ) return false ;
+
+  static EvtId B0 =EvtPDL::getId("B0");
+  static EvtId B0B=EvtPDL::getId("anti-B0");
+
+  if ( ( p->getId() != B0 ) && ( p->getId() != B0B ) ) return false ;
+
+  if ( ( p->getParent()->getId() == B0 ) ||
+       ( p->getParent()->getId() == B0B ) ) return true ;
+
+  return false ;
+}
+
+bool EvtSSD_DirectCP::isBsMixed ( EvtParticle * p ) {
+  if ( ! ( p->getParent() ) ) return false ;
+
+  static EvtId BS0=EvtPDL::getId("B_s0");
+  static EvtId BSB=EvtPDL::getId("anti-B_s0");
+
+  if ( ( p->getId() != BS0 ) && ( p->getId() != BSB ) ) return false ;
+
+  if ( ( p->getParent()->getId() == BS0 ) ||
+       ( p->getParent()->getId() == BSB ) ) return true ;
+
+  return false ;
+}

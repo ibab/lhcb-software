@@ -33,7 +33,10 @@ public:
 
   void init(EvtId part_n,double e,double px,double py,double pz);
   void init(EvtId part_n,const EvtVector4R& p4);
-//Returns polarization tensors.
+  void init(EvtId part_n,const EvtVector4R& p4,
+	    const EvtTensor4C&,const EvtTensor4C&,const EvtTensor4C&,
+	    const EvtTensor4C&,const EvtTensor4C&);
+  //Returns polarization tensors.
   EvtTensor4C epsTensorParent(int i) const; 
   EvtTensor4C epsTensor(int i) const; 
 
@@ -45,7 +48,7 @@ public:
   
 private:
   
-  EvtTensor4C eps1,eps2,eps3,eps4,eps5; 
+  EvtTensor4C eps[5];//eps1,eps2,eps3,eps4,eps5; 
 
   EvtTensorParticle(const EvtTensorParticle& tensor);  
   EvtTensorParticle& operator=(const EvtTensorParticle& tensor);  

@@ -32,7 +32,7 @@ public:
   EvtEtaDalitz() {}
   virtual ~EvtEtaDalitz();
 
-  void getName(std::string& name);
+  std::string getName();
   EvtDecayBase* clone();
 
   void init();

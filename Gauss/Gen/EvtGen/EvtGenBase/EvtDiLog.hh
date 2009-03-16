@@ -1,4 +1,4 @@
-// $Id: EvtDiLog.hh,v 1.2 2007-01-24 20:20:12 robbep Exp $
+// $Id: EvtDiLog.hh,v 1.3 2009-03-16 16:44:33 robbep Exp $
 #ifndef EVTGENBASE_EVTDILOG_HH 
 #define EVTGENBASE_EVTDILOG_HH 1
 

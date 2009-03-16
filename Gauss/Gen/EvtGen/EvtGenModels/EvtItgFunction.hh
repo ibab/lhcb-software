@@ -25,7 +25,7 @@
  *
  *  @see EvtItgFunctionEvtItgFunction
  *
- *  @version $Id: EvtItgFunction.hh,v 1.1 2003-10-02 17:26:51 robbep Exp $ 
+ *  @version $Id: EvtItgFunction.hh,v 1.2 2009-03-16 16:34:00 robbep Exp $ 
  *
  *  @author Phil Strother       Originator
  */

@@ -145,7 +145,7 @@ void EvtBToKStarllDurham07::initProbMax(){
 	//Initial particle is unpolarized, well it is a scalar so it is 
 	//trivial
 	EvtSpinDensity rho;
-	rho.SetDiag(root_part->getSpinStates());
+	rho.setDiag(root_part->getSpinStates());
 
 	double mass[3];
 
@@ -243,7 +243,7 @@ void EvtBToKStarllDurham07::initProbMax(){
 
 				//report(INFO,"EvtGen") <<"amp:"<<amp.getSpinDensity()<<std::endl;
 
-				prob = rho.NormalizedProb(amp.getSpinDensity());
+				prob = rho.normalizedProb(amp.getSpinDensity());
 
 				//report(INFO,"EvtGen") << "prob:"<<q2<<" "<<costl<<" "<<prob<<std::endl;
 

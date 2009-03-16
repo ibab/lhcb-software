@@ -26,14 +26,26 @@
 
 class EvtSemiLeptonicFF{
 
- public:
+public:
 
-  virtual void getscalarff( EvtId , EvtId , double , double , double *,
-                            double * ) {return;}
-  virtual void getvectorff( EvtId , EvtId ,double , double , double *,
-                            double *, double *, double * ) {return;}
-  virtual void gettensorff( EvtId , EvtId ,double , double , double *,
-                            double *, double *, double * ) {return;}
+  virtual void getscalarff( EvtId parent, EvtId daught,
+			    double t, double mass, double *fpf,
+			    double *fmf ) = 0;
+  virtual void getvectorff( EvtId parent, EvtId daught,
+			    double t, double mass, double *a1f,
+			    double *a2f, double *vf, double *a0f ) = 0;
+  virtual void gettensorff( EvtId parent, EvtId daught,
+			    double t, double mass, double *a1f,
+			    double *a2f, double *vf, double *a0f ) = 0;
+
+  virtual void getbaryonff(EvtId parent, EvtId daught,
+			   double t,
+                           double m_meson,
+                           double *f1v, 
+                           double *f1a, 
+                           double *f2v, 
+			   double *f2a) = 0 ;
+
 
 };
 

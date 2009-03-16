@@ -10,7 +10,9 @@
 //
 // Module: EvtGen/EvtDecayIncoherent.hh
 //
-// Description:
+// Description: Base class for models that calculate
+//              decay kinematics and do not do any accept/reject.
+//              Useful e.g. for interface to other generators
 //
 // Modification history:
 //
@@ -30,7 +32,7 @@ class EvtDecayIncoherent : public EvtDecayBase{
 
 public:
 
-  void makeDecay(EvtParticle* p);
+  void makeDecay(EvtParticle* p, bool recursive=true);
 
   virtual ~EvtDecayIncoherent() {}
 

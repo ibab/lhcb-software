@@ -33,7 +33,7 @@ public:
   EvtSingleParticle() {}
   virtual ~EvtSingleParticle();
 
-  void getName(std::string& name);
+  std::string getName();
   
   EvtDecayBase* clone();
 

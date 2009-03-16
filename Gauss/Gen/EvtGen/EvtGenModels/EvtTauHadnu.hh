@@ -18,8 +18,8 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef EVTTAUHADNU_HH
-#define EVTTAUHADNU_HH
+#ifndef EVTTAUHADNUKS_HH
+#define EVTTAUHADNUKS_HH
 
 #include "EvtGenBase/EvtDecayAmp.hh"
 
@@ -32,7 +32,7 @@ public:
   EvtTauHadnu() {}
   virtual ~EvtTauHadnu();
 
-  void getName(std::string& name);
+  std::string getName();
   EvtDecayBase* clone();
 
   void initProbMax();
@@ -48,9 +48,10 @@ private:
   double _mA1;
   double _gammaA1;
 
-  EvtComplex Fpi( EvtVector4R q1, EvtVector4R q2);
-  double pi3G(double m2,int dupD);
-
+  double gFunc(double m2,int dupD);
+  EvtComplex Fpi( double s, double xm1, double xm2 );
+  EvtComplex BW( double s, double m, double gamma, double xm1, double xm2 );
+  
 };
 
 #endif

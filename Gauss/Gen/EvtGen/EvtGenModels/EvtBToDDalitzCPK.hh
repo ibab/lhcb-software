@@ -1,4 +1,4 @@
-// $Id: EvtBToDDalitzCPK.hh,v 1.1 2003-12-09 11:20:23 robbep Exp $
+// $Id: EvtBToDDalitzCPK.hh,v 1.2 2009-03-16 16:37:55 robbep Exp $
 #ifndef EVTGENMODELS_EVTBTODDALITZCPK_HH 
 #define EVTGENMODELS_EVTBTODDALITZCPK_HH 1
 
@@ -20,7 +20,7 @@ public:
 
   virtual ~EvtBToDDalitzCPK( ); ///< Destructor
 
-  void getName ( std::string & name ) ;
+  virtual std::string getName ( ) ;
   EvtDecayBase * clone ( ) ;
   
   void decay ( EvtParticle * p ) ;

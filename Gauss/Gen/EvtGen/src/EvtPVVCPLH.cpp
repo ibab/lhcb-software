@@ -26,7 +26,7 @@
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
-#include "EvtGenBase/EvtIncoherentMixing.hh"
+#include "EvtGenBase/EvtCPUtil.hh"
 #include "EvtGenBase/EvtPDL.hh"
 #include "EvtGenModels/EvtSVVHelAmp.hh"
 #include "EvtGenBase/EvtReport.hh"
@@ -38,10 +38,8 @@
 
 EvtPVVCPLH::~EvtPVVCPLH() {}
 
-void EvtPVVCPLH::getName(std::string& model_name){
-
-  model_name="PVV_CPLH";     
-
+std::string EvtPVVCPLH::getName() {
+  return "PVV_CPLH";     
 }
 
 
@@ -90,21 +88,26 @@ void EvtPVVCPLH::decay( EvtParticle *p){
 // CP-asymmetry in this channel very small, since:
 // deltaMs large ..and..
 // CPV-phase small
-  EvtIncoherentMixing::OtherB(p,t,other_b);
+  EvtCPUtil::OtherB(p,t,other_b);
 //  EvtIncoherentMixing::OtherB(p,t,other_b,0.5);//also possible
 
   //Here we're gonna generate and set the "envelope" lifetime
   //So we take the longest living component (for positive deltaGamma: tauH)
   //The double exponent will be taken care of later, by the amplitudes
   //Tristan
-  static double Gamma = EvtConst::c/(EvtPDL::getctau(BS0));
-  static double deltaGamma = EvtIncoherentMixing::getdGammas();
-  static double ctauLong = EvtConst::c/(Gamma-fabs(deltaGamma)/2);
+  
+  // TODO: fix for new EvtGen
+////  static double Gamma = EvtConst::c/(EvtPDL::getctau(BS0));
+////  static double deltaGamma = EvtIncoherentMixing::getdGammas();
+////  static double ctauLong = EvtConst::c/(Gamma-fabs(deltaGamma)/2);
+  static double Gamma = 0. ;
+  static double deltaGamma = 0. ;
+  static double ctauLong = 0. ;
   // if dG>0: tauLong=tauH(CP-odd) is then largest
 
   //This overrules the lifetimes made in OtherB
   t=-log(EvtRandom::Flat())*(ctauLong);//ctauLong has same dimensions as t
-  if((EvtIncoherentMixing::isBsMixed(p))){
+  if(isBsMixed(p)){
     p->getParent()->setLifetime(t);
   }else{
     p->setLifetime(t);
@@ -120,7 +123,10 @@ void EvtPVVCPLH::decay( EvtParticle *p){
 
   //deltaMs is no argument anymore
   //Tristan
-  static double deltaMs = EvtIncoherentMixing::getdeltams();
+  
+  // TODO: Fix for new EvtGen
+//.  static double deltaMs = EvtIncoherentMixing::getdeltams();
+  static double deltaMs = 0. ;
 
   EvtComplex cG0P,cG1P,cG1M;
 
@@ -167,5 +173,18 @@ void EvtPVVCPLH::decay( EvtParticle *p){
   return ;
 }
 
+bool EvtPVVCPLH::isBsMixed ( EvtParticle * p ) {
+  if ( ! ( p->getParent() ) ) return false ;
+
+  static EvtId BS0=EvtPDL::getId("B_s0");
+  static EvtId BSB=EvtPDL::getId("anti-B_s0");
+
+  if ( ( p->getId() != BS0 ) && ( p->getId() != BSB ) ) return false ;
+
+  if ( ( p->getParent()->getId() == BS0 ) ||
+       ( p->getParent()->getId() == BSB ) ) return true ;
+
+  return false ;
+}
 
 

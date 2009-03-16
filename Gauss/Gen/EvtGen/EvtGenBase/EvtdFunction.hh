@@ -27,7 +27,6 @@ public:
 
  static double d(int j,int m1,int m2,double theta);
 
-
 };
 
 #endif

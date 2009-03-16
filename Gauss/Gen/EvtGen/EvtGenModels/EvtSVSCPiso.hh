@@ -32,7 +32,7 @@ public:
   EvtSVSCPiso() {}
   virtual ~EvtSVSCPiso();
 
-  void getName(std::string& name);
+  std::string getName();
   EvtDecayBase* clone();
 
   void init();

@@ -27,8 +27,14 @@ public:
                        double *a2f, double *vf, double *a0f );
 
   void getscalarff(EvtId parent,EvtId daught,
-                   double t, double mass, double *f0p, double *f0m);
-  
+			      double t, double mass, double *f0p, double *f0m);
+
+  void gettensorff(EvtId, EvtId, double, double, double*, 
+		   double*, double*, double*);
+
+  void getbaryonff(EvtId, EvtId, double, double, double*, 
+		   double*, double*, double*);
+
 
 private:
   double r1_1;

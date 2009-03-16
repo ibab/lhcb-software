@@ -19,6 +19,7 @@
 //------------------------------------------------------------------------
 // 
 #include "EvtGenBase/EvtPatches.hh"
+#include "EvtGenBase/EvtPatches.hh"
 #include <iostream>
 #include <math.h>
 #include <assert.h>
@@ -47,7 +48,7 @@ EvtSpinDensity EvtHighSpinParticle::rotateToHelicityBasis() const{
   int n=EvtSpinType::getSpinStates(EvtPDL::getSpinType(getId()));
 
   EvtSpinDensity R;
-  R.SetDiag(n);
+  R.setDiag(n);
 
   return R;
 
@@ -64,7 +65,8 @@ EvtSpinDensity EvtHighSpinParticle::rotateToHelicityBasis(double alpha,
   int n=EvtSpinType::getSpinStates(EvtPDL::getSpinType(getId()));
 
   EvtSpinDensity R;
-  R.SetDim(n);
+  
+  R.setDim(n);
 
   int J2=EvtSpinType::getSpin2(EvtPDL::getSpinType(getId()));
 
@@ -81,8 +83,8 @@ EvtSpinDensity EvtHighSpinParticle::rotateToHelicityBasis(double alpha,
 
   for(i=0;i<n;i++){
     for(j=0;j<n;j++){
-      R.Set(i,j,EvtdFunction::d(J2,lambda2[j],lambda2[i],-beta)*
-	exp(EvtComplex(0.0,-0.5*(alpha*lambda2[i]-gamma*lambda2[j]))));
+      R.set(i,j,EvtdFunction::d(J2,lambda2[j],lambda2[i],beta)*
+	exp(EvtComplex(0.0,0.5*(alpha*lambda2[i]-gamma*lambda2[j]))));
     }
   }
 

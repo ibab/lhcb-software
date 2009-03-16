@@ -27,6 +27,7 @@
 #include <string>
 #include "EvtGenBase/EvtAbsLineShape.hh"
 
+
 class EvtPartProp {
 
 public:
@@ -89,6 +90,8 @@ public:
   void includeDecayFactor(bool yesno);
   void newLineShape(std::string type);
   void setPWForDecay( int spin, EvtId d1, EvtId d2);
+  void setPWForBirthL( int spin, EvtId par, EvtId othD);
+  void fixLSForSP8() {_lineShape->fixForSP8();}
 
 private:
 

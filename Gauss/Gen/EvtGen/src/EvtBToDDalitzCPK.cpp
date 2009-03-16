@@ -1,4 +1,4 @@
-// $Id: EvtBToDDalitzCPK.cpp,v 1.1 2003-12-09 11:20:28 robbep Exp $
+// $Id: EvtBToDDalitzCPK.cpp,v 1.2 2009-03-16 16:28:42 robbep Exp $
 // Include files 
 #include "EvtGenBase/EvtPDL.hh"
 #include "EvtGenBase/EvtParticle.hh"
@@ -22,9 +22,9 @@ EvtBToDDalitzCPK::~EvtBToDDalitzCPK ( ) { }
 //=============================================================================
 // Name of the model
 //=============================================================================
-void EvtBToDDalitzCPK::getName( std::string & model_name ) 
+std::string EvtBToDDalitzCPK::getName( ) 
 {
-  model_name = "BTODDALITZCPK" ;
+  return "BTODDALITZCPK" ;
 }
 //=============================================================================
 // Clone method

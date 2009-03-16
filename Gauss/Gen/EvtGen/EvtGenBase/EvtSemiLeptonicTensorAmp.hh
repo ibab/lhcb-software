@@ -10,7 +10,8 @@
 //
 // Module: EvtGen/EvtSemiLeptonicTensorAmp.hh
 //
-// Description:
+// Description: Class for calcultaion of amplitude for semileptonic
+//              decay to tensor.
 //
 // Modification history:
 //

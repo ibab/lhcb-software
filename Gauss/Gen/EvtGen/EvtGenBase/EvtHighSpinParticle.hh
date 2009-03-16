@@ -22,7 +22,7 @@
 #define EVTHIGHSPINPARTICLE_HH
 
 #include "EvtGenBase/EvtParticle.hh"
-//#include "EvtGenBase/EvtId.hh"
+
 class EvtId;
 
 class EvtHighSpinParticle: public EvtParticle {

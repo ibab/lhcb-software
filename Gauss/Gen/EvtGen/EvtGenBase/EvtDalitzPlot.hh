@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------
 // File and Version Information: 
-//      $Id: EvtDalitzPlot.hh,v 1.1 2003-10-02 17:25:52 robbep Exp $
+//      $Id: EvtDalitzPlot.hh,v 1.2 2009-03-16 16:44:53 robbep Exp $
 // 
 // Environment:
 //      This software is part of the EvtGen package developed jointly

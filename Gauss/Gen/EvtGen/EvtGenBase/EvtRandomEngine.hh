@@ -17,6 +17,7 @@
 // Modification history:
 //
 //    RYD     December 25, 1999         Module created
+//    RYD     October 2, 2006           Converted to a pure interface class 
 //
 //------------------------------------------------------------------------
 
@@ -27,11 +28,9 @@ class EvtRandomEngine{
 
 public:
 
-  virtual double random();
-
-  // PR LHCb Add virtual destructor to be able to destruct correctly
-  // daughter classes
   virtual ~EvtRandomEngine() {};
+
+  virtual double random()=0;
 
 private:
 

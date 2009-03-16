@@ -32,7 +32,7 @@ public:
   EvtPi0Dalitz() {}
   virtual ~EvtPi0Dalitz();
 
-  void getName(std::string& name);
+  std::string getName();
   EvtDecayBase* clone();
 
   void init();

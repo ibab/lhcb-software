@@ -1,4 +1,4 @@
-// $Id: EvtGenDecay.cpp,v 1.19 2009-01-20 15:20:29 wreece Exp $
+// $Id: EvtGenDecay.cpp,v 1.20 2009-03-16 16:53:26 robbep Exp $
 // Header file
 #include "EvtGenDecay.h"
 
@@ -391,7 +391,7 @@ StatusCode EvtGenDecay::makeHepMC( EvtParticle * theEvtGenPart ,
     theMother -> parent_event() -> add_vertex( end_vtx ) ;
     end_vtx->add_particle_in( theMother ) ;
     
-    for ( int it = 0 ; it < theEvtGenPart -> getNDaug() ; ++it ) {
+    for ( unsigned int it = 0 ; it < theEvtGenPart -> getNDaug() ; ++it ) {
       // For each daughter create a new HepMCParticle with correct
       // 4 momentum and PDG Id and with status 777 (= decayed with EvtGen)
       EvtVector4R momentum = theEvtGenPart -> getDaug( it ) -> getP4Lab() ;
@@ -621,8 +621,9 @@ double EvtGenDecay::branching( const EvtId& id ) const {
       tempBr *= branching( theDecAlias -> getDaugs( )[ j ] ) ;
     }
 
-    result += theTrueDecay -> getBranchingFraction( ) /
-      EvtDecayTable::totalBr( id.getId( ) ) * tempBr ;
+//    TODO: reintroduce this possibility missing from EvtGen
+//    result += theTrueDecay -> getBranchingFraction( ) /
+//      EvtDecayTable::totalBr( id.getId( ) ) * tempBr ;
   }
 
   return result ;
@@ -716,11 +717,11 @@ const {
   if ( ( m_generatePolLambdab ) && 
        ( abs( theHepMCPart -> pdg_id() ) == 5122 ) ) {
     EvtSpinDensity rho ;
-    rho.SetDim( 2 ) ;
-    rho.Set( 0 , 0 , 1.0 ) ;
-    rho.Set( 0 , 1 , 0.0 ) ;
-    rho.Set( 1 , 0 , 0.0 ) ;
-    rho.Set( 1 , 1 , 0.0 ) ;
+    rho.setDim( 2 ) ;
+    rho.set( 0 , 0 , 1.0 ) ;
+    rho.set( 0 , 1 , 0.0 ) ;
+    rho.set( 1 , 0 , 0.0 ) ;
+    rho.set( 1 , 1 , 0.0 ) ;
     thePart -> setSpinDensityForwardHelicityBasis( rho ) ;
   } else {
     thePart -> setDiagonalSpinDensity( ) ;
@@ -732,10 +733,10 @@ const {
     if ( ( abs( theHepMCPart -> pdg_id() ) == 443 ) ||
          ( abs( theHepMCPart -> pdg_id() ) == 20443 ) ) {
       EvtSpinDensity rho ;
-      rho.SetDiag( thePart -> getSpinStates() ) ;
-      rho.Set( 0 , 0 , EvtComplex( m_realHelOne  , m_imHelOne  ) ) ;
-      rho.Set( 1 , 1 , EvtComplex( m_realHelZero , m_imHelZero ) ) ;
-      rho.Set( 2 , 2 , EvtComplex( m_realHelOne  , m_imHelOne  ) ) ;
+      rho.setDiag( thePart -> getSpinStates() ) ;
+      rho.set( 0 , 0 , EvtComplex( m_realHelOne  , m_imHelOne  ) ) ;
+      rho.set( 1 , 1 , EvtComplex( m_realHelZero , m_imHelZero ) ) ;
+      rho.set( 2 , 2 , EvtComplex( m_realHelOne  , m_imHelOne  ) ) ;
       thePart -> setSpinDensityForwardHelicityBasis( rho ) ;    
     } else if ( 445 == abs( theHepMCPart -> pdg_id() ) ) {
          // WHAT TO DO HERE FOR TENSOR PARTICLES ? 

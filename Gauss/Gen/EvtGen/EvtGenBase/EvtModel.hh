@@ -24,7 +24,7 @@
 #include "EvtGenBase/EvtDecayBase.hh"
 #include "EvtGenBase/EvtStringHash.hh"
 #include <map>
-//#include <fstream>
+//#include <fstream.h>
 
 
 //Class to read in and handle the decays available
@@ -36,14 +36,12 @@ class EvtModel{
 public:
 
   static EvtModel& instance();
-  static void deleteInstance() ;
 
-  void Register(EvtDecayBase* prototype);
-  void UnRegisterAll() ;
+  void registerModel(EvtDecayBase* prototype);
       
   int isModel(std::string name);
 
-  EvtDecayBase* GetFcn(std::string model_name);
+  EvtDecayBase* getFcn(std::string model_name);
 
   int isCommand(std::string cmd);
   void storeCommand(std::string cmd,std::string cnfgstr);
@@ -60,6 +58,14 @@ private:
 
 
 };
+
+
+inline EvtModel& EvtModel::instance() {
+  if ( _instance == 0 )  _instance=new EvtModel;
+  return *_instance;
+}
+
+
 #endif
 
 

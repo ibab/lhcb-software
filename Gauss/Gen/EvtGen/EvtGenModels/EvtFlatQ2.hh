@@ -32,7 +32,7 @@ public:
   EvtFlatQ2() {}
   virtual ~EvtFlatQ2();
 
-  void getName(std::string& name);
+  std::string getName();
   EvtDecayBase* clone();
 
   void init();

@@ -1,4 +1,4 @@
-// $Id: EvtGenDecay.h,v 1.8 2008-07-21 13:37:34 robbep Exp $
+// $Id: EvtGenDecay.h,v 1.9 2009-03-16 16:53:26 robbep Exp $
 #ifndef GENERATORS_EVTGENDECAY_H 
 #define GENERATORS_EVTGENDECAY_H 1
 
@@ -214,20 +214,22 @@ public:
   boost::filesystem::path m_photosTempFilename ;  
 };
 
-#include "EvtGenBase/EvtIncoherentMixing.hh"
+//#include "EvtGenBase/EvtIncoherentMixing.hh"
 
 //=============================================================================
 // Enable the possibility to flip the flavour for CP decay modes in EvtGen
 //=============================================================================
 inline void EvtGenDecay::enableFlip() const { 
-  EvtIncoherentMixing::enableFlip() ; 
+//  TODO: look how to implement in EvtGen
+//  EvtIncoherentMixing::enableFlip() ; 
 }
 
 //=============================================================================
 // Disable the possibility to flip the flavour for CP decay modes in EvtGen
 //=============================================================================
 inline void EvtGenDecay::disableFlip() const { 
-  EvtIncoherentMixing::disableFlip() ; 
+// TODO: look how to implement in EvtGen
+//  EvtIncoherentMixing::disableFlip() ; 
 }
 
 #include "GaudiKernel/RndmGenerators.h"

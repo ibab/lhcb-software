@@ -34,7 +34,7 @@ public:
   EvtBTo3piCP() {}
   virtual ~EvtBTo3piCP();
 
-  void getName(std::string& name);
+  std::string getName();
   EvtDecayBase* clone();
 
   void init();

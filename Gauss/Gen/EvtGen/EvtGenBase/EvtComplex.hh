@@ -39,7 +39,7 @@ class EvtComplex {
   inline friend EvtComplex conj(const EvtComplex& c);
   inline friend double abs(const EvtComplex& c);
   inline friend double abs2(const EvtComplex& c);
-  inline friend double arg(const EvtComplex& c); //added by FS
+  inline friend double arg(const EvtComplex& c); 
   inline friend double real(const EvtComplex& c);
   inline friend double imag(const EvtComplex& c);
   inline friend EvtComplex exp(const EvtComplex& c);
@@ -224,7 +224,7 @@ double abs2(const EvtComplex& c){
 }
 
 
-double arg(const EvtComplex& c){     //added by FS
+double arg(const EvtComplex& c){    
   if ((c._rpart==0)&&(c._ipart==0)) {return 0.0;}
   if (c._rpart==0){
     if (c._ipart>0){

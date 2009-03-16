@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Project: BaBar detector at the SLAC PEP-II B-factory
  * Package: EvtGenBase
- *    File: $Id: EvtAmpPdf.hh,v 1.1 2003-10-02 17:25:51 robbep Exp $
+ *    File: $Id: EvtAmpPdf.hh,v 1.2 2009-03-16 16:43:40 robbep Exp $
  *  Author: Alexei Dvoretskii, dvoretsk@slac.stanford.edu, 2001-2002
  *
  * Copyright (C) 2002 Caltech
@@ -24,12 +24,8 @@ public:
   EvtAmpPdf(const EvtAmpPdf<T>& other) : EvtPdf<T>(other), COPY_PTR(_amp) {}
   virtual ~EvtAmpPdf() { delete _amp; }
   
-#ifdef WIN32
-  virtual EvtPdf<T>* clone() const { return new EvtAmpPdf(*this); }
-#else
   virtual EvtAmpPdf<T>* clone() const { return new EvtAmpPdf(*this); }
-#endif
-
+  
   virtual double pdf(const T& p) const
   {
     EvtComplex amp = _amp->evaluate(p);

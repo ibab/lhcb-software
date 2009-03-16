@@ -30,7 +30,7 @@ class EvtbTosllBallFF : public EvtbTosllFF {
 
 public:
 
-  EvtbTosllBallFF();
+  EvtbTosllBallFF(int);
 
   void getScalarFF(EvtId parent, EvtId daught,double t, double mass, 
 		   double& fp,double& f0,double& ft);
@@ -41,7 +41,7 @@ public:
 
 
 private:
-
+  int _theFFModel;
 };
 
 #endif

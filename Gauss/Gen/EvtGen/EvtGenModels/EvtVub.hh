@@ -24,7 +24,8 @@
 #define EVTVUB_HH
 
 #include "EvtGenBase/EvtDecayIncoherent.hh"
-#include "CLHEP/Random/RandGeneral.h"
+
+#include <vector>
 
 class EvtParticle;
 class EvtVubdGamma;
@@ -33,10 +34,10 @@ class EvtVub:public  EvtDecayIncoherent  {
 
 public:
   
-  EvtVub() : _masses( 0 ) , _weights( 0 ) , _dGamma( 0 ) , _pFermi( 0 ) {}
+  EvtVub() : _masses(0) , _weights(0) , _dGamma(0) {}
   virtual ~EvtVub();
 
-  void getName(std::string& name);
+  std::string getName();
 
   EvtDecayBase* clone();
 
@@ -58,8 +59,8 @@ private:
   double * _weights;
 
   EvtVubdGamma *_dGamma; // calculates the decay rate
-  RandGeneral *_pFermi; // calculates the Fermi Motion
-  
+  double findPFermi();
+  std::vector<double> _pf;
 };
 
 #endif

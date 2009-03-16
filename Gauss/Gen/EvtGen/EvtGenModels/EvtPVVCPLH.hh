@@ -34,13 +34,17 @@ public:
   EvtPVVCPLH() {}
   virtual ~EvtPVVCPLH();
 
-  void getName(std::string& name);
+  virtual std::string getName();
   EvtDecayBase* clone();
 
   void initProbMax();
   void init();
 
   void decay(EvtParticle *p); 
+  
+private:
+  bool isBsMixed ( EvtParticle * p ) ;
+
 
 };
 

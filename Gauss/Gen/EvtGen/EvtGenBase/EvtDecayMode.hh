@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------
 // File and Version Information: 
-//      $Id: EvtDecayMode.hh,v 1.1 2003-10-02 17:25:52 robbep Exp $
+//      $Id: EvtDecayMode.hh,v 1.2 2009-03-16 16:44:33 robbep Exp $
 // 
 // Environment:
 //      This software is part of the EvtGen package developed jointly
@@ -41,10 +41,10 @@ public:
 
   // Frequent name combinations
 
-  const char* m(EvtCyclic3::Pair i) const;
-  const char* q(EvtCyclic3::Pair i) const;
-  const char* dal(EvtCyclic3::Pair i, EvtCyclic3::Pair j) const;
-  const char* mode() const;
+  std::string m(EvtCyclic3::Pair i) const;
+  std::string q(EvtCyclic3::Pair i) const;
+  std::string dal(EvtCyclic3::Pair i, EvtCyclic3::Pair j) const;
+  std::string mode() const;
 
 private:
 

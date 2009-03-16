@@ -7,6 +7,7 @@
  * Provides a list of external decay models to
  * use with EvtGen.
 */
+typedef std::list<EvtDecayBase*> EvtModelList;
 class EvtModelRegExtras
 {
 public:

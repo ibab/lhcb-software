@@ -21,18 +21,20 @@
 #ifndef EVTPARTICLE_HH
 #define EVTPARTICLE_HH
 
-//#include <iostream>
+//#include <iostream.h>
 #include <assert.h>
 #include "EvtGenBase/EvtVector4R.hh"
 #include "EvtGenBase/EvtSpinDensity.hh"
 #include "EvtGenBase/EvtId.hh"
 #include "EvtGenBase/EvtSpinType.hh"
+#include <string>
 
 class EvtDiracSpinor;
 class EvtVector4C;
 class EvtTensor4C;
 class EvtStdHep;
 class EvtSecondary;
+class EvtRaritaSchwinger;
 
 const int MAX_DAUG =100;
 const int MAX_LEVEL=10;
@@ -108,6 +110,19 @@ public:
   */
   virtual EvtTensor4C epsTensor(int i) const; 
   
+  /**
+   * Returns Rarita-Schwinger spinor in the parents restframe for a 
+   * Rarita-Schwinger particle.
+   */
+  virtual EvtRaritaSchwinger spRSParent(int) const;
+  
+  /**
+   * Returns Rarita-Schwinger spinor in the particles own restframe for a 
+   * Rarita-Schwinger particle.
+   */
+  virtual EvtRaritaSchwinger spRS(int) const;
+  
+
 
   /**
   * Initialiaze particle with id and 4momentum.
@@ -140,17 +155,18 @@ public:
   * adds them to the parent. Note that momentum
   * is left uninitialized, this is _only_ creation.
   */ 
-  void makeDaughters(int ndaug,EvtId *id);
+  void makeDaughters(unsigned int ndaug,EvtId *id);
 
   /**
   * Similar to the routine above except that here 
   * momentum is generated according to phase space 
   * daughters are filled with this momentum.
   */ 
-  double initializePhaseSpace(int numdaughter,EvtId *daughters, 
-			    double poleSize=-1., int whichTwo1=0, 
-			    int whichTwo2=0); 
-
+  double initializePhaseSpace(unsigned int numdaughter,EvtId *daughters,
+			      bool forceResetMasses=false,
+			      double poleSize=-1., int whichTwo1=0, 
+			      int whichTwo2=1); 
+  
   /**
   * Get pointer the the i:th daugther.
   */  
@@ -172,23 +188,31 @@ public:
   * Gets 4vector in the labframe, i.e., the frame in which the root
   * particles momentum is measured.
   */
-  EvtVector4R getP4Lab();
+  EvtVector4R getP4Lab() const;
 
+
+  /**
+  * Gets 4vector in the labframe for the 4-momentum befor FSR was 
+  * generated in the parents decay. The lab frame is where the root
+  * particles momentum is measured.
+  */
+  EvtVector4R getP4LabBeforeFSR();
+ 
   /**
   * Gets 4vector in the particles restframe, i.e. this functiont will
   * return (m,0,0,0)
   */
-  EvtVector4R getP4Restframe();
+  EvtVector4R getP4Restframe() const;
 
   /**
   * Returns the 4position of the particle in the lab frame.
   */
-  EvtVector4R get4Pos();
+  EvtVector4R get4Pos() const;
 
   /**
   * Returns pointer to parent particle.
   */
-  EvtParticle *getParent();
+  EvtParticle *getParent() const;
   
   /**
   * Makes partptr the idaug:th daugther.
@@ -231,8 +255,19 @@ public:
   /**
   * Sets the 4momentum in the parents restframe.
   */
-  void setP4(const EvtVector4R& p4){_p=p4;}
-  
+  void setP4(const EvtVector4R& p4){
+    _p=p4;
+    _pBeforeFSR=p4;
+  }
+
+  void setP4WithFSR(const EvtVector4R& p4){
+    _p=p4;
+  }
+
+  void setFSRP4toZero(){
+    _pBeforeFSR.set(0.0,0.0,0.0,0.0);
+  }
+
   /**
   * Retunrs the decay channel.
   */
@@ -241,7 +276,7 @@ public:
   /**
   * Returns number of daugthers.
   */ 
-  int getNDaug() const;
+  size_t getNDaug() const;
   void resetNDaug() {_ndaug=0; return;}
 
   /**
@@ -251,7 +286,10 @@ public:
   */
   void printTree() const;
 
-  void printTreeRec(int level) const;
+  void printTreeRec(unsigned int level) const;
+
+  std::string treeStr() const;
+  std::string treeStrRec(unsigned int level) const;
 
   /**
   * Prints information for the particle.
@@ -289,7 +327,7 @@ public:
   void setSpinDensityForward(const EvtSpinDensity& rho){_rhoForward=rho;}
 
   /**
-  * Set forward spin density matric according to the density matrix
+  * Set forward spin density matrix according to the density matrix
   * rho in the helicity amplitude basis.
   */
   void setSpinDensityForwardHelicityBasis(const EvtSpinDensity& rho);
@@ -351,12 +389,27 @@ public:
   bool hasValidP4() {return _validP4;}
   bool isDecayed() {return _isDecayed;}
 
+
+  // decay prob - only relevent if already decayed
+  // and is a scalar particle
+  // returned is a double* that should be prob/probMax
+  double* decayProb() {return _decayProb;}
+  void setDecayProb( double p);
+
+  
 protected:
 
-  void setp( double e, double px, double py, double pz) { _p.set(e,px,py,pz); }
-  void setp( const EvtVector4R& p4 ) { _p =p4; }
-  void setpart_num(EvtId particle_number ) 
-  { 
+  void setp( double e, double px, double py, double pz) { 
+    _p.set(e,px,py,pz); 
+    _pBeforeFSR=_p;
+  }
+
+  void setp( const EvtVector4R& p4 ) { 
+    _p =p4; 
+    _pBeforeFSR=_p;
+  }
+
+  void setpart_num(EvtId particle_number ) { 
     assert(_channel==-10||
 	   _id.getId()==particle_number.getId()||
 	   _id.getId()==-1);
@@ -367,12 +420,13 @@ protected:
 private:
 
   EvtParticle*   _daug[MAX_DAUG];
-  int            _ndaug; 
+  size_t         _ndaug; 
   EvtParticle*   _parent;
   int            _channel; 
   int            _first;
   EvtId          _id;
   EvtVector4R    _p;
+  EvtVector4R    _pBeforeFSR;
   double         _t;
   bool            _isInit;
   bool           _isDecayed;
@@ -394,6 +448,8 @@ private:
   //these does _not_ have an implementation
   EvtParticle& operator=(const EvtParticle& p);
   EvtParticle(const EvtParticle& p);
+
+  double *_decayProb;
 
 };
 

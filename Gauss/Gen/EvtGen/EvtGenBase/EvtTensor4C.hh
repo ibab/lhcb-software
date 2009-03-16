@@ -21,7 +21,6 @@
 #ifndef EvtTensor4C_HH
 #define EvtTensor4C_HH
 
-//#include <iostream>
 #include "EvtGenBase/EvtComplex.hh"
 
 //Class to handle 4D complex valued tensors.
@@ -29,27 +28,7 @@ class EvtTensor4C;
 class EvtVector4C;
 class EvtVector4R;
 class EvtVector3R;
-#include <iosfwd>
-EvtTensor4C rotateEuler(const EvtTensor4C& e,
-			double alpha,double beta,double gamma);
-EvtTensor4C boostTo(const EvtTensor4C& e, const EvtVector4R p4);
-EvtTensor4C boostTo(const EvtTensor4C& e, const EvtVector3R boost); 
-EvtTensor4C directProd(const EvtVector4C& c1,const EvtVector4C& c2);
-EvtTensor4C directProd(const EvtVector4C& c1,const EvtVector4R& c2); 
-EvtTensor4C directProd(const EvtVector4R& c1,const EvtVector4R& c2); 
-EvtTensor4C dual(const EvtTensor4C& t2); 
-EvtTensor4C conj(const EvtTensor4C& t2);
-EvtTensor4C cont22(const EvtTensor4C& t1,const EvtTensor4C& t2);
-EvtTensor4C cont11(const EvtTensor4C& t1,const EvtTensor4C& t2);
-EvtTensor4C operator*(const EvtTensor4C& t1,const EvtComplex& c);
-EvtTensor4C operator*(const EvtComplex& c,const EvtTensor4C& t1);
-EvtTensor4C operator*(const EvtTensor4C& t1,double d);
-EvtTensor4C operator*(double d,const EvtTensor4C& t1);
-EvtComplex  cont(const EvtTensor4C& t1,const EvtTensor4C& t2);
-EvtTensor4C operator+(const EvtTensor4C& t1,const EvtTensor4C& t2);
-inline EvtTensor4C operator-(const EvtTensor4C& t1,const EvtTensor4C& t2);
 
-//==================
 class EvtTensor4C {
 
   friend EvtTensor4C rotateEuler(const EvtTensor4C& e,
@@ -74,8 +53,12 @@ class EvtTensor4C {
   friend EvtTensor4C operator-(const EvtTensor4C& t1,const EvtTensor4C& t2);
   
 public:
-  EvtTensor4C();
-  EvtTensor4C(double t00,double t11,double t22, double t33);
+
+  EvtTensor4C() {;}
+
+  EvtTensor4C(double t00,double t11,double t22, double t33) { setdiag(t00,t11,t22,t33);}
+
+
   EvtTensor4C(const EvtTensor4C& t1 );
   virtual ~EvtTensor4C();
   EvtTensor4C& operator=(const EvtTensor4C& t1);

@@ -10,7 +10,7 @@
 //
 // Module: EvtGen/EvtRadCorr.hh
 //
-// Description:ISR interface 
+// Description:FSR interface 
 //
 // Modification history:
 //
@@ -33,10 +33,10 @@ public:
 
   static void doRadCorr(EvtParticle *p);
   
-  //This class does not take ownership of the random engine;
+  //This class does not take ownership of the fsr engine;
   //the caller needs to make sure that the engine is not
   //destroyed.
-  static void setRadCorrEngine(EvtAbsRadCorr* isrEngine);
+  static void setRadCorrEngine(EvtAbsRadCorr* fsrEngine);
   static bool alwaysRadCorr();
   static bool neverRadCorr();
   static void setAlwaysRadCorr();
@@ -45,7 +45,7 @@ public:
 
 private:
 
-  static EvtAbsRadCorr* _isrEngine;
+  static EvtAbsRadCorr* _fsrEngine;
   static bool _alwaysRadCorr;
   static bool _neverRadCorr;
 };

@@ -10,7 +10,7 @@
 //
 // Module: EvtGen/EvtDecayAmp.hh
 //
-// Description:
+// Description: Baseclass for models that calculates amplitudes
 //
 // Modification history:
 //
@@ -28,7 +28,7 @@ class EvtDecayAmp : public EvtDecayBase{
 
 public:
 
-  void makeDecay(EvtParticle* p);
+  void makeDecay(EvtParticle* p, bool recursive=true);
   inline void setWeight(double weight) {_weight=weight;}
 
   /**
@@ -59,6 +59,15 @@ public:
   */
   void vertex(int *i1, const EvtComplex& amp)
   { _amp2.vertex(i1,amp);}
+
+  /**
+   *  Provide access to the amplitude
+   */
+  const EvtAmp & amplitude() const 
+  { return _amp2;}
+
+
+
 
   virtual ~EvtDecayAmp() {}
 

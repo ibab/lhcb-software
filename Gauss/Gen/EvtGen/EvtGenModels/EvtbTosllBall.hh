@@ -32,10 +32,10 @@ class EvtbTosllBall:public  EvtDecayAmp  {
 
 public:
 
-  EvtbTosllBall(): _ballffmodel(0), _calcamp(0) {}
+  EvtbTosllBall() : _calcamp(0), _ballffmodel(0) {}
   virtual ~EvtbTosllBall();
 
-  void getName(std::string& name);
+  std::string getName();
   EvtDecayBase* clone();
 
   void decay(EvtParticle *p);
@@ -43,8 +43,8 @@ public:
   void initProbMax();
 
 private:
-  EvtbTosllFF *_ballffmodel;
   EvtbTosllAmp *_calcamp;
+  EvtbTosllFF *_ballffmodel;
   double _poleSize;
 };
 

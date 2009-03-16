@@ -35,7 +35,7 @@ public:
   EvtTSS() {}
   virtual ~EvtTSS();
 
-  void getName(std::string& name);
+  std::string getName();
   EvtDecayBase* clone();
 
   void init();

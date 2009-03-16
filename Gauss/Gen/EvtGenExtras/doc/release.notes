@@ -4,6 +4,9 @@
 ! Purpose     : Repository of EvtGen models with external linkages
 !-----------------------------------------------------------------------------
 
+! 2009-03-16 - Patrick Robbe
+ - Fixes for new EvtGen version
+
 !======================= EvtGenExtras v1r0 2009-02-09 ========================
 
 ! 2009-02-23 - Will REECE

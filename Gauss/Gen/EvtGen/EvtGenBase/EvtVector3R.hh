@@ -21,8 +21,6 @@
 #ifndef EVTVECTOR3R_HH
 #define EVTVECTOR3R_HH
 
-//#include <iostream>
-//#include <math.h>
 #include <iosfwd>
 
 class EvtVector3R {

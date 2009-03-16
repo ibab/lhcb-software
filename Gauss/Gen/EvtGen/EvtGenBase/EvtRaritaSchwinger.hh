@@ -42,7 +42,6 @@ EvtRaritaSchwinger operator-(const EvtRaritaSchwinger& u1,
 EvtComplex operator*(const EvtRaritaSchwinger& u1,
 		     const EvtRaritaSchwinger& u2);
 
-//========================
 class EvtRaritaSchwinger{
 
   friend EvtRaritaSchwinger rotateEuler(const EvtRaritaSchwinger& rs,

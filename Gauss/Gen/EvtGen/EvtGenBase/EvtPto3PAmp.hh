@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Project: BaBar detector at the SLAC PEP-II B-factory
  * Package: EvtGenBase
- *    File: $Id: EvtPto3PAmp.hh,v 1.1 2003-10-02 17:25:55 robbep Exp $
+ *    File: $Id: EvtPto3PAmp.hh,v 1.2 2009-03-16 16:41:09 robbep Exp $
  *  Author: Alexei Dvoretskii, dvoretsk@slac.stanford.edu, 2001-2002
  *
  * Copyright (C) 2002 Caltech
@@ -28,7 +28,9 @@ class EvtPto3PAmp : public EvtAmplitude<EvtDalitzPoint> {
 public:
 
   // Numerator type
-  enum NumType {NBW=0,RBW_ZEMACH=1,RBW_KUEHN=2,RBW_CLEO=3};
+  enum NumType {NBW=0, RBW_ZEMACH=1, RBW_KUEHN=2, RBW_CLEO=3, FLATTE, GAUSS, DOUBLE_GAUSS,
+		NONRES, NONRES_LIN, NONRES_EXP, NONRES_EXP_ADD, NONRES_CCS, NONRES_LAURA, 
+		LASS, GS};
 
 
   EvtPto3PAmp(EvtDalitzPlot dp, EvtCyclic3::Pair pairAng, EvtCyclic3::Pair pairRes,  
@@ -51,6 +53,11 @@ public:
   void set_fd(double R);
   void set_fb(double R);
 
+  void setmin(double min) {_min = min;}
+  void setmax(double max) {_max = max;}
+
+  virtual EvtComplex evalPropagator(double m) const  { return _prop->evaluate(m); }
+
 private:
 
   // Pairing indices:
@@ -71,11 +78,14 @@ private:
 
   EvtPropagator* _prop;                  
   double _g0; // nominal width
+  double _min; //min and max values on which
+  double _max; //the resonance is defined
 
   // Vertices
 
   EvtTwoBodyVertex _vb;
   EvtTwoBodyVertex _vd;
+
 };
 
 #endif

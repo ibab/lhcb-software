@@ -18,6 +18,7 @@
 //    JFS     December 16th, 2003         Module created
 //
 //------------------------------------------------------------------------
+#include "EvtGenBase/EvtPatches.hh"
 
 #include "EvtGenModels/EvtLambdaP_BarGamma.hh"
 #include "EvtGenBase/EvtGammaMatrix.hh"
@@ -25,6 +26,9 @@
 #include "EvtGenBase/EvtSpinType.hh"
 #include "EvtGenBase/EvtDiracParticle.hh"
 #include "EvtGenBase/EvtPhotonParticle.hh"
+#include <stdlib.h>
+using std::cout;
+using std::endl;
 
 EvtLambdaP_BarGamma::EvtLambdaP_BarGamma() :
   _mLambdab   ( 5.624),            // Lambda_b mass
@@ -46,8 +50,8 @@ EvtLambdaP_BarGamma::EvtLambdaP_BarGamma() :
 
 
 
-void EvtLambdaP_BarGamma::getName(std::string& modelName){
-    modelName = "B_TO_LAMBDA_PBAR_GAMMA";
+std::string EvtLambdaP_BarGamma::getName(){
+    return "B_TO_LAMBDA_PBAR_GAMMA";
 }
 
 EvtDecayBase* EvtLambdaP_BarGamma::clone(){
@@ -98,6 +102,7 @@ void EvtLambdaP_BarGamma::decay(EvtParticle* p) {
 						   / ((lambdaMomentum + photonMomentum)*(lambdaMomentum + photonMomentum) - _mLambdab*_mLambdab)
 						   * EvtGammaMatrix::g5() * antiP_Pol);
 	  // use of parentheses so I do not have to define EvtDiracSpinor*EvtGammaMatrix, which shouldn't be defined to prevent errors in indexing
+
 	  vertex(i, j, k, amp);
 	}
       }

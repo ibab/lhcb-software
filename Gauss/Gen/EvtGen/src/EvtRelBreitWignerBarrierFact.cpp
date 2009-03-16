@@ -18,6 +18,7 @@
 //    Dvoretskii June  03, 2002        Reimplemented rollMass()
 //
 //------------------------------------------------------------------------
+#include "EvtGenBase/EvtPatches.hh"
 
 #include "EvtGenBase/EvtPatches.hh"
 
@@ -50,6 +51,7 @@ EvtRelBreitWignerBarrierFact::EvtRelBreitWignerBarrierFact(double mass, double w
   _spin=sp;
   _blatt=3.0;
   _maxRange=maxRange;
+  _errorCond=false;
 
   double maxdelta = 15.0*width;
 
@@ -66,33 +68,32 @@ EvtRelBreitWignerBarrierFact::EvtRelBreitWignerBarrierFact(double mass, double w
   if ( _massMin< 0. ) _massMin=0.;
 }
 
-EvtRelBreitWignerBarrierFact::EvtRelBreitWignerBarrierFact
-(const EvtRelBreitWignerBarrierFact& x): EvtAbsLineShape( x ) {
-  _mass=x._mass;
-  _width=x._width;
-  _spin=x._spin;
+EvtRelBreitWignerBarrierFact::EvtRelBreitWignerBarrierFact(const EvtRelBreitWignerBarrierFact& x) :
+  EvtAbsLineShape(x)
+{
   _massMax=x._massMax;
   _massMin=x._massMin;
   _blatt=x._blatt;
   _maxRange=x._maxRange;
   _includeDecayFact=x._includeDecayFact;
   _includeBirthFact=x._includeBirthFact;
+  _errorCond=x._errorCond;
 
 }
 
-EvtRelBreitWignerBarrierFact& EvtRelBreitWignerBarrierFact::operator=(const EvtRelBreitWignerBarrierFact& x){
+EvtRelBreitWignerBarrierFact& EvtRelBreitWignerBarrierFact::operator=(const EvtRelBreitWignerBarrierFact& x) {
   _mass=x._mass;
+  _width=x._width;
+  _spin=x._spin;
   _massMax=x._massMax;
   _massMin=x._massMin;
-  _width=x._width;
   _blatt=x._blatt;
   _maxRange=x._maxRange;
-  _spin=x._spin;
   _includeDecayFact=x._includeDecayFact;
   _includeBirthFact=x._includeBirthFact;
+  _errorCond=x._errorCond;
   
   return *this;
-
 }
 
 EvtAbsLineShape* EvtRelBreitWignerBarrierFact::clone() {
@@ -103,6 +104,7 @@ EvtAbsLineShape* EvtRelBreitWignerBarrierFact::clone() {
 
 double EvtRelBreitWignerBarrierFact::getMassProb(double mass, double massPar,int nDaug, double *massDau) {
 
+  _errorCond=false;
   //return EvtAbsLineShape::getMassProb(mass,massPar,nDaug,massDau);
   if (nDaug!=2) return EvtAbsLineShape::getMassProb(mass,massPar,nDaug,massDau);
 
@@ -112,9 +114,9 @@ double EvtRelBreitWignerBarrierFact::getMassProb(double mass, double massPar,int
   for (i=0; i<nDaug; i++) {
     dTotMass+=massDau[i];
   }
-  //report(INFO,"EvtGen") << mass << " " << massPar << " " << dTotMass << " "<< std::endl;
+  //report(INFO,"EvtGen") << mass << " " << massPar << " " << dTotMass << " "<< endl;
   //    if ( (mass-dTotMass)<0.0001 ) return 0.;
-  //report(INFO,"EvtGen") << mass << " " << dTotMass << std::endl;
+  //report(INFO,"EvtGen") << mass << " " << dTotMass << endl;
   if ( (mass<dTotMass) ) return 0.;
 
   if ( _width< 0.0001) return 1.;
@@ -122,6 +124,8 @@ double EvtRelBreitWignerBarrierFact::getMassProb(double mass, double massPar,int
   if ( massPar>0.0000000001 ) {
     if ( mass > massPar) return 0.;
   }
+
+  if ( _errorCond ) return 0.;
 
   // we did all the work in getRandMass
   return 1.;
@@ -145,11 +149,13 @@ double EvtRelBreitWignerBarrierFact::getRandMass(EvtId *parId,int nDaug, EvtId *
 
 
   // the user has overridden the partial wave to use.
-  for ( unsigned int vC=0; vC<_userSetPW.size(); vC++) {
-    if ( dauId[0]==_userSetPWD1[vC] &&  dauId[1]==_userSetPWD2[vC] ) 
+  for (unsigned int vC=0; vC<_userSetPW.size(); vC++) {
+    if ( dauId[0]==_userSetPWD1[vC] &&  dauId[1]==_userSetPWD2[vC] ) {
       Lmin=2*_userSetPW[vC]; 
-    if ( dauId[0]==_userSetPWD2[vC] &&  dauId[1]==_userSetPWD1[vC] ) 
+    }
+    if ( dauId[0]==_userSetPWD2[vC] &&  dauId[1]==_userSetPWD1[vC] ) {
       Lmin=2*_userSetPW[vC]; 
+    }
   }
   
   // allow for special cases.
@@ -161,17 +167,11 @@ double EvtRelBreitWignerBarrierFact::getRandMass(EvtId *parId,int nDaug, EvtId *
     if ( t2>4) return EvtAbsLineShape::getRandMass(parId,nDaug,dauId,othDaugId,maxMass,dauMasses);
     
     //figure the min and max allowwed "spins" for the daughters state
-#ifdef WIN32
-    Lmin=__max(t3-t2-t1,__max(t2-t3-t1,t1-t3-t2));
-#else
     Lmin=std::max(t3-t2-t1,std::max(t2-t3-t1,t1-t3-t2));
-#endif
-    
     if (Lmin<0) Lmin=0;
-    
     assert(Lmin==0||Lmin==2||Lmin==4);
   }
-  
+
   //double massD1=EvtPDL::getMeanMass(dauId[0]);
   //double massD2=EvtPDL::getMeanMass(dauId[1]);
   double massD1=dauMasses[0];
@@ -195,16 +195,19 @@ double EvtRelBreitWignerBarrierFact::getRandMass(EvtId *parId,int nDaug, EvtId *
     
     //figure the min and max allowwed "spins" for the daughters state
     if ( (tt1<=4) && ( tt2<=4) ) {
-#ifdef WIN32
-      birthl=__max(tt3-tt2-tt1,__max(tt2-tt3-tt1,tt1-tt3-tt2));
-#else
       birthl=std::max(tt3-tt2-tt1,std::max(tt2-tt3-tt1,tt1-tt3-tt2));
-#endif
       if (birthl<0) birthl=0;
     
       massOthD=EvtPDL::getMeanMass(*othDaugId);
       massParent=EvtPDL::getMeanMass(*parId);
     
+    }
+
+    // allow user to override
+    for (size_t vC=0; vC<_userSetBirthPW.size(); vC++) {
+      if ( *othDaugId==_userSetBirthOthD[vC] && *parId==_userSetBirthPar[vC]){
+	birthl=2*_userSetBirthPW[vC];
+      } 
     }
 
   }
@@ -229,6 +232,10 @@ double EvtRelBreitWignerBarrierFact::getRandMass(EvtId *parId,int nDaug, EvtId *
     if ( _includeBirthFact ) {
 
       EvtTwoBodyVertex vb(_mass,massOthD,massParent,birthl/2);
+      //whoops 060116
+      //needed to actually tell the vertex about the form factor!
+      //otherwise its just 1
+      if ( _applyFixForSP8 ) vb.set_f(_blatt);
       amp.setBirthVtx(vb);
       amp.addBirthFact();
       amp.addBirthFactFF();
@@ -247,10 +254,22 @@ double EvtRelBreitWignerBarrierFact::getRandMass(EvtId *parId,int nDaug, EvtId *
   if ( maxMass>-0.5 && maxMass<_massMax) tempMax=maxMass;
   double tempMinMass=_massMin;
   if ( massD1+massD2 > _massMin) tempMinMass=massD1+massD2;
+
+  //redo sanity check - is there a solution to our problem.
+  //if not return an error condition that is caught by the
+  //mass prob calculation above.
+  if ( tempMinMass > tempMax ) {
+    _errorCond=true;
+    return tempMinMass;
+  }
+  
   if ( tempMaxLoc < tempMinMass) tempMaxLoc=tempMinMass;
 
-  EvtPdfMax<EvtPoint1D> max(1.2*pdf.evaluate(EvtPoint1D(tempMinMass,tempMax,tempMaxLoc)));
-  EvtPdfMax<EvtPoint1D> max2(1.2*pdf.evaluate(EvtPoint1D(tempMinMass,tempMax,(0.1*tempMax+tempMinMass))));
+  double safetyFactor=1.2;
+  if ( _applyFixForSP8 ) safetyFactor=1.4;
+
+  EvtPdfMax<EvtPoint1D> max(safetyFactor*pdf.evaluate(EvtPoint1D(tempMinMass,tempMax,tempMaxLoc)));
+
   EvtPdfPred<EvtPoint1D> pred(pdf);
   pred.setMax(max);
 

@@ -23,7 +23,6 @@
 
 #include "EvtGenBase/EvtVector4C.hh"
 #include "EvtGenBase/EvtParticle.hh"
-//#include "EvtGenBase/EvtId.hh"
 class EvtId;
 
 //Class to handle massless spin 1 particles.

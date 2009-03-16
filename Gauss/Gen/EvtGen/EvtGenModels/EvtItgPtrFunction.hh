@@ -24,15 +24,15 @@
 #ifndef EVTITGPTRFUNCTION_HH
 #define EVTITGPTRFUNCTION_HH
 
-#include "CLHEP/Matrix/Vector.h"
+#include <vector>
 #include "EvtGenModels/EvtItgAbsFunction.hh"
 
 class EvtItgPtrFunction: public EvtItgAbsFunction {
 
 public:
 
-  EvtItgPtrFunction( double (*theFunction)(double, const HepVector &),
-		     double lowerRange, double upperRange, const HepVector &coeffs1);
+  EvtItgPtrFunction( double (*theFunction)(double, const std::vector<double> &),
+		     double lowerRange, double upperRange, const std::vector<double> &coeffs1);
  
   virtual ~EvtItgPtrFunction( );
 
@@ -46,13 +46,13 @@ protected:
 private:
  
   // Data members
-  double (*_myFunction)(double x, const HepVector & coeffs1);
+  double (*_myFunction)(double x, const std::vector<double> & coeffs1);
 
   // Note: if your class needs a copy constructor or an assignment operator, 
   //  make one of the following public and implement it.
   EvtItgPtrFunction( const EvtItgPtrFunction& );                //// Copy Constructor
   EvtItgPtrFunction& operator= ( const EvtItgPtrFunction& );    // Assignment op
-  HepVector _coeffs1;
+  std::vector<double> _coeffs1;
 
 };
 

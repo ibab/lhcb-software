@@ -10,7 +10,9 @@
 //
 // Module: EvtGen/EvtDecayTable.hh
 //
-// Description:
+// Description: Class to read in and handle the decays available
+//              to EvtGen for each particle, and the model to be
+//              used for each one.
 //
 // Modification history:
 //
@@ -22,12 +24,11 @@
 #define EVTDECAYTABLE_HH
 
 #include "EvtGenBase/EvtDecayBase.hh"
-//#include <fstream>
+#include "EvtGenBase/EvtParticleDecayList.hh"
+#include <vector>
+
 class EvtId;
 
-//Class to read in and handle the decays available
-//to EvtGen for each particle, and the model to be
-//used for each one.
 
 typedef EvtDecayBase* EvtDecayBasePtr;
 
@@ -39,22 +40,25 @@ public:
 
   static EvtDecayBase* getDecay(int ipar, int imode);
 
-  static void readDecayFile(const std::string dec_name);
+  static void readDecayFile(const std::string dec_name, bool verbose=true);
 
-  static int findChannel(EvtId parent,std::string model,int ndaug, EvtId *daugs,
-		     int narg, std::string *args);
+  static int findChannel(EvtId parent,std::string model,int ndaug, 
+			 EvtId *daugs,
+			 int narg, std::string *args);
   
   static int inChannelList(EvtId parent, int ndaug, EvtId *daugs);
 
-  static EvtDecayBase *GetDecayFunc(EvtParticle *);
+  static EvtDecayBase *getDecayFunc(EvtParticle *p);
 
   static void printSummary();
 
-  static bool isJetSet( EvtId evtnum ) ;
+  static void checkConj();
 
-  static double totalBr(int ipar) ;
+  static const std::vector<EvtParticleDecayList> & decaytable() {return _decaytable;};
 
 private:
+
+  static std::vector<EvtParticleDecayList> _decaytable;
 
 };
 

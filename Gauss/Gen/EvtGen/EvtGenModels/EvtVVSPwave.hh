@@ -32,7 +32,7 @@ public:
   EvtVVSPwave() {}
   virtual ~EvtVVSPwave();
 
-  void getName(std::string& name);
+  std::string getName();
   EvtDecayBase* clone();
 
   void decay(EvtParticle *p); 

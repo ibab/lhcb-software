@@ -32,7 +32,7 @@ public:
   EvtTauScalarnu() {}
   virtual ~EvtTauScalarnu();
 
-  void getName(std::string& name);
+  std::string getName();
   EvtDecayBase* clone();
 
   void initProbMax();

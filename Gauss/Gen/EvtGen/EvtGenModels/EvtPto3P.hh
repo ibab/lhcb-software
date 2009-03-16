@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------
 // File and Version Information: 
-//      $Id: EvtPto3P.hh,v 1.1 2003-10-02 17:26:52 robbep Exp $
+//      $Id: EvtPto3P.hh,v 1.2 2009-03-16 16:31:05 robbep Exp $
 // 
 // Environment:
 //      This software is part of the EvtGen package developed jointly
@@ -29,7 +29,7 @@ public:
   
   EvtPto3P() {}
   virtual ~EvtPto3P() {}
-  void getName(std::string& model_name) { model_name="PTO3P"; }
+  std::string getName() { return "PTO3P"; }
   EvtDecayBase* clone() { return new EvtPto3P(); } 
   
   

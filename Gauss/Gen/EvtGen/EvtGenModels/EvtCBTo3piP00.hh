@@ -32,7 +32,7 @@ public:
   EvtCBTo3piP00() {}
   virtual ~EvtCBTo3piP00();
 
-  void getName(std::string& name);
+  std::string getName();
   EvtDecayBase* clone();
 
   void init();

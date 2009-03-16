@@ -24,7 +24,6 @@
 #define EVTBTOXSGAMMA_HH
 
 #include "EvtGenBase/EvtDecayIncoherent.hh"
-//#include "EvtGenModels/EvtBtoXsgammaAbsModel.hh"
 
 class EvtBtoXsgammaAbsModel;
 class EvtParticle;
@@ -33,11 +32,11 @@ class EvtBtoXsgamma:public  EvtDecayIncoherent  {
 
 public:
   
-  EvtBtoXsgamma():_model(0) {};
+  EvtBtoXsgamma() {_model=0;}
 
   virtual ~EvtBtoXsgamma();
 
-  void getName(std::string& name);
+  std::string getName();
 
   EvtDecayBase* clone();
 

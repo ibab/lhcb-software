@@ -34,7 +34,7 @@ public:
   EvtSLPole() {}
   virtual ~EvtSLPole();
 
-  void getName(std::string& name);
+  std::string getName();
   EvtDecayBase* clone();
 
   void decay(EvtParticle *p);
@@ -44,6 +44,9 @@ public:
 private:
   EvtSemiLeptonicFF *SLPoleffmodel;
   EvtSemiLeptonicAmp *calcamp;
+  //special case - reset the daughter masses
+  bool _resetDaughterTree;
+
 };
 
 #endif

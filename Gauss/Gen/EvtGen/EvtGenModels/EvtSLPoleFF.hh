@@ -38,6 +38,9 @@ public:
                        double t, double mass, double *hf,
                        double *kf, double *bp, double *bm );
 
+  void getbaryonff(EvtId, EvtId, double, double, double*, 
+		   double*, double*, double*);
+
 private:
    int numSLPoleargs;
    double SLPoleargs[16];

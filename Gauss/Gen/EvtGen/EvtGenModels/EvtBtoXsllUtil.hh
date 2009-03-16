@@ -1,8 +1,5 @@
 //--------------------------------------------------------------------------
 //
-//
-// Copyright Information: See EvtGen/COPYRIGHT
-//
 // Environment:
 //      This software is part of the EvtGen package developed jointly
 //      for the BaBar and CLEO collaborations.  If you use all or part
@@ -16,8 +13,8 @@
 //
 // Modification history:
 //
-//    Stephane Willocq       Jan  19, 2001       Module created
-//    Stephane Willocq       Nov   6, 2003       Update Wilson Coeffs
+//    Stephane Willocq    Jan 19, 2001   Module created
+//    Stephane Willocq    Nov  6, 2003   Update Wilson Coeffs
 //
 //------------------------------------------------------------------------
 
@@ -28,7 +25,7 @@
 #include "EvtGenBase/EvtDecayIncoherent.hh"
 #include "EvtGenBase/EvtParticle.hh"
 
-class EvtComplex ;
+class EvtComplex;
 
 class EvtBtoXsllUtil{
 
@@ -41,10 +38,10 @@ public:
   EvtComplex GetC10Eff(double sh, bool nnlo=true);
 
   double dGdsProb(double mb, double ms, double ml,
-                                  double s);
+                  double s);
 
   double dGdsdupProb(double mb, double ms, double ml,
-                                     double s,  double u);
+                     double s,  double u);
   
   double FermiMomentum( double pf );
   

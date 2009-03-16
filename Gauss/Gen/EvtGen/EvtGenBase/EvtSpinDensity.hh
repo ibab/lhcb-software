@@ -33,15 +33,15 @@ public:
   virtual ~EvtSpinDensity();
 
   EvtSpinDensity();
-  void SetDim(int n);
-  int GetDim() const;
-  void Set(int i,int j,const EvtComplex& rhoij);
-  const EvtComplex& Get(int i,int j) const;
-  double NormalizedProb(const EvtSpinDensity& d);
+  void setDim(int n);
+  int getDim() const;
+  void set(int i,int j,const EvtComplex& rhoij);
+  const EvtComplex& get(int i,int j) const;
+  double normalizedProb(const EvtSpinDensity& d);
   friend std::ostream& operator<<(std::ostream& s,const EvtSpinDensity& d);
-  void SetDiag(int n);
+  void setDiag(int n);
 
-  int Check();
+  int check();
 
 private:
 

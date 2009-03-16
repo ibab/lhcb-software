@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Project: BaBar detector at the SLAC PEP-II B-factory
  * Package: EvtGenBase
- *    File: $Id: EvtAmplitudeSum.hh,v 1.1 2003-10-02 17:25:51 robbep Exp $
+ *    File: $Id: EvtAmplitudeSum.hh,v 1.2 2009-03-16 16:42:46 robbep Exp $
  *  Author: Alexei Dvoretskii, dvoretsk@slac.stanford.edu, 2001-2002
  *
  * Copyright (C) 2002 Caltech
@@ -11,6 +11,7 @@
 #define EVT_AMPLITUDE_SUM_HH
 
 #include <stdio.h>
+#include <assert.h>
 #include <vector>
 #include "EvtGenBase/EvtAmplitude.hh"
 
@@ -38,8 +39,7 @@ public:
   
   virtual ~EvtAmplitudeSum()
   {
-    unsigned int i;
-    for(i=0;i<_term.size();i++) {
+    for(size_t i=0;i<_term.size();i++) {
       
       delete _term[i];
     }
@@ -89,9 +89,8 @@ protected:
       printf("Warning: amplitude sum has zero terms\n");
     
     EvtComplex value = 0.;
-    unsigned int i;
-    for(i=0;i<_term.size();i++) {
-    
+
+    for(size_t i=0;i<_term.size();i++) {    
       value+=_c[i]*_term[i]->evaluate(p);    
     }    
     return value;
@@ -105,7 +104,5 @@ private:
 
 
 #endif
-
-
 
 

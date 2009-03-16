@@ -23,7 +23,6 @@
 
 #include "EvtGenBase/EvtDiracSpinor.hh"
 #include "EvtGenBase/EvtParticle.hh"
-//#include "EvtGenBase/EvtId.hh"
 class EvtId;
 class EvtVector4R;
 
@@ -34,7 +33,6 @@ public:
   EvtNeutrinoParticle();
   virtual ~EvtNeutrinoParticle();
   void init(EvtId part_n,const EvtVector4R& p4);
-//Return spinors
   EvtDiracSpinor spParentNeutrino() const;
   EvtDiracSpinor spNeutrino() const;
   EvtSpinDensity rotateToHelicityBasis() const;

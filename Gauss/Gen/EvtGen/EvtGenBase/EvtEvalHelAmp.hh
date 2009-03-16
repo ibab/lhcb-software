@@ -34,9 +34,9 @@ class EvtEvalHelAmp{
 
 public:
 
-  EvtEvalHelAmp(EvtSpinType::spintype A,
-		EvtSpinType::spintype B,
-		EvtSpinType::spintype C,
+  EvtEvalHelAmp(EvtId idA,
+		EvtId idB,
+		EvtId idC,
 		EvtComplexPtrPtr HBC);
 
   virtual ~EvtEvalHelAmp();
@@ -48,7 +48,7 @@ public:
 
 private:
 
-  void fillHelicity(int* lambda2,int n,int J2);
+  void fillHelicity(int* lambda2,int n,int J2, EvtId id);
   void setUpRotationMatrices(EvtParticle *p,double theta, double phi);
   void applyRotationMatrices();
 

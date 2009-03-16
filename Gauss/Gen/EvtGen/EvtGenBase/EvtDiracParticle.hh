@@ -23,7 +23,6 @@
 
 #include "EvtGenBase/EvtDiracSpinor.hh"
 #include "EvtGenBase/EvtParticle.hh"
-//#include "EvtGenBase/EvtId.hh"
 
 class EvtId;
 class EvtVector4R;
@@ -36,8 +35,11 @@ public:
   EvtDiracParticle();
   virtual ~EvtDiracParticle();
   void init(EvtId part_n,const EvtVector4R& p4);
-  EvtDiracSpinor spParent(int) const;
-  EvtDiracSpinor sp(int) const;   
+  void init(EvtId part_n,const EvtVector4R& p4,
+	    const EvtDiracSpinor &,const EvtDiracSpinor &,
+	    const EvtDiracSpinor &,const EvtDiracSpinor &);
+  EvtDiracSpinor spParent(int i) const {return _spinorParent[i];}
+  EvtDiracSpinor sp(int i) const {return _spinorRest[i];}  
   EvtSpinDensity rotateToHelicityBasis() const;
   EvtSpinDensity rotateToHelicityBasis(double alpha,
 				       double beta,
@@ -45,8 +47,8 @@ public:
 
 private:
 
-  EvtDiracSpinor spinor1_rest,spinor2_rest;
-  EvtDiracSpinor spinor1_parent,spinor2_parent;
+  EvtDiracSpinor _spinorRest[2];
+  EvtDiracSpinor _spinorParent[2];
   EvtDiracParticle(const EvtDiracParticle& d);
   EvtDiracParticle& operator=(const EvtDiracParticle& d);
 

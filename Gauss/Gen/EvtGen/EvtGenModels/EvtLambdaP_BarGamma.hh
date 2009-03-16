@@ -35,7 +35,7 @@ public:
   EvtLambdaP_BarGamma();
   ~EvtLambdaP_BarGamma() {;}
   
-  void getName(std::string& name);
+  std::string getName();
   EvtDecayBase* clone();
   void decay(EvtParticle* p);
   void init();

@@ -48,6 +48,7 @@ public:
 protected:
 
   double _blatt;
+  bool _errorCond;
 
 }; 
 

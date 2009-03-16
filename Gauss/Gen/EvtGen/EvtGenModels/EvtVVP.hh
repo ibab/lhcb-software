@@ -32,7 +32,7 @@ public:
   EvtVVP() {}
   virtual ~EvtVVP();
   
-  void getName(std::string& name);
+  std::string getName();
   EvtDecayBase* clone();
 
   void initProbMax();

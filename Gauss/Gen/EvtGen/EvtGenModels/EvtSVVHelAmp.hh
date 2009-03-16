@@ -39,7 +39,7 @@ public:
   EvtSVVHelAmp() {}
   virtual ~EvtSVVHelAmp();
 
-  void getName(std::string& name);
+  std::string getName();
   EvtDecayBase* clone();
 
   void init();

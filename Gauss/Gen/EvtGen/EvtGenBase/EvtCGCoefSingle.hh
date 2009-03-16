@@ -28,15 +28,15 @@ class EvtCGCoefSingle{
 
 public:
 
-  EvtCGCoefSingle();
+  EvtCGCoefSingle(int j1, int j2) {init(j1,j2);}
   ~EvtCGCoefSingle();
 
-  void init(int j1,int j2);
 
   double coef(int J,int M,int j1,int j2,int m1,int m2);
   
 private:
 
+  void init(int j1,int j2);
   double& cg(int J,int M, int m1, int m2);
 
   int _j1;

@@ -38,12 +38,12 @@ public:
   void    init(fcnPtr pfcn, int ndaug, int *daugs, int narg,
 	       double *args, std::string name); 
 
-  int     GetNDaug() {return itsndaug; }
-  int     GetNArg() {return itsnarg; }
-  int*    GetDaugs() {return itsdaugs; }
-  double* GetArgs() {return itsargs; }
-  fcnPtr  GetfcnPtr() {return itsfcn; }
-  std::string   GetModelName() {return modelname; }
+  int     getNDaug() {return itsndaug; }
+  int     getNArg() {return itsnarg; }
+  int*    getDaugs() {return itsdaugs; }
+  double* getArgs() {return itsargs; }
+  fcnPtr  getfcnPtr() {return itsfcn; }
+  std::string   getModelName() {return modelname; }
 
 private:
 

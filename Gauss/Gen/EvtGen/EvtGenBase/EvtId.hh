@@ -22,7 +22,7 @@
 #define EVTID_HH
 
 #include <iostream>
-//#include <iosfwd>
+//class ostream;
 
 class EvtId {
 
@@ -37,6 +37,7 @@ public:
 
   int operator==(const EvtId& id) const { return _id==id._id; }
   int operator!=(const EvtId& id) const { return _id!=id._id; }
+  int isConjugate(const EvtId & id) const;
 
   int getId() const { return _id;}
 

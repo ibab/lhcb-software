@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2009-03016 - Patrick Robbe
+ - Move to new EvtGen version from Anders Ryd after merging BaBar
+   and LHCb changes. 
+
 ! 2009-02-26 - Patrick Robbe
  - EvtParticleDecayList.cpp: fix case when decay mode is forced
 

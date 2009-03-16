@@ -31,7 +31,7 @@ public:
   EvtBHadronic() {}
   virtual ~EvtBHadronic();
 
-  void getName(std::string& name);
+  std::string getName();
   EvtDecayBase* clone();
 
   void init();

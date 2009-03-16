@@ -32,7 +32,7 @@ public:
   EvtVSSMix() {}
   virtual ~EvtVSSMix();
 
-  void getName(std::string& name);
+  std::string getName();
   EvtDecayBase* clone();
 
   void decay(EvtParticle *p); 

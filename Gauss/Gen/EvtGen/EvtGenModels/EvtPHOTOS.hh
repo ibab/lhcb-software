@@ -24,14 +24,22 @@
 #define EVTPHOTOS_HH
 
 #include "EvtGenBase/EvtAbsRadCorr.hh"
+#include <string>
 
 class EvtParticle;
 
 class EvtPHOTOS : public EvtAbsRadCorr{
 
 public:
+    
+    //The photon type to use
+    EvtPHOTOS(std::string photontype="gamma"); 
+	      
+    void doRadCorr(EvtParticle *p);
 
-  void doRadCorr(EvtParticle *p);
+private:
+    std::string _photontype;
+
 };
 
 #endif

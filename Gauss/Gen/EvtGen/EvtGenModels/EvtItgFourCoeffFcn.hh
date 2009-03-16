@@ -22,15 +22,15 @@
 #ifndef EVTITFOURCOEFFFCN_HH
 #define EVTITFOURCOEFFFCN_HH
 
-#include "CLHEP/Matrix/Vector.h"
+#include <vector>
 #include "EvtGenModels/EvtItgAbsFunction.hh"
 
 class EvtItgFourCoeffFcn: public EvtItgAbsFunction {
 
 public:
 
-  EvtItgFourCoeffFcn( double (*theFunction)(double, const HepVector &, const HepVector &, const HepVector &, const HepVector &),
-		     double lowerRange, double upperRange, const HepVector &coeffs1, const HepVector &coeffs2, const HepVector &coeffs3, const HepVector &coeffs4);
+  EvtItgFourCoeffFcn( double (*theFunction)(double, const std::vector<double> &, const std::vector<double> &, const std::vector<double> &, const std::vector<double> &),
+		     double lowerRange, double upperRange, const std::vector<double> &coeffs1, const std::vector<double> &coeffs2, const std::vector<double> &coeffs3, const std::vector<double> &coeffs4);
 
   virtual ~EvtItgFourCoeffFcn( );
 
@@ -44,16 +44,16 @@ protected:
 private:
  
   // Data members
-  double (*_myFunction)(double x, const HepVector & coeffs1, const HepVector & coeffs2, const HepVector & coeffs3, const HepVector & coeffs4);
+  double (*_myFunction)(double x, const std::vector<double> & coeffs1, const std::vector<double> & coeffs2, const std::vector<double> & coeffs3, const std::vector<double> & coeffs4);
   
   // Note: if your class needs a copy constructor or an assignment operator, 
   //  make one of the following public and implement it.
   EvtItgFourCoeffFcn( const EvtItgFourCoeffFcn& );                //// Copy Constructor
   EvtItgFourCoeffFcn& operator= ( const EvtItgFourCoeffFcn& );    // Assignment op
-  HepVector _coeffs1;
-  HepVector _coeffs2;
-  HepVector _coeffs3;
-  HepVector _coeffs4;
+  std::vector<double> _coeffs1;
+  std::vector<double> _coeffs2;
+  std::vector<double> _coeffs3;
+  std::vector<double> _coeffs4;
 
 };
 

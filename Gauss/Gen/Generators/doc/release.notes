@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.144 2009-03-02 12:12:35 robbep Exp $
+! $Id: release.notes,v 1.145 2009-03-16 16:53:26 robbep Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2009-03-16 - Patrick Robbe
+ - EvtGenDecay: fixes for new EvtGen version
 
 ! 2009-03-02 - Patrick Robbe
  - ReadHepMCAsciiFile.cpp: move to new method IO_GenEvent instead

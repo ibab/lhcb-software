@@ -21,7 +21,6 @@
 #ifndef EVTVECTOR4C_HH
 #define EVTVECTOR4C_HH
 
-//#include <iostream>
 #include "EvtGenBase/EvtComplex.hh"
 #include "EvtGenBase/EvtVector3C.hh"
 #include "EvtGenBase/EvtVector4R.hh"

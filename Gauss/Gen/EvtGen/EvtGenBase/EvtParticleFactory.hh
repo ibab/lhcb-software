@@ -10,7 +10,7 @@
 //
 // Module: EvtGen/EvtParticleFactory.hh
 //
-// Description:Class to describe all particles
+// Description:Factory for creating particles
 //
 // Modification history:
 //

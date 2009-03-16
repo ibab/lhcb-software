@@ -1,4 +1,5 @@
-//--------------------------------------------------------------------------
+#include "EvtGenBase/EvtPatches.hh"
+ //--------------------------------------------------------------------------
 //
 // Environment:
 //      This software is part of the EvtGen package developed jointly
@@ -28,6 +29,7 @@
 #include "EvtGenBase/EvtManyDeltaFuncLineShape.hh"
 #include "EvtGenBase/EvtRelBreitWignerBarrierFact.hh"
 #include <string>
+using std::fstream;
 
 EvtPartProp::EvtPartProp():
   _id(-1,-1)
@@ -87,7 +89,6 @@ EvtPartProp& EvtPartProp::operator=(const EvtPartProp& x){
 
 void EvtPartProp::initLineShape(double mass, double width, double maxRange){
 
-  //  _lineShape=new EvtAbsLineShape(mass,width,maxRange);
   _lineShape=new EvtRelBreitWignerBarrierFact(mass,width,maxRange,_spintype);
 
 }
@@ -113,11 +114,6 @@ void EvtPartProp::newLineShape(std::string type){
   }
 }
 
-//void EvtPartProp::initLineShape(double mass, double width, double maxRange,
-//				double mDaug1, double mDaug2, int l){
-//
-//  _lineShape=new EvtRelBreitWignerBarrierFact(mass,width,maxRange,mDaug1,mDaug2,l);
-//}
 
 void EvtPartProp::reSetMass(double mass) {
   if (!_lineShape) ::abort();
@@ -132,6 +128,12 @@ void EvtPartProp::setPWForDecay( int spin, EvtId d1, EvtId d2) {
   if (!_lineShape) ::abort();
   _lineShape->setPWForDecay(spin,d1,d2);
 }
+
+void EvtPartProp::setPWForBirthL( int spin, EvtId par, EvtId othD) { 
+  if (!_lineShape) ::abort();
+  _lineShape->setPWForBirthL(spin,par,othD);
+}
+
 
 void EvtPartProp::reSetMassMin(double mass){
   if (!_lineShape) ::abort();

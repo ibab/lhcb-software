@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Project: BaBar detector at the SLAC PEP-II B-factory
  * Package: EvtGenBase
- *    File: $Id: EvtPdf.hh,v 1.1 2003-10-02 17:25:54 robbep Exp $
+ *    File: $Id: EvtPdf.hh,v 1.2 2009-03-16 16:40:15 robbep Exp $
  *  Author: Alexei Dvoretskii, dvoretsk@slac.stanford.edu, 2001-2002
  *
  * Copyright (C) 2002 Caltech
@@ -92,7 +92,7 @@ public:
   virtual EvtValError compute_integral() const
     //make sun happy - return something
   { printf("Analytic integration of PDF is not defined\n"); assert(0); return compute_integral();}
-  virtual EvtValError compute_integral(int /*N*/) const { return compute_integral(); }
+  virtual EvtValError compute_integral(int) const { return compute_integral(); }
 
   //  Monte Carlo integration.
 
@@ -245,7 +245,7 @@ EvtValError EvtPdf<T>::findGenEff(const EvtPdf<T>& pc, int N, int nFindMax)
   int i;
   for(i=0;i<N;i++) gen();
   double eff = double(gen.getPassed())/double(gen.getTried());
-  double err = sqrt(gen.getPassed())/double(gen.getTried());
+  double err = sqrt(double(gen.getPassed()))/double(gen.getTried());
   return EvtValError(eff,err);
 }
 

@@ -21,6 +21,7 @@
 #ifndef EVTVECTORPARTICLE_HH
 #define EVTVECTORPARTICLE_HH
 
+#include "EvtGenBase/EvtVector4R.hh"
 #include "EvtGenBase/EvtVector4C.hh"
 #include "EvtGenBase/EvtParticle.hh"
 
@@ -35,8 +36,10 @@ public:
 
   void init(EvtId part_n,double e,double px,double py,double pz);
   void init(EvtId part_n,const EvtVector4R& p);
-  EvtVector4C epsParent(int i) const; 
-  EvtVector4C eps(int i) const; 
+  void init(EvtId part_n,const EvtVector4R& p,
+	    const EvtVector4C&,const EvtVector4C&,const EvtVector4C&);
+  EvtVector4C epsParent(int i) const   {return boostTo(_eps[i],this->getP4());}
+  EvtVector4C eps(int i) const {return _eps[i];} 
   EvtSpinDensity rotateToHelicityBasis() const;
   EvtSpinDensity rotateToHelicityBasis(double alpha,
 				       double beta,
@@ -44,7 +47,7 @@ public:
  
 private:
   
-  EvtVector4C eps1,eps2,eps3;
+  EvtVector4C _eps[3];
 
   EvtVectorParticle(const EvtVectorParticle& vector);
   EvtVectorParticle& operator=(const EvtVectorParticle& vector);

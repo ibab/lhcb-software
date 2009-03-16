@@ -22,10 +22,8 @@
 #define EVTSCALARPARTICLE_HH
 
 #include "EvtGenBase/EvtParticle.hh"
-//#include "EvtGenBase/EvtId.hh"
 class EvtId;
 
-//Class to handle SCALAR particles.  Not much to do.
 
 class EvtScalarParticle: public EvtParticle {
 

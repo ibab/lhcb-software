@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------
 // File and Version Information: 
-//      $Id: EvtPto3PAmpFactory.hh,v 1.1 2003-10-02 17:25:55 robbep Exp $
+//      $Id: EvtPto3PAmpFactory.hh,v 1.2 2009-03-16 16:42:03 robbep Exp $
 // 
 // Environment:
 //      This software is part of the EvtGen package developed jointly
@@ -23,6 +23,7 @@
 #include "EvtGenBase/EvtAmpFactory.hh"
 #include "EvtGenBase/EvtDalitzPlot.hh"
 #include "EvtGenBase/EvtDalitzPoint.hh"
+#include "EvtGenBase/EvtCyclic3.hh"
 
 class EvtPto3PAmpFactory : public EvtAmpFactory<EvtDalitzPoint> {
   
@@ -43,8 +44,13 @@ public:
   }
   
   virtual void processAmp(EvtComplex c, std::vector<std::string> vv, bool conj);
-  
+ 
 private:
+
+  double matchIsobarCoef(EvtAmplitude<EvtDalitzPoint>* amp,
+			 EvtPdf<EvtDalitzPoint>* pdf, 
+			 EvtCyclic3::Pair i);
+
 
   EvtDalitzPlot _dp;
 

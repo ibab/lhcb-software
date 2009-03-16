@@ -28,9 +28,12 @@ class EvtRandom{
 
 public:
 
-  static double Flat(double min, double max);
-  static double Flat(double max);
   static double Flat();
+  static double Flat(double max);
+  static double Flat(double min, double max);
+
+  //generate unit Gaussian
+  static double Gaussian();
 
   static double random();
   

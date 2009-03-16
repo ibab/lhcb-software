@@ -29,8 +29,6 @@ class EvtSemiLeptonicFF;
 
 class EvtSemiLeptonicScalarAmp : public EvtSemiLeptonicAmp {
 
-  // public:
-
   //Daughters are initialized and have been added to the parent.
   //No need to carry around the daughters seperately!
   void CalcAmp( EvtParticle *parent, EvtAmp& amp,

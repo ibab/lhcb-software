@@ -64,9 +64,21 @@ public:
   EvtVector4R cross(const EvtVector4R& v2);
   double dot(const EvtVector4R& v2) const;
   double d3mag() const;
+
+  // Added by AJB - calculate scalars in the rest frame of the current object
+  double scalartripler3( const EvtVector4R& p1, const EvtVector4R& p2,
+          const EvtVector4R& p3 ) const;
+  double dotr3( const EvtVector4R& p1, const EvtVector4R& p2 ) const;
+  double mag2r3( const EvtVector4R& p1 ) const;
+  double magr3( const EvtVector4R& p1 ) const;
+
+
 private:
 
   double v[4];
+
+  inline double Square( double x ) const { return x*x; }
+
 };
 
 

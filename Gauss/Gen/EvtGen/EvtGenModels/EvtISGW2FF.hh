@@ -39,6 +39,9 @@ public:
                        double t, double mass, double *hf,
                        double *kf, double *bpf, double *bmf );
 
+  void getbaryonff(EvtId, EvtId, double, double, double*, 
+		   double*, double*, double*);
+
 
 private:
 

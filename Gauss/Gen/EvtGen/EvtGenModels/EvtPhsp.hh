@@ -34,7 +34,7 @@ public:
   EvtPhsp() {}
   virtual ~EvtPhsp();
 
-  void getName(std::string& name);
+  std::string getName();
 
   EvtDecayBase* clone();
 

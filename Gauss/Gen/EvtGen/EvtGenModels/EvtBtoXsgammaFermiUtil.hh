@@ -23,7 +23,7 @@
 #ifndef EVTBTOXSGAMMAFERMIUTIL_HH
 #define EVTBTOXSGAMMAFERMIUTIL_HH
 
-#include "CLHEP/Matrix/Vector.h"
+#include <vector>
 
 class EvtBtoXsgammaFermiUtil {
 
@@ -38,21 +38,21 @@ public:
   virtual ~EvtBtoXsgammaFermiUtil() { };
 
   //Exponential function
-  static double FermiExpFunc(double var, const HepVector &coeffs);
+  static double FermiExpFunc(double var, const std::vector<double> &coeffs);
 
   //Gaussian function and its helper functions
-  static double FermiGaussFunc(double, HepVector const &coeffs);
-  static double FermiGaussFuncRoot(double, double, double, HepVector &coeffs);
-  static double FermiGaussRootFcnA(double, const HepVector &coeffs1, const HepVector &coeffs2);
-  static double FermiGaussRootFcnB(double, const HepVector &coeffs1, const HepVector &coeffs2);
-  static double Gamma(double, const HepVector &coeffs);
+  static double FermiGaussFunc(double, std::vector<double> const &coeffs);
+  static double FermiGaussFuncRoot(double, double, double, std::vector<double> &coeffs);
+  static double FermiGaussRootFcnA(double, const std::vector<double> &coeffs1, const std::vector<double> &coeffs2);
+  static double FermiGaussRootFcnB(double, const std::vector<double> &coeffs1, const std::vector<double> &coeffs2);
+  static double Gamma(double, const std::vector<double> &coeffs);
 
   //Roman function and its helper functions
   static double BesselI1(double);
   static double BesselK1(double);
   static double FermiRomanFuncRoot(double, double);
   static double FermiRomanRootFcnA(double);
-  static double FermiRomanFunc(double, HepVector const &coeffs);
+  static double FermiRomanFunc(double, std::vector<double> const &coeffs);
 
 };
 

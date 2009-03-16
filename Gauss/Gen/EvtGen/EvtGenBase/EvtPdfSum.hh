@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Project: BaBar detector at the SLAC PEP-II B-factory
  * Package: EvtGenBase
- *    File: $Id: EvtPdfSum.hh,v 1.2 2006-09-19 21:30:32 gcorti Exp $
+ *    File: $Id: EvtPdfSum.hh,v 1.3 2009-03-16 16:40:16 robbep Exp $
  *  Author: Alexei Dvoretskii, dvoretsk@slac.stanford.edu, 2001-2002
  *
  * Copyright (C) 2002 Caltech
@@ -35,7 +35,7 @@ public:
   void addOwnedTerm(double c, EvtPdf<T>* pdf)
   { _c.push_back(c); _term.push_back(pdf); }
   
-  int nTerms() const { return _term.size(); }  // number of terms
+  size_t nTerms() const { return _term.size(); }  // number of terms
   
   inline double   c(int i) const { return _c[i]; }
   inline EvtPdf<T>* getPdf(int i) const { return _term[i]; }
@@ -60,8 +60,7 @@ template <class T>
 EvtPdfSum<T>::EvtPdfSum(const EvtPdfSum<T>& other)
   : EvtPdf<T>(other)
 {
-  int i;
-  for(i = 0; i < other.nTerms(); i++) {
+  for(size_t i = 0; i < other.nTerms(); i++) {
     _c.push_back(other._c[i]);
     _term.push_back(other._term[i]->clone());
   }
@@ -70,8 +69,9 @@ EvtPdfSum<T>::EvtPdfSum(const EvtPdfSum<T>& other)
 template <class T>
 EvtPdfSum<T>::~EvtPdfSum()
 {
-  unsigned int i;
-  for(i = 0; i < _c.size(); i++) delete _term[i];
+  for(size_t i = 0; i < _c.size(); i++) {
+    delete _term[i];
+  }
 }
 
 
@@ -79,8 +79,9 @@ template <class T>
 double EvtPdfSum<T>::pdf(const T& p) const
 {
   double ret = 0.;
-  unsigned i;
-  for(i=0; i < _c.size(); i++) ret += _c[i] * _term[i]->evaluate(p);
+  for(size_t i=0; i < _c.size(); i++) {
+    ret += _c[i] * _term[i]->evaluate(p);
+  }
   return ret;
 }
 
@@ -91,18 +92,18 @@ double EvtPdfSum<T>::pdf(const T& p) const
 template <class T>
 EvtValError EvtPdfSum<T>::compute_integral() const 
 {
-  int i;
   EvtValError itg(0.0,0.0);
-  for(i=0;i<nTerms();i++) itg += _c[i]*_term[i]->getItg();
+  for(size_t i=0;i<nTerms();i++) {
+    itg += _c[i]*_term[i]->getItg();
+  }
   return itg;
 }
 
 template <class T>
 EvtValError EvtPdfSum<T>::compute_integral(int N) const
 {
-  int i;
   EvtValError itg(0.0,0.0);
-  for(i=0;i<nTerms();i++) itg += _c[i]*_term[i]->getItg(N);
+  for(size_t i=0;i<nTerms();i++) itg += _c[i]*_term[i]->getItg(N);
   return itg;
 }
 
@@ -122,7 +123,7 @@ T EvtPdfSum<T>::randomPoint()
   double rnd = EvtRandom::Flat(0,max);
   
   double sum = 0.;
-  int i;
+  size_t i;
   for(i = 0; i < nTerms(); i++) {
     double itg = _term[i]->getItg().value();
     sum += _c[i] * itg;
@@ -133,6 +134,5 @@ T EvtPdfSum<T>::randomPoint()
 }
 
 #endif
-
 
 

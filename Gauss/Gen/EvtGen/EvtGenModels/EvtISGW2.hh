@@ -39,7 +39,7 @@ public:
   EvtISGW2();
   virtual ~EvtISGW2();
 
-  void getName(std::string& name);
+  std::string getName();
   EvtDecayBase* clone();
 
   void decay(EvtParticle *p);

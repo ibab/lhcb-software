@@ -22,7 +22,7 @@
 #ifndef EVTITTWOCOEFFFCN_HH
 #define EVTITTWOCOEFFFCN_HH
 
-#include "CLHEP/Matrix/Vector.h"
+#include <vector>
 
 //-------------
 // C Headers --
@@ -36,8 +36,8 @@ class EvtItgTwoCoeffFcn: public EvtItgAbsFunction {
 
 public:
 
-  EvtItgTwoCoeffFcn( double (*theFunction)(double, const HepVector &, const HepVector &),
-		     double lowerRange, double upperRange, const HepVector &coeffs1, const HepVector &coeffs2);
+  EvtItgTwoCoeffFcn( double (*theFunction)(double, const std::vector<double> &, const std::vector<double> &),
+		     double lowerRange, double upperRange, const std::vector<double> &coeffs1, const std::vector<double> &coeffs2);
 
   virtual ~EvtItgTwoCoeffFcn( );
 
@@ -52,15 +52,15 @@ protected:
 private:
  
   // Data members
-  double (*_myFunction)(double x, const HepVector & coeffs1, const HepVector & coeffs2);
+  double (*_myFunction)(double x, const std::vector<double> & coeffs1, const std::vector<double> & coeffs2);
 
   // Note: if your class needs a copy constructor or an assignment operator, 
   // make one of the following public and implement it.
    EvtItgTwoCoeffFcn( const EvtItgTwoCoeffFcn& );                //// Copy Constructor
   EvtItgTwoCoeffFcn& operator= ( const EvtItgTwoCoeffFcn& );    // Assignment op
  
-  HepVector _coeffs1;
-  HepVector _coeffs2;
+  std::vector<double> _coeffs1;
+  std::vector<double> _coeffs2;
 
 };
 

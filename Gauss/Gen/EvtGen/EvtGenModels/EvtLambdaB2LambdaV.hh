@@ -53,7 +53,7 @@ namespace VID
 //
 // cf : O. Leitner, Z.J Ajaltouni, E. Conte, 
 //      PCCF RI 0601, ECT-05-15, LPNHE/2006-01, hep-ph/0602043
-
+ 
 class EvtLambdaB2LambdaV:public  EvtDecayProb
 {
 
@@ -63,7 +63,7 @@ public:
   virtual ~EvtLambdaB2LambdaV();
   EvtDecayBase* clone();
 
-  void getName(std::string& name);
+  virtual std::string getName();
   void init();
   void initProbMax();
   void decay(EvtParticle *lambdab);
@@ -122,7 +122,7 @@ public:
   virtual ~EvtLambda2PPiForLambdaB2LambdaV();
   EvtDecayBase* clone();
 
-  void getName(std::string& name);
+  virtual std::string getName();
   void init();
   void initProbMax();
   void decay(EvtParticle *lambda);  
@@ -177,7 +177,7 @@ public:
   virtual ~EvtV2VpVmForLambdaB2LambdaV();
   EvtDecayBase* clone();
 
-  void getName(std::string& name);
+  virtual std::string getName();
   void init();
   void initProbMax();
   void decay(EvtParticle *V);

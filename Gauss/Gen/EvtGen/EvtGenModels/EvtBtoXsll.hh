@@ -1,8 +1,5 @@
 //--------------------------------------------------------------------------
 //
-//
-// Copyright Information: See EvtGen/COPYRIGHT
-//
 // Environment:
 //      This software is part of the EvtGen package developed jointly
 //      for the BaBar and CLEO collaborations.  If you use all or part
@@ -35,7 +32,7 @@ public:
   EvtBtoXsll(): _calcprob(0) {}
   virtual ~EvtBtoXsll();
 
-  void getName(std::string& name);
+  std::string getName();
 
   EvtDecayBase* clone();
 
@@ -50,10 +47,11 @@ private:
   EvtBtoXsllUtil *_calcprob;
   double         _dGdsProbMax;
   double         _dGdsdupProbMax;
-  double         _mb ;
-  double         _ms ;
-  double         _mq ;
-  double         _pf ;
+  double         _mb;
+  double         _ms;
+  double         _mq;
+  double         _pf;
+  double         _mxmin;
 };
 
 #endif

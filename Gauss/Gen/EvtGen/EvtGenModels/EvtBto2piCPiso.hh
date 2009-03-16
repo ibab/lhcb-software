@@ -31,7 +31,7 @@ public:
   EvtBto2piCPiso() {}
   virtual ~EvtBto2piCPiso();
   
-  void getName(std::string& name);
+  std::string getName();
   EvtDecayBase* clone();
 
   void init();

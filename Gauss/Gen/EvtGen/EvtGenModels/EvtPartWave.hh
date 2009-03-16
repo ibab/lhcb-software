@@ -1,5 +1,4 @@
 //--------------------------------------------------------------------------
-// $Id: EvtPartWave.hh,v 1.3 2008-12-16 20:09:20 robbep Exp $
 //
 // Environment:
 //      This software is part of the EvtGen package developed jointly
@@ -33,10 +32,10 @@ class EvtPartWave:public  EvtDecayAmp{
 
 public:
 
-  EvtPartWave() : _evalHelAmp( 0 ) , _HBC( 0 ) {}
+  EvtPartWave() : _evalHelAmp(0) {}
   virtual ~EvtPartWave();
 
-  void getName(std::string& name);
+  std::string getName();
   EvtDecayBase* clone();
 
   void init();
@@ -50,9 +49,6 @@ private:
   void fillHelicity(int* lambda2,int n,int J2);
 
   EvtEvalHelAmp* _evalHelAmp;
-  EvtComplexPtr * _HBC ;
-  int _nB ;
-  
 
 };
 

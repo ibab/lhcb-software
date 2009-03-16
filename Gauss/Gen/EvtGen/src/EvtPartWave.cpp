@@ -21,6 +21,7 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
@@ -36,19 +37,12 @@
 #include "EvtGenBase/EvtKine.hh"
 #include "EvtGenBase/EvtCGCoefSingle.hh"
 #include <algorithm>
-EvtPartWave::~EvtPartWave() {
-  if ( 0 != _HBC ) {
-    for ( int i = 0 ; i < _nB ; ++i ) {
-      delete [] (_HBC[i]) ;
-    }
-    delete [] _HBC ;
-  }
-  if ( 0 != _evalHelAmp ) delete _evalHelAmp ;
-}
+using std::endl;
+EvtPartWave::~EvtPartWave() {}
 
-void EvtPartWave::getName(std::string& model_name){
+std::string EvtPartWave::getName(){
 
-  model_name="PARTWAVE";     
+  return "PARTWAVE";     
 
 }
 
@@ -65,16 +59,12 @@ void EvtPartWave::init(){
 
   //find out how many states each particle have
   int _nA=EvtSpinType::getSpinStates(EvtPDL::getSpinType(getParentId()));
-  _nB=EvtSpinType::getSpinStates(EvtPDL::getSpinType(getDaug(0)));
+  int _nB=EvtSpinType::getSpinStates(EvtPDL::getSpinType(getDaug(0)));
   int _nC=EvtSpinType::getSpinStates(EvtPDL::getSpinType(getDaug(1)));
-
-  EvtId _idA=getParentId();
-  EvtId _idB=getDaug(0);
-  EvtId _idC=getDaug(1);
 
   if (verbose()){
     report(INFO,"EvtGen")<<"_nA,_nB,_nC:"
-			 <<_nA<<","<<_nB<<","<<_nC<<std::endl;
+			 <<_nA<<","<<_nB<<","<<_nC<<endl;
   }
 
   //find out what 2 times the spin is
@@ -84,7 +74,7 @@ void EvtPartWave::init(){
 
   if (verbose()){
     report(INFO,"EvtGen")<<"_JA2,_JB2,_JC2:"
-			 <<_JA2<<","<<_JB2<<","<<_JC2<<std::endl;
+			 <<_JA2<<","<<_JB2<<","<<_JC2<<endl;
   }
 
 
@@ -93,8 +83,8 @@ void EvtPartWave::init(){
   int* _lambdaB2=new int[_nB];
   int* _lambdaC2=new int[_nC];
 
-  _HBC=new EvtComplexPtr[_nB];
-  int /*ia,*/ib,ic;
+  EvtComplexPtr* _HBC=new EvtComplexPtr[_nB];
+  int ib,ic;
   for(ib=0;ib<_nB;ib++){
     _HBC[ib]=new EvtComplex[_nC];
   }
@@ -108,30 +98,26 @@ void EvtPartWave::init(){
   fillHelicity(_lambdaC2,_nC,_JC2);
 
   if (verbose()){
-    report(INFO,"EvtGen")<<"Helicity states of particle A:"<<std::endl;
+    report(INFO,"EvtGen")<<"Helicity states of particle A:"<<endl;
     for(i=0;i<_nA;i++){
-      report(INFO,"EvtGen")<<_lambdaA2[i]<<std::endl;
+      report(INFO,"EvtGen")<<_lambdaA2[i]<<endl;
     }
 
-    report(INFO,"EvtGen")<<"Helicity states of particle B:"<<std::endl;
+    report(INFO,"EvtGen")<<"Helicity states of particle B:"<<endl;
     for(i=0;i<_nB;i++){
-      report(INFO,"EvtGen")<<_lambdaB2[i]<<std::endl;
+      report(INFO,"EvtGen")<<_lambdaB2[i]<<endl;
     }
 
-    report(INFO,"EvtGen")<<"Helicity states of particle C:"<<std::endl;
+    report(INFO,"EvtGen")<<"Helicity states of particle C:"<<endl;
     for(i=0;i<_nC;i++){
-      report(INFO,"EvtGen")<<_lambdaC2[i]<<std::endl;
+      report(INFO,"EvtGen")<<_lambdaC2[i]<<endl;
     }
 
-    report(INFO,"EvtGen")<<"Will now figure out the valid (M_LS) states:"<<std::endl;
+    report(INFO,"EvtGen")<<"Will now figure out the valid (M_LS) states:"<<endl;
 
   }
 
-#ifdef WIN32
-  int Lmin=__max(_JA2-_JB2-_JC2,__max(_JB2-_JA2-_JC2,_JC2-_JA2-_JB2));
-#else
   int Lmin=std::max(_JA2-_JB2-_JC2,std::max(_JB2-_JA2-_JC2,_JC2-_JA2-_JB2));
-#endif
   if (Lmin<0) Lmin=0;
   //int Lmin=_JA2-_JB2-_JC2;
   int Lmax=_JA2+_JB2+_JC2;
@@ -155,7 +141,7 @@ void EvtPartWave::init(){
 
       _nPartialWaveAmp++;
       if (verbose()){
-	report(INFO,"EvtGen")<<"M["<<L<<"]["<<S<<"]"<<std::endl;    
+	report(INFO,"EvtGen")<<"M["<<L<<"]["<<S<<"]"<<endl;    
       }
     }
   }
@@ -166,18 +152,21 @@ void EvtPartWave::init(){
 
   EvtComplex _M[50];
 
+  double partampsqtot=0.0;
+
   for(i=0;i<_nPartialWaveAmp;i++){
     _M[i]=getArg(argcounter)*exp(EvtComplex(0.0,getArg(argcounter+1)));;
     argcounter+=2;
+    partampsqtot+=abs2(_M[i]);
     if (verbose()){
-      report(INFO,"EvtGen")<<"M["<<_nL[i]<<"]["<<_nS[i]<<"]="<<_M[i]<<std::endl;
+      report(INFO,"EvtGen")<<"M["<<_nL[i]<<"]["<<_nS[i]<<"]="<<_M[i]<<endl;
     }
   }
 
   //Now calculate the helicity amplitudes
 
+  double helampsqtot=0.0;
   
-
   for(ib=0;ib<_nB;ib++){
     for(ic=0;ic<_nC;ic++){
       _HBC[ib][ic]=0.0;
@@ -191,12 +180,11 @@ void EvtPartWave::init(){
 	  int s2=_JB2;
 	  int s3=_JC2;
 	  int m1=lambda2-lambda3;
-	  EvtCGCoefSingle c1;
-	  c1.init(s2,s3);
-	  EvtCGCoefSingle c2;
-	  c2.init(L,S);
+	  EvtCGCoefSingle c1(s2,s3);
+	  EvtCGCoefSingle c2(L,S);
+
 	  if (verbose()){
-	    report(INFO,"EvtGen") << "s2,lambda2:"<<s2<<" "<<lambda2<<std::endl;
+	    report(INFO,"EvtGen") << "s2,lambda2:"<<s2<<" "<<lambda2<<endl;
 	  }
 	  //fkw changes to satisfy KCC
 	  double fkwTmp = (L+1.0)/(s1+1.0);
@@ -206,25 +194,46 @@ void EvtPartWave::init(){
 	    EvtComplex tmp=sqrt(fkwTmp)
 	      *c1.coef(S,m1,s2,s3,lambda2,-lambda3)
 	      *c2.coef(s1,m1,L,S,0,m1)*_M[i];
-	    //fkw EvtComplex tmp=sqrt((L+1)/(s1+1))*c1.coef(S,m1,s2,s3,lambda2,-lambda3)*c2.coef(s1,m1,L,S,0,m1)*_M[i];
 	    _HBC[ib][ic]+=tmp;
 	  }
 	}
 	if (verbose()){
-	  report(INFO,"EvtGen")<<"_HBC["<<ib<<"]["<<ic<<"]="<<_HBC[ib][ic]<<std::endl;
+	  report(INFO,"EvtGen")<<"_HBC["<<ib<<"]["<<ic<<"]="<<_HBC[ib][ic]<<endl;
 	}
       }
+      helampsqtot+=abs2(_HBC[ib][ic]);
     }
   }
 
-  _evalHelAmp=new EvtEvalHelAmp(EvtPDL::getSpinType(getParentId()),
-				EvtPDL::getSpinType(getDaug(0)),
-				EvtPDL::getSpinType(getDaug(1)),
+  if (fabs(helampsqtot-partampsqtot)/(helampsqtot+partampsqtot)>1e-6){
+      report(ERROR,"EvtGen")<<"In EvtPartWave for decay "
+			    << EvtPDL::name(getParentId()) << " -> "
+                            << EvtPDL::name(getDaug(0)) << " "     
+                            << EvtPDL::name(getDaug(1)) << std::endl; 
+      report(ERROR,"EvtGen")<<"With arguments: "<<std::endl;
+      for(i=0;i*2<getNArg();i++){
+	  report(ERROR,"EvtGen") <<"M("<<_nL[i]<<","<<_nS[i]<<")="
+//				 <<getArg(2*i)<<" "<<getArg(2*i+1)<<std::endl;
+				 <<_M[i]<<std::endl;
+      }
+      report(ERROR,"EvtGen")<< "The total probability in the partwave basis is: "
+			    << partampsqtot << std::endl;
+      report(ERROR,"EvtGen")<< "The total probability in the helamp basis is: "
+			    << helampsqtot << std::endl;
+      report(ERROR,"EvtGen")<< "Most likely this is because the specified partwave amplitudes "
+			    << std::endl;
+      report(ERROR,"EvtGen")<< "project onto unphysical helicities of photons or neutrinos. "
+			    << std::endl;
+      report(ERROR,"EvtGen")<< "Seriously consider if your specified amplitudes are correct. "
+			    << std::endl;
+      
+  
+  }
+  
+  _evalHelAmp=new EvtEvalHelAmp(getParentId(),
+				getDaug(0),
+				getDaug(1),
 				_HBC);
-
-  delete [] _lambdaA2 ;
-  delete [] _lambdaB2 ;
-  delete [] _lambdaC2 ;
 
 }
 
@@ -234,7 +243,7 @@ void EvtPartWave::initProbMax(){
   double maxprob=_evalHelAmp->probMax();
 
   if (verbose()){
-    report(INFO,"EvtGen")<<"Calculated probmax"<<maxprob<<std::endl;
+    report(INFO,"EvtGen")<<"Calculated probmax"<<maxprob<<endl;
   }
 
   setProbMax(maxprob);
