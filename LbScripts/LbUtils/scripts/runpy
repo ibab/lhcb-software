@@ -91,7 +91,8 @@ except AttributeError:
             path_dir = self.path_dir
             if path_dir == '':
                 path_dir = os.getcwd()
-            sub_name = mod_name.rsplit(".", 1)[-1]
+            sub_name = mod_name.split(".")[-1]
+#            sub_name = mod_name.rsplit(".", 1)[-1]
             try:
                 file, filename, mod_info = imp.find_module(sub_name,
                                                            [path_dir])
@@ -316,7 +317,12 @@ except AttributeError:
             imp.acquire_lock()
             try:
                 # Module not in sys.modules, or uses an unhooked loader
-                parts = mod_name.rsplit(".", 1)
+#                parts = mod_name.rsplit(".", 1)
+                tmp_parts = mod_name.split(".")
+                parts = []
+                if len(tmp_parts)>1 :
+                    parts.append(".".join(tmp_parts[:-1]))
+                parts.append(tmp_parts[-1])
                 if len(parts) == 2:
                     # Sub package, so use parent package's path
                     pkg_name, sub_name = parts

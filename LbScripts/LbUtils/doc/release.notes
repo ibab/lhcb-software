@@ -1,3 +1,8 @@
+2009-03-16  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/runpy: fixed usage of string.rsplit which is not compatible
+	with python 2.3
+
 2009-03-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v1r14
