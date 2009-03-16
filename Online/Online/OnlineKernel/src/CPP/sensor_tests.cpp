@@ -47,7 +47,7 @@ namespace {
 	for(i=0; i<m_probes.size();++i) {
 	  cout << "[TIMERTEST] ---> Probe " << i << " had " << m_probes[i]->m_count << " turns." << endl;
 	}
-	::delete this;
+	//::delete this;
 	::exit(0);
       }
     }
@@ -69,7 +69,7 @@ namespace {
 	for(i=0; i<m_probes.size();++i) {
 	  cout << "[IOCTEST] ---> Probe " << i << " had " << m_probes[i]->m_count << " turns." << endl;
 	}
-	::delete this;
+	//::delete this;
 	::exit(0);
       }
     }
