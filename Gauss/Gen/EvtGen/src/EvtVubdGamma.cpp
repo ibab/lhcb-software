@@ -10,7 +10,7 @@
 //  ---------- = 12 Gamma   | (1+x-z)(z-x-p ) -- W  + (1-z+p ) -- W 
 //         _ 2           0  \                  2  1             2  2
 //  dx dz dp                                   2
-//                                _   _  _2  mb                 2    \    .
+//                                _   _  _2  mb                 2   \. 
 //                             + [x(z-x)-p ] -- (W + 2mb W  + mb W ) |
 //                                            4   3       4       5 /
 //
@@ -34,7 +34,7 @@
 //-----------------------
 // This Class's Header --
 //-----------------------
-//#include "CLHEP/config/CLHEP.h"
+#include "EvtGenBase/EvtPatches.hh"
 #include "EvtGenBase/EvtConst.hh"
 #include "EvtGenModels/EvtVubdGamma.hh"
 #include "EvtGenBase/EvtDiLog.hh"
@@ -43,6 +43,7 @@
 // C Headers --
 //---------------
 #include <math.h>
+
 //----------------
 // Constructors --
 //----------------
@@ -66,8 +67,7 @@ EvtVubdGamma::EvtVubdGamma(const double &alphas)
   _epsilon1 = 1e-10;
   _epsilon2 = 1e-5;
   if ( alphas > 0 ) {
-    double lne3 = 9./16.-2*EvtConst::pi*EvtConst::pi/3.+6*EvtConst::pi/4/alphas;
-    if ( lne3 > 0 ) 
+    double lne3 = 9./16.-2*EvtConst::pi*EvtConst::pi/3.+6*EvtConst::pi/4/alphas;    if ( lne3 > 0 ) 
       lne3 = -7./4. - sqrt(lne3);
     else
       lne3 = -7./4.;
@@ -97,7 +97,7 @@ double EvtVubdGamma::getdGdxdzdp(const double &x, const double &z, const double 
 
   if ( x < 0 || x > 1 || z < xb || z > (1+xb) ) 
     return 0;
-
+  
   double p2min = (0>z-1.?0:z-1.);
   double p2max = (1.-x)*(z-1.+x);
 
@@ -139,7 +139,7 @@ double EvtVubdGamma::delta(const double &x, const double &xmin, const double &xm
   return 0.0; 
 }
 
-double EvtVubdGamma::getW1delta(const double &/*x*/, const double &z)
+double EvtVubdGamma::getW1delta(const double &, const double &z)
 {
   double mz = 1.-z;
 
@@ -161,7 +161,7 @@ double EvtVubdGamma::getW1delta(const double &/*x*/, const double &z)
   return (1. + w*_alphas/3./EvtConst::pi);
 }
 
-double EvtVubdGamma::getW1nodelta(const double &/*x*/, const double &z, const double &p2)
+double EvtVubdGamma::getW1nodelta(const double &, const double &z, const double &p2)
 {
 
   double z2 = z*z;
@@ -179,7 +179,7 @@ double EvtVubdGamma::getW1nodelta(const double &/*x*/, const double &z, const do
   return w*_alphas/3./EvtConst::pi;
 }
 
-double EvtVubdGamma::getW2nodelta(const double &/*x*/, const double &z, const double &p2)
+double EvtVubdGamma::getW2nodelta(const double &, const double &z, const double &p2)
 {
 
   double z2 = z*z;
@@ -196,7 +196,7 @@ double EvtVubdGamma::getW2nodelta(const double &/*x*/, const double &z, const do
   return (w*_alphas/3./EvtConst::pi);
 }
 
-double EvtVubdGamma::getW3nodelta(const double &/*x*/, const double &z, const double &p2)
+double EvtVubdGamma::getW3nodelta(const double &, const double &z, const double &p2)
 {
   double z2 = z*z;
   double t2 = 1.-4.*p2/z2;
@@ -214,7 +214,7 @@ double EvtVubdGamma::getW3nodelta(const double &/*x*/, const double &z, const do
   return (w*_alphas/3./EvtConst::pi);
 }
 
-double EvtVubdGamma::getW4nodelta(const double &/*x*/, const double &z, const double &p2)
+double EvtVubdGamma::getW4nodelta(const double &, const double &z, const double &p2)
 {
   double z2 = z*z;
   double t2 = 1.-4.*p2/z2;
@@ -232,7 +232,7 @@ double EvtVubdGamma::getW4nodelta(const double &/*x*/, const double &z, const do
   return w*_alphas/3./EvtConst::pi;
 }
 
-double EvtVubdGamma::getW4plus5delta(const double &/*x*/, const double &z)
+double EvtVubdGamma::getW4plus5delta(const double &, const double &z)
 {
 
   double w = 0;
@@ -245,7 +245,7 @@ double EvtVubdGamma::getW4plus5delta(const double &/*x*/, const double &z)
   return (w*_alphas/3./EvtConst::pi);
 }
 
-double EvtVubdGamma::getW5nodelta(const double &/*x*/, const double &z, const double &p2)
+double EvtVubdGamma::getW5nodelta(const double &, const double &z, const double &p2)
 {
   double z2 = z*z;
   double t2 = 1.-4.*p2/z2;
@@ -259,8 +259,8 @@ double EvtVubdGamma::getW5nodelta(const double &/*x*/, const double &z, const do
   if ( p2 > _epsilon2 )
     w += -(8.+z)/2./z2/t2 - 3.*(12.-z)/2./z2/t4;
 
- 
   return (w*_alphas/3./EvtConst::pi);
+
 }
 
 

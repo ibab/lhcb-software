@@ -18,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include <math.h>
 #include <iostream>
@@ -28,17 +29,10 @@
 
 double EvtdFunction::d(int j,int m1,int m2, double theta){
 
-  //report(INFO,"EvtGen") << "j,m1,m2:"<<j<<","<<m1<<","<<m2<<std::endl;
-
-  double c=cos(theta);
-  double c2=cos(0.5*theta);
-  double s=sin(theta);
-  double s2=sin(0.5*theta);
 
   int m1p=m1;
   int m2p=m2;
 
-  //report(INFO,"EvtGen") << "here10"<<std::endl;
 
   int signp=1;
   //make |m2p|>|m1p|
@@ -49,8 +43,6 @@ double EvtdFunction::d(int j,int m1,int m2, double theta){
     if ((m1p-m2p)%4!=0) signp=-signp;
   } 
 
-  //report(INFO,"EvtGen") << "here11"<<std::endl;
-
   //make m2p non-negative
   if (m2p<0) {
     m1p=-m1p;
@@ -58,194 +50,12 @@ double EvtdFunction::d(int j,int m1,int m2, double theta){
     if ((m1p-m2p)%4!=0) signp=-signp;
   }
 
-  //report(INFO,"EvtGen") << "here1"<<std::endl;
 
   EvtdFunctionSingle df;
 
-  //report(INFO,"EvtGen") << "here2"<<std::endl;
-
   df.init(j,m1p,m2p);
 
-  //report(INFO,"EvtGen") << "here3"<<std::endl;
-  
-
-  double dtmp=df.d(j,m1p,m2p,theta)*signp;
-  //report(INFO,"EvtGen") << "new:"<<dtmp<<std::endl;
-
-
-  int sign=1;
-  
-  //make |m1|>|m2|
-  if (abs(m1)<abs(m2)) {
-    int tmp=m1;
-    m1=m2;
-    m2=tmp;
-    if ((m1-m2)%4!=0) sign=-sign;
-  } 
-
-  //make m1 non-negative
-  if (m1<0) {
-    m1=-m1;
-    m2=-m2;
-    if ((m1-m2)%4!=0) sign=-sign;
-  }
-
-
-  double d=0.0;
-
-  switch (j){
-    
-  case 0:  // j=0
-    d=1.0;
-    break;
-  case 1:  // j=1/2
-
-    switch (m1){
-
-    case 1: //m1=1/2
-
-      switch (m2) {
-	
-      case 1: //m2=1/2
-
-	d=c2;
-	break;
-
-      case -1: //m2=-1/2
-	
-	d=-s2;
-	break;
-
-      default:
-	::abort();
-	
-      }
-
-      break;
-
-    default:
-      ::abort();
-      
-    }
-    break;
-
-  case 2: //j=1
-
-    switch (m1){
-      
-    case 0: //m1=0
-
-      d=c;
-      break;
-      
-    case 2: //m1=1
-
-      switch (m2){
-	
-      case 2:  //m2=1
-	
-	d=0.5*(1+c);
-	break;
-
-      case 0:  //m2=0
-	
-	d=-s/sqrt(2.0);
-	break;
-
-      case -2:  //m2=1
-	
-	d=0.5*(1-c);
-	break;
-	
-      }
-      break;
-      
-    default:
-      ::abort();
-
-    }
-    break;
-
-  case 4: //j=2
-
-    switch (m1){
-
-    case 4: //m1=2
-
-      switch (m2){
-
-      case 4: //m2=2
-	d=0.25*(1+c)*(1+c);
-	break;
-
-      case 2: //m2=1
-	d=-0.5*(1+c)*s;
-	break;
-
-      case 0: //m2=0
-	d=0.25*sqrt(6.0)*s*s;
-	break;
-
-      case -2: //m2=-1
-	d=-0.5*(1-c)*s;
-	break;
-
-      case -4: //m2=-2
-	d=0.25*(1-c)*(1-c);
-	break;
-
-      default:
-	::abort();
-
-      }
-      break;
-
-    case 2: //m1=2
-
-      switch (m2){
-
-      case 2: //m2=1;
-	d=0.5*(1+c)*(2*c-1);
-	break;
-
-      case 0: //m2=0;
-	d=-sqrt(3.0/2.0)*s*c;
-	break;
-	
-      case -2: //m2=-1;
-	d=0.5*(1-c)*(2*c+1);
-	break;
-
-      default:
-	::abort();
-	
-      }
-      break;
-
-    case 0: //m1=2
-      d=0.5*(3*c*c-1);
-      break;
-
-    default:
-      ::abort();
-
-    }
-    break;
-    
-
-  default:
-
-    //Ok here we use the new method as we have 
-    //no old method.
-    d=dtmp*sign;
-    
-  }
-
-  if (sign==-1) d=-d;
-
-  //report(INFO,"EvtGen") << "old:"<<d<<std::endl<<std::endl;
-
-  assert(fabs(dtmp-d)<0.0001);
+  double d=df.d(j,m1p,m2p,theta)*signp;
 
   return d;
   

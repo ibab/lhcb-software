@@ -17,6 +17,7 @@
 //    Ryd     March 30, 2003         Module created
 //
 //------------------------------------------------------------------------
+#include "EvtGenBase/EvtPatches.hh"
 
 #include "EvtGenBase/EvtPatches.hh"
 #include "EvtGenBase/EvtPDL.hh"
@@ -27,11 +28,11 @@ EvtbTosllAliFF::EvtbTosllAliFF(){}
 
 
 void EvtbTosllAliFF::getScalarFF(EvtId parent, EvtId daught,
-                                 double t, double /*mass*/, 
-                                 double& fp,double& f0,double& ft){
+				 double t, double /*mass*/, 
+				 double& fp,double& f0,double& ft){
 
   double m=EvtPDL::getMeanMass(parent);
-  EvtPDL::getMeanMass(daught);
+  //double md=EvtPDL::getMeanMass(daught);
   
   double shat=t/(m*m);
   double shat2=shat*shat;
@@ -45,13 +46,12 @@ void EvtbTosllAliFF::getScalarFF(EvtId parent, EvtId daught,
 
 
 void EvtbTosllAliFF::getVectorFF(EvtId parent, EvtId daught,
-                                 double t, double /*mass*/, 
-                                 double& a1,double& a2,double& a0, double& v,
-                                 double& t1, double& t2, double& t3 ){
+				 double t, double /*mass*/, 
+				 double& a1,double& a2,double& a0, double& v,
+				 double& t1, double& t2, double& t3 ){
 
   
   double m=EvtPDL::getMeanMass(parent);
-  EvtPDL::getMeanMass(daught);
   
   double shat=t/(m*m);
   double shat2=shat*shat;

@@ -19,6 +19,7 @@
 //
 //------------------------------------------------------------------------
 //
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include <iostream>
 #include <string>
@@ -32,9 +33,9 @@
 
 EvtTaulnunu::~EvtTaulnunu() {}
 
-void EvtTaulnunu::getName(std::string& model_name){
+std::string EvtTaulnunu::getName(){
 
-  model_name="TAULNUNU";     
+  return "TAULNUNU";     
 
 }
 

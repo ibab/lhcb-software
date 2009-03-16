@@ -18,12 +18,15 @@
 //
 //------------------------------------------------------------------------
 // 
+#include "EvtGenBase/EvtPatches.hh"
 #include <iostream>
 #include <math.h>
 #include "EvtGenBase/EvtComplex.hh"
 #include "EvtGenBase/EvtVector3C.hh"
 #include "EvtGenBase/EvtTensor3C.hh"
 #include "EvtGenBase/EvtReport.hh"
+using std::endl;
+using std::ostream;
 
 
 EvtTensor3C::~EvtTensor3C(){}
@@ -332,11 +335,11 @@ const EvtTensor3C& EvtTensor3C::id(){
 
 }
 
-std::ostream& operator<<(std::ostream& s,const EvtTensor3C& v){
+ostream& operator<<(ostream& s,const EvtTensor3C& v){
 
-  s<<std::endl<<"("<<v.t[0][0]<<","<<v.t[0][1]<<","<<v.t[0][2]<<")";
-  s<<std::endl<<"("<<v.t[1][0]<<","<<v.t[1][1]<<","<<v.t[1][2]<<")";
-  s<<std::endl<<"("<<v.t[2][0]<<","<<v.t[2][1]<<","<<v.t[2][2]<<")"<<std::endl;
+  s<<endl<<"("<<v.t[0][0]<<","<<v.t[0][1]<<","<<v.t[0][2]<<")";
+  s<<endl<<"("<<v.t[1][0]<<","<<v.t[1][1]<<","<<v.t[1][2]<<")";
+  s<<endl<<"("<<v.t[2][0]<<","<<v.t[2][1]<<","<<v.t[2][2]<<")"<<endl;
   
   return s;
 }

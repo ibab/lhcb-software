@@ -31,11 +31,13 @@
 #include "EvtGenBase/EvtVector4C.hh"
 #include "EvtGenBase/EvtIdSet.hh"
 
+using namespace std;
+
 EvtTauHadnu::~EvtTauHadnu() {}
 
-void EvtTauHadnu::getName(std::string& model_name){
+std::string EvtTauHadnu::getName(){
 
-  model_name="TAUHADNU";     
+  return "TAUHADNU";     
 
 }
 
@@ -91,14 +93,11 @@ void EvtTauHadnu::init() {
   }
 
   if ( !validndaug ) {
-    report(ERROR,"EvtGen") 
-      << "Have not yet implemented this final state in TAUHADNU model" 
-      << std::endl;
-    report(ERROR,"EvtGen") << "Ndaug="<<getNDaug() << std::endl;
+    report(ERROR,"EvtGen") << "Have not yet implemented this final state in TAUHADNUKS model" << endl;
+    report(ERROR,"EvtGen") << "Ndaug="<<getNDaug() << endl;
     int id;
     for ( id=0; id<(getNDaug()-1); id++ ) 
-      report(ERROR,"EvtGen") << "Daug " << id << " "
-                             <<EvtPDL::name(getDaug(id)).c_str() << std::endl;
+      report(ERROR,"EvtGen") << "Daug " << id << " "<<EvtPDL::name(getDaug(id)).c_str() << endl;
 
   }
 
@@ -108,7 +107,7 @@ void EvtTauHadnu::initProbMax(){
 
   if ( getNDaug()==2 )  setProbMax(90.0);
   if ( getNDaug()==3 )  setProbMax(2500.0);
-  if ( getNDaug()==4 )  setProbMax(5000.0);
+  if ( getNDaug()==4 )  setProbMax(30000.0);
 
 }
 
@@ -145,15 +144,17 @@ void EvtTauHadnu::decay(EvtParticle *p){
   }
   if ( getNDaug() == 3 ) {
 
-    //pi pi nu with rho and rhopr resonance
+    //pi pi0 nu with rho and rhopr resonance
     if ( thePis.contains(getDaug(0)) &&
 	 thePis.contains(getDaug(1)) ) {
 
       EvtVector4R q1 = p->getDaug(0)->getP4();
       EvtVector4R q2 = p->getDaug(1)->getP4();
-  
-      hadCurr = Fpi(q1,q2)*(q1-q2);
-
+      double m1 = q1.mass();
+      double m2 = q2.mass();
+       
+      hadCurr = Fpi( (q1+q2).mass2(), m1, m2 )  * (q1-q2);
+      
       foundHadCurr = true;
     }
 
@@ -162,7 +163,6 @@ void EvtTauHadnu::decay(EvtParticle *p){
     if ( thePis.contains(getDaug(0)) &&
 	 thePis.contains(getDaug(1)) &&
 	 thePis.contains(getDaug(2)) ) {
-      foundHadCurr = true;
       //figure out which is the different charged pi
       //want it to be q3
 
@@ -175,18 +175,24 @@ void EvtTauHadnu::decay(EvtParticle *p){
       EvtVector4R q2=p->getDaug(samePi2)->getP4();
       EvtVector4R q3=p->getDaug(diffPi)->getP4();
       
-      EvtVector4R Q=q1+q2+q3;
-      double qMass2=Q.mass2();
+      double m1 = q1.mass();
+      double m2 = q2.mass();
+      double m3 = q3.mass();
+      
+      EvtVector4R Q = q1 + q2 + q3;
+      double Q2 = Q.mass2();
+      double _mA12 = _mA1*_mA1;
 
-      double GA1=_gammaA1*pi3G(Q.mass2(),samePi1)/pi3G(_mA1*_mA1,samePi1);
+      double _gammaA1X = _gammaA1 * gFunc( Q2, samePi1 )/gFunc( _mA12, samePi1 );
 
-      EvtComplex denBA1(_mA1*_mA1 - Q.mass2(),-1.*_mA1*GA1);
-      EvtComplex BA1 = _mA1*_mA1 / denBA1;
+      EvtComplex denBW_A1( _mA12 - Q2, -1.*_mA1*_gammaA1X );
+      EvtComplex BW_A1 = _mA12 / denBW_A1;
 
-      hadCurr = BA1*( (q1-q3) - (Q*(Q*(q1-q3))/qMass2)*Fpi(q2,q3) +
-		      (q2-q3) - (Q*(Q*(q2-q3))/qMass2)*Fpi(q1,q3) ); 
+      hadCurr = BW_A1 * ( ((q1-q3)-(Q*(Q*(q1-q3))/Q2)) * Fpi( (q1+q3).mass2(), m1, m3) + 
+			  ((q2-q3)-(Q*(Q*(q2-q3))/Q2)) * Fpi( (q2+q3).mass2(), m2, m3) ); 
 
-
+      foundHadCurr = true;
+      
     }
 
 
@@ -195,66 +201,62 @@ void EvtTauHadnu::decay(EvtParticle *p){
 
 
   if ( !foundHadCurr ) {
-    report(ERROR,"EvtGen") 
-      << "Have not yet implemented this final state in TAUHADNU model" 
-      << std::endl;
-    report(ERROR,"EvtGen") << "Ndaug="<<getNDaug() << std::endl;
+    report(ERROR,"EvtGen") << "Have not yet implemented this final state in TAUHADNUKS model" << endl;
+    report(ERROR,"EvtGen") << "Ndaug="<<getNDaug() << endl;
     int id;
     for ( id=0; id<(getNDaug()-1); id++ ) 
-      report(ERROR,"EvtGen") << "Daug " << id << " "
-                             <<EvtPDL::name(getDaug(id)).c_str() << std::endl;
+      report(ERROR,"EvtGen") << "Daug " << id << " "<<EvtPDL::name(getDaug(id)).c_str() << endl;
 
   }
 
   
   vertex(0,tau1*hadCurr);
   vertex(1,tau2*hadCurr);
+  
 
+  
   return;
 
 }
 
-
-double EvtTauHadnu::pi3G(double m2,int dupD) {
-  double mPi= EvtPDL::getMeanMass(getDaug(dupD));
-  if ( m2 > (_mRho+mPi) ) {
-    return m2*(1.623 + 10.38/m2 - 9.32/(m2*m2) + 0.65/(m2*m2*m2));
+double EvtTauHadnu::gFunc(double Q2, int dupD) {
+  
+  double mpi= EvtPDL::getMeanMass(getDaug(dupD));
+  double mpi2 = pow( mpi,2.);
+  if ( Q2 < pow(_mRho + mpi, 2.) ) {
+    double arg = Q2-9.*mpi2;
+    return 4.1 * pow(arg,3.) * (1. - 3.3*arg + 5.8*pow(arg,2.));
   }
-  else {
-    double t1=m2-9.0*mPi*mPi;
-    return 4.1*pow(t1,3.0)*(1.0 - 3.3*t1+5.8*t1*t1);
-  }
-  return 0.;
+  else 
+    return Q2 * (1.623 + 10.38/Q2 - 9.32/pow(Q2,2.) + 0.65/pow(Q2,3.));
 }
 
-EvtComplex EvtTauHadnu::Fpi( EvtVector4R q1, EvtVector4R q2) {
+EvtComplex EvtTauHadnu::Fpi( double s, double xm1, double xm2 ) {
 
-  double m1=q1.mass();
-  double m2=q2.mass();
-  EvtVector4R q = q1 - q2;
-  EvtVector4R Q = q1 + q2;
-  double mQ2= Q*Q;
-  
-  // momenta in the rho->pipi decay
-  double dRho= _mRho*_mRho - m1*m1 - m2*m2;
-  double pPiRho = (1.0/_mRho)*sqrt((dRho*dRho)/4.0 - m1*m1*m2*m2);
-  
-  double dRhopr= _mRhopr*_mRhopr - m1*m1 - m2*m2;
-  double pPiRhopr = (1.0/_mRhopr)*sqrt((dRhopr*dRhopr)/4.0 - m1*m1*m2*m2);
-  
-  double dQ= mQ2 - m1*m1 - m2*m2;
-  double pPiQ = (1.0/sqrt(mQ2))*sqrt((dQ*dQ)/4.0 - m1*m1*m2*m2);
+  EvtComplex BW_rho = BW( s, _mRho, _gammaRho, xm1, xm2 );
+  EvtComplex BW_rhopr = BW( s, _mRhopr, _gammaRhopr, xm1, xm2 );
   
   
-  double gammaRho = _gammaRho*_mRho/sqrt(mQ2)*pow((pPiQ/pPiRho),3);
-  EvtComplex BRhoDem(_mRho*_mRho - mQ2,-1.0*_mRho*gammaRho);
-  EvtComplex BRho= _mRho*_mRho / BRhoDem;
+  return (BW_rho + _beta*BW_rhopr)/(1.+_beta);
+}
+
+EvtComplex EvtTauHadnu::BW( double s, double m, double gamma, double xm1, double xm2 ) {
   
-  double gammaRhopr = _gammaRhopr*_mRhopr/sqrt(mQ2)*pow((pPiQ/pPiRhopr),3);
-  EvtComplex BRhoprDem(_mRhopr*_mRhopr - mQ2,-1.0*_mRho*gammaRhopr);
-  EvtComplex BRhopr= _mRhopr*_mRhopr / BRhoprDem;
+  double m2 = pow( m, 2.);
   
-  return (BRho + _beta*BRhopr)/(1+_beta);
+  if ( s > pow( xm1+xm2, 2.) ) {
+    double qs = sqrt( fabs( (s-pow(xm1+xm2,2.)) * (s-pow(xm1-xm2,2.)) ) ) / sqrt(s); 
+    double qm = sqrt( fabs( (m2-pow(xm1+xm2,2.)) * (m2-pow(xm1-xm2,2.)) ) ) / m;
+    
+    gamma *= m2/s * pow( qs/qm, 3.); 
+  }
+  else
+    gamma = 0.;
+
+  EvtComplex denBW( m2 - s, -1.* sqrt(s) * gamma );
+  
+  
+  return m2 / denBW;
 }
 
 

@@ -19,6 +19,7 @@
 //
 //------------------------------------------------------------------------
 //
+#include "EvtGenBase/EvtPatches.hh"
 #include <stdlib.h>
 #include <iostream>
 #include <string>
@@ -32,9 +33,9 @@
 
 EvtTauVectornu::~EvtTauVectornu() {}
 
-void EvtTauVectornu::getName(std::string& model_name){
+std::string EvtTauVectornu::getName(){
 
-  model_name="TAUVECTORNU";     
+  return "TAUVECTORNU";     
 
 }
 
