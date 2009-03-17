@@ -56,9 +56,11 @@ class ProjectConf(ProjectBaseConf):
         self._afsvolumeroot = "lhcb"
         self._afslibgroup = "z5"
         self._aliases = dict()
+        self._setenvalias = True
+        self._setupalias = True
         self._applicationpackage = projectname
-        self._aliases["setenv%s" % projectname] = "setenvProject %s" % projectname
-        self._aliases["Setup%s" % projectname] = "SetupProject %s" % projectname
+        self.enableSetenvAlias()
+        self.enableSetupAlias()
     def setCMTExtraTags(self, taglist):
         """ set the list of CMTEXTRATAGS needed for the project build """
         self._cmtextratags = taglist
@@ -77,6 +79,22 @@ class ProjectConf(ProjectBaseConf):
     def Aliases(self):
         """ return the shell aliases of the project """
         return self._aliases
+    def enableSetenvAlias(self):
+        """ enable the setenv Alias """
+        self._setenvalias = True
+        self._aliases["setenv%s" % self._name] = "setenvProject %s" % self._name
+    def disableSetenvAlias(self):
+        """ disable the setenv Alias """
+        self._setenvalias = False
+        del self._aliases["setenv%s" % self._name]
+    def enableSetupAlias(self):
+        """ enable the Setup Alias """
+        self._setupalias = True
+        self._aliases["Setup%s" % self._name] = "SetupProject %s" % self._name
+    def disableSetupAlias(self):
+        """ disable the Setup Alias """
+        self._setupalias = False
+        del self._aliases["Setup%s" % self._name]
     def setSteeringPackage(self, packname):
         """ set the name of the steering package for the build """
         self._steeringpackage = packname
@@ -193,3 +211,6 @@ Bender.setApplicationPackage("Phys/Bender")#IGNORE:E0602
 
 #LbScripts
 LbScripts.setAFSVolumeName("LB")#IGNORE:E0602
+
+#Dirac
+Dirac.disableSetenvAlias()#IGNORE:E0602

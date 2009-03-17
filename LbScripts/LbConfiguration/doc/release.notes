@@ -1,3 +1,14 @@
+2009-03-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v2r7
+
+2009-03-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/Project.py: 
+	  - added the possibility to remove the setenvProject or the SetupProject
+	    alias for some projects.
+	  - removed the setenvProject alias for Dirac
+
 2009-03-16  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/SetupProject.py: fixed problem with Python 2.3.
