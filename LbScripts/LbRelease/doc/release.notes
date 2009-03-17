@@ -1,5 +1,9 @@
 2009-03-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of version v2r6
+
+2009-03-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* cmt/requirements: added python alias for genXMLCatalog
 
 2009-03-17  Joel Closier  <joel.closier@cern.ch>
