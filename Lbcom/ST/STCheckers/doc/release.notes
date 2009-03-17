@@ -2,6 +2,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2009-03-17 M Needham
+ - Bug fixes in TTOccupancy algorithm
+
 !=========================== STCheckers v2r11 2009-03-10 ======================
 ! 2009-02-26 M Needham
  - Follow changes in STSummary class
