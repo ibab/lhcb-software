@@ -4,6 +4,10 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2009-03-17 - Jeroen Van Tilburg
+ - STFullDecoding: Add TELL1 ID to error messages + remove hard-coded hex
+   numbers.
+
 ! 2009-03-14 M Needham
  - Clean up STClustersToRawBank to follow changes in STClusterCreator
 

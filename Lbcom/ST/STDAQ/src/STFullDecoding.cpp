@@ -1,4 +1,4 @@
-// $Id: STFullDecoding.cpp,v 1.2 2009-03-03 13:11:04 mtobin Exp $
+// $Id: STFullDecoding.cpp,v 1.3 2009-03-17 17:46:22 jvantilb Exp $
 // Include files
 
 // from Gaudi
@@ -28,7 +28,7 @@ using namespace STDAQ;
 //-----------------------------------------------------------------------------
 // Implementation file for class : STFullDecoding
 //
-// 2007-09-11: Mathias Knecht, Jeroen vcan Tilburg
+// 2007-09-11: Mathias Knecht, Jeroen van Tilburg
 //-----------------------------------------------------------------------------
 
 // ----------------------------------------------------------------------------
@@ -124,19 +124,19 @@ StatusCode STFullDecoding::execute()
 
     const RawBank* p = *itB;
     if (msgLevel(MSG::DEBUG)) {
-      debug() << "Decoding bank number [" << itB-itf.begin() << "] of type" 
+      debug() << "Decoding bank number [" << itB-itf.begin() << "] of type " 
               << detType() << "Full (TELL1 ID: " <<  p->sourceID() 
               << ", Size: " <<  p->size() << " bytes)" << endmsg;
     }
     
     // Check if the board is valid
-    STTell1ID tell1ID = STTell1ID((unsigned int)(*itB)->sourceID()); 
+    STTell1ID tell1ID = STTell1ID((unsigned int)p->sourceID()); 
     const STTell1Board* aBoard =  readoutTool()->findByBoardID(tell1ID);
     if ( !aBoard ) { // not a valid b
-      std::string invalidSource = "Invalid source ID --> skip bank"+
-        boost::lexical_cast<std::string>((*itB)->sourceID());  
+      std::string invalidSource = "Invalid source ID --> skip bank "+
+        boost::lexical_cast<std::string>(p->sourceID());  
       Warning(invalidSource,StatusCode::SUCCESS,2).ignore(); 
-      ++counter("skipped Banks");
+      ++counter("Skipped banks");
       continue;
     }
 
@@ -155,7 +155,8 @@ StatusCode STFullDecoding::execute()
 
       if(cntWD % 224 == 0){	// Each 224 words we have a new PP-FPGA        
         cntWD = 0;
-        cntPP = (*(w + 219) & 0xc0000000)/0x40000000;          
+        cntPP = (*(w + 219) & STTELL1EventInfo::ChipAddrMask) 
+          >> STTELL1EventInfo::ChipAddrBits;
         sentPP.push_back(cntPP);
 
         if (msgLevel(MSG::DEBUG)) {
@@ -165,13 +166,18 @@ StatusCode STFullDecoding::execute()
       }
 
       // Set the Tell1 sourceID for each PP
-      eventInfo[cntPP]->setSourceID(p->sourceID()); 			   
+      STTELL1EventInfo* evtInfo = eventInfo[cntPP];
+      evtInfo->setSourceID(p->sourceID()); 			   
 
       // Unpack the 32-bit word into 8-bit chunks
-      unsigned int p1 = ( *w & mask1);
-      unsigned int p2 = ((*w & mask2)/0x100);
-      unsigned int p3 = ((*w & mask3)/0x10000);
-      unsigned int p4 = ((*w & mask4)/0x1000000);  
+      unsigned int bits1 = 0;
+      unsigned int bits2 = 8;
+      unsigned int bits3 = 16;
+      unsigned int bits4 = 24;
+      unsigned int p1 = ( *w & mask1) >> bits1;
+      unsigned int p2 = ( *w & mask2) >> bits2;
+      unsigned int p3 = ( *w & mask3) >> bits3;
+      unsigned int p4 = ( *w & mask4) >> bits4;
 
       if( cntWD < 216 ) { // Words below 216 contain data and header
         int iPort = cntWD/(nbeetles*36);
@@ -194,130 +200,143 @@ StatusCode STFullDecoding::execute()
         }
       }
       else if(cntWD == 216){ // Words 216-223 contains Event Info
-        eventInfo[cntPP]->setWord0(*w);
+        evtInfo->setWord0(*w);
         if (msgLevel(MSG::DEBUG)) {
           debug() << "(Event Info) Event Information (bits): " 
-                  << std::bitset<8>(p4) 
-                  << " |Bank List (bits): " << std::bitset<8>(p3)
-                  << " |Detector ID (dec): " << (*w & 0x0000f000)/0x1000
-                  << " |Bunch Counter (dec): " << (*w & 0x0000fff) << endmsg;
+                  << std::bitset<8>(evtInfo->EventInformation()) 
+                  << " | Bank List (bits): "
+                  << std::bitset<8>(evtInfo->BankList())
+                  << " | Detector ID (dec): "
+                  << (unsigned int) evtInfo->DetectorID()
+                  << " | Bunch Counter (dec): " << evtInfo->bCnt() << endmsg;
         }
       }
       else if(cntWD == 217){  
-        eventInfo[cntPP]->setWord1(*w);
+        evtInfo->setWord1(*w);
         if( msgLevel(MSG::DEBUG) ) {
           debug() << "(Event Info) L0-EventID (dec): " << (int)*w << endmsg;
         }
         if( L0EvtID == 0){ 
           // For each bank, L0EvtID is initialized. So the first time in the
           // bank, L0EvtID is checked.
-          L0EvtID = (unsigned int)*w;
+          L0EvtID = (unsigned int) evtInfo->L0EvID();
         } 
         else{ 
           // The rest of the time (for all PPs, all TELL1), there's a check
           // that L0EvtID is the same for all.
-          if( (unsigned int)*w != L0EvtID ){
+          if( (unsigned int) evtInfo->L0EvID() != L0EvtID ){
             error() << "L0-Event ID not the same for all!" << endmsg;	     
           }
         }
       }
       else if( cntWD == 218 ){
-        eventInfo[cntPP]->setWord2(*w);
+        evtInfo->setWord2(*w);
         if( msgLevel(MSG::DEBUG) ) {
-          debug() << "(Event Info) Reserved Bits (hex): " << std::hex 
-                  << (*w & 0xffff0000)/0x00010000
-                  << " |Process Info (bits): " << std::bitset<8>(p2)
-                  << " |PCN (from Beetle 0) (dec): " << std::dec << p1 
-                  << endmsg;
+          debug() << "(Event Info) Reserved Bits (hex): " 
+                  << std::hex << evtInfo->R1() 
+                  << " | Process Info (bits): "
+                  << std::bitset<8>(evtInfo->ProcessInfo())
+                  << " | PCN (from Beetle 0) (dec): " 
+                  << std::dec << (unsigned int) evtInfo->pcn() << endmsg;
         }
       }	
       else if(cntWD == 219){
-        eventInfo[cntPP]->setWord3(*w);     
+        evtInfo->setWord3(*w);     
         if (msgLevel(MSG::DEBUG)){
           debug() << "(Event Info) Chip Addr (dec): " 
-                  << (*w & 0xc0000000)/0x40000000 
-                  << " |Sync RAM Full (bits): " 
-                  << std::bitset<6>((*w & 0x3f000000)/0x1000000)
-                      << " |TLK Link Loss (bits): (bits) " 
-                  <<  std::bitset<6>((*w & 0x00fc0000)/0x40000) << endmsg;
-          debug() << "(Event Info) |Sync Evt Size Err. (bits): " 
-                  <<  std::bitset<6>((*w & 0x0003f000)/0x1000 )
-                  << " |Opt. Link Disable (bits): " 
-                  << std::bitset<6>((*w & 0x00000fc0)/0x40) 
-                  << " |Opt. Link NoEvent (bits): " 
-                  << std::bitset<6>((*w & 0x0000003f)) << endmsg;
+                  << (unsigned int) evtInfo->ChipAddr()
+                  << " | Sync RAM Full (bits): " 
+                  << std::bitset<6>(evtInfo->SyncRAMFull())
+                      << " | TLK Link Loss (bits): " 
+                  <<  std::bitset<6>(evtInfo->tlkLnkLoss()) << endmsg;
+          debug() << "(Event Info) | Sync Evt Size Err. (bits): " 
+                  <<  std::bitset<6>(evtInfo->SyncEvtSizeError())
+                  << " | Opt. Link Disable (bits): " 
+                  << std::bitset<6>(evtInfo->OptLnkDisable()) 
+                  << " | Opt. Link NoEvent (bits): " 
+                  << std::bitset<6>(evtInfo->OptLnkNoEvt()) << endmsg;
         }
         if( m_printErrorInfo ) { 
-          if( (*w & 0x3f000000)/0x1000000 != 0 ) 
-            error() << "Attention: You have a Sync RAM Full ERROR! For the "
-                    << "PP-FPGA " << cntPP << ", Value (One bit per link): " 
-                    << std::bitset<6>((*w & 0x3f000000)/0x1000000) << endmsg; 
-          if( (*w & 0x00fc0000)/0x40000 != 0 ) 
-            error() << "Attention: You have a TLK Link loss ERROR! For the "
-                    << "PP-FPGA " << cntPP << ", Value (One bit per link): "
-                    << std::bitset<6>((*w & 0x00fc0000)/0x40000) << endmsg;
-          if( (*w & 0x0003f000)/0x1000  != 0 )
-            error() << "Attention: You have a Sync Event size ERROR! For the "
-                    << "PP-FPGA " << cntPP << ", Value (One bit per link): "
-                    << std::bitset<6>((*w & 0x0003f000)/0x1000) << endmsg;
-          if( (*w & 0x0000003f) != 0 ) 
-            error() << "Attention: You have an Optical Link no Event ERROR! "
-                    << "For the PP-FPGA " << cntPP 
-                    << ", Value (One bit per link): " 
-                    << std::bitset<6>(*w & 0x0000003f) << endmsg;
+          if( evtInfo->SyncRAMFull() != 0 )
+            error() << "Sync RAM Full in TELL1 ID " 
+                    <<  p->sourceID() << ", PP-FPGA " << cntPP 
+                    << ". Value (One bit per link): " 
+                    << std::bitset<6>(evtInfo->SyncRAMFull()) << endmsg; 
+          if( evtInfo->tlkLnkLoss() != 0 ) 
+            error() << "TLK Link loss in TELL1 ID " 
+                    <<  p->sourceID() << ", PP-FPGA " << cntPP 
+                    << ". Value (One bit per link): "
+                    << std::bitset<6>(evtInfo->tlkLnkLoss()) << endmsg;
+          if( evtInfo->SyncEvtSizeError() != 0 )
+            error() << "Sync Event size error in TELL1 ID " 
+                    <<  p->sourceID() << ", PP-FPGA " << cntPP 
+                    << ". Value (One bit per link): "
+                    << std::bitset<6>(evtInfo->SyncEvtSizeError()) << endmsg;
+          if( evtInfo->OptLnkNoEvt() != 0 ) 
+            error() << "Optical Link No Event in TELL1 ID " 
+                    <<  p->sourceID() << ", PP-FPGA " << cntPP 
+                    << ". Value (One bit per link): " 
+                    << std::bitset<6>(evtInfo->OptLnkNoEvt()) << endmsg;
         }
       }
       else if( cntWD == 220 ) {
-        eventInfo[cntPP]->setWord4(*w);
+        evtInfo->setWord4(*w);
         if (msgLevel(MSG::DEBUG)){
           debug() << "(Event Info) Reserved bit (bits): " 
-                  << std::bitset<1>((*w & 0x80000000)/0x80000000)
-                  << " |PCN Error (bits):" 
-                  << std::bitset<1>((*w & 0x40000000)/0x40000000)
-                  << " |Optical Link no clock (bits): " 
-                  << std::bitset<6>((*w & 0x3f000000)/0x1000000) << endmsg;
-          debug() << "(Event Info) |Header Pseudo Err. (bits): " 
-                  << std::bitset<24>(*w & 0x00ffffff) << endmsg;
+                  << std::bitset<1>(evtInfo->R2())
+                  << " | PCN Error (bits):" 
+                  << std::bitset<1>(evtInfo->pcnError())
+                  << " | Optical Link no clock (bits): " 
+                  << std::bitset<6>(evtInfo->OptLnkNoClock()) << endmsg;
+          debug() << "(Event Info) | Header Pseudo Err. (bits): " 
+                  << std::bitset<24>(evtInfo->HeaderPseudoError()) << endmsg;
         }
         
         if( m_printErrorInfo ) { 
-          if((*w & 0x00ffffff) != 0) 
-            error() << "Attention: You have a Header Pseudo Error! For the "
-                    << "PP-FPGA " << cntPP 
-                    << ", Value (One bit per port=24 bits): " 
-                    << std::bitset<24>(*w & 0x00ffffff) << endmsg;	  
+          if( evtInfo->HeaderPseudoError() != 0) 
+            error() << "Header Pseudo Error in TELL1 ID " 
+                    <<  p->sourceID() << ", PP-FPGA " << cntPP 
+                    << ". Value (One bit per port=24 bits): " 
+                    << std::bitset<24>(evtInfo->HeaderPseudoError()) << endmsg;
         }
       }		
       else if(cntWD == 221){
-        eventInfo[cntPP]->setWord5(*w); 
+        evtInfo->setWord5(*w); 
         if (msgLevel(MSG::DEBUG)) {
-          debug() << "(Event Info) Beetle3 PCN (dec): " << p4
-                  << " |Beetle2 PCN (dec): " << p3
-                  << " |Beetle1 PCN (dec): " << p2
-                  << " |Beetle0 PCN (dec): " << p1 << endmsg;
+          debug() << "(Event Info) Beetle3 PCN (dec): " 
+                  << (unsigned int) evtInfo->pcnBeetle3()
+                  << " | Beetle2 PCN (dec): " 
+                  << (unsigned int) evtInfo->pcnBeetle2()
+                  << " | Beetle1 PCN (dec): " 
+                  << (unsigned int) evtInfo->pcnBeetle1()
+                  << " | Beetle0 PCN (dec): " 
+                  << (unsigned int) evtInfo->pcnBeetle0() <<endmsg;
         }
 	    }	    
       else if(cntWD == 222){ 
         eventInfo[cntPP]->setWord6(*w);     
         if( msgLevel(MSG::DEBUG) ) {
           debug() << "(Event Info) Reserved bits (hex): " << std::hex 
-                  << (*w & 0xffff0000)/0x00010000
-                  << " |Beetle5 PCN (dec): " << std::dec << p2
-                  << " |Beetle4 PCN (dec): " << p1 << endmsg;
+                  << evtInfo->R3()
+                  << " | Beetle5 PCN (dec): " << std::dec 
+                  << (unsigned int) evtInfo->pcnBeetle5()
+                  << " | Beetle4 PCN (dec): " 
+                  << (unsigned int) evtInfo->pcnBeetle4() << endmsg;
         }        
       }
       else if(cntWD == 223){
         eventInfo[cntPP]->setWord7(*w);
         if( msgLevel(MSG::DEBUG) ) {
-          debug() << "(Event Info) Reserved bits (hex): " <<  std::hex << p4
-                  << " |I Headers: |Beet.5 (dec): " << std::dec  
-                  << (*w & 0x00f00000)/0x100000
-                  << " |Beet.4: " << (*w & 0x000f0000)/0x10000
-                  << " |Beet.3: " << (*w & 0x0000f000)/0x1000
-                  << " |Beet.2: " << (*w & 0x00000f00)/0x100
-                  << " |Beet.1: " << (*w & 0x000000f0)/0x10
-                  << " |Beet.0: " << (*w & 0x0000000f) << std::dec 
-                  << endmsg;
+          debug() << "(Event Info) Reserved bits (hex): " <<  std::hex 
+                  << (unsigned int) evtInfo->R4()
+                  << " | I Headers: Beet.5 (dec): " << std::dec  
+                  << (unsigned int) evtInfo->iHeaderBeetle5()
+                  << " | Beet.4: " << (unsigned int) evtInfo->iHeaderBeetle4()
+                  << " | Beet.3: " << (unsigned int) evtInfo->iHeaderBeetle3()
+                  << " | Beet.2: " << (unsigned int) evtInfo->iHeaderBeetle2()
+                  << " | Beet.1: " << (unsigned int) evtInfo->iHeaderBeetle1()
+                  << " | Beet.0: " << (unsigned int) evtInfo->iHeaderBeetle0() 
+                  << std::dec << endmsg;
         }
       }			
       else {
@@ -327,14 +346,10 @@ StatusCode STFullDecoding::execute()
 			
       cntWD++;
     }// Loop over all words
-    
+
     // make an empty tell1 data object
     STTELL1Data* myData = new STTELL1Data( tell1Data, tell1Header, 
-                                          sentPP, eventInfo );
-    
-    //STTELL1Data* myData = new STTELL1Data(tell1Data);
-    //myData->setHeader(tell1Header);   
-    //myData->setEventInfo(eventInfo);
+                                           sentPP, eventInfo );
     
     // put into the container, second argument is TELL1 id
     outputData->insert(myData, int(p->sourceID()));
