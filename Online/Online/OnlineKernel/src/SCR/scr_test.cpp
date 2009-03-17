@@ -14,40 +14,42 @@ static void broadcast_handler (char* message)   {
   scrc_end_pasteboard_update (pb);
 }
 #endif
+static bool s_showMem = true;
 static int show_memory()     {
   int memory;
-  char text[20];
+  char text[64];
   int i;
   static int n = 0;
-  scrc_begin_pasteboard_update (pb);
-  memory = scrc_memory_of_pasteboard (pb);
-  sprintf (text, "%d", memory);
-  scrc_put_chars (d4, text, NORMAL, 1, 1, 1);
-  memory = scrc_memory_of_display (d0);
-  sprintf (text, "%d", memory);
-  scrc_put_chars (d4, text, NORMAL|CYAN, 2, 1, 1);
-  memory = scrc_memory_of_display (d1);
-  sprintf (text, "%d", memory);
-  scrc_put_chars (d4, text, NORMAL|MAGENTA, 3, 1, 1);
-  memory = scrc_memory_of_display (d2);
-  sprintf (text, "%d", memory);
-  scrc_put_chars (d4, text, NORMAL, 4, 1, 1);
-  memory = scrc_memory_of_display (d3);
-  sprintf (text, "%d", memory);
-  scrc_put_chars (d4, text, 0x200|RED, 5, 1, 1);
-  memory = scrc_memory_of_display (d4);
-  sprintf (text, "%d", memory);
-  scrc_put_chars (d4, text, BOLD|INVERSE|RED, 6, 1, 1);
-  memory = scrc_memory_of_display (d5);
-  sprintf (text, "%d", memory);
-  scrc_put_chars (d5, text, NORMAL, 7, 1, 1);
-  
-  for (i=0; i<n; i++) scrc_put_char (d4, '.', INVERSE|BLUE, 8, i+1);
-  for (; i<10; i++) scrc_put_char (d4, ' ', NORMAL, 8, i+1);
-  n++;
-  if (n >= 10) n = 0;
-  
-  scrc_end_pasteboard_update (pb);
+  if ( s_showMem ) {
+    scrc_begin_pasteboard_update (pb);
+    memory = scrc_memory_of_pasteboard (pb);
+    sprintf (text, "Pb:%d", memory);
+    scrc_put_chars (d4, text, NORMAL, 1, 1, 1);
+    memory = scrc_memory_of_display (d0);
+    sprintf (text, "D0:%d", memory);
+    scrc_put_chars (d4, text, NORMAL|CYAN, 2, 1, 1);
+    memory = scrc_memory_of_display (d1);
+    sprintf (text, "D1:%d", memory);
+    scrc_put_chars (d4, text, NORMAL|MAGENTA, 3, 1, 1);
+    memory = scrc_memory_of_display (d2);
+    sprintf (text, "D2:%d", memory);
+    scrc_put_chars (d4, text, NORMAL, 4, 1, 1);
+    memory = scrc_memory_of_display (d3);
+    sprintf (text, "D3:%d", memory);
+    scrc_put_chars (d4, text, 0x200|RED, 5, 1, 1);
+    memory = scrc_memory_of_display (d4);
+    sprintf (text, "D4:%d", memory);
+    scrc_put_chars (d4, text, BOLD|INVERSE|RED, 6, 1, 1);
+    memory = scrc_memory_of_display (d5);
+    sprintf (text, "D5:%d", memory);
+    scrc_put_chars (d5, text, NORMAL, 7, 1, 1);
+    
+    for (i=0; i<n; i++) scrc_put_char (d4, '.', INVERSE|BLUE, 8, i+1);
+    for (; i<10; i++) scrc_put_char (d4, ' ', NORMAL, 8, i+1);
+    n++;
+    if (n >= 10) n = 0;    
+    scrc_end_pasteboard_update (pb);
+  }
   return 1;
 }
 
@@ -63,16 +65,18 @@ static void wait_next()   {
   scrc_wait(d3);
 }
 
+static void help() {}
+
 extern "C" int scr_test(int argc, char** argv)  {
-  int pb_rows = 0, pb_cols = 80;
-  int i;
-  char text[20], font[80], *device;
-
-  if (argc == 2) strcpy (font, argv[1]);
-  else strcpy (font, "tcs.font");
-
-  if (argc == 3) device = argv[2];
-  else device = 0;
+  int i, pb_rows = 0, pb_cols = 80;
+  char text[20], font[80];
+  const char *device = 0;
+  std::string arg;
+  RTL::CLI cli(argc, argv, help);
+  cli.getopt("font",1,arg="tcs.font");
+  ::strcpy (font, arg.c_str());
+  s_showMem = cli.getopt("nomemory",1) == 0;
+  device = cli.getopt("device",1);
   
   scrc_create_pasteboard (&pb, device, &pb_rows, &pb_cols);
   
@@ -83,7 +87,7 @@ extern "C" int scr_test(int argc, char** argv)  {
   scrc_create_display (&d1, 15, 20, NORMAL, ON, " display 1 ");
   scrc_create_display (&d2, 15, 30, NORMAL|CYAN, ON, " display 2 ");
   scrc_create_display (&d3, 1,  50, BOLD|RED|INVERSE,   ON, " Doing : ");
-  scrc_create_display (&d4, 8,  10, INVERSE,   ON, " Memory ");
+  scrc_create_display (&d4, 8,  32, INVERSE,   ON, " Memory ");
   scrc_create_display (&d5, 1,  15, BOLD,   ON, " Messages ");
 
   scrc_paste_display (d3, pb, 2, 20);
@@ -232,7 +236,7 @@ extern "C" int scr_test(int argc, char** argv)  {
 }
 
 extern "C" int scr_qmtest(int /* argc */, char** /* argv */)  {
-  FILE* input = ::popen("test.exe scr_test","w");
+  FILE* input = ::popen("test.exe scr_test -nomemory","w");
   for(size_t i=0; i<13; ++i) {
     ::fwrite("\n",2,1,input);
     ::fflush(input);

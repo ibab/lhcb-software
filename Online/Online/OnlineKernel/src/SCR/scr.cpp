@@ -5,7 +5,7 @@
 
 using namespace SCR;
 
-#define BUFFER_GUARD 20
+#define BUFFER_GUARD 64
 
 #define belongs_to(d,r,c) (r >= d->row0+d->row-1 && \
   r <= d->row1+d->row-1 && \
@@ -77,6 +77,7 @@ int scrc_create_pasteboard(Pasteboard** paste, const char* device, int* rows, in
   }
   pb->rows = 24;
   pb->cols = 80;
+  pb->curs.row = pb->curs.col = 1;
   ::scrc_get_console_dimensions(&pb->rows,&pb->cols);
   *rows = pb->rows;
   *cols = pb->cols;
@@ -1214,9 +1215,9 @@ int scrc_end_pasteboard_update (Pasteboard *pb)   {
   cols = pb->cols;
   last = a + pb->rows*cols - 1;
 
-  for (r=1; r<=pb->rows; r++, l++)  {
+  for (r=1; r<=pb->rows; ++r, ++l)  {
     if (*l) {
-      for (c = 1; c <= cols; c++)  {
+      for (c = 1; c <= cols; ++c)  {
         if (*a) {
           *a &= ~MODIFIED;
           if (*a != *old_a || *m != *old_m) {
@@ -1258,10 +1259,8 @@ int scrc_count_unmodified (uint_t* attr, unsigned int* last)    {
 int cursor (Pasteboard *pb, int row, int col)   {
   char *buf = pb->bufout + pb->bufptr;
   *buf = ESCAPE;
-  pb->bufptr++;
-  buf = pb->bufout + pb->bufptr;
-  ::sprintf (buf, "[%d;%dH", row, col);
-  pb->bufptr += ::strlen(buf);
+  ::sprintf(++buf,"[%d;%dH", row, col);
+  pb->bufptr += ::strlen(buf)+1;
   if (pb->bufptr > pb->bufsize - BUFFER_GUARD) ::scrc_fflush (pb);
   return 1;
 }
