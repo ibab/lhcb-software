@@ -1,3 +1,7 @@
+2009-03-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: added python alias for genXMLCatalog
+
 2009-03-17  Joel Closier  <joel.closier@cern.ch>
 
 	* scripts/lhcb_bkk : to launch the bookkeeping with a proxy

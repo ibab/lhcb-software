@@ -14,3 +14,4 @@ apply_pattern source_shell_alias script=BrunelBench
 
 
 apply_pattern python_alias script=getpack
+apply_pattern python_alias script=genXMLCatalog
