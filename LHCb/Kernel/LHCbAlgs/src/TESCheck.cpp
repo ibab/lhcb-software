@@ -1,4 +1,4 @@
-// $Id: TESCheck.cpp,v 1.5 2009-01-09 10:55:45 pkoppenb Exp $
+// $Id: TESCheck.cpp,v 1.6 2009-03-17 10:53:51 cattanem Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -142,10 +142,18 @@ StatusCode TESCheck::execute()
   {
     const std::string& address = *i ;
 
-    IDataProviderSvc* dp =
-      EvtStore == m_store ?   evtSvc () :
-      DetStore == m_store ?   detSvc () :
-      HstStore == m_store ? histoSvc () : evtSvc() ;
+    SmartIF<IDataProviderSvc> dp;
+    switch(m_store) {
+    case DetStore:
+      dp = detSvc();
+      break;
+    case HstStore:
+      dp = histoSvc();
+      break;
+    case EvtStore:
+    default:
+      dp = evtSvc();
+    }
 
     SmartDataPtr<DataObject> obj( dp , address ) ;
     DataObject* o = obj ;
@@ -161,7 +169,7 @@ StatusCode TESCheck::execute()
       {
         debug() << "Object address/type : "
                 << "'" << address << "'/'"
-                << System::typeinfoName( typeid( *o ) ) << "'" << endreq ;
+                << System::typeinfoName( typeid( *o ) ) << "'" << endmsg ;
       }
     }
     

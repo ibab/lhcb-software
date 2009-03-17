@@ -1,4 +1,4 @@
-// $Id: PostScaler.cpp,v 1.3 2007-11-28 13:43:20 cattanem Exp $
+// $Id: PostScaler.cpp,v 1.4 2009-03-17 10:58:30 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -53,11 +53,11 @@ StatusCode PostScaler::execute() {
     Rndm::Numbers random(randSvc(), Rndm::Flat(0.0,100.));
     if ( random ){
       double r = random() ;
-      verbose() << "Random number thrown: " << r << endreq;
+      verbose() << "Random number thrown: " << r << endmsg;
       if ( r > m_percentPass ) {
-        verbose() << "Random filter failed" << endreq;
+        verbose() << "Random filter failed" << endmsg;
         accepted = false ;
-      } else verbose() << "Random filter passed" << endreq;
+      } else verbose() << "Random filter passed" << endmsg;
     }
   }
   
@@ -73,9 +73,9 @@ StatusCode PostScaler::execute() {
       verbose() << "Filter not passed as " << m_nEvents
               << " > " << max_evts << " (reduction 1/" << m_forcedReduction  
               << " + " << m_margin 
-              << ")" << endreq;    
+              << ")" << endmsg;    
       accepted = false ;
-    } else verbose() << "Filter passed." << endreq;
+    } else verbose() << "Filter passed." << endmsg;
   }
   
   // event passed
@@ -90,8 +90,8 @@ StatusCode PostScaler::execute() {
 //=============================================================================
 StatusCode PostScaler::finalize() {
 
-  info() << "Event Filtered " << m_nEventsAll << endreq;
-  info() << "Event Accepted " << m_nEvents << endreq;
+  info() << "Event Filtered " << m_nEventsAll << endmsg;
+  info() << "Event Accepted " << m_nEvents << endmsg;
 
   return GaudiAlgorithm::finalize() ;
 }

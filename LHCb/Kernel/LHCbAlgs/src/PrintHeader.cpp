@@ -1,4 +1,4 @@
-// $Id: PrintHeader.cpp,v 1.4 2007-07-05 11:09:29 pkoppenb Exp $
+// $Id: PrintHeader.cpp,v 1.5 2009-03-17 10:58:30 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -62,7 +62,7 @@ StatusCode PrintHeader::execute() {
 //=============================================================================
 StatusCode PrintHeader::finalize() {
 
-  info() << "Filtered " << m_nEvents << " events" << endreq;
+  info() << "Filtered " << m_nEvents << " events" << endmsg;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }

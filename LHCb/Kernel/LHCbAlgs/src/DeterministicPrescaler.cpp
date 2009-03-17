@@ -160,8 +160,7 @@ DeterministicPrescaler::execute()
 {
   if (!exist<LHCb::ODIN>( LHCb::ODINLocation::Default)) {
         setFilterPassed(false);
-        error() << "ODIN missing" << endreq;
-        return StatusCode::SUCCESS;
+        return Error( "ODIN missimg",  StatusCode::SUCCESS );
   }
 
   LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );

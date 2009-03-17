@@ -6,6 +6,7 @@
 
 ! 2009-03-17 - Marco Cattaneo
  - Fix TESCheck.cpp for Gaudi v21 (backward compatible)
+ - Replace all endreq (deprecated) by endmsg
 
 !======================== LHCbAlgs v2r25 2009-03-10 ==========================
 ! 2009-03-09 - Jeroen van Tilburg
