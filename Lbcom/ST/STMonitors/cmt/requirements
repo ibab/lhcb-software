@@ -15,7 +15,7 @@ version v1r0
 # Structure, i.e. directories to process. 
 #============================================================================
 
-branches src cmt doc
+branches src cmt doc python
 
 #============================================================================
 # Used packages. 
@@ -26,6 +26,9 @@ use STKernel      v*  ST
 use RecEvent      v*  Event
 use GaudiAlg      v* 
 use AIDA          v*  LCG_Interfaces -no_auto_imports
+
+use GaudiConf         *      -no_auto_imports
+use DDDB              * Det  -no_auto_imports
 
 #-----------------------------------------------------------------
 # library building rule
