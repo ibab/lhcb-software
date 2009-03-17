@@ -1,4 +1,4 @@
-// $Id: STSummaryAnalyser.cpp,v 1.3 2009-03-17 10:47:58 nchiapol Exp $
+// $Id: STSummaryMonitor.cpp,v 1.1 2009-03-17 11:23:30 nchiapol Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -20,22 +20,22 @@
 #include "boost/lexical_cast.hpp"
 
 // local
-#include "STSummaryAnalyser.h"
+#include "STSummaryMonitor.h"
 
 using namespace LHCb;
 using namespace AIDA;
 using namespace STDAQ;
 using namespace STBoardMapping;
 
-DECLARE_ALGORITHM_FACTORY( STSummaryAnalyser);
+DECLARE_ALGORITHM_FACTORY( STSummaryMonitor);
 
 //--------------------------------------------------------------------
 //
-//  STSummaryAnalyser
+//  STSummaryMonitor
 //
 //--------------------------------------------------------------------
 
-STSummaryAnalyser::STSummaryAnalyser( const std::string& name, ISvcLocator* pSvcLocator ) :
+STSummaryMonitor::STSummaryMonitor( const std::string& name, ISvcLocator* pSvcLocator ) :
   GaudiHistoAlg(name, pSvcLocator),
   //m_pcnHisto("pcnEvent"),
   c_binIDaSynch(0.5),
@@ -54,12 +54,12 @@ STSummaryAnalyser::STSummaryAnalyser( const std::string& name, ISvcLocator* pSvc
   declareProperty("SuppressRecovered", m_suppressRecovered = false);
 }
 
-STSummaryAnalyser::~STSummaryAnalyser()
+STSummaryMonitor::~STSummaryMonitor()
 {
   // destructer
 }
 
-StatusCode STSummaryAnalyser::initialize()
+StatusCode STSummaryMonitor::initialize()
 {
   // Initialize GaudiHistoAlg
   StatusCode sc = GaudiHistoAlg::initialize();
@@ -84,7 +84,7 @@ StatusCode STSummaryAnalyser::initialize()
 
 
 
-StatusCode STSummaryAnalyser::execute()
+StatusCode STSummaryMonitor::execute()
 { 
   int pipelineSize = 187;
   m_evtNumber++;
@@ -142,7 +142,7 @@ StatusCode STSummaryAnalyser::execute()
   return StatusCode::SUCCESS;
 }
 
-StatusCode STSummaryAnalyser::finalize()
+StatusCode STSummaryMonitor::finalize()
 {
   return StatusCode::SUCCESS;
 }

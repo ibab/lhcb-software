@@ -1,25 +1,25 @@
-// $Id: STSummaryAnalyser.h,v 1.3 2009-03-17 10:47:58 nchiapol Exp $
-#ifndef STSummaryAnalyser_H
-#define STSummaryAnalyser_H 1
+// $Id: STSummaryMonitor.h,v 1.1 2009-03-17 11:23:30 nchiapol Exp $
+#ifndef STSummaryMonitor_H
+#define STSummaryMonitor_H 1
 
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "Kernel/STBoardMapping.h"
 
-/** @class STSummaryAnalyser STSummaryAnalyser.h
+/** @class STSummaryMonitor STSummaryMonitor.h
  *
  *  @author N. Chiapolini
  *  @date   20/02/2009
  */
 
-class STSummaryAnalyser : public GaudiHistoAlg{
+class STSummaryMonitor : public GaudiHistoAlg{
 
 public:
  
   /// constructer
-  STSummaryAnalyser( const std::string& name, ISvcLocator *svcloc );
+  STSummaryMonitor( const std::string& name, ISvcLocator *svcloc );
 
   /// destructer
-  virtual ~STSummaryAnalyser();
+  virtual ~STSummaryMonitor();
 
   /// initialize
   StatusCode initialize();
@@ -82,4 +82,4 @@ private:
 
 };
 
-#endif // STSummaryAnalyser_H
+#endif // STSummaryMonitor_H

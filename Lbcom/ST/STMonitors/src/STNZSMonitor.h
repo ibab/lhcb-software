@@ -1,143 +1,100 @@
-// $Id: STNZSMonitor.h,v 1.1.1.1 2009-03-02 19:13:44 mtobin Exp $
-#ifndef PUBLIC_STNZSMONITOR_H 
-#define PUBLIC_STNZSMONITOR_H 1
-//===========================================
+// $Id: STNZSMonitor.h,v 1.2 2009-03-17 11:23:30 nchiapol Exp $
+#ifndef STNZSMonitor_H
+#define STNZSMonitor_H 1
 
+#include "GaudiAlg/GaudiHistoAlg.h"
 
-//===========================================
-// Include files
-// from Gaudi
-#include "GaudiAlg/GaudiAlgorithm.h"
-
-
-#include "GaudiKernel/IHistogramSvc.h"
-
-
-#include <map>
-
-#include "Kernel/ISTReadoutTool.h"
-
-#include "AIDA/IHistogram1D.h"
-#include "AIDA/IHistogram2D.h"
-#include "AIDA/IProfile1D.h"
-
-
-class ISTReadoutTool;
-
-
-/** @class STNZSMonitor STNZSMonitor.h public/STNZSMonitor.h
- *   
+/** @class STNZSMonitor STNZSMonitor.h
  *
- *  @author Mathias Knecht
- *  @date   2007-10-03
+ *  Class for monitoring the noise of the Tell1's. For each Tell1 the noise
+ *  versus the strip number is stored in a histogram. The histograms can be
+ *  stored using sourceID or tell1 name with the option \b UseSourceID. There
+ *  are several options for calculating the noise:
+ *  - \b FollowPeriod: This is the period of the exponential moving average. It
+ *    determines the lifetime of the averages (in number of events). As long as
+ *    the number of processed events is smaller than FollowPeriod the average
+ *    is a cumulative average. Set this to -1 to always use a cumulative
+ *    averaging.
+ *  - \b UpdateRate: Rate at which the histograms are updated (in number of
+ *    events). Useful in online mode. Set to -1 to update only at the end.
+ *  - \b ResetRate: Rate at which the counters for histograms are reset
+ *    (in number of events). Set to -1 to do no reset (default).
+ *  - \b SkipEvents: Number of events to be skipped. Useful when running over
+ *     common-mode-subtracted data where the pedestals have not been calculated.
+ *
+ *  @author J. van Tilburg, N. Chiapolini
+ *  @date   10/02/2009
  */
-class STNZSMonitor : public GaudiAlgorithm {
-public: 
-  /// Standard constructor
-  STNZSMonitor( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~STNZSMonitor( ); ///< Destructor
+class STNZSMonitor : public GaudiHistoAlg{
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
+public:
+ 
+  /// constructer
+  STNZSMonitor( const std::string& name, ISvcLocator *svcloc );
 
-protected:
+  /// destructer
+  virtual ~STNZSMonitor();
+
+  /// initialize
+  StatusCode initialize();
+
+  /// execute
+  StatusCode execute();
+
+  /// finalize
+  StatusCode finalize();
 
 private:
- 
-  // options
-  std::string m_inputLocation;
-  std::string m_LCMSADCs;
-  std::string m_PedSubADCs; 
-  bool m_disable2D;
-  std::string m_readoutToolName;
+
+  /// Fill the noise histograms (only called every N events and at finalize)
+  void updateNoiseHistogram(int tell1ID);
+
+  /// Tell1 mapping from tell1 name to source ID.
+  const std::map<unsigned int, unsigned int>* m_TELL1Mapping;
+
+  //const std::string   m_basenameNoiseHisto; 
+  int                 m_evtNumber;
+
+  typedef std::map<int, std::vector<double> > DataMap;  
+  DataMap m_meanMap;            ///< Internal map for the pedestals
+  DataMap m_meanSqMap;          ///< Internal map of the pedestal^2
+  std::map<int, int> m_nEvents; ///< Internal map of number of events per tell1
+
+  // jobOptions
+
+  /// Detector type. Can be set to IT or TT. Changes m_dataLocation accordingly
   std::string m_detType;
-  float m_NoiseIncr;
-  int m_ConvLimit;
-  bool m_OnlineMode;
- 
-  bool toberesettedIT[8];
-  bool toberesettedTT[6];
-  
-  int iBeetleIT;
-  int iBeetleTT;
-  int iModuleIT;
-  int iSectorTT;
-  
 
-  ISTReadoutTool*   m_readoutTool;
-  bool              m_useLink[48][24];
-  int               maskedpositive[24];
-  int               evt_counter;
-  IHistogramSvc*    m_histosvc;
-  
-  std::map<unsigned int, int> m_map;
-  unsigned int q;
+  /// Location in the Event Data Store with the ADC values
+  std::string m_dataLocation;
 
-  
-  int cmsADC[48][24][128];
-  int cmsADCsq[48][24][128];
-  
-  int absADC[48][24][128];
- 	
- 
-  int pedsubADC[48][24][128];	
-  int pedsubADCsq[48][24][128];
-  
-  
+  /// When set to true: use the sourceID in the histogram name. Otherwise use
+  /// the tell1 name.
+  bool m_useSourceID;
 
-  float noise_PedSub[48][24][128];
-  float noise_CMS[48][24][128];
-  float noise_Pulsed[48][24][128];
-  int mean[48][24][128];
-  int pedestals[48][24][128];
- 
- 
-  // NON SPECIFIC HISTOS
-  AIDA::IHistogram1D *evt_number;
-  AIDA::IHistogram2D *RAWNOISEBOARD[48]; 
-  AIDA::IHistogram2D *CMSNOISEBOARD[48]; 
-  AIDA::IHistogram1D *CMSNOISEDISTRBOARD[48]; 
-  AIDA::IHistogram2D *MEANBOARD[48];  
-  AIDA::IHistogram1D *MEANDISTRBOARD[48];  
+  /// String used as a base for the histogram's name (_$tell + number will be 
+  /// added to the name)
+  /// if possible this might get replaced with the name of the instance running 
+  /// or removed completely
+  std::string m_basenameHisto; 
 
-  AIDA::IHistogram2D *PCNDISTR[48]; 
-  AIDA::IHistogram1D *OPTLINKNOEVT[48];
-  AIDA::IHistogram1D *SYNCEVTSIZERROR[48];
-  AIDA::IHistogram1D *OPTLNKNOCLOCK[48]; 
-  AIDA::IHistogram1D *TLKLNKLOSS[48];
-  AIDA::IHistogram1D *SYNCRAMFULL[48];
-  AIDA::IHistogram1D *PCNERROR[48]; 
- 
-  // SPECIFIC HISTOS
+  /// Period of the an exponential moving average.
+  /// Set to -1 to have a cumulative average.
+  int m_followingPeriod;
+
+  /// Rate at which the histograms are updated (in number of events).
+  /// Set to -1 to update only at the end.
+  int m_updateRate;
   
-  AIDA::IHistogram1D *CMSNOISEDISTRMODIT[48][8];
-  AIDA::IHistogram1D *CMSNOISEDISTRMODTT[48][6]; 
- 
-  AIDA::IHistogram1D *CMSNOISEIT[48][8];
-  AIDA::IHistogram1D *CMSNOISETT[48][6]; 
+  /// Rate at which the counters for histograms are reset (in number of events).
+  /// Set to -1 to do no reset (default).
+  int m_resetRate;
+  
+  /// Number of events to be skipped. Useful when running over
+  /// common-mode-subtracted data where the pedestals have not been calculated. 
+  int m_skipEvents;
 
-  AIDA::IHistogram1D *RAWNOISEIT[48][8];
-  AIDA::IHistogram1D *RAWNOISETT[48][6]; 
- 
-  AIDA::IHistogram1D *MEANIT[48][8];
-  AIDA::IHistogram1D *MEANTT[48][6];
- 
-  AIDA::IHistogram1D *SoverNIT[48][8];
-  AIDA::IHistogram1D *SoverNTT[48][6];
- 
-  AIDA::IHistogram1D *PEDESTALIT[48][8];
-  AIDA::IHistogram1D *PEDESTALTT[48][6];
- 
-  AIDA::IHistogram1D *RAWADCIT[48][8];
-  AIDA::IHistogram1D *RAWADCTT[48][6];
-   
-  AIDA::IHistogram1D *HEADERIT[48][8];
-  AIDA::IHistogram1D *HEADERTT[48][6];
-
-   AIDA::IHistogram2D *LCMSIT[48][8];
-  AIDA::IHistogram2D *LCMSTT[48][6];
- 
 };
-#endif // PUBLIC_STMONITOR_H
+
+#endif // STNZSMonitor_H
