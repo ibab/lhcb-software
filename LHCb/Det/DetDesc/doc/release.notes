@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.395 2009-02-18 12:44:10 cattanem Exp $ 
+! $Id: release.notes,v 1.396 2009-03-17 13:34:16 wouter Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2009-03-17 - Wouter Hulsbergen
+ - Added another virtual function hook to AlignmentCondition to allow
+ special condition update for VeloAlignCondition
 
 !====================== DetDesc v18r12 2009-02-18 =============================
 ! 2009-02-04 - Marco Clemencic

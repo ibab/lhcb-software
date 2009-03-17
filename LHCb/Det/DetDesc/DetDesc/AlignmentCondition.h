@@ -1,4 +1,4 @@
-// $Id: AlignmentCondition.h,v 1.17 2008-07-11 16:35:05 marcocle Exp $
+// $Id: AlignmentCondition.h,v 1.18 2009-03-17 13:34:16 wouter Exp $
 #ifndef DETDESC_ALIGNMENTCONDITION_H 
 #define DETDESC_ALIGNMENTCONDITION_H 1
 
@@ -81,19 +81,13 @@ protected:
 
   IMessageSvc*       msgSvc  () const;
 
-  inline void loadParams(const std::vector<double>& translation,
-                         const std::vector<double>& rotation,
-                         const std::vector<double>& pivot) 
-  {
-    this->addParam(m_translationString, translation );
-    this->addParam(m_rotationString,    rotation    );
-    this->addParam(m_pivotString,       pivot       );
-  }
+  void loadParams(const std::vector<double>& translation,
+		  const std::vector<double>& rotation,
+		  const std::vector<double>& pivot);
   
-
   virtual StatusCode makeMatrices();
 
-  void updateParams();
+  virtual void updateParams(const Gaudi::Transform3D& matrixInv);
 
   DetDesc::Services* m_services;
 

@@ -1,4 +1,4 @@
-// $Id: AlignmentCondition.cpp,v 1.21 2008-07-11 16:35:05 marcocle Exp $
+// $Id: AlignmentCondition.cpp,v 1.22 2009-03-17 13:34:17 wouter Exp $
 // Include files
 #include <algorithm>
 
@@ -64,7 +64,7 @@ void AlignmentCondition::offNominalMatrix(const Gaudi::Transform3D& newMatrix)
 {
   m_matrix=newMatrix.Inverse();
   m_matrixInv=newMatrix;  
-  updateParams();
+  updateParams(m_matrixInv);
 }
 //=============================================================================
 StatusCode 
@@ -79,7 +79,7 @@ AlignmentCondition::setOffNominalTransformation( const std::vector<double>& tran
 StatusCode AlignmentCondition::makeMatrices() 
 {
   MsgStream log(msgSvc(), "AlignmentCondition");
-  log << MSG::VERBOSE << "Making transformation matrix" << endmsg;
+  log << MSG::VERBOSE << " Making transformation matrix for \'" << name() << "\'" << endmsg;
   
   std::vector<double> translations = paramAsDoubleVect (m_translationString);
   std::vector<double> rotations    = paramAsDoubleVect (m_rotationString);
@@ -96,7 +96,7 @@ StatusCode AlignmentCondition::makeMatrices()
     
     return StatusCode::SUCCESS;
   } else {
-    log << MSG::ERROR << "Translations vector has funny size: "
+    log << MSG::ERROR << "Translations vector for \'" << name() << "\' has funny size: "
         << translations.size() << ". Assigning identity matrices" << endmsg;
     m_matrixInv=Gaudi::Transform3D();
     m_matrix=m_matrixInv;
@@ -105,19 +105,25 @@ StatusCode AlignmentCondition::makeMatrices()
 
 }
 //=============================================================================
-void AlignmentCondition::updateParams() 
+void AlignmentCondition::updateParams(const Gaudi::Transform3D& matrixInv) 
 {
   std::vector<double> newTrans(3,0);
   std::vector<double> newRot(3,0);
   const std::vector<double> pivot = (exists(m_pivotString) ) ? 
     paramAsDoubleVect(m_pivotString) : std::vector<double>(3, 0);
 
-  DetDesc::getZYXTransformParameters( m_matrixInv, newTrans, newRot, pivot );
+  DetDesc::getZYXTransformParameters( matrixInv, newTrans, newRot, pivot );
   
   loadParams( newTrans, newRot, pivot );
-
-  return;
-  
+} 
+//=============================================================================
+void AlignmentCondition::loadParams(const std::vector<double>& translation,
+				    const std::vector<double>& rotation,
+				    const std::vector<double>& pivot) 
+{
+  this->addParam(m_translationString, translation );
+  this->addParam(m_rotationString,    rotation    );
+  this->addParam(m_pivotString,       pivot       );
 }
 //=============================================================================
 IMessageSvc* AlignmentCondition::msgSvc() const {
