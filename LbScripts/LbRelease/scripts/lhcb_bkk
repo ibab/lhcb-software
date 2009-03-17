@@ -5,7 +5,7 @@
 #
 
 
-source `which SetupProject` Dirac  > /dev/null
+source `which SetupProject.csh` Dirac  > /dev/null
 if $status == 0 then
    lhcb-proxy-info > /dev/null
    if $status != 0 then
