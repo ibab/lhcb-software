@@ -71,6 +71,9 @@ public:
 
   std::string conditionsPathName() const;
 
+  /** half module type */
+  std::string halfModuleType() const;
+
 private:
 
   parent_type* m_parent;
@@ -93,6 +96,11 @@ inline std::string DeTTSector::position() const {
 inline unsigned int DeTTSector::row() const {
   return m_row;
 }
+
+inline std::string DeTTSector::halfModuleType() const {
+  return m_parent->type();
+}
+
 
 #endif // _DeTTSector_H
 
