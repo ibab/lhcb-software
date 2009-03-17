@@ -4,6 +4,11 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+! 2009-03-17 - Nicola Chiapolini
+ - all histograms from STSummary are now available
+ - renamed Analysers to Monitors
+ - added python files for createing and configuring pages
+
 !======================= STMonitors v1r0 2009-03-11 ==========================
 ! 2009-03-11 - Marco Cattaneo
  - Fix STZSMonitor compilation warnings about possible uninitialized variables
