@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2009-03-17 M Needham
+ - Add remainder and risetime functions to ISiAmplifierResponse
+
 !===================== LHCbKernel v11r2 2009-03-09 ========================
 ! 2009-03-05 - Marco Cattaneo
  - Add option PrintEventTime to LbAppInit, if set prints the event time

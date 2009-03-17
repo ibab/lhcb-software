@@ -1,4 +1,4 @@
-// $Id: ISiAmplifierResponse.h,v 1.4 2007-05-09 11:43:22 cattanem Exp $
+// $Id: ISiAmplifierResponse.h,v 1.5 2009-03-17 14:51:24 mneedham Exp $
 #ifndef _ISiAMPLIFIERRESPONSE_H
 #define _ISiAMPLIFIERRESPONSE_H
 
@@ -34,18 +34,29 @@ public:
   /** Static access to interface id */
   static const InterfaceID& interfaceID() { return IID_ISiAmplifierResponse; }
 
- /** calculate Beetle response
- * @param  time time in ns 
- * @return response 
- */
- virtual double response(const double time) const=0;
+  /** calculate Beetle response
+  * @param  time time in ns 
+  * @return response 
+  */
+  virtual double response(const double time) const=0;
 
- /** The response is only valid for a certain capacitance, Vfs, etc.
- * This method allows you to find out when the curve is valid
- *
- * @return validity info
- */
- virtual ISiAmplifierResponse::Info validity() const = 0; 
+  /** The response is only valid for a certain capacitance, Vfs, etc.
+  * This method allows you to find out when the curve is valid
+  *
+  * @return validity info
+  */
+  virtual ISiAmplifierResponse::Info validity() const = 0; 
+
+  /** calculate the remainder ie signal left after 25 ns
+  * @param time time of sampling relative to peak [default is zero ]  
+  * @return response 
+  */
+  virtual double remainder(double time = 0) const = 0;
+
+  /** calculate the rise time [10 - 90 %]
+  * @return ristime
+  */
+  virtual double risetime() const = 0;
 
 };
 
