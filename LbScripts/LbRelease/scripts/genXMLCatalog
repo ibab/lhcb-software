@@ -1,0 +1,206 @@
+#!/usr/bin/env python
+
+import sys, os, getopt, time
+
+def usage():
+    print "Usage: genXMLCatalog <options> <config-files>"
+    print "Options:"
+    print "  -s, --site <site>: site name (default=CERN)"
+    print "  -d, --depth <depth>: depths for ancestors in BK (default=1)"
+    print "  -f, -p, --catalog <catalog-name>: XML file catalog name (default=./pool_xml_catalog.xml)"
+    print "  -n, --newoptions <config-file>: generate a new config file (no catalog is created)"
+    print "  -o, --options <config-file>: python config file to be parsed (for backward compatibility)"
+    print "  <config-files>: list of python config files"
+    print "  -v: verbose output"
+
+
+try:
+    from DIRAC import gLogger
+    #print "No need to SetupProject"
+except:
+    # Setup DIRAC and call back the same script...
+    command = ' '.join(sys.argv)
+    #print command
+    sys.exit( os.system(". $LHCBSCRIPTS/SetupProject.sh Dirac &>/dev/null; "+ command))
+    
+opts, args = getopt.getopt( sys.argv[1:], \
+                            "ho:n:s:f:p:d:v", \
+                            ["help", "options=", "site=", "catalog=", "depth=", "newoptions="])
+
+catalog = 'pool_xml_catalog.xml'
+tier1s = {"CERN":"LCG.CERN.ch", "RAL":"LCG.RAL.uk", "IN2P3":"LCG.IN2P3.fr", "GRIDKA":"LCG.GRIDKA.de", "NIKHEF":"LCG.NIKHEF.nl", "CNAF":"LCG.CNAF.it", "PIC":"LCG.PIC.es"}
+site = 'LCG.CERN.ch'
+depth = 1
+optFiles = []
+verbose = False
+newOptFile = ''
+
+for o, a in opts:
+    if o in ("-h", "--help"):
+        usage()
+        sys.exit(0)
+    if o in ("-o", "--options"):
+        optFiles.append(a)
+    if o in ("-s", "--site"):
+        site = a
+    if o in ("-f", "-p", "--catalog"):
+        catalog = a
+        ext = os.path.splitext(catalog)
+        if len(ext[1]) == 0:
+            catalog += os.path.extsep + "xml"
+    if o in ("-d", "--depth"):
+        try:
+            depth = int(a)
+        except:
+            print "Invalid depth, must be integer"
+            sys.exit(1)
+    if o in ("-v"):
+        verbose = True
+        t0 = time.time()
+    if o in ("-n", "--newoptions"):
+        newOptFile = a
+        ext = os.path.splitext(newOptFile)
+        if len(ext[1]) == 0:
+            newOptFile += os.path.extsep + "py"
+
+for a in args:
+    optFiles.append(a)
+
+if depth <= 0:
+    print "Invalid ancestor depth, should be >= 1"
+    sys.exit(1)
+
+if len(optFiles) == 0:
+    print "No option files given"
+    usage()
+    sys.exit(1)
+
+if newOptFile and len(optFiles) != 1:
+    print "Generating an options file is only valid with a single file as input"
+    sys.exit(1)
+if newOptFile:
+    if depth > 1:
+        print "New options file required, depth ignored..."
+    depth = 1
+    if os.path.realpath(newOptFile) == os.path.realpath(optFiles[0]):
+        print "Cannot write a new option file overwriting the original one, select a name different from",newOptFile
+        sys.exit(1)
+
+if tier1s.has_key(site.upper()):
+    site = tier1s[site.upper()]
+
+import tempfile
+a, tmpFile = tempfile.mkstemp(suffix=".py")
+runOpts = ""
+for opt in optFiles:
+    if not os.path.exists(opt):
+        print "File not found: ", opt
+        sys.exit(1)
+    runOpts += opt + " "
+
+gaudiRun = "gaudirun.py -n -o %s %s &>/dev/null" % (tmpFile, runOpts)
+if verbose:
+    print "Extract list of input files from", optFiles
+    
+if  os.system("which gaudirun.py &>/dev/null") != 0:
+    rc = os.system(". $LHCBSCRIPTS/SetupProject.sh Gaudi &>/dev/null;" + gaudiRun)
+else:
+    rc = os.system(gaudiRun)
+if rc:
+    print "Error when parsing options files", optFiles
+    sys.exit(rc)
+
+optDict = eval(open(tmpFile,'r').read())
+os.remove(tmpFile)
+if optDict.has_key('EventSelector') and optDict['EventSelector'].has_key('Input'):
+    if verbose:
+        print "List of files extracted in %5.2f seconds..." % (time.time()-t0)
+    appInput = optDict['EventSelector']['Input']
+else:
+    print "Options file do not set EventSelector().Input"
+    sys.exit(1)
+
+lfnList = []
+lfns = ""
+for inp in appInput:
+    lfn = inp.split()[0].split("'")[1].replace('LFN:','')
+    lfnList.append(lfn)
+
+# Now call DIRAC
+rc = 0
+try:
+    # Trick: reset the arguments as otherwise DIRAC parses them! ;-)
+    sys.argv = ["dirac-lhcb-generate-catalog"]
+
+    # Verify the user has a valid proxy
+    done = 1
+    while done and os.system("dirac-proxy-info --checkvalid > /dev/null") != 0:
+        print "You don't have a valid proxy, we create one..."
+        done = os.system("lhcb-proxy-init")
+        
+    if depth > 1:
+        from DIRAC.LHCbSystem.Utilities.AncestorFiles import getAncestorFiles
+        # Seems getAncestrorFiles only works for one file...
+        #result = getAncestorFiles(lfnList,depth)
+        #if not result['OK']:
+        #    print "Error getting ancestor files..."
+        #    sys.exit(1)
+        #lfnList = result['Value']
+        fullList = []
+        for lfn in lfnList:
+            result = getAncestorFiles(lfn,depth)
+            if not result['OK']:
+                print "Error getting ancestor files..."
+                sys.exit(1)
+            fullList += result['Value']
+        lfnList = fullList
+    
+    from DIRAC.Interfaces.API.Dirac import *
+    if not verbose:
+        gLogger.setLevel("Always")
+    if newOptFile:
+        catalog = "/dev/null"
+    if verbose:
+        print "List of LFNs:", lfnList
+        print "Site:",site
+        print "Catalog file:",catalog
+    result = Dirac().getInputDataCatalog(lfnList,site,catalog)
+    if result["OK"]:
+        if newOptFile:
+            lfnToPfn = result["Successful"]
+            optLines = open(optFiles[0]).readlines()
+            fo = open(newOptFile,'w')
+            for opt in optLines:
+                found = False
+                for lfn in lfnList:
+                    if opt.find(lfn) >= 0:
+                        # get the tURL for this lfn
+                        found = True
+                        if lfnToPfn.has_key(lfn):
+                            pfn = lfnToPfn[lfn]['turl']
+                            opt = opt.replace( "LFN:"+lfn, pfn)
+                        else:
+                            print "No tURL found for ", lfn
+                        break
+                fo.write(opt)
+            fo.close()
+            print "New options file",newOptFile,"successfully created"
+        else:
+            print "POOL XML catalog",catalog,"successfully created"
+            catOption, ext = os.path.splitext(catalog)
+            catOption += os.path.extsep + "py"
+            fo = open(catOption, 'w')
+            fo.write("FileCatalog().Catalogs = [ 'xmlcatalog_file:"+catalog+"' ]\n")
+            fo.close()
+            print "Add",catOption,"to your list of options file"
+    else:
+        print "Error getting the list of PFNs"
+except:
+    print "Exception caught while creating catalog or option file"
+    rc = 1
+
+if verbose:
+    print "Total execution time for %d files: %5.2f seconds" % (len(lfnList),time.time()-t0)
+sys.exit(rc)
+
+
