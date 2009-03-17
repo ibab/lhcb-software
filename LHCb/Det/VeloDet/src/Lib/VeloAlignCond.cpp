@@ -1,4 +1,4 @@
-// $Id: VeloAlignCond.cpp,v 1.2 2009-01-10 23:00:40 marcocle Exp $
+// $Id: VeloAlignCond.cpp,v 1.3 2009-03-17 13:41:41 wouter Exp $
 #include "VeloDet/VeloAlignCond.h"
 
 #include "DetDesc/3DTransformationFunctions.h"
@@ -159,50 +159,63 @@ namespace {
 }
 
 //=============================================================================
+Gaudi::Transform3D VeloAlignCond::motionSystemTransform() const
+{
+  std::vector<double> translations(3,0) ;
+  std::vector<double> rotations(3,0) ;
+  std::vector<double> pivot(3,0) ;
+
+  // Apply the offsets given by the stepping motors
+  if ( m_xOffCond ) {
+    double offset = m_xOffCond->param<double>(m_paths.x.second);
+    if (exists("XOffsetCoeffs")) {
+      offset = correctOffset(offset,param<std::vector<double> >("XOffsetCoeffs"));
+    }
+    translations[0] += offset;
+  }
+  if ( m_yOffCond ) {
+    double offset = m_yOffCond->param<double>(m_paths.y.second);
+    if (exists("YOffsetCoeffs")) {
+      offset = correctOffset(offset,param<std::vector<double> >("YOffsetCoeffs"));
+    }
+    translations[1] += offset;
+  }
+  
+  return DetDesc::localToGlobalTransformation( translations,rotations,pivot );
+}
+
+//=============================================================================
 StatusCode VeloAlignCond::makeMatrices() 
 {
   MsgStream log(this->msgSvc(), "VeloAlignCond");
-  log << MSG::VERBOSE << "Making transformation matrix" << endmsg;
-
-  std::vector<double> translations = paramAsDoubleVect (m_translationString);
-  std::vector<double> rotations    = paramAsDoubleVect (m_rotationString);
-  std::vector<double> pivot = (exists(m_pivotString) ) ? 
-      paramAsDoubleVect(m_pivotString) : std::vector<double>(3, 0);
-
-  if (translations.size()==3  && rotations.size()==3 && pivot.size()==3) {
-
-    // Apply the offsets given by the stepping motors
-    if ( m_xOffCond ) {
-      double offset = m_xOffCond->param<double>(m_paths.x.second);
-      if (exists("XOffsetCoeffs")) {
-        offset = correctOffset(offset,param<std::vector<double> >("XOffsetCoeffs"));
-      }
-      translations[0] += offset;
-    }
-    if ( m_yOffCond ) {
-      double offset = m_yOffCond->param<double>(m_paths.y.second);
-      if (exists("YOffsetCoeffs")) {
-        offset = correctOffset(offset,param<std::vector<double> >("YOffsetCoeffs"));
-      }
-      translations[1] += offset;
-    }
-
-    m_matrixInv = DetDesc::localToGlobalTransformation(translations,
-                                                       rotations,
-                                                       pivot);
-
+  log << MSG::VERBOSE << "Making transformation matrix for \'" << name() 
+      << "\' Correcting for motion system position." << endmsg ;
+  StatusCode sc = AlignmentCondition::makeMatrices() ;
+  if( sc.isSuccess() ) {
+    // The transform from the position of the sensors
+    Gaudi::Transform3D mstransform        = motionSystemTransform() ;
+    // The transform from the alignment condition
+    Gaudi::Transform3D alignmenttransform = m_matrixInv ;
+    // The total
+    m_matrixInv = mstransform * alignmenttransform;
     m_matrix = m_matrixInv.Inverse();
-
-    return StatusCode::SUCCESS;
-  } else {
-    log << MSG::ERROR << "Translations vector has funny size: "
-    << translations.size() << ". Assigning identity matrices" << endmsg;
-    m_matrixInv=Gaudi::Transform3D();
-    m_matrix=m_matrixInv;
-    return StatusCode::FAILURE;
   }
-
+  return sc ;
 }
+
+//=============================================================================
+void VeloAlignCond::updateParams(const Gaudi::Transform3D& matrixInv) 
+{
+  MsgStream log(this->msgSvc(), "VeloAlignCond");
+  log << MSG::VERBOSE << "Updating condition parameters for \'" << name() 
+      << "\' Correcting for motion system position." << endmsg ;
+  // The transform from the position of the sensors
+  Gaudi::Transform3D mstransform        = motionSystemTransform() ;
+  // The transform from the alignment condition
+  Gaudi::Transform3D alignmenttransform = mstransform.Inverse() * matrixInv ;
+  // Now call down to the base class with the corrected transform
+  AlignmentCondition::updateParams( alignmenttransform ) ;
+} 
 
 //=============================================================================
 void VeloAlignCond::update(ValidDataObject& obj)

@@ -1,4 +1,4 @@
-// $Id: VeloAlignCond.h,v 1.2 2009-01-10 23:00:40 marcocle Exp $
+// $Id: VeloAlignCond.h,v 1.3 2009-03-17 13:41:41 wouter Exp $
 #ifndef VELODET_VELOALIGNCOND_H
 #define VELODET_VELOALIGNCOND_H 1
 
@@ -54,10 +54,16 @@ public:
   /// Class ID of this class
   inline static  const CLID& classID() { return CLID_VeloAlignCond; };
 
+  /// Creates the transformation from the motion system
+  Gaudi::Transform3D motionSystemTransform() const ;
+
 protected:
 
   /// @see AlignmentCondition
   virtual StatusCode makeMatrices();
+
+  /// @see AlignmentCondition
+  virtual void updateParams(const Gaudi::Transform3D& matrixInv);
 
   /// Commodity function to register to the UpdateMgrSvc for an offset condition.
   virtual void i_registerOffsetCond(const PositionPaths::ValueType &offsetCond, Condition *&cond,

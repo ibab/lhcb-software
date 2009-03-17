@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.210 2009-01-12 07:16:09 cattanem Exp $
+! $Id: release.notes,v 1.211 2009-03-17 13:41:41 wouter Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
+
+! 2009-03-17 - Wouter Hulsbergen
+ - Added VeloAlignCond::updateParams which overloads the function in AlignmentCondition 
+   and corrects for the motion system position when updating the condition.
+ - Added VeloAlignCond::motionSystemTransform which actually defines the transform
 
 !======================== VeloDet v13r5 2009-01-12 ===========================
 ! 2009-01-10 - Marco Clemencic
