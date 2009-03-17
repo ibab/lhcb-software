@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.66 2009-03-09 14:21:47 cattanem Exp $
+! $Id: release.notes,v 1.67 2009-03-17 12:44:47 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
+
+! 2009-03-17 - Marco Cattaneo
+ - Backward compatible fix for Gaudi v21
 
 !====================== DaVinciMCKernel v3r1 2009-03-09 ======================
 ! 2009-03-09 - Juan PALACIOS
