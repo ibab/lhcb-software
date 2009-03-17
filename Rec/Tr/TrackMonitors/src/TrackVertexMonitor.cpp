@@ -162,11 +162,12 @@ struct TrackFlagPredicate
   bool operator()(const LHCb::Track* track) const { return m_positive ? track->checkFlag(m_flag) : !track->checkFlag(m_flag) ; }
 } ;
 
-struct TrackTXPredicate
+struct TrackVeloSidePredicate
 {
   int m_sign ;
-  TrackTXPredicate(int asign) : m_sign(asign) {}
-  bool operator()(const LHCb::Track* track) const { return track->firstState().tx()*m_sign>0 ; }
+  TrackVeloSidePredicate(int asign) : m_sign(asign) {}
+  bool operator()(const LHCb::Track* track) const { 
+    return track->firstState().tx()*m_sign*(track->checkFlag(LHCb::Track::Backward)? -1 : 1 )>0 ; }
 } ;
 
 struct TrackChisqPredicate
@@ -235,8 +236,8 @@ StatusCode TrackVertexMonitor::execute()
     }
     
     // now split the primary vertex in left and right tracks
-    TrackVector lefttracks = myselect(tracks,TrackTXPredicate(+1)) ;
-    TrackVector righttracks =  myselect(tracks,TrackTXPredicate(-1)) ;
+    TrackVector lefttracks = myselect(tracks,TrackVeloSidePredicate(+1)) ;
+    TrackVector righttracks =  myselect(tracks,TrackVeloSidePredicate(-1)) ;
     if( lefttracks.size() >= 2 && righttracks.size() >= 2 ) {
       // fit two vertices
       LHCb::RecVertex* leftvertex  = m_vertexer->fit( lefttracks ) ;
