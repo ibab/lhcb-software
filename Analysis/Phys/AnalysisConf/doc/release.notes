@@ -4,6 +4,9 @@
 ! Purpose     : Configuration for Analysis project
 !-----------------------------------------------------------------------------
 
+! 2009-03-17 - Patrick Koppenburg
+ - Switch Redoing of links on by default for DC06.
+
 !========================== AnalysisConf v1r1p2 2009-03-04 ===================
 
 ! 2009-03-04 - Juan PALACIOS
