@@ -1,4 +1,4 @@
-// $Id: STNZSMonitor.cpp,v 1.2 2009-03-17 11:23:30 nchiapol Exp $
+// $Id: STNZSMonitor.cpp,v 1.3 2009-03-17 18:12:44 nchiapol Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -191,23 +191,22 @@ void STNZSMonitor::updateNoiseHistogram(int tellID)
   // Create a title for the histogram
   //std::string title = m_basenameHisto + boost::lexical_cast<std::string>(tellID);
   std::string strTellID  = boost::lexical_cast<std::string>(tellID);
-  std::string histoID    = m_basenameHisto + strTellID;
+  //std::string histoID    = m_basenameHisto + strTellID;
+  HistoID histoID        = m_basenameHisto + strTellID;
   std::string histoTitle = "Noise for Tell" + strTellID;
 
+  //IHistogram1D* hist = histo1D( histoTitle ) ;
   IHistogram1D* hist = histo1D( histoID ) ;
-  //if ( hist == 0 ) {
-    //error() << "Histogram " << histoID << " not found" << endmsg;
-    //return;
-  //}
-  //hist->reset();
-
+  if ( hist ) {
+    hist->reset();
+  }
+  
   // Loop over strips in tell1
   for (unsigned int strip = 0u; strip < nStripsPerBoard; ++strip) {
     double rms = sqrt( m_meanSqMap[tellID][strip] 
                        - gsl_pow_2(m_meanMap[tellID][strip]));
     if ( hist ) {
-      hist->reset();
-      hist->fill(strip, rms);
+      hist->fill( strip, rms );
     } else {
       plot1D( strip, histoID, histoTitle, 0, nStripsPerBoard, nStripsPerBoard, rms );
     }
