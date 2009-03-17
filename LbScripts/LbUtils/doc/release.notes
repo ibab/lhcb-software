@@ -1,3 +1,7 @@
+2009-03-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v1r15
+
 2009-03-16  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/runpy: fixed usage of string.rsplit which is not compatible
