@@ -1,5 +1,5 @@
 package MooreSys
-version v6r1
+version v6r2
 
 branches doc cmt
 
@@ -9,12 +9,7 @@ branches doc cmt
 
 use  Moore                  v6r1    Hlt
 use  TCKData                v1r8    Hlt
-use  HltConf                v2r3p1  Hlt
 use  HltLuminosityMonitor   v1r2    Hlt
-use  HltGlobalMonitor       v2r2    Hlt
-use  HltCommon              v5r2    Hlt
-use  HltEcalAlley           v1r6p1  Hlt
-use  DaVinciTools           v18r2p2 Phys
 
 
 # Allow the generation of QMTest summary 
