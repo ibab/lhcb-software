@@ -1,4 +1,4 @@
-// $Id: XmlGenericCnv.h,v 1.9 2009-03-16 11:12:13 marcocle Exp $
+// $Id: XmlGenericCnv.h,v 1.10 2009-03-18 09:05:56 marcocle Exp $
 
 #ifndef DETDESCCNV_XMLGENERICCNV_H
 #define DETDESCCNV_XMLGENERICCNV_H
@@ -90,8 +90,8 @@ class XmlGenericCnv : public Converter {
    *  @return status depending on the completion of the call
    */
   IXmlSvc* xmlSvc() {
-    if (!m_xmlSvc) {
-      m_xmlSvc = SmartIF<IXmlSvc>(conversionSvc()).get();
+    if (!m_xmlSvc.isValid()) {
+      m_xmlSvc = conversionSvc();
     }
     return m_xmlSvc;
   }
@@ -231,7 +231,7 @@ protected:
   static const std::string dom2Std (const XMLCh* domString);
 
   /// the IXmlSvc interface of this object
-  IXmlSvc* m_xmlSvc;
+  SmartIF<IXmlSvc> m_xmlSvc;
 
 private:
 

@@ -4,6 +4,10 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !------------------------------------------------------------------------------
 
+! 2009-03-18 - Marco Clemencic
+ - Use SmartIF to for the cached pointer to IXmlSvc in XmlGenericCnv to solve
+   a compatibility problem with the HEAD version of Gaudi.
+
 ! 2009-03-16 - Marco Clemencic
  - Removed a dynamic_cast that should have not been there.
 

@@ -1,4 +1,4 @@
-// $Id: XmlGenericCnv.cpp,v 1.21 2008-06-11 08:18:50 marcocle Exp $
+// $Id: XmlGenericCnv.cpp,v 1.22 2009-03-18 09:05:56 marcocle Exp $
 
 // Include files
 #include "DetDescCnv/XmlGenericCnv.h"
@@ -28,7 +28,7 @@
 // ------------------------------------------------------------------------
 XmlGenericCnv::XmlGenericCnv( ISvcLocator* svc, const CLID& clid) :
   Converter (XML_StorageType, clid, svc),
-  m_xmlSvc (0),
+  m_xmlSvc(),
   m_have_CONDDB_StorageType(false)
 {
   DDDBString = xercesc::XMLString::transcode("DDDB");
