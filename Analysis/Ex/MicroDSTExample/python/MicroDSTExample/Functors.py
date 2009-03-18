@@ -13,18 +13,10 @@ class MCAssociator :
         self.mcAssoc = MCAssociatorTool
         self.verbose = verbose
     def __call__(self, p) :
-        table = self.mcAssoc.relatedMCPs(p)
-        if self.verbose and (table == None) :
-            print "Found no table"
-        else :
-            rels = table.relations()
-            if rels.size() > 0 :
-                mcp = rels.back().to()
-                if (Helpers.pid(p) != Helpers.pid(mcp) ) and self.verbose :
-                    print "ASSOC MISMATCH!!\tP ", Helpers.pid(p), "\tMCP ", Helpers.pid(mcp)
-                    for rel in rels :
-                        print "\t MCP ", Helpers.pid(rel.to())
-                return rels.back().to()
+        mcp = self.mcAssoc.bestRelatedMCP(p)
+        if self.verbose and (mcp == None) :
+            print "Found no assoc trees"
+        return mcp
 #==============================================================================
 class MassRes:
     def __init__(self, assocFun) :
