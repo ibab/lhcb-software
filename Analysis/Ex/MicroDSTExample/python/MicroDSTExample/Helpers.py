@@ -23,7 +23,7 @@ class EventLoop:
 
     def getEvtStuff(self, location, verbose = False) :
         stuff = self.evt[location]
-        if (verbose == False) and (stuff == None) :
+        if (verbose == True) and (stuff == None) :
             print "Found no stuff in ", location
         return stuff
     
