@@ -1,7 +1,7 @@
 """
 High level configuration example for a typical physics MicroDST
 """
-__version__ = "$Id: Configuration.py,v 1.1 2009-03-18 17:25:22 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.2 2009-03-18 18:42:22 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 
@@ -114,18 +114,30 @@ class PhysMicroDST(LHCbConfigurableUser) :
                                        "HltUserAlgorithms",
                                        "Hlt2Requires"] )
 
+    def seqMicroDST(self) :
+        return GaudiSequencer('SeqMicroDST')
 
     def getSequencer(self) :
+        opts = self.getProp( "MainOptions" )
+        if not (opts == '') :
+            importOptions("$STDOPTS/PreloadUnits.opts") # to get units in .opts files
+            importOptions( self.getProp( "MainOptions" ) )
+        else :
+            log.info("No MainOptions specified. DaVinci() will import no options file!")
         seqName = self.getProp("MainSequence")
         log.info("Getting MainSequence to "+seqName)
-        return GaudiSequencer(seqName)
+        seq = GaudiSequencer(seqName)
+#        seq.Members += [ self.seqMicroDST() ]
+        return seq
+
 
     def userAlgs(self) :
         userAlgs = []
-        sequencer = self.getSequencer()
         for alg in self.getProp("UserAlgorithms"):
             userAlgs.append( alg )
-        userAlgs.append(sequencer)
+        seq = self.getSequencer()
+        seq.Members += [ self.seqMicroDST() ]
+        userAlgs.append(seq)
         log.info("PhysMicroDST: Setting UserAlgorithms:")
         DaVinci().setProp("UserAlgorithms", userAlgs)
         
@@ -137,7 +149,8 @@ class PhysMicroDST(LHCbConfigurableUser) :
         dstName = self.getProp("MicroDSTFile")
         if (dstName != "" ) :
             stream.Output = "DATAFILE='"+dstName +"' TYP='POOL_ROOTTREE' OPT='REC'"
-        seqName = self.getSequencer().name()
+#        seqName = self.getSequencer().name()
+        seqName = self.getProp("MainSequence")
         log.info("Adding sequence "+ seqName + " to MicroDSTSTream")
         stream.AcceptAlgs.append( seqName )
 
@@ -145,7 +158,7 @@ class PhysMicroDST(LHCbConfigurableUser) :
         return self.getProp("MainLocation")
 
     def copyDefaultStuff(self):
-        self.getSequencer().Members += [CopyRecHeader()]
+        self.seqMicroDST().Members += [CopyRecHeader()]
 
     def copyParticleTrees(self) :
         copyParticles = CopyParticles('CopyParticles')
@@ -154,18 +167,18 @@ class PhysMicroDST(LHCbConfigurableUser) :
         copyParticles.addTool(ProtoParticleCloner(),
                               name='ProtoParticleCloner')
         copyParticles.OutputLevel=4
-        self.getSequencer().Members += [copyParticles]  
+        self.seqMicroDST().Members += [copyParticles]  
 
     def copyPVs(self) :
         copyPV=CopyPrimaryVertices('CopyPrimaryVertices')
         copyPV.OutputLevel = 4
-        self.getSequencer().Members += [copyPV]
+        self.seqMicroDST().Members += [copyPV]
 
     def copyP2PVLinks(self) :
         copyP2PVLink = CopyParticle2PVLink()
         copyP2PVLink.InputLocation = self.mainLocation()+"/Particle2VertexRelations"
         copyP2PVLink.OutputLevel=4;
-        self.getSequencer().Members += [copyP2PVLink]
+        self.seqMicroDST().Members += [copyP2PVLink]
 
 
 
@@ -178,7 +191,7 @@ class PhysMicroDST(LHCbConfigurableUser) :
         copyMC.addTool(MCParticleCloner(), name= 'MCParticleCloner')
         copyMC.MCParticleCloner.addTool(MCVertexCloner(), name = 'ICloneMCVertex')
         copyMC.OutputLevel=4;
-        self.getSequencer().Members += [copyMC]
+        self.seqMicroDST().Members += [copyMC]
 
     def copyBTaggingInfo(self) :
 
@@ -189,10 +202,10 @@ class PhysMicroDST(LHCbConfigurableUser) :
         BTagAlgo.PhysDesktop.InputLocations=[self.mainLocation()]
         BTagLocation = self.mainLocation()+"/Tagging"
         BTagAlgo.TagOutputLocation = BTagLocation
-        self.getSequencer().Members += [BTagAlgo]
+        self.seqMicroDST().Members += [BTagAlgo]
         copyFlavTag = CopyFlavourTag()
         copyFlavTag.InputLocation = BTagLocation
-        self.getSequencer().Members += [copyFlavTag]
+        self.seqMicroDST().Members += [copyFlavTag]
 
     def reFitPVLocation(self) :
         return self.mainLocation()+"/RefittedVertices"
@@ -207,42 +220,22 @@ class PhysMicroDST(LHCbConfigurableUser) :
         PVReFitter.VertexOutputLocation = self.reFitPVLocation()
         PVReFitter.P2VRelationsOutputLocation = self.P2ReFitPVRelationsLoc()
         PVReFitter.OutputLevel=4
-        self.getSequencer().Members += [PVReFitter]
+        self.seqMicroDST().Members += [PVReFitter]
 
     def copyP2PVLink(self) :
 
         copyP2RefitPVLink = CopyParticle2PVLink("CopyP2RefitPVLink")
         copyP2RefitPVLink.InputLocation = self.P2ReFitPVRelationsLoc()
         copyP2RefitPVLink.OutputLevel=4
-        self.getSequencer().Members += [copyP2RefitPVLink]
+        self.seqMicroDST().Members += [copyP2RefitPVLink]
 
     def copyReFittedPVs(self) :
         self.refitPVs()
         copyReFittedPVs = CopyPrimaryVertices('CopyReFittedPVs')
         copyReFittedPVs.InputLocation = self.reFitPVLocation()
-        self.getSequencer().Members += [copyReFittedPVs]
+        self.seqMicroDST().Members += [copyReFittedPVs]
         self.copyP2PVLink()
 
-    def mainSequence(self):
-        """
-        Main Sequence
-        """
-        opts = self.getProp( "MainOptions" )
-        if not (opts == '') :
-            importOptions( self.getProp( "MainOptions" ) )
-        else :
-            log.info("No MainOptions specified. DaVinci() will import no options file!")
-        log.info("Creating User Algorithms")
-        from Configurables import GaudiSequencer
-        mainSeq = GaudiSequencer("DaVinciMainSequence")
-        mainSeq.IgnoreFilterPassed = True 
-        ApplicationMgr().TopAlg += [ mainSeq ]
-        if ( len ( self.getProp("UserAlgorithms") ) > 0 ):
-            for alg in self.getProp("UserAlgorithms"):
-                mainSeq.Members += [ alg ]
-        sequencer = self.getSequencer()
-        log.info("Adding sequencer "+sequencer.name() + " to main sequence")
-        mainSeq.Members += [ sequencer ]
 
     def __apply_configuration__(self) :
         """
@@ -250,15 +243,12 @@ class PhysMicroDST(LHCbConfigurableUser) :
         """
         log.info("Applying PhysMicroDST configuration")
         log.info( self )
- #       importOptions("$STDOPTS/PreloadUnits.opts") # to get units in .opts files
-#        self.mainSequence()
         self.davinci()
-        self.getSequencer()
         self.userAlgs()
         self.initStream()
         self.copyDefaultStuff()
         self.copyParticleTrees()
         self.copyPVs()
-#        self.copyP2PVLinks()
-#        self.copyBTaggingInfo()
-#        self.copyMCInfo()
+        self.copyP2PVLinks()
+        self.copyBTaggingInfo()
+        self.copyMCInfo()
