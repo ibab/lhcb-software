@@ -1,7 +1,7 @@
 """
 High level configuration example for a typical physics MicroDST
 """
-__version__ = "$Id: Configuration.py,v 1.2 2009-03-18 18:42:22 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.3 2009-03-18 19:22:32 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 
@@ -58,6 +58,11 @@ class PhysMicroDST(LHCbConfigurableUser) :
         , "HltType"            : ''            # HltType : No Hlt. Use Hlt1+Hlt2 to run Hlt
         , "HltUserAlgorithms"  : [ ]           # put here user algorithms to add
         , "Hlt2Requires"       : 'L0+Hlt1'     # Say what Hlt2 requires
+        , "CopyParticles"      : True
+        , "CopyPVs"            : True
+        , "CopyBTags"          : True
+        , "CopyReFittedPVs"    : False
+        , "CopyMCTruth"        : False
         }
 
     _propertyDocDct = {  
@@ -127,7 +132,6 @@ class PhysMicroDST(LHCbConfigurableUser) :
         seqName = self.getProp("MainSequence")
         log.info("Getting MainSequence to "+seqName)
         seq = GaudiSequencer(seqName)
-#        seq.Members += [ self.seqMicroDST() ]
         return seq
 
 
@@ -149,7 +153,6 @@ class PhysMicroDST(LHCbConfigurableUser) :
         dstName = self.getProp("MicroDSTFile")
         if (dstName != "" ) :
             stream.Output = "DATAFILE='"+dstName +"' TYP='POOL_ROOTTREE' OPT='REC'"
-#        seqName = self.getSequencer().name()
         seqName = self.getProp("MainSequence")
         log.info("Adding sequence "+ seqName + " to MicroDSTSTream")
         stream.AcceptAlgs.append( seqName )
@@ -247,8 +250,9 @@ class PhysMicroDST(LHCbConfigurableUser) :
         self.userAlgs()
         self.initStream()
         self.copyDefaultStuff()
-        self.copyParticleTrees()
-        self.copyPVs()
-        self.copyP2PVLinks()
-        self.copyBTaggingInfo()
-        self.copyMCInfo()
+        if self.getProp("CopyParticles") : self.copyParticleTrees()
+        if self.getProp("CopyPVs") : self.copyPVs()
+        if self.getProp("CopyParticles") and self.getProp("CopyPVs") : self.copyP2PVLinks()
+        if self.getProp("CopyBTags") : self.copyBTaggingInfo()
+        if self.getProp("CopyReFittedPVs") : self.copyReFittedPVs()
+        if self.getProp("CopyMCTruth") : self.copyMCInfo()
