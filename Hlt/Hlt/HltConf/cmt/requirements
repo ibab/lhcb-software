@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.22 2009-03-17 11:02:20 graven Exp $ 
+# $Id: requirements,v 1.23 2009-03-18 13:26:21 graven Exp $ 
 # =============================================================================
 # The helper package for configuration of Hlt(1)
 # =============================================================================
@@ -26,7 +26,7 @@ use       HltCommon   v*  Hlt
 # ======= the structure =======================================================
 branches cmt doc options python tests 
 # =============================================================================
-macro RichRecSysConfUserModules "RichRecSys.Configuration"
+macro HltConfConfUserModules "HltConf.Configuration HltConf.LumiCounterDefinition"
 
 
 # =============================================================================

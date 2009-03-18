@@ -1,12 +1,12 @@
-! $Id: release.notes,v 1.176 2009-03-17 11:02:20 graven Exp $ 
+! $Id: release.notes,v 1.177 2009-03-18 13:26:21 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
-! 2009-03-17 - Gerhard Raven
- - add dependency on RichRecSys ConfUserModules in requirements
+! 2009-03-18 - Gerhard Raven
+  - declare extra python modules in requirements
 
 ! 2009-03-16 - Leandro de Paula
  - Change in HltMuonLines.py to make it more readable
