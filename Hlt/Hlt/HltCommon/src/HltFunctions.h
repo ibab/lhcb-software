@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.15 2009-03-11 11:45:04 aperezca Exp $
+// $Id: HltFunctions.h,v 1.16 2009-03-19 09:28:20 dhcroft Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -80,6 +80,19 @@ namespace Hlt {
     }
     Hlt::TrackFunction* clone() const {return new TrackFlag(flag);}
     LHCb::Track::Flags flag;      
+  };
+
+  /* Check a VELO tracks number of missed hits
+   * returns a double with the number Expected - found hits (could be negative)
+   */
+  class MissedVeloHits : public Hlt::TrackFunction{
+  public:
+    explicit MissedVeloHits(){};
+    double operator()( const LHCb::Track& t ) const{
+      return (t.info(LHCb::Track::nExpectedVelo,-1.))
+	- static_cast<double>(t.nLHCbIDs());
+    }
+    Hlt::TrackFunction* clone() const { return new MissedVeloHits(); }
   };
 
   class NumberOfASideVeloHits : public Hlt::TrackFunction {

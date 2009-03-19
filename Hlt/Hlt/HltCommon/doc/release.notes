@@ -3,6 +3,10 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+
+! 2009-03-19 - David Hutchcroft
+ - Added the TrackFilter MissedVeloHits 
+
 ! 2009-03-11 - Antonio Perez-Calero
   - In HltFunctions.h and HltFunctionFactories.cpp: added filters VertexTrack1Chi2OverNdf and also
   	for track2, to apply chi2 filter to each of the daughter tracks, in order to distinguish between 
