@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTrack.cpp,v 1.9 2009-03-05 14:27:57 dhcroft Exp $
+// $Id: PatVeloSpaceTrack.cpp,v 1.10 2009-03-19 09:25:09 dhcroft Exp $
 // Include files 
 
 // local
@@ -35,6 +35,7 @@ namespace Tf {
       m_cov(Gaudi::TrackSymMatrix()),
       m_maxRSensor(0),
       m_minRSensor(65),
+      m_nVeloExpected(-1.),
       m_ancestor(0),
       m_angleUtils(-Gaudi::Units::pi,Gaudi::Units::pi)
   {

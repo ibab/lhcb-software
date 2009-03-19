@@ -1,4 +1,4 @@
-// $Id: PatRZTrack.h,v 1.3 2007-11-30 09:09:19 dhcroft Exp $
+// $Id: PatRZTrack.h,v 1.4 2009-03-19 09:25:08 dhcroft Exp $
 #ifndef TF_PATRZTRACK_H 
 #define TF_PATRZTRACK_H 1
 
@@ -37,7 +37,7 @@ namespace Tf {
       inline bool valid()          const { return m_valid; }
       inline VeloRHits* coords()       { return &m_coord; };
       inline unsigned int nbCoords() const { return m_coord.size(); }
-      inline bool missedStations() const { return m_missedStations; }
+      inline unsigned int missedStations() const { return m_missedStations; }
       inline int zone()            const { return m_zone; } ///< get R zone
       inline bool backward()       const { return m_backward; }
 
@@ -47,7 +47,7 @@ namespace Tf {
       // set track parmaters
       void setValid( bool flag )  { m_valid = flag; }
       void setZone( unsigned int zone )    { m_zone = zone;   } ///< Set track R zone
-      void setMissedStations( bool flag )  { m_missedStations = flag; }
+      void setMissedStations( unsigned int missed ) { m_missedStations = missed ; } 
       void setBackward( bool flag )      { m_backward = flag; }  
 
       void addRCoord( VeloRHit* coord ); ///< new R coord + fit
@@ -71,7 +71,7 @@ namespace Tf {
       bool   m_valid;
       unsigned int    m_zone;
       bool   m_backward;
-      bool   m_missedStations;
+      unsigned int m_missedStations;
       unsigned int m_minSensor;
       unsigned int m_maxSensor;
 

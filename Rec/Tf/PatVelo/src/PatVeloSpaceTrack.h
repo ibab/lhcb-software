@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTrack.h,v 1.7 2009-03-05 14:27:57 dhcroft Exp $
+// $Id: PatVeloSpaceTrack.h,v 1.8 2009-03-19 09:25:09 dhcroft Exp $
 #ifndef TF_PATVELOSPACETRACK_H
 #define TF_PATVELOSPACETRACK_H 1
 
@@ -59,6 +59,9 @@ namespace Tf {
     /// set the used type flag for all cluster on the track
     void tagClustersAsUsed( HitBase::EStatus );
 
+    /// set the number of expected R clusters (from RZ Track)
+    void setNVeloExpected( double nVeloExp ) { m_nVeloExpected = nVeloExp ; }
+
   public:
     // inline getters
     inline double meanZ()           const { return m_meanZ; }
@@ -81,6 +84,7 @@ namespace Tf {
     inline const LHCb::Track* ancestor() const { return m_ancestor; }
     inline unsigned int minRSensor() const { return m_minRSensor; }
     inline unsigned int maxRSensor() const { return m_maxRSensor; }
+    inline double nVeloExpected()    const { return m_nVeloExpected; }
 
     inline const Gaudi::TrackSymMatrix& covariance()  const { return m_cov; }
 
@@ -170,6 +174,8 @@ namespace Tf {
 
     unsigned int m_maxRSensor; ///< the biggest R sensor index on the track
     unsigned int m_minRSensor; ///< the smallest R sensor index on the track
+
+    double m_nVeloExpected;   ///< Number of clusters expected, read from RZ 
 
     const LHCb::Track* m_ancestor; ///< RZ track ancestor; if one exists
 

@@ -4,6 +4,18 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2009-03-18 - David Hutchcroft
+ - Added nVeloExpected info to RZ track and Space/General tracks
+   For use in the HLT to reject more ghosts. Note due to the way the HLT
+   explicitly copies everything from the RZ to the Space track and overwrites
+   the AdditionalInfo the RZ track has the estimate of the number of R+Phi
+   clusters.
+   PatRZTrack: number of missed stations is a int not a bool
+   PatVeloGeneralTracking : set nVeloExpected in track AdditionalInfo
+   PatVeloRTracking : set nVeloExpected (R+Phi count, see comment above)
+   PatVeloSpaceTrack : store nVeloExpected from RZ track
+   PatVeloTrackTool : copy RZ info to PatVeloSpaceTrack, then to output track
+
 ! 2009-03-13 - Olivier Callot
  - Several changes for performance improvements:
    PatVeloPhiList: o Compute a quality factor = chi2 - .5 * nbUnused for better

@@ -1,4 +1,4 @@
-// $Id: PatRZTrack.cpp,v 1.5 2007-11-30 09:09:19 dhcroft Exp $
+// $Id: PatRZTrack.cpp,v 1.6 2009-03-19 09:25:08 dhcroft Exp $
 // Include files 
 
 // local
@@ -26,7 +26,7 @@ namespace Tf {
     m_valid(true),
     m_zone(0),  
     m_backward(false),
-    m_missedStations(false),
+    m_missedStations(0),
     m_minSensor( 100 ),
     m_maxSensor( 0 ),
     m_pos0(-999.),

@@ -1,4 +1,4 @@
-// $Id: PatVeloRTracking.cpp,v 1.6 2009-03-13 16:17:32 ocallot Exp $
+// $Id: PatVeloRTracking.cpp,v 1.7 2009-03-19 09:25:09 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -311,6 +311,13 @@ namespace Tf {
         track->addToStates( temp );
         // set chi2 per dof from RZ fit
         track->setChi2AndDoF(tr->chi2(),tr->nbCoords()-2);
+	// also add the number of found + missed stations 
+	// to the track information for ghost rejection later if required
+	// return the number of expetced R + phi clusters 
+	// due to issues in the HLT
+	track->addInfo(LHCb::Track::nExpectedVelo,
+		       2.*static_cast<double>(tr->nbCoords()+
+					      tr->missedStations()) );
 
         // store details of hits on track
         for ( VeloRHits::iterator itC = tr->coords()->begin();
@@ -532,9 +539,8 @@ namespace Tf {
             continue;
           }
 
-          if ( m_maxMissed < nMiss ) {
-            newTrack.setMissedStations( true );
-          }
+	  // store the number of missed stations to put on LHCb::Track later
+	  newTrack.setMissedStations( nMiss );
 
           // define the global frame 45 degree zone in which the track was
           // found. Use the sectors of an upstream lefthand sensor 0->3
