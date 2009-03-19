@@ -7,6 +7,7 @@
 #include "EvtGenBase/EvtComplex.hh"
 #include "EvtGenModels/EvtBToVllConstants.hh"
 
+#include <algorithm>
 #include <cassert>
 #include <iostream>
 #include <memory>
@@ -29,8 +30,10 @@ class WilsonCoefficients{
 public:
 	
 	explicit WilsonCoefficients(const double& _scale, const unsigned int _operatorBasis, const unsigned int _dimension);
-	WilsonCoefficients(const WilsonCoefficients& other);
+	WilsonCoefficients(const WilsonCoefficients<T>& other);
 
+	static std::auto_ptr<WilsonCoefficients<T> > conjugate(const WilsonCoefficients<T>& other);
+	
 	T& operator()(const size_t index) const;
 	T& operator()(const size_t index);
 
@@ -40,7 +43,6 @@ public:
 	unsigned int getDimension() const;
 	
 	double getScale() const;
-	std::auto_ptr<WilsonCoefficients<T> > getSlice(const int& start, const int& end) const;
 
 private:
 	
@@ -54,9 +56,11 @@ private:
 	template<typename TT>
 	friend WilsonCoefficients<TT> operator*(const Matrix &m1, const WilsonCoefficients<TT>& m2);
 
+	static EvtComplex doConj(const T& number);
 	
 
 };
+typedef const WilsonCoefficients<WilsonType>* WCPtrNaked;
 typedef std::auto_ptr<const WilsonCoefficients<WilsonType> > WCPtr;
 
 template<typename T>
@@ -66,7 +70,7 @@ WilsonCoefficients<T>::WilsonCoefficients(const double& _scale, const unsigned i
 }
 
 template<typename T>
-WilsonCoefficients<T>::WilsonCoefficients(const WilsonCoefficients& other):
+WilsonCoefficients<T>::WilsonCoefficients(const WilsonCoefficients<T>& other):
 	scale(other.scale), wc(new std::vector<T>(other.operatorBasis)),
 		operatorBasis(other.operatorBasis),dimension(other.dimension)
 {
@@ -116,22 +120,14 @@ double WilsonCoefficients<T>::getScale() const{
 }
 
 /**
- * Gets a slice of WCs. Is inclusive range with same index as WCs
+ * Returns a copy of the WilsonCoefficients object
+ * where a complex conjugate has been made.
  */
 template<typename T>
-std::auto_ptr<WilsonCoefficients<T> > WilsonCoefficients<T>::getSlice(const int& start, const int& end) const{
-	
-	int range = end - start;
-	
-	assert(end > start);
-	assert(range <= getOperatorBasis());
-	
-	WilsonCoefficients<T> result = new WilsonCoefficients<T>(getScale(), range, dimension);
-	for(unsigned int i = start; i <= end; i++){
-		result(i) = wc(i);
-	}
+std::auto_ptr<WilsonCoefficients<T> > WilsonCoefficients<T>::conjugate(const WilsonCoefficients<T>& other){
+	WilsonCoefficients<T>* result = new WilsonCoefficients<T>(other);
+	std::transform(result->wc->begin(),result->wc->end(),result->wc->begin(),WilsonCoefficients<T>::doConj);
 	return std::auto_ptr< WilsonCoefficients<T> >(result);
-	
 }
 
 template<typename T>
@@ -168,6 +164,13 @@ WilsonCoefficients<T> operator*(const Matrix &m1, const  WilsonCoefficients<T>& 
 		result(i) = T(mReResult(i),mImResult(i));
 	}
 	return result;
+}
+
+//private function to perform the conjugate of things which can be converted to an EvtComplex
+template<typename T>
+EvtComplex WilsonCoefficients<T>::doConj(const T& number){
+	EvtComplex c = number;
+	return conj(c);
 }
 
 }

@@ -39,6 +39,30 @@ const std::string QCDFactorisation::antibquark("B0");
 
 EvtBToVllParameters* QCDFactorisation::parameters = 0;
 
+EvtBToVllParameters::EvtBToVllParameters(bool _includeRHC,
+		qcd::WCPtr _C_mb, qcd::WCPtr _C_mb3,
+		qcd::WCPtr _CR_mb, qcd::WCPtr _CR_mb3):
+		includeRHC(_includeRHC),
+		C_mb(_C_mb),C_mb3(_C_mb3),
+		CR_mb(_CR_mb),CR_mb3(_CR_mb3),
+		C_mb_conj(qcd::WilsonCoefficients<qcd::WilsonType>::conjugate(*C_mb)),
+		C_mb3_conj(qcd::WilsonCoefficients<qcd::WilsonType>::conjugate(*C_mb3)),
+		CR_mb_conj(qcd::WilsonCoefficients<qcd::WilsonType>::conjugate(*CR_mb)),
+		CR_mb3_conj(qcd::WilsonCoefficients<qcd::WilsonType>::conjugate(*CR_mb3)),
+		isBbar(true){
+	std::cout << "Constructed the parameters struct" << std::endl;
+}
+
+void EvtBToVllParameters::setParentID(const EvtId parentID){
+	EvtIdSet b(QCDFactorisation::bquark);//i.e. the Bbar
+	isBbar = b.contains(parentID);
+}
+
+std::string EvtBToVllParameters::flavourString() const{
+	return isBbar ? QCDFactorisation::bquark : QCDFactorisation::antibquark; 
+}
+
+
 QCDFactorisation::QCDFactorisation(const qcd::IPhysicsModel& _model, const bdkszmm::PARAMETERIZATIONS _ffModel, bool _calcAFBZero):
 	model(_model),ffModel(bdkszmm::getFFModel(_ffModel)),calcAFBZero(_calcAFBZero)
 {
@@ -50,43 +74,52 @@ QCDFactorisation::QCDFactorisation(const qcd::IPhysicsModel& _model, const bdksz
 void QCDFactorisation::init(){
 	
 	report(INFO,"EvtGen") << " Form-factor model is \"" << ffModel->getName() << "\"." << std::endl;
-	
-	parameters = new EvtBToVllParameters();
 
 	//find the WCs at mu = mb
 	qcd::WCPtr  C_mw = model.getLeftWilsonCoefficientsMW();
 	qcd::WCPtr  CR_mw = model.getRightWilsonCoefficientsMW();
+
 	qcd::EvtBToVllEvolveWC10D evolveMb(*C_mw,*CR_mw);
-	
 	std::auto_ptr<qcd::WilsonPair> _mb(evolveMb(constants::mu_mb));
-	parameters->C_mb = qcd::WCPtr(_mb->first);
-	parameters->CR_mb = qcd::WCPtr(_mb->second);
 	std::auto_ptr<qcd::WilsonPair> _mb3(evolveMb(constants::mu_h));
-	parameters->C_mb3 = qcd::WCPtr(_mb3->first);
-	parameters->CR_mb3 = qcd::WCPtr(_mb3->second);
-	parameters->includeRHC = model.hasRightHandedCurrents();
+
+	parameters = new EvtBToVllParameters(model.hasRightHandedCurrents(),
+			qcd::WCPtr(_mb->first),qcd::WCPtr(_mb3->first),
+			qcd::WCPtr(_mb->second),qcd::WCPtr(_mb3->second));
 	
-	assert(C_mw->getOperatorBasis() == parameters->C_mb->getOperatorBasis());
-	assert(C_mw->getOperatorBasis() == parameters->C_mb3->getOperatorBasis());
+	assert(C_mw->getOperatorBasis() == parameters->getC_mb()->getOperatorBasis());
+	assert(C_mw->getOperatorBasis() == parameters->getC_mb3()->getOperatorBasis());
 	
 	DEBUGPRINT("C_mw: ", (*C_mw));//V
-	DEBUGPRINT("C_mb: ", *(parameters->C_mb));//V
-	DEBUGPRINT("C_mb3: ", *(parameters->C_mb3));//V
 	DEBUGPRINT("CR_mw: ", (*CR_mw));//V
-	DEBUGPRINT("CR_mb: ", *(parameters->CR_mb));//V
-	DEBUGPRINT("CR_mb3: ", *(parameters->CR_mb3));//V
+
+	const bool saveFlavour = parameters->getisBbar();
+	parameters->setBbar(true);
+	DEBUGPRINT("Flavour: ", parameters->flavourString());
+	DEBUGPRINT("C_mb: ", *(parameters->getC_mb()));//V
+	DEBUGPRINT("C_mb3: ", *(parameters->getC_mb3()));//V
+	DEBUGPRINT("CR_mb: ", *(parameters->getCR_mb()));//V
+	DEBUGPRINT("CR_mb3: ", *(parameters->getCR_mb3()));//V
+	
+	parameters->setBbar(false);
+	DEBUGPRINT("Flavour: ", parameters->flavourString());
+	DEBUGPRINT("C_mb: ", *(parameters->getC_mb()));//V
+	DEBUGPRINT("C_mb3: ", *(parameters->getC_mb3()));//V
+	DEBUGPRINT("CR_mb: ", *(parameters->getCR_mb()));//V
+	DEBUGPRINT("CR_mb3: ", *(parameters->getCR_mb3()));//V
+	parameters->setBbar(saveFlavour);
 	
 	report(NOTICE,"EvtGen") << "Using physics model: " << model.getModelName() << std::endl;
+	report(NOTICE,"EvtGen") << "Meson: " << parameters->flavourString() << std::endl;
 	report(NOTICE,"EvtGen") << "Left-handed Wilson coefficients are: " << std::endl;
 	report(NOTICE,"EvtGen") << "\t(m_W): " << (*C_mw) <<std::endl;
-	report(NOTICE,"EvtGen") << "\t(m_b): " << *(parameters->C_mb) <<std::endl;
-	report(NOTICE,"EvtGen") << "\t(m_h): " << *(parameters->C_mb3) <<std::endl;
+	report(NOTICE,"EvtGen") << "\t(m_b): " << *(parameters->getC_mb()) <<std::endl;
+	report(NOTICE,"EvtGen") << "\t(m_h): " << *(parameters->getC_mb3()) <<std::endl;
 	
 	report(NOTICE,"EvtGen") << "Right-handed Wilson coefficients are: " << std::endl;
 	report(NOTICE,"EvtGen") << "\t(m_W): " << (*CR_mw) <<std::endl;
-	report(NOTICE,"EvtGen") << "\t(m_b): " << *(parameters->CR_mb) <<std::endl;
-	report(NOTICE,"EvtGen") << "\t(m_h): " << *(parameters->CR_mb3) <<std::endl;
-	
+	report(NOTICE,"EvtGen") << "\t(m_b): " << *(parameters->getCR_mb()) <<std::endl;
+	report(NOTICE,"EvtGen") << "\t(m_h): " << *(parameters->getCR_mb3()) <<std::endl;
 	
 	if(calcAFBZero){
 		double afbZero = findAFBZero();
@@ -95,9 +128,9 @@ void QCDFactorisation::init(){
 	
 #if 1
 	std::cout << "C(mb)" << std::endl;
-	for(unsigned int i = 1; i <= parameters->C_mb->getOperatorBasis(); i++){
-		const double re = real((*(parameters->C_mb))(i));
-		const double im = imag((*(parameters->C_mb))(i));
+	for(unsigned int i = 1; i <= parameters->getC_mb()->getOperatorBasis(); i++){
+		const double re = real((*(parameters->getC_mb()))(i));
+		const double im = imag((*(parameters->getC_mb()))(i));
 		const char op = (im > 0) ? '+' : '-';
 		if( (im<1e-5) && (im>-1e-5) ){//real
 			std::cout << std::showpoint << std::fixed << std::setprecision(3) << re << " & ";
@@ -107,9 +140,9 @@ void QCDFactorisation::init(){
 	}
 	std::cout << std::endl;
 	std::cout << "C\'(mb)" << std::endl;
-	for(unsigned int i = 1; i <= parameters->CR_mb->getOperatorBasis(); i++){
-		const double re = real((*(parameters->CR_mb))(i));
-		const double im = imag((*(parameters->CR_mb))(i));
+	for(unsigned int i = 1; i <= parameters->getCR_mb()->getOperatorBasis(); i++){
+		const double re = real((*(parameters->getCR_mb()))(i));
+		const double im = imag((*(parameters->getCR_mb()))(i));
 		const char op = (im > 0) ? '+' : '-';
 		if( (im<1e-5) && (im>-1e-5) ){//real
 			std::cout << std::showpoint << std::fixed << std::setprecision(3) << re << " & ";
@@ -167,6 +200,16 @@ void QCDFactorisation::getAmp(EvtParticle* parent, EvtAmp& amp) const{
 	const double mK = constants::mKstar;
 	//const double q2 = 3.9;
 	const double mKhat = mK/MB;
+
+	//set the parent ID so that we get the right WC
+	parameters->setParentID(parent->getId());
+	//parameters->setBbar(false);
+	
+	DEBUGPRINT("Flavour: ", parameters->flavourString());
+	DEBUGPRINT("C_mb: ", *(parameters->getC_mb()));
+	DEBUGPRINT("C_mb3: ", *(parameters->getC_mb3()));
+	DEBUGPRINT("CR_mb: ", *(parameters->getCR_mb()));
+	DEBUGPRINT("CR_mb3: ", *(parameters->getCR_mb3()));
 	DEBUGPRINT("MB: ", MB);
 	
 	//get the amplitude tensors
@@ -273,7 +316,9 @@ void QCDFactorisation::getAmp(EvtParticle* parent, EvtAmp& amp) const{
 	    amp.vertex(i,0,1, l12*E1+a12*E2+S*s12);
 	    amp.vertex(i,1,0, l21*E1+a21*E2+S*s21);
 	    amp.vertex(i,1,1, l22*E1+a22*E2+S*s22);
-	 } 
+	 }
+	//return parent ID to default state
+	parameters->resetParentID();
 }
 
 double QCDFactorisation::getAFB(const double q2) const{
@@ -569,7 +614,7 @@ void QCDFactorisation::getTnAmplitudes(const double q2, const double MB, const d
 	const double s2 = q2/(constants::mb*constants::mb);
 	const double Lc = log(mc1);
 	const double Ls = log(s2);
-	const double Lm = log(parameters->C_mb->getScale()/constants::mb);
+	const double Lm = log(parameters->getC_mb()->getScale()/constants::mb);
 	
 	DEBUGPRINT("mc1: ", mc1);//V
 	DEBUGPRINT("s2: ", s2);//V
@@ -622,16 +667,16 @@ void QCDFactorisation::getTnAmplitudes(const double q2, const double MB, const d
 	DEBUGPRINT("F[8,9]: ", F_8_9);//V
 	
 	DEBUGPRINT("mbp: ", qcd::mb_pole(constants::mb));//V
-	DEBUGPRINT("h3(q^2,0): ", qcd::h(q2,0,parameters->C_mb3->getScale()));//V
-	DEBUGPRINT("h3(q^2,mc): ", qcd::h(q2,constants::mc,parameters->C_mb3->getScale()));//V
-	DEBUGPRINT("h3(q^2,mb): ", qcd::h(q2,constants::mb,parameters->C_mb3->getScale()));//V
-	DEBUGPRINT("h3(q^2,mbp): ", qcd::h(q2,qcd::mb_pole(constants::mb),parameters->C_mb3->getScale()));//V
-	DEBUGPRINT("Y3(q^2): ", qcd::Y(q2,*(parameters->C_mb3)));//V
+	DEBUGPRINT("h3(q^2,0): ", qcd::h(q2,0,parameters->getC_mb3()->getScale()));//V
+	DEBUGPRINT("h3(q^2,mc): ", qcd::h(q2,constants::mc,parameters->getC_mb3()->getScale()));//V
+	DEBUGPRINT("h3(q^2,mb): ", qcd::h(q2,constants::mb,parameters->getC_mb3()->getScale()));//V
+	DEBUGPRINT("h3(q^2,mbp): ", qcd::h(q2,qcd::mb_pole(constants::mb),parameters->getC_mb3()->getScale()));//V
+	DEBUGPRINT("Y3(q^2): ", qcd::Y(q2,*(parameters->getC_mb3())));//V
 	
 	DEBUGPRINT("PolyLog[2, 10102.3465 - 78798.918 I]",PolyLog(2,EvtComplex(10102.3465,78798.918)));
 	DEBUGPRINT("PolyLog[2, -0.003465 - 0.00918 I]",PolyLog(2,EvtComplex(-0.003465,0.00918)));
 	
-	const Integrate t1_int_left(e,MB,mK,q2,parameters->C_mb.get(),parameters->C_mb3.get());
+	const Integrate t1_int_left(e,MB,mK,q2,parameters->getC_mb(),parameters->getC_mb3());
 	const SignedPair<double> xi(xi1,xi2);
 	const SignedPair<EvtComplex> C1 = t1_int_left.getC1(F_2_7,F_8_7,F_1_9,F_2_9,F_8_9);
 	DEBUGPRINT("C1[1]: ", C1[1]);//V
@@ -646,7 +691,7 @@ void QCDFactorisation::getTnAmplitudes(const double q2, const double MB, const d
 	const EvtComplex C9_1 = (2*constants::mb*MB*t_1)/(q2*xi[1]);
 	const EvtComplex C9_2 = (-2*constants::mb*t_2)/(MB*xi[2]);
 	const SignedPair<EvtComplex> C9(C9_1,C9_2);
-	const EvtComplex Ceff1_9 = (*(parameters->C_mb))(9) + qcd::Y(q2,*(parameters->C_mb));
+	const EvtComplex Ceff1_9 = (*(parameters->getC_mb()))(9) + qcd::Y(q2,*(parameters->getC_mb()));
 	
 	DEBUGPRINT("C9[1]: ", C9[1]);//V
 	DEBUGPRINT("C9[2]: ", C9[2]);//V
@@ -656,7 +701,7 @@ void QCDFactorisation::getTnAmplitudes(const double q2, const double MB, const d
 	SignedPair<EvtComplex> C9p(0.0,0.0);
 	EvtComplex Ceff1_9p = 0.0;
 	if(parameters->includeRHC){
-		const IntegrateRight t1_int_right(e,MB,mK,q2,parameters->CR_mb.get(),parameters->CR_mb3.get());
+		const IntegrateRight t1_int_right(e,MB,mK,q2,parameters->getCR_mb(),parameters->getCR_mb3());
 		const SignedPair<EvtComplex> CR1 = t1_int_right.getC1(F_2_7,F_8_7,F_1_9,F_2_9,F_8_9);
 		const EvtComplex tp_1 = t1_int_right.get_t(1, xi, CR1);
 		DEBUGPRINT("tp[1]: ", tp_1);
@@ -665,7 +710,7 @@ void QCDFactorisation::getTnAmplitudes(const double q2, const double MB, const d
 		
 		C9p.set(1,(2*constants::mb*MB*tp_1)/(q2*xi[1]));
 		C9p.set(2,(-2*constants::mb*tp_2)/(MB*xi[2]));
-		Ceff1_9p = (*(parameters->CR_mb))(9);
+		Ceff1_9p = (*(parameters->getCR_mb()))(9);
 		
 		DEBUGPRINT("C9p[1]: ", C9p[1]);
 		DEBUGPRINT("C9p[2]: ", C9p[2]);
@@ -679,51 +724,53 @@ void QCDFactorisation::getTnAmplitudes(const double q2, const double MB, const d
 	
 	const double mk = mK/MB;
 	DEBUGPRINT("mk: ", mk);
+	DEBUGPRINT("C7:",(*(parameters->getC_mb()))(7));
+	DEBUGPRINT("C7\':",(*(parameters->getCR_mb()))(7));
 	
 	//eqn 4.10
 	const EvtComplex tensA = ((2*(Ceff1_9 + Ceff1_9p)*ffV)/(1 + mk)) +
-		((4*constants::mb*MB*((*(parameters->C_mb))(7)+(*(parameters->CR_mb))(7))*ffT1)/(q2)) +
+		((4*constants::mb*MB*((*(parameters->getC_mb()))(7)+(*(parameters->getCR_mb()))(7))*ffT1)/(q2)) +
 		((2*(C9[1]+C9p[1])*xi[1]));
 	DEBUGPRINT("tensA: ", tensA);//V
 	tensors->at(A) = tensA;//will throw runtime exception if the vector is not correct
 	
 	//eqn 4.11
 	const EvtComplex tensB = (1 + mk)*(((Ceff1_9 - Ceff1_9p)*ffA1) +
-			(2*constants::mb*MB*(1 - mk)*((*(parameters->C_mb))(7)-(*(parameters->CR_mb))(7))*ffT2/q2)) +
+			(2*constants::mb*MB*(1 - mk)*((*(parameters->getC_mb()))(7)-(*(parameters->getCR_mb()))(7))*ffT2/q2)) +
 		(2*e*(C9[1]-C9p[1])*xi[1]/MB);
 	DEBUGPRINT("tensB: ", tensB);//V
 	tensors->at(B) = tensB;//will throw runtime exception if the vector is not correct
 	
 	//eqn 4.12
 	const EvtComplex tensC = (1./(1 - (mk*mk)))*(((1 - mk)*(Ceff1_9 + Ceff1_9p)*ffA2) + 
-			(2*(constants::mb/MB)*((*(parameters->C_mb))(7)+(*(parameters->CR_mb))(7))*(ffT3 + (((MB*MB) - (mK*mK))/q2)*ffT2)) + 
+			(2*(constants::mb/MB)*((*(parameters->getC_mb()))(7)+(*(parameters->getCR_mb()))(7))*(ffT3 + (((MB*MB) - (mK*mK))/q2)*ffT2)) + 
 			((C9[1]+C9p[1])*xi[1]) - ((C9[2]+C9p[2])*xi[2]));
 	DEBUGPRINT("tensC: ", tensC);//V
 	tensors->at(C) = tensC;//will throw runtime exception if the vector is not correct
 		
 	//eqn 4.14
-	const EvtComplex tensE = (2*((*(parameters->C_mb))(10)+(*(parameters->CR_mb))(10))*ffV)/(1 + mk);
+	const EvtComplex tensE = (2*((*(parameters->getC_mb()))(10)+(*(parameters->getCR_mb()))(10))*ffV)/(1 + mk);
 	DEBUGPRINT("tensE: ", tensE);//V
 	tensors->at(E) = tensE;//will throw runtime exception if the vector is not correct
 	
 	//eqn 4.15
-	const EvtComplex tensF = (1 + mk)*((*(parameters->C_mb))(10)-(*(parameters->CR_mb))(10))*ffA1;
+	const EvtComplex tensF = (1 + mk)*((*(parameters->getC_mb()))(10)-(*(parameters->getCR_mb()))(10))*ffA1;
 	DEBUGPRINT("tensF: ", tensF);//V
 	tensors->at(F) = tensF;//will throw runtime exception if the vector is not correct
 	
 	//eqn 4.16
-	const EvtComplex tensG = ((*(parameters->C_mb))(10)+(*(parameters->CR_mb))(10))*(ffA2/(1 + mk));
+	const EvtComplex tensG = ((*(parameters->getC_mb()))(10)+(*(parameters->getCR_mb()))(10))*(ffA2/(1 + mk));
 	DEBUGPRINT("tensG: ", tensG);//V
 	tensors->at(G) = tensG;//will throw runtime exception if the vector is not correct
 	
 	//eqn 4.17 of Ali and Ball, and also 3.18 of hep-ph/0004262
-	const EvtComplex tensH = ((*(parameters->C_mb))(10)+(*(parameters->CR_mb))(10))*
+	const EvtComplex tensH = ((*(parameters->getC_mb()))(10)+(*(parameters->getCR_mb()))(10))*
 		( ((MB*MB/q2)*( (((1 + mk)*ffA1)) - ((1 - mk)*ffA2) - (2*mk*ffA0))) ) +
-		((mK*MB*ffA0*(*(parameters->C_mb))(12))/(constants::mmu*(constants::mb + constants::ms)));//scalar correction
+		((mK*MB*ffA0*(*(parameters->getC_mb()))(12))/(constants::mmu*(constants::mb + constants::ms)));//scalar correction
 	tensors->at(H) = tensH;//will throw runtime exception if the vector is not correct
 	DEBUGPRINT("tensH: ", tensH);
 	
-	const EvtComplex tensS2 = (-MB*ffA0*(*(parameters->C_mb))(11))/(constants::mb + constants::ms);
+	const EvtComplex tensS2 = (-MB*ffA0*(*(parameters->getC_mb()))(11))/(constants::mb + constants::ms);
 	tensors->at(S2) = tensS2;//will throw runtime exception if the vector is not correct
 	DEBUGPRINT("tensS2: ", tensS2);//V
 }
