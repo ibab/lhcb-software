@@ -1,4 +1,4 @@
-// $Id: RichRingReconParam.cpp,v 1.1.1.1 2009-03-04 12:01:45 jonrob Exp $
+// $Id: RichRingReconParam.cpp,v 1.2 2009-03-19 17:15:43 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -27,7 +27,9 @@ RichRingReconParam::RichRingReconParam( const std::string& type,
 {
   declareInterface<IRichRingReconParam>(this);
   declareProperty("AerogelYHitShift",m_YAgelShift=225.0); // shift in mm for aerogel hits between Top and Bottom.
-  declareProperty("MinRadiator" , m_MinRadiator=0);  // lowest radiator number.
+  //  declareProperty("MinRadiator" , m_MinRadiator=0);  // lowest radiator number.
+  declareProperty("MinRadiator" , m_MinRadiator=1);  // lowest radiator number. Aerogel is swiched off temporarily, to
+                                                     // gain cpu time.
   declareProperty("MaxRadiator" , m_MaxRadiator=2);  // highest radiator number.
   declareProperty("ActivateSingleEvHisto", m_ActivateSingleEvHisto=false); // single event histo
   declareProperty("ActivateSingleTrackDebug",m_ActivateSingleTrackDebug= false);

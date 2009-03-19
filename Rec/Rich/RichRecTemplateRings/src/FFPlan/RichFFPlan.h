@@ -1,4 +1,4 @@
-// $Id: RichFFPlan.h,v 1.1.1.1 2009-03-04 12:01:45 jonrob Exp $
+// $Id: RichFFPlan.h,v 1.2 2009-03-19 17:14:22 seaso Exp $
 #ifndef FFPLAN_RICHFFPLAN_H 
 #define FFPLAN_RICHFFPLAN_H 1
 
@@ -9,6 +9,7 @@
 
 #include "RichRingRec/IRichFFPlan.h"            // Interface
 
+#include "fftw3.h"
 
 /** @class RichFFPlan RichFFPlan.h FFPlan/RichFFPlan.h
  *  
@@ -29,6 +30,11 @@ public:
   void InitFFPlan();
   VD ConvertToFF2d( VD A, VD B);
   VVD ConvertToInvFF2d(VD F );
+  void InitFFForwardPlan();
+  void InitFFInvPlan();
+  void ResetFFTWForwardPlanArrays();
+  void ResetFFTWInvPlanArrays();
+  void ReleaseFFTWArrays();
   
   
 
@@ -53,6 +59,14 @@ private:
 
   // Cartisian coord not used in this version, for now.
 
+  double* m_Input2drTocF;    //array input for Forward FF transform
+  fftw_complex * m_Output2drTocF; // array output for Forward FF transform
+  fftw_plan  m_plan2drTocForward;  //Plan for forward FF transform
+  
+  fftw_complex* m_Input2dcTocInverse; // array input for Inverse FF transform
+  fftw_complex* m_Output2dcTocInverse; // array output for Inverse FF transform
+  fftw_plan m_plan2dcTocInverse;  // Plan for Inverse FF transform
+  
 
 };
 #endif // FFPLAN_RICHFFPLAN_H

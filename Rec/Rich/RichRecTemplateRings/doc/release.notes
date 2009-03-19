@@ -5,8 +5,14 @@
 !-----------------------------------------------------------------------------
 
 !==================== RichRecTemplateRings v1r0 2009-03-10 ===================
-! 2009-03-08  Sajan Easo
-  Added couple of options switches in RichRingMasterAlg
+! 2009-03-19  Sajan Easo
+ - Added couple of options switches in RichRingMasterAlg
+ - Improved the cpu time in a minor way by configuring the 
+   FFT Plan at initialize stage in RichFFPlan.cpp
+ - Added a switch in RichTargetDataConfigAlg.cp to select only tracks above
+   a Cherenkov Momentum Threshold.
+ - In  RichRingReconParam.cpp the aerogel rings are swiched off as
+   a default setup. They can be be switched on using the python options.
 ! 2009-03-08  Sajan Easo
   Fixed a typo in RichRingRecMass
  

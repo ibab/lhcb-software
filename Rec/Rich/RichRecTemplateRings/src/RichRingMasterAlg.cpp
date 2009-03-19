@@ -1,4 +1,4 @@
-// $Id: RichRingMasterAlg.cpp,v 1.2 2009-03-19 09:28:53 seaso Exp $
+// $Id: RichRingMasterAlg.cpp,v 1.3 2009-03-19 17:15:43 seaso Exp $
 // Include files
 
 // from Gaudi
@@ -94,6 +94,7 @@ StatusCode RichRingMasterAlg::FindRingsWithTracks()
 
     // loop through the track segments in each radiator
     VI tkMM = art->Tfm()->getTrackIndexLimits( irad);
+    
     for(int itk=tkMM[0]; itk< (tkMM [1]) ; ++itk){
 
       // select and configure the RICH hits in the Field of Interest.
@@ -219,7 +220,7 @@ StatusCode RichRingMasterAlg::StoreRingInfoInNtup()
     }
 
 
-     info()<<" Now in store info to Ntuple NumHit "<<aNumHit<<endmsg;
+    //info()<<" Now in store info to Ntuple NumHit "<<aNumHit<<endmsg;
 
     m_RingTuple->column("Radiator", irad);
     m_RingTuple->column("NumTk",(int) tkX.size());
@@ -332,6 +333,7 @@ StatusCode RichRingMasterAlg::finalize()
   //  if( rt()->RParam()-> WriteOutAuxiliaryDebugHisto()  ){
   //   rt()->HSingleEv()-> WriteOutDebugHistogramsToAuxiliaryFile();
   // }
+  rt()->RFFP()->ReleaseFFTWArrays();
 
   return RichRingRecTupleAlgBase::finalize();  // must be called after all other actions
 }

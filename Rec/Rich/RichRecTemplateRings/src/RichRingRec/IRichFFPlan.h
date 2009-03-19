@@ -1,4 +1,4 @@
-// $Id: IRichFFPlan.h,v 1.1.1.1 2009-03-04 12:01:45 jonrob Exp $
+// $Id: IRichFFPlan.h,v 1.2 2009-03-19 17:14:50 seaso Exp $
 #ifndef RICHRINGREC_IRICHFFPLAN_H 
 #define RICHRINGREC_IRICHFFPLAN_H 1
 
@@ -25,7 +25,7 @@ public:
   static const InterfaceID& interfaceID() { return IID_IRichFFPlan; }
 
   virtual  void  InitFFPlan()=0;
-  
+  virtual  void  ReleaseFFTWArrays()=0;
   virtual   VD ConvertToFF2d( VD A, VD B)=0;
   virtual   VVD ConvertToInvFF2d(VD F )=0;
   

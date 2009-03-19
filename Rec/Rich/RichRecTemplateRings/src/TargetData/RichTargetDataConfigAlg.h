@@ -1,4 +1,4 @@
-// $Id: RichTargetDataConfigAlg.h,v 1.1.1.1 2009-03-04 12:01:45 jonrob Exp $
+// $Id: RichTargetDataConfigAlg.h,v 1.2 2009-03-19 17:13:31 seaso Exp $
 #ifndef RICHTARGETDATACONFIGALG_H 
 #define RICHTARGETDATACONFIGALG_H 1
 
@@ -37,6 +37,8 @@ protected:
 private:
 
  const ITrackSelector * m_trSelector; ///< Track selector
+ bool m_selectTracksAboveMomentumThreshold; // select tracks above the
+                                             // minimum Cherenkov threshold.
 
 };
 #endif // RICHTARGETDATACONFIGALG_H

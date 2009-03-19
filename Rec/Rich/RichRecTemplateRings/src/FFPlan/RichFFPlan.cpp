@@ -1,4 +1,4 @@
-// $Id: RichFFPlan.cpp,v 1.1.1.1 2009-03-04 12:01:45 jonrob Exp $
+// $Id: RichFFPlan.cpp,v 1.2 2009-03-19 17:14:22 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -40,6 +40,9 @@ void RichFFPlan::InitFFPlan(){
 
   setDimensionPolar(nx,ny);
   
+  InitFFForwardPlan();
+  InitFFInvPlan();
+  
 }
 
 void RichFFPlan::setDimensionPolar(int nx, int ny ){
@@ -54,6 +57,62 @@ void RichFFPlan::setDimensionPolar(int nx, int ny ){
    m_iNxyh =  m_iNx* m_iNyh ;  // m_dimxy_2dcTocInvPol
 
 }
+void RichFFPlan::InitFFForwardPlan(){
+   // create and reset to zero  the arrays for Forward FF
+
+   m_Input2drTocF = (double* ) calloc(m_fNxy , sizeof(double));
+   m_Output2drTocF = (fftw_complex* ) calloc(m_fNxy , sizeof(fftw_complex)); 
+
+  //   m_Input2drTocF = fftw_malloc(sizeof(double) * m_fNxy );
+  //   m_Output2drTocF = fftw_malloc (sizeof(fftw_complex)* m_fNxy );
+   //  m_plan2drTocForward = fftw_plan_dft_r2c_2d( m_fNx,m_fNy,
+   //                                m_Input2drTocF ,m_Output2drTocF ,FFTW_ESTIMATE);
+
+   m_plan2drTocForward = fftw_plan_dft_r2c_2d( m_fNx,m_fNy,
+                         m_Input2drTocF ,m_Output2drTocF ,FFTW_MEASURE);
+  
+}
+void RichFFPlan::InitFFInvPlan(){
+  // create and reset to zero the arrays for Inv FF.
+
+   m_Input2dcTocInverse = (fftw_complex* ) calloc(m_iNxyh ,  sizeof(fftw_complex));
+   m_Output2dcTocInverse = (fftw_complex* ) calloc(m_iNxyh ,  sizeof(fftw_complex));
+
+   m_plan2dcTocInverse = fftw_plan_dft_2d(m_iNx, m_iNyh,
+                         m_Input2dcTocInverse,m_Output2dcTocInverse,-1,FFTW_MEASURE);
+
+
+}
+void RichFFPlan::ResetFFTWForwardPlanArrays(){
+  for (int i=0; i<m_fNxy ; i++ ) {
+    m_Input2drTocF[i]=0;
+    m_Output2drTocF[i] [0] =0;
+    m_Output2drTocF[i] [1] =0;
+  }
+  
+
+}
+void RichFFPlan::ResetFFTWInvPlanArrays(){
+  for(int i=0; i< m_iNxyh ; i++) {
+    m_Input2dcTocInverse  [i] [0] = 0;
+    m_Output2dcTocInverse [i] [0] = 0;
+  }
+  
+
+}
+
+void RichFFPlan::ReleaseFFTWArrays(){
+  // clear the FF arrays.
+
+  fftw_destroy_plan(m_plan2drTocForward);
+  fftw_free(m_Input2drTocF);
+  fftw_free(m_Output2drTocF);
+
+  fftw_destroy_plan(m_plan2dcTocInverse );
+  fftw_free(m_Input2dcTocInverse);
+  fftw_free(m_Output2dcTocInverse);
+  
+}
 
 VD  RichFFPlan::ConvertToFF2d( VD A, VD B){
   // normally A is log ploar radius and B is theta for log polar setup. This 
@@ -62,19 +121,21 @@ VD  RichFFPlan::ConvertToFF2d( VD A, VD B){
   // aType 0 is for log polar and the aType 1 is for cartisian.
   // aType=1 is not used at the moment; only one type ie. Log-polar  used in this version.
 
+  //  IChronoStatSvc * csvc = chronoSvc();
+  // csvc->chronoStart("FFTWForward Execute" );
+  
+  
+  ResetFFTWForwardPlanArrays();
 
   int aSize= (int) A.size();
-
-  // create and reset to zero  the arrays for FF
-
-  double* m_Input2drTocF = (double* ) calloc(m_fNxy , sizeof(double));
-  fftw_complex * m_Output2drTocF = (fftw_complex* ) calloc(m_fNxy , sizeof(fftw_complex));
   
-
-  // setup a plan   
-
-  fftw_plan  m_plan2drTocForward = fftw_plan_dft_r2c_2d( m_fNx,m_fNy,
-                                   m_Input2drTocF ,m_Output2drTocF ,FFTW_MEASURE);
+  // create and reset to zero  the arrays for FF. All done at init level.
+  //double* m_Input2drTocF = (double* ) calloc(m_fNxy , sizeof(double));
+  // fftw_complex * m_Output2drTocF = (fftw_complex* ) calloc(m_fNxy , sizeof(fftw_complex));
+  // setup a plan
+  //fftw_plan  m_plan2drTocForward = fftw_plan_dft_r2c_2d( m_fNx,m_fNy,
+  //                                 m_Input2drTocF ,m_Output2drTocF ,FFTW_MEASURE);
+  //                                  
 
 
    
@@ -84,6 +145,7 @@ VD  RichFFPlan::ConvertToFF2d( VD A, VD B){
               m_Input2drTocF [cbin ]= 1.0 ; 
     }
   }
+
 
   // execute the plan
 
@@ -104,12 +166,13 @@ VD  RichFFPlan::ConvertToFF2d( VD A, VD B){
 
 
   
-  // clear the FF arrays.
+  // clear the FF arrays. All done at the Finalize level
+  //  fftw_destroy_plan(m_plan2drTocForward);
+  // fftw_free(m_Input2drTocF);
+  // fftw_free(m_Output2drTocF);
 
-  fftw_destroy_plan(m_plan2drTocForward);
-  fftw_free(m_Input2drTocF);
-  fftw_free(m_Output2drTocF);
-
+  //  csvc->chronoStop("FFTWForward Execute" );
+  // csvc->chronoDelta("FFTWForward Execute" , IChronoStatSvc::KERNEL);
 
   
   return aOut;
@@ -118,18 +181,22 @@ VD  RichFFPlan::ConvertToFF2d( VD A, VD B){
 }
 
 VVD  RichFFPlan::ConvertToInvFF2d(VD F ){
+
+
+  //  IChronoStatSvc * csvc = chronoSvc();
+  // csvc->chronoStart("FFTWInv Execute" );
+
+
+  ResetFFTWInvPlanArrays();
+
   int fsize = (int) ( F.size())/2;
 
-  // create and reset to zero the arrays for Inv FF.
-
-  fftw_complex* m_Input2dcTocInverse = (fftw_complex* ) calloc(m_iNxyh ,  sizeof(fftw_complex));
-  fftw_complex* m_Output2dcTocInverse = (fftw_complex* ) calloc(m_iNxyh ,  sizeof(fftw_complex));
-
+  // create and reset to zero the arrays for Inv FF. All done at the init level.
+  // fftw_complex* m_Input2dcTocInverse = (fftw_complex* ) calloc(m_iNxyh ,  sizeof(fftw_complex));
+  // fftw_complex* m_Output2dcTocInverse = (fftw_complex* ) calloc(m_iNxyh ,  sizeof(fftw_complex));
   // setup a plan
-
-  fftw_plan m_plan2dcTocInverse = fftw_plan_dft_2d(m_iNx, m_iNyh,
-                                  m_Input2dcTocInverse,m_Output2dcTocInverse,-1,FFTW_MEASURE);
-
+  //fftw_plan m_plan2dcTocInverse = fftw_plan_dft_2d(m_iNx, m_iNyh,
+  //                                m_Input2dcTocInverse,m_Output2dcTocInverse,-1,FFTW_MEASURE);
 
 
   for(int k=0; k<fsize;++k) {
@@ -137,7 +204,7 @@ VVD  RichFFPlan::ConvertToInvFF2d(VD F ){
     m_Input2dcTocInverse [k] [1]= F[2*k+1];
   } 
 
-
+ 
   // execute the plan
   fftw_execute(m_plan2dcTocInverse);
 
@@ -151,12 +218,14 @@ VVD  RichFFPlan::ConvertToInvFF2d(VD F ){
     } 
   }
 
-  // clear the FF arrays
+  // clear the FF arrays. All done at the end of event loop.
+  // fftw_destroy_plan(m_plan2dcTocInverse );
+  // fftw_free(m_Input2dcTocInverse);
+  // fftw_free(m_Output2dcTocInverse);
 
-  fftw_destroy_plan(m_plan2dcTocInverse );
-  fftw_free(m_Input2dcTocInverse);
-  fftw_free(m_Output2dcTocInverse);
-  
+  //   csvc->chronoStop("FFTWInv Execute" );
+  // csvc->chronoDelta("FFTWInv Execute" , IChronoStatSvc::KERNEL);
+ 
   return aInvOut;
     
   

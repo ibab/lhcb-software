@@ -1,4 +1,4 @@
-// $Id: RichTargetDataConfigAlg.cpp,v 1.1.1.1 2009-03-04 12:01:45 jonrob Exp $
+// $Id: RichTargetDataConfigAlg.cpp,v 1.2 2009-03-19 17:13:31 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -42,6 +42,8 @@ StatusCode RichTargetDataConfigAlg::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   acquireTool( "TrackSelector",       m_trSelector, this );  
+  declareProperty("SelectOnlyTracksAboveMomentumThreshold", m_selectTracksAboveMomentumThreshold=true);
+
  
   return StatusCode::SUCCESS;
 }
@@ -135,7 +137,8 @@ StatusCode RichTargetDataConfigAlg::AcquireTargetTrackInfo()
     int n0s=0;    int n1s=0; int n2s=0;
     VI ti0; ti0.reserve(aNumMaxTk);
     VI ti1; ti1.reserve(aNumMaxTk);
-    VI ti2; ti2.reserve(aNumMaxTk);    
+    VI ti2; ti2.reserve(aNumMaxTk);
+
 
   for ( LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin();
         iSeg != richSegments()->end(); ++iSeg )
@@ -149,36 +152,61 @@ StatusCode RichTargetDataConfigAlg::AcquireTargetTrackInfo()
     if( !((pdPoint.x() ==0.0) && ( pdPoint.y() == 0.0 )) ) {  // avoid unphysical track coord.
       const LHCb::RichTrackSegment & tkSeg = segment->trackSegment();
       double tkMomz = tkSeg.bestMomentum().z();
+      const Rich::RadiatorType rad = tkSeg.radiator();   // which radiator
+      double tkTotMom = pow( (tkSeg.bestMomentum().Mag2()), 0.5);     // track reconstructed momentum
+
       if(tkMomz >0.0 ) { // avoid tracks going backwards
        aNumtk++;
-       const Rich::RadiatorType rad = tkSeg.radiator();   // which radiator
-       double tkTotMom = pow( (tkSeg.bestMomentum().Mag2()), 0.5);     // track reconstructed momentum   
-       const Gaudi::XYZPoint & pdPointLocal = segment->pdPanelHitPointLocal();  
+
+       bool SelectedforMom=true;
+       if(m_selectTracksAboveMomentumThreshold) { // select only those tracks above a momentum threshold
+          int irad=1;
+          if(rad == Rich::Aerogel ) {
+            irad=0;
+          }else if ( rad== Rich::Rich2Gas ){
+            irad=2;
+          }
+          if(rt()->RConst()->RichParticleCherenkovThreshold(irad,0) > tkTotMom ) {
+           // test on the threshold for the first particle type
+            SelectedforMom=false;
+          }
+          
+
+          
+       } // end test for Momentum threshold
+       
+
+       if( SelectedforMom ) {
+
+
+         const Gaudi::XYZPoint & pdPointLocal = segment->pdPanelHitPointLocal();  
                                                          //track proj on hpd panel in local coord
        
-       int invIndex = iSeg- (richSegments()->begin());
-       if(rad==Rich::Aerogel ) {
-         n0s++;   
-         t0h.push_back(pdPointLocal);
-         ti0.push_back(invIndex);
-         m0h.push_back(  tkTotMom);         
-       }else if (rad== Rich::Rich1Gas) {
-         n1s++;
-         t1h.push_back(pdPointLocal);
-         ti1.push_back(invIndex);
-         m1h.push_back(  tkTotMom);
+         int invIndex = iSeg- (richSegments()->begin());
+         if(rad==Rich::Aerogel ) {
+           n0s++;   
+           t0h.push_back(pdPointLocal);
+           ti0.push_back(invIndex);
+           m0h.push_back(  tkTotMom);         
+         }else if (rad== Rich::Rich1Gas) {
+           n1s++;
+           t1h.push_back(pdPointLocal);
+           ti1.push_back(invIndex);
+           m1h.push_back(  tkTotMom);
 
-       }else if (rad==Rich::Rich2Gas ) {
-         n2s++;
-         t2h.push_back(pdPointLocal);
-         ti2.push_back(invIndex);
-         m2h.push_back(  tkTotMom);
+         }else if (rad==Rich::Rich2Gas ) {
+           n2s++;
+           t2h.push_back(pdPointLocal);
+           ti2.push_back(invIndex);
+           m2h.push_back(  tkTotMom);
 
          // info() <<"Target acquire track track num "<<rad
          // <<"  "<<invIndex<<"  "<<aNumtk<<"  "<<n2s<<"  "<<pdPointLocal<<endreq;
+           
+         }
          
-       }
-      
+       
+       } // end selectedForMomentum
        
       }  
       
@@ -197,6 +225,7 @@ StatusCode RichTargetDataConfigAlg::AcquireTargetTrackInfo()
   return sc;
   
 }
+
 
 //=============================================================================
 //  Finalize
