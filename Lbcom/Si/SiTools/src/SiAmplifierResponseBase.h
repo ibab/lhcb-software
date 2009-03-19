@@ -1,4 +1,4 @@
-// $Id: SiAmplifierResponseBase.h,v 1.1 2009-01-15 10:02:19 mneedham Exp $
+// $Id: SiAmplifierResponseBase.h,v 1.2 2009-03-19 08:19:42 mneedham Exp $
 #ifndef SiAmplifierResponseBase_H
 #define SiAmplifierResponseBase_H 1
 
@@ -45,9 +45,16 @@ public:
   */
   virtual ISiAmplifierResponse::Info validity() const; 
 
-private:
+  /** calculate the remainder ie signal left after 25 ns
+  * @param time time of sampling on peak [default is zero ]  
+  * @return response 
+  */
+  virtual double remainder(double time = 0) const;
 
-  ISiAmplifierResponse::Info m_info;         ///< Holds information on validity
+  /** calculate the rise time [10 - 90 %]
+  * @return ristime
+  */
+  virtual double risetime() const ;
 
 protected:
 
@@ -82,6 +89,11 @@ protected:
   bool m_printToScreen;
   bool m_printForRoot;
   double m_printDt;
+
+private:
+
+  double findValue(double value) const;
+  ISiAmplifierResponse::Info m_info;         ///< Holds information on validity
 
 };
 

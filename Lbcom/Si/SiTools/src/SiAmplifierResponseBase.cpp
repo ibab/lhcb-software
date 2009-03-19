@@ -1,4 +1,4 @@
-// $Id: SiAmplifierResponseBase.cpp,v 1.1 2009-01-15 10:02:19 mneedham Exp $
+// $Id: SiAmplifierResponseBase.cpp,v 1.2 2009-03-19 08:19:42 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -88,8 +88,9 @@ void SiAmplifierResponseBase::printToScreen() const {
   info() << "Printing response function" << endmsg;
   info() << "Type: " << m_type << endmsg; 
   info() << "Vfs: " << m_vfs << endmsg;
-  info() << "Assumed Capacitance: " 
-         << m_capacitance/Gaudi::Units::picofarad << " pF "<< endmsg;
+  info() << "Assumed Capacitance: "   << m_capacitance/Gaudi::Units::picofarad << " pF "<< endmsg;
+  info() << "risetime [10-90]" << risetime()/Gaudi::Units::ns << endmsg;  
+  info() << "remainder sampling on peak " << remainder() << endmsg; 
   for (unsigned int i = 0 ; i < times.size() ; ++i){
     info() << "Time " << times[i] << " value " << values[i] << endmsg;
   } // loop i
@@ -121,5 +122,25 @@ void SiAmplifierResponseBase::printArray(const std::vector<double>& values,
   std::cout << "};" << std::endl;    
 }
 
+double SiAmplifierResponseBase::remainder(double time) const{
+  // find the maximum time
+  double tMax = findValue(1.0);
+  return response(time + tMax + 25.0*Gaudi::Units::ns);
+} 
 
+double SiAmplifierResponseBase::findValue(double value) const{
+
+  // scan across and find the value
+  double time = m_tMin;
+  do {
+    time += 0.05;  
+  }  while ( value -response(time) > 1e-3  );
+  return time;
+}
+
+double SiAmplifierResponseBase::risetime() const{
+  double t_10 = findValue(0.1);
+  double t_90 = findValue(0.9);
+  return t_90 - t_10;
+}
 
