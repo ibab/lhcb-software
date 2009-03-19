@@ -1,4 +1,4 @@
-// $Id: RichRingMasterAlg.cpp,v 1.1.1.1 2009-03-04 12:01:45 jonrob Exp $
+// $Id: RichRingMasterAlg.cpp,v 1.2 2009-03-19 09:28:53 seaso Exp $
 // Include files
 
 // from Gaudi
@@ -28,6 +28,9 @@ RichRingMasterAlg::RichRingMasterAlg( const std::string& name,
   declareProperty( "RingLocation",
                    m_ringLocation = LHCb::RichRecRingLocation::TemplateRings+"All" );
   declareProperty( "RichTemplateRingNtupProduce",  m_storeNtupRadius = false);
+  declareProperty( "RichTemplateRingMassFinderActivate", m_activateRingMassFinder=false);
+  declareProperty( "RichTemplateSavingRingsOnTESActivate" , m_activateSavingRingsOnTES=true);
+
 
 }
 
@@ -64,10 +67,14 @@ StatusCode RichRingMasterAlg::execute()
 
   StatusCode sc = FindRingsWithTracks();
 
-  sc = sc && ReconstructMassForRings();
-
-  sc = sc && saveRingsInTES();
-
+  if(m_activateRingMassFinder) {
+    sc = sc && ReconstructMassForRings();
+  }
+  if(  m_activateSavingRingsOnTES ) {
+  
+    sc = sc && saveRingsInTES();
+  }
+  
   return sc;
 }
 
@@ -84,26 +91,24 @@ StatusCode RichRingMasterAlg::FindRingsWithTracks()
     sc = SetRadiatorSpecificParam(irad);
     int iRich =  art->Tfm()->RichDetNumFromRadiator(irad);
 
+
     // loop through the track segments in each radiator
     VI tkMM = art->Tfm()->getTrackIndexLimits( irad);
     for(int itk=tkMM[0]; itk< (tkMM [1]) ; ++itk){
+
       // select and configure the RICH hits in the Field of Interest.
-
-
       sc = art->RLocTgC()-> SelectHitsInFoi (itk, irad, iRich);
 
-
       sc = art->RLocTDC()->ConfigureTemplateHitsForFF(irad);
-
 
       sc = art->RLocTgC()->ConfigureTargetHitsInFoiForFF(itk,irad,iRich);
 
       // perform FFT
       VD  aFFTarget =   art->RFFP()->ConvertToFF2d(art->RLocTgC()->RpnTarget(),
                                                    art->RLocTgC()->PpnTarget());
-
       VD  aFFTemplate =  art->RFFP()->ConvertToFF2d(art->RLocTDC()->RpnTemplate(),
                                                     art->RLocTDC()->PpnTemplate());
+
 
       // get Correlation
       VD   aCorr = art->Tfm()->GetCorrelation(aFFTarget, aFFTemplate);
@@ -214,7 +219,7 @@ StatusCode RichRingMasterAlg::StoreRingInfoInNtup()
     }
 
 
-    //info()<<" Now in store info to Ntuple Radius NumHit "<<aRadius<<"  "<<aNumHit<<endmsg;
+     info()<<" Now in store info to Ntuple NumHit "<<aNumHit<<endmsg;
 
     m_RingTuple->column("Radiator", irad);
     m_RingTuple->column("NumTk",(int) tkX.size());

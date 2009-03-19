@@ -6,6 +6,8 @@
 
 !==================== RichRecTemplateRings v1r0 2009-03-10 ===================
 ! 2009-03-08  Sajan Easo
+  Added couple of options switches in RichRingMasterAlg
+! 2009-03-08  Sajan Easo
   Fixed a typo in RichRingRecMass
  
 ! 2007-08-23  Sajan Easo

@@ -1,4 +1,4 @@
-// $Id: RichRingMasterAlg.h,v 1.1.1.1 2009-03-04 12:01:45 jonrob Exp $
+// $Id: RichRingMasterAlg.h,v 1.2 2009-03-19 09:28:53 seaso Exp $
 #ifndef RICHRINGMASTERALG_H 
 #define RICHRINGMASTERALG_H 1
 
@@ -52,6 +52,9 @@ private:
  const ITrackSelector * m_trSelector; ///< Track selector
   bool m_storeNtupRadius;
   std::string m_ringLocation;
+  bool m_activateRingMassFinder;
+  bool m_activateSavingRingsOnTES;
+
   
 };
 #endif // RICHRINGMASTERALG_H
