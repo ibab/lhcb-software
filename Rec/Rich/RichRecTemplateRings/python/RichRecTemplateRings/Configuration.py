@@ -5,7 +5,7 @@
 #  @author Sajan Easo   (Sajan.Easo@cern.ch)
 #  @date   02/03/2009
 
-__version__ = "$Id: Configuration.py,v 1.1.1.1 2009-03-04 12:01:45 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.2 2009-03-19 17:50:46 seaso Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -22,6 +22,7 @@ class RichTemplateRingFinderConf(RichConfigurableUser):
     __slots__ = {
         "Context"             :    "Offline"   # The context within which to run
        ,"Sequencer"           : GaudiSequencer("RichTemplateDefaultSequencer")  # The sequencer to add the RICH MCMC algorithms to
+       ,"MakeNtuple"          : False
         }
 
     ## @brief Apply the configuration to the given GaudiSequencer
@@ -40,3 +41,11 @@ class RichTemplateRingFinderConf(RichConfigurableUser):
         master = RichRingMasterAlg()
 
         sequence.Members += [ base, config, master ]
+
+        if self.getProp("MakeNtuple") :
+
+            from Configurables import NTupleSvc
+            NTupleSvc().Output = ["RICHTUPLE1 DATAFILE='Ntuple_RichTemplateRings.root' TYP='ROOT' OPT='NEW'"]
+
+            master.RichTemplateRingNtupProduce=True
+        
