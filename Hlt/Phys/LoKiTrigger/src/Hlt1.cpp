@@ -1,4 +1,4 @@
-// $Id: Hlt1.cpp,v 1.2 2008-11-13 22:11:03 ibelyaev Exp $
+// $Id: Hlt1.cpp,v 1.3 2009-03-19 13:16:12 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -11,7 +11,7 @@
 #include "LTTools.h"
 // ============================================================================
 /** @file
- *  Implementation file for functions fro namespace LoKi::Hlt 
+ *  Implementation file for functions from namespace LoKi::Hlt 
  *  @date 2008-11-10 
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  */
@@ -48,8 +48,12 @@ LoKi::Hlt1::TrSelection::TrSelection
   , m_selection ( 0 )
   , m_selName ( selection ) 
 {
-  m_selection = 
-    LoKi::Hlt1::Utils::getTSelection<LHCb::Track> ( selName() , *this ) ;
+  // get seleciton form the Hlt Unit/Hlt Data service 
+  SmartIF<LoKi::IHltUnit> unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
+  Assert ( !(!unit) , "LoKi::IHltUnit* point to NULL" ) ;
+  const Hlt::Selection* sel = unit->declareInput ( selection , *this ) ;
+  Assert ( 0 != sel         , "Hlt::Selection                points to NULL!" ) ;  
+  m_selection = LoKi::Hlt1::Utils::cast<LHCb::Track> ( sel ) ;
   Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::Track>* points to NULL!" ) ;  
 }
 // ============================================================================
@@ -81,8 +85,8 @@ LoKi::Hlt1::TrRegister::TrRegister
 {
   SmartIF<LoKi::IHltUnit> unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
   Assert ( !(!unit) , "LoKi::IHltUnit* point to NULL" ) ;
-  // delcare selection  
-  m_selection = unit->declareSelection<LHCb::Track> ( selName() ) ;
+  // declare the selection  
+  m_selection = unit->declareOutput<LHCb::Track> ( selName() , *this ) ;
   Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::Track>* points to NULL!" ) ;  
 }
 // ============================================================================
@@ -138,9 +142,12 @@ LoKi::Hlt1::RvSelection::RvSelection
 ( const std::string&    selection ) 
   : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 
   , m_selection ( 0 )
-  , m_selName ( selection ) 
+  , m_selName ( selection )
 {
-  m_selection = LoKi::Hlt1::Utils::getTSelection<LHCb::RecVertex> ( selName() , *this ) ;
+  SmartIF<LoKi::IHltUnit> unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
+  Assert ( !(!unit) , "LoKi::IHltUnit* point to NULL" ) ;
+  // declare the selection  
+  m_selection = unit->declareOutput<LHCb::RecVertex> ( selName() , *this ) ;
   Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::RecVertex>* points to NULL!" ) ;  
 }
 // ============================================================================
@@ -171,9 +178,9 @@ LoKi::Hlt1::RvRegister::RvRegister
 {
   SmartIF<LoKi::IHltUnit> unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
   Assert ( !(!unit) , "LoKi::IHltUnit* point to NULL" ) ;
-  // delcare selection  
-  m_selection = unit->declareSelection<LHCb::RecVertex> ( selName() ) ;
-  Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::ReVertex>* points to NULL!" ) ;  
+  // declare the selection  
+  m_selection = unit->declareOutput<LHCb::RecVertex> ( selName() , *this ) ;
+  Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::RecVertex>* points to NULL!" ) ;  
 }
 // ============================================================================
 // MANDATORY: the only one essential method 

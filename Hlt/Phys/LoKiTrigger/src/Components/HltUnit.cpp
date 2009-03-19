@@ -1,4 +1,4 @@
-// $Id: HltUnit.cpp,v 1.3 2008-12-12 16:35:46 ibelyaev Exp $
+// $Id: HltUnit.cpp,v 1.4 2009-03-19 13:16:12 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -27,13 +27,17 @@
  */
 // ============================================================================
 LoKi::HltUnit::HltUnit
-( const std::string& name ,                      //    algorithm instance name 
-  ISvcLocator*       pSvc )                      // pointer to Service Locator
+( const std::string& name ,                       //    algorithm instance name 
+  ISvcLocator*       pSvc )                       // pointer to Service Locator
   : LoKi::FilterAlg ( name , pSvc ) 
+  // services: 
+  , m_annSvc  ( 0 )                      // "Assigned Numbers & Names " service 
+  , m_regSvc  ( 0 )                      //                Hlt Register service 
+  , m_hltSvc  ( 0 )                      //                    Hlt Data Service 
+  , m_lokiSvc ( 0 )                      //                        LoKi Service 
   //
-  , m_hltSvc  ( 0     )
   , m_monitor ( false )
-  , m_all     () 
+  , m_in      () 
   , m_out     ()
   //
   , m_cut ( LoKi::BasicFunctors<void>::BooleanConstant( false ) )
@@ -59,41 +63,78 @@ LoKi::HltUnit::HltUnit
 LoKi::HltUnit::~HltUnit(){}                   // virtual & protected destructor
 // ============================================================================
 /* register the selection 
- *  (internal method, should not be invoked directly) 
- *  @see LoKi::IHltUnit::registerSelection
- *  @param selection the seelction to be registered 
+ *  @param selection the selection to be registered 
+ *  @param client the client 
  *  @return status code 
  */
 // ============================================================================
-StatusCode LoKi::HltUnit::registerSelection ( Hlt::Selection* selection ) 
+StatusCode LoKi::HltUnit::registerOutput 
+( Hlt::Selection*    selection  , 
+  const Client&   /* client */  ) const 
 {
   if ( 0 == selection ) 
   { return Error ("registerSelection: Hlt::Selection points to NULL") ; }
-  // get the service 
-  IHltDataSvc* hlt = hltSvc() ;
-  // register selection 
-  StatusCode sc = hlt->addSelection ( selection , this ) ;
+  //
+  StatusCode sc = regSvc()->registerOutput ( selection , this ) ;
   if ( sc.isFailure() ) 
-  { return Error( "Unable to register selection " + selection->id().str() ) ; }
+  { return Error ( "Unable to register OUTPUT selection '" + 
+                   selection->id() + "'" , sc ) ; }
   //
   // register as "output" selection 
   m_out.insert ( selection->id () , selection ) ; 
   //
   return StatusCode::SUCCESS ;
 }
+// ========================================================================
+/** declare the input selection 
+ *  @param key the selection key 
+ *  @param client the client 
+ */
+// ========================================================================
+const Hlt::Selection* LoKi::HltUnit::declareInput 
+( const Key&       key       , 
+  const Client& /* client */ ) const 
+{
+  // use the registration service 
+  StatusCode sc = regSvc()->registerInput ( key , this ) ;
+  Assert ( sc.isSuccess () , 
+           "Unable to register  INPUT selection '" + key + "'" ) ; 
+  // get the selection for the service 
+  const Hlt::Selection* sel = hltSvc()->selection ( key , this ) ;
+  Assert ( 0 != sel , "Unable to locate the selection '" + key + "'" ) ;
+  //
+  m_in.insert ( key , sel ) ;
+  return sel ;
+}
 // ============================================================================
-/*  get the selection by key 
+/*  get the (const) selection by key 
+ *  @param key the key 
+ *  @param client the client 
+ *  @return pointer to the selection 
+ */
+// ============================================================================
+const Hlt::Selection* LoKi::HltUnit::selection 
+( const Key&       key       , 
+  const Client& /* client */ ) const 
+{
+  IMap::const_iterator ifind = m_in.find ( key ) ;
+  Assert ( m_in.end() != ifind , 
+           "Unable to get LOCAL INPUT selection '" + key + "'" ) ;
+  return ifind->second ;
+}
+// ============================================================================
+/*  get the (const) selection by key  (anonymous) 
  *  @param key the key 
  *  @return pointer to the selection 
  */
 // ============================================================================
-Hlt::Selection* LoKi::HltUnit::selection ( const stringKey& key ) const 
+const Hlt::Selection* LoKi::HltUnit::selection ( const Key& key ) const 
 {
-  // get the selection 
-  Hlt::Selection* s = i_selection ( key ) ;
-  // register "all" selection 
-  if ( monitor() ) { m_all.insert ( key , s ) ; }
-  return s ;
+  Warning ("Anonymous access to the selection!") ;
+  IMap::const_iterator ifind = m_in.find ( key ) ;
+  Assert ( m_in.end() != ifind , 
+           "Unable to get LOCAL INPUT selection '" + key + "'" ) ;
+  return ifind->second ;
 }
 // ============================================================================
 /*  decode the functor 
@@ -102,10 +143,18 @@ Hlt::Selection* LoKi::HltUnit::selection ( const stringKey& key ) const
 // ============================================================================
 StatusCode LoKi::HltUnit::decode() 
 {
+  // ==========================================================================
+  // ensure the validity of Hlt registration service 
+  Assert ( 0 != regSvc() , "Hlt::IRegister is not available" ) ;
+  // ==========================================================================
   /// lock the context 
-  Gaudi::Utils::AlgContext lock ( this , contextSvc() ) ;
+  Gaudi::Utils::AlgContext lock1 ( this     , contextSvc() ) ;
+  /// lock Hlt Register Service 
+  Hlt::IRegister::Lock     lock2 ( regSvc() , this         ) ;
+  /// decode & initialize the functors 
   StatusCode sc = i_decode<LoKi::Hybrid::ICoreFactory> ( m_cut ) ;
   Assert ( sc.isSuccess() , "Unable to decode the functor!" ) ;
+  // =========================================================================
   return StatusCode::SUCCESS ;  
 }
 // ============================================================================
@@ -123,90 +172,82 @@ StatusCode LoKi::HltUnit::queryInterface
   if ( 0 == ppvi ) { return StatusCode::FAILURE ; }
   /// 
   if ( LoKi::IHltUnit::interfaceID() == iid ) 
-  {
-    *ppvi = static_cast<LoKi::IHltUnit*>( this ) ;
-    addRef() ; //                               NB: Increment the ref-count!
-    return StatusCode::SUCCESS ;                                   // RETURN 
+  { 
+    *ppvi = static_cast<LoKi::IHltUnit*>( this ) ; 
+    addRef() ;
+    return StatusCode::SUCCESS ;                                      // RETURN 
   }
-  else if ( IHltDataSvc::interfaceID() == iid ) 
-  {
-    IHltDataSvc* hlt = hltSvc() ;
-    return hlt -> queryInterface ( iid , ppvi ) ;                  // RETUTRN
-  }
-  else if ( IANNSvc::interfaceID() == iid ) 
-  {
-    IANNSvc* ann = annSvc() ;
-    return ann -> queryInterface ( iid , ppvi ) ;                  // RETURN
-  }
-  else if ( LoKi::ILoKiSvc::interfaceID() == iid ) 
-  {
-    LoKi::ILoKiSvc* loki = svc<LoKi::ILoKiSvc>( "LoKiSvc" , true ) ;
-    return loki -> queryInterface( iid , ppvi ) ;
-  }
-  // 
+  else if ( Hlt::IRegister ::interfaceID() == iid ) 
+  { return regSvc() -> queryInterface ( iid , ppvi ) ; }              // RETURN 
+  else if ( Hlt::IData     ::interfaceID() == iid ) 
+  { return hltSvc() -> queryInterface ( iid , ppvi ) ; }              // RETURN 
+  else if ( IANNSvc        ::interfaceID() == iid ) 
+  { return annSvc() -> queryInterface ( iid , ppvi ) ; }              // RETURN 
+  else if ( IANSvc         ::interfaceID() == iid ) 
+  { return annSvc() -> queryInterface ( iid , ppvi ) ; }              // RETURN 
+  else if ( LoKi::ILoKiSvc ::interfaceID() == iid ) 
+  { return lokiSvc() -> queryInterface( iid , ppvi ) ; }              // RETURN
+  // check the basic interfaces  
+  StatusCode sc = Algorithm::queryInterface ( iid , ppvi ) ; 
+  if ( sc.isSuccess () ) { return sc ; }                              // RETURN
+  // check the Hlt Service 
+  sc = hltSvc  () -> queryInterface ( iid , ppvi ) ;                  
+  if ( sc.isSuccess () ) { return sc ; }                              // RETURN
+  // check the LoKi Service 
+  sc = lokiSvc () -> queryInterface ( iid , ppvi ) ;
+  if ( sc.isSuccess () ) { return sc ; }                              // RETURN
+  // come back to the base 
   return Algorithm::queryInterface ( iid , ppvi ) ;
 }
-// ===========================================================================
+// ============================================================================
 // execute the algorithm
-// ===========================================================================
+// ============================================================================
 StatusCode LoKi::HltUnit::execute () 
 {
   /// lock the context 
   Gaudi::Utils::AlgContext lock ( this , contextSvc() ) ;
   ///
-  if ( updateRequired() )
-  {
-    Warning ( "Update of the algorithm is required!!!") ;
-    StatusCode sc = decode() ;
-    Assert ( sc.isSuccess() , "Unable to decode the functor!" ) ;
-  } 
+  Assert ( !updateRequired() , "Update is not possible for Hlt!" ) ;
   
-  // MANDATORY: clear all "out" seelctions
-  for ( Map::iterator iout = m_out.begin() ; m_out.end() != iout ; ++iout ) 
+  /// MANDATORY: clear all "out" selections
+  for ( OMap::iterator iout = m_out.begin() ; m_out.end() != iout ; ++iout ) 
   { iout->second->clean() ; }
   
-  
-  // OPTIONAL: Some decorative monitoring 
+  /// OPTIONAL: Some decorative monitoring 
   typedef std::map<stringKey,size_t> Sizes  ;
   Sizes map ;
+  
   // get the status of all selections 
   if ( monitor() ) 
   {
-    for ( CMap::const_iterator ikey = m_all.begin() ; m_all.end() != ikey ; ++ikey ) 
-    { map[ ikey->first ] = ikey->second->size() ; }  
+    /** do somehting here */ 
   }
-  // use the functor 
-  const bool result = m_cut () ;
+  // ==========================================================================
+  // use the functor                                                   // NB !!
+  const bool result = m_cut () ;                                       // NB !!
+  // ==========================================================================
   //
   // some statistics
   counter ("#passed" ) += result ;
   //
   // set the filter:
   setFilterPassed ( result ) ;
-  //
   
   /// Monitor output selections  (*ALWAYS*)
-  for ( Map::const_iterator iout = m_out.begin() ; m_out.end() != iout ; ++iout ) 
-  { counter ( "#" + iout->first ) += iout->second->size() ; }
+  for ( OMap::const_iterator iout = m_out.begin() ; m_out.end() != iout ; ++iout ) 
+  { counter ( "# " + iout->first ) += iout->second->size() ; }
   
   // DECORATION? monitoring
   if ( monitor() ) // the output selections are *ALWAYS* monitored   
   {
-    for ( Sizes::const_iterator ikey = map.begin() ; map.end() != ikey ; ++ikey )
-    {
-      // get the selection 
-      const Hlt::Selection* s = m_all [ ikey->first ] ;
-      // count the changes in the number of candidates  
-      if ( m_out.end() == m_out.find ( ikey->first ) ) 
-      { counter ( "delta '" + ikey->first + "'" ) += ( s->size() - ikey->second ) ; }
-      // ======================================================================
-    } 
+    /** do somehting here */ 
   }
   //
   return StatusCode::SUCCESS ;
 }
 // ============================================================================
-/// the factory (needed for instantiations):
+// the factory (needed for instantiations):
+// ============================================================================
 DECLARE_NAMESPACE_ALGORITHM_FACTORY(LoKi,HltUnit)
 // ============================================================================
 //  The END 

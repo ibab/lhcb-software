@@ -1,0 +1,205 @@
+// $Id: ServiceRegister.cpp,v 1.1 2009-03-19 13:16:12 ibelyaev Exp $
+// ============================================================================
+// Include files 
+// ============================================================================
+// Local
+// ============================================================================
+#include "Service.h"
+// ============================================================================
+/** @file 
+ *  Implementation file for class Hlt::Service
+ *  The methods from Hlt::IRegister are implemented here 
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2009-03-18
+ */
+// ============================================================================
+/*  start the transaction/lock the registrator 
+ *  @param alg the algorithm which starts the transaction
+ *  @param status code
+ */
+// ============================================================================
+StatusCode Hlt::Service::lock   ( const IAlgorithm* alg ) 
+{
+  // invalid algoritm ? 
+  if ( 0 == alg      ) 
+  { return Error ( "lock : IAlgorithm* points to NULL"  , 
+                   Lock_Invalid_Algorithm     )  ; }                 // RETURN 
+  // all transactions are disabled ?
+  else if ( m_frozen      ) 
+  { return Error ( "lock : all transactions are frozen" , 
+                   Lock_Transactions_Disabled )  ; }                 // RETURN 
+  // already locked by some other algorithm ? 
+  else if ( 0 != m_locker ) 
+  { return Error ( "lock : the service is already locked by '"  + 
+                   m_locker->name() + "'" , 
+                   Lock_Invalid_Lock          )  ; }                 // RETURN 
+  // the algorithm has already been locked previously 
+  else if ( m_locked.end()  
+            != std::find ( m_locked.begin() , m_locked.end() , alg ) )    
+  { return Error ( "lock : illegal attempt to re-register for '"  + 
+                   alg->name() + "'" , 
+                   Lock_Double_Registration    )  ; }                // RETURN 
+  // ==========================================================================
+  // lock it! 
+  m_locker = alg ;
+  // ==========================================================================
+  return StatusCode::SUCCESS ;
+}
+// ============================================================================
+/*  end the transaction/unlock the registrator 
+ *  @param alg the algorithm which ends the transaction
+ *  @param status code
+ */
+// ============================================================================
+StatusCode Hlt::Service::unlock ( const IAlgorithm* alg ) 
+{
+  // invalid algoritm ? 
+  if      ( 0 == alg       ) 
+  { return Error ( "unlock : IAlgorithm* points to NULL" , 
+                   Lock_Invalid_Algorithm     )  ; }                 // RETURN 
+  else if ( alg != m_locker ) 
+  { return Error ( "unlock : lock/unlock mismatch "      , 
+                   Lock_Invalid_Lock          )  ; }                 // RETURN 
+  // ==========================================================================
+  // lock it! 
+  m_locker = 0 ;
+  m_locked.push_back ( alg ) ;
+  // ==========================================================================
+  return StatusCode::SUCCESS ;  
+}
+
+// ============================================================================
+/*  register the output selection during the allowed transaction for 
+ *  the locked service 
+ *  @param sel the selection to be registered 
+ *  @param alg the algorithm/producer
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode Hlt::Service::registerOutput 
+( Hlt::Selection*         selection ,               // the output selection 
+  const IAlgorithm*       producer  )               //             producer 
+{
+  // ==========================================================================
+  if      ( 0 == producer  ) 
+  { return Error ( "registerOutput: invald producer" , 
+                   Register_Invalid_Producer          ) ; }           // RETURN
+  else if ( 0 == selection ) 
+  { return Error ( "registerOutput: invalid seelction for producer '" + 
+                   producer->name() + "'" , 
+                   Register_Invalid_Selection         ) ;  }          // RETURN  
+  else if ( 0 ==  m_locker ) 
+  { return Error ( "registerOutput: the service is not locked" ,   
+                   Register_Invalid_Lock              ) ;  }          // RETURN
+  else if ( m_locker != producer ) 
+  { return Error ( "registerOutput: the service is locked by '" 
+                   + m_locker->name() + "'" , 
+                   Register_Invalid_Lock              ) ;  }          // RETURN
+  // ==========================================================================
+  { // check for the double registration 
+    if      ( inMap ( selection -> id() ) ) 
+    { return Error ( "registerOutput: the selection with ID '" 
+                     + selection->id() + 
+                     "' is already registered (1) " ,
+                     Register_Double_Registration ) ; }                // RETURN
+    else if ( inMap ( selection  ) ) 
+    { return Error ( "registerOutput: the selection '" 
+                     + selection->id() +
+                     "' is already registered (2) " ,
+                     Register_Double_Registration ) ; }              // RETURN
+  }
+  // ==========================================================================
+  // finally insert it!
+  OutputMap::iterator ifind = m_outputs.find ( producer ) ;
+  if ( m_outputs.end() == ifind ) 
+  {
+    m_outputs.insert ( producer , SelMap() ) ;
+    ifind = m_outputs.find ( producer ) ;
+  }
+  // insert it! 
+  SelMap sels = ifind->second ;
+  sels.insert ( selection -> id() , selection ) ;
+  m_outputs.update ( producer , sels ) ;
+  // register it also in global map:
+  m_selections.insert ( selection -> id () , selection ) ;
+  //
+  debug() << "Register OUTPUT" 
+          << " selection '"      << selection -> id   () << "'" 
+          << " for algorithm '"  << producer  -> name () << endreq ;
+  //
+  return StatusCode::SUCCESS ;
+}
+// ============================================================================
+/*  register the input selection  dirung the allower transactions for 
+ *  locked service 
+ *  @param sel the selection to be registered 
+ *  @param alg the algorithm/consumer
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode Hlt::Service::registerInput 
+( const Key&              selection ,                // the input selection 
+  const IAlgorithm*       consumer  )               //            consumer 
+{
+  // ==========================================================================
+  if      ( 0 == consumer  ) 
+  { return Error ( "registerInput: invalid consumer"  , 
+                   Register_Invalid_Consumer          ) ; }           // RETURN
+  else if ( 0 ==  m_locker ) 
+  { return Error ( "registerInput: the service is not locked" ,   
+                   Register_Invalid_Lock              ) ;  }          // RETURN
+  else if ( m_locker != consumer ) 
+  { return Error ( "registerInput: the service is locked by '" 
+                   + m_locker->name() + "'" , 
+                   Register_Invalid_Lock              ) ;  }          // RETURN
+  // ==========================================================================
+  // check the existence of the selection:
+  if ( !inMap ( selection ) ) 
+  { return Error ( "registerInput: the selection '" 
+                   + selection + "' is unknown " ,
+                   Register_Unknown_Selection ) ; }             // RETURN
+  // ==========================================================================
+//   { // check that it is not in the list of own output selection 
+//     OutputMap::iterator iout = m_outputs.find ( consumer ) ;
+//     if ( m_outputs.end() != iout ) 
+//     {
+//       SelMap::iterator i = iout->second.find ( selection ) ;
+//       if ( iout->second.end() != i ) 
+//       { return Error ( "registerInput: the input selection '" 
+//                        + selection + 
+//                        "' is output selection "   ,
+//                        Register_Invalid_Selection ) ; }             // RETURN
+//     }
+//   }
+  { // check it if is not in the list of own input selections 
+    InputMap::iterator iin = m_inputs.find ( consumer ) ;
+    if ( m_inputs.end() == iin ) 
+    {
+      m_inputs.insert ( consumer , SelMap() );
+      iin = m_inputs.find ( consumer ) ;
+    }
+    SelMap::iterator i = iin->second.find ( selection ) ;
+    if ( iin->second.end() != i ) 
+    { Warning ( "registerInput: the input selection '" 
+                + selection + 
+                "' is already input selection " ,
+                Register_Double_Registration ) ; }
+    else 
+    {
+      // insert it !
+      SelMap inp = iin->second ;
+      Hlt::Selection* sel = m_selections[ selection ] ;
+      inp.update ( selection , sel ) ;
+      m_inputs.update ( consumer , inp ) ;
+    } 
+  }
+  // debug printout here 
+  debug() << "Register  INPUT " 
+          << " selection '"      << selection            << "'" 
+          << " for algorithm '"  << consumer  -> name () << endreq ;
+  //
+  return StatusCode::SUCCESS ;
+}
+// ============================================================================
+// The END 
+// ============================================================================

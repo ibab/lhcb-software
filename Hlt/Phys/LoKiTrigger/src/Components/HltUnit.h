@@ -1,4 +1,4 @@
-// $Id: HltUnit.h,v 1.5 2009-01-14 21:13:14 graven Exp $
+// $Id: HltUnit.h,v 1.6 2009-03-19 13:16:12 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_HLTUNIT_H 
 #define LOKI_HLTUNIT_H 1
@@ -12,14 +12,18 @@
 // ============================================================================
 // HltBase 
 // ============================================================================
-#include "HltBase/IHltDataSvc.h"
 #include "Kernel/IANNSvc.h"
 // ============================================================================
 // LoKi 
 // ============================================================================
 #include "LoKi/FilterAlg.h"
 #include "LoKi/IHltUnit.h"
+#include "LoKi/ILoKiSvc.h"
 #include "LoKi/CoreTypes.h"
+// ============================================================================
+#include "LoKi/IHltRegister.h"
+#include "LoKi/IHltData.h"
+#include "LoKi/IHltInspector.h"
 // ============================================================================
 namespace LoKi 
 {
@@ -40,8 +44,11 @@ namespace LoKi
     // ========================================================================
   public:                                                          // Algorithm 
     // ========================================================================
+    /// initialize the algorithm
+    // virtual StatusCode initialize () ;
+    // ========================================================================
     /// execute the algorithm
-    virtual StatusCode execute () ;
+    virtual StatusCode execute    () ;
     // ========================================================================
   public:                                                    // LoKi::FilterAlg 
     // ========================================================================
@@ -55,18 +62,55 @@ namespace LoKi
     // ========================================================================
     /** register the selection 
      *  (internal method, should not be invoked directly) 
-     *  @see LoKi::IhltUnit::registerSelection
-     *  @param selection the seelction to be registered 
+     *  @param selection the selection to be registered 
+     *  @param client the client 
      *  @return status code 
      */
-    virtual StatusCode registerSelection ( Hlt::Selection* selection ) ;
+    virtual StatusCode 
+    registerOutput 
+    ( Hlt::Selection* selection , 
+      const Client&   client    ) const ;
     // ========================================================================
-    /** get the selection by key 
+    /** declare the input selection 
+     *  @param key the selection key 
+     *  @param client the client 
+     */
+    virtual const Hlt::Selection* 
+    declareInput 
+    ( const Key&      key       , 
+      const Client&   client    ) const ;
+    // ========================================================================
+    /** get the (const) selection by key 
+     *  @attention only *local input* selections are available 
      *  @param key the key 
-     *  @see LoKi::IhltUnit::selection
      *  @return pointer to the selection 
      */
-    virtual Hlt::Selection* selection ( const stringKey& key ) const ;
+    virtual const Hlt::Selection* 
+    selection 
+    ( const Key&    key    , 
+      const Client& client ) const ;
+    // =========================================================================
+    /** get the (const) selection by key  (anonymous)  
+     *  @param key the key 
+     *  @return pointer to the selection 
+     */
+    virtual const Hlt::Selection* 
+    selection ( const Key& key ) const ;
+    // =========================================================================
+  public:
+    // =========================================================================
+    /** get the selection by key (non-const)
+     *  @param key the key 
+     *  @return pointer to the selection 
+     */
+    virtual Hlt::Selection* 
+    retrieve  
+    ( const Client& /* client */ , 
+      const Key&    /* key    */ ) const 
+    {
+      Error("retrive(): not implemented ") ;
+      return 0 ;
+    }
     // ========================================================================
   public:                                                  // IInterface tricks  
     // ========================================================================
@@ -81,30 +125,8 @@ namespace LoKi
     // ========================================================================
   protected:
     // ========================================================================
-    /// get access to Hlt data service 
-    inline IHltDataSvc* hltSvc() const 
-    {
-      if ( 0 == m_hltSvc ) { m_hltSvc = svc<IHltDataSvc>( "HltDataSvc" , true ) ; }
-      return m_hltSvc ;
-    }
-    /// get access to Hlt data service 
-    inline IANNSvc* annSvc() const 
-    {
-      if ( 0 == m_annSvc ) { m_annSvc = svc<IANNSvc>( "HltANNSvc" , true ) ; }
-      return m_annSvc ;
-    }
-    // ========================================================================
     /// monitor the selections? 
     inline bool monitor() const { return m_monitor || msgLevel ( MSG::DEBUG ) ; }
-    // ========================================================================
-    inline Hlt::Selection*  i_selection ( const stringKey& key ) const 
-    {
-      IHltDataSvc* hlt = hltSvc() ;
-      const IAlgorithm* _a = this ;
-      IAlgorithm* ia = const_cast<IAlgorithm*> ( _a ) ;
-      Hlt::Selection* s = const_cast<Hlt::Selection*>(hlt->selection ( key , ia ));
-      return s ;
-    }
     // ========================================================================
   protected:                                            // allowed constructors  
     // ========================================================================
@@ -127,29 +149,66 @@ namespace LoKi
     /// the assignemet opeartor is disabled 
     HltUnit& operator=( const HltUnit& ) ;            // no assignemet operator
     // ========================================================================
-  private:
+  private: // protected:
     // ========================================================================
-    /// ANN-service 
-    mutable IANNSvc*     m_annSvc  ;                             // ANN-service 
+    /// "Assigned Numbers & Names" service 
+    inline IANNSvc* annSvc () const       // "Assigned Numbers & Names" service 
+    {
+      if ( m_annSvc.validPointer() ) { return m_annSvc ; } 
+      m_annSvc = svc<IANNSvc> ( "Hlt::Service" , true ) ;
+      return m_annSvc ;
+    }
+    /// Hlt Register service 
+    inline Hlt::IRegister* regSvc () const              // Hlt Register Service 
+    {
+      if ( m_regSvc.validPointer() ) { return m_regSvc; }
+      m_regSvc = svc<Hlt::IRegister> ( "Hlt::Service" , true ) ;
+      return m_regSvc ;
+    }
+    /// Hlt Data service 
+    inline Hlt::IData* hltSvc     () const                  // Hlt Data Service
+    {
+      if ( m_hltSvc.validPointer() ) { return m_hltSvc; }
+      m_hltSvc = svc<Hlt::IData> ( "Hlt::Service" , true ) ;
+      return m_hltSvc ;
+    }
+    /// LoKi service 
+    inline LoKi::ILoKiSvc* lokiSvc () const 
+    {
+      if ( m_lokiSvc.validPointer() ) { return m_lokiSvc; }
+      m_lokiSvc = svc<LoKi::ILoKiSvc> ( "LoKiSvc" , true ) ;
+      return m_lokiSvc ;
+    } 
     // ========================================================================
-    /// the pointer to HLT data service 
-    mutable IHltDataSvc* m_hltSvc  ;         // the pointer to HLT data service 
+  private: // services 
+    // ========================================================================
+    /// "Assigned Numbers & Names" service 
+    mutable LoKi::Interface<IANNSvc>  m_annSvc  ;  // "Assigned Numbers & Names"
+    /// Hlt Register service 
+    mutable LoKi::Interface<Hlt::IRegister> m_regSvc ;        //   Hlt Register
+    /// Hlt Data serrvice 
+    mutable LoKi::Interface<Hlt::IData>     m_hltSvc ;     //  Hlt Data Service
+    /// LoKi service 
+    mutable LoKi::Interface<LoKi::ILoKiSvc> m_lokiSvc ;   // major LoKi service 
+    // ========================================================================
+  private: 
+    // ========================================================================
     /// the flag to switch on-of monitoring 
     bool                 m_monitor ;     // the flag to switch on-of monitoring 
     // ========================================================================
   private:
     // ========================================================================
     /// container of keys 
-    typedef GaudiUtils::VectorMap<stringKey,      Hlt::Selection*>  Map;
-    typedef GaudiUtils::VectorMap<stringKey,const Hlt::Selection*> CMap;
-    /// keys for all selections 
-    mutable CMap  m_all ;
+    typedef GaudiUtils::VectorMap<Key,      Hlt::Selection*> OMap;
+    typedef GaudiUtils::VectorMap<Key,const Hlt::Selection*> IMap;
+    /// keys for all "input"  selections 
+    mutable IMap      m_in  ;               // keys for all "input"  selections 
     /// keys for all "output" selections 
-    mutable  Map  m_out ;
+    mutable OMap      m_out ;               // keys for all "output" selections 
     /// the functor itself
-    LoKi::Types::FCut    m_cut ;                        // the functor itself
+    LoKi::Types::FCut m_cut ;                             // the functor itself
     // ======================================================================== 
-  } ;
+  } ; // 
   // ==========================================================================
 } // end of namespace LoKi 
 // ============================================================================

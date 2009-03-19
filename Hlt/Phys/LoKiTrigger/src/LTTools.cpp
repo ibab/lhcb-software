@@ -1,4 +1,4 @@
-// $Id: LTTools.cpp,v 1.5 2008-12-12 16:35:46 ibelyaev Exp $
+// $Id: LTTools.cpp,v 1.6 2009-03-19 13:16:12 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -27,7 +27,7 @@
 #include "LTTools.h"
 // ============================================================================
 /** @file 
- *  Implementation fiel for namespace LoKi::Hlt1::Utils 
+ *  Implementation file for namespace LoKi::Hlt1::Utils 
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2008-11-13
  */
@@ -50,17 +50,17 @@ IAlgorithm* LoKi::Hlt1::Utils::getAlg ( const LoKi::AuxFunBase& base )
 {
   // get LoKi service
   const LoKi::Interface<LoKi::ILoKiSvc>& svc = base.lokiSvc() ;
-  base.Assert( !(!svc) , "LoKi Service is not available!" ) ;
+  base.Assert( !(!svc)   , "LoKi Service is not available!" ) ;
   SmartIF<IAlgContextSvc> cntx ( svc ) ;
-  base.Assert( !(!cntx) , "IAlgContextSvc* points to NULL!") ;
+  base.Assert( !(!cntx)  , "IAlgContextSvc* points to NULL!") ;
   IAlgorithm* ialg = cntx->currentAlg() ;
-  base.Assert( 0 != ialg , "IAlgorithm* points to NULL!") ;
+  base.Assert( 0 != ialg , "IAlgorithm* points to NULL!"    ) ;
   return ialg ;
 }
 // ==========================================================================
 // get the selection by key 
 // ==========================================================================
-Hlt::Selection* LoKi::Hlt1::Utils::getSelection
+const Hlt::Selection* LoKi::Hlt1::Utils::getSelection
 ( const stringKey&        key  ,
   const LoKi::AuxFunBase& base )
 {
@@ -68,6 +68,8 @@ Hlt::Selection* LoKi::Hlt1::Utils::getSelection
   base.Assert( !(!unit) , "LoKi::IHltUnit* is invalid") ;
   return unit->selection ( key ) ;
 }
+// ==========================================================================
+// compare vald pointers 
 // ==========================================================================
 bool LoKi::Hlt1::Utils::CmpTrack::compare
 ( const LHCb::Track* trk1 , 

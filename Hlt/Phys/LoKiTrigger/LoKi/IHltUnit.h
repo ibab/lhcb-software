@@ -1,4 +1,4 @@
-// $Id: IHltUnit.h,v 1.2 2008-11-13 13:14:41 ibelyaev Exp $
+// $Id: IHltUnit.h,v 1.3 2009-03-19 13:16:12 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_IHLTUNIT_H 
 #define LOKI_IHLTUNIT_H 1
@@ -12,14 +12,24 @@
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/IInterface.h"
+#include "GaudiKernel/IAlgorithm.h"
 // ============================================================================
 // HltBase 
 // ============================================================================
 #include "HltBase/stringKey.h"
 #include "HltBase/HltSelection.h"
 // ============================================================================
+namespace Hlt 
+{
+  class IRegister  ;
+  class IData      ; 
+}
+// ============================================================================
 namespace LoKi
 {
+  // =========================================================================
+  // the base for all functors 
+  class AuxFunBase ; // the base for all functors 
   // ==========================================================================
   /** @class IHltUnit LoKi/IHltUnit.h
    *  Simple interface, suitable to act as facade unit for the Hlt Algorithm
@@ -30,32 +40,77 @@ namespace LoKi
   {
   public:
     // ========================================================================
+    /// the actual type of functor 
+    typedef LoKi::AuxFunBase Client ;             // the actual type of functor 
+    /// the actual type of Key
+    typedef stringKey        Key    ;       // the actual type of selection key 
+    // ========================================================================
+  public:
+    // ========================================================================
     /** declare (the templated) selection
-     *  @param key the key to be usef for selection 
+     *  @param key the key to be used for selection 
      *  @return pointer to the registered seelction (or NULL)
      */
     template <class T>
-    Hlt::TSelection<T>* declareSelection ( const stringKey& key ) 
+    Hlt::TSelection<T>* 
+    declareOutput 
+    ( const Key&    key    , 
+      const Client& client ) const 
     {
       Hlt::TSelection<T>* selection = new Hlt::TSelection<T>( key ) ;
-      StatusCode sc = this->registerSelection ( selection ) ;
+      StatusCode sc = this->registerOutput ( selection , client ) ;
       if ( sc.isSuccess() ) { return selection ; }                    // RETURN 
       delete selection ;
       return 0 ;
     }
     // ========================================================================
     /** register the selection 
-     *  (internal method, should not be invoked directly) 
-     *  @param selection the seelction to be registered 
+     *  @param selection the selection to be registered 
+     *  @param client the client 
      *  @return status code 
      */
-    virtual StatusCode registerSelection ( Hlt::Selection* selection ) = 0 ;
+    virtual StatusCode 
+    registerOutput 
+    ( Hlt::Selection* selection , 
+      const Client&   client    ) const = 0 ;
     // ========================================================================
-    /** get the selection by key 
+    /** declare the input selection 
+     *  @param key the selection key 
+     *  @param client the client 
+     */
+    virtual const Hlt::Selection* 
+    declareInput 
+    ( const Key&      key      , 
+      const Client&   client   ) const = 0 ;
+    // ========================================================================
+    /** get the (const) selection by key 
      *  @param key the key 
      *  @return pointer to the selection 
      */
-    virtual Hlt::Selection* selection ( const stringKey& key ) const = 0 ;
+    virtual const Hlt::Selection* 
+    selection 
+    ( const Key&      key      , 
+      const Client&   cleint   ) const = 0 ;
+    // =========================================================================
+  public:
+    // =========================================================================
+    /** get the (const) selection by key  (anonymous)  
+     *  @param key the key 
+     *  @return pointer to the selection 
+     */
+    virtual const Hlt::Selection* 
+    selection ( const Key& key ) const = 0 ;
+    // =========================================================================
+  public:
+    // =========================================================================
+    /** get the selection by key (non-const)
+     *  @param key the key 
+     *  @return pointer to the selection 
+     */
+    virtual Hlt::Selection* 
+    retrieve  
+    ( const Client& client , 
+      const Key&    key    ) const = 0 ;
     // ========================================================================
   public: // IInterface related stuff 
     // ========================================================================

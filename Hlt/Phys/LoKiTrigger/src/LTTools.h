@@ -1,4 +1,4 @@
-// $Id: LTTools.h,v 1.4 2008-12-12 16:35:46 ibelyaev Exp $
+// $Id: LTTools.h,v 1.5 2009-03-19 13:16:12 ibelyaev Exp $
 // ============================================================================
 #ifndef LTTOOLS_H 
 #define LTTOOLS_H 1
@@ -17,11 +17,12 @@
 // HltBase 
 // ============================================================================
 #include "HltBase/HltSelection.h"
-#include "HltBase/IHltDataSvc.h"
 // ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/IHltUnit.h"
+#include "LoKi/IHltRegister.h"
+#include "LoKi/IHltData.h"
 // ============================================================================
 // forward decalrations 
 // ============================================================================
@@ -52,25 +53,32 @@ namespace LoKi
       {
         IInterface* iif = getUnit( base ) ;
         SmartIF<IANNSvc> ann ( iif ) ;
-        base.Assert ( !(!iif) , "IANNSvc* points to NULL" ) ;
+        base.Assert ( !(!ann) , "IANNSvc* points to NULL" ) ;
         return ann ;
       }
       // ======================================================================
       /// get Hlt Data Service 
-      inline SmartIF<IHltDataSvc> hltSvc ( const LoKi::AuxFunBase& base ) 
+      inline SmartIF<Hlt::IData> hltSvc ( const LoKi::AuxFunBase& base ) 
       {
         IInterface* iif = getUnit( base ) ;
-        SmartIF<IHltDataSvc> ann ( iif ) ;
-        base.Assert ( !(!iif) , "IHltDataSvc* points to NULL" ) ;
-        return ann ;
+        SmartIF<Hlt::IData> hlt ( iif ) ;
+        base.Assert ( !(!hlt) , "Hlt::IData* points to NULL" ) ;
+        return hlt ;
+      }
+      /// get Hlt Register Service 
+      inline SmartIF<Hlt::IRegister> regSvc ( const LoKi::AuxFunBase& base ) 
+      {
+        IInterface* iif = getUnit( base ) ;
+        SmartIF<Hlt::IRegister> reg ( iif ) ;
+        base.Assert ( !(!reg) , "Hlt::IRegister* points to NULL" ) ;
+        return reg ;
       }
       // ======================================================================
       /// get the selection by key 
-      Hlt::Selection* getSelection
+      const Hlt::Selection* getSelection
       ( const stringKey&        key  ,
         const LoKi::AuxFunBase& base ) ;
       // ======================================================================
-      /// cast the seelction
       template <class TYPE>
       inline Hlt::TSelection<TYPE>* cast ( Hlt::Selection* sel ) 
       {
@@ -83,31 +91,25 @@ namespace LoKi
       inline const Hlt::TSelection<TYPE>* cast ( const Hlt::Selection* sel ) 
       {
         if ( 0 == sel ) { return 0 ; }
-        return cast<TYPE>( const_cast<Hlt::Selection*>( sel ) ) ;
+        return dynamic_cast<const Hlt::TSelection<TYPE>*>( sel ) ;
       }  
       // ======================================================================
       /// get the concrete selection by key 
       template <class TYPE>
-      Hlt::TSelection<TYPE>* getTSelection
+      const Hlt::TSelection<TYPE>* getTSelection
       ( const stringKey&        key  ,
         const LoKi::AuxFunBase& base )
       {
-        std::cout << " debug1 : " << key << "/" << base << std::endl ;
-        Hlt::Selection* sel = getSelection ( key , base ) ;
-        std::cout << " debug2 : " << key << "/" << base << std::endl ;
+        const Hlt::Selection* sel = getSelection ( key , base ) ;
         base.Assert ( 0 !=  sel , "Hlt::Selection  points to NULL!" ) ;
-        std::cout << " debug3 : " << key << "/" << base << std::endl ;
         typedef Hlt::TSelection<TYPE> TSel ;
-        std::cout << " debug4 : " << key << "/" << base << std::endl ;
-        TSel* tsel = cast<TYPE> ( sel ) ;
-        std::cout << " debug5 : " << key << "/" << base << std::endl ;
+        const TSel* tsel = cast<TYPE> ( sel ) ;
         base.Assert ( 0 != tsel , "Hlt::TSelection points to NULL!" ) ;    
-        std::cout << " debug6 : " << key << "/" << base << std::endl ;
         return tsel ;
       }
       // ======================================================================
       /** @struct CmpTrack
-       *  comparison criteria to eliminate double count 
+       *  comparison criteria to eliminate the double count 
        *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
        *  @date 2008-11-14
        */
@@ -128,7 +130,7 @@ namespace LoKi
         // ====================================================================
       private:
         // ====================================================================
-        /// compare valid pointers 
+        /// compare the valid pointers 
         bool compare
         ( const LHCb::Track* trk1 , 
           const LHCb::Track* trk2 ) const ;
