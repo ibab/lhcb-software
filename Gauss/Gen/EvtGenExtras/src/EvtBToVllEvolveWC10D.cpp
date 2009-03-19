@@ -285,8 +285,8 @@ qcd::EvtBToVllEvolveWC10D::result_type qcd::EvtBToVllEvolveWC10D::operator()(con
 	DEBUGPRINT("CmL: ", CmL);//V
 	DEBUGPRINT("CmR: ", CmR);//V
 		
-	WilsonCoefficients<WilsonType>* C_barred(new WilsonCoefficients<WilsonType>(mu,12,dimension));
-	WilsonCoefficients<WilsonType>* CR_barred(new WilsonCoefficients<WilsonType>(mu,12,dimension));
+	WilsonCoefficients<WilsonType>* C_barred = new WilsonCoefficients<WilsonType>(mu,12,dimension);
+	WilsonCoefficients<WilsonType>* CR_barred = new WilsonCoefficients<WilsonType>(mu,12,dimension);
 	
 	//this is the final result
 	//see Appendix A of hep-ph/0106067
