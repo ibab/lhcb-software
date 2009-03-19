@@ -1,0 +1,15 @@
+<lcgdict>
+
+<!-- Muon Standalone Track rec -->
+  <class name = "IMuonTrackRec"/>
+  <class name = "IMuonHitDecode"/>
+  <class name = "IMuonPadRec"/>
+  <class name="std::vector<MuonLogHit*>"/>
+  <class name="std::vector<MuonLogPad*>"/>
+  <class name="std::vector<MuonHit*>"/>
+  <class name="std::vector<MuonTrack*>"/>
+  <class name="MuonLogHit"/>
+  <class name="MuonLogPad"/>
+  <class name="MuonHit"/>
+  <class name="MuonTrack"/>
+</lcgdict>

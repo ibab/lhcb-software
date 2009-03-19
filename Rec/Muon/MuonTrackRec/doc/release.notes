@@ -1,0 +1,15 @@
+!-----------------------------------------------------------------------------
+! Package     : Muon/MuonTrackRec
+! Responsible : Giovanni Passaleva / Giacomo Graziani
+! Purpose     : Standalone Muon track reconstruction (with a recurrent neural network)
+!-----------------------------------------------------------------------------
+
+
+! 2009-03-16 - G. Graziani
+ - first release of MuonTrackRec, unifying and reorganizing code from packages MuonMonKernel, Cosmics, MuonNNet: 
+   * migrate from MuonMonKerne the base classes for muon decoding output
+   * add abstract interface for decoding (IMuonHitDecode): default implementation uses the official
+	   MuonRawBuffer tool, MuonMonKernel providing a fast alternative for online monitoring
+   * add abstract interface for 2d pad reconstruction (IMuonPadRec): implementation migrated from MuonMonKernel
+   * more general tool (IMuonTrackRec) for standalone track rec. (MuonNNetRec is the first implementation)
+   
