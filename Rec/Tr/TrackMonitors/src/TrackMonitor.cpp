@@ -1,4 +1,4 @@
-// $Id: TrackMonitor.cpp,v 1.12 2009-02-17 09:59:10 pkoppenb Exp $
+// $Id: TrackMonitor.cpp,v 1.13 2009-03-19 14:26:58 wouter Exp $
 // Include files 
 #include "TrackMonitor.h"
 
@@ -9,6 +9,7 @@
 #include "Event/VeloCluster.h"
 #include "Event/VeloPhiMeasurement.h"
 #include "Event/VeloRMeasurement.h"
+#include "Kernel/HitPattern.h"
 
 // Det
 #include "OTDet/DeOTDetector.h"
@@ -301,28 +302,19 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
         plot(iterInfo->second,type+"/info/"+range.fid, title,range.fxMin ,range.fxMax , 100);
       }
     } // iterInfo
-
-    // velo hit map
-    const size_t maxlayer = 30 ;
-    std::vector<size_t> velohitmap( maxlayer,0 ) ;
-    for( std::vector<LHCbID>::const_iterator iid = track.lhcbIDs().begin() ;
-	 iid != track.lhcbIDs().end(); ++iid) 
-      if( iid->isVelo() ) {
-	LHCb::VeloChannelID veloid = iid->veloID() ;
-	size_t station = (veloid.sensor() & 0x3E) >> 1; 
-	++(velohitmap[station]) ;
-      }
-    size_t numstations(0) ;
-    bool   numstationsoverlap(0) ;
-    for( std::vector<size_t>::const_iterator istation = velohitmap.begin() ;
-	 istation != velohitmap.end(); ++istation) 
-      if( *istation >= 1 ) { // request one R OR one phi hit 
-	++numstations ;
-	if( *istation >= 3 ) 
-	  ++numstationsoverlap ;
-      }
-    plot( numstations, type+"/NumVeloStations", "Number of traversed stations in velo", -0.5,30.5, 31) ;
-    plot( numstationsoverlap, type+"/NumVeloOverlapStations", "Number of traversed overlaps in velo", -0.5,30.5, 31) ;
-
   }
+   
+  LHCb::HitPattern hitpattern( track.lhcbIDs() ) ;
+  plot( hitpattern.numVeloStations(),
+	type+"/NumVeloStations", "Number of traversed stations in Velo", -0.5,21.5, 22) ;
+  plot( hitpattern.numVeloStationsOverlap(), 
+	type+"/NumVeloOverlapStations", "Number of traversed overlaps in Velo", -0.5,21.5, 22) ;
+  plot( hitpattern.numITStationsOverlap(), 
+	type+"/NumITOverlapStations", "Number of traversed overlaps in IT", -0.5,3.5,4) ;
+  plot( hitpattern.numITOTStationsOverlap(), 
+	type+"/NumITOTOverlapStations", "Number of T stations with both OT and IT", -0.5,3.5,4) ;
+  plot( hitpattern.numVeloHoles(), 
+	type+"/NumVeloHoles", "Number of missing velo layers", -0.5,10.5,11) ;
+  plot( hitpattern.numTHoles(), 
+	type+"/NumTHoles", "Number of missing T layers", -0.5,10.5,11) ;
 }
