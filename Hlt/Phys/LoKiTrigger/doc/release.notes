@@ -1,9 +1,23 @@
-! $Id: release.notes,v 1.24 2009-03-19 13:16:12 ibelyaev Exp $
+! $Id: release.notes,v 1.25 2009-03-19 20:11:55 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiTrigger
 ! Responsible : Vanya BELYAEV
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
+
+! 2009-03-19 - Vanya BELYAEV
+
+ - base class for "Exceptional" algorithms 
+   Hlt::Base 
+ 
+ - the first "exceptional" algorithm 
+   Hlt::L0Muon2Track
+
+ - new files:
+   LoKi/HltBase.h
+   src/HltBase.cpp
+   src/Components/L0Muon2Track.cpp
+ 
 
 ! 2009-03-19 - Vanya BELYAEV
 

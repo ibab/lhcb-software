@@ -1,4 +1,4 @@
-// $Id: IHltUnit.h,v 1.3 2009-03-19 13:16:12 ibelyaev Exp $
+// $Id: IHltUnit.h,v 1.4 2009-03-19 20:11:55 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_IHLTUNIT_H 
 #define LOKI_IHLTUNIT_H 1
@@ -55,14 +55,7 @@ namespace LoKi
     Hlt::TSelection<T>* 
     declareOutput 
     ( const Key&    key    , 
-      const Client& client ) const 
-    {
-      Hlt::TSelection<T>* selection = new Hlt::TSelection<T>( key ) ;
-      StatusCode sc = this->registerOutput ( selection , client ) ;
-      if ( sc.isSuccess() ) { return selection ; }                    // RETURN 
-      delete selection ;
-      return 0 ;
-    }
+      const Client& client ) const ;
     // ========================================================================
     /** register the selection 
      *  @param selection the selection to be registered 
@@ -125,6 +118,24 @@ namespace LoKi
   } ;
   // ==========================================================================
 } // end of namespace LoKi 
+// ============================================================================
+/*  declare (the templated) selection
+ *  @param key the key to be used for selection 
+ *  @return pointer to the registered seelction (or NULL)
+ */
+// ============================================================================
+template <class T>
+Hlt::TSelection<T>* 
+LoKi::IHltUnit::declareOutput 
+( const LoKi::IHltUnit::Key&    key    , 
+  const LoKi::IHltUnit::Client& client ) const 
+{
+  Hlt::TSelection<T>* selection = new Hlt::TSelection<T>( key ) ;
+  StatusCode sc = this->registerOutput ( selection , client ) ;
+  if ( sc.isSuccess() ) { return selection ; }                    // RETURN 
+  delete selection ;
+  return 0 ;
+}
 // ============================================================================
 // The END 
 // ============================================================================

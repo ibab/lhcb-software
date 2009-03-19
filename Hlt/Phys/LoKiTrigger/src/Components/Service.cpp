@@ -1,4 +1,4 @@
-// $Id: Service.cpp,v 1.1 2009-03-19 13:16:12 ibelyaev Exp $
+// $Id: Service.cpp,v 1.2 2009-03-19 20:11:55 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -127,27 +127,27 @@ StatusCode Hlt::Service::queryInterface
   // "switch"
   // Hlt Register ?
   if      ( Hlt::IRegister    ::interfaceID () == iid ) 
-  { *ppi = static_cast<Hlt::IRegister*>    ( this ) ; }
+  { *ppi = static_cast<Hlt::IRegister*>    ( this )      ; }
   // Hlt Data ?
   else if ( Hlt::IData        ::interfaceID () == iid ) 
-  { *ppi = static_cast<Hlt::IData*>        ( this ) ; }
+  { *ppi = static_cast<Hlt::IData*>        ( this )      ; }
   // Hlt Inspector ?
   else if ( Hlt::IInspector   ::interfaceID () == iid ) 
-  { *ppi = static_cast<Hlt::IInspector*>   ( this ) ; }
+  { *ppi = static_cast<Hlt::IInspector*>   ( this )      ; }
   // "Assigned Names & Numbers"?
   else if ( IANNSvc           ::interfaceID () == iid ) 
-  { return annSvc() -> queryInterface ( iid , ppi ) ; }              // RETURN
+  {      return annSvc() -> queryInterface ( iid , ppi ) ; }          // RETURN
   // "Assigned Names"?
   else if ( IANSvc            ::interfaceID () == iid ) 
-  { return annSvc() -> queryInterface ( iid , ppi ) ; }              // RETURN
+  {      return annSvc() -> queryInterface ( iid , ppi ) ; }          // RETURN
   // Incident listener?
   else if ( IIncidentListener ::interfaceID () == iid ) 
-  { *ppi = static_cast<IIncidentListener*> ( this ) ; }
-  else { return Service::queryInterface ( iid , ppi ) ; }            // RETURN 
+  { *ppi = static_cast<IIncidentListener*> ( this )      ; }
+  else { return  ::Service::queryInterface ( iid , ppi ) ; }          // RETURN 
   //
   addRef();
   //
-  return StatusCode::SUCCESS ;                                       // RETURN 
+  return StatusCode::SUCCESS ;                                        // RETURN 
 }
 // ============================================================================
 /*  standard initialization 
@@ -160,8 +160,11 @@ StatusCode Hlt::Service::initialize ()
   // initialize the base 
   StatusCode sc = ::Service::initialize () ;
   if ( sc.isFailure() ) { return StatusCode::FAILURE ; }              // RETURN
-  // subscribe the incident 
-  //
+  // check LoKi Service 
+  lokiSvc() ;
+  // check Assigned Numbers & Names service 
+  annSvc () ;
+  // check Inciden tService & subscribe the incident 
   incSvc () -> addListener ( this , IncidentType::BeginEvent ) ;
   incSvc () -> addListener ( this , IncidentType::BeginRun   ) ;
   //
@@ -194,6 +197,19 @@ IANNSvc* Hlt::Service::annSvc() const
   return m_annSvc ;
 }
 // ============================================================================
+// access to "Assigned Numbers and Names" service 
+// ============================================================================
+LoKi::ILoKiSvc* Hlt::Service::lokiSvc() const 
+{
+  if ( m_lokiSvc.validPointer()  ) { return m_lokiSvc ; }
+  LoKi::ILoKiSvc* svc = 0 ;
+  StatusCode sc = service ( "LoKiSvc" , svc , true ) ;
+  Assert ( sc.isSuccess ()         , "Unable to locate LoKiSvc" , sc ) ;
+  m_lokiSvc = svc ;
+  Assert ( m_lokiSvc.validPointer() , "ILoKiSvc  points to NULL"     ) ;
+  return m_lokiSvc ;
+}
+// ============================================================================
 /*  standard finalization
  *  @see IService 
  *  @return status code 
@@ -212,8 +228,9 @@ StatusCode Hlt::Service::finalize ()
   // unsubscribe the incidents 
   if ( m_incSvc.validPointer() ) { m_incSvc -> removeListener ( this ) ; }
   // release the services 
-  m_incSvc.release () ;
-  m_annSvc.release () ;
+  m_incSvc  . release () ;
+  m_annSvc  . release () ;
+  m_lokiSvc . release () ;
   // finalize the base class 
   return ::Service::finalize () ;
 }  

@@ -1,4 +1,4 @@
-// $Id: IHltRegister.h,v 1.1 2009-03-19 13:16:12 ibelyaev Exp $
+// $Id: IHltRegister.h,v 1.2 2009-03-19 20:11:55 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_IHLTREGISTER_H 
 #define LOKI_IHLTREGISTER_H 1
@@ -10,6 +10,8 @@
 #include "GaudiKernel/IInterface.h"
 #include "GaudiKernel/IAlgorithm.h"
 // ============================================================================
+// HltBse 
+// ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/Interface.h"
@@ -20,7 +22,8 @@
 // ============================================================================
 // forward declarations
 // ============================================================================
-namespace Hlt { class Selection ; }
+namespace Hlt {                       class  Selection ; }
+namespace Hlt { template <class TYPE> class TSelection ; }
 class IAlgorithm ;
 // ============================================================================
 namespace Hlt

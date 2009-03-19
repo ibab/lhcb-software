@@ -1,4 +1,4 @@
-// $Id: Service.h,v 1.1 2009-03-19 13:16:12 ibelyaev Exp $
+// $Id: Service.h,v 1.2 2009-03-19 20:11:55 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKITRIGGER_SERVICE_H 
 #define LOKITRIGGER_SERVICE_H 1 
@@ -23,6 +23,7 @@
 // ============================================================================
 // LoKi 
 // ============================================================================
+#include "LoKi/ILoKiSvc.h"
 #include "LoKi/IHltRegister.h"
 #include "LoKi/IHltData.h"
 #include "LoKi/IHltInspector.h"
@@ -415,9 +416,11 @@ namespace Hlt
   protected : // Helpers 
     // ========================================================================
     /// incident service 
-    IIncidentSvc* incSvc() const ;                         // incindent service 
+    IIncidentSvc*   incSvc  () const ;                     // incindent service 
     /// "Assigned Numbers & Names" service
-    IANNSvc*      annSvc() const ;        // "Assigned Numbers & Names" service
+    IANNSvc*        annSvc  () const ;    // "Assigned Numbers & Names" service
+    /// the major LoKi service
+    LoKi::ILoKiSvc* lokiSvc () const ;                // the major LoKi Service 
     // ========================================================================    
   private: // Helpers 
     // ========================================================================
@@ -425,6 +428,8 @@ namespace Hlt
     mutable LoKi::Interface<IIncidentSvc> m_incSvc ;        // incident service 
     /// "Assigned Numbers & Names" service
     mutable LoKi::Interface<IANNSvc>      m_annSvc ;// Assigned Numbers & Names
+    /// the major LoKi Service 
+    mutable LoKi::Interface<LoKi::ILoKiSvc> m_lokiSvc ;         // LoKi Service 
     // ========================================================================
   private: // Properties
     // ========================================================================

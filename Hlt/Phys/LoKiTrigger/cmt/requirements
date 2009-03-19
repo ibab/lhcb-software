@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.13 2009-03-19 13:16:12 ibelyaev Exp $ 
+# $Id: requirements,v 1.14 2009-03-19 20:11:55 ibelyaev Exp $ 
 # ============================================================================
 # Created    : 2007-06-08
 # Maintainer : Vanya BELYAEV
@@ -12,6 +12,7 @@ branches          cmt doc src dict python LoKi
 # =============== dependencies ================================================
 use               HltBase         v*    Hlt
 use               TrackEvent      v*    Event 
+use               L0Event         v*    Event 
 use               TrackInterfaces v*    Tr
 use               LoKiCore        v*    Phys 
 use               LoKiNumbers     v*    Phys 
