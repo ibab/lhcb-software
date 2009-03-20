@@ -49,4 +49,4 @@ DaVinci().ReplaceL0BanksWithEmulated = False   # Redo L0
 DaVinci().Simulation = True 
 DaVinci().TupleFile =  "Hlt12-StatsTuple.root"
 # DaVinci().HistogramFile = "DVHlt2stats.root"
-DaVinci().MoniSequence += [ moni, statseq, DecayTreeTuple("Hlt2DecayTreeTuple") ]
+DaVinci().MoniSequence += [ moni, statseq ]
