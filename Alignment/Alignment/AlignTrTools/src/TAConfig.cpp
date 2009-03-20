@@ -3,7 +3,7 @@
  *  Implementation file for Millepede configuration tool : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.cpp,v 1.22 2009-02-21 22:05:54 jblouw Exp $
+ *  $Id: TAConfig.cpp,v 1.23 2009-03-20 15:18:32 jblouw Exp $
  *
  *  @author J. Blouw (johan.blouw@mpi-hd.mpg.de)
  *          M. Deissenroth (marc.deissenroth@physi.uni-heidelberg.de)
@@ -400,17 +400,23 @@ StatusCode TAConfig::ConfigOT( std::vector<Gaudi::Transform3D> &OTmap ) {
   int rank = m_rank.size();
   m_OTStations = m_ot->childIDetectorElements();
   for ( unsigned int i = 0; i < m_OTStations.size(); i++ ) {
+      info() << "-----------------------------" << endreq;
+      info() << "Station name = " << m_OTStations[i]->name() << endreq;
     m_OTLayers = m_OTStations[i]->childIDetectorElements();
     for ( unsigned int j = 0; j < m_OTLayers.size(); j++ ) {
       info() << "-----------------------------" << endreq;
       info() << "Layer name = " << m_OTLayers[j]->name() << endreq;
       const AlignmentCondition *ot_cond = m_OTLayers[j]->geometry()->alignmentCondition();
-      debug() << "Alignment condition (1) = " << ot_cond->offNominalMatrix() << endreq;
-      debug() << "Alignment condition (2) = " << ot_cond->toNominalMatrix() << endreq;
+      info() << "Alignment condition (1) = " << ot_cond->offNominalMatrix() << endreq;
+      info() << "Alignment condition (2) = " << ot_cond->toNominalMatrix() << endreq;
       m_OTQuadrants = m_OTLayers[j]->childIDetectorElements();
       for ( unsigned int k = 0; k < m_OTQuadrants.size(); k++ ) {
+        info() << "-----------------------------" << endreq;
+        info() << "Quadrant name = " << m_OTQuadrants[k]->name() << endreq;
         m_OTModules = m_OTQuadrants[k]->childIDetectorElements();
         for ( unsigned int l = 0; l < m_OTModules.size(); l++ ) {
+          info() << "-----------------------------" << endreq;
+          info() << "Module name = " << m_OTModules[l]->name() << endreq;
           if ( m_otModule ) {
             CreateMap( rank, m_OTModules[l], m_zmoy_ot );
             info() << "De " << m_OTModules[l]->name() << " has rank " << rank << endreq;
@@ -556,13 +562,11 @@ StatusCode TAConfig::StoreParameters( std::vector<double> &ali_par ) {
   unsigned int msize = m_C_pos.size();
   // loop over the detector elements we wanted to align.
   // check for each element which degrees of freedom were determined.
+  info() << "Transforming alignment parameters..." << endreq;
   for (std::map<std::string,int>::iterator t = m_C_pos.begin(); t != m_C_pos.end(); ++t ) {
     info() << "Parameter " << t->first << " " << t->second  << " " << ali_par[t->second] << endreq;
     IDetectorElement *det = getDet<IDetectorElement>(t->first);
     IGeometryInfo *geo = det->geometry();
-    SmartRef<Condition> cond =  det->condition(t->first);
-    //    IAlignment *alicond = dynamic_cast<IAlignment*>( cond.target() );
-    
     // Convert alignment parameters into
     // a vector containing translations
     // a vector containing rotations and
@@ -1573,20 +1577,20 @@ StatusCode TAConfig::CalcResidual( unsigned int tr_cnt,
 				    distance );
   measMP = sqrt(distance.Mag2()) - mf;
   if ( isnan(mf) || fabs(measMP) > 1000.0 ) {
-    warning() << "Error in calculating poca!" << endreq;
-    warning() << "trt = " << trt << endreq;
-    warning() << "m_trx0 = " << m_trx0[tr_cnt] << endreq;
-    warning() << "m_rank_nr = " << m_rank_nr << endreq;
-    warning() << "delta = " << delta << endreq;
-    warning() << "m_estimated (x): " << m_estimated[m_rank_nr] << endreq;
-    warning() << "m_estimatedB4 (x) " << m_estimatedB4[m_rank_nr] << endreq;
-    warning() << "Center of Module = " << cenMod << endreq;
-    warning() << "Center of element lowest in hierarchy = " << cenLH << endreq;
-    warning() << "distance = " << distance << endreq;
-    warning() << "measurement traj: " << measTraj->direction(onstraw) << endreq;
-    warning() << "traj.Mag2() = " << measTraj->direction(onstraw).Mag2() << endreq;
-    warning() << "Center of module: " << mC << endreq;
-    warning() << "Model calculation failure: model = " << mf << endreq;
+    info() << "Error in calculating poca!" << endreq;
+    info() << "trt = " << trt << endreq;
+    info() << "m_trx0 = " << m_trx0[tr_cnt] << endreq;
+    info() << "m_rank_nr = " << m_rank_nr << endreq;
+    info() << "delta = " << delta << endreq;
+    info() << "m_estimated (x): " << m_estimated[m_rank_nr] << endreq;
+    info() << "m_estimatedB4 (x) " << m_estimatedB4[m_rank_nr] << endreq;
+    info() << "Center of Module = " << cenMod << endreq;
+    info() << "Center of element lowest in hierarchy = " << cenLH << endreq;
+    info() << "distance = " << distance << endreq;
+    info() << "measurement traj: " << measTraj->direction(onstraw) << endreq;
+    info() << "traj.Mag2() = " << measTraj->direction(onstraw).Mag2() << endreq;
+    info() << "Center of module: " << mC << endreq;
+    info() << "Model calculation failure: model = " << mf << endreq;
   }
   // set a few variables which are also used in FillMatrix method.
   // m_weight (error on the measurement)
