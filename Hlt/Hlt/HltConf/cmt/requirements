@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.25 2009-03-19 11:01:02 graven Exp $ 
+# $Id: requirements,v 1.26 2009-03-20 14:06:33 cattanem Exp $ 
 # =============================================================================
 # The helper package for configuration of Hlt(1)
 # =============================================================================
@@ -18,7 +18,7 @@ use       HltCommon   v*  Hlt
 # ======= the structure =======================================================
 branches cmt doc options python tests 
 # =============================================================================
-macro HltConfConfUserModules "HltConf.LumiCounterDefinition HltConf.HltVeloLines HltConf.Hlt1 HltConf.HltBeamGasLines HltConf.HltCommissioningLines HltConf.HltElectronLines HltConf.HltExpressLines HltConf.HltHadronLines HltConf.HltL0Lines HltConf.HltLumiLines HltConf.HltMuonLines HltConf.HltPhotonLines HltConf.HltVeloLines "
+macro HltConfConfUserModules "HltConf.LumiCounterDefinition HltConf.HltVeloLines HltConf.Hlt1 HltConf.HltBeamGasLines HltConf.HltCommissioningLines HltConf.HltElectronLines HltConf.HltExpressLines HltConf.HltHadronLines HltConf.HltL0Lines HltConf.HltLumiLines HltConf.HltMuonLines HltConf.HltPhotonLines HltConf.HltVeloLines HltConf.Configuration"
 
 
 

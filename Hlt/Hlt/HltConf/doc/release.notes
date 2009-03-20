@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.177 2009-03-18 13:26:21 graven Exp $ 
+! $Id: release.notes,v 1.178 2009-03-20 14:06:33 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-03-20 - Marco Cattaneo
+ - Remove RichRecSysConf from _used_configurables_ of Configuration.py, and add
+   Configuration.py to ConfUserModules in requirements. Should fix problem of
+   "HltConf not in database" affecting Moore and DaVinci in nightlies
 
 ! 2009-03-18 - Gerhard Raven
   - declare extra python modules in requirements

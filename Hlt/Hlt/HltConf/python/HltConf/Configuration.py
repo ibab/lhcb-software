@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.54 2009-03-11 17:31:04 depaula Exp $"
+__version__ = "$Id: Configuration.py,v 1.55 2009-03-20 14:06:33 cattanem Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -27,7 +27,7 @@ from HltConf.HltExpressLines  import HltExpressLinesConf
 from HltConf.HltBeamGasLines  import HltBeamGasLinesConf
 from HltConf.Hlt1             import Hlt1Conf
 # import HltConf.HltL0Candidates
-from RichRecSys.Configuration import *
+#from RichRecSys.Configuration import *
 
 class HltConf(LHCbConfigurableUser):
     __used_configurables__ = [ HltCommissioningLinesConf
@@ -40,8 +40,8 @@ class HltConf(LHCbConfigurableUser):
                              , HltElectronLinesConf
                              , HltPhotonLinesConf
                              , HltExpressLinesConf
-                             , Hlt1Conf
-                             , RichRecSysConf ]
+                             , Hlt1Conf ]
+#                             , RichRecSysConf ]
     __slots__ = { "L0TCK"                      : ''
                 , "hltType"                    : 'Hlt1+Hlt2'
                 , "Hlt2Requires"               : 'L0+Hlt1'  # require L0 and Hlt1 pass before running Hlt2
