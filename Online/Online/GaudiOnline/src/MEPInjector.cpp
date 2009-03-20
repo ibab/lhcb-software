@@ -1288,7 +1288,7 @@ in_addr_t MEPInjector::getTell1IP(int type, int src)
     case RawBank::L0CaloFull:	// 37
     case RawBank::L0CaloError:
     case RawBank::L0Calo:
-	return (/*inet_addr("192.169.2.0")*/ ipNet|(6<<16)  | (src + 1 << 24));	//L0Calo = L0Suppression result for Hcal and Ecal
+	return (/*inet_addr("192.169.2.0")*/ ipNet|(6<<16)  | ((src + 1) << 24));	//L0Calo = L0Suppression result for Hcal and Ecal
     case RawBank::L0DUError:
     case RawBank::L0DU:
 	return (/*inet_addr("192.169.7.2")*/ ipNet|(7<<16) | (2 << 24));
@@ -1403,7 +1403,7 @@ in_addr_t MEPInjector::getTell1IP(int type, int src)
     case RawBank::Rich: // Lets assume that the relation is sourceID +1 for last digit, as they seems to do not care
         
 
- 	return (/*inet_addr("192.169.14.0")*/ ipNet+(14<<16) | ((src)<< 24));
+ 	return (/*inet_addr("192.169.14.0")*/ (ipNet | (14<<16) ) | ((src)<< 24));
     case RawBank::TTFull:
     case RawBank::TTError:
     case RawBank::TTPedestal:

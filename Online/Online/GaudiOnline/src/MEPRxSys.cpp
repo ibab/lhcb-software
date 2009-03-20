@@ -10,6 +10,11 @@
 //  System dependent parts of the eventbuilder MEPRxSvc
 //  ===========================================================
 #include "GaudiOnline/MEPRxSys.h"
+#include <cstring>  	 
+#include <cstdlib> 	 
+#include <cerrno> 	 
+#include <ctime>
+
 #ifdef _WIN32
 #include <WinSock2.h>
 #include <Ws2tcpip.h>
@@ -24,7 +29,6 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include <netdb.h>
-#include <ctime>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <sys/select.h>
@@ -32,9 +36,7 @@
 #include <netinet/ip.h>
 #include <arpa/inet.h>
 #include <sys/time.h> 
-#include <cerrno>
 #include <sys/poll.h>
-
 #endif // ifndef _WIN32
 // Like the Windows and Unix syscalls
 // *all* functions return 0 on success and > 0 on a failure 
