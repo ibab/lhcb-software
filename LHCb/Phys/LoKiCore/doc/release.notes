@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.132 2009-01-08 17:11:23 cattanem Exp $ 
+! $Id: release.notes,v 1.133 2009-03-20 19:11:05 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,18 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2009-03-20 - Vanya BELYAEV
+
+ - LoKi/HistoBook.h
+
+     add more methods for histogram booking 
+     (needed for monitoring functors) 
+
+- cmt/requirements 
+
+     version increment to v9r0 
+
 
 ! =========================== LoKiCore v8r1 2009-01-08 ========================
 ! 2008-12-18 - Vanya Belyaev
