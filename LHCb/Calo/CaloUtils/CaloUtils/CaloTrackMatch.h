@@ -1,4 +1,4 @@
-// $Id: CaloTrackMatch.h,v 1.8 2007-01-15 07:52:45 cattanem Exp $
+// $Id: CaloTrackMatch.h,v 1.9 2009-03-20 17:57:43 vegorych Exp $
 // ============================================================================
 #ifndef CALOUTILS_CALOTRACKMATCH_H 
 #define CALOUTILS_CALOTRACKMATCH_H 1
@@ -116,7 +116,7 @@ protected:
     if (  !m1.inverted() || !m1.ok() || 
 	  !m2.inverted() || !m2.ok() )
       { 
-	Error(  "chi2(): invalid data are detected - return bad chi2" );
+	Warning(  "chi2(): invalid data are detected - return bad chi2" );
 	return 99999999. ; 
       }
 
@@ -127,7 +127,7 @@ protected:
     s_cov = m1.matrix() +  m2.matrix() ;
     if ( !s_cov.Invert() ) 
     { 
-      Error(  "chi2(): can not invert the matrix - return bad chi2" ) ; 
+      Warning(  "chi2(): can not invert the matrix - return bad chi2" ) ; 
       return 99999999. ; 
     }
 
@@ -154,7 +154,7 @@ protected:
     match.setOK       ( true  ) ;    
     if ( !match.invert() ) 
     {
-      Error ( "match(): Could not invert '2D-calo' matrix, see debug") ;
+      Warning ( "match(): Could not invert '2D-calo' matrix, see debug") ;
       if ( msgLevel ( MSG::DEBUG ) ) 
       { debug() << "CaloPosition:" << c << endreq ; }
       return StatusCode::FAILURE ;
@@ -176,7 +176,7 @@ protected:
     match.setOK       ( true  ) ;    
     if ( !match.invert() ) 
     { 
-      Error ( "match(): Could not invert 'track' matrix") ; 
+      Warning ( "match(): Could not invert 'track' matrix") ; 
       if ( msgLevel ( MSG::DEBUG ) ) 
       { debug() << "State:" << s << endreq ; }
       return StatusCode::FAILURE ; 
@@ -202,7 +202,7 @@ protected:
     match.setOK       ( true  ) ;    
     if ( !match.invert() ) 
     { 
-      Error ( "match(): Could not invert '3D-calo' matrix") ; 
+      Warning ( "match(): Could not invert '3D-calo' matrix") ; 
       if ( msgLevel ( MSG::DEBUG ) ) 
       { debug() << "CaloPosition:" << c << endreq ; }
       return StatusCode::FAILURE ; 
@@ -224,7 +224,7 @@ protected:
     match.setOK       ( true  ) ;    
     if ( !match.invert() ) 
     { 
-      Error ( "match(): Could not invert '2D-calobrem' matrix") ; 
+      Warning ( "match(): Could not invert '2D-calobrem' matrix") ; 
       if ( msgLevel ( MSG::DEBUG ) ) 
       { debug() << "CaloPosition:" << c << endreq ; }
       return StatusCode::FAILURE ; 
@@ -252,7 +252,7 @@ protected:
     match.setOK       ( true  ) ;    
     if ( !match.invert() ) 
     {
-      Error ( "match(): Could not invert 'track' matrix") ; 
+      Warning ( "match(): Could not invert 'track' matrix") ; 
       if ( msgLevel ( MSG::DEBUG ) ) 
       { debug() << "State:" << s << endreq ; }
       return StatusCode::FAILURE ; 

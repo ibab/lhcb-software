@@ -1,7 +1,15 @@
-! $Id: release.notes,v 1.114 2009-01-08 12:54:25 cattanem Exp $
+! $Id: release.notes,v 1.115 2009-03-20 17:57:43 vegorych Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+
+!========================== CaloUtils v8r4 2009-03-20 =========================
+! 2009-03-20 - Victor Egorychev
+ - CaloUtils/CaloTrackMatch.h
+    Error to Warning (requisted by Olivier)
+ - cmt/requirements
+  . Increase version to v8r4
 
 !========================== CaloUtils v8r3p1 2008-11-17 =========================
 ! 2008-12-10 - Marco Cattaneo
