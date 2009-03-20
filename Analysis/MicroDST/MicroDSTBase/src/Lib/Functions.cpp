@@ -1,4 +1,4 @@
-// $Id: Functions.cpp,v 1.4 2008-04-04 11:55:21 jpalac Exp $
+// $Id: Functions.cpp,v 1.5 2009-03-20 13:52:24 jpalac Exp $
 // Include files 
 
 
@@ -44,5 +44,17 @@ namespace MicroDST
     }
     return sc;
   }
+  //===========================================================================
+  const std::string trunkLocation(const std::string& location)
+  {
+    const std::string::size_type pos = location.rfind("/");
+    if ( pos != std::string::npos ) {
+      return std::string(location, 0, pos);
+    } else {
+      return std::string(location);
+    }
+    
+  }
+  
   //===========================================================================
 }

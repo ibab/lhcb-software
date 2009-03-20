@@ -1,4 +1,4 @@
-// $Id: Functions.h,v 1.3 2008-04-03 14:35:22 jpalac Exp $
+// $Id: Functions.h,v 1.4 2009-03-20 13:52:24 jpalac Exp $
 #ifndef MICRODST_FUNCTIONS_H 
 #define MICRODST_FUNCTIONS_H 1
 
@@ -48,6 +48,17 @@ namespace MicroDST {
                                  IInterface* daughter,
                                  const std::string& name  );
   
+  /**
+   *
+   * Return the trunk of a location XX/YY/ZZ
+   * Used to go from Phys/Selection/Particles to Phys/Selection
+   * @param location the location XX/YY/ZZ
+   * @return the top location, XX/YY
+   * 
+   * @date 20-03-2009
+   * @author Juan Palacios juancho@nikhef.nl
+   **/
+  const std::string trunkLocation(const std::string& location);  
 
 }
 #endif // MICRODST_FUNCTIONS_H
