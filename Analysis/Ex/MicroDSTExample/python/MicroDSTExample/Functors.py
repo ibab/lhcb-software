@@ -5,8 +5,8 @@ from ROOT import Double
 class AssocMCPFromTable :
     def __init__(self, table) :
         self.table = table
-        def __call__(self, particle) :
-            return Helpers.assocMCP(particle, self.table)
+    def __call__(self, particle) :
+        return Helpers.assocMCP(particle, self.table)
 #==============================================================================
 class MCAssociator :
     def __init__(self, MCAssociatorTool, verbose = False ) :
