@@ -1,10 +1,20 @@
-!$Id: release.notes,v 1.21 2009-03-10 15:52:59 jpalac Exp $
+!$Id: release.notes,v 1.22 2009-03-20 14:13:32 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTBase
 ! Responsible : Juan Palacios
 ! Purpose     : Base classes for MicroDST algorithms and tools, plus helper
 !               functions and functors.
 !-----------------------------------------------------------------------------
+
+! 2009-03-20 - Juan PALACIOS
+ - MicroDST/MicroDSTCommon.icpp, KeyedContainerClonerAlg.h
+  . Supress some errors and warnings after 10 times.
+ - MicroDST/Functions.h, src/Lib/Functions.cpp
+  . Add const std::string trunkLocation(const std::string& location);
+   * Return the trunk of a location XX/YY/ZZ
+   * @param location the location XX/YY/ZZ
+   * @return the top location, XX/YY
+
 
 ! 2009-03-10 - Juan PALACIOS
  - MicroDST/MicroDSTCommon.icpp
