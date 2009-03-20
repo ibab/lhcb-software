@@ -1,4 +1,4 @@
-// $Id: CopyRelatedMCParticles.cpp,v 1.17 2009-03-20 14:03:32 jpalac Exp $
+// $Id: CopyRelatedMCParticles.cpp,v 1.18 2009-03-20 16:11:08 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -94,7 +94,7 @@ StatusCode CopyRelatedMCParticles::execute() {
   const std::string relationsLoc = MicroDST::trunkLocation( fullOutputTESLocation() ) 
     + "/P2MCPRelations";
 
-  always() << "Storing relations table at " << relationsLoc << endmsg;
+  verbose() << "Storing relations table at " << relationsLoc << endmsg;
 
   put(m_relations, relationsLoc);
 
