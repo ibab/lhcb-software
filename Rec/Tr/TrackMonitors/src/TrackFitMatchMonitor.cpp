@@ -8,6 +8,7 @@
 class TrackFitMatchMonitor : public GaudiHistoAlg 
 {
 public:
+  enum ConstrainMethod { All=0, QOverP=1, Projective=2 } ;
 
    /** Standard construtor */
   TrackFitMatchMonitor( const std::string& name, ISvcLocator* pSvcLocator );
@@ -32,7 +33,7 @@ private:
 			  double xmin, double xmax, size_t nbins) ;
 private:
   std::string m_trackContainerName;
-  bool m_constrainQoPOnly ;
+  int m_constrainMethod ;
 } ;
 
 // Declaration of the Algorithm Factory
@@ -46,7 +47,7 @@ TrackFitMatchMonitor::TrackFitMatchMonitor( const std::string& name,
   : GaudiHistoAlg( name , pSvcLocator )
 {
   declareProperty( "TrackContainer", m_trackContainerName = LHCb::TrackLocation::Default  );
-  declareProperty( "ConstrainQoPOnly", m_constrainQoPOnly = false ) ;
+  declareProperty( "ConstrainMethod", m_constrainMethod = Projective ) ;
 }
 
 //=============================================================================
@@ -143,8 +144,8 @@ void TrackFitMatchMonitor::plotDelta(const std::string& thisname,
   // wrong in the fitted tracks already: We find for MC tracks that
   // things don't match very well.
 
-  Gaudi::TrackVector deltac,deltacpull ; 
-  if(!m_constrainQoPOnly) {
+  Gaudi::TrackVector deltac,deltacpull ;
+  if( m_constrainMethod == All ) {
     // now remove the contribution from the difference in the 'other' variables
     for( size_t irow = 0; irow<5; ++irow) {
       // remove this row from delta and cov
@@ -170,20 +171,28 @@ void TrackFitMatchMonitor::plotDelta(const std::string& thisname,
       Gaudi::Vector4 tmp = subcov * subcor ;
       deltac(irow) = delta(irow)  - ROOT::Math::Dot(subdelta,tmp) ;
       double covc = cov(irow,irow) - ROOT::Math::Dot(subcor,tmp) ;
-      deltacpull(irow) = deltac(irow) / std::sqrt(covc) ;
+      if( covc > 0 ) 
+	deltacpull(irow) = deltac(irow) / std::sqrt(covc) ;
+      else
+	warning() << "problem with covc: "
+		  << irow << " " << covc << " " << cov(irow,irow) << " "
+		  << ROOT::Math::Dot(subcor,tmp) << endreq ;
     }
   } else {
+    int map[4] = {2,3,0,1} ;
     for( size_t irow = 0; irow<4; ++irow) {
-      deltac(irow) = delta(irow)  - cov(irow,4)/cov(4,4) * delta(4) ;
-      double covc  = cov(irow,irow) - cov(irow,4)/cov(4,4) * cov(4,irow) ;
+      int ref = m_constrainMethod==QOverP ? 4 : map[irow] ;
+      deltac(irow) = delta(irow)  - cov(irow,ref)/cov(ref,ref) * delta(ref) ;
+      double covc  = cov(irow,irow) - cov(irow,ref)/cov(ref,ref) * cov(ref,irow) ;
       deltacpull(irow) = deltac(irow) / std::sqrt(covc) ;
     }
   }
   
-  myPlot1D(deltac(0),thisname,"dx",-20,20) ;
-  myPlot1D(deltac(1),thisname,"dy",-20,20) ;
-  myPlot1D(deltac(2),thisname,"dtx",-0.020,0.020) ;
-  myPlot1D(deltac(3),thisname,"dty",-0.020,0.020) ;
+  // these titles are only right if you choose 'Projective'
+  myPlot1D(deltac(0),thisname,"dx for dtx==0",-20,20) ;
+  myPlot1D(deltac(1),thisname,"dy for dty==0",-20,20) ;
+  myPlot1D(deltac(2),thisname,"dtx for dx==0",-0.010,0.010) ;
+  myPlot1D(deltac(3),thisname,"dty for dy==0",-0.010,0.010) ;
   //if(!m_constrainQoPOnly) plot(deltac(4),std::string("dqop"), -1e-4,1e-4) ;
   
   myPlot1D(deltacpull(0),thisname,"dx pull",-10,10) ;
