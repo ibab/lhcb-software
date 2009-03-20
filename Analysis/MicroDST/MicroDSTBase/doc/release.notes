@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.22 2009-03-20 14:13:32 jpalac Exp $
+!$Id: release.notes,v 1.23 2009-03-20 14:14:53 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTBase
 ! Responsible : Juan Palacios
@@ -14,7 +14,8 @@
    * Return the trunk of a location XX/YY/ZZ
    * @param location the location XX/YY/ZZ
    * @return the top location, XX/YY
-
+ - cmt/requirements
+  . Increase version to v1r3
 
 ! 2009-03-10 - Juan PALACIOS
  - MicroDST/MicroDSTCommon.icpp
