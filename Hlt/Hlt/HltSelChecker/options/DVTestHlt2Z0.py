@@ -43,9 +43,5 @@ DaVinci().TupleFile =  "HLT-"+signal+".root"
 DaVinci().HistogramFile = "DVHlt2-"+signal+".root"
 DaVinci().MoniSequence += [ moni, HltBackgroundCategory(), Z0 ]
 DaVinci().Input = [
-  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001929/DST/0000/00001929_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001929/DST/0000/00001929_00000002_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001929/DST/0000/00001929_00000006_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001929/DST/0000/00001929_00000007_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001929/DST/0000/00001929_00000008_5.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
+  "DATAFILE='PFN:castor:/castor/cern.ch/d/dijkstra/Selections-DC06/Z02MuMu.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
 ]

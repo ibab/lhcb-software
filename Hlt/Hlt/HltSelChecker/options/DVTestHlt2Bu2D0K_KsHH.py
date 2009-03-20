@@ -1,4 +1,4 @@
-### $Id: DVTestHlt2Bu2D0K_KsHH.py,v 1.11 2009-02-24 14:12:54 pkoppenb Exp $
+### $Id: DVTestHlt2Bu2D0K_KsHH.py,v 1.12 2009-03-20 10:05:38 pkoppenb Exp $
  #
  #  Test file for HLT Bd->D0(Kpi)K*(Kpi) selection
  #
@@ -62,4 +62,4 @@ DaVinci().HistogramFile = "DVHlt2-"+signal+".root"
 DaVinci().UserAlgorithms = [ presel ] 
 DaVinci().MoniSequence += [ moni, DecayTreeTuple("Hlt2DecayTreeTuple") ]
 DaVinci().Input = [
-  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/Bu2KD-KSPiPi-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
+  "DATAFILE='PFN:castor:/castor/cern.ch/user/d/dijkstra/Selections-DC06/Bu2KD-KSPiPi-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]

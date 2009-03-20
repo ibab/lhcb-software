@@ -12,6 +12,12 @@
 ! end
 !-----------------------------------------------------------------------------
 
+!========================== HltSelChecker v8r0 2009-03-20 ===================
+! 2009-03-20 - Patrick Koppenburg
+ - Use benchmark channels from http://lhcb-trig.web.cern.ch/lhcb-trig/HLT/benchmark.pdf
+ - This maks all results backward-incompatible
+ - Increment to v8r0
+
 ! 2009-03-20 - Patrick Koppenburg
  - Statistics : no eeK tuple
 

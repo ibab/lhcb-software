@@ -61,10 +61,4 @@ DaVinci().HistogramFile = "DVHlt2-"+signal+".root"
 DaVinci().UserAlgorithms = [ presel ] 
 DaVinci().MoniSequence += [ moni, DecayTreeTuple("Hlt2DecayTreeTuple") ]
 DaVinci().Input = [
- "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001581/DST/0000/00001581_00000002_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001581/DST/0000/00001581_00000005_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001581/DST/0000/00001581_00000007_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001581/DST/0000/00001581_00000008_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001581/DST/0000/00001581_00000009_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001581/DST/0000/00001581_00000010_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001581/DST/0000/00001581_00000011_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"]   
+  "DATAFILE='PFN:castor:/castor/cern.ch/user/d/dijkstra/Selections-DC06/Bs2Jpsi2eePhi.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
