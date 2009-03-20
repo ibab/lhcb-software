@@ -76,6 +76,11 @@ for i in range( opts.numiter ) :
     evtSel.rewind()
     mainSeq.Enable = True
 
+    # steer the monitor sequence depending on the iteration
+    appMgr.algorithm('AlignMonitorSeq').Enable = ( i == 0 )
+    if opts.numiter>1 :
+       appMgr.algorithm('AlignPostMonitorSeq').Enable = ( i == opts.numiter-1 )
+    
     # event loop
     appMgr.run( opts.numevents )
 

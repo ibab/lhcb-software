@@ -36,6 +36,7 @@ class TAlignment( LHCbConfigurableUser ):
         , "Chi2Outlier"                  : 10000                       # Chi2 cut for outliers
         , "UsePreconditioning"           : True                        # Pre-conditioning
         , "SolvTool"                     : "DiagSolvTool"              # Solver to use
+        , "EigenValueThreshold"          : -1                          # Eigenvalue threshold for cutting out weak modes
         , "WriteCondSubDetList"          : []                          # List of sub-detectors for which to write out the conditions
         , "CondFilePrefix"               : "xml/"                      # Prefix for xml file names
         , "VeloTopLevelElement"          : "/dd/Structure/LHCb/BeforeMagnetRegion/Velo"
@@ -111,6 +112,25 @@ class TAlignment( LHCbConfigurableUser ):
             if outputLevel == VERBOSE: print "VERBOSE: Filter Sequencer already defined!" 
             return allConfigurables.get( "TrackFilterSeq" )
 
+    def monitorSeq( self ) :
+        from Configurables import (TrackMonitor,TrackVertexMonitor)
+        monitorSeq = GaudiSequencer("AlignMonitorSeq")
+        monitorSeq.Members.append(TrackMonitor("AlignTrackMonitor",
+                                               TracksInContainer =self.getProp("TrackLocation")))
+        if self.getProp("VertexLocation") != "":
+             monitorSeq.Members.append(TrackVertexMonitor("AlignVertexMonitor",
+                                                          PVContainer = self.getProp("VertexLocation")))
+        return monitorSeq
+
+    def postMonitorSeq( self ) :
+        from Configurables import (TrackMonitor,TrackVertexMonitor)
+        monitorSeq = GaudiSequencer("AlignPostMonitorSeq")
+        monitorSeq.Members.append(TrackMonitor("AlignPostTrackMonitor",
+                                               TracksInContainer =self.getProp("TrackLocation")))
+        if self.getProp("VertexLocation") != "":
+             monitorSeq.Members.append(TrackVertexMonitor("AlignPostVertexMonitor",
+                                                          PVContainer = self.getProp("VertexLocation")))
+        return monitorSeq
 
     def writeAlg( self, subdet, condname, depths, outputLevel = INFO) :
         from Configurables import WriteAlignmentConditions
@@ -150,12 +170,11 @@ class TAlignment( LHCbConfigurableUser ):
                                         Al__AlignConstraintTool, Al__AlignUpdateTool )
             alignAlg = AlignAlgorithm( "Alignment" )
             alignAlg.OutputLevel                  = outputLevel
-            alignAlg.NumberOfIterations           = self.getProp( "NumIterations"       )
-            print "Getting tracks from ", self.getProp( "TrackLocation" )
+            alignAlg.NumberOfIterations           = self.getProp( "NumIterations" )
             alignAlg.TracksLocation               = self.getProp( "TrackLocation" )
-            alignAlg.VertexLocation               = self.getProp( "VertexLocation"      )
-            alignAlg.UseCorrelations              = self.getProp( "UseCorrelations"     )
-            alignAlg.Chi2Outlier                  = self.getProp( "Chi2Outlier"         )
+            alignAlg.VertexLocation               = self.getProp( "VertexLocation" )
+            alignAlg.UseCorrelations              = self.getProp( "UseCorrelations" )
+            alignAlg.Chi2Outlier                  = self.getProp( "Chi2Outlier" )
             alignAlg.HistoPrint                   = False
             alignAlg.UpdateInFinalize             = self.getProp( "UpdateInFinalize" )
             
@@ -180,6 +199,10 @@ class TAlignment( LHCbConfigurableUser ):
             constrainttool                        = Al__AlignConstraintTool("Al::AlignConstraintTool")
             constrainttool.Constraints            = self.getProp( "Constraints" )
             constrainttool.UseWeightedAverage     = self.getProp( "UseWeightedAverageConstraint" )
+
+            # and these too
+            gslSVDsolver().EigenValueThreshold    = self.getProp( "EigenValueThreshold" )
+            DiagSolvTool().EigenValueThreshold    = self.getProp( "EigenValueThreshold" )
             
             alignSequencer.Members.append(alignAlg)
 
@@ -201,7 +224,10 @@ class TAlignment( LHCbConfigurableUser ):
         mainSeq.Members.append( self.filterSeq(    self.getProp( "OutputLevel" ) ) )
         mainSeq.Members.append( self.fitSeq(       self.getProp( "OutputLevel" ) ) )
         mainSeq.Members.append( self.alignmentSeq( self.getProp( "OutputLevel" ) ) )
-
+        mainSeq.Members.append( self.monitorSeq() )
+        if self.getProp( "NumIterations" ) > 1 :
+            mainSeq.Members.append( self.postMonitorSeq() )
+            
         listOfCondToWrite = self.getProp( "WriteCondSubDetList" )
         if listOfCondToWrite:
             mainSeq.Members.append( self.writeSeq( listOfCondToWrite ) )
