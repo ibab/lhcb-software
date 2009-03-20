@@ -4,6 +4,10 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-03-20 - Wouter Hulsbergen
+ - Changed constrainmethod in TrackFitMatchMonitor. See cvs log.
+ - Added hit patterns to TrackMonitor
+
 !============================ TrackMonitors v1r8 2009-03-11 ==================
 ! 2009-03-11 - Wouter Hulsbergen
  - Bug fix in OTTrackMonitor:  division by zero for tracks with 1 dof
