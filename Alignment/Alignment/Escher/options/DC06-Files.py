@@ -47,8 +47,14 @@ else:
     # Example POOL DIGI (default, MC production)
     datasetName =  "00001820_00000001"
     # B->J/Psi(mumu)Ks events with Boole v12r4, Gauss v25r2, XmlDDDB v30r8
-    EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/DIGI/0000/" + datasetName + "_4.digi' TYP='POOL_ROOTTREE' OPT='READ'"]
-
+    files = ['00001820_00000001_4.digi','00001820_00000004_4.digi','00001820_00000009_4.digi','00001820_00000010_4.digi',
+             '00001820_00000011_4.digi','00001820_00000014_4.digi','00001820_00000015_4.digi','00001820_00000016_4.digi',
+             '00001820_00000018_4.digi','00001820_00000020_4.digi','00001820_00000024_4.digi','00001820_00000032_4.digi',
+             '00001820_00000033_4.digi','00001820_00000040_4.digi']
+    for file in files :
+        filename = 'PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/DIGI/0000/' + file
+        EventSelector().Input.append("DATAFILE='" + filename + "' TYP='POOL_ROOTTREE' OPT='READ'")
+        
 #-- Example field off and velo open files
 if "fieldOff" in Escher().getProp("SpecialData") :
     if "veloOpen" in Escher().getProp("SpecialData") :
