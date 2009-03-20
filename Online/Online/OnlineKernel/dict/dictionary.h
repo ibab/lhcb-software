@@ -1,6 +1,7 @@
 #include <cstdarg>
-
 #ifndef __GCCXML
+  #include <typeinfo>
+  
   #define __GCCXML
   #define __REAL_COMP
   #ifdef _WIN32
