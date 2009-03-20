@@ -1,4 +1,4 @@
-// $Id: MicroDSTCommon.icpp,v 1.4 2009-03-10 15:52:21 jpalac Exp $
+// $Id: MicroDSTCommon.icpp,v 1.5 2009-03-20 13:52:36 jpalac Exp $
 //-----------------------------------------------------------------------------
 // Implementation file for templated methods of class : MicroDSTCommon
 //
@@ -47,7 +47,8 @@ const T* MicroDSTCommon<PBASE>::copyAndStoreObject( const std::string& from,
     this->verbose() << "Data values set to\n" << *newData << "\n" << endmsg;
     return newData;
   } else {
-    this->Warning("No data container found at "+ from, StatusCode::SUCCESS);
+    this->Warning("No data container found at "+ from, 
+                  StatusCode::FAILURE, 10).ignore();
     return 0;
   } // if exist
 
@@ -88,7 +89,8 @@ const T* MicroDSTCommon<PBASE>::copyKeyedContainer( const std::string& from,
 
   const T* data = this->getInputContainer<T>( from );
   if (!data) {
-    this->warning() << "copyKeyedContainer found no data at " << from << endmsg;
+    this->Warning("copyKeyedContainer found no data at "+from, 
+                  StatusCode::FAILURE, 10).ignore();
     
     return 0;
   }
@@ -111,7 +113,8 @@ const T* MicroDSTCommon<PBASE>::copyKeyedContainer( const std::string& from,
                     << " into " << outputTESLocation(from)
                     <<", size " << clones->size() << endmsg;
   } else {
-    this->warning() << "opyKeyedContainer failed to clone " << from << endmsg;
+    this->Warning("CopyKeyedContainer failed to clone "+ from,
+                  StatusCode::FAILURE, 10).ignore();
   }
   
   
@@ -173,8 +176,8 @@ template <class T>
 const T* MicroDSTCommon<PBASE>::getInputContainer( const std::string& location ) 
 {
   if (!exist<T>(location)) {
-    this->error() << "Container location " << location
-                  << "does not exist" << endmsg;
+    this->Error("Container location "+location+" does not exist",
+                StatusCode::FAILURE, 10).ignore();
     return 0;    
   } else {
     return this->get<T>( location );

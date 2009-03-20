@@ -1,4 +1,4 @@
-// $Id: KeyedContainerClonerAlg.h,v 1.4 2008-09-01 17:02:57 jpalac Exp $
+// $Id: KeyedContainerClonerAlg.h,v 1.5 2009-03-20 13:52:36 jpalac Exp $
 #ifndef MICRODST_KEYEDCONTAINERCLONERALG_H 
 #define MICRODST_KEYEDCONTAINERCLONERALG_H 1
 
@@ -60,10 +60,11 @@ public:
     if (m_cloner) {
       debug() << "Found cloner " << m_clonerType << endmsg;
     } else {
-      error() << "Failed to find cloner " << m_clonerType << endmsg;
+      sc = Error("Failed to find cloner " + m_clonerType,
+            StatusCode::FAILURE, 10);
     }
 
-    return StatusCode::SUCCESS;
+    return sc;
 
   }
   
@@ -82,8 +83,8 @@ public:
     setFilterPassed(true);
 
     if (0==cont) {
-      warning() << "Unable clone or get container from " 
-                << inputTESLocation() << endmsg;
+      Warning("Unable clone or get container from "+ inputTESLocation(),
+              StatusCode::FAILURE, 10).ignore();
     }
 
     return StatusCode::SUCCESS;
