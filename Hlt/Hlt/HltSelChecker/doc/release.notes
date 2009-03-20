@@ -4,10 +4,16 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 !
-! foreach a (`ls -1 options/DVTestHlt2* | awk -FTestHlt2 '{print $2}' | awk -F. '{print $1}'`)
+! foreach a (`ls -1 options/DVTestHlt2* | grep -v Hlt2Bs | awk -FTestHlt2 '{print $2}' | awk -F. '{print $1}'`)
+!   gaudirun.py options/DVTestHlt2${a}.py >! test-$a &
+! end
+! foreach a (`ls -1 options/DVTestHlt2* | grep Hlt2Bs | awk -FTestHlt2 '{print $2}' | awk -F. '{print $1}'`)
 !   gaudirun.py options/DVTestHlt2${a}.py >! test-$a &
 ! end
 !-----------------------------------------------------------------------------
+
+! 2009-03-20 - Patrick Koppenburg
+ - Statistics : no eeK tuple
 
 ! 2009-03-04 - Patrick Koppenburg
  - DecayTreeTuple : revert pid.
