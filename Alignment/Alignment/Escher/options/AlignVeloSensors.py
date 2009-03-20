@@ -25,7 +25,7 @@ Escher().Kalman = True
 Escher().Millepede = False
 Escher().TrackContainer = "Rec/Track/Best" # Velo, VeloR, Long, Upstream, Downstream, Ttrack, Muon or Calo
 Escher().EvtMax = 1000
-TrackSys().ExpertTracking += [ "kalmanSmoother" ]
+TrackSys().ExpertTracking += [ "kalmanSmoother","simplifiedGeometry" ]
 TrackSys().TrackExtraInfoAlgorithms = ['']
 RecSysConf().RecoSequence = ["VELO","TT","IT","OT","Tr","Vertex"]
 
@@ -37,8 +37,11 @@ elements = Alignables()
 #elements.VeloPhiSensors("TxTy")
 #elements.VeloModules("TzRxRyRz")
 #let's do modules only, for now:
-elements.VeloModules("TxTyTzRxRyRz")
-constraints = ["Tz","Ty","Tx","Rz","Ry","Rz"]
+#elements.VeloModules("TxTyTzRxRyRz")
+elements.VeloRSensors("TxTyTzRxRy")
+elements.VeloPhiSensors("TxTyTzRxRyRz")
+
+constraints = ["Tz","Ty","Tx","Rz","Ry","Rx","Szz","Szx","Szy","SRz"]
 
 print "aligning elements ", elements
 
@@ -47,7 +50,7 @@ TAlignment().TrackLocation        = "Rec/Track/AlignTracks"
 TAlignment().VertexLocation       = "Rec/Vertex/Primary"
 TAlignment().Constraints          = constraints
 TAlignment().WriteCondSubDetList  = ['Velo']
-#TAlignment().UpdateInFinalize = False
+TAlignment().EigenValueThreshold  = 100
 
 # still set up a track selection
 from Configurables import (GaudiSequencer,TrackContainerCopy,TrackSelector,TrackMonitor) 
@@ -57,21 +60,17 @@ alignSelector  = TrackContainerCopy("AlignSelector",
                                     outputLocation = "Rec/Track/AlignTracks")
 alignSelector.addTool( TrackSelector("Selector",
                                      MaxChi2Cut = 10,
-                                     MinNVeloRHits = 3,
-                                     MinNVeloPhiHits = 3) ) 
+                                     MinNVeloRHits = 4,
+                                     MinNVeloPhiHits = 4 )
+                       ) 
 trackFilterSeq.Members.append( alignSelector )
-trackFilterSeq.Members.append( TrackMonitor("AlignTrackMonitor",
-                                            TracksInContainer = "Rec/Track/AlignTracks") )
 
 # Load the velo misalignment
 from Configurables import ( CondDB, CondDBAccessSvc )
 veloCond = CondDBAccessSvc( 'VeloAlignCond' )
 veloCond.ConnectionString = 'sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/B2HH_LHCBCOND_Velo-slice_5sigma.db/LHCBCOND'
+#veloCond.ConnectionString = 'sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/B2HH_LHCBCOND_Velo-slice_5sigma_aligned.db/LHCBCOND'
 CondDB().addLayer( veloCond )
-
-# add some data
-
-
 
 ##############################################################################
 # I/O datasets are defined in a separate file, see examples in 2008-TED_Data.py
