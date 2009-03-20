@@ -1,4 +1,4 @@
-// $Id: SysInfo.cpp,v 1.5 2008-11-19 11:07:57 frankb Exp $
+// $Id: SysInfo.cpp,v 1.6 2009-03-20 15:00:17 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,8 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SysInfo.cpp,v 1.5 2008-11-19 11:07:57 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SysInfo.cpp,v 1.6 2009-03-20 15:00:17 frankb Exp $
+
 #include "ROMon/SysInfo.h"
 #include "ROMon/CPUMonOstream.h"
 #include "ROMon/Sys.h"
@@ -21,6 +22,7 @@
 
 #include <iostream>
 #include <stdexcept>
+#include <cstring>
 #include <cstdio>
 #include <cerrno>
 #include <fcntl.h>

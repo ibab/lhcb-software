@@ -55,11 +55,11 @@ int rawtyp2det[] = { 0,      1,      2,      3,      4,      2,
                      3, 4, 2 /* PrsPacked */, 15 /* L0MUON */, 
                      8, 7, 8, 7, 5, 5 };
 
-
-char *rawsubdetstr[16] = { "L0CA", "L0DU", "PRSH", "ECAL", "HCAL", "VELO", 
-                           "RICH",   "TT",   "IT",   "OT", "MUON", "L0PU",  
-                           "DAQ",  "ODIN",   "HLT", "L0MU"};
-
+/*
+static const char *rawsubdetstr[16] = { "L0CA", "L0DU", "PRSH", "ECAL", "HCAL", "VELO", 
+					"RICH",   "TT",   "IT",   "OT", "MUON", "L0PU",  
+					"DAQ",  "ODIN",   "HLT", "L0MU"};
+*/
 
 /* map bank-types to TELL1s */
 

@@ -1,7 +1,9 @@
 #include "ROMon/PartitionListener.h"
 #include "ROMon/Constants.h"
 #include "CPP/IocSensor.h"
+#include <cstring>
 #include <vector>
+#include <memory>
 extern "C" {
 #include "dic.h"
 }
