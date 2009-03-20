@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.29 2009-03-07 10:32:22 graven Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.30 2009-03-20 14:24:03 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -144,7 +144,6 @@ HltGlobalMonitor::~HltGlobalMonitor() {};
 StatusCode HltGlobalMonitor::initialize() {
   StatusCode sc = HltBaseAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-
   //  m_time_ref    = time(NULL);  //time or mtime or mtimeref... zie constructor
   
   m_L0Input         = book1D("L0 channel",-0.5,16.5,17);
@@ -177,14 +176,13 @@ StatusCode HltGlobalMonitor::initialize() {
   std::vector<std::string> labels;
   for (std::vector<std::string>::const_iterator i = m_Hlt1Lines.begin(); i!=m_Hlt1Lines.end();++i) {
       std::string s = *i;
-      // remove "Hlt1" and "Decision"
-      std::string::size_type i =  s.find("Hlt1");
-      if (i != std::string::npos) s.erase(i,i+4);
-      i =  s.find("Decision");
-      if (i != std::string::npos) s.erase(i,i+8);
+      std::vector<std::string> strip = boost::assign::list_of<std::string>("Hlt1")("Decision");
+      for (std::vector<std::string>::const_iterator j = strip.begin();j!=strip.end();++j) {
+     	std::string::size_type k =  s.find(*j);
+     	if (k != std::string::npos) s.erase(k,k+j->size());
+      }
       labels.push_back(s);  
   }
-
 
 
 
@@ -228,8 +226,8 @@ StatusCode HltGlobalMonitor::initialize() {
      declareInfo("COUNTER_TO_RATE["+*i+"Call]", m_allCall.back(), "Hlt1 "+*i+" Line Calls");
   }
 
-  declareInfo("COUNTER_TO_RATE", m_virtmem, "Virtual memory");
-  declareInfo("COUNTER_TO_RATE", (double)m_time, "Ellapsed time");
+  declareInfo("COUNTER_TO_RATE[virtmem]", m_virtmem, "Virtual memory");
+  declareInfo("COUNTER_TO_RATE[elapsed time]", (double)m_time, "Elapsed time");
   
   m_gpstimesec=0;
 
@@ -237,7 +235,6 @@ StatusCode HltGlobalMonitor::initialize() {
   declareInfo("COUNTER_TO_RATE[GpsTimeoflast]",m_gpstimesec,"Gps time of last event");
 
   declareInfo("#accept","",&counter("#accept"),0,std::string("Events accepted"));
-
   return StatusCode::SUCCESS;
 };
 
