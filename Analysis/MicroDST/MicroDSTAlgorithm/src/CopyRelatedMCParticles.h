@@ -1,4 +1,4 @@
-// $Id: CopyRelatedMCParticles.h,v 1.15 2008-09-24 20:50:09 jpalac Exp $
+// $Id: CopyRelatedMCParticles.h,v 1.16 2009-03-20 14:10:15 jpalac Exp $
 #ifndef COPYRELATEDMCPARTICLES_H 
 #define COPYRELATEDMCPARTICLES_H 1
 
@@ -35,7 +35,7 @@ class MCVertex;
  * input set of LHCb::Particles,
  * and the cloned LHCb::MCParticles. This is stored in the form 
  * of an LHCb::RelationWeighted2D<LHCb::Particle, LHCb::MCParticle, double> in
- * a TES location defined by InputLocation + "/RelatedMCParticles".
+ * a TES location defined by InputLocation - "/Particles" + "/P2MCPRelations".
  * The requirement is that the LHCb::Particles from the InputLocation have 
  * previously been cloned to the MicroDST TES area. If a clone is not found,
  * no association is stored
@@ -45,16 +45,20 @@ class MCVertex;
  *
  * <b>Example</b>: Clone LHCb::MCParticles associated to LHCb::Particles in 
  * "/Event/MyLocation/Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/Particles"  using an MCParticleCloner. 
- * Copy associations to "/Event/MyLocation/Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/Particles/RelatedMCParticles"
+ * Copy associations to "/Event/MyLocation/Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/P2MCPRelations"
  *
  *  @code
  *
  *  // Add a CopyRelatedMCParticles instance to a selection sequence
- *  SeqDC06selBd2Jpsi2MuMu_Kst2KPi.Members += {"CopyRelatedMCParticles/CopyMC"};
- *  CopyMC.OutputPrefix = "MyLocation";
+ *  seq = GaudiSequencer('SeqDC06selBd2Jpsi2MuMu_Kst2KPi')
+ *  copyMC = CopyRelatedMCParticles()
+ *  seq.Members += [copyMC]
+ *  copyMC.OutputPrefix = "MyLocation"
  *  // Note: the InputLocation is the TES location of the original particles
- *  CopyMC.InputLocation = "Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/Particles";
- *  CopyMC.ICloneMCParticle = "MCParticleCloner" // this is the default anyway.
+ *  copyMC.InputLocation = "Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/Particles"
+ *  copyMC.addTool(MCParticleCloner(), name= 'MCParticleCloner') # this is the default anyway.
+ *  copyMC.MCParticleCloner.addTool(MCVertexCloner(), name = 'ICloneMCVertex') # this is the default anyway.
+ *
  *  @endcode
  * 
  *
