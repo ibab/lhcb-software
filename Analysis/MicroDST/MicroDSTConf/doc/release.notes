@@ -1,9 +1,15 @@
-!$Id: release.notes,v 1.6 2009-01-15 14:19:40 jpalac Exp $
+!$Id: release.notes,v 1.7 2009-03-20 16:27:31 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTConf
 ! Responsible : Juan PALACIOS
 ! Purpose     : Configuration and options files for MicroDST making.
 !-----------------------------------------------------------------------------
+
+! 2009-03-20 - Juan PALACIOS
+ - options/MicroDSTStream.py
+  . Remove MicroDSTStream from ApplicationMgr().OutStream.
+ - cmt/requirements
+  . Increase version to v2r1
 
 !========================== MicroDSTConf v2r0 2009-01-15 ==================
 ! 2009-01-15 - Juan PALACIOS
