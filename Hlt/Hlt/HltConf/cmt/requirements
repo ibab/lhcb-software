@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.26 2009-03-20 14:06:33 cattanem Exp $ 
+# $Id: requirements,v 1.27 2009-03-20 14:58:22 graven Exp $ 
 # =============================================================================
 # The helper package for configuration of Hlt(1)
 # =============================================================================
@@ -11,6 +11,8 @@ use       GaudiPolicy v*
 use       Python      v* LCG_Interfaces 
 use       HltCommon   v*  Hlt
 
+use       RichRecSys  v*  Rich
+
 
 # =============================================================================
 
@@ -18,12 +20,12 @@ use       HltCommon   v*  Hlt
 # ======= the structure =======================================================
 branches cmt doc options python tests 
 # =============================================================================
-macro HltConfConfUserModules "HltConf.LumiCounterDefinition HltConf.HltVeloLines HltConf.Hlt1 HltConf.HltBeamGasLines HltConf.HltCommissioningLines HltConf.HltElectronLines HltConf.HltExpressLines HltConf.HltHadronLines HltConf.HltL0Lines HltConf.HltLumiLines HltConf.HltMuonLines HltConf.HltPhotonLines HltConf.HltVeloLines HltConf.Configuration"
 
 
 
 # =============================================================================
 # ======= the patterns ========================================================
+macro HltConfConfUserModules "HltConf.LumiCounterDefinition HltConf.HltVeloLines HltConf.Hlt1 HltConf.HltBeamGasLines HltConf.HltCommissioningLines HltConf.HltElectronLines HltConf.HltExpressLines HltConf.HltHadronLines HltConf.HltL0Lines HltConf.HltLumiLines HltConf.HltMuonLines HltConf.HltPhotonLines HltConf.HltVeloLines HltConf.Configuration"
 apply_pattern install_python_modules
 # =============================================================================
 

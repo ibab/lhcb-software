@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.55 2009-03-20 14:06:33 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.56 2009-03-20 14:58:22 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -26,8 +26,7 @@ from HltConf.HltPhotonLines   import HltPhotonLinesConf
 from HltConf.HltExpressLines  import HltExpressLinesConf
 from HltConf.HltBeamGasLines  import HltBeamGasLinesConf
 from HltConf.Hlt1             import Hlt1Conf
-# import HltConf.HltL0Candidates
-#from RichRecSys.Configuration import *
+from RichRecSys.Configuration import *
 
 class HltConf(LHCbConfigurableUser):
     __used_configurables__ = [ HltCommissioningLinesConf
@@ -40,8 +39,8 @@ class HltConf(LHCbConfigurableUser):
                              , HltElectronLinesConf
                              , HltPhotonLinesConf
                              , HltExpressLinesConf
-                             , Hlt1Conf ]
-#                             , RichRecSysConf ]
+                             , Hlt1Conf
+                             , RichRecSysConf ]
     __slots__ = { "L0TCK"                      : ''
                 , "hltType"                    : 'Hlt1+Hlt2'
                 , "Hlt2Requires"               : 'L0+Hlt1'  # require L0 and Hlt1 pass before running Hlt2
@@ -109,16 +108,15 @@ class HltConf(LHCbConfigurableUser):
                 # TODO: this next one should become a property of the Hlt2 configurable, and we
                 #       just forward to it...
                 Sequence("Hlt2CheckHlt1Passed").Members = [ ]
-
-                from Configurables import LoKi__HDRFilter   as HltFilter
-                from Configurables import LoKi__L0Filter    as L0Filter
-                hlt2requires = { 'L0'   : L0Filter('L0Pass', Code = "L0_DECISION" )
-                               , 'Hlt1' : HltFilter('Hlt1GlobalPass' , Code = "HLT_PASS('Hlt1Global')" )
-                               }
-                confs = self.getProp('Hlt2Requires')
-                if confs != "" and confs != "None" :
-                    for i in confs.split('+') :
-                        Sequence("Hlt2CheckHlt1Passed").Members.append( hlt2requires[i] )
+                reqs = self.getProp('Hlt2Requires')
+                if reqs.upper != "NONE" :
+                    from Configurables import LoKi__HDRFilter   as HltFilter
+                    from Configurables import LoKi__L0Filter    as L0Filter
+                    hlt2requires = { 'L0'   : L0Filter( 'L0Pass',          Code = "L0_DECISION"            )
+                                   , 'Hlt1' : HltFilter('Hlt1GlobalPass' , Code = "HLT_PASS('Hlt1Global')" )
+                                   }
+                    for i in reqs.split('+') :
+                        if i : Sequence("Hlt2CheckHlt1Passed").Members.append( hlt2requires[i] )
 
     def configureRoutingBits(self) :
         ## set triggerbits
@@ -126,7 +124,7 @@ class HltConf(LHCbConfigurableUser):
         # 32-63: reserved for Hlt1
         # 64-91: reserved for Hlt2
 
-        ### NOTE: any change in the meaning of any of the following needs to be 
+        ### NOTE: any change in the _meaning_ of any of the following needs to be 
         ###       communicated with online, to insure the events are still properly
         ###       routed!!!
         routingBits = { 32 : "HLT_PASS('Hlt1Global')"
@@ -189,19 +187,17 @@ class HltConf(LHCbConfigurableUser):
         # TODO: HltGlobalMonitor().AlleyMap = grouping
 
         def disableHistograms(c,filter = lambda x : True) :
-            if 'HistoProduce' in c.getProperties() :
-                if not filter(c) : 
-                    c.HistoProduce = False
-                    print 'disabling histograms for ' + c.getFullName()
+            if 'HistoProduce' in c.getDefaultProperties() and filter(c):
+                c.HistoProduce = False
             for p in [ 'Members','Filter0','Filter1' ] :
-                if hasattr(c,p) : 
-                    x = getattr(c,p)
-                    if list is not type(x) : x = [ x ]
-                    [ disableHistograms(i,filter) for i in x ]
-        if self.getProp('HistogrammingLevel') == 'None' : 
-            [ disableHistograms( i.sequencer() ) for i in hlt1Lines() ]
+                if not hasattr(c,p) : continue
+                x = getattr(c,p)
+                if list is not type(x) : x = [ x ]
+                [ disableHistograms(i,filter) for i in x ]
+        if   self.getProp('HistogrammingLevel') == 'None' : 
+            for i in hlt1Lines() : disableHistograms( i.sequencer() )
         elif self.getProp('HistogrammingLevel') == 'Line' : 
-            [ disableHistograms( i.sequencer(), lambda x: x.getType!='HltLine' ) for i in hlt1Lines() ]
+            for i in hlt1Lines() : disableHistograms( i.sequencer(), lambda x: x.getType()!='HltLine' ) 
             
 
     def postConfigAction(self) : 
