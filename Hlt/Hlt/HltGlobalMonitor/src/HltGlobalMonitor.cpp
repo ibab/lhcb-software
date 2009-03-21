@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.30 2009-03-20 14:24:03 graven Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.31 2009-03-21 08:07:14 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -117,20 +117,15 @@ namespace {
 HltGlobalMonitor::HltGlobalMonitor( const std::string& name,
                     ISvcLocator* pSvcLocator)
   : HltBaseAlg ( name , pSvcLocator )
-    , m_gpstimesec(0), m_time(0), m_scanevents(10),  m_totaltime(100000), m_totalmem(2000)
-    , m_virtmem(0)
-
-
-
+    , m_gpstimesec(0), m_time(0), m_virtmem(0)
 {
-  // se nao tiver declarado no options, ele usa este
   declareProperty("ODIN",              m_ODINLocation = LHCb::ODINLocation::Default);
   declareProperty("L0DUReport",        m_L0DUReportLocation = LHCb::L0DUReportLocation::Default);
   declareProperty("HltDecReports",     m_HltDecReportsLocation = LHCb::HltDecReportsLocation::Default);
   declareProperty("Hlt1Decisions",     m_Hlt1Lines );
-  //  declareProperty("ScanEvents",        m_scanevents = 2000 );
-  //  declareProperty("TotalTime",         m_totaltime  = 2000 );
-  //  declareProperty("TotalMemory",       m_totalmem   = 5000 );
+  declareProperty("ScanEvents",        m_scanevents = 2000 );
+  declareProperty("TotalTime",         m_totaltime  = 2000 );
+  declareProperty("TotalMemory",       m_totalmem   = 5000 );
 
 }
 //=============================================================================
