@@ -1,4 +1,4 @@
-// $Id: L0Muon2Track.cpp,v 1.1 2009-03-19 20:11:55 ibelyaev Exp $
+// $Id: L0Muon2Track.cpp,v 1.2 2009-03-22 17:57:42 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -243,14 +243,14 @@ namespace
     IsMuonTile
     ( const LHCb::MuonTileID& tile    , 
       const unsigned int      station ) 
-      : m_tile ( tile ) 
+      : m_tile    ( tile    ) 
       , m_station ( station ) 
     {}
     /// the main method:
     bool operator() ( const LHCb::LHCbID& id ) 
     { 
       return 
-        id.isMuon() && id.muonID().station() == m_station && id == m_tile ;  
+        id.isMuon() && ( id.muonID().station() == m_station ) && ( id == m_tile ) ;  
     }
     ///
   private:
@@ -271,8 +271,8 @@ namespace
 bool Hlt::L0Muon2Track::checkClone ( const LHCb::L0MuonCandidate&  muon) const
 {
   
-  const LHCb::MuonTileID& tileM1 = muon.muonTileIDs(0).front() ;
-  const LHCb::MuonTileID& tileM2 = muon.muonTileIDs(1).front() ;
+  const LHCb::MuonTileID tileM1 = muon.muonTileIDs(0).front() ;
+  const LHCb::MuonTileID tileM2 = muon.muonTileIDs(1).front() ;
   
   typedef std::vector< LHCb::LHCbID > LHCbIDs ;
   

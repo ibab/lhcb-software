@@ -1,4 +1,4 @@
-// $Id: HltUnit.cpp,v 1.4 2009-03-19 13:16:12 ibelyaev Exp $
+// $Id: HltUnit.cpp,v 1.5 2009-03-22 17:57:42 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -53,7 +53,7 @@ LoKi::HltUnit::HltUnit
   Assert ( sc.isSuccess () , "Unable (re)set property 'Code'"    , sc ) ;
   // set the factory type/name 
   sc = setProperty
-    ( "Factory" , "LoKi::Hybrid::CoreFactory/CoreFactory::PUBLIC" ) ;
+    ( "Factory" , "LoKi::Hybrid::CoreFactory/CoreFactory:PUBLIC" ) ;
   Assert ( sc.isSuccess () , "Unable (re)set property 'Factory'" , sc ) ;
   // ==========================================================================
 }

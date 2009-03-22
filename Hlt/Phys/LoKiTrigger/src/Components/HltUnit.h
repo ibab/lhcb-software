@@ -1,4 +1,4 @@
-// $Id: HltUnit.h,v 1.6 2009-03-19 13:16:12 ibelyaev Exp $
+// $Id: HltUnit.h,v 1.7 2009-03-22 17:57:42 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_HLTUNIT_H 
 #define LOKI_HLTUNIT_H 1
@@ -30,7 +30,7 @@ namespace LoKi
   // ==========================================================================
   /** @class HltUnit HltUnit.h LoKi/HltUnit.h
    *  Simple algorithm with pretends to be a replacement of
-   *  the major part of the python' HltConf.Hlt1Line stuff
+   *  the major part of the python HltConf.Hlt1Line stuff
    *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    *  @date   2008-11-10
    */

@@ -1,4 +1,4 @@
-// $Id: Service.cpp,v 1.2 2009-03-19 20:11:55 ibelyaev Exp $
+// $Id: Service.cpp,v 1.3 2009-03-22 17:57:42 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -11,6 +11,10 @@
 // ============================================================================
 #include "Kernel/IANNSvc.h"
 #include "Kernel/IANSvc.h"
+// ============================================================================
+// LoKi
+// ============================================================================
+#include "LoKi/ILoKiSvc.h"
 // ============================================================================
 // Local 
 // ============================================================================
@@ -127,27 +131,52 @@ StatusCode Hlt::Service::queryInterface
   // "switch"
   // Hlt Register ?
   if      ( Hlt::IRegister    ::interfaceID () == iid ) 
-  { *ppi = static_cast<Hlt::IRegister*>    ( this )      ; }
+  { 
+    *ppi =  static_cast<Hlt::IRegister*>    ( this )      ;
+    addRef() ;
+    return StatusCode::SUCCESS ;                                       // RETURN 
+  }
   // Hlt Data ?
   else if ( Hlt::IData        ::interfaceID () == iid ) 
-  { *ppi = static_cast<Hlt::IData*>        ( this )      ; }
+  { 
+    *ppi =  static_cast<Hlt::IData*>        ( this )      ; 
+    addRef() ;
+    return StatusCode::SUCCESS ;                                       // RETURN 
+  }
   // Hlt Inspector ?
   else if ( Hlt::IInspector   ::interfaceID () == iid ) 
-  { *ppi = static_cast<Hlt::IInspector*>   ( this )      ; }
+  { 
+    *ppi =  static_cast<Hlt::IInspector*>   ( this )      ;
+    addRef() ;
+    return StatusCode::SUCCESS ;                                       // RETURN 
+  }
   // "Assigned Names & Numbers"?
   else if ( IANNSvc           ::interfaceID () == iid ) 
-  {      return annSvc() -> queryInterface ( iid , ppi ) ; }          // RETURN
+  {      return  annSvc() -> queryInterface ( iid , ppi ) ; }          // RETURN
   // "Assigned Names"?
   else if ( IANSvc            ::interfaceID () == iid ) 
-  {      return annSvc() -> queryInterface ( iid , ppi ) ; }          // RETURN
+  {      return  annSvc() -> queryInterface ( iid , ppi ) ; }          // RETURN
+  //   LoKi ?
+  else if ( LoKi::ILoKiSvc    ::interfaceID () == iid ) 
+  {      return lokiSvc() -> queryInterface ( iid , ppi ) ; }          // RETURN
   // Incident listener?
   else if ( IIncidentListener ::interfaceID () == iid ) 
-  { *ppi = static_cast<IIncidentListener*> ( this )      ; }
-  else { return  ::Service::queryInterface ( iid , ppi ) ; }          // RETURN 
-  //
-  addRef();
-  //
-  return StatusCode::SUCCESS ;                                        // RETURN 
+  { 
+    *ppi =  static_cast<IIncidentListener*> ( this )      ;
+    addRef() ;
+    return StatusCode::SUCCESS ;                                      // RETURN 
+  }
+  
+  // try basic interfaces form the base class 
+  StatusCode sc = ::Service::queryInterface ( iid , ppi ) ;           // RETURN 
+  if ( sc.isSuccess () && 0 != *ppi ) { return sc ; }
+  
+  // try to get something indirectly from LoKi service
+  sc = lokiSvc () -> queryInterface ( iid , ppi ) ;
+  if (  sc.isSuccess() && 0 != *ppi ) { return sc ; }                 // REUTRN
+  
+  // try basic interfaces form the base class 
+  return ::Service::queryInterface ( iid , ppi ) ;                    // RETURN 
 }
 // ============================================================================
 /*  standard initialization 
@@ -243,6 +272,13 @@ void Hlt::Service::handle ( const Incident& /* inc */ )
   {
     Warning ( "The Service is frozen! No furthe rregistartion are allowed!") ;
     m_frozen = true ;
+  } 
+  // clear all selections 
+  for ( SelMap::iterator isel = m_selections.begin() ; 
+        m_selections.end() != isel ; ++isel ) 
+  {
+    Hlt::Selection* sel = isel->second ;
+    if ( 0 != sel ) { sel -> clean () ; }
   } 
 }
 // ============================================================================
