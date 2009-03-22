@@ -1,55 +1,75 @@
-// $Id: HltLine.cpp,v 1.16 2009-03-07 10:36:22 graven Exp $
+// $Id: HltLine.cpp,v 1.17 2009-03-22 17:58:45 ibelyaev Exp $
+// ============================================================================
 // Include files
-#include "HltLine.h"
-
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/IAlgManager.h"
-#include "GaudiKernel/ListItem.h"
-#include "GaudiAlg/ISequencerTimerTool.h"
-#include "GaudiKernel/IJobOptionsSvc.h"
-
-#include "Event/HltDecReports.h"
-
+// ============================================================================
+// Boost
+// ============================================================================
 #include "boost/foreach.hpp"
 #include "boost/lambda/lambda.hpp"
 #include "boost/lambda/construct.hpp"
-
-#include "TH1D.h"
-#include "GaudiUtils/Aida2ROOT.h"
+// ============================================================================
+// AIDA 
+// ============================================================================
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram.h"
 #include "AIDA/IAxis.h"
-
+// ============================================================================
+// ROOT 
+// ============================================================================
+#include "TH1D.h"
+// ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/IAlgManager.h"
+#include "GaudiKernel/ListItem.h"
+#include "GaudiKernel/IJobOptionsSvc.h"
+#include "GaudiKernel/IAlgContextSvc.h"
+// ============================================================================
+// GaudiAlg
+// ============================================================================
+#include "GaudiAlg/ISequencerTimerTool.h"
+// ============================================================================
+// GaudiUtils 
+// ============================================================================
+#include "GaudiUtils/Aida2ROOT.h"
+// ============================================================================
+// HltEvent 
+// ============================================================================
+#include "Event/HltDecReports.h"
+// ============================================================================
+// Local 
+// ============================================================================
+#include "HltLine.h"
+// ============================================================================
 namespace {
-    bool setBinLabels( TAxis* axis,  const std::vector<std::pair<unsigned,std::string> >& labels ) {
-        if (axis==0) return false;
-        unsigned nbins = axis->GetNbins(); 
-        for (std::vector<std::pair<unsigned,std::string> >::const_iterator i = labels.begin();i!=labels.end();++i ) {
-          if (1+i->first <= 0 ||  1+i->first > nbins ) return false;
-            // Argh... ROOT bins start counting at '1' instead of '0'
-            axis -> SetBinLabel(1 + i->first  ,i->second.c_str() );
-        }
-        return true;
+  bool setBinLabels( TAxis* axis,  const std::vector<std::pair<unsigned,std::string> >& labels ) {
+    if (axis==0) return false;
+    unsigned nbins = axis->GetNbins(); 
+    for (std::vector<std::pair<unsigned,std::string> >::const_iterator i = labels.begin();i!=labels.end();++i ) {
+      if (1+i->first <= 0 ||  1+i->first > nbins ) return false;
+      // Argh... ROOT bins start counting at '1' instead of '0'
+      axis -> SetBinLabel(1 + i->first  ,i->second.c_str() );
     }
-
-    bool setBinLabels( AIDA::IHistogram1D* hist, const std::vector<std::pair<unsigned,std::string> >& labels ) {
-        if (hist==0) return false;
-        TH1D *h1d = Gaudi::Utils::Aida2ROOT::aida2root( hist );
-        if (h1d==0) return false;
-        return setBinLabels(  h1d->GetXaxis(), labels );
+    return true;
+  }
+  
+  bool setBinLabels( AIDA::IHistogram1D* hist, const std::vector<std::pair<unsigned,std::string> >& labels ) {
+    if (hist==0) return false;
+    TH1D *h1d = Gaudi::Utils::Aida2ROOT::aida2root( hist );
+    if (h1d==0) return false;
+    return setBinLabels(  h1d->GetXaxis(), labels );
+  }
+  
+  bool setBinLabels( AIDA::IHistogram1D* hist, const std::vector<std::string>& labels ) {
+    std::vector<std::pair<unsigned,std::string> > l;
+    for (unsigned i = 0;i<labels.size();++i) {
+      l.push_back(std::make_pair( i , labels[i] ) );
     }
-
-    bool setBinLabels( AIDA::IHistogram1D* hist, const std::vector<std::string>& labels ) {
-        std::vector<std::pair<unsigned,std::string> > l;
-        for (unsigned i = 0;i<labels.size();++i) {
-            l.push_back(std::make_pair( i , labels[i] ) );
-        }
-        return setBinLabels(hist,l);
-    }
-
-};
-
+    return setBinLabels(hist,l);
+  }
+  
+}
 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( HltLine );
@@ -180,6 +200,7 @@ HltLine::HltLine( const std::string& name,
   declareProperty( "MeasureTime"          , m_measureTime    = false );
   declareProperty( "ReturnOK"             , m_returnOK       = false );
   declareProperty( "AcceptOnError"        , m_acceptOnError  = false );
+
 }
 //=============================================================================
 // Destructor
@@ -190,9 +211,14 @@ HltLine::~HltLine() { };
 // Initialisation. Check parameters
 //=============================================================================
 StatusCode HltLine::initialize() {
-  StatusCode status = GaudiAlgorithm::initialize();
+  /// initialize the base:
+
+  StatusCode status = GaudiHistoAlg::initialize();
   if ( !status.isSuccess() ) return status;
 
+  /// lock the context 
+  Gaudi::Utils::AlgContext lock1 ( this , contextSvc() ) ;
+  
   debug() << "==> Initialize" << endreq;
   m_jos    = svc<IJobOptionsSvc>( "JobOptionsSvc"  );
   m_algMgr = svc<IAlgManager>   ( "ApplicationMgr" );
@@ -260,7 +286,7 @@ StatusCode HltLine::initialize() {
   declareInfo("COUNTER_TO_RATE["+m_decision+"Error]",  m_errorRate,  m_decision + " Error Rate");
 
   if ( m_measureTime ) m_timerTool->decreaseIndent();
-
+  
   return StatusCode::SUCCESS;
 };
 
@@ -268,7 +294,10 @@ StatusCode HltLine::initialize() {
 // Main execution
 //=============================================================================
 StatusCode HltLine::execute() {
-
+  
+  /// lock the context 
+  Gaudi::Utils::AlgContext lock1 ( this , contextSvc() ) ;
+  
   if ( m_measureTime ) m_timerTool->start( m_timer );
 
   longlong startClock = System::currentTime( System::microSec );
