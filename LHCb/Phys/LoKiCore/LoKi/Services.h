@@ -1,4 +1,4 @@
-// $Id: Services.h,v 1.9 2008-12-04 14:37:31 ibelyaev Exp $
+// $Id: Services.h,v 1.10 2009-03-22 17:55:23 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_SERVICES_H 
 #define LOKI_SERVICES_H 1
@@ -16,6 +16,9 @@ class IAlgContextSvc       ;
 class IHistogramSvc        ;
 class IDataProviderSvc     ;
 class IRndmGenSvc          ;
+class ICounterSvc          ;
+class IStatSvc             ;
+class IChronoSvc           ;
 // ============================================================================
 /** @file
  *
@@ -64,6 +67,12 @@ namespace LoKi
     IDataProviderSvc*     evtSvc      () const ;
     /// accessor to Random Number Service 
     IRndmGenSvc*          randSvc     () const ;
+    /// accessor to Statistical Service 
+    IStatSvc*             statSvc     () const ;
+    /// accessor to Counter Service 
+    ICounterSvc*          cntSvc      () const ;
+    /// accessor to Chrono Service 
+    IChronoSvc*           chronoSvc   () const ;
     /// destructor (virtual) 
     virtual ~Services() ;
     // ========================================================================
@@ -105,17 +114,23 @@ namespace LoKi
   private:
     // ========================================================================
     /// The major service : LoKi service 
-    LoKi::ILoKiSvc*        m_lokiSvc    ; // the major service for LoKi 
-    // The source of particle properties 
+    LoKi::ILoKiSvc*        m_lokiSvc      ; // the major service for LoKi 
+    /// The source of particle properties 
     mutable LHCb::IParticlePropertySvc* m_ppSvc ; // particle properties 
-    // The algorithm context service: needed for "context" services
-    mutable IAlgContextSvc* m_contextSvc ; // algorithm context 
-    // The source of random numbers 
-    mutable IRndmGenSvc*   m_randSvc    ; // the source of random numbers 
-    // The histogram storage 
-    mutable IHistogramSvc* m_histoSvc   ; // the histogram storage 
-    // The eevtn data service 
-    mutable IDataProviderSvc* m_evtSvc  ; // the evetn data service 
+    /// The algorithm context service: needed for "context" services
+    mutable IAlgContextSvc* m_contextSvc  ; // algorithm context 
+    /// The source of random numbers 
+    mutable IRndmGenSvc*   m_randSvc       ; // the source of random numbers 
+    /// The histogram storage 
+    mutable IHistogramSvc* m_histoSvc      ; // the histogram storage 
+    /// The event data service 
+    mutable IDataProviderSvc* m_evtSvc     ; // the evetn data service 
+    /// The statistical service 
+    mutable IStatSvc*         m_statSvc    ; // the statistical service 
+    /// The counter service 
+    mutable ICounterSvc*      m_cntSvc     ; // the counter service 
+    /// The chrono 
+    mutable IChronoSvc*       m_chronoSvc  ; // the chrono service 
     // =======================================================================
   };
   // ==========================================================================

@@ -1,4 +1,4 @@
-// $Id: Reporter.cpp,v 1.11 2008-03-30 17:55:52 ibelyaev Exp $
+// $Id: Reporter.cpp,v 1.12 2009-03-22 17:55:24 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -34,6 +34,7 @@
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   /** @class Reporter Reporter.h LoKi/Reporter.h
    *  
    *  Simple class (tool)  for error/warning/exception
@@ -42,13 +43,16 @@ namespace LoKi
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2003-01-16
    */
-  class Reporter : public virtual LoKi::IReporter ,
-                   public               GaudiTool 
+  class Reporter 
+    : public virtual LoKi::IReporter 
+    , public               GaudiTool 
   {
-    // friend factory for instantiation 
+    // ========================================================================
+    /// friend factory for instantiation 
     friend class ToolFactory<LoKi::Reporter>;
+    // ========================================================================
   public:    
-    //
+    // ========================================================================
     virtual StatusCode Error     
     ( const std::string& msg , 
       const StatusCode   st  = StatusCode ( StatusCode::FAILURE , true )  ,
@@ -90,7 +94,9 @@ namespace LoKi
       const StatusCode   sc  = StatusCode ( StatusCode::FAILURE , true ) ) const 
     {  return GaudiTool::Exception ( msg      , sc ) ; }
     //
+    // ========================================================================
   public:
+    // ========================================================================
     /** standard initialization
      *  @see AlgTool
      *  @return status code 
@@ -119,7 +125,9 @@ namespace LoKi
       // finalize the base class 
       return GaudiTool::finalize();
     } 
+    // ========================================================================
   protected:
+    // ========================================================================
     /** Standard constructor for AlgTools
      *  @see AlgTool 
      *  @param type   tool type 
@@ -135,20 +143,33 @@ namespace LoKi
       // declare the interface 
       declareInterface<LoKi::IReporter> ( this ) ;
       declareInterface<IErrorTool>      ( this ) ;
+      //
+      StatusCode sc = setProperty ( "TypePrint"          , false ) ;
+      Assert ( sc.isSuccess() , 
+               "Unable to set Property 'TypePrint'"      , sc    ) ;
+      sc            = setProperty ( "PropertiesPrint"    , false ) ;
+      Assert ( sc.isSuccess() ,
+               "Unable to set Property 'PropertiesPrint'", sc    ) ;
+      //
     } 
     /// virtual destructor 
     virtual ~Reporter(){} ;
+    // ========================================================================
   private:
-    Reporter            (                 ) ;
-    Reporter            ( const Reporter& ) ;
-    Reporter& operator= ( const Reporter& ) ;
+    // ========================================================================
+    /// the default contructor is disabled 
+    Reporter () ;                         // the default contructor is disabled 
+    /// copy  constructor is disabled 
+    Reporter ( const Reporter& ) ;             // copy  constructor is disabled 
+    /// assignement operator is disabled 
+    Reporter& operator= ( const Reporter& ) ;        // no assignement operator
+    // ========================================================================
   };
-}
+  // ==========================================================================
+} // end of namespace LoKi 
 // ============================================================================
-using namespace LoKi;
-DECLARE_TOOL_FACTORY(Reporter)
-// ============================================================================
-
+/// the factory for instantiation 
+DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,Reporter);
 // ============================================================================
 // The END 
 // ============================================================================

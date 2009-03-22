@@ -1,4 +1,4 @@
-// $Id: Services.cpp,v 1.9 2008-12-04 14:37:31 ibelyaev Exp $
+// $Id: Services.cpp,v 1.10 2009-03-22 17:55:24 ibelyaev Exp $
 // ===========================================================================
 // Include files 
 // ===========================================================================
@@ -9,6 +9,9 @@
 #include "GaudiKernel/IHistogramSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IRndmGenSvc.h"
+#include "GaudiKernel/IStatSvc.h"
+#include "GaudiKernel/ICounterSvc.h"
+#include "GaudiKernel/IChronoSvc.h"
 #include "GaudiKernel/SmartIF.h"
 // ============================================================================
 // PartProp
@@ -54,6 +57,9 @@ LoKi::Services::Services()
   , m_randSvc    ( 0 ) 
   , m_histoSvc   ( 0 ) 
   , m_evtSvc     ( 0 ) 
+  , m_statSvc    ( 0 ) 
+  , m_cntSvc     ( 0 ) 
+  , m_chronoSvc  ( 0 ) 
 {
   LoKi::Welcome::instance() ;
 }
@@ -66,6 +72,12 @@ LoKi::Services::~Services(){}
 // ===========================================================================
 StatusCode LoKi::Services::releaseAll() 
 {
+  // release services 
+  if ( 0 != m_chronoSvc  ) { m_chronoSvc  -> release () ; m_chronoSvc  = 0 ; }
+  // release services 
+  if ( 0 != m_cntSvc     ) { m_cntSvc     -> release () ; m_cntSvc     = 0 ; }
+  // release services 
+  if ( 0 != m_statSvc    ) { m_statSvc    -> release () ; m_statSvc    = 0 ; }
   // release services 
   if ( 0 != m_histoSvc   ) { m_histoSvc   -> release () ; m_histoSvc   = 0 ; }
   // 'release' the service 
@@ -218,6 +230,63 @@ IDataProviderSvc* LoKi::Services::evtSvc     () const
   m_evtSvc -> addRef() ;
   //
   return m_evtSvc  ;
+}
+// ===========================================================================
+// accessor to Statistical Service 
+// ===========================================================================
+IStatSvc* LoKi::Services::statSvc     () const 
+{
+  if ( 0 != m_statSvc ) { return m_statSvc ; }
+  // get the service form LoKi 
+  SmartIF<IStatSvc> svc ( m_lokiSvc ) ;
+  if ( !svc ) 
+  {
+    Error ( "IStatSvc* points to NULL, return NULL" ) ;
+    return 0 ;
+  }
+  //
+  m_statSvc = svc ;
+  m_statSvc -> addRef() ;
+  //
+  return m_statSvc  ;
+}
+// ===========================================================================
+// accessor to Counter Service 
+// ===========================================================================
+ICounterSvc* LoKi::Services::cntSvc     () const 
+{
+  if ( 0 != m_cntSvc ) { return m_cntSvc ; }
+  // get the service form LoKi 
+  SmartIF<ICounterSvc> svc ( m_lokiSvc ) ;
+  if ( !svc ) 
+  {
+    Error ( "ICounterSvc* points to NULL, return NULL" ) ;
+    return 0 ;
+  }
+  //
+  m_cntSvc = svc ;
+  m_cntSvc -> addRef() ;
+  //
+  return m_cntSvc  ;
+}
+// ===========================================================================
+// accessor to Chrono Service 
+// ===========================================================================
+IChronoSvc* LoKi::Services::chronoSvc     () const 
+{
+  if ( 0 != m_chronoSvc ) { return m_chronoSvc ; }
+  // get the service form LoKi 
+  SmartIF<IChronoSvc> svc ( m_lokiSvc ) ;
+  if ( !svc ) 
+  {
+    Error ( "IChronoSvc* points to NULL, return NULL" ) ;
+    return 0 ;
+  }
+  //
+  m_chronoSvc = svc ;
+  m_chronoSvc -> addRef() ;
+  //
+  return m_chronoSvc  ;
 }
 // ===========================================================================
 // The END 

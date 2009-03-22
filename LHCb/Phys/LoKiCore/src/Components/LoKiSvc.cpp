@@ -1,4 +1,4 @@
-// $Id: LoKiSvc.cpp,v 1.18 2008-12-04 14:37:31 ibelyaev Exp $
+// $Id: LoKiSvc.cpp,v 1.19 2009-03-22 17:55:24 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -19,6 +19,9 @@
 #include "GaudiKernel/IHistogramSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IRndmGenSvc.h"
+#include "GaudiKernel/IStatSvc.h"
+#include "GaudiKernel/ICounterSvc.h"
+#include "GaudiKernel/IChronoSvc.h"
 #include "GaudiKernel/ServiceLocatorHelper.h"
 // ============================================================================
 // PartProp
@@ -260,6 +263,72 @@ public:
     return m_rndmSvc ;
   }   
   // ==========================================================================
+  /** get the pointer to Statistics 
+   *  @return pointer to Statistics Service 
+   *  @see IStatSvc 
+   */
+  IStatSvc* statSvc () const 
+  {
+    if ( 0 != m_statSvc ) { return m_statSvc ; }
+    // locate the service 
+    StatusCode sc = service ( "ChronoStatSvc" , m_statSvc , true ) ;
+    if ( sc.isFailure() ) 
+    { 
+      m_statSvc = 0 ;
+      LOKI_EXCEPTION( "LoKiSvc: 'ChronoStatSvc' could not be located" , sc ) ; 
+    }
+    if ( 0 == m_statSvc ) 
+    { 
+      LOKI_EXCEPTION( "LoKiSvc: IStatSvc* points to NULL"       , sc ) ; 
+    }
+    //
+    return m_statSvc ;
+  }   
+  // ==========================================================================
+  /** get the pointer to Counter service 
+   *  @return pointer to Counter Service 
+   *  @see ICounterSvc 
+   */
+  ICounterSvc* cntSvc () const 
+  {
+    if ( 0 != m_cntSvc ) { return m_cntSvc ; }
+    // locate the service 
+    StatusCode sc = service ( "CounterSvc" , m_cntSvc , true ) ;
+    if ( sc.isFailure() ) 
+    { 
+      m_cntSvc = 0 ;
+      LOKI_EXCEPTION( "LoKiSvc: 'CounterSvc' could not be located" , sc ) ; 
+    }
+    if ( 0 == m_cntSvc ) 
+    { 
+      LOKI_EXCEPTION( "LoKiSvc: ICounterSvc* points to NULL"       , sc ) ; 
+    }
+    //
+    return m_cntSvc ;
+  }   
+  // ==========================================================================
+  /** get the pointer to Chrono service 
+   *  @return pointer to Chrono Service 
+   *  @see IChronoSvc 
+   */
+  IChronoSvc* chronoSvc () const 
+  {
+    if ( 0 != m_chronoSvc ) { return m_chronoSvc ; }
+    // locate the service 
+    StatusCode sc = service ( "ChronoStatSvc" , m_chronoSvc , true ) ;
+    if ( sc.isFailure() ) 
+    { 
+      m_chronoSvc = 0 ;
+      LOKI_EXCEPTION( "LoKiSvc: 'ChronoStatSvc' could not be located" , sc ) ; 
+    }
+    if ( 0 == m_chronoSvc ) 
+    { 
+      LOKI_EXCEPTION( "LoKiSvc: IChronoSvc* points to NULL" , sc ) ; 
+    }
+    //
+    return m_chronoSvc ;
+  }   
+  // ==========================================================================
 public:
   // ==========================================================================
   /// Inform that a new incident has occured
@@ -473,6 +542,15 @@ public:
     // IRndmGenSvc 
     else if ( IRndmGenSvc::interfaceID          () == iid && 0 != rndmSvc     () ) 
     { return rndmSvc     ()     -> queryInterface ( iid , ppI ) ; }
+    // IStatSvc 
+    else if ( IStatSvc::interfaceID             () == iid && 0 != statSvc     () ) 
+    { return statSvc     ()     -> queryInterface ( iid , ppI ) ; }
+    // ICounterSvc 
+    else if ( ICounterSvc::interfaceID          () == iid && 0 != cntSvc      () ) 
+    { return cntSvc      ()     -> queryInterface ( iid , ppI ) ; }
+    // IChronoSvc 
+    else if ( IChronoSvc::interfaceID           () == iid && 0 != chronoSvc   () ) 
+    { return chronoSvc   ()     -> queryInterface ( iid , ppI ) ; }
     // a bit more fun with the reporter 
     else if ( LoKi::IReporter::interfaceID      () == iid && 0 != reporter    () ) 
     { return reporter    ()     -> queryInterface ( iid , ppI ) ; }
@@ -482,7 +560,7 @@ public:
     addRef() ;
     //
     return StatusCode::SUCCESS ;
-  } ; 
+  } 
   // ==========================================================================
 protected:  
   // ==========================================================================
@@ -502,6 +580,11 @@ protected:
     , m_histoSvc     (  0 ) 
     , m_evtSvc       (  0 ) 
     , m_rndmSvc      (  0 ) 
+    , m_statSvc      (  0 )
+    , m_cntSvc       (  0 ) 
+    , m_chronoSvc    (  0 ) 
+    //
+    //
     , m_reporter     (  0 )
     , m_reporterName ( "LoKi::Reporter/REPORT")
     , m_event        ( -1 )
@@ -524,6 +607,9 @@ protected:
     if ( 0 != m_histoSvc    ) { m_histoSvc    -> release() ; m_histoSvc    = 0 ; } 
     if ( 0 != m_evtSvc      ) { m_evtSvc      -> release() ; m_evtSvc      = 0 ; } 
     if ( 0 != m_rndmSvc     ) { m_rndmSvc     -> release() ; m_rndmSvc     = 0 ; } 
+    if ( 0 != m_statSvc     ) { m_statSvc     -> release() ; m_statSvc     = 0 ; } 
+    if ( 0 != m_cntSvc      ) { m_cntSvc      -> release() ; m_cntSvc      = 0 ; } 
+    if ( 0 != m_chronoSvc   ) { m_chronoSvc   -> release() ; m_chronoSvc   = 0 ; } 
   }   
   // ==========================================================================
 private:
@@ -551,6 +637,12 @@ private:
   mutable IDataProviderSvc*     m_evtSvc       ;        //   event data service 
   /// random numbers service 
   mutable IRndmGenSvc*          m_rndmSvc      ;        //       random numbers 
+  /// statistics service 
+  mutable IStatSvc*             m_statSvc      ;        //           statistics 
+  /// counters  
+  mutable ICounterSvc*          m_cntSvc       ;        //             counters
+  /// chrono
+  mutable IChronoSvc*           m_chronoSvc    ;        //               chrono
   /// the default reporter 
   mutable LoKi::IReporter*      m_reporter     ;        // the default reporter 
   /// the name of the default reporter 

@@ -1,4 +1,4 @@
-// $Id: Monitoring.h,v 1.5 2008-10-19 16:11:40 ibelyaev Exp $
+// $Id: Monitoring.h,v 1.6 2009-03-22 17:55:23 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MONITORING_H 
 #define LOKI_MONITORING_H 1
@@ -19,6 +19,15 @@
 // ============================================================================
 #include "LoKi/Functions.h"
 #include "LoKi/HistoBook.h"
+// ============================================================================
+/// forward declarations 
+// ============================================================================
+class IStatSvc       ;
+class ICounterSvc    ;
+class IAlgContextSvc ;
+class GaudiAlgorithm ;
+class GaudiTool      ;
+namespace GaudiAlg { class ID ; }
 // ============================================================================
 namespace LoKi 
 {
@@ -485,6 +494,97 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
+    /** helper enumerator to indicate the mode for creation of counters:
+     *
+     *   - ContextSvc : the counter is retrieved from the corresponding 
+     *                  GauidiAlgorithm using Context Service      
+     *   - StatSvc    : the counter is retrieved from Stat Service 
+     *   - CounterSvc : the counter is retrieved from Counter Service 
+     *
+     *  @see StatEntity
+     *  @see Stat
+     *  @see IAlgContextSvc 
+     *  @see GaudiAlgorithm
+     *  @see GaudiCommon
+     *  @see IStatSvc 
+     *  @see ICounterSvc 
+     */
+    enum Flag 
+      {
+        ContextSvc = 0 , //  local counter through IAlgContext -> GaudiAlgorithm  ,
+        StatSvc        , // global counter through IStatSvc  ,
+        CounterSvc       // global counter through ICounterSvc  
+      };
+    // ========================================================================
+    /** get the (global) counter by name using IStatSvc 
+     *  @param IStatSvc 
+     *  @param ssvc service of statistics 
+     *  @param name the counter name 
+     *  @return the counter 
+     */
+    StatEntity* getCounter 
+    ( IStatSvc*          csvc , 
+      const std::string& name ) ;
+    /** get the (local) counter by name using GaudiAlgorithm
+     *  @param alg the algorithm 
+     *  @param name the counter name 
+     *  @return the counter 
+     */
+    StatEntity* getCounter 
+    ( GaudiAlgorithm*    alg  , 
+      const std::string& name ) ; 
+    /** get the (local) counter by name using GaudiTool
+     *  @param tool the tool 
+     *  @param name the counter name 
+     *  @return the counter 
+     */
+    StatEntity* getCounter 
+    ( GaudiTool*         tool , 
+      const std::string& name ) ; 
+    /** get the counter by name using ICounterSvc 
+     *  @see ICounterSvc 
+     *  @param csvc the counter service 
+     *  @param group the counter group
+     *  @param name the counter name 
+     *  @return the counter 
+     */
+    StatEntity* getCounter 
+    ( ICounterSvc*       csvc     ,
+      const std::string& group    ,
+      const std::string& name     ) ;
+    /** get the counter by name using IAlgContextSvc 
+     *  @param name the counter name 
+     *  @param csvc context service 
+     *  @return the counter 
+     */
+    StatEntity* getCounter 
+    ( const IAlgContextSvc* csvc , 
+      const std::string&    name ) ;
+    /** get the counter by name using IStatSvc/ICounter or IAlgContextSvc
+     *  @param ICounterSvc      
+     *  @param IStatSvc      
+     *  @param IAlgContextSvc 
+     *  @param flag  local/global flag 
+     *  @param group the counter grop
+     *  @param name  the counter name
+     *  @return the counter 
+     */
+    StatEntity* getCounter 
+    ( const Flag         flag  , 
+      const std::string& group , 
+      const std::string& name  ) ;
+    /** get the counter by name using IStatSvc/ICounter or IAlgContextSvc
+     *  @param ICounterSvc      
+     *  @param IStatSvc      
+     *  @param IAlgContextSvc 
+     *  @param flag  local/global flag 
+     *  @param name  the counter name
+     *  @return the counter 
+     */
+    StatEntity* getCounter 
+    ( const Flag         flag  , 
+      const std::string& name  ) ;
+    // ========================================================================
   } // end of namespace LoKi::Monitoring
   // ==========================================================================
   /** helper function for creation of monitored predicate
@@ -558,8 +658,8 @@ namespace LoKi
   template <class TYPE, class TYPE2> 
   inline 
   LoKi::Monitoring::Plot<TYPE,TYPE2>
-  monitor ( const LoKi::Functor<TYPE,TYPE2>& cut , 
-            AIDA::IHistogram1D* histo  )
+  monitor ( const LoKi::Functor<TYPE,TYPE2>& cut    , 
+            AIDA::IHistogram1D*              histo  )
   { return LoKi::Monitoring::Plot<TYPE,TYPE2>( cut , histo ) ; }
   // ==========================================================================
   /** helper function for creation of monitored function  
@@ -585,8 +685,8 @@ namespace LoKi
   template <class TYPE, class TYPE2> 
   inline 
   LoKi::Monitoring::Plot<TYPE,TYPE2>
-  plot ( const LoKi::Functor<TYPE,TYPE2>& cut , 
-         AIDA::IHistogram1D* histo  )
+  plot ( const LoKi::Functor<TYPE,TYPE2>& cut    , 
+         AIDA::IHistogram1D*              histo  )
   { return LoKi::Monitoring::Plot<TYPE,TYPE2>( cut , histo ) ; }
   // ==========================================================================
   /** helper function for creation of monitored function  
@@ -601,7 +701,7 @@ namespace LoKi
    *   { 
    *     const std::string&       path = ... ;
    *     const Gaudi::Histo1DDef& desc = ... ;
-   *     fun = plot ( fun , path , desc ) ; ;
+   *     fun = plot ( fun , path , desc , histoSvc() ) ; ;
    *   }
    *
    * 
@@ -610,6 +710,7 @@ namespace LoKi
    *  @param cut the function to be monitored 
    *  @param path the historgam path in HDS 
    *  @param histo the histogram desctriptor 
+   *  @param hsvc the histogram service
    *
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2007-06-14
@@ -617,11 +718,13 @@ namespace LoKi
   template <class TYPE, class TYPE2> 
   inline 
   LoKi::Monitoring::Plot<TYPE,TYPE2>
-  plot ( const LoKi::Functor<TYPE,TYPE2>& cut   , 
-         const std::string&               path  , 
-         const Gaudi::Histo1DDef&         histo )
+  plot
+  ( const LoKi::Functor<TYPE,TYPE2>& cut   , 
+    const std::string&               path  , 
+    const Gaudi::Histo1DDef&         histo , 
+    IHistogramSvc*                   hsvc  )
   { 
-    return plot ( cut , LoKi::HistoBook::book ( path , histo ) ) ;
+    return plot ( cut , LoKi::HistoBook::book ( path , histo , hsvc ) ) ;
   }
   // ==========================================================================
   /** helper function for creation of monitored function  
@@ -654,12 +757,13 @@ namespace LoKi
   template <class TYPE, class TYPE2> 
   inline 
   LoKi::Monitoring::Plot<TYPE,TYPE2>
-  plot ( const LoKi::Functor<TYPE,TYPE2>& cut   , 
-         const std::string&               dir   , 
-         const std::string&               id    , 
-         const Gaudi::Histo1DDef&         histo )
+  plot ( const LoKi::Functor<TYPE,TYPE2>& cut       , 
+         const std::string&               dir       , 
+         const GaudiAlg::ID&              id        , 
+         const Gaudi::Histo1DDef&         histo     , 
+         IHistogramSvc*                   hsvc  = 0 ) 
   { 
-    return plot ( cut , LoKi::HistoBook::book ( dir, id , histo ) ) ;
+    return plot ( cut , LoKi::HistoBook::book ( dir , id , histo , hsvc ) ) ;
   }
   // ==========================================================================
   /** helper function for creation of monitored function  
@@ -673,7 +777,7 @@ namespace LoKi
    *  if ( monitoring ) 
    *   { 
    *     const std::string&       dir = ... ;
-   *     const int                id  = ... ;
+   *     const std::string&       id  = ... ;
    *     const Gaudi::Histo1DDef& desc = ... ;
    *     fun = plot ( fun , path , desc ) ; ;
    *   }
@@ -684,7 +788,7 @@ namespace LoKi
    *  @param cut the function to be monitored 
    *  @param dir the historgam directory in HDS 
    *  @param id  the histogram  ID 
-   *  @param histo the histogram desctritor 
+   *  @param histo the histogram descriptor 
    *
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2007-06-14
@@ -692,12 +796,12 @@ namespace LoKi
   template <class TYPE, class TYPE2> 
   inline 
   LoKi::Monitoring::Plot<TYPE,TYPE2>
-  plot ( const LoKi::Functor<TYPE,TYPE2>& cut   , 
-         const std::string&               dir   , 
-         const int                        id    , 
-         const Gaudi::Histo1DDef&         histo )
+  plot ( const LoKi::Functor<TYPE,TYPE2>& cut       , 
+         const Gaudi::Histo1DDef&         histo     ,
+         const GaudiAlg::ID&              id        , 
+         const IAlgContextSvc*            csvc  = 0 )
   { 
-    return plot ( cut , LoKi::HistoBook::book ( dir, id , histo ) ) ;
+    return plot ( cut , LoKi::HistoBook::book ( histo , id , csvc ) ) ;
   }
   // ==========================================================================
   /** helper function to instantiate the monitored functor 

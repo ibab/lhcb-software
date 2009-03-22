@@ -1,4 +1,4 @@
-// $Id: FuncOps.h,v 1.20 2008-11-27 10:30:05 ibelyaev Exp $
+// $Id: FuncOps.h,v 1.21 2009-03-22 17:55:23 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FUNCOPS_H 
 #define LOKI_FUNCOPS_H 1
@@ -179,20 +179,61 @@ namespace LoKi
       // ======================================================================
       // monitoring 
       // ======================================================================
+      // print-monitoring 
       static Fun __monitor__ ( const Func&                c ,
                                const std::string& s = "\n"  , 
                                const std::string& p = ""    ) 
       { return LoKi::print ( c , std::cout , s , p ) ; }        
+      // monitoring with counters:
       static Fun __monitor__ ( const Func&              c , 
                                StatEntity*              e ) 
       { return LoKi::monitor ( c , e ) ; }
+      // use the services:
+      static Fun __monitor__ 
+      ( const Func&              c , 
+        IStatSvc*                s , 
+        const std::string&       n ) 
+      { return LoKi::monitor 
+          ( c , LoKi::Monitoring::getCounter ( s , n ) ) ; }
+      static Fun __monitor__ 
+      ( const Func&              c , 
+        ICounterSvc*             s , 
+        const std::string&       g ,
+        const std::string&       n ) 
+      { return LoKi::monitor 
+          ( c , LoKi::Monitoring::getCounter ( s , g , n ) ) ; }      
+      static Fun __monitor__
+      ( const Func&              c , 
+        IAlgContextSvc*          s , 
+        const std::string&       n ) 
+      { return LoKi::monitor 
+          ( c , LoKi::Monitoring::getCounter ( s , n ) ) ; }
+      // use the flag:
+      static Fun __monitor__ 
+      ( const Func&                  c , 
+        const std::string&           n ,
+        const LoKi::Monitoring::Flag f )
+      { return LoKi::monitor 
+          ( c , LoKi::Monitoring::getCounter ( f , n ) ) ; }
+      static Fun __monitor__ 
+      ( const Func&                  c ,
+        const std::string&           g ,
+        const std::string&           n , 
+        const LoKi::Monitoring::Flag f )
+      { return LoKi::monitor 
+          ( c , LoKi::Monitoring::getCounter ( f , g , n ) ) ; }
+      // monitoring with histograms:
       static Fun __monitor__ ( const Func&              c , 
                                AIDA::IHistogram1D*      h ) 
       { return LoKi::monitor ( c , h ) ; }
+      // bookthe historgams using IHistogramSvc 
       static Fun __monitor__ ( const Func&              c , 
                                const std::string&       p , 
                                const Gaudi::Histo1DDef& h )
-      { return LoKi::plot    ( c , p , h ) ; }
+      {
+        IHistogramSvc* const hsvc = 0 ;
+        return LoKi::plot    ( c , p , h , hsvc ) ; 
+      }
       static Fun __monitor__ ( const Func&              c , 
                                const std::string&       d , 
                                const std::string&       i , 
@@ -200,10 +241,27 @@ namespace LoKi
       { return LoKi::plot    ( c , d , i , h ) ; }
       static Fun __monitor__ ( const Func&              c , 
                                const std::string&       d , 
-
                                const int                i , 
                                const Gaudi::Histo1DDef& h )
       { return LoKi::plot    ( c , d , i , h ) ; }
+      static Fun __monitor__ ( const Func&              c , 
+                               const std::string&       d ,
+                               const GaudiAlg::ID&      i , 
+                               const Gaudi::Histo1DDef& h )
+      { return LoKi::plot    ( c , d , i , h ) ; }
+      // book the historgams using IAlgContextSvc 
+      static Fun __monitor__ ( const Func&              c , 
+                               const Gaudi::Histo1DDef& h ,
+                               const GaudiAlg::ID&      i ) 
+      { return LoKi::plot    ( c , h , i ) ; }
+      static Fun __monitor__ ( const Func&              c , 
+                               const Gaudi::Histo1DDef& h ,
+                               const std::string&       i ) 
+      { return LoKi::plot    ( c , h , i ) ; }
+      static Fun __monitor__ ( const Func&              c , 
+                               const Gaudi::Histo1DDef& h ,
+                               const int                i ) 
+      { return LoKi::plot    ( c , h , i ) ; }
       // ======================================================================
       // EqualTo
       // ======================================================================
@@ -314,15 +372,48 @@ namespace LoKi
       static Cut __and__      ( const Cuts&  cut1 , 
                                 const Cuts&  cut2 ) { return cut1 && cut2 ; }
       static Cut __invert__   ( const Cuts&  cut  ) { return !cut ; }
-      //
+      // monitor with printout 
       static Cut __monitor__  ( const Cuts&        c        ,
                                 const std::string& s = "\n" , 
                                 const std::string& p = ""   ) 
       { return LoKi::print ( c , std::cout , s , p ) ; }        
-      //
+      // monitor with counters:
       static Cut __monitor__  ( const Cuts&         c , 
                                 StatEntity*         e )
       { return LoKi::monitor  ( c , e ) ; }
+      // use the services:
+      static Cut __monitor__  ( const Cuts&              c , 
+                                IStatSvc*                s , 
+                                const std::string&       n ) 
+      { return LoKi::monitor 
+          ( c , LoKi::Monitoring::getCounter ( s , n ) ) ; }
+      static Cut __monitor__  
+      ( const Cuts&              c , 
+        ICounterSvc*             s , 
+        const std::string&       g ,
+        const std::string&       n ) 
+      { return LoKi::monitor 
+          ( c , LoKi::Monitoring::getCounter ( s , g , n ) ) ; }      
+      static Cut __monitor__ 
+      ( const Cuts&              c , 
+        IAlgContextSvc*          s , 
+        const std::string&       n ) 
+      { return LoKi::monitor 
+          ( c , LoKi::Monitoring::getCounter ( s , n ) ) ; }
+      // use the flag:
+      static Cut __monitor__ 
+      ( const Cuts&                  c , 
+        const std::string&           n ,
+        const LoKi::Monitoring::Flag f )
+      { return LoKi::monitor 
+          ( c , LoKi::Monitoring::getCounter ( f , n ) ) ; }
+      static Cut __monitor__ 
+      ( const Cuts&                  c , 
+        const std::string&           g ,
+        const std::string&           n ,
+        const LoKi::Monitoring::Flag f )
+      { return LoKi::monitor 
+          ( c , LoKi::Monitoring::getCounter ( f , g , n ) ) ; }
       //
       static Fun __switch__   ( const Cuts&  cut  , 
                                 const Func&  fun1 ,
