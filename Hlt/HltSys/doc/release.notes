@@ -5,6 +5,12 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+</PRE><H1><A NAME=v5r2>2009-03-23 HltSys v5r2</A></H1><PRE>
+ - Topological trigger released
+ - Hlt2SelChecker updated to more recent DSTs
+ - A few other minor changes
+ - Ecal alley memory leak fixed
+
 </PRE><H1><A NAME=v5r1>2009-02-23 HltSys v5r1</A></H1><PRE>
  - FEST 2 version. Many changes to improve Hlt for FEST 2.
  - A few additions here and there, especially lumi, ecal, Hlt2.

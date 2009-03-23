@@ -1,5 +1,5 @@
 package HltSys
-version v5r0
+version v5r2
 
 branches cmt doc options
 
@@ -7,9 +7,9 @@ branches cmt doc options
 # HLT1 and common packages
 #=======================================================
 
-use HltConf             v2r3    Hlt   # Vanya Belyaev, Gerhard Raven
-use HltBase             v6r1    Hlt   # Jose Angel Hernando-Morata
-use HltCommon           v5r1    Hlt   # Jose Angel Hernando-Morata
+use HltConf             v2r5    Hlt   # Vanya Belyaev, Gerhard Raven
+use HltBase             v6r2    Hlt   # Gerhard Raven
+use HltCommon           v5r3    Hlt   # Gerhard Raven
 
 use HltTracking         v3r8    Hlt   # Jose Angel Hernando-Morata
 use HltHadAlley         v3r3p1  Hlt   # Jose Angel Hernando-Morata
@@ -22,31 +22,37 @@ use HltL0Conf           v2r8    Hlt   # Johannes Albrecht
 use HltL0MuonConf       v3r5    Hlt   # Alessia Satta/Sandra Amato  
 
 use HltRecChecker	v1r9	Hlt   # Jose Angel Hernando-Morata
-use HltGlobalMonitor	v2r1	Hlt   # Bruno de Paula
-use HltLuminosity       v2r5    Hlt   # Jaap Panman
+use HltGlobalMonitor	v2r3	Hlt   # Bruno de Paula
+use HltLuminosity       v2r6    Hlt   # Jaap Panman
 
 use HltRawData          v1r9    Hlt   # Tomasz Skwarnicki
 
 # And now for something completely different
-use HltPython	        v1r13   Hlt   # Jose Angel Hernando-Morata
+use HltPython	        v1r14   Hlt   # Jose Angel Hernando-Morata
 
 #=======================================================
 # HLT2 packages
 #=======================================================
 
-use HltSelections       v8r8    Hlt   # Patrick Koppenburg
+use HltSelections       v8r9    Hlt   # Patrick Koppenburg
 use Fidel               v1r3p1  Phys  # Sara Furcas    
 use HltKshort           v1r6    Hlt   # Jaap Panman
 use HltHidValley        v1r2p1  Hlt   # Marcin Kucharczyk
 
-use HltSelChecker       v7r6    Hlt   # Patrick Koppenburg
+use HltSelChecker       v8r0    Hlt   # Patrick Koppenburg
 
 #=============================================================
 # Stuff added temporarily to allow a fast development cycle
 #=============================================================
 
-use LoKiTrigger         v8r1   Phys   # Vanya Belyaev
-use TisTosTobbing       v3r2   Phys   # Tomasz Skwarnicki  
+use LoKiTrigger         v9r0   Phys   # Vanya Belyaev
+use TisTosTobbing       v3r3   Phys   # Tomasz Skwarnicki  
+
+
+# TMP
+use DaVinciTools        v18r2p3 Phys
+use LoKiPhys            v8r3 Phys
+use LoKiArrayFunctors   v8r2 Phys
 
 
 # Allow the generation of QMTest summary 
