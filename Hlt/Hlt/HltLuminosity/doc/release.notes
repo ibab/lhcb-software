@@ -3,6 +3,8 @@
 ! Responsible : Jaap Panman
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
+
+!========================== HltLuminosity v2r6 2009-03-23 ===================
 ! 2009-02-25 - Gerhard Raven
  - remove unused references to Event/HltSummary.h
  - add LumiEvent to requirements
