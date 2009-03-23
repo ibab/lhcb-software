@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.40 2009-03-23 16:44:35 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.41 2009-03-23 17:02:42 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -1187,13 +1187,13 @@ void OnlineHistogram::OnlineDisplayOption::set(void *option){
   std::string* cont;
   switch (m_type) {
   case STRING :
-    if (debug() > 3) {
+    if (m_env->debug() > 3) {
       std::cout <<" setting string option "<<m_name <<": before m_value_null="<<*m_value_null;
       if (! *m_value_null) std::cout <<" value="<<getStringValue();
       std::cout<<std::endl;
     }
     if (*m_value_null) { // create the OCI object
-      if (debug() > 3) std::cout << "creating string object for option "<<m_name<<std::endl;
+      if (m_env->debug() > 3) std::cout << "creating string object for option "<<m_name<<std::endl;
       OCIObjectNew ( m_env->envhp(), m_env->errhp(), m_env->svchp(), OCI_TYPECODE_VARCHAR2,
                      (OCIType *) NULL, (dvoid *) NULL, OCI_DURATION_SESSION, TRUE,
                      (dvoid **) m_value);
@@ -1250,7 +1250,7 @@ bool OnlineHistogram::OnlineDisplayOption::get(void *option){
 }
 
 void OnlineHistogram::OnlineDisplayOption::unset() {
-  if (debug() > 3) std::cout << "unsetting option "<<m_name<<std::endl;
+  if (m_env->debug() > 3) std::cout << "unsetting option "<<m_name<<std::endl;
   *m_value_null = -1;
    if(m_type == STRING && m_locString) {
     // remove allocated string 
