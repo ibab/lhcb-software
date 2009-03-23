@@ -1,4 +1,4 @@
-// $Id: HltTrackFromParticle.cpp,v 1.10 2008-12-29 16:36:13 graven Exp $
+// $Id: HltTrackFromParticle.cpp,v 1.11 2009-03-23 16:14:41 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -41,13 +41,10 @@ HltTrackFromParticle::~HltTrackFromParticle() {}
 //=============================================================================
 StatusCode HltTrackFromParticle::initialize() {
 
-  StatusCode sc = HltAlgorithm::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-
   m_selections.registerSelection();
 
   info() << "HltAlgorithm initialized";
-  return sc;
+  return StatusCode::SUCCESS;
 }
 
 //=============================================================================
@@ -55,7 +52,7 @@ StatusCode HltTrackFromParticle::initialize() {
 //=============================================================================
 StatusCode HltTrackFromParticle::execute() {
 
-  StatusCode sc = HltAlgorithm::execute(); // must be executed first
+  StatusCode sc;
 
   //Check if particles exist
   if (!exist<Particles>(m_particlesName)) return sc;
