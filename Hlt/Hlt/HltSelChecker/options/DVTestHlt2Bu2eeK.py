@@ -23,10 +23,10 @@ presel = GaudiSequencer("SeqDC06SelBu2eeK")
 #
 # True filter criterion
 #
-#from Configurables import FilterTrueTracks, MCDecayFinder
-#importOptions( "$HLTSELCHECKERROOT/options/FilterTrueTracks.py")
-#FilterTrueTracks().addTool(MCDecayFinder())
-#FilterTrueTracks().MCDecayFinder.Decay =  "{[B+ -> ^K+ ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}{,gamma}]cc, [B+ -> ^K+ ^e+ ^e- {,gamma}{,gamma}{,gamma}{,gamma}{,gamma}]cc}"
+from Configurables import FilterTrueTracks, MCDecayFinder
+importOptions( "$HLTSELCHECKERROOT/options/FilterTrueTracks.py")
+FilterTrueTracks().addTool(MCDecayFinder())
+FilterTrueTracks().MCDecayFinder.Decay =  "{[B+ -> ^K+ ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}{,gamma}]cc, [B+ -> ^K+ ^e+ ^e- {,gamma}{,gamma}{,gamma}{,gamma}{,gamma}]cc}"
 #
 from Configurables import GaudiSequencer
 #
