@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.49 2009-03-23 00:24:31 gligorov Exp $
+// $Id: BackgroundCategory.cpp,v 1.50 2009-03-23 00:35:45 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -30,8 +30,8 @@ BackgroundCategory::BackgroundCategory( const std::string& type,
   , m_particleDescendants(0)
   , m_linkerTool_cPP(0)
   , m_linkerTool_nPP(0)
-  , m_printDecay(0)
   , m_commonMother(0)
+  , m_printDecay(0)
 {
   IBackgroundCategory::m_cat[-1]   = "Undefined";
   IBackgroundCategory::m_cat[0]    = "Signal";
@@ -1228,7 +1228,6 @@ MCParticleVector BackgroundCategory::associate_particles_in_decay(ParticleVector
                                             << endmsg;
 
       const LHCb::ProtoParticle* protoTemp = (*iP)->proto();
-      const LHCb::MCParticle* mcTemp;
 
       if (msgLevel(MSG::VERBOSE)) verbose() << "Protoparticle of " 
                                             << (*iP)->particleID().pid() 
@@ -1262,7 +1261,7 @@ MCParticleVector BackgroundCategory::associate_particles_in_decay(ParticleVector
         associating_a_neutral = false;
       }
 
-      if (mcPartRange.size() == NULL) { //ghost
+      if (mcPartRange.size() == 0) { //ghost
         associated_mcparts.push_back(NULL);
         continue;
       }
