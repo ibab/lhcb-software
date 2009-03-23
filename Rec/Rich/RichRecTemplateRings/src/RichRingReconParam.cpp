@@ -1,4 +1,4 @@
-// $Id: RichRingReconParam.cpp,v 1.2 2009-03-19 17:15:43 seaso Exp $
+// $Id: RichRingReconParam.cpp,v 1.3 2009-03-23 17:27:14 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -40,6 +40,11 @@ RichRingReconParam::RichRingReconParam( const std::string& type,
   declareProperty("ActivateRandomPhiLocalScaling", m_ActivateRandomPhiLocalScaling=false); // for tests
 
   declareProperty("ActivateMCCompareMassPrint", m_ActivateMCCompareMassPrint=false);
+ 
+  declareProperty("ActivateMaxNumberOfTrackSegmentsInRadiator", m_ActivateMaxNumberOfTrackSegmentsInRadiator=true);
+  declareProperty("MaxNumTrackSegmentsInAerogel", m_MaxNumTrackSegmentsInAerogel=15);
+  declareProperty("MaxNumTrackSegmentsInR1gas", m_MaxNumTrackSegmentsInR1gas=15);
+  declareProperty("MaxNumTrackSegmentsInR2gas", m_MaxNumTrackSegmentsInR2gas=15);
   
 
   //  declareProperty("WriteOutAuxiliaryDebugHisto", m_WriteOutAuxiliaryDebugHisto=false);

@@ -1,4 +1,4 @@
-// $Id: RichRingReconParam.h,v 1.1.1.1 2009-03-04 12:01:45 jonrob Exp $
+// $Id: RichRingReconParam.h,v 1.2 2009-03-23 17:27:14 seaso Exp $
 #ifndef RICHRINGRECONPARAM_H 
 #define RICHRINGRECONPARAM_H 1
 
@@ -35,10 +35,14 @@ public:
   std::string RingRecHistoPath()  {  return m_RingRecHistoPath;}
   bool ActivateRandomPhiLocalScaling()  {  return m_ActivateRandomPhiLocalScaling;}
   bool ActivateMCCompareMassPrint()  {  return m_ActivateMCCompareMassPrint;}
-  
-  
-  
-
+  bool ActivateMaxNumberOfTrackSegmentsInRadiator() 
+  {  return m_ActivateMaxNumberOfTrackSegmentsInRadiator;}
+  int MaxNumTrackSegmentsInAerogel() 
+  {    return m_MaxNumTrackSegmentsInAerogel;}
+  int MaxNumTrackSegmentsInR1gas() 
+  {    return m_MaxNumTrackSegmentsInR1gas;}
+  int MaxNumTrackSegmentsInR2gas() 
+  {    return m_MaxNumTrackSegmentsInR2gas;}
   //  bool WriteOutAuxiliaryDebugHisto()  {    return m_WriteOutAuxiliaryDebugHisto;}
   // std::string RichDebugAuxHistoFileName()  {    return m_RichDebugAuxHistoFileName;}
   
@@ -65,6 +69,10 @@ private:
   // std::string m_RichDebugAuxHistoFileName;
   bool m_ActivateRandomPhiLocalScaling;
   bool m_ActivateMCCompareMassPrint;
+  bool m_ActivateMaxNumberOfTrackSegmentsInRadiator;
+  int  m_MaxNumTrackSegmentsInAerogel;
+  int  m_MaxNumTrackSegmentsInR1gas;
+  int  m_MaxNumTrackSegmentsInR2gas;
   
   
   

@@ -1,4 +1,4 @@
-// $Id: IRichRingReconParam.h,v 1.1.1.1 2009-03-04 12:01:45 jonrob Exp $
+// $Id: IRichRingReconParam.h,v 1.2 2009-03-23 17:26:21 seaso Exp $
 #ifndef RICHRINGREC_IRICHRINGRECONPARAM_H 
 #define RICHRINGREC_IRICHRINGRECONPARAM_H 1
 
@@ -34,6 +34,10 @@ public:
   virtual std::string RingRecHistoPath()=0;
   virtual bool ActivateRandomPhiLocalScaling()=0;
   virtual bool   ActivateMCCompareMassPrint()=0;
+  virtual bool ActivateMaxNumberOfTrackSegmentsInRadiator()=0;
+  virtual int MaxNumTrackSegmentsInAerogel() =0;
+  virtual int MaxNumTrackSegmentsInR1gas() =0;
+  virtual int MaxNumTrackSegmentsInR2gas() =0;
   
 
   //  virtual bool WriteOutAuxiliaryDebugHisto()=0;

@@ -1,4 +1,4 @@
-// $Id: RichRingRecTransformTool.cpp,v 1.1.1.1 2009-03-04 12:01:45 jonrob Exp $
+// $Id: RichRingRecTransformTool.cpp,v 1.2 2009-03-23 17:26:43 seaso Exp $
 // Include files 
 #include<TMath.h>
 
@@ -340,6 +340,24 @@ VI RichRingRecTransformTool::getTrackIndexLimits( int irad)
 {
     int tkMin=0; 
     int tkMax = (int) tgD()-> NumChRdTrackValue(irad);
+    if(RParam()-> ActivateMaxNumberOfTrackSegmentsInRadiator() ) {
+      // Set a max limit on the upper limit on the segments to reduce cpu time.
+      if(tkMax > 0 ) {
+        int currentMax =tkMax;
+        if(irad ==0 ) {
+          currentMax = RParam()-> MaxNumTrackSegmentsInAerogel() ;
+        }else if (irad ==1 ) {
+          currentMax= RParam()-> MaxNumTrackSegmentsInR1gas() ;          
+        }else if (irad ==2 ) {
+          currentMax = RParam()-> MaxNumTrackSegmentsInR2gas() ;
+        }
+        if(tkMax > currentMax ) tkMax =currentMax;
+      }
+      
+    } // end activation on the max number of segments per radiator.
+    
+    
+
     if(RParam()-> ActivateSingleTrackDebug()) {
       int aMin= RParam()->  MinTrackNumForDebug();
       int aMax = RParam()-> MaxTrackNumForDebug();
