@@ -1,7 +1,7 @@
 """
 High level configuration example for a typical physics MicroDST
 """
-__version__ = "$Id: Configuration.py,v 1.3 2009-03-18 19:22:32 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.4 2009-03-23 17:19:58 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 
@@ -15,7 +15,6 @@ from Configurables import MCVertexCloner
 from Configurables import VertexCloner
 from Configurables import ProtoParticleCloner
 from Configurables import PrintHeader
-from Configurables import OutputStream
 from Configurables import BTagging, BTaggingTool
 from Configurables import PhysDesktop
 from Configurables import PVReFitterAlg
@@ -34,23 +33,21 @@ class PhysMicroDST(LHCbConfigurableUser) :
 
     __slots__ = {
         # Application Configuration : sent to LHCbApp and Gaudi
-        "EvtMax"             :  -1           # Number of events to analyse
-        , "SkipEvents"         :   0           # Number of events to skip at beginning for file
-        , "PrintFreq"          : 100           # The frequency at which to print event numbers
-        , "DataType"           : 'DC06'        # Data type, can be ['DC06','2008'] Forwarded to PhysConf
-        , "Simulation"         : True          # set to True to use SimCond. Forwarded to PhysConf
+        "EvtMax"                 :  -1           # Number of events to analyse
+        , "SkipEvents"           :   0           # Number of events to skip at beginning for file
+        , "PrintFreq"            : 100           # The frequency at which to print event numbers
+        , "DataType"             : 'DC06'        # Data type, can be ['DC06','2008'] Forwarded to PhysConf
+        , "Simulation"           : True          # set to True to use SimCond. Forwarded to PhysConf
         # Input
-        , "Input"              : []            # Input data. Can also be passed as a second option file.
+        , "Input"                : []            # Input data. Can also be passed as a second option file.
         # Output
-        , "HistogramFile"      : ""            # Write name of output Histogram file
-        , "TupleFile"          : ""            # Write name of output Tuple file
-        , "ETCFile"            : ""            # Name of ETC file
-        , "MicroDSTFile"       : "MicroDST.dst"
+        , "HistogramFile"        : ""            # Write name of output Histogram file
+        , "TupleFile"            : ""            # Write name of output Tuple file
+        , "ETCFile"              : ""            # Name of ETC file
+        , "MicroDSTFile"         : "MicroDST.dst"
          # DaVinci Options
-        , "MainOptions"        : ""            # Main option file to execute
-        , "UserAlgorithms"     : []            # User algorithms to run.
-        , "MainSequence"       : ""            # Name of sequence from which to take data for MicroDST
-        , "MainLocation"       : ""            # Name of TES location of selected particles
+        , "UserAlgorithms"       : []            # User algorithms to run.
+        , "MicroDSTSelectionAlg" : ""            # Name of selection algorithm that defines data for MicroDST
         , "RedoMCLinks"        : False         # On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association.
         # Trigger running
         , "L0"                 : False         # Run L0. 
@@ -76,11 +73,8 @@ class PhysMicroDST(LHCbConfigurableUser) :
         , "TupleFile"          : """ Write name of output Tuple file """
         , "ETCFile"            : """ Write name of output ETC file."""
         , "MicroDSTFile"     : """ Write name of output MicroDST file. Default 'MicroDST.dst'"""
-        , "MainOptions"        : """ Main option file to execute """
         , "UserAlgorithms"     : """ User algorithms to run. """
-        , "MainSequence"       : """ Name of GaudiSequence from which to take data for MicroDST"""
-        , "MainLocation"       : """ Name of TES location of selected particles"""
-        , "MainSequence"       : """ Name of GaudiSequence from which to take data for MicroDST"""         
+        , "MicroDSTSelectionAlg"      : """            # Name of selection algorithm that defines data for MicroDST"""
         , "RedoMCLinks"        : """ On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association. """
         , "InputType"          : """ 'DST' or 'DIGI' or 'ETC' or 'RDST' or 'DST'. Nothing means the input type is compatible with being a DST.  """
         , "L0"                 : """ Re-Run L0 """
@@ -111,7 +105,6 @@ class PhysMicroDST(LHCbConfigurableUser) :
                                        "TupleFile",
                                        "ETCFile",
                                        "MicroDSTFile",
-                                       "MainOptions",
                                        "RedoMCLinks",
                                        "L0",
                                        "ReplaceL0BanksWithEmulated",
@@ -122,44 +115,36 @@ class PhysMicroDST(LHCbConfigurableUser) :
     def seqMicroDST(self) :
         return GaudiSequencer('SeqMicroDST')
 
-    def getSequencer(self) :
-        opts = self.getProp( "MainOptions" )
-        if not (opts == '') :
-            importOptions("$STDOPTS/PreloadUnits.opts") # to get units in .opts files
-            importOptions( self.getProp( "MainOptions" ) )
-        else :
-            log.info("No MainOptions specified. DaVinci() will import no options file!")
-        seqName = self.getProp("MainSequence")
-        log.info("Getting MainSequence to "+seqName)
-        seq = GaudiSequencer(seqName)
-        return seq
-
+    def getMicroDSTSelAlg(self) :        
+        seqName = self.getProp("MicroDSTSelectionAlg")
+        log.info("Getting MicroDSTSelectionAlg "+ seqName)
+        return seqName
 
     def userAlgs(self) :
         userAlgs = []
         for alg in self.getProp("UserAlgorithms"):
             userAlgs.append( alg )
-        seq = self.getSequencer()
-        seq.Members += [ self.seqMicroDST() ]
-        userAlgs.append(seq)
+        mainAlgoName = self.getMicroDSTSelAlg()
+        print "Adding ", mainAlgoName, " to MicroDST sequence"
+        self.seqMicroDST().Members += [mainAlgoName]
+        userAlgs.append(self.seqMicroDST())
         log.info("PhysMicroDST: Setting UserAlgorithms:")
         DaVinci().setProp("UserAlgorithms", userAlgs)
         
         
-    def initStream(self) :
+    def initMicroDSTStream(self) :
         log.info("Setting MicroDSTStream")
         importOptions('$MICRODSTOPTS/MicroDSTStream.py')
         stream = OutputStream('MicroDSTStream')
         dstName = self.getProp("MicroDSTFile")
         if (dstName != "" ) :
             stream.Output = "DATAFILE='"+dstName +"' TYP='POOL_ROOTTREE' OPT='REC'"
-        seqName = self.getProp("MainSequence")
-        log.info("Adding sequence "+ seqName + " to MicroDSTSTream")
-        stream.AcceptAlgs.append( seqName )
+        return stream
 
     def mainLocation(self) :
-        return self.getProp("MainLocation")
-
+        algoName = self.getProp("MicroDSTSelectionAlg")
+        return 'Phys/' + algoName
+    
     def copyDefaultStuff(self):
         self.seqMicroDST().Members += [CopyRecHeader()]
 
@@ -248,7 +233,6 @@ class PhysMicroDST(LHCbConfigurableUser) :
         log.info( self )
         self.davinci()
         self.userAlgs()
-        self.initStream()
         self.copyDefaultStuff()
         if self.getProp("CopyParticles") : self.copyParticleTrees()
         if self.getProp("CopyPVs") : self.copyPVs()
@@ -256,3 +240,4 @@ class PhysMicroDST(LHCbConfigurableUser) :
         if self.getProp("CopyBTags") : self.copyBTaggingInfo()
         if self.getProp("CopyReFittedPVs") : self.copyReFittedPVs()
         if self.getProp("CopyMCTruth") : self.copyMCInfo()
+        self.seqMicroDST().Members += [self.initMicroDSTStream()]
