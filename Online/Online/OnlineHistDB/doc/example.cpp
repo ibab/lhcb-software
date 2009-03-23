@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/doc/example.cpp,v 1.11 2009-02-16 10:37:42 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/doc/example.cpp,v 1.12 2009-03-23 16:44:35 ggiacomo Exp $
 #include <iostream>
 #include <OnlineHistDB/OnlineHistDB.h>
 #include <OnlineHistDB/OMAMessage.h>
@@ -6,9 +6,9 @@ using namespace std;
 
 int main ()
 {
-  OnlineHistDB *HistDB = new OnlineHistDB("PASSWORD",
-                                          OnlineHistDBEnv_constants::ACCOUNT,
-                                          OnlineHistDBEnv_constants::DB);
+
+  OnlineHistDB *HistDB = new OnlineHistDB("testhist2009",
+                                          "LHCB_DEVMON_GIACOMO","devdb10");
   
   cout << "opened connection with "<<HistDB->nHistograms()<<" Histograms "
        << HistDB->nPages()<<" Pages "

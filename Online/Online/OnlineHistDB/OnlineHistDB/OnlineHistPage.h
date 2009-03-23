@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistPage.h,v 1.19 2009-03-06 09:26:54 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistPage.h,v 1.20 2009-03-23 16:44:35 ggiacomo Exp $
 #ifndef ONLINEHISTPAGE_H
 #define ONLINEHISTPAGE_H 1
 /** @class  OnlineHistPage OnlineHistPage.h OnlineHistDB/OnlineHistPage.h
@@ -88,7 +88,7 @@ class OnlineHistPage : public OnlineHistDBEnv
   void load();
 private:
   // private dummy copy constructor and assignment operator 
-  OnlineHistPage(const OnlineHistPage&) : OnlineHistDBEnv("dummy") {}
+  OnlineHistPage(const OnlineHistPage&) : OnlineHistDBEnv() {}
   OnlineHistPage & operator= (const OnlineHistPage&) {return *this;}
   //
   std::string m_name;

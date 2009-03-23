@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.30 2009-02-16 10:37:42 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.31 2009-03-23 16:44:35 ggiacomo Exp $
 #ifndef ONLINEHISTOGRAM_H
 #define ONLINEHISTOGRAM_H 1
 /** @class  OnlineHistogram OnlineHistogram.h OnlineHistDB/OnlineHistogram.h
@@ -266,7 +266,7 @@ class  OnlineHistogram : public OnlineHistDBEnv
 
  private:
   // private dummy copy constructor and assignment operator 
-  OnlineHistogram(const OnlineHistogram&) : OnlineHistDBEnv("dummy") {}
+  OnlineHistogram(const OnlineHistogram&) : OnlineHistDBEnv() {}
   OnlineHistogram & operator= (const OnlineHistogram&) {return *this;}
   // private OnlineDisplayOption class
   class OnlineDisplayOption {
@@ -291,6 +291,7 @@ class  OnlineHistogram : public OnlineHistDBEnv
     DisplayOptionType m_type;
     void* m_value;
     OCIInd* m_value_null;
+    bool m_locString;
     OnlineHistDBEnv* m_env;
     std::string getStringValue();
     int getIntValue();

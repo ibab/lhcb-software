@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.38 2009-02-16 10:37:42 ggiacomo Exp $
+! $Id: release.notes,v 1.39 2009-03-23 16:44:35 ggiacomo Exp $
 ! Package     : OnlineHistDB
 ! Responsible : Giacomo Graziani
 !
 ! user manual in pdf format is available at /afs/cern.ch/user/g/ggrazian/www/lhcb/histdbdoc.pdf
 ! or using makedoc script in this folder
 !
+
+! 20090323
+ - fix order of object deletion in destructors
 
 ! 20090213 OnlineHistDB v5r0
  - possibility to associate fit functions to histograms, for both display and analysis;

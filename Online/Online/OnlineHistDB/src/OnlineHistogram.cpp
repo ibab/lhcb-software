@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.39 2009-03-09 15:40:47 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.40 2009-03-23 16:44:35 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -48,7 +48,7 @@ void OnlineHistogram::checkServiceName() {
     releaseOCIStatement(stmt);
   }
   if (!unchanged) {
-    if (debug() > 3) cout << "Reloading Histogram " << identifier() << endl;
+    if (debug() > 3) std::cout << "Reloading Histogram " << identifier() << std::endl;
     load();
   }
 }
@@ -603,9 +603,13 @@ bool OnlineHistogram::loadCreationDirections() {
 OnlineHistogram::~OnlineHistogram()
 {
   std::vector<OnlineDisplayOption*>::iterator ip;
-  for (ip = m_do.begin();ip != m_do.end(); ++ip) 
+  for (ip = m_do.begin();ip != m_do.end(); ++ip)  {
+    if (debug() > 3) std::cout << "removing OnlineDisplayOption object for "<<m_identifier <<
+      ": "<<  (*ip)->name() << " type "<< (*ip)->type() << std::endl;
     delete *ip; 
+  }
   m_do.clear();
+  if (debug() > 3) std::cout << "removing m_dispopt object"<< std::endl;
   if(m_dispopt) 
     checkerr(OCIObjectFree ( m_envhp, m_errhp, m_dispopt, OCI_OBJECTFREE_FORCE) );
 }
@@ -1164,37 +1168,40 @@ OnlineHistogram::OnlineDisplayOption::OnlineDisplayOption(std::string Name,
 							  OnlineHistDBEnv * Env) 
   : m_name(Name), m_type(Type), 
     m_value(OCIvar), m_value_null(OCIvar_null),
+    m_locString(false),
     m_env(Env) 
-{ if(Type == STRING) { // needs to be created (otherwise the allocation duration is 
-                       // apparently not guaranteed)
-    OCIObjectNew ( m_env->envhp(), m_env->errhp(), m_env->svchp(), OCI_TYPECODE_VARCHAR2,
-    		   (OCIType *) NULL, (dvoid *) NULL, OCI_DURATION_SESSION, TRUE,
-		   (dvoid **) m_value);
-  } 
+{ 
 }
 
 OnlineHistogram::OnlineDisplayOption::~OnlineDisplayOption() {
-  if(m_type == STRING) {
-    // remove allocated string (apparently, contrary to what stated in OCI doc, freeing
-    // the dispopt object doesn't free the secondary  memory segments)
+  if(m_type == STRING && m_locString) {
+    // remove allocated OCIString 
     OCIObjectFree ( m_env->envhp(), m_env->errhp(), (dvoid *) (*((OCIString **) m_value)), 
-		    OCI_OBJECTFREE_FORCE);
+                    OCI_OBJECTFREE_FORCE);
     (*((OCIString **) m_value)) = NULL;
     *m_value_null = -1;
   }
 }
 
 void OnlineHistogram::OnlineDisplayOption::set(void *option){
-  *m_value_null = 0;
   std::string* cont;
-  std::string debstr;
   switch (m_type) {
   case STRING :
+    if (debug() > 3) {
+      std::cout <<" setting string option "<<m_name <<": before m_value_null="<<*m_value_null;
+      if (! *m_value_null) std::cout <<" value="<<getStringValue();
+      std::cout<<std::endl;
+    }
+    if (*m_value_null) { // create the OCI object
+      if (debug() > 3) std::cout << "creating string object for option "<<m_name<<std::endl;
+      OCIObjectNew ( m_env->envhp(), m_env->errhp(), m_env->svchp(), OCI_TYPECODE_VARCHAR2,
+                     (OCIType *) NULL, (dvoid *) NULL, OCI_DURATION_SESSION, TRUE,
+                     (dvoid **) m_value);
+      m_locString = true;
+    }
     cont = static_cast<std::string*>(option);
     OCIStringAssignText(m_env->envhp(), m_env->errhp(), (CONST OraText *) cont->c_str(),
-			(ub2) ( strlen(cont->c_str())), (OCIString **) m_value);
-    
-    debstr=*cont;
+                        (ub2) ( strlen(cont->c_str())), (OCIString **) m_value);
     break;
   case FLOAT :
     OCINumberFromReal(m_env->errhp(), (dvoid *) option, (uword) sizeof(float),(OCINumber *) m_value);
@@ -1204,6 +1211,7 @@ void OnlineHistogram::OnlineDisplayOption::set(void *option){
 		     OCI_NUMBER_SIGNED,(OCINumber *) m_value);
     break;
   }
+  *m_value_null = 0;
 }
 
 
@@ -1242,7 +1250,14 @@ bool OnlineHistogram::OnlineDisplayOption::get(void *option){
 }
 
 void OnlineHistogram::OnlineDisplayOption::unset() {
+  if (debug() > 3) std::cout << "unsetting option "<<m_name<<std::endl;
   *m_value_null = -1;
+   if(m_type == STRING && m_locString) {
+    // remove allocated string 
+    OCIObjectFree ( m_env->envhp(), m_env->errhp(), (dvoid *) (*((OCIString **) m_value)), 
+                    OCI_OBJECTFREE_FORCE);
+    (*((OCIString **) m_value)) = NULL;
+  }
 }
 
 bool OnlineHistogram::OnlineDisplayOption::differentfrom(void *option) {
@@ -1595,8 +1610,8 @@ OnlineHistogramStorage::OnlineHistogramStorage() :
 
 OnlineHistogramStorage::~OnlineHistogramStorage() 
 {
-  if (m_Histenv->debug() > 2) cout << "Deleting "<<
-    m_myHist.size() << " OnlineHistogram objects"<<endl;
+  if (m_Histenv->debug() > 2) std::cout << "Deleting "<<
+    m_myHist.size() << " OnlineHistogram objects"<<std::endl;
   std::vector<OnlineHistogram*>::iterator ih;
   for (ih = m_myHist.begin();ih != m_myHist.end(); ++ih) 
     delete *ih; 

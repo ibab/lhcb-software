@@ -1,4 +1,4 @@
-// $Id: OMAMessage.cpp,v 1.8 2009-03-05 09:55:37 ggiacomo Exp $
+// $Id: OMAMessage.cpp,v 1.9 2009-03-23 16:44:35 ggiacomo Exp $
 #include <time.h>
 #include "OnlineHistDB/OMAMessage.h"
 using namespace std;
@@ -39,7 +39,7 @@ OMAMessage::OMAMessage( std::string& HistName,
                         std::string& AnalysisName,
                         std::string& Text,
                         OMAMsgLevel Level) :
-  OnlineHistDBEnv(""), m_ID(0), m_histo(HistName), m_saveSet(SaveSet),
+  OnlineHistDBEnv(), m_ID(0), m_histo(HistName), m_saveSet(SaveSet),
   m_taskName(TaskName),  m_anaTaskName(AnaTaskName), m_anaTaskName_null(0),
   m_msgtext(Text), m_msgtext_null(0), m_level(Level),
   m_anaid(0), m_ananame(AnalysisName), m_time(0),

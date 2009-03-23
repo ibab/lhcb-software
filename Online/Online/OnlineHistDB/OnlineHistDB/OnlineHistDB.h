@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.26 2009-02-18 19:17:05 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.27 2009-03-23 16:44:35 ggiacomo Exp $
 #ifndef ONLINEHISTDB_H
 #define ONLINEHISTDB_H 1
 /** @class  OnlineHistDB OnlineHistDB.h OnlineHistDB/OnlineHistDB.h
@@ -177,7 +177,7 @@ class  OnlineHistDB : public OnlineHistDBEnv,
 
  private:
   // private dummy copy constructor and assignment operator
-   OnlineHistDB(const OnlineHistDB&) : OnlineHistDBEnv("dummy"),  
+   OnlineHistDB(const OnlineHistDB&) : OnlineHistDBEnv(),  
      OnlineTaskStorage(), OnlineHistogramStorage(), OnlinePageStorage() {} 
      OnlineHistDB& operator= (const OnlineHistDB&)  {return *this;} 
   int m_canwrite;

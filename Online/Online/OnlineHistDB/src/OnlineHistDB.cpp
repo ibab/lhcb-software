@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.37 2009-03-06 09:26:54 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.38 2009-03-23 16:44:35 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -12,7 +12,7 @@ using namespace OnlineHistDBEnv_constants;
 OnlineHistDB::OnlineHistDB(std::string passwd,
 			   std::string user,
 			   std::string db) : 
-  OnlineHistDBEnv(user),
+  OnlineHistDBEnv(passwd, user, db, true),
   OnlineTaskStorage(), 
   OnlineHistogramStorage(),
   OnlinePageStorage(),
@@ -21,43 +21,7 @@ OnlineHistDB::OnlineHistDB(std::string passwd,
   setTaskEnv((OnlineHistDBEnv*) this);
   setHistEnv((OnlineHistDBEnv*) this);
   setPageEnv((OnlineHistDBEnv*) this);
-
-  // initialize Oracle session and log in
-  m_StmtMethod = "OnlineHistDB::OnlineHistDB";
-  checkerr( OCIEnvCreate ((OCIEnv **)&m_envhp, (ub4)OCI_OBJECT , (dvoid *)0,
-			  (dvoid * (*) (dvoid *, size_t))0, (dvoid * (*)(dvoid *, dvoid *, size_t))0,
-			  (void (*)(dvoid *, dvoid *))0, (size_t)0, (dvoid **)0 ),
-	    SEVERE);
-
-  checkerr( OCIHandleAlloc((dvoid *) m_envhp, (dvoid **) &m_errhp, OCI_HTYPE_ERROR,
-			   (size_t) 0, (dvoid **) 0),
-	    SEVERE);
-
-  checkerr( OCILogon2(m_envhp, 
-		      m_errhp, 
-		      &m_svchp, 
-		      (text *) user.data(), 
-		      (ub4) user.length(), 
-		      (text *) passwd.data(),
-		      (ub4) passwd.length(), 
-		      (text *) db.data(),
-		      (ub4) db.length(),
-		      OCI_LOGON2_STMTCACHE),
-	    SEVERE);
-
-  // needed initialization for OCI interface
-  getOCITypes();
-  m_TaggedStatement = new std::set<std::string>;
-  m_refRoot = new std::string(OnlineHistDBEnv_constants::StdRefRoot);
-  char * envRefRoot = getenv ("HISTREFPATH");
-  if (envRefRoot !=NULL)
-    *m_refRoot = envRefRoot;
-
-  m_savesetsRoot = new std::string(OnlineHistDBEnv_constants::StdSavesetsRoot);
-  char * envSvsRoot = getenv ("HISTSAVESETSPATH");
-  if (envSvsRoot !=NULL)
-    *m_savesetsRoot = envSvsRoot;
-
+  
   // set up object cache to avoid object duplication
   m_TStorage = (OnlineTaskStorage*) this;
   m_HStorage = (OnlineHistogramStorage*) this;
@@ -90,12 +54,7 @@ OnlineHistDB::OnlineHistDB(std::string passwd,
 }
 
 OnlineHistDB::~OnlineHistDB () {  
-  OCICacheFree ( m_envhp, m_errhp, m_svchp);
-  if (m_envhp)
-    OCIHandleFree((dvoid *) m_envhp, OCI_HTYPE_ENV);
-  if(m_TaggedStatement) delete m_TaggedStatement;
-  if(m_refRoot) delete m_refRoot;
-  if(m_savesetsRoot) delete m_savesetsRoot;
+  if (debug()>3) std::cout<< "removing OnlineHistDB"<<std::endl;
 }
 
 bool OnlineHistDB::commit() {
@@ -108,7 +67,7 @@ bool OnlineHistDB::commit() {
       m_StmtMethod = "OnlineHistDB::commit";
       out = (OCI_SUCCESS == myOCIStmtExecute(stmt, SEVERE));
       if (out) {
-        if (debug()>2) cout << "session terminated"<<endl; 
+        if (debug()>2) std::cout << "changes are successfully commited"<<std::endl; 
       }
     }
     releaseOCIStatement(stmt);
@@ -153,7 +112,7 @@ void OnlineHistDB::declareHistogram(std::string TaskName,
     myOCIBindString(stmt, ":x4", myType);
   
     if (OCI_SUCCESS == myOCIStmtExecute(stmt)) {
-      if (debug() >2) cout <<" Declared Histo: " << TaskName <<"/"<<AlgorithmName<<"/"<< Title<<endl;
+      if (debug() >2) std::cout <<" Declared Histo: " << TaskName <<"/"<<AlgorithmName<<"/"<< Title<<std::endl;
     }
     releaseOCITaggedStatement(stmt, "HDEC");
   }
@@ -180,8 +139,8 @@ OnlineHistogram* OnlineHistDB::declareAnalysisHistogram
       if(Parameters->size() > (unsigned int)np) ok=false;
   }
   if (!ok) {
-    cout << "something wrong in your call to OnlineHistDB::declareAnalysisHistogram("<<
-      Algorithm <<"," << Title <<"), aborting..." <<endl;
+    std::cout << "something wrong in your call to OnlineHistDB::declareAnalysisHistogram("<<
+      Algorithm <<"," << Title <<"), aborting..." <<std::endl;
   }
   else {
     std::stringstream command;

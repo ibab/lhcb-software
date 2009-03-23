@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.35 2009-02-19 19:05:02 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.36 2009-03-23 16:44:35 ggiacomo Exp $
 #ifndef ONLINEHISTDBENV_H
 #define ONLINEHISTDBENV_H 1
 /** @class  OnlineHistDBEnv OnlineHistDBEnv.h OnlineHistDB/OnlineHistDBEnv.h
@@ -23,7 +23,7 @@ namespace OnlineHistDBEnv_constants {
   static const std::string ACCOUNT="HIST_READER";
   static const std::string PASSWORD="reader";
   static const unsigned int DBschema = 12;
-  static const std::string version = "v5r0";
+  static const std::string version = "v5r1";
 
   static const int NHTYPES=6;
   static const char HistTypeName[][4] = {
@@ -101,11 +101,15 @@ class OnlineHistDBEnv {
   inline void setStmtMethod(std::string Caller) {m_StmtMethod = Caller;}
 
  protected:
-  OnlineHistDBEnv(std::string User); 
+  OnlineHistDBEnv(std::string passwd,
+                  std::string user,
+                  std::string db, 
+                  bool newsession=false); 
   OnlineHistDBEnv(OnlineHistDBEnv &m);
-  virtual ~OnlineHistDBEnv() 
-  {  };
+  OnlineHistDBEnv();
+  virtual ~OnlineHistDBEnv() ;
 
+  bool m_ownEnv;
   // methods for OCI statements and OCI error handling
   std::string m_StmtMethod;
   typedef enum { 

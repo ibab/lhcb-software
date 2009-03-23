@@ -1,25 +1,68 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.17 2009-03-09 13:56:32 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.18 2009-03-23 16:44:35 ggiacomo Exp $
 #include <cctype>
 #include <cstring>
 #include "OnlineHistDB/OnlineHistDBEnv.h"
 using namespace std;
 using namespace OnlineHistDBEnv_constants;
 
-OnlineHistDBEnv::OnlineHistDBEnv(std::string User) 
-  :  m_envhp(NULL), m_errhp(NULL), m_svchp(NULL),
+// constructor for creating new DB session
+OnlineHistDBEnv::OnlineHistDBEnv(std::string passwd,
+                                 std::string user,
+                                 std::string db,
+                                 bool newsession) 
+  :  m_ownEnv(newsession), m_envhp(NULL), m_errhp(NULL), m_svchp(NULL),
      OCIthresholds(NULL), OCIparameters(NULL),
      OCIintlist(NULL), OCIinttlist(NULL), OCIanalist(NULL), OCIhnalist(NULL), OCIflolist(NULL),    
      m_TaggedStatement(NULL),
      m_refRoot(NULL), m_savesetsRoot(NULL),
      m_TStorage(NULL), m_HStorage(NULL), m_PStorage(NULL), 
-     m_user(User), m_debug(0), m_excLevel(1)
+     m_user(user), m_debug(0), m_excLevel(1)
 {
   toUpper(m_user);
   initOCIBinds();
+  if(newsession) {
+    // initialize Oracle session and log in
+    m_StmtMethod = "OnlineHistDB::OnlineHistDB";
+    m_ownEnv = true;
+    checkerr( OCIEnvCreate ((OCIEnv **)&m_envhp, (ub4)OCI_OBJECT , (dvoid *)0,
+                            (dvoid * (*) (dvoid *, size_t))0, (dvoid * (*)(dvoid *, dvoid *, size_t))0,
+                            (void (*)(dvoid *, dvoid *))0, (size_t)0, (dvoid **)0 ),
+              SEVERE);
+    
+    checkerr( OCIHandleAlloc((dvoid *) m_envhp, (dvoid **) &m_errhp, OCI_HTYPE_ERROR,
+                             (size_t) 0, (dvoid **) 0),
+              SEVERE);
+    
+    checkerr( OCILogon2(m_envhp, 
+                        m_errhp, 
+                        &m_svchp, 
+                        (text *) user.data(), 
+                        (ub4) user.length(), 
+                        (text *) passwd.data(),
+                        (ub4) passwd.length(), 
+                        (text *) db.data(),
+                        (ub4) db.length(),
+                        OCI_LOGON2_STMTCACHE),
+              SEVERE);
+    
+    // needed initialization for OCI interface
+    getOCITypes();
+    m_TaggedStatement = new std::set<std::string>;
+    m_refRoot = new std::string(OnlineHistDBEnv_constants::StdRefRoot);
+    char * envRefRoot = getenv ("HISTREFPATH");
+    if (envRefRoot !=NULL)
+      *m_refRoot = envRefRoot;
+    
+    m_savesetsRoot = new std::string(OnlineHistDBEnv_constants::StdSavesetsRoot);
+    char * envSvsRoot = getenv ("HISTSAVESETSPATH");
+    if (envSvsRoot !=NULL)
+      *m_savesetsRoot = envSvsRoot;
+  }
 }
 
-
-OnlineHistDBEnv::OnlineHistDBEnv(OnlineHistDBEnv &m) {
+// constructor for passing already existing session environment
+OnlineHistDBEnv::OnlineHistDBEnv(OnlineHistDBEnv &m) :
+  m_ownEnv(false) {
   m_envhp = m.m_envhp; m_errhp=m.m_errhp; m_svchp = m.m_svchp;
   m_user=m.m_user;
   m_debug = m.debug(); m_excLevel = m.excLevel();
@@ -40,6 +83,31 @@ OnlineHistDBEnv::OnlineHistDBEnv(OnlineHistDBEnv &m) {
   initOCIBinds();
 }
 
+// dummy constructor for no-DB operation
+OnlineHistDBEnv::OnlineHistDBEnv()
+  :  m_ownEnv(false), m_envhp(NULL), m_errhp(NULL), m_svchp(NULL),
+     OCIthresholds(NULL), OCIparameters(NULL),
+     OCIintlist(NULL), OCIinttlist(NULL), OCIanalist(NULL), OCIhnalist(NULL), OCIflolist(NULL),    
+     m_TaggedStatement(NULL),
+     m_refRoot(NULL), m_savesetsRoot(NULL),
+     m_TStorage(NULL), m_HStorage(NULL), m_PStorage(NULL), 
+     m_user(""), m_debug(0), m_excLevel(1)
+{}
+
+
+OnlineHistDBEnv::~OnlineHistDBEnv() {
+  if (m_debug > 3) std::cout<< "removing OnlineHistDBEnv"<<std::endl;
+  if(m_ownEnv) {
+    if (m_debug > 2) std::cout<< "removing OCI session "<<std::endl;
+    if(m_TaggedStatement) delete m_TaggedStatement;
+    if(m_refRoot) delete m_refRoot;
+    if(m_savesetsRoot) delete m_savesetsRoot;
+    OCICacheFree ( m_envhp, m_errhp, m_svchp);
+    if (m_envhp)
+      OCIHandleFree((dvoid *) m_envhp, OCI_HTYPE_ENV);
+  }
+};
+
 void OnlineHistDBEnv::initOCIBinds() {
   for (int i=0; i<20 ;++i)
     m_bnd[i] = (OCIBind *) NULL;
@@ -49,7 +117,9 @@ void OnlineHistDBEnv::initOCIBinds() {
 void OnlineHistDBEnv::checkCurBind() {
   if(m_curBind == 40) {
     std::string error("FATAL ERROR IN OnlineHistDBEnv::checkCurBind : maximum number of binds reached");
-    cout << error<<endl;
+    if (m_debug > -1) {
+      std::cout << error<<std::endl;
+    }
     resetTaggedStatements();
     throw error; 
   }
@@ -115,8 +185,8 @@ void OnlineHistDBEnv::resetTaggedStatements()
 
 void OnlineHistDBEnv::warningMessage(std::string Error) const {
   if (m_debug > -1) {
-    cout << "------- WARNING: ---------- from "  << m_StmtMethod << endl;
-    cout<< Error <<endl;
+    std::cout << "------- WARNING: ---------- from "  << m_StmtMethod << std::endl;
+    std::cout<< Error <<std::endl;
   }     
 }
 
@@ -194,7 +264,7 @@ sword OnlineHistDBEnv::prepareOCIStatement(OCIStmt* & stmt,
 			     OCI_HTYPE_STMT, (size_t) 0, (dvoid **) 0));
  
   if (OCI_SUCCESS == out) {
-    if (m_debug>3) cout << "preparing untagged statement "<<sqlcommand<<endl;
+    if (m_debug>3) std::cout << "preparing untagged statement "<<sqlcommand<<std::endl;
     out = checkerr(OCIStmtPrepare2(m_svchp, &stmt, m_errhp, (text *) sqlcommand,
 				   (ub4) strlen((char *) sqlcommand), (CONST OraText  *) NULL, (ub4) 0,
 				   (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT) );
@@ -212,13 +282,13 @@ sword OnlineHistDBEnv::prepareOCITaggedStatement(OCIStmt* & stmt,
   std::string key(StmtKey);
 
   if(m_TaggedStatement->count(key) ) {// use tagged statement
-    if (m_debug>3) cout << "using tagged statement "<<StmtKey<<endl;
+    if (m_debug>3) std::cout << "using tagged statement "<<StmtKey<<std::endl;
     out = checkerr(OCIStmtPrepare2(m_svchp, &stmt, m_errhp, (text *) NULL,
 				   (ub4) 0, (const OraText*) StmtKey, (ub4) (ub4)strlen(StmtKey),
 				   (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT));
   }
   else {// first call of this statement
-    if (m_debug>3) cout << "first call for statement "<<StmtKey<<endl;
+    if (m_debug>3) std::cout << "first call for statement "<<StmtKey<<std::endl;
     out = checkerr(OCIStmtPrepare2(m_svchp, &stmt, m_errhp, (text *) sqlcommand,
 				   (ub4) strlen((char *) sqlcommand), (CONST OraText  *) NULL, (ub4) 0,
 				   (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT));
@@ -439,7 +509,7 @@ sword OnlineHistDBEnv::checkerr(sword status,
     message << "from "+m_StmtMethod + " -------" <<endl;
     message << error << endl;
     if (m_debug > -1)
-      cout << message.str();
+      std::cout << message.str();
     if( (level == SEVERE && m_excLevel >0) ||
         (m_excLevel >1  && level > NORMAL) ) {
       resetTaggedStatements();
@@ -448,8 +518,8 @@ sword OnlineHistDBEnv::checkerr(sword status,
   }
   else {
     if (m_debug > dboff && error.size() >0) {
-      cout << "warning from "<<m_StmtMethod <<": "<<
-        error << endl;
+      std::cout << "warning from "<<m_StmtMethod <<": "<<
+        error << std::endl;
     }
   }
 

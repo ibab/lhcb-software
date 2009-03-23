@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistTask.cpp,v 1.8 2008-08-12 10:37:31 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistTask.cpp,v 1.9 2009-03-23 16:44:35 ggiacomo Exp $
 #include "OnlineHistDB/OnlineHistTask.h"
 using namespace std;
 using namespace OnlineHistDBEnv_constants;
@@ -163,24 +163,24 @@ bool OnlineHistTask::save() {
 }
 
 void OnlineHistTask::dump() {
-    cout << "Task "<< name() << "  related to "<<ndet() << " detectors:"<<endl <<"             ";
+    std::cout << "Task "<< name() << "  related to "<<ndet() << " detectors:"<<std::endl <<"             ";
     for (int i=0 ; i< ndet(); i++) 
-      cout << det(i) << "  ";
-    cout << endl << " Run Conf: Ph=" << runsOnPhysics() <<
-      "  Calib=" << runsOnCalib() << "  Empty=" << runsOnEmpty() <<endl ;
+      std::cout << det(i) << "  ";
+    std::cout << std::endl << " Run Conf: Ph=" << runsOnPhysics() <<
+      "  Calib=" << runsOnCalib() << "  Empty=" << runsOnEmpty() <<std::endl ;
     if (m_SavingFrequency_null == 0)
-      cout << " Frequency : " << savingFrequency() <<endl;
+      std::cout << " Frequency : " << savingFrequency() <<std::endl;
     if (m_Reference_null == 0)
-      cout << " Reference : " << reference() <<endl;
-    cout<< "-----------------------------------------------------------------------"<<endl;
+      std::cout << " Reference : " << reference() <<std::endl;
+    std::cout<< "-----------------------------------------------------------------------"<<std::endl;
 }
 
 
 
 
 OnlineTaskStorage::~OnlineTaskStorage() {
-  if (m_Taskenv->debug() > 2) cout << "Deleting "<<
-    m_myTask.size() << " OnlineHistTask objects"<<endl;
+  if (m_Taskenv->debug() > 2) std::cout << "Deleting "<<
+    m_myTask.size() << " OnlineHistTask objects"<<std::endl;
   std::vector<OnlineHistTask*>::iterator it;
   for (it = m_myTask.begin();it != m_myTask.end(); ++it) 
     delete *it; 
