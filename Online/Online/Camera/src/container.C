@@ -1,5 +1,9 @@
 #include "container.h"
 
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+
 container::container(){
 }
 

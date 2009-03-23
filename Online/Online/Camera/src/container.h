@@ -2,12 +2,8 @@
 #define CONTAINER_H
 
 #include <iostream>
-#include <string>
 #include <sstream>
-#include <iostream>
-#include <string.h>
-#include <stdio.h>
-#include <list>
+#include <string>
 #include <vector>
 
 class  container{
