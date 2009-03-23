@@ -85,7 +85,7 @@ nPrimaryVertices = 0
 
 selectionPath = locationRoot +  '/Phys/' + selection
 particlePath = selectionPath + '/Particles'
-particle2mcPath = selectionPath + '/Particles/RelatedMCParticles'
+particle2mcPath = selectionPath + '/P2MCPRelations'
 stdVertexAssocPath = selectionPath + '/Particle2VertexRelations'
 refitVertexPath = selectionPath + '/RefittedVertices'
 refitVertexAssocPath = selectionPath + '/Particle2ReFittedVertexRelations'
@@ -195,10 +195,13 @@ while (eventLoop.nextEvent() ) :
             refitVertex = Helpers.bestVertex(p, refitBestVertexAssoc)
             pMom = p.momentum()
             refitVertices = eventLoop.getEvtStuff(refitVertexPath)
-            for rv in refitVertices :
-                refitVertexZ.Fill(rv.position().z())
+            if refitVertices != None :
+                for rv in refitVertices :
+                    if rv!=None : refitVertexZ.Fill(rv.position().z())
             if (refitVertex != None) :
                 refitPropTime = Helpers.properTime(p, refitVertex, properTimeFitter)
+            else :
+                refitPropTime = -9999.
             assocMCPart = (Helpers.assocMCP(p, p2MCPTable))
             if (assocMCPart != None) :
                 MCPropTime = Helpers.properTimeMC(assocMCPart)
