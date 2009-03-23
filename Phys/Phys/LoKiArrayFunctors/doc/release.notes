@@ -1,10 +1,11 @@
-$Id: release.notes,v 1.35 2009-03-10 22:56:26 spradlin Exp $ 
+$Id: release.notes,v 1.36 2009-03-23 15:43:57 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiArrayFunctors
 ! Responsible : Vanya BELYAEV
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiArrayFunctors v8r2 2009-03-23 ===================
 ! 2009-03-10 - Patrick SPRADLIN
 - add new functors:
 
