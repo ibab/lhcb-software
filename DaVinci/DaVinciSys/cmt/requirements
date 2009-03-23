@@ -9,8 +9,8 @@ branches doc cmt
 use  DaVinci                 	v22r2   Phys  
 
 #TMP
-PhysConf v1r1p1 Phys
-AnalysisConf v1r1p2 Phys
+use PhysConf v1r1p1 Phys
+use AnalysisConf v1r1p2 Phys
 
 
 alias DaVinciTests "cmt qmtest_run"
