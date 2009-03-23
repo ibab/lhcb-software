@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.39 2009-02-25 09:00:10 graven Exp $
+! $Id: release.notes,v 1.40 2009-03-23 15:43:17 pkoppenb Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
 
+!========================== TisTosTobbing v3r3 2009-03-23 ===================
 ! 2009-01-21 - Gerhard Raven
  - remove TriggerSelectionTisTosHS TriggerTisTosHS
 
