@@ -1,17 +1,17 @@
-! $Id: release.notes,v 1.179 2009-03-20 14:58:21 graven Exp $ 
+! $Id: release.notes,v 1.180 2009-03-23 16:04:08 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+!========================== HltConf v2r5 2009-03-23 ===================
 ! 2009-03-20 - Gerhard Raven
  - add RichRecSysConf back, AND add REC as a dependency of the HLT project,
    and add RichRecSys as a dependency in the requirements in order to allow
    Hlt2 to run -- this is at best a temporary hack until this gets sorted
    out correctly...
   
-
 ! 2009-03-20 - Marco Cattaneo
  - Remove RichRecSysConf from _used_configurables_ of Configuration.py, and add
    Configuration.py to ConfUserModules in requirements. Should fix problem of
