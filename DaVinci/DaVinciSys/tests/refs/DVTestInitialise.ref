@@ -1,5 +1,5 @@
-# --> Including file '/afs/cern.ch/user/p/pkoppenb/cmtuser/DaVinci_HEAD/DaVinciSys/tests/options/DVTestInitialise.py'
-# <-- End of file '/afs/cern.ch/user/p/pkoppenb/cmtuser/DaVinci_HEAD/DaVinciSys/tests/options/DVTestInitialise.py'
+# --> Including file '/afs/cern.ch/lhcb/software/DEV/DAVINCI/DAVINCI_v22r1p1/DaVinciSys/tests/options/DVTestInitialise.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/DEV/DAVINCI/DAVINCI_v22r1p1/DaVinciSys/tests/options/DVTestInitialise.py'
 # applying configuration of DaVinci
 # Applying DaVinci configuration
 # /***** User DaVinci/DaVinci ************************************************************************
@@ -27,12 +27,12 @@
 # |-HistogramFile              = ''
 # \----- (End of User DaVinci/DaVinci) ---------------------------------------------------------------
 # Set DDDBtag default
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Mon/LHCB/LHCB_v26r2/GaudiConf/options/LHCbApplication.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Mon/LHCB/LHCB_v26r2/GaudiConf/options/units.opts'
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Mon/LHCB/LHCB_v26r2/GaudiConf/options/units.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v26r2/GaudiConf/options/LHCbApplication.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v26r2/GaudiConf/options/units.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v26r2/GaudiConf/options/units.opts'
 # EventDataSvc.ForceLeaves = true;
 # EventDataSvc.RootCLID    =    1;
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Mon/LHCB/LHCB_v26r2/Det/DDDB/options/DDDB.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v26r2/Det/DDDB/options/DDDB.opts'
 # ApplicationMgr.ExtSvc += { "DetDataSvc/DetectorDataSvc" };
 # DetectorDataSvc.UsePersistency = true;
 # DetectorDataSvc.DetDbRootName  = "dd";
@@ -54,15 +54,21 @@
 # LHCBCOND.CacheHighLevel = 200;
 # SIMCOND.ConnectionString = "sqlite_file:$SQLDDDBROOT/db/SIMCOND.db/SIMCOND";
 # SIMCOND.CacheHighLevel = 200;
-# ONLINE.Readers = { "'CondDBAccessSvc/ONLINE_200806':(0,1214870400000000000)",                    "'CondDBAccessSvc/ONLINE_200807':(1214870400000000000,1217548800000000000)",                    "'CondDBAccessSvc/ONLINE_200808':(1217548800000000000,9223372036854775807)" };
-# ONLINE_200806.ConnectionString = "sqlite_file:$SQLITEDBPATH/ONLINE-200806.db/ONLINE";
-# ONLINE_200807.ConnectionString = "sqlite_file:$SQLITEDBPATH/ONLINE-200807.db/ONLINE";
+# ONLINE.Readers = { "'CondDBAccessSvc/ONLINE_200806':(0,1214870400000000000)",                   "'CondDBAccessSvc/ONLINE_200807':(1214870400000000000,1217548800000000000)",                   "'CondDBAccessSvc/ONLINE_200808':(1217548800000000000,1220227200000000000)",                   "'CondDBAccessSvc/ONLINE_200809':(1220227200000000000,1222819200000000000)",                   "'CondDBAccessSvc/ONLINE_200810':(1222819200000000000,1225497600000000000)",                   "'CondDBAccessSvc/ONLINE_200811':(1225497600000000000,1228089600000000000)",                   "'CondDBAccessSvc/ONLINE_200812':(1228089600000000000,1230768000000000000)",                   "'CondDBAccessSvc/ONLINE_200901':(1230768000000000000,1233446400000000000)",                   "'CondDBAccessSvc/ONLINE_200902':(1233446400000000000,9223372036854775807)" };
+# ONLINE_200806.ConnectionString = 'sqlite_file:$SQLITEDBPATH/ONLINE-200806.db/ONLINE';
+# ONLINE_200807.ConnectionString = 'sqlite_file:$SQLITEDBPATH/ONLINE-200807.db/ONLINE';
 # ONLINE_200808.ConnectionString = 'sqlite_file:$SQLITEDBPATH/ONLINE-200808.db/ONLINE';
+# ONLINE_200809.ConnectionString = 'sqlite_file:$SQLITEDBPATH/ONLINE-200809.db/ONLINE';
+# ONLINE_200810.ConnectionString = 'sqlite_file:$SQLITEDBPATH/ONLINE-200810.db/ONLINE';
+# ONLINE_200811.ConnectionString = 'sqlite_file:$SQLITEDBPATH/ONLINE-200811.db/ONLINE';
+# ONLINE_200812.ConnectionString = 'sqlite_file:$SQLITEDBPATH/ONLINE-200812.db/ONLINE';
+# ONLINE_200901.ConnectionString = 'sqlite_file:$SQLITEDBPATH/ONLINE-200901.db/ONLINE';
+# ONLINE_200902.ConnectionString = 'sqlite_file:$SQLITEDBPATH/ONLINE-200902.db/ONLINE';
 # <-- End of file '/afs/cern.ch/user/m/marcocle/scratch0/workspace/LHCb/Det/SQLDDDB/options/SQLDDDB.opts'
 # MessageSvc.setError += { "RelationalDatabase" };
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Mon/LHCB/LHCB_v26r2/Det/DDDB/options/DDDB.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v26r2/Det/DDDB/options/DDDB.opts'
 # EventDataSvc.EnableFaultHandler = true;
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Mon/LHCB/LHCB_v26r2/GaudiConf/options/LHCbApplication.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v26r2/GaudiConf/options/LHCbApplication.opts'
 # --> Including file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v20r4/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # ApplicationMgr.ExtSvc    += { "Gaudi::MultiFileCatalog/FileCatalog",                              "Gaudi::IODataManager/IODataManager",                              "PoolDbCacheSvc/PoolDbCacheSvc",                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"                            };
 # EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" };
@@ -86,14 +92,14 @@
 # PoolRootTreeEvtCnvSvc.EnableIncident =    1;
 # <-- End of file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v20r4/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # Resetting ApplicationMgr
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Mon/REC/REC_v6r2/Calo/CaloReco/options/CaloRecoOnDemand.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Mon/LHCB/LHCB_v26r2/Calo/CaloDAQ/options/CaloDigitsOnDemand.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/REC/REC_v6r2/Calo/CaloReco/options/CaloRecoOnDemand.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v26r2/Calo/CaloDAQ/options/CaloDigitsOnDemand.opts'
 # DataOnDemandSvc.AlgMap += {     "Raw/Spd/Digits"  : "CaloDigitsFromRaw/SpdFromRaw"   , "Raw/Prs/Digits"  : "CaloDigitsFromRaw/PrsFromRaw"   , "Raw/Ecal/Digits" : "CaloZSupAlg/EcalZSup"   , "Raw/Hcal/Digits" : "CaloZSupAlg/HcalZSup"  };
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Mon/LHCB/LHCB_v26r2/Calo/CaloDAQ/options/CaloDigitsOnDemand.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v26r2/Calo/CaloDAQ/options/CaloDigitsOnDemand.opts'
 # DataOnDemandSvc.AlgMap += {  "Rec/Calo/EcalClusters"      : "GaudiSequencer/CaloClusterOnDemand" ,"Rec/Calo/EcalSplitClusters" : "CaloMergedPi0Alg/MergedPi0Rec"};
 # CaloClusterOnDemand.Members += { "CellularAutomatonAlg/EcalClust",                                 "CaloSharedCellAlg/EcalShare",                                 "CaloClusterCovarianceAlg/EcalCovar",                                 "CaloClusterCorrect3x3Position/EcalPosition"};
 # MergedPi0Rec.CreateSplitClustersOnly = true;
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Mon/REC/REC_v6r2/Calo/CaloReco/options/MergedPi0Rec.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/REC/REC_v6r2/Calo/CaloReco/options/MergedPi0Rec.opts'
 # MergedPi0Rec.TrShOut_nospd={ -0.0060,  2.4956,115.0827,  9.8842,  0.0320,  2.0982,  1.0302,  0.0409,  0.0030, -9.6135 };
 # MergedPi0Rec.TrShMid_nospd={  0.0464,  2.0384, 36.5885,  8.0260,  0.0460,  2.3936,  1.0703,  0.1611,  0.0238, -5.8899 };
 # MergedPi0Rec.TrShInn_nospd={  0.0981,  2.2529, 33.8837,  8.0532,  0.0654,  2.2046,  1.1092,  0.1645,  0.0248, -5.7248 };
@@ -110,11 +116,11 @@
 # MergedPi0Rec.LPar_Be0= {   0.,0.,0. };
 # MergedPi0Rec.LPar_z0 = { 12566. };
 # MergedPi0Rec.EtCut = 2.*GeV;
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Mon/REC/REC_v6r2/Calo/CaloReco/options/MergedPi0Rec.opts'
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Mon/REC/REC_v6r2/Calo/CaloReco/options/CaloRecoOnDemand.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/REC/REC_v6r2/Calo/CaloReco/options/MergedPi0Rec.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/REC/REC_v6r2/Calo/CaloReco/options/CaloRecoOnDemand.opts'
 # Doing MuonID for DC06 and DST
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Mon/REC/REC_v6r2/Muon/MuonID/options/MuonID.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Mon/REC/REC_v6r2/Muon/MuonID/options/MuonID.py'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/REC/REC_v6r2/Muon/MuonID/options/MuonID.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/REC/REC_v6r2/Muon/MuonID/options/MuonID.py'
 # DaVinci input is  []
 # No MainOptions specified. DaVinci() will import no options file!
 # Creating User Algorithms
@@ -148,13 +154,13 @@
 # skipping configuration of HltCommissioningLinesConf
 # applying configuration of AnalysisConf
 # Applying Analysis configuration
-# WARNING: file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Mon/LHCB/LHCB_v26r2/Calo/CaloDAQ/options/CaloDigitsOnDemand.opts' already included, ignored.
+# WARNING: file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v26r2/Calo/CaloDAQ/options/CaloDigitsOnDemand.opts' already included, ignored.
 # WARNING: Default tag requested for partition DDDB (using DC06-20081002)
 # WARNING: Default tag requested for partition LHCBCOND (using DC06-20081002)
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to DaVinci version v22r0
-                                          running on lxplus222.cern.ch on Mon Feb 23 18:09:35 2009
+                                                   Welcome to DaVinci version v22r1
+                                          running on lxplus246.cern.ch on Mon Mar 23 16:27:49 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Successfully loaded modules : HepMCBack
 ApplicationMgr       INFO Application Manager Configured successfully
@@ -166,7 +172,7 @@ DetectorDataSvc                                             SUCCESS Detector des
 RndmGenSvc.Engine                                              INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine                                              INFO Current Seed:1234567 Luxury:3
 RndmGenSvc                                                     INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.TIMER                                            INFO This machine has a speed about   2.72 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER                                            INFO This machine has a speed about   1.82 times the speed of a 2.8 GHz Xeon.
 DataOnDemandSvc                                             WARNING The property 'Nodes'      is obsolete, switch to map-like 'NodeMap'  = { 'data' : 'type'      }
 DataOnDemandSvc                                             WARNING The property 'Algorithms' is obsolete, switch to map-like 'AlgMap'   = { 'data' : 'algorithm' }
 EventPersistencySvc                                            INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
@@ -195,8 +201,6 @@ Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome 
 
 
 
-TransportSvc                                                   INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
-TransportSvc                                                   INFO Recovery of geometry errors is  ENABLED
 DaVinciInitSeq                                                 INFO Member list: LbAppInit/DaVinciAppInit, GaudiSequencer/PhysInitSeq, GaudiSequencer/AnalysisInitSeq
 DaVinciAppInit                                              SUCCESS ==================================================================
 DaVinciAppInit                                              SUCCESS Requested to process 0 events
@@ -206,9 +210,9 @@ TestProtoPRecalibration                                        INFO Member list:
 ProtoPRecalibration                                            INFO Member list: MuonRec, MuonID, UpdateMuonPIDInProtoP, ChargedProtoCombineDLLsAlg, RichPIDsFromProtoParticlesAlg/RichPIDsFromProtos
 COOLConfSvc                                                    INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc                                                    INFO CORAL Connection Retrial Time-Out set to 900s
-DDDB                                                           INFO Connected to database "sqlite_file:/afs/cern.ch/user/m/marcocle/public/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
+DDDB                                                           INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
 DDDB                                                           INFO Using TAG "DC06-20081002"
-LHCBCOND                                                       INFO Connected to database "sqlite_file:/afs/cern.ch/user/m/marcocle/public/DBASE/Det/SQLDDDB/db/LHCBCOND.db/LHCBCOND"
+LHCBCOND                                                       INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/db/LHCBCOND.db/LHCBCOND"
 LHCBCOND                                                       INFO Using TAG "DC06-20081002"
 MuonID                                                         INFO  MuonID v5r2
 ToolSvc.OTRawBankDecoder                                       INFO  countsPerBX = 64
@@ -229,13 +233,6 @@ DaVinciAppInit                                              SUCCESS 0 events pro
 DaVinciAppInit                                              SUCCESS ==================================================================
 RootHistSvc                                                 WARNING no ROOT output file name, Histograms cannot be persistified
 EventLoopMgr                                                   INFO Histograms converted successfully according to request.
-TransportSvc                                                SUCCESS  GEOMETRY ERRORS: 'Skip'     map has the size 0
-
-TransportSvc                                                SUCCESS  GEOMETRY ERRORS: 'Recover'  map has the size 0
-
-TransportSvc                                                SUCCESS  GEOMETRY ERRORS: 'Codes'    map has the size 0
-
-TransportSvc                                                   INFO Reset the static pointer to DetDesc::IGeometyrErrorSvc
 LoKiSvc                                                     SUCCESS
 
 
@@ -263,7 +260,7 @@ ToolSvc                                                        INFO Removing all
 ToolSvc.OTChannelMapTool                                    SUCCESS Exceptions/Errors/Warnings Statistics : 0/0/1
 ToolSvc.OTChannelMapTool                                    SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.TIMER                                            INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.TIMER                                            INFO This machine has a speed about   2.72 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER                                            INFO This machine has a speed about   1.82 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.TIMER                                            INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.TIMER                                            INFO ------------------------------------------------------------------------------------------------
 TimingAuditor.TIMER                                            INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
