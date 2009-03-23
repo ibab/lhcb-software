@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.h,v 1.25 2009-03-12 13:48:32 pkoppenb Exp $
+// $Id: BackgroundCategory.h,v 1.26 2009-03-23 00:24:31 gligorov Exp $
 #ifndef BACKGROUNDCATEGORY_H 
 #define BACKGROUNDCATEGORY_H 1
 
@@ -92,7 +92,6 @@ private:
   bool doAllFinalStateParticlesHaveACommonMother(MCParticleVector, MCParticleVector, ParticleVector);
   bool isTheDecayFullyReconstructed(MCParticleVector);
   bool areAllFinalStateParticlesCorrectlyIdentified(ParticleVector, MCParticleVector);
-  //  bool isTheMotherCorrectlyIdentified(MCParticleVector, const Particle*);
   bool isTheMotherCorrectlyIdentified(const LHCb::Particle*);
   bool wereAnyResonancesMissed(const LHCb::Particle*);
   bool checkLowMassBackground(const LHCb::Particle*);
@@ -100,17 +99,15 @@ private:
   bool isThisAPileup(MCParticleVector,ParticleVector);
   bool isThisBBarBackground(MCParticleVector);
   bool isThisCCbarBackground(MCParticleVector);
-  int areAnyFinalStateParticlesFromAPrimaryVertex(/*MCParticleVector,*/MCParticleVector);
+  int areAnyFinalStateParticlesFromAPrimaryVertex(MCParticleVector);
 
 private:
   IParticlePropertySvc* m_ppSvc;
   IParticleDescendants* m_particleDescendants;
   IDaVinciAssociatorsWrapper* m_linkerTool_cPP;
   IDaVinciAssociatorsWrapper* m_linkerTool_nPP;
-  IDaVinciAssociatorsWrapper* m_linkerTool_Composite;
   ProtoParticle2MCLinker* m_pCPPAsct; 
   ProtoParticle2MCLinker* m_pNPPAsct;
-  Particle2MCLinker* m_pChi2PPAsct; 
   const LHCb::MCParticle* m_commonMother;
   DaughterAndPartnerVector m_daughtersAndPartners;
   IPrintDecay* m_printDecay ;

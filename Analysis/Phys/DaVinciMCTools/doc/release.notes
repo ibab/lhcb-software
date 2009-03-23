@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.251 2009-03-12 13:48:32 pkoppenb Exp $
+! $Id: release.notes,v 1.252 2009-03-23 00:25:43 gligorov Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2009-03-23 - V. Gligorov
+ - BackgroundCategory:
+   . Added documentation to code
+   . Removed obsolete code
 
 ! 2009-03-12 - Patrick Koppenburg
  - BackgroundCategory:

@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.48 2009-03-12 13:48:32 pkoppenb Exp $
+// $Id: BackgroundCategory.cpp,v 1.49 2009-03-23 00:24:31 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -30,10 +30,7 @@ BackgroundCategory::BackgroundCategory( const std::string& type,
   , m_particleDescendants(0)
   , m_linkerTool_cPP(0)
   , m_linkerTool_nPP(0)
-  , m_linkerTool_Composite(0)
-  //, m_pCPPAsct(0)
-  //, m_pNPPAsct(0)
-  //, m_pChi2PPAsct(0)
+  , m_printDecay(0)
   , m_commonMother(0)
 {
   IBackgroundCategory::m_cat[-1]   = "Undefined";
@@ -60,8 +57,6 @@ BackgroundCategory::BackgroundCategory( const std::string& type,
   declareProperty("SemileptonicDecay", m_semileptonicDecay = 0);
   declareProperty("NumNeutrinos", m_numNeutrinos = 0);
   declareProperty("MCmatchQualityPIDoverrideLevel", m_override = 0.7); 
-  //Override decision only if match quality for PID correct match is no 
-  //no worse than by 1 order of magnitude in weight compared to alternatives.
   declareProperty("ResonanceCut", m_rescut = 10.e-6);
   declareProperty("MCminWeight", m_minWeight = 0.);
 }
@@ -75,47 +70,70 @@ IBackgroundCategory::categories BackgroundCategory::category(const LHCb::Particl
   //all the categories mean, please visit IBackgroundCategory.h 
 {
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << m_linkerTool_cPP << " " << m_linkerTool_nPP << " " << m_linkerTool_Composite << endmsg;
+  //Check if the tool was actually given a particle to categorise
+  if (!reconstructed_mother) {
+    Exception("Given nothing to classify. Bye!").ignore();
+  }
+  //Initialize the value of  the common mother to zero  
+  m_commonMother = 0;
+
+  if (msgLevel(MSG::VERBOSE)) verbose() << "About to get the linkers, they are currently" << endmsg;
+
+  if (msgLevel(MSG::VERBOSE)) verbose() << m_linkerTool_cPP 
+                                        << " " 
+                                        << m_linkerTool_nPP 
+                                        << endmsg;
 
   m_pCPPAsct = (ProtoParticle2MCLinker*) m_linkerTool_cPP->linker(Particle2MCMethod::ChargedPP);
   
   m_pNPPAsct = (ProtoParticle2MCLinker*) m_linkerTool_nPP->linker(Particle2MCMethod::NeutralPP);
-  
-  m_pChi2PPAsct = m_linkerTool_Composite->linker(Particle2MCMethod::Composite);
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << m_linkerTool_cPP << " " << m_linkerTool_nPP << " " << m_linkerTool_Composite << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Got the linkers, they are currently" << endmsg;
 
-  if (m_pCPPAsct == NULL || m_pNPPAsct == NULL || m_pChi2PPAsct == NULL) {
-    err() << "Something failed when making the associators. Bye!" << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << m_linkerTool_cPP 
+                                        << " " 
+                                        << m_linkerTool_nPP 
+                                        << endmsg;
+
+  if (m_pCPPAsct == NULL || m_pNPPAsct == NULL) {
+    Exception("Something failed when making the associators. Bye!").ignore();
   }
 
-  m_commonMother = 0;
-  //First of all, we use Patrick's tool to get all the particles in the decay tree
+  //Some debug information at VERBOSE level
   if (msgLevel(MSG::VERBOSE)) verbose() << "About to start processing the categorisation tree for a " 
-                                        <<  reconstructed_mother->particleID().pid()  << " " 
-                                        << reconstructed_mother->momentum() << endmsg;
+                                        <<  reconstructed_mother->particleID().pid()  
+                                        << " " 
+                                        << reconstructed_mother->momentum() 
+                                        << endmsg;
 
   if (m_printDecay) m_printDecay->printTree ( reconstructed_mother );
-
+  //We use Patrick's tool to get all the particles in the decay tree.
   ParticleVector particles_in_decay = m_particleDescendants->descendants(reconstructed_mother);
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Back from ParticleDescendants" << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Back from ParticleDescendants with the daughters" 
+                                        << endmsg ;
   if (particles_in_decay.empty()) {
-    Warning("No descendants for Particle");
+    Warning("No descendants for Particle!");
     return Undefined; 
   } else {
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Descendents are " << particles_in_decay << endreq;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Descendents are " 
+                                          << particles_in_decay 
+                                          << endreq;
   }
+
   //Now we have to associate each one of them to an MCParticle if possible
   MCParticleVector mc_particles_linked_to_decay = associate_particles_in_decay(particles_in_decay,reconstructed_mother);
+
   //Now to create a vector with the final mothers of all these mc particles.
   MCParticleVector mc_mothers_final = get_mc_mothers(mc_particles_linked_to_decay);
+
   //First we test if the final state particles have a common mother;if it succeeds, 
   //we have signal or 'physics backgrounds', else 'combinatorics'
   //For a list of what the conditions are, see the respective test functions
   if (doAllFinalStateParticlesHaveACommonMother(mc_mothers_final,
                                                 mc_particles_linked_to_decay, 
                                                 particles_in_decay) ) {
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Checked if all have common mother" << endmsg;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Checked if all have common mother" 
+                                          << endmsg;
     // We are in the territory of signal decays and
     // "physics" backgrounds (meaning we have reconstructed some actual decay 
     // that occured, even if not the one we were after).
@@ -211,22 +229,30 @@ IBackgroundCategory::categories BackgroundCategory::category(const LHCb::Particl
 }
 //=============================================================================
 const DaughterAndPartnerVector BackgroundCategory::getDaughtersAndPartners( const LHCb::Particle* reconstructed_mother)
+//Returns the daughters of the particle being associated and their MC associated partners; this is a sort
+//of 'hidden' method. 
 {
   if ( NULL==reconstructed_mother){
     Exception("Got NULL pointer").ignore();
   }
 
   DaughterAndPartnerVector::const_iterator iP;
-
   int backcategory = category(reconstructed_mother);
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Event is category " << backcategory << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Event is category " 
+                                        << backcategory 
+                                        << endmsg;
+
   for (iP = m_daughtersAndPartners.begin(); iP != m_daughtersAndPartners.end(); ++iP){
 
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Reconstructed particle has PID" << ((*iP).first)->particleID().pid() << endmsg;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Reconstructed particle has PID" 
+                                          << ((*iP).first)->particleID().pid() 
+                                          << endmsg;
     if ((0!=(*iP).second) && (msgLevel(MSG::VERBOSE))) verbose() << "Associated particle has PID" 
-                                                                 << ((*iP).second)->particleID().pid() << endmsg;
-    else  if (msgLevel(MSG::VERBOSE)) verbose() << "There is no associated particle" << endmsg;
+                                                                 << ((*iP).second)->particleID().pid() 
+                                                                 << endmsg;
+    else  if (msgLevel(MSG::VERBOSE)) verbose() << "There is no associated particle" 
+                                                << endmsg;
 
   }
 
@@ -234,6 +260,9 @@ const DaughterAndPartnerVector BackgroundCategory::getDaughtersAndPartners( cons
 }
 //=============================================================================
 const LHCb::MCParticle* BackgroundCategory::origin(const LHCb::Particle* reconstructed_mother)
+//Returns the MCParticle associated to your reconstructed candidate if there is one.
+//Note that the candidate may still be background even if this MCParticle has the same
+//PID as your composite particle!
 {
   if ( NULL==reconstructed_mother){
     Exception("Got NULL pointer").ignore();
@@ -242,7 +271,8 @@ const LHCb::MCParticle* BackgroundCategory::origin(const LHCb::Particle* reconst
   int backcategory = category(reconstructed_mother);
 
   if (backcategory < 60) {
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Getting the common mother" << endmsg;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Getting the common mother" 
+                                          << endmsg;
     if (m_commonMother) return m_commonMother;
     else return 0;
   } else return 0;
@@ -278,10 +308,13 @@ MCParticleVector BackgroundCategory::get_mc_mothers(MCParticleVector mc_particle
   MCParticleVector mc_mothers;
   MCParticleVector::iterator iP;
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Starting to find the MC mothers of the associated particles" << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Starting to find the MC mothers of the associated particles" 
+                                        << endmsg;
 
   for (iP = mc_particles_linked_to_decay.begin(); iP != mc_particles_linked_to_decay.end(); ++iP) {
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Finding the final mother of " << *iP << endmsg;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Finding the final mother of " 
+                                          << *iP 
+                                          << endmsg;
     mc_mothers.push_back(get_top_mother_of_MCParticle(*iP));
   }
   
@@ -289,55 +322,85 @@ MCParticleVector BackgroundCategory::get_mc_mothers(MCParticleVector mc_particle
 }
 //=============================================================================
 int BackgroundCategory::topologycheck(const LHCb::MCParticle* topmother)
+//This returns the sum of the PIDs of all the daughters of the common MCParticle mother
+//except photons and neutrinos
 {
 
   int sumofpids = 0;
   bool isitstable = false;
 
   SmartRefVector<LHCb::MCParticle>::const_iterator iP;
-  SmartRefVector<LHCb::MCVertex>::const_iterator iV = topmother->endVertices().begin();
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Printing out decay vertices of a " << topmother->particleID().abspid() << endmsg;
-  if (msgLevel(MSG::VERBOSE)) verbose() << topmother->endVertices() << endmsg;
+  //Check for an MCMother with a null endvertex -- really shouldn't happen
+  //here though, but the Cat is often betrayed by other pieces of code...
+  SmartRefVector<LHCb::MCVertex> motherEndVertices = topmother->endVertices();
+  if (motherEndVertices.size() ==0) 
+    Exception("The Cat found a common MC mother but it has no daughters, please report this as a bug.").ignore();
+  //Assuming all went well...
+  SmartRefVector<LHCb::MCVertex>::const_iterator iV = motherEndVertices.begin();
+
+  //Print out some debug messages
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Printing out decay vertices of a " 
+                                        << topmother->particleID().abspid() 
+                                        << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << topmother->endVertices() 
+                                        << endmsg;
 
   for (iP = (*iV)->products().begin(); iP != (*iV)->products().end(); ++iP) {
 
+    //Need to protect against MCParticles with null endVertices,
+    //which are assumed to be stable
     SmartRefVector<LHCb::MCVertex> VV = (*iP)->endVertices();
     if (VV.size() != 0) isitstable = (*(VV.begin()))->products().empty();
     else isitstable = true;
-    //SmartRefVector<LHCb::MCVertex>::const_iterator iVV = (*iP)->endVertices().begin();
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Printing out decay vertices of a " << (*iP)->particleID().abspid() << endmsg;
-    if (msgLevel(MSG::VERBOSE)) verbose() << (*iP)->endVertices() << endmsg;
     
-    if (  isitstable ||
-          isStable( (*iP)->particleID().abspid() ) ||
-          (*iP)->particleID().abspid() == 111
+    //Print out some debug messages
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Printing out decay vertices of a " 
+                                          << (*iP)->particleID().abspid() 
+                                          << endmsg;
+    if (msgLevel(MSG::VERBOSE)) verbose() << (*iP)->endVertices() 
+                                          << endmsg;
+    
+    //Add stable neutrals including resolved/merged pi0. Remember that this causes
+    //a special problem because all MCParticls pi0 have two photon daughters,
+    //whereas only the resolved pi0 is reconstructed from two photon daughters.
+    if (  isitstable || //if the MCParticle did not have an endVertex
+          isStable( (*iP)->particleID().abspid() ) || //if it is one of the MCParticles we always call stable
+          (*iP)->particleID().abspid() == 111 //or if it is a pi0, need this to deal with resolved/merged pi0
 
-          ) {
+       ) {
 
-      if(((*iP)->particleID().abspid() != 22) &&
-         ((*iP)->particleID().abspid() != 12) &&
-         ((*iP)->particleID().abspid() != 14) &&
-         ((*iP)->particleID().abspid() != 16) 
-         ) sumofpids += (*iP)->particleID().abspid();
+         if(((*iP)->particleID().abspid() != 22) &&
+            ((*iP)->particleID().abspid() != 12) &&
+            ((*iP)->particleID().abspid() != 14) &&
+            ((*iP)->particleID().abspid() != 16) 
+           ) sumofpids += (*iP)->particleID().abspid();
 
-      if (msgLevel(MSG::VERBOSE)) verbose() << "MC sum having added a neutral is now " << sumofpids << endmsg;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "MC sum having added a neutral is now " 
+                                            << sumofpids 
+                                            << endmsg;
 
-    } else {
+    } else { //Add composites and charged particles
 
       sumofpids += (*iP)->particleID().abspid();      
       sumofpids += topologycheck(*iP);
 
-      if (msgLevel(MSG::VERBOSE)) verbose() << "MC sum having added a charged is now " << sumofpids << endmsg;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "MC sum having added a charged or composite is now " 
+                                            << sumofpids 
+                                            << endmsg;
     }
 
   }
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Final MC sum is " << sumofpids << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Final MC sum is " 
+                                        << sumofpids 
+                                        << endmsg;
 
   return sumofpids;
 }
 //=============================================================================
 int BackgroundCategory::topologycheck(const LHCb::Particle* topmother)
+//This returns the sum of the PIDs of all the daughters of the reconstructed particle
+//that was originally passed to The Cat, except photons (we never reconstruct neutrinos anyway)
 {
 
   int sumofpids = 0;
@@ -345,16 +408,24 @@ int BackgroundCategory::topologycheck(const LHCb::Particle* topmother)
   ParticleVector particles_in_decay = m_particleDescendants->descendants(topmother);
   ParticleVector::const_iterator iP = particles_in_decay.begin();
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Mother is a " << topmother->particleID().pid() << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Mother is a " 
+                                        << topmother->particleID().pid() 
+                                        << endmsg;
 
   for (iP = particles_in_decay.begin(); iP != particles_in_decay.end(); ++iP) {
 
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Daughter is a " << (*iP)->particleID().pid() << endmsg;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Daughter is a " 
+                                          << (*iP)->particleID().pid() 
+                                          << endmsg;
 
+    //Here we just need to protect against adding photons (again the resolved/merged pi0 issue)
+    //We never reconstruct neutrions so no need to worry abut them. 
     if ((*iP) != 0) {
 
       if((*iP)->particleID().abspid() != 22) sumofpids += (*iP)->particleID().abspid();
-      if (msgLevel(MSG::VERBOSE)) verbose() << "Sum is now " << sumofpids << endmsg;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Sum is now " 
+                                            << sumofpids 
+                                            << endmsg;
 
     }
 
@@ -371,40 +442,56 @@ MCParticleVector BackgroundCategory::create_finalstatedaughterarray_for_mcmother
   //state particle daughters of the candidate Particle. For obvious reasons, this function is only invoked for
   //background catgegories 0->50.
 {
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Creating an array of final state daughters for the mc mother" 
+                                        << endmsg;
+
   bool isitstable = false;
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Starting to create the array of final state daughters for the mc mother" << endmsg;
-  
   MCParticleVector finalstateproducts;
   MCParticleVector tempfinalstateproducts;
-  SmartRefVector<LHCb::MCParticle>::const_iterator iP;
-  SmartRefVector<LHCb::MCVertex>::const_iterator iV = topmother->endVertices().begin(); 
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Mother " << topmother->particleID().pid() 
-                                        << " has " <<  (*iV)->products().size() << " daughters" << endmsg;
+  SmartRefVector<LHCb::MCParticle>::const_iterator iP;
+  //Check for an MCMother with a null endvertex -- really shouldn't happen
+  //here though, but the Cat is often betrayed by other pieces of code...
+  SmartRefVector<LHCb::MCVertex> motherEndVertices = topmother->endVertices();
+  if (motherEndVertices.size() ==0)
+    Exception("The Cat found a common MC mother but it has no daughters, please report this as a bug.").ignore();
+  //Assuming all went well...
+  SmartRefVector<LHCb::MCVertex>::const_iterator iV = motherEndVertices.begin(); 
+
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Mother " 
+                                        << topmother->particleID().pid() 
+                                        << " has " 
+                                        <<  (*iV)->products().size() 
+                                        << " daughters" 
+                                        << endmsg;
   
   for (iP = (*iV)->products().begin(); iP != (*iV)->products().end(); ++iP) {
 
+    //Need to protect against MCParticles with null endVertices,
+    //which are assumed to be stable
     SmartRefVector<LHCb::MCVertex> VV = (*iP)->endVertices();
     if (VV.size() != 0) isitstable = (*(VV.begin()))->products().empty();
     else isitstable = true;
-    //SmartRefVector<LHCb::MCVertex>::const_iterator iVV = (*iP)->endVertices().begin();
 
     if (msgLevel(MSG::VERBOSE)) verbose() << (*iP)->particleID().abspid() 
-                                          << " stable: " << isStable( (*iP)->particleID().abspid() );
+                                          << " stable: " 
+                                          << isStable( (*iP)->particleID().abspid() );
+
     if (isitstable) if (msgLevel(MSG::VERBOSE)) verbose() << endmsg; 
-    else if (msgLevel(MSG::VERBOSE)) verbose() << " products: " << (*(VV.begin()))->products().size() << endmsg ;
+    else if (msgLevel(MSG::VERBOSE)) verbose() << " products: " 
+                                               << (*(VV.begin()))->products().size() 
+                                               << endmsg ;
 
     if ( isitstable || 
          isStable( (*iP)->particleID().abspid() ) 
          ) {
-      //if (isStable( (*iP)->particleID().abspid() )) {
 
       //If it is a stable, add it to the final state array
       finalstateproducts.push_back(*iP);
 
     } else {
 
-      //Otherwise recurse
+      //Otherwise recurse 
       tempfinalstateproducts = create_finalstatedaughterarray_for_mcmother(*iP);
       finalstateproducts.insert(finalstateproducts.end(),
                                 tempfinalstateproducts.begin(),
@@ -422,7 +509,7 @@ MCParticleVector BackgroundCategory::create_finalstatedaughterarray_for_mcmother
 }
 //=============================================================================
 const LHCb::MCParticle* BackgroundCategory::get_top_mother_of_MCParticle(const LHCb::MCParticle* candidate)
-  //Gets the 'final' non-zero mother of an MCParticle as we go up the decay tree
+//Gets the 'final' non-zero mother of an MCParticle as we go up the decay tree
 {
 
   const LHCb::MCParticle* finalmother;
@@ -431,7 +518,9 @@ const LHCb::MCParticle* BackgroundCategory::get_top_mother_of_MCParticle(const L
   //No associated particle so no mother
   if (!candidate) return 0;
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << "About to find the final mother of a " << candidate << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "About to find the final mother of a " 
+                                        << candidate 
+                                        << endmsg;
 
   do {
  
@@ -451,33 +540,48 @@ const LHCb::MCParticle* BackgroundCategory::get_lowest_common_mother(MCParticleV
   //then take the second mother of the first particle, check... etc.
 {
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Starting search for lowest common mother (single)" << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Starting search for lowest common mother (single)" 
+                                        << endmsg;
 
   bool carryon = false; 
   MCParticleVector::const_iterator iMCP = mc_particles_to_compare.begin();
   const LHCb::MCParticle* tempmother = (*iMCP);
+  const LHCb::MCParticle* tempmother2 = (*iMCP);
+
   if (msgLevel(MSG::VERBOSE)) verbose() << "The tempmother has been set to " 
-                                        << tempmother << " with PID " << tempmother->particleID().pid() << endmsg;
-  const LHCb::MCParticle* tempmother2;
+                                        << tempmother 
+                                        << " with PID " 
+                                        << tempmother->particleID().pid() 
+                                        << endmsg;
 
   do {
 
+    //The code begins by getting the mother of the current MCParticle
+    //begin looked at; we will then check if this can be the lowest common
+    //mother of the whole tree. 
     if (tempmother) tempmother = tempmother->mother();
-    else return 0; //shouldn't happen!
+    else Exception("Something went wrong in the MCParticle tree, please report the bug.").ignore(); //shouldn't happen!
 
-    if (!tempmother) return 0; //shouldn't happen!
+    if (!tempmother) Exception("Something went wrong in the MCParticle tree, please report the bug.").ignore(); //shouldn't happen!
 
     if (msgLevel(MSG::VERBOSE)) verbose() << "The current candidate for a common mother is " 
-                                          << tempmother << " and has PID " << tempmother->particleID().pid() << endmsg;
+                                          << tempmother 
+                                          << " and has PID " 
+                                          << tempmother->particleID().pid() 
+                                          << endmsg;
  
     for (iMCP = mc_particles_to_compare.begin() + 1;
          iMCP != mc_particles_to_compare.end();
          ++iMCP) {
       
       carryon = true;
-      if (!(*iMCP)) return 0; //shouldn't happen!
+      if (!(*iMCP)) 
+        Exception("The Cat is trying to find an MC mother for a ghost, please report the bug.").ignore(); //shouldn't happen!
       if (msgLevel(MSG::VERBOSE)) verbose() << "Looping on MCParticle " 
-                                            << (*iMCP) << " and PID " << (*iMCP)->particleID().pid() << endmsg;
+                                            << (*iMCP) 
+                                            << " and PID " 
+                                            << (*iMCP)->particleID().pid() 
+                                            << endmsg;
 
       tempmother2 = (*iMCP)->mother();
       if (!tempmother2) return 0; //shouldn't happen!
@@ -513,7 +617,8 @@ const LHCb::MCParticle* BackgroundCategory::get_lowest_common_mother(MCParticleV
   //finding the common mother
 {
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Starting search for lowest common mother" << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Starting search for lowest common mother" 
+                                        << endmsg;
 
   MCParticleVector::const_iterator iMCP = mc_particles_linked_to_decay.begin();
   ParticleVector::const_iterator iPP = particles_in_decay.begin();
@@ -525,19 +630,29 @@ const LHCb::MCParticle* BackgroundCategory::get_lowest_common_mother(MCParticleV
   //i.e. only the ones matching to a stable final state particle
   do{
     if(*iPP) {
-      if (msgLevel(MSG::VERBOSE)) verbose() << "Looking at Particle " << 
-                                    (*iPP) << " with PID " << (*iPP)->particleID().abspid() << endmsg;
+
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Looking at Particle " 
+                                            << (*iPP) 
+                                            << " with PID " 
+                                            << (*iPP)->particleID().abspid() 
+                                            << endmsg;
+
       if ( isStable((*iPP)->particleID().abspid()) ||
            (*iPP)->isBasicParticle()
            ) {
         //it is a stable so push back its associated MCP
         if (!(*iMCP)) return 0; //stable associated to nothing, so return 0
         mc_particles_to_compare.push_back(*iMCP);
-        if (msgLevel(MSG::VERBOSE)) verbose() << "Pushed back MCParticle " << 
-                                      (*iMCP) << " with PID " << (*iMCP)->particleID().abspid() << endmsg; 
+
+        if (msgLevel(MSG::VERBOSE)) verbose() << "Pushed back MCParticle " 
+                                              << (*iMCP) 
+                                              << " with PID " 
+                                              << (*iMCP)->particleID().abspid() 
+                                              << endmsg; 
       }
       ++iMCP; ++iPP;
-    } else return 0; //something went wrong 
+    } else Exception("Your reconstructed particle had a null daughter, please report the bug.").ignore(); //something went wrong 
+
   }while(iMCP != mc_particles_linked_to_decay.end() &&
          iPP != particles_in_decay.end()
          );
@@ -557,61 +672,103 @@ bool BackgroundCategory::doAllFinalStateParticlesHaveACommonMother(MCParticleVec
   ParticleVector::const_iterator iPP = particles_in_decay.begin();
   
   bool carryon = true;
-  //bool stop = false;
   bool motherassignedyet = false; 
   const LHCb::MCParticle* tempmother = NULL;
 
   //Begin DEBUG printouts of the finalstate MC daughters and mothers
   if (msgLevel(MSG::VERBOSE)) {
-    verbose() << "####################################################################" << endmsg;
-    verbose() << "Beginning printout of the final state mothers" << endmsg;
-    verbose() << "********************************************************************" << endmsg;
+
+    verbose() << "####################################################################" 
+              << endmsg;
+    verbose() << "Beginning printout of the final state mothers" 
+              << endmsg;
+    verbose() << "********************************************************************" 
+              << endmsg;
+
     for (iP = mc_mothers_final.begin(); iP != mc_mothers_final.end(); ++iP) {
-      verbose() << "Mother = " << (*iP) << endmsg;
+      verbose() << "Mother = " 
+                << (*iP) 
+                << endmsg;
       if (*iP){
-        verbose() << "PID of mother = " << (*iP)->particleID().pid() << endmsg;
+        verbose() << "PID of mother = " 
+                  << (*iP)->particleID().pid() 
+                  << endmsg;
       }
     }
-    verbose() << "********************************************************************" << endmsg;
-    verbose() << "**********************************************" << endmsg;
-    verbose() << "Beginning printout of the reconstructed particles" << endmsg;
+
+    verbose() << "********************************************************************" 
+              << endmsg;
+    verbose() << "**********************************************" 
+              << endmsg;
+    verbose() << "Beginning printout of the reconstructed particles" 
+              << endmsg;
+
     for (iPP = particles_in_decay.begin(); iPP != particles_in_decay.end(); ++iPP) {
-      verbose() << "Reconstructed particle = " << (*iPP) << endmsg;
+      verbose() << "Reconstructed particle = " 
+                << (*iPP) 
+                << endmsg;
       if (*iPP) {
-        verbose() << "PID of reconstructed particle = " << (*iPP)->particleID().pid() << endmsg;
+        verbose() << "PID of reconstructed particle = " 
+                  << (*iPP)->particleID().pid() 
+                  << endmsg;
       }
     }
-    verbose() << "********************************************************************" << endmsg;
-    verbose() << "**********************************************" << endmsg;
-    verbose() << "Beginning printout of the associated particles" << endmsg;
+
+    verbose() << "********************************************************************" 
+              << endmsg;
+    verbose() << "**********************************************" 
+              << endmsg;
+    verbose() << "Beginning printout of the associated particles" 
+              << endmsg;
+
     for (iMCP = mc_particles_linked_to_decay.begin(); iMCP != mc_particles_linked_to_decay.end(); ++iMCP) {
-      verbose() << "Associated particle = " << (*iMCP) << endmsg;
+      verbose() << "Associated particle = " 
+                << (*iMCP) 
+                << endmsg;
       if (*iMCP) {
-        verbose() << "PID of associated particle = " << (*iMCP)->particleID().pid() << endmsg;
+        verbose() << "PID of associated particle = " 
+                  << (*iMCP)->particleID().pid() 
+                  << endmsg;
       }
     }
-    verbose() << "####################################################################" << endmsg;
+    verbose() << "####################################################################" 
+              << endmsg;
   }
-  
   //End DEBUG
 
   //Reset the positions of the counters after the debug
   iP = mc_mothers_final.begin();
   iPP = particles_in_decay.begin();
 
+  //This first loop finds if any common mother exists for the MCParticles associated
+  //to the stable daughters of the Particle whose category you are testing. This could in
+  //principle be integrated with finding the lowest common mother but is done in two stages for
+  //historical reasons. If you ignore the debug messages, the loop essentially consists of
+  //looping over all the (stable) associated MCParticles and checking that their top level
+  //mothers (found earlier and passed as an argument here) match.
   do {
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Condition A looping on " << (*iPP) << " and " << (*iP) << endmsg; 
+
+    //Yet more debug messages...
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Condition A looping on " 
+                                          << (*iPP) 
+                                          << " and " 
+                                          << (*iP) 
+                                          << endmsg; 
  
     if (*iPP) {
 
-      if (msgLevel(MSG::VERBOSE)) verbose() << "PID is " << (*iPP)->particleID().abspid() << endmsg;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "PID is " 
+                                            << (*iPP)->particleID().abspid() 
+                                            << endmsg;
  
       verbose () << "Passed" << endmsg; 
  
       //if ( (*iPP)->isBasicParticle()) { //final state particle
-      if ( isStable((*iPP)->particleID().abspid()) || (*iPP)->isBasicParticle() ) { //final state particle -- the other way
+      if ( isStable((*iPP)->particleID().abspid()) || 
+           (*iPP)->isBasicParticle() ) { //final state particle -- the other way
 
-        verbose () << "Passed" << endmsg;
+        verbose () << "Passed" 
+                   << endmsg;
  
         if ((*iP) == 0 ) {
           carryon = false; //final state particle has no mother - no need to go further
@@ -620,7 +777,8 @@ bool BackgroundCategory::doAllFinalStateParticlesHaveACommonMother(MCParticleVec
             tempmother = *iP ;
             motherassignedyet = true;
           } else {
-            verbose () << "Doing the check" << endmsg;
+            verbose () << "Doing the check" 
+                       << endmsg;
  
             if ( (*iP) == tempmother ) {
               carryon = true;
@@ -654,25 +812,18 @@ bool BackgroundCategory::doAllFinalStateParticlesHaveACommonMother(MCParticleVec
     m_commonMother = get_lowest_common_mother(mc_particles_linked_to_decay,particles_in_decay);
     //m_commonMother = tempmother;
 
-    if (!m_commonMother) {
-
-      info() << "If you are reading this error message, something has gone very wrong" << endmsg;
-      info() << "with the background categorization, and the brave Back Cat has not been able to" << endmsg;
-      info() << "recover the error. Most likely it was betrayed by some other piece of code." << endmsg;
-      info() << "Please report the error to the relevant authorities without delay. Thank you." << endmsg;
-
-      return 0;
-
-    }
+    if (!m_commonMother) 
+      Exception("Something has gone wrong when looking for the lowest common mother, please report the bug.").ignore(); 
 
     if (msgLevel(MSG::VERBOSE)) verbose() << "Found common mother " 
                                           << m_commonMother->particleID().pid() 
                                           << endmsg ;
+
     if ( isStable(m_commonMother->particleID().abspid())){
       if (msgLevel(MSG::VERBOSE)) verbose() << "Common mother is a stable " 
                                             << m_commonMother->particleID().pid() 
                                             << endmsg ;
-      Warning("Common mother is stable").ignore();
+      Warning("Common mother is stable.").ignore();
       m_commonMother = 0 ;
       carryon = false ;
     }
@@ -688,19 +839,20 @@ bool BackgroundCategory::isTheDecayFullyReconstructed(MCParticleVector mc_partic
   //the particles used to make our B came from one decay, and this checks if there 
   //are any particles coming from said decay which we missed out in our reconstruction. 
 {
-  //if (msgLevel(MSG::VERBOSE)) verbose() << "Beginning to check condition B" << endmsg;
   bool carryon;
   bool isitstable = false;
   int neutrinosFound = 0;
   MCParticleVector finalstateproducts = create_finalstatedaughterarray_for_mcmother(m_commonMother);
   MCParticleVector::const_iterator iPP = finalstateproducts.begin();
-  if (finalstateproducts.empty() ) Exception("Condition B 3 : No final states").ignore();
+  if (finalstateproducts.empty() ) Exception("Condition B : No final states, please report the bug.").ignore();
   MCParticleVector::const_iterator iP = mc_particles_linked_to_decay.begin();
 
-  //Because of the special case of the merged pi0, we need to make a dummy array here
+  //Because of the special case of the merged pi0, the only non stable particle made without any
+  //daughters, we need to make a dummy array here.
   //We will copy out mc_particles_linked_to_decay into it, replacing any pi0
-  //particles by their daughters
-  if (msgLevel(MSG::VERBOSE)) verbose() << "About to create a temporary array to deal with the merged pi0 case" << endmsg;
+  //particles by their daughters.
+  if (msgLevel(MSG::VERBOSE)) verbose() << "About to create a temporary array to deal with the merged pi0 case" 
+                                        << endmsg;
   MCParticleVector mc_particles_linked_to_decay_without_pi0;
   MCParticleVector merged_pi0_daughters;
   mc_particles_linked_to_decay_without_pi0.clear();
@@ -710,7 +862,9 @@ bool BackgroundCategory::isTheDecayFullyReconstructed(MCParticleVector mc_partic
       mc_particles_linked_to_decay_without_pi0.push_back(*iP);
       continue;
     }
-    if (msgLevel(MSG::VERBOSE)) verbose() << "PID of associated particle = " << (*iP)->particleID().pid() << endmsg;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "PID of associated particle = " 
+                                          << (*iP)->particleID().pid() 
+                                          << endmsg;
     if ((*iP)->particleID().abspid() == 111){
       //if this is a merged pi0, we push back its daughters instead
       //this is only relevant for checking condition B, which is why
@@ -726,25 +880,43 @@ bool BackgroundCategory::isTheDecayFullyReconstructed(MCParticleVector mc_partic
 
   //Begin DEBUG printouts of the finalstate MC daughters and the associated particles
   if (msgLevel(MSG::VERBOSE)) {
-    verbose() << "####################################################################" << endmsg;
-    verbose() << "Beginning printout of the final state daughters of the common mother" << endmsg;
-    verbose() << "********************************************************************" << endmsg;
+    verbose() << "####################################################################" 
+              << endmsg;
+    verbose() << "Beginning printout of the final state daughters of the common mother" 
+              << endmsg;
+    verbose() << "********************************************************************" 
+              << endmsg;
     for (iPP = finalstateproducts.begin(); iPP != finalstateproducts.end(); ++iPP) {
-      verbose() << "Daughter of common mother = " << (*iPP) << endmsg;
+      verbose() << "Daughter of common mother = " 
+                << (*iPP) 
+                << endmsg;
       if (*iPP){
-        verbose() << "PID of daughter = " << (*iPP)->particleID().pid() << endmsg;
+        verbose() << "PID of daughter = " 
+                  << (*iPP)->particleID().pid() 
+                  << endmsg;
       }
     }
-    verbose() << "********************************************************************" << endmsg;
-    verbose() << "**********************************************" << endmsg;
-    verbose() << "Beginning printout of the associated particles" << endmsg;
-    for (iP = mc_particles_linked_to_decay_without_pi0.begin(); iP != mc_particles_linked_to_decay_without_pi0.end(); ++iP) {
-      verbose() << "Associated particle = " << (*iP) << endmsg;
+    verbose() << "********************************************************************" 
+              << endmsg;
+    verbose() << "**********************************************" 
+              << endmsg;
+    verbose() << "Beginning printout of the associated particles" 
+              << endmsg;
+
+    for (iP = mc_particles_linked_to_decay_without_pi0.begin(); 
+         iP != mc_particles_linked_to_decay_without_pi0.end(); 
+         ++iP) {
+      verbose() << "Associated particle = " 
+                << (*iP) 
+                << endmsg;
       if (*iP) {
-        verbose() << "PID of associated particle = " << (*iP)->particleID().pid() << endmsg;
+        verbose() << "PID of associated particle = " 
+                  << (*iP)->particleID().pid() 
+                  << endmsg;
       }
     }
-    verbose() << "**********************************************" << endmsg;
+    verbose() << "**********************************************" 
+              << endmsg;
   }
   
   //End DEBUG
@@ -771,13 +943,17 @@ bool BackgroundCategory::isTheDecayFullyReconstructed(MCParticleVector mc_partic
                 (*iPP)->particleID().abspid() == 14  || //neutrinos are ignored
                 (*iPP)->particleID().abspid() == 16) neutrinosFound +=1;
 
-        if (msgLevel(MSG::VERBOSE)) verbose() << "Photon is being ignored!!!!!!!!!!!!!!!!!!!!" << endmsg;
+        if (msgLevel(MSG::VERBOSE)) verbose() << "Photon is being ignored!!" 
+                                              << endmsg;
 
         carryon = true;
 
       }  
 
-      if (msgLevel(MSG::VERBOSE)) verbose() << "The MC final state particle has pid : " << (*iPP)->particleID().pid() << endmsg;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "The MC final state particle has pid : " 
+                                            << (*iPP)->particleID().pid() 
+                                            << endmsg;
+
       if (!carryon) { //if the particle is not to be ignored
         for (iP = mc_particles_linked_to_decay_without_pi0.begin(); 
              iP != mc_particles_linked_to_decay_without_pi0.end(); ++iP) {
@@ -786,14 +962,19 @@ bool BackgroundCategory::isTheDecayFullyReconstructed(MCParticleVector mc_partic
                (*iP)->particleID().abspid() == 22 && 
                (*iP)->momentum().e() < m_softPhotonCut ) continue; //soft photons are ignored
 
-          if (msgLevel(MSG::VERBOSE)) verbose() << "The MC-associated particle has pid : " << (*iP)->particleID().pid() << endmsg;
+          if (msgLevel(MSG::VERBOSE)) verbose() << "The MC-associated particle has pid : " 
+                                                << (*iP)->particleID().pid() 
+                                                << endmsg;
           SmartRefVector<LHCb::MCVertex> VV = (*iP)->endVertices();
           if (VV.size() != 0) isitstable = (*(VV.begin()))->products().empty();
           else isitstable = true;
-          //SmartRefVector<LHCb::MCVertex>::const_iterator iVV = (*iP)->endVertices().begin();
           if ( isitstable || isStable( (*iP)->particleID().abspid() )  ) {
-            if (msgLevel(MSG::VERBOSE)) verbose() << "Associated Particle:" << (*iP) << endmsg;
-            if (msgLevel(MSG::VERBOSE)) verbose() << "MC-final state Particle:" << (*iPP) << endmsg;
+            if (msgLevel(MSG::VERBOSE)) verbose() << "Associated Particle:" 
+                                                  << (*iP) 
+                                                  << endmsg;
+            if (msgLevel(MSG::VERBOSE)) verbose() << "MC-final state Particle:" 
+                                                  << (*iPP) 
+                                                  << endmsg;
             carryon = ( *iP == *iPP ); 
             if (carryon) break;
           }
@@ -886,7 +1067,6 @@ bool BackgroundCategory::areAnyFinalStateParticlesGhosts(MCParticleVector mc_par
 
     if ( 
         (*iP) == 0 && 
-        //(*iPP)->isBasicParticle() 
         ( isStable((*iPP)->particleID().abspid()) || (*iPP)->isBasicParticle()  )
         ) { 
       carryon = false;  
@@ -907,13 +1087,11 @@ bool BackgroundCategory::isThisAPileup(MCParticleVector mc_particles_linked_to_d
   bool carryon = true;
   MCParticleVector::const_iterator iP = mc_particles_linked_to_decay.begin();
   ParticleVector::const_iterator iPP = particles_in_decay.begin();
-  //const Collision* tmpcollision = NULL;
   const LHCb::MCVertex* tmpcollision = NULL;
   bool gotacollision = false;
 
   do {
 
-    //if ( (*iPP)->isBasicParticle() ) {
     if ( isStable((*iPP)->particleID().abspid()) || (*iPP)->isBasicParticle() ) {
 
       if (*iP) {
@@ -982,8 +1160,6 @@ int BackgroundCategory::areAnyFinalStateParticlesFromAPrimaryVertex(MCParticleVe
   int howmanyfinalstate = 0; 
   int howmanyfromPV = 0;
   
-  //MCParticleVector::const_iterator iP = mc_mothers_final.begin();
-
   for (MCParticleVector::const_iterator iPP = mc_particles_linked_to_decay.begin(); 
        iPP != mc_particles_linked_to_decay.end(); ++iPP) {
 
@@ -994,6 +1170,8 @@ int BackgroundCategory::areAnyFinalStateParticlesFromAPrimaryVertex(MCParticleVe
         if (*iVV) { 
           if ( (*iVV)->products().empty() || isStable( (*iPP)->particleID().abspid()) ) {
             ++howmanyfinalstate;
+            //Need to check if the origin vertex is the primary or is indistinguishable from
+            //it (for short lived resonances). 
             if ( (*iPP)->originVertex()->isPrimary() || 
                  ( (*iPP)->primaryVertex()->position() - 
                    (*iPP)->originVertex()->position()
@@ -1001,33 +1179,6 @@ int BackgroundCategory::areAnyFinalStateParticlesFromAPrimaryVertex(MCParticleVe
                  ) {
               ++howmanyfromPV;
             }
-            /*if (*iP != *iPP) {
-              bool fromshortlivedmother = true;
-              const LHCb::MCParticle* tempdaughter = *iPP;
-              do {
-  
-              const LHCb::MCParticle* tempmother = tempdaughter->mother();
-              if (tempmother) {
-
-              SmartRefVector<LHCb::MCVertex>::const_iterator iVT = tempmother->endVertices().begin();
-              double motherflighttime = (*iVT)->timeOfFlight();
-
-              if (motherflighttime > m_rescut) {
-
-              fromshortlivedmother = false;
-              }
-
-              }
-
-              tempdaughter = tempmother;
-
-              } while (fromshortlivedmother && tempdaughter);
-              if (fromshortlivedmother) ++howmanyfromPV;
-              ++iP;
-              continue;
-              } else {
-              ++howmanyfromPV;
-              }*/
           }
         }
       } else {
@@ -1040,7 +1191,6 @@ int BackgroundCategory::areAnyFinalStateParticlesFromAPrimaryVertex(MCParticleVe
         }
       }
     }
-    //++iP;
   }
 
   if (howmanyfromPV > 0) {
@@ -1052,194 +1202,172 @@ int BackgroundCategory::areAnyFinalStateParticlesFromAPrimaryVertex(MCParticleVe
 //=============================================================================
 MCParticleVector BackgroundCategory::associate_particles_in_decay(ParticleVector particles_in_decay,
                                                                   const LHCb::Particle* reconstructed_mother)
-  //Associates all the final state particles daughters of the candidate Particle. For composites, 
-  //attempts to use the Chi2 associator, which has to be configured properly for this (utterly
-  //non-essential) feature to work. The reconstructed mother is used to check the neutral association.
+  //Associates all the final state particles daughters of the candidate Particle. 
+  //Ignores composites. The reconstructed mother is used to check the neutral association.
 {
-  //if (msgLevel(MSG::VERBOSE)) verbose() << "Beginning to associate descendants" << endmsg; 
   MCParticleVector associated_mcparts;
   ParticleVector::iterator iP;
   MCParticleVector::iterator iPP;
   DaughterAndPartnerPair temp_pair;
   DaughterAndPartnerVector tempDaughtersAndPartners;
 
-  //if (msgLevel(MSG::VERBOSE)) verbose() << "Associating step 1" << endmsg;
-  int verboses = 0;
   bool associating_a_neutral = false;
   bool found_neutral_mother = false;
 
   for (iP = particles_in_decay.begin() ; iP != particles_in_decay.end() ; ++iP){
-    ++verboses;
-    if (msgLevel(MSG::VERBOSE)) verbose() << "About to check if we are dealing with a basic particle" << endmsg;
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Particle PID is " << (*iP)->particleID().pid() << endmsg;
-    //if ( (*iP)->isBasicParticle() ) {
+
+    if (msgLevel(MSG::VERBOSE)) verbose() << "About to check if we are dealing with a basic particle" 
+                                          << endmsg;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Particle PID is " 
+                                          << (*iP)->particleID().pid() 
+                                          << endmsg;
+
     if ( isStable((*iP)->particleID().abspid()) || (*iP)->isBasicParticle() ) {
-      //if (msgLevel(MSG::VERBOSE)) verbose() << "Associating step 3a - loop step " << verboses << endmsg;
-      if (msgLevel(MSG::VERBOSE)) verbose() << "About to get the relevant protoparticle" << endmsg;
-      const LHCb::ProtoParticle* protoTemp = (*iP)->proto();//dynamic_cast<ProtoParticle*>((*iP)->origin());
-      //if (msgLevel(MSG::VERBOSE)) verbose() << "Associating step 4a - loop step " << verboses << endmsg;
-      if (msgLevel(MSG::VERBOSE)) verbose() << "Protoparticle of " 
-                                            << (*iP)->particleID().pid() << " is at " << protoTemp << endmsg;
+
+      if (msgLevel(MSG::VERBOSE)) verbose() << "About to get the relevant protoparticle" 
+                                            << endmsg;
+
+      const LHCb::ProtoParticle* protoTemp = (*iP)->proto();
       const LHCb::MCParticle* mcTemp;
-      if (protoTemp == NULL) {
+
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Protoparticle of " 
+                                            << (*iP)->particleID().pid() 
+                                            << " is at " 
+                                            << protoTemp 
+                                            << endmsg;
+
+      if (protoTemp == NULL) { //No protoparticle, null association
         associated_mcparts.push_back(NULL);
         continue;
       }
+
+      //Look at the full range of associated particles
+      const LHCb::MCParticle* mc_correctPID = NULL;
+      const LHCb::MCParticle* mc_bestQ = NULL;
+      const LHCb::MCParticle* mc_TempDeux = NULL;
+      double minimumweight = m_minWeight;
+      double mc_weight = 0.;
+      double mc_correctPID_weight = minimumweight;
+      
+      ProtoParticle2MCLinker::ToRange mcPartRange;
+
+      if (msgLevel(MSG::VERBOSE)) verbose() << "About to get the array of matching particles" 
+                                            << endmsg;
+
       if ( (*iP)->particleID().pid() == 22 || (*iP)->particleID().pid() == 111) {
-        mcTemp = m_pNPPAsct->firstMCP(protoTemp);//associatedFrom(protoTemp);
-        //mcTemp = m_pNPPAsct->firstMCP(*iP);
-
-        /*if (msgLevel(MSG::VERBOSE)) verbose() << "Neutral Particle has PID = " << (*iP)->particleID().pid() << endmsg;
-          if (msgLevel(MSG::VERBOSE)) verbose() << "N energy = " << (*iP)->momentum().e() << endmsg;
-          if (msgLevel(MSG::VERBOSE)) verbose() << "N pt = " << (*iP)->momentum().vect().perp() << endmsg;
-          if (msgLevel(MSG::VERBOSE)) verbose() << "N momentum = " << (*iP)->momentum().vect().mag() << endmsg;
-          if (msgLevel(MSG::VERBOSE)) verbose() 
-          << "====================================================================" << endmsg;
-          if (msgLevel(MSG::VERBOSE)) verbose() << "Neutral MCParticle is at " << mcTemp << endmsg;
-          if (msgLevel(MSG::VERBOSE)) verbose() << "Neutral MCParticle has PID = " << mcTemp->particleID().pid() << endmsg;
-          if (msgLevel(MSG::VERBOSE)) verbose() << "MCN energy = " << mcTemp->momentum().e() << endmsg;
-          if (msgLevel(MSG::VERBOSE)) verbose() << "MCN pt = " << mcTemp->momentum().vect().perp() << endmsg;
-          if (msgLevel(MSG::VERBOSE)) verbose() << "MCN momentum = " << mcTemp->momentum().vect().mag() << endmsg; */
+        mcPartRange = m_pNPPAsct->rangeFrom(protoTemp);
+        associating_a_neutral = true;
       } else {
-        mcTemp = m_pCPPAsct->firstMCP(protoTemp);//associatedFrom(protoTemp);
-        //mcTemp = m_pCPPAsct->firstMCP(*iP);
-
-        /*if (msgLevel(MSG::VERBOSE)) verbose() << "First associated MCParticle is at " << mcTemp ; 
-          if ( NULL!=mcTemp) if (msgLevel(MSG::VERBOSE)) verbose() << " (" << mcTemp->particleID().pid() << ")" << endmsg;
-          else if (msgLevel(MSG::VERBOSE)) verbose() << endmsg;
-          if (msgLevel(MSG::VERBOSE)) verbose() << "Its weight is " << m_pCPPAsct->weightMCP() << endmsg;
-
-          //FOR DEBUG ONLY
-          mcTemp = m_pCPPAsct->nextMCP();
-          while (mcTemp != NULL) {
-
-          if (msgLevel(MSG::VERBOSE)) verbose() << "There is ANOTHER matching MC particle!!" << endmsg;
-          if (msgLevel(MSG::VERBOSE)) verbose() << "Next associated MCParticle is at " << mcTemp << endmsg;
-          if (msgLevel(MSG::VERBOSE)) verbose() << "Its weight is " << m_pCPPAsct->weightMCP() << endmsg;
-
-          mcTemp = m_pCPPAsct->nextMCP();
-
-          }
-          //mcTemp = m_pCPPAsct->firstMCP(protoTemp);
-          mcTemp = m_pCPPAsct->firstMCP(*iP);*/
-        //END OF DEBUG
-
+        mcPartRange = m_pCPPAsct->rangeFrom(protoTemp);
+        associating_a_neutral = false;
       }
-      if (!mcTemp) {
-        associated_mcparts.push_back(mcTemp);
+
+      if (mcPartRange.size() == NULL) { //ghost
+        associated_mcparts.push_back(NULL);
         continue;
       }
-      //if (mcTemp->particleID().pid() == (*iP)->particleID().pid()) {
-      if (0==1) { //turned off for verbose
-        //if (msgLevel(MSG::VERBOSE)) verbose() << "Associating step 5a - loop step " << verboses << endmsg;
-        //if (msgLevel(MSG::VERBOSE)) verbose() << "MCParticle is at " << mcTemp << endmsg;
-        if (msgLevel(MSG::VERBOSE)) verbose() << "PIDs match so pushing back the first associated MCParticle "<< endmsg;
-        associated_mcparts.push_back(mcTemp);
-        //if (msgLevel(MSG::VERBOSE)) verbose() << "Associating step 6a - loop step " << verboses << endmsg;
-      } else {
 
-        if (msgLevel(MSG::VERBOSE)) verbose() 
-          << "PIDs don't match so searching through the array of associated MCParticles"<< endmsg;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Got the array of matching particles OK!" 
+                                            << endmsg;
 
-        //associated_mcparts.push_back(mcTemp);
+      ProtoParticle2MCLinker::ToIterator mcPartIt;
 
-        //}
-        //New commands to look for a range of particles
-        const LHCb::MCParticle* mc_correctPID = NULL;
-        const LHCb::MCParticle* mc_bestQ = NULL;
-        const LHCb::MCParticle* mc_TempDeux = NULL;
-        double minimumweight = m_minWeight;
-        double mc_weight = 0.;
-        double mc_correctPID_weight = minimumweight;
-        
-        ProtoParticle2MCLinker::ToRange mcPartRange;
-        //Particle2MCLinker::ToRange mcPartRange;
+      int looper = 1;
 
-        if (msgLevel(MSG::VERBOSE)) verbose() << "About to get the array of matching particles" << endmsg;
-  
-        if ( (*iP)->particleID().pid() == 22 || (*iP)->particleID().pid() == 111) {
-          mcPartRange = m_pNPPAsct->rangeFrom(protoTemp);
-          associating_a_neutral = true;
-          //mcPartRange = m_pNPPAsct->rangeFrom(*iP);
-        } else {
-          mcPartRange = m_pCPPAsct->rangeFrom(protoTemp);
-          associating_a_neutral = false;
-          //mcPartRange = m_pCPPAsct->rangeFrom(*iP);
+      for (mcPartIt = mcPartRange.begin(); mcPartIt!=mcPartRange.end(); ++mcPartIt) {
+
+        if (msgLevel(MSG::VERBOSE)) verbose() << "About to get the " 
+                                              << looper 
+                                              << "th match" 
+                                              << endmsg;
+        mc_TempDeux = (*mcPartIt).to();
+
+        //Lots of debug messages...
+        if (msgLevel(MSG::VERBOSE)) verbose() << "MCParticle is at " 
+                                              << mc_TempDeux 
+                                              << endmsg;
+        if (msgLevel(MSG::VERBOSE)) verbose() << "MCParticle has PID = " 
+                                              << mc_TempDeux->particleID().pid() 
+                                              << endmsg;
+        if (msgLevel(MSG::VERBOSE)) verbose() << "MCParticle energy = " 
+                                              << mc_TempDeux->momentum().E() 
+                                              << endmsg;
+        if (msgLevel(MSG::VERBOSE)) verbose() << "Range pt = " 
+                                              << mc_TempDeux->momentum().Pt() 
+                                              << endmsg;
+        if (msgLevel(MSG::VERBOSE)) verbose() << "Range momentum = " 
+                                              << mc_TempDeux->momentum().P() 
+                                              << endmsg;
+        if (msgLevel(MSG::VERBOSE)) verbose() << "Range weight = " 
+                                              << (*mcPartIt).weight() 
+                                              << endmsg; 
+
+        mc_weight = (*mcPartIt).weight();
+        if ( mc_weight > minimumweight ) {
+          minimumweight = mc_weight;
+          mc_bestQ = mc_TempDeux;
         }
-
-        if (msgLevel(MSG::VERBOSE)) verbose() << "Got the array of matching particles OK!" << endmsg;
-
-        ProtoParticle2MCLinker::ToIterator mcPartIt;
-        //Particle2MCLinker::ToIterator mcPartIt;
-
-        int looper = 1;
-
-        for (mcPartIt = mcPartRange.begin(); mcPartIt!=mcPartRange.end(); ++mcPartIt) {
-          if (msgLevel(MSG::VERBOSE)) verbose() << "About to get the " << looper << "th match" << endmsg;
-          mc_TempDeux = (*mcPartIt).to();
-          if (msgLevel(MSG::VERBOSE)) verbose() << "To Range MCParticle is at " << mc_TempDeux << endmsg;
-          if (msgLevel(MSG::VERBOSE)) verbose() << "To Range MCParticle has PID = " << mc_TempDeux->particleID().pid() << endmsg;
-          if (msgLevel(MSG::VERBOSE)) verbose() << "To Range energy = " << mc_TempDeux->momentum().E() << endmsg;
-          if (msgLevel(MSG::VERBOSE)) verbose() << "Range pt = " << mc_TempDeux->momentum().Pt() << endmsg;
-          if (msgLevel(MSG::VERBOSE)) verbose() << "Range momentum = " << mc_TempDeux->momentum().P() << endmsg;
-          if (msgLevel(MSG::VERBOSE)) verbose() << "Range weight = " << (*mcPartIt).weight() << endmsg; 
-          mc_weight = (*mcPartIt).weight();
-          if ( mc_weight > minimumweight ) {
-            minimumweight = mc_weight;
-            mc_bestQ = mc_TempDeux;
+        if (mc_TempDeux->particleID().pid() == (*iP)->particleID().pid()){
+          if (mc_weight > mc_correctPID_weight) {
+            mc_correctPID_weight = mc_weight;
+            mc_correctPID = mc_TempDeux;
           }
-          if (mc_TempDeux->particleID().pid() == (*iP)->particleID().pid()){
-            if (mc_weight > mc_correctPID_weight) {
-              mc_correctPID_weight = mc_weight;
-              mc_correctPID = mc_TempDeux;
-            }
-          }
-          if (associating_a_neutral && 
-              ( reconstructed_mother->particleID().pid() == 
-                mc_TempDeux->particleID().pid()
-                )
-              ) {
-            found_neutral_mother = true;
-          }
-          looper++;
         }
-        if (mc_correctPID) {
-          if ((mc_correctPID == mc_bestQ)) {
-            if (msgLevel(MSG::VERBOSE)) verbose() << "Pushing back best match" << endmsg;
-            if (msgLevel(MSG::VERBOSE)) verbose() << "Best PID weight = " << minimumweight << endmsg;
-            associated_mcparts.push_back(mc_bestQ);
-          } else {
-            if ((mc_correctPID_weight > m_override) || (associating_a_neutral && found_neutral_mother)) {
-              if (msgLevel(MSG::VERBOSE)) verbose() << "Pushing back best pid match" << endmsg;
-              if (msgLevel(MSG::VERBOSE)) verbose() << "Best PID weight = " << mc_correctPID_weight << endmsg;
-              associated_mcparts.push_back(mc_correctPID);
-            } else {
-              if (msgLevel(MSG::VERBOSE)) verbose() << "OVERRIDE! Pushing back best Q match" << endmsg;
-              if (msgLevel(MSG::VERBOSE)) verbose() << "Best Q match has PID = " << mc_bestQ->particleID().pid() << endmsg;
-              if (msgLevel(MSG::VERBOSE)) verbose() << "Best PID weight = " << mc_correctPID_weight << endmsg;
-              if (msgLevel(MSG::VERBOSE)) verbose() << "Best Q = " << minimumweight << endmsg;
-              associated_mcparts.push_back(mc_bestQ);
-            }
-          }
-        } else {
-          //No match with correct PID, we just match the best quality one there is
-          if (msgLevel(MSG::VERBOSE)) verbose() << "Pushing back best Q match" << endmsg;
-          if (msgLevel(MSG::VERBOSE)) verbose() << "Best Q match has PID = " << mc_bestQ->particleID().pid() << endmsg;
-          if (msgLevel(MSG::VERBOSE)) verbose() << "Best Q = " << minimumweight << endmsg;
-          associated_mcparts.push_back(mc_bestQ);
+        if (associating_a_neutral && 
+            ( reconstructed_mother->particleID().pid() == 
+              mc_TempDeux->particleID().pid()
+              )
+            ) {
+          found_neutral_mother = true;
         }
+        looper++;
       }
-    } else {
-      //if (msgLevel(MSG::VERBOSE)) verbose() << "Associating step 3b - loop step " << verboses << endmsg;
-      const LHCb::Particle* partTemp = *iP;
-      //if (msgLevel(MSG::VERBOSE)) verbose() << "Associating step 4b - loop step " << verboses << endmsg;
-      if (msgLevel(MSG::VERBOSE)) verbose() << "Composite Particle is at " << partTemp << endmsg;
-      const LHCb::MCParticle* mcTemp = m_pChi2PPAsct->firstMCP(partTemp);//associatedFrom(partTemp);
-      //if (msgLevel(MSG::VERBOSE)) verbose() << "Associating step 5b - loop step " << verboses << endmsg;
-      if (msgLevel(MSG::VERBOSE)) verbose() << "Composite MCParticle is at " << mcTemp << endmsg;
-      associated_mcparts.push_back(mcTemp);
-      //associated_mcparts.push_back(0);
-      //if (msgLevel(MSG::VERBOSE)) verbose() << "Associating step 6b - loop step " << verboses << endmsg;
+      if (mc_correctPID) {
+        if ((mc_correctPID == mc_bestQ)) {
+          if (msgLevel(MSG::VERBOSE)) verbose() << "Pushing back best match" 
+                                                << endmsg;
+          if (msgLevel(MSG::VERBOSE)) verbose() << "Best PID weight = " 
+                                                << minimumweight 
+                                                << endmsg;
+          associated_mcparts.push_back(mc_bestQ);
+        } else {
+          if ((mc_correctPID_weight > m_override) || (associating_a_neutral && found_neutral_mother)) {
+            if (msgLevel(MSG::VERBOSE)) verbose() << "Pushing back best pid match" 
+                                                  << endmsg;
+            if (msgLevel(MSG::VERBOSE)) verbose() << "Best PID weight = " 
+                                                  << mc_correctPID_weight 
+                                                  << endmsg;
+            associated_mcparts.push_back(mc_correctPID);
+          } else {
+            if (msgLevel(MSG::VERBOSE)) verbose() << "OVERRIDE! Pushing back best Q match" 
+                                                  << endmsg;
+            if (msgLevel(MSG::VERBOSE)) verbose() << "Best Q match has PID = " 
+                                                  << mc_bestQ->particleID().pid() 
+                                                  << endmsg;
+            if (msgLevel(MSG::VERBOSE)) verbose() << "Best PID weight = " 
+                                                  << mc_correctPID_weight 
+                                                  << endmsg;
+            if (msgLevel(MSG::VERBOSE)) verbose() << "Best Q = " 
+                                                  << minimumweight 
+                                                  << endmsg;
+            associated_mcparts.push_back(mc_bestQ);
+          }
+        }
+      } else if (mc_bestQ) {
+        //No match with correct PID, we just match the best quality one there is
+        if (msgLevel(MSG::VERBOSE)) verbose() << "Pushing back best Q match" 
+                                              << endmsg;
+        if (msgLevel(MSG::VERBOSE)) verbose() << "Best Q match has PID = " 
+                                              << mc_bestQ->particleID().pid() 
+                                              << endmsg;
+        if (msgLevel(MSG::VERBOSE)) verbose() << "Best Q = " 
+                                              << minimumweight 
+                                              << endmsg;
+        associated_mcparts.push_back(mc_bestQ);
+      } else associated_mcparts.push_back(NULL); //ghost
+
+    } else {//Just ignore composites
+      associated_mcparts.push_back(NULL);
     }
   } 
 
@@ -1260,10 +1388,15 @@ MCParticleVector BackgroundCategory::associate_particles_in_decay(ParticleVector
 
   for (iDAP = m_daughtersAndPartners.begin(); iDAP != m_daughtersAndPartners.end(); ++iDAP){
 
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Reconstructed particle has PID " << ((*iDAP).first)->particleID().pid() << endmsg;
-    if ((*iDAP).second != NULL) if (msgLevel(MSG::VERBOSE)) verbose() << "Associated particle has PID " 
-                                                                      << ((*iDAP).second)->particleID().pid() << endmsg;
-    else  if (msgLevel(MSG::VERBOSE)) verbose() << "There is no associated particle" << endmsg;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Reconstructed particle has PID " 
+                                          << ((*iDAP).first)->particleID().pid() 
+                                          << endmsg;
+    if ((*iDAP).second != NULL) 
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Associated particle has PID " 
+                                            << ((*iDAP).second)->particleID().pid() 
+                                            << endmsg;
+    else  if (msgLevel(MSG::VERBOSE)) verbose() << "There is no associated particle" 
+                                                << endmsg;
 
   }
 
@@ -1279,8 +1412,10 @@ StatusCode BackgroundCategory::finalize(){
 }
 //=============================================================================
 StatusCode BackgroundCategory::initialize(){
+//Initiialize and get the required tools
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Starting to initialise Background Categorisation" << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Starting to initialise Background Categorisation" 
+                                        << endmsg;
 
   StatusCode sc = GaudiTool::initialize();
   if (!sc) return sc;
@@ -1292,11 +1427,11 @@ StatusCode BackgroundCategory::initialize(){
   m_particleDescendants = tool<IParticleDescendants>("ParticleDescendants",this);
   m_linkerTool_cPP = tool<IDaVinciAssociatorsWrapper>("DaVinciAssociatorsWrapper","Wrapper_CAT_cPP",this);
   m_linkerTool_nPP = tool<IDaVinciAssociatorsWrapper>("DaVinciAssociatorsWrapper","Wrapper_CAT_nPP",this);
-  m_linkerTool_Composite = tool<IDaVinciAssociatorsWrapper>("DaVinciAssociatorsWrapper","Wrapper_CAT_Composite",this);
 
   if (msgLevel(MSG::VERBOSE)) m_printDecay = tool<IPrintDecay>("PrintDecayTreeTool",this);
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Done initializing" << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Done initializing" 
+                                        << endmsg ;
  
   return StatusCode::SUCCESS;
 }
