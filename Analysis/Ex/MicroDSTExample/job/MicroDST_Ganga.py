@@ -1,4 +1,4 @@
-#$Id: MicroDST_Ganga.py,v 1.1 2008-12-02 17:19:02 jpalac Exp $
+#$Id: MicroDST_Ganga.py,v 1.2 2009-03-23 17:18:47 jpalac Exp $
 #==============================================================================
 # Example ganga job submission file
 #==============================================================================
@@ -12,12 +12,12 @@
 # To submit you start ganga with the command "ganga" and then
 # at the ganga prompt type
 #
-# [In] 1 : ganga DaVinci_Ganga.py
+# [In] 1 : ganga MicroDST_Ganga.py
 #
 # As an alternative you can also submit the job directly from 
 # the Unix prompt with the line
 # 
-# [user@lxplus]~% ganga DaVinci_Ganga.py
+# [user@lxplus]~% ganga MicroDST_Ganga.py
 # 
 # but in this way you will have the overhead of starting Ganga 
 # for each job you submit.
@@ -42,7 +42,7 @@
 #------------------------------------------------------------------------------
 # Make a new DaVinci application
 #------------------------------------------------------------------------------
-dv = DaVinci( version = 'v21r0' )
+dv = DaVinci( version = 'v22r1' )
 #dv.getpack('MicroDST/MicroDSTConf v1r0p1')
 #dv.make()
 #------------------------------------------------------------------------------
@@ -51,10 +51,7 @@ dv = DaVinci( version = 'v21r0' )
 # Define the configuration file(s) to use
 # Extra options
 # Appended to the end of the main options to override default settings
-dv.extraopts = '''
-from Gaudi.Configuration import *
-importOptions( "$MICRODSTEXAMPLEROOT/options/TestMicroDSTMake.py")
-'''
+dv.optsfile = "$MICRODSTEXAMPLEROOT/options/TestMicroDSTMake.py"
 #------------------------------------------------------------------------------
 # Create a job
 #------------------------------------------------------------------------------
