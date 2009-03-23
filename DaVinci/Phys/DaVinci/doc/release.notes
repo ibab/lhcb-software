@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.321 2009-03-11 17:56:30 pkoppenb Exp $
+! $Id: release.notes,v 1.322 2009-03-23 16:30:32 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -9,6 +9,7 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== DaVinci v22r2 2009-03-23 ===================
 ! 2009-03-11 - Patrick Koppenburg
  - ReadETC.py : no need to include GaudiPoolDB.
 
