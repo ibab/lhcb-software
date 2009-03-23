@@ -4,7 +4,10 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 !
-! foreach a (`ls -1 options/DVTestHlt2* | grep -v Hlt2Bs | awk -FTestHlt2 '{print $2}' | awk -F. '{print $1}'`)
+! foreach a (`ls -1 options/DVTestHlt2* | grep -v Hlt2Bs | grep -v Hlt2Bd | awk -FTestHlt2 '{print $2}' | awk -F. '{print $1}'`)
+!   gaudirun.py options/DVTestHlt2${a}.py >! test-$a &
+! end
+! foreach a (`ls -1 options/DVTestHlt2* | grep Hlt2Bd | awk -FTestHlt2 '{print $2}' | awk -F. '{print $1}'`)
 !   gaudirun.py options/DVTestHlt2${a}.py >! test-$a &
 ! end
 ! foreach a (`ls -1 options/DVTestHlt2* | grep Hlt2Bs | awk -FTestHlt2 '{print $2}' | awk -F. '{print $1}'`)
@@ -12,10 +15,13 @@
 ! end
 !-----------------------------------------------------------------------------
 
-!========================== HltSelChecker v8r0 2009-03-20 ===================
+!========================== HltSelChecker v8r0 2009-03-23 ===================
+! 2009-03-23 - Patrick Koppenburg
+ - A few bug fixes in options
+
 ! 2009-03-20 - Patrick Koppenburg
  - Use benchmark channels from http://lhcb-trig.web.cern.ch/lhcb-trig/HLT/benchmark.pdf
- - This maks all results backward-incompatible
+ - This makes all results backward-incompatible
  - Increment to v8r0
 
 ! 2009-03-20 - Patrick Koppenburg

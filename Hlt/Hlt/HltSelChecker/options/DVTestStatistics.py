@@ -27,7 +27,7 @@ statseq = GaudiSequencer("StatisticsSeq")
 #statseq.Members += [ L0Filter(), Hlt2Statistics() ]
 
 # event tuple
-#importOptions( "$HLTSELCHECKERROOT/options/Hlt2EventTuple.py" )
+importOptions( "$HLTSELCHECKERROOT/options/Hlt2EventTuple.py" )
 ###
  # Tuple
 ###
