@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#! /afs/cern.ch/sw/lcg/external/Python/2.5/slc4_amd64_gcc34/bin/python
+## """ !/usr/bin/python """
 # =============================================================================
 """ @namespace hltalleymonitor
 @brief script that monitor an alley
@@ -27,7 +28,7 @@ A ROOT file with a set of histograms for the monitoring tasks
 @revision DaVinci v21r0
 """
 # =============================================================================
-
+import os
 import GaudiPython
 
 from math import *
@@ -51,44 +52,14 @@ from hltmonitortools import FiltersTOS
 
 # configure channel and alleys to monitor
 #----------------------------------
-DEBUG = arguments.argument("dbg"," debug ",True)
-NEVENTS = arguments.argument("n"," number of events ",100)
-#CHANNEL = arguments.argument("c"," channel name ","mblumi2")
-#CHANNEL = arguments.argument("c"," channel name ","mbL0lumi2")
-#CHANNEL = arguments.argument("c"," channel name ","mb2008lumi2")
-#CHANNEL = arguments.argument("c"," channel name ","Bs2PhiPhi")
-CHANNEL = arguments.argument("c"," channel name ","Bs2Jpsi2MuMuPhi")
-#CHANNEL = arguments.argument("c"," channel name ","Bd2Jpsi2MuMuKs")
-#CHANNEL = arguments.argument("c"," channel name ","Bs2MuMu")
-#CHANNEL = arguments.argument("c"," channel name ","Bs2MuMu2008")
-#CHANNEL = arguments.argument("c"," channel name ","LumiNoPV")
-#CHANNEL = arguments.argument("c"," channel name ","LumiAll")
-#CHANNEL = arguments.argument("c"," channel name ","Neutralino")
-#ALLEYS = arguments.argument_list("a"," alleys list to monitor ", [
-                                 #"MuonNoIPL0",
-                                 #"MuonNoIPGEC",
-                                 #"MuonIPCL0",
-                                 #"MuonIPCGEC",
-                                 #"DiMuonNoIPL0Di",
-                                 #"DiMuonNoIP2L0",
-                                 #"DiMuonNoIPL0GEC",
-                                 #"DiMuonNoIPL0Seg",
-                                 #"DiMuonNoIPGECSeg",
-                                 #"DiMuonIPCL0Di",
-                                 #"DiMuonIPC2L0",
-                                 #"DiMuonIPCL0GEC",
-                                 #"DiMuonIPCL0Seg",
-                                 #"DiMuonIPCGECSeg"#,
-                                 #"DiMuonNoPVL0Di",
-                                 #"DiMuonNoPV2L0",
-                                 #"DiMuonNoPVL0Seg"
-                                 #] )
-ALLEYS = arguments.argument_list("a"," alleys list to monitor ", [
-                                 "SingleHadron",
-                                 "DiHadron"
-                                 ] )
-#CANDOTOS = ((CHANNEL.find("mb") or CHANNEL.find("Lumi"))<0)
-CANDOTOS = True 
+DEBUG = arguments.argument("dbg"," debug ",False)
+NEVENTS = arguments.argument("n"," number of events ",1000)
+CHANNEL = arguments.argument("c"," channel name ","Bs2PhiPhi")
+HOMEDIR = str(arguments.argument("path"," path for output root files ",""))
+PROD = str(arguments.argument("prod"," production name ",""))
+ALLEYS = arguments.argument_list("a"," alleys list to monitor ", ["SingleHadron","DiHadron"])
+CANDOTOS = ((CHANNEL.find("mb") or CHANNEL.find("Lumi"))<0)
+#CANDOTOS = True 
 
 # define the moniroting tasks
 #----------------------------------
@@ -108,7 +79,6 @@ if (FILTERS): ALGTYPES.append([Filters,"Filters"])
 FILTERSTOS = arguments.argument("mfilterstos"," monitor filters ", True)
 if ((FILTERSTOS) and CANDOTOS):
     ALGTYPES.append([FiltersTOS,"FiltersTOS"])
-
 
 # import the HLT that you want to monitor!
 from Configurables import DaVinci
@@ -157,6 +127,14 @@ topalg.remove('GaudiSequencer/L0DUBankSwap')
 topalg.insert(1,'GaudiSequencer/L0DUBankSwap') 
 gaudi.TopAlg = topalg
 
+# CUANTION1  -----------
+# trick for DaVinci v22r0p2
+topalg = gaudi.TopAlg
+topalg.remove('GaudiSequencer/L0DUBankSwap')
+topalg.insert(1,'GaudiSequencer/L0DUBankSwap')
+gaudi.TopAlg = topalg
+#------------------------
+
 # create the moniroting tasks
 for alley in ALLEYS:
     print 'Line - (1) ', alley
@@ -190,3 +168,11 @@ for alg in desktop.ALGOS:
 # run the application
 gaudi.run(NEVENTS)
 
+# end gaudi
+gaudi.exit()
+
+# copying the root files to the path directory
+if (HOMEDIR!=""):
+    PWD = os.environ['PWD']
+    print 'mv '+PWD+"/*.root "+HOMEDIR+'/.'
+    os.system('mv '+PWD+"/*.root "+HOMEDIR+'/.')

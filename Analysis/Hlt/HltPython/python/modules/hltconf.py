@@ -18,14 +18,16 @@ HLTPROPERTIES = ["InputSelection","OutputSelection",
                  "FilterDescriptor","RecoName","MatchName","Quality",
                  "HistoDescriptor"]
 
-VARIABLE_RANGE = {"IP":[-0.1,1.9],
+VARIABLE_RANGE = {"IP":[0.,0.5],
                   "PT":[0.,6000.],
-                  "Chi2":[0.,5.],
+                  "Calo":[0.,10.],
                   "DOCA":[0.,1.],
                   "Fraction":[0.,2.],
                   "Dz":[0.,5.],
                   "Pointing":[0.,1.],
-                  "Match":[0.,2.]
+                  "Match":[0.,2.],
+                  "OverNdf":[0.,40.],
+                  "L0ET":[1500.,5100.]
                   }
 
 VARIABLE_DEFAULT = 1e16
@@ -43,7 +45,18 @@ EXCLUDE_FILTERS = ["IsBackward","Calo2DChi2","RZVeloTMatch","IsMuon",
                    "PT0","DoShareM3"]
 EXCLUDE_BINDERS = ["Prep"]
 
-def infoID(annsvc,filtername):
+DATA = {"Index":20000}
+
+def functionName(filtername):
+    """ returns the function name associated to a filter name
+    i.e filtername = 'PT,>,2000', returns 'PT'
+    @param filtername name of the filter i.e 'PT,>,2000'
+    """
+    cromos = filtername.split(",")
+    name = cromos[0]
+    return name
+
+def infoID(annsvc,filtername,mayor="InfoID"):
     """ returns the integer ID associated to an name (string) of the values stored
     in the extra info of the HLT candidates """
     vals = annsvc.items("InfoID")
@@ -90,6 +103,104 @@ def _opt(name,type,value,com=" = "):
                 s = s + svalue(v)+","
             s = s + svalue(value[-1])+'}'+send
     return s
+
+def stepname(a):
+    HAS = ["FilterDescriptor","RecoName","MatchName"]
+    name = None
+    xname = a.property('FilterDescriptor')
+    if (xname and len(xname)>0):
+        name = str(xname[0])
+        cromos = name.split(",")
+        funs = cromos[0].split("_")
+        fun = funs[0]
+        com = cromos[1].replace("||","")
+        val = cromos[2]
+        name = fun+com+val
+    xname = a.property('RecoName')
+    if (xname): name = xname
+    xname = a.property('MatchName')
+    if (xname): name = xname
+    #print " stepname ",a," ==> ",name
+    return name
+
+def alleySteps(alley):
+    malley = []
+    for a in alley:
+        sname = stepname(a)
+        if (sname and sname != 'None' and (sname.find("IsBackward")<0)):
+            malley.append(a)
+    return malley
+
+
+def stepsSelections(gaudi,alleyname):
+    """ return the list with the selections of an alley (in order of execution)
+    @param gaudi: gaudi application
+    @param alleyname: name of the alley, i.e 'SingleHadron'
+    """
+    alley = confAlley(gaudi,alleyname)
+    steps = alleySteps(alley)
+    osels = []
+    for istep in steps:
+        sel =  istep.property("OutputSelection")
+        if (sel): osels.append(sel)
+    return osels
+
+def selname(algo):
+    """ return the output selection of this algorithm
+    """
+    if (not algo.props.has_key('OutputSelection')): return None
+    return algo.props['OutputSelection']
+
+def writeAlley(gaudi,alleyname,fname="alley.txt"):
+    """ writes a file with a list with (algoname,stepname,selectioname)
+    """
+    alley = confAlley(gaudi,alleyname)
+    f = open(fname,"a")
+    names = map(lambda x: x.name,alley)
+    nsteps = map(stepname,alley)
+    nsels = map(selname,alley)
+    f.write(alleyname+"Alley = [\n")
+    for i in range(len(names)):
+        s = "('"+str(names[i])+"','"+str(nsteps[i])+"','"+str(nsels[i])+"')"
+        if (i<len(names)-1): s = s+",\n"
+        else: s= s+"\n]\n"
+        f.write(s)
+    f.close()        
+
+def annSvcDB(asvc):
+    """ returns in a dictionary the contents of the ANNSvc
+    it holds the Hlt1SelectionID name <-> int and the InfoID name <-> int
+    """
+    DB = {}
+    majors = asvc.majors()
+    for major in majors:
+        dmajor = {}
+        vals = asvc.items(major)
+        for val in vals:
+            dmajor[val.first] = val.second
+        DB[major] = dmajor
+    return DB
+
+def extendANNSvc(gaudi,alleyname,fname="ANNSvcExtended.py",index=0):
+    """ Extend the configuration python file for the ANNSvc with the names
+    if the selections of a given alley
+    @param gaudi: guadi application
+    @param alleyname: i.e 'SingleHadron'
+    @param fname, filename with the configurations default 'ANNSvcExtended.py'
+    @param index, incremental index of the selections (automatic default:2000)
+    """
+    if (index == 0): index = DATA['Index']
+    f = open(fname,"a")
+    osels = stepsSelections(gaudi,alleyname)
+    f.write("from Configurables import HltANNSvc \n")
+    f.write("HltANNSvc().Hlt1SelectionID.update( {\n")
+    for osel in osels[:-1]:
+        f.write('"'+osel+'" : '+str(index)+',\n')
+        index = index +1
+    f.write('"'+osels[-1]+'" : '+str(index)+"})\n")
+    f.close()
+    index = index +1
+    DATA['Index'] = index
 
 class HltAlgoConf():
     """ A class to hold the important properties of an HltAlgorithm
@@ -206,29 +317,32 @@ class hltfilter():
     """ class that holds the information of an hlt filter, i.e 'PT,>,5000.'
     passing some candidates return the quantities associated to the filter
     """ 
-    def __init__(self,name,ID,x0=0.,xf=100.):
+    def __init__(self,name,id,x0=0.,xf=100.):
         cromos = name.split(",")
         self.name = cromos[0]
         self.comparator = cromos[1]
         self.value = cromos[2]
-        self.id = ID
+        self.id = id
         if (DEBUG): print " filter ID ",name,self.id
         if (len(cromos)>3): self.value2 = cromos[3]
         self.xrange = hisrange(name)
 
-    def vals(self,candis,xhisto=None):
+    def vals(self,candis,xhisto=None):        
         vals0 = map(lambda x: x.info(self.id,VARIABLE_DEFAULT),candis)
         vals = filter(lambda x : x!=VARIABLE_DEFAULT, vals0)
+        if (self.comparator.find("||")>=0):
+            vals = map(abs,vals)
+            if (DEBUG): print self.name,vals
         if (xhisto):
             for v in vals: xhisto.Fill(v,1.)
         return vals
 
     def best(self,candis,xhisto=None):
-        vals = map(lambda x: x.info(self.id,VARIABLE_DEFAULT),candis)
-        if (len(vals)<=0): return 0.
-        vals.sort()
-        best = vals[0]
-        if (self.comparator.find(">")>=0): best=vals[-1]
+        tvals = self.vals(candis)
+        if (len(tvals)<=0): return 0.
+        tvals.sort()
+        best = tvals[0]
+        if (self.comparator.find(">")>=0): best=tvals[-1]
         if (DEBUG): print best
         if (xhisto): xhisto.Fill(best,1.)
         return best

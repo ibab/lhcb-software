@@ -24,37 +24,11 @@ from math import *
 from ROOT import *
 import desktop
 import hltconf
+from hltconf import stepname,alleySteps
 import histotools
 
 DEBUG = False
 
-#----------------------------------------------------
-def stepname(a):
-    HAS = ["FilterDescriptor","RecoName","MatchName"]
-    name = None
-    xname = a.property('FilterDescriptor')
-    if (xname and len(xname)>0):
-        name = str(xname[0])
-        cromos = name.split(",")
-        funs = cromos[0].split("_")
-        fun = funs[0]
-        com = cromos[1].replace("||","")
-        val = cromos[2]
-        name = fun+com+val
-    xname = a.property('RecoName')
-    if (xname): name = xname
-    xname = a.property('MatchName')
-    if (xname): name = xname
-    #print " stepname ",a," ==> ",name
-    return name
-
-def alleySteps(alley):
-    malley = []
-    for a in alley:
-        sname = stepname(a)
-        if (sname and sname != 'None' and (sname.find("IsBackward")<0)):
-            malley.append(a)
-    return malley
 
 #----------------------------------------------------
 class Rate(GaudiPython.PyAlgorithm):
@@ -86,7 +60,8 @@ class Rate(GaudiPython.PyAlgorithm):
         return True
 
     def finalize(self):
-        desktop.hisnorma(self.alleyname+":Rate",1./float(self.nevents))
+        if (self.nevents>0):
+            desktop.hisnorma(self.alleyname+":Rate",1./float(self.nevents))
         return True
 
 #----------------------------------------------------
@@ -152,9 +127,10 @@ class RateTOS(GaudiPython.PyAlgorithm):
         return True
 
     def finalize(self):
-        desktop.hisnorma(self.alleyname+":RateTOS",1./float(self.nevents))
-        desktop.hisnorma(self.alleyname+":RateTIS",1./float(self.nevents))
-        desktop.hisnorma(self.alleyname+":RateTISTOS",1./float(self.nevents))
+        if (self.nevents>0):
+            desktop.hisnorma(self.alleyname+":RateTOS",1./float(self.nevents))
+            desktop.hisnorma(self.alleyname+":RateTIS",1./float(self.nevents))
+            desktop.hisnorma(self.alleyname+":RateTISTOS",1./float(self.nevents))
         return True
     
 #----------------------------------------------------

@@ -75,7 +75,7 @@ FILLSTYLE = 	{ 					#http://root.cern.ch/root/htmldoc/TAttFill.html
 				'g':3007
 				}
 
-MARKER = 		{					#http://root.cern.ch/root/htmldoc/TAttMarker.html
+MARKER = 		{					#http://root.cern.ch/root/htmldoc/TAttMarkerhtml
 				'.':1,
 				'+':2,
 				'*':3,
@@ -161,6 +161,23 @@ gStyle.SetMarkerStyle(MARKER['smallcircle'])
 gStyle.SetLegendBorderSize(1)
 
 # methods
+def mstyle(obj,mcolor,mwidth=1,mstyle=2):
+	"""
+	Set maker style	
+	Tree style is inherited by histograms produced with geth(), fillh() and PlotVar methods
+	
+	@param obj TH*, TTree, TGraph
+	@param mcolor maker color - may be passed as int or str (to be converted using the respective dictionary)
+	@param mwidth line width
+	@param mstyle maker style - may be passed as int or str (to be converted using the respective dictionary)
+	"""
+	
+	obj.SetMarkerSize(mwidth)
+	if isinstance(mcolor, int): 	obj.SetMakerColor(mcolor)
+	elif isinstance(mcolor, str): 	obj.SetMarkerColor(COLOR[mcolor])	
+	if isinstance(mstyle, int):		obj.SetMarkerStyle(mstyle)
+	elif isinstance(mstyle, str):	obj.SetMarkerStyle(MARKER[mstyle])
+
 def lstyle(obj, lcolor, lwidth=1, lstyle=LINESTYLE['solid']):
 	"""
 	Set line style	
@@ -509,7 +526,7 @@ def effint(h, op, norm=0):
 	return heff
 
 #---------------------------------------------------
-def hs2g(h1, h2):
+def hs2g(h1, h2, h2Style = False):
 	"""
 	Takes two histograms defined in the same range and with same binning to produce a graph
 	Each bin is translated in a point (x,y), where x = h1.GetBinContent(bin) and
@@ -549,8 +566,10 @@ def hs2g(h1, h2):
 	g.GetYaxis().SetTitle( h2.GetYaxis().GetTitle() )
 	
 	# g inherits h1 style
-	lstyle(g, h1.GetLineColor(), h1.GetLineWidth(), h1.GetLineStyle())
-	fstyle(g, h1.GetFillColor(), h1.GetFillStyle())	
+	href  = h1
+	if (h2Style): href = h2
+	lstyle(g, href.GetLineColor(), href.GetLineWidth(), href.GetLineStyle())
+	fstyle(g, href.GetFillColor(), href.GetFillStyle())	
 	
 	return g
 
@@ -614,24 +633,32 @@ def getleg( trees, drawopt='l', fillcolor=COLOR['white']):
 	return l
 
 #---------------------------------------------------
-def getleg( objs, legends, drawopt='l', fillcolor=COLOR['white']):
+def getleg( objs, legends, drawopt='l', fillcolor=COLOR['white'], x0=0.65, y0=0.45):
 	"""
 	Produces a legend given a list of objects.	
 	Possible drawopt: 'l' - line, 'p' - marker, 'f' - filled box, 'ep' - marker with vertical error bar
+	(x0,y0) location of the legend in the plot in fraction i.e (0.5, 0.5)
 	"""
-	l = TLegend(.65,.45,.98,.68)
+	# l = TLegend(.65,.45,.98,.68)
+	xf = min(0.98,x0+0.3)
+	yf = min(0.98,y0+0.2)
+	l = TLegend(x0,y0,xf,yf)
 	l.SetFillColor(fillcolor)		
 	for i in range(len(objs)):
 		l.AddEntry(objs[i], legends[i], drawopt)
 	return l
 
 #---------------------------------------------------
-def setleg( objs, legends, drawopt='l', fillcolor=COLOR['white']):
+def setleg( objs, legends, drawopt='l', fillcolor=COLOR['white'], x0=0.54, y0=0.45):
 	"""
 	set as legent the list of names in legends for a list of objets
 	Possible drawopt: 'l' - line, 'p' - marker, 'f' - filled box, 'ep' - marker with vertical error bar
+	(x0,y0) location of the legend in the plot in fraction i.e (0.5, 0.5)
 	"""
-	l = TLegend(.65,.45,.98,.68)
+	#l = TLegend(.65,.45,.98,.68)
+	xf = min(0.98,x0+0.3)
+	yf = min(0.98,y0+0.2)
+	l = TLegend(x0,y0,xf,yf)
 	l.SetFillColor(fillcolor)		
 	for i in range(len(objs)):
 		l.AddEntry(objs[i], legends[i], drawopt)
@@ -783,6 +810,7 @@ def plot(objs, extraopts=''):
 				
 				# if 'leg' opt, find and draw legend
 				if drawleg:
+					print ' drawing legent'
 					try:
 						leg = LEGENDICT[obj[0]]
 						leg.Draw()

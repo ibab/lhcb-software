@@ -3,6 +3,10 @@
 ! Responsible : Jose A. Hernando 
 ! Purpose     : Exposing Hlt tools to Python, share common python tools
 !-----------------------------------------------------------------------------
+
+! 2009-03-23- Jose A. Hernando
+    - PlotTools, hltconf, hltmonitortools adaptations
+
 ! 2009-02-25- Sandra Amato
    - hltalleymonitor.py and hltmonitortools.py : Remove HltSummaryTool, substitute by TisTosTool
   
