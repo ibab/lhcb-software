@@ -3,10 +3,10 @@
 ! Responsible : Jose Angel Hernando Morata
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+
+!========================== HltBase v6r2 2009-03-23 ===================
 ! 2009-02-25 - Gerhard Raven
  - remove HltSummaryHelper.h and IHltDecisionPredicateFactory.h
-
-
 !========================== HltBase v6r1 2009-02-23 ===================
 ! 2009-02-20 - Gerhard Raven
  - do not allow ':' in configuration comments (confuses online panels)
