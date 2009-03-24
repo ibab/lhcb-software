@@ -1,60 +1,20 @@
 """
 High level configuration example for a typical physics MicroDST
 """
-__version__ = "$Id: Configuration.py,v 1.5 2009-03-24 11:03:06 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.6 2009-03-24 17:12:26 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
-from Configurables import GaudiSequencer
-from Configurables import OutputStream
-from Configurables import ( LHCbConfigurableUser, LHCbApp, PhysConf, DaVinci )
-from Configurables import MCParticleCloner
-from Configurables import MCVertexCloner
-from Configurables import VertexCloner
-from Configurables import ProtoParticleCloner
-from Configurables import PrintHeader
-from Configurables import BTagging, BTaggingTool
-from Configurables import PhysDesktop
-from Configurables import PVReFitterAlg
-from Configurables import CopyRecHeader
-from Configurables import CopyMCParticles
-from Configurables import CopyParticles
-from Configurables import CopyPrimaryVertices
-from Configurables import CopyParticle2PVLink
-from Configurables import CopyRelatedMCParticles
-from Configurables import CopyFlavourTag
-import GaudiKernel.ProcessJobOptions
-    
+
+from Configurables import LHCbConfigurableUser
+
 class PhysMicroDST(LHCbConfigurableUser) :
 
-    Sequence = None
-
     __slots__ = {
-        # Application Configuration : sent to LHCbApp and Gaudi
-        "EvtMax"                 :  -1           # Number of events to analyse
-        , "SkipEvents"           :   0           # Number of events to skip at beginning for file
-        , "PrintFreq"            : 100           # The frequency at which to print event numbers
-        , "DataType"             : 'DC06'        # Data type, can be ['DC06','2008'] Forwarded to PhysConf
-        , "Simulation"           : True          # set to True to use SimCond. Forwarded to PhysConf
-        # Input
-        , "Input"                : []            # Input data. Can also be passed as a second option file.
-        # Output
-        , "HistogramFile"        : ""            # Write name of output Histogram file
-        , "TupleFile"            : ""            # Write name of output Tuple file
-        , "ETCFile"              : ""            # Name of ETC file
-        , "MicroDSTFile"         : "MicroDST.dst"
-         # DaVinci Options
-        , "UserAlgorithms"       : []            # User algorithms to run.
-        , "MicroDSTSelectionAlg" : ""            # Name of selection algorithm that defines data for MicroDST
-        , "RedoMCLinks"        : False         # On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association.
-        # Trigger running
-        , "L0"                 : False         # Run L0. 
-        , "ReplaceL0BanksWithEmulated" : False # Re-run L0 
-        , "HltType"            : ''            # HltType : No Hlt. Use Hlt1+Hlt2 to run Hlt
-        , "HltUserAlgorithms"  : [ ]           # put here user algorithms to add
-        , "Hlt2Requires"       : 'L0+Hlt1'     # Say what Hlt2 requires
+        "MicroDSTFile"         : "MicroDST.dst"
+        , "MicroDSTSelectionAlg" : ""
         , "CopyParticles"      : True
         , "CopyPVs"            : True
         , "CopyBTags"          : True
@@ -63,56 +23,17 @@ class PhysMicroDST(LHCbConfigurableUser) :
         }
 
     _propertyDocDct = {  
-        "EvtMax"             : """ Number of events to analyse """
-        , "SkipEvents"         : """ Number of events to skip at beginning for file """
-        , "PrintFreq"          : """ The frequency at which to print event numbers """
-        , "DataType"           : """ Data type, can be ['DC06','2008'] Forwarded to PhysConf """
-        , "Simulation"         : """ set to True to use SimCond. Forwarded to PhysConf """
-        , "Input"              : """ Input data. Can also be passed as a second option file. """
-        , "HistogramFile"      : """ Write name of output Histogram file """
-        , "TupleFile"          : """ Write name of output Tuple file """
-        , "ETCFile"            : """ Write name of output ETC file."""
-        , "MicroDSTFile"     : """ Write name of output MicroDST file. Default 'MicroDST.dst'"""
-        , "UserAlgorithms"     : """ User algorithms to run. """
-        , "MicroDSTSelectionAlg"      : """            # Name of selection algorithm that defines data for MicroDST"""
-        , "RedoMCLinks"        : """ On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association. """
-        , "InputType"          : """ 'DST' or 'DIGI' or 'ETC' or 'RDST' or 'DST'. Nothing means the input type is compatible with being a DST.  """
-        , "L0"                 : """ Re-Run L0 """
-        , "ReplaceL0BanksWithEmulated" : """ Re-run L0 and replace all data with emulation  """
-        , "HltType"            : """ HltType : No Hlt by default. Use Hlt1+Hlt2 to run Hlt """
-        , "HltUserAlgorithms"  : """ Put here user algorithms to add to Hlt """
-        , "Hlt2Requires"       : """ Definition of what Hlt2 requires to run. Default is 'L0+Hlt1'.
-        'L0' will require only L0, '' (empty string) will run on all events. 'Hlt1' without L0 does not make any sense.
-                                    """
+        "MicroDSTFile"           : """ Write name of output MicroDST file. Default 'MicroDST.dst'"""
+        , "MicroDSTSelectionAlg" : """            # Name of selection algorithm that defines data for MicroDST"""
+        , "CopyParticles"        : """ """
+        , "CopyPVs"              : """ """
+        , "CopyBTags"            : """ """
+        , "CopyReFittedPVs"      : """ """
+        , "CopyMCTruth"          : """ """
         }
 
-    __used_configurables__ = [ DaVinci ]
-
-
-
-    def davinci(self) :
-        print "configuring DaVinci"
-        """
-        Pass on common parameters to DaVinci configurable
-        """
-        self.setOtherProps( DaVinci(),["EvtMax",
-                                       "SkipEvents",
-                                       "PrintFreq",
-                                       "DataType",
-                                       "Simulation",
-                                       "Input",
-                                       "HistogramFile",
-                                       "TupleFile",
-                                       "ETCFile",
-                                       "MicroDSTFile",
-                                       "RedoMCLinks",
-                                       "L0",
-                                       "ReplaceL0BanksWithEmulated",
-                                       "HltType",
-                                       "HltUserAlgorithms",
-                                       "Hlt2Requires"] )
-
     def seqMicroDST(self) :
+        from Configurables import GaudiSequencer
         return GaudiSequencer('SeqMicroDST')
 
     def getMicroDSTSelAlg(self) :        
@@ -120,19 +41,8 @@ class PhysMicroDST(LHCbConfigurableUser) :
         log.info("Getting MicroDSTSelectionAlg "+ seqName)
         return seqName
 
-    def userAlgs(self) :
-        userAlgs = []
-        for alg in self.getProp("UserAlgorithms"):
-            userAlgs.append( alg )
-        mainAlgoName = self.getMicroDSTSelAlg()
-        print "Adding ", mainAlgoName, " to MicroDST sequence"
-        self.seqMicroDST().Members += [mainAlgoName]
-        userAlgs.append(self.seqMicroDST())
-        log.info("PhysMicroDST: Setting UserAlgorithms:")
-        DaVinci().setProp("UserAlgorithms", userAlgs)
-        
-        
     def initMicroDSTStream(self) :
+        from Configurables import OutputStream
         log.info("Setting MicroDSTStream")
         importOptions('$MICRODSTOPTS/MicroDSTStream.py')
         stream = OutputStream('MicroDSTStream')
@@ -146,9 +56,11 @@ class PhysMicroDST(LHCbConfigurableUser) :
         return 'Phys/' + algoName
     
     def copyDefaultStuff(self):
+        from Configurables import CopyRecHeader
         self.seqMicroDST().Members += [CopyRecHeader()]
 
     def copyParticleTrees(self) :
+        from Configurables import CopyParticles, VertexCloner, ProtoParticleCloner
         copyParticles = CopyParticles('CopyParticles')
         copyParticles.InputLocation = self.mainLocation()+"/Particles"
         copyParticles.addTool(VertexCloner(), name='VertexCloner')
@@ -158,7 +70,7 @@ class PhysMicroDST(LHCbConfigurableUser) :
         self.seqMicroDST().Members += [copyParticles]  
 
     def copyP2PVLink(self, name, location) :
-
+        from Configurables import CopyParticle2PVLink
         copyP2RefitPVLink = CopyParticle2PVLink(name)
         copyP2RefitPVLink.InputLocation = location
         copyP2RefitPVLink.OutputLevel=4
@@ -166,6 +78,7 @@ class PhysMicroDST(LHCbConfigurableUser) :
 
 
     def copyPVs(self) :
+        from Configurables import CopyPrimaryVertices
         copyPV=CopyPrimaryVertices('CopyPrimaryVertices')
         copyPV.OutputLevel = 4
         self.seqMicroDST().Members += [copyPV]
@@ -177,6 +90,8 @@ class PhysMicroDST(LHCbConfigurableUser) :
         """
         Copy related MC particles of candidates plus daughters
         """
+        from Configurables import CopyRelatedMCParticles
+        from Configurables import MCParticleCloner, MCVertexCloner
         copyMC = CopyRelatedMCParticles()
         copyMC.InputLocation = self.mainLocation()+'/Particles'
         copyMC.addTool(MCParticleCloner(), name= 'MCParticleCloner')
@@ -185,7 +100,9 @@ class PhysMicroDST(LHCbConfigurableUser) :
         self.seqMicroDST().Members += [copyMC]
 
     def copyBTaggingInfo(self) :
-
+        from Configurables import BTagging, BTaggingTool
+        from Configurables import CopyFlavourTag
+        from Configurables import PhysDesktop
         importOptions('$FLAVOURTAGGINGOPTS/BTaggingTool.py')
         BTagAlgo = BTagging('BTagging')
         BTagAlgo.addTool(PhysDesktop)
@@ -206,6 +123,7 @@ class PhysMicroDST(LHCbConfigurableUser) :
 
     
     def refitPVs(self) :
+        from Configurables import PVReFitterAlg
         PVReFitter = PVReFitterAlg("PVReFitterAlg")
         PVReFitter.ParticleInputLocation = self.mainLocation()+"/Particles"
         PVReFitter.VertexOutputLocation = self.reFitPVLocation()
@@ -215,6 +133,7 @@ class PhysMicroDST(LHCbConfigurableUser) :
         
 
     def copyReFittedPVs(self) :
+        from Configurables import CopyPrimaryVertices
         self.refitPVs()
         copyReFittedPVs = CopyPrimaryVertices('CopyReFittedPVs')
         copyReFittedPVs.InputLocation = self.reFitPVLocation()
@@ -227,14 +146,25 @@ class PhysMicroDST(LHCbConfigurableUser) :
         """
         PhysMicroDST configuration
         """
+        from Configurables import LoKi__VoidFilter
+        from Configurables import LoKi__Hybrid__CoreFactory
+        LoKi__Hybrid__CoreFactory('CoreFactory:').Modules += ['LoKiHlt.algorithms','LoKiHlt.decorators']
         log.info("Applying PhysMicroDST configuration")
         log.info( self )
-        self.davinci()
-        self.userAlgs()
+        mdstSeq = self.seqMicroDST()
+#        mdstSeq.IgnoreFilterPassed = True
+        ApplicationMgr().OutStream += [mdstSeq]
+        selAlg = self.getMicroDSTSelAlg()
+        if type(selAlg) == str :
+            mdstSeq.Members = [LoKi__VoidFilter("Something",
+                                                Code = "ALG_PASSED('"+selAlg+"')")]
+        else :
+            mdstSeq.Members = [selAgl]
+
         self.copyDefaultStuff()
         if self.getProp("CopyParticles") : self.copyParticleTrees()
         if self.getProp("CopyPVs") : self.copyPVs()
         if self.getProp("CopyBTags") : self.copyBTaggingInfo()
         if self.getProp("CopyReFittedPVs") : self.copyReFittedPVs()
         if self.getProp("CopyMCTruth") : self.copyMCInfo()
-        self.seqMicroDST().Members += [self.initMicroDSTStream()]
+        mdstSeq.Members += [self.initMicroDSTStream()]
