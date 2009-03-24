@@ -1,4 +1,4 @@
-// $Id: STErrorMonitor.cpp,v 1.2 2009-03-24 15:58:58 nchiapol Exp $
+// $Id: STErrorMonitor.cpp,v 1.3 2009-03-24 16:11:20 nchiapol Exp $
 // Include files 
 
 // from Gaudi
@@ -109,7 +109,7 @@ StatusCode STErrorMonitor::execute()
           // Fill 2D histogram with the error types versus Beetle port
           unsigned int errorType = (*errorIt) -> linkInfo(beetle, port, pcn);
           double portBin = double(port)/double(nports)+beetle+pp*nBeetlesPerPPx;
-          plot2D(portBin, errorType, "error_types_$tell"+strTellNum, 
+          plot2D(portBin, errorType, "error-types_$tell"+strTellNum, 
 	         "Error types tell"+strTellNum, 0, noptlinks, 0, 10, 
 		 nports*noptlinks, 10);
         }
