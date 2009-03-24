@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.211 2009-03-17 13:41:41 wouter Exp $
+! $Id: release.notes,v 1.212 2009-03-24 13:28:24 krinnert Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
+
+! 2009-03-24 - Kurt Rinnert
+ - Added free functions to convert chip channel to TELL1 channel.  The
+   conversion is a simply inverting the order of the four blocks of 512
+   channels.  The concept existed already in different pieces of code but was
+   never made explicit.  Only relevant for analysis of NZS data.
 
 ! 2009-03-17 - Wouter Hulsbergen
  - Added VeloAlignCond::updateParams which overloads the function in AlignmentCondition 
