@@ -1,9 +1,26 @@
-!$Id: release.notes,v 1.16 2009-03-10 15:29:21 jpalac Exp $
+!$Id: release.notes,v 1.17 2009-03-24 11:09:44 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Ex/MicroDSTExample
 ! Responsible : Juan PALACIOS
 ! Purpose     : MicroDST making and reading examples.
 !-----------------------------------------------------------------------------
+
+! 2009-03-24 - Juan PALACIOS
+ - python/MicroDSTExample/Configuration.py
+  . Fix bug with P -> PV relations copying.
+ - options/TestMicroDSTMakeNewConf.py
+  . Re-fit PVs and copy
+
+! 2009-03-23 - Juan PALACIOS
+ - job/MicroDST_Ganga.py
+  . Get MicroDST-making options using optsfile instead of extraopts.
+ - python/MicroDSTExample/Configuration.py
+  . Change the way the stream is handled.
+ - python/MicroDSTReadingExample.py
+  . Change location of P->MCP relations table location from 
+selectionPath + '/Particles/RelatedMCParticles' to selectionPath + '/P2MCPRelations'
+ - Added options/TestMicroDSTMakeNewConf.py, an example job using the new 
+   configurable
 
 ! 2009-03-10 - Juan PALACIOS
  - python/MicroDSTExample/Functors.py
