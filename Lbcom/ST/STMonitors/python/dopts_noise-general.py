@@ -24,8 +24,8 @@ setDisplay.stringOptions = {}
 # *) if int is true, saveHistoSetDisplayOptions() will be called
 # i.e. the changes will be applied for the whole set
 setDisplay.HistoNames = {
-  "/Raw/raw_$tell1" : 1 , 
-  "/CMS/cms_$tell1" : 1 
+  "/Raw/raw_$tell1" : 1
+#  "/CMS/cms_$tell1" : 1 
   } 
 
 # Should all display options for these Histograms be unset 
@@ -56,4 +56,4 @@ setDisplay.stringOptions["DRAWOPTS"]  = "hist"
 # ****** END EDITABLE ******
 
 # application manager and messag service settings
-importOptions("inc_dispOptsNZS.py")
+importOptions("inc_setNZS.py")
