@@ -1,8 +1,18 @@
 
 #include "display.h"
-#include <iostream>
 #include "container_ROOT.h"
+
+#include "TArrow.h"
+#include "TBox.h"
+#include "TEllipse.h"
+#include "TF1.h"
+#include "TF2.h"
+#include "TH2F.h"
+#include "TLine.h"
 #include "TROOT.h"
+
+#include <iostream>
+
 
 InfoWindow::InfoWindow(int * inalive):TGMainFrame()
 {
