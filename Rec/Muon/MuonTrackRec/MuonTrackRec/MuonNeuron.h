@@ -1,4 +1,4 @@
-// $Id: MuonNeuron.h,v 1.1.1.1 2009-03-19 14:38:47 ggiacomo Exp $
+// $Id: MuonNeuron.h,v 1.2 2009-03-24 16:23:37 ggiacomo Exp $
 #ifndef MUONNEURON_H 
 #define MUONNEURON_H 1
 
@@ -84,10 +84,10 @@ public:
   double angle( const MuonNeuron &n );
   
   /// angle with another neuron in XZ
-  double MuonNeuron::angleXZ( const MuonNeuron &n );
+  double angleXZ( const MuonNeuron &n );
   
   /// angle with another neuron in YZ
-  double MuonNeuron::angleYZ( const MuonNeuron &n );
+  double angleYZ( const MuonNeuron &n );
   
   /// check if this is th with n
   bool tailHead( const MuonNeuron& n ) const;
