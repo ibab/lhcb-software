@@ -1,74 +1,35 @@
-# --> Including file '/afs/cern.ch/lhcb/software/DEV/DAVINCI/DAVINCI_v22r1p1/DaVinciSys/tests/options/DVTestInitialise.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/DEV/DAVINCI/DAVINCI_v22r1p1/DaVinciSys/tests/options/DVTestInitialise.py'
+# --> Including file '/afs/cern.ch/lhcb/software/DEV/DAVINCI/DAVINCI_v22r2/DaVinciSys/tests/options/DVTestInitialise.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/DEV/DAVINCI/DAVINCI_v22r2/DaVinciSys/tests/options/DVTestInitialise.py'
 # applying configuration of DaVinci
 # Applying DaVinci configuration
 # /***** User DaVinci/DaVinci ************************************************************************
 # |-MainOptions                = ''  (default: '')
-# |-TupleFile                  = ''
-# |-SkipEvents                 = 0  (default: 0)
-# |-Input                      = []  (default: [])
 # |-Hlt2Requires               = 'L0+Hlt1'
-# |-DDDBtag                    = 'default'
-# |-HltUserAlgorithms          = []  (default: [])
-# |-UserAlgorithms             = []  (default: [])
-# |-ETCFile                    = ''
-# |-MoniSequence               = []  (default: [])
-# |-UseOracle                  = False
-# |-InputType                  = 'DST'
+# |-RedoMCLinks                = False
+# |-DataType                   = 'DC06'
+# |-TupleFile                  = ''
 # |-PrintFreq                  = 1  (default: 100)
 # |-HltType                    = ''
+# |-SkipEvents                 = 0  (default: 0)
 # |-EvtMax                     = 0  (default: -1)
 # |-CondDBtag                  = 'default'
+# |-HistogramFile              = ''
+# |-UserAlgorithms             = []  (default: [])
 # |-L0                         = False
+# |-ETCFile                    = ''
+# |-MoniSequence               = []  (default: [])
+# |-Input                      = []  (default: [])
 # |-ReplaceL0BanksWithEmulated = False
 # |-Simulation                 = True
-# |-DataType                   = 'DC06'
-# |-RedoMCLinks                = False
-# |-HistogramFile              = ''
+# |-HltUserAlgorithms          = []  (default: [])
+# |-DDDBtag                    = 'default'
+# |-InputType                  = 'DST'
 # \----- (End of User DaVinci/DaVinci) ---------------------------------------------------------------
 # Set DDDBtag default
-# --> Including file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v26r2/GaudiConf/options/LHCbApplication.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v26r2/GaudiConf/options/PreloadUnits.opts'
 # --> Including file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v26r2/GaudiConf/options/units.opts'
 # <-- End of file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v26r2/GaudiConf/options/units.opts'
-# EventDataSvc.ForceLeaves = true;
-# EventDataSvc.RootCLID    =    1;
-# --> Including file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v26r2/Det/DDDB/options/DDDB.opts'
-# ApplicationMgr.ExtSvc += { "DetDataSvc/DetectorDataSvc" };
-# DetectorDataSvc.UsePersistency = true;
-# DetectorDataSvc.DetDbRootName  = "dd";
-# DetectorDataSvc.DetDbLocation = "conddb:/lhcb.xml";
-# DetectorDataSvc.DetStorageType = 7;
-# DetectorPersistencySvc.CnvServices = { "XmlCnvSvc" };
-# XmlParserSvc.MaxDocNbInCache = 10;
-# XmlParserSvc.CacheBehavior = 3;
-# XmlCnvSvc.AllowGenericConversion = true;
-# XmlParserSvc.EntityResolver = "CondDBEntityResolver";
-# CondDBCnvSvc.CondDBReader = "CondDBDispatcherSvc";
-# CondDBDispatcherSvc.MainAccessSvc = "CondDBAccessSvc/DDDB";
-# CondDBDispatcherSvc.Alternatives = { "/Conditions": "CondDBAccessSvc/LHCBCOND" };
-# CondDBDispatcherSvc.Alternatives += { "/Conditions/Online": "CondDBTimeSwitchSvc/ONLINE" };
-# --> Including file '/afs/cern.ch/user/m/marcocle/scratch0/workspace/LHCb/Det/SQLDDDB/options/SQLDDDB.opts'
-# DDDB.ConnectionString = "sqlite_file:$SQLDDDBROOT/db/DDDB.db/DDDB";
-# DDDB.CacheHighLevel = 1700;
-# LHCBCOND.ConnectionString = "sqlite_file:$SQLDDDBROOT/db/LHCBCOND.db/LHCBCOND";
-# LHCBCOND.CacheHighLevel = 200;
-# SIMCOND.ConnectionString = "sqlite_file:$SQLDDDBROOT/db/SIMCOND.db/SIMCOND";
-# SIMCOND.CacheHighLevel = 200;
-# ONLINE.Readers = { "'CondDBAccessSvc/ONLINE_200806':(0,1214870400000000000)",                   "'CondDBAccessSvc/ONLINE_200807':(1214870400000000000,1217548800000000000)",                   "'CondDBAccessSvc/ONLINE_200808':(1217548800000000000,1220227200000000000)",                   "'CondDBAccessSvc/ONLINE_200809':(1220227200000000000,1222819200000000000)",                   "'CondDBAccessSvc/ONLINE_200810':(1222819200000000000,1225497600000000000)",                   "'CondDBAccessSvc/ONLINE_200811':(1225497600000000000,1228089600000000000)",                   "'CondDBAccessSvc/ONLINE_200812':(1228089600000000000,1230768000000000000)",                   "'CondDBAccessSvc/ONLINE_200901':(1230768000000000000,1233446400000000000)",                   "'CondDBAccessSvc/ONLINE_200902':(1233446400000000000,9223372036854775807)" };
-# ONLINE_200806.ConnectionString = 'sqlite_file:$SQLITEDBPATH/ONLINE-200806.db/ONLINE';
-# ONLINE_200807.ConnectionString = 'sqlite_file:$SQLITEDBPATH/ONLINE-200807.db/ONLINE';
-# ONLINE_200808.ConnectionString = 'sqlite_file:$SQLITEDBPATH/ONLINE-200808.db/ONLINE';
-# ONLINE_200809.ConnectionString = 'sqlite_file:$SQLITEDBPATH/ONLINE-200809.db/ONLINE';
-# ONLINE_200810.ConnectionString = 'sqlite_file:$SQLITEDBPATH/ONLINE-200810.db/ONLINE';
-# ONLINE_200811.ConnectionString = 'sqlite_file:$SQLITEDBPATH/ONLINE-200811.db/ONLINE';
-# ONLINE_200812.ConnectionString = 'sqlite_file:$SQLITEDBPATH/ONLINE-200812.db/ONLINE';
-# ONLINE_200901.ConnectionString = 'sqlite_file:$SQLITEDBPATH/ONLINE-200901.db/ONLINE';
-# ONLINE_200902.ConnectionString = 'sqlite_file:$SQLITEDBPATH/ONLINE-200902.db/ONLINE';
-# <-- End of file '/afs/cern.ch/user/m/marcocle/scratch0/workspace/LHCb/Det/SQLDDDB/options/SQLDDDB.opts'
-# MessageSvc.setError += { "RelationalDatabase" };
-# <-- End of file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v26r2/Det/DDDB/options/DDDB.opts'
-# EventDataSvc.EnableFaultHandler = true;
-# <-- End of file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v26r2/GaudiConf/options/LHCbApplication.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v26r2/GaudiConf/options/PreloadUnits.opts'
 # --> Including file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v20r4/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # ApplicationMgr.ExtSvc    += { "Gaudi::MultiFileCatalog/FileCatalog",                              "Gaudi::IODataManager/IODataManager",                              "PoolDbCacheSvc/PoolDbCacheSvc",                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"                            };
 # EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" };
@@ -121,32 +82,32 @@
 # Doing MuonID for DC06 and DST
 # --> Including file '/afs/cern.ch/lhcb/software/releases/REC/REC_v6r2/Muon/MuonID/options/MuonID.py'
 # <-- End of file '/afs/cern.ch/lhcb/software/releases/REC/REC_v6r2/Muon/MuonID/options/MuonID.py'
+# WARNING: Redoing MC links enforced with DC06
 # DaVinci input is  []
 # No MainOptions specified. DaVinci() will import no options file!
 # Creating User Algorithms
 # /***** User DaVinci/DaVinci ************************************************************************
 # |-MainOptions                = ''  (default: '')
-# |-TupleFile                  = ''
-# |-SkipEvents                 = 0  (default: 0)
-# |-Input                      = []  (default: [])
 # |-Hlt2Requires               = 'L0+Hlt1'
-# |-DDDBtag                    = 'default'
-# |-HltUserAlgorithms          = []  (default: [])
-# |-UserAlgorithms             = []  (default: [])
-# |-ETCFile                    = ''
-# |-MoniSequence               = []  (default: [])
-# |-UseOracle                  = False
-# |-InputType                  = 'DST'
+# |-RedoMCLinks                = False
+# |-DataType                   = 'DC06'
+# |-TupleFile                  = ''
 # |-PrintFreq                  = 1  (default: 100)
 # |-HltType                    = ''
+# |-SkipEvents                 = 0  (default: 0)
 # |-EvtMax                     = 0  (default: -1)
 # |-CondDBtag                  = 'default'
+# |-HistogramFile              = ''
+# |-UserAlgorithms             = []  (default: [])
 # |-L0                         = False
+# |-ETCFile                    = ''
+# |-MoniSequence               = []  (default: [])
+# |-Input                      = []  (default: [])
 # |-ReplaceL0BanksWithEmulated = False
 # |-Simulation                 = True
-# |-DataType                   = 'DC06'
-# |-RedoMCLinks                = False
-# |-HistogramFile              = ''
+# |-HltUserAlgorithms          = []  (default: [])
+# |-DDDBtag                    = 'default'
+# |-InputType                  = 'DST'
 # \----- (End of User DaVinci/DaVinci) ---------------------------------------------------------------
 # skipping configuration of DstConf
 # skipping configuration of HltConf
@@ -159,8 +120,8 @@
 # WARNING: Default tag requested for partition LHCBCOND (using DC06-20081002)
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to DaVinci version v22r1
-                                          running on lxplus246.cern.ch on Mon Mar 23 16:27:49 2009
+                                                   Welcome to DaVinci version v22r2
+                                          running on lxplus214.cern.ch on Tue Mar 24 09:25:35 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Successfully loaded modules : HepMCBack
 ApplicationMgr       INFO Application Manager Configured successfully
@@ -172,7 +133,7 @@ DetectorDataSvc                                             SUCCESS Detector des
 RndmGenSvc.Engine                                              INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine                                              INFO Current Seed:1234567 Luxury:3
 RndmGenSvc                                                     INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.TIMER                                            INFO This machine has a speed about   1.82 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER                                            INFO This machine has a speed about   2.12 times the speed of a 2.8 GHz Xeon.
 DataOnDemandSvc                                             WARNING The property 'Nodes'      is obsolete, switch to map-like 'NodeMap'  = { 'data' : 'type'      }
 DataOnDemandSvc                                             WARNING The property 'Algorithms' is obsolete, switch to map-like 'AlgMap'   = { 'data' : 'algorithm' }
 EventPersistencySvc                                            INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
@@ -201,10 +162,13 @@ Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome 
 
 
 
-DaVinciInitSeq                                                 INFO Member list: LbAppInit/DaVinciAppInit, GaudiSequencer/PhysInitSeq, GaudiSequencer/AnalysisInitSeq
-DaVinciAppInit                                              SUCCESS ==================================================================
-DaVinciAppInit                                              SUCCESS Requested to process 0 events
-DaVinciAppInit                                              SUCCESS ==================================================================
+DaVinciInitSeq                                                 INFO Member list: DaVinciInit, GaudiSequencer/PhysInitSeq, GaudiSequencer/AnalysisInitSeq
+DaVinciInit                                                 SUCCESS ==================================================================
+DaVinciInit                                                 SUCCESS Requested to process 0 events
+DaVinciInit                                                 SUCCESS ==================================================================
+HistogramPersistencySvc                                        INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
+RootHistSvc                                                    INFO Writing ROOT histograms to: UndefinedROOTOutputFileName
+HistogramPersistencySvc                                        INFO Added successfully Conversion service:RootHistSvc
 PhysInitSeq                                                    INFO Member list: GaudiSequencer/TestProtoPRecalibration
 TestProtoPRecalibration                                        INFO Member list: TESCheck/CheckProto, GaudiSequencer/ProtoPRecalibration
 ProtoPRecalibration                                            INFO Member list: MuonRec, MuonID, UpdateMuonPIDInProtoP, ChargedProtoCombineDLLsAlg, RichPIDsFromProtoParticlesAlg/RichPIDsFromProtos
@@ -221,16 +185,14 @@ ToolSvc.OTRawBankDecoder                                       INFO  timePerBX =
 ToolSvc.OTRawBankDecoder                                       INFO  ForceBankVersion = 255
 ChargedProtoCombineDLLsAlg                                     INFO Using retuned RICH el and mu DLL values in combined DLLs
 RichPIDsFromProtos                                             INFO Creating RichPIDs 'Rec/Rich/PIDs' from ProtoParticles at 'Rec/ProtoP/Charged'
-AnalysisInitSeq                                                INFO Member list:
-HistogramPersistencySvc                                        INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
-RootHistSvc                                                    INFO Writing ROOT histograms to: UndefinedROOTOutputFileName
-HistogramPersistencySvc                                        INFO Added successfully Conversion service:RootHistSvc
+AnalysisInitSeq                                                INFO Member list: GaudiSequencer/RedoMCLinks
+RedoMCLinks                                                    INFO Member list: TESCheck/DaVinciEvtCheck, EventNodeKiller/DaVinciEvtNodeKiller, TrackAssociator
 ApplicationMgr                                                 INFO Application Manager Initialized successfully
 ApplicationMgr                                                 INFO Application Manager Started successfully
 ApplicationMgr                                                 INFO Application Manager Stopped successfully
-DaVinciAppInit                                              SUCCESS ==================================================================
-DaVinciAppInit                                              SUCCESS 0 events processed
-DaVinciAppInit                                              SUCCESS ==================================================================
+DaVinciInit                                                 SUCCESS ==================================================================
+DaVinciInit                                                 SUCCESS 0 events processed
+DaVinciInit                                                 SUCCESS ==================================================================
 RootHistSvc                                                 WARNING no ROOT output file name, Histograms cannot be persistified
 EventLoopMgr                                                   INFO Histograms converted successfully according to request.
 LoKiSvc                                                     SUCCESS
@@ -260,12 +222,12 @@ ToolSvc                                                        INFO Removing all
 ToolSvc.OTChannelMapTool                                    SUCCESS Exceptions/Errors/Warnings Statistics : 0/0/1
 ToolSvc.OTChannelMapTool                                    SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.TIMER                                            INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.TIMER                                            INFO This machine has a speed about   1.82 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER                                            INFO This machine has a speed about   2.12 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.TIMER                                            INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.TIMER                                            INFO ------------------------------------------------------------------------------------------------
 TimingAuditor.TIMER                                            INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.TIMER                                            INFO  DaVinciInitSeq               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO   DaVinciAppInit              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO   DaVinciInit                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.TIMER                                            INFO   PhysInitSeq                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.TIMER                                            INFO    TestProtoPRecalibration    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.TIMER                                            INFO     CheckProto                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -276,6 +238,10 @@ TimingAuditor.TIMER                                            INFO      UpdateM
 TimingAuditor.TIMER                                            INFO      ChargedProtoCombineDLLsAl|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.TIMER                                            INFO      RichPIDsFromProtos       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.TIMER                                            INFO   AnalysisInitSeq             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO    RedoMCLinks                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO     DaVinciEvtCheck           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO     DaVinciEvtNodeKiller      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO     TrackAssociator           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.TIMER                                            INFO ------------------------------------------------------------------------------------------------
 ApplicationMgr                                                 INFO Application Manager Finalized successfully
 ApplicationMgr                                                 INFO Application Manager Terminated successfully

@@ -1,5 +1,5 @@
 ##############################################################################
-#$Id: DVTestB2DiMuon.py,v 1.2 2009-02-24 14:21:30 pkoppenb Exp $
+#$Id: DVTestB2DiMuon.py,v 1.3 2009-03-24 10:43:21 pkoppenb Exp $
 #
 # Example Qm test option using configurables.
 #
@@ -96,3 +96,5 @@ DaVinci().Input = [
     "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000010_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"
 ]
 ##############################################################################
+########################################################################
+MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"

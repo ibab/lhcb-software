@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestHlt-DC06.py,v 1.2 2009-02-23 20:10:31 pkoppenb Exp $
+# $Id: DVTestHlt-DC06.py,v 1.3 2009-03-24 10:43:21 pkoppenb Exp $
 #
 # Options for a typical DaVinci job
 #
@@ -37,3 +37,5 @@ DaVinci().Input   = [
 "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/L0-v1-lumi2/00001959/DST/0000/00001959_00000008_1.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
 
 
+########################################################################
+MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"

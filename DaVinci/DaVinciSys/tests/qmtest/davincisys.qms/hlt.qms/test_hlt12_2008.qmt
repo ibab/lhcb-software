@@ -9,7 +9,7 @@
 findReferenceBlock("""
 Hlt2Decision                                                SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"Accepted Events"                               |        89 |          0 |(  2.24719 +- 1.57105  )%|   -------   |   -------   |
+ |*"Accepted Events"                               |        89 |          0 |(  0.00000 +- 1.12360  )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0)
 </text></argument>
 </extension>

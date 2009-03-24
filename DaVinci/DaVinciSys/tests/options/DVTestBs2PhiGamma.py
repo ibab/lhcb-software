@@ -1,6 +1,6 @@
-## $Id: DVTestBs2PhiGamma.py,v 1.2 2009-02-24 14:21:30 pkoppenb Exp $
+## $Id: DVTestBs2PhiGamma.py,v 1.3 2009-03-24 10:43:21 pkoppenb Exp $
 ## ============================================================================
-## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 ## ============================================================================
 """
 @file DVTestBs2PhiGamma.py
@@ -102,3 +102,5 @@ DaVinci().SkipEvents = 0
 DaVinci().PrintFreq = 1 
 
 
+########################################################################
+MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"

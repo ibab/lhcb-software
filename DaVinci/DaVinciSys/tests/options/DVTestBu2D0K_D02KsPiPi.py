@@ -1,6 +1,6 @@
-## $Id: DVTestBu2D0K_D02KsPiPi.py,v 1.3 2009-02-24 14:21:30 pkoppenb Exp $
+## $Id: DVTestBu2D0K_D02KsPiPi.py,v 1.4 2009-03-24 10:43:21 pkoppenb Exp $
 ## ============================================================================
-## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 ## ============================================================================
 """
 @file DVTestBu2D0K_D02KsPiPi.py
@@ -120,4 +120,6 @@ DaVinci().EvtMax = 200
 DaVinci().SkipEvents = 0 
 DaVinci().PrintFreq = 50
 
+########################################################################
+MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 

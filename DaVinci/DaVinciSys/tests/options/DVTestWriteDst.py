@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestWriteDst.py,v 1.1 2009-02-27 15:24:47 pkoppenb Exp $
+# $Id: DVTestWriteDst.py,v 1.2 2009-03-24 10:43:22 pkoppenb Exp $
 #
 # Options for a DaVinci job creating DSTs
 #
@@ -63,6 +63,8 @@ DaVinci().PrintFreq = 1
 # DaVinci().SkipEvents = 0
 DaVinci().DataType = "2008" # Default is "DC06"
 # DaVinci().Simulation   = False
+########################################################################
+MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 ##############################################################################
 DaVinci().Input   = [
 "   DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/2008/DST/00003401/0000/00003401_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",

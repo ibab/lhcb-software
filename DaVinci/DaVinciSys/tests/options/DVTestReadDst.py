@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestReadDst.py,v 1.1 2009-02-27 15:24:47 pkoppenb Exp $
+# $Id: DVTestReadDst.py,v 1.2 2009-03-24 10:43:22 pkoppenb Exp $
 #
 # Options for a typical DaVinci job creating DSTs
 #
@@ -8,6 +8,7 @@
 # @date 2009-02-04
 #
 ########################################################################
+from Gaudi.Configuration import *
 from Configurables import DaVinci
 ##############################################################################
 #
@@ -33,3 +34,5 @@ DaVinci().Input = [ "DATAFILE='PFN:Jpsi_3050_3150.dst' TYP='POOL_ROOTTREE' OPT='
                  ,  "DATAFILE='PFN:Jpsi_3000_3500.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
                     ]
 DaVinci().UserAlgorithms = [  ph, pJpsi ]
+########################################################################
+MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"

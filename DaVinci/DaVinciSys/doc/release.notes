@@ -9,6 +9,7 @@ Based on Phys v8r1, Analysis v3r1, Rec v6r2, HLT v5r2, Lbcom v6r26, LHCb v26r2, 
 Highlights :
   * Updated Hlt. New topological trigger.
   * Some patches.
+  * Fixed all tests _except_ bb_stripping that gets a wrong output code.
 
 </PRE><H1><A NAME=v22r1>2009-03-02 DaVinci v22r1</A></H1><PRE>
 Based on Phys v8r1, Analysis v3r1, Rec v6r2, HLT v5r1, Lbcom v6r26, LHCb v26r2, Gaudi v20r4, LCGCMT 55c

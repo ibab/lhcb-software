@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestHlt-2008.py,v 1.3 2009-02-23 20:10:31 pkoppenb Exp $
+# $Id: DVTestHlt-2008.py,v 1.4 2009-03-24 10:43:21 pkoppenb Exp $
 #
 # Options for a typical DaVinci job
 #
@@ -25,7 +25,7 @@ DaVinci().Simulation   = True
 # HLT
 #
 DaVinci().Hlt2Requires = 'L0'
-DaVinci().HltType = 'Hlt1+Hlt2'             ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
+DaVinci().HltType = 'Hlt2'             ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
 DaVinci().Input   = [
 "   DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/2008/DST/00003400/0000/00003400_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
 "   DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/2008/DST/00003400/0000/00003400_00000002_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
@@ -34,3 +34,5 @@ DaVinci().Input   = [
 "   DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/2008/DST/00003400/0000/00003400_00000005_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
 "   DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/2008/DST/00003400/0000/00003400_00000006_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
 
+########################################################################
+MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
