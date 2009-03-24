@@ -1,4 +1,4 @@
-// $Id: IMuonHitDecode.h,v 1.1.1.1 2009-03-19 14:38:47 ggiacomo Exp $
+// $Id: IMuonHitDecode.h,v 1.2 2009-03-24 10:42:24 ggiacomo Exp $
 #ifndef MUONMONITOR_IMUONHITDECODE_H 
 #define MUONMONITOR_IMUONHITDECODE_H 1
 
@@ -69,6 +69,8 @@ public:
                                           unsigned int r, 
                                           short int io, 
                                           unsigned int ch)  =0;
+  virtual std::string& ecsChamberName(int region,
+                                      int chamberNumber)=0;
 protected:
   inline std::string locBX(int iX) {
     std::stringstream sloc;

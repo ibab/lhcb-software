@@ -1,4 +1,4 @@
-// $Id: MuonHitDecode.h,v 1.1.1.1 2009-03-19 14:38:47 ggiacomo Exp $
+// $Id: MuonHitDecode.h,v 1.2 2009-03-24 10:42:24 ggiacomo Exp $
 #ifndef LIB_MUONHITDECODE_H 
 #define LIB_MUONHITDECODE_H 1
 
@@ -61,6 +61,11 @@ public:
                                           short int io, 
                                           unsigned int ch) 
   {return (0*q*s*r*io*ch);}
+  virtual std::string& ecsChamberName(int region,
+                                      int chamberNumber) 
+  {int x=region*chamberNumber;x=0;
+    nullstring="";
+    return nullstring;}
 
   // from GaudiTool
   virtual StatusCode 	initialize ();
@@ -77,5 +82,6 @@ private:
   DeMuonDetector* m_muonDetector;
   std::vector<MuonLogHit*> m_hits;
   bool m_hitsDecoded;
+  std::string nullstring;
 };
 #endif // LIB_MUONHITDECODE_H
