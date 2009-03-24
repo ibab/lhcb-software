@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.17 2009-03-24 11:09:44 jpalac Exp $
+!$Id: release.notes,v 1.18 2009-03-24 17:26:26 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Ex/MicroDSTExample
 ! Responsible : Juan PALACIOS
@@ -8,6 +8,9 @@
 ! 2009-03-24 - Juan PALACIOS
  - python/MicroDSTExample/Configuration.py
   . Fix bug with P -> PV relations copying.
+  . De-couple from DaVinci. Interface greatly reduces.
+ - options/TestMicroDSTMakeNewConf.py
+  . Use new configurable
  - options/TestMicroDSTMakeNewConf.py
   . Re-fit PVs and copy
 
