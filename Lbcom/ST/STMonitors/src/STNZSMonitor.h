@@ -1,8 +1,9 @@
-// $Id: STNZSMonitor.h,v 1.2 2009-03-17 11:23:30 nchiapol Exp $
+// $Id: STNZSMonitor.h,v 1.3 2009-03-24 10:32:14 jvantilb Exp $
 #ifndef STNZSMonitor_H
 #define STNZSMonitor_H 1
 
-#include "GaudiAlg/GaudiHistoAlg.h"
+// from STKernel
+#include "Kernel/STHistoAlgBase.h"
 
 /** @class STNZSMonitor STNZSMonitor.h
  *
@@ -26,24 +27,16 @@
  *  @date   10/02/2009
  */
 
-class STNZSMonitor : public GaudiHistoAlg{
+class STNZSMonitor : public ST::HistoAlgBase {
 
 public:
  
-  /// constructer
+  /// Standard constructer
   STNZSMonitor( const std::string& name, ISvcLocator *svcloc );
 
-  /// destructer
-  virtual ~STNZSMonitor();
-
-  /// initialize
-  StatusCode initialize();
-
-  /// execute
-  StatusCode execute();
-
-  /// finalize
-  StatusCode finalize();
+  virtual StatusCode initialize();    ///< Algorithm initialization
+  virtual StatusCode execute   ();    ///< Algorithm execution
+  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
 
@@ -59,7 +52,7 @@ private:
   typedef std::map<int, std::vector<double> > DataMap;  
   DataMap m_meanMap;            ///< Internal map for the pedestals
   DataMap m_meanSqMap;          ///< Internal map of the pedestal^2
-  std::map<int, int> m_nEvents; ///< Internal map of number of events per tell1
+  std::map<int, std::vector<int> > m_nEvents; ///< Internal map of number of events per tell1 and FPGA-PP
 
   // jobOptions
 
@@ -72,12 +65,6 @@ private:
   /// When set to true: use the sourceID in the histogram name. Otherwise use
   /// the tell1 name.
   bool m_useSourceID;
-
-  /// String used as a base for the histogram's name (_$tell + number will be 
-  /// added to the name)
-  /// if possible this might get replaced with the name of the instance running 
-  /// or removed completely
-  std::string m_basenameHisto; 
 
   /// Period of the an exponential moving average.
   /// Set to -1 to have a cumulative average.

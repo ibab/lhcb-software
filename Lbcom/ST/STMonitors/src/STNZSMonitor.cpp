@@ -1,4 +1,4 @@
-// $Id: STNZSMonitor.cpp,v 1.3 2009-03-17 18:12:44 nchiapol Exp $
+// $Id: STNZSMonitor.cpp,v 1.4 2009-03-24 10:32:14 jvantilb Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -35,63 +35,34 @@ DECLARE_ALGORITHM_FACTORY( STNZSMonitor);
 //
 //--------------------------------------------------------------------
 
-STNZSMonitor::STNZSMonitor( const std::string& name, ISvcLocator* pSvcLocator ) :
-  GaudiHistoAlg(name, pSvcLocator) 
+STNZSMonitor::STNZSMonitor( const std::string& name, 
+                            ISvcLocator* pSvcLocator ) :
+  ST::HistoAlgBase(name, pSvcLocator)
 {
   // constructer
-  declareProperty("DetType", m_detType = "TT" );
-  declareProperty("InputData", m_dataLocation = STTELL1DataLocation::TTFull );
+  declareSTConfigProperty("InputData" , m_dataLocation,
+                          STTELL1DataLocation::TTFull);
   declareProperty("UseSourceID", m_useSourceID = true );
-  declareProperty("BaseNameHisto", m_basenameHisto = "raw" );
   declareProperty("FollowPeriod", m_followingPeriod = 2000);
   declareProperty("UpdateRate", m_updateRate = -1);  
   declareProperty("ResetRate", m_resetRate = -1);  
   declareProperty("SkipEvents", m_skipEvents = -1 );
 }
 
-STNZSMonitor::~STNZSMonitor()
-{
-  // destructer
-}
-
 StatusCode STNZSMonitor::initialize()
 {
-  // Initialize GaudiHistoAlg
-  StatusCode sc = GaudiHistoAlg::initialize();
-  if (sc.isFailure()) {
-    return Error("Failed to initialize", sc);
-  }
-  
-  // Set the top directory to IT or TT.
-//  if( "" == histoTopDir() ) {
-//    setHistoTopDir(m_detType+"/");
-//  }
+  // Initialize ST::HistoAlgBase
+  StatusCode sc = ST::HistoAlgBase::initialize();
+  if (sc.isFailure()) return sc;
 
-  STDetSwitch::flip(m_detType,m_dataLocation);
-
-  //const Map *NumberToSourceIDMap;
-  //const std::map<unsigned int, unsigned int> *NumberToSourceIDMap;
-  if (m_detType == "TT") {
+  // Get the tell1 mapping from source ID to tell1 number
+  if (detType() == "TT") {
     m_TELL1Mapping      = &TTSourceIDToNumberMap();
-    //NumberToSourceIDMap = &TTNumberToSourceIDMap();
   } else {
     m_TELL1Mapping      = &ITSourceIDToNumberMap();
-    //NumberToSourceIDMap = &ITNumberToSourceIDMap();
   }
 
-  m_basenameHisto += "_$tell";
   m_evtNumber = 0;
-
-//        std::map<unsigned int, unsigned int>::const_iterator iterMap = NumberToSourceIDMap->begin();
-//  const std::map<unsigned int, unsigned int>::const_iterator endMap  = NumberToSourceIDMap->end();
-//  for ( ; iterMap != endMap ; iterMap++ ) {
-//    int tellID = iterMap->first;
-//    if (m_useSourceID) {
-//      tellID = iterMap->second;
-//    }
-//    std::string title = m_basenameHisto + boost::lexical_cast<std::string>(tellID);
-//    book(title, 0, nStripsPerBoard, nStripsPerBoard);
-//  }
 
   return StatusCode::SUCCESS;
 }
@@ -126,49 +97,65 @@ StatusCode STNZSMonitor::execute()
     int tellID = m_useSourceID ? sourceID :
       (m_TELL1Mapping->find(sourceID))->second;
 
-    // Reset the maps for each tell1 and book the histogram
+    // Reset the maps for each tell1
     if ( m_meanMap.find(tellID) == m_meanMap.end() ) {
-      m_meanMap[tellID].resize(3072,0.0);
+      m_meanMap[tellID].resize(3072, 0.0);
       m_meanSqMap[tellID].resize(3072, 0.0);
-      m_nEvents[tellID] = 0;
+      m_nEvents[tellID].resize(4,0);
     }
-    m_nEvents[tellID]++;
 
-    // Cumulative average up to m_followingPeriod; after that
-    // exponential moving average
-    int nEvt = m_nEvents[tellID];
-    if( m_followingPeriod > 0 && nEvt > m_followingPeriod ) 
-      nEvt = m_followingPeriod;
+    // Flag to check if histogram needs to be updated
+    bool needToUpdate = false;
     
-    // Loop over the links (i.e. Beetles)
-    unsigned int iBeetle= 0;
-    for ( ; iBeetle < noptlinks; ++iBeetle ){
+    // Loop over the PPs that have sent data
+    std::vector<unsigned int> sentPPs = (*iterBoard)->sentPPs();
+    std::vector<unsigned int>::const_iterator iPP = sentPPs.begin();
+    for( ; iPP != sentPPs.end(); ++iPP ) {
+      unsigned int pp = *iPP;
+      
+      // Count the number of events per PP
+      m_nEvents[tellID][pp]++;
 
-      // Loop over the strips in this link
-      unsigned int iStrip = 0;
-      for ( ; iStrip < LHCbConstants::nStripsInBeetle ; ++iStrip){
-
-        // Get the ADC value
-        const int value = dataValues[iBeetle][iStrip];
-
-        // Calculate the pedestal and the pedestal squared
-        int strip = iStrip + iBeetle * LHCbConstants::nStripsInBeetle;
-        m_meanMap[tellID][strip] = (m_meanMap[tellID][strip]*(nEvt-1)
+      // Cumulative average up to m_followingPeriod; after that
+      // exponential moving average
+      int nEvt = m_nEvents[tellID][pp];
+      if( m_followingPeriod > 0 && nEvt > m_followingPeriod ) 
+        nEvt = m_followingPeriod;
+    
+      // Loop over the links (i.e. Beetles)
+      unsigned int iBeetle = 0;
+      for ( ; iBeetle < nBeetlesPerPPx; ++iBeetle ){
+        unsigned int beetle = iBeetle + pp*nBeetlesPerPPx;
+        
+        // Loop over the strips in this link
+        unsigned int iStrip = 0;
+        for ( ; iStrip < LHCbConstants::nStripsInBeetle ; ++iStrip){
+          
+          // Get the ADC value
+          const int value = dataValues[beetle][iStrip];
+          
+          // Calculate the pedestal and the pedestal squared
+          int strip = iStrip + beetle * LHCbConstants::nStripsInBeetle;
+          m_meanMap[tellID][strip] = (m_meanMap[tellID][strip]*(nEvt-1)
                                       + value ) / nEvt;
-        m_meanSqMap[tellID][strip] = (m_meanSqMap[tellID][strip]*(nEvt-1) 
+          m_meanSqMap[tellID][strip] = (m_meanSqMap[tellID][strip]*(nEvt-1) 
                                         + gsl_pow_2(value) ) / nEvt;
-      } // strip
-    }  // beetle
+        } // strip
+      }  // beetle
 
+      // Resets the event counter
+      if( m_resetRate > 0  && nEvt%m_resetRate == 0 ) {
+        m_nEvents[tellID][pp] = 0;
+      }
+
+      // Check if at least one of the PPs requires to update the histogram
+      if( m_updateRate > 0 && nEvt%m_updateRate == 0 && nEvt != 0 ) {
+        needToUpdate = true;
+      }
+    } // FPGA-PP
+    
     // Update the noise histogram
-    if( m_updateRate > 0  && m_nEvents[tellID]%m_updateRate == 0 ) {
-      updateNoiseHistogram( tellID );
-    }
-
-    // Resets the event counter
-    if( m_resetRate > 0  && m_nEvents[tellID]%m_resetRate == 0 ) {
-      m_nEvents[tellID] = 0;
-    }
+    if( needToUpdate ) updateNoiseHistogram( tellID );
 
   } // boards
   return StatusCode::SUCCESS;
@@ -183,19 +170,17 @@ StatusCode STNZSMonitor::finalize()
     updateNoiseHistogram( (*iTell).first );
   } 
 
-  return StatusCode::SUCCESS;
+  return ST::HistoAlgBase::finalize();// must be called after all other actions
 }
 
 void STNZSMonitor::updateNoiseHistogram(int tellID)
 {
   // Create a title for the histogram
-  //std::string title = m_basenameHisto + boost::lexical_cast<std::string>(tellID);
   std::string strTellID  = boost::lexical_cast<std::string>(tellID);
-  //std::string histoID    = m_basenameHisto + strTellID;
-  HistoID histoID        = m_basenameHisto + strTellID;
+  HistoID histoID        = "noise_$tell" + strTellID;
   std::string histoTitle = "Noise for Tell" + strTellID;
 
-  //IHistogram1D* hist = histo1D( histoTitle ) ;
+  // Get the histogram and reset it in case it is already booked. 
   IHistogram1D* hist = histo1D( histoID ) ;
   if ( hist ) {
     hist->reset();
@@ -208,7 +193,8 @@ void STNZSMonitor::updateNoiseHistogram(int tellID)
     if ( hist ) {
       hist->fill( strip, rms );
     } else {
-      plot1D( strip, histoID, histoTitle, 0, nStripsPerBoard, nStripsPerBoard, rms );
+      plot1D( strip, histoID, histoTitle, 0, nStripsPerBoard, nStripsPerBoard, 
+              rms );
     }
   }
 }
