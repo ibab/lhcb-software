@@ -1,7 +1,7 @@
 """
 High level configuration example for a typical physics MicroDST
 """
-__version__ = "$Id: Configuration.py,v 1.6 2009-03-24 17:12:26 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.7 2009-03-24 20:58:12 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 
@@ -148,6 +148,7 @@ class PhysMicroDST(LHCbConfigurableUser) :
         """
         from Configurables import LoKi__VoidFilter
         from Configurables import LoKi__Hybrid__CoreFactory
+        from Configurables import FilterDesktop, PhysDesktop
         LoKi__Hybrid__CoreFactory('CoreFactory:').Modules += ['LoKiHlt.algorithms','LoKiHlt.decorators']
         log.info("Applying PhysMicroDST configuration")
         log.info( self )
@@ -156,11 +157,15 @@ class PhysMicroDST(LHCbConfigurableUser) :
         ApplicationMgr().OutStream += [mdstSeq]
         selAlg = self.getMicroDSTSelAlg()
         if type(selAlg) == str :
-            mdstSeq.Members = [LoKi__VoidFilter("Something",
+            mdstSeq.Members = [LoKi__VoidFilter("MicroDSTSel",
                                                 Code = "ALG_PASSED('"+selAlg+"')")]
         else :
             mdstSeq.Members = [selAgl]
-
+        filterHack = FilterDesktop('FilterHack')
+        filterHack.Code = "ALL"
+        filterHack.addTool(PhysDesktop)
+        filterHack.PhysDesktop.InputLocations = [self.mainLocation()]
+        mdstSeq.Members += [filterHack]
         self.copyDefaultStuff()
         if self.getProp("CopyParticles") : self.copyParticleTrees()
         if self.getProp("CopyPVs") : self.copyPVs()
