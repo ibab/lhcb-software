@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.322 2009-03-23 16:30:32 pkoppenb Exp $
+! $Id: release.notes,v 1.323 2009-03-24 08:26:31 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -10,6 +10,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== DaVinci v22r2 2009-03-23 ===================
+! 2009-03-24 - Patrick Koppenburg
+ - MesssgeSvc format must be put explicitly in options
+
 ! 2009-03-11 - Patrick Koppenburg
  - ReadETC.py : no need to include GaudiPoolDB.
 
