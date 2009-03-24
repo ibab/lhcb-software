@@ -1,7 +1,7 @@
 """
 High level configuration example for a typical physics MicroDST
 """
-__version__ = "$Id: Configuration.py,v 1.4 2009-03-23 17:19:58 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.5 2009-03-24 11:03:06 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 
@@ -157,19 +157,22 @@ class PhysMicroDST(LHCbConfigurableUser) :
         copyParticles.OutputLevel=4
         self.seqMicroDST().Members += [copyParticles]  
 
+    def copyP2PVLink(self, name, location) :
+
+        copyP2RefitPVLink = CopyParticle2PVLink(name)
+        copyP2RefitPVLink.InputLocation = location
+        copyP2RefitPVLink.OutputLevel=4
+        self.seqMicroDST().Members += [copyP2RefitPVLink]
+
+
     def copyPVs(self) :
         copyPV=CopyPrimaryVertices('CopyPrimaryVertices')
         copyPV.OutputLevel = 4
         self.seqMicroDST().Members += [copyPV]
-
-    def copyP2PVLinks(self) :
-        copyP2PVLink = CopyParticle2PVLink()
-        copyP2PVLink.InputLocation = self.mainLocation()+"/Particle2VertexRelations"
-        copyP2PVLink.OutputLevel=4;
-        self.seqMicroDST().Members += [copyP2PVLink]
-
-
-
+        if self.getProp("CopyParticles") :
+            self.copyP2PVLink("CopyP2PVLink",
+                              self.mainLocation()+"/Particle2VertexRelations")
+        
     def copyMCInfo(self) :
         """
         Copy related MC particles of candidates plus daughters
@@ -209,21 +212,16 @@ class PhysMicroDST(LHCbConfigurableUser) :
         PVReFitter.P2VRelationsOutputLocation = self.P2ReFitPVRelationsLoc()
         PVReFitter.OutputLevel=4
         self.seqMicroDST().Members += [PVReFitter]
-
-    def copyP2PVLink(self) :
-
-        copyP2RefitPVLink = CopyParticle2PVLink("CopyP2RefitPVLink")
-        copyP2RefitPVLink.InputLocation = self.P2ReFitPVRelationsLoc()
-        copyP2RefitPVLink.OutputLevel=4
-        self.seqMicroDST().Members += [copyP2RefitPVLink]
+        
 
     def copyReFittedPVs(self) :
         self.refitPVs()
         copyReFittedPVs = CopyPrimaryVertices('CopyReFittedPVs')
         copyReFittedPVs.InputLocation = self.reFitPVLocation()
         self.seqMicroDST().Members += [copyReFittedPVs]
-        self.copyP2PVLink()
-
+        if self.getProp("CopyParticles") :
+            self.copyP2PVLink("CopyP2RefitPVLink",
+                              self.P2ReFitPVRelationsLoc() )
 
     def __apply_configuration__(self) :
         """
@@ -236,7 +234,6 @@ class PhysMicroDST(LHCbConfigurableUser) :
         self.copyDefaultStuff()
         if self.getProp("CopyParticles") : self.copyParticleTrees()
         if self.getProp("CopyPVs") : self.copyPVs()
-        if self.getProp("CopyParticles") and self.getProp("CopyPVs") : self.copyP2PVLinks()
         if self.getProp("CopyBTags") : self.copyBTaggingInfo()
         if self.getProp("CopyReFittedPVs") : self.copyReFittedPVs()
         if self.getProp("CopyMCTruth") : self.copyMCInfo()
