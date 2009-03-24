@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.323 2009-03-24 08:26:31 pkoppenb Exp $
+! $Id: release.notes,v 1.324 2009-03-24 08:43:27 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -12,6 +12,7 @@
 !========================== DaVinci v22r2 2009-03-23 ===================
 ! 2009-03-24 - Patrick Koppenburg
  - MesssgeSvc format must be put explicitly in options
+   See https://twiki.cern.ch/twiki/bin/view/LHCb/FAQ/LHCbFAQ#How_do_I_set_the_printout_format
 
 ! 2009-03-11 - Patrick Koppenburg
  - ReadETC.py : no need to include GaudiPoolDB.
