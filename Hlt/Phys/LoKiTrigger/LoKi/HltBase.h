@@ -1,4 +1,4 @@
-// $Id: HltBase.h,v 1.1 2009-03-19 20:11:55 ibelyaev Exp $
+// $Id: HltBase.h,v 1.2 2009-03-24 17:33:26 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_HLTBASE_H 
 #define LOKI_HLTBASE_H 1
@@ -69,6 +69,13 @@ namespace Hlt
     Hlt::IData*     hltSvc () const ;
     /// accessor to Assigned Names & Numbers Service 
     IANNSvc*        annSvc () const ;
+    // ========================================================================
+  protected:
+    // ========================================================================
+    // name   -> number for "InfoID" using IANNSvc 
+    int         hltInfoID   ( const std::string& name ) const  ;   
+    // number -> name   for "InfoID" using IANNSvc 
+    std::string hltInfoName ( const int          id   ) const  ;   
     // ========================================================================
   private:
     // ========================================================================

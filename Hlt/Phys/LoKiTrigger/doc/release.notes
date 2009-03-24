@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.27 2009-03-23 15:42:43 pkoppenb Exp $
+! $Id: release.notes,v 1.28 2009-03-24 17:33:26 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiTrigger
 ! Responsible : Vanya BELYAEV
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
+
+
+! 2009-03-24 - Vanya BELYAEV
+
+ - add  L0 -> Hlt utilities and L0Calo -> Track converter 
+
+
 
 !========================== LoKiTrigger v9r0 2009-03-23 ===================
 ! 2009-03-22 - Vanya BELYAEV

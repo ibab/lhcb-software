@@ -1,4 +1,4 @@
-// $Id: L0Muon2Track.cpp,v 1.2 2009-03-22 17:57:42 ibelyaev Exp $
+// $Id: L0Muon2Track.cpp,v 1.3 2009-03-24 17:33:26 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -22,6 +22,7 @@
 // LoKi
 // ============================================================================
 #include "LoKi/HltBase.h"
+#include "LoKi/HltL0.h"
 // ============================================================================
 namespace Hlt
 {
@@ -30,6 +31,8 @@ namespace Hlt
    *  Simple class which converts L0Muon candidates into "tracks" using 
    *  the special tool by Johannes albrecht 
    *  @see IMuonSeedTrack
+   *  The actual lines are stollen from 
+   *     Gerhard "The Great" Raven & Jose Angel Hernando  Morata
    *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    *  @date 2000-03-19
    */
@@ -52,7 +55,7 @@ namespace Hlt
       /// register the output selection
       m_selection = new Hlt::TSelection<LHCb::Track>( m_output ) ;
       sc = lock -> registerOutput ( m_selection , this ) ;
-      Assert ( sc.isSuccess () , "Unable to register OUPUT selection" , sc );
+      Assert ( sc.isSuccess () , "Unable to register OUTPUT selection" , sc );
       // get the tool 
       m_maker = tool<IMuonSeedTool>( m_makerName , this ) ; // PRIVATE ???
       
@@ -92,6 +95,8 @@ namespace Hlt
       , m_L0Channel ()
       , m_makerName ( "MuonSeedTool" )
       , m_maker     ( 0 )
+      //
+      , m_l0data_names () 
     {
       declareProperty 
         ( "OutputSelection"                 , 
@@ -110,10 +115,18 @@ namespace Hlt
           m_L0Channel                       , 
           "L0Channel to be converted "      ) ;
       declareProperty 
-        ( "MuonSeedTool" ,
-          m_makerName    ,
-          "The type/name of muon seed Tool (IMuonSeedTool)" ) ;
+        ( "TrackMaker"  ,
+          m_makerName       ,
+          "The type/name of muon track maker tool (IMuonSeedTool)" ) ;
+      //
+      m_l0data_names.push_back (   "Muon1(Pt)" ) ;
+      m_l0data_names.push_back ( "DiMuon1(Pt)" ) ;
+      declareProperty 
+        ( "L0DataNames"  , 
+          m_l0data_names , 
+          "The list of L0 data names" ) ;
     }
+    
     /// virtual and protected destructor 
     virtual ~L0Muon2Track() {}
     // ========================================================================
@@ -147,6 +160,11 @@ namespace Hlt
     //// the tool 
     IMuonSeedTool* m_maker       ;                                  // the tool 
     // ========================================================================
+  private: //pure techcal stuff 
+    // ========================================================================
+    /// the vector of elementary L0 data names 
+    std::vector<std::string>   m_l0data_names ; // the vector of L0 data names 
+    // ========================================================================
   } ;
   // ==========================================================================
 } // end of namespace Hlt 
@@ -160,70 +178,45 @@ StatusCode Hlt::L0Muon2Track::execute  ()
   // get all L0 muons from TES  
   const L0Muons* l0muons = get<L0Muons> ( m_L0MuonLocation ) ;
   
-  bool has_cut  = false ;
-  double pt_cut = 0.0   ;
+  // create the container of muons/tracks and register it in TES 
+  LHCb::Track::Container* muons = new LHCb::Track::Container() ;
+  put ( muons , "Hlt/Track/" + m_selection -> id () );
+  
+  using namespace Hlt::L0Utils ;
+  
+  L0MuonCut cut ( m_L0Channel ) ;  
   
   if ( "AllMuon" != m_L0Channel ) 
   {
     const LHCb::L0DUReport* l0 = get<LHCb::L0DUReport>( m_L0DULocation );
-    /// Retrieve const   L0DU algorithm configuration
-    const LHCb::L0DUConfig* l0config = l0->configuration() ;
-    Assert ( 0 != l0config , "LHCb::L0DUConfig* points to NULL" ) ;
-    const LHCb::L0DUChannel::Map& channels = l0config->channels();
-    LHCb::L0DUChannel::Map::const_iterator ichannel = channels.find(m_L0Channel);
-    if ( channels.end() == ichannel ) 
-    { return Error ( "Invalid L0-Muon channel '" + m_L0Channel + "'" ) ; }    
-    // get the conditions 
-    const LHCb::L0DUChannel* channel = ichannel->second ;
-    Assert ( 0 != channel , "LHCb::L0DUChannel* points to NULL" ) ;
-    const LHCb::L0DUElementaryCondition::Map& conditions = 
-      channel->elementaryConditions();
-    // loop over elementary conditions:
-    for ( LHCb::L0DUElementaryCondition::Map::const_iterator
-            condition = conditions.begin();
-          condition!=conditions.end(); ++condition)
-    {       
-      // Retrieve const   L0DU Elementary data
-      const LHCb::L0DUElementaryCondition* elementary = condition->second ;
-      Assert ( 0 != elementary , 
-               "LHCb::L0DUElementaryCondition* points to NULL" ) ;
-      const LHCb::L0DUElementaryData* data = elementary->data() ;
-      Assert ( 0 != data , "LHCb::L0DUElementaryData* points to NULL" ) ;
-      // get the nesessary threshold: 
-      if ( data->name() == "Muon1(Pt)" || 
-           data->name() == "DiMuon(Pt)"  ) 
-      {
-        has_cut = true ;
-        pt_cut  = elementary->threshold() ;
-        break ;
-      }
-    }
-    Assert ( has_cut , "Unable to find threshold for L0 Muon channel" ) ;
+    L0MuonCuts cuts ;
+    StatusCode sc = Hlt::L0Utils::getL0Cuts 
+      ( l0 , m_L0Channel , m_l0data_names , cuts ) ;
+    Assert ( sc.isSuccess  () , "Unable to extract the proper L0MuonCuts" , sc ) ;
+    Assert ( 1 == cuts.size() , "Invalid size of L0 data!"  ) ;
+    cut = cuts.front() ;
   }
   
-  // create the container of muons/tracks ansd register it in TES 
-  LHCb::Track::Container* muons = new LHCb::Track::Container() ;
-  put ( muons , "Hlt/Track/" + m_selection -> id () );
+  always () << " Use muon cuts: " << cut << endreq ;
   
-  
-  for ( L0Muons::const_iterator il0 = l0muons->begin() ; l0muons->end() != il0 ; ++il0  )
+  // loop over input data 
+  for ( L0Muons::const_iterator il0 = l0muons->begin() ; 
+        l0muons->end() != il0 ; ++il0  )
   {
     const LHCb::L0MuonCandidate* l0muon = *il0 ;
-    if ( 0 == l0muon ) { continue ; }
     // check the cut:
-    if ( has_cut && pt_cut > l0muon->encodedPt() ){ continue ; }
+    if ( !cut ( l0muon )        ) { continue ; }                     // CONTINUE 
     // clone ?
-    if ( checkClone ( *l0muon ) ) { continue ; }
+    if ( checkClone ( *l0muon ) ) { continue ; }                     // CONTINUE 
     // create the track 
     std::auto_ptr<LHCb::Track> track( new LHCb::Track() );
     StatusCode sc = m_maker->makeTrack(*l0muon,*track);
     if ( sc.isFailure() ) 
-    { return Error ( "Error from IMuonSeedTool" , sc ); }
+    { return Error ( "Error from IMuonSeedTool" , sc ); }              // RETURN 
     // push into containers :
     m_selection -> push_back ( track.get()     ) ;
     muons       -> insert    ( track.release() ) ;
   }
-  
   
   counter ( "#input"  ) +=  l0muons     -> size  () ;
   counter ( "#output" ) +=  m_selection -> size  () ;

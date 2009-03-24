@@ -1,6 +1,10 @@
-// $Id: HltBase.cpp,v 1.1 2009-03-19 20:11:55 ibelyaev Exp $
+// $Id: HltBase.cpp,v 1.2 2009-03-24 17:33:26 ibelyaev Exp $
 // ============================================================================
 // Include files 
+// ============================================================================
+// Kernel
+// ============================================================================
+#include "Kernel/IANNSvc.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -17,6 +21,7 @@
  *  @param name algorithm instance name 
  *  @param pSvc pointer to Service Locator 
  */
+// ============================================================================
 Hlt::Base::Base
 ( const std::string& name ,                     //      algorithm instance name 
   ISvcLocator*       pSvc )                     //   pointer to Service Locator 
@@ -90,6 +95,28 @@ IANNSvc*   Hlt::Base::annSvc() const
   if ( 0 != m_annSvc ) { return m_annSvc ; }
   m_annSvc = svc<IANNSvc>       ( "Hlt::Service" , true ) ;
   return m_annSvc ;
+}
+// ============================================================================
+// name   -> number for "InfoID" using IANNSvc
+// ============================================================================
+int Hlt::Base::hltInfoID 
+( const std::string& name ) const 
+{
+  boost::optional<IANNSvc::minor_value_type> i =  
+    annSvc() -> value ( "InfoID" , name ) ;
+  Assert ( i, " request for unknown Info ID" ) ;
+  return i->second;
+}
+// ============================================================================
+// number -> name   for "InfoID" using IANNSvc
+// ============================================================================
+std::string Hlt::Base::hltInfoName 
+( const int id ) const  
+{
+  boost::optional<IANNSvc::minor_value_type> i =  
+    annSvc() -> value ( "InfoID" , id );
+  Assert( i, " request for unknown Info ID");
+  return i->first;
 }
 // ============================================================================
 // The END 
