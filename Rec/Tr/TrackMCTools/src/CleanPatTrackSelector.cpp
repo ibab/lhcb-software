@@ -74,6 +74,8 @@ bool CleanPatTrackSelector::cleanTrack(const Track& aTrack) const {
       clean = m_selector->accept(mcpart);
     }
   }
-  
+  else {
+    warning() << " Failed to find linker table " << endmsg; 
+  }  
   return clean;
 }

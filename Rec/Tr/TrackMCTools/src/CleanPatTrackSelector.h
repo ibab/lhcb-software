@@ -1,4 +1,4 @@
-// $Id: CleanPatTrackSelector.h,v 1.4 2009-01-29 12:28:48 mneedham Exp $
+// $Id: CleanPatTrackSelector.h,v 1.5 2009-03-24 15:14:23 mneedham Exp $
 #ifndef _CleanPatTrackSelector_H
 #define _CleanPatTrackSelector_H
 
@@ -18,6 +18,7 @@
 
 #include "Linker/LinkerTool.h"
 #include "Event/Track.h"
+#include "MCInterfaces/IMCParticleSelector.h"
 
 namespace LHCb{
   class MCParticle;
