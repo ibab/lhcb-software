@@ -1,4 +1,4 @@
-// $Id: SiZuriFunction.cpp,v 1.1 2009-01-15 10:02:19 mneedham Exp $
+// $Id: SiZuriFunction.cpp,v 1.2 2009-03-24 15:12:00 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -97,20 +97,9 @@ double SiZuriFunction::zuriFun(const double t) const{
 
 std::pair<double,double> SiZuriFunction::findMax() const{
 
-  // do this better = binary search
-  std::pair<double,double> max = std::make_pair(0., -100.);   
-  double t = 0.0; 
-  double dt = 0.1;
-  while (t < m_tRange){
-    const double testValue = zuriFun(t);
-    if (testValue > max.second){
-      max.first = t;
-      max.second = testValue; 
-    }
-    t+= dt;
-  } //while
-
-  return max;
+  // its this simple
+  double tMax = (3 - sqrt(3)) * m_riseTime;
+  return std::make_pair(tMax, zuriFun(tMax));
 } 
 
 
