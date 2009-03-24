@@ -2,6 +2,9 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+! 2009-03-23 M Needham 
+ - Add killing by truth example to killing options
+
 ! 2009-03-14 M Needham
  - Add digit merging classes
  - Add Clusters to digits algorithm

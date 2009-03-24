@@ -30,3 +30,9 @@ ToolSvc.SelectByCharge.maxCharge = 50.0;
 STLiteClusterKiller.DetType = "IT";
 STLiteClusterKiller.Selector = "STSelectChannelIDByServiceBox";
 ToolSvc.ITLiteKiller.serviceBoxes = {"IT1A1", "IT2C1"};
+
+// killing spillover
+STLiteClusterKiller.DetType = "TT";
+STLiteClusterKiller.Selector = "STSelectChannelIDByTruth";
+ToolSvc.TTLiteKiller.Types = {0};
+
