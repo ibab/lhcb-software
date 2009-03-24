@@ -2,6 +2,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2009-03-23 M Needham
+ - Add STSelectChannelIDByTruth [select by spillover, particle type etc]
+
 ! 2009-03-14 M needham
  - Modifications to cluster selectors
  - Add STChannelID based selectors 
