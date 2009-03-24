@@ -1,4 +1,4 @@
-// $Id: VoidFilter.cpp,v 1.1 2008-10-19 16:11:40 ibelyaev Exp $
+// $Id: VoidFilter.cpp,v 1.2 2009-03-24 17:35:15 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -67,7 +67,7 @@ namespace LoKi
       StatusCode sc = setProperty ( "Code" , "FNONE" ) ;
       Assert ( sc.isSuccess () , "Unable (re)set property 'Code'"    , sc ) ;
       sc = setProperty 
-        ( "Factory" , "LoKi::Hybrid::CoreFactory/CoreFactory::PUBLIC" ) ;
+        ( "Factory" , "LoKi::Hybrid::CoreFactory/CoreFactory:PUBLIC" ) ;
       Assert ( sc.isSuccess () , "Unable (re)set property 'Factory'" , sc ) ;
     } 
     /// virtual and protected destructor 
