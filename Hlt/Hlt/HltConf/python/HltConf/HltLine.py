@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.40 2009-03-25 08:38:54 graven Exp $ 
+# $Id: HltLine.py,v 1.41 2009-03-25 15:16:11 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.40 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.41 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt line itself 
@@ -886,8 +886,22 @@ class Hlt1Line(object):
         are updated accordingly.
         
         """
+
+
+        print 'entering clone'
+        # add some python magic to allow reasonable definition of the deepcopy 
+        # of a member function bound to an object instance.
+        # see http://bugs.python.org/issue1515 for more info...
+        import copy,types
+        origMethod = copy._deepcopy_dispatch[types.MethodType] if types.MethodType in copy._deepcopy_dispatch else None
+        def _deepcopy_method(x, memo):
+            return type(x)(x.im_func, deepcopy(x.im_self, memo), x.im_class)
+        copy._deepcopy_dispatch[types.MethodType] = _deepcopy_method
+
+
         ## 1) clone the arguyments
         args = deepcopy ( args )
+
         ## 2) classify arguments:
         _own   = {} # own arguments 
         _seq   = {} # arguments for sequencer
@@ -899,13 +913,19 @@ class Hlt1Line(object):
 
         # Explictly copy all major structural parameters 
         __name       = deepcopy ( name        )
-        __prescale   = deepcopy ( args.get ( 'prescale'  , self._prescale  ) )
+        __prescale   = deepcopy ( args.get ( 'prescale'  , self._prescale  ) ) 
         __ODIN       = deepcopy ( args.get ( 'ODIN'      , self._ODIN      ) )        
         __L0DU       = deepcopy ( args.get ( 'L0DU'      , self._L0DU      ) )        
         __HLT        = deepcopy ( args.get ( 'HLT'       , self._HLT       ) )        
         __postscale  = deepcopy ( args.get ( 'postscale' , self._postscale ) ) 
         __algos      = deepcopy ( args.get ( 'algos'     , self._algos     ) )
         __args       = deepcopy ( self._args  ) 
+
+        # restore the original deepcopy behaviour...
+        if origMethod :
+            copy._deepcopy_dispatch[types.MethodType] = origMethod 
+        else :
+            del copy._deepcopy_dispatch[types.MethodType]
 
         # Check the parameters, reponsible for reconfiguration:
         for alg in [ i for i in __algos if type(i) is Hlt1Member ] :

@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltHadronLines.py,v 1.7 2009-03-25 13:06:22 graven Exp $
+# $Id: HltHadronLines.py,v 1.8 2009-03-25 15:16:11 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hadron Lines
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -54,9 +54,9 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
                 , 'HadVertex_MinIPCut'      : 0.1
                 , 'HadVertex_MinPtCut'      : 1000.
                 , 'HadVertex_PointingCut'   : 0.4
-                , 'SoftDiHadron'            : False
                 , 'HadL0_SoftEtCut'         : 2500. 
                 , 'HadMain_SoftPtCut'       : 1500. 
+                , 'Prescale'                : { 'Hlt1SoftDiHadron' : 0 } # overrule imported default
                 }
 
     def __apply_configuration__(self) : 
@@ -144,10 +144,9 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
             ])
         setupHltFastTrackFit('Hlt1DiHadronVUFitTrack')
 
-        if (self.getProp('SoftDiHadron')):
-            _getLine("DiHadron").clone("SoftDiHadron"
-                                      #, prescale = self.prescale # TODO: fix cloning to understand callable
-                                      #, postscale = self.postscale
+        _getLine("DiHadron").clone("SoftDiHadron"
+                                      , prescale = self.prescale
+                                      , postscale = self.postscale
                                       , L0DU = "L0_CHANNEL('"+",".join([L0Channel]+L0Channels())+"') "
                                       , TFL0Hadrons     = { "FilterDescriptor": ["L0ET,>,"+str(self.getProp('HadL0_SoftEtCut'))] }
                                       , TFGuidedForward = { "FilterDescriptor": ["PT,>,"+str(self.getProp('HadMain_SoftPtCut'))] }
