@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltHadronLines.py,v 1.6 2009-03-25 08:38:54 graven Exp $
+# $Id: HltHadronLines.py,v 1.7 2009-03-25 13:06:22 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hadron Lines
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -146,8 +146,8 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
 
         if (self.getProp('SoftDiHadron')):
             _getLine("DiHadron").clone("SoftDiHadron"
-                                      , prescale = self.prescale
-                                      , postscale = self.postscale
+                                      #, prescale = self.prescale # TODO: fix cloning to understand callable
+                                      #, postscale = self.postscale
                                       , L0DU = "L0_CHANNEL('"+",".join([L0Channel]+L0Channels())+"') "
                                       , TFL0Hadrons     = { "FilterDescriptor": ["L0ET,>,"+str(self.getProp('HadL0_SoftEtCut'))] }
                                       , TFGuidedForward = { "FilterDescriptor": ["PT,>,"+str(self.getProp('HadMain_SoftPtCut'))] }
