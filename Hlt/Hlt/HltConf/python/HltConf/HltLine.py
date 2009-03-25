@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.41 2009-03-25 15:16:11 graven Exp $ 
+# $Id: HltLine.py,v 1.42 2009-03-25 15:32:24 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.41 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.42 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt line itself 
@@ -886,9 +886,6 @@ class Hlt1Line(object):
         are updated accordingly.
         
         """
-
-
-        print 'entering clone'
         # add some python magic to allow reasonable definition of the deepcopy 
         # of a member function bound to an object instance.
         # see http://bugs.python.org/issue1515 for more info...
