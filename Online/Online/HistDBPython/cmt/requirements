@@ -1,0 +1,18 @@
+# =============================================================================
+# Created    : 23/03/2009
+# Maintainer : Nicola Chiapolini
+# =============================================================================
+package             HistDBPython
+version             v1r0
+
+branches            cmt doc src 
+
+use OnlineHistDB    *   Online
+
+apply_pattern l     d_library_path
+private
+use GaudiAlg        * 
+
+library             HistDBPython ../src/*.cpp
+
+apply_pattern component_library library=HistDBPython

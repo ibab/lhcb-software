@@ -1,0 +1,57 @@
+============= example of python scripts to interface the Histogram DB
+============= written and mantained by Nicola Chiapolini
+============= created December 2008
+
+** Installation
+1. Add OnlineHistDB to your requirement file
+2. Copy the example files into your working directory and
+   adjust them as needed.
+3. create a password file:
+   - the file should only contain the password for the 
+     HIST_WRITER user of the OnlineHistDB and is best
+     placed in the same directory as the option files.
+   - File name and location can be specified by the 
+     PasswordFile option in the option file.
+   - Default filename is 'password'
+
+
+** Organisation:
+
+*) Page definitions:
+To define a page, the following files need to exist:
+- page.py
+  defines the pages in the folder tree that are set up
+  according to this configuration as well as the page
+  configuration itself (i.e. the histograms to be displayed)
+- layout.py
+  defines the layout used for the page 
+  [gets included in page.py]
+- genCreate.py
+  adds the algorithm to the application manager, and sets
+  other general options of the CreateHistDBPages algorithm.
+  [gets included in page.py]
+
+*) Display options:
+To set displayoptions, the following files need to exist:
+- dopts.py
+  defines the histograms as well as the options that should be set.
+- genSet.py 
+  adds the algorithm to the application manager, and sets other 
+  general options of the SetHistDisplayOptions algorithm.
+  [gets included in dopts.py]
+
+
+for more info see the comments in the example files 
+(names as above with prefix "example_")
+
+
+** running
+
+a) individual page
+$ gaudirun.py page.py
+Hint: *) using "gaudirun.py -vn ..." does just parse 
+          the files without execution
+
+b) several pages
+$ .runCreatePages.sh page1 page2 page3 ...
+
