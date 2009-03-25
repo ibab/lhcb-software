@@ -4,6 +4,12 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2009-03-25 - Gerhard Raven
+ - add HltTriggerRawConversion: simple algorithm to trigger the DOD service
+   for a list of TES location. Intention is to run this as part of a line
+   with small AcceptFraction, to force the entire rawbank to be decoded at
+   some low rate, and accept the event in case the conversion fails...
+
 ! 2009-03-23 - V. Gligorov
  - Removed obsolete generic execute/initialize in HltTrackFromParticle 
 
