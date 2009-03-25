@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.76 2009-03-04 17:37:56 niko Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.77 2009-03-25 14:46:23 dsvantes Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -65,8 +65,9 @@ typedef unsigned int uint;
   a << MSG::ERROR << x << " " << MEPRxSys::sys_err_msg() << " in " << __PRETTY_FUNCTION__<< ":"  << __FILE__<<  ":(" << __LINE__ << ")" << endmsg;} while(0);
 #endif
 
+// Sent as 64bit integers ("X")
 #define PUBCNT(name, desc) do {m_ ## name = 0; m_monSvc->declareInfo(#name, m_ ## name, desc, this);} while(0);
-#define PUBARRAYCNT(name, desc) do {m_monSvc->declareInfo(#name, "I", & m_ ## name [0], m_ ## name.size() * sizeof(int), desc, this);} while(0);
+#define PUBARRAYCNT(name, desc) do {m_monSvc->declareInfo(#name, "X", & m_ ## name [0], m_ ## name.size() * sizeof(int64_t), desc, this);} while(0);
 
 #define printnum(n,s)     n << s << ((char*)(n == 1 ? "" : "s"))
 
@@ -1061,7 +1062,7 @@ int MEPRxSvc::setupCounters() {
     return 1;
    ::memcpy(m_allNames, (const char *) all_names.data(), all_names.size() +1);
   
-  m_monSvc->declareInfo("srcName", "C:", m_allNames, sizeof(m_srcName), "Source IP names", this);
+  m_monSvc->declareInfo("srcName", "C", m_allNames, all_names.size()+1, "Source IP names", this);
   log << MSG::INFO << all_names << all_names.size() << endmsg;
   return 0;
 }

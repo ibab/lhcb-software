@@ -140,12 +140,14 @@ namespace LHCb  {
     u_int32_t                   m_ownAddress;
 
     /* Counters per source */ 
-    std::vector<int>            m_rxOct;
-    std::vector<int>            m_rxPkt;
-    std::vector<int>            m_rxEvt;
-    std::vector<int>            m_noShow; 
+    std::vector<int64_t>            m_rxOct;
+    std::vector<int64_t>            m_rxPkt;
+    std::vector<int64_t>            m_rxEvt;
+    std::vector<int>	            m_noShow; 
     /* Global counters */
-    int m_numMEPRecvTimeouts, m_numMEPReq, m_totMEPReq, m_totMEPReqPkt;
+    int64_t 			 m_numMEPRecvTimeouts;
+    int64_t			 m_numMEPReq;			//This seem to not be used?
+    int64_t			 m_totMEPReq, m_totMEPReqPkt;
 
     // Error counters
     // u_int64_t m_notReqPkt, m_incEvt; // 64-bit not yet supported in IMonitorSvc
@@ -154,23 +156,23 @@ namespace LHCb  {
     int * m_testint;
 
   public:
-    int                         m_totRxPkt;
-    int                         m_totRxOct;
-    int                         m_notReqPkt;
-    int                         m_incEvt;
-    int                         m_totBadMEP;
-    int                         m_totWrongPartID;
+    int64_t                     m_totRxPkt;
+    int64_t                     m_totRxOct;
+    int64_t                     m_notReqPkt;
+    int64_t                     m_incEvt;
+    int64_t                     m_totBadMEP;
+    int64_t                     m_totWrongPartID;
     unsigned long               m_timer;
     int                         m_maxErrors;
     int                         m_nErrorSamples;
     int                         m_errorCheckInterval; // (in millis)
     bool                        m_cryError;
-    std::vector<int>            m_badLenPkt;
-    std::vector<int>            m_misPkt;
-    std::vector<int>            m_badPckFktPkt;
-    std::vector<int>            m_truncPkt;
-    std::vector<int>            m_emptyPkt;
-    std::vector<int>		m_multipleEvt;
+    std::vector<int64_t>        m_badLenPkt;
+    std::vector<int64_t>        m_misPkt;
+    std::vector<int64_t>        m_badPckFktPkt;
+    std::vector<int64_t>        m_truncPkt;
+    std::vector<int64_t>        m_emptyPkt;
+    std::vector<int64_t>	m_multipleEvt;
 
     /// Standard Constructor
     MEPRxSvc(const std::string& name, ISvcLocator* svc);
