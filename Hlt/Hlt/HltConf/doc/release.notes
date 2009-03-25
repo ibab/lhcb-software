@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.182 2009-03-25 16:09:29 aperezca Exp $ 
+! $Id: release.notes,v 1.183 2009-03-25 17:59:04 hernando Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -22,6 +22,9 @@
    Default is a pre(post)scale of 1, and the default can be overruled
    by adding an explicit 'Prescale' ('Postscale') in the __slots__ of the
    derived class.
+
+! 2009-03-25 - Jose A. Hernando
+ - HltHadronLines.py small bugs in the line corrected, single and dihadron lines starts from L0 candidates, soft dihadron line added by default, presecale set to 0, dihadron line starts from all L0 candidates. Some primitive structure of blocks in the alley implemented.
 
 !========================== HltConf v2r5 2009-03-23 ===================
 ! 2009-03-20 - Gerhard Raven
