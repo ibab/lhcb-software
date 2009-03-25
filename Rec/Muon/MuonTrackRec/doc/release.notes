@@ -4,6 +4,9 @@
 ! Purpose     : Standalone Muon track reconstruction (with a recurrent neural network)
 !-----------------------------------------------------------------------------
 
+! 2009-03-25 - G. Graziani v1r1
+ - add one method to IMuonHitDecode for monitoring
+ - compile under slc5
 
 ! 2009-03-16 - G. Graziani
  - first release of MuonTrackRec, unifying and reorganizing code from packages MuonMonKernel, Cosmics, MuonNNet: 
