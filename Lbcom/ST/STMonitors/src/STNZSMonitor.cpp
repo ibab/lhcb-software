@@ -1,10 +1,9 @@
-// $Id: STNZSMonitor.cpp,v 1.4 2009-03-24 10:32:14 jvantilb Exp $
+// $Id: STNZSMonitor.cpp,v 1.5 2009-03-25 09:39:15 jvantilb Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
 // LHCbKernel
-#include "Kernel/STDetSwitch.h"
 #include "Kernel/STDAQDefinitions.h"
 #include "Kernel/STBoardMapping.h"
 #include "Kernel/LHCbConstants.h"

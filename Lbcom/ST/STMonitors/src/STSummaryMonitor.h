@@ -1,84 +1,67 @@
-// $Id: STSummaryMonitor.h,v 1.1 2009-03-17 11:23:30 nchiapol Exp $
+// $Id: STSummaryMonitor.h,v 1.2 2009-03-25 09:39:15 jvantilb Exp $
 #ifndef STSummaryMonitor_H
 #define STSummaryMonitor_H 1
 
-#include "GaudiAlg/GaudiHistoAlg.h"
-#include "Kernel/STBoardMapping.h"
+// from STKernel
+#include "Kernel/STHistoAlgBase.h"
 
 /** @class STSummaryMonitor STSummaryMonitor.h
+ *
+ *  Algorithm to monitor the information in the STSummary class. The STSummary
+ *  information is filled in the ZS decoding. The following histograms are
+ *  filled:
+ *  - PCN distribution. The democratically-chosen PCN is used (from STSummary),
+ *  - Total data size (kB) per event,
+ *  - Error information in the STSummary: each bin signals a problem in the
+ *    event: bin 1, PCN sync is false; bin 2, corrupted banks, bin 3, lost banks
+ *    bin 4, recovered banks.
+ *  There are three main job options:
+ *  - \b DetType: to switch between "IT" and "TT"
+ *  - \b InputData: Input location of the STSummary data. Default is set to
+ *    STSummaryLocation::TTSummary or STSummaryLocation::ITSummary depending on
+ *    the setting of the detector switch.
+ *  - \b SuppressMissing: Flag to suppress the filling of the 3th bin in the
+ *    error information histogram (default is false).
+ *  - \b SuppressRecovered: Flag to suppress the filling of the 4th bin in the
+ *    error information histogram (default is false).
+ *  - \b PipeLineSize: Default is set to 187.
  *
  *  @author N. Chiapolini
  *  @date   20/02/2009
  */
 
-class STSummaryMonitor : public GaudiHistoAlg{
+class STSummaryMonitor : public ST::HistoAlgBase {
 
 public:
  
   /// constructer
   STSummaryMonitor( const std::string& name, ISvcLocator *svcloc );
 
-  /// destructer
-  virtual ~STSummaryMonitor();
-
-  /// initialize
-  StatusCode initialize();
-
-  /// execute
-  StatusCode execute();
-
-  /// finalize
-  StatusCode finalize();
+  virtual StatusCode initialize();    ///< Algorithm initialization
+  virtual StatusCode execute   ();    ///< Algorithm execution
+  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
 
-  /// Fill the noise histograms (only called every N events and at finalize)
-  //void updateNoiseHistogram(int tell1ID);
-
-  //const std::string   m_basenameNoiseHisto; 
-  std::string         m_pcnHisto[2];
-  std::string         m_errorHisto[2];
-  std::string	      m_dataSizeHisto[2];
-
-  static const int    c_id             = 0;
-  static const int    c_title          = 1;
-
-  static const int    c_nErrorBins     = 4;
+  static const int c_nErrorBins = 4;
   const double c_binIDaSynch;
   const double c_binIDmissing; 
   const double c_binIDcorrupted;
   const double c_binIDrecovered;
 
-  /// Tell1 mapping from tell1 name to source ID.
-  const std::map<unsigned int, unsigned int>* m_TELL1Mapping;
-  //const STBoardMapping::Map *m_TELL1Mapping;
-  
-  int                 m_evtNumber;
-  
   // jobOptions
 
-  /// Detector type. Can be set to IT or TT. Changes m_dataLocation accordingly
-  std::string m_detType;
-
-  /// Location in the Event Data Store with the ADC values
-  //std::string m_dataLocation;
-
-  /// Locatuib ub tge Event Data Store with the Summary Info
+  /// Location of the Event Data Store with the Summary Info
   std::string m_summaryLocation;
-
-  /// When set to true: use the sourceID in the histogram name. Otherwise use
-  /// the tell1 name.
-  bool m_useSourceID;
-
-  /// Number of events to be skipped. Useful when running over
-  /// common-mode-subtracted data where the pedestals have not been calculated. 
-  int m_skipEvents;
 
   /// When set to true: do not fill the bin for missing banks 
   bool m_suppressMissing;
   
   /// When set to true: do not fill the bin for recovered banks 
   bool m_suppressRecovered;
+
+  /// Length of the beetle pipeline
+  int m_pipeLineSize;
 
 };
 

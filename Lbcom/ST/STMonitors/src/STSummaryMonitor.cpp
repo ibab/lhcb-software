@@ -1,4 +1,4 @@
-// $Id: STSummaryMonitor.cpp,v 1.1 2009-03-17 11:23:30 nchiapol Exp $
+// $Id: STSummaryMonitor.cpp,v 1.2 2009-03-25 09:39:15 jvantilb Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -6,26 +6,15 @@
 // LHCbKernel
 #include "Kernel/STDetSwitch.h"
 #include "Kernel/STDAQDefinitions.h"
-#include "Kernel/LHCbConstants.h"
 
 // STTELL1Event
-#include "Event/STTELL1Data.h"
 #include "Event/STSummary.h"
-
-// AIDA
-#include "AIDA/IHistogram1D.h"
-
-// standard
-#include "gsl/gsl_math.h"
-#include "boost/lexical_cast.hpp"
 
 // local
 #include "STSummaryMonitor.h"
 
 using namespace LHCb;
-using namespace AIDA;
-using namespace STDAQ;
-using namespace STBoardMapping;
+//using namespace STDAQ;
 
 DECLARE_ALGORITHM_FACTORY( STSummaryMonitor);
 
@@ -35,114 +24,77 @@ DECLARE_ALGORITHM_FACTORY( STSummaryMonitor);
 //
 //--------------------------------------------------------------------
 
-STSummaryMonitor::STSummaryMonitor( const std::string& name, ISvcLocator* pSvcLocator ) :
-  GaudiHistoAlg(name, pSvcLocator),
-  //m_pcnHisto("pcnEvent"),
+STSummaryMonitor::STSummaryMonitor( const std::string& name, 
+                                    ISvcLocator* pSvcLocator ) :
+  ST::HistoAlgBase(name, pSvcLocator),
   c_binIDaSynch(0.5),
   c_binIDmissing(2.5), 
   c_binIDcorrupted(1.5),
   c_binIDrecovered(3.5)
 {
   // constructer
-  declareProperty("DetType", m_detType = "TT" );
-  //declareProperty("InputData", m_dataLocation = STTELL1DataLocation::TTFull );
-  //declareProperty("Summary", m_summaryLocation   = STSummaryLocation::TTSummary );
-  declareProperty("InputData", m_summaryLocation   = STSummaryLocation::TTSummary );
-  declareProperty("UseSourceID", m_useSourceID = true );
-  declareProperty("SkipEvents", m_skipEvents = -1 );
-  declareProperty("SuppressMissing", m_suppressMissing = false);
+  declareSTConfigProperty("InputData" , m_summaryLocation, 
+                          STSummaryLocation::TTSummary);
+  declareProperty("SuppressMissing",   m_suppressMissing   = false);
   declareProperty("SuppressRecovered", m_suppressRecovered = false);
-}
-
-STSummaryMonitor::~STSummaryMonitor()
-{
-  // destructer
+  declareProperty("PipeLineSize",      m_pipeLineSize      = 187  );
 }
 
 StatusCode STSummaryMonitor::initialize()
 {
-  // Initialize GaudiHistoAlg
-  StatusCode sc = GaudiHistoAlg::initialize();
-  if (sc.isFailure()) {
-    return Error("Failed to initialize", sc);
-  }
-  
-  STDetSwitch::flip(m_detType,m_summaryLocation);
-
-  // defining histogram ids and titles
-  m_pcnHisto[c_id]         = "pcn";
-  m_pcnHisto[c_title]      = "PCN distribution";
-  m_errorHisto[c_id]       = "errors";
-  m_errorHisto[c_title]    = "Error Info in Summary";
-  m_dataSizeHisto[c_id]    = "dataSize";
-  m_dataSizeHisto[c_title] = "Data size per event";
-  
-  m_evtNumber      = 0;
+  // Initialize ST::HistoAlgBase
+  StatusCode sc = ST::HistoAlgBase::initialize();
+  if (sc.isFailure()) return sc;  
   
   return StatusCode::SUCCESS;
 }
 
 
-
 StatusCode STSummaryMonitor::execute()
 { 
-  int pipelineSize = 187;
-  m_evtNumber++;
-  
-  // Skip first m_skipEvents. Useful when running over CMS data.
-  if( m_evtNumber < m_skipEvents ) {
-    debug() << "skipping Event" << endmsg;
-    return StatusCode::SUCCESS;
-  }
- 
-  
   // Skip if there is no Tell1 data
-  if (!exist<STSummary>(m_summaryLocation)) {
-    debug() << "No data at given location" << endmsg;
-    return StatusCode::SUCCESS;
+  if( !exist<STSummary>(m_summaryLocation) ) {
+    return Warning("No data at given location", StatusCode::SUCCESS, 0);
   }
 
   // Get the data
-  const STSummary    *summary = get<STSummary>(m_summaryLocation);
+  const STSummary* summary = get<STSummary>(m_summaryLocation);
   // debug() << "Found " << data->size() << " boards." << endmsg;
-
   
-  /** 
-   * Filling the histograms
-   */
+  // Filling the histograms
   
-  // PCN
-  plot1D(summary->pcn(), m_pcnHisto[c_id], m_pcnHisto[c_title], 0, pipelineSize, pipelineSize);
+  // Fill PCN histogram
+  plot1D( summary->pcn(), "pcn", "PCN distribution", 0, m_pipeLineSize, 
+          m_pipeLineSize );
   
-  // Error Summary
-  if (!(summary->pcnSynch())) {
-    plot1D(c_binIDaSynch, m_errorHisto[c_id], m_errorHisto[c_title], 
-		    0, c_nErrorBins, c_nErrorBins );
+  // Fill error summary histogram
+  std::string errorHistoID    = "errors";
+  std::string errorHistoTitle = "Error Info in Summary";
+  if( !(summary->pcnSynch()) ) {
+    plot1D( c_binIDaSynch, errorHistoID, errorHistoTitle, 
+            0, c_nErrorBins, c_nErrorBins );
   }
-  plot1D(c_binIDcorrupted, m_errorHisto[c_id], m_errorHisto[c_title], 
-                    0, c_nErrorBins, c_nErrorBins, 
-		    (summary->corruptedBanks()).size());
-  if ( !m_suppressMissing ) {
-    plot1D(c_binIDmissing, m_errorHisto[c_id], m_errorHisto[c_title], 
-                      0, c_nErrorBins, c_nErrorBins, 
-        	      (summary->missingBanks()).size());
+  if( (summary->corruptedBanks()).size() > 0 ) {
+    plot1D( c_binIDcorrupted, errorHistoID, errorHistoTitle, 
+            0, c_nErrorBins, c_nErrorBins);
   }
-  if ( !m_suppressRecovered ) {
-    plot1D(c_binIDrecovered, m_errorHisto[c_id], m_errorHisto[c_title], 
-                      0, c_nErrorBins, c_nErrorBins, 
-                      (summary->recoveredBanks()).size());
+  if ( !m_suppressMissing && (summary->missingBanks()).size() > 0 ) {
+    plot1D( c_binIDmissing, errorHistoID, errorHistoTitle, 
+            0, c_nErrorBins, c_nErrorBins );
+  }
+  if ( !m_suppressRecovered && (summary->recoveredBanks()).size() > 0 ) {
+    plot1D( c_binIDrecovered, errorHistoID, errorHistoTitle, 
+            0, c_nErrorBins, c_nErrorBins );
   }
 
-  // Data Size
-  plot1D(summary->rawBufferSize()/1024, m_dataSizeHisto[c_id], m_dataSizeHisto[c_title], 
-                    0, 100 , 200); 
-  
-
+  // Fill data size histogram
+  plot1D( summary->rawBufferSize()/1024, "dataSize", "Data size (kB) per event",
+          0, 500 , 250);
   
   return StatusCode::SUCCESS;
 }
 
 StatusCode STSummaryMonitor::finalize()
 {
-  return StatusCode::SUCCESS;
+  return ST::HistoAlgBase::finalize();// must be called after all other actions
 }

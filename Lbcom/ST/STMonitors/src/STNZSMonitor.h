@@ -1,4 +1,4 @@
-// $Id: STNZSMonitor.h,v 1.3 2009-03-24 10:32:14 jvantilb Exp $
+// $Id: STNZSMonitor.h,v 1.4 2009-03-25 09:39:15 jvantilb Exp $
 #ifndef STNZSMonitor_H
 #define STNZSMonitor_H 1
 
@@ -52,9 +52,11 @@ private:
   typedef std::map<int, std::vector<double> > DataMap;  
   DataMap m_meanMap;            ///< Internal map for the pedestals
   DataMap m_meanSqMap;          ///< Internal map of the pedestal^2
-  std::map<int, std::vector<int> > m_nEvents; ///< Internal map of number of events per tell1 and FPGA-PP
 
-  // jobOptions
+  /// Internal map of number of events per tell1 and FPGA-PP
+  std::map<int, std::vector<int> > m_nEvents;
+
+  // jobOptions:
 
   /// Detector type. Can be set to IT or TT. Changes m_dataLocation accordingly
   std::string m_detType;
