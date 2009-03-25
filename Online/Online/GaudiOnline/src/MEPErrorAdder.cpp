@@ -5,7 +5,7 @@
 //
 //  Package   : GaudiOnline
 //
-//  Author    : David Svantesson 
+//  Author    : David Svantesson i
 //
 //  ===========================================================
 #include <cstdlib>
@@ -22,13 +22,20 @@
 
 #include "GaudiOnline/MEPRxSys.h"
 
-#define PUBCNT(name, desc) do {m_ ## name = 0; m_monSvc->declareInfo(#name, m_ ## name, desc, this);} while(0);
-#define PUBARRAYCNT(name, desc) do {m_monSvc->declareInfo(#name, "I", & m_ ## name [0], m_ ## name.size()*sizeof(int), desc, this);} while(0);
+#define PUBCNT(name, desc) do {m_ ## name = 0; m_monSvc->declareInfo(#name,"X", & m_ ## name, sizeof(int64_t), desc, this);} while(0);
+#define PUBARRAYCNT(name, desc) do {m_monSvc->declareInfo(#name, "X", & m_ ## name [0], m_ ## name.size()*sizeof(int64_t), desc, this);} while(0);
 
 template <typename T> static void resetCounter(T& cnt) { cnt = 0; }
 template <typename T> static void resetCounters(T& cnt,size_t len) {
   cnt.resize(len,0);
   std::for_each(cnt.begin(),cnt.end(),resetCounter<typename T::value_type>);
+}
+
+template <typename T> static void reset2DCounters(T& cnt, size_t len1, size_t len2) {
+  cnt.resize(len1);
+  for (int i=0; i<len1; i++) {
+    cnt[i].resize(len2,0);
+  }
 }
 
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb, MEPErrorAdder);
@@ -41,8 +48,6 @@ MEPErrorAdder::MEPErrorAdder(const std::string& nam, ISvcLocator* svc)
 
   
   declareProperty("listenerDnsNode",    m_listenerDnsNode); 		//Also where we get RunInfo (ECSXX)
-  declareProperty("senderDnsNode",      m_senderDnsNode);
-
   declareProperty("updateFrequency",    m_updateFrequency =5);		//How often the statistics should be updated
   
   declareProperty("sumPartition",	m_sumPartition=false); 	  	//Is this a sum over nodes in subfarm, or subfarms in partition?
@@ -55,11 +60,29 @@ MEPErrorAdder::MEPErrorAdder(const std::string& nam, ISvcLocator* svc)
   declareProperty("nrSubNodes",         m_nrSubNodes =4);         	//Number of nodes per subfarm
   
   declareProperty("nSrc",               m_nSrc=100);			//Numer of TELL1 sources this partition have
-									// Maybe we could get this from RunInfo instead....
+
 }
 
 MEPErrorAdder::~MEPErrorAdder() {
-  
+  for (int i=0; i<m_badLenPkt.size(); i++) {
+    delete m_subsBadLenPkt[i];
+    delete m_subsBadPckFktPkt[i];
+    delete m_subsMisPkt[i];
+    delete m_subsTruncPkt[i];
+    delete m_subsMultipleEvt[i];
+    delete m_subsRxOct[i];
+    delete m_subsRxPkt[i];
+    delete m_subsRxEvt[i];
+    delete m_subsTotRxOct[i];
+    delete m_subsTotRxPkt[i];
+    delete m_subsIncEvt[i];
+    delete m_subsTotBadMEP[i];
+    delete m_subsTotMEPReq[i];
+    delete m_subsTotMEPReqPkt[i];
+    delete m_subsNumMEPRecvTimeouts[i];
+    delete m_subsNotReqPkt[i];
+    delete m_subsTotWrongPartID[i];
+  }	
 }
 
 int
@@ -71,7 +94,21 @@ MEPErrorAdder::setupCounters() {
   resetCounters(m_badLenPkt, m_nSrc);
   resetCounters(m_misPkt, m_nSrc);
   resetCounters(m_truncPkt, m_nSrc);
-  resetCounters(m_multipleEvt, m_nSrc);
+  resetCounters(m_multipleEvt, m_nSrc); 
+
+  m_totMEPReq          = 0;
+  m_totMEPReqPkt       = 0;
+  m_numMEPRecvTimeouts = 0;
+  m_notReqPkt          = 0;
+  m_totRxOct           = 0;
+  m_totRxPkt           = 0;
+  m_incEvt             = 0; 
+  m_totMEPReqPkt       = 0;
+  m_numMEPRecvTimeouts = 0;
+  m_totMEPReq          = 0;
+  m_totBadMEP          = 0;
+  m_totWrongPartID     = 0;
+
   PUBARRAYCNT(badLenPkt,     "MEPs with mismatched length");
   PUBARRAYCNT(misPkt,        "Missing MEPs");
   PUBARRAYCNT(badPckFktPkt,  "MEPs with wrong packing (MEP) factor");
@@ -80,6 +117,16 @@ MEPErrorAdder::setupCounters() {
   PUBARRAYCNT(rxOct,         "Received bytes");
   PUBARRAYCNT(rxPkt,         "Received packets");
   PUBARRAYCNT(rxEvt,         "Received events");
+
+  PUBCNT(totRxOct,           "Total received bytes");
+  PUBCNT(totRxPkt,           "Total received packets");
+  PUBCNT(incEvt,             "Incomplete events"); 
+  PUBCNT(totBadMEP,          "Total bad MEPs");
+  PUBCNT(totMEPReq,          "Total requested MEPs");
+  PUBCNT(totMEPReqPkt,       "Total Sent MEP-request packets");
+  PUBCNT(numMEPRecvTimeouts, "MEP-receive Timeouts");
+  PUBCNT(notReqPkt,          "Total unsolicited packets");
+  PUBCNT(totWrongPartID,     "Packets with wrong partition-ID");
 
   return 0;
 }
@@ -93,12 +140,10 @@ MEPErrorAdder::initialize() {
   }
   m_log << MSG::DEBUG << "Partition Name: " << m_partitionName << endmsg;
   
-  DimServer::autoStartOff();
-
   char temp[100];
 
   if (m_sumPartition) {    
-  	m_log << MSG::INFO << "Acquiring RunInfo information about subfarms etc. in partition" << endmsg;  
+  	m_log << MSG::DEBUG << "Acquiring RunInfo information about subfarms etc. in partition" << endmsg;  
  	if (m_runInfoDnsNode.size()>0) DimClient::setDnsNode(m_runInfoDnsNode.c_str());
 	else DimClient::setDnsNode(m_listenerDnsNode.c_str());
 
@@ -123,7 +168,7 @@ MEPErrorAdder::initialize() {
   }
   
   DimClient::setDnsNode(m_listenerDnsNode.c_str());
-  DimServer::setDnsNode(m_senderDnsNode.c_str());
+
 
   //All services we want to publish, through the Monitoring Svc
   m_log << MSG::DEBUG << "Setup Monitoring Svc" << endmsg;
@@ -138,77 +183,131 @@ MEPErrorAdder::initialize() {
     return StatusCode::FAILURE;
   }
 
-  if (m_sumPartition) sprintf(temp,"%s_MEPRx_1",m_partitionName.c_str());
-  else sprintf(temp,"%s_MEPRx_1",m_listenerDnsNode.c_str());
-  m_log << MSG::DEBUG << "Starting DIM Server:" << temp <<  endmsg;
-  DimServer::start(temp);
-
-  //m_log << MSG::DEBUG << "Listen to services" << endmsg;
-  
   // add all services we want to listen to..
-  int nrservices;
-  if (m_sumPartition) nrservices = m_nrSubFarms;
-  else nrservices = m_nrSubNodes;     
+  if (m_sumPartition) m_nrServices = m_nrSubFarms;
+  else m_nrServices = m_nrSubNodes;     
   // need to resize
-  m_subsBadLenPkt.resize(nrservices,NULL);
-  m_subsBadPckFktPkt.resize(nrservices,NULL);
-  m_subsMisPkt.resize(nrservices,NULL);
-  m_subsTruncPkt.resize(nrservices,NULL);
-  m_subsMultipleEvt.resize(nrservices,NULL);
-  m_subsRxOct.resize(nrservices,NULL);
-  m_subsRxPkt.resize(nrservices,NULL);
-  m_subsRxEvt.resize(nrservices,NULL);
-  m_rBadLenPkt.resize(nrservices);
-  m_rBadPckFktPkt.resize(nrservices);
-  m_rMisPkt.resize(nrservices);
-  m_rTruncPkt.resize(nrservices);
-  m_rMultipleEvt.resize(nrservices);
-  m_rRxOct.resize(nrservices);
-  m_rRxPkt.resize(nrservices);
-  m_rRxEvt.resize(nrservices);
+  m_subsBadLenPkt.resize(m_nrServices,NULL);
+  m_subsBadPckFktPkt.resize(m_nrServices,NULL);
+  m_subsMisPkt.resize(m_nrServices,NULL);
+  m_subsTruncPkt.resize(m_nrServices,NULL);
+  m_subsMultipleEvt.resize(m_nrServices,NULL);
+  m_subsRxOct.resize(m_nrServices,NULL);
+  m_subsRxPkt.resize(m_nrServices,NULL);
+  m_subsRxEvt.resize(m_nrServices,NULL);
+
+  m_subsTotRxOct.resize(m_nrServices,NULL);
+  m_subsTotRxPkt.resize(m_nrServices,NULL);
+  m_subsIncEvt.resize(m_nrServices,NULL);
+  m_subsTotBadMEP.resize(m_nrServices,NULL);
+  m_subsTotMEPReq.resize(m_nrServices,NULL);
+  m_subsTotMEPReqPkt.resize(m_nrServices,NULL);
+  m_subsNumMEPRecvTimeouts.resize(m_nrServices,NULL);
+  m_subsNotReqPkt.resize(m_nrServices,NULL);
+  m_subsTotWrongPartID.resize(m_nrServices,NULL);
+
+  reset2DCounters(m_rBadLenPkt,m_nrServices,m_nSrc);
+  reset2DCounters(m_rBadPckFktPkt,m_nrServices,m_nSrc);
+  reset2DCounters(m_rMisPkt,m_nrServices,m_nSrc);
+  reset2DCounters(m_rTruncPkt,m_nrServices,m_nSrc);
+  reset2DCounters(m_rMultipleEvt,m_nrServices,m_nSrc);
+  reset2DCounters(m_rRxOct,m_nrServices,m_nSrc);
+  reset2DCounters(m_rRxPkt,m_nrServices,m_nSrc);
+  reset2DCounters(m_rRxEvt,m_nrServices,m_nSrc);
+
+  m_rTotRxOct.resize(m_nrServices,0);
+  m_rTotRxPkt.resize(m_nrServices,0);
+  m_rIncEvt.resize(m_nrServices,0);
+  m_rTotBadMEP.resize(m_nrServices,0);
+  m_rTotMEPReq.resize(m_nrServices,0);
+  m_rTotMEPReqPkt.resize(m_nrServices,0);
+  m_rNumMEPRecvTimeouts.resize(m_nrServices,0);
+  m_rNotReqPkt.resize(m_nrServices,0);
+  m_rTotWrongPartID.resize(m_nrServices,0);
+
+  longlong zero = 0;
+
   if (m_sumPartition) { 
     //Partition sum
     for (int i=0;i<m_nrSubFarms;i++) {
   	//all subfarms
 	sprintf(temp,"%s_MEPRx_1/Runable/badLenPkt",m_subFarms[i].c_str());
-	m_subsBadLenPkt[i] = new DimInfo(temp,m_updateFrequency,0,this);
+	m_subsBadLenPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
     	sprintf(temp,"%s_MEPRx_1/Runable/badPckFktPkt",m_subFarms[i].c_str());
-   	m_subsBadPckFktPkt[i] = new DimInfo(temp,m_updateFrequency,0,this);
+   	m_subsBadPckFktPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
    	sprintf(temp,"%s_MEPRx_1/Runable/misPkt",m_subFarms[i].c_str());
-   	m_subsMisPkt[i] = new DimInfo(temp,m_updateFrequency,0,this);
+   	m_subsMisPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
     	sprintf(temp,"%s_MEPRx_1/Runable/truncPkt",m_subFarms[i].c_str());
-    	m_subsTruncPkt[i] = new DimInfo(temp,m_updateFrequency,0,this);
+    	m_subsTruncPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
     	sprintf(temp,"%s_MEPRx_1/Runable/multipleEvt",m_subFarms[i].c_str());
-    	m_subsMultipleEvt[i] = new DimInfo(temp,m_updateFrequency,0,this);
+    	m_subsMultipleEvt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
     	sprintf(temp,"%s_MEPRx_1/Runable/rxOct",m_subFarms[i].c_str());
-    	m_subsRxOct[i] = new DimInfo(temp,m_updateFrequency,0,this);
+    	m_subsRxOct[i] = new DimInfo(temp,m_updateFrequency,zero,this);
     	sprintf(temp,"%s_MEPRx_1/Runable/rxPkt",m_subFarms[i].c_str());
-    	m_subsRxPkt[i] = new DimInfo(temp,m_updateFrequency,0,this);
+    	m_subsRxPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
     	sprintf(temp,"%s_MEPRx_1/Runable/rxEvt",m_subFarms[i].c_str());
-    	m_subsRxEvt[i] = new DimInfo(temp,m_updateFrequency,0,this);
+    	m_subsRxEvt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
 	
+	sprintf(temp,"%s_MEPRx_1/Runable/totRxOct",m_subFarms[i].c_str());
+	m_subsTotRxOct[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+    	sprintf(temp,"%s_MEPRx_1/Runable/totRxPkt",m_subFarms[i].c_str());
+	m_subsTotRxPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+    	sprintf(temp,"%s_MEPRx_1/Runable/incEvt",m_subFarms[i].c_str());
+	m_subsIncEvt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+    	sprintf(temp,"%s_MEPRx_1/Runable/totBadMEP",m_subFarms[i].c_str());
+	m_subsTotBadMEP[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+    	sprintf(temp,"%s_MEPRx_1/Runable/totMEPReq",m_subFarms[i].c_str());
+	m_subsTotMEPReq[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+    	sprintf(temp,"%s_MEPRx_1/Runable/totMEPReqPkt",m_subFarms[i].c_str());
+	m_subsTotMEPReqPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+    	sprintf(temp,"%s_MEPRx_1/Runable/numMEPRecvTimeouts",m_subFarms[i].c_str());
+	m_subsNumMEPRecvTimeouts[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+    	sprintf(temp,"%s_MEPRx_1/Runable/notReqPkt",m_subFarms[i].c_str());
+	m_subsNotReqPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+    	sprintf(temp,"%s_MEPRx_1/Runable/totWrongPartID",m_subFarms[i].c_str());
+	m_subsBadLenPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+    	
     }
   } else {
     //Subfarm sum
     for (int i=0;i<m_nrSubNodes;i++) {
    	//all nodes in this subfarm 
    	sprintf(temp,"%s%.2i_MEPRx_1/Runable/badLenPkt",m_listenerDnsNode.c_str(),i+1);
-        m_subsBadLenPkt[i] = new DimInfo(temp,m_updateFrequency,0,this);
+        m_subsBadLenPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
    	sprintf(temp,"%s%.2i_MEPRx_1/Runable/badPckFktPkt",m_listenerDnsNode.c_str(),i+1);
-   	m_subsBadPckFktPkt[i] = new DimInfo(temp,m_updateFrequency,0,this);
+   	m_subsBadPckFktPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
    	sprintf(temp,"%s%.2i_MEPRx_1/Runable/misPkt",m_listenerDnsNode.c_str(),i+1);
-   	m_subsMisPkt[i] = new DimInfo(temp,m_updateFrequency,0,this);
+   	m_subsMisPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
     	sprintf(temp,"%s%.2i_MEPRx_1/Runable/truncPkt",m_listenerDnsNode.c_str(),i+1);
-    	m_subsTruncPkt[i] = new DimInfo(temp,m_updateFrequency,0,this);
+    	m_subsTruncPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
     	sprintf(temp,"%s%.2i_MEPRx_1/Runable/multipleEvt",m_listenerDnsNode.c_str(),i+1);
-    	m_subsMultipleEvt[i] = new DimInfo(temp,m_updateFrequency,0,this);
+    	m_subsMultipleEvt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
     	sprintf(temp,"%s%.2i_MEPRx_1/Runable/rxOct",m_listenerDnsNode.c_str(),i+1);
-    	m_subsRxOct[i] = new DimInfo(temp,m_updateFrequency,0,this);
+    	m_subsRxOct[i] = new DimInfo(temp,m_updateFrequency,zero,this);
     	sprintf(temp,"%s%.2i_MEPRx_1/Runable/rxPkt",m_listenerDnsNode.c_str(),i+1);
-    	m_subsRxPkt[i] = new DimInfo(temp,m_updateFrequency,0,this);
+    	m_subsRxPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
     	sprintf(temp,"%s%.2i_MEPRx_1/Runable/rxEvt",m_listenerDnsNode.c_str(),i+1);
-    	m_subsRxEvt[i] = new DimInfo(temp,m_updateFrequency,0,this);
-	
+    	m_subsRxEvt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+
+	sprintf(temp,"%s%.2i_MEPRx_1/Runable/totRxOct",m_listenerDnsNode.c_str(),i+1);
+	m_subsTotRxOct[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+    	sprintf(temp,"%s%.2i_MEPRx_1/Runable/totRxPkt",m_listenerDnsNode.c_str(),i+1);
+	m_subsTotRxPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+    	sprintf(temp,"%s%.2i_MEPRx_1/Runable/incEvt",m_listenerDnsNode.c_str(),i+1);
+	m_subsIncEvt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+    	sprintf(temp,"%s%.2i_MEPRx_1/Runable/totBadMEP",m_listenerDnsNode.c_str(),i+1);
+	m_subsTotBadMEP[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+    	sprintf(temp,"%s%.2i_MEPRx_1/Runable/totMEPReq",m_listenerDnsNode.c_str(),i+1);
+	m_subsTotMEPReq[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+    	sprintf(temp,"%s%.2i_MEPRx_1/Runable/totMEPReqPkt",m_listenerDnsNode.c_str(),i+1);
+	m_subsTotMEPReqPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+    	sprintf(temp,"%s%.2i_MEPRx_1/Runable/numMEPRecvTimeouts",m_listenerDnsNode.c_str(),i+1);
+	m_subsNumMEPRecvTimeouts[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+    	sprintf(temp,"%s%.2i_MEPRx_1/Runable/notReqPkt",m_listenerDnsNode.c_str(),i+1);
+	m_subsNotReqPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+    	sprintf(temp,"%s%.2i_MEPRx_1/Runable/totWrongPartID",m_listenerDnsNode.c_str(),i+1);
+	m_subsTotWrongPartID[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+    	
     }
   }
  
@@ -233,141 +332,101 @@ MEPErrorAdder::finalize() {
   m_subsRxOct.clear();
   m_subsRxPkt.clear();
   m_subsRxEvt.clear();
+  m_subsTotRxOct.clear();
+  m_subsTotRxPkt.clear();
+  m_subsIncEvt.clear();
+  m_subsTotBadMEP.clear();
+  m_subsTotMEPReq.clear();
+  m_subsTotMEPReqPkt.clear();
+  m_subsNumMEPRecvTimeouts.clear();
+  m_subsNotReqPkt.clear();
+  m_subsTotWrongPartID.clear();
+
 
   m_svcState = NOT_READY;  
   return Service::finalize();
 } 
+
+/** Help-function for receiving array counters
+ *
+ */
+bool
+MEPErrorAdder::ReceiveArrayService(DimInfo * curr, DimInfo * subs,  std::vector<int64_t> &rArray, std::vector<int64_t> &sArray) {
+
+  // Return false if not the correct service
+  if (curr != subs) return false;
+
+  int arraySize = curr->getSize()/sizeof(int64_t);
+  if (arraySize<m_nSrc) {
+    m_log << MSG::INFO << "Received less data than number of sources from a service." << endmsg;
+  }
+  else if (arraySize>m_nSrc) {
+    //This is an error, we can't receive more data than the number of sources.
+    m_log << MSG::WARNING << "Received too much data from a service (compared to number of sources), ignoring..." << endmsg;	
+    arraySize = m_nSrc;
+  }
+
+  int64_t * data = (int64_t*) curr->getData();
+  int64_t diff;
+
+  for (int j=0; j<arraySize; j++) {
+    diff = data[j] - rArray[j];
+    sArray[j] += diff;
+  }
+
+  return true;
+}
+
+/** Help-function for receiving single counters
+ *
+ */
+bool
+MEPErrorAdder::ReceiveSingleService(DimInfo * curr, DimInfo * subs, int64_t rValue, int64_t sValue) {
+
+  // Return false if not the correct service
+  if (curr != subs) return false;
+
+  int64_t data = *((int64_t*) curr->getData());
+  
+  int64_t diff = data - rValue;
+  rValue = data;
+  sValue += diff;
+
+  return true;
+
+}
 
 void
 MEPErrorAdder::infoHandler() {
   DimInfo * curr = getInfo();
  
   m_log << MSG::DEBUG << "Receiving data from " << curr->getName() << endmsg;
-  
-  int nrservices;
-  if (m_sumPartition) nrservices = m_nrSubFarms;
-  else nrservices = m_nrSubNodes;     
- 
-  int diff;
-  int prevSize;
-  int newSize;
+
   //To know what service, we must iterate over all...
-  for (int i=0;i<nrservices; i++) {
-    if (curr == m_subsBadLenPkt[i]) {
-      prevSize = m_rBadLenPkt[i].size();
-      newSize = curr->getSize()/sizeof(int);
-      if (prevSize<newSize) m_rBadLenPkt[i].resize(newSize,0); 
-      int * data = (int*) curr->getData();
-      
-      for (int j=0; j<newSize; j++) {
-        diff = data[j] - m_rBadLenPkt[i][j];
-        m_rBadLenPkt[i][j] = data[j]; 	//save the received data
-        m_badLenPkt[j] += diff;		//add difference to get current value
-	//m_log << MSG::DEBUG << "Data: " << data[j] << " Diff: " << diff << " Value: "<< m_badLenPkt[j] << endmsg;
-      }
-      break;
-    }
-    if (curr == m_subsBadPckFktPkt[i]) {
-      prevSize = m_rBadPckFktPkt[i].size();
-      newSize = curr->getSize()/sizeof(int);
-      
-      if (prevSize<newSize) m_rBadPckFktPkt[i].resize(newSize,0); 
-      int * data = (int*) curr->getData();
-      
-      for (int j=0; j<newSize; j++) {
-        diff = data[j] - m_rBadPckFktPkt[i][j];
-        m_rBadPckFktPkt[i][j] = data[j];
-        m_badPckFktPkt[j] += diff;
-      }
-      break;
-    }
-    if (curr == m_subsMisPkt[i]) {
-      prevSize = m_rMisPkt[i].size();
-      newSize = curr->getSize()/sizeof(int);
-      
-      if (prevSize<newSize) m_rMisPkt[i].resize(newSize,0); 
-      int * data = (int*) curr->getData();
-      
-      for (int j=0; j<newSize; j++) {
-        diff = data[j] - m_rMisPkt[i][j];
-        m_rMisPkt[i][j] = data[j];
-        m_misPkt[j] += diff;
-      }
-      break;
-    }
-    if (curr == m_subsTruncPkt[i]) {
-      prevSize = m_rTruncPkt[i].size();
-      newSize = curr->getSize()/sizeof(int);
-      
-      if (prevSize<newSize) m_rTruncPkt[i].resize(newSize,0); 
-      int * data = (int*) curr->getData();
-      
-      for (int j=0; j<newSize; j++) {
-        diff = data[j] - m_rTruncPkt[i][j];
-        m_rTruncPkt[i][j] = data[j];
-        m_truncPkt[j] += diff;
-      }
-      break;
-    }
-    
-    if (curr == m_subsMultipleEvt[i]) {
-      prevSize = m_rMultipleEvt[i].size();
-      newSize = curr->getSize()/sizeof(int);
-      
-      if (prevSize<newSize) m_rMultipleEvt[i].resize(newSize,0); 
-      int * data = (int*) curr->getData();
-      
-      for (int j=0; j<newSize; j++) {
-        diff = data[j] - m_rMultipleEvt[i][j];
-        m_rMultipleEvt[i][j] = data[j];
-        m_multipleEvt[j] += diff;
-      }
-      break;
-    }
-    if (curr == m_subsRxOct[i]) {
-      prevSize = m_rRxOct[i].size();
-      newSize = curr->getSize()/sizeof(int);
-      
-      if (prevSize<newSize) m_rRxOct[i].resize(newSize,0); 
-      int * data = (int*) curr->getData();
-      
-      for (int j=0; j<newSize; j++) {
-        diff = data[j] - m_rRxOct[i][j];
-        m_rRxOct[i][j] = data[j];
-        m_rxOct[j] += diff;
-      }
-      break;
-    }
-    if (curr == m_subsRxPkt[i]) {
-      prevSize = m_rRxPkt[i].size();
-      newSize = curr->getSize()/sizeof(int);
-      
-      if (prevSize<newSize) m_rRxPkt[i].resize(newSize,0); 
-      int * data = (int*) curr->getData();
-      
-      for (int j=0; j<newSize; j++) {
-        diff = data[j] - m_rRxPkt[i][j];
-        m_rRxPkt[i][j] = data[j];
-        m_rxPkt[j] += diff;
-      }
-      break;
-    }
-    if (curr == m_subsRxEvt[i]) {
-      prevSize = m_rRxEvt[i].size();
-      newSize = curr->getSize()/sizeof(int);
-      
-      if (prevSize<newSize) m_rRxEvt[i].resize(newSize,0); 
-      int * data = (int*) curr->getData();
-      
-      for (int j=0; j<newSize; j++) {
-        diff = data[j] - m_rRxEvt[i][j];
-        m_rRxEvt[i][j] = data[j];
-        m_rxEvt[j] += diff;
-      }
-      break;
-    }
+  for (int i=0;i<m_nrServices; i++) {
+    if (ReceiveArrayService(curr,m_subsBadLenPkt[i], m_rBadLenPkt[i], m_badLenPkt)) break;
+    if (ReceiveArrayService(curr,m_subsBadPckFktPkt[i], m_rBadPckFktPkt[i], m_badPckFktPkt)) break;
+    if (ReceiveArrayService(curr,m_subsMisPkt[i], m_rMisPkt[i], m_misPkt)) break;
+    if (ReceiveArrayService(curr,m_subsTruncPkt[i], m_rTruncPkt[i], m_truncPkt)) break;
+    if (ReceiveArrayService(curr,m_subsMultipleEvt[i], m_rMultipleEvt[i], m_multipleEvt)) break;
+    if (ReceiveArrayService(curr,m_subsRxOct[i], m_rRxOct[i], m_rxOct)) break;
+    if (ReceiveArrayService(curr,m_subsRxPkt[i], m_rRxPkt[i], m_rxPkt)) break;
+    if (ReceiveArrayService(curr,m_subsRxEvt[i], m_rRxEvt[i], m_rxEvt)) break;
    
+    if (ReceiveSingleService(curr,m_subsTotRxOct[i], m_rTotRxOct[i], m_totRxOct)) break;    
+    if (ReceiveSingleService(curr,m_subsTotRxPkt[i], m_rTotRxPkt[i], m_totRxPkt)) break;    
+    if (ReceiveSingleService(curr,m_subsIncEvt[i], m_rIncEvt[i], m_incEvt)) break;    
+    if (ReceiveSingleService(curr,m_subsTotBadMEP[i], m_rTotBadMEP[i], m_totBadMEP)) break;    
+    if (ReceiveSingleService(curr,m_subsTotMEPReq[i], m_rTotMEPReq[i], m_totMEPReq)) break;    
+    if (ReceiveSingleService(curr,m_subsTotMEPReqPkt[i], m_rTotMEPReqPkt[i], m_totMEPReqPkt)) break;    
+    if (ReceiveSingleService(curr,m_subsNumMEPRecvTimeouts[i], m_rNumMEPRecvTimeouts[i], m_numMEPRecvTimeouts)) break;    
+    if (ReceiveSingleService(curr,m_subsNotReqPkt[i], m_rNotReqPkt[i], m_notReqPkt)) break;    
+    if (ReceiveSingleService(curr,m_subsTotWrongPartID[i], m_rTotWrongPartID[i], m_totWrongPartID)) break;    
+  
   }
+
+  //m_log << MSG::DEBUG << "Data size: " << curr->getSize() <<  "Single numbers: " << m_totRxOct << "." << m_totRxPkt  << "." <<  m_incEvt  << "." << m_totBadMEP  << "." << m_totMEPReq  << "." << m_totMEPReqPkt  << "." << m_numMEPRecvTimeouts  << "." << m_notReqPkt  << "." <<  m_totWrongPartID << endmsg;
+
 
 }
 
