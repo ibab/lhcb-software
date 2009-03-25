@@ -9,6 +9,14 @@
    5 MinBias events created.
  - QMtests activated in requirements file.
   
+! 2009-03-06 - Gloria CORTI
+ - Adapt options for debugging G4Tracking to changes in CommandTrackAction
+   class (GaussTools v15r2)
+   . DebugG4Track.opts
+ - Reset particle width to prevent crashes in EvtGen due to changes in
+   ParticleProperty table (DDDD tag head-20090213).
+   TEMPORARY until put in DDDB.
+
 !======================== Gauss v36r2 2009-02-10 =============================
 ! 2009-02-10 - Gloria CORTI
  - Modify transverse beam size settings for 450 GeV and 5 TeV based on 
