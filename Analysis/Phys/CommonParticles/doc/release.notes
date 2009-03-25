@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.115 2009-03-01 19:28:38 jpalac Exp $
+!$Id: release.notes,v 1.116 2009-03-25 16:23:44 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
+
+! 2009-03-25 - Patrick Koppenburg
+ - Bug fix in StdLooseD02HH : All states except D0->Kpi were called Standard 
+	 instead of Std.
 
 !========================== CommonParticles v5r0 2009-03-01 ==================
 

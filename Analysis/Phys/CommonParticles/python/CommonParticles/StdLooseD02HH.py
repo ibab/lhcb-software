@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseD02HH.py,v 1.2 2009-02-24 14:19:26 pkoppenb Exp $ 
+# $Id: StdLooseD02HH.py,v 1.3 2009-03-25 16:23:44 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseD02HH.py
 #  configuration file for 'Standard Loose D0 -> HH' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Loose D0 -> HH'
 """
 __author__  = "Patrick Koppenburg"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # =============================================================================
 __all__ = (
     'StdLooseD02KPi' ,
@@ -34,7 +34,7 @@ StdLooseD02KPi.PhysDesktop.InputLocations = [ "StdLooseKaons", "StdLoosePions" ]
 StdLooseD02KPi.DecayDescriptor = "[D0 -> K- pi+]cc" 
 
 StdLooseD02KPi.DaughtersCuts = { "K+" : "(PT>300*MeV) & (P>2*GeV) & (MIPCHI2DV(PRIMARY)>4)",
-                                   "pi+" : "(PT>300*MeV) & (P>2*GeV) & (MIPCHI2DV(PRIMARY)>4)"} 
+                                 "pi+" : "(PT>300*MeV) & (P>2*GeV) & (MIPCHI2DV(PRIMARY)>4)"} 
 StdLooseD02KPi.CombinationCut = "(ADAMASS('D0')<50) & (APT>1*GeV)"
 StdLooseD02KPi.MotherCut = "(VFASPF(VCHI2/VDOF)<25)"
 
@@ -43,7 +43,7 @@ locations = updateDoD ( StdLooseD02KPi )
 
 ## ============================================================================
 ## PiPi
-StdLooseD02PiPi = StdLooseD02KPi.clone("StandardLooseD02PiPi")
+StdLooseD02PiPi = StdLooseD02KPi.clone("StdLooseD02PiPi")
 StdLooseD02PiPi.DecayDescriptor = "[D0 -> pi- pi+]cc"
 StdLooseD02PiPi.PhysDesktop.InputLocations = [ "StdLoosePions" ]
 
@@ -52,7 +52,7 @@ locations = updateDoD ( StdLooseD02PiPi )
 
 ## ============================================================================
 ## KK
-StdLooseD02KK = StdLooseD02KPi.clone("StandardLooseD02KK")
+StdLooseD02KK = StdLooseD02KPi.clone("StdLooseD02KK")
 StdLooseD02KK.DecayDescriptor = "[D0 -> K- K+]cc"
 StdLooseD02KK.PhysDesktop.InputLocations = [ "StdLooseKaons" ]
 
@@ -61,7 +61,7 @@ locations = updateDoD ( StdLooseD02KK )
 
 ## ============================================================================
 ## Doubly Cabibbo suppressed
-StdLooseD02KPiDCS = StdLooseD02KPi.clone("StandardLooseD02KPiDCS")
+StdLooseD02KPiDCS = StdLooseD02KPi.clone("StdLooseD02KPiDCS")
 StdLooseD02KPiDCS.DecayDescriptor = "[D0 -> K+ pi-]cc" 
 StdLooseD02KPiDCS.PhysDesktop.InputLocations = [ "StdLooseKaons", "StdLoosePions" ]
 
