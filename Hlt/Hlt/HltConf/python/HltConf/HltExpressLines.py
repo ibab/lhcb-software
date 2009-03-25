@@ -5,7 +5,7 @@ from HltConf.HltLine import Hlt1Line as Line
 #
 class HltExpressLinesConf(HltLinesConfigurableUser) :
     # steering variables
-    __slots__ = { 'Prescale' : { 'XPress' : 0.0025 } } # overrule inherited default
+    __slots__ = { 'Prescale' : { 'Hlt1XPress' : 0.0025 } } # overrule inherited default
 
     def __apply_configuration__(self) : 
         Line( 'XPress' 

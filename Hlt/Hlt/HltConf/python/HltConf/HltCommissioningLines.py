@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltCommissioningLines.py,v 1.5 2009-03-25 08:38:54 graven Exp $
+# $Id: HltCommissioningLines.py,v 1.6 2009-03-25 09:35:40 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines for commissioning
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $"
 # =============================================================================
 
 from HltConf.HltLinesConfigurableUser import *
@@ -22,9 +22,9 @@ from Configurables   import HltIncidentFilter
 
 class HltCommissioningLinesConf(HltLinesConfigurableUser):
 
-   __slots__ = { 'Prescale' : { 'Physics'  : 1 # update default prescales for these lines
-                              , 'Random'   : 1 # @OnlineEnv.AcceptRate
-                              , 'L0Forced' : 0 
+   __slots__ = { 'Prescale' : { 'Hlt1Physics'  : 1 # update default prescales for these lines
+                              , 'Hlt1Random'   : 1 # @OnlineEnv.AcceptRate
+                              , 'Hlt1L0Forced' : 0 
                               }
                }
    def __apply_configuration__(self):
