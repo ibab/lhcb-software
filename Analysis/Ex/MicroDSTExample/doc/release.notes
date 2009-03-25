@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.19 2009-03-25 11:17:54 jpalac Exp $
+!$Id: release.notes,v 1.20 2009-03-25 11:31:08 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Ex/MicroDSTExample
 ! Responsible : Juan PALACIOS
@@ -10,6 +10,7 @@
   . Add possibility of changing the pre-fix for MicroDST data location.
     Eg /Event/microDST, /Event/MicroDST, /Event/MySelection.
     Steered with property PhysMicroDST().OutputPrefix.
+  . Move it to DaVinci under name PhysMicroDST.py
 
 ! 2009-03-24 - Juan PALACIOS
  - python/MicroDSTExample/Configuration.py
