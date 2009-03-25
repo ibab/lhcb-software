@@ -1,9 +1,15 @@
-!$Id: release.notes,v 1.18 2009-03-24 17:26:26 jpalac Exp $
+!$Id: release.notes,v 1.19 2009-03-25 11:17:54 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Ex/MicroDSTExample
 ! Responsible : Juan PALACIOS
 ! Purpose     : MicroDST making and reading examples.
 !-----------------------------------------------------------------------------
+
+! 2009-03-25 - Juan PALACIOS
+ - python/MicroDSTExample/Configuration.py
+  . Add possibility of changing the pre-fix for MicroDST data location.
+    Eg /Event/microDST, /Event/MicroDST, /Event/MySelection.
+    Steered with property PhysMicroDST().OutputPrefix.
 
 ! 2009-03-24 - Juan PALACIOS
  - python/MicroDSTExample/Configuration.py
