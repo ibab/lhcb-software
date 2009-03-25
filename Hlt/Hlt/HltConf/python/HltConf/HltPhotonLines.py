@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltPhotonLines.py,v 1.9 2009-03-12 16:33:40 graven Exp $
+# $Id: HltPhotonLines.py,v 1.10 2009-03-25 08:38:54 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Photon Lines
@@ -12,13 +12,12 @@
 '''
 # =============================================================================
 __author__  = 'Gerhard Raven Gerhard.Raven@nikhef.nl'
-__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $'
+__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $'
 # =============================================================================
 
 from Gaudi.Configuration import * 
-from LHCbKernel.Configuration import *
 
-
+from HltConf.HltLinesConfigurableUser import *
 from HltConf.HltLine import Hlt1Line   as Line
 from HltConf.HltLine import Hlt1Member as Member
 from HltConf.HltLine import Hlt1Tool   as Tool
@@ -30,10 +29,8 @@ from HltConf.HltLine import hlt1Lines, addHlt1Prop, rmHlt1Prop
 from HltConf.HltL0Candidates import *
 
 
-class HltPhotonLinesConf(LHCbConfigurableUser):
-   __slots__ = { 'Prescale'        : 1
-               , 'Postscale'       : 1
-               , 'Track_PtCut'     : 650.   # for global optimization 1
+class HltPhotonLinesConf(HltLinesConfigurableUser):
+   __slots__ = { 'Track_PtCut'     : 650.   # for global optimization 1
                , 'Track_IPCut3D'   : 0.15   # for global optimization 2
                , 'Pho_IsPho'       : -0.1   # for global optimization 3 optional
                , 'Pho_EtCut'       : 2500.
@@ -100,6 +97,7 @@ class HltPhotonLinesConf(LHCbConfigurableUser):
                       ]
 
         Line ('Photon' 
+              , prescale = self.prescale
               , L0DU = "L0_CHANNEL('Photon')"
               , algos = [ convertL0Candidates('Photon') ] + commonSeq
                       + [ Member ( 'AddPhotonToVertex', 'DiTrackDecision' # add photon track to ditrack vertex to save all objects into summary
@@ -108,9 +106,11 @@ class HltPhotonLinesConf(LHCbConfigurableUser):
                                  , OutputSelection = '%Decision'
                                  )
                         ]
+              , postscale = self.postscale
              )
 
         Line ('PhotonFromEle' 
+              , prescale = self.prescale
               , L0DU = "L0_CHANNEL('Electron')"
               , algos = [ convertL0Candidates('Electron') ] + commonSeq
                       + [ Member ( 'AddPhotonToVertex', 'DiTrackDecision' # add photon track to ditrack vertex to save all objects into summary
@@ -119,5 +119,5 @@ class HltPhotonLinesConf(LHCbConfigurableUser):
                                  , OutputSelection = '%Decision'
                                  )
                         ]
+              , postscale = self.postscale
              )
-

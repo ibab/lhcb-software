@@ -1,9 +1,9 @@
 #!/usr/bin/env gaudirun.py
 
 from Gaudi.Configuration import * 
-from LHCbKernel.Configuration import *
 
 
+from HltConf.HltLinesConfigurableUser import *
 from HltConf.HltLine import Hlt1Line   as Line
 from HltConf.HltLine import Hlt1Member as Member
 from HltConf.HltLine import bindMembers
@@ -11,7 +11,7 @@ from HltConf.HltLine import Hlt1Tool   as Tool
 from HltConf.HltL0Candidates import *
 
 
-class HltElectronLinesConf(LHCbConfigurableUser) :
+class HltElectronLinesConf(HltLinesConfigurableUser) :
 
     # steering variables
     __slots__ = { 'Compan_PtCut'         :  1000.    # for global optimization 1
@@ -86,18 +86,21 @@ class HltElectronLinesConf(LHCbConfigurableUser) :
         ##### Lines
         
         Line ('SingleElectron'
-             , L0DU = "L0_CHANNEL('Electron')"
-             , algos = [ convertL0Candidates('Electron') ] + prepareElectronWithIP
-                     + [ Member ( 'TF','Decision'
-                                , OutputSelection = '%Decision'
-                                , FilterDescriptor = ['PT,>,'+SINGLEELE_PTCUT]
-                                , HistogramUpdatePeriod = 0
-                                , HistoDescriptor = { 'PT' : ('PT',0.,8000.,100), 'PTBest' : ('PTBest',0.,8000.,100)}
-                                )
-                       ]
-             )
+                 , prescale = self.prescale
+                 , L0DU = "L0_CHANNEL('Electron')"
+                 , algos = [ convertL0Candidates('Electron') ] + prepareElectronWithIP
+                         + [ Member ( 'TF','Decision'
+                                    , OutputSelection = '%Decision'
+                                    , FilterDescriptor = ['PT,>,'+SINGLEELE_PTCUT]
+                                    , HistogramUpdatePeriod = 0
+                                    , HistoDescriptor = { 'PT' : ('PT',0.,8000.,100), 'PTBest' : ('PTBest',0.,8000.,100)}
+                                    )
+                           ]
+                 , postscale = self.postscale
+                 )
 
         Line ('SingleElectronFromPi0'
+             , prescale = self.prescale
              , L0DU = "L0_CHANNEL('LocalPi0')"
              , algos = [ convertL0Candidates('LocalPi0') ] + prepareElectronWithIP
                      + [ Member ( 'TF','Decision'
@@ -107,9 +110,11 @@ class HltElectronLinesConf(LHCbConfigurableUser) :
                                 , HistoDescriptor = { 'PT' : ('PT',0.,8000.,100), 'PTBest' : ('PTBest',0.,8000.,100)}
                                 )
                        ]
+             , postscale = self.postscale
              )
 
         Line( 'ElectronTrackWithIP' 
+             , prescale = self.prescale
              , L0DU = "L0_CHANNEL('Electron')"
              , algos = [ convertL0Candidates('Electron') ] + prepareElectronWithIP + companionTrackWithIP
                      + [ Member ( 'VF', 'VertexCut'
@@ -117,9 +122,11 @@ class HltElectronLinesConf(LHCbConfigurableUser) :
                                 , OutputSelection = '%Decision'
                                 )
                        ]
+             , postscale = self.postscale
             )
 
         Line( 'ElectronFromPi0TrackWithIP' 
+             , prescale = self.prescale
              , L0DU = "L0_CHANNEL('LocalPi0')"
              , algos = [ convertL0Candidates('LocalPi0') ] + prepareElectronWithIP + companionTrackWithIP
                      + [ Member ( 'VF', 'VertexCut'
@@ -127,9 +134,11 @@ class HltElectronLinesConf(LHCbConfigurableUser) :
                                 , OutputSelection = '%Decision'
                                 )
                        ]
+             , postscale = self.postscale
             )
 
         Line( 'ElectronTrackNoIP' 
+             , prescale = self.prescale
              , L0DU = "L0_CHANNEL('Electron')"
              , algos = [ convertL0Candidates('Electron') ] + prepareElectronNoIP + companionTrackNoIP 
                      + [ Member ( 'VF', 'VertexCut'
@@ -140,9 +149,11 @@ class HltElectronLinesConf(LHCbConfigurableUser) :
                                 , OutputSelection = '%Decision'
                                 )
                        ]
+             , postscale = self.postscale
             )
         
         Line( 'ElectronFromPi0TrackNoIP' 
+             , prescale = self.prescale
              , L0DU = "L0_CHANNEL('LocalPi0')"
              , algos = [ convertL0Candidates('LocalPi0') ] + prepareElectronNoIP + companionTrackNoIP 
                      + [ Member ( 'VF', 'VertexCut'
@@ -153,4 +164,5 @@ class HltElectronLinesConf(LHCbConfigurableUser) :
                                 , OutputSelection = '%Decision'
                                 )
                        ]
+             , postscale = self.postscale
             )

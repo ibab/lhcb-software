@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltBeamGasLines.py,v 1.2 2009-03-11 16:05:40 graven Exp $
+# $Id: HltBeamGasLines.py,v 1.3 2009-03-25 08:38:53 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of BeamGas Lines
@@ -11,13 +11,13 @@
 """
 # =============================================================================
 __author__  = "Jaap Panman jaap.panman@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
-from LHCbKernel.Configuration import *
 
 
+from HltConf.HltLinesConfigurableUser import *
 from HltConf.HltLine import Hlt1Line   as Line
 from HltConf.HltLine import bindMembers
 from HltConf.HltLine import Hlt1Member as Member
@@ -26,7 +26,7 @@ from HltConf.HltLine import hlt1Lines
 from HltConf.HltL0Candidates import *
 
 
-class HltBeamGasLinesConf(LHCbConfigurableUser) :
+class HltBeamGasLinesConf(HltLinesConfigurableUser) :
     #--------------------------------
     #
     # For the moment set up to select a single hadron Et candidate in the calorimeter
@@ -50,28 +50,30 @@ class HltBeamGasLinesConf(LHCbConfigurableUser) :
         #-----------------------------------
         from Configurables import GaudiSequencer
         Line ( 'BeamGasLeft' 
+               , prescale = self.prescale
                , ODIN  = " ODIN_BXTYP == LHCb.ODIN.SingleBeamLeft "
                , L0DU  = "L0_CHANNEL('"+L0ChannelLeft+"')"
                , algos = [
-            convertL0Candidates('AllHadron')
-            , Member("TF","L0BeamGas", FilterDescriptor = ["L0ET,>,"+str(BeamGas_EtCut)])
-            , GaudiSequencer('Hlt1RecoRZVeloSequence')
-            , Member ( 'TF' ,'RZVelo'
-                       , InputSelection = 'RZVelo'
-                       , FilterDescriptor = ['Calo2DChi2_%TFL0BeamGas,<,4'])
-            , Member ( 'TU', 'Velo',  RecoName = 'Velo')
-            , Member ( 'TF', '1Velo', FilterDescriptor = [ 'Calo3DChi2_%TFL0BeamGas,<,4' ])
-            , Member ( 'TM' , 'VeloCalo'
-                       , InputSelection1 = '%TF1Velo'
-                       , InputSelection2 = '%TFL0BeamGas'
-                       , MatchName = 'VeloCalo' , MaxQuality = 4.
-                       )
-            , Member ( 'TU', 'GuidedForward'
-                       , InputSelection  = '%TMVeloCalo'
-                       , RecoName = 'GuidedForward'
-                       , HistogramUpdatePeriod = 1
-                       )
-            , Member ( 'TF' , 'GuidedForward'
-                       , OutputSelection = '%Decision'
-                       , FilterDescriptor = ['PT,>,'+str(self.getProp('BeamGas_PtCut'))])
-            ])
+                     convertL0Candidates('AllHadron')
+                     , Member("TF","L0BeamGas", FilterDescriptor = ["L0ET,>,"+str(BeamGas_EtCut)])
+                     , GaudiSequencer('Hlt1RecoRZVeloSequence')
+                     , Member ( 'TF' ,'RZVelo'
+                                , InputSelection = 'RZVelo'
+                                , FilterDescriptor = ['Calo2DChi2_%TFL0BeamGas,<,4'])
+                     , Member ( 'TU', 'Velo',  RecoName = 'Velo')
+                     , Member ( 'TF', '1Velo', FilterDescriptor = [ 'Calo3DChi2_%TFL0BeamGas,<,4' ])
+                     , Member ( 'TM' , 'VeloCalo'
+                                , InputSelection1 = '%TF1Velo'
+                                , InputSelection2 = '%TFL0BeamGas'
+                                , MatchName = 'VeloCalo' , MaxQuality = 4.
+                                )
+                     , Member ( 'TU', 'GuidedForward'
+                                , RecoName = 'GuidedForward'
+                                , HistogramUpdatePeriod = 1
+                                )
+                     , Member ( 'TF' , 'GuidedForward'
+                                , OutputSelection = '%Decision'
+                                , FilterDescriptor = ['PT,>,'+str(self.getProp('BeamGas_PtCut'))])
+                     ]
+               , postscale = self.postscale 
+             )

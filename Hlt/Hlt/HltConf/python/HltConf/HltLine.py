@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.39 2009-03-12 14:18:41 graven Exp $ 
+# $Id: HltLine.py,v 1.40 2009-03-25 08:38:54 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.39 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.40 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt line itself 
@@ -718,12 +718,14 @@ class Hlt1Line(object):
 
         # 1) save all parameters (needed for the proper cloning)
         self._name      = name
+        if callable(prescale) : prescale = prescale( self.name() )
         self._prescale  = prescale
         
         self._ODIN      = ODIN
         self._L0DU      = L0DU
         self._HLT       = HLT
         
+        if callable(postscale) : postscale = postscale( self.name() )
         self._postscale = postscale
         self._algos     = algos
         self._args      = args

@@ -3,13 +3,12 @@
 ##############################
 
 from Gaudi.Configuration import *
-from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 
+from HltConf.HltLinesConfigurableUser import *
 from HltConf.HltLine import Hlt1Line   as Line
 from HltConf.HltLine import Hlt1Member as Member
 
-from Configurables import LHCbConfigurableUser
 from HltConf.LumiCounterDefinition import LumiCounterDefinitionConf
 from Configurables import ( LumiCountVertices,
                             LumiCountTracks,
@@ -38,7 +37,7 @@ def _combine( op, arg ) :
     return arg.keys()
 
 ############# start building the lumi line(s)...
-class HltLumiLinesConf(LHCbConfigurableUser) :
+class HltLumiLinesConf(HltLinesConfigurableUser) :
     __used_configurables__ = [ LumiCounterDefinitionConf ]
 
     __slots__ = { 'TriggerTypes'         : ['RandomTrigger']  # ODIN trigger type accepted
@@ -148,8 +147,10 @@ class HltLumiLinesConf(LHCbConfigurableUser) :
 
 
         return Line ( 'Lumi'+BXType
-            , ODIN = ' ( ODIN_TRGTYP == LHCb.ODIN.RandomTrigger ) & ( ODIN_BXTYP == LHCb.ODIN.'+BXType+' ) '
+                    , prescale = self.prescale
+                    , ODIN = ' ( ODIN_TRGTYP == LHCb.ODIN.RandomTrigger ) & ( ODIN_BXTYP == LHCb.ODIN.'+BXType+' ) '
                     , algos = [ lumiRecoSequence, lumiCountSequence, lumiHistoSequence ] 
+                    , postscale = self.postscale
                     ) 
 
     def __apply_configuration__(self) :

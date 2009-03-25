@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltHadronLines.py,v 1.5 2009-03-11 16:05:40 graven Exp $
+# $Id: HltHadronLines.py,v 1.6 2009-03-25 08:38:54 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hadron Lines
@@ -11,13 +11,12 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
-from LHCbKernel.Configuration import *
 
-
+from HltConf.HltLinesConfigurableUser import *
 from HltConf.HltLine import Hlt1Line   as Line
 from HltConf.HltLine import bindMembers
 from HltConf.HltLine import Hlt1Member as Member
@@ -33,9 +32,7 @@ def _getLine(name):
     print "ERROR:  no line with name ", name
     return None
 
-
-
-class HltHadronLinesConf(LHCbConfigurableUser) :
+class HltHadronLinesConf(HltLinesConfigurableUser) :
     #--------------------------------
     #
     # (J.A. Hernando 17/12/08)
@@ -77,6 +74,8 @@ class HltHadronLinesConf(LHCbConfigurableUser) :
         # Single Hadron Alley
         #-----------------------------------
         Line ( 'SingleHadron' 
+               , prescale = self.prescale
+               , postscale = self.postscale
                , L0DU  = "L0_CHANNEL('"+L0Channel+"')"
                , algos = [
             convertL0Candidates('AllHadron')
@@ -93,10 +92,7 @@ class HltHadronLinesConf(LHCbConfigurableUser) :
                        , InputSelection2 = '%TFL0Hadrons'
                        , MatchName = 'VeloCalo' , MaxQuality = 4.
                        )
-            , Member ( 'TU', 'GuidedForward'
-                       , RecoName = 'GuidedForward'
-                       , HistogramUpdatePeriod = 1
-                       )
+            , Member ( 'TU', 'GuidedForward' ,  RecoName = 'GuidedForward' , HistogramUpdatePeriod = 1)
             , Member ( 'TF' , 'GuidedForward' , FilterDescriptor = ['PT,>,'+str(self.getProp('SingleHadron_PtCut'))])
             , Member ( 'TU' , 'FitTrack' ,      RecoName = 'FitTrack')
             , Member ( 'TF' , '1FitTrack' ,     FilterDescriptor = ["FitIP_PV2D,||>,"+str(self.getProp('HadMain_IPCut'))])
@@ -105,7 +101,6 @@ class HltHadronLinesConf(LHCbConfigurableUser) :
                        , FilterDescriptor = ["FitChi2OverNdf,<,"+str(self.getProp('HadMain_TrackFitChi2Cut'))])
             ])
         setupHltFastTrackFit('Hlt1SingleHadronTUFitTrack')
-               
 
         Line ('DiHadron'
               , L0DU  = "L0_CHANNEL('"+L0Channel+"')"
@@ -124,14 +119,11 @@ class HltHadronLinesConf(LHCbConfigurableUser) :
                        , InputSelection2 = '%TFL0Hadrons'
                        , MatchName = 'VeloCalo' , MaxQuality = 4.
                        )
-            , Member ( 'TU', 'GuidedForward'
-                       , RecoName = 'GuidedForward'
-                       , HistogramUpdatePeriod = 1
-                       )        
+            , Member ( 'TU', 'GuidedForward' , RecoName = 'GuidedForward' , HistogramUpdatePeriod = 1)        
             , Member ( 'TF', 'GuidedForward' , FilterDescriptor = ['PT,>,'+str(self.getProp('HadMain_PtCut'))])
             , HltTrackUpgrade( 'Hlt1RecoVelo' )
-            , Member ( 'TF', '1Velo2'
-                       , InputSelection = HltTrackUpgrade('Hlt1RecoVelo') # this line shouldn't be needed
+            , Member ( 'TF', '1Velo2'  # the output of this instance is never used ???
+                       , InputSelection = HltTrackUpgrade('Hlt1RecoVelo') # this line isn't necessary
                        , FilterDescriptor = [ 'IP_PV2D,||>,'+str(self.getProp('HadMain_IPCut'))])
             , Member ( 'TF', '2Velo2'
                        , InputSelection = HltTrackUpgrade('Hlt1RecoVelo')
@@ -147,16 +139,16 @@ class HltHadronLinesConf(LHCbConfigurableUser) :
             , Member ( 'VU', 'FitTrack',   RecoName = 'FitTrack')
             , Member ( 'VF', '1FitTrack',  FilterDescriptor = [ 'FitVertexMinIP_PV2D,||>,'+str(self.getProp('HadVertex_MinIPCut'))])
             , Member ( 'VF', '2FitTrack'
-                     , OutputSelection = "%Decision"
+                     , OutputSelection  = "%Decision"
                      , FilterDescriptor = ['FitVertexMaxChi2OverNdf,<,'+str(self.getProp('HadMain_TrackFitChi2Cut')) ])
             ])
         setupHltFastTrackFit('Hlt1DiHadronVUFitTrack')
 
-
-
         if (self.getProp('SoftDiHadron')):
             _getLine("DiHadron").clone("SoftDiHadron"
-                                       , L0DU = "L0_CHANNEL('"+",".join([L0Channel]+L0Channels())+"') "
-                                       , TFL0Hadrons     = { "FilterDescriptor": ["L0ET,>,"+str(self.getProp('HadL0_SoftEtCut'))] }
-                                       , TFGuidedForward = { "FilterDescriptor": ["PT,>,"+str(self.getProp('HadMain_SoftPtCut'))] }
-                                       )
+                                      , prescale = self.prescale
+                                      , postscale = self.postscale
+                                      , L0DU = "L0_CHANNEL('"+",".join([L0Channel]+L0Channels())+"') "
+                                      , TFL0Hadrons     = { "FilterDescriptor": ["L0ET,>,"+str(self.getProp('HadL0_SoftEtCut'))] }
+                                      , TFGuidedForward = { "FilterDescriptor": ["PT,>,"+str(self.getProp('HadMain_SoftPtCut'))] }
+                                      )

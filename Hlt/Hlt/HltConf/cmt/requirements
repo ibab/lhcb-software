@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.27 2009-03-20 14:58:22 graven Exp $ 
+# $Id: requirements,v 1.28 2009-03-25 08:38:53 graven Exp $ 
 # =============================================================================
 # The helper package for configuration of Hlt(1)
 # =============================================================================
 package HltConf
-version v2r5
+version v2r6
 
 # =============================================================================
 # ======= the actual dependencies =============================================
@@ -25,7 +25,7 @@ branches cmt doc options python tests
 
 # =============================================================================
 # ======= the patterns ========================================================
-macro HltConfConfUserModules "HltConf.LumiCounterDefinition HltConf.HltVeloLines HltConf.Hlt1 HltConf.HltBeamGasLines HltConf.HltCommissioningLines HltConf.HltElectronLines HltConf.HltExpressLines HltConf.HltHadronLines HltConf.HltL0Lines HltConf.HltLumiLines HltConf.HltMuonLines HltConf.HltPhotonLines HltConf.HltVeloLines HltConf.Configuration"
+macro HltConfConfUserModules "HltConf.HltLinesConfigurableUser HltConf.LumiCounterDefinition HltConf.HltVeloLines HltConf.Hlt1 HltConf.HltBeamGasLines HltConf.HltCommissioningLines HltConf.HltElectronLines HltConf.HltExpressLines HltConf.HltHadronLines HltConf.HltL0Lines HltConf.HltLumiLines HltConf.HltMuonLines HltConf.HltPhotonLines HltConf.HltVeloLines HltConf.Configuration"
 apply_pattern install_python_modules
 # =============================================================================
 

@@ -1,9 +1,23 @@
-! $Id: release.notes,v 1.180 2009-03-23 16:04:08 pkoppenb Exp $ 
+! $Id: release.notes,v 1.181 2009-03-25 08:38:53 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2009-03-25 - Gerhard Raven
+ - unify slots for prescale and postscale:
+   every HltXXXLinesConf class now inherits from HltLinesConfigurableUser
+   (which inherits from LHCbConfigurableUser) instead of from LHCbConfigurableUser
+   directly.
+   HltLinesConfigurableUser introduces 'Prescale' and 'Postscale' slots,
+   which contain dictionaries of 'name' -> pre/postvalues. These get
+   applied to each 'line' by adding 'prescale = self.prescale' and 
+   'postscale = self.postscale' to the constructor calls of the line,
+   which will trigger a callback with the name of the line which is
+   'matched' with the 'name' in the dictionary (wildcards are allowed).
+   Default is a pre(post)scale of 1, and the default can be overruled
+   by adding an explicit 'Prescale' ('Postscale') in the __slots__ of the
+   derived class.
 
 !========================== HltConf v2r5 2009-03-23 ===================
 ! 2009-03-20 - Gerhard Raven

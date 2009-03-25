@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltVeloLines.py,v 1.4 2009-03-11 16:05:40 graven Exp $
+# $Id: HltVeloLines.py,v 1.5 2009-03-25 08:38:54 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines for the VELO closing proceure
@@ -9,25 +9,25 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
 # =============================================================================
 
 #
 # VELO (closing procedure) specific HLT trigger lines
 #
-from LHCbKernel.Configuration import *
-from Configurables import GaudiSequencer
+from HltConf.HltLinesConfigurableUser import *
 from HltConf.HltLine import Hlt1Line   as Line
 from HltConf.HltLine import Hlt1Member as Member
 
-class HltVeloLinesConf(LHCbConfigurableUser):
-   __slots__ = { 'Prescale'  : 0.0001
+class HltVeloLinesConf(HltLinesConfigurableUser):
+   __slots__ = { 'Prescale'  : { 'VeloClosing' : 1, '.Side' : 0.0001 }  # overrule inherited default
                , 'MinimumNumberOfRClusters'   : 12 # 4 tracks with 3 hits
                , 'MinimumNumberOfPhiClusters' : 12 # 4 tracks with 3 hits
                , 'MaxNumberOfClusters'        : 450 # 0.5% occupancy
                , 'ODIN'                       :"( ODIN_TRGTYP != LHCb.ODIN.RandomTrigger )" # on what trigger types do we run?
                }
    def __apply_configuration__(self):
+        from Configurables import GaudiSequencer
         from Configurables import VeloClusterFilter
         from Configurables import Tf__DefaultVeloRHitManager as DefaultVeloRHitManager
         from Configurables import Tf__DefaultVeloPhiHitManager as DefaultVeloPhiHitManager
@@ -84,17 +84,23 @@ class HltVeloLinesConf(LHCbConfigurableUser):
             pv3D.PVOfflineTool.PVSeedingName = "PVSeed3DTool"
 
             Line( 'Velo' + side
-                      , ODIN = self.getProp('ODIN')
-                      , prescale = self.getProp('Prescale')
-                      , algos =
-                      [ cf, rt, st, gt, pv3D
-                      , Member( 'VF' , 'Decision'
-                              , OutputSelection = '%Decision'
-                              , InputSelection  = 'TES:Hlt/Vertex/' + side + 'PV3D'
-                              , FilterDescriptor = ['VertexNumberOf' + side + 'Tracks,>,4']
-                              , HistogramUpdatePeriod = 1
-                              , HistoDescriptor = {'VertexNumberOf' + side + 'Tracks' : ( 'VertexNumberOf'+side+'Tracks',-0.5,39.5,40)}
-                              )
-                      ] )
+                , ODIN = self.getProp('ODIN')
+                , prescale = self.prescale
+                , algos =
+                [ cf, rt, st, gt, pv3D
+                , Member( 'VF' , 'Decision'
+                        , OutputSelection = '%Decision'
+                        , InputSelection  = 'TES:Hlt/Vertex/' + side + 'PV3D'
+                        , FilterDescriptor = ['VertexNumberOf' + side + 'Tracks,>,4']
+                        , HistogramUpdatePeriod = 1
+                        , HistoDescriptor = {'VertexNumberOf' + side + 'Tracks' : ( 'VertexNumberOf'+side+'Tracks',-0.5,39.5,40)}
+                        )
+                ]
+                , postscale = self.postscale
+                )
 
-        Line( 'VeloClosing' , HLT = "HLT_PASS('Hlt1VeloCSideDecision') | HLT_PASS('Hlt1VeloASideDecision')" )
+        Line( 'VeloClosing' 
+            , prescale = self.prescale
+            , HLT = "HLT_PASS('Hlt1VeloCSideDecision,Hlt1VeloASideDecision')" 
+            , postscale = self.postscale
+            )

@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltL0Lines.py,v 1.6 2009-01-17 08:46:30 graven Exp $
+# $Id: HltL0Lines.py,v 1.7 2009-03-25 08:38:54 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines which are plain L0 lines
@@ -11,17 +11,16 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
 # =============================================================================
 
-from LHCbKernel.Configuration import *
+from HltConf.HltLinesConfigurableUser import *
 from HltConf.HltLine import Hlt1Line   as Line
 from HltConf.HltL0Candidates import *
 from HltConf.HltLine     import hlt1Lines
 
-class HltL0LinesConf(LHCbConfigurableUser) :
-   __slots__ = { 'Prescale'  : 1 
-               , 'Postscale' : 0.000001
+class HltL0LinesConf(HltLinesConfigurableUser) :
+   __slots__ = { 'Postscale' : { '.*' : 0.000001 } # set new default Postscale for these lines!
                , 'L0Channels' : []  # if empty, use all pre-defined channels
                }
 
@@ -30,8 +29,8 @@ class HltL0LinesConf(LHCbConfigurableUser) :
         if not channels : channels = L0Channels()
         for channel in channels :
             Line ( 'L0' + channel 
+                 , prescale = self.prescale
                  , L0DU  = "L0_CHANNEL('"+channel+"')"
-                 , prescale = self.getProp('Prescale')
                  , algos = [ convertL0Candidates(channel) ]
-                 , postscale = self.getProp('Postscale')
+                 , postscale = self.postscale
                  )
