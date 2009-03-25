@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonLines.py,v 1.19 2009-03-25 08:38:54 graven Exp $
+# $Id: HltMuonLines.py,v 1.20 2009-03-25 16:09:29 aperezca Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.19 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.20 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -36,7 +36,7 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
     # steering variables
     __slots__ = { 
         #'L0MuonGEC_PtCut'          : 1300.
-         'L0Muon_PtCut'             :  840.
+        'L0Muon_PtCut'             :  840.
         ,'L0MuonNoPV_PtCut'         :  800.
         ,'Muon_DeltaPCut'           :    0.
         ,'Muon_VeloTMatchCut'       :  200.
@@ -56,7 +56,7 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
         ,'DiMuon_IPCut'             :    0.15
         
         # For the Muon+Track lines
-        ,'MuTrackL0DU'     :"L0_CHANNEL('MuonNoGlob')"
+        ,'MuTrackL0DU'     :"L0_CHANNEL('Muon')"
         #,'MuTrackL0DU'     :"L0_CHANNEL('Muon') | L0_CHANNEL('MuonNoGlob')"
         ,'MuTrackMuPt'    : 1000.
         ,'MuTrackMuIP'    : 0.025
@@ -69,11 +69,12 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
         ,'MuTrackPoint'   : 0.4
         ,'MuTrackMuChi2'  : 10.
         ,'MuTrackTrChi2'  : 10.
-  
+        
         ,'MuTrackMuPt4JPsi'         : 1600.
         ,'MuTrackTrPt4JPsi'         : 400.
         ,'MuTrackDoca4JPsi'         : 0.1
-        ,'MuTrackAngle4JPsi'        : 0.3
+        ,'MuTrackAngle4JPsiLow'     : 0.02
+        ,'MuTrackAngle4JPsiHigh'    : 0.30
         ,'MuTrackDimuMass4JPsiLow'  : 2900.
         ,'MuTrackDimuMass4JPsiHigh' : 3300.
         ,'MuTrackMuChi24JPsi'       : 4.
@@ -158,7 +159,7 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
         ###  Prepare 
         # Muons 
         MuonPrep = bindMembers( 'MuonPrep',
-                              [ convertL0Candidates('MuonNoGlob')
+                              [ convertL0Candidates('Muon')
                               , Member ( 'TF', 'L0', FilterDescriptor = [ 'PT0,||>,'+str(self.getProp('L0Muon_PtCut')) ]) 
                               ] + TMatchV )
         # Muons in Events without Reconstructed Primary Vertices
@@ -226,7 +227,7 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
         #--------------------------------------------------------------------
         SingleMuonNoIPL0 = Line( 'SingleMuonNoIPL0'
                                ,  prescale = self.prescale
-                               ,  L0DU = "L0_CHANNEL('MuonNoGlob')"
+                               ,  L0DU = "L0_CHANNEL('Muon')"
                                ,  algos = [ MuonPrep 
                                           , Member( 'TF', 'PT' 
                                                   , FilterDescriptor = ['PT,>,'+str(self.getProp('Muon_PtCut'))] 
@@ -254,7 +255,7 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
         #--------------------------------------------------------------------
         SingleMuonIPCL0 = Line ( 'SingleMuonIPCL0'
                                ,  prescale = self.prescale
-                               ,  L0DU = "L0_CHANNEL('MuonNoGlob')"
+                               ,  L0DU = "L0_CHANNEL('Muon')"
                                ,  algos = [ MuonPrep
                                           , RecoRZPV
                                           ,  Member ( 'TF', 'PT'
@@ -297,7 +298,7 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
         #--------------------------------------------------------------------
         DiMuonNoIP2L0 = Line ('DiMuonNoIP2L0'
                              , prescale = self.prescale
-                             , L0DU = "L0_CHANNEL('MuonNoGlob')"
+                             , L0DU = "L0_CHANNEL('Muon')"
                              , algos = 
                                      [ MuonPrep 
                                      , Member( 'VM1', 'VeloT', FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('DiMuon_DOCACut')) ])
@@ -331,7 +332,7 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
         #--------------------------------------------------------------------
         DiMuonNoIPL0Seg = Line( 'DiMuonNoIPL0Seg'
                           , prescale = self.prescale
-                          , L0DU = "L0_CHANNEL('MuonNoGlob')"
+                          , L0DU = "L0_CHANNEL('Muon')"
                           , algos = 
                                   [ MuonSegPrep
                                   , Member( 'VM2', 'VeloT'
@@ -387,7 +388,7 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
         #--------------------------------------------------------------------
         DiMuonIPC2L0 = Line ('DiMuonIPC2L0'
                             , prescale = self.prescale
-                            , L0DU = "L0_CHANNEL('MuonNoGlob')"
+                            , L0DU = "L0_CHANNEL('Muon')"
                             , algos = 
                                     [ MuonPrep 
                                     , Member( 'VM1', 'VeloT', FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('DiMuon_DOCACut')) ])
@@ -419,7 +420,7 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
         #--------------------------------------------------------------------
         DiMuonIPCL0Seg = Line( 'DiMuonIPCL0Seg'
                              , prescale = self.prescale
-                             , L0DU = "L0_CHANNEL('MuonNoGlob')"
+                             , L0DU = "L0_CHANNEL('Muon')"
                              , algos = 
                                      [ MuonSegPrep
                                      , Member( 'VM2', 'VeloT'
@@ -634,8 +635,9 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
                                         , HistoDescriptor = {  'DOCA': ('DOCA',0.,2.,400), 'DOCABest': ( 'DOCABest',0.,1.,400)}
                                         )
                               
-                              , Member( 'VF', 'VeloVertex' # // Filter velo vertices in DZ
-                                        , FilterDescriptor = ['VertexAngle,<,'+str(self.getProp('MuTrackAngle4JPsi'))]
+                              , Member( 'VF', 'VeloVertex' # // Filter velo vertices in angle
+                                        , FilterDescriptor = ['VertexAngle,>,'+str(self.getProp('MuTrackAngle4JPsiLow')),
+                                                              'VertexAngle,<,'+str(self.getProp('MuTrackAngle4JPsiHigh'))]
                                         , HistogramUpdatePeriod = 0
                                         )
                               
@@ -670,7 +672,8 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
                               , Member ( 'VF', 'Decision' # // Final filter redo cuts
                                          , OutputSelection = '%Decision'
                                          , FilterDescriptor = ['FitVertexDOCA,<,'+str(self.getProp('MuTrackDoca4JPsi')),
-                                                               'FitVertexAngle,<,'+str(self.getProp('MuTrackAngle4JPsi')),
+                                                               'FitVertexAngle,>,'+str(self.getProp('MuTrackAngle4JPsiLow')),
+                                                               'FitVertexAngle,<,'+str(self.getProp('MuTrackAngle4JPsiHigh')),
                                                                'FitVertexTrack1PT,>,'+str(self.getProp('MuTrackMuPt4JPsi')),
                                                                'FitVertexTrack2PT,>,'+str(self.getProp('MuTrackTrPt4JPsi')),
                                                                'FitVertexDimuonMass,>,'+str(self.getProp('MuTrackDimuMass4JPsiLow')),

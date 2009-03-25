@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.181 2009-03-25 08:38:53 graven Exp $ 
+! $Id: release.notes,v 1.182 2009-03-25 16:09:29 aperezca Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2009-03-25 - Antonio Perez-Calero
+ - Replaced L0 channel "MuonNoGlob" for "Muon" in HltMuonLines.py, HltL0Candidates.py and
+   Configuration.py to adapt to new TCK DC09 (No GEC's)
+
 ! 2009-03-25 - Gerhard Raven
  - unify slots for prescale and postscale:
    every HltXXXLinesConf class now inherits from HltLinesConfigurableUser

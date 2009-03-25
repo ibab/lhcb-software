@@ -1,6 +1,6 @@
 #
 #==============================================================================
-# $Id: HltL0Candidates.py,v 1.17 2009-03-12 10:14:46 graven Exp $
+# $Id: HltL0Candidates.py,v 1.18 2009-03-25 16:09:29 aperezca Exp $
 #==============================================================================
 #
 # Module to define the conversion of L0 candidates across several HltLines
@@ -95,6 +95,7 @@ _l0Channels = None
 def decodeL0Channels( L0TCK , skipDisabled = True) :
     # we assume somebody has done an 'importOptions' of the relevant L0 setup...
     channels = _parseL0settings( ConfigurableGeneric('ToolSvc.L0DUConfig.TCK_'+L0TCK).Channels )
+    print '# decoded L0 channels: ' + str(channels)
     return [ i['name'] for i in channels if ( not skipDisabled or 'DISABLE' not in i or i['DISABLE'].upper().find('TRUE') == -1 ) ]
 
 def setupL0Channels( channels ) :
@@ -102,7 +103,7 @@ def setupL0Channels( channels ) :
     if _dict or _l0Channels  : raise RunTimeError('HltL0Candidates already initialized -- 2nd call to setupL0Channels...')
     _l0Channels = channels
     if not _l0Channels:
-        _l0Channels = [ 'MuonNoGlob','DiMuon','Muon,lowMult','DiMuon,lowMult','Electron','Photon','Hadron' ,'LocalPi0','GlobalPi0' ]
+        _l0Channels = [ 'Muon','DiMuon','Muon,lowMult','DiMuon,lowMult','Electron','Photon','Hadron' ,'LocalPi0','GlobalPi0' ]
 
     print '# recognized L0 channels: ' + str(_l0Channels)
     # the types are basically hardwired and are thus not likely to change...
