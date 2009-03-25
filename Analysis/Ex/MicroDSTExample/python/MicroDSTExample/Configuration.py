@@ -1,7 +1,7 @@
 """
 High level configuration example for a typical physics MicroDST
 """
-__version__ = "$Id: Configuration.py,v 1.7 2009-03-24 20:58:12 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.8 2009-03-25 11:07:57 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 
@@ -13,18 +13,20 @@ from Configurables import LHCbConfigurableUser
 class PhysMicroDST(LHCbConfigurableUser) :
 
     __slots__ = {
-        "MicroDSTFile"         : "MicroDST.dst"
+        "MicroDSTFile"           : "MicroDST.dst"
         , "MicroDSTSelectionAlg" : ""
-        , "CopyParticles"      : True
-        , "CopyPVs"            : True
-        , "CopyBTags"          : True
-        , "CopyReFittedPVs"    : False
-        , "CopyMCTruth"        : False
+        , "OutputPrefix"         : "microDST"
+        , "CopyParticles"        : True
+        , "CopyPVs"              : True
+        , "CopyBTags"            : True
+        , "CopyReFittedPVs"      : False
+        , "CopyMCTruth"          : False
         }
 
     _propertyDocDct = {  
         "MicroDSTFile"           : """ Write name of output MicroDST file. Default 'MicroDST.dst'"""
         , "MicroDSTSelectionAlg" : """            # Name of selection algorithm that defines data for MicroDST"""
+        , "OutputPrefix"         : """ """
         , "CopyParticles"        : """ """
         , "CopyPVs"              : """ """
         , "CopyBTags"            : """ """
@@ -46,6 +48,7 @@ class PhysMicroDST(LHCbConfigurableUser) :
         log.info("Setting MicroDSTStream")
         importOptions('$MICRODSTOPTS/MicroDSTStream.py')
         stream = OutputStream('MicroDSTStream')
+        stream.OptItemList = ["/Event/"+self.outputPrefix()+"#99"]
         dstName = self.getProp("MicroDSTFile")
         if (dstName != "" ) :
             stream.Output = "DATAFILE='"+dstName +"' TYP='POOL_ROOTTREE' OPT='REC'"
@@ -54,10 +57,18 @@ class PhysMicroDST(LHCbConfigurableUser) :
     def mainLocation(self) :
         algoName = self.getProp("MicroDSTSelectionAlg")
         return 'Phys/' + algoName
+
+    def outputPrefix(self) :
+        return self.getProp("OutputPrefix")
+
+    def setOutputPrefix(self, alg) :
+        alg.OutputPrefix = self.outputPrefix()
     
     def copyDefaultStuff(self):
         from Configurables import CopyRecHeader
-        self.seqMicroDST().Members += [CopyRecHeader()]
+        copyRecHeader = CopyRecHeader()
+        self.setOutputPrefix(copyRecHeader)
+        self.seqMicroDST().Members += [copyRecHeader]
 
     def copyParticleTrees(self) :
         from Configurables import CopyParticles, VertexCloner, ProtoParticleCloner
@@ -67,6 +78,7 @@ class PhysMicroDST(LHCbConfigurableUser) :
         copyParticles.addTool(ProtoParticleCloner(),
                               name='ProtoParticleCloner')
         copyParticles.OutputLevel=4
+        self.setOutputPrefix(copyParticles)
         self.seqMicroDST().Members += [copyParticles]  
 
     def copyP2PVLink(self, name, location) :
@@ -74,6 +86,7 @@ class PhysMicroDST(LHCbConfigurableUser) :
         copyP2RefitPVLink = CopyParticle2PVLink(name)
         copyP2RefitPVLink.InputLocation = location
         copyP2RefitPVLink.OutputLevel=4
+        self.setOutputPrefix(copyP2RefitPVLink)
         self.seqMicroDST().Members += [copyP2RefitPVLink]
 
 
@@ -81,6 +94,7 @@ class PhysMicroDST(LHCbConfigurableUser) :
         from Configurables import CopyPrimaryVertices
         copyPV=CopyPrimaryVertices('CopyPrimaryVertices')
         copyPV.OutputLevel = 4
+        self.setOutputPrefix(copyPV)
         self.seqMicroDST().Members += [copyPV]
         if self.getProp("CopyParticles") :
             self.copyP2PVLink("CopyP2PVLink",
@@ -97,6 +111,7 @@ class PhysMicroDST(LHCbConfigurableUser) :
         copyMC.addTool(MCParticleCloner(), name= 'MCParticleCloner')
         copyMC.MCParticleCloner.addTool(MCVertexCloner(), name = 'ICloneMCVertex')
         copyMC.OutputLevel=4;
+        self.setOutputPrefix(copyMC)
         self.seqMicroDST().Members += [copyMC]
 
     def copyBTaggingInfo(self) :
@@ -113,6 +128,7 @@ class PhysMicroDST(LHCbConfigurableUser) :
         self.seqMicroDST().Members += [BTagAlgo]
         copyFlavTag = CopyFlavourTag()
         copyFlavTag.InputLocation = BTagLocation
+        self.setOutputPrefix(copyFlavTag)
         self.seqMicroDST().Members += [copyFlavTag]
 
     def reFitPVLocation(self) :
@@ -137,6 +153,7 @@ class PhysMicroDST(LHCbConfigurableUser) :
         self.refitPVs()
         copyReFittedPVs = CopyPrimaryVertices('CopyReFittedPVs')
         copyReFittedPVs.InputLocation = self.reFitPVLocation()
+        self.setOutputPrefix(copyReFittedPVs)
         self.seqMicroDST().Members += [copyReFittedPVs]
         if self.getProp("CopyParticles") :
             self.copyP2PVLink("CopyP2RefitPVLink",

@@ -91,7 +91,7 @@ refitVertexPath = selectionPath + '/RefittedVertices'
 refitVertexAssocPath = selectionPath + '/Particle2ReFittedVertexRelations'
 mcParticlePath = '/Event/microDST/MC/Particles'
 flavTagPath = selectionPath + "/Tagging"
-pvLocation = "/Event/microDST/Rec/Vertex/Primary"
+pvLocation = locationRoot+"/Rec/Vertex/Primary"
 nPVPlot = TH1D( "# of PVs", "# of primary vertices", 5, -0.5, 4.5 )
 
 stdPropTimeResPlot = TH1D("tau-tau_MC", "tau-tau_MC", 100, -0.2,0.5)
