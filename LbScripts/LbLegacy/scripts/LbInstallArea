@@ -1,0 +1,152 @@
+#!/bin/csh
+
+#===========================================================================
+# cd  $LHCBRELEASES/<PROJECT>/<PROJECT>_<version>
+# make a soft link in InstallArea/$CMTCONFIG/lib or /bin to
+# lib*.so and *.exe built in the project
+# 1st arg = binary
+#===========================================================================
+# 051213 - do not remove DetSys which contains DetDict
+# 061026 - 1st arg is mandatory
+# 070125 - do not remove InstallArea/bin and lib if they exist, lib could contain *.rootmap files
+# 070126 - skip if 'hat' or 'dir' is not a directory
+#===========================================================================
+set nar = $#argv
+if (nar != 0) then
+  if ("$argv[${nar}]" == "-v") then
+    set echo on
+    set argv[${nar}] = ""
+    @ nar = ${nar} - 1
+  endif
+endif
+if ($1 == "-h") then
+   echo ""
+   echo "usage:"
+   echo " LbInstallArea [-v]"
+   echo " will create and fill the InstallArea in the current directory"
+   echo ""
+   echo "example:"
+   echo " > cd $LHCBRELEASES/DAVINCI/DAVINCI_v8r1" 
+   echo " > LbInstallArea $CMTCONFIG"
+   echo " will create InstallArea/$CMTCONFIG/lib and /bin"
+   echo " will create SoftLinks to *so and *.exe in /lib and /bin"
+   echo ""
+   echo " > cd $LHCBRELEASES/DAVINCI/DAVINCI_v8r1" 
+   echo " > LbInstallArea $CMTDEB"
+   echo " will create InstallArea/$CMTDEB/lib and /bin"
+   echo " will create SoftLinks to *so and *.exe in /lib and /bin"
+   echo ""
+   echo " > cd $LHCBRELEASES/DAVINCI/DAVINCI_v8r1" 
+   echo " > LbInstallArea win32_vc71_dbg"
+   echo " will create InstallArea/win32_vc71_dbg/lib and /bin"
+   echo " will copy *.lib, *.dll,  and *.exe in /lib and /bin"
+   echo ""
+   goto exec_end
+endif
+#
+set projdir = $PWD
+set projhat = `dirname $PWD`
+set project = `basename $projhat`
+
+if ($nar == 0) then
+  set binary = $CMTCONFIG
+else 
+  set binary = $1
+  if ($binary == "debug") set binary = $CMTDEB
+endif
+
+if ($binary == "win32_vc71_dbg" ) then
+  set libext = "*.lib"
+  set action = "/bin/cp -dp "
+  set OS = "WIN32" 
+else
+  set libext = "*.so"
+  set action = "/bin/ln -fs "
+  set OS = "Linux"
+endif
+
+if ($1 == "python") then
+  set pydir = $projdir/InstallArea/$binary
+   mkdir -p InstallArea/$binary
+else 
+  set libdir = $projdir/InstallArea/$binary/lib
+  set bindir = $projdir/InstallArea/$binary/bin
+  mkdir -p InstallArea/$binary/lib
+  mkdir -p InstallArea/$binary/bin
+endif
+
+if ("$project" == "GAUDI" ) then
+  set hats = "."
+else
+  set hats = `/bin/ls -I InstallArea -I mgetpack.list -I mkproject.log -I LHCbSys -I LHCb -I GaudiConf -I BrunelSys -I DaVinciSys -I GaussSys -I Geant4Sys -I doc -I G4config -I requirements -I PanoramixSys -I BooleSys -I BenderSys -I Geant4Sys -I cmt`
+endif 
+
+#echo ' hats' $hats
+foreach hat ($hats[*])
+  if ($hat == "GaudiObjDesc") then
+    set hat = "."
+    set dirs = "GaudiObjDesc"
+  endif
+
+
+  #echo $projdir/$hat
+  if ( -d $projdir/$hat) then
+   cd $projdir/$hat
+   set dirs = `/bin/ls  -I EventSys -I KernelSys -I AssociatorsSys -I PhysSelSys -I BenderSys -I InstallArea -I cmt`
+   #echo $hat '-' $dirs
+   foreach dir ($dirs[*])
+    #echo $hat $dir
+    if ( -d $projdir/$hat/$dir ) then
+      cd $projdir/$hat/$dir
+      set vers = `/bin/ls`
+
+      foreach ver ($vers[*])
+
+        if ( -d $projdir/$hat/$dir/$ver/$binary ) then
+          cd $projdir/$hat/$dir/$ver/$binary
+        else
+          # no binary directory
+          continue
+        endif
+
+        if ($1 == "python") then          #python or lib and bin
+          set pys = `/bin/ls *.py`
+          cd $pydir   
+          foreach py ($pys[*])
+            ${action} $projdir/$hat/$dir/$ver/$binary/$py .
+            echo "$projdir/$hat/$dir/$ver/$binary/$py" >! ${py}.cmtref 
+          end  #loop over pys       
+        else                              # not python, but lib and bin
+          set libs = `find . -name "${libext}" ! -type l`
+          set bins = `/bin/ls *exe`
+
+          cd $libdir
+          foreach lib ($libs[*])
+            set libname = `basename $lib`
+            ${action} $projdir/$hat/$dir/$ver/$binary/$libname .
+            echo "$projdir/$hat/$dir/$ver/$binary/$libname" >! ${libname}.cmtref
+            if ($OS == "WIN32") then
+              set dllname = `basename $lib "lib"`             
+              ${action} $projdir/$hat/$dir/$ver/$binary/${dllname}dll .
+            endif
+          end  #loop over libs
+
+          cd $bindir
+          foreach bin ($bins[*])
+            ${action} $projdir/$hat/$dir/$ver/$binary/$bin .
+            echo "$projdir/$hat/$dir/$ver/$binary/$bin" >! ${bin}.cmtref
+          end  #loop over bins
+
+        endif  # python or lib and bin
+
+      end      # loop over vers
+
+    endif      # projdir/hat/dir is a directory
+   end         # loop over dirs
+
+  endif        # projdir/hat is a directory
+end            # loop over hats
+
+
+#
+exec_end:

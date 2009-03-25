@@ -1,0 +1,70 @@
+""" Script create a new afs volume for a new project version"""
+""" 060616 - first version """
+""" 060623 - prepare the script to be called in mkproject.py"""
+""" 060925 - set python_version and day """
+""" 061031 - fix size """
+""" 070306 - add ANALYSIS """
+
+#-----------------------------------------------------------------------------
+
+import sys, os, string, getopt, warnings, time, shutil, commands, fnmatch
+from LbLegacy.vol_for_releases import create_volume
+
+
+script_version = '070306'
+python_version = string.atoi(string.replace(string.split(sys.version)[0],'.',''))
+
+#---------------------------------------------------------------------------
+def usage() :
+    print 'Usage:'
+    print '  python vol_for_releases.py -p <pname> -v <version> [-b <binary>]'
+    print 'Try "vol_for_releases.py -h" for more information.'
+    sys.exit()
+#--------------------------------------------------------------------------
+def help() :
+    print """create a volume on $GAUDISOFT ot $LHCBRELEASES
+    Usage:
+      python vol_for_releases.py -p <PROJECT> -v <version> [-s <size>] \n
+      -d                                 - debug mode \n
+      -p or --project= <project>         - PROJECT NAME \n
+      -v or --version= <version>         - project version\n
+      -s or --size=<new size >           - volume size\n
+    Examples:
+      cd $LHCBRELEASES
+      python vol_for_releases.py -p BRUNEL -v v30r3 -s 2500000
+
+      """
+    sys.exit()
+
+#------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------------
+#================================================================================
+if __name__ == 'main':
+
+    size = ''
+# get arguments from the command line
+    arguments = sys.argv[1:]
+    if len(sys.argv) == 1:
+        help()
+        sys.exit()
+    try:
+        keys, values = getopt.getopt(arguments,'h:d:p:v:s:',
+            ['help','debug','project=','version=','size='])
+
+    except getopt.GetoptError:
+        help()
+        sys.exit()
+
+    for key,value in keys:
+        if key in ('-d', '--debug'):
+            debug_flag = 1
+        if key in ('-h', '--help'):
+            help()
+        if key in ( '-v', '--version'):
+            pversion = value
+        if key in ('-p', '--project'):
+            pname = value
+        if key in ('-s', '--size'):
+            size = value
+
+    create_volume(pname,pversion,size)

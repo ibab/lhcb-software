@@ -1,0 +1,360 @@
+#!/usr/bin/env python
+
+import string, sys, os, shutil, commands, random, glob, getopt
+
+# - 060816 - adapt the script to be run under CMT v1r18* making use of $CMTPROJECTPATH
+# - 070122 - use GaudiRelease instead of Gaudi
+# - 070214 - use a temporary directory for output files, controlled by -o <dir>
+# - 070219 - restore a relative link to doc in <PROJECT>/<PROJECT>_<version>
+# - 070328 - make sure that CMTPATH does not contain any CMT strange message
+# - 081007 - checks for packages without version directory first
+
+#================================================================================
+version = '081007'
+#================================================================================
+class builder :
+
+#--------------------------------------------------------------------------------
+    def __init__(self):
+
+        self.argv0        = "makedoc"
+        self.info         = 0
+        self.test         = 0
+        self.output       = "/build"
+        self.gaudiRoot    = ""
+        self.cfgFile      = "DoxyFile.cfg"
+        self.dotPath      = "$(LHCBHOME)/bin"
+        self.doxyPath     = "$LHCBHOME/bin/doxygen"
+
+#--------------------------------------------------------------------------------
+    def usage(self):
+
+        print self.argv0, version
+        print
+        print self.argv0, 'Builds doxygen web for LHCb software'
+        print
+        print 'Prerequisites for the script to run properly are:'
+        print ' - Python 2.2 or greater'
+        print ' - doxygen 1.4 or greater'
+        print ' - if CMT v1r16p* Correctly set CMT environment for project to be documented'
+        print '   (correct CMTPATH, setup.csh correctly sourced)'
+        print ' - DoxyFile.cfg in current directory'
+        print
+        print 'Arguments:'
+        print '  -i, --info       print more information while processing'
+        print '  -h, --help       print this usage statement'
+        print '  -t, --test       use externally defined project xxROOT directories'
+        print '                   default is to build directories from CMTPATH'
+        print '  -v, --version    print the version of this script'
+        print '  -o, --output dir defines a directory for temporary output files'
+        print '                   default is /build if it exists'
+        print
+        print 'Usage example:'
+        print '======= with CMT v1r16p* ============='
+        print '  cd $GAUDISOFT/GAUDI/GAUDI_v15r3/Gaudi/v15r3p3/doc'
+        print '  unsetenv CMTPATH'
+        print '  GaudiEnv v15r3'
+        print '  $LHCBSCRIPTS/makedoc'
+        print '======== with CMT v1r18p* ============'
+        print '  cd $GAUDISOFT/GAUDI/GAUDI_v18r6b/Gaudi/v18r6b/doc'
+        print '  $LHCBSCRIPTS/makedoc'
+        print
+        print 'Please send requests and bug reports to marco.cattaneo@cern.ch'
+        print
+        sys.exit(0)
+
+#--------------------------------------------------------------------------------
+    def argChecker(self, arguments):
+
+        if len(sys.argv) == 1:
+            return
+
+        try:
+            keys, values = getopt.getopt(arguments,'hitv:o:',
+                                         ['help','info','test','version','output='])
+
+        except getopt.GetoptError:
+            self.usage()
+            sys.exit()
+
+        for key,value in keys:
+            if key in ('-i', '--info'):
+                self.info = 1
+            if key in ('-h', '--help'):
+                self.usage()
+            if key in ( '-v', '--version'):
+                print version
+                sys.exit(0)
+            if key in ('-t', '--test'):
+                self.test = 1
+            if key in ('-o', '--output'):
+                self.output = value
+
+
+#--------------------------------------------------------------------------------
+    def envChecker(self):
+        if not os.path.exists( self.cfgFile ):
+            print self.argv0 + ': ' + self.cfgFile + ' does not exist in current directory'
+            sys.exit(0)
+
+        if not os.environ.has_key('CMTPROJECTPATH'):
+            if not os.environ.has_key('CMTPATH'):
+                print self.argv0 + ': CMTPATH not defined'
+                sys.exit(0)
+        else:
+            os.chdir(os.path.join(os.pardir,'cmt'))
+            status,value = commands.getstatusoutput('cmt show set_value CMTPATH')
+            if value.find('#CMT>') != -1:
+                CMTPATH = string.split(value,'\n')[1]
+            else:
+                CMTPATH = value
+            os.environ['CMTPATH'] = CMTPATH
+            os.chdir(os.path.join(os.pardir,'doc'))
+        print ' envChecker - CMTPATH= ',os.environ.get('CMTPATH')
+
+#--------------------------------------------------------------------------------
+    def getExternals(self):
+        temp = os.getcwd()
+        gaudiDir = self.gaudiRoot + '/cmt'
+        os.chdir(gaudiDir)
+        for line in os.popen('cmt show macros native_version').readlines():
+            pack = line[0:line.find('_native')]+'VERS'
+#      vers = line[line.find('=')+2:len(line)-2]
+            native = line.split('=')[0]
+            cmtcmd = 'cmt show macro_value ' + native
+            status,vers = commands.getstatusoutput(cmtcmd)
+            if self.info : 
+                print self.argv0 + ': setting $' + pack + '=' + vers
+            os.environ[pack] = vers
+
+        os.chdir(temp)
+
+# If externaldocs page already exists, remove it to avoid appending to it
+        if os.path.exists('html/externaldocs.html'):
+            os.remove('html/externaldocs.html')
+
+#--------------------------------------------------------------------------------
+    def getProjects(self):
+        lhcb = os.environ.get('LHCb_release_area')
+        if lhcb == None:
+            print self.argv0 + ' LHCb_release_area not defined'
+            return
+
+        paths = os.environ.get('CMTPATH').split(':')
+        for path in paths:
+            dirs = path.split(os.sep)
+            for dir in dirs:
+                if dir.find('_') != -1:
+                    pack = dir[0:dir.find('_')]
+                    vers = dir[dir.find('_')+1:]
+                    if self.info : print self.argv0 + ': setting $' + pack + 'VERS=' + vers
+                    os.environ[pack+'VERS'] = vers
+                    os.environ[pack+'_HOME'] = path
+
+                    if pack == 'LCGCMT' : 
+                        break
+
+                    if pack == 'GAUDI'  :
+                        self.setGaudiRoot(path,vers)
+                        break
+
+                    sysRoot = pack + 'SYSROOT'
+                    if os.environ.has_key( sysRoot ) and self.test:
+                        if self.info : 
+                            print self.argv0 + ': $' + sysRoot + ' already defined as ' + os.environ.get(( sysRoot ))
+
+                    else:
+                        if pack == 'LHCB':
+                            packSys = 'LHCbSys'
+                        elif pack == 'DAVINCI':
+                            packSys = 'DaVinciSys'
+                        else:
+                            packSys = pack.capitalize() + 'Sys'
+
+                        if os.path.exists(os.path.join(lhcb,pack,pack+'_'+vers, packSys, "cmt")) :
+                            sysPath = os.path.join(lhcb,pack,pack+'_'+vers, packSys)
+                        else :
+                            sysPath = os.path.join(lhcb,pack,pack+'_'+vers, packSys, vers)                            
+                        if self.info : 
+                            print self.argv0 + ': setting $' + sysRoot + '=' + sysPath
+                        os.environ[sysRoot] = sysPath
+                    break
+
+#--------------------------------------------------------------------------------
+    def setGaudiRoot(self,path,vers):
+        if os.environ.has_key('CMTPROJECTPATH'):
+            packSys = 'GaudiRelease'
+            root = 'GAUDIRELEASEROOT'
+        else:
+            packSys = 'Gaudi'
+            root = 'GAUDIROOT'
+
+        temp = os.environ.get(root)
+        if temp != None and self.test :
+            self.gaudiRoot = temp
+            if self.info : 
+                print self.argv0 + ': $'+root+' already defined as ' + temp
+        else:
+            if os.path.exists(os.path.join(path,packSys,"cmt")) :
+                self.gaudiRoot = os.path.join(path,packSys)
+            else :
+                self.gaudiRoot = os.path.join(path,packSys,vers)
+            if self.info : print self.argv0 + ': setting $'+root+'=' + self.gaudiRoot
+            os.environ[root] = self.gaudiRoot
+        # Since Gaudi v20r3, GAUDI_DOXY_HOME has to be set
+        os.environ['GAUDI_DOXY_HOME'] = os.path.join(self.gaudiRoot,"doc")
+
+#--------------------------------------------------------------------------------
+    def docBuilder(self):
+
+        if self.info : print self.argv0 + ': building list of projects'
+        self.getProjects()
+        self.getExternals()
+        self.extractReleaseNotes()
+        if self.info : print
+
+        shutil.copy( self.cfgFile, 'temp.cfg' )
+        outDir  = self.findOutputDir( 'temp.cfg' )
+        tempDir = self.setTempDir( 'temp.cfg' )
+
+        if self.info : print self.argv0 + ': making the doc'
+        os.system( self.doxyPath + ' temp.cfg')
+
+        if tempDir != 'NONE' :   # move the generated files from the temporary dir
+            here = os.getcwd()
+            os.chdir(outDir)
+            for file in glob.glob( os.path.join(tempDir,'*') ):
+                newFile = os.path.basename(file)
+                print 'moving ' + file + ' to ' + os.getcwd() + os.sep + newFile
+                if os.path.exists( newFile ):
+                    shutil.rmtree( newFile )
+                shutil.copytree( file, newFile )
+            shutil.rmtree( tempDir )
+            os.chdir(here)
+
+        os.remove('temp.cfg')
+        if self.info : print
+
+#--------------------------------------------------------------------------------
+    def findOutputDir(self,file='DoxyFile.cfg'):
+
+        if not os.path.exists( file ):
+            print self.argv0 + ': ' + file + ' does not exist'
+            sys.exit(0)
+
+        outDir = os.getcwd()
+        theFile = open( file, 'r' )
+        for line in theFile:
+            if line.find( 'OUTPUT_DIRECTORY' ) != -1:
+                tempDir = line.split( '=' )[1] % os.environ
+                tempDir = tempDir.split('\n')[0]
+                # build the output directory with resolving environment of variables
+                outDir = ''
+                envs = tempDir.split('$(')
+                for temp in envs:
+                    if temp.find(')') == -1:
+                        outDir += temp
+                    else:
+                        env = os.environ.get( temp.split(')')[0] )
+                        if env == None :
+                            print temp.split(')')[0] + " not defined"
+                            sys.exit(0)
+                        outDir += env + temp.split(')',2)[1]
+                outDir = outDir.strip()
+        theFile.close()
+
+        return outDir
+
+#--------------------------------------------------------------------------------
+    def setTempDir(self,file='temp.cfg'):
+
+        if not os.path.exists( file ):
+            print self.argv0 + ': ' + file + ' does not exist'
+            sys.exit(0)
+
+# use a temporary directory for output files, if it is defined
+        tempDir = 'NONE'
+        if not os.path.exists( self.output ):
+            if os.path.exists( '/tmp' ):
+                self.output = '/tmp'
+
+        if os.path.exists( self.output ):
+            tempDir = os.path.join(self.output,'lhcbdoc_'+str(random.randint(0,1000000)))
+            os.mkdir( tempDir )
+            print ' writing temporary files to '+tempDir
+
+            theFile = open( file, 'r' )
+            lines = theFile.readlines()
+            theFile.close()
+            lines.append( 'OUTPUT_DIRECTORY = '+tempDir )
+            theFile = open( file, 'w' )
+            theFile.writelines( lines )
+            theFile.close()
+        else:
+            print self.output + ' does not exist, not using a temporary directory'
+
+        return tempDir
+
+#================================================================================
+    def extractReleaseNotes(self):
+
+        if os.path.exists('release.notes'):
+            rel_notes = 'release.notes'
+        else:
+            if os.path.exists('release_notes.html'):
+                rel_notes = 'release_notes.html'
+            else:
+                return
+
+        if os.path.exists('new_release.notes'):
+            os.remove('new_release.notes')
+
+        outFile = file( 'new_release.notes', 'a+' )
+        inFile  = open( rel_notes, 'r' )
+        lines = inFile.readlines()
+        found = 0
+        for line in lines:
+            if found == 0 :
+                if(line.find('<H1>') != -1) :
+                    found = 1
+                    outFile.write(line)
+                    continue
+            else :
+                if(line.find('<H1>') != -1) : break
+                outFile.write(line)
+        outFile.write('</PRE>')
+        outFile.close()
+
+#================================================================================
+if ( __name__ == '__main__'):
+
+    arguments = sys.argv[1:]
+
+    chk = builder()
+    chk.argChecker(arguments)
+    chk.envChecker()
+
+#remove doc link if it exists
+
+    here = os.getcwd()
+    link = 'no'
+    if os.path.exists(os.path.join(here,os.pardir,os.pardir,"cmt", "project.cmt")) :
+        os.chdir(os.path.join(here,os.pardir,os.pardir))
+    else :
+        os.chdir(os.path.join(here,os.pardir,os.pardir,os.pardir))
+    project_path = os.getcwd()
+    print "Project path is %s" % project_path
+    if os.path.islink('doc'):
+        link = 'yes'
+        os.unlink('doc')
+    os.chdir(here)
+
+    chk.docBuilder()
+    print os.getcwd()
+#restore link if any
+    os.chdir(here)
+    if link =='yes':
+        os.chdir(project_path)
+        doc_path = string.replace(here,project_path+'/','')
+        os.symlink(doc_path,'doc')
+        os.chdir(here)
