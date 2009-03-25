@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.42 2009-03-25 15:32:24 graven Exp $ 
+# $Id: HltLine.py,v 1.43 2009-03-25 15:35:45 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.42 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.43 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt line itself 
@@ -889,6 +889,8 @@ class Hlt1Line(object):
         # add some python magic to allow reasonable definition of the deepcopy 
         # of a member function bound to an object instance.
         # see http://bugs.python.org/issue1515 for more info...
+        # This should be fixed in python 2.6, so at some point this hack
+        # can be removed again
         import copy,types
         origMethod = copy._deepcopy_dispatch[types.MethodType] if types.MethodType in copy._deepcopy_dispatch else None
         def _deepcopy_method(x, memo):
