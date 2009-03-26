@@ -375,6 +375,8 @@ int GaudiTask::stopApplication()  {
       m_incidentSvc= 0;
       StatusCode sc = m_subMgr ? m_subMgr->stop() : StatusCode::SUCCESS;
       if ( !sc.isSuccess() )   {
+	MsgStream log(msgSvc(), name());
+	log << MSG::ERROR << "Failed to stop the application" << endmsg;
 	gauditask_task_unlock();
 	return 0;
       }
@@ -407,6 +409,8 @@ int GaudiTask::finalizeApplication()  {
       m_incidentSvc= 0;
       StatusCode sc = m_subMgr ? m_subMgr->finalize() : StatusCode::SUCCESS;
       if ( !sc.isSuccess() )   {
+	MsgStream log(msgSvc(), name());
+	log << MSG::ERROR << "Failed to finalize the application" << endmsg;
 	gauditask_task_unlock();
 	return 0;
       }
@@ -442,6 +446,8 @@ int GaudiTask::terminateApplication()  {
 	Gaudi::setInstance(m_appMgr);
 	return 1;
       }
+      MsgStream log(msgSvc(), name());
+      log << MSG::ERROR << "Failed to terminate the application" << endmsg;
       return 0;
     }
     catch(const std::exception& e) {

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/NetworkDataReceiver.h,v 1.7 2009-02-11 16:51:43 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/NetworkDataReceiver.h,v 1.8 2009-03-26 16:44:21 frankb Exp $
 //  ====================================================================
 //  NetworkDataReceiver.h
 //  --------------------------------------------------------------------
@@ -103,6 +103,8 @@ namespace LHCb  {
     lib_rtl_lock_t  m_lock;
     /// [Network Consumer] Queue of data sources
     Receivers       m_receivers;
+    /// Flag track event receiving loop.
+    bool            m_recvEvents;
 
     /// WT callback for asynchronous request rearm
     static int rearm_net_request(unsigned int facility,void* param);
@@ -115,10 +117,14 @@ namespace LHCb  {
     NetworkDataReceiver(const std::string& nam, ISvcLocator* pSvc);
     /// Standard Destructor
     virtual ~NetworkDataReceiver();
-    /// Finalize the object: release all allocated resources
+    /// Service overload: Finalize the object: release all allocated resources
     virtual StatusCode finalize();
-    /// Initialize the object: allocate all necessary resources
+    /// Service overload: Initialize the object: allocate all necessary resources
     virtual StatusCode initialize();
+    /// Service overload: Start transition callback
+    virtual StatusCode start();
+    /// Service overload: Stop transition callback
+    virtual StatusCode stop();
 
     /// Incident handler implemenentation: Inform that a new incident has occured
     void handle(const Incident& inc);

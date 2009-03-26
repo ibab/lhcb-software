@@ -22,13 +22,17 @@ static unsigned int hash32(const char* key) {
   hash += (hash << 3); hash ^= (hash >> 11); hash += (hash << 15);
   return hash;
 }
+
 static const unsigned int COPY_LIMIT   = (8192*2);
 static const int LINGER_VALUE          =  0;
 static const unsigned int CHOP_SIZE    = (8192*4);
+//static const unsigned int CHOP_SIZE    = (8192*8);
 static const unsigned int LOWER_CHOP   = 4096;
 static const int MAX_TCP_ERRORS        = 20;
 static const int SNDBUF_VALUE          = 8192;
-static const int RCVBUF_VALUE          = CHOP_SIZE;
+//static const int SNDBUF_VALUE          = CHOP_SIZE;
+static const int RCVBUF_VALUE        = CHOP_SIZE;
+//static const int RCVBUF_VALUE          = 100*CHOP_SIZE;
 
 namespace DataTransfer  {
   struct netentry_t {
@@ -143,6 +147,7 @@ NetErrorCode netentry_t::setSockopts()  {
 NetErrorCode netentry_t::setSendBuff(unsigned int siz) {
   unsigned int sndbuf = (siz>CHOP_SIZE) ? CHOP_SIZE : (siz<LOWER_CHOP) ? LOWER_CHOP : siz;
   sndbuf *= 2;
+  //sndbuf = siz;
   if ( sndbuf != sndBuffSize )     {
     ::setsockopt(chan, SOL_SOCKET, SO_SNDBUF, (const char*)&sndbuf, sizeof(int));
     sndBuffSize = sndbuf;

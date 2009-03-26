@@ -1,4 +1,4 @@
-// $Id: ErrorLog.cpp,v 1.12 2009-01-09 10:31:20 frankb Exp $
+// $Id: ErrorLog.cpp,v 1.13 2009-03-26 16:44:21 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrorLog.cpp,v 1.12 2009-01-09 10:31:20 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrorLog.cpp,v 1.13 2009-03-26 16:44:21 frankb Exp $
 
 // Framework include files
 #include <sstream>
@@ -35,12 +35,13 @@ extern "C" {
 }
 
 using namespace ROLogger;
+using namespace std;
 
 /// Standard constructor
 ErrorLog::ErrorLog(int argc, char** argv) 
 {
   RTL::CLI cli(argc, argv, help_fun);
-  std::string name, info;
+  string name, info;
   cli.getopt("service",1,name);
   m_messageLog = new Logger(RTL::processName()+"_display");
   m_historyLog = new Logger(RTL::processName()+"_history");

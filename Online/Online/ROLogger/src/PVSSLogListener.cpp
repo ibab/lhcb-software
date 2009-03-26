@@ -1,4 +1,4 @@
-// $Id: PVSSLogListener.cpp,v 1.6 2008-11-19 11:09:39 frankb Exp $
+// $Id: PVSSLogListener.cpp,v 1.7 2009-03-26 16:44:21 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PVSSLogListener.cpp,v 1.6 2008-11-19 11:09:39 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PVSSLogListener.cpp,v 1.7 2009-03-26 16:44:21 frankb Exp $
 
 // Framework include files
 #include "ROLogger/PVSSLogListener.h"
@@ -37,7 +37,7 @@ extern "C" {
 using namespace ROLogger;
 using namespace std;
 typedef vector<string> _SV;
-static std::string facility = "pvss";
+static string facility = "pvss";
 
 /// Standard constructor with object setup through parameters
 PVSSLogListener::PVSSLogListener(Interactor* parent,const string& n) : m_parent(parent), m_name(n)

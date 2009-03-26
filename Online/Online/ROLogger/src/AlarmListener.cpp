@@ -1,4 +1,4 @@
-// $Id: AlarmListener.cpp,v 1.5 2009-01-09 10:31:20 frankb Exp $
+// $Id: AlarmListener.cpp,v 1.6 2009-03-26 16:44:21 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/AlarmListener.cpp,v 1.5 2009-01-09 10:31:20 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/AlarmListener.cpp,v 1.6 2009-03-26 16:44:21 frankb Exp $
 
 // Framework include files
 #include "ROLogger/AlarmListener.h"
@@ -33,7 +33,7 @@ using namespace std;
 typedef vector<string> _SV;
 
 /// Standard constructor with object setup through parameters
-AlarmListener::AlarmListener(Interactor* parent,const string& n, const std::string& fac) 
+AlarmListener::AlarmListener(Interactor* parent,const string& n, const string& fac) 
   : m_parent(parent), m_name(n), m_facility(fac)
 {
   auto_ptr<_SV> f(new _SV());

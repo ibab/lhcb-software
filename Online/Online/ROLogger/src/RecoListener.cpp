@@ -1,4 +1,4 @@
-// $Id: RecoListener.cpp,v 1.1 2009-01-09 10:32:38 frankb Exp $
+// $Id: RecoListener.cpp,v 1.2 2009-03-26 16:44:21 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/RecoListener.cpp,v 1.1 2009-01-09 10:32:38 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/RecoListener.cpp,v 1.2 2009-03-26 16:44:21 frankb Exp $
 
 // Framework include files
 #include "ROLogger/RecoListener.h"
@@ -33,7 +33,7 @@ using namespace std;
 typedef vector<string> _SV;
 
 /// Standard constructor with object setup through parameters
-RecoListener::RecoListener(Interactor* parent,const string& n, const std::string& fac) 
+RecoListener::RecoListener(Interactor* parent,const string& n, const string& fac) 
   : m_parent(parent), m_name(n), m_facility(fac)
 {
   char txt[64];

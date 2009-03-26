@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataReceiver.cpp,v 1.22 2009-02-11 16:51:43 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataReceiver.cpp,v 1.23 2009-03-26 16:44:21 frankb Exp $
 //  ====================================================================
 //  NetworkDataReceiver.cpp
 //  --------------------------------------------------------------------
@@ -27,7 +27,8 @@ static const std::string s_reqMsg("EVENT_REQUEST");
 // Standard algorithm constructor
 NetworkDataReceiver::NetworkDataReceiver(const std::string& nam, ISvcLocator* pSvc)
 : OnlineService(nam,pSvc), m_recvReq(0), m_recvError(0), m_recvBytes(0), 
-  m_backlog(0), m_lastbacklog(0), m_mepMgr(0), m_prod(0), m_evtSelector(0)
+  m_backlog(0), m_lastbacklog(0), m_mepMgr(0), m_prod(0), m_evtSelector(0),
+  m_recvEvents(false)
 {
   ::wtc_init();
   ::lib_rtl_create_lock(0,&m_lock);
@@ -58,6 +59,7 @@ StatusCode NetworkDataReceiver::initialize()   {
     return sc;
   }
   try {
+    m_recvEvents = true;
     // Do NOT call base class initialization: we are not writing to file/socket!
     declareInfo("EventsIn", m_recvReq=0,   "Total number of items received.");
     declareInfo("ErrorsIn", m_recvError=0, "Total number of receive errors.");
@@ -88,6 +90,7 @@ StatusCode NetworkDataReceiver::initialize()   {
 
 // Finalize the object: release all allocated resources
 StatusCode NetworkDataReceiver::finalize()     {
+  m_recvEvents = false;
   ::wtc_flush(WT_FACILITY_DAQ_EVENT);
   ::wtc_remove(WT_FACILITY_DAQ_EVENT);
   unsubscribeNetwork(); // Cannot really do anything if this fails...except printing
@@ -104,10 +107,23 @@ StatusCode NetworkDataReceiver::finalize()     {
   return OnlineService::finalize();
 }
 
+// Service overload: Start transition callback
+StatusCode NetworkDataReceiver::start()   {
+  m_recvEvents = true;
+  return OnlineService::start();
+}
+
+// Service overload: Stop transition callback
+StatusCode NetworkDataReceiver::stop()   {
+  m_recvEvents = false;
+  return OnlineService::stop();
+}
+
 /// Incident handler implemenentation: Inform that a new incident has occured
 void LHCb::NetworkDataReceiver::handle(const Incident& inc)    {
   if ( inc.type() == "DAQ_CANCEL" )  {
     MsgStream info(msgSvc(), name());
+    m_recvEvents = false;
     info << MSG::INFO << "Executing DAQ_CANCEL" << endmsg;
     ::wtc_flush(WT_FACILITY_DAQ_EVENT);
     m_mepMgr->cancel();
@@ -159,7 +175,10 @@ NetworkDataReceiver::RecvEntry* NetworkDataReceiver::receiver(const std::string&
 /// Rearm network request for a single event source
 StatusCode NetworkDataReceiver::rearmRequest(const RecvEntry& entry)   {
   if ( m_useEventRequests )  {
-    return rearmNetRequest(entry);
+    StatusCode sc = rearmNetRequest(entry);
+    sc.ignore();
+    if ( !m_recvEvents ) sc = StatusCode::SUCCESS;
+    return sc;
   }
   return StatusCode::SUCCESS;
 }
@@ -243,7 +262,7 @@ StatusCode NetworkDataReceiver::copyEventData(void* to, void* from, size_t len) 
 // Handle event declaration into the buffer manager
 StatusCode NetworkDataReceiver::declareEventData(RecvEntry& entry)  {
   try {
-    int ret = m_prod->getSpace(entry.size);
+    int ret = m_recvEvents ? m_prod->getSpace(entry.size) : MBM_REQ_CANCEL;
     if ( ret == MBM_NORMAL ) {
       MBM::EventDesc& e = m_prod->event();
       RawBank*   b = (RawBank*)e.data;
@@ -270,14 +289,14 @@ StatusCode NetworkDataReceiver::declareEventData(RecvEntry& entry)  {
       }
       MsgStream log0(msgSvc(), name());
       log0 << MSG::ERROR << "Failed to retrieve network event data from:" << entry.name << endmsg;
-      if ( ret != MBM_REQ_CANCEL ) rearmRequest(entry);
+      if ( m_recvEvents && ret != MBM_REQ_CANCEL ) rearmRequest(entry);
       ++m_recvError;
       return StatusCode::SUCCESS;
     }
     MsgStream log1(msgSvc(), name());
     // Cannot do anything - must handle and rearm new request
     log1 << MSG::ERROR << "Failed to get space for buffer manager." << endmsg;
-    if ( ret != MBM_REQ_CANCEL ) rearmRequest(entry);
+    if ( m_recvEvents && ret != MBM_REQ_CANCEL ) rearmRequest(entry);
     ++m_recvError;
     return StatusCode::SUCCESS;
   }
@@ -291,7 +310,7 @@ StatusCode NetworkDataReceiver::declareEventData(RecvEntry& entry)  {
     err << MSG::ERROR << "Got unknown exception when declaring event from:" << entry.name << endmsg;
   }
   ++m_recvError;
-  return rearmRequest(entry);
+  return m_recvEvents ? rearmRequest(entry) : StatusCode::SUCCESS;
 }
 
 // Callback on task dead notification

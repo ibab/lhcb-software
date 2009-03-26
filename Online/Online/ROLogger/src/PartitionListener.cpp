@@ -1,4 +1,4 @@
-// $Id: PartitionListener.cpp,v 1.18 2009-02-27 15:32:34 frankb Exp $
+// $Id: PartitionListener.cpp,v 1.19 2009-03-26 16:44:21 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionListener.cpp,v 1.18 2009-02-27 15:32:34 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionListener.cpp,v 1.19 2009-03-26 16:44:21 frankb Exp $
 
 // Framework include files
 #include "ROLogger/PartitionListener.h"
@@ -161,7 +161,7 @@ void PartitionListener::nodeHandler(void* tag, void* address, int* size) {
   char txt[132];
   auto_ptr<_SV> n(new _SV());
   PartitionListener* h = *(PartitionListener**)tag;
-  std::string nam = h->name().substr(0,4);
+  string nam = h->name().substr(0,4);
   get_nodes(address,size,n.get());
   n->push_back("STORECTL01");
   n->push_back("STORERECV01");
