@@ -1,4 +1,4 @@
-// $Id: IParticle2MCWeightedAssociator.h,v 1.1 2009-03-26 08:29:27 jpalac Exp $
+// $Id: IParticle2MCWeightedAssociator.h,v 1.2 2009-03-26 08:46:33 jpalac Exp $
 #ifndef KERNEL_IPARTICLE2MCWEIGHTEDASSOCIATOR_H 
 #define KERNEL_IPARTICLE2MCWEIGHTEDASSOCIATOR_H 1
 
@@ -47,7 +47,7 @@ public:
    *
    **/
   virtual Particle2MCParticle::ToVector 
-  associate(const LHCb::Particle* particle) const = 0;
+  relatedMCPs(const LHCb::Particle* particle) const = 0;
 
   /**
    *
@@ -64,8 +64,8 @@ public:
    *
    **/
   virtual Particle2MCParticle::ToVector 
-  associate(const LHCb::Particle* particle,
-            const std::string& mcParticleLocation) const = 0;
+  relatedMCPs(const LHCb::Particle* particle,
+              const std::string& mcParticleLocation) const = 0;
 
   /**
    *
@@ -80,8 +80,8 @@ public:
    *
    **/
   virtual Particle2MCParticle::ToVector 
-  associate(const LHCb::Particle* particle,
-            const LHCb::MCParticle::Container& mcParticles) const = 0;
+  relatedMCPs(const LHCb::Particle* particle,
+              const LHCb::MCParticle::Container& mcParticles) const = 0;
   /**
    *
    * Calculate the weighted associations between an LHCb::Particle and
@@ -95,8 +95,8 @@ public:
    *
    **/
   virtual Particle2MCParticle::ToVector 
-  associate(const LHCb::Particle* particle,
-            const LHCb::MCParticle::ConstVector& mcParticles) const = 0;
+  relatedMCPs(const LHCb::Particle* particle,
+              const LHCb::MCParticle::ConstVector& mcParticles) const = 0;
 
 };
 #endif // KERNEL_IPARTICLE2MCWEIGHTEDASSOCIATOR_H
