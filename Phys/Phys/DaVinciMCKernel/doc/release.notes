@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.69 2009-03-26 11:10:48 jpalac Exp $
+! $Id: release.notes,v 1.70 2009-03-26 12:54:20 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
@@ -6,11 +6,18 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-03-26 - Juan PALACIOS
+ - Kernel/IParticle2MCWeightedAssociator.h
+  . Inherits from IParticle2MCAssociator.h
+ - Kernel/Particle2MCAssociatorBase.h
+  .Inherits from IParticle2MCWeightedAssociator, which inherits from 
+   IParticle2MCAssociator
+ - Kernel/IParticle2MCAssociator.h
+  . Add associationWeight method
  - Kernel/IParticle2MCAssociator.h
   . Add doxygen
  - Kernel/Particle2MCAssociatorBase.h
   . Remove obsolete relaations table related methods
-  . Add weight method
+  . Add associaitonWeight method
  - dict/*
   . Add dict for IParticle2MCWeightedAssociator
 
