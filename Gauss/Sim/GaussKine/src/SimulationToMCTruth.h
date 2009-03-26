@@ -1,4 +1,4 @@
-// $Id: SimulationToMCTruth.h,v 1.4 2008-11-04 21:09:54 robbep Exp $
+// $Id: SimulationToMCTruth.h,v 1.5 2009-03-26 21:42:04 robbep Exp $
 #ifndef SIMULATIONTOMCTRUTH_H 
 #define SIMULATIONTOMCTRUTH_H 1
  
@@ -66,6 +66,7 @@ private:
 
   std::string m_particles ;    ///< Name of MCParticles location
   std::string m_vertices  ;    ///< Name of MCVertices location
+  std::string m_mcHeaderLocation ; ///< Name of MCHeader Location
   
   LHCb::MCParticles * m_particleContainer ; ///< MCParticles container
   LHCb::MCVertices  * m_vertexContainer   ; ///< MCVertices container

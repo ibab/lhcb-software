@@ -4,6 +4,10 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-03-26 - Patrick Robbe
+ - GenerationToSimulation and SimulationToMCTruth: add possibility to
+   change location of MCHeader by option
+
 ! 2009-03-04 - Patrick Robbe
  - GenerationToSimulation.cpp: fixes for "skipGeant4" option to allow
    transfering directly from HepMC to MCParticles/MCVertices

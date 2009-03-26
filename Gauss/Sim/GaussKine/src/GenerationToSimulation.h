@@ -1,4 +1,4 @@
-// $Id: GenerationToSimulation.h,v 1.4 2008-12-12 13:58:32 robbep Exp $
+// $Id: GenerationToSimulation.h,v 1.5 2009-03-26 21:42:04 robbep Exp $
 #ifndef GENERATIONTOSIMULATION_H 
 #define GENERATIONTOSIMULATION_H 1
 
@@ -90,6 +90,7 @@ private:
   std::string m_generationLocation ; ///< Location in TES of input HepMC events
   std::string m_particlesLocation ;  ///< Location in TES of output MCParticles
   std::string m_verticesLocation ;   ///< Location in TES of output MCVertices
+  std::string m_mcHeader         ;   ///< Location in TES of MCHeader
   
   LHCb::MCParticles * m_particleContainer ; ///< Container of MCParticles
   LHCb::MCVertices  * m_vertexContainer   ; ///< Container of MCVertices

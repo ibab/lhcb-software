@@ -1,4 +1,4 @@
-// $Id: SimulationToMCTruth.cpp,v 1.6 2008-11-04 21:09:54 robbep Exp $
+// $Id: SimulationToMCTruth.cpp,v 1.7 2009-03-26 21:42:04 robbep Exp $
 // Include files 
 
 // local 
@@ -63,6 +63,7 @@ SimulationToMCTruth::SimulationToMCTruth(const std::string& name,
   declareProperty( "GiGaService",    m_gigaSvcName  = "GiGa" );
   declareProperty( "KineCnvService", m_kineSvcName  = IGiGaCnvSvcLocation::Kine );
   declareProperty( "CheckForUnknownParticle" , m_checkUnknown = false ) ;
+  declareProperty( "MCHeader" , m_mcHeaderLocation = LHCb::MCHeaderLocation::Default ) ;
 }
 
 //=============================================================================
@@ -116,7 +117,7 @@ StatusCode SimulationToMCTruth::execute() {
   }
   
   // Retrieve MCHeader (filled initially in SimInit)
-  m_mcHeader = get<LHCb::MCHeader>(LHCb::MCHeaderLocation::Default);
+  m_mcHeader = get<LHCb::MCHeader>( m_mcHeaderLocation );
 
   // clear set of treated MCParticles
   m_treatedParticles.clear() ;

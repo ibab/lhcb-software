@@ -1,4 +1,4 @@
-// $Id: GenerationToSimulation.cpp,v 1.8 2009-03-04 15:03:44 robbep Exp $
+// $Id: GenerationToSimulation.cpp,v 1.9 2009-03-26 21:42:04 robbep Exp $
 // Include files 
 // local
 #include "GenerationToSimulation.h"
@@ -56,6 +56,7 @@ GenerationToSimulation::GenerationToSimulation( const std::string& name,
   declareProperty( "LookForUnknownParticles" , m_lookForUnknownParticles = false ) ;
   declareProperty( "SkipGeant" , m_skipGeant4 = false ) ;
   declareProperty( "UpdateG4ParticleProperties" , m_updateG4ParticleProperties = true ) ;
+  declareProperty( "MCHeader" , m_mcHeader = LHCb::MCHeaderLocation::Default) ;
 }
 //=============================================================================
 // Destructor
@@ -120,7 +121,7 @@ StatusCode GenerationToSimulation::execute() {
   }
 
   // Obtain the MCHeader info
-  LHCb::MCHeader * mcHeader = get<LHCb::MCHeader>(LHCb::MCHeaderLocation::Default) ;
+  LHCb::MCHeader * mcHeader = get<LHCb::MCHeader>( m_mcHeader ) ;
 
   // Loop over the events (one for each pile-up interaction)
   for( LHCb::HepMCEvents::const_iterator genEvent = generationEvents -> begin() ; 
