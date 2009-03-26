@@ -1,4 +1,4 @@
-// $Id: IParticle2MCWeightedAssociator.h,v 1.4 2009-03-26 12:52:30 jpalac Exp $
+// $Id: IParticle2MCWeightedAssociator.h,v 1.5 2009-03-26 17:57:38 jpalac Exp $
 #ifndef KERNEL_IPARTICLE2MCWEIGHTEDASSOCIATOR_H 
 #define KERNEL_IPARTICLE2MCWEIGHTEDASSOCIATOR_H 1
 
@@ -100,23 +100,6 @@ public:
   virtual Particle2MCParticle::ToVector 
   relatedMCPs(const LHCb::Particle* particle,
               const LHCb::MCParticle::ConstVector& mcParticles) const = 0;
-
-  /**
-   *
-   * Return the association weight between an LHCb::Particle and an
-   * LHCb::MCParticle
-   *
-   * @param particle pointer to LHCb::Particle to be associated
-   * @param mcParticle pointer to LHCb::MCParticle to be associated
-   * @return weight of the association. It should be a probability, therefore
-   *         it is bounded by 0 and 1.
-   *
-   * @author Juan Palacios juan.palacios@nikhef.nl
-   * @date   2009-26-03
-   **/
-  virtual double 
-  associationWeight(const LHCb::Particle* particle,
-                    const LHCb::MCParticle* mcParticle) const = 0;
 
 };
 #endif // KERNEL_IPARTICLE2MCWEIGHTEDASSOCIATOR_H
