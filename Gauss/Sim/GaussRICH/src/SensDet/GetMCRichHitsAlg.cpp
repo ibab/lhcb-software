@@ -1,4 +1,4 @@
-// $Id: GetMCRichHitsAlg.cpp,v 1.34 2008-06-24 15:56:35 jonrob Exp $
+// $Id: GetMCRichHitsAlg.cpp,v 1.35 2009-03-26 21:49:02 robbep Exp $
 // Include files
 
 // from Gaudi
@@ -33,6 +33,8 @@ GetMCRichHitsAlg::GetMCRichHitsAlg( const std::string& name,
 {
   declareProperty( "MCRichHitsLocation",
                    m_dataToFill = MCRichHitLocation::Default );
+  declareProperty( "MCParticles" ,
+                   m_mcParticles = MCParticleLocation::Default ) ;
 }
 
 //=============================================================================
@@ -79,10 +81,10 @@ StatusCode GetMCRichHitsAlg::execute()
     unsigned int  totalSize( 0 );
     ++m_nEvts; // Count events
     // now check the existence of MC particles and get their table.
-    if( !( exist<MCParticles>( MCParticleLocation::Default ) ) )
+    if( !( exist<MCParticles>( m_mcParticles ) ) )
     {
       return Error( "GetMCRichHitsAlg : MCParticles do not exist at '"
-                    + MCParticleLocation::Default +"'" );
+                    + m_mcParticles +"'" );
     }
     // Get the Geant4->MCParticle table
     GiGaKineRefTable& table = kineSvc()->table();

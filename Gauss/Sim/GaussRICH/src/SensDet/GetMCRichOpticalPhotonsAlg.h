@@ -1,4 +1,4 @@
-// $Id: GetMCRichOpticalPhotonsAlg.h,v 1.3 2006-10-10 17:41:50 jonrob Exp $
+// $Id: GetMCRichOpticalPhotonsAlg.h,v 1.4 2009-03-26 21:49:47 robbep Exp $
 #ifndef SENSDET_GETMCRICHOPTICALPHOTONSALG_H
 #define SENSDET_GETMCRICHOPTICALPHOTONSALG_H 1
 
@@ -43,6 +43,8 @@ private:
   /// count overall number of photons in each RICH radiator medium
   RadMap m_hitTally;
 
+  /// Location of MC Rich Hits
+  std::string m_mcRichHits ;
 };
 
 #endif // SENSDET_GETMCRICHOPTICALPHOTONSALG_H

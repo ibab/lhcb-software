@@ -1,4 +1,4 @@
-// $Id: GetMCRichOpticalPhotonsAlg.cpp,v 1.14 2008-01-28 17:10:29 jonrob Exp $
+// $Id: GetMCRichOpticalPhotonsAlg.cpp,v 1.15 2009-03-26 21:49:47 robbep Exp $
 // Include files 
 
 // from Gaudi
@@ -30,6 +30,8 @@ GetMCRichOpticalPhotonsAlg::GetMCRichOpticalPhotonsAlg( const std::string& name,
 {
   declareProperty( "MCRichOpticalPhotonsLocation",
                    m_dataToFill = MCRichOpticalPhotonLocation::Default );
+  declareProperty( "MCRichHits" , 
+                   m_mcRichHits = MCRichHitLocation::Default ) ;
 }
 
 //=============================================================================
@@ -68,7 +70,7 @@ StatusCode GetMCRichOpticalPhotonsAlg::execute()
   if ( 0 != hitscollections )
   {
     // Get MCRichHits
-    const MCRichHits * mcHits = get<MCRichHits>( MCRichHitLocation::Default );
+    const MCRichHits * mcHits = get<MCRichHits>( m_mcRichHits );
 
     // reserve space in photon container
     photons->reserve( mcHits->size() );

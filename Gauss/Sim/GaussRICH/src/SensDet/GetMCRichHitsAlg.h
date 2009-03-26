@@ -1,4 +1,4 @@
-// $Id: GetMCRichHitsAlg.h,v 1.9 2008-06-02 13:00:18 jonrob Exp $
+// $Id: GetMCRichHitsAlg.h,v 1.10 2009-03-26 21:49:02 robbep Exp $
 #ifndef SENSDET_GetMCRichHitsAlg_H
 #define SENSDET_GetMCRichHitsAlg_H 1
 
@@ -104,6 +104,8 @@ private:
   /// Pointers to RICH detector elements
   std::vector<const DeRich *> m_richDets;
 
+  /// MCParticles location
+  std::string m_mcParticles ;
 private:
 
   /// Print a monitoring statistic

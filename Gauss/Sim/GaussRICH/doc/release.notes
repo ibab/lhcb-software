@@ -3,6 +3,12 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
+
+! 2009-03-26 - Patrick Robbe
+ - GetMCRichHitsAlg, GetMCRichOpticalPhotons, GetMCRichTracksAlg:
+   . add the possibility to change location of hits, photons, ... to 
+     allow generation of spill over in Gauss
+
 ! 2009-03-03 - Sajan Easo
  - Added the options to run Gauss without RICH, for special studies. This
    gives three possibilities: run with RICH ON which is default, run with

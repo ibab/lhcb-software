@@ -1,4 +1,4 @@
-// $Id: GetMCRichTracksAlg.h,v 1.2 2006-03-01 09:31:26 jonrob Exp $
+// $Id: GetMCRichTracksAlg.h,v 1.3 2009-03-26 21:49:47 robbep Exp $
 #ifndef SENSDET_GetMCRichTracksAlg_H
 #define SENSDET_GetMCRichTracksAlg_H 1
 
@@ -35,7 +35,10 @@ private:
   unsigned long int m_nEvts;
   /// Count tracks
   unsigned long int m_hitTally;
-
+  /// Location of mc particles
+  std::string m_mcParticles ;
+  /// Location of rich segments
+  std::string m_mcRichSegments ;
 };
 
 #endif // SENSDET_GetMCRichTracksAlg_H

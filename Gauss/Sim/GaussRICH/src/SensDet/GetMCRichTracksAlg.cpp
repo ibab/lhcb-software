@@ -1,4 +1,4 @@
-// $Id: GetMCRichTracksAlg.cpp,v 1.7 2007-03-18 19:54:57 gcorti Exp $
+// $Id: GetMCRichTracksAlg.cpp,v 1.8 2009-03-26 21:49:47 robbep Exp $
 // Include files
 
 // from Gaudi
@@ -32,6 +32,8 @@ GetMCRichTracksAlg::GetMCRichTracksAlg( const std::string& name,
 {
   declareProperty( "MCRichTracksLocation",
                    m_dataToFill = MCRichTrackLocation::Default );
+  declareProperty( "MCParticles" , m_mcParticles = MCParticleLocation::Default ) ;
+  declareProperty( "MCRichSegments" , m_mcRichSegments = MCRichSegmentLocation::Default ) ;
 }
 
 //=============================================================================
@@ -83,10 +85,10 @@ StatusCode GetMCRichTracksAlg::execute()
     const GiGaKineRefTable & table = kineSvc()->table();
 
     // Locate the MCRichSegments
-    MCRichSegments * segments   = get<MCRichSegments>( MCRichSegmentLocation::Default );
+    MCRichSegments * segments   = get<MCRichSegments>( m_mcRichSegments );
     if ( segments->empty() ) { return StatusCode::SUCCESS; }
     // locate MCParticles
-    const MCParticles * mcParts = get<MCParticles>( MCParticleLocation::Default );
+    const MCParticles * mcParts = get<MCParticles>( m_mcParticles );
     if ( mcParts->empty()  ) { return Warning( "Empty MCParticles", StatusCode::SUCCESS ); }
 
     // loop over trajectories and form links from MCP to trajectories
