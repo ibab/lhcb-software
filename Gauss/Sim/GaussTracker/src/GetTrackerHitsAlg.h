@@ -1,4 +1,4 @@
-// $Id: GetTrackerHitsAlg.h,v 1.5 2008-05-06 16:25:42 gcorti Exp $
+// $Id: GetTrackerHitsAlg.h,v 1.6 2009-03-26 21:52:20 robbep Exp $
 #ifndef GETTRACKERHITSALG_H 
 #define GETTRACKERHITSALG_H 1
 
@@ -66,6 +66,8 @@ private:
   
   std::vector<std::string> m_detName;             ///< Detector PATHs
   std::vector<const DetectorElement*> m_detector; ///< Pointers to DetectorEl
+  
+  std::string        m_mcParticles;       ///< Name of MCParticles location
 
 };
 #endif // GETTRACKERHITSALG_H

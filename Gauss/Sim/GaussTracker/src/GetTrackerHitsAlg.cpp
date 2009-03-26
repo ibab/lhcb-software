@@ -1,4 +1,4 @@
-// $Id: GetTrackerHitsAlg.cpp,v 1.15 2008-05-06 16:25:42 gcorti Exp $
+// $Id: GetTrackerHitsAlg.cpp,v 1.16 2009-03-26 21:52:20 robbep Exp $
 // Include files 
 
 // from Gaudi
@@ -55,6 +55,8 @@ GetTrackerHitsAlg::GetTrackerHitsAlg( const std::string& name,
                    "Name of Geant4 collection where to retrieve hits" );
   declareProperty( "Detectors",      m_detName,
                    "List of detector paths in TDS for which to retrieve the hits (most of the time one" );
+  declareProperty( "MCParticles",    m_mcParticles = LHCb::MCParticleLocation::Default,
+		   "Location of MCParticles" ) ;
 }
 
 //=============================================================================
@@ -141,9 +143,9 @@ StatusCode GetTrackerHitsAlg::execute() {
   }
   
   // The MCParticles should have already been filled
-  if( !( exist<LHCb::MCParticles>( LHCb::MCParticleLocation::Default ) ) ) {
+  if( !( exist<LHCb::MCParticles>( m_mcParticles ) ) ) {
     return Error( "MCParticles do not exist at'" 
-                  + LHCb::MCParticleLocation::Default +"'" );
+                  + m_mcParticles +"'" );
   }
   
   // reserve elements on output container

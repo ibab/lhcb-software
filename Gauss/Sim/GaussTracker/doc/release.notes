@@ -5,6 +5,10 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
+! 2009-03-26 - Patrick Robbe
+ - GetTrackerHitsAlg: add possibility to change location of MCParticles by
+   job option
+
 !======================= GaussTracker v6r1 2008-05-06 ========================
 ! 2008-05-06 - Gloria CORTI
  - Introduce as option possibility to not require dE/dx in the sensitive
