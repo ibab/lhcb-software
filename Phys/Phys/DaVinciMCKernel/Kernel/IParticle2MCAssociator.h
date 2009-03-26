@@ -1,4 +1,4 @@
-// $Id: IParticle2MCAssociator.h,v 1.7 2009-03-26 08:46:01 jpalac Exp $
+// $Id: IParticle2MCAssociator.h,v 1.8 2009-03-26 11:06:33 jpalac Exp $
 #ifndef KERNEL_IPARTICLE2MCASSOCIATOR_H 
 #define KERNEL_IPARTICLE2MCASSOCIATOR_H 1
 
@@ -40,7 +40,7 @@ public:
   /**
    * Calculate and return the LHCb::MCParticle associated to an
    * LHCb::Particle. The associated LHCb::Particle is selected from a
-   * container of LHCb::MCParticles from a TES locaiton.
+   * container of LHCb::MCParticles from a TES location.
    * @param particle LHCb::Particle* to be associated
    * @return const LHCb::MCParticle* to associated LHCb::MCParticle
    *
@@ -51,15 +51,50 @@ public:
   virtual const LHCb::MCParticle* 
   relatedMCP(const LHCb::Particle*) const = 0;
 
-
+  /**
+   * Calculate and return the LHCb::MCParticle associated to an
+   * LHCb::Particle. The associated LHCb::Particle is selected from a
+   * container of LHCb::MCParticles from a TES location.
+   * @param particle LHCb::Particle* to be associated
+   * @param mcParticleLocation TES location of MCParticles
+   * @return const LHCb::MCParticle* to associated LHCb::MCParticle
+   *
+   * @author Juan Palacios juan.palacios@nikhef.nl
+   * @date   2009-03-25
+   *
+   **/
   virtual const LHCb::MCParticle*
   relatedMCP(const LHCb::Particle*,
              const std::string& mcParticleLocation) const = 0;
 
+  /**
+   * Calculate and return the LHCb::MCParticle associated to an
+   * LHCb::Particle. The associated LHCb::Particle is selected from a
+   * container of LHCb::MCParticles.
+   * @param particle LHCb::Particle* to be associated
+   * @param mcParticles Container of MCParticles
+   * @return const LHCb::MCParticle* to associated LHCb::MCParticle
+   *
+   * @author Juan Palacios juan.palacios@nikhef.nl
+   * @date   2009-03-25
+   *
+   **/
   virtual const LHCb::MCParticle*
   relatedMCP(const LHCb::Particle* particles,
              const LHCb::MCParticle::ConstVector& mcParticles) const = 0;
 
+  /**
+   * Calculate and return the LHCb::MCParticle associated to an
+   * LHCb::Particle. The associated LHCb::Particle is selected from a
+   * container of LHCb::MCParticles.
+   * @param particle LHCb::Particle* to be associated
+   * @param mcParticles Container of MCParticles
+   * @return const LHCb::MCParticle* to associated LHCb::MCParticle
+   *
+   * @author Juan Palacios juan.palacios@nikhef.nl
+   * @date   2009-03-25
+   *
+   **/
   virtual const LHCb::MCParticle*
   relatedMCP(const LHCb::Particle* particles,
              const LHCb::MCParticle::Container& mcParticles) const = 0;
