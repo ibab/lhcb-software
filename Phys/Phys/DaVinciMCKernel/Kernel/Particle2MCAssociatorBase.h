@@ -1,4 +1,4 @@
-// $Id: Particle2MCAssociatorBase.h,v 1.14 2009-03-26 13:58:38 jpalac Exp $
+// $Id: Particle2MCAssociatorBase.h,v 1.15 2009-03-26 14:01:19 jpalac Exp $
 #ifndef PARTICLE2MCASSOCIATORBASE_H 
 #define PARTICLE2MCASSOCIATORBASE_H 1
 
@@ -13,17 +13,19 @@
 
 /** @class Particle2MCAssociatorBase Particle2MCAssociatorBase.h
  *  
- *  Common implementation for descendants of IParticle2MCAssociator.
+ *  Common implementation for descendants of IParticle2MCWeightedAssociator.
  *  Mainly inline helper methods for common implementation of host of 
  *  similar methods in the interface.
  *  Set of methods is self-consistent. Derived classes only need to implement
  *  methods
  *  @code 
- *  bool isMatched(const LHCb::Particle*, const LHCb::MCParticle)
+ *  virtual bool isAssociated(const LHCb::Particle*, 
+ *                            const LHCb::MCParticle) const
  *  @endcode
  *  and
  *  @code
- *  LHCb::MCParticle::ConstVector sort(const LHCb::MCParticle::Container* mcParticles) const
+ *  virtual double associationWeight(const LHCb::Particle*,
+                                     const LHCb::MCParticle* ) const
  *  @code
  *
  *  @author Juan PALACIOS
