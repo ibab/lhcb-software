@@ -7,7 +7,6 @@
 #include "Kernel/IBackgroundCategory.h"
 #include "Kernel/IDaVinciAssociatorsWrapper.h"
 #include "Kernel/Particle2MCLinker.h"
-#include "Kernel/IParticle2MCAssociator.h"
 #include "Kernel/Particle2MCAssociatorBase.h"
 #include "Kernel/MCAssociation.h"
 
@@ -37,7 +36,7 @@
  *  @date   2009-01-13
  */
 class DaVinciSmartAssociator : public Particle2MCAssociatorBase, 
-                               virtual public IParticle2MCAssociator {
+                               virtual public IParticle2MCWeightedAssociator {
 public: 
   /// Standard constructor
   DaVinciSmartAssociator( const std::string& type, 
@@ -51,15 +50,18 @@ public:
   virtual StatusCode finalize() ;
 
   virtual Particle2MCParticle::ToVector 
-  associate(const LHCb::Particle* particle) const ;
+  relatedMCPs(const LHCb::Particle* particle) const ;
 
   virtual Particle2MCParticle::ToVector 
-  associate(const LHCb::Particle* particle,
-            const std::string& mcParticleLocation) const ;
+  relatedMCPs(const LHCb::Particle* particle,
+              const std::string& mcParticleLocation) const ;
 
   virtual bool  
-  isMatched(const LHCb::Particle* particle, 
+  isAssociated(const LHCb::Particle* particle, 
             const LHCb::MCParticle* mcParticle) const ;
+
+  virtual double associationWeight(const LHCb::Particle* particle,
+                                   const LHCb::MCParticle* mcParticle) const;
 
 private:
 
