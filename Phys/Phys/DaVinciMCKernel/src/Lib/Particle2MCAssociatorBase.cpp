@@ -1,4 +1,4 @@
-// $Id: Particle2MCAssociatorBase.cpp,v 1.8 2009-03-26 13:43:51 jpalac Exp $
+// $Id: Particle2MCAssociatorBase.cpp,v 1.9 2009-03-26 13:59:13 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -57,6 +57,13 @@ Particle2MCAssociatorBase::relatedMCP(const LHCb::Particle* particle,
   return i_bestMCPWithCheck( i_relatedMCPs( particle, 
                                             mcParticles.begin(), 
                                             mcParticles.end()    )   );
+}
+//=============================================================================
+bool
+Particle2MCAssociatorBase::isAssociated(const LHCb::Particle*, 
+                                        const LHCb::MCParticle*) const
+{
+  return false;
 }
 //=============================================================================
 Particle2MCParticle::ToVector 
