@@ -1,4 +1,4 @@
-// $Id: Particle2MCAssociatorBase.h,v 1.8 2009-03-26 08:46:59 jpalac Exp $
+// $Id: Particle2MCAssociatorBase.h,v 1.9 2009-03-26 11:08:21 jpalac Exp $
 #ifndef PARTICLE2MCASSOCIATORBASE_H 
 #define PARTICLE2MCASSOCIATORBASE_H 1
 
@@ -77,6 +77,9 @@ public:
   relatedMCPs(const LHCb::Particle* particle,
               const LHCb::MCParticle::ConstVector& mcParticles) const ;
 
+  virtual double weight(const LHCb::Particle*,
+                        const LHCb::MCParticle* ) const;
+
 private:
 
   inline LHCb::MCParticle::Container* 
@@ -86,81 +89,36 @@ private:
       get<LHCb::MCParticle::Container>( location ) : 0 ;
   }
   
+  inline Particle2MCParticle::ToVector 
+  i_relatedMCPs(const LHCb::Particle* particle,
+                const std::string& mcParticleLocation) const
+  {
+    LHCb::MCParticle::Container* mcps = i_MCParticles(mcParticleLocation);
+    return i_relatedMCPs( particle, mcps->begin(), mcps->end() );
+  }
 
   template <typename Iter> 
-  Particle2MCParticle::LightTable 
+  Particle2MCParticle::ToVector 
   i_relatedMCPs(const LHCb::Particle* particle,
                 Iter begin,
                 Iter end     ) const
   {
-    Particle2MCParticle::LightTable table;
-    if (0!=particle) {
-      LHCb::MCParticle::ConstVector mcps;
-      for ( Iter iMCP = begin ; iMCP != end ; ++iMCP){
-        const bool match = isMatched(particle, *iMCP);
-        if ( match ) mcps.push_back(*iMCP);
-      }
-      mcps = sort(mcps);
-      return i_buildTable(particle, mcps.begin(), mcps.end() );
-    } else {
-      Warning("No particle!").ignore();
-      return Particle2MCParticle::LightTable();
+    Particle2MCParticle::ToVector associations;
+    for ( Iter iMCP = begin ; iMCP != end ; ++iMCP){
+      const double wt = weight(particle, *iMCP);
+      associations.push_back( MCAssociation(*iMCP, wt ) ); 
     }
-  }
-
-  template <typename pIter, typename mcPIter>
-  Particle2MCParticle::LightTable 
-  i_associations(const pIter pBegin, 
-                 const pIter pEnd, 
-                 const mcPIter mcBegin, 
-                 const mcPIter mcEnd) const
-  {
-
-    Particle2MCParticle::LightTable table;
-    for (pIter part = pBegin; part != pEnd; ++part) {
-      table.merge( i_relatedMCPs(*part, mcBegin, mcEnd).relations() );
-    }
-    //    table.i_sort();
-    return table;
-  }
-  
-  template <typename Iter> 
-  inline Particle2MCParticle::LightTable 
-  i_associations(const Iter pBegin,
-                 const Iter pEnd,
-                 const std::string& mcParticleLocation) const
-  {
-    LHCb::MCParticle::Container* mcps = i_MCParticles(mcParticleLocation);
-    if (0!=mcps) {
-      return i_associations(pBegin, pEnd, mcps->begin(), mcps->end());
-    } else {
-      return Particle2MCParticle::LightTable();
-    }
-  }
-
-  template <typename Iter>
-  Particle2MCParticle::LightTable i_buildTable(const LHCb::Particle* particle,
-                                               const Iter mcBegin,
-                                               const Iter mcEnd) const
-  {
-    Particle2MCParticle::LightTable table;
-    for ( Iter iMCP = mcBegin ; iMCP != mcEnd ; ++iMCP) {
-      table.i_push( particle, *iMCP );
-    }
-    //    table.i_sort();
-    return table;
+    return i_sort(associations);
   }
 
 private :
 
-  virtual LHCb::MCParticle::ConstVector sort(const LHCb::MCParticle::ConstVector& mcParticles) const;
-
-  virtual LHCb::MCParticle::ConstVector sort(const LHCb::MCParticle::Container* mcParticles) const;
-
-  template <typename Iter> 
-  LHCb::MCParticle::ConstVector i_sort(const Iter begin, const Iter end) const
+  Particle2MCParticle::ToVector 
+  i_sort(const Particle2MCParticle::ToVector& associations) const
   {
-    return LHCb::MCParticle::ConstVector(begin, end);
+    // should sort container by weight of MCAssociation
+    return Particle2MCParticle::ToVector( associations.begin(), 
+                                          associations.end()   );
   }
 
 private:
