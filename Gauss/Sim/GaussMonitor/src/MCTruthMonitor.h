@@ -1,4 +1,4 @@
-// $Id: MCTruthMonitor.h,v 1.1 2005-10-02 15:14:03 gcorti Exp $
+// $Id: MCTruthMonitor.h,v 1.2 2009-03-26 21:45:04 robbep Exp $
 #ifndef MCTRUTHMONITOR_H 
 #define MCTRUTHMONITOR_H 1
 
@@ -36,6 +36,8 @@ protected:
 private:
 
   bool m_detailedHistos;             ///< Property to control set of histos
+  std::string m_mcParticles ;        ///< Location of the MCParticles
+  std::string m_mcVertices ;         ///< Location of the MCVertices
   AIDA::IHistogram1D* m_hNPart;      ///< Histo of MCParticle multiplicity
   AIDA::IHistogram1D* m_hNVert;      ///< Histo of MCVertices multiplicity  
   AIDA::IHistogram1D* m_hPOrigZ;     ///< Z Origin of all particles 

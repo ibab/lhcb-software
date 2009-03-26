@@ -1,4 +1,4 @@
-// $Id: MCTruthMonitor.cpp,v 1.4 2006-07-04 16:50:50 gcorti Exp $
+// $Id: MCTruthMonitor.cpp,v 1.5 2009-03-26 21:45:04 robbep Exp $
 // Include files 
 
 // from Gaudi
@@ -29,6 +29,10 @@ MCTruthMonitor::MCTruthMonitor( const std::string& name,
   : GaudiHistoAlg ( name , pSvcLocator )
 {
   declareProperty( "DetailedHistos", m_detailedHistos = false );  
+  declareProperty( "MCParticles"   , 
+                   m_mcParticles = LHCb::MCParticleLocation::Default ) ;
+  declareProperty( "MCVertices" , 
+                   m_mcVertices = LHCb::MCVertexLocation::Default ) ;
 }
 //=============================================================================
 // Destructor
@@ -90,7 +94,7 @@ StatusCode MCTruthMonitor::execute() {
   unsigned int nBeauty = 0, nCharm = 0, nNuclei = 0;
 
   const LHCb::MCParticles* particles = 
-    get<LHCb::MCParticles>( LHCb::MCParticleLocation::Default );
+    get<LHCb::MCParticles>( m_mcParticles );
   m_hNPart->fill(particles->size());
   LHCb::MCParticles::const_iterator ip;
   for( ip = particles->begin(); particles->end() != ip; ++ip ) {
@@ -142,7 +146,7 @@ StatusCode MCTruthMonitor::execute() {
   }
   
   const LHCb::MCVertices* vertices = 
-    get<LHCb::MCVertices>( LHCb::MCVertexLocation::Default );
+    get<LHCb::MCVertices>( m_mcVertices );
   m_hNVert->fill(vertices->size());
   LHCb::MCVertices::const_iterator iv;
   for( iv = vertices->begin(); vertices->end()!= iv; ++iv ) {
