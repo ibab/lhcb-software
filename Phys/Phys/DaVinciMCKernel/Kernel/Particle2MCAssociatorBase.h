@@ -1,4 +1,4 @@
-// $Id: Particle2MCAssociatorBase.h,v 1.11 2009-03-26 12:52:47 jpalac Exp $
+// $Id: Particle2MCAssociatorBase.h,v 1.12 2009-03-26 13:29:10 jpalac Exp $
 #ifndef PARTICLE2MCASSOCIATORBASE_H 
 #define PARTICLE2MCASSOCIATORBASE_H 1
 
@@ -107,18 +107,30 @@ private:
       const double wt = associationWeight(particle, *iMCP);
       associations.push_back( MCAssociation(*iMCP, wt ) ); 
     }
-    return i_sort(associations);
+    i_sort(associations);
+    return associations;
   }
 
 private :
 
-  Particle2MCParticle::ToVector 
-  i_sort(const Particle2MCParticle::ToVector& associations) const
+  void
+  i_sort(Particle2MCParticle::ToVector& associations) const
   {
-    // should sort container by weight of MCAssociation
-    return Particle2MCParticle::ToVector( associations.begin(), 
-                                          associations.end()   );
+    std::stable_sort( associations.begin() , 
+                      associations.end() , 
+                      sortByWeight() ) ;
   }
+
+  struct sortByWeight : public std::binary_function<const MCAssociation, const MCAssociation, bool>
+  {
+    bool operator() (const MCAssociation& assoc1,
+                     const MCAssociation& assoc2) const
+    {
+      return assoc1.weight() < assoc2.weight();
+    }
+    
+  };
+  
 
 private:
 
