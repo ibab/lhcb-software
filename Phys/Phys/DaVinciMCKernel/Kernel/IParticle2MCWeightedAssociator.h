@@ -1,4 +1,4 @@
-// $Id: IParticle2MCWeightedAssociator.h,v 1.3 2009-03-26 12:17:10 jpalac Exp $
+// $Id: IParticle2MCWeightedAssociator.h,v 1.4 2009-03-26 12:52:30 jpalac Exp $
 #ifndef KERNEL_IPARTICLE2MCWEIGHTEDASSOCIATOR_H 
 #define KERNEL_IPARTICLE2MCWEIGHTEDASSOCIATOR_H 1
 
@@ -11,6 +11,7 @@
 
 //
 #include "Kernel/Particle2MCParticle.h"
+#include "Kernel/IParticle2MCAssociator.h"
 
 static const InterfaceID IID_IParticle2MCWeightedAssociator ( "IParticle2MCWeightedAssociator", 1, 0 );
 
@@ -27,7 +28,9 @@ static const InterfaceID IID_IParticle2MCWeightedAssociator ( "IParticle2MCWeigh
  *  @author Juan PALACIOS
  *  @date   2009-03-25
  */
-class IParticle2MCWeightedAssociator : virtual public IAlgTool {
+class IParticle2MCWeightedAssociator : virtual public IAlgTool,
+                                       virtual public IParticle2MCAssociator
+{
 public: 
 
   // Return the interface ID
