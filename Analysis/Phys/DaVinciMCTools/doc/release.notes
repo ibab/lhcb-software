@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.252 2009-03-23 00:25:43 gligorov Exp $
+! $Id: release.notes,v 1.253 2009-03-26 15:20:05 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2009-03-26 - Juan PALACIOS
+ - src/DaVinciSmartAssociator.h
+  . Adapt to new IParticle2MCWeightedAssociator interface
 
 ! 2009-03-23 - V. Gligorov
  - BackgroundCategory:
