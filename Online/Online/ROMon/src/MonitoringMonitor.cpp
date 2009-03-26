@@ -38,7 +38,7 @@ namespace ROMon {
     };
 
     typedef std::map<std::string,NodeMon*>  Monitors;
-    bool              m_inUse;
+    bool              m_inUse, m_isReco;
 
     std::string m_partition;
     Monitors   m_nodes;
@@ -142,10 +142,17 @@ MonitoringMonitor::MonitoringMonitor(FarmMonitor* parent, const string& title)
   m_partition = parent->partition();
   m_steer &= ~COUNT_TASKS;
   m_steer &= ~COUNT_EVENTS;
-  string svc = "/";
-  for(size_t i=0; i<title.length();++i) svc += ::tolower(title[i]);
-  svc += "/ROpublish";
+  m_isReco = false;
+  string svc = "/", node;
+  for(size_t i=0; i<title.length();++i) node += ::tolower(title[i]);
+  svc = "/"+node+"/ROpublish";
   m_svc = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,dataHandler,(long)this,0,0);
+  m_title = svc;
+  if ( node.substr(0,6) == "mona09" )   {
+    m_isReco = true;
+    m_snapshotDiff *= 3;
+    cout << node << "> Update diff " << m_snapshotDiff << endl;
+  }
 }
 
 /// Standard destructor
@@ -283,6 +290,7 @@ void MonitoringMonitor::analyzeData() {
     bool check_senders = node.substr(0,6)=="mona09" || node=="mona0801";
     bool check_outbuf  = check_senders && node != "mona0801" && node != "mona0901";
     bool check_receivers = true;
+    bool recv_dead = false, send_dead = true;
     NodeMon& m = *((*i).second);
     NodeMon& h = *(m_history[(*i).first]);
     time_t   when = m.update;
@@ -295,20 +303,31 @@ void MonitoringMonitor::analyzeData() {
     else   {
       NodeMon::Clients::const_iterator ih;
       if ( check_receivers ) {
-	if ( m.rxEvt < 0 )                                                    // RECEIVER DEAD/not present
+	if ( m.rxEvt < 0 )   {                                                // RECEIVER DEAD/not present
 	  setAlarm(alarms->second,node,ERR_RECEIVER_MISSING,when);
-	else if ( m.rxEvt == 0 && m_sum.evtIN > m_sumHist.evtIN )             // RECEIVER stuck while running
+	  recv_dead = true;
+	  cout << "DECLARE: " << (*i).first << "  " << when << " Rx:" << m.rxEvt << endl;
+	}
+	else if ( m.rxEvt == 0 && m_sum.evtIN > m_sumHist.evtIN )   {         // RECEIVER stuck while running
 	  setAlarm(alarms->second,node,ERR_RECEIVER_STUCK,when);
+	  cout << "DECLARE: " << (*i).first << "  " << when << " Rx:" << m.rxEvt << endl;
+	}
 	else if ( m.evtIN  <= h.evtIN  && m_sum.evtIN > m_sumHist.evtIN )     // RECEIVER stuck while running
 	  setAlarm(alarms->second,node,ERR_RECEIVER_STUCK,when);
       }
       if ( check_senders ) {
-	if ( m.txEvt < 0 )                                                    // SENDER DEAD/not present
+	if ( m.txEvt < 0 )   {                                                // SENDER DEAD/not present
 	  setAlarm(alarms->second,node,ERR_SENDER_MISSING,when);
-	else if ( m.txEvt == 0 && m_sum.evtOUT > m_sumHist.evtOUT )           // SENDER stuck while running
+	  send_dead = true;
+	  cout << "DECLARE: " << (*i).first << "  " << when << " Tx:" << m.txEvt << endl;
+	}
+	else if ( m.txEvt == 0 && m_sum.evtOUT > m_sumHist.evtOUT )  {        // SENDER stuck while running
 	  setAlarm(alarms->second,node,ERR_SENDER_STUCK,when);
-	else if ( m.evtOUT  <= h.evtOUT  && m_sum.evtOUT > m_sumHist.evtOUT ) // SENDER stuck while running
+	  cout << "DECLARE: " << (*i).first << "  " << when << " Tx:" << m.txEvt << endl;
+	}
+	else if ( m.evtOUT  <= h.evtOUT  && m_sum.evtOUT > m_sumHist.evtOUT ){// SENDER stuck while running
 	  setAlarm(alarms->second,node,ERR_SENDER_STUCK,when);
+	}
       }
       for(NodeMon::Tasks::const_iterator im=m.tasks.begin(); im!=m.tasks.end(); ++im)  {
 	if ( m.monitors.find(*im) == m.monitors.end() )
@@ -326,20 +345,24 @@ void MonitoringMonitor::analyzeData() {
       
       txt[0] = 0;
       if ( m.slotIN < SLOTS_MIN || (check_outbuf && m.slotOUT < SLOTS_MIN) ) {
-	if ( m.slotIN    < SLOTS_MIN ) ::strcat(txt," INPUT");
-	if ( check_outbuf && m.slotOUT   < SLOTS_MIN ) ::strcat(txt," OUTPUT");
-	if ( m.evtIN == h.evtIN || (check_outbuf && m.evtOUT == h.evtOUT) )
-	  setAlarm(alarms->second,node,ERR_NODE_STUCK,when, txt);
-	else
-	  setAlarm(alarms->second,node,ERR_SLOTS_LIMIT,when, txt);
+	if ( !m_isReco && !(recv_dead || send_dead) ) {
+	  if ( m.slotIN    < SLOTS_MIN ) ::strcat(txt," INPUT");
+	  if ( check_outbuf && m.slotOUT   < SLOTS_MIN ) ::strcat(txt," OUTPUT");
+	  if ( m.evtIN == h.evtIN || (check_outbuf && m.evtOUT == h.evtOUT) )
+	    setAlarm(alarms->second,node,ERR_NODE_STUCK,when, txt);
+	  else
+	    setAlarm(alarms->second,node,ERR_SLOTS_LIMIT,when, txt);
+	}
       }
       else if ( m.spacIN < SPACE_MIN || (check_outbuf && m.spacOUT < SPACE_MIN) ) {
-	if ( m.spacIN    < SPACE_MIN ) ::strcat(txt," INPUT");
-	if ( check_outbuf && m.spacOUT   < SPACE_MIN ) ::strcat(txt," OUTPUT");
-	if ( m.evtIN == h.evtIN || (check_outbuf && m.evtOUT == h.evtOUT) )
-	  setAlarm(alarms->second,node,ERR_NODE_STUCK,when, txt);
-	else
-	  setAlarm(alarms->second,node,ERR_SPACE_LIMIT,when, txt);
+	if ( !m_isReco && !(recv_dead || send_dead) ) {
+	  if ( m.spacIN    < SPACE_MIN ) ::strcat(txt," INPUT");
+	  if ( check_outbuf && m.spacOUT   < SPACE_MIN ) ::strcat(txt," OUTPUT");
+	  if ( m.evtIN == h.evtIN || (check_outbuf && m.evtOUT == h.evtOUT) )
+	    setAlarm(alarms->second,node,ERR_NODE_STUCK,when, txt);
+	  else
+	    setAlarm(alarms->second,node,ERR_SPACE_LIMIT,when, txt);
+	}
       }
       else if ( m.evtIN > 0 && m.evtIN <= h.evtIN && m_sum.evtIN  == m_sumHist.evtIN ) // No activity IN buffer
 	setAlarm(alarms->second,node,ERR_NOMONITORING_ACTIVITY,when);

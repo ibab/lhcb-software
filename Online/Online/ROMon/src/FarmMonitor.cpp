@@ -1,4 +1,4 @@
-// $Id: FarmMonitor.cpp,v 1.3 2009-02-24 16:05:42 frankb Exp $
+// $Id: FarmMonitor.cpp,v 1.4 2009-03-26 14:37:51 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmMonitor.cpp,v 1.3 2009-02-24 16:05:42 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmMonitor.cpp,v 1.4 2009-03-26 14:37:51 frankb Exp $
 
 #define MBM_IMPLEMENTATION
 #include "ROMon/ROMon.h"
@@ -352,7 +352,7 @@ void InternalMonitor::addStateSummary(StateSummary& sum) {
 
 bool InternalMonitor::useSnapshot() const {
   time_t now = time(0);
-  return (now - m_lastUpdate) < m_snapshotDiff;
+  return (now - m_lastUpdate) >= m_snapshotDiff;
 }
 
 /// Check monitor for errors

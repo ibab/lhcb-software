@@ -149,6 +149,7 @@ StorageMonitor::StorageMonitor(FarmMonitor* parent, const string& title)
   for(size_t i=0; i<title.length();++i) svc += ::tolower(title[i]);
   svc += "/ROpublish";
   m_svc = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,dataHandler,(long)this,0,0);
+  m_title = svc;
 }
 
 /// Standard destructor
