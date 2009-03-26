@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.72 2009-03-26 14:01:35 jpalac Exp $
+! $Id: release.notes,v 1.73 2009-03-26 17:53:48 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
@@ -6,6 +6,12 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-03-26 - Juan PALACIOS
+ - Kernel/Particle2MCAssociatorBase.h
+  . Add method to normalise weights in Particle2MCParticle::ToVector
+ - Kernel/Particle2MCParticle.h
+  . Add functors for summing and sorting MCAssociation by weight
+ - Kernel/MCAssociation.h
+  . Add non-const reference access to weight
  - Kernel/Particle2MCAssociatorBase.h
   . Add private virtual method bool isAssociated(const LHCb::Particle*, const LHCb::MCParticle* ) const to allow for some filtering.
 
