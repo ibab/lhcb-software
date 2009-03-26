@@ -3,7 +3,7 @@
 #include "RTL/Lock.h"
 
 extern "C" int rtl_testSemaphoreSubProcess(int argc,char** argv) {
-  int msecs = 500;
+  int msecs = 1000;
   int turns = 10;
   lib_rtl_lock_t id;
   std::string proc = argc>1 ? std::string(argv[1]) : RTL::processName();
@@ -30,6 +30,6 @@ extern "C" int rtl_testSemaphoreSubProcess(int argc,char** argv) {
 
 extern "C" int rtl_testsemaphore(int,char**) {
   system("gentest.exe libOnlineKernel.so rtl_testSemaphoreSubProcess  Process__1&");
-  lib_rtl_sleep(250);
+  lib_rtl_sleep(700);
   return system("gentest.exe libOnlineKernel.so rtl_testSemaphoreSubProcess Process__2");
 }
