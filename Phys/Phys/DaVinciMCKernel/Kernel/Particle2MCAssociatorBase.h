@@ -1,4 +1,4 @@
-// $Id: Particle2MCAssociatorBase.h,v 1.12 2009-03-26 13:29:10 jpalac Exp $
+// $Id: Particle2MCAssociatorBase.h,v 1.13 2009-03-26 13:43:51 jpalac Exp $
 #ifndef PARTICLE2MCASSOCIATORBASE_H 
 #define PARTICLE2MCASSOCIATORBASE_H 1
 
@@ -96,6 +96,13 @@ private:
     return i_relatedMCPs( particle, mcps->begin(), mcps->end() );
   }
 
+  inline const LHCb::MCParticle* 
+  i_bestMCPWithCheck(const Particle2MCParticle::ToVector& assoc) const
+  {
+    return (!assoc.empty() ) ? assoc.back().to() : 0;
+  }
+  
+
   template <typename Iter> 
   Particle2MCParticle::ToVector 
   i_relatedMCPs(const LHCb::Particle* particle,
@@ -111,7 +118,6 @@ private:
     return associations;
   }
 
-private :
 
   void
   i_sort(Particle2MCParticle::ToVector& associations) const

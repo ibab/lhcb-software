@@ -1,4 +1,4 @@
-// $Id: Particle2MCAssociatorBase.cpp,v 1.7 2009-03-26 12:21:31 jpalac Exp $
+// $Id: Particle2MCAssociatorBase.cpp,v 1.8 2009-03-26 13:43:51 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -29,29 +29,34 @@ Particle2MCAssociatorBase::Particle2MCAssociatorBase( const std::string& type,
 const LHCb::MCParticle*
 Particle2MCAssociatorBase::relatedMCP(const LHCb::Particle* particle) const
 {
-  return i_relatedMCPs(particle,
-                       m_defMCLoc).back().to();
+  return i_bestMCPWithCheck(i_relatedMCPs(particle,
+                                        m_defMCLoc) );
 }
 //=============================================================================
 const LHCb::MCParticle*
 Particle2MCAssociatorBase::relatedMCP(const LHCb::Particle* particle,
                                       const std::string& mcParticleLocation) const
 {
-  return i_relatedMCPs(particle, mcParticleLocation).back().to();
+  return i_bestMCPWithCheck( i_relatedMCPs(particle, 
+                                           mcParticleLocation)  );
 }
 //=============================================================================
 const LHCb::MCParticle*
 Particle2MCAssociatorBase::relatedMCP(const LHCb::Particle* particle,
                                       const LHCb::MCParticle::ConstVector& mcParticles) const
 {
-  return i_relatedMCPs(particle, mcParticles.begin(), mcParticles.end()).back().to();
+  return i_bestMCPWithCheck( i_relatedMCPs( particle, 
+                                            mcParticles.begin(), 
+                                            mcParticles.end()    )   );
 }
 //=============================================================================
 const LHCb::MCParticle*
 Particle2MCAssociatorBase::relatedMCP(const LHCb::Particle* particle,
                                       const LHCb::MCParticle::Container& mcParticles) const
 {
-  return i_relatedMCPs(particle, mcParticles.begin(), mcParticles.end()).back().to();
+  return i_bestMCPWithCheck( i_relatedMCPs( particle, 
+                                            mcParticles.begin(), 
+                                            mcParticles.end()    )   );
 }
 //=============================================================================
 Particle2MCParticle::ToVector 
