@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.71 2009-03-26 13:44:01 jpalac Exp $
+! $Id: release.notes,v 1.72 2009-03-26 14:01:35 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
@@ -6,8 +6,11 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-03-26 - Juan PALACIOS
+ - Kernel/Particle2MCAssociatorBase.h
+  . Add private virtual method bool isAssociated(const LHCb::Particle*, const LHCb::MCParticle* ) const to allow for some filtering.
+
  - Particle2MCAssociatorBase
-   . Add checkiong for empty associaiton ranges when returning "best" MCParticle
+   . Add checkiong for empty association ranges when returning "best" MCParticle
  - Kernel/IParticle2MCWeightedAssociator.h
   . Inherits from IParticle2MCAssociator.h
  - Kernel/Particle2MCAssociatorBase.h
