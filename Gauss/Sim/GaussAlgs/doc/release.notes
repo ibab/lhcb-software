@@ -4,6 +4,10 @@
 ! Responsible : G.Corti
 ! -----------------------------------------------------------------------------
 
+! 2009-03-26 - Patrick Robbe
+ - GenInit.h/.cpp and SimInit.h/.cpp: 
+     . add possibility to specify location of GenHeader by job option
+
 !======================= GaussAlgs v3r3p1 2008-08-04 ==========================
 ! 2009-01-26 - Chris Jones
  - Suppress info() message for RICH extended information.

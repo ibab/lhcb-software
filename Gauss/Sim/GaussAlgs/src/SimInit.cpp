@@ -1,4 +1,4 @@
-// $Id: SimInit.cpp,v 1.7 2008-08-04 21:08:47 gcorti Exp $
+// $Id: SimInit.cpp,v 1.8 2009-03-26 21:32:40 robbep Exp $
 // Include files 
 
 // from Gaudi
@@ -35,6 +35,8 @@ SimInit::SimInit( const std::string& name,
     m_memoryTool( 0 ),
     m_detDataSvc( 0 )
 {
+    declareProperty( "GenHeader" , m_genHeader = LHCb::GenHeaderLocation::Default ) ;
+    declareProperty( "MCHeader"  , m_mcHeader  = LHCb::MCHeaderLocation::Default  ) ;
 }
 
 //=============================================================================
@@ -81,7 +83,7 @@ StatusCode SimInit::execute() {
   // Get the run and event number from the GenHeader if it exist (i.e.
   // Generator phase already run or events read from file)
   LHCb::GenHeader* evt = 
-    get<LHCb::GenHeader>( LHCb::GenHeaderLocation::Default );
+    get<LHCb::GenHeader>( m_genHeader );
 
   // Initialize the random number
   std::vector<long int> seeds = getSeeds( evt->runNumber(), evt->evtNumber() );
@@ -98,7 +100,7 @@ StatusCode SimInit::execute() {
   header->setEvtTime( m_detDataSvc->eventTime().ns() );
   header->setRandomSeeds( seeds );
   header->setCondDBTags( this->condDBTags() );
-  put( header, LHCb::MCHeaderLocation::Default );
+  put( header, m_mcHeader );
 
   return StatusCode::SUCCESS;
 }

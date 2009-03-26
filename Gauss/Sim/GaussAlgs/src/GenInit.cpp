@@ -1,4 +1,4 @@
-// $Id: GenInit.cpp,v 1.5 2008-08-04 21:08:47 gcorti Exp $
+// $Id: GenInit.cpp,v 1.6 2009-03-26 21:32:40 robbep Exp $
 // Include files 
 #include <cmath>
 
@@ -32,6 +32,8 @@ GenInit::GenInit( const std::string& name,
 {
   declareProperty( "FirstEventNumber", m_firstEvent = 1 );
   declareProperty( "RunNumber",        m_runNumber  = 1 );
+  declareProperty( "MCHeader" ,        
+                   m_mcHeader = LHCb::GenHeaderLocation::Default ) ;
 }
 
 //=============================================================================
@@ -82,7 +84,7 @@ StatusCode GenInit::execute() {
   header->setRunNumber( m_runNumber );
   header->setEvtNumber( eventNumber );
   header->setRandomSeeds( seeds );
-  put( header, LHCb::GenHeaderLocation::Default );    
+  put( header, m_mcHeader );    
 
   return StatusCode::SUCCESS;
 }

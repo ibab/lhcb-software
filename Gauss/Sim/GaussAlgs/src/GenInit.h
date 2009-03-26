@@ -1,4 +1,4 @@
-// $Id: GenInit.h,v 1.2 2006-02-16 15:23:22 gcorti Exp $
+// $Id: GenInit.h,v 1.3 2009-03-26 21:32:40 robbep Exp $
 #ifndef GENINIT_H 
 #define GENINIT_H 1
 
@@ -38,6 +38,8 @@ private:
   int           m_runNumber;
 
   IGenericTool* m_memoryTool;   ///< Pointer to (private) memory histogram tool
+  
+  std::string   m_mcHeader ; ///< Location of MCHeader
 
 };
 #endif // GENINIT_H

@@ -1,4 +1,4 @@
-// $Id: SimInit.h,v 1.2 2006-02-16 15:23:22 gcorti Exp $
+// $Id: SimInit.h,v 1.3 2009-03-26 21:32:40 robbep Exp $
 #ifndef SIMINIT_H 
 #define SIMINIT_H 1
 
@@ -34,6 +34,9 @@ protected:
 private:
   IGenericTool* m_memoryTool;   ///< Pointer to (private) memory histogram tool
   IDetDataSvc*  m_detDataSvc;   ///< Pointer to (private) detector service
+  
+  std::string m_genHeader ; ///< Location where to read Gen Header
+  std::string m_mcHeader ; ///< Location where to store MC Header
 
 };
 #endif // SIMINIT_H
