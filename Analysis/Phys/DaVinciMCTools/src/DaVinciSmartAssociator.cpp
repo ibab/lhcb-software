@@ -38,7 +38,7 @@ DaVinciSmartAssociator::~DaVinciSmartAssociator() {}
 //============================================================================= 
 //============================================================================= 
 Particle2MCParticle::ToVector 
-DaVinciSmartAssociator::associate(const LHCb::Particle* particleToBeAssociated) const 
+DaVinciSmartAssociator::relatedMCPs(const LHCb::Particle* particle) const 
 {
 //We associate according to the particle type: protoparticle associators
 //are used for neutral and charged stable tracks, otherwise we use BackCat
@@ -47,22 +47,22 @@ DaVinciSmartAssociator::associate(const LHCb::Particle* particleToBeAssociated) 
 
   ProtoParticle2MCLinker::ToRange associatedParts;
   //Now we get the association result based on the particle type
-  if (particleToBeAssociated->isBasicParticle()){ //if this is a stable
+  if (particle->isBasicParticle()){ //if this is a stable
     ProtoParticle2MCLinker* linker(0);
     verbose() << "About to get the array of matching particles" << endmsg;
-    if ( particleToBeAssociated->particleID().pid() == 22 || 
-         particleToBeAssociated->particleID().pid() == 111) {
+    if ( particle->particleID().pid() == 22 || 
+         particle->particleID().pid() == 111) {
       linker = dynamic_cast<ProtoParticle2MCLinker*>(m_linkerTool_nPP->linker(Particle2MCMethod::NeutralPP) );
     } else {
       linker = dynamic_cast<ProtoParticle2MCLinker*>(m_linkerTool_cPP->linker(Particle2MCMethod::ChargedPP) ); 
     }
     if (0!=linker) {
-      associatedParts = linker->rangeFrom(particleToBeAssociated->proto());
+      associatedParts = linker->rangeFrom(particle->proto());
     }
     
   } else{ //If composite use BackCat
     if (0!=m_bkg) {
-      associatedParts.push_back(MCAssociation(m_bkg->origin(particleToBeAssociated), 1.));  
+      associatedParts.push_back(MCAssociation(m_bkg->origin(particle), 1.));  
     }
   }
 
@@ -70,29 +70,43 @@ DaVinciSmartAssociator::associate(const LHCb::Particle* particleToBeAssociated) 
 }
 //============================================================================= 
 Particle2MCParticle::ToVector 
-DaVinciSmartAssociator::associate(const LHCb::Particle* particleToBeAssociated,
-                                  const std::string& mcParticleLocation) const 
+DaVinciSmartAssociator::relatedMCPs(const LHCb::Particle* particle,
+                                    const std::string& mcParticleLocation) const 
 {
   if (mcParticleLocation!=LHCb::MCParticleLocation::Default) {
     Warning("associate(const LHCb::Particle*  particle, const std::string& mcParticleLocation) NOT implemented",
             1, StatusCode::SUCCESS).ignore();
     return ProtoParticle2MCLinker::ToRange();
   } else {
-    return associate(particleToBeAssociated);
+    return relatedMCPs(particle);
   }
 
 }
 //=============================================================================
-bool DaVinciSmartAssociator::isMatched(const LHCb::Particle* particle, 
-                                       const LHCb::MCParticle* mcParticle) const
+bool DaVinciSmartAssociator::isAssociated(const LHCb::Particle* particle, 
+                                          const LHCb::MCParticle* mcParticle) const
 {
-  Particle2MCParticle::ToVector assocVector = associate(particle);
+  ///@todo Should implement this one!
+  if ( !particle->isBasicParticle() ) {
+    return ( 0!= m_bkg                    && 
+             0!= m_bkg->origin(particle)  && 
+             m_bkg->origin(particle) == mcParticle );
+  } else {
+    Warning("isAssociated(const LHCb::Particle*  particle, const LHCb::MCParticle) NOT implemented for Basic particles, returninf false",
+            1, 
+            StatusCode::SUCCESS).ignore();
+    return false;
+  }
+  
+}
+//=============================================================================
+double DaVinciSmartAssociator::associationWeight(const LHCb::Particle* particle,
+                                                 const LHCb::MCParticle* mcParticle) const
+{
+  ///@todo Should implement this one!
 
-  for (Particle2MCParticle::ToVector::const_iterator it = assocVector.begin();
-       it != assocVector.end(); ++it) 
-    if (it->to() == mcParticle) return true;
+  return isAssociated(particle, mcParticle) ? 1. : 0. ;
 
-  return false;
 }
 //=============================================================================
 // initialize
