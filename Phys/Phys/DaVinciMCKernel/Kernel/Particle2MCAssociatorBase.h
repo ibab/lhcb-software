@@ -1,4 +1,4 @@
-// $Id: Particle2MCAssociatorBase.h,v 1.16 2009-03-26 17:51:49 jpalac Exp $
+// $Id: Particle2MCAssociatorBase.h,v 1.17 2009-03-26 17:57:56 jpalac Exp $
 #ifndef PARTICLE2MCASSOCIATORBASE_H 
 #define PARTICLE2MCASSOCIATORBASE_H 1
 
@@ -77,10 +77,24 @@ public:
   relatedMCPs(const LHCb::Particle* particle,
               const LHCb::MCParticle::ConstVector& mcParticles) const ;
 
-  virtual double associationWeight(const LHCb::Particle*,
-                                   const LHCb::MCParticle* ) const;
 
 private:
+
+  /**
+   *
+   * Return the association weight between an LHCb::Particle and an
+   * LHCb::MCParticle
+   *
+   * @param particle pointer to LHCb::Particle to be associated
+   * @param mcParticle pointer to LHCb::MCParticle to be associated
+   * @return weight of the association. It should be a probability, therefore
+   *         it is bounded by 0 and 1.
+   *
+   * @author Juan Palacios juan.palacios@nikhef.nl
+   * @date   2009-26-03
+   **/
+  virtual double associationWeight(const LHCb::Particle*,
+                                   const LHCb::MCParticle* ) const;
 
   virtual bool isAssociated(const LHCb::Particle*,
                             const LHCb::MCParticle* ) const;
