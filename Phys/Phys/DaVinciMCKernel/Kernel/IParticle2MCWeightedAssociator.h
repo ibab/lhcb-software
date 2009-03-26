@@ -1,4 +1,4 @@
-// $Id: IParticle2MCWeightedAssociator.h,v 1.2 2009-03-26 08:46:33 jpalac Exp $
+// $Id: IParticle2MCWeightedAssociator.h,v 1.3 2009-03-26 12:17:10 jpalac Exp $
 #ifndef KERNEL_IPARTICLE2MCWEIGHTEDASSOCIATOR_H 
 #define KERNEL_IPARTICLE2MCWEIGHTEDASSOCIATOR_H 1
 
@@ -54,7 +54,7 @@ public:
    * Calculate the weighted associations between an LHCb::Particle and
    * and some LHCb::MCParticles
    * @param particle LHCb::Particle* to be associated
-   * @param mcParticleLocation TES locaiton of LHCb::MCParticle::Container
+   * @param mcParticleLocation TES location of LHCb::MCParticle::Container
    *         from which to associate
    * @return Particle2MCParticle::ToVector containing sorted weighted 
    *         associations
@@ -97,6 +97,23 @@ public:
   virtual Particle2MCParticle::ToVector 
   relatedMCPs(const LHCb::Particle* particle,
               const LHCb::MCParticle::ConstVector& mcParticles) const = 0;
+
+  /**
+   *
+   * Return the association weight between an LHCb::Particle and an
+   * LHCb::MCParticle
+   *
+   * @param particle pointer to LHCb::Particle to be associated
+   * @param mcParticle pointer to LHCb::MCParticle to be associated
+   * @return weight of the association. It should be a probability, therefore
+   *         it is bounded by 0 and 1.
+   *
+   * @author Juan Palacios juan.palacios@nikhef.nl
+   * @date   2009-26-03
+   **/
+  virtual double 
+  associationWeight(const LHCb::Particle* particle,
+                    const LHCb::MCParticle* mcParticle) const = 0;
 
 };
 #endif // KERNEL_IPARTICLE2MCWEIGHTEDASSOCIATOR_H

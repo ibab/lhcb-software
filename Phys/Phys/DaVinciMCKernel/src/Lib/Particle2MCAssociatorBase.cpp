@@ -1,4 +1,4 @@
-// $Id: Particle2MCAssociatorBase.cpp,v 1.6 2009-03-26 11:10:35 jpalac Exp $
+// $Id: Particle2MCAssociatorBase.cpp,v 1.7 2009-03-26 12:21:31 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -82,8 +82,8 @@ Particle2MCAssociatorBase::relatedMCPs(const LHCb::Particle* particle,
 }
 //=============================================================================
 double
-Particle2MCAssociatorBase::weight(const LHCb::Particle*, 
-                                  const LHCb::MCParticle*) const
+Particle2MCAssociatorBase::associationWeight(const LHCb::Particle*, 
+                                             const LHCb::MCParticle*) const
 {
   return 0;
 }

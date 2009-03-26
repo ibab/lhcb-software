@@ -1,4 +1,4 @@
-// $Id: Particle2MCAssociatorBase.h,v 1.9 2009-03-26 11:08:21 jpalac Exp $
+// $Id: Particle2MCAssociatorBase.h,v 1.10 2009-03-26 12:17:10 jpalac Exp $
 #ifndef PARTICLE2MCASSOCIATORBASE_H 
 #define PARTICLE2MCASSOCIATORBASE_H 1
 
@@ -77,8 +77,8 @@ public:
   relatedMCPs(const LHCb::Particle* particle,
               const LHCb::MCParticle::ConstVector& mcParticles) const ;
 
-  virtual double weight(const LHCb::Particle*,
-                        const LHCb::MCParticle* ) const;
+  virtual double associationWeight(const LHCb::Particle*,
+                                   const LHCb::MCParticle* ) const;
 
 private:
 
@@ -105,7 +105,7 @@ private:
   {
     Particle2MCParticle::ToVector associations;
     for ( Iter iMCP = begin ; iMCP != end ; ++iMCP){
-      const double wt = weight(particle, *iMCP);
+      const double wt = associationWeight(particle, *iMCP);
       associations.push_back( MCAssociation(*iMCP, wt ) ); 
     }
     return i_sort(associations);
