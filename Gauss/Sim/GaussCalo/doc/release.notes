@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.73 2008-07-18 15:53:55 gcorti Exp $
+! $Id: release.notes,v 1.74 2009-03-26 21:38:44 robbep Exp $
 ! -----------------------------------------------------------------------------
 ! Package          : Sim/GaussCalo
 ! Contributors     : Vanya Belyaev, Grigori Rybkine, Alexei Berdiouguine,
@@ -7,6 +7,9 @@
 ! Purpose          : collection of sensitive detectors, converters, 
 !                  : G4 actions, etc for LHCb calorimeters
 ! -----------------------------------------------------------------------------
+
+! 2009-03-26 - Patrick Robbe
+ - GetCaloHitsAlg: add possibility to change MCParticles location by option
 
 !========================= GaussCalo v9r2 2008-07-18 ==========================
 ! 2008-07-11 - Patrick Robbe

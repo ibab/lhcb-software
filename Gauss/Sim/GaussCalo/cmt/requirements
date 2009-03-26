@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.31 2008-07-11 10:47:44 robbep Exp $ 
+# $Id: requirements,v 1.32 2009-03-26 21:38:44 robbep Exp $ 
 #============================================================================
 # Created    : 2005-12-08
 # Maintainer : Patrick ROBBE
@@ -7,7 +7,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           GaussCalo
-version           v9r2
+version           v9r3
 
 #============================================================================
 # Structure, i.e. directories to process. 

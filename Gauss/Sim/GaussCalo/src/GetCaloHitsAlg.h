@@ -1,4 +1,4 @@
-// $Id: GetCaloHitsAlg.h,v 1.1 2005-11-14 14:57:46 robbep Exp $
+// $Id: GetCaloHitsAlg.h,v 1.2 2009-03-26 21:38:44 robbep Exp $
 #ifndef GAUSSCALO_GETCALOHITSALG_H 
 #define GAUSSCALO_GETCALOHITSALG_H 1
 
@@ -38,6 +38,8 @@ private:
   std::string m_hitsLocation ;
   /// Name of the G4 hits collection
   std::string m_colName ;
+  /// Name of the MCParticles location
+  std::string m_mcParticles ;
 
   /// Pointer to the GiGa service
   IGiGaSvc * m_gigaSvc ;

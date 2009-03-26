@@ -1,4 +1,4 @@
-// $Id: GetCaloHitsAlg.cpp,v 1.5 2007-10-05 07:24:42 gcorti Exp $
+// $Id: GetCaloHitsAlg.cpp,v 1.6 2009-03-26 21:38:44 robbep Exp $
 // Include files 
 
 // from Gaudi
@@ -42,6 +42,8 @@ GetCaloHitsAlg::GetCaloHitsAlg( const std::string& name,
                      m_kineSvcName = IGiGaCnvSvcLocation::Kine ) ;
     declareProperty( "MCHitsLocation" , m_hitsLocation = "" ) ;
     declareProperty( "CollectionName" , m_colName = "" ) ;
+    declareProperty( "MCParticles"    , 
+                     m_mcParticles = LHCb::MCParticleLocation::Default ) ;
   }
 
 //=============================================================================
@@ -94,9 +96,9 @@ StatusCode GetCaloHitsAlg::execute() {
   if ( 0 == hitCollection ) return Error( "Wrong collection type" ) ;
   
   // Get the reference table between G4 tracks and MC particles
-  if ( ! exist< LHCb::MCParticles >( LHCb::MCParticleLocation::Default ) ) 
+  if ( ! exist< LHCb::MCParticles >( m_mcParticles ) ) 
     return Error( "LHCb::MCParticles do not exist at'" +
-                  LHCb::MCParticleLocation::Default + "'" ) ;
+                  m_mcParticles + "'" ) ;
   const GiGaKineRefTable & table = m_gigaKineCnvSvc -> table() ;
 
   const size_t numOfHits = hitCollection -> entries() ;
