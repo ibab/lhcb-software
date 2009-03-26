@@ -1,4 +1,4 @@
-// $Id: Particle2MCParticle.h,v 1.3 2009-03-03 16:05:38 jpalac Exp $
+// $Id: Particle2MCParticle.h,v 1.4 2009-03-26 17:50:31 jpalac Exp $
 #ifndef KERNEL_PARTICLE2MCPARTICLE_H 
 #define KERNEL_PARTICLE2MCPARTICLE_H 1
 
@@ -32,6 +32,25 @@ namespace Particle2MCParticle {
   typedef Table::From                                     From       ;
 
   typedef std::vector<MCAssociation>                      ToVector;
-  
+
+
+  struct SumWeights : public std::binary_function<MCAssociation, MCAssociation, double>
+  {
+    double operator() (const double& x,
+                       const MCAssociation& assoc) const
+    {
+      return x + assoc.weight();
+    }
+  };
+    
+    struct SortByWeight : public std::binary_function<const MCAssociation, const MCAssociation, bool>
+    {
+      bool operator() (const MCAssociation& assoc1,
+                       const MCAssociation& assoc2) const
+      {
+        return assoc1.weight() < assoc2.weight();
+      }
+    
+    };
 }
 #endif // KERNEL_PARTICLE2MCPARTICLE_H
