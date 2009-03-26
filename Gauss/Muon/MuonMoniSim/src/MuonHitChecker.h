@@ -1,4 +1,4 @@
-// $Id: MuonHitChecker.h,v 1.5 2008-02-03 14:58:31 asatta Exp $
+// $Id: MuonHitChecker.h,v 1.6 2009-03-26 21:59:02 robbep Exp $
 #ifndef MuonHitChecker_H 
 #define MuonHitChecker_H 1
 
@@ -40,5 +40,7 @@ private:
   bool m_detailedMonitor;
   int m_hit_outside_gaps;
   
+  std::string m_mcHeader ; ///< Location of MC Header
+  std::string m_muonHits ; ///< Location of muon hits
 };
 #endif // MuonHitChecker_H

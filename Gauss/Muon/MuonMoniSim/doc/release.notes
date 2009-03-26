@@ -4,6 +4,10 @@
 ! Purpose       : Monitoring for the muon system for simulated data
 !-----------------------------------------------------------------------------
 
+! 2009-03-26 - Patrick Robbe
+ - MuonHitChecker: add possibility to change location of MuonHits by option
+   to generate spill over inside Gauss
+
 !======================== MuonMoniSim v2r3 2008-02-08 ========================
 !  2008-02-03 - Alessia Satta
  - add counter for hit generated outside gaps volume

@@ -1,4 +1,4 @@
-// $Id: MuonHitChecker.cpp,v 1.10 2008-02-03 14:58:31 asatta Exp $
+// $Id: MuonHitChecker.cpp,v 1.11 2009-03-26 21:59:02 robbep Exp $
 // Include files 
 
 // from Gaudi
@@ -29,6 +29,8 @@ MuonHitChecker::MuonHitChecker( const std::string& name,
     m_detailedMonitor   ( false ) 
 {
   declareProperty( "DetailedMonitor"         ,m_detailedMonitor );
+  declareProperty( "MCHeader" , m_mcHeader = LHCb::MCHeaderLocation::Default ) ;
+  declareProperty( "MuonHits" , m_muonHits = LHCb::MCHitLocation::Muon ) ;
   m_hit_outside_gaps=0;
   
 }
@@ -65,7 +67,7 @@ StatusCode MuonHitChecker::initialize() {
 //=============================================================================
 StatusCode MuonHitChecker::execute() {
 
-  const LHCb::MCHeader* evt = get<LHCb::MCHeader>(LHCb::MCHeaderLocation::Default);
+  const LHCb::MCHeader* evt = get<LHCb::MCHeader>( m_mcHeader );
 
   long  m_evt = evt->evtNumber();
 
@@ -88,8 +90,7 @@ StatusCode MuonHitChecker::execute() {
   DeMuonDetector * muonD = getDet<DeMuonDetector>("/dd/Structure/LHCb/DownstreamRegion/Muon"); 
 
   // get the MCHits
-  SmartDataPtr<LHCb::MCHits> hits(eventSvc(), 
-				  LHCb::MCHitLocation::Muon);
+  SmartDataPtr<LHCb::MCHits> hits(eventSvc() , m_muonHits );
   
   LHCb::MCHits::const_iterator iter;
   int MyDetID;
