@@ -1,4 +1,4 @@
-// $Id: Particle2MCAssociatorBase.h,v 1.10 2009-03-26 12:17:10 jpalac Exp $
+// $Id: Particle2MCAssociatorBase.h,v 1.11 2009-03-26 12:52:47 jpalac Exp $
 #ifndef PARTICLE2MCASSOCIATORBASE_H 
 #define PARTICLE2MCASSOCIATORBASE_H 1
 
@@ -30,7 +30,6 @@
  *  @date   2009-01-30
  */
 class Particle2MCAssociatorBase : public GaudiTool, 
-                                  virtual public IParticle2MCAssociator,
                                   virtual public IParticle2MCWeightedAssociator
 {
 public: 
