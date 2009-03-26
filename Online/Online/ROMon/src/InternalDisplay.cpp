@@ -1,4 +1,4 @@
-// $Id: InternalDisplay.cpp,v 1.1 2009-02-24 10:38:43 frankb Exp $
+// $Id: InternalDisplay.cpp,v 1.2 2009-03-26 14:49:05 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/InternalDisplay.cpp,v 1.1 2009-02-24 10:38:43 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/InternalDisplay.cpp,v 1.2 2009-03-26 14:49:05 frankb Exp $
 
 #include "ROMon/InternalDisplay.h"
 #include "ROMon/Constants.h"
@@ -22,6 +22,7 @@
 extern "C" {
 #include "dic.h"
 }
+#include <cstring>
 
 using namespace ROMon;
 using namespace SCR;

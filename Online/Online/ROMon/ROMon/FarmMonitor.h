@@ -1,4 +1,4 @@
-// $Id: FarmMonitor.h,v 1.2 2009-02-24 10:38:19 frankb Exp $
+// $Id: FarmMonitor.h,v 1.3 2009-03-26 14:49:05 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmMonitor.h,v 1.2 2009-02-24 10:38:19 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmMonitor.h,v 1.3 2009-03-26 14:49:05 frankb Exp $
 #ifndef ROMON_FARMMONITOR_H
 #define ROMON_FARMMONITOR_H 1
 
@@ -25,6 +25,7 @@
 #include <map>
 #include <ctime>
 #include <vector>
+#include <memory>
 
 class Interactor;
 

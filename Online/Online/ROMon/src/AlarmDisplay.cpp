@@ -1,4 +1,4 @@
-// $Id: AlarmDisplay.cpp,v 1.1 2009-02-24 10:38:43 frankb Exp $
+// $Id: AlarmDisplay.cpp,v 1.2 2009-03-26 14:49:05 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/AlarmDisplay.cpp,v 1.1 2009-02-24 10:38:43 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/AlarmDisplay.cpp,v 1.2 2009-03-26 14:49:05 frankb Exp $
 
 #include "ROMon/AlarmDisplay.h"
 #include "ROMon/FarmMonitor.h"
@@ -29,7 +29,9 @@ extern "C" {
 }
 
 // C++ include files
+#include <cstring>
 #include <sstream>
+#include <memory>
 #include <set>
 
 using namespace ROMon;
