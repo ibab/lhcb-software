@@ -1,8 +1,11 @@
-// $Id: MCCaloMonitor.h,v 1.3 2006-02-13 12:03:00 odescham Exp $
+// $Id: MCCaloMonitor.h,v 1.4 2009-03-26 21:55:03 robbep Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/02/13 12:03:00  odescham
+// v2r1 migration to GaudiHistoAlg completed - structure pathes adapted to new enveloppes
+//
 // Revision 1.2  2005/12/16 17:53:59  odescham
 // v2r0 - LHCb v20 migration
 //
@@ -89,6 +92,10 @@ private:
   int m_nEvents;
   std::string m_Detector;
   std::string m_DetectorName;
+  std::string m_mcParticles ;
+  
+  /// Spill over slot to look for hits: '', 'Prev/', 'Next/', etc.
+  std::string m_slot ;
   
   const std::string m_textNorm;
 

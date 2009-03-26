@@ -1,4 +1,4 @@
-// $Id: MCCaloMonitor.cpp,v 1.8 2009-01-13 13:54:09 odescham Exp $
+// $Id: MCCaloMonitor.cpp,v 1.9 2009-03-26 21:55:03 robbep Exp $
 
 // Include files
 
@@ -71,6 +71,8 @@ MCCaloMonitor::MCCaloMonitor( const std::string& name,
   declareProperty("hDir"            , m_hDir             );
   declareProperty("Detector"        , m_Detector             );
   declareProperty("DetectorName"    , m_DetectorName         );
+  declareProperty("MCParticles"     , m_mcParticles = MCParticleLocation::Default ) ;
+  declareProperty("Slot"            , m_slot             ) ;
 }
 
 //=============================================================================
@@ -88,7 +90,7 @@ StatusCode MCCaloMonitor::initialize() {
   info() << "==> Initialise Monitoring " << m_Detector << endreq;
 
   m_hDir = m_Detector;
-  m_nameOfMCHits = "MC/" + m_Detector + "/Hits";
+  m_nameOfMCHits = m_slot + "MC/" + m_Detector + "/Hits";
   if (m_Detector == "Spd"){
     m_DetectorName = "SPD";
   }
@@ -149,7 +151,7 @@ StatusCode MCCaloMonitor::execute() {
   }  
   // Get the MCParticles
   
-  SmartDataPtr< MCParticles > mcParts (eventSvc(),MCParticleLocation::Default);
+  SmartDataPtr< MCParticles > mcParts (eventSvc(), m_mcParticles );
   if( 0 == mcParts ) {
     error() << "Cannot locate mcParts in "<< m_Detector << endreq;
     return StatusCode::FAILURE ;

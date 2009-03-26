@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.14 2009-02-09 13:01:12 gcorti Exp $ 
+! $Id: release.notes,v 1.15 2009-03-26 21:55:03 robbep Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniSim
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
+
+! 2009-03-26 - Patrick Robbe 
+ - MCCaloMonitor: add possibility to change location of MCHits
 
 !====================== CaloMoniSim v3r1p2 2009-02-09 =========================
 ! 2009-01-13 - Olivier Deschamps 
