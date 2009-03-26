@@ -109,6 +109,8 @@ MEPErrorAdder::setupCounters() {
   m_totBadMEP          = 0;
   m_totWrongPartID     = 0;
 
+  m_allNamesSize       = 0;
+
   PUBARRAYCNT(badLenPkt,     "MEPs with mismatched length");
   PUBARRAYCNT(misPkt,        "Missing MEPs");
   PUBARRAYCNT(badPckFktPkt,  "MEPs with wrong packing (MEP) factor");
@@ -206,6 +208,8 @@ MEPErrorAdder::initialize() {
   m_subsNotReqPkt.resize(m_nrServices,NULL);
   m_subsTotWrongPartID.resize(m_nrServices,NULL);
 
+  m_subsSrcName.resize(m_nrServices,NULL);
+
   reset2DCounters(m_rBadLenPkt,m_nrServices,m_nSrc);
   reset2DCounters(m_rBadPckFktPkt,m_nrServices,m_nSrc);
   reset2DCounters(m_rMisPkt,m_nrServices,m_nSrc);
@@ -266,7 +270,9 @@ MEPErrorAdder::initialize() {
 	m_subsNotReqPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
     	sprintf(temp,"%s_MEPRx_1/Runable/totWrongPartID",m_subFarms[i].c_str());
 	m_subsBadLenPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
-    	
+    
+	sprintf(temp,"%s_MEPRx_1/Runable/srcName",m_subFarms[i].c_str());
+	m_subsSrcName[i] = new DimInfo(temp,m_updateFrequency,"",this);
     }
   } else {
     //Subfarm sum
@@ -307,7 +313,10 @@ MEPErrorAdder::initialize() {
 	m_subsNotReqPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
     	sprintf(temp,"%s%.2i_MEPRx_1/Runable/totWrongPartID",m_listenerDnsNode.c_str(),i+1);
 	m_subsTotWrongPartID[i] = new DimInfo(temp,m_updateFrequency,zero,this);
-    	
+    
+	sprintf(temp,"%s%.2i_MEPRx_1/Runable/srcName",m_listenerDnsNode.c_str(),i+1);
+	m_subsSrcName[i] = new DimInfo(temp,m_updateFrequency,"",this);
+ 
     }
   }
  
@@ -341,7 +350,7 @@ MEPErrorAdder::finalize() {
   m_subsNumMEPRecvTimeouts.clear();
   m_subsNotReqPkt.clear();
   m_subsTotWrongPartID.clear();
-
+  m_subsSrcName.clear();
 
   m_svcState = NOT_READY;  
   return Service::finalize();
@@ -423,10 +432,26 @@ MEPErrorAdder::infoHandler() {
     if (ReceiveSingleService(curr,m_subsNotReqPkt[i], m_rNotReqPkt[i], m_notReqPkt)) break;    
     if (ReceiveSingleService(curr,m_subsTotWrongPartID[i], m_rTotWrongPartID[i], m_totWrongPartID)) break;    
   
+    if (curr == m_subsSrcName[i]) {
+	//Receiving source names
+	
+	int size = curr->getSize();
+	if (size>0) {
+		if (m_allNamesSize==0) {
+			//Received first time
+			m_allNamesSize=size;
+			if (!(m_allNames = new char[size])) {
+				m_log << MSG::ERROR << "Failed to store source names" << endmsg;
+				return;
+			}
+   			::memcpy(m_allNames, (const char *) curr->getData(), size);
+			 
+			m_monSvc->declareInfo("srcName", "C", m_allNames, size, "Source IP names", this);
+		}
+	}
+    }
+
   }
-
-  //m_log << MSG::DEBUG << "Data size: " << curr->getSize() <<  "Single numbers: " << m_totRxOct << "." << m_totRxPkt  << "." <<  m_incEvt  << "." << m_totBadMEP  << "." << m_totMEPReq  << "." << m_totMEPReqPkt  << "." << m_numMEPRecvTimeouts  << "." << m_notReqPkt  << "." <<  m_totWrongPartID << endmsg;
-
 
 }
 

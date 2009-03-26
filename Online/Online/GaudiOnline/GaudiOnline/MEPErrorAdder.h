@@ -70,6 +70,9 @@ namespace LHCb  {
 
     int				m_nrServices; 		// == nrSubNodes or nrSubFarms
 
+    char			*m_allNames;
+    int				m_allNamesSize;
+
     //Save all received values from all sources
     std::vector<std::vector<int64_t> >      	m_rBadLenPkt;
     std::vector<std::vector<int64_t> >      	m_rMisPkt;
@@ -130,6 +133,8 @@ namespace LHCb  {
     std::vector<DimInfo*>	m_subsNumMEPRecvTimeouts;
     std::vector<DimInfo*>	m_subsNotReqPkt;
     std::vector<DimInfo*>	m_subsTotWrongPartID;
+
+    std::vector<DimInfo*>	m_subsSrcName;
 
     IIncidentSvc*		m_incidentSvc;
     IMonitorSvc*                m_monSvc;    

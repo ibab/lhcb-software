@@ -11,19 +11,19 @@ ApplicationMgr.Dlls		= {"GaudiOnline", "Gaucho"};
 ApplicationMgr.ExtSvc		= { "IncidentSvc" };
 ApplicationMgr.ExtSvc		+= {"MonitorSvc"};
 
-Runable.listenerDnsNode	= "plus19";
-Runable.senderDnsNode	= "plus19";
+Runable.listenerDnsNode	= "ECS03";
 Runable.updateFrequency	= 5; //seconds
-Runable.nSrc		= 20; //number of TELL1-srcs in this partition
+Runable.nSrc		= 8; //number of TELL1-srcs in this partition
 
 //Is this a sum over a whole partiton (or over SubFarm)?
 Runable.sumPartition	= TRUE;	
-//Options for partition sum
-Runable.partitionName	= "MUON";
-Runable.runInfoDnsNode	= "ECS03"; //if different from listenerDnsNode 
-//Options for subFarm sum
-Runable.nrSubNodes	= 4;
 
+//Options for partition sum
+Runable.partitionName	= "RICH1";
+Runable.runInfoDnsNode	= "ECS03"; //if different from listenerDnsNode 
+
+//Options for subFarm sum
+Runable.nrSubNodes	= 10;
 
 MessageSvc.OutputLevel = 2;
 
