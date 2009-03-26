@@ -1,4 +1,4 @@
-// $Id: MCAssociation.h,v 1.3 2009-01-30 18:34:52 jpalac Exp $
+// $Id: MCAssociation.h,v 1.4 2009-03-26 17:50:48 jpalac Exp $
 #ifndef KERNEL_MCASSOCIATION_H 
 #define KERNEL_MCASSOCIATION_H 1
 
@@ -37,7 +37,9 @@ public:
   
   const LHCb::MCParticle* to() const { return m_associatedMCP; }
 
-  double weight() const { return m_weight; }
+  const double& weight() const { return m_weight; }
+
+  double& weight() { return m_weight; }
 
 private:
   const LHCb::MCParticle* m_associatedMCP;
