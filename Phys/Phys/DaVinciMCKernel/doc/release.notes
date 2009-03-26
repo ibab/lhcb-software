@@ -1,9 +1,18 @@
-! $Id: release.notes,v 1.68 2009-03-26 08:49:08 jpalac Exp $
+! $Id: release.notes,v 1.69 2009-03-26 11:10:48 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
+
+! 2009-03-26 - Juan PALACIOS
+ - Kernel/IParticle2MCAssociator.h
+  . Add doxygen
+ - Kernel/Particle2MCAssociatorBase.h
+  . Remove obsolete relaations table related methods
+  . Add weight method
+ - dict/*
+  . Add dict for IParticle2MCWeightedAssociator
 
 ! 2009-03-25 - Juan PALACIOS
  - Add Kernel/IParticle2MCWeightedAssociator.h
