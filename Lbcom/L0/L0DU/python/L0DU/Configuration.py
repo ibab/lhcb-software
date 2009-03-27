@@ -22,6 +22,8 @@ class L0Conf(LHCbConfigurableUser) :
         ,"DecodeL0DU"     : False
         ,"FilterL0FromRaw": False
         ,"MonitorL0"      : False
+        ,"TCK"            : None
+        ,"verbose"        : False 
         # Sequencers 
         ,"L0Sequencer"    : None 
         ,"LinkSequencer"  : None 
@@ -43,6 +45,8 @@ class L0Conf(LHCbConfigurableUser) :
         ,"MonitorL0"      : """ If True, run the L0 monitoring algorithms."""
         ,"FilterL0FromRaw": """ If True, run the L0DU decoding and filter according to L0 decision."""
         ,"FilterL0"       : """ If True, filter according to L0 decision."""
+        ,"TCK"            : """ Specifies the TCK to be used in simulation or emulation."""
+        ,"verbose"        : """ If True, the log.info of L0Conf will be printed out.""" 
         # Sequencers 
         ,"L0Sequencer"    : """ Sequencer filled according to the L0Conf properties."""
         ,"LinkSequencer"  : """ Sequencer filled with the MC associator algorithms (not configurable)."""
@@ -82,12 +86,21 @@ class L0Conf(LHCbConfigurableUser) :
             # Set up the TCK to use
             from Configurables import L0DUAlg
             l0du = L0DUAlg("L0DU")
-            if not l0du.isPropertySet("TCK"): # Use default if L0DU.TCK not set
-                if self.getProp("DataType").upper() in ["DC06"]:
-                    l0du.TCK = "0xFFFF"
-                else:
-                    l0du.TCK = "0xDC09"
-
+            if self.isPropertySet("TCK"):     # Use L0Conf.TCK if set
+                tck = self.getProp("TCK")
+                if l0du.isPropertySet("TCK"):
+                    log.warning("L0DU.TCK and L0Conf().TCK both set, using L0Conf().TCK = %s"%tck)
+                l0du.TCK = tck
+            else:
+                if l0du.isPropertySet("TCK"): # Use already defined TCK
+                    log.info("L0DU.TCK was set independently of L0Conf")
+                else:                         # Use default TCK
+                    if self.getProp("DataType").upper() in ["DC06"]:
+                        l0du.TCK = "0xFFFF"
+                    else:
+                        l0du.TCK = "0xDC09"
+            log.info("L0DUAlg will use TCK=%s"%l0du.getProp('TCK'))
+            
             seq=self.getProp("L0Sequencer")
 
             if self.getProp("ReplaceL0BanksWithEmulated"):
@@ -169,12 +182,17 @@ class L0Conf(LHCbConfigurableUser) :
         """
         L0Conf configuration.
         """
+        if self.getProp("verbose") :
+            import GaudiKernel.ProcessJobOptions
+            GaudiKernel.ProcessJobOptions.PrintOn()
         self.checkOptions()
         self._defineL0Sequencer()
         self._defineL0LinkSequencer()
         self._defineL0MoniSequence()
         self._defineL0FilterSequence()
         self._defineETC()
+        if self.getProp("verbose") :
+            GaudiKernel.ProcessJobOptions.PrintOn()
 
 
 class L0ConfError(Exception):
