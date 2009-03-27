@@ -1,4 +1,4 @@
-// $Id: Particle2MCAssociatorBase.cpp,v 1.9 2009-03-26 13:59:13 jpalac Exp $
+// $Id: Particle2MCAssociatorBase.cpp,v 1.10 2009-03-27 16:42:47 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -64,6 +64,21 @@ Particle2MCAssociatorBase::isAssociated(const LHCb::Particle*,
                                         const LHCb::MCParticle*) const
 {
   return false;
+}
+//=============================================================================
+Particle2MCParticle::ToVector 
+Particle2MCAssociatorBase::relatedMCPsImpl(const LHCb::Particle* particle,
+                                           const LHCb::MCParticle::ConstVector& mcParticles) const 
+{
+  typedef LHCb::MCParticle::ConstVector::const_iterator Iter;
+  Particle2MCParticle::ToVector associations;
+  for (Iter iMCP = mcParticles.begin() ; iMCP != mcParticles.end() ; ++iMCP){
+    if (isAssociated(particle, *iMCP) ) {
+      const double wt = associationWeight(particle, *iMCP);
+      associations.push_back( MCAssociation(*iMCP, wt ) );
+    }
+  }
+  return associations;
 }
 //=============================================================================
 Particle2MCParticle::ToVector 
