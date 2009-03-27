@@ -13,7 +13,8 @@ _this_file = __file__
 _pyconf_dir = os.path.dirname(_this_file)
 _py_dir = os.path.dirname(_pyconf_dir)
 _base_dir = os.path.dirname(_py_dir)
-
+_ia_dir = _base_dir
+_iapy_dir = os.path.join(_ia_dir, "python")
 
 # added the installarea if I am called from the local package
 if os.path.basename(_base_dir) != "InstallArea" :
@@ -42,7 +43,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.20 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.21 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -106,6 +107,8 @@ class LbLoginScript(Script):
         self.output_file = None
         self.output_name = None
         self._currentcmtroot = os.environ.get("CMTROOT", None)
+        self._triedlocalsetup = False
+        self._triedAFSsetup = False
     def _write_script(self, env):
         """ select the ouput stream according to the cmd line options """
         close_output = False
@@ -155,8 +158,12 @@ class LbLoginScript(Script):
         parser.set_defaults(mysiteroot=None)
         parser.add_option("-m", "--mysiteroot",
                           dest="mysiteroot",
-                          help="set MYSITEROOT", 
-                          fallback_env="MYSITEROOT")
+                          help="set MYSITEROOT")
+        parser.set_defaults(cmtsite=None)
+        parser.add_option("--cmtsite",
+                          dest="cmtsite",
+                          help="set the CMTSITE", 
+                          fallback_env="CMTSITE")
         parser.set_defaults(cmtconfig=None)
         parser.add_option("-c", "--cmtconfig",
                           dest="cmtconfig",
@@ -195,11 +202,6 @@ class LbLoginScript(Script):
                           dest="sharedarea",
                           help="set the shared area", 
                           fallback_env="VO_LHCB_SW_DIR")
-        parser.set_defaults(cmtsite=None)
-        parser.add_option("--cmtsite",
-                          dest="cmtsite",
-                          help="set the CMTSITE", 
-                          fallback_env="CMTSITE")
 
 #-----------------------------------------------------------------------------------
 
@@ -231,46 +233,86 @@ class LbLoginScript(Script):
 
     def setSite(self):
         """ Site massaging """
+        log = logging.getLogger()
         opts = self.options
         ev = self._env
+        if ev.has_key("MYSITEROOT") :
+            del ev["MYSITEROOT"]
         if opts.mysiteroot :
-            ev["MYSITEROOT"] = opts.mysiteroot
+            # use the mysiteroot value as the top priority choice for the site guessing
+            log.debug("Using MYSITEROOT: %s" % opts.mysiteroot)
             ev["SITEROOT"] = opts.mysiteroot
             ev["CMTSITE"] = "LOCAL"
             opts.cmtsite = "LOCAL"
         else :
-            if sys.platform != "win32" :
-                afsroot = "/afs"
-            else :
-                if ev.has_key("AFSROOT") :
-                    afsroot = ev["AFSROOT"]
-                else : 
-                    afsroot = "Z:"
-            cernbase = "cern.ch"
-            if sys.platform != "win32" :
-                cernroot = os.path.join(afsroot, cernbase)
-            else :
-                cernroot = os.path.join(afsroot+os.sep, cernbase)
+            # if no mysiteroot has been passed to the script, use CMTSITE for the guessing
+            log.debug("No MYSITEROOT defined. Trying CMTSITE (%s) setting." % opts.cmtsite)
             if opts.cmtsite == "LOCAL" :
-                opts.mysiteroot = os.getcwd()
+                self._triedlocalsetup = True
+                log.debug("CMTSITE set to LOCAL. Guessing MYSITEROOT")                    
+                thismysiteroot = None
+                log.debug("IA dir: %s" % _ia_dir)
+                thisprojectversdir = os.path.dirname(_ia_dir)
+                log.debug("proj vers dir: %s" % thisprojectversdir)
+                if os.path.isdir(thisprojectversdir) :
+                    thisprojectdir = os.path.dirname(thisprojectversdir)
+                    if os.path.isdir(thisprojectdir) :
+                        thislhcbdir = os.path.dirname(thisprojectdir)
+                        if os.path.isdir(thislhcbdir) :
+                            thismysiteroot = os.path.dirname(thislhcbdir)
+                log.debug("CMTSITE set to LOCAL. Guessed MYSITEROOT: %s" % thismysiteroot)
+                if os.path.isdir(thismysiteroot) and "install_project.py" in os.listdir(thismysiteroot) :
+                    log.debug("this mysiteroot: %s" % thismysiteroot)
+                    opts.mysiteroot = thismysiteroot                    
+                else :
+                    if self._triedAFSsetup :
+                        log.debug("No valid MYSITEROOT. Trying CMTSITE=standalone")
+                        opts.cmtsite = "standalone"
+                    else :
+                        log.debug("No valid MYSITEROOT. Trying CMTSITE=CERN")
+                        opts.cmtsite = "CERN"
                 self.setSite()
             elif opts.cmtsite == "CERN" :
-                ev["CMTSITE"] = "CERN"
-                ev["AFSROOT"] = afsroot 
-                ev["SITEROOT"] = cernroot
-                if ev.has_key("MYSITEROOT") :
-                    del ev["MYSITEROOT"]
-            elif os.path.exists(cernroot) and os.path.isdir(cernroot) :
-                opts.cmtsite = "CERN"
+                self._triedAFSsetup = True
+                log.debug("CMTSITE set to CERN.")                                    
+                cernbase = "cern.ch"
+                afsroot = "/afs"
+                cernroot = os.path.join(afsroot, cernbase)
+                if sys.platform == "win32" :
+                    if ev.has_key("AFSROOT") :
+                        afsroot = ev["AFSROOT"]
+                    else : 
+                        afsroot = "Z:"
+                    cernroot = os.path.join(afsroot+os.sep, cernbase)
+                if os.path.isdir(cernroot) :
+                    ev["CMTSITE"] = "CERN"
+                    ev["AFSROOT"] = afsroot 
+                    ev["SITEROOT"] = cernroot
+                else :
+                    if self._triedlocalsetup :
+                        # try standalone mode if AFS is not present
+                        log.debug("No AFS directory found. Going to standalone mode.")
+                        opts.cmtsite = "standalone"
+                    else :
+                        log.debug("No AFS directory found. Going to local mode.")
+                        opts.cmtsite = "LOCAL"
+                    self.setSite()
+            elif opts.cmtsite == "standalone" :
+                ev["CMTSITE"] = "standalone"
+            elif not opts.cmtsite :
+                # try LOCAL, CERN, standalone in that order
+                log.debug("Neither MYSITEROOT nor CMTSITE are set")
+                if self._triedlocalsetup :
+                    if self._triedAFSsetup :
+                        opts.cmtsite = "standalone"
+                    else :
+                        opts.cmtsite = "CERN"
+                else :
+                    opts.cmtsite = "LOCAL"
                 self.setSite()
-            else : 
-                self._add_echo(' the MYSITEROOT variable is not defined')
-                self._add_echo(' we suggest you install all software under $MYSITEROOT')
-                self._add_echo(' then LHCb software will be installed under $MYSITEROOT/lhcb')
-                self._add_echo('      LCG software will be installed under $MYSITEROOT/lcg/external')
-                self._add_echo('      CMT and OpenScientist will be installed under $MYSITEROOT/contrib')
-                self._add_echo( ' as an example ')
-                self._add_echo(' setenv $MYSITEROOT /home/ranjard/Install')
+            else :
+                log.error("Unknown CMTSITE %s" % opts.cmtsite)
+            
 
 # sites defaults
 
@@ -282,6 +324,8 @@ class LbLoginScript(Script):
                 if not ev.has_key("CASTOR_HOME") and ev.has_key("HOME") :
                     if ev["HOME"].startswith("/afs/") :
                         ev["CASTOR_HOME"] = ev["HOME"].replace("/afs/", "/castor/")
+
+
 #-----------------------------------------------------------------------------------
 # Core CMT business
 
@@ -385,15 +429,17 @@ class LbLoginScript(Script):
         if opts.cmtsite == "CERN" :
             ev["CONTRIBDIR"] = os.path.join(ev["SITEROOT"], "sw", "contrib")
         else :
-            ev["CONTRIBDIR"] = _multiPathJoin(ev["SITEROOT"], "contrib")            
+            if ev.has_key("SITEROOT") :
+                ev["CONTRIBDIR"] = _multiPathJoin(ev["SITEROOT"], "contrib")            
 
         if sys.platform == "darwin" :
             opts.cmtvers = "v1r20p20070524"
             if opts.mysiteroot :
                 opts.use_cache = False
-            
-        ev["CMT_DIR"] = ev["CONTRIBDIR"]
-        ev["CMTROOT"] = _multiPathGet(ev["CMT_DIR"], os.path.join("CMT", opts.cmtvers))
+        
+        if ev.has_key("CONTRIBDIR") :
+            ev["CMT_DIR"] = ev["CONTRIBDIR"]
+            ev["CMTROOT"] = _multiPathGet(ev["CMT_DIR"], os.path.join("CMT", opts.cmtvers))
         if not os.path.isdir(ev["CMTROOT"]) :
             ev["CMTROOT"] = self._currentcmtroot
         
@@ -403,34 +449,35 @@ class LbLoginScript(Script):
     def setSoftLocations(self):
         ev = self._env
         opts = self.options
-        if opts.cmtsite == "LOCAL" :
-            ev["LHCBHOME"] = ev["MYSITEROOT"].split(os.pathsep)[0]
-            ev["LHCB_USERLOGS"] =  os.path.join(ev["LHCBHOME"], "log", "users")
-            ev["DIM_release_area"] = ev["CONTRIBDIR"]
-            ev["XMLRPC_release_area"] = ev["CONTRIBDIR"]
-            ev["LCG_release_area"] = _multiPathJoin(ev["MYSITEROOT"], os.path.join("lcg" ,"external"))
-            ev["LHCBRELEASES"] = _multiPathJoin(ev["MYSITEROOT"], "lhcb")
-            ev["GAUDISOFT"] = ev["LHCBRELEASES"]
-            ev["LHCBPROJECTPATH"] = os.pathsep.join([ev["LHCBRELEASES"],ev["LCG_release_area"]])
-        else :
-            ev["LHCBHOME"] = os.path.join(ev["SITEROOT"], "lhcb")
-            ev["LHCB_USERLOGS"] =  os.path.join(ev["LHCBHOME"], "project", "logfiles")
-            ev["DIM_release_area"] = os.path.join(ev["LHCBHOME"], "online", "control")
-            ev["XMLRPC_release_area"] = os.path.join(ev["LHCBHOME"], "project", "web", "online" )
-            ev["LCG_release_area"] = os.path.join(ev["SITEROOT"], "sw", "lcg", "app", "releases" )
-            ev["SOFTWARE"] = os.path.join(ev["LHCBHOME"], "software" )
-            ev["LHCBRELEASES"] = os.path.join(ev["SOFTWARE"], "releases")
-            ev["GAUDISOFT"] = os.path.join(ev["SITEROOT"], "sw", "Gaudi", "releases")
-            ev["LHCBPROJECTPATH"] = os.pathsep.join([ev["LHCBRELEASES"], ev["GAUDISOFT"], ev["LCG_release_area"]])
-            ev["LHCBDEV"] = os.path.join(ev["SITEROOT"], "lhcb", "software", "DEV" )
-            ev["LHCBTAR"] = os.path.join(ev["SITEROOT"], "lhcb", "distribution" )
-            ev["LHCBDOC"] = os.path.join(ev["LHCBRELEASES"], "DOC")
-            ev["EMACSDIR"] = os.path.join(ev["LHCBRELEASES"], "TOOLS", "Tools", "Emacs", "pro")
-            ev["LHCBSTYLE"] = os.path.join(ev["LHCBRELEASES"], "TOOLS", "Tools", "Styles", "pro")
-
-        ev["OSC_release_area"] = ev["CONTRIBDIR"]
-        ev["Gaudi_release_area"] = ev["GAUDISOFT"]
-        ev["LHCb_release_area"] = ev["LHCBRELEASES"]
+        if opts.cmtsite != "standalone" :
+            if opts.cmtsite == "LOCAL" :
+                ev["LHCBHOME"] = opts.mysiteroot.split(os.pathsep)[0]
+                ev["LHCB_USERLOGS"] =  os.path.join(ev["LHCBHOME"], "log", "users")
+                ev["DIM_release_area"] = ev["CONTRIBDIR"]
+                ev["XMLRPC_release_area"] = ev["CONTRIBDIR"]
+                ev["LCG_release_area"] = _multiPathJoin(opts.mysiteroot, os.path.join("lcg" ,"external"))
+                ev["LHCBRELEASES"] = _multiPathJoin(opts.mysiteroot, "lhcb")
+                ev["GAUDISOFT"] = ev["LHCBRELEASES"]
+                ev["LHCBPROJECTPATH"] = os.pathsep.join([ev["LHCBRELEASES"],ev["LCG_release_area"]])
+            else :
+                ev["LHCBHOME"] = os.path.join(ev["SITEROOT"], "lhcb")
+                ev["LHCB_USERLOGS"] =  os.path.join(ev["LHCBHOME"], "project", "logfiles")
+                ev["DIM_release_area"] = os.path.join(ev["LHCBHOME"], "online", "control")
+                ev["XMLRPC_release_area"] = os.path.join(ev["LHCBHOME"], "project", "web", "online" )
+                ev["LCG_release_area"] = os.path.join(ev["SITEROOT"], "sw", "lcg", "app", "releases" )
+                ev["SOFTWARE"] = os.path.join(ev["LHCBHOME"], "software" )
+                ev["LHCBRELEASES"] = os.path.join(ev["SOFTWARE"], "releases")
+                ev["GAUDISOFT"] = os.path.join(ev["SITEROOT"], "sw", "Gaudi", "releases")
+                ev["LHCBPROJECTPATH"] = os.pathsep.join([ev["LHCBRELEASES"], ev["GAUDISOFT"], ev["LCG_release_area"]])
+                ev["LHCBDEV"] = os.path.join(ev["SITEROOT"], "lhcb", "software", "DEV" )
+                ev["LHCBTAR"] = os.path.join(ev["SITEROOT"], "lhcb", "distribution" )
+                ev["LHCBDOC"] = os.path.join(ev["LHCBRELEASES"], "DOC")
+                ev["EMACSDIR"] = os.path.join(ev["LHCBRELEASES"], "TOOLS", "Tools", "Emacs", "pro")
+                ev["LHCBSTYLE"] = os.path.join(ev["LHCBRELEASES"], "TOOLS", "Tools", "Styles", "pro")
+    
+            ev["OSC_release_area"] = ev["CONTRIBDIR"]
+            ev["Gaudi_release_area"] = ev["GAUDISOFT"]
+            ev["LHCb_release_area"] = ev["LHCBRELEASES"]
 
 #-----------------------------------------------------------------------------------
                       
@@ -457,11 +504,11 @@ class LbLoginScript(Script):
             os.remove(cmtrcfile)
         # to work with rootd the .rootauthrc file is required
         rootrcfile = os.path.join(homedir, ".rootauthrc")
-        if not os.path.exists(rootrcfile) :
+        if not os.path.exists(rootrcfile) and opts.cmtsite != "standalone" :
             if opts.cmtsite == "CERN" :
                 srcrootrcfile = os.path.join(ev["AFSROOT"], "cern.ch", "lhcb", "scripts", ".rootauthrc")
             elif opts.cmtsite == "LOCAL" :
-                srcrootrcfile = os.path.join(ev["MYSITEROOT"].split(os.pathsep)[0], "lhcb", "scripts", ".rootauthrc")
+                srcrootrcfile = os.path.join(opts.mysiteroot.split(os.pathsep)[0], "lhcb", "scripts", ".rootauthrc")
             if os.path.exists(srcrootrcfile) :                
                 shutil.copy(srcrootrcfile, rootrcfile)
 

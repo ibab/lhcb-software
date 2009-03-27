@@ -1,3 +1,19 @@
+2009-03-27  hubert  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/LbLogin.py: rewritten completely the Site massaging 
+	part:
+	   - the MYSITEROOT value has full priority over any other setting. It cannot
+	   be passed to the script through the environment. It has to be explicitly passed 
+	   as argument.
+	   - if no MYSITEROOT value is available, the CMTSITE value is used. This one can be
+	   read from the environment and it can have 3 possible values LOCAL, CERN, standalone.
+	      * the LOCAL value is trying to guess the MYSITEROOT value
+	      * the CERN value is trying to local the /afs/cern.ch directory
+	      * the standalone value is setting nothing and is used for the building of the project.
+	   If any of these attempt is failing, it falls back on the next one.
+	   - if neither MYSITEROOT nor CMTSITE is available, the 3 possibity are tryied
+	   - if everything fails, the standalone mode is chosen.
+
 2009-03-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/Project.py: added missing projects and missing
