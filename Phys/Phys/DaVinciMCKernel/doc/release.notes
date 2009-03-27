@@ -1,16 +1,22 @@
-! $Id: release.notes,v 1.75 2009-03-27 16:43:05 jpalac Exp $
+! $Id: release.notes,v 1.76 2009-03-27 18:02:56 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
 
-! 2009-03-26 - Juan PALACIOS
+! 2009-03-27 - Juan PALACIOS
+ - Kernel/Particle2MCParticle.h
+  . Add functor to filter out MCAssociaitons who's MCParticle* are not 
+    inside a given MCParticle* container.
  - Kernel/Particle2MCAssociatorBase.h
   . Add relatedMCPsImpl, method to be implemented by derived classes.
  - src/Lib/Particle2MCAssociatorBase.cpp
   . add default implementation of relatedMCPsImpl. Uses associationWeight and
     isAssociated methods
+
+! 2009-03-26 - Juan PALACIOS
+ - Kernel/Particle2MCAssociatorBase.h
   . associationWeight now private
   . Add method to normalise weights in Particle2MCParticle::ToVector
  - Kernel/Particle2MCParticle.h
