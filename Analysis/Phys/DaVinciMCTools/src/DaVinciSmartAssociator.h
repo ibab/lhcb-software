@@ -49,19 +49,10 @@ public:
 
   virtual StatusCode finalize() ;
 
+private :
   virtual Particle2MCParticle::ToVector 
-  relatedMCPs(const LHCb::Particle* particle) const ;
-
-  virtual Particle2MCParticle::ToVector 
-  relatedMCPs(const LHCb::Particle* particle,
-              const std::string& mcParticleLocation) const ;
-
-  virtual bool  
-  isAssociated(const LHCb::Particle* particle, 
-            const LHCb::MCParticle* mcParticle) const ;
-
-  virtual double associationWeight(const LHCb::Particle* particle,
-                                   const LHCb::MCParticle* mcParticle) const;
+  relatedMCPsImpl(const LHCb::Particle* particle,
+                  const LHCb::MCParticle::ConstVector mcParticles) const ;
 
 private:
 

@@ -35,17 +35,18 @@ DaVinciSmartAssociator::DaVinciSmartAssociator( const std::string& type,
 DaVinciSmartAssociator::~DaVinciSmartAssociator() {} 
 //=============================================================================
 // Make & return the linker
-//============================================================================= 
-//============================================================================= 
+//=============================================================================
 Particle2MCParticle::ToVector 
-DaVinciSmartAssociator::relatedMCPs(const LHCb::Particle* particle) const 
+DaVinciSmartAssociator::relatedMCPsImpl(const LHCb::Particle* particle,
+                                        const LHCb::MCParticle::ConstVector mcps) const 
 {
 //We associate according to the particle type: protoparticle associators
 //are used for neutral and charged stable tracks, otherwise we use BackCat
 //for composites. The associator wrapper makes sure the linkers thus created are
 //deleted in the correct manner.
 
-  ProtoParticle2MCLinker::ToRange associatedParts;
+//  ProtoParticle2MCLinker::ToRange associatedParts;
+  Particle2MCParticle::ToVector associatedParts;
   //Now we get the association result based on the particle type
   if (particle->isBasicParticle()){ //if this is a stable
     ProtoParticle2MCLinker* linker(0);
@@ -61,52 +62,24 @@ DaVinciSmartAssociator::relatedMCPs(const LHCb::Particle* particle) const
     }
     
   } else{ //If composite use BackCat
-    if (0!=m_bkg) {
-      associatedParts.push_back(MCAssociation(m_bkg->origin(particle), 1.));  
+    if ( 0!=m_bkg ) {
+      const LHCb::MCParticle* assocMCP = m_bkg->origin(particle);
+      if (0!=assocMCP ) {
+        associatedParts.push_back(MCAssociation(m_bkg->origin(particle), 1.)); 
+      }
     }
   }
 
-  return associatedParts; 
-}
-//============================================================================= 
-Particle2MCParticle::ToVector 
-DaVinciSmartAssociator::relatedMCPs(const LHCb::Particle* particle,
-                                    const std::string& mcParticleLocation) const 
-{
-  if (mcParticleLocation!=LHCb::MCParticleLocation::Default) {
-    Warning("associate(const LHCb::Particle*  particle, const std::string& mcParticleLocation) NOT implemented",
-            1, StatusCode::SUCCESS).ignore();
-    return ProtoParticle2MCLinker::ToRange();
-  } else {
-    return relatedMCPs(particle);
-  }
+  // check if the associaited MCPs are in the input container, if not,
+  // remove the association!
 
-}
-//=============================================================================
-bool DaVinciSmartAssociator::isAssociated(const LHCb::Particle* particle, 
-                                          const LHCb::MCParticle* mcParticle) const
-{
-  ///@todo Should implement this one!
-  if ( !particle->isBasicParticle() ) {
-    return ( 0!= m_bkg                    && 
-             0!= m_bkg->origin(particle)  && 
-             m_bkg->origin(particle) == mcParticle );
-  } else {
-    Warning("isAssociated(const LHCb::Particle*  particle, const LHCb::MCParticle) NOT implemented for Basic particles, returninf false",
-            1, 
-            StatusCode::SUCCESS).ignore();
-    return false;
-  }
-  
-}
-//=============================================================================
-double DaVinciSmartAssociator::associationWeight(const LHCb::Particle* particle,
-                                                 const LHCb::MCParticle* mcParticle) const
-{
-  ///@todo Should implement this one!
+  Particle2MCParticle::NotInRange pred(&mcps);
 
-  return isAssociated(particle, mcParticle) ? 1. : 0. ;
+  Particle2MCParticle::ToVector::iterator new_last = 
+    std::remove_if(associatedParts.begin(), associatedParts.end(), pred);
 
+  return Particle2MCParticle::ToVector(associatedParts.begin(), new_last);
+ 
 }
 //=============================================================================
 // initialize
