@@ -33,7 +33,7 @@ template <typename T> static void resetCounters(T& cnt,size_t len) {
 
 template <typename T> static void reset2DCounters(T& cnt, size_t len1, size_t len2) {
   cnt.resize(len1);
-  for (int i=0; i<len1; i++) {
+  for (unsigned int i=0; i< len1; i++) {
     cnt[i].resize(len2,0);
   }
 }
@@ -64,7 +64,8 @@ MEPErrorAdder::MEPErrorAdder(const std::string& nam, ISvcLocator* svc)
 }
 
 MEPErrorAdder::~MEPErrorAdder() {
-  for (int i=0; i<m_badLenPkt.size(); i++) {
+  int size = (int) m_badLenPkt.size();
+  for (int i=0; i<size; i++) {
     delete m_subsBadLenPkt[i];
     delete m_subsBadPckFktPkt[i];
     delete m_subsMisPkt[i];
@@ -82,6 +83,7 @@ MEPErrorAdder::~MEPErrorAdder() {
     delete m_subsNumMEPRecvTimeouts[i];
     delete m_subsNotReqPkt[i];
     delete m_subsTotWrongPartID[i];
+    delete m_subsSrcName[i];
   }	
 }
 
@@ -436,7 +438,7 @@ MEPErrorAdder::infoHandler() {
 	//Receiving source names
 	
 	int size = curr->getSize();
-	if (size>0) {
+	if (size>1) {
 		if (m_allNamesSize==0) {
 			//Received first time
 			m_allNamesSize=size;
