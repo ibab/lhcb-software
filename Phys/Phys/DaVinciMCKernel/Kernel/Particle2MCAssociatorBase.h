@@ -1,4 +1,4 @@
-// $Id: Particle2MCAssociatorBase.h,v 1.17 2009-03-26 17:57:56 jpalac Exp $
+// $Id: Particle2MCAssociatorBase.h,v 1.18 2009-03-27 16:41:22 jpalac Exp $
 #ifndef PARTICLE2MCASSOCIATORBASE_H 
 #define PARTICLE2MCASSOCIATORBASE_H 1
 
@@ -17,7 +17,13 @@
  *  Mainly inline helper methods for common implementation of host of 
  *  similar methods in the interface.
  *  Set of methods is self-consistent. Derived classes only need to implement
- *  methods
+ *  method
+ *  @code
+ *  relatedMCPsImpl(const LHCb::Particle* particle,
+ *                   const LHCb::MCParticle::ConstVector& mcParticles) const ;
+ *  @code
+ *  or the following methods, which are used internally in the default 
+ *  implementation of relatedMCPsImpl
  *  @code 
  *  virtual bool isAssociated(const LHCb::Particle*, 
  *                            const LHCb::MCParticle) const
@@ -98,6 +104,26 @@ private:
 
   virtual bool isAssociated(const LHCb::Particle*,
                             const LHCb::MCParticle* ) const;
+  /**
+   *
+   * 
+   * Calculate the weighted associations between an LHCb::Particle and
+   * and some LHCb::MCParticles
+   * @param particle LHCb::Particle* to be associated
+   * @param mcParticles Container of LHCb::MCParticle from which to associate
+   * @return Particle2MCParticle::ToVector containing weighted associations
+   *
+   * Uses isAssociated and associationWeight internally. weighted associations
+   * are not sorted or normalised. Normalisation and sorting is taken care
+   * of before returning the associations to the user via one of the 
+   * methods in the public interface
+   *
+   * @author Juan Palacios juan.palacios@nikhef.nl
+   * @date   2009-27-03
+   **/
+  virtual Particle2MCParticle::ToVector 
+  relatedMCPsImpl(const LHCb::Particle* particle,
+                  const LHCb::MCParticle::ConstVector& mcParticles) const ;
 
   inline LHCb::MCParticle::Container* 
   i_MCParticles(const std::string& location) const
@@ -127,13 +153,9 @@ private:
                 Iter begin,
                 Iter end     ) const
   {
-    Particle2MCParticle::ToVector associations;
-    for ( Iter iMCP = begin ; iMCP != end ; ++iMCP){
-      if (isAssociated(particle, *iMCP) ) {
-        const double wt = associationWeight(particle, *iMCP);
-        associations.push_back( MCAssociation(*iMCP, wt ) );
-      }
-    }
+    Particle2MCParticle::ToVector associations = 
+      relatedMCPsImpl(particle,
+                      LHCb::MCParticle::ConstVector(begin, end));
     i_normalise(associations);
     i_sort(associations);
     return associations;
