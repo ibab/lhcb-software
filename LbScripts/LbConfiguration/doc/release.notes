@@ -1,4 +1,4 @@
-2009-03-27  hubert  <Hubert.Degaudenzi@cern.ch>
+2009-03-27  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/LbLogin.py: rewritten completely the Site massaging 
 	part:
@@ -11,7 +11,7 @@
 	      * the CERN value is trying to local the /afs/cern.ch directory
 	      * the standalone value is setting nothing and is used for the building of the project.
 	   If any of these attempt is failing, it falls back on the next one.
-	   - if neither MYSITEROOT nor CMTSITE is available, the 3 possibity are tryied
+	   - if neither MYSITEROOT nor CMTSITE is available, the 3 possibilities are tried
 	   - if everything fails, the standalone mode is chosen.
 
 2009-03-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
