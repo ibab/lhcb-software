@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.253 2009-03-26 15:20:05 jpalac Exp $
+! $Id: release.notes,v 1.254 2009-03-27 18:05:00 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
 
+! 2009-03-27 - Juan PALACIOS
+ - src/DaVinciSmartAssociator{.h, .cpp}
+   .implement relatedMCPsImpl and remove all other implementations from 
+    Particle2MCAssociatorBase
 ! 2009-03-26 - Juan PALACIOS
  - src/DaVinciSmartAssociator.h
   . Adapt to new IParticle2MCWeightedAssociator interface
