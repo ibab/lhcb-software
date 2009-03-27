@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.324 2009-03-24 08:43:27 pkoppenb Exp $
+! $Id: release.notes,v 1.325 2009-03-27 14:09:26 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,12 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-03-25 - Juan PALACIOS
+ - Add python/DaVinci/PhysMicroDST.py
+  . Configurable for "standard" physics selection MicroDST making
+ - cmt/requirements
+  . Add DaVinci.PhysMicroDST to DaVinciConfUserModules
 
 !========================== DaVinci v22r2 2009-03-23 ===================
 ! 2009-03-24 - Patrick Koppenburg
