@@ -1,4 +1,4 @@
-// $Id: Particle2MCParticle.h,v 1.4 2009-03-26 17:50:31 jpalac Exp $
+// $Id: Particle2MCParticle.h,v 1.5 2009-03-27 18:00:23 jpalac Exp $
 #ifndef KERNEL_PARTICLE2MCPARTICLE_H 
 #define KERNEL_PARTICLE2MCPARTICLE_H 1
 
@@ -52,5 +52,34 @@ namespace Particle2MCParticle {
       }
     
     };
+
+  struct NotInRange : public std::unary_function<MCAssociation, bool>
+  {
+
+    NotInRange(const LHCb::MCParticle::ConstVector* range)
+      :
+      m_toRange(range) 
+    {
+    }
+  
+    bool operator() (const MCAssociation& assoc) const
+    {
+      
+      for (LHCb::MCParticle::ConstVector::const_iterator itW = m_toRange->begin();
+           itW != m_toRange->end();
+           ++itW) {
+        if ( (*itW) == assoc.to() ) return false;
+      }
+      return  true;
+    }
+
+  private:
+
+    NotInRange() {}
+  
+    const LHCb::MCParticle::ConstVector* m_toRange;
+    
+  };
+
 }
 #endif // KERNEL_PARTICLE2MCPARTICLE_H
