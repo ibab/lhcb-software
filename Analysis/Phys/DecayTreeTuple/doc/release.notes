@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+! 2009-03-27 - Patrick Koppenburg
+ - MCDecayTreeTuple : treat oscillated Bs properly. 
+
 ! 2009-03-06 - Rob Lambert
  - Two new tuple tools.
    MCEventType, for searching for Event Types in the MCTruth

@@ -1,4 +1,4 @@
-// $Id: TupleToolTrackInfo.h,v 1.1 2008-03-19 20:26:28 sposs Exp $
+// $Id: TupleToolTrackInfo.h,v 1.2 2009-03-27 17:51:36 pkoppenb Exp $
 #ifndef JBOREL_TUPLETOOLTRACKINFO_H
 #define JBOREL_TUPLETOOLTRACKINFO_H 1
 
@@ -11,9 +11,14 @@
  *
  * \brief Fill track information for DecayTreeTuple
  *
- * - head_TRACK_CHI2 : track chi2
- * - head_TRACK_NDOF : track ndof
- *
+ * - X_TRACK_TYPE : track type
+ * - X_TRACK_CHI2 : track chi2
+ * - X_TRACK_NDOF : track ndof
+ * - X_TRACK_PCHI2 : track Chi2 probability
+ * - X_TRACK_VeloCHI2NDOF : Track fit velo chi2/nDoF
+ * - X_TRACK_TCHI2NDOF : Track fit T chi2/nDoF
+ * - X_TRACK_GhostProb : Ghost probability (run NeuralNetTmva to fill it)
+ * - X_TRACK_CloneDist : Only available for 2009 data
  *
  * \sa DecayTreeTuple
  *

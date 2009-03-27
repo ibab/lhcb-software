@@ -1,4 +1,4 @@
-// $Id: TupleToolTrackInfo.cpp,v 1.4 2008-11-11 11:09:42 sean Exp $
+// $Id: TupleToolTrackInfo.cpp,v 1.5 2009-03-27 17:51:36 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -12,7 +12,7 @@
 
 #include "Event/Particle.h"
 //-----------------------------------------------------------------------------
-// Implementation file for class : EventInfoTupleTool
+// Implementation file for class : TupleToolTrackInfo
 //
 // 2008-03-17 : Stephane Poss
 //-----------------------------------------------------------------------------
@@ -48,10 +48,21 @@ StatusCode TupleToolTrackInfo::fill( const LHCb::Particle*
           test &= tuple->column( head+"_TRACK_CHI2",  track->chi2() );
           int nDoF = track->nDoF();
           test &= tuple->column( head+"_TRACK_NDOF",  nDoF );
-          if (nDoF)
+          if (nDoF){
             test &= tuple->column( head+"_TRACK_PCHI2", track->probChi2() );
-          else
+            if ( track->info(LHCb::Track::FitVeloNDoF,0) >0) {
+              test &= tuple->column( head+"_TRACK_VeloCHI2NDOF",  
+                                     track->info(LHCb::Track::FitVeloChi2, -1.)/
+                                     track->info(LHCb::Track::FitVeloNDoF, 0) );
+            } else test &= tuple->column( head+"_TRACK_VeloCHI2NDOF",-1.);
+            if ( track->info(LHCb::Track::FitTNDoF,0) >0) {
+              test &= tuple->column( head+"_TRACK_TCHI2NDOF",  
+                                     track->info(LHCb::Track::FitTChi2, -1.)/
+                                     track->info(LHCb::Track::FitTNDoF, 0) );
+            } else test &= tuple->column( head+"_TRACK_TCHI2NDOF",-1.);
+          } else {
             test &= tuple->column( head+"_TRACK_PCHI2",-1);
+          }
           test &= tuple->column( head+"_TRACK_GhostProb", track->info(LHCb::Track::GhostProbability, -1.) );
           test &= tuple->column( head+"_TRACK_CloneDist", track->info(LHCb::Track::CloneDist, -1.) );
         }

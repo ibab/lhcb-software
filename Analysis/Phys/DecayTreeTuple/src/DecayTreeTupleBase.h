@@ -1,4 +1,4 @@
-// $Id: DecayTreeTupleBase.h,v 1.9 2009-02-20 09:02:40 pkoppenb Exp $
+// $Id: DecayTreeTupleBase.h,v 1.10 2009-03-27 17:51:36 pkoppenb Exp $
 #ifndef JBOREL_DECAYTREETUPLEBASE_H
 #define JBOREL_DECAYTREETUPLEBASE_H 1
 
@@ -79,6 +79,10 @@ class DecayTreeTupleBase : public DVAlgorithm  {
     if (msgLevel(MSG::VERBOSE)) verbose() << "Initialize Particle tools" << endmsg ;
     initializeStufferTools(m_pTools);
   } ;
+  /// has oscillated (needed to tell if one needs reverting)
+  bool hasOscillated(const LHCb::Particle*)const{return false;};
+  /// has oscillated (needed to tell if one needs reverting)
+  bool hasOscillated(const LHCb::MCParticle* P)const{return P->hasOscillated();};
   
  protected:
   std::vector<std::string> getEventTools() const;

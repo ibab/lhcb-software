@@ -92,14 +92,24 @@ bool sizeCheckOrInit( const std::vector<const PARTICLE*> & row ){
     
   // initializing the particles object.
   m_parts.reserve( size );
-  bool revert = false ;
-  if (m_revertToPositiveID && (row[0]->particleID().pid())<0){
-    info() << "The head of chain is a " << ppSvc()->find(row[0]->particleID() ) 
-           << " -> will change to it antiparticle " << endmsg ;
-    revert = true ;
+  bool revertChain = false ;
+  bool revertHead = false ;
+  if (m_revertToPositiveID){ 
+    revertHead = ( row[0]->particleID().pid()<0 ) ; // revert all heads
+    bool oscillated = hasOscillated(row[0]) ; // only makes sense for MC
+    // revert chain only for particles oscillating : 
+    revertChain =  ( revertHead != oscillated )  ; // Bbar -> Bbar or B -> Bbar
+    info() << "The head of chain is a " << ppSvc()->find( row[0]->particleID() )->particle() ;
+    if (oscillated) info() << " that has oscillated" ;
+    info() << " : " ;
+    if (revertHead) info() << "Will change to its antiparticle. " ;
+    if (revertChain) info() << "Will change daughters to antiparticles. " ;
+    if (! (revertHead || revertChain )) info() << "Will keep whole chain as is. " ;
+    info() << endmsg ;
   }
   
   for( unsigned int i=0; i<size; ++i ){
+    bool revert = ((i==0) ? revertHead : revertChain ) ; 
     const LHCb::ParticleProperty* pp = (revert ? 
                                         ppSvc()->find ( row[i]->particleID() )->antiParticle() : 
                                         ppSvc()->find ( row[i]->particleID() )) ;
