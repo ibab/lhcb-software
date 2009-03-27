@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.9 2008-11-26 13:34:02 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.10 2009-03-27 14:06:43 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -244,6 +244,11 @@ class RichTools(RichConfigurableUser):
             tool = self.__makeRichTool( Rich__Rec__SimplePhotonPredictor, nickname, private )
             tool.MaxTrackROI = [ 999, 999, 999 ]
             tool.MinTrackROI = [ 000, 000, 000 ]
+        elif predType == "MCTrueCKPhotons" :
+            #from Configurables import Rich__Rec__MC__PhotonPredictorUsingMCRichOpticalPhotons
+            #tool = self.__makeRichTool( Rich__Rec__MC__PhotonPredictorUsingMCRichOpticalPhotons, nickname, private )
+            from Configurables import Rich__Rec__MC__PhotonPredictorUsingMCTruth
+            tool = self.__makeRichTool( Rich__Rec__MC__PhotonPredictorUsingMCTruth, nickname, private )
         else:
             raise RuntimeError("Unknown Photon Predictor '%s'"%predType)
         return tool

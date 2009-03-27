@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.213 2009-03-09 14:15:08 cattanem Exp $
+! $Id: release.notes,v 1.214 2009-03-27 14:06:43 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
+
+! 2009-03-27 - Chris Jones
+ - Improvements to fillStream printout of RichGeomPhoton
+ - Add a new photon predictor type to RichTools() python configuration, 
+   that use MC information to selet photons.
 
 !====================== RichKernel v7r20 2009-03-09 ====================
 ! 2009-03-03 - Chris Jones
