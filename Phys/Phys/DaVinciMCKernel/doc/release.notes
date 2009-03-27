@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.74 2009-03-26 17:58:03 jpalac Exp $
+! $Id: release.notes,v 1.75 2009-03-27 16:43:05 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
@@ -7,6 +7,10 @@
 
 ! 2009-03-26 - Juan PALACIOS
  - Kernel/Particle2MCAssociatorBase.h
+  . Add relatedMCPsImpl, method to be implemented by derived classes.
+ - src/Lib/Particle2MCAssociatorBase.cpp
+  . add default implementation of relatedMCPsImpl. Uses associationWeight and
+    isAssociated methods
   . associationWeight now private
   . Add method to normalise weights in Particle2MCParticle::ToVector
  - Kernel/Particle2MCParticle.h
