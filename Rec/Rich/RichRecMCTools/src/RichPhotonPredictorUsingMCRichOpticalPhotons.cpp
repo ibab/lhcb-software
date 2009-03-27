@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichPhotonPredictorUsingMCRichOpticalPhotons.cpp
  *
- *  Implementation file for RICH reconstruction tool : RichPhotonPredictorUsingMCRichOpticalPhotons
+ *  Implementation file for RICH reconstruction tool : Rich::Rec::PhotonPredictorUsingMCRichOpticalPhotons
  *
  *  CVS Log :-
- *  $Id: RichPhotonPredictorUsingMCRichOpticalPhotons.cpp,v 1.5 2007-02-02 10:06:27 jonrob Exp $
+ *  $Id: RichPhotonPredictorUsingMCRichOpticalPhotons.cpp,v 1.6 2009-03-27 14:15:50 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -36,6 +36,9 @@ PhotonPredictorUsingMCRichOpticalPhotons( const std::string& type,
   declareInterface<IPhotonPredictor>(this);
 }
 
+// Destructor
+PhotonPredictorUsingMCRichOpticalPhotons::~PhotonPredictorUsingMCRichOpticalPhotons() {}
+
 StatusCode PhotonPredictorUsingMCRichOpticalPhotons::initialize()
 {
   // Sets up various tools and services
@@ -53,7 +56,6 @@ bool PhotonPredictorUsingMCRichOpticalPhotons::
 photonPossible( LHCb::RichRecSegment * segment,
                 LHCb::RichRecPixel * pixel ) const
 {
-
   // Are they in the same Rich detector ?
   if ( segment->trackSegment().rich() != pixel->detector() ) return false;
 

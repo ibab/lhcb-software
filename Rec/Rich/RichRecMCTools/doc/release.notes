@@ -4,6 +4,10 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2009-03-27 - Chris Jones
+ - Add new photon predictor tool that use MC information (available on DSTs) to
+   select signal and/or background photons.
+
 !====================== RichRecMCTools v2r20p1 2009-02-20 =====================
 ! 2009-01-20 - Marco Cattaneo
  - Remove obsolete includes for Gaudi ParticlePropertySvc
