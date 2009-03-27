@@ -14,7 +14,7 @@ OMAIfbMonitor::OMAIfbMonitor(OMAcommon* Env) :
   m_npars = 0;
   m_inputNames.push_back("MinTotClusters"); m_inputDefValues.push_back(0.);
   m_inputNames.push_back("MaxIFBClusters"); m_inputDefValues.push_back(60000000.);
-  m_doc = "Algorithm for converting 2-D histograms of HPD cluster hits (total and IFB/large) to ID's";
+  m_doc = "Algorithm for converting 2-D histograms of HPD cluster hits (total and IFB/large) to IDs";
   m_doc += "saved on an ntuple on disk - IFB calculation is then performed offline. Cuts are used to";
   m_doc += "filter data deemed eligible for an IFB calculation.";
 }
