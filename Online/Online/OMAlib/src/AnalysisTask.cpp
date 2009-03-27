@@ -1,10 +1,11 @@
-// $Id: AnalysisTask.cpp,v 1.13 2009-03-04 17:31:11 ggiacomo Exp $
+// $Id: AnalysisTask.cpp,v 1.14 2009-03-27 14:06:34 ggiacomo Exp $
 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 // local
 #include "OMAlib/OMAlib.h"
+#include "OMAlib/OMAAlgorithms.h"
 #include "OMAlib/AnalysisTask.h"
 #include "OMAlib/SavesetFinder.h"
 
@@ -30,6 +31,8 @@ AnalysisTask::AnalysisTask( const std::string& name,
   declareProperty ( "InputFiles"   , m_inputFiles);
   declareProperty ( "InputTasks"   , m_inputTasks);
   declareProperty ( "Partition"    , m_partition = "LHCb" );
+  //
+  declareProperty ( "RICHclustersDir", m_RICHClDir= "/home/ryoung");
 }
 
 AnalysisTask::~AnalysisTask() {
@@ -54,6 +57,9 @@ StatusCode AnalysisTask::initialize() {
   if( "default" != m_myRefRoot) 
     setRefRoot(m_myRefRoot);
 
+  // special for RICH IFB algorithm
+  std::string richalg("IfbMonitor");
+  ( dynamic_cast<OMAIfbMonitor*>(getAlg(richalg)) )->setOutputDir(m_RICHClDir);
 
   if ( ! m_inputFiles.empty() ) {
     // single shot: analyze these files now 

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.14 2009-03-04 14:42:35 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.15 2009-03-27 14:06:34 ggiacomo Exp $
 /*
   Online Monitoring Analysis library
   G. Graziani (INFN Firenze)
@@ -183,6 +183,7 @@ void OMAlib::doAlgList() {
   m_algorithms["CompareToReference"] = new OMACompareToReference(Env);
   m_algorithms["CheckEntriesInRange"] = new OMACheckEntriesInRange(Env);
   m_algorithms["Fit"] = new OMAFit(Env);
+  m_algorithms["IfbMonitor"] = new OMAIfbMonitor(Env);
 
   m_algorithms["Efficiency"] = new OMAEfficiency(Env);
   m_algorithms["Divide"] = new OMADivide(Env);

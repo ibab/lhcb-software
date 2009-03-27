@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.22 2009-03-06 09:42:20 ggiacomo Exp $
+! $Id: release.notes,v 1.23 2009-03-27 14:06:33 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
+
+! 20090325 v2r3
+ - new check algorithm: OMAIfbMonitor by Ross Young
 
 ! 20090306 v2r2
  - improve and unify code to get histograms from root files (savesets 
