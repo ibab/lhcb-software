@@ -5,7 +5,7 @@
  *  Header file for RichSmartID conversion utilities
  *
  *  CVS Log :-
- *  $Id: RichSmartIDCnv.h,v 1.8 2009-03-03 12:03:19 jonrob Exp $
+ *  $Id: RichSmartIDCnv.h,v 1.9 2009-03-27 14:05:29 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   05/02/2008
@@ -240,10 +240,10 @@ namespace Rich
     int globalPixelY() const;
 
     /// Returns a 'global' pixel column number from a given local coordinate with a variable HPD x size.
-    int globalPixelX(int localX, int sizeX) const;
+    int globalPixelX(const int localX, const int sizeX) const;
 
     /// Returns a 'global' pixel row number from a given local corrdinate with a variable HPD y size.
-    int globalPixelY(int localY, int sizeY) const;
+    int globalPixelY(const int localY, const int sizeY) const;
 
     /// Returns a 'local' pixel column number
     int localPixelX() const;
@@ -379,7 +379,7 @@ namespace Rich
   }
 
   // Returns a 'global' pixel X coordinate number from a given local coordinate and size of X HPD direction.
-  inline int SmartIDGlobalOrdering::globalPixelX(int localX, int sizeX) const
+  inline int SmartIDGlobalOrdering::globalPixelX(const int localX, const int sizeX) const
   {
     return ( Rich::Rich1 == smartID().rich() ?
              // RICH1
@@ -392,7 +392,7 @@ namespace Rich
   }
 
   // Returns a 'global' pixel y coordinate from a given local coordinate and size of the y HPD direction.
-  inline int SmartIDGlobalOrdering::globalPixelY(int localY, int sizeY) const
+  inline int SmartIDGlobalOrdering::globalPixelY(const int localY, const int sizeY) const
   {
     return ( Rich::Rich1 == smartID().rich() ?
              // RICH1
