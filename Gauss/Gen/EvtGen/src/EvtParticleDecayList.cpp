@@ -224,7 +224,7 @@ void EvtParticleDecayList::setNMode(int nmode){
 }
 
 
-EvtParticleDecay& EvtParticleDecayList::getDecay(int nchannel) {
+EvtParticleDecay& EvtParticleDecayList::getDecay(int nchannel) const {
   if (nchannel>=_nmode) {
     report(ERROR,"EvtGen") <<"Error getting channel:"
 			   <<nchannel<<" with only "<<_nmode
@@ -438,7 +438,7 @@ void EvtParticleDecayList::removeMode(EvtDecayBase* decay) {
 }
 
 
-bool EvtParticleDecayList::isJetSet() {
+bool EvtParticleDecayList::isJetSet() const {
   int i ;
   EvtDecayBase * decayer ;
  

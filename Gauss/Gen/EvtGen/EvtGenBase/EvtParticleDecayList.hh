@@ -50,7 +50,7 @@ public:
   const EvtDecayBase* getDecayModel(int imode) const {return _decaylist[imode]->getDecayModel();}
 
 
-  EvtParticleDecay& getDecay(int nchannel);
+  EvtParticleDecay& getDecay(int nchannel) const;
 
   double getRawBrfrSum() {return _rawbrfrsum;}
   void setRawBrfrSum(double rawbrfrsum) {_rawbrfrsum=rawbrfrsum;}
@@ -70,7 +70,7 @@ public:
 
   void printSummary();
 
-  bool isJetSet() ;
+  bool isJetSet() const ;
 
 private:
 
