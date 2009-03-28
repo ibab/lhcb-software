@@ -1,4 +1,4 @@
-// $Id: Service.h,v 1.3 2009-03-28 13:58:48 ibelyaev Exp $
+// $Id: Service.h,v 1.4 2009-03-28 14:17:57 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKITRIGGER_SERVICE_H 
 #define LOKITRIGGER_SERVICE_H 1 
@@ -263,39 +263,6 @@ namespace Hlt
      */
     virtual size_t selections ( KeyList& keys ) const ;
     // ========================================================================
-  public: // "DOT"
-    // ========================================================================
-    /** produce "DOT"-file with the given name 
-     *  @param fname the name of DOT-file 
-     *  @return status code 
-     */
-    virtual StatusCode dump
-    ( const std::string&     fname  ) const ;
-    /** produce "DOT"-file with the given name for the given algorithm 
-     *  @param alg the algorithm 
-     *  @param fname the name of DOT-file 
-     *  @return status code 
-     */
-    virtual StatusCode dump
-    ( const IAlgorithm*      alg    ,
-      const std::string&     fname  ) const ;
-    /** produce "DOT"-file with the given name for the given seelction
-     *  @param sel the selection 
-     *  @param fname the name of DOT-file 
-     *  @return status code 
-     */
-    virtual StatusCode dump
-    ( const Hlt::Selection*  sel ,
-      const std::string&     fname  ) const ;
-    /** produce "DOT"-file with the given name for the given object
-     *  @param obj   the object
-     *  @param fname the name of DOT-file 
-     *  @return status code 
-     */
-    virtual StatusCode dump
-    ( const std::string&     object ,
-      const std::string&     fname  ) const ;
-    // ========================================================================
   public: // IIncidentListener
     // ========================================================================
     /** handle the incident
@@ -303,39 +270,6 @@ namespace Hlt
      *  @param inc incident to be handled 
      */
     virtual void handle ( const Incident& inc ) ;
-    // ========================================================================
-  public: // "DOT"
-    // ========================================================================
-    /** produce "DOT"-file with the given name 
-     *  @param  stream the stream 
-     *  @return status code 
-     */
-    StatusCode dot 
-    ( std::ostream& stream ) const ;
-    /** produce "DOT"-file with the given name for the given algorithm 
-     *  @param  alg the algorithm 
-     *  @param  stream the stream 
-     *  @return status code 
-     */
-    virtual StatusCode dot 
-    ( const IAlgorithm*      alg    ,
-      std::ostream&          stream ) const ;
-    /** produce "DOT"-file with the given name for the given seelction
-     *  @param  sel the selection 
-     *  @param  stream the stream 
-     *  @return status code 
-     */
-    virtual StatusCode dot
-    ( const Hlt::Selection*  sel ,
-      std::ostream&          stream ) const ;
-    /** produce "DOT"-file with the given name for the given object
-     *  @param  obj   the object
-     *  @param  stream the stream 
-     *  @return status code 
-     */
-    virtual StatusCode dot
-    ( const std::string&     object ,
-      std::ostream&          stream ) const ;
     // ========================================================================
   public: // IService/IInterface etc...
     // ========================================================================
