@@ -1,4 +1,4 @@
-// $Id: ServiceRegister.cpp,v 1.1 2009-03-19 13:16:12 ibelyaev Exp $
+// $Id: ServiceRegister.cpp,v 1.2 2009-03-28 13:58:48 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -124,8 +124,8 @@ StatusCode Hlt::Service::registerOutput
   m_selections.insert ( selection -> id () , selection ) ;
   //
   debug() << "Register OUTPUT" 
-          << " selection '"      << selection -> id   () << "'" 
-          << " for algorithm '"  << producer  -> name () << endreq ;
+          << " selection '" << std::string( selection -> id () ) << "'" 
+          << " for algorithm '"  << producer  -> name () << "'" << endreq ;
   //
   return StatusCode::SUCCESS ;
 }
@@ -195,8 +195,8 @@ StatusCode Hlt::Service::registerInput
   }
   // debug printout here 
   debug() << "Register  INPUT " 
-          << " selection '"      << selection            << "'" 
-          << " for algorithm '"  << consumer  -> name () << endreq ;
+          << " selection '"      << std::string(selection) << "'" 
+          << " for algorithm '"  << consumer  -> name ()   << "'" << endreq ;
   //
   return StatusCode::SUCCESS ;
 }

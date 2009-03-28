@@ -464,6 +464,8 @@ bindAbsMin . __doc__ += "\n\n" + LoKi.Dicts.HltBind.bindAbsMin . __doc__
 bindAbsMax . __doc__ += "\n\n" + LoKi.Dicts.HltBind.bindAbsMax . __doc__ 
 
 
+import LoKiTrigger.Service
+
 if '__main__' == __name__ :
     for i in dir() : print i 
 

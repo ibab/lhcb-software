@@ -1,4 +1,4 @@
-// $Id: LoKiTriggerDict.h,v 1.13 2008-12-12 16:35:46 ibelyaev Exp $
+// $Id: LoKiTriggerDict.h,v 1.14 2009-03-28 13:58:48 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
@@ -25,6 +25,10 @@
 #include "LoKi/TrMatch.h"
 #include "LoKi/VxMaker.h"
 #include "LoKi/VxUpgrade.h"
+// ============================================================================
+#include "LoKi/IHltRegister.h"
+#include "LoKi/IHltData.h"
+#include "LoKi/IHltInspector.h"
 // ============================================================================
 namespace LoKi 
 {
@@ -696,6 +700,12 @@ namespace
     LoKi::Functors::Empty<LHCb::RecVertex*> m_e2 ;    
     LoKi::Functors::Size<LHCb::Track*>      m_s1 ;
     LoKi::Functors::Size<LHCb::RecVertex*>  m_s2 ;    
+    /// needed for various Hlt interafces 
+    LoKi::Interface<Hlt::IRegister>          m_htl1 ;
+    LoKi::Interface<Hlt::IData>              m_htl2 ;
+    LoKi::Interface<Hlt::IInspector>         m_htl3 ;
+    Hlt::IInspector::SelList                 m_hlt4 ;
+    Hlt::IInspector::AlgList                 m_hlt5 ;
     /// fictive constructor 
     _Instantiations () ;
     // ========================================================================

@@ -1,4 +1,4 @@
-// $Id: IHltInspector.h,v 1.1 2009-03-19 13:16:12 ibelyaev Exp $
+// $Id: IHltInspector.h,v 1.2 2009-03-28 13:58:48 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_IHLTINSPECTOR_H 
 #define LOKI_IHLTINSPECTOR_H 1
@@ -23,6 +23,7 @@ namespace Hlt
   // ==========================================================================
   /** @class IInspector LoKi/IHltInspector.h
    *  An abstract interface, whch allow the inspection of Hlt-selection(s)
+   *  @attention the implementation is not supposed to be fast & efficient! 
    *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    *  @date   2009-03-16
    */
@@ -31,14 +32,12 @@ namespace Hlt
     // ========================================================================
   public:
     // ========================================================================
-    /// the actual type of the selection key/name
-    typedef stringKey Key ;                  // the actual type of the key/name 
-    /// the actual type of alg-list
+     /// the actual type of alg-list
     typedef std::vector<const IAlgorithm*>     AlgList ;// the type of alg-list
     /// the actual type of selection-list
     typedef std::vector<const Hlt::Selection*> SelList ;// the type of alg-list
     /// the actual type of list of keys 
-    typedef std::vector<Key>                   KeyList ;// the type of key-list
+    typedef std::vector<std::string>           KeyList ;// the type of key-list
     // ========================================================================
   public:   // ispection by selection: producer & consumers 
     // ========================================================================
@@ -53,7 +52,7 @@ namespace Hlt
      *  @return the producer 
      */
     virtual const IAlgorithm* producer 
-    ( const Key&              selection ) const = 0 ;
+    ( const std::string&      selection ) const = 0 ;
     // ========================================================================
     /** get all nominal consumers for the given selection 
      *  @param selection the selection 
@@ -69,7 +68,7 @@ namespace Hlt
      *  @param number of nominal consumers 
      */
     virtual size_t consumers 
-    ( const Key&            selection , 
+    ( const std::string&    selection , 
       AlgList&              alglist   ) const  = 0 ;
     // ========================================================================
   public:   // ispection by algorithms: inputs/outputs  
@@ -140,6 +139,19 @@ namespace Hlt
     ( const std::string& algorithm , 
       KeyList&           selections ) const = 0 ;
     // ========================================================================
+  public:
+    // ========================================================================
+    /** get all algorithms 
+     *  @param algs (OUTPUT) the list of algorithms 
+     *  @return number of algorithms 
+     */
+    virtual size_t algorithms ( AlgList& algs ) const = 0 ;
+    /** get all selections 
+     *  @param sels (OUTPUT) the list of selections 
+     *  @return number of selections  
+     */
+    virtual size_t selections ( KeyList& sels ) const = 0 ;
+    // ========================================================================
   public: //  some general stuff
     // ========================================================================
     /// registered algorithm?
@@ -155,7 +167,7 @@ namespace Hlt
     /// registered producer?
     virtual bool hasConsumer  ( const std::string& alg ) const = 0 ;
     /// registered selection ?
-    virtual bool hasSelection ( const Key&         key ) const = 0 ;
+    virtual bool hasSelection ( const std::string& key ) const = 0 ;
     /// registered selection ?
     virtual bool hasSelection ( const Hlt::Selection* selection ) const = 0 ;
     // ========================================================================

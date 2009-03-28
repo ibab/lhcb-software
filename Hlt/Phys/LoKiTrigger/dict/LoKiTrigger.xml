@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiTrigger.xml,v 1.15 2008-12-13 13:35:44 ibelyaev Exp $ 
+     * $Id: LoKiTrigger.xml,v 1.16 2009-03-28 13:58:48 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
@@ -82,6 +82,14 @@
   <class pattern   = "LoKi::Hybrid::*"   />
 
   <class pattern   = "LoKi::Hlt1::*" />
+  
+  <class name    = "Hlt::IRegister"        />
+  <class name    = "Hlt::IRegister::Lock"  />
+  <class name    = "Hlt::IData"            />
+  <class name    = "Hlt::IInspector"       />
+  <class name    = "std::vector<const IAlgorithm*>"     />
+  <class name    = "std::vector<const Hlt::Selection*>" />
+  <class pattern = "LoKi::Interface<Hlt::I*"  />
   
   <exclusion>
     <class pattern="LoKi::HltBinders::HltBinder*::Container" />

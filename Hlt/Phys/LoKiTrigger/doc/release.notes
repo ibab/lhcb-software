@@ -1,9 +1,55 @@
-! $Id: release.notes,v 1.28 2009-03-24 17:33:26 ibelyaev Exp $
+! $Id: release.notes,v 1.29 2009-03-28 13:58:48 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiTrigger
 ! Responsible : Vanya BELYAEV
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
+
+! 2009-03-28 - Vanya BELYAEV
+
+ - add the python image of Hlt::IInspector  service:
+
+    >>> import LoKiTrigger.Service 
+
+    >>> gaudi = AppMgr() 
+
+
+    >>> hlt = gaudi.hltInspector() 
+
+    >>> algs = hlt.algorithms()  ## get all algorithms, list of iAlgorithm
+    
+    >>> sels = hlt.selections() ## get all selections, (list ofnames)
+
+    various checkers: hasAlgorithm/hasProducer/hasConsumer/hasSelection
+
+    >>> inp = htl.inputs ( alg ) ## get all input selections for the given algorithm
+    >>> for i in inp: print i 
+
+    >>> out = htl.outputs ( alg ) ## get all output selections for the given algorithm
+    >>> for o in out: print o
+
+    >>> p = hlt.producer ( selection ) ## get the producer for the given selection
+    >>> c = htl.consumers ( seleciton ) ## get the list of consumers 
+    >>> for i in c : print i.name() 
+
+
+    >>> hlt.dumpAlg( alg ) # prin tsoem primitive info for debugging
+
+    >>> htl.dotAlg( alg ) # produce DOT-view for the given algorithm
+    >>> hlt.dotAlg( alg , 'file.dot' ) # write DOT-view into the file  
+    >>> hlt.dotAlg( alg , open('file.dot') ) # the same 
+
+
+    >>> htl.dotSel( sel ) # produce DOT-view for the given selection
+    >>> hlt.dotSel( sel , 'file.dot' ) # write DOT-view into the file  
+    >>> hlt.dotSel( sel , open('file.dot') ) # the same 
+
+    >>> htl.dotAll() # produce DOT-view for all algorithms 
+    >>> hlt.dotAll( 'file.dot' ) # write DOT-view into the file  
+    >>> hlt.dotAll( open('file.dot') ) # the same 
+ 
+    
+    
 
 
 ! 2009-03-24 - Vanya BELYAEV

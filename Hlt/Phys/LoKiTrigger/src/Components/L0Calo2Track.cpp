@@ -1,4 +1,4 @@
-// $Id: L0Calo2Track.cpp,v 1.1 2009-03-24 17:33:26 ibelyaev Exp $
+// $Id: L0Calo2Track.cpp,v 1.2 2009-03-28 13:58:48 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -308,9 +308,7 @@ StatusCode Hlt::L0Calo2Track::execute  ()
   }
   
   // 
-  Assert ( !cuts.empty  () , "Invalid size of L0CaloCuts" ) ;
-  
-  always() << " L0CaloCuts: " << cuts << endreq ;
+  Assert ( !cuts.empty  () , "Invalid size of L0CaloCuts" ) ;  
   
   // loop over L0 candidates:
   for ( L0Calos::const_iterator icalo = l0calos->begin() ; 

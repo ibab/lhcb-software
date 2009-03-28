@@ -1,4 +1,4 @@
-// $Id: L0Muon2Track.cpp,v 1.3 2009-03-24 17:33:26 ibelyaev Exp $
+// $Id: L0Muon2Track.cpp,v 1.4 2009-03-28 13:58:48 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -196,8 +196,6 @@ StatusCode Hlt::L0Muon2Track::execute  ()
     Assert ( 1 == cuts.size() , "Invalid size of L0 data!"  ) ;
     cut = cuts.front() ;
   }
-  
-  always () << " Use muon cuts: " << cut << endreq ;
   
   // loop over input data 
   for ( L0Muons::const_iterator il0 = l0muons->begin() ; 
