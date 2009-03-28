@@ -4,7 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-! 2009-03016 - Patrick Robbe
+! 2009-03-28 - Patrick Robbe
+ - EvtPythia.cpp: reintroduce LHCb Pythia model
+
+! 2009-03-16 - Patrick Robbe
  - Move to new EvtGen version from Anders Ryd after merging BaBar
    and LHCb changes. 
 

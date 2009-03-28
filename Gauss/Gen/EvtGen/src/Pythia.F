@@ -20,7 +20,7 @@ C
 C------------------------------------------------------------------------
       SUBROUTINE EVTPYTHIAINIT(FNAME)
       IMPLICIT NONE
-      EXTERNAL PYDATA
+CCC      EXTERNAL PYDATA
       
       CHARACTER*(*) FNAME
       
@@ -232,6 +232,9 @@ C
       SAVE /PYDAT1/
       DOUBLE PRECISION P,V
       COMMON/PYJETS/N,NPAD,K(4000,5),P(4000,5),V(4000,5)
+      INTEGER MINT
+      DOUBLE PRECISION VINT 
+      COMMON/PYINT1/MINT(400),VINT(400)
       
       INTEGER N,NPAD,K
       
@@ -277,13 +280,15 @@ C switched on
 C...Decay products may develop a shower.
         IF(MSTJ(92).GT.0) THEN
           IP1=MSTJ(92)
-          QMAX=SQRT(MAX(0.,(P(IP1,4)+P(IP1+1,4))**2-(P(IP1,1)+P(IP1+1,
+          QMAX=SQRT(MAX(0.D0,(P(IP1,4)+P(IP1+1,4))**2-(P(IP1,1)+P(IP1+1,
      &    1))**2-(P(IP1,2)+P(IP1+1,2))**2-(P(IP1,3)+P(IP1+1,3))**2))
+	  MINT(33) = 0 
           CALL PYSHOW(IP1,IP1+1,QMAX)
           CALL PYPREP(IP1)
           MSTJ(92)=0
         ELSEIF(MSTJ(92).LT.0) THEN
           IP1=-MSTJ(92)
+	  MINT(33)=0
           CALL PYSHOW(IP1,-3,P(IP,5))
           CALL PYPREP(IP1)
           MSTJ(92)=0
