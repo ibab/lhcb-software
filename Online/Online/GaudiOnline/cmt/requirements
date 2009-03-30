@@ -27,6 +27,9 @@ apply_pattern generate_configurables library=GaudiOnline
 
 macro_append GaudiOnline_shlibflags ' $(MDFlib_linkopts) '
 
+apply_pattern QMTest
+apply_pattern QMTestSummarize
+
 # ==================== private test application =============================
 application  Gaudi              "../main/*.cpp"
 macro_append Gaudi_dependencies " GaudiOnline "

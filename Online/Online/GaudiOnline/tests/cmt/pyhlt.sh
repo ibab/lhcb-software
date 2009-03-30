@@ -18,15 +18,15 @@ $BIGTERM MBMMon@${HOST}     -e "export UTGID=${NODENAME}/MBMMon;    exec -a \${U
 #
 $MINITERM EvtProd@${HOST}   -e "export UTGID=${NODENAME}/EvtProd;   exec -a \${UTGID} $Class1_task -opt=$OPTS/MEPConverter.opts"&
 # start_py_task EvtProd   "import GaudiOnlineTests;GaudiOnlineTests.runEvtProd()"
-start_py_task EvtHolder "import GaudiOnlineTests;GaudiOnlineTests.runEvtHolder()"
-start_py_task Moore_0   "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
-start_py_task Moore_1   "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
-start_py_task Moore_2   "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
-start_py_task Moore_3   "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
-#start_py_task Moore_4   "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
-#start_py_task Moore_5   "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
-#start_py_task Moore_6   "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
-#start_py_task Moore_7   "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
+start_py_task EvtHolder   "import GaudiOnlineTests;GaudiOnlineTests.runEvtHolder()"
+start_py_task Moore_0     "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
+start_py_task Moore_1     "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
+start_py_task Moore_2     "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
+start_py_task Moore_3     "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
+#start_py_task Moore_4    "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
+#start_py_task Moore_5    "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
+#start_py_task Moore_6    "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
+#start_py_task Moore_7    "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
 #
 sleep 3
 start_py_task Receiver "import GaudiOnlineTests;GaudiOnlineTests.runReceiver()"
