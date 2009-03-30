@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : Rich::Rec::PixelCreatorFromRichDigitsWithBg
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.21 2007-04-23 13:23:54 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.22 2009-03-30 10:45:46 jonrob Exp $
  *
  *  @author Andy Buckley  buckley@hep.phy.cam.ac.uk
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -165,7 +165,7 @@ PixelCreatorFromRichDigitsWithBg::newPixel( const LHCb::RichSmartID id ) const
     LHCb::RichRecPixel* newPix(0);
 
     // Check this hit is OK
-    if ( pixelIsOK(id) )
+    if ( hpdIsOK(id) && pixelIsOK(id) )
     {
 
       // Make a new RichRecPixel
