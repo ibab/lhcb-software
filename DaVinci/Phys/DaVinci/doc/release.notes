@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.325 2009-03-27 14:09:26 jpalac Exp $
+! $Id: release.notes,v 1.326 2009-03-30 15:00:35 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,14 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-03-30 - Juan PALACIOS
+ - Tag as jpalac_20090330
+ - Add python/DaVinci/PhysMicroDST.py
+  . Adapt to bug fix in LoKi CoreFactory
+ - cmt/requirements
+ - job/DaVinci_Ganga.py
+  . Increase version to v22r3
 
 ! 2009-03-25 - Juan PALACIOS
  - Add python/DaVinci/PhysMicroDST.py
