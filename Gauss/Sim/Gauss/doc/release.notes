@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-03-30 - Silvia MIGLIORANZI
+ - QMTest modified to have the DecFiles built in the nightlies.
+
 ! 2009-03-25 - Silvia MIGLIORANZI
  - QMTest added in test directory. Standard output and error reference for 
    5 MinBias events created.
