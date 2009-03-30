@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
-__version__ = "$Id: CondDBAdmin_Commit.py,v 1.8 2009-01-06 18:21:19 marcocle Exp $"
+__version__ = "$Id: CondDBAdmin_Commit.py,v 1.9 2009-03-30 18:33:46 marcocle Exp $"
 
 import os, sys, stat
 
@@ -245,13 +245,14 @@ and for a short message for the release notes.""")
     if not options.message:
         log.warning("Empty message!")
     else:
+        options.message = options.message.replace("\\n","\n")
         log.info("Message for the changes:\n\n%s\n" % options.message)
 
     from CondDBUI.Admin import ReleaseNotes
     rel_notes = ReleaseNotes(options.rel_notes)
     rel_notes.addNote(contributor = options.contributor,
                       partitions = {partition:(local_tag,modified + added)},
-                      description = [options.message],
+                      description = options.message.splitlines(),
                       patch = options.patch)
     
     ans = None

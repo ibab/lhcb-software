@@ -1,9 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.102 2009-02-18 15:01:59 cattanem Exp $
+! $Id: release.notes,v 1.103 2009-03-30 18:33:46 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+! 2009-03-30 - Marco Clemencic
+ - Allow multi-line release notes comments in CondDBAdmin_Commit.py.
 
 !===================== Tools/CondDBUI v2r16 2009-02-18 ========================
 ! 2009-02-12 - Marco Clemencic
