@@ -1,7 +1,7 @@
 """
 High level configuration example for a typical physics MicroDST
 """
-__version__ = "$Id: PhysMicroDST.py,v 1.2 2009-03-27 14:09:10 jpalac Exp $"
+__version__ = "$Id: PhysMicroDST.py,v 1.3 2009-03-30 14:44:01 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 
@@ -166,7 +166,7 @@ class PhysMicroDST(LHCbConfigurableUser) :
         from Configurables import LoKi__VoidFilter
         from Configurables import LoKi__Hybrid__CoreFactory
 
-        LoKi__Hybrid__CoreFactory('CoreFactory:').Modules += ['LoKiHlt.algorithms','LoKiHlt.decorators']
+        LoKi__Hybrid__CoreFactory('CoreFactory').Modules += ['LoKiHlt.algorithms','LoKiHlt.decorators']
         log.info("Applying PhysMicroDST configuration")
         log.info( self )
         mdstSeq = self.seqMicroDST()
