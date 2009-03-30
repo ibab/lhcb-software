@@ -31,31 +31,31 @@ ext_lhcb = ['LCGCMT', 'GENSER', 'OpenScientist']
 
 lcg_projects =['LCGCMT', 'SEAL','POOL','GENSER','COOL','GDML','CORAL','RELAX']
 
-lhcb_projects = {'GAUDI':'Gaudi',
-                   'LHCB':'LHCb',
-                   'LBCOM':'Lbcom',
-                   'REC':'Rec',
-                   'HLT':'Hlt',
-                   'PHYS':'Phys',
-                   'ONLINE':'Online',
-                   'ALIGNMENT':'Alignment',
-                   'MOORE':'Moore',
-                   'EULER':'Euler',
-                   'VETRA':'Vetra',
-                   'GEANT4':'Geant4',
-                   'GAUSS':'Gauss',
-                   'BOOLE':'Boole',
-                   'BRUNEL':'Brunel',
-                   'DAVINCI':'DaVinci',
-                   'BENDER':'Bender',
-                   'ANALYSIS':'Analysis',
-                   'ORWELL':'Orwell',
-                   'PANORAMIX':'Panoramix',
-                   'LBSCRIPTS':'LbScripts',
-                   'CURIE':'Curie',
-                   'PANOPTES':'Panoptes',
-                   'DIRAC':'Dirac',
-                   'LHCBGRID':'LHCbGrid'}
+#lhcb_projects = {'GAUDI':'Gaudi',
+#                   'LHCB':'LHCb',
+#                   'LBCOM':'Lbcom',
+#                   'REC':'Rec',
+#                   'HLT':'Hlt',
+#                   'PHYS':'Phys',
+#                   'ONLINE':'Online',
+#                   'ALIGNMENT':'Alignment',
+#                   'MOORE':'Moore',
+#                   'EULER':'Euler',
+#                   'VETRA':'Vetra',
+#                   'GEANT4':'Geant4',
+#                   'GAUSS':'Gauss',
+#                   'BOOLE':'Boole',
+#                   'BRUNEL':'Brunel',
+#                   'DAVINCI':'DaVinci',
+#                   'BENDER':'Bender',
+#                   'ANALYSIS':'Analysis',
+#                   'ORWELL':'Orwell',
+#                   'PANORAMIX':'Panoramix',
+#                   'LBSCRIPTS':'LbScripts',
+#                   'CURIE':'Curie',
+#                   'PANOPTES':'Panoptes',
+#                   'DIRAC':'Dirac',
+#                   'LHCBGRID':'LHCbGrid'}
 
 #applications = {'GAUSS':'Sim/Gauss', 
 #                'BOOLE':'Digi/Boole', 
@@ -102,10 +102,10 @@ lhcb_binary = ['slc4_ia32_gcc34_dbg','slc4_ia32_gcc34',
 #                 'DIRAC':'500000', 
 #                 'LHCbGrid': '50000'} 
 
-lhcb_base_name = {'GAUDI' : 'LCGCMT',
-                    'LHCB'  : 'GAUDI',
-                    'BENDER': 'DAVINCI',
-                    'GEANT4': 'GAUDI'   }
+#lhcb_base_name = {'GAUDI' : 'LCGCMT',
+#                    'LHCB'  : 'GAUDI',
+#                    'BENDER': 'DAVINCI',
+#                    'GEANT4': 'GAUDI'   }
                     
 
 #applications_other_executables = {'GAUSS':'BcVegPy,Herwig,HidValley,Hijing'}

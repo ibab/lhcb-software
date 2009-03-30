@@ -1,58 +1,49 @@
-""" Script to make a LHCb tar file"""
-""" - 060612 - first version """
-""" - 060829 - fix create_web :
-               which should not change $LHCBTAR/distribution.html """
-""" - 060920 - add MCatNLOData """
-""" - 061005 - fix Panoramix """
-""" - 061103 - remove temporary dependency file """
-""" - 061128 - import LHCb_config to get data_files dictionary"""
-""" - 070126 - adapt the code to CMTPROJECTPATH """
-""" - 070329 - get Gauss dependencies on GENSER through GENSER or MCGenerators """
-""" - 070416 - keep test* directories in Online project """
-""" - 070925 - added generation of md5 sum """
-""" - 071002 - fixed md5 file format  """
-""" - 071004 - removed the exclusion of the glimpse index from the source tar ball  """
-""" - 071022 - added the exclusion of install.history from the tar balls  """
-""" - 071022 - removed from the source tarball exclusion, the glimpse files """
-""" - 080204 - added the calculation of the md5 check sum for data files """
-""" - 080221 - added the Mac binary exclusion """
-""" - 080221 - added exclusion of binary ATLAS tags """
-""" - 080421 - added exclusion of the archived library (lib*.a) in the binary tar balls """
-""" - 081007 - by default consider that there is no version directories for the packages """
-""" - 081028 - added the same feature as above for Panoramix """
-""" - 081113 - fix the cleaning of GaudiExamples without version directory """
-""" - 081215 - Removed LCGCMT from the direct dependencies of Dirac """
-""" - 081217 - added LCGGrid to the Dirac dependencies """
+#!/usr/bin/env python
 
+""" Script to make a LHCb tar file
+ - 060612 - first version 
+ - 060829 - fix create_web :
+            which should not change $LHCBTAR/distribution.html
+ - 060920 - add MCatNLOData
+ - 061005 - fix Panoramix
+ - 061103 - remove temporary dependency file
+ - 061128 - import LHCb_config to get data_files dictionary
+ - 070126 - adapt the code to CMTPROJECTPATH
+ - 070329 - get Gauss dependencies on GENSER through GENSER or MCGenerators
+ - 070416 - keep test* directories in Online project
+ - 070925 - added generation of md5 sum
+ - 071002 - fixed md5 file format
+ - 071004 - removed the exclusion of the glimpse index from the source tar ball
+ - 071022 - added the exclusion of install.history from the tar balls
+ - 071022 - removed from the source tarball exclusion, the glimpse files
+ - 080204 - added the calculation of the md5 check sum for data files
+ - 080221 - added the Mac binary exclusion
+ - 080221 - added exclusion of binary ATLAS tags
+ - 080421 - added exclusion of the archived library (lib*.a) in the binary tar balls
+ - 081007 - by default consider that there is no version directories for the packages
+ - 081028 - added the same feature as above for Panoramix
+ - 081113 - fix the cleaning of GaudiExamples without version directory
+ - 081215 - Removed LCGCMT from the direct dependencies of Dirac
+ - 081217 - added LCGGrid to the Dirac dependencies
+"""
 
 #-----------------------------------------------------------------------------
 
-import sys, os, string, getopt, warnings, time, shutil, commands, fnmatch
+import sys, os, getopt, time, commands, fnmatch
 import re
 from install_project import calculateMD5
 
-global script_dir, python_version, LHCBTAR, HTMLDIR, TARSRC, CMTPATH, here
-global pname, pversion, binary
-global debug_flag
-global data_files, ext_projects
-
 script_version = '081217'
-python_version = string.atoi(string.replace(string.split(sys.version)[0],'.',''))
 
-sys.path.append(os.environ['LHCBPYTHON'])
-from LHCb_config import *
+from LbLegacy.LHCb_config import data_files
 
-script_dir = os.getenv('LHCBSCRIPTS')
 LHCBTAR = os.getenv('LHCBTAR')
 HTMLDIR = os.path.join(LHCBTAR,'html')
 TARSRC = 'source'
 here = os.getcwd()
 
 # set default  arguments
-pname =''
-pversion = ''
-binary = ''
-debug_flag = 1
+debug_flag = True
 
 #---------------------------------------------------------------------------
 def usage() :
@@ -81,9 +72,9 @@ def help() :
 
 
 def _get_base_project(native_version):
-    NAME = string.split(native_version,'_')[0]
-    version = string.split(native_version,'_')[1]
-    Name = string.capitalize(string.lower(NAME))
+    NAME = native_version.split('_')[0]
+    version = native_version.split('_')[1]
+    Name = NAME.lower().capitalize()
     if NAME == 'LCGCMT': Name = 'LCG'
     if NAME == 'LHCBGRID' : Name = 'LHCbGrid'
     NameSys = Name+'Sys'
@@ -129,10 +120,12 @@ def _get_grid_version(path_list):
             break
     return grid_version
 #-----------------------------------------------------------------------------------
-def make_tar(pname,pversion,binary=''):
+def make_tar(pname, pversion, binary=''):
+    
+    global TARSRC
 
-    if debug_flag == 1:
-        print 'make_tar %s %s %s ' %(pname,pversion,binary)
+    if debug_flag :
+        print 'make_tar %s %s %s ' % (pname, pversion, binary)
 
     # binary directory name starts with:
     compLinux = 'slc'
@@ -172,8 +165,8 @@ def make_tar(pname,pversion,binary=''):
         title = ' ('+binary+' binary files) '
         # external package binary : only the optimized version is distributed
         tar_opt = tar_bin
-        if string.find(tar_bin,'_dbg') != -1: tar_opt = tar_bin[:string.find(tar_bin,'_dbg')]
-        platform = string.split(binary,'_')[0]
+        if tar_bin.find('_dbg') != -1: tar_opt = tar_bin[:tar_bin.find('_dbg')]
+        platform = binary.split('_')[0]
         if platform.find('slc') != -1: platform = 'slc'
 
 
@@ -204,7 +197,7 @@ def make_tar(pname,pversion,binary=''):
     else:
         env = ''
 
-    PACK = string.upper(pname)
+    PACK = pname.upper()
     maindir = os.path.join(PACK,PACK+'_'+pversion)
     packver = PACK+'_'+PACK+'_'+pversion
     packSys = pname+'Sys'
@@ -219,7 +212,7 @@ def make_tar(pname,pversion,binary=''):
         if platform != '':
             if not os.path.isdir(os.path.join(maindir,'InstallArea',binary)):
                 os.chdir(maindir)
-                str = script_dir+'/LbInstallArea '+binary
+                str = 'LbInstallArea '+binary
                 os.system(str)
                 os.chdir(here)
             l = os.listdir(os.path.join(maindir,'InstallArea',binary,'lib'))
@@ -241,7 +234,7 @@ def make_tar(pname,pversion,binary=''):
             os.chdir(os.path.join(here,maindir,'GaudiExamples',v[0],'home'))
 
         for line in os.popen('cvs update').readlines():
-            if string.split(line)[0] == '?': os.remove(string.split(line)[1])
+            if line.split()[0] == '?': os.remove(line.split()[1])
         os.chdir(here)
 
 #
@@ -257,7 +250,7 @@ def make_tar(pname,pversion,binary=''):
 
     status,value = commands.getstatusoutput('cmt show set_value CMTPATH')
     if value.find('#CMT>') != -1:
-        CMTPATH = string.split(value,'\n')[1]
+        CMTPATH = value.split('\n')[1]
     else:
         CMTPATH = value
     os.environ['CMTPATH'] = CMTPATH
@@ -273,7 +266,7 @@ def make_tar(pname,pversion,binary=''):
                 os.chdir(os.path.join(here,maindir,'PanoramixSys',pversion,'cmt'))
             status,OSC_home = commands.getstatusoutput('cmt show macro_value OSC_home')
             status,LCG_system = commands.getstatusoutput('cmt show macro_value LCG_system')
-            OSC_PATH = string.split(OSC_home,LCG_system)[0]
+            OSC_PATH = OSC_home.split(LCG_system)[0]
             CMTPATH = CMTPATH+':'+OSC_PATH[0:-1]
     os.putenv('CMTPATH',CMTPATH)
     os.environ['CMTPATH'] = CMTPATH
@@ -296,14 +289,14 @@ def make_tar(pname,pversion,binary=''):
 
     dep.write('<MENU><LI>\n')
 
-    path_list = string.split(CMTPATH,':')
+    path_list = CMTPATH.split(':')
     path_list.reverse()
     for p in path_list:
-        if string.find(p,PACK) != -1: break
+        if p.find(PACK) != -1: break
         dver = os.path.basename(p)
         if dver == 'DBASE' or dver == 'PARAM' : continue
-        dnam = string.split(dver,'_')[0]
-        if dnam == 'LCGCMT' or string.find(p,'OpenScientist') != -1:
+        dnam = dver.split('_')[0]
+        if dnam == 'LCGCMT' or p.find('OpenScientist') != -1:
             if dnam != 'LCGCMT' : dver = 'OpenScientist_'+dver
             if PACK == 'LHCBGRID':
                 dver = 'LCGGrid' + '_' + pversion
@@ -324,10 +317,10 @@ def make_tar(pname,pversion,binary=''):
     else :
         os.chdir(os.path.join(maindir,packSys,pversion,'cmt'))
     for line in os.popen('cmt show uses').readlines():
-        if string.find(line,'DBASE') != -1 or string.find(line,'PARAM') != -1:
+        if line.find('DBASE') != -1 or line.find('PARAM') != -1:
             dnam = 'DBASE'
-            if string.find(line,'PARAM') != -1 : dnam = 'PARAM'
-            file = string.split(string.split(line,'(')[0])
+            if line.find('PARAM') != -1 : dnam = 'PARAM'
+            file = line.split('(')[0].split()
             print file
             name = file[1]
             ver  = file[2]
@@ -347,7 +340,7 @@ def make_tar(pname,pversion,binary=''):
         if os.environ.has_key('CMTPROJECTPATH'):
             status,value = commands.getstatusoutput('cmt show macro_value GENSERVERSION')
             if value.find('#CMT>') != -1:
-                GENSER_version = 'GENSER_'+string.split(value,'\n')[1]
+                GENSER_version = 'GENSER_'+value.split('\n')[1]
             else:
                 GENSER_version = 'GENSER_'+value
         else:
@@ -389,7 +382,7 @@ def make_tar(pname,pversion,binary=''):
 # tar the main directory
     tarfile = TARDIR+'/'+packver+tar_bin+'.tar.gz'
     if binary == '':
-        exclude_list = ' --exclude='+string.join(exclude_source,' --exclude=')
+        exclude_list = ' --exclude=' + ' --exclude='.join(exclude_source)
         if env != '':
             str = 'tar '+exclude_list+' -zcvf '+tarfile+' '+env+'/'+pversion+' '+maindir
         else:
@@ -398,9 +391,9 @@ def make_tar(pname,pversion,binary=''):
         tar_status,output = commands.getstatusoutput(str)
         print 'make_tar: %s tar status= %s'%(tarfile,tar_status)
     else:
-        exclude_list = ' --exclude='+string.join(exclude_binary,' --exclude=')
+        exclude_list = ' --exclude=' + ' --exclude='.join(exclude_binary)
         status,output = commands.getstatusoutput('find '+maindir+' -type d -name '+binary+' -print')
-        binlist = string.replace(output,'\n',' ')
+        binlist = output.replace('\n',' ')
         str = 'tar '+exclude_list+' -zcvf '+tarfile+' '+binlist
         tar_status,output = commands.getstatusoutput(str)
         print  ' make_tar: %s tar status= %s'%(tarfile,tar_status)
@@ -440,16 +433,18 @@ def make_tar(pname,pversion,binary=''):
 # ========================================================================
 # create data_files tar file (DBASE,PARAM)
 # ========================================================================
-def data_files_tar(pname,pversion):
+def data_files_tar(pname, pversion):
+    global TARSRC
+    
     prefix = data_files[pname]
-    maindir = os.path.join(string.replace(prefix,'_',os.sep),pversion)
+    maindir = os.path.join(prefix.replace('_',os.sep),pversion)
     packver = prefix+'_'+pversion
 
     if not os.path.exists(maindir):
         print ' %s does not exist - STOP '%(maindir)
         sys.exit()
 
-    TARSRC = string.split(prefix,'_')[0]
+    TARSRC = prefix.split('_')[0]
     TARDIR = os.path.join(LHCBTAR,TARSRC)
     tarfile = os.path.join(TARDIR,packver+'.tar.gz')
 
@@ -548,7 +543,7 @@ if __name__ == "__main__":
             sys.exit()
 
 # print action list
-    print '+++++++++++++++++++++++ python %s : start mkLHCbtar.py - version no %s '%(python_version,script_version)
+    print '+++++++++++++++++++++++ Start mkLHCbtar.py - version no %s '% script_version
     print pname, pversion, binary
     print 'debug_flag= %s'%(debug_flag)
 
@@ -556,6 +551,6 @@ if __name__ == "__main__":
 
     if tar_status == 0 : rc = create_web()
 
-    print '+++++++++++++++++++++++ end mkLHCbtar.py -version no ',script_version
+    print '+++++++++++++++++++++++ End mkLHCbtar.py -version no ',script_version
 
     sys.exit(tar_status)

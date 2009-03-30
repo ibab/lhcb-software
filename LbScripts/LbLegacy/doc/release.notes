@@ -1,7 +1,11 @@
 2009-03-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* scripts/install_project.py: New file. imported latest version
+	* scripts/makedoc: remove obsolete string module
+	* scripts/mkLHCbtar: fixed global and import from LHCb_config 
 	* python/LbLegacy/LHCb_config.py: commented out settings which have
 	been replaced by LbConfiguration/Project.
+	
 	* scripts/mkproject: replaced configuration settings from LHCb_config with
 	the ones in LbConfiguration/Project.
 
