@@ -1,4 +1,4 @@
-// $Id: SetHistDisplayOptions.h,v 1.1.1.1 2009-03-25 09:50:53 nchiapol Exp $
+// $Id: SetHistDisplayOptions.h,v 1.2 2009-03-30 13:19:00 nchiapol Exp $
 
 #ifndef HISTDBPYTHON_SETHISTDISPLAYOPTIONS_H
 #define HISTDBPYTHON_SETHISTDISPLAYOPTIONS_H 1
@@ -75,6 +75,10 @@ private:
                                                     // As there is no mapping from python to map<string, float>
                                                     // double is used and the value is casted before using.
   std::map<std::string, std::string> m_strOptions;  // @property stringOptions List with all string options
+
+  std::vector<std::string> m_xLabels;               // @property xLabels       List with the labels for every bin on the x axis
+  std::vector<std::string> m_yLabels;               // @property yLabels       List with the labels for every bin on the y axis
+
 };
 
 #endif // HISTDBPYTHON_SETHISTDISPLAYOPTIONS_H

@@ -1,4 +1,4 @@
-// $Id: SetHistDisplayOptions.cpp,v 1.1.1.1 2009-03-25 09:50:53 nchiapol Exp $
+// $Id: SetHistDisplayOptions.cpp,v 1.2 2009-03-30 13:19:00 nchiapol Exp $
 
 #include "SetHistDisplayOptions.h"
 
@@ -17,10 +17,13 @@ SetHistDisplayOptions::SetHistDisplayOptions(const std::string& name, ISvcLocato
   declareProperty( "HistoNames"           , m_histoNames);
   
   //declareProperty( "OptionsList"          , m_dispOptsList);
-  declareProperty( "UnsetOptions"         , m_unsetOptions);
+  declareProperty( "UnsetOptions"         , m_unsetOptions          = true);
   declareProperty( "intOptions"           , m_intOptions);
   declareProperty( "floatOptions"         , m_doubleOptions);
   declareProperty( "stringOptions"        , m_strOptions);
+
+  declareProperty( "xLabels"              , m_xLabels);
+  declareProperty( "yLabels"              , m_yLabels);
 }
 
 
@@ -80,16 +83,6 @@ StatusCode SetHistDisplayOptions::initialize()
       if ( m_unsetOptions ) {
 	histo->unsetAllDisplayOptions();
       }
-//      if ( !m_dispOptsList.empty() ) {
-//        debug() << "*) resetting all Options"<< endmsg;
-//        std::vector<std::string>::iterator optIt;
-//        std::vector<std::string>::iterator optItEnd = m_dispOptsList.end();
-//        for( optIt = m_dispOptsList.begin() ; optIt != optItEnd ; optIt++) {
-//          histo->unsetDisplayOption( (*optIt) );
-//        }
-//      } else {
-//        debug() << "OptionList is empty"<< endmsg;
-//      }
 
   /// set the display options according to the configutration file
       if ( !m_intOptions.empty() ) {
@@ -125,8 +118,67 @@ StatusCode SetHistDisplayOptions::initialize()
           debug() << "setting " << (*optIt).first << " to " << (*optIt).second << endmsg;
           histo->setDisplayOption( (*optIt).first, (void*) &((*optIt).second) );
         }
-      } else {
+      } else { 
         debug() << "No strOptions to edit"<< endmsg;
+      }
+
+
+
+  /// set custom labels for x and y axis
+      debug() << "setting labels" << endmsg;
+      std::vector<std::string> *xlabels = NULL;
+      std::vector<std::string> *ylabels = NULL;
+      if ( !m_xLabels.empty() ) {
+	debug() << "xLabels found" << endmsg;
+	xlabels = &m_xLabels;
+      }
+      if ( !m_yLabels.empty() ) {
+	debug() << "yLabels found" << endmsg;
+	ylabels = &m_yLabels;
+      }
+      
+      if ( (xlabels != NULL) || (ylabels != NULL) ) {
+	
+        if ( msgLevel( MSG::DEBUG ) ) {
+          if (xlabels != NULL) {
+	    debug() << "*) xLabels" << endmsg;
+            std::vector< std::string >::iterator It;
+            for( It = xlabels->begin() ; It < xlabels->end() ; It++) {
+              debug() << "  " << *It << endmsg;
+            }
+	  }
+          if (ylabels != NULL) {
+	    debug() << "*) yLabels" << endmsg;
+            std::vector< std::string >::iterator It;
+            for( It = ylabels->begin() ; It < ylabels->end() ; It++) {
+              debug() << "  " << *It << endmsg;
+            }
+	  }
+        }
+
+        int nh = 0;	
+	std::vector<OnlineHistogram*> setList;
+	if ((*histIt).second) {
+	  std::string histSet = histo->hsname();
+	  debug() << "setName: " << histSet << endmsg;
+	  nh = HistDB->getHistogramsBySet(m_histoBase + "/" + histSet, &setList);
+	} else {
+	  setList.push_back(histo);
+	}
+	debug() << "number of histograms in set: " << nh << endmsg;
+	
+        bool labelSuccess = true;
+	std::vector<OnlineHistogram*>::iterator setIt;
+	std::vector<OnlineHistogram*>::iterator setItEnd = setList.end();
+	for (setIt = setList.begin(); setIt < setItEnd; setIt++) {
+	  debug() << "setting labels for " << (*setIt)->hname() << endmsg;
+	  if ( !(*setIt)->setBinLabels(xlabels, ylabels) ) {
+            labelSuccess &= false;
+	  }
+	} 
+	if ( !labelSuccess ) {
+	  error() << "setting labels failed for histogram " << (*histIt).first << endmsg;
+	}
       }
 
   /// saving changes
