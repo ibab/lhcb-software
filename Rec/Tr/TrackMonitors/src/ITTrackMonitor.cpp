@@ -1,4 +1,4 @@
-// $Id: ITTrackMonitor.cpp,v 1.4 2009-02-17 09:59:10 pkoppenb Exp $
+// $Id: ITTrackMonitor.cpp,v 1.5 2009-03-30 12:54:54 mneedham Exp $
 // Include files 
 #include "ITTrackMonitor.h"
 
@@ -41,6 +41,7 @@ TrackMonitorBase( name , pSvcLocator ){
 
   declareProperty("ReferenceZ", m_refZ = 7500.0); // midpoint of IT
   declareProperty("splitByITType", m_splitByITType = true); 
+  declareProperty("plotsByLayer", m_plotsByLayer = true);
   declareProperty("minNumITHits", m_minNumITHits = 6u); 
 }
 
@@ -133,8 +134,8 @@ void ITTrackMonitor::fillHistograms(const LHCb::Track& track,
   plot2D(aState.x()/Gaudi::Units::cm,
          aState.y()/Gaudi::Units::cm, type+"/xy", "x vs y", 
            -m_xMax,m_xMax, -m_yMax, m_yMax, 50, 50);
-  plot(aState.tx(),type+"/tx","tx", -0.2,0.2, 200);
-  plot(aState.ty(),type+"/ty", "ty", -0.2,0.2, 200);
+  plot(aState.tx(),type+"/tx","tx", -0.5 , 0.5,  200);
+  plot(aState.ty(),type+"/ty", "ty", -0.5, 0.5, 200);
   plot(track.p()/Gaudi::Units::GeV, type+"/momentum" ,"momentum", -5., 205., 21); 
   plot(aState.x()/Gaudi::Units::cm, type+"/xdist","x dist", -m_xMax, m_xMax);
   plot(aState.y()/Gaudi::Units::cm, type+"/ydist", "y dist", -m_yMax, m_yMax);
@@ -157,7 +158,15 @@ void ITTrackMonitor::fillHistograms(const LHCb::Track& track,
       STChannelID chan = fNode->measurement().lhcbID().stID();
       plot(fNode->unbiasedResidual(),ittype+"/unbiasedResidual","unbiasedResidual",  -2., 2., 200 );
       plot(fNode->residual(),ittype+"/biasedResidual","biasedResidual",  -2., 2., 200 );
-      
+      if (m_plotsByLayer == true){
+	std::string layerName = ITNames().LayerToString(chan);
+	std::string stationName = ITNames().StationToString(chan);
+        plot(fNode->unbiasedResidual(),ittype+"/unbiasedResidual"+layerName,"unbiasedResidual"+layerName,  -2., 2., 200 );
+        plot(fNode->residual(),ittype+"/biasedResidual"+layerName,"biasedResidual"+layerName,  -2., 2., 200 );
+        plot(fNode->unbiasedResidual(),ittype+"/unbiasedResidual"+stationName+layerName,"unbiasedResidual"+stationName+layerName,  -2., 2., 200 );
+        plot(fNode->residual(),ittype+"/biasedResidual"+stationName+layerName,"biasedResidual"+stationName+layerName,  -2., 2., 200 );
+      }      
+
       // get the measurement and plot ST related quantities
       STMeasurement* hit = dynamic_cast<STMeasurement*>(&fNode->measurement());
       plot(hit->totalCharge(),ittype+"/charge", "clusters charge", 0., 200., 100);

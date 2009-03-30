@@ -1,4 +1,4 @@
-// $Id: ITTrackMonitor.h,v 1.2 2008-12-10 12:42:31 cattanem Exp $
+// $Id: ITTrackMonitor.h,v 1.3 2009-03-30 12:54:54 mneedham Exp $
 #ifndef ITTRACKMONITOR_H
 #define ITTRACKMONITOR_H 1
  
@@ -50,7 +50,8 @@ class ITTrackMonitor : public TrackMonitorBase {
 
   unsigned int m_minNumITHits;
   bool m_splitByITType; 
-  
+  bool m_plotsByLayer;  
+
 };
 
 inline bool ITTrackMonitor::splitByITType() const {

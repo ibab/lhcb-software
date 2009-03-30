@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-03-30 M Needham
+ - Add residuals per layer histos to ITTrackMonitor 
+
 ! 2009-03-20 - Wouter Hulsbergen
  - Changed constrainmethod in TrackFitMatchMonitor. See cvs log.
  - Added hit patterns to TrackMonitor
