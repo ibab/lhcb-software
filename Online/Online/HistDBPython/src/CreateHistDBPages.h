@@ -1,4 +1,4 @@
-// $Id: CreateHistDBPages.h,v 1.1.1.1 2009-03-25 09:50:53 nchiapol Exp $
+// $Id: CreateHistDBPages.h,v 1.2 2009-03-30 14:04:16 nchiapol Exp $
 
 #ifndef HISTDBPYTHON_CREATEHISTDBPAGES_H
 #define HISTDBPYTHON_CREATEHISTDBPAGES_H 1
@@ -27,6 +27,8 @@
  *  - \b HistoBase: Fixed part of the histogram names. (e.g. Task and Algorithm)
  *  - \b HistoNames: list of lists; each list contains the names of the histograms 
  *    to be placed on one page
+ *  - \b HistoLinks: Map linking histogram names in HistoNames with the page
+ *    that should be displayed when the histogram is clicked on.  
  *  - \b PageBase: Prefix for all page names, use it to identify your folder
  *  - \b PageNames: List with the names of all pages to generate
  *  - \b PageLayout: List of groups of 4 values; each group defines the positions of 
@@ -109,7 +111,8 @@ private:
   std::vector<std::vector<std::string> > m_histoNames;
   
   // @option HistoLinks
-  // vector of lists; each list contains the names of the histograms to be placed on one page
+  // map the first string is the histogram name, the second string the page that should 
+  // be displayed when the histogram is clicked on.  
   std::map<std::string, std::string> m_histoLinks;
   std::map<std::string, std::string>::iterator m_histoLinksEndIterator;
 };
