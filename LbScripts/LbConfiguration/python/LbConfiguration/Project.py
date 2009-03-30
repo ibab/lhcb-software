@@ -61,6 +61,8 @@ class ProjectConf(ProjectBaseConf):
         self._setenvalias = True
         self._setupalias = True
         self._applicationpackage = projectname
+        self._extraexe = {}
+        self._basename = ""
         self.enableSetenvAlias()
         self.enableSetupAlias()
     def setCMTExtraTags(self, taglist):
@@ -78,6 +80,12 @@ class ProjectConf(ProjectBaseConf):
     def FullSize(self):
         """ returns the foreseen fullsize of a project release """
         return self._fullsize
+    def setBaseName(self, basename):
+        """ set the base name for the project """
+        self._basename = basename
+    def BaseName(self):
+        """ returns the base name of the project """
+        return self._basename
     def Aliases(self):
         """ return the shell aliases of the project """
         return self._aliases
@@ -123,6 +131,18 @@ class ProjectConf(ProjectBaseConf):
         self._afslibgroup = group
     def AFSLibrarianGroup(self):
         return self._afslibgroup
+    def setExtraExe(self, exedict):
+        """ set the list of extra executable to be build in the project """
+        self._extraexe = exedict
+    def addExtraExe(self, exename, taglist=None):
+        """ add executables to the list of extra executables for the build """
+        if taglist :
+            self._extraexe[exename] = taglist
+        else :
+            self._extraexe[exename] = []
+    def ExtraExe(self):
+        """ return the list of extra executable used for the build """
+        return self._extraexe
     def __str__(self):
         """ return string representation for printing """
         rep = super(ProjectConf, self).__str__()
@@ -171,6 +191,7 @@ Analysis.setFullSize(2000000)#IGNORE:E0602
 # Bender
 Bender.setApplicationPackage("Phys/Bender")#IGNORE:E0602
 Bender.setFullSize(500000)#IGNORE:E0602
+Bender.setBaseName("DAVINCI")#IGNORE:E0602
 
 # Boole
 Boole.setApplicationPackage("Digi/Boole")#IGNORE:E0602
@@ -204,16 +225,21 @@ if os.environ.has_key("GAUDISOFT") :
 Gaudi.setAFSVolumeRoot("Gaudi") #IGNORE:E0602
 Gaudi.setAFSLibrarianGroup("gaudi") #IGNORE:E0602
 Gaudi.setFullSize(3000000)#IGNORE:E0602
+Gaudi.setBaseName("LCGCMT")#IGNORE:E0602
 
 #Gauss
-Gauss.addCMTExtraTags("Hijing", "Herwig", #IGNORE:E0602
-                      "BcVegPy", "HidValley", "AlpGen")#IGNORE:E0602
-Gauss.setApplicationPackage("Sim/Gauss")#IGNORE:E0602
-Gauss.setFullSize(700000)#IGNORE:E0602
+Gauss.setApplicationPackage("Sim/Gauss") #IGNORE:E0602
+Gauss.setFullSize(700000) #IGNORE:E0602
+Gauss.addExtraExe("Hijing", ["Hijing"] ) #IGNORE:E0602
+Gauss.addExtraExe("Herwig", ["Herwig"] ) #IGNORE:E0602
+Gauss.addExtraExe("BcVegPy", ["BcVegPy"] ) #IGNORE:E0602
+Gauss.addExtraExe("HidValley", ["HidValley"] ) #IGNORE:E0602
+Gauss.addExtraExe("AlpGen", ["AlpGen"] ) #IGNORE:E0602
 
 # Geant4
 Geant4.setAFSVolumeName("G4")#IGNORE:E0602
 Geant4.setFullSize(2000000)#IGNORE:E0602
+Geant4.setBaseName("GAUDI")#IGNORE:E0602
 
 # Hlt
 Hlt.setFullSize(2500000)#IGNORE:E0602
@@ -228,6 +254,8 @@ LbScripts.setFullSize(10000)#IGNORE:E0602
 # LHCb
 LHCb.setApplicationPackage("Ex")#IGNORE:E0602
 LHCb.setFullSize(6000000)#IGNORE:E0602
+LHCb.setBaseName("GAUDI")#IGNORE:E0602
+
 
 # LHCbGrid
 LHCbGrid.setFullSize(100000)#IGNORE:E0602
