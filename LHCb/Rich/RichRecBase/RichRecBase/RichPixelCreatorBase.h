@@ -5,7 +5,7 @@
  *  Header file for tool base class : Rich::Rec::PixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.h,v 1.24 2008-03-25 16:01:13 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.h,v 1.25 2009-03-30 10:53:18 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -146,15 +146,25 @@ namespace Rich
        */
       bool useDetector( const Rich::DetectorType rich ) const;
 
-      /** Check the status of the given RICH channel (RichSmartID)
+      /** Check the status of the given RICH HPD pixel identifier (RichSmartID)
        *
-       *  @param id The RichSmartID to check
+       *  @param id The HPD pixel RichSmartID to check
        *
        *  @return boolean indicating if the given channel is active
        *  @retval true  channel is active
        *  @retval false channel is not in use
        */
       bool pixelIsOK( const LHCb::RichSmartID id ) const;
+
+      /** Check the status of the given RICH HPD identifier (RichSmartID)
+       *
+       *  @param id The HPD RichSmartID to check
+       *
+       *  @return boolean indicating if the given channel is active
+       *  @retval true  HPD is active
+       *  @retval false HPD is not in use
+       */
+      bool hpdIsOK( const LHCb::RichSmartID id ) const;
 
       /** Save a given pixel to the TES container
        *
@@ -363,7 +373,13 @@ namespace Rich
 
     inline bool PixelCreatorBase::pixelIsOK( const LHCb::RichSmartID id ) const
     {
-      return ( useDetector(id.rich()) &&  // This RICH is in use
+      return id.isValid();
+    }
+
+    inline bool PixelCreatorBase::hpdIsOK( const LHCb::RichSmartID id ) const
+    {
+      return ( id.isValid() &&                               // Valid HPD ID
+               useDetector(id.rich()) &&                     // This RICH is in use
                ( !m_hpdCheck || m_richSys->hpdIsActive(id) ) // If required, check HPD is alive
                );
     }

@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.cpp,v 1.33 2008-08-18 19:09:07 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.cpp,v 1.34 2009-03-30 10:53:18 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -40,7 +40,7 @@ namespace Rich
         m_geomTool      ( NULL  ),
         m_pixels        ( NULL  ),
         m_bookKeep      ( true  ),
-        m_hpdCheck      ( false ),
+        m_hpdCheck      ( true  ),
         m_clusterHits   ( Rich::NRiches, false ),
         m_noClusterFinding ( false ),
         m_usedDets      ( Rich::NRiches, true  ),
@@ -91,15 +91,9 @@ namespace Rich
         debug() << "RichRecPixel location : " << m_richRecPixelLocation << endreq;
       }
 
+      // get tools and det elems
       acquireTool( "RichRecGeometry", m_geomTool );
-
-      // get tools
-      if ( m_hpdCheck )
-      {
-        m_richSys = getDet<DeRichSystem>( DeRichLocations::RichSystem );
-        Warning( "Will check each pixel for HPD status. Takes additional CPU.",
-                 StatusCode::SUCCESS );
-      }
+      m_richSys = getDet<DeRichSystem>( DeRichLocations::RichSystem );
 
       // Check which detectors to use
       if ( !m_usedDets[Rich::Rich1] )
@@ -310,10 +304,11 @@ namespace Rich
                   iHPD != (*iIn).second.hpdData().end(); ++iHPD )
             {
 
-              // Valid HPD ID
-              if ( !(*iHPD).second.hpdID().isValid() ) { continue; }
               // inhibited HPD ?
               if ( (*iHPD).second.header().inhibit() ) { continue; }
+
+              // Is the HPD OK
+              if ( !hpdIsOK((*iHPD).second.hpdID()) )  { continue; }
 
               // Do we have any hits in this HPD ?
               if ( !(*iHPD).second.smartIDs().empty() )
