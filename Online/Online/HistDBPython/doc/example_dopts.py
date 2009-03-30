@@ -24,31 +24,42 @@ setDisplay.stringOptions = {}
 # *) if int is true, saveHistoSetDisplayOptions() will be called
 # i.e. the changes will be applied for the whole set
 setDisplay.HistoNames = {
-  "/Raw/raw_$tell1" : 1 , 
-  "/CMS/cms_$tell1" : 1 
-  } 
+  "/error-types_$tell1" : 1
+} 
 
 # Should all display options for these Histograms be unset 
 # before the changes below are made?
 setDisplay.UnsetOptions = 1 
     
-    
 # The actual definition of the display options. 
+# unused options should just be commented out
+#   This list is not updated on regular basis
 #   check histdbdoc for the latest list of 
 #   availbale options
 
-setDisplay.stringOptions["LABEL_X"]   = "Strip"
+setDisplay.stringOptions["LABEL_X"]   = "Optical Link"
+setDisplay.intOptions["NDIVX"]        = 424
 
-setDisplay.floatOptions["YMIN"]       = 0
-setDisplay.floatOptions["YMAX"]       = 10
+setDisplay.floatOptions["LAB_X_SIZE"] = 0.04
+setDisplay.floatOptions["LAB_Y_SIZE"] = 0.04
 
-#setDisplay.intOptions["LINESTYLE"]    = 1
-setDisplay.intOptions["LINECOLOR"]    = 4
-#setDisplay.intOptions["LINEWIDTH"]    = 0
-#setDisplay.intOptions["MARKERCOLOR"]  = 3
-#setDisplay.intOptions["MARKERSTYLE"]  = 2
-setDisplay.stringOptions["DRAWOPTS"]  = "hist"
- 
+setDisplay.stringOptions["DRAWOPTS"]  = "box"
+
+# Define custom bin labels
+#   for each axis there is a list with one 
+#   string for each bin  
+setDisplay.yLabels = []
+setDisplay.yLabels.append("None");
+setDisplay.yLabels.append("CorruptedBank");
+setDisplay.yLabels.append("OptLinkDisabled");
+setDisplay.yLabels.append("TlkLinkLoss");
+setDisplay.yLabels.append("OptLinkNoClock");
+setDisplay.yLabels.append("SyncRAMFull");
+setDisplay.yLabels.append("SyncEvtSize");
+setDisplay.yLabels.append("OptLinkNoEvent");
+setDisplay.yLabels.append("PseudoHeader");
+setDisplay.yLabels.append("WrongPCN");
+
 
 # ****** END EDITABLE ******
 

@@ -39,6 +39,19 @@ createHistAlg.PageNames   = []
 #   PageNames above.
 createHistAlg.HistoNames = []
 
+# HistoLinks is a map
+#   std::map<std::string, std::string>
+# *) the first string is the name of a histogram in 
+#    HistoNames.
+# *) the second string is the full path of the page 
+#    that should be displayed when one clicks on 
+#    the histogram.
+#    (this is not supported in the presenter at 
+#    2009-03-30)
+# The page to display is a property of the histogram,
+# so only one page can be defined per histogram.
+createHistAlg.HistoLinks = {}
+
 for num in histoNum:
 	id = str(num)
 	createHistAlg.PageNames.append("/"+folderBase+id+"/"+page)
@@ -48,6 +61,8 @@ for num in histoNum:
 	folderHistos.append(histoSet2+id)
 	createHistAlg.HistoNames.append(folderHistos)
 
+        # this is useless and just for demonstartion
+	createHistAlg.HistoLinks[histoSet1+id] = "/TT/Expert/NoiseAllTell1s/"
 
 # ***********************************************
 # importing common configuration files
