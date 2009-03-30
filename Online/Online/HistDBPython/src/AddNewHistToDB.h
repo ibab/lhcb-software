@@ -1,4 +1,4 @@
-// $Id: AddNewHistToDB.h,v 1.1 2009-03-30 13:20:41 nchiapol Exp $
+// $Id: AddNewHistToDB.h,v 1.2 2009-03-30 14:37:58 nchiapol Exp $
 
 #ifndef HISTDBPYTHON_AddNewHistToDB_H
 #define HISTDBPYTHON_AddNewHistToDB_H 1
@@ -25,8 +25,9 @@
  *    this file must be excluded from CVS. The default value is "password".
  *  - \b TaskName
  *  - \b AlgorithmName
- *  - \b HistoNames: list of lists; each list contains the names of the histograms 
- *    to be placed on one page
+ *  - \b HistoNames: list of strings containing the names of the histograms to create.
+ *  - \b HistoType: Type of the histograms. All histograms need to have the same type.
+ *    Possible values are defined in OnlineHistDBEnv (H1D, H2D, P1D, P2D, CNT)
  *  
  *  For more details on how to use this algrithm have a look at the examples in the 
  *  doc/python directory. 
@@ -65,6 +66,7 @@ private:
   // Prefix for all page names, use it to identify your folder
   std::string m_algoName;
 
+  // @option HistoType
   std::string               m_histTypeName;
 
   // @option HistoNames

@@ -1,4 +1,4 @@
-// $Id: AddNewHistToDB.cpp,v 1.1 2009-03-30 13:20:41 nchiapol Exp $
+// $Id: AddNewHistToDB.cpp,v 1.2 2009-03-30 14:37:58 nchiapol Exp $
 
 #include "AddNewHistToDB.h"
 
@@ -103,27 +103,4 @@ StatusCode AddNewHistToDB::execute()
     
     return StatusCode::SUCCESS;
   }
-
-
-
-
-//  /**
-//   * FUNCTIONS
-//   */
-//  HistType AddNewHistToDB::makeHistType(std::string type) 
-//  {
-//    switch (type)
-//     case "H1D":
-//       return OnlineHistDBEnv::H1D;
-//     case "H2D":
-//       return OnlineHistDBEnv::H2D;
-//     case "P1D":
-//       return OnlineHistDBEnv::P1D;
-//     case "P2D":
-//       return OnlineHistDBEnv::P2D;
-//     case "CNT":
-//       return OnlineHistDBEnv::CNT;
-//     case "SAM":
-//       return OnlineHistDBEnv::SAM;
-//     default: 
 
