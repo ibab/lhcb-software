@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.43 2009-03-25 15:35:45 graven Exp $ 
+# $Id: HltLine.py,v 1.44 2009-03-30 20:46:12 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.43 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.44 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt line itself 
@@ -73,64 +73,60 @@ __all__ = ( 'Hlt1Line'     ,  ## the Hlt line itself
 import re
 from copy import deepcopy 
 from Gaudi.Configuration import GaudiSequencer, Sequencer, Configurable 
-
 from Configurables import DeterministicPrescaler as Scaler
-
 from Configurables import LoKi__L0Filter    as L0Filter
 from Configurables import LoKi__HDRFilter   as HDRFilter
 from Configurables import LoKi__ODINFilter  as ODINFilter
-
-from Configurables import HltTrackUpgrade        as TrackUpgrade 
-from Configurables import HltTrackMatch          as TrackMatch   
-from Configurables import HltTrackFilter         as TrackFilter 
-from Configurables import HltVertexMaker1        as VertexMaker1 
-from Configurables import HltVertexMaker2        as VertexMaker2 
-from Configurables import HltVertexFilter        as VertexFilter 
-from Configurables import HltVertexUpgrade       as VertexUpgrade 
+from Configurables import HltTrackUpgrade   as TrackUpgrade 
+from Configurables import HltTrackMatch     as TrackMatch   
+from Configurables import HltTrackFilter    as TrackFilter 
+from Configurables import HltVertexMaker1   as VertexMaker1 
+from Configurables import HltVertexMaker2   as VertexMaker2 
+from Configurables import HltVertexFilter   as VertexFilter 
+from Configurables import HltVertexUpgrade  as VertexUpgrade 
 from Configurables import HltL0MuonCandidates    as L0MuonCandidates 
 from Configurables import HltL0CaloCandidates    as L0CaloCandidates 
 from Configurables import HltVertexToTracks      as VertexToTracks 
 from Configurables import HltAddPhotonToVertex   as AddPhotonToVertex
-
-## @todo introduce the proper decision 
 from Configurables import HltLine                as Line
 
 
 ## Convention: the name of 'Filter' algorithm inside HltLine
-def filterName   ( line ) :
+def filterName   ( line , level = 'Hlt1') :
     """Convention: the name of 'Filter' algorithm(s) inside HltLine"""
-    return 'Hlt1%sFilterSequence'   % line
+    return '%s%sFilterSequence'   % (level,line)
 ## Convention: the name of 'PreScaler' algorithm inside HltLine
-def prescalerName  ( line ) :
+def prescalerName  ( line, level = 'Hlt1' ) :
     """ Convention: the name of 'PreScaler' algorithm inside HltLine """
-    return 'Hlt1%sPreScaler'  % line
+    return '%s%sPreScaler'  % (level,line)
 ## Convention: the name of 'PostScaler' algorithm inside HltLine
-def postscalerName ( line ) :
+def postscalerName ( line , level = 'Hlt1') :
     """ Convention: the name of 'PostScaler' algorithm inside HltLine """
-    return 'Hlt1%sPostScaler' % line
+    return '%s%sPostScaler' % (level, line)
 ## Convention: the name of 'ODINFilter' algorithm inside HltLine
-def odinentryName    ( line ) :
+def odinentryName    ( line, level = 'Hlt1' ) :
     """ Convention: the name of 'ODINFilter' algorithm inside HltLine """
-    return 'Hlt1%sODINFilter'   % line
+    return '%s%sODINFilter'   % (level,line)
 ## Convention: the name of 'L0DUFilter' algorithm inside HltLine
-def l0entryName    ( line ) :
+def l0entryName    ( line, level = 'Hlt1' ) :
     """ Convention: the name of 'L0DUFilter' algorithm inside HltLine """
-    return 'Hlt1%sL0DUFilter'   % line
+    return '%s%sL0DUFilter'   % (level,line)
 ## Convention: the name of 'HLTFilter' algorithm inside HltLine
-def hltentryName    ( line ) :
+def hltentryName    ( line, level = 'Hlt1' ) :
     """ Convention: the name of 'HLTFilter' algorithm inside HltLine """
-    return 'Hlt1%sHltFilter'   % line
+    return '%s%sHltFilter'   % (level,line)
 ## Convention: the generic name of 'member' algorithm inside HltLine 
-def memberName     ( member, line ) :
+def memberName     ( member, line, level='Hlt1' ) :
     """ Convention: the generic name of 'member' algorithm inside HltLine """
-    return 'Hlt1%s%s'%(line,member.subname())
+    return '%s%s%s'%(level,line,member.subname())
 ## Convention: the name of 'Decision' algorithm inside HltLine
-def decisionName   ( line ) :
+def decisionName   ( line, level = 'Hlt1' ) :
     """Convention: the name of 'Decision' algorithm inside HltLine"""
-    return 'Hlt1%sDecision'   % line if line != 'Global' else 'Hlt1Global'
+    return level + '%sDecision'   % line if line != 'Global' else 'Hlt1Global'
 
 ## the list of all created lines 
 _hlt_1_lines__ = []
+_hlt_2_lines__ = []
 
 # =============================================================================
 ## Simple function which returns the (tuple) of all currently created Hlt1Lines
@@ -143,13 +139,24 @@ def hlt1Lines () :
     >>> lines = hlt1Lines()
     >>> print lines
     >>> for line in lines : print line
-
-    it is also a good way to get all 'decisions' from the registered Hlt lines:
-
-    >>> decisions = [ p.decision() for p in hlt1Lines() ]
     
     """
     return tuple(_hlt_1_lines__)
+
+# =============================================================================
+## Simple function which returns the (tuple) of all currently created Hlt2Lines
+#  @author Gerhard Raven Gerhard.Raven@nikhef.nl
+#  @date   2009-03-27
+def hlt2Lines () :
+    """
+    Simple function which returns the (tuple) of all currently created Hlt2Lines
+    
+    >>> lines = hl21Lines()
+    >>> print lines
+    >>> for line in lines : print line
+    
+    """
+    return tuple(_hlt_2_lines__)
 
 # =============================================================================
 ## Simple function whcih returns the decisions for all created Hlt1 lines
@@ -163,6 +170,20 @@ def hlt1Decisions () :
     
     """
     t = [ l.decision() for l in hlt1Lines() if l.decision() ]
+    return tuple(t)
+
+# =============================================================================
+## Simple function whcih returns the decisions for all created Hlt1 lines
+#  @author Gerhard Raven Gerhard.Raven@nikhef.nl
+#  @date   2009-03-27
+def hlt2Decisions () :
+    """
+    Simple function which returns the decisions for all created Hlt2 lines:
+    
+    >>> decisions = hlt2Decisions ()
+    
+    """
+    t = [ l.decision() for l in hlt2Lines() if l.decision() ]
     return tuple(t)
 
 ## the list of all input selections
@@ -255,6 +276,14 @@ def _add_to_hlt1_lines_( line ) :
     Add the line into the local storage of created Hlt1Lines 
     """
     _hlt_1_lines__.append ( line ) 
+
+# =============================================================================
+## Add the created line into the local storage of created Hlt2Lines 
+def _add_to_hlt2_lines_( line ) :
+    """
+    Add the line into the local storage of created Hlt2Lines 
+    """
+    _hlt_2_lines__.append ( line ) 
         
 # =============================================================================
 ## the list of valid members of Hlt1 sequencer 
@@ -656,13 +685,21 @@ class Hlt1Member ( object ) :
 #  The structure of each line is fixed to be
 # 
 #    - Prescaler
-#    - ODINFilter | L0DUFilter | HLTFilter
+#    - ODINFilter 
+#    - L0DUFilter 
+#    - HLTFilter
+#    - Filter0
 #       - Member_1
 #       - Member_2
 #       - ...
 #       - Member_N
-#    - Decision
+#    - Filter1
+#       - Member_1
+#       - Member_2
+#       - ...
+#       - Member_N
 #    - Postscaler
+#    - (implicit) Decision
 # 
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date   2008-08-06   
@@ -689,7 +726,7 @@ class Hlt1Line(object):
                    L0DU      = None ,   # L0DU predicate  
                    HLT       = None ,   # HltDecReports predicate
                    algos     = []   ,   # the list of algorithms/members
-                   postscale = 1    ,   # prescale factor
+                   postscale = 1    ,   # postscale factor
                    **args           ) : # other configuration parameters
         """
         The constructor, which essentially defines the line
@@ -697,9 +734,9 @@ class Hlt1Line(object):
         The major arguments
         - 'name'      : short name of the line, e.g, 'SingleMuon'
         - 'prescale'  : the prescaler factor
-        - 'ODIN'      : the list of ODIN types for ODINFilter (mutally exclusive with L0DU and HLT)
-        - 'L0DU'      : the list of L0Channels names for L0Filter (mutally exclusive with ODIN and HLT)
-        - 'HLT'       : the list of HLT selections for HLTFilter (mutally exclusive with ODIN and L0)
+        - 'ODIN'      : the list of ODIN types for ODINFilter
+        - 'L0DU'      : the list of L0Channels names for L0Filter
+        - 'HLT'       : the list of HLT selections for HLTFilter
         - 'algos'     : the list of actual members 
         - 'postscale' : the postscale factor
         
@@ -712,11 +749,7 @@ class Hlt1Line(object):
         algos = deepcopy ( algos )
         args  = deepcopy ( args  )
         
-        ## 2) require at least one of ODIN, L0DU, or HLT
-        if not (ODIN or L0DU or HLT ) :
-            raise AttributeError, "Must have at least one of ODIN, L0DU or HLT -- line %s" % name 
-
-        # 1) save all parameters (needed for the proper cloning)
+        # 2) save all parameters (needed for the proper cloning)
         self._name      = name
         if callable(prescale) : prescale = prescale( self.name() )
         self._prescale  = prescale
@@ -731,7 +764,7 @@ class Hlt1Line(object):
         self._args      = args
 
         
-        # decision: (pre)set to None, and assign once we're successfully completed ourselfs...
+        # 3) decision: (pre)set to None, and assign once we're successfully completed ourselfs...
         self._decision  = None 
         
         # check for forbidden attributes
@@ -950,6 +983,251 @@ class Hlt1Line(object):
                           algos     = __algos      , **__args )
     
     
+# ============================================================================
+## @class Hl2Line
+#  The major class which represent the Hlt2 Line, the sequence.
+#
+#  The structure of each line is fixed to be
+# 
+#    - Prescaler
+#    - ODINFilter 
+#    - L0DUFilter 
+#    - HLTFilter
+#    - Filter0
+#       - Member_1
+#       - Member_2
+#       - ...
+#       - Member_N
+#    - Filter1
+#       - Member_1
+#       - Member_2
+#       - ...
+#       - Member_N
+#    - Postscaler
+#    - (implicit) Decision
+# 
+#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+#  @date   2008-08-06   
+class Hlt2Line(object):
+    """
+    The major class which represent the Hlt2 Line, the sequence.
+    @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+    @date   2008-08-06   
+    """
+    ## The constructor, which defines the line
+    #
+    #  The major arguments
+    #    - 'name'      : short name of the line, e.g, 'SingleMuon'
+    #    - 'prescale'  : the prescaler factor
+    #    - 'ODIN'      : the list of ODINtype names for ODINFilter 
+    #    - 'L0DU'      : the list of L0Channels names for L0Filter 
+    #    - 'HLT'       : the list of HLT selections for HLTFilter
+    #    - 'algos'     : the list of actual members 
+    #    - 'postscale' : the postscale factor
+    def __init__ ( self             ,
+                   name             ,   # the base name for the Line
+                   prescale  = 1    ,   # prescale factor
+                   ODIN      = None ,   # ODIN predicate
+                   L0DU      = None ,   # L0DU predicate  
+                   HLT       = None ,   # HltDecReports predicate
+                   algos     = []   ,   # the list of algorithms/members
+                   postscale = 1    ,   # postscale factor
+                   **args           ) : # other configuration parameters
+        """
+        The constructor, which essentially defines the line
+        
+        The major arguments
+        - 'name'      : short name of the line, e.g, 'SingleMuon'
+        - 'prescale'  : the prescaler factor
+        - 'ODIN'      : the list of ODIN types for ODINFilter
+        - 'L0DU'      : the list of L0Channels names for L0Filter
+        - 'HLT'       : the list of HLT selections for HLTFilter
+        - 'algos'     : the list of actual members 
+        - 'postscale' : the postscale factor
+        
+        """
+        ## 1) clone all arguments
+        name  = deepcopy ( name  )
+        ODIN  = deepcopy ( ODIN  )
+        L0DU  = deepcopy ( L0DU  )
+        HLT   = deepcopy ( HLT   )
+        algos = deepcopy ( algos )
+        args  = deepcopy ( args  )
+        
+        # 2) save all parameters (needed for the proper cloning)
+        self._name      = name
+        if callable(prescale) : prescale = prescale( self.name() )
+        self._prescale  = prescale
+        
+        self._ODIN      = ODIN
+        self._L0DU      = L0DU
+        self._HLT       = HLT
+        
+        if callable(postscale) : postscale = postscale( self.name() )
+        self._postscale = postscale
+        self._algos     = algos
+        self._args      = args
+
+        
+        # 3) decision: (pre)set to None, and assign once we're successfully completed ourselfs...
+        self._decision  = None 
+        
+        # check for forbidden attributes
+        mdict = {} 
+        for key in args :
+            if key in _protected_ :
+                raise AttributeError, "The attribute'%s' is protected for %s"%(key,self.type())
+            mdict[key] = args[key] 
+
+        #start to contruct the sequence        
+        line = self.subname()
+        
+        
+        # create the line configurable
+        # NOTE: even if pre/postscale = 1, we want the scaler, as we may want to clone configurations
+        #       and change them -- and not having the scaler would be problem in that case...
+        mdict.update( { 'DecisionName' : decisionName ( line, 'Hlt2' ) 
+                      , 'Prescale'     : Scaler(     prescalerName ( line,'Hlt2' ) , AcceptFraction = self._prescale  )
+                      , 'Postscale'    : Scaler(    postscalerName ( line,'Hlt2' ) , AcceptFraction = self._postscale ) 
+                      } )
+        if ODIN : mdict.update( { 'ODIN' : ODINFilter ( odinentryName( line,'Hlt2' ) , Code = self._ODIN )  } )
+        if L0DU : mdict.update( { 'L0DU' : L0Filter   ( l0entryName  ( line,'Hlt2' ) , Code = self._L0DU )  } )
+        ## TODO: in case of HLT, we have a dependency... dangerous, as things become order dependent...
+        if HLT  : mdict.update( { 'HLT'  : HDRFilter  ( hltentryName ( line,'Hlt2' ) , Code = self._HLT  ) } )
+        if self._algos : 
+            # TODO: if len(_members) = 1, we don't need a sequencer...
+            # TODO: but what about the name of the algorithm?
+            #if len(_members) == 1 : 
+            #    mdict.update( { 'Filter1' : _members[0] })
+            #else :
+            mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line,'Hlt2' ) , Members = self._algos ) })
+        # final cloning of all parameters:
+        __mdict = deepcopy ( mdict ) 
+        self._configurable = Line ( self.name() , **__mdict )
+        print 'created HLT2 HltLine configurable for ' + name
+        print self._configurable
+
+        ## finally assign the decision name!
+        self._decision = decisionName ( line, 'Hlt2' )
+
+        # register into the local storage of all created Lines
+        _add_to_hlt2_lines_( self ) 
+
+    ## 'sub-name' of Hlt Line 
+    def subname   ( self ) :
+        """ 'Sub-name' of the Hlt line  """ 
+        return            self._name
+    ## Full name of Hlt line 
+    def name      ( self ) :
+        """ Full name of Hlt Line """
+        return 'Hlt2%s' % self._name
+    ## the actual type of Hlt Line 
+    def type      ( self ) :
+        """ The actual type of Hlt Line """
+        return Hlt2Line
+    ## Get the underlying 'Configurable'
+    #  probably it is the most important method except the constructor
+    #
+    #  @code 
+    #  >>> line = Hlt2Line ( .... )
+    #  >>> conf = line.configurable() 
+    #  @endcode    
+    def configurable ( self ) :
+        """
+        Get the underlying 'Configurable' instance 
+        probably it is the most important method except the constructor
+        
+        >>> line = Hlt1Line ( .... )
+        >>> conf = line.configurable()
+        """
+        return self._configurable
+    ## get the decision of the line
+    def decision ( self ) :
+        """
+        Get the actual decision of the line
+
+        >>> line = ...
+        >>> decision = line.decision()
+        
+        """
+        if not self._decision :
+            raise AttributeError, "The line %s does not define valid decision " % self.subname()
+        return self._decision
+    ## Clone the line  
+    def clone ( self , name , **args ) :
+        """
+        Clone the line
+        
+        A new Hlt Line is created with new name, all property/attrributes maps
+        are updated accordingly.
+        
+        """
+        raise RuntimeError, 'please make sure clone gets implemented!....'
+        # add some python magic to allow reasonable definition of the deepcopy 
+        # of a member function bound to an object instance.
+        # see http://bugs.python.org/issue1515 for more info...
+        # This should be fixed in python 2.6, so at some point this hack
+        # can be removed again
+        import copy,types
+        origMethod = copy._deepcopy_dispatch[types.MethodType] if types.MethodType in copy._deepcopy_dispatch else None
+        def _deepcopy_method(x, memo):
+            return type(x)(x.im_func, deepcopy(x.im_self, memo), x.im_class)
+        copy._deepcopy_dispatch[types.MethodType] = _deepcopy_method
+
+
+        ## 1) clone the arguyments
+        args = deepcopy ( args )
+
+        ## 2) classify arguments:
+        _own   = {} # own arguments 
+        _seq   = {} # arguments for sequencer
+        _other = {} # the rest (probably reconfiguration of members)
+        for key in args :
+            if    key in GaudiSequencer.__slots__ : _seq   [keq] = args[key]
+            elif  key in  _myslots_               : _own   [key] = args[key] 
+            else                                  : _other [key] = args[key]
+
+        # Explictly copy all major structural parameters 
+        __name       = deepcopy ( name        )
+        __prescale   = deepcopy ( args.get ( 'prescale'  , self._prescale  ) ) 
+        __ODIN       = deepcopy ( args.get ( 'ODIN'      , self._ODIN      ) )        
+        __L0DU       = deepcopy ( args.get ( 'L0DU'      , self._L0DU      ) )        
+        __HLT        = deepcopy ( args.get ( 'HLT'       , self._HLT       ) )        
+        __postscale  = deepcopy ( args.get ( 'postscale' , self._postscale ) ) 
+        __algos      = deepcopy ( args.get ( 'algos'     , self._algos     ) )
+        __args       = deepcopy ( self._args  ) 
+
+        # restore the original deepcopy behaviour...
+        if origMethod :
+            copy._deepcopy_dispatch[types.MethodType] = origMethod 
+        else :
+            del copy._deepcopy_dispatch[types.MethodType]
+
+        # Check the parameters, reponsible for reconfiguration:
+        # TODO...
+        #for alg in [ i for i in __algos if type(i) is Hlt1Member ] :
+        #    #id = alg.id()
+        #    #if id in _other :
+        #         #alg.Args.update( _other [id] ) 
+        #         #del _other [id]
+
+        # unknown parameters/arguments 
+        if _other :
+            raise AttributeError, 'Invalid attributes are detected: %s'%_other 
+
+        # get all "OLD" arguments
+        # and update them with all arguments, understandable by Sequencer 
+        __args.update ( _seq   )
+
+        return Hlt2Line ( name      = __name       ,
+                          prescale  = __prescale   ,
+                          ODIN      = __ODIN       ,
+                          L0DU      = __L0DU       ,
+                          HLT       = __HLT        ,
+                          postscale = __postscale  ,
+                          algos     = __algos      , **__args )
+    
+    
 
 # =============================================================================
 # Soem useful decorations 
@@ -1053,8 +1331,8 @@ def prnt ( obj        ,   # the object
     #
     for item in lst :
         if hasattr ( obj , item ) :
-            if l1 < len1( line ) : line += '\n#' + (l1-1)*' '
-            line = line + " %-15s : %s" % ( item , getattr ( obj , item ) )
+            if l1 < len1( line ) : line += '\n' + l1*' '
+            line += "%-15s : %s" % ( item , getattr ( obj , item ) )
     return line 
 
 # =============================================================================
@@ -1076,37 +1354,40 @@ def __enroll__ ( self       ,   ## the object
     @date 2008-08-06
     
     """
-    
+
+    if type(self) == str :
+        # try to decode it into something reasonable
+        (n,t) = (self,None) if self.find('/') == -1 else self.split('/')
+        from Gaudi.Configuration import allConfigurables
+        cfg = allConfigurables.get(n)
+        if cfg :
+            if cfg.getType() == t or cfg.getType() == 'ConfigurableGeneric' :
+                self = cfg
+            else :
+                print 'got something for %s, don\'t know what to do with %s'%(self,str(cfg))
+            
     if hasattr ( self , 'sequencer' ) :
         return __enroll__ ( self.sequencer() , level )
 
     _tab = 50
-    _indent_ = ('#%-3d'%level) + level * '   ' 
+    _indent_ = ('%-3d'%level) + level * '   ' 
     try:     line = _indent_ + self.name ()
-    except:  line = _indent_ + '<UNKNOWN>'
+    except:  line = _indent_ + ( self if type(self) == str else '<UNKNOWN>' )
         
-    if len1(line)>( _tab-1): line = line + '\n#'+ (_tab-1)*' '
-    else :                   line = line + (_tab-len1(line))*' '
-    try:    line = line + '%-25.25s'%self.getType()
-    except: line = line + '<UNKNOWN>'
+    if len1(line)>( _tab-1): line +=  '\n'+ _tab*' '
+    else :                   line +=  (_tab-len1(line))*' '
+    try:                     line +=  '%-25.25s'%self.getType()
+    except:                  line +=  '<UNKNOWN>'
 
-
-    line = prnt ( self , lst , line, l1 = _tab+25 )
+    line = prnt ( self , lst , line, l1 = _tab+25 ) + '\n'
     
-    line = line + '\n'
-
     # use the recursion 
     if hasattr ( self , 'Members' ) :
-        _ms = self.Members
-        for _m in _ms : line = line + __enroll__ ( _m , level + 1 , lst ) 
+        for _m in getattr(self,'Members') : line += __enroll__ ( _m , level + 1 , lst ) 
 
     if type(self) is Line :
-        line = line + __enroll__( self.Prescale,  level + 1, lst )
-        if hasattr(self,'ODIN') : line = line + __enroll__( self.ODIN,      level + 1, lst )
-        if hasattr(self,'L0DU') : line = line + __enroll__( self.L0DU,      level + 1, lst )
-        if hasattr(self,'HLT')  : line = line + __enroll__( self.HLT,      level + 1, lst )
-        if hasattr(self,'Filter1') : line = line + __enroll__( self.Filter1,   level + 1, lst )
-        line = line + __enroll__( self.Postscale, level + 1, lst )
+        for i in [ 'Prescale','ODIN','L0DU','HLT','Filter0','Filter1','Postscale' ] :
+            if hasattr(self,i) : line += __enroll__( getattr(self,i), level + 1, lst )
 
     return line
 
