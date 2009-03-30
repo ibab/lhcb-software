@@ -1,4 +1,4 @@
-// $Id: HltLine.cpp,v 1.17 2009-03-22 17:58:45 ibelyaev Exp $
+// $Id: HltLine.cpp,v 1.18 2009-03-30 20:25:26 graven Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -195,7 +195,7 @@ HltLine::HltLine( const std::string& name,
     declareProperty( m_stages[i]->property().name() , m_stages[i]->property() );
   }
   declareProperty( "HltDecReportsLocation", m_outputContainerName   = LHCb::HltDecReportsLocation::Default );
-  declareProperty( "DecisionName"         , m_decision       = name+"Decision");
+  declareProperty( "DecisionName"         , m_decision       = name+"Decision"); //TODO: install updateHandler, refuse changes after initialize...
   declareProperty( "IgnoreFilterPassed"   , m_ignoreFilter   = false );
   declareProperty( "MeasureTime"          , m_measureTime    = false );
   declareProperty( "ReturnOK"             , m_returnOK       = false );
@@ -310,7 +310,25 @@ StatusCode HltLine::execute() {
     error() << "HltDecReports already contains report" << endmsg;
     return StatusCode::FAILURE;
   }
-  boost::optional<IANNSvc::minor_value_type> key = annSvc().value("Hlt1SelectionID",m_decision);
+
+  // TODO: do this upfront, 'lock' updates after initialize...
+  static const std::string major1("Hlt1SelectionID");
+  static const std::string major2("Hlt2SelectionID");
+  const std::string* major = 0;
+  if (m_decision.find("Hlt1")!=std::string::npos) {
+    major =  &major1;
+  } else if (m_decision.find("Hlt2")!=std::string::npos) {
+    major = &major2;
+  } else {
+    error() << " Could not find Hlt1/Hlt2 in decision " << m_decision << " ???? " << endmsg;
+  }
+
+
+  boost::optional<IANNSvc::minor_value_type> key = annSvc().value(*major,m_decision);
+
+  if (!key) {
+    warning() << " selectionName=" << m_decision << " not known under major " << *major << endmsg;
+  }
   //TODO: add c'tor with only selID
   LHCb::HltDecReport report( 0, 0, 0, key->second );
   if (report.invalidIntSelectionID()) {

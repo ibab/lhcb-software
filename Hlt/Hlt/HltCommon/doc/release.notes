@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2009-03-30 - Gerhard Raven
+ - add Hlt2 support to HltLine 
+
 ! 2009-03-25 - Gerhard Raven
  - add HltTriggerRawConversion: simple algorithm to trigger the DOD service
    for a list of TES location. Intention is to run this as part of a line
