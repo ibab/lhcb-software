@@ -23,7 +23,6 @@
 
 
 from LbLegacy.vol_for_releases import create_volume
-from LbLegacy.LHCb_config import applications_other_executables
 
 from LbConfiguration.Project import getProject
 from LbConfiguration.Platform import getBinaryDbg, getBinaryOpt, isBinaryOpt
@@ -221,7 +220,7 @@ def release_project(pname,pversion,action=None):
         if rel_dir == os.environ['LHCBRELEASES'] or rel_dir == os.environ['GAUDISOFT']:
             rc = create_volume(pname, pversion)
 
-            if not os.path.exists(os.path.join(rel_dir,maindir)):
+            if not os.path.exists(os.path.join(rel_dir, maindir)):
                 log.error( 'Problem to create the volume - STOP' )
                 sys.exit('ERROR - no volume')
 
@@ -273,7 +272,8 @@ def release_project(pname,pversion,action=None):
     log.info( 'set the environment')
 # set the environment
     base_name = 'LHCB'
-    if lhcb_base_name.has_key(PACK): base_name = lhcb_base_name[PACK]
+    if projconf.BaseName() :
+        base_name = projconf.BaseName()
 
     if CMTPROJECTPATH == '':
     # use CMTPATH
@@ -381,19 +381,25 @@ def release_project(pname,pversion,action=None):
             sys.exit('ERROR - optimize compilation failed')
 
         # if Gauss: build other executables
-        if applications_other_executables.has_key(PACK):
-            os.chdir(os.path.join(rel_dir,maindir,'Sim','Gauss','cmt'))
-            other_list = applications_other_executables[PACK].split(',')
-            for other in other_list:
+        extraexelist = projconf.ExtraExe() 
+        if extraexelist :
+            os.chdir(os.path.join(rel_dir, maindir, projconf.ApplicationPackage(), "cmt"))
+            for other in extraexelist.keys() :
                 ko = 0
-                for line in os.popen(cmtrun+'cmt show uses -tag_add='+other).readlines():
+                cmd = "%s cmt show uses" % cmtrun
+                for e in extraexelist[other] :
+                    cmd += " -tag_add=%s" % e
+                for line in os.popen(cmd).readlines():
                     if line.find('Warn') == -1: continue
                     ko = 1
                     break
                 if ko == 0:
-                    log.info('build %s.exe '%(other))
-                    str = command+'setup'+ext+' -tag_add='+other+'; make CMTEXTRATAGS='+other
-                    rc = os.system(cmtrun+str)
+                    log.info('build %s.exe ' % other )
+                    cmd = "%s %s setup%s" % (cmtrun, command, ext)
+                    for e in extraexelist[other] :
+                        cmd += " -tag_add=%s" % e
+                    cmd += "; make CMTEXTRATAGS=%s" % ",".join(extraexelist[other])
+                    rc = os.system(cmd)
 
         log.info('end of compilation in optimize mode ')
         os.chdir(rel_dir)
@@ -401,8 +407,8 @@ def release_project(pname,pversion,action=None):
 # ======================= action: compilation in debug mode ====================================
     if debug :
         log.info( 'compile in debug mode' )
-        os.chdir(os.path.join(rel_dir,maindir,packSys,'cmt'))
-        log.info('%s compile in debug %s mode %s %s \n'%(day,os.environ['CMTDEB'],packSys,pversion))
+        os.chdir(os.path.join(rel_dir, maindir, packSys, 'cmt'))
+        log.info('%s compile in debug %s mode %s %s \n' % (day, os.environ['CMTDEB'], packSys, pversion))
 
         # cmt broadcast gmake tag=$CMTDEB
         os.environ['CMTCONFIG'] = CMTDEB

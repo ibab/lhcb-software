@@ -1,3 +1,10 @@
+2009-03-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/LHCb_config.py: commented out settings which have
+	been replaced by LbConfiguration/Project.
+	* scripts/mkproject: replaced configuration settings from LHCb_config with
+	the ones in LbConfiguration/Project.
+
 2009-03-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* initial import

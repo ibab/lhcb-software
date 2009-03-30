@@ -108,4 +108,4 @@ lhcb_base_name = {'GAUDI' : 'LCGCMT',
                     'GEANT4': 'GAUDI'   }
                     
 
-applications_other_executables = {'GAUSS':'BcVegPy,Herwig,HidValley,Hijing'}
+#applications_other_executables = {'GAUSS':'BcVegPy,Herwig,HidValley,Hijing'}
