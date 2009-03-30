@@ -1,0 +1,8 @@
+! $Id: release.notes,v 1.1 2009-03-30 13:21:38 nchiapol Exp $
+! Package     : HistDBPython
+! Responsible : Nicola Chiapolini
+!
+
+! 20090325 HistDBPython v1r0
+ - First Version of HistDPPython uploaded. 
+
