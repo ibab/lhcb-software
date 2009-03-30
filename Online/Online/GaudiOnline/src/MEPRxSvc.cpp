@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.77 2009-03-25 14:46:23 dsvantes Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.78 2009-03-30 09:10:17 dsvantes Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -65,8 +65,9 @@ typedef unsigned int uint;
   a << MSG::ERROR << x << " " << MEPRxSys::sys_err_msg() << " in " << __PRETTY_FUNCTION__<< ":"  << __FILE__<<  ":(" << __LINE__ << ")" << endmsg;} while(0);
 #endif
 
-// Sent as 64bit integers ("X")
 #define PUBCNT(name, desc) do {m_ ## name = 0; m_monSvc->declareInfo(#name, m_ ## name, desc, this);} while(0);
+// Sent as 64bit integers ("X")
+#define PUB64CNT(name, desc) do {m_ ## name = 0; m_monSvc->declareInfo(#name,"X", & m_ ## name, sizeof(int64_t), desc, this);} while(0);
 #define PUBARRAYCNT(name, desc) do {m_monSvc->declareInfo(#name, "X", & m_ ## name [0], m_ ## name.size() * sizeof(int64_t), desc, this);} while(0);
 
 #define printnum(n,s)     n << s << ((char*)(n == 1 ? "" : "s"))
@@ -1007,15 +1008,15 @@ void MEPRxSvc::ageEvents() {
 
 void MEPRxSvc::publishCounters()
 {
-  PUBCNT(totRxOct,           "Total received bytes");
-  PUBCNT(totRxPkt,           "Total received packets");
-  PUBCNT(incEvt,             "Incomplete events");
-  PUBCNT(totBadMEP,          "Total bad MEPs");
-  PUBCNT(totMEPReq,          "Total requested MEPs");
-  PUBCNT(totMEPReqPkt,       "Total Sent MEP-request packets");
-  PUBCNT(numMEPRecvTimeouts, "MEP-receive Timeouts");
-  PUBCNT(notReqPkt,          "Total unsolicited packets");
-  PUBCNT(totWrongPartID,     "Packets with wrong partition-ID");
+  PUB64CNT(totRxOct,           "Total received bytes");
+  PUB64CNT(totRxPkt,           "Total received packets");
+  PUB64CNT(incEvt,             "Incomplete events");
+  PUB64CNT(totBadMEP,          "Total bad MEPs");
+  PUB64CNT(totMEPReq,          "Total requested MEPs");
+  PUB64CNT(totMEPReqPkt,       "Total Sent MEP-request packets");
+  PUB64CNT(numMEPRecvTimeouts, "MEP-receive Timeouts");
+  PUB64CNT(notReqPkt,          "Total unsolicited packets");
+  PUB64CNT(totWrongPartID,     "Packets with wrong partition-ID");
   PUBARRAYCNT(badLenPkt,     "MEPs with mismatched length");
   PUBARRAYCNT(misPkt,        "Missing MEPs");
   PUBARRAYCNT(badPckFktPkt,  "MEPs with wrong packing (MEP) factor");
