@@ -42,7 +42,7 @@ use ROMon             v1r13    Online
 use ROLogger          v0r10    Online
 use UPI               v1r14    Online
 use UPIR              v1r1     Online
-use Viewer            v1r5     Online
+#Obsolete: use Viewer            v1r5     Online
 use Writer            v1r12    Online
 
 # Allow the generation of QMTest summary 
