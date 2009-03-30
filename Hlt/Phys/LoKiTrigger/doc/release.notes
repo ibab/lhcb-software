@@ -1,9 +1,24 @@
-! $Id: release.notes,v 1.29 2009-03-28 13:58:48 ibelyaev Exp $
+! $Id: release.notes,v 1.30 2009-03-30 19:06:49 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiTrigger
 ! Responsible : Vanya BELYAEV
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
+
+! 2009-03-30 - Vanya BELYAEV
+
+  new functors, needed for Hlt1 implementation
+
+   TrDPMU    ( "TRack Delta P MUon" )
+    LoKi-fied version of HltDeltaPTool by Leandro de Paula 
+
+   
+
+
+ - LoKi/Hl1Functions.h, src/Hl1Functions.cpp 
+
+    new files with new functors, specific for Hlt1 implementation 
+
 
 ! 2009-03-28 - Vanya BELYAEV
 

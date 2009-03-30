@@ -220,6 +220,15 @@ TrVIP         = LoKi.Tracks.ImpactParameter ()
 ## @see LoKi::Cuts::TrVRIP 
 TrVRIP        = LoKi.Tracks.RadialIP        () 
 
+
+# functions for HltUnits:
+
+## @see LoKi::Cuts::TrDPMU_
+TrDPMU_       = LoKi.Tracks.MuonDeltaP
+## @see LoKi::Cuts::TrDPMU
+TrDPMU        = LoKi.Tracks.MuonDeltaP()
+
+
 # functional stuff
 
 

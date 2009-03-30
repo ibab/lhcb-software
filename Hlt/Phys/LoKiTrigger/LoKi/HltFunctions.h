@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.6 2008-01-22 14:26:37 hernando Exp $
+// $Id: HltFunctions.h,v 1.7 2009-03-30 19:06:49 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_HLTFUNCTIONS_H 
 #define LOKI_HLTFUNCTIONS_H 1
@@ -17,6 +17,7 @@
 // ============================================================================
 namespace LoKi 
 {
+  // ==========================================================================
   namespace Tracks
   {  
     // ========================================================================
@@ -50,7 +51,7 @@ namespace LoKi
     /** @class DeltaP
      *  Evaluator of "DeltaP"
      *
-     *  The class and implementation comes from  HltBase /HltFunctions.h
+     *  The class and implementation comes from  HltBase/HltFunctions.h
      *
      *  The actual lines are copied from the package Hlt/HltBase 
      *   written by Jose Angel Hernando Morata
@@ -240,7 +241,9 @@ namespace LoKi
       virtual std::ostream& fillStream ( std::ostream& s ) const 
       { return s << "TTrDA" ; }
     } ;    
+    // ========================================================================
   } // end of namespace LoKi::Tracks
+  // ==========================================================================
 } // end of namespace LoKi 
 // ============================================================================
 // The END 
