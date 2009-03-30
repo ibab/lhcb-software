@@ -1,10 +1,16 @@
-!$Id: release.notes,v 1.164 2009-03-17 14:41:54 mneedham Exp $
+!$Id: release.notes,v 1.165 2009-03-30 12:59:11 mneedham Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
+
+! 2009-03-30 M Needham
+ - Add access to status Condition to DeSTSector
+
+
 ! 2009-03-17 M Needham
  - Add halfModuleType to DeTTSector class
+
 
 ! 20009-03-14 M. Needham
  - Move contains function to DeSTBaseElement class + make virtual

@@ -1,4 +1,4 @@
-// $Id: DeSTSector.h,v 1.37 2009-03-14 09:18:07 mneedham Exp $
+// $Id: DeSTSector.h,v 1.38 2009-03-30 12:59:11 mneedham Exp $
 #ifndef _DeSTSector_H_
 #define _DeSTSector_H_
 
@@ -322,6 +322,9 @@ public:
   */
   double fractionActive() const;
 
+  /** direct access to the status condition, for experts only */
+  const Condition* statusCondition() const;
+
 protected:
 
   StatusCode registerConditionsCallbacks();
@@ -589,6 +592,9 @@ inline const std::string& DeSTSector::nickname() const{
   return m_nickname;
 }
 
+inline const Condition* DeSTSector::statusCondition() const{
+  return condition(m_statusString);
+}
 #include "STDet/StatusMap.h"
  
 #endif // _DeSTSector_H

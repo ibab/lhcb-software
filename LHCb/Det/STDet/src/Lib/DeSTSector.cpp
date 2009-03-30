@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.52 2009-02-19 12:30:52 cattanem Exp $
+// $Id: DeSTSector.cpp,v 1.53 2009-03-30 12:59:11 mneedham Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -389,7 +389,7 @@ StatusCode DeSTSector::registerConditionsCallbacks(){
 
 StatusCode DeSTSector::updateStatusCondition(){
 
-  const Condition* aCon = condition(m_statusString);
+  const Condition* aCon = statusCondition();
   if (aCon == 0){
     MsgStream msg(msgSvc(), name());
     msg << "failed to find condition" << endmsg;
