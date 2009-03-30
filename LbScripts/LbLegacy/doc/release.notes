@@ -1,5 +1,6 @@
 2009-03-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* scripts/tbroadcast: New file
 	* scripts/install_project.py: New file. imported latest version
 	* scripts/makedoc: remove obsolete string module
 	* scripts/mkLHCbtar: fixed global and import from LHCb_config 

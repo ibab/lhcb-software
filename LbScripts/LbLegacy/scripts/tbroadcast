@@ -1,0 +1,18 @@
+#!/bin/csh -f
+
+set tbroadcast_root = ${CMTROOT}/../tbroadcast/v2.0.4
+
+if ( $?PYTHONPATH ) then
+  set save = $PYTHONPATH
+  setenv PYTHONPATH ${LHCBPYTHON}:${tbroadcast_root}/python:${PYTHONPATH}
+else
+  unset save
+  setenv PYTHONPATH ${tbroadcast_root}/python
+endif
+
+${LHCBPYTHON}/tbroadcast -local -ignore_cycles -no_keep_going  ${*:q}
+
+if ( $?save ) then
+  setenv PYTHONPATH ${save}
+  unset save
+endif
