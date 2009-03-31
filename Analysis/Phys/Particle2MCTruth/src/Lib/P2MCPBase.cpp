@@ -1,4 +1,4 @@
-// $Id: P2MCPBase.cpp,v 1.3 2009-03-13 18:08:07 jpalac Exp $
+// $Id: P2MCPBase.cpp,v 1.4 2009-03-31 12:41:53 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -27,7 +27,7 @@ P2MCPBase::P2MCPBase( const std::string& type,
 }
 //=============================================================================
 const LHCb::MCParticle* 
-P2MCPBase::bestRelatedMCP(const LHCb::Particle* particle) const 
+P2MCPBase::relatedMCP(const LHCb::Particle* particle) const 
 {
   const LHCb::MCParticle::Container* mcParticles = i_MCParticles(m_defMCLoc);
   return (0==mcParticles) ? 0 : i_bestMCP(particle, 
@@ -36,14 +36,22 @@ P2MCPBase::bestRelatedMCP(const LHCb::Particle* particle) const
 }
 //=============================================================================
 const LHCb::MCParticle* 
-P2MCPBase::bestRelatedMCP(const LHCb::Particle* particle,
-                          const LHCb::MCParticle::ConstVector& mcParticles) const
+P2MCPBase::relatedMCP(const LHCb::Particle* particle,
+                      const std::string& mcParticleLocation) const
+{
+  LHCb::MCParticle::Container* mcps = i_MCParticles(mcParticleLocation);
+  return (0!=mcps) ? i_bestMCP(particle,  mcps->begin(), mcps->end()) : 0;
+}
+//=============================================================================
+const LHCb::MCParticle* 
+P2MCPBase::relatedMCP(const LHCb::Particle* particle,
+                      const LHCb::MCParticle::ConstVector& mcParticles) const
 {
   return i_bestMCP(particle, mcParticles.begin(), mcParticles.end());
 }
 //=============================================================================
 const LHCb::MCParticle* 
-P2MCPBase::bestRelatedMCP(const LHCb::Particle* particle,
+P2MCPBase::relatedMCP(const LHCb::Particle* particle,
                           const LHCb::MCParticle::Container& mcParticles) const 
 {
   return i_bestMCP(particle, mcParticles.begin(), mcParticles.end());
