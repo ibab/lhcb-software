@@ -4,6 +4,13 @@
 ! Purpose     : Muon digitisation algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-03-31 - Marco Cattaneo
+ - In MuonDigitization:
+   . Remove need to access SpilloverAlg to determine number of spillover slots
+     Now hardcoded to 4 if EnableSpillover is true (in any case anything other
+     then 4 would have given unpredictable results)
+   . Cleanup up some debug messages
+
 !========================= MuonAlgs v6r7 2009-02-20 ==========================
 ! 2009-02-12 - Alessia Satta
  - Fix an error in electronic noise simulation

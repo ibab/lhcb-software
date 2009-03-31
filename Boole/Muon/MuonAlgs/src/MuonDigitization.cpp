@@ -1,12 +1,10 @@
-//$Id: MuonDigitization.cpp,v 1.47 2009-02-13 09:55:16 asatta Exp $
+//$Id: MuonDigitization.cpp,v 1.48 2009-03-31 09:55:31 cattanem Exp $
 
 #include <algorithm>
 #include <vector>
 #include <cmath>
 
-#include "GaudiKernel/AlgFactory.h"  
-#include "GaudiKernel/IAlgManager.h"
-#include "GaudiKernel/SmartIF.h"
+#include "GaudiKernel/AlgFactory.h"
 
 #include "MuonDet/MuonBasicGeometry.h"
 #include "MuonDet/DeMuonDetector.h"
@@ -21,7 +19,8 @@
 DECLARE_ALGORITHM_FACTORY( MuonDigitization );
 
 //reserve space for static variable
-std::string MuonDigitization::spill[6] = 
+#define SIZEOFSPILLOVERVECTOR 4
+std::string MuonDigitization::spill[2+SIZEOFSPILLOVERVECTOR] = 
 {"/LHCBackground","","/Prev","/PrevPrev","/Next","/NextNext"};
 std::string MuonDigitization::numreg[4] = 
 {"1","2","3","4"};
@@ -63,31 +62,7 @@ StatusCode MuonDigitization::initialize()
   if ( sc.isFailure() ) return sc;  // error printed already by  GaudiAlgorithm	
 
   unsigned int numberOfSpilloverEvents = 0;
-  if( m_enableSpillover ) {
-    // Get the number of spillover events from the SpilloverAlg
-    IAlgManager* algmgr =svc<IAlgManager>("ApplicationMgr");
-    IAlgorithm*  spillAlg;
-    sc = algmgr->getAlgorithm( "SpilloverAlg", spillAlg );
-    if( !sc.isSuccess() )
-      return Error( "Spillover requested but SpilloverAlg not found", sc );
-
-    SmartIF<IProperty> spillProp( spillAlg );
-    if( !spillProp )
-      return Error( "Problem locating properties of SpilloverAlg" );
-
-    StringArrayProperty evtPaths;
-    sc=evtPaths.assign( spillProp->getProperty("PathList") );
-    if( !sc.isSuccess() )
-      return Error( "Problem locating PathList property of SpilloverAlg", sc );
-
-    numberOfSpilloverEvents = evtPaths.value().size();
-
-    // Release the interface no longer needed
-    releaseSvc(algmgr).ignore();
-  }
-  
-  info() << "number of spillover events read from aux stream "
-      << numberOfSpilloverEvents << endmsg;
+  if( m_enableSpillover ) numberOfSpilloverEvents = SIZEOFSPILLOVERVECTOR;
   m_numberOfEvents = numberOfSpilloverEvents+1;
   m_numberOfEventsNeed=5;	
 
@@ -98,14 +73,14 @@ StatusCode MuonDigitization::initialize()
   int i=0;  
   while(i<m_stationNumber){
     numsta[i]=basegeometry.getStationName(i);    
-    debug()<<" station "<<i<<" "<<numsta[i]<<endreq;
+    debug()<<" station "<<i<<" "<<numsta[i]<<endmsg;
     i++;    
   }
   m_partition=basegeometry.getPartitions();
   sc=m_flatDist.initialize( randSvc(), Rndm::Flat(0.0,1.0));	 
   if(sc.isFailure())warning()<<" error in flat ini"<<endmsg;
   detectorResponse.initialize( toolSvc(),randSvc(), detSvc(), msgSvc());
-  debug()<<" detectorResponseInitialized "<<endreq;
+  debug()<<" detectorResponseInitialized "<<endmsg;
   m_spill=6;
   m_container=4;
   unsigned int count=1;
@@ -124,7 +99,7 @@ StatusCode MuonDigitization::execute()
 MsgStream log(msgSvc(), name());
  	StatusCode sc=StatusCode::SUCCESS ;
   
-  debug()<<"starting the Muon Digitization algorithm "<<endreq;
+  debug()<<"starting the Muon Digitization algorithm "<<endmsg;
 
 
   SmartDataPtr<LHCb::MCHits> 
@@ -137,28 +112,28 @@ MsgStream log(msgSvc(), name());
       if(m_verboseDebug){
         info()<<"muon x , y, z , exit  "<< (*i)->exit().x() <<" " <<
           (*i)->exit().y() << "  " <<                          
-          (*i)->exit().z() << endreq ;																		
+          (*i)->exit().z() << endmsg ;																		
         debug()<<"muon x , y, z entry ,  "<< (*i)->entry().x() <<" " <<
-          (*i)->entry().y() << "  " <<(*i)->entry().z() << endreq ;   
-        debug()<<"time of flight ,  "<< (*i)->time()<< endreq;
+          (*i)->entry().y() << "  " <<(*i)->entry().z() << endmsg ;   
+        debug()<<"time of flight ,  "<< (*i)->time()<< endmsg;
         int det=(*i)->sensDetID(); 
         debug()<<" chamber and gap ID	"<<
           m_muonDetector->chamberID(det)<<" "<<
-          m_muonDetector->gapID(det)<<endreq;
+          m_muonDetector->gapID(det)<<endmsg;
         const LHCb::MCParticle* origparticle=(*i)->mcParticle();
         if(origparticle)  {
           debug()<<"Particle from which it originates (PDG code)"<<
-            origparticle->particleID().abspid()<<endreq;
+            origparticle->particleID().abspid()<<endmsg;
         }
         else{
           warning()<<
-            "Particle from which it originates is not defined "<< endreq;
+            "Particle from which it originates is not defined "<< endmsg;
         }
       }	
     }
 	}	
 	else{
-    err()<<"unable to retrieve the hit container"<<endreq; 
+    Error("unable to retrieve the hit container").ignore(); 
   } 
     
 
@@ -177,26 +152,23 @@ MsgStream log(msgSvc(), name());
 	if(m_applyElectronicNoise)	sc=addElectronicNoise(PhyChaOutput);
 	if(sc.isFailure())return StatusCode::FAILURE;	
   
-  debug()<<"qui "<<endreq;  
   sc=applyPhysicalEffects(PhyChaOutput);
-  //info()<<" quiquo"<<endreq;
 	if(sc.isFailure())return StatusCode::FAILURE;	
-  debug()<<" ale "<<endreq;
   if(m_verboseDebug){	
     for(int i=0; i<m_partition; i++){
-	    info()<<"  last print container number "<<i<<endreq;
+	    info()<<"  last print container number "<<i<<endmsg;
       MuonPhysicalChannels::const_iterator iter=
         PhyChaOutput.getPartition(i)->begin();
 		  for(iter=PhyChaOutput.getPartition(i)->begin();iter<
             PhyChaOutput.getPartition(i)->end();iter++){		    
-        info()<<"#FE ID "<<(*iter)->phChID()->getID()<<endreq;
-        info()<<"#Station "<<(*iter)->phChID()->getStation()<<endreq;
-        info()<<"#Region "<<(*iter)->phChID()->getRegion()<<endreq;
-        //info()<<"#Quadrant "<<(*iter)->phChID()->getQuadrant()<<endreq;
-        info()<<"#Chamber "<<(*iter)->phChID()->getChamber()<<endreq;
-        info()<<"# ch X "<<(*iter)->phChID()->getPhChIDX()<<endreq;
-        info()<<"# ch Y "<<(*iter)->phChID()->getPhChIDY()<<endreq;
-        info()<<"#frontend "<<(*iter)->phChID()->getFrontEnd()<<endreq;
+        info()<<"#FE ID "<<(*iter)->phChID()->getID()<<endmsg;
+        info()<<"#Station "<<(*iter)->phChID()->getStation()<<endmsg;
+        info()<<"#Region "<<(*iter)->phChID()->getRegion()<<endmsg;
+        //info()<<"#Quadrant "<<(*iter)->phChID()->getQuadrant()<<endmsg;
+        info()<<"#Chamber "<<(*iter)->phChID()->getChamber()<<endmsg;
+        info()<<"# ch X "<<(*iter)->phChID()->getPhChIDX()<<endmsg;
+        info()<<"# ch Y "<<(*iter)->phChID()->getPhChIDY()<<endmsg;
+        info()<<"#frontend "<<(*iter)->phChID()->getFrontEnd()<<endmsg;
       }
     }
     
@@ -211,21 +183,21 @@ MsgStream log(msgSvc(), name());
 	if(sc.isFailure())return StatusCode::FAILURE;	 			
   if(m_verboseDebug){	
     for(int i=0; i<m_partition; i++){
-	    info()<<"  last print container number "<<i<<endreq;
+	    info()<<"  last print container number "<<i<<endmsg;
       MuonPhysicalChannelOutputs::const_iterator iter=
         PhysicalChannelOutput.getPartition(i)->begin();
 		  for(iter=PhysicalChannelOutput.getPartition(i)->begin();iter<
             PhysicalChannelOutput.getPartition(i)->end();iter++){		    
-        info()<<"FE ID "<<(*iter)->phChID()->getID()<<endreq;
-        info()<<"Station "<<(*iter)->phChID()->getStation()<<endreq;
-        info()<<"Region "<<(*iter)->phChID()->getRegion()<<endreq;
-        //info()<<"Quadrant "<<(*iter)->phChID()->getQuadrant()<<endreq;
-        info()<<"Chamber "<<(*iter)->phChID()->getChamber()<<endreq;
-        info()<<" ch X "<<(*iter)->phChID()->getPhChIDX()<<endreq;
-        info()<<" ch Y "<<(*iter)->phChID()->getPhChIDY()<<endreq;
-        info()<<" frontend "<<(*iter)->phChID()->getFrontEnd()<<endreq;
-        info()<<" fired "<<(*iter)->phChInfo().isAlive()<<endreq;
-        info()<<" nature "<<(*iter)->phChInfo().natureOfHit()<<endreq;
+        info()<<"FE ID "<<(*iter)->phChID()->getID()<<endmsg;
+        info()<<"Station "<<(*iter)->phChID()->getStation()<<endmsg;
+        info()<<"Region "<<(*iter)->phChID()->getRegion()<<endmsg;
+        //info()<<"Quadrant "<<(*iter)->phChID()->getQuadrant()<<endmsg;
+        info()<<"Chamber "<<(*iter)->phChID()->getChamber()<<endmsg;
+        info()<<" ch X "<<(*iter)->phChID()->getPhChIDX()<<endmsg;
+        info()<<" ch Y "<<(*iter)->phChID()->getPhChIDY()<<endmsg;
+        info()<<" frontend "<<(*iter)->phChID()->getFrontEnd()<<endmsg;
+        info()<<" fired "<<(*iter)->phChInfo().isAlive()<<endmsg;
+        info()<<" nature "<<(*iter)->phChInfo().natureOfHit()<<endmsg;
         std::vector<MuonHitTraceBack> vector_traceBack=(*iter)->
           hitsTraceBack();
         std::vector<MuonHitTraceBack>::iterator iterTraceBack=
@@ -233,7 +205,7 @@ MsgStream log(msgSvc(), name());
         for(iterTraceBack=(vector_traceBack).begin();iterTraceBack<
               (vector_traceBack).end();iterTraceBack++){
           info()<<"hit time "<<(*iterTraceBack).hitArrivalTime() 
-             <<endreq; 
+             <<endmsg; 
         }
 		  }
     }
@@ -241,12 +213,12 @@ MsgStream log(msgSvc(), name());
 
 	MuonDigitizationData<MuonCardiacChannelOutput> 
     CardiacChannelOutput("MUCC",&log,eventSvc(),"MUCC") ;
-  //debug()<<"pappa hk "<<endreq; 
+  //debug()<<"pappa hk "<<endmsg; 
 	sc=fillCardiacChannel(PhysicalChannelOutput,CardiacChannelOutput);
 	if(sc.isFailure())return StatusCode::FAILURE;	 	
   LHCb::MCMuonDigits* mcDigitContainer= new LHCb::MCMuonDigits;
   //bool test=true;
-  // debug()<<"pappa rrr"<<endreq; 
+  // debug()<<"pappa rrr"<<endmsg; 
   if(m_applyDialogDeadtime){
     
     sc=createLogicalChannel(CardiacChannelOutput, *mcDigitContainer);
@@ -262,7 +234,7 @@ MsgStream log(msgSvc(), name());
 	if(sc.isFailure())return StatusCode::FAILURE;	 				
 	put( digitContainer, LHCb::MuonDigitLocation::MuonDigit );
   
- 	debug()<<"End of the Muon Digitization"<<endreq;
+ 	debug()<<"End of the Muon Digitization"<<endmsg;
   return StatusCode::SUCCESS;
   
 }
@@ -357,7 +329,7 @@ StatusCode MuonDigitization::addChamberNoise(){
                 hitsContainer->push_back(pHit);
                 if(m_verboseDebug){	
                   info()<<"adding chamber noise hit "<<
-                    ispill<<" "<<k<<" "<<s<<numberOfNoiseHit<<endreq;
+                    ispill<<" "<<k<<" "<<s<<numberOfNoiseHit<<endmsg;
                 }
                 continue;              
               }            
@@ -371,7 +343,7 @@ StatusCode MuonDigitization::addChamberNoise(){
             if(numberOfNoiseHit>0)
               info()<<"adding chamber noise hit "<<ispill<<" "<<
                 k<<" "<<s<<" chamber "<<chamber <<" "<<
-                numberOfNoiseHit<<endreq;
+                numberOfNoiseHit<<endmsg;
           }	
           
         }         
@@ -412,7 +384,7 @@ MuonDigitization::createInput(
       std::string path="/Event"+spill[ispill]+"/MC/Muon/"+
         TESPathOfHitsContainer[container];
       if(m_verboseDebug) {info()<<"hit container path "<<
-                            path<<endreq;}
+                            path<<endmsg;}
       
       SmartDataPtr<LHCb::MCHits> hitPointer(eventSvc(),path);
       LHCb::MCHits::const_iterator iter;	 
@@ -420,7 +392,6 @@ MuonDigitization::createInput(
         for (iter=(hitPointer)->begin();iter<(hitPointer)->end();iter++){
           std::vector< std::pair<MuonFrontEndID, std::vector<float> > > 
             listph;
-          debug()<<"eccoci "<<endreq;
       	  int det=(*iter)-> sensDetID();
           if(det<0)continue;
           
@@ -434,8 +405,8 @@ MuonDigitization::createInput(
                                                      hitRegion,hitChamber);
           std::vector< std::pair<MuonFrontEndID, std::vector<float> > >::
             iterator itPh;
-          verbose()<<" ga hit "<<hitStation<<" "<<hitRegion<<" "<<hitChamber<<" "
-                <<hitGap<<" "<<hitQuarter<<endmsg;
+          if(m_verboseDebug) verbose()<<" ga hit "<<hitStation<<" "<<hitRegion
+                       <<" "<<hitChamber<<" "<<hitGap<<" "<<hitQuarter<<endmsg;
           
           for(itPh=listph.begin();itPh<listph.end();itPh++){
             MuonFrontEndID fe=(*itPh).first;
@@ -452,9 +423,9 @@ MuonDigitization::createInput(
            //                              hitRegion,tile);
            // unsigned int hitQuarter=tile.quarter();
             //             info()<<" hitQuarter "<<hitQuarter<<" "<<hitStation<<" "<<
-            //  hitRegion<<" "<<hitChamber<<" "<<hitGap<<endreq;
-            debug()<<" adding pch "<<hitStation<<" "<<
-              hitRegion<<" "<<hitChamber<<" "<<hitQuarter<<"  "<<fe.getReadout()<<endreq;
+            //  hitRegion<<" "<<hitChamber<<" "<<hitGap<<endmsg;
+            if(m_verboseDebug) debug()<<" adding pch "<<hitStation<<" "<<
+              hitRegion<<" "<<hitChamber<<" "<<hitQuarter<<"  "<<fe.getReadout()<<endmsg;
             
             inputPointer->phChID()->setStation(hitStation);
             inputPointer->phChID()->setRegion(hitRegion);
@@ -473,9 +444,9 @@ MuonDigitization::createInput(
             
             double xcenter, ycenter,zcenter;
             //info()<<"before pccenter"<<hitChamber<<" "<<hitStation<<" "<<
-            //hitRegion<<" "<<hitGap<<" "<<fe.getFEIDX()<<" "<<fe.getFEIDY()<<endreq;             
+            //hitRegion<<" "<<hitGap<<" "<<fe.getFEIDX()<<" "<<fe.getFEIDY()<<endmsg;             
             //info()<<" dete "<<m_muonDetector->getPhChannelNX(0,hitStation,hitRegion)<<
-            //" "<<m_muonDetector->getPhChannelNY(0,hitStation,hitRegion)<<endreq;
+            //" "<<m_muonDetector->getPhChannelNY(0,hitStation,hitRegion)<<endmsg;
             
             
             StatusCode sc=m_muonDetector->
@@ -484,7 +455,7 @@ MuonDigitization::createInput(
             if(sc.isFailure())warning()<<" getpc ch error"<<endmsg;
             double tofOfLight=sqrt(xcenter*xcenter+ycenter*ycenter+
                                    zcenter*zcenter)/300.0;
-            //info()<<" tof "<<tofOfLight<<" "<<hitStation<<" "<<hitRegion<<" "<<zcenter<<endreq;
+            //info()<<" tof "<<tofOfLight<<" "<<hitStation<<" "<<hitRegion<<" "<<zcenter<<endmsg;
             inputPointer->getHitTraceBack()
               ->setHitArrivalTime((*iter)->time()+globalTimeOffset()+
                                   +spillTime-tofOfLight+0.5);
@@ -530,33 +501,33 @@ MuonDigitization::createInput(
                      <<" "<<fe.getReadout()<<" "                
                      <<" "<<tofOfLight<<" "<< 
                  OriginOfHitsContainer[container]<<" "<<
-                 ispill<<" "<< code<<endreq;		
+                 ispill<<" "<< code<<endmsg;		
                info()<<" ph ch ID "<<
                  *(inputPointer->phChID())<<" id "<<
-                 inputPointer->phChID()->getID()<<endreq;
+                 inputPointer->phChID()->getID()<<endmsg;
             }	 	
-             //info()<<" before keep "<<endreq;
+             //info()<<" before keep "<<endmsg;
             keepTemporary[hitStation*4+hitRegion].push_back(*inputPointer);
             delete inputPointer;
-            //info()<<" last "<<endreq;
-          }	//info()<<" last 1"<<endreq;
-        }      //   	info()<<" last2 "<<endreq;
-      }			//info()<<" last3 container "<<container<<endreq;
-    }      	//info()<<" last4 spill "<<ispill<<endreq;
-  }	 	//info()<<" last5 "<<station<<" "<<region<<endreq; 
+            //info()<<" last "<<endmsg;
+          }	//info()<<" last 1"<<endmsg;
+        }      //   	info()<<" last2 "<<endmsg;
+      }			//info()<<" last3 container "<<container<<endmsg;
+    }      	//info()<<" last4 spill "<<ispill<<endmsg;
+  }	 	//info()<<" last5 "<<station<<" "<<region<<endmsg; 
   
   
   
-  //info()<<"qui "<<endreq;
+  //info()<<"qui "<<endmsg;
   
   for(int iterRegion=0;iterRegion<m_partition;iterRegion++){     
     if(m_verboseDebug){
-      debug()<<"pre-sorted vector"<<endreq;}
+      debug()<<"pre-sorted vector"<<endmsg;}
     //		std::vector<MuonPhPreInput>::reverse_iterator iterPre;		
     std::stable_sort(keepTemporary[iterRegion].begin(),
                      keepTemporary[iterRegion].end(),SortPhChID());
     if(m_verboseDebug){
-      debug()<<"sorted vector"<<endreq;}
+      debug()<<"sorted vector"<<endmsg;}
     std::vector<MuonPhPreInput>::reverse_iterator iterPost;    
     for(iterPost=keepTemporary[iterRegion].rbegin();
         iterPost<keepTemporary[iterRegion].rend();
@@ -566,18 +537,18 @@ MuonDigitization::createInput(
                      (iterPost)->phChID()->getID()<<
                      " hit origin "<< (iterPost)->getHitTraceBack()
                      ->getMCMuonHitOrigin().getFlatSpilloverNature() 
-                     <<endreq;	*/	
+                     <<endmsg;	*/	
       }
       MuonPhyChannelInput* phChPointer = 
         new MuonPhyChannelInput((iterPost)->phChID()->getID(),
                                 *((iterPost)->getHitTraceBack())) ;	
       StatusCode asc=PhyChaInput.addMuonObject(iterRegion,phChPointer);
-      if(asc.isFailure())debug()<<" not able to add requested obj "<<endreq;
+      if(asc.isFailure())debug()<<" not able to add requested obj "<<endmsg;
       keepTemporary[iterRegion].pop_back(); 	
     } 	  
   }
   
-  //  info()<<" exit "<<endreq;
+  //  info()<<" exit "<<endmsg;
   
   return StatusCode::SUCCESS;
 }
@@ -617,7 +588,7 @@ elaborateMuonPhyChannelInputs(
         (detectorResponse.getResponse(*((*inputIterStart)->phChID())));
       if(!detectorResponse.getResponse(*((*inputIterStart)->phChID()))){
         err()<<"unable to retrieve the response of  ph. channel"
-           <<endreq;
+           <<endmsg;
       }
       outputPointer->hitsTraceBack().push_back(*pointerToHitTraceBack);
       StatusCode asc=PhysicalChannel.addMuonObject(i,outputPointer);
@@ -639,7 +610,7 @@ elaborateMuonPhyChannelInputs(
           outputPointer->hitsTraceBack().push_back(*pointerToHitTraceBack) ;
           prevFE=lastFE;
           StatusCode asc=PhysicalChannel.addMuonObject(i,outputPointer);
-          if(asc.isFailure())debug()<<"error in adding obj "<<endreq;        
+          if(asc.isFailure())debug()<<"error in adding obj "<<endmsg;        
         }			
       }						
     }
@@ -667,7 +638,7 @@ fillPhysicalChannel(MuonDigitizationData<MuonPhysicalChannel>&
         double timeOfFiring;
         std::vector<MuonHitTraceBack>::iterator iterInHits ;
         if(m_verboseDebug)info()<<objToAdd->phChID()->
-                            getID()<<" "<<*(objToAdd->phChID())<<endreq;
+                            getID()<<" "<<*(objToAdd->phChID())<<endmsg;
         // if(i==0)	cout<<" start nuovo mupnphysicalchannel "<<endl;
         for(iterInHits=objToAdd->hitsTraceBack().begin();
             iterInHits<objToAdd->hitsTraceBack().end();iterInHits++){
@@ -681,7 +652,7 @@ fillPhysicalChannel(MuonDigitizationData<MuonPhysicalChannel>&
                               (*iterInHits).getMCMuonHistory().
                               isHitInDeadtime()<<
                               " time of firing "<< 
-                              (*iterInHits).hitArrivalTime()<<endreq;				 
+                              (*iterInHits).hitArrivalTime()<<endmsg;				 
           if(!fired){
             if(!(*iterInHits).getMCMuonHistory().isHitOutGeoAccemtance()&&
                !(*iterInHits).getMCMuonHistory().
@@ -715,7 +686,7 @@ fillPhysicalChannel(MuonDigitizationData<MuonPhysicalChannel>&
             }
           }
         }
-        if(m_verboseDebug)info()<<" fired "<<fired<<endreq;
+        if(m_verboseDebug)info()<<" fired "<<fired<<endmsg;
         if(!fired){
           for(iterInHits=objToAdd->hitsTraceBack().begin();
               iterInHits<objToAdd->hitsTraceBack().end();iterInHits++){
@@ -814,7 +785,7 @@ fillPhysicalChannel(MuonDigitizationData<MuonPhysicalChannel>&
               int pid= particle->particleID().abspid();
               if(pid==13||pid==-13){
                 debug()<<"moun hit   time   ??????"<<
-                    (iterInHits)-> hitArrivalTime()	<<endreq;	
+                    (iterInHits)-> hitArrivalTime()	<<endmsg;	
                 muon=true;
               }
             }
@@ -823,26 +794,26 @@ fillPhysicalChannel(MuonDigitizationData<MuonPhysicalChannel>&
         if(muon){
           if(m_verboseDebug)
             info()<<"**** start new pc****   station  and region "
-                  <<i <<" fired "<<fired<<endreq;	
+                  <<i <<" fired "<<fired<<endmsg;	
           for(iterInHits=objToAdd->hitsTraceBack().begin();
               iterInHits<objToAdd->hitsTraceBack().end();iterInHits++){	
             
             if(m_verboseDebug)info()<<"time"<<(iterInHits)-> 
                                 hitArrivalTime()	<<" tile "<<
-                                objToAdd->phChID()->getFETile()<<endreq;	
+                                objToAdd->phChID()->getFETile()<<endmsg;	
             if(m_verboseDebug)info()<<	" deadtime "<<
                                 (*iterInHits).getMCMuonHistory().
                                 isHitInDeadtime()<<" time jitter "<<
                                 (*iterInHits).getMCMuonHistory().
                                 hasTimeJittered() <<" efficiency  "<<
                                 (*iterInHits).getMCMuonHistory().
-                                isKilledByChamberInefficiency()<<endreq;
+                                isKilledByChamberInefficiency()<<endmsg;
           }					  
         }
         // if(fired||interestingHit){  
         objToAdd->fillTimeList();
         StatusCode asc=PhysicalChannelOutput.addMuonObject(i,objToAdd);
-        if(asc.isFailure())debug()<<" problem in adding obj "<<endreq;
+        if(asc.isFailure())debug()<<" problem in adding obj "<<endmsg;
         
         //}
         //else {
@@ -874,11 +845,11 @@ fillCardiacChannel(MuonDigitizationData<MuonPhysicalChannelOutput>&
         
         (*iterInput)->calculateCardiacORID(cardiacChTileID,
                        m_muonDetector);
-        //        info()<<"ii "<<i<<" "<< cardiacChTileID<<endreq;
+        //        info()<<"ii "<<i<<" "<< cardiacChTileID<<endmsg;
         bool alreadyExist=false;
         MuonPhysicalChannelOutput* jout=
           static_cast< MuonPhysicalChannelOutput* >(*(iterInput));
-        //info()<<((*iterInput)->phChInfo()).isAlive()<<endreq;
+        //info()<<((*iterInput)->phChInfo()).isAlive()<<endmsg;
       
         if(!CardiacChannelOutput.isEmpty(i)){
            for(iterOutput=CardiacChannelOutput.getPartition(i)->begin();
@@ -892,7 +863,7 @@ fillCardiacChannel(MuonDigitizationData<MuonPhysicalChannelOutput>&
            }
            
         }
-        //info()<<" alreadyExist= "<<alreadyExist<<endreq;
+        //info()<<" alreadyExist= "<<alreadyExist<<endmsg;
         
         
         if(!alreadyExist){
@@ -901,7 +872,7 @@ fillCardiacChannel(MuonDigitizationData<MuonPhysicalChannelOutput>&
             MuonCardiacChannelOutput(cardiacChTileID);
           objToAdd->addPhyChannel(jout);
           StatusCode asc=CardiacChannelOutput.addMuonObject(i,objToAdd);
-          if(asc.isFailure())debug()<<"unable to add chardiac channel "<<endreq;
+          if(asc.isFailure())debug()<<"unable to add chardiac channel "<<endmsg;
           
         }
         
@@ -915,7 +886,7 @@ fillCardiacChannel(MuonDigitizationData<MuonPhysicalChannelOutput>&
           iterOutput<CardiacChannelOutput.getPartition(i)->end();iterOutput++){
         (*iterOutput)-> processForDeadTime(25, m_gate);
         //        (*iterOutput)-> setFiringTime(); 
-        //  info()<<" dopo il deadtime "<< (*iterOutput)->chInfo().isAlive()<<endreq;
+        //  info()<<" dopo il deadtime "<< (*iterOutput)->chInfo().isAlive()<<endmsg;
         
       }
    }
@@ -923,7 +894,7 @@ fillCardiacChannel(MuonDigitizationData<MuonPhysicalChannelOutput>&
   }
   
 
-  //info()<<" pre new ch  size "<<endreq;
+  //info()<<" pre new ch  size "<<endmsg;
   
  
    return StatusCode::SUCCESS;
@@ -939,11 +910,11 @@ applyPhysicalEffects(MuonDigitizationData<MuonPhysicalChannel>&
   //loop over the 20 containers 
   
   for (int i=0; i<m_partition;i++){	
-    //    log<<MSG::INFO<<" part "<<i<<endreq;
+    //    log<<MSG::INFO<<" part "<<i<<endmsg;
     int station=i/4;
     int region=i%4;	 
 	  if(!PhysicalChannel.isEmpty(i)){
-      //log<<MSG::INFO<<" non empty "<<i<<endreq;
+      //log<<MSG::INFO<<" non empty "<<i<<endmsg;
       
 		  std::vector<MuonPhysicalChannel*>  XTalkPhysicalChannel;
 			std::vector<MuonPhysicalChannel*>::iterator iterOnSTD;
@@ -960,22 +931,22 @@ applyPhysicalEffects(MuonDigitizationData<MuonPhysicalChannel>&
 			 	phChInY[m_muonDetector->getReadoutType(iloop,station,region)]	=
           m_muonDetector->getPhChannelNY( iloop,station,region);
       }
-      //log<<MSG::INFO<<" start iter "<<endreq;
+      //log<<MSG::INFO<<" start iter "<<endmsg;
       
       for(iter=PhysicalChannel.getPartition(i)->begin();
 			    iter<PhysicalChannel.getPartition(i)->end();iter++){
         //					if(i==0)cout<<" alessia diventa scema "<<endl;
         // apply per pc the time jitter on each hit	
-        //  log<<MSG::INFO<<" pre jitter "<<endreq;
+        //  log<<MSG::INFO<<" pre jitter "<<endmsg;
         if( m_applyTimeJitter)(*iter)->applyTimeJitter();
-        //log<<MSG::INFO<<" jitter "<<endreq;
+        //log<<MSG::INFO<<" jitter "<<endmsg;
         // apply per pc the geometry inefficiency 	on each hit			
         if(m_applyEfficiency)(*iter)->applyGeoInefficiency();					 
-        //log<<MSG::INFO<<" eff "<<endreq;
+        //log<<MSG::INFO<<" eff "<<endmsg;
         
         // apply per pc the chamber inefficiency 	on each hit				
         if(m_applyEfficiency)(*iter)->applyChamberInefficiency();	
-        //log<<MSG::INFO<<" effdue "<<endreq;
+        //log<<MSG::INFO<<" effdue "<<endmsg;
         
         // apply per pc the X Talk on each hit				
         // start Xtalk   
@@ -993,8 +964,8 @@ applyPhysicalEffects(MuonDigitizationData<MuonPhysicalChannel>&
             XTalkPhysicalChannel.push_back(*iterXTalk);
           }else{
             debug()<<"xtalk hit test  molto dopo "<<
-              (*iter)<<" "<<*iterXTalk<<" "<<pFound<<endreq;
-            if(pFound==(*iter))err()<<"alessia gran casino"<<endreq;
+              (*iter)<<" "<<*iterXTalk<<" "<<pFound<<endmsg;
+            if(pFound==(*iter))err()<<"alessia gran casino"<<endmsg;
             pFound->addToPC(*iterXTalk);
             delete *iterXTalk;
           }
@@ -1019,7 +990,7 @@ applyPhysicalEffects(MuonDigitizationData<MuonPhysicalChannel>&
         }
         else{
           StatusCode asc=PhysicalChannel.addMuonObject(i,*iterOnSTD);
-          if(asc.isFailure())debug()<<" not able to add xt "<<endreq;
+          if(asc.isFailure())debug()<<" not able to add xt "<<endmsg;
           
           //						 if(i==0)cout<<" real new  "<<endl;
           std::vector<MuonHitTraceBack>::iterator hji ;
@@ -1031,7 +1002,7 @@ applyPhysicalEffects(MuonDigitizationData<MuonPhysicalChannel>&
         }        
       } 
       // start deadtime
-      //log<<MSG::INFO<<" deadtime "<<endreq;
+      //log<<MSG::INFO<<" deadtime "<<endmsg;
       for(iter=PhysicalChannel.getPartition(i)->begin();
 			    iter<PhysicalChannel.getPartition(i)->end();iter++){
         // sort in time the hit of each pc
@@ -1044,19 +1015,19 @@ applyPhysicalEffects(MuonDigitizationData<MuonPhysicalChannel>&
           for (iterTest=hits.begin();iterTest<hits.end();iterTest++){
           }
         }			  
-        //log<<MSG::INFO<<" deadtime 2"<<endreq;
+        //log<<MSG::INFO<<" deadtime 2"<<endmsg;
         
         //apply time adjustment	
         if(m_applyTimeAdjustment)(*iter)->applyTimeAdjustment();	
         //apply deadtime
         if(m_applyDeadtime)(*iter)-> applyDeadtime(m_numberOfEventsNeed) ;
-        //log<<MSG::INFO<<" deadtime 3"<<endreq;
+        //log<<MSG::INFO<<" deadtime 3"<<endmsg;
 			}	
       //end deadtime			 			 			  									 			
 	  }				
   }
   
-  //log<<MSG::INFO<<" end of all "<<endreq;
+  //log<<MSG::INFO<<" end of all "<<endmsg;
   
   return StatusCode::SUCCESS ;	
 }
@@ -1079,16 +1050,16 @@ createLogicalChannel(MuonDigitizationData<MuonPhysicalChannelOutput>&
     for(iter=PhyChaOutput.getPartition(i)->begin();iter<
           PhyChaOutput.getPartition(i)->end();iter++){	
       if(m_verboseDebug){
-        debug()<<"FE ID "<<(*iter)->phChID()->getID()<<endreq;}
+        debug()<<"FE ID "<<(*iter)->phChID()->getID()<<endmsg;}
       LHCb::MuonTileID phChTileID[2];
       int numberOfTileID;  
       if(m_verboseDebug)info()<<"FE ID "<<
-                          (*iter)->phChID()->getID()<<endreq;
+                          (*iter)->phChID()->getID()<<endmsg;
       (*iter)->calculateTileID(numberOfTileID,phChTileID,m_muonDetector);
       if( m_verboseDebug)info()<<" after tile calculation " 
-                            << numberOfTileID<<" "<<endreq;
+                            << numberOfTileID<<" "<<endmsg;
       if( m_verboseDebug)info()<<" tile  " << 
-                                phChTileID[0]<< phChTileID[1]<<" "<<endreq;
+                                phChTileID[0]<< phChTileID[1]<<" "<<endmsg;
       
       //
       // loop over possible phchtileID (1 or 2 if double mapping)
@@ -1100,7 +1071,7 @@ createLogicalChannel(MuonDigitizationData<MuonPhysicalChannelOutput>&
         //           
         if(m_verboseDebug){
           debug()<<" Loop on mappings "<<
-            iTile<<" "<<numberOfTileID<<endreq;}             
+            iTile<<" "<<numberOfTileID<<endmsg;}             
         for(iterDigit=mcDigitContainer.begin(); 
             iterDigit<mcDigitContainer.end()&&!found; iterDigit++){
           LHCb::MuonTileID tile=(*iterDigit)->key();
@@ -1112,11 +1083,11 @@ createLogicalChannel(MuonDigitizationData<MuonPhysicalChannelOutput>&
           if(tile==phChTileID[iTile]){
             if( m_verboseDebug)info()<<
                                  " Loop on mappings found already "
-                                  <<tile<<" "<<endreq;
+                                  <<tile<<" "<<endmsg;
             if( m_verboseDebug) info()<<"  "<<
                                   (*iterDigit)->DigitInfo().isAlive()
                                         <<" "<<(*iter)->phChInfo().isAlive()
-                                   <<endreq;
+                                   <<endmsg;
             found=true;
                  // Digit already exists, update bits and links
             std::vector<MuonHitTraceBack>::iterator iterOnHits;
@@ -1167,14 +1138,14 @@ createLogicalChannel(MuonDigitizationData<MuonPhysicalChannelOutput>&
                    
               if( m_verboseDebug)info()<<" importante "<<
                                    (*iterDigit)->DigitInfo().isAlive()  
-                                    <<endreq;
+                                    <<endmsg;
             }
             if(!((*iterDigit)->DigitInfo().isAlive())&&
                !((*iter)->phChInfo().isAlive())){
               if( m_verboseDebug)info()<<
                                    " molto importante "<<
                                    (*iterDigit)->DigitInfo().isAlive()  
-                                    <<endreq;                   
+                                    <<endmsg;                   
               // both not fired
               if((*iterDigit)->DigitInfo().isInDeadTime()||	
                  (*iter)->phChInfo().isInDeadTime()){
@@ -1213,7 +1184,7 @@ createLogicalChannel(MuonDigitizationData<MuonPhysicalChannelOutput>&
         if(!found){
           if( m_verboseDebug)info()<<
                                " create new Digit with tile "<<
-                               phChTileID[iTile]<<" "<<iTile<<endreq;
+                               phChTileID[iTile]<<" "<<iTile<<endmsg;
           std::vector<MuonHitTraceBack>::iterator iterOnHits;
           LHCb::MCMuonDigit* newMCDigit=new 
             LHCb::MCMuonDigit(phChTileID[iTile]);
@@ -1233,7 +1204,7 @@ createLogicalChannel(MuonDigitizationData<MuonPhysicalChannelOutput>&
       }
     }
   }
-  debug()<<" MC Digits created "<<countDigits<<endreq; 
+  debug()<<" MC Digits created "<<countDigits<<endmsg; 
   return StatusCode::SUCCESS;
 }
 
@@ -1250,23 +1221,23 @@ createLogicalChannel(MuonDigitizationData<MuonCardiacChannelOutput>&
     for(iter=PhyChaOutput.getPartition(i)->begin();iter<
           PhyChaOutput.getPartition(i)->end();iter++){	
      //  if(m_verboseDebug){
-//         debug()<<"FE ID "<<(*iter)->phChID()->getID()<<endreq;}
+//         debug()<<"FE ID "<<(*iter)->phChID()->getID()<<endmsg;}
 //if((*iter)->
 //info()<<" "<<(*iter)->
       LHCb::MuonTileID phChTileID[2];
       int numberOfTileID;  
       if(m_verboseDebug) info()<<"FE ID "<<
-        (*iter)->chID().getID()<<endreq;
+        (*iter)->chID().getID()<<endmsg;
       if(m_verboseDebug)info()<<"FE ID "<<
-                          (*iter)->chID().getID()<<endreq; 
-       if(m_verboseDebug)info()<<" prima "<< (**iter).chID()<<endreq;
+                          (*iter)->chID().getID()<<endmsg; 
+       if(m_verboseDebug)info()<<" prima "<< (**iter).chID()<<endmsg;
       (*iter)->calculateTileID(numberOfTileID,phChTileID,m_muonDetector);
-       if(m_verboseDebug)info()<< (**iter).chID()<<endreq;
+       if(m_verboseDebug)info()<< (**iter).chID()<<endmsg;
       
       if( m_verboseDebug)info()<<" after tile calculation " 
-                               << numberOfTileID<<" "<<endreq;
+                               << numberOfTileID<<" "<<endmsg;
       if( m_verboseDebug)info()<<" tile  " << 
-                                phChTileID[0]<< phChTileID[1]<<" "<<endreq;
+                                phChTileID[0]<< phChTileID[1]<<" "<<endmsg;
       
       //
       // loop over possible phchtileID (1 or 2 if double mapping)
@@ -1282,14 +1253,14 @@ createLogicalChannel(MuonDigitizationData<MuonCardiacChannelOutput>&
                 if(m_verboseDebug){info()<<" deg "<<  phChTileID[iTile].layout()<<" "<<
           phChTileID[iTile].station()<<" "<< phChTileID[iTile].region()<<" "<<
           phChTileID[iTile].quarter()<<" "<< phChTileID[iTile].nX()<<" "<<
-                                     phChTileID[iTile].nY()<<endreq;
+                                     phChTileID[iTile].nY()<<endmsg;
                 }
                 
         if(m_verboseDebug){
           debug()<<" Loop on mappings "<<
-            iTile<<" "<<numberOfTileID<<endreq;}      
+            iTile<<" "<<numberOfTileID<<endmsg;}      
         if(m_verboseDebug) debug()<<" Loop on mappings "<<
-            iTile<<" "<<numberOfTileID<<endreq;       
+            iTile<<" "<<numberOfTileID<<endmsg;       
         for(iterDigit=mcDigitContainer.begin(); 
             iterDigit<mcDigitContainer.end()&&!found; iterDigit++){
           LHCb::MuonTileID tile=(*iterDigit)->key();
@@ -1301,12 +1272,12 @@ createLogicalChannel(MuonDigitizationData<MuonCardiacChannelOutput>&
           if(tile==phChTileID[iTile]){
             if( m_verboseDebug)info()<<
                                  " Loop on mappings found already "
-                                     <<tile<<" "<<endreq;
+                                     <<tile<<" "<<endmsg;
                       if( m_verboseDebug) 
             info()<<"  "<<
               (*iterDigit)->DigitInfo().isAlive()
                   <<" "<<(*iter)->chInfo().isAlive()
-                  <<endreq;
+                  <<endmsg;
             found=true;
             // Digit already exists, update bits and links
             std::vector<MuonHitTraceBack>::iterator iterOnHits;
@@ -1345,7 +1316,7 @@ createLogicalChannel(MuonDigitizationData<MuonCardiacChannelOutput>&
               // only one is fired	
              //  info()<<" importante "<<
 //                 (*iterDigit)->DigitInfo().isAlive()  
-//                     <<endreq;
+//                     <<endmsg;
               (*iterDigit)->setFiringTime((*iter)->firingTime());
               (*iterDigit)->DigitInfo().setNatureHit((*iter)
                                                      ->chInfo().
@@ -1358,14 +1329,14 @@ createLogicalChannel(MuonDigitizationData<MuonCardiacChannelOutput>&
                    
               if( m_verboseDebug)info()<<" importante "<<
                                    (*iterDigit)->DigitInfo().isAlive()  
-                                    <<endreq;
+                                    <<endmsg;
             }
             if(!((*iterDigit)->DigitInfo().isAlive())&&
                !((*iter)->chInfo().isAlive())){
               if( m_verboseDebug)info()<<
                                    " molto importante "<<
                                    (*iterDigit)->DigitInfo().isAlive()  
-                                    <<endreq;                   
+                                    <<endmsg;                   
               // both not fired
               if((*iterDigit)->DigitInfo().isInDeadTime()||	
                  (*iter)->chInfo().isInDeadTime()){
@@ -1401,11 +1372,11 @@ createLogicalChannel(MuonDigitizationData<MuonCardiacChannelOutput>&
             for(iterOnHitsCardiac=iterstart;
                      iterOnHitsCardiac!=iterstop;
                 iterOnHitsCardiac++){
-              // info()<<" add hits "<<(*iter)->hitsTraceBack().size()<<endreq;
-              // info()<<" add hits "<< iterOnHitsCardiac<<endreq;
+              // info()<<" add hits "<<(*iter)->hitsTraceBack().size()<<endmsg;
+              // info()<<" add hits "<< iterOnHitsCardiac<<endmsg;
               
               //if((*iter)->hitsTraceBack().end()==iterOnHitsCardiac)
-                //  info()<<" add hits at the end"<<endreq;
+                //  info()<<" add hits at the end"<<endmsg;
               
               (*iterDigit)->HitsHistory().push_back((*iterOnHitsCardiac)->
                                                     getMCMuonHistory());
@@ -1418,7 +1389,7 @@ createLogicalChannel(MuonDigitizationData<MuonCardiacChannelOutput>&
           //          if( m_verboseDebug)
         //   info()<<
 //             " create new Digit with tile "<<
-//             phChTileID[iTile]<<" "<<iTile<<endreq;
+//             phChTileID[iTile]<<" "<<iTile<<endmsg;
           std::vector<MuonHitTraceBack*>::iterator iterOnHitsCardiac;
           LHCb::MCMuonDigit* newMCDigit=new 
             LHCb::MCMuonDigit(phChTileID[iTile]);
@@ -1428,20 +1399,20 @@ createLogicalChannel(MuonDigitizationData<MuonCardiacChannelOutput>&
           for(iterOnHitsCardiac=pippo.begin();
               iterOnHitsCardiac!=pippo.end();
               iterOnHitsCardiac++){ 
-            // info()<<"a new  hit to add "<<(*iter)->hitsTraceBack().size()<<endreq;
+            // info()<<"a new  hit to add "<<(*iter)->hitsTraceBack().size()<<endmsg;
             (newMCDigit)->HitsHistory().push_back((*iterOnHitsCardiac)->
                                                   getMCMuonHistory());
-            // info()<<"a new  hit to add "<<endreq;
+            // info()<<"a new  hit to add "<<endmsg;
             
             newMCDigit->addToMCHits((*iterOnHitsCardiac)->getMCHit());
-            // info()<<" hit added "<<endreq;
+            // info()<<" hit added "<<endmsg;
             //          (*iter)->chInfo()  
           }
           
           newMCDigit->setDigitInfo((*iter)->chInfo());
           newMCDigit->setFiringTime((*iter)->firingTime());
           //info()<<(*iter)->firingTime()<<" qui "
-          //     <<(*iter)->chInfo().isAlive()<<endreq;
+          //     <<(*iter)->chInfo().isAlive()<<endmsg;
           mcDigitContainer.insert(newMCDigit); 
           ++countDigits;
         }
@@ -1450,7 +1421,7 @@ createLogicalChannel(MuonDigitizationData<MuonCardiacChannelOutput>&
                 
     }
   }
-  debug()<<" MC Digits created "<<countDigits<<endreq; 
+  debug()<<" MC Digits created "<<countDigits<<endmsg; 
   return StatusCode::SUCCESS;
 }
   
@@ -1478,10 +1449,10 @@ createRAWFormat(LHCb::MCMuonDigits& mcDigitContainer,
       LHCb::MuonTileID gg=(*iterMCDigit)->key();
 			debug()<<"new daq word "<<
         gg.layout()<<" "<<gg.station()<<" "<<gg.region()<< 
-        " "<<gg.quarter()<<" "<<gg.nX()<<" "<<gg.nY()<<" "<<" "<<time<<endreq;
-      debug()<<gg<<endreq;
+        " "<<gg.quarter()<<" "<<gg.nX()<<" "<<gg.nY()<<" "<<" "<<time<<endmsg;
+      debug()<<gg<<endmsg;
       
-      //        " "<<time<<endreq;
+      //        " "<<time<<endmsg;
  		}
 	}
   return StatusCode::SUCCESS;	 
@@ -1509,11 +1480,11 @@ addElectronicNoise(MuonDigitizationData
                 readout++){
               int phChInX=m_muonDetector->getPhChannelNX( readout,i,k);   
               int phChInY=m_muonDetector->getPhChannelNY( readout,i,k);
-              //              info()<<"pre noiseChannels"<<partitionNumber<<" "<<readout<<endreq; 
+              //              info()<<"pre noiseChannels"<<partitionNumber<<" "<<readout<<endmsg; 
               int noiseChannels=(detectorResponse.getResponse
                 (partitionNumber,readout))->
                 electronicNoise();
-              //info()<<"noiseChannels "<<noiseChannels<<" "<<partitionNumber<<endreq;
+              //info()<<"noiseChannels "<<noiseChannels<<" "<<partitionNumber<<endmsg;
               unsigned int readoutType=
                 m_muonDetector->getReadoutType(readout,i,k);
               for(int hitNoise=0;hitNoise<noiseChannels;hitNoise++){
@@ -1527,7 +1498,7 @@ addElectronicNoise(MuonDigitizationData
                 ID.setRegion(k);
                 LHCb::MuonTileID chTile;
 		StatusCode scchamber=m_muonDetector->Chamber2Tile(chamber,i,k,chTile);
-                if(scchamber.isFailure())warning()<<" failure of chamber 2 tile conversion "<<endreq;
+                if(scchamber.isFailure())warning()<<" failure of chamber 2 tile conversion "<<endmsg;
                 ID.setQuadrant(chTile.quarter());
                 //                ID.setQuadrant(m_pGetInfo->getQuadrantChamber
                 //               (chamber+chamberTillNow));
@@ -1562,7 +1533,7 @@ addElectronicNoise(MuonDigitizationData
                      (*(newPhysicalChannel->phChID())));
                   StatusCode asc=PhysicalChannel.addMuonObject(partitionNumber,
                                                 newPhysicalChannel);
-                  if(asc.isFailure())debug()<<" unable to add hit "<<endreq;
+                  if(asc.isFailure())debug()<<" unable to add hit "<<endmsg;
                   
                 }
               }	 
@@ -1573,7 +1544,7 @@ addElectronicNoise(MuonDigitizationData
       }									 							 		
     }			 
 	}		
-  //info()<<"esco "<<endreq;
+  //info()<<"esco "<<endmsg;
   return StatusCode::SUCCESS;	 
   
 }
