@@ -35,11 +35,11 @@
 # PoolRootKeyEvtCnvSvc.EnableIncident  =    1;
 # PoolRootTreeEvtCnvSvc.EnableIncident =    1;
 # <-- End of file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v20r4/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
-Gauss-5ev-20090323
-ApplicationMgr    SUCCESS 
+Gauss-5ev-20090331
+ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Gauss version v36r2
-                                          running on lxplus253.cern.ch on Mon Mar 23 09:59:07 2009
+                                          running on lxplus217.cern.ch on Tue Mar 31 18:12:22 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersistencySvc     INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
@@ -82,10 +82,15 @@ DeRichSystem               INFO Built mappings for  7 L1 and 196 HPDs in Rich1
 DeRichSystem               INFO Built mappings for  8 L1 and 288 HPDs in Rich2
 RichG4TrackActionPhotOpt   INFO  Rich HPD Max QE from DB and UsedInThisRun are  0.45    0.45
 ParticlePropertySvc        INFO Opened particle properties file : conddb:///param/ParticleTable.txt
+ParticlePropertySvc     SUCCESS  Add/Modify the particle:  name='Sigma_c*0' geant=480 jetset=4114 charge=0 mass=2.518 ltime=4.08827e-23 evtgen='Sigma_c*0' pythia=4114 maxwid=0.0919
+ParticlePropertySvc     SUCCESS  Add/Modify the particle:  name='Sigma_c*~0' geant=481 jetset=-4114 charge=0 mass=2.518 ltime=4.08827e-23 evtgen='anti-Sigma_c*0' pythia=-4114 maxwid=0.0919
+ParticlePropertySvc     SUCCESS  Add/Modify the particle:  name='Sigma_c*++' geant=488 jetset=4224 charge=2 mass=2.5184 ltime=4.41753e-23 evtgen='Sigma_c*++' pythia=4224 maxwid=0.09
+ParticlePropertySvc     SUCCESS  Add/Modify the particle:  name='Sigma_c*~--' geant=489 jetset=-4224 charge=-2 mass=2.5184 ltime=4.41753e-23 evtgen='anti-Sigma_c*--' pythia=-4224 maxwid=0.09
+ParticlePropertySvc        INFO Properties have beed redefined for 4 particles : [ 'Sigma_c*++' , 'Sigma_c*0' , 'Sigma_c*~--' , 'Sigma_c*~0' ]
 GiGa                       INFO Used Tracking Action Object is GiGaTrackActionSequence/GiGa.TrackSeq
 GiGa                       INFO Used  Stepping Action Object is GiGaStepActionSequence/GiGa.StepSeq
 HistogramPersistencySvc    INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
-RootHistSvc                INFO Writing ROOT histograms to: Gauss-5ev-20090323-histos.root
+RootHistSvc                INFO Writing ROOT histograms to: Gauss-5ev-20090331-histos.root
 HistogramPersistencySvc    INFO Added successfully Conversion service:RootHistSvc
 HistogramDataSvc           INFO Added stream file:/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r0/data/gausscalo.root as GaussCalo
 GiGa                       INFO Used  Event Action Object is GiGaEventActionSequence/GiGa.EventSeq
@@ -96,29 +101,208 @@ RndmGenSvc.Engine          INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine          INFO Current Seed:1234567 Luxury:3
 RndmGenSvc.Engine          INFO This is the GEANT4 engine!
 RndmGenSvc                 INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.TIMER        INFO This machine has a speed about   1.34 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER        INFO This machine has a speed about   1.61 times the speed of a 2.8 GHz Xeon.
 Gauss                      INFO Member list: GaudiSequencer/Generator, GaudiSequencer/Simulation
-ToolSvc.SequencerTime...   INFO This machine has a speed about   1.36 times the speed of a 2.8 GHz Xeon.
+ToolSvc.SequencerTime...   INFO This machine has a speed about   1.85 times the speed of a 2.8 GHz Xeon.
 Generator                  INFO Member list: GenInit/GaussGen, Generation, GaudiSequencer/GenMonitor
 GaussGen                SUCCESS ==================================================================
 GaussGen                SUCCESS Requested to process 5 events
 GaussGen                SUCCESS ==================================================================
-Generation.FixedLumin...   INFO Poisson distribution with fixed luminosity. 
+Generation.FixedLumin...   INFO Poisson distribution with fixed luminosity.
 Generation.FixedLumin...   INFO Luminosity (10^32 / cm^2 s): 2
 Generation.FixedLumin...   INFO Bunch crossing rate (MHz): 30
 Generation.FixedLumin...   INFO Total cross section (mbarn): 102.4
+ToolSvc.EvtGenDecay       DEBUG Property update for OutputLevel : new value = 2
+ToolSvc.EvtGenDecay       DEBUG Property update for OutputLevel : new value = 2
+ToolSvc.EvtGenDecay       DEBUG Initialize base class GaudiCommon<AlgTool>
+ToolSvc.EvtGenDecay       DEBUG List of ALL properties of EvtGenDecay/ToolSvc.EvtGenDecay  #properties = 29
+ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'ImHelOne':0
+ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'RealHelZero':1
+ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'ImHelOne':0
+ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'RealHelOne':1
+ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'PolarizedCharmonium':False
+ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'PolarizedLambdad':False
+ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'KeepTempEvtFile':False
+ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'UserDecayFile':/afs/cern.ch/lhcb/software/releases/DBASE/Gen/DecFiles/v16r1/dkfiles/minbias.dec
+ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'DecayFile':/afs/cern.ch/lhcb/software/DEV/GAUSS/Gen/DecFiles/v17r0/dkfiles/DECAY.DEC
+ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'ContextService':AlgContextSvc
+ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
+ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
+ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
+ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0
+ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'RootOnTES':
+ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'RootInTES':
+ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'Context':
+ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'TypePrint':True
+ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'StatPrint':True
+ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'PropertiesPrint':False
+ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'AuditFinalize':False
+ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'AuditStop':False
+ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'AuditStart':False
+ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'AuditInitialize':False
+ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'AuditTools':False
+ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'OutputLevel':2
+ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
+ToolSvc.EvtGenDecay       DEBUG Releasing service 'ParticlePropertySvc'
+ToolSvc.EvtGenDecay       DEBUG Releasing service 'RndmGenSvc'
+EvtGen:Initializing EvtGen
+EvtGen:Storing known decay models
+EvtGen:Main decay file name  :/afs/cern.ch/lhcb/software/DEV/GAUSS/Gen/DecFiles/v17r0/dkfiles/DECAY.DEC
+EvtGen:PDT table file name   :tempPdlFile.txt
+EvtGen:Initializing RadCorr=PHOTOS
+EvtGen:No RadCorr engine given in EvtGen::EvtGen constructor, will use default EvtPHOTOS.
+EvtGen:In readDecayFile, reading:/afs/cern.ch/lhcb/software/DEV/GAUSS/Gen/DecFiles/v17r0/dkfiles/DECAY.DEC
+EvtGen:As requested, PHOTOS will be turned on.
+EvtGen:VSS_BMIXCPT will generate mixing and CPT/CP effects in mixing:
+
+    Upsilon(4S) --> B0 + anti-B0
+
+using parameters:
+
+  delta(m)  = 0.502 hbar/ps
+  _freq     = 1.67449 hbar/mm
+  dgog      = 0
+  dGamma    = 0 hbar/mm
+  q/p       = (1,0)
+  z         = (0,0)
+  tau       = 1.53 ps
+  x         = 0.76806
+ chi(B0->B0bar) = 0.185518
+ chi(B0bar->B0) = 0.185518
+ Af         = (1,0)
+ Abarf      = (0,0)
+ Afbar      = (0,0)
+ Abarfbar   = (1,0)
+
+EvtGen:Warning, sum of branching fractions for anti-B0 is 0.9977
+EvtGen:rescaled to one!
+EvtGen:Warning, sum of branching fractions for B0 is 0.9977
+EvtGen:rescaled to one!
+EvtGen:Warning, sum of branching fractions for anti-B_s0 is 1.00087
+EvtGen:rescaled to one!
+EvtGen:Warning, sum of branching fractions for B_s0 is 1.00087
+EvtGen:rescaled to one!
+EvtGen:Redefined Partial wave for D_1+ to D*+ pi0 (2)
+EvtGen:Redefined Partial wave for D_1+ to D*0 pi+ (2)
+EvtGen:Redefined Partial wave for D_1- to D*- pi0 (2)
+EvtGen:Redefined Partial wave for D_1- to anti-D*0 pi- (2)
+EvtGen:Redefined Partial wave for D_10 to D*0 pi0 (2)
+EvtGen:Redefined Partial wave for D_10 to D*+ pi- (2)
+EvtGen:Redefined Partial wave for anti-D_10 to anti-D*0 pi0 (2)
+EvtGen:Redefined Partial wave for anti-D_10 to D*- pi+ (2)
+EvtGen:Redefined Partial wave for D_2*+ to D*+ pi0 (2)
+EvtGen:Redefined Partial wave for D_2*+ to D*0 pi+ (2)
+EvtGen:Redefined Partial wave for D_2*- to D*- pi0 (2)
+EvtGen:Redefined Partial wave for D_2*- to anti-D*0 pi- (2)
+EvtGen:Redefined Partial wave for D_2*0 to D*0 pi0 (2)
+EvtGen:Redefined Partial wave for D_2*0 to D*+ pi- (2)
+EvtGen:Redefined Partial wave for anti-D_2*0 to anti-D*0 pi0 (2)
+EvtGen:Redefined Partial wave for anti-D_2*0 to D*- pi+ (2)
+EvtGen:Warning, sum of branching fractions for J/psi is 0.99771
+EvtGen:rescaled to one!
+EvtGen:Given allowed decays, resetting minMass omega(1650) 0 to 0.27914
+EvtGen:Given allowed decays, resetting minMass phi(1680) 0 to 0.27914
+EvtGen:Done initializing EvtGen
+EvtGen:In readDecayFile, reading:/afs/cern.ch/lhcb/software/releases/DBASE/Gen/DecFiles/v16r1/dkfiles/minbias.dec
+EvtGen:Reading /afs/cern.ch/lhcb/software/releases/DBASE/Gen/DecFiles/v16r1/dkfiles/minbias.dec to override decay table.
+EvtGen:Will initialize Pythia.
+1
+ ******************************************************************************
+ ******************************************************************************
+ **                                                                          **
+ **                                                                          **
+ **              *......*                  Welcome to the Lund Monte Carlo!  **
+ **         *:::!!:::::::::::*                                               **
+ **      *::::::!!::::::::::::::*          PPP  Y   Y TTTTT H   H III   A    **
+ **    *::::::::!!::::::::::::::::*        P  P  Y Y    T   H   H  I   A A   **
+ **   *:::::::::!!:::::::::::::::::*       PPP    Y     T   HHHHH  I  AAAAA  **
+ **   *:::::::::!!:::::::::::::::::*       P      Y     T   H   H  I  A   A  **
+ **    *::::::::!!::::::::::::::::*!       P      Y     T   H   H III A   A  **
+ **      *::::::!!::::::::::::::* !!                                         **
+ **      !! *:::!!:::::::::::*    !!       This is PYTHIA version 6.418      **
+ **      !!     !* -><- *         !!       Last date of change:  9 Jun 2008  **
+ **      !!     !!                !!                                         **
+ **      !!     !!                !!       Now is  0 Jan 2000 at  0:00:00    **
+ **      !!                       !!                                         **
+ **      !!        lh             !!       Disclaimer: this program comes    **
+ **      !!                       !!       without any guarantees. Beware    **
+ **      !!                 hh    !!       of errors and use common sense    **
+ **      !!    ll                 !!       when interpreting results.        **
+ **      !!                       !!                                         **
+ **      !!                                Copyright T. Sjostrand (2008)     **
+ **                                                                          **
+ ** An archive of program versions and documentation is found on the web:    **
+ ** http://www.thep.lu.se/~torbjorn/Pythia.html                              **
+ **                                                                          **
+ ** When you cite this program, the official reference is to the 6.4 manual: **
+ ** T. Sjostrand, S. Mrenna and P. Skands, JHEP05 (2006) 026                 **
+ ** (LU TP 06-13, FERMILAB-PUB-06-052-CD-T) [hep-ph/0603175].                **
+ **                                                                          **
+ ** Also remember that the program, to a large extent, represents original   **
+ ** physics research. Other publications of special relevance to your        **
+ ** studies may therefore deserve separate mention.                          **
+ **                                                                          **
+ ** Main author: Torbjorn Sjostrand; Department of Theoretical Physics,      **
+ **   Lund University, Solvegatan 14A, S-223 62 Lund, Sweden;                **
+ **   phone: + 46 - 46 - 222 48 16; e-mail: torbjorn@thep.lu.se              **
+ ** Author: Stephen Mrenna; Computing Division, GDS Group,                   **
+ **   Fermi National Accelerator Laboratory, MS 234, Batavia, IL 60510, USA; **
+ **   phone: + 1 - 630 - 840 - 2556; e-mail: mrenna@fnal.gov                 **
+ ** Author: Peter Skands; Theoretical Physics Department,                    **
+ **   Fermi National Accelerator Laboratory, MS 106, Batavia, IL 60510, USA; **
+ **   and CERN/PH, CH-1211 Geneva, Switzerland;                              **
+ **   phone: + 41 - 22 - 767 24 59; e-mail: skands@fnal.gov                  **
+ **                                                                          **
+ **                                                                          **
+ ******************************************************************************
+ ******************************************************************************
+     MSTJ(26)       changed from              2 to              0
+
+     Advisory warning type 7 given after        0 PYEXEC calls:
+     (PYUPDA:) Kinematically unallowed decay of KF =       18
+
+     Advisory warning type 7 given after        0 PYEXEC calls:
+     (PYUPDA:) Kinematically unallowed decay of KF =       18
+
+     Advisory warning type 7 given after        0 PYEXEC calls:
+     (PYUPDA:) Kinematically unallowed decay of KF =      113
+
+     Advisory warning type 7 given after        0 PYEXEC calls:
+     (PYUPDA:) Kinematically unallowed decay of KF =      115
+
+     Advisory warning type 7 given after        0 PYEXEC calls:
+     (PYUPDA:) Kinematically unallowed decay of KF =      115
+
+     Advisory warning type 7 given after        0 PYEXEC calls:
+     (PYUPDA:) Kinematically unallowed decay of KF =      115
+
+     Advisory warning type 7 given after        0 PYEXEC calls:
+     (PYUPDA:) Kinematically unallowed decay of KF =      115
+
+     Advisory warning type 7 given after        0 PYEXEC calls:
+     (PYUPDA:) Kinematically unallowed decay of KF =      115
+
+     Advisory warning type 7 given after        0 PYEXEC calls:
+     (PYUPDA:) Kinematically unallowed decay of KF =      115
+
+     Advisory warning type 7 given after        0 PYEXEC calls:
+     (PYUPDA:) Kinematically unallowed decay of KF =      115
+EvtGen:Done initializing Pythia.
+ToolSvc.EvtGenDecay       DEBUG EvtGenDecay initialized
 Generation.MinimumBias     INFO Generating Minimum Bias events.
 Generation.MinimumBia...SUCCESS ==================================================================
 Generation.MinimumBia...SUCCESS Using as production engine  PythiaProduction
 Generation.MinimumBia...SUCCESS ==================================================================
-Generation.MinimumBia...   INFO Colliding Beam Parameters: 
+Generation.MinimumBia...   INFO Colliding Beam Parameters:
 Generation.MinimumBia...   INFO Beam Momentum (TeV): 7
 Generation.MinimumBia...   INFO Vertical crossing angle (microradian): 0
 Generation.MinimumBia...   INFO Horizontal crossing angle (microradian): 285
  Warning: requested subprocess 484 has vanishing cross-section.
  Process switched off!
-Generation.BeamSpotSm...   INFO Smearing of interaction point with Gaussian distribution 
-Generation.BeamSpotSm...   INFO  Z primary = 0 mm 
+Generation.BeamSpotSm...   INFO Smearing of interaction point with Gaussian distribution
+Generation.BeamSpotSm...   INFO  Z primary = 0 mm
 Generation.BeamSpotSm...   INFO  time of interaction vs T0 of IP is 0 ns
 Generation.BeamSpotSm...   INFO  with sigma(X,Y,Z) = 0.07 mm, 0.07 mm, 50 mm
 Generation              SUCCESS ==================================================================
@@ -149,12 +333,175 @@ OTHitMonitor.MCPartic...   INFO            Beta * gamma cut : 0 < beta*gamma
 OTHitMonitor.MCPartic...   INFO            Eta cut          : -1.79769e+308 < P < 1.79769e+308
 EventPersistencySvc        INFO Added successfully Conversion service:PoolRootEvtCnvSvc
 EventPersistencySvc        INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
-GaussTape                  INFO Data source: EventDataSvc output: DATAFILE='PFN:Gauss-5ev-20090323.sim' TYP='POOL_ROOTTREE' OPT='RECREATE'
-EventLoopMgr            WARNING Unable to locate service "EventSelector" 
+GaussTape                  INFO Data source: EventDataSvc output: DATAFILE='PFN:Gauss-5ev-20090331.sim' TYP='POOL_ROOTTREE' OPT='RECREATE'
+EventLoopMgr            WARNING Unable to locate service "EventSelector"
 EventLoopMgr            WARNING No events will be processed from external input.
 ApplicationMgr             INFO Application Manager Initialized successfully
 ApplicationMgr             INFO Application Manager Started successfully
 GaussGen                   INFO Evt 1,  Run 1082,  Nr. in job = 1 with seeds [1082, 1, 2119103972, 0]
+ Message from PHCORK(MODCOR):: initialization
+ MODOP=5 -- corrects Energy from mass+flow
+1
+ ********************************************************************************
+ *                                                                              *
+ *                          ==========================                          *
+ *                            PHOTOS, Version:  2.15                            *
+ *                            Released at:  11/10/ 5                            *
+ *                          ==========================                          *
+ *                                                                              *
+ *                  PHOTOS QED Corrections in Particle Decays                   *
+ *                                                                              *
+ *         Monte Carlo Program - by E. Barberio, B. van Eijk and Z. Was         *
+ *         Version 2.09  - by P. Golonka and Z.W.                               *
+ *                                                                              *
+ ********************************************************************************
+ *                                                                              *
+ *                  Internal input parameters:                                  *
+ *                                                                              *
+ *                  INTERF= T  ISEC= F  ITRE= F  IEXP= T  IFTOP= F   IFW= F     *
+ *                  ALPHA_QED= 0.00730   XPHCUT=.100E-06                        *
+ *                                                                              *
+ *                  option with interference is active                          *
+ *                  option with exponentiation is active EPSEXP=0.1000E-03      *
+ *                                                                              *
+ *          WARNING (1): /HEPEVT/ is not anymore the standard common block      *
+ *                                                                              *
+ *          PHOTOS expects /HEPEVT/ to have REAL*8 variables. To change to      *
+ *          REAL*4 modify its declaration in subr. PHOTOS_GET PHOTOS_SET:       *
+ *               REAL*8  d_h_phep,  d_h_vhep                                    *
+ *          WARNING (2): check dims. of /hepevt/ /phoqed/ /ph_hepevt/.          *
+ *          HERE:                     d_h_nmxhep= 10000 and  NMXHEP=10000       *
+ *                                                                              *
+ ********************************************************************************
+EvtGen:This is the current decay chain
+This top particle is pi0
+pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is eta'
+eta' -> rho0 gamma
+     rho0 -> pi+ pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho+
+rho+ -> pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is omega
+omega -> pi- pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is K0
+K0 -> K_L0
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is anti-K0
+anti-K0 -> K_L0
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho0
+rho0 -> pi+ pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is omega
+omega -> pi- pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is eta
+eta -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho+
+rho+ -> pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho-
+rho- -> pi- pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho+
+rho+ -> pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is K0
+K0 -> K_S0
+     K_S0 -> pi+ pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is pi0
+pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is omega
+omega -> pi- pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is pi0
+pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is pi0
+pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho0
+rho0 -> pi+ pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho0
+rho0 -> pi+ pi- gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho-
+rho- -> pi- pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho+
+rho+ -> pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is K*0
+K*0 -> K0 pi0
+     K0 -> K_L0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is eta'
+eta' -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho+
+rho+ -> pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is omega
+omega -> pi- pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is eta
+eta -> pi- pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is pi0
+pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho-
+rho- -> pi- pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
 GaussSim                   INFO Evt 1,  Run 1082,  Nr. in job = 1 with seeds [1082, 1, 786365161, 0]
 MagneticFieldSvc.MagT...   INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r2/cdf/field048.c1.vp.cdf
 MagneticFieldSvc.MagT...   INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r2/cdf/field048.c2.vp.cdf
@@ -168,29 +515,29 @@ GiGaGeo                    INFO world():: Global        'G4Field Manager' is set
 GiGaGeo                    INFO world():: Global        'G4MagneticField' is set to be = GiGaMagFieldGlobal
 GiGaGeo                    INFO world():: Global 'G4MagIntegratorStepper' is set to be = G4ClassicalRK4
 GiGaGeo.ZeroField          INFO createFieldMgr(): null magnetic field
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/BeforeMagnetRegion/TT/Modules/lvLadder3 .  Please Check Geometry DB  
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/BeforeMagnetRegion/TT/Modules/lvLadder4 .  Please Check Geometry DB  
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/BeforeMagnetRegion/TT/Modules/lvLadder1 .  Please Check Geometry DB  
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/BeforeMagnetRegion/TT/Modules/lvLadder2 .  Please Check Geometry DB  
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/Ladder/lvLong410Sector .  Please Check Geometry DB  
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITX1LongLayer .  Please Check Geometry DB  
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITULongLayer .  Please Check Geometry DB  
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITVLongLayer .  Please Check Geometry DB  
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITX2LongLayer .  Please Check Geometry DB  
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/Ladder/lvShort320Sector .  Please Check Geometry DB  
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITX1ShortLayer .  Please Check Geometry DB  
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITUShortLayer .  Please Check Geometry DB  
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITVShortLayer .  Please Check Geometry DB  
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITX2ShortLayer .  Please Check Geometry DB  
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/Ladder/lvShort410Sector .  Please Check Geometry DB  
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITV_410_4to7_ShortLayer .  Please Check Geometry DB  
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITV_410_1to4_ShortLayer .  Please Check Geometry DB  
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/OT/lvOTStation .  Please Check Geometry DB  
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/BeforeMagnetRegion/TT/Modules/lvLadder3 .  Please Check Geometry DB
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/BeforeMagnetRegion/TT/Modules/lvLadder4 .  Please Check Geometry DB
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/BeforeMagnetRegion/TT/Modules/lvLadder1 .  Please Check Geometry DB
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/BeforeMagnetRegion/TT/Modules/lvLadder2 .  Please Check Geometry DB
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/Ladder/lvLong410Sector .  Please Check Geometry DB
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITX1LongLayer .  Please Check Geometry DB
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITULongLayer .  Please Check Geometry DB
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITVLongLayer .  Please Check Geometry DB
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITX2LongLayer .  Please Check Geometry DB
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/Ladder/lvShort320Sector .  Please Check Geometry DB
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITX1ShortLayer .  Please Check Geometry DB
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITUShortLayer .  Please Check Geometry DB
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITVShortLayer .  Please Check Geometry DB
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITX2ShortLayer .  Please Check Geometry DB
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/Ladder/lvShort410Sector .  Please Check Geometry DB
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITV_410_4to7_ShortLayer .  Please Check Geometry DB
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITV_410_1to4_ShortLayer .  Please Check Geometry DB
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/OT/lvOTStation .  Please Check Geometry DB
 RFileCnv                   INFO opening Root file "/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r0/data/gausscalo.root" for reading
 GiGa.GiGaMgr               INFO GiGaRunManager::  Geometry will be extracted from GiGaGeo
 RichG4Cerenkov::RichG4Cerenkov constructor
 NOTE: this is now a G4VDiscreteProcess!
-Required change in UserPhysicsList: 
+Required change in UserPhysicsList:
 change: pmanager->AddContinuousProcess(theCerenkovProcess);
 to:     pmanager->AddProcess(theCerenkovProcess);
         pmanager->SetProcessOrdering(theCerenkovProcess,idxPostStep);
@@ -199,14 +546,14 @@ RichHpdPhotoElectricEffect PsfPreDc06Flag       = 0
 RichHpdPhotoElectricEffect UseNominalHpdQE =   0
 RichHpdProperties          INFO Total Number of hpds in Rich1 = 196
 RichHpdProperties          INFO Total Number of hpds in Rich2 = 288
-RichHpdProperties          INFO Filled the HPD QE, PSF and Demag tables for  RICH  
+RichHpdProperties          INFO Filled the HPD QE, PSF and Demag tables for  RICH
 Rich Hpd SiHitEfficiency  BackScatterCorrectedProb 0.85   0.0385953
-GiGa.ModularPL             INFO  The production cut for gamma is set to 	10 mm 
-GiGa.ModularPL             INFO  The production cut for electron is set to 	1e+07 mm 
-GiGa.ModularPL             INFO  The production cut for positron is set to 	5 mm 
+GiGa.ModularPL             INFO  The production cut for gamma is set to 	10 mm
+GiGa.ModularPL             INFO  The production cut for electron is set to 	1e+07 mm
+GiGa.ModularPL             INFO  The production cut for positron is set to 	5 mm
 SIMCOND.TimeOutChecker     INFO Disconnect from database after being idle for 120s (will reconnect if needed)
 
-phot:  Total cross sections from Sandia parametrisation. 
+phot:  Total cross sections from Sandia parametrisation.
       Sampling according PhotoElectric model
 
 compt:  Total cross sections has a good parametrisation from 10 KeV to (100/Z) GeV
@@ -234,7 +581,7 @@ eIoni:   tables are built for  e-
 eBrem:   tables are built for  e-
       dE/dx and range tables from 100 eV  to 100 TeV in 120 bins.
       Lambda tables from threshold to 100 TeV in 120 bins.
-      Total cross sections and sampling from StandBrem model (based on the EEDL data library) 
+      Total cross sections and sampling from StandBrem model (based on the EEDL data library)
       Good description from 1 KeV to 100 GeV, log scale extrapolation above 100 GeV. LPM flag 1
 
 eIoni:   tables are built for  e+
@@ -247,7 +594,7 @@ eIoni:   tables are built for  e+
 eBrem:   tables are built for  e+
       dE/dx and range tables from 100 eV  to 100 TeV in 120 bins.
       Lambda tables from threshold to 100 TeV in 120 bins.
-      Total cross sections and sampling from StandBrem model (based on the EEDL data library) 
+      Total cross sections and sampling from StandBrem model (based on the EEDL data library)
       Good description from 1 KeV to 100 GeV, log scale extrapolation above 100 GeV. LPM flag 1
 
 annihil:       Sampling according eplus2gg model
@@ -297,36 +644,36 @@ msc:  Model variant of multiple scattering for mu+
 muIoni:   tables are built for  mu+
       dE/dx and range tables from 100 eV  to 100 TeV in 120 bins.
       Lambda tables from threshold to 100 TeV in 120 bins.
-      Bether-Bloch model for E > 0.2 MeV, parametrisation of Bragg peak below, 
+      Bether-Bloch model for E > 0.2 MeV, parametrisation of Bragg peak below,
       radiative corrections for E > 1 GeV
       Step function: finalRange(mm)= 1, dRoverRange= 0.2, integral: 1, fluct: 1
 
 muBrems:   tables are built for  mu+
       dE/dx and range tables from 100 eV  to 100 TeV in 120 bins.
       Lambda tables from threshold to 100 TeV in 120 bins.
-      Parametrised model 
+      Parametrised model
 
 muPairProd:   tables are built for  mu+
       dE/dx and range tables from 100 eV  to 100 TeV in 120 bins.
       Lambda tables from threshold to 100 TeV in 120 bins.
-      Parametrised model 
+      Parametrised model
 
 muIoni:   tables are built for  mu-
       dE/dx and range tables from 100 eV  to 100 TeV in 120 bins.
       Lambda tables from threshold to 100 TeV in 120 bins.
-      Bether-Bloch model for E > 0.2 MeV, parametrisation of Bragg peak below, 
+      Bether-Bloch model for E > 0.2 MeV, parametrisation of Bragg peak below,
       radiative corrections for E > 1 GeV
       Step function: finalRange(mm)= 1, dRoverRange= 0.2, integral: 1, fluct: 1
 
 muBrems:   tables are built for  mu-
       dE/dx and range tables from 100 eV  to 100 TeV in 120 bins.
       Lambda tables from threshold to 100 TeV in 120 bins.
-      Parametrised model 
+      Parametrised model
 
 muPairProd:   tables are built for  mu-
       dE/dx and range tables from 100 eV  to 100 TeV in 120 bins.
       Lambda tables from threshold to 100 TeV in 120 bins.
-      Parametrised model 
+      Parametrised model
 
 G4UHadronElasticProcess for neutron PDGcode= 2112  Elow(MeV)= 19  Elowest(eV)= 0
 
@@ -352,21 +699,1115 @@ hIoni:   tables are built for  pi-
       Step function: finalRange(mm)= 1, dRoverRange= 0.2, integral: 1, fluct: 1
 RichG4HistoSet2            INFO Now Booking Rich G4 Histo Set2
 GiGaGetEventAlg            INFO Number of extracted MCParticles 'MC/Particles' 	504
-IODataManager              INFO Referring to dataset Gauss-5ev-20090323.sim by its file ID:56B5F5A0-8917-DE11-BFCE-001E4F3DA517
-Gauss-5ev-20090323.sim  SUCCESS Root file version:51800
-GaussGen                   INFO Evt 2,  Run 1082,  Nr. in job = 2 with seeds [1082, 2, 1474865432, 0]
-GaussSim                   INFO Evt 2,  Run 1082,  Nr. in job = 2 with seeds [1082, 2, 31909538, 0]
-GiGaGetEventAlg            INFO Number of extracted MCParticles 'MC/Particles' 	1125
-GaussGen                   INFO Evt 3,  Run 1082,  Nr. in job = 3 with seeds [1082, 3, 645125023, 0]
-GaussSim                   INFO Evt 3,  Run 1082,  Nr. in job = 3 with seeds [1082, 3, 1254798016, 0]
+Gauss-5ev-20090331.sim  SUCCESS Root file version:51800
 DDDB.TimeOutChecker        INFO Disconnect from database after being idle for 120s (will reconnect if needed)
+GaussGen                   INFO Evt 2,  Run 1082,  Nr. in job = 2 with seeds [1082, 2, 1474865432, 0]
+EvtGen:This is the current decay chain
+This top particle is eta
+eta -> pi0 pi0 pi0
+     pi0 -> gamma gamma
+     pi0 -> gamma gamma
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is Delta-
+Delta- -> n0 pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho+
+rho+ -> pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho-
+rho- -> pi- pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho+
+rho+ -> pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho-
+rho- -> pi- pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho-
+rho- -> pi- pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is anti-Delta+
+anti-Delta+ -> anti-n0 pi+
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is pi0
+pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is eta
+eta -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is omega
+omega -> pi- pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is Delta0
+Delta0 -> n0 pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is a_1-
+a_1- -> rho- pi0
+     rho- -> pi- pi0
+          pi0 -> gamma gamma
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is anti-Delta+
+anti-Delta+ -> anti-n0 pi+
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is eta
+eta -> pi0 pi0 pi0
+     pi0 -> gamma gamma
+     pi0 -> gamma gamma
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho-
+rho- -> pi- pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is eta
+eta -> pi0 pi0 pi0
+     pi0 -> gamma gamma
+     pi0 -> gamma gamma
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is a_2-
+a_2- -> rho- pi0
+     rho- -> pi- pi0
+          pi0 -> gamma gamma
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho0
+rho0 -> pi+ pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is pi0
+pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho+
+rho+ -> pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho-
+rho- -> pi- pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is Sigma0
+Sigma0 -> gamma Lambda0
+     Lambda0 -> p+ pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is anti-Sigma+
+anti-Sigma+ -> anti-n0 pi+
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is K0
+K0 -> K_L0
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is pi0
+pi0 -> e+ e- gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is K_2*+
+K_2*+ -> K*0 pi+
+     K*0 -> K+ pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is anti-K0
+anti-K0 -> K_L0
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is a_1-
+a_1- -> rho- pi0
+     rho- -> pi- pi0
+          pi0 -> gamma gamma
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho0
+rho0 -> pi+ pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is eta'
+eta' -> pi+ pi- eta
+     eta -> pi- pi+ pi0
+          pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is K*+
+K*+ -> K0 pi+
+     K0 -> K_S0
+          K_S0 -> pi+ pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is anti-K0
+anti-K0 -> K_S0
+     K_S0 -> pi+ pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is omega
+omega -> pi- pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is omega
+omega -> pi- pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho+
+rho+ -> pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is K0
+K0 -> K_S0
+     K_S0 -> pi0 pi0
+          pi0 -> gamma gamma
+          pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is eta'
+eta' -> pi+ pi- eta
+     eta -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is anti-K0
+anti-K0 -> K_S0
+     K_S0 -> pi+ pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is omega
+omega -> pi- pi+ pi0 gamma
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is a_2+
+a_2+ -> eta pi+
+     eta -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is a_2-
+a_2- -> omega pi- pi0
+     omega -> pi- pi+ pi0
+          pi0 -> gamma gamma
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is pi0
+pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho0
+rho0 -> pi+ pi- gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is anti-Delta-
+anti-Delta- -> anti-p- pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is eta
+eta -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is omega
+omega -> pi- pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is a_00
+a_00 -> eta pi0
+     eta -> gamma gamma
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho+
+rho+ -> pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is anti-Delta--
+anti-Delta-- -> anti-p- pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is pi0
+pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is a_1-
+a_1- -> rho0 pi-
+     rho0 -> pi+ pi- gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is a_2+
+a_2+ -> rho+ pi0
+     rho+ -> pi+ pi0
+          pi0 -> gamma gamma
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is Sigma0
+Sigma0 -> gamma Lambda0
+     Lambda0 -> p+ pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is anti-Sigma0
+anti-Sigma0 -> gamma anti-Lambda0
+     anti-Lambda0 -> anti-p- pi+
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho+
+rho+ -> pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is K0
+K0 -> K_L0
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is anti-K0
+anti-K0 -> K_L0
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho0
+rho0 -> pi+ pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho+
+rho+ -> pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is a_0+
+a_0+ -> eta pi+
+     eta -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is omega
+omega -> pi- pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is K*0
+K*0 -> K0 pi0
+     K0 -> K_S0
+          K_S0 -> pi+ pi-
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is anti-K0
+anti-K0 -> K_S0
+     K_S0 -> pi+ pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is a_1-
+a_1- -> rho0 pi-
+     rho0 -> pi+ pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is eta'
+eta' -> pi+ pi- eta
+     eta -> gamma pi- pi+ gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is a_20
+a_20 -> rho+ pi-
+     rho+ -> pi+ pi0
+          pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is K*+
+K*+ -> K0 pi+
+     K0 -> K_S0
+          K_S0 -> pi+ pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho+
+rho+ -> pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is eta
+eta -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho-
+rho- -> pi- pi0
+     pi0 -> e+ e- gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is eta
+eta -> pi- pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+GaussSim                   INFO Evt 2,  Run 1082,  Nr. in job = 2 with seeds [1082, 2, 31909538, 0]
+GiGaGetEventAlg            INFO Number of extracted MCParticles 'MC/Particles' 	1075
+GaussGen                   INFO Evt 3,  Run 1082,  Nr. in job = 3 with seeds [1082, 3, 645125023, 0]
+EvtGen:This is the current decay chain
+This top particle is a_10
+a_10 -> rho+ pi-
+     rho+ -> pi+ pi0
+          pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is Lambda0
+Lambda0 -> p+ pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho0
+rho0 -> pi+ pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is f_1
+f_1 -> a_0- pi+
+     a_0- -> eta pi-
+          eta -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is omega
+omega -> pi- pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is pi0
+pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho0
+rho0 -> pi+ pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is pi0
+pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is pi0
+pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is anti-Sigma0
+anti-Sigma0 -> gamma anti-Lambda0
+     anti-Lambda0 -> anti-p- pi+
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is Lambda0
+Lambda0 -> p+ pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is pi0
+pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho-
+rho- -> pi- pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is omega
+omega -> pi- pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho+
+rho+ -> pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho0
+rho0 -> pi+ pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is anti-Sigma-
+anti-Sigma- -> anti-p- pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is Sigma+
+Sigma+ -> p+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is pi0
+pi0 -> gamma gamma
+EvtGen:End of decay chain.
+GaussSim                   INFO Evt 3,  Run 1082,  Nr. in job = 3 with seeds [1082, 3, 1254798016, 0]
 GiGaGetEventAlg            INFO Number of extracted MCParticles 'MC/Particles' 	193
 GaussGen                   INFO Evt 4,  Run 1082,  Nr. in job = 4 with seeds [1082, 4, 1010630449, 0]
+EvtGen:This is the current decay chain
+This top particle is omega
+omega -> pi- pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is anti-Lambda0
+anti-Lambda0 -> anti-p- pi+
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is anti-K0
+anti-K0 -> K_S0
+     K_S0 -> pi+ pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is eta
+eta -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho-
+rho- -> pi- pi0 gamma
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is omega
+omega -> pi- pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho0
+rho0 -> pi+ pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is a_2+
+a_2+ -> rho+ pi0
+     rho+ -> pi+ pi0
+          pi0 -> gamma gamma
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is pi0
+pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is omega
+omega -> pi- pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is K*+
+K*+ -> K+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is anti-K*0
+anti-K*0 -> K- pi+
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho+
+rho+ -> pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho-
+rho- -> pi- pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is pi0
+pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is eta
+eta -> pi0 pi0 pi0
+     pi0 -> gamma gamma
+     pi0 -> gamma gamma
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is pi0
+pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is pi0
+pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho0
+rho0 -> pi+ pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho+
+rho+ -> pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is K0
+K0 -> K_L0
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is Delta+
+Delta+ -> p+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is anti-Delta-
+anti-Delta- -> anti-p- pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is a_0+
+a_0+ -> eta pi+
+     eta -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is eta
+eta -> pi0 pi0 pi0
+     pi0 -> gamma gamma
+     pi0 -> gamma gamma
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is pi0
+pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho+
+rho+ -> pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is omega
+omega -> pi- pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is K*0
+K*0 -> K+ pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is anti-K*0
+anti-K*0 -> K- pi+
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is pi0
+pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is omega
+omega -> pi- pi+ pi0 gamma
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho0
+rho0 -> pi+ pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is eta
+eta -> pi0 pi0 pi0
+     pi0 -> gamma gamma
+     pi0 -> gamma gamma
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is eta
+eta -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho0
+rho0 -> pi+ pi- gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is eta
+eta -> pi- pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho-
+rho- -> pi- pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is Delta-
+Delta- -> n0 pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is pi0
+pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is anti-Delta+
+anti-Delta+ -> anti-n0 pi+
+EvtGen:End of decay chain.
 GaussSim                   INFO Evt 4,  Run 1082,  Nr. in job = 4 with seeds [1082, 4, 479188555, 0]
 GiGaGetEventAlg            INFO Number of extracted MCParticles 'MC/Particles' 	643
 GaussGen                   INFO Evt 5,  Run 1082,  Nr. in job = 5 with seeds [1082, 5, 1094777801, 0]
+EvtGen:This is the current decay chain
+This top particle is f_2
+f_2 -> pi+ pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is pi0
+pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is anti-K0
+anti-K0 -> K_S0
+     K_S0 -> pi+ pi- gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho0
+rho0 -> pi+ pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho+
+rho+ -> pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is K*+
+K*+ -> K0 pi+
+     K0 -> K_L0
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is Lambda0
+Lambda0 -> n0 pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho-
+rho- -> pi- pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is anti-Delta+
+anti-Delta+ -> anti-n0 pi+
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is pi0
+pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is a_0-
+a_0- -> eta pi-
+     eta -> pi- pi+ pi0
+          pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is omega
+omega -> pi- pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is pi0
+pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is K*0
+K*0 -> K0 pi0
+     K0 -> K_L0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is anti-K0
+anti-K0 -> K_L0
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is K*+
+K*+ -> K0 pi+ gamma
+     K0 -> K_S0
+          K_S0 -> pi+ pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is Lambda0
+Lambda0 -> p+ pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is f_1
+f_1 -> rho0 pi0 pi0
+     rho0 -> pi+ pi-
+     pi0 -> gamma gamma
+     pi0 -> e+ e- gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho0
+rho0 -> pi+ pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is K0
+K0 -> K_L0
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is eta'
+eta' -> pi+ pi- eta
+     eta -> gamma e+ e- gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is Delta++
+Delta++ -> p+ pi+
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is anti-K0
+anti-K0 -> K_L0
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is anti-K*0
+anti-K*0 -> anti-K0 pi0
+     anti-K0 -> K_S0
+          K_S0 -> pi0 pi0
+               pi0 -> gamma gamma
+               pi0 -> gamma gamma
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is anti-Sigma*0
+anti-Sigma*0 -> anti-Lambda0 pi0
+     anti-Lambda0 -> anti-n0 pi0
+          pi0 -> gamma gamma
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is Sigma*0
+Sigma*0 -> Sigma- pi+
+     Sigma- -> n0 pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho+
+rho+ -> pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is a_2-
+a_2- -> rho- pi0
+     rho- -> pi- pi0
+          pi0 -> gamma gamma
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is eta
+eta -> pi0 pi0 pi0
+     pi0 -> gamma gamma
+     pi0 -> gamma gamma
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho0
+rho0 -> pi+ pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho-
+rho- -> pi- pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is eta
+eta -> pi- pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is f_1
+f_1 -> a_0+ pi-
+     a_0+ -> eta pi+
+          eta -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is a_20
+a_20 -> rho- pi+
+     rho- -> pi- pi0
+          pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is omega
+omega -> pi- pi+ pi0 gamma
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is omega
+omega -> pi- pi+ pi0 gamma
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is eta
+eta -> pi0 pi0 pi0
+     pi0 -> gamma gamma
+     pi0 -> gamma gamma
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is omega
+omega -> pi- pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho+
+rho+ -> pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is eta
+eta -> pi0 pi0 pi0
+     pi0 -> gamma gamma
+     pi0 -> gamma gamma
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is eta
+eta -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho0
+rho0 -> pi+ pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho-
+rho- -> pi- pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is a_1+
+a_1+ -> rho0 pi+
+     rho0 -> pi+ pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is pi0
+pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is eta
+eta -> pi0 pi0 pi0
+     pi0 -> gamma gamma
+     pi0 -> gamma gamma
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is K*-
+K*- -> K- pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is anti-Sigma-
+anti-Sigma- -> anti-p- pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is a_10
+a_10 -> rho+ pi- gamma gamma
+     rho+ -> pi+ pi0
+          pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is omega
+omega -> pi- pi+ pi0 gamma
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is f_1
+f_1 -> rho0 pi+ pi-
+     rho0 -> pi+ pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is Delta++
+Delta++ -> p+ pi+
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is K0
+K0 -> K_L0
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is f_1
+f_1 -> a_00 pi0
+     a_00 -> eta pi0
+          eta -> gamma gamma
+          pi0 -> gamma gamma
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is anti-Delta+
+anti-Delta+ -> anti-n0 pi+
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is eta'
+eta' -> pi0 pi0 eta
+     pi0 -> gamma gamma
+     pi0 -> gamma gamma
+     eta -> pi0 pi0 pi0
+          pi0 -> gamma gamma
+          pi0 -> gamma gamma
+          pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is Delta-
+Delta- -> n0 pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is anti-K0
+anti-K0 -> K_S0
+     K_S0 -> pi0 pi0
+          pi0 -> gamma gamma
+          pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is K0
+K0 -> K_L0
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is a_20
+a_20 -> rho- pi+
+     rho- -> pi- pi0
+          pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is pi0
+pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is a_2+
+a_2+ -> rho0 pi+
+     rho0 -> pi+ pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is K0
+K0 -> K_L0
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is eta
+eta -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho+
+rho+ -> pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is pi0
+pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is omega
+omega -> pi- pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is K*-
+K*- -> anti-K0 pi-
+     anti-K0 -> K_L0
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho0
+rho0 -> pi+ pi-
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is pi0
+pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is K_2*-
+K_2*- -> anti-K*0 pi-
+     anti-K*0 -> anti-K0 pi0
+          anti-K0 -> K_S0
+               K_S0 -> pi+ pi-
+          pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is K*+
+K*+ -> K0 pi+
+     K0 -> K_S0
+          K_S0 -> pi0 pi0
+               pi0 -> gamma gamma
+               pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is a_2-
+a_2- -> rho- pi0
+     rho- -> pi- pi0
+          pi0 -> gamma gamma
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho0
+rho0 -> pi+ pi- gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is anti-Lambda0
+anti-Lambda0 -> anti-p- pi+
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is eta
+eta -> pi- pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is a_10
+a_10 -> rho- pi+
+     rho- -> pi- pi0
+          pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is anti-K0
+anti-K0 -> K_S0
+     K_S0 -> pi+ pi- gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is omega
+omega -> pi- pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is omega
+omega -> pi- pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is pi0
+pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is eta
+eta -> pi0 pi0 pi0
+     pi0 -> gamma gamma
+     pi0 -> gamma gamma
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is K0
+K0 -> K_S0
+     K_S0 -> pi0 pi0
+          pi0 -> gamma gamma
+          pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is K0
+K0 -> K_S0
+     K_S0 -> pi0 pi0
+          pi0 -> gamma gamma
+          pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is omega
+omega -> pi- pi+ pi0
+     pi0 -> gamma gamma
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is a_10
+a_10 -> rho+ pi-
+     rho+ -> pi+ pi0
+          pi0 -> gamma gamma
+EvtGen:End of decay chain.
 GaussSim                   INFO Evt 5,  Run 1082,  Nr. in job = 5 with seeds [1082, 5, 253147997, 0]
-GiGaGetEventAlg            INFO Number of extracted MCParticles 'MC/Particles' 	1858
+GiGaGetEventAlg            INFO Number of extracted MCParticles 'MC/Particles' 	1327
 ApplicationMgr             INFO Application Manager Stopped successfully
 GaussGen                SUCCESS ==================================================================
 GaussGen                SUCCESS 5 events processed
@@ -396,155 +1837,158 @@ Number of accepted interactions with >= 3c : 0
 Number of accepted interactions with >= prompt C : 0
 Number of accepted interactions with b and c : 0
 
-GenMonitorAlg              INFO 
+GenMonitorAlg              INFO
 ======================== Generators Statistics ====================
 =                                                                 =
-= Number of particles generated: 1604
+= Number of particles generated: 1611
 = Number of events: 5
-= Mean multiplicity: 320.8
+= Mean multiplicity: 322.2
 =                                                                 =
-= Number of pseudo stable particles generated: 1371
+= Number of pseudo stable particles generated: 1378
 = Number of events: 5
-= Mean pseudo stable multiplicity: 274.2
+= Mean pseudo stable multiplicity: 275.6
 =                                                                 =
-= Number of charged stable particles generated: 388
+= Number of charged stable particles generated: 398
 = Number of events: 5
-= Mean charged stable multiplicity: 77.6
+= Mean charged stable multiplicity: 79.6
 =                                                                 =
-= Number of charged stable particles in LHCb eta 80
+= Number of charged stable particles in LHCb eta 83
 = Number of events: 5
-= Mean charged stable multiplicity in LHCb eta: 16
+= Mean charged stable multiplicity in LHCb eta: 16.6
 =                                                                 =
 ===================================================================
-GenMonitorAlg           SUCCESS Booked 19 Histogram(s) : 1D=19 
+GenMonitorAlg           SUCCESS Booked 19 Histogram(s) : 1D=19
 GaussSim                SUCCESS ==================================================================
 GaussSim                SUCCESS 5 events processed
 GaussSim                SUCCESS ==================================================================
 GetRichHits                INFO Av. # Invalid RICH flags              =    0.00 +- 0.00
-GetRichHits                INFO Av. # MCRichHits              : Rich1 = 1030.80 +-14.36 (100.00 +-0.00%) Rich2 =  695.60 +-11.79 (100.00 +-0.00%)
+GetRichHits                INFO Av. # MCRichHits              : Rich1 =  804.40 +-12.68 (100.00 +-0.00%) Rich2 =  210.00 +- 6.48 (100.00 +-0.00%)
 GetRichHits                INFO Av. # Invalid radiator hits   : Rich1 =    0.20 +- 0.20 (  0.02 +-0.02%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO Av. # Signal Hits             : Rich1 =  441.00 +- 9.39 ( 42.78 +-0.69%) Rich2 =  196.40 +- 6.27 ( 28.23 +-0.76%)
-GetRichHits                INFO Av. # Gas Quartz CK hits      : Rich1 =   18.60 +- 1.93 (  1.80 +-0.19%) Rich2 =   31.80 +- 2.52 (  4.57 +-0.35%)
-GetRichHits                INFO Av. # HPD Quartz CK hits      : Rich1 =  504.80 +-10.05 ( 48.97 +-0.70%) Rich2 =  446.20 +- 9.45 ( 64.15 +-0.81%)
-GetRichHits                INFO Av. # Nitrogen CK hits        : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.20 +- 0.20 (  0.03 +-0.03%)
-GetRichHits                INFO Av. # Aero Filter CK hits     : Rich1 =    0.20 +- 0.20 (  0.02 +-0.02%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO Av. # Si back-scattering      : Rich1 =    6.80 +- 1.17 (  0.66 +-0.11%) Rich2 =    3.20 +- 0.80 (  0.46 +-0.11%)
+GetRichHits                INFO Av. # Signal Hits             : Rich1 =  429.00 +- 9.26 ( 53.33 +-0.79%) Rich2 =  180.60 +- 6.01 ( 86.00 +-1.07%)
+GetRichHits                INFO Av. # Gas Quartz CK hits      : Rich1 =   10.60 +- 1.46 (  1.32 +-0.18%) Rich2 =    7.60 +- 1.23 (  3.62 +-0.58%)
+GetRichHits                INFO Av. # HPD Quartz CK hits      : Rich1 =  306.60 +- 7.83 ( 38.12 +-0.77%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
+GetRichHits                INFO Av. # Nitrogen CK hits        : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
+GetRichHits                INFO Av. # Aero Filter CK hits     : Rich1 =    0.40 +- 0.28 (  0.05 +-0.04%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
+GetRichHits                INFO Av. # Si back-scattering      : Rich1 =    4.80 +- 0.98 (  0.60 +-0.12%) Rich2 =    0.80 +- 0.40 (  0.38 +-0.19%)
 GetRichHits                INFO Av. # Charged Track hits      : Rich1 =    0.20 +- 0.20 (  0.02 +-0.02%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO Av. # All HPD reflection hits : Rich1 =  169.80 +- 5.83 ( 16.47 +-0.52%) Rich2 =  127.00 +- 5.04 ( 18.26 +-0.66%)
-GetRichHits                INFO   Av. # QW/PC refl. hits      : Rich1 =   91.80 +- 4.28 (  8.91 +-0.40%) Rich2 =   60.60 +- 3.48 (  8.71 +-0.48%)
-GetRichHits                INFO   Av. # Chromium refl. hits   : Rich1 =   75.60 +- 3.89 (  7.33 +-0.36%) Rich2 =   64.00 +- 3.58 (  9.20 +-0.49%)
-GetRichHits                INFO   Av. # Air/QW refl. hits     : Rich1 =   37.20 +- 2.73 (  3.61 +-0.26%) Rich2 =   28.40 +- 2.38 (  4.08 +-0.34%)
-GetRichHits                INFO   Av. # Air/PC refl. hits     : Rich1 =    0.40 +- 0.28 (  0.04 +-0.03%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
+GetRichHits                INFO Av. # All HPD reflection hits : Rich1 =  110.00 +- 4.69 ( 13.67 +-0.54%) Rich2 =   22.40 +- 2.12 ( 10.67 +-0.95%)
+GetRichHits                INFO   Av. # QW/PC refl. hits      : Rich1 =   52.80 +- 3.25 (  6.56 +-0.39%) Rich2 =    7.60 +- 1.23 (  3.62 +-0.58%)
+GetRichHits                INFO   Av. # Chromium refl. hits   : Rich1 =   57.00 +- 3.38 (  7.09 +-0.40%) Rich2 =   17.00 +- 1.84 (  8.10 +-0.84%)
+GetRichHits                INFO   Av. # Air/QW refl. hits     : Rich1 =   28.00 +- 2.37 (  3.48 +-0.29%) Rich2 =    3.80 +- 0.87 (  1.81 +-0.41%)
+GetRichHits                INFO   Av. # Air/PC refl. hits     : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
 GetRichHits                INFO   Av. # PC/QW refl. hits      : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO   Av. # Silicon refl. hits    : Rich1 =    1.00 +- 0.45 (  0.10 +-0.04%) Rich2 =    0.20 +- 0.20 (  0.03 +-0.03%)
-GetRichHits                INFO   Av. # Kovar refl. hits      : Rich1 =    3.60 +- 0.85 (  0.35 +-0.08%) Rich2 =    1.40 +- 0.53 (  0.20 +-0.08%)
-GetRichHits                INFO   Av. # Kapton refl. hits     : Rich1 =   16.80 +- 1.83 (  1.63 +-0.18%) Rich2 =   15.80 +- 1.78 (  2.27 +-0.25%)
-GetRichHits                INFO Av. # Signal CK MCRichHits    : Aero  =   76.80 +- 3.92 (  7.45 +-0.37%) C4F10 =  364.20 +- 8.53 ( 35.33 +-0.67%) CF4 =  196.40 +- 6.27 ( 28.23 +-0.76%)
-GetRichHits                INFO Av. # Rayleigh scattered hits : Aero  =    5.20 +- 1.02 (  0.50 +-0.10%) C4F10 =    0.20 +- 0.20 (  0.02 +-0.02%) CF4 =    0.00 +- 0.00 (  0.00 +-0.00%)
+GetRichHits                INFO   Av. # Silicon refl. hits    : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.40 +- 0.28 (  0.19 +-0.13%)
+GetRichHits                INFO   Av. # Kovar refl. hits      : Rich1 =    1.80 +- 0.60 (  0.22 +-0.07%) Rich2 =    1.00 +- 0.45 (  0.48 +-0.21%)
+GetRichHits                INFO   Av. # Kapton refl. hits     : Rich1 =   11.40 +- 1.51 (  1.42 +-0.19%) Rich2 =    2.20 +- 0.66 (  1.05 +-0.31%)
+GetRichHits                INFO Av. # Signal CK MCRichHits    : Aero  =   79.20 +- 3.98 (  9.85 +-0.47%) C4F10 =  349.80 +- 8.36 ( 43.49 +-0.78%) CF4 =  180.60 +- 6.01 ( 86.00 +-1.07%)
+GetRichHits                INFO Av. # Rayleigh scattered hits : Aero  =    5.20 +- 1.02 (  0.65 +-0.13%) C4F10 =    0.00 +- 0.00 (  0.00 +-0.00%) CF4 =    0.00 +- 0.00 (  0.00 +-0.00%)
 GetRichHits                INFO Av. # MCParticle-less hits    : Aero  =    0.00 +- 0.00 (  0.00 +-0.00%) C4F10 =    0.00 +- 0.00 (  0.00 +-0.00%) CF4 =    0.00 +- 0.00 (  0.00 +-0.00%)
 GetRichHits                INFO Av. # Aero hits per tile     :
-GetRichHits                INFO           tile =  0 hits =    0.60 +- 0.35 / event
+GetRichHits                INFO           tile =  0 hits =    0.00 +- 0.00 / event
 GetRichHits                INFO           tile =  1 hits =    0.00 +- 0.00 / event
-GetRichHits                INFO           tile =  2 hits =   29.40 +- 2.42 / event
-GetRichHits                INFO           tile =  3 hits =    2.40 +- 0.69 / event
-GetRichHits                INFO           tile =  4 hits =   13.00 +- 1.61 / event
+GetRichHits                INFO           tile =  2 hits =   31.60 +- 2.51 / event
+GetRichHits                INFO           tile =  3 hits =    4.20 +- 0.92 / event
+GetRichHits                INFO           tile =  4 hits =   16.40 +- 1.81 / event
 GetRichHits                INFO           tile =  5 hits =    0.00 +- 0.00 / event
-GetRichHits                INFO           tile =  6 hits =    3.40 +- 0.82 / event
+GetRichHits                INFO           tile =  6 hits =    5.60 +- 1.06 / event
 GetRichHits                INFO           tile =  7 hits =    0.00 +- 0.00 / event
-GetRichHits                INFO           tile =  8 hits =    0.80 +- 0.40 / event
+GetRichHits                INFO           tile =  8 hits =    0.40 +- 0.28 / event
 GetRichHits                INFO           tile =  9 hits =    0.00 +- 0.00 / event
-GetRichHits                INFO           tile = 10 hits =   14.60 +- 1.71 / event
-GetRichHits                INFO           tile = 11 hits =    5.40 +- 1.04 / event
-GetRichHits                INFO           tile = 12 hits =   18.80 +- 1.94 / event
-GetRichHits                INFO           tile = 13 hits =    1.80 +- 0.60 / event
-GetRichHits                INFO           tile = 14 hits =    3.60 +- 0.85 / event
+GetRichHits                INFO           tile = 10 hits =   17.40 +- 1.87 / event
+GetRichHits                INFO           tile = 11 hits =    7.40 +- 1.22 / event
+GetRichHits                INFO           tile = 12 hits =    7.80 +- 1.25 / event
+GetRichHits                INFO           tile = 13 hits =    0.00 +- 0.00 / event
+GetRichHits                INFO           tile = 14 hits =    2.60 +- 0.72 / event
 GetRichHits                INFO           tile = 15 hits =    1.20 +- 0.49 / event
-GetRichPhotons             INFO Av. # MCRichOpticalPhotons : Aerogel =    95.00 +-  4.36 / event
-GetRichPhotons             INFO Av. # MCRichOpticalPhotons : Rich1Gas =   412.00 +-  9.08 / event
-GetRichPhotons             INFO Av. # MCRichOpticalPhotons : Rich2Gas =   217.40 +-  6.59 / event
-GetRichPhotons             INFO Av. # MCRichOpticalPhotons : GasQuartzWin =    50.40 +-  3.17 / event
-GetRichPhotons             INFO Av. # MCRichOpticalPhotons : HPDQuartzWin =   951.00 +- 13.79 / event
-GetRichPhotons             INFO Av. # MCRichOpticalPhotons : Nitrogen =     0.20 +-  0.20 / event
-GetRichPhotons             INFO Av. # MCRichOpticalPhotons : AerogelFilter =     0.20 +-  0.20 / event
-GetRichSegments            INFO Av. # MCRichSegments       : Aerogel =    14.60 +-  1.71 / event
-GetRichSegments            INFO Av. # MCRichSegments       : Rich1Gas =    20.20 +-  2.01 / event
-GetRichSegments            INFO Av. # MCRichSegments       : Rich2Gas =    13.80 +-  1.66 / event
-GetRichSegments            INFO Av. # MCRichSegments       : GasQuartzWin =     5.40 +-  1.04 / event
-GetRichSegments            INFO Av. # MCRichSegments       : HPDQuartzWin =     6.60 +-  1.15 / event
-GetRichSegments            INFO Av. # MCRichSegments       : Nitrogen =     0.20 +-  0.20 / event
-GetRichSegments            INFO Av. # MCRichSegments       : AerogelFilter =     0.20 +-  0.20 / event
+GetRichPhotons             INFO Av. # MCRichOpticalPhotons : Aerogel =    94.60 +-  4.35 / event
+GetRichPhotons             INFO Av. # MCRichOpticalPhotons : Rich1Gas =   392.00 +-  8.85 / event
+GetRichPhotons             INFO Av. # MCRichOpticalPhotons : Rich2Gas =   202.40 +-  6.36 / event
+GetRichPhotons             INFO Av. # MCRichOpticalPhotons : GasQuartzWin =    18.20 +-  1.91 / event
+GetRichPhotons             INFO Av. # MCRichOpticalPhotons : HPDQuartzWin =   306.60 +-  7.83 / event
+GetRichPhotons             INFO Av. # MCRichOpticalPhotons : AerogelFilter =     0.40 +-  0.28 / event
+GetRichSegments            INFO Av. # MCRichSegments       : Aerogel =    13.80 +-  1.66 / event
+GetRichSegments            INFO Av. # MCRichSegments       : Rich1Gas =    16.60 +-  1.82 / event
+GetRichSegments            INFO Av. # MCRichSegments       : Rich2Gas =    11.80 +-  1.54 / event
+GetRichSegments            INFO Av. # MCRichSegments       : GasQuartzWin =     2.20 +-  0.66 / event
+GetRichSegments            INFO Av. # MCRichSegments       : HPDQuartzWin =     2.00 +-  0.63 / event
+GetRichSegments            INFO Av. # MCRichSegments       : AerogelFilter =     0.40 +-  0.28 / event
 GetRichTracks              INFO Av. # MCRichTracks         : Overall =     0.00 +-  0.00
 VeloGaussMoni              INFO ------------------------------------------------------
-VeloGaussMoni              INFO                 - VeloGaussMoni table -                 
+VeloGaussMoni              INFO                 - VeloGaussMoni table -
 VeloGaussMoni              INFO ------------------------------------------------------
-VeloGaussMoni              INFO | Number of MCHits/Event:       474+/-144.115
-VeloGaussMoni              INFO | Number of PileUpMCHits/Event: 26.2+/-6.48938
+VeloGaussMoni              INFO | Number of MCHits/Event:       473.2+/-139.363
+VeloGaussMoni              INFO | Number of PileUpMCHits/Event: 27.6+/-6.87372
 VeloGaussMoni              INFO ------------------------------------------------------
 TTHitMonitor               INFO *** Summary ***
-TTHitMonitor               INFO #hits per event: 186.4
-TTHitMonitor               INFO Mean beta * gamma: 1839.2
-TTHitMonitor               INFO Most Probable deposited charge: 0.156417
-TTHitMonitor            SUCCESS Booked 7 Histogram(s) : 1D=7 
+TTHitMonitor               INFO #hits per event: 124
+TTHitMonitor               INFO Mean beta * gamma: 1864.71
+TTHitMonitor               INFO Most Probable deposited charge: 0.149468
+TTHitMonitor            SUCCESS Booked 7 Histogram(s) : 1D=7
 TTHitMonitor            SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "betaGamma"                                     |       932 |    1714134 |     1839.2 |     8284.3 |    0.099536 |  1.0981e+05 |
- | "numberHits"                                    |         5 |        932 |     186.40 |     158.19 |      9.0000 |      465.00 |
+ | "betaGamma"                                     |       620 |    1156121 |     1864.7 |     9382.2 |    0.016020 |  1.0981e+05 |
+ | "numberHits"                                    |         5 |        620 |     124.00 |     77.854 |      9.0000 |      250.00 |
 ITHitMonitor               INFO *** Summary ***
-ITHitMonitor               INFO #hits per event: 136.4
-ITHitMonitor               INFO Mean beta * gamma: 3592.79
-ITHitMonitor               INFO Most Probable deposited charge: 0.103266
-ITHitMonitor            SUCCESS Booked 9 Histogram(s) : 1D=9 
+ITHitMonitor               INFO #hits per event: 125
+ITHitMonitor               INFO Mean beta * gamma: 3812.7
+ITHitMonitor               INFO Most Probable deposited charge: 0.112657
+ITHitMonitor            SUCCESS Booked 9 Histogram(s) : 1D=9
 ITHitMonitor            SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "betaGamma"                                     |       682 |    2450282 |     3592.8 |     10602. |   0.0051126 |      77975. |
- | "numberHits"                                    |         5 |        682 |     136.40 |     89.440 |      12.000 |      291.00 |
+ | "betaGamma"                                     |       625 |    2382937 |     3812.7 |     10805. |   0.0051126 |      77975. |
+ | "numberHits"                                    |         5 |        625 |     125.00 |     66.696 |      12.000 |      219.00 |
 OTHitMonitor               INFO *** Summary ***
-OTHitMonitor               INFO #hits per event: 471.4
-OTHitMonitor               INFO Mean beta * gamma: 2870.96
-OTHitMonitor               INFO Most Probable deposited charge: 0.227353
-OTHitMonitor            SUCCESS Booked 9 Histogram(s) : 1D=9 
+OTHitMonitor               INFO #hits per event: 348.2
+OTHitMonitor               INFO Mean beta * gamma: 2277.68
+OTHitMonitor               INFO Most Probable deposited charge: 0.225901
+OTHitMonitor            SUCCESS Booked 9 Histogram(s) : 1D=9
 OTHitMonitor            SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "betaGamma"                                     |      2357 |    6766847 |     2871.0 |     11268. |   0.0074928 |  1.0981e+05 |
- | "numberHits"                                    |         5 |       2357 |     471.40 |     348.77 |      47.000 |      1077.0 |
-SpdMonitor              SUCCESS Booked 19 Histogram(s) : 1D=19 
-PrsMonitor              SUCCESS Booked 19 Histogram(s) : 1D=19 
-EcalMonitor             SUCCESS Booked 19 Histogram(s) : 1D=19 
-HcalMonitor             SUCCESS Booked 16 Histogram(s) : 1D=16 
+ | "betaGamma"                                     |      1741 |    3965434 |     2277.7 |     10456. |    0.011220 |  1.0981e+05 |
+ | "numberHits"                                    |         5 |       1741 |     348.20 |     205.76 |      47.000 |      691.00 |
+SpdMonitor              SUCCESS Booked 19 Histogram(s) : 1D=19
+PrsMonitor              SUCCESS Booked 19 Histogram(s) : 1D=19
+EcalMonitor             SUCCESS Booked 19 Histogram(s) : 1D=19
+HcalMonitor             SUCCESS Booked 16 Histogram(s) : 1D=16
 MuonHitChecker             INFO -----------------------------------------------------------------
-MuonHitChecker             INFO        Muon Monitoring Table 
+MuonHitChecker             INFO        Muon Monitoring Table
 MuonHitChecker             INFO -----------------------------------------------------------------
-MuonHitChecker             INFO  M1        M2        M3        M4        M5 
-MuonHitChecker             INFO 22.200  4.600  0.000  0.000  0.800   R1
-MuonHitChecker             INFO 25.400  1.000  0.000  0.000  0.000   R2
-MuonHitChecker             INFO 34.400  1.200  0.000  0.000  0.000   R3
-MuonHitChecker             INFO 36.600  0.800  0.000  0.000  0.000   R4
+MuonHitChecker             INFO  M1        M2        M3        M4        M5
+MuonHitChecker             INFO 21.800  10.200  0.800  0.800  0.800   R1
+MuonHitChecker             INFO 15.200  5.800  0.000  0.000  0.000   R2
+MuonHitChecker             INFO 27.400  2.800  0.800  0.800  0.800   R3
+MuonHitChecker             INFO 25.600  0.000  0.000  0.000  0.000   R4
 MuonHitChecker             INFO -----------------------------------------------------------------
 MuonHitChecker             INFO -------    Integrated over regions    ---------------------------
 MuonHitChecker             INFO -----------------------------------------------------------------
-MuonHitChecker             INFO 118.600  7.600  0.000  0.000  0.800   allR
+MuonHitChecker             INFO 90.000  18.800  1.600  1.600  1.600   allR
 MuonHitChecker             INFO  number of hit generate doutside gaps volume 0
 GaussTape                  INFO Events output: 5
 EventLoopMgr               INFO Histograms converted successfully according to request.
+ParticlePropertySvc     SUCCESS Properties have beed redefined for 4 particles : [ 'Sigma_c*++' , 'Sigma_c*0' , 'Sigma_c*~--' , 'Sigma_c*~0' ]
 ToolSvc                    INFO Removing all tools created by ToolSvc
-GaussSim.GaussSimMemory SUCCESS Booked 2 Histogram(s) : 1D=2 
-GaussGen.GaussGenMemory SUCCESS Booked 2 Histogram(s) : 1D=2 
+GaussSim.GaussSimMemory SUCCESS Booked 2 Histogram(s) : 1D=2
+ToolSvc.EvtGenDecay       DEBUG EvtGenDecay finalized
+ToolSvc.EvtGenDecay       DEBUG  ==> Finalize the base class GaudiTool
+ToolSvc.EvtGenDecay       DEBUG Tools to release :
+ToolSvc.EvtGenDecay       DEBUG Services to release :
+GaussGen.GaussGenMemory SUCCESS Booked 2 Histogram(s) : 1D=2
 ToolSvc.SequencerTime...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTime...   INFO This machine has a speed about   1.36 times the speed of a 2.8 GHz Xeon.
+ToolSvc.SequencerTime...   INFO This machine has a speed about   1.85 times the speed of a 2.8 GHz Xeon.
 ToolSvc.SequencerTime...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.SequencerTime...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTime...   INFO DetectorsHits                 |    17.598 |    17.682 |    3.006      40.1 |       5 |     0.088 |
-ToolSvc.SequencerTime...   INFO   GetVeloHits                 |     1.200 |     1.129 |    0.201       2.1 |       5 |     0.006 |
-ToolSvc.SequencerTime...   INFO   GetPuVetoHits               |     0.200 |     0.052 |    0.033       0.1 |       5 |     0.000 |
-ToolSvc.SequencerTime...   INFO   GetTTHits                   |     1.400 |     1.463 |    0.171       3.1 |       5 |     0.007 |
-ToolSvc.SequencerTime...   INFO   GetITHits                   |     0.600 |     0.664 |    0.145       1.1 |       5 |     0.003 |
-ToolSvc.SequencerTime...   INFO   GetOTHits                   |     2.400 |     2.468 |    0.372       5.2 |       5 |     0.012 |
-ToolSvc.SequencerTime...   INFO   GetMuonHits                 |     2.400 |     2.334 |    0.430       5.1 |       5 |     0.012 |
-ToolSvc.SequencerTime...   INFO   GetSpdHits                  |     0.400 |     0.352 |    0.096       0.6 |       5 |     0.002 |
-ToolSvc.SequencerTime...   INFO   GetPrsHits                  |     0.400 |     0.461 |    0.195       0.9 |       5 |     0.002 |
-ToolSvc.SequencerTime...   INFO   GetEcalHits                 |     1.600 |     1.501 |    0.651       2.9 |       5 |     0.008 |
-ToolSvc.SequencerTime...   INFO   GetHcalHits                 |     0.000 |     0.192 |    0.120       0.3 |       5 |     0.001 |
-ToolSvc.SequencerTime...   INFO   RichHits                    |     6.999 |     7.054 |    0.581      18.8 |       5 |     0.035 |
+ToolSvc.SequencerTime...   INFO DetectorsHits                 |    15.998 |    17.884 |    3.609      29.6 |       5 |     0.089 |
+ToolSvc.SequencerTime...   INFO   GetVeloHits                 |     1.200 |     1.193 |    0.222       1.8 |       5 |     0.006 |
+ToolSvc.SequencerTime...   INFO   GetPuVetoHits               |     0.000 |     0.060 |    0.041       0.1 |       5 |     0.000 |
+ToolSvc.SequencerTime...   INFO   GetTTHits                   |     1.000 |     1.248 |    0.195       1.9 |       5 |     0.006 |
+ToolSvc.SequencerTime...   INFO   GetITHits                   |     1.200 |     0.761 |    0.164       1.4 |       5 |     0.004 |
+ToolSvc.SequencerTime...   INFO   GetOTHits                   |     2.400 |     2.446 |    0.458       4.4 |       5 |     0.012 |
+ToolSvc.SequencerTime...   INFO   GetMuonHits                 |     2.599 |     2.647 |    0.523       6.0 |       5 |     0.013 |
+ToolSvc.SequencerTime...   INFO   GetSpdHits                  |     0.400 |     0.393 |    0.116       0.8 |       5 |     0.002 |
+ToolSvc.SequencerTime...   INFO   GetPrsHits                  |     0.600 |     0.508 |    0.215       0.9 |       5 |     0.003 |
+ToolSvc.SequencerTime...   INFO   GetEcalHits                 |     1.600 |     1.642 |    0.772       3.2 |       5 |     0.008 |
+ToolSvc.SequencerTime...   INFO   GetHcalHits                 |     0.400 |     0.237 |    0.144       0.4 |       5 |     0.001 |
+ToolSvc.SequencerTime...   INFO   RichHits                    |     4.599 |     6.735 |    0.746      15.5 |       5 |     0.034 |
 ToolSvc.SequencerTime...   INFO ------------------------------------------------------------------------------------------------
 1********* PYSTAT:  Statistics on Number of Events and Cross-sections *********
 
@@ -622,94 +2066,93 @@ ToolSvc.SequencerTime...   INFO ------------------------------------------------
  ********* Fraction of events that fail fragmentation cuts =  0.00000 *********
 
 TimingAuditor.TIMER        INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.TIMER        INFO This machine has a speed about   1.34 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER        INFO This machine has a speed about   1.61 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.TIMER        INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.TIMER        INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.TIMER        INFO EVENT LOOP                    | 61771.809 | 63306.771 | 8709.537  225588.6 |       5 |   316.534 |
-TimingAuditor.TIMER        INFO  Gauss                        | 60749.764 | 62088.945 | 8695.419  219941.6 |       5 |   310.445 |
-TimingAuditor.TIMER        INFO   Generator                   |    17.997 |    17.778 |    4.372      28.1 |       5 |     0.089 |
-TimingAuditor.TIMER        INFO    GaussGen                   |     0.600 |     0.487 |    0.203       1.4 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO    Generation                 |    16.998 |    16.999 |    4.036      27.4 |       5 |     0.085 |
-TimingAuditor.TIMER        INFO    GenMonitor                 |     0.400 |     0.268 |    0.094       0.4 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO     GenMonitorAlg             |     0.400 |     0.263 |    0.090       0.4 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO   Simulation                  | 60731.767 | 62071.154 | 8691.040  219921.5 |       5 |   310.356 |
-TimingAuditor.TIMER        INFO    GaussSim                   |     0.200 |     0.276 |    0.137       0.6 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO    GiGaStore                  |     0.000 |     0.006 |    0.005       0.0 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO    Geo                        | 25123.581 | 26372.635 |    0.002  131863.2 |       5 |   131.863 |
-TimingAuditor.TIMER        INFO    GenerationToSimulation     | 14003.671 | 14007.524 |    2.082   70020.2 |       5 |    70.038 |
-TimingAuditor.TIMER        INFO    GiGaFlushAlgorithm         | 21570.921 | 21657.326 | 8679.136   43204.2 |       5 |   108.287 |
-TimingAuditor.TIMER        INFO    GiGaCheckEventStatus       |     0.000 |     0.008 |    0.004       0.0 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO    SimulationToMCTruth        |     1.800 |     1.828 |    0.504       3.5 |       5 |     0.009 |
-TimingAuditor.TIMER        INFO    DetectorsHits              |    17.598 |    17.686 |    3.009      40.1 |       5 |     0.088 |
-TimingAuditor.TIMER        INFO     GetVeloHits               |     1.200 |     1.124 |    0.198       2.1 |       5 |     0.006 |
-TimingAuditor.TIMER        INFO     GetPuVetoHits             |     0.000 |     0.047 |    0.030       0.1 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO     GetTTHits                 |     1.400 |     1.456 |    0.168       3.1 |       5 |     0.007 |
-TimingAuditor.TIMER        INFO     GetITHits                 |     0.600 |     0.659 |    0.142       1.0 |       5 |     0.003 |
-TimingAuditor.TIMER        INFO     GetOTHits                 |     2.400 |     2.462 |    0.368       5.2 |       5 |     0.012 |
-TimingAuditor.TIMER        INFO     GetMuonHits               |     2.400 |     2.328 |    0.427       5.1 |       5 |     0.012 |
-TimingAuditor.TIMER        INFO     GetSpdHits                |     0.400 |     0.346 |    0.092       0.6 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO     GetPrsHits                |     0.400 |     0.456 |    0.192       0.9 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO     GetEcalHits               |     1.600 |     1.496 |    0.647       2.9 |       5 |     0.007 |
-TimingAuditor.TIMER        INFO     GetHcalHits               |     0.000 |     0.186 |    0.116       0.3 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO     RichHits                  |     6.999 |     7.048 |    0.577      18.8 |       5 |     0.035 |
-TimingAuditor.TIMER        INFO      GetRichHits              |     1.600 |     1.488 |    0.135       3.3 |       5 |     0.007 |
-TimingAuditor.TIMER        INFO      GetRichPhotons           |     1.000 |     0.948 |    0.090       2.3 |       5 |     0.005 |
-TimingAuditor.TIMER        INFO      GetRichSegments          |     1.200 |     1.252 |    0.114       2.7 |       5 |     0.006 |
-TimingAuditor.TIMER        INFO      GetRichTracks            |     0.600 |     0.526 |    0.086       1.0 |       5 |     0.003 |
-TimingAuditor.TIMER        INFO      MCPartToMCRichTrack      |     0.000 |     0.137 |    0.068       0.3 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO      MCRichHitToMCRichOpPhot  |     2.600 |     2.671 |    0.070       9.4 |       5 |     0.013 |
-TimingAuditor.TIMER        INFO    SimMonitor                 |    12.398 |    12.109 |    2.402      21.0 |       5 |     0.061 |
-TimingAuditor.TIMER        INFO     GiGaGetEventAlg           |     0.400 |     0.149 |    0.106       0.3 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO     MCTruthMonitor            |     0.400 |     0.500 |    0.125       1.0 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO     GiGaGetHitsAlg            |     0.000 |     0.322 |    0.098       0.6 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO     DetectorsMonitor          |    11.398 |    11.120 |    2.059      19.9 |       5 |     0.056 |
-TimingAuditor.TIMER        INFO      VeloGaussMoni            |     4.799 |     4.996 |    0.503       9.9 |       5 |     0.025 |
-TimingAuditor.TIMER        INFO      TTHitMonitor             |     0.800 |     0.494 |    0.043       0.9 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO      ITHitMonitor             |     0.400 |     0.304 |    0.037       0.6 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO      OTHitMonitor             |     0.800 |     0.923 |    0.104       1.9 |       5 |     0.005 |
-TimingAuditor.TIMER        INFO      SpdMonitor               |     0.800 |     0.812 |    0.178       1.7 |       5 |     0.004 |
-TimingAuditor.TIMER        INFO      PrsMonitor               |     1.400 |     1.219 |    0.384       2.1 |       5 |     0.006 |
-TimingAuditor.TIMER        INFO      EcalMonitor              |     1.200 |     1.495 |    0.551       2.6 |       5 |     0.007 |
-TimingAuditor.TIMER        INFO      HcalMonitor              |     0.600 |     0.354 |    0.152       0.9 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO      MuonHitChecker           |     0.600 |     0.487 |    0.087       1.0 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO    PackMCParticle             |     0.600 |     0.914 |    0.193       1.6 |       5 |     0.005 |
-TimingAuditor.TIMER        INFO    PackMCVertex               |     1.000 |     0.770 |    0.164       1.4 |       5 |     0.004 |
-TimingAuditor.TIMER        INFO  GaussTape                    |  1021.845 |  1217.560 |   14.071    5646.4 |       5 |     6.088 |
+TimingAuditor.TIMER        INFO EVENT LOOP                    | 65331.868 | 66783.865 | 10242.833  256133.2 |       5 |   333.919 |
+TimingAuditor.TIMER        INFO  Gauss                        | 64224.836 | 65382.095 | 10226.407  249452.3 |       5 |   326.910 |
+TimingAuditor.TIMER        INFO   Generator                   |    21.596 |    29.887 |    9.231      51.3 |       5 |     0.149 |
+TimingAuditor.TIMER        INFO    GaussGen                   |     0.600 |     0.634 |    0.369       1.5 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO    Generation                 |    20.397 |    28.877 |    8.653      50.5 |       5 |     0.144 |
+TimingAuditor.TIMER        INFO    GenMonitor                 |     0.400 |     0.346 |    0.124       0.5 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO     GenMonitorAlg             |     0.400 |     0.340 |    0.120       0.5 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO   Simulation                  | 64203.240 | 65352.195 | 10217.168  249430.2 |       5 |   326.761 |
+TimingAuditor.TIMER        INFO    GaussSim                   |     0.200 |     0.358 |    0.243       0.6 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO    GiGaStore                  |     0.000 |     0.007 |    0.006       0.0 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO    Geo                        | 25810.476 | 26177.730 |    0.002  130888.6 |       5 |   130.889 |
+TimingAuditor.TIMER        INFO    GenerationToSimulation     | 19042.905 | 19468.846 |    2.455   97325.4 |       5 |    97.344 |
+TimingAuditor.TIMER        INFO    GiGaFlushAlgorithm         | 19317.063 | 19670.368 | 10203.615   28719.4 |       5 |    98.352 |
+TimingAuditor.TIMER        INFO    GiGaCheckEventStatus       |     0.000 |     0.011 |    0.006       0.0 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO    SimulationToMCTruth        |     2.000 |     1.915 |    0.675       2.9 |       5 |     0.010 |
+TimingAuditor.TIMER        INFO    DetectorsHits              |    15.998 |    17.888 |    3.613      29.6 |       5 |     0.089 |
+TimingAuditor.TIMER        INFO     GetVeloHits               |     1.200 |     1.187 |    0.218       1.8 |       5 |     0.006 |
+TimingAuditor.TIMER        INFO     GetPuVetoHits             |     0.000 |     0.052 |    0.037       0.1 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO     GetTTHits                 |     1.000 |     1.242 |    0.191       1.9 |       5 |     0.006 |
+TimingAuditor.TIMER        INFO     GetITHits                 |     1.200 |     0.752 |    0.160       1.3 |       5 |     0.004 |
+TimingAuditor.TIMER        INFO     GetOTHits                 |     2.400 |     2.437 |    0.453       4.4 |       5 |     0.012 |
+TimingAuditor.TIMER        INFO     GetMuonHits               |     2.599 |     2.633 |    0.519       5.9 |       5 |     0.013 |
+TimingAuditor.TIMER        INFO     GetSpdHits                |     0.400 |     0.385 |    0.112       0.8 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO     GetPrsHits                |     0.600 |     0.501 |    0.212       0.9 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO     GetEcalHits               |     1.600 |     1.634 |    0.767       3.2 |       5 |     0.008 |
+TimingAuditor.TIMER        INFO     GetHcalHits               |     0.200 |     0.227 |    0.139       0.4 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO     RichHits                  |     4.599 |     6.729 |    0.742      15.5 |       5 |     0.034 |
+TimingAuditor.TIMER        INFO      GetRichHits              |     1.000 |     1.221 |    0.169       1.9 |       5 |     0.006 |
+TimingAuditor.TIMER        INFO      GetRichPhotons           |     0.600 |     0.672 |    0.109       1.1 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO      GetRichSegments          |     1.000 |     1.034 |    0.148       2.0 |       5 |     0.005 |
+TimingAuditor.TIMER        INFO      GetRichTracks            |     0.800 |     0.576 |    0.120       1.1 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO      MCPartToMCRichTrack      |     0.000 |     1.933 |    0.082       9.3 |       5 |     0.010 |
+TimingAuditor.TIMER        INFO      MCRichHitToMCRichOpPhot  |     1.000 |     1.251 |    0.091       2.5 |       5 |     0.006 |
+TimingAuditor.TIMER        INFO    SimMonitor                 |    12.998 |    13.232 |    3.135      27.0 |       5 |     0.066 |
+TimingAuditor.TIMER        INFO     GiGaGetEventAlg           |     0.200 |     0.313 |    0.206       0.7 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO     MCTruthMonitor            |     0.400 |     0.514 |    0.167       0.8 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO     GiGaGetHitsAlg            |     0.200 |     0.294 |    0.121       0.6 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO     DetectorsMonitor          |    12.198 |    12.091 |    2.605      25.2 |       5 |     0.060 |
+TimingAuditor.TIMER        INFO      VeloGaussMoni            |     5.599 |     5.517 |    0.617      12.6 |       5 |     0.028 |
+TimingAuditor.TIMER        INFO      TTHitMonitor             |     0.600 |     0.504 |    0.057       1.2 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO      ITHitMonitor             |     0.200 |     0.360 |    0.049       0.6 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO      OTHitMonitor             |     1.000 |     0.901 |    0.146       1.4 |       5 |     0.005 |
+TimingAuditor.TIMER        INFO      SpdMonitor               |     0.800 |     0.814 |    0.222       1.9 |       5 |     0.004 |
+TimingAuditor.TIMER        INFO      PrsMonitor               |     1.200 |     1.252 |    0.500       2.4 |       5 |     0.006 |
+TimingAuditor.TIMER        INFO      EcalMonitor              |     1.400 |     1.594 |    0.708       2.8 |       5 |     0.008 |
+TimingAuditor.TIMER        INFO      HcalMonitor              |     0.800 |     0.415 |    0.165       1.1 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO      MuonHitChecker           |     0.600 |     0.691 |    0.119       1.4 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO    PackMCParticle             |     1.000 |     1.043 |    0.277       1.6 |       5 |     0.005 |
+TimingAuditor.TIMER        INFO    PackMCVertex               |     0.600 |     0.706 |    0.211       1.1 |       5 |     0.004 |
+TimingAuditor.TIMER        INFO  GaussTape                    |  1107.031 |  1401.475 |   16.366    6680.2 |       5 |     7.007 |
 TimingAuditor.TIMER        INFO ------------------------------------------------------------------------------------------------
 GiGa.TrackSeq.PostTrack SUCCESS Exceptions/Errors/Warnings Statistics : 0/0/1
-GiGa.TrackSeq.PostTrack SUCCESS  #WARNINGS   = 10159    Message = 'RichHpdPhotoelectricProcess or RichHpdSiEnergyLossProcess  particles not kept'
+GiGa.TrackSeq.PostTrack SUCCESS  #WARNINGS   = 5918     Message = 'RichHpdPhotoelectricProcess or RichHpdSiEnergyLossProcess  particles not kept'
 GiGa.GiGaMgr               INFO GiGaRunManager:: GiGaRunManager Finalization
-PoolRootTreeEvtCnvSvc      INFO Disconnected data IO:56B5F5A0-8917-DE11-BFCE-001E4F3DA517[Gauss-5ev-20090323.sim]
-XMLCatalog                 INFO File 'NewCatalog.xml' does not exist. New file created.
+PoolRootTreeEvtCnvSvc      INFO Disconnected data IO:DEC11689-DB1D-DE11-AE7D-000423D67746[Gauss-5ev-20090331.sim]
 *****Chrono*****           INFO ****************************************************************************************************
 *****Chrono*****           INFO  The Final CPU consumption ( Chrono ) Table (ordered)
 *****Chrono*****           INFO ****************************************************************************************************
-GiGa.GiGaMgr::process...   INFO Time User   : Tot=  108  [s] Ave/Min/Max= 21.6(+-   12)/ 8.71/ 43.2  [s] #=  5
-ChronoStatSvc              INFO Time User   : Tot=  370  [s]                                             #=  1
+GiGa.GiGaMgr::process...   INFO Time User   : Tot= 96.1  [s] Ave/Min/Max= 19.2(+- 6.06)/ 10.2/ 27.9  [s] #=  5
+ChronoStatSvc              INFO Time User   : Tot=  385  [s]                                             #=  1
 *****Chrono*****           INFO ****************************************************************************************************
 ******Stat******           INFO ****************************************************************************************************
 ******Stat******           INFO  The Final stat Table (ordered)
 ******Stat******           INFO ****************************************************************************************************
 ******Stat******           INFO      Counter     |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-******Stat******           INFO  "#VeloPU MCHits |         5 |        131 |     26.200 |     14.511 |      5.0000 |      48.000 |
-******Stat******           INFO  "#MCRichTracks" |         5 |        210 |     42.000 |     32.790 |      4.0000 |      100.00 |
-******Stat******           INFO  "#MCRichSegment |         5 |        305 |     61.000 |     48.961 |      6.0000 |      149.00 |
-******Stat******           INFO  "#Muon MCHits"  |         5 |        635 |     127.00 |     97.618 |      21.000 |      306.00 |
-******Stat******           INFO  "#IT MCHits"    |         5 |        682 |     136.40 |     89.440 |      12.000 |      291.00 |
-******Stat******           INFO  "#Hcal MCHits"  |         5 |        829 |     165.80 |     69.632 |      101.00 |      292.00 |
-******Stat******           INFO  "#TT MCHits"    |         5 |        932 |     186.40 |     158.19 |      9.0000 |      465.00 |
-******Stat******           INFO  "#OT MCHits"    |         5 |       2357 |     471.40 |     348.77 |      47.000 |      1077.0 |
-******Stat******           INFO  "#Velo MCHits"  |         5 |       2370 |     474.00 |     322.25 |      57.000 |      965.00 |
-******Stat******           INFO  "#Spd MCHits"   |         5 |       2905 |     581.00 |     382.84 |      144.00 |      1263.0 |
-******Stat******           INFO  "#Rich2 MCHits" |         5 |       3478 |     695.60 |     762.77 |      60.000 |      2055.0 |
-******Stat******           INFO  "#MCParticles"  |         5 |       4323 |     864.60 |     580.49 |      193.00 |      1858.0 |
-******Stat******           INFO  "#Rich1 MCHits" |         5 |       5154 |     1030.8 |     853.90 |      58.000 |      2330.0 |
-******Stat******           INFO  "#Prs MCHits"   |         5 |       5344 |     1068.8 |     648.07 |      360.00 |      2237.0 |
-******Stat******           INFO  "#Ecal MCHits"  |         5 |       6487 |     1297.4 |     698.19 |      525.00 |      2575.0 |
-******Stat******           INFO  "#MCRichOpPhoto |         5 |       8631 |     1726.2 |     1488.8 |      118.00 |      4385.0 |
-******Stat******           INFO  "#Rich MCHits"  |         5 |       8632 |     1726.4 |     1488.8 |      118.00 |      4385.0 |
+******Stat******           INFO  "#VeloPU MCHits |         5 |        138 |     27.600 |     15.370 |      5.0000 |      46.000 |
+******Stat******           INFO  "#MCRichTracks" |         5 |        169 |     33.800 |     21.470 |      4.0000 |      69.000 |
+******Stat******           INFO  "#MCRichSegment |         5 |        234 |     46.800 |     28.715 |      6.0000 |      93.000 |
+******Stat******           INFO  "#Muon MCHits"  |         5 |        568 |     113.60 |     84.111 |      21.000 |      270.00 |
+******Stat******           INFO  "#TT MCHits"    |         5 |        620 |     124.00 |     77.854 |      9.0000 |      250.00 |
+******Stat******           INFO  "#IT MCHits"    |         5 |        625 |     125.00 |     66.696 |      12.000 |      219.00 |
+******Stat******           INFO  "#Hcal MCHits"  |         5 |        806 |     161.20 |     63.247 |      101.00 |      275.00 |
+******Stat******           INFO  "#Rich2 MCHits" |         5 |       1050 |     210.00 |     114.99 |      60.000 |      397.00 |
+******Stat******           INFO  "#OT MCHits"    |         5 |       1741 |     348.20 |     205.76 |      47.000 |      691.00 |
+******Stat******           INFO  "#Spd MCHits"   |         5 |       2337 |     467.40 |     228.04 |      144.00 |      808.00 |
+******Stat******           INFO  "#Velo MCHits"  |         5 |       2366 |     473.20 |     311.63 |      57.000 |      865.00 |
+******Stat******           INFO  "#MCParticles"  |         5 |       3742 |     748.40 |     405.16 |      193.00 |      1327.0 |
+******Stat******           INFO  "#Rich1 MCHits" |         5 |       4022 |     804.40 |     583.71 |      58.000 |      1687.0 |
+******Stat******           INFO  "#Prs MCHits"   |         5 |       4624 |     924.80 |     430.64 |      360.00 |      1601.0 |
+******Stat******           INFO  "#MCRichOpPhoto |         5 |       5071 |     1014.2 |     627.74 |      118.00 |      1812.0 |
+******Stat******           INFO  "#Rich MCHits"  |         5 |       5072 |     1014.4 |     627.99 |      118.00 |      1813.0 |
+******Stat******           INFO  "#Ecal MCHits"  |         5 |       5865 |     1173.0 |     519.67 |      525.00 |      2068.0 |
 ******Stat******           INFO ****************************************************************************************************
-ChronoStatSvc.finalize()   INFO  Service finalized succesfully 
+ChronoStatSvc.finalize()   INFO  Service finalized succesfully
 ApplicationMgr             INFO Application Manager Finalized successfully
 ApplicationMgr             INFO Application Manager Terminated successfully
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'EcalSensDet/GiGaGeo.Ecal' Counts = 1
