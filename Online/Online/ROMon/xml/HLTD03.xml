@@ -5,6 +5,13 @@
    <Node name="hltd0302"   type="HLTWorker"/>
    <Node name="hltd0303"   type="HLTWorker"/>
    <Node name="hltd0304"   type="HLTWorker"/>
+   <Node name="hltd0305"   type="HLTWorker"/>
+   <Node name="hltd0306"   type="HLTWorker"/>
+   <Node name="hltd0307"   type="HLTWorker"/>
+   <Node name="hltd0308"   type="HLTWorker"/>
+   <Node name="hltd0309"   type="HLTWorker"/>
+   <Node name="hltd0310"   type="HLTWorker"/>
+   <Node name="hltd0311"   type="HLTWorker"/>
    <Node name="hltd03"   type="HLTControl"/>
   </NodeList>
 </TaskInventory>

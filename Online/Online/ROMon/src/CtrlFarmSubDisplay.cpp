@@ -159,7 +159,7 @@ void CtrlFarmSubDisplay::updateContent(XML::TaskSupervisorParser& ts) {
     missTaskCount += n.missTaskCount;
     connCount     += n.connCount;
     missConnCount += n.missConnCount;
-    val = " "+(n.name == m_name ? n.name : n.name.substr(n.name.length()-2))+" ";
+    val = " "+(n.name == m_name ? n.name : n.name.substr(n.name.length()-2));
     ::scrc_put_chars(m_display,val.c_str(),col,line,pos,0);
     pos += val.length();
     if ( pos>DISP_WIDTH-3 ) ++line, pos=1;

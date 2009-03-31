@@ -11,7 +11,6 @@
    <Node name="mona0908"   type="ReconstructionWorker"/>
    <Node name="mona0909"   type="ReconstructionWorker"/>
    <Node name="mona0910"   type="ReconstructionWorker"/>
-   <Node name="mona09"   type="ReconstructionControl"/>
    <Node name="mona0911"   type="ReconstructionWorker"/>
    <Node name="mona0912"   type="ReconstructionWorker"/>
    <Node name="mona0913"   type="ReconstructionWorker"/>
@@ -22,6 +21,7 @@
    <Node name="mona0918"   type="ReconstructionWorker"/>
    <Node name="mona0919"   type="ReconstructionWorker"/>
    <Node name="mona0920"   type="ReconstructionWorker"/>
+   <Node name="mona09"   type="ReconstructionControl"/>
   </NodeList>
 </TaskInventory>
 

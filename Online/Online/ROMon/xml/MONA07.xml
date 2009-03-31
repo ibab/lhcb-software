@@ -1,9 +1,9 @@
 <TaskInventory>
   <NodeList name="MONA07">
    <Name>MONA07</Name>
-   <Project name="RECFARM"/>
-   <Project name="RECCTRL"/>
-   <Node name="mona07"   type="MonitoringControlTest"/>
-   <Node name="mona0701" type="MonitoringWorker"/>
+   <Node name="mona0701"   type="MonitoringWorker"/>
+   <Node name="mona0702"   type="MonitoringWorker"/>
+   <Node name="mona07"   type="MonitoringControl"/>
   </NodeList>
 </TaskInventory>
+
