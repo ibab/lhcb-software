@@ -4,6 +4,14 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2009-03-31 - Vanya BELYAEV
+
+ - TrackInterfaces/IFunctionTool.h
+    add the unique interface IDs (and destructors) to I*FunctionTool classes
+
+ - cmt/requirements 
+    version increment to v4r3 
+
 !====================== TrackInterfaces v4r2 2009-03-11 ======================
 ! 2009-03-11 - Stephanie Hansmann-Menzemer
  - New interface is created for PatVeloTTFit
