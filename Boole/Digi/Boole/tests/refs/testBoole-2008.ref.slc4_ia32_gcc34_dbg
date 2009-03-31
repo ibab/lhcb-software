@@ -16,7 +16,6 @@
 # |-MainSequence   = []  (default: [])
 # |-MoniSequence   = ['VELO', 'TT', 'IT', 'OT', 'RICH', 'CALO', 'MUON', 'L0', 'MC']  (default: [])
 # |-TAEPrev        = 0
-# |-SkipSpill      = 0
 # |-DigiSequence   = ['VELO', 'TT', 'IT', 'OT', 'RICH', 'CALO', 'MUON', 'L0']  (default: [])
 # |-EvtMax         = 10  (default: -1)
 # |-TAENext        = 0
@@ -120,7 +119,6 @@ EcalFillRawBuffer    INFO Data coding type 2
 HcalFillRawBuffer    INFO Processing 54 FE-Cards and 8 TELL1
 HcalFillRawBuffer    INFO Data coding type 2
 DigiMUONSeq          INFO Member list: MuonDigitization, MuonDigitToRawBuffer
-MuonDigitization     INFO number of spillover events read from aux stream 0
 DigiL0Seq            INFO Member list: GaudiSequencer/L0SimulationSeq
 L0SimulationSeq      INFO Member list: PuVetoFillRawBuffer, GaudiSequencer/L0EmulatorSeq, L0CaloCandidatesFromRaw
 L0EmulatorSeq        INFO Member list: GaudiSequencer/L0ProcessorsSeq, L0DUAlg/L0DU
