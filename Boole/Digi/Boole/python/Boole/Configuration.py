@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.43 2009-03-31 09:09:07 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.44 2009-03-31 11:21:04 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -421,7 +421,7 @@ class Boole(LHCbConfigurableUser):
         MuonBackground("MuonLowEnergy").EnableSpillover = True
 
         # Handle the unpacking of pSim containers
-        for spill in spillPaths :
+        for spill in self.getProp("SpilloverPaths") :
             from Configurables import UnpackMCParticle, UnpackMCVertex
             particleUnpacker = UnpackMCParticle( "UnpackMCP" + spill )
             particleUnpacker.RootInTES = spill
