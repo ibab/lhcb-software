@@ -1,4 +1,4 @@
-// $Id: Particle2MCParticle.h,v 1.5 2009-03-27 18:00:23 jpalac Exp $
+// $Id: Particle2MCParticle.h,v 1.6 2009-03-31 15:14:36 jpalac Exp $
 #ifndef KERNEL_PARTICLE2MCPARTICLE_H 
 #define KERNEL_PARTICLE2MCPARTICLE_H 1
 
@@ -31,8 +31,7 @@ namespace Particle2MCParticle {
   typedef Table::To                                       To         ;
   typedef Table::From                                     From       ;
 
-  typedef std::vector<MCAssociation>                      ToVector;
-
+  typedef std::vector<MCAssociation>                      ToVector;  
 
   struct SumWeights : public std::binary_function<MCAssociation, MCAssociation, double>
   {
@@ -80,6 +79,29 @@ namespace Particle2MCParticle {
     const LHCb::MCParticle::ConstVector* m_toRange;
     
   };
+
+  /**
+   *
+   *  Filter a container of MCAssociations depending on whether the associated
+   *  MCParticles come from a container of MCParticles
+   *
+   *  @param mcAssociations Container of MCAssociaitons to be filtered
+   *  @param mcps Container of MCParticles to compare to for filtering  
+   *  @return container of filtered associaitons, subset of mcAssociaitons containing only associaitons with MCParticles in mcps
+   *  @author Juan PALACIOS juan.palacios@nikhef.nl   
+   **/
+  static 
+  Particle2MCParticle::ToVector 
+  FilterMCAssociations(const ToVector& mcAssociations,
+                       const LHCb::MCParticle::ConstVector& mcps)
+  {
+    const Particle2MCParticle::NotInRange pred(&mcps);
+    article2MCParticle::ToVector tmp(mcAssociations);
+    Particle2MCParticle::ToVector::iterator new_last = 
+      std::remove_if(tmp.begin(), tmp.end(), pred);
+    return Particle2MCParticle::ToVector(tmp.begin(), new_last);
+  }
+
 
 }
 #endif // KERNEL_PARTICLE2MCPARTICLE_H
