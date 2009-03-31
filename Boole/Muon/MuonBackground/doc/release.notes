@@ -5,6 +5,11 @@
 !               low energy components, flatspillover
 !-----------------------------------------------------------------------------
 
+! 2009-03-31 - Marco Cattaneo
+ - In MuonBackgroundm, remove need to access SpilloverAlg to determine number
+   of spillover slots. Now hardcoded to 4 if EnableSpillover is true (in any 
+   case anything other than 4 would have given unpredictable results)
+
 !====================== MuonBackground v2r8 2009-02-24 =======================
 ! 2009-01-29 - Marco Cattaneo
  - Add EnableSpillover option to MuonBackground (default False) to avoid

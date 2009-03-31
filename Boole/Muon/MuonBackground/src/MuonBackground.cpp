@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.49 2009-01-31 20:43:05 cattanem Exp $
+// $Id: MuonBackground.cpp,v 1.50 2009-03-31 11:28:39 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -151,8 +151,8 @@ StatusCode MuonBackground::initialize() {
     m_type=FlatSpillover;        
   }
   debug() <<" type "<< m_type<<endreq;
-  if( m_type==LowEnergy ){    
 
+  if( m_type==LowEnergy ){    
     if( m_histos ) {
       for (int y=0;y<5;y++){
         for (int kk=0;kk<4;kk++){
@@ -173,29 +173,9 @@ StatusCode MuonBackground::initialize() {
         }
       }
     }
-
     m_readSpilloverEvents = 0;
-    if( m_enableSpillover ) {
-      // Get the number of spillover events from the SpilloverAlg
-      IAlgorithm*  spillAlg;
-      sc = algmgr->getAlgorithm( "SpilloverAlg", spillAlg );
-      if( !sc.isSuccess() )
-        return Error( "Spillover enabled but SpilloverAlg not found", sc);
+    if( m_enableSpillover ) m_readSpilloverEvents = 4;
 
-      SmartIF<IProperty> spillProp( spillAlg );
-      if( !spillProp )
-        return Error( "Unable to access SpilloverAlg properties" );
-
-      StringArrayProperty evtPaths;
-      sc=evtPaths.assign( spillProp->getProperty("PathList") );
-      if( !sc.isSuccess() )
-        return Error( "Problem locating PathList property of SpilloverAlg", sc );
-
-      m_readSpilloverEvents = evtPaths.value().size();
-    }
-
-    debug() << "number of spillover events read from aux stream "
-            << m_readSpilloverEvents << endmsg;  
   }else if(m_type==FlatSpillover){
     m_readSpilloverEvents=1;
     m_luminosityFactor=m_luminosity/2.0;   
