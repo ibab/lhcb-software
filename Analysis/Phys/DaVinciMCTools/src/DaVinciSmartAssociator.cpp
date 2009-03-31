@@ -27,7 +27,7 @@ DaVinciSmartAssociator::DaVinciSmartAssociator( const std::string& type,
   m_linkerTool_nPP(0),
   m_bkg(0)
 {
-  declareInterface<IParticle2MCWeightedAssociator>(this);
+
 }
 //=============================================================================
 // Destructor

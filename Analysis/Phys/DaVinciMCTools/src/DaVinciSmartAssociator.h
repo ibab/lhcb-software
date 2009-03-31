@@ -35,8 +35,7 @@
  *  @author V. Gligorov
  *  @date   2009-01-13
  */
-class DaVinciSmartAssociator : public Particle2MCAssociatorBase, 
-                               virtual public IParticle2MCWeightedAssociator {
+class DaVinciSmartAssociator : public Particle2MCAssociatorBase {
 public: 
   /// Standard constructor
   DaVinciSmartAssociator( const std::string& type, 
