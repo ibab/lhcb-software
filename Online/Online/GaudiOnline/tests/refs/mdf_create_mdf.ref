@@ -41,7 +41,7 @@ ApplicationMgr       INFO Application Manager Configured successfully
               'Compress': 0,
               'Connection': 'LFN:/user/frank/markus/mdf_1.dat',
               'GenerateMD5': True},
- 'Writer_10': {'Connection': '/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/qmtest/mdfData_10.dat'},
+ 'Writer_10': {'Connection': '/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_10.dat'},
  'Writer_2': {'ChecksumType': 1,
               'Compress': 0,
               'Connection': 'LFN:/user/frank/markus/mdf_2.dat',
@@ -54,11 +54,11 @@ ApplicationMgr       INFO Application Manager Configured successfully
               'Compress': 2,
               'Connection': 'root:mdfData_4.dat',
               'GenerateMD5': True},
- 'Writer_5': {'Connection': 'PFN:root:file:///afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/qmtest/mdfData_5.dat'},
- 'Writer_6': {'Connection': 'PFN:root:file:///afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/qmtest/mdfData_6.dat'},
- 'Writer_7': {'Connection': 'PFN:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/qmtest/mdfData_7.dat'},
- 'Writer_8': {'Connection': 'root:file:///afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/qmtest/mdfData_8.dat'},
- 'Writer_9': {'Connection': 'root:file:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/qmtest/mdfData_9.dat'}}
+ 'Writer_5': {'Connection': 'PFN:root:file:///afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_5.dat'},
+ 'Writer_6': {'Connection': 'PFN:root:file:///afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_6.dat'},
+ 'Writer_7': {'Connection': 'PFN:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_7.dat'},
+ 'Writer_8': {'Connection': 'root:file:///afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_8.dat'},
+ 'Writer_9': {'Connection': 'root:file:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_9.dat'}}
 ApplicationMgr      FATAL start: Invalid state "CONFIGURED"
 ---> Start processing events
 EventPersistenc...   INFO  'CnvServices':[ 'LHCb::RawDataCnvSvc/RawDataCnvSvc' ]
@@ -69,20 +69,28 @@ Writer_1             INFO Received event request connection.
 Writer_2             INFO Initialize MDFWriter
 Writer_2             INFO Received event request connection.
 Writer_3             INFO Initialize MDFWriter
+IODataManager        INFO Referring to dataset root:mdfData_3.dat by its file ID:32349EAF-201E-DE11-B178-000423D9A21A
 Writer_3             INFO Received event request connection.
 Writer_4             INFO Initialize MDFWriter
+IODataManager        INFO Referring to dataset root:mdfData_4.dat by its file ID:E0769EAF-201E-DE11-B178-000423D9A21A
 Writer_4             INFO Received event request connection.
 Writer_5             INFO Initialize MDFWriter
+IODataManager        INFO Referring to dataset root:file:///afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_5.dat by its file ID:6ABF9EAF-201E-DE11-B178-000423D9A21A
 Writer_5             INFO Received event request connection.
 Writer_6             INFO Initialize MDFWriter
+IODataManager        INFO Referring to dataset root:file:///afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_6.dat by its file ID:747D9FAF-201E-DE11-B178-000423D9A21A
 Writer_6             INFO Received event request connection.
 Writer_7             INFO Initialize MDFWriter
+IODataManager        INFO Referring to dataset /afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_7.dat by its file ID:1EBA9FAF-201E-DE11-B178-000423D9A21A
 Writer_7             INFO Received event request connection.
 Writer_8             INFO Initialize MDFWriter
+IODataManager        INFO Referring to dataset root:file:///afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_8.dat by its file ID:0AE79FAF-201E-DE11-B178-000423D9A21A
 Writer_8             INFO Received event request connection.
 Writer_9             INFO Initialize MDFWriter
+IODataManager        INFO Referring to dataset root:file:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_9.dat by its file ID:FA23A0AF-201E-DE11-B178-000423D9A21A
 Writer_9             INFO Received event request connection.
 Writer_10            INFO Initialize MDFWriter
+IODataManager        INFO Referring to dataset /afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_10.dat by its file ID:7260A0AF-201E-DE11-B178-000423D9A21A
 Writer_10            INFO Received event request connection.
 EventLoopMgr      WARNING Unable to locate service "EventSelector"
 EventLoopMgr      WARNING No events will be processed from external input.
@@ -90,11 +98,12 @@ HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
-Explorer             INFO ========= /Event[0x9020b90@EventDataSvc]:
+Explorer             INFO ========= /Event[0x9010d20@EventDataSvc]:
 Explorer             INFO +--> /Event [No Address]  DataObject
 Explorer             INFO   +--> /DAQ [No Address]  DataObject
 Explorer             INFO     +--> /RawEvent [No Address]  LHCb::RawEvent
-LHCb::RawDataCn...   INFO Opened(NEW)  MDF stream:PFN:root:file://mdfData_0.dat ID:0x9020b70
+IODataManager        INFO Referring to dataset root:file://mdfData_0.dat by its file ID:7809A1AF-201E-DE11-B178-000423D9A21A
+LHCb::RawDataCn...   INFO Opened(NEW)  MDF stream:PFN:root:file://mdfData_0.dat ID:0x9049320
 ---> Finished processing events
 ApplicationMgr       INFO Application Manager Stopped successfully
 Writer_0             INFO Events output: 2000
@@ -102,13 +111,14 @@ Writer_1             INFO Size:20880000 Output:LFN:/user/frank/markus/mdf_1.dat 
 Writer_2             INFO Size:20880000 Output:LFN:/user/frank/markus/mdf_2.dat MD5 sum:30d43bd10921906d457bca3b3dd90c50
 Writer_3             INFO Size: 1761540 Output:PFN:root:mdfData_3.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
 Writer_4             INFO Size: 1761540 Output:root:mdfData_4.dat MD5 sum:9f48e421e73f2421bfd836e3f9f83a81
-Writer_5             INFO Size: 1761540 Output:PFN:root:file:///afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/qmtest/mdfData_5.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
-Writer_6             INFO Size: 1761540 Output:PFN:root:file:///afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/qmtest/mdfData_6.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
-Writer_7             INFO Size: 1761540 Output:PFN:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/qmtest/mdfData_7.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
-Writer_8             INFO Size: 1761540 Output:root:file:///afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/qmtest/mdfData_8.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
-Writer_9             INFO Size: 1761540 Output:root:file:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/qmtest/mdfData_9.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
-Writer_10            INFO Size: 1761540 Output:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/qmtest/mdfData_10.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
+Writer_5             INFO Size: 1761540 Output:PFN:root:file:///afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_5.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
+Writer_6             INFO Size: 1761540 Output:PFN:root:file:///afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_6.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
+Writer_7             INFO Size: 1761540 Output:PFN:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_7.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
+Writer_8             INFO Size: 1761540 Output:root:file:///afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_8.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
+Writer_9             INFO Size: 1761540 Output:root:file:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_9.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
+Writer_10            INFO Size: 1761540 Output:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_10.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
 EventLoopMgr         INFO Histograms converted successfully according to request.
-LHCb::RawDataCn...   INFO Closed MDF stream:PFN:root:file://mdfData_0.dat ID:0x9020b70
+LHCb::RawDataCn...   INFO Closed MDF stream:PFN:root:file://mdfData_0.dat ID:0x9049320
+XMLCatalog           INFO File 'Cnew.xml' does not exist. New file created.
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

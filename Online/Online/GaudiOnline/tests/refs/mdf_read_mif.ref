@@ -36,73 +36,73 @@ MIFSelector       SUCCESS Connected to:58AD91C1-1FEA-DC11-A5AA-000423D950B0 file
 EventSelector.D...   INFO Compression:0 Checksum:0
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 EventPersistenc...   INFO Added successfully Conversion service:RawDataCnvSvc
-Explorer             INFO ========= /Event[0x8f65fa0@EventDataSvc]:
+Explorer             INFO ========= /Event[0x8f5f1b8@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
 EventSelector     SUCCESS Reading Event record 1001. Record number within stream 1: 1001
-MIFSelector       SUCCESS Connected to:0800E02A-0D1E-DE11-851F-000423D9A21A root:file://mdfData_0.dat
+MIFSelector       SUCCESS Connected to:7809A1AF-201E-DE11-B178-000423D9A21A root:file://mdfData_0.dat
 EventSelector.D...   INFO Compression:2 Checksum:1
 EventSelector     SUCCESS Reading Event record 2001. Record number within stream 1: 2001
 EventSelector     SUCCESS Reading Event record 3001. Record number within stream 1: 3001
 MIFSelector       SUCCESS Connected to:E6C199C1-1FEA-DC11-A5AA-000423D950B0 root:file:mdfData_2.dat
 EventSelector.D...   INFO Compression:0 Checksum:1
 EventSelector     SUCCESS Reading Event record 4001. Record number within stream 1: 4001
-Explorer             INFO ========= /Event[0x8f66190@EventDataSvc]:
+Explorer             INFO ========= /Event[0x8f75980@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
 EventSelector     SUCCESS Reading Event record 5001. Record number within stream 1: 5001
-MIFSelector       SUCCESS Connected to:4CA1DC2A-0D1E-DE11-851F-000423D9A21A root:mdfData_3.dat
+MIFSelector       SUCCESS Connected to:32349EAF-201E-DE11-B178-000423D9A21A root:mdfData_3.dat
 EventSelector.D...   INFO Compression:2 Checksum:1
 EventSelector     SUCCESS Reading Event record 6001. Record number within stream 1: 6001
 EventSelector     SUCCESS Reading Event record 7001. Record number within stream 1: 7001
-MIFSelector       SUCCESS Connected to:2CF3DC2A-0D1E-DE11-851F-000423D9A21A root:mdfData_4.dat
+MIFSelector       SUCCESS Connected to:E0769EAF-201E-DE11-B178-000423D9A21A root:mdfData_4.dat
 EventSelector.D...   INFO Compression:2 Checksum:0
 EventSelector     SUCCESS Reading Event record 8001. Record number within stream 1: 8001
 EventSelector     SUCCESS Reading Event record 9001. Record number within stream 1: 9001
-Explorer             INFO ========= /Event[0x8f78bb0@EventDataSvc]:
+Explorer             INFO ========= /Event[0x8f79268@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
-MIFSelector       SUCCESS Connected to:8675DD2A-0D1E-DE11-851F-000423D9A21A root:file:///afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/qmtest/mdfData_5.dat
+MIFSelector       SUCCESS Connected to:6ABF9EAF-201E-DE11-B178-000423D9A21A root:file:///afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_5.dat
 EventSelector.D...   INFO Compression:2 Checksum:1
 EventSelector     SUCCESS Reading Event record 10001. Record number within stream 1: 10001
 EventSelector     SUCCESS Reading Event record 11001. Record number within stream 1: 11001
 IODataManager        INFO Disconnect from dataset file://../cmt/mdfData_1.dat [58AD91C1-1FEA-DC11-A5AA-000423D950B0]
-IODataManager       ERROR Referring to existing dataset root:file:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/qmtest/mdfData_6.dat by its physical name.
+IODataManager       ERROR Referring to existing dataset root:file:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_6.dat by its physical name.
 IODataManager       ERROR You may not be able to nagivate back to the input file -- processing continues
-MIFSelector       SUCCESS Connected to:root:file:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/qmtest/mdfData_6.dat root:file:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/qmtest/mdfData_6.dat
+MIFSelector       SUCCESS Connected to:root:file:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_6.dat root:file:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_6.dat
 EventSelector.D...   INFO Compression:2 Checksum:1
 EventSelector     SUCCESS Reading Event record 12001. Record number within stream 1: 12001
 EventSelector     SUCCESS Reading Event record 13001. Record number within stream 1: 13001
-IODataManager        INFO Disconnect from dataset root:file://mdfData_0.dat [0800E02A-0D1E-DE11-851F-000423D9A21A]
-IODataManager       ERROR Referring to existing dataset root:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/qmtest/mdfData_7.dat by its physical name.
+IODataManager        INFO Disconnect from dataset root:file://mdfData_0.dat [7809A1AF-201E-DE11-B178-000423D9A21A]
+IODataManager       ERROR Referring to existing dataset root:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_7.dat by its physical name.
 IODataManager       ERROR You may not be able to nagivate back to the input file -- processing continues
-MIFSelector       SUCCESS Connected to:root:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/qmtest/mdfData_7.dat root:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/qmtest/mdfData_7.dat
+MIFSelector       SUCCESS Connected to:root:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_7.dat root:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_7.dat
 EventSelector.D...   INFO Compression:2 Checksum:1
 EventSelector     SUCCESS Reading Event record 14001. Record number within stream 1: 14001
-Explorer             INFO ========= /Event[0x8fa02b0@EventDataSvc]:
+Explorer             INFO ========= /Event[0x8f992b0@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
 EventSelector     SUCCESS Reading Event record 15001. Record number within stream 1: 15001
 IODataManager        INFO Disconnect from dataset root:file:mdfData_2.dat [E6C199C1-1FEA-DC11-A5AA-000423D950B0]
-MIFSelector       SUCCESS Connected to:421DDE2A-0D1E-DE11-851F-000423D9A21A root:file:///afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/qmtest/mdfData_8.dat
+MIFSelector       SUCCESS Connected to:0AE79FAF-201E-DE11-B178-000423D9A21A root:file:///afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_8.dat
 EventSelector.D...   INFO Compression:2 Checksum:1
 EventSelector     SUCCESS Reading Event record 16001. Record number within stream 1: 16001
 EventSelector     SUCCESS Reading Event record 17001. Record number within stream 1: 17001
-IODataManager        INFO Disconnect from dataset root:mdfData_3.dat [4CA1DC2A-0D1E-DE11-851F-000423D9A21A]
-MIFSelector       SUCCESS Connected to:0C5DDE2A-0D1E-DE11-851F-000423D9A21A root:file:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/qmtest/mdfData_9.dat
+IODataManager        INFO Disconnect from dataset root:mdfData_3.dat [32349EAF-201E-DE11-B178-000423D9A21A]
+MIFSelector       SUCCESS Connected to:FA23A0AF-201E-DE11-B178-000423D9A21A root:file:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_9.dat
 EventSelector.D...   INFO Compression:2 Checksum:1
 EventSelector     SUCCESS Reading Event record 18001. Record number within stream 1: 18001
 EventSelector     SUCCESS Reading Event record 19001. Record number within stream 1: 19001
-Explorer             INFO ========= /Event[0x8fa02b0@EventDataSvc]:
+Explorer             INFO ========= /Event[0x8f70c58@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
-IODataManager        INFO Disconnect from dataset root:mdfData_4.dat [2CF3DC2A-0D1E-DE11-851F-000423D9A21A]
-MIFSelector       SUCCESS Connected to:86D3DE2A-0D1E-DE11-851F-000423D9A21A /afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/qmtest/mdfData_10.dat
+IODataManager        INFO Disconnect from dataset root:mdfData_4.dat [E0769EAF-201E-DE11-B178-000423D9A21A]
+MIFSelector       SUCCESS Connected to:7260A0AF-201E-DE11-B178-000423D9A21A /afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_10.dat
 EventSelector.D...   INFO Compression:2 Checksum:1
 EventSelector     SUCCESS Reading Event record 20001. Record number within stream 1: 20001
 EventSelector     SUCCESS Reading Event record 21001. Record number within stream 1: 21001

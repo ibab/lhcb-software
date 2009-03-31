@@ -86,7 +86,7 @@ def mdfCheck():
   app.TopAlg       += [dmp,exp]
   svc  = CFG.EventPersistencySvc()
   svc.CnvServices += [Configs.LHCb__RawDataCnvSvc('RawDataCnvSvc')]
-  CFG.FileCatalog().Catalogs = ['xmlcatalog_file:Cnew.xml','xmlcatalog_file://'+os.environ['MDFROOT']+'/cmt/C1.xml']
+  CFG.FileCatalog().Catalogs = ['xmlcatalog_file:Cnew.xml','xmlcatalog_file:C1.xml']
   CFG.IODataManager().OutputLevel = 1  
   CFG.IODataManager().AgeLimit = 1
 
