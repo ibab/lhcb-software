@@ -4,6 +4,22 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2009-03-31 - Vanya BELYAEV
+
+ - HltBase/ITrackBiFunctionTool.h
+
+   remove duplicated definition of ITrackBifunctionTool class, 
+   replace it with #include "HltBase/IBiFunctionTool.h"
+
+ - HltBase/IBiFunctionTool.h, src/IBiFunctionTool.cpp
+
+    add the unique interface IDs for I*BiFunctionTool interfaces 
+    and the virtual protected destructors 
+
+ - cmt/requirements 
+
+    version increment to v6r4 
+ 
 !========================== HltBase v6r2 2009-03-23 ===================
 ! 2009-02-25 - Gerhard Raven
  - remove HltSummaryHelper.h and IHltDecisionPredicateFactory.h
