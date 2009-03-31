@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.254 2009-03-27 18:05:00 jpalac Exp $
+! $Id: release.notes,v 1.255 2009-03-31 18:10:48 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
 
+! 2009-03-31 - Juan PALACIOS
+ - Add P2MCPFromProtoP, an IParticle2MCWeightedAssociator that uses ProtoParticle -> MCParticle relations tables.
+ - src/DaVinciSmartAssociator.cpp
+  . Fix error in interface and pass ToVector filtering to new method in Particle2MCParticle
+ - src/DaVinciSmartAssociator.h
+  . relatedMCPsImpl bug fix: was passing container of MCParticles by value. Pass by reference
 ! 2009-03-27 - Juan PALACIOS
  - src/DaVinciSmartAssociator{.h, .cpp}
    .implement relatedMCPsImpl and remove all other implementations from 
