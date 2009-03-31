@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.42 2009-03-06 16:03:52 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.43 2009-03-31 09:09:07 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -28,7 +28,6 @@ class Boole(LHCbConfigurableUser):
     __slots__ = {
         "EvtMax"         : -1
        ,"SkipEvents"     : 0
-       ,"SkipSpill"      : 0
        ,"UseSpillover"   : False
        ,"SpilloverPaths" : ["Prev", "PrevPrev", "Next"]
        ,"TAEPrev"        : 0
@@ -55,7 +54,6 @@ class Boole(LHCbConfigurableUser):
     _propertyDocDct = { 
         'EvtMax'       : """ Maximum number of events to process """
        ,'SkipEvents'   : """ Number of events to skip """
-       ,'SkipSpill'    : """ Number of spillover events to skip """
        ,'UseSpillover' : """ Flag to enable spillover (default False) """
        ,'SpilloverPaths':""" Paths to fill when spillover is enabled """
        ,'TAEPrev'      : """ Number of Prev Time Alignment Events to generate """
@@ -67,7 +65,7 @@ class Boole(LHCbConfigurableUser):
        ,'Histograms'   : """ Type of histograms: ['None','Default','Expert'] """
        ,'NoWarnings'   : """ Flag to suppress all MSG::WARNING or below (default False) """ 
        ,'DatasetName'  : """ String used to build output file names """
-       ,'DataType'     : """ Data type, can be ['DC06','2008']. Default '2008' """
+       ,'DataType'     : """ Data type. Default '2008' """
        ,'DDDBtag'      : """ Tag for DDDB """
        ,'CondDBtag'    : """ Tag for CondDB """
        ,'Monitors'     : """ List of monitors to execute """
@@ -82,6 +80,9 @@ class Boole(LHCbConfigurableUser):
     __used_configurables__ = [ LHCbApp, L0Conf ]
 
     def defineDB(self):
+        if self.getProp("DataType") == "DC06" :
+            raise RuntimeError( "DC06 data type no longer supported. Please use an earlier Boole version" )
+            
         # Delegate handling to LHCbApp configurable
         self.setOtherProps(LHCbApp(),["CondDBtag","DDDBtag","DataType"])
         LHCbApp().Simulation = True
@@ -90,12 +91,6 @@ class Boole(LHCbConfigurableUser):
     def defineEvents(self):
         # Delegate handling to LHCbApp configurable
         self.setOtherProps(LHCbApp(),["EvtMax","SkipEvents"])
-
-        skipSpill = self.getProp("SkipSpill")
-        if skipSpill  > 0 :
-            if EventSelector("SpilloverSelector").isPropertySet("FirstEvent"):
-                log.warning( "EventSelector('SpilloverSelector').FirstEvent and Boole().SkipSpill both defined, using Boole().SkipSpill")
-            EventSelector("SpilloverSelector").FirstEvent = skipSpill + 1
 
 
     def configurePhases(self):
@@ -138,17 +133,11 @@ class Boole(LHCbConfigurableUser):
         MessageSvc().OutputLevel = INFO
         EventSelector().PrintFreq = -1
 
-        spill = self.getProp("UseSpillover")
-        if tae :
-            if spill :
+        if self.getProp("UseSpillover"):
+            if tae :
                 log.warning("Disabling spillover, incompatible with TAE")
-                spill = False
-
-        if spill :
-            self.enableSpillover()
-        else:
-            if self.getProp("DataType") == "DC06" and not tae:
-                log.warning("Spillover is disabled. Should normally be enabled for DC06!")
+            else:
+                self.enableSpillover()
 
   
         if "MUON" in initDets:
@@ -203,10 +192,7 @@ class Boole(LHCbConfigurableUser):
             else:
                 raise RuntimeError("Unknown ST detector '%s'"%det)
 
-            mcdepCreator = MCSTDepositCreator("MC%sDepositCreator%s"%(det,tae),DetType=det)
-            if self.getProp("DataType") == "DC06" :
-                mcdepCreator.DepChargeTool = "SiDepositedCharge"
-            seq.Members += [ mcdepCreator ]
+            seq.Members += [ MCSTDepositCreator("MC%sDepositCreator%s"%(det,tae),DetType=det) ]
             seq.Members += [ MCSTDigitCreator("MC%sDigitCreator%s"%(det,tae),DetType=det) ]
             seq.Members += [ STDigitCreator("%sDigitCreator%s"%(det,tae),DetType=det) ]
             seq.Members += [ STClusterCreator("%sClusterCreator%s"%(det,tae),DetType=det) ]
@@ -251,10 +237,7 @@ class Boole(LHCbConfigurableUser):
     def configureDigiMUON(self, seq, tae ):
         from Configurables import MuonDigitization, MuonDigitToRawBuffer
         seq.Members += [ MuonDigitization("MuonDigitization%s"%tae) ]
-        digitToRaw = MuonDigitToRawBuffer("MuonDigitToRawBuffer%s"%tae)
-        if self.getProp("DataType") == "DC06" :
-            digitToRaw.VType = 1 # DC06 RawBank type
-        seq.Members += [ digitToRaw ]
+        seq.Members += [ MuonDigitToRawBuffer("MuonDigitToRawBuffer%s"%tae) ]
 
     def configureDigiL0(self, seq, tae ):
         if tae == "":
@@ -433,21 +416,13 @@ class Boole(LHCbConfigurableUser):
         """
         switch to generate spillover events.
         """
-        if self.getProp("DataType") != "DC06" :
-            log.warning("Spillover is enabled. Should normally be enabled only for DC06!")
-
-        from Configurables import MergeEventAlg, UnpackMCParticle, UnpackMCVertex
-        initDataSeq = GaudiSequencer( "InitDataSeq" )
-        spillPaths  = self.getProp("SpilloverPaths")
-        spillAlg    = MergeEventAlg( name = "SpilloverAlg", PathList = spillPaths )
-        initDataSeq.Members += [ spillAlg ]
-        importOptions("$DIGIALGROOT/options/Spillover.opts")
         from Configurables import MuonBackground, MuonDigitization
         MuonDigitization().EnableSpillover = True
         MuonBackground("MuonLowEnergy").EnableSpillover = True
 
         # Handle the unpacking of pSim containers
         for spill in spillPaths :
+            from Configurables import UnpackMCParticle, UnpackMCVertex
             particleUnpacker = UnpackMCParticle( "UnpackMCP" + spill )
             particleUnpacker.RootInTES = spill
             vertexUnpacker = UnpackMCVertex( "UnpackMCV" + spill )
