@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.58 2009-03-31 11:49:36 leandrop Exp $"
+__version__ = "$Id: Configuration.py,v 1.59 2009-03-31 12:37:01 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -11,8 +11,8 @@ from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 from Configurables       import GaudiSequencer as Sequence
 from Configurables       import HltANNSvc 
-from HltConf.HltLine     import Hlt1Line   as Line
 from HltConf.HltLine     import hlt1Lines
+from HltConf.HltLine     import hlt2Lines
 from HltConf.HltLine     import hlt1Selections
 from HltConf.HltLine     import hlt1Decisions
 from HltConf.HltCommissioningLines  import HltCommissioningLinesConf
@@ -201,6 +201,7 @@ class HltConf(LHCbConfigurableUser):
             
 
     def postConfigAction(self) : 
+        from HltConf.HltLine     import Hlt1Line   as Line
         ## Should find a more elegant way of doing this...
         ## there are too many implicit assumptions in this action...
         ##
@@ -219,6 +220,13 @@ class HltConf(LHCbConfigurableUser):
         print '# List of configured Hlt1Lines : ' + str(hlt1Lines()) 
         print '# List of Hlt1Lines added to Hlt1 : ' + str(lines) 
         Sequence('Hlt1').Members = [ i.sequencer() for i in lines ] # note : should verify order (?) -- global should be last hlt1line! 
+
+        ### TEMPORARY HACK until HltSelectionsDecision completely obsolete...
+        print '# List of configured Hlt2Lines : ' + str(hlt2Lines()) 
+        from Configurables       import HltSelectionsDecision
+        HltSelectionsDecision('Hlt2Decision').Ignore = [ i.name() for i in hlt2Lines() ]
+        print ' setting Hlt2Decision.Ignore = ' + str([ i.name() for i in hlt2Lines() ])
+
 
         self.configureHltMonitoring(lines)
         self.configureRoutingBits()
