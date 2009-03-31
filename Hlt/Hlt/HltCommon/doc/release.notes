@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2009-03-31 - Gerhard Raven
+ - add HltCopySelection to copy (possible from TES) to an HltSelection
+
 ! 2009-03-30 - Gerhard Raven
  - add Hlt2 support to HltLine 
 
