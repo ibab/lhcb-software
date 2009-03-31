@@ -7,6 +7,7 @@
 ###
 from Gaudi.Configuration import *
 from Configurables import GaudiSequencer
+from Configurables import HltSelectionsDecision
 # ---------------------------------------------------------------------
 #  HLT exclusive Selections
 # ---------------------------------------------------------------------
@@ -41,5 +42,5 @@ importOptions( "$HLTSELECTIONSROOT/options/Hlt2Selections.py" )
 # --------------------------------------------------------------------
 #  Decision
 # --------------------------------------------------------------------
-Hlt2.Members += [ "HltSelectionsDecision/Hlt2Decision" ] 
+Hlt2.Members += [ HltSelectionsDecision('Hlt2Decision') ] 
 
