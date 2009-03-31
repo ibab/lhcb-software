@@ -1,4 +1,4 @@
-// $Id: IParticle2MCAssociator.h,v 1.8 2009-03-26 11:06:33 jpalac Exp $
+// $Id: IParticle2MCAssociator.h,v 1.9 2009-03-31 15:11:30 jpalac Exp $
 #ifndef KERNEL_IPARTICLE2MCASSOCIATOR_H 
 #define KERNEL_IPARTICLE2MCASSOCIATOR_H 1
 
@@ -8,7 +8,7 @@
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
-
+#include "Event/MCParticle.h"
 namespace LHCb
 {
   class Particle;
