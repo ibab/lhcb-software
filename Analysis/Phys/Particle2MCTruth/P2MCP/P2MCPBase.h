@@ -1,4 +1,4 @@
-// $Id: P2MCPBase.h,v 1.3 2009-03-13 18:08:07 jpalac Exp $
+// $Id: P2MCPBase.h,v 1.4 2009-03-31 12:41:41 jpalac Exp $
 #ifndef P2MCP_P2MCPBASE_H 
 #define P2MCP_P2MCPBASE_H 1
 
@@ -6,7 +6,6 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 // LHCb
-#include "Event/MCParticle.h"
 #include "P2MCP/IP2MCP.h"            // Interface
 
 
@@ -44,17 +43,21 @@ public:
 
   virtual 
   const LHCb::MCParticle* 
-  bestRelatedMCP(const LHCb::Particle* particle) const ;
+  relatedMCP(const LHCb::Particle* particle) const ;
+
+  virtual const LHCb::MCParticle*
+  relatedMCP(const LHCb::Particle*,
+             const std::string& mcParticleLocation) const ;
 
   virtual 
   const LHCb::MCParticle* 
-  bestRelatedMCP(const LHCb::Particle* particle,
-                 const LHCb::MCParticle::ConstVector& mcParticles) const ;
+  relatedMCP(const LHCb::Particle* particle,
+             const LHCb::MCParticle::ConstVector& mcParticles) const ;
 
   virtual 
   const LHCb::MCParticle* 
-  bestRelatedMCP(const LHCb::Particle* particle,
-                 const LHCb::MCParticle::Container& mcParticles) const ;
+  relatedMCP(const LHCb::Particle* particle,
+             const LHCb::MCParticle::Container& mcParticles) const ;
 
   virtual P2MCP::Types::FlatTrees
   relatedMCPs(const LHCb::Particle* particle) const ;
