@@ -59,7 +59,7 @@ else {
     // list by analysis features
     if(array_key_exists("feature",$_GET)) {
       if ($_GET["feature"] == 'Show Histograms produced by Analysis task') 
-	$specs=",HISTOGRAM H WHERE VH.HID=H.HID AND H.ISANALYSISHIST=1";
+	$specs=",HISTOGRAM H $onlyset and VH.HID=H.HID AND H.ISANALYSISHIST=1";
       if ($_GET["feature"] == 'Show Histograms with automatic analysis') 
 	$specs=",HISTOGRAMSET HS $onlyset AND VH.HSID=HS.HSID AND HS.NANALYSIS>0";
     }

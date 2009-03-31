@@ -80,7 +80,7 @@ int main() {
     hnew->saveHistoSetDisplayOptions(); // options are saved for the whole histogram set
   }
 
-  OnlineHistPage*  hitmap =  HistDB->getPage("/Muon Commissioning/Pad Map Summary (fast)");
+  OnlineHistPage*  hitmap =  HistDB->getPage("/Muon Example/Pad Map Summary (fast)");
   hitmap->removeAllHistograms();
   ok = true;
   ok &= (NULL != hitmap->declareHistogram( HistDB->getHistogram("MuonDAQMon/MuonMonitor/Pads Map_$M2"),
@@ -97,7 +97,7 @@ int main() {
     abort();
   hitmap->dump();
 
-  hitmap =  HistDB->getPage("/Muon Commissioning/Pad Map Summary");
+  hitmap =  HistDB->getPage("/Muon Example/Pad Map Summary");
   hitmap->removeAllHistograms();
   ok = true;
   ok &= (NULL != hitmap->declareHistogram( HistDB->getHistogram("MuonDAQMon_ANALYSIS/HMerge/Pads Map_$M2"),
@@ -117,7 +117,7 @@ int main() {
 
   for (int is=1;is<6;is++) {
     stringstream nn,nh;
-    nn << "/Muon Commissioning/Pad Map M"<<is;
+    nn << "/Muon Example/Pad Map M"<<is;
     nh << "MuonDAQMon_ANALYSIS/HMerge/Pads Map_$M"<<is;
     OnlineHistPage*  hitm =  HistDB->getPage(nn.str());
     hitm->removeAllHistograms();
@@ -131,7 +131,7 @@ int main() {
     hitm->dump();
   }
   
-  OnlineHistPage*  gen =  HistDB->getPage("/Muon Commissioning/Multiplicity and Time spectrum");
+  OnlineHistPage*  gen =  HistDB->getPage("/Muon Example/Multiplicity and Time spectrum");
   gen->removeAllHistograms();
   ok = true;
   ok &= (NULL != gen->declareHistogram( HistDB->getHistogram("MuonDAQMon/MuonMonitor/Pad Multiplicity_$all"),
@@ -142,7 +142,7 @@ int main() {
   else abort();
   gen->dump();
   
-  OnlineHistPage*  pms =  HistDB->getPage("/Muon Commissioning/Multiplicity per station");
+  OnlineHistPage*  pms =  HistDB->getPage("/Muon Example/Multiplicity per station");
   pms->removeAllHistograms();
   ok = true;
   ok &= (NULL != pms->declareHistogram( HistDB->getHistogram("MuonDAQMon/MuonMonitor/Pad Multiplicity_$M2"),
@@ -171,7 +171,7 @@ int main() {
                                             "Average Occupancy per Station/Region",
                                             sources);
   
-  OnlineHistPage*  pulse = HistDB->getPage("/Muon Commissioning/Pulsed Run Summary");
+  OnlineHistPage*  pulse = HistDB->getPage("/Muon Example/Pulsed Run Summary");
   pulse->removeAllHistograms();
   ok = true;
   ok &= (NULL != pulse->declareHistogram( allhits,
@@ -189,8 +189,8 @@ int main() {
     for (int s=1; s<=5; s++) {
       
       stringstream hmname,oldnm;
-      hmname << "/Muon Commissioning/Q"<<quad <<"/Pad Map M"<<s;
-      oldnm << "/Muon Commissioning/Q"<<quad <<"/Hit Map M"<<s;
+      hmname << "/Muon Example/Q"<<quad <<"/Pad Map M"<<s;
+      oldnm << "/Muon Example/Q"<<quad <<"/Hit Map M"<<s;
       OnlineHistPage* oldpage = HistDB->getPage(oldnm.str());
       if(oldpage) HistDB->removePage(oldpage);
       page = HistDB->getPage(hmname.str());
@@ -240,7 +240,7 @@ int main() {
       int maxr= (s<4) ? 4 : 1;
       for (int r=1; r<= maxr ;r++) {
         stringstream pname;
-        pname << "/Muon Commissioning/Q"<<quad <<"/M"<<s<<"R"<<r<<" by ODE";
+        pname << "/Muon Example/Q"<<quad <<"/M"<<s<<"R"<<r<<" by ODE";
         page = HistDB->getPage(pname.str());
         page->removeAllHistograms();
         ok = true;
@@ -262,7 +262,7 @@ int main() {
       }
       if (s>3) {
         stringstream pname;
-        pname << "/Muon Commissioning/Q"<<quad <<"/M"<<s<<"R2-3-4 by ODE";
+        pname << "/Muon Example/Q"<<quad <<"/M"<<s<<"R2-3-4 by ODE";
         page = HistDB->getPage(pname.str());
         page->removeAllHistograms();
         ok = true;
@@ -312,7 +312,7 @@ int main() {
     hnew->saveHistoSetDisplayOptions();
   }
 
-  hitmap =  HistDB->getPage("/Muon Commissioning/Cosmic Track Maps");
+  hitmap =  HistDB->getPage("/Muon Example/Cosmic Track Maps");
   hitmap->removeAllHistograms();
   ok = true;
   ok &= (NULL != hitmap->declareHistogram( HistDB->getHistogram("MuonDAQMon_ANALYSIS/HMerge/Track Map_$M2"),
@@ -331,7 +331,7 @@ int main() {
   cout << "committing changes"<<endl;
 
   
-  hitmap =  HistDB->getPage("/Muon Commissioning/Cosmic Summary");
+  hitmap =  HistDB->getPage("/Muon Example/Cosmic Summary");
   hitmap->removeAllHistograms();
   ok = true;
   ok &= (NULL != hitmap->declareHistogram( HistDB->getHistogram("MuonDAQMon/CosmicMonitor/Track Multiplicity"),
@@ -349,7 +349,7 @@ int main() {
     abort();
   hitmap->dump();
 
-  hitmap =  HistDB->getPage("/Muon Commissioning/Cosmic Track Residuals");
+  hitmap =  HistDB->getPage("/Muon Example/Cosmic Track Residuals");
   hitmap->removeAllHistograms();
   ok = true;
   ok &= (NULL != hitmap->declareHistogram( HistDB->getHistogram("MuonDAQMon/CosmicMonitor/Residuals x_$all"),
@@ -372,7 +372,7 @@ int main() {
   hitmap->dump();
   
   
-  hitmap =  HistDB->getPage("/Muon Commissioning/Cosmic polar angles");
+  hitmap =  HistDB->getPage("/Muon Example/Cosmic polar angles");
   hitmap->removeAllHistograms();
   ok = true;
   ok &= (NULL != hitmap->declareHistogram( HistDB->getHistogram("MuonDAQMon/CosmicMonitor/Track phi wrt vertical"),

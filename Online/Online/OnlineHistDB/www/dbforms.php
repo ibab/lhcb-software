@@ -159,9 +159,10 @@ function hidpost_displayoptions() {
 
 function get_fitoptions($disp) {
   global $conn;
-  $dstid = OCIParse($conn,"begin OnlineHistDB.GetFitOptions($disp,:ff,:np);end;");
+  $dstid = OCIParse($conn,"begin OnlineHistDB.GetFitOptions($disp,:ff,:np,:ni);end;");
   ocibindbyname($dstid,":ff",$_POST["FITFUN"],50);
   ocibindbyname($dstid,":np",$np,50);
+  ocibindbyname($dstid,":ni",$ni,50);
   OCIExecute($dstid);
   ocifreestatement($dstid);
   if ($np>0) {
@@ -169,6 +170,16 @@ function get_fitoptions($disp) {
     for ($i=1 ; $i<=$np ; $i++) {
       ocibindbyname($dstid,":i",$i);
       ocibindbyname($dstid,":p",$_POST["FITPAR_$i"],50);
+      OCIExecute($dstid);
+    }
+    ocifreestatement($dstid);
+  }
+  if ($ni>0) {
+    $dstid = OCIParse($conn,"begin :p := OnlineHistDB.GetFitParam($disp,:i);end;");
+    for ($i=1 ; $i<=$ni ; $i++) {
+      $j=$i+$np;
+      ocibindbyname($dstid,":i",$j);
+      ocibindbyname($dstid,":p",$_POST["FITINPPAR_$i"],50);
       OCIExecute($dstid);
     }
     ocifreestatement($dstid);
@@ -237,6 +248,7 @@ function histo_display($id,$htype,$mode)
     echo "<input type='hidden' name='${field}' value='".$_POST[$field]."'>\n";
   echo "<input type='hidden' name='id' value='${id}'>\n";
   echo "<input type='hidden' name='htype' value='${htype}'>\n";
+  echo "<input type='hidden' name='doid' value='${MYDISPLAY}'>\n";
   if ($htype == "SHID") {
     echo "<input type='hidden' name='PAGE' value='".$_POST["PAGE"]."'>\n";
     echo "<input type='hidden' name='INSTANCE' value='".$_POST["INSTANCE"]."'>\n";
@@ -245,17 +257,24 @@ function histo_display($id,$htype,$mode)
     echo "<font size=+1> Leave options blank for default values</font><br><br>";
   }
   
-  printf("Histogram title window &nbsp&nbsp size X <input name='HTIT_X_SIZE' size=5 value='%s' ${cw_ro}> &nbsp&nbsp \n",$_POST["HTIT_X_SIZE"]);
+  echo "<br><B>Sizes and Margins (relative to pad size)</B><br>\n";
+
+  printf("Histogram title window &nbsp&nbsp size X <input name='HTIT_X_SIZE' size=5 value='%s' ${cw_ro}> \n",$_POST["HTIT_X_SIZE"]);
   printf(" &nbsp size Y <input name='HTIT_Y_SIZE' size=5 value='%s' ${cw_ro}>  \n",$_POST["HTIT_Y_SIZE"]);
   printf(" &nbsp offset X <input name='HTIT_X_OFFS' size=5 value='%s' ${cw_ro}> \n",$_POST["HTIT_X_OFFS"]);
   printf(" &nbsp offset Y <input name='HTIT_Y_OFFS' size=5 value='%s' ${cw_ro}> <br><br>\n",$_POST["HTIT_Y_OFFS"]);
 
-  printf("Stat window &nbsp&nbsp size X <input name='STAT_X_SIZE' size=5 value='%s' ${cw_ro}> &nbsp&nbsp \n",$_POST["STAT_X_SIZE"]);
+  printf("Stat window &nbsp&nbsp size X <input name='STAT_X_SIZE' size=5 value='%s' ${cw_ro}> \n",$_POST["STAT_X_SIZE"]);
   printf(" &nbsp size Y <input name='STAT_Y_SIZE' size=5 value='%s' ${cw_ro}>  \n",$_POST["STAT_Y_SIZE"]);
   printf(" &nbsp offset X <input name='STAT_X_OFFS' size=5 value='%s' ${cw_ro}> \n",$_POST["STAT_X_OFFS"]);
   printf(" &nbsp offset Y <input name='STAT_Y_OFFS' size=5 value='%s' ${cw_ro}> <br><br>\n",$_POST["STAT_Y_OFFS"]);
 
-  printf("X Axis &nbsp&nbsp  title <input name='LABEL_X' size=15 value='%s' ${cw_ro}> &nbsp&nbsp \n",$_POST["LABEL_X"]);
+  printf("Margins: &nbsp&nbsp Top <input name='MARGIN_TOP' size=5 value='%s' ${cw_ro}> \n",$_POST["MARGIN_TOP"]);
+  printf(" &nbsp Bottom <input name='MARGIN_BOTTOM' size=5 value='%s' ${cw_ro}> \n",$_POST["MARGIN_BOTTOM"]);
+  printf(" &nbsp Left <input name='MARGIN_LEFT' size=5 value='%s' ${cw_ro}> \n",$_POST["MARGIN_LEFT"]);
+  printf(" &nbsp Right <input name='MARGIN_RIGHT' size=5 value='%s' ${cw_ro}> <br><br>\n",$_POST["MARGIN_RIGHT"]);
+
+  printf("<B>X Axis</B> &nbsp&nbsp  title <input name='LABEL_X' size=15 value='%s' ${cw_ro}> &nbsp&nbsp \n",$_POST["LABEL_X"]);
   printf("size <input name='TIT_X_SIZE' size=5 value='%s' ${cw_ro}> &nbsp&nbsp \n",$_POST["TIT_X_SIZE"]);
   printf("offset <input name='TIT_X_OFFS' size=5 value='%s' ${cw_ro}> &nbsp&nbsp <br>\n",$_POST["TIT_X_OFFS"]);
   echo "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
@@ -266,9 +285,13 @@ function histo_display($id,$htype,$mode)
 	 $_POST["LOGX"] ? "checked" : "");
   printf(" Grid <input ${cw_dis} type='checkbox' name='GRIDX' value='1' %s> &nbsp&nbsp \n",
 	 $_POST["GRIDX"] ? "checked" : "");
-  printf("Number of divisions <input name='NDIVX' size=4 value='%s' ${cw_ro}> <br>\n",$_POST["NDIVX"]);
-  
-  printf("<br>Y Axis &nbsp&nbsp  title <input name='LABEL_Y' size=15 value='%s' ${cw_ro}> &nbsp&nbsp \n",$_POST["LABEL_Y"]);
+  printf("Number of divisions <input name='NDIVX' size=4 value='%s' ${cw_ro}> \n",$_POST["NDIVX"]);
+  printf("&nbsp Tick option <input name='TICK_X' size=1 value='%s' ${cw_ro}> <br>\n",$_POST["TICK_X"]);
+  echo "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp ";
+  printf("X miminum <input name='XMIN' size=7 value='%s' ${cw_ro}> &nbsp&nbsp ",$_POST["XMIN"]);
+  printf("X maximum <input name='XMAX' size=7 value='%s' ${cw_ro}> <br><br>\n",$_POST["XMAX"]);
+
+  printf("<br><B>Y Axis</B> &nbsp&nbsp  title <input name='LABEL_Y' size=15 value='%s' ${cw_ro}> &nbsp&nbsp \n",$_POST["LABEL_Y"]);
   printf("size <input name='TIT_Y_SIZE' size=5 value='%s' ${cw_ro}> &nbsp&nbsp \n",$_POST["TIT_Y_SIZE"]);
   printf("offset <input name='TIT_Y_OFFS' size=5 value='%s' ${cw_ro}> &nbsp&nbsp <br>\n",$_POST["TIT_Y_OFFS"]);
   echo "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
@@ -279,10 +302,14 @@ function histo_display($id,$htype,$mode)
 	 $_POST["LOGY"] ? "checked" : "");
   printf(" Grid <input ${cw_dis} type='checkbox' name='GRIDY' value='1' %s>&nbsp&nbsp\n",
 	 $_POST["GRIDY"] ? "checked" : "");
-  printf("Number of divisions <input name='NDIVY' size=4 value='%s' ${cw_ro}> <br>\n",$_POST["NDIVY"]);
+  printf("Number of divisions <input name='NDIVY' size=4 value='%s' ${cw_ro}> \n",$_POST["NDIVY"]);
+  printf("&nbsp Tick option <input name='TICK_Y' size=1 value='%s' ${cw_ro}> <br>\n",$_POST["TICK_Y"]);
+  echo "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp ";
+  printf("Y miminum <input name='YMIN' size=7 value='%s' ${cw_ro}> &nbsp&nbsp ",$_POST["YMIN"]);
+  printf("Y maximum <input name='YMAX' size=7 value='%s' ${cw_ro}> <br><br>\n",$_POST["YMAX"]);
 
   if ($_POST["HSTYPE"]=='H2D' || $_POST["HSTYPE"]=='P2D') {
-    printf("<br>Z Axis &nbsp&nbsp  title <input name='LABEL_Z' size=15 value='%s' ${cw_ro}> &nbsp&nbsp \n",$_POST["LABEL_Z"]);
+    printf("<br><B>Z Axis</B> &nbsp&nbsp  title <input name='LABEL_Z' size=15 value='%s' ${cw_ro}> &nbsp&nbsp \n",$_POST["LABEL_Z"]);
     printf("size <input name='TIT_Z_SIZE' size=5 value='%s' ${cw_ro}> &nbsp&nbsp \n",$_POST["TIT_Z_SIZE"]);
     printf("offset <input name='TIT_Z_OFFS' size=5 value='%s' ${cw_ro}> &nbsp&nbsp <br>\n",$_POST["TIT_Z_OFFS"]);
     echo "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
@@ -293,17 +320,11 @@ function histo_display($id,$htype,$mode)
 	   $_POST["LOGZ"] ? "checked" : "");
     printf(" Grid <input ${cw_dis} type='checkbox' name='GRIDZ' value='1' %s><br>\n",
 	   $_POST["GRIDZ"] ? "checked" : "");
-  }
-  
-  printf("<br>X miminum <input name='XMIN' size=7 value='%s' ${cw_ro}> &nbsp&nbsp ",$_POST["XMIN"]);
-  printf("X maximum <input name='XMAX' size=7 value='%s' ${cw_ro}> <br>\n",$_POST["XMAX"]);
-  printf("Y miminum <input name='YMIN' size=7 value='%s' ${cw_ro}> &nbsp&nbsp ",$_POST["YMIN"]);
-  printf("Y maximum <input name='YMAX' size=7 value='%s' ${cw_ro}> <br>\n",$_POST["YMAX"]);
-  if ($_POST["HSTYPE"]=='H2D' || $_POST["HSTYPE"]=='P2D') {
+    echo "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp ";
     printf("Z miminum <input name='ZMIN' size=7 value='%s' ${cw_ro}> &nbsp&nbsp ",$_POST["ZMIN"]);
-    printf("Z maximum <input name='ZMAX' size=7 value='%s' ${cw_ro}> <br>\n",$_POST["ZMAX"]);
+    printf("Z maximum <input name='ZMAX' size=7 value='%s' ${cw_ro}> <br><br>\n",$_POST["ZMAX"]);
 
-    echo"3D plots rendering: &nbsp&nbsp Engine <select name='TIMAGE'>";
+    echo"<B>3D plot rendering</B>: &nbsp&nbsp Engine <select name='TIMAGE'>";
     foreach (array("","HIST","IMAGE","AUTO") as $val) {
       $SELECTED[$val] = ( ($_POST["TIMAGE"] == $val) ? "SELECTED" : "") ;
       echo "<option ".$SELECTED[$val]."> ".$val." </option>";
@@ -311,9 +332,10 @@ function histo_display($id,$htype,$mode)
     echo "</select>";
     echo "&nbsp&nbsp Angles (deg): ";
      printf("Theta <input name='THETA' size=5 value='%s' ${cw_ro}> &nbsp&nbsp ",$_POST["THETA"]);
-     printf("Phi <input name='PHI' size=5 value='%s' ${cw_ro}> <br>",$_POST["PHI"]);     
+     printf("Phi <input name='PHI' size=5 value='%s' ${cw_ro}> <br><br>",$_POST["PHI"]);     
   }
 
+  echo"<B>Miscellanea</B>:<br>";
   printf("<br>Stats option <input name='STATS' size=7 value='%s' ${cw_ro}> &nbsp&nbsp ",$_POST["STATS"]);
   printf("Fill Style <input name='FILLSTYLE' size=2 value='%s' ${cw_ro}> &nbsp&nbsp ",$_POST["FILLSTYLE"]);
   printf("Fill Color <input name='FILLCOLOR' size=2 value='%s' ${cw_ro}><br>\n",$_POST["FILLCOLOR"]);
@@ -323,10 +345,16 @@ function histo_display($id,$htype,$mode)
   printf("Marker Style <input name='MARKERSTYLE' size=2 value='%s' ${cw_ro}> &nbsp&nbsp ",$_POST["MARKERSTYLE"]);
   printf("Marker Color <input name='MARKERCOLOR' size=2 value='%s' ${cw_ro}>\n",$_POST["MARKERCOLOR"]);
   printf("Marker Size <input name='MARKERSIZE' size=2 value='%s' ${cw_ro}><br>\n",$_POST["MARKERSIZE"]);
+  printf("Pad Color <input name='PADCOLOR' size=2 value='%s' ${cw_ro}><br><br>\n",$_POST["PADCOLOR"]);
 
-  printf("ROOT Draw options <input name='DRAWOPTS' size=20 value='%s' ${cw_ro}><br>\n",$_POST["DRAWOPTS"]);
+  printf("<B>ROOT Draw options</B> <input name='DRAWOPTS' size=20 value='%s' ${cw_ro}><br>\n",$_POST["DRAWOPTS"]);
   // printf("Display Refresh Time (s)  <input name='REFRESH' size=5 value='%s' ${cw_ro}><br>\n",$_POST["REFRESH"]);
-  printf("<br>Overplot reference (if available)    <select name='REF'>");
+
+  printf("<br>Draw with area <B>normalized</B> to (leave blank for no normalization) ".
+         "<input name='NORM' size=3 value='%s' ${cw_ro}><br><br>\n",$_POST["NORM"]);
+
+
+  printf("<br><B>Overplot reference</B> (if available)    <select name='REF'>");
   foreach (array("","NOREF","NONE","AREA","ENTR") as $val) {
       $SELECTED[$val] = ($_POST["REF"] == $val) ? "SELECTED" : "" ;
       echo "<option ".$SELECTED[$val]."> ".$val." </option>";
@@ -334,10 +362,10 @@ function histo_display($id,$htype,$mode)
   echo "</select> &nbsp&nbsp(Possible Normalization is NONE, same AREA, same ENTRies)<br>";
 
   // fit function
-  echo "<br>Fit to be performed on every display: Function ";
+  echo "<br><B>Fit</B> to be performed on every display: Function ";
   echo "<input type='hidden' name='OLDFITFUN' value='".$_POST["FITFUN"]."'>\n";
   echo "<select name='FITFUN'><option value=0> none</option>\n";
-  $stid = OCIParse($conn,"SELECT NAME,CODE,MUSTINIT,NP from FITFUNCTION order by NAME");
+  $stid = OCIParse($conn,"SELECT NAME,CODE,MUSTINIT,NP,NINPUT from FITFUNCTION order by NAME");
   OCIExecute($stid);
   $fitNP=0;
   while (OCIFetchInto($stid,$myfun,OCI_ASSOC )) {
@@ -345,6 +373,7 @@ function histo_display($id,$htype,$mode)
       $selected = "selected";
       $MUSTIN=$myfun["MUSTINIT"];
       $_POST["FITNP"]=$myfun["NP"];
+      $_POST["FITNINPUT"]=$myfun["NINPUT"];
       $_POST["FITFUNNAME"] = $myfun["NAME"];
     }
     else {
@@ -356,22 +385,50 @@ function histo_display($id,$htype,$mode)
   echo "</select><br>";
   echo "<input type='hidden' name='FITFUNNAME' value='".$_POST["FITFUNNAME"]."'>\n";
   echo "<input type='hidden' name='FITNP' value='".$_POST["FITNP"]."'>\n";
+  echo "<input type='hidden' name='FITNINPUT' value='".$_POST["FITNINPUT"]."'>\n";
 
+  
+  if ($_POST["FITNINPUT"]>0 && $_POST["FITFUN"]>0) {
+    echo "&nbsp&nbsp&nbsp<table align=center>";
+    echo "<tr><td colspan=2 align=center> Input parameters for fit function:</td></tr>\n";
+    $ip=0;
+    while ($ip++ < $_POST["FITNINPUT"]) {
+      $fcode=$_POST["FITFUN"];
+      $dstid = OCIParse($conn,"begin OnlineHistDB.GetFitFunInputParname($fcode,$ip,:pname,:def); end;");
+      ocibindbyname($dstid,":pname",$pname,500);
+      ocibindbyname($dstid,":def",$defv,50);
+      OCIExecute($dstid);
+      ocifreestatement($dstid);
+      if ($mode != "display" && !array_key_exists("FITINPPAR_${ip}",$_POST)) {
+        $_POST["FITINPPAR_${ip}"] = $defv;
+      }
+      echo "<tr><td><input type='text' name='FITINPPARNAME_${ip}' value='${pname}' READONLY>";
+      printf("<td><input type='text' name='FITINPPAR_${ip}' value=%s></tr>\n",$_POST["FITINPPAR_${ip}"]);
+    }
+    echo "</table>";
+  }
   if ($_POST["FITNP"]>0 && $_POST["FITFUN"]>0) {
     echo "&nbsp&nbsp&nbsp<table align=center>";
     echo "<tr><td colspan=2 align=center> Init. values for fit parameters ";
-    if ( $MUSTIN )
-      echo " (MUST BE PROVIDED)";
+    if ( $MUSTIN ) 
+      echo " (MUST BE PROVIDED):";
     else
-      echo " (leave blank for auto)";
+      echo " (leave blank for auto):";
     echo "</td></tr>\n";
     $ip=0;
     while ($ip++ < $_POST["FITNP"]) {
       $fcode=$_POST["FITFUN"];
-      $dstid = OCIParse($conn,"begin OnlineHistDB.GetFitFunParname($fcode,$ip,:pname); end;");
+      $dstid = OCIParse($conn,"begin OnlineHistDB.GetFitFunParname($fcode,$ip,:pname,:def); end;");
       ocibindbyname($dstid,":pname",$pname,500);
+      ocibindbyname($dstid,":def",$defv,50);
       OCIExecute($dstid);
       ocifreestatement($dstid);
+      if ($mode != "display" && $MUSTIN) {
+        $_POST["FITPAR_${ip}"] = $defv;
+      }
+      if ($_POST["FITPAR_${ip}"] < -999990 && $MUSTIN ==0) { // very negative value means auto
+        $_POST["FITPAR_${ip}"]="";
+      }
       echo "<tr><td><input type='text' name='FITPARNAME_${ip}' value='${pname}' READONLY>";
       printf("<td><input type='text' name='FITPAR_${ip}' value=%s></tr>\n",$_POST["FITPAR_${ip}"]);
     }
@@ -379,19 +436,23 @@ function histo_display($id,$htype,$mode)
   }
   echo "<br>\n";
 
-  printf("<br>Pattern to be overdrawn on histogram (must be a ROOT file name)<br> \$GROUPDIR/online/Histograms/Reference/%s/",
+  printf("<br><B>Pattern to be overdrawn</B> on histogram (must be a ROOT file name)<br> \$GROUPDIR/online/Histograms/Reference/%s/",
          $_POST["TASKNAME"]);
   printf("<input name='DRAWPATTERN' size=40 value='%s' ${cw_ro}><br>\n",$_POST["DRAWPATTERN"]);
 
 
   if( $canwrite) {
     $action= ($mode == "display" && $htype != "SHID") ? "Update Display Options" : "Confirm";
-    echo "<table align=right><tr><td> <input align=right type='submit' name='Update_display' value='${action}'></tr></table>";
+    echo "<table align=right><tr><td> <input align=right type='submit' name='Update_display' value='${action}'>";
+    if ($mode == "display") {
+      echo "<td align='right'> <input type='submit' name='Remove_DO' value='Remove Display Options'>\n";
+    }
+    echo "</tr></table>";
   }
   echo "</form>";
   
   if (!$setlist && $mode=='display' && $htype=="HSID" && $_POST["NHS"]>1) {
-    echo "<form action='DispList.php' method='post'>\n";
+    echo "<br><br><form action='DispList.php' method='post'>\n";
     foreach (array("TASKNAME","HSALGO","HSTYPE","HSTITLE","NHS","HSDISPLAY") as $field)
       echo "<input type='hidden' name='${field}' value='".$_POST[$field]."'>\n";
     echo "<input type='hidden' name='hsid' value='${id}'>\n";
@@ -549,6 +610,9 @@ function get_ana_parameters($alg,$type,$aid,$ia,$hhid,$mask=1,$names=1,$values=1
 
     $_POST["a${ia}_np"]=$np;
     $_POST["a${ia}_ni"]=$ni;
+    if ($wantfitpars) { // number of input parameters of fit function
+      $_POST["a${ia}_nfi"]=$ni-(($np-1)/2)-2;
+    }
     ocifreestatement($dstid);
   }
   else {
@@ -683,22 +747,16 @@ function histo_analysis($id,$htype,$mode) {
       $_POST["a${ia}_alg"]=$myana["ALGORITHM"];
     }
     ocifreestatement($stid);
-    $showpars=0;
 
+    // get parameters to be shown
     $hhid=($htype == "HID") ? $id : "${hsid}/1";
-    if($htype == "HID" || $_POST["NHS"]==1) { // get parameters to be shown
-      $showpars=1;
-      $ia=0;
-      while ($ia++<$lastana)
-	get_ana_parameters($_POST["a${ia}_alg"],"CHECK",$_POST["a${ia}_id"],$ia,$hhid);
+    $ia=0;
+    while ($ia++<$lastana) {
+      get_ana_parameters($_POST["a${ia}_alg"],"CHECK",$_POST["a${ia}_id"],$ia,$hhid);
     }
-    else {
-      // don't show parameters but load them 
-      $ia=0;
-      while ($ia++<$lastana)
-	//get_ana_parameters($_POST["a${ia}_alg"],"CHECK",$_POST["a${ia}_id"],1,0,0,1,0);
-        get_ana_parameters($_POST["a${ia}_alg"],"CHECK",$_POST["a${ia}_id"],$ia,$hhid);
-    }
+
+    // show parameters only for single histograms
+    $showpars= ($htype == "HID" || $_POST["NHS"]==1);
   }
   else if ($mode == "update") {
     $firstana=$lastana=$_POST["Iana"];
@@ -776,13 +834,18 @@ function histo_analysis($id,$htype,$mode) {
             fitfunctionselect($ia,$mode);
           }
           else {
-            if($ip==3 && $_POST["a${ia}_alg"] == "Fit") {
-              echo "<tr><td colspan=2>Init. values for fit parameters ";
-              if ( $_POST["mi_".$_POST["a${ia}_i1_v"]])
-                echo " (MUST BE PROVIDED)";
-              else
-                echo " (leave blank for auto)";
-              echo "</td></tr>\n";
+            if($_POST["a${ia}_alg"] == "Fit") {
+              if($ip==3 && $_POST["a${ia}_nfi"]>0) {
+                echo "<tr><td colspan=2>Input parameters for fit function: ";
+              }
+              if($ip== (3+$_POST["a${ia}_nfi"])) {
+                echo "<tr><td colspan=2>Init. values for fit parameters: ";
+                if ( $_POST["mi_".$_POST["a${ia}_i1_v"]])
+                  echo " (MUST BE PROVIDED)";
+                else
+                  echo " (leave blank for auto)";
+                echo "</td></tr>\n";
+              }
             }
             printf("<tr><td> <input READONLY type='text' size=15 name='a${ia}_i${ip}_name' value='%s'>\n",$_POST["a${ia}_i${ip}_name"]);
             if($mode == "newana" || $mode == "newfit") { 
@@ -813,11 +876,16 @@ function histo_analysis($id,$htype,$mode) {
     }
     else {
       $ip=0;
-      while ($ip++<$_POST["a${ia}_np"])
+      while ($ip++<$_POST["a${ia}_np"]) {
 	printf("<input type='hidden' name='a${ia}_p${ip}_name' value='%s'>\n",$_POST["a${ia}_p${ip}_name"]);
+        printf("<input type='hidden' name='a${ia}_p${ip}_w' value='%s'>\n",$_POST["a${ia}_p${ip}_w"]);
+        printf("<input type='hidden' name='a${ia}_p${ip}_a' value='%s'>\n",$_POST["a${ia}_p${ip}_a"]);
+      }
       $ip=0;
-      while ($ip++<$_POST["a${ia}_ni"])
+      while ($ip++<$_POST["a${ia}_ni"]) {
 	printf("<input type='hidden' name='a${ia}_i${ip}_name' value='%s'>\n",$_POST["a${ia}_i${ip}_name"]);
+        printf("<input type='hidden' name='a${ia}_i${ip}_v' value='%s'>\n",$_POST["a${ia}_i${ip}_v"]);
+      }
     }
     if ($canwrite) {
       echo "<table align='center'><tr>";

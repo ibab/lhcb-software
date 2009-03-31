@@ -51,7 +51,15 @@ $DispOpt = array("LABEL_X",
 "NDIVY",
 "MARKERSIZE",
 "MARKERCOLOR",
-"MARKERSTYLE");
+"MARKERSTYLE",
+"NORM",
+"TICK_X",
+"TICK_Y",
+"MARGIN_TOP",
+"MARGIN_BOTTOM",
+"MARGIN_LEFT",
+"MARGIN_RIGHT",
+"PADCOLOR");
 function get_displayoptions($disp) {
   global $conn;
   $query="BEGIN ONLINEHISTDB.GET_DISPLAYOPTIONS($disp";
@@ -161,6 +169,22 @@ function get_displayoptions($disp) {
   $_POST["MARKERCOLOR"] = 9999999999.;
   $query .= ",:MARKERSTYLE";
   $_POST["MARKERSTYLE"] = 9999999999.;
+  $query .= ",:NORM";
+  $_POST["NORM"] = 9999999999.;
+  $query .= ",:TICK_X";
+  $_POST["TICK_X"] = 9999999999.;
+  $query .= ",:TICK_Y";
+  $_POST["TICK_Y"] = 9999999999.;
+  $query .= ",:MARGIN_TOP";
+  $_POST["MARGIN_TOP"] = 9999999999.;
+  $query .= ",:MARGIN_BOTTOM";
+  $_POST["MARGIN_BOTTOM"] = 9999999999.;
+  $query .= ",:MARGIN_LEFT";
+  $_POST["MARGIN_LEFT"] = 9999999999.;
+  $query .= ",:MARGIN_RIGHT";
+  $_POST["MARGIN_RIGHT"] = 9999999999.;
+  $query .= ",:PADCOLOR";
+  $_POST["PADCOLOR"] = 9999999999.;
   $query .= "); END;";
   $dstid = OCIParse($conn,$query);
   ocibindbyname($dstid,":LABEL_X",$_POST["LABEL_X"],50);
@@ -216,6 +240,14 @@ function get_displayoptions($disp) {
   ocibindbyname($dstid,":MARKERSIZE",$_POST["MARKERSIZE"]);
   ocibindbyname($dstid,":MARKERCOLOR",$_POST["MARKERCOLOR"]);
   ocibindbyname($dstid,":MARKERSTYLE",$_POST["MARKERSTYLE"]);
+  ocibindbyname($dstid,":NORM",$_POST["NORM"]);
+  ocibindbyname($dstid,":TICK_X",$_POST["TICK_X"]);
+  ocibindbyname($dstid,":TICK_Y",$_POST["TICK_Y"]);
+  ocibindbyname($dstid,":MARGIN_TOP",$_POST["MARGIN_TOP"]);
+  ocibindbyname($dstid,":MARGIN_BOTTOM",$_POST["MARGIN_BOTTOM"]);
+  ocibindbyname($dstid,":MARGIN_LEFT",$_POST["MARGIN_LEFT"]);
+  ocibindbyname($dstid,":MARGIN_RIGHT",$_POST["MARGIN_RIGHT"]);
+  ocibindbyname($dstid,":PADCOLOR",$_POST["PADCOLOR"]);
   OCIExecute($dstid);
   ocifreestatement($dstid);
 }

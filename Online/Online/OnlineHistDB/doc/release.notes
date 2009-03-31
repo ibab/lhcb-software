@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.39 2009-03-23 16:44:35 ggiacomo Exp $
+! $Id: release.notes,v 1.40 2009-03-31 13:15:30 ggiacomo Exp $
 ! Package     : OnlineHistDB
 ! Responsible : Giacomo Graziani
 !
@@ -6,8 +6,15 @@
 ! or using makedoc script in this folder
 !
 
+! 20090331 v5r1
+ - various improvements to web interface
+ - several more display options (margins, normalization, ticks, pad color)
+ - fit functions can have input parameters
+ - remove python interface by  Nicola Chiapolini that now lives in package Online/HistDBPython
+ 
 ! 20090323
  - fix order of object deletion in destructors
+ - more correct handling (hopefully) of dispopt object
 
 ! 20090213 OnlineHistDB v5r0
  - possibility to associate fit functions to histograms, for both display and analysis;

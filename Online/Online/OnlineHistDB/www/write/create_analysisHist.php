@@ -24,6 +24,27 @@ for ($ih=1;$ih<=$nin;$ih++) {
     $sh[$ih]=SingleHist($_POST["SOURCEH${ih}"]);
   }
 }
+
+// check that task of input histograms is the same
+$task="";
+foreach ($sh as $inphist) {
+  $tstid = OCIParse($conn,"select HSTASK from histogramset hs,histogram h where hs.HSID=h.HSET and h.HID='${inphist}'");
+  OCIExecute($tstid,OCI_DEFAULT);
+  OCIFetchInto($tstid, $taskq, OCI_ASSOC);
+  if ($task == "") {
+    $task = $taskq["HSTASK"];
+  }
+  else {
+    if ($taskq["HSTASK"] != $task) {
+      echo "<BR><B><FONT color='red'> Warning: input parameters are not from the same monitoring task:".
+        " the analysis histogram can't work in history mode and references won't be available</FONT></B><BR>\n";
+    }
+    last;
+  }
+  ocifreestatement($tstid);
+}
+
+
 if( $sss ) {
   $sourceh .= "theSources=>OnlineHistDB.sourceh('".implode("','",$sh)."')";
 }

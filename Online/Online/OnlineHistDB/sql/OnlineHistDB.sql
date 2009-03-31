@@ -43,8 +43,8 @@ create or replace package OnlineHistDB AUTHID CURRENT_USER as
  procedure DeclareCreatorAlgorithm(Name IN varchar2,Ninp IN number:=0,pars IN parameters,
 			thetype IN varchar2 := 'H1D', doc IN varchar2:=NULL, thegetset in ALGORITHM.GETSET%TYPE := 0,
 			defVals thresholds);
- procedure DeclareFitFunction(theName IN varchar2, theNp IN int, thePnames IN parameters, theMi IN int, theDoc IN varchar2 := NULL); 
-
+ procedure DeclareFitFunction(theName IN varchar2, theNp IN int, thePnames IN parameters, theMi IN int, theDoc IN varchar2 := NULL,
+        theNin IN int := 0, theDefVals IN thresholds := thresholds() ); 
 
  -- display options
  function DeclareHistDisplayOptions(theHID IN HISTOGRAM.HID%TYPE, theOptions IN dispopt,
@@ -57,9 +57,10 @@ create or replace package OnlineHistDB AUTHID CURRENT_USER as
  function GetBestDO(theHID IN HISTOGRAM.HID%TYPE, thePage IN varchar2 := NULL,TheInstance IN int := 1) return number;
  function GetDisplayOptions(theDOID IN int, theOptions OUT dispopt, 
         theFitFun OUT varchar2, theFitPars OUT thresholds)  return number;
- procedure GetFitOptions(theDOID IN int, theFitFun OUT int, Np OUT int);
+ procedure GetFitOptions(theDOID IN int, theFitFun OUT int, theNp OUT int, theNin OUT int);
  function GetFitParam(theDOID IN int, iPar IN int) return number;
- procedure GetFitFunParname(fcode IN int, Ipar IN integer, name OUT varchar2);
+ procedure GetFitFunParname(fcode IN int, Ipar IN integer, name OUT varchar2, defVal OUT float );
+ procedure GetFitFunInputParname(fcode IN int, Ipar IN integer, name OUT varchar2, defVal OUT float );
  procedure GetFitFunName(fcode IN int, theName OUT varchar2);
     -- access function for php4 (produced automatically by  autodispopt.pl)
  procedure GET_DISPLAYOPTIONS(theDOID IN int
@@ -71,7 +72,9 @@ create or replace package OnlineHistDB AUTHID CURRENT_USER as
   ,LAB_Y_SIZE OUT FLOAT,LAB_Y_OFFS OUT FLOAT,LAB_Z_SIZE OUT FLOAT,LAB_Z_OFFS OUT FLOAT,GRIDX OUT INT,GRIDY OUT INT
   ,THETA OUT FLOAT,PHI OUT FLOAT,CNTPLOT OUT VARCHAR2,DRAWPATTERN OUT VARCHAR2,STAT_X_SIZE OUT FLOAT,STAT_X_OFFS OUT FLOAT
   ,STAT_Y_SIZE OUT FLOAT,STAT_Y_OFFS OUT FLOAT,HTIT_X_SIZE OUT FLOAT,HTIT_X_OFFS OUT FLOAT,HTIT_Y_SIZE OUT FLOAT,HTIT_Y_OFFS OUT FLOAT
-  ,NDIVX OUT INT,NDIVY OUT INT,MARKERSIZE OUT INT,MARKERCOLOR OUT INT,MARKERSTYLE OUT INT);
+  ,NDIVX OUT INT,NDIVY OUT INT,MARKERSIZE OUT INT,MARKERCOLOR OUT INT,MARKERSTYLE OUT INT,NORM OUT FLOAT
+  ,TICK_X OUT INT,TICK_Y OUT INT,MARGIN_TOP OUT FLOAT,MARGIN_BOTTOM OUT FLOAT,MARGIN_LEFT OUT FLOAT,MARGIN_RIGHT OUT FLOAT
+  ,PADCOLOR OUT INT);
 
 
  -- analysis
@@ -670,17 +673,19 @@ EXCEPTION
 end DeclareCreatorAlgorithm;
 
 -----------------------
-procedure DeclareFitFunction(theName IN varchar2, theNp IN int, thePnames IN parameters, theMi IN int, theDoc IN varchar2 := NULL) is
+procedure DeclareFitFunction(theName IN varchar2, theNp IN int, thePnames IN parameters, theMi IN int, theDoc IN varchar2 := NULL,
+        theNin IN int := 0, theDefVals IN thresholds := thresholds() ) is
  cursor ff is select NAME from FITFUNCTION where NAME=theName;
  func FITFUNCTION.NAME%TYPE;
 begin
  open ff;
  fetch ff into func;
  if ff%NOTFOUND then
-   insert into FITFUNCTION(NAME,CODE,NP,PARNAMES,MUSTINIT,DOC) 
-        VALUES(theName,FunCode_ID.NEXTVAL, theNp, thePnames, theMi, theDoc);
+   insert into FITFUNCTION(NAME,CODE,NP,PARNAMES,MUSTINIT,DOC,NINPUT,FIPARDEFVAL) 
+        VALUES(theName,FunCode_ID.NEXTVAL, theNp, thePnames, theMi, theDoc, theNin, theDefVals );
  else 
-   update FITFUNCTION set NP=theNp,PARNAMES=thePnames,MUSTINIT=theMi,DOC=theDoc where NAME=theName;
+   update FITFUNCTION set NP=theNp,PARNAMES=thePnames,MUSTINIT=theMi,DOC=theDoc,NINPUT=theNin, FIPARDEFVAL=theDefVals
+        where NAME=theName;
  end if;
 end DeclareFitFunction;
 -----------------------
@@ -885,18 +890,15 @@ end GetDisplayOptions;
 -----------------------
 -- this is needed for the web interface since PHP4 doesn't support objects.
 
-procedure GetFitOptions(theDOID IN int, theFitFun OUT int, Np OUT int) is
- theFitPars thresholds;
+procedure GetFitOptions(theDOID IN int, theFitFun OUT int, theNp OUT int, theNin OUT int) is
  theffname DISPLAYOPTIONS.FITFUN%TYPE;
 begin
- Np := 0;
+ theNp := 0;
+ theNin := 0;
  theFitFun := 0;
- select FITFUN,FITPARS into theffname,theFitPars from DISPLAYOPTIONS where DOID=theDOID; 
+ select FITFUN into theffname from DISPLAYOPTIONS where DOID=theDOID; 
  if (theffname is not null) then
-   select CODE into theFitFun from FITFUNCTION where NAME=theffname;
-   if (theFitPars is not NULL) then
-     Np := theFitPars.COUNT;
-   end if;
+   select CODE,NP,NINPUT into theFitFun,theNp,theNin from FITFUNCTION where NAME=theffname;
  end if;
 end GetFitOptions;
 
@@ -911,15 +913,37 @@ begin
  end if;
 end GetFitParam;
 
-procedure GetFitFunParname(fcode IN int, Ipar IN integer, name OUT varchar2) is
+procedure GetFitFunParname(fcode IN int, Ipar IN integer, name OUT varchar2, defVal OUT float ) is
  theFitPars parameters;
+ theDefVal thresholds;
+ nmaxopar int;
+ mymu int;
 begin 
  name := NULL;
- select PARNAMES into theFitPars from FITFUNCTION where CODE=fcode;
- if ( Ipar >0 and Ipar <= theFitPars.COUNT ) then
+ defVal := NULL;
+ select NP,PARNAMES,FIPARDEFVAL,MUSTINIT into nmaxopar,theFitPars,theDefVal,mymu from FITFUNCTION where CODE=fcode;
+ if ( Ipar >0 and Ipar <= nmaxopar ) then
   name := theFitPars(Ipar);
+  if (mymu = 1) then 
+   defVal := theDefVal(Ipar);
+  end if;
  end if;
 end GetFitFunParname;
+-----------------------
+procedure GetFitFunInputParname(fcode IN int, Ipar IN integer, name OUT varchar2, defVal OUT float ) is
+ theFitPars parameters;
+ theDefVal thresholds;
+ nmaxipar int;
+ mynp int;
+begin 
+ name := NULL;
+ defVal := NULL;
+ select NP,NINPUT,PARNAMES,FIPARDEFVAL into mynp,nmaxipar,theFitPars,theDefVal from FITFUNCTION where CODE=fcode;
+ if ( Ipar >0 and Ipar <= nmaxipar ) then
+  name := theFitPars(mynp+Ipar);
+  defVal := theDefVal(mynp+Ipar);
+ end if;
+end GetFitFunInputParname;
 -----------------------
 
 procedure GetFitFunName(fcode IN int, theName OUT varchar2) is
@@ -931,15 +955,17 @@ end GetFitFunName;
 
 -- procedure GET_DISPLAYOPTIONS is produced automatically by  autodispopt.pl
 procedure GET_DISPLAYOPTIONS(theDOID IN int
-,LABEL_X OUT VARCHAR2,LABEL_Y OUT VARCHAR2,LABEL_Z OUT VARCHAR2,YMIN OUT FLOAT,YMAX OUT FLOAT,STATS OUT INT
-,FILLSTYLE OUT INT,FILLCOLOR OUT INT,LINESTYLE OUT INT,LINECOLOR OUT INT,LINEWIDTH OUT INT,DRAWOPTS OUT VARCHAR2
-,XMIN OUT FLOAT,XMAX OUT FLOAT,ZMIN OUT FLOAT,ZMAX OUT FLOAT,LOGX OUT INT,LOGY OUT INT
-,LOGZ OUT INT,TIMAGE OUT VARCHAR2,REF OUT VARCHAR2,REFRESH OUT FLOAT,TIT_X_SIZE OUT FLOAT,TIT_X_OFFS OUT FLOAT
-,TIT_Y_SIZE OUT FLOAT,TIT_Y_OFFS OUT FLOAT,TIT_Z_SIZE OUT FLOAT,TIT_Z_OFFS OUT FLOAT,LAB_X_SIZE OUT FLOAT,LAB_X_OFFS OUT FLOAT
-,LAB_Y_SIZE OUT FLOAT,LAB_Y_OFFS OUT FLOAT,LAB_Z_SIZE OUT FLOAT,LAB_Z_OFFS OUT FLOAT,GRIDX OUT INT,GRIDY OUT INT
-,THETA OUT FLOAT,PHI OUT FLOAT,CNTPLOT OUT VARCHAR2,DRAWPATTERN OUT VARCHAR2,STAT_X_SIZE OUT FLOAT,STAT_X_OFFS OUT FLOAT
-,STAT_Y_SIZE OUT FLOAT,STAT_Y_OFFS OUT FLOAT,HTIT_X_SIZE OUT FLOAT,HTIT_X_OFFS OUT FLOAT,HTIT_Y_SIZE OUT FLOAT,HTIT_Y_OFFS OUT FLOAT
-,NDIVX OUT INT,NDIVY OUT INT,MARKERSIZE OUT INT,MARKERCOLOR OUT INT,MARKERSTYLE OUT INT) is
+  ,LABEL_X OUT VARCHAR2,LABEL_Y OUT VARCHAR2,LABEL_Z OUT VARCHAR2,YMIN OUT FLOAT,YMAX OUT FLOAT,STATS OUT INT
+  ,FILLSTYLE OUT INT,FILLCOLOR OUT INT,LINESTYLE OUT INT,LINECOLOR OUT INT,LINEWIDTH OUT INT,DRAWOPTS OUT VARCHAR2
+  ,XMIN OUT FLOAT,XMAX OUT FLOAT,ZMIN OUT FLOAT,ZMAX OUT FLOAT,LOGX OUT INT,LOGY OUT INT
+  ,LOGZ OUT INT,TIMAGE OUT VARCHAR2,REF OUT VARCHAR2,REFRESH OUT FLOAT,TIT_X_SIZE OUT FLOAT,TIT_X_OFFS OUT FLOAT
+  ,TIT_Y_SIZE OUT FLOAT,TIT_Y_OFFS OUT FLOAT,TIT_Z_SIZE OUT FLOAT,TIT_Z_OFFS OUT FLOAT,LAB_X_SIZE OUT FLOAT,LAB_X_OFFS OUT FLOAT
+  ,LAB_Y_SIZE OUT FLOAT,LAB_Y_OFFS OUT FLOAT,LAB_Z_SIZE OUT FLOAT,LAB_Z_OFFS OUT FLOAT,GRIDX OUT INT,GRIDY OUT INT
+  ,THETA OUT FLOAT,PHI OUT FLOAT,CNTPLOT OUT VARCHAR2,DRAWPATTERN OUT VARCHAR2,STAT_X_SIZE OUT FLOAT,STAT_X_OFFS OUT FLOAT
+  ,STAT_Y_SIZE OUT FLOAT,STAT_Y_OFFS OUT FLOAT,HTIT_X_SIZE OUT FLOAT,HTIT_X_OFFS OUT FLOAT,HTIT_Y_SIZE OUT FLOAT,HTIT_Y_OFFS OUT FLOAT
+  ,NDIVX OUT INT,NDIVY OUT INT,MARKERSIZE OUT INT,MARKERCOLOR OUT INT,MARKERSTYLE OUT INT,NORM OUT FLOAT
+  ,TICK_X OUT INT,TICK_Y OUT INT,MARGIN_TOP OUT FLOAT,MARGIN_BOTTOM OUT FLOAT,MARGIN_LEFT OUT FLOAT,MARGIN_RIGHT OUT FLOAT
+  ,PADCOLOR OUT INT) is
  mydo dispopt; 
 begin
  SELECT OPT INTO mydo FROM DISPLAYOPTIONS WHERE DOID = theDOID;
@@ -996,8 +1022,15 @@ begin
  MARKERSIZE := mydo.MARKERSIZE;
  MARKERCOLOR := mydo.MARKERCOLOR;
  MARKERSTYLE := mydo.MARKERSTYLE;
+ NORM := mydo.NORM;
+ TICK_X := mydo.TICK_X;
+ TICK_Y := mydo.TICK_Y;
+ MARGIN_TOP := mydo.MARGIN_TOP;
+ MARGIN_BOTTOM := mydo.MARGIN_BOTTOM;
+ MARGIN_LEFT := mydo.MARGIN_LEFT;
+ MARGIN_RIGHT := mydo.MARGIN_RIGHT;
+ PADCOLOR := mydo.PADCOLOR;
 end GET_DISPLAYOPTIONS;
-
 
 -------------------------------
 
@@ -1081,27 +1114,30 @@ end GetAlgoParname;
 -----------------------
 -- special versions for the "Fit" algorithm:
 --   the first 2 input parameters are function code and confidence level
+--   next are the input parameters of the fit function (if any)
+--   next are the init. values of the fit parameters  
 --   the first output parameter is chi2 prob.
---   the other input (= output) parameters are taken from the fit function
+--   the next output parameters are the min and max values of fit parameters
 -----------------------
 
 procedure GetFitAlgNpar(fcode IN int, Npar OUT integer, Ninp OUT integer) is
  cursor np is select NPARS,NINPUT from ALGORITHM where ALGNAME='Fit';
- fitnp int;
- fitni int;
- cursor nf is select NP from FITFUNCTION where CODE=fcode;
+ algnp int;
+ algni int;
+ cursor nf is select NP,ninput from FITFUNCTION where CODE=fcode;
 begin
  open nf;
- fetch nf into Npar;
+ fetch nf into Npar,Ninp;
  if (nf%NOTFOUND) then
      Npar:=-1;
      Ninp:=-1;
      raise_application_error(-20006,'Cannot find FitFunction with code '||fcode);
  else
      open np;
-     fetch np into  fitnp,fitni;
-     Ninp := fitni+Npar;
-     Npar := fitnp+2*Npar;
+     fetch np into  algnp,algni;
+     Ninp := algni+Ninp+Npar;
+     Npar := algnp+2*Npar;
+     close np;
  end if;
  close nf;
 end GetFitAlgNpar;
@@ -1113,23 +1149,32 @@ procedure GetFitAlgParname(fcode IN int, Ipar IN integer, name OUT varchar2, def
  noutfa int;
  ninfa int;
  fapars parameters;
+ noutff int;
+ ninff int;
  ffpars parameters;
  isinput int;
- mydefval thresholds;
+ defvalfa thresholds;
+ defvalff thresholds;
  ffix int :=0;
+ mymu FITFUNCTION.MUSTINIT%TYPE;
  cursor np is select NPARS,NINPUT,ALGPARS,PARDEFVAL from ALGORITHM where ALGNAME='Fit';
- cursor fp is select PARNAMES from FITFUNCTION where CODE=fcode;
+ cursor fp is select NP,NINPUT,PARNAMES,FIPARDEFVAL,MUSTINIT from FITFUNCTION where CODE=fcode;
 begin
  name := 'Unknown';
  defVal := NULL;
  GetFitAlgNpar(fcode,nout,nin);
  open np;
- fetch np into noutfa,ninfa,fapars,mydefval;
+ fetch np into noutfa,ninfa,fapars,defvalfa;
+
+ open fp;
+ fetch fp into noutff,ninff,ffpars,defvalff,mymu;
+
+
  if (Ipar<=nout) then -- output parameter
   if (Ipar <= noutfa) then 
     name := fapars(Ipar);
-    if (mydefval is not NULL) then
-     defVal := mydefval(Ipar);
+    if (defvalfa is not NULL) then
+     defVal := defvalfa(Ipar);
     end if;
   else 
     ffix := Ipar-noutfa;
@@ -1138,25 +1183,33 @@ begin
  else -- input parameter
   if (Ipar <= (nout+ninfa) ) then 
     name := fapars(Ipar-nout+noutfa);
-    if (mydefval is not NULL) then
-     defVal := mydefval(Ipar-nout+noutfa);
+    if (defvalfa is not NULL) then
+     defVal := defvalfa(Ipar-nout+noutfa);
     end if;
   else 
-    ffix := Ipar-nout-ninfa;
+   if (Ipar <= (nout+ninfa+ninff) ) then 
+    name := ffpars(Ipar-nout-ninfa+noutff);
+    if (defvalff is not NULL) then
+     defVal := defvalff(Ipar-nout-ninfa+noutff);
+    end if;
+   else 
+    ffix := Ipar-nout-ninfa-ninff;
     isinput := 1;
+   end if;
   end if;
  end if;
  close np;
 
  if (ffix>0) then -- parameters in FITFUNCTION
-  open fp;
-  fetch fp into ffpars;
   if (fp%NOTFOUND) then
      raise_application_error(-20006,'Cannot find FitFunction with code '||fcode);
   end if;
   if (isinput = 1) then
     if (ffix <= ffpars.COUNT ) then
      name := ffpars(ffix);
+     if (mymu = 1) then
+       defVal := defvalff(ffix);
+     end if;
     end if;
   else -- two parameters for min and max fit result
     if (ffix <= 2* ffpars.COUNT ) then

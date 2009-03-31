@@ -8,7 +8,15 @@ include '../util.php'; include '../dbforms.php';
 $conn=HistDBconnect(1);
 
 
-
+function remove_histo_display($doid) {
+  global $conn;
+  $stid = OCIParse($conn,"delete from DISPLAYOPTIONS where DOID=$doid");
+  $r=OCIExecute($stid,OCI_DEFAULT);
+  if (!$r) return 0;
+  ocifreestatement($stid);
+  ocicommit($conn);
+  return 1;  
+}
 
 function update_histo_display() {
   global $conn;
@@ -35,7 +43,13 @@ function update_histo_display() {
       if( strlen($_POST["FITPAR_${ip}"])>0 ) 
         $ffpar[$ip]=$_POST["FITPAR_${ip}"];
       else
-        break;
+        $ffpar[$ip]=-999999.;
+    }
+    for ($ip=1 ; $ip<= $_POST["FITNINPUT"]; $ip++) {
+      if( strlen($_POST["FITINPPAR_${ip}"])>0 ) 
+        $ffpar[$_POST["FITNP"]+$ip]=$_POST["FITINPPAR_${ip}"];
+      else
+        $ffpar[$_POST["FITNP"]+$ip]=-999999.;
     }
     $command .= "thresholds(".implode(",",$ffpar).")";
   }
@@ -78,16 +92,35 @@ $page= array_key_exists("PAGE",$_POST) ? $_POST["PAGE"] : 0;
 if ($page)
   echo "<H2 ALIGN='CENTER'> in Page $page</H2>";
 
-if ($_POST["Update_display"] == 'Confirm' && fitok()) {
-  if (update_histo_display())
-    echo "Histogram Display Options updated successfully<br><br>\n";
-  else
-    echo "<font color=red> <B>Got errors from update_histo_display() </B></font><br><br>\n";
-} 
-else {
-  echo "Please check your data and confirm <br><br>";
-  histo_display($id,$_POST["htype"],"update");
-}
+
+if (array_key_exists("Remove_DO",$_POST)) {
+  echo "<B>If you confirm, display options for histogram record $id will be removed and lost ";
+  if ($_POST["htype"] == 'HSID' && $_POST["NHS"]>1) { 
+    echo "<br><font color='red'> for the whole histogram set (".$_POST["NHS"]." histograms)<br></font>";
+  }
+  echo "</B><br>\n";
+  echo "<form action='$_SERVER[PHP_SELF]' method='post'>\n";
+  echo "<input type='hidden' name='id' value='${id}'>\n";
+  echo "<input type='hidden' name='htype' value='".$_POST["htype"],"'>\n";    
+  echo "<input type='hidden' name='doid' value='".$_POST["doid"],"'>\n";
+  echo "<input type='submit' name='Really_Remove_DO' value='Confirm Removal of Display Options'>\n";
+ }
+ else if (array_key_exists("Really_Remove_DO",$_POST)) {
+   if (remove_histo_display($doid)) 
+     echo "Histogram Display options  deleted successfully<br><br>\n";
+   else
+     echo "<font color=red> <B>Got errors from remove_histo_display() </B></font><br><br>\n";
+ }
+ else if ($_POST["Update_display"] == 'Confirm' && fitok()) {
+   if (update_histo_display())
+     echo "Histogram Display Options updated successfully<br><br>\n";
+   else
+     echo "<font color=red> <B>Got errors from update_histo_display() </B></font><br><br>\n";
+ } 
+ else {
+   echo "Please check your data and confirm <br><br>";
+   histo_display($id,$_POST["htype"],"update");
+ }
 
 ocilogoff($conn);
 echo "<p><a href='../Histogram.php?".hidtype($_POST["htype"])."=${id}'> Back to Histogram Record $id </a></p>";
