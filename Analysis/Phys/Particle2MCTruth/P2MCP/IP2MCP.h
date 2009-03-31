@@ -1,4 +1,4 @@
-// $Id: IP2MCP.h,v 1.3 2009-03-13 18:03:37 jpalac Exp $
+// $Id: IP2MCP.h,v 1.4 2009-03-31 12:39:27 jpalac Exp $
 #ifndef P2MCP_IP2MCP_H 
 #define P2MCP_IP2MCP_H 1
 
@@ -8,13 +8,16 @@
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
+// from LHCb
+#include "Event/MCParticle.h"
 // from DaVinciMCKernel
+#include "Kernel/IParticle2MCAssociator.h"
+// from Particle2MCTruth
 #include "P2MCP/P2MCPTypes.h"
 
 namespace LHCb
 {
   class Particle;
-  class MCParticle;
 }
 
 
@@ -34,45 +37,13 @@ static const InterfaceID IID_IP2MCP ( "IP2MCP", 1, 0 );
  *  @author Juan PALACIOS
  *  @date   2009-01-19
  */
-class IP2MCP : virtual public IAlgTool {
+class IP2MCP : virtual public IAlgTool,
+               virtual public IParticle2MCAssociator
+{
 public: 
 
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_IP2MCP; }
-
-
-  /**
-   *
-   *
-   *
-   * @author Juan Palacios juan.palacios@nikhef.nl
-   **/
-  virtual 
-  const LHCb::MCParticle* 
-  bestRelatedMCP(const LHCb::Particle* particle) const = 0;
-
-  /**
-   *
-   *
-   *
-   * @author Juan Palacios juan.palacios@nikhef.nl
-   **/
-  virtual 
-  const LHCb::MCParticle* 
-  bestRelatedMCP(const LHCb::Particle* particle,
-                 const LHCb::MCParticle::ConstVector& mcParticles) const = 0;
-
-  /**
-   *
-   *
-   *
-   * @author Juan Palacios juan.palacios@nikhef.nl
-   **/
-  virtual 
-  const LHCb::MCParticle* 
-  bestRelatedMCP(const LHCb::Particle* particle,
-                 const LHCb::MCParticle::Container& mcParticles) const = 0;
-
 
   /**
    * Calculate and return the weighted associations between an 
