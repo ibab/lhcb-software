@@ -20,10 +20,10 @@ source $LHCBSCRIPTS/setup_external.csh --lcg 54 Python
 
 
 set gaussver=v30r5
-python install_project.py -p Gauss -v $gaussver -b slc4_ia32_gcc34 -m do_config
-python install_project.py -p Gauss -v $gaussver -b slc4_amd64_gcc34 -m do_config
-python install_project.py -p Gauss -v $gaussver -b slc4_ia32_gcc34_dbg -m do_config
-python install_project.py -p Gauss -v $gaussver -b slc4_amd64_gcc34_dbg -m do_config
+python install_project.py -p Gauss -v $gaussver -b slc4_ia32_gcc34
+python install_project.py -p Gauss -v $gaussver -b slc4_amd64_gcc34
+python install_project.py -p Gauss -v $gaussver -b slc4_ia32_gcc34_dbg
+python install_project.py -p Gauss -v $gaussver -b slc4_amd64_gcc34_dbg
 
 setenv PYTHONPATH
 SetupProject Gauss $gaussver

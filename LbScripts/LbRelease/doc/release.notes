@@ -1,3 +1,8 @@
+2009-03-31  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/BrunelBench.csh: 
+	* scripts/GaussBench.csh: removed obsolete "-m" option of install_project
+
 2009-03-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v2r6
