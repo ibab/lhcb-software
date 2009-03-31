@@ -1,4 +1,3 @@
-#!/usr/bin/env gaudirun.py
 
 from Gaudi.Configuration import * 
 
