@@ -5,6 +5,15 @@
 !               Particle2MCAssociatorBase for Particle -> MCTruth matching
 !-----------------------------------------------------------------------------
 
+! 2009-03-31 - Juan PALACIOS
+ - P2MCP/IP2MCP.h
+  . Now inherits from IParticle2MCAssociator (DaVinciMCKernel)
+ - P2MCP/P2MCPBase.h
+  . restRelatedMCP -> relatedMCP to conform to Particle2MCAssociator interface.
+ - src/Lib/P2MCPBase.cpp
+  . Add method relatedMCP(const LHCb::Particle* particle,
+                          const std::string& mcParticleLocation)
+
 ! 2009-03-13 - Juan PALACIOS
  - P2MCP/IP2MCP.h
   . Clean up. Return P2MCPTypes::FlatTrees
