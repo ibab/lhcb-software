@@ -52,7 +52,7 @@ public:
 private :
   virtual Particle2MCParticle::ToVector 
   relatedMCPsImpl(const LHCb::Particle* particle,
-                  const LHCb::MCParticle::ConstVector mcParticles) const ;
+                  const LHCb::MCParticle::ConstVector& mcParticles) const ;
 
 private:
 
