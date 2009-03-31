@@ -9,7 +9,13 @@
   </set></argument>
   <argument name="options"><text>
 from Gaudi.Configuration import *
-ApplicationMgr().Environment["DECFILESROOT"] = "/afs/cern.ch/lhcb/software/DEV/GAUSS/Gen/DecFiles/v17r0"
+from Gauss.Configuration import *
+from Configurables import EvtGenDecay
+EvtGenDecay = EvtGenDecay()
+ToolSvc = ToolSvc()
+ToolSvc.addTool(EvtGenDecay, name='EvtGenDecay')
+ToolSvc.EvtGenDecay.DecayFile="/afs/cern.ch/lhcb/software/DEV/GAUSS/Gen/DecFiles/v17r0/dkfiles/DECAY.DEC"
+ToolSvc.EvtGenDecay.OutputLevel = 2
   </text></argument>
   <argument name="timeout"><integer>1800</integer></argument>
   <argument name="reference"><text>$GAUSSROOT/tests/refs/testGauss-2008.ref</text></argument>
