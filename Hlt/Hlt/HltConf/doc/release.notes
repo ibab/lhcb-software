@@ -1,12 +1,19 @@
-! $Id: release.notes,v 1.185 2009-03-31 11:41:20 graven Exp $ 
+! $Id: release.notes,v 1.186 2009-03-31 11:49:36 leandrop Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+<<<<<<< release.notes
+! 2009-03-31 - Leanro de Paula
+ - changes in MuonLine, HltInit, HltL0Candidates and Configure in order to
+   be able to run with DC06 and DC09 setup
+
+=======
 ! 2009-03-31 - Gerhard Raven
  - further Hlt2 support work
 
+>>>>>>> 1.185
 ! 2009-03-28 - Gerhard Raven
  - add initial Hlt2 support to HltLine
 

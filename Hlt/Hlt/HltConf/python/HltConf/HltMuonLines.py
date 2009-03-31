@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonLines.py,v 1.21 2009-03-31 11:39:03 graven Exp $
+# $Id: HltMuonLines.py,v 1.22 2009-03-31 11:49:36 leandrop Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.21 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.22 $"
 # =============================================================================
 
 
@@ -31,8 +31,31 @@ from HltConf.HltFastTrackFit import setupHltFastTrackFit
 class HltMuonLinesConf(HltLinesConfigurableUser) :
     # steering variables
     __slots__ = { 
-        #'L0MuonGEC_PtCut'          : 1300.
-        'L0Muon_PtCut'             :  840.
+    #  DC06 (FFFF) Muon Lines
+        #'Lines'                    :['SingleMuonNoIPL0','SingleMuonNoIPGEC','SingleMuonIPCL0','SingleMuonIPCGEC',
+        #                             'DiMuonNoIPL0Di','DiMuonNoIP2L0','DiMuonNoIPL0Seg',
+        #                             'DiMuonNoIPL0GEC','DiMuonNoIPGECSeg',
+        #                             'DiMuonIPCL0Di','DiMuonIPC2L0','DiMuonIPCL0GEC','DiMuonIPCL0Seg',
+        #                             'DiMuonIPCL0GEC','DiMuonIPCGECSeg']
+        #                             'DiMuonNoPVL0Di','DiMuonNoPV2L0','DiMuonNoPVL0Seg']
+        #,'L0SingleMuon'             :"MuonNoGlob"
+        #,'L0SingleMuonGEC'          :"Muon"
+        #,'L0SingleMuonNoPV'         :""
+        #,'L0DiMuonNoPV'             :""
+        #,'DiMuon_SumPtCut'          : 1500.
+    #  DC09 Muon Lines
+        'Lines'                    :['SingleMuonNoIPL0','SingleMuonIPCL0',                    
+                                     'DiMuonNoIPL0Di','DiMuonNoIP2L0','DiMuonNoIPL0Seg',
+                                     'DiMuonIPCL0Di','DiMuonIPC2L0','DiMuonIPCL0Seg',
+                                     'DiMuonNoPVL0Di','DiMuonNoPV2L0','DiMuonNoPVL0Seg']
+        ,'L0SingleMuon'             :"Muon"
+        ,'L0SingleMuonGEC'          :""
+        ,'L0SingleMuonNoPV'         :"Muon,lowMult"
+        ,'L0DiMuonNoPV'             :"DiMuon,lowMult"
+        ,'DiMuon_SumPtCut'          : 1000.
+    # DC09 and DC06
+        ,'L0DiMuon'                 :"DiMuon"
+        ,'L0AllMuon_PtCut'          :   80.
         ,'L0MuonNoPV_PtCut'         :  800.
         ,'Muon_DeltaPCut'           :    0.
         ,'Muon_VeloTMatchCut'       :  200.
@@ -42,7 +65,6 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
         ,'Muon_PtCut'               : 6000.
         ,'MuonIP_PtCut'             : 1300. 
         ,'Muon_IPMinCut'            :    0.08
-        ,'DiMuon_SumPtCut'          : 1000.
         ,'DiMuon_DOCACut'           :    0.5
         ,'DiMuon_IDCut'             :    1.9
         ,'DiMuon_MassCut'           : 2500.
@@ -52,7 +74,8 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
         ,'DiMuon_IPCut'             :    0.15
         
         # For the Muon+Track lines
-        ,'MuTrackL0DU'     :"L0_CHANNEL('Muon')"
+        #,'MuTrackL0DU'     :"L0_CHANNEL('Muon')"
+        #,'MuTrackL0DU'     :"L0_CHANNEL('MuonNoGlob')"
         #,'MuTrackL0DU'     :"L0_CHANNEL('Muon') | L0_CHANNEL('MuonNoGlob')"
         ,'MuTrackMuPt'    : 1000.
         ,'MuTrackMuIP'    : 0.025
@@ -92,6 +115,8 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
         RecoMuonSeg = HltMuonRec('HltRecoMuonSeg'
                                 , OutputMuonTracksName='Hlt/Track/MuonSegmentForL0Single'
                                 , DecodingFromCoord=True )
+
+        ActiveLines = self.getProp('Lines')
 
         ### Matching Confirmed T Tracks with VELO
         from Configurables import PatMatchTool
@@ -159,19 +184,26 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
         ###  Prepare 
         # Muons 
         MuonPrep = bindMembers( 'MuonPrep',
-                              [ convertL0Candidates('Muon')
-                              , Member ( 'TF', 'L0', FilterDescriptor = [ 'PT0,||>,'+str(self.getProp('L0Muon_PtCut')) ]) 
+                              [ convertL0Candidates( str(self.getProp('L0SingleMuon')) )
                               ] + TMatchV )
+
+        AllL0MuPrep = bindMembers( 'AllL0MuPrep',
+                                 [ convertL0Candidates('AllMuon')
+                                 , Member ( 'TF', 'L0', FilterDescriptor = [ 'PT0,||>,'+str(self.getProp('L0AllMuon_PtCut')) ]) 
+                                 ] + TMatchV )
+
+
         # Muons in Events without Reconstructed Primary Vertices
-        MuonNoPVPrep = bindMembers( 'MuonNoPVPrep',
-                                  [ convertL0Candidates('Muon,lowMult') 
-                                  , Member ( 'TF', 'L0', FilterDescriptor = [ 'PT0,||>,'+str(self.getProp('L0MuonNoPV_PtCut')) ]) 
-                                  ] + TMatchV )
+        if ( 'DiMuonNoPVL0Seg' in ActiveLines ):
+          MuonNoPVPrep = bindMembers( 'MuonNoPVPrep',
+                                    [ convertL0Candidates( str(self.getProp('L0SingleMuonNoPV')) )
+                                    , Member ( 'TF', 'L0', FilterDescriptor = [ 'PT0,||>,'+str(self.getProp('L0MuonNoPV_PtCut')) ]) 
+                                    ] + TMatchV )
         # Muons with GEC
-        #MuonGECPrep = bindMembers( 'MuonGECPrep',
-        #                         [ convertL0Candidates('Muon')
-        #                         , Member ( 'TF', 'L0', FilterDescriptor = [ 'PT0,||>,'+str(self.getProp('L0MuonGEC_PtCut')) ]) 
-        #                         ] + TMatchV )
+        if ( 'SingleMuonNoIPGEC' in ActiveLines ):
+          MuonGECPrep = bindMembers( 'MuonGECPrep',
+                                   [ convertL0Candidates( str(self.getProp('L0SingleMuonGEC')) )
+                                   ] + TMatchV )
         # Muon Segments
         MuonSegPrep = bindMembers ('MuonSegPrep' ,
                                   [ MuonPrep
@@ -183,39 +215,42 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
                                   ] + TMatchV 
                                   )
         # Muon Segments in Eventes witout Reconstructed Primary Vertices
-        MuonNoPVSegPrep = bindMembers ('MuonNoPVSegPrep' ,
-                                      [ MuonNoPVPrep
-                                      , RecoMuonSeg
-                                      , Member ('TF', 'PrepMuSeg'
-                                               , RequirePositiveInputs = False
-                                               , InputSelection = 'TES:' + RecoMuonSeg.OutputMuonTracksName # if has else RecoMuSeg.getDefaults('OutputMuonTracksName')
-                                               , FilterDescriptor = [ 'DoShareM3_'+MuonNoPVPrep.outputSelection()+',<,'+str(self.getProp('Muon_ShareCut')) ] )
-                                      ] + TMatchV 
-                                      )
+        if ( 'DiMuonNoPVL0Seg' in ActiveLines ):
+          MuonNoPVSegPrep = bindMembers ('MuonNoPVSegPrep' ,
+                                        [ MuonNoPVPrep
+                                        , RecoMuonSeg
+                                        , Member ('TF', 'PrepMuSeg'
+                                                 , RequirePositiveInputs = False
+                                                 , InputSelection = 'TES:' + RecoMuonSeg.OutputMuonTracksName # if has else RecoMuSeg.getDefaults('OutputMuonTracksName')
+                                                 , FilterDescriptor = [ 'DoShareM3_'+MuonNoPVPrep.outputSelection()+',<,'+str(self.getProp('Muon_ShareCut')) ] )
+                                        ] + TMatchV 
+                                        )
         # Muon Segments with GEC
-        #MuonGECSegPrep = bindMembers ('MuonGECSegPrep' ,
-        #                             [ MuonGECPrep
-        #                             , RecoMuonSeg
-        #                             , Member ('TF', 'PrepMuSeg'
-        #                                      , RequirePositiveInputs = False
-        #                                      , InputSelection = 'TES:' + RecoMuonSeg.OutputMuonTracksName # if has else RecoMuSeg.getDefaults('OutputMuonTracksName')
-        #                                      , FilterDescriptor = [ 'DoShareM3_'+MuonGECPrep.outputSelection()+',<,'+str(self.getProp('Muon_ShareCut')) ] )
-        #                             ] + TMatchV 
-        #                             )
+        if ( 'DiMuonNoIPGECSeg' in ActiveLines ):
+          MuonGECSegPrep = bindMembers ('MuonGECSegPrep' ,
+                                       [ MuonGECPrep
+                                       , RecoMuonSeg
+                                       , Member ('TF', 'PrepMuSeg'
+                                                , RequirePositiveInputs = False
+                                                , InputSelection = 'TES:' + RecoMuonSeg.OutputMuonTracksName # if has else RecoMuSeg.getDefaults('OutputMuonTracksName')
+                                                , FilterDescriptor = [ 'DoShareM3_'+MuonGECPrep.outputSelection()+',<,'+str(self.getProp('Muon_ShareCut')) ] )
+                                       ] + TMatchV 
+                                       )
         # Di Muons 
         DiMuonPrep = bindMembers('DiMuonPrep' ,
-                                [ convertL0Candidates('DiMuon') 
+                                [ convertL0Candidates( str(self.getProp('L0DiMuon')) )
                                 , Member( 'VM1', 'L0DiMuon' , FilterDescriptor = [ 'SumPT,>,'+str(self.getProp('DiMuon_SumPtCut')) ])
                                 , Member( 'VT', 'L0' )
                                 ] + TMatchV + MakeVertex
                                 )
         # Di Muons in Events without Reconstructed Primary Vertices
-        DiMuonNoPVPrep = bindMembers('DiMuonNoPVPrep' ,
-                                    [ convertL0Candidates('DiMuon,lowMult') 
-                                    , Member( 'VM1', 'L0DiMuon' , FilterDescriptor = [ 'SumPT,>,'+str(self.getProp('DiMuonNoPV_SumPtCut')) ])
-                                    , Member( 'VT', 'L0' )
-                                    ] + TMatchV + MakeVertex
-                                    )
+        if ( 'DiMuonNoPVL0Di' in ActiveLines ):
+          DiMuonNoPVPrep = bindMembers('DiMuonNoPVPrep' ,
+                                      [ convertL0Candidates( str(self.getProp('L0DiMuonNoPV')) )
+                                      , Member( 'VM1', 'L0DiMuon' , FilterDescriptor = [ 'SumPT,>,'+str(self.getProp('DiMuonNoPV_SumPtCut')) ])
+                                      , Member( 'VT', 'L0' )
+                                      ] + TMatchV + MakeVertex
+                                      )
 
         #--------------------------------------------------------------------
         #### these are the lines which actually make decisions...
@@ -225,282 +260,309 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
         #--------------------------------------------------------------------
         # Single Muon without IP cut from L0Muon (MuonNoGlob) 
         #--------------------------------------------------------------------
-        SingleMuonNoIPL0 = Line( 'SingleMuonNoIPL0'
-                               ,  prescale = self.prescale
-                               ,  L0DU = "L0_CHANNEL('Muon')"
-                               ,  algos = [ MuonPrep 
-                                          , Member( 'TF', 'PT' 
-                                                  , FilterDescriptor = ['PT,>,'+str(self.getProp('Muon_PtCut'))] 
-                                                  ) 
-                                          ] + FastFitNoIP 
-                               ,  postscale = self.postscale
-                               )
-        setupHltFastTrackFit('Hlt1SingleMuonNoIPL0TUFitTrack')
+        if ( 'SingleMuonNoIPL0' in ActiveLines ):
+          SingleMuonNoIPL0 = Line( 'SingleMuonNoIPL0'
+                                 , prescale = self.prescale
+                                 , L0DU = "L0_CHANNEL('"+str(self.getProp('L0SingleMuon'))+"')"
+                                 , algos = [ MuonPrep 
+                                           , Member( 'TF', 'PT' 
+                                                   , FilterDescriptor = ['PT,>,'+str(self.getProp('Muon_PtCut'))] 
+                                                   ) 
+                                           ] + FastFitNoIP 
+                                 , postscale = self.postscale
+                                 )
+          setupHltFastTrackFit('Hlt1SingleMuonNoIPL0TUFitTrack')
         #--------------------------------------------------------------------
         # Single Muon without IP cut from L0Muon with GEC (Muon)
         #--------------------------------------------------------------------
-        #SingleMuonNoIPGEC = Line( 'SingleMuonNoIPGEC'
-        #                        ,  prescale = self.prescale
-        #                        ,  L0DU = "L0_CHANNEL('Muon')"
-        #                        ,  algos = [ MuonGECPrep 
-        #                                   , Member( 'TF', 'PT' 
-        #                                           , FilterDescriptor = ['PT,>,'+str(self.getProp('Muon_PtCut'))] 
-        #                                           ) 
-        #                                   ] + FastFitNoIP 
-        #                        ,  postscale = self.postscale
-        #                        )
-        #setupHltFastTrackFit('Hlt1SingleMuonNoIPGECTUFitTrack')
+        if ( 'SingleMuonNoIPGEC' in ActiveLines ):
+          SingleMuonNoIPGEC = Line( 'SingleMuonNoIPGEC'
+                                  , prescale = self.prescale
+                                  , L0DU = "L0_CHANNEL('"+str(self.getProp('L0SingleMuonGEC'))+"')"
+                                  , algos = [ MuonGECPrep 
+                                            , Member( 'TF', 'PT' 
+                                                    , FilterDescriptor = ['PT,>,'+str(self.getProp('Muon_PtCut'))] 
+                                                    ) 
+                                            ] + FastFitNoIP 
+                                  , postscale = self.postscale
+                                  )
+          setupHltFastTrackFit('Hlt1SingleMuonNoIPGECTUFitTrack')
         #--------------------------------------------------------------------
         # Single Muon with IP cut from L0Muon (MuonNoGlob) 
         #--------------------------------------------------------------------
-        SingleMuonIPCL0 = Line ( 'SingleMuonIPCL0'
-                               ,  prescale = self.prescale
-                               ,  L0DU = "L0_CHANNEL('Muon')"
-                               ,  algos = [ MuonPrep
-                                          , RecoRZPV
-                                          ,  Member ( 'TF', 'PT'
-                                                    , FilterDescriptor = ['PT,>,'+str(self.getProp('MuonIP_PtCut')) ])
-                                          ] + FastFitWithIP 
-                               ,  postscale = self.postscale
-                               ) 
-        setupHltFastTrackFit('Hlt1SingleMuonIPCL0TUFitTrack')
+        if ( 'SingleMuonIPCL0' in ActiveLines ):
+          SingleMuonIPCL0 = Line( 'SingleMuonIPCL0'
+                                 , prescale = self.prescale
+                                 , L0DU = "L0_CHANNEL('"+str(self.getProp('L0SingleMuon'))+"')"
+                                 , algos = [ MuonPrep
+                                           , RecoRZPV
+                                           ,  Member ( 'TF', 'PT'
+                                                     , FilterDescriptor = ['PT,>,'+str(self.getProp('MuonIP_PtCut')) ])
+                                           ] + FastFitWithIP 
+                                 , postscale = self.postscale
+                                 ) 
+          setupHltFastTrackFit('Hlt1SingleMuonIPCL0TUFitTrack')
         #--------------------------------------------------------------------
         # Single Muon with IP cut from L0Muon with GEC (Muon)
         #--------------------------------------------------------------------
-        #SingleMuonIPCGEC = Line ( 'SingleMuonIPCGEC'
-        #                        ,  prescale = self.prescale
-        #                        ,  L0DU = "L0_CHANNEL('Muon')"
-        #                        ,  algos = [ MuonGECPrep
-        #                                   , RecoRZPV
-        #                                   ,  Member ( 'TF', 'PT'
-        #                                             , FilterDescriptor = ['PT,>,'+str(self.getProp('MuonIP_PtCut')) ])
-        #                                   ] + FastFitWithIP 
-        #                        ,  postscale = self.postscale
-        #                        ) 
-        #setupHltFastTrackFit('Hlt1SingleMuonIPCGECTUFitTrack')
+        if ( 'SingleMuonIPCGEC' in ActiveLines ):
+          SingleMuonIPCGEC = Line( 'SingleMuonIPCGEC'
+                                 , prescale = self.prescale
+                                 , L0DU = "L0_CHANNEL('"+str(self.getProp('L0SingleMuonGEC'))+"')"
+                                 , algos = [ MuonGECPrep
+                                           , RecoRZPV
+                                           ,  Member ( 'TF', 'PT'
+                                                     , FilterDescriptor = ['PT,>,'+str(self.getProp('MuonIP_PtCut')) ])
+                                           ] + FastFitWithIP 
+                                 , postscale = self.postscale
+                                 ) 
+          setupHltFastTrackFit('Hlt1SingleMuonIPCGECTUFitTrack')
         #--------------------------------------------------------------------
         ####         DiMuon Lines           ####
         #--------------------------------------------------------------------
         # DiMuon without IP cut from L0DiMuon (DiMuon) 
         #--------------------------------------------------------------------
-        DiMuonNoIPL0Di = Line( 'DiMuonNoIPL0Di'
-                             , prescale = self.prescale
-                             , L0DU = "L0_CHANNEL('DiMuon')"
-                             , algos = [ DiMuonPrep
-                                       , Member( 'VF', 'Mass' 
-                                               , FilterDescriptor = ['VertexDimuonMass,>,'+str(self.getProp('DiMuon_MassCut'))])
-                                       ] + FastFitVtxNoIP
-                             ,  postscale = self.postscale
-                             )
-        setupHltFastTrackFit('Hlt1DiMuonNoIPL0DiVUFitTrack')
+        if ( 'DiMuonNoIPL0Di' in ActiveLines ):
+          DiMuonNoIPL0Di = Line( 'DiMuonNoIPL0Di'
+                               , prescale = self.prescale
+                               , L0DU = "L0_CHANNEL('"+str(self.getProp('L0DiMuon'))+"')"
+                               , algos = [ DiMuonPrep
+                                         , Member( 'VF', 'Mass' 
+                                                 , FilterDescriptor = ['VertexDimuonMass,>,'+str(self.getProp('DiMuon_MassCut'))])
+                                         ] + FastFitVtxNoIP
+                               , postscale = self.postscale
+                               )
+          setupHltFastTrackFit('Hlt1DiMuonNoIPL0DiVUFitTrack')
         #--------------------------------------------------------------------
         # DiMuon without IP cut from 2 L0Muon (MuonNoGlob) 
         #--------------------------------------------------------------------
-        DiMuonNoIP2L0 = Line ('DiMuonNoIP2L0'
-                             , prescale = self.prescale
-                             , L0DU = "L0_CHANNEL('Muon')"
-                             , algos = 
-                                     [ MuonPrep 
-                                     , Member( 'VM1', 'VeloT', FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('DiMuon_DOCACut')) ])
-                                     , Member( 'VF','Mass' 
-                                             , FilterDescriptor = [ 'VertexDimuonMass,>,'+str(self.getProp('DiMuon_MassCut')) ])
-                                     ] + FastFitVtxNoIP
-                             ,  postscale = self.postscale
-                             )
-        setupHltFastTrackFit('Hlt1DiMuonNoIP2L0VUFitTrack')
+        if ( 'DiMuonNoIP2L0' in ActiveLines ):
+          DiMuonNoIP2L0 = Line( 'DiMuonNoIP2L0'
+                              , prescale = self.prescale
+                              , L0DU = "L0_CHANNEL('"+str(self.getProp('L0SingleMuon'))+"')"
+                              , algos = 
+                                      [ MuonPrep 
+                                      , AllL0MuPrep
+                                      , Member( 'VM2', 'VeloT'
+                                              , InputSelection1 = MuonPrep
+                                              , InputSelection2 = AllL0MuPrep
+                                              ,  FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('DiMuon_DOCACut')) ]
+                                              )
+                                      , Member( 'VF','Mass' 
+                                              , FilterDescriptor = [ 'VertexDimuonMass,>,'+str(self.getProp('DiMuon_MassCut')) ])
+                                      ] + FastFitVtxNoIP
+                               , postscale = self.postscale
+                               )
+          setupHltFastTrackFit('Hlt1DiMuonNoIP2L0VUFitTrack')
         #--------------------------------------------------------------------
         # DiMuon without IP cut from 1 L0Muon (MuonNoGlob) and 1 L0GEC (Muon) or from 2 L0GEC (Muon) 
         #--------------------------------------------------------------------
-        #DiMuonNoIPL0GEC = Line ('DiMuonNoIPL0GEC'
-        #                       , prescale = self.prescale
-        #                       ,  L0DU = "L0_CHANNEL('Muon') | L0_CHANNEL('MuonNoGlob')"
-        #                       , algos = [ MuonGECPrep
-        #                                 , MuonPrep
-        #                                 , Member( 'VM2', 'VeloT'
-        #                                         , InputSelection1 = MuonGECPrep
-        #                                         , InputSelection2 = MuonPrep
-        #                                         ,  FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('DiMuon_DOCACut')) ]
-        #                                         )
-        #                                 , Member( 'VF','Mass' 
-        #                                         , FilterDescriptor = [ 'VertexDimuonMass,>,'+str(self.getProp('DiMuon_MassCut')) ])
-        #                                 ] + FastFitVtxNoIP
-        #                       , postscale = self.postscale
-        #                       )
-        #setupHltFastTrackFit('Hlt1DiMuonNoIPL0GECVUFitTrack')
+        if ( 'DiMuonNoIPL0GEC' in ActiveLines ):
+          DiMuonNoIPL0GEC = Line( 'DiMuonNoIPL0GEC'
+                                , prescale = self.prescale
+                                , L0DU = "L0_CHANNEL('"+str(self.getProp('L0SingleMuonGEC'))+"')"
+                                , algos = [ MuonGECPrep
+                                          , MuonPrep
+                                          , Member( 'VM2', 'VeloT'
+                                                  , InputSelection1 = MuonGECPrep
+                                                  , InputSelection2 = MuonPrep
+                                                  ,  FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('DiMuon_DOCACut')) ]
+                                                  )
+                                          , Member( 'VF','Mass' 
+                                                  , FilterDescriptor = [ 'VertexDimuonMass,>,'+str(self.getProp('DiMuon_MassCut')) ])
+                                          ] + FastFitVtxNoIP
+                                , postscale = self.postscale
+                                )
+          setupHltFastTrackFit('Hlt1DiMuonNoIPL0GECVUFitTrack')
         #--------------------------------------------------------------------
         # DiMuon without IP cut using L0Muon (MuonNoGlob) and 1 Muon Segment
         #--------------------------------------------------------------------
-        DiMuonNoIPL0Seg = Line( 'DiMuonNoIPL0Seg'
-                          , prescale = self.prescale
-                          , L0DU = "L0_CHANNEL('Muon')"
-                          , algos = 
-                                  [ MuonSegPrep
-                                  , Member( 'VM2', 'VeloT'
-                                          , InputSelection1 = MuonPrep
-                                          , InputSelection2 = MuonSegPrep
-                                          , FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('DiMuon_DOCACut')) ]
-                                          #If you do not set DoMergeInputs = False it will make vertices
-                                          #with 2 tracks from  InputSelection and
-                                          #one track from InputSelection and another track from InputSelection2 
-                                          , DoMergeInputs = False 
-                                          )
-                                  , Member( 'VF','Mass' 
-                                          , FilterDescriptor = [ 'VertexDimuonMass,>,'+str(self.getProp('DiMuon_MassCut')) ]
-                                          )
-                                  ] + FastFitVtxNoIP
-                          ,  postscale = self.postscale
-                          )
-        setupHltFastTrackFit('Hlt1DiMuonNoIPL0SegVUFitTrack')
+        if ( 'DiMuonNoIPL0Seg' in ActiveLines ):
+          DiMuonNoIPL0Seg = Line( 'DiMuonNoIPL0Seg'
+                                , prescale = self.prescale
+                                , L0DU = "L0_CHANNEL('"+str(self.getProp('L0SingleMuon'))+"')"
+                                , algos = 
+                                        [ MuonSegPrep
+                                        , Member( 'VM2', 'VeloT'
+                                                , InputSelection1 = MuonPrep
+                                                , InputSelection2 = MuonSegPrep
+                                                , FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('DiMuon_DOCACut')) ]
+                                                #If you do not set DoMergeInputs = False it will make vertices
+                                                #with 2 tracks from  InputSelection and
+                                                #one track from InputSelection and another track from InputSelection2 
+                                                , DoMergeInputs = False 
+                                                )
+                                        , Member( 'VF','Mass' 
+                                                , FilterDescriptor = [ 'VertexDimuonMass,>,'+str(self.getProp('DiMuon_MassCut')) ]
+                                                )
+                                        ] + FastFitVtxNoIP
+                                , postscale = self.postscale
+                                )
+          setupHltFastTrackFit('Hlt1DiMuonNoIPL0SegVUFitTrack')
         #--------------------------------------------------------------------
         # DiMuon without IP cut using L0Muon with GEC (Muon) and 1 Muon Segment
         #--------------------------------------------------------------------
-        #DiMuonNoIPGECSeg = Line( 'DiMuonNoIPGECSeg'
-        #                       , prescale = self.prescale
-        #                       ,  L0DU = "L0_CHANNEL('Muon')"
-        #                       , algos = 
-        #                               [  MuonGECSegPrep
-        #                               , Member( 'VM2', 'VeloT'
-        #                                       , InputSelection1 = MuonGECPrep
-        #                                       , InputSelection2 = MuonGECSegPrep
-        #                                       , FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('DiMuon_DOCACut')) ]
-        #                                       , DoMergeInputs = False )
-        #                               , Member( 'VF','Mass' 
-        #                                       , FilterDescriptor = [ 'VertexDimuonMass,>,'+str(self.getProp('DiMuon_MassCut')) ]
-        #                                       ) 
-        #                               ] + FastFitVtxNoIP
-        #                       , postscale = self.postscale
-        #                       )
-        #setupHltFastTrackFit('Hlt1DiMuonNoIPGECSegVUFitTrack')
+        if ( 'DiMuonNoIPGECSeg' in ActiveLines ):
+          DiMuonNoIPGECSeg = Line( 'DiMuonNoIPGECSeg'
+                                 , prescale = self.prescale
+                                 , L0DU = "L0_CHANNEL('"+str(self.getProp('L0SingleMuonGEC'))+"')"
+                                 , algos = 
+                                         [  MuonGECSegPrep
+                                         , Member( 'VM2', 'VeloT'
+                                                 , InputSelection1 = MuonGECPrep
+                                                 , InputSelection2 = MuonGECSegPrep
+                                                 , FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('DiMuon_DOCACut')) ]
+                                                 , DoMergeInputs = False )
+                                         , Member( 'VF','Mass' 
+                                                 , FilterDescriptor = [ 'VertexDimuonMass,>,'+str(self.getProp('DiMuon_MassCut')) ]
+                                                 ) 
+                                         ] + FastFitVtxNoIP
+                                 , postscale = self.postscale
+                                 )
+          setupHltFastTrackFit('Hlt1DiMuonNoIPGECSegVUFitTrack')
         #--------------------------------------------------------------------
         # DiMuon with IP cut from L0DiMuon (DiMuon) 
         #--------------------------------------------------------------------
-        DiMuonIPCL0Di = Line ( 'DiMuonIPCL0Di'
-                             , prescale = self.prescale
-                             , L0DU = "L0_CHANNEL('DiMuon')"
-                             , algos = [ DiMuonPrep
-                                       , RecoRZPV
-                                       ] + FastFitVtxWithIP
-                             , postscale = self.postscale
-                             )
-        setupHltFastTrackFit('Hlt1DiMuonIPCL0DiVUFitTrack')
+        if ( 'DiMuonIPCL0Di' in ActiveLines ):
+          DiMuonIPCL0Di = Line( 'DiMuonIPCL0Di'
+                              , prescale = self.prescale
+                              , L0DU = "L0_CHANNEL('"+str(self.getProp('L0DiMuon'))+"')"
+                              , algos = [ DiMuonPrep
+                                        , RecoRZPV
+                                        ] + FastFitVtxWithIP
+                              ,  postscale = self.postscale
+                              )
+          setupHltFastTrackFit('Hlt1DiMuonIPCL0DiVUFitTrack')
         #--------------------------------------------------------------------
         # DiMuon with IP cut from 2 L0Muon (MuonNoGlob) 
         #--------------------------------------------------------------------
-        DiMuonIPC2L0 = Line ('DiMuonIPC2L0'
-                            , prescale = self.prescale
-                            , L0DU = "L0_CHANNEL('Muon')"
-                            , algos = 
-                                    [ MuonPrep 
-                                    , Member( 'VM1', 'VeloT', FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('DiMuon_DOCACut')) ])
-                                    , RecoRZPV
-                                    ] + FastFitVtxWithIP
-                            , postscale = self.postscale
-                            )
-        setupHltFastTrackFit('Hlt1DiMuonIPC2L0VUFitTrack')
-        #--------------------------------------------------------------------
-        # DiMuon with IP cut from 1 L0Muon (MuonNoGlob) and 1 L0GEC (Muon) or from 2 L0GEC (Muon) 
-        #--------------------------------------------------------------------
-        #DiMuonIPCL0GEC = Line ('DiMuonIPCL0GEC'
-        #                      , prescale = self.prescale
-        #                      ,  L0DU = "L0_CHANNEL('Muon') | L0_CHANNEL('MuonNoGlob')"
-        #                      , algos = 
-        #                              [ MuonGECPrep
-        #                              , MuonPrep
-        #                              , Member( 'VM2', 'VeloT'
-        #                                      , InputSelection1 = MuonGECPrep
-        #                                      , InputSelection2 = MuonPrep
-        #                                      , FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('DiMuon_DOCACut')) ])
-        #                              , RecoRZPV
-        #                              ] + FastFitVtxWithIP
-        #                      , postscale = self.postscale
-        #                      )
-        #setupHltFastTrackFit('Hlt1DiMuonIPCL0GECVUFitTrack')
-        #--------------------------------------------------------------------
-        # DiMuon with IP cut using L0Muon (MuonNoGlob) and 1 Muon Segment
-        #--------------------------------------------------------------------
-        DiMuonIPCL0Seg = Line( 'DiMuonIPCL0Seg'
+        if ( 'DiMuonIPC2L0' in ActiveLines ):
+          DiMuonIPC2L0 = Line( 'DiMuonIPC2L0'
                              , prescale = self.prescale
-                             , L0DU = "L0_CHANNEL('Muon')"
+                             , L0DU = "L0_CHANNEL('"+str(self.getProp('L0SingleMuon'))+"')"
                              , algos = 
-                                     [ MuonSegPrep
+                                     [ MuonPrep 
+                                     , AllL0MuPrep
                                      , Member( 'VM2', 'VeloT'
                                              , InputSelection1 = MuonPrep
-                                             , InputSelection2   = MuonSegPrep
-                                             , FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('DiMuon_DOCACut')) ]
-                                             , DoMergeInputs = False 
+                                             , InputSelection2 = AllL0MuPrep
+                                             ,  FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('DiMuon_DOCACut')) ]
                                              )
                                      , RecoRZPV
                                      ] + FastFitVtxWithIP
                              , postscale = self.postscale
                              )
-        setupHltFastTrackFit('Hlt1DiMuonIPCL0SegVUFitTrack')
+          setupHltFastTrackFit('Hlt1DiMuonIPC2L0VUFitTrack')
+        #--------------------------------------------------------------------
+        # DiMuon with IP cut from 1 L0Muon (MuonNoGlob) and 1 L0GEC (Muon) or from 2 L0GEC (Muon) 
+        #--------------------------------------------------------------------
+        if ( 'DiMuonIPCL0GEC' in ActiveLines ):
+          DiMuonIPCL0GEC = Line( 'DiMuonIPCL0GEC'
+                               , prescale = self.prescale
+                               , L0DU = "L0_CHANNEL('"+str(self.getProp('L0SingleMuonGEC'))+"')"
+                               , algos = 
+                                       [ MuonGECPrep
+                                       , MuonPrep
+                                       , Member( 'VM2', 'VeloT'
+                                               , InputSelection1 = MuonGECPrep
+                                               , InputSelection2 = MuonPrep
+                                               , FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('DiMuon_DOCACut')) ])
+                                       , RecoRZPV
+                                       ] + FastFitVtxWithIP
+                               , postscale = self.postscale
+                               )
+          setupHltFastTrackFit('Hlt1DiMuonIPCL0GECVUFitTrack')
+        #--------------------------------------------------------------------
+        # DiMuon with IP cut using L0Muon (MuonNoGlob) and 1 Muon Segment
+        #--------------------------------------------------------------------
+        if ( 'DiMuonIPCL0Seg' in ActiveLines ):
+          DiMuonIPCL0Seg = Line( 'DiMuonIPCL0Seg'
+                               , prescale = self.prescale
+                               , L0DU = "L0_CHANNEL('"+str(self.getProp('L0SingleMuon'))+"')"
+                               , algos = 
+                                       [ MuonSegPrep
+                                       , Member( 'VM2', 'VeloT'
+                                               , InputSelection1 = MuonPrep
+                                               , InputSelection2   = MuonSegPrep
+                                               , FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('DiMuon_DOCACut')) ]
+                                               , DoMergeInputs = False 
+                                               )
+                                       , RecoRZPV
+                                       ] + FastFitVtxWithIP
+                               , postscale = self.postscale
+                               )
+          setupHltFastTrackFit('Hlt1DiMuonIPCL0SegVUFitTrack')
         #--------------------------------------------------------------------
         # DiMuon with IP cut using L0Muon with GEC (Muon) and 1 Muon Segment
         #--------------------------------------------------------------------
-        #DiMuonIPCGECSeg = Line( 'DiMuonIPCGECSeg'
-        #                      , prescale = self.prescale
-        #                      ,  L0DU = "L0_CHANNEL('Muon')"
-        #                      , algos = 
-        #                              [ MuonGECSegPrep
-        #                              , Member( 'VM2', 'VeloT'
-        #                                      , InputSelection1 = MuonGECPrep
-        #                                      , InputSelection2   = MuonGECSegPrep
-        #                                      , FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('DiMuon_DOCACut')) ]
-        #                                      , DoMergeInputs = False 
-        #                                      )
-        #                              , RecoRZPV
-        #                              ] + FastFitVtxWithIP
-        #                      , postscale = self.postscale
-        #                      )
-        #setupHltFastTrackFit('Hlt1DiMuonIPCGECSegVUFitTrack')
+        if ( 'DiMuonIPCGECSeg' in ActiveLines ):
+          DiMuonIPCGECSeg = Line( 'DiMuonIPCGECSeg'
+                                , prescale = self.prescale
+                                , L0DU = "L0_CHANNEL('"+str(self.getProp('L0SingleMuonGEC'))+"')"
+                                , algos = 
+                                        [ MuonGECSegPrep
+                                        , Member( 'VM2', 'VeloT'
+                                                , InputSelection1 = MuonGECPrep
+                                                , InputSelection2   = MuonGECSegPrep
+                                                , FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('DiMuon_DOCACut')) ]
+                                                , DoMergeInputs = False 
+                                                )
+                                        , RecoRZPV
+                                        ] + FastFitVtxWithIP
+                                , postscale = self.postscale
+                                )
+          setupHltFastTrackFit('Hlt1DiMuonIPCGECSegVUFitTrack')
         #--------------------------------------------------------------------
         # DiMuon without reconstructed Primary Vertex from L0DiMuon (DiMuon,lowMult) 
         #--------------------------------------------------------------------
-        DiMuonNoPVL0Di = Line( 'DiMuonNoPVL0Di'
-                             , prescale = self.prescale
-                             , L0DU = "L0_CHANNEL('DiMuon,lowMult')"
-                             , algos = [ DiMuonNoPVPrep
-                                       , Member( 'VF', 'Mass' 
-                                               , FilterDescriptor = ['VertexDimuonMass,>,'+str(self.getProp('DiMuonNoPV_MassCut'))])
-                                       ] + FastFitVtxNoIP
-                             , postscale = self.postscale
-                             )
-        setupHltFastTrackFit('Hlt1DiMuonNoPVL0DiVUFitTrack')
+        if ( 'DiMuonNoPVL0Di' in ActiveLines ):
+          DiMuonNoPVL0Di = Line( 'DiMuonNoPVL0Di'
+                               , prescale = self.prescale
+                               , L0DU = "L0_CHANNEL('"+str(self.getProp('L0DiMuonNoPV'))+"')"
+                               , algos = [ DiMuonNoPVPrep
+                                         , Member( 'VF', 'Mass' 
+                                         , FilterDescriptor = ['VertexDimuonMass,>,'+str(self.getProp('DiMuonNoPV_MassCut'))])
+                                         ] + FastFitVtxNoIP
+                               , postscale = self.postscale
+                               )
+          setupHltFastTrackFit('Hlt1DiMuonNoPVL0DiVUFitTrack')
         #--------------------------------------------------------------------
         # DiMuon without reconstructed Primary Vertex from L0Muon (Muon,lowMult) 
         #--------------------------------------------------------------------
-        DiMuonNoPV2L0 = Line ('DiMuonNoPV2L0'
-                             , prescale = self.prescale
-                             , L0DU = "L0_CHANNEL('Muon,lowMult')"
-                             , algos = 
-                                     [ MuonNoPVPrep 
-                                     , Member( 'VM1', 'VeloT', FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('DiMuon_DOCACut')) ])
-                                     , Member( 'VF','Mass' 
-                                             , FilterDescriptor = [ 'VertexDimuonMass,>,'+str(self.getProp('DiMuonNoPV_MassCut')) ])
-                                     ] + FastFitVtxNoIP
-                             , postscale = self.postscale
-                             )
-        setupHltFastTrackFit('Hlt1DiMuonNoPV2L0VUFitTrack')
+        if ( 'DiMuonNoPV2L0' in ActiveLines ):
+          DiMuonNoPV2L0 = Line('DiMuonNoPV2L0'
+                               , prescale = self.prescale
+                               , L0DU = "L0_CHANNEL('"+str(self.getProp('L0SingleMuonNoPV'))+"')"
+                               , algos = 
+                                       [ MuonNoPVPrep 
+                                       , Member( 'VM1', 'VeloT', FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('DiMuon_DOCACut')) ])
+                                       , Member( 'VF','Mass' 
+                                       , FilterDescriptor = [ 'VertexDimuonMass,>,'+str(self.getProp('DiMuonNoPV_MassCut')) ])
+                                       ] + FastFitVtxNoIP
+                               , postscale = self.postscale
+                               )
+          setupHltFastTrackFit('Hlt1DiMuonNoPV2L0VUFitTrack')
         #--------------------------------------------------------------------
         # DiMuon without reconstructed Primary Vertex using L0Muon (Muon.lowMult) and 1 Muon Segment
         #--------------------------------------------------------------------
-        DiMuonNoPVL0Seg = Line( 'DiMuonNoPVL0Seg'
-                              , prescale = self.prescale
-                              , L0DU = "L0_CHANNEL('Muon,lowMult')"
-                              , algos = 
-                                      [ MuonNoPVSegPrep
-                                      , Member( 'VM2', 'VeloT'
-                                              , InputSelection1 = MuonNoPVPrep
-                                              , InputSelection2   = MuonNoPVSegPrep
-                                              , FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('DiMuon_DOCACut')) ]
-                                              , DoMergeInputs = False )
-                                      , Member( 'VF','Mass' 
-                                              , FilterDescriptor = [ 'VertexDimuonMass,>,'+str(self.getProp('DiMuonNoPV_MassCut')) ]
-                                              ) 
-                                      ] + FastFitVtxNoIP
-                              , postscale = self.postscale
-                              )
-        setupHltFastTrackFit('Hlt1DiMuonNoPVL0SegVUFitTrack')
+        if ( 'DiMuonNoPVL0Seg' in ActiveLines ):
+          DiMuonNoPVL0Seg = Line( 'DiMuonNoPVL0Seg'
+                                , prescale = self.prescale
+                                , L0DU = "L0_CHANNEL('"+str(self.getProp('L0SingleMuonNoPV'))+"')"
+                                , algos = 
+                                        [ MuonNoPVSegPrep
+                                        , Member( 'VM2', 'VeloT'
+                                                , InputSelection1 = MuonNoPVPrep
+                                                , InputSelection2   = MuonNoPVSegPrep
+                                                , FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('DiMuon_DOCACut')) ]
+                                                , DoMergeInputs = False )
+                                        , Member( 'VF','Mass' 
+                                                , FilterDescriptor = [ 'VertexDimuonMass,>,'+str(self.getProp('DiMuonNoPV_MassCut')) ]
+                                                ) 
+                                        ] + FastFitVtxNoIP
+                                , postscale = self.postscale
+                                )
+          setupHltFastTrackFit('Hlt1DiMuonNoPVL0SegVUFitTrack')
 
         #-----------------------------------------------------
         # MUON+TRACK ALLEY Lines (Antonio Perez-Calero, aperez@ecm.ub.es):
@@ -508,7 +570,8 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
         
         MuTrack= Line( 'MuTrack'
                        , prescale = self.prescale
-                       , L0DU = str(self.getProp('MuTrackL0DU'))
+                       #, L0DU = str(self.getProp('MuTrackL0DU'))
+                       , L0DU = "L0_CHANNEL('"+str(self.getProp('L0SingleMuon'))+"')"
                        , algos =
                        #[ SingleMuonPrep
                        [ MuonPrep
@@ -603,14 +666,15 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
                                                           'FitVertexPointing_PV2D,<,'+str(self.getProp('MuTrackPoint'))
                                                           ]
                                     )
-                         ]
-                         , postscale = self.postscale
+                       ]
+                       , postscale = self.postscale
                        )
         
 
         MuTrack4JPsi= Line( 'MuTrack4JPsi'
                             , prescale = self.prescale
-                            , L0DU = str(self.getProp('MuTrackL0DU'))
+                            #, L0DU = str(self.getProp('MuTrackL0DU'))
+                            , L0DU = "L0_CHANNEL('"+str(self.getProp('L0SingleMuon'))+"')"
                             , algos =
                             #[ SingleMuonPrep
                             [ MuonPrep
@@ -686,3 +750,8 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
         
         setupHltFastTrackFit('Hlt1MuTrackVUVTrackFit')
         setupHltFastTrackFit('Hlt1MuTrack4JPsiVUVTrackFit')
+        
+
+        
+        
+

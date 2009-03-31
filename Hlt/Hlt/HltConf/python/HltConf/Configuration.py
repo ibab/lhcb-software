@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.57 2009-03-25 16:09:29 aperezca Exp $"
+__version__ = "$Id: Configuration.py,v 1.58 2009-03-31 11:49:36 leandrop Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -59,7 +59,7 @@ class HltConf(LHCbConfigurableUser):
                 from HltConf.HltL0Candidates import decodeL0Channels
                 channels = decodeL0Channels( L0TCK )
             else :
-                channels = [ 'Muon','DiMuon','Muon,lowMult','DiMuon,lowMult','Electron','Photon','Hadron' ,'LocalPi0','GlobalPi0' ]
+                channels = [ 'Muon','MuonNoGlob','DiMuon','Muon,lowMult','DiMuon,lowMult','Electron','Photon','Hadron' ,'LocalPi0','GlobalPi0' ]
             from HltConf.HltL0Candidates import setupL0Channels
             setupL0Channels( channels ) 
 
