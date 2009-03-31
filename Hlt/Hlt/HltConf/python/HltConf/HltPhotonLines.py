@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltPhotonLines.py,v 1.10 2009-03-25 08:38:54 graven Exp $
+# $Id: HltPhotonLines.py,v 1.11 2009-03-31 11:38:53 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Photon Lines
@@ -12,21 +12,21 @@
 '''
 # =============================================================================
 __author__  = 'Gerhard Raven Gerhard.Raven@nikhef.nl'
-__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $'
+__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $'
 # =============================================================================
 
-from Gaudi.Configuration import * 
 
+from Gaudi.Configuration import * 
 from HltConf.HltLinesConfigurableUser import *
 from HltConf.HltLine import Hlt1Line   as Line
 from HltConf.HltLine import Hlt1Member as Member
 from HltConf.HltLine import Hlt1Tool   as Tool
 from HltConf.HltLine import hlt1Lines, addHlt1Prop, rmHlt1Prop 
+from HltConf.HltL0Candidates import *
 
 #//---------------------------
 #// HLT Photon Alley
 #//--------------------------
-from HltConf.HltL0Candidates import *
 
 
 class HltPhotonLinesConf(HltLinesConfigurableUser):

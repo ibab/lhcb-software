@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonLines.py,v 1.20 2009-03-25 16:09:29 aperezca Exp $
+# $Id: HltMuonLines.py,v 1.21 2009-03-31 11:39:03 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,15 +14,11 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.20 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.21 $"
 # =============================================================================
 
+
 from Gaudi.Configuration import * 
-
-from Configurables import GaudiSequencer
-from Configurables import HltMuonRec
-from Configurables import HltTrackUpgrade
-
 from HltConf.HltLinesConfigurableUser import *
 from HltConf.HltLine import Hlt1Line   as Line
 from HltConf.HltLine import Hlt1Member as Member
@@ -83,6 +79,10 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
 
 
     def __apply_configuration__(self) : 
+        from Configurables import GaudiSequencer
+        from Configurables import HltMuonRec
+        from Configurables import HltTrackUpgrade
+
         importOptions('$HLTCONFROOT/options/TsaTool.opts')
         importOptions('$HLTCONFROOT/options/HltRecoSequence.py')
 
