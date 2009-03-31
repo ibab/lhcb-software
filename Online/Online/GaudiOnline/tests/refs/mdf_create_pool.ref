@@ -42,7 +42,7 @@ ApplicationMgr       INFO Application Manager Configured successfully
               'OutputLevel': 3,
               'PrintFreq': 0.00021000000000000001},
  'FileCatalog': {'Catalogs': ['xmlcatalog_file:Cnew.xml',
-                              'xmlcatalog_file:///afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v26r2/DAQ/MDF/cmt/C1.xml']},
+                              'xmlcatalog_file:C1.xml']},
  'IODataManager': {'AgeLimit': 1, 'OutputLevel': 1},
  'POOLMini': {'ItemList': ['/Event#1', '/Event/DAQ#1'],
               'Output': "DATAFILE='PFN:mdfPOOL.dat' TYP='POOL_ROOTTREE' OPT='RECREATE'"},
@@ -76,11 +76,10 @@ ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
 EventSelector.D...   INFO Compression:0 Checksum:0
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
-Explorer             INFO ========= /Event[0x9345788@EventDataSvc]:
+Explorer             INFO ========= /Event[0x259bec0@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
-IODataManager        INFO Referring to dataset mdfPOOL.dat by its file ID:FED38DC2-201E-DE11-98C9-000423D9A21A
 Domain[ROOT_All]     INFO ->  Access   DbDatabase   CREATE    [ROOT_All] FED38DC2-201E-DE11-98C9-000423D9A21A
 Domain[ROOT_All]     INFO                           mdfPOOL.dat
 mdfPOOL.dat       SUCCESS Root file version:51800
@@ -113,7 +112,7 @@ EventSelector     SUCCESS Reading Event record 4001. Record number within stream
 EventSelector     SUCCESS Reading Event record 4201. Record number within stream 3: 201
 EventSelector     SUCCESS Reading Event record 4401. Record number within stream 3: 401
 EventSelector     SUCCESS Reading Event record 4601. Record number within stream 3: 601
-Explorer             INFO ========= /Event[0x9344d40@EventDataSvc]:
+Explorer             INFO ========= /Event[0x25a02c0@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
@@ -147,7 +146,7 @@ EventSelector     SUCCESS Reading Event record 8801. Record number within stream
 EventSelector     SUCCESS Reading Event record 9001. Record number within stream 5: 1001
 EventSelector     SUCCESS Reading Event record 9201. Record number within stream 5: 1201
 EventSelector     SUCCESS Reading Event record 9401. Record number within stream 5: 1401
-Explorer             INFO ========= /Event[0x9345cb8@EventDataSvc]:
+Explorer             INFO ========= /Event[0x25a08b0@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
@@ -188,7 +187,7 @@ EventSelector        INFO Stream:EventSelector.DataStreamTool_8 Def:DATA='PFN:ro
 EventSelector.D...   INFO Compression:2 Checksum:1
 EventSelector     SUCCESS Reading Event record 14001. Record number within stream 8: 1
 EventSelector     SUCCESS Reading Event record 14201. Record number within stream 8: 201
-Explorer             INFO ========= /Event[0x8fd1698@EventDataSvc]:
+Explorer             INFO ========= /Event[0x24051e0@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
@@ -222,7 +221,7 @@ EventSelector     SUCCESS Reading Event record 18401. Record number within strea
 EventSelector     SUCCESS Reading Event record 18601. Record number within stream 10: 601
 EventSelector     SUCCESS Reading Event record 18801. Record number within stream 10: 801
 EventSelector     SUCCESS Reading Event record 19001. Record number within stream 10: 1001
-Explorer             INFO ========= /Event[0x93db2f0@EventDataSvc]:
+Explorer             INFO ========= /Event[0x25a2310@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
