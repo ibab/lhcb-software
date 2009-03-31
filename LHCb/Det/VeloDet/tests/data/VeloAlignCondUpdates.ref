@@ -1,9 +1,11 @@
-# --> Including file '/tmp/marcocle/tmpqzoxMW.py'
-# <-- End of file '/tmp/marcocle/tmpqzoxMW.py'
+# --> Including file '/tmp/tmph4edvc.py'
+# <-- End of file '/tmp/tmph4edvc.py'
 # applying configuration of DDDBConf
+# WARNING: Using default tag head-20090213 for partition DDDB
+# WARNING: Using default tag head-20090213 for partition LHCBCOND
+# WARNING: Using default tag sim-20090212 for partition SIMCOND
 # /***** User DDDBConf/DDDBConf **********************************************************************
 # |-DataType   = '2008'
-# |-UseOracle  = False
 # |-DbRoot     = 'conddb:/lhcb.xml'
 # |-Simulation = False
 # \----- (End of User DDDBConf/DDDBConf) -------------------------------------------------------------
@@ -14,7 +16,7 @@
 # |-PartitionConnectionString = {}  (default: {})
 # |-LocalTags                 = {}  (default: {})
 # |-Tags                      = {}  (default: {})
-# |-Overrides                 = [(0, <CondDBAccessSvc/VeloAlignCondTestDB at 0x7c5cd0>)]  (default: [])
+# |-Overrides                 = [(0, <CondDBAccessSvc/VeloAlignCondTestDB at 0x8302d0>)]  (default: [])
 # |-Simulation                = False
 # |-SQLiteLocalCopiesDir      = ''
 # |-UseOracle                 = False
@@ -23,8 +25,8 @@
 # \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.2 $
-                                          running on lxbuild120.cern.ch on Sat Jan 10 23:08:21 2009
+                                                   Welcome to ApplicationMgr $Revision: 1.3 $
+                                          running on lxbuild120.cern.ch on Mon Mar 30 13:32:43 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
@@ -39,9 +41,9 @@ EventClockSvc.E...   INFO Event times generated from 10000000000 with steps of 1
 UpdateManagerSvc  VERBOSE ServiceLocatorHelper::createService: found service EventClockSvc
 UpdateManagerSvc    DEBUG Good: EventClockSvc found
 UpdateManagerSvc    DEBUG Got pointer to IncidentSvc
-UpdateManagerSvc    DEBUG registering condition "Conditions/Online/Velo/MotionSystem" for object of type DetCondTest::TestConditionAlg at 0x1f5e840
-UpdateManagerSvc    DEBUG registering condition "Conditions/Alignment/Velo/VeloLeft" for object of type DetCondTest::TestConditionAlg at 0x1f5e840
-UpdateManagerSvc    DEBUG registering condition "Conditions/Alignment/Velo/VeloRight" for object of type DetCondTest::TestConditionAlg at 0x1f5e840
+UpdateManagerSvc    DEBUG registering condition "Conditions/Online/Velo/MotionSystem" for object of type DetCondTest::TestConditionAlg at 0x1f770b0
+UpdateManagerSvc    DEBUG registering condition "Conditions/Alignment/Velo/VeloLeft" for object of type DetCondTest::TestConditionAlg at 0x1f770b0
+UpdateManagerSvc    DEBUG registering condition "Conditions/Alignment/Velo/VeloRight" for object of type DetCondTest::TestConditionAlg at 0x1f770b0
 EventLoopMgr      WARNING Unable to locate service "EventSelector"
 EventLoopMgr      WARNING No events will be processed from external input.
 HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
@@ -55,16 +57,16 @@ COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
 VeloAlignCondTe...   INFO Connected to database "sqlite_file:../data/VeloAlignCondTest.db/DDDB"
 VeloAlignCondTe...   INFO Using TAG "updates"
-UpdateManagerSvc    DEBUG registering condition "Conditions/Online/Velo/MotionSystem" for object of type VeloAlignCond at 0x2095a30
-UpdateManagerSvc    DEBUG registering condition "Conditions/Online/Velo/MotionSystem" for object of type VeloAlignCond at 0x2095a30
-UpdateManagerSvc    DEBUG Update specific object at 0x2095a30
-UpdateManagerSvc    DEBUG registering condition "Conditions/Online/Velo/MotionSystem" for object of type VeloAlignCond at 0x2096640
-UpdateManagerSvc    DEBUG registering condition "Conditions/Online/Velo/MotionSystem" for object of type VeloAlignCond at 0x2096640
-UpdateManagerSvc    DEBUG Update specific object at 0x2096640
+UpdateManagerSvc    DEBUG registering condition "Conditions/Online/Velo/MotionSystem" for object of type VeloAlignCond at 0x20c23f0
+UpdateManagerSvc    DEBUG registering condition "Conditions/Online/Velo/MotionSystem" for object of type VeloAlignCond at 0x20c23f0
+UpdateManagerSvc    DEBUG Update specific object at 0x20c23f0
+UpdateManagerSvc    DEBUG registering condition "Conditions/Online/Velo/MotionSystem" for object of type VeloAlignCond at 0x20c2b50
+UpdateManagerSvc    DEBUG registering condition "Conditions/Online/Velo/MotionSystem" for object of type VeloAlignCond at 0x20c2b50
+UpdateManagerSvc    DEBUG Update specific object at 0x20c2b50
 UpdateManagerSvc  VERBOSE newEvent(evtTime): releasing mutex lock
 DetCondTest::Te...   INFO Requested Conditions:
 --- /dd/Conditions/Alignment/Velo/VeloLeft
-DataObject at 0x2095a30
+DataObject at 0x20c23f0
 Validity: 0.0 -> 55.0
 (std::string) XOffset = Conditions/Online/Velo/MotionSystem[ResolPosLA]
 (std::string) YOffset = Conditions/Online/Velo/MotionSystem[ResolPosY]
@@ -73,12 +75,12 @@ Validity: 0.0 -> 55.0
 (std::vector<double,std::allocator<double> >) pivotXYZ = [0, 0, 0]
 offNominalMatrix:
 
-1  -0  0  30
-0  1  -0  1
+1  0  0  30
+0  1  0  1
 0  0  1  0
 
 --- /dd/Conditions/Alignment/Velo/VeloRight
-DataObject at 0x2096640
+DataObject at 0x20c2b50
 Validity: 0.0 -> 55.0
 (std::string) XOffset = Conditions/Online/Velo/MotionSystem[ResolPosRC]
 (std::string) YOffset = Conditions/Online/Velo/MotionSystem[ResolPosY]
@@ -88,12 +90,12 @@ Validity: 0.0 -> 55.0
 (std::vector<double,std::allocator<double> >) pivotXYZ = [0, 0, 0]
 offNominalMatrix:
 
-1  -0  0  -30
-0  1  -0  15
+1  0  0  -30
+0  1  0  15
 0  0  1  0
 
 --- /dd/Conditions/Online/Velo/MotionSystem
-DataObject at 0x2041860
+DataObject at 0x2056690
 Validity: 0.0 -> 15.0
 (double) ResolPosLA = 30
 (double) ResolPosRC = -30
@@ -106,7 +108,7 @@ UpdateManagerSvc    DEBUG newEvent(evtTime): loop over head items
 UpdateManagerSvc  VERBOSE newEvent(evtTime): releasing mutex lock
 DetCondTest::Te...   INFO Requested Conditions:
 --- /dd/Conditions/Alignment/Velo/VeloLeft
-DataObject at 0x2095a30
+DataObject at 0x20c23f0
 Validity: 0.0 -> 55.0
 (std::string) XOffset = Conditions/Online/Velo/MotionSystem[ResolPosLA]
 (std::string) YOffset = Conditions/Online/Velo/MotionSystem[ResolPosY]
@@ -115,12 +117,12 @@ Validity: 0.0 -> 55.0
 (std::vector<double,std::allocator<double> >) pivotXYZ = [0, 0, 0]
 offNominalMatrix:
 
-1  -0  0  10
-0  1  -0  1
+1  0  0  10
+0  1  0  1
 0  0  1  0
 
 --- /dd/Conditions/Alignment/Velo/VeloRight
-DataObject at 0x2096640
+DataObject at 0x20c2b50
 Validity: 0.0 -> 55.0
 (std::string) XOffset = Conditions/Online/Velo/MotionSystem[ResolPosRC]
 (std::string) YOffset = Conditions/Online/Velo/MotionSystem[ResolPosY]
@@ -130,12 +132,12 @@ Validity: 0.0 -> 55.0
 (std::vector<double,std::allocator<double> >) pivotXYZ = [0, 0, 0]
 offNominalMatrix:
 
-1  -0  0  -30
-0  1  -0  15
+1  0  0  -30
+0  1  0  15
 0  0  1  0
 
 --- /dd/Conditions/Online/Velo/MotionSystem
-DataObject at 0x2041860
+DataObject at 0x2056690
 Validity: 15.0 -> 25.0
 (double) ResolPosLA = 10
 (double) ResolPosRC = -30
@@ -148,7 +150,7 @@ UpdateManagerSvc    DEBUG newEvent(evtTime): loop over head items
 UpdateManagerSvc  VERBOSE newEvent(evtTime): releasing mutex lock
 DetCondTest::Te...   INFO Requested Conditions:
 --- /dd/Conditions/Alignment/Velo/VeloLeft
-DataObject at 0x2095a30
+DataObject at 0x20c23f0
 Validity: 0.0 -> 55.0
 (std::string) XOffset = Conditions/Online/Velo/MotionSystem[ResolPosLA]
 (std::string) YOffset = Conditions/Online/Velo/MotionSystem[ResolPosY]
@@ -157,12 +159,12 @@ Validity: 0.0 -> 55.0
 (std::vector<double,std::allocator<double> >) pivotXYZ = [0, 0, 0]
 offNominalMatrix:
 
-1  -0  0  10
-0  1  -0  1
+1  0  0  10
+0  1  0  1
 0  0  1  0
 
 --- /dd/Conditions/Alignment/Velo/VeloRight
-DataObject at 0x2096640
+DataObject at 0x20c2b50
 Validity: 0.0 -> 55.0
 (std::string) XOffset = Conditions/Online/Velo/MotionSystem[ResolPosRC]
 (std::string) YOffset = Conditions/Online/Velo/MotionSystem[ResolPosY]
@@ -172,12 +174,12 @@ Validity: 0.0 -> 55.0
 (std::vector<double,std::allocator<double> >) pivotXYZ = [0, 0, 0]
 offNominalMatrix:
 
-1  -0  0  -10
-0  1  -0  15
+1  0  0  -10
+0  1  0  15
 0  0  1  0
 
 --- /dd/Conditions/Online/Velo/MotionSystem
-DataObject at 0x2041860
+DataObject at 0x2056690
 Validity: 25.0 -> 35.0
 (double) ResolPosLA = 10
 (double) ResolPosRC = -10
@@ -190,7 +192,7 @@ UpdateManagerSvc    DEBUG newEvent(evtTime): loop over head items
 UpdateManagerSvc  VERBOSE newEvent(evtTime): releasing mutex lock
 DetCondTest::Te...   INFO Requested Conditions:
 --- /dd/Conditions/Alignment/Velo/VeloLeft
-DataObject at 0x2095a30
+DataObject at 0x20c23f0
 Validity: 0.0 -> 55.0
 (std::string) XOffset = Conditions/Online/Velo/MotionSystem[ResolPosLA]
 (std::string) YOffset = Conditions/Online/Velo/MotionSystem[ResolPosY]
@@ -199,12 +201,12 @@ Validity: 0.0 -> 55.0
 (std::vector<double,std::allocator<double> >) pivotXYZ = [0, 0, 0]
 offNominalMatrix:
 
-1  -0  0  10
-0  1  -0  -1
+1  0  0  10
+0  1  0  -1
 0  0  1  0
 
 --- /dd/Conditions/Alignment/Velo/VeloRight
-DataObject at 0x2096640
+DataObject at 0x20c2b50
 Validity: 0.0 -> 55.0
 (std::string) XOffset = Conditions/Online/Velo/MotionSystem[ResolPosRC]
 (std::string) YOffset = Conditions/Online/Velo/MotionSystem[ResolPosY]
@@ -214,12 +216,12 @@ Validity: 0.0 -> 55.0
 (std::vector<double,std::allocator<double> >) pivotXYZ = [0, 0, 0]
 offNominalMatrix:
 
-1  -0  0  -10
-0  1  -0  25
+1  0  0  -10
+0  1  0  25
 0  0  1  0
 
 --- /dd/Conditions/Online/Velo/MotionSystem
-DataObject at 0x2041860
+DataObject at 0x2056690
 Validity: 35.0 -> 45.0
 (double) ResolPosLA = 10
 (double) ResolPosRC = -10
@@ -232,7 +234,7 @@ UpdateManagerSvc    DEBUG newEvent(evtTime): loop over head items
 UpdateManagerSvc  VERBOSE newEvent(evtTime): releasing mutex lock
 DetCondTest::Te...   INFO Requested Conditions:
 --- /dd/Conditions/Alignment/Velo/VeloLeft
-DataObject at 0x2095a30
+DataObject at 0x20c23f0
 Validity: 0.0 -> 55.0
 (std::string) XOffset = Conditions/Online/Velo/MotionSystem[ResolPosLA]
 (std::string) YOffset = Conditions/Online/Velo/MotionSystem[ResolPosY]
@@ -241,12 +243,12 @@ Validity: 0.0 -> 55.0
 (std::vector<double,std::allocator<double> >) pivotXYZ = [0, 0, 0]
 offNominalMatrix:
 
-1  -0  0  30
-0  1  -0  1
+1  0  0  30
+0  1  0  1
 0  0  1  0
 
 --- /dd/Conditions/Alignment/Velo/VeloRight
-DataObject at 0x2096640
+DataObject at 0x20c2b50
 Validity: 0.0 -> 55.0
 (std::string) XOffset = Conditions/Online/Velo/MotionSystem[ResolPosRC]
 (std::string) YOffset = Conditions/Online/Velo/MotionSystem[ResolPosY]
@@ -256,12 +258,12 @@ Validity: 0.0 -> 55.0
 (std::vector<double,std::allocator<double> >) pivotXYZ = [0, 0, 0]
 offNominalMatrix:
 
-1  -0  0  -30
-0  1  -0  15
+1  0  0  -30
+0  1  0  15
 0  0  1  0
 
 --- /dd/Conditions/Online/Velo/MotionSystem
-DataObject at 0x2041860
+DataObject at 0x2056690
 Validity: 45.0 -> 9223372036.854775807
 (double) ResolPosLA = 30
 (double) ResolPosRC = -30
@@ -271,16 +273,16 @@ Validity: 45.0 -> 9223372036.854775807
 UpdateManagerSvc    DEBUG New BeginEvent incident received
 UpdateManagerSvc  VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc    DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc    DEBUG Invalidate object at 0x2041860
-UpdateManagerSvc    DEBUG Invalidate object at 0x2041860
-UpdateManagerSvc    DEBUG Update specific object at 0x2095a30
-UpdateManagerSvc    DEBUG Invalidate object at 0x2041860
-UpdateManagerSvc    DEBUG Invalidate object at 0x2041860
-UpdateManagerSvc    DEBUG Update specific object at 0x2096640
+UpdateManagerSvc    DEBUG Invalidate object at 0x2056690
+UpdateManagerSvc    DEBUG Invalidate object at 0x2056690
+UpdateManagerSvc    DEBUG Update specific object at 0x20c23f0
+UpdateManagerSvc    DEBUG Invalidate object at 0x2056690
+UpdateManagerSvc    DEBUG Invalidate object at 0x2056690
+UpdateManagerSvc    DEBUG Update specific object at 0x20c2b50
 UpdateManagerSvc  VERBOSE newEvent(evtTime): releasing mutex lock
 DetCondTest::Te...   INFO Requested Conditions:
 --- /dd/Conditions/Alignment/Velo/VeloLeft
-DataObject at 0x2095a30
+DataObject at 0x20c23f0
 Validity: 55.0 -> 65.0
 (std::string) XOffset = Conditions/Online/Velo/MotionSystem[ResolPosLA]
 (std::string) YOffset = Conditions/Online/Velo/MotionSystem[ResolPosY]
@@ -289,12 +291,12 @@ Validity: 55.0 -> 65.0
 (std::vector<double,std::allocator<double> >) pivotXYZ = [0, 0, 0]
 offNominalMatrix:
 
-1  -0  0  40
-0  1  -0  1
+1  0  0  40
+0  1  0  1
 0  0  1  0
 
 --- /dd/Conditions/Alignment/Velo/VeloRight
-DataObject at 0x2096640
+DataObject at 0x20c2b50
 Validity: 55.0 -> 65.0
 (std::string) XOffset = Conditions/Online/Velo/MotionSystem[ResolPosRC]
 (std::string) YOffset = Conditions/Online/Velo/MotionSystem[ResolPosY]
@@ -304,12 +306,12 @@ Validity: 55.0 -> 65.0
 (std::vector<double,std::allocator<double> >) pivotXYZ = [0, 0, 0]
 offNominalMatrix:
 
-1  -0  0  -30
-0  1  -0  1
+1  0  0  -30
+0  1  0  1
 0  0  1  0
 
 --- /dd/Conditions/Online/Velo/MotionSystem
-DataObject at 0x2041860
+DataObject at 0x2056690
 Validity: 45.0 -> 9223372036.854775807
 (double) ResolPosLA = 30
 (double) ResolPosRC = -30
@@ -319,16 +321,16 @@ Validity: 45.0 -> 9223372036.854775807
 UpdateManagerSvc    DEBUG New BeginEvent incident received
 UpdateManagerSvc  VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc    DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc    DEBUG Invalidate object at 0x2041860
-UpdateManagerSvc    DEBUG Invalidate object at 0x2041860
-UpdateManagerSvc    DEBUG Update specific object at 0x2095a30
-UpdateManagerSvc    DEBUG Invalidate object at 0x2041860
-UpdateManagerSvc    DEBUG Invalidate object at 0x2041860
-UpdateManagerSvc    DEBUG Update specific object at 0x2096640
+UpdateManagerSvc    DEBUG Invalidate object at 0x2056690
+UpdateManagerSvc    DEBUG Invalidate object at 0x2056690
+UpdateManagerSvc    DEBUG Update specific object at 0x20c23f0
+UpdateManagerSvc    DEBUG Invalidate object at 0x2056690
+UpdateManagerSvc    DEBUG Invalidate object at 0x2056690
+UpdateManagerSvc    DEBUG Update specific object at 0x20c2b50
 UpdateManagerSvc  VERBOSE newEvent(evtTime): releasing mutex lock
 DetCondTest::Te...   INFO Requested Conditions:
 --- /dd/Conditions/Alignment/Velo/VeloLeft
-DataObject at 0x2095a30
+DataObject at 0x20c23f0
 Validity: 65.0 -> 75.0
 (std::string) XOffset = Conditions/Online/Velo/MotionSystem[ResolPosLA]
 (std::vector<double,std::allocator<double> >) XOffsetCoeffs = [30, 0]
@@ -339,12 +341,12 @@ Validity: 65.0 -> 75.0
 (std::vector<double,std::allocator<double> >) pivotXYZ = [0, 0, 0]
 offNominalMatrix:
 
-1  -0  0  30
-0  1  -0  5
+1  0  0  30
+0  1  0  5
 0  0  1  0
 
 --- /dd/Conditions/Alignment/Velo/VeloRight
-DataObject at 0x2096640
+DataObject at 0x20c2b50
 Validity: 65.0 -> 75.0
 (std::string) XOffset = Conditions/Online/Velo/MotionSystem[ResolPosRC]
 (std::vector<double,std::allocator<double> >) XOffsetCoeffs = [0, 0.833333]
@@ -355,12 +357,12 @@ Validity: 65.0 -> 75.0
 (std::vector<double,std::allocator<double> >) pivotXYZ = [0, 0, 0]
 offNominalMatrix:
 
-1  -0  0  -25
-0  1  -0  2
+1  0  0  -25
+0  1  0  2
 0  0  1  0
 
 --- /dd/Conditions/Online/Velo/MotionSystem
-DataObject at 0x2041860
+DataObject at 0x2056690
 Validity: 45.0 -> 9223372036.854775807
 (double) ResolPosLA = 30
 (double) ResolPosRC = -30
@@ -370,16 +372,16 @@ Validity: 45.0 -> 9223372036.854775807
 UpdateManagerSvc    DEBUG New BeginEvent incident received
 UpdateManagerSvc  VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc    DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc    DEBUG Invalidate object at 0x2041860
-UpdateManagerSvc    DEBUG Invalidate object at 0x2041860
-UpdateManagerSvc    DEBUG Update specific object at 0x2095a30
-UpdateManagerSvc    DEBUG Invalidate object at 0x2041860
-UpdateManagerSvc    DEBUG Invalidate object at 0x2041860
-UpdateManagerSvc    DEBUG Update specific object at 0x2096640
+UpdateManagerSvc    DEBUG Invalidate object at 0x2056690
+UpdateManagerSvc    DEBUG Invalidate object at 0x2056690
+UpdateManagerSvc    DEBUG Update specific object at 0x20c23f0
+UpdateManagerSvc    DEBUG Invalidate object at 0x2056690
+UpdateManagerSvc    DEBUG Invalidate object at 0x2056690
+UpdateManagerSvc    DEBUG Update specific object at 0x20c2b50
 UpdateManagerSvc  VERBOSE newEvent(evtTime): releasing mutex lock
 DetCondTest::Te...   INFO Requested Conditions:
 --- /dd/Conditions/Alignment/Velo/VeloLeft
-DataObject at 0x2095a30
+DataObject at 0x20c23f0
 Validity: 75.0 -> 9223372036.854775807
 (std::string) XOffset = Conditions/Online/Velo/MotionSystem[ResolPosLA]
 (std::vector<double,std::allocator<double> >) XOffsetCoeffs = []
@@ -390,12 +392,12 @@ Validity: 75.0 -> 9223372036.854775807
 (std::vector<double,std::allocator<double> >) pivotXYZ = [0, 0, 0]
 offNominalMatrix:
 
-1  -0  0  30
-0  1  -0  1
+1  0  0  30
+0  1  0  1
 0  0  1  0
 
 --- /dd/Conditions/Alignment/Velo/VeloRight
-DataObject at 0x2096640
+DataObject at 0x20c2b50
 Validity: 75.0 -> 9223372036.854775807
 (std::string) XOffset = Conditions/Online/Velo/MotionSystem[ResolPosRC]
 (std::vector<double,std::allocator<double> >) XOffsetCoeffs = []
@@ -406,12 +408,12 @@ Validity: 75.0 -> 9223372036.854775807
 (std::vector<double,std::allocator<double> >) pivotXYZ = [0, 0, 0]
 offNominalMatrix:
 
-1  -0  0  -30
-0  1  -0  15
+1  0  0  -30
+0  1  0  15
 0  0  1  0
 
 --- /dd/Conditions/Online/Velo/MotionSystem
-DataObject at 0x2041860
+DataObject at 0x2056690
 Validity: 45.0 -> 9223372036.854775807
 (double) ResolPosLA = 30
 (double) ResolPosRC = -30
@@ -419,32 +421,32 @@ Validity: 45.0 -> 9223372036.854775807
 
 
 ApplicationMgr       INFO Application Manager Stopped successfully
-UpdateManagerSvc    DEBUG Unregister object at 0x1f5e840
+UpdateManagerSvc    DEBUG Unregister object at 0x1f770b0
 EventLoopMgr         INFO Histograms converted successfully according to request.
 UpdateManagerSvc    DEBUG --- finalize ---
 UpdateManagerSvc    DEBUG --- Dump
 UpdateManagerSvc    DEBUG     3 items registered
 UpdateManagerSvc    DEBUG      of which 2 in the head
 UpdateManagerSvc    DEBUG          head IOV = 75.0 - 0.0
-UpdateManagerSvc    DEBUG --item 0 0x1f68870
-UpdateManagerSvc    DEBUG        ptr  = 0x2041860
+UpdateManagerSvc    DEBUG --item 0 0x1f81d80
+UpdateManagerSvc    DEBUG        ptr  = 0x2056690
 UpdateManagerSvc    DEBUG        path = Conditions/Online/Velo/MotionSystem
 UpdateManagerSvc    DEBUG         IOV = 45.0 - 9223372036.854775807
-UpdateManagerSvc    DEBUG --item 1 0x1f655b0 (head)
-UpdateManagerSvc    DEBUG        ptr  = 0x2095a30
+UpdateManagerSvc    DEBUG --item 1 0x1f7eae0 (head)
+UpdateManagerSvc    DEBUG        ptr  = 0x20c23f0
 UpdateManagerSvc    DEBUG        path = Conditions/Alignment/Velo/VeloLeft
 UpdateManagerSvc    DEBUG         IOV = 0.000000001 - 0.0
 UpdateManagerSvc    DEBUG        depend on :
-UpdateManagerSvc    DEBUG                    0x1f68870
-UpdateManagerSvc    DEBUG --item 2 0x1f68df0 (head)
-UpdateManagerSvc    DEBUG        ptr  = 0x2096640
+UpdateManagerSvc    DEBUG                    0x1f81d80
+UpdateManagerSvc    DEBUG --item 2 0x1f82350 (head)
+UpdateManagerSvc    DEBUG        ptr  = 0x20c2b50
 UpdateManagerSvc    DEBUG        path = Conditions/Alignment/Velo/VeloRight
 UpdateManagerSvc    DEBUG         IOV = 75.0 - 9223372036.854775807
 UpdateManagerSvc    DEBUG        depend on :
-UpdateManagerSvc    DEBUG                    0x1f68870
+UpdateManagerSvc    DEBUG                    0x1f81d80
 UpdateManagerSvc    DEBUG Found 2 head items: OK
 ToolSvc              INFO Removing all tools created by ToolSvc
-UpdateManagerSvc  VERBOSE Trying to unregister object at 0x2096640, with the service OFFLINE
-UpdateManagerSvc  VERBOSE Trying to unregister object at 0x2095a30, with the service OFFLINE
+UpdateManagerSvc  VERBOSE Trying to unregister object at 0x20c2b50, with the service OFFLINE
+UpdateManagerSvc  VERBOSE Trying to unregister object at 0x20c23f0, with the service OFFLINE
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

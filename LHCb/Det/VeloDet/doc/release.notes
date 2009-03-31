@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.212 2009-03-24 13:28:24 krinnert Exp $
+! $Id: release.notes,v 1.213 2009-03-31 13:26:12 marcocle Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
+
+! 2009-03-31 - Marco Clemencic
+ - Updated the reference file of the test velodet.veloaligncond.updates because
+   the output changed after the changes by Wouter. 
 
 ! 2009-03-24 - Kurt Rinnert
  - Added free functions to convert chip channel to TELL1 channel.  The
