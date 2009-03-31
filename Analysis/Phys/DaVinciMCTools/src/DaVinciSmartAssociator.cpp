@@ -27,7 +27,7 @@ DaVinciSmartAssociator::DaVinciSmartAssociator( const std::string& type,
   m_linkerTool_nPP(0),
   m_bkg(0)
 {
-  declareInterface<IParticle2MCAssociator>(this);
+  declareInterface<IParticle2MCWeightedAssociator>(this);
 }
 //=============================================================================
 // Destructor
@@ -38,7 +38,7 @@ DaVinciSmartAssociator::~DaVinciSmartAssociator() {}
 //=============================================================================
 Particle2MCParticle::ToVector 
 DaVinciSmartAssociator::relatedMCPsImpl(const LHCb::Particle* particle,
-                                        const LHCb::MCParticle::ConstVector mcps) const 
+                                        const LHCb::MCParticle::ConstVector& mcps) const 
 {
 //We associate according to the particle type: protoparticle associators
 //are used for neutral and charged stable tracks, otherwise we use BackCat
@@ -73,12 +73,8 @@ DaVinciSmartAssociator::relatedMCPsImpl(const LHCb::Particle* particle,
   // check if the associaited MCPs are in the input container, if not,
   // remove the association!
 
-  Particle2MCParticle::NotInRange pred(&mcps);
-
-  Particle2MCParticle::ToVector::iterator new_last = 
-    std::remove_if(associatedParts.begin(), associatedParts.end(), pred);
-
-  return Particle2MCParticle::ToVector(associatedParts.begin(), new_last);
+  return Particle2MCParticle::FilterMCAssociations(associatedParts,
+                                                   mcps);
  
 }
 //=============================================================================
