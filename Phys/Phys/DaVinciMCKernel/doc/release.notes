@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.76 2009-03-27 18:02:56 jpalac Exp $
+! $Id: release.notes,v 1.77 2009-03-31 15:15:17 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
+
+! 2009-03-31 - Juan PALACIOS
+ - Kernel/Particle2MCParticle.h
+  . Add static method to filter out MCAssociations that don't have MCParticles
+    coming from an MCParticle container
+ - Kernel/IParticle2MCAssociator.h
+  . #include "Event/MCParticle.h" needed after re-structuring.
 
 ! 2009-03-27 - Juan PALACIOS
  - Kernel/Particle2MCParticle.h
