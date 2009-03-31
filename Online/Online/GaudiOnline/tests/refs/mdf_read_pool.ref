@@ -1,0 +1,54 @@
++----------------------------------------------------------------------------+
+|      Executing MDF           ReadPOOL                                      |
++----------------------------------------------------------------------------+
+ServiceManager      FATAL No Service factory for PoolDbCacheSvc available.
+ApplicationMgr      ERROR decodeExtSvcNameList: Cannot create service PoolDbCacheSvc/PoolDbCacheSvc
+ApplicationMgr      ERROR Failure during external service association
+{'ApplicationMgr': {'AppName': '',
+                    'ExtSvc': ['Gaudi::MultiFileCatalog/FileCatalog',
+                               'Gaudi::IODataManager/IODataManager',
+                               'PoolDbCacheSvc/PoolDbCacheSvc',
+                               'PoolDbCnvSvc/PoolRootEvtCnvSvc',
+                               'PoolDbCnvSvc/PoolRootKeyEvtCnvSvc',
+                               'PoolDbCnvSvc/PoolRootTreeEvtCnvSvc',
+                               'PoolDbCnvSvc/RunRecordCnvSvc'],
+                    'HistogramPersistency': 'NONE',
+                    'TopAlg': ['LHCb::RawEventTestDump/Dump',
+                               'StoreExplorerAlg/Explorer']},
+ 'Dump': {'CheckData': False,
+          'DumpData': False,
+          'FullDump': False,
+          'OutputLevel': 3},
+ 'EventDataSvc': {'EnableFaultHandler': True,
+                  'ForceLeaves': True,
+                  'RootCLID': 1},
+ 'EventPersistencySvc': {'CnvServices': ['LHCb::RawDataCnvSvc/RawDataCnvSvc',
+                                         'PoolRootEvtCnvSvc',
+                                         'PoolRootTreeEvtCnvSvc',
+                                         'PoolRootKeyEvtCnvSvc']},
+ 'EventSelector': {'Input': ["DATA='PFN:mdfPOOL.dat' TYP='POOL_ROOTTREE' OPT='OLD'"],
+                   'PrintFreq': 200},
+ 'Explorer': {'AccessForeign': True,
+              'Load': True,
+              'OutputLevel': 3,
+              'PrintFreq': 0.00021000000000000001},
+ 'FileCatalog': {'Catalogs': ['xmlcatalog_file:Cnew.xml',
+                              'xmlcatalog_file:///afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v26r2/DAQ/MDF/cmt/C1.xml']},
+ 'IODataManager': {'AgeLimit': 5, 'OutputLevel': 1},
+ 'PoolDbCacheSvc': {'Dlls': ['lcg_RootStorageSvc', 'GaudiKernelDict'],
+                    'DomainOpts': ['Domain[ROOT_All].TREE_MAX_SIZE=500000000000 TYP=longlong'],
+                    'OutputLevel': 4},
+ 'PoolRootEvtCnvSvc': {'DbType': 'POOL_ROOT', 'EnableIncident': 1},
+ 'PoolRootKeyEvtCnvSvc': {'DbType': 'POOL_ROOTKEY', 'EnableIncident': 1},
+ 'PoolRootTreeEvtCnvSvc': {'DbType': 'POOL_ROOTTREE', 'EnableIncident': 1},
+ 'RunRecordCnvSvc': {'DbType': 'POOL_ROOTTREE', 'ShareFiles': True},
+ 'RunRecordDataSvc': {'EnableFaultHandler': True,
+                      'ForceLeaves': True,
+                      'RootCLID': 1},
+ 'RunRecordPersistencySvc': {'CnvServices': ['RunRecordCnvSvc']}}
+ApplicationMgr      FATAL start: Invalid state "OFFLINE"
+---> Start processing events
+ApplicationMgr      FATAL executeRun: Invalid state "OFFLINE"
+---> Finished processing events
+ApplicationMgr      FATAL stop: Invalid state "OFFLINE"
+ApplicationMgr      FATAL finalize: Invalid state "OFFLINE"

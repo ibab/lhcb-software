@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPProducer.cpp,v 1.12 2009-01-23 15:02:48 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPProducer.cpp,v 1.13 2009-03-31 17:35:31 frankb Exp $
 //  ====================================================================
 //  RawBufferCreator.cpp
 //  --------------------------------------------------------------------
@@ -20,6 +20,18 @@
 #endif
 
 namespace {
+  static void help()  {
+    ::printf("mep_prod_a -opt [-opt]\n");
+    ::printf("    -n(ame)=<name>         buffer member name\n");
+    ::printf("    -a(synchronous)        Asynchonous mode (default is synchronous)\n");
+    ::printf("    -s(pace)=<number>      Default space allocation in kBytes\n");
+    ::printf("    -c(ount)=<number>      Number of events to be sent. default: unlimited\n");
+    ::printf("    -p(artition)=<number>  Partition ID\n");
+    ::printf("    -r(efcount)=<number>   Initial MEP reference count\n");
+    ::printf("    -m(apunused)           Map unused MEP buffers\n");
+    ::printf("    -d(ebug)               Invoke debugger\n");
+  }
+
   int __dummyReadEvent(void* data, size_t bufLen, size_t& evtLen)  {
     static int nrewind = 0;
     static int file = open("../cmt/mepData_0.dat", O_RDONLY|O_BINARY);
@@ -44,20 +56,7 @@ again:
     }
     return 0;
   }
-}
 
-namespace {
-  static void help()  {
-    ::printf("mep_prod_a -opt [-opt]\n");
-    ::printf("    -n(ame)=<name>         buffer member name\n");
-    ::printf("    -a(synchronous)        Asynchonous mode (default is synchronous)\n");
-    ::printf("    -s(pace)=<number>      Default space allocation in kBytes\n");
-    ::printf("    -c(ount)=<number>      Number of events to be sent. default: unlimited\n");
-    ::printf("    -p(artition)=<number>  Partition ID\n");
-    ::printf("    -r(efcount)=<number>   Initial MEP reference count\n");
-    ::printf("    -m(apunused)           Map unused MEP buffers\n");
-    ::printf("    -d(ebug)               Invoke debugger\n");
-  }
   struct MEPProducer  : public MEP::Producer  {
     int m_spaceSize, m_refCount, m_evtCount;
     MEPProducer(const std::string& nam, int partitionID, int refcnt, size_t siz, int evtCount, bool unused) 
@@ -119,7 +118,7 @@ namespace {
       }
       if ( m_evtCount>0 ) {
 	m_evtCount--;
-	if ( m_evtCount==0 ) {
+	if ( 0 == m_evtCount ) {
 	  std::cout << "All events requested were decleared to MEP buffer." << std::endl;
 	  exit(0);
 	}
@@ -145,8 +144,8 @@ extern "C" int mep_producer(int argc,char **argv) {
   cli.getopt("refcount",1,refCount);
   cli.getopt("count",1,evtCount);
   if ( debug ) ::lib_rtl_start_debugger();
-  ::printf("%synchronous MEP Producer \"%s\" Partition:%d (pid:%d) included in buffers.\n",
-     async ? "As" : "S", name.c_str(), partID, MEPProducer::pid());
+  ::printf("%synchronous MEP Producer \"%s\" Partition:%d (pid:%d) included in buffers. Will produce %d MEPs\n",
+	   async ? "As" : "S", name.c_str(), partID, MEPProducer::pid(),evtCount);
   MEPProducer p(name, partID, refCount, space, evtCount, unused);
   if ( async ) p.setNonBlocking(WT_FACILITY_DAQ_SPACE, true);
   return p.run();

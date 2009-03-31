@@ -14,6 +14,8 @@ fi
 cat >/tmp/CreateMEP.opts <<END-OF-OPTS
 #include "$MDFROOT/options/CreateMEP.opts"
 ApplicationMgr.OutStream  = { "LHCb::MEPWriter/Writer_0" };
+ApplicationMgr.EvtMax   = 2002;
+StoreExplorer.PrintFreq = 0.01;
 Writer_0.Compress       = 0;
 Writer_0.ChecksumType   = 0;
 Writer_0.PackingFactor  = 11;

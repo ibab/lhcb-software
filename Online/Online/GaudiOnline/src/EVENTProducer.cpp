@@ -13,13 +13,14 @@ namespace  {
     ::printf("    -p(artition)=<number>  Partition ID\n");
     ::printf("    -r(efcount)=<number>   Optional MEP reference count decrement\n");
   }
+
   struct EVENTGenerator  : public MEP::Consumer  {
     typedef std::vector<LHCb::MEPFragment*> Frags;
     typedef std::map<unsigned int, Frags >  SubEvents;
     MBM::Producer* m_evtProd;
     int prt, m_refCount;
     EVENTGenerator(const std::string& nam, int partID, int cnt)
-    : MEP::Consumer(nam, partID), m_evtProd(0), m_refCount(cnt)
+    : MEP::Consumer(nam, partID), m_evtProd(0), m_refCount(cnt)    
     {
       prt = 0;
       unsigned int vetomask[4] = {0,0,0,0};
@@ -31,7 +32,7 @@ namespace  {
       addRequest(EVENT_TYPE_MEP,trmask,vetomask,BM_MASK_ANY,BM_REQ_VIP,BM_FREQ_PERC,100.);
       ::printf(" MEP    buffer start: %08lX\n",m_mepID->mepStart);
       ::printf(" EVENT  buffer start: %08lX\n",m_mepID->evtStart);
-      ::printf(" RESULT buffer start: %08lX\n",m_mepID->resStart);
+      //::printf(" RESULT buffer start: %08lX\n",m_mepID->resStart);
       //mbm_register_alloc_event(m_mepID->evtBuffer,0,0);
     }
     virtual ~EVENTGenerator()  {

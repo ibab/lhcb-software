@@ -1,0 +1,67 @@
++----------------------------------------------------------------------------+
+|      Executing MDF           CreatePOOL                                    |
++----------------------------------------------------------------------------+
+ServiceManager      FATAL No Service factory for PoolDbCacheSvc available.
+ApplicationMgr      ERROR decodeExtSvcNameList: Cannot create service PoolDbCacheSvc/PoolDbCacheSvc
+ApplicationMgr      ERROR Failure during external service association
+{'ApplicationMgr': {'AppName': '',
+                    'ExtSvc': ['Gaudi::MultiFileCatalog/FileCatalog',
+                               'Gaudi::IODataManager/IODataManager',
+                               'PoolDbCacheSvc/PoolDbCacheSvc',
+                               'PoolDbCnvSvc/PoolRootEvtCnvSvc',
+                               'PoolDbCnvSvc/PoolRootKeyEvtCnvSvc',
+                               'PoolDbCnvSvc/PoolRootTreeEvtCnvSvc',
+                               'PoolDbCnvSvc/RunRecordCnvSvc'],
+                    'HistogramPersistency': 'NONE',
+                    'OutStream': ['OutputStream/POOLMini'],
+                    'TopAlg': ['LHCb::RawEventTestDump/Dump',
+                               'StoreExplorerAlg/Explorer']},
+ 'Dump': {'CheckData': False,
+          'DumpData': False,
+          'FullDump': False,
+          'OutputLevel': 3},
+ 'EventDataSvc': {'EnableFaultHandler': True,
+                  'ForceLeaves': True,
+                  'RootCLID': 1},
+ 'EventPersistencySvc': {'CnvServices': ['LHCb::RawDataCnvSvc/RawDataCnvSvc',
+                                         'PoolRootEvtCnvSvc',
+                                         'PoolRootTreeEvtCnvSvc',
+                                         'PoolRootKeyEvtCnvSvc']},
+ 'EventSelector': {'Input': ["DATA='LFN:/user/frank/markus/mdf_1.dat' SVC='LHCb::MDFSelector'",
+                             "DATA='PFN:root:file://mdfData_0.dat'        SVC='LHCb::MDFSelector'",
+                             "DATA='root:file:mdfData_2.dat'              SVC='LHCb::MDFSelector'",
+                             "DATA='PFN:root:mdfData_3.dat'               SVC='LHCb::MDFSelector'",
+                             "DATA='root:mdfData_4.dat'                   SVC='LHCb::MDFSelector'",
+                             "DATA='PFN:root:file:///afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/qmtest/mdfData_5.dat'        SVC='LHCb::MDFSelector'",
+                             "DATA='PFN:root:file:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/qmtest/mdfData_6.dat'          SVC='LHCb::MDFSelector'",
+                             "DATA='PFN:root:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/qmtest/mdfData_7.dat'               SVC='LHCb::MDFSelector'",
+                             "DATA='root:file:///afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/qmtest/mdfData_8.dat'            SVC='LHCb::MDFSelector'",
+                             "DATA='root:file:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/qmtest/mdfData_9.dat'              SVC='LHCb::MDFSelector'",
+                             "DATA='/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/qmtest/mdfData_10.dat'                       SVC='LHCb::MDFSelector'"],
+                   'PrintFreq': 200},
+ 'Explorer': {'AccessForeign': True,
+              'Load': True,
+              'OutputLevel': 3,
+              'PrintFreq': 0.00021000000000000001},
+ 'FileCatalog': {'Catalogs': ['xmlcatalog_file:Cnew.xml',
+                              'xmlcatalog_file:///afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v26r2/DAQ/MDF/cmt/C1.xml']},
+ 'IODataManager': {'AgeLimit': 1, 'OutputLevel': 1},
+ 'POOLMini': {'ItemList': ['/Event#1', '/Event/DAQ#1'],
+              'Output': "DATAFILE='PFN:mdfPOOL.dat' TYP='POOL_ROOTTREE' OPT='RECREATE'"},
+ 'PoolDbCacheSvc': {'Dlls': ['lcg_RootStorageSvc', 'GaudiKernelDict'],
+                    'DomainOpts': ['Domain[ROOT_All].TREE_MAX_SIZE=500000000000 TYP=longlong'],
+                    'OutputLevel': 1},
+ 'PoolRootEvtCnvSvc': {'DbType': 'POOL_ROOT', 'EnableIncident': 1},
+ 'PoolRootKeyEvtCnvSvc': {'DbType': 'POOL_ROOTKEY', 'EnableIncident': 1},
+ 'PoolRootTreeEvtCnvSvc': {'DbType': 'POOL_ROOTTREE', 'EnableIncident': 1},
+ 'RunRecordCnvSvc': {'DbType': 'POOL_ROOTTREE', 'ShareFiles': True},
+ 'RunRecordDataSvc': {'EnableFaultHandler': True,
+                      'ForceLeaves': True,
+                      'RootCLID': 1},
+ 'RunRecordPersistencySvc': {'CnvServices': ['RunRecordCnvSvc']}}
+ApplicationMgr      FATAL start: Invalid state "OFFLINE"
+---> Start processing events
+ApplicationMgr      FATAL executeRun: Invalid state "OFFLINE"
+---> Finished processing events
+ApplicationMgr      FATAL stop: Invalid state "OFFLINE"
+ApplicationMgr      FATAL finalize: Invalid state "OFFLINE"
