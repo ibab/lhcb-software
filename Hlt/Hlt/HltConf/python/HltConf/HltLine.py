@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.44 2009-03-30 20:46:12 graven Exp $ 
+# $Id: HltLine.py,v 1.45 2009-03-31 11:41:20 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.44 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.45 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt line itself 
@@ -89,6 +89,7 @@ from Configurables import HltL0CaloCandidates    as L0CaloCandidates
 from Configurables import HltVertexToTracks      as VertexToTracks 
 from Configurables import HltAddPhotonToVertex   as AddPhotonToVertex
 from Configurables import HltLine                as Line
+from Configurables import HltCopySelection_LHCb__Particle_ as HltCopyParticleSelection
 
 
 ## Convention: the name of 'Filter' algorithm inside HltLine
@@ -1100,7 +1101,10 @@ class Hlt2Line(object):
             #if len(_members) == 1 : 
             #    mdict.update( { 'Filter1' : _members[0] })
             #else :
-            mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line,'Hlt2' ) , Members = self._algos ) })
+            members = self._algos + [ HltCopyParticleSelection( 'Hlt2%sDecision'%self._name
+                                                              , InputSelection = 'TES:/Event/HLT/Hlt2Sel%s/Particles'%self._name
+                                                              , OutputSelection = "Hlt2%sDecision"%self._name) ]
+            mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line,'Hlt2' ) , Members = members ) })
         # final cloning of all parameters:
         __mdict = deepcopy ( mdict ) 
         self._configurable = Line ( self.name() , **__mdict )

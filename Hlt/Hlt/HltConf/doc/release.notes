@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.184 2009-03-30 20:46:12 graven Exp $ 
+! $Id: release.notes,v 1.185 2009-03-31 11:41:20 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2009-03-31 - Gerhard Raven
+ - further Hlt2 support work
+
 ! 2009-03-28 - Gerhard Raven
  - add initial Hlt2 support to HltLine
 
