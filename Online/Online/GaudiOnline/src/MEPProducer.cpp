@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPProducer.cpp,v 1.13 2009-03-31 17:35:31 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPProducer.cpp,v 1.14 2009-04-01 20:16:35 frankb Exp $
 //  ====================================================================
 //  RawBufferCreator.cpp
 //  --------------------------------------------------------------------
@@ -19,6 +19,8 @@
 #define O_BINARY 0
 #endif
 
+using namespace std;
+
 namespace {
   static void help()  {
     ::printf("mep_prod_a -opt [-opt]\n");
@@ -32,35 +34,11 @@ namespace {
     ::printf("    -d(ebug)               Invoke debugger\n");
   }
 
-  int __dummyReadEvent(void* data, size_t bufLen, size_t& evtLen)  {
-    static int nrewind = 0;
-    static int file = open("../cmt/mepData_0.dat", O_RDONLY|O_BINARY);
-    LHCb::MEPEvent* me = (LHCb::MEPEvent*)data;
-again:
-    int status1 = ::read(file, me, me->sizeOf());
-    if ( status1 < (int)me->sizeOf() )  {
-      ::lseek(file, 0, SEEK_SET);
-      ::printf("[0] Rewind # %d: End-of-file.\n", ++nrewind);
-      goto again;
-    }
-    if ( status1 <= (int)bufLen )  {
-      int status2 = ::read(file, ((char*)data)+me->sizeOf(), me->size());
-      if ( status2 < (int)me->size() )  {
-        ::lseek(file, 0, SEEK_SET);
-        ::printf("[1] Rewind # %d: End-of-file.\n", ++nrewind);
-        goto again;
-      }
-      evtLen = me->size()+me->sizeOf();
-      // printf("MEP size: %d \n",evtLen);
-      return 1;
-    }
-    return 0;
-  }
-
   struct MEPProducer  : public MEP::Producer  {
+    string m_fname;
     int m_spaceSize, m_refCount, m_evtCount;
-    MEPProducer(const std::string& nam, int partitionID, int refcnt, size_t siz, int evtCount, bool unused) 
-      : MEP::Producer(nam, partitionID), m_spaceSize(siz), m_refCount(refcnt), m_evtCount(evtCount)
+    MEPProducer(const string& nam, int partitionID, const string& fn, int refcnt, size_t siz, int evtCount, bool unused) 
+      : MEP::Producer(nam, partitionID), m_fname(fn), m_spaceSize(siz), m_refCount(refcnt), m_evtCount(evtCount)
     {
       m_spaceSize *= 1024;  // Space size is in kBytes
       m_flags = USE_MEP_BUFFER;
@@ -75,6 +53,30 @@ again:
       }
     }
     ~MEPProducer()  {
+    }
+    int __dummyReadEvent(void* data, size_t bufLen, size_t& evtLen)  {
+      static int nrewind = 0;
+      static int file = open(m_fname.c_str(), O_RDONLY|O_BINARY);
+      LHCb::MEPEvent* me = (LHCb::MEPEvent*)data;
+    again:
+      int status1 = ::read(file, me, me->sizeOf());
+      if ( status1 < (int)me->sizeOf() )  {
+	::lseek(file, 0, SEEK_SET);
+	::printf("[0] Rewind # %d: End-of-file.\n", ++nrewind);
+	goto again;
+      }
+      if ( status1 <= (int)bufLen )  {
+	int status2 = ::read(file, ((char*)data)+me->sizeOf(), me->size());
+	if ( status2 < (int)me->size() )  {
+	  ::lseek(file, 0, SEEK_SET);
+	  ::printf("[1] Rewind # %d: End-of-file.\n", ++nrewind);
+	  goto again;
+	}
+	evtLen = me->size()+me->sizeOf();
+	// printf("MEP size: %d \n",evtLen);
+	return 1;
+      }
+      return 0;
     }
     int spaceRearm(int) {
       return MEP::Producer::spaceRearm(m_spaceSize);
@@ -119,7 +121,7 @@ again:
       if ( m_evtCount>0 ) {
 	m_evtCount--;
 	if ( 0 == m_evtCount ) {
-	  std::cout << "All events requested were decleared to MEP buffer." << std::endl;
+	  cout << "All events requested were decleared to MEP buffer." << endl;
 	  exit(0);
 	}
       }
@@ -134,19 +136,21 @@ extern "C" int mep_producer(int argc,char **argv) {
   int partID = 0x103;              // default is LHCb partition id
   int refCount = 1;
   int evtCount = -1;
-  std::string name = "producer";
+  string name = "producer";
+  string fname = "../cmt/mepData_0.dat";
   bool async = cli.getopt("asynchronous",1) != 0;
   bool debug = cli.getopt("debug",1) != 0;
   bool unused = cli.getopt("mapunused",1) != 0;
   cli.getopt("name",1,name);
+  cli.getopt("file",1,fname);
   cli.getopt("space",1,space);
   cli.getopt("partitionid",1,partID);
   cli.getopt("refcount",1,refCount);
   cli.getopt("count",1,evtCount);
   if ( debug ) ::lib_rtl_start_debugger();
-  ::printf("%synchronous MEP Producer \"%s\" Partition:%d (pid:%d) included in buffers. Will produce %d MEPs\n",
-	   async ? "As" : "S", name.c_str(), partID, MEPProducer::pid(),evtCount);
-  MEPProducer p(name, partID, refCount, space, evtCount, unused);
+  ::printf("%synchronous MEP Producer \"%s\" Partition:%d (pid:%d) included in buffers. Will produce %d MEPs from %s\n",
+	   async ? "As" : "S", name.c_str(), partID, MEPProducer::pid(),evtCount,fname.c_str());
+  MEPProducer p(name, partID, fname, refCount, space, evtCount, unused);
   if ( async ) p.setNonBlocking(WT_FACILITY_DAQ_SPACE, true);
   return p.run();
 }

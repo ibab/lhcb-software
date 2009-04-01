@@ -3,17 +3,22 @@ from OnlineEnv import *
 pid = PartitionID
 pnam = PartitionName
 
-def _run(app,prt=True):  return (app,end_config(prt))
+def _run(app,prt=True):                return (app,end_config(prt))
 #------------------------------------------------------------------------------------------------
-def runDimReader(buffer): return _run(dimFileReaderApp(pid,pnam,buffer,True))
+def runDimReader(buffer):              return _run(dimFileReaderApp(pid,pnam,buffer,True))
 #------------------------------------------------------------------------------------------------
-def runSender(target): return _run(dataSenderApp(pid,pnam,target,'RESULT',False,True))
+# HLT sender with input from MEP RESULT buffer, with decoding of fragments.
+def runSender(target):                 return _run(dataSenderApp(pid,pnam,target,'RESULT',False,True))
 #------------------------------------------------------------------------------------------------
-def runReceiver():     return _run(dataReceiverApp(pid,pnam,'OUT',True))
+# Typical sender with input from partitioned buffers, no MEP decoding.
+def runDataSender(target,buffer):      return _run(dataSenderApp(pid,pnam,target,buffer,True,False))
 #------------------------------------------------------------------------------------------------
-def runEvtProd():      return _run(mepConverterApp(pid,pnam,bursts=True,freq=0.001))
+# Data receiver task; puts data into buffer 'buffer'
+def runReceiver(buffer='OUT'):         return _run(dataReceiverApp(pid,pnam,buffer,True))
 #------------------------------------------------------------------------------------------------
-def runEvtHolder():    return _run(mepHolderApp(pid,pnam,'OUT',True))
+def runEvtProd():                      return _run(mepConverterApp(pid,pnam,bursts=True,freq=0.001))
+#------------------------------------------------------------------------------------------------
+def runEvtHolder():                    return _run(mepHolderApp(pid,pnam,'OUT',True))
 #------------------------------------------------------------------------------------------------
 def runMBMRead(percent=1,print_freq=0.0001):
   return _run(defaultFilterApp(pid,pnam,percent=percent,print_freq=print_freq))

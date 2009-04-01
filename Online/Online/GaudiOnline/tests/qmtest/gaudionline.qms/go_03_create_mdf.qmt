@@ -3,5 +3,5 @@
   <argument name="program"><text>../cmt/qmtest_mdf.sh</text></argument>
   <argument name="args"><set><text>../../python/MDFtests.py</text><text>createMDF</text></set></argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
-  <argument name="reference"><text>../refs/mdf_create_mdf.ref</text></argument>
+  <argument name="reference"><text>../refs/go_create_mdf.ref</text></argument>
 </extension>
