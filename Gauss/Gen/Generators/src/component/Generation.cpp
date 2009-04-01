@@ -1,4 +1,4 @@
-// $Id: Generation.cpp,v 1.30 2008-09-20 20:06:31 robbep Exp $
+// $Id: Generation.cpp,v 1.31 2009-04-01 09:47:20 robbep Exp $
 // Include files 
 
 // from Gaudi
@@ -169,6 +169,7 @@ StatusCode Generation::execute() {
 
   debug() << "Processing event type " << m_eventType << endmsg ;
   StatusCode sc = StatusCode::SUCCESS ;
+  setFilterPassed( true ) ;
 
   // Get the header and update the information
   LHCb::GenHeader* theGenHeader = get<LHCb::GenHeader> ( m_genHeaderLocation );
@@ -203,55 +204,66 @@ StatusCode Generation::execute() {
     }
     // generate a set of Pile up interactions according to the requested type
     // of event
-    goodEvent = m_sampleGenerationTool -> generate( nPileUp, theEvents, 
-                                                    theCollisions );
+    if ( 0 < nPileUp ) 
+      goodEvent = m_sampleGenerationTool -> generate( nPileUp, theEvents, 
+                                                      theCollisions );
+    else { 
+      goodEvent = true ;
+      setFilterPassed( false ) ;
+    }
 
     // increase event and interactions counters
     ++m_nEvents ;    m_nInteractions += nPileUp ;
 
     // Update interaction counters
-    theIntCounter.assign( 0 ) ;
-    for ( itEvents = theEvents->begin() ; itEvents != theEvents->end() ; 
-          ++itEvents ) updateInteractionCounters( theIntCounter , *itEvents ) ;
+    if ( 0 < nPileUp ) { 
+      theIntCounter.assign( 0 ) ;
+      for ( itEvents = theEvents->begin() ; itEvents != theEvents->end() ; 
+            ++itEvents ) updateInteractionCounters( theIntCounter , *itEvents ) ;
     
-    GenCounters::AddTo( m_intC , theIntCounter ) ;
+      GenCounters::AddTo( m_intC , theIntCounter ) ;
 
-    // Decay the event if it is a good event
-    if ( ( goodEvent ) && ( 0 != m_decayTool ) ) {
-      unsigned short iPile( 0 ) ;
-      for ( itEvents = theEvents->begin() ; itEvents != theEvents->end() ;
-            ++itEvents ) {
-        sc = decayEvent( *itEvents ) ;
-        (*itEvents) -> pGenEvt() -> set_event_number( ++iPile ) ;
-        if ( ! sc.isSuccess() ) return sc ;
-        sc = m_vertexSmearingTool -> smearVertex( *itEvents ) ;
-        if ( ! sc.isSuccess() ) return sc ;
+      // Decay the event if it is a good event
+      if ( ( goodEvent ) && ( 0 != m_decayTool ) ) {
+        unsigned short iPile( 0 ) ;
+        for ( itEvents = theEvents->begin() ; itEvents != theEvents->end() ;
+              ++itEvents ) {
+          sc = decayEvent( *itEvents ) ;
+          (*itEvents) -> pGenEvt() -> set_event_number( ++iPile ) ;
+          if ( ! sc.isSuccess() ) return sc ;
+          sc = m_vertexSmearingTool -> smearVertex( *itEvents ) ;
+          if ( ! sc.isSuccess() ) return sc ;
+        }
       }
-    }
 
-    // Apply generator level cut on full event
-    if ( m_fullGenEventCutTool ) {
-      if ( goodEvent ) {
-        ++m_nBeforeFullEvent ;
-        goodEvent = m_fullGenEventCutTool -> studyFullEvent( theEvents , 
+      // Apply generator level cut on full event
+      if ( m_fullGenEventCutTool ) {
+        if ( goodEvent ) {
+          ++m_nBeforeFullEvent ;
+          goodEvent = m_fullGenEventCutTool -> studyFullEvent( theEvents , 
                                                              theCollisions );
-        if ( goodEvent ) ++m_nAfterFullEvent ;
+          if ( goodEvent ) ++m_nAfterFullEvent ;
+        }
       }
     }
   }  
 
   ++m_nAcceptedEvents ;
   m_nAcceptedInteractions += nPileUp ;
-
-  GenCounters::AddTo( m_intCAccepted , theIntCounter ) ;
-
-  // Now either create the info in the TES or add it to the existing one
-  LHCb::HepMCEvents* eventsInTES = 
-    getOrCreate<LHCb::HepMCEvents,LHCb::HepMCEvents>( m_hepMCEventLocation );
-
-  LHCb::GenCollisions* collisionsInTES = 
-    getOrCreate<LHCb::GenCollisions,LHCb::GenCollisions>( m_genCollisionLocation );
   
+  LHCb::HepMCEvents* eventsInTES( 0 )  ;
+  LHCb::GenCollisions* collisionsInTES( 0 ) ;
+  if ( 0 < nPileUp ) {
+    GenCounters::AddTo( m_intCAccepted , theIntCounter ) ;
+
+    // Now either create the info in the TES or add it to the existing one
+    eventsInTES = 
+      getOrCreate<LHCb::HepMCEvents,LHCb::HepMCEvents>( m_hepMCEventLocation );
+
+    collisionsInTES = 
+      getOrCreate<LHCb::GenCollisions,LHCb::GenCollisions>( m_genCollisionLocation );
+  }
+    
   // Copy the HepMCevents and Collisions from the temporary containers to 
   // those in TES and update the header information
   theGenHeader->setLuminosity( currentLuminosity );

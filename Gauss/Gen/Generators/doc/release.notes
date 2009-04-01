@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.145 2009-03-16 16:53:26 robbep Exp $
+! $Id: release.notes,v 1.146 2009-04-01 09:47:20 robbep Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2009-04-01 - Patrick Robbe
+ - Generation: make it a filter to skip the generation and simulation
+   sequence for 0 interaction
+ - Add new pile-up tool: FixedLuminosityForSpillOver which allows 0 
+   interaction
 
 ! 2009-03-16 - Patrick Robbe
  - EvtGenDecay: fixes for new EvtGen version
