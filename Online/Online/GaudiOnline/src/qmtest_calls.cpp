@@ -158,9 +158,9 @@ extern "C" int qmtest_evacuate(int argc, char** argv)  {
   const char *a3[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runBuffer(buffer='Node3')");
   const char *a4[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runBuffer(buffer='Storage')");
   const char *a5[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runReceiver(buffer='Storage')");
-  const char *a6[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runDataSender(target='Receiver_0',buffer='Node1')");
-  const char *a7[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runDataSender(target='Receiver_0',buffer='Node2')");
-  const char *a8[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runDataSender(target='Receiver_0',buffer='Node3')");
+  const char *a6[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runDataSender(target='Receiver_0',buffer='Node1',req='ALL')");
+  const char *a7[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runDataSender(target='Receiver_0',buffer='Node2',req='ALL')");
+  const char *a8[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runDataSender(target='Receiver_0',buffer='Node3',req='ALL')");
 
   const char *aprod1[]=CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runMDF2MBMFile(buffers=['Node1'],fname='mdfData_0.dat')");
   const char *aprod2[]=CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runMDF2MBMFile(buffers=['Node2'],fname='mdfData_0.dat')");
@@ -183,7 +183,7 @@ extern "C" int qmtest_evacuate(int argc, char** argv)  {
 
   cout << "Starting processes ..... " << endl;
   pg.start();
-  ::lib_rtl_sleep(15500);
+  ::lib_rtl_sleep(5500);
   cout << "Starting producer ...... " << endl;
   pg.add(p[9] =new Process("Prod1_0",command(),aprod1,out.c_str()));
   pg.add(p[10]=new Process("Prod2_0",command(),aprod2,out.c_str()));
@@ -193,7 +193,7 @@ extern "C" int qmtest_evacuate(int argc, char** argv)  {
   cout << "Producer finished work.. " << endl;
   return collect_summary(sizeof(p)/sizeof(p[0]),p);
 }
-/*
+
 extern "C" int qmtest_write_buffer(int argc, char** argv)  {
   string groot = ::getenv("GAUDIONLINEROOT");
   string main_opts = "-main="+groot+"/options/Main.opts";
@@ -201,38 +201,26 @@ extern "C" int qmtest_write_buffer(int argc, char** argv)  {
   string host = RTL::nodeNameShort();
   Process* p[21] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
   ProcessGroup pg;
-  const char *a1[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runBuffer(buffer='Events')");
-  const char *a8[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runDataSender(target='Receiver_0',buffer='Node3')");
-  const char *aprod1[]=CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runMDF2MBMFile(buffers=['Node1'],fname='mdfData_0.dat')");
+  const char *a0[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runBuffer(buffer='Events')");
+  const char *a1[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runDiskWR('Events',True,False,'./mdfOutput.dat')");
+  const char *aprod[]=CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runMDF2MBMFile(buffers=['Events'],fname='mdfData_0.dat')");
 
   Process::setDebug(true);  
-  pg.add(p[0]=new Process("TanServ_0",command(),a0,out.c_str()));
-  pg.add(p[1]=new Process("Node1_0",  command(),a1,out.c_str()));
-  pg.add(p[2]=new Process("Node2_0",  command(),a2,out.c_str()));
-  pg.add(p[3]=new Process("Node3_0",  command(),a3,out.c_str()));
-  pg.add(p[4]=new Process("Storage_0",command(),a4,out.c_str()));
+  pg.add(p[0]=new Process("Events_0", command(),a0,out.c_str()));
   pg.start();
-  ::lib_rtl_sleep(3500);
-  pg.add(p[5] =new Process("Receiver_0",command(),a5,out.c_str()));
-  pg.start();
-  ::lib_rtl_sleep(2000);
-  pg.add(p[6]=new Process("Sender1_0",command(),a6,out.c_str()));
-  pg.add(p[7]=new Process("Sender2_0",command(),a7,out.c_str()));
-  pg.add(p[8]=new Process("Sender3_0",command(),a8,out.c_str()));
-
+  ::lib_rtl_sleep(3000);
+  pg.add(p[1]=new Process("DiskWr_0", command(),a1,out.c_str()));
   cout << "Starting processes ..... " << endl;
   pg.start();
-  ::lib_rtl_sleep(15500);
+  ::lib_rtl_sleep(3000);
   cout << "Starting producer ...... " << endl;
-  pg.add(p[9] =new Process("Prod1_0",command(),aprod1,out.c_str()));
-  pg.add(p[10]=new Process("Prod2_0",command(),aprod2,out.c_str()));
-  pg.add(p[11]=new Process("Prod3_0",command(),aprod3,out.c_str()));
+  pg.add(p[2] =new Process("Prod_0",command(),aprod,out.c_str()));
   pg.start();
   ::lib_rtl_sleep(15000);
   cout << "Producer finished work.. " << endl;
   return collect_summary(sizeof(p)/sizeof(p[0]),p);
 }
-*/
+
 extern "C" int pyhlt_test_run(int /* ac  */, char** /* av */)  {
   string groot = ::getenv("GAUDIONLINEROOT");
   string main_opts = "-main="+groot+"/options/Main.opts";
