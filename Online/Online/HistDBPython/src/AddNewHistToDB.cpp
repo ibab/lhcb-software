@@ -1,4 +1,4 @@
-// $Id: AddNewHistToDB.cpp,v 1.2 2009-03-30 14:37:58 nchiapol Exp $
+// $Id: AddNewHistToDB.cpp,v 1.3 2009-04-01 13:07:56 nchiapol Exp $
 
 #include "AddNewHistToDB.h"
 
@@ -64,10 +64,17 @@ StatusCode AddNewHistToDB::initialize()
     
   /// convert HistoTypeName into 
     OnlineHistDBEnv::HistType type;
+    bool typeOK = false;
     int it;
     for (it=0; it< OnlineHistDBEnv_constants::NHTYPES; it++) {
-      if ( m_histTypeName == std::string(OnlineHistDBEnv_constants::HistTypeName[it]))
-      type=(OnlineHistDBEnv::HistType)it;
+      if ( m_histTypeName == std::string(OnlineHistDBEnv_constants::HistTypeName[it])) {
+	type=(OnlineHistDBEnv::HistType)it;
+	typeOK = true;
+      }
+    }
+    if (!typeOK) {
+      error() << "Given HistoType does not exist" << endmsg;
+      return StatusCode::SUCCESS;
     }
     
   /// loop over all histograms on page
