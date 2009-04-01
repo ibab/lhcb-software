@@ -111,4 +111,18 @@
     <logical/>
   </File>
 
+  <File ID="3CEF5302-F81E-DE11-AF2F-000423D6B700">
+    <physical>
+      <pfn filetype="ROOT_All" name="mdfPOOL.dat"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="26FE952B-F81E-DE11-B1D8-000423D6B700">
+    <physical>
+      <pfn filetype="ROOT_All" name="taePOOL.dat"/>
+    </physical>
+    <logical/>
+  </File>
+
 </POOLFILECATALOG>

@@ -1,20 +1,24 @@
 Executing:   /afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/qmtest_cleanup.sh
 ....starting cleanup.....
-    1 mdfData_0.dat
-    1 mdfData_10.dat
-    1 mdfData_3.dat
-    1 mdfData_4.dat
-    1 mdfData_5.dat
-    1 mdfData_6.dat
-    1 mdfData_7.dat
-    1 mdfData_8.dat
-    1 mdfData_9.dat
+ 1721 mdfData_0.dat
+ 1721 mdfData_10.dat
+20391 mdfData_1.dat
+20391 mdfData_2.dat
+ 1721 mdfData_3.dat
+ 1721 mdfData_4.dat
+ 1721 mdfData_5.dat
+ 1721 mdfData_6.dat
+ 1721 mdfData_7.dat
+ 1721 mdfData_8.dat
+ 1721 mdfData_9.dat
+  407 mdfPOOL.dat
  1030 mep_data_0.dat
 20610 mepData_0.dat
  1030 mep_data_1.dat
-    0 mifData.dat
+  645 mifData.dat
 20610 taeData_0.dat
-    0 taeData.dat
+16033 taeData.dat
+  251 taePOOL.dat
 1 Cnew.xml
-3 qmTest.xml
+4 qmTest.xml
 ....cleanup finished.....

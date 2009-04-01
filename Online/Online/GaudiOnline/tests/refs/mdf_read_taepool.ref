@@ -50,14 +50,66 @@ HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
-Error in <TFile::TFile>: file taePOOL.dat does not exist
-taePOOL.dat         ERROR You cannot open a ROOT file in mode READ if it does not exists.
-IODataManager       ERROR Error: connectDataIO> Cannot connect to database: PFN=taePOOL.dat FID=taePOOL.dat
-PoolRootTreeEvt...  ERROR Error: createSelect> Cannot open database:PFN:taePOOL.dat
+taePOOL.dat       SUCCESS Root file version:51800
+PoolRootTreeEvt...   INFO No RunRecords present in:26FE952B-F81E-DE11-B1D8-000423D6B700
+EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
+RawDataCnvSvc        INFO Opened(READ) MDF stream:1823C7F6-BC1E-DE11-BDC3-000423D9A21A ID:0x28661f0
+R__unzip: too small target
+RawDataCnvSvc        INFO Retry with increased buffer space of 185208 bytes.
+Explorer             INFO ========= /Event[0x2715a70@EventDataSvc]:
+Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
+Explorer             INFO | +--> /Prev5 [Address: CLID=0x1 Type=0xa000000]  DataObject
+Explorer             INFO | | +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
+Explorer             INFO | |   +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
+Explorer             INFO | +--> /Prev4 [Address: CLID=0x1 Type=0xa000000]  DataObject
+Explorer             INFO | | +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
+Explorer             INFO | |   +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
+Explorer             INFO | +--> /Prev3 [Address: CLID=0x1 Type=0xa000000]  DataObject
+Explorer             INFO | | +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
+Explorer             INFO | |   +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
+Explorer             INFO | +--> /Prev2 [Address: CLID=0x1 Type=0xa000000]  DataObject
+Explorer             INFO | | +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
+Explorer             INFO | |   +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
+Explorer             INFO | +--> /Prev1 [Address: CLID=0x1 Type=0x202]  DataObject
+Explorer             INFO | | +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
+Explorer             INFO | |   +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
+Explorer             INFO | +--> /DAQ [Address: CLID=0x1 Type=0x202]  DataObject
+Explorer             INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
+Explorer             INFO | +--> /Next1 [Address: CLID=0x1 Type=0x202]  DataObject
+Explorer             INFO | | +--> /DAQ [Address: CLID=0x1 Type=0x202]  DataObject
+Explorer             INFO | |   +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
+Explorer             INFO | +--> /Next2 [Address: CLID=0x1 Type=0xa000000]  DataObject
+Explorer             INFO | | +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
+Explorer             INFO | |   +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
+Explorer             INFO | +--> /Next3 [Address: CLID=0x1 Type=0xa000000]  DataObject
+Explorer             INFO | | +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
+Explorer             INFO | |   +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
+Explorer             INFO | +--> /Next4 [Address: CLID=0x1 Type=0xa000000]  DataObject
+Explorer             INFO | | +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
+Explorer             INFO | |   +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
+Explorer             INFO   +--> /Next5 [Address: CLID=0x1 Type=0xa000000]  DataObject
+Explorer             INFO     +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
+Explorer             INFO       +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
+EventSelector     SUCCESS Reading Event record 201. Record number within stream 1: 201
+EventSelector     SUCCESS Reading Event record 401. Record number within stream 1: 401
+EventSelector     SUCCESS Reading Event record 601. Record number within stream 1: 601
+EventSelector     SUCCESS Reading Event record 801. Record number within stream 1: 801
+EventSelector     SUCCESS Reading Event record 1001. Record number within stream 1: 1001
+EventSelector     SUCCESS Reading Event record 1201. Record number within stream 1: 1201
+EventSelector     SUCCESS Reading Event record 1401. Record number within stream 1: 1401
+EventSelector     SUCCESS Reading Event record 1601. Record number within stream 1: 1601
+EventSelector     SUCCESS Reading Event record 1801. Record number within stream 1: 1801
+EventSelector     SUCCESS Reading Event record 2001. Record number within stream 1: 2001
+EventSelector     SUCCESS Reading Event record 2201. Record number within stream 1: 2201
+EventSelector     SUCCESS Reading Event record 2401. Record number within stream 1: 2401
+EventSelector     SUCCESS Reading Event record 2601. Record number within stream 1: 2601
+EventSelector     SUCCESS Reading Event record 2801. Record number within stream 1: 2801
 EventLoopMgr         INFO No more events in event selection
 +-------------------> Finished processing events
 ApplicationMgr       INFO Application Manager Stopped successfully
 EventLoopMgr         INFO Histograms converted successfully according to request.
+RawDataCnvSvc        INFO Closed MDF stream:1823C7F6-BC1E-DE11-BDC3-000423D9A21A ID:0x28661f0
 ToolSvc              INFO Removing all tools created by ToolSvc
+PoolRootTreeEvt...   INFO Disconnected data IO:26FE952B-F81E-DE11-B1D8-000423D6B700[taePOOL.dat]
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

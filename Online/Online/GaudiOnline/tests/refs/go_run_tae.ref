@@ -1,0 +1,42 @@
+Executing:   gentest.exe libGaudiOnline.so qmtest_tae
+Parent: Started process:TAEBuffers_0 output redirected to:/dev/null
+Starting processes .....
+Parent: Started process:TAE_0 output redirected to:/dev/null
+Parent: Started process:TAE_1 output redirected to:/dev/null
+Parent: Started process:TAE_2 output redirected to:/dev/null
+Parent: Started process:TAE_3 output redirected to:/dev/null
+Parent: Started process:TAE_4 output redirected to:/dev/null
+Starting producer ......
+Parent: Started process:TAEProd_0 output redirected to:/dev/null
+waitpid() exited: Status=0
+Producer finished work..
+Child: Starting process:MBMsummary_0
+Parent: Started process:MBMsummary_0
++++++ MBM buffer section sucessfully mapped.
+
+======================== MBM Bufer summary for buffer "MEP" ========================
+
+ Buffer "MEP"               Events: Produced:20000 Actual:100000 Seen:20000 Pending:0 Max:100
+                            Space(kB):[Tot:6998 Free:6998] Users:[Tot:5 Max:10]
+
+ Name            Partition Type State   Produced %prod     #seen %seen Reqs Buffer
+ CONS_ONE              14d    C   wev                      20000   100   1     MEP
+
+======================== MBM Bufer summary for buffer "SEND" ========================
+
+ Buffer "SEND"              Events: Produced:20000 Actual:0 Seen:0 Pending:0 Max:100
+                            Space(kB):[Tot:6999 Free:6999] Users:[Tot:5 Max:14]
+
+ Name            Partition Type State   Produced %prod     #seen %seen Reqs Buffer
+ PROD_ONE              14d    P   *SP      20000   100                                   SEND
+
++++++ MBM summary finished.
+waitpid() exited: Status=1
+Summary task finished work..
+waitpid() exited: Status=0
+waitpid() exited: Status=0
+waitpid() exited: Status=0
+waitpid() exited: Status=0
+waitpid() exited: Status=0
+waitpid() exited: Status=0
+All processes finished work..
