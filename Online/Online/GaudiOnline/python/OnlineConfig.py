@@ -259,10 +259,10 @@ def mepConverterApp(partID, partName, bursts=True, freq=0.):
   return _application('NONE',evtsel='NONE',extsvc=[monSvc,mepMgr,evtloop,runable],runable=runable,evtloop=evtloop)
 
 #------------------------------------------------------------------------------------------------
-def dataSenderApp(partID, partName, target, buffer, partitionBuffers=True, decode=False,algs=[]):
+def dataSenderApp(partID, partName, target, buffer, partitionBuffers=True, decode=False,request=None,algs=[]):
   mepMgr               = mepManager(partID,partName,[buffer], partitionBuffers)
   runable              = evtRunable(mepMgr)
-  evtSel               = mbmSelector(buffer,decode=decode)
+  evtSel               = mbmSelector(buffer,type=request,decode=decode)
   evtdata              = evtDataSvc()
   evtPers              = rawPersistencySvc()
   sender               = evtSender(target)
