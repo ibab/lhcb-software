@@ -5,4 +5,52 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-04-01 - Silvia Miglioranzi
- - First version of validation scripts for productions. 
+ - First version of validation scripts for productions.  
+
+   1) Gauss_SimRefPlots.py: providing in input two Gauss .root and .log files, 
+   this script crates a html page (simpage.html) with the summary of the 
+   comparison.   
+
+   Usage: python Gauss_SimRefPlots.py -r GaussHistos_REF.root  -l  Gauss_REF.log 
+   -s GaussHistos.root -f Gauss.log
+
+   Main steering Options:
+
+   --install : creates a directory containing the comparison results in the 
+   http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/gauss/simulation
+   /validation/ area (without this option the webpage and plots will be created
+   in the directory where the script is run).
+   
+   --add-to-index : updates the summary simulation monitoring web page:
+   http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/gauss/simulation
+   /validation/index.html adding the results of the comparison.
+
+   --kolmogorov : allows to change the ROOT Kolmogorov Test running options 
+   (the default is " "); the user can choose for istance the option "D" for 
+   debugging.
+
+   2) Gauss_GetProdLogFiles.py: providing in input the PROD IDs of the samples 
+   to compare, this script searches in the http://lhcb-logs.cern.ch/storage/lhcb/MC/ 
+   area for the first GaussHisto.roots and corresponding log files. It downloads them 
+   in the directory where the script is run and execute the Gauss_SimRefPlots.py 
+   to analyze them.
+
+   Usage: python autorun_prodid.py <webpage> <REF_prodid> <CURR_prodid>
+
+   Example: python autorun_prodid.py http://lhcb-logs.cern.ch/storage/lhcb/MC/ 4497 3974
+
+   3) Gauss_ExampleCombine_MPV_betagamma.py : this script loops over the lines of 
+   the html source: http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/
+   gauss/simulation/validation/index.html
+   and fills the "dE/dx MPV vs betagamma" histogram for a specific particle type 
+   providing the "starting and stopping titles" (see Example and webpage).
+
+   Usage: python plot_MPV_betagamma.py
+
+   Example: setting in the script the lines:
+
+ 	 mcSetIni = "PGUN: mu+mu- (LHEP+EMopt1+DRays OFF+KineHT)"
+	 mcSetEnd = "PGUN: mu+mu- (LHEP+EMopt1+DRays ON+KineHT)"
+
+   only the pi+pi- (LHEP+EMopt1+DRays OFF+KineHT) info will be plotted.
+
