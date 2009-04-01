@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.16 2009-03-19 09:28:20 dhcroft Exp $
+// $Id: HltFunctions.h,v 1.17 2009-04-01 09:57:31 dhcroft Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -89,8 +89,18 @@ namespace Hlt {
   public:
     explicit MissedVeloHits(){};
     double operator()( const LHCb::Track& t ) const{
-      return (t.info(LHCb::Track::nExpectedVelo,-1.))
-	- static_cast<double>(t.nLHCbIDs());
+      // should cut on LHCb::Track::nPRVelo3DExpect, 
+      // however HLT overwrites the 3D info with the RZ info 
+      // so if that is available double it then use that
+      if( t.hasInfo(LHCb::Track::nPRVelo3DExpect) ){	
+	return (t.info(LHCb::Track::nPRVelo3DExpect,-1.))
+	  - static_cast<double>(t.nLHCbIDs());
+      }else if( t.hasInfo(LHCb::Track::nPRVeloRZExpect) ){
+	return (2.*t.info(LHCb::Track::nPRVeloRZExpect,-1.))
+	  - static_cast<double>(t.nLHCbIDs());
+      }else{
+	return -1.;
+      }
     }
     Hlt::TrackFunction* clone() const { return new MissedVeloHits(); }
   };
