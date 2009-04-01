@@ -1,4 +1,4 @@
-// $Id: PatRZTrack.cpp,v 1.6 2009-03-19 09:25:08 dhcroft Exp $
+// $Id: PatRZTrack.cpp,v 1.7 2009-04-01 09:54:20 dhcroft Exp $
 // Include files 
 
 // local
@@ -21,12 +21,11 @@ namespace Tf {
     m_sr(0.),
     m_sz(0.),
     m_srz(0.),
-    m_sr2(0.),
     m_sz2(0.),
     m_valid(true),
     m_zone(0),  
     m_backward(false),
-    m_missedStations(0),
+    m_missedStations(-1),
     m_minSensor( 100 ),
     m_maxSensor( 0 ),
     m_pos0(-999.),
@@ -47,7 +46,6 @@ namespace Tf {
     m_sr  = m_sr  + w * r;
     m_sz  = m_sz  + w * z;
     m_srz = m_srz + w * r * z;
-    m_sr2 = m_sr2 + w * r * r;
     m_sz2 = m_sz2 + w * z * z;
 
     if( m_coord.size() > 2 ){

@@ -1,4 +1,4 @@
-// $Id: PatVeloTrackTool.cpp,v 1.9 2009-03-19 09:25:09 dhcroft Exp $
+// $Id: PatVeloTrackTool.cpp,v 1.10 2009-04-01 09:54:20 dhcroft Exp $
 // Include files 
 
 // from Gaudi
@@ -166,7 +166,8 @@ namespace Tf {
       newTrack->setZone( pTrack.specific() );
       newTrack->setAncestor( &pTrack );
       // -1 is the default should the RZ track not have an expectation set
-      newTrack->setNVeloExpected(pTrack.info(LHCb::Track::nExpectedVelo,-1.));
+      // expect twice as many phi + r as R clusters
+      newTrack->setNVeloExpected(2.*pTrack.info(LHCb::Track::nPRVeloRZExpect,-1.));
 
       // copy co-ords from rz track input tracks
       std::vector<LHCb::LHCbID>::const_iterator itR;
@@ -221,10 +222,9 @@ namespace Tf {
     newTrack->setFlag( LHCb::Track::Backward, patTrack->backward() );
     newTrack->setType( LHCb::Track::Velo );
     newTrack->setPatRecStatus( LHCb::Track::PatRecIDs );
-    // the number of "expected" r+phi clusters is twice 
-    // the number of expected R clusters 
+    // the number of "expected" r+phi clusters 
     if( patTrack->nVeloExpected() > -0.5 ){ // default if unset is -1
-      newTrack->addInfo(LHCb::Track::nExpectedVelo,patTrack->nVeloExpected());
+      newTrack->addInfo(LHCb::Track::nPRVelo3DExpect,patTrack->nVeloExpected());
     }
 
     // set box offset here

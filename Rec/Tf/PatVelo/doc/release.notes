@@ -4,6 +4,13 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2009-04-01 - David Hutchcroft
+ - Tweaked the setting of the number of missing clusters to better cope with
+   stations to the beam line missed.
+ - added more comments and cleaned an unused variable from PatRZTrack
+ - Changed enums for storing N expected Velo clusters
+
+
 ! 2009-04-01 - Olivier Callot
  - In PatVeloSpaceTool correct the half box offset for phi computation.
    In PatVeloSpaceTrack protect for the case of two hits in the same sensor

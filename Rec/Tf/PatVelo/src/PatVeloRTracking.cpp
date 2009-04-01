@@ -1,4 +1,4 @@
-// $Id: PatVeloRTracking.cpp,v 1.7 2009-03-19 09:25:09 dhcroft Exp $
+// $Id: PatVeloRTracking.cpp,v 1.8 2009-04-01 09:54:20 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -313,11 +313,9 @@ namespace Tf {
         track->setChi2AndDoF(tr->chi2(),tr->nbCoords()-2);
 	// also add the number of found + missed stations 
 	// to the track information for ghost rejection later if required
-	// return the number of expetced R + phi clusters 
-	// due to issues in the HLT
-	track->addInfo(LHCb::Track::nExpectedVelo,
-		       2.*static_cast<double>(tr->nbCoords()+
-					      tr->missedStations()) );
+	track->addInfo(LHCb::Track::nPRVeloRZExpect,
+		       static_cast<double>(tr->nbCoords()+
+					   tr->missedStations()) );
 
         // store details of hits on track
         for ( VeloRHits::iterator itC = tr->coords()->begin();

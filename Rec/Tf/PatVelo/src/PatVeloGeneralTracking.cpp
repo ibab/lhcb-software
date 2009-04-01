@@ -1,4 +1,4 @@
-// $Id: PatVeloGeneralTracking.cpp,v 1.16 2009-03-19 09:25:08 dhcroft Exp $
+// $Id: PatVeloGeneralTracking.cpp,v 1.17 2009-04-01 09:54:20 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -500,8 +500,8 @@ void Tf::PatVeloGeneralTracking::extendTrack(PointsList &trackPoints,
     newTrack->addPhi((*ipP)->phiHit());
   }
   // sst number of expected clusters
-  int nExpected = 2 + 2*(trackPoints.points().front()->rHit()->sensorNumber() -
-			 trackPoints.points().back()->rHit()->sensorNumber());
+  int nExpected = 2 + (trackPoints.points().front()->rHit()->sensorNumber() -
+		       trackPoints.points().back()->rHit()->sensorNumber());
   // cast to double as that is how value is stored in LHCb::Track
   // Assume one side only (i.e. either just A or just C)
   newTrack->setNVeloExpected( fabs(static_cast<double>(nExpected)) );

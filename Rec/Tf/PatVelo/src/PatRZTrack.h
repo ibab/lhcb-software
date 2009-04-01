@@ -1,4 +1,4 @@
-// $Id: PatRZTrack.h,v 1.4 2009-03-19 09:25:08 dhcroft Exp $
+// $Id: PatRZTrack.h,v 1.5 2009-04-01 09:54:20 dhcroft Exp $
 #ifndef TF_PATRZTRACK_H 
 #define TF_PATRZTRACK_H 1
 
@@ -37,7 +37,7 @@ namespace Tf {
       inline bool valid()          const { return m_valid; }
       inline VeloRHits* coords()       { return &m_coord; };
       inline unsigned int nbCoords() const { return m_coord.size(); }
-      inline unsigned int missedStations() const { return m_missedStations; }
+      inline int missedStations() const { return m_missedStations; }
       inline int zone()            const { return m_zone; } ///< get R zone
       inline bool backward()       const { return m_backward; }
 
@@ -47,7 +47,7 @@ namespace Tf {
       // set track parmaters
       void setValid( bool flag )  { m_valid = flag; }
       void setZone( unsigned int zone )    { m_zone = zone;   } ///< Set track R zone
-      void setMissedStations( unsigned int missed ) { m_missedStations = missed ; } 
+      void setMissedStations( int missed ) { m_missedStations = missed ; } 
       void setBackward( bool flag )      { m_backward = flag; }  
 
       void addRCoord( VeloRHit* coord ); ///< new R coord + fit
@@ -62,25 +62,24 @@ namespace Tf {
     protected:
 
     private:
-      double m_s0;
-      double m_sr;
-      double m_sz;
-      double m_srz;
-      double m_sr2;
-      double m_sz2;
-      bool   m_valid;
-      unsigned int    m_zone;
-      bool   m_backward;
-      unsigned int m_missedStations;
-      unsigned int m_minSensor;
-      unsigned int m_maxSensor;
+      double m_s0;   ///< sum of weight of R clusters
+      double m_sr;   ///< sum of ( weight of R clusters * r )
+      double m_sz;   ///< sum of ( weight of R clusters * z )
+      double m_srz;  ///< sum of ( weight of R clusters * r * z )
+      double m_sz2;  ///< sum of ( weight of R clusters * z**2 )
+      bool   m_valid;///< Track is OK to use
+      unsigned int    m_zone; ///< R sensor zone of track
+      bool   m_backward; ///< True if backwards track
+      int m_missedStations; ///< Num of stations missed to beam line
+      unsigned int m_minSensor; ///< min sensor number on track
+      unsigned int m_maxSensor; ///< max sensor number on track
 
-      double m_pos0;
-      double m_slope;
+      double m_pos0; ///< position on track in R at z=0
+      double m_slope; ///< dr/dz
 
-      double m_slopeErr;
+      double m_slopeErr; ///< error on dr/dz
 
-      VeloRHits m_coord;
+      VeloRHits m_coord; ///< Container of R coords
 
   };
 }
