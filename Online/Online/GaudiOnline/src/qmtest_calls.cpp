@@ -73,7 +73,9 @@ static int collect_summary(size_t len,Process* p[]) {
   ::lib_rtl_sleep(1000);
   return 0;
 }
-
+//
+//   Test of HLT event processing
+//
 extern "C" int qmtest_hlt(int argc, char** argv)  {
   string groot = ::getenv("GAUDIONLINEROOT");
   string main_opts = "-main="+groot+"/options/Main.opts";
@@ -111,7 +113,9 @@ extern "C" int qmtest_hlt(int argc, char** argv)  {
   cout << "Producer finished work.. " << endl;
   return collect_summary(sizeof(p)/sizeof(p[0]),p);
 }
-
+//
+//   Test of TAE event processing
+//
 extern "C" int qmtest_tae(int argc, char** argv)  {
   string groot = ::getenv("GAUDIONLINEROOT");
   string main_opts = "-main="+groot+"/options/Main.opts";
@@ -144,7 +148,9 @@ extern "C" int qmtest_tae(int argc, char** argv)  {
   cout << "Producer finished work.. " << endl;
   return collect_summary(sizeof(p)/sizeof(p[0]),p);
 }
-
+//
+//   Test of data sending from MBM buffer to receiver connected to MBM buffer
+//
 extern "C" int qmtest_evacuate(int argc, char** argv)  {
   string groot = ::getenv("GAUDIONLINEROOT");
   string main_opts = "-main="+groot+"/options/Main.opts";
@@ -193,7 +199,9 @@ extern "C" int qmtest_evacuate(int argc, char** argv)  {
   cout << "Producer finished work.. " << endl;
   return collect_summary(sizeof(p)/sizeof(p[0]),p);
 }
-
+//
+//   Test of disk writer attached to MBM buffer
+//
 extern "C" int qmtest_write_buffer(int argc, char** argv)  {
   string groot = ::getenv("GAUDIONLINEROOT");
   string main_opts = "-main="+groot+"/options/Main.opts";
@@ -287,72 +295,6 @@ extern "C" int pyhlt_test_run(int /* ac  */, char** /* av */)  {
   for(int i=20; i>=0; --i) if ( p[i] ) p[i]->stop();
   ::lib_rtl_sleep(1000);
   for(int i=20; i>=0; --i) if ( p[i] ) p[i]->wait(Process::WAIT_BLOCK);
-  cout << "All processes finished work.. " << endl;
-  ::lib_rtl_sleep(1000);
-
-  return 0;
-}
-
-extern "C" int tae_test(int /* ac  */, char** /* av */)  {
-  string groot = ::getenv("GAUDIONLINEROOT");
-  string main_opts = "-main="+groot+"/options/Main.opts";
-  string out = "/dev/null";
-
-  Process* p[15] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-  ProcessGroup pg;
-  const char *a0[] ={"libGaudiOnline.so", "OnlineStart", "libOnlineKernel.so", "tan_nameserver","-a","-tcp","-d",0};
-  const char *a1[] =CLASS1("TAEBuffers.opts");
-  const char *a2[] =CLASS1("MBMinit.opts");
-  const char *a3[] =CLASS1("MDFReceiver.opts");
-  const char *a4[] =CLASS1("ReadTAE.opts");
-  const char *a5[] =CLASS1("TAESender.opts");
-  const char *a6[] =CLASS1("TAEWriter.opts");
-  const char *aprod[]={"libGaudiOnline.so", "OnlineStart", "libGaudiOnline.so", "mep_producer","-n=prod_0","-p=333","-s=500","-r=2","-n=1000",0};
-  const char *asum[]={"mbm_summary",0};
-
-  i_putenv("TAN_PORT","YES");
-  i_putenv("TAN_NODE",RTL::nodeNameShort());
-  i_putenv("NODENAME",RTL::nodeNameShort());
-  i_putenv("DATAINTERFACE",RTL::nodeNameShort());
-
-  Process::setDebug(true);  
-  pg.add(p[0]=new Process("TanServ_0",   command(),a0,out.c_str()));
-  pg.add(p[1]=new Process("TAEInit_0",   command(),a1,out.c_str()));
-  pg.add(p[2]=new Process("MBMinit_0",   command(),a2,out.c_str()));
-  pg.start();
-  ::lib_rtl_sleep(3500);
-
-  pg.add(p[3] =new Process("Receiver_0", command(),a3,out.c_str()));
-  pg.start();
-  ::lib_rtl_sleep(2000);
-
-  pg.add(p[4] =new Process("TMA_0",      command(),a4,out.c_str()));
-  pg.add(p[6] =new Process("TMA_1",      command(),a4,out.c_str()));
-  pg.add(p[7] =new Process("TMA_2",      command(),a5,out.c_str()));
-  pg.add(p[8] =new Process("Sender_0",   command(),a5,out.c_str()));
-  pg.add(p[9] =new Process("TAEWriter",  command(),a6,out.c_str()));
-  pg.start();
-
-  cout << "Starting processes ..... " << endl;
-  ::lib_rtl_sleep(3000);
-  cout << "Starting producer ...... " << endl;
-  Process* prod=new Process("Prod_0",command(),aprod,out.c_str());
-  prod->start();
-  ::lib_rtl_sleep(4000);
-  prod->wait(Process::WAIT_BLOCK);
-  delete prod;
-  cout << "Producer finished work.. " << endl;
-  ::lib_rtl_sleep(4000);
-  Process* summary=new Process("Summary_0",command(),asum);
-  summary->start();
-  summary->wait(Process::WAIT_BLOCK);
-  delete summary;
-  cout << "Summary task finished work.. " << endl;
-
-  ::lib_rtl_sleep(3000);
-  for(int i=11; i>=0; --i) p[i]->stop();
-  ::lib_rtl_sleep(1000);
-  for(int i=11; i>=0; --i) p[i]->wait(Process::WAIT_BLOCK);
   cout << "All processes finished work.. " << endl;
   ::lib_rtl_sleep(1000);
 
