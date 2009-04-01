@@ -1,4 +1,3 @@
-execute(_createMEP,100)
 ApplicationMgr       INFO Application Manager Configured successfully
 {'ApplicationMgr': {'AppName': '',
                     'EvtSel': 'NONE',
@@ -15,8 +14,7 @@ ApplicationMgr       INFO Application Manager Configured successfully
               'Load': True,
               'OutputLevel': 3,
               'PrintFreq': 0.00021000000000000001},
- 'FileCatalog': {'Catalogs': ['xmlcatalog_file:Cnew.xml',
-                              'xmlcatalog_file:C1.xml']},
+ 'FileCatalog': {'Catalogs': ['xmlcatalog_file:qmTest.xml']},
  'IODataManager': {'AgeLimit': 1, 'OutputLevel': 1},
  'Writer_0': {'ChecksumType': 0,
               'Compress': 2,
@@ -26,8 +24,7 @@ ApplicationMgr       INFO Application Manager Configured successfully
               'Compress': 2,
               'Connection': 'file://mep_data_1.dat',
               'PackingFactor': 10}}
-ApplicationMgr      FATAL start: Invalid state "CONFIGURED"
----> Start processing events
++-------------------> Start processing events
 EventPersistenc...   INFO  'CnvServices':[ 'LHCb::RawDataCnvSvc/RawDataCnvSvc' ]
 Writer_0             INFO Initialize MDFWriter
 Writer_0             INFO Received event request connection.
@@ -39,11 +36,11 @@ HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
-Explorer             INFO ========= /Event[0x8f51088@EventDataSvc]:
+Explorer             INFO ========= /Event[0x8f4bab0@EventDataSvc]:
 Explorer             INFO +--> /Event [No Address]  DataObject
 Explorer             INFO   +--> /DAQ [No Address]  DataObject
 Explorer             INFO     +--> /RawEvent [No Address]  LHCb::RawEvent
----> Finished processing events
++-------------------> Finished processing events
 ApplicationMgr       INFO Application Manager Stopped successfully
 Writer_0             INFO Size:       0 Output:file://mep_data_0.dat MD5 sum:d41d8cd98f00b204e9800998ecf8427e
 Writer_1             INFO Size:       0 Output:file://mep_data_1.dat MD5 sum:d41d8cd98f00b204e9800998ecf8427e

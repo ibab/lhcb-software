@@ -1,4 +1,3 @@
-execute(_readMIF,1000000)
 +----------------------------------------------------------------------------+
 |      Executing MDF           ReadMIF                                       |
 +----------------------------------------------------------------------------+
@@ -21,11 +20,9 @@ ApplicationMgr       INFO Application Manager Configured successfully
               'Load': True,
               'OutputLevel': 3,
               'PrintFreq': 0.00021000000000000001},
- 'FileCatalog': {'Catalogs': ['xmlcatalog_file:Cnew.xml',
-                              'xmlcatalog_file:C1.xml']},
+ 'FileCatalog': {'Catalogs': ['xmlcatalog_file:qmTest.xml']},
  'IODataManager': {'AgeLimit': 5, 'OutputLevel': 1}}
-ApplicationMgr      FATAL start: Invalid state "CONFIGURED"
----> Start processing events
++-------------------> Start processing events
 EventPersistenc...   INFO  'CnvServices':[ 'LHCb::RawDataCnvSvc/RawDataCnvSvc' ]
 MIFSelector       SUCCESS Connected to:file://mifData.dat file://mifData.dat
 EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATA='file://mifData.dat' SVC='LHCb::MIFSelector'
@@ -33,82 +30,8 @@ HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
-MIFSelector       SUCCESS Connected to:58AD91C1-1FEA-DC11-A5AA-000423D950B0 file://../cmt/mdfData_1.dat
-EventSelector.D...   INFO Compression:0 Checksum:0
-EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
-EventPersistenc...   INFO Added successfully Conversion service:RawDataCnvSvc
-Explorer             INFO ========= /Event[0x8f68770@EventDataSvc]:
-Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
-Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
-Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
-EventSelector     SUCCESS Reading Event record 1001. Record number within stream 1: 1001
-MIFSelector       SUCCESS Connected to:7809A1AF-201E-DE11-B178-000423D9A21A root:file://mdfData_0.dat
-EventSelector.D...   INFO Compression:2 Checksum:1
-EventSelector     SUCCESS Reading Event record 2001. Record number within stream 1: 2001
-EventSelector     SUCCESS Reading Event record 3001. Record number within stream 1: 3001
-MIFSelector       SUCCESS Connected to:E6C199C1-1FEA-DC11-A5AA-000423D950B0 root:file:mdfData_2.dat
-EventSelector.D...   INFO Compression:0 Checksum:1
-EventSelector     SUCCESS Reading Event record 4001. Record number within stream 1: 4001
-Explorer             INFO ========= /Event[0x8f68960@EventDataSvc]:
-Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
-Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
-Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
-EventSelector     SUCCESS Reading Event record 5001. Record number within stream 1: 5001
-MIFSelector       SUCCESS Connected to:32349EAF-201E-DE11-B178-000423D9A21A root:mdfData_3.dat
-EventSelector.D...   INFO Compression:2 Checksum:1
-EventSelector     SUCCESS Reading Event record 6001. Record number within stream 1: 6001
-EventSelector     SUCCESS Reading Event record 7001. Record number within stream 1: 7001
-MIFSelector       SUCCESS Connected to:E0769EAF-201E-DE11-B178-000423D9A21A root:mdfData_4.dat
-EventSelector.D...   INFO Compression:2 Checksum:0
-EventSelector     SUCCESS Reading Event record 8001. Record number within stream 1: 8001
-EventSelector     SUCCESS Reading Event record 9001. Record number within stream 1: 9001
-Explorer             INFO ========= /Event[0x8f7b380@EventDataSvc]:
-Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
-Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
-Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
-MIFSelector       SUCCESS Connected to:E256A469-921E-DE11-A5AD-000423D9A21A root:file://./mdfData_5.dat
-EventSelector.D...   INFO Compression:2 Checksum:1
-EventSelector     SUCCESS Reading Event record 10001. Record number within stream 1: 10001
-EventSelector     SUCCESS Reading Event record 11001. Record number within stream 1: 11001
-IODataManager        INFO Disconnect from dataset file://../cmt/mdfData_1.dat [58AD91C1-1FEA-DC11-A5AA-000423D950B0]
-IODataManager       ERROR Referring to existing dataset root:file:./mdfData_6.dat by its physical name.
-IODataManager       ERROR You may not be able to nagivate back to the input file -- processing continues
-MIFSelector       SUCCESS Connected to:root:file:./mdfData_6.dat root:file:./mdfData_6.dat
-EventSelector.D...   INFO Compression:2 Checksum:1
-EventSelector     SUCCESS Reading Event record 12001. Record number within stream 1: 12001
-EventSelector     SUCCESS Reading Event record 13001. Record number within stream 1: 13001
-IODataManager        INFO Disconnect from dataset root:file://mdfData_0.dat [7809A1AF-201E-DE11-B178-000423D9A21A]
-IODataManager       ERROR Referring to existing dataset root:./mdfData_7.dat by its physical name.
-IODataManager       ERROR You may not be able to nagivate back to the input file -- processing continues
-MIFSelector       SUCCESS Connected to:root:./mdfData_7.dat root:./mdfData_7.dat
-EventSelector.D...   INFO Compression:2 Checksum:1
-EventSelector     SUCCESS Reading Event record 14001. Record number within stream 1: 14001
-Explorer             INFO ========= /Event[0x8f7aae8@EventDataSvc]:
-Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
-Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
-Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
-EventSelector     SUCCESS Reading Event record 15001. Record number within stream 1: 15001
-IODataManager        INFO Disconnect from dataset root:file:mdfData_2.dat [E6C199C1-1FEA-DC11-A5AA-000423D950B0]
-MIFSelector       SUCCESS Connected to:F89CEC6A-921E-DE11-A5AD-000423D9A21A root:file://./mdfData_8.dat
-EventSelector.D...   INFO Compression:2 Checksum:1
-EventSelector     SUCCESS Reading Event record 16001. Record number within stream 1: 16001
-EventSelector     SUCCESS Reading Event record 17001. Record number within stream 1: 17001
-IODataManager        INFO Disconnect from dataset root:mdfData_3.dat [32349EAF-201E-DE11-B178-000423D9A21A]
-MIFSelector       SUCCESS Connected to:10B0026B-921E-DE11-A5AD-000423D9A21A root:file:./mdfData_9.dat
-EventSelector.D...   INFO Compression:2 Checksum:1
-EventSelector     SUCCESS Reading Event record 18001. Record number within stream 1: 18001
-EventSelector     SUCCESS Reading Event record 19001. Record number within stream 1: 19001
-Explorer             INFO ========= /Event[0x8f79348@EventDataSvc]:
-Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
-Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
-Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
-IODataManager        INFO Disconnect from dataset root:mdfData_4.dat [E0769EAF-201E-DE11-B178-000423D9A21A]
-MIFSelector       SUCCESS Connected to:72B73E6B-921E-DE11-A5AD-000423D9A21A ./mdfData_10.dat
-EventSelector.D...   INFO Compression:2 Checksum:1
-EventSelector     SUCCESS Reading Event record 20001. Record number within stream 1: 20001
-EventSelector     SUCCESS Reading Event record 21001. Record number within stream 1: 21001
 EventLoopMgr         INFO No more events in event selection
----> Finished processing events
++-------------------> Finished processing events
 ApplicationMgr       INFO Application Manager Stopped successfully
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc

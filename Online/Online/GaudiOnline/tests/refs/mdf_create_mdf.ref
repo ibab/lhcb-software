@@ -1,4 +1,3 @@
-execute(_createMDF,2000)
 +----------------------------------------------------------------------------+
 |      Executing MDF           CreateMDF                                     |
 +----------------------------------------------------------------------------+
@@ -32,8 +31,7 @@ ApplicationMgr       INFO Application Manager Configured successfully
               'Load': True,
               'OutputLevel': 3,
               'PrintFreq': 0.00021000000000000001},
- 'FileCatalog': {'Catalogs': ['xmlcatalog_file:Cnew.xml',
-                              'xmlcatalog_file:C1.xml']},
+ 'FileCatalog': {'Catalogs': ['xmlcatalog_file:qmTest.xml']},
  'IODataManager': {'AgeLimit': 1, 'OutputLevel': 1},
  'MessageSvc': {'OutputLevel': 3},
  'Writer_0': {'ItemList': ['/Event#1'],
@@ -60,30 +58,39 @@ ApplicationMgr       INFO Application Manager Configured successfully
  'Writer_7': {'Connection': 'PFN:./mdfData_7.dat'},
  'Writer_8': {'Connection': 'root:file://./mdfData_8.dat'},
  'Writer_9': {'Connection': 'root:file:./mdfData_9.dat'}}
-ApplicationMgr      FATAL start: Invalid state "CONFIGURED"
----> Start processing events
++-------------------> Start processing events
 EventPersistenc...   INFO  'CnvServices':[ 'LHCb::RawDataCnvSvc/RawDataCnvSvc' ]
 EventPersistenc...   INFO Added successfully Conversion service:LHCb::RawDataCnvSvc
 Writer_0             INFO Data source: EventDataSvc output: DATAFILE='PFN:root:file://mdfData_0.dat' SVC='LHCb::RawDataCnvSvc' OPT='REC'
 Writer_1             INFO Initialize MDFWriter
-Writer_1             INFO Received event request connection.
+IODataManager       ERROR Failed to resolve LFN:/user/frank/markus/mdf_1.dat Cannot access this dataset.
+Writer_1            ERROR FAILED receiving event request connection.
 Writer_2             INFO Initialize MDFWriter
-Writer_2             INFO Received event request connection.
+IODataManager       ERROR Failed to resolve LFN:/user/frank/markus/mdf_2.dat Cannot access this dataset.
+Writer_2            ERROR FAILED receiving event request connection.
 Writer_3             INFO Initialize MDFWriter
+IODataManager        INFO Referring to dataset root:mdfData_3.dat by its file ID:8894EDE9-BC1E-DE11-A8FC-000423D9A21A
 Writer_3             INFO Received event request connection.
 Writer_4             INFO Initialize MDFWriter
+IODataManager        INFO Referring to dataset root:mdfData_4.dat by its file ID:0494F4E9-BC1E-DE11-A8FC-000423D9A21A
 Writer_4             INFO Received event request connection.
 Writer_5             INFO Initialize MDFWriter
+IODataManager        INFO Referring to dataset root:file://./mdfData_5.dat by its file ID:BE38F5E9-BC1E-DE11-A8FC-000423D9A21A
 Writer_5             INFO Received event request connection.
 Writer_6             INFO Initialize MDFWriter
+IODataManager        INFO Referring to dataset root:file://./mdfData_6.dat by its file ID:7E78F5E9-BC1E-DE11-A8FC-000423D9A21A
 Writer_6             INFO Received event request connection.
 Writer_7             INFO Initialize MDFWriter
+IODataManager        INFO Referring to dataset ./mdfData_7.dat by its file ID:8CB0F5E9-BC1E-DE11-A8FC-000423D9A21A
 Writer_7             INFO Received event request connection.
 Writer_8             INFO Initialize MDFWriter
+IODataManager        INFO Referring to dataset root:file://./mdfData_8.dat by its file ID:14E2F5E9-BC1E-DE11-A8FC-000423D9A21A
 Writer_8             INFO Received event request connection.
 Writer_9             INFO Initialize MDFWriter
+IODataManager        INFO Referring to dataset root:file:./mdfData_9.dat by its file ID:361FF6E9-BC1E-DE11-A8FC-000423D9A21A
 Writer_9             INFO Received event request connection.
 Writer_10            INFO Initialize MDFWriter
+IODataManager        INFO Referring to dataset ./mdfData_10.dat by its file ID:D287F6E9-BC1E-DE11-A8FC-000423D9A21A
 Writer_10            INFO Received event request connection.
 EventLoopMgr      WARNING Unable to locate service "EventSelector"
 EventLoopMgr      WARNING No events will be processed from external input.
@@ -91,25 +98,33 @@ HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
-Explorer             INFO ========= /Event[0x9024750@EventDataSvc]:
+Explorer             INFO ========= /Event[0x9005070@EventDataSvc]:
 Explorer             INFO +--> /Event [No Address]  DataObject
 Explorer             INFO   +--> /DAQ [No Address]  DataObject
 Explorer             INFO     +--> /RawEvent [No Address]  LHCb::RawEvent
-LHCb::RawDataCn...   INFO Opened(NEW)  MDF stream:PFN:root:file://mdfData_0.dat ID:0x9055ac0
----> Finished processing events
+IODataManager        INFO Referring to dataset root:file://mdfData_0.dat by its file ID:70BBF7E9-BC1E-DE11-A8FC-000423D9A21A
+LHCb::RawDataCn...   INFO Opened(NEW)  MDF stream:PFN:root:file://mdfData_0.dat ID:0x903f2e8
+Writer_1            ERROR Failed write data to output device.
+EventLoopMgr      WARNING Execution of output stream Writer_1 failed
+Writer_2            ERROR Failed write data to output device.
+EventLoopMgr      WARNING Execution of output stream Writer_2 failed
+EventLoopMgr        ERROR Error processing event loop.
+EventLoopMgr        ERROR Terminating event processing loop due to errors
+EventLoopMgr        ERROR Terminating event processing loop due to errors
++-------------------> Finished processing events
 ApplicationMgr       INFO Application Manager Stopped successfully
-Writer_0             INFO Events output: 2000
-Writer_1             INFO Size:20880000 Output:LFN:/user/frank/markus/mdf_1.dat MD5 sum:dc02f78b632fe55c37c3838ee3aaaf41
-Writer_2             INFO Size:20880000 Output:LFN:/user/frank/markus/mdf_2.dat MD5 sum:30d43bd10921906d457bca3b3dd90c50
-Writer_3             INFO Size: 1761540 Output:PFN:root:mdfData_3.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
-Writer_4             INFO Size: 1761540 Output:root:mdfData_4.dat MD5 sum:9f48e421e73f2421bfd836e3f9f83a81
-Writer_5             INFO Size: 1761540 Output:PFN:root:file://./mdfData_5.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
-Writer_6             INFO Size: 1761540 Output:PFN:root:file://./mdfData_6.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
-Writer_7             INFO Size: 1761540 Output:PFN:./mdfData_7.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
-Writer_8             INFO Size: 1761540 Output:root:file://./mdfData_8.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
-Writer_9             INFO Size: 1761540 Output:root:file:./mdfData_9.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
-Writer_10            INFO Size: 1761540 Output:./mdfData_10.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
+Writer_0             INFO Events output: 1
+Writer_1             INFO Size:       0 Output:LFN:/user/frank/markus/mdf_1.dat MD5 sum:d41d8cd98f00b204e9800998ecf8427e
+Writer_2             INFO Size:       0 Output:LFN:/user/frank/markus/mdf_2.dat MD5 sum:d41d8cd98f00b204e9800998ecf8427e
+Writer_3             INFO Size:     866 Output:PFN:root:mdfData_3.dat MD5 sum:09b77458b25e92d6590ed6627c065681
+Writer_4             INFO Size:     866 Output:root:mdfData_4.dat MD5 sum:20239f22890af0a253b69d61cd70ba6c
+Writer_5             INFO Size:     866 Output:PFN:root:file://./mdfData_5.dat MD5 sum:09b77458b25e92d6590ed6627c065681
+Writer_6             INFO Size:     866 Output:PFN:root:file://./mdfData_6.dat MD5 sum:09b77458b25e92d6590ed6627c065681
+Writer_7             INFO Size:     866 Output:PFN:./mdfData_7.dat MD5 sum:09b77458b25e92d6590ed6627c065681
+Writer_8             INFO Size:     866 Output:root:file://./mdfData_8.dat MD5 sum:09b77458b25e92d6590ed6627c065681
+Writer_9             INFO Size:     866 Output:root:file:./mdfData_9.dat MD5 sum:09b77458b25e92d6590ed6627c065681
+Writer_10            INFO Size:     866 Output:./mdfData_10.dat MD5 sum:09b77458b25e92d6590ed6627c065681
 EventLoopMgr         INFO Histograms converted successfully according to request.
-LHCb::RawDataCn...   INFO Closed MDF stream:PFN:root:file://mdfData_0.dat ID:0x9055ac0
+LHCb::RawDataCn...   INFO Closed MDF stream:PFN:root:file://mdfData_0.dat ID:0x903f2e8
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

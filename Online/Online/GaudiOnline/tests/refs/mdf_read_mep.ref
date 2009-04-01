@@ -1,4 +1,3 @@
-execute(_readMEP,1000000)
 ApplicationMgr       INFO Application Manager Configured successfully
 {'ApplicationMgr': {'AppName': '',
                     'EvtSel': 'NONE',
@@ -8,12 +7,10 @@ ApplicationMgr       INFO Application Manager Configured successfully
                   'ForceLeaves': True,
                   'RootCLID': 1},
  'EventPersistencySvc': {'CnvServices': ['LHCb::RawDataCnvSvc/RawDataCnvSvc']},
- 'FileCatalog': {'Catalogs': ['xmlcatalog_file:Cnew.xml',
-                              'xmlcatalog_file:C1.xml']},
+ 'FileCatalog': {'Catalogs': ['xmlcatalog_file:qmTest.xml']},
  'IODataManager': {'AgeLimit': 1, 'OutputLevel': 1},
  'MEPDump': {'Connection': 'file://mep_data_0.dat'}}
-ApplicationMgr      FATAL start: Invalid state "CONFIGURED"
----> Start processing events
++-------------------> Start processing events
 EventPersistenc...   INFO  'CnvServices':[ 'LHCb::RawDataCnvSvc/RawDataCnvSvc' ]
 EventLoopMgr      WARNING Unable to locate service "EventSelector"
 EventLoopMgr      WARNING No events will be processed from external input.
@@ -136,7 +133,7 @@ EventLoopMgr      WARNING Execution of algorithm MEPDump failed
 EventLoopMgr        ERROR Error processing event loop.
 EventLoopMgr        ERROR Terminating event processing loop due to errors
 EventLoopMgr        ERROR Terminating event processing loop due to errors
----> Finished processing events
++-------------------> Finished processing events
 ApplicationMgr       INFO Application Manager Stopped successfully
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ApplicationMgr       INFO Application Manager Finalized successfully

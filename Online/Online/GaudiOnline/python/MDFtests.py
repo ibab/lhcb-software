@@ -50,10 +50,9 @@ def setData(test_castor=False):
 #------------------------------------------------------------------------------------------------
 def execute(func, numEvt):
   g = _run(func(),True)[1]
-  g.start()
-  print '---> Start processing events '
+  print '+-------------------> Start processing events '
   g.run(numEvt)
-  print '---> Finished processing events '
+  print '+-------------------> Finished processing events '
   g.stop()
   g.finalize()
   sys.exit(0)
@@ -65,7 +64,7 @@ def setupApp():
   app.HistogramPersistency = 'NONE'
   svc  = CFG.EventPersistencySvc()
   svc.CnvServices += [Configs.LHCb__RawDataCnvSvc('RawDataCnvSvc')]
-  CFG.FileCatalog().Catalogs = ['xmlcatalog_file:Cnew.xml','xmlcatalog_file:C1.xml']
+  CFG.FileCatalog().Catalogs = ['xmlcatalog_file:qmTest.xml']
   CFG.IODataManager().OutputLevel = 1  
   CFG.IODataManager().AgeLimit = 1
   svc                  = CFG.EventDataSvc()
@@ -278,6 +277,5 @@ if __name__ == "__main__":
   elif tt == 'createTAE':
     evt = 3000
   fun = 'execute(_'+tt+','+str(evt)+')'
-  print fun
   res =  eval(fun)
   sys.exit(0)
