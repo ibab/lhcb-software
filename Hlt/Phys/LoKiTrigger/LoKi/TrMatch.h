@@ -1,4 +1,4 @@
-// $Id: TrMatch.h,v 1.1 2008-11-17 17:38:49 ibelyaev Exp $
+// $Id: TrMatch.h,v 1.2 2009-04-01 12:36:09 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_TRMATCH_H 
 #define LOKI_TRMATCH_H 1
@@ -32,16 +32,17 @@ namespace LoKi
   {
     // ========================================================================
     /** @class TrMatch TrMatch.h LoKi/TrMatch.h
-     *  Simple helper whjcih represent the track matching concept  
+     *  Simple helper whicch represent the track matching concept  
      *  @see ITrackMatch 
      *  @see LoKi::Hlt1::MatchConf
      *  @see LoKi::Cuts::TrMATCH
+     *  @see LoKi::Hlt1::TrMatch2
      *  @author Vanya BELYAEV Ivab.Belyaev@nikhef.nl
      *  @date   2008-11-14
      */
     class TrMatch : public LoKi::BasicFunctors<LHCb::Track*>::Pipe 
     {
-    private:
+    protected:
       // ======================================================================
       /// the actual type of track source
       typedef LoKi::BasicFunctors<LHCb::Track*>::Source TrSource ;
@@ -98,6 +99,8 @@ namespace LoKi
       operator const LoKi::Hlt1::MatchConf& () const { return   config() ; }
       /// the matching tool
       const LoKi::Interface<ITrackMatch>& match () const { return m_match ; }
+      /// the second source 
+      const TrSource& tracks2() const { return m_tracks2.func() ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -144,7 +147,52 @@ namespace LoKi
       /// the algorithm
       mutable const GaudiAlgorithm* m_alg     ;  //              the algorithm
       // ======================================================================
+    protected:
+      // ======================================================================
+      /// invert ?
+      bool invert() const { return m_invert ; }                     // invert ?
+      // ======================================================================
+      /// set the invert flag
+      void setInvert ( const bool invert ) { m_invert = invert ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// invert flag ?
+      bool m_invert ;                                          // invert flag ?
+      // ======================================================================
     };
+    // ========================================================================
+    /** @class TrMatch2 TrMatch.h LoKi/TrMatch.h
+     *  Simple helper whcich represent the track matching concept  
+     *  @see ITrackMatch 
+     *  @see LoKi::Hlt1::MatchConf
+     *  @see LoKi::Hlt1::TrMatch
+     *  @see LoKi::Cuts::TrMATCH2
+     *  @author Vanya BELYAEV Ivab.Belyaev@nikhef.nl
+     *  @date   2008-11-14
+     */
+    class TrMatch2 : public TrMatch
+    {
+    public :
+      // ======================================================================
+      /// constructor 
+      TrMatch2 
+      ( const std::string&           output  ,   //   output selection name/key 
+        const TrSource&              tracks2 ,   //   tracks to be matched with 
+        const LoKi::Hlt1::MatchConf& config  ) ; //          tool configuration 
+      /// MANDATORY: virtual desctructor 
+      virtual ~TrMatch2() {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  TrMatch2* clone() const { return new TrMatch2(*this) ; }
+      /// OPTIONAL: nice printout 
+      virtual std::ostream&  fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      TrMatch2() ;                       // the default constructor is disabled 
+      // ======================================================================
+    } ;
     // ========================================================================
   } // end of namespace LoKi::Hlt1 
   // ==========================================================================

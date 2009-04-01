@@ -1,4 +1,4 @@
-// $Id: Hlt1Functions.h,v 1.1 2009-03-30 19:06:49 ibelyaev Exp $
+// $Id: Hlt1Functions.h,v 1.2 2009-04-01 12:36:09 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_HLT1FUNCTIONS_H 
 #define LOKI_HLT1FUNCTIONS_H 1
@@ -81,6 +81,9 @@ namespace LoKi
      *  @see HltDeltaPTool
      *  @see LoKi::Tracks::MuonDeltaP
      *  @see LoKi::Cuts::TrDPMU
+     *  @see LoKi::Cuts::TrDPMUON
+     *  @see LoKi::Cuts::TrDSELTAPMU
+     *  @see LoKi::Cuts::TrDSELTAPMUON
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2009-03-30
      */
@@ -96,6 +99,39 @@ namespace LoKi
      *  @date 2009-03-30
      */
     const LoKi::Tracks::MuonDeltaP                                     TrDPMU ;
+    // ========================================================================
+    /** @var TrDPMUON 
+     *  Simple functor to cut on "delta-P" for muons.
+     *  Essentially it is LoKified verison of HltDeltaPTool by Leando de Paula
+     *  @see HltDeltaPTool
+     *  @see LoKi::Tracks::MuonDeltaP
+     *  @see LoKi::Cuts::TrDPMU_
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-03-30
+     */
+    const LoKi::Tracks::MuonDeltaP                                   TrDPMUON ;
+    // ========================================================================
+    /** @var TrDELTAPMU 
+     *  Simple functor to cut on "delta-P" for muons.
+     *  Essentially it is LoKified verison of HltDeltaPTool by Leando de Paula
+     *  @see HltDeltaPTool
+     *  @see LoKi::Tracks::MuonDeltaP
+     *  @see LoKi::Cuts::TrDPMU_
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-03-30
+     */
+    const LoKi::Tracks::MuonDeltaP                                 TrDELTAPMU ;
+    // ========================================================================
+    /** @var TrDELTAPMUON
+     *  Simple functor to cut on "delta-P" for muons.
+     *  Essentially it is LoKified verison of HltDeltaPTool by Leando de Paula
+     *  @see HltDeltaPTool
+     *  @see LoKi::Tracks::MuonDeltaP
+     *  @see LoKi::Cuts::TrDPMU_
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-03-30
+     */
+    const LoKi::Tracks::MuonDeltaP                               TrDELTAPMUON ;
     // ========================================================================
   } // end of namespace LoKi::Cuts 
   // ==========================================================================

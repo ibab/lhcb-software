@@ -1,4 +1,4 @@
-// $Id: TrMatch.cpp,v 1.1 2008-11-17 17:38:49 ibelyaev Exp $
+// $Id: TrMatch.cpp,v 1.2 2009-04-01 12:36:09 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -39,6 +39,8 @@ LoKi::Hlt1::TrMatch::TrMatch
   , m_match      (         )
   , m_recoID     ( 0       )
   , m_alg        ( 0       ) 
+  // 
+  , m_invert     ( false   )
 {
   init() ; 
 }
@@ -64,15 +66,24 @@ LoKi::Hlt1::TrMatch::operator()
   
   // the output selection 
   TRACKS output ;
+  
+  const TRACKS* arg1 = &a       ;
+  const TRACKS* arg2 = &tracks2 ;
+  
+  /// swap the arguments 
+  if  ( invert() ) 
+  { 
+    arg1 = &tracks2 ;
+    arg2 = &a       ;
+  }
 
   // double loop over all 2-tracks combinations
-  
-  for ( TRACKS::const_iterator itrk1 = a.begin() ; a.end() != itrk1 ; ++itrk1 ) 
+  for ( TRACKS::const_iterator itrk1 = arg1->begin() ; arg1->end() != itrk1 ; ++itrk1 ) 
   {
     const LHCb::Track* trk1 = *itrk1 ;
     if ( 0 == trk1 ) { continue ; }                                // CONTINUE 
     
-    for ( TRACKS::const_iterator itrk2 = tracks2.begin() ; tracks2.end() != itrk2 ; ++itrk2 ) 
+    for ( TRACKS::const_iterator itrk2 = arg2->begin() ; arg2->end() != itrk2 ; ++itrk2 ) 
     {
       const LHCb::Track* trk2 = *itrk2 ;
       if ( 0 == trk2 ) { continue ; }                              // CONTINUE  
@@ -115,10 +126,10 @@ LoKi::Hlt1::TrMatch::operator()
 std::ostream& LoKi::Hlt1::TrMatch::fillStream ( std::ostream& s ) const 
 {
   return 
-    s << "TrMatch(" 
-      << "'" << address()  << "',"
-      <<        m_tracks2  << "," 
-      <<  config()         << ")" ;  
+    s << "TrMATCH("
+      << "'" << address ()  << "',"
+      <<        tracks2 ()  << "," 
+      <<        config  ()  << ")" ;  
 }
 // ============================================================================
 void LoKi::Hlt1::TrMatch::init () const 
@@ -169,8 +180,32 @@ void LoKi::Hlt1::TrMatch::init () const
   }
   //
 }
+// ============================================================================
+
 
 // ============================================================================
+// constructor 
+// ============================================================================
+LoKi::Hlt1::TrMatch2::TrMatch2 
+( const std::string&           output  ,         //   output selection name/key 
+  const TrSource&              tracks2 ,         //   tracks to be matched with 
+  const LoKi::Hlt1::MatchConf& config  )         //          tool configuration 
+  : LoKi::Hlt1::TrMatch ( output , tracks2 , config ) 
+{
+  setInvert ( true ) ;
+}
+// ============================================================================
+// OPTIONAL: nice printout 
+// ============================================================================
+std::ostream& LoKi::Hlt1::TrMatch2::fillStream ( std::ostream& s ) const 
+{
+  return 
+    s <<  "TrMATCH2(" 
+      << "'" << address ()  << "',"
+      <<        tracks2 ()  << "," 
+      <<        config  ()  << ")" ;  
+}
+  
 
 
 // ============================================================================

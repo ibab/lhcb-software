@@ -1,20 +1,93 @@
-// $Id: Hlt1Binders.h,v 1.1 2008-11-17 17:38:48 ibelyaev Exp $
+// $Id: Hlt1Binders.h,v 1.2 2009-04-01 12:36:09 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKITRIGGER_HLT1BINDERS_H 
 #define LOKITRIGGER_HLT1BINDERS_H 1
 // ============================================================================
 // Include files
 // ============================================================================
+// STD & STL 
+// ============================================================================
+#include <climits>
+// ============================================================================
+// LHCbMath
+// ============================================================================
+#include "LHCbMath/LHcbMath.h"
+// ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/apply.h"
 #include "LoKi/HltBinders.h"
+// ============================================================================
+// BOOST
+// ============================================================================
+#include "boost/static_assert.hpp"
 // ============================================================================
 namespace LoKi 
 {
   // ==========================================================================
   namespace HltBinders 
   {
+    // ========================================================================
+    /** @struct BinOps 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2008-11-17
+     */        
+    template <class TYPE> struct BinOps  ;
+    template <class TYPE> 
+    struct BinOps<std::less<TYPE>    >
+    { 
+      BOOST_STATIC_ASSERT( std::numeric_limits<TYPE>::is_specialized ) ;
+      /// the exceptional value 
+      static TYPE value() { return std::numeric_limits<TYPE>::max() ; } 
+      /// the name of the operation
+      static std::string name() 
+      {
+        const static std::string s_name  = "Min" ; 
+        return s_name ;
+      }
+    };
+    // ========================================================================
+    template <class TYPE> 
+    struct BinOps<std::greater<TYPE> >
+    { 
+      BOOST_STATIC_ASSERT( std::numeric_limits<TYPE>::is_specialized ) ;
+      /// the exceptional value 
+      static TYPE value() { return 1 - std::numeric_limits<TYPE>::max() ; } 
+      /// the name of the operation
+      static std::string name() 
+      {
+        const static std::string s_name  = "Max" ; 
+        return s_name ;
+      }
+    };
+    // ========================================================================
+    template <class TYPE> 
+    struct  BinOps<LHCb::Math::abs_less<TYPE> >
+    { 
+      BOOST_STATIC_ASSERT( std::numeric_limits<TYPE>::is_specialized ) ;
+      /// the exceptional value 
+      static TYPE value() { return std::numeric_limits<TYPE>::max() ; } 
+      /// the name of the operation
+      static std::string name() 
+      {
+        const static std::string s_name  = "AbsMin" ; 
+        return s_name ;
+      }
+    };
+    // ========================================================================
+    template <class TYPE> 
+    struct  BinOps<LHCb::Math::abs_greater<TYPE> >
+    { 
+      BOOST_STATIC_ASSERT( std::numeric_limits<TYPE>::is_specialized ) ;
+      /// the exceptional value 
+      static TYPE value() { return 0 ; } 
+      /// the name of the operation
+      static std::string name() 
+      {
+        const static std::string s_name  = "AbsMax" ; 
+        return s_name ;
+      }
+    };
     // ========================================================================
     /** @class BinderValueWithTheSource
      *  Simple generalization of class LoKi::HltBinders::BinderValue

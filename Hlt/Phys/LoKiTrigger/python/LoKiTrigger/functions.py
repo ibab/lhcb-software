@@ -227,6 +227,30 @@ TrVRIP        = LoKi.Tracks.RadialIP        ()
 TrDPMU_       = LoKi.Tracks.MuonDeltaP
 ## @see LoKi::Cuts::TrDPMU
 TrDPMU        = LoKi.Tracks.MuonDeltaP()
+TrDELTAPMU    = TrDPMU 
+TrDPMUON      = TrDPMU 
+TrDELTAPMUON  = TrDPMU 
+
+
+## @see LoKi::Cuts::TrFUN 
+TrFUN          = LoKi.Tracks.TrFunction
+## @see LoKi::Cuts::TTrFUN 
+TTrFUN         = LoKi.Tracks.TTrFunction
+## @see LoKi::Cuts::TTrFUN2
+TTrFUN2        = LoKi.Tracks.TTrFunction2
+## @see LoKi::Cuts::TTrTVELOMATCH
+TTrTVELOMATCH  = LoKi.Tracks.TTrMatchTVelo
+## @see LoKi::Cuts::TTrTVELOMATCH2
+TTrTVELOMATCH2 = LoKi.Tracks.TTrMatchTVelo2
+## @see LoKi::Cuts::TrVFUN
+TrVFUN         = LoKi.Tracks.TrVFunction 
+
+
+## helper objects
+TrackFunction       = LoKi.Hlt1.TrackFunction
+TrackBiFunction     = LoKi.Hlt1.TrackBiFunction
+MatchTVelo          = LoKi.Hlt1.MatchTVelo
+TrackVertexFunction = LoKi.Hlt1.TrackVertexFunction
 
 
 # functional stuff
@@ -284,6 +308,7 @@ RvSELECTION = LoKi.Hlt1.RvSelection
 RvREGISTER  = LoKi.Hlt1.RvRegister
 TrUPGRADE   = LoKi.Hlt1.TrUpgrade
 TrMATCH     = LoKi.Hlt1.TrMatch
+TrMATCH2    = LoKi.Hlt1.TrMatch2
 VxMAKER     = LoKi.Hlt1.VxMaker 
 VxUPGRADE   = LoKi.Hlt1.VxUpgrade
 
