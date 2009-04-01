@@ -21,7 +21,7 @@ class DDDBConf(ConfigurableUser):
                    }
     _propertyDocDct = { 
                        'DbRoot' : """ Root file of the detector description """,
-                       'DataType' : """ Symbolic name for the data type. Allowed values: ["2008", "DC06"] """,
+                       'DataType' : """ Symbolic name for the data type. Allowed values: ["2009", "2008", "DC06"] """,
                        'Simulation' : """ Boolean flag to select the simulation or real-data configuration """,
                        }
     
@@ -107,6 +107,15 @@ class DDDBConf(ConfigurableUser):
                 cdb.Tags[p] = tag
                 log.warning("Default tag requested for partition %s (using %s)", p, tag )
 
+    def __2009_conf__(self):
+        """
+        2009-specific configuration.
+        """
+        # Set the tags
+        self.__set_tag__(["DDDB"], "head-20090330")
+        self.__set_tag__(["LHCBCOND"], "head-20090401")
+        self.__set_tag__(["SIMCOND"], "sim-20090401-vc-mu100")
+    
     def __2008_conf__(self):
         """
         2008-specific configuration.
@@ -139,5 +148,6 @@ class DDDBConf(ConfigurableUser):
         # Backward compatibility Dll to read HepMC 1 record
         ApplicationMgr().Dlls += [ "HepMCBack" ]
     
-    __data_types_handlers__ =  { "2008": __2008_conf__,
+    __data_types_handlers__ =  { "2009": __2009_conf__,
+                                 "2008": __2008_conf__,
                                  "DC06": __DC06_conf__ }
