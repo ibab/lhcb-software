@@ -30,12 +30,12 @@ ApplicationMgr       INFO Application Manager Configured successfully
                              "DATA='root:file:mdfData_2.dat'              SVC='LHCb::MDFSelector'",
                              "DATA='PFN:root:mdfData_3.dat'               SVC='LHCb::MDFSelector'",
                              "DATA='root:mdfData_4.dat'                   SVC='LHCb::MDFSelector'",
-                             "DATA='PFN:root:file:///afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_5.dat'        SVC='LHCb::MDFSelector'",
-                             "DATA='PFN:root:file:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_6.dat'          SVC='LHCb::MDFSelector'",
-                             "DATA='PFN:root:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_7.dat'               SVC='LHCb::MDFSelector'",
-                             "DATA='root:file:///afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_8.dat'            SVC='LHCb::MDFSelector'",
-                             "DATA='root:file:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_9.dat'              SVC='LHCb::MDFSelector'",
-                             "DATA='/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_10.dat'                       SVC='LHCb::MDFSelector'"],
+                             "DATA='PFN:root:file://./mdfData_5.dat'        SVC='LHCb::MDFSelector'",
+                             "DATA='PFN:root:file:./mdfData_6.dat'          SVC='LHCb::MDFSelector'",
+                             "DATA='PFN:root:./mdfData_7.dat'               SVC='LHCb::MDFSelector'",
+                             "DATA='root:file://./mdfData_8.dat'            SVC='LHCb::MDFSelector'",
+                             "DATA='root:file:./mdfData_9.dat'              SVC='LHCb::MDFSelector'",
+                             "DATA='./mdfData_10.dat'                       SVC='LHCb::MDFSelector'"],
                    'PrintFreq': 200},
  'Explorer': {'AccessForeign': True,
               'Load': True,
@@ -76,7 +76,7 @@ ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
 EventSelector.D...   INFO Compression:0 Checksum:0
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
-Explorer             INFO ========= /Event[0x259bec0@EventDataSvc]:
+Explorer             INFO ========= /Event[0x259ff80@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
@@ -112,7 +112,7 @@ EventSelector     SUCCESS Reading Event record 4001. Record number within stream
 EventSelector     SUCCESS Reading Event record 4201. Record number within stream 3: 201
 EventSelector     SUCCESS Reading Event record 4401. Record number within stream 3: 401
 EventSelector     SUCCESS Reading Event record 4601. Record number within stream 3: 601
-Explorer             INFO ========= /Event[0x25a02c0@EventDataSvc]:
+Explorer             INFO ========= /Event[0x2607140@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
@@ -146,14 +146,14 @@ EventSelector     SUCCESS Reading Event record 8801. Record number within stream
 EventSelector     SUCCESS Reading Event record 9001. Record number within stream 5: 1001
 EventSelector     SUCCESS Reading Event record 9201. Record number within stream 5: 1201
 EventSelector     SUCCESS Reading Event record 9401. Record number within stream 5: 1401
-Explorer             INFO ========= /Event[0x25a08b0@EventDataSvc]:
+Explorer             INFO ========= /Event[0x2657430@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
 EventSelector     SUCCESS Reading Event record 9601. Record number within stream 5: 1601
 EventSelector     SUCCESS Reading Event record 9801. Record number within stream 5: 1801
 EventSelector.D...   INFO Cannot read more data. End-of-File reached.
-EventSelector        INFO Stream:EventSelector.DataStreamTool_6 Def:DATA='PFN:root:file:///afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_5.dat'        SVC='LHCb::MDFSelector'
+EventSelector        INFO Stream:EventSelector.DataStreamTool_6 Def:DATA='PFN:root:file://./mdfData_5.dat'        SVC='LHCb::MDFSelector'
 EventSelector.D...   INFO Compression:2 Checksum:1
 EventSelector     SUCCESS Reading Event record 10001. Record number within stream 6: 1
 EventSelector     SUCCESS Reading Event record 10201. Record number within stream 6: 201
@@ -166,9 +166,9 @@ EventSelector     SUCCESS Reading Event record 11401. Record number within strea
 EventSelector     SUCCESS Reading Event record 11601. Record number within stream 6: 1601
 EventSelector     SUCCESS Reading Event record 11801. Record number within stream 6: 1801
 EventSelector.D...   INFO Cannot read more data. End-of-File reached.
-IODataManager       ERROR Referring to existing dataset root:file:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_6.dat by its physical name.
+IODataManager       ERROR Referring to existing dataset root:file:./mdfData_6.dat by its physical name.
 IODataManager       ERROR You may not be able to nagivate back to the input file -- processing continues
-EventSelector        INFO Stream:EventSelector.DataStreamTool_7 Def:DATA='PFN:root:file:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_6.dat'          SVC='LHCb::MDFSelector'
+EventSelector        INFO Stream:EventSelector.DataStreamTool_7 Def:DATA='PFN:root:file:./mdfData_6.dat'          SVC='LHCb::MDFSelector'
 EventSelector.D...   INFO Compression:2 Checksum:1
 EventSelector     SUCCESS Reading Event record 12001. Record number within stream 7: 1
 EventSelector     SUCCESS Reading Event record 12201. Record number within stream 7: 201
@@ -181,13 +181,13 @@ EventSelector     SUCCESS Reading Event record 13401. Record number within strea
 EventSelector     SUCCESS Reading Event record 13601. Record number within stream 7: 1601
 EventSelector     SUCCESS Reading Event record 13801. Record number within stream 7: 1801
 EventSelector.D...   INFO Cannot read more data. End-of-File reached.
-IODataManager       ERROR Referring to existing dataset root:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_7.dat by its physical name.
+IODataManager       ERROR Referring to existing dataset root:./mdfData_7.dat by its physical name.
 IODataManager       ERROR You may not be able to nagivate back to the input file -- processing continues
-EventSelector        INFO Stream:EventSelector.DataStreamTool_8 Def:DATA='PFN:root:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_7.dat'               SVC='LHCb::MDFSelector'
+EventSelector        INFO Stream:EventSelector.DataStreamTool_8 Def:DATA='PFN:root:./mdfData_7.dat'               SVC='LHCb::MDFSelector'
 EventSelector.D...   INFO Compression:2 Checksum:1
 EventSelector     SUCCESS Reading Event record 14001. Record number within stream 8: 1
 EventSelector     SUCCESS Reading Event record 14201. Record number within stream 8: 201
-Explorer             INFO ========= /Event[0x24051e0@EventDataSvc]:
+Explorer             INFO ========= /Event[0x2656f50@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
@@ -200,7 +200,7 @@ EventSelector     SUCCESS Reading Event record 15401. Record number within strea
 EventSelector     SUCCESS Reading Event record 15601. Record number within stream 8: 1601
 EventSelector     SUCCESS Reading Event record 15801. Record number within stream 8: 1801
 EventSelector.D...   INFO Cannot read more data. End-of-File reached.
-EventSelector        INFO Stream:EventSelector.DataStreamTool_9 Def:DATA='root:file:///afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_8.dat'            SVC='LHCb::MDFSelector'
+EventSelector        INFO Stream:EventSelector.DataStreamTool_9 Def:DATA='root:file://./mdfData_8.dat'            SVC='LHCb::MDFSelector'
 EventSelector.D...   INFO Compression:2 Checksum:1
 EventSelector     SUCCESS Reading Event record 16001. Record number within stream 9: 1
 EventSelector     SUCCESS Reading Event record 16201. Record number within stream 9: 201
@@ -213,7 +213,7 @@ EventSelector     SUCCESS Reading Event record 17401. Record number within strea
 EventSelector     SUCCESS Reading Event record 17601. Record number within stream 9: 1601
 EventSelector     SUCCESS Reading Event record 17801. Record number within stream 9: 1801
 EventSelector.D...   INFO Cannot read more data. End-of-File reached.
-EventSelector        INFO Stream:EventSelector.DataStreamTool_10 Def:DATA='root:file:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_9.dat'              SVC='LHCb::MDFSelector'
+EventSelector        INFO Stream:EventSelector.DataStreamTool_10 Def:DATA='root:file:./mdfData_9.dat'              SVC='LHCb::MDFSelector'
 EventSelector.D...   INFO Compression:2 Checksum:1
 EventSelector     SUCCESS Reading Event record 18001. Record number within stream 10: 1
 EventSelector     SUCCESS Reading Event record 18201. Record number within stream 10: 201
@@ -221,7 +221,7 @@ EventSelector     SUCCESS Reading Event record 18401. Record number within strea
 EventSelector     SUCCESS Reading Event record 18601. Record number within stream 10: 601
 EventSelector     SUCCESS Reading Event record 18801. Record number within stream 10: 801
 EventSelector     SUCCESS Reading Event record 19001. Record number within stream 10: 1001
-Explorer             INFO ========= /Event[0x25a2310@EventDataSvc]:
+Explorer             INFO ========= /Event[0x2636a20@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
@@ -230,7 +230,7 @@ EventSelector     SUCCESS Reading Event record 19401. Record number within strea
 EventSelector     SUCCESS Reading Event record 19601. Record number within stream 10: 1601
 EventSelector     SUCCESS Reading Event record 19801. Record number within stream 10: 1801
 EventSelector.D...   INFO Cannot read more data. End-of-File reached.
-EventSelector        INFO Stream:EventSelector.DataStreamTool_11 Def:DATA='/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_10.dat'                       SVC='LHCb::MDFSelector'
+EventSelector        INFO Stream:EventSelector.DataStreamTool_11 Def:DATA='./mdfData_10.dat'                       SVC='LHCb::MDFSelector'
 EventSelector.D...   INFO Compression:2 Checksum:1
 EventSelector     SUCCESS Reading Event record 20001. Record number within stream 11: 1
 EventSelector     SUCCESS Reading Event record 20201. Record number within stream 11: 201

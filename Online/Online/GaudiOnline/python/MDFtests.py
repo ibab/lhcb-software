@@ -3,7 +3,7 @@ import Gaudi.Configuration as CFG
 import Configurables as Configs
 ApplicationMgr = CFG.ApplicationMgr
 
-base = os.getcwd()
+base = '.'# os.getcwd()
 
 #------------------------------------------------------------------------------------------------
 def printConfiguration():

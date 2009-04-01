@@ -41,7 +41,7 @@ ApplicationMgr       INFO Application Manager Configured successfully
               'Compress': 0,
               'Connection': 'LFN:/user/frank/markus/mdf_1.dat',
               'GenerateMD5': True},
- 'Writer_10': {'Connection': '/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_10.dat'},
+ 'Writer_10': {'Connection': './mdfData_10.dat'},
  'Writer_2': {'ChecksumType': 1,
               'Compress': 0,
               'Connection': 'LFN:/user/frank/markus/mdf_2.dat',
@@ -54,11 +54,11 @@ ApplicationMgr       INFO Application Manager Configured successfully
               'Compress': 2,
               'Connection': 'root:mdfData_4.dat',
               'GenerateMD5': True},
- 'Writer_5': {'Connection': 'PFN:root:file:///afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_5.dat'},
- 'Writer_6': {'Connection': 'PFN:root:file:///afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_6.dat'},
- 'Writer_7': {'Connection': 'PFN:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_7.dat'},
- 'Writer_8': {'Connection': 'root:file:///afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_8.dat'},
- 'Writer_9': {'Connection': 'root:file:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_9.dat'}}
+ 'Writer_5': {'Connection': 'PFN:root:file://./mdfData_5.dat'},
+ 'Writer_6': {'Connection': 'PFN:root:file://./mdfData_6.dat'},
+ 'Writer_7': {'Connection': 'PFN:./mdfData_7.dat'},
+ 'Writer_8': {'Connection': 'root:file://./mdfData_8.dat'},
+ 'Writer_9': {'Connection': 'root:file:./mdfData_9.dat'}}
 ApplicationMgr      FATAL start: Invalid state "CONFIGURED"
 ---> Start processing events
 EventPersistenc...   INFO  'CnvServices':[ 'LHCb::RawDataCnvSvc/RawDataCnvSvc' ]
@@ -73,16 +73,22 @@ Writer_3             INFO Received event request connection.
 Writer_4             INFO Initialize MDFWriter
 Writer_4             INFO Received event request connection.
 Writer_5             INFO Initialize MDFWriter
+IODataManager        INFO Referring to dataset root:file://./mdfData_5.dat by its file ID:E256A469-921E-DE11-A5AD-000423D9A21A
 Writer_5             INFO Received event request connection.
 Writer_6             INFO Initialize MDFWriter
+IODataManager        INFO Referring to dataset root:file://./mdfData_6.dat by its file ID:1ECF6C6A-921E-DE11-A5AD-000423D9A21A
 Writer_6             INFO Received event request connection.
 Writer_7             INFO Initialize MDFWriter
+IODataManager        INFO Referring to dataset ./mdfData_7.dat by its file ID:CA66EC6A-921E-DE11-A5AD-000423D9A21A
 Writer_7             INFO Received event request connection.
 Writer_8             INFO Initialize MDFWriter
+IODataManager        INFO Referring to dataset root:file://./mdfData_8.dat by its file ID:F89CEC6A-921E-DE11-A5AD-000423D9A21A
 Writer_8             INFO Received event request connection.
 Writer_9             INFO Initialize MDFWriter
+IODataManager        INFO Referring to dataset root:file:./mdfData_9.dat by its file ID:10B0026B-921E-DE11-A5AD-000423D9A21A
 Writer_9             INFO Received event request connection.
 Writer_10            INFO Initialize MDFWriter
+IODataManager        INFO Referring to dataset ./mdfData_10.dat by its file ID:72B73E6B-921E-DE11-A5AD-000423D9A21A
 Writer_10            INFO Received event request connection.
 EventLoopMgr      WARNING Unable to locate service "EventSelector"
 EventLoopMgr      WARNING No events will be processed from external input.
@@ -90,11 +96,11 @@ HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
-Explorer             INFO ========= /Event[0x1ffdb00@EventDataSvc]:
+Explorer             INFO ========= /Event[0x1fce870@EventDataSvc]:
 Explorer             INFO +--> /Event [No Address]  DataObject
 Explorer             INFO   +--> /DAQ [No Address]  DataObject
 Explorer             INFO     +--> /RawEvent [No Address]  LHCb::RawEvent
-LHCb::RawDataCn...   INFO Opened(NEW)  MDF stream:PFN:root:file://mdfData_0.dat ID:0x20080d0
+LHCb::RawDataCn...   INFO Opened(NEW)  MDF stream:PFN:root:file://mdfData_0.dat ID:0x2007da0
 ---> Finished processing events
 ApplicationMgr       INFO Application Manager Stopped successfully
 Writer_0             INFO Events output: 2000
@@ -102,13 +108,13 @@ Writer_1             INFO Size:20880000 Output:LFN:/user/frank/markus/mdf_1.dat 
 Writer_2             INFO Size:20880000 Output:LFN:/user/frank/markus/mdf_2.dat MD5 sum:30d43bd10921906d457bca3b3dd90c50
 Writer_3             INFO Size: 1761540 Output:PFN:root:mdfData_3.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
 Writer_4             INFO Size: 1761540 Output:root:mdfData_4.dat MD5 sum:9f48e421e73f2421bfd836e3f9f83a81
-Writer_5             INFO Size: 1761540 Output:PFN:root:file:///afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_5.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
-Writer_6             INFO Size: 1761540 Output:PFN:root:file:///afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_6.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
-Writer_7             INFO Size: 1761540 Output:PFN:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_7.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
-Writer_8             INFO Size: 1761540 Output:root:file:///afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_8.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
-Writer_9             INFO Size: 1761540 Output:root:file:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_9.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
-Writer_10            INFO Size: 1761540 Output:/afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/mdfData_10.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
+Writer_5             INFO Size: 1761540 Output:PFN:root:file://./mdfData_5.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
+Writer_6             INFO Size: 1761540 Output:PFN:root:file://./mdfData_6.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
+Writer_7             INFO Size: 1761540 Output:PFN:./mdfData_7.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
+Writer_8             INFO Size: 1761540 Output:root:file://./mdfData_8.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
+Writer_9             INFO Size: 1761540 Output:root:file:./mdfData_9.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
+Writer_10            INFO Size: 1761540 Output:./mdfData_10.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
 EventLoopMgr         INFO Histograms converted successfully according to request.
-LHCb::RawDataCn...   INFO Closed MDF stream:PFN:root:file://mdfData_0.dat ID:0x20080d0
+LHCb::RawDataCn...   INFO Closed MDF stream:PFN:root:file://mdfData_0.dat ID:0x2007da0
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully
