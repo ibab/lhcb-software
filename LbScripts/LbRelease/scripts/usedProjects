@@ -4,7 +4,7 @@
 """ Script to check projects used by other projects"""
 #------------------------------------------------------------------------------
 
-import sys, os, string, glob, getopt
+import sys, os, glob, getopt
 
 usedProjects = {}
 allProjects  = []
