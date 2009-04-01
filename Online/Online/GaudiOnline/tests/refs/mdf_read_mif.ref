@@ -1,3 +1,4 @@
+execute(_readMIF,1000000)
 +----------------------------------------------------------------------------+
 |      Executing MDF           ReadMIF                                       |
 +----------------------------------------------------------------------------+
@@ -36,7 +37,7 @@ MIFSelector       SUCCESS Connected to:58AD91C1-1FEA-DC11-A5AA-000423D950B0 file
 EventSelector.D...   INFO Compression:0 Checksum:0
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 EventPersistenc...   INFO Added successfully Conversion service:RawDataCnvSvc
-Explorer             INFO ========= /Event[0x1f05640@EventDataSvc]:
+Explorer             INFO ========= /Event[0x8f68770@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
@@ -48,7 +49,7 @@ EventSelector     SUCCESS Reading Event record 3001. Record number within stream
 MIFSelector       SUCCESS Connected to:E6C199C1-1FEA-DC11-A5AA-000423D950B0 root:file:mdfData_2.dat
 EventSelector.D...   INFO Compression:0 Checksum:1
 EventSelector     SUCCESS Reading Event record 4001. Record number within stream 1: 4001
-Explorer             INFO ========= /Event[0x1f056e0@EventDataSvc]:
+Explorer             INFO ========= /Event[0x8f68960@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
@@ -61,7 +62,7 @@ MIFSelector       SUCCESS Connected to:E0769EAF-201E-DE11-B178-000423D9A21A root
 EventSelector.D...   INFO Compression:2 Checksum:0
 EventSelector     SUCCESS Reading Event record 8001. Record number within stream 1: 8001
 EventSelector     SUCCESS Reading Event record 9001. Record number within stream 1: 9001
-Explorer             INFO ========= /Event[0x1f3c400@EventDataSvc]:
+Explorer             INFO ========= /Event[0x8f7b380@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
@@ -82,7 +83,7 @@ IODataManager       ERROR You may not be able to nagivate back to the input file
 MIFSelector       SUCCESS Connected to:root:./mdfData_7.dat root:./mdfData_7.dat
 EventSelector.D...   INFO Compression:2 Checksum:1
 EventSelector     SUCCESS Reading Event record 14001. Record number within stream 1: 14001
-Explorer             INFO ========= /Event[0x1f43450@EventDataSvc]:
+Explorer             INFO ========= /Event[0x8f7aae8@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
@@ -97,7 +98,7 @@ MIFSelector       SUCCESS Connected to:10B0026B-921E-DE11-A5AD-000423D9A21A root
 EventSelector.D...   INFO Compression:2 Checksum:1
 EventSelector     SUCCESS Reading Event record 18001. Record number within stream 1: 18001
 EventSelector     SUCCESS Reading Event record 19001. Record number within stream 1: 19001
-Explorer             INFO ========= /Event[0x1f16370@EventDataSvc]:
+Explorer             INFO ========= /Event[0x8f79348@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
@@ -106,7 +107,6 @@ MIFSelector       SUCCESS Connected to:72B73E6B-921E-DE11-A5AD-000423D9A21A ./md
 EventSelector.D...   INFO Compression:2 Checksum:1
 EventSelector     SUCCESS Reading Event record 20001. Record number within stream 1: 20001
 EventSelector     SUCCESS Reading Event record 21001. Record number within stream 1: 21001
-MIFSelector         ERROR Unknown input specification:       0
 EventLoopMgr         INFO No more events in event selection
 ---> Finished processing events
 ApplicationMgr       INFO Application Manager Stopped successfully

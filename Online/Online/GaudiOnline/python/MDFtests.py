@@ -23,14 +23,6 @@ def _run(app,prt=True):
   return (app,end_config(prt))
 
 #------------------------------------------------------------------------------------------------
-def evtDataSvc():
-  svc                  = CFG.EventDataSvc()
-  svc.RootCLID         = 1
-  svc.ForceLeaves      = 1
-  svc.EnableFaultHandler = True
-  return svc
-
-#------------------------------------------------------------------------------------------------
 def setData(test_castor=False):
   sel = CFG.EventSelector()
   sel.PrintFreq              = 200
@@ -67,11 +59,24 @@ def execute(func, numEvt):
   sys.exit(0)
 
 #------------------------------------------------------------------------------------------------
-def mdfCheck():
+def setupApp():
   app               = ApplicationMgr()
   app.AppName       = ''
-  app.HistogramPersistency = "NONE"
-  svc               = evtDataSvc()
+  app.HistogramPersistency = 'NONE'
+  svc  = CFG.EventPersistencySvc()
+  svc.CnvServices += [Configs.LHCb__RawDataCnvSvc('RawDataCnvSvc')]
+  CFG.FileCatalog().Catalogs = ['xmlcatalog_file:Cnew.xml','xmlcatalog_file:C1.xml']
+  CFG.IODataManager().OutputLevel = 1  
+  CFG.IODataManager().AgeLimit = 1
+  svc                  = CFG.EventDataSvc()
+  svc.RootCLID         = 1
+  svc.ForceLeaves      = 1
+  svc.EnableFaultHandler = True
+  return app
+  
+#------------------------------------------------------------------------------------------------
+def mdfCheck():
+  app               = setupApp()
   dmp               = Configs.LHCb__RawEventTestDump('Dump')
   dmp.CheckData     = 1
   dmp.CheckData     = 0
@@ -84,14 +89,11 @@ def mdfCheck():
   exp.AccessForeign = True
   exp.OutputLevel   = 3
   app.TopAlg       += [dmp,exp]
-  svc  = CFG.EventPersistencySvc()
-  svc.CnvServices += [Configs.LHCb__RawDataCnvSvc('RawDataCnvSvc')]
-  CFG.FileCatalog().Catalogs = ['xmlcatalog_file:Cnew.xml','xmlcatalog_file:C1.xml']
-  CFG.IODataManager().OutputLevel = 1  
-  CFG.IODataManager().AgeLimit = 1
+  return app
 
-def addWriter(name, fname, compress=None, checksum=None, md5=None):
-  # To create a MDF file using the MDF writer:
+#------------------------------------------------------------------------------------------------
+def addWriter(name, fname, compress=None, checksum=None, md5=None,forceTAE=None):
+  # To create a MDF file using the MDF writer
   app = ApplicationMgr()
   wr  = Configs.LHCb__MDFWriter(name)
   wr.Connection       = fname
@@ -101,6 +103,8 @@ def addWriter(name, fname, compress=None, checksum=None, md5=None):
     wr.ChecksumType     = checksum
   if md5 is not None:
     wr.GenerateMD5      = md5
+  if forceTAE is not None:
+    wr.ForceTAE         = forceTAE
   app.OutStream += [wr]
   return wr
 
@@ -146,6 +150,7 @@ def _readMDF(test_castor=None):
   mdfCheck()
   return app
 
+#------------------------------------------------------------------------------------------------
 def _createMIF(test_castor=None):
   print_header('MDF','CreateMIF')
   app  = ApplicationMgr()
@@ -156,6 +161,7 @@ def _createMIF(test_castor=None):
   app.TopAlg += [wr]
   return app
 
+#------------------------------------------------------------------------------------------------
 def _readMIF(test_castor=None):
   print_header('MDF','ReadMIF')
   mdfCheck()
@@ -164,6 +170,7 @@ def _readMIF(test_castor=None):
   CFG.IODataManager().AgeLimit               = 5
   return ApplicationMgr()
   
+#------------------------------------------------------------------------------------------------
 def _createPOOL(test_castor=None):
   print_header('MDF','CreatePOOL')
   app  = ApplicationMgr()
@@ -178,6 +185,7 @@ def _createPOOL(test_castor=None):
   cache.OutputLevel = 1
   return app
 
+#------------------------------------------------------------------------------------------------
 def _readPOOL(test_castor=None):
   print_header('MDF','ReadPOOL')
   mdfCheck()
@@ -187,13 +195,89 @@ def _readPOOL(test_castor=None):
   sel.Input      = ["DATA='PFN:mdfPOOL.dat' TYP='POOL_ROOTTREE' OPT='OLD'"]
   CFG.IODataManager().AgeLimit = 5
   return ApplicationMgr()
-  
+
+#------------------------------------------------------------------------------------------------
+def _createTAE(test_castor=None):
+  app  = ApplicationMgr()
+  evtgen = Configs.LHCb__RawEventTestCreator('RawEventGen')
+  taegen = Configs.LHCb__TAETestCreator('TAECreator')
+  taegen.TAEEvents = 5
+  app.TopAlg = [evtgen, taegen]
+  mdfCheck()
+  setData(test_castor)
+  addWriter('Writer_0','PFN:file://taeData.dat',1,1,True,True)
+  CFG.MessageSvc().OutputLevel    = 3
+  return app
+
+#------------------------------------------------------------------------------------------------
+def _readTAE():
+  app  = ApplicationMgr()
+  mdfCheck()
+  CFG.importOptions('$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts')
+  CFG.EventSelector().Input = ["DATA='file://taeData.dat' SVC='LHCb::MDFSelector'"]
+  CFG.EventSelector().PrintFreq              = 200
+  mini = CFG.OutputStream('TAEMini')
+  app.OutStream  += [mini]
+  mini.ItemList   = ['/Event#1','/Event/DAQ#1','/Event/Prev1/DAQ','/Event/Prev2','/Event/Next1/DAQ/RawEvent']
+  mini.Output     = "DATAFILE='PFN:taePOOL.dat' TYP='POOL_ROOTTREE' OPT='RECREATE'"
+  CFG.PoolDbCacheSvc().OutputLevel = 1
+  return app
+
+#------------------------------------------------------------------------------------------------
+def _readTAEPOOL():
+  app  = ApplicationMgr()
+  mdfCheck()
+  CFG.importOptions('$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts')
+  CFG.EventSelector().Input = ["DATA='PFN:taePOOL.dat' TYP='POOL_ROOTTREE' OPT='OLD'"]
+  CFG.EventSelector().PrintFreq = 200
+  return app
+
+#------------------------------------------------------------------------------------------------
+def _createMEP(test_castor=None):
+  app               = setupApp()
+  exp               = CFG.StoreExplorerAlg('Explorer') 
+  exp.Load          = 1
+  exp.PrintFreq     = 0.00021
+  exp.AccessForeign = True
+  exp.OutputLevel   = 3
+  app.TopAlg        = [Configs.LHCb__RawEventTestCreator('Creator'),exp]
+  app.EvtSel        = 'NONE'
+  wr0=Configs.LHCb__MEPWriter('Writer_0')
+  wr0.Connection    = 'file://mep_data_0.dat'
+  wr0.ChecksumType  = 0
+  wr0.Compress      = 2
+  wr0.PackingFactor = 10
+  wr1=Configs.LHCb__MEPWriter('Writer_1')
+  wr1.Connection    = 'file://mep_data_1.dat'
+  wr1.ChecksumType  = 0
+  wr1.Compress      = 2
+  wr1.PackingFactor = 10
+  app.OutStream     = [wr0, wr1]
+  return app
+
+#------------------------------------------------------------------------------------------------
+def _readMEP(test_castor=None):
+  app               = setupApp()
+  app.EvtSel        = 'NONE'
+  dmp = Configs.LHCb__MEPDump('MEPDump')
+  dmp.Connection    = 'file://mep_data_0.dat'
+  app.TopAlg        = [dmp]
+  return app
+
+#------------------------------------------------------------------------------------------------
 if __name__ == "__main__":
+  os.dup2(sys.stdout.fileno(),sys.stderr.fileno())
+
   tt = sys.argv[1]
   res = 1
-  fun = 'execute(_'+tt+',1000000)'
+  evt = 1000000
   if tt == 'createMDF':
-    res =  execute(_createMDF,2000)
-    sys.exit(0)
-  res =  eval('execute(_'+tt+',1000000)')
+    evt = 2000
+  elif tt == 'createMEP':
+    evt = 100
+  elif tt == 'createTAE':
+    evt = 3000
+  fun = 'execute(_'+tt+','+str(evt)+')'
+  print fun
+  res =  eval(fun)
   sys.exit(0)

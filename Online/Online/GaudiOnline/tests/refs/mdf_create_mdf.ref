@@ -1,3 +1,4 @@
+execute(_createMDF,2000)
 +----------------------------------------------------------------------------+
 |      Executing MDF           CreateMDF                                     |
 +----------------------------------------------------------------------------+
@@ -73,22 +74,16 @@ Writer_3             INFO Received event request connection.
 Writer_4             INFO Initialize MDFWriter
 Writer_4             INFO Received event request connection.
 Writer_5             INFO Initialize MDFWriter
-IODataManager        INFO Referring to dataset root:file://./mdfData_5.dat by its file ID:E256A469-921E-DE11-A5AD-000423D9A21A
 Writer_5             INFO Received event request connection.
 Writer_6             INFO Initialize MDFWriter
-IODataManager        INFO Referring to dataset root:file://./mdfData_6.dat by its file ID:1ECF6C6A-921E-DE11-A5AD-000423D9A21A
 Writer_6             INFO Received event request connection.
 Writer_7             INFO Initialize MDFWriter
-IODataManager        INFO Referring to dataset ./mdfData_7.dat by its file ID:CA66EC6A-921E-DE11-A5AD-000423D9A21A
 Writer_7             INFO Received event request connection.
 Writer_8             INFO Initialize MDFWriter
-IODataManager        INFO Referring to dataset root:file://./mdfData_8.dat by its file ID:F89CEC6A-921E-DE11-A5AD-000423D9A21A
 Writer_8             INFO Received event request connection.
 Writer_9             INFO Initialize MDFWriter
-IODataManager        INFO Referring to dataset root:file:./mdfData_9.dat by its file ID:10B0026B-921E-DE11-A5AD-000423D9A21A
 Writer_9             INFO Received event request connection.
 Writer_10            INFO Initialize MDFWriter
-IODataManager        INFO Referring to dataset ./mdfData_10.dat by its file ID:72B73E6B-921E-DE11-A5AD-000423D9A21A
 Writer_10            INFO Received event request connection.
 EventLoopMgr      WARNING Unable to locate service "EventSelector"
 EventLoopMgr      WARNING No events will be processed from external input.
@@ -96,11 +91,11 @@ HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
-Explorer             INFO ========= /Event[0x1fce870@EventDataSvc]:
+Explorer             INFO ========= /Event[0x9024750@EventDataSvc]:
 Explorer             INFO +--> /Event [No Address]  DataObject
 Explorer             INFO   +--> /DAQ [No Address]  DataObject
 Explorer             INFO     +--> /RawEvent [No Address]  LHCb::RawEvent
-LHCb::RawDataCn...   INFO Opened(NEW)  MDF stream:PFN:root:file://mdfData_0.dat ID:0x2007da0
+LHCb::RawDataCn...   INFO Opened(NEW)  MDF stream:PFN:root:file://mdfData_0.dat ID:0x9055ac0
 ---> Finished processing events
 ApplicationMgr       INFO Application Manager Stopped successfully
 Writer_0             INFO Events output: 2000
@@ -115,6 +110,6 @@ Writer_8             INFO Size: 1761540 Output:root:file://./mdfData_8.dat MD5 s
 Writer_9             INFO Size: 1761540 Output:root:file:./mdfData_9.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
 Writer_10            INFO Size: 1761540 Output:./mdfData_10.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
 EventLoopMgr         INFO Histograms converted successfully according to request.
-LHCb::RawDataCn...   INFO Closed MDF stream:PFN:root:file://mdfData_0.dat ID:0x2007da0
+LHCb::RawDataCn...   INFO Closed MDF stream:PFN:root:file://mdfData_0.dat ID:0x9055ac0
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully
