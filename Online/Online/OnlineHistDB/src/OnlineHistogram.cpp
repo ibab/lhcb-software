@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.42 2009-03-31 13:15:31 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.43 2009-04-01 13:11:14 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -1147,7 +1147,7 @@ bool OnlineHistogram::setBinLabels(std::vector<std::string> *Xlabels,
                       Xlabels->end() );
     newXsize=Xlabels->size();
   }
-  else {
+  else if(m_xbinlab) {
     newlabels.insert( newlabels.end(), m_binlabels.begin(),
                       m_binlabels.begin()+m_xbinlab );
   }
@@ -1156,7 +1156,7 @@ bool OnlineHistogram::setBinLabels(std::vector<std::string> *Xlabels,
                       Ylabels->end() );
     newYsize=Ylabels->size();
   }
-  else {
+  else if(m_ybinlab) {
     newlabels.insert( newlabels.end(), m_binlabels.begin()+m_xbinlab,
                       m_binlabels.end() );
   }
