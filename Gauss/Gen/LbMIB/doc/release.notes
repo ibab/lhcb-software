@@ -5,6 +5,64 @@
 !               obtained with dedicated simulations
 !-----------------------------------------------------------------------------
 
+!=========================== LbMIB v3r2 2009-04-01 ===========================
+! 2009-04-01 - Magnus Lieng
+ - Added new time correlated MIB tool. This tool uses a root file as input.
+   The root file contains two trees; one for particles and one for events. 
+   TimeCorrSource randomly generates events containing certain particles as
+   opposed to CollimatorSource which randomly generates particles.
+
+   The list of options to steer the behaviour of the code and how to use them
+   is given below:
+   HepMCEvents         The TS location of the Event
+   GenHeader           The TS location of the Generation Header
+   GenCollisions       The TS location of the Collision
+
+   ParticleSourceFile  Root file containing the events and particles to be 
+                       generated.
+
+   ScalingFactor       Scaling factor used to modify the number of particles
+                       created in an event.
+   BunchFrequency      Scaling factor used to modify the number of particles
+                       created in an event. Indicates the frequency used to
+                       generate the input file.
+   BeamEnergy          Energy of the beam protons. Used to correct particle 
+                       timing.
+
+   Luminosity          Luminosity to be set in header.
+
+   GenerationHist      True to generate histograms.
+
+   ForcePartPerEvt     -1  : Use random number of particles in event.
+                       >=0 : Force the generation of this amount particles per
+                             event.
+
+   ReadFileFromOffset  -1  : Choose random particles using weight based
+                             envelope method.
+                       >=0 : Pick particles sequentially from file starting at
+                             this particle number. Envelope generation and
+                             random particle selection is ignored.
+                             Weight information is saved in vertex.
+
+   EnvelopeSize        Amount of events contained in one envelope.
+
+   ZParticleOrigin     Z position of particles as given in the input file. 
+   ZParticleGen        Z position to generate particles. If this is different
+                       from ZParticleOrigin, timing of the particles are 
+                       re-calculated according to particle and beam 
+                       kinematics as well as the two Z positions.
+   ZDirection          Z direction to generate particles (+1/-1)
+
+   EventType           Event type code.
+
+   . TimeCorrSource.cpp
+   . TimeCorrSource.h
+ - Added python script to generate input files for TimeCorrSource both using
+   the new and old text file format. The old text format creates fake events 
+   where each event contains only one particle.
+   . makeRootFile.py
+   . makeRootFileFromOldFormat.py
+ 
 !=========================== LbMIB v3r1 2009-01-13 ===========================
 ! 2008-12-11 - Patrick Robbe
  - CollimatorSource.cpp: set signal_process_vertex to define primary vertex
