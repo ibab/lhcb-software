@@ -1,4 +1,4 @@
-//$Id: MuonDigitization.cpp,v 1.48 2009-03-31 09:55:31 cattanem Exp $
+//$Id: MuonDigitization.cpp,v 1.49 2009-04-01 12:57:40 cattanem Exp $
 
 #include <algorithm>
 #include <vector>
@@ -19,8 +19,7 @@
 DECLARE_ALGORITHM_FACTORY( MuonDigitization );
 
 //reserve space for static variable
-#define SIZEOFSPILLOVERVECTOR 4
-std::string MuonDigitization::spill[2+SIZEOFSPILLOVERVECTOR] = 
+std::string MuonDigitization::spill[6] = 
 {"/LHCBackground","","/Prev","/PrevPrev","/Next","/NextNext"};
 std::string MuonDigitization::numreg[4] = 
 {"1","2","3","4"};
@@ -38,7 +37,7 @@ MuonDigitization::MuonDigitization(const std::string& name,
                                    ISvcLocator* pSvcLocator)
   :  GaudiAlgorithm(name, pSvcLocator)
 {
-  declareProperty("EnableSpillover", m_enableSpillover=false) ;
+  declareProperty("SpilloverPathsSize", m_numberOfSpilloverEvents = 0) ;
   declareProperty("BXTime" , m_BXTime=25.0) ;
   declareProperty("TimeGate" , m_gate=25.0) ;
   declareProperty("TimeBits" , m_TimeBits=4) ;
@@ -61,9 +60,13 @@ StatusCode MuonDigitization::initialize()
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by  GaudiAlgorithm	
 
-  unsigned int numberOfSpilloverEvents = 0;
-  if( m_enableSpillover ) numberOfSpilloverEvents = SIZEOFSPILLOVERVECTOR;
-  m_numberOfEvents = numberOfSpilloverEvents+1;
+  if( m_numberOfSpilloverEvents > 4 ) {
+    warning() << "Cannot have " << m_numberOfSpilloverEvents 
+              << " SpilloverPathSize, set to 4" << endmsg;
+    m_numberOfSpilloverEvents = 4;
+  }
+  
+  m_numberOfEvents = m_numberOfSpilloverEvents+1;
   m_numberOfEventsNeed=5;	
 
   // initialize some basic geometrical information

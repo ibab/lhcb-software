@@ -6,9 +6,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-03-31 - Marco Cattaneo
- - In MuonBackgroundm, remove need to access SpilloverAlg to determine number
-   of spillover slots. Now hardcoded to 4 if EnableSpillover is true (in any 
-   case anything other than 4 would have given unpredictable results)
+ - In MuonBackground, remove need to access SpilloverAlg to determine number
+   of spillover paths. Now passed as a job option, replaces EnableSpillover
 
 !====================== MuonBackground v2r8 2009-02-24 =======================
 ! 2009-01-29 - Marco Cattaneo

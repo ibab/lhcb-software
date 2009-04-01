@@ -67,6 +67,7 @@ public:
 private:
   int m_numberOfEvents;
   int m_numberOfEventsNeed;
+  int m_numberOfSpilloverEvents; ///< Option to set max no. of spillover events
   double m_BXTime;
   double m_gate;
   bool m_applyTimeJitter;
@@ -78,7 +79,6 @@ private:
   bool m_applyDialogDeadtime;	 
   bool m_applyTimeAdjustment;	 
   bool m_registerPhysicalChannelOutput;
-  bool m_enableSpillover;
 
   bool m_verboseDebug;
   int m_stationNumber;

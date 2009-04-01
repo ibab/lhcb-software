@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.50 2009-03-31 11:28:39 cattanem Exp $
+// $Id: MuonBackground.cpp,v 1.51 2009-04-01 12:56:55 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -68,7 +68,7 @@ MuonBackground::MuonBackground( const std::string& name,
   declareProperty("FlatSpillNumber" , m_numberOfFlatSpill=1 ) ;
   declareProperty("BackgroundType" , m_typeOfBackground ) ;
   declareProperty("RadialUnit" , m_unitLength=10.0 ) ;
-  declareProperty("EnableSpillover", m_enableSpillover=false ) ;
+  declareProperty("SpilloverPathsSize", m_readSpilloverEvents=0 ) ;
   declareProperty("DebugHistos" , m_histos=false ) ;
 }
 
@@ -173,10 +173,15 @@ StatusCode MuonBackground::initialize() {
         }
       }
     }
-    m_readSpilloverEvents = 0;
-    if( m_enableSpillover ) m_readSpilloverEvents = 4;
+    if( m_readSpilloverEvents > 4 ) {
+      warning() << "Cannot have " << m_readSpilloverEvents
+                << " SpilloverPathSize, set to 4" << endmsg;
+      m_readSpilloverEvents = 4;
+    }
 
   }else if(m_type==FlatSpillover){
+    if( m_readSpilloverEvents > 1 )
+      warning() << "Ignoring SpillOverNumber job option, always 1 for flat spillover" << endmsg;
     m_readSpilloverEvents=1;
     m_luminosityFactor=m_luminosity/2.0;   
     //    m_readSpilloverEvents=m_numberOfFlatSpill;    
