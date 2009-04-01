@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.44 2009-03-31 11:21:04 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.45 2009-04-01 13:09:38 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -417,8 +417,8 @@ class Boole(LHCbConfigurableUser):
         switch to generate spillover events.
         """
         from Configurables import MuonBackground, MuonDigitization
-        MuonDigitization().EnableSpillover = True
-        MuonBackground("MuonLowEnergy").EnableSpillover = True
+        MuonDigitization().SpilloverPathsSize = len(self.getProp("SpilloverPaths"))
+        MuonBackground("MuonLowEnergy").SpilloverPathsSize = len(self.getProp("SpilloverPaths"))
 
         # Handle the unpacking of pSim containers
         for spill in self.getProp("SpilloverPaths") :

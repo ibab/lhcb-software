@@ -8,6 +8,7 @@ Purpose: LHCb Digitization program
    . SkipSpill option removed
    . UseSpillover option used to steer spillover usage in sub-detectors
    . SpilloverPaths option use to define which paths to use from input file
+   . Adapt to corresponding changes in MuonDigitisation and MuonBackground
  - Remove DC06 support, increase major version to v18r0
 
 ! 2009-03-10 - Marco Cattaneo
