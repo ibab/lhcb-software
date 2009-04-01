@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2009-04-01 - Olivier Callot
+ - New tool PatDebugTracktool to return the MC keys associated to a track.
+
 !======================= TrackMCTools v2r22 2009-03-10 =======================
 ! 2009-02-20 M Needham
  - Fix some untested statuscodes
