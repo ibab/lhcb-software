@@ -7,4 +7,8 @@ apply_pattern python_alias script=mkproject
 apply_pattern python_alias script=mkvolume
 apply_pattern python_alias script=mkLHCbtar
 
+apply_pattern python_alias script=mkLCGCMTtar
+apply_pattern python_alias script=copy-Win2afs
+apply_pattern python_alias script=FixProjectLinks
 
+apply_pattern source_shell_alias script=ProjectEnv

@@ -16,3 +16,5 @@ if ( $?save ) then
   setenv PYTHONPATH ${save}
   unset save
 endif
+
+unset tbroadcast_root

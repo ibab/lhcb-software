@@ -1,0 +1,215 @@
+#!/usr/bin/env python
+
+""" Script to configure a project and copy binaries from  WIn32 to AFS,
+ - 070125 - no more packageEnv, Gaudi is rename as GaudiRelease
+ - 070209 - skip configuration if already done
+ - 070503 - get platform from CMTCONFIG
+ - 071101 - fixed use of tags in requirements file
+"""
+#----------------------------------------------------------------------------------
+import sys, os, getopt, warnings
+lhcb_packages = ['GAUDI','GAUSS','BOOLE','BRUNEL','DAVINCI','PANORAMIX','BENDER']
+global repare
+#----------------------------------------------------------------------------------
+def usage() :
+    print 'Usage:'
+    print '  copy-Win2afs [options] '
+    print 'Try "copy-Win2afs --help" for more information.'
+    sys.exit()
+#----------------------------------------------------------------------------------
+def help() :
+    print """Copies Win32 binaries below the current directory to the corresponding AFS location\n
+    Usage:
+      copy-Win2afs [options] \n
+    Options:
+      -o <directory>, --output <directory>
+         AFS directory where binaries will be copied if not the default.
+         Default is %GAUDISOFT% or %LHCBRELEASES%.\n
+    example:
+      C:\lhcb\DAVINCI\DAVINCI_v12r4
+      copy-Win2afs
+      will configure and copy , but not overwite, all $CMTCONFIG to $LHCBRELEASES/DAVINCI/DAVINCI_v12r4 \n
+      copy-Win2afs -r
+      will configure and overwite, if any directory exists alkready on afs
+      copy-Win2afs -s
+      will not configure but copy
+      copy-Win2afs -o Z:\cern.ch\lhcb\software\DEV
+      will copy all $CMTCONFIG to $LHCBDEV/DAVINCI/DAVINCI_v12r4
+
+     """
+    sys.exit()
+#----------------------------------------------------------------------------------
+def main() :
+    global repare
+    platform = os.environ['CMTCONFIG']
+    print platform
+    copy_package = copy_package_win
+
+    source_dir = os.getcwd().split("\\")
+    version = source_dir[-1]
+    project = source_dir[-2]
+    destination_dir = os.environ['AFS'] + '\\cern.ch\\lhcb\\software\\releases'
+    packSys = project + 'Sys'
+    packver = version.split("_")
+    packEnv = project + 'Env'
+    old = os.path.isdir(os.path.join(os.getcwd(),os.pardir,os.pardir,packEnv,version))
+    if project == 'GAUDI':
+        destination_dir = os.environ['AFS'] + '\\cern.ch\\sw\\Gaudi\\releases'
+        packSys = 'GaudiRelease'
+        if old : 
+            packSys = 'Gaudi'
+    destination = os.path.join(destination_dir,project,version)
+    cmtversion = 'v1r20p20070208'
+
+# by default do not overwrite existing directories.
+# if repare = True then overwrite existing directories
+    repare = 'False'
+# if skip = True then skip cmt config and build vsnet
+    skip = 'False'
+
+    #----Obtain the options----------------------------------------------------------
+    options = sys.argv[1:]
+    try:
+        opts, args = getopt.getopt(options, 'hrso:',
+                     ['help','repare','skip','output='])
+    except getopt.GetoptError:
+        usage()
+        sys.exit(2)
+    for o, a in opts:
+        if o in ('-h', '--help'):
+            help()
+            sys.exit()
+        if o in ('-r', '--repare'):
+            repare = 'True'
+        if o in ('-o', '--output'):
+            destination = a
+        if o in ('-s', '--skip'):
+            skip = 'True'
+
+    #----Sanity checks---------------------------------------------------------------
+    cmtcmd = 'cmt'
+
+    if not os.popen(cmtcmd+' --version').readlines() :
+        print 'CMT command not available. Exiting.'; sys.exit(1)
+    if not os.path.isdir(destination) :
+        print 'Destination directory [%s] does not exist. Exiting'%destination; sys.exit(1)
+
+    #----Run cmt config--------------------------------------------------------------
+    here = os.getcwd()
+    if skip == 'False':
+        if old :
+            print 'configure ',packEnv
+            cmtopt = ' -path=%s -pack=%s -version=%s -quiet '%(destination_dir,packEnv,packver[-1])
+            os.system(cmtcmd+cmtopt+' config')
+        print 'configure ',packSys
+        cmtopt = ' -path=%s -pack=%s -version=%s -quiet '%(destination,packSys,packver[-1])
+        os.system(cmtcmd+cmtopt+' config')
+
+    #----Get the list of packages----------------------------------------------------
+    packages = [{'name':packSys,'version':packver[-1],'hat':''}]
+    packSysReq = os.path.join(os.getcwd(),packSys,'cmt','requirements')
+    if not os.path.exists(packSysReq) :
+        packSysReq = os.path.join(os.getcwd(),packSys,packver[-1]+'\\cmt\\requirements')
+    input = open(packSysReq,'r')
+    for line in input.readlines():
+        line = line.replace('\t', ' ')
+        if line[0] == '#': continue
+        if line.find('use ') != -1 and line.find('#use ') == -1 and line.find('_use') == -1:
+            words = line.split()
+            if len(words) == 3:
+                words.append('')
+                pack = words[1]
+            else:
+                pack = os.path.join(words[3],words[1])
+            #add the package
+            packages.append ({'name':words[1],'version':words[2],'hat':words[3]})
+            cmtopt = ' -path=%s -pack=%s -version=%s -quiet '%(destination,pack,words[2])
+            if skip == 'False':
+                #configure the package
+                print 'configure ',pack
+                os.system(cmtcmd+cmtopt+' config')
+                print 'build vsnet ',pack
+                os.system(cmtcmd+cmtopt+'build vsnet')
+
+    print ' number of packages to be copied ',len(packages)
+
+    #----Do the copy -----------------------------------------------------------------
+    count = 0
+    for p in packages :
+        if 'version' in p :
+            rc = copy_package(p['name'],p['version'], p['hat'], platform, os.getcwd(), destination,count)
+            count = rc
+    print ' number of copied packages ',count
+    #---copy the InstallArea/%CMTCONFIG% -----------------------------------------------
+    P_v = os.path.split(os.getcwd())[-1]
+    sinstall = os.path.join(os.getcwd(),os.pardir)
+    dinstall = os.path.join(destination,os.pardir)
+    rc = copy_package(P_v,'InstallArea','',platform,sinstall,dinstall,count)
+    #-----------------------------------------------------------------------------------
+
+def copy_config_files(name, version, hat, platform, sdir, ddir):
+    if hat:
+        source      = os.path.join(sdir, hat, name, 'cmt')
+        destination = os.path.join(ddir, hat, name, 'cmt')
+        if not os.path.exists(source) :        
+            source      = os.path.join(sdir, hat, name, version, 'cmt')
+            destination = os.path.join(ddir, hat, name, version, 'cmt')
+    else:
+        source      = os.path.join(sdir, name, 'cmt')
+        destination = os.path.join(ddir, name, 'cmt')
+        if not os.path.exists(source) :
+            source      = os.path.join(sdir, name, version, 'cmt')
+            destination = os.path.join(ddir, name, version, 'cmt')
+    if os.path.exists(source) :
+        print '========try to copy %s config files to %s '%(source,destination)
+        fcopylist = [ x for x in os.listdir(source) if x.endswith('.bat') ]
+        options = '/V /C /H /D /Q /Y'
+        for f in fcopylist :
+            sf = os.path.join(source, f)
+            df = os.path.join(destination, f)
+            status = os.system('xcopy %s %s %s' % (sf, df, options) )
+            if status :
+                print ' Error copying %s to %s ' % (sf, df)
+            else :
+                print "Copied %s to %s" % (sf, df)
+
+
+def copy_package_win( name, version, hat, platform, sdir, ddir, count) :
+    counter = count +1
+    if hat:
+        source      = os.path.join(sdir,hat,name,platform)
+        destination = os.path.join(ddir,hat,name,platform)
+        if not os.path.exists(source) :
+            source      = os.path.join(sdir,hat,name,version,platform)
+            destination = os.path.join(ddir,hat,name,version,platform)
+    else:
+        source      = os.path.join(sdir,name,platform)
+        destination = os.path.join(ddir,name,platform)
+        if not os.path.exists(source) :
+            source      = os.path.join(sdir,name,version,platform)
+            destination = os.path.join(ddir,name,version,platform)
+    print '========try to copy %s to %s '%(source,destination)
+
+    if not os.path.exists(source) :
+        print '  %s Source for package %s does not exists at %s'%(counter,name,source)
+        return (counter)
+    if os.path.exists(destination) and repare ==  'False':
+        print '  %s Package %s %s exists already in destination. Not copied.'%(counter,name,version)
+        return (counter)
+
+    options = '/E /V /C /H /D /I /Q /Y'
+    if os.path.exists(source):
+        status = os.system('xcopy '+source+' '+destination+' '+options)
+        if status :
+            print '  %s Error copying %s '%(counter,name)
+        else :
+            options = '/S/Q'
+            status = os.system('rmdir '+destination+'\\'+name+' '+options)
+            # ensures that all the .bat files are present in the destination
+            copy_config_files(name, version, hat, platform, sdir, ddir)
+            print '  %s copy %s done ' %(counter,name)
+    return (counter)
+
+#---------------------------------------------------------------------
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,505 @@
+#!/usr/bin/env python
+
+""" Script to make a LCGCMT tar file
+ - 060119 - first version
+ - 060206 - add include directory in LCG applications (but RELAX)
+ - 060317 - remove adding include directory
+            remove doc, test, tests, examples directories from LCG packages
+ - 060329 - try to find tar file on lhcbtar if not on lcg_tar_dir
+ - 060404 - adapt the script to new spi tar files
+ - 060612 - remove some softlinks from cernlib
+ - 060719 - build the native.versions list for  Linux or win32
+ - 060720 - skip CASTOR on win32 tar file
+ - 060830 - use ROOT debug version on WIN32
+ - 060918 - fix a bug in get_tar_name : the list of missing tar files was not correct
+ - 061012 - add PLUGINS tar file
+ - 061023 - fix clean_clhep
+ - 070122 - get native versions from config_versions
+ - 070123 - make sure that CMTPROJECTPATH is set when no <package>Env
+ - 070301 - add the tag slc3 to get native_versions of grid stuff
+ - 070613 - added option to exclude files according to a pattern
+ - 070615 - moved to CMT v1r20p20070208
+ - 070622 - added the conversion of slc4_amd64_gcc345 directories to slc4_amd64_gcc34
+ - 071004 - added the creation of the md5 file
+ - 081113 - Fixed problem with native project without version directories
+ - 081212 - added the option for custom output file
+ - 081212 - added the possibility to create the LCGGrid tarball from Dirac
+ - 090107 - exclude file extension tgz, tar.gz, rpm for the tarball
+"""
+#------------------------------------------------------------------------------
+import sys, os, getopt, time, shutil, commands
+import re
+from install_project import calculateMD5
+version = '000107'
+#---------------------------------------------------------------------------
+def usage() :
+    print 'Usage:'
+    print '  python mkLCGCMTtar.py -n <version> '
+    print 'Try "mkLCGCMTtar.py -h" for more information.'
+    sys.exit()
+#--------------------------------------------------------------------------
+def help() :
+    print """make a LCGCMT tar file for a given Gaudi version with the necessary libraries\n
+    Usage:
+      python mkLCGCMTtar.py -n  -b [-d or --debug] [--plugins]\n
+      -d                                 - debug mode \n
+      -b or --binary=  <binary>          - for this binary platform \n
+      -e or --exclude=  <pattern>        - for file pattern exclusion\n
+      -n or --native=  <Lb project_vers> - application version from where to get native.versions \n
+      -o or --output=file                - output filename
+      --plugins                          - if there build a PLUGINS tar file \n
+    Examples:
+      cd $LHCBTAR/source
+      python mkLCGCMTtar.py --native=GAUDI_<version> --binary=slc3_ia32_gcc323 \n
+      gets the libraries used by GAUDI_<version> from $LCG_release_area/LCGCMT/LCGCMT_version used by Gaudi>\n
+      python mkLCGCMTtar.py --plugins \n
+      """
+    sys.exit()
+
+#----------------------------------------------------------------------------
+#  get native versions ==============================================
+#----------------------------------------------------------------------------
+def get_base_project(native_version):
+    NAME = native_version.split('_')[0]
+    version = native_version.split('_')[1]
+    Name = NAME.lower().capitalize()
+    if NAME == 'LCGCMT': Name = 'LCG'
+    if NAME == 'LHCBGRID' : Name = 'LHCbGrid'
+    NameSys = Name+'Sys'
+    if Name == 'Gaudi': NameSys = Name+'Release'
+    if Name == 'LCG' : NameSys = Name+'_Release'
+    release_area = Name+'_release_area'
+    if os.path.isdir(os.path.join(os.environ[release_area],Name+'Env',version)):
+        os.chdir(os.path.join(os.environ[release_area],Name+'Env',version,'cmt'))
+        if Name == 'Gaudi': NameSys = Name
+    else:
+        if not os.environ.has_key('CMTPROJECTPATH'):
+            print 'you should set CMTPROJECTPATH first - STOP '
+            sys.exit('No CMTPROJECTPATH')
+        print 'CMTPROJECTPATH = ',os.environ['CMTPROJECTPATH']
+        os.chdir(os.path.join(os.environ[release_area],NAME,native_version,'cmt'))
+    return NAME, version, Name, NameSys, release_area
+
+
+def get_project_dir(native_version):
+    here = os.getcwd()
+    NAME, version, Name, NameSys, release_area = get_base_project(native_version)
+    dir = os.path.join(os.environ[release_area],NAME,native_version)
+    os.chdir(here)
+    return dir
+
+
+def get_projectcmt_file(native_version):
+    dir = get_project_dir(native_version)
+    return os.path.join(dir,'cmt','project.cmt')
+
+def get_runtime_deps(filename):
+    deps = dict()
+    matchexpr = re.compile("#\s*runtime_use\s+\w+")
+    for l in open(filename, "r") :
+        if matchexpr.search(l[:-1]) :
+            words = l[:-1].replace("#","").split()
+            if len(words) < 3 :
+                deps[words[1]] = ""
+            else :
+                deps[words[1]] = words[2]
+    return deps
+
+def get_runtime_cmtpath(native_version):
+    file = get_projectcmt_file(native_version)
+    deps = get_runtime_deps(file)
+    cmtpath = []
+    for d in deps.keys():
+        dir = get_project_dir(deps[d])
+        cmtpath.append(dir)
+    return ':'.join(cmtpath)
+
+
+def get_cmtpath(native_version):
+    os.environ['CMTPATH'] = get_runtime_cmtpath(native_version)
+    status,CMTPATH = commands.getstatusoutput('cmt show set_value CMTPATH')
+    if CMTPATH[0] == ':' : CMTPATH = CMTPATH[1:]
+    os.environ['CMTPATH'] = CMTPATH
+    print 'CMTPATH=%s' % CMTPATH
+    return CMTPATH
+
+def get_lcg_version(cmtpath):
+    for p in cmtpath.split(':') :
+        pos = p.find('LCGCMT_')
+        if pos != -1 :
+            return p[pos:]
+#----------------------------------------------------------------------------
+#  get native versions ==============================================
+#----------------------------------------------------------------------------
+def get_native_versions(native_version,binary):
+    if debug_flag == 1: print 'get_native_versions',native_version,binary
+    here = os.getcwd()
+
+    packages_versions = {}
+
+    #build cmtcmd
+    if plugins_flag == 1:
+        print 'build PLUGINS tar file'
+        if os.path.isfile(os.path.join(os.environ['LHCBRELEASES'],'context','requirements')):
+            os.environ['CMTUSERCONTEXT'] = os.path.join(os.environ['LHCBRELEASES'],'context')
+            cmtcmd = 'cmt show macros native > '
+    else:
+        NAME, version, Name, NameSys, release_area = get_base_project(native_version)
+        CMTPATH = get_cmtpath(native_version)
+        lcgv = get_lcg_version(CMTPATH)
+        native_cmt = os.path.join(os.environ[release_area],NAME,native_version,NameSys,'cmt')
+        if not os.path.exists(native_cmt) :
+            native_cmt = os.path.join(os.environ[release_area],NAME,native_version,NameSys,version,'cmt')
+        os.chdir(native_cmt)
+        if debug_flag == 1:
+            print 'get_native_version - %s %s %s %s '%(release_area,native_cmt,os.getenv('CMTPATH'),lcgv)
+        if NAME != 'LHCBGRID':
+            packages_versions['LCGCMT'] = lcgv
+        if binary.find('win32') != -1:
+            cmtshow = 'cmt -tag=LHCb,WIN32 show '
+        else:
+            if binary.find('slc3') != -1:
+                cmtshow = 'cmt -tag=LHCb,LHCbGrid,slc3 show '
+            else:
+                cmtshow = 'cmt -tag=LHCb,LHCbGrid show '
+        cmtcmd = cmtshow +'macros native > '
+    # run cmtcmd
+    if sys.platform == 'win32':
+        natives = os.path.join(os.environ['TMP'],native_version+'.vers')
+    else:
+        natives = os.path.join('/tmp',native_version+'.vers')
+    if debug_flag == 1:
+        print 'get_native_version - %s '%(cmtcmd+natives)
+
+    os.system (cmtcmd+natives)
+
+    # get packages_versions
+    fd = open(natives)
+    fdlines = fd.readlines()
+    for fdline in fdlines:
+        native = fdline.split('=')[0]
+        cmtcmd = cmtshow+ 'macro_value '+native
+        status,vers = commands.getstatusoutput(cmtcmd)
+        pack = fdline.split('_native')[0]
+        packages_versions[pack] = vers
+
+    os.system(rmcmd+natives)
+    return packages_versions
+
+#
+#  get LCGCMT tar file names ===============================================
+#
+def get_tar_name(root,gen,native,bin):
+    if debug_flag == 1: print ' get_tar_name for %s %s %s %s '%(root,gen,native,bin)
+    lcgbin = '__LCG_'+bin
+    lcg_app_dir = os.getenv('LCG_release_area')
+    dirlist = []
+
+    if native.find(gen) != -1 or gen == 'ROOT':
+        # packages on /sw/lcg/app/releases or ROOT
+        if gen == 'LCGCMT':
+            name = native+'.tar.gz'
+        else:
+            if bin == 'win32_vc71':
+                lcgbin = lcgbin+'_dbg'
+                dirlist.append(bin+'_dbg')
+            else:
+                dirlist.append(bin)
+            name = native+lcgbin+'.tar.gz'
+            if gen == 'ROOT': name = gen+'_'+name
+    else:
+        # packages on /sw/lcg/external but ROOT
+        name = gen+'_'+native+lcgbin+'.tar.gz'
+        if gen == 'AIDA':
+            name = name.replace(bin,'share')
+        else:
+            dirlist.append(bin)
+
+    if debug_flag == 1: print 'get_tar_name ',name,dirlist
+
+    if not os.path.exists(os.path.join(root,name)):
+        if os.path.exists(os.path.join(root,name.replace(gen,gen.lower()))):
+            name =  name.replace(gen,gen.lower())
+        else:
+            name = name.replace(lcgbin,'')
+            if not os.path.exists(os.path.join(root,name)):
+                if os.path.exists(os.path.join(root,name.replace(gen,gen.lower()))):
+                    name = name.replace(gen,gen.lower())
+                else:
+                    name = None
+
+    return name,dirlist
+
+
+def get_output_filename(native_version, binary, packages_versions):
+    here = os.getcwd()
+    NAME, version, Name, NameSys, release_area = get_base_project(native_version)
+    os.chdir(here)
+    if plugins_flag == 0:
+        if NAME == "LHCBGRID":
+            filename = "LCGGrid_" + version
+        elif NAME == "DIRAC" :
+            packver = version
+            os.chdir(get_project_dir(native_version))
+            for line in os.popen("cmt show projects") :
+                line = line[:-1]
+                if line.find("LHCBGRID_") != -1 :
+                    words = line.split()
+                    for w in words :
+                        if w.startswith("LHCBGRID_") :
+                            packver=w.split("_")[1]
+            os.chdir(here)
+            filename = "LCGGrid_" + packver
+        else:
+            filename = packages_versions['LCGCMT']
+    else:
+        filename = 'PLUGINS'
+    print filename
+    return filename
+
+
+#
+#  get tar files from lcg  ==================================================
+#
+def get_tar_files(native_version, packages_versions,binary_dir, output_file):
+    if debug_flag == 1:
+        if plugins_flag == 0:
+            print ' get_tar_files for %s %s '%(packages_versions['LCGCMT'],binary_dir)
+        else:
+            print ' get_tar_files for PLUGINS %s '%(binary_dir)
+
+    lcg_tar_dir = os.path.join(lcg_ext_dir,'distribution')
+
+    os.chdir('/tmp')
+
+    main_dir = get_output_filename(native_version, binary_dir, packages_versions)
+
+    if output_file :
+        tarfile = output_file
+    else :
+        tarfile = os.path.join(lhcbtar,main_dir+'_'+binary_dir+'.tar.gz')
+
+    if tarfile.endswith(".tar.gz") :
+        md5file = tarfile.replace(".tar.gz",".md5")        
+    else :
+        md5file = None
+
+    if not os.path.exists(main_dir): os.mkdir(main_dir)
+    os.chdir(main_dir)
+    if not os.path.exists(binary_dir): os.mkdir(binary_dir)
+    os.chdir(binary_dir)
+    if  os.path.exists('external'): os.system(rmcmd+' external')
+    os.mkdir('external')
+    os.chdir('external')
+
+# if PLUGINS copy $LHCBRELEASES/context/requirements on /tmp/external
+    if plugins_flag == 1:
+        str = 'cp -r '+os.path.join(os.environ['LHCBRELEASES'],'context')+' .'
+        os.system(str)
+
+# loop over external packages
+    missing = []
+    tarko   = []
+    for key in packages_versions.keys():
+        value = packages_versions[key]
+        tar_dir = lcg_tar_dir
+        file,dirlist = get_tar_name(tar_dir,key,value,binary_dir)
+        if file == None:
+            tar_dir = lhcbtar
+            file,dirlist = get_tar_name(tar_dir,key,value,binary_dir)
+        if debug_flag == 1: print 'get_tar_files %s %s '%(file,dirlist)
+        if file != None:
+            Ffile = os.path.join(tar_dir,file)
+            pack = file.split('_')[0]
+            if debug_flag == 1: print Ffile
+
+            packpath = os.path.join(pack,value)
+            if debug_flag == 1: print 'get_tar_file packpath= ',packpath
+
+            str = 'tar --extract --ungzip --file '+Ffile
+            rc = os.system(str)
+
+            if rc != 0:
+                tarko.append(os.path.join(key,value,binary_dir))
+            elif len(dirlist) != 0:
+                # if binary = slc4_ia32_gcc345 rename it to slc4_ia32_gcc34
+                if not os.path.isdir(os.path.join(packpath,binary_dir)):
+                    if os.path.isdir(os.path.join(packpath,'slc4_ia32_gcc345')):
+                        pn =  os.path.join(packpath,binary_dir)
+                        po =  os.path.join(packpath,'slc4_ia32_gcc345')
+                        str = 'mv '+po+' '+pn
+                        rc = os.system(str)
+                        print ' move %s/%s to %s/%s' %(packpath,po,packpath,pn)
+                    if os.path.isdir(os.path.join(packpath,'slc4_amd64_gcc345')):
+                        pn =  os.path.join(packpath,binary_dir)
+                        po =  os.path.join(packpath,'slc4_amd64_gcc345')
+                        str = 'mv '+po+' '+pn
+                        rc = os.system(str)
+                        print ' move %s/%s to %s/%s' %(packpath,po,packpath,pn)
+                # remove doc, test and tests directories if any
+                for dir in ['doc', 'test', 'tests', 'examples', 'tutorial']:
+                    if os.path.isdir(os.path.join(packpath,dirlist[0],dir)):
+                        shutil.rmtree(os.path.join(packpath,dirlist[0],dir))
+                        if debug_flag == 1:
+                            print 'remove %s '%(os.path.join(packpath,dirlist[0],dir))
+                # remove softlinks which cannot be resolved (cernlib/2005)
+                for lnk in ['src','lib/xsneut95.dat']:
+                    if os.path.islink(os.path.join(packpath,dirlist[0],lnk)):
+                        os.remove(os.path.join(packpath,dirlist[0],lnk))
+                        print 'remove %s '%(os.path.join(packpath,dirlist[0],lnk))
+        else:
+            if not (key == 'CASTOR' and binary_dir.find('win32') != -1):
+                print key,binary_dir
+                missing.append(os.path.join(key,value,binary_dir))
+
+# clean CLHEP directory
+    if os.path.isdir('clhep'):
+        rc = clean_clhep_dir(packages_versions['LCGCMT'],packages_versions['CLHEP'],binary_dir)
+
+# make the final tar file from /tmp/main_dir/binary_dir
+    if len(missing) == 0 and len(tarko) == 0:
+        os.chdir(os.path.join('/tmp',main_dir,binary_dir))
+        os.system("symlinks -c -r external")
+        str = 'tar zcf '
+        str += tarfile
+        str += ' --exclude "*/InstallArea*" '
+        str += ' --exclude "*.tar.gz" '
+        str += ' --exclude "*.tgz" '
+        str += ' --exclude "*.rpm" '
+        if exclusion_pattern :
+            str += ' --exclude "%s" ' % exclusion_pattern
+        str += ' external'
+        print str
+        rc = os.system(str)
+        if rc == 0:
+            str = rmcmd+os.path.join('/tmp',main_dir,binary_dir)
+            os.system(str)
+            logfile.write('%s tar file has been built for %s and relevant /tmp directory removed'%(main_dir,binary_dir)+'\n')
+            if md5file :
+                md5sum = calculateMD5(tarfile)
+                mdf = open(md5file,"w")
+                mdf.write("%s  %s" % (md5sum,os.path.basename(tarfile)))
+                logfile.write('%s md5 file has been built for %s'%(main_dir,binary_dir)+'\n')
+    else:
+        logfile.write('%s tar file has not been built for %s because some tar files are missing or wrong '%(main_dir,binary_dir)+'\n')
+
+        logfile.write('missing tar files= %s'%(missing)+'\n')
+        logfile.write('wrong tar files = %s'%(tarko)+'\n')
+
+
+
+
+#
+# -------------------------------------------------------------------
+#
+def clean_clhep_dir(LCGCMT_vers,clhep_vers,binary_dir):
+
+    here = os.getcwd()
+
+    clhep_dir = os.path.join(os.environ['LCG_release_area'],'LCGCMT',LCGCMT_vers,'LCG_Interfaces','CLHEP','cmt')
+    os.chdir(clhep_dir)
+
+    # get the list of libraries from the CLHEP_linkopts macro
+    str = 'cmt show macro_value CLHEP_linkopts -tag='+binary_dir
+    status,output = commands.getstatusoutput(str)
+    lib_list = output.split()
+
+    # in lib_list remove any character specific to Linux or Win32
+    list = []
+    for lib in lib_list[1:]:
+        list.append(lib.replace('-lCLHEP','CLHEP').replace('.lib',''))
+
+    # get the list of existing libraries
+    os.chdir(os.path.join(here,'clhep',clhep_vers,binary_dir,'lib'))
+    libraries = os.listdir(os.getcwd())
+
+    # split the list of existing libraries between keep and delete
+    keep = []
+    delete  = []
+    for lib  in libraries:
+        for key in list:
+            if lib.find(key) != -1:
+                keep.append(lib)
+                break
+            else:
+                continue
+        else:
+            delete.append(lib)
+
+        # delete the libraries not required
+    for lib in delete:
+        os.remove(lib)
+
+    os.chdir(here)
+
+#---------------------------------------------------------------------
+if __name__ == "__main__":
+
+    here = os.getcwd()
+
+    logname = os.path.join(here,'mkLCGCMTtar.log')
+    if os.path.exists(logname): os.remove(logname)
+    logfile = open(logname,'w')
+    str = " =========== "+time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())+"\n"
+    logfile.write(str)
+
+    if sys.platform == 'win32':
+        rmcmd = 'rmdir /s/q '
+    else:
+        rmcmd = '/bin/rm -fr '
+
+    lcg_ext_dir = os.path.normpath(os.path.join(os.environ['LCG_release_area'],'..','..','external'))
+    lhcbtar = os.path.join(os.environ['LHCBHOME'],'distribution','source')
+    binary = os.environ['CMTCONFIG']
+    source = ' '
+    package = ' '
+    version = 0
+    native_version = 0
+    exclusion_pattern = ''
+    output_file = None
+
+    arguments = sys.argv[1:]
+    if len(sys.argv) == 1:
+        help()
+        sys.exit()
+    try:
+        keys, values = getopt.getopt(arguments,'hdb:n:e:o:',
+                       ['help','debug','plugins','binary=','native=','exclude=', 'output='])
+
+    except getopt.GetoptError:
+        help()
+        sys.exit()
+
+    debug_flag = 0
+    plugins_flag = 0
+
+    for key,value in keys:
+        if key in ('-d', '--debug'):
+            debug_flag = 1
+        if key in ('-h', '--help'):
+            help()
+        if key in ('-b', '--binary'):
+            binary = value
+        if key in ('-n', '--native'):
+            native_version = value
+        if key in ('-o', '--output'):
+            output_file = value
+        if key in ('-e', '--exclude'):
+            exclusion_pattern = value
+            print exclusion_pattern
+#      sys.exit()
+        if key in ('-p', '--plugins'):
+            plugins_flag = 1
+            native_version = 'PLUGINS'
+
+    if plugins_flag == 1:
+        logfile.write( 'debug_flag %s, binary %s from $LHCBRELEASES/context/requirements '%(debug_flag,binary)+'\n')
+    else:
+        logfile.write( 'debug_flag %s, binary %s from %s '%(debug_flag,binary,native_version)+'\n')
+
+
+    packages_versions = get_native_versions(native_version,binary)
+    if debug_flag == 1:
+        print ' packages_versions = ', packages_versions
+
+    rc = get_tar_files(native_version, packages_versions, binary, output_file)

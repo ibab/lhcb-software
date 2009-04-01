@@ -1,0 +1,211 @@
+#!/usr/bin/env python
+
+from os.path import islink, walk, join, abspath, realpath, normpath
+from os.path import dirname, exists
+from os import readlink, sep, pardir, symlink, environ, remove
+
+
+
+
+def isLinkAbsolute(linkname):
+    linkcont = readlink(linkname)
+    return linkcont.startswith(sep)
+    
+def isLinkBroken(linkname):
+    linkdir = dirname(linkname)
+    target = abspath(join(linkdir, readlink(linkname)))
+    return not exists(target)
+
+def doesLinkPointInTree(treebase, linkname):
+    linkdir = dirname(linkname)
+    target = abspath(join(linkdir, readlink(linkname)))
+    return target.startswith(treebase)
+
+def getCommonPath(dirn, filen):
+    """ calculate the common path of the 2 entries """
+    dirl = dirn.split(sep)
+    filel = filen.split(sep)
+    commpth = []
+    for d, f in zip(dirl, filel):
+        if d == f :
+            commpth.append(d)
+        else :
+            break
+    commpth = sep.join(commpth)
+    if not commpth:
+        commpth = sep
+    elif commpth[-1] != sep:
+        commpth += sep
+    return commpth
+
+
+def getRelativePath(dirn, filen):
+    """ calculate the relative path of filename with regards to dirname """
+    filen = realpath(filen)
+    dirn = realpath(dirn)
+    commonpath = getCommonPath(dirn, filen)
+    relname = filen[len(commonpath):]
+    reldir = dirn[len(commonpath):]
+    if reldir:
+        relname = (pardir+sep)*len(reldir.split(sep)) + relname  
+    return relname
+
+
+
+def makeRelativeLink(src, dest, verbose, dryrunmode):
+    """ create a relative symlink (instead of an absolute one) """
+    relpath = getRelativePath(dirname(dest), src)
+    if verbose : 
+        print "Creating relativelink %s -> %s" % (dest, relpath)
+    if not dryrunmode :
+        symlink(relpath, dest)
+
+
+def relativizeLink(linkname):
+    linkdir = dirname(linkname)
+    target = abspath(join(linkdir, readlink(linkname)))
+    return getRelativePath(linkdir,target)
+
+def getLinkSignature(treebase, linkname):
+    signature = ""
+    if isLinkAbsolute(linkname):
+        signature += "A" # absolute link
+    else:
+        signature += "R" # relative link
+    if isLinkBroken(linkname):
+        signature += "B" # broken link
+    else:
+        signature += "V" # valid link
+    if doesLinkPointInTree(treebase, linkname):
+        signature += "C" # link is contained
+    else:
+        signature += "O" # link is outside
+    return signature
+
+def getLinkInfo(treebase, linkname):
+    signature = getLinkSignature(treebase, linkname)
+    msg =  "[%-3s] %s -> " % (signature, linkname)
+    linkcont = readlink(linkname)
+    msg += "%s" % linkcont
+    return msg
+    
+
+def printVisitor(data, dirnm, filesindir):
+    for f in filesindir:
+        filename = join(dirnm, f)
+        if islink(filename):
+            print getLinkInfo(data["treebase"], filename)
+    
+
+def fixLinks(treebase, opts=None):
+    """ recursively displays the links of a tree """
+    data = dict()
+    data["treebase"] = treebase
+    visitor = fixVisitor
+    if opts:
+        data["options"] = opts
+        if opts.showmode:
+            visitor = printVisitor
+    walk(treebase, visitor, data)
+    
+def fixLink(data, linkname):
+    verbose = False
+    absolutemode = False
+    dryrunmode = False
+    if data.has_key("options"):
+        opts = data["options"]
+        verbose = opts.verbose
+        absolutemode = opts.absolutemode
+        dryrunmode = opts.dryrunmode
+    linkcont = readlink(linkname)
+    if isLinkAbsolute(linkname):
+        mysitelink = getMySiteLink(linkcont)
+    else:
+        mysitelink = normpath(join(dirname(linkname),linkcont))
+    if mysitelink :
+        if verbose : print "Removing %s" % linkname
+        if not dryrunmode: remove(linkname)
+        if absolutemode:
+            if verbose : print "Creating absolute link %s -> %s" % (linkname, mysitelink)
+            if not dryrunmode: symlink(mysitelink, linkname )
+        else:
+            makeRelativeLink(mysitelink, linkname, verbose, dryrunmode )
+    else:
+        print "Warning: local %s doesn't exist" % linkcont
+                
+            
+    
+def fixVisitor(data, dirnm, filesindir):
+    for f in filesindir:
+        filename = join(dirnm, f)
+        if islink(filename):
+            fixLink(data, filename)
+
+
+    
+
+def getMySiteLink(afslink):
+    mybase = environ["MYSITEROOT"]
+    mybase = join(mybase,"lhcb")
+    rel_areas = []
+    rel_areas.append("/afs/cern.ch/lhcb/software/releases")
+    rel_areas.append("/afs/cern.ch/sw/Gaudi/releases")
+    for ra in rel_areas:
+        if afslink.startswith(ra):
+            pos = len(ra)
+            tail = afslink[pos:]
+            if tail.startswith(sep):
+                tail = tail[1:]
+            return join(mybase,tail)
+    else :
+        return afslink
+
+
+if __name__ == '__main__':
+    
+    from optparse import OptionParser
+
+    usage = """
+    %prog --dry-run [dir1 [dir2 ...]]
+    %prog [--show|-s] [dir1 [dir2 ...]]
+    %prog [-q|-v] [-a] [dir1 [dir2 ...]]
+    """        
+    parser = OptionParser(usage=usage, version="%prog v1r0")
+    
+    
+    parser.set_defaults(verbose=False)
+    parser.add_option("-q", "--quiet",
+                      action="store_false", 
+                      dest="verbose",
+                      help="silent mode")
+    parser.add_option("-v", "--verbose",
+                      action="store_true", 
+                      dest="verbose",
+                      help="verbose mode")
+    
+    parser.set_defaults(showmode=False)
+    parser.add_option("-s", "--show",
+                      action="store_true", 
+                      dest="showmode",
+                      help="only shows links")
+    
+    parser.add_option("--dry-run",
+                      action="store_true", 
+                      dest="dryrunmode",
+                      help="simulate action")
+    
+    parser.set_defaults(absolutemode=False)
+    parser.add_option("-a", "--absolute",
+                      action="store_true", 
+                      dest="absolutemode",
+                      help="create absolute links")
+
+    (options, args) = parser.parse_args()
+    
+    if not args:
+        args.append(".")
+        
+    for di in args:
+        fixLinks(di, options)
+
+    

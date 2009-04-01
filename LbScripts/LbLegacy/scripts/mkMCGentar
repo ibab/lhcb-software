@@ -1,0 +1,208 @@
+#!/usr/bin/env python
+
+""" Script to make a GENSER tar file
+ - 070206 - first version
+ - 070427 - fix help and comments
+ - 071004 - added md5 sum calculation
+ - 080619 - check cteq6 function in the extra "share" tar ball
+ - 081013 - Fixed non-versioned packages projects
+"""
+#------------------------------------------------------------------------------
+import sys, os, getopt, time, shutil, commands
+from install_project import calculateMD5
+version = '081013'
+#---------------------------------------------------------------------------
+def usage() :
+    print 'Usage:'
+    print '  python mkMCGentar.py -n GAUSS_<version> '
+    print 'Try "mkMCGentar.py -h" for more information.'
+    sys.exit()
+#--------------------------------------------------------------------------
+def help() :
+    print """make a GENSER tar file for a given Gauss version with the necessary libraries\n
+    Usage:
+      python mkMCGentar.py [-d or --debug] \n
+      -d                                 - debug mode \n
+      -b or --binary=  <binary>          - for this binary platform \n
+      -n or --native=  <Lb project_vers> - application version from where to get native.versions \n
+    Examples:
+      cd $LHCBTAR/source
+      python mkMCGentar.py --native=GAUSS_<version> \n
+      gets the libraries used by GAUSS_<version> from $LCGEXTERNAL/MCGenerators used by Gauss>\n
+
+      """
+    sys.exit()
+
+#----------------------------------------------------------------------------
+#
+#  get native versions ==============================================
+#
+def get_native_versions(native_version):
+    if debug_flag == 1: print 'get_native_versions',native_version
+    packages_versions = {}
+
+    NAME = native_version.split('_')[0]
+    version =  native_version.split('_')[1]
+    name = NAME.lower().capitalize()
+    release_area = os.getenv(name +'_release_area')
+    if debug_flag == 1: print 'get_native_versions - release_area = ',release_area
+
+    Sys_dir = os.path.join(release_area,NAME,native_version,name+'Sys','cmt')
+    if not os.path.exists(Sys_dir) :
+        Sys_dir = os.path.join(release_area,NAME,native_version,name+'Sys',version,'cmt')
+    if debug_flag == 1: print 'get_native_versions -  ',Sys_dir
+    os.chdir(Sys_dir)
+
+    status,value = commands.getstatusoutput('cmt sh macro_value GENSERVERSION')
+    if value.find('#CMT>') != -1:
+        GENSERVERSION = value.split('\n')[1]
+    else:
+        GENSERVERSION = value
+
+    packages_versions['GENSER'] = GENSERVERSION.split('p')[0]
+
+    for fdline in os.popen('cmt show macros native').readlines():
+        if fdline.find('config_version') == -1:
+            pack = fdline.split('_')[0]
+            vers = fdline.split("'")[1]
+            packages_versions[pack] = vers
+
+    os.chdir(release_area)
+    return packages_versions
+
+#
+#  get MCGen tar file names ===============================================
+#
+def get_MCGen_tar_name(root,gen,native,bin):
+    if debug_flag == 1: print ' get_MCGen_tar_name for %s %s %s %s '%(root,gen,native,bin)
+    rootdef = root
+    name = None
+    list = os.listdir(rootdef)
+    for l in list:
+        if l.find(gen) != -1:
+            name = gen+'-'+native+'-'+bin+'.tgz'
+            return name
+
+    return name
+
+
+#
+#  get tar files from lcg  ==================================================
+#
+def get_tar_files(packages_versions,binary_dir):
+    if debug_flag == 1: print ' get_tar_files for GENSER %s %s '%(packages_versions['GENSER'],binary_dir)
+
+    GENSER_vers = 'GENSER_'+packages_versions['GENSER']
+    tarfile = os.path.join(lhcbtar,GENSER_vers+'_'+binary_dir+'.tar.gz')
+    md5file = os.path.join(lhcbtar,GENSER_vers+'_'+binary_dir+'.md5')
+    MCGen_tar_dir = os.path.join(lcg_dir,'MCGenerators','distribution')
+
+    os.chdir('/tmp')
+    if not os.path.exists('MCGenerators'): os.mkdir('MCGenerators')
+    os.chdir('MCGenerators')
+    print 'get_tar_files -', os.getcwd()
+    for key in packages_versions.keys():
+        value = packages_versions[key]
+        file = get_MCGen_tar_name(MCGen_tar_dir,key,value,binary_dir)
+        if debug_flag == 1: print 'get_tar_files %s '%(file)
+        if file != None:
+            if os.path.exists(os.path.join(MCGen_tar_dir,file)):
+                shutil.copyfile(os.path.join(MCGen_tar_dir,file),file)
+                key_value = os.path.join(key,value)
+                str = 'tar --extract --ungzip --file '+file +' '+ os.path.join(key_value,binary_dir)
+                rc = os.system(str)
+                if key == 'lhapdf':
+                    str = 'tar --extract --ungzip --file '+file+' '+key_value+'/share/PDFsets/cteq6l.LHpdf'+' '+key_value+'/share/PDFsets/cteq6ll.LHpdf'
+                    rc = os.system(str)
+                    if rc != 0 :
+                        os.remove(file)
+                        file = file.replace(binary_dir, "share")
+                        if os.path.exists(os.path.join(MCGen_tar_dir,file)):
+                            shutil.copyfile(os.path.join(MCGen_tar_dir,file),file)
+                        str = 'tar --extract --ungzip --file '+file+' '+key_value+'/share/PDFsets/cteq6l.LHpdf'+' '+key_value+'/share/PDFsets/cteq6ll.LHpdf'
+                        rc = os.system(str)
+                        if rc == 0 :
+                            print "%s/share/PDFsets/cteq6l.LHpdf found in %s" % (key_value, file)
+                            print "%s/share/PDFsets/cteq6ll.LHpdf found in %s" % (key_value, file)
+                os.remove(file)
+
+    os.chdir('/tmp')
+    str = 'tar zcf '+tarfile+' MCGenerators'
+    rc = os.system(str)
+    if rc == 0:
+        os.system('rm -fr /tmp/MCGenerators')
+        logfile.write('%s tar file for %s has been written and relevant /tmp/MCGenerators directory removed '%(GENSER_vers,binary_dir)+'\n')
+        md5sum = calculateMD5(tarfile)
+        mdf = open(md5file,"w")
+        mdf.write("%s  %s" % (md5sum,os.path.basename(tarfile)))
+        logfile.write('%s md5 file for %s has been written'%(GENSER_vers,binary_dir)+'\n')
+    else:
+        logfile.write('%s tar file for %s has not been written '%(GENSER_vers,binary_dir)+'\n')
+
+
+
+#
+# -------------------------------------------------------------------
+#
+
+
+
+#
+#---------------------------------------------------------------------
+if __name__ == "__main__":
+
+    here = os.getcwd()
+
+    logname = os.path.join(here,'mkMCGentar.log')
+    if os.path.exists(logname): os.remove(logname)
+    logfile = open(logname,'w')
+    str = " =========== "+time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())+"\n"
+    logfile.write(str)
+
+    if sys.platform == 'win32':
+        rmcmd = 'rmdir /s/q '
+    else:
+        rmcmd = '/bin/rm -fr '
+
+    lcg_dir = '/afs/cern.ch/sw/lcg/external'
+    lhcbtar = os.path.join(os.environ['LHCBHOME'],'distribution','source')
+    binary = os.environ['CMTCONFIG']
+    source = ' '
+    package = ' '
+    version = 0
+    native_version = 0
+
+    arguments = sys.argv[1:]
+    if len(sys.argv) == 1:
+        help()
+        sys.exit()
+    try:
+        keys, values = getopt.getopt(arguments,'hdb:n:',
+                       ['help','debug','binary=','native='])
+
+    except getopt.GetoptError:
+        help()
+        sys.exit()
+
+    debug_flag = 0
+    for key,value in keys:
+        if key in ('-d', '--debug'):
+            debug_flag = 1
+        if key in ('-h', '--help'):
+            help()
+        if key in ('-b', '--binary'):
+            binary = value
+        if key in ('-n', '--native'):
+            native_version = value
+
+    logfile.write('debug_flag %s, binary %s from %s '%(debug_flag,binary,native_version)+'\n')
+
+    packages_versions = get_native_versions(native_version)
+    if debug_flag == 1:
+        print ' packages_versions = ', packages_versions
+
+    if packages_versions.has_key('GENSER') != 1:
+        logfile.write('GENSER is not required - exit \n')
+        sys.exit()
+    else:
+        rc = get_tar_files(packages_versions,binary)

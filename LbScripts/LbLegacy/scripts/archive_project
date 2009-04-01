@@ -1,0 +1,160 @@
+#!/bin/csh
+#-----------------------------------------------------------------------
+# Script : archive_project
+# Devel. : J. Closier
+# Date   : 10 June 2002
+# Goals  : archive package from the $LHCBRELEASES area to
+#          /castor/cern.ch/lhcb/soft-backup
+# Usage  : archive_project project version
+# Modify : 050705 - remove all tar files and html files
+#        : 060526 - remove these files with /bin/rm -i
+#                   fix a bug in the rm command which removes ${VERSION}*
+#        : 060530 - fix bugs introduced in the previous fix" 
+#        : 071009 - added the clean up of the md5 files" 
+#-----------------------------------------------------------------------
+#
+set here = $PWD
+set LHCBARCHIVE = "/castor/cern.ch/lhcb/soft-backup"
+
+#
+set verb = ''
+set nar = $#argv
+if (nar != 0) then
+  if ($argv[${nar}] == "-v") then
+     set echo on
+     set verb = "-v"
+     set argv[${nar}] = ""
+     @ nar = ${nar} - 1
+  endif
+endif
+#
+if ($1 == "-h") then
+   echo ""
+   echo " Usage : archive_project project_name project_version"
+   echo "  where :"
+   echo "         package_name is the name of the package to be archived"
+   echo "         version is the version of package_name to be transfered"
+   echo " "
+   echo " Example1: archive_project LHCb v11r2"
+   echo "           $LHCBRELEASES/LHCB/LHCB_v11r2 will be defreezed"
+   echo "           all *.o file removed"
+   echo "           a LHCB_v11r2.tar.gz file produced "
+   echo "           and copied onto /castor/cern.ch/lhcb/soft-backup"
+   echo "           the LHCB_v11r2 volume deleted"
+   echo "           the LHCbEnv/v11r2 directory removed"
+   echo ""
+   echo " Example2: archive_project Gauss v12r0 delete"
+   echo "           a tar file will NOT be saved onto /castor/"
+   echo "           the GAUSS_v12r0 volume will be deleted"
+   echo "           the GaussEnv/v12r0 directory removed"
+   echo ""          
+   goto exec_end
+endif
+#
+unset noclobber
+#
+
+set package=$1
+set version=$2
+set action = "archive"
+if ($3 == "delete") then
+  set action = "delete"
+endif
+
+if ($package == "Gaudi") then
+  set rel_dir = $GAUDISOFT
+  set group = "gaudi"
+else
+  set rel_dir = $LHCBRELEASES
+  set group = "z5"
+endif
+
+set PACKAGE = `echo ${package} | tr '[a-z]' '[A-Z]'`
+set VERSION = ${PACKAGE}_${version}
+set project = `echo ${package} | tr '[A-Z]' '[a-z]'`
+
+if !(-r ${rel_dir}/$PACKAGE) then
+   echo "The package ${rel_dir}/$package does not exist"
+   exit 0
+endif
+
+if !(-r ${rel_dir}/$PACKAGE/$VERSION) then
+   echo "The version of the package ${rel_dir}/$PACKAGE/$VERSION does not exist"
+   exit 0
+endif
+
+# defreeze
+cd ${rel_dir}/$PACKAGE/$VERSION
+echo " defreeze the project directory"
+find . -type d -exec fs setacl {} ${group}:librarians all \;
+
+# archive the version on /castor/
+if ($action == "archive") then
+#   remove *.o files
+   echo " remove *.o files ..."
+   rm */*/v*/slc*_dbg/*.o
+   rm */*/v*/win32*/*/*.obj
+   rm */*/v*/slc*/*.o
+
+#   tar file
+   cd ${rel_dir}/$PACKAGE
+   echo " Compress in progress ..."
+   tar czf /tmp/${VERSION}.tar.gz $VERSION
+   rfcp /tmp/${VERSION}.tar.gz $LHCBARCHIVE/${VERSION}.tar.gz
+   if ($status == 1) then
+     echo " error during rfcp - exit"
+     echo " if no rfcp command - restart the script from another PC"
+     
+     goto exec_end
+   endif
+endif
+
+# remove directory
+echo " rm -rf ${rel_dir}/$PACKAGE/$VERSION"
+afs_admin delete ${rel_dir}/$PACKAGE/$VERSION
+
+# remove corresponding ProjectEnv version
+cd ${rel_dir}
+echo " remove ${package}Env/${version}"
+/bin/rm -fr ${package}Env/${version}
+
+# remove corresponding $LHCBTAR/*/tarfile
+echo " remove  $LHCBTAR/${PACKAGE}/tarfiles"
+/bin/rm   ${LHCBTAR}/${PACKAGE}/${PACKAGE}_${VERSION}.tar.gz
+set list = `ls  ${LHCBTAR}/${PACKAGE}/${PACKAGE}_${VERSION}_*.tar.gz`
+if ($status == "0") /bin/rm -i $list
+
+# remove corresponding $LHCBTAR/*/md5file
+echo " remove  $LHCBTAR/${PACKAGE}/md5files"
+/bin/rm   ${LHCBTAR}/${PACKAGE}/${PACKAGE}_${VERSION}.md5
+set list = `ls  ${LHCBTAR}/${PACKAGE}/${PACKAGE}_${VERSION}_*.md5`
+if ($status == "0") /bin/rm -i $list
+
+echo " remove $LHCBTAR/html/htmlfiles"
+/bin/rm   ${LHCBTAR}/html/${PACKAGE}_${VERSION}.html
+set list = `ls ${LHCBTAR}/html/${PACKAGE}_${VERSION}_*.html`
+if ($status == "0") /bin/rm -i $list
+
+# remove logfile
+echo " remove ${LHCBHOME}/project/logfiles/${VERSION}_* logfiles"
+set list = `ls ${LHCBHOME}/project/logfiles/${VERSION}_*`
+if ($status == "0") rm  $list
+
+# remove documentation
+if ( -d  ${LHCBDOC}/${project}/releases/${version} ) then
+  echo " remove $LHCBDOC/$project/releases/$version"
+  cd $LHCBDOC
+  python scripts/remrel.py ${project} ${version}
+endif
+
+# send a mail
+echo " ${rel_dir}/$PACKAGE/$VERSION is ${action}d and ${rel_dir}/${package}Env/${version} is removed" > /tmp/$$
+if (${group} == "z5" ) mail -s "${rel_dir}/$PACKAGE/$VERSION $action" joel.closier@cern.ch,marco.cattaneo@cern.ch,hubert.degaudenzi@cern.ch < /tmp/$$
+rm -f /tmp/$$ 
+rm -f /tmp/${VERSION}.tar.gz
+
+#============================================================================
+exec_end:
+cd $here
+
+exit 0
