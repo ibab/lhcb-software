@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTrack.cpp,v 1.10 2009-03-19 09:25:09 dhcroft Exp $
+// $Id: PatVeloSpaceTrack.cpp,v 1.11 2009-04-01 08:11:45 ocallot Exp $
 // Include files 
 
 // local
@@ -90,12 +90,16 @@ namespace Tf {
     std::pair<const PatVeloPhiHit*,const PatVeloPhiHit*> coordP = 
       surroundZ(m_phiCoord,z);
     //== weight by the z ratio. 
-    double zRatio = (z - coordP.first->z() ) / 
-      ( coordP.second->z()- coordP.first->z() );
     double phi1 =  coordP.second->referencePhi();
     double phi2 =  coordP.first->referencePhi();
-
-    double phi = m_angleUtils.mean(phi1,zRatio,phi2,(1.-zRatio));
+    double phi;
+    if ( 1.e-5 > fabs( coordP.second->z() - coordP.first->z() ) ) {
+      phi = .5 * phi1 + .5 * phi2;
+    } else {
+      double zRatio = (z - coordP.first->z() ) / 
+        ( coordP.second->z()- coordP.first->z() );
+      phi = m_angleUtils.mean(phi1,zRatio,phi2,(1.-zRatio));
+    }
     
     myCoord->setRadiusAndPhi( myCoord->coordHalfBox(), phi );
   }
@@ -198,6 +202,7 @@ namespace Tf {
 
       MSError += stepError;
     }
+
     // fit the two frames
     u.fitLinear();
     v.fitLinear();

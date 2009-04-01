@@ -4,6 +4,12 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2009-04-01 - Olivier Callot
+ - In PatVeloSpaceTool correct the half box offset for phi computation.
+   In PatVeloSpaceTrack protect for the case of two hits in the same sensor
+   In PatVeloSpaceTracking get the tool with freedom of type.
+   New space tracking tools NewVeloSpaceTool with class NewSpaceTrack
+
 ! 2009-03-18 - David Hutchcroft
  - Added nVeloExpected info to RZ track and Space/General tracks
    For use in the HLT to reject more ghosts. Note due to the way the HLT

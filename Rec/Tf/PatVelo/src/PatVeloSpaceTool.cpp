@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTool.cpp,v 1.15 2009-03-13 16:17:32 ocallot Exp $
+// $Id: PatVeloSpaceTool.cpp,v 1.16 2009-04-01 08:11:45 ocallot Exp $
 // Include files
 
 // from Gaudi
@@ -336,6 +336,12 @@ namespace Tf {
       int nStationsTried,
       double r,
       const std::pair<double,double>& phiRange) {
+    int side = 0;
+    double dxBox = m_velo->halfBoxOffset(side).x();
+    if ( station->sensor()->isRight() ) {
+      side  = 1;
+      dxBox = -m_velo->halfBoxOffset(side).x();
+    }
     double offset = station->sensor()->halfboxPhiOffset(zone,r);
     std::vector<PatVeloPhiHit*>::const_iterator itP;
     for ( itP = station->hits(zone).begin(); station->hits(zone).end() != itP; ++itP ) {
@@ -346,6 +352,7 @@ namespace Tf {
 
       // set a possible `point' (incorporating R info) corresponding to
       // this co-ord
+      phi = phi + sin(phi) * dxBox / r;
       (*itP)->setRadiusAndPhi( r, phi );
 
       //=== First sensors. Create a list only.
