@@ -189,6 +189,7 @@
         - implemented the path stripping for the generation of the project setup script
  090325 - factored out the lbscripts version.
         - call LbLogin before generating the setup script
+ 090401 - fixed small hickup in the installation of a local data package.
 """
 #------------------------------------------------------------------------------
 import sys, os, string, getopt, time, shutil, urllib
@@ -197,7 +198,7 @@ import commands
 import logging
 from shutil import rmtree
 
-script_version = '090325'
+script_version = '090401'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
 lbscripts_version = "v2r7"
@@ -1106,7 +1107,9 @@ def getProjectTar(tar_list, already_present_list=None):
                                 extradir = 'PARAM'
                             if extradir is not None :
                                 f = os.path.join(pack_ver[0], pack_ver[1])
-                                os.makedirs(os.path.dirname(os.path.join('EXTRAPACKAGES', f)))
+                                tdir = os.path.dirname(os.path.join('EXTRAPACKAGES', f))
+                                if not os.path.exists(tdir) :
+                                    os.makedirs(tdir)
                                 shutil.copytree(os.path.join(extradir, f), os.path.join('EXTRAPACKAGES', f))
                                 changePermissions(os.path.join('EXTRAPACKAGES',f),recursive=True)
                                 shutil.rmtree(extradir, ignore_errors=True)
@@ -1120,8 +1123,8 @@ def getProjectTar(tar_list, already_present_list=None):
                         prodlink = os.path.join(os.path.dirname(pack_ver[3]),"prod")
                         if os.path.islink(prodlink) :
                             os.remove(prodlink)
-                        if sys.platform != "win32" :
-                            os.symlink(pack_ver[0]+'_'+pack_ver[1], prodlink)
+                            if sys.platform != "win32" :
+                                os.symlink(pack_ver[0]+'_'+pack_ver[1], prodlink)
                         my_dir = os.path.dirname(this_lhcb_dir)
                         for f in os.listdir(os.path.join(pack_ver[3], "InstallArea", "scripts")) :
                             if f.startswith("LbLogin.") and not (f.endswith(".zsh") or f.endswith(".py")):

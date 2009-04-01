@@ -1,3 +1,20 @@
+2009-04-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/install_project.py: Removed.
+	* python/LbLegacy/install_project.py: New file.
+	* scripts/archive_project: New file.
+	* scripts/copy-Win2afs: New file.
+	* scripts/FixProjectLinks: New file.
+	* scripts/install_project.bat: New file.
+	* scripts/Lbglimpse: New file.
+	* scripts/mkLCGCMTtar: New file.
+	* scripts/mkMCGentar: New file.
+	* scripts/ProjectEnv.bat: New file.
+	* scripts/ProjectEnv.csh: New file.
+	* scripts/ProjectEnv.sh: New file.
+	* cmt/requirements: 
+	* scripts/tbroadcast: added missing scripts
+
 2009-03-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/tbroadcast: New file
