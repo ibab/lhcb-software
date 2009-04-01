@@ -2,9 +2,9 @@
 #  Script to monitor the output of different Gauss versions. It takes in input 
 #  the Gauss root and log files of the two samples to be compared 
 #  Usage:
-#  python SimulationReferencePlots.py 
+#  python Gauss_SimRefPlots.py --help
 #  Example: 
-#  python SimulationReferencePlots.py -v -r GaussHistos_REF_30000000.root  -l  Gauss_REF.log -s GaussHistos_30000000.root -f Gauss.log 
+#  python Gauss_SimRefPlots.py -v -r GaussHistos_REF_30000000.root  -l  Gauss_REF.log -s GaussHistos_30000000.root -f Gauss.log 
 #################################################################################
 
 from ROOT import TFile, TCanvas, TH1D, TH2D

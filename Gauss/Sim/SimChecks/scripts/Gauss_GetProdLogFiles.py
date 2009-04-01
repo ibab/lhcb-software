@@ -4,9 +4,9 @@
 #  non-empty Gauss.logs and GaussHistos.roots available and analyze them  using
 #  SimulationReference.py 
 #  Usage:
-#  python autorun_prodid.py <webpage> <REF_prodid> <CURR_prodid> 
+#  python Gauss_GetProdLogFiles.py <webpage> <REF_prodid> <CURR_prodid> 
 #  Exemple: 
-#  python autorun_prodid.py http://lhcb-logs.cern.ch/storage/lhcb/MC/ 4497 3974
+#  python Gauss_GetProdLogFiles.py http://lhcb-logs.cern.ch/storage/lhcb/MC/ 4497 3974
 #################################################################################
 
 import urllib, sys, os, re, array
@@ -140,7 +140,7 @@ parseHTML(url,depth,curId)
 # execute monitoring script command:
 
 
-cmd = 'python SimulationReferencePlots.py -r ./gauss'+refId+'.root -l  ./gauss'+refId+'.log -s ./gauss'+curId+'.root -f  ./gauss'+curId+'.log -v -i -a -k D'
+cmd = 'python Gauss_SimRefPlots.py -r ./gauss'+refId+'.root -l  ./gauss'+refId+'.log -s ./gauss'+curId+'.root -f  ./gauss'+curId+'.log -v -i -a -k D'
 
 os.system(cmd)
 
