@@ -192,7 +192,7 @@
  090401 - fixed small hickup in the installation of a local data package.
 """
 #------------------------------------------------------------------------------
-import sys, os, string, getopt, time, shutil, urllib
+import sys, os, getopt, time, shutil, urllib
 import stat
 import commands
 import logging
@@ -607,7 +607,7 @@ def getCMT(version=0):
         cmtbin = 'VisualC'
     elif sys.platform == 'mac':
         cmtbin = 'Darwin-PowerMacintosh'
-    elif string.find(sys.platform,'linux') != -1:
+    elif sys.platform.find('linux') != -1:
         platform = 'linux'
         hw = commands.getstatusoutput('uname -m')[1]
         cmtbin = 'Linux-'+hw
@@ -738,7 +738,7 @@ def getFile(url,file):
         hasbeendownloaded = False
         while ( not hasbeendownloaded and (local_retries>0) ) :
             h =  urllib.urlretrieve(url+'/'+file,dest)[1]
-            if string.find(h.type,filetype) == -1:
+            if h.type.find(filetype) == -1:
                 log.warning('cannot download %s - retry' % file)
                 os.remove(dest)
             else:
@@ -848,7 +848,7 @@ def getPackVer(file):
         else:
             bin = ''
             ffile = file[:file.find('.tar.gz')]
-    packver = string.split(ffile,'_')
+    packver = ffile.split('_')
     vers = packver[-1]
     name = packver[0]
     file_path = os.path.join(this_lhcb_dir,name,name+'_'+vers)
@@ -868,7 +868,7 @@ def getPackVer(file):
         file_base.append(os.path.join(base_dir[0],name,name+'_'+vers))
     if name == "LCGCMT" or name == "GENSER" or name == "LCGGrid":
         if len(packver) >= 2:
-            vers = string.join(packver[1:],'_')
+            vers = '_'.join(packver[1:])
             file_path = os.path.join(this_lcg_dir,name,name+'_'+vers)
             base_dir = lcg_dir.split(os.pathsep)
             file_base = []
@@ -906,7 +906,7 @@ def getProjectList(name,version,binary=' '):
     if LHCb_config.data_files.has_key(name) == 1:
         tar_file = LHCb_config.data_files[name]+'_'+version
     else:
-        tar_file = string.upper(name)+'_'+string.upper(name)
+        tar_file = name.upper()+'_'+name.upper()
         if version != 0 :
             tar_file = tar_file + '_' + version
         if binary != ' ': tar_file = tar_file+'_'+binary
@@ -933,7 +933,7 @@ def getProjectList(name,version,binary=' '):
         if fdline.find('HREF=') != -1:
             eq_sign = fdline.find('HREF=')
             gt_sign = fdline.find('>')
-            slash_sign = eq_sign + string.find(fdline[eq_sign:],'/')
+            slash_sign = eq_sign + fdline[eq_sign:].find('/')
             source = fdline[eq_sign+5:slash_sign]
             file   = fdline[slash_sign+1:gt_sign]
             project_list[file] = source
@@ -1095,9 +1095,9 @@ def getProjectTar(tar_list, already_present_list=None):
                                 os.mkdir ('InstallArea')
                             os.chdir('InstallArea')
                             os.mkdir(pack_ver[2])
-                    if sys.platform != 'win32' :
-                        from FixProjectLinks import fixLinks
-                        fixLinks(pack_ver[3])
+#                    if sys.platform != 'win32' :
+#                        from FixProjectLinks import fixLinks
+#                        fixLinks(pack_ver[3])
                     if multiple_mysiteroot :
                         if os.path.isdir('EXTRAPACKAGES'):
                             extradir = None
@@ -1166,7 +1166,7 @@ def getScripts(bin):
     new_install = 'latest_install_project.py'
     getFile(url_dist,'install_project.py')
     latest_line = readString(new_install,'script_version')
-    latest_version = string.split(latest_line,"'")[1]
+    latest_version = latest_line.split("'")[1]
     log.info('script_version= %s, latest_version= %s' % (script_version, latest_version) )
     if script_version < latest_version :
         sys.exit(' You are running and old version of install_project. The latest one has been download in MYSITEROOT/%s. You should rename the latest version and use it - STOP'%(new_install))
@@ -1219,14 +1219,14 @@ def listVersions(pname):
     log = logging.getLogger()
     log.debug('listVersions for %s ' % pname)
 
-    PROJECT = string.upper(pname)
+    PROJECT = pname.upper()
     webpage = urllib.urlopen(url_dist+'/'+PROJECT)
     weblines = webpage.readlines()
     for webline in weblines:
-        if string.find(webline,'href="'+PROJECT) != -1:
-            href = string.index(webline,'href=')
-            quote1 = string.index(webline[href:],'"')
-            quote2 = string.index(webline[href+quote1+1:],'"')
+        if webline.find('href="'+PROJECT) != -1:
+            href = webline.index('href=')
+            quote1 = webline[href:].index('"')
+            quote2 = webline[href+quote1+1:].index('"')
             log.info(webline[href+quote1+1:href+quote1+1+quote2])
 
 #
@@ -1255,26 +1255,26 @@ def removeProject(project,pvers):
     this_contrib_dir = contrib_dir.split(os.pathsep)[0]
     
 
-    PROJECT = string.upper(project)
+    PROJECT = project.upper()
     if LHCb_config.lhcb_projects.has_key(PROJECT):
         head = this_lhcb_dir
         VERSION = PROJECT+'_'+pvers
 
         list = os.listdir(this_html_dir)
         for file in list:
-            if string.find(file,VERSION+'.') != -1 or string.find(file,VERSION+'_') != -1 :
+            if file.find(VERSION+'.') != -1 or file.find(VERSION+'_') != -1 :
                 os.remove(os.path.join(this_html_dir,file))
                 log.info('remove %s' % os.path.join(this_html_dir, file))
 
         list = os.listdir(this_targz_dir)
         for file in list:
-            if string.find(file,VERSION+'.') != -1 or string.find(file,VERSION+'_') != -1:
+            if file.find(VERSION+'.') != -1 or file.find(VERSION+'_') != -1:
                 os.remove(os.path.join(this_targz_dir,file))
                 log.info('remove %s' % os.path.join(this_targz_dir, file))
 
         list = os.listdir(this_log_dir)
         for file in list:
-            if string.find(file,VERSION+'.') != -1 or string.find(file,VERSION+'_') != -1:
+            if file.find(VERSION+'.') != -1 or file.find(VERSION+'_') != -1:
                 os.remove(os.path.join(this_log_dir,file))
                 log.info('remove %s' % os.path.join(this_log_dir, file))
 
@@ -1288,19 +1288,19 @@ def removeProject(project,pvers):
         proj_vers = project+'_'+pvers
         list = os.listdir(this_html_dir)
         for file in list:
-            if string.find(file,proj_vers) != -1 :
+            if file.find(proj_vers) != -1 :
                 os.remove(os.path.join(this_html_dir,file))
                 log.info('remove %s' % os.path.join(this_html_dir, file))
 
         list = os.listdir(this_targz_dir)
         for file in list:
-            if string.find(file,proj_vers+'.') != -1 or string.find(file,proj_vers+'_') != -1:
+            if file.find(proj_vers+'.') != -1 or file.find(proj_vers+'_') != -1:
                 os.remove(os.path.join(this_targz_dir,file))
                 log.info('remove %s \n' % os.path.join(this_targz_dir, file))
 
         list = os.listdir(this_log_dir)
         for file in list:
-            if string.find(file,proj_vers+'.') != -1 or string.find(file,proj_vers+'_') != -1:
+            if file.find(proj_vers+'.') != -1 or file.find(proj_vers+'_') != -1:
                 os.remove(os.path.join(this_log_dir,file))
                 log.info('remove %s' % os.path.join(this_log_dir, file))
 
@@ -1318,20 +1318,23 @@ def removeProject(project,pvers):
 
     if multiple_mysiteroot and os.path.isdir(os.path.join(this_lhcb_dir, 'EXTRAPACKAGES')):
         head = os.path.join(this_lhcb_dir,'EXTRAPACKAGES')
-        if string.find(project,'Field') != -1: 
+        if project.find('Field') != -1: 
             head = os.path.join(this_lhcb_dir,'EXTRAPACKAGES')
-        if string.find(project,'DDDB') != -1:  
+        if project.find('DDDB') != -1:  
             head = os.path.join(this_lhcb_dir,'EXTRAPACKAGES','Det')
-        if string.find(project,'Dec') != -1:  
+        if project.find('Dec') != -1:  
             head = os.path.join(this_lhcb_dir,'EXTRAPACKAGES','Gen')
         if os.path.isdir(os.path.join(head,project,pvers)):
             shutil.rmtree(os.path.join(head,project,pvers))
             log.info('remove %s' % os.path.join(head, project, pvers))
 
     head = os.path.join(this_lhcb_dir,'PARAM')
-    if string.find(project,'Field') != -1: head = os.path.join(this_lhcb_dir,'DBASE')
-    if string.find(project,'DDDB') != -1:  head = os.path.join(this_lhcb_dir,'DBASE','Det')
-    if string.find(project,'Dec') != -1:  head = os.path.join(this_lhcb_dir,'DBASE','Gen')
+    if project.find('Field') != -1: 
+        head = os.path.join(this_lhcb_dir,'DBASE')
+    if project.find('DDDB') != -1:  
+        head = os.path.join(this_lhcb_dir,'DBASE','Det')
+    if project.find('Dec') != -1:  
+        head = os.path.join(this_lhcb_dir,'DBASE','Gen')
     if os.path.isdir(os.path.join(head,project,pvers)):
         shutil.rmtree(os.path.join(head,project,pvers))
         log.info('remove %s' % os.path.join(head, project, pvers))
