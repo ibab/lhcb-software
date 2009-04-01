@@ -1,4 +1,4 @@
-// $Id: MCOTDepositMonitor.cpp,v 1.14 2009-02-16 14:42:35 janos Exp $
+// $Id: MCOTDepositMonitor.cpp,v 1.15 2009-04-01 15:29:49 cattanem Exp $
 
 // from STD
 #include <algorithm>
@@ -117,18 +117,43 @@ StatusCode MCOTDepositMonitor::execute() {
         10, "Total number of deposits"                         , -0.0005, 20000.5, 201 );
   plot( double( nSignalDeposits      ), 
         11, "Number of signal  deposits (including spill over)", -0.0005, 1.0005, 100 );
-  plot( double( nCurrent )   / double( nSignalDeposits ), 
-        12, "Fraction of current deposits over signal and spill"   , -0.0005, 1.0005, 100 );
-  plot( double( nSpillOver ) / double( nSignalDeposits )                                 , 
-        13, "Fraction of spill deposits over signal and spill", -0.0005, 1.0005, 100 );
-  plot( double( nNoiseDeposits       ) / double( nNoiseDeposits       + nSignalDeposits ), 
-        14, "Fraction of noise deposits"       , -0.0005,     0.4, 100 );
-  plot( double( nXTalkDeposits       ) / double( nXTalkDeposits       + nSignalDeposits ), 
-        15, "Fraction of XTalk deposits"       , -0.0005,     0.4, 100 );
-  plot( double( nDoublePulseDeposits ) / double( nDoublePulseDeposits + nSignalDeposits ), 
-        16, "Fraction of double pulse deposits", -0.0005, 0.4, 100 );
-  plot( double( nSpillOver + nNoiseDeposits + nXTalkDeposits + nDoublePulseDeposits ) / double( nTotalDeposits ), 
-        17, "Total fraction of background", -0.0005, 1.0005, 100 );
+  double data;
+
+  if( 0 < nSignalDeposits )
+    { data = double( nCurrent ) / double( nSignalDeposits ); }
+  else
+    { data = -1.; }
+  plot( data, 12, "Fraction of current deposits over signal and spill"   , -0.0005, 1.0005, 100 );
+
+  if( 0 < nSignalDeposits )
+    { data = double( nSpillOver ) / double( nSignalDeposits ); }
+  else
+    { data = -1.; }
+  plot( data, 13, "Fraction of spill deposits over signal and spill", -0.0005, 1.0005, 100 );
+
+  if( 0 <  nNoiseDeposits + nSignalDeposits )
+    { data = double( nNoiseDeposits ) / double( nNoiseDeposits + nSignalDeposits ); }
+  else
+    { data = -1.; }
+  plot( data, 14, "Fraction of noise deposits"       , -0.0005,     0.4, 100 );
+
+  if( 0 <  nXTalkDeposits + nSignalDeposits )
+    { data = double( nXTalkDeposits ) / double( nXTalkDeposits + nSignalDeposits ); }
+  else
+    { data = -1.; }
+  plot( data, 15, "Fraction of XTalk deposits"       , -0.0005,     0.4, 100 );
+
+  if( 0 <  nDoublePulseDeposits + nSignalDeposits )
+    { data = double( nDoublePulseDeposits ) / double( nDoublePulseDeposits + nSignalDeposits ); }
+  else
+    { data = -1.; }
+  plot( data, 16, "Fraction of double pulse deposits", -0.0005, 0.4, 100 );
+
+  if( 0 < nTotalDeposits )
+    { data = double( nSpillOver + nNoiseDeposits + nXTalkDeposits + nDoublePulseDeposits ) / double( nTotalDeposits ); }
+  else
+    { data = -1.; }
+  plot( data, 17, "Total fraction of background", -0.0005, 1.0005, 100 );
 
   /// Histos per deposit
   std::for_each( deps->begin(), deps->end(), bind(&MCOTDepositMonitor::fillHistograms, this, _1) );
