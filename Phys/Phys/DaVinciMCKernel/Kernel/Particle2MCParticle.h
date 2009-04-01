@@ -1,4 +1,4 @@
-// $Id: Particle2MCParticle.h,v 1.7 2009-03-31 15:19:13 jpalac Exp $
+// $Id: Particle2MCParticle.h,v 1.8 2009-04-01 16:33:13 jpalac Exp $
 #ifndef KERNEL_PARTICLE2MCPARTICLE_H 
 #define KERNEL_PARTICLE2MCPARTICLE_H 1
 
@@ -90,8 +90,7 @@ namespace Particle2MCParticle {
    *  @return container of filtered associaitons, subset of mcAssociaitons containing only associaitons with MCParticles in mcps
    *  @author Juan PALACIOS juan.palacios@nikhef.nl   
    **/
-  static 
-  Particle2MCParticle::ToVector 
+  ToVector 
   FilterMCAssociations(const ToVector& mcAssociations,
                        const LHCb::MCParticle::ConstVector& mcps)
   {
@@ -101,6 +100,7 @@ namespace Particle2MCParticle {
       std::remove_if(tmp.begin(), tmp.end(), pred);
     return Particle2MCParticle::ToVector(tmp.begin(), new_last);
   }
+  
 
 
 }
