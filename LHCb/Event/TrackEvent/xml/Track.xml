@@ -173,6 +173,8 @@
         <enumval name = "CloneDist"  value = "101" desc="Track is flagged as being a (rejected) clone of another track. Value is the KL clone distance"/>
         <enumval name = "GhostProbability" value = "102" desc=" gives the NN ghost probability"/>
 
+        <enumval name = "nPRVeloRZExpect" value = "103" desc="Number of expected Velo clusters from VELO RZ pattern recognition"/>
+        <enumval name = "nPRVelo3DExpect" value = "104" desc="Number of expected Velo clusters from VELO 3D pattern recognition"/>
         
         <enumval name = "CaloMatchChi2"  value = "201" desc="Chi2 from the 2D Ecal-Hcal matching (cosmics tracks)"/>
         <enumval name = "CaloTimeInfo"   value = "202" desc="Time info from Calo "/>
@@ -181,6 +183,7 @@
         <enumval name = "MuonQuality"   value = "302" desc="Quality of the muon (chi2 in the muon stations)"/>
         <enumval name = "MuonCL"   value = "303" desc="Confidence level to be a muon"/>
         <enumval name = "MuonDLL"   value = "304" desc="Delta log likelihood between a muon and no muon hipothesis"/>
+
        </enum>
 
    <typedef

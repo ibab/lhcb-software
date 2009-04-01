@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2009-04-01 - David Hutchcroft
+ - Added Track AdditionalInfo enums: nPRVeloRZExpected and nPRVelo3DExpected
+
 !======================= TrackEvent v4r19 2009-03-09 =========================
 ! 2009-03-09 - Jose A. Hernando
  - Add enums for extra info for the muon tracks
