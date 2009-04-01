@@ -1,3 +1,8 @@
+2009-04-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/LbLogin.py: prepended $LHCBHOME/bin to the PATH if 
+	at CERN.
+
 2009-03-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/Project.py: added missing settings for the legacy scripts.
