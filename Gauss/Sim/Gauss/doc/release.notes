@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-04-02 - Silvia MIGLIORANZI
+ - QMTest reference files updated and gauss-2008.qmt modified adding new lines 
+   to be skipped in the comparison of the stdoutput.
+
 ! 2009-03-31 - Silvia MIGLIORANZI
  - QMTest modified to have the DecFiles built in the nightlies (forcing the 
    ToolSvc.EvtGenDecay.DecayFile=
