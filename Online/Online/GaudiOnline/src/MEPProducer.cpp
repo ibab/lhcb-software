@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPProducer.cpp,v 1.14 2009-04-01 20:16:35 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPProducer.cpp,v 1.15 2009-04-02 14:21:32 frankb Exp $
 //  ====================================================================
 //  RawBufferCreator.cpp
 //  --------------------------------------------------------------------
@@ -11,6 +11,7 @@
 #include "MBM/MepProducer.h"
 #include "WT/wt_facilities.h"
 #include <iostream>
+#include <cstring>
 #include <fcntl.h>
 #ifdef _WIN32
 #include <io.h>

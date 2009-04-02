@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <stdexcept>
+#include <cstring>
 #include <cstdio>
 #include <cerrno>
 #include <fcntl.h>
