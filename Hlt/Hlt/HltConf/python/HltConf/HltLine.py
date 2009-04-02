@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.46 2009-04-02 09:24:35 graven Exp $ 
+# $Id: HltLine.py,v 1.47 2009-04-02 11:25:19 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.46 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.47 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -1302,9 +1302,7 @@ class Hlt2Line(object):
             del copy._deepcopy_dispatch[types.MethodType]
 
         # Check the parameters, reponsible for reconfiguration:
-        print 'clone : got' + str(_other)
         for alg in [ i for i in __algos if type(i) is Hlt2Member ] :
-            print 'clone : checking ' + alg.id()
             id = alg.id()
             if id in _other :
                  alg.Args.update( _other [id] ) 
