@@ -493,7 +493,7 @@ double EvtVubBLNPHybrid::F1(double Pp, double Pm, double muh, double mui, double
 
 }
 
-double EvtVubBLNPHybrid::F2(double Pp, double Pm, double muh, double mui, double mubar, double done3) {
+double EvtVubBLNPHybrid::F2(double Pp, double Pm, double muh, double /* mui */, double mubar, double done3) {
   
   std::vector<double> vars(12);
   vars[0] = Pp;
@@ -515,7 +515,7 @@ double EvtVubBLNPHybrid::F2(double Pp, double Pm, double muh, double mui, double
 
 }
 
-double EvtVubBLNPHybrid::F3(double Pp, double Pm, double muh, double mui, double mubar, double done2) {
+double EvtVubBLNPHybrid::F3(double Pp, double Pm, double /*muh*/, double /* mui */, double mubar, double done2) {
 
   std::vector<double> vars(12);
   vars[0] = Pp;
@@ -535,7 +535,7 @@ double EvtVubBLNPHybrid::F3(double Pp, double Pm, double muh, double mui, double
 
 }
 
-double EvtVubBLNPHybrid::DoneJS(double Pp, double Pm, double mui) {
+double EvtVubBLNPHybrid::DoneJS(double Pp, double Pm, double /* mui */) {
 
   std::vector<double> vars(12);
   vars[0] = Pp;
@@ -554,7 +554,7 @@ double EvtVubBLNPHybrid::DoneJS(double Pp, double Pm, double mui) {
 
 }
 
-double EvtVubBLNPHybrid::Done1(double Pp, double Pm, double mui) {
+double EvtVubBLNPHybrid::Done1(double Pp, double Pm, double /* mui */) {
 
   std::vector<double> vars(12);
   vars[0] = Pp;
@@ -573,7 +573,7 @@ double EvtVubBLNPHybrid::Done1(double Pp, double Pm, double mui) {
 
 }
 
-double EvtVubBLNPHybrid::Done2(double Pp, double Pm, double mui) {
+double EvtVubBLNPHybrid::Done2(double Pp, double Pm, double /* mui */ ) {
 
   std::vector<double> vars(12);
   vars[0] = Pp;
@@ -592,7 +592,7 @@ double EvtVubBLNPHybrid::Done2(double Pp, double Pm, double mui) {
 
 }
 
-double EvtVubBLNPHybrid::Done3(double Pp, double Pm, double mui) {
+double EvtVubBLNPHybrid::Done3(double Pp, double Pm, double /* mui */) {
 
   std::vector<double> vars(12);
   vars[0] = Pp;
@@ -798,7 +798,7 @@ double EvtVubBLNPHybrid::myfunction(double w, double Lbar, double mom2) {
 
 }
 
-double EvtVubBLNPHybrid::myfunctionBIK(double w, double Lbar, double mom2) {
+double EvtVubBLNPHybrid::myfunctionBIK(double w, double Lbar, double /* mom2 */) {
 
   double aval = 10.0;
   double normBIK = (4 - M_PI)*M_PI*M_PI/8/(2-M_PI)/aval + 1;
@@ -845,7 +845,7 @@ double EvtVubBLNPHybrid::S0(double a1, double r) {
   return answer;
 }
 
-double EvtVubBLNPHybrid::S1(double a1, double r) {
+double EvtVubBLNPHybrid::S1(double /* a1 */ , double r) {
   double answer = Gamma0/(4*beta0*beta0)*(0.5*log(r)*log(r)*beta1/beta0 + (Gamma1/Gamma0 - beta1/beta0)*(1 - r + log(r)));
   return answer;
 }

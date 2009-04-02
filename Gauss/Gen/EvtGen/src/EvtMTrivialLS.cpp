@@ -1,7 +1,7 @@
 #include "EvtGenBase/EvtPatches.hh"
 #include "EvtGenBase/EvtMTrivialLS.hh"
 
-EvtComplex EvtMTrivialLS::shape( const vector<EvtVector4R>& product ) const 
+EvtComplex EvtMTrivialLS::shape( const vector<EvtVector4R>& /*product*/ ) const 
 { 
     return EvtComplex(1.0, 0.0); 
 }

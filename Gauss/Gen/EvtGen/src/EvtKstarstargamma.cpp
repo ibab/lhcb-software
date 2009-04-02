@@ -72,7 +72,7 @@ void EvtKstarstargamma::initProbMax() {
 
 }      
 
-void EvtKstarstargamma::decay( EvtParticle *p){
+void EvtKstarstargamma::decay( EvtParticle * /*p*/){
 
 /*
 

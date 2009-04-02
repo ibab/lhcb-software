@@ -36,8 +36,8 @@ EvtKKLambdaCFF::EvtKKLambdaCFF(int numarg, double *arglist) {
    return;
 }
 
-void EvtKKLambdaCFF::getbaryonff(EvtId parent,EvtId daught,
-		 double t, double mass, double *f1v,
+void EvtKKLambdaCFF::getbaryonff(EvtId /*parent*/,EvtId /*daught*/,
+		 double t, double /*mass*/, double *f1v,
 		 double *f1a, double *f2v, double *f2a ) {
   
   *f1v=(_args[0])/(1.0-(t/(_args[1]*_args[1])));

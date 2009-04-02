@@ -95,7 +95,7 @@ void EvtGoityRoberts::decay( EvtParticle *p){
 }
 
 void EvtGoityRoberts::DecayBDstarpilnuGR(EvtParticle *pb,EvtId ndstar,
-					 EvtId nlep, EvtId nnu)
+					 EvtId nlep, EvtId /*nnu*/)
 {
 
   pb->initializePhaseSpace(getNDaug(),getDaugs());
@@ -307,7 +307,7 @@ void EvtGoityRoberts::DecayBDstarpilnuGR(EvtParticle *pb,EvtId ndstar,
 }
 
 void EvtGoityRoberts::DecayBDpilnuGR(EvtParticle *pb,EvtId nd,
-                EvtId nlep, EvtId nnu)
+				     EvtId nlep, EvtId /*nnu*/)
 
 {
   //added by Lange Jan4,2000

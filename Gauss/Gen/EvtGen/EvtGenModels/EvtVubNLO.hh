@@ -134,7 +134,7 @@ private:
   // Sudakov
 
   inline double S0(double a, double r){return -gamma0()/4/a/pow(beta0(),2)*(1/r-1+log(r));}
-  inline double S1(double a, double r){return gamma0()/4./pow(beta0(),2)*(
+  inline double S1(double /*a*/, double r){return gamma0()/4./pow(beta0(),2)*(
 								  pow(log(r),2)*beta1()/2./beta0()+(gamma1()/gamma0()-beta1()/beta0())*(1.-r+log(r))
 								  );}
   inline double S2(double a, double r){return gamma0()*a/4./pow(beta0(),2)*(

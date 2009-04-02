@@ -38,8 +38,8 @@ EvtBToPlnuBKFF::EvtBToPlnuBKFF(double alpha, double beta) {
 }
 
 
-void EvtBToPlnuBKFF::getscalarff(EvtId parent,EvtId daught,
-			    double t, double mass, double *fp, double *f0) {
+void EvtBToPlnuBKFF::getscalarff(EvtId parent,EvtId /*daught*/,
+			    double t, double /*mass*/, double *fp, double *f0) {
 
   //Define mBstar
   EvtId Bplus = EvtPDL::getId("B+");

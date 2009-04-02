@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------
 // File and Version Information: 
-//      $Id: EvtBtoKD3P.cpp,v 1.1 2009-03-16 16:47:51 robbep Exp $
+//      $Id: EvtBtoKD3P.cpp,v 1.2 2009-04-02 15:22:28 robbep Exp $
 // 
 // Environment:
 //      This software is part of the EvtGen package developed jointly
@@ -39,7 +39,8 @@ EvtBtoKD3P::EvtBtoKD3P() :
 }
 
 //------------------------------------------------------------------
-EvtBtoKD3P::EvtBtoKD3P(const EvtBtoKD3P & other){
+EvtBtoKD3P::EvtBtoKD3P(const EvtBtoKD3P & other) : 
+    EvtDecayAmp( other ){
 }
 
 //------------------------------------------------------------------

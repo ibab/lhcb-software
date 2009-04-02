@@ -507,7 +507,7 @@ EvtVubNLO::F3(const std::vector<double> &coeffs){
 }
 */
 
-double EvtVubNLO::SFNorm(  const std::vector<double> &coeffs){
+double EvtVubNLO::SFNorm(  const std::vector<double> &/*coeffs*/){
   
   double omega0=1.68;//normalization scale (mB-2*1.8)
   if(_idSF==1){ // exponential SF

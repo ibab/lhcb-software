@@ -37,7 +37,7 @@ EvtSLBKPoleFF::EvtSLBKPoleFF(int numarg, double *arglist) {//modified
 
 
 void EvtSLBKPoleFF::getscalarff(EvtId parent,EvtId daught,
-                       double t, double mass, double *fpf,
+                       double t, double /*mass*/, double *fpf,
 			    double *f0f ) {
 
 // Form factors have a general form, with parameters passed in
@@ -74,8 +74,8 @@ void EvtSLBKPoleFF::getscalarff(EvtId parent,EvtId daught,
   return;
 }
 
-void EvtSLBKPoleFF::getvectorff(EvtId parent,EvtId daught,
-                       double t, double mass, double *a1f,
+void EvtSLBKPoleFF::getvectorff(EvtId parent,EvtId /*daught*/,
+                       double t, double /*mass*/, double *a1f,
 			     double *a2f, double *vf, double *a0f ){
 
    if ( numSLBKPoleargs !=8 ) {//modified
@@ -115,7 +115,7 @@ void EvtSLBKPoleFF::getvectorff(EvtId parent,EvtId daught,
   static EvtId DSPMS=EvtPDL::getId("D_s*+");
 
   double mass_star;
-  double mass_star2;
+  double mass_star2=0.;
   if(parent==B0||parent==B0B){
      mass_star=EvtPDL::getMeanMass(B0S);
      mass_star2=mass_star*mass_star;
@@ -176,8 +176,8 @@ void EvtSLBKPoleFF::getvectorff(EvtId parent,EvtId daught,
 
 
 
-void EvtSLBKPoleFF::gettensorff(EvtId parent,EvtId daught,
-                       double t, double mass, double *hf,
+void EvtSLBKPoleFF::gettensorff(EvtId parent,EvtId /*daught*/,
+                       double t, double /*mass*/, double *hf,
 			     double *kf, double *bpf, double *bmf ){
 
   if ( numSLBKPoleargs !=16 ) {

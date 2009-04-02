@@ -51,7 +51,7 @@ public:
   void reSetWidth(double width) { _width=width;}
   void reSetMassMin(double mass) { _massMin=mass;}
   void reSetMassMax(double mass) { _massMax=mass;}
-  virtual void reSetBlatt(double blatt) {};
+  virtual void reSetBlatt(double /*blatt*/) {};
   void includeBirthFactor(bool yesno) { _includeBirthFact = yesno; }
   void includeDecayFactor(bool yesno) { _includeDecayFact = yesno; }
   void setPWForDecay( int spin, EvtId d1, EvtId d2) { 

@@ -9,7 +9,7 @@ EvtMParticle::EvtMParticle( int label, const EvtId& id )
     _resonance.push_back( label );
 }
 
-EvtSpinAmp EvtMParticle::amplitude( const vector<EvtVector4R> &product) const
+EvtSpinAmp EvtMParticle::amplitude( const vector<EvtVector4R> &/*product*/) const
 {
     vector<EvtSpinType::spintype> types( 2, getspintype() );
     EvtSpinAmp amp( types, EvtComplex( 0.0, 0.0 ) );

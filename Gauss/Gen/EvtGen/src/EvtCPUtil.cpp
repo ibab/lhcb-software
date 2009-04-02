@@ -40,7 +40,7 @@ using std::endl;
 //both CP eigenstates and non-CP eigenstates -- NK, Jan. 27th, 1998
 
 void EvtCPUtil::fractB0CP(EvtComplex Af, EvtComplex Abarf, 
-			  double deltam, double beta, double &fract) {
+			  double /*deltam*/, double beta, double &fract) {
 //this function returns the number of B0 tags for decays into CP-eigenstates
 //(the "probB0" in the new EvtOtherB)
 

@@ -212,8 +212,8 @@ void EvtPythia::command(std::string cmd){
 
 }
 
-void EvtPythia::pythiacont(double *energy, int *ndaugjs, int *kf,
-			   double *px, double *py, double *pz, double *e)
+void EvtPythia::pythiacont(double */*energy*/, int */*ndaugjs*/, int */*kf*/,
+			   double */*px*/, double */*py*/, double */*pz*/, double */*e*/)
 {
 #ifdef WIN32
 //  PYCONTINUUM(energy,ndaugjs,kf,px,py,pz,e);
@@ -1136,7 +1136,7 @@ void EvtPythia::MakePythiaFile(char* fname){
   int nokcentry;
   for(lundkc=1;lundkc<500;lundkc++){
     nokcentry=1;
-    int iipar;
+    unsigned int iipar;
     for(iipar=0;iipar<EvtPDL::entries();iipar++){
       ipar=EvtId(iipar,iipar);
 //      if ( EvtDecayTable::isJetSet( ipar ) ) { replace for new EvtGen by
@@ -1219,7 +1219,7 @@ void EvtPythia::MakePythiaFile(char* fname){
 
   // Write now new Pythia particles
 
-  int iiparNew;
+  unsigned int iiparNew;
   for(iiparNew=0;iiparNew<EvtPDL::entries();iiparNew++){
     ipar = EvtId(iiparNew,iiparNew);
 //    if ( EvtDecayTable::isJetSet( ipar ) ) { for new EvtGen:
@@ -1290,7 +1290,7 @@ void EvtPythia::pythiaInit(int /*dummy*/){
     // Update masses, width, ... in PYTHIA common
     // Do Not update for diquarks (PR)
     // Do not update for Pythia special codes
-    int iipar ;
+    unsigned int iipar ;
     for ( iipar = 0 ;
           iipar < EvtPDL::entries() ;
           iipar++ ) {

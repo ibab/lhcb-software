@@ -51,8 +51,8 @@ EvtBToVlnuBallFF::EvtBToVlnuBallFF(double    r2_A1,
 }
 
 
-void EvtBToVlnuBallFF::getvectorff(EvtId parent,EvtId daught,
-				   double t, double mass, double *a1f,
+void EvtBToVlnuBallFF::getvectorff(EvtId parent,EvtId /*daught*/,
+				   double t, double /*mass*/, double *a1f,
 				   double *a2f, double *vf, double *a0f ){
   
   // FF calculations taken from the LCSR calculation of 

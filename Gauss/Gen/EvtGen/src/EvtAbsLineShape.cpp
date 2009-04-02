@@ -114,7 +114,7 @@ double EvtAbsLineShape::rollMass() {
     return temp;
   }
 }
-double EvtAbsLineShape::getRandMass(EvtId *parId, int nDaug, EvtId *dauId, EvtId *othDaugId, double maxMass, double *dauMasses) {
+double EvtAbsLineShape::getRandMass(EvtId *parId, int /* nDaug */, EvtId * /*dauId*/, EvtId */*othDaugId*/, double maxMass, double */*dauMasses*/) {
 
   if ( _width< 0.0001) return _mass;
   //its not flat - but generated according to a BW
