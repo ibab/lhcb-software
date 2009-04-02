@@ -31,6 +31,7 @@ preprocessor = normalizeExamples + \
     LineSkipper(["Total CPU time elapsed for geometry optimisation"]) + \
     LineSkipper(["INFO Connected to database"]) + \
     LineSkipper(["INFO Disconnect from database after being idle"]) + \
+    LineSkipper(["INFO Loading simulation attributes file", "UserDecayFile"]) + \
     LineSkipper(["ChronoStatSvc.f...   INFO  Service finalized succes"]) 
 strippedOutput = []
 skipping = False
