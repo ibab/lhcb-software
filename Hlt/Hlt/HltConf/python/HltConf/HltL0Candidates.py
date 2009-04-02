@@ -1,6 +1,6 @@
 #
 #==============================================================================
-# $Id: HltL0Candidates.py,v 1.19 2009-03-31 11:49:36 leandrop Exp $
+# $Id: HltL0Candidates.py,v 1.20 2009-04-02 09:27:31 graven Exp $
 #==============================================================================
 #
 # Module to define the conversion of L0 candidates across several HltLines
@@ -95,7 +95,7 @@ _l0Channels = None
 def decodeL0Channels( L0TCK , skipDisabled = True) :
     # we assume somebody has done an 'importOptions' of the relevant L0 setup...
     channels = _parseL0settings( ConfigurableGeneric('ToolSvc.L0DUConfig.TCK_'+L0TCK).Channels )
-    print '# decoded L0 channels: ' + str(channels)
+    print '# decoded L0 channels for L0TCK=%s: %s'%(L0TCK, str(channels))
     return [ i['name'] for i in channels if ( not skipDisabled or 'DISABLE' not in i or i['DISABLE'].upper().find('TRUE') == -1 ) ]
 
 def setupL0Channels( channels ) :
