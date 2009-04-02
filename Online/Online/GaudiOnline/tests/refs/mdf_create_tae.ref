@@ -31,7 +31,7 @@ ApplicationMgr       INFO Application Manager Configured successfully
               'OutputLevel': 3,
               'PrintFreq': 0.00021000000000000001},
  'FileCatalog': {'Catalogs': ['xmlcatalog_file:qmTest.xml']},
- 'IODataManager': {'AgeLimit': 1, 'OutputLevel': 1},
+ 'IODataManager': {'AgeLimit': 1, 'OutputLevel': 3},
  'MessageSvc': {'OutputLevel': 3},
  'TAECreator': {'TAEEvents': 5},
  'Writer_0': {'ChecksumType': 1,
@@ -51,7 +51,7 @@ ApplicationMgr       INFO Application Manager Started successfully
 EventSelector.D...   INFO Compression:0 Checksum:0
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 EventPersistenc...   INFO Added successfully Conversion service:RawDataCnvSvc
-Explorer             INFO ========= /Event[0x1f1df40@EventDataSvc]:
+Explorer             INFO ========= /Event[0x1f2e2f0@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO | +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO | | +--> /RawEvent [No Address]  LHCb::RawEvent

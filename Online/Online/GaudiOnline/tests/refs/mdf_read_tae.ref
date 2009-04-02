@@ -29,7 +29,7 @@ ApplicationMgr       INFO Application Manager Configured successfully
               'OutputLevel': 3,
               'PrintFreq': 0.00021000000000000001},
  'FileCatalog': {'Catalogs': ['xmlcatalog_file:qmTest.xml']},
- 'IODataManager': {'AgeLimit': 1, 'OutputLevel': 1},
+ 'IODataManager': {'AgeLimit': 1, 'OutputLevel': 3},
  'PoolDbCacheSvc': {'Dlls': ['lcg_RootStorageSvc', 'GaudiKernelDict'],
                     'DomainOpts': ['Domain[ROOT_All].TREE_MAX_SIZE=500000000000 TYP=longlong'],
                     'OutputLevel': 1},
@@ -67,7 +67,7 @@ EventSelector.D...   INFO Compression:1 Checksum:1
 R__unzip: too small target
 EventSelector.D...   INFO Retry with increased buffer space of 185208 bytes.
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
-Explorer             INFO ========= /Event[0x2586a10@EventDataSvc]:
+Explorer             INFO ========= /Event[0x25971c0@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO | +--> /Prev5 [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO | | +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
@@ -101,7 +101,6 @@ Explorer             INFO | |   +--> /RawEvent [Address: CLID=0x3ea Type=0xa0000
 Explorer             INFO   +--> /Next5 [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO       +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
-IODataManager        INFO Referring to dataset taePOOL.dat by its file ID:26FE952B-F81E-DE11-B1D8-000423D6B700
 Domain[ROOT_All]     INFO ->  Access   DbDatabase   CREATE    [ROOT_All] 26FE952B-F81E-DE11-B1D8-000423D6B700
 Domain[ROOT_All]     INFO                           taePOOL.dat
 taePOOL.dat       SUCCESS Root file version:51800

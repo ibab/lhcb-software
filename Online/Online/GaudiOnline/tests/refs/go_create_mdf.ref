@@ -32,7 +32,7 @@ ApplicationMgr       INFO Application Manager Configured successfully
               'OutputLevel': 3,
               'PrintFreq': 0.00021000000000000001},
  'FileCatalog': {'Catalogs': ['xmlcatalog_file:qmTest.xml']},
- 'IODataManager': {'AgeLimit': 1, 'OutputLevel': 1},
+ 'IODataManager': {'AgeLimit': 1, 'OutputLevel': 3},
  'MessageSvc': {'OutputLevel': 3},
  'Writer_0': {'ItemList': ['/Event#1'],
               'Output': "DATAFILE='PFN:root:file://mdfData_0.dat' SVC='LHCb::RawDataCnvSvc' OPT='REC'"},
@@ -88,11 +88,11 @@ HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
-Explorer             INFO ========= /Event[0x1feafb0@EventDataSvc]:
+Explorer             INFO ========= /Event[0x1ffb8a0@EventDataSvc]:
 Explorer             INFO +--> /Event [No Address]  DataObject
 Explorer             INFO   +--> /DAQ [No Address]  DataObject
 Explorer             INFO     +--> /RawEvent [No Address]  LHCb::RawEvent
-LHCb::RawDataCn...   INFO Opened(NEW)  MDF stream:PFN:root:file://mdfData_0.dat ID:0x1ff0b00
+LHCb::RawDataCn...   INFO Opened(NEW)  MDF stream:PFN:root:file://mdfData_0.dat ID:0x2001420
 +-------------------> Finished processing events
 ApplicationMgr       INFO Application Manager Stopped successfully
 Writer_0             INFO Events output: 2000
@@ -107,6 +107,6 @@ Writer_8             INFO Size: 1761540 Output:root:file://./mdfData_8.dat MD5 s
 Writer_9             INFO Size: 1761540 Output:root:file:./mdfData_9.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
 Writer_10            INFO Size: 1761540 Output:./mdfData_10.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
 EventLoopMgr         INFO Histograms converted successfully according to request.
-LHCb::RawDataCn...   INFO Closed MDF stream:PFN:root:file://mdfData_0.dat ID:0x1ff0b00
+LHCb::RawDataCn...   INFO Closed MDF stream:PFN:root:file://mdfData_0.dat ID:0x2001420
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

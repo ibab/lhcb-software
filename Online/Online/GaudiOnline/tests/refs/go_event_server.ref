@@ -4,8 +4,8 @@ Python options:-opt=command=import GaudiOnlineTests;GaudiOnlineTests.runNetCons(
 Python options:-opt=command=import GaudiOnlineTests;GaudiOnlineTests.runMDF2MBMFile(buffers=['Events'],fname='mdfData_0.dat')
 Parent: Started process:TanServ_0 output redirected to:/dev/null
 Parent: Started process:Events_0 output redirected to:/dev/null
-Starting processes .....
 Parent: Started process:EvtServ_0 output redirected to:/dev/null
+Starting processes .....
 Child: Starting process:NetCons_0
 Parent: Started process:NetCons_0
 Parent: Started process:NetCons_1 output redirected to:/dev/null
@@ -37,7 +37,7 @@ ApplicationMgr       INFO Application Manager Started successfully
 Starting producer ......
 Parent: Started process:Prod_0 output redirected to:/dev/null
 EventPersistenc...   INFO Added successfully Conversion service:RawDataCnvSvc
-StoreExplorerAlg     INFO ========= /Event[0x1fb47f0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x1fb49a0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 StoreExplorerAlg     INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 StoreExplorerAlg     INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent

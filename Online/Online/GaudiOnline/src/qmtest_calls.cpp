@@ -89,7 +89,7 @@ extern "C" int qmtest_hlt(int argc, char** argv)  {
   const char *a2[] =CLASS1("MEPConverter.opts");
   const char *a3[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runEvtHolder()");
   const char *a4[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runMBMRead(percent=100.0)");
-  const char *aprod[]={"libGaudiOnline.so", "OnlineStart", "libGaudiOnline.so", "mep_producer","-n=prod_0","-p=333","-s=500","-r=2","-c=20000",0};
+  const char *aprod[]={"libGaudiOnline.so", "OnlineStart", "libGaudiOnline.so", "mep_producer","-n=prod_0","-p=333","-s=500","-r=2","-c=5000",0};
 
   Process::setDebug(true);  
   pg.add(p[0]=new Process("MEPInit_0",  command(),a1,out.c_str()));
@@ -108,8 +108,8 @@ extern "C" int qmtest_hlt(int argc, char** argv)  {
   cout << "Starting producer ...... " << endl;
   Process* prod=new Process("Prod_0",command(),aprod,out.c_str());
   prod->start();
-  ::lib_rtl_sleep(10000);
   prod->wait(Process::WAIT_BLOCK);
+  ::lib_rtl_sleep(10000);
   delete prod;
   cout << "Producer finished work.. " << endl;
   return collect_summary(sizeof(p)/sizeof(p[0]),p);
@@ -126,7 +126,7 @@ extern "C" int qmtest_tae(int argc, char** argv)  {
   ProcessGroup pg;
   const char *a1[] =CLASS1("TAEBuffers.opts");
   const char *a2[] =CLASS1("ReadTAE.opts");
-  const char *aprod[]={"libGaudiOnline.so", "OnlineStart", "libGaudiOnline.so", "mep_producer","-n=prod_0","-p=333","-s=500","-r=2","-c=20000","-file=taeData_0.dat",0};
+  const char *aprod[]={"libGaudiOnline.so", "OnlineStart", "libGaudiOnline.so", "mep_producer","-n=prod_0","-p=333","-s=500","-r=2","-c=5000","-file=taeData_0.dat",0};
 
   Process::setDebug(true);  
   pg.add(p[0]=new Process("TAEBuffers_0",command(),a1,out.c_str()));
@@ -143,8 +143,8 @@ extern "C" int qmtest_tae(int argc, char** argv)  {
   cout << "Starting producer ...... " << endl;
   Process* prod=new Process("TAEProd_0",command(),aprod,out.c_str());
   prod->start();
-  ::lib_rtl_sleep(4000);
   prod->wait(Process::WAIT_BLOCK);
+  ::lib_rtl_sleep(10000);
   delete prod;
   cout << "Producer finished work.. " << endl;
   return collect_summary(sizeof(p)/sizeof(p[0]),p);

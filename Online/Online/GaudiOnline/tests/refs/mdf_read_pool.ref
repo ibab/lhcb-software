@@ -31,7 +31,7 @@ ApplicationMgr       INFO Application Manager Configured successfully
               'OutputLevel': 3,
               'PrintFreq': 0.00021000000000000001},
  'FileCatalog': {'Catalogs': ['xmlcatalog_file:qmTest.xml']},
- 'IODataManager': {'AgeLimit': 5, 'OutputLevel': 1},
+ 'IODataManager': {'AgeLimit': 5, 'OutputLevel': 3},
  'PoolDbCacheSvc': {'Dlls': ['lcg_RootStorageSvc', 'GaudiKernelDict'],
                     'DomainOpts': ['Domain[ROOT_All].TREE_MAX_SIZE=500000000000 TYP=longlong'],
                     'OutputLevel': 4},
@@ -56,8 +56,8 @@ ApplicationMgr       INFO Application Manager Started successfully
 mdfPOOL.dat       SUCCESS Root file version:51800
 PoolRootTreeEvt...   INFO No RunRecords present in:3CEF5302-F81E-DE11-AF2F-000423D6B700
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
-RawDataCnvSvc        INFO Opened(READ) MDF stream:58AD91C1-1FEA-DC11-A5AA-000423D950B0 ID:0x2821cb0
-Explorer             INFO ========= /Event[0x278cd60@EventDataSvc]:
+RawDataCnvSvc        INFO Opened(READ) MDF stream:58AD91C1-1FEA-DC11-A5AA-000423D950B0 ID:0x282c820
+Explorer             INFO ========= /Event[0x279dab0@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0x202]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
@@ -71,7 +71,7 @@ EventSelector     SUCCESS Reading Event record 1401. Record number within stream
 EventSelector     SUCCESS Reading Event record 1601. Record number within stream 1: 1601
 EventSelector     SUCCESS Reading Event record 1801. Record number within stream 1: 1801
 EventSelector     SUCCESS Reading Event record 2001. Record number within stream 1: 2001
-RawDataCnvSvc        INFO Opened(READ) MDF stream:70BBF7E9-BC1E-DE11-A8FC-000423D9A21A ID:0x27ec2c0
+RawDataCnvSvc        INFO Opened(READ) MDF stream:70BBF7E9-BC1E-DE11-A8FC-000423D9A21A ID:0x2818be0
 EventSelector     SUCCESS Reading Event record 2201. Record number within stream 1: 2201
 EventSelector     SUCCESS Reading Event record 2401. Record number within stream 1: 2401
 EventSelector     SUCCESS Reading Event record 2601. Record number within stream 1: 2601
@@ -84,11 +84,11 @@ EventSelector     SUCCESS Reading Event record 3801. Record number within stream
 EventSelector     SUCCESS Reading Event record 4001. Record number within stream 1: 4001
 IODataManager       ERROR Referring to existing dataset root:file:mdfData_2.dat by its physical name.
 IODataManager       ERROR You may not be able to nagivate back to the input file -- processing continues
-RawDataCnvSvc        INFO Opened(READ) MDF stream:root:file:mdfData_2.dat ID:0x27fdb00
+RawDataCnvSvc        INFO Opened(READ) MDF stream:root:file:mdfData_2.dat ID:0x2822a20
 EventSelector     SUCCESS Reading Event record 4201. Record number within stream 1: 4201
 EventSelector     SUCCESS Reading Event record 4401. Record number within stream 1: 4401
 EventSelector     SUCCESS Reading Event record 4601. Record number within stream 1: 4601
-Explorer             INFO ========= /Event[0x27bf650@EventDataSvc]:
+Explorer             INFO ========= /Event[0x2871990@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0x202]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
@@ -99,7 +99,7 @@ EventSelector     SUCCESS Reading Event record 5401. Record number within stream
 EventSelector     SUCCESS Reading Event record 5601. Record number within stream 1: 5601
 EventSelector     SUCCESS Reading Event record 5801. Record number within stream 1: 5801
 EventSelector     SUCCESS Reading Event record 6001. Record number within stream 1: 6001
-RawDataCnvSvc        INFO Opened(READ) MDF stream:8894EDE9-BC1E-DE11-A8FC-000423D9A21A ID:0x285f250
+RawDataCnvSvc        INFO Opened(READ) MDF stream:8894EDE9-BC1E-DE11-A8FC-000423D9A21A ID:0x2822a80
 EventSelector     SUCCESS Reading Event record 6201. Record number within stream 1: 6201
 EventSelector     SUCCESS Reading Event record 6401. Record number within stream 1: 6401
 EventSelector     SUCCESS Reading Event record 6601. Record number within stream 1: 6601
@@ -110,7 +110,7 @@ EventSelector     SUCCESS Reading Event record 7401. Record number within stream
 EventSelector     SUCCESS Reading Event record 7601. Record number within stream 1: 7601
 EventSelector     SUCCESS Reading Event record 7801. Record number within stream 1: 7801
 EventSelector     SUCCESS Reading Event record 8001. Record number within stream 1: 8001
-RawDataCnvSvc        INFO Opened(READ) MDF stream:0494F4E9-BC1E-DE11-A8FC-000423D9A21A ID:0x2807f10
+RawDataCnvSvc        INFO Opened(READ) MDF stream:0494F4E9-BC1E-DE11-A8FC-000423D9A21A ID:0x280e9f0
 EventSelector     SUCCESS Reading Event record 8201. Record number within stream 1: 8201
 EventSelector     SUCCESS Reading Event record 8401. Record number within stream 1: 8401
 EventSelector     SUCCESS Reading Event record 8601. Record number within stream 1: 8601
@@ -118,14 +118,14 @@ EventSelector     SUCCESS Reading Event record 8801. Record number within stream
 EventSelector     SUCCESS Reading Event record 9001. Record number within stream 1: 9001
 EventSelector     SUCCESS Reading Event record 9201. Record number within stream 1: 9201
 EventSelector     SUCCESS Reading Event record 9401. Record number within stream 1: 9401
-Explorer             INFO ========= /Event[0x281be50@EventDataSvc]:
+Explorer             INFO ========= /Event[0x282b920@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0x202]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
 EventSelector     SUCCESS Reading Event record 9601. Record number within stream 1: 9601
 EventSelector     SUCCESS Reading Event record 9801. Record number within stream 1: 9801
 EventSelector     SUCCESS Reading Event record 10001. Record number within stream 1: 10001
-RawDataCnvSvc        INFO Opened(READ) MDF stream:BE38F5E9-BC1E-DE11-A8FC-000423D9A21A ID:0x2821800
+RawDataCnvSvc        INFO Opened(READ) MDF stream:BE38F5E9-BC1E-DE11-A8FC-000423D9A21A ID:0x282b920
 EventSelector     SUCCESS Reading Event record 10201. Record number within stream 1: 10201
 EventSelector     SUCCESS Reading Event record 10401. Record number within stream 1: 10401
 EventSelector     SUCCESS Reading Event record 10601. Record number within stream 1: 10601
@@ -139,7 +139,7 @@ EventSelector     SUCCESS Reading Event record 12001. Record number within strea
 IODataManager        INFO Disconnect from dataset file://mdfData_1.dat [58AD91C1-1FEA-DC11-A5AA-000423D950B0]
 IODataManager       ERROR Referring to existing dataset root:file:./mdfData_6.dat by its physical name.
 IODataManager       ERROR You may not be able to nagivate back to the input file -- processing continues
-RawDataCnvSvc        INFO Opened(READ) MDF stream:root:file:./mdfData_6.dat ID:0x281ab50
+RawDataCnvSvc        INFO Opened(READ) MDF stream:root:file:./mdfData_6.dat ID:0x2818500
 EventSelector     SUCCESS Reading Event record 12201. Record number within stream 1: 12201
 EventSelector     SUCCESS Reading Event record 12401. Record number within stream 1: 12401
 EventSelector     SUCCESS Reading Event record 12601. Record number within stream 1: 12601
@@ -153,9 +153,9 @@ EventSelector     SUCCESS Reading Event record 14001. Record number within strea
 IODataManager        INFO Disconnect from dataset root:file://mdfData_0.dat [70BBF7E9-BC1E-DE11-A8FC-000423D9A21A]
 IODataManager       ERROR Referring to existing dataset root:./mdfData_7.dat by its physical name.
 IODataManager       ERROR You may not be able to nagivate back to the input file -- processing continues
-RawDataCnvSvc        INFO Opened(READ) MDF stream:root:./mdfData_7.dat ID:0x281bec0
+RawDataCnvSvc        INFO Opened(READ) MDF stream:root:./mdfData_7.dat ID:0x2807250
 EventSelector     SUCCESS Reading Event record 14201. Record number within stream 1: 14201
-Explorer             INFO ========= /Event[0x2821a50@EventDataSvc]:
+Explorer             INFO ========= /Event[0x282c850@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0x202]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
@@ -169,7 +169,7 @@ EventSelector     SUCCESS Reading Event record 15601. Record number within strea
 EventSelector     SUCCESS Reading Event record 15801. Record number within stream 1: 15801
 EventSelector     SUCCESS Reading Event record 16001. Record number within stream 1: 16001
 IODataManager        INFO Disconnect from dataset root:file:mdfData_2.dat [root:file:mdfData_2.dat]
-RawDataCnvSvc        INFO Opened(READ) MDF stream:14E2F5E9-BC1E-DE11-A8FC-000423D9A21A ID:0x285dec0
+RawDataCnvSvc        INFO Opened(READ) MDF stream:14E2F5E9-BC1E-DE11-A8FC-000423D9A21A ID:0x2807310
 EventSelector     SUCCESS Reading Event record 16201. Record number within stream 1: 16201
 EventSelector     SUCCESS Reading Event record 16401. Record number within stream 1: 16401
 EventSelector     SUCCESS Reading Event record 16601. Record number within stream 1: 16601
@@ -181,13 +181,13 @@ EventSelector     SUCCESS Reading Event record 17601. Record number within strea
 EventSelector     SUCCESS Reading Event record 17801. Record number within stream 1: 17801
 EventSelector     SUCCESS Reading Event record 18001. Record number within stream 1: 18001
 IODataManager        INFO Disconnect from dataset root:mdfData_3.dat [8894EDE9-BC1E-DE11-A8FC-000423D9A21A]
-RawDataCnvSvc        INFO Opened(READ) MDF stream:361FF6E9-BC1E-DE11-A8FC-000423D9A21A ID:0x2821ce0
+RawDataCnvSvc        INFO Opened(READ) MDF stream:361FF6E9-BC1E-DE11-A8FC-000423D9A21A ID:0x27a82a0
 EventSelector     SUCCESS Reading Event record 18201. Record number within stream 1: 18201
 EventSelector     SUCCESS Reading Event record 18401. Record number within stream 1: 18401
 EventSelector     SUCCESS Reading Event record 18601. Record number within stream 1: 18601
 EventSelector     SUCCESS Reading Event record 18801. Record number within stream 1: 18801
 EventSelector     SUCCESS Reading Event record 19001. Record number within stream 1: 19001
-Explorer             INFO ========= /Event[0x27fdb30@EventDataSvc]:
+Explorer             INFO ========= /Event[0x28072e0@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0x202]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
@@ -197,7 +197,7 @@ EventSelector     SUCCESS Reading Event record 19601. Record number within strea
 EventSelector     SUCCESS Reading Event record 19801. Record number within stream 1: 19801
 EventSelector     SUCCESS Reading Event record 20001. Record number within stream 1: 20001
 IODataManager        INFO Disconnect from dataset root:mdfData_4.dat [0494F4E9-BC1E-DE11-A8FC-000423D9A21A]
-RawDataCnvSvc        INFO Opened(READ) MDF stream:D287F6E9-BC1E-DE11-A8FC-000423D9A21A ID:0x2821ac0
+RawDataCnvSvc        INFO Opened(READ) MDF stream:D287F6E9-BC1E-DE11-A8FC-000423D9A21A ID:0x282b950
 EventSelector     SUCCESS Reading Event record 20201. Record number within stream 1: 20201
 EventSelector     SUCCESS Reading Event record 20401. Record number within stream 1: 20401
 EventSelector     SUCCESS Reading Event record 20601. Record number within stream 1: 20601
@@ -211,17 +211,17 @@ EventLoopMgr         INFO No more events in event selection
 +-------------------> Finished processing events
 ApplicationMgr       INFO Application Manager Stopped successfully
 EventLoopMgr         INFO Histograms converted successfully according to request.
-RawDataCnvSvc        INFO Closed MDF stream:0494F4E9-BC1E-DE11-A8FC-000423D9A21A ID:0x2807f10
-RawDataCnvSvc        INFO Closed MDF stream:14E2F5E9-BC1E-DE11-A8FC-000423D9A21A ID:0x285dec0
-RawDataCnvSvc        INFO Closed MDF stream:361FF6E9-BC1E-DE11-A8FC-000423D9A21A ID:0x2821ce0
-RawDataCnvSvc        INFO Closed MDF stream:58AD91C1-1FEA-DC11-A5AA-000423D950B0 ID:0x2821cb0
-RawDataCnvSvc        INFO Closed MDF stream:70BBF7E9-BC1E-DE11-A8FC-000423D9A21A ID:0x27ec2c0
-RawDataCnvSvc        INFO Closed MDF stream:8894EDE9-BC1E-DE11-A8FC-000423D9A21A ID:0x285f250
-RawDataCnvSvc        INFO Closed MDF stream:BE38F5E9-BC1E-DE11-A8FC-000423D9A21A ID:0x2821800
-RawDataCnvSvc        INFO Closed MDF stream:D287F6E9-BC1E-DE11-A8FC-000423D9A21A ID:0x2821ac0
-RawDataCnvSvc        INFO Closed MDF stream:root:./mdfData_7.dat ID:0x281bec0
-RawDataCnvSvc        INFO Closed MDF stream:root:file:./mdfData_6.dat ID:0x281ab50
-RawDataCnvSvc        INFO Closed MDF stream:root:file:mdfData_2.dat ID:0x27fdb00
+RawDataCnvSvc        INFO Closed MDF stream:0494F4E9-BC1E-DE11-A8FC-000423D9A21A ID:0x280e9f0
+RawDataCnvSvc        INFO Closed MDF stream:14E2F5E9-BC1E-DE11-A8FC-000423D9A21A ID:0x2807310
+RawDataCnvSvc        INFO Closed MDF stream:361FF6E9-BC1E-DE11-A8FC-000423D9A21A ID:0x27a82a0
+RawDataCnvSvc        INFO Closed MDF stream:58AD91C1-1FEA-DC11-A5AA-000423D950B0 ID:0x282c820
+RawDataCnvSvc        INFO Closed MDF stream:70BBF7E9-BC1E-DE11-A8FC-000423D9A21A ID:0x2818be0
+RawDataCnvSvc        INFO Closed MDF stream:8894EDE9-BC1E-DE11-A8FC-000423D9A21A ID:0x2822a80
+RawDataCnvSvc        INFO Closed MDF stream:BE38F5E9-BC1E-DE11-A8FC-000423D9A21A ID:0x282b920
+RawDataCnvSvc        INFO Closed MDF stream:D287F6E9-BC1E-DE11-A8FC-000423D9A21A ID:0x282b950
+RawDataCnvSvc        INFO Closed MDF stream:root:./mdfData_7.dat ID:0x2807250
+RawDataCnvSvc        INFO Closed MDF stream:root:file:./mdfData_6.dat ID:0x2818500
+RawDataCnvSvc        INFO Closed MDF stream:root:file:mdfData_2.dat ID:0x2822a20
 ToolSvc              INFO Removing all tools created by ToolSvc
 PoolRootTreeEvt...   INFO Disconnected data IO:3CEF5302-F81E-DE11-AF2F-000423D6B700[mdfPOOL.dat]
 ApplicationMgr       INFO Application Manager Finalized successfully
