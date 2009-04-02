@@ -36,7 +36,7 @@ script_name = 'mkproject'
 day = time.strftime("%a, %d %b %Y %H:%M:%S",time.localtime())
 
 rel_dir = os.getcwd()
-script_dir = os.getenv('LHCBSCRIPTS')
+#script_dir = os.getenv('LHCBSCRIPTS')
 debug_flag = False
 command = '. '
 ext = '.sh'
@@ -260,8 +260,8 @@ def release_project(pname,pversion,action=None):
                 sys.exit('ERROR - '+pname+'Env missing version')
         else:
 
-            log.info( ' CMTPROJECTPATH is set : getpack -v %s %s'%(PACK,PACK+'_'+pversion))
-            rc = os.system('getpack -v '+ PACK +' '+PACK+'_'+pversion)
+            log.info( ' CMTPROJECTPATH is set : getpack -P %s %s'%(PACK,PACK+'_'+pversion))
+            rc = os.system('getpack -P '+ PACK +' '+PACK+'_'+pversion)
             if rc != 0 :
                 log.error( 'cmt/project.cmt is not available for this version %s - STOP'%(pversion) )
                 log.error( 'check the cmtproject/%s tag and restart '%(PACK) )
@@ -429,7 +429,8 @@ def release_project(pname,pversion,action=None):
     if install :
         log.info( 'build InstallArea' )
         os.chdir(os.path.join(rel_dir,maindir))
-        str = os.path.join(script_dir,'LbInstallArea ')
+#        str = os.path.join(script_dir,'LbInstallArea ')
+        str = 'LbInstallArea '
         if CMTPROJECTPATH == '':
             os.system(str+binary)
             os.system(str+binary+'_dbg')
@@ -440,7 +441,8 @@ def release_project(pname,pversion,action=None):
     if tar :
         log.info( 'build tar files' )
         os.chdir(rel_dir)
-        str = os.path.join(script_dir,'mkLHCbtar')+' -p '+pname+' -v '+pversion
+#        str = os.path.join(script_dir,'mkLHCbtar')+' -p '+pname+' -v '+pversion
+        str = 'mkLHCbtar -p '+pname+' -v '+pversion
         rc = os.system(str)
         log.info( 'tar source rc = %s' % rc )
         rc = os.system(str+' -b '+binary)
@@ -453,7 +455,8 @@ def release_project(pname,pversion,action=None):
         log.info( 'build glimpse index files' )
         os.chdir(os.path.join(rel_dir,maindir))
         os.system('cp '+os.path.join(os.environ['LHCb_release_area'],'.glimpse_exclude')+' .')
-        str = os.path.join(script_dir,'glimpseindex')+' -H '+os.getcwd()+' '+os.getcwd()
+#        str = os.path.join(script_dir,'glimpseindex')+' -H '+os.getcwd()+' '+os.getcwd()
+        str = 'glimpseindex -H '+os.getcwd()+' '+os.getcwd()
         os.system(str)
         os.chdir(rel_dir)
 
