@@ -4,6 +4,11 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+!============ Presenter v0r17 2009-04-02 =============
+! 2009-04-02
++ Giacomo's patch: new DB entries (e.g. PadMargins)
+    fix ref. normalization
+
 !============ Presenter v0r16 2009-03-05 =============
 ! 2009-03-05
 0 fix histo zoom
