@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.189 2009-04-02 09:27:03 graven Exp $ 
+! $Id: release.notes,v 1.190 2009-04-02 12:55:47 hernando Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-04-02 Jose A. Hernando
+ - options/HltInit.py InfoID have to start from 1000, 
+   numbers below 1000 are reserved for thr tracking group
+
 ! 2009-04-01 - Gerhard Raven
  - cloning of Hlt2Lines now operational
  - use L0_ALL in HltSoftDiHadron
