@@ -1,4 +1,3 @@
-Executing:   gentest.exe libGaudiOnline.so qmtest_tae
 Parent: Started process:TAEBuffers_0 output redirected to:/dev/null
 Starting processes .....
 Parent: Started process:TAE_0 output redirected to:/dev/null

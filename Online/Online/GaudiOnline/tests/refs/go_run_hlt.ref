@@ -1,4 +1,3 @@
-Executing:   gentest.exe libGaudiOnline.so qmtest_hlt
 Python options:-opt=command=import GaudiOnlineTests;GaudiOnlineTests.runMepBuffer()
 Python options:-opt=command=import GaudiOnlineTests;GaudiOnlineTests.runEvtHolder()
 Python options:-opt=command=import GaudiOnlineTests;GaudiOnlineTests.runMBMRead(percent=100.0)

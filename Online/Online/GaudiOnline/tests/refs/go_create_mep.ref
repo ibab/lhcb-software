@@ -1,4 +1,3 @@
-Executing:   /afs/cern.ch/user/f/frankb/scratch0/Online.release/Online/GaudiOnline/tests/cmt/CreateMEP.sh
 #include "/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v26r2/DAQ/MDF/options/CreateMEP.opts"
 ApplicationMgr.OutStream  = { "LHCb::MEPWriter/Writer_0" };
 ApplicationMgr.EvtMax   = 2002;
@@ -46,8 +45,8 @@ Writer_0.MakeTAE = 0;                                                   //GP: (1
 JobOptionsSvc        INFO Job options successfully read in from /tmp/CreateMEP.opts
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.2 $
-                                          running on lxplus231.cern.ch on Wed Apr  1 15:49:19 2009
+                                                   Welcome to ApplicationMgr $Revision: 1.3 $
+                                          running on lxplus213.cern.ch on Thu Apr  2 09:55:16 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Successfully loaded modules : MDF
 ApplicationMgr       INFO Application Manager Configured successfully
@@ -60,87 +59,87 @@ HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
-StoreExplorerAlg     INFO ========= /Event[0x82be340@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x8c8d30@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [No Address]  DataObject
 StoreExplorerAlg     INFO   +--> /DAQ [No Address]  DataObject
 StoreExplorerAlg     INFO     +--> /RawEvent [No Address]  LHCb::RawEvent
-StoreExplorerAlg     INFO ========= /Event[0x82c3fe8@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x8d8820@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [No Address]  DataObject
 StoreExplorerAlg     INFO   +--> /DAQ [No Address]  DataObject
 StoreExplorerAlg     INFO     +--> /RawEvent [No Address]  LHCb::RawEvent
-StoreExplorerAlg     INFO ========= /Event[0x82c97c8@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x8d8190@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [No Address]  DataObject
 StoreExplorerAlg     INFO   +--> /DAQ [No Address]  DataObject
 StoreExplorerAlg     INFO     +--> /RawEvent [No Address]  LHCb::RawEvent
-StoreExplorerAlg     INFO ========= /Event[0x829ada8@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x8d6280@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [No Address]  DataObject
 StoreExplorerAlg     INFO   +--> /DAQ [No Address]  DataObject
 StoreExplorerAlg     INFO     +--> /RawEvent [No Address]  LHCb::RawEvent
-StoreExplorerAlg     INFO ========= /Event[0x82d5448@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x8d1f20@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [No Address]  DataObject
 StoreExplorerAlg     INFO   +--> /DAQ [No Address]  DataObject
 StoreExplorerAlg     INFO     +--> /RawEvent [No Address]  LHCb::RawEvent
-StoreExplorerAlg     INFO ========= /Event[0x8299350@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x9165f0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [No Address]  DataObject
 StoreExplorerAlg     INFO   +--> /DAQ [No Address]  DataObject
 StoreExplorerAlg     INFO     +--> /RawEvent [No Address]  LHCb::RawEvent
-StoreExplorerAlg     INFO ========= /Event[0x82a1198@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x9076b0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [No Address]  DataObject
 StoreExplorerAlg     INFO   +--> /DAQ [No Address]  DataObject
 StoreExplorerAlg     INFO     +--> /RawEvent [No Address]  LHCb::RawEvent
-StoreExplorerAlg     INFO ========= /Event[0x82cf070@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x90f130@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [No Address]  DataObject
 StoreExplorerAlg     INFO   +--> /DAQ [No Address]  DataObject
 StoreExplorerAlg     INFO     +--> /RawEvent [No Address]  LHCb::RawEvent
-StoreExplorerAlg     INFO ========= /Event[0x82979e8@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x8d3f50@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [No Address]  DataObject
 StoreExplorerAlg     INFO   +--> /DAQ [No Address]  DataObject
 StoreExplorerAlg     INFO     +--> /RawEvent [No Address]  LHCb::RawEvent
-StoreExplorerAlg     INFO ========= /Event[0x82bfdb8@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x90b100@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [No Address]  DataObject
 StoreExplorerAlg     INFO   +--> /DAQ [No Address]  DataObject
 StoreExplorerAlg     INFO     +--> /RawEvent [No Address]  LHCb::RawEvent
-StoreExplorerAlg     INFO ========= /Event[0x82caae8@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x8d7b60@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [No Address]  DataObject
 StoreExplorerAlg     INFO   +--> /DAQ [No Address]  DataObject
 StoreExplorerAlg     INFO     +--> /RawEvent [No Address]  LHCb::RawEvent
-StoreExplorerAlg     INFO ========= /Event[0x829b8d8@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x934ef0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [No Address]  DataObject
 StoreExplorerAlg     INFO   +--> /DAQ [No Address]  DataObject
 StoreExplorerAlg     INFO     +--> /RawEvent [No Address]  LHCb::RawEvent
-StoreExplorerAlg     INFO ========= /Event[0x82c0768@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x90f010@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [No Address]  DataObject
 StoreExplorerAlg     INFO   +--> /DAQ [No Address]  DataObject
 StoreExplorerAlg     INFO     +--> /RawEvent [No Address]  LHCb::RawEvent
-StoreExplorerAlg     INFO ========= /Event[0x8298cb8@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x8d6080@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [No Address]  DataObject
 StoreExplorerAlg     INFO   +--> /DAQ [No Address]  DataObject
 StoreExplorerAlg     INFO     +--> /RawEvent [No Address]  LHCb::RawEvent
-StoreExplorerAlg     INFO ========= /Event[0x82c9180@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x911d30@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [No Address]  DataObject
 StoreExplorerAlg     INFO   +--> /DAQ [No Address]  DataObject
 StoreExplorerAlg     INFO     +--> /RawEvent [No Address]  LHCb::RawEvent
-StoreExplorerAlg     INFO ========= /Event[0x82a0240@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x902b30@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [No Address]  DataObject
 StoreExplorerAlg     INFO   +--> /DAQ [No Address]  DataObject
 StoreExplorerAlg     INFO     +--> /RawEvent [No Address]  LHCb::RawEvent
-StoreExplorerAlg     INFO ========= /Event[0x82a39c0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x911e70@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [No Address]  DataObject
 StoreExplorerAlg     INFO   +--> /DAQ [No Address]  DataObject
 StoreExplorerAlg     INFO     +--> /RawEvent [No Address]  LHCb::RawEvent
-StoreExplorerAlg     INFO ========= /Event[0x8295370@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x9046d0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [No Address]  DataObject
 StoreExplorerAlg     INFO   +--> /DAQ [No Address]  DataObject
 StoreExplorerAlg     INFO     +--> /RawEvent [No Address]  LHCb::RawEvent
-StoreExplorerAlg     INFO ========= /Event[0x82a4440@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x8d0840@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [No Address]  DataObject
 StoreExplorerAlg     INFO   +--> /DAQ [No Address]  DataObject
 StoreExplorerAlg     INFO     +--> /RawEvent [No Address]  LHCb::RawEvent
-StoreExplorerAlg     INFO ========= /Event[0x82cc0f0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x9113a0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [No Address]  DataObject
 StoreExplorerAlg     INFO   +--> /DAQ [No Address]  DataObject
 StoreExplorerAlg     INFO     +--> /RawEvent [No Address]  LHCb::RawEvent
-StoreExplorerAlg     INFO ========= /Event[0x829c1f8@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x90b2c0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [No Address]  DataObject
 StoreExplorerAlg     INFO   +--> /DAQ [No Address]  DataObject
 StoreExplorerAlg     INFO     +--> /RawEvent [No Address]  LHCb::RawEvent

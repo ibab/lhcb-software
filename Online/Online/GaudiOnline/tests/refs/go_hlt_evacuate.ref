@@ -1,4 +1,3 @@
-Executing:   gentest.exe libGaudiOnline.so qmtest_evacuate
 Python options:-opt=command=import GaudiOnlineTests;GaudiOnlineTests.runBuffer(buffer='Node1')
 Python options:-opt=command=import GaudiOnlineTests;GaudiOnlineTests.runBuffer(buffer='Node2')
 Python options:-opt=command=import GaudiOnlineTests;GaudiOnlineTests.runBuffer(buffer='Node3')

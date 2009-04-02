@@ -14,6 +14,6 @@ cmt config 2&> /dev/null
 fi;
 . setup.sh 2&> /dev/null
 . preamble.sh 2&> /dev/null
-echo "Executing:   $args "
+#  echo "Executing:   $args "
 eval ${args}
 

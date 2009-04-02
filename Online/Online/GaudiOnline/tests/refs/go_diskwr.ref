@@ -1,4 +1,3 @@
-Executing:   gentest.exe libGaudiOnline.so qmtest_write_buffer
 Python options:-opt=command=import GaudiOnlineTests;GaudiOnlineTests.runBuffer(buffer='Events')
 Python options:-opt=command=import GaudiOnlineTests;GaudiOnlineTests.runDiskWR('Events',True,False,'./mdfOutput.dat')
 Python options:-opt=command=import GaudiOnlineTests;GaudiOnlineTests.runMDF2MBMFile(buffers=['Events'],fname='mdfData_0.dat')
