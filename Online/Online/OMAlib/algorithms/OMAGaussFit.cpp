@@ -1,4 +1,4 @@
-// $Id: OMAGaussFit.cpp,v 1.5 2009-02-16 10:38:21 ggiacomo Exp $
+// $Id: OMAGaussFit.cpp,v 1.6 2009-04-02 10:27:25 ggiacomo Exp $
 
 #include <TH1F.h>
 #include <TF1.h>
@@ -27,12 +27,14 @@ void OMAGaussFit::exec(TH1 &Histo,
                        TH1* Ref) {
   float confidence=0.95;
   Ref = NULL; // avoid compil. warning
-  std::string message(" Mean out of range");
-  std::string hname(Histo.GetName());
 
   if( warn_thresholds.size() <m_npars ||  alarm_thresholds.size() <m_npars )
     return;
 
+  std::stringstream message;
+  std::string hname(Histo.GetName());
+  OMAMessage::OMAMsgLevel level = OMAMessage::INFO;
+ 
   if ( input_pars.size() > 0 )
     confidence = input_pars[0];
 
@@ -43,40 +45,38 @@ void OMAGaussFit::exec(TH1 &Histo,
     if (false == checkParam( fit,1,
                              alarm_thresholds[0],
                              alarm_thresholds[1],
-                             confidence) ) { // alarm on
-    raiseMessage( anaID,
-                  OMAMessage::ALARM , 
-		  message, hname);
+                             confidence, message) ) { // alarm on
+      level = OMAMessage::ALARM;
     }
     else {
       if (false == checkParam( fit,1,
                                warn_thresholds[0],
                                warn_thresholds[1],
-                               confidence) ) { // warning on
-        raiseMessage( anaID,
-                      OMAMessage::WARNING , 
-                      message, hname);
+                               confidence, message) ) { // warning on
+        level = OMAMessage::WARNING;
       }
     }
-    message=" Sigma out of range";
     if (false == checkParam( fit,2,
                              alarm_thresholds[2],
                              alarm_thresholds[3],
-                             confidence) ) { // alarm on
-      raiseMessage( anaID,
-                    OMAMessage::ALARM , 
-		    message, hname);
+                             confidence, message) ) { // alarm on
+      level = OMAMessage::ALARM;
     }
     else {
       if (false == checkParam( fit,2,
                                warn_thresholds[2],
                                warn_thresholds[3],
-                               confidence) ) { // warning on
-        raiseMessage( anaID,
-                      OMAMessage::WARNING , 
-		      message, hname);
+                               confidence, message) ) { // warning on
+        level = OMAMessage::WARNING;
       }
     }
+  }
+
+  if (level > OMAMessage::INFO) {
+    raiseMessage( anaID,
+                  level , 
+                  message.str(), 
+                  hname);
   }
 }
 
@@ -84,12 +84,14 @@ bool OMAGaussFit::checkParam( TF1* fit,
                               int ipar,
                               float min,
                               float max,
-                              float conf) {
+                              float conf,
+                              std::stringstream &mess) {
   bool out = true;
   int ndf= fit->GetNDF();
+  double param=0., error=0.;
   if (ndf>0) {
-    double param= fit->GetParameter(ipar);
-    double error= fit->GetParError(ipar);
+    param= fit->GetParameter(ipar);
+    error= fit->GetParError(ipar);
     if( param < min || param > max ) {
       // param out of range: check if deviation from range is significant
       double delta = 
@@ -98,6 +100,15 @@ bool OMAGaussFit::checkParam( TF1* fit,
         out = false;      
     }
   }
+  if (false == out) {
+    if (! mess.str().empty()) {
+      mess << std::endl;
+    }
+    mess << fit->GetParName(ipar) << " is "<<param <<
+      " +/- "<< error << " (allowed range is "
+         << min << " - " << max << " )";
+  }
+
   return out;
 }
 

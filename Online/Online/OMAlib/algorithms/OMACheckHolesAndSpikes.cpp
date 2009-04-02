@@ -114,23 +114,30 @@ void OMACheckHolesAndSpikes::exec(TH1 &Histo,
     }
   }
   
-  std::stringstream message,message2;
+  std::stringstream message;
   std::string hname(Histo.GetName());
+  OMAMessage::OMAMsgLevel level=OMAMessage::INFO;
   if ( MinDelta < alarm_thresholds[0]) {
     message << "Hole detected for x="<<Histo.GetBinCenter(minbin)<< " delta="<<MinDelta;
-    raiseMessage( anaID, OMAMessage::ALARM , message.str(), hname);
+    level= OMAMessage::ALARM;
   }
   else if( MinDelta < warn_thresholds[0]) {
     message << "Hole detected for x="<<Histo.GetBinCenter(minbin)<< " delta="<<MinDelta;
-    raiseMessage( anaID, OMAMessage::WARNING , message.str(), hname);
+    level= OMAMessage::WARNING;
   }
 
   if ( MaxDelta > alarm_thresholds[1]) {
-    message2 << "Spike detected for x="<<Histo.GetBinCenter(maxbin)<< " delta="<<MaxDelta;
-    raiseMessage( anaID, OMAMessage::ALARM , message2.str(), hname);
+    if (level > OMAMessage::INFO) message << std::endl;
+    message << "Spike detected for x="<<Histo.GetBinCenter(maxbin)<< " delta="<<MaxDelta;
+    level= OMAMessage::ALARM;
   }
   else if ( MaxDelta > warn_thresholds[1]) {
-    message2 << "Spike detected for x="<<Histo.GetBinCenter(maxbin)<< " delta="<<MaxDelta;
-    raiseMessage( anaID, OMAMessage::WARNING , message2.str(), hname);
+    if (level > OMAMessage::INFO) message << std::endl;
+    message << "Spike detected for x="<<Histo.GetBinCenter(maxbin)<< " delta="<<MaxDelta;
+    level= OMAMessage::WARNING;
+  }
+
+  if(level > OMAMessage::INFO) {
+    raiseMessage(anaID, level, message.str(), hname);
   }
 }

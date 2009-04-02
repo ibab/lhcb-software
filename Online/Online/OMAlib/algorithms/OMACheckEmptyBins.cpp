@@ -35,10 +35,9 @@ void OMACheckEmptyBins::exec(TH1 &Histo,
   std::stringstream message;
   std::string hname(Histo.GetName());
   message << "Number of empty bins= "<<NemptyBins;
-  if ( NemptyBins  > (int) (alarm_thresholds[0]+.1) ) {
-    raiseMessage( anaID, OMAMessage::ALARM , message.str(), hname);
-  }
-  else if( NemptyBins > (int) (warn_thresholds[0]+.1)) {
-    raiseMessage( anaID, OMAMessage::WARNING , message.str(), hname);
-  }
+  raiseMessage( anaID, 
+                ( NemptyBins > (int) (warn_thresholds[0]+.1) ),
+                ( NemptyBins  > (int) (alarm_thresholds[0]+.1) ),
+                message.str(),
+                hname);
 }

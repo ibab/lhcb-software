@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.15 2009-03-27 14:06:34 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.16 2009-04-02 10:27:25 ggiacomo Exp $
 /*
   Online Monitoring Analysis library
   G. Graziani (INFN Firenze)
@@ -261,8 +261,17 @@ void OMAlib::syncList() {
         if (m_debug>1) 
           cout << "  sending fit function "<<ff->name() <<" ... ";
         
+        ff->checkDefValues();
+
         fitok=m_histDB->declareFitFunction
-          (ff->name(),ff->np(), &(ff->parNames()), ff->mustInit(), ff->doc());
+          (ff->name(),
+           ff->np(), 
+           &(ff->parNames()), 
+           ff->mustInit(), 
+           ff->doc(),
+           &(ff->parDefValues()),
+           &(ff->inputNames()),
+           &(ff->inputDefValues())     );
 
         if (m_debug>1) cout << (fitok ? " OK!" : " ERROR! ") <<endl;
         ok &= fitok;

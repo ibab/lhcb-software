@@ -43,10 +43,9 @@ void OMACompareToReference::exec(TH1 &Histo,
   std::stringstream message;
   std::string hname(Histo.GetName());
   message << "Comparison Test p-value= "<<  pvalue;
-  if ( pvalue  < alarm_thresholds[0] ) {
-    raiseMessage( anaID, OMAMessage::ALARM , message.str(), hname);
-  }
-  else if( pvalue < warn_thresholds[0] ) {
-    raiseMessage( anaID, OMAMessage::WARNING , message.str(), hname);
-  }
+  raiseMessage( anaID,
+                ( pvalue < warn_thresholds[0] ),
+                ( pvalue  < alarm_thresholds[0] ),
+                message.str(), 
+                hname);
 }

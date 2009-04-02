@@ -3,7 +3,7 @@
 # Maintainer : Giacomo Graziani 
 # =============================================================================
 package          OMAlib
-version          v2r3
+version          v2r4
 
 branches src cmt doc OMAlib
 

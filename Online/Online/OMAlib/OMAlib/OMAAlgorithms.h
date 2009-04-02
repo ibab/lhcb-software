@@ -1,7 +1,8 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAAlgorithms.h,v 1.10 2009-03-27 14:06:33 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAAlgorithms.h,v 1.11 2009-04-02 10:27:25 ggiacomo Exp $
 #ifndef OMALIB_OMAALGORITHMS_H
 #define OMALIB_OMAALGORITHMS_H 1
 
+#include <sstream>
 #include "OMAlib/OMAalg.h"
 class TH1;
 class TH2D;
@@ -27,9 +28,10 @@ class OMACheckXRange : public OMACheckAlg
             float alarm_max,
             unsigned int anaID);
  private:
-  bool check(TH1 &Histo,
-             float min,
-             float max);
+  bool findBadEntries(TH1 &Histo,
+                       float min,
+                       float max,
+                       std::stringstream &mess);
 };
 
 class OMACheckMeanAndSigma : public OMACheckAlg
@@ -46,11 +48,13 @@ class OMACheckMeanAndSigma : public OMACheckAlg
   bool checkMean(TH1 &Histo,
                  float min,
                  float max,
-                 float sig);
+                 float sig,
+                 std::stringstream &mess);
   bool checkSigma(TH1 &Histo,
-                 float min,
-                 float max,
-                 float sig);
+                  float min,
+                  float max,
+                  float sig,
+                  std::stringstream &mess);
 };
 
 class OMAGaussFit : public OMACheckAlg
@@ -68,7 +72,8 @@ class OMAGaussFit : public OMACheckAlg
                    int ipar,
                    float min,
                    float max,
-                   float sig);
+                   float sig,
+                   std::stringstream &mess);
 };
 
 class OMACheckHolesAndSpikes  : public OMACheckAlg

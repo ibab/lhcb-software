@@ -1,4 +1,4 @@
-// $Id: OMACheckEntriesInRange.cpp,v 1.4 2009-02-16 10:38:21 ggiacomo Exp $
+// $Id: OMACheckEntriesInRange.cpp,v 1.5 2009-04-02 10:27:25 ggiacomo Exp $
 #include <TH1F.h>
 #include <TF1.h>
 #include "OMAlib/OMAAlgorithms.h"
@@ -53,10 +53,9 @@ void OMACheckEntriesInRange::exec(TH1 &Histo,
   std::stringstream message;
   std::string hname(Histo.GetName());
   message << ckty <<" in Range "<<xmin<<" - "<<xmax<<" is "<<out;
-  if ( out  > alarm_thresholds[0] ) {
-    raiseMessage( anaID, OMAMessage::ALARM , message.str(), hname);
-  }
-  else if( out > warn_thresholds[0] ) {
-    raiseMessage( anaID, OMAMessage::WARNING , message.str(), hname);
-  }
+  raiseMessage( anaID,
+                ( out > warn_thresholds[0] ),
+                ( out > alarm_thresholds[0] ),
+                message.str(),
+                hname);
 }

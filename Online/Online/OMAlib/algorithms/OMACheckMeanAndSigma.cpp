@@ -1,4 +1,4 @@
-// $Id: OMACheckMeanAndSigma.cpp,v 1.4 2009-02-16 10:38:21 ggiacomo Exp $
+// $Id: OMACheckMeanAndSigma.cpp,v 1.5 2009-04-02 10:27:25 ggiacomo Exp $
 
 #include <TH1F.h>
 #include <TMath.h>
@@ -30,44 +30,47 @@ void OMACheckMeanAndSigma::exec(TH1 &Histo,
     confidence = input_pars[0];
   if( warn_thresholds.size() <4 ||  alarm_thresholds.size() <4 )
     return;
-  std::string message(" Mean out of range");
+  
+  
+  std::stringstream message;
   std::string hname(Histo.GetName());
+  OMAMessage::OMAMsgLevel level = OMAMessage::INFO;
+  
 
   if (false == checkMean(Histo,alarm_thresholds[0],alarm_thresholds[1],
-                         confidence) ) { // alarm on
-    raiseMessage( anaID,
-                  OMAMessage::ALARM , 
-                  message, hname);
+                         confidence, message) ) { // alarm on
+    level = OMAMessage::ALARM;
   }
   else {
     if (false == checkMean(Histo,warn_thresholds[0],warn_thresholds[1],
-                           confidence) ) { // warning on
-      raiseMessage( anaID,
-                    OMAMessage::WARNING , 
-                    message, hname);
+                           confidence, message) ) { // warning on
+      level = OMAMessage::WARNING;
     }
   }
-  message=" Sigma out of range";
+
   if (false == checkSigma(Histo,alarm_thresholds[2],alarm_thresholds[3],
-                         confidence) ) { // alarm on
-    raiseMessage( anaID,
-                  OMAMessage::ALARM , 
-                  message, hname);
+                         confidence, message) ) { // alarm on
+    level = OMAMessage::ALARM;
   }
   else {
     if (false == checkSigma(Histo,warn_thresholds[2],warn_thresholds[3],
-                           confidence) ) { // warning on
-      raiseMessage( anaID,
-                    OMAMessage::WARNING , 
-                    message, hname);
+                           confidence, message) ) { // warning on
+      level = OMAMessage::WARNING;
     }
+  }
+  if (level > OMAMessage::INFO) {
+    raiseMessage( anaID,
+                  level , 
+                  message.str(), 
+                  hname);
   }
 }
 
 bool OMACheckMeanAndSigma::checkMean(TH1 &Histo,
                                      float min,
                                      float max,
-                                     float conf) {
+                                     float conf,
+                                     std::stringstream &mess) {
   bool out = true;
   double mean=Histo.GetMean();
   if( mean < min || mean > max ) {
@@ -78,13 +81,22 @@ bool OMACheckMeanAndSigma::checkMean(TH1 &Histo,
     if( StudentI(delta, Histo.GetEntries()-1) > conf)  
       out = false;      
   }
+
+  if (false == out) {
+    if (! mess.str().empty()) {
+      mess << std::endl;
+    }
+    mess << "Mean is "<<Histo.GetMean() << " (allowed range is "
+            << min << " - " << max << " )";
+  }
   return out;
 }
 
 bool OMACheckMeanAndSigma::checkSigma(TH1 &Histo,
                                       float min,
                                       float max,
-                                      float conf) {
+                                      float conf,
+                                      std::stringstream &mess) {
   bool out = true;
   double mean=Histo.GetRMS();
   if( mean < min || mean > max ) {
@@ -93,7 +105,15 @@ bool OMACheckMeanAndSigma::checkSigma(TH1 &Histo,
     double delta = 
       ( mean < min ) ? (min-mean)/err : (mean-max)/err;
     if( StudentI(delta, Histo.GetEntries()-1) > conf )  
-      out = false;      
+      out = false;     
+  }
+
+  if (false == out) {
+    if (! mess.str().empty()) {
+      mess << std::endl;
+    }
+    mess << "Sigma is "<<Histo.GetRMS() << " (allowed range is "
+            << min << " - " << max << " )";
   }
   return out;
 }

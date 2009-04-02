@@ -1,4 +1,4 @@
-// $Id: OMAFitFunction.h,v 1.4 2009-02-26 15:50:57 ggiacomo Exp $
+// $Id: OMAFitFunction.h,v 1.5 2009-04-02 10:27:25 ggiacomo Exp $
 #ifndef OMALIB_OMAFITFUNCTION_H 
 #define OMALIB_OMAFITFUNCTION_H 1
 #include <string>
@@ -15,9 +15,9 @@ class TH1;
  */
 class OMAFitFunction {
 public: 
-  //constructor for derived class (implementing custom fit function)
+  /// constructor for derived class (implementing custom fit function)
   OMAFitFunction(std::string Name);
-  // cunstructor for simple fit functions defined by funcString
+  /// cunstructor for simple fit functions defined by funcString
   OMAFitFunction(std::string Name,
                  std::string FuncString,
                  std::vector<std::string> &ParNames,
@@ -29,9 +29,14 @@ public:
 
   inline std::string& name() {return m_name;}
   inline int np(){return m_parNames.size();}
+  inline int ninput(){return m_inputNames.size();}
   inline std::string& doc() {return m_doc;}
   inline bool mustInit() {return m_mustInit;}
   std::vector<std::string>& parNames() {return m_parNames;}
+  std::vector<float>& parDefValues() {return m_parDefValues;}
+  std::vector<std::string>& inputNames() {return m_inputNames;}
+  std::vector<float>& inputDefValues() {return m_inputDefValues;}
+  void checkDefValues();
   virtual void fit(TH1* histo, std::vector<float>* initValues);
   TF1* fittedfun() {return m_fitfun;}
 protected:
@@ -40,6 +45,9 @@ protected:
 
   std::string m_name;
   std::vector<std::string> m_parNames;
+  std::vector<float> m_parDefValues;
+  std::vector<std::string> m_inputNames;
+  std::vector<float> m_inputDefValues;
   bool m_mustInit;
   std::string m_doc;
   std::string m_funcString;

@@ -1,4 +1,4 @@
-// $Id: OMAFitFunction.cpp,v 1.4 2009-02-24 20:36:07 frankb Exp $
+// $Id: OMAFitFunction.cpp,v 1.5 2009-04-02 10:27:25 ggiacomo Exp $
 #include <sstream>
 #include <cmath>
 #include <TF1.h>
@@ -13,10 +13,12 @@
 // 2009-02-10 : Giacomo GRAZIANI
 //-----------------------------------------------------------------------------
 //=============================================================================
+// constructor for derived class (implementing custom fit function)
 OMAFitFunction::OMAFitFunction( std::string Name ) :
   m_name(Name), m_mustInit(true), m_doc(""), 
   m_funcString(""), m_fitfun(NULL) {}
 
+// cunstructor for simple fit functions defined by funcString
 OMAFitFunction::OMAFitFunction(std::string Name,
                                std::string FuncString,
                                std::vector<std::string> &ParNames,
@@ -31,6 +33,18 @@ OMAFitFunction::OMAFitFunction(std::string Name,
 OMAFitFunction::~OMAFitFunction() {
   if(m_fitfun) delete m_fitfun;
 } 
+
+
+void OMAFitFunction::checkDefValues() {
+  // pad undefined default values for input and fit parameters
+  unsigned int i;
+  for (i=m_parDefValues.size(); i < m_parNames.size(); i++) {
+    m_parDefValues.push_back(-999999.);
+  }
+  for (i=m_inputDefValues.size(); i < m_inputNames.size(); i++) {
+    m_inputDefValues.push_back(0.);
+  }
+}
 
 void OMAFitFunction::initfun() {
   if(!m_predef) {
@@ -88,12 +102,12 @@ void OMAFitFunction::fit(TH1* histo, std::vector<float>* initValues)
 
 OMAFitDoubleGaus::OMAFitDoubleGaus() :
   OMAFitFunction("doublegaus") {
-  m_parNames.push_back("Constant1");
-  m_parNames.push_back("Mean1");
-  m_parNames.push_back("Sigma1");
-  m_parNames.push_back("Constant2");
-  m_parNames.push_back("Mean2");
-  m_parNames.push_back("Sigma2");
+  m_parNames.push_back("Constant1");    m_parDefValues.push_back(0.5);
+  m_parNames.push_back("Mean1");        m_parDefValues.push_back(0.);
+  m_parNames.push_back("Sigma1");       m_parDefValues.push_back(1);
+  m_parNames.push_back("Constant2");    m_parDefValues.push_back(0.5);
+  m_parNames.push_back("Mean2");        m_parDefValues.push_back(0.);
+  m_parNames.push_back("Sigma2");       m_parDefValues.push_back(10);
   m_mustInit=true;
   m_doc="sum of two gaussian functions";
   m_funcString="[0]*exp(-((x-[1])**2/(2*[2]**2)))+[3]*exp(-((x-[4])**2/(2*[5]**2)))";

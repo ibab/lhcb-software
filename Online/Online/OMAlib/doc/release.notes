@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.23 2009-03-27 14:06:33 ggiacomo Exp $
+! $Id: release.notes,v 1.24 2009-04-02 10:27:25 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
+
+! 20090402 v2r4
+ - add to fit functions:
+   * optional input parameters
+   * optional default values for input and fit parameters  
+ - more info in alarm messages
 
 ! 20090325 v2r3
  - new check algorithm: OMAIfbMonitor by Ross Young

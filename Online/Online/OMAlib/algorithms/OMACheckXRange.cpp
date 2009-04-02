@@ -1,4 +1,4 @@
-// $Id: OMACheckXRange.cpp,v 1.4 2009-02-16 10:38:21 ggiacomo Exp $
+// $Id: OMACheckXRange.cpp,v 1.5 2009-04-02 10:27:25 ggiacomo Exp $
 
 #include <TH1F.h>
 #include "OMAlib/OMAAlgorithms.h"
@@ -33,32 +33,38 @@ void OMACheckXRange::exec(TH1 &Histo,
                           float alarm_max,
                           unsigned int anaID) {
   bool ok=true;
-  std::string s1(" entries out of range");
-  std::string s2(Histo.GetName());
+  OMAMessage::OMAMsgLevel level = OMAMessage::INFO;
+  std::string hname(Histo.GetName());
+  std::stringstream message;
 
-  if (false == check(Histo,alarm_min,alarm_max) ) { // alarm on
-    raiseMessage( anaID,
-                  OMAMessage::ALARM , 
-                  s1,s2);
-    ok = false;
+  if (findBadEntries(Histo,alarm_min,alarm_max,message) ) {
+    level = OMAMessage::ALARM;
   }
-  else {
-    if (false == check(Histo,warn_min,warn_max) ) { // warning on
-      raiseMessage( anaID,
-                    OMAMessage::WARNING , 
-                    s1,s2);
-      ok = false;
-    }
+  else if (findBadEntries(Histo,warn_min,warn_max,message) ) {
+    level = OMAMessage::WARNING;
+  }
+  if (level > OMAMessage::INFO) {
+    raiseMessage( anaID,
+                  level , 
+                  message.str(), 
+                  hname);
   }
 }
 
-bool OMACheckXRange::check(TH1 &Histo,
-                           float min,
-                           float max) {
-  bool out = true;
+bool OMACheckXRange::findBadEntries(TH1 &Histo,
+                                     float min,
+                                     float max,
+                                     std::stringstream &mess) {
+  bool out=false;
   static const double contTh = 0.0001;
-  if( Histo.Integral(0,Histo.FindBin(min)) > contTh) out=false;
-  if(out)
-    if( Histo.Integral(Histo.FindBin(max),Histo.GetNbinsX()+1) > contTh ) out=false;
+
+  double be = Histo.Integral(0,Histo.FindBin(min)) +
+    Histo.Integral(Histo.FindBin(max),Histo.GetNbinsX()+1);
+  if (be > contTh) {
+    out = true;
+    mess << "There are "<< be << " entries outside the allowed range "
+         << min << " to "<<max;
+  }
   return out;
 }
+
