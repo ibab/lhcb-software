@@ -3,7 +3,9 @@
 ! Responsible : VELO monitoring group
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
-
+! 2009-03-05 - James Mylroie-Smith
+ - added ClusterMon package which makes plots  of adc for clusters and tracks
+	 with options to split sensors by regions.
 !======================= VeloRecMonitors v1r5 2009-03-10 =====================
 ! 2009-03-05 - Eduardo Rodrigues
  - reduced (unnecessary high) binning of a few histos in VeloTrackMonitor
