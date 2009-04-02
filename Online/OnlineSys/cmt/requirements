@@ -29,9 +29,9 @@ use HPDMonitor        v1r5     Online
 use HistDBPython      v1r0     Online
 use InsertDB          v1r3     Online
 use MBMDump           v1r11    Online
-use OMAlib            v2r1     Online
+use OMAlib            v2r4     Online
 use OnlineDummyReader v1r4     Online
-use OnlineHistDB      v5r0     Online
+use OnlineHistDB      v5r1     Online
 use OnlineKernel      v1r23    Online
 use OnlineTools       v1r1     Online
 use OnlineTasks       v1r20    Online
