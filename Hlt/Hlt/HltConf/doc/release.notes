@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.188 2009-04-02 09:24:35 graven Exp $ 
+! $Id: release.notes,v 1.189 2009-04-02 09:27:03 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -6,6 +6,7 @@
 ! -----------------------------------------------------------------------------
 ! 2009-04-01 - Gerhard Raven
  - cloning of Hlt2Lines now operational
+ - use L0_ALL in HltSoftDiHadron
 
 ! 2009-03-31 - Leanro de Paula
  - changes in MuonLine, HltInit, HltL0Candidates and Configure in order to

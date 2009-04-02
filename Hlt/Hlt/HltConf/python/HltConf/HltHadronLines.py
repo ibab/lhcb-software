@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltHadronLines.py,v 1.10 2009-03-25 17:59:04 hernando Exp $
+# $Id: HltHadronLines.py,v 1.11 2009-04-02 09:26:52 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hadron Lines
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -25,21 +25,12 @@ from HltConf.HltLine import hlt1Lines
 from HltConf.HltL0Candidates import *
 from HltConf.HltFastTrackFit import setupHltFastTrackFit
 
-# here get a Hlt1 line 
-def _getLine(name):
-    line = filter( lambda x : x._name == name ,  hlt1Lines() )
-    if line : return line[0]
-    print "ERROR:  no line with name ", name
-    return None
-
-
 def histosfilter(name,xlower=0.,xup=100.,nbins=100):
     """ return the dictonary with the booking of the histograms associated to a filter
     @param filter name i.e 'PT
     """
     histosfs = { name : ( name,xlower,xup,nbins),
                  name+"Best" : (name+"Best",xlower,xup,nbins) }
-    #print histosfs
     return histosfs
 
 
@@ -76,7 +67,6 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
                   , 'SoftHadMain_PTCut'       : 1500.
                   , 'SoftHadMain_IPCut'       : 0.1
                   , 'Prescale'                : { 'Hlt1SoftDiHadron' : 0 } # overrule imported default
-
                 }
     
     def __apply_configuration__(self) : 
@@ -90,15 +80,15 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
         # confirmed track
         #------------------------
         def confirmation(type=""):
-            candis = _cut("L0Channel")
-            L0candis = "Hlt1L0"+candis+"Decision"
+            candidates = _cut("L0Channel")
+            L0candidates = "Hlt1L0"+candidates+"Decision"
             if (type=="Soft"):
-                candis = "All"+candis
-                L0candis = "%TFL0Hadron"
+                candidates = "All"+candidates
+                L0candidates = "%TFL0Hadron"
             IPCut = _cut(type+"HadMain_IPCut")
             PTCut = _cut(type+"HadMain_PTCut")
             # get the L0 candidates (all or L0)
-            conf = [convertL0Candidates(candis)]
+            conf = [convertL0Candidates(candidates)]
             if (type == "Soft"):
                 conf.append(
                     Member('TF','L0Hadron'
@@ -111,15 +101,15 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
                 GaudiSequencer('Hlt1RecoRZVeloSequence')
                 , Member ( 'TF' ,'RZVelo'
                            , InputSelection = 'RZVelo'
-                           , FilterDescriptor = ['Calo2DChi2_'+L0candis+',<,4']
+                           , FilterDescriptor = ['Calo2DChi2_'+L0candidates+',<,4']
                            , HistogramUpdatePeriod = 1
-                           , HistoDescriptor  = histosfilter('Calo2DChi2_'+L0candis+'',0.,10.,200)
+                           , HistoDescriptor  = histosfilter('Calo2DChi2_'+L0candidates,0.,10.,200)
                            )
                 , Member ( 'TU', 'Velo',  RecoName = 'Velo')
                 , Member ( 'TF', '1Velo',
-                           FilterDescriptor = [ 'Calo3DChi2_'+L0candis+',<,4' ],
+                           FilterDescriptor = [ 'Calo3DChi2_'+L0candidates+',<,4' ],
                            HistogramUpdatePeriod = 1,
-                           HistoDescriptor  = histosfilter('Calo3DChi2_'+L0candis+'',0.,10.,200)
+                           HistoDescriptor  = histosfilter('Calo3DChi2_'+L0candidates,0.,10.,200)
                            )
                 , Member ( 'TF', '2Velo',
                            FilterDescriptor = [ 'IP_PV2D,||>,'+IPCut],
@@ -128,7 +118,7 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
                            )
                 , Member ( 'TM' , 'VeloCalo'
                            , InputSelection1 = '%TF2Velo'
-                           , InputSelection2 = ''+L0candis+''
+                           , InputSelection2 = L0candidates
                            , MatchName = 'VeloCalo' , MaxQuality = 4.
                            )
                 , Member ( 'TU', 'GuidedForward'
@@ -213,8 +203,7 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
         #--------------------------------
         def afterburn():
             after = [
-                Member ( 'TU' , 'FitTrack' ,
-                         RecoName = "FitTrack")
+                Member ( 'TU' , 'FitTrack' , RecoName = "FitTrack")
                 , Member ( 'TF' , '1FitTrack' ,
                            FilterDescriptor = ["FitIP_PV2D,||>,"+_cut('HadMain_IPCut')],
                            HistogramUpdatePeriod = 1,
@@ -271,16 +260,10 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
 
         # Soft DiHadron Line
         #-----------------------------------
-        l0all = "|".join( [ "L0_CHANNEL('"+i+"')" for i in L0Channels() ] )
-        # xalls = map(lambda x: "L0_CHANNEL('"+x+"')",L0Channels())
-        # l0all = xalls[0]
-        #for a in xalls[1:]: l0all = l0all+" | "+a
-        print " softdihadron: L0ALL >> ",l0all
         Line('SoftDiHadron'
              , prescale = self.prescale
              , postscale = self.postscale
-             , L0DU = l0all
+             , L0DU = "L0_ALL"
              , algos = confirmation('Soft')+companion()+dihadron()+vafterburn()
              )
         setupHltFastTrackFit('Hlt1SoftDiHadronVUFitTrack')
-
