@@ -37,8 +37,8 @@ def runMDF2MBM2(buffers):
   import data;
   return _run(mdf2mbmApp(pid,pnam,buffers=buffers,input=data.Input,partitionBuffers=True),False)
 #------------------------------------------------------------------------------------------------
-def runEvtServer(buffer, partitionBuffers):
-  return _run(evtServerApp(pid,pnam,buffer=buffer,partitionBuffers=partitionBuffers))
+def runEvtServer(buffer, partitionBuffers, request='USER'):
+  return _run(evtServerApp(pid,pnam,buffer=buffer,partitionBuffers=partitionBuffers,request=request))
 #------------------------------------------------------------------------------------------------
 def runBuffer(buffer='Events', partitionBuffers=True):
   return _run(mbmInitApp(pid,pnam,flags='-s=8096 -e=64 -u=64 -i='+buffer+' -c',partitionBuffers=partitionBuffers))

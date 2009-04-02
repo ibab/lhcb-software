@@ -108,7 +108,7 @@ extern "C" int qmtest_hlt(int argc, char** argv)  {
   cout << "Starting producer ...... " << endl;
   Process* prod=new Process("Prod_0",command(),aprod,out.c_str());
   prod->start();
-  ::lib_rtl_sleep(4000);
+  ::lib_rtl_sleep(10000);
   prod->wait(Process::WAIT_BLOCK);
   delete prod;
   cout << "Producer finished work.. " << endl;
@@ -251,6 +251,8 @@ extern "C" int qmtest_event_server(int argc, char** argv)  {
   pg.start();
   ::lib_rtl_sleep(3000);
   pg.add(p[2]=new Process("EvtServ_0", command(),a2,out.c_str()));
+  pg.start();
+  ::lib_rtl_sleep(2000);
   pg.add(p[3]=new Process("NetCons_0", command(),a3,""));
   pg.add(p[4]=new Process("NetCons_1", command(),a3,out.c_str()));
   cout << "Starting processes ..... " << endl;

@@ -20,12 +20,12 @@ Parent: Started process:MBMsummary_0
 
 ======================== MBM Bufer summary for buffer "EVENT" ========================
 
- Buffer "EVENT"             Events: Produced:220000 Actual:1100000 Seen:220000 Pending:0 Max:500
-                            Space(kB):[Tot:199 Free:199] Users:[Tot:6 Max:14]
+ Buffer "EVENT"             Events: Produced:220000 Actual:1100000 Seen:220000 Pending:1 Max:500
+                            Space(kB):[Tot:199 Free:198] Users:[Tot:6 Max:14]
 
  Name            Partition Type State   Produced %prod     #seen %seen Reqs Buffer
  EvtProd_0             14d    P   *SP     220000   100                                  EVENT
- CONS_ONE              14d    C   wev                     220000   100   1   EVENT
+ CONS_ONE              14d    C    ac                     220000   100   1   EVENT
 
 ======================== MBM Bufer summary for buffer "MEP" ========================
 
@@ -37,11 +37,11 @@ Parent: Started process:MBMsummary_0
 
 ======================== MBM Bufer summary for buffer "RESULT" ========================
 
- Buffer "RESULT"            Events: Produced:220000 Actual:0 Seen:0 Pending:0 Max:100
+ Buffer "RESULT"            Events: Produced:219999 Actual:0 Seen:0 Pending:0 Max:100
                             Space(kB):[Tot:199 Free:199] Users:[Tot:5 Max:14]
 
  Name            Partition Type State   Produced %prod     #seen %seen Reqs Buffer
- PROD_ONE              14d    P   *SP     220000   100                                 RESULT
+ PROD_ONE              14d    P   *SP     219999   100                                 RESULT
 
 +++++ MBM summary finished.
 waitpid() exited: Status=1

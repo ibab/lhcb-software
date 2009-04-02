@@ -65,7 +65,7 @@ def setupApp():
   svc  = CFG.EventPersistencySvc()
   svc.CnvServices += [Configs.LHCb__RawDataCnvSvc('RawDataCnvSvc')]
   CFG.FileCatalog().Catalogs = ['xmlcatalog_file:qmTest.xml']
-  CFG.IODataManager().OutputLevel = 1  
+  CFG.IODataManager().OutputLevel = 3  
   CFG.IODataManager().AgeLimit = 1
   svc                  = CFG.EventDataSvc()
   svc.RootCLID         = 1

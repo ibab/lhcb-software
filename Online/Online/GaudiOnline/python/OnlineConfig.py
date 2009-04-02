@@ -279,10 +279,10 @@ def dataReceiverApp(partID, partName, buffer, partitionBuffers=True,algs=[]):
   return _application('NONE',evtsel='NONE',extsvc=extsvc,runable=runable,algs=algs)
 
 #------------------------------------------------------------------------------------------------
-def evtServerApp(partID, partName, buffer, partitionBuffers):
+def evtServerApp(partID, partName, buffer, partitionBuffers,request='USER'):
   "Event server application to distribute events over the network to clients."
   mepMgr               = mepManager(partID,partName,[buffer],partitionBuffers)
-  runable              = evtServerRunable(mepMgr,buffer=buffer,request='USER')
+  runable              = evtServerRunable(mepMgr,buffer=buffer,request=request)
   evtPers              = rawPersistencySvc()
   return _application('NONE','NONE',extsvc=[Configs.MonitorSvc(),mepMgr],runable=runable)
 
