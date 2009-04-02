@@ -3,7 +3,7 @@ HLT = 1
 STORAGE = 2
 MONITORING = 3
 RECONSTRUCTION = 5
-RECCTRL = 3
+RECCTRL = 6
 TOP_LOGGER = 4
 
 db_dir = '..'+os.sep+'xml'+os.sep
@@ -19,6 +19,8 @@ def nodeType(typ):
     return ('StorageControl','StorageWorker')
   elif typ == MONITORING:
     return ('MonitoringControl','MonitoringWorker')
+  elif typ == RECCTRL:
+    return ('MonitoringControlTest','MonitoringWorker')
   elif typ == RECONSTRUCTION:
     return ('ReconstructionControl','ReconstructionWorker')
   return ('','')

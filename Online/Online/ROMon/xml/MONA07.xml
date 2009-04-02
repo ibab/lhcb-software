@@ -3,7 +3,7 @@
    <Name>MONA07</Name>
    <Node name="mona0701"   type="MonitoringWorker"/>
    <Node name="mona0702"   type="MonitoringWorker"/>
-   <Node name="mona07"   type="MonitoringControl"/>
+   <Node name="mona07"     type="MonitoringControlTest"/>
   </NodeList>
 </TaskInventory>
 

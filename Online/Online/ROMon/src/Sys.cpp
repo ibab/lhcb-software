@@ -16,6 +16,7 @@
 namespace {
   struct passwd {char pw_name[16];};
   passwd* getpwuid(int) { return 0; }
+  int getpwuid_r(int uid, passwd *, char *, size_t, passwd**) { return 1; }
 }
 #define O_RDONLY _O_RDONLY
 #define _SC_PAGESIZE 1
@@ -503,7 +504,7 @@ int ROMon::read(Procset& procset, size_t max_len) {
   //static int pgSize = sysconf(_SC_PAGESIZE);
   int jiffy2second = sysconf(_SC_CLK_TCK);
   int pid, retry = 5, cnt;
-  char buff[1024], *ptr;
+  char buff[2048], pwdbuff[1024], *ptr;
   time_t now = ::time(0);
   struct dirent* dp;
   DIR *dir = 0;
@@ -527,8 +528,9 @@ int ROMon::read(Procset& procset, size_t max_len) {
           pid = ::atoi(n);
           if ( ::stat(fn_process_dir(pid),&st_buf)==0 ) {
             try {
-              struct passwd *pw = ::getpwuid(st_buf.st_uid);
-              if ( proc.read(pid) && status.read(pid) ) {
+              struct passwd pw, *ppwd;
+	      int ret = ::getpwuid_r(st_buf.st_uid,&pw,pwdbuff,sizeof(pwdbuff),&ppwd);
+              if ( 0 == ret && proc.read(pid) && status.read(pid) ) {
                 Process& p = (*pr);
 		utgid.utgid = "";
 		try {
@@ -549,7 +551,7 @@ int ROMon::read(Procset& procset, size_t max_len) {
                   p.cmd[sizeof(p.cmd)-1] = 0;
                   if ( (ptr=::strchr(p.cmd,')')) ) *ptr = 0;
                 }
-                ::strncpy(p.owner,pw->pw_name,sizeof(p.owner));
+                ::strncpy(p.owner,ppwd->pw_name,sizeof(p.owner));
                 p.owner[sizeof(p.owner)-1] = 0;
                 ::strncpy(p.utgid,utgid.utgid.empty() ? "N/A" : utgid.utgid.c_str(),sizeof(p.utgid));
                 p.utgid[sizeof(p.utgid)-1] = 0;
