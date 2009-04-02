@@ -9,6 +9,7 @@ import sys, os, glob, getopt
 usedProjects = {}
 allProjects  = []
 printAll     = False
+removeAll    = False
 allDbases    = []
 usedDbases   = []
 
@@ -17,14 +18,14 @@ usedDbases   = []
 #------------------------------------------------------------------------------
 def argChecker():
 
-    global printAll
+    global printAll,removeAll
     arguments = sys.argv[1:]
     if len(sys.argv) == 1:
         return
     
     try:
-        keys, values = getopt.getopt(arguments,'v',
-                                     ['verbose'])
+        keys, values = getopt.getopt(arguments,'vr',
+                                     ['verbose','remove'])
 
     except getopt.GetoptError:
         print 'invalid argument'
@@ -33,6 +34,10 @@ def argChecker():
     for key,value in keys:
         if key in ('-v', '--verbose'):
             printAll = True
+
+    for key,value in keys:
+        if key in ('-r', '--remove'):
+            removeAll = True
 
 #------------------------------------------------------------------------------
 # check the environment
@@ -129,8 +134,12 @@ def printProjects():
     print '====================================================================='
     unusedProjects.sort()
     for pName in unusedProjects:
-        print pName, ' versions: ', unusedProjectVersions[pName]
-
+      print pName, ' versions: ', unusedProjectVersions[pName]
+      if removeAll:
+        if not pName in ['BRUNEL','GAUSS','DAVINCI','BOOLE','LBSCRIPTS','DIRAC']:
+          for toberemove in unusedProjectVersions[pName]:
+            print 'remove ',pName,' version ',toberemove
+            os.popen('cd $MYSITEROOT ; `which install_project` -p '+pName+' -v '+toberemove+' -r')
 
 #------------------------------------------------------------------------------
 # Find database packages known to distribution area
