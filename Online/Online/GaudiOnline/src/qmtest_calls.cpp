@@ -56,15 +56,16 @@ extern "C" int pyhlt_test(int /* ac  */, char** /* av */)  {
   return 0;
 }
 
-static int collect_summary(size_t len,Process* p[]) {
+static int collect_summary(size_t len,Process* p[], bool run_summary=true) {
   const char *asum[] ={"libOnlineKernel.so", "mbm_summary",0};
   ::lib_rtl_sleep(4000);
-  Process* summary=new Process("MBMsummary_0",command(),asum);
-  summary->start();
-  summary->wait(Process::WAIT_BLOCK);
-  delete summary;
-  cout << "Summary task finished work.. " << endl;
-
+  if ( run_summary ) {
+    Process* summary=new Process("MBMsummary_0",command(),asum);
+    summary->start();
+    summary->wait(Process::WAIT_BLOCK);
+    delete summary;
+    cout << "Summary task finished work.. " << endl;
+  }
   ::lib_rtl_sleep(3000);
   for(int i=len-1; i>=0; --i) if ( p[i] ) p[i]->stop();
   ::lib_rtl_sleep(1000);
@@ -227,6 +228,40 @@ extern "C" int qmtest_write_buffer(int argc, char** argv)  {
   ::lib_rtl_sleep(15000);
   cout << "Producer finished work.. " << endl;
   return collect_summary(sizeof(p)/sizeof(p[0]),p);
+}
+//
+//   Test of event server application for event displays
+//
+extern "C" int qmtest_event_server(int argc, char** argv)  {
+  string groot = ::getenv("GAUDIONLINEROOT");
+  string main_opts = "-main="+groot+"/options/Main.opts";
+  string out = argc>1 ? argv[1] : "/dev/null";
+  string host = RTL::nodeNameShort();
+  Process* p[21] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  ProcessGroup pg;
+  const char *a0[] ={"libGaudiOnline.so", "OnlineStart", "libOnlineKernel.so", "tan_nameserver","-a","-tcp","-d",0};
+  const char *a1[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runBuffer(buffer='Events')");
+  const char *a2[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runEvtServer('Events',True,'ALL')");
+  const char *a3[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runNetCons('EvtServ_0',1,0.0005)");
+  const char *aprod[]=CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runMDF2MBMFile(buffers=['Events'],fname='mdfData_0.dat')");
+
+  Process::setDebug(true);  
+  pg.add(p[0]=new Process("TanServ_0",command(),a0,out.c_str()));
+  pg.add(p[1]=new Process("Events_0", command(),a1,out.c_str()));
+  pg.start();
+  ::lib_rtl_sleep(3000);
+  pg.add(p[2]=new Process("EvtServ_0", command(),a2,out.c_str()));
+  pg.add(p[3]=new Process("NetCons_0", command(),a3,""));
+  pg.add(p[4]=new Process("NetCons_1", command(),a3,out.c_str()));
+  cout << "Starting processes ..... " << endl;
+  pg.start();
+  ::lib_rtl_sleep(3000);
+  cout << "Starting producer ...... " << endl;
+  pg.add(p[5]=new Process("Prod_0",command(),aprod,out.c_str()));
+  pg.start();
+  ::lib_rtl_sleep(15000);
+  cout << "Producer finished work.. " << endl;
+  return collect_summary(sizeof(p)/sizeof(p[0]),p,false);
 }
 
 extern "C" int pyhlt_test_run(int /* ac  */, char** /* av */)  {
