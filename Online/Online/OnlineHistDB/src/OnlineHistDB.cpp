@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.38 2009-03-23 16:44:35 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.39 2009-04-02 10:26:20 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -325,12 +325,25 @@ bool OnlineHistDB::declareFitFunction(std::string Name,
                                       int Npars,
                                       std::vector<std::string> *parnames,
                                       bool mustInit,
-                                      std::string &doc) {
+                                      std::string &doc,
+                                      std::vector<float> *parInitv,
+                                      std::vector<std::string> *inPars,
+                                      std::vector<float> *inDefv ) {
   bool out=false;
+  int Nin=0;
   if(Npars>0) {
     if (parnames == NULL )
       return out;
     if ((int)parnames->size() != Npars )
+      return out;
+    if (!parInitv) return out;
+    if ((int)parInitv->size() != Npars ) 
+      return out;
+  }
+  if(inPars) {
+    Nin=inPars->size();
+    if (!inDefv) return out;
+    if ((int)inDefv->size() != Nin ) 
       return out;
   }
 
@@ -350,7 +363,24 @@ bool OnlineHistDB::declareFitFunction(std::string Name,
   if(!doc.empty()) {
     statement<< ",theDoc => '"<<doc<<"'";
   }
-  statement<< "); END;";
+  if (Nin >0) {
+    statement<< ",theNin => '"<<Nin<<"'";
+  }
+  statement<< ",theDefVals=>THRESHOLDS(";
+  bool first=true;
+  std::vector<float>::iterator idv;
+  for (idv = parInitv->begin() ; idv != parInitv->end(); idv++) {
+    if (!first) statement<< ",";
+    statement<< *idv;
+    first=false;
+  }
+  for (idv = inDefv->begin() ; idv != inDefv->end(); idv++) {
+    if (!first) statement<< ",";
+    statement<< *idv;
+    first=false;
+  }
+  
+  statement<< ") ); END;";
   
   m_StmtMethod = "OnlineHistDB::declareFitFunction";
   OCIStmt *stmt=NULL;

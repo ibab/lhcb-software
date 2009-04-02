@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.27 2009-03-23 16:44:35 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.28 2009-04-02 10:26:20 ggiacomo Exp $
 #ifndef ONLINEHISTDB_H
 #define ONLINEHISTDB_H 1
 /** @class  OnlineHistDB OnlineHistDB.h OnlineHistDB/OnlineHistDB.h
@@ -91,7 +91,10 @@ class  OnlineHistDB : public OnlineHistDBEnv,
                           int Npars,
                           std::vector<std::string> *parnames,
                           bool mustInit,
-                          std::string &doc);
+                          std::string &doc,
+                          std::vector<float> *parInitv = NULL,
+                          std::vector<std::string> *inPars =NULL ,
+                          std::vector<float> *inDefv = NULL );
   std::string getFitFunction(int code);
   /// gets the algorithm list version
   int getAlgListID() const {return m_AlgListID;}
