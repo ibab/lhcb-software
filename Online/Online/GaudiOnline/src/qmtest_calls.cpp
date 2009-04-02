@@ -67,9 +67,11 @@ static int collect_summary(size_t len,Process* p[], bool run_summary=true) {
     cout << "Summary task finished work.. " << endl;
   }
   ::lib_rtl_sleep(3000);
-  for(int i=len-1; i>=0; --i) if ( p[i] ) p[i]->stop();
-  ::lib_rtl_sleep(1000);
-  for(int i=len-1; i>=0; --i) if ( p[i] ) p[i]->wait(Process::WAIT_BLOCK);
+  for(int i=len-1; i>=0; --i) if ( p[i] )   {
+    p[i]->stop();
+    ::lib_rtl_sleep(500);
+    p[i]->wait(Process::WAIT_BLOCK);
+  }
   cout << "All processes finished work.. " << endl;
   ::lib_rtl_sleep(1000);
   return 0;

@@ -37,14 +37,14 @@ ApplicationMgr       INFO Application Manager Started successfully
 Starting producer ......
 Parent: Started process:Prod_0 output redirected to:/dev/null
 EventPersistenc...   INFO Added successfully Conversion service:RawDataCnvSvc
-StoreExplorerAlg     INFO ========= /Event[0x1fb49a0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x1fb47f0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 StoreExplorerAlg     INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 StoreExplorerAlg     INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
 Producer finished work..
+waitpid() exited: Status=0
+waitpid() exited: Status=0
 NetCons_0           ERROR RTL:Handled signal: 15 [SIGTERM] Old action:(nil)
-waitpid() exited: Status=0
-waitpid() exited: Status=0
 waitpid() exited: Status=0
 waitpid() exited: Status=0
 waitpid() exited: Status=0

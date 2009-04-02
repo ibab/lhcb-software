@@ -12,8 +12,6 @@ Producer finished work..
 Child: Starting process:MBMsummary_0
 Parent: Started process:MBMsummary_0
 +++++ MBM buffer section sucessfully mapped.
-RTL:        9 : Bad file descriptor
-                Error mapping control section for Events_LHCb.Status=0
 
 ======================== MBM Bufer summary for buffer "MEP" ========================
 
