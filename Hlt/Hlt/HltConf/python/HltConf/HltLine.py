@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.45 2009-03-31 11:41:20 graven Exp $ 
+# $Id: HltLine.py,v 1.46 2009-04-02 09:24:35 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,11 +54,13 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.45 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.46 $ "
 # =============================================================================
 
-__all__ = ( 'Hlt1Line'     ,  ## the Hlt line itself 
-            'Hlt1Member'   ,  ## the representation of the line member 
+__all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
+            'Hlt2Line'     ,  ## The Hlt2 line itself
+            'Hlt1Member'   ,  ## the representation of an Hlt1 line member 
+            'Hlt2Member'   ,  ## the representation of an Hlt2 line member 
             'hlt1Lines'    ,  ## list of all created lines 
             'hlt1Decisions',  ## all decisions for created alleys 
             'hlt1Props'    ,  ## list of all major properties for inspection
@@ -287,7 +289,7 @@ def _add_to_hlt2_lines_( line ) :
     _hlt_2_lines__.append ( line ) 
         
 # =============================================================================
-## the list of valid members of Hlt1 sequencer 
+## the list of possible Hlt1Members types of an Hlt1Line
 _types_ = { TrackUpgrade  : 'TU'  
           , TrackMatch    : 'TM'  
           , TrackFilter   : 'TF'  
@@ -476,6 +478,12 @@ class bindMembers (object) :
                 self._members += [ alg ]
                 self._outputsel = alg.OutputSelection
                 continue
+
+            # if Hlt2Member, ask it to creats a configurable instance for this line..
+            if type(alg) is Hlt2Member:
+                self._members += [ alg.createConfigurable( line, **alg.Args ) ]
+                continue
+
 
             # if not Hlt1Member, blindly copy -- not much else we can do
             if type(alg) is not Hlt1Member:
@@ -673,9 +681,9 @@ class Hlt1Member ( object ) :
         ## clone the arguments
         line = deepcopy ( line )
         args = deepcopy ( args ) 
-        name = memberName( self, line )
+        _name = self.name( line )
         # see if alg has any special Tool requests...
-        instance =  self.Type( name, **args)
+        instance =  self.Type( _name, **args)
         for tool in self.Tools : tool.createConfigurable( instance )
         return instance
 
@@ -984,6 +992,90 @@ class Hlt1Line(object):
                           algos     = __algos      , **__args )
     
     
+# =============================================================================
+## @class Hlt2Member
+#  Simple class to represent the member of Hlt2 line
+#  Only the specific algorithm types are allowed to be "members" of Hlt lines
+#  Each such algorithm has a short "type"
+#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+#  @date   2008-08-06  
+class Hlt2Member ( object ) :
+    """
+    Simple class to represent the member of Hlt2 line
+    Only the specific algorithm types are allowed to be 'members' of Hlt lines
+    Each such algorithm has a short 'type'
+    
+    @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+    @date   2008-08-06
+    
+    >>> m1 = Member ( Type , 'Velo'   , RecoName = 'Velo' ) # 'HltTrackUpgrade'
+    
+    """
+    __slots__ = ( 'Type' , 'Name' , 'Args', 'Tools' )
+    
+    ### The standard constructor to create the  Hlt1Member instance:
+    def __init__ ( self       ,    ## ...
+                   Type       ,    ## type of members
+                   name  = '' ,    ## the specific part of the algorithm name 
+                   tools = [] ,    ## list of tool options for this algorithm
+                   **Args     ) :  ## arguments 
+        """
+        The standard constructor to create the  Hlt1Member instance:
+        >>> m1 = Hlt2Member ( FilterDesktop , 'Filter', Code = '...', InputLocations = ... ,
+        """
+        from Configurables import FilterDesktop, CombineParticles, PhysDesktop
+        ## (0) verify input
+        # Type must be a (configurable) class name, and only
+        # a limited set is allowed (which must be DVAlgorithms...)
+        if Type not in [ FilterDesktop, CombineParticles ] :
+            raise AttributeError, "The type  %s is not known for Hlt2Member"%Type
+
+
+        ## (1) "clone" all agruments
+        Type  = deepcopy ( Type  )
+        name  = deepcopy ( name  )
+        tools = deepcopy ( tools )
+        Args  = deepcopy ( Args  )
+        ##
+        Name = name
+        self.Type = Type 
+        self.Name = Name 
+        self.Args = Args
+        self.Tools = tools
+        # intercept special keys...
+        if 'InputLocations' in Args :
+            #TODO: must check no PhysDesktop explicitly specified... if so, add to it...
+            self.Tools.append( Hlt1Tool( PhysDesktop, InputLocations = Args.pop('InputLocations') )) 
+        for key in Args :
+            if  key not in self.Type.__slots__  :
+                raise AttributeError, "The key %s is not allowed"%key
+        
+
+    def subtype( self )        :
+        " Return the 'subtype' of the member "
+        return self.Type.__name__
+    def name   ( self , line ) :
+        " Return the full name of the member "
+        return memberName ( self , line, level = 'Hlt2' ) 
+    def id     ( self )        :
+        " Return the ID of the member "        
+        return self.subtype() + self.Name
+    def subname( self )        :
+        " Return the specific part of the name "        
+        return self.id()
+    def createConfigurable( self, line, **args ) :
+        """
+        Create the configurable, and, if needed, deal with tool configuration
+        """
+        ## clone the arguments
+        line = deepcopy ( line )
+        args = deepcopy ( args ) 
+        _name = self.name( line )
+        # see if alg has any special Tool requests...
+        instance =  self.Type( _name, **args)
+        for tool in self.Tools : tool.createConfigurable( instance )
+        return instance
+
 # ============================================================================
 ## @class Hl2Line
 #  The major class which represent the Hlt2 Line, the sequence.
@@ -1082,7 +1174,10 @@ class Hlt2Line(object):
 
         #start to contruct the sequence        
         line = self.subname()
-        
+
+        # bind members to line
+        _boundMembers = bindMembers( line, algos )
+        _members = _boundMembers.members()
         
         # create the line configurable
         # NOTE: even if pre/postscale = 1, we want the scaler, as we may want to clone configurations
@@ -1095,15 +1190,15 @@ class Hlt2Line(object):
         if L0DU : mdict.update( { 'L0DU' : L0Filter   ( l0entryName  ( line,'Hlt2' ) , Code = self._L0DU )  } )
         ## TODO: in case of HLT, we have a dependency... dangerous, as things become order dependent...
         if HLT  : mdict.update( { 'HLT'  : HDRFilter  ( hltentryName ( line,'Hlt2' ) , Code = self._HLT  ) } )
-        if self._algos : 
+        if _members : 
             # TODO: if len(_members) = 1, we don't need a sequencer...
             # TODO: but what about the name of the algorithm?
             #if len(_members) == 1 : 
             #    mdict.update( { 'Filter1' : _members[0] })
             #else :
-            members = self._algos + [ HltCopyParticleSelection( 'Hlt2%sDecision'%self._name
-                                                              , InputSelection = 'TES:/Event/HLT/Hlt2Sel%s/Particles'%self._name
-                                                              , OutputSelection = "Hlt2%sDecision"%self._name) ]
+            members = _members + [ HltCopyParticleSelection( 'Hlt2%sDecision'%self._name
+                                                           , InputSelection = 'TES:/Event/HLT/Hlt2Sel%s/Particles'%self._name
+                                                           , OutputSelection = "Hlt2%sDecision"%self._name) ]
             mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line,'Hlt2' ) , Members = members ) })
         # final cloning of all parameters:
         __mdict = deepcopy ( mdict ) 
@@ -1166,7 +1261,6 @@ class Hlt2Line(object):
         are updated accordingly.
         
         """
-        raise RuntimeError, 'please make sure clone gets implemented!....'
         # add some python magic to allow reasonable definition of the deepcopy 
         # of a member function bound to an object instance.
         # see http://bugs.python.org/issue1515 for more info...
@@ -1208,12 +1302,13 @@ class Hlt2Line(object):
             del copy._deepcopy_dispatch[types.MethodType]
 
         # Check the parameters, reponsible for reconfiguration:
-        # TODO...
-        #for alg in [ i for i in __algos if type(i) is Hlt1Member ] :
-        #    #id = alg.id()
-        #    #if id in _other :
-        #         #alg.Args.update( _other [id] ) 
-        #         #del _other [id]
+        print 'clone : got' + str(_other)
+        for alg in [ i for i in __algos if type(i) is Hlt2Member ] :
+            print 'clone : checking ' + alg.id()
+            id = alg.id()
+            if id in _other :
+                 alg.Args.update( _other [id] ) 
+                 del _other [id]
 
         # unknown parameters/arguments 
         if _other :
@@ -1403,13 +1498,23 @@ Sequencer      . __str__ = __enroll__
 
 # =============================================================================
 ## The simple representation of Hlt1Line
-def __line_repr__ ( self , *args ) :
+def __line1_repr__ ( self , *args ) :
     """
     The simple representation of Hlt1Line
     """
     return "Hlt1Line('%s')" % self.name()
 
-Hlt1Line . __repr__ = __line_repr__ 
+Hlt1Line . __repr__ = __line1_repr__ 
+
+# =============================================================================
+## The simple representation of Hlt1Line
+def __line2_repr__ ( self , *args ) :
+    """
+    The simple representation of Hlt1Line
+    """
+    return "Hlt2Line('%s')" % self.name()
+
+Hlt2Line . __repr__ = __line2_repr__ 
 
 # =============================================================================
 ## some embedded action

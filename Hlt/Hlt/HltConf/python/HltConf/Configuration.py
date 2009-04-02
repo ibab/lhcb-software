@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.59 2009-03-31 12:37:01 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.60 2009-04-02 09:24:35 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -47,6 +47,7 @@ class HltConf(LHCbConfigurableUser):
                 , "Verbose"                    : False # print the generated Hlt sequence
                 , "LumiBankKillerAcceptFraction" : 0 # fraction of lumi-only events where raw event is stripped down
                 , "ActiveHlt1Lines"            : [] # list of lines to be added
+                , "ActiveHlt2Lines"            : [] # list of lines to be added
                 , "HistogrammingLevel"         : 'None' # or 'Line'
                 }   
                 
@@ -216,19 +217,23 @@ class HltConf(LHCbConfigurableUser):
         Line('Global', HLT = 'HLT_DECISION' )
 
         activeLines = self.getProp('ActiveHlt1Lines') 
-        lines = [ i for i in hlt1Lines() if ( not activeLines or i.name() in activeLines ) ]
+        lines1 = [ i for i in hlt1Lines() if ( not activeLines or i.name() in activeLines ) ]
         print '# List of configured Hlt1Lines : ' + str(hlt1Lines()) 
-        print '# List of Hlt1Lines added to Hlt1 : ' + str(lines) 
-        Sequence('Hlt1').Members = [ i.sequencer() for i in lines ] # note : should verify order (?) -- global should be last hlt1line! 
+        print '# List of Hlt1Lines added to Hlt1 : ' + str(lines1) 
+        Sequence('Hlt1').Members = [ i.configurable() for i in lines1 ] # note : should verify order (?) -- global should be last hlt1line! 
 
         ### TEMPORARY HACK until HltSelectionsDecision completely obsolete...
         print '# List of configured Hlt2Lines : ' + str(hlt2Lines()) 
         from Configurables       import HltSelectionsDecision
         HltSelectionsDecision('Hlt2Decision').Ignore = [ i.name() for i in hlt2Lines() ]
-        print ' setting Hlt2Decision.Ignore = ' + str([ i.name() for i in hlt2Lines() ])
+        print '# Hlt2Decision.Ignore = ' + str(HltSelectionsDecision('Hlt2Decision').Ignore)
+        activeLines = self.getProp('ActiveHlt2Lines') 
+        lines2 = [ i for i in hlt2Lines() if ( not activeLines or i.name() in activeLines ) ]
+        Sequence('Hlt2').Members += [ i.configurable() for i in lines2 ] 
+        print Sequence('Hlt2').Members
 
 
-        self.configureHltMonitoring(lines)
+        self.configureHltMonitoring(lines1)
         self.configureRoutingBits()
         self.configureVertexPersistence()
         self.configureANNSelections()
