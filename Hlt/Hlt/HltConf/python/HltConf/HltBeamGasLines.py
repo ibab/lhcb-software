@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltBeamGasLines.py,v 1.3 2009-03-25 08:38:53 graven Exp $
+# $Id: HltBeamGasLines.py,v 1.4 2009-04-02 09:25:22 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of BeamGas Lines
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Jaap Panman jaap.panman@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
