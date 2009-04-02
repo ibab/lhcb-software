@@ -1,8 +1,8 @@
-# --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_v36r2/Sim/Gauss/options/Gauss-2008.py'
-# --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_v36r2/Sim/Gauss/options/Gauss.opts'
-# --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_v36r2/Sim/Gauss/options/Common.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v26r1/GaudiConf/options/units.opts'
-# <-- End of file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v26r1/GaudiConf/options/units.opts'
+# --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/Gauss-2008.py'
+# --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/Gauss.opts'
+# --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/Common.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Thu/LHCB/LHCB_v26r3/GaudiConf/options/units.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Thu/LHCB/LHCB_v26r3/GaudiConf/options/units.opts'
 # RndmGenSvc.Engine.SetSingleton   = true;
 # ApplicationMgr.EvtSel  = "NONE";
 # MessageSvc.OutputLevel         = 3;
@@ -12,7 +12,7 @@
 # MessageSvc.Format = "% F%24W%S%7W%R%T %0W%M";
 # EventDataSvc.ForceLeaves         = true;
 # EventPersistencySvc.CnvServices  = [];
-# --> Including file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v26r1/GaudiConf/options/SimDicts.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Thu/LHCB/LHCB_v26r3/GaudiConf/options/SimDicts.opts'
 # --> Including file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v20r4/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # ApplicationMgr.ExtSvc    += { "Gaudi::MultiFileCatalog/FileCatalog",                              "Gaudi::IODataManager/IODataManager",                              "PoolDbCacheSvc/PoolDbCacheSvc",                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"                            };
 # EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" };
@@ -35,11 +35,11 @@
 # PoolRootKeyEvtCnvSvc.EnableIncident  =    1;
 # PoolRootTreeEvtCnvSvc.EnableIncident =    1;
 # <-- End of file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v20r4/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
-Gauss-5ev-20090331
+Gauss-5ev-20090402
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Gauss version v36r2
-                                          running on lxplus217.cern.ch on Tue Mar 31 18:38:03 2009
+                                          running on lxplus213.cern.ch on Thu Apr  2 15:01:46 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersistencySvc     INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
@@ -56,7 +56,7 @@ ChronoStatSvc              INFO  Number of skipped events for MemStat-1
                             WWW : http://cern.ch/geant4
 *************************************************************
 
-SimulationSvc              INFO Loading simulation attributes file "/afs/cern.ch/user/s/silviam/cmtuser/Gauss_v36r2/Sim/Gauss/xml/Simulation.xml" ...
+SimulationSvc              INFO Loading simulation attributes file "/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/xml/Simulation.xml" ...
 GiGa.ModularPL             INFO GiGaPhysListModular initializing
 GiGa.ModularPL             INFO Registered GiGa.ModularPL.EmOpt1Physics
 GiGa.ModularPL             INFO Registered GiGa.ModularPL.EmExtraPhysics
@@ -71,11 +71,11 @@ GiGa                       INFO Used Physics List Object is GiGaPhysListModular/
 GiGa                       INFO Stacking Action Object is not required to be loaded
 COOLConfSvc                INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc                INFO CORAL Connection Retrial Time-Out set to 900s
-DDDB                       INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r2/db/DDDB.db/DDDB"
+DDDB                       INFO Connected to database "sqlite_file:/afs/cern.ch/user/m/marcocle/public/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
 DDDB                       INFO Using TAG "head-20090112"
 EventPersistencySvc        INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' , 'GiGaKine' ]
 EventClockSvc.EventTi...   INFO Event times generated from 0 with steps of 25
-SIMCOND                    INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r2/db/SIMCOND.db/SIMCOND"
+SIMCOND                    INFO Connected to database "sqlite_file:/afs/cern.ch/user/m/marcocle/public/DBASE/Det/SQLDDDB/db/SIMCOND.db/SIMCOND"
 SIMCOND                    INFO Using TAG "sim-20090112"
 DeRichSystem               INFO Update triggered for HPD numbering maps
 DeRichSystem               INFO Built mappings for  7 L1 and 196 HPDs in Rich1
@@ -90,7 +90,7 @@ ParticlePropertySvc        INFO Properties have beed redefined for 4 particles :
 GiGa                       INFO Used Tracking Action Object is GiGaTrackActionSequence/GiGa.TrackSeq
 GiGa                       INFO Used  Stepping Action Object is GiGaStepActionSequence/GiGa.StepSeq
 HistogramPersistencySvc    INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
-RootHistSvc                INFO Writing ROOT histograms to: Gauss-5ev-20090331-histos.root
+RootHistSvc                INFO Writing ROOT histograms to: Gauss-5ev-20090402-histos.root
 HistogramPersistencySvc    INFO Added successfully Conversion service:RootHistSvc
 HistogramDataSvc           INFO Added stream file:/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r0/data/gausscalo.root as GaussCalo
 GiGa                       INFO Used  Event Action Object is GiGaEventActionSequence/GiGa.EventSeq
@@ -101,7 +101,7 @@ RndmGenSvc.Engine          INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine          INFO Current Seed:1234567 Luxury:3
 RndmGenSvc.Engine          INFO This is the GEANT4 engine!
 RndmGenSvc                 INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.TIMER        INFO This machine has a speed about   1.82 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER        INFO This machine has a speed about   2.27 times the speed of a 2.8 GHz Xeon.
 Gauss                      INFO Member list: GaudiSequencer/Generator, GaudiSequencer/Simulation
 ToolSvc.SequencerTime...   INFO This machine has a speed about   2.32 times the speed of a 2.8 GHz Xeon.
 Generator                  INFO Member list: GenInit/GaussGen, Generation, GaudiSequencer/GenMonitor
@@ -123,7 +123,7 @@ ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'RealHelOne':1
 ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'PolarizedCharmonium':False
 ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'PolarizedLambdad':False
 ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'KeepTempEvtFile':False
-ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'UserDecayFile':/afs/cern.ch/lhcb/software/releases/DBASE/Gen/DecFiles/v16r1/dkfiles/minbias.dec
+ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'UserDecayFile':/afs/cern.ch/user/m/marcocle/public/DBASE/Gen/DecFiles/v16r1/dkfiles/minbias.dec
 ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'DecayFile':/afs/cern.ch/lhcb/software/DEV/GAUSS/Gen/DecFiles/v17r0/dkfiles/DECAY.DEC
 ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'ContextService':AlgContextSvc
 ToolSvc.EvtGenDecay       DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
@@ -152,30 +152,7 @@ EvtGen:Storing known decay models
 EvtGen:Main decay file name  :/afs/cern.ch/lhcb/software/DEV/GAUSS/Gen/DecFiles/v17r0/dkfiles/DECAY.DEC
 EvtGen:PDT table file name   :tempPdlFile.txt
 EvtGen:Initializing RadCorr=PHOTOS
-EvtGen:No RadCorr engine given in EvtGen::EvtGen constructor, will use default EvtPHOTOS.
 EvtGen:In readDecayFile, reading:/afs/cern.ch/lhcb/software/DEV/GAUSS/Gen/DecFiles/v17r0/dkfiles/DECAY.DEC
-EvtGen:As requested, PHOTOS will be turned on.
-EvtGen:VSS_BMIXCPT will generate mixing and CPT/CP effects in mixing:
-
-    Upsilon(4S) --> B0 + anti-B0
-
-using parameters:
-
-  delta(m)  = 0.502 hbar/ps
-  _freq     = 1.67449 hbar/mm
-  dgog      = 0
-  dGamma    = 0 hbar/mm
-  q/p       = (1,0)
-  z         = (0,0)
-  tau       = 1.53 ps
-  x         = 0.76806
- chi(B0->B0bar) = 0.185518
- chi(B0bar->B0) = 0.185518
- Af         = (1,0)
- Abarf      = (0,0)
- Afbar      = (0,0)
- Abarfbar   = (1,0)
-
 EvtGen:Warning, sum of branching fractions for anti-B0 is 0.9977
 EvtGen:rescaled to one!
 EvtGen:Warning, sum of branching fractions for B0 is 0.9977
@@ -184,29 +161,10 @@ EvtGen:Warning, sum of branching fractions for anti-B_s0 is 1.00087
 EvtGen:rescaled to one!
 EvtGen:Warning, sum of branching fractions for B_s0 is 1.00087
 EvtGen:rescaled to one!
-EvtGen:Redefined Partial wave for D_1+ to D*+ pi0 (2)
-EvtGen:Redefined Partial wave for D_1+ to D*0 pi+ (2)
-EvtGen:Redefined Partial wave for D_1- to D*- pi0 (2)
-EvtGen:Redefined Partial wave for D_1- to anti-D*0 pi- (2)
-EvtGen:Redefined Partial wave for D_10 to D*0 pi0 (2)
-EvtGen:Redefined Partial wave for D_10 to D*+ pi- (2)
-EvtGen:Redefined Partial wave for anti-D_10 to anti-D*0 pi0 (2)
-EvtGen:Redefined Partial wave for anti-D_10 to D*- pi+ (2)
-EvtGen:Redefined Partial wave for D_2*+ to D*+ pi0 (2)
-EvtGen:Redefined Partial wave for D_2*+ to D*0 pi+ (2)
-EvtGen:Redefined Partial wave for D_2*- to D*- pi0 (2)
-EvtGen:Redefined Partial wave for D_2*- to anti-D*0 pi- (2)
-EvtGen:Redefined Partial wave for D_2*0 to D*0 pi0 (2)
-EvtGen:Redefined Partial wave for D_2*0 to D*+ pi- (2)
-EvtGen:Redefined Partial wave for anti-D_2*0 to anti-D*0 pi0 (2)
-EvtGen:Redefined Partial wave for anti-D_2*0 to D*- pi+ (2)
 EvtGen:Warning, sum of branching fractions for J/psi is 0.99771
 EvtGen:rescaled to one!
-EvtGen:Given allowed decays, resetting minMass omega(1650) 0 to 0.27914
-EvtGen:Given allowed decays, resetting minMass phi(1680) 0 to 0.27914
 EvtGen:Done initializing EvtGen
-EvtGen:In readDecayFile, reading:/afs/cern.ch/lhcb/software/releases/DBASE/Gen/DecFiles/v16r1/dkfiles/minbias.dec
-EvtGen:Reading /afs/cern.ch/lhcb/software/releases/DBASE/Gen/DecFiles/v16r1/dkfiles/minbias.dec to override decay table.
+EvtGen:In readDecayFile, reading:/afs/cern.ch/user/m/marcocle/public/DBASE/Gen/DecFiles/v16r1/dkfiles/minbias.dec
 EvtGen:Will initialize Pythia.
 1
  ******************************************************************************
@@ -301,6 +259,8 @@ Generation.MinimumBia...   INFO Vertical crossing angle (microradian): 0
 Generation.MinimumBia...   INFO Horizontal crossing angle (microradian): 285
  Warning: requested subprocess 484 has vanishing cross-section.
  Process switched off!
+ Warning: requested subprocess 485 has vanishing cross-section.
+ Process switched off!
 Generation.BeamSpotSm...   INFO Smearing of interaction point with Gaussian distribution
 Generation.BeamSpotSm...   INFO  Z primary = 0 mm
 Generation.BeamSpotSm...   INFO  time of interaction vs T0 of IP is 0 ns
@@ -333,7 +293,7 @@ OTHitMonitor.MCPartic...   INFO            Beta * gamma cut : 0 < beta*gamma
 OTHitMonitor.MCPartic...   INFO            Eta cut          : -1.79769e+308 < P < 1.79769e+308
 EventPersistencySvc        INFO Added successfully Conversion service:PoolRootEvtCnvSvc
 EventPersistencySvc        INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
-GaussTape                  INFO Data source: EventDataSvc output: DATAFILE='PFN:Gauss-5ev-20090331.sim' TYP='POOL_ROOTTREE' OPT='RECREATE'
+GaussTape                  INFO Data source: EventDataSvc output: DATAFILE='PFN:Gauss-5ev-20090402.sim' TYP='POOL_ROOTTREE' OPT='RECREATE'
 EventLoopMgr            WARNING Unable to locate service "EventSelector"
 EventLoopMgr            WARNING No events will be processed from external input.
 ApplicationMgr             INFO Application Manager Initialized successfully
@@ -374,136 +334,142 @@ GaussGen                   INFO Evt 1,  Run 1082,  Nr. in job = 1 with seeds [10
  *                                                                              *
  ********************************************************************************
 EvtGen:This is the current decay chain
-This top particle is pi0
-pi0 -> gamma gamma
+This top particle is pi0 0.134977 (43.4193,-0.169344,-0.481838,43.4161)
+pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is eta'
-eta' -> rho0 gamma
-     rho0 -> pi+ pi-
+This top particle is eta' 0.957739 (52.5564,1.91767,1.00823,52.503)
+eta' -> rho0 gamma 0.804929 3 0 2
+     rho0 -> pi+ pi- 0.13957 1 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho+
-rho+ -> pi+ pi0
-     pi0 -> gamma gamma
+This top particle is rho+ 0.835135 (159.049,5.03917,1.94002,158.955)
+rho+ -> pi+ pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 6.58545e-10 2 6.58545e-10 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is omega
-omega -> pi- pi+ pi0
-     pi0 -> gamma gamma
+This top particle is omega 0.748185 (5.5801,-0.0515845,0.396007,5.51527)
+omega -> pi- pi+ pi0 0.13957 1 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is K0
-K0 -> K_L0
+This top particle is K0 0.497672 (1.16532,-0.0962543,-0.691148,0.789516)
+K0 -> K_L0 0.497672 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is anti-K0
-anti-K0 -> K_L0
+This top particle is anti-K0 0.497672 (2.55064,0.0705109,0.154928,2.49582)
+anti-K0 -> K_L0 0.497672 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho0
-rho0 -> pi+ pi-
+This top particle is rho0 0.772875 (3.57982,0.0272494,0.670693,3.43033)
+rho0 -> pi+ pi- 0.13957 1 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is omega
-omega -> pi- pi+ pi0
-     pi0 -> gamma gamma
+This top particle is omega 0.840762 (1.36004,-0.0802374,-0.206251,-1.04587)
+omega -> pi- pi+ pi0 0.13957 1 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is eta
-eta -> gamma gamma
+This top particle is eta 0.5473 (0.845321,0.517971,-0.352809,-0.149204)
+eta -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho+
-rho+ -> pi+ pi0
-     pi0 -> gamma gamma
+This top particle is rho+ 0.848421 (2.6467,0.224387,0.127139,-2.49373)
+rho+ -> pi+ pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 4.65661e-10 2 4.65661e-10 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho-
-rho- -> pi- pi0
-     pi0 -> gamma gamma
+This top particle is rho- 0.778376 (20.0687,-0.286877,0.768596,-20.0368)
+rho- -> pi- pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho+
-rho+ -> pi+ pi0
-     pi0 -> gamma gamma
+This top particle is rho+ 0.696464 (14.9425,0.0929009,-0.526152,-14.9167)
+rho+ -> pi+ pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 1.04125e-09 2 1.04125e-09 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is K0
-K0 -> K_L0
+This top particle is K0 0.497672 (16.2615,-0.163539,-0.0761691,-16.2528)
+K0 -> K_L0 0.497672 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is pi0
-pi0 -> gamma gamma
+This top particle is pi0 0.134977 (278.673,0.259394,0.0844323,-278.672)
+pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is omega
-omega -> pi- pi+ pi0
-     pi0 -> gamma gamma
+This top particle is omega 0.781359 (26.8817,-0.476589,0.354689,26.8638)
+omega -> pi- pi+ pi0 0.13957 1 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 6.58545e-10 2 6.58545e-10 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is pi0
-pi0 -> gamma gamma
+This top particle is pi0 0.134977 (9.67263,-0.374191,0.299669,9.6598)
+pi0 -> gamma gamma 6.58545e-10 2 6.58545e-10 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is pi0
-pi0 -> gamma gamma
+This top particle is pi0 0.134977 (13.9229,-0.601388,-1.99617,13.7653)
+pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho0
-rho0 -> pi+ pi-
+This top particle is rho0 0.837194 (2.38375,-0.307331,0.0404844,2.21026)
+rho0 -> pi+ pi- 0.13957 1 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho0
-rho0 -> pi+ pi-
+This top particle is rho0 0.714533 (0.962103,0.273908,0.0414013,0.581675)
+rho0 -> pi+ pi- 0.13957 1 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho-
-rho- -> pi- pi0
-     pi0 -> gamma gamma
+This top particle is rho- 0.494448 (0.850426,0.298066,0.542956,0.308383)
+rho- -> pi- pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho+
-rho+ -> pi+ pi0
-     pi0 -> gamma gamma
+This top particle is rho+ 0.771755 (1.00014,-0.390417,-0.320141,-0.386987)
+rho+ -> pi+ pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 4.65661e-10 2 4.65661e-10 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is K*0
-K*0 -> K+ pi- gamma
+This top particle is K*0 0.997335 (2.97606,0.0877965,0.310206,-2.78538)
+K*0 -> K+ pi- gamma 0.493677 1 0.13957 1 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is eta'
-eta' -> rho0 gamma
-     rho0 -> pi+ pi-
+This top particle is eta' 0.957558 (2.64107,-0.262699,0.196238,-2.43943)
+eta' -> pi+ pi- eta 0.13957 1 0.13957 1 0.5473 1
+     eta -> pi0 pi0 pi0 0.134977 1 0.134977 1 0.134977 1
+          pi0 -> e+ e- gamma 0.000510999 2 0.000510999 2 0 2
+          pi0 -> gamma gamma 0 2 0 2
+          pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho+
-rho+ -> pi+ pi0
-     pi0 -> gamma gamma
+This top particle is rho+ 0.72859 (3.36494,-0.422578,-0.180057,-3.25284)
+rho+ -> pi+ pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is omega
-omega -> pi- pi+ pi0
-     pi0 -> gamma gamma
+This top particle is omega 0.792296 (11.2614,-1.06934,-0.0732989,-11.1822)
+omega -> pi- pi+ pi0 0.13957 1 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is eta
-eta -> gamma gamma
+This top particle is eta 0.5473 (17.7782,-0.757427,0.178489,-17.7528)
+eta -> pi0 pi0 pi0 0.134977 1 0.134977 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
+     pi0 -> gamma gamma 9.31323e-10 2 9.31323e-10 2
+     pi0 -> gamma gamma 6.16012e-10 2 6.16012e-10 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is pi0
-pi0 -> gamma gamma
+This top particle is pi0 0.134977 (17.0067,-1.26223,-1.35182,-16.9053)
+pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho-
-rho- -> pi- pi0
-     pi0 -> gamma gamma
+This top particle is rho- 0.762654 (92.5106,0.30956,-0.674577,-92.5044)
+rho- -> pi- pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 5.70316e-10 2 5.70316e-10 2
 EvtGen:End of decay chain.
 GaussSim                   INFO Evt 1,  Run 1082,  Nr. in job = 1 with seeds [1082, 1, 786365161, 0]
-MagneticFieldSvc.MagT...   INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r2/cdf/field048.c1.vp.cdf
-MagneticFieldSvc.MagT...   INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r2/cdf/field048.c2.vp.cdf
-MagneticFieldSvc.MagT...   INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r2/cdf/field048.c3.vp.cdf
-MagneticFieldSvc.MagT...   INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r2/cdf/field048.c4.vp.cdf
+MagneticFieldSvc.MagT...   INFO Opened magnetic field file : /afs/cern.ch/user/m/marcocle/public/DBASE/FieldMap/v5r2/cdf/field048.c1.vp.cdf
+MagneticFieldSvc.MagT...   INFO Opened magnetic field file : /afs/cern.ch/user/m/marcocle/public/DBASE/FieldMap/v5r2/cdf/field048.c2.vp.cdf
+MagneticFieldSvc.MagT...   INFO Opened magnetic field file : /afs/cern.ch/user/m/marcocle/public/DBASE/FieldMap/v5r2/cdf/field048.c3.vp.cdf
+MagneticFieldSvc.MagT...   INFO Opened magnetic field file : /afs/cern.ch/user/m/marcocle/public/DBASE/FieldMap/v5r2/cdf/field048.c4.vp.cdf
 MagneticFieldSvc.MagT...   INFO Map scaled by factor 1
 GiGaGeo.FieldMgr           INFO Minimum and Maximum Epsilon Step
 5e-05 0.001
@@ -695,1104 +661,1163 @@ hIoni:   tables are built for  pi-
       Parametrisation from Bragg for protons below. NuclearStopping= 1
       Step function: finalRange(mm)= 1, dRoverRange= 0.2, integral: 1, fluct: 1
 RichG4HistoSet2            INFO Now Booking Rich G4 Histo Set2
-GiGaGetEventAlg            INFO Number of extracted MCParticles 'MC/Particles' 	639
-Gauss-5ev-20090331.sim  SUCCESS Root file version:51800
+GiGaGetEventAlg            INFO Number of extracted MCParticles 'MC/Particles' 	742
+IODataManager              INFO Referring to dataset Gauss-5ev-20090402.sim by its file ID:2CF9FD0F-871F-DE11-A3EC-000423D6B700
+Gauss-5ev-20090402.sim  SUCCESS Root file version:51800
 GaussGen                   INFO Evt 2,  Run 1082,  Nr. in job = 2 with seeds [1082, 2, 1474865432, 0]
 EvtGen:This is the current decay chain
-This top particle is eta
-eta -> pi0 pi0 pi0
-     pi0 -> gamma gamma
-     pi0 -> gamma gamma
-     pi0 -> gamma gamma
+This top particle is rho+ 1.05482 (447.32,0.0786497,1.22684,-447.317)
+rho+ -> pi+ pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 6.58545e-10 2 6.58545e-10 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is Delta-
-Delta- -> n0 pi-
+This top particle is rho0 0.530498 (388.057,-0.290681,0.31512,388.056)
+rho0 -> pi+ pi- 0.13957 1 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho+
-rho+ -> pi+ pi0
-     pi0 -> gamma gamma
+This top particle is omega 0.780629 (461.695,0.490255,-0.50038,461.694)
+omega -> pi- pi+ pi0 0.13957 1 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho-
-rho- -> pi- pi0
-     pi0 -> gamma gamma
+This top particle is omega 0.798047 (86.6451,-0.235243,0.1757,86.6409)
+omega -> pi- pi+ pi0 0.13957 1 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho+
-rho+ -> pi+ pi0
-     pi0 -> gamma gamma
+This top particle is pi0 0.134977 (12.2684,-0.041635,-0.0643582,12.2674)
+pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho-
-rho- -> pi- pi0
-     pi0 -> gamma gamma
+This top particle is omega 0.77899 (1.05967,-0.0326353,0.0155965,0.717469)
+omega -> pi- pi+ pi0 0.13957 1 0.13957 1 0.134977 1
+     pi0 -> e+ e- gamma 0.000510999 2 0.000510999 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho-
-rho- -> pi- pi0
-     pi0 -> gamma gamma
+This top particle is omega 0.791025 (2.19886,-0.656575,0.439327,-1.89346)
+omega -> pi- pi+ pi0 0.13957 1 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 1.18721e-09 2 1.18721e-09 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is anti-Delta+
-anti-Delta+ -> anti-n0 pi+
+This top particle is a_1- 1.26374 (4.67309,0.710855,1.56618,-4.15722)
+a_1- -> rho- pi0 0.944029 3 0.134977 1
+     rho- -> pi- pi0 0.13957 1 0.134977 1
+          pi0 -> gamma gamma 3.29272e-10 2 3.29272e-10 2
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is pi0
-pi0 -> gamma gamma
+This top particle is pi0 0.134977 (336.54,-0.0179472,-0.00754637,336.54)
+pi0 -> gamma gamma 9.31323e-10 2 9.31323e-10 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is eta
-eta -> gamma gamma
+This top particle is rho+ 0.959207 (708.456,0.506044,-0.0886682,708.455)
+rho+ -> pi+ pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 7.63386e-10 2 7.63386e-10 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is omega
-omega -> pi- pi+ pi0
-     pi0 -> gamma gamma
+This top particle is rho- 0.489649 (421.152,0.283239,-0.467096,421.151)
+rho- -> pi- pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 8.69226e-10 2 8.69226e-10 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is Delta0
-Delta0 -> n0 pi0
-     pi0 -> gamma gamma
+This top particle is K*0 0.892951 (39.1771,0.315024,0.552208,39.1617)
+K*0 -> K0 pi0 0.497672 1 0.134977 1
+     K0 -> K_L0 0.497672 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is a_1-
-a_1- -> rho- pi0
-     rho- -> pi- pi0
-          pi0 -> gamma gamma
-     pi0 -> gamma gamma
+This top particle is Sigma*+ 1.37334 (29.5239,-0.356651,-0.622543,29.4832)
+Sigma*+ -> Lambda0 pi+ gamma 1.11568 2 0.13957 1 0 2
+     Lambda0 -> p+ pi- 0.938272 2 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is anti-Delta+
-anti-Delta+ -> anti-n0 pi+
+This top particle is rho- 1.0815 (12.2539,-0.0630557,0.170554,12.2047)
+rho- -> pi- pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is eta
-eta -> pi0 pi0 pi0
-     pi0 -> gamma gamma
-     pi0 -> gamma gamma
-     pi0 -> gamma gamma
+This top particle is anti-K0 0.497672 (1.56902,-1.43514,0.382329,-0.0912779)
+anti-K0 -> K_S0 0.497672 1
+     K_S0 -> pi0 pi0 0.134977 1 0.134977 1
+          pi0 -> gamma gamma 0 2 0 2
+          pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho-
-rho- -> pi- pi0
-     pi0 -> gamma gamma
+This top particle is K0 0.497672 (2.42639,-1.56411,1.73692,-0.419953)
+K0 -> K_L0 0.497672 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is eta
-eta -> pi0 pi0 pi0
-     pi0 -> gamma gamma
-     pi0 -> gamma gamma
-     pi0 -> gamma gamma
+This top particle is pi0 0.134977 (0.808993,-0.31798,-0.00692902,-0.7315)
+pi0 -> gamma gamma 9.31323e-10 2 9.31323e-10 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is a_2-
-a_2- -> rho- pi0
-     rho- -> pi- pi0
-          pi0 -> gamma gamma
-     pi0 -> gamma gamma
+This top particle is rho+ 0.705177 (2.73352,0.188587,0.911257,-2.47162)
+rho+ -> pi+ pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 6.37633e-10 2 6.37633e-10 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho0
-rho0 -> pi+ pi-
+This top particle is rho- 0.768926 (1.93838,0.241234,-0.479025,-1.69659)
+rho- -> pi- pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is pi0
-pi0 -> gamma gamma
+This top particle is rho+ 0.841045 (3.62608,0.4104,0.552474,-3.4594)
+rho+ -> pi+ pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho+
-rho+ -> pi+ pi0
-     pi0 -> gamma gamma
+This top particle is eta 0.5473 (12.6479,-0.100512,-0.477949,-12.6266)
+eta -> gamma gamma 2.28127e-09 2 2.28127e-09 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho-
-rho- -> pi- pi0
-     pi0 -> gamma gamma
+This top particle is pi0 0.134977 (2.15393,0.0993489,0.1629,-2.14121)
+pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is Sigma0
-Sigma0 -> gamma Lambda0
-     Lambda0 -> p+ pi-
+This top particle is rho- 0.802374 (533.014,0.0240791,0.137874,-533.014)
+rho- -> pi- pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is anti-Sigma+
-anti-Sigma+ -> anti-n0 pi+
+This top particle is rho- 0.842836 (28.8941,-0.425314,0.42799,-28.8755)
+rho- -> pi- pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 1.05419e-09 2 1.05419e-09 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is K0
-K0 -> K_L0
+This top particle is rho0 0.665384 (30.415,-0.040184,0.370721,-30.4055)
+rho0 -> pi+ pi- 0.13957 1 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is pi0
-pi0 -> e+ e- gamma
+This top particle is anti-K0 0.497672 (9.90199,-0.113802,-0.405614,-9.8805)
+anti-K0 -> K_L0 0.497672 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is K_2*+
-K_2*+ -> K*0 pi+
-     K*0 -> K+ pi-
+This top particle is K0 0.497672 (2.74663,0.840469,-0.32231,-2.54676)
+K0 -> K_S0 0.497672 1
+     K_S0 -> pi0 pi0 0.134977 1 0.134977 1
+          pi0 -> gamma gamma 0 2 0 2
+          pi0 -> gamma gamma 1.27924e-09 2 1.27924e-09 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is anti-K0
-anti-K0 -> K_L0
+This top particle is eta' 0.95775 (2.66442,-0.646189,0.146851,-2.39639)
+eta' -> pi+ pi- eta gamma 0.13957 1 0.13957 1 0.5473 1 8.89045e-16 2
+     eta -> pi0 pi0 pi0 0.134977 1 0.134977 1 0.134977 1
+          pi0 -> gamma gamma 0 2 0 2
+          pi0 -> gamma gamma 9.31323e-10 2 9.31323e-10 2
+          pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is a_1-
-a_1- -> rho- pi0
-     rho- -> pi- pi0
-          pi0 -> gamma gamma
-     pi0 -> gamma gamma
+This top particle is Sigma*0 1.35489 (4.48467,0.538772,-0.0822531,4.24022)
+Sigma*0 -> Lambda0 pi0 1.11568 2 0.134977 1
+     Lambda0 -> n0 pi0 0.939565 2 0.134977 1
+          pi0 -> gamma gamma 0 2 0 2
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho0
-rho0 -> pi+ pi-
+This top particle is K0 0.497672 (7.4881,-0.25341,-0.69357,7.43497)
+K0 -> K_L0 0.497672 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is eta'
-eta' -> pi+ pi- eta
-     eta -> pi- pi+ pi0
-          pi0 -> gamma gamma
+This top particle is eta' 0.957757 (9.53604,-0.02308,-0.768317,9.45664)
+eta' -> gamma gamma 0 2 6.45239e-09 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is K*+
-K*+ -> K0 pi+
-     K0 -> K_S0
-          K_S0 -> pi+ pi-
+This top particle is rho0 1.14834 (6.81784,0.217373,0.0124644,6.71691)
+rho0 -> pi+ pi- 0.13957 1 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is anti-K0
-anti-K0 -> K_S0
-     K_S0 -> pi+ pi-
+This top particle is omega 0.787518 (21.2199,0.211274,-0.542448,21.1973)
+omega -> pi- pi+ pi0 0.13957 1 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is omega
-omega -> pi- pi+ pi0
-     pi0 -> gamma gamma
+This top particle is eta 0.5473 (19.528,0.185533,-0.532844,19.5121)
+eta -> pi0 pi0 pi0 0.134977 1 0.134977 1 0.134977 1
+     pi0 -> gamma gamma 2.38225e-10 2 2.38225e-10 2
+     pi0 -> gamma gamma 0 2 0 2
+     pi0 -> gamma gamma 4.65661e-10 2 4.65661e-10 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is omega
-omega -> pi- pi+ pi0
-     pi0 -> gamma gamma
+This top particle is K*- 0.880082 (55.8953,-0.60861,-2.35152,55.8356)
+K*- -> anti-K0 pi- 0.497672 1 0.13957 1
+     anti-K0 -> K_L0 0.497672 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho+
-rho+ -> pi+ pi0
-     pi0 -> gamma gamma
+This top particle is K0 0.497672 (24.2186,1.09655,-0.0847286,24.1885)
+K0 -> K_S0 0.497672 1
+     K_S0 -> pi+ pi- 0.13957 1 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is K0
-K0 -> K_S0
-     K_S0 -> pi0 pi0
-          pi0 -> gamma gamma
-          pi0 -> gamma gamma
+This top particle is omega 0.788615 (24.2772,-0.456801,-1.31683,24.2244)
+omega -> pi- pi+ pi0 0.13957 1 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is eta'
-eta' -> pi+ pi- eta
-     eta -> gamma gamma
+This top particle is anti-Lambda0 1.11568 (5.95704,-0.0843574,0.204128,5.84746)
+anti-Lambda0 -> anti-n0 pi0 0.939565 2 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is anti-K0
-anti-K0 -> K_S0
-     K_S0 -> pi+ pi-
+This top particle is Sigma0 1.19264 (13.1554,-0.0323797,-0.556129,13.0894)
+Sigma0 -> gamma Lambda0 6.58545e-10 2 1.11568 2
+     Lambda0 -> n0 pi0 0.939565 2 0.134977 1
+          pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is omega
-omega -> pi- pi+ pi0 gamma
-     pi0 -> gamma gamma
+This top particle is rho+ 0.548027 (0.752911,0.403513,-0.140286,0.289894)
+rho+ -> pi+ pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 1.14063e-09 2 1.14063e-09 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is a_2+
-a_2+ -> eta pi+
-     eta -> gamma gamma
+This top particle is eta 0.5473 (0.656974,-0.232793,0.256432,0.110125)
+eta -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is a_2-
-a_2- -> omega pi- pi0
-     omega -> pi- pi+ pi0
-          pi0 -> gamma gamma
-     pi0 -> gamma gamma
+This top particle is rho0 1.00129 (2.13447,1.82208,-0.111602,0.470034)
+rho0 -> pi+ pi- gamma 0.13957 1 0.13957 1 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is pi0
-pi0 -> gamma gamma
+This top particle is pi0 0.134977 (0.498653,-0.3118,0.344162,-0.121529)
+pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho0
-rho0 -> pi+ pi- gamma
+This top particle is rho0 0.671644 (83.3298,2.06116,1.42852,-83.2893)
+rho0 -> pi+ pi- gamma 0.13957 1 0.13957 1 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is anti-Delta-
-anti-Delta- -> anti-p- pi0
-     pi0 -> gamma gamma
+This top particle is rho+ 0.787716 (6.64968,0.843682,-0.137306,-6.54729)
+rho+ -> pi+ pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 5.20625e-10 2 5.20625e-10 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is eta
-eta -> gamma gamma
+This top particle is Delta- 1.1805 (4.65742,-1.25808,0.492894,-4.29794)
+Delta- -> n0 pi- 0.939565 2 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is omega
-omega -> pi- pi+ pi0
-     pi0 -> gamma gamma
+This top particle is rho0 0.306758 (5.41725,0.460403,-0.525942,-5.3632)
+rho0 -> pi+ pi- 0.13957 1 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is a_00
-a_00 -> eta pi0
-     eta -> gamma gamma
-     pi0 -> gamma gamma
+This top particle is anti-Delta0 1.22739 (3.06902,0.358317,-0.00356756,-2.78998)
+anti-Delta0 -> anti-n0 pi0 0.939565 2 0.134977 1
+     pi0 -> gamma gamma 6.58545e-10 2 6.58545e-10 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho+
-rho+ -> pi+ pi0
-     pi0 -> gamma gamma
+This top particle is rho0 0.759097 (1.66177,-0.316352,-0.441513,-1.37486)
+rho0 -> pi+ pi- 0.13957 1 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is anti-Delta--
-anti-Delta-- -> anti-p- pi-
+This top particle is Delta0 1.36724 (4.70682,0.152883,-0.967129,-4.39615)
+Delta0 -> n0 pi0 0.939565 2 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is pi0
-pi0 -> gamma gamma
+This top particle is pi0 0.134977 (2.80387,-0.204546,-0.843771,-2.66265)
+pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is a_1-
-a_1- -> rho0 pi-
-     rho0 -> pi+ pi- gamma
+This top particle is K_2*0 1.44848 (47.0376,-1.00528,-0.136695,-47.0043)
+K_2*0 -> K*0 pi+ pi- 0.871364 3 0.13957 1 0.13957 1
+     K*0 -> K0 pi0 0.497672 1 0.134977 1
+          K0 -> K_L0 0.497672 1
+          pi0 -> gamma gamma 1.18721e-09 2 1.18721e-09 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is a_2+
-a_2+ -> rho+ pi0
-     rho+ -> pi+ pi0
-          pi0 -> gamma gamma
-     pi0 -> gamma gamma
+This top particle is rho0 0.664131 (20.7246,-0.639839,-0.153765,-20.7035)
+rho0 -> pi+ pi- 0.13957 1 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is Sigma0
-Sigma0 -> gamma Lambda0
-     Lambda0 -> p+ pi-
+This top particle is pi0 0.134977 (27.2403,-0.370386,-0.00354634,-27.2374)
+pi0 -> gamma gamma 3.29272e-10 2 3.29272e-10 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is anti-Sigma0
-anti-Sigma0 -> gamma anti-Lambda0
-     anti-Lambda0 -> anti-p- pi+
+This top particle is f'_2 1.54605 (53.4908,0.169722,0.449728,-53.4663)
+f'_2 -> K_S0 K_S0 0.497672 1 0.497672 1
+     K_S0 -> pi0 pi0 0.134977 1 0.134977 1
+          pi0 -> gamma gamma 0 2 0 2
+          pi0 -> gamma gamma 4.65661e-10 2 4.65661e-10 2
+     K_S0 -> pi0 pi0 0.134977 1 0.134977 1
+          pi0 -> gamma gamma 1.04125e-09 2 1.04125e-09 2
+          pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho+
-rho+ -> pi+ pi0
-     pi0 -> gamma gamma
+This top particle is K*+ 0.899809 (15.7785,0.710777,-0.350209,-15.7329)
+K*+ -> K0 pi+ 0.497672 1 0.13957 1
+     K0 -> K_S0 0.497672 1
+          K_S0 -> pi+ pi- 0.13957 1 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is K0
-K0 -> K_L0
+This top particle is rho- 0.732114 (3.0115,-0.57632,0.267037,-2.85126)
+rho- -> pi- pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is anti-K0
-anti-K0 -> K_L0
+This top particle is rho+ 0.889371 (19.4459,0.128831,0.246853,-19.4236)
+rho+ -> pi+ pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 6.58545e-10 2 6.58545e-10 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho0
-rho0 -> pi+ pi-
+This top particle is rho0 0.818395 (2.01061,-0.131223,-0.439726,-1.77826)
+rho0 -> pi+ pi- 0.13957 1 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho+
-rho+ -> pi+ pi0
-     pi0 -> gamma gamma
+This top particle is pi0 0.134977 (0.221412,-0.157558,0.073797,-0.0231079)
+pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is a_0+
-a_0+ -> eta pi+
-     eta -> gamma gamma
+This top particle is rho+ 0.753348 (2.18642,1.84506,0.71072,-0.550922)
+rho+ -> pi+ pi0 gamma 0.13957 1 0.134977 1 0 2
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is omega
-omega -> pi- pi+ pi0
-     pi0 -> gamma gamma
+This top particle is anti-Delta-- 1.22835 (1.74486,1.14995,-0.419122,-0.194094)
+anti-Delta-- -> anti-p- pi- 0.938272 2 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is K*0
-K*0 -> K0 pi0
-     K0 -> K_S0
-          K_S0 -> pi+ pi-
-     pi0 -> gamma gamma
+This top particle is a_1- 1.15248 (4.56231,0.074948,-0.244691,-4.40692)
+a_1- -> rho0 pi- 0.661122 3 0.13957 1
+     rho0 -> pi+ pi- 0.13957 1 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is anti-K0
-anti-K0 -> K_S0
-     K_S0 -> pi+ pi-
+This top particle is pi0 0.134977 (2.96588,0.0487395,0.510502,-2.91809)
+pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is a_1-
-a_1- -> rho0 pi-
-     rho0 -> pi+ pi-
+This top particle is anti-K0 0.497672 (7.56163,-0.53063,-0.163703,-7.52478)
+anti-K0 -> K_L0 0.497672 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is eta'
-eta' -> pi+ pi- eta
-     eta -> gamma pi- pi+ gamma
+This top particle is K_2*+ 1.43462 (30.9567,0.0548026,-0.373364,-30.9212)
+K_2*+ -> K*0 pi+ 0.892452 3 0.13957 1
+     K*0 -> K+ pi- 0.493677 1 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is a_20
-a_20 -> rho+ pi-
-     rho+ -> pi+ pi0
-          pi0 -> gamma gamma
+This top particle is K0 0.497672 (23.7344,0.243003,0.605459,-23.7202)
+K0 -> K_L0 0.497672 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is K*+
-K*+ -> K0 pi+
-     K0 -> K_S0
-          K_S0 -> pi+ pi-
+This top particle is omega 0.797601 (851.471,0.285462,0.756581,-851.471)
+omega -> pi- pi+ pi0 0.13957 1 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 7.14083e-10 2 7.14083e-10 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho+
-rho+ -> pi+ pi0
-     pi0 -> gamma gamma
+This top particle is rho0 0.798069 (1.53012,0.481457,0.161321,-1.20271)
+rho0 -> pi+ pi- 0.13957 1 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is eta
-eta -> gamma gamma
+This top particle is eta' 0.957785 (2.24749,-0.361091,-0.794158,1.83651)
+eta' -> pi+ pi- eta 0.13957 1 0.13957 1 0.5473 1
+     eta -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho-
-rho- -> pi- pi0
-     pi0 -> e+ e- gamma
+This top particle is rho- 0.760075 (4.13401,-0.779151,-0.502622,3.95634)
+rho- -> pi- pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 2.85158e-10 2 2.85158e-10 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is eta
-eta -> pi- pi+ pi0
-     pi0 -> gamma gamma
+This top particle is rho+ 0.694308 (4.16113,0.110651,-0.141635,4.09885)
+rho+ -> pi+ pi0 gamma 0.13957 1 0.134977 1 0 2
+     pi0 -> gamma gamma 0 2 0 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is pi0 0.134977 (5.92467,0.0358127,-0.500266,5.90186)
+pi0 -> gamma gamma 0 2 0 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is pi0 0.134977 (2.92896,-0.336627,-0.808366,2.79174)
+pi0 -> gamma gamma 0 2 0 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho- 0.992495 (35.2405,-0.698987,0.829744,35.2098)
+rho- -> pi- pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 6.58545e-10 2 6.58545e-10 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho+ 0.780901 (80.8211,0.253228,-0.32323,80.8163)
+rho+ -> pi+ pi0 gamma 0.13957 1 0.134977 1 0 2
+     pi0 -> gamma gamma 0 2 0 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho- 0.518751 (28.0364,-0.118886,-0.307179,28.0297)
+rho- -> pi- pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is omega 0.743082 (1308.5,1.70744,-0.185516,1308.5)
+omega -> pi- pi+ pi0 0.13957 1 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is omega 0.735867 (21.5803,-1.5521,1.10119,21.4837)
+omega -> pi- pi+ pi0 0.13957 1 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho- 0.722434 (5.18328,-0.188561,0.387813,5.11454)
+rho- -> pi- pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho0 0.786252 (14.0812,-0.480404,1.4887,13.9719)
+rho0 -> pi+ pi- 0.13957 1 0.13957 1
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho0 0.864673 (14.336,-1.28604,0.733614,14.2331)
+rho0 -> pi+ pi- 0.13957 1 0.13957 1
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is f_2 1.14087 (2.30554,0.643647,-0.251598,1.88052)
+f_2 -> K_S0 K_S0 0.497672 1 0.497672 1
+     K_S0 -> pi0 pi0 0.134977 1 0.134977 1
+          pi0 -> gamma gamma 1.01489e-09 2 1.01489e-09 2
+          pi0 -> gamma gamma 6.58545e-10 2 6.58545e-10 2
+     K_S0 -> pi0 pi0 0.134977 1 0.134977 1
+          pi0 -> gamma gamma 0 2 0 2
+          pi0 -> gamma gamma 3.29272e-10 2 3.29272e-10 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is pi0 0.134977 (0.154154,0.0601541,-0.0436548,0.00451261)
+pi0 -> gamma gamma 2.32831e-10 2 2.32831e-10 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho0 0.739897 (1.86596,-0.0879447,-0.317328,1.68105)
+rho0 -> pi+ pi- gamma gamma 0.13957 1 0.13957 1 4.65661e-10 2 3.08006e-10 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is K*- 0.876052 (1.19474,-0.615664,-0.0401699,0.528467)
+K*- -> K- pi0 0.493677 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is K*- 0.892518 (1.74983,-0.556657,0.348732,-1.35419)
+K*- -> K- pi0 0.493677 1 0.134977 1
+     pi0 -> gamma gamma 9.31323e-10 2 9.31323e-10 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is eta 0.5473 (2.68082,-0.366019,-0.0527906,-2.59817)
+eta -> pi- pi+ pi0 0.13957 1 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho- 0.991516 (12.9341,0.299504,-0.345187,-12.8879)
+rho- -> pi- pi0 gamma 0.13957 1 0.134977 1 0 2
+     pi0 -> gamma gamma 9.31323e-10 2 9.31323e-10 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is Delta- 1.11039 (32.0209,-0.0113132,0.0756452,-32.0016)
+Delta- -> n0 pi- 0.939565 2 0.13957 1
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is omega 0.79009 (95.8081,0.435358,-0.492837,-95.8026)
+omega -> pi- pi+ pi0 0.13957 1 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho+ 0.750455 (77.8041,0.165258,-0.0397173,-77.8003)
+rho+ -> pi+ pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho- 0.691394 (173.686,0.331103,-0.494392,-173.683)
+rho- -> pi- pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 4.65661e-10 2 4.65661e-10 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho- 0.79344 (5.834,0.501114,-0.250032,-5.7526)
+rho- -> pi- pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 6.58545e-10 2 6.58545e-10 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho- 0.737055 (6.26075,1.05552,0.346615,-6.11715)
+rho- -> pi- pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho+ 0.74575 (3.27203,-0.636391,0.269791,-3.11003)
+rho+ -> pi+ pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 6.16012e-10 2 6.16012e-10 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho- 0.84587 (4.87632,1.22976,-0.330764,-4.63048)
+rho- -> pi- pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is a_1+ 1.47513 (4.61466,-0.820837,1.18808,-4.1272)
+a_1+ -> rho0 pi+ 0.950602 3 0.13957 1
+     rho0 -> pi+ pi- gamma 0.13957 1 0.13957 1 1.13687e-13 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is pi0 0.134977 (315.413,-0.342699,0.190134,-315.413)
+pi0 -> gamma gamma 0 2 0 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is anti-K'_10 1.31514 (332.026,0.391746,-0.140207,-332.023)
+anti-K'_10 -> omega anti-K0 0.777748 3 0.497672 1
+     omega -> pi- pi+ pi0 0.13957 1 0.13957 1 0.134977 1
+          pi0 -> gamma gamma 9.37794e-11 2 9.37794e-11 2
+     anti-K0 -> K_S0 0.497672 1
+          K_S0 -> pi+ pi- gamma 0.13957 1 0.13957 1 0 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is K*0 0.931121 (346.406,-0.34654,0.285344,-346.404)
+K*0 -> K+ pi- 0.493677 1 0.13957 1
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho+ 0.898969 (38.2297,-0.0150181,0.0710837,-38.2191)
+rho+ -> pi+ pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 1.23202e-09 2 1.23202e-09 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho+ 0.804938 (13.4169,0.443215,0.0200178,-13.3854)
+rho+ -> pi+ pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 6.58545e-10 2 6.58545e-10 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho- 0.915201 (9.29559,0.0146748,-0.0514293,-9.25027)
+rho- -> pi- pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho- 0.640302 (3.11521,0.720992,-0.292677,-2.94772)
+rho- -> pi- pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho+ 0.604573 (2.046,-0.126312,0.355435,-1.91789)
+rho+ -> pi+ pi0 gamma 0.13957 1 0.134977 1 0 2
+     pi0 -> gamma gamma 0 2 0 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is a_1- 1.34239 (1.94142,-0.0640374,0.0910581,-1.39812)
+a_1- -> rho0 pi- 0.755795 3 0.13957 1
+     rho0 -> pi+ pi- 0.13957 1 0.13957 1
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho0 0.682288 (0.802696,-0.197549,-0.0307214,0.372606)
+rho0 -> pi+ pi- 0.13957 1 0.13957 1
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is Delta0 1.24298 (1.99911,0.167202,-0.405082,1.50312)
+Delta0 -> p+ pi- 0.938272 2 0.13957 1
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is eta 0.5473 (2.08803,-0.0802492,0.356672,1.98158)
+eta -> pi0 pi0 pi0 0.134977 1 0.134977 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
+     pi0 -> gamma gamma 4.65661e-10 2 4.65661e-10 2
+     pi0 -> gamma gamma 0 2 0 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is pi0 0.134977 (1.2621,0.133626,-0.134788,1.24043)
+pi0 -> gamma gamma 3.18816e-10 2 3.18816e-10 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is pi0 0.134977 (2.01497,0.196373,-0.403687,1.95968)
+pi0 -> gamma gamma 0 2 0 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is omega 0.714123 (3.07588,0.653528,0.252751,2.90862)
+omega -> pi- pi+ pi0 0.13957 1 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is pi0 0.134977 (5.93593,0.665985,0.131125,5.89545)
+pi0 -> gamma gamma 0 2 0 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is K0 0.497672 (2.94844,0.145798,-0.371879,2.87856)
+K0 -> K_L0 0.497672 1
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho- 0.61192 (1.23488,-0.316719,-0.226941,0.99933)
+rho- -> pi- pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 6.58545e-10 2 6.58545e-10 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is anti-Delta+ 1.33494 (1.6595,-0.247627,0.0810022,0.950783)
+anti-Delta+ -> anti-n0 pi+ 0.939565 2 0.13957 1
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is K0 0.497672 (0.658712,0.192639,-0.251529,0.292998)
+K0 -> K_S0 0.497672 1
+     K_S0 -> pi+ pi- 0.13957 1 0.13957 1
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is Lambda0 1.11568 (1.93213,-0.0312793,0.207018,-1.5635)
+Lambda0 -> p+ pi- 0.938272 2 0.13957 1
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is K*- 0.924238 (9.93877,-0.303431,0.515518,-9.8776)
+K*- -> K- pi0 0.493677 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho0 0.810933 (7.39601,0.166288,0.114145,-7.34865)
+rho0 -> pi+ pi- 0.13957 1 0.13957 1
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is omega 0.776777 (6.93117,-0.178223,-0.0375784,-6.88509)
+omega -> pi- pi+ 0.13957 1 0.13957 1
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is omega 0.782129 (4.79646,-0.128682,0.805762,-4.66138)
+omega -> pi- pi+ pi0 0.13957 1 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 6.58545e-10 2 6.58545e-10 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is a_2+ 1.24284 (17.5512,-0.542511,-0.132118,-17.4982)
+a_2+ -> rho0 pi+ 0.783654 3 0.13957 1
+     rho0 -> pi+ pi- 0.13957 1 0.13957 1
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is omega 0.779929 (15.5299,0.272233,0.386881,-15.5031)
+omega -> pi- pi+ pi0 0.13957 1 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 9.87817e-10 2 9.87817e-10 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is rho+ 0.342527 (4.48884,-0.00441993,-0.149602,-4.47324)
+rho+ -> pi+ pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 7.36275e-10 2 7.36275e-10 2
+EvtGen:End of decay chain.
+EvtGen:This is the current decay chain
+This top particle is omega 0.780031 (7.14015,0.675078,0.00280978,-7.06524)
+omega -> pi- pi+ pi0 0.13957 1 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 GaussSim                   INFO Evt 2,  Run 1082,  Nr. in job = 2 with seeds [1082, 2, 31909538, 0]
-GiGaGetEventAlg            INFO Number of extracted MCParticles 'MC/Particles' 	994
+DDDB.TimeOutChecker        INFO Disconnect from database after being idle for 120s (will reconnect if needed)
+GiGaGetEventAlg            INFO Number of extracted MCParticles 'MC/Particles' 	1920
 GaussGen                   INFO Evt 3,  Run 1082,  Nr. in job = 3 with seeds [1082, 3, 645125023, 0]
 EvtGen:This is the current decay chain
-This top particle is a_10
-a_10 -> rho+ pi-
-     rho+ -> pi+ pi0
-          pi0 -> gamma gamma
+This top particle is a_10 0.879037 (1520.01,0.790633,-0.12395,1520.01)
+a_10 -> rho+ pi- 0.578599 3 0.13957 1
+     rho+ -> pi+ pi0 0.13957 1 0.134977 1
+          pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is Lambda0
-Lambda0 -> p+ pi-
+This top particle is Lambda0 1.11568 (4189.75,1.5578,-0.139992,4189.75)
+Lambda0 -> n0 pi0 0.939565 2 0.134977 1
+     pi0 -> gamma gamma 9.31323e-10 2 9.31323e-10 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho0
-rho0 -> pi+ pi-
+This top particle is rho0 0.879122 (314.719,0.381008,0.166413,314.718)
+rho0 -> pi+ pi- 0.13957 1 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is f_1
-f_1 -> a_0- pi+
-     a_0- -> eta pi-
-          eta -> gamma gamma
+This top particle is f_1 1.28584 (162.287,-0.410881,-0.299568,162.281)
+f_1 -> a_0- pi+ 0.999123 1 0.13957 1
+     a_0- -> K0 K- 0.497672 1 0.493677 1
+          K0 -> K_L0 0.497672 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is omega
-omega -> pi- pi+ pi0
-     pi0 -> gamma gamma
+This top particle is omega 0.781404 (125.408,0.197537,0.342861,125.405)
+omega -> pi0 gamma 0.134977 1 0 2
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is pi0
-pi0 -> gamma gamma
+This top particle is pi0 0.134977 (5.3514,-0.244404,-0.415065,5.32796)
+pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho0
-rho0 -> pi+ pi-
+This top particle is rho0 0.784741 (2221.6,1.04607,-0.128643,-2221.6)
+rho0 -> pi+ pi- 0.13957 1 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is pi0
-pi0 -> gamma gamma
+This top particle is pi0 0.134977 (2.50088,0.650839,0.133122,-2.40726)
+pi0 -> gamma gamma 1.04125e-09 2 1.04125e-09 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is pi0
-pi0 -> gamma gamma
+This top particle is pi0 0.134977 (3.10028,-0.632901,0.0875994,-3.03072)
+pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is anti-Sigma0
-anti-Sigma0 -> gamma anti-Lambda0
-     anti-Lambda0 -> anti-p- pi+
+This top particle is anti-Sigma0 1.19264 (2.17454,0.145347,0.401569,-1.76744)
+anti-Sigma0 -> gamma anti-Lambda0 1.04125e-09 2 1.11568 2
+     anti-Lambda0 -> anti-p- pi+ 0.938272 2 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is Lambda0
-Lambda0 -> p+ pi-
+This top particle is Lambda0 1.11568 (1.97986,0.097721,-0.326318,-1.59971)
+Lambda0 -> p+ pi- 0.938272 2 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is pi0
-pi0 -> gamma gamma
+This top particle is pi0 0.134977 (1.35519,-0.607571,0.39472,-1.13726)
+pi0 -> e+ e- gamma 0.000510999 2 0.000510999 2 9.87817e-10 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho-
-rho- -> pi- pi0
-     pi0 -> gamma gamma
+This top particle is rho- 0.757859 (24.1456,0.0987949,0.601204,-24.126)
+rho- -> pi- pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is omega
-omega -> pi- pi+ pi0
-     pi0 -> gamma gamma
+This top particle is omega 0.810027 (55.4188,0.0420032,-0.253825,-55.4123)
+omega -> pi- pi+ pi0 0.13957 1 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho+
-rho+ -> pi+ pi0
-     pi0 -> gamma gamma
+This top particle is rho+ 0.763912 (18.2985,0.0784212,0.309039,-18.2798)
+rho+ -> pi+ pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 8.06549e-10 2 8.06549e-10 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho0
-rho0 -> pi+ pi-
+This top particle is rho0 0.739628 (33.585,-0.317041,-0.305628,-33.574)
+rho0 -> pi+ pi- 0.13957 1 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is anti-Sigma-
-anti-Sigma- -> anti-p- pi0
-     pi0 -> gamma gamma
+This top particle is anti-Sigma- 1.18937 (379.456,0.0220734,-0.0197264,-379.454)
+anti-Sigma- -> anti-n0 pi- 0.939565 2 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is Sigma+
-Sigma+ -> p+ pi0
-     pi0 -> gamma gamma
+This top particle is Sigma+ 1.18937 (376.873,0.261872,-0.140491,-376.871)
+Sigma+ -> n0 pi+ 0.939565 2 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is pi0
-pi0 -> gamma gamma
+This top particle is pi0 0.134977 (455.651,-0.0710035,0.182596,-455.651)
+pi0 -> gamma gamma 8.06549e-10 2 8.06549e-10 2
 EvtGen:End of decay chain.
 GaussSim                   INFO Evt 3,  Run 1082,  Nr. in job = 3 with seeds [1082, 3, 1254798016, 0]
-GiGaGetEventAlg            INFO Number of extracted MCParticles 'MC/Particles' 	249
+GiGaGetEventAlg            INFO Number of extracted MCParticles 'MC/Particles' 	177
 GaussGen                   INFO Evt 4,  Run 1082,  Nr. in job = 4 with seeds [1082, 4, 1010630449, 0]
 EvtGen:This is the current decay chain
-This top particle is omega
-omega -> pi- pi+ pi0
-     pi0 -> gamma gamma
+This top particle is anti-K0 0.497672 (44.5834,-1.1649,-0.399968,44.5636)
+anti-K0 -> K_S0 0.497672 1
+     K_S0 -> pi+ pi- 0.13957 1 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is anti-Lambda0
-anti-Lambda0 -> anti-p- pi+
+This top particle is anti-Lambda0 1.11568 (49.707,-1.57041,-0.839595,49.6626)
+anti-Lambda0 -> anti-p- pi+ 0.938272 2 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is anti-K0
-anti-K0 -> K_S0
-     K_S0 -> pi+ pi-
+This top particle is K0 0.497672 (4.06998,-0.609213,-0.0972975,3.99205)
+K0 -> K_L0 0.497672 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is eta
-eta -> gamma gamma
+This top particle is pi0 0.134977 (2.257,0.411535,-0.796855,2.06676)
+pi0 -> gamma gamma 8.06549e-10 2 8.06549e-10 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho-
-rho- -> pi- pi0 gamma
-     pi0 -> gamma gamma
+This top particle is rho- 0.842291 (3.12959,-0.0134154,0.307523,2.99836)
+rho- -> pi- pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is omega
-omega -> pi- pi+ pi0
-     pi0 -> gamma gamma
+This top particle is anti-K0 0.497672 (1.27231,0.0480259,0.174714,1.15683)
+anti-K0 -> K_L0 0.497672 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho0
-rho0 -> pi+ pi-
+This top particle is rho+ 0.956361 (1.67439,-0.339438,0.057741,-1.33057)
+rho+ -> pi+ pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is a_2+
-a_2+ -> rho+ pi0
-     rho+ -> pi+ pi0
-          pi0 -> gamma gamma
-     pi0 -> gamma gamma
+This top particle is eta 0.5473 (1.42323,-0.0840293,0.353141,-1.26265)
+eta -> pi0 pi0 pi0 0.134977 1 0.134977 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
+     pi0 -> gamma gamma 0 2 0 2
+     pi0 -> gamma gamma 6.58545e-10 2 6.58545e-10 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is pi0
-pi0 -> gamma gamma
+This top particle is pi0 0.134977 (61.1773,0.700216,-0.113126,61.173)
+pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is omega
-omega -> pi- pi+ pi0
-     pi0 -> gamma gamma
+This top particle is pi0 0.134977 (160.729,-0.288902,-0.147495,160.729)
+pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is K*+
-K*+ -> K0 pi+
-     K0 -> K_S0
-          K_S0 -> pi0 pi0
-               pi0 -> gamma gamma
-               pi0 -> gamma gamma
+This top particle is rho+ 0.868964 (101.868,-0.255954,-0.096008,101.863)
+rho+ -> pi+ pi0 gamma 0.13957 1 0.134977 1 0 2
+     pi0 -> gamma gamma 1.16415e-09 2 1.16415e-09 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is anti-K*0
-anti-K*0 -> K- pi+
+This top particle is pi0 0.134977 (2.08249,-0.471184,0.265715,2.00648)
+pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho+
-rho+ -> pi+ pi0
-     pi0 -> gamma gamma
+This top particle is rho+ 0.860456 (9.54645,0.450418,0.412198,9.48797)
+rho+ -> pi+ pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 1.04125e-09 2 1.04125e-09 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho-
-rho- -> pi- pi0
-     pi0 -> gamma gamma
+This top particle is rho0 0.811487 (6.94201,0.0207208,0.44778,6.87983)
+rho0 -> pi+ pi- 0.13957 1 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is pi0
-pi0 -> gamma gamma
+This top particle is rho- 0.733255 (8.07536,0.264756,1.29857,7.93205)
+rho- -> pi- pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is eta
-eta -> pi0 pi0 pi0
-     pi0 -> gamma gamma
-     pi0 -> gamma gamma
-     pi0 -> gamma gamma
+This top particle is omega 0.782315 (4.62812,1.17589,1.04893,4.28071)
+omega -> pi0 gamma 0.134977 1 5.8902e-09 2
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is pi0
-pi0 -> gamma gamma
+This top particle is rho- 0.416067 (7.34252,1.60682,1.66692,6.9555)
+rho- -> pi- pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is pi0
-pi0 -> gamma gamma
+This top particle is eta 0.5473 (995.569,0.378045,0.0915897,-995.569)
+eta -> pi0 pi0 pi0 0.134977 1 0.134977 1 0.134977 1
+     pi0 -> gamma gamma 2.60313e-10 2 2.60313e-10 2
+     pi0 -> gamma gamma 1.04125e-09 2 1.04125e-09 2
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho0
-rho0 -> pi+ pi-
+This top particle is Delta++ 1.31949 (3519.42,1.18693,-0.0991724,-3519.42)
+Delta++ -> p+ pi+ 0.938272 2 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho+
-rho+ -> pi+ pi0
-     pi0 -> gamma gamma
+This top particle is rho- 0.766405 (687.973,0.215693,0.0978314,-687.972)
+rho- -> pi- pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is K0
-K0 -> K_S0
-     K_S0 -> pi0 pi0
-          pi0 -> gamma gamma
-          pi0 -> gamma gamma
+This top particle is rho+ 0.733498 (305.264,0.410022,1.02837,-305.261)
+rho+ -> pi+ pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is Delta+
-Delta+ -> p+ pi0
-     pi0 -> gamma gamma
+This top particle is pi0 0.134977 (164.575,0.13744,0.672501,-164.574)
+pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is anti-Delta-
-anti-Delta- -> anti-n0 pi-
+This top particle is eta 0.5473 (45.9779,-0.153613,-0.162702,-45.9741)
+eta -> pi- pi+ pi0 gamma 0.13957 1 0.13957 1 0.134977 1 1.62806e-14 2
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is a_0+
-a_0+ -> eta pi+
-     eta -> gamma gamma
+This top particle is anti-K0 0.497672 (35.6587,0.0176396,-0.767291,-35.647)
+anti-K0 -> K_L0 0.497672 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is eta
-eta -> gamma gamma
+This top particle is eta 0.5473 (19.4652,-1.19612,-1.53244,-19.3601)
+eta -> gamma gamma 1.86265e-09 2 1.86265e-09 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is pi0
-pi0 -> gamma gamma
+This top particle is K*- 0.849751 (4.73725,-0.131484,-0.598668,-4.61993)
+K*- -> K- pi0 0.493677 1 0.134977 1
+     pi0 -> gamma gamma 1.08897e-09 2 1.08897e-09 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho+
-rho+ -> pi+ pi0
-     pi0 -> gamma gamma
+This top particle is K0 0.497672 (7.3477,-0.443738,-0.764008,-7.27739)
+K0 -> K_S0 0.497672 1
+     K_S0 -> pi+ pi- 0.13957 1 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is omega
-omega -> pi- pi+ pi0
-     pi0 -> gamma gamma
-EvtGen:End of decay chain.
-EvtGen:This is the current decay chain
-This top particle is K*0
-K*0 -> K+ pi-
-EvtGen:End of decay chain.
-EvtGen:This is the current decay chain
-This top particle is anti-K*0
-anti-K*0 -> anti-K0 pi0
-     anti-K0 -> K_L0
-     pi0 -> gamma gamma
-EvtGen:End of decay chain.
-EvtGen:This is the current decay chain
-This top particle is pi0
-pi0 -> gamma gamma
-EvtGen:End of decay chain.
-EvtGen:This is the current decay chain
-This top particle is omega
-omega -> pi- pi+ pi0
-     pi0 -> gamma gamma
-EvtGen:End of decay chain.
-EvtGen:This is the current decay chain
-This top particle is rho0
-rho0 -> pi+ pi-
-EvtGen:End of decay chain.
-EvtGen:This is the current decay chain
-This top particle is eta
-eta -> pi- pi+ pi0
-     pi0 -> gamma gamma
-EvtGen:End of decay chain.
-EvtGen:This is the current decay chain
-This top particle is eta
-eta -> pi0 pi0 pi0
-     pi0 -> gamma gamma
-     pi0 -> gamma gamma
-     pi0 -> gamma gamma
-EvtGen:End of decay chain.
-EvtGen:This is the current decay chain
-This top particle is rho0
-rho0 -> pi+ pi-
-EvtGen:End of decay chain.
-EvtGen:This is the current decay chain
-This top particle is eta
-eta -> pi- pi+ pi0
-     pi0 -> gamma gamma
-EvtGen:End of decay chain.
-EvtGen:This is the current decay chain
-This top particle is rho-
-rho- -> pi- pi0
-     pi0 -> gamma gamma
-EvtGen:End of decay chain.
-EvtGen:This is the current decay chain
-This top particle is Delta-
-Delta- -> n0 pi-
-EvtGen:End of decay chain.
-EvtGen:This is the current decay chain
-This top particle is pi0
-pi0 -> gamma gamma
-EvtGen:End of decay chain.
-EvtGen:This is the current decay chain
-This top particle is anti-Delta+
-anti-Delta+ -> anti-n0 pi+
+This top particle is anti-K*0 0.898969 (3.45159,0.20389,-0.152452,-3.32273)
+anti-K*0 -> K- pi+ 0.493677 1 0.13957 1
 EvtGen:End of decay chain.
 GaussSim                   INFO Evt 4,  Run 1082,  Nr. in job = 4 with seeds [1082, 4, 479188555, 0]
-DDDB.TimeOutChecker        INFO Disconnect from database after being idle for 120s (will reconnect if needed)
-GiGaGetEventAlg            INFO Number of extracted MCParticles 'MC/Particles' 	421
+GiGaGetEventAlg            INFO Number of extracted MCParticles 'MC/Particles' 	448
 GaussGen                   INFO Evt 5,  Run 1082,  Nr. in job = 5 with seeds [1082, 5, 1094777801, 0]
 EvtGen:This is the current decay chain
-This top particle is f_2
-f_2 -> pi+ pi-
+This top particle is rho0 0.863221 (200.765,0.774629,0.0779472,-200.762)
+rho0 -> pi+ pi- 0.13957 1 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is pi0
-pi0 -> gamma gamma
+This top particle is K*- 0.978342 (324.135,0.617458,-0.371142,324.133)
+K*- -> K- pi0 0.493677 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is anti-K0
-anti-K0 -> K_S0
-     K_S0 -> pi+ pi- gamma
+This top particle is anti-K0 0.497672 (460.681,0.683706,0.0510483,460.68)
+anti-K0 -> K_L0 0.497672 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho0
-rho0 -> pi+ pi-
+This top particle is anti-Sigma- 1.18937 (497.643,-0.151179,-0.0532134,497.641)
+anti-Sigma- -> anti-p- pi0 0.938272 2 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho+
-rho+ -> pi+ pi0
-     pi0 -> gamma gamma
+This top particle is eta' 0.956145 (913.018,-0.141273,0.406943,913.017)
+eta' -> pi0 pi0 eta 0.134977 1 0.134977 1 0.5473 1
+     pi0 -> gamma gamma 9.87817e-10 2 9.87817e-10 2
+     pi0 -> gamma gamma 6.58545e-10 2 6.58545e-10 2
+     eta -> gamma pi- pi+ 0 2 0.13957 1 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is K*+
-K*+ -> K0 pi+
-     K0 -> K_L0
+This top particle is Delta++ 1.20398 (823.917,0.71637,-0.674494,823.915)
+Delta++ -> p+ pi+ 0.938272 2 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is Lambda0
-Lambda0 -> n0 pi0
-     pi0 -> gamma gamma
+This top particle is rho- 0.82813 (45.0484,-0.297613,-0.594981,45.0359)
+rho- -> pi- pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho-
-rho- -> pi- pi0
-     pi0 -> gamma gamma
+This top particle is rho+ 0.887798 (7.14476,-0.0475976,0.406063,7.07758)
+rho+ -> pi+ pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is anti-Delta+
-anti-Delta+ -> anti-n0 pi+
+This top particle is Delta- 1.09847 (1.76511,0.0687126,-0.436671,1.30904)
+Delta- -> n0 pi- 0.939565 2 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is pi0
-pi0 -> gamma gamma
+This top particle is rho+ 0.738418 (1.46442,-0.0356748,-0.0358403,-1.26361)
+rho+ -> pi+ pi0 gamma 0.13957 1 0.134977 1 0 2
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is a_0-
-a_0- -> eta pi-
-     eta -> pi- pi+ pi0
-          pi0 -> gamma gamma
+This top particle is rho0 0.975808 (4.33336,-1.3871,-1.01312,-3.85685)
+rho0 -> pi+ pi- 0.13957 1 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is omega
-omega -> pi- pi+ pi0
-     pi0 -> gamma gamma
+This top particle is a_2+ 1.36487 (3742.61,0.789546,-0.298828,-3742.61)
+a_2+ -> rho0 pi+ gamma gamma 0.705914 3 0.13957 1 2.66454e-15 2 3.08006e-10 2
+     rho0 -> pi+ pi- 0.13957 1 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is pi0
-pi0 -> gamma gamma
+This top particle is Delta0 1.23542 (1260.2,0.398039,0.0810593,-1260.2)
+Delta0 -> n0 pi0 0.939565 2 0.134977 1
+     pi0 -> gamma gamma 3.86106e-10 2 3.86106e-10 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is K*0
-K*0 -> K+ pi-
+This top particle is rho+ 0.869849 (1024.51,0.312972,-0.204208,-1024.51)
+rho+ -> pi+ pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 9.31323e-10 2 9.31323e-10 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is anti-K0
-anti-K0 -> K_L0
+This top particle is K*- 0.995985 (46.2343,0.474552,0.341494,-46.2199)
+K*- -> K- pi0 0.493677 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is K*+
-K*+ -> K0 pi+
-     K0 -> K_S0
-          K_S0 -> pi+ pi- gamma
+This top particle is anti-Sigma+ 1.19745 (30.9008,-0.650388,0.671245,-30.8635)
+anti-Sigma+ -> anti-n0 pi+ 0.939565 2 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is Lambda0
-Lambda0 -> p+ pi-
+This top particle is Delta- 1.23922 (9.26332,0.326531,-0.368451,-9.16685)
+Delta- -> n0 pi- 0.939565 2 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is f_1
-f_1 -> a_00 pi0
-     a_00 -> eta pi0
-          eta -> pi0 pi0 pi0
-               pi0 -> gamma gamma
-               pi0 -> gamma gamma
-               pi0 -> gamma gamma
-          pi0 -> gamma gamma
-     pi0 -> e+ e- gamma
+This top particle is anti-K0 0.497672 (1.54075,0.239103,0.432837,-1.37175)
+anti-K0 -> K_S0 0.497672 1
+     K_S0 -> pi0 pi0 0.134977 1 0.134977 1
+          pi0 -> gamma gamma 0 2 0 2
+          pi0 -> gamma gamma 1.06696e-09 2 1.06696e-09 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho0
-rho0 -> pi+ pi-
+This top particle is pi0 0.134977 (0.776406,0.16277,0.186611,-0.723374)
+pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is K0
-K0 -> K_L0
+This top particle is anti-Delta+ 1.2323 (2.70548,0.0986507,0.858609,-2.24814)
+anti-Delta+ -> anti-n0 pi+ 0.939565 2 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is eta'
-eta' -> pi+ pi- eta
-     eta -> pi0 pi0 pi0
-          pi0 -> gamma gamma
-          pi0 -> gamma gamma
-          pi0 -> gamma gamma
+This top particle is Delta- 1.15036 (1.21556,0.249072,0.288791,0.0938297)
+Delta- -> n0 pi- 0.939565 2 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is Delta++
-Delta++ -> p+ pi+
+This top particle is rho0 0.719634 (0.853156,-0.057857,0.450844,0.058252)
+rho0 -> pi+ pi- 0.13957 1 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is anti-K0
-anti-K0 -> K_S0
-     K_S0 -> pi0 pi0
-          pi0 -> gamma gamma
-          pi0 -> gamma gamma
+This top particle is anti-Delta- 1.29905 (1.89741,-0.00884257,-0.028844,1.38266)
+anti-Delta- -> anti-p- pi0 0.938272 2 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is anti-K*0
-anti-K*0 -> K- pi+
+This top particle is Delta++ 1.19576 (3.49102,-0.506122,0.25077,3.23084)
+Delta++ -> p+ pi+ 0.938272 2 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is anti-Sigma*0
-anti-Sigma*0 -> anti-Lambda0 pi0
-     anti-Lambda0 -> anti-p- pi+
-     pi0 -> gamma gamma
+This top particle is pi0 0.134977 (1.95375,-0.0148671,-0.0081325,1.94901)
+pi0 -> gamma gamma 3.29272e-10 2 3.29272e-10 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is Sigma*0
-Sigma*0 -> Lambda0 pi0
-     Lambda0 -> p+ pi-
-     pi0 -> gamma gamma
+This top particle is anti-Delta- 1.14003 (6.64008,-1.10173,0.332497,6.43945)
+anti-Delta- -> anti-n0 pi- 0.939565 2 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho+
-rho+ -> pi+ pi0
-     pi0 -> gamma gamma
+This top particle is a_1+ 1.53607 (6.98566,-1.08851,-0.585096,6.70169)
+a_1+ -> rho0 pi+ 0.763775 3 0.13957 1
+     rho0 -> pi+ pi- 0.13957 1 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is a_2-
-a_2- -> rho- pi0
-     rho- -> pi- pi0
-          pi0 -> gamma gamma
-     pi0 -> gamma gamma
+This top particle is Delta- 1.30411 (13.9618,-1.70888,0.431412,13.7885)
+Delta- -> n0 pi- 0.939565 2 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is eta
-eta -> pi0 pi0 pi0
-     pi0 -> gamma gamma
-     pi0 -> gamma gamma
-     pi0 -> gamma gamma
+This top particle is omega 0.774446 (2.04274,0.622091,0.0296096,1.78469)
+omega -> pi0 gamma 0.134977 1 1.26331e-08 2
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho0
-rho0 -> pi+ pi-
+This top particle is rho+ 0.720016 (3.96715,0.265833,-0.0585768,3.89175)
+rho+ -> pi+ pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho-
-rho- -> pi- pi0
-     pi0 -> gamma gamma
+This top particle is omega 0.786731 (3.82223,-0.195062,8.18389e-05,3.7353)
+omega -> pi- pi+ pi0 0.13957 1 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is eta
-eta -> gamma gamma
+This top particle is eta' 0.957673 (43.7338,0.695973,0.621687,43.7134)
+eta' -> pi+ pi- eta 0.13957 1 0.13957 1 0.5473 1
+     eta -> gamma gamma 2.63418e-09 2 2.63418e-09 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is f_1
-f_1 -> rho0 pi+ pi-
-     rho0 -> pi+ pi- gamma
+This top particle is omega 0.784387 (63.2739,0.439639,1.87072,63.2399)
+omega -> pi- pi+ pi0 0.13957 1 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is a_20
-a_20 -> rho- pi+
-     rho- -> pi- pi0
-          pi0 -> gamma gamma
+This top particle is rho0 0.777207 (1.22514,-0.428633,-0.700829,0.471213)
+rho0 -> pi+ pi- 0.13957 1 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is omega
-omega -> pi- pi+ pi0
-     pi0 -> gamma gamma
+This top particle is anti-K*0 0.894181 (1.30912,-0.00766663,-0.141816,0.945551)
+anti-K*0 -> K- pi+ 0.493677 1 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is omega
-omega -> pi- pi+
+This top particle is K0 0.497672 (1.33504,1.17321,-0.31641,0.241073)
+K0 -> K_L0 0.497672 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is eta
-eta -> pi0 pi0 pi0
-     pi0 -> gamma gamma
-     pi0 -> gamma gamma
-     pi0 -> gamma gamma
+This top particle is rho+ 0.737655 (0.953254,0.482681,0.103193,0.347748)
+rho+ -> pi+ pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 9.31323e-10 2 9.31323e-10 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is omega
-omega -> pi- pi+ pi0
-     pi0 -> gamma gamma
+This top particle is rho+ 0.78834 (1.80787,0.606904,-0.320123,-1.47516)
+rho+ -> pi+ pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho+
-rho+ -> pi+ pi0
-     pi0 -> gamma gamma
+This top particle is omega 0.774567 (2.21003,-0.0368848,-0.368211,-2.0365)
+omega -> pi- pi+ pi0 0.13957 1 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 4.65661e-10 2 4.65661e-10 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is eta
-eta -> gamma gamma
+This top particle is omega 0.782902 (4.85519,-0.809378,-0.725061,-4.66681)
+omega -> pi- pi+ pi0 gamma 0.13957 1 0.13957 1 0.134977 1 4.62771e-11 2
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is eta
-eta -> gamma gamma
+This top particle is omega 0.779768 (1.22911,-0.0044814,-0.0540673,-0.948539)
+omega -> pi- pi+ pi0 gamma 0.13957 1 0.13957 1 0.134977 1 0 2
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho0
-rho0 -> pi+ pi-
+This top particle is K'_10 1.66614 (34.1671,-0.215073,0.105377,-34.1256)
+K'_10 -> K*+ pi- gamma 0.88181 3 0.13957 1 0 2
+     K*+ -> K+ pi0 0.493677 1 0.134977 1
+          pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is rho-
-rho- -> pi- pi0
-     pi0 -> gamma gamma
+This top particle is rho+ 0.874512 (47.088,0.665034,-0.454007,-47.073)
+rho+ -> pi+ pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is a_1+
-a_1+ -> rho0 pi+
-     rho0 -> pi+ pi-
+This top particle is omega 0.773232 (66.9052,-0.242603,0.475349,-66.8986)
+omega -> pi- pi+ pi0 0.13957 1 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 3.39406e-10 2 3.39406e-10 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is pi0
-pi0 -> gamma gamma
+This top particle is K*- 0.855298 (51.4032,0.0830701,0.239683,-51.3955)
+K*- -> anti-K0 pi- 0.497672 1 0.13957 1
+     anti-K0 -> K_L0 0.497672 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is eta
-eta -> pi0 pi0 pi0
-     pi0 -> gamma gamma
-     pi0 -> gamma gamma
-     pi0 -> gamma gamma
+This top particle is K0 0.497672 (16.0714,-0.209538,0.0231837,-16.0623)
+K0 -> K_S0 0.497672 1
+     K_S0 -> pi0 pi0 0.134977 1 0.134977 1
+          pi0 -> gamma gamma 0 2 0 2
+          pi0 -> gamma gamma 2.23625e-10 2 2.23625e-10 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is K*-
-K*- -> anti-K0 pi-
-     anti-K0 -> K_S0
-          K_S0 -> pi+ pi-
+This top particle is rho+ 0.705161 (9.32193,0.839971,-0.255134,-9.25367)
+rho+ -> pi+ pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 6.58545e-10 2 6.58545e-10 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is anti-Sigma-
-anti-Sigma- -> anti-p- pi0
-     pi0 -> gamma gamma
+This top particle is a_2- 1.29518 (11.4105,-0.130064,0.701309,-11.3143)
+a_2- -> omega pi- pi0 0.777005 3 0.13957 1 0.134977 1
+     omega -> pi- pi+ pi0 0.13957 1 0.13957 1 0.134977 1
+          pi0 -> gamma gamma 0 2 0 2
+     pi0 -> gamma gamma 1.14434e-09 2 1.14434e-09 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is a_10
-a_10 -> rho- pi+
-     rho- -> pi- pi0
-          pi0 -> gamma gamma
+This top particle is omega 0.784853 (2.55918,-0.113195,-0.834628,-2.28561)
+omega -> pi- pi+ pi0 0.13957 1 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 6.58545e-10 2 6.58545e-10 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is omega
-omega -> pi- pi+ pi0
-     pi0 -> gamma gamma
+This top particle is K*+ 0.893614 (2.28965,-0.818504,-0.721562,-1.80371)
+K*+ -> K0 pi+ 0.497672 1 0.13957 1
+     K0 -> K_L0 0.497672 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is f_1
-f_1 -> eta pi0 pi0
-     eta -> pi0 pi0 pi0
-          pi0 -> gamma gamma
-          pi0 -> gamma gamma
-          pi0 -> gamma gamma
-     pi0 -> gamma gamma
-     pi0 -> gamma gamma
+This top particle is rho0 0.729043 (1.02618,0.702898,0.148009,-0.0746689)
+rho0 -> pi+ pi- 0.13957 1 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is Delta++
-Delta++ -> p+ pi+ gamma
+This top particle is pi0 0.134977 (1.24559,0.401197,0.79548,0.85996)
+pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is K0
-K0 -> K_L0
+This top particle is pi0 0.134977 (0.514065,-0.362498,-0.213782,0.262557)
+pi0 -> gamma gamma 9.31323e-10 2 9.31323e-10 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is f_1
-f_1 -> rho- pi+ pi0
-     rho- -> pi- pi0
-          pi0 -> gamma gamma
-     pi0 -> gamma gamma
+This top particle is anti-Delta0 1.29293 (7.21688,0.135909,0.500611,7.08115)
+anti-Delta0 -> anti-p- pi+ gamma 0.938272 2 0.13957 1 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is anti-Delta+
-anti-Delta+ -> anti-n0 pi+
+This top particle is omega 0.838577 (1.70534,0.243453,-0.235006,1.44585)
+omega -> pi- pi+ pi0 0.13957 1 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is eta'
-eta' -> pi+ pi- eta
-     eta -> gamma gamma
+This top particle is Delta0 1.2435 (22.1482,0.845417,0.429449,22.0929)
+Delta0 -> n0 pi0 0.939565 2 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is Delta-
-Delta- -> n0 pi-
+This top particle is rho+ 0.779965 (23.2687,-0.0473042,-0.313627,23.2535)
+rho+ -> pi+ pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is anti-K0
-anti-K0 -> K_L0
+This top particle is anti-Delta-- 1.20045 (1.65093,-0.0987617,0.504904,1.00986)
+anti-Delta-- -> anti-p- pi- 0.938272 2 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is K0
-K0 -> K_S0
-     K_S0 -> pi+ pi-
+This top particle is Delta++ 1.23891 (1.87971,-0.564063,-0.266255,1.26861)
+Delta++ -> p+ pi+ 0.938272 2 0.13957 1
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is a_20
-a_20 -> rho+ pi-
-     rho+ -> pi+ pi0
-          pi0 -> gamma gamma
+This top particle is omega 0.793702 (0.871237,0.0951783,-0.346061,-0.0165433)
+omega -> pi- pi+ pi0 0.13957 1 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 6.58545e-10 2 6.58545e-10 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is pi0
-pi0 -> gamma gamma
+This top particle is omega 0.777567 (13.0368,0.685637,0.683183,-12.9776)
+omega -> pi- pi+ pi0 0.13957 1 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is a_2+
-a_2+ -> eta pi+
-     eta -> gamma gamma
+This top particle is rho+ 0.535052 (3.60517,0.469179,0.242535,-3.5259)
+rho+ -> pi+ pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 0 2 0 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is K0
-K0 -> K_L0
+This top particle is pi0 0.134977 (14.0937,0.392098,1.04144,-14.049)
+pi0 -> gamma gamma 5.73279e-10 2 5.73279e-10 2
 EvtGen:End of decay chain.
 EvtGen:This is the current decay chain
-This top particle is eta
-eta -> gamma gamma
-EvtGen:End of decay chain.
-EvtGen:This is the current decay chain
-This top particle is rho+
-rho+ -> pi+ pi0
-     pi0 -> gamma gamma
-EvtGen:End of decay chain.
-EvtGen:This is the current decay chain
-This top particle is pi0
-pi0 -> gamma gamma
-EvtGen:End of decay chain.
-EvtGen:This is the current decay chain
-This top particle is omega
-omega -> pi0 gamma
-     pi0 -> gamma gamma
-EvtGen:End of decay chain.
-EvtGen:This is the current decay chain
-This top particle is K*-
-K*- -> K- pi0
-     pi0 -> gamma gamma
-EvtGen:End of decay chain.
-EvtGen:This is the current decay chain
-This top particle is rho0
-rho0 -> pi+ pi-
-EvtGen:End of decay chain.
-EvtGen:This is the current decay chain
-This top particle is pi0
-pi0 -> gamma gamma
-EvtGen:End of decay chain.
-EvtGen:This is the current decay chain
-This top particle is K_2*-
-K_2*- -> anti-K0 pi-
-     anti-K0 -> K_L0
-EvtGen:End of decay chain.
-EvtGen:This is the current decay chain
-This top particle is K*+
-K*+ -> K0 pi+
-     K0 -> K_L0
-EvtGen:End of decay chain.
-EvtGen:This is the current decay chain
-This top particle is a_2-
-a_2- -> omega pi- pi0
-     omega -> pi0 gamma
-          pi0 -> gamma gamma
-     pi0 -> gamma gamma
-EvtGen:End of decay chain.
-EvtGen:This is the current decay chain
-This top particle is rho0
-rho0 -> pi+ pi-
-EvtGen:End of decay chain.
-EvtGen:This is the current decay chain
-This top particle is anti-Lambda0
-anti-Lambda0 -> anti-n0 pi0
-     pi0 -> gamma gamma
-EvtGen:End of decay chain.
-EvtGen:This is the current decay chain
-This top particle is eta
-eta -> gamma gamma
-EvtGen:End of decay chain.
-EvtGen:This is the current decay chain
-This top particle is a_10
-a_10 -> rho+ pi-
-     rho+ -> pi+ pi0
-          pi0 -> gamma gamma
-EvtGen:End of decay chain.
-EvtGen:This is the current decay chain
-This top particle is anti-K0
-anti-K0 -> K_S0
-     K_S0 -> pi0 pi0
-          pi0 -> gamma gamma
-          pi0 -> gamma gamma
-EvtGen:End of decay chain.
-EvtGen:This is the current decay chain
-This top particle is omega
-omega -> pi- pi+ pi0
-     pi0 -> gamma gamma
-EvtGen:End of decay chain.
-EvtGen:This is the current decay chain
-This top particle is omega
-omega -> pi- pi+ pi0
-     pi0 -> gamma gamma
-EvtGen:End of decay chain.
-EvtGen:This is the current decay chain
-This top particle is pi0
-pi0 -> gamma gamma
-EvtGen:End of decay chain.
-EvtGen:This is the current decay chain
-This top particle is eta
-eta -> gamma gamma
-EvtGen:End of decay chain.
-EvtGen:This is the current decay chain
-This top particle is K0
-K0 -> K_S0
-     K_S0 -> pi+ pi-
-EvtGen:End of decay chain.
-EvtGen:This is the current decay chain
-This top particle is K0
-K0 -> K_L0
-EvtGen:End of decay chain.
-EvtGen:This is the current decay chain
-This top particle is omega
-omega -> pi0 gamma
-     pi0 -> gamma gamma
-EvtGen:End of decay chain.
-EvtGen:This is the current decay chain
-This top particle is a_10
-a_10 -> rho+ pi- gamma
-     rho+ -> pi+ pi0
-          pi0 -> gamma gamma
+This top particle is rho- 0.645883 (2.23561,-0.604598,1.06078,-1.75784)
+rho- -> pi- pi0 0.13957 1 0.134977 1
+     pi0 -> gamma gamma 6.58545e-10 2 6.58545e-10 2
 EvtGen:End of decay chain.
 GaussSim                   INFO Evt 5,  Run 1082,  Nr. in job = 5 with seeds [1082, 5, 253147997, 0]
-GiGaGetEventAlg            INFO Number of extracted MCParticles 'MC/Particles' 	1564
+GiGaGetEventAlg            INFO Number of extracted MCParticles 'MC/Particles' 	1232
 ApplicationMgr             INFO Application Manager Stopped successfully
 GaussGen                SUCCESS ==================================================================
 GaussGen                SUCCESS 5 events processed
@@ -1825,21 +1850,21 @@ Number of accepted interactions with b and c : 0
 GenMonitorAlg              INFO
 ======================== Generators Statistics ====================
 =                                                                 =
-= Number of particles generated: 1570
+= Number of particles generated: 1669
 = Number of events: 5
-= Mean multiplicity: 314
+= Mean multiplicity: 333.8
 =                                                                 =
-= Number of pseudo stable particles generated: 1337
+= Number of pseudo stable particles generated: 1383
 = Number of events: 5
-= Mean pseudo stable multiplicity: 267.4
+= Mean pseudo stable multiplicity: 276.6
 =                                                                 =
-= Number of charged stable particles generated: 392
+= Number of charged stable particles generated: 408
 = Number of events: 5
-= Mean charged stable multiplicity: 78.4
+= Mean charged stable multiplicity: 81.6
 =                                                                 =
-= Number of charged stable particles in LHCb eta 79
+= Number of charged stable particles in LHCb eta 76
 = Number of events: 5
-= Mean charged stable multiplicity in LHCb eta: 15.8
+= Mean charged stable multiplicity in LHCb eta: 15.2
 =                                                                 =
 ===================================================================
 GenMonitorAlg           SUCCESS Booked 19 Histogram(s) : 1D=19
@@ -1847,90 +1872,95 @@ GaussSim                SUCCESS ================================================
 GaussSim                SUCCESS 5 events processed
 GaussSim                SUCCESS ==================================================================
 GetRichHits                INFO Av. # Invalid RICH flags              =    0.00 +- 0.00
-GetRichHits                INFO Av. # MCRichHits              : Rich1 =  542.60 +-10.42 (100.00 +-0.00%) Rich2 =  222.80 +- 6.68 (100.00 +-0.00%)
-GetRichHits                INFO Av. # Invalid radiator hits   : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO Av. # Signal Hits             : Rich1 =  392.60 +- 8.86 ( 72.36 +-0.86%) Rich2 =  129.80 +- 5.10 ( 58.26 +-1.48%)
-GetRichHits                INFO Av. # Gas Quartz CK hits      : Rich1 =   28.00 +- 2.37 (  5.16 +-0.42%) Rich2 =    3.80 +- 0.87 (  1.71 +-0.39%)
-GetRichHits                INFO Av. # HPD Quartz CK hits      : Rich1 =   68.40 +- 3.70 ( 12.61 +-0.64%) Rich2 =   68.00 +- 3.69 ( 30.52 +-1.38%)
-GetRichHits                INFO Av. # Nitrogen CK hits        : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO Av. # Aero Filter CK hits     : Rich1 =    0.20 +- 0.20 (  0.04 +-0.04%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO Av. # Si back-scattering      : Rich1 =    3.40 +- 0.82 (  0.63 +-0.15%) Rich2 =    2.60 +- 0.72 (  1.17 +-0.32%)
-GetRichHits                INFO Av. # Charged Track hits      : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO Av. # All HPD reflection hits : Rich1 =   67.00 +- 3.66 ( 12.35 +-0.63%) Rich2 =   49.20 +- 3.14 ( 22.08 +-1.24%)
-GetRichHits                INFO   Av. # QW/PC refl. hits      : Rich1 =   26.80 +- 2.32 (  4.94 +-0.42%) Rich2 =   21.20 +- 2.06 (  9.52 +-0.88%)
-GetRichHits                INFO   Av. # Chromium refl. hits   : Rich1 =   40.60 +- 2.85 (  7.48 +-0.51%) Rich2 =   27.60 +- 2.35 ( 12.39 +-0.99%)
-GetRichHits                INFO   Av. # Air/QW refl. hits     : Rich1 =   13.60 +- 1.65 (  2.51 +-0.30%) Rich2 =   13.80 +- 1.66 (  6.19 +-0.72%)
-GetRichHits                INFO   Av. # Air/PC refl. hits     : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
+GetRichHits                INFO Av. # MCRichHits              : Rich1 =  697.40 +-11.81 (100.00 +-0.00%) Rich2 =  538.60 +-10.38 (100.00 +-0.00%)
+GetRichHits                INFO Av. # Invalid radiator hits   : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.20 +- 0.20 (  0.04 +-0.04%)
+GetRichHits                INFO Av. # Signal Hits             : Rich1 =  472.20 +- 9.72 ( 67.71 +-0.79%) Rich2 =  179.40 +- 5.99 ( 33.31 +-0.91%)
+GetRichHits                INFO Av. # Gas Quartz CK hits      : Rich1 =   24.40 +- 2.21 (  3.50 +-0.31%) Rich2 =   24.00 +- 2.19 (  4.46 +-0.40%)
+GetRichHits                INFO Av. # HPD Quartz CK hits      : Rich1 =  139.00 +- 5.27 ( 19.93 +-0.68%) Rich2 =  313.80 +- 7.92 ( 58.26 +-0.95%)
+GetRichHits                INFO Av. # Nitrogen CK hits        : Rich1 =    0.20 +- 0.20 (  0.03 +-0.03%) Rich2 =    0.20 +- 0.20 (  0.04 +-0.04%)
+GetRichHits                INFO Av. # Aero Filter CK hits     : Rich1 =    0.40 +- 0.28 (  0.06 +-0.04%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
+GetRichHits                INFO Av. # Si back-scattering      : Rich1 =    4.40 +- 0.94 (  0.63 +-0.13%) Rich2 =    2.00 +- 0.63 (  0.37 +-0.12%)
+GetRichHits                INFO Av. # Charged Track hits      : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.20 +- 0.20 (  0.04 +-0.04%)
+GetRichHits                INFO Av. # All HPD reflection hits : Rich1 =   91.00 +- 4.27 ( 13.05 +-0.57%) Rich2 =  111.60 +- 4.72 ( 20.72 +-0.78%)
+GetRichHits                INFO   Av. # QW/PC refl. hits      : Rich1 =   30.40 +- 2.47 (  4.36 +-0.35%) Rich2 =   44.80 +- 2.99 (  8.32 +-0.53%)
+GetRichHits                INFO   Av. # Chromium refl. hits   : Rich1 =   56.80 +- 3.37 (  8.14 +-0.46%) Rich2 =   66.20 +- 3.64 ( 12.29 +-0.63%)
+GetRichHits                INFO   Av. # Air/QW refl. hits     : Rich1 =   20.00 +- 2.00 (  2.87 +-0.28%) Rich2 =   20.60 +- 2.03 (  3.82 +-0.37%)
+GetRichHits                INFO   Av. # Air/PC refl. hits     : Rich1 =    0.20 +- 0.20 (  0.03 +-0.03%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
 GetRichHits                INFO   Av. # PC/QW refl. hits      : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO   Av. # Silicon refl. hits    : Rich1 =    0.20 +- 0.20 (  0.04 +-0.04%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO   Av. # Kovar refl. hits      : Rich1 =    2.20 +- 0.66 (  0.41 +-0.12%) Rich2 =    0.60 +- 0.35 (  0.27 +-0.16%)
-GetRichHits                INFO   Av. # Kapton refl. hits     : Rich1 =    7.80 +- 1.25 (  1.44 +-0.23%) Rich2 =    3.40 +- 0.82 (  1.53 +-0.37%)
-GetRichHits                INFO Av. # Signal CK MCRichHits    : Aero  =   76.20 +- 3.90 ( 14.04 +-0.67%) C4F10 =  316.40 +- 7.95 ( 58.31 +-0.95%) CF4 =  129.80 +- 5.10 ( 58.26 +-1.48%)
-GetRichHits                INFO Av. # Rayleigh scattered hits : Aero  =    3.80 +- 0.87 (  0.70 +-0.16%) C4F10 =    0.60 +- 0.35 (  0.11 +-0.06%) CF4 =    0.00 +- 0.00 (  0.00 +-0.00%)
+GetRichHits                INFO   Av. # Silicon refl. hits    : Rich1 =    0.40 +- 0.28 (  0.06 +-0.04%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
+GetRichHits                INFO   Av. # Kovar refl. hits      : Rich1 =    4.00 +- 0.89 (  0.57 +-0.13%) Rich2 =    1.00 +- 0.45 (  0.19 +-0.08%)
+GetRichHits                INFO   Av. # Kapton refl. hits     : Rich1 =   12.60 +- 1.59 (  1.81 +-0.23%) Rich2 =   14.00 +- 1.67 (  2.60 +-0.31%)
+GetRichHits                INFO Av. # Signal CK MCRichHits    : Aero  =   80.80 +- 4.02 ( 11.59 +-0.54%) C4F10 =  391.40 +- 8.85 ( 56.12 +-0.84%) CF4 =  179.40 +- 5.99 ( 33.31 +-0.91%)
+GetRichHits                INFO Av. # Rayleigh scattered hits : Aero  =    5.00 +- 1.00 (  0.72 +-0.14%) C4F10 =    0.40 +- 0.28 (  0.06 +-0.04%) CF4 =    0.00 +- 0.00 (  0.00 +-0.00%)
 GetRichHits                INFO Av. # MCParticle-less hits    : Aero  =    0.00 +- 0.00 (  0.00 +-0.00%) C4F10 =    0.00 +- 0.00 (  0.00 +-0.00%) CF4 =    0.00 +- 0.00 (  0.00 +-0.00%)
 GetRichHits                INFO Av. # Aero hits per tile     :
-GetRichHits                INFO           tile =  0 hits =    0.60 +- 0.35 / event
-GetRichHits                INFO           tile =  1 hits =    1.60 +- 0.57 / event
-GetRichHits                INFO           tile =  2 hits =   14.80 +- 1.72 / event
-GetRichHits                INFO           tile =  3 hits =    6.40 +- 1.13 / event
-GetRichHits                INFO           tile =  4 hits =   20.40 +- 2.02 / event
-GetRichHits                INFO           tile =  5 hits =    0.60 +- 0.35 / event
-GetRichHits                INFO           tile =  6 hits =    1.00 +- 0.45 / event
-GetRichHits                INFO           tile =  7 hits =    0.00 +- 0.00 / event
-GetRichHits                INFO           tile =  8 hits =    0.20 +- 0.20 / event
-GetRichHits                INFO           tile =  9 hits =    0.00 +- 0.00 / event
-GetRichHits                INFO           tile = 10 hits =   16.00 +- 1.79 / event
-GetRichHits                INFO           tile = 11 hits =    8.20 +- 1.28 / event
-GetRichHits                INFO           tile = 12 hits =   13.40 +- 1.64 / event
-GetRichHits                INFO           tile = 13 hits =    2.00 +- 0.63 / event
-GetRichHits                INFO           tile = 14 hits =    3.20 +- 0.80 / event
-GetRichHits                INFO           tile = 15 hits =    0.60 +- 0.35 / event
-GetRichPhotons             INFO Av. # MCRichOpticalPhotons : Aerogel =    89.00 +-  4.22 / event
-GetRichPhotons             INFO Av. # MCRichOpticalPhotons : Rich1Gas =   357.00 +-  8.45 / event
-GetRichPhotons             INFO Av. # MCRichOpticalPhotons : Rich2Gas =   151.00 +-  5.50 / event
-GetRichPhotons             INFO Av. # MCRichOpticalPhotons : GasQuartzWin =    31.80 +-  2.52 / event
-GetRichPhotons             INFO Av. # MCRichOpticalPhotons : HPDQuartzWin =   136.40 +-  5.22 / event
-GetRichPhotons             INFO Av. # MCRichOpticalPhotons : AerogelFilter =     0.20 +-  0.20 / event
-GetRichSegments            INFO Av. # MCRichSegments       : Aerogel =    14.60 +-  1.71 / event
-GetRichSegments            INFO Av. # MCRichSegments       : Rich1Gas =    15.40 +-  1.75 / event
-GetRichSegments            INFO Av. # MCRichSegments       : Rich2Gas =     9.80 +-  1.40 / event
-GetRichSegments            INFO Av. # MCRichSegments       : GasQuartzWin =     2.00 +-  0.63 / event
-GetRichSegments            INFO Av. # MCRichSegments       : HPDQuartzWin =     1.40 +-  0.53 / event
-GetRichSegments            INFO Av. # MCRichSegments       : AerogelFilter =     0.20 +-  0.20 / event
+GetRichHits                INFO           tile =  0 hits =    0.00 +- 0.00 / event
+GetRichHits                INFO           tile =  1 hits =    1.20 +- 0.49 / event
+GetRichHits                INFO           tile =  2 hits =   13.00 +- 1.61 / event
+GetRichHits                INFO           tile =  3 hits =   12.20 +- 1.56 / event
+GetRichHits                INFO           tile =  4 hits =   13.60 +- 1.65 / event
+GetRichHits                INFO           tile =  5 hits =    1.60 +- 0.57 / event
+GetRichHits                INFO           tile =  6 hits =    0.20 +- 0.20 / event
+GetRichHits                INFO           tile =  7 hits =    1.20 +- 0.49 / event
+GetRichHits                INFO           tile =  8 hits =    0.00 +- 0.00 / event
+GetRichHits                INFO           tile =  9 hits =    2.00 +- 0.63 / event
+GetRichHits                INFO           tile = 10 hits =   16.20 +- 1.80 / event
+GetRichHits                INFO           tile = 11 hits =    4.00 +- 0.89 / event
+GetRichHits                INFO           tile = 12 hits =   23.40 +- 2.16 / event
+GetRichHits                INFO           tile = 13 hits =    1.00 +- 0.45 / event
+GetRichHits                INFO           tile = 14 hits =    7.00 +- 1.18 / event
+GetRichHits                INFO           tile = 15 hits =    1.00 +- 0.45 / event
+GetRichPhotons             INFO Av. # MCRichOpticalPhotons : Aerogel =    97.60 +-  4.42 / event
+GetRichPhotons             INFO Av. # MCRichOpticalPhotons : Rich1Gas =   435.80 +-  9.34 / event
+GetRichPhotons             INFO Av. # MCRichOpticalPhotons : Rich2Gas =   200.40 +-  6.33 / event
+GetRichPhotons             INFO Av. # MCRichOpticalPhotons : GasQuartzWin =    48.40 +-  3.11 / event
+GetRichPhotons             INFO Av. # MCRichOpticalPhotons : HPDQuartzWin =   452.80 +-  9.52 / event
+GetRichPhotons             INFO Av. # MCRichOpticalPhotons : Nitrogen =     0.40 +-  0.28 / event
+GetRichPhotons             INFO Av. # MCRichOpticalPhotons : AerogelFilter =     0.40 +-  0.28 / event
+GetRichSegments            INFO Av. # MCRichSegments       : Aerogel =    14.80 +-  1.72 / event
+GetRichSegments            INFO Av. # MCRichSegments       : Rich1Gas =    20.00 +-  2.00 / event
+GetRichSegments            INFO Av. # MCRichSegments       : Rich2Gas =    12.20 +-  1.56 / event
+GetRichSegments            INFO Av. # MCRichSegments       : GasQuartzWin =     3.80 +-  0.87 / event
+GetRichSegments            INFO Av. # MCRichSegments       : HPDQuartzWin =     3.60 +-  0.85 / event
+GetRichSegments            INFO Av. # MCRichSegments       : Nitrogen =     0.40 +-  0.28 / event
+GetRichSegments            INFO Av. # MCRichSegments       : AerogelFilter =     0.40 +-  0.28 / event
 GetRichTracks              INFO Av. # MCRichTracks         : Overall =     0.00 +-  0.00
 VeloGaussMoni              INFO ------------------------------------------------------
 VeloGaussMoni              INFO                 - VeloGaussMoni table -
 VeloGaussMoni              INFO ------------------------------------------------------
-VeloGaussMoni              INFO | Number of MCHits/Event:       465.6+/-121.392
-VeloGaussMoni              INFO | Number of PileUpMCHits/Event: 27.4+/-7.60316
+VeloGaussMoni              INFO | Number of MCHits/Event:       508.8+/-154.363
+VeloGaussMoni              INFO | Number of PileUpMCHits/Event: 34.8+/-16.8675
 VeloGaussMoni              INFO ------------------------------------------------------
 TTHitMonitor               INFO *** Summary ***
-TTHitMonitor               INFO #hits per event: 156.2
-TTHitMonitor               INFO Mean beta * gamma: 705.103
-TTHitMonitor               INFO Most Probable deposited charge: 0.153036
+TTHitMonitor               INFO #hits per event: 194.2
+TTHitMonitor               INFO Mean beta * gamma: 982.474
+TTHitMonitor               INFO Most Probable deposited charge: 0.155382
+TTHitMonitor               INFO Half Sample width 0.0719561
 TTHitMonitor            SUCCESS Booked 7 Histogram(s) : 1D=7
 TTHitMonitor            SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "betaGamma"                                     |       781 |   550685.2 |     705.10 |     2058.6 |   0.0081572 |      15636. |
- | "numberHits"                                    |         5 |        781 |     156.20 |     88.761 |      34.000 |      286.00 |
+ | "betaGamma"                                     |       971 |   953981.8 |     982.47 |     2528.1 |     0.17399 |      18728. |
+ | "numberHits"                                    |         5 |        971 |     194.20 |     135.74 |      18.000 |      348.00 |
 ITHitMonitor               INFO *** Summary ***
-ITHitMonitor               INFO #hits per event: 121.4
-ITHitMonitor               INFO Mean beta * gamma: 1956.31
-ITHitMonitor               INFO Most Probable deposited charge: 0.108833
+ITHitMonitor               INFO #hits per event: 90
+ITHitMonitor               INFO Mean beta * gamma: 359.149
+ITHitMonitor               INFO Most Probable deposited charge: 0.117893
+ITHitMonitor               INFO Half Sample width 0.0497353
 ITHitMonitor            SUCCESS Booked 9 Histogram(s) : 1D=9
 ITHitMonitor            SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "betaGamma"                                     |       607 |    1187480 |     1956.3 |     6625.7 |     0.68857 |      48294. |
- | "numberHits"                                    |         5 |        607 |     121.40 |     79.180 |      6.0000 |      230.00 |
+ | "betaGamma"                                     |       450 |   161617.2 |     359.15 |     1321.3 |     0.15280 |      23521. |
+ | "numberHits"                                    |         5 |        450 |     90.000 |     62.578 |      7.0000 |      191.00 |
 OTHitMonitor               INFO *** Summary ***
-OTHitMonitor               INFO #hits per event: 382.8
-OTHitMonitor               INFO Mean beta * gamma: 1870.39
-OTHitMonitor               INFO Most Probable deposited charge: 0.228882
+OTHitMonitor               INFO #hits per event: 425
+OTHitMonitor               INFO Mean beta * gamma: 1584.06
+OTHitMonitor               INFO Most Probable deposited charge: 0.229482
+OTHitMonitor               INFO Half Sample width 0.105756
 OTHitMonitor            SUCCESS Booked 9 Histogram(s) : 1D=9
 OTHitMonitor            SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "betaGamma"                                     |      1914 |    3579932 |     1870.4 |     6355.1 |   0.0064722 |      56819. |
- | "numberHits"                                    |         5 |       1914 |     382.80 |     205.42 |      129.00 |      723.00 |
+ | "betaGamma"                                     |      2125 |    3366133 |     1584.1 |     3957.3 |   0.0072211 |      32452. |
+ | "numberHits"                                    |         5 |       2125 |     425.00 |     274.67 |      37.000 |      802.00 |
 SpdMonitor              SUCCESS Booked 19 Histogram(s) : 1D=19
 PrsMonitor              SUCCESS Booked 19 Histogram(s) : 1D=19
 EcalMonitor             SUCCESS Booked 19 Histogram(s) : 1D=19
@@ -1939,14 +1969,14 @@ MuonHitChecker             INFO ------------------------------------------------
 MuonHitChecker             INFO        Muon Monitoring Table
 MuonHitChecker             INFO -----------------------------------------------------------------
 MuonHitChecker             INFO  M1        M2        M3        M4        M5
-MuonHitChecker             INFO 26.200  1.600  0.000  0.400  0.200   R1
-MuonHitChecker             INFO 32.800  2.400  0.800  1.200  0.400   R2
-MuonHitChecker             INFO 35.200  1.000  0.000  0.000  0.000   R3
-MuonHitChecker             INFO 31.000  2.000  0.000  0.000  0.000   R4
+MuonHitChecker             INFO 21.400  5.200  2.000  0.600  1.000   R1
+MuonHitChecker             INFO 25.000  4.200  0.000  0.000  0.600   R2
+MuonHitChecker             INFO 30.600  1.800  0.000  0.000  0.000   R3
+MuonHitChecker             INFO 32.200  7.200  0.000  0.000  0.200   R4
 MuonHitChecker             INFO -----------------------------------------------------------------
 MuonHitChecker             INFO -------    Integrated over regions    ---------------------------
 MuonHitChecker             INFO -----------------------------------------------------------------
-MuonHitChecker             INFO 125.200  7.000  0.800  1.600  0.600   allR
+MuonHitChecker             INFO 109.200  18.400  2.000  0.600  1.800   allR
 MuonHitChecker             INFO  number of hit generate doutside gaps volume 0
 GaussTape                  INFO Events output: 5
 EventLoopMgr               INFO Histograms converted successfully according to request.
@@ -1962,18 +1992,18 @@ ToolSvc.SequencerTime...   INFO ------------------------------------------------
 ToolSvc.SequencerTime...   INFO This machine has a speed about   2.32 times the speed of a 2.8 GHz Xeon.
 ToolSvc.SequencerTime...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.SequencerTime...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTime...   INFO DetectorsHits                 |    15.397 |    25.780 |    5.492      66.9 |       5 |     0.129 |
-ToolSvc.SequencerTime...   INFO   GetVeloHits                 |     1.400 |     1.348 |    0.241       2.0 |       5 |     0.007 |
-ToolSvc.SequencerTime...   INFO   GetPuVetoHits               |     0.000 |     0.060 |    0.037       0.1 |       5 |     0.000 |
-ToolSvc.SequencerTime...   INFO   GetTTHits                   |     1.400 |     1.329 |    0.331       2.0 |       5 |     0.007 |
-ToolSvc.SequencerTime...   INFO   GetITHits                   |     0.400 |     0.730 |    0.089       1.1 |       5 |     0.004 |
-ToolSvc.SequencerTime...   INFO   GetOTHits                   |     1.800 |     1.908 |    0.875       3.4 |       5 |     0.010 |
-ToolSvc.SequencerTime...   INFO   GetMuonHits                 |     2.400 |     2.273 |    1.029       4.5 |       5 |     0.011 |
-ToolSvc.SequencerTime...   INFO   GetSpdHits                  |     0.799 |     0.537 |    0.150       1.0 |       5 |     0.003 |
-ToolSvc.SequencerTime...   INFO   GetPrsHits                  |     0.800 |     0.785 |    0.268       2.0 |       5 |     0.004 |
-ToolSvc.SequencerTime...   INFO   GetEcalHits                 |     2.200 |     2.178 |    0.814       5.0 |       5 |     0.011 |
-ToolSvc.SequencerTime...   INFO   GetHcalHits                 |     0.200 |     0.319 |    0.201       0.6 |       5 |     0.002 |
-ToolSvc.SequencerTime...   INFO   RichHits                    |     3.999 |    14.298 |    1.043      55.5 |       5 |     0.071 |
+ToolSvc.SequencerTime...   INFO DetectorsHits                 |    18.397 |    18.105 |    3.220      34.2 |       5 |     0.091 |
+ToolSvc.SequencerTime...   INFO   GetVeloHits                 |     1.399 |     1.473 |    0.336       2.6 |       5 |     0.007 |
+ToolSvc.SequencerTime...   INFO   GetPuVetoHits               |     0.400 |     0.117 |    0.038       0.2 |       5 |     0.001 |
+ToolSvc.SequencerTime...   INFO   GetTTHits                   |     1.400 |     1.459 |    0.232       2.3 |       5 |     0.007 |
+ToolSvc.SequencerTime...   INFO   GetITHits                   |     0.800 |     0.578 |    0.110       1.1 |       5 |     0.003 |
+ToolSvc.SequencerTime...   INFO   GetOTHits                   |     2.000 |     2.231 |    0.346       3.9 |       5 |     0.011 |
+ToolSvc.SequencerTime...   INFO   GetMuonHits                 |     2.399 |     2.381 |    1.048       4.4 |       5 |     0.012 |
+ToolSvc.SequencerTime...   INFO   GetSpdHits                  |     0.400 |     0.534 |    0.056       1.2 |       5 |     0.003 |
+ToolSvc.SequencerTime...   INFO   GetPrsHits                  |     0.600 |     0.553 |    0.061       1.1 |       5 |     0.003 |
+ToolSvc.SequencerTime...   INFO   GetEcalHits                 |     1.800 |     1.873 |    0.160       4.1 |       5 |     0.009 |
+ToolSvc.SequencerTime...   INFO   GetHcalHits                 |     0.400 |     0.296 |    0.107       0.5 |       5 |     0.001 |
+ToolSvc.SequencerTime...   INFO   RichHits                    |     6.799 |     6.594 |    0.714      14.7 |       5 |     0.033 |
 ToolSvc.SequencerTime...   INFO ------------------------------------------------------------------------------------------------
 1********* PYSTAT:  Statistics on Number of Events and Cross-sections *********
 
@@ -2041,101 +2071,101 @@ ToolSvc.SequencerTime...   INFO ------------------------------------------------
  I 481 g + g  -> Upsilon(2S) + g    I            0             0 I  0.000E+00 I
  I 482 g + g  -> Upsilon(3S) + g    I            0             0 I  0.000E+00 I
  I 483 g + g  -> Upsilon(4S) + g    I            0             0 I  0.000E+00 I
- I 485 g + g  -> psi(3770) + g      I            0             0 I  0.000E+00 I
  I                                  I                            I            I
  ==============================================================================
 
  ********* Total number of errors, excluding junctions =        0 *************
  ********* Total number of errors, including junctions =        0 *************
- ********* Total number of warnings =                           0 *************
+ ********* Total number of warnings =                           2 *************
  ********* Fraction of events that fail fragmentation cuts =  0.00000 *********
 
 TimingAuditor.TIMER        INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.TIMER        INFO This machine has a speed about   1.82 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER        INFO This machine has a speed about   2.27 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.TIMER        INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.TIMER        INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.TIMER        INFO EVENT LOOP                    | 59793.910 | 61454.141 | 7547.055  230255.7 |       5 |   307.271 |
-TimingAuditor.TIMER        INFO  Gauss                        | 59016.428 | 60015.590 | 7528.058  223608.3 |       5 |   300.078 |
-TimingAuditor.TIMER        INFO   Generator                   |    20.197 |   136.632 |    8.815     577.4 |       5 |     0.683 |
-TimingAuditor.TIMER        INFO    GaussGen                   |     0.400 |     0.630 |    0.234       1.7 |       5 |     0.003 |
-TimingAuditor.TIMER        INFO    Generation                 |    19.597 |   135.697 |    8.301     575.2 |       5 |     0.678 |
-TimingAuditor.TIMER        INFO    GenMonitor                 |     0.200 |     0.270 |    0.109       0.4 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO     GenMonitorAlg             |     0.200 |     0.264 |    0.104       0.4 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO   Simulation                  | 58996.231 | 59878.945 | 7519.235  223030.9 |       5 |   299.395 |
-TimingAuditor.TIMER        INFO    GaussSim                   |     0.800 |     0.383 |    0.264       0.6 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO    GiGaStore                  |     0.000 |     0.005 |    0.005       0.0 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO    Geo                        | 27577.207 | 27806.001 |    0.002  139030.0 |       5 |   139.030 |
-TimingAuditor.TIMER        INFO    GenerationToSimulation     | 13798.302 | 13931.345 |    2.938   69636.8 |       5 |    69.657 |
-TimingAuditor.TIMER        INFO    GiGaFlushAlgorithm         | 17587.527 | 18096.432 | 7502.213   37743.4 |       5 |    90.482 |
+TimingAuditor.TIMER        INFO EVENT LOOP                    | 62827.049 | 63949.835 | 6495.719  235065.3 |       5 |   319.749 |
+TimingAuditor.TIMER        INFO  Gauss                        | 61887.991 | 62904.294 | 6484.902  230154.7 |       5 |   314.521 |
+TimingAuditor.TIMER        INFO   Generator                   |    25.196 |    33.389 |    8.863      70.3 |       5 |     0.167 |
+TimingAuditor.TIMER        INFO    GaussGen                   |     0.400 |     0.635 |    0.292       1.7 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO    Generation                 |    24.596 |    32.439 |    8.349      69.4 |       5 |     0.162 |
+TimingAuditor.TIMER        INFO    GenMonitor                 |     0.200 |     0.284 |    0.100       0.5 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO     GenMonitorAlg             |     0.200 |     0.278 |    0.095       0.5 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO   Simulation                  | 61862.795 | 62870.891 | 6476.032  230127.8 |       5 |   314.354 |
+TimingAuditor.TIMER        INFO    GaussSim                   |     0.200 |     0.424 |    0.249       0.7 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO    GiGaStore                  |     0.000 |     0.006 |    0.005       0.0 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO    Geo                        | 26583.559 | 27306.297 |    0.002  136531.5 |       5 |   136.531 |
+TimingAuditor.TIMER        INFO    GenerationToSimulation     | 14318.823 | 14389.687 |    0.847   71924.8 |       5 |    71.948 |
+TimingAuditor.TIMER        INFO    GiGaFlushAlgorithm         | 20924.019 | 21136.309 | 6456.947   42685.1 |       5 |   105.682 |
 TimingAuditor.TIMER        INFO    GiGaCheckEventStatus       |     0.000 |     0.010 |    0.005       0.0 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO    SimulationToMCTruth        |     2.400 |     2.222 |    0.893       3.6 |       5 |     0.011 |
-TimingAuditor.TIMER        INFO    DetectorsHits              |    15.397 |    25.784 |    5.495      66.9 |       5 |     0.129 |
-TimingAuditor.TIMER        INFO     GetVeloHits               |     1.400 |     1.342 |    0.238       2.0 |       5 |     0.007 |
-TimingAuditor.TIMER        INFO     GetPuVetoHits             |     0.000 |     0.052 |    0.033       0.1 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO     GetTTHits                 |     1.400 |     1.322 |    0.327       2.0 |       5 |     0.007 |
-TimingAuditor.TIMER        INFO     GetITHits                 |     0.400 |     0.721 |    0.086       1.1 |       5 |     0.004 |
-TimingAuditor.TIMER        INFO     GetOTHits                 |     1.600 |     1.899 |    0.869       3.4 |       5 |     0.009 |
-TimingAuditor.TIMER        INFO     GetMuonHits               |     2.400 |     2.262 |    1.025       4.5 |       5 |     0.011 |
-TimingAuditor.TIMER        INFO     GetSpdHits                |     0.799 |     0.527 |    0.145       1.0 |       5 |     0.003 |
-TimingAuditor.TIMER        INFO     GetPrsHits                |     0.800 |     0.776 |    0.264       2.0 |       5 |     0.004 |
-TimingAuditor.TIMER        INFO     GetEcalHits               |     2.200 |     2.169 |    0.809       5.0 |       5 |     0.011 |
-TimingAuditor.TIMER        INFO     GetHcalHits               |     0.200 |     0.302 |    0.195       0.5 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO     RichHits                  |     3.999 |    14.292 |    1.039      55.5 |       5 |     0.071 |
-TimingAuditor.TIMER        INFO      GetRichHits              |     0.999 |     1.065 |    0.271       2.0 |       5 |     0.005 |
-TimingAuditor.TIMER        INFO      GetRichPhotons           |     0.200 |     0.449 |    0.157       0.7 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO      GetRichSegments          |     1.400 |     1.060 |    0.251       2.3 |       5 |     0.005 |
-TimingAuditor.TIMER        INFO      GetRichTracks            |     0.600 |     0.607 |    0.152       1.2 |       5 |     0.003 |
-TimingAuditor.TIMER        INFO      MCPartToMCRichTrack      |     0.200 |     0.181 |    0.075       0.5 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO      MCRichHitToMCRichOpPhot  |     0.600 |    10.888 |    0.107      52.1 |       5 |     0.054 |
-TimingAuditor.TIMER        INFO    SimMonitor                 |    12.998 |    13.359 |    3.490      22.5 |       5 |     0.067 |
-TimingAuditor.TIMER        INFO     GiGaGetEventAlg           |     0.200 |     0.226 |    0.067       0.4 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO     MCTruthMonitor            |     0.600 |     0.454 |    0.146       0.9 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO     GiGaGetHitsAlg            |     0.400 |     0.251 |    0.113       0.6 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO     DetectorsMonitor          |    11.798 |    12.410 |    3.018      21.1 |       5 |     0.062 |
-TimingAuditor.TIMER        INFO      VeloGaussMoni            |     4.999 |     5.229 |    0.475      11.3 |       5 |     0.026 |
-TimingAuditor.TIMER        INFO      TTHitMonitor             |     0.800 |     0.796 |    0.112       1.7 |       5 |     0.004 |
-TimingAuditor.TIMER        INFO      ITHitMonitor             |     0.200 |     0.344 |    0.030       0.6 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO      OTHitMonitor             |     1.200 |     1.044 |    0.317       1.9 |       5 |     0.005 |
-TimingAuditor.TIMER        INFO      SpdMonitor               |     0.600 |     0.888 |    0.220       1.7 |       5 |     0.004 |
-TimingAuditor.TIMER        INFO      PrsMonitor               |     1.000 |     1.432 |    0.419       3.3 |       5 |     0.007 |
-TimingAuditor.TIMER        INFO      EcalMonitor              |     2.000 |     1.640 |    0.547       3.7 |       5 |     0.008 |
-TimingAuditor.TIMER        INFO      HcalMonitor              |     0.200 |     0.320 |    0.136       0.7 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO      MuonHitChecker           |     0.600 |     0.670 |    0.149       1.1 |       5 |     0.003 |
-TimingAuditor.TIMER        INFO    PackMCParticle             |     1.200 |     2.192 |    0.254       7.9 |       5 |     0.011 |
-TimingAuditor.TIMER        INFO    PackMCVertex               |     0.400 |     1.109 |    0.210       3.9 |       5 |     0.006 |
-TimingAuditor.TIMER        INFO  GaussTape                    |   777.282 |  1438.202 |   18.931    6646.7 |       5 |     7.191 |
+TimingAuditor.TIMER        INFO    SimulationToMCTruth        |     2.400 |     3.059 |    0.958       5.9 |       5 |     0.015 |
+TimingAuditor.TIMER        INFO    DetectorsHits              |    18.397 |    18.108 |    3.223      34.2 |       5 |     0.091 |
+TimingAuditor.TIMER        INFO     GetVeloHits               |     1.399 |     1.468 |    0.334       2.6 |       5 |     0.007 |
+TimingAuditor.TIMER        INFO     GetPuVetoHits             |     0.400 |     0.109 |    0.035       0.2 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO     GetTTHits                 |     1.400 |     1.452 |    0.228       2.3 |       5 |     0.007 |
+TimingAuditor.TIMER        INFO     GetITHits                 |     0.800 |     0.570 |    0.106       1.1 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO     GetOTHits                 |     2.000 |     2.222 |    0.342       3.9 |       5 |     0.011 |
+TimingAuditor.TIMER        INFO     GetMuonHits               |     2.399 |     2.370 |    1.046       4.4 |       5 |     0.012 |
+TimingAuditor.TIMER        INFO     GetSpdHits                |     0.400 |     0.526 |    0.052       1.1 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO     GetPrsHits                |     0.600 |     0.544 |    0.057       1.1 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO     GetEcalHits               |     1.800 |     1.865 |    0.157       4.1 |       5 |     0.009 |
+TimingAuditor.TIMER        INFO     GetHcalHits               |     0.400 |     0.284 |    0.103       0.5 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO     RichHits                  |     6.799 |     6.589 |    0.710      14.7 |       5 |     0.033 |
+TimingAuditor.TIMER        INFO      GetRichHits              |     1.600 |     1.440 |    0.169       2.9 |       5 |     0.007 |
+TimingAuditor.TIMER        INFO      GetRichPhotons           |     1.000 |     0.935 |    0.096       2.0 |       5 |     0.005 |
+TimingAuditor.TIMER        INFO      GetRichSegments          |     1.400 |     1.514 |    0.161       2.8 |       5 |     0.008 |
+TimingAuditor.TIMER        INFO      GetRichTracks            |     1.000 |     0.702 |    0.106       1.3 |       5 |     0.004 |
+TimingAuditor.TIMER        INFO      MCPartToMCRichTrack      |     0.000 |     0.170 |    0.080       0.5 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO      MCRichHitToMCRichOpPhot  |     1.800 |     1.787 |    0.080       5.7 |       5 |     0.009 |
+TimingAuditor.TIMER        INFO    SimMonitor                 |    13.798 |    15.219 |    2.945      33.0 |       5 |     0.076 |
+TimingAuditor.TIMER        INFO     GiGaGetEventAlg           |     0.200 |     0.307 |    0.077       0.5 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO     MCTruthMonitor            |     0.400 |     0.509 |    0.106       1.0 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO     GiGaGetHitsAlg            |     0.400 |     0.297 |    0.112       0.6 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO     DetectorsMonitor          |    12.799 |    14.087 |    2.470      31.4 |       5 |     0.070 |
+TimingAuditor.TIMER        INFO      VeloGaussMoni            |     6.399 |     6.406 |    0.955      14.7 |       5 |     0.032 |
+TimingAuditor.TIMER        INFO      TTHitMonitor             |     0.400 |     0.712 |    0.079       1.4 |       5 |     0.004 |
+TimingAuditor.TIMER        INFO      ITHitMonitor             |     0.400 |     0.308 |    0.034       0.6 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO      OTHitMonitor             |     1.000 |     1.102 |    0.110       2.0 |       5 |     0.006 |
+TimingAuditor.TIMER        INFO      SpdMonitor               |     1.000 |     0.867 |    0.089       1.8 |       5 |     0.004 |
+TimingAuditor.TIMER        INFO      PrsMonitor               |     1.000 |     1.165 |    0.103       2.1 |       5 |     0.006 |
+TimingAuditor.TIMER        INFO      EcalMonitor              |     1.400 |     1.405 |    0.116       2.6 |       5 |     0.007 |
+TimingAuditor.TIMER        INFO      HcalMonitor              |     0.200 |     0.365 |    0.099       1.0 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO      MuonHitChecker           |     1.000 |     1.714 |    0.171       6.5 |       5 |     0.009 |
+TimingAuditor.TIMER        INFO    PackMCParticle             |     0.999 |     1.008 |    0.169       1.7 |       5 |     0.005 |
+TimingAuditor.TIMER        INFO    PackMCVertex               |     0.600 |     0.665 |    0.139       1.2 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO  GaussTape                    |   938.657 |  1045.236 |   10.749    4909.9 |       5 |     5.226 |
 TimingAuditor.TIMER        INFO ------------------------------------------------------------------------------------------------
 GiGa.TrackSeq.PostTrack SUCCESS Exceptions/Errors/Warnings Statistics : 0/0/1
-GiGa.TrackSeq.PostTrack SUCCESS  #WARNINGS   = 4540     Message = 'RichHpdPhotoelectricProcess or RichHpdSiEnergyLossProcess  particles not kept'
+GiGa.TrackSeq.PostTrack SUCCESS  #WARNINGS   = 7285     Message = 'RichHpdPhotoelectricProcess or RichHpdSiEnergyLossProcess  particles not kept'
 GiGa.GiGaMgr               INFO GiGaRunManager:: GiGaRunManager Finalization
-PoolRootTreeEvtCnvSvc      INFO Disconnected data IO:DEC11689-DB1D-DE11-AE7D-000423D67746[Gauss-5ev-20090331.sim]
+PoolRootTreeEvtCnvSvc      INFO Disconnected data IO:2CF9FD0F-871F-DE11-A3EC-000423D6B700[Gauss-5ev-20090402.sim]
+XMLCatalog                 INFO File 'NewCatalog.xml' does not exist. New file created.
 *****Chrono*****           INFO ****************************************************************************************************
 *****Chrono*****           INFO  The Final CPU consumption ( Chrono ) Table (ordered)
 *****Chrono*****           INFO ****************************************************************************************************
-GiGa.GiGaMgr::process...   INFO Time User   : Tot= 87.5  [s] Ave/Min/Max= 17.5(+- 10.1)/ 7.32/ 36.2  [s] #=  5
-ChronoStatSvc              INFO Time User   : Tot=  360  [s]                                             #=  1
+GiGa.GiGaMgr::process...   INFO Time User   : Tot=  104  [s] Ave/Min/Max= 20.9(+- 12.1)/ 6.45/ 42.2  [s] #=  5
+ChronoStatSvc              INFO Time User   : Tot=  355  [s]                                             #=  1
 *****Chrono*****           INFO ****************************************************************************************************
 ******Stat******           INFO ****************************************************************************************************
 ******Stat******           INFO  The Final stat Table (ordered)
 ******Stat******           INFO ****************************************************************************************************
 ******Stat******           INFO      Counter     |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-******Stat******           INFO  "#VeloPU MCHits |         5 |        137 |     27.400 |     17.001 |      5.0000 |      48.000 |
-******Stat******           INFO  "#MCRichTracks" |         5 |        162 |     32.400 |     16.907 |      9.0000 |      60.000 |
-******Stat******           INFO  "#MCRichSegment |         5 |        217 |     43.400 |     23.610 |      12.000 |      82.000 |
-******Stat******           INFO  "#IT MCHits"    |         5 |        607 |     121.40 |     79.180 |      6.0000 |      230.00 |
-******Stat******           INFO  "#Muon MCHits"  |         5 |        676 |     135.20 |     92.489 |      54.000 |      307.00 |
-******Stat******           INFO  "#Hcal MCHits"  |         5 |        747 |     149.40 |     72.885 |      91.000 |      292.00 |
-******Stat******           INFO  "#TT MCHits"    |         5 |        781 |     156.20 |     88.761 |      34.000 |      286.00 |
-******Stat******           INFO  "#Rich2 MCHits" |         5 |       1114 |     222.80 |     111.45 |      114.00 |      435.00 |
-******Stat******           INFO  "#OT MCHits"    |         5 |       1914 |     382.80 |     205.42 |      129.00 |      723.00 |
-******Stat******           INFO  "#Velo MCHits"  |         5 |       2328 |     465.60 |     271.44 |      57.000 |      769.00 |
-******Stat******           INFO  "#Rich1 MCHits" |         5 |       2713 |     542.60 |     388.14 |      47.000 |      1076.0 |
-******Stat******           INFO  "#Spd MCHits"   |         5 |       2926 |     585.20 |     469.81 |      156.00 |      1459.0 |
-******Stat******           INFO  "#Rich MCHits"  |         5 |       3827 |     765.40 |     471.33 |      259.00 |      1511.0 |
-******Stat******           INFO  "#MCRichOpPhoto |         5 |       3827 |     765.40 |     471.33 |      259.00 |      1511.0 |
-******Stat******           INFO  "#MCParticles"  |         5 |       3867 |     773.40 |     467.11 |      249.00 |      1564.0 |
-******Stat******           INFO  "#Prs MCHits"   |         5 |       6048 |     1209.6 |     890.49 |      397.00 |      2834.0 |
-******Stat******           INFO  "#Ecal MCHits"  |         5 |       6617 |     1323.4 |     944.18 |      443.00 |      3056.0 |
+******Stat******           INFO  "#VeloPU MCHits |         5 |        174 |     34.800 |     37.717 |      7.0000 |      109.00 |
+******Stat******           INFO  "#MCRichTracks" |         5 |        189 |     37.800 |     28.322 |      4.0000 |      87.000 |
+******Stat******           INFO  "#MCRichSegment |         5 |        276 |     55.200 |     41.864 |      8.0000 |      127.00 |
+******Stat******           INFO  "#IT MCHits"    |         5 |        450 |     90.000 |     62.578 |      7.0000 |      191.00 |
+******Stat******           INFO  "#Muon MCHits"  |         5 |        660 |     132.00 |     75.742 |      49.000 |      264.00 |
+******Stat******           INFO  "#Hcal MCHits"  |         5 |        773 |     154.60 |     72.478 |      60.000 |      284.00 |
+******Stat******           INFO  "#TT MCHits"    |         5 |        971 |     194.20 |     135.74 |      18.000 |      348.00 |
+******Stat******           INFO  "#OT MCHits"    |         5 |       2125 |     425.00 |     274.67 |      37.000 |      802.00 |
+******Stat******           INFO  "#Velo MCHits"  |         5 |       2544 |     508.80 |     345.17 |      109.00 |      1092.0 |
+******Stat******           INFO  "#Rich2 MCHits" |         5 |       2693 |     538.60 |     578.09 |      20.000 |      1624.0 |
+******Stat******           INFO  "#Spd MCHits"   |         5 |       2866 |     573.20 |     371.12 |      36.000 |      1058.0 |
+******Stat******           INFO  "#Rich1 MCHits" |         5 |       3487 |     697.40 |     575.88 |      114.00 |      1451.0 |
+******Stat******           INFO  "#MCParticles"  |         5 |       4519 |     903.80 |     616.85 |      177.00 |      1920.0 |
+******Stat******           INFO  "#Prs MCHits"   |         5 |       4568 |     913.60 |     646.77 |      64.000 |      1997.0 |
+******Stat******           INFO  "#Ecal MCHits"  |         5 |       5385 |     1077.0 |     732.31 |      70.000 |      2323.0 |
+******Stat******           INFO  "#MCRichOpPhoto |         5 |       6179 |     1235.8 |     1112.3 |      134.00 |      3075.0 |
+******Stat******           INFO  "#Rich MCHits"  |         5 |       6180 |     1236.0 |     1112.4 |      134.00 |      3075.0 |
 ******Stat******           INFO ****************************************************************************************************
 ChronoStatSvc.finalize()   INFO  Service finalized succesfully
 ApplicationMgr             INFO Application Manager Finalized successfully
