@@ -44,7 +44,7 @@ public:
   void fillHistogram(DbRootHist* histogram,
                      const std::string & timePoint,
                      const std::string & pastDuration);
-  TH1* referenceHistogram(const std::string & referenceDbEntry);
+//  TH1* referenceHistogram(const std::string & referenceDbEntry);
   void saveAsReferenceHistogram(DbRootHist* histogram);
   std::string createIsoTimeString(int& year, int& month, int& day,
                                   int& hour, int& min, int& sec);

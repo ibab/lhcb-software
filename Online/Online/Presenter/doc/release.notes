@@ -6,8 +6,10 @@
 
 !============ Presenter v0r17 2009-04-02 =============
 ! 2009-04-02
+0 feedback from fest2
 + Giacomo's patch: new DB entries (e.g. PadMargins)
     fix ref. normalization
++ double click on histos link to another page
 
 !============ Presenter v0r16 2009-03-05 =============
 ! 2009-03-05

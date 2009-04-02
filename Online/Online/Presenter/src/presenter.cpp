@@ -27,7 +27,7 @@ using namespace boost::program_options;
 using namespace boost::filesystem;
 
 void setSystemEnvironment(const char* environmentVariable, const char* value) {
-// inspired by VirtualBox Open Source Edition, innotek/Sun Microsystems, Inc.
+// inspired by WhateverBox, innotek/Sun Microsystems/Whomever
 #if defined(_WIN32)
   const size_t envVarLen = strlen(environmentVariable);
   const size_t envVarValue = strlen(value);
@@ -214,9 +214,12 @@ int main(int argc, char* argv[])
              startupSettings["tnsnames-path"].as<std::string>().c_str());
     }
 
+    const char* dimDnsNodeEnv = getenv(s_dimDnsNodeEnv.c_str());
     if (startupSettings.count("dim-dns-node")) {
       setSystemEnvironment(s_dimDnsNodeEnv.c_str(),
              startupSettings["dim-dns-node"].as<std::string>().c_str());
+    } else if (NULL != dimDnsNodeEnv) {
+      setSystemEnvironment(s_dimDnsNodeEnv.c_str(), dimDnsNodeEnv);
     } else {
         setSystemEnvironment(s_dimDnsNodeEnv.c_str(), "127.0.0.1");
     }
@@ -227,7 +230,7 @@ int main(int argc, char* argv[])
                                           10, 10,
                                           windowWidth,
                                           windowHeight);
-    presenterMainFrame.SetIconPixmap(presenter32);
+    presenterMainFrame.SetIconPixmap((char**)presenter32);
 
     if (startupSettings.count("verbosity")) {
       if ("silent" == startupSettings["verbosity"].as<std::string>()) {

@@ -408,10 +408,10 @@ std::vector<path> Archive::findSavesets(const std::string & taskname,
   }
   return foundRootFiles;
 }
-TH1* Archive::referenceHistogram(const string & /*referenceDbEntry*/)
-{
-  return 0;
-}
+//TH1* Archive::referenceHistogram(const string & /*referenceDbEntry*/)
+//{
+//  return 0;
+//}
 void Archive::saveAsReferenceHistogram(DbRootHist* histogram)
 {
   path referenceFilePath(m_referencePath/histogram->taskName());
