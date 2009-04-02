@@ -456,6 +456,7 @@ StatusCode SLICEReaderSvc::pushEvent(char *event, int size)
 
 
     return StatusCode::SUCCESS; 
+
 }
 
 #endif /*_WIN32*/

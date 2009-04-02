@@ -122,7 +122,8 @@ static void *extendBuffer(void *p, size_t len)
 
 
 
-
+/** Extended service constructor
+*/
 MEPInjector::MEPInjector(const std::string & name, ISvcLocator * pSvcLocator):Service(name, pSvcLocator), m_IncidentSvc(0), m_MonSvc(0) 
 {
     m_ProcName = RTL::processName(); 
@@ -177,7 +178,8 @@ MEPInjector::MEPInjector(const std::string & name, ISvcLocator * pSvcLocator):Se
     m_InjState = NOT_READY;
 }
 
-// IInterface implementation : queryInterface
+/** IInterface implementation : queryInterface
+ */
 StatusCode MEPInjector::queryInterface(const InterfaceID& riid, void** ppIf)   {
   if ( IRunable::interfaceID().versionMatch(riid) )  {
     *ppIf = (IRunable*)this;
@@ -188,7 +190,11 @@ StatusCode MEPInjector::queryInterface(const InterfaceID& riid, void** ppIf)   {
 }
 
 
-//"-s=70000 -e=100 -u=20 -b=15 -f -i=NORMALEVENT -c -s=70000 -e=100 -u=20 -b=15 -f -i=LUMIEVENT -c"
+/** Buffer manager initialization
+ * Uses attributes BufferNames and BufferOptions
+ * Default options: -s=70000, -e=100, -u=20 
+ * No default buffer name: the run control should define at least one
+ */
 StatusCode MEPInjector::initBuffers()
 {
     MsgStream msgLog(msgSvc(), name());
@@ -210,6 +216,8 @@ StatusCode MEPInjector::initBuffers()
             items.push_back(strcpy(new char[ite->size()], ite->c_str()));
     }
 
+    ///Get a point to the last string of the buffer manager options.
+    ///It will contain the buffer name
     items.push_back(new char[64]);
     char **pName = &(items.back());
     items.push_back(strcpy(new char[3], "-c")); 
@@ -249,8 +257,9 @@ StatusCode MEPInjector::initBuffers()
     return StatusCode::SUCCESS;
 }
 
-
-
+/** Initialization of the buffer consumers
+ * 
+ */
 StatusCode MEPInjector::initConsumers()
 {
     static MsgStream msgLog(msgSvc(), name());	//Message stream for output
@@ -258,21 +267,22 @@ StatusCode MEPInjector::initConsumers()
     {
         //use the requirem,etns to compute the probability of choosing buffers?
         for(Requirements::iterator i=m_Req.begin(); i!=m_Req.end(); ++i)  {
-          Requirement r;
-          r.parse(*i);
-   //       pcons->addRequest(r);
-          if(MBM_NORMAL != mbm_add_req(ite->second, r.evtype, r.trmask, r.vetomask, r.maskType, r.userType, r.freqType, r.freq))
-          {
-              msgLog << MSG::ERROR << "Unable to add a request to the queue " << ite->first << endmsg;
-              return StatusCode::FAILURE; 
-          }  
+            Requirement r;
+            r.parse(*i);
+            //pcons->addRequest(r);
+            if(MBM_NORMAL != mbm_add_req(ite->second, r.evtype, r.trmask, r.vetomask, r.maskType, r.userType, r.freqType, r.freq))
+            {
+                msgLog << MSG::ERROR << "Unable to add a request to the queue " << ite->first << endmsg;
+                return StatusCode::FAILURE; 
+            }  
         }
-        
-        
     }
     return StatusCode::SUCCESS; 
 }
 
+/** Destruction of the buffer consumers
+ * 
+ */
 StatusCode MEPInjector::deleteConsumers()
 {
     static MsgStream msgLog(msgSvc(), name());	//Message stream for output
@@ -290,9 +300,11 @@ StatusCode MEPInjector::deleteConsumers()
         } 
         mbm_free_space(ite->second);
         mbm_exclude(ite->second);
-//        mbm_deinstall(
     }
 
+    /// XXX
+    /// deinstall buffers, could it have been easier ?
+    /// basically do the same processing as for initialization ...
     std::vector<char *> items;
     static char type[64]="mbm_install";
     items.push_back(type);
@@ -313,8 +325,6 @@ StatusCode MEPInjector::deleteConsumers()
     char **pName = &(items.back());
     items.push_back(strcpy(new char[3], "-c"));
 
-
-    /// Attach to the buffers
     for(std::vector<std::string>::iterator iteNames = m_BufferNames.begin(); iteNames != m_BufferNames.end(); ++iteNames)
     {
         std::string tmp = "-i="+*iteNames;
@@ -334,7 +344,9 @@ StatusCode MEPInjector::deleteConsumers()
     return StatusCode::SUCCESS;
 }
 
-/// Initialize
+/** Extended service initialization
+ * Run threads, declare everything, ...
+ */
 StatusCode MEPInjector::initialize()
 {
     StatusCode sc = Service::initialize();
@@ -572,7 +584,7 @@ StatusCode MEPInjector::initialize()
         ERRMSG(msgLog, "clock_gettime failed");
         return StatusCode::FAILURE;
     }
-  */
+*/
 
     if(m_Debug) {  
         std::string strFile = "/tmp/injectorcredits";
@@ -591,6 +603,9 @@ StatusCode MEPInjector::initialize()
     return StatusCode::SUCCESS;
 }
 
+/** DEBUGGING ONLY: log received MEP requests into a file
+ * 
+ */
 StatusCode MEPInjector::logMEPReqs() 
 {
     MsgStream msgLog(msgSvc(), name());     //Message stream for output
@@ -617,6 +632,11 @@ StatusCode MEPInjector::logMEPReqs()
     return StatusCode::SUCCESS;
 }
 
+
+/** Ping the destination nodes in order to add them to the ARP table
+ * @deprecated since default route through the switch has been configured, 
+ * and its MAC address has been added statically to the ARP table
+ */
 StatusCode MEPInjector::pingHLTNodes()
 {
     MsgStream msgLog(msgSvc(), name());     //Message stream for output
@@ -653,7 +673,12 @@ StatusCode MEPInjector::pingHLTNodes()
     return StatusCode::SUCCESS;
 }
 
-
+/** Merge the information of the src Odin MEP into the dest Odin MEP
+ * Event type, calibration step and orbit comes from tape.
+ * The word 9 bitmask can be defined in the option file, the default value has been agreed after the first FEST week:
+ *     LSB comes from TFC
+ *     MSG comes from Tape
+ */
 void MEPInjector::copyOdinBank(OnlineRunInfo **dest, OnlineRunInfo **src) 
 {
     unsigned int *word9tfc, *word9tape;
@@ -709,6 +734,8 @@ void MEPInjector::copyOdinBank(OnlineRunInfo **dest, OnlineRunInfo **src)
     }
 }
 
+/** Display a buffer in hexadecimal
+ */
 void displayBuff(char *buf, int size) 
 {   
     int *ibuf = (int *) buf;
@@ -716,9 +743,13 @@ void displayBuff(char *buf, int size)
         if(i%4 == 0) printf("\n%5x:", i);
         printf(" %8x ", ibuf[i]);
     }
-    printf("\n");                                                                    }
+    printf("\n");
+}
 
 
+/** Get an event from the buffer managers, according to the trigger type of the Odin MEP
+ * @param nbEv: the current offset in the MEP production, in order to get the good Odin bank 
+ */
 StatusCode MEPInjector::getEvent(int nbEv)
 {
     static MsgStream msgLog(msgSvc(), name());
@@ -803,7 +834,8 @@ StatusCode MEPInjector::getEvent(int nbEv)
 
 }
 
-/// Read banks from msg queue, and store each banks in the future MEP
+/** Read banks from msg queue, and store each banks in the future MEP
+ */
 StatusCode MEPInjector::readEvent()
 {
     static int icalled = 0;
@@ -838,7 +870,7 @@ StatusCode MEPInjector::readEvent()
 	    }
 
              
-            /// Processing of the Odin banks, basically remove them
+            /// Processing of the Odin banks, basically merge tape and TFC bank contents according to what was defined 
             if(hdr->type() == RawBank::ODIN && !m_AutoMode)
             {
                 if(m_OdinMEP->size() == 0) {
@@ -858,119 +890,93 @@ StatusCode MEPInjector::readEvent()
             } 
             /// END OF ODIN BANKS PROCESSING
 
-/*	
-///XXX No more OTFIX, if I have to redo it, it will not be so easy ... 
-        /// Processing of the OT banks, insert empty banks for the absents
-        if(bk->type() == RawBank::OT)
-        {
-            int iot = 1;
-            bnks = raw->banks(RawBank::OT);
-            for (std::vector < RawBank * >::iterator ib = bnks.begin();
-                ib != bnks.end(); ++ib) {
-                RawBank *rb = *ib;
-                while(rb->sourceID() > iot && iot < 49) /// insert empty raw bank
-                { 
-                    OTFIX(iot++, nbEv);
-                }   
-                ++iot;
-           }
-           while(iot < 49) {
-               OTFIX(iot++, nbEv);
-           continue; 
-        }
-*/
-
-        /// END OF OTFIX
-        /// THIS IS UGLY !! MAKE A SUB FUNCTION FOR THIS PIECE OF CODE
-
- 
-                MEPEvent *curmep = NULL;
-                char *ccur = NULL;
-                MEPHdr *mh = NULL;
-                MEPFrgHdr *mf = NULL; 
-          
-                if(hdr->type() == RawBank::OT
-                       || hdr->type() == RawBank::OTError
-                       || hdr->type() == RawBank::OTRaw )
-                {
-                    unsigned int src = hdr->sourceID();
-                    unsigned int tmp = (src/100 * 16 * 16) + (((src/10) %10) * 16 ) + (src%10);
-                    hdr->setSourceID(tmp);
-                }
-        
+            MEPEvent *curmep = NULL;
+            char *ccur = NULL;
+            MEPHdr *mh = NULL;
+            MEPFrgHdr *mf = NULL; 
+      
+            if(hdr->type() == RawBank::OT
+                   || hdr->type() == RawBank::OTError
+                   || hdr->type() == RawBank::OTRaw )
+            {
+                unsigned int src = hdr->sourceID();
+                unsigned int tmp = (src/100 * 16 * 16) + (((src/10) %10) * 16 ) + (src%10);
+                hdr->setSourceID(tmp);
+            }
+    
 		tell1id = getTell1IP(hdr->type(), hdr->sourceID());
 		if (tell1id == 0) { 
-//                    msgLog << MSG::DEBUG<<"Unknown source "<<hdr->sourceID()<<" or type "<<RawBank::typeName(hdr->type()) << " no tell1 found, execution continue "<<endmsg; 
+                msgLog << MSG::DEBUG<<"Problem finding Tell1 IP: Unknown source "<<hdr->sourceID()<<" or type "<<RawBank::typeName(hdr->type()) << ", execution continue "<<endmsg; 
 		    continue;
 		}
 
 		len = hdr->totalSize();	/// I need len = hdr + body + padding, because the bank array contains the padding    
  
-                /////////////////////////////////////////
-                // Encoding while reading
-                ////////////////////////////////////////
-                std::map<unsigned long, MEPEvent *>::iterator ite = m_MapTell1MEPs.find(tell1id);
-                if(ite == m_MapTell1MEPs.end()) 
-                {
-                    continue; // it means that we have to ignore this tell1, as the map is initialized in the initialize procedure
-                   
-                }
+            /////////////////////////////////////////
+            // Encoding while reading
+            ////////////////////////////////////////
+            std::map<unsigned long, MEPEvent *>::iterator ite = m_MapTell1MEPs.find(tell1id);
+            if(ite == m_MapTell1MEPs.end()) 
+            {
+                continue; // it means that we have to ignore this tell1, as the map is initialized in the initialize procedure
+               
+            }
 
-                curmep = m_MapTell1MEPs[tell1id]; 
-                ccur = (((char *) curmep) + MEPEVENTOFFSET);
+            curmep = m_MapTell1MEPs[tell1id]; 
+            ccur = (((char *) curmep) + MEPEVENTOFFSET);
   	        mh = (MEPHdr *) (ccur + IPHDRSZ);
-                   
-                /// Use the mepevent 4 first byte as "pointer" to the beginning of the current fragment, to set up the header
-                /// Use the MEp tot len as the current tot len 
-                /// Only when reading the last event of a MEP(or the first but if so has to be updated each time ... ), same with Fragment Header and banks
-                /// Set the MEP Header
-                if(nbEv == 0) 
-                {
+               
+            /// Use the mepevent 4 first byte as "pointer" to the beginning of the current fragment, to set up the header
+            /// Use the MEp tot len as the current tot len 
+            /// Only when reading the last event of a MEP(or the first but if so has to be updated each time ... ), same with Fragment Header and banks
+            /// Set the MEP Header
+            if(nbEv == 0) 
+            {
 /*
-                    /// XXX OT FIX
-                    if(bkType == RawBank::OT 
-                       || bkType == RawBank::OTError 
-                       || bkType == RawBank::OTRaw ) 
-                    { 
-                         bzero(curmep, MEPHDRSZ + IPHDRSZ + MEPEVENTOFFSET + m_PackingFactor*(BKHDRSZ + FRAGHDRSZ) + m_PackingFactor*2000 );
-                    }
-                    else
-*/
-                    /// Only sets the first headers to 0, and then everything should be fine 
-                    bzero(curmep, MEPHDRSZ + IPHDRSZ + MEPEVENTOFFSET + BKHDRSZ + FRAGHDRSZ );
-
-                    curmep->setSize(IPHDRSZ + MEPHDRSZ ); 
-                    mh->m_totLen  = MEPHDRSZ;
-                    mh->m_partitionID = m_PartitionID;
-                    
-                    mh->m_l0ID = m_L0ID;
-                }
-                mh->m_nEvt = nbEv+1;
-                
-                /// Sets the Fragment header, care, multi banks per fragments ... 
-                ccur = (((char *) curmep) + curmep->size() + MEPEVENTOFFSET);    
-                mf = ( MEPFrgHdr *) ccur;
-                /// The first bank of a fragment is encountered if we still point to the old fragment with mf and the evtId has been incremented
-                /// Or if the evtId = 0 and the size of the fragment has never been written 
-                if(mf->m_l0IDlow != m_EvtID || (m_EvtID ==0 && mf->m_len == 0 )  ) /// If a bank has not been already registred for this event, i.e. first bank for cur event
-                {
-                    /// First update the pointer to beginning of cur frag = end of previous frag
-                    curmep->setSize(mh->m_totLen + IPHDRSZ);
-                    ccur = (((char *) curmep) + curmep->size() + MEPEVENTOFFSET);
-                    mf = ( MEPFrgHdr *) ccur; 
-                    mf->m_l0IDlow = m_EvtID;
-                    mf->m_len = len ;
-                    mh->m_totLen += FRAGHDRSZ;
+                /// XXX OT FIX
+                if(bkType == RawBank::OT 
+                   || bkType == RawBank::OTError 
+                   || bkType == RawBank::OTRaw ) 
+                { 
+                     bzero(curmep, MEPHDRSZ + IPHDRSZ + MEPEVENTOFFSET + m_PackingFactor*(BKHDRSZ + FRAGHDRSZ) + m_PackingFactor*2000 );
                 }
                 else
-                {
-                    mf->m_len +=len;
-                }
-                ccur = ((char *)curmep) + MEPEVENTOFFSET + IPHDRSZ + mh->m_totLen; 
-                mh->m_totLen +=len;
+*/
+                /// Only sets the first headers to 0, and then everything should be fine 
+                bzero(curmep, MEPHDRSZ + IPHDRSZ + MEPEVENTOFFSET + BKHDRSZ + FRAGHDRSZ );
+
+                curmep->setSize(IPHDRSZ + MEPHDRSZ ); 
+                mh->m_totLen  = MEPHDRSZ;
+                mh->m_partitionID = m_PartitionID;
+                
+                mh->m_l0ID = m_L0ID;
+            }
+            mh->m_nEvt = nbEv+1;
+            
+            /// Sets the Fragment header, care, multi banks per fragments ... 
+            ccur = (((char *) curmep) + curmep->size() + MEPEVENTOFFSET);    
+            mf = ( MEPFrgHdr *) ccur;
+            /// The first bank of a fragment is encountered if we still point to the old fragment with mf and the evtId has been incremented
+            /// Or if the evtId = 0 and the size of the fragment has never been written 
+            if(mf->m_l0IDlow != m_EvtID || (m_EvtID ==0 && mf->m_len == 0 )  ) /// If a bank has not been already registred for this event, i.e. first bank for cur event
+            {
+                /// First update the pointer to beginning of cur frag = end of previous frag
+                curmep->setSize(mh->m_totLen + IPHDRSZ);
+                ccur = (((char *) curmep) + curmep->size() + MEPEVENTOFFSET);
+                mf = ( MEPFrgHdr *) ccur; 
+                mf->m_l0IDlow = m_EvtID;
+                mf->m_len = len ;
+                mh->m_totLen += FRAGHDRSZ;
+            }
+            else
+            {
+                mf->m_len +=len;
+            }
+            ccur = ((char *)curmep) + MEPEVENTOFFSET + IPHDRSZ + mh->m_totLen; 
+            mh->m_totLen +=len;
  
-                /// Copy the bank opaque body + hdr + padding
-                memcpy(ccur, hdr, len); 
+            /// Copy the bank opaque body + hdr + padding
+            memcpy(ccur, hdr, len); 
 	}			//end for all banks of the event
         if(++nbEv == m_PackingFactor)
         {
@@ -983,6 +989,9 @@ StatusCode MEPInjector::readEvent()
     return StatusCode::SUCCESS;
 }
 
+/** A fix for empty and missing OT banks
+ * @deprecated since new files producted for 2nd FEST week, in march
+ */
 StatusCode MEPInjector::OTFIX(int iot, int nbEv) {
     /// Src IDs are from 1 to 47, src > 24 -> A side(12) else C side (16)
     /// bks are ordered from 1 to 47
@@ -1066,7 +1075,11 @@ void MEPInjector::printMEP(MEPEvent *me, int size) {
   fclose(fic) ;
 }
 
-
+/** Main processing for injection
+ * Select an available HLT node
+ * Select the First Odin MEP of the FIFO
+ * Build events and sends them
+ */
 StatusCode MEPInjector::injectorProcessing()
 {
     static MsgStream msgLog(msgSvc(), name());
@@ -1121,12 +1134,14 @@ StatusCode MEPInjector::injectorProcessing()
     return StatusCode::SUCCESS;
 }
 
+/** Reads events to build MEPs, then sends MEPs
+ */
 StatusCode MEPInjector::readThenSend()
 {
     static MsgStream msgLog(msgSvc(), name());	//Message stream for output
 
 
-    if((m_TotElapsedTime%10000) == 0 && !m_AutoMode)
+    if((m_TotEvtsSent%500000) == 0 && !m_AutoMode)
     {   
         msgLog << MSG::INFO << "+++++++++++++++++++++++" << endmsg;
         msgLog << MSG::INFO << "-----------------------" << endmsg;
@@ -1264,7 +1279,8 @@ StatusCode MEPInjector::readThenSend()
 }
 
 
-/// Get the MTU set in the system configuration, 
+/** Get the MTU set in the system configuration, 
+ */
 int MEPInjector::getMTU(int netdev)
 {
     struct ifreq eth1req;
@@ -1277,7 +1293,11 @@ int MEPInjector::getMTU(int netdev)
 }
 
 
-/// Get Tell1 IP, return 0 if no tell1 were found  
+/** Get Tell1 IP, return 0 if no tell1 were found  
+ * @param type: Type of the raw bank produced by a Tell1
+ * @param src: Source of the raw bank produced by a Tell1
+ * @return The IP address of the Tell1 which could have produce the bank bank containing type and src
+ */
 in_addr_t MEPInjector::getTell1IP(int type, int src)
 {
     static MsgStream msgLog(msgSvc(), name());	//Message stream for output
@@ -1588,6 +1608,10 @@ in_addr_t MEPInjector::getTell1IP(int type, int src)
     return 0;
 }
 
+/** Sends a MEP to a HLT node, manages the fragmentation of the IP datagram
+ * @param tell1IP: The HLT node IP address
+ * @param me: The MEP to send
+ */
 StatusCode MEPInjector::sendMEP(int tell1IP, MEPEvent * me)
 {
     static MsgStream msgLog(msgSvc(), name());
@@ -1608,8 +1632,6 @@ StatusCode MEPInjector::sendMEP(int tell1IP, MEPEvent * me)
     u_int16_t datagramID =
 	((u_int16_t) (0x000000FF & m_L0ID) << 8) |
 	((u_int16_t) (0x0000FF00 & m_L0ID) >> 8);
-
-//    msgLog << MSG::DEBUG<<"datagram id : "<< datagramID<<endmsg;
 
     int iDatagramSize = MEPSize +20 ;
 
@@ -1756,7 +1778,9 @@ StatusCode MEPInjector::sendMEP(int tell1IP, MEPEvent * me)
     return StatusCode::FAILURE;
 }
 
-
+/** Send a MEP request packet to the Readout Supervisor
+ * @param req: The MEP request
+ */
 StatusCode MEPInjector::sendMEPReq(MEPReq * req)
 {
     static MsgStream msgLog(msgSvc(), name()); 
@@ -1778,6 +1802,10 @@ StatusCode MEPInjector::sendMEPReq(MEPReq * req)
     return StatusCode::FAILURE;
 }
 
+/** Receive a MEP from the Readout Supervisor
+ * @param bufMEP: The buffer in which the MEP will be stored
+ * @param retLen: The size of the Odin MEP
+ */
 StatusCode MEPInjector::receiveOdinMEP(char *bufMEP, int *retLen)
 {
     static MsgStream msgLog(msgSvc(), name());
@@ -1825,6 +1853,8 @@ StatusCode MEPInjector::receiveOdinMEP(char *bufMEP, int *retLen)
     return StatusCode::SUCCESS;
 }
 
+/** 
+ */
 StatusCode MEPInjector::receiveMEPReq(char *req)
 {
     static MsgStream msgLog(msgSvc(), name());
