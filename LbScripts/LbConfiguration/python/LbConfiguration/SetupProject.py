@@ -6,11 +6,11 @@ from stat import S_ISDIR
 import getopt
 from fnmatch import fnmatch
 
-_cvs_id = "$Id: SetupProject.py,v 1.9 2009-03-16 10:10:10 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.10 2009-04-02 16:18:09 joel Exp $"
 
 try:
     from LbUtils.CVS import CVS2Version
-    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.9 $")
+    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.10 $")
 except ImportError :
     __version__ = _cvs_id
 
@@ -1384,6 +1384,11 @@ class SetupProject:
             return 1
         else:
             self.project_name = self.args.pop(0)
+        
+
+        # Force the use of GaudiPoolDb in LHCb to simplify the merging of datasets
+        if self.project_name == "LHCb":
+            self.opts.use.append("GaudiPoolDb")
         
         #------------- sanity check: the shell type has to be specified
         if not self.shell:

@@ -1,3 +1,7 @@
+2009-04-02 Marco Clemencic
+
+  * python/LbConfiguration/SetupProject.py: setting LHCb with usage of GaudiPoolDb
+
 2009-04-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v3r0
@@ -104,6 +108,7 @@
 
 	* cmt/requirements: don't set the mkpublic and mkprivate if we are not at CERN.
 
+>>>>>>> 1.132
 2009-02-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v2r5
