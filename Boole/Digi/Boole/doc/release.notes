@@ -3,6 +3,10 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+! 2009-04-02 - Marco Cattaneo
+ - For MDF output, only run Link sequences needed for monitoring
+ - Add sanity checks to avoid switching off linkers needed by monitors
+
 ! 2009-03-31 - Marco Cattaneo
  - Remove addition of spillover, done in Gauss, needs Gauss v36r3
    . SkipSpill option removed

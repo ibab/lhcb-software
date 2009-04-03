@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.45 2009-04-01 13:09:38 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.46 2009-04-03 07:15:18 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -110,18 +110,21 @@ class Boole(LHCbConfigurableUser):
         else:
             tae = False
 
-        self.configureInit(tae)
-        self.configureDigi()
-        self.configureLink()
-        self.configureMoni()
+        initDets   = self._setupPhase( "Init",   self.KnownInitSubdets )
+        digiDets   = self._setupPhase( "Digi",   self.KnownDigiSubdets )
+        linkDets   = self._setupPhase( "Link",   self.KnownLinkSubdets )
+        moniDets   = self._setupPhase( "Moni",   self.KnownMoniSubdets )
+
+        self.configureInit(tae, initDets)
+        self.configureDigi(digiDets)
+        self.configureLink(linkDets,moniDets)
+        self.configureMoni(moniDets)
         self.configureFilter()
             
-    def configureInit(self,tae):
+    def configureInit(self,tae,initDets):
         """
         Set up the initialization sequence
         """
-        initDets = self._setupPhase( "Init", self.KnownInitSubdets )
-
         # Start the DataOnDemandSvc ahead of ToolSvc
         ApplicationMgr().ExtSvc  += [ "DataOnDemandSvc" ]
         ApplicationMgr().ExtSvc  += [ "ToolSvc" ]
@@ -150,12 +153,10 @@ class Boole(LHCbConfigurableUser):
                 importOptions( "$MUONBACKGROUNDROOT/options/MuonFlatSpillover-G4.opts" )
 
 
-    def configureDigi(self):
+    def configureDigi(self,digiDets):
         """
         Set up the digitization sequence
         """
-        digiDets = self._setupPhase( "Digi", self.KnownDigiSubdets )
-
         importOptions("$STDOPTS/PreloadUnits.opts") # needed by VELO and ST
         if "VELO" in digiDets : self.configureDigiVELO( GaudiSequencer("DigiVELOSeq"), "" )
         if "TT"   in digiDets : self.configureDigiST(   GaudiSequencer("DigiTTSeq"), "TT", "" )
@@ -279,24 +280,18 @@ class Boole(LHCbConfigurableUser):
             if not odinFilter.isPropertySet( "TriggerTypes" ):
                 odinFilter.TriggerTypes = ["RandomTrigger"]
 
-    def configureLink(self):
+    def configureLink(self,linkDets,moniDets):
         """
         Set up the MC links sequence
         """
-
-        linkDets = self._setupPhase( "Link", self.KnownLinkSubdets )
 
         # Unpack MCParticles and MCVertices if not existing on input file
         DataOnDemandSvc().AlgMap["MC/Particles"] = "UnpackMCParticle"
         DataOnDemandSvc().AlgMap["MC/Vertices"]  = "UnpackMCVertex"
 
-        # Pack them for the output if not on the input file...
-        DataOnDemandSvc().AlgMap["pSim/MCParticles"] = "PackMCParticle"
-        DataOnDemandSvc().AlgMap["pSim/MCVertices"]  = "PackMCVertex"
-
-        if "VELO" in linkDets:
-            from Configurables import DecodeVeloRawBuffer
+        if "VELO" in linkDets or "VELO" in moniDets or "Tr" in linkDets:
             seq = GaudiSequencer("LinkVELOSeq")
+            from Configurables import DecodeVeloRawBuffer
             decodeVelo = DecodeVeloRawBuffer()
             decodeVelo.DecodeToVeloClusters     = True
             decodeVelo.DecodeToVeloLiteClusters = False
@@ -304,35 +299,35 @@ class Boole(LHCbConfigurableUser):
             seq.Members += [ "VeloCluster2MCHitLinker" ]
             seq.Members += [ "VeloCluster2MCParticleLinker" ]
 
-        if "TT" in linkDets or "IT" in linkDets:
+        if "TT" in linkDets or "IT" in linkDets or "TT" in moniDets or "IT" in moniDets or "Tr" in linkDets:
             from Configurables import STDigit2MCHitLinker, STCluster2MCHitLinker, STCluster2MCParticleLinker
-            if "TT" in linkDets:
+            if "TT" in linkDets or "TT" in moniDets:
                 seq = GaudiSequencer("LinkTTSeq")
                 seq.Members += [ STDigit2MCHitLinker("TTDigitLinker") ]
                 seq.Members += [ STCluster2MCHitLinker("TTClusterLinker") ]
                 seq.Members += [ STCluster2MCParticleLinker("TTTruthLinker") ]
 
-            if "IT" in linkDets:
+            if "IT" in linkDets or "IT" in moniDets:
                 seq = GaudiSequencer("LinkITSeq")
                 seq.Members += [ STDigit2MCHitLinker("ITDigitLinker", DetType   = "IT") ]
                 seq.Members += [ STCluster2MCHitLinker("ITClusterLinker", DetType   = "IT") ]
                 seq.Members += [ STCluster2MCParticleLinker("ITTruthLinker", DetType   = "IT") ]
 
-        if "OT" in linkDets:
+        if "OT" in linkDets or "OT" in moniDets or "Tr" in linkDets:
             seq = GaudiSequencer("LinkOTSeq")
             seq.Members += [ "OTMCDepositLinker" ]
             seq.Members += [ "OTMCHitLinker" ]
             seq.Members += [ "OTMCParticleLinker" ]
 
-        if "Tr" in linkDets:
+        if "Tr" in linkDets and "DIGI" in self.getProp("Outputs"):
             seq = GaudiSequencer("LinkTrSeq")
             seq.Members += [ "BuildMCTrackInfo" ]
 
-        if "RICH" in linkDets:
+        if "RICH" in linkDets and "DIGI" in self.getProp("Outputs"):
             seq = GaudiSequencer("LinkRICHSeq")
             seq.Members += [ "Rich::MC::MCRichDigitSummaryAlg" ]
 
-        if "CALO" in linkDets:
+        if "CALO" in linkDets or "CALO" in moniDets:
             from Configurables import CaloDigitsFromRaw, CaloReCreateMCLinks, CaloDigitMCTruth
             seq = GaudiSequencer("LinkCALOSeq")
             seq.Members += [ CaloDigitsFromRaw("EcalFromRaw") ]
@@ -347,12 +342,12 @@ class Boole(LHCbConfigurableUser):
             hcalTruth.Detector = "/dd/Structure/LHCb/DownstreamRegion/Hcal"
             seq.Members += [ hcalTruth ]
 
-        if "MUON" in linkDets:
+        if "MUON" in linkDets and "DIGI" in self.getProp("Outputs"):
             seq = GaudiSequencer("LinkMUONSeq")
             seq.Members += [ "MuonDigit2MCParticleAlg" ]
             seq.Members += [ "MuonTileDigitInfo" ]
 
-        if "L0" in linkDets:
+        if "L0" in linkDets and "DIGI" in self.getProp("Outputs"):
             from Configurables import L0Conf
             L0Conf().LinkSequencer = GaudiSequencer("LinkL0Seq")
 
@@ -474,14 +469,18 @@ class Boole(LHCbConfigurableUser):
         knownOptions = ["MDF","DIGI","L0ETC"]
         outputs = []
         for option in self.getProp("Outputs"):
-            if option.upper() not in knownOptions:
+            if option not in knownOptions:
                 raise RuntimeError("Unknown Boole().Outputs value '%s'"%option)
-            outputs.append( option.upper() )
+            outputs.append( option )
 
         # POOL Persistency
         importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
 
         if "DIGI" in outputs:
+            # Pack pSim containers for the output if not on the input file
+            DataOnDemandSvc().AlgMap["pSim/MCParticles"] = "PackMCParticle"
+            DataOnDemandSvc().AlgMap["pSim/MCVertices"]  = "PackMCVertex"
+
             # Objects to be written to output file
             importOptions("$STDOPTS/DigiContent.opts")
             extended = self.getProp("ExtendedDigi")
@@ -552,10 +551,8 @@ class Boole(LHCbConfigurableUser):
         return LHCbApp().evtMax()
 
 
-    def configureMoni(self):
+    def configureMoni(self,moniDets):
         # Set up monitoring
-        moniDets = self._setupPhase( "Moni", self.KnownMoniSubdets )
-
         histOpt = self.getProp("Histograms").capitalize()
         if histOpt not in self.KnownHistOptions:
             raise RuntimeError("Unknown Histograms option '%s'"%histOpt)
@@ -583,7 +580,7 @@ class Boole(LHCbConfigurableUser):
             clusMoni    = STClusterMonitor(    "ITClusterMonitor",   DetType="IT" )
             mcp2MCHit   = MCParticle2MCHitAlg( "MCP2ITMCHitAlg", MCHitPath = "MC/IT/Hits",
                                                OutputData = "/Event/MC/Particles2MCITHits" )
-            effCheck    = STEffChecker(        "ITEffChecker",       DetType="IT" )
+            effCheck    = STEffChecker(         "ITEffChecker",      DetType="IT" )
             effCheck.addTool(MCParticleSelector)
             effCheck.MCParticleSelector.zOrigin = 50.0
             effCheck.MCParticleSelector.pMin = 1.0*GeV
