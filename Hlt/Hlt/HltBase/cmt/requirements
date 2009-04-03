@@ -1,4 +1,4 @@
-#$Id: requirements,v 1.39 2009-03-31 15:42:33 ibelyaev Exp $
+#$Id: requirements,v 1.40 2009-04-03 11:47:58 graven Exp $
 #============================================================================
 # Created    : 2005-11-15
 # Maintainer : Gerhard raven
@@ -51,3 +51,6 @@ apply_pattern    reflex_dictionary                                 \
 macro HltBaseDict_use_linkopts $(use_linkopts)
 
 macro_append Boost_linkopts " $(Boost_linkopts_regex) "
+
+private
+macro_append ROOT_linkopts " -lHist "  WIN32 "  libHist.lib"

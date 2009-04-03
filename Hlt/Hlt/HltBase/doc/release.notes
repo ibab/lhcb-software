@@ -4,6 +4,14 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2009-04-03 - Gerhard Raven
+ - add some utilities which allow to set histogram binlabels
+   given an AIDA histogram. This is to put all code which 
+   goes from AIDA to an (possible) underlying ROOT histogram
+   in one place, so there is one clearly identified location
+   for this, instead of spreading ROOT dependencies over many
+   places...
+
 ! 2009-03-31 - Vanya BELYAEV
 
  - HltBase/ITrackBiFunctionTool.h
