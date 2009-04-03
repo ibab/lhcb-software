@@ -43,6 +43,15 @@
           <arg const="TRUE" name="head" type="LHCb::MCHeader"/>
           <code/>
       	</constructor>
+      <method
+        desc="Number of primary vertices in bunch crossing"
+        name="numOfPrimaryVertices"
+        type="unsigned int"
+       >
+	<code>
+	  return primaryVertices().size();
+        </code>
+      </method>
      </class>
   </package>
 </gdd>

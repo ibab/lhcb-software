@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.111 2009-02-18 13:12:31 cattanem Exp $
+! $Id: release.notes,v 1.112 2009-04-03 12:27:20 gcorti Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 !-----------------------------------------------------------------------------
+
+!======================== MCEvent v2r13 2009-04-03 ===========================
+! 2009-04-03 - Gloria CORTI
+ - Add short-cut method for number of primary vertices to MCHeader
 
 !======================== MCEvent v2r12 2009-02-18 ===========================
 ! 2009-02-12 M Needham
