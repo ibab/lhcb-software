@@ -5,5 +5,5 @@ use LbScriptsPolicy     v2r4
 use LbUtils             v1r15
 use LbRelease           v2r7
 use LbConfiguration     v3r0
-use LbLegacy            v1r1
+use LbLegacy            v1r2
 
