@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.h,v 1.20 2009-02-18 09:10:45 wouter Exp $
+// $Id: TrackMasterFitter.h,v 1.21 2009-04-03 14:36:22 hernando Exp $
 #ifndef TRACKFITTER_TRACKMASTERFITTER_H 
 #define TRACKFITTER_TRACKMASTERFITTER_H 1
 
@@ -97,6 +97,8 @@ private:
   int m_numFitIter;                 ///< number of fit iterations to perform
   double m_chi2Outliers;            ///< chi2 of outliers to be removed
   int m_numOutlierIter;             ///< max number of outliers to be removed
+  bool m_useSeedStateErrors; ///< use errors of the seed state
+  
   double m_errorX2;                 ///< Error^2 on x
   double m_errorY2;                 ///< Error^2 on y
   double m_errorTx2;                ///< Error^2 on slope x

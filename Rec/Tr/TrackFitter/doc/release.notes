@@ -3,6 +3,9 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+! 2009-04-03 - Jose A. Hernando (from X. Cid)
+ - in src/TrackMasterExtrapolator.h(cpp) add UseSeedStateErrors property to fit the measurement using the seed state errors (to fit the muon part of a track using the state from the 'long' track)
+
 !=========================== TrackFitter v2r32 2009-03-10 ===================
 ! 2009-03-08 - Stephanie Hansmann-Menzemer
  - use StateDetailedBetheBlochEnergyCorrectionTool as default in the fit

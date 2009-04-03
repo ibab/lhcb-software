@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.65 2009-02-18 09:10:45 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.66 2009-04-03 14:36:22 hernando Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -75,6 +75,9 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
                                                         (StateParameters::ZEndRich1)
                                                         (StateParameters::ZBegRich2)
                                                         (StateParameters::ZEndRich2));
+
+  declareProperty( "UseSeedStateErrors", m_useSeedStateErrors = false );
+
   declareProperty( "ErrorX2"        , m_errorX2 =  400.0*Gaudi::Units::mm2 );
   declareProperty( "ErrorY2"        , m_errorY2 =  400.0*Gaudi::Units::mm2 );
   declareProperty( "ErrorTx2"       , m_errorTx2 = 0.01                     );
@@ -159,23 +162,49 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
 {
   // any track that doesnt make it to the end is failed
   track.setFitStatus( Track::FitFailed );
+  
 
   // Make the nodes from the measurements
   StatusCode sc;
   if( track.nodes().empty() || m_makeNodes ) {
     sc = makeNodes( track,pid );
     if ( sc.isFailure() )
+    {
       return failure( "unable to make nodes from the measurements" );
+    }
   }
+
+  if (m_useSeedStateErrors) {
+    State st = track.firstState();
+    debug() << " state 0 at z" << st.z() 
+            << " vector " << st.stateVector() << "\n"
+            << " covariance " << st.covariance() << endreq;
+    State state0(track.firstState());
+    double z1 = track.nodes().front()->state().z();
+    m_extrapolator->propagate(state0,z1);
+    m_errorX2 = state0.errX2();
+    m_errorY2 = state0.errY2();
+    m_errorTx2 = state0.errTx2();
+    m_errorTy2 = state0.errTy2();
+    m_errorP[0] = state0.errQOverP2();
+    m_errorP[1] = 0.;
+    debug() << " state0 at z " << z1 
+            << " vector " << state0.stateVector() << "\n"
+            << " covariance " << state0.covariance() << endreq;
+  }
+
   
   // Check that the number of measurements is enough
   State& seed = track.nodes().front()->state() ;
-  if ( nNodesWithMeasurement( track ) < seed.nParameters() ) {
-    debug() << "Track has " << track.nMeasurements() 
-            << " measurements. Fitting a " << seed.nParameters() 
-            << "D-state" << endmsg;
-    return failure("Insufficient measurements to fit the State");
+  if (!m_useSeedStateErrors) {  
+    if ( nNodesWithMeasurement( track ) < seed.nParameters() ) {
+      debug() << "Track has " << track.nMeasurements() 
+              << " measurements. Fitting a " << seed.nParameters() 
+              << "D-state" << endmsg;
+      return failure("Insufficient measurements to fit the State");
+    }
   }
+  
 
   // create a covariance matrix to seed the Kalman fit
   TrackSymMatrix seedCov ; // Set off-diagonal elements to zero
@@ -184,33 +213,39 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
   seedCov(2,2) = m_errorTx2;
   seedCov(3,3) = m_errorTy2;
   // error is like A^2/p^2 + B^2
-  seedCov(4,4) = gsl_pow_2( m_errorP[0] * seed.qOverP() ) + gsl_pow_2(m_errorP[1]);
+  seedCov(4,4) = gsl_pow_2( m_errorP[0] * seed.qOverP() ) + gsl_pow_2(m_errorP[1]);  
+
+  if (m_useSeedStateErrors) seedCov(4,4) =  m_errorP[0];
+  // reset the covariance of the first state
+  seed.covariance() = seedCov ;
   
   if ( m_debugLevel )
     debug() << "SeedState: z = " << seed.z()
             << " stateVector = " << seed.stateVector()
             << " covariance  = " << seed.covariance() << endmsg;
-
+  
   // Iterate the track fit for linearisation
   int iter = 1;
   for ( ; iter <= m_numFitIter; ++iter ) {   
     if ( m_debugLevel ) debug() << "Iteration # " << iter << endmsg;
-
+    
     // update reference trajectories with smoothed states
     if( iter > 1 ) {
       sc = updateRefVectors( track );
       if ( sc.isFailure() ) return failure( "problem updating ref vectors" );
     }
-
+    
+    
     // reset the covariance of the first state
     seed.covariance() = seedCov ;
-    
+
     sc = m_trackNodeFitter -> fit( track );
+    
     if ( sc.isFailure() ) return failure( "unable to fit the track" );
-      
+    
     if ( m_debugLevel ) debug() << "chi2 =  " << track.chi2() 
-				<< " ref state = (" << track.nodes().back()->state().stateVector() 
-				<< ") at z= " << track.nodes().back()->state().z() << endmsg;
+                                << " ref state = (" << track.nodes().back()->state().stateVector() 
+                                << ") at z= " << track.nodes().back()->state().z() << endmsg;
   }
   
   // Outlier removal iterations
@@ -218,14 +253,14 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
   while ( iter <= m_numOutlierIter && track.nDoF() > 1 &&
           outlierRemoved( track ) ) {
     if ( m_debugLevel ) debug() << "Outlier iteration # " << iter << endmsg;
-
+    
     // update reference trajectories with smoothed states
     sc = updateRefVectors( track );
     if ( sc.isFailure() ) return failure( "problem updating ref vectors" );
     
     // reset the covariance of the first state
     seed.covariance() = seedCov ;
-
+    
     // Call the track fit
     sc = m_trackNodeFitter -> fit( track );
     if ( sc.isFailure() ) {
@@ -234,46 +269,49 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
       //mess << "unable to fit the track # " << track.key();
       //return failure( mess.str() );
       return failure( "unable to fit the track" );
-    }    
-      
+    } 
+    
     if ( m_debugLevel ) debug() << "chi2 =  " << track.chi2() 
-				<< " ref state = (" << track.nodes().back()->state().stateVector() 
-				<< ") at z= " << track.nodes().back()->state().z() << endmsg;
+                                << " ref state = (" << track.nodes().back()->state().stateVector() 
+                                << ") at z= " << track.nodes().back()->state().z() << endmsg;
     ++iter;  
   }
-
+  
   // determine the track states at user defined z positions
   sc = determineStates( track );
   if ( sc.isFailure() ) 
     return failure( "failed in determining states" ) ;
-  
+
   if ( m_debugLevel && !track.states().empty() )
     debug() << "first state = " << track.firstState() << endmsg;
-
+  
   // fill extra info
   fillExtraInfo( track ) ;
+
   // make sure to declare the track successful
   track.setFitStatus( Track::Fitted );
   
   return sc;
 }
 
+
+
 //=============================================================================
 // 
 //=============================================================================
 StatusCode TrackMasterFitter::determineStates( Track& track ) const
 {
-  StatusCode sc = StatusCode::SUCCESS ;
-
+  StatusCode sc = StatusCode::SUCCESS;
+  
   // clean the non-fitted states in the track!
   track.clearStates();
   
   std::vector<Node*>& nodes = track.nodes();
-
+  
   // Add the state at the first measurement position
   // -----------------------------------------------
   if ( ( m_upstream && !track.checkFlag(Track::Backward ) ) ||
-     ( !m_upstream && track.checkFlag(Track::Backward ))) {
+       ( !m_upstream && track.checkFlag(Track::Backward ))) {
     std::vector<Node*>::reverse_iterator iNode = nodes.rbegin();
     while ( !(*iNode)->hasMeasurement() ) ++iNode;
     State& state = (*iNode) -> state();
@@ -430,7 +468,7 @@ StatusCode TrackMasterFitter::makeNodes( Track& track, LHCb::ParticleID pid ) co
   StatusCode sc = initializeRefStates( track, pid );
   if (sc.isFailure())
     return Warning("Problems setting reference info", StatusCode::FAILURE, 1);
-  
+
   // Check if it is needed to populate the track with measurements
   if ( track.checkPatRecStatus( Track::PatRecIDs ) ||
        track.measurements().empty() ) {
@@ -443,9 +481,13 @@ StatusCode TrackMasterFitter::makeNodes( Track& track, LHCb::ParticleID pid ) co
 	      << ", " << track.nMeasurements() << endreq;
   }
 
+
   // check that there are sufficient measurements
-  if( track.nMeasurements() < track.firstState().nParameters() )
-    return Warning("Not enough measurements to fit track", StatusCode::FAILURE, 0);
+  if (!m_useSeedStateErrors)
+  {
+    if( track.nMeasurements() < track.firstState().nParameters() )
+      return Warning("Not enough measurements to fit track", StatusCode::FAILURE, 0);
+  }
   
   // Create the nodes for the measurements.
   const std::vector<Measurement*>& measures = track.measurements();
@@ -506,17 +548,13 @@ StatusCode TrackMasterFitter::makeNodes( Track& track, LHCb::ParticleID pid ) co
   // add all the noise, if required
   if(m_applyMaterialCorrections && sc.isSuccess()) {
     sc = updateMaterialCorrections( track, pid ) ;
-    if(!sc.isSuccess())
-      error() << "Problem setting material corrections." << endreq ;
   }
   
   // create the transport of the reference (after the noise, because it uses energy loss)
   if( sc.isSuccess()) {
     sc = updateTransport( track ) ;
-    if(!sc.isSuccess()) 
-      error() << "Problem setting transports." << endreq ;
   }
-  
+
   return sc ;
 }
 
