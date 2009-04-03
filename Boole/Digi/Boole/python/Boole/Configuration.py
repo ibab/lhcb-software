@@ -1,12 +1,12 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.46 2009-04-03 07:15:18 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.47 2009-04-03 11:04:02 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
 import GaudiKernel.ProcessJobOptions
-from Configurables import LHCbConfigurableUser, LHCbApp, ProcessPhase, L0Conf
+from Configurables import LHCbConfigurableUser, LHCbApp, ProcessPhase, L0Conf, DigiConf
 
 class Boole(LHCbConfigurableUser):
 
@@ -34,8 +34,7 @@ class Boole(LHCbConfigurableUser):
        ,"TAENext"        : 0
        ,"TAESubdets"     : [ "CALO", "MUON" ]
        ,"Outputs"        : [ "DIGI" ]
-       ,"WriteL0Only"    : False
-       ,"ExtendedDigi"   : False
+       ,"DigiType"       : "Default"
        ,"Histograms"     : "Default"
        ,"NoWarnings"     : False
        ,"DatasetName"    : "Boole"
@@ -60,8 +59,7 @@ class Boole(LHCbConfigurableUser):
        ,'TAENext'      : """ Number of Next Time Alignment Events to generate """
        ,'TAESubdets'   : """ Subdetectors for which TAE are enabled """
        ,'Outputs'      : """ List of outputs: ['MDF','DIGI','L0ETC'] (default 'DIGI') """
-       ,'WriteL0Only'  : """ OBSOLETE. Add L0 to FilterSequence instead """
-       ,'ExtendedDigi' : """ Flag to add MCHits to .digi output file (default False) """
+       ,'DigiType'     : """ Defines content of DIGI file: ['Minimal','Default',Extended'] """
        ,'Histograms'   : """ Type of histograms: ['None','Default','Expert'] """
        ,'NoWarnings'   : """ Flag to suppress all MSG::WARNING or below (default False) """ 
        ,'DatasetName'  : """ String used to build output file names """
@@ -77,7 +75,7 @@ class Boole(LHCbConfigurableUser):
        ,'FilterSequence' : """ List of Filter sequences, see KnownFilterSubdets  """
        }
     
-    __used_configurables__ = [ LHCbApp, L0Conf ]
+    __used_configurables__ = [ LHCbApp, L0Conf, DigiConf ]
 
     def defineDB(self):
         if self.getProp("DataType") == "DC06" :
@@ -260,12 +258,6 @@ class Boole(LHCbConfigurableUser):
             if det not in self.KnownFilterSubdets :
                 log.warning("Unknown subdet '%s' in FilterSequence"%det)
 
-        l0yes = self.getProp( "WriteL0Only" )
-        if l0yes :
-            log.warning("WriteL0Only property is obsolete. Adding L0 to FilterSequence instead")
-            if "L0" not in filterDets :
-                filterDets += [ "L0" ]
-                self.setProp("FilterSequence",filterDets)
         filterSeq = ProcessPhase("Filter", ModeOR = True )
         filterSeq.DetectorList += filterDets
 
@@ -477,30 +469,17 @@ class Boole(LHCbConfigurableUser):
         importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
 
         if "DIGI" in outputs:
-            # Pack pSim containers for the output if not on the input file
-            DataOnDemandSvc().AlgMap["pSim/MCParticles"] = "PackMCParticle"
-            DataOnDemandSvc().AlgMap["pSim/MCVertices"]  = "PackMCVertex"
+            writerName = "DigiWriter"
+            digiWriter = OutputStream( writerName, Preload=False )
+            if not digiWriter.isPropertySet( "Output" ):
+                digiWriter.Output  = "DATAFILE='PFN:" + self.outputName() + ".digi' TYP='POOL_ROOTTREE' OPT='REC'"
+            digiWriter.RequireAlgs.append( "Filter" )
 
-            # Objects to be written to output file
-            importOptions("$STDOPTS/DigiContent.opts")
-            extended = self.getProp("ExtendedDigi")
-            if ( extended ): importOptions( "$STDOPTS/ExtendedDigi.opts" )
-
-            MyWriter = OutputStream( "DigiWriter", Preload=False )
-            if not MyWriter.isPropertySet( "Output" ):
-                MyWriter.Output  = "DATAFILE='PFN:" + self.outputName() + ".digi' TYP='POOL_ROOTTREE' OPT='REC'"
-            MyWriter.RequireAlgs.append( "Filter" )
-            ApplicationMgr().OutStream.append( "DigiWriter" )
-
-            # Add TAE RawEvents when enabled
-            taePrev = self.getProp("TAEPrev")
-            while taePrev > 0:
-                MyWriter.ItemList += ["/Event/Prev%s/DAQ/RawEvent#1"%taePrev]
-                taePrev -= 1
-            taeNext = self.getProp("TAENext")
-            while taeNext>0:
-                MyWriter.ItemList += ["/Event/Next%s/DAQ/RawEvent#1"%taeNext]
-                taeNext -= 1
+            # Set up the Digi content
+            DigiConf().Writer = writerName
+            self.setOtherProps(DigiConf(),["DigiType","TAEPrev","TAENext"])
+            if self.getProp("UseSpillover"):
+                self.setOtherProps(DigiConf(),["SpilloverPaths"])
 
         if "L0ETC" in outputs:
             from Configurables import L0Conf
@@ -544,7 +523,7 @@ class Boole(LHCbConfigurableUser):
         outputName = self.getProp("DatasetName")
         if ( self.evtMax() > 0 ): outputName += '-' + str(self.evtMax()) + 'ev'
         if len(self.getProp( "FilterSequence" )) > 0 : outputName += '-filtered'
-        if self.getProp("ExtendedDigi") : outputName += '-extended'
+        if self.getProp("DigiType") != "Default" : outputName += '-%s'%self.getProp("DigiType")
         return outputName
 
     def evtMax(self):
