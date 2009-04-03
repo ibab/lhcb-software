@@ -4,7 +4,7 @@
   <package name="RecEvent">
 
 <!-- **************************************************************************
-  * $Id: MuonPID.xml,v 1.4 2008-08-11 12:27:21 jpalac Exp $
+  * $Id: MuonPID.xml,v 1.5 2009-04-03 14:00:58 hernando Exp $
   *****************************************************************************
   * XML-description of MuonPID class                                          *
   * author: Erica Polycarpo                                                   *
@@ -36,11 +36,9 @@ system"
         desc="Number of tracks which share hits" init="0"/>
 
       <attribute type="bitfield" name="Status" desc="Status of MuonPID">
-        <bitfield name="IsMuon" length="1" desc="Boolean: is track a
-          muon"/>
-        <bitfield name="InAcceptance" length="1"
-          desc="Boolean, if track extraoplation is in the Muon
-acceptance"/>
+        <bitfield name="IsMuon" length="1" desc="Boolean: is track a muon"/>
+	<bitfield name="IsMuonLoose" length="1" desc="Boolean: is track a muon (looser defintion)"/>
+        <bitfield name="InAcceptance" length="1" desc="Boolean, if track extraoplation is in the Muon acceptance"/>
         <bitfield name="PreSelMomentum" length="1"
           desc="Boolean, if track has minimal momentum"/>
       </attribute>
