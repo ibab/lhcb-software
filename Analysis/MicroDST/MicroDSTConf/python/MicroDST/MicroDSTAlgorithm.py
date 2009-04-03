@@ -10,5 +10,6 @@ from Configurables import CopyMCParticles
 from Configurables import CopyMCHeader
 from Configurables import CopyL0DUReport
 from Configurables import CopyHltSummary
+from Configurables import CopyHltDecReports
 from Configurables import CopyFlavourTag
 
