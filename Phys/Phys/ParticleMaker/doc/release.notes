@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.88 2009-01-15 10:09:32 jpalac Exp $ 
+! $Id: release.notes,v 1.89 2009-04-03 12:38:54 odescham Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : Chris Jones, J. Palacios
 !==============================================================================
+
+! 2008-04-03 - Olivier Deschamps 
+ - Merged/ResolvedPi0Maker.cpp : new property 'Particle' (default 'pi0') allow to produce any gamma-gamma particle (e.g. 'eta')
+                               : change property name 'Pi0MassWindow' -> 'MassWindow' and 'Pi0PtCut' -> 'PtCut'
+
 
 !======================== ParticleMaker v4r2 2009-01-15 ===================
 

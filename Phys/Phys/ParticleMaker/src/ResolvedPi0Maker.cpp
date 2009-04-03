@@ -1,5 +1,5 @@
 // $Id
-// $Id: ResolvedPi0Maker.cpp,v 1.6 2007-08-22 16:40:04 pkoppenb Exp $
+// $Id: ResolvedPi0Maker.cpp,v 1.7 2009-04-03 12:38:54 odescham Exp $
 // ============================================================================
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -56,8 +56,9 @@ ResolvedPi0Maker::ResolvedPi0Maker
   declareProperty( "IndependantPhotons", m_independantPhotons= false);
   declareProperty ( "PhotonMakerType"  , m_photonMakerType = "PhotonMaker") ;
   // Filter 
-  declareProperty( "Pi0MassWindow"     , m_pi0MassWin = 30. * Gaudi::Units::MeV);
-  declareProperty( "Pi0PtCut"          , m_pi0PtCut = 0. * Gaudi::Units::MeV);
+  declareProperty( "MassWindow"     , m_pi0MassWin = 30. * Gaudi::Units::MeV);
+  declareProperty( "PtCut"          , m_pi0PtCut = 0. * Gaudi::Units::MeV);
+  declareProperty( "Particle"       , m_part = "pi0");
   //
   m_point = Gaudi::XYZPoint();
   m_pointErr = Gaudi::SymMatrix3x3();
@@ -88,7 +89,11 @@ StatusCode ResolvedPi0Maker::initialize    ()
     return sc;
   }
   ParticleProperty* partProp;
-  partProp  = ppSvc->find( "pi0" );
+  partProp  = ppSvc->find( m_part );
+  if(partProp == NULL){
+    Error("Requested particle '" + m_part + "' is unknown").ignore();
+    return StatusCode::FAILURE;
+  }
   m_Id      = (*partProp).jetsetID();
   m_pi0Mass = (*partProp).mass();
   //
@@ -112,7 +117,7 @@ StatusCode ResolvedPi0Maker::initialize    ()
 StatusCode ResolvedPi0Maker::finalize      ()
 {
   info() << " - ResolvedPi0Maker Summary -----" << endreq;
-  info() << " Created : " << (float) m_count[1]/m_count[0] << " Resolved Pi0s per event" << endreq;
+  info() << " Created : " << (float) m_count[1]/m_count[0] << " Resolved " << m_part << "per event" << endreq;
   info() << " --------------------------------" << endreq;
   // finalize the base class
   return GaudiTool::finalize ();
@@ -139,7 +144,7 @@ StatusCode ResolvedPi0Maker::makeParticles (LHCb::Particle::Vector & pi0s )
   StatusCode sc = m_photonMaker->makeParticles(photons);
   if (!sc) return sc;
   if( 0 == photons.size() ) { 
-    Warning("PhotonMaker return empty container - No resolved pi0 to be created").ignore();
+    Warning("PhotonMaker return empty container - No resolved "+ m_part + " to be created").ignore();
     return StatusCode::SUCCESS; 
   }
 
@@ -188,7 +193,7 @@ StatusCode ResolvedPi0Maker::makeParticles (LHCb::Particle::Vector & pi0s )
       if(StatusCode::SUCCESS != sc ){
         delete pi0;
         nSkip++;
-        warning() << "Unable to fill Resolved Pi0 parameters, skip particle [" << nSkip << "]"<< endreq;
+        warning() << "Unable to fill Resolved " << m_part << " parameters, skip particle [" << nSkip << "]"<< endreq;
         continue;
       }
       // fill container
@@ -202,12 +207,12 @@ StatusCode ResolvedPi0Maker::makeParticles (LHCb::Particle::Vector & pi0s )
       // print out
       LHCb::Particle* g1 = ((*ip1).first).particle();
       LHCb::Particle* g2 = ((*ip2).first).particle();
-      verbose() << " ---- Resolved Pi0 found [" << nPi0 << "]"<< endreq;
+      verbose() << " ---- Resolved " << m_part <<" found [" << nPi0 << "]"<< endreq;
       verbose() << "Point   : " << pi0->referencePoint() << endreq;
-      verbose() << "Pt(pi0) : "  << pi0->momentum().Pt() << endreq;
+      verbose() << "Pt("<<m_part<<") : "  << pi0->momentum().Pt() << endreq;
       verbose() << "Pt(g1)  : "  << g1->momentum().Pt() << endreq;
       verbose() << "Pt(g2)  : "  << g2->momentum().Pt() << endreq;
-      verbose() << "CL(pi0) : "  << pi0->confLevel() << endreq;
+      verbose() << "CL("<<m_part<<") : "  << pi0->confLevel() << endreq;
       verbose() << "CL(g1)  : "  << g1->confLevel() << endreq;
       verbose() << "CL(g2)  : "  << g2->confLevel() << endreq;
       verbose() << "Mass    : "  << pi0->momentum().M()  << endreq;
@@ -228,9 +233,9 @@ StatusCode ResolvedPi0Maker::makeParticles (LHCb::Particle::Vector & pi0s )
   debug() << " " << endreq;
   debug() << "-----------------------" << endreq;
   debug() << " Filtered and created :" << endreq;
-  debug() << " --> " << nPi0 << " Resolved Pi0s " << endreq;
+  debug() << " --> " << nPi0 << " Resolved " << m_part <<"s " << endreq;
   debug() << " --> " << nGamma-nDel <<" photons have been used among the " << nGamma << " selected " << endreq;
-  debug() << " Skipped Pi0 : " << nSkip << endreq;
+  debug() << " Skipped " << m_part <<" : " << nSkip << endreq;
   debug() << "-----------------------" << endreq;
   return StatusCode::SUCCESS ;
 };

@@ -1,4 +1,4 @@
-// $Id: MergedPi0Maker.h,v 1.2 2007-03-05 09:24:25 pkoppenb Exp $
+// $Id: MergedPi0Maker.h,v 1.3 2009-04-03 12:38:54 odescham Exp $
 #ifndef MERGEDPI0PARTICLEPARTICLEMAKER_H 
 #define MERGEDPI0PARTICLEPARTICLEMAKER_H 1
 // Include files
@@ -80,5 +80,6 @@ private:
   double   m_ggDistCut  ;
   std::vector<double> m_parMas;
   unsigned long  m_count[3];
+  std::string m_part;
 };
 #endif // MERGEDPI0PARTICLEPARTICLEMAKER_H

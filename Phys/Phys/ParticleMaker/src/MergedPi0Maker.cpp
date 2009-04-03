@@ -1,5 +1,5 @@
 // $Id
-// $Id: MergedPi0Maker.cpp,v 1.5 2007-08-22 16:40:04 pkoppenb Exp $
+// $Id: MergedPi0Maker.cpp,v 1.6 2009-04-03 12:38:54 odescham Exp $
 // ============================================================================
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -67,15 +67,16 @@ MergedPi0Maker::MergedPi0Maker
   declareProperty ( "UseClusterMass"             , m_useClusterMass    = false) ;
   // Filter 
   declareProperty ( "ConfLevelCut"     , m_clCut = 0.4 ) ; // Chi2  > 1 
-  declareProperty( "Pi0MassWindow"     , m_pi0MassWin = 200. * Gaudi::Units::MeV);
+  declareProperty( "MassWindow"        , m_pi0MassWin = 200. * Gaudi::Units::MeV);
   declareProperty( "GammaPtCut"        , m_gPtCut = 0. * Gaudi::Units::MeV);
-  declareProperty( "Pi0PtCut"          , m_pi0PtCut = 0. * Gaudi::Units::MeV);
+  declareProperty( "PtCut"             , m_pi0PtCut = 0. * Gaudi::Units::MeV);
   declareProperty( "GammaGammaDistCut" , m_ggDistCut = 1.8 ); // Unit = cellSize
   // Mass correction
   declareProperty( "ParMas", m_parMas );
   m_parMas.push_back(1.00  );
   m_parMas.push_back(0.00  );
   m_parMas.push_back(0.00  );
+  declareProperty( "Particle"       , m_part = "pi0");
   
   //
   m_point = Gaudi::XYZPoint();
@@ -106,7 +107,7 @@ StatusCode MergedPi0Maker::initialize    ()
     return sc;
   }
   ParticleProperty* partProp;
-  partProp  = ppSvc->find( "pi0" );
+  partProp  = ppSvc->find( m_part );
   m_Id      = (*partProp).jetsetID();
   m_pi0Mass = (*partProp).mass();
 
@@ -133,7 +134,7 @@ StatusCode MergedPi0Maker::initialize    ()
   if( m_useShowerShape  )
   { debug() << " ShowerShape  : Ecal Cluster shape/size            " << endreq ; }
   if( m_useClusterMass  )
-  { debug() << " ClusterMass  : Ecal Cluster pi0 mass              " << endreq ; }
+  { debug() << " ClusterMass  : Ecal Cluster  mass              " << endreq ; }
 
   if( !m_useCaloTrMatch   &&
       !m_useCaloDepositID &&
@@ -157,7 +158,7 @@ StatusCode MergedPi0Maker::initialize    ()
 StatusCode MergedPi0Maker::finalize      ()
 {
   info() << " - MergedPi0Maker Summary -----" << endreq;
-  info() << " Created : " << (float) m_count[1]/m_count[0] << " Merged Pi0 per event" << endreq;
+  info() << " Created : " << (float) m_count[1]/m_count[0] << " Merged " << m_part << " per event" << endreq;
   info() << " ------------------------------" << endreq;
   // finalize the base class
   return GaudiTool::finalize ();
@@ -264,7 +265,7 @@ StatusCode MergedPi0Maker::makeParticles (LHCb::Particle::Vector & particles )
       delete particle ;
       nSkip++;
       warning() << " CaloParticle status/flag : " << calopart.status() << "/" << calopart.flag();
-      warning() << "Unable to fill Merged Pi0 parameters, skip particle [" << nSkip << "]"<< endreq;
+      warning() << "Unable to fill Merged " << m_part << " parameters, skip particle [" << nSkip << "]"<< endreq;
       --nSelPp;
       continue ;                                                
     }
@@ -275,7 +276,7 @@ StatusCode MergedPi0Maker::makeParticles (LHCb::Particle::Vector & particles )
 
 
     m_count[1] += 1;
-    verbose() << " ---- Merged Pi0 found ["<< nSelPp << "]" <<  endreq;
+    verbose() << " ---- Merged " << m_part << " found ["<< nSelPp << "]" <<  endreq;
     verbose() << "Pt    "  << pi0Momentum.pt() << endreq;
     verbose() << "Corrected Mass (uncorrected) " << mass << " (" << umas << ")"<<endreq;
     verbose() << "CL (Chi2)  " << CL   << " ("<<pp->info(LHCb::ProtoParticle::CaloTrMatch,-999.) << ")"<<endreq;
@@ -289,7 +290,7 @@ StatusCode MergedPi0Maker::makeParticles (LHCb::Particle::Vector & particles )
   debug() << " " << endreq;
   debug() << "-----------------------" << endreq;
   debug() << " Filtered and created :" << endreq;
-  debug() << " --> " << nSelPp << " Merged Pi0s (among " << nPp <<")"<< endreq;
+  debug() << " --> " << nSelPp << " Merged " << m_part << " (among " << nPp <<")"<< endreq;
   debug() << " Skipped : " << nSkip << endreq;
   debug() << "--------------------" << endreq;
 

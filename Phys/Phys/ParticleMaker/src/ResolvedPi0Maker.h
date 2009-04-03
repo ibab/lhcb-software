@@ -1,4 +1,4 @@
-// $Id: ResolvedPi0Maker.h,v 1.2 2007-03-05 09:48:05 pkoppenb Exp $
+// $Id: ResolvedPi0Maker.h,v 1.3 2009-04-03 12:38:54 odescham Exp $
 #ifndef RESOLVEDPI0MAKER_H 
 #define RESOLVEDPI0MAKER_H 1
 // Include files
@@ -76,5 +76,6 @@ private:
   double   m_pi0MassWin ;
   double   m_pi0PtCut   ;
   unsigned long  m_count[3];
+  std::string m_part;
 };
 #endif // RESOLVEDPI0MAKER_H
