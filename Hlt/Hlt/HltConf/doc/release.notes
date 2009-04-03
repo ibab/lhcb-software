@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.192 2009-04-03 15:55:56 panmanj Exp $ 
+! $Id: release.notes,v 1.193 2009-04-03 18:49:17 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-04-03 Gerhard Raven
+ - add python/HltConf/HltReco.py as a module to replace
+   options/HltRecoSequence.py. See comments in HltReco.py
+   as to how to use it
+ - add support for ignoring OutputSelection in HltMember
 
 ! 2009-04-03 Jaap Panman
  - switch on more lumi counters in HltLumiLines.py and LumiCounterDefinition.py

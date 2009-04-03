@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.47 2009-04-02 11:25:19 graven Exp $ 
+# $Id: HltLine.py,v 1.48 2009-04-03 18:49:18 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.47 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.48 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -447,30 +447,43 @@ class bindMembers (object) :
     """
     __slots__ = ('_members','_outputsel')
 
-    def members( self ) : return self._members
-    def outputSelection( self ) : return self._outputsel
+    def outputSelection( self ) : 
+        return self._outputsel
 
+    def members( self ) :         
+        #return self._members
+        # remove (downstream) duplicates
+        members = []
+        for m in self._members :
+            if m not in members : members += [ m ]
+        return members
+
+    def ignoreOutputSelection( self ) :
+        x = deepcopy(self)
+        x._outputsel = None
+        return x
 
     def __init__( self, line, algos ) :
-        if line == None: raise AttributeError, 'Must have a line name to bind to'
 
         self._members = []
         self._outputsel = None
 
-
-        # last_output_index = _last_algo_with_output(algos)
-        # for algi in range(len(algos)) :
         for alg in algos:
-            # print 'iterator: at ' + str(algi)
-            # print '  type: ' + str(type(algos[algi]))
-            # alg  = algos[algi]
-            # last = ( last_output_index and algi == last_output_index ) 
-            # print 'last? ' + str(last)
 
             # allow chaining of previously bound members...
             if type(alg) is bindMembers:
                 self._members  += alg.members()
-                self._outputsel = alg.outputSelection()
+                # sometimes, we want to ignore this... 
+                # add a flag to allow to skip this (when set to None?)
+                if alg.outputSelection() : self._outputsel = alg.outputSelection()
+                # self._outputsel = alg.outputSelection()
+                continue
+
+            # if Hlt2Member, ask it to creats a configurable instance for this line..
+            if type(alg) is Hlt2Member:
+                if line == None: raise AttributeError, 'Must have a line name to bind to'
+                self._members += [ alg.createConfigurable( line, **alg.Args ) ]
+                # find the PhysDesktop tool, and its' OutputLocation' property..'
                 continue
 
             # allow automatic picking up of shared L0 candidates...
@@ -478,12 +491,6 @@ class bindMembers (object) :
                 self._members += [ alg ]
                 self._outputsel = alg.OutputSelection
                 continue
-
-            # if Hlt2Member, ask it to creats a configurable instance for this line..
-            if type(alg) is Hlt2Member:
-                self._members += [ alg.createConfigurable( line, **alg.Args ) ]
-                continue
-
 
             # if not Hlt1Member, blindly copy -- not much else we can do
             if type(alg) is not Hlt1Member:
@@ -496,6 +503,7 @@ class bindMembers (object) :
                 continue
                 
             # if Hlt1Member, verify, expand, and chain
+            if line == None: raise AttributeError, 'Must have a line name to bind to'
             margs = alg.Args.copy() 
             #### TODO: use _checkSelection to make sure the result is valid!!!
             #    expand '%' in FilterDescriptor, InputSelection{,1,2} to allow bound selections
@@ -556,10 +564,7 @@ class bindMembers (object) :
 
             
             ## output selection (default: the algorithm instance name)
-            ## TODO: make sure the 'last' algorithm in the line (which has 'OutputSelection' in 
-            ## its __slots__) has an OutputSelection which matches the decision name...
             if 'OutputSelection' in alg.Type.__slots__ : 
-                # self._outputsel = algName if not last else 'Hlt1%sDecision'%line
                 self._outputsel = algName
                 if margs.has_key ( 'OutputSelection' ) :
                     _checkSelection ( 'OutputSelection' , margs , algName , line ) 
@@ -567,8 +572,6 @@ class bindMembers (object) :
             
             # create (the configurable for) the algorithm and add it to the sequencer:
             self._members += [ alg.createConfigurable( line , **margs ) ]
-
-        
 
 
 # =============================================================================
