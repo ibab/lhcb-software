@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.190 2009-04-02 12:55:47 hernando Exp $ 
+! $Id: release.notes,v 1.191 2009-04-03 15:54:07 panmanj Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-04-04 Jaap Panman
+ - switch on more lumi counters in HltLumiLines.py and LumiCounterDefinition.py
 
 ! 2009-04-02 Jose A. Hernando
  - options/HltInit.py InfoID have to start from 1000, 
