@@ -1,9 +1,9 @@
 #============================================================================
-# Created    : 2007-11-13
+# Created    : 2008-03-17
 # Maintainer : Olivier Callot
 #============================================================================
-package           FarmMonit
-version           v1r0
+package           FarmMonitor
+version           v2r0
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -13,11 +13,15 @@ branches          cmt doc src
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use OnlineSys v* 
-
-application FarmMonit ../src/*.cpp
-
-macro FarmMonit_linkopts    "$(application_linkopts)"
-
-apply_pattern application_path
-
+use ROMon  v* Online
+use DIM    v* Online
+use GaudiKernel  v*
+include_path      none
+#============================================================================
+# Component library building rule
+#============================================================================
+library          FarmMonitor    ../src/*.cpp 
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    linker_library library=FarmMonitor
