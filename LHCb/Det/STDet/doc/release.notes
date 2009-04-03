@@ -1,7 +1,15 @@
-!$Id: release.notes,v 1.165 2009-03-30 12:59:11 mneedham Exp $
+!$Id: release.notes,v 1.166 2009-04-03 06:33:00 jluisier Exp $
 !Package         : STDet
 !Package manager : M. Needham
-!-------------------------------------------------------------------------
+i!-------------------------------------------------------------------------
+
+! 2009-04-03 J Luisier
+ - Add access to Noise condition in DeSTSector
+ - Add methods to read the noise per sector / beetle / beetle port and strip
+   in DeSTSector
+ - Add toElectron and toADC methods in DeSTSector 
+ - Add access to ProdID condition in DeITSector and DeTTHalfModule
+ - Add prodID method in DeSTSector
 
 
 ! 2009-03-30 M Needham

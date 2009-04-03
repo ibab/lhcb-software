@@ -110,7 +110,7 @@ StatusCode DeTTSector::initialize() {
 
     using namespace boost;
     std::string region = lexical_cast<std::string>(chan.detRegion());
-    std::string col = lexical_cast<std::string>(column());  
+    std::string col = moduleNumber( chan.detRegion(), parentID.station());
 
     m_conditionPathName = TTNames().UniqueLayerToString(chan) + "LayerR"
       + region + "Module" + col
@@ -126,7 +126,6 @@ StatusCode DeTTSector::initialize() {
       msg << MSG::ERROR << "Failed to cache geometry" << endmsg;
       return sc;
     }
-
   }
 
   return StatusCode::SUCCESS;
@@ -139,5 +138,26 @@ unsigned int DeTTSector::prodID() const{
 std::string DeTTSector::conditionsPathName() const
 {
   return m_conditionPathName;
+}
+
+std::string DeTTSector::moduleNumber(const unsigned int& reg,
+                                     const unsigned int& station) const
+{
+  using namespace boost;
+  if ( reg  == 1 ) // => A
+    return lexical_cast<std::string>(column());
+  else if ( reg == 2 ) // => B
+    return lexical_cast<std::string>(column() - 6);
+  else if ( reg == 3 ) // => C
+  {
+    if ( station == 1 ) // => TTa
+      return lexical_cast<std::string>(column() - 9);
+    else if ( station == 2 ) // => TTb
+      return lexical_cast<std::string>(column() - 11);
+    else
+      return "0";
+  }
+  else
+    return "0";
 }
 

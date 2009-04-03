@@ -28,7 +28,9 @@ using namespace boost::lambda;
 
 DeTTHalfModule::DeTTHalfModule( const std::string& name ) :
   DeSTBaseElement( name ),
-  m_prodID(0)
+  m_prodID(0),
+  m_versionString("DC06"),
+  m_prodIDString("ProdID")
 { 
   // constructer
   m_sectors.clear();
@@ -64,9 +66,39 @@ StatusCode DeTTHalfModule::initialize() {
     const STChannelID parentID = m_parent->elementID();
     STChannelID chan(STChannelID::typeTT, parentID.station(), parentID.layer(), m_detRegion,m_firstSector,0);
     setElementID(chan);
-    m_sectors = getChildren<DeTTHalfModule>();   
+    m_sectors = getChildren<DeTTHalfModule>();
   }
- 
+  
+  if (exists("version"))
+    m_versionString = param<std::string>("version");
+  
+  // Can't test the version string, it's unfortunalety not trustable
+  // it exists a DC07 version (why?) that doesn't contain prodID
+  if (m_versionString != "DC06" && m_versionString != "DC07")
+  {
+    sc = registerCondition(this, m_prodIDString,
+                           &DeTTHalfModule::updateProdIDCondition, true);
+    if (sc.isFailure() )
+    {
+      MsgStream msg(msgSvc(), name() );
+      msg << MSG::ERROR << "Failed to register prodID conditions" << endreq;
+      return StatusCode::FAILURE; 
+    }
+  }
+  
+  return StatusCode::SUCCESS;
+}
+
+StatusCode DeTTHalfModule::updateProdIDCondition()
+{
+  const Condition* aCon = condition(m_prodIDString);
+  if (aCon == 0){
+    MsgStream msg(msgSvc(), name());
+    msg << MSG::ERROR << "Failed to find condition" << endmsg;
+    return StatusCode::FAILURE; 
+  }
+  m_prodID = aCon->param<int>("ProdID");
+  
   return StatusCode::SUCCESS;
 }
 
@@ -115,17 +147,17 @@ DeTTSector* DeTTHalfModule::findSector(const STChannelID aChannel){
 DeTTSector* DeTTHalfModule::findSector(const Gaudi::XYZPoint& point) {
 
   // find the half module 
-  Children::iterator iter = std::find_if(m_sectors.begin(), m_sectors.end(), 
-                                                            bind(&DeSTSector::isInside, _1, point)); 
+  Children::iterator iter = std::find_if(m_sectors.begin(),m_sectors.end(), 
+                                         bind(&DeSTSector::isInside, _1, point)); 
 
   return (iter != m_sectors.end() ? *iter: 0);
 }
 
-
-
 double DeTTHalfModule::fractionActive() const {
 
-  return std::accumulate(m_sectors.begin(), m_sectors.end(), 0.0,  _1 + bind(&DeSTSector::fractionActive,_2))/double(m_sectors.size()); 
+  return std::accumulate(m_sectors.begin(), m_sectors.end(),
+                         0.0, _1 + bind(&DeSTSector::fractionActive,_2))
+    /double(m_sectors.size()); 
   
 }
 

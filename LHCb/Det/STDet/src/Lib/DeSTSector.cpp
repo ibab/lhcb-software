@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.53 2009-03-30 12:59:11 mneedham Exp $
+// $Id: DeSTSector.cpp,v 1.54 2009-04-03 06:33:00 jluisier Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -97,28 +97,48 @@ StatusCode DeSTSector::initialize() {
     return sc;
   }
   else {
-
-    // version 
-    if (exists("version") == true) m_versionString = param<std::string>("version") ;
  
     m_pitch = param<double>("pitch");
     m_nStrip =  param<int>("numStrips");
     m_capacitance = param<double>("capacitance");
     m_type = param<std::string>("type");
 
+
+    // version 
+    if (exists("version") == true) m_versionString = param<std::string>("version");
+
     // guard ring
     m_deadWidth = param<double>("verticalGuardRing");
 
     m_noiseValues.assign(m_nStrip, 0);
- 
-    if (m_versionString != "DC06"){
+    m_electronsPerADC.assign(m_nStrip, 1.);
+
+    if (m_versionString != "DC06")
+    {
       StatusCode sc = registerCondition(this,m_statusString,
                                         &DeSTSector::updateStatusCondition,true);
       if (sc.isFailure() ){
         MsgStream msg(msgSvc(), name() );
         msg << MSG::ERROR << "Failed to register status conditions" << endreq;
-        return StatusCode::FAILURE; 
+        return StatusCode::FAILURE;
       }
+
+      // Try to add the noise from the DB as well..
+      // Can't test the version string, it's unfortunalety not trustable
+      // it exists a DC07 version (why?) that doesn't contain Noise
+      if (m_versionString != "DC07")
+      {
+        sc = registerCondition(this, m_noiseString,
+                               &DeSTSector::updateNoiseCondition, true);
+      
+        if (sc.isFailure())
+        {
+          MsgStream msg(msgSvc(), name() );
+          msg << MSG::ERROR << "Failed to register noise conditions" << endreq;
+          return StatusCode::FAILURE;
+        }
+      }
+      
     } // !DC06
   }
   return StatusCode::SUCCESS;
@@ -131,16 +151,40 @@ double DeSTSector::noise(const LHCb::STChannelID& aChannel) const
 
 double DeSTSector::noise(const unsigned int& aStrip) const
 {
-  return m_noiseValues[aStrip];
+  const std::vector<DeSTSector::Status> statusVector = stripStatus();
+
+  if ( aStrip > nStrip() || (statusVector[aStrip] != DeSTSector::OK &&
+                             statusVector[aStrip] != DeSTSector::Pinhole) )
+    return 999.99;
+  else
+    return m_noiseValues[aStrip];
 }
 
 double DeSTSector::sectorNoise() const
 {
-  double sum(0);
+  const std::vector<DeSTSector::Status> statusVector = stripStatus();
 
-  std::accumulate(m_noiseValues.begin(), m_noiseValues.end(), sum);
+  double sum(0.), number(0.);
 
-  return sum / static_cast<double>(m_nStrip);
+  for (unsigned int chan(0); chan < m_nStrip; chan++)
+  {
+    if ( statusVector[chan] == DeSTSector::OK ||
+         statusVector[chan] == DeSTSector::Pinhole )
+    {
+      sum    += m_noiseValues[chan];
+      number += 1.;
+    }    
+  }
+  
+  if (number < 1.)
+    return 999.99;
+  else
+  {
+    MsgStream msg(msgSvc(), name() );
+    msg << MSG::DEBUG << number << " strips out of " << nStrip()
+            << " are not taken into account" << endmsg;
+    return sum / number;
+  }
 }
 
 double DeSTSector::beetleNoise(const unsigned int& beetle) const
@@ -150,25 +194,41 @@ double DeSTSector::beetleNoise(const unsigned int& beetle) const
      MsgStream msg(msgSvc(), name() );
      msg << MSG::WARNING << "You asked for beetle " << beetle
          << " but there are " << nBeetle() << " of them" << endmsg;
-     return 0.; 
+     return 999.99; 
    }
   else if (beetle == 0)
   {
     MsgStream msg(msgSvc(), name() );
     msg << MSG::WARNING << "You asked for beetle 0 but is starts at 1"
         << endmsg;
-     return 0.;
+     return 999.99;
   }
- double sum(0);
 
- std::vector<double>::const_iterator Begin(m_noiseValues.begin()), End;
+  const std::vector<DeSTSector::Status> statusVector = stripStatus();
 
- Begin += (beetle - 1) * LHCbConstants::nStripsInBeetle ;
- End = Begin + LHCbConstants::nStripsInBeetle;
+  double sum(0.), number(0.);
 
- std::accumulate(Begin, End, sum);
-
- return sum / static_cast<double>(LHCbConstants::nStripsInBeetle);
+  for (unsigned int chan((beetle - 1) * LHCbConstants::nStripsInBeetle);
+       chan < beetle * LHCbConstants::nStripsInBeetle; chan++)
+  {
+    if ( statusVector[chan] == DeSTSector::OK ||
+         statusVector[chan] == DeSTSector::Pinhole ) 
+    {
+      sum    += m_noiseValues[chan];
+      number += 1.;
+    }    
+  }
+  
+  if (number < 1.)
+    return 999.99;
+  else
+  {
+    MsgStream msg(msgSvc(), name() );
+    msg << MSG::DEBUG << number << " strips out of "
+        << LHCbConstants::nStripsInBeetle
+        << " are not taken into account" << endmsg;
+    return sum / number;
+  }
 }
 
 double DeSTSector::portNoise(const unsigned int& beetle,
@@ -179,14 +239,14 @@ double DeSTSector::portNoise(const unsigned int& beetle,
     MsgStream msg(msgSvc(), name() );
     msg << MSG::WARNING << "You asked for beetle " << beetle
         << " but there are " << nBeetle() << " of them" << endmsg;
-    return 0.;
+    return 999.99;
   }
   else if (beetle == 0)
   {
     MsgStream msg(msgSvc(), name() );
     msg << MSG::WARNING << "You asked for beetle 0 but is starts at 1"
         << endmsg;
-    return 0.;
+    return 999.99;
   }
 
   if (port > 4)
@@ -194,7 +254,7 @@ double DeSTSector::portNoise(const unsigned int& beetle,
     MsgStream msg(msgSvc(), name() );
     msg << MSG::WARNING << "You asked for port " << port
         << " but there are 4 of them" << endmsg;
-    return 0.;
+    return 999.99;
   }
   else if (port == 0)
   {
@@ -204,17 +264,56 @@ double DeSTSector::portNoise(const unsigned int& beetle,
     return 0.;
   }
 
-  double sum(0);
+  const std::vector<DeSTSector::Status> statusVector = stripStatus();
 
-  std::vector<double>::const_iterator Begin(m_noiseValues.begin()), End;
+  double sum(0.), number(0.);
 
-  Begin += (beetle - 1) * LHCbConstants::nStripsInBeetle
-    + (port - 1) * LHCbConstants::nStripsInPort;
-  End = Begin + LHCbConstants::nStripsInPort;
+  for (unsigned int chan((beetle - 1) * LHCbConstants::nStripsInBeetle +
+                         (port - 1) * LHCbConstants::nStripsInPort);
+       chan < (beetle - 1) * LHCbConstants::nStripsInBeetle +
+         port * LHCbConstants::nStripsInPort; chan++)
+  {
+    if ( statusVector[chan] == DeSTSector::OK ||
+         statusVector[chan] == DeSTSector::Pinhole )
+    {
+      sum    += m_noiseValues[chan];
+      number += 1.;
+    }    
+  }
+  
+  if (number < 1.)
+    return 999.99;
+  else
+  {
+    MsgStream msg(msgSvc(), name() );
+    msg << MSG::DEBUG << number << " strips out of "
+        << LHCbConstants::nStripsInPort
+        << " are not taken into account" << endmsg;
+    return sum / number;
+  }
+}
 
-  std::accumulate(Begin, End, sum);
+double DeSTSector::toADC(const double& e,
+                         const LHCb::STChannelID& aChannel) const
+{
+  return toADC(e, aChannel.strip() - 1);
+}
 
-  return sum / static_cast<double>(LHCbConstants::nStripsInPort);
+double DeSTSector::toADC(const double& e, const unsigned int& aStrip) const
+{
+  return e / m_electronsPerADC[aStrip];
+}
+
+double DeSTSector::toElectron(const double& val,
+                              const LHCb::STChannelID& aChannel) const
+{
+  return toElectron(val, aChannel.strip() - 1);
+}
+
+double DeSTSector::toElectron(const double& val,
+                              const unsigned int& aStrip) const
+{
+  return val * m_electronsPerADC[aStrip];
 }
 
 std::auto_ptr<LHCb::Trajectory> 
@@ -392,7 +491,7 @@ StatusCode DeSTSector::updateStatusCondition(){
   const Condition* aCon = statusCondition();
   if (aCon == 0){
     MsgStream msg(msgSvc(), name());
-    msg << "failed to find condition" << endmsg;
+    msg << "failed to find status condition" << endmsg;
     return StatusCode::FAILURE; 
   }
 
@@ -408,6 +507,42 @@ StatusCode DeSTSector::updateStatusCondition(){
   return StatusCode::SUCCESS;
 }
 
+StatusCode DeSTSector::updateNoiseCondition()
+{
+  const Condition* aCon = condition(m_noiseString);
+  if (aCon == 0){
+    MsgStream msg(msgSvc(), name());
+    msg << MSG::ERROR << "failed to find noise condition" << endmsg;
+    return StatusCode::FAILURE; 
+  }
+
+  std::vector< double > tmpNoise, tmpElectrons;
+
+  tmpNoise = aCon -> param<std::vector< double > >("SectorNoise");
+
+  if (tmpNoise.size() == m_nStrip)
+    m_noiseValues.assign(tmpNoise.begin(), tmpNoise.end());
+  else
+  {
+    MsgStream msg(msgSvc(), name());
+    msg << MSG::ERROR << "Size mismatch for SectorNoise" << endmsg;
+    return StatusCode::FAILURE;
+  }
+  
+  tmpElectrons = aCon -> param<std::vector< double > >("electronsPerADC");
+ 
+  if (tmpElectrons.size() == m_nStrip)
+    m_electronsPerADC.assign(tmpElectrons.begin(), tmpElectrons.end());
+  else
+  {
+    MsgStream msg(msgSvc(), name());
+    msg << MSG::ERROR << "Size mismatch for electronsPerADC" << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  return StatusCode::SUCCESS;
+}
+
 void DeSTSector::toEnumMap(const std::map<int,int>& input, DeSTSector::StatusMap& output) {
   output.clear();
   std::map<int,int>::const_iterator iterM = input.begin();
@@ -416,7 +551,6 @@ void DeSTSector::toEnumMap(const std::map<int,int>& input, DeSTSector::StatusMap
   } // iterM
 
 }
-
 
 DeSTSensor* DeSTSector::findSensor(const Gaudi::XYZPoint& point) const{
   // return pointer to the layer from point

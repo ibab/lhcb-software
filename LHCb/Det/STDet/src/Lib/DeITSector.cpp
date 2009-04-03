@@ -20,7 +20,8 @@ using namespace LHCb;
 DeITSector::DeITSector( const std::string& name ) :
   DeSTSector( name ),
   m_parent(0),
-  m_prodID(0)
+  m_prodID(0),
+  m_prodIDString("ProdID")
 { 
   // constructer
 }
@@ -61,6 +62,18 @@ StatusCode DeITSector::initialize() {
     m_sensors.insert(m_sensors.begin(), sensors.begin(), sensors.end());
     m_thickness = m_sensors.front()->thickness();
 
+    // Can't test the version string, it's unfortunalety not trustable
+    // it exists a DC07 version (why?) that doesn't contain ProdID
+    if (versionString() != "DC06" && versionString() != "DC07")
+    {
+      sc = registerCondition(this, m_prodIDString,
+                             &DeITSector::updateProdIDCondition, true);
+      if (sc.isFailure() ){
+        msg << MSG::ERROR << "Failed to register prodID conditions" << endreq;
+        return StatusCode::FAILURE; 
+      }
+    }
+
     sc = registerConditionsCallbacks();
     if (sc.isFailure()){
       msg << MSG::ERROR << "Failed to registerConditions call backs" << endmsg;
@@ -91,6 +104,8 @@ std::string DeITSector::conditionsPathName() const
 
   size_t loc;
 
+  name.replace(0, 2, "ITT");
+
   for (unsigned int i(0); i < 3; i++)
   {
     loc =  name.find(keys[i]);
@@ -102,4 +117,17 @@ std::string DeITSector::conditionsPathName() const
   }
 
   return name;
+}
+
+StatusCode DeITSector::updateProdIDCondition()
+{
+  const Condition* aCon = condition(m_prodIDString);
+  if (aCon == 0){
+    MsgStream msg(msgSvc(), name());
+    msg << MSG::ERROR << "Failed to find condition" << endmsg;
+    return StatusCode::FAILURE; 
+  }
+  m_prodID = aCon->param<int>("ProdID");
+
+  return StatusCode::SUCCESS;
 }

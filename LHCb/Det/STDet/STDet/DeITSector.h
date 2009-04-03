@@ -58,8 +58,11 @@ public:
 
 private:
 
+  StatusCode updateProdIDCondition();
+
   parent_type* m_parent;
   unsigned int m_prodID;
+  std::string m_prodIDString;
 
 };
 

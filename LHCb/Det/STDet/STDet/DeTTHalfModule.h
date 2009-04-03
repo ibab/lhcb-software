@@ -1,4 +1,4 @@
-// $Id: DeTTHalfModule.h,v 1.9 2009-03-14 09:18:07 mneedham Exp $
+// $Id: DeTTHalfModule.h,v 1.10 2009-04-03 06:33:00 jluisier Exp $
 
 #ifndef _DeTTHalfModule_H_
 #define _DeTTHalfModule_H_
@@ -122,6 +122,13 @@ public:
   */
   double fractionActive() const;
 
+  /** version */
+  std::string versionString() const;
+
+protected:
+
+  StatusCode updateProdIDCondition();
+
 private:
 
   unsigned int m_detRegion;
@@ -132,7 +139,8 @@ private:
   parent_type* m_parent;
   Children m_sectors;
   unsigned int m_prodID;
-
+  std::string m_versionString;
+  std::string m_prodIDString;
 };
 
 #include "STDet/DeTTLayer.h"
@@ -177,6 +185,12 @@ inline bool DeTTHalfModule::contains(const LHCb::STChannelID aChannel) const{
 inline unsigned int DeTTHalfModule::prodID() const{
   return m_prodID;
 }
+
+inline std::string DeTTHalfModule::versionString() const
+{
+  return m_versionString;
+}
+
 
 /** ouput operator for class DeTTHalfModule
  *  @see DeHalfModule
