@@ -1,4 +1,4 @@
-// $Id: VeloExpertClusterMonitor.cpp,v 1.1 2009-04-02 13:19:15 jmylroie Exp $
+// $Id: VeloExpertClusterMonitor.cpp,v 1.2 2009-04-03 08:54:48 jmylroie Exp $
 // Include files// from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "GaudiKernel/AlgFactory.h" 
@@ -18,7 +18,7 @@
 #include "TrackInterfaces/IMeasurementProvider.h"
 
 // local
-#include "ClusterMon.h"
+#include "VeloExpertClusterMonitor.h"
 //#include "CommonFunctions.h"
 
 #include "boost/format.hpp"
@@ -40,7 +40,7 @@
 // Declaration of the Algorithm Factory
 namespace Velo 
 {
-  DECLARE_ALGORITHM_FACTORY( ClusterMon );
+  DECLARE_ALGORITHM_FACTORY( VeloExpertClusterMonitor );
 }
 
 //using namespace LHCb;
@@ -48,7 +48,7 @@ namespace Velo
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-Velo::ClusterMon::ClusterMon( const std::string& name,
+Velo::VeloExpertClusterMonitor::VeloExpertClusterMonitor( const std::string& name,
                         ISvcLocator* pSvcLocator)
   //  : GaudiAlgorithm ( name , pSvcLocator )
   : Velo::VeloMonitorBase ( name , pSvcLocator )//GaudiHistoAlg
@@ -63,12 +63,12 @@ Velo::ClusterMon::ClusterMon( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-Velo::ClusterMon::~ClusterMon() {} 
+Velo::VeloExpertClusterMonitor::~VeloExpertClusterMonitor() {} 
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode Velo::ClusterMon::initialize() {
+StatusCode Velo::VeloExpertClusterMonitor::initialize() {
   //  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   StatusCode sc = VeloMonitorBase::initialize();
   //  StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
@@ -87,7 +87,7 @@ StatusCode Velo::ClusterMon::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode Velo::ClusterMon::execute() {
+StatusCode Velo::VeloExpertClusterMonitor::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
   //  plotClusters();
@@ -95,7 +95,7 @@ StatusCode Velo::ClusterMon::execute() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode Velo::ClusterMon::loopTracks (){
+StatusCode Velo::VeloExpertClusterMonitor::loopTracks (){
  
   debug() << " ==> plotClusters " << endmsg;
   //  LHCb::Tracks* tracks=get<LHCb::Tracks>("Rec/Track/Velo");
@@ -184,7 +184,7 @@ StatusCode Velo::ClusterMon::loopTracks (){
     const std::vector< LHCb::LHCbID > & trackID = track->lhcbIDs() ;
     Gaudi::XYZVector slope= track->slopes();
     double theta = slope.Theta();
-    double angleCorr = 1./sqrt(1+(slope.x()*slope.x())+(slope.y()*slope.y()));
+    //    double angleCorr = 1./sqrt(1+(slope.x()*slope.x())+(slope.y()*slope.y()));
     std::vector<LHCb::LHCbID>::const_iterator iID;
     std::vector<LHCb::LHCbID>::const_iterator imatchID;
     for (iID=trackID.begin(); iID!=trackID.end(); ++iID) {
@@ -213,7 +213,7 @@ StatusCode Velo::ClusterMon::loopTracks (){
             const DeVeloPhiType* associated_sensor =  r_to_match->associatedPhiSensor();
             unsigned int phisenNo = associated_sensor->sensorNumber();
             unsigned int rsenNo = r_to_match->sensorNumber();
-            
+            debug() << "\t==> R sensor found to then match to: "<< rsenNo << endmsg;            
             if (phisenNo== init_sensor ){
               //  std::cout<< "\tThis is a matched track\n";
               
@@ -257,14 +257,14 @@ StatusCode Velo::ClusterMon::loopTracks (){
 // plot clusters
 //============================================================================
 
-StatusCode Velo::ClusterMon::plotCluster(LHCb::VeloCluster* cluster, std::string ClusterType,double theta,double prap){
+StatusCode Velo::VeloExpertClusterMonitor::plotCluster(LHCb::VeloCluster* cluster, std::string ClusterType,double theta,double prap){
   debug() << " ==> plotClusters " << endmsg;
-  char senName[100];
-  int rsensnum = 0;
-  int phisensnum = 0;
+  // char senName[100];
+  //   int rsensnum = 0;
+  //   int phisensnum = 0;
   LHCb::VeloChannelID idtemp = cluster->channelID();
   int clsens = idtemp.sensor();
-  int clstr = idtemp.strip();
+  //  int clstr = idtemp.strip();
   double clsize = cluster->size();
   double adc = cluster->totalCharge();
   double corr_adc(0);
@@ -362,14 +362,9 @@ StatusCode Velo::ClusterMon::plotCluster(LHCb::VeloCluster* cluster, std::string
   return StatusCode::SUCCESS;
 }
 //============================================================================
-// plot people that hate me
-//============================================================================
-
-
-//============================================================================
 // plot r & phi ranges.
 //============================================================================
-StatusCode Velo::ClusterMon::plotRPhiRange( LHCb::VeloCluster* cluster,LHCb::VeloChannelID idtemp,
+StatusCode Velo::VeloExpertClusterMonitor::plotRPhiRange( LHCb::VeloCluster* cluster,LHCb::VeloChannelID idtemp,
                                       double adc, std::string path,double clsize,std::string ClusterType, double theta){
 
   char senName[100];
@@ -390,7 +385,7 @@ StatusCode Velo::ClusterMon::plotRPhiRange( LHCb::VeloCluster* cluster,LHCb::Vel
       double max_radius = (i+10);
       double min_radius = (i+7);
       std::string radiusName;
-      std::string corr_radiusName;
+      //std::string corr_radiusName;
       char radiusname[100];
       char corr_radiusname[100];
       double r_strfr = cluster->interStripFraction();
@@ -428,7 +423,7 @@ StatusCode Velo::ClusterMon::plotRPhiRange( LHCb::VeloCluster* cluster,LHCb::Vel
       double min_phi = -Gaudi::Units::pi+step*(i);
       std::string phiName;
       char phiname[100];
-      std::string corr_phiName;
+      //std::string corr_phiName;
       char corr_phiname[100];
       double phi_strfr = cluster->interStripFraction();
       double phi = psens->idealPhi(clstr,phi_strfr);
@@ -464,7 +459,7 @@ return StatusCode::SUCCESS;
 //============================================================================
 // plot all sensors ADCs
 //============================================================================
-StatusCode Velo::ClusterMon::plotSensorsADC(double& adc, std::string corr,std::string& ClusterType,int& sensor_num){
+StatusCode Velo::VeloExpertClusterMonitor::plotSensorsADC(double& adc, std::string corr,std::string& ClusterType,int& sensor_num){
   plot1D(adc, ClusterType+corr+"/cluster_adc", "Cluster ADC ", 0, 100, 100);
   if(sensor_num!= -400){
     char senName[100];
@@ -477,7 +472,7 @@ StatusCode Velo::ClusterMon::plotSensorsADC(double& adc, std::string corr,std::s
 //============================================================================
 // plot all sensors size
 //============================================================================
-StatusCode Velo::ClusterMon::plotSensorsSize(double& clsize, std::string corr,std::string& ClusterType,int& sensor_num){
+StatusCode Velo::VeloExpertClusterMonitor::plotSensorsSize(double& clsize, std::string corr,std::string& ClusterType,int& sensor_num){
 
   plot1D(clsize, ClusterType+corr+"/cluster_size", "Cluster Size ", -0.5, 9.5, 10);
   if(sensor_num!= -400){
@@ -493,7 +488,7 @@ StatusCode Velo::ClusterMon::plotSensorsSize(double& clsize, std::string corr,st
 // seperate angular plots
 //============================================================================}
 
-StatusCode Velo::ClusterMon::plotAngles(double& adc, std::string& range,std::string& ClusterType,double& theta,int& sensor_num){
+StatusCode Velo::VeloExpertClusterMonitor::plotAngles(double& adc, std::string& range,std::string& ClusterType,double& theta,int& sensor_num){
 
   plot1D(adc, ClusterType+range, "Cluster ADC ", 0, 100, 100);
   //+"/theta/adc/"
@@ -510,7 +505,7 @@ StatusCode Velo::ClusterMon::plotAngles(double& adc, std::string& range,std::str
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode Velo::ClusterMon::finalize() {
+StatusCode Velo::VeloExpertClusterMonitor::finalize() {
   
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 

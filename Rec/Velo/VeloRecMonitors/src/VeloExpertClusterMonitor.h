@@ -1,6 +1,6 @@
-// $Id: VeloExpertClusterMonitor.h,v 1.1 2009-04-02 13:19:15 jmylroie Exp $
-#ifndef CLUSTERMON_H 
-#define CLUSTERMON_H 1
+// $Id: VeloExpertClusterMonitor.h,v 1.2 2009-04-03 08:54:48 jmylroie Exp $
+#ifndef VELOEXPERTCLUSTERMONITOR_H 
+#define VELOEXPERTCLUSTERMONITOR_H 1
 
 // Include files
 // from Gaudi
@@ -21,12 +21,12 @@
 //class ClusterMon : public GaudiAlgorithm {
 namespace Velo
 {
-  class ClusterMon : public VeloMonitorBase {//GaudiHistoAlg
+  class VeloExpertClusterMonitor : public VeloMonitorBase {//GaudiHistoAlg
   public: 
     /// Standard constructor
-    ClusterMon( const std::string& name, ISvcLocator* pSvcLocator );
+    VeloExpertClusterMonitor( const std::string& name, ISvcLocator* pSvcLocator );
     
-    virtual ~ClusterMon( ); ///< Destructor
+    virtual ~VeloExpertClusterMonitor( ); ///< Destructor
     
     virtual StatusCode initialize();    ///< Algorithm initialization
     virtual StatusCode execute   ();    ///< Algorithm execution
