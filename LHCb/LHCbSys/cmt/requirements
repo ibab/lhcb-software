@@ -47,12 +47,12 @@ use DAQEvent              v7r19   Event   # Marco Cattaneo, Markus Frank
 use DigiEvent             v2r11   Event   # Marco Cattaneo and sub-det experts
 use EventAssoc            v4r5    Event   # Ivan Belyaev
 use EventBase             v2r5    Event   # Marco Cattaneo, Gloria Corti
-use GenEvent              v5r4    Event   # Gloria Corti
+use GenEvent              v5r5    Event   # Gloria Corti
 use HltEvent              v8r16   Event   # Jose Angel Hernando-Morata
 use LinkerEvent           v3r6    Event   # Olivier Callot
 use LumiEvent             v1r0    Event   # Jaap Panman
 use L0Event               v17r4   Event   # Olivier Deschamps, Julien Cogan
-use MCEvent               v2r12   Event   # Gloria Corti and sub-det experts
+use MCEvent               v2r13   Event   # Gloria Corti and sub-det experts
 use PackedEvent           v3r5    Event   # Marco Cattaneo, Olivier Callot
 use PhysEvent             v11r8   Event   # Patrick Koppenburg, Juan Palacios
 use RecEvent              v2r19   Event   # Marco Cattaneo and sub-det experts
