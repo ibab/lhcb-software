@@ -3,5 +3,14 @@
   <argument name="program"><text>../cmt/qmtest_go.sh</text></argument>
   <argument name="args"><set><text>gentest.exe</text><text>libGaudiOnline.so</text><text>qmtest_event_server</text></set></argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
+<!--
   <argument name="reference"><text>../refs/go_event_server.ref</text></argument>
+-->
+  <argument name="validator"><text>
+expected_string = &quot;StoreExplorerAlg     INFO     +--> /RawEvent [Address&quot; 
+if stdout.find(expected_string) == -1:
+    causes.append('missing string')
+    result['GaudiTest.expected_string'] = result.Quote(expected_string)
+</text></argument>
+
 </extension>
