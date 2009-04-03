@@ -1,10 +1,11 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: DstConf.py,v 1.8 2009-01-29 10:01:08 cattanem Exp $"
+__version__ = "$Id: DstConf.py,v 1.9 2009-04-03 11:01:11 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration import *
+import GaudiKernel.ProcessJobOptions
 
 class DstConf(ConfigurableUser):
     __slots__ = {
@@ -140,6 +141,8 @@ class DstConf(ConfigurableUser):
         writer.Preload = False
         writer.ItemList += items
         writer.OptItemList += optItems
+        log.info( "%s.ItemList=%s"%(self.getProp("Writer"),items) )
+        log.info( "%s.OptItemList=%s"%(self.getProp("Writer"),optItems) )
         
 
     def _doWriteMDF( self, items ):
@@ -248,4 +251,6 @@ class DstConf(ConfigurableUser):
     def __apply_configuration__(self):
         if self.getProp( "EnableUnpack" ) : self._doUnpack()
         if hasattr( self, "PackSequencer" ): self._doPack()
+        GaudiKernel.ProcessJobOptions.PrintOn()
         self._doWrite()
+        GaudiKernel.ProcessJobOptions.PrintOff()

@@ -2,7 +2,13 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
-!======================== GaudiConf v12r2 2009-03-09 ========================
+!======================== GaudiConf v12r2 2009-04-03 ========================
+! 2009-04-03 - Marco Cattaneo
+ - Add DigiConf() configurable, to set up Boole output
+ - DstConf() configurable now prints Dst content
+ - Remove obsolete option files DigiContent.opts, ExtendedDigi.opts
+ - Update PoolCopy.opts to include directly GaudiPoolDbRoot.opts
+
 ! 2009-03-09 - Marco Cattaneo
  - Remove LHCbApp().UseOracle property. Use CondDB().UseOracle instead
 

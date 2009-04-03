@@ -6,9 +6,8 @@ ApplicationMgr.OutStream += {"InputCopyStream/InputCopyStream"};
 
 EventSelector.PrintFreq = 1;
 
-// Set up the POOL persistency for the output file and load the
-// DLLs that contain the necessary dictionaries and factories
-#include "$STDOPTS/DstDicts.opts"
+// Set up the POOL persistency
+#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
 
 // Provide one or more input files.
 //EventSelector.Input = { 
