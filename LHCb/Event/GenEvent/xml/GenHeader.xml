@@ -6,7 +6,7 @@
      * GenHeader                                                    *
      ****************************************************************-->
      <class 
-      author="Marco Cattaneo, revised by P. Koppenburg"
+      author="Marco Cattaneo, revised by P. Koppenburg, then G.Corti"
       desc="Header for event generator information"
       name="GenHeader"
       location="Gen/Header"
@@ -40,6 +40,27 @@
         name="collisions"
         type="LHCb::GenCollision"
        />
+       <attribute
+        desc="Total cross section used for pileUp probability"
+        name="totCrossSection"
+        type="double"
+        init="0.0"
+       />
+       <attribute
+        desc="Filled-filled bunches crossing frequency"
+        name="crossingFreq"
+        type="double"
+        init="0.0"
+       />
+       <method
+        desc="Number of collisions in bunch crossing"
+        name="numOfCollisions"
+        type="unsigned int"
+       >
+	<code>
+	  return collisions().size();
+        </code>
+       </method>
      </class>
   </package>
 </gdd>
