@@ -4,6 +4,10 @@ Package Coordinator : Johan Blouw
 Responsibles : J. Amoraal, J. Blouw, A. Hicheur, L. Nicolas
 Purpose: LHCb Alignment Tools
 
+</PRE><H1><A NAME=v4r1>2009-04-03 AlignTrTools v4r1 </A></H1><PRE>
+! 2009-03-04 Johan Blouw
+- tagged this package for Alignment_v4r1
+
 ! 2009-03-20 Johan Blouw
 - AlignTrTools: fixed bug in StoreParameters.
 
