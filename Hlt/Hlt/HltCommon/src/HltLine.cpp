@@ -1,4 +1,4 @@
-// $Id: HltLine.cpp,v 1.18 2009-03-30 20:25:26 graven Exp $
+// $Id: HltLine.cpp,v 1.19 2009-04-03 12:13:08 graven Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -14,10 +14,6 @@
 #include "AIDA/IHistogram.h"
 #include "AIDA/IAxis.h"
 // ============================================================================
-// ROOT 
-// ============================================================================
-#include "TH1D.h"
-// ============================================================================
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/AlgFactory.h"
@@ -30,9 +26,10 @@
 // ============================================================================
 #include "GaudiAlg/ISequencerTimerTool.h"
 // ============================================================================
-// GaudiUtils 
+// HLT
 // ============================================================================
-#include "GaudiUtils/Aida2ROOT.h"
+#include "HltBase/HltHistogramUtilities.h"
+using namespace Hlt::HistogramUtilities;
 // ============================================================================
 // HltEvent 
 // ============================================================================
@@ -42,34 +39,6 @@
 // ============================================================================
 #include "HltLine.h"
 // ============================================================================
-namespace {
-  bool setBinLabels( TAxis* axis,  const std::vector<std::pair<unsigned,std::string> >& labels ) {
-    if (axis==0) return false;
-    unsigned nbins = axis->GetNbins(); 
-    for (std::vector<std::pair<unsigned,std::string> >::const_iterator i = labels.begin();i!=labels.end();++i ) {
-      if (1+i->first <= 0 ||  1+i->first > nbins ) return false;
-      // Argh... ROOT bins start counting at '1' instead of '0'
-      axis -> SetBinLabel(1 + i->first  ,i->second.c_str() );
-    }
-    return true;
-  }
-  
-  bool setBinLabels( AIDA::IHistogram1D* hist, const std::vector<std::pair<unsigned,std::string> >& labels ) {
-    if (hist==0) return false;
-    TH1D *h1d = Gaudi::Utils::Aida2ROOT::aida2root( hist );
-    if (h1d==0) return false;
-    return setBinLabels(  h1d->GetXaxis(), labels );
-  }
-  
-  bool setBinLabels( AIDA::IHistogram1D* hist, const std::vector<std::string>& labels ) {
-    std::vector<std::pair<unsigned,std::string> > l;
-    for (unsigned i = 0;i<labels.size();++i) {
-      l.push_back(std::make_pair( i , labels[i] ) );
-    }
-    return setBinLabels(hist,l);
-  }
-  
-}
 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( HltLine );

@@ -40,5 +40,3 @@ library          HltCommon    ../src/*.cpp
 #============================================================================
 apply_pattern    component_library library=HltCommon
 
-private
-macro_append ROOT_linkopts " -lHist "
