@@ -4,9 +4,9 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
-!========================== DDDB v1r16 2009-04-01 ============================
-! 2009-04-01 - Marco Cattaneo
- - Add 2009 data type
+!========================== DDDB v1r16 2009-04-03 ============================
+! 2009-04-03 - Marco Cattaneo
+ - Add 2009 data type and corresponding tags
 
 ! 2009-03-09 - Marco Cattaneo
  - Remove obsolete file options/DDDB.py
