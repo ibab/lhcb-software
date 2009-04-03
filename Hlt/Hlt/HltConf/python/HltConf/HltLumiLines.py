@@ -42,8 +42,8 @@ class HltLumiLinesConf(HltLinesConfigurableUser) :
 
     __slots__ = { 'TriggerTypes'         : ['RandomTrigger']  # ODIN trigger type accepted
                 , 'BXTypes'              : ['NoBeam', 'BeamCrossing','SingleBeamRight','SingleBeamLeft']
-                , 'LumiLines'            : ['Count','B1Gas','B2Gas','VDM']
-                , 'FullReco'             : False
+                , 'LumiLines'            : ['Count','VDM']
+                , 'FullReco'             : True
                 , 'OutputLevel'          : INFO
                 , 'Debug'                : False
         }

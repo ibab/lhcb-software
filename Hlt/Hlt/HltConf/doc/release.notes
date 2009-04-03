@@ -1,11 +1,11 @@
-! $Id: release.notes,v 1.191 2009-04-03 15:54:07 panmanj Exp $ 
+! $Id: release.notes,v 1.192 2009-04-03 15:55:56 panmanj Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
-! 2009-04-04 Jaap Panman
+! 2009-04-03 Jaap Panman
  - switch on more lumi counters in HltLumiLines.py and LumiCounterDefinition.py
 
 ! 2009-04-02 Jose A. Hernando
