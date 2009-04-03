@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.193 2009-04-03 18:49:17 graven Exp $ 
+! $Id: release.notes,v 1.194 2009-04-03 21:12:18 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -10,6 +10,7 @@
    options/HltRecoSequence.py. See comments in HltReco.py
    as to how to use it
  - add support for ignoring OutputSelection in HltMember
+ - fix typo in Hlt1VeloClosingDecision
 
 ! 2009-04-03 Jaap Panman
  - switch on more lumi counters in HltLumiLines.py and LumiCounterDefinition.py

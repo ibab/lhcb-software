@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltVeloLines.py,v 1.6 2009-03-25 09:35:40 graven Exp $
+# $Id: HltVeloLines.py,v 1.7 2009-04-03 21:12:18 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines for the VELO closing proceure
@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
 # =============================================================================
 
 #
@@ -27,7 +27,6 @@ class HltVeloLinesConf(HltLinesConfigurableUser):
                , 'ODIN'                       :"( ODIN_TRGTYP != LHCb.ODIN.RandomTrigger )" # on what trigger types do we run?
                }
    def __apply_configuration__(self):
-        from Configurables import GaudiSequencer
         from Configurables import VeloClusterFilter
         from Configurables import Tf__DefaultVeloRHitManager as DefaultVeloRHitManager
         from Configurables import Tf__DefaultVeloPhiHitManager as DefaultVeloPhiHitManager
@@ -101,6 +100,6 @@ class HltVeloLinesConf(HltLinesConfigurableUser):
 
         Line( 'VeloClosing' 
             , prescale = self.prescale
-            , HLT = "HLT_PASS('Hlt1VeloCSideDecision,Hlt1VeloASideDecision')" 
+            , HLT = "HLT_PASS('Hlt1VeloCSideDecision','Hlt1VeloASideDecision')" 
             , postscale = self.postscale
             )
