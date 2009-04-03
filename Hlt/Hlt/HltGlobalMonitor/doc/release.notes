@@ -1,7 +1,10 @@
-!$Id: release.notes,v 1.33 2009-03-23 15:41:17 pkoppenb Exp $
+!$Id: release.notes,v 1.34 2009-04-03 12:12:04 graven Exp $
 Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
+
+2009-04-03 - Gerhard Raven
+ - move direct ROOT manipulations to HltBase
 
 !========================== HltGlobalMonitor v2r3 2009-03-23 ===================!
 2009-03-20 - Gerhard Raven
