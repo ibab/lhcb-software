@@ -1,7 +1,7 @@
 """
 High level configuration example for a typical physics MicroDST
 """
-__version__ = "$Id: PhysMicroDST.py,v 1.3 2009-03-30 14:44:01 jpalac Exp $"
+__version__ = "$Id: PhysMicroDST.py,v 1.4 2009-04-03 10:44:46 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 
@@ -65,11 +65,15 @@ class PhysMicroDST(LHCbConfigurableUser) :
         alg.OutputPrefix = self.outputPrefix()
     
     def copyDefaultStuff(self):
-        from Configurables import CopyRecHeader
+        from Configurables import CopyRecHeader, CopyODIN
         copyRecHeader = CopyRecHeader()
         self.setOutputPrefix(copyRecHeader)
         self.seqMicroDST().Members += [copyRecHeader]
+        copyODIN = CopyODIN()
+        self.setOutputPrefix(copyODIN)
+        self.seqMicroDST().Members += [copyODIN]
 
+        
     def copyParticleTrees(self) :
         from Configurables import CopyParticles, VertexCloner, ProtoParticleCloner
         copyParticles = CopyParticles('CopyParticles')
