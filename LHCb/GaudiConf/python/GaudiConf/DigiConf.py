@@ -1,7 +1,7 @@
 """
 Configurable for Boole output
 """
-__version__ = "$Id: DigiConf.py,v 1.1 2009-04-03 11:01:11 cattanem Exp $"
+__version__ = "$Id: DigiConf.py,v 1.2 2009-04-03 15:01:40 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -18,7 +18,7 @@ class DigiConf(ConfigurableUser):
 
     _propertyDocDct = { 
         'DigiType'      : """ Type of digi, can be ['Minimal','Default','Extended'] """
-       ,'Writer'        : """ Name of OutputStream writing the Digi file """
+       ,'Writer'        : """ Name of OutputStream writing the Digi file, if any """
        ,'TAEPrev'       : """ Number of Prev Time Alignment Events to write """
        ,'TAENext'       : """ Number of Next Time Alignment Events to write """
        ,'SpilloverPaths': """ Paths to write out when spillover is enabled """
@@ -42,7 +42,7 @@ class DigiConf(ConfigurableUser):
         optItems = []
         self._defineOutputData( dType, items, optItems )
         
-        self._doWritePOOL( items, optItems )
+        self._doWritePOOL( dType, items, optItems )
             
 
     def _defineOutputData( self, dType, items, optItems ):
@@ -58,7 +58,6 @@ class DigiConf(ConfigurableUser):
             # Objects propagated from Gauss
               "/Event/Gen/Header#1"
             , "/Event/MC/Header#1"
-            , "/Event/pSim/MCVertices#1" # In Minimal case, filtered by Boole
 
             # Boole header
             , "/Event/MC/DigiHeader#1"
@@ -66,14 +65,18 @@ class DigiConf(ConfigurableUser):
             # Real data simulation
             , "/Event/DAQ/RawEvent#1" ]
 
-        # Add standard DIGI content
-        if dType != "Minimal":
+        if dType == "Minimal":
+            items += [ "/Event/MC/Vertices#1" ] # Filtered, only primary vertices with no daughters
+
+        else:
+            # Standard DIGI content
             items += [ 
                 # Objects propagated from Gauss
                   "/Event/Gen/Collisions#1"
                 , "/Event/Gen/HepMCEvents#1"
                 , "/Event/pSim/MCParticles#1"
-
+                , "/Event/pSim/MCVertices#1"
+ 
                 # Digitization summaries
                 , "/Event/MC/Rich/DigitSummaries#1"
                 , "/Event/MC/Muon/DigitsInfo#1"
@@ -126,7 +129,7 @@ class DigiConf(ConfigurableUser):
                 , "/Event/MC/Muon/Hits#1" ]
             
 
-    def _doWritePOOL( self, items, optItems ):
+    def _doWritePOOL( self, dType, items, optItems ):
         """
         Write a file in POOL format
         """
@@ -137,7 +140,15 @@ class DigiConf(ConfigurableUser):
         writer.OptItemList += optItems
         log.info( "%s.ItemList=%s"%(self.getProp("Writer"),items) )
         log.info( "%s.OptItemList=%s"%(self.getProp("Writer"),optItems) )
-        
+
+        # In Minimal case, need to kill some nodes
+        if dType == "Minimal":
+            from Configurables import EventNodeKiller
+            nodeKiller = EventNodeKiller("POOLNodeKiller")
+            ApplicationMgr().OutStream.insert( 0, nodeKiller )
+            nodeKiller.Nodes += [ "Link", "pSim" ]
+            nodeKiller.Nodes += [ "MC/Velo", "MC/PuVeto", "MC/TT", "MC/IT", "MC/OT", "MC/Rich", "MC/Prs", "MC/Spd", "MC/Ecal", "MC/Hcal", "MC/Muon" ]
+            nodeKiller.Nodes += self.getProp("SpilloverPaths")
 
     def __apply_configuration__(self):
         GaudiKernel.ProcessJobOptions.PrintOn()
