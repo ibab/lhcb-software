@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+</PRE><H1><A NAME=v4r1>2009-04-03 TAlignment v4r1</A></H1><PRE>
+! 2009-03-04 Johan Blouw tag v4r1 for Alignment_v4r1
+
 ! 2009-03-10 Wouter Hulsbergen
  - restored information lost in head of configuration + clean up
 
