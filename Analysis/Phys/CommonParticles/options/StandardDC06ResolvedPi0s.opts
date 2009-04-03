@@ -14,13 +14,13 @@ StdDC06LooseResolvedPi0sSeq.MeasureTime = true;
 
 StdDC06LooseResolvedPi0s.PhysDesktop.ParticleMakerType =  "CaloParticleMaker";
 StdDC06LooseResolvedPi0s.PhysDesktop.CaloParticleMaker.Type = "ResolvedPi0Maker";
-StdDC06LooseResolvedPi0s.PhysDesktop.CaloParticleMaker.ResolvedPi0Maker.Pi0MassWindow = 30.* MeV;
+StdDC06LooseResolvedPi0s.PhysDesktop.CaloParticleMaker.ResolvedPi0Maker.MassWindow = 30.* MeV;
 StdDC06LooseResolvedPi0s.PhysDesktop.CaloParticleMaker.ResolvedPi0Maker.PhotonMaker.PtCut = 200.*MeV;
 StdDC06LooseResolvedPi0s.DecayDescriptor = "Pi0" ;
 
 /* --- available properties --- */
 
-// StdDC06LooseResolvedPi0s.PhysDesktop.CaloParticleMaker.ResolvedPi0Maker.Pi0PtCut = 0.*MeV ;         // default 0. MeV
+// StdDC06LooseResolvedPi0s.PhysDesktop.CaloParticleMaker.ResolvedPi0Maker.PtCut = 0.*MeV ;         // default 0. MeV
 // StdDC06LooseResolvedPi0s.PhysDesktop.CaloParticleMaker.ResolvedPi0Maker.SinglePhotonUse = true ;    // default false
 // StdDC06LooseResolvedPi0s.PhysDesktop.CaloParticleMaker.ResolvedPi0Maker.IndependantPhotons = true ; // default false
 // StdDC06LooseResolvedPi0s.PhysDesktop.CaloParticleMaker.ResolvedPi0Maker.PhotonMaker.XXX (see StandardDC06Photon.opts)

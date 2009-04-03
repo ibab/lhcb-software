@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseResolvedPi0.py,v 1.1 2009-02-18 15:29:30 pkoppenb Exp $ 
+# $Id: StdLooseResolvedPi0.py,v 1.2 2009-04-03 12:40:32 odescham Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseResolvedPi0.py
 #  configuration file for 'Standard Loose Pions' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Loose ResolvedPi0'
 """
 __author__  = "Patrick Koppenburg"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 __all__ = (
     'StdLooseResolvedPi0' ,
@@ -37,7 +37,7 @@ maker  = particleMaker ( algorithm , CaloParticleMaker )
 maker.addTool ( ResolvedPi0Maker , name = 'ResolvedPi0Maker' )
 maker.Type = 'ResolvedPi0Maker'
 pi0 = maker.ResolvedPi0Maker
-pi0.Pi0MassWindow = 30.* MeV
+pi0.MassWindow = 30.* MeV
 pi0.addTool(PhotonMaker())
 pi0.PhotonMaker.PtCut = 200.*MeV
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseMergedPi0.py,v 1.1 2009-02-18 15:29:30 pkoppenb Exp $ 
+# $Id: StdLooseMergedPi0.py,v 1.2 2009-04-03 12:40:32 odescham Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseMergedPi0.py
 #  configuration file for 'Standard Loose Pions' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Loose MergedPi0'
 """
 __author__  = "Patrick Koppenburg"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 __all__ = (
     'StdLooseMergedPi0' ,
@@ -37,7 +37,7 @@ maker  = particleMaker ( algorithm , CaloParticleMaker )
 maker.addTool ( MergedPi0Maker , name = 'MergedPi0Maker' )
 maker.Type = 'MergedPi0Maker'
 pi0 = maker.MergedPi0Maker
-pi0.Pi0MassWindow = 60.* MeV
+pi0.MassWindow = 60.* MeV
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( algorithm )
