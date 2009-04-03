@@ -1,8 +1,9 @@
-// $Id: MisalignmentParser.h,v 1.1 2009-02-21 22:21:17 jblouw Exp $
+// $Id: MisalignmentParser.h,v 1.2 2009-04-03 12:10:38 jblouw Exp $
 #ifndef INCLUDE_MISALIGNMENTPARSER_H
 #define INCLUDE_MISALIGNMENTPARSER_H 1
 
 #include <string>
+#include <iostream>
 #include <vector>
 #include <utility>
 #include <sstream>

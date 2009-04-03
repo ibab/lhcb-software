@@ -16,8 +16,8 @@ ApplicationMgr.TopAlg += { "GaudiSequencer/MisAlignMainSeq"};
 MisAlignMainSeq.MeasureTime = true ;
 MisAlignMainSeq.Members += { "LbAppInit/Misaligner" };
 ApplicationMgr.AppName = "Misaligner";
-Misaligner.OutputLevel = 1;
-MessageSvc.OutputLevel = 1;
+Misaligner.OutputLevel = 3;
+MessageSvc.OutputLevel = 3;
 ToolSvc.OutputLevel = 3;
 
 ApplicationMgr.DLLs += {
@@ -29,15 +29,15 @@ MisAlignMainSeq.Members += {"GaudiSequencer/Misalign"};
 Misalign.MeasureTime = true;
 Misalign.Members += {"MisAlignAlg"
 //		   , "WriteAlignmentConditions/WriteIT"
-//		   , "WriteAlignmentConditions/WriteOT"
+		   , "WriteAlignmentConditions/WriteOT"
 		   , "WriteAlignmentConditions/WriteVelo"
 			};
 MisAlignAlg.OTMisalignment_file = "../options/OT.opts";
 MisAlignAlg.ITMisalignment_file = "../options/IT.opts";
 MisAlignAlg.TTMisalignment_file = "../options/TT.opts";
-MisAlignAlg.VELOMisalignment_file = "../options/VELO.opts";
+MisAlignAlg.VeLoMisalignment_file = "../options/VELO.opts";
 //MisAlignAlg.Detectors += {"OT","IT", "Velo"};
-MisAlignAlg.Detectors += {"Velo"};
+MisAlignAlg.Detectors += {"Velo", "OT"};
 WriteIT.topElement = "/dd/Structure/LHCb/AfterMagnetRegion/T/IT";
 WriteIT.depths = {0,1,2,3,4,5,6,7};
 WriteIT.outputFile = "IT_1.xml";
@@ -61,27 +61,27 @@ CondDBDispatcherSvc.Alternatives = {
                                 ,"/Conditions/Velo": "CondDBAccessSvc/VELOCOND"
                                 ,"/Conditions": "CondDBAccessSvc/LHCBCOND"
 };
-DDDB.DefaultTAG = "DC06-repro0710";
+DDDB.DefaultTAG = "DC06-20081002";
 //CONDLayers.Layers = { "CondDBAccessSvc/LHCBCOND"};
 //OTLayers.Layers = { "CondDBAccessSvc/OTCOND"};
 //ITLayers.Layers = { "CondDBAccessSvc/ITCOND"};
 //VELOLayers.Layers = { "CondDBAccessSvc/VELOCOND"};
-LHCBCOND.ConnectionString = "sqlite_file:/work/blouw/Alignment/Alignment_v3r1/Tools/CondDBUI/v2r10/db/LHCBCOND.db/LHCBCOND";
-LHCBCOND.DefaultTag = "DC06-repro0710";
+LHCBCOND.ConnectionString = "sqlite_file:$SQLDDDBROOT/db/LHCBCOND.db/LHCBCOND";
+LHCBCOND.DefaultTag = "DC06-20081002";
 LHCBCOND.ConnectionTimeOut = 0;
-OTCOND.ConnectionString = "sqlite_file:/work/blouw/Alignment/Alignment_v3r1/Tools/CondDBUI/v2r10/db/LHCBCOND.db/LHCBCOND";
-OTCOND.DefaultTag = "DC06-repro0710";
+OTCOND.ConnectionString = "sqlite_file:$SQLDDDBROOT/db/LHCBCOND.db/LHCBCOND";
+OTCOND.DefaultTag = "DC06-20081002";
 //OTCOND.DefaultTag = "OT_IT_SYS_03";
 OTCOND.ConnectionTimeOut = 0;
-ITCOND.ConnectionString = "sqlite_file:/work/blouw/Alignment/Alignment_v3r1/Tools/CondDBUI/v2r10/db/LHCBCOND.db/LHCBCOND";
-ITCOND.DefaultTag = "DC06-repro0710";
+ITCOND.ConnectionString = "sqlite_file:$SQLDDDBROOT/db/LHCBCOND.db/LHCBCOND";
+ITCOND.DefaultTag = "DC06-20081002";
 //ITCOND.DefaultTag = "OT_IT_SYS_03";
 ITCOND.ConnectionTimeOut = 0;
-VELOCOND.ConnectionString = "sqlite_file:/work/blouw/Alignment/Alignment_v3r1/Tools/CondDBUI/v2r10/db/LHCBCOND.db/LHCBCOND";
-VELOCOND.DefaultTag = "DC06-repro0710";
+VELOCOND.ConnectionString = "sqlite_file:$SQLDDDBROOT/db/LHCBCOND.db/LHCBCOND";
+VELOCOND.DefaultTag = "DC06-20081002";
 
-//ApplicationMgr.EvtMax = -1;
 ApplicationMgr.EvtMax = 1;
+//ApplicationMgr.EvtMax = 0;
 
 EventSelector.Input   = {
 "DATAFILE='PFN:/work/blouw/data/FieldOff_450GeV.dst' TYP='POOL_ROOTTREE' OPT='READ'"

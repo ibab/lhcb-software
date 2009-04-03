@@ -1,4 +1,4 @@
-// $Id: MisalignmentParser.cpp,v 1.1 2009-02-21 22:21:17 jblouw Exp $
+// $Id: MisalignmentParser.cpp,v 1.2 2009-04-03 12:10:38 jblouw Exp $
 
 #include "MisalignmentParser.h"
 
@@ -56,9 +56,11 @@ MisalignmentParser::getAlignmentParameters(
   for (unsigned i = 0; i < m_rules.size(); ++i) {
     regexp e(m_rules[i].first, boost::regex::extended);
     // skip non-matching rules
-    if (!boost::regex_match(detelement, e))
+    std::cout << "Checking " << detelement << " vs. " << e << std::endl;
+    if (!boost::regex_match(detelement, e)) 
       continue;
     // ok, found one that fits
+    std::cout << "Match " << detelement << " and " << e << std::endl;
     return m_rules[i].second.get();
   }
 
@@ -84,6 +86,7 @@ MisalignmentParser::Misalignment::Misalignment(const std::string& str) :
 
   // parse mystr
   std::istringstream istr(mystr);
+  std::cout << "Parsing... " << istr.str() << std::endl;
   while (!istr.eof()) {
     if (readstr(istr, "SHIFT=[")) {
       // read exactly three comma seperated misalignment specs
@@ -230,6 +233,7 @@ MisalignmentParser::AlignmentParameters
   // loop over degrees of freedom and generate fixed/random
   // misalignments
   for (int i = 0; i < 6; ++i) {
+    std::cout << "m_types = " << m_types[i] << std::endl;
     switch (m_types[i]) {
       case none:
 	values[i] = 0.;
