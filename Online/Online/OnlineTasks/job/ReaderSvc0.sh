@@ -12,11 +12,11 @@ fi
 
 #${GAUDIKERNELROOT}/../InstallArea/$CMTCONFIG/bin/Gaudi.exe ../options/MEPInjector.opts
 
-cd /home/online/ONLINE/Online_v4r20/Online/OnlineTasks/job
+cd /home/online/ONLINE/Online_v4r20dev/Online/OnlineTasks/job
 
 HOST=$(hostname --short | awk '{ print toupper($1) }')
 
 . ./setupOnline.sh $1
 
-exec -a ${UTGID} ${gaudi_exe} -tasktype=LHCb::Class2Task -main=${GAUDIONLINEROOT}/options/Main.opts -opt=${ONLINETASKSROOT}/options/NormalReaderSvc.opts&
+exec -a ${UTGID} ${gaudi_exe} -tasktype=LHCb::Class2Task -main=${GAUDIONLINEROOT}/options/Main.opts -opt=${ONLINETASKSROOT}/options/ReaderSvc0.opts&
 
