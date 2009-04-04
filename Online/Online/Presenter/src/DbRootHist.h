@@ -75,11 +75,12 @@ class DbRootHist : public HistogramIdentifier
     TH1*    rootHistogram;
     // Histos live in pads, so each histo must have a home
     TPad*   hostingPad;
-    void draw(TCanvas* editorCanvas, double xlow, double ylow, double xup, double yup, bool fastHitMapDraw, TPad* ovPad=NULL);
+    void draw(TCanvas* editorCanvas, double xlow, double ylow, double xup, double yup, bool fastHitMapDraw, TPad* overlayOnPad=NULL);
 //    void    setHostingPad(int xlow, int ylow, int xup, int yup);
     // H2Ds are rendered as images
     /// true if histogram is drawn on top of another one
     bool isOverlap() {return m_isOverlap;}
+    void setOverlapMode(bool overlapMode) {overlapMode ? m_isOverlap = pres::s_overlapping : m_isOverlap = pres::s_separate;}
 
     /// histogram identifier
     std::string identifier()  { return m_identifier;}
@@ -100,6 +101,8 @@ class DbRootHist : public HistogramIdentifier
     /// updates ROOT TH1 display properties from Histogram DB (via OnlineHistogram object)
     /// (normally called when connecting)
     void setTH1FromDB();
+    /// updates pad margins from  Histogram DB
+    void setPadMarginsFromDB(TPad* &pad);
     /// updates current drawing options from Histogram DB (via OnlineHistogram object)
     void setDrawOptionsFromDB(TPad* &pad);
     /// saves current ROOT display options to OnlineHistogram object and to Histogram DB

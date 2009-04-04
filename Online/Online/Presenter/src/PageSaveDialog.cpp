@@ -74,7 +74,7 @@ void PageSaveDialog::build()
   // list tree
   m_pageFolderListTree = new TGListTree(fCanvas694, kHorizontalFrame);
   m_pageFolderListTree->AddRoot("Pages");
-  m_mainFrame->listFromHistogramDB(m_pageFolderListTree,
+  m_mainFrame->listHistogramsFromHistogramDB(m_pageFolderListTree,
       FoldersAndPages, s_withoutHistograms);
   m_pageFolderListTree->Connect(
     "Clicked(TGListTreeItem*, Int_t, Int_t, Int_t)", "PageSaveDialog",
