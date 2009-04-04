@@ -1,8 +1,6 @@
 // $Id $
 // TH1::SetMaximum() and TH1::SetMinimum()
 
-//TODO: use plotting mode DB switch, //dim, overlay gfx, proper login, timage title, histos as links
-
 #include <TPad.h>
 #include <TH1F.h>
 #include <TH2F.h>
@@ -947,6 +945,12 @@ void DbRootHist::setTH1FromDB()
     if (m_onlineHistogram->getDisplayOption("LAB_Z_OFFS", &fopt)) {
       rootHistogram->GetZaxis()->SetLabelOffset(fopt);
     }
+    
+    if (m_onlineHistogram->getDisplayOption("NORM", &fopt)) {
+      if (fopt>0.)
+        rootHistogram->SetNormFactor(fopt);
+    }
+
     // custom bin labels
     if (0 != rootHistogram->GetXaxis()) {
       if (m_onlineHistogram->nXbinlabels() > 0) {
@@ -966,6 +970,27 @@ void DbRootHist::setTH1FromDB()
     }
   }
 }
+
+void DbRootHist::setPadMarginsFromDB(TPad* &pad) {
+  if (NULL != &pad &&
+      NULL != m_onlineHistogram) {
+    float fopt = 0.0;
+    if (m_onlineHistogram->getDisplayOption("MARGIN_TOP", &fopt)) {
+      pad->SetTopMargin(fopt);
+    }
+    if (m_onlineHistogram->getDisplayOption("MARGIN_BOTTOM", &fopt)) {
+      pad->SetBottomMargin(fopt);
+    }
+    if (m_onlineHistogram->getDisplayOption("MARGIN_LEFT", &fopt)) {
+      pad->SetLeftMargin(fopt);
+    }
+    if (m_onlineHistogram->getDisplayOption("MARGIN_RIGHT", &fopt)) {
+      pad->SetRightMargin(fopt);
+    }
+  }
+}
+
+
 // TODO: should rather use hostingPad
 void DbRootHist::setDrawOptionsFromDB(TPad* &pad)
 {
@@ -1073,7 +1098,16 @@ void DbRootHist::setDrawOptionsFromDB(TPad* &pad)
       std::vector<float> initValues;
       m_onlineHistogram->getFitFunction(Name,&initValues);
       m_analysisLib->getFitFunction(Name)->fit(rootHistogram, &initValues);
-      
+    }
+
+    if(m_onlineHistogram->getDisplayOption("TICK_X", &iopt)) {
+      pad->SetTickx(iopt);
+    }
+    if(m_onlineHistogram->getDisplayOption("TICK_Y", &iopt)) {
+      pad->SetTicky(iopt);
+    }
+    if(m_onlineHistogram->getDisplayOption("PADCOLOR", &iopt)) {
+      pad->SetFillColor(iopt);
     }
 
   }
@@ -1142,16 +1176,16 @@ bool DbRootHist::saveTH1ToDB(TPad* pad)
     if(tit && m_titpave) {
       fopt = tit->GetX1NDC();
       out |= updateDBOption("HTIT_X_OFFS", &fopt, 
-                            TMath::Abs(fopt - m_titpave->GetX1NDC())<0.001);
+                            TMath::Abs(fopt - m_titpave->GetX1NDC())<0.0001);
       fopt = tit->GetX2NDC() - tit->GetX1NDC();
       out |= updateDBOption("HTIT_X_SIZE", &fopt, 
-                            TMath::Abs(fopt - (m_titpave->GetX2NDC()-m_titpave->GetX1NDC())) <0.001);
+                            TMath::Abs(fopt - (m_titpave->GetX2NDC()-m_titpave->GetX1NDC())) <0.0001);
       fopt = tit->GetY1NDC();
       out |= updateDBOption("HTIT_Y_OFFS", &fopt, 
                             TMath::Abs(fopt - m_titpave->GetY1NDC())<0.001);
       fopt = tit->GetY2NDC() - tit->GetY1NDC();
       out |= updateDBOption("HTIT_Y_SIZE", &fopt, 
-                            TMath::Abs(fopt - (m_titpave->GetY2NDC()-m_titpave->GetY1NDC())) <0.001);
+                            TMath::Abs(fopt - (m_titpave->GetY2NDC()-m_titpave->GetY1NDC())) <0.0001);
       delete m_titpave;
       m_titpave = (TPave*) tit->Clone();
     }
@@ -1188,32 +1222,32 @@ bool DbRootHist::saveTH1ToDB(TPad* pad)
 
     fopt = rootHistogram->GetXaxis()->GetTitleSize();
     out |= updateDBOption("TIT_X_SIZE", &fopt,
-                          fopt == (float) gStyle->GetTitleSize("X"));
+                          TMath::Abs(fopt - (float) gStyle->GetTitleSize("X"))<0.0001);
     fopt = rootHistogram->GetXaxis()->GetTitleOffset();
     out |= updateDBOption("TIT_X_OFFS", &fopt,
-                          fopt == (float) gStyle->GetTitleOffset("X"));
+                          TMath::Abs(fopt - (float) gStyle->GetTitleOffset("X"))<0.0001);
     fopt = rootHistogram->GetXaxis()->GetLabelSize();
     out |= updateDBOption("LAB_X_SIZE", &fopt,
-         fopt == (float) gStyle->GetLabelSize("X"));
+         TMath::Abs(fopt - (float) gStyle->GetLabelSize("X"))<0.0001);
     fopt = rootHistogram->GetXaxis()->GetLabelOffset();
     out |= updateDBOption("LAB_X_OFFS", &fopt,
-                          fopt == (float) gStyle->GetLabelOffset("X"));
+                          TMath::Abs(fopt - (float) gStyle->GetLabelOffset("X"))<0.0001);
     iopt = rootHistogram->GetNdivisions("X");
     out |= updateDBOption("NDIVX", &iopt,
                           iopt == (int) gStyle->GetNdivisions("X"));
 
     fopt = rootHistogram->GetYaxis()->GetTitleSize();
     out |= updateDBOption("TIT_Y_SIZE", &fopt,
-                          fopt == (float) gStyle->GetTitleSize("Y"));
+                          TMath::Abs(fopt - (float) gStyle->GetTitleSize("Y"))<0.0001);
     fopt = rootHistogram->GetYaxis()->GetTitleOffset();
     out |= updateDBOption("TIT_Y_OFFS", &fopt,
-                          fopt == (float) gStyle->GetTitleOffset("Y"));
+                          TMath::Abs(fopt - (float) gStyle->GetTitleOffset("Y"))<0.0001);
     fopt = rootHistogram->GetYaxis()->GetLabelSize();
     out |= updateDBOption("LAB_Y_SIZE", &fopt,
-                          fopt == (float) gStyle->GetLabelSize("Y"));
+                          TMath::Abs(fopt - (float) gStyle->GetLabelSize("Y"))<0.0001);
     fopt = rootHistogram->GetYaxis()->GetLabelOffset();
     out |= updateDBOption("LAB_Y_OFFS", &fopt,
-                          fopt == (float) gStyle->GetLabelOffset("Y"));
+                          TMath::Abs(fopt - (float) gStyle->GetLabelOffset("Y"))<0.0001);
     iopt = rootHistogram->GetNdivisions("Y");
     out |= updateDBOption("NDIVY", &iopt,
                           iopt == (int) gStyle->GetNdivisions("Y"));
@@ -1223,16 +1257,16 @@ bool DbRootHist::saveTH1ToDB(TPad* pad)
       out |= updateDBOption("LABEL_Z", &sopt, sopt.empty());
       fopt = rootHistogram->GetZaxis()->GetTitleSize();
       out |= updateDBOption("TIT_Z_SIZE",  &fopt,
-                            fopt == (float) gStyle->GetTitleSize("Z"));
+                            TMath::Abs(fopt - (float) gStyle->GetTitleSize("Z"))<0.0001);
       fopt = rootHistogram->GetZaxis()->GetTitleOffset();
       out |= updateDBOption("TIT_Z_OFFS",  &fopt,
-                            fopt == (float) gStyle->GetTitleOffset("Z"));
+                            TMath::Abs(fopt - (float) gStyle->GetTitleOffset("Z"))<0.0001);
       fopt = rootHistogram->GetZaxis()->GetLabelSize();
       out |= updateDBOption("LAB_Z_SIZE",  &fopt,
-                            fopt == (float) gStyle->GetLabelSize("Z"));
+                            TMath::Abs(fopt - (float) gStyle->GetLabelSize("Z"))<0.0001);
       fopt = rootHistogram->GetZaxis()->GetLabelOffset();
       out |= updateDBOption("LAB_Z_OFFS",  &fopt,
-                            fopt == (float) gStyle->GetLabelOffset("Z"));
+                            TMath::Abs(fopt - (float) gStyle->GetLabelOffset("Z"))<0.0001);
     }
 
     // now options from Pad ... be sure we are in the right Pad
@@ -1245,6 +1279,26 @@ bool DbRootHist::saveTH1ToDB(TPad* pad)
      out |= updateDBOption("GRIDX", &iopt, (iopt>0) == gStyle->GetPadGridX());
      iopt = pad->GetGridy() ? 1 : 0;
      out |= updateDBOption("GRIDY", &iopt, (iopt>0) == gStyle->GetPadGridY());
+     iopt = pad->GetTickx();
+     out |= updateDBOption("TICK_X", &iopt, iopt == gStyle->GetPadTickX());
+     iopt = pad->GetTicky();
+     out |= updateDBOption("TICK_Y", &iopt, iopt == gStyle->GetPadTickY());
+     fopt = (float)pad->GetTopMargin();
+     out |= updateDBOption("MARGIN_TOP", &fopt, 
+                           TMath::Abs(fopt - (float)gStyle->GetPadTopMargin())<0.0001);
+     fopt = (float)pad->GetBottomMargin();
+     out |= updateDBOption("MARGIN_BOTTOM", &fopt, 
+                           TMath::Abs(fopt - (float)gStyle->GetPadBottomMargin())<0.0001);
+     fopt = (float)pad->GetLeftMargin();
+     out |= updateDBOption("MARGIN_LEFT", &fopt, 
+                           TMath::Abs(fopt - (float)gStyle->GetPadLeftMargin())<0.0001);
+     fopt = (float)pad->GetRightMargin();
+     out |= updateDBOption("MARGIN_RIGHT", &fopt, 
+                           TMath::Abs(fopt - (float)gStyle->GetPadRightMargin())<0.0001);
+     iopt = pad->GetFillColor();
+     out |= updateDBOption("PADCOLOR", &iopt, iopt == 10 ); // 10 corresponds to GetWhitePixel()
+                           //(int)gStyle->GetPadColor() );
+
      if (m_onlineHistogram->dimension() > 1) {
        iopt = pad->GetLogz();
        out |= updateDBOption("LOGZ", &iopt, iopt == gStyle->GetOptLogz());
@@ -1264,22 +1318,24 @@ bool DbRootHist::saveTH1ToDB(TPad* pad)
 }
 
 
-void DbRootHist::draw(TCanvas* editorCanvas, double xlow, double ylow, double xup, double yup, bool fastHitMapDraw, TPad* ovPad)
+void DbRootHist::draw(TCanvas* editorCanvas, double xlow, double ylow, double xup, double yup, bool fastHitMapDraw, TPad* overlayOnPad)
 {
   m_fastHitmapPlot = fastHitMapDraw;
-  TPad* pad=ovPad;
-  m_isOverlap = (NULL != ovPad);
-  // if (NULL == m_session) {
-  if (!m_isOverlap)    
+  TPad* pad=overlayOnPad;
+  m_isOverlap = (NULL != overlayOnPad);
+  // if (NULL == m_session) {  
+  if (!m_isOverlap) {
     pad = new TPad(m_identifier.c_str(),
                    TString(""),
                    TMath::Abs(xlow), TMath::Abs(ylow),
                    TMath::Abs(xup), TMath::Abs(yup));
+    setPadMarginsFromDB(pad);
+  }
 
   editorCanvas->cd();
 
-  if (!m_isOverlap) (pad)->Draw();
-   pad->cd();
+  if (!m_isOverlap) { (pad)->Draw(); }
+  pad->cd();
 
   if (!m_isOverlap) {
     pad->SetBit(kNoContextMenu);
@@ -1320,7 +1376,9 @@ void DbRootHist::draw(TCanvas* editorCanvas, double xlow, double ylow, double xu
 
  if (NULL != m_session) {
   std::string sopt("");
-  if (0 != m_onlineHistogram  && m_onlineHistogram->getDisplayOption("DRAWPATTERN", &sopt)) {
+  if (0 != m_onlineHistogram  &&
+      m_onlineHistogram->getDisplayOption("DRAWPATTERN", &sopt) &&
+      false == m_isOverlap) {
 
     std::string drawPatternFile = m_analysisLib->refRoot() + "/" + 
                                   m_onlineHistogram->task() + "/" + sopt;
@@ -1375,50 +1433,58 @@ void DbRootHist::draw(TCanvas* editorCanvas, double xlow, double ylow, double xu
 void DbRootHist::normalizeReference()
 {
   if (m_reference) {
-    //TODO: normFactor goes negative if refhisto "heavier" than cleared histo
-    float normFactor = 0.0;
-    if (s_Entries == m_refOption) {
-      normFactor = rootHistogram->GetSumOfWeights();
-      if (m_cleared && m_offsetHistogram) {
-        normFactor -= m_offsetHistogram->GetSumOfWeights();
+    float normFactor = rootHistogram->GetNormFactor();
+    // if GetNormFactor() >0, histogram is drawn normalized, just use the same normalization
+    if (normFactor<0.1) {
+      if (s_Entries == m_refOption) {
+        normFactor = rootHistogram->GetSumOfWeights();
+        // next lines needed only if m_offsetHistogram has not been subtracted yet
+        //if (m_cleared && m_offsetHistogram) {
+        //  normFactor -= m_offsetHistogram->GetSumOfWeights();
+        //}
+        m_reference->SetNormFactor(normFactor);
+      } else if (s_Area == m_refOption) {
+        normFactor = rootHistogram->Integral();
+        //if (m_cleared && m_offsetHistogram) {
+        //  normFactor -= m_offsetHistogram->Integral();
+        //}
       }
-      m_reference->SetNormFactor(normFactor);
-    } else if (s_Area == m_refOption) {
-      normFactor = rootHistogram->Integral();
-      if (m_cleared && m_offsetHistogram) {
-        normFactor -= m_offsetHistogram->Integral();
-      }
-      m_reference->SetNormFactor(normFactor);
     }
+    m_reference->SetNormFactor(normFactor);
   }
 }
 void DbRootHist::referenceHistogram(ReferenceVisibility visibility)
 {
-  if (0 == m_reference &&
-      s_NoReference != m_refOption &&
-      false == m_isAnaHist) {
-    TH1* ref = (TH1*)m_analysisLib->getReference(m_onlineHistogram);
-    if (ref) {
-      if (m_reference) { delete m_reference; m_reference = 0; }
-      m_reference = ref;
+  if (rootHistogram &&
+      s_H2D != m_histogramType &&
+      s_pfixMonH2D != m_histogramType) {
+    if (0 == m_reference &&
+        s_NoReference != m_refOption &&
+        rootHistogram->GetDimension() == 1 &&
+        Show == visibility) {
+      TH1* ref = (TH1*)m_analysisLib->getReference(m_onlineHistogram);
+      if (ref) {
+        if (m_reference) { delete m_reference; m_reference = 0; }
+        m_reference = ref;
+      }
+    } 
+    if (0 != m_reference &&
+        Show == visibility) {
+      // standard plot style
+      m_reference->SetLineStyle(2);
+      m_reference->SetLineColor(2); // red
+      // normalization
+      normalizeReference();
+      TVirtualPad *padsav = gPad;
+      hostingPad->cd();    
+      m_reference->Draw("SAME");
+      m_reference->SetStats(0);
+      //    m_reference->Draw();
+      hostingPad->Modified();
+      padsav->cd();
+    } else if (Hide == visibility) {
+      if (0 != m_reference) { delete m_reference; m_reference = NULL; }
     }
-  } 
-  if (0 != m_reference &&
-      Show == visibility) {
-    // standard plot style
-    m_reference->SetLineStyle(2);
-    m_reference->SetLineColor(2); // red
-    // normalization
-    normalizeReference();
-    TVirtualPad *padsav = gPad;
-    hostingPad->cd();    
-    m_reference->Draw("SAME");
-    m_reference->SetStats(0);
-//    m_reference->Draw();
-    hostingPad->Modified();
-    padsav->cd();
-  } else if (Hide == visibility) {
-    if (0 != m_reference) { delete m_reference; m_reference = NULL; }
   }
 }
 
@@ -1438,7 +1504,7 @@ std::string DbRootHist::findDimServiceName(const std::string & dimServiceType) {
   }
 
   m_dimBrowser->getServices(dimServiceNameQueryBegining.c_str());
-  while(dimType = m_dimBrowser->getNextService(dimService, dimFormat)) {
+  while((dimType = m_dimBrowser->getNextService(dimService, dimFormat))) {
     std::string dimServiceCandidate(dimService);
        
     TString dimServiceTS(dimServiceCandidate);
