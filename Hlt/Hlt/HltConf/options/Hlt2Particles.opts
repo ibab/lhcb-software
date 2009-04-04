@@ -136,7 +136,7 @@ Hlt2ChargedProtoPAlg.UseVeloPID = false ;
 // Charged Particles - Here make all to Pi and K
 //---------------------------------------------------------------------
 SeqHlt2Particles.Members += { "PreLoadParticles/Hlt2Pions",
-                             "PreLoadParticles/Hlt2Kaons" }; 
+                              "PreLoadParticles/Hlt2Kaons" }; 
 
 Hlt2Pions.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
 Hlt2Pions.PhysDesktop.NoPIDsParticleMaker.Inputs =  {"Hlt/ProtoP/Charged"} ;

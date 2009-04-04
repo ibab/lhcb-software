@@ -3,10 +3,6 @@
 ToolSvc.TsaConfirmTool.calcLikelihood = false;
 
 ToolSvc.TsaConfirmTool.nSigma=5;
-//L0MuonConfL0SingleWithT.TsaConfirmTool.otDataSvcName     = "L0ConfToolOTDataSvc";
-//L0MuonConfL0SingleWithT.TsaConfirmTool.itDataSvcName     = "L0ConfToolITDataSvc";
-//L0MuonConfL0SingleWithT.L0ConfToolITDataSvc.sortData = true;
-//L0MuonConfL0SingleWithT.L0ConfToolOTDataSvc.sortData = true;
 
 //from TsaSeed
 ToolSvc.TsaConfirmTool.xSearchS0.sector = 0;
@@ -20,6 +16,7 @@ ToolSvc.TsaConfirmTool.stereoS1.sector = 1;
 ToolSvc.TsaConfirmTool.stereoS2.sector = 2;
 ToolSvc.TsaConfirmTool.stereoS3.sector = 3;
 ToolSvc.TsaConfirmTool.stereoS4.sector = 4;
+
 /*
 ToolSvc.TsaConfirmTool.xSearchS3.otDataSvcName = "L0ConfToolOTDataSvc";
 ToolSvc.TsaConfirmTool.xSearchS4.otDataSvcName = "L0ConfToolOTDataSvc";

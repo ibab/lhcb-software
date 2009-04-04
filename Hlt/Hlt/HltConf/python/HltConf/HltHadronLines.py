@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltHadronLines.py,v 1.11 2009-04-02 09:26:52 graven Exp $
+# $Id: HltHadronLines.py,v 1.12 2009-04-04 21:05:24 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hadron Lines
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.12 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -70,9 +70,7 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
                 }
     
     def __apply_configuration__(self) : 
-        from Configurables import GaudiSequencer
-        from Configurables import HltTrackUpgrade
-        importOptions('$HLTCONFROOT/options/HltRecoSequence.py')
+        from HltConf.HltReco import RZVelo, PV2D
 
         ## alias to get the slot associated to a name
         _cut = lambda x: str(self.getProp(x))
@@ -97,41 +95,39 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
                            , HistoDescriptor  = histosfilter('L0ET',1500.,5100.,200)
                            )
                     )    
-            conf = conf + [
-                GaudiSequencer('Hlt1RecoRZVeloSequence')
-                , Member ( 'TF' ,'RZVelo'
-                           , InputSelection = 'RZVelo'
-                           , FilterDescriptor = ['Calo2DChi2_'+L0candidates+',<,4']
+            conf += [ RZVelo
+                    , PV2D.ignoreOutputSelection()
+                    , Member ( 'TF' ,'RZVelo'
+                           , FilterDescriptor = ['Calo2DChi2_%s,<,4'%L0candidates ]
                            , HistogramUpdatePeriod = 1
                            , HistoDescriptor  = histosfilter('Calo2DChi2_'+L0candidates,0.,10.,200)
                            )
-                , Member ( 'TU', 'Velo',  RecoName = 'Velo')
-                , Member ( 'TF', '1Velo',
-                           FilterDescriptor = [ 'Calo3DChi2_'+L0candidates+',<,4' ],
-                           HistogramUpdatePeriod = 1,
-                           HistoDescriptor  = histosfilter('Calo3DChi2_'+L0candidates,0.,10.,200)
-                           )
-                , Member ( 'TF', '2Velo',
+                    , Member ( 'TU', 'Velo',  RecoName = 'Velo')
+                    , Member ( 'TF', '1Velo',
+                               FilterDescriptor = [ 'Calo3DChi2_%s,<,4'%L0candidates ],
+                               HistogramUpdatePeriod = 1,
+                               HistoDescriptor  = histosfilter('Calo3DChi2_'+L0candidates,0.,10.,200)
+                               )
+                    , Member ( 'TF', '2Velo',
                            FilterDescriptor = [ 'IP_PV2D,||>,'+IPCut],
                            HistogramUpdatePeriod = 1,
                            HistoDescriptor = histosfilter('IP_PV2D',-0.2,1.8,200)
                            )
-                , Member ( 'TM' , 'VeloCalo'
-                           , InputSelection1 = '%TF2Velo'
-                           , InputSelection2 = L0candidates
-                           , MatchName = 'VeloCalo' , MaxQuality = 4.
-                           )
-                , Member ( 'TU', 'GuidedForward'
-                           , InputSelection  = '%TMVeloCalo'
-                           , RecoName = 'GuidedForward'
-                           , HistogramUpdatePeriod = 1
-                           )
-                , Member ( 'TF' , 'Confirmed' ,
-                           FilterDescriptor = ['PT,>,'+PTCut],
-                           HistogramUpdatePeriod = 1,
-                           HistoDescriptor  = histosfilter('PT',0.,8000.,200)
-                           )
-                ]
+                    , Member ( 'TM' , 'VeloCalo'
+                               , InputSelection1 = '%TF2Velo'
+                               , InputSelection2 = L0candidates
+                               , MatchName = 'VeloCalo' , MaxQuality = 4.
+                               )
+                    , Member ( 'TU', 'GuidedForward'
+                               , RecoName = 'GuidedForward'
+                               , HistogramUpdatePeriod = 1
+                               )
+                    , Member ( 'TF' , 'Confirmed' ,
+                               FilterDescriptor = ['PT,>,'+PTCut],
+                               HistogramUpdatePeriod = 1,
+                               HistoDescriptor  = histosfilter('PT',0.,8000.,200)
+                               )
+                    ]
             return conf
         
         # simple hadron cut
@@ -150,11 +146,8 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
         #------------------------------------
         def companion(type=""):
             IP2Cut = _cut(type+"HadCompanion_IPCut")
-            comp = [
-                Member('TU','UVelo'
-                       , InputSelection= 'RZVelo'
-                       , RecoName = 'Velo'
-                       )
+            comp = [ RZVelo , PV2D.ignoreOutputSelection()
+                , Member ( 'TU', 'UVelo' , RecoName = 'Velo')
                 , Member ( 'TF', '1UVelo'
                            , FilterDescriptor = ['MatchIDsFraction_%TFConfirmed,<,0.9' ]
                            , HistogramUpdatePeriod = 1
@@ -173,8 +166,8 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
         #---------------------
         def dihadron(type=""):
             PT2Cut = _cut(type+"HadCompanion_PTCut")
-            dih = [
-                Member ( 'VM2', 'UVelo'
+            dih = [ PV2D.ignoreOutputSelection()
+                , Member ( 'VM2', 'UVelo'
                          , InputSelection1 = '%TFConfirmed'
                          , InputSelection2 = '%TFCompanion'
                          , FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('HadCompanion_DOCACut'))]
@@ -202,8 +195,8 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
         # afterburn of a line with tracks
         #--------------------------------
         def afterburn():
-            after = [
-                Member ( 'TU' , 'FitTrack' , RecoName = "FitTrack")
+            after = [ PV2D.ignoreOutputSelection()
+                , Member ( 'TU' , 'FitTrack' , RecoName = "FitTrack")
                 , Member ( 'TF' , '1FitTrack' ,
                            FilterDescriptor = ["FitIP_PV2D,||>,"+_cut('HadMain_IPCut')],
                            HistogramUpdatePeriod = 1,
@@ -222,8 +215,8 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
         #-------------------
         def vafterburn(type=""):
             IPCut = _cut(type+'HadMain_IPCut')
-            vafter =  [
-                Member ( 'VU', 'FitTrack',   RecoName = 'FitTrack')
+            vafter =  [ PV2D.ignoreOutputSelection()
+                , Member ( 'VU', 'FitTrack',   RecoName = 'FitTrack')
                 , Member ( 'VF', '1FitTrack',
                            FilterDescriptor = [ 'FitVertexMinIP_PV2D,||>,'+IPCut],
                            HistogramUpdatePeriod = 1,

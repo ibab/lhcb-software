@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.194 2009-04-03 21:12:18 graven Exp $ 
+! $Id: release.notes,v 1.195 2009-04-04 21:05:24 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-04-04 Gerhard Raven
+ - update Hlt configuration to use python/HltConf/HltReco.py instead of
+   options/HltRecoSequence.py.
+ - rename Hlt2CheckHlt1Passed into Hlt2Requirements
 
 ! 2009-04-03 Gerhard Raven
  - add python/HltConf/HltReco.py as a module to replace

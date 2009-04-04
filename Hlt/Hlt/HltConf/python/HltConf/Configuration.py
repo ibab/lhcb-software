@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.60 2009-04-02 09:24:35 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.61 2009-04-04 21:05:24 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -78,7 +78,6 @@ class HltConf(LHCbConfigurableUser):
             trans = { 'Hlt1'   : 'LU+L0+VE+XP+MU+HA+PH+EL'
                     , 'DEFAULT': 'PA+LU+L0+VE+XP'
                     }
-            importOptions('$HLTCONFROOT/options/HltRecoSequence.py')
             for short,full in trans.iteritems() : hlttype = hlttype.replace(short,full)
             type2conf = { 'PA' : HltCommissioningLinesConf # PA for 'PAss-thru' (PT was considered bad)
                         , 'LU' : HltLumiLinesConf
@@ -108,7 +107,7 @@ class HltConf(LHCbConfigurableUser):
                 importOptions('$HLTCONFROOT/options/Hlt2.py')
                 # TODO: this next one should become a property of the Hlt2 configurable, and we
                 #       just forward to it...
-                Sequence("Hlt2CheckHlt1Passed").Members = [ ]
+                Sequence("Hlt2Requirements").Members = [ ]
                 reqs = self.getProp('Hlt2Requires')
                 if reqs.upper != "NONE" :
                     from Configurables import LoKi__HDRFilter   as HltFilter
@@ -117,7 +116,7 @@ class HltConf(LHCbConfigurableUser):
                                    , 'Hlt1' : HltFilter('Hlt1GlobalPass' , Code = "HLT_PASS('Hlt1Global')" )
                                    }
                     for i in reqs.split('+') :
-                        if i : Sequence("Hlt2CheckHlt1Passed").Members.append( hlt2requires[i] )
+                        if i : Sequence("Hlt2Requirements").Members.append( hlt2requires[i] )
 
     def configureRoutingBits(self) :
         ## set triggerbits
@@ -182,10 +181,10 @@ class HltConf(LHCbConfigurableUser):
                     if i not in grouping.keys() : grouping[i] = rule[1] 
                     #else :
                     #    print 'WARNING: could not make unique assignement for %s'%i 
-        # print '\n\ngenerated grouping table:'
-        # print grouping
-        # print '\n\n'
-        # TODO: HltGlobalMonitor().AlleyMap = grouping
+        #print '\n\ngenerated monitoring grouping table:'
+        #print grouping
+        #print '\n\n'
+        #HltGlobalMonitor().GroupLines = grouping
 
         def disableHistograms(c,filter = lambda x : True) :
             if 'HistoProduce' in c.getDefaultProperties() and filter(c):
@@ -194,7 +193,7 @@ class HltConf(LHCbConfigurableUser):
                 if not hasattr(c,p) : continue
                 x = getattr(c,p)
                 if list is not type(x) : x = [ x ]
-                [ disableHistograms(i,filter) for i in x ]
+                for i in x : disableHistograms(i,filter) 
         if   self.getProp('HistogrammingLevel') == 'None' : 
             for i in hlt1Lines() : disableHistograms( i.sequencer() )
         elif self.getProp('HistogrammingLevel') == 'Line' : 

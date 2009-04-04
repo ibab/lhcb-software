@@ -17,11 +17,12 @@ if Hlt2 not in GaudiSequencer("Hlt").Members : GaudiSequencer("Hlt").Members += 
 # ---------------------------------------------------------------------
 #  Make sure Hlt1 is passed
 # ---------------------------------------------------------------------
-Hlt2.Members += [ GaudiSequencer("Hlt2CheckHlt1Passed") ]
+Hlt2.Members += [ GaudiSequencer("Hlt2Requirements") ]
 # ---------------------------------------------------------------------
 #  Full reconstruction of all tracks 
 # ---------------------------------------------------------------------
-Hlt2.Members += [ GaudiSequencer("HltRecoSequence") ]
+from HltConf.HltReco import HltRecoSequence
+Hlt2.Members += [ HltRecoSequence ]
 # ---------------------------------------------------------------------
 #  ProtoParticles and Particles
 # ---------------------------------------------------------------------
@@ -43,4 +44,3 @@ importOptions( "$HLTSELECTIONSROOT/options/Hlt2Selections.py" )
 #  Decision
 # --------------------------------------------------------------------
 Hlt2.Members += [ HltSelectionsDecision('Hlt2Decision') ] 
-

@@ -60,7 +60,7 @@ class HltLumiLinesConf(HltLinesConfigurableUser) :
         debugOPL = self.getProp('OutputLevel')
         debugging = self.getProp('Debug')
         fullReco = self.getProp('FullReco')
-        importOptions('$HLTCONFROOT/options/HltRecoSequence.py') 
+        from HltConf.HltReco import PV2D
 
         # define empty reco sequence
         seqRecoName = 'LumiReco'
@@ -100,12 +100,13 @@ class HltLumiLinesConf(HltLinesConfigurableUser) :
         if fullReco:
             # create lumiRecoSequence
             lumiTrackRecoSequence = GaudiSequencer( 'LumiTrackRecoSequence'
-                                                    ,  Members =
-                                                    [  Sequence('HltRecoRZVeloSequence')
+                                                    ,  IgnoreFilterPassed = True
+                                                    ,  Members = PV2D.members()
+                                                    #[  Sequence('HltRecoRZVeloSequence')
                                                     #,  recoVelo
                                                     #,  prepareVelo
-                                                    #,  recoPV3D
-                                                   ] )
+                                                    #,  recoPV3D ]
+                                                    )
             lumiRecoSequence.Members.append( Sequence('LumiTrackRecoSequence' , MeasureTime = True ) )
             # filter to get backward tracks (make sure it always passes by wrapping inside a sequence)
             if veloBW:

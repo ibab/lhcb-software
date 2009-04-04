@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltBeamGasLines.py,v 1.4 2009-04-02 09:25:22 graven Exp $
+# $Id: HltBeamGasLines.py,v 1.5 2009-04-04 21:05:24 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of BeamGas Lines
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Jaap Panman jaap.panman@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -39,7 +39,7 @@ class HltBeamGasLinesConf(HltLinesConfigurableUser) :
                 }
 
     def __apply_configuration__(self) : 
-        importOptions('$HLTCONFROOT/options/HltRecoSequence.py')
+        from HltConf.HltReco import RZVelo
 
         # depending variables
         #------------------------------------
@@ -56,10 +56,8 @@ class HltBeamGasLinesConf(HltLinesConfigurableUser) :
                , algos = [
                      convertL0Candidates('AllHadron')
                      , Member("TF","L0BeamGas", FilterDescriptor = ["L0ET,>,"+str(BeamGas_EtCut)])
-                     , GaudiSequencer('Hlt1RecoRZVeloSequence')
-                     , Member ( 'TF' ,'RZVelo'
-                                , InputSelection = 'RZVelo'
-                                , FilterDescriptor = ['Calo2DChi2_%TFL0BeamGas,<,4'])
+                     , RZVelo
+                     , Member ( 'TF' ,'RZVelo' , FilterDescriptor = ['Calo2DChi2_%TFL0BeamGas,<,4'])
                      , Member ( 'TU', 'Velo',  RecoName = 'Velo')
                      , Member ( 'TF', '1Velo', FilterDescriptor = [ 'Calo3DChi2_%TFL0BeamGas,<,4' ])
                      , Member ( 'TM' , 'VeloCalo'

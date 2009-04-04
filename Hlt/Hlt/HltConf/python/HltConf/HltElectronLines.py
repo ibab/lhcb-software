@@ -22,14 +22,10 @@ class HltElectronLinesConf(HltLinesConfigurableUser) :
                 }
 
     def __apply_configuration__(self) :
-        from Configurables import GaudiSequencer
-        from Configurables import HltTrackUpgrade
         from Configurables import HltTrackUpgradeTool
         from Configurables import L0ConfirmWithT
+        from HltConf.HltReco import RZVelo, Velo, PV2D
         
-        RZVelo = GaudiSequencer('Hlt1RecoRZVeloSequence')
-        RecoVelo = HltTrackUpgrade('Hlt1RecoVelo')
-
         COMPAN_PTCUT    = str(self.getProp('Compan_PtCut'))
         SINGLEELE_PTCUT = str(self.getProp('SingleEle_PtCut'))
         LOWMASS         = str(self.getProp('Jpsi_LowMassCut'))
@@ -37,20 +33,19 @@ class HltElectronLinesConf(HltLinesConfigurableUser) :
         L0ET_CUT        = str(self.getProp('Ele_EtCut'))
 
         ##### common bodies IP
-        
         IP_CUT = str(self.getProp('Ele_IPCut'))
         prepareElectronWithIP = [ Member ( 'TF', 'L0Electrons', FilterDescriptor = [ 'L0ET,>,'+L0ET_CUT ] )
                                 , Member ( 'TU', 'TConf', RecoName = 'TConf',
                                               tools = [ Tool( HltTrackUpgradeTool,
                                               tools = [ Tool( L0ConfirmWithT,  particleType = 2 ) ] ) ] )
-                                , RZVelo
-                                , Member ( 'TF', 'RZVelo', InputSelection = 'RZVelo', FilterDescriptor = [ 'RZVeloTMatch_%TUTConf,||<,60.' ] )
+                                , RZVelo, PV2D.ignoreOutputSelection()
+                                , Member ( 'TF', 'RZVelo', FilterDescriptor = [ 'RZVeloTMatch_%TUTConf,||<,60.' ] )
                                 , Member ( 'TU', 'Velo', RecoName = 'Velo' )
                                 , Member ( 'TM', 'VeloT', InputSelection1 = '%TUVelo' , InputSelection2 = '%TUTConf' , MatchName = 'VeloT')
                                 , Member ( 'TF', 'VeloT', FilterDescriptor = [ 'IP_PV2D,||[],'+IP_CUT+',3.' ])
                                 ]
 
-        companionTrackWithIP  = [ RecoVelo
+        companionTrackWithIP  = [ Velo
                                 , Member ( 'TF', 'CompanionVelo',
                                            FilterDescriptor = [ 'IP_PV2D,||[],'+IP_CUT+',3.', 'DOCA_%TFVeloT,<,0.2' ])
                                 , Member ( 'TU', 'CompanionForward', RecoName = 'Forward' )
@@ -60,20 +55,19 @@ class HltElectronLinesConf(HltLinesConfigurableUser) :
                                 ]
 
         ##### common bodies no IP
-
         IP_CUT = "0.0"
         prepareElectronNoIP   = [ Member ( 'TF', 'L0Electrons', FilterDescriptor = [ 'L0ET,>,'+L0ET_CUT ] )
                                 , Member ( 'TU', 'TConf', RecoName = 'TConf',
                                               tools = [ Tool( HltTrackUpgradeTool,
                                               tools = [ Tool( L0ConfirmWithT,  particleType = 2 ) ] ) ] )
-                                , RZVelo
-                                , Member ( 'TF', 'RZVelo', InputSelection = 'RZVelo', FilterDescriptor = [ 'RZVeloTMatch_%TUTConf,||<,60.' ] )
+                                , RZVelo, PV2D.ignoreOutputSelection()
+                                , Member ( 'TF', 'RZVelo', FilterDescriptor = [ 'RZVeloTMatch_%TUTConf,||<,60.' ] )
                                 , Member ( 'TU', 'Velo', RecoName = 'Velo' )
                                 , Member ( 'TM', 'VeloT', InputSelection1 = '%TUVelo' , InputSelection2 = '%TUTConf' , MatchName = 'VeloT')
                                 , Member ( 'TF', 'VeloT', FilterDescriptor = [ 'IP_PV2D,||[],'+IP_CUT+',3.' ])
                                 ]
 
-        companionTrackNoIP    = [ RecoVelo
+        companionTrackNoIP    = [ Velo
                                 , Member ( 'TF', 'CompanionVelo', 
                                            FilterDescriptor = [ 'IP_PV2D,||[],'+IP_CUT+',3.', 'DOCA_%TFVeloT,<,0.2' ])
                                 , Member ( 'TU', 'CompanionForward', RecoName = 'Forward' )
@@ -83,7 +77,6 @@ class HltElectronLinesConf(HltLinesConfigurableUser) :
                                 ]
 
         ##### Lines
-        
         Line ('SingleElectron'
                  , prescale = self.prescale
                  , L0DU = "L0_CHANNEL('Electron')"
