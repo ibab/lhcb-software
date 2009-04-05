@@ -10,6 +10,7 @@
 + Giacomo's patch: new DB entries (e.g. PadMargins)
     fix ref. normalization
 + double click on histos link to another page
++ msg list handling: display histos in alarm
 
 !============ Presenter v0r16 2009-03-05 =============
 ! 2009-03-05

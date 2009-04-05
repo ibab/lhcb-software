@@ -12,7 +12,7 @@
 
 void setSystemEnvironment(const char* environmentVariable, const char* value);
 
-static const std::string s_presenterVersion("v0r15");
+static const std::string s_presenterVersion("v0r17");
 // environment variable for archive mount point (i.e. prefix to paths)
 static const std::string s_histdir("HISTDIR");
 static const std::string s_referencePath("HISTREFPATH");
@@ -66,6 +66,9 @@ namespace pres
   static const bool s_withTree          = true;
   static const bool s_withoutTree       = false;
 
+  static const bool s_overlapping       = true;
+  static const bool s_separate          = false;
+
   static const bool s_checkTreeItems    = true;
   static const bool s_uncheckTreeItems  = false;
   
@@ -89,6 +92,11 @@ namespace pres
   static const std::string s_setSwitch("_$");
   static const std::string s_underscore("_");
   static const std::string s_slash("/"); // also for DB folders...
+  
+// Move to OMAMessage:
+  static const std::string s_ALARM("ALARM");
+  static const std::string s_WARNING("WARNING");
+  static const std::string s_INFO("INFO");
   
   static const std::string s_adder("Adder");
   // boost::filesystem::slash

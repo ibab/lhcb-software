@@ -27,6 +27,9 @@
 //#include "../icons/stock_new-labels.xpm" // quarter-level
 #include "../icons/inspectHistogram16.xpm" // inspect histo
 #include "../icons/stock_new-formula.xpm" // inspect histo
+#include "../icons/mb_asterisk_s.xpm" // INFO
+#include "../icons/mb_exclamation_s.xpm" // WARNING
+#include "../icons/mb_stop_s.xpm" // ALARM
 //#include "../icons/edit-find-replace16.xpm" // inspect page
 //#include "../icons/editDelete16.xpm" // del
 //#include "../icons/applications-system16.xpm" // task
