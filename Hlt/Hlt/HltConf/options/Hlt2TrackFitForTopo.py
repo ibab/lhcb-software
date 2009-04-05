@@ -190,15 +190,15 @@ HltRichPIDsTFKaonsForTopo.DecayDescriptor = "Kaon"
 #---------------------------------------------------------------------
 # Muons sequence
 #---------------------------------------------------------------------
-SeqHlt2TFMuonsForTopo = GaudiSequencer('SeqHlt2TFMuons')
+SeqHlt2TFMuonsForTopo = GaudiSequencer('SeqHlt2TFMuonsForTopo')
 SeqHlt2TFParticlesForTopo.Members += [ SeqHlt2TFMuonsForTopo ]
 SeqHlt2TFMuonsForTopo.IgnoreFilterPassed = 1
 
 #---------------------------------------------------------------------
 # Muons from Long tracks
 #---------------------------------------------------------------------
-Hlt2TFMuonsForTopo = PreLoadParticles('Hlt2TFMuons')
-SeqHlt2TFMuonsForTopo.Members += [ Hlt2TFMuons ]
+Hlt2TFMuonsForTopo = PreLoadParticles('Hlt2TFMuonsForTopo')
+SeqHlt2TFMuonsForTopo.Members += [ Hlt2TFMuonsForTopo ]
 
 Hlt2TFMuonsForTopo.addTool(PhysDesktop)
 Hlt2TFMuonsForTopo.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
@@ -215,7 +215,7 @@ Hlt2TFMuonsForTopo.DecayDescriptor = "Muon"
 #---------------------------------------------------------------------
 # Special case for electrons 
 #---------------------------------------------------------------------
-Hlt2TFElectronsForTopo = PreLoadParticles('Hlt2TFElectrons')
+Hlt2TFElectronsForTopo = PreLoadParticles('Hlt2TFElectronsForTopo')
 SeqHlt2TFParticlesForTopo.Members += [ Hlt2TFElectronsForTopo ]
 
 Hlt2TFElectronsForTopo.addTool(PhysDesktop)
