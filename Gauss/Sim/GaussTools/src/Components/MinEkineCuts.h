@@ -1,39 +1,49 @@
-// ------------------------------------------------------------
+// $Id: MinEkineCuts.h,v 1.2 2009-04-05 17:35:00 gcorti Exp $
+#ifndef GAUSSTOOLS_COMPONENTS_MINEKINECUTS_H
+#define GAUSSTOOLS_COMPONENTS_MINEKINECUTS_H 1
 
-#ifndef MinEkineCuts_h
-#define MinEkineCuts_h 1
-
+// Include files
 #include "G4ios.hh"
 #include "globals.hh"
 #include "SpecialCuts.h"
 
+/** @class LoopCuts LoopCuts.h Components/LoopCuts.h
+ * 
+ *
+ *  @author Witek POKORSKI
+ *  @date   2003-04-11
+ */
 
-class MinEkineCuts : public SpecialCuts
+namespace GiGa 
 {
+  class MinEkineCuts : public SpecialCuts
+  {
   public:     
 
-     MinEkineCuts(const G4String& processName ="MinEkineCuts", 
-                  double m_cut=DBL_MAX);
+    /// Constructor
+    MinEkineCuts(const G4String& processName ="MinEkineCuts", 
+                 double m_cut=DBL_MAX);
 
-     virtual ~MinEkineCuts();
+    virtual ~MinEkineCuts(); ///< Destructor
 
-     // PostStep GPIL
-     virtual G4double PostStepGetPhysicalInteractionLength(
+    /// Implementation of G4VProcess method for post step 
+    virtual G4double PostStepGetPhysicalInteractionLength(
                              const G4Track& track,
-			     G4double   previousStepSize,
-			     G4ForceCondition* condition
-			    );
+                             G4double   previousStepSize,
+                             G4ForceCondition* condition );
             
-			    
+    
   private:
 
-  double m_cut;
+    double m_cut;
   
-  // hide assignment operator as private 
-      MinEkineCuts(MinEkineCuts&);
-      MinEkineCuts& operator=(const MinEkineCuts& right);
+    // Assignment operator as private 
+    MinEkineCuts(MinEkineCuts&);
+    MinEkineCuts& operator=(const MinEkineCuts& right);
 
-};
+  };
+
+} // closes namespace
 
 #endif
 

@@ -1,13 +1,26 @@
-// --------------------------------------------------------------
+// $Id: LoopCuts.cpp,v 1.6 2009-04-05 17:31:55 gcorti Exp $
+// Include files 
 
-#include "LoopCuts.h"
-
+// from G4
 #include "G4Step.hh"
 #include "G4UserLimits.hh"
 #include "G4VParticleChange.hh"
 
-LoopCuts::LoopCuts(const G4String& aName, int maxs, double minstep)
-  : SpecialCuts(aName)
+// local
+#include "LoopCuts.h"
+
+//-----------------------------------------------------------------------------
+// Implementation file for class : LoopCuts
+//
+// 2003-06-17 : Witek POKORSKI
+// 2009-03-26 : Gloria CORTI, clean up
+//-----------------------------------------------------------------------------
+
+//=============================================================================
+// Constructor, initializes variables
+//=============================================================================
+GiGa::LoopCuts::LoopCuts(const G4String& aName, int maxs, double minstep)
+  : GiGa::SpecialCuts(aName)
 { 
 
   m_maxstepnumber = maxs;
@@ -19,51 +32,61 @@ LoopCuts::LoopCuts(const G4String& aName, int maxs, double minstep)
   SetProcessType(fUserDefined);
 }
 
-LoopCuts::~LoopCuts()
-{}
+//=============================================================================
+// Destructor
+//=============================================================================
+GiGa::LoopCuts::~LoopCuts() {}
 
-LoopCuts::LoopCuts(LoopCuts& right)
-  :SpecialCuts(right)
-{}
+//=============================================================================
+// Private assignment operator
+//=============================================================================
+GiGa::LoopCuts::LoopCuts(GiGa::LoopCuts& right) : SpecialCuts(right) {}
 
  
-G4double LoopCuts::
+//=============================================================================
+// Implementation of process methods: PostStepGetPhysicalInteractionLength
+//=============================================================================
+G4double GiGa::LoopCuts::
 PostStepGetPhysicalInteractionLength(const G4Track& track,
                                      G4double ,
                                      G4ForceCondition* condition)
 {
   // condition is set to "Not Forced"
   *condition = NotForced;
+
   // default proposed step
-  G4double     proposedStep = DBL_MAX;
+  G4double proposedStep = DBL_MAX;
 
   double steplenght = track.GetStepLength();
   int stepn = track.GetCurrentStepNumber();  
   
-  if (stepn==1)
-    {
+  // Check number of steps less of lenght less than min
+  if (stepn==1) {
       m_counter=0;
-    }
-  else if (steplenght < m_minstep) m_counter++;
-
-  if (m_counter>m_maxstepnumber) 
-    {          
-      proposedStep = 0.;
-    } 
+  } else if (steplenght < m_minstep) {
+    m_counter++;
+  }
+  
+  if (m_counter > m_maxstepnumber) {          
+    proposedStep = 0.;
+  } 
   
   return proposedStep;    
 }
-  
-  
+
+//=============================================================================
 // Overrides default behaviour of SpecialCuts to be able to leave
 // the particle alive for subsequent decays
-G4VParticleChange* LoopCuts::PostStepDoIt(
-			     const G4Track& aTrack,
-			     const G4Step& ) {
+//=============================================================================
+G4VParticleChange* GiGa::LoopCuts::PostStepDoIt( const G4Track& aTrack,
+                                           const G4Step& ) {
+
    aParticleChange.Initialize(aTrack);
    aParticleChange.ProposeEnergy(0.) ;
    aParticleChange.ProposeLocalEnergyDeposit(aTrack.GetKineticEnergy()) ;
-   // leave the possibility of decay
    aParticleChange.ProposeTrackStatus(fStopButAlive);
    return &aParticleChange;
 }
+
+//=============================================================================
+

@@ -1,13 +1,26 @@
-// --------------------------------------------------------------
+// $Id: MinEkineCuts.cpp,v 1.7 2009-04-05 17:35:03 gcorti Exp $
+// Include files 
 
-#include "MinEkineCuts.h"
-
+// from G4
 #include "G4Step.hh"
 #include "G4UserLimits.hh"
 #include "G4VParticleChange.hh"
 #include "G4EnergyLossTables.hh"
 
-MinEkineCuts::MinEkineCuts(const G4String& aName, double cut)
+// local
+#include "MinEkineCuts.h"
+
+//-----------------------------------------------------------------------------
+// Implementation file for class : MinEkineCuts
+//
+// 2003-04-11 : Witek POKORSKI
+// 2009-04-01 : Gloria CORTI, adapt to LHCb template
+//-----------------------------------------------------------------------------
+
+//=============================================================================
+// Constructor, initializes variables
+//=============================================================================
+GiGa::MinEkineCuts::MinEkineCuts(const G4String& aName, double cut)
   : SpecialCuts(aName)
 { 
   m_cut=cut;
@@ -18,19 +31,27 @@ MinEkineCuts::MinEkineCuts(const G4String& aName, double cut)
   SetProcessType(fUserDefined);
 }
 
-MinEkineCuts::~MinEkineCuts()
-{}
+//=============================================================================
+// Destructor
+//=============================================================================
+GiGa::MinEkineCuts::~MinEkineCuts() {}
 
-MinEkineCuts::MinEkineCuts(MinEkineCuts& right)
-  :SpecialCuts(right)
-{}
+//=============================================================================
+// Private assignment operator
+//=============================================================================
+GiGa::MinEkineCuts::MinEkineCuts(GiGa::MinEkineCuts& right) 
+  : SpecialCuts(right) {}
 
  
-G4double MinEkineCuts::
+//=============================================================================
+// Implementation of process methods: PostStepGetPhysicalInteractionLength
+//=============================================================================
+G4double GiGa::MinEkineCuts::
 PostStepGetPhysicalInteractionLength(const G4Track& aTrack,
                                      G4double ,
                                      G4ForceCondition* condition)
 {
+
   // condition is set to "Not Forced"
   *condition = NotForced;
   // default proposed step
@@ -50,29 +71,29 @@ PostStepGetPhysicalInteractionLength(const G4Track& aTrack,
 
   // if UserLimits attached to the volume, use them
   // if not use the default cuts
-  if (pUserLimits)      
-    {
+  if (pUserLimits) {
       eMin = pUserLimits->GetUserMinEkine(aTrack);
-    }
+  }
   
-  if (eKine < eMin ) 
-    {
+  if (eKine < eMin ) {
       proposedStep = 0.;
-    }
+  } 
   else if (aParticleDef->GetPDGCharge() != 0.0 
-           && G4EnergyLossTables::GetRangeTable(aParticleDef)) 
-    {
-      // charged particles only       
-      G4double temp = DBL_MAX;
-      G4double rangeNow = DBL_MAX;
+           && G4EnergyLossTables::GetRangeTable(aParticleDef)) {
+
+    // charged particles only       
+    G4double temp = DBL_MAX;
+    G4double rangeNow = DBL_MAX;
       
-      const G4MaterialCutsCouple* aMaterial= aTrack.GetMaterialCutsCouple();          
-      rangeNow = G4EnergyLossTables::GetRange(aParticleDef,eKine,aMaterial);
-      G4double rangeMin = 
-        G4EnergyLossTables::GetRange(aParticleDef,eMin,aMaterial);
-      temp = rangeNow - rangeMin;
-      if (proposedStep > temp) proposedStep = temp;        
-    }
+    const G4MaterialCutsCouple* aMaterial= aTrack.GetMaterialCutsCouple();          
+    rangeNow = G4EnergyLossTables::GetRange(aParticleDef,eKine,aMaterial);
+    G4double rangeMin = 
+      G4EnergyLossTables::GetRange(aParticleDef,eMin,aMaterial);
+    temp = rangeNow - rangeMin;
+    if (proposedStep > temp) proposedStep = temp;        
+  }
+
   return proposedStep;    
 }
   
+//=============================================================================
