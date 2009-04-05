@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.195 2009-04-04 21:05:24 graven Exp $ 
+! $Id: release.notes,v 1.196 2009-04-05 09:26:17 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-04-05 Gerhard Raven
+ - make sure Hlt2Decision is still the last algorithm in the Hlt2 sequencer
 
 ! 2009-04-04 Gerhard Raven
  - update Hlt configuration to use python/HltConf/HltReco.py instead of

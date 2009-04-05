@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.61 2009-04-04 21:05:24 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.62 2009-04-05 09:26:17 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -224,11 +224,16 @@ class HltConf(LHCbConfigurableUser):
         ### TEMPORARY HACK until HltSelectionsDecision completely obsolete...
         print '# List of configured Hlt2Lines : ' + str(hlt2Lines()) 
         from Configurables       import HltSelectionsDecision
-        HltSelectionsDecision('Hlt2Decision').Ignore = [ i.name() for i in hlt2Lines() ]
-        print '# Hlt2Decision.Ignore = ' + str(HltSelectionsDecision('Hlt2Decision').Ignore)
+        Hlt2Decision = HltSelectionsDecision('Hlt2Decision')
+        Hlt2Decision.Ignore = [ i.name() for i in hlt2Lines() ]
+        print '# Hlt2Decision.Ignore = ' + str(Hlt2Decision.Ignore)
         activeLines = self.getProp('ActiveHlt2Lines') 
         lines2 = [ i for i in hlt2Lines() if ( not activeLines or i.name() in activeLines ) ]
         Sequence('Hlt2').Members += [ i.configurable() for i in lines2 ] 
+        # make sure Hlt2Decision is _last_ in the Hlt2 sequencer...
+        if Hlt2Decision in Sequence('Hlt2').Members :
+            Sequence('Hlt2').Members.remove(Hlt2Decision)
+            Sequence('Hlt2').Members += [ Hlt2Decision ]
         print Sequence('Hlt2').Members
 
 
