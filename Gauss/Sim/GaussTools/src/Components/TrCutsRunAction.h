@@ -1,23 +1,25 @@
-// $Id: TrCutsRunAction.h,v 1.7 2007-01-12 15:36:58 ranjard Exp $
-#ifndef GIGA_TRCUTSRUNACTION_H 
-#define GIGA_TRCUTSRUNACTION_H 1
-
-// GiGa
+// $Id: TrCutsRunAction.h,v 1.8 2009-04-05 17:50:24 gcorti Exp $
+#ifndef GAUSSTOOLS_COMPONENTS_TRCUTSRUNACTION_H 
+#define GAUSSTOOLS_COMPONENTS_TRCUTSRUNACTION_H 1
+// Include files
+// from GiGa
 #include "GiGa/GiGaRunActionBase.h"
-// forward declarations
-//template <class TYPE> class GiGaFactory;
+
 
 /** @class TrCutsRunAction TrCutsRunAction.h
  *  
+ *  Class to pass Tracking Cuts to Geant4 as processes. 
+ *  Modified to  
+ *  
  *
- *  @author Witek Pokorski
- *  @date   10/04/2003
+ *  @author Witek POKORSKI
+ *  @date   2003-04-10
+ *  @author Gloria CORTI
+ *  @date   2009-03-31
  */
 
 class TrCutsRunAction: public virtual GiGaRunActionBase
 {
-  /// friend factory for instantiation
-  //friend class GiGaFactory<TrCutsRunAction>;
   
 public:
   
@@ -71,6 +73,13 @@ private:
   int m_maxsteps;
   double m_minstep;
   double m_minx, m_miny, m_minz, m_maxx, m_maxy, m_maxz;
+  bool m_killPingPong;
+  int m_nMaxForPingPong;
+  int m_nMaxOfPingPong;
+  double m_stepLenghtPingPong;
+  std::vector<int> m_killAtOrigin;
+
+
 };
 // ============================================================================
 

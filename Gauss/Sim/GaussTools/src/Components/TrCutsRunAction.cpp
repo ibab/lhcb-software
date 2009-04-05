@@ -1,4 +1,4 @@
-// $Id: TrCutsRunAction.cpp,v 1.14 2007-01-12 15:36:58 ranjard Exp $
+// $Id: TrCutsRunAction.cpp,v 1.15 2009-04-05 17:50:39 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -16,6 +16,8 @@
 #include "MinEkineCuts.h"
 #include "LoopCuts.h"
 #include "WorldCuts.h"
+#include "PingPongCut.h"
+#include "KillAtOriginCut.h"
 #include "TrCutsRunAction.h"
 
 // ============================================================================
@@ -69,6 +71,18 @@ TrCutsRunAction::TrCutsRunAction
   declareProperty("MaxX", m_maxx);
   declareProperty("MaxY", m_maxy);
   declareProperty("MaxZ", m_maxz);
+  declareProperty( "KillPingPong", m_killPingPong = true );
+  declareProperty( "MaxNumStepsForPingPong", m_nMaxForPingPong = 1000000 );
+  declareProperty( "MaxNumOfPingPong", m_nMaxOfPingPong = 20 );
+  declareProperty( "MaxStepLenForPingPong", m_stepLenghtPingPong = 1.0e-3 );
+  m_killAtOrigin.push_back(12);
+  m_killAtOrigin.push_back(14);
+  m_killAtOrigin.push_back(16);
+  m_killAtOrigin.push_back(-12);
+  m_killAtOrigin.push_back(-14);
+  m_killAtOrigin.push_back(-16);
+  declareProperty( "DoNotTrackParticles", m_killAtOrigin );
+  
 };
 // ============================================================================
 
@@ -86,26 +100,36 @@ TrCutsRunAction::~TrCutsRunAction()
 // ============================================================================
 void TrCutsRunAction::BeginOfRunAction( const G4Run* run )
 {
-  if ( 0 == run ) 
-  { Warning ( "BeginOfRunAction:: G4Run* points to NULL!" ) ; }
+  if ( 0 == run ) { 
+    Warning( "BeginOfRunAction:: G4Run* points to NULL!" );
+  }
   
+  // Loop on particles that have been defined and attach process
   G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
-  if ( 0 == particleTable ) 
-  { Error ( "G4ParticleTable points to NULL!; return! ") ; return ; }
+  if ( 0 == particleTable ) {
+    Error( "G4ParticleTable points to NULL!; return! ");
+    return; 
+  }
   
   int ii, ptbSiz = particleTable->size();
   
-  for(ii = 0; ii < ptbSiz; ii++)
-    {
-      G4ParticleDefinition* particle = particleTable->GetParticle( ii );
+  for( ii = 0; ii < ptbSiz; ii++) {
+
+    G4ParticleDefinition* particle = particleTable->GetParticle( ii );
+    
+    if ( 0 == particle ) {
+      Warning ( "G4ParticleDefinition* points to NULL, skip it" ) ;
+      continue;
+    }
       
-      if ( 0 == particle ) 
-      {
-        Warning ( "G4ParticleDefinition* points to NULL, skip it" ) ;
-        continue ;
-      }
+    std::string pname=particle->GetParticleName();
+
+    // Do not attach cuts processes to optical photons nor short lived
+    // particle as will disappear anyway for other reasons!!!
+    if( (pname!="opticalphoton") && ( ! particle->IsShortLived() ) ) {
       
       int particleCode = particle->GetPDGEncoding();
+
       double acut;
 
       if(abs(particleCode)==11)
@@ -127,8 +151,6 @@ void TrCutsRunAction::BeginOfRunAction( const G4Run* run )
       else if(abs(particleCode)==12 || abs(particleCode)==14 
               || abs(particleCode)==16)
         {
-          // do not track neutrinos
-//    acut=100000000.0;
           acut=m_nucut;
         }
       else if ( (abs(particleCode) == 2212 ) || (abs(particleCode) == 321 )
@@ -141,8 +163,6 @@ void TrCutsRunAction::BeginOfRunAction( const G4Run* run )
           acut = m_ocut ;
         }      
 
-      std::string pname=particle->GetParticleName();
-      
       if ( (pname!="opticalphoton") && ( ! particle->IsShortLived() ) )
         {          
           G4ProcessManager* procMgr = particle->GetProcessManager();
@@ -151,17 +171,40 @@ void TrCutsRunAction::BeginOfRunAction( const G4Run* run )
             Error("G4ProcessManager* points to NULL!") ;
             return ;
           }
+
+          for( std::vector<int>::iterator ik = m_killAtOrigin.begin();
+               m_killAtOrigin.end() != ik; ik++ ) {
+
+            if( particleCode == *ik ) {
+              
+              procMgr->AddDiscreteProcess( 
+                       new GiGa::KillAtOriginCut("KillAtOriginCut") );
+            }
+          } // closes loop on particles to kill
           
-          procMgr->AddDiscreteProcess(new MinEkineCuts("MinEkineCut",acut) );
-          procMgr->AddDiscreteProcess(new WorldCuts("WorldCut",
-                                                    m_minx,m_miny,m_minz,
-                                                    m_maxx,m_maxy,m_maxz));
-          if ( (pname=="e-" || pname=="gamma" ) && m_killloops)  
+          procMgr->AddDiscreteProcess( new GiGa::MinEkineCuts("MinEkineCut",
+                                                              acut) );
+          procMgr->AddDiscreteProcess( new GiGa::WorldCuts("WorldCut",
+                                                           m_minx, m_miny,
+                                                           m_minz, m_maxx,
+                                                           m_maxy, m_maxz) );
+          if ( (pname=="e-" || pname=="gamma" ) && m_killloops) {
             procMgr->
-              AddDiscreteProcess(new LoopCuts("LoopCuts",m_maxsteps,m_minstep));
+              AddDiscreteProcess( new GiGa::LoopCuts("LoopCuts", m_maxsteps,
+                                                     m_minstep) );
+          }
           
+          if( m_killPingPong ) {
+            procMgr->AddDiscreteProcess( new GiGa::PingPongCut("PingPongCut",
+                                                         m_nMaxForPingPong,
+                                                         m_stepLenghtPingPong,
+                                                         m_nMaxOfPingPong) );
+          }                                               
         }
     }
+    
+  }
+  
 };
 // ============================================================================
 
@@ -172,8 +215,10 @@ void TrCutsRunAction::BeginOfRunAction( const G4Run* run )
 // ============================================================================
 void TrCutsRunAction::EndOfRunAction( const G4Run* run )
 {
-  if( 0 == run ) 
-    { Warning("EndOfRunAction:: G4Run* points to NULL!") ; }
+  
+  if( 0 == run ) { 
+    Warning("EndOfRunAction:: G4Run* points to NULL!"); 
+  }
 
 };
 // ============================================================================

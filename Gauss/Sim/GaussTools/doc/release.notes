@@ -4,6 +4,32 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!======================== GaussTools v15r2 2009-04-05 ========================
+! 2009-04-05 - Gloria CORTI
+ - Fix bug #47062 of particle getting stuck and Gauss jobs hanging in 
+   production. This is due to ping pong between two volumes and probably 
+   for two different reasons: multiple scattering steps at boundaries in
+   very rare cases and an optimizer problem in most of the cases when this
+   happen as the step is always indetical. To fix the problem introduce
+   a new G4VProcess called PingPongCut that is added to TrCutsRunAction for
+   all type of particles. As about half of the cases were due to neutrinos
+   that have no reason to be followed introduce also another new G4VProcess
+   that kills particle at origin depending on what they are. By default it
+   kills only all neutrinos. KillAtOriginCut is also added to TrCutsRunAction,
+   to which new properties have been introduced to steer the two new "cuts".
+   . TrCutsRunAction.{h,cpp}
+   . KillAtOriginCut.{h,cpp}
+   . PingPongCut.{h,cpp}
+
+ - Wrap all cuts in GiGa namespace as at least the base class SpecialCuts 
+   and MinEkineCut exist with an identical name in Geant4 (G4physics_lists), 
+   although the header files there have extension ".hh"
+   . TrCutsRunAction.cpp
+   . SpecialCuts.{h,cpp}
+   . LoopCuts.{h,cpp}
+   . WorldCuts.{h.cpp}
+   . MinEkineCut.{h,cpp}
+
 ! 2009-03-06 - Gloria CORTI
  - Extent to passing commands to list of G4Tracks instead of a single one:
     CommandTrackAction.TrackID = 53 for example is replace by
