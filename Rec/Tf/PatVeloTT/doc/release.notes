@@ -3,6 +3,8 @@
 ! Responsible : Mariusz Witek
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+! 2009-04-05 - Stephanie Hansmann-Menzemer
+ - bug fix for inverse polarized magnetic field
 
 !========================== PatVeloTT v3r6 2009-03-11 ========================
 ! 2009-03-11 - Stephanie Hansmann-Menzemer

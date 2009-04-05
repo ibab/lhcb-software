@@ -1,4 +1,4 @@
-// $Id: PatVeloTTTool.cpp,v 1.9 2009-03-11 18:09:59 smenzeme Exp $
+// $Id: PatVeloTTTool.cpp,v 1.10 2009-04-05 09:03:33 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -39,7 +39,6 @@ PatVeloTTTool::PatVeloTTTool( const std::string& type,
   declareProperty("minMomentum"        , m_minMomentum      = 0.8*Gaudi::Units::GeV);
   declareProperty("maxPseudoChi2"      , m_maxPseudoChi2          = 10000.);
   declareProperty("maxSolutionsPerTrack"  , m_maxSolutionsPerTrack = 3);
-  declareProperty("distToMomentum"     , m_distToMomentum   = .00004);
   // Tolerances for extrapolation
   declareProperty("XTolerance"         , m_xTol             = 0.35 * Gaudi::Units::mm);
   declareProperty("XTolSlope"          , m_xTolSlope        = 350. * Gaudi::Units::mm);
@@ -136,7 +135,9 @@ void PatVeloTTTool::getCandidates( LHCb::Track& veloTrack, std::vector<PatVTTTra
 
   if(m_debug) debug() << "Entering getCandidates" << endmsg;
 
-  double maxTol = 1. / ( m_distToMomentum * m_minMomentum );
+  double maxTol = fabs(1. / ( m_distToMomentum * m_minMomentum ));
+
+
 
   if(m_debug) debug() << " maxWindow: " << maxTol << endmsg;
 
@@ -181,6 +182,8 @@ void PatVeloTTTool::getCandidates( LHCb::Track& veloTrack, std::vector<PatVTTTra
       for (Tf::TTRegionID reg=0; reg<m_ttHitManager->maxRegions(); reg++){
         if( 0 == m_ttHitManager->hits(sta,lay,reg).size()) continue;
 
+
+
         const Tf::ITTHitCreator::STRegion* regionB = m_ttHitManager->region(sta,lay,reg);
 
         double zTTReg = regionB->z();
@@ -200,13 +203,12 @@ void PatVeloTTTool::getCandidates( LHCb::Track& veloTrack, std::vector<PatVTTTra
 
         double tol = maxTol;
 
-
         //--------------------------------------------------------------------------
         // Loop on hits
         //--------------------------------------------------------------------------
         Tf::TTStationHitManager<PatTTHit>::HitRange range = m_ttHitManager->hits(sta, lay, reg);
 
-        for ( PatTTHits::const_iterator itH = range.begin();
+       for ( PatTTHits::const_iterator itH = range.begin();
               range.end() != itH; ++itH ) {
 
           double xOnTrack = cand.xAtZ( (*itH)->z() );
@@ -226,7 +228,7 @@ void PatVeloTTTool::getCandidates( LHCb::Track& veloTrack, std::vector<PatVTTTra
           dx = dx * normFact[(*itH)->planeCode()];
           double fabsdx = fabs(dx);
 
-          if(tol > fabsdx){
+	  if(tol > fabsdx){
 
             // Now refine the tolerance in Y
             if( yOnTrack + (m_yTol + m_yTolSlope * fabsdx) < (*itH)->hit()->yMin() ||
@@ -244,7 +246,6 @@ void PatVeloTTTool::getCandidates( LHCb::Track& veloTrack, std::vector<PatVTTTra
   // Important to sort here: the bestLists assumes hits are sorted
   cand.sortHits();
 
-
   if(m_debug) cand.printLists(debug());
 
   // Numbering warning : layer 0 is the 1st layer
@@ -260,6 +261,8 @@ void PatVeloTTTool::getCandidates( LHCb::Track& veloTrack, std::vector<PatVTTTra
     debug() << "This Velo track has " << theSolutions.size()
             << " possible solution(s) with 3 or 4 layers fired before clean-up" << endmsg;
   }
+
+
 
   // If there is only one candidate for this Velo track: these solution won't be cleaned-up
   int nSolutions = theSolutions.size();
