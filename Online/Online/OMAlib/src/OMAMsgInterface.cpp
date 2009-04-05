@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.cpp,v 1.13 2009-03-04 17:31:11 ggiacomo Exp $
+// $Id: OMAMsgInterface.cpp,v 1.14 2009-04-05 15:39:04 psomogyi Exp $
 #include <cstring>
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAMsgInterface.h"
@@ -144,7 +144,7 @@ void OMAMsgInterface::raiseMessage(OMAMessage::OMAMsgLevel level,
 bool OMAMsgInterface::raiseAlarm(OMAMessage& message) {
   (*m_outs) << (MSG::Level) message.level() << "==================================================================="<<endmsg;
   char* time = message.humanTime();
-  std::remove(time, time+strlen(time)+1,'\n');
+//  std::remove(time, time+strlen(time)+1,'\n');
   (*m_outs) << (MSG::Level) message.level() << "********     "<<time <<endmsg;
   (*m_outs) << (MSG::Level) message.level() << message.levelString() <<" from Analysis Task "<<
     m_anaTaskname <<"  in analysis "<<    message.ananame() <<endmsg;

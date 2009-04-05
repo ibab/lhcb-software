@@ -60,7 +60,7 @@ void OMAFitTH2withSinCosC::fit(TH1* histo, std::vector<float>* initValues) {
 
   int xbins = (int)inHist->GetNbinsX();
   int ybins = (int)inHist->GetNbinsY();
-  TH1F* Stripe[xbins];
+  TH1F* Stripe[1000]; // xbins
 
   for (int i=0; i<xbins; i++)
   {
