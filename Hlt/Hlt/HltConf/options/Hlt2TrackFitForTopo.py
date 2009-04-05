@@ -14,15 +14,15 @@ from Configurables import CombineParticles, PhysDesktop
 # Do not run this as part of the Hlt2 by default.  Include it before
 # algorithms that require the refit particles.
 #---------------------------------------------------------------------
-SeqHlt2TFParticles = GaudiSequencer('SeqHlt2TFParticles')
-#GaudiSequencer('Hlt2').Members += [ SeqHlt2TFParticles ]
+SeqHlt2TFParticlesForTopo = GaudiSequencer('SeqHlt2TFParticles')
+#GaudiSequencer('Hlt2').Members += [ SeqHlt2TFParticlesForTopo ]
 
-SeqHlt2TFParticles.MeasureTime = 1
-SeqHlt2TFParticles.IgnoreFilterPassed = 1  # do all
+SeqHlt2TFParticlesForTopo.MeasureTime = 1
+SeqHlt2TFParticlesForTopo.IgnoreFilterPassed = 1  # do all
 
-SeqHlt2TFCharged = GaudiSequencer('SeqHlt2TFCharged')
-SeqHlt2TFParticles.Members += [ SeqHlt2TFCharged ]
-SeqHlt2TFCharged.MeasureTime = 1
+SeqHlt2TFChargedForTopo = GaudiSequencer('SeqHlt2TFChargedForTopo')
+SeqHlt2TFParticlesForTopo.Members += [ SeqHlt2TFChargedForTopo ]
+SeqHlt2TFChargedForTopo.MeasureTime = 1
 
 #---------------------------------------------------------------------
 # @todo TEMPORARY kill huge events
@@ -34,13 +34,13 @@ SeqHlt2TFCharged.MeasureTime = 1
 # configured---it is already configured in HltConf/Hlt2Particles.opts
 #---------------------------------------------------------------------
 #from Configurables import NumberOfTracksFilter
-#SeqHlt2TFCharged.Members += [ NumberOfTracksFilter('NumberOfTracksFilter') ]
+#SeqHlt2TFChargedForTopo.Members += [ NumberOfTracksFilter('NumberOfTracksFilter') ]
 
 #---------------------------------------------------------------------
 # MC truth associated tracks
 #---------------------------------------------------------------------
 #SeqTrueSignalTracks = GaudiSequencer('SeqTrueSignalTracks')
-#SeqHlt2TFCharged.Members += [ SeqTrueSignalTracks ]     # debug
+#SeqHlt2TFChargedForTopo.Members += [ SeqTrueSignalTracks ]     # debug
 
 #---------------------------------------------------------------------
 # TF tracks rather than hacking
@@ -49,15 +49,15 @@ SeqHlt2TFCharged.MeasureTime = 1
 #---------------------------------------------------------------------
 from Configurables import TrackEventFitter, TrackMasterFitter
 from Configurables import TrackKalmanFilter, TrackMasterExtrapolator
-Hlt2TFTrackFit = TrackEventFitter('Hlt2TFTrackFit')
-SeqHlt2TFCharged.Members += [ Hlt2TFTrackFit ]
+Hlt2TFTrackFitForTopo = TrackEventFitter('Hlt2TFTrackFit')
+SeqHlt2TFChargedForTopo.Members += [ Hlt2TFTrackFitForTopo ]
 
-Hlt2TFTrackFit.TracksInContainer  = "Hlt/Track/Forward"
-Hlt2TFTrackFit.TracksOutContainer = "Hlt/Track/TFForward"
+Hlt2TFTrackFitForTopo.TracksInContainer  = "Hlt/Track/Forward"
+Hlt2TFTrackFitForTopo.TracksOutContainer = "Hlt/Track/TFForwardForTopo"
 
-Hlt2TFTrackFit.addTool(TrackMasterFitter, name = 'Fitter')
+Hlt2TFTrackFitForTopo.addTool(TrackMasterFitter, name = 'Fitter')
 from TrackFitter.ConfiguredFitters import ConfiguredFastFitter
-ConfiguredFastFitter( getattr(Hlt2TFTrackFit,'Fitter'))
+ConfiguredFastFitter( getattr(Hlt2TFTrackFitForTopo,'Fitter'))
 
 #---------------------------------------------------------------------
 # Calo Reco & PIDs --------
@@ -72,7 +72,7 @@ ConfiguredFastFitter( getattr(Hlt2TFTrackFit,'Fitter'))
 # name.
 #---------------------------------------------------------------------
 #importOptions($CALORECOROOT/options/HltCaloSeq.opts)
-#SeqHlt2TFParticles.Members += [ GaudiSequencer('HltRecoCALOSeq') ]
+#SeqHlt2TFParticlesForTopo.Members += [ GaudiSequencer('HltRecoCALOSeq') ]
 
 
 #// @todo temporary : redefine HLT track location to "Hlt/Track/ForwardCleaned"
@@ -82,7 +82,7 @@ ConfiguredFastFitter( getattr(Hlt2TFTrackFit,'Fitter'))
 #from Configurables import ElectronMatchAlg, Track2SpdEAlg, Track2PrsEAlg
 #from Configurables import Track2EcalEAlg, Track2HcalEAlg, EcalChi22ID
 #from Configurables import BremChi22ID, ClusChi22ID
-#lclCaloTrackContainers = [ "Hlt/Track/Forward", "Hlt/Track/TFForward" ]
+#lclCaloTrackContainers = [ "Hlt/Track/Forward", "Hlt/Track/TFForwardForTopo" ]
 #InSpdAcceptanceAlg('HltInSPD').Inputs       = lclCaloTrackContainers
 #InPrsAcceptanceAlg('HltInPRS').Inputs       = lclCaloTrackContainers
 #InHcalAcceptanceAlg('HltInHCAL').Inputs     = lclCaloTrackContainers
@@ -104,31 +104,31 @@ ConfiguredFastFitter( getattr(Hlt2TFTrackFit,'Fitter'))
 # ChargedProtoPAlg
 #---------------------------------------------------------------------
 from Configurables import ChargedProtoPAlg, ChargedProtoCombineDLLsAlg
-Hlt2TFChargedProtoPAlg = ChargedProtoPAlg('Hlt2TFChargedProtoPAlg')
-Hlt2TFChargedProtoCombDLL = ChargedProtoCombineDLLsAlg('Hlt2TFChargedProtoCombDLL')
-SeqHlt2TFParticles.Members += [ Hlt2TFChargedProtoPAlg
-                                   , Hlt2TFChargedProtoCombDLL ]
+Hlt2TFChargedForTopoProtoPAlg = ChargedProtoPAlg('Hlt2TFChargedForTopoProtoPAlg')
+Hlt2TFChargedForTopoProtoCombDLL = ChargedProtoCombineDLLsAlg('Hlt2TFChargedForTopoProtoCombDLL')
+SeqHlt2TFParticlesForTopo.Members += [ Hlt2TFChargedForTopoProtoPAlg
+                                   , Hlt2TFChargedForTopoProtoCombDLL ]
 
-Hlt2TFChargedProtoPAlg.InputTrackLocation = "Hlt/Track/TFForward"
-Hlt2TFChargedProtoPAlg.OutputProtoParticleLocation = "Hlt/ProtoP/TFCharged"
-Hlt2TFChargedProtoCombDLL.ProtoParticleLocation = "Hlt/ProtoP/TFCharged"
+Hlt2TFChargedForTopoProtoPAlg.InputTrackLocation = "Hlt/Track/TFForwardForTopo"
+Hlt2TFChargedForTopoProtoPAlg.OutputProtoParticleLocation = "Hlt/ProtoP/TFChargedForTopo"
+Hlt2TFChargedForTopoProtoCombDLL.ProtoParticleLocation = "Hlt/ProtoP/TFChargedForTopo"
 
 
 #---------------------------------------------------------------------
 # ProtoParticles
 #---------------------------------------------------------------------
-#Hlt2TFChargedProtoPAlg.InputRichPIDLocation = "Rec/Rich/HltPIDs"
-Hlt2TFChargedProtoPAlg.InputMuonPIDLocation = "Hlt/Muon/MuonPID"
+#Hlt2TFChargedForTopoProtoPAlg.InputRichPIDLocation = "Rec/Rich/HltPIDs"
+Hlt2TFChargedForTopoProtoPAlg.InputMuonPIDLocation = "Hlt/Muon/MuonPID"
 #/ Calo PID
-Hlt2TFChargedProtoPAlg.UseCaloSpdPID = 1
-Hlt2TFChargedProtoPAlg.UseCaloPrsPID = 1
-Hlt2TFChargedProtoPAlg.UseCaloEcalPID = 1
-Hlt2TFChargedProtoPAlg.UseCaloHcalPID = 1
-Hlt2TFChargedProtoPAlg.UseCaloBremPID = 1
-#Hlt2TFChargedProtoPAlg.UseRichPID = 0 # Protos will NOT have any RICH information - HltRichPIDsKaons will not work
-Hlt2TFChargedProtoPAlg.UseRichPID = 1  # Use this to add RICH info to the HLT protos, needed for HltRichPIDsKaons
-Hlt2TFChargedProtoPAlg.UseMuonPID = 1
-Hlt2TFChargedProtoPAlg.UseVeloPID = 0
+Hlt2TFChargedForTopoProtoPAlg.UseCaloSpdPID = 1
+Hlt2TFChargedForTopoProtoPAlg.UseCaloPrsPID = 1
+Hlt2TFChargedForTopoProtoPAlg.UseCaloEcalPID = 1
+Hlt2TFChargedForTopoProtoPAlg.UseCaloHcalPID = 1
+Hlt2TFChargedForTopoProtoPAlg.UseCaloBremPID = 1
+#Hlt2TFChargedForTopoProtoPAlg.UseRichPID = 0 # Protos will NOT have any RICH information - HltRichPIDsTFKaonsForTopo will not work
+Hlt2TFChargedForTopoProtoPAlg.UseRichPID = 1  # Use this to add RICH info to the HLT protos, needed for HltRichPIDsTFKaonsForTopo
+Hlt2TFChargedForTopoProtoPAlg.UseMuonPID = 1
+Hlt2TFChargedForTopoProtoPAlg.UseVeloPID = 0
 
 
 #/---------------------------------------------------------------------
@@ -137,95 +137,95 @@ Hlt2TFChargedProtoPAlg.UseVeloPID = 0
 from Configurables import PreLoadParticles, NoPIDsParticleMaker
 from Configurables import CombinedParticleMaker, TrackSelector
 from Configurables import ProtoParticleCALOFilter, ProtoParticleMUONFilter
-Hlt2TFPions = PreLoadParticles('Hlt2TFPions')
-Hlt2TFKaons = PreLoadParticles('Hlt2TFKaons')
-SeqHlt2TFParticles.Members += [ Hlt2TFPions, Hlt2TFKaons ]
+Hlt2TFPionsForTopo = PreLoadParticles('Hlt2TFPionsForTopo')
+Hlt2TFKaonsForTopo = PreLoadParticles('Hlt2TFKaonsForTopo')
+SeqHlt2TFParticlesForTopo.Members += [ Hlt2TFPionsForTopo, Hlt2TFKaonsForTopo ]
 
-Hlt2TFPions.addTool(PhysDesktop)
-Hlt2TFPions.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker"
-Hlt2TFPions.PhysDesktop.addTool(NoPIDsParticleMaker)
-Hlt2TFPions.PhysDesktop.NoPIDsParticleMaker.Inputs = [ "Hlt/ProtoP/TFCharged" ]
-Hlt2TFPions.PhysDesktop.NoPIDsParticleMaker.Particle = "pion"
-Hlt2TFPions.DecayDescriptor = "Pion"
+Hlt2TFPionsForTopo.addTool(PhysDesktop)
+Hlt2TFPionsForTopo.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker"
+Hlt2TFPionsForTopo.PhysDesktop.addTool(NoPIDsParticleMaker)
+Hlt2TFPionsForTopo.PhysDesktop.NoPIDsParticleMaker.Inputs = [ "Hlt/ProtoP/TFChargedForTopo" ]
+Hlt2TFPionsForTopo.PhysDesktop.NoPIDsParticleMaker.Particle = "pion"
+Hlt2TFPionsForTopo.DecayDescriptor = "Pion"
 
-Hlt2TFKaons.addTool(PhysDesktop)
-Hlt2TFKaons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker"
-Hlt2TFKaons.PhysDesktop.addTool(NoPIDsParticleMaker)
-Hlt2TFKaons.PhysDesktop.NoPIDsParticleMaker.Inputs = [ "Hlt/ProtoP/TFCharged" ]
-Hlt2TFKaons.PhysDesktop.NoPIDsParticleMaker.Particle = "kaon"
-Hlt2TFKaons.DecayDescriptor = "Kaon"
+Hlt2TFKaonsForTopo.addTool(PhysDesktop)
+Hlt2TFKaonsForTopo.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker"
+Hlt2TFKaonsForTopo.PhysDesktop.addTool(NoPIDsParticleMaker)
+Hlt2TFKaonsForTopo.PhysDesktop.NoPIDsParticleMaker.Inputs = [ "Hlt/ProtoP/TFChargedForTopo" ]
+Hlt2TFKaonsForTopo.PhysDesktop.NoPIDsParticleMaker.Particle = "kaon"
+Hlt2TFKaonsForTopo.DecayDescriptor = "Kaon"
 
 #* To get the RICH kaons
-#Hlt2TFKaons.addTool(PhysDesktop)
-#Hlt2TFKaons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker"
-#Hlt2TFKaons.PhysDesktop.addTool(CombinedParticleMaker)
-#Hlt2TFKaons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = 0
-#Hlt2TFKaons.PhysDesktop.CombinedParticleMaker.InputProtoParticles = "Hlt/ProtoP/TFCharged"
-#Hlt2TFKaons.PhysDesktop.CombinedParticleMaker.Particles = ["kaon"]
-#Hlt2TFKaons.PhysDesktop.CombinedParticleMaker.addTool(TrackSelector)
-#Hlt2TFKaons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = ["Long"]
-#Hlt2TFKaons.PhysDesktop.CombinedParticleMaker.addTool(ProtoParticleCALOFilter('Kaon'))
-#Hlt2TFKaons.PhysDesktop.CombinedParticleMaker.Kaon.Selection = [ "RequiresDet='RICH' CombDLL(k-pi)>'-5.0'" ]
-#Hlt2TFKaons.DecayDescriptor = "Kaon"
+#Hlt2TFKaonsForTopo.addTool(PhysDesktop)
+#Hlt2TFKaonsForTopo.PhysDesktop.ParticleMakerType = "CombinedParticleMaker"
+#Hlt2TFKaonsForTopo.PhysDesktop.addTool(CombinedParticleMaker)
+#Hlt2TFKaonsForTopo.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = 0
+#Hlt2TFKaonsForTopo.PhysDesktop.CombinedParticleMaker.InputProtoParticles = "Hlt/ProtoP/TFChargedForTopo"
+#Hlt2TFKaonsForTopo.PhysDesktop.CombinedParticleMaker.Particles = ["kaon"]
+#Hlt2TFKaonsForTopo.PhysDesktop.CombinedParticleMaker.addTool(TrackSelector)
+#Hlt2TFKaonsForTopo.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = ["Long"]
+#Hlt2TFKaonsForTopo.PhysDesktop.CombinedParticleMaker.addTool(ProtoParticleCALOFilter('Kaon'))
+#Hlt2TFKaonsForTopo.PhysDesktop.CombinedParticleMaker.Kaon.Selection = [ "RequiresDet='RICH' CombDLL(k-pi)>'-5.0'" ]
+#Hlt2TFKaonsForTopo.DecayDescriptor = "Kaon"
 
 
 #---------------------------------------------------------------------
 # Kaons using RICH HLT reco results
 #---------------------------------------------------------------------
-HltRichPIDsKaons = PreLoadParticles('HltRichPIDsKaons')
-SeqHlt2TFParticles.Members += [ HltRichPIDsKaons ]
+HltRichPIDsTFKaonsForTopo = PreLoadParticles('HltRichPIDsTFKaonsForTopo')
+SeqHlt2TFParticlesForTopo.Members += [ HltRichPIDsTFKaonsForTopo ]
 
-HltRichPIDsKaons.addTool(PhysDesktop)
-HltRichPIDsKaons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker"
-HltRichPIDsKaons.PhysDesktop.addTool(CombinedParticleMaker)
-HltRichPIDsKaons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = 0
-HltRichPIDsKaons.PhysDesktop.CombinedParticleMaker.InputProtoParticles = "Hlt/ProtoP/TFCharged"
-HltRichPIDsKaons.PhysDesktop.CombinedParticleMaker.Particles = ["kaon"]
-HltRichPIDsKaons.PhysDesktop.CombinedParticleMaker.addTool(TrackSelector())
-HltRichPIDsKaons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = ["Long"]
-HltRichPIDsKaons.PhysDesktop.CombinedParticleMaker.addTool(ProtoParticleCALOFilter('Kaon'))
-HltRichPIDsKaons.PhysDesktop.CombinedParticleMaker.Kaon.Selection = ["RequiresDet='RICH' CombDLL(k-pi)>'-5.0'"]
-HltRichPIDsKaons.DecayDescriptor = "Kaon"
+HltRichPIDsTFKaonsForTopo.addTool(PhysDesktop)
+HltRichPIDsTFKaonsForTopo.PhysDesktop.ParticleMakerType = "CombinedParticleMaker"
+HltRichPIDsTFKaonsForTopo.PhysDesktop.addTool(CombinedParticleMaker)
+HltRichPIDsTFKaonsForTopo.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = 0
+HltRichPIDsTFKaonsForTopo.PhysDesktop.CombinedParticleMaker.InputProtoParticles = "Hlt/ProtoP/TFChargedForTopo"
+HltRichPIDsTFKaonsForTopo.PhysDesktop.CombinedParticleMaker.Particles = ["kaon"]
+HltRichPIDsTFKaonsForTopo.PhysDesktop.CombinedParticleMaker.addTool(TrackSelector())
+HltRichPIDsTFKaonsForTopo.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = ["Long"]
+HltRichPIDsTFKaonsForTopo.PhysDesktop.CombinedParticleMaker.addTool(ProtoParticleCALOFilter('Kaon'))
+HltRichPIDsTFKaonsForTopo.PhysDesktop.CombinedParticleMaker.Kaon.Selection = ["RequiresDet='RICH' CombDLL(k-pi)>'-5.0'"]
+HltRichPIDsTFKaonsForTopo.DecayDescriptor = "Kaon"
 
 #---------------------------------------------------------------------
 # Muons sequence
 #---------------------------------------------------------------------
-SeqHlt2TFMuons = GaudiSequencer('SeqHlt2TFMuons')
-SeqHlt2TFParticles.Members += [ SeqHlt2TFMuons ]
-SeqHlt2TFMuons.IgnoreFilterPassed = 1
+SeqHlt2TFMuonsForTopo = GaudiSequencer('SeqHlt2TFMuons')
+SeqHlt2TFParticlesForTopo.Members += [ SeqHlt2TFMuonsForTopo ]
+SeqHlt2TFMuonsForTopo.IgnoreFilterPassed = 1
 
 #---------------------------------------------------------------------
 # Muons from Long tracks
 #---------------------------------------------------------------------
-Hlt2TFMuons = PreLoadParticles('Hlt2TFMuons')
-SeqHlt2TFMuons.Members += [ Hlt2TFMuons ]
+Hlt2TFMuonsForTopo = PreLoadParticles('Hlt2TFMuons')
+SeqHlt2TFMuonsForTopo.Members += [ Hlt2TFMuons ]
 
-Hlt2TFMuons.addTool(PhysDesktop)
-Hlt2TFMuons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
-Hlt2TFMuons.PhysDesktop.addTool(CombinedParticleMaker)
-Hlt2TFMuons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = 0
-Hlt2TFMuons.PhysDesktop.CombinedParticleMaker.InputProtoParticles =  "/Event/Hlt/ProtoP/TFCharged"
-Hlt2TFMuons.PhysDesktop.CombinedParticleMaker.Particles = ["muon"]
-Hlt2TFMuons.PhysDesktop.CombinedParticleMaker.addTool(ProtoParticleMUONFilter('Muon'))
-Hlt2TFMuons.PhysDesktop.CombinedParticleMaker.Muon.Selection = ["RequiresDet='MUON'"]
-Hlt2TFMuons.PhysDesktop.CombinedParticleMaker.addTool(TrackSelector())
-Hlt2TFMuons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = ["Long"]
-Hlt2TFMuons.DecayDescriptor = "Muon"
+Hlt2TFMuonsForTopo.addTool(PhysDesktop)
+Hlt2TFMuonsForTopo.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
+Hlt2TFMuonsForTopo.PhysDesktop.addTool(CombinedParticleMaker)
+Hlt2TFMuonsForTopo.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = 0
+Hlt2TFMuonsForTopo.PhysDesktop.CombinedParticleMaker.InputProtoParticles =  "/Event/Hlt/ProtoP/TFChargedForTopo"
+Hlt2TFMuonsForTopo.PhysDesktop.CombinedParticleMaker.Particles = ["muon"]
+Hlt2TFMuonsForTopo.PhysDesktop.CombinedParticleMaker.addTool(ProtoParticleMUONFilter('Muon'))
+Hlt2TFMuonsForTopo.PhysDesktop.CombinedParticleMaker.Muon.Selection = ["RequiresDet='MUON'"]
+Hlt2TFMuonsForTopo.PhysDesktop.CombinedParticleMaker.addTool(TrackSelector())
+Hlt2TFMuonsForTopo.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = ["Long"]
+Hlt2TFMuonsForTopo.DecayDescriptor = "Muon"
 
 #---------------------------------------------------------------------
 # Special case for electrons 
 #---------------------------------------------------------------------
-Hlt2TFElectrons = PreLoadParticles('Hlt2TFElectrons')
-SeqHlt2TFParticles.Members += [ Hlt2TFElectrons ]
+Hlt2TFElectronsForTopo = PreLoadParticles('Hlt2TFElectrons')
+SeqHlt2TFParticlesForTopo.Members += [ Hlt2TFElectronsForTopo ]
 
-Hlt2TFElectrons.addTool(PhysDesktop)
-Hlt2TFElectrons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker"
-Hlt2TFElectrons.PhysDesktop.addTool(CombinedParticleMaker)
-Hlt2TFElectrons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = 0
-Hlt2TFElectrons.PhysDesktop.CombinedParticleMaker.Particles =  ["electron"]
-Hlt2TFElectrons.PhysDesktop.CombinedParticleMaker.InputProtoParticles =  "/Event/Hlt/ProtoP/TFCharged"
-Hlt2TFElectrons.PhysDesktop.CombinedParticleMaker.addTool(ProtoParticleCALOFilter('Electron'))
-Hlt2TFElectrons.PhysDesktop.CombinedParticleMaker.Electron.Selection = ["RequiresDet='CALO' CombDLL(e-pi)>'-2.0'"]
-Hlt2TFElectrons.DecayDescriptor = "Electron"
+Hlt2TFElectronsForTopo.addTool(PhysDesktop)
+Hlt2TFElectronsForTopo.PhysDesktop.ParticleMakerType = "CombinedParticleMaker"
+Hlt2TFElectronsForTopo.PhysDesktop.addTool(CombinedParticleMaker)
+Hlt2TFElectronsForTopo.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = 0
+Hlt2TFElectronsForTopo.PhysDesktop.CombinedParticleMaker.Particles =  ["electron"]
+Hlt2TFElectronsForTopo.PhysDesktop.CombinedParticleMaker.InputProtoParticles =  "/Event/Hlt/ProtoP/TFChargedForTopo"
+Hlt2TFElectronsForTopo.PhysDesktop.CombinedParticleMaker.addTool(ProtoParticleCALOFilter('Electron'))
+Hlt2TFElectronsForTopo.PhysDesktop.CombinedParticleMaker.Electron.Selection = ["RequiresDet='CALO' CombDLL(e-pi)>'-2.0'"]
+Hlt2TFElectronsForTopo.DecayDescriptor = "Electron"
 
 
