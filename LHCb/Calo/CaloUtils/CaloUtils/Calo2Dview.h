@@ -1,4 +1,4 @@
-// $Id: Calo2Dview.h,v 1.5 2008-10-29 10:47:43 cattanem Exp $
+// $Id: Calo2Dview.h,v 1.6 2009-04-06 15:48:40 odescham Exp $
 #ifndef CALODAQ_CALO2DVIEW_H 
 #define CALODAQ_CALO2DVIEW_H 1
 
@@ -17,6 +17,8 @@
 #include "Event/L0PrsSpdHit.h"
 #include "Event/L0CaloCandidate.h"
 #include "Event/CaloCluster.h"
+#include "GaudiKernel/Point3DTypes.h"
+#include <TH2.h> 
 
 /** @class Calo2Dview Calo2Dview.h
  *  
@@ -32,9 +34,9 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode finalize  ();    ///< Algorithm finalization
-protected:
-  AIDA::IHistogram2D* bookCalo2D(const HistoID unit,const std::string title, std::string name );
-  AIDA::IHistogram2D* bookCalo2D(const HistoID unit,const std::string title, unsigned  int calo );
+
+  AIDA::IHistogram2D* bookCalo2D(const HistoID unit,const std::string title, std::string name ,int area =-1);
+  AIDA::IHistogram2D* bookCalo2D(const HistoID unit,const std::string title, unsigned  int calo , int area = -1);
   AIDA::IHistogram2D* fillCalo2D(const HistoID unit, LHCb::MCCaloHit mchit, const std::string title="");
   AIDA::IHistogram2D* fillCalo2D(const HistoID unit, LHCb::MCCaloDigit mcdigit, const std::string title="");
   AIDA::IHistogram2D* fillCalo2D(const HistoID unit, LHCb::CaloDigit digit, const std::string title="");
@@ -55,15 +57,21 @@ protected:
   void setOffset(double offset){m_offset = offset;};
   void setFlux(bool flux){m_flux = flux ;}
   void setEnergyWeighted(bool energyWeighted){m_energyWeighted = energyWeighted ;}
+  void setGeometricalView(bool geo){m_geo = geo;}
+  void setOneDimension(bool dim){m_1d = dim;}
   
-
+protected:
   // attributes
   DeCalorimeter* m_calo;
   int m_caloType;
   unsigned int m_reg;
   unsigned int m_centre;
-  double m_xsize;
-  double m_ysize;
+  std::vector<double> m_xsize;
+  std::vector<double> m_ysize;
+  std::vector<LHCb::CaloCellID> m_refCell;
+  int m_fCard;
+  int m_lCard;
+  int m_nChan;
   double  m_threshold;
   double  m_offset;
   bool m_dim;
@@ -71,12 +79,23 @@ protected:
   bool m_pin;
   bool m_energyWeighted;
   bool m_flux;
+  bool m_geo;
+  bool m_split;
+  bool m_1d;
+  int m_bin1d;
+  std::string m_lab;
 private:
+  int centre(int x , int area);
+  std::string getUnit(std::string unit, int calo, int area);
+  std::string getTitle(std::string title, int calo, int area);
+
   std::map<int,DeCalorimeter*> m_caloMap;
+  std::map<int,std::vector<LHCb::CaloCellID> > m_refCellMap;
   std::map<int,int> m_centreMap;
   std::map<int,int> m_regMap;
-  std::map<int,double> m_xsizeMap;
-  std::map<int,double> m_ysizeMap;
+  std::map<int,int> m_nChanMap;
+  std::map<int,int> m_fCardMap;
+  std::map<int,int> m_lCardMap;
   //
   //
   std::map<HistoID,unsigned int> caloViewMap;

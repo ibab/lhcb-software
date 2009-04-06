@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.58 2009-03-20 17:57:43 vegorych Exp $
+# $Id: requirements,v 1.59 2009-04-06 15:48:40 odescham Exp $
 # =============================================================================
 # Created    : 02/11/2001
 # Author     : Vanya BELYAEV belyaev@lapp.in2p3.fr 
@@ -32,6 +32,4 @@ library             CaloUtils  -import=AIDA  *.cpp
 # ================= patterns ==================================================
 apply_pattern       linker_library library=CaloUtils
 
-# =============================================================================
-# The END
-# =============================================================================
+macro_append CaloUtils_shlibflags " -lHist  -lGraf -lRIO  " WIN32 " libHist.lib libGraf.lib libRIO.lib"
