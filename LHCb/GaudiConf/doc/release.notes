@@ -2,7 +2,14 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
-!======================== GaudiConf v12r2 2009-04-03 ========================
+!======================== GaudiConf v12r2 2009-04-06 ========================
+! 2009-04-06 - Marco Cattaneo
+ - In DstConf(), replace bool Simulation property with string SimType. Possible
+   values are
+	 . "None" (same as Simulation=False)
+   . "Full" (same as Simulation=True)
+   . "Minimal" (same as "None" plus Gen/Header, MC/Header, pSim/Vertices) 
+
 ! 2009-04-03 - Marco Cattaneo
  - Add DigiConf() configurable, to set up Boole output
  - DstConf() configurable now prints Dst content

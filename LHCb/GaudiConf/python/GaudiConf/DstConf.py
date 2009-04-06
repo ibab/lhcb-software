@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: DstConf.py,v 1.9 2009-04-03 11:01:11 cattanem Exp $"
+__version__ = "$Id: DstConf.py,v 1.10 2009-04-06 15:26:29 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -10,20 +10,20 @@ import GaudiKernel.ProcessJobOptions
 class DstConf(ConfigurableUser):
     __slots__ = {
          "DstType"       : "NONE"
+       , "SimType"       : "None"
        , "EnableUnpack"  : False
        , "PackType"      : "TES"
        , "PackSequencer" : None
-       , "Simulation"    : False
        , "Writer"        : "DstWriter"
        , "OutputName"    : ""
          }
 
     _propertyDocDct = { 
         'DstType'       : """ Type of dst, can be ['DST','RDST'] """
+       ,'SimType'       : """ Type of simulation output, can be ['None','Minimal','Full'] """
        ,'EnableUnpack'  : """ Flag to set up on demand unpacking of DST containers """
        ,'PackType'      : """ Type of packing for the DST, can be ['NONE','TES','MDF'] """
        ,'PackSequencer' : """ Sequencer in which to run the packing algorithms """
-       ,'Simulation'    : """ Flag to define whether to store simulation objects """
        ,'Writer'        : """ Name of OutputStream writing the DST """
        ,'OutputName'    : """ Name of the output file, for MDF writing """ 
        }
@@ -99,18 +99,21 @@ class DstConf(ConfigurableUser):
                 optItems += [ "/Event/Phys/Selections#1" ]
 
                 # Add the simulation objects (POOL DST only)
-                if self.getProp( "Simulation" ):
-                    items += [
+                if self.getProp("SimType").capitalize() != "None":
+                    # Minimal MC output.
+                    items += [ "/Event/Gen/Header#1"
+                             , "/Event/MC/Header#1"
+                             , "/Event/pSim/MCVertices#1" ]
+
+                    if self.getProp("SimType").capitalize() == "Full":
+                        items += [
                              # Links to MCParticles created in Brunel
                                "/Event/Link/Rec/Track/Best#1"
 
                              # Objects propagated from Gauss
-                             , "/Event/Gen/Header#1"
                              , "/Event/Gen/Collisions#1"
                              , "/Event/Gen/HepMCEvents#1"
-                             , "/Event/MC/Header#1"
                              , "/Event/pSim/MCParticles#1"
-                             , "/Event/pSim/MCVertices#1"
 
                              # Objects propagated from Boole
                              , "/Event/MC/DigiHeader#1"
@@ -242,7 +245,7 @@ class DstConf(ConfigurableUser):
         DataOnDemandSvc().AlgMap[ "/Event/Rec/Vertex/V0" ]         = unpackV0
 
         # If simulation, set up also unpacking of MC Truth
-        if self.getProp( "Simulation" ):
+        if self.getProp("SimType").capitalize() != "None":
             from Configurables import UnpackMCParticle, UnpackMCVertex
             DataOnDemandSvc().AlgMap[ "/Event/MC/Particles" ] = UnpackMCParticle()
             DataOnDemandSvc().AlgMap[ "/Event/MC/Vertices" ]  = UnpackMCVertex()
