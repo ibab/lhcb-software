@@ -1,4 +1,4 @@
-// $Id: Particle2MCParticle.h,v 1.8 2009-04-01 16:33:13 jpalac Exp $
+// $Id: Particle2MCParticle.h,v 1.9 2009-04-06 13:10:38 jpalac Exp $
 #ifndef KERNEL_PARTICLE2MCPARTICLE_H 
 #define KERNEL_PARTICLE2MCPARTICLE_H 1
 
@@ -92,16 +92,7 @@ namespace Particle2MCParticle {
    **/
   ToVector 
   FilterMCAssociations(const ToVector& mcAssociations,
-                       const LHCb::MCParticle::ConstVector& mcps)
-  {
-    const Particle2MCParticle::NotInRange pred(&mcps);
-    Particle2MCParticle::ToVector tmp(mcAssociations);
-    Particle2MCParticle::ToVector::iterator new_last = 
-      std::remove_if(tmp.begin(), tmp.end(), pred);
-    return Particle2MCParticle::ToVector(tmp.begin(), new_last);
-  }
-  
-
+                       const LHCb::MCParticle::ConstVector& mcps);
 
 }
 #endif // KERNEL_PARTICLE2MCPARTICLE_H
