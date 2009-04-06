@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.166 2009-04-03 06:33:00 jluisier Exp $
+!$Id: release.notes,v 1.167 2009-04-06 07:39:08 mneedham Exp $
 !Package         : STDet
 !Package manager : M. Needham
 i!-------------------------------------------------------------------------
@@ -11,6 +11,7 @@ i!-------------------------------------------------------------------------
  - Add access to ProdID condition in DeITSector and DeTTHalfModule
  - Add prodID method in DeSTSector
 
+! 2009-04-06 Clean up printout in case try to make invalid traj [DeSTSector]
 
 ! 2009-03-30 M Needham
  - Add access to status Condition to DeSTSector

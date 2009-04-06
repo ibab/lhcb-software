@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.54 2009-04-03 06:33:00 jluisier Exp $
+// $Id: DeSTSector.cpp,v 1.55 2009-04-06 07:39:08 mneedham Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -322,8 +322,8 @@ DeSTSector::trajectory(const STChannelID& aChan, const double offset) const
   
   if (contains(aChan) == false){
     MsgStream msg(msgSvc(), name() );
-    msg << MSG::ERROR << "Failed to link " << aChan.uniqueSector() << " " 
-        << elementID().uniqueSector() << endmsg; 
+    msg << MSG::ERROR << "Failed to link to sector " << nickname() 
+        << " test strip  number "  << aChan.strip() << " strip "  << endmsg; 
     throw GaudiException( "Failed to make trajectory",
                           "DeSTSector.cpp", StatusCode::FAILURE );
   }
