@@ -1,4 +1,4 @@
-// $Id: MCMatchObjP2MCRelator.h,v 1.6 2009-03-13 18:09:26 jpalac Exp $
+// $Id: MCMatchObjP2MCRelator.h,v 1.7 2009-04-06 20:20:02 jpalac Exp $
 #ifndef MCMATCHOBJP2MCRELATOR_H 
 #define MCMATCHOBJP2MCRELATOR_H 1
 
@@ -24,8 +24,9 @@ namespace LoKi
  *  @author Juan PALACIOS
  *  @date   2009-03-04
  */
-class MCMatchObjP2MCRelator : public P2MCPBase,
-                              virtual public IP2MCP {
+class MCMatchObjP2MCRelator : public P2MCPBase
+
+{
 public: 
   /// Standard constructor
   MCMatchObjP2MCRelator( const std::string& type, 
