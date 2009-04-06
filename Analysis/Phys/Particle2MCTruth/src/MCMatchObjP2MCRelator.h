@@ -1,14 +1,10 @@
-// $Id: MCMatchObjP2MCRelator.h,v 1.7 2009-04-06 20:20:02 jpalac Exp $
+// $Id: MCMatchObjP2MCRelator.h,v 1.8 2009-04-06 20:20:59 jpalac Exp $
 #ifndef MCMATCHOBJP2MCRELATOR_H 
 #define MCMATCHOBJP2MCRELATOR_H 1
 
 // Include files
 #include <functional>
 // from Gaudi
-#include "GaudiAlg/GaudiTool.h"
-//#include "Kernel/IParticle2MCAssociator.h"            // Interface
-//#include "Kernel/Particle2MCAssociatorBase.h"
-#include "P2MCP/IP2MCP.h"  
 #include "P2MCP/P2MCPBase.h"
 #include "LoKi/MCMatch.h"
 #include "LoKi/MCMatchObj.h"
