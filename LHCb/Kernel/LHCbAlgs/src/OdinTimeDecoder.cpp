@@ -1,4 +1,4 @@
-// $Id: OdinTimeDecoder.cpp,v 1.3 2009-02-06 11:01:53 marcocle Exp $
+// $Id: OdinTimeDecoder.cpp,v 1.4 2009-04-06 15:54:28 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -34,7 +34,7 @@ OdinTimeDecoder::OdinTimeDecoder( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
   : GaudiTool ( type, name , parent ),
-    m_odinDecoder("ODINDecodeTool"),
+    m_odinDecoder("ODINDecodeTool",this),
     m_currentRun(0)
 {
   declareInterface<IEventTimeDecoder>(this);

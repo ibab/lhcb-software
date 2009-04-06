@@ -4,6 +4,10 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2009-04-06 - Olivier Deschamps
+ - OdinTimeDecoder : make the tool ODINDecodeTool private
+
+
 ! 2009-03-17 - Marco Cattaneo
  - Fix TESCheck.cpp for Gaudi v21 (backward compatible)
  - Replace all endreq (deprecated) by endmsg
