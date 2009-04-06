@@ -1,4 +1,4 @@
-// $Id: IParticle2MCWeightedAssociator.h,v 1.5 2009-03-26 17:57:38 jpalac Exp $
+// $Id: IParticle2MCWeightedAssociator.h,v 1.6 2009-04-06 15:41:57 jpalac Exp $
 #ifndef KERNEL_IPARTICLE2MCWEIGHTEDASSOCIATOR_H 
 #define KERNEL_IPARTICLE2MCWEIGHTEDASSOCIATOR_H 1
 
@@ -6,8 +6,6 @@
 // from STL
 #include <string>
 
-// from Gaudi
-#include "GaudiKernel/IAlgTool.h"
 
 //
 #include "Kernel/Particle2MCParticle.h"
@@ -28,8 +26,7 @@ static const InterfaceID IID_IParticle2MCWeightedAssociator ( "IParticle2MCWeigh
  *  @author Juan PALACIOS
  *  @date   2009-03-25
  */
-class IParticle2MCWeightedAssociator : virtual public IAlgTool,
-                                       virtual public IParticle2MCAssociator
+class IParticle2MCWeightedAssociator : virtual public IParticle2MCAssociator
 {
 public: 
 
