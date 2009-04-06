@@ -1,4 +1,4 @@
-// $Id: Particle2MCAssociatorBase.h,v 1.18 2009-03-27 16:41:22 jpalac Exp $
+// $Id: Particle2MCAssociatorBase.h,v 1.19 2009-04-06 15:43:42 jpalac Exp $
 #ifndef PARTICLE2MCASSOCIATORBASE_H 
 #define PARTICLE2MCASSOCIATORBASE_H 1
 
@@ -7,7 +7,6 @@
 #include "GaudiAlg/GaudiTool.h"
 // LHCb
 #include "Event/MCParticle.h"
-#include "Kernel/IParticle2MCAssociator.h"            // Interface
 #include "Kernel/IParticle2MCWeightedAssociator.h"            // Interface
 
 
