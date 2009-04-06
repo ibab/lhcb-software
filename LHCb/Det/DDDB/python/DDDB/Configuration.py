@@ -121,7 +121,8 @@ class DDDBConf(ConfigurableUser):
         2008-specific configuration.
         """
         # Set the tags
-        self.__set_tag__(["DDDB", "LHCBCOND"], "head-20090213")
+        self.__set_tag__(["DDDB"], "head-20090330")
+        self.__set_tag__(["LHCBCOND"], "head-20090402")
         self.__set_tag__(["SIMCOND"], "sim-20090212")
     
     def __DC06_conf__(self):

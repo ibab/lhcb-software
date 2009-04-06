@@ -7,6 +7,9 @@
 !========================== DDDB v1r16 2009-04-03 ============================
 ! 2009-04-03 - Marco Cattaneo
  - Add 2009 data type and corresponding tags
+ - New default tags for 2008:
+   - head-20090330 for DDDB
+   - head-20090402 for LHCBCOND
 
 ! 2009-03-09 - Marco Cattaneo
  - Remove obsolete file options/DDDB.py
