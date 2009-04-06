@@ -4,6 +4,9 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+! 2009-04-06 - Deschamps Olivier
+ - src/components/OdinTypesFilter : improve finalize printout 
+
 !================ DAQEvent v7r19 2009-03-09 ===========================
 ! 2009-02-25 - Deschamps Olivier
  - src/components/RawBankReadoutStatusMonitor : implement automatic bin labels + few minor fixes

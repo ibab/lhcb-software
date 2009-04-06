@@ -1,4 +1,4 @@
-// $Id: OdinTypesFilter.cpp,v 1.5 2008-12-16 14:06:34 odescham Exp $
+// $Id: OdinTypesFilter.cpp,v 1.6 2009-04-06 15:51:17 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -250,7 +250,10 @@ StatusCode OdinTypesFilter::finalize() {
   info() << "Accepted BXTypes : " << m_bxs << endreq;
   info() << m_log << endreq;
   info() << "Accepted TriggerTypes : " << m_trs << endreq;
-  info() << "   ---> " << m_acc << " accepted events among " << m_all << endreq;
+  info() << m_log << endreq;
+  info() << "Accepted ReadoutTypes : " << m_ros << endreq;
+  info() << m_log << endreq;
+  info() << "TAE Window in [" << m_winmin << "," << m_winmax <<"]"<< endreq;
   
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
