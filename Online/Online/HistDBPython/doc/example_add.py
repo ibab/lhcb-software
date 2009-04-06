@@ -38,6 +38,12 @@ for num in histNum:
 # setting the Output level
 addHistAlg.OutputLevel = INFO 
 
+# PasswordFile points to the file containing the password for HIST_WRITER
+# the options should give the file name of the password 
+# file, either relative to run directory or absolut.
+# default value is 'password'
+#addHistAlg.PasswordFile = "password"
+
 # adding the algorithm to execution list
 app = ApplicationMgr()
 app.TopAlg.append(addHistAlg)
