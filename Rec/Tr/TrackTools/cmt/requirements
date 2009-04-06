@@ -3,7 +3,7 @@
 # Maintainer : Jose Hernando, Eduardo Rodrigues
 #============================================================================
 package           TrackTools
-version           v3r16
+version           v3r17
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -20,6 +20,7 @@ use   PartProp        v*     Kernel
 use   TrackEvent      v*     Event
 use   DigiEvent       v*     Event
 
+use   STKernel        v*     ST
 use   TsaKernel       v*     Tf
 use   TrackFitEvent   v*     Tr
 use   TrackInterfaces v*     Tr
