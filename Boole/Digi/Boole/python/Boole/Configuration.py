@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.47 2009-04-03 11:04:02 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.48 2009-04-06 09:58:00 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -480,6 +480,9 @@ class Boole(LHCbConfigurableUser):
             self.setOtherProps(DigiConf(),["DigiType","TAEPrev","TAENext"])
             if self.getProp("UseSpillover"):
                 self.setOtherProps(DigiConf(),["SpilloverPaths"])
+
+            # In Minimal case, filter the MCVertices before writing
+            ApplicationMgr().TopAlg.append( "FilterMCPrimaryVtx" )
 
         if "L0ETC" in outputs:
             from Configurables import L0Conf

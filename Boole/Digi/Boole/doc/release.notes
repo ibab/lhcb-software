@@ -3,6 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+! 2009-04-06 - Marco Cattaneo
+ - Run FilterMCPrimaryVtx algorithms when writing Minimal MC truth
+
 ! 2009-04-03 - Marco Cattaneo
  - Use new DigiConf configurable to set up DIGI content
  - Remove obsolete option WriteL0Only
