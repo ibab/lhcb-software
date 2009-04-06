@@ -4,6 +4,7 @@
 ! Purpose     : "Interface" to Hijing 
 !-----------------------------------------------------------------------------
 
+!========================= LbHijing v5r0 2009-04-06 ==========================
 ! 2009-03-11 - Patrick Robbe
  - HijingProduction.cpp: set mass units correctly (GeV -> MeV)
 

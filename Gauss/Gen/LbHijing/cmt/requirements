@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.13 2009-03-06 13:25:08 robbep Exp $ 
+# $Id: requirements,v 1.14 2009-04-06 12:38:17 gcorti Exp $ 
 #============================================================================
 # Created    : 2006-07-03
 # Maintainer : Vincenzo Vagnoni
 #============================================================================
 package       LbHijing
-version       v4r2
+version       v5r0
 
 
 # Structure, i.e. directories to process. 
