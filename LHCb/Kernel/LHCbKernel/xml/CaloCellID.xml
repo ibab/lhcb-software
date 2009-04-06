@@ -3,7 +3,7 @@
 <gdd>
 
 <!-- **************************************************************************
-  * $Id: CaloCellID.xml,v 1.11 2009-03-05 15:47:13 odescham Exp $
+  * $Id: CaloCellID.xml,v 1.12 2009-04-06 15:57:15 odescham Exp $
   *****************************************************************************
   * XML-description of CaloCellIDclass                                        *
   * author: Vanya BELYAEV Ivan.Belyaev@itep.ru                                *
@@ -149,6 +149,21 @@
       return contents() == ID.contents() ;
     </code>
   </method>
+
+
+  <method
+    desc    = "return true if the cellID corresponds to a PIN-diode readout channel"
+    name    = "isPin"
+    type    = "bool"
+    const   = "TRUE"
+    access  = "PUBLIC" >
+    <code>
+      return ( CaloCellCode::CaloAreaFromNum( calo(), area() ) == CaloCellCode::AreaName[CaloCellCode::PinArea] );
+    </code>
+  </method>
+
+
+
 
   <method
     name      = "fillStream"

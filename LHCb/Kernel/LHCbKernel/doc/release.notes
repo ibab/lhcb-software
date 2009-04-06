@@ -17,7 +17,6 @@
 
 
 !===================== LHCbKernel v11r2 2009-03-09 ========================
->>>>>>> 1.429
 ! 2009-03-05 - Marco Cattaneo
  - Add option PrintEventTime to LbAppInit, if set prints the event time
    together with the run and event number
