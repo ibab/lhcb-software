@@ -5,6 +5,7 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
+!======================= GaussTracker v6r2 2009-04-06 ========================
 ! 2009-03-26 - Patrick Robbe
  - GetTrackerHitsAlg: add possibility to change location of MCParticles by
    job option
