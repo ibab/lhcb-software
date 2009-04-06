@@ -1,4 +1,4 @@
-// $Id: CaloMergeTAE.cpp,v 1.2 2008-10-27 18:14:26 odescham Exp $
+// $Id: CaloMergeTAE.cpp,v 1.3 2009-04-06 15:45:03 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -146,8 +146,8 @@ void CaloMergeTAE::mergeDigits(){
   LHCb::CaloDigits* newDigits = new LHCb::CaloDigits();
   put( newDigits, m_outDigit );
   //
-  CaloVector<CellParam>& cells = m_calo->cellParams();
-  for( CaloVector<CellParam>::iterator icell = cells.begin() ; icell != cells.end() ; icell++){
+  const CaloVector<CellParam>& cells = m_calo->cellParams();
+  for( CaloVector<CellParam>::const_iterator icell = cells.begin() ; icell != cells.end() ; icell++){
     LHCb::CaloCellID id = (*icell).cellID();
 
     std::stringstream txt("");
@@ -189,8 +189,8 @@ void CaloMergeTAE::mergeAdcs(){
   LHCb::CaloAdcs* newAdcs = new LHCb::CaloAdcs();
   put( newAdcs, m_outAdc );
   //
-  CaloVector<CellParam>& cells = m_calo->cellParams();
-  for( CaloVector<CellParam>::iterator icell = cells.begin() ; icell != cells.end() ; icell++){
+  const CaloVector<CellParam>& cells = m_calo->cellParams();
+  for( CaloVector<CellParam>::const_iterator icell = cells.begin() ; icell != cells.end() ; icell++){
     LHCb::CaloCellID id = (*icell).cellID();
 
     std::stringstream txt("");

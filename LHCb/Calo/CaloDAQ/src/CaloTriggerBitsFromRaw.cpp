@@ -1,4 +1,4 @@
-// $Id: CaloTriggerBitsFromRaw.cpp,v 1.24 2008-06-04 09:49:52 odescham Exp $
+// $Id: CaloTriggerBitsFromRaw.cpp,v 1.25 2009-04-06 15:45:03 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -113,7 +113,7 @@ LHCb::Calo::PrsSpdFiredCells& CaloTriggerBitsFromRaw::prsSpdCells (int source ) 
   int sourceID     ;
   if(m_getRaw)getCaloBanksFromRaw();
   if( NULL == m_banks || 0 == m_banks->size() ){
-    Error("The banks container is empty").ignore();
+    debug() << "The banks container is empty" << endreq;
   }else{    
     for( std::vector<LHCb::RawBank*>::const_iterator itB = m_banks->begin(); 
          itB != m_banks->end() ; ++itB ) {
@@ -125,14 +125,14 @@ LHCb::Calo::PrsSpdFiredCells& CaloTriggerBitsFromRaw::prsSpdCells (int source ) 
       if( !decoded ){
         std::stringstream s("");
         s<< sourceID;
-        Error("Error when decoding bank " + s.str()   + " -> incomplete data - May be corrupted").ignore();
+        debug() << "Error when decoding bank " << s.str()   << " -> incomplete data - May be corrupted" << endreq;
       }
     } 
   }
   if( !found ){
     std::stringstream s("");
     s<< source;
-    Error("rawBank sourceID : " + s.str() + " has not been found").ignore();
+    debug() << "rawBank sourceID : " << s.str() << " has not been found"<<endreq;
   }
   return m_data;
 }

@@ -1,8 +1,11 @@
-// $Id: CaloReCreateMCLinks.cpp,v 1.9 2008-01-25 13:08:36 odescham Exp $
+// $Id: CaloReCreateMCLinks.cpp,v 1.10 2009-04-06 15:45:03 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.9 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.10 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2008/01/25 13:08:36  odescham
+// add Hcal as default in RecreateMCLinks
+//
 // Revision 1.8  2007/08/27 14:03:50  odescham
 // clean unchecked StatusCode
 //

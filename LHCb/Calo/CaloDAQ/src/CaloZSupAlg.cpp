@@ -1,4 +1,4 @@
-// $Id: CaloZSupAlg.cpp,v 1.12 2008-10-27 18:14:26 odescham Exp $
+// $Id: CaloZSupAlg.cpp,v 1.13 2009-04-06 15:45:03 odescham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -32,10 +32,10 @@ CaloZSupAlg::CaloZSupAlg( const std::string& name, ISvcLocator* pSvcLocator)
   declareProperty("OutputDigitData" , m_outputDigitData    ) ;
   declareProperty("ZsupMethod"      , m_zsupMethod         ) ;
   declareProperty("ZsupThreshold"   , m_zsupThreshold      ) ;
-  declareProperty("ZsupNeighbor"   , m_zsupNeighbor=-256  ) ;
+  declareProperty("ZsupNeighbor"    , m_zsupNeighbor=-256  ) ;
   declareProperty("OutputType"      , m_outputType = "Digits"  ) ;
-  declareProperty( "Extension"  ,  m_extension = "" );
-  declareProperty( "StatusOnTES"   , m_statusOnTES = true);
+  declareProperty( "Extension"      ,  m_extension = "" );
+  declareProperty( "StatusOnTES"    , m_statusOnTES = true);
 
 
 

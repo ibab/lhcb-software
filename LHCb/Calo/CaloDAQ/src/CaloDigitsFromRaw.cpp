@@ -1,4 +1,4 @@
-// $Id: CaloDigitsFromRaw.cpp,v 1.14 2009-02-20 11:37:30 odescham Exp $
+// $Id: CaloDigitsFromRaw.cpp,v 1.15 2009-04-06 15:45:03 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -27,13 +27,13 @@ CaloDigitsFromRaw::CaloDigitsFromRaw( const std::string& name,
   if ( m_detectorNum < 0 || m_detectorNum >= (int) CaloCellCode::CaloNums ) 
   { m_detectorNum = CaloCellCode::CaloNumFromName( "Ecal" ) ; }
   
-  declareProperty( "Extension"  ,  m_extension = "" );
-  declareProperty( "OutputType" , m_outputType = "Digits"  ) ;
-  declareProperty( "PinContainer"  ,  m_pinContainerName );
-  declareProperty( "DigitsContainer"  ,  m_outputDigits );
-  declareProperty( "AdcsContainer"   ,  m_outputADCs);
-  declareProperty( "PinContainer"    ,  m_pinContainerName );
-  declareProperty( "StatusOnTES"     , m_statusOnTES = true);
+  declareProperty( "Extension"               ,  m_extension = "" );
+  declareProperty( "OutputType"              ,  m_outputType = "Digits"  ) ;
+  declareProperty( "PinContainer"            ,  m_pinContainerName );
+  declareProperty( "DigitsContainer"         ,  m_outputDigits );
+  declareProperty( "AdcsContainer"           ,  m_outputADCs);
+  declareProperty( "PinContainer"            ,  m_pinContainerName );
+  declareProperty( "StatusOnTES"             ,  m_statusOnTES = true);
 
 
   m_digitOnTES =false  ;
@@ -168,8 +168,6 @@ void CaloDigitsFromRaw::convertSpd ( double energyScale ) {
     }
     debug() <<  m_outputADCs << " CaloAdc container size " << adcs->size() << endreq;
   }
-
-
 } 
 
 //=========================================================================

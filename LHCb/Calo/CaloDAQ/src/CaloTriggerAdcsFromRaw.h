@@ -1,4 +1,4 @@
-// $Id: CaloTriggerAdcsFromRaw.h,v 1.6 2007-12-06 09:31:25 odescham Exp $
+// $Id: CaloTriggerAdcsFromRaw.h,v 1.7 2009-04-06 15:45:03 odescham Exp $
 #ifndef CALOTRIGGERADCSFROMRAW_H 
 #define CALOTRIGGERADCSFROMRAW_H 1
 
@@ -37,6 +37,5 @@ protected:
 private:
   std::vector<LHCb::L0CaloAdc> m_data;
   std::vector<LHCb::L0CaloAdc> m_pinData;
-  unsigned int m_pinArea;
 };
 #endif // CALOTRIGGERADCSFROMRAW_H

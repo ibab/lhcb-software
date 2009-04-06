@@ -1,4 +1,4 @@
-// $Id: CaloTriggerAdcsFromRaw.cpp,v 1.20 2008-06-04 09:49:52 odescham Exp $
+// $Id: CaloTriggerAdcsFromRaw.cpp,v 1.21 2009-04-06 15:45:03 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -58,7 +58,6 @@ StatusCode CaloTriggerAdcsFromRaw::initialize ( ) {
     return StatusCode::FAILURE;
   }
 
-  m_pinArea = m_calo->pinArea();      
   long nCells = m_calo->numberOfCells();
   long nPins = m_calo->numberOfPins();
   m_data.reserve( nCells );
@@ -126,7 +125,7 @@ std::vector<LHCb::L0CaloAdc>& CaloTriggerAdcsFromRaw::adcs (int source ) {
   int sourceID  ;
   if(m_getRaw)getCaloBanksFromRaw();
   if( NULL == m_banks || 0 == m_banks->size() ){
-    Error("The banks container is empty").ignore();
+    debug() << "The banks container is empty"<< endreq;
   }else{
     for( std::vector<LHCb::RawBank*>::const_iterator itB = m_banks->begin(); 
          itB != m_banks->end() ; ++itB ) {
@@ -138,14 +137,14 @@ std::vector<LHCb::L0CaloAdc>& CaloTriggerAdcsFromRaw::adcs (int source ) {
       if( !decoded ){
         std::stringstream s("");
         s<< sourceID;
-        Error("Error when decoding bank " + s.str()   + " -> incomplete data - May be corrupted").ignore();
+        debug() << "Error when decoding bank " << s.str()<< " -> incomplete data - May be corrupted"<< endreq;
       }
     } 
   }
   if( !found ){
     std::stringstream s("");
     s<< source;
-    Error("rawBank sourceID : " + s.str() + " has not been found").ignore();
+    debug() << "rawBank sourceID : " << s.str() << " has not been found"<<endreq;
   }
   return m_data ;
 }
@@ -196,7 +195,7 @@ bool CaloTriggerAdcsFromRaw::getData ( LHCb::RawBank* bank ){
       LHCb::CaloCellID id1( lastID );
       if ( 0 != adc1 ) {
         LHCb::L0CaloAdc dum( id1, adc1 );
-        if( m_pinArea != id1.area() ){
+        if( !id1.isPin() ){
           m_data.push_back( dum );
         }else{
           m_pinData.push_back( dum );
@@ -215,7 +214,7 @@ bool CaloTriggerAdcsFromRaw::getData ( LHCb::RawBank* bank ){
       LHCb::CaloCellID id2( ++lastID );
       if ( 0 != adc2 ) {
         LHCb::L0CaloAdc dum( id2, adc2 );
-        if( m_pinArea != id2.area() ){
+        if( !id2.isPin() ){
           m_data.push_back( dum );
         }else{
           m_pinData.push_back( dum );
@@ -305,7 +304,7 @@ bool CaloTriggerAdcsFromRaw::getData ( LHCb::RawBank* bank ){
             
             if ( 0 != id.index() ) {
               LHCb::L0CaloAdc temp( id, adc );
-              if( m_pinArea != id.area() ){
+              if( !id.isPin() ){
                 m_data.push_back( temp );
               }else{
                 m_pinData.push_back( temp );

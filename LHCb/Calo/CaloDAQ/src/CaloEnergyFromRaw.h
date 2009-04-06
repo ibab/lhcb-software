@@ -1,4 +1,4 @@
-// $Id: CaloEnergyFromRaw.h,v 1.9 2007-12-06 09:31:24 odescham Exp $
+// $Id: CaloEnergyFromRaw.h,v 1.10 2009-04-06 15:45:03 odescham Exp $
 #ifndef CALOENERGYFROMRAW_H 
 #define CALOENERGYFROMRAW_H 1
 
@@ -43,7 +43,6 @@ protected:
 
 private:
   double   m_pedShift;
-  unsigned int      m_pinArea;
   std::vector<LHCb::CaloAdc>    m_pinData;
   std::vector<LHCb::CaloAdc>    m_data;
   std::vector<LHCb::CaloDigit>  m_digits;

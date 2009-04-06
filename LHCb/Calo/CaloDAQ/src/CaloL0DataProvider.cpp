@@ -177,14 +177,14 @@ bool CaloL0DataProvider::decodeTell1 (int source) {
     if( !decoded ){
       std::stringstream s("");
       s<< sourceID;
-      Error("Error when decoding bank " + s.str()   + " -> incomplete data - May be corrupted").ignore();
+      debug() << "Error when decoding bank " << s.str()   << " -> incomplete data - May be corrupted"<<endreq;
     }
     m_tell1s++; // count the number of decoded TELL1
   }
   if( !found ){
     std::stringstream s("");
     s<< source;
-    Error("rawBank sourceID : " + s.str() + " has not been found").ignore();
+    debug() <<"rawBank sourceID : " + s.str() + " has not been found"<< endreq;
   }
   return decoded;
 }

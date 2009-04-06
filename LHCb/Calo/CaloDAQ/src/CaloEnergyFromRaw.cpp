@@ -1,4 +1,4 @@
-// $Id: CaloEnergyFromRaw.cpp,v 1.24 2008-06-04 09:49:51 odescham Exp $
+// $Id: CaloEnergyFromRaw.cpp,v 1.25 2009-04-06 15:45:03 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -65,7 +65,6 @@ StatusCode CaloEnergyFromRaw::initialize ( ) {
     return StatusCode::FAILURE;
   }
   
-  m_pinArea = m_calo->pinArea();      
   m_pedShift = m_calo->pedestalShift();
   long nCells = m_calo->numberOfCells();
   long nPins  = m_calo->numberOfPins();
@@ -147,7 +146,7 @@ std::vector<LHCb::CaloAdc>& CaloEnergyFromRaw::adcs (int source) {
   bool found   = false;
   if(m_getRaw)getCaloBanksFromRaw();
   if( NULL == m_banks || 0 == m_banks->size() ){
-    Error("The banks container is empty").ignore();
+    debug() << "The banks container is empty"<< endreq;
   }else{
     for( std::vector<LHCb::RawBank*>::const_iterator itB = m_banks->begin(); 
          itB != m_banks->end() ; ++itB ) {
@@ -162,14 +161,14 @@ std::vector<LHCb::CaloAdc>& CaloEnergyFromRaw::adcs (int source) {
       if( !decoded ){
         std::stringstream s("");
         s<< sourceID;
-        Error("Error when decoding bank " + s.str()   + " -> incomplete data - May be corrupted").ignore();
+        debug() <<"Error when decoding bank " << s.str()   << " -> incomplete data - May be corrupted"<< endreq;
       }
     } 
   }
   if( !found ){
     std::stringstream s("");
     s<< source;
-    Error("rawBank sourceID : " + s.str() + " has not been found").ignore();
+    debug() <<"rawBank sourceID : " << s.str() << " has not been found"<<endreq;
   }
   
   return m_data ;
@@ -266,7 +265,7 @@ bool CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
       }
 
       if ( 0 != cellId.index() ) {
-        if( m_pinArea != cellId.area() ){
+        if( !cellId.isPin() ){
           m_data.push_back( temp );
         }else{
           m_pinData.push_back( temp );
@@ -371,7 +370,7 @@ bool CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
         //== Keep only valid cells
         if ( 0 != id.index() ) {
           LHCb::CaloAdc temp( id, adc);
-          if( m_pinArea != id.area() ){
+          if( !id.isPin() ){
               m_data.push_back( temp );
           }else{
             m_pinData.push_back( temp );
@@ -461,7 +460,7 @@ bool CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
 
 
         if ( 0 != id.index() ) {
-          if( m_pinArea != id.area() ){
+          if( !id.isPin() ){
             m_data.push_back( temp );
           }else{
             m_pinData.push_back( temp );

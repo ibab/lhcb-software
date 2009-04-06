@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.cpp,v 1.32 2009-03-13 10:42:27 odescham Exp $
+// $Id: CaloReadoutTool.cpp,v 1.33 2009-04-06 15:45:03 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -57,7 +57,7 @@ bool CaloReadoutTool::getCaloBanksFromRaw( ) {
   if( exist<LHCb::RawEvent>( m_raw ) ){
     rawEvt= get<LHCb::RawEvent>( m_raw );
   }else  {
-    if(m_first)info()<<"WARNING : rawEvent not found at location  (message will be suppressed)'" << rootInTES() << m_raw <<endreq;
+    if(m_first)debug()<<"WARNING : rawEvent not found at location  (message will be suppressed)'" << rootInTES() << m_raw <<endreq;
     m_first=false;
     return false;
   }
@@ -86,7 +86,7 @@ bool CaloReadoutTool::getCaloBanksFromRaw( ) {
     }    
     
     if ( 0 == m_banks || 0 == m_banks->size() ){
-      Warning("WARNING : None of short and packed banks have been found ").ignore();
+      if ( msgLevel( MSG::DEBUG) )debug() << "WARNING : None of short and packed banks have been found "<<endreq;
       return false;
     }else{
       if( !m_packedIsDefault){      
@@ -122,8 +122,8 @@ bool CaloReadoutTool::getCaloBanksFromRaw( ) {
   }  
 
   if(m_packed){  // TELL1 format : 1 source per TELL1
-    std::vector<Tell1Param>& tell1s = m_calo->tell1Params();
-    for(std::vector<Tell1Param>::iterator itt = tell1s.begin() ; itt != tell1s.end() ; itt++){
+    const std::vector<Tell1Param>& tell1s = m_calo->tell1Params();
+    for(std::vector<Tell1Param>::const_iterator itt = tell1s.begin() ; itt != tell1s.end() ; itt++){
       bool ok=false;
       for(std::vector<int>::iterator it = sources.begin() ; it != sources.end() ; it++){
         if( (*itt).number() == *it){ok=true;break;}
