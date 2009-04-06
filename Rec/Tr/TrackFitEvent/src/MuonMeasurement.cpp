@@ -1,4 +1,4 @@
-// $Id: MuonMeasurement.cpp,v 1.6 2009-04-03 14:07:16 hernando Exp $
+// $Id: MuonMeasurement.cpp,v 1.7 2009-04-06 13:52:11 hernando Exp $
 // Include files 
 
 // local
@@ -34,16 +34,16 @@ MuonMeasurement::MuonMeasurement( const LHCbID& lhcbID,
   if(m_muonProjection == X){
     setMeasure(position.x());
     setErrMeasure(2.*dx*LHCb::Math::inv_sqrt_12);
-    Gaudi::XYZVector x_dir(1,0,0); 
-    std::pair<double,double> x_range(-dx,dx);
-    m_trajectory = std::auto_ptr<Trajectory>(new LineTraj(position, x_dir, x_range, true));
+    Gaudi::XYZVector y_dir(0,1,0); 
+    std::pair<double,double> y_range(-dy,dy);
+    m_trajectory = std::auto_ptr<Trajectory>(new LineTraj(position, y_dir, y_range, true));
 
   }else{
     setMeasure(position.y());
     setErrMeasure(2.*dy*LHCb::Math::inv_sqrt_12);
-    Gaudi::XYZVector y_dir(0,1,0); 
-    std::pair<double,double> y_range(-dy,dy);
-    m_trajectory = std::auto_ptr<Trajectory>(new LineTraj(position, y_dir, y_range, true));  
+    Gaudi::XYZVector x_dir(1,0,0); 
+    std::pair<double,double> x_range(-dx,dx);
+    m_trajectory = std::auto_ptr<Trajectory>(new LineTraj(position, x_dir, x_range, true));  
 
   }
 }

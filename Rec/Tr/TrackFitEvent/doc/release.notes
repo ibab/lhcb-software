@@ -4,8 +4,9 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
-! 2009-04-04 Jose A. Hernando
- - in src/MuonMeasurement.cpp x,y coordinates were swap
+! 2009-06-04 Jose A. Hernando
+ - in src/MuonMeasurement.cpp x,y 
+   x-type, measures x, error = x-size/sqrt(12), j-vector trayectory, range +- y-size/2 
 
 !========================== TrackFitEvent v3r20 2009-02-20 ===================
 ! 2009-01-20 David Hutchcroft
