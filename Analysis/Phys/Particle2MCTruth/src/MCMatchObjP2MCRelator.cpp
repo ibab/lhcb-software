@@ -1,4 +1,4 @@
-// $Id: MCMatchObjP2MCRelator.cpp,v 1.7 2009-03-13 18:21:45 jpalac Exp $
+// $Id: MCMatchObjP2MCRelator.cpp,v 1.8 2009-04-06 20:19:18 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -37,8 +37,6 @@ MCMatchObjP2MCRelator::MCMatchObjP2MCRelator( const std::string& type,
   m_PP2MC.push_back ( "Relations/" + LHCb::ProtoParticleLocation::Charged  ) ;
   m_PP2MC.push_back ( "Relations/" + LHCb::ProtoParticleLocation::Upstream ) ;
   m_PP2MC.push_back ( "Relations/" + LHCb::ProtoParticleLocation::Neutrals ) ;
-
-  declareInterface<IP2MCP>(this);
 
 }
 //=============================================================================
