@@ -1,4 +1,4 @@
-// $Id: IP2MCP.h,v 1.4 2009-03-31 12:39:27 jpalac Exp $
+// $Id: IP2MCP.h,v 1.5 2009-04-06 20:15:00 jpalac Exp $
 #ifndef P2MCP_IP2MCP_H 
 #define P2MCP_IP2MCP_H 1
 
@@ -20,9 +20,6 @@ namespace LHCb
   class Particle;
 }
 
-
-static const InterfaceID IID_IP2MCP ( "IP2MCP", 1, 0 );
-
 /** @class IP2MCP IP2MCP.h Kernel/IP2MCP.h
  *  
  *  Tool interface to generate weighted associations between one or many 
@@ -37,13 +34,9 @@ static const InterfaceID IID_IP2MCP ( "IP2MCP", 1, 0 );
  *  @author Juan PALACIOS
  *  @date   2009-01-19
  */
-class IP2MCP : virtual public IAlgTool,
-               virtual public IParticle2MCAssociator
+class IP2MCP : virtual public IParticle2MCAssociator
 {
-public: 
-
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_IP2MCP; }
+public:
 
   /**
    * Calculate and return the weighted associations between an 
@@ -124,6 +117,13 @@ public:
   virtual bool 
   isMatched(const LHCb::Particle* particle, 
             const LHCb::MCParticle* mcParticle) const = 0;
+
+protected:
+  virtual ~IP2MCP(); ///< virtual and protected destructor
+
+ public:
+   // Return the interface ID
+   static const InterfaceID& interfaceID();
 
 };
 #endif // P2MCP_IP2MCP_H
