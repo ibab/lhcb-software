@@ -14,7 +14,7 @@ from Configurables import CombineParticles, PhysDesktop
 # Do not run this as part of the Hlt2 by default.  Include it before
 # algorithms that require the refit particles.
 #---------------------------------------------------------------------
-SeqHlt2TFParticlesForTopo = GaudiSequencer('SeqHlt2TFParticles')
+SeqHlt2TFParticlesForTopo = GaudiSequencer('SeqHlt2TFParticlesForTopo')
 #GaudiSequencer('Hlt2').Members += [ SeqHlt2TFParticlesForTopo ]
 
 SeqHlt2TFParticlesForTopo.MeasureTime = 1
