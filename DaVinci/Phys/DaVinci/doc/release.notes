@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.326 2009-03-30 15:00:35 jpalac Exp $
+! $Id: release.notes,v 1.327 2009-04-06 13:23:58 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,9 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-04-06 - Patrick Koppenburg
+ - Use Paramfiles v8r1
 
 ! 2009-03-30 - Juan PALACIOS
  - Tag as jpalac_20090330
