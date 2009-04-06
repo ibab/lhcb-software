@@ -4,6 +4,7 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+!====================== GaussMonitor v6r3 2009-04-06 =========================
 ! 2009-03-26 - Patrick Robbe
  - MCTruthMonitor: add possibility to change location of MCParticles and 
    MCVertices by job option
