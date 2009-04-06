@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.69 2009-03-11 22:12:30 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.70 2009-04-06 15:28:57 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -48,6 +48,7 @@ class Brunel(LHCbConfigurableUser):
        ,"Simulation"      : False
        ,"RecL0Only"       : False
        ,"InputType"       : "MDF"
+       ,"DigiType"        : "Default"
        ,"OutputType"      : "DST"
        ,"PackType"        : "TES"
        ,"WriteFSR"        : True
@@ -77,6 +78,7 @@ class Brunel(LHCbConfigurableUser):
        ,'Simulation'   : """ Flags whether to use SIMCOND conditions (default False) """
        ,'RecL0Only'    : """ Flags whether to reconstruct and output only events passing L0 (default False) """
        ,'InputType'    : """ Type of input file. Can be one of ['MDF','DIGI','ETC','RDST','DST'] (default 'MDF') """
+       ,'DigiType'     : """ Type of digi, can be ['Minimal','Default','Extended'] """
        ,'OutputType'   : """ Type of output file. Can be one of ['RDST','DST','NONE'] (default 'DST') """
        ,'PackType'     : """ Type of packing for the output file. Can be one of ['TES','MDF','NONE'] (default 'TES') """
        ,'WriteFSR'     : """ Flags whether to write out an FSR """
@@ -327,13 +329,6 @@ class Brunel(LHCbConfigurableUser):
                     from Configurables import RunRecordDataSvc
                     RunRecordDataSvc().OutputLevel = FATAL
 
-            # Define the file content
-            DstConf().Writer     = writerName
-            DstConf().DstType    = dstType
-            DstConf().PackType   = packType
-            DstConf().Simulation = withMC
-            DstConf().OutputName = self.outputName()
-
             from Configurables import TrackToDST
             if dstType == "DST":
                 # Sequence for altering DST content
@@ -357,6 +352,20 @@ class Brunel(LHCbConfigurableUser):
                 packSeq = GaudiSequencer("PackDST")
                 DstConf().PackSequencer = packSeq
                 GaudiSequencer("OutputDSTSeq").Members += [ packSeq ]
+
+            # Define the file content
+            DstConf().Writer     = writerName
+            DstConf().DstType    = dstType
+            DstConf().PackType   = packType
+            if withMC:
+                DstConf().SimType = "Full"
+            elif self.getProp("DigiType").capitalize() == "Minimal":
+                from Configurables import PackMCVertex
+                GaudiSequencer("OutputDSTSeq").Members += [PackMCVertex()]
+                DstConf().SimType = "Minimal"
+            DstConf().OutputName = self.outputName()
+
+
 
         # Always write an ETC if ETC input
         if self.getProp( "InputType" ).upper() == "ETC":

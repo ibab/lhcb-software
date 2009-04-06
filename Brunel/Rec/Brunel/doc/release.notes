@@ -3,7 +3,7 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v34r3>2009-03-10 Brunel v34r3</A></H1><PRE>
+</PRE><H1><A NAME=v34r3>2009-04-06 Brunel v34r3</A></H1><PRE>
  - Changes to requirements:
    . Add dependency to AppConfig v2r*, to pick up options for production
    . Add explicit use CASTOR from LCG_Interfaces for QMTests
@@ -14,6 +14,7 @@ Purpose: LHCb reconstruction program
      (was writing one FSR per event!)
    . Remove UseOracle option of Configurable, use DetCond() directly
    . Pass DataType to L0Conf() and RecSysConf()
+   . Add DigiType option, for saving Minimal MC truth 
 
  - Changes to Tests:
    . No longer disable FPE check for MergedPi0Rec, now fixed
