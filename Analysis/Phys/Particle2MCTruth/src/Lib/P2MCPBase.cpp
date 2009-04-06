@@ -1,4 +1,4 @@
-// $Id: P2MCPBase.cpp,v 1.4 2009-03-31 12:41:53 jpalac Exp $
+// $Id: P2MCPBase.cpp,v 1.5 2009-04-06 20:18:21 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -23,6 +23,8 @@ P2MCPBase::P2MCPBase( const std::string& type,
   GaudiTool ( type, name , parent ),
   m_defMCLoc(LHCb::MCParticleLocation::Default)
 {
+  declareInterface<IParticle2MCAssociator>(this);
+  declareInterface<IP2MCP>(this);
   declareProperty ( "MCParticleDefaultLocation" , m_defMCLoc  ) ;
 }
 //=============================================================================
