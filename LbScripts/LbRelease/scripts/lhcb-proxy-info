@@ -24,7 +24,7 @@ while ($nar <= $narg)
   endif
 end
 
-if ! $?DIRACROOT then
+if ! $?DIRACSYSROOT then
    unsetenv User_release_area
    source `which SetupProject.csh` $dirac_dev Dirac $version >&! /dev/null
    if $SetupProjectStatus != 0 then

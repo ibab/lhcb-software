@@ -1,3 +1,9 @@
+2009-04-06  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/lhcb-proxy-info: added test on DIRACSYSROOT
+	* scripts/lhcb-proxy-init: modified test on DIRACSYSROOT (it was DIRACROOT) 
+	for the call to "SetupProject Dirac"
+
 2009-04-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v2r7
