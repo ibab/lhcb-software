@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.cpp,v 1.55 2008-12-09 15:39:42 odescham Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.56 2009-04-06 15:42:33 odescham Exp $ 
 // ============================================================================
 #define  CALODET_DECALORIMETER_CPP 1
 // STL
@@ -36,7 +36,6 @@ DeCalorimeter::DeCalorimeter( const std::string& name )
   ,  m_caloIndex         ( -1         )
   ,  m_initialized       ( false      )
   ,  m_subCalos          () 
-  ,  m_subCalos_         ()
   ,  m_adcMax            ( 4095       )
   ,  m_maxEtInCenter     (         )
   ,  m_maxEtSlope        (         )
@@ -92,7 +91,6 @@ StatusCode DeCalorimeter::initialize()
     DeSubCalorimeter* sub = dynamic_cast<DeSubCalorimeter*> ( child ) ;
     Assert ( 0 != sub , "no DeSubCalorimeter!" ) ;
     m_subCalos  .push_back ( sub ) ;
-    m_subCalos_ .push_back ( sub ) ;
   }
   Assert ( !m_subCalos  .empty() , "Empty subcalorimeters!" ) ;
   Assert ( 0 != geometry() , "Invalid IGeometryInfo!" ) ;
@@ -863,7 +861,7 @@ StatusCode DeCalorimeter::buildMonitoring( )  {
       m_cells[pinId].setValid( true ); 
       m_cells[pinId].setFeCard( iCard, pinCol , pinRow);
       // update FE-Card
-      std::vector<LHCb::CaloCellID>& ids = m_feCards[iCard].ids();
+      std::vector<LHCb::CaloCellID>& ids = (std::vector<LHCb::CaloCellID>&) m_feCards[iCard].ids(); // no-const
       ids[channel] = pinId;
       kk++;
       msg << MSG::DEBUG << "PIN diode " << kk << "  ------" << endreq;    
@@ -937,7 +935,7 @@ StatusCode DeCalorimeter::buildMonitoring( )  {
 
  
     // Link to cell (if not done yet)
-    std::vector<int>& leds = m_pins[pinId].leds();
+    std::vector<int>& leds = (std::vector<int>&) m_pins[pinId].leds(); // non-const conversion
     for(std::vector<int>::iterator iled=leds.begin() + nleds ; 
         iled != leds.end() ; ++iled ) {
       

@@ -1,5 +1,5 @@
 /// ===========================================================================
-// $Id: CellParam.h,v 1.8 2008-09-26 15:45:38 odescham Exp $
+// $Id: CellParam.h,v 1.9 2009-04-06 15:42:33 odescham Exp $
 #ifndef CALODET_CELLPARAM_H 
 #define CALODET_CELLPARAM_H 1
 /// ===========================================================================
@@ -72,9 +72,8 @@ public:
   double                gain          () const { return nominalGain() * calibration() * gainShift() ;}  
     
 
-  std::vector<LHCb::CaloCellID> pins() const  { return m_pins ;}
-  std::vector<int> leds() const  { return m_leds ;}    
-  
+  const std::vector<LHCb::CaloCellID>& pins() const  { return m_pins ;}
+  const std::vector<int>& leds() const  { return m_leds ;}
   const CaloNeighbors& neighbors     () const { return m_neighbors     ; }
   const CaloNeighbors& zsupNeighbors () const { return m_zsupNeighbors ; }
   

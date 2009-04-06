@@ -1,4 +1,4 @@
-// $Id: DeCaloCalib.cpp,v 1.1 2008-09-26 15:45:39 odescham Exp $
+// $Id: DeCaloCalib.cpp,v 1.2 2009-04-06 15:42:33 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -37,6 +37,7 @@ DeCaloCalib::DeCaloCalib( const std::string& name,
   declareProperty( "Params"         , m_params);
   declareProperty( "Key"            , m_key = "CellID" );
   declareProperty( "deltaGain"      , m_deltas);
+  declareProperty( "EventUpdate"    , m_update = false); // default is update in initialize only
 
   m_params.push_back( 1.0 );
   m_params.push_back( 1.0  );
@@ -83,7 +84,6 @@ StatusCode DeCaloCalib::initialize() {
   
   // Params
   m_rndmSvc = svc< IRndmGenSvc>( "RndmGenSvc" , true );
-  Rndm::Numbers shoot;
   
   double a,b;
   if( m_method == "Gauss" ){
@@ -93,7 +93,7 @@ StatusCode DeCaloCalib::initialize() {
     a= *(m_params.begin());
     b= *(m_params.begin()+1);
     info() << " mean/sigma = " << a << "/" << b << endreq;
-    sc = shoot.initialize(rndmSvc() , Rndm::Gauss( a , b ));
+    sc = m_shoot.initialize(rndmSvc() , Rndm::Gauss( a , b ));
     if( !sc.isSuccess() )return sc;
   }
   else if(m_method == "Flat"){
@@ -103,7 +103,7 @@ StatusCode DeCaloCalib::initialize() {
     a= *(m_params.begin());
     b= *(m_params.begin()+1);
     info() << " min/max = " << a << "/" << b << endreq;
-    sc=shoot.initialize(rndmSvc() , Rndm::Flat( a , b ));
+    sc=m_shoot.initialize(rndmSvc() , Rndm::Flat( a , b ));
     if( !sc.isSuccess() )return sc;
   }  
   else if(m_method == "User"){
@@ -127,43 +127,9 @@ StatusCode DeCaloCalib::initialize() {
     return StatusCode::FAILURE;
   }
 
-
   // update cellParams
-
-  CaloVector<CellParam>& cells = m_calo->cellParams();
-  std::vector<int> cellids,cellind;
-  std::vector<double> gains,dgains;
-  for(CaloVector<CellParam>::iterator icell = cells.begin() ; icell != cells.end() ; icell++){
-    LHCb::CaloCellID id = (*icell).cellID() ;
-    if( !m_calo->valid  ( id )  )continue;
-    if( m_calo->isPinId( id )   )continue;
-    long num = m_calo->cellIndex( id );
-    double dt;
-    if( m_method == "User" ){
-      long index = id.index();
-      if( m_key == "Index" )index = num;
-      dt = delta( index );
-    }
-    else{
-      dt = shoot();
-    }
-    debug() << num << " Calibration constant for cellID " << id << " : " << dt << endreq;
-    (*icell).setCalibration ( dt ) ; // 
-
-    cellids.push_back( id.index()      );
-    cellind.push_back( num             );
-    gains.push_back  ( (*icell).gain() );
-    dgains.push_back ( (*icell).calibration());
-  }
+  update(true); // + tupling = true
   
-  // Ntupling
-  Tuple ntp = nTuple(500,m_detectorName + "DeCalib" ,CLID_ColumnWiseTuple);
-  int max = m_calo->numberOfCells();
-  sc=ntp->farray("cellID"   , cellids  ,"Nchannels",max);
-  sc=ntp->farray("index"    , cellind  ,"Nchannels",max);
-  sc=ntp->farray("gain"     , gains    ,"Nchannels",max);
-  sc=ntp->farray("calib"    , dgains   ,"Nchannels",max);
-  sc=ntp->write();
   return sc;
 }
 
@@ -174,7 +140,8 @@ StatusCode DeCaloCalib::execute() {
 
   debug() << "==> Execute" << endmsg;
 
-
+  // update at each event ?
+  if(m_update)update();
 
   return StatusCode::SUCCESS;
 }
@@ -190,3 +157,46 @@ StatusCode DeCaloCalib::finalize() {
 }
 
 //=============================================================================
+
+void DeCaloCalib::update(bool tupling) {
+  // update cellParams
+  CaloVector<CellParam>& cells = (CaloVector<CellParam>&) m_calo->cellParams(); // no-const conversion
+  std::vector<int> cellids,cellind;
+  std::vector<double> gains,dgains;
+  for(CaloVector<CellParam>::iterator icell = cells.begin() ; icell != cells.end() ; icell++){
+    LHCb::CaloCellID id = (*icell).cellID() ;
+    if( !m_calo->valid  ( id )  )continue;
+
+    //    if( m_calo->isPinId( id )   )continue; // PIN-diode calibration
+
+    long num = m_calo->cellIndex( id );
+    double dt;
+    if( m_method == "User" ){
+      long index = id.index();
+      if( m_key == "Index" )index = num;
+      dt = delta( index );
+    }
+    else{
+      dt = m_shoot();
+    }
+    debug() << num << " Calibration constant for cellID " << id << " : " << dt << endreq;
+    (*icell).setCalibration ( dt ) ; // 
+
+    cellids.push_back( id.index()      );
+    cellind.push_back( num             );
+    gains.push_back  ( (*icell).gain() );
+    dgains.push_back ( (*icell).calibration());
+  }
+
+  if(!tupling)return ;
+  // Ntupling
+  StatusCode sc;
+  Tuple ntp = nTuple(500,m_detectorName + "DeCalib" ,CLID_ColumnWiseTuple);
+  int max = m_calo->numberOfCells();
+  sc=ntp->farray("cellID"   , cellids  ,"Nchannels",max);
+  sc=ntp->farray("index"    , cellind  ,"Nchannels",max);
+  sc=ntp->farray("gain"     , gains    ,"Nchannels",max);
+  sc=ntp->farray("calib"    , dgains   ,"Nchannels",max);
+  sc=ntp->write();
+  if(sc.isFailure())Warning("cannot write NTP").ignore();
+}

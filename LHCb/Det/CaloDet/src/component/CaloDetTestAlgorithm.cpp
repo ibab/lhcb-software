@@ -1,8 +1,11 @@
-// $Id: CaloDetTestAlgorithm.cpp,v 1.6 2008-09-26 15:45:39 odescham Exp $
+// $Id: CaloDetTestAlgorithm.cpp,v 1.7 2009-04-06 15:42:33 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2008/09/26 15:45:39  odescham
+// implement updMgrSvc
+//
 // Revision 1.5  2008/06/05 06:37:24  cattanem
 // fix compiler warning
 //
@@ -93,9 +96,31 @@ StatusCode CaloDetTestAlgorithm::initialize()
     { return Error("Could not initialize the base class!",sc);}
 
 
-  const DeCalorimeter* calo = getDet<DeCalorimeter>( m_DetData ) ;
-  // Hack to fix compiler warning
+  DeCalorimeter* calo = getDet<DeCalorimeter>( m_DetData ) ;
   debug() << "Detector element found at " << calo << endmsg;
+
+
+  // channel
+  const CaloVector<CellParam>& cells = calo->cellParams();
+  for(CaloVector<CellParam>::const_iterator icel = cells.begin();icel != cells.end();++icel){
+    
+    LHCb::CaloCellID id = (*icel).cellID();
+    int card = (*icel).cardNumber();
+
+    info()    << " | " 
+              << (*icel).cellID() << " | "
+              << (*icel).cellID().all() << " | "
+              << format("0x%04X",(*icel).cellID().all()) << " | "
+              << (*icel).cardColumn() <<"/"<< (*icel).cardRow() << " | "
+              << (*icel).cardNumber() << " ( " << calo->cardCode(card)      << ") | "
+              << calo->cardCrate(card)     << " | "
+              << calo->cardSlot(card)      << " | "
+              << calo->cardToTell1(card)   << " | " 
+              << endreq;
+  }
+  
+
+
   
   return StatusCode::SUCCESS;
 };

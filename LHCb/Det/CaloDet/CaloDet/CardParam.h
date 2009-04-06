@@ -1,5 +1,5 @@
 /// ===========================================================================
-/// $Id: CardParam.h,v 1.12 2008-05-29 21:42:41 odescham Exp $
+/// $Id: CardParam.h,v 1.13 2009-04-06 15:42:33 odescham Exp $
 /// ===========================================================================
 #ifndef CALODET_CARDPARAM_H 
 #define CALODET_CARDPARAM_H 1
@@ -72,9 +72,7 @@ public:
   int  selectionType  () const { return m_selectionType  ; }    
   Mapping mapping     () const { return m_mapping        ; }
   
-  std::vector<LHCb::CaloCellID>& ids() { return m_ids; }
-  
-  
+  const std::vector<LHCb::CaloCellID>& ids() { return m_ids; }  
   void addID( LHCb::CaloCellID id )    { m_ids.push_back( id ); }  
   void setTell1(int tell1)             { m_tell1 = tell1; }
   void setValidationNumber( int num )  {m_validationNumber = num;}  

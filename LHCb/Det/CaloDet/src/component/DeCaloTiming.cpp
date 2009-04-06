@@ -1,4 +1,4 @@
-// $Id: DeCaloTiming.cpp,v 1.2 2008-09-26 15:45:39 odescham Exp $
+// $Id: DeCaloTiming.cpp,v 1.3 2009-04-06 15:42:34 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -127,7 +127,7 @@ StatusCode DeCaloTiming::initialize() {
 
   // update cellParams
 
-  CaloVector<CellParam>& cells = m_calo->cellParams();
+  CaloVector<CellParam>& cells = (CaloVector<CellParam>&) m_calo->cellParams(); // no-const conversion
   std::vector<int> cellids,cellind;
   std::vector<double> times,dtimes;
   for(CaloVector<CellParam>::iterator icell = cells.begin() ; icell != cells.end() ; icell++){

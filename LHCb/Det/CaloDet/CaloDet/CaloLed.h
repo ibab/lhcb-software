@@ -30,7 +30,7 @@ public:
 
   //getters
   int number()  const  { return m_id ; }
-  std::vector<LHCb::CaloCellID>& cells() {return m_cells; }
+  const std::vector<LHCb::CaloCellID>& cells() {return m_cells; }
   LHCb::CaloCellID   pin() const {return m_pin;   }
 
   std::vector<int>  firstRows()    const {return m_fRow;  }    

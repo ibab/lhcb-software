@@ -28,9 +28,8 @@ public:
 
   // getters
   LHCb::CaloCellID   id()      const {return m_id ;}
-  std::vector<int>& leds() {return m_leds; }
-  std::vector<LHCb::CaloCellID>& cells() {return m_cells; }
-
+  const std::vector<int>& leds() {return m_leds; }
+  const std::vector<LHCb::CaloCellID>& cells() {return m_cells; }
 
   std::vector<int>  firstRows()    const {return m_fRow;  }    
   std::vector<int>  lastRows()     const {return m_lRow; } 

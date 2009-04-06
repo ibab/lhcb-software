@@ -2,6 +2,9 @@
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2008/09/26 15:45:39  odescham
+// implement updMgrSvc
+//
 // Revision 1.7  2008/05/29 21:42:41  odescham
 // Readout channel re-mapping from condDB
 //
@@ -67,8 +70,8 @@ CardParam::CardParam( int iArea ,
     ,m_selectionType(-1)
     ,m_mapping( CardParam::None )
 {
-  m_ids.clear();
   m_ids.reserve( 64 );
+  m_ids.clear();
 } ;
 
 // ============================================================================
