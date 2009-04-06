@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.80 2009-04-06 13:11:00 jpalac Exp $
+! $Id: release.notes,v 1.81 2009-04-06 16:01:28 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
@@ -6,6 +6,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-04-06 - Juan PALACIOS
+ - Kernel/IParticle2MCWeightedAssociator.h
+  . Do not inherit from IAlgTool since IParticle2MCAssociator already does.
+ - Kernel/Particle2MCParticleAsociatorBase.h
+  . Remove include of Kernel/IParticle2MCAssociator.h
  - Kernel/Particle2MCParticle.h
   . Move function bodies to new src/Lib/Particle2MCParticle.cpp
  - dict/DaVinciMCKernelDict.xml
