@@ -49,7 +49,7 @@ SeqHlt2TFChargedForTopo.MeasureTime = 1
 #---------------------------------------------------------------------
 from Configurables import TrackEventFitter, TrackMasterFitter
 from Configurables import TrackKalmanFilter, TrackMasterExtrapolator
-Hlt2TFTrackFitForTopo = TrackEventFitter('Hlt2TFTrackFit')
+Hlt2TFTrackFitForTopo = TrackEventFitter('Hlt2TFTrackFitForTopo')
 SeqHlt2TFChargedForTopo.Members += [ Hlt2TFTrackFitForTopo ]
 
 Hlt2TFTrackFitForTopo.TracksInContainer  = "Hlt/Track/Forward"
