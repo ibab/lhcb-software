@@ -1,11 +1,11 @@
-// $Id: P2MCPBase.h,v 1.4 2009-03-31 12:41:41 jpalac Exp $
+// $Id: P2MCPBase.h,v 1.5 2009-04-06 20:17:21 jpalac Exp $
 #ifndef P2MCP_P2MCPBASE_H 
 #define P2MCP_P2MCPBASE_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-// LHCb
+// local
 #include "P2MCP/IP2MCP.h"            // Interface
 
 
@@ -27,8 +27,9 @@
  *  @author Juan PALACIOS
  *  @date   2009-01-30
  */
-class P2MCPBase : public GaudiTool, 
-                  virtual public IP2MCP {
+class P2MCPBase : public GaudiTool,
+                  virtual public IP2MCP
+{
 public: 
   /// Standard constructor
   P2MCPBase( const std::string& type, 
