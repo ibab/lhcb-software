@@ -1,4 +1,4 @@
-// $Id: CaloCellCode.h,v 1.6 2009-03-05 15:47:13 odescham Exp $ 
+// $Id: CaloCellCode.h,v 1.7 2009-04-06 15:57:15 odescham Exp $ 
 // ============================================================================
 #ifndef      KERNEL_CALOCELLCODE_H 
 #define      KERNEL_CALOCELLCODE_H 1
@@ -19,8 +19,17 @@
  *  @date    19/02/2001
  */
 
-namespace CaloCellCode
-{
+
+
+namespace CaloCellCode{
+  enum CaloArea{ Outer = 0,
+                 Middle,
+                 Inner,
+                 PinArea
+  };
+  static const unsigned int CaloAreaNums =  4;
+  static const std::string AreaName[CaloAreaNums] = {"Outer","Middle","Inner","PinArea"};
+
   //
   /// 32 bits representation
   typedef unsigned int   ContentType     ;  
@@ -114,18 +123,22 @@ namespace CaloCellCode
   };
   static inline const std::string CaloAreaFromNum( const int calo , const int num){
     if( CaloNameFromNum( calo ) == "Hcal" ){
-      if( num == 0 )return "Outer";
-      else if( num == 1 )return "Inner";
-      else if( num == 3 )return "PinArea";
+      if( num == 0 )return AreaName[Outer];
+      else if( num == 1 )return AreaName[Inner];
+      else if( num == 3 )return AreaName[PinArea];
+      else return "????";
+    }else if( CaloNameFromNum( calo ) == "Ecal" ){
+      if( num == 0 )return      AreaName[Outer];
+      else if( num == 1 )return AreaName[Middle];
+      else if( num == 2 )return AreaName[Inner];
+      else if( num == 3 )return AreaName[PinArea];
+      else return "????";
+    }else{
+      if( num == 0 )return      AreaName[Outer];
+      else if( num == 1 )return AreaName[Middle];
+      else if( num == 2 )return AreaName[Inner];
       else return "????";
     }
-    else{
-      if( num == 0 )return "Outer";
-      else if( num == 1 )return "Middle";
-      else if( num == 2 )return "Inner"; 
-      else if( num == 3 )return "PinArea";
-      else return "????";
-    }  
   };
 
 
