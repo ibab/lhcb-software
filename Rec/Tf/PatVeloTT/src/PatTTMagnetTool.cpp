@@ -1,4 +1,4 @@
-// $Id: PatTTMagnetTool.cpp,v 1.4 2007-10-12 17:58:22 witekma Exp $
+// $Id: PatTTMagnetTool.cpp,v 1.5 2009-04-06 06:42:27 cattanem Exp $
 
 // Include files
 
@@ -90,7 +90,7 @@ StatusCode PatTTMagnetTool::initialize ( ) {
   m_zMidField = zBdlMiddle(0.05, 0.0, 0.0);
 
   if(m_noField) {
-    info() << " No B field detected." << endreq;    
+    info() << " No B field detected." << endmsg;    
   }
   return StatusCode::SUCCESS;
 }
@@ -127,7 +127,7 @@ double PatTTMagnetTool::averageDist2mom() {
 //=========================================================================
 void PatTTMagnetTool::prepareBdlTables() {
 
-  info() << "Start generation of VeloTT Bdl LUTs" << endreq;
+  info() << "Start generation of VeloTT Bdl LUTs" << endmsg;
   // prepare table with Bdl integrations
   // Bdl integral depends on 3 track parameters
   //  slopeY     - y slope of the track
@@ -168,7 +168,7 @@ void PatTTMagnetTool::prepareBdlTables() {
     iover = m_lutZHalfBdl->incrementIndexVector();
   }
 
-  info() << "Generation of VeloTT Bdl LUTs finished" << endreq;
+  info() << "Generation of VeloTT Bdl LUTs finished" << endmsg;
   return;
 
 }
@@ -178,7 +178,8 @@ void PatTTMagnetTool::prepareBdlTables() {
 //=========================================================================
 void PatTTMagnetTool::prepareDeflectionTables() {
 
-  info() << "Start generation of VeloTT deflection LUTs" << endreq;
+  info() << "Start generation of VeloTT deflection LUTs" << endmsg;
+  const bool isDebug = msgLevel( MSG::DEBUG );
 
   // prepare deflection tables
 
@@ -229,10 +230,12 @@ void PatTTMagnetTool::prepareDeflectionTables() {
     xBeg = 0.;
     yBeg = 0.;
     zBeg = 0.;
-    debug() << m_lutVar[0] << " " << m_lutVar[1] << " "  
-            << " idlay " << idLay << " " << m_zLayers.size() << " zlay" 
-            << zLay << " " << endreq;
-
+    if( isDebug ) {
+      debug() << m_lutVar[0] << " " << m_lutVar[1] << " "  
+              << " idlay " << idLay << " " << m_zLayers.size() << " zlay" 
+              << zLay << " " << endmsg;
+    }
+    
     tmpState.setState(  xBeg,  yBeg, zBeg, dxdzBeg, dydzBeg, qpBeg );
     
     LHCb::State stalin_mid = tmpState;
@@ -241,7 +244,7 @@ void PatTTMagnetTool::prepareDeflectionTables() {
     StatusCode sc1 =    my_linear->propagate( stalin_mid, m_zCenterTT );
     StatusCode sc2 = my_parabolic->propagate( stapar_mid, m_zCenterTT );
     if( sc1.isFailure() || sc2.isFailure() ) {
-      warning() << "Extrapolation failed " << endreq;
+      Warning( "Extrapolation failed ", StatusCode::SUCCESS, 0 ).ignore();
     } 
 
     double dx_mid = 0.;
@@ -253,7 +256,7 @@ void PatTTMagnetTool::prepareDeflectionTables() {
     StatusCode sc3 =    my_linear->propagate( stalin_lay, zLay );
     StatusCode sc4 = my_parabolic->propagate( stapar_lay, zLay );
     if( sc3.isFailure() || sc4.isFailure()) {
-      warning() << "Extrapolation failed " << endreq;
+      Warning( "Extrapolation failed ", StatusCode::SUCCESS, 0 ).ignore();
     } else {
       dx_mid = stapar_mid.x()-stalin_mid.x();
       dx_lay = stapar_lay.x()-stalin_lay.x();
@@ -289,7 +292,7 @@ void PatTTMagnetTool::prepareDeflectionTables() {
 
     double dx2mom = 0.;
     if( sc1.isFailure() || sc2.isFailure() ) {
-      warning() << "Extrapolation failed " << endreq;
+      Warning( "Extrapolation failed ", StatusCode::SUCCESS, 0 ).ignore();
     } else {
       double dx = stapar_mid.x()-stalin_mid.x();
       if(fabs(dx)>1e-8) dx2mom = qpBeg / dx;    
@@ -303,7 +306,7 @@ void PatTTMagnetTool::prepareDeflectionTables() {
   m_lutVar.push_back(0.05);
   m_dist2mom = m_lutDxToMom->getValueFromTable(m_lutVar);
 
-  info() << "Generation of VeloTT deflection LUTs finished" << endreq;
+  info() << "Generation of VeloTT deflection LUTs finished" << endmsg;
 
   return;
 }

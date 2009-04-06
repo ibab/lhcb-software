@@ -1,4 +1,4 @@
-// $Id: PatVeloTTFit.cpp,v 1.2 2009-03-11 18:09:59 smenzeme Exp $
+// $Id: PatVeloTTFit.cpp,v 1.3 2009-04-06 06:42:27 cattanem Exp $
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRegistry.h"
 #include "STDet/DeSTDetector.h"
@@ -87,8 +87,7 @@ StatusCode PatVeloTTFit::fitVTT( LHCb::Track& track ) const
       LHCb::STChannelID stChan = ihit->stID() ;
       const DeSTSector* stSector = m_ttDet->findSector( stChan );
       if(stSector==0) {
-	error() << "No sector found for TT hit!" << endreq ;
-	return StatusCode::FAILURE ;
+        return Error( "No sector found for TT hit!" );
       }
 
       LHCb::STLiteCluster::FastContainer::const_iterator iclus =  
@@ -114,8 +113,7 @@ StatusCode PatVeloTTFit::fitVTT( LHCb::Track& track ) const
 	cand.storeHit( dx, pattthit );
 	
       } else {
-	error() << "Cannot find lite cluster!" << endreq ;
-	return StatusCode::FAILURE ;
+        return Error( "Cannot find lite cluster!" );
       }
     }
   }

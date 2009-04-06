@@ -3,10 +3,14 @@
 ! Responsible : Mariusz Witek
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+
+!========================== PatVeloTT v3r6 2009-03-11 ========================
+! 2009-04-06 - Marco Cattaneo
+ - Replace obsolescent endreq by endmsg
+
 ! 2009-04-05 - Stephanie Hansmann-Menzemer
  - bug fix for inverse polarized magnetic field
 
-!========================== PatVeloTT v3r6 2009-03-11 ========================
 ! 2009-03-11 - Stephanie Hansmann-Menzemer
   - add interface to fit of PatVeloTT fit
 

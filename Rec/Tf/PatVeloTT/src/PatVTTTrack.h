@@ -1,4 +1,4 @@
-// $Id: PatVTTTrack.h,v 1.6 2008-12-02 14:38:29 wouter Exp $
+// $Id: PatVTTTrack.h,v 1.7 2009-04-06 06:42:27 cattanem Exp $
 #ifndef PATVTTTRACK_H
 #define PATVTTTRACK_H 1
 
@@ -310,7 +310,7 @@
                   << format(" %6.2f(%1d) ", itStoreB->distance(), itStoreB->hit()->planeCode())
                   << " , last hit dist: "
                   << format(" %6.2f(%1d) ", itStoreE->distance(), itStoreE->hit()->planeCode())
-                  << endreq;
+                  << endmsg;
             }
 
             // List of local hits without more than 2 on the same layer:
@@ -334,7 +334,7 @@
       } // itB
 
       if(isDebug){
-        msg << "Number of solutions: " << LocalHitsLists.size() << endreq;
+        msg << "Number of solutions: " << LocalHitsLists.size() << endmsg;
       }
 
       // Now create the different PatTTHit combinations and add them to the vector of solutions
@@ -360,7 +360,7 @@
         }
 
         if(isDebug){
-          msg << endreq;
+          msg << endmsg;
         }
 
         // Add all the solutions
@@ -373,7 +373,7 @@
       LocalHitIterators itL;
 
       /*
-        msg << endreq << "Hits : ";
+        msg << endmsg << "Hits : ";
         for ( itL = m_list.begin(); m_list.end() != itL; itL++ ) {
         LHCb::STChannelID id = (*itL).hit()->lhcbID().stID();
         }
@@ -390,7 +390,7 @@
           ll = 10;
         }
       }
-      msg << endreq;
+      msg << endmsg;
     }
 
   protected:
