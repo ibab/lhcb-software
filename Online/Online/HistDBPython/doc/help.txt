@@ -17,6 +17,11 @@
 
 ** Organisation:
 
+*) adding histograms:
+To add new histograms only the add.py file needs to exist.
+It contains the task and algorithm name as well as a list 
+of the histograms to be added and their type.
+
 *) Page definitions:
 To define a page, the following files need to exist:
 - page.py

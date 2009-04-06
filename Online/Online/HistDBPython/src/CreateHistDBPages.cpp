@@ -1,4 +1,4 @@
-// $Id: CreateHistDBPages.cpp,v 1.1.1.1 2009-03-25 09:50:53 nchiapol Exp $
+// $Id: CreateHistDBPages.cpp,v 1.2 2009-04-06 10:36:13 nchiapol Exp $
 
 #include "CreateHistDBPages.h"
 
@@ -18,6 +18,7 @@ CreateHistDBPages::CreateHistDBPages(const std::string& name, ISvcLocator* ploc)
   declareProperty( "PageBase"             , m_pageBase              = "TestPages");
   declareProperty( "PageNames"            , m_pageNames);
   declareProperty( "PageLayout"           , m_pageLayout);
+  declareProperty( "PageDoc"              , m_pageDoc);
   
   declareProperty( "HistoBase"            , m_histoBase             = "TestMon");
   declareProperty( "HistoNames"           , m_histoNames);
@@ -64,7 +65,7 @@ StatusCode CreateHistDBPages::initialize()
     error() << "initalizing HistDB failed!" << endmsg;
     initOk = false;
   }
-
+ 
   if ( initOk ) {
   /// loop over all pages in m_pageNames
     unsigned int numHistInLayout = m_pageLayout.size();
@@ -78,17 +79,19 @@ StatusCode CreateHistDBPages::initialize()
       }
     }
 	
+	
     //   int max = m_histoNames.size(); // old line - this should be a bug!
     int max = m_pageNames.size();
     for( int i=0 ; i < max ; i++ ){
     
-      /// checking layout
+      // checking layout
       if (numHistInLayout != m_histoNames[i].size()) {
         Error("Layout does not agree with Number of Histograms!\n Not processing page:"+m_pageNames[i]);
-        break; // same effect as initOK = false;
+        break; 
       }
+
       
-      /// creating Pages
+      // creating Pages
       StatusCode pageStatus;
       
       pageStatus = createPage(HistDB, i);
@@ -146,6 +149,18 @@ StatusCode CreateHistDBPages::createPage(OnlineHistDB *HistDB, int pageNr)
   /// preparing page
   OnlineHistPage*  page =  HistDB->declarePage(m_pageBase + *pageName);
   page ->removeAllHistograms();
+  
+  /// add page documentation, if required
+  if ( ! m_pageDoc.empty() ) {
+    std::string *thisDoc;
+    if ( m_pageDoc.size() == m_pageNames.size() ) {
+      thisDoc = &(m_pageDoc[pageNr]);
+    } else {
+      debug() << "Using first description." << endmsg;
+      thisDoc = &(m_pageDoc[0]);
+    }
+    ok &= page->setDoc(*thisDoc);
+  }
   
   /// loop over all histograms on page
   std::vector<std::string>::iterator hNamesIt;

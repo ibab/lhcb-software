@@ -1,4 +1,4 @@
-// $Id: CreateHistDBPages.h,v 1.2 2009-03-30 14:04:16 nchiapol Exp $
+// $Id: CreateHistDBPages.h,v 1.3 2009-04-06 10:36:13 nchiapol Exp $
 
 #ifndef HISTDBPYTHON_CREATEHISTDBPAGES_H
 #define HISTDBPYTHON_CREATEHISTDBPAGES_H 1
@@ -31,6 +31,9 @@
  *    that should be displayed when the histogram is clicked on.  
  *  - \b PageBase: Prefix for all page names, use it to identify your folder
  *  - \b PageNames: List with the names of all pages to generate
+ *  - \b PageDoc: List with the descriptions for each page (order as PageNames).
+ *    If the number of entries in PageDoc does not agree with PageNames, the first 
+ *    description will be used for all pages.
  *  - \b PageLayout: List of groups of 4 values; each group defines the positions of 
  *    a histograms on the page order as in OnlineHistPage->declareHistogram: 
  *      Xmin, Ymin, Xmax, Ymax
@@ -99,6 +102,10 @@ private:
   // vector with the names of all pages to generate
   std::vector<std::string> m_pageNames;
   
+  // @option PageDoc
+  // A short descriptions of the page content, max. 100 characters.
+  std::vector<std::string> m_pageDoc;
+   
   // @option PageLayout
   // Vector of groups of 4 values; each group defines the positions of a histograms on the page
   // order as in OnlineHistPage->declareHistogram: Xmin, Ymin, Xmax, Ymax

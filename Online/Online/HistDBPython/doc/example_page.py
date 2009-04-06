@@ -25,6 +25,15 @@ histoNum   = range(1, 49)
 # (defined in genCreate.py)
 createHistAlg.PageNames   = []
 
+# PageDoc is a std::vector<std::string> that contains the 
+# documentation for the pages.
+# - if the list is empty, no documentation will be added. 
+# - if the list has one entry for each page, these will 
+#   be used.
+# - otherwise the first documentation will be used for 
+#   every page.
+  createHistAlg.PageDoc   = []
+
 # HistoNames is a vector of vectors 
 #   std::vector<std::vector<std::string> >
 # the structure is [pageNumber][histogram]
@@ -71,4 +80,4 @@ for num in histoNum:
 importOptions("inc_layout2overlap.py")
 
 # general options
-importOptions("example_genCreate.py")
+importOptions("exampl_genCreate.py")
