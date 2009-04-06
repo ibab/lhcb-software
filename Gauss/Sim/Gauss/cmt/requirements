@@ -3,7 +3,7 @@
 # Maintainer : Gloria Corti, Florence Ranjard
 #============================================================================
 package Gauss
-version v36r2
+version v37r0
 
 #============================================================================
 #-- Structure
@@ -17,12 +17,14 @@ branches src doc options cmt job python
 use DDDB               v*     Det            -no_auto_imports
 use ParamFiles         v8r0                  -no_auto_imports
 use FieldMap           v5r*                  -no_auto_imports
-use DecFiles           v16r1  Gen            -no_auto_imports
+use DecFiles           v17r*  Gen            -no_auto_imports
 use Geant4Files	       v91r0	             -no_auto_imports
 use MIBData            v2r0                  -no_auto_imports
 use MCatNLOData        v1r1                  -no_auto_imports
 use XmlVis             v*     Vis            -no_auto_imports
 
+#-- Package to run the application with different configurations
+use AppConf            v2r*                  -no_auto_imports
 #===========================================================================
 
 # Packages needed to compile and link the application
