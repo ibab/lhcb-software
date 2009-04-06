@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.198 2009-04-06 06:35:54 graven Exp $ 
+! $Id: release.notes,v 1.199 2009-04-06 13:04:24 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -7,7 +7,8 @@
 
 
 ! 2009-04-06 Gerhard Raven
- - for now, keep Hlt2Lines in Hlt2Selections
+ - for now, run all Hlt2Lines as part of the Hlt2Lines sequencer
+ - cleanup HltConf.HltReco a bit
 
 ! 2009-04-05 V. Gligorov
  - Make sure Hlt2TrackFitForTopo puts the tracks/particles in a location

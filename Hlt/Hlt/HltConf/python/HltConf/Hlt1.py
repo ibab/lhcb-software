@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.7 2009-03-09 15:26:47 graven Exp $
+# $Id: Hlt1.py,v 1.8 2009-04-06 13:04:25 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -49,14 +49,11 @@ class Hlt1Conf(LHCbConfigurableUser):
                     , 'OutputSelection','Context' ])
 
         importOptions('$HLTCONFROOT/options/HltInit.py')
-        importOptions('$HLTCONFROOT/options/HltLumiInit.py')
-
-
 
         ## finally, define the Hlt1 sequence!!
         Sequence('Hlt1',  ModeOR = True, ShortCircuit = False )
 
-        Sequence( 'HltEndSequence', ModeOR = True, ShortCircuit = False , Members = 
+        Sequence( 'HltEndSequence', IgnoreFilterPassed = True, Members = 
                     [ HltGlobalMonitor()
                     , HltDecReportsMaker()
                     , HltDecReportsWriter()

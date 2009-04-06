@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.1 2009-04-03 18:49:18 graven Exp $
+# $Id: HltReco.py,v 1.2 2009-04-06 13:04:25 graven Exp $
 # =============================================================================
 ## @file HltConf/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -50,51 +50,79 @@ from Configurables import PVOfflineTool
 from Configurables import HltTrackFilter, HltVertexFilter, HltTrackUpgrade
 from HltConf.HltLine import bindMembers
 
+##### pattern recognition algorithms...
 
-#----------------------- HltTrack sequence
-# ---------------------
-## make sure we continue, even if no PV is found
 patVeloR = Tf__PatVeloRTracking('HltRecoRZVelo' , OutputTracksName = "Hlt/Track/RZVelo" ) 
-
-recoRZVeloTracksSequence = GaudiSequencer( 'HltRecoRZVeloTracksSequence', MeasureTime = True
-                                         , Members = [ patVeloR ] 
-                                         )
-
-patPV2D = PatPV2D( 'HltRecoPV2D' , InputTracksName = patVeloR.OutputTracksName
-                                 , OutputVerticesName = "Hlt/Vertex/PV2D" 
-                 )  
-recoRZPVSequence = GaudiSequencer( 'HltRecoRZPVSequence' , MeasureTime = True, IgnoreFilterPassed = True
-                                 , Members = [ patPV2D ] 
-                                 )
-
-recoRZVeloSequence = GaudiSequencer ( 'HltRecoRZVeloSequence', MeasureTime = True
-                                    , Members = 
-                                    [  recoRZVeloTracksSequence
-                                    ,  recoRZPVSequence ] )
 
 recoVelo = Tf__PatVeloSpaceTracking('HltRecoVelo'
                                    , InputTracksName = patVeloR.OutputTracksName
                                    , OutputTracksName = "Hlt/Track/Velo" )
 
-prepareVelo = HltTrackFilter('HltPrepareVelo'
-                            , InputSelection = "TES:" + recoVelo.OutputTracksName
-                            , OutputSelection = "Velo1"
-                            , RequirePositiveInputs = False )
-
 recoForward = PatForward( 'HltRecoForward'
                         , InputTracksName = recoVelo.OutputTracksName
                         , OutputTracksName = "Hlt/Track/Forward" )
+
+PatForwardTool( MinMomentum = 1000., MinPt = 1000., AddTTClusterName = "" )
+
+#### Primary vertex algorithms...
+
+patPV2D = PatPV2D( 'HltRecoPV2D' , InputTracksName = patVeloR.OutputTracksName
+                                 , OutputVerticesName = "Hlt/Vertex/PV2D" )  
+
+recoPV3D =  PatPV3D('Hlt1RecoPV3D' )
+recoPV3D.addTool( PVOfflineTool, name = 'PVOfflineTool' )
+recoPV3D.PVOfflineTool.InputTracks = [ recoVelo.OutputTracksName ]
+
+
+##### Hlt selections
 
 prepareForward = HltTrackFilter( 'HltPrepareForward' 
                                , InputSelection = "TES:" + recoForward.OutputTracksName
                                , OutputSelection = "Forward1"
                                , RequirePositiveInputs = False )
 
+# why does Hlt1PrepareRZVelo::initialize  trigger an init of ToolSvc.OTRawBankDecoder???
+prepareRZVelo = HltTrackFilter( 'Hlt1PrepareRZVelo'
+                              , InputSelection   = "TES:" + patVeloR.OutputTracksName
+                              , RequirePositiveInputs = False
+                              , AddInfo = False
+                              , FilterDescriptor = ["IsBackward,<,0.5"]
+                              , OutputSelection     = "RZVelo" )
 
-recoPV3D =  PatPV3D('Hlt1RecoPV3D' ) #TODO: check IPVOfflineTool config!!! InputTracksName = recoVelo.OutputTracksName )
-#Hlt1RecoPV3D.PVOfflineTool.InputTracks = [ recoVelo.OutputTracksName ]
-recoPV3D.addTool( PVOfflineTool, name = 'PVOfflineTool' )
-recoPV3D.PVOfflineTool.InputTracks = [ recoVelo.OutputTracksName ]
+prepareVelo = HltTrackFilter('HltPrepareVelo'
+                            , InputSelection = "TES:" + recoVelo.OutputTracksName
+                            , OutputSelection = "Velo1"
+                            , RequirePositiveInputs = False )
+
+reco1Velo = HltTrackUpgrade( 'Hlt1RecoVelo'
+                           , InputSelection = prepareRZVelo.OutputSelection
+                           , OutputSelection = "Velo"
+                           , RecoName = "Velo"
+                           , HistogramUpdatePeriod = 0 )
+
+recoFwd = HltTrackUpgrade( 'Hlt1RecoForward'
+                         , InputSelection = reco1Velo.OutputSelection
+                         , OutputSelection = "Forward"
+                         , RecoName = "Forward"
+                         , HistogramUpdatePeriod = 0 )
+
+preparePV2D = HltVertexFilter( 'Hlt1PreparePV2D'
+                             , InputSelection = "TES:" + PatPV2D('HltRecoPV2D').OutputVerticesName
+                             , RequirePositiveInputs = False
+                             , OutputSelection   = "PV2D" )
+
+##### Sequencers #### 
+
+recoRZVeloTracksSequence = GaudiSequencer( 'HltRecoRZVeloTracksSequence', MeasureTime = True
+                                         , Members = [ patVeloR ] )
+
+recoRZPVSequence = GaudiSequencer( 'HltRecoRZPVSequence' , MeasureTime = True, IgnoreFilterPassed = True
+                                 , Members = [ patPV2D ] )
+
+recoRZVeloSequence = GaudiSequencer ( 'HltRecoRZVeloSequence', MeasureTime = True
+                                    , Members = 
+                                    [  recoRZVeloTracksSequence
+                                    ,  recoRZPVSequence ] )
 
 trackRecoSequence = GaudiSequencer( 'HltTrackRecoSequence'
                                   ,  Members =
@@ -105,23 +133,15 @@ trackRecoSequence = GaudiSequencer( 'HltTrackRecoSequence'
                                   ,  recoForward
                                   ,  prepareForward
                                   ] )
+####TODO
+###           HltTrackRecoSequence                  GaudiSequencer           
+###              HltRecoRZVelo                      Tf::PatVeloRTracking     
+###              HltRecoVelo                        Tf::PatVeloSpaceTracking
+###              HltRecoForward                     PatForward               
+###              HltRecoPVSequence                  GaudiSequencer             IgnoreFilterPassed
+###                    HltRecoPV2D                  PatPV2D                  
+###                    Hlt1RecoPV3D                 PatPV3D            
 
-#------------------------------
-# Definition of the Hlt1 Reconstruction
-#-----------------------------
-
-# why does Hlt1PrepareRZVelo::initialize  trigger an init of ToolSvc.OTRawBankDecoder???
-prepareRZVelo = HltTrackFilter( 'Hlt1PrepareRZVelo'
-                              , InputSelection   = "TES:" + patVeloR.OutputTracksName
-                              , RequirePositiveInputs = False
-                              , AddInfo = False
-                              , FilterDescriptor = ["IsBackward,<,0.5"]
-                              , OutputSelection     = "RZVelo" )
-
-preparePV2D = HltVertexFilter( 'Hlt1PreparePV2D'
-                             , InputSelection = "TES:" + PatPV2D('HltRecoPV2D').OutputVerticesName
-                             , RequirePositiveInputs = False
-                             , OutputSelection   = "PV2D" )
 
 hlt1RecoRZVeloTracksSequence = GaudiSequencer( 'Hlt1RecoRZVeloTracksSequence' , MeasureTime = True
                                              , Members = [ recoRZVeloTracksSequence , prepareRZVelo ] )
@@ -132,20 +152,6 @@ hlt1RecoRZPVSequence = GaudiSequencer( 'Hlt1RecoRZPVSequence', MeasureTime = Tru
 recoRZVelo = GaudiSequencer( 'Hlt1RecoRZVeloSequence' , MeasureTime = True
                            , Members = [ recoRZVeloSequence , prepareRZVelo, preparePV2D ] ) 
 
-reco1Velo = HltTrackUpgrade( 'Hlt1RecoVelo'
-                          , InputSelection = prepareRZVelo.OutputSelection
-                          , OutputSelection = "Velo"
-                          , RecoName = "Velo"
-                          , HistogramUpdatePeriod = 0 )
-
-
-recoFwd = HltTrackUpgrade( 'Hlt1RecoForward'
-                         , InputSelection = reco1Velo.OutputSelection
-                         , OutputSelection = "Forward"
-                         , RecoName = "Forward"
-                         , HistogramUpdatePeriod = 0 )
-
-
 #hlt1RecoSequence = GaudiSequencer( 'Hlt1RecoSequence', MeasureTime = True
 #                                 , Members = 
 #                                 [ hlt1RecoRZVeloTracksSequence
@@ -153,12 +159,6 @@ recoFwd = HltTrackUpgrade( 'Hlt1RecoForward'
 #                                 , reco1Velo
 #                                 ,  recoPV3D # this aborts the remainder of the sequence if no primary -- do we really want that??
 #                                 , recoFwd ] )
-
-# Forward
-#----------------
-PatForwardTool( MinMomentum = 1000.
-              , MinPt = 1000.
-              , AddTTClusterName = "" )
 
 recoSeq = GaudiSequencer('HltRecoSequence', MeasureTime = True
                         , Members =
@@ -176,12 +176,11 @@ GaudiSequencer('HltCaloRecoSequence', Members = [ GaudiSequencer('RecoCALOSeq') 
 #/// @todo This cannot work, as tracking must have been done to process the rest.
 #//recoSeq.IgnoreFilterPassed = True; // process both track and calo independently
 
-
-
 ### define exported symbols (i.e. these are externally visible, the rest is NOT)
 Forward1 = bindMembers( None, [ patVeloR, recoVelo, recoForward , prepareForward ] )
 PV2D     = bindMembers( None, [ patVeloR, patPV2D, preparePV2D ] )
 RZVelo   = bindMembers( None, [ patVeloR, prepareRZVelo ] )
-Velo     = bindMembers( None, [ RZVelo , reco1Velo ] )
-Forward  = bindMembers( None, [ Velo,  recoFwd ] )
+Velo     = bindMembers( None, [                  RZVelo , reco1Velo ] )
+Forward  = bindMembers( None, [                                Velo,  recoFwd ] )
+
 HltRecoSequence = recoSeq
