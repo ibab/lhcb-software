@@ -190,6 +190,8 @@
  090325 - factored out the lbscripts version.
         - call LbLogin before generating the setup script
  090401 - fixed small hickup in the installation of a local data package.
+ 090406 - removed the obsolete string module
+        - moved to LbScripts v3r1
 """
 #------------------------------------------------------------------------------
 import sys, os, getopt, time, shutil, urllib
@@ -198,10 +200,10 @@ import commands
 import logging
 from shutil import rmtree
 
-script_version = '090401'
+script_version = '090406'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
-lbscripts_version = "v2r7"
+lbscripts_version = "v3r1"
 #-----------------------------------------------------------------------------------
 
 # url from which to get files
