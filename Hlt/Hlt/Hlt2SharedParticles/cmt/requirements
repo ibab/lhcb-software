@@ -1,0 +1,21 @@
+# $Id: requirements,v 1.1.1.1 2009-04-06 20:47:14 graven Exp $
+# Created    : 2009/04/06
+# Maintainer : P. Koppenburg & G.Raven
+
+package           Hlt2SharedParticles
+version           v0r1
+
+# ============================================================================
+# ======= the structure ======================================================
+branches          cmt doc python
+include_path      none
+
+# ============================================================================
+# ======= the actual dependencies ============================================
+use HltConf              v*     Hlt
+
+
+# ============================================================================
+# ======= the patterns =======================================================
+apply_pattern install_python_modules
+

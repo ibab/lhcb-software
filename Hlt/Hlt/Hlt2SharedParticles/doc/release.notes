@@ -1,0 +1,10 @@
+$Id: release.notes,v 1.1.1.1 2009-04-06 20:47:14 graven Exp $
+!-----------------------------------------------------------------------------
+! Package     : Hlt/Hlt2SharedParticles
+! Responsible : P. Koppenburg / G. Raven
+! Purpose     : define the shared particle used in Hlt2
+!-----------------------------------------------------------------------------
+! 2009-04-06 - Gerhard Raven
+  - initial import
+  - create first few entries by copying them from $HLTSELECTIONSROOT/options
+    and converting them to python modules.
