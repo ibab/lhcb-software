@@ -101,6 +101,7 @@ class PresenterMainFrame : public TGMainFrame
       PAGE_EDITOR_OFFLINE_MODE_COMMAND,
       M_AddHistoToDB_COMMAND,
       M_AddHistoToPage_COMMAND,
+      M_AddDBHistoToPageAsOne_COMMAND,
       M_AddDBHistoToPage_COMMAND,
       M_SetDimSourceFromTree,
       M_SetDimSourceFromQuickButton,
@@ -111,6 +112,7 @@ class PresenterMainFrame : public TGMainFrame
       M_RefreshHistoDBListTree_COMMAND,
       M_RefreshHistoSvcListTree,
       M_RefreshDBPagesListTree_COMMAND,
+      M_RefreshAlarmDBListTree_COMMAND,
       M_LoadPage_COMMAND,
       M_DeletePage_COMMAND,
       M_DeleteFolder_COMMAND,
@@ -144,9 +146,9 @@ class PresenterMainFrame : public TGMainFrame
     
     //slots
     
-    void PresenterMainFrame::startBenchmark(const std::string &timer);
-    void PresenterMainFrame::stopBenchmark(const std::string &timer);
-    void PresenterMainFrame::printBenchmark(const std::string &timer);
+    void startBenchmark(const std::string &timer);
+    void stopBenchmark(const std::string &timer);
+    void printBenchmark(const std::string &timer);
 
     void about();
     void buildGUI();
@@ -186,7 +188,9 @@ class PresenterMainFrame : public TGMainFrame
     void previousInterval();
     void refreshPage();
     void refreshClock();
-    void listFromHistogramDB(TGListTree* listView,
+    void listAlarmsFromHistogramDB(TGListTree* listView,
+                                   const FilterCriteria & filterCriteria);   
+    void listHistogramsFromHistogramDB(TGListTree* listView,
                              const FilterCriteria & filterCriteria,
                              bool histograms);
 
@@ -265,13 +269,16 @@ class PresenterMainFrame : public TGMainFrame
     void clickedPageTreeItem(TGListTreeItem* node,
                              EMouseButton btn,
                              int x, int y);
+    void clickedAlarmTreeItem(TGListTreeItem* node,
+                             EMouseButton btn,
+                             int x, int y);                             
 
 //    TGPopupMenu* histoSvcTreeContextMenu() const { return m_histoSvcTreeContextMenu; }
 
     void addDimSvcToHistoDB();
-    void addDimSvcToPage();
-    void addDbHistoToPage();
-    void addHistoToPage(const std::string& histogramUrl);
+    void addDimHistosToPage();
+    void addDbHistoToPage(bool overlapMode);
+    void addHistoToPage(const std::string& histogramUrl, bool overlapMode);
     void setHistogramDimSource(bool tree);
     void dimCollapseAllChildren();
 
@@ -279,7 +286,11 @@ class PresenterMainFrame : public TGMainFrame
     void dbHistoCollapseAllChildren();
 
     void deleteSelectedHistoFromDB();
-    void loadSelectedPageFromDB(const std::string & timePoint = "",
+    std::string selectedPageFromDbTree();
+    int selectedAlarmFromDbTree();
+    void loadSelectedAlarmFromDB(int msgId);
+    void loadSelectedPageFromDB(const std::string & pageName = "",
+                                const std::string & timePoint = "",
                                 const std::string & pastDuration = "");
     void deleteSelectedPageFromDB();
     void deleteSelectedFolderFromDB();
@@ -288,7 +299,7 @@ class PresenterMainFrame : public TGMainFrame
     void toggleReferenceOverlay();
     void toggleFastHitMapDraw();
     void toggleHistoryPlots();
-    void paintHist(DbRootHist* histogram);
+    void paintHist(DbRootHist* histogram, TPad* overlayOnPad);
 
 
     void removeHistogramsFromPage();
@@ -306,13 +317,14 @@ class PresenterMainFrame : public TGMainFrame
     std::string global_stepSize;
 
     std::vector<DbRootHist*>  dbHistosOnPage;
-    std::vector<DbRootHist*>::iterator  dbHistosOnPageIt;
+//    std::vector<DbRootHist*>::iterator  dbHistosOnPageIt;
 
   private:
 
     pres::MsgLevel    m_verbosity;
     bool              m_historyMode;
     std::string       m_currentPartition;
+    std::string       m_currentPageName;
     std::string       m_referencePath;
     std::string       m_savesetPath;
     std::string       m_savesetFileName;
@@ -320,6 +332,7 @@ class PresenterMainFrame : public TGMainFrame
     Archive*          m_archive;
     IntervalPicker*   m_intervalPicker;
     pres::PresenterMode m_presenterMode;
+    pres::PresenterMode m_prevPresenterMode;
     pres::DatabaseMode  m_databaseMode;
     TTimer*           m_pageRefreshTimer;
     TTimer*           m_clockTimer;
@@ -337,6 +350,7 @@ class PresenterMainFrame : public TGMainFrame
     TGDockableFrame*  m_menuDock;
     TGDockableFrame*  m_toolBarDock;
     TGDockableFrame*  m_databaseHistogramsDock;
+    TGDockableFrame*  m_databaseAlarmsDock;
     TGDockableFrame*  m_pageDock;
     TGDockableFrame*  m_mainCanvasInfoDock;
     TPad*             m_drawPattern;
@@ -447,8 +461,13 @@ class PresenterMainFrame : public TGMainFrame
     const TGPicture*  m_iconSet;
     const TGPicture*  m_iconLevel;
     const TGPicture*  m_stockNewFormula;
+    const TGPicture*  m_iconAlarm;
+    const TGPicture*  m_iconWarning;
+    const TGPicture*  m_iconInfo;
+    const TGPicture*  m_iconAnalysisAlarm;
 
     TGVerticalFrame* m_rightMiscFrame;
+    TGVerticalFrame* m_leftMiscFrame;
     TGHorizontalFrame* m_mainHorizontalFrame;
     TGVSplitter* m_rightVerticalSplitter;
 
@@ -500,17 +519,25 @@ class PresenterMainFrame : public TGMainFrame
     TString m_2ddrawOption; // bulk DO
 
     TGListTree*          m_databaseHistogramTreeList;
+    TGListTree*          m_alarmHistogramTreeList;
     TGListTree*          m_pagesFromHistoDBListTree;
     TGListTree*          m_histoSvcListTree;
     TGPopupMenu*         m_histoSvcTreeContextMenu;
     TGPopupMenu*         m_histoDBContextMenu;
+    TGPopupMenu*         m_alarmDBContextMenu;
     TGPopupMenu*         m_pagesContextMenu;
     TGViewPort*          m_histoDBCanvasViewPort;
+    TGViewPort*          m_alarmDBCanvasViewPort;
     TGViewPort*          m_pagesFromHistoDBViewPort;
     TGCanvas*            m_dimSvcListTreeContainterCanvas;
     TGCanvas*            m_histoDBCanvas;
+    TGCanvas*            m_alarmDBCanvas;
     TGVerticalFrame*     m_histoDBFilterFrame;
+    TGVerticalFrame*     m_alarmDBFilterFrame;
     TGComboBox*          m_histoDBFilterComboBox;
+    TGComboBox*          m_alarmDBFilterComboBox;
+
+    std::vector<int> m_alarmMessageIDs;
 
     std::vector<std::string>      m_knownDimServices;
     std::vector<std::string>::const_iterator m_knownDimServicesIt;
