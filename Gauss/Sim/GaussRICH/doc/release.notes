@@ -4,6 +4,7 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
 
+!========================= GaussRICH v9r4 2009-04-06 =========================
 ! 2009-03-26 - Patrick Robbe
  - GetMCRichHitsAlg, GetMCRichOpticalPhotons, GetMCRichTracksAlg:
    . add the possibility to change location of hits, photons, ... to 
