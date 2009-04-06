@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.27 2008-10-03 10:47:30 robbep Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.28 2009-04-06 15:59:05 odescham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -690,8 +690,8 @@ void L0CaloMonit::SearchForHotCellsAndReset(IHistogram1D* hist , int caloType ) 
 	  card  = m_ecal->cardNumber( caloCell) ; 
 	  crate = m_ecal->cardCrate(card); 
 	  cardSlot = m_ecal->cardSlot(card) ; 
-	  std::vector<LHCb::CaloCellID>&  myCardChannels = m_ecal->cardChannels( card ) ;
-	  std::vector<LHCb::CaloCellID>::iterator it ;
+	  const std::vector<LHCb::CaloCellID>&  myCardChannels = m_ecal->cardChannels( card ) ;
+	  std::vector<LHCb::CaloCellID>::const_iterator it ;
 	  for ( it = myCardChannels.begin() ; it != myCardChannels.end() ;  it++ ) {
 	    if (*it == caloCell) cellChannel = channelNum ; 
 	    channelNum++ ; 
@@ -701,8 +701,8 @@ void L0CaloMonit::SearchForHotCellsAndReset(IHistogram1D* hist , int caloType ) 
 	  card  = m_hcal->cardNumber( caloCell) ; 
 	  crate = m_hcal->cardCrate(card); 
 	  cardSlot = m_hcal->cardSlot(card) ; 
-	  std::vector<LHCb::CaloCellID>&  myCardChannels = m_hcal->cardChannels( card ) ;
-	  std::vector<LHCb::CaloCellID>::iterator it ;
+	  const std::vector<LHCb::CaloCellID>&  myCardChannels = m_hcal->cardChannels( card ) ;
+	  std::vector<LHCb::CaloCellID>::const_iterator it ;
 	  for ( it = myCardChannels.begin() ; it != myCardChannels.end() ;  it++ ) {
 	    if (*it == caloCell) cellChannel = channelNum ; 
 	    channelNum++ ; 

@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.127 2008-11-21 08:10:14 cattanem Exp $
+! $Id: release.notes,v 1.128 2009-04-06 15:59:05 odescham Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Patrick Robbe & M-H. Schune
 !--------------------------------------------------------------------------
+
+! 2009-04-06 - Olivier Deschamps
+ - adapt to change in CaloDet
+
 
 !========================= L0Calo v9r19 2008-11-21 ========================
 ! 2008-10-31 - Patrick Robbe
