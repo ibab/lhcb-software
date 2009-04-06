@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.1 2009-03-30 13:21:38 nchiapol Exp $
+! $Id: release.notes,v 1.2 2009-04-06 11:20:46 nchiapol Exp $
 ! Package     : HistDBPython
 ! Responsible : Nicola Chiapolini
 !
+
+ - new feature:   CreateHistDBPages allows adding a page description 
+ - new feature:   SetHistDisplayOptions allows to set custom labels 
+ - new algortihm: AddNewHistToDB 
 
 ! 20090325 HistDBPython v1r0
  - First Version of HistDPPython uploaded. 
