@@ -1,4 +1,4 @@
-// $Id: BuildMCTrackInfo.cpp,v 1.9 2008-12-06 21:48:01 cattanem Exp $
+// $Id: BuildMCTrackInfo.cpp,v 1.10 2009-04-06 09:53:58 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -59,13 +59,13 @@ StatusCode BuildMCTrackInfo::initialize() {
   m_velo = getDet<DeVelo>( DeVeloLocation::Default );
 
   m_ttDet = getDet<DeSTDetector>(DeSTDetLocation::TT );
-  info() << "Number TT layer " << m_ttDet->layers().size() << endreq;
+  debug() << "Number of TT layers " << m_ttDet->layers().size() << endmsg;
   
   m_itDet = getDet<DeSTDetector>(DeSTDetLocation::IT );
-  info() << "Number IT layer " << m_itDet->layers().size() << endreq;  
+  debug() << "Number of IT layers " << m_itDet->layers().size() << endmsg;
 
   m_otDet = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
-  info() << "Number OT layer " << m_otDet->layers().size() << endreq;  
+  debug() << "Number of OT layers " << m_otDet->layers().size() << endmsg;
 
   return StatusCode::SUCCESS;
 };
@@ -74,7 +74,10 @@ StatusCode BuildMCTrackInfo::initialize() {
 // Main execution
 //=============================================================================
 StatusCode BuildMCTrackInfo::execute() {
-  if(msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endreq;
+  const bool isDebug   = msgLevel(MSG::DEBUG);
+  const bool isVerbose = msgLevel(MSG::VERBOSE);
+
+  if(isDebug) debug() << "==> Execute" << endmsg;
   
   LinkedTo<LHCb::MCParticle, LHCb::VeloCluster> veloLink( eventSvc(), msgSvc(), 
                                        LHCb::VeloClusterLocation::Default );
@@ -88,16 +91,8 @@ StatusCode BuildMCTrackInfo::execute() {
                                      LHCb::STClusterLocation::ITClusters );
   if( itLink.notFound() ) return StatusCode::FAILURE;
   
-  /*** Old ***/
-  // LinkedTo<LHCb::MCParticle, LHCb::OTTime> otLink( eventSvc(), msgSvc(), 
-  //                                                    LHCb::OTTimeLocation::Default );
-  // if( otLink.notFound() ) return StatusCode::FAILURE;
-  /***********/
-
-  /*** New ***/
   LinkedTo<LHCb::MCParticle> otLink( eventSvc(), msgSvc(), LHCb::OTTimeLocation::Default );
   if( otLink.notFound() ) return StatusCode::FAILURE;
-  /***********/
 
   LHCb::MCParticles* mcParts = get<LHCb::MCParticles>(LHCb::MCParticleLocation::Default);
 
@@ -113,7 +108,7 @@ StatusCode BuildMCTrackInfo::execute() {
   }
   unsigned int nbMcPart = highestKey;
 
-  if(msgLevel(MSG::DEBUG)) debug() << "Highest MCParticle number " << nbMcPart << endreq;
+  if(isDebug) debug() << "Highest MCParticle number " << nbMcPart << endmsg;
 
   std::vector<int> veloR   ( nbMcPart+1, 0 );
   std::vector<int> lastVelo ( nbMcPart+1, -1 );
@@ -139,11 +134,11 @@ StatusCode BuildMCTrackInfo::execute() {
             lastVelo[MCNum] = sensor;
             if ( sens->isR() ) {
               veloR[MCNum]++;
-              if(msgLevel(MSG::VERBOSE))
+              if(isVerbose)
                 verbose() << "MC " << MCNum << " Velo R sensor " << sensor << " nbR " << veloR[MCNum] << endmsg;
             } else if ( sens->isPhi() ) {
               veloPhi[MCNum]++;
-              if(msgLevel(MSG::VERBOSE))
+              if(isVerbose)
                 verbose() << "MC " << MCNum << " Velo Phi sensor " << sensor << " nbPhi " << veloPhi[MCNum] << endmsg;
             }
           }
@@ -166,7 +161,7 @@ StatusCode BuildMCTrackInfo::execute() {
         MCNum = part->key();
         if ( station.size() > MCNum ) {
           updateBit( station[MCNum], sta, isX );
-          if(msgLevel(MSG::VERBOSE)) verbose() << "MC " << MCNum << " TT Sta " << sta << " lay " << lay << endreq;
+          if(isVerbose) verbose() << "MC " << MCNum << " TT Sta " << sta << " lay " << lay << endmsg;
         }
       }
       part = ttLink.next() ;
@@ -186,26 +181,15 @@ StatusCode BuildMCTrackInfo::execute() {
         MCNum = part->key();
         if ( station.size() > MCNum ) {
           updateBit( station[MCNum], sta, isX );
-          if(msgLevel(MSG::VERBOSE)) verbose() << "MC " << MCNum << " IT Sta " << sta << " lay " << lay << endreq;
+          if(isVerbose) verbose() << "MC " << MCNum << " IT Sta " << sta << " lay " << lay << endmsg;
         }
       }
       part = itLink.next() ;
     }
   }
   
-  //== OT Times -> particle associaton
-  /*** Old ***/
-  // LHCb::OTTimes* OTTim = get<LHCb::OTTimes>( LHCb::OTTimeLocation::Default);
-  /**********/
-  
-  /// There should be a 1-to-1 correspondence. MCOTTimes are encoded and put in the
-  /// RawBuffer which is then decoded to create OTTimes. The channelID of the two objects
-  /// should be the same
-  /*** New ***/
   const LHCb::MCOTTimes* OTTim = get<LHCb::MCOTTimes>(LHCb::MCOTTimeLocation::Default);
-  /***********/
 
-  ///Old: for ( LHCb::OTTimes::const_iterator timIt = OTTim->begin() ;
   for ( LHCb::MCOTTimes::const_iterator timIt = OTTim->begin() ;
         OTTim->end() != timIt ; timIt++ ) {
     // OT stations should be 2-4 in this numbering, 0,1 are TT stations
@@ -219,7 +203,7 @@ StatusCode BuildMCTrackInfo::execute() {
         MCNum = part->key();
         if ( station.size() > MCNum ) {
           updateBit( station[MCNum], sta, isX );
-          if(msgLevel(MSG::VERBOSE)) verbose() << "MC " << MCNum << " OT Sta " << sta << " lay " << lay << endreq;
+          if(isVerbose) verbose() << "MC " << MCNum << " OT Sta " << sta << " lay " << lay << endmsg;
         }
       }
       part = otLink.next() ;
@@ -248,15 +232,15 @@ StatusCode BuildMCTrackInfo::execute() {
 
     if ( 0 != mask ) {
       trackInfo->setProperty( *itP, mask );
-      if(msgLevel(MSG::DEBUG)) debug() << format( "Track %4d mask %8x nR %2d nPhi %2d ", 
-                         MCNum, mask, veloR[MCNum], veloPhi[MCNum] );
+      if(isDebug) debug() << format( "Track %4d mask %8x nR %2d nPhi %2d ", 
+                                     MCNum, mask, veloR[MCNum], veloPhi[MCNum] );
       if ( MCTrackInfo::maskHasVelo == (mask & MCTrackInfo::maskHasVelo ) )
-        if(msgLevel(MSG::DEBUG)) debug() << " hasVelo ";
+        if(isDebug) debug() << " hasVelo ";
       if ( MCTrackInfo::maskHasTT   == (mask & MCTrackInfo::maskHasTT ) )
-        if(msgLevel(MSG::DEBUG)) debug() << " hasTT ";
+        if(isDebug) debug() << " hasTT ";
       if ( MCTrackInfo::maskHasT    == (mask & MCTrackInfo::maskHasT   ) )
-        if(msgLevel(MSG::DEBUG)) debug() << " hasT ";
-      if(msgLevel(MSG::DEBUG)) debug() << endreq;
+        if(isDebug) debug() << " hasT ";
+      if(isDebug) debug() << endmsg;
     }
   }
 
@@ -279,6 +263,7 @@ StatusCode BuildMCTrackInfo::finalize() {
 //=========================================================================
 void BuildMCTrackInfo::computeAcceptance ( std::vector<int>& station ) {
 
+  const bool isDebug = msgLevel(MSG::DEBUG);
   std::vector<int> nVeloR( station.size(), 0 );
   std::vector<int> nVeloP( station.size(), 0 );
   
@@ -326,8 +311,8 @@ void BuildMCTrackInfo::computeAcceptance ( std::vector<int>& station ) {
     Gaudi::XYZPoint midPoint = (*tHit)->midPoint();
     DeSTLayer* ttLay = m_ttDet->findLayer( midPoint );
     if ( 0 == ttLay ) {
-      debug() << format( "TT Hit not in any LAYER ! x %8.2f y%8.2f z%9.2f",
-                         midPoint.x(), midPoint.y(), midPoint.z() ) << endreq;
+      if(isDebug) debug() << format( "TT Hit not in any LAYER ! x %8.2f y%8.2f z%9.2f",
+                                     midPoint.x(), midPoint.y(), midPoint.z() ) << endmsg;
       continue;
     }
     int  sta = ttLay->elementID().station() -1;
@@ -354,8 +339,8 @@ void BuildMCTrackInfo::computeAcceptance ( std::vector<int>& station ) {
     Gaudi::XYZPoint midPoint = (*iHit)->midPoint();
     DeSTLayer* itLay = m_itDet->findLayer( midPoint );
     if ( 0 == itLay ) {
-      debug() << format( "IT Hit not in any LAYER ! x %8.2f y%8.2f z%9.2f",
-                         midPoint.x(), midPoint.y(), midPoint.z() ) << endreq;
+      if(isDebug) debug() << format( "IT Hit not in any LAYER ! x %8.2f y%8.2f z%9.2f",
+                                     midPoint.x(), midPoint.y(), midPoint.z() ) << endmsg;
       continue;
     }
     int  sta = itLay->elementID().station() +1;  // want 2,3,4
@@ -381,8 +366,8 @@ void BuildMCTrackInfo::computeAcceptance ( std::vector<int>& station ) {
     Gaudi::XYZPoint midPoint = (*oHit)->midPoint();
     DeOTLayer* otLay = m_otDet->findLayer( midPoint );
     if ( 0 == otLay ) {
-      debug() << format( "OT Hit not in any LAYER ! x %8.2f y%8.2f z%9.2f",
-                         midPoint.x(), midPoint.y(), midPoint.z() ) << endreq;
+      if(isDebug) debug() << format( "OT Hit not in any LAYER ! x %8.2f y%8.2f z%9.2f",
+                                     midPoint.x(), midPoint.y(), midPoint.z() ) << endmsg;
       continue;
     }
     int sta = otLay->elementID().station() +1;

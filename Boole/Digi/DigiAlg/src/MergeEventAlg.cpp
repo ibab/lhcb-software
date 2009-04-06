@@ -1,4 +1,4 @@
-// $Id: MergeEventAlg.cpp,v 1.15 2007-02-05 16:06:08 cattanem Exp $
+// $Id: MergeEventAlg.cpp,v 1.16 2009-04-06 09:53:59 cattanem Exp $
 #define MERGEEVENTALG_CPP
 // Include files
 
@@ -268,7 +268,7 @@ StatusCode MergeEventAlg::readAndLoadEvent( const std::string& subPath )
 
     if ( msgLevel(MSG::DEBUG) )
     {
-      debug() << "Resetting links for " << mcPath <<  endreq;
+      debug() << "Resetting links for " << mcPath <<  endmsg;
     }
 
     // Reset links for object
@@ -329,7 +329,7 @@ StatusCode MergeEventAlg::resetLinks( const std::string& subPath,
 
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "  Resetting links for " << pMCObj->name() <<  endreq;
+    debug() << "  Resetting links for " << pMCObj->name() <<  endmsg;
   }
   
   LinkManager::LinkVector oldlinks = pMCObj->linkMgr()->m_linkVector;

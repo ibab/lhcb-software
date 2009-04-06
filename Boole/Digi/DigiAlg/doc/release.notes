@@ -4,6 +4,12 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-04-06 - Marco Cattaneo
+ - Add FilterMCPrimaryVtx algorithm: removes all but primary vertices from
+   MCVertices container and updates MCHeader accordingly. Daughters are 
+   cleared. 
+ - Use endmsg instead of endreq
+
 ! 2009-03-05 - Marco Cattaneo
  - Add to BooleInit capability to print event time
 
