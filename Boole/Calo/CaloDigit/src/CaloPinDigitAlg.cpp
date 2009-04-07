@@ -1,4 +1,4 @@
-// $Id: CaloPinDigitAlg.cpp,v 1.5 2007-06-06 15:04:24 cattanem Exp $
+// $Id: CaloPinDigitAlg.cpp,v 1.6 2009-04-07 09:54:24 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -194,17 +194,19 @@ StatusCode CaloPinDigitAlg::execute() {
   // ==============================
   // Create Noise for the pinDiode 
   // ============================== 
-  CaloVector<CaloPin>&  caloPins = m_calo->caloPins();
+  const CaloVector<CaloPin>&  caloPins = m_calo->caloPins();
 
   // (in)coherent noise
   Rndm::Numbers rndCNoise( rndmSvc() , Rndm::Gauss( 0.0 , m_cNoise ) );// coherent noise
   Rndm::Numbers rndINoise( rndmSvc() , Rndm::Gauss( 0.0 , m_iNoise ) );// incoherent noise  
   double cNoise = rndCNoise();
-  for( CaloVector<CaloPin>::iterator iPin = caloPins.begin() ; iPin != caloPins.end() ; ++iPin ) {
-    const LHCb::CaloCellID   id    = (*iPin).id();
-    int pinSignal  = (int) floor( cNoise + rndINoise() + 0.5 );    
+  for( CaloVector<CaloPin>::const_iterator iPin = caloPins.begin() ; iPin != caloPins.end() ; ++iPin ) {
+    CaloPin pin = *iPin;
+    const LHCb::CaloCellID   id    = pin.id();
+    int pinSignal  = (int) floor( cNoise + rndINoise() + 0.5 ); 
+    std::vector<int> leds = pin.leds();
     debug() << " PIN " << iPin-caloPins.begin() << " id " << id 
-            << " pedestal : " << pinSignal << " Leds : " << (*iPin).leds() << endreq;
+            << " pedestal : " << pinSignal << " Leds : " << leds << endreq;
     LHCb::CaloAdc* pinAdc = new LHCb::CaloAdc(id , pinSignal );
     pinAdcs->insert( pinAdc ); 
   }
@@ -213,25 +215,26 @@ StatusCode CaloPinDigitAlg::execute() {
   // ================//
   // Create LED data //
   // ================//
-  std::vector<CaloLed>&  caloLeds = m_calo->caloLeds();
+  const std::vector<CaloLed>&  caloLeds = m_calo->caloLeds();
 
   debug() << " Get " << caloLeds.size() << " LEDs " << endreq;
   
 
   // loop over LEDs
-  for(std::vector<CaloLed>::iterator iLed = caloLeds.begin() ; iLed != caloLeds.end() ; ++iLed ) {
-
-    int index = (*iLed).number();
+  for(std::vector<CaloLed>::const_iterator iLed = caloLeds.begin() ; iLed != caloLeds.end() ; ++iLed ) {
+    CaloLed led = *iLed;
+    int index = led.number();
     debug() << "Led index " << index << endreq;
     // LED firing : use m_rate & m_count
     if( index-m_count < 0 )continue;
     if( 0 !=  m_rate*( (int) (index-m_count)/m_rate)-(index-m_count) )continue;
     debug() << "---> is fired" << endreq;
-
+    const std::vector<LHCb::CaloCellID>& cells = led.cells();
     //if( !ledIsFired ) continue;
-    debug () << "-----> LED id " << (*iLed).number() 
-             << " => "  << (*iLed).cells().size()  << " cells "
-             << " => PIN id " <<(*iLed).pin() <<  " => " << caloPins[(*iLed).pin()].cells().size() <<" cells"<< endreq; 
+    CaloPin cPin = caloPins[led.pin()];
+    debug () << "-----> LED id " << led.number() 
+             << " => "  << cells.size()  << " cells "
+             << " => PIN id " << led.pin() <<  " => " << cPin.cells().size() <<" cells"<< endreq; 
     
 
     //
@@ -245,9 +248,8 @@ StatusCode CaloPinDigitAlg::execute() {
 
     debug() << " -----> Add data value " << data << endreq;
     // Add data to cells ADCs
-    std::vector<LHCb::CaloCellID>& cells = (*iLed).cells();
     debug() << cells.size() << " connected cells " << endreq;
-    for ( std::vector<LHCb::CaloCellID>::iterator iCell = cells.begin(); iCell != cells.end() ; ++iCell){
+    for ( std::vector<LHCb::CaloCellID>::const_iterator iCell = cells.begin(); iCell != cells.end() ; ++iCell){
       LHCb::CaloAdc* adc = adcs->object( *iCell );
       if( NULL == adc){
         warning() << " ADC not found for cell " << *iCell << endreq;

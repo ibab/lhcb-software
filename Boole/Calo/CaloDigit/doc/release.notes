@@ -4,6 +4,9 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+! 2009-04-06 - Olivier Deschamps
+ - CaloPinDigitAlg :  adapt to change in CaloDet
+
 !======================== CaloDigit v2r12 2009-02-24 =========================
 ! 2009-02-19 - Olivier Deschamps
  - CaloDigitAlg :  - align default pedestalShit value with condDB/simcond value
