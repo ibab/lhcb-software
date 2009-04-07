@@ -1,6 +1,6 @@
 // 
 // SliceReaderSvc.opts
-// $Id: ReaderSvc1.opts,v 1.1 2009-04-03 06:46:00 garnierj Exp $
+// $Id: ReaderSvc1.opts,v 1.2 2009-04-07 16:30:33 garnierj Exp $
 //#include "$ONLINETASKSROOT/options/OnlineEnvironment.opts"
 #include "/group/online/dataflow/options/FEST/Injector_Info.opts"
 ApplicationMgr.HistogramPersistency  = "NONE";
@@ -16,39 +16,9 @@ ApplicationMgr.ExtSvc		     += { "MonitorSvc" };
 ApplicationMgr.OutputLevel = 5;
 Reader1.OutputLevel = 3;
 MessageSvc.OutputLevel= 3;
-Reader1.InputFiles={
-"/daqarea/lhcb/data/INFEST2_NOLUMI/00004314_00000001_1-nolumi.mdf",
-"/daqarea/lhcb/data/INFEST2_NOLUMI/00004314_00000002_1-nolumi.mdf",
-"/daqarea/lhcb/data/INFEST2_NOLUMI/00004314_00000003_1-nolumi.mdf",
-"/daqarea/lhcb/data/INFEST2_NOLUMI/00004314_00000004_1-nolumi.mdf",
-"/daqarea/lhcb/data/INFEST2_NOLUMI/00004314_00000005_1-nolumi.mdf",
-"/daqarea/lhcb/data/INFEST2_NOLUMI/00004314_00000006_1-nolumi.mdf",
-"/daqarea/lhcb/data/INFEST2_NOLUMI/00004314_00000007_1-nolumi.mdf",
-"/daqarea/lhcb/data/INFEST2_NOLUMI/00004314_00000008_1-nolumi.mdf",
-"/daqarea/lhcb/data/INFEST2_NOLUMI/00004314_00000009_1-nolumi.mdf",
-"/daqarea/lhcb/data/INFEST2_NOLUMI/00004314_00000010_1-nolumi.mdf",
-"/daqarea/lhcb/data/INFEST2_NOLUMI/00004314_00000011_1-nolumi.mdf",
-"/daqarea/lhcb/data/INFEST2_NOLUMI/00004314_00000012_1-nolumi.mdf",
-"/daqarea/lhcb/data/INFEST2_NOLUMI/00004314_00000013_1-nolumi.mdf",
-"/daqarea/lhcb/data/INFEST2_NOLUMI/00004314_00000014_1-nolumi.mdf",
-"/daqarea/lhcb/data/INFEST2_NOLUMI/00004314_00000016_1-nolumi.mdf",
-"/daqarea/lhcb/data/INFEST2_NOLUMI/00004314_00000018_1-nolumi.mdf",
-"/daqarea/lhcb/data/INFEST2_NOLUMI/00004314_00000019_1-nolumi.mdf",
-"/daqarea/lhcb/data/INFEST2_NOLUMI/00004314_00000020_1-nolumi.mdf",
-"/daqarea/lhcb/data/INFEST2_NOLUMI/00004314_00000021_1-nolumi.mdf",
-"/daqarea/lhcb/data/INFEST2_NOLUMI/00004314_00000022_1-nolumi.mdf",
-"/daqarea/lhcb/data/INFEST2_NOLUMI/00004314_00000023_1-nolumi.mdf",
-"/daqarea/lhcb/data/INFEST2_NOLUMI/00004314_00000024_1-nolumi.mdf",
-"/daqarea/lhcb/data/INFEST2_NOLUMI/00004314_00000025_1-nolumi.mdf",
-"/daqarea/lhcb/data/INFEST2_NOLUMI/00004314_00000026_1-nolumi.mdf",
-"/daqarea/lhcb/data/INFEST2_NOLUMI/00004314_00000028_1-nolumi.mdf",
-"/daqarea/lhcb/data/INFEST2_NOLUMI/00004314_00000029_1-nolumi.mdf"
-};
-
-//@OnlineEnv.Reader1_Files;
-Reader1.Loop= true;
-//@OnlineEnv.Loop;
-Reader1.BufferName= "PERA";//@OnlineEnv.Reader1_Buffer;
+Reader1.InputFiles= @OnlineEnv.Reader1_Files;
+Reader1.Loop= @OnlineEnv.Injector_LoopFiles;
+Reader1.BufferName= @OnlineEnv.Reader1_Name;
 Reader1.PartitionID= @OnlineEnv.PartitionID;
 Reader1.Requirements         = {
 "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"

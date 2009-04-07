@@ -1,6 +1,6 @@
 // 
 // SliceReaderSvc.opts
-// $Id: MEPInjector.opts,v 1.12 2009-04-03 06:46:00 garnierj Exp $
+// $Id: MEPInjector.opts,v 1.13 2009-04-07 16:30:33 garnierj Exp $
 //#include "$ONLINETASKSROOT/options/OnlineEnvironment.opts"
 #include "/group/online/dataflow/options/FEST/Injector_Info.opts"
 ApplicationMgr.HistogramPersistency  = "NONE";
@@ -33,22 +33,19 @@ Injector.PartitionID=@OnlineEnv.PartitionID;
 /// Not useful params
 Injector.TimeOut = 1000;  //milliseconds
 
-Injector.AutoMode = true;
+Injector.AutoMode = false;
 Injector.HLTIPAddrTo = "192.169.19.2"; //Still used in Automode
 
 Injector.ARPME = false;
 
-Injector.BufferNames = { //=@OnlineEnv.something;
- "PERA",
- "LUMI"
-};
+Injector.BufferNames = @OnlineEnv.Injector_Readers;
 
 Injector.BufferOptions = {
- "-s=700000", 
- "-e=5000",
- "-u=20"
-// "-b=15", 
-// "-f"
+ "-s=10000", 
+ "-e=100",
+ "-u=20",
+ "-b=15", 
+ "-f"
 };
 
 Injector.Requirements         = {
