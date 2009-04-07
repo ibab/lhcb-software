@@ -527,6 +527,8 @@ if __name__ == "__main__":
         help()
         sys.exit()
 
+    binary = ''
+
     for key,value in keys:
         if key in ('-d', '--debug'):
             debug_flag = 1
