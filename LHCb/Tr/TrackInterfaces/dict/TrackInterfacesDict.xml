@@ -1,4 +1,5 @@
 <lcgdict>
+  <class name = "ISTClusterCollector"        />
   <class name    = "IAddTTClusterTool"       />
   <class name    = "IHitExpectation"         />
   <class name    = "IHltV0Upgrade"           />

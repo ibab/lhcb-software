@@ -1,6 +1,7 @@
 #ifndef DICT_TRACKINTERFACESDICT_H 
 #define DICT_TRACKINTERFACESDICT_H 1
 
+#include "TrackInterfaces/ISTClusterCollector.h"
 #include "TrackInterfaces/IAddTTClusterTool.h"
 #include "TrackInterfaces/IFunctionTool.h"
 #include "TrackInterfaces/IHitExpectation.h"
