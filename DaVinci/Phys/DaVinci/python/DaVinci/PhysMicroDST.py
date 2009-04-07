@@ -1,7 +1,7 @@
 """
 High level configuration example for a typical physics MicroDST
 """
-__version__ = "$Id: PhysMicroDST.py,v 1.4 2009-04-03 10:44:46 jpalac Exp $"
+__version__ = "$Id: PhysMicroDST.py,v 1.5 2009-04-07 08:05:40 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 
@@ -20,6 +20,8 @@ class PhysMicroDST(LHCbConfigurableUser) :
         , "CopyPVs"              : True
         , "CopyBTags"            : True
         , "CopyReFittedPVs"      : False
+        , "CopyL0DUReport"       : False
+        , "CopyHltDecReports"    : False
         , "CopyMCTruth"          : False
         }
 
@@ -163,6 +165,19 @@ class PhysMicroDST(LHCbConfigurableUser) :
             self.copyP2PVLink("CopyP2RefitPVLink",
                               self.P2ReFitPVRelationsLoc() )
 
+    def copyL0DUReport(self) :
+        from Configurables import CopyL0DUReport
+        copyL0 = CopyL0DUReport()
+        self.setOutputPrefix(copyL0)
+        self.seqMicroDST().Members += [copyL0]
+
+    def copyHltDecReports(self) :
+        from Configurables import CopyHltDecReports
+        copyHlt = CopyHltDecReports()
+        self.setOutputPrefix(copyHlt)
+        self.seqMicroDST().Members += [copyHlt]
+
+
     def __apply_configuration__(self) :
         """
         PhysMicroDST configuration
@@ -185,6 +200,8 @@ class PhysMicroDST(LHCbConfigurableUser) :
         if self.getProp("CopyParticles") : self.copyParticleTrees()
         if self.getProp("CopyPVs") : self.copyPVs()
         if self.getProp("CopyBTags") : self.copyBTaggingInfo()
+        if self.getProp("CopyL0DUReport") : self.copyL0DUReport()
+        if self.getProp("CopyHltDecReports") : self.copyHltDecReports()
         if self.getProp("CopyReFittedPVs") : self.copyReFittedPVs()
         if self.getProp("CopyMCTruth") : self.copyMCInfo()
         mdstSeq.Members += [self.initMicroDSTStream()]
