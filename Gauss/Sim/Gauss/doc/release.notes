@@ -4,9 +4,18 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-04-07 - Gloria CORTI
+ - Gauss-2008.py is only settings the tags, it now imports
+   Gauss.py that has parts common
+   to all jobs and the sequencing (to be replaced by Gauss() configurable)
+ - Gauss-MC09.py replaces Gauss-2008.py for stearing
+ - Remove GaussRead.opts that is no longer working
+ - Move GaussTape configuration and setting in Configuration.py and remove
+   GaussTape.opts file. Modify Gauss.opts to remove this obsolete part.
+
 ! 2009-04-06 - Gloria CORTI
  - Increase major version of DecFiles to be used as previous one is 
-   incompatible
+   incompatible with EvtGen new version.
 
 ! 2009-04-02 - Silvia MIGLIORANZI
  - QMTest reference files updated and gauss-2008.qmt modified adding new lines 
