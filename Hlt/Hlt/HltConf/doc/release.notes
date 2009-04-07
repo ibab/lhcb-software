@@ -1,10 +1,14 @@
-! $Id: release.notes,v 1.199 2009-04-06 13:04:24 graven Exp $ 
+! $Id: release.notes,v 1.200 2009-04-07 07:35:19 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+
+! 2009-04-07 Gerhard Raven
+ - avoid assuming any naming convention for the last algorithm
+   in Hlt2Lines
 
 ! 2009-04-06 Gerhard Raven
  - for now, run all Hlt2Lines as part of the Hlt2Lines sequencer

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.48 2009-04-03 18:49:18 graven Exp $ 
+# $Id: HltLine.py,v 1.49 2009-04-07 07:35:19 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.48 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.49 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -125,7 +125,7 @@ def memberName     ( member, line, level='Hlt1' ) :
 ## Convention: the name of 'Decision' algorithm inside HltLine
 def decisionName   ( line, level = 'Hlt1' ) :
     """Convention: the name of 'Decision' algorithm inside HltLine"""
-    return level + '%sDecision'   % line if line != 'Global' else 'Hlt1Global'
+    return level + '%sDecision'   % line if line != 'Global' else level+'Global'
 
 ## the list of all created lines 
 _hlt_1_lines__ = []
@@ -1194,14 +1194,9 @@ class Hlt2Line(object):
         ## TODO: in case of HLT, we have a dependency... dangerous, as things become order dependent...
         if HLT  : mdict.update( { 'HLT'  : HDRFilter  ( hltentryName ( line,'Hlt2' ) , Code = self._HLT  ) } )
         if _members : 
-            # TODO: if len(_members) = 1, we don't need a sequencer...
-            # TODO: but what about the name of the algorithm?
-            #if len(_members) == 1 : 
-            #    mdict.update( { 'Filter1' : _members[0] })
-            #else :
-            members = _members + [ HltCopyParticleSelection( 'Hlt2%sDecision'%self._name
-                                                           , InputSelection = 'TES:/Event/HLT/Hlt2Sel%s/Particles'%self._name
-                                                           , OutputSelection = "Hlt2%sDecision"%self._name) ]
+            members = _members + [ HltCopyParticleSelection( decisionName( line, 'Hlt2')
+                                                           , InputSelection = 'TES:/Event/HLT/%s/Particles'%_members[-1].getName()
+                                                           , OutputSelection = decisionName(line, 'Hlt2')) ]
             mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line,'Hlt2' ) , Members = members ) })
         # final cloning of all parameters:
         __mdict = deepcopy ( mdict ) 
