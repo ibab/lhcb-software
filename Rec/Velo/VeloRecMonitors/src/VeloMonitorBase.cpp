@@ -1,4 +1,4 @@
-// $Id: VeloMonitorBase.cpp,v 1.1.1.1 2008-08-18 10:17:53 erodrigu Exp $
+// $Id: VeloMonitorBase.cpp,v 1.2 2009-04-07 17:12:24 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -41,11 +41,13 @@ StatusCode VeloMonitorBase::initialize() {
   StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiHistoAlg
 
+  setHistoTopDir( "Velo/" );
+
+  printProps();
+
   m_debugLevel = msgLevel( MSG::DEBUG );
 
   if ( m_debugLevel ) debug() << "==> Initialize" << endmsg;
-
-  setHistoTopDir( "Velo/" );
 
   m_veloDet = getDet<DeVelo>( DeVeloLocation::Default );
 
