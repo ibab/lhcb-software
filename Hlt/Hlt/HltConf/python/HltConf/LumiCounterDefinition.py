@@ -25,7 +25,7 @@ class LumiCounterDefinitionConf(LHCbConfigurableUser) :
   def defineCounters( self ):
     fullReco = self.getProp('FullReco')
     self.Definition  = {
-      'Velo'     : [LumiCountTracks   , fullReco, 'Hlt/Track/Velo'  ,   5,  200],
+      # 'Velo'     : [LumiCountTracks   , fullReco, 'Hlt/Track/Velo'  ,   5,  200],
       'RZVelo'   : [LumiCountTracks   , fullReco, 'Hlt/Track/RZVelo',   5,  200],
       'Muon'     : [LumiCountTracks   , False   , 'Rec/Tracks/Muons',   5,  200],
       'PV2D'     : [LumiCountVertices , fullReco, 'Hlt/Vertex/PV2D' ,   1,   20],
