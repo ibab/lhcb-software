@@ -1,6 +1,5 @@
 from Gaudi.Configuration import *
-from DaVinci.Configuration import DaVinci
-from MicroDSTExample.Configuration import PhysMicroDST
+from Configurables import DaVinci, PhysMicroDST
 
 importOptions("$STDOPTS/PreloadUnits.opts")
 importOptions( "$CCBARROOT/options/DoDC06SelBs2Jpsi2MuMuPhi2KK_lifetime_unbiased.opts")
@@ -8,6 +7,8 @@ conf = PhysMicroDST()
 conf.OutputPrefix = "MicroDST"
 conf.MicroDSTFile = "MyTestMDST_MC_newConf3.dst"
 conf.MicroDSTSelectionAlg = "DC06selBs2JpsiPhi_unbiased"
+conf.CopyL0DUReport = True
+conf.CopyHltDecReports = False
 conf.CopyMCTruth = True
 conf.CopyReFittedPVs = True
 
