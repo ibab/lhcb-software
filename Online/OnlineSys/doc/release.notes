@@ -5,7 +5,13 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-    - Remove obsolete package Online/Viewer from release
+
+</PRE><H1><A NAME=v4r21>2009-04-10 OnlineSys v4r21</A></H1><PRE>
+     New version v4r21 built against LHCb v26r3 and GAUDI v20r4.
+     - Updates to Gaucho, GaudiOnline, OnlineKernel, OnlineTasks, 
+       DIM, UPI, ROMon, ROLogger, Writer, OMAlib, Presenter
+     - New packages: HistDBPython and Camera
+     - Remove obsolete package Online/Viewer amd Online/OnlineDummyReader from release
 
 </PRE><H1><A NAME=v4r20>2009-01-10 OnlineSys v4r20</A></H1><PRE>
      New version v4r20 built against LHCb v26r2 and GAUDI v20r4.
