@@ -1,9 +1,11 @@
 #include <cstdio>
 #include "rtl_internal.h"
-#ifdef USE_PTHREADS
 #include <signal.h>
-#include <sys/wait.h>
 #include <fcntl.h>
+#ifdef USE_PTHREADS
+#include <sys/wait.h>
+#elif defined(_WIN32)
+#define SIGKILL SIGTERM
 #endif
 #include <iostream>
 #include <cerrno>

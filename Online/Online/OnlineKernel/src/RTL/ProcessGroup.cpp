@@ -2,10 +2,11 @@
 // $ID:
 #include "RTL/ProcessGroup.h"
 
+#include <cmath>
 #include <cstdio>
+#include <signal.h>
 #include "rtl_internal.h"
 #ifdef USE_PTHREADS
-#include <signal.h>
 #include <sys/wait.h>
 #endif
 #include <iostream>
@@ -134,7 +135,7 @@ extern "C" int rtl_test_process_group(int, char** ) {
   pg.wait();
   pg.removeAll();
   time_t stop = ::time(0);
-  if ( fabs(stop-start) > 14 ) {
+  if ( ::fabs(float(stop-start)) > 14E0 ) {
     cout << "All processes ended" << endl;
   }
   else {
@@ -195,7 +196,7 @@ extern "C" int rtl_test_sub_processes(int, char** ) {
   pg.wait();
   pg.removeAll();
   time_t stop = ::time(0);
-  if ( fabs(stop-start) >= 6 ) {
+  if ( ::fabs(float(stop-start)) >= 6E0 ) {
     cout << "All processes ended" << endl;
   }
   else {

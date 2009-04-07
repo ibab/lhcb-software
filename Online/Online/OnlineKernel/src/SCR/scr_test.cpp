@@ -3,7 +3,9 @@
 #include "SCR/scr.h"
 #include "RTL/rtl.h"
 using namespace SCR;
-
+#ifdef _WIN32
+#define popen _popen
+#endif
 static Pasteboard* pb;
 typedef Display* PDisplay;
 static PDisplay d0, d1, d2, d3, d4, d5;

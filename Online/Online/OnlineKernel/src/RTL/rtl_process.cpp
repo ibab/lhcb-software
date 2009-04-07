@@ -2,10 +2,8 @@
 #include "RTL/ProcessGroup.h"
 
 #include <cstdio>
-#include "rtl_internal.h"
-#ifdef USE_PTHREADS
 #include <signal.h>
-#endif
+#include "rtl_internal.h"
 #include <iostream>
 #include <cerrno>
 
@@ -13,7 +11,8 @@ using namespace std;
 using namespace RTL;
 
 extern "C" int rtl_start_process2(int, char**) {
-  pid_t pID = ::fork();
+#ifndef _WIN32
+  int pID = ::fork();
   if (pID == 0)  {       // child
     cout << "PG:" << getpgid(0) << " PID:" << pID << "  getPID:" << getpid() << " 'Child Process'" << endl;
     ::execl("/bin/sleep","SLEEPER","10",0);
@@ -43,6 +42,7 @@ extern "C" int rtl_start_process2(int, char**) {
     ::system("ps -ef | grep frank");
     ::lib_rtl_sleep(3000);
   }
+#endif
   return 0;
 }
 
