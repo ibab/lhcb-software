@@ -13,7 +13,7 @@ class MCAssociator :
         self.mcAssoc = MCAssociatorTool
         self.verbose = verbose
     def __call__(self, p) :
-        mcp = self.mcAssoc.bestRelatedMCP(p)
+        mcp = self.mcAssoc.relatedMCP(p)
         if self.verbose and (mcp == None) :
             print "Found no assoc trees"
         return mcp
