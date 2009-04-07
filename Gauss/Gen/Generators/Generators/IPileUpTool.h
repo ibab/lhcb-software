@@ -1,4 +1,4 @@
-// $Id: IPileUpTool.h,v 1.3 2009-04-07 16:11:21 gcorti Exp $
+// $Id: IPileUpTool.h,v 1.4 2009-04-07 16:18:32 gcorti Exp $
 #ifndef GENERATORS_IPILEUPTOOL_H 
 #define GENERATORS_IPILEUPTOOL_H 1
 
@@ -20,7 +20,7 @@ namespace LHCb {
  *  @date   2005-08-17
  */
 
-static const InterfaceID IID_IPileUpTool( "IPileUpTool" , 1 , 0 ) ;
+static const InterfaceID IID_IPileUpTool( "IPileUpTool" , 2 , 0 ) ;
 
 class IPileUpTool : virtual public IAlgTool {
 public:
