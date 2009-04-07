@@ -1,4 +1,4 @@
-// $Id: AddNewHistToDB.cpp,v 1.3 2009-04-01 13:07:56 nchiapol Exp $
+// $Id: AddNewHistToDB.cpp,v 1.4 2009-04-07 18:04:52 nchiapol Exp $
 
 #include "AddNewHistToDB.h"
 
@@ -63,7 +63,7 @@ StatusCode AddNewHistToDB::initialize()
   if ( initOk ) {
     
   /// convert HistoTypeName into 
-    OnlineHistDBEnv::HistType type;
+    OnlineHistDBEnv::HistType type = OnlineHistDBEnv::H1D;
     bool typeOK = false;
     int it;
     for (it=0; it< OnlineHistDBEnv_constants::NHTYPES; it++) {
