@@ -1,3 +1,14 @@
+2009-04-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/vol_for_releases.py: fixed the size statement which is 
+	now an integer instead of a string.
+
+2009-04-06  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: 
+	  - removed the usage of the obsolete string module.
+	  - moved to LbScripts v3r1
+
 2009-04-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v1r1
