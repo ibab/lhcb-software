@@ -1,4 +1,4 @@
-// $Id: PatDownTrack.cpp,v 1.2 2009-04-07 12:17:23 ocallot Exp $
+// $Id: PatDownTrack.cpp,v 1.3 2009-04-07 15:30:40 ocallot Exp $
 // Include files 
 
 // local
@@ -63,6 +63,10 @@ PatDownTrack::PatDownTrack( LHCb::Track* tr,
   m_slopeXSave = m_slopeX;
   m_displX     = 0.;
   m_displY     = 0.;
+
+  //=== Initialize all other data members
+  m_moment     = 0.;
+  m_chisq      = 0.;
 
   m_curvature  = 1.7e-5 * ( m_state->tx() - m_slopeX );
 }
