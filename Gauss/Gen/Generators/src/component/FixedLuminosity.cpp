@@ -1,4 +1,4 @@
-// $Id: FixedLuminosity.cpp,v 1.5 2007-03-08 13:39:36 robbep Exp $
+// $Id: FixedLuminosity.cpp,v 1.6 2009-04-07 16:11:21 gcorti Exp $
 // Include files 
 
 // local
@@ -8,6 +8,9 @@
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/SystemOfUnits.h"
+
+// From Event
+#include "Event/GenHeader.h"
 
 // From Generators
 #include "Generators/GenCounters.h"
@@ -63,14 +66,20 @@ StatusCode FixedLuminosity::initialize( ) {
 
   m_mean = m_luminosity * m_totalXSection / m_crossingRate ;
 
+  info() << "Mean number of interaction/bunch = " << m_mean << endmsg;  
+
   return sc ;
 }
 
 //=============================================================================
 // Compute the number of pile up to generate according to beam parameters
 //=============================================================================
-unsigned int FixedLuminosity::numberOfPileUp( double & currentLuminosity ) {
-  currentLuminosity = m_luminosity ;
+unsigned int FixedLuminosity::numberOfPileUp( LHCb::GenHeader* theGenHeader ) {
+
+  theGenHeader->setLuminosity( m_luminosity );
+  theGenHeader->setCrossingFreq( m_crossingRate );
+  theGenHeader->setTotCrossSection( m_totalXSection );
+
   unsigned int result = 0 ;
   while ( 0 == result ) {
     m_nEvents++ ;

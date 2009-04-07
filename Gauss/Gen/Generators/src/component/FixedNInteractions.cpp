@@ -1,4 +1,4 @@
-// $Id: FixedNInteractions.cpp,v 1.4 2007-02-08 17:46:06 gcorti Exp $
+// $Id: FixedNInteractions.cpp,v 1.5 2009-04-07 16:11:21 gcorti Exp $
 // Include files 
 
 // local
@@ -8,6 +8,9 @@
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
 #include "GaudiKernel/SystemOfUnits.h"
+
+// from Event 
+#include "Event/GenHeader.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : FixedNInteractions
@@ -29,7 +32,9 @@ FixedNInteractions::FixedNInteractions( const std::string& type,
   : GaudiTool ( type, name , parent ) {
     declareInterface< IPileUpTool >( this ) ;
     declareProperty ( "NInteractions" , m_nInteractions = 1 ) ;
-    declareProperty ( "Luminosity" , m_luminosity = 2.e32 / Gaudi::Units::cm2/ Gaudi::Units::s ) ;
+    declareProperty ( "Luminosity" , m_luminosity = 3.e32 / Gaudi::Units::cm2/ Gaudi::Units::s ) ;
+    declareProperty ( "CrossingRate"  , m_crossingRate  = 30.0 * Gaudi::Units::megahertz  ) ;
+    declareProperty ( "TotalXSection" , m_totalXSection = 102.4 * Gaudi::Units::millibarn ) ;
 }
 
 //=============================================================================
@@ -50,6 +55,10 @@ StatusCode FixedNInteractions::initialize( ) {
               << m_nInteractions << endmsg ;
   info() << "Luminosity (10^32 / cm^2 s) stored in events: " 
          << m_luminosity / 1.e32 * Gaudi::Units::cm2 * Gaudi::Units::s << endmsg ;
+  info() << "Rate (MHz) of colliding bunches stored in events: "
+         << m_crossingRate / Gaudi::Units::megahertz << endmsg;
+  info() << "Total cross section (mbarn) stored in events" 
+         <<  m_totalXSection / Gaudi::Units::millibarn << endmsg;
 
   return sc ;
 }
@@ -57,8 +66,12 @@ StatusCode FixedNInteractions::initialize( ) {
 //=============================================================================
 // Compute the number of pile up to generate according to beam parameters
 //=============================================================================
-unsigned int FixedNInteractions::numberOfPileUp( double & currentLuminosity ) {
-  currentLuminosity = m_luminosity ;
+unsigned int FixedNInteractions::numberOfPileUp( LHCb::GenHeader* theGenHeader ) {
+
+  theGenHeader->setLuminosity(m_luminosity);
+  theGenHeader->setCrossingFreq( m_crossingRate );
+  theGenHeader->setTotCrossSection( m_totalXSection );
+
   return m_nInteractions ;
 }
 

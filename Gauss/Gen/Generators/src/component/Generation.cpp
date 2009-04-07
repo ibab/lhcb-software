@@ -1,4 +1,4 @@
-// $Id: Generation.cpp,v 1.31 2009-04-01 09:47:20 robbep Exp $
+// $Id: Generation.cpp,v 1.32 2009-04-07 16:11:21 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -127,7 +127,7 @@ StatusCode Generation::initialize() {
   if ( "" == m_pileUpToolName ) {
     info() << "No Pile Up Tool is defined. Will generate no pile-up " 
            << endmsg ;
-    info() << "and fix luminosity to 2e32" << endmsg ;
+    info() << "and set luminosity in header to 2e32" << endmsg ;
   } else m_pileUpTool = tool< IPileUpTool >( m_pileUpToolName , this ) ;
 
   // Retrieve decay tool
@@ -196,11 +196,15 @@ StatusCode Generation::execute() {
     
     // Compute the number of pile-up interactions to generate 
     if ( 0 != m_pileUpTool ) 
-      nPileUp = m_pileUpTool -> numberOfPileUp( currentLuminosity ) ;
+      nPileUp = m_pileUpTool -> numberOfPileUp( theGenHeader ) ;
     else { 
       // default set to 1 pile and 2.10^32 luminosity
       nPileUp = 1 ;
-      currentLuminosity = 2.e32/Gaudi::Units::cm2/Gaudi::Units::s ;
+//      currentLuminosity = 2.e32/Gaudi::Units::cm2/Gaudi::Units::s ;
+      theGenHeader->setLuminosity(3.e32/Gaudi::Units::cm2/Gaudi::Units::s);
+      theGenHeader->setLuminosity(30.0*Gaudi::Units::megahertz);
+      theGenHeader->setLuminosity(102.4 * Gaudi::Units::millibarn);
+
     }
     // generate a set of Pile up interactions according to the requested type
     // of event
@@ -266,7 +270,7 @@ StatusCode Generation::execute() {
     
   // Copy the HepMCevents and Collisions from the temporary containers to 
   // those in TES and update the header information
-  theGenHeader->setLuminosity( currentLuminosity );
+  //  theGenHeader->setLuminosity( currentLuminosity );
 
   // Check that number of temporary HepMCEvents is the same as GenCollisions
   if( theEvents->size() != theCollisions->size() ) {

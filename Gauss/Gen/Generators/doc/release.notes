@@ -1,9 +1,28 @@
-! $Id: release.notes,v 1.146 2009-04-01 09:47:20 robbep Exp $
+! $Id: release.notes,v 1.147 2009-04-07 16:11:21 gcorti Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+!====================== Generators v10r0 2009-04-07 ==========================
+! 2009-04-07 - Gloria CORTI
+ - Fill new information in GenHeader (frequency and total cross section) in
+   order to be able to reproduce n_mean (collisions/bunch). In order to
+   fill information modify IPileUpTool interface to pass GenHeader rather
+   than "current luminosity". Modify all implemementations of PileUp tools
+   to adopt new interface and fill GenHeader.
+   . IPileUpTool.h
+   . FixedLuminosity.{h,cpp}
+   . FixedLuminosityForRareProcess.{h,cpp}
+   . FixedLuminosityForSpillOver.{h,cpp}
+   . FixedNInteractions.{h,cpp}
+   . VariableLuminosity.{h,cpp}
+   . Generation.cpp
+
+!====================== Generators v9r4 2009-04-06 ===========================
+! 2009-04-06 - Gloria CORTI
+ - Tag only, to keep next changes separate
 
 ! 2009-04-01 - Patrick Robbe
  - Generation: make it a filter to skip the generation and simulation

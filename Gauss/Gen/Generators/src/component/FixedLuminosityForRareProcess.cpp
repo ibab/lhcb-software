@@ -1,4 +1,4 @@
-// $Id: FixedLuminosityForRareProcess.cpp,v 1.2 2007-03-08 19:57:03 robbep Exp $
+// $Id: FixedLuminosityForRareProcess.cpp,v 1.3 2009-04-07 16:11:21 gcorti Exp $
 // Include files 
 
 // local
@@ -8,6 +8,9 @@
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/SystemOfUnits.h"
+
+// From Event
+#include "Event/GenHeader.h"
 
 // From Generators
 #include "Generators/GenCounters.h"
@@ -68,8 +71,12 @@ StatusCode FixedLuminosityForRareProcess::initialize( ) {
 //=============================================================================
 // Compute the number of pile up to generate according to beam parameters
 //=============================================================================
-unsigned int FixedLuminosityForRareProcess::numberOfPileUp( double & currentLuminosity ) {
-  currentLuminosity = m_luminosity ;
+unsigned int FixedLuminosityForRareProcess::numberOfPileUp( LHCb::GenHeader* theGenHeader ) {
+
+  theGenHeader->setLuminosity( m_luminosity );
+  theGenHeader->setCrossingFreq( m_crossingRate );
+  theGenHeader->setTotCrossSection( m_totalXSection );
+
   unsigned int result = 0 ;
   m_nEvents++ ;
   Rndm::Numbers poissonGenerator( m_randSvc , Rndm::Poisson( m_mean ) ) ;

@@ -1,4 +1,4 @@
-// $Id: VariableLuminosity.cpp,v 1.5 2007-01-12 15:17:47 ranjard Exp $
+// $Id: VariableLuminosity.cpp,v 1.6 2009-04-07 16:11:21 gcorti Exp $
 // Include files 
 
 // local
@@ -10,6 +10,9 @@
 
 // From CLHEP
 #include "CLHEP/Units/SystemOfUnits.h"
+
+// From Event
+#include "Event/GenHeader.h"
 
 // From Generators
 #include "Generators/GenCounters.h"
@@ -85,9 +88,10 @@ StatusCode VariableLuminosity::initialize( ) {
 //=============================================================================
 // Compute the number of pile up to generate according to beam parameters
 //=============================================================================
-unsigned int VariableLuminosity::numberOfPileUp( double & currentLuminosity ) {
+unsigned int VariableLuminosity::numberOfPileUp( LHCb::GenHeader* theGenHeader ) {
   unsigned int result = 0 ;
   double theTime , mean ;
+  double currentLuminosity;
   while ( 0 == result ) {
     m_nEvents++ ;
     theTime = m_flatGenerator() * m_fillDuration ;
@@ -97,6 +101,11 @@ unsigned int VariableLuminosity::numberOfPileUp( double & currentLuminosity ) {
     result = (unsigned int) poissonGenerator() ;
     if ( 0 == result ) m_numberOfZeroInteraction++ ;
   }
+
+  theGenHeader->setLuminosity( currentLuminosity );
+  theGenHeader->setCrossingFreq( m_crossingRate );
+  theGenHeader->setTotCrossSection( m_totalXSection );
+
   return result ;
 }
 

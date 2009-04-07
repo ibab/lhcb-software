@@ -1,4 +1,4 @@
-// $Id: VariableLuminosity.h,v 1.2 2005-12-15 21:00:07 robbep Exp $
+// $Id: VariableLuminosity.h,v 1.3 2009-04-07 16:11:21 gcorti Exp $
 #ifndef GENERATORS_VARIABLELUMINOSITY_H 
 #define GENERATORS_VARIABLELUMINOSITY_H 1
 
@@ -43,7 +43,7 @@ public:
    *  The mean luminosity is given in options so the maximum luminosity 
    *  (at t=0) is computed using the fill duration.
    */
-  virtual unsigned int numberOfPileUp( double & currentLuminosity ) ;
+  virtual unsigned int numberOfPileUp( LHCb::GenHeader* theGenHeader ) ;
 
   /// Implements IPileUpTool::printPileUpCounters
   virtual void printPileUpCounters( ) ;

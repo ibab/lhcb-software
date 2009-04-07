@@ -1,4 +1,4 @@
-// $Id: FixedLuminosityForRareProcess.h,v 1.1 2007-03-08 13:43:21 robbep Exp $
+// $Id: FixedLuminosityForRareProcess.h,v 1.2 2009-04-07 16:11:21 gcorti Exp $
 #ifndef GENERATORS_FIXEDLUMINOSITYFORRAREPROCESS_H 
 #define GENERATORS_FIXEDLUMINOSITYFORRAREPROCESS_H 1
 
@@ -40,7 +40,7 @@ public:
    *  mean = Luminosity * cross_section / crossing_rate.
    *  The fixed luminosity is returned as the currentLuminosity.
    */
-  virtual unsigned int numberOfPileUp( double & currentLuminosity ) ;
+  virtual unsigned int numberOfPileUp( LHCb::GenHeader* theGenHeader ) ;
 
   /// Implements IPileUpTool::printPileUpCounters
   virtual void printPileUpCounters( ) ;

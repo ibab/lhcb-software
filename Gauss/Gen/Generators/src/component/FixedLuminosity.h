@@ -1,4 +1,4 @@
-// $Id: FixedLuminosity.h,v 1.3 2007-03-08 13:39:36 robbep Exp $
+// $Id: FixedLuminosity.h,v 1.4 2009-04-07 16:11:21 gcorti Exp $
 #ifndef GENERATORS_FIXEDLUMINOSITY_H 
 #define GENERATORS_FIXEDLUMINOSITY_H 1
 
@@ -38,9 +38,9 @@ public:
    *  Returns the number of pile-up interactions in one event. It follows
    *  a Poisson distribution with 
    *  mean = Luminosity * cross_section / crossing_rate.
-   *  The fixed luminosity is returned as the currentLuminosity.
+   *  The fixed luminosity is returned in the GenHeader.
    */
-  virtual unsigned int numberOfPileUp( double & currentLuminosity ) ;
+  virtual unsigned int numberOfPileUp( LHCb::GenHeader* theGenHeader ) ;
 
   /// Implements IPileUpTool::printPileUpCounters
   virtual void printPileUpCounters( ) ;

@@ -1,4 +1,4 @@
-// $Id: FixedNInteractions.h,v 1.3 2006-02-05 21:02:45 robbep Exp $
+// $Id: FixedNInteractions.h,v 1.4 2009-04-07 16:11:21 gcorti Exp $
 #ifndef GENERATORS_FIXEDNINTERACTIONS_H 
 #define GENERATORS_FIXEDNINTERACTIONS_H 1
 
@@ -32,7 +32,7 @@ class FixedNInteractions : public GaudiTool, virtual public IPileUpTool {
    *  Implementation of IPileUpTool::numberOfPileUp. 
    *  Returns a luminosity equal to 0.
    */
-  virtual unsigned int numberOfPileUp( double & currentLuminosity ) ;
+  virtual unsigned int numberOfPileUp( LHCb::GenHeader* theGenHeader ) ;
   
   /// Implementation of IPileUpTool::printPileUpCounters
   virtual void printPileUpCounters( ) ;
@@ -40,7 +40,10 @@ class FixedNInteractions : public GaudiTool, virtual public IPileUpTool {
  private:
   /// Number of interactions to generate (set by job options)
   int m_nInteractions ; 
-  /// Luminosity to use for spill over (set by job options)
+  /// Luminosity to use for spill over (set by job options, not used)
   double m_luminosity ;
+  double m_crossingRate ; ///< Crossing rate (set by options, not used)
+  double m_totalXSection ; ///< Cross section (set by options, not used)
+
 };
 #endif // GENERATORS_FIXEDNINTERACTIONS_H

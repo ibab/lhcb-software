@@ -1,4 +1,4 @@
-// $Id: FixedLuminosityForSpillOver.h,v 1.1 2009-04-01 09:48:00 robbep Exp $
+// $Id: FixedLuminosityForSpillOver.h,v 1.2 2009-04-07 16:11:21 gcorti Exp $
 #ifndef GENERATORS_FIXEDLUMINOSITYFORSPILLOVER_H 
 #define GENERATORS_FIXEDLUMINOSITYFORSPILLOVER_H 1
 
@@ -42,7 +42,7 @@ public:
    *  mean = Luminosity * cross_section / crossing_rate.
    *  The fixed luminosity is returned as the currentLuminosity.
    */
-  virtual unsigned int numberOfPileUp( double & currentLuminosity ) ;
+  virtual unsigned int numberOfPileUp( LHCb::GenHeader* theGenHeader ) ;
 
   /// Implements IPileUpTool::printPileUpCounters
   virtual void printPileUpCounters( ) ;

@@ -1,4 +1,4 @@
-// $Id: IPileUpTool.h,v 1.2 2005-12-11 23:21:47 robbep Exp $
+// $Id: IPileUpTool.h,v 1.3 2009-04-07 16:11:21 gcorti Exp $
 #ifndef GENERATORS_IPILEUPTOOL_H 
 #define GENERATORS_IPILEUPTOOL_H 1
 
@@ -6,6 +6,10 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
+// Forward declaration
+namespace LHCb {
+  class GenHeader;
+}
 
 /** @class IPileUpTool IPileUpTool.h "Generators/IPileUpTool.h"
  *  
@@ -26,7 +30,7 @@ public:
    *  @param[out] currentLuminosity  Luminosity of the current event.
    *  @return Number of pile-up interactions to generate.
    */
-  virtual unsigned int numberOfPileUp( double & currentLuminosity ) = 0 ;
+  virtual unsigned int numberOfPileUp( LHCb::GenHeader* theGenHeader ) = 0 ;
 
   /// Print various counters at the end of the job
   virtual void printPileUpCounters( ) = 0 ;
