@@ -9,7 +9,11 @@
 #----------------------------------------------------------------------------------
 import sys, os, getopt, warnings
 lhcb_packages = ['GAUDI','GAUSS','BOOLE','BRUNEL','DAVINCI','PANORAMIX','BENDER']
-global repare
+
+# by default do not overwrite existing directories.
+# if repare = True then overwrite existing directories
+repare = False
+
 #----------------------------------------------------------------------------------
 def usage() :
     print 'Usage:'
@@ -61,9 +65,6 @@ def main() :
     destination = os.path.join(destination_dir,project,version)
     cmtversion = 'v1r20p20070208'
 
-# by default do not overwrite existing directories.
-# if repare = True then overwrite existing directories
-    repare = 'False'
 # if skip = True then skip cmt config and build vsnet
     skip = 'False'
 
@@ -80,7 +81,7 @@ def main() :
             help()
             sys.exit()
         if o in ('-r', '--repare'):
-            repare = 'True'
+            repare = True
         if o in ('-o', '--output'):
             destination = a
         if o in ('-s', '--skip'):
@@ -193,7 +194,7 @@ def copy_package_win( name, version, hat, platform, sdir, ddir, count) :
     if not os.path.exists(source) :
         print '  %s Source for package %s does not exists at %s'%(counter,name,source)
         return (counter)
-    if os.path.exists(destination) and repare ==  'False':
+    if os.path.exists(destination) and not repare:
         print '  %s Package %s %s exists already in destination. Not copied.'%(counter,name,version)
         return (counter)
 

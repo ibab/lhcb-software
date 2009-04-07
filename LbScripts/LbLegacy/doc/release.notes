@@ -1,5 +1,6 @@
 2009-04-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* scripts/copy-Win2afs: replace the value of the repare variable into a boolean.
 	* python/LbLegacy/vol_for_releases.py: fixed the size statement which is 
 	now an integer instead of a string.
 
