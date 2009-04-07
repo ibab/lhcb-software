@@ -5,7 +5,133 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-- Configurable has new DataType option, used to determine CaloPID calibration to be used
+</PRE><H1><A NAME=v6r3>2009-04-07 RecSys v6r3</A></H1><PRE>
+This version uses Gaudi v20r4 and LHCb v26r3.
+
+- Packages modified: RecAlgs v1r8, CaloMoniDst v3r5, CaloPIDs v4r15,
+    CaloReco v4r18, TrackExtrapolators v2r21, TrackFitter v2r32,
+    TrackMCTools v2r22, TrackMonitors v1r8, TrackTools v3r16, TrackUtils v1r25,
+    TrackSys v4r22, PatAlgorithms v3r16, PatVelo v3r12, PatVeloTT v3r6,
+    MuonID v6r2, RichHLTLocalPID v1r3p2, RichRecMonitors v2r22, RichRecQC v2r27,
+    RichRecSys v3r17, RichRecTrackTools v1r9, GlobalReco v6r20,
+    VeloRecMonitors v1r5
+
+- In RecSys v6r3
+	. New RecSysConf().DataType option, determines which CaloPID calibration to use
+
+- In RecAlgs v1r8
+  . RecInit prints also event time if PrintEventTime option is set
+
+- In CaloMoniDst v3r5
+  . Set CaloDQ.opts histo selection as default in CaloMonitor.opts for Brunel
+  . New options:
+    o CaloFullMonitoring.opts (to be added to produce the whole histo set)
+    o CaloDQ.opts: selection of relevant monitoring histo for Data Quality stuff
+  . Clean monitoring algorithms
+  . Add protection against missing data inputs here and there
+  . CaloMoniAlg : new property 'splitAreas' allow to produce histo per area
+
+- In CaloPIDs v4r15
+  . AddNeigbours in EcalEnergyForTrack and HcalEnergyForTrack changed to FALSE
+
+- In CaloReco v4r18
+  . Added file CaloPIDs-DC06.opts, for DC06 pdf histograms
+  . Brunel.opts no longer includes CaloPIDs.opts. Instead, RecSysConf includes
+    either CaloPIDs.opts or CaloPIDs-DC06.opts
+  . CaloPIDs_DC09_v1.root file with new PDF for DC09 in CaloPIDs.opts
+  . Clean up messages in CaloMergedPi0Alg:
+    o Protect debug() with MsgLevel(MSG::DEBUG)
+    o Fix untested status codes from Warning() and Error()
+    o Replace endreq with endmsg
+  . Fix FPE occurring in CaloMergedPi0Alg (missing initialization)
+  . options/CaloECorrectionParam.opts : DC09 tuning
+  . options/UnpackCaloHypoOnDemand.opts : new options to unpack packed CaloHypo
+                                          on-demand (same as done in DstConf.py)
+
+- In TrackExtrapolators v2r21
+  . Add switches to configure the fitter/extrapolator/locator to choose
+    dedx tool, default still simple, however switched to detailed for
+    extrapolator and locator used in the fitter
+
+- In TrackFitter v2r32
+  . Use StateDetailedBetheBlochEnergyCorrectionTool as default in the fit
+
+- In TrackMCTools v2r22
+  . Fix some untested StatusCodes
+
+- In TrackMonitors v1r8
+  . Added OTTrackMonitor
+  . Add six plots for vertex x,y,z positions for left/right half respectively
+
+- In TrackTools v3r16
+  . New tool "TrackStateInitTool". This tool re-initializes the track starting
+    from LHCbIDs. It can be used to get	the same fit results without dependence
+    on previous fitting history. It cleans the states, nodes and measurement the
+    the tracks. Then it obtains a new states using Velo and TT hits. The
+    PatVeloFitLHCbIDs and PatSeedingTool are used for the Velo and T-stations
+    respectively.
+  . New algorithm "TrackStateInitAlg". It applies the TrackStateInitTool for all
+    tracks in the container.
+  . Changed default tune of TrackVelodEdxCharge to expect 47.1 ADC per cluster
+
+- In TrackUtils v1r25
+  . Fix untested StatusCode in TrackV0Finder
+  . Added CreateFastTrackCollection algorithm which copies pointers to tracks
+    from a list of input container to a SharedObjectsContainer on the TES.
+    This gives the possibility to quickly create custom track collections
+    without the cost of keyed containers and deep-copying the tracks. Potential
+    use case might be a collection of all long tracks in the HLT.
+
+- In TrackSys v4r22
+  . Add fitter initialization tool in track fitting sequence
+
+- In PatAlgorithms v3r16
+  . Fix for FPE in PatDownstream and PatFwdFitLine
+  . Use scale factor from magnetic field service in PatDownTrack
+  . Add new seed fitting class
+
+- In PatVelo v3r12
+  . Changed default constructor of PatVeloPhiList to initialise all members,
+    fixes another FPE in scl4_ia32_gcc34_dbg
+  . Removed three unused variables from PatVeloSpaceTrack
+  . Added more DOxygen comments to PatVeloSpaceTrack
+  . Removed an unnecessary dependence from PatVeloLiteClusterPromoter.cpp
+  . Removed copy constructor from PatVeloSpaceTrack as it did not cure FPEs
+
+- In PatVeloTT v3r6
+  . Replace obsolescent endreq by endmsg
+  . Bug fix for inverse polarized magnetic field
+  . Add interface to fit of PatVeloTT fit
+  . Use pre configured fitter in steering script
+
+- In MuonID v6r2
+  . Changed the FOIfactor to 1.2 to recover some efficiency (2009 settings) 
+
+- In RichHLTLocalPID v1r3p2
+  . Fix uninitialised variables
+
+- In RichRecMonitors v2r22
+  . Miscellaneous minor improvements to the detailed MC monitors
+
+- In RichRecQC v2r27
+  . Suppress empty plot in MC free running from Rich::Rec::MC::PixelQC
+
+- In RichRecSys v3r17
+  . Add new package for ring reconstruction (temporarily disabled).
+
+- In RichRecTrackTools v1r9
+  . Suppress warning about isolation tool not implemented for Aerogel.
+
+- In GlobalReco v6r20
+  . Improvements to the ROOT scripts for monitoring the PID performance
+    from ProtoParticles.
+
+- In VeloRecMonitors v1r5
+  . Reduced (unnecessary high) binning of a few histos in VeloTrackMonitor
+  . Fix an untested StatusCode
+  . Introduce new plots/profile histograms 
+    o Measurement of +ve and -ve charges
+    o Biased/unbiased residuals versus momentum profiles for +ve and -ve charges
 
 </PRE><H1><A NAME=v6r2>2009-02-24 RecSys v6r2</A></H1><PRE>
 This version uses Gaudi v20r4 and LHCb v26r2.
