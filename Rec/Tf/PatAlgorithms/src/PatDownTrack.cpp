@@ -1,4 +1,4 @@
-// $Id: PatDownTrack.cpp,v 1.1 2007-10-22 15:50:07 ocallot Exp $
+// $Id: PatDownTrack.cpp,v 1.2 2009-04-07 12:17:23 ocallot Exp $
 // Include files 
 
 // local
@@ -18,10 +18,12 @@ PatDownTrack::PatDownTrack( LHCb::Track* tr,
                             std::vector<double> magnetParams,
                             std::vector<double> momentumParams,
                             std::vector<double> yParams,
-                            double errZMag ) {
+                            double errZMag,
+                            double magnetScale) {
   m_zTT    = zTT;
   m_magPar = magnetParams;
   m_momPar = momentumParams;
+  m_magnetScale = magnetScale;
   
   m_track = tr;
 

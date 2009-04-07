@@ -1,4 +1,4 @@
-// $Id: PatDownstream.cpp,v 1.6 2008-12-04 09:06:34 cattanem Exp $
+// $Id: PatDownstream.cpp,v 1.7 2009-04-07 12:17:23 ocallot Exp $
 // Include files 
 
 // from boost
@@ -124,6 +124,8 @@ StatusCode PatDownstream::initialize() {
     return StatusCode::FAILURE;
   }
 
+  m_magFieldSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
+
   return StatusCode::SUCCESS;
 };
 
@@ -213,7 +215,8 @@ StatusCode PatDownstream::execute() {
     m_printing = msgLevel( MSG::DEBUG );
     if ( 0 <= m_seedKey && m_seedKey == tr->key() ) m_printing = true;
 
-    PatDownTrack track( tr, m_zTT, m_zMagnetParams, m_momentumParams, m_yParams, m_errZMag );
+    double magScaleFactor = m_magFieldSvc->scaleFactor() ;
+    PatDownTrack track( tr, m_zTT, m_zMagnetParams, m_momentumParams, m_yParams, m_errZMag, magScaleFactor );
 
     //Y. Xie get rid or particles from beampipe 
     double xAtTT = track.xAtZ( m_zTTa );
@@ -599,9 +602,11 @@ void PatDownstream::fitAndRemove ( PatDownTrack& track ) {
     
     double dx, dy, dsl;
 
-    double den = a1 * b2 - a2 * b1;    
+    double den = a1 * b2 - a2 * b1;
+    if ( 0. == den ) den = 1.;      // protect FPE
     if ( 0 == nbUV ) {
       den = s0 * sz2 - sz * sz;
+      if ( 1.e-10 > den ) den = 1.;      // protect FPE
       dsl = ( s0 * sxz - sx  * sz ) / den;
       dx  = ( sx * sz2 - sxz * sz ) / den;
       dy  = 0.;

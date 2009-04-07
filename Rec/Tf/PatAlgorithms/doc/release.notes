@@ -4,6 +4,10 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2009-04-07 - Olivier Callot
+ - Fix for FPE in PatDownstream and PatFwdFitLine
+ - Use scale factor from magnetic field service in PatDownTrack
+
 !========================== PatAlgorithms v3r16 2009-03-10 ===================
 ! 2009-03-02 - Pavel Krokovny
  - add new seed fitting class

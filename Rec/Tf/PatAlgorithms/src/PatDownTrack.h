@@ -1,4 +1,4 @@
-// $Id: PatDownTrack.h,v 1.1 2007-10-22 15:50:07 ocallot Exp $
+// $Id: PatDownTrack.h,v 1.2 2009-04-07 12:17:23 ocallot Exp $
 #ifndef KSTRACK_H 
 #define KSTRACK_H 1
 
@@ -27,7 +27,8 @@ public:
                 std::vector<double> magnetParams,
                 std::vector<double> momentumParams,
                 std::vector<double> yParams,
-                double errZMag ); 
+                double errZMag,
+                double magnetScale ); 
   
   virtual ~PatDownTrack( ) {} ///< Destructor
   
@@ -44,7 +45,7 @@ public:
     return ( m_momPar[0] +    
              m_momPar[1] * m_state->tx() * m_state->tx() +
              m_momPar[2] * m_state->ty() * m_state->ty() ) / 
-      ( m_state->tx() - m_slopeX );
+      ( m_state->tx() - m_slopeX ) * m_magnetScale;
   }
 
   double      errXMag() const { return m_errXMag; }
@@ -109,6 +110,7 @@ private:
   double      m_zTT;
   std::vector<double> m_magPar;
   std::vector<double> m_momPar;
+  double              m_magnetScale;
   LHCb::Track*        m_track;
   LHCb::State*        m_state;
   Gaudi::XYZPoint     m_magnet;

@@ -1,4 +1,4 @@
-// $Id: PatDownstream.h,v 1.4 2008-12-04 09:06:34 cattanem Exp $
+// $Id: PatDownstream.h,v 1.5 2009-04-07 12:17:23 ocallot Exp $
 #ifndef PATDOWNSTREAM_H 
 #define PATDOWNSTREAM_H 1
 
@@ -8,6 +8,7 @@
 
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
+#include "Kernel/ILHCbMagnetSvc.h"
 
 #include "TfKernel/TTStationHitManager.h"
 #include "PatKernel/PatTTHit.h"
@@ -69,6 +70,7 @@ private:
   std::vector<double> m_momentumParams;
   std::vector<double> m_yParams;
   double m_errZMag;
+  ILHCbMagnetSvc*     m_magFieldSvc; 
   
   double m_stateErrorX2;
   double m_stateErrorY2;

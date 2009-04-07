@@ -1,4 +1,4 @@
-// $Id: PatFwdFitLine.h,v 1.2 2008-06-04 15:33:48 mschille Exp $
+// $Id: PatFwdFitLine.h,v 1.3 2009-04-07 12:17:23 ocallot Exp $
 #ifndef PATFWDFITLINE_H
 #define PATFWDFITLINE_H 1
 
@@ -37,8 +37,10 @@
     }
 
     void solve()  {
-      m_ax = ( m_sx  * m_sz2 - m_sxz * m_sz ) / ( m_s0  * m_sz2 - m_sz * m_sz );
-      m_bx = ( m_s0  * m_sxz - m_sx  * m_sz ) / ( m_s0  * m_sz2 - m_sz * m_sz );
+      double den =  m_s0  * m_sz2 - m_sz * m_sz;
+      if ( 1.e-10 > den ) den = 1.;                    // Always positive, avoid 0.
+      m_ax = ( m_sx  * m_sz2 - m_sxz * m_sz ) / den;
+      m_bx = ( m_s0  * m_sxz - m_sx  * m_sz ) / den;
       m_bx *= 1.e-3;
     }
 
