@@ -5,6 +5,137 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v26r3>2009-04-07 LHCbSys v26r3</A></H1><PRE>
+This version uses Gaudi v20r4 and LCG_55c
+It is released together with TCK/L0TCK v1r1 and Det/SQLDDDB v5r3
+
+- Packages modified : GaudiConf v12r2, LHCbKernel v11r2, RichKernel v7r20,
+    DDDB v1r16, DetCond v12r5p2, STDet v4r8, DAQEvent v7r19, DigiEvent v2r11,
+    GenEvent v5r5, HltEvent v8r16, L0Event v17r4, MCEvent v2r13, RecEvent v2r19,
+    TrackEvent v4r19, EventPacker v1r4, DaVinciKernel v7r4, DaVinciMCKernel v3r1,
+    LHCbAlgs v2r25, MCInterfaces v1r8, RichRecBase v3r20, SimComponents v2r17,
+    STKernel v1r12, TrackInterfaces v4r2, DetDescChecks v4r10p1
+
+- In GaudiConf v12r2
+  . Replace bool DstConf().Simulation property with string DstConf().SimType.
+    Possible values are:
+	  o "None" (same as Simulation=False)
+    o "Full" (same as Simulation=True)
+    o "Minimal" (same as "None" plus Gen/Header, MC/Header, pSim/Vertices) 
+  . DstConf() configurable now prints Dst content
+  . Add DigiConf() configurable, to set up Boole output
+  . Remove obsolete option files DigiContent.opts, ExtendedDigi.opts
+  . Update PoolCopy.opts to include directly GaudiPoolDbRoot.opts
+  . Remove LHCbApp().UseOracle property. Use CondDB().UseOracle instead
+
+- In LHCbKernel v11r2
+  . Add bool option LbAppInit().PrintEventTime, if True prints the event time
+    together with the run and event number
+  . Extended IEvtTypeSvc. allTypes returns a set of all known types
+	  Added typdefs LHCb::EventTypeSet, as an ordered set of types
+  . CaloCellID.xml : make setCalo() method public
+                     change fillstream output
+  . CaloCellCode.h : new static method : CaloAreaFromNum( calo, num) return 
+                     the area for a given calo as string 
+
+- In RichKernel v7r20
+  . Updates to RichSmartIDCnv to inline more functions.
+
+- In DDDB v1r16
+  . Requires SQLDDDB v5r3 or greater 
+  . Add 2009 data type and corresponding tags
+  . New default tags for 2008:
+    o head-20090330 for DDDB
+    o head-20090402 for LHCBCOND
+  . Remove obsolete file options/DDDB.py
+  . Remove property DDDBConf().UseOracle, use CondDB().UseOracle instead
+
+- In DetCond v12r5p2
+  . Add options/UseOracle.py: additional options for gaudirun.py command line
+    to get conditions from Oracle DB
+
+- In STDet v4r8
+  . Add findTopElement method to DeSTDetector
+
+- In DAQEvent v7r19
+  . src/components/RawBankReadoutStatusMonitor : implement automatic bin labels +
+    few minor fixes
+  . cmt/requirements : explicit link libHist in ROOT_linkOpts
+
+- In DigiEvent v2r11
+  . Remove unused constructor and set functions from STCluster
+  . Add setDepositedCharge method to STDigit
+  . Add clone and copy constructor to VeloDigit 
+
+- In GenEvent v5r5
+  . Add two new data members to GenHeader, the total inelastic cross section
+    and frequency of crossing of filled-filled bunches. Also add short-cut
+    method for number of collisions
+
+- In HltEvent v8r16
+  . create custom dictionary for HltObjectSummary::Info
+
+- In L0Event v17r4
+  . Event/L0DUBase.h : define hardware limitation parameters
+  . xml/L0DUTrigger.xml & xml/L0DUReport.xml : minor fix
+
+- In MCEvent v2r13
+  . Add short-cut method for number of primary vertices to MCHeader
+
+- In RecEvent v2r19
+  . Add ST event size in bytes, #full + # pedestal banks to STSummary
+
+- In TrackEvent v4r19
+  . Add enums for extra info for the muon tracks
+
+- In EventPacker v1r4
+  . Fix the hack in ReadPackedDst.cpp : Use a std::vector as temporary
+
+- In DaVinciKernel v7r4
+  . Added Kernel/DaVinciFun.h with useful free functions
+  . src/Lib/DVAlgorithm.cpp
+    o Fix problem with pointer to related vertex getting lost in PV re-fit case.
+    o Use Kernel/DaVinciFun.h functions
+    o getRelatedPV(const LHCb::Particle* part): Add protection for null particle*
+      being passed as argument. Print 10 warnings if no PV found, instead of
+      infinite errors.
+
+- In DaVinciMCKernel v3r1
+  . dict/DaVinciMCKernelDict.*
+      Add IParticle2MCAssociator to reflex dictionaries
+  . Kernel/IParticle2MCAssociator.h, Particle2MCAssociatorBase
+      Deal with unweighted relations now.
+  . Kernel/IDaVinciSmartAssociator.h
+      Removed. Superseded by IParticle2MCAssociator.h
+
+- In LHCbAlgs v2r25
+  . Added FilterByBankType algorithm. Can be used to select events based 
+    on which banks are present in the RawEvent.
+
+- In MCInterfaces v1r8
+  . Added an interface, IMCEventTypeFinder, to define a tool allowing us to 
+    search for a given event type. Implemented in Sim/SimComponents
+
+- In RichRecBase v3r20
+  . Extend definitions in RichRecRing for new 'Template' ring finding
+
+- In SimComponents v2r17
+  . Added implementation of MCEventTypeFinder tool. 
+    This new tool allows to search the MCTruth of an event for any event type.
+    Or to construct the event type based on lhcb-note 2005-034
+	. Added method to EvtTypeSvc to get all known types
+  . In MCDecayFinder, added sanity checking of the decay string, and use of ppSvc
+    to get charge conjugated associates. Fixed some dereferencing segfaults.
+
+- In STKernel v1r12
+  . Bug fix in TTNumberToSourceIDMap
+
+- In TrackInterfaces v4r2
+  . Add new interfaces for PatVeloTTFit, PatSeedFit, TrackStateInitTool
+
+- In DetDescChecks v4r10p1
+  . Fix example for using Oracle CondDB
+
 </PRE><H1><A NAME=v26r2>2009-02-23 LHCbSys v26r2</A></H1><PRE>
 This version uses Gaudi v20r4 and LCG_55c
 
