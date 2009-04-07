@@ -8,9 +8,10 @@
 ##
 from Gaudi.Configuration import *
 from Configurables import CombineParticles, GaudiSequencer, PhysDesktop, FilterDesktop
+from HltConf.HltLine import bindMembers
 
 
-__all__ = { 'DiMuon' , 'Jpsi2MuMu' , 'HighPtJpsi2MuMu' }
+__all__ = ( 'DiMuon' , 'Jpsi2MuMu' , 'HighPtJpsi2MuMu' )
 
 
 Hlt2SharedDiMuon = CombineParticles("Hlt2SharedDiMuon")
@@ -51,5 +52,5 @@ Hlt2SharedHighPtJpsi2MuMu.PhysDesktop.InputLocations  = [ "Hlt2SharedJpsi2MuMu" 
 ### exported symbols...
 DiMuon           = bindMembers( None, [ Hlt2SharedDiMuon ] )
 Jpsi2MuMu        = bindMembers( None, [ DiMuon, Hlt2SharedJpsi2MuMu ] )
-HightPtJpsi2MuMu = bindMembers( None, [ Jpsi2MuMu, Hlt2SharedHighPtJPsi2MuMu ] )
+HightPtJpsi2MuMu = bindMembers( None, [ Jpsi2MuMu, Hlt2SharedHighPtJpsi2MuMu ] )
 

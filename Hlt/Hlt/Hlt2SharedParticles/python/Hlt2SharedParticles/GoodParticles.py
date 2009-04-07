@@ -7,6 +7,7 @@
 #
 ##
 from Gaudi.Configuration import *
+from HltConf.HltLine import bindMembers
 from Configurables import FilterDesktop, PhysDesktop
 ##########################################################################
 # Prepare the Kaons -- pt cuts
@@ -29,9 +30,8 @@ Hlt2GoodPions.PhysDesktop.InputLocations = [ "Hlt2Pions" ]
 # from Hlt2SharedParticles.GoodParticles import GoodKaons, GoodPions
 #
 
-__all__ = { 'GoodKaons','GoodPions' }
+__all__ = ( 'GoodKaons','GoodPions' )
 
-GoodKaons = Hlt2GoodKaons
-GoodPions = Hlt2GoodPions
-
+GoodKaons = bindMembers( None, [ Hlt2GoodKaons ] )
+GoodPions = bindMembers( None, [ Hlt2GoodPions ] )
 
