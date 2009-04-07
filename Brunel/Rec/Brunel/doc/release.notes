@@ -26,6 +26,7 @@ Purpose: LHCb reconstruction program
    . New tuning for MuonPID, Calo, Velo dE/dx
    . Monitoring changes in Calo, OT, Vertex
    . Fix to untested StatusCode in LHCbIDsToMCParticles, TrackGhostClassificationBase
+   . Fix to FPE in PatDownstream
 
 </PRE><H1><A NAME=v34r2>2009-02-25 Brunel v34r2</A></H1><PRE>
  - Changes to configurable:
