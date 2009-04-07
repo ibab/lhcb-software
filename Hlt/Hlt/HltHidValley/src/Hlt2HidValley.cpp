@@ -123,7 +123,10 @@ StatusCode Hlt2HidValley::execute() {
        (sumXYTrackfirstStates > 30. * Gaudi::Units::mm) && 
        (sumSVxyDist > 0.7 * Gaudi::Units::mm)) {
       setFilterPassed(true);
-      desktop()->keep(highestPtPion);
+      LHCb::Particle::ConstVector Pions ;
+      Pions.push_back(highestPtPion);
+      StatusCode sc = desktop()->cloneTrees(Pions);
+      if (!sc) return sc;
     }			 
   }
  
