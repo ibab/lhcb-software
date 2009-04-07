@@ -25,7 +25,7 @@ Hlt2IncPhiTFTrackFit = TrackEventFitter('Hlt2IncPhiTFTrackFit')
 Hlt2IncPhiTFTrackFitSeq.Members += [ Hlt2IncPhiTFTrackFit ]
 
 Hlt2IncPhiTFTrackFit.TracksInContainer  = "Hlt/Track/Forward"
-Hlt2IncPhiTFTrackFit.TracksOutContainer = "Hlt/Track/IncPhiTFForward"
+Hlt2IncPhiTFTrackFit.TracksOutContainer = "Hlt/Track/TFForwardForIncPhi"
 
 Hlt2IncPhiTFTrackFit.addTool(TrackMasterFitter, name = 'Fitter')
 from TrackFitter.ConfiguredFitters import ConfiguredFastFitter
@@ -47,8 +47,8 @@ Hlt2IncPhiTFChargedProtoPAlg = ChargedProtoPAlg('Hlt2IncPhiTFChargedProtoPAlg')
 Hlt2IncPhiTFMakeProtoSeq.Members += [ Hlt2IncPhiTFChargedProtoPAlg ]
 #                                   , Hlt2IncPhiTFChargedProtoCombDLL ]
 
-Hlt2IncPhiTFChargedProtoPAlg.InputTrackLocation = "Hlt/Track/IncPhiTFForward"
-Hlt2IncPhiTFChargedProtoPAlg.OutputProtoParticleLocation = "Hlt/ProtoP/IncPhiTFCharged"
+Hlt2IncPhiTFChargedProtoPAlg.InputTrackLocation = "Hlt/Track/TFForwardForIncPhi"
+Hlt2IncPhiTFChargedProtoPAlg.OutputProtoParticleLocation = "Hlt/ProtoP/TFChargedForIncPhi"
 #Hlt2IncPhiTFChargedProtoCombDLL.ProtoParticleLocation = "Hlt/ProtoP/IncPhiTFCharged"
 
 ######################################################################
@@ -75,7 +75,7 @@ Hlt2IncPhiTFMakeProtoSeq.Members += [ Hlt2IncPhiTFKaons ]
 Hlt2IncPhiTFKaons.addTool(PhysDesktop)
 Hlt2IncPhiTFKaons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker"
 Hlt2IncPhiTFKaons.PhysDesktop.addTool(NoPIDsParticleMaker)
-Hlt2IncPhiTFKaons.PhysDesktop.NoPIDsParticleMaker.Inputs = [ "Hlt/ProtoP/IncPhiTFCharged" ]
+Hlt2IncPhiTFKaons.PhysDesktop.NoPIDsParticleMaker.Inputs = [ "Hlt/ProtoP/TFChargedForIncPhi" ]
 Hlt2IncPhiTFKaons.PhysDesktop.NoPIDsParticleMaker.Particle = "kaon"
 Hlt2IncPhiTFKaons.DecayDescriptor = "Kaon"
 
@@ -101,9 +101,9 @@ Hlt2IncPhiRichChargedProtoCombDLL = ChargedProtoCombineDLLsAlg('Hlt2IncPhiRichCh
 Hlt2IncPhiRichParticlesSeq.Members += [ GaudiSequencer("HltRICHReco"), Hlt2IncPhiRichChargedProtoPAlg
                                    , Hlt2IncPhiRichChargedProtoCombDLL ]
 
-Hlt2IncPhiRichChargedProtoPAlg.InputTrackLocation = "Hlt/Track/IncPhiTFForward"
-Hlt2IncPhiRichChargedProtoPAlg.OutputProtoParticleLocation = "Hlt/ProtoP/IncPhiRichCharged"
-Hlt2IncPhiRichChargedProtoCombDLL.ProtoParticleLocation = "Hlt/ProtoP/IncPhiRichCharged"
+Hlt2IncPhiRichChargedProtoPAlg.InputTrackLocation = "Hlt/Track/TFForwardForIncPhi"
+Hlt2IncPhiRichChargedProtoPAlg.OutputProtoParticleLocation = "Hlt/ProtoP/RichChargedForIncPhi"
+Hlt2IncPhiRichChargedProtoCombDLL.ProtoParticleLocation = "Hlt/ProtoP/RichChargedForIncPhi"
 
 ######################################################################
 # Rich ProtoParticles
@@ -128,12 +128,12 @@ HltIncPhiRichPIDsKaons.addTool(PhysDesktop)
 HltIncPhiRichPIDsKaons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker"
 HltIncPhiRichPIDsKaons.PhysDesktop.addTool(CombinedParticleMaker)
 HltIncPhiRichPIDsKaons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = 0
-HltIncPhiRichPIDsKaons.PhysDesktop.CombinedParticleMaker.InputProtoParticles = "Hlt/ProtoP/IncPhiRichCharged"
+HltIncPhiRichPIDsKaons.PhysDesktop.CombinedParticleMaker.InputProtoParticles = "Hlt/ProtoP/RichChargedForIncPhi"
 HltIncPhiRichPIDsKaons.PhysDesktop.CombinedParticleMaker.Particles = ["kaon"]
 HltIncPhiRichPIDsKaons.PhysDesktop.CombinedParticleMaker.addTool(TrackSelector())
 HltIncPhiRichPIDsKaons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = ["Long"]
 HltIncPhiRichPIDsKaons.PhysDesktop.CombinedParticleMaker.addTool(ProtoParticleCALOFilter('Kaon'))
-HltIncPhiRichPIDsKaons.PhysDesktop.CombinedParticleMaker.Kaon.Selection = ["RequiresDet='RICH' CombDLL(k-pi)>'-5.0'"]
+HltIncPhiRichPIDsKaons.PhysDesktop.CombinedParticleMaker.Kaon.Selection = ["RequiresDet='RICH' CombDLL(k-pi)>'-1.0'"]
 HltIncPhiRichPIDsKaons.DecayDescriptor = "Kaon"
 
 
