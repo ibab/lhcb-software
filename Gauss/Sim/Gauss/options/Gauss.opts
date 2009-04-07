@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.107 2009-01-13 12:03:16 gcorti Exp $ 
+// $Id: Gauss.opts,v 1.108 2009-04-07 18:11:22 gcorti Exp $ 
 
 /** @file 
  * 
@@ -58,73 +58,3 @@ Simulation.Members      += { "GaudiSequencer/SimMonitor" };
 #include "$GAUSSOPTS/Monitor.opts"
 //#include "$GAUSSOPTS/MonitorInDetail.opts" // ntuples and commented examples
 
-//---------------------------------------------------------------------------
-// Write an output file (configuration set in GaussTape.opts, always included)
-//---------------------------------------------------------------------------
-#include "$GAUSSOPTS/GaussTape.opts"
-ApplicationMgr.OutStream += { "GaussTape" };
-
-//---------------------------------------------------------------------------
-// Add here any job specific options, to over-ride previously defined options
-//---------------------------------------------------------------------------
-//MessageSvc.OutputLevel    = 3;
-
-//---------------------------------------------------------------------------
-// Output files. 
-//---------------------------------------------------------------------------
-GaussTape.Output = "DATAFILE='PFN:Gauss.sim' TYP='POOL_ROOTTREE' OPT='RECREATE'";
-FileCatalog.Catalogs = { "xmlcatalog_file:NewCatalog.xml" };
-
-// Monitoring histos
-HistogramPersistencySvc.OutputFile = "GaussHistos.root";
-//NTupleSvc.Output={"FILE1 DATAFILE='GaussMonitor.root' TYP='ROOT' OPT='NEW'"};
-
-//---------------------------------------------------------------------------
-// Event type to simulate: for <evttype> put a line similar to the following
-//                         or use ParticleGun.opts
-//---------------------------------------------------------------------------
-//#include "$DECFILESROOT/options/30000000.opts"  // Min Bias
-//#include "$DECFILESROOT/options/10000000.opts"  // Generic b-b~ events
-//#include "$DECFILESROOT/options/13144001.opts"  // Bs->J/Psi(mumu)phi, CPV
-//#include "$DECFILESROOT/options/11144100.opts"  // Bs->J/Psi(mumu)Kshort
-
-//---------------------------------------------------------------------------
-// Other generators beside Pythia
-// These options MUST be included AFTER those of <evttype>
-//---------------------------------------------------------------------------
-// To generate events with Herwig uncomment the following line
-//#include "$LBHERWIGROOT/options/Herwig.opts"
-
-// To generate events with BcVegPy (for Bc signal ONLY) use appropriate
-// event type and uncomment the BcVegPy line
-// #include "$DECFILESROOT/options/14143000.opts" // Bc->J/Psi pi
-// #include "$LBBCVEGPYROOT/options/BcVegPy.opts"
-
-// To generate events with Hijing (for Beam gas ONLY) use appropriate
-// event type and uncomment the Hijing line
-//#include "$DECFILESROOT/options/60000000.opts" // Beam gas in Velo
-//#include "$LBHIJINGROOT/options/Hijing.opts"
-
-// To generate events with only EvtGen uncomment the following line
-//#include "$GAUSSOPTS/EvtGenAlone.opts"
- 
-// To generate events with HiddenValley (Higgs and multipions) for the
-// moment use events type from package: 43900001-6, 44900001-6
-//#include "$DECFILESROOT/options/43900001.opts" 
-//#include "$LBHIDVALLEYROOT/options/HidValley.opts" 
-
-// To generate any of the event types above in Pilot Run conditions 
-// (2007 beams at 450 GeV) you can uncomment the following line and
-// modify PilotRun.opts or you can use the predefined configurations
-// v200601-PilotRun-t{0,1,2,3}.opts instead of v200601.opts
-// NOTE 1 - that this must be included AFTER the event type options 
-// NOTE 2 - that the default in PilotRun.opts is Magnet ON/Velo CLOSE
-//          examples are listed there for different configurations
-//#include "$GAUSSOPTS/PilotRun.opts"
-
-//---------------------------------------------------------------------------
-// Particle gun example for private generation
-// Does not require uncommenting <evttype> options
-//---------------------------------------------------------------------------
-//#include "$PARTICLEGUNSROOT/options/ParticleGun.opts"  // ParticleGun example
- 
