@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.49 2009-04-07 07:35:19 graven Exp $ 
+# $Id: HltLine.py,v 1.50 2009-04-07 07:48:46 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.49 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.50 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -1194,8 +1194,11 @@ class Hlt2Line(object):
         ## TODO: in case of HLT, we have a dependency... dangerous, as things become order dependent...
         if HLT  : mdict.update( { 'HLT'  : HDRFilter  ( hltentryName ( line,'Hlt2' ) , Code = self._HLT  ) } )
         if _members : 
+            last = _members[-1]
+            while hasattr(last,'Members') : 
+                last = getattr(last,'Members')[-1]
             members = _members + [ HltCopyParticleSelection( decisionName( line, 'Hlt2')
-                                                           , InputSelection = 'TES:/Event/HLT/%s/Particles'%_members[-1].getName()
+                                                           , InputSelection = 'TES:/Event/HLT/%s/Particles'%last.getName()
                                                            , OutputSelection = decisionName(line, 'Hlt2')) ]
             mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line,'Hlt2' ) , Members = members ) })
         # final cloning of all parameters:
