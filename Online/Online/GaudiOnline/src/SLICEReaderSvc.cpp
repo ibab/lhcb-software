@@ -160,11 +160,12 @@ StatusCode SLICEReaderSvc::initialize()
     if(m_InputFiles.size() == 0) 
         msgLog << MSG::WARNING << "No input files -> no injection" << endmsg;
 
+/*
     for(std::vector<std::string>::iterator ite = m_InputFiles.begin(); ite != m_InputFiles.end(); ++ite)
     {
         msgLog << MSG::INFO << *ite << endmsg;        
     }  
-
+*/
     m_CurEvtLen=m_OffsetEvt=m_CurEvtIte=m_CurSliceIte=0;
 
     m_TotEvtsRead=0;
@@ -321,7 +322,8 @@ StatusCode SLICEReaderSvc::readFile()
     
     int sec = (tvaf.tv_sec - tvbef.tv_sec);
     int usec = (tvaf.tv_usec - tvbef.tv_usec);
-    printf("File %s, containing %d times 2 MBytes, were read from in %d s %d us\n, ", m_InputFiles[m_CurFile].c_str(), nbSlices, sec , usec);
+
+    //printf("File %s, containing %d times 2 MBytes, were read from in %d s %d us\n, ", m_InputFiles[m_CurFile].c_str(), nbSlices, sec , usec);
     ///XXX
 
 
@@ -394,6 +396,7 @@ StatusCode SLICEReaderSvc::finalize()
     }
 
 //    mbm_free_space(m_BMID);
+
     if(m_BMID != MBM_INV_DESC) 
         mbm_exclude(m_BMID);
 
@@ -403,15 +406,17 @@ StatusCode SLICEReaderSvc::finalize()
 
 void SLICEReaderSvc::handle(const Incident& incident){
   MsgStream msgLog(msgSvc(),name());
-  msgLog << MSG::DEBUG << "Got incident:" << incident.source() << " of type " << incident.type() << endmsg;
+  msgLog << MSG::ALWAYS << "Got incident:" << incident.source() << " of type " << incident.type() << endmsg;
   if (incident.type() == "DAQ_CANCEL")  {  
       if(m_ReaderState != STOPPED) 
       {
           m_ReaderState = STOPPED;
+
           if(mbm_cancel_request(m_BMID) != MBM_NORMAL) {
               msgLog << MSG::ERROR << "Could not cancel writing request" << endmsg;
           }
           msgLog << MSG::DEBUG << "request cancelled" << endmsg;
+
       } 
   }
   else if (incident.type() == "DAQ_ENABLE") {

@@ -175,6 +175,8 @@ MEPInjector::MEPInjector(const std::string & name, ISvcLocator * pSvcLocator):Se
     declareProperty("TFCMask", m_TFCMask = 0x0000ffff);
     declareProperty("TapeMask", m_TapeMask = 0xffff0000);
 
+    declareProperty("NeedOTConv", m_NeedOTConv = 0);
+
     m_InjState = NOT_READY;
 }
 
@@ -777,11 +779,11 @@ StatusCode MEPInjector::getEvent(int nbEv)
             // Select the stream according to the trigger type
             char *ccur = (((char *) m_OdinMEP) + MEPEVENTOFFSET);
             OnlineRunInfo *ori = ( OnlineRunInfo *) (ccur+IPHDRSZ+MEPHDRSZ+nbEv*(ODFRAGSZ) + FRAGHDRSZ + BKHDRSZ);
-            msgLog << MSG::INFO << "Online Trigger Type: " << ori->triggerType << endmsg; 
+            msgLog << MSG::DEBUG << "Online Trigger Type: " << ori->triggerType << endmsg; 
             switch(ori->triggerType) {
                     // Static "map" not very elegant but easier to implement and to control via job options 
                 case 1 : //LUMI
-                        msgLog << MSG::INFO << "LUMI event selected"<<endmsg;
+                        msgLog << MSG::DEBUG << "LUMI event selected"<<endmsg;
                         bmid = m_EventBuffers[LUMI];
                         break;
                 case 0 : //PHYS, should not be seen, process it like PERA (periodic A)
@@ -792,7 +794,7 @@ StatusCode MEPInjector::getEvent(int nbEv)
                 case 6 : //TIMI, don't know what it is, process it like PERA
                 case 7 : //CALX, don't know what it is, process it like PERA
                 case 4 : //PERA or PERB
-                        msgLog << MSG::INFO << "PERA event selected"<<endmsg;
+                        msgLog << MSG::DEBUG << "PERA event selected"<<endmsg;
                         bmid = m_EventBuffers[PERA];
                         break;
                 default : msgLog << MSG::ERROR << "Odin trigger type decoding error" << endmsg;
@@ -801,19 +803,10 @@ StatusCode MEPInjector::getEvent(int nbEv)
             } 
       
         }   
-        if(mbm_events_actual(bmid, &eventActual) != MBM_NORMAL)
+        if(mbm_events_in_buffer(bmid, &eventActual) != MBM_NORMAL)
         {   
             msgLog << MSG::WARNING << "Error checking number of event in buffer " << LUMI << endmsg;
         }
-        else
-        {
-            if(eventActual <= 0) {
-                static int i = 0;
-                if(++i %1000 == 0) msgLog << MSG::WARNING << "oups ca fait longtemps" << endmsg;
-                MEPRxSys::microsleep(1000);
-            }
-        }
-
     }
     while(eventActual <= 0 && m_InjState == RUNNING);
 
@@ -822,6 +815,7 @@ StatusCode MEPInjector::getEvent(int nbEv)
         return StatusCode::RECOVERABLE;
     }
 
+    ///XXX Here, if ReaderSvc stopped before injector, we are blocked
     if(mbm_get_event(bmid,&p, &m_CurEventSize, &r.evtype, r.trmask, m_PartitionID) != MBM_NORMAL)
     {
         msgLog << MSG::ERROR << "mbm_get_event failed" << endmsg;
@@ -858,6 +852,8 @@ StatusCode MEPInjector::readEvent()
     {
         int bytesRead = MDFHDRSZ;
         
+        int nbTell=0;
+
         /// for each bank
         while(bytesRead<m_CurEventSize)
         { 
@@ -868,7 +864,7 @@ StatusCode MEPInjector::readEvent()
                 ERRMSG(msgLog, "Severe error in fragment");
                 return StatusCode::FAILURE;  
 	    }
-
+            ++nbTell; 
              
             /// Processing of the Odin banks, basically merge tape and TFC bank contents according to what was defined 
             if(hdr->type() == RawBank::ODIN && !m_AutoMode)
@@ -897,20 +893,20 @@ StatusCode MEPInjector::readEvent()
       
             if(hdr->type() == RawBank::OT
                    || hdr->type() == RawBank::OTError
-                   || hdr->type() == RawBank::OTRaw )
+                   || hdr->type() == RawBank::OTRaw && m_NeedOTConv)
             {
                 unsigned int src = hdr->sourceID();
                 unsigned int tmp = (src/100 * 16 * 16) + (((src/10) %10) * 16 ) + (src%10);
                 hdr->setSourceID(tmp);
             }
     
-		tell1id = getTell1IP(hdr->type(), hdr->sourceID());
-		if (tell1id == 0) { 
+            tell1id = getTell1IP(hdr->type(), hdr->sourceID());
+	    if (tell1id == 0) { 
                 msgLog << MSG::DEBUG<<"Problem finding Tell1 IP: Unknown source "<<hdr->sourceID()<<" or type "<<RawBank::typeName(hdr->type()) << ", execution continue "<<endmsg; 
-		    continue;
-		}
+	        continue;
+	    }
 
-		len = hdr->totalSize();	/// I need len = hdr + body + padding, because the bank array contains the padding    
+	    len = hdr->totalSize();	/// I need len = hdr + body + padding, because the bank array contains the padding   
  
             /////////////////////////////////////////
             // Encoding while reading
@@ -978,6 +974,11 @@ StatusCode MEPInjector::readEvent()
             /// Copy the bank opaque body + hdr + padding
             memcpy(ccur, hdr, len); 
 	}			//end for all banks of the event
+        if(m_Debug) { 
+            msgLog << MSG::INFO << "One event read:" << bytesRead << "/" << m_CurEventSize << endmsg;
+            msgLog << MSG::INFO << nbTell << " TELL1 read in the event" << endmsg;
+        }
+ 
         if(++nbEv == m_PackingFactor)
         {
             nbEv=0;
@@ -1098,7 +1099,26 @@ StatusCode MEPInjector::injectorProcessing()
     StatusCode sc = StatusCode::RECOVERABLE;
     while ((sc.isSuccess() || sc.isRecoverable()) && m_InjState == RUNNING ) {
         //XXX optimization, all get HLT et get Odin in main loop, not in alternative inside the readThenSend, 
-        //XXX as we could go back to main loop once mep factor reached, to do when spare time 
+        //XXX as we could go back to main loop once mep factor reached, to do when spare time
+ 
+        if((m_TotEvtsSent%500000) == 0 && !m_AutoMode)
+        {   
+            msgLog << MSG::INFO << "+++++++++++++++++++++++" << endmsg;
+            msgLog << MSG::INFO << "-----------------------" << endmsg;
+            msgLog << MSG::INFO << "Time of run (ms) :     " << m_TotElapsedTime << endmsg;
+            msgLog << MSG::INFO << "Number of Odin MEP :   " << m_TotOdinMEPRx << endmsg;
+            msgLog << MSG::INFO << "-----------------------" << endmsg; 
+            msgLog << MSG::INFO << "Number of event sent : " << m_TotEvtsSent << endmsg;
+            msgLog << MSG::INFO << "Number of event read : " << m_TotEvtsRead << endmsg; 
+            msgLog << MSG::INFO << "-----------------------" << endmsg; 
+            msgLog << MSG::INFO << "Credits received :     " << m_TotMEPReqRx << endmsg; 
+            msgLog << MSG::INFO << "Credits sent :         " << m_TotMEPReqTx << endmsg;
+            msgLog << MSG::INFO << "Credits consumed :     " << m_TotCreditConsumed << endmsg; 
+            msgLog << MSG::INFO << "-----------------------" << endmsg;
+            msgLog << MSG::INFO << "+++++++++++++++++++++++" << endmsg;
+            if(m_Debug) logMEPReqs();  
+        }
+
         if(sc.isRecoverable()) 
         {
             if(!m_AutoMode) {
@@ -1139,25 +1159,6 @@ StatusCode MEPInjector::injectorProcessing()
 StatusCode MEPInjector::readThenSend()
 {
     static MsgStream msgLog(msgSvc(), name());	//Message stream for output
-
-
-    if((m_TotEvtsSent%500000) == 0 && !m_AutoMode)
-    {   
-        msgLog << MSG::INFO << "+++++++++++++++++++++++" << endmsg;
-        msgLog << MSG::INFO << "-----------------------" << endmsg;
-        msgLog << MSG::INFO << "Time of run (ms) :     " << m_TotElapsedTime << endmsg;
-        msgLog << MSG::INFO << "Number of Odin MEP :   " << m_TotOdinMEPRx << endmsg;
-        msgLog << MSG::INFO << "-----------------------" << endmsg; 
-        msgLog << MSG::INFO << "Number of event sent : " << m_TotEvtsSent << endmsg;
-        msgLog << MSG::INFO << "Number of event read : " << m_TotEvtsRead << endmsg; 
-        msgLog << MSG::INFO << "-----------------------" << endmsg; 
-        msgLog << MSG::INFO << "Credits received :     " << m_TotMEPReqRx << endmsg; 
-        msgLog << MSG::INFO << "Credits sent :         " << m_TotMEPReqTx << endmsg;
-        msgLog << MSG::INFO << "Credits consumed :     " << m_TotCreditConsumed << endmsg; 
-        msgLog << MSG::INFO << "-----------------------" << endmsg;
-        msgLog << MSG::INFO << "+++++++++++++++++++++++" << endmsg;
-        if(m_Debug) logMEPReqs();  
-    }
 
 
     StatusCode sc;
@@ -2247,18 +2248,21 @@ StatusCode MEPInjector::finalize()
     deleteConsumers();
 
     /// No more need of synchronisation to access to the queues/maps, min value = 1
-    /// and they should exit  
-    if(sem_post(&m_MEPReqCount)==-1)
-    {
-        ERRMSG(msgLog, "Posting on the semaphore");
-        perror("sem_post");
-        exit(errno);
-    } 
-    if(sem_post(&m_OdinCount)==-1) 
-    {
-        ERRMSG(msgLog, "Posting on the semaphore");
-        perror("sem_post");
-        exit(errno);
+    /// and they should exit 
+    if(! m_AutoMode)
+    { 
+        if(sem_post(&m_MEPReqCount)==-1)
+        {
+            ERRMSG(msgLog, "Posting on the semaphore");
+            perror("sem_post");
+            exit(errno);
+        } 
+        if(sem_post(&m_OdinCount)==-1) 
+        {
+            ERRMSG(msgLog, "Posting on the semaphore");
+            perror("sem_post");
+            exit(errno);
+        }
     }
     
 /*
