@@ -1,4 +1,4 @@
-// $Id: VeloExpertClusterMonitor.h,v 1.2 2009-04-03 08:54:48 jmylroie Exp $
+// $Id: VeloExpertClusterMonitor.h,v 1.3 2009-04-07 14:39:08 jmylroie Exp $
 #ifndef VELOEXPERTCLUSTERMONITOR_H 
 #define VELOEXPERTCLUSTERMONITOR_H 1
 
@@ -42,9 +42,9 @@ namespace Velo
     //    DeVelo* m_veloDet;
     StatusCode loopTracks();
     StatusCode plotCluster(LHCb::VeloCluster* cluster,std::string ClusterType, double theta=-400.,double prap = -400.);
-    StatusCode plotSensorsADC(double& adc,std::string corr,std::string& ClusterType,int& sensor_num = -400);
-    StatusCode plotSensorsSize(double& clsize,std::string corr,std::string& ClusterType,int& sensor_num = -400);
-    StatusCode plotAngles(double& adc,std::string& range,std::string& ClusterType, double& theta=-400.,int& sensor_num = -400);
+    StatusCode plotSensorsADC(double& adc,std::string corr,std::string& ClusterType,int sensor_num = -400);
+    StatusCode plotSensorsSize(double& clsize,std::string corr,std::string& ClusterType,int sensor_num = -400);
+    StatusCode plotAngles(double& adc,std::string& range,std::string& ClusterType, double theta=-400.,int sensor_num = -400);
     StatusCode plotRPhiRange( LHCb::VeloCluster* cluster,LHCb::VeloChannelID idtemp, double adc,
                               std::string path,double clsize,std::string ClusterType, double theta);
    

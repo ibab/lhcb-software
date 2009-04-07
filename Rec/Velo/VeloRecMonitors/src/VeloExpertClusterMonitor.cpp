@@ -1,4 +1,4 @@
-// $Id: VeloExpertClusterMonitor.cpp,v 1.2 2009-04-03 08:54:48 jmylroie Exp $
+// $Id: VeloExpertClusterMonitor.cpp,v 1.3 2009-04-07 14:39:08 jmylroie Exp $
 // Include files// from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "GaudiKernel/AlgFactory.h" 
@@ -459,7 +459,7 @@ return StatusCode::SUCCESS;
 //============================================================================
 // plot all sensors ADCs
 //============================================================================
-StatusCode Velo::VeloExpertClusterMonitor::plotSensorsADC(double& adc, std::string corr,std::string& ClusterType,int& sensor_num){
+StatusCode Velo::VeloExpertClusterMonitor::plotSensorsADC(double& adc, std::string corr,std::string& ClusterType,int sensor_num){
   plot1D(adc, ClusterType+corr+"/cluster_adc", "Cluster ADC ", 0, 100, 100);
   if(sensor_num!= -400){
     char senName[100];
@@ -472,7 +472,7 @@ StatusCode Velo::VeloExpertClusterMonitor::plotSensorsADC(double& adc, std::stri
 //============================================================================
 // plot all sensors size
 //============================================================================
-StatusCode Velo::VeloExpertClusterMonitor::plotSensorsSize(double& clsize, std::string corr,std::string& ClusterType,int& sensor_num){
+StatusCode Velo::VeloExpertClusterMonitor::plotSensorsSize(double& clsize, std::string corr,std::string& ClusterType,int sensor_num){
 
   plot1D(clsize, ClusterType+corr+"/cluster_size", "Cluster Size ", -0.5, 9.5, 10);
   if(sensor_num!= -400){
@@ -488,7 +488,7 @@ StatusCode Velo::VeloExpertClusterMonitor::plotSensorsSize(double& clsize, std::
 // seperate angular plots
 //============================================================================}
 
-StatusCode Velo::VeloExpertClusterMonitor::plotAngles(double& adc, std::string& range,std::string& ClusterType,double& theta,int& sensor_num){
+StatusCode Velo::VeloExpertClusterMonitor::plotAngles(double& adc, std::string& range,std::string& ClusterType,double theta,int sensor_num){
 
   plot1D(adc, ClusterType+range, "Cluster ADC ", 0, 100, 100);
   //+"/theta/adc/"
