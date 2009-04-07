@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: TrackCreator.py,v 1.5 2008-11-14 17:14:05 jonrob Exp $"
+__version__ = "$Id: TrackCreator.py,v 1.6 2009-04-07 16:17:17 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration  import *
@@ -23,8 +23,8 @@ class RichTrackCreatorConfig(RichConfigurableUser):
     __slots__ = {
         "Context":       "Offline"  # The context within which to run
        ,"Radiators": [True,True,True] # The radiators to use (Aerogel/Rich1Gas/Rich2Gas)
-       ,"UseCaloMomentumTracks" : False # Use Tracks cloned from originals with P updated using the CALO
        ,"SpecialData"  : []      # Various special data processing options. See KnownSpecialData in RecSys for all options
+       ,"InputTracksLocation" : "" # The input location for tracks
         }
 
     ## @brief Apply the configuration
@@ -43,8 +43,9 @@ class RichTrackCreatorConfig(RichConfigurableUser):
         # Track creator
         trackCr = RichTools().trackCreator(nickname)
 
-        if self.getProp("UseCaloMomentumTracks") :
-            trackCr.TracksLocation = "Rec/Track/BestWithCALOInfo"
+        # Input tracks
+        intracks = self.getProp("InputTracksLocation")
+        if intracks != "" : trackCr.TracksLocation = intracks
             
         # Track selector
         trselname = "TrackSelector"

@@ -4,6 +4,11 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2009-04-07 - Chris Jones
+ - Add option to Track Creator Configurable to allow user to set a custom
+   input track location
+ - Remove 'CaloTracks' option (superceded by above addition).
+
 !====================== RichRecSys v3r17 2009-03-10 ==========================
 ! 2009-03-10 - Chris Jones
  - Temporarily disable Sajan's package for DC09 release.
