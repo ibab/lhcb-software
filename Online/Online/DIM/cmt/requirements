@@ -42,16 +42,16 @@ macro_append  didlinkopts " /usr/X11R6/lib/libMrm.so.3 "\
  WIN32                    " "
 apply_pattern dim_exe name=test_server       files=examples/test_server.c
 apply_pattern dim_exe name=test_client       files=examples/test_client.c
-apply_pattern dim_exe name=test_big_server   files=examples/test_big_server.c
-apply_pattern dim_exe name=test_big_client   files=examples/test_big_client.c
+#apply_pattern dim_exe name=test_big_server   files=examples/test_big_server.c
+#apply_pattern dim_exe name=test_big_client   files=examples/test_big_client.c
 # apply_pattern dim_exe name=demo_server     files=examples/demo_server.c
 # apply_pattern dim_exe name=demo_client     files=examples/demo_client.c
-apply_pattern dim_exe name=rpc_server        files=examples/rpc_server.cxx
-apply_pattern dim_exe name=rpc_client        files=examples/rpc_client.cxx
-apply_pattern dim_exe name=pvss_dim_server   files=examples/pvss_dim_server.cxx
-apply_pattern dim_exe name=pvss_dim_client   files=examples/pvss_dim_client.cxx
-apply_pattern dim_exe name=benchServer       files=benchmark/benchServer.cxx
-apply_pattern dim_exe name=benchClient       files=benchmark/benchClient.cxx
+#apply_pattern dim_exe name=rpc_server        files=examples/rpc_server.cxx
+#apply_pattern dim_exe name=rpc_client        files=examples/rpc_client.cxx
+#apply_pattern dim_exe name=pvss_dim_server   files=examples/pvss_dim_server.cxx
+#apply_pattern dim_exe name=pvss_dim_client   files=examples/pvss_dim_client.cxx
+#apply_pattern dim_exe name=benchServer       files=benchmark/benchServer.cxx
+#apply_pattern dim_exe name=benchClient       files=benchmark/benchClient.cxx
 apply_pattern dim_exe name=check_dns         files=util/check_dns.cxx
 apply_pattern dim_exe name=dimbridge         files=util/dimbridge.cxx
 apply_pattern dim_exe name=dim_get_service   files=util/dim_get_service.c
