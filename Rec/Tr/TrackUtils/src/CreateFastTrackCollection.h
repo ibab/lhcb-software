@@ -1,4 +1,4 @@
-// $Id: CreateFastTrackCollection.h,v 1.1 2009-02-25 22:46:51 mschille Exp $
+// $Id: CreateFastTrackCollection.h,v 1.2 2009-04-07 09:35:07 mschille Exp $
 #ifndef INCLUDE_CREATEFASTTRACKCOLLECTION_H
 #define INCLUDE_CREATEFASTTRACKCOLLECTION_H 1
 
@@ -30,6 +30,8 @@ class CreateFastTrackCollection : public GaudiAlgorithm
     private:
 	std::vector<std::string> m_inputLocations; ///< input locations
 	std::string m_outputLocation; ///< output location
+	bool m_slowContainer; ///< optionally deep-copy tracks into keyed cont.
 };
 #endif // INCLUDE_CREATEFASTTRACKCOLLECTION_H
 
+// vim:tw=78:sw=4:ft=cpp

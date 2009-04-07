@@ -1,4 +1,4 @@
-// $Id: CreateFastTrackCollection.cpp,v 1.1 2009-02-25 22:46:51 mschille Exp $
+// $Id: CreateFastTrackCollection.cpp,v 1.2 2009-04-07 09:35:07 mschille Exp $
 #include "GaudiKernel/AlgFactory.h"
 
 #include "CreateFastTrackCollection.h"
@@ -26,6 +26,7 @@ CreateFastTrackCollection::CreateFastTrackCollection(const std::string& name,
 {
     declareProperty("InputLocations", m_inputLocations);
     declareProperty("OutputLocation", m_outputLocation);
+    declareProperty("SlowContainer", m_slowContainer = false);
 }
 
 //=============================================================================
@@ -58,7 +59,7 @@ StatusCode CreateFastTrackCollection::initialize()
 	++pos;
 	if (src.empty()) {
 	    error() << "Invalid input location specified (position " <<
-		    pos << ")." << endmsg;
+		pos << ")." << endmsg;
 	    allok = false;
 	}
     }
@@ -74,14 +75,38 @@ StatusCode CreateFastTrackCollection::initialize()
 StatusCode CreateFastTrackCollection::execute()
 {
     debug() << "==> Execute" << endmsg;
-    // create output container and put it on TES
-    SharedObjectsContainer<LHCb::Track> *out =
-	new SharedObjectsContainer<LHCb::Track>;
-    put(out, m_outputLocation);
-    // get all input containers in turn and put track pointers into output
-    BOOST_FOREACH(const std::string& src, m_inputLocations) {
-	LHCb::Tracks *input = get<LHCb::Tracks>(src);
-	out->insert(input->begin(), input->end());
+    if (!m_slowContainer) {
+	// create output container and put it on TES
+	SharedObjectsContainer<LHCb::Track> *out =
+	    new SharedObjectsContainer<LHCb::Track>;
+	put(out, m_outputLocation);
+	// get all input containers in turn and put track pointers into output
+	BOOST_FOREACH(const std::string& src, m_inputLocations) {
+	    LHCb::Tracks *input = get<LHCb::Tracks>(src);
+	    out->insert(input->begin(), input->end());
+	}
+    } else {
+	// count tracks so that we can make an output container of the
+	// right size
+	std::size_t ntracks = 0;
+	BOOST_FOREACH(const std::string& src, m_inputLocations) {
+	    const LHCb::Tracks* input = get<LHCb::Tracks>(src);
+	    ntracks += input->size();
+	}
+	// copy tracks the old way, using keyed containers
+	LHCb::Tracks *out = new LHCb::Tracks();
+	out->reserve(ntracks);
+	put(out, m_outputLocation);
+	BOOST_FOREACH(const std::string& src, m_inputLocations) {
+	    const LHCb::Tracks* input = get<LHCb::Tracks>(src);
+	    BOOST_FOREACH(const LHCb::Track* tr, *input) {
+		// hopefully, I copy everything
+		LHCb::Track *ntr = tr->clone();
+		ntr->setHistory(tr->history());
+		ntr->setType(tr->type());
+		out->insert(ntr);
+	    }
+	}
     }
 
     return StatusCode::SUCCESS;
@@ -96,3 +121,5 @@ StatusCode CreateFastTrackCollection::finalize()
 
     return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
+
+// vim:tw=78:sw=4:ft=cpp
