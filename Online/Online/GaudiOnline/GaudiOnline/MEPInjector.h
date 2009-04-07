@@ -81,6 +81,8 @@ namespace LHCb {
     typedef std::vector<std::string>        Requirements;
 
   protected:
+    bool m_NeedOTConv;
+
     /// Protected Attributes
     Requirements m_Req; /* Vector of strings which tells the options to access to buffer managers,             */
                         /* Most are useless and should be like this :                                          */
