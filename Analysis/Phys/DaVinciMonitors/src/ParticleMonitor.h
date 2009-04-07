@@ -1,4 +1,4 @@
-// $Id: ParticleMonitor.h,v 1.2 2009-02-13 12:28:16 jonrob Exp $
+// $Id: ParticleMonitor.h,v 1.3 2009-04-07 16:25:12 pkoppenb Exp $
 #ifndef PARTICLEMONITOR_H 
 #define PARTICLEMONITOR_H 1
 
@@ -42,6 +42,6 @@ private:
   std::string  m_sidebandCut       ; ///< Selection cut applied to sideband mothers
   std::map<std::string,IPlotTool*> m_plotTools ; ///< Plot tools to be used
   std::vector<std::string>  m_plotToolNames; ///< names for plottols, only for initialize
-
+  std::string m_massPlotToolName ; ///< Mass plot tool is special
 };
 #endif // PARTICLEMONITOR_H

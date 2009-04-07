@@ -1,4 +1,4 @@
-// $Id: MassPlotTool.cpp,v 1.4 2009-02-15 22:03:51 jonrob Exp $
+// $Id: MassPlotTool.cpp,v 1.5 2009-04-07 16:25:12 pkoppenb Exp $
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
@@ -43,7 +43,9 @@ StatusCode MassPlotTool::fillImpl( const LHCb::Particle* p,
   if (!pp) { return StatusCode::SUCCESS; }
 
   const double mm = pp->mass() ;
-  const double em = mm*0.1; // CRJ : Arbitary I know. To be improved ...
+  const double wm = pp->width() ;
+  const double re = 20.0*Gaudi::Units::MeV ; // Typical resolution
+  const double em = 5.0*sqrt(wm*wm+re*re); /// @todo PK : 5 (width + resolution). Arbitary I know. To be improved ...
 
   plot( p->measuredMass(),
         histoName("M",pp,trailer),"Mass of "+pp->name()+"_"+trailer, 

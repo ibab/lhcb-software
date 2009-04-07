@@ -4,6 +4,11 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-04-07 - Patrick Koppenburg
+ - MassPlotTool : Use 5*(width _+_ 20MeV) as window
+ - ParticleMonitor : always fill Mass plot tool
+ - Increment to v1r2
+
 !========================== DaVinciMonitors v1r1 2009-03-01 ==================
 
 ! 2009-02-26 - Patrick Koppenburg for Alessio Sarti

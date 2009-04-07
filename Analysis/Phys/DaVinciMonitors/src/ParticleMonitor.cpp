@@ -1,4 +1,4 @@
-// $Id: ParticleMonitor.cpp,v 1.4 2009-02-13 12:28:16 jonrob Exp $
+// $Id: ParticleMonitor.cpp,v 1.5 2009-04-07 16:25:12 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -28,6 +28,7 @@ ParticleMonitor::ParticleMonitor( const std::string& name,
   ,   m_mother(LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant( true ))
   ,   m_peak(LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant( true ))
   ,   m_sideband(LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant( false ))
+  ,   m_massPlotToolName("MassPlotTool")
 {
   declareProperty( "MotherCut", m_motherCut = "ALL", 
                    "The cut to be applied to all mother particle (default all)." )  ;
@@ -73,15 +74,22 @@ StatusCode ParticleMonitor::initialize() {
   else 
   {
     if (msgLevel(MSG::DEBUG)) debug() << "Using" ;
+    m_plotTools.insert(std::pair<std::string,IPlotTool*>(m_massPlotToolName,
+                                                         tool<IPlotTool>(m_massPlotToolName,this)));
+    if (msgLevel(MSG::DEBUG)) debug() << " " << m_massPlotToolName << endmsg ;  
     for ( std::vector<std::string>::const_iterator s = m_plotToolNames.begin() ;
           s != m_plotToolNames.end() ; ++s)
     {
+      if ( *s == m_massPlotToolName ) {
+        warning() <<  *s << " is mandatory. Is already added to list." << endmsg ;
+        continue ; // already done
+      }
       m_plotTools.insert(std::pair<std::string,IPlotTool*>(*s,tool<IPlotTool>(*s,this)));
       if (msgLevel(MSG::DEBUG)) debug() << " " << *s << endmsg ;
     }    
     if (msgLevel(MSG::DEBUG)) debug() << endmsg ;
   }
-  
+
   return StatusCode::SUCCESS;
 }
 
@@ -97,13 +105,15 @@ StatusCode ParticleMonitor::execute() {
         m != desktop()->particles().end(); ++m)
   {
     counter("# Mothers")++ ;
-    if ( !m_mother( *m ) )  { continue ; }   // discard particles with no cuts
-    
-    std::string trail = "mother";
+    if ( !m_mother( *m ) )  { continue ; }   // discard particles with no cut   
+
+    std::string trail = "all";
+    m_plotTools[m_massPlotToolName]->fillPlots(*m,trail); // full mass plot
     
     counter("# Accepted Mothers")++;
     const bool peak     = m_peak( *m ) ;
     const bool sideband = m_sideband( *m ) ;
+
     if (peak) 
     {
       counter("# Accepted Mothers in Peak")++;
