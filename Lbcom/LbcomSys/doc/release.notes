@@ -6,6 +6,51 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v6r27>2009-04-07 LbcomSys v6r27</A></H1><PRE>
+This version uses Gaudi v20r4 and LHCb v26r3
+
+- Packages added:    STMonitors - Standard package for monitoring NZS and ZS data
+- Packages modified: CaloTools v5r7, L0DU v8r15, OTMonitor v2r10, 
+    RichDAQ v3r23p1, STAlgorithms v3r5, STCheckers v2r11, STDAQ v3r16
+
+- In CaloTools v5r7
+  . Fix bad default setting for CaloHypo2Calo.cpp (Seed=false -> true) +
+    minor bug fix
+  . Improve verbosity for CaloCosmics stuff
+
+- In L0DU v8r15
+  . Add "DataType" property to L0DUConf(), used to define default TCK 
+  . Default TCK is "0xFFFF" if DataType is "DC06", "0xDC09" otherwise
+  . Remove options/DefaultTCK.opts, obsoleted by above change
+  . Fix compilation problem with gcc43
+  . src/L0DUAlg.cpp  : m_sourceID can be changed by options
+  . src/L0Filter.cpp : printout statistics in finalize()
+  . src/L0DURawBankMonitor.cpp : implement bin labelling + few improvements.
+  . src/L0DUReportMonitor.cpp  : implement dynamic bin labelling
+  . src/L0DUConfigProvider.cpp : automatic L0DUTrigger definition
+  . cmt/requirements : append libHist explicitely
+                       use L0TCK v1r* (instead of v*)
+
+- In OTMonitor v2r10
+  . Protect divides by zero in MCOTDepositMonitor in case of empty events
+
+- In RichDAQ v3r23p1
+  . Fix untested StatusCodes in RichRawDataFormatTool (Warning().ignore())
+  . Replace obsolescent endreq by endmsg 
+
+- In STAlgorithms v3r5
+  . Move STClusterCreator to new base class
+  . Follow changes in STCluster class [removed constructor]
+
+- In STCheckers v2r11
+  . Follow changes in STSummary class
+
+- In STDAQ v3r16
+  . Merge STDAQ and STOnline
+  . Add STPedestalDecoding and STFullDecoding
+  . Remove info message in event loop
+  . Follow changes in STSummary block content
+
 </PRE><H1><A NAME=v6r26>2009-02-24 LbcomSys v6r26</A></H1><PRE>
 This version uses Gaudi v20r4 and LHCb v26r2
 
