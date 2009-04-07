@@ -236,14 +236,14 @@ Hlt2ResolvedPi0s.PhysDesktop.ParticleMakerType = "CaloParticleMaker" ;
 Hlt2ResolvedPi0s.PhysDesktop.CaloParticleMaker.Type = "ResolvedPi0Maker" ;
 Hlt2ResolvedPi0s.DecayDescriptor = "Pi0" ;
 Hlt2ResolvedPi0s.PhysDesktop.CaloParticleMaker.ResolvedPi0Maker.PhotonMaker.Input = "Hlt/ProtoP/Neutrals";
-Hlt2ResolvedPi0s.PhysDesktop.CaloParticleMaker.ResolvedPi0Maker.Pi0MassWindow = 30.* MeV;
+Hlt2ResolvedPi0s.PhysDesktop.CaloParticleMaker.ResolvedPi0Maker.MassWindow = 30.* MeV;
 Hlt2ResolvedPi0s.PhysDesktop.CaloParticleMaker.ResolvedPi0Maker.PhotonMaker.PtCut = 200.*MeV;
 //Make the merged Pi0s
 Hlt2MergedPi0s.PhysDesktop.ParticleMakerType = "CaloParticleMaker" ;
 Hlt2MergedPi0s.PhysDesktop.CaloParticleMaker.Type = "MergedPi0Maker" ;
 Hlt2MergedPi0s.DecayDescriptor = "Pi0" ;
 Hlt2MergedPi0s.PhysDesktop.CaloParticleMaker.MergedPi0Maker.Input= "Hlt/ProtoP/Neutrals"; 
-Hlt2MergedPi0s.PhysDesktop.CaloParticleMaker.MergedPi0Maker.Pi0MassWindow = 60.* MeV;
+Hlt2MergedPi0s.PhysDesktop.CaloParticleMaker.MergedPi0Maker.MassWindow = 60.* MeV;
 
 
 //---------------------------------------------------------------------
