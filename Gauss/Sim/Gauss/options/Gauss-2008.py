@@ -12,22 +12,8 @@
 #
 from Gauss.Configuration import *
 
-#--Allow to use ns (ie. double) in options of EventClockSvc
-ec = EventClockSvc()
-ec.addTool(FakeEventTime(), name="EventTimeDecoder")
-ec.EventTimeDecoder.StartTime = 0
-ec.EventTimeDecoder.TimeStep  = 25*SystemOfUnits.ns
-
-#--Generic Gauss options
-importOptions('$GAUSSOPTS/Gauss.opts')
-
 #--Geometry dependent options, use information from SIMCOND for positions
-LHCbApp( DataType = "2008", Simulation = True )
 LHCbApp().DDDBtag = "head-20090112"
-LHCbApp().CondDBtag = "sim-20090112" 
+LHCbApp().CondDBtag = "sim-20090112"
 
-giGaGeo = GiGaGeo()
-giGaGeo.UseAlignment      = True
-giGaGeo.AlignAllDetectors = True
-importOptions('$GAUSSOPTS/SimVeloGeometry.py')  # -- To misalign VELO
-
+importOptions('$GAUSSOPTS/Gauss.py')
