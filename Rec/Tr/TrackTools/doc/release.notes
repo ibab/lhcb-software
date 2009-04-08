@@ -3,6 +3,8 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+! 2009-04-08 - Stephanie Hansmann-Menzemer
+- fix bug with ancestors in TrackStateInitTool
 
 ! 2009-04-06 M Needham
  - Add STClusterCollector tool

@@ -31,6 +31,10 @@ StatusCode TrackStateInitTool::initialize()
 
 StatusCode TrackStateInitTool::fit( LHCb::Track& track, bool clearStates ) const
 {
+
+
+
+  
   
   //do nothing  
   if(!clearStates) 
@@ -50,16 +54,16 @@ StatusCode TrackStateInitTool::fit( LHCb::Track& track, bool clearStates ) const
 
       LHCb::Track::ExtraInfo extraInfo = track.extraInfo();
 
-      const SmartRefVector<LHCb::Track>& ancestors = track.ancestors();      
-      
+      const SmartRefVector<LHCb::Track> ancestors = track.ancestors();      
+
       StatusCode sc = createVeloStates( track );
-      if( sc.isFailure() ) Warning("TrackStateInitTool fit Velo failed",sc,0).ignore();
+      if( sc.isFailure() ) Warning("TrackStateInitool fit Velo failed",sc,0).ignore();
 
       track.clearAncestors();
 
       // copy the ancestors
       for (SmartRefVector<LHCb::Track>::const_iterator it = ancestors.begin();
-	   it != ancestors.end();  ++it) track.addToAncestors(*(*it));
+         it != ancestors.end();  ++it) track.addToAncestors(*(*it));
     
       track.setExtraInfo(extraInfo); 
   }
@@ -82,6 +86,9 @@ StatusCode TrackStateInitTool::fit( LHCb::Track& track, bool clearStates ) const
       StatusCode sc = createTStationStates( track ) ;
       if( sc.isFailure() ) Warning("TrackStateInitTool fit T failed",sc,0).ignore();
   }
+
+  LHCb::Track::Types savedType1 = track.type();
+
     return StatusCode::SUCCESS ;
 } ;
 
