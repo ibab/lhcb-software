@@ -1,4 +1,4 @@
-#$Id: requirements,v 1.176 2009-04-08 13:25:28 jpalac Exp $
+#$Id: requirements,v 1.177 2009-04-08 13:36:00 jpalac Exp $
 package PhysSys
 version v8r2
 
@@ -7,11 +7,11 @@ branches doc cmt
 ####################################################################
 
 #===================================================================
-use  PhysConf                   v1r1     Phys   # Patrick Koppenburg, Juan Palacios
+use  PhysConf                   v1r1p1   Phys   # Patrick Koppenburg, Juan Palacios
 use  ProtoParticleFilter        v1r3     Phys   # Chris Jones
-use  DaVinciTools       	v18r2p1  Phys   # Juan Palacios
+use  DaVinciTools       	v18r3    Phys   # Juan Palacios
 use  DaVinciTransporter 	v3r8     Phys   # Juan Palacios
-use  ParticleMaker      	v4r2     Phys   # Chris Jones
+use  ParticleMaker      	v4r3     Phys   # Chris Jones
 use  VertexFit			v5r6     Phys   # Yuehong Xie
 use  LoKiFitters                v2r1     Phys   # Vanya Belyaev
 
