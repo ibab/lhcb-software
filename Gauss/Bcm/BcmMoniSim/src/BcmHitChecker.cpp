@@ -23,6 +23,7 @@ BcmHitChecker::BcmHitChecker( const std::string& name,
 {
   declareProperty("BcmDetLocation", m_bcmDetLocation);
   declareProperty("MonitorInDetail", m_detailedMonitor);
+  declareProperty("BcmHitsLocation", m_bcmHitsLocation = "MC/Bcm/Hits" );
 }
 
 //=============================================================================
@@ -70,10 +71,11 @@ StatusCode BcmHitChecker::finalize() {
 StatusCode BcmHitChecker::getData() {
   debug()<< " ==> BcmHitChecker::getData" <<endmsg;
 
-  if(!exist<LHCb::MCHits>("MC/Bcm/Hits")){ // Should be replaced with LHCb::MCHitLocation::Bcm
-    error()<< "There is no MCHits at MC/Bcm/Hits in TES!" <<endmsg;
+  if(!exist<LHCb::MCHits>(m_bcmHitsLocation)){ // Should be replaced with LHCb::MCHitLocation::Bcm
+    error()<< "There is no MCHits at " << m_bcmHitsLocation << " in TES!" 
+           << endmsg;
   }else{
-    m_bcmMCHits=get<LHCb::MCHits>("MC/Bcm/Hits");
+    m_bcmMCHits=get<LHCb::MCHits>(m_bcmHitsLocation);
   }
   
   return StatusCode::SUCCESS;

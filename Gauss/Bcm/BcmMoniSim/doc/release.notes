@@ -4,6 +4,10 @@
 ! Purpose     : Histograming for the BCM stations
 !----------------------------------------------------------------------------
 
+!======================== BcmMoniSim v1r2 2009-04-08 ========================
+! 2009-04-03 - Gloria CORTI
+ - Allow for multiple location of hits to handle spill-over in Gauss.
+
 !======================== BcmMoniSim v1r1 2008-06-10 ========================
 ! 2008-06-10 - Gloria CORTI
  - Adapt options to new path in detector element upstream of VELO for

@@ -40,6 +40,7 @@ protected:
 private:
 
   std::string m_bcmDetLocation;
+  std::string m_bcmHitsLocation;
   bool m_detailedMonitor;
   DeBcm* m_bcmDet;
   LHCb::MCHits* m_bcmMCHits;
