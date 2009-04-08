@@ -1,4 +1,4 @@
-// $Id: L0DURawBankMonitor.cpp,v 1.10 2009-03-10 14:40:57 cattanem Exp $
+// $Id: L0DURawBankMonitor.cpp,v 1.11 2009-04-08 11:16:53 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -138,6 +138,7 @@ StatusCode L0DURawBankMonitor::execute() {
     // Pile-Up
     fill( histo1D(toHistoID("Data/Pus/1")),m_fromRaw->data("PUPeak1(Cont)") ,1);
     fill( histo1D(toHistoID("Data/Pus/2")),m_fromRaw->data("PUPeak2(Cont)") ,1);
+    fill( histo1D(toHistoID("Data/Pus/3")),m_fromRaw->data("PUHits(Mult)") ,1);
     // Muon
     fill( histo1D(toHistoID("Data/Muon/1")),m_fromRaw->data("M0(Pt)")  * Sgn[m_fromRaw->data("M0(Sgn)")] ,1);
     fill( histo1D(toHistoID("Data/Muon/2")),m_fromRaw->data("M1(Pt)")  * Sgn[m_fromRaw->data("M1(Sgn)")] ,1);
@@ -348,6 +349,7 @@ void L0DURawBankMonitor::bookHistos() {
     //
     book1D( toHistoID("Data/Pus/1")  ,  "PUPeak1(Cont)"   ,  0. , 256.  , 256/m_bin);
     book1D( toHistoID("Data/Pus/2")  ,  "PUPeak2(Cont)"   ,  0. , 256.  , 256/m_bin);
+    book1D( toHistoID("Data/Pus/3")  ,  "PUHits(Mult)"    ,  0. , 256.  , 256/m_bin);
     //
     book1D( toHistoID("Data/Muon/1") ,  "Muon Q00  (Pt*sign) "   ,  -128.*muonPt, 128*muonPt , 256/m_bin);
     book1D( toHistoID("Data/Muon/2") ,  "Muon Q01  (Pt*sign) "   ,  -128.*muonPt, 128.*muonPt , 256/m_bin);
@@ -537,6 +539,7 @@ GaudiAlg::HistoID L0DURawBankMonitor::toHistoID(std::string unit){
   else if( unit.find("Status/Pus/2")!= std::string::npos)return HistoID( pref + "/Pus/Word2" );
   else if( unit.find("Pus/1")!= std::string::npos)return HistoID( pref + "/Pus/Peak1" );
   else if( unit.find("Pus/2")!= std::string::npos)return HistoID( pref + "/Pus/Peak2" );
+  else if( unit.find("Pus/3")!= std::string::npos)return HistoID( pref + "/Pus/Hits" );
   return HistoID( unit );
   
 } 

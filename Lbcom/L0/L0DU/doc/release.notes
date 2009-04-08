@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.153 2009-03-27 16:50:11 jucogan Exp $
+! $Id: release.notes,v 1.154 2009-04-08 11:16:53 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
+
+! 2009-04-08 - Olivier Deschamps
+  - L0DURawBankMonitoring : add monitoring histo for PileUp multiplicity
 
 ! 2009-03-27 - Julien Cogan
  - Add "TCK" property to L0Conf(), used to specify a TCK for the simulation
