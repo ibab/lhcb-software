@@ -87,9 +87,7 @@ StatusCode TrackStateInitTool::fit( LHCb::Track& track, bool clearStates ) const
       if( sc.isFailure() ) Warning("TrackStateInitTool fit T failed",sc,0).ignore();
   }
 
-  LHCb::Track::Types savedType1 = track.type();
-
-    return StatusCode::SUCCESS ;
+  return StatusCode::SUCCESS ;
 } ;
 
 StatusCode TrackStateInitTool::createVeloStates( LHCb::Track& track ) const
