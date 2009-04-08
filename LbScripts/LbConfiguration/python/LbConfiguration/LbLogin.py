@@ -43,7 +43,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.23 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.24 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -92,6 +92,10 @@ def _setCMTVersion_cb(option, opt_str, value, parser):
     if parser.values.cmtvers != value :
         parser.values.use_cache = False
         parser.values.cmtvers = value
+
+def _noPython_cb(option, opt_str, value, parser):
+    parser.values.get_python = False
+    parser.values.use_cache = False
 
 class LbLoginScript(Script):
     _version = __version__
@@ -185,7 +189,8 @@ class LbLoginScript(Script):
                           action="store_false",
                           help="prevent the usage of the cached setup of LbScripts")
         parser.set_defaults(cmtvers="v1r20p20070208")
-        parser.add_option("--cmtvers", action="callback",
+        parser.add_option("--cmtvers", 
+                          action="callback",
                           callback= _setCMTVersion_cb,
                           type="string",
                           help="set CMT version")
@@ -197,6 +202,11 @@ class LbLoginScript(Script):
         parser.add_option("--python-version",
                           dest="pythonvers",
                           help="version of python to be setup [default: %default]")
+        parser.set_defaults(get_python=True)
+        parser.add_option("--no-python",
+                          action="callback",
+                          callback = _noPython_cb,
+                          help="prevents the python setup")
         parser.set_defaults(sharedarea=None)
         parser.add_option("-s", "--shared",
                           dest="sharedarea",
@@ -449,6 +459,7 @@ class LbLoginScript(Script):
 #-----------------------------------------------------------------------------------
     def setSoftLocations(self):
         ev = self._env
+        al = self._aliases
         opts = self.options
         if opts.cmtsite != "standalone" :
             if opts.cmtsite == "LOCAL" :
@@ -478,6 +489,11 @@ class LbLoginScript(Script):
                 newpath = ev["PATH"].split(os.pathsep)
                 newpath.insert(0, os.path.join(ev["LHCBHOME"], "bin"))
                 ev["PATH"] = os.pathsep.join(newpath)
+                gangasetupdir = os.path.join(ev["SITEROOT"], "sw", "ganga", "install", "etc")
+                if opts.targetshell == "csh" :
+                    al["GangaEnv"] = "source %s/setup-lhcb.csh" % gangasetupdir
+                elif opts.targetshell == "sh" :
+                    al["GangaEnv"] = ". %s/setup-lhcb.sh" % gangasetupdir
     
             ev["OSC_release_area"] = ev["CONTRIBDIR"]
             ev["Gaudi_release_area"] = ev["GAUDISOFT"]
@@ -750,12 +766,13 @@ class LbLoginScript(Script):
             setupprojargs.append("LbScripts")
             if opts.scriptsvers :
                 setupprojargs.append(opts.scriptsvers)
-            setupprojargs.append("--runtime-project")            
-            setupprojargs.append("LCGCMT")
-            setupprojargs.append("Python")
-            if opts.pythonvers :
-                setupprojargs.append("-v")
-                setupprojargs.append(opts.pythonvers)
+            if opts.get_python :
+                setupprojargs.append("--runtime-project")            
+                setupprojargs.append("LCGCMT")
+                setupprojargs.append("Python")
+                if opts.pythonvers :
+                    setupprojargs.append("-v")
+                    setupprojargs.append(opts.pythonvers)
     
     
             log.debug("Arguments to SetupProject: %s" % " ".join(setupprojargs))

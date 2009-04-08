@@ -5,8 +5,11 @@
 	* scripts/group_shell.csh: 
 	* scripts/group_shell.sh: reverted the logic: if $HOME/.oldLHCBLoginscript is
 	not present, use the new login procedure. 
-	* python/LbConfiguration/LbLogin.py: restored the MYSITEROOT variable. Usefull for 
-	many installation.
+	* python/LbConfiguration/LbLogin.py: 
+	  - restored the MYSITEROOT variable. Usefull for many installation.
+	  - added the "-no-python" option to prevent python setup.
+	  - added the "GangaEnv" alias for CERN/lxplus usage. 
+	
 
 2009-04-03  Joel Closier <Joel.Closier@cern.ch>
 
