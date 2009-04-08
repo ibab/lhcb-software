@@ -32,6 +32,8 @@ preprocessor = normalizeExamples + \
     LineSkipper(["INFO Connected to database"]) + \
     LineSkipper(["INFO Disconnect from database after being idle"]) + \
     LineSkipper(["INFO Loading simulation attributes file", "UserDecayFile"]) + \
+    LineSkipper(["INFO Opened magnetic field file","EvtGen:In readDecayFile"]) + \
+    LineSkipper(["Generation.FixedLumi","Simulation                 INFO Member list"]) + \
     LineSkipper(["ChronoStatSvc.f...   INFO  Service finalized succes"]) 
 strippedOutput = []
 skipping = False
