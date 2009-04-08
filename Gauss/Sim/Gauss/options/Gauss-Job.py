@@ -21,10 +21,11 @@ fName = 'Gauss'
 #--Event type can either be imported here (uncomment the following lines)
 #  or given as additional argument of gaudirun.py
 #  The 'first part' of the output files names can be overwritten
+eventType = ''
 #eventType = '30000000'
 #eventType = '11144103'
-#importOptions('$DECFILESROOT/options/'+eventType+'.opts')
-#fName = eventType 
+if (eventType != '') :
+    fName = fName+'-'+eventType 
 
 #--Set name of output files for given job, based on number of events and
 #  date, above the first part is the name of the application or in case
