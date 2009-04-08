@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.255 2009-03-31 18:10:48 jpalac Exp $
+! $Id: release.notes,v 1.256 2009-04-08 08:58:55 gligorov Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2009-04-08 - V. Gligorov
+ - Update DaVinciSmartAsscoator.{h,cpp} to use P2MCPFromProtoP for associating stables. 
 
 ! 2009-03-31 - Juan PALACIOS
  - Add P2MCPFromProtoP, an IParticle2MCWeightedAssociator that uses ProtoParticle -> MCParticle relations tables.

@@ -8,7 +8,9 @@
 #include "Kernel/IDaVinciAssociatorsWrapper.h"
 #include "Kernel/Particle2MCLinker.h"
 #include "Kernel/Particle2MCAssociatorBase.h"
+#include "Kernel/IParticle2MCWeightedAssociator.h"
 #include "Kernel/MCAssociation.h"
+#include "Event/MCParticle.h"
 
 /** @class DaVinciSmartAssociator DaVinciSmartAssociator.h
  *  
@@ -55,8 +57,7 @@ private :
 
 private:
 
-  IDaVinciAssociatorsWrapper* m_linkerTool_cPP;
-  IDaVinciAssociatorsWrapper* m_linkerTool_nPP;
+  IParticle2MCWeightedAssociator* m_weightedAssociation; //for stables
   IBackgroundCategory* m_bkg; //for composites
 
 };
