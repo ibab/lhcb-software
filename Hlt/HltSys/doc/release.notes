@@ -5,6 +5,10 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+</PRE><H1><A NAME=v6r0>2009-04-08 HltSys v6r0</A></H1><PRE>
+ - Hlt2 selections rewritten to use Hlt2 lines (Vava & Gerhard)
+ - Do not create new Hlt2SelXxx.py files anymore. 
+
 </PRE><H1><A NAME=v5r2>2009-03-23 HltSys v5r2</A></H1><PRE>
  - Topological trigger released
  - Hlt2SelChecker updated to more recent DSTs
