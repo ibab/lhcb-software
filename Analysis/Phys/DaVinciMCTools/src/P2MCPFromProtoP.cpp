@@ -1,4 +1,4 @@
-// $Id: P2MCPFromProtoP.cpp,v 1.1 2009-03-31 18:10:28 jpalac Exp $
+// $Id: P2MCPFromProtoP.cpp,v 1.2 2009-04-08 12:12:31 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -43,7 +43,7 @@ P2MCPFromProtoP::relatedMCPsImpl(const LHCb::Particle* particle,
                                  const LHCb::MCParticle::ConstVector& mcps) const 
 {
   Particle2MCParticle::ToVector associations;
-  if ( ( particle->isBasicParticle() ) && ( 0==particle->proto() )   ) {
+  if ( ( particle->isBasicParticle() ) && ( 0!=particle->proto() )   ) {
     loadTables();
     for (Tables::const_iterator iTable = i_tables().begin();
          iTable != i_tables().end(); 
@@ -56,15 +56,15 @@ P2MCPFromProtoP::relatedMCPsImpl(const LHCb::Particle* particle,
       }
     }
   } else {
-    Warning("Composite or ProtoParticle-less associaiton not implemented!", StatusCode::SUCCESS, 10);
+    Warning("Composite or ProtoParticle-less association not implemented!", StatusCode::SUCCESS, 10);
   }
 
   // check if the associaited MCPs are in the input container, if not,
   // remove the association!
-
+  
   return Particle2MCParticle::FilterMCAssociations(associations,
                                                    mcps);
-
+  
 }
 //=============================================================================
 void P2MCPFromProtoP::loadTables() const
@@ -74,14 +74,13 @@ void P2MCPFromProtoP::loadTables() const
   for (Addresses::const_iterator item = m_PP2MC.begin(); item!=m_PP2MC.end(); ++item) {
     const std::string& address = *item;
     if (exist<LoKi::Types::TablePP2MC>(address) ) {
-      verbose() << "Adding table " << address << endmsg;;
+      verbose() << "Adding table " << address << endmsg;
       LoKi::Types::TablePP2MC* table = get<LoKi::Types::TablePP2MC>(address);
       m_tables.push_back(table);
     } else {
       Error ( " There is no valid data at '" + address + "'" ).ignore() ; 
     }
   }
-
 }
 //=============================================================================
 // Destructor
