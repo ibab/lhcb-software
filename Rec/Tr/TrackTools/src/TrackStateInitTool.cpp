@@ -107,7 +107,7 @@ StatusCode TrackStateInitTool::createTStationStates( LHCb::Track& track ) const
   
   std::vector<LHCb::State> newStates;
   //set T states
-  bool success  = m_seedFit->fitSeed(track.lhcbIDs(), &newStates);
+  StatusCode success = m_seedFit->fitSeed(track.lhcbIDs(), &newStates);
   //set qOverP for Velo states
   if(newStates.size()>0 && track.nStates()>0 && 
      track.firstState().location()<=LHCb::State::EndVelo) {
