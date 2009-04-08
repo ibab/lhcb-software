@@ -13,6 +13,7 @@
   <class name = "IP2VVMCPartAngleCalculator"/>
   <class name = "IPrintDecayTreeTool"/>
   <class name = "IPV2MC"/>
+  <class name = "MCAssociation"/>
   <class pattern = "Particle2MCParticle::*"/>
   <function pattern = "Particle2MCParticle::*"/>
 </lcgdict>
