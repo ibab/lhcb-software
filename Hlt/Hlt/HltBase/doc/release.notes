@@ -4,6 +4,7 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+!========================== HltBase v6r3 2009-04-08 ===================
 ! 2009-04-03 - Gerhard Raven
  - add some utilities which allow to set histogram binlabels
    given an AIDA histogram. This is to put all code which 
