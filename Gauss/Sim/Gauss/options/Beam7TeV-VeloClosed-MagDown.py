@@ -13,7 +13,7 @@
 #
 from Gauss.Configuration import *
 
-#--Use latest SIMCOND with standard data taking (Velo closing, Magnet down)
+#--Use latest SIMCOND with DC06 conditions (Velo closing, Magnet down)
 LHCbApp().CondDBtag = "sim-20090402-vc-md100"
 
 #--Starting time
