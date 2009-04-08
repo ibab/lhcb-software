@@ -1,17 +1,19 @@
-!$Id: release.notes,v 1.117 2009-04-03 12:40:32 odescham Exp $
+!$Id: release.notes,v 1.118 2009-04-08 14:05:57 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+!========================== CommonParticles v5r0p1 2009-04-08 ================
+
 ! 2008-04-03 - Olivier Deschamps 
  - adapt options and python to change in calo ParticleMaker (property name changes for pi0Makers)
 
-=======
 ! 2009-03-25 - Patrick Koppenburg
  - Bug fix in StdLooseD02HH : All states except D0->Kpi were called Standard 
 	 instead of Std.
+
 !========================== CommonParticles v5r0 2009-03-01 ==================
 
 ! 2009-02-26 - Patrick Koppenburg for Alessio Sarti
