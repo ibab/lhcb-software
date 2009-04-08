@@ -4,21 +4,18 @@
 # Beam7TeV-VeloOpen-MagDown
 #
 # Syntax is: 
-#  gaudirun.py $GAUSSOPTS/Gauss-2008.py
+#  gaudirun.py $GAUSSOPTS/Gauss-MC09.py
 #              $GAUSSOPTS/Beam7TeV-VeloOpen-MagDown.py
 #              $DECFILESROOT/options/30000000.opts (ie. event type)
+#              $LBPYTHIAROOT/options/Pythia.opts (i.e. production engine)
 #              $GAUSSOPTS/Gauss-Job.py (ie. job specific: random seed,
 #                                                         output file names...)
 #
 from Gauss.Configuration import *
 
-#--Tell SIMCOND tag to generate Open VELO
-from Configurables import CondDB
-## from DetCond.Configuration import addCondDBLayer
-## simCondVelo = allConfigurables["SIMCOND"].clone("VELOCOND")
-## simCondVelo.DefaultTAG = "velo-open"
-## addCondDBLayer(simCondVelo)
-CondDB().LocalTags["SIMCOND"] = ["velo-open"]
+#--Tell SIMCOND to use tag for Open VELO
+#--                        and Magnetic Field down (negative polarity)
+LHCbApp().CondDBtag = "sim-20090402-vo-md100"
 
 #--Starting time
 ec = EventClockSvc()
