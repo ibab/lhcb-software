@@ -1,5 +1,10 @@
 2009-04-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* scripts/group_login.csh: 
+	* scripts/group_login.sh: 
+	* scripts/group_shell.csh: 
+	* scripts/group_shell.sh: reverted the logic: if $HOME/.oldLHCBLoginscript is
+	not present, use the new login procedure. 
 	* python/LbConfiguration/LbLogin.py: restored the MYSITEROOT variable. Usefull for 
 	many installation.
 
