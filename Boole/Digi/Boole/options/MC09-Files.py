@@ -1,8 +1,8 @@
-# Example 2008 data files for Boole.
+# Example MC09 data files for Boole.
 # This file must be given as last argument to gaudirun.py, after Boole<conf>.py
 
 # Syntax is:
-#   gaudirun.py Boole<conf>.py 2008-Files.py
+#   gaudirun.py Boole<conf>.py MC09-Files.py
 #
 
 from Gaudi.Configuration import *
@@ -11,23 +11,23 @@ from Configurables import Boole, LHCbApp
 #-- File catalogs
 FileCatalog().Catalogs = [ "xmlcatalog_file:NewCatalog.xml" ]
 
-#-- Main ('signal') event input
+#-- Event input
+LHCbApp().DDDBtag   = "head-20090330"
+LHCbApp().CondDBtag = "sim-20090402-vc-mu100"
 
-# Events from Gauss v36r1, DB tag head-200910108 (new muon geometry)
-#LHCbApp().DDDBtag   = "head-20090108"
-#LHCbApp().CondDBtag = "sim-20090108"
-#datasetName = '11144101-100ev-20090111'
-#EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/g/gcorti/Gauss/2009/v36r1/" + datasetName + ".sim' TYP='POOL_ROOTTREE' OPT='READ'"]
+# Signal events from Gauss v37r0
+#datasetName = '11144103-100ev-20090402'
 
-# Events from Gauss v36r1, DB tag head-200910112
-LHCbApp().DDDBtag   = "head-20090112"
-LHCbApp().CondDBtag = "sim-20090112"
-datasetName = '11144101-100ev-20090112'
-EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/g/gcorti/Gauss/2009/v36r1/" + datasetName + ".sim' TYP='POOL_ROOTTREE' OPT='READ'"]
+# Minimum bias events from Gauss v37r0, High Luminosity
+#datasetName = '30000000-100ev-20090405-HL'
 
+# Minimum bias events from Gauss v37r0, Normal Luminosity
+#datasetName = '30000000-100ev-20090407-NL'
 
-#-- Spillover events not used in 2008 configuration
+# Minimum bias events from Gauss v37r0, default MC09 settings
+datasetName = '30000000-100ev-20090407-MC09'
 
+EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/g/gcorti/Gauss/2009/v37r0/" + datasetName + ".sim' TYP='POOL_ROOTTREE' OPT='READ'"]
 
 # Default output files names are set up using value Boole().DatasetName property
 Boole().DatasetName = datasetName

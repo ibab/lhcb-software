@@ -1,6 +1,5 @@
 ##############################################################################
-# File for running Boole with default options (2008 geometry)
-# Edit one or more of the lines below to change the defaults
+# File for running Boole with default options
 ##############################################################################
 # Syntax is:
 #   gaudirun.py Boole-Default.py <someDataFiles>.py
@@ -18,5 +17,5 @@ from Configurables import Boole
 theApp = Boole()
 
 ##############################################################################
-# I/O datasets are defined in a separate file, see examples in DC06-Files.py
+# I/O datasets are defined in a separate file, see examples in MC09-Files.py
 ##############################################################################

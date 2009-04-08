@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.48 2009-04-06 09:58:00 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.49 2009-04-08 16:08:47 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -281,6 +281,8 @@ class Boole(LHCbConfigurableUser):
         DataOnDemandSvc().AlgMap["MC/Particles"] = "UnpackMCParticle"
         DataOnDemandSvc().AlgMap["MC/Vertices"]  = "UnpackMCVertex"
 
+        doWriteTruth = ("DIGI" in self.getProp("Outputs")) and (self.getProp("DigiType").capitalize() != "Minimal")
+
         if "VELO" in linkDets or "VELO" in moniDets or "Tr" in linkDets:
             seq = GaudiSequencer("LinkVELOSeq")
             from Configurables import DecodeVeloRawBuffer
@@ -311,11 +313,11 @@ class Boole(LHCbConfigurableUser):
             seq.Members += [ "OTMCHitLinker" ]
             seq.Members += [ "OTMCParticleLinker" ]
 
-        if "Tr" in linkDets and "DIGI" in self.getProp("Outputs"):
+        if "Tr" in linkDets and doWriteTruth:
             seq = GaudiSequencer("LinkTrSeq")
             seq.Members += [ "BuildMCTrackInfo" ]
 
-        if "RICH" in linkDets and "DIGI" in self.getProp("Outputs"):
+        if "RICH" in linkDets and doWriteTruth:
             seq = GaudiSequencer("LinkRICHSeq")
             seq.Members += [ "Rich::MC::MCRichDigitSummaryAlg" ]
 
@@ -334,12 +336,12 @@ class Boole(LHCbConfigurableUser):
             hcalTruth.Detector = "/dd/Structure/LHCb/DownstreamRegion/Hcal"
             seq.Members += [ hcalTruth ]
 
-        if "MUON" in linkDets and "DIGI" in self.getProp("Outputs"):
+        if "MUON" in linkDets and doWriteTruth:
             seq = GaudiSequencer("LinkMUONSeq")
             seq.Members += [ "MuonDigit2MCParticleAlg" ]
             seq.Members += [ "MuonTileDigitInfo" ]
 
-        if "L0" in linkDets and "DIGI" in self.getProp("Outputs"):
+        if "L0" in linkDets and doWriteTruth:
             from Configurables import L0Conf
             L0Conf().LinkSequencer = GaudiSequencer("LinkL0Seq")
 
@@ -482,7 +484,8 @@ class Boole(LHCbConfigurableUser):
                 self.setOtherProps(DigiConf(),["SpilloverPaths"])
 
             # In Minimal case, filter the MCVertices before writing
-            ApplicationMgr().TopAlg.append( "FilterMCPrimaryVtx" )
+            if self.getProp("DigiType").capitalize() == "Minimal":
+                ApplicationMgr().TopAlg.append( "FilterMCPrimaryVtx" )
 
         if "L0ETC" in outputs:
             from Configurables import L0Conf

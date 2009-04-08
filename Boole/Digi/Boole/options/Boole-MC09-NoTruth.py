@@ -1,21 +1,14 @@
 ##############################################################################
-# File for Boole production of MDF files for 2009 Full Experiment System Test
+# File for running Boole with MC09 configuration, with Minimal Digi output
 #
 # Syntax is:
-#   gaudirun.py Boole-FEST09.py <someDataFiles>.py
+#   gaudirun.py Boole-MC09-NoTruth.py <someDataFiles>.py
 ##############################################################################
 
 from Configurables import Boole
 
-Boole().Outputs    = ["MDF"]
-#Boole().NoWarnings = True
-
-# Write out only events passing L0, or with simulated random trigger
-Boole().FilterSequence = ["L0","ODIN"]
-
-# Do not compress output file, for faster reading by FEST injector
-from Configurables import LHCb__RawDataCnvSvc
-LHCb__RawDataCnvSvc().Compress = 0
+# Switch off MC truth output except for primary vertices information
+Boole().DigiType = 'Minimal'
 
 ##############################################################################
 # I/O datasets and database tags are defined in a separate file,
