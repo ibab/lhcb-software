@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.82 2009-04-08 06:52:31 jpalac Exp $
+! $Id: release.notes,v 1.83 2009-04-08 11:36:51 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
+
+! 2009-04-08 - Juan PALACIOS
+ - dict/DaVinciMCKernelDict.h
+  . Add instantiation for Particle2MCParticle::ToVector (std::vector<MCAssociation>
+ - dict/DaVinciMCKernelDict.xml
+  . Add all classes and structs in Particle2MCParticle namespace
 
 ! 2009-04-08 - Juan PALACIOS
  - Kernel/Particle2MCAssociatorBase.h
