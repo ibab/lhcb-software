@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2009-04-06 M Needham
+ - Add STClusterCollector tool
+
 !======================== TrackTools v3r16 2009-04-08 ========================
 ! 2009-04-08 - Stephanie Hansmann-Menzemer
 - fix bug with ancestors in TrackStateInitTool
