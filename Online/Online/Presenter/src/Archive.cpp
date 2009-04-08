@@ -329,16 +329,26 @@ std::string Archive::substractIsoTimeDate(const std::string & startTimeIsoString
   return createIsoTimeString(to_tm(newPTime)); //to_iso_string(newTime);
 }
 std::string Archive::taskNameFromFile(const std::string & fileName) {
-  TObjArray* fileDateMatchGroup = 0;
+  TObjArray* fileNameMatchGroup = 0;
   std::string taskNameFound("");   
-  fileDateMatchGroup = s_fileDateRegexp.MatchS(path(fileName).leaf());
-  if (!fileDateMatchGroup->IsEmpty()) {
-    taskNameFound = (((TObjString *)fileDateMatchGroup->At(1))->GetString()).Data();
+  fileNameMatchGroup = s_fileDateRegexp.MatchS(path(fileName).leaf());
+  if (!fileNameMatchGroup->IsEmpty()) {
+    taskNameFound = (((TObjString *)fileNameMatchGroup->At(1))->GetString()).Data();
+  } else {
+    if (fileNameMatchGroup) {
+      fileNameMatchGroup->Delete();
+      delete fileNameMatchGroup;
+      fileNameMatchGroup = 0;
+    }
+    fileNameMatchGroup = s_offlineJobRegexp.MatchS(path(fileName).leaf());
+    if (!fileNameMatchGroup->IsEmpty()) {
+      taskNameFound = (((TObjString *)fileNameMatchGroup->At(1))->GetString()).Data();
+    }
   }
-  if (fileDateMatchGroup) {
-    fileDateMatchGroup->Delete();
-    delete fileDateMatchGroup;
-    fileDateMatchGroup = 0;
+  if (fileNameMatchGroup) {
+    fileNameMatchGroup->Delete();
+    delete fileNameMatchGroup;
+    fileNameMatchGroup = 0;
   }
   return taskNameFound;
 }        
