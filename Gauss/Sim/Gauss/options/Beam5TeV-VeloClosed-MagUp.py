@@ -4,26 +4,24 @@
 # Beam5TeV-VeloClosed-MagUp
 #
 # Syntax is: 
-#  gaudirun.py $GAUSSOPTS/Gauss-2008.py
+#  gaudirun.py $GAUSSOPTS/Gauss-MC09.py
 #              $GAUSSOPTS/Beam5TeV-VeloClosed-MagUp.py
 #              $DECFILESROOT/options/30000000.opts (ie. event type)
+#              $LBPYTHIAROOT/options/Pythia.opts (i.e. production engine)
 #              $GAUSSOPTS/Gauss-Job.py (ie. job specific: random seed,
 #                                                         output file names...)
 #
 from Gauss.Configuration import *
 
-#--Tell SIMCOND to generate Magnetic Field of positive polarity (or mag up)
-from Configurables import UpdateManagerSvc
-UpdateManagerSvc().ConditionsOverride += [
- "Conditions/Online/LHCb/Magnet/Measured :=  int Polarity = 1;",
-]
+#--Tell SIMCOND to generate Magnetic Field up (positive polarity)
+LHCbApp().CondDBtag = "sim-20090402-vc-mu100"
 
 #--Tell to use 5 TeV beams for collisions and beam gas, with corresponding
-#--beam size and luminous region, the options already set zero crossing angle
-#--as for BfieldOff
-importOptions("$GAUSSOPTS/BeamCond-5TeV.opts")
+#--beam size and luminous region, and effective crossing angle for beta*=3m
+importOptions("$GAUSSOPTS/BeamCond-5TeV.py")
 setCrossingAngle(0.121*SystemOfUnits.mrad)
 
 #--Starting time
 ec = EventClockSvc()
-ec.EventTimeDecoder.StartTime = 212000*SystemOfUnits.ns
+ec.EventTimeDecoder.StartTime = 202000*SystemOfUnits.ns
+
