@@ -24,7 +24,7 @@ use MCatNLOData        v1r1                  -no_auto_imports
 use XmlVis             v*     Vis            -no_auto_imports
 
 #-- Package to run the application with different configurations
-use AppConf            v2r*                  -no_auto_imports
+use AppConfig          v2r*                  -no_auto_imports
 #===========================================================================
 
 # Packages needed to compile and link the application
