@@ -1,5 +1,5 @@
 package GaussSys
-version v36r2
+version v37r0
 
 branches cmt doc
 
@@ -8,14 +8,14 @@ branches cmt doc
 #==================================================================
 
 # Gauss application: the application is not built on Win32
-macro Gauss_use         "Gauss        v36r2   Sim"  WIN32 ""
+macro Gauss_use         "Gauss        v37r0   Sim"  WIN32 ""
 use ${Gauss_use} 
 
 # Generator packages: Basic configuration
-macro GENSER_use        "GENSER       v5r0    Gen"  WIN32 ""
-macro EvtGen_use        "EvtGen       v10r2   Gen"  WIN32 ""
-macro EvtGenExtras_use  "EvtGenExtras v1r0    Gen"  WIN32 ""
-macro Generators_use    "Generators   v9r3    Gen"  WIN32 ""
+macro GENSER_use        "GENSER       v5r1    Gen"  WIN32 ""
+macro EvtGen_use        "EvtGen       v11r0   Gen"  WIN32 ""
+macro EvtGenExtras_use  "EvtGenExtras v2r0    Gen"  WIN32 ""
+macro Generators_use    "Generators   v10r0    Gen"  WIN32 ""
 macro LbPythia_use      "LbPythia     v8r3    Gen"  WIN32 ""
 use ${GENSER_use}
 use ${EvtGen_use}
@@ -40,14 +40,14 @@ use ${LbHerwig_use}
 use ${LbPythia8_use}
 
 # Generators packages: alternative to Pythia6 for p-A collisions
-macro LbHijing_use      "LbHijing     v4r1    Gen"  WIN32 ""
+macro LbHijing_use      "LbHijing     v5r0    Gen"  WIN32 ""
 use ${LbHijing_use}
 
 # Generators packages: LHCb sampling results for Machine Induced Background
-use LbMIB               v3r1      Gen
+use LbMIB               v3r2      Gen
 
 # Generators packages: LHCb particle gun generator: temporarly off on Win32
-macro ParticleGuns_use  "ParticleGuns v6r2    Gen"  WIN32 ""
+macro ParticleGuns_use  "ParticleGuns v7r0    Gen"  WIN32 ""
 use ${ParticleGuns_use}
 
 # Simulation basic packages
@@ -60,30 +60,31 @@ use VisSvc              v5r3      Vis
 use ClhepTools          v2r1      Tools
 
 # Simulation specialized packages
-use GaussKine           v3r3      Sim
-use GaussAlgs		v3r3p1    Sim
-use GaussTools          v15r1p1   Sim
-use GaussRICH		v9r3	  Sim
-use GaussTracker	v6r1	  Sim
-use GaussCalo		v9r2	  Sim
+use GaussKine           v3r4      Sim
+use GaussAlgs		v3r4      Sim
+use GaussTools          v15r2     Sim
+use GaussRICH		v9r4	  Sim
+use GaussTracker	v6r2	  Sim
+use GaussCalo		v9r3	  Sim
 use GaussPhysics	v6r2	  Sim
 
 # Monitoring packages
-use GaussMonitor	v6r2      Sim
-use CaloMoniSim         v3r1p2    Calo
-use VeloGauss           v2r3      Velo
-use MuonMoniSim         v2r3      Muon
-use BcmMoniSim          v1r1      Bcm
+use GaussMonitor	v6r3      Sim
+use CaloMoniSim         v3r2      Calo
+use VeloGauss           v2r4      Velo
+use MuonMoniSim         v2r4      Muon
+use BcmMoniSim          v1r2      Bcm
 
 # GMDL
 #use GDML                v1r240p0  Sim
 #use GDMLG4Writer        v2r0      Sim
 
 # Visualization configuration
-use XmlVis              v1r8      Vis
+use XmlVis              v1r11      Vis
 
 # Test packages for new releases or installations on new platforms
 use GenTests            v1r3      Gen
+use SimChecks           v1r0      Sim
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize

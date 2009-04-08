@@ -3,6 +3,412 @@ Package : GaussSys
 Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
+</PRE><H1><A NAME="v37r0">2009-04-08 - GaussSys v37r0</A></H1><PRE>
+<H2><A NAME="Note">DC09 version. Support latest DDDB tags lhcb-20090330
+   and SIMCOND tag sim-20090402-xx
+   </A></H2>
+<H3><A NAME="Use">This version uses:
+   LHCb v26r3 (and Gaudi v20r4)
+   pythia6 418.2, photos 215.2, lhapdf 5.3.1 
+   (via LCG_GeneratorsInterfaces)
+   HepMC 2.03.09 (via LCG_Interfaces)
+   Geant4 v91r3 (based on geant4.9.1.p03) and Geant4Files v91r0
+   <b>DecFiles v17r0</b>, 
+   ParamFiles v8r0, 
+   SQLDDDB v5r3, FieldMap v5r* (latest v5r1), 
+   XmlVis v1r11,
+   herwig 6.510.2, jimmy 4.31.2 (via LCG_GeneratorsInterfaces),
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
+   pythia8 107.1,
+   bcvegpy (LHCb build)
+</A></H3>
+
+!======================== Gauss v37r0 2009-04-08 =============================
+! 2009-04-08 - Patrick ROBBE
+ - First version of script to produce spill-over events with Gauss with 'older'
+   database tags, Gauss-2008-WithSpillOver.py
+
+! 2009-04-08 - Gloria CORTI
+ - Set beam conditions for 5 TeV in python options (BeamCond-5TeV.py), for
+   the moment this include BeamCond-5TeV.opts with leftover beam energy
+   as hijing part not yet ready in python.
+   This is used by all Beam5TeV-Velo{Closed,Open}-Mag{Up,Down,Off}.py
+ - Use global tags for latest version of velo open/closed and mag up/down/off,
+   instead of local tags and update manager.
+   Modified all Beam{5,7}TeV-Velo{Closed,Open}-Mag{Up,Down,Off}.py
+   and Beam450GeV-Velo{Closed,Open}-Mag{Up,Down,Off}.py
+ - Clean up a little the Gauss-Job.py example
+ - Remove setting of masses in Generator.opts as they have been introduced in
+   particle table available with latest tag of DDDB
+
+! 2009-04-07 - Gloria CORTI
+ - New options Gauss-MC09.py uses the latest tags in DDDB (head-20090330)
+   and SIMCOND picking veloclosed and field up (sim-20090402-vc-mu100).
+   It should be used instead of Gauss-2008.py for stearing
+ - Gauss-2008.py left for backward compatibility only. settings the old
+   tags, it now imports Gauss.py.
+ - Gauss.py new file that has parts common to all jobs and the sequencing
+   It will be replaced in the future by the Gauss() configurable.
+ - Remove GaussRead.opts that is no longer working
+ - Move GaussTape configuration and setting in Configuration.py and remove
+   GaussTape.opts file. Modify Gauss.opts to remove this obsolete part.
+
+! 2009-04-06 - Gloria CORTI
+ - Increase major version of DecFiles to be used as previous one is
+   incompatible with EvtGen new version.
+
+! 2009-04-02 - Silvia MIGLIORANZI
+ - QMTest reference files updated and gauss-2008.qmt modified adding new lines
+   to be skipped in the comparison of the stdoutput.
+
+! 2009-03-31 - Silvia MIGLIORANZI
+ - QMTest modified to have the DecFiles built in the nightlies (forcing the
+   ToolSvc.EvtGenDecay.DecayFile=
+   "$LHCBDEV/GAUSS/Gen/DecFiles/v17r0/dkfiles/DECAY.DEC").
+
+! 2009-03-30 - Silvia MIGLIORANZI
+ - QMTest modified to have the DecFiles built in the nightlies.
+
+! 2009-03-25 - Silvia MIGLIORANZI
+ - QMTest added in test directory. Standard output and error reference for
+   5 MinBias events created.
+ - QMtests activated in requirements file.
+
+! 2009-03-06 - Gloria CORTI
+ - Adapt options for debugging G4Tracking to changes in CommandTrackAction
+   class (GaussTools v15r2)
+   . DebugG4Track.opts
+ - Reset particle width to prevent crashes in EvtGen due to changes in
+   ParticleProperty table (DDDD tag head-20090213).
+   TEMPORARY until put in DDDB.
+
+!======================== GaussTools v15r2 2009-04-05 ========================
+! 2009-04-05 - Gloria CORTI
+ - Fix bug #47062 of particle getting stuck and Gauss jobs hanging in
+   production. This is due to ping pong between two volumes and probably
+   for two different reasons: multiple scattering steps at boundaries in
+   very rare cases and an optimizer problem in most of the cases when this
+   happen as the step is always indetical. To fix the problem introduce
+   a new G4VProcess called PingPongCut that is added to TrCutsRunAction for
+   all type of particles. As about half of the cases were due to neutrinos
+   that have no reason to be followed introduce also another new G4VProcess
+   that kills particle at origin depending on what they are. By default it
+   kills only all neutrinos. KillAtOriginCut is also added to TrCutsRunAction,
+   to which new properties have been introduced to steer the two new "cuts".
+   . TrCutsRunAction.{h,cpp}
+   . KillAtOriginCut.{h,cpp}
+   . PingPongCut.{h,cpp}
+
+ - Wrap all cuts in GiGa namespace as at least the base class SpecialCuts
+   and MinEkineCut exist with an identical name in Geant4 (G4physics_lists),
+   although the header files there have extension ".hh"
+   . TrCutsRunAction.cpp
+   . SpecialCuts.{h,cpp}
+   . LoopCuts.{h,cpp}
+   . WorldCuts.{h.cpp}
+   . MinEkineCut.{h,cpp}
+
+! 2009-03-06 - Gloria CORTI
+ - Extent to passing commands to list of G4Tracks instead of a single one:
+    CommandTrackAction.TrackID = 53 for example is replace by
+    CommandTrackAction.TrackIDs = { 53 }
+   by default the list is empty.
+   New option to print G4TrackID for each track
+    CommandTrackAction.PrintTrackIDs = true/false
+   by default is true to help finding track with problem
+   New option to print parameters of each track (parentID, origin and momentum)
+    CommandTrackAction.TrackInfos = true/false
+   by default is false, when track is in list the information is anyway
+   printed.
+   . CommandTrackAction.{h,cpp}
+
+!========================= GaussKine v3r4 2009-04-06 =========================
+! 2009-03-26 - Patrick Robbe
+ - GenerationToSimulation and SimulationToMCTruth: add possibility to
+   change location of MCHeader by option
+
+! 2009-03-04 - Patrick Robbe
+ - GenerationToSimulation.cpp: fixes for "skipGeant4" option to allow
+   transfering directly from HepMC to MCParticles/MCVertices
+
+!======================== GaussAlgs v3r4 2009-04-06 ===========================
+! 2009-03-26 - Patrick Robbe
+ - GenInit.h/.cpp and SimInit.h/.cpp:
+     . add possibility to specify location of GenHeader by job option
+
+!========================= GaussRICH v9r4 2009-04-06 =========================
+! 2009-03-26 - Patrick Robbe
+ - GetMCRichHitsAlg, GetMCRichOpticalPhotons, GetMCRichTracksAlg:
+   . add the possibility to change location of hits, photons, ... to
+     allow generation of spill over in Gauss
+
+! 2009-03-03 - Sajan Easo
+ - Added the options to run Gauss without RICH, for special studies. This
+   gives three possibilities: run with RICH ON which is default, run with
+   RICH geometry but without RICH simulation , run without RICH geometry and
+   without RICH simulation.
+   To switch off the RICH simulation one should, in RICH.opts, change the default values
+   GiGa.ModularPL.GiGaPhysConstructorOp.RichOpticalPhysicsProcessActivate=true;
+   GiGa.ModularPL.GiGaPhysConstructorHpd.RichHpdPhysicsProcessActivate=true;
+   to false. To switch off rich geometry, one can comment out the following in
+   $GAUSSROOT/options/SimGeometry.opts:
+         Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/Rich1"};
+         Geo.StreamItems      += {"/dd/Geometry/BeforeMagnetRegion/Rich1/Rich1Surfaces"};
+         Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/Rich2"};
+         Geo.StreamItems      += {"/dd/Geometry/AfterMagnetRegion/Rich2/Rich2Surfaces"};
+         Geo.StreamItems      += {"/dd/Geometry/BeforeMagnetRegion/Rich1/RichHPDSurfaces"};
+   - Files modified for running without RICH are :
+       GiGaPhysConstructorHpd.h, GiGaPhysConstructorHpd.cpp,
+       GiGaPhysConstructorHpd.h,GiGaPhysConstructorHpd.cpp,RichG4EventHitCount.cpp
+       The Rich.opts has two extra lines as indicated above.
+
+!======================= GaussTracker v6r2 2009-04-06 ========================
+! 2009-03-26 - Patrick Robbe
+ - GetTrackerHitsAlg: add possibility to change location of MCParticles by
+   job option
+
+!========================= GaussCalo v9r3 2009-04-06 ==========================
+! 2009-03-26 - Patrick Robbe
+ - GetCaloHitsAlg: add possibility to change MCParticles location by option
+
+!====================== GaussMonitor v6r3 2009-04-06 =========================
+! 2009-03-26 - Patrick Robbe
+ - MCTruthMonitor: add possibility to change location of MCParticles and
+   MCVertices by job option
+
+!======================= CaloMoniSim v3r2 2009-04-06 ==========================
+! 2009-03-26 - Patrick Robbe
+ - MCCaloMonitor: add possibility to change location of MCHits
+
+!========================== VeloGauss v2r4 2009-04-06 ========================
+! 2009-03-26 - Patrick Robbe
+ - VeloGaussMoni: add possibility to change location of VeloMCHits
+
+!======================== MuonMoniSim v2r4 2009-04-06 ========================
+! 2009-03-26 - Patrick Robbe
+ - MuonHitChecker: add possibility to change location of MuonHits by option
+   to generate spill over inside Gauss
+
+!======================== BcmMoniSim v1r2 2009-04-08 ========================
+! 2009-04-03 - Gloria CORTI
+ - Allow for multiple location of hits to handle spill-over in Gauss.
+
+!========================= SimChecks v1r0 2009-04-01 =========================
+! 2009-04-01 - Silvia Miglioranzi
+ - First version of validation scripts for productions.
+
+   1) Gauss_SimRefPlots.py: providing in input two Gauss .root and .log files,
+   this script crates a html page (simpage.html) with the summary of the
+   comparison.
+
+   Usage: python Gauss_SimRefPlots.py -r GaussHistos_REF.root  -l  Gauss_REF.log
+   -s GaussHistos.root -f Gauss.log
+
+   Main steering Options:
+
+   --install : creates a directory containing the comparison results in the
+   http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/gauss/simulation
+   /validation/ area (without this option the webpage and plots will be created
+   in the directory where the script is run).
+
+   --add-to-index : updates the summary simulation monitoring web page:
+   http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/gauss/simulation
+   /validation/index.html adding the results of the comparison.
+
+   --kolmogorov : allows to change the ROOT Kolmogorov Test running options
+   (the default is " "); the user can choose for istance the option "D" for
+   debugging.
+
+   2) Gauss_GetProdLogFiles.py: providing in input the PROD IDs of the samples
+   to compare, this script searches in the http://lhcb-logs.cern.ch/storage/lhcb/MC/
+   area for the first GaussHisto.roots and corresponding log files. It downloads them
+   in the directory where the script is run and execute the Gauss_SimRefPlots.py
+   to analyze them.
+
+   Usage: python autorun_prodid.py <webpage> <REF_prodid> <CURR_prodid>
+
+   Example: python autorun_prodid.py http://lhcb-logs.cern.ch/storage/lhcb/MC/ 4497 3974
+
+   3) Gauss_ExampleCombine_MPV_betagamma.py : this script loops over the lines of
+   the html source: http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/
+   gauss/simulation/validation/index.html
+   and fills the "dE/dx MPV vs betagamma" histogram for a specific particle type
+   providing the "starting and stopping titles" (see Example and webpage).
+
+   Usage: python plot_MPV_betagamma.py
+
+   Example: setting in the script the lines:
+
+         mcSetIni = "PGUN: mu+mu- (LHEP+EMopt1+DRays OFF+KineHT)"
+         mcSetEnd = "PGUN: mu+mu- (LHEP+EMopt1+DRays ON+KineHT)"
+
+   only the pi+pi- (LHEP+EMopt1+DRays OFF+KineHT) info will be plotted.
+
+!========================== EvtGen v11r0 2009-04-08 ==========================
+! 2009-04-08 - Patrick Robbe
+ - Pythia.F: fix decay routine (wrong index when calling PYSHOW routine)
+
+! 2009-04-02 - Patrick Robbe
+ - Fix compilation warnings for slc4 at various places.
+
+! 2009-03-28 - Patrick Robbe
+ - EvtPythia.cpp: reintroduce LHCb Pythia model
+
+! 2009-03-16 - Patrick Robbe
+ - Move to new EvtGen version from Anders Ryd after merging BaBar
+   and LHCb changes.
+
+! 2009-02-26 - Patrick Robbe
+ - EvtParticleDecayList.cpp: fix case when decay mode is forced
+
+!======================= EvtGenExtras v2r0 2009-04-06 ========================
+! 2009-03-16 - Patrick Robbe
+ - Fixes for new EvtGen version
+
+!====================== Generators v10r0 2009-04-07 ==========================
+! 2009-04-07 - Gloria CORTI
+ - Fill new information in GenHeader (frequency and total cross section) in
+   order to be able to reproduce n_mean (collisions/bunch). In order to
+   fill information modify IPileUpTool interface to pass GenHeader rather
+   than "current luminosity". Modify all implemementations of PileUp tools
+   to adopt new interface and fill GenHeader.
+   . IPileUpTool.h
+   . FixedLuminosity.{h,cpp}
+   . FixedLuminosityForRareProcess.{h,cpp}
+   . FixedLuminosityForSpillOver.{h,cpp}
+   . FixedNInteractions.{h,cpp}
+   . VariableLuminosity.{h,cpp}
+   . Generation.cpp
+
+!====================== Generators v9r4 2009-04-06 ===========================
+! 2009-04-06 - Gloria CORTI
+ - Tag only, to keep next changes separate
+
+! 2009-04-01 - Patrick Robbe
+ - Generation: make it a filter to skip the generation and simulation
+   sequence for 0 interaction
+ - Add new pile-up tool: FixedLuminosityForSpillOver which allows 0
+   interaction
+
+! 2009-03-16 - Patrick Robbe
+ - EvtGenDecay: fixes for new EvtGen version
+
+! 2009-03-02 - Patrick Robbe
+ - ReadHepMCAsciiFile.cpp: move to new method IO_GenEvent instead
+   of deprecated IO_Ascii method for external input files
+
+! 2009-02-26 - Patrick Robbe
+ - UpsilonDaughtersInLHCb: add new cut tool specific for Upsilon
+   generation
+
+!======================= ParticleGuns v7r0 2009-04-07 =======================
+! 2009-04-07 - Gloria CORTI
+ - Adapt to changes in IPileUpTool interface.
+   . ParticleGun.cpp
+   . FlatNParticles.{h,cpp}
+
+! 2009-04-03 - Gloria CORTI
+ - Fix bug #48912 reported by Aras Papadelis about smearing of primary vertex
+   being applied only if a DecayTool is used (so not for stable particle
+   guns).
+
+!========================= LbHijing v5r0 2009-04-06 ==========================
+! 2009-03-11 - Patrick Robbe
+ - HijingProduction.cpp: set mass units correctly (GeV -> MeV)
+
+! 2009-03-06 - Patrick Robbe
+ - Move ran.F and rlu.F to GENSER package and update requirements to
+   pick them from there.
+
+! 2009-03-04 - Patrick Robbe
+ - ran.F: set as double precision
+
+! 2009-02-27 - Patrick Robbe
+ - add rlu.F, another random function used in Hijing to override it.
+
+! 2009-02-26 - Patrick Robbe
+ - ran.F: revert to original function name (ran) to allow overriding of
+   HIJING random generator
+ - requirement: remove ran.F when compiling on OSX
+ - HijingProduction: remove beam particles from HepMC event to prevent wrong
+   primary vertex assignment in Geant4
+
+!========================== GENSER v5r1 2009-04-06 ===========================
+! 2009-03-06 - Patrick Robbe
+ - Add hijing subdirectoy to contain HIJING functions overwriten in Gauss
+
+! 2009-03-04 - Patrick Robbe
+ - Rename xsection.F to xsectionPsiStart.F because of a name conflict
+   with BcVegPy
+
+!=========================== LbMIB v3r2 2009-04-01 ===========================
+! 2009-04-01 - Magnus Lieng
+ - Added new time correlated MIB tool. This tool uses a root file as input.
+   The root file contains two trees; one for particles and one for events.
+   TimeCorrSource randomly generates events containing certain particles as
+   opposed to CollimatorSource which randomly generates particles.
+
+   The list of options to steer the behaviour of the code and how to use them
+   is given below:
+   HepMCEvents         The TS location of the Event
+   GenHeader           The TS location of the Generation Header
+   GenCollisions       The TS location of the Collision
+
+   ParticleSourceFile  Root file containing the events and particles to be
+                       generated.
+
+   ScalingFactor       Scaling factor used to modify the number of particles
+                       created in an event.
+   BunchFrequency      Scaling factor used to modify the number of particles
+                       created in an event. Indicates the frequency used to
+                       generate the input file.
+   BeamEnergy          Energy of the beam protons. Used to correct particle
+                       timing.
+
+   Luminosity          Luminosity to be set in header.
+
+   GenerationHist      True to generate histograms.
+
+   ForcePartPerEvt     -1  : Use random number of particles in event.
+                       >=0 : Force the generation of this amount particles per
+                             event.
+
+   ReadFileFromOffset  -1  : Choose random particles using weight based
+                             envelope method.
+                       >=0 : Pick particles sequentially from file starting at
+                             this particle number. Envelope generation and
+                             random particle selection is ignored.
+                             Weight information is saved in vertex.
+
+   EnvelopeSize        Amount of events contained in one envelope.
+
+   ZParticleOrigin     Z position of particles as given in the input file.
+   ZParticleGen        Z position to generate particles. If this is different
+                       from ZParticleOrigin, timing of the particles are
+                       re-calculated according to particle and beam
+                       kinematics as well as the two Z positions.
+   ZDirection          Z direction to generate particles (+1/-1)
+
+   EventType           Event type code.
+
+   . TimeCorrSource.cpp
+   . TimeCorrSource.h
+ - Added python script to generate input files for TimeCorrSource both using
+   the new and old text file format. The old text format creates fake events
+   where each event contains only one particle.
+   . makeRootFile.py
+   . makeRootFileFromOldFormat.py
+
+!=========================== XmlVis v1r11 ====================================
+! 2009-03-26 - Gloria CORTI
+ - Added visual attributes for new implementation of beam pipe supports, made
+   by Daria Savrina
+
+!=========================== XmlVis v1r10 ====================================
+! 2009-01-19 - Thomas Ruf
+ - made tunnel around Velo transparent
+
+!============================================================================
 </PRE><H1><A NAME="v36r2">2009-02-10 - GaussSys v36r2</A></H1><PRE>
 <H2><A NAME="Note">DC09 DEVELOPEMENT version. Support DDDB tag lhcb-20091012
    and SIMCOND tag sim-20090112
