@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.256 2009-04-08 08:58:55 gligorov Exp $
+! $Id: release.notes,v 1.257 2009-04-08 12:13:19 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2009-04-08 - Juan PALACIOS
+ - src/P2MCPFromProtoP.cpp
+  . fix trivial but deadly bug
 
 ! 2009-04-08 - V. Gligorov
  - Update DaVinciSmartAsscoator.{h,cpp} to use P2MCPFromProtoP for associating stables. 
