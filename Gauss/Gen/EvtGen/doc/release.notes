@@ -4,10 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================== EvtGen v11r0 2009-04-08 ==========================
 ! 2009-04-08 - Patrick Robbe
  - Pythia.F: fix decay routine (wrong index when calling PYSHOW routine)
 
-!========================== EvtGen v11r0 2009-04-06 ==========================
 ! 2009-04-02 - Patrick Robbe
  - Fix compilation warnings for slc4 at various places.
 
