@@ -4,6 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-04-08 - Silvia Miglioranzi
+ - New QMTest (gauss-MC09.qmt) was added to the suite of Gauss tests; it is 
+   running the new Gauss-MC09.py steering script. A set of .ref files for this 
+   test were added.
+
 !======================== Gauss v37r0 2009-04-08 =============================
 ! 2009-04-08 - Patrick ROBBE
  - First version of script to produce spill-over events with Gauss with 'older'
