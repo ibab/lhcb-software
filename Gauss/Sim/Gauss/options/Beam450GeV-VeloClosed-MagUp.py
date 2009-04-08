@@ -4,19 +4,17 @@
 # Beam450GeV-VeloClosed-MagUp
 #
 # Syntax is: 
-#  gaudirun.py $GAUSSOPTS/Gauss-2008.py
+#  gaudirun.py $GAUSSOPTS/Gauss-MC09.py
 #              $GAUSSOPTS/Beam450GeV-VeloClosed-MagUp.py
 #              $DECFILESROOT/options/30000000.opts (ie. event type)
+#              $LBPYTHIAROOT/options/Pythia.opts (i.e. production engine)
 #              $GAUSSOPTS/Gauss-Job.py (ie. job specific: random seed,
 #                                                         output file names...)
 #
 from Gauss.Configuration import *
 
-#--Tell SIMCOND to generate Magnetic Field of positive polarity (or mag up)
-from Configurables import UpdateManagerSvc
-UpdateManagerSvc().ConditionsOverride += [
- "Conditions/Online/LHCb/Magnet/Measured :=  int Polarity = 1;",
-]
+#--Tell SIMCOND to generate Magnetic Field up (positive polarity)
+LHCbApp().CondDBtag = "sim-20090402-vc-mu100"
 
 #--Tell to use 450 GeV beams for collisions and beam gas, with corresponding
 #--beam size and luminous region, the options already set zero crossing angle
