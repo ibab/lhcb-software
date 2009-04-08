@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.83 2009-04-08 11:36:51 jpalac Exp $
+! $Id: release.notes,v 1.84 2009-04-08 12:34:43 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
@@ -8,8 +8,10 @@
 ! 2009-04-08 - Juan PALACIOS
  - dict/DaVinciMCKernelDict.h
   . Add instantiation for Particle2MCParticle::ToVector (std::vector<MCAssociation>
+  . Include Kernel/MCAssociation.h
  - dict/DaVinciMCKernelDict.xml
   . Add all classes and structs in Particle2MCParticle namespace
+  . Add class MCAssociation
 
 ! 2009-04-08 - Juan PALACIOS
  - Kernel/Particle2MCAssociatorBase.h
