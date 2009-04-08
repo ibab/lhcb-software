@@ -1,6 +1,6 @@
 project GAUSS
 
-use LHCB	LHCB_v26r1
+use LHCB	LHCB_v26r3
 use GEANT4	GEANT4_v91r3
 
 build_strategy	with_installarea
