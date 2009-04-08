@@ -43,7 +43,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.22 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.23 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -244,6 +244,7 @@ class LbLoginScript(Script):
             ev["SITEROOT"] = opts.mysiteroot
             ev["CMTSITE"] = "LOCAL"
             opts.cmtsite = "LOCAL"
+            ev["MYSITEROOT"] = opts.mysiteroot
         else :
             # if no mysiteroot has been passed to the script, use CMTSITE for the guessing
             log.debug("No MYSITEROOT defined. Trying CMTSITE (%s) setting." % opts.cmtsite)
