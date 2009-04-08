@@ -1,3 +1,7 @@
+2009-04-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/mkMCGentar: fixed the install_project import.
+
 2009-04-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/mkLHCbtar: added default value to the binary global variable.

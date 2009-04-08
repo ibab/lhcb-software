@@ -9,7 +9,7 @@
 """
 #------------------------------------------------------------------------------
 import sys, os, getopt, time, shutil, commands
-from install_project import calculateMD5
+from LbLegacy.install_project import calculateMD5
 version = '081013'
 #---------------------------------------------------------------------------
 def usage() :
