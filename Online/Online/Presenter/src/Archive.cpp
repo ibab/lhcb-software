@@ -241,7 +241,8 @@ std::vector<std::string> Archive::listPartitions() {
       if (is_directory(year_itr->path())) {
         directory_iterator partition_end_itr;
         for (directory_iterator partition_itr(year_itr->path()); partition_itr != partition_end_itr; ++partition_itr) {
-          if (is_directory(partition_itr->path())) {
+          if (is_directory(partition_itr->path()) &&
+              string::npos == partition_itr->path().string().find("ByRun")) { // Skip GG's run aggregator
             foundPartitionDirectories.push_back(partition_itr->path().leaf());
           }
         }
