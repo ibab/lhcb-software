@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.56 2009-03-10 10:45:50 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.57 2009-04-08 08:30:40 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -151,7 +151,8 @@ class DaVinci(LHCbConfigurableUser) :
             l0seq = GaudiSequencer("seqL0")
             ApplicationMgr().TopAlg += [ l0seq ]
             L0Conf().setProp( "L0Sequencer", l0seq )
-            L0Conf().setProp( "ReplaceL0BanksWithEmulated", self.getProp("ReplaceL0BanksWithEmulated") ) 
+            L0Conf().setProp( "ReplaceL0BanksWithEmulated", self.getProp("ReplaceL0BanksWithEmulated") )
+            L0Conf().setProp( "DataType", self.getProp("DataType"))
             log.info("Will run L0")
         
 ################################################################################
