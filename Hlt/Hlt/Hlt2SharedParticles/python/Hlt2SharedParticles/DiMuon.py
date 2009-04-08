@@ -52,5 +52,5 @@ Hlt2SharedHighPtJpsi2MuMu.PhysDesktop.InputLocations  = [ "Hlt2SharedJpsi2MuMu" 
 ### exported symbols...
 DiMuon           = bindMembers( None, [ Hlt2SharedDiMuon ] )
 Jpsi2MuMu        = bindMembers( None, [ DiMuon, Hlt2SharedJpsi2MuMu ] )
-HightPtJpsi2MuMu = bindMembers( None, [ Jpsi2MuMu, Hlt2SharedHighPtJpsi2MuMu ] )
+HighPtJpsi2MuMu = bindMembers( None, [ Jpsi2MuMu, Hlt2SharedHighPtJpsi2MuMu ] )
 

@@ -7,7 +7,7 @@
 #
 ##
 from Gaudi.Configuration import *
-from Hlt2SharedParticles import GoodPions
+from Hlt2SharedParticles.GoodParticles import GoodPions
 from Configurables import CombineParticles, GaudiSequencer, PhysDesktop
 
 __all__ = ( 'KsLL' )

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.2 2009-04-07 20:36:18 graven Exp $
+# $Id: requirements,v 1.3 2009-04-08 07:54:12 graven Exp $
 # Created    : 2009/04/06
 # Maintainer : P. Koppenburg & G.Raven
 
@@ -17,4 +17,5 @@ use HltConf              v*     Hlt
 # ============================================================================
 # ======= the patterns =======================================================
 apply_pattern install_python_modules
-
+#apply_pattern install_python_init
+#apply_pattern install_custom_python_modules
