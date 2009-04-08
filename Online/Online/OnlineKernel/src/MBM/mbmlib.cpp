@@ -55,9 +55,9 @@ void mbm_print_trace ()   {
 }
 #endif
 
-//#ifdef _WIN32  // Default for all !
+#ifdef _WIN32  // Default for all !
 #define _MBM_EXPLICIT_SEMAPHORES 1
-//#endif
+#endif
 
 #define _mbm_return_err(err_code)  {  errno = err_code; return err_code; }
 
@@ -736,7 +736,8 @@ int mbm_cancel_request (BMID bm)   {
   UserLock user(bm, MBM_ILL_CONS);
   USER* us = user.user();
   if ( us )  {
-    if (us->c_state == S_wevent)    {
+    if (us->c_state == S_wevent || us->c_state == S_active)    {
+      us->c_state = S_wevent;
       _mbm_del_wev (bm, us);
       us->c_state = S_active;
       if ( !lib_rtl_is_success(::lib_rtl_set_event(bm->WEV_event_flag)) ) {
@@ -774,6 +775,7 @@ int mbm_stop_consumer(BMID bm)   {
   UserLock user(bm, MBM_ILL_CONS);
   USER* us = user.user();
   if ( us )  {
+    us->c_state = S_wevent;
     _mbm_del_wev (bm, us);
     us->c_state = S_active;
     if ( !lib_rtl_is_success(::lib_rtl_set_event(bm->WEV_event_flag)) ) {
@@ -1504,6 +1506,17 @@ Again:
     _mbm_return_err (MBM_ILL_CONS);
   }
   if ( *ct && us->c_state != S_wevent_ast_queued )  {
+    if ( us->c_state != S_wevent ) {
+      if ( us->c_state == S_active ) {
+	return MBM_REQ_CANCEL;
+      }
+      else  {
+	Lock lock(bm);
+	if ( us->c_state == S_active )   {
+	  return MBM_REQ_CANCEL;
+	}
+      }
+    }
     sc = lib_rtl_wait_for_event(bm->WEV_event_flag);
   }
   if ( *ct && lib_rtl_is_success(sc) )  {
