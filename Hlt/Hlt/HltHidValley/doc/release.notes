@@ -1,12 +1,13 @@
-!$Id: release.notes,v 1.10 2009-04-07 12:43:16 pkoppenb Exp $
+!$Id: release.notes,v 1.11 2009-04-08 12:16:33 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltHidValley
 ! Responsible : Marcin Kucharczyk
 ! Purpose     : Holds algorithms for selections of Hidden Valley particles
 !-----------------------------------------------------------------------------
 
+!========================== HltHidValley v1r2p2 2009-04-08 ===================
 ! 2009-04-07 - Patrick Koppenburg
- - Clone the pighest Pt pion
+ - Clone the highest Pt pion
 
 !========================== HltHidValley v1r2p1 2008-11-24 ===================
 ! 2008-10-29 - Juan PALACIOS
