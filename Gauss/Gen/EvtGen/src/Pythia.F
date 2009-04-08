@@ -289,7 +289,7 @@ C...Decay products may develop a shower.
         ELSEIF(MSTJ(92).LT.0) THEN
           IP1=-MSTJ(92)
 	  MINT(33)=0
-          CALL PYSHOW(IP1,-3,P(IP,5))
+          CALL PYSHOW(IP1,-3,P(1,5))
           CALL PYPREP(IP1)
           MSTJ(92)=0
         ENDIF
