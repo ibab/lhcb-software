@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.78 2009-04-03 10:37:11 jpalac Exp $
+! $Id: release.notes,v 1.79 2009-04-08 13:49:36 jpalac Exp $
 !==============================================================================
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel, Juan Palacios
 !==============================================================================
+
+!========================== MicroDSTAlgorithm v3r5 2009-04-08 =================
 
 ! 2009-04-03 - Juan Palacios
  - Add CopyHltDecReports, simple object cloner.
