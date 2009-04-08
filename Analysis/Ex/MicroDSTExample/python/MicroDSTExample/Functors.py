@@ -15,7 +15,7 @@ class MCAssociator :
     def __call__(self, p) :
         mcp = self.mcAssoc.relatedMCP(p)
         if self.verbose and (mcp == None) :
-            print "Found no assoc trees"
+            print "Found no associated MCP"
         return mcp
 #==============================================================================
 class MassRes:
