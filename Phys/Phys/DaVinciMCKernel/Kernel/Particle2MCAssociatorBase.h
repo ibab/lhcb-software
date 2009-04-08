@@ -1,4 +1,4 @@
-// $Id: Particle2MCAssociatorBase.h,v 1.19 2009-04-06 15:43:42 jpalac Exp $
+// $Id: Particle2MCAssociatorBase.h,v 1.20 2009-04-08 06:50:24 jpalac Exp $
 #ifndef PARTICLE2MCASSOCIATORBASE_H 
 #define PARTICLE2MCASSOCIATORBASE_H 1
 
@@ -136,7 +136,9 @@ private:
                 const std::string& mcParticleLocation) const
   {
     LHCb::MCParticle::Container* mcps = i_MCParticles(mcParticleLocation);
-    return i_relatedMCPs( particle, mcps->begin(), mcps->end() );
+    return (0!=mcps) ? 
+      i_relatedMCPs( particle, mcps->begin(), mcps->end() ) : 
+      Particle2MCParticle::ToVector();
   }
 
   inline const LHCb::MCParticle* 
