@@ -1,4 +1,4 @@
-// $Id: DaVinciMCKernelDict.h,v 1.8 2009-03-26 11:09:31 jpalac Exp $
+// $Id: DaVinciMCKernelDict.h,v 1.9 2009-04-08 11:36:32 jpalac Exp $
 #ifndef DICT_DAVINCIMCKERNELDICT_H 
 #define DICT_DAVINCIMCKERNELDICT_H 1
 
@@ -25,4 +25,10 @@
 #include "Kernel/IP2VVMCPartAngleCalculator.h"
 #include "Kernel/IPrintDecayTreeTool.h"
 #include "Kernel/IPV2MC.h"
+
+namespace
+{
+  std::vector<MCAssociation> __stdvector_MCAssoc;
+}
+
 #endif // DICT_DAVINCIMCKERNELDICT_H
