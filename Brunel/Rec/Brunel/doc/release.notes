@@ -28,6 +28,12 @@ Purpose: LHCb reconstruction program
    . Fix to untested StatusCode in LHCbIDsToMCParticles, TrackGhostClassificationBase
    . Fix to FPE in PatDownstream
 
+ - Changes to options:
+   . Add MC09-Files.py: example files of MC09 data
+   . Add Brunel-MC09-WithTruth.py: MC09 simulation checking and saving MC Truth
+   . Add Brunel-MC09-NoTruth.py: MC09 simulation without checking or saving MC Truth
+   . Remove Copy.opts, use instead $STDOPTS/PoolCopy.opts
+
 </PRE><H1><A NAME=v34r2>2009-02-25 Brunel v34r2</A></H1><PRE>
  - Changes to configurable:
    . Add EventCountHisto in init sequence. 
