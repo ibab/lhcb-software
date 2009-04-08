@@ -3,6 +3,15 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v3r2>2009-04-08 Analysis v3r2 </A></H1><PRE>
+
+ - Based on LHCb v26r3 and Gaudi v20r4
+
+  Highlights:
+  * MicroDST: - Add copying of HltDecReports
+              - Move Particle->MCParticle relaitons table to .../SelectionName/P2MCPRelations
+  * Bug fixes here and there
+
 </PRE><H1><A NAME=v3r1>2009-03-01 Analysis v3r1 </A></H1><PRE>
 
  - Based on LHCb v26r2 and Gaudi v20r4
