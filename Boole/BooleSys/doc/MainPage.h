@@ -10,12 +10,10 @@
  * \htmlinclude new_release.notes
 
  * <b>Top level options files</b>
- * \li Boole-Default.py: Default settings (2008 geometry, no spillover)
- * \li Boole-2008.py:    Default settings (2008 geometry, no spillover)
- * \li Boole-2008-VeloOpen.py: As Boole-2008.py, but with Velo open
+ * \li Boole-Default.py: Default settings
+ * \li Boole-MC09-WithTruth.py: Default settings
+ * \li Boole-MC09-NoTruth.py: Default settings but not saving MC Truth
  * \li Boole-FEST09.py:  For FEST09 production (MDF output, minimal messages)
- * \li Boole-DC06.py:    DC06 geometry, with spillover
- * \li Copy.opts: To make a copy of .digi files
 
  *
  */
