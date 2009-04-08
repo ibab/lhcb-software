@@ -1,4 +1,4 @@
-// $Id: Digit.h,v 1.4 2009-01-10 12:58:54 ibelyaev Exp $
+// $Id: Digit.h,v 1.5 2009-04-08 16:19:00 ibelyaev Exp $
 // ============================================================================
 #ifndef LHCBMATH_DIGIT_H 
 #define LHCBMATH_DIGIT_H 1
@@ -227,7 +227,7 @@ namespace Gaudi
       template <class TYPE, 
                 unsigned int N1,
                 unsigned int N2>
-      struct _Digits : public std::unary_function<TYPE,int>
+      struct _Digits : public std::unary_function<TYPE,TYPE>
       {
       private:
         // ====================================================================
@@ -246,7 +246,8 @@ namespace Gaudi
       public:
         // ====================================================================
         /// the only on eessential method 
-        inline int operator() ( const TYPE v ) const { return (v/val1)%val2 ; }
+        inline TYPE operator() ( const TYPE v ) const 
+        { return static_cast<TYPE> ( (v/val1) % val2 ) ; }
         // ====================================================================
       private:
         // ====================================================================
@@ -409,14 +410,14 @@ namespace Gaudi
         // ====================================================================
         const TYPE ten = 10 ;
         const TYPE aux = Gaudi::Math::pow ( ten , N ) ;
-        return (value/aux)%10 ;                                       // RETURN 
+        return static_cast<TYPE> ( (value/aux) % 10 ) ;               // RETURN 
         // ====================================================================
       }
       // ======================================================================
       const unsigned long long val = value ;
       const unsigned long long ten = 10    ;
       const unsigned long long aux = Gaudi::Math::pow ( ten , N ) ;
-      return (val/aux)%10 ;                                         // RETURN
+      return static_cast<TYPE> (  (val/aux) % 10 ) ;                  // RETURN
       // ======================================================================
     }  
     // ========================================================================
@@ -462,7 +463,7 @@ namespace Gaudi
         const TYPE ten = 10 ;
         const TYPE aux1 = Gaudi::Math::pow ( ten ,      N1 ) ;
         const TYPE aux2 = Gaudi::Math::pow ( ten , N2 - N1 ) ;
-        return (value/aux1)%aux2 ;                                    // RETURN 
+        return static_cast<TYPE> ( (value/aux1)%aux2 ) ;              // RETURN 
         // ====================================================================
       }
       // ======================================================================
@@ -470,7 +471,7 @@ namespace Gaudi
       const unsigned long long ten  = 10 ;
       const unsigned long long aux1 = Gaudi::Math::pow ( ten , N1      ) ;
       const unsigned long long aux2 = Gaudi::Math::pow ( ten , N2 - N1 ) ;
-      return (val/aux1)%aux2 ;                                        // RETURN
+      return static_cast<TYPE>( (val/aux1)%aux2 ) ;                   // RETURN
       // ======================================================================
     }
     // ========================================================================

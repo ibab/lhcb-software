@@ -6,6 +6,12 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2009-04-08 - Vanya BELYAEV
+
+ - LHCbMath/Digit.h
+   fix compilation warning for Win32 platform
+
+
 !========================= LHCbMath v3r6 2009-02-18 ==========================
 ! 2009-02-18 - Marco Cattaneo
  - Removed slc3 cases from GSL linkopts
