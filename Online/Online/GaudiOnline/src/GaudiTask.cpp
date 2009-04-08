@@ -311,17 +311,18 @@ int GaudiTask::startApplication()  {
     std::string nam, runable_name;
     SmartIF<IProperty>   ip(m_subMgr);
     SmartIF<ISvcLocator> loc(m_subMgr);
-    if ( 0 == m_handle )  {
-      if ( ip && loc )  {
-	if ( 0 == m_incidentSvc ) {  // In case we were removed during stop(): reconnect
-	  if ( !loc->service("IncidentSvc",m_incidentSvc, true).isSuccess() )  {
-	    log << MSG::ERROR << "Failed to access incident service." << endmsg;
-	    return 0;
-	  }
-	  m_incidentSvc->addListener(this,"DAQ_ERROR");
+
+    if ( ip && loc )  {
+      if ( 0 == m_incidentSvc ) {  // In case we were removed during stop(): reconnect
+	if ( !loc->service("IncidentSvc",m_incidentSvc, true).isSuccess() )  {
+	  log << MSG::ERROR << "Failed to access incident service." << endmsg;
+	  return 0;
 	}
-	StatusCode sc = m_subMgr->start();
-	if ( sc.isSuccess() )   {
+	m_incidentSvc->addListener(this,"DAQ_ERROR");
+      }
+      StatusCode sc = m_subMgr->start();
+      if ( sc.isSuccess() )   {
+	if ( 0 == m_handle )  {
 	  if ( ip->getProperty("Runable",nam).isSuccess() )  {
 	    size_t id1 = nam.find_first_of("\"");
 	    size_t id2 = nam.find_last_of("\"");
@@ -338,19 +339,17 @@ int GaudiTask::startApplication()  {
 	    log << MSG::ERROR << "Failed to access Runable:" << nam << endmsg;
 	    return 0;
 	  }
-	  log << MSG::ERROR << "Failed to start application manager" << endmsg;
-	  return 0;
 	}
-        log << MSG::ERROR << "Failed to access service locator object" << endmsg;
-        return 0;
+	else  {
+	  log << MSG::INFO << "2nd. layer is already executing." << endmsg;
+	  return 1;
+	}
       }
-      log << MSG::ERROR << "Failed to initialize application manager" << endmsg;
+      log << MSG::ERROR << "Failed to start application manager" << endmsg;
       return 0;
     }
-    else  {
-      log << MSG::INFO << "2nd. layer is already executing" << endmsg;
-      return 3;
-    }
+    log << MSG::ERROR << "Failed to access service locator object" << endmsg;
+    return 0;
   }
   else  {
     log << MSG::ERROR << "2nd. layer is not initialized...did you ever call configure?" << endmsg;
@@ -362,17 +361,20 @@ int GaudiTask::startApplication()  {
 /// Finalize second layer application manager for GAUDI Application
 int GaudiTask::stopApplication()  {
   if ( m_subMgr )  {
-    if ( m_handle )  {
+    // If the event thread finished, join it....
+    if ( m_handle && m_eventThread == false )  {
       ::lib_rtl_join_thread(m_handle);
       m_handle = 0;
     }
     gauditask_task_lock();
     try {
+#if 0
       if ( m_incidentSvc ) {
 	m_incidentSvc->removeListener(this);
 	m_incidentSvc->release();
       }
       m_incidentSvc= 0;
+#endif
       StatusCode sc = m_subMgr ? m_subMgr->stop() : StatusCode::SUCCESS;
       if ( !sc.isSuccess() )   {
 	MsgStream log(msgSvc(), name());
@@ -398,6 +400,10 @@ int GaudiTask::stopApplication()  {
 int GaudiTask::finalizeApplication()  {
   if ( m_subMgr )  {
     try {
+      if ( m_handle )  {
+	::lib_rtl_join_thread(m_handle);
+	m_handle = 0;
+      }
       gauditask_task_lock();
       // If e.g.Class1 processes are reset() before start(), then the incident service 
       // is still connected, and a later cancel() would access violate.

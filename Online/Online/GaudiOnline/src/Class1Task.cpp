@@ -5,10 +5,24 @@
 DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,Class1Task);
 
 using namespace LHCb;
+namespace {
+  enum States { 
+    TASK_OFFLINE,
+    TASK_CONFIGURED,
+    TASK_INITIALIZED,
+    TASK_STARTING,
+    TASK_STARTED,
+    TASK_STOPPING,
+    TASK_STOPPED, 
+    TASK_FINALIZED,
+    TASK_TERMINATED
+  };
+}
 
 /// Standard constructor
 Class1Task::Class1Task(IInterface* svc) : GaudiTask(svc) {
   IOCSENSOR.send(this, STARTUP_DONE);
+  m_myState = TASK_OFFLINE;
 }
 
 /// Callback on configure transition
@@ -21,6 +35,7 @@ StatusCode Class1Task::configure()  {
   case 1:
     result = initApplication();
     if ( result == 1 ) {
+      m_myState = TASK_CONFIGURED;
       return DimTaskFSM::configure();
     }
     declareState(ST_ERROR);
@@ -35,23 +50,27 @@ StatusCode Class1Task::configure()  {
 
 /// Callback on start transition 
 StatusCode Class1Task::initialize()  {
+  m_myState = TASK_INITIALIZED;
   return DimTaskFSM::initialize();
 }
 
 /// Callback on stop transition
 StatusCode Class1Task::finalize()  {
   m_continue = false;
+  m_myState = TASK_FINALIZED;
   return declareState(ST_STOPPED);
 }
 
 /// Callback on configure transition
 StatusCode Class1Task::start()  {
+  m_myState = TASK_STARTING;
   int result = startApplication();
   switch(result) {
   case 2:
     declareState(ST_READY);
     return StatusCode::FAILURE;
   case 1:
+    m_myState = TASK_STARTED;
     return DimTaskFSM::start();
   case 0:
   default:
@@ -62,9 +81,9 @@ StatusCode Class1Task::start()  {
 
 /// Callback on reset transition
 StatusCode Class1Task::stop()  {
-  stopRunable();
   int result = stopApplication();
   if (1 == result) {
+    m_myState = TASK_STOPPED;
     return DimTaskFSM::stop();
   }
   declareState(ST_RUNNING);
@@ -78,6 +97,7 @@ StatusCode Class1Task::terminate()  {
   if (1 == result) {
     result = terminateApplication();
     if( 1 == result ) {
+      m_myState = TASK_TERMINATED;
       return DimTaskFSM::terminate();
     }
   }
@@ -91,3 +111,14 @@ StatusCode Class1Task::disable()  {
   IOCSENSOR.send(this, STOP);
   return StatusCode::SUCCESS;
 }
+
+/// Callback on I/O cancel
+StatusCode Class1Task::cancel()  {
+  if ( m_myState == TASK_STOPPING ) {
+    stopRunable();
+    return StatusCode::SUCCESS;
+  }
+  m_myState = TASK_STOPPING;
+  return GaudiTask::cancel();
+}
+

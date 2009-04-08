@@ -16,6 +16,9 @@ namespace LHCb {
     * @version 1.0
     */
   class Class1Task : public GaudiTask {
+  protected:
+    /// Internal helper variable for state transitions
+    int m_myState;
   public:
     /// Standard constructor
     Class1Task(IInterface* svc);
@@ -35,6 +38,8 @@ namespace LHCb {
     virtual StatusCode terminate();
     /// Callback on disable event processing
     virtual StatusCode disable();
+    /// Callback on I/O cancel
+    virtual StatusCode cancel();
   };
 }
 #endif // ONLINE_GAUDIONLINE_CLASS1TASK_H
