@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 !======================== Gauss v37r0 2009-04-08 =============================
+! 2009-04-08 - Patrick ROBBE
+ - First version of script to produce spill-over events with Gauss with 'older'
+   database tags, Gauss-2008-WithSpillOver.py
+
 ! 2009-04-08 - Gloria CORTI
  - Set beam conditions for 5 TeV in python options (BeamCond-5TeV.py), for
    the moment this include BeamCond-5TeV.opts with leftover beam energy
