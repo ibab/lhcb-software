@@ -1,4 +1,4 @@
-// $Id: TupleToolMCTruth.cpp,v 1.11 2009-02-17 19:43:39 gligorov Exp $
+// $Id: TupleToolMCTruth.cpp,v 1.12 2009-04-09 19:10:07 gligorov Exp $
 // Include files
 #include "gsl/gsl_sys.h"
 // from Gaudi
@@ -35,21 +35,12 @@ TupleToolMCTruth::TupleToolMCTruth( const std::string& type,
 				    const std::string& name,
 				    const IInterface* parent )
   : GaudiTool ( type, name , parent )
-  , m_pLink(0)
-  , m_pComp(0)
-  , m_pChi2(0)
-  , m_bkg(0)
-  , m_linkerTool_Links(0)
-  , m_linkerTool_Chi2(0)
-  , m_linkerTool_Composite(0)
+  , m_smartAssociation(0)
 {
   declareInterface<IParticleTupleTool>(this);
   
   // Associator input location. Empty should be fine for most of the case
   declareProperty( "InputLocations", m_assocInputs = std::vector<std::string>(1,"") );
-
-  // Use the chi2 associator instead of the link and composite associator
-  declareProperty( "UseChi2Method", m_useChi2Method=false );
 
   // Store the number of associations seen
   declareProperty( "StoreAssociationNumbers", m_storeNumberOfAssoc=false );
@@ -73,10 +64,7 @@ TupleToolMCTruth::TupleToolMCTruth( const std::string& type,
 StatusCode TupleToolMCTruth::initialize(){
   if( ! GaudiTool::initialize() ) return StatusCode::FAILURE;
 
-  m_linkerTool_Links = tool<IDaVinciAssociatorsWrapper>("DaVinciAssociatorsWrapper","Wrapper_Links",this);
-  m_linkerTool_Chi2 = tool<IDaVinciAssociatorsWrapper>("DaVinciAssociatorsWrapper","Wrapper_Chi2",this);
-  m_linkerTool_Composite = tool<IDaVinciAssociatorsWrapper>("DaVinciAssociatorsWrapper","Wrapper_Composite",this);
-  m_bkg = tool<IBackgroundCategory>( "BackgroundCategory", this );
+  m_smartAssociation = tool<IParticle2MCWeightedAssociator>("DaVinciSmartAssociator", this);
 
    if (m_fillangles) m_angleTool  = tool<IP2VVMCPartAngleCalculator>(m_calculator,this);
 
@@ -88,14 +76,8 @@ StatusCode TupleToolMCTruth::fill( const LHCb::Particle*
 				 , const std::string& head
 				 , Tuples::Tuple& tuple ){
 
-  m_pLink = m_linkerTool_Links->linker(Particle2MCMethod::Links,m_assocInputs); 
-  m_pComp = m_linkerTool_Composite->linker(Particle2MCMethod::Composite,m_assocInputs);
-  m_pChi2 = m_linkerTool_Chi2->linker(Particle2MCMethod::Chi2,m_assocInputs);
-
-  Assert( ( !m_useChi2Method && m_pLink && m_pComp ) 
-	  ||
-	  ( m_useChi2Method || m_pChi2 )
-	  , "One of your associator hasn't been initialized!");
+  Assert( m_smartAssociation 
+	  , "One of your associators hasn't been initialized!");
   
   int assignedPid = 0;
   
@@ -108,20 +90,11 @@ StatusCode TupleToolMCTruth::fill( const LHCb::Particle*
 
   const MCParticle* mcp(0);
   bool test = true;
+  bool badTrueTAU = false;
 
   if( P ){
     assignedPid = P->particleID().pid();
-    if ( m_useChi2Method ){
-      double w=0;
-      nbAss = m_pChi2->associatedMCP( P );
-      mcp = m_pChi2->firstMCP( P, w );
-      
-      test &= tuple->column( head+"_MC_CHI2WHEIGHT", w );
-
-    } else {
-      if( P->isBasicParticle() ) mcp = m_pLink->firstMCP( P );
-      else                       mcp = m_bkg->origin(P);//m_pComp->firstMCP( P );
-    }
+    mcp = m_smartAssociation->relatedMCP(P);
   }
  
   // pointer is ready, prepare the values:
@@ -132,18 +105,28 @@ StatusCode TupleToolMCTruth::fill( const LHCb::Particle*
     trueP = mcp->momentum();
 
     const SmartRefVector< LHCb::MCVertex > & endVertices = mcp->endVertices();
-    if (endVertices.size() != 0) {
+    if (endVertices.size() != 0 ) {
     
-      endVertex = endVertices.front()->position(); // the first item, the other are discarded.
-      originVertex = mcp->originVertex()->position();
+      if (endVertices.front() != NULL) {
+        endVertex = endVertices.front()->position(); // the first item, the other are discarded.
+      } else {
+        endVertex.SetXYZ(-9999.,-9999.,-9999.);
+        badTrueTAU = true;
+      }
+      if (mcp->originVertex() != NULL) {
+        originVertex = mcp->originVertex()->position();
+      } else {
+        originVertex.SetXYZ(-9999.,-9999.,-9999.);
+        badTrueTAU = true;
+      }
 
       // lifetime
-      if( m_storePT ){
+      if( m_storePT && !badTrueTAU){
         Gaudi::XYZVector dist = endVertex - originVertex;
         // copied from DecayChainNTuple // 
         mcTau = trueP.M() * dist.Dot( trueP.Vect() ) / trueP.Vect().mag2();
         mcTau /= Gaudi::Units::picosecond * Gaudi::Units::c_light;
-      }
+      } else mcTau = -9999.;
     } else{
       //MC particle has no endvertices
       endVertex.SetXYZ(-9999.,-9999.,-9999.); 

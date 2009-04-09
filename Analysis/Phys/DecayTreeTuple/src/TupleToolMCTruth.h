@@ -1,4 +1,4 @@
-// $Id: TupleToolMCTruth.h,v 1.5 2009-02-17 19:43:39 gligorov Exp $
+// $Id: TupleToolMCTruth.h,v 1.6 2009-04-09 19:10:07 gligorov Exp $
 #ifndef JBOREL_TUPLETOOLMCTRUTH_H
 #define JBOREL_TUPLETOOLMCTRUTH_H 1
 
@@ -10,6 +10,8 @@
 //struct Particle2MCLinker;
 #include "Kernel/Particle2MCLinker.h"
 #include "Kernel/IDaVinciAssociatorsWrapper.h"
+#include "Kernel/IParticle2MCWeightedAssociator.h"
+#include "Kernel/MCAssociation.h"
 /** @class TupleToolMCTruth TupleToolMCTruth.h jborel/TupleToolMCTruth.h
  *
  * \brief Fill MC truth info if a link is present
@@ -69,20 +71,11 @@ private:
 
   //  const GaudiAlgorithm* getParent() const ;
 
-  Particle2MCLinker *m_pLink;
-  Particle2MCLinker *m_pComp;
-  Particle2MCLinker *m_pChi2;
-
-  IBackgroundCategory* m_bkg;
-
-  IDaVinciAssociatorsWrapper* m_linkerTool_Links;
-  IDaVinciAssociatorsWrapper* m_linkerTool_Chi2;
-  IDaVinciAssociatorsWrapper* m_linkerTool_Composite;
+  IParticle2MCWeightedAssociator* m_smartAssociation;
 
   IP2VVMCPartAngleCalculator*   m_angleTool;
 
   std::vector<std::string> m_assocInputs;
-  bool m_useChi2Method; //!< Use the chi2 associator instead of the link and composite associator
   bool m_storeNumberOfAssoc; //!< Store in the tuple the number of MC Association found;
   bool m_storeKinetic; //!< Store kinetic information from the associated candidate
   bool m_storePT; //!< Store the propertime information for associated composite particle
