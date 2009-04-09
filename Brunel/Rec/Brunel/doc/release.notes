@@ -3,11 +3,11 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v34r3>2009-04-06 Brunel v34r3</A></H1><PRE>
+</PRE><H1><A NAME=v34r3>2009-04-09 Brunel v34r3</A></H1><PRE>
  - Changes to requirements:
    . Add dependency to AppConfig v2r*, to pick up options for production
    . Add explicit use CASTOR from LCG_Interfaces for QMTests
-   . Use ParamFiles v8r1 (for DC09 Calo PIDs pdf)
+   . Use ParamFiles v8r1 (for MC09 Calo PIDs pdf)
 
  - Changes to Configurable
    . Bug fix: use RunRecordStream for writing FSR, not OutputFSRStream
@@ -20,6 +20,7 @@ Purpose: LHCb reconstruction program
    . No longer disable FPE check for MergedPi0Rec, now fixed
    . Add event time printout to brunel-2008-MC test
    . Remove obsolete DQ directory
+   . Replace brunel-2008-mc test with brunel-mc09-withtruth, brunel-mc09-notruth
 
  - Changes to references to reflect changes in Brunel v34r3 output:
    . New track fit initialisation, SimplifiedMaterialLocator now a private tool
@@ -33,6 +34,8 @@ Purpose: LHCb reconstruction program
    . Add Brunel-MC09-WithTruth.py: MC09 simulation checking and saving MC Truth
    . Add Brunel-MC09-NoTruth.py: MC09 simulation without checking or saving MC Truth
    . Remove Copy.opts, use instead $STDOPTS/PoolCopy.opts
+   . Remove 2008 MC example files: 2008-Files.py, Brunel-2008-MC.py, 
+     Brunel-2008-MC-VeloOpen.py, Brunel-2008-MC-BOff-VeloOpen.py
 
 </PRE><H1><A NAME=v34r2>2009-02-25 Brunel v34r2</A></H1><PRE>
  - Changes to configurable:

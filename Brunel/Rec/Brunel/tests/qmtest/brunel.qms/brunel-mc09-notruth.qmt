@@ -1,15 +1,14 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>gaudirun.py</text></argument>
-  <argument name="timeout"><integer>1200</integer></argument>
   <argument name="args"><set>
     <text>$BRUNELROOT/tests/options/testBrunel-defaults.py</text>
-    <text>$BRUNELOPTS/Brunel-2008-MC.py</text>
-    <text>$BRUNELOPTS/2008-Files.py</text>
+    <text>$BRUNELOPTS/Brunel-MC09-NoTruth.py</text>
+    <text>$BRUNELOPTS/MC09-Files.py</text>
     <text>--option</text>
-    <text>from Brunel.Configuration import *; Brunel().Histograms="Expert"; Brunel().RecL0Only=True; Brunel().EvtMax=15; from Configurables import RecInit; RecInit("BrunelInit").PrintEventTime=True</text>
+    <text>from Brunel.Configuration import *; Brunel().EvtMax=5</text>
   </set></argument>
-  <argument name="reference"><text>../refs/testBrunel-2008-MC.ref</text></argument>
+  <argument name="reference"><text>../refs/testBrunel-MC09-NoTruth.ref</text></argument>
   <argument name="validator"><text>
 preprocessor = normalizeExamples + \
     RegexpReplacer(when = "Connected to database",

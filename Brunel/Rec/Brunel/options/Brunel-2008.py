@@ -1,6 +1,6 @@
 ##############################################################################
-# File for running Brunel on real data with default 2008 geometry, as defined in
-#                                                        DDDB/Configuration.py
+# File for running Brunel on 2008 real data
+#
 # Syntax is:
 #   gaudirun.py Brunel-2008.py <someDataFiles>.py
 ##############################################################################

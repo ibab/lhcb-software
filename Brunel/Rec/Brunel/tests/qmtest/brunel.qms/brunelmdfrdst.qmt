@@ -3,7 +3,7 @@
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args"><set>
     <text>../options/mdfrdst.py</text>
-    <text>$BRUNELOPTS/Brunel-2008-MC.py</text>
+    <text>$BRUNELOPTS/Brunel-MC09-WithTruth.py</text>
   </set></argument>
   <argument name="reference"><text>../refs/testBrunelMdfRdst.ref</text></argument>
   <argument name="validator"><text>
