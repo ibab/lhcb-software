@@ -7,6 +7,8 @@ Purpose: LHCb Digitization program
  - Add options for MC09 simulation and corresponding tests
  - Remove options for 2008 simulation and corresponding tests
  - Input file for FEST09 test changed to latest MC09 Gauss file
+ - Move Expert histograms QMTest from FEST09 test to MC09-WithTruth test
+ - For Minimal DIGI output, only run Link sequences needed for monitoring
 
 ! 2009-04-06 - Marco Cattaneo
  - Run FilterMCPrimaryVtx algorithms when writing Minimal MC truth

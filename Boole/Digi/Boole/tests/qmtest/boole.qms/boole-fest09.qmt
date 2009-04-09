@@ -6,7 +6,7 @@
     <text>$BOOLEOPTS/Boole-FEST09.py</text>
     <text>$BOOLEOPTS/MC09-Files.py</text>
     <text>--option</text>
-    <text>from Boole.Configuration import *; Boole().Histograms="Expert"; Boole().EvtMax=15; from Configurables import BooleInit; BooleInit().PrintEventTime=True</text>
+    <text>from Boole.Configuration import *; Boole().EvtMax=15; from Configurables import BooleInit; BooleInit().PrintEventTime=True</text>
   </set></argument>
   <argument name="reference"><text>../refs/testBoole-FEST09.ref</text></argument>
   <argument name="validator"><text>

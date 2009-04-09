@@ -5,6 +5,8 @@
     <text>$BOOLEROOT/tests/options/testBoole-defaults.py</text>
     <text>$BOOLEOPTS/Boole-MC09-WithTruth.py</text>
     <text>$BOOLEOPTS/MC09-Files.py</text>
+    <text>--option</text>
+    <text>from Boole.Configuration import *; Boole().Histograms="Expert"</text>
   </set></argument>
   <argument name="reference"><text>../refs/testBoole-MC09-WithTruth.ref</text></argument>
   <argument name="validator"><text>
