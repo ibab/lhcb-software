@@ -3,48 +3,48 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-! 2009-04-09 - Marco Cattaneo
- - Update references for MuonDigitization printout of hits not found inside gap
+</PRE><H1><A NAME=v18r0>2009-04-14 Boole v18r0</A></H1><PRE>
 
-! 2009-04-08 - Marco Cattaneo
- - Add options for MC09 simulation and corresponding tests
- - Remove options for 2008 simulation and corresponding tests
- - Input file for FEST09 test changed to latest MC09 Gauss file
- - Move Expert histograms QMTest from FEST09 test to MC09-WithTruth test
- - For Minimal DIGI output, only run Link sequences needed for monitoring
+ - Changes to requirements
+   . Increase major version to v18r0
+   . Explicitly use CASTOR from LCG_Interfaces for QMTests
+   . Use ParamFiles v8r1
 
-! 2009-04-06 - Marco Cattaneo
- - Run FilterMCPrimaryVtx algorithms when writing Minimal MC truth
+ - Changes to Configurable:
+   . Remove possibility to add spillover, now done in Gauss, needs Gauss v36r3
+     o SkipSpill option removed
+     o UseSpillover option used to steer spillover usage in sub-detectors
+     o SpilloverPaths option use to define which paths to use from input file
+     o Adapt to corresponding changes in MuonDigitisation and MuonBackground
+   . Remove DC06 support
+   . Use new DigiConf configurable to set up DIGI content, adapt to DigiType:
+     o Remove ExtendedDigi option, replaced by DigiType, passed to DigiConf()
+     o For Minimal DigiType, only run Link sequences needed for monitoring
+     o Run FilterMCPrimaryVtx algorithm when writing Minimal DigiType
+   . Remove obsolete option WriteL0Only
+   . For MDF output only run Link sequences needed for monitoring
+   . Add sanity checks to avoid switching off linkers needed by monitors
+   . Remove UseOracle flag, set it directly in CondDB configurable
+   . Propagate "DataType" to L0Conf()
 
-! 2009-04-03 - Marco Cattaneo
- - Use new DigiConf configurable to set up DIGI content
- - Remove obsolete option WriteL0Only
- - Remove ExtendedDigi option, replaced by DigiType, passed to DigiConf()
- - Remove obsolete file Copy.opts
+ - Changes to options:
+   . Add options for MC09 simulation: 
+     Boole-MC09-NoTruth.py, Boole-MC09-WithTruth.py, MC09-Files.py
+   . Remove options for 2008 and DC06 simulations 
+   . Remove obsolete file Copy.opts
 
-! 2009-04-02 - Marco Cattaneo
- - For MDF output, only run Link sequences needed for monitoring
- - Add sanity checks to avoid switching off linkers needed by monitors
+ - Changes to QMTests
+   . Add tests for MC09 simulation: boole-mc09-notruth, boole-mc09-withtruth
+   . Remove tests for 2008 and DC06 simulations
+   . Input file for FEST09 test changed to latest Gauss file in MC09-Files.py
+   . Move Expert histograms QMTest from FEST09 test to MC09-WithTruth test
+   . Add printing of event time to boole-fest09 test
 
-! 2009-03-31 - Marco Cattaneo
- - Remove addition of spillover, done in Gauss, needs Gauss v36r3
-   . SkipSpill option removed
-   . UseSpillover option used to steer spillover usage in sub-detectors
-   . SpilloverPaths option use to define which paths to use from input file
-   . Adapt to corresponding changes in MuonDigitisation and MuonBackground
- - Remove DC06 support, increase major version to v18r0
-
-! 2009-03-10 - Marco Cattaneo
- - Explicitly use CASTOR from LCG_Interfaces for QMTests
- - Use ParamFiles v8r1
-
-! 2009-03-05 - Marco Cattaneo
- - Remove UseOracle flag, set it directly in CondDB configurable
- - Propagate "DataType" to L0Conf()
- - Add printing of event time to boole-fest09 test
- - Update references for new default L0 TCK (for non DC06 DataType)
- - Remove .slc4_amd64 from filename of default test refs, to provide default
-   also for other platforms 
+ - Changes to references to reflect changes in Boole v18r0 output:
+   . MuonDigitization::finalize prints number of hits found not inside gap
+   . New default L0 TCK
+   . Remove .slc4_amd64 from filename of default test refs, to provide default
+     also for other platforms 
 
 </PRE><H1><A NAME=v17r3>2009-02-24 Boole v17r3</A></H1><PRE>
  - Changes to Configurable:
