@@ -55,7 +55,9 @@ Hlt2SharedD02KsPiPi.PhysDesktop.InputLocations = [ GoodPions, "Hlt2KsLLParticles
 
 ###@TODO:@FIXME: convert Hl2Particles.opts to python... 
 importOptions('$HLTCONF/options/Hlt2Particles.opts')
-_KsLL =  GaudiSequencer('SeqKs', ModeOR=True, ShortCircuit=False, Members = [ GaudiSequencer('SeqMakeHlt2KsLL'), KsLL]) )
+# Need to do an 'OR' of SeqMakeHlt2KsLL and KsLL...
+_KsLL =  GaudiSequencer('SeqMakeKs', ModeOR=True, ShortCircuit=False, Members = [ GaudiSequencer('SeqMakeHlt2KsLL'), KsLL]) )
+####@TODO:@FIXME: maybe we need seperate D0 -> Ks_1 Pi Pi, D0 -> Ks_2 Pi Pi instead of the this OR...
 
 
 D02KsPiPi = bindMembers( None, [ GoodPions, _KsLL , Hl2SharedD02KsPiPi ] )
