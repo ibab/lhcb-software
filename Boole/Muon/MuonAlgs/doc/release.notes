@@ -4,6 +4,9 @@
 ! Purpose     : Muon digitisation algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-04-09 - Alessia Satta
+ - add a counter to detect hits which due to rounding problem do not belong 
+   to any gaps
 ! 2009-03-31 - Marco Cattaneo
  - In MuonDigitization:
    . Remove need to access SpilloverAlg to determine number of spillover slots,

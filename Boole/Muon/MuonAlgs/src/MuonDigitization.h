@@ -99,5 +99,6 @@ private:
   static const int OriginOfHitsContainer[5];
   
   Rndm::Numbers m_flatDist;
+int m_hitNotInGap;
   };
 #endif

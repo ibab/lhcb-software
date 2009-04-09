@@ -1,4 +1,4 @@
-//$Id: MuonDigitization.cpp,v 1.49 2009-04-01 12:57:40 cattanem Exp $
+//$Id: MuonDigitization.cpp,v 1.50 2009-04-09 09:56:15 asatta Exp $
 
 #include <algorithm>
 #include <vector>
@@ -52,6 +52,7 @@ MuonDigitization::MuonDigitization(const std::string& name,
   declareProperty("ApplyTimeAdjustment",m_applyTimeAdjustment=true);
   declareProperty("RegisterPhysicalChannelOutput",
                    m_registerPhysicalChannelOutput=false);
+m_hitNotInGap=0;
 
 }
 
@@ -247,6 +248,8 @@ StatusCode MuonDigitization::finalize()
   // Release the tools
   //if( m_pMuonTileXYZ ) toolSvc()->releaseTool( m_pMuonTileXYZ );
   //if( m_pGetInfo ) toolSvc()->releaseTool( m_pGetInfo );
+info()<<" the hit which were not found inside a gap were "<<m_hitNotInGap<<endreq;;
+
   detectorResponse.finalize();
   
   return GaudiAlgorithm::finalize();
@@ -406,6 +409,7 @@ MuonDigitization::createInput(
           listph= m_muonDetector->listOfPhysChannels((*iter)->entry(),
                                                      (*iter)->exit(), 
                                                      hitRegion,hitChamber);
+          if(listph.size()==0)m_hitNotInGap++;
           std::vector< std::pair<MuonFrontEndID, std::vector<float> > >::
             iterator itPh;
           if(m_verboseDebug) verbose()<<" ga hit "<<hitStation<<" "<<hitRegion
