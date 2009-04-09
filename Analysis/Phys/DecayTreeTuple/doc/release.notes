@@ -4,6 +4,12 @@
 ! Purpose     : Option-steered tuples. Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+! 2009-04-09 - V. Gligorov
+ - TupleToolMCTruth.{h,cpp}
+   . Use DaVinciSmartAssociator for charged&neutral "stables"
+ - TupleToolKinematic.{h,cpp}
+   . Store mass as well as measured mass.
+
 !======================== DecayTreeTuple v2r1 2009-04-08 =====================
 
 ! 2009-03-27 - Patrick Koppenburg
