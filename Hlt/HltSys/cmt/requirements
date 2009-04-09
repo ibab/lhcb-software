@@ -9,7 +9,7 @@ branches cmt doc options
 
 use HltConf             v2r7    Hlt   # Vanya Belyaev, Gerhard Raven
 use HltBase             v6r3    Hlt   # Gerhard Raven
-use HltCommon           v5r3p1  Hlt   # Gerhard Raven
+use HltCommon           v5r4    Hlt   # Gerhard Raven
 
 use HltTracking         v3r8    Hlt   # Jose Angel Hernando-Morata
 use HltHadAlley         v3r3p1  Hlt   # Jose Angel Hernando-Morata
@@ -35,11 +35,13 @@ use HltPython	        v1r14   Hlt   # Jose Angel Hernando-Morata
 #=======================================================
 
 use HltSelections       v9r0    Hlt   # Patrick Koppenburg
+use Hlt2SharedParticles v0r1    Hlt   # Patrick Koppenburg/Gerhard Raven
 use Fidel               v1r3p1  Phys  # Sara Furcas    
 use HltKshort           v1r6    Hlt   # Jaap Panman
 use HltHidValley        v1r2p2  Hlt   # Marcin Kucharczyk
 
 use HltSelChecker       v8r0    Hlt   # Patrick Koppenburg
+
 
 #=============================================================
 # Stuff added temporarily to allow a fast development cycle
