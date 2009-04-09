@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.31 2009-04-08 12:25:13 pkoppenb Exp $
+! $Id: release.notes,v 1.32 2009-04-09 15:12:13 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiTrigger
 ! Responsible : Vanya BELYAEV
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
+
+
+! 2009-04-09 - Vanya BELYAEV 
+
+ - src/Components/ServiceRegister.cpp
+   fix for Win32 compilation 
+
 
 !========================== LoKiTrigger v9r1 2009-04-08 ===================
 ! 2009-03-30 - Vanya BELYAEV

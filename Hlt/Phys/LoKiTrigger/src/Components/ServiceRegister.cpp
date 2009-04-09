@@ -1,4 +1,4 @@
-// $Id: ServiceRegister.cpp,v 1.2 2009-03-28 13:58:48 ibelyaev Exp $
+// $Id: ServiceRegister.cpp,v 1.3 2009-04-09 15:12:13 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -29,7 +29,7 @@ StatusCode Hlt::Service::lock   ( const IAlgorithm* alg )
   { return Error ( "lock : all transactions are frozen" , 
                    Lock_Transactions_Disabled )  ; }                 // RETURN 
   // already locked by some other algorithm ? 
-  else if ( 0 != m_locker ) 
+  else if ( !(!m_locker)  ) 
   { return Error ( "lock : the service is already locked by '"  + 
                    m_locker->name() + "'" , 
                    Lock_Invalid_Lock          )  ; }                 // RETURN 
@@ -88,7 +88,7 @@ StatusCode Hlt::Service::registerOutput
   { return Error ( "registerOutput: invalid seelction for producer '" + 
                    producer->name() + "'" , 
                    Register_Invalid_Selection         ) ;  }          // RETURN  
-  else if ( 0 ==  m_locker ) 
+  else if ( !m_locker      ) 
   { return Error ( "registerOutput: the service is not locked" ,   
                    Register_Invalid_Lock              ) ;  }          // RETURN
   else if ( m_locker != producer ) 
@@ -145,7 +145,7 @@ StatusCode Hlt::Service::registerInput
   if      ( 0 == consumer  ) 
   { return Error ( "registerInput: invalid consumer"  , 
                    Register_Invalid_Consumer          ) ; }           // RETURN
-  else if ( 0 ==  m_locker ) 
+  else if ( !m_locker      ) 
   { return Error ( "registerInput: the service is not locked" ,   
                    Register_Invalid_Lock              ) ;  }          // RETURN
   else if ( m_locker != consumer ) 
