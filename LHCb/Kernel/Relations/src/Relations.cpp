@@ -1,4 +1,4 @@
-// $Id: Relations.cpp,v 1.7 2008-10-31 19:34:59 ibelyaev Exp $
+// $Id: Relations.cpp,v 1.8 2009-04-09 13:16:58 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ====================================================================
@@ -13,20 +13,6 @@
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-02-03 
  */
-// ============================================================================
-// anonymous namespace to hide local instantiations 
-// ============================================================================
-namespace 
-{
-  //Relations::BaseRange                       _0_0_2 ;
-  //Relations::BaseTable                       _0_0_3 ;  
-  //Relations::BaseWeightedTable               _0_1_3 ;
-  
-  LHCb::Relation1D<int,float>                _1 ;
-  LHCb::Relation2D<std::string,int>          _2 ;
-  LHCb::RelationWeighted1D<int,float,double> _3 ;
-  LHCb::RelationWeighted2D<int,float,double> _4 ;
-} 
 // ============================================================================
 // The END 
 // ============================================================================

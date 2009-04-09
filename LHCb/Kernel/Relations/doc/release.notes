@@ -1,9 +1,22 @@
-! $Id: release.notes,v 1.60 2009-01-08 16:39:57 cattanem Exp $ 
+! $Id: release.notes,v 1.61 2009-04-09 13:16:58 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
+
+! 2009-04-09 - Vanya BELYAEV 
+
+ - src/Relations.cpp
+   remove local instances of relation tables. 
+   Due to some unknown reasons
+   it causes some problem with compilation of PHYS with SUSE
+   
+ - tests/RelationsTests.cpp
+   add the auxillary test for queich checks of compilation problems. 
+
+ - cmt/requirements 
+    version increment to v5r7 
 
 !====================== Relations v5r6 2008-11-17 ============================
 ! 2008-11-29 - Vanya BELYAEV

@@ -1,13 +1,13 @@
-# $Id: requirements,v 1.26 2008-11-29 16:25:30 ibelyaev Exp $
+# $Id: requirements,v 1.27 2009-04-09 13:16:58 ibelyaev Exp $
 # =============================================================================
 package Relations
 author  Vanya.Belyaev
 manager Vanya.Belyaev
-version v5r6
+version v5r7
 # =============================================================================
 
 # ============= structure =====================================================
-branches      Relations doc cmt src dict python
+branches      Relations doc cmt src dict python tests 
 
 # ============== dependencies =================================================
 use              GaudiKernel v*
@@ -25,8 +25,9 @@ apply_pattern     reflex_dictionary                                 \
 	          options=" -U__MINGW32__ "
 
 # ============== constituents =================================================
-library          RelationsLib  *.cpp
-
+library          RelationsLib    *.cpp
+application      RelationsTests  -check ../tests/RelationsTest.cpp
+ 
 # ============== patterns =====================================================
 apply_pattern    linker_library    library=RelationsLib
 apply_pattern    install_python_modules 
