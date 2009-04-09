@@ -4,15 +4,104 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
 
+</PRE><H1><A NAME=v34r3>2009-04-14 Brunel v34r3</A></H1><PRE>
+This version uses projects Gaudi v20r4, LHCb v26r3, Lbcom v6r27, Rec v6r3
+ and SQLDDDB v5r3, ParamFiles v8r1, FieldMap v5r2, AppConfig v2r*
+
+This is a production version for the 2009 MC production. 
+Output requires DaVinci v22r1 or greater
+
+ - New packaging
+   . Add dependency to AppConfig v2r*, to pick up options for production
+   . Add explicit use CASTOR from LCG_Interfaces for QMTests
+   . Use ParamFiles v8r1 (for MC09 Calo PIDs pdf)
+   . Remove obsolete Rec/Brunel/DQ directory
+
+ - Functionality changes
+   . New Brunel().DigiType option: when set to "Minimal", do not read MC Truth
+     from .digi input, and do not save it on output, except for pileup info
+     propagated from Boole "Minimal" output (Configuration.py, GaudiConf v12r2)
+   . Remove Brunel().UseOracle option, use DetCond().UseOracle instead
+   . Add bool option RecInit().PrintEventTime, if True prints the event time
+     together with the run and event number (LHCbKernel v11r2, RecAlgs v1r8)
+
+ - Persistency changes
+   . Add two new data members to GenHeader, the total inelastic cross section
+     and frequency of crossing of filled-filled bunches (GenEvent v5r5)
+   . When reading "Minimal" .digi, pSim/MCVertices contains only primary vertices
+
+ - New tuning
+   . DstConf() configurable now prints Dst content at startup (GaudiConf v12r2)
+   . New default tags for 2008 real data: head-20090330 for DDDB,
+     head-20090402 for LHCBCOND (DDDB v1r16, SQLDDDB v5r3)
+   . AddNeigbours in EcalEnergyForTrack and HcalEnergyForTrack changed to FALSE
+     (CaloPIDs v4r15)
+   . New CaloPID PDFs tuning. DC06 tuning still accessible when DC06 DataType
+     selected (CaloReco v4r18, ParamFiles v8r1)
+   . Use detailed dedx StateDetailedBetheBlochEnergyCorrectionTool in the track
+     fit. Elsewhere default remains simple tool 
+     (TrackFitter v2r32, TrackExtrapolators v2r21)
+   . New algorithm TrackStateInitAlg and tool TrackStateInitTool called for 
+     each track container to re-initialize the track starting from LHCbIDs. 
+     Allows to get	the same fit results without dependence on previous fitting
+     history (TrackSys v4r22, TrackTools v3r16, TrackInterfaces v4r2)
+   . Changed default tune of TrackVelodEdxCharge to expect 47.1 ADC per cluster
+     (TrackTools v3r16)
+   . Changed the FOIfactor to 1.2 to recover some efficiency (2009 settings) 
+     (MuonID v6r2)
+
+ - Bug fixes
+   . In Brunel() configurable, use RunRecordStream for writing FSR, not 
+     OutputFSRStream (was writing one FSR per event!)
+   . Fix bad default setting for CaloHypo2Calo.cpp (Seed=false -> true), plus
+     minor bug fix (CaloTools v5r7)
+   . Fix untested StatusCodes (RichDAQ v3r23p1, TrackMCTools v2r22,
+     TrackUtils v1r25, VeloRecMonitors v1r5)
+   . Fix FPE in CaloMergedPi0Alg (missing initialization) (CaloReco v4r18)
+   . Fix for FPE in PatDownstream and PatFwdFitLine (PatAlgorithms v3r16)
+   . Changed default constructor of PatVeloPhiList to initialise all members,
+     fixes another FPE in scl4_ia32_gcc34_dbg (PatVelo v3r12)
+   . Remove hardcoded magnetic field polarity 
+     (PatVeloTT v3r6, PatAlgorithms v3r16)
+
+ - Monitoring changes
+   . Set CaloDQ.opts histo selection as default: selection of relevant
+     monitoring histo for Data Quality stuff (CaloMoniDst v3r5)
+   . CaloFullMonitoring.opts produces the whole histo set, to be explicitly
+     added with importOptions (CaloMoniDst v3r5)
+   . Added OTTrackMonitor, added six plots for vertex x,y,z positions for
+     left/right half respectively (TrackMonitors v1r8)
+   . Miscellaneous minor improvements to the detailed MC monitors
+     (RichRecMonitors v2r22)
+   . Suppress empty plot in MC free running from Rich::Rec::MC::PixelQC
+     (RichRecQC v2r27)
+   . Suppress warning about isolation tool not implemented for Aerogel
+     (RichRecTrackTools v1r9)
+   . Reduced (unnecessary high) binning of a few histos in VeloTrackMonitor
+     (VeloRecMonitors v1r5)
+   . Introduce new plots/profile histograms (VeloRecMonitors v1r5)
+     o Measurement of +ve and -ve charges
+     o Biased/unbiased residuals versus momentum profiles for +ve & -ve charges
+
+ - Changes to tests and example options
+   . Add MC09-Files.py: example files of MC09 data
+   . Add Brunel-MC09-WithTruth.py: MC09 simulation checking and saving MC Truth
+   . Add Brunel-MC09-NoTruth.py: MC09 simulation without checking or saving MC Truth
+   . Remove Copy.opts, use instead $STDOPTS/PoolCopy.opts
+   . Remove 2008 MC example files: 2008-Files.py, Brunel-2008-MC.py, 
+     Brunel-2008-MC-VeloOpen.py, Brunel-2008-MC-BOff-VeloOpen.py
+   . Replace brunel-2008-mc test with brunel-mc09-withtruth, brunel-mc09-notruth
+   . No longer disable FPE check for MergedPi0Rec, now fixed
+   . Add event time printout to brunel-mc09-withtruth test
+
 </PRE><H1><A NAME=v34r2>2009-02-25 Brunel v34r2</A></H1><PRE>
 This version uses projects Gaudi v20r4, LHCb v26r2, Lbcom v6r26, Rec v6r2
- and SQLDDDB v5r2, ParamFiles v8r0, FieldMap v5r2, AppConfig v2r*
+ and SQLDDDB v5r2, ParamFiles v8r0, FieldMap v5r2
 
 This is a pre-production version for the 2009 MC production. 
 Output requires DaVinci v22r1 or greater
 
  - New packaging:
-   . Add dependency to AppConfig v2r*, to pick up options for production
    . Added QMTests for:
      o DC06, 2008 real data and simulation, cosmics data processing
      o Expert histos and RecL0Only options
