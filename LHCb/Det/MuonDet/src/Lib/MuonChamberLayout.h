@@ -1,4 +1,4 @@
-// $Id: MuonChamberLayout.h,v 1.2 2007-12-03 20:51:51 santovet Exp $
+// $Id: MuonChamberLayout.h,v 1.3 2009-04-09 09:54:10 asatta Exp $
 #ifndef PUBLIC_MUONCHAMBERLAYOUT_H 
 #define PUBLIC_MUONCHAMBERLAYOUT_H 1
 
@@ -11,6 +11,7 @@
 
 //Gaudi
 #include "GaudiKernel/IDataProviderSvc.h"
+class IMessageSvc;
 
 /** @class MuonChamberLayout MuonChamberLayout.h MuonDet/MuonChamberLayout.h
  *  
@@ -23,10 +24,11 @@ public:
 
   /// Standard constructor
   MuonChamberLayout(MuonLayout R1,
-		    MuonLayout R2,
-		    MuonLayout R3,
-		    MuonLayout R4,
-		    IDataProviderSvc* detSvc); 
+                    MuonLayout R2,
+                    MuonLayout R3,
+                    MuonLayout R4,
+                    IDataProviderSvc* detSvc,
+                    IMessageSvc * msgSvc); 
   
   // Void constructor: calls the previous one
   // with dummy DataProvider and default grid Layout
@@ -200,7 +202,7 @@ public:
 protected:
 
 private:
-
+  IMessageSvc* m_msgSvc ;
   //Chambers
   std::vector<int> m_offSet;
   std::vector<unsigned int> m_cgX;

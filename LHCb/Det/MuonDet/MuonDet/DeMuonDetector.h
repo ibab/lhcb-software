@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.h,v 1.31 2008-10-28 15:06:04 cattanem Exp $
+// $Id: DeMuonDetector.h,v 1.32 2009-04-09 09:54:10 asatta Exp $
 // ============================================================================
 #ifndef MUONDET_DEMUONDETECTOR_H
 #define MUONDET_DEMUONDETECTOR_H 1
@@ -327,6 +327,7 @@ private:
   double m_stationBox[5][4];
   double m_stationZ[5];
   MuonDAQHelper m_daqHelper;
+  int   m_hitNotInGap;
 
 };
 

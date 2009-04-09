@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.45 2008-10-28 15:06:04 cattanem Exp $
+// $Id: DeMuonDetector.cpp,v 1.46 2009-04-09 09:54:10 asatta Exp $
 
 // Include files
 #include "MuonChamberLayout.h"
@@ -33,6 +33,8 @@ DeMuonDetector::DeMuonDetector() {
   m_stations = 0;
   m_regions = 0;
   m_chamberLayout = 0;
+    m_hitNotInGap = 0;
+
 }
 
 /// Standard Destructor
@@ -66,7 +68,7 @@ StatusCode DeMuonDetector::initialize()
 
   //Initializing the Layout
   MuonLayout R1(1,1), R2(1,2), R3(1,4), R4(2,8); 
-  MuonChamberLayout * tLay = new MuonChamberLayout(R1,R2,R3,R4,m_detSvc);
+  MuonChamberLayout * tLay = new MuonChamberLayout(R1,R2,R3,R4,m_detSvc,msgSvc());
   m_chamberLayout = tLay;
 
   m_ChmbPtr =  m_chamberLayout->fillChambersVector(m_detSvc);
@@ -598,7 +600,8 @@ DeMuonDetector::listOfPhysChannels(Gaudi::XYZPoint my_entry, Gaudi::XYZPoint my_
 
   //  if(!myGap) {
   if(!isIn) {
-    msg << MSG::ERROR <<"Could not find the gap. Returning a void list."<<endreq; 
+    msg << MSG::DEBUG <<"Could not find the gap. Returning a void list."<<endreq;
+    m_hitNotInGap++;	 
     return tmpPair;
   }
   

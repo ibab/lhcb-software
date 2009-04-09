@@ -1,9 +1,9 @@
-// $Id: MuonChamberLayout.cpp,v 1.31 2008-04-16 11:13:49 cattanem Exp $
+// $Id: MuonChamberLayout.cpp,v 1.32 2009-04-09 09:54:10 asatta Exp $
 // Include files 
 
 // Gaudi
 #include "GaudiKernel/SmartDataPtr.h"
-
+#include "GaudiKernel/MsgStream.h"
 //Muon
 #include "MuonChamberLayout.h"
 #include "MuonDet/MuonChamberGrid.h"
@@ -35,7 +35,7 @@ MuonChamberLayout::MuonChamberLayout() {
   MuonLayout R4(2,8); 
 
   //When initialized in this way needs un update for the Layout
-  MuonChamberLayout(R1,R2,R3,R4,this->dataSvc());
+  MuonChamberLayout(R1,R2,R3,R4,this->dataSvc(),this->msgSvc());
 }
 
 
@@ -43,7 +43,7 @@ MuonChamberLayout::MuonChamberLayout(MuonLayout R1,
 				     MuonLayout R2,
 				     MuonLayout R3,
 				     MuonLayout R4,
-				     IDataProviderSvc* detSvc) {
+				     IDataProviderSvc* detSvc,IMessageSvc * msgSvc) {
 
 
   //Setting up the layout for the various regions
@@ -52,18 +52,19 @@ MuonChamberLayout::MuonChamberLayout(MuonLayout R1,
   m_layout[2] = R3;
   m_layout[3] = R4;
   m_detSvc = detSvc;
-
+  m_msgSvc =msgSvc;
   //Performing vectors and grid initialization
   initialize(); 
 }
 
-StatusCode MuonChamberLayout::initialize() {
+StatusCode MuonChamberLayout::initialize( ) {
 
   bool debug = false;
   StatusCode sc = DetectorElement::initialize();
   if( sc.isFailure() ) { 
-    if(debug) std::cout << "Failure to initialize DetectorElement" << 
-                std::endl;
+      MsgStream log(m_msgSvc, "MuonChamberLayout");
+      if(debug) log<<MSG::ERROR << "Failure to initialize DetectorElement" << 
+                endreq;
     return sc ; 
   }
   
@@ -74,7 +75,11 @@ StatusCode MuonChamberLayout::initialize() {
   unsigned int cgY[4] = {1,2,4,8}; m_cgY.resize(4);
   for(iDd = 0; iDd<4; iDd++) { m_cgY.at(iDd) = cgY[iDd]; }
 
-  if(debug)  std::cout<<" Building a Grid inside MuonLayout"<<std::endl;
+  if(debug) { 
+    MsgStream log(m_msgSvc, "MuonChamberLayout");
+    log<<MSG::DEBUG<< " Building a Grid inside MuonLayout"<<endreq;
+    
+ }
 
   //Offset: needs to change?
   int myoffset[4] = {0,16,48,112}; m_offSet.resize(4);
@@ -96,7 +101,11 @@ void MuonChamberLayout::Copy(MuonChamberLayout &lay) {
   //Copy constructor
   bool debug = false;
   for(int iL = 0; iL<4; iL++) {
-    if(debug) std::cout<<"My Copied layout: "<<iL<<std::endl;
+    if(debug){  
+      MsgStream log(m_msgSvc, "MuonChamberLayout");
+      log<<MSG::DEBUG<<"My Copied layout: "<<iL<<endreq;
+    }
+    
     lay.setLayout(iL,this->layout(iL));
   }
   lay.setDataProvider(this->DataProvider());
@@ -113,9 +122,12 @@ neighborChambers(float myX, float myY, int stat, int x_direction, int y_directio
 
   gridPosition(myX,myY,stat,sC_idX,sC_idY,reg);
 
-  if(debug) std::cout<<"Position in the grid "<<sC_idX<<" "<<sC_idY<<" "<<
-              reg<<" "<<x_direction<<" "<<y_direction<<std::endl;
-
+  if(debug){  
+    MsgStream log(m_msgSvc, "MuonChamberLayout");
+    log<<MSG::DEBUG<<"Position in the grid "<<sC_idX<<" "<<sC_idY<<" "<<
+      reg<<" "<<x_direction<<" "<<y_direction<<endreq;
+  }
+  
   //Deciding the corner-side
   int scX(0),scY(0);
   if(x_direction != 0) scX++;
@@ -131,8 +143,9 @@ neighborChambers(float myX, float myY, int stat, int x_direction, int y_directio
   }
 
   if(debug) {
-    using GaudiUtils::operator<<; // for streaming std::vector
-    std::cout<<"Returning chambers: "<<myChambers<<std::endl;
+    //   using GaudiUtils::operator<<; // for streaming std::vector
+     MsgStream log(m_msgSvc, "MuonChamberLayout");
+     log<<MSG::DEBUG<<"Returning chambers: "<<myChambers<<endreq;
   }
   
   return myChambers;
@@ -152,14 +165,21 @@ void MuonChamberLayout::returnChambers(int sta, float st_x, float st_y, int x_di
     //Added protection against non existing chamber
     if(cTile>0) {
       int region = findRegion(cTile);
-      if(debug)  std::cout<<"Returned chambers:: "<<sta+1<<" "
+      if(debug)  { 
+        MsgStream log(m_msgSvc, "MuonChamberLayout");
+        log<<MSG::DEBUG<<"Returned chambers:: "<<sta+1<<" "
                           <<region+1<<" "<<cTile-m_offSet.at(region)<<
-	std::endl;
+          endreq;
+      }
       
       regs.push_back(region);  chs.push_back(cTile-m_offSet.at(region)-1);
     }
   }
-  if(debug)  std::cout<<"Exiting from chamber creation "<<std::endl;
+  if(debug) { 
+        MsgStream log(m_msgSvc, "MuonChamberLayout");
+        log<<MSG::DEBUG<<"Exiting from chamber creation "<<endreq;
+  }
+  
 
   return;
 }
@@ -171,9 +191,13 @@ void MuonChamberLayout::chamberXY(int sx, int sy, int shx, int shy,
   int fx = sx + shx;
   int fy = sy + shy;
   
-  if(debug) std::cout<<" Chamber XY. Reg: "<<reg<<" "<<m_cgX.at(reg)<<
-              " "<<m_cgY.at(reg)<<" "<<fx<<" "<<fy<<" "<<sx<<" "<<sy<<
-              " "<<shx<<" "<<shy<<std::endl;
+  if(debug){ 
+    MsgStream log(m_msgSvc, "MuonChamberLayout");
+    log<<MSG::DEBUG<<" Chamber XY. Reg: "<<reg<<" "<<m_cgX.at(reg)<<
+      " "<<m_cgY.at(reg)<<" "<<fx<<" "<<fy<<" "<<sx<<" "<<sy<<
+      " "<<shx<<" "<<shy<<endreq;
+  }
+  
 
   //Protect against chambers outside the current region grid
   if(fx<0 || fy<0 || fx >= 4*(int)m_cgX.at(reg) 
@@ -193,24 +217,36 @@ void MuonChamberLayout::chamberXY(int sx, int sy, int shx, int shy,
       chamberXY(sx,sy,shx,shy,reg+1,chamberNumber);
     } else {
       //Exits [chamber outside the R4 grid]
-      if(debug) std::cout<<" Chamber not Found (>3) "<<chN<<std::endl;
+      if(debug){ 
+        MsgStream log(m_msgSvc, "MuonChamberLayout");
+        log<<MSG::DEBUG<<" Chamber not Found (>3) "<<chN<<endreq;
+      }
+      
       chamberNumber.push_back(-1);
       return;
     }
     //Fix the chamber number for chambers in region != from starting one
     vSize = chamberNumber.size();
     if(vSize>0) {
-      if(debug) std::cout<<" Encode and chamber in first call: "<<chN<<
-                  " :: "<<chamberNumber.at(vSize-1)<<" "<<chamberNumber.size()
-                         <<" "<<reg+1<<std::endl;
+      if(debug){
+        MsgStream log(m_msgSvc, "MuonChamberLayout");
+        log<<MSG::DEBUG<<" Encode and chamber in first call: "<<chN<<
+          " :: "<<chamberNumber.at(vSize-1)<<" "<<chamberNumber.size()
+           <<" "<<reg+1<<endreq;
+      }
+      
       if(chamberNumber.at(vSize-1)>-1) return;
     }
   } else {
     //Look inside the grid
     int enc = fx+4*m_cgX.at(reg)*fy+m_offSet.at(reg);
     chN = m_chamberGrid.at(enc);
-    if(debug) std::cout<<" Encode and chamber in first call: "<<chN<<" "<<
-                enc<<" "<<reg<<" "<<fx<<" "<<fy<<std::endl;
+    if(debug) { 
+      MsgStream log(m_msgSvc, "MuonChamberLayout");
+      log<<MSG::DEBUG<<" Encode and chamber in first call: "<<chN<<" "<<
+        enc<<" "<<reg<<" "<<fx<<" "<<fy<<endreq;
+    }
+    
   }
   
   //If a chamber number is <0 this means that 
@@ -228,61 +264,94 @@ void MuonChamberLayout::chamberXY(int sx, int sy, int shx, int shy,
         shx = -2;
       }
       shy = m_cgY.at(reg);
-      if(debug) std::cout<<" Subcall 2: "<<fx<<" "<<fy<<" "<<shx<<" "<<-shy<<
-                  " "<<reg-1<<std::endl;
+      if(debug){ 
+        MsgStream log(m_msgSvc, "MuonChamberLayout");
+        log<<MSG::DEBUG<<" Subcall 2: "<<fx<<" "<<fy<<" "<<shx<<" "<<-shy<<
+          " "<<reg-1<<endreq;
+      }
+      
       chamberXY(fx,fy,shx,-shy,reg-1,chamberNumber);
     } else {
       //lowest (inner) region. Exiting
-      if(debug) std::cout<<" Chamber not Found (<0) "<<chN<<std::endl;
+      if(debug){ 
+        MsgStream log(m_msgSvc, "MuonChamberLayout");
+        log<<MSG::DEBUG<<" Chamber not Found (<0) "<<chN<<endreq;
+      }
+    
       chamberNumber.push_back(-1);
       return;
     }
     vSize = chamberNumber.size();
     if(vSize>0) {
-      if(debug) std::cout<<" Encode and chamber in second call: "<<chN<<" :: "
+      if(debug) {
+        MsgStream log(m_msgSvc, "MuonChamberLayout");
+        log<<MSG::DEBUG<<" Encode and chamber in second call: "<<chN<<" :: "
                          <<chamberNumber.at(vSize-1)<<" "<<chamberNumber.size()
-                         <<" "<<std::endl;
+           <<" "<<endreq;
+      }
+      
       if(chamberNumber.at(vSize-1)>-1) {
         chN = chamberNumber.at(vSize-1);
       }
     }
     
+    
+    
     //Second chamber needed for regions 0,1,2
     if(reg <3) {
       if((sy/m_cgY.at(reg) < 1) || (sy/m_cgY.at(reg) > 2)) {
         if(reg-1>0) { 
-          if(debug) std::cout<<" Third call "<<std::endl;
+          if(debug) {
+            MsgStream log(m_msgSvc, "MuonChamberLayout");
+            log<<MSG::DEBUG<<" Third call "<<endreq;
+          }
+          
           chamberXY(fx,fy,0,-m_cgY.at(reg),reg-1,chamberNumber);
         } else {
-          if(debug) std::cout<<" Chamber not Found "<<std::endl;
+          if(debug){
+            MsgStream log(m_msgSvc, "MuonChamberLayout");
+            log<<MSG::DEBUG<<" Chamber not Found "<<endreq;
+          }
+          
           chamberNumber.push_back(-1);
           return;
         }
         vSize = chamberNumber.size();
         if(vSize) {
-          if(debug) std::cout<<" Encode and chamber in third call: "<<chN<<
-                      " :: "<<chamberNumber.at(vSize-1)<<" "<<
-                      chamberNumber.size()<<" "<<std::endl;
-          if(chamberNumber.at(vSize-1)>-1) return;
+          if(debug) {
+            MsgStream log(m_msgSvc, "MuonChamberLayout");
+            log<<MSG::DEBUG<<" Encode and chamber in third call: "<<chN<<
+              " :: "<<chamberNumber.at(vSize-1)<<" "<<
+              chamberNumber.size()<<" "<<endreq;
+          }
+        
+        if(chamberNumber.at(vSize-1)>-1) return;
         }
       }
     }
   } else if(chN != -1) {
     //Need a +1 to avoid skipping chamber n.1 (idx 0)
     chamberNumber.push_back(chN+m_offSet.at(reg)+1);
-    if(debug) std::cout << "Closing Chamber " << chN 
+    if(debug){ 
+      MsgStream log(m_msgSvc, "MuonChamberLayout");
+      log<<MSG::DEBUG<< "Closing Chamber " << chN 
                         << " in R" << reg
                         << " xIndex " << fx
-                        << " yIndex " << fy << std::endl;
-  } else {
-    std::cout << "Chamber " << chN 
-              << " in R" << reg
+         << " yIndex " << fy <<endreq;
+    }
+  
+
+    
+  } else { 
+    MsgStream log(m_msgSvc, "MuonChamberLayout");
+    log<<MSG::DEBUG<< "Chamber " << chN 
+       << " in R" << reg
               << " xIndex " << fx
               << " yIndex " << fy
-              << " is not in TES/xml. " << std::endl;
+              << " is not in TES/xml. " <<endreq;
   }
-  
-  return;
+
+return;
 }
 
 int MuonChamberLayout::findRegion(int chamber) const {
@@ -291,9 +360,10 @@ int MuonChamberLayout::findRegion(int chamber) const {
   for(reg=0; reg<4; reg++) {
     if(chamber < offset[reg]) break;
   }
-  if(reg>3) {
-    std::cout<<"Region not found for chamber: "<<chamber<<
-      ". Go back and check the code!"<<std::endl;
+  if(reg>3){
+    MsgStream log(m_msgSvc, "MuonChamberLayout");
+    log<<MSG::DEBUG<<"Region not found for chamber: "<<chamber<<
+      ". Go back and check the code!"<<endreq;
     reg = -1;
   }
   return reg; 
@@ -307,8 +377,9 @@ int& chmb, int& reg)const {
   //  std::cout << "Chamber dimensions "<<m_xS.at(station)<<" "<< m_yS.at(station)<< std::endl;
   if(m_xS.at(station) && m_yS.at(station)) {    
     gridPosition(x,y,station,fx,fy,myReg);
-  } else {
-    std::cout << "Null chamber dimensions"<< std::endl;
+  } else { 
+    MsgStream log(m_msgSvc, "MuonChamberLayout");
+    log<<MSG::INFO << "Null chamber dimensions"<< endreq;
   }
   if(myReg<0){
     reg=-1;
@@ -322,7 +393,8 @@ int& chmb, int& reg)const {
     chmb = m_chamberGrid.at(enc);
     reg = myReg;
   } else {
-    std::cout<<"Matrix Index problem!!!!"<<std::endl;
+    MsgStream log(m_msgSvc, "MuonChamberLayout");
+    log<<MSG::INFO <<"Matrix Index problem!!!!"<<endreq;
   }
   
   return;
@@ -343,7 +415,11 @@ LHCb::MuonTileID MuonChamberLayout::tileChamber(DeMuonChamber* chmb)const{
   //myTile.setLayer(0);
 
   myTile.setLayout(MuonLayout(m_cgX.at(reg),m_cgY.at(reg)));
-  if(debug)std::cout<<"TileChamber:: "<<m_cgX.at(reg)<<" "<<m_cgY.at(reg)<<std::endl;
+  if(debug){
+    
+    MsgStream log(m_msgSvc, "MuonChamberLayout");
+    log<<MSG::INFO<<"TileChamber:: "<<m_cgX.at(reg)<<" "<<m_cgY.at(reg)<<endreq;
+  }
   
   //Chamber number is needed to find x,y
   unsigned int chN = chmb->chamberNumber();
@@ -373,8 +449,12 @@ LHCb::MuonTileID MuonChamberLayout::tileChamber(DeMuonChamber* chmb)const{
           }
         }
 
-        if(debug) std::cout<<"X, Y " <<fx<<" "<<fy<<
-                    " for chamber "<<chN<<" "<<reg<<std::endl;
+        if(debug) {
+          MsgStream log(m_msgSvc, "MuonChamberLayout");
+          log<<MSG::INFO<<"X, Y " <<fx<<" "<<fy<<
+            " for chamber "<<chN<<" "<<reg<<endreq;
+        }
+        
         if( myQuarter == 0){
           myTile.setX(fx - m_cgX.at(reg)*2);
           myTile.setY(fy - m_cgY.at(reg)*2);
@@ -390,15 +470,20 @@ LHCb::MuonTileID MuonChamberLayout::tileChamber(DeMuonChamber* chmb)const{
         }
         myTile.setQuarter(myQuarter);
 	
-        if(debug) std::cout<<"X, Y and Q " <<myTile.nX()<<" "<<
-                    myTile.nY()<<" "<<myQuarter<<
-              " for chamber "<<chN<<" "<<reg<<std::endl;
+        if(debug) {
+          MsgStream log(m_msgSvc, "MuonChamberLayout");
+          log<<MSG::INFO<<"X, Y and Q " <<myTile.nX()<<" "<<
+            myTile.nY()<<" "<<myQuarter<<
+            " for chamber "<<chN<<" "<<reg<<endreq;
+        }
+        
         return myTile;
       }
     }
   }
   
-  std::cout<<"X, Y and Q not found! Check for grid problems" <<std::endl;
+  MsgStream log(m_msgSvc, "MuonChamberLayout");
+  log<<MSG::INFO<<"X, Y and Q not found! Check for grid problems" <<endreq;
   return myTile;
 }
 
@@ -418,8 +503,9 @@ LHCb::MuonTileID MuonChamberLayout::tileChamberNumber(int sta, int reg, int chmb
   if(deChmb) {
     myTile = tileChamber(deChmb);
   }   else {
-    std::cout<<" Could not find the chamber "<<chmbNum<<
-      " in the TES. Check the configuration!"<<std::endl;
+     MsgStream log(m_msgSvc, "MuonChamberLayout");
+     log<<MSG::INFO<<" Could not find the chamber "<<chmbNum<<
+      " in the TES. Check the configuration!"<<endreq;
   }
   return myTile;
 }
@@ -435,12 +521,22 @@ void MuonChamberLayout::gridPosition(float x, float y, int iS, int &idx,
   //Extracting chamber indexes in the finest grid.
   myIdx = (int)(x/xs);  myIdy = (int)(y/ys);
   rX = x-xs*myIdx; rY = y-ys*myIdy;
-  if(debug) std::cout << "Rest: "<<rX<<" "<<rY<<" "<<xs<<" "<<ys<<" "
-                      <<x<<" "<<y<< std::endl;
+  if(debug) {
+    MsgStream log(m_msgSvc, "MuonChamberLayout");
+    log<<MSG::INFO<< "Rest: "<<rX<<" "<<rY<<" "<<xs<<" "<<ys<<" "
+       <<x<<" "<<y<< endreq;
+  }
+  
+  
   for(int iRx = 0; iRx<4; iRx++) {
-    if(debug)	std::cout << "Idx in loop grid: "<<myIdx+2*(int)m_cgX.at(iRx)<<
-                " "<<myIdy+2*(int)m_cgY.at(iRx)<<" for region: "<<iRx<<
-                std::endl;
+    if(debug) {      
+      MsgStream log(m_msgSvc, "MuonChamberLayout");
+      log<<MSG::INFO<< "Idx in loop grid: "<<myIdx+2*(int)m_cgX.at(iRx)<<
+        " "<<myIdy+2*(int)m_cgY.at(iRx)<<" for region: "<<iRx<<
+        endreq;
+      
+    }
+    
     //To be checked fator 2 in last gridX
     if(abs(myIdx)<2*(int)m_cgX.at(iRx) && abs(myIdy)<2*(int)m_cgY.at(iRx)){
       myReg = iRx; 
@@ -455,8 +551,12 @@ void MuonChamberLayout::gridPosition(float x, float y, int iS, int &idx,
     idx = myIdx+2*(int)m_cgX.at(myReg);
     idy = myIdy+2*(int)m_cgY.at(myReg);
     reg = myReg;
-    if(debug)  std::cout << "Final Idxs grid: "<<idx<<" "<<idy<<
-                 " for region: "<<myReg<<std::endl;
+    if(debug)  {
+      MsgStream log(m_msgSvc, "MuonChamberLayout");
+      log<<MSG::INFO << "Final Idxs grid: "<<idx<<" "<<idy<<
+        " for region: "<<myReg<<endreq;
+    }
+    
   }  
   return;
 }
@@ -509,9 +609,14 @@ std::vector<DeMuonChamber*>  MuonChamberLayout::fillChambersVector(IDataProvider
     substring.assign(name,start,len);
     
     sscanf(substring.c_str(),"/M%d",&obtIS);
-    if(debug) std::cout<<"Station Name: "<<(*itSt)->name()<<" ::  "<<obtIS<<std::endl;
+    if(debug){
+       MsgStream log(m_msgSvc, "MuonChamberLayout");
+      log<<MSG::INFO <<"Station Name: "<<(*itSt)->name()<<" ::  "<<obtIS<<endreq;
+    }
+    
     while(iS != obtIS-1) {
-      std::cout<<"There is/are void stations. "<<std::endl;
+       MsgStream log(m_msgSvc, "MuonChamberLayout");
+      log<<MSG::INFO <<"There is/are void stations. "<<endreq;
       for(int ire = 0; ire<4; ire++) {
         for(int ich = 0; ich<MaxRegions[ire]; ich++) {
           m_ChVec.at(encode) = (DeMuonChamber*)0;
@@ -538,15 +643,24 @@ std::vector<DeMuonChamber*>  MuonChamberLayout::fillChambersVector(IDataProvider
         substringSta.assign(name,start,3);
         std::string substringReg;
         substringReg.assign(name,start+11,3);
-        if(debug)std::cout<<" station path "<<substringSta<<std::endl;
-        if(debug)std::cout<<" reg path "<<substringReg<<std::endl;
+        if(debug){ 
+          MsgStream log(m_msgSvc, "MuonChamberLayout");
+          log<<MSG::INFO <<" station path "<<substringSta<<endreq;
+          log<<MSG::INFO<<" reg path "<<substringReg<<endreq;
+        }
+        
         sscanf(substringSta.c_str(),"/M%d",&obtIS);
         
         sscanf(substringReg.c_str(),"/R%d",&obtIR);
-        if(debug) std::cout<<"Region Name: "<<(*itRg)->name()<<
-                    " ::  "<<obtIR<<std::endl;    
+        if(debug){
+           MsgStream log(m_msgSvc, "MuonChamberLayout");
+          log<<MSG::INFO <<"Region Name: "<<(*itRg)->name()<<
+            " ::  "<<obtIR<<endreq; 
+        }
+        
         while(iR != obtIR-1) {
-          std::cout<<"There is/are void regions. "<<std::endl;
+            MsgStream log(m_msgSvc, "MuonChamberLayout");
+          log<<MSG::INFO<<"There is/are void regions. "<<endreq;
           for(int ich = 0+iSide*MaxRegions[iR]/2; 
               ich<(iSide+1)*MaxRegions[iR]/2; ich++) {
             //int countCh=276*iS+m_offSet[iR]+
@@ -571,8 +685,13 @@ std::vector<DeMuonChamber*>  MuonChamberLayout::fillChambersVector(IDataProvider
           if(iR==1)countCh=countCh+12;
           if(iR==2)countCh=countCh+12+24;
           if(iR==3)countCh=countCh+12+24+48;
-          if(debug)std::cout<<" ch position "<<countCh<<" "<<iS<<" "<<iR<<" "<<deChmb->chamberNumber()<<std::endl;
-          //	  if(deChmb->chamberNumber()==4)std::cout<<" ch position "<<countCh<<" "<<iS<<" "<<iR<<" "<<deChmb->chamberNumber()<<std::endl;
+          if(debug){ 
+            MsgStream log(m_msgSvc, "MuonChamberLayout");
+            log<<MSG::INFO<<" ch position "<<countCh<<" "<<iS<<" "<<iR<<" "
+               <<deChmb->chamberNumber()<<endreq;
+          }
+          
+          //	  if(deChmb->chamberNumber()==4)std::cout<<" ch position "<<countCh<<" "<<iS<<" "<<iR<<" "<<deChmb->chamberNumber()<<endreq;
           // 	  if(deChmb) {
           // 	    m_ChVec.at(encode) = deChmb;
           // 	  } else {
@@ -593,19 +712,25 @@ std::vector<DeMuonChamber*>  MuonChamberLayout::fillChambersVector(IDataProvider
           int enc = idx+4*m_cgX.at(reg)*idy+m_offSet.at(reg);
           m_chamberGrid.at(enc) = deChmb->chamberNumber();
           
-          if(debug)  std::cout<<"Chamber initialization: "<<enc<<
-                       " "<<deChmb->chamberNumber()<<" "<<idx<<" "<<idy<<
-                       " "<<m_cgX.at(reg)<<" "<<m_offSet.at(reg)<<" "<<myX<<" "<<myY<<std::endl;
+          if(debug)  { 
+            MsgStream log(m_msgSvc, "MuonChamberLayout");
+            log<<MSG::INFO<<"Chamber initialization: "<<enc<<
+              " "<<deChmb->chamberNumber()<<" "<<idx<<" "<<idy<<
+              " "<<m_cgX.at(reg)<<" "<<m_offSet.at(reg)<<" "<<myX<<" "
+               <<myY<<endreq;
+          }
           
           //Try to fill also the other relevant quantities
           //Only when the region changes
           if(vIdx != myvIdx) {
             myvIdx = vIdx;
             sc = fillSystemGrids(deChmb,vIdx,reg);
-            if(sc.isFailure()) {std::cout<<
-                                  "Failed to fill the system grid for chamber "
-                                         <<deChmb->chamberNumber()<<
-                                  " in region "<<reg<<std::endl;}
+            if(sc.isFailure()) {
+              MsgStream log(m_msgSvc, "MuonChamberLayout");
+              log<<MSG::INFO<<
+                "Failed to fill the system grid for chamber "
+                 <<deChmb->chamberNumber()<<
+                " in region "<<reg<<endreq;}
           }
           chamCnt++;
 
@@ -619,7 +744,11 @@ std::vector<DeMuonChamber*>  MuonChamberLayout::fillChambersVector(IDataProvider
     //next station
     iS++;
   }
-  if(debug) std::cout<<"Filled chamber vector of size: "<<encode<<std::endl;
+  if(debug){  
+    MsgStream log(m_msgSvc, "MuonChamberLayout");
+    log<<MSG::INFO<<"Filled chamber vector of size: "<<encode<<endreq;
+  }
+  
   return m_ChVec;
 }
 
@@ -641,12 +770,15 @@ StatusCode MuonChamberLayout::Tile2XYZpos(const LHCb::MuonTileID& tile,
   
   bool m_debug = false;
   
-  if( 0 == m_logVertGridX.size() ){
-    std::cout<<" The channel / pad grids have not been initialized!!!! Why? "<<std::endl;
+  if( 0 == m_logVertGridX.size() ){ 
+    MsgStream log(m_msgSvc, "MuonChamberLayout");
+    log<<MSG::INFO<<
+      " The channel / pad grids have not been initialized!!!! Why? "
+       <<endreq;
     fillChambersVector(this->dataSvc());
-    std::cout<<" Called initialization "<<std::endl;
+    std::cout<<" Called initialization "<<endreq;
     if( 0 == m_logVertGridX.size() ){
-      std::cout<<" Initialization failed!"<<std::endl;
+       log<<MSG::INFO<<" Initialization failed!"<<endreq;
       return StatusCode::FAILURE;
     }
   }
@@ -658,12 +790,15 @@ StatusCode MuonChamberLayout::Tile2XYZpos(const LHCb::MuonTileID& tile,
 
   MsgStream msg(msgSvc(), name());
   
-  if(m_debug) std::cout << "Tile det: " <<tile.layout().xGrid()<<", "<<tile.layout().yGrid()<<" in station "<<station<<" and region "<<region<< ";Grid details. Reg "<<m_cgX.at(region)<<", "<<m_cgY.at(region)<<
-    " ; Pad "<<m_padGridX[station*4 + region]<<", "<<m_padGridY[station*4 + region]<<
-    " ; LogH "<<m_logHorizGridX[station*4 + region]<<", "<<m_logHorizGridY[station*4 + region]<<
-    " ; LogV "<<m_logVertGridX[station*4 + region]<<", "<<m_logVertGridY[station*4 + region]<<
-    std::endl;
-
+  if(m_debug) {
+    MsgStream log(m_msgSvc, "MuonChamberLayout");
+    log<<MSG::INFO<< "Tile det: " <<tile.layout().xGrid()<<", "<<tile.layout().yGrid()<<" in station "<<station<<" and region "<<region<< ";Grid details. Reg "<<m_cgX.at(region)<<", "<<m_cgY.at(region)<<
+      " ; Pad "<<m_padGridX[station*4 + region]<<", "<<m_padGridY[station*4 + region]<<
+      " ; LogH "<<m_logHorizGridX[station*4 + region]<<", "<<m_logHorizGridY[station*4 + region]<<
+      " ; LogV "<<m_logVertGridX[station*4 + region]<<", "<<m_logVertGridY[station*4 + region]<<
+      endreq;
+  }
+  
   // now compare the layout parameter to possible "levels"
   // currently chamber, logical channel, pad
   if( m_cgX.at(region) ==  tile.layout().xGrid() && 
@@ -755,7 +890,7 @@ StatusCode MuonChamberLayout::Tile2XYZpos(const LHCb::MuonTileID& tile,
     return StatusCode::FAILURE;
   }
 
-  if(m_debug) std::cout << "Output " <<x<<" "<<deltax<<" "<<y<<" "<<deltay<<" "<<z<<" "<<deltaz<<std::endl;
+  if(m_debug)  msg << MSG::DEBUG << "Output " <<x<<" "<<deltax<<" "<<y<<" "<<deltay<<" "<<z<<" "<<deltaz<<endreq;
 
   return StatusCode::SUCCESS;
 
@@ -791,7 +926,7 @@ StatusCode MuonChamberLayout::fillSystemGrids(DeMuonChamber *deChmb,
 
   if(debug) {
     std::cout<<"Grid "<< deChmb->getGridName() <<"  data:: "<<grX/m_cgX.at(reg)<<" "<<grY/m_cgY.at(reg)<<" "<<SgrX/m_cgX.at(reg)<<" "<<SgrY/m_cgY.at(reg);
-    std::cout<<" ; Map:: "<<xm0<<" "<<ym0<<" "<<xm1<<" "<<ym1<<std::endl;
+    std::cout<<" ; Map:: "<<xm0<<" "<<ym0<<" "<<xm1<<" "<<ym1<<endreq;
   }
 
   //Service variables
@@ -866,7 +1001,7 @@ StatusCode MuonChamberLayout::fillSystemGrids(DeMuonChamber *deChmb,
     m_padGridY.at(vIdx) = aSgrY / aym1;
 	    
   } else {
-    std::cout<<"MuonChamberLayouty                             ERROR  Wrong size readout vector:: "<<readoutType.size()<<" != from 1 or 2!!!!"<<std::endl;
+    std::cout<<"MuonChamberLayouty                             ERROR  Wrong size readout vector:: "<<readoutType.size()<<" != from 1 or 2!!!!"<<endreq;
   }
   //End of FE work
   return StatusCode::SUCCESS;
@@ -1114,7 +1249,7 @@ StatusCode MuonChamberLayout::getXYZPad(const LHCb::MuonTileID& tile,
     std::cout << "Pad xOffset within chamber:" << xOffset 
 	      << " yOffset within chamber:" << yOffset 
 	      << " xratio: " << xRatio << " yratio: " << yRatio
-	      << std::endl;
+	      << endreq;
   }
   
 
@@ -1140,7 +1275,7 @@ StatusCode MuonChamberLayout::getXYZPad(const LHCb::MuonTileID& tile,
     ( ( static_cast<double>(yOffset) / static_cast<double>(yRatio) ) *
       (2.0 * cDeltay ) );
 
-  if ( m_debug ) std::cout<<" getXYZPad:: XY tem info  "<<xOffset<<" "<<yOffset<<" "<<cx<<" "<<cDeltax<<" "<<cy<<" "<<cDeltay<<" "<<x<<" "<<y<<std::endl;
+  if ( m_debug ) std::cout<<" getXYZPad:: XY tem info  "<<xOffset<<" "<<yOffset<<" "<<cx<<" "<<cDeltax<<" "<<cy<<" "<<cDeltay<<" "<<x<<" "<<y<<endreq;
 
   Dx = cDeltax / (static_cast<double>(xRatio));
   Dy = cDeltay / (static_cast<double>(yRatio));
@@ -1149,7 +1284,7 @@ StatusCode MuonChamberLayout::getXYZPad(const LHCb::MuonTileID& tile,
   x = x + Dx;
   y = y + Dy;
 
-  if ( m_debug )   std::cout<<" getXYZPad:: XY info  "<<x<<" "<<Dx<<" "<<y<<" "<<Dy<<std::endl;
+  if ( m_debug )   std::cout<<" getXYZPad:: XY info  "<<x<<" "<<Dx<<" "<<y<<" "<<Dy<<endreq;
 
   Gaudi::XYZPoint cnt(x,y,z);
   Gaudi::XYZPoint crn(x+Dx,y+Dy,z+Dz);
@@ -1171,7 +1306,7 @@ StatusCode MuonChamberLayout::getXYZPad(const LHCb::MuonTileID& tile,
     localToglobal(cInfo,cnt,crn,deltax,deltay,deltaz);
   }  
 
-  if ( m_debug )   std::cout<<" getXYZPad:: loc to glob "<<Dx<<" "<<Dy<<" "<<Dz<<" "<<myChs.at(0)->name()<<" "<<deltax<<" "<<deltay<<" "<<deltaz<<std::endl;
+  if ( m_debug )   std::cout<<" getXYZPad:: loc to glob "<<Dx<<" "<<Dy<<" "<<Dz<<" "<<myChs.at(0)->name()<<" "<<deltax<<" "<<deltay<<" "<<deltaz<<endreq;
     
   return StatusCode::SUCCESS;
 }  
@@ -1375,7 +1510,7 @@ int MuonChamberLayout::getChamberNumber(const LHCb::MuonTileID& tile){
   bool m_debug = false;
   
   //Look inside the grid
-  if(m_debug) std::cout<<" getChamberNumber:: Bef corr.  " <<" "<<tile.region()<<" "<<tile.nX()<<" "<<tile.nY()<<" "<<m_cgX.at(tile.region())<<" "<<m_offSet.at(tile.region())<<std::endl;
+  if(m_debug) std::cout<<" getChamberNumber:: Bef corr.  " <<" "<<tile.region()<<" "<<tile.nX()<<" "<<tile.nY()<<" "<<m_cgX.at(tile.region())<<" "<<m_offSet.at(tile.region())<<endreq;
   int fx(0),fy(0);
   //Correct for quarter information
   if( tile.quarter() == 0){
@@ -1395,7 +1530,7 @@ int MuonChamberLayout::getChamberNumber(const LHCb::MuonTileID& tile){
   int enc = fx+4*m_cgX.at(tile.region())*fy+m_offSet.at(tile.region());
   chamberNumber = m_chamberGrid.at(enc);
 
-  if(m_debug) std::cout<<" getChamberNumber:: chNum  "<<chamberNumber<<" "<<enc<<" "<<fx<<" "<<fy<<" "<<m_cgX.at(tile.region())<<" "<<m_offSet.at(tile.region())<<std::endl;
+  if(m_debug) std::cout<<" getChamberNumber:: chNum  "<<chamberNumber<<" "<<enc<<" "<<fx<<" "<<fy<<" "<<m_cgX.at(tile.region())<<" "<<m_offSet.at(tile.region())<<endreq;
 
   MsgStream msg(msgSvc(), name());
   if ( m_debug ) {
@@ -1545,7 +1680,7 @@ createChambersFromTile(std::vector<LHCb::MuonTileID> mytiles){
     if(cTile>0) {
       if(debug)  std::cout<<"Returned chambers:: "<<station
 			  <<" "<<region
-			  <<" "<<chamb<<std::endl;
+			  <<" "<<chamb<<endreq;
       encode = 276*station+chamb;
       if(region) {
 	re = region;
@@ -1569,11 +1704,11 @@ Tile2ChamberNum(const LHCb::MuonTileID& tile){
   m_chaVect.resize(1);
   
   if( 0 == m_logVertGridX.size() ){
-    std::cout<<" The channel / pad grids have not been initialized!!!! Why? "<<std::endl;
+    std::cout<<" The channel / pad grids have not been initialized!!!! Why? "<<endreq;
     fillChambersVector(this->dataSvc());
-    std::cout<<" Called initialization "<<std::endl;
+    std::cout<<" Called initialization "<<endreq;
     if( 0 == m_logVertGridX.size() ){
-      std::cout<<" Initialization failed!"<<std::endl;
+      std::cout<<" Initialization failed!"<<endreq;
       return m_chaVect;
     }
   }
@@ -1596,7 +1731,7 @@ Tile2ChamberNum(const LHCb::MuonTileID& tile){
                         <<" ; LogH "<<m_logHorizGridX[station*4 + region]
                         <<", "<<m_logHorizGridY[station*4 + region]
                         <<" ; LogV "<<m_logVertGridX[station*4 + region]
-                        <<", "<<m_logVertGridY[station*4 + region]<<std::endl;
+                        <<", "<<m_logVertGridY[station*4 + region]<<endreq;
   
   // now compare the layout parameter to possible "levels"
   // currently chamber, logical channel, pad
@@ -1616,7 +1751,7 @@ Tile2ChamberNum(const LHCb::MuonTileID& tile){
     // muon pads and logical channels with a 1:1 mapping to pads
     
     if ( m_debug ) 
-      std::cout << "Found a tile laying out pads" <<std::endl;
+      std::cout << "Found a tile laying out pads" <<endreq;
     
     LHCb::MuonTileID chamTile = m_layout[region].contains(tile);
     m_chaVect.at(0) = getChamberNumber(chamTile);
@@ -1635,7 +1770,7 @@ Tile2ChamberNum(const LHCb::MuonTileID& tile){
     // vertical logical channels            
     
     if ( m_debug ) {
-      std::cout  << "Found a tile laying out vertical logical channels" <<std::endl;
+      std::cout  << "Found a tile laying out vertical logical channels" <<endreq;
     }
     m_chaVect = Logical2ChamberNum(tile);
   } 
@@ -1644,7 +1779,7 @@ Tile2ChamberNum(const LHCb::MuonTileID& tile){
     // tile laying out Twelfths
     
     if ( m_debug )
-      std::cout << "Found a tile laying out Twelfths" <<std::endl;
+      std::cout << "Found a tile laying out Twelfths" <<endreq;
     
     m_chaVect = Twelfth2ChamberNum(tile);
   } 
@@ -1703,7 +1838,7 @@ Logical2ChamberNum(const LHCb::MuonTileID& tile){
       if(m_debug) {
         std::cout << "i: " << i 
                   << "  nX: " << tile.nX() 
-                  << "  nY: " << yTile << std::endl;
+                  << "  nY: " << yTile << endreq;
       }
       tempTiles.push_back(tTile);
     }
