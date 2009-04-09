@@ -4,6 +4,7 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+!========================== DigiAlg v4r16 2009-04-09 =========================
 ! 2009-04-06 - Marco Cattaneo
  - Add FilterMCPrimaryVtx algorithm: removes all but primary vertices from
    MCVertices container and updates MCHeader accordingly. Daughters are 
