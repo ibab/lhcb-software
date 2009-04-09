@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.h,v 1.26 2009-03-23 00:24:31 gligorov Exp $
+// $Id: BackgroundCategory.h,v 1.27 2009-04-09 19:13:36 gligorov Exp $
 #ifndef BACKGROUNDCATEGORY_H 
 #define BACKGROUNDCATEGORY_H 1
 
@@ -6,13 +6,9 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "Event/Particle.h"
-//#include "Event/Collision.h"
 #include "Kernel/IBackgroundCategory.h"          // Interface
 #include "Kernel/IParticleDescendants.h"
-#include "Kernel/IDaVinciAssociatorsWrapper.h"
-//#include "Kernel/ProtoParticle2MCAsct.h"
-//#include "Kernel/Particle2MCWithChi2Asct.h"
-#include "Kernel/Particle2MCLinker.h"
+#include "Kernel/IParticle2MCWeightedAssociator.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
 #include "Kernel/IPrintDecay.h"
@@ -38,9 +34,11 @@ typedef std::vector<DaughterAndPartnerPair> DaughterAndPartnerVector;
  *  MCmatchQualityPIDoverrideLevel - At present the tool will occasionally find that
  *				     one ProtoParticle has more than one MCParticle
  *				     associated to it. The MCParticle with the "correct"
- *				     PID is chosen unless the ratio of matching weights 
- *				     (correctpid_match_weight/best_match_weight) is less
- *				     than the cut. The default is 10.
+ *				     PID is chosen unless its weight is lower than the
+ *                                   cut. The default is 0.5, since the "weight" is the
+ *                                   probability of the particle with the "correct" PID to
+ *                                   be the "correct" associated MCParticle, given that at least one
+ *                                   MCParticle exists which is associated to the ProtoParticle.
  *
  *  InclusiveDecay - is this an inclusive decay? If you want to reconstruct an exclusive
  *			semi-leptonic decay chain, set this to 0 and the SemileptonicDecay property to 1.
@@ -104,13 +102,11 @@ private:
 private:
   IParticlePropertySvc* m_ppSvc;
   IParticleDescendants* m_particleDescendants;
-  IDaVinciAssociatorsWrapper* m_linkerTool_cPP;
-  IDaVinciAssociatorsWrapper* m_linkerTool_nPP;
-  ProtoParticle2MCLinker* m_pCPPAsct; 
-  ProtoParticle2MCLinker* m_pNPPAsct;
+  IParticle2MCWeightedAssociator* m_smartAssociator;
+  IPrintDecay* m_printDecay ;
+
   const LHCb::MCParticle* m_commonMother;
   DaughterAndPartnerVector m_daughtersAndPartners;
-  IPrintDecay* m_printDecay ;
 
   
   int m_inclusiveDecay; //are we studying an inclusive decay?

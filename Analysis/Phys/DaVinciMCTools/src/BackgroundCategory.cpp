@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.50 2009-03-23 00:35:45 gligorov Exp $
+// $Id: BackgroundCategory.cpp,v 1.51 2009-04-09 19:13:36 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -28,10 +28,9 @@ BackgroundCategory::BackgroundCategory( const std::string& type,
   : GaudiTool ( type, name , parent )
   , m_ppSvc(0)
   , m_particleDescendants(0)
-  , m_linkerTool_cPP(0)
-  , m_linkerTool_nPP(0)
-  , m_commonMother(0)
+  , m_smartAssociator(0)
   , m_printDecay(0)
+  , m_commonMother(0)
 {
   IBackgroundCategory::m_cat[-1]   = "Undefined";
   IBackgroundCategory::m_cat[0]    = "Signal";
@@ -56,7 +55,7 @@ BackgroundCategory::BackgroundCategory( const std::string& type,
   declareProperty("InclusiveDecay", m_inclusiveDecay = 0);
   declareProperty("SemileptonicDecay", m_semileptonicDecay = 0);
   declareProperty("NumNeutrinos", m_numNeutrinos = 0);
-  declareProperty("MCmatchQualityPIDoverrideLevel", m_override = 0.7); 
+  declareProperty("MCmatchQualityPIDoverrideLevel", m_override = 0.5); 
   declareProperty("ResonanceCut", m_rescut = 10.e-6);
   declareProperty("MCminWeight", m_minWeight = 0.);
 }
@@ -77,25 +76,7 @@ IBackgroundCategory::categories BackgroundCategory::category(const LHCb::Particl
   //Initialize the value of  the common mother to zero  
   m_commonMother = 0;
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << "About to get the linkers, they are currently" << endmsg;
-
-  if (msgLevel(MSG::VERBOSE)) verbose() << m_linkerTool_cPP 
-                                        << " " 
-                                        << m_linkerTool_nPP 
-                                        << endmsg;
-
-  m_pCPPAsct = (ProtoParticle2MCLinker*) m_linkerTool_cPP->linker(Particle2MCMethod::ChargedPP);
-  
-  m_pNPPAsct = (ProtoParticle2MCLinker*) m_linkerTool_nPP->linker(Particle2MCMethod::NeutralPP);
-
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Got the linkers, they are currently" << endmsg;
-
-  if (msgLevel(MSG::VERBOSE)) verbose() << m_linkerTool_cPP 
-                                        << " " 
-                                        << m_linkerTool_nPP 
-                                        << endmsg;
-
-  if (m_pCPPAsct == NULL || m_pNPPAsct == NULL) {
+  if (m_smartAssociator == NULL) {
     Exception("Something failed when making the associators. Bye!").ignore();
   }
 
@@ -1216,6 +1197,11 @@ MCParticleVector BackgroundCategory::associate_particles_in_decay(ParticleVector
 
   for (iP = particles_in_decay.begin() ; iP != particles_in_decay.end() ; ++iP){
 
+    if ((*iP) == NULL) { //No particle, null association
+        associated_mcparts.push_back(NULL);
+        continue;
+    }
+
     if (msgLevel(MSG::VERBOSE)) verbose() << "About to check if we are dealing with a basic particle" 
                                           << endmsg;
     if (msgLevel(MSG::VERBOSE)) verbose() << "Particle PID is " 
@@ -1223,22 +1209,6 @@ MCParticleVector BackgroundCategory::associate_particles_in_decay(ParticleVector
                                           << endmsg;
 
     if ( isStable((*iP)->particleID().abspid()) || (*iP)->isBasicParticle() ) {
-
-      if (msgLevel(MSG::VERBOSE)) verbose() << "About to get the relevant protoparticle" 
-                                            << endmsg;
-
-      const LHCb::ProtoParticle* protoTemp = (*iP)->proto();
-
-      if (msgLevel(MSG::VERBOSE)) verbose() << "Protoparticle of " 
-                                            << (*iP)->particleID().pid() 
-                                            << " is at " 
-                                            << protoTemp 
-                                            << endmsg;
-
-      if (protoTemp == NULL) { //No protoparticle, null association
-        associated_mcparts.push_back(NULL);
-        continue;
-      }
 
       //Look at the full range of associated particles
       const LHCb::MCParticle* mc_correctPID = NULL;
@@ -1248,16 +1218,16 @@ MCParticleVector BackgroundCategory::associate_particles_in_decay(ParticleVector
       double mc_weight = 0.;
       double mc_correctPID_weight = minimumweight;
       
-      ProtoParticle2MCLinker::ToRange mcPartRange;
+      Particle2MCParticle::ToVector mcPartRange;
 
       if (msgLevel(MSG::VERBOSE)) verbose() << "About to get the array of matching particles" 
                                             << endmsg;
 
       if ( (*iP)->particleID().pid() == 22 || (*iP)->particleID().pid() == 111) {
-        mcPartRange = m_pNPPAsct->rangeFrom(protoTemp);
+        mcPartRange = m_smartAssociator->relatedMCPs(*iP);
         associating_a_neutral = true;
       } else {
-        mcPartRange = m_pCPPAsct->rangeFrom(protoTemp);
+        mcPartRange = m_smartAssociator->relatedMCPs(*iP);
         associating_a_neutral = false;
       }
 
@@ -1269,7 +1239,7 @@ MCParticleVector BackgroundCategory::associate_particles_in_decay(ParticleVector
       if (msgLevel(MSG::VERBOSE)) verbose() << "Got the array of matching particles OK!" 
                                             << endmsg;
 
-      ProtoParticle2MCLinker::ToIterator mcPartIt;
+      Particle2MCParticle::ToVector::const_iterator mcPartIt;
 
       int looper = 1;
 
@@ -1313,9 +1283,13 @@ MCParticleVector BackgroundCategory::associate_particles_in_decay(ParticleVector
           }
         }
         if (associating_a_neutral && 
-            ( reconstructed_mother->particleID().pid() == 
-              mc_TempDeux->particleID().pid()
-              )
+            (( reconstructed_mother->charge() != 0 && (reconstructed_mother->particleID().pid() == 
+              mc_TempDeux->particleID().pid())
+              ) ||
+             ( reconstructed_mother->charge() == 0 && (reconstructed_mother->particleID().abspid() ==
+              mc_TempDeux->particleID().abspid())
+             )
+            )
             ) {
           found_neutral_mother = true;
         }
@@ -1330,7 +1304,7 @@ MCParticleVector BackgroundCategory::associate_particles_in_decay(ParticleVector
                                                 << endmsg;
           associated_mcparts.push_back(mc_bestQ);
         } else {
-          if ((mc_correctPID_weight > m_override) || (associating_a_neutral && found_neutral_mother)) {
+          if ((mc_correctPID_weight >= m_override) || (associating_a_neutral && found_neutral_mother)) {
             if (msgLevel(MSG::VERBOSE)) verbose() << "Pushing back best pid match" 
                                                   << endmsg;
             if (msgLevel(MSG::VERBOSE)) verbose() << "Best PID weight = " 
@@ -1411,7 +1385,7 @@ StatusCode BackgroundCategory::finalize(){
 }
 //=============================================================================
 StatusCode BackgroundCategory::initialize(){
-//Initiialize and get the required tools
+  //Initialize and get the required tools
 
   if (msgLevel(MSG::VERBOSE)) verbose() << "Starting to initialise Background Categorisation" 
                                         << endmsg;
@@ -1424,8 +1398,7 @@ StatusCode BackgroundCategory::initialize(){
   if (!sc) return sc;
 
   m_particleDescendants = tool<IParticleDescendants>("ParticleDescendants",this);
-  m_linkerTool_cPP = tool<IDaVinciAssociatorsWrapper>("DaVinciAssociatorsWrapper","Wrapper_CAT_cPP",this);
-  m_linkerTool_nPP = tool<IDaVinciAssociatorsWrapper>("DaVinciAssociatorsWrapper","Wrapper_CAT_nPP",this);
+  m_smartAssociator = tool<IParticle2MCWeightedAssociator>("P2MCPFromProtoP", this); 
 
   if (msgLevel(MSG::VERBOSE)) m_printDecay = tool<IPrintDecay>("PrintDecayTreeTool",this);
 

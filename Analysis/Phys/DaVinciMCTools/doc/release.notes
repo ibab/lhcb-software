@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.257 2009-04-08 12:13:19 jpalac Exp $
+! $Id: release.notes,v 1.258 2009-04-09 19:15:04 gligorov Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2009-04-09 - V. Gligorov
+ - Update BackgroundCategory.{h,cpp} to use P2MCPFromProtoP for associating stables.
+ - Update documentation in BackgroundCategory.h
+ - Fix minor bug affecting association of decays into neutrals in BackgroundCategory.cpp
 
 ! 2009-04-08 - Juan PALACIOS
  - src/P2MCPFromProtoP.cpp
