@@ -5,6 +5,7 @@
 !               low energy components, flatspillover
 !-----------------------------------------------------------------------------
 
+!====================== MuonBackground v2r9 2009-04-09 =======================
 ! 2009-03-31 - Marco Cattaneo
  - In MuonBackground, remove need to access SpilloverAlg to determine number
    of spillover paths. Now passed as a job option, replaces EnableSpillover
