@@ -3,6 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+! 2009-04-09 - Marco Cattaneo
+ - Update references for MuonDigitization printout of hits not found inside gap
+
 ! 2009-04-08 - Marco Cattaneo
  - Add options for MC09 simulation and corresponding tests
  - Remove options for 2008 simulation and corresponding tests
