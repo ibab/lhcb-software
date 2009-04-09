@@ -1,4 +1,4 @@
-// $Id: TupleToolKinematic.cpp,v 1.1.1.1 2007-12-12 17:46:43 pkoppenb Exp $
+// $Id: TupleToolKinematic.cpp,v 1.2 2009-04-09 19:10:24 gligorov Exp $
 // Include files
 
 // from Gaudi
@@ -50,6 +50,7 @@ StatusCode TupleToolKinematic::fill( const LHCb::Particle*
     test &= tuple->column( head+"_MM", P->measuredMass() );
     if( !P->isBasicParticle() )
       test &= tuple->column( head+"_MMERR", P->measuredMassErr() );
+    test &= tuple->column( head+"_M", P->momentum().M() );
   } else {
     return StatusCode::FAILURE;
   }
