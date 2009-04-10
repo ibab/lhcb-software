@@ -1,5 +1,5 @@
 /// ===========================================================================
-// $Id: CellParam.h,v 1.9 2009-04-06 15:42:33 odescham Exp $
+// $Id: CellParam.h,v 1.10 2009-04-10 14:51:08 odescham Exp $
 #ifndef CALODET_CELLPARAM_H 
 #define CALODET_CELLPARAM_H 1
 /// ===========================================================================
@@ -107,7 +107,7 @@ public:
   void addLed(int id){ m_leds.push_back(id) ;}
 
   // Calibration & quality
-  void addQualityFlag  (int quality)           {m_quality = m_quality || quality; }
+  void addQualityFlag  (int quality)           {m_quality = m_quality | quality; }
   void setLedData      (double pmt, double pin){m_pmt    = pmt ; m_pin    = pin;  }
   void setCalibration  (double calib)          { m_calibration = calib;           }
   void setL0Constant   (int    cte)            { m_l0constant  = cte;             }

@@ -16,7 +16,7 @@ Simulation.Members += {  "DeCaloCalib/EcalCalib" };
 //------------------------------ 1) User defined value
 //EcalCalib.Method = "User";
 //EcalCalib.DeltaKey = "Index";   // Key for DeltaTime mapping 'Index' or 'CellID'
-//EcalCalib.DeltaTime = { "Default" : 0.,
+//EcalCalib.DeltaGain = { "Default" : 0.,
 //                         "0" : 1.1     ,
 //                         "1" : 0.9     ,
 //                         "2" : 1.05    ,

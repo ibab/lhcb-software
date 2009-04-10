@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.102 2009-04-06 15:42:33 odescham Exp $ 
+! $Id: release.notes,v 1.103 2009-04-10 14:51:08 odescham Exp $ 
 ! =============================================================================
 ! Package         : CaloDet   
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+
+! 2009-04-09 Olivier Deschamps
+    - fix bug in CellParam (addQualityFlag() method)
+    - improve DeCalib.cpp algorithm    
 
 ! 2009-03-27 Olivier Deschamps
     - references -> const in *.h
