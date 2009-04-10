@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.116 2009-04-06 15:48:40 odescham Exp $
+! $Id: release.notes,v 1.117 2009-04-10 14:49:09 odescham Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
+
+! 2009-04-10 - Olivier Deschamps
+ - Calo2Dview : fix bug in 'electronics' 2D view for Spd
 
 ! 2009-04-06 - Olivier Deschamps
  - Calo2Dview : add new 2D views (crate-feb vs channels) + possibility to split the view per area

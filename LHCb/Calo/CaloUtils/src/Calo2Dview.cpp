@@ -1,4 +1,4 @@
-// $Id: Calo2Dview.cpp,v 1.13 2009-04-06 15:48:40 odescham Exp $
+// $Id: Calo2Dview.cpp,v 1.14 2009-04-10 14:49:09 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -111,7 +111,7 @@ StatusCode Calo2Dview::initialize() {
   m_refCellMap[0].push_back(LHCb::CaloCellID(0, 1, 12 ,0) ); // middle
   m_refCellMap[0].push_back(LHCb::CaloCellID(0, 2, 14  ,8)); // inner
   m_fCardMap[0] = 0;
-  m_lCardMap[1] = 127;
+  m_lCardMap[0] = 127;
   m_nChanMap[0] = 64;
   return StatusCode::SUCCESS;
 }
