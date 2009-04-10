@@ -79,7 +79,7 @@ StatusCode CheckCaloBank::execute() {
   if(trig ||  bank ){
     debug() << " Calo Banks with 'compressed' format exist - Do nothing" << endreq;
   }else{
-    debug() << " Calo Banks with 'compressed' format DON'T exist - Will be created from PACKED banks" << endreq;
+    debug() << " Calo Banks with 'compressed' format DOESN'T exist - Will be created from PACKED banks" << endreq;
   }
   
   if(trig && bank)setFilterPassed(false);// no need to rebuilt 'compressed' bank
