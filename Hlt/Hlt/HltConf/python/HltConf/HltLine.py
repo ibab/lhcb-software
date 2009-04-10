@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.51 2009-04-07 14:24:22 pkoppenb Exp $ 
+# $Id: HltLine.py,v 1.52 2009-04-10 21:07:11 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.51 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.52 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -451,7 +451,6 @@ class bindMembers (object) :
         return self._outputsel
 
     def members( self ) :         
-        #return self._members
         # remove (downstream) duplicates
         members = []
         for m in self._members :
@@ -463,116 +462,116 @@ class bindMembers (object) :
         x._outputsel = None
         return x
 
-    def __init__( self, line, algos ) :
+    def _default_handler_( self, line, alg ) :
+        # if not known, blindly copy -- not much else we can do
+        self._members += [ alg ]
+        # try to guess where the output goes...
+        if hasattr ( type(alg) , 'OutputSelection' ) :
+            if hasattr ( alg , 'OutputSelection' ) :
+                self._outputsel = alg.OutputSelection 
+        elif hasattr ( type(alg) , 'OutputLocation' ) :
+            if hasattr ( alg , 'OutputLocation' ) :
+                self._outputsel = alg.OutputLocation 
+        else :
+            self._outputsel = alg.name()
 
+    # allow chaining of previously bound members...
+    def _handle_bindMembers( self, line, alg ) :
+        self._members  += alg.members()
+        # sometimes, we want to ignore this... 
+        # add a flag to allow to skip this (when set to None?)
+        if alg.outputSelection() : self._outputsel = alg.outputSelection()
+        # self._outputsel = alg.outputSelection()
+
+    # if Hlt2Member, ask it to creats a configurable instance for this line..
+    # then it's bussines as usual..
+    #@TODO: perform substitution 
+    def _handle_Hlt2Member( self, line, alg ) :
+        if line == None: raise AttributeError, 'Must have a line name to bind to'
+        alg = alg.createConfigurable( line, **alg.Args )
+        # if alg in 
+        return self._default_handler_( line,  alg )
+
+    # if Hlt1Member, verify, expand, and chain
+    def _handle_Hlt1Member( self, line, alg ) :
+        if line == None: raise AttributeError, 'Must have a line name to bind to'
+        margs = alg.Args.copy() 
+        #### TODO: use _checkSelection to make sure the result is valid!!!
+        #    expand '%' in FilterDescriptor, InputSelection{,1,2} to allow bound selections
+        _subs_cand_ =  ['FilterDescriptor', 'OutputSelection', 'InputSelections'
+                       , 'InputSelection', 'InputSelection1','InputSelection2','InputSelecion3' ]
+        for key in set(margs).intersection(set(_subs_cand_)) :
+            if type(margs[key]) is str  : margs[key] =   re.sub('%','Hlt1%s'%line,margs[key])
+            if type(margs[key]) is list : margs[key] = [ re.sub('%','Hlt1%s'%line,i) for i in margs[key] ]
+        algName = alg.name ( line )
+        
+        ## need input selection?
+        if   'InputSelection3' in alg.Type.__slots__ :
+            # check input selections
+            _checkSelections ( margs ,  # arguments
+                               # must be: 
+                               [ 'InputSelection3' , 'InputSelection2' , 'InputSelection1' ] ,
+                               # not allowed:
+                               [ 'InputSelection'  , 'InputSelections' ] ,
+                               algName , line ) ;
+            #
+        elif 'InputSelection2' in alg.Type.__slots__ :
+            # check input selections
+            _checkSelections ( margs ,  # arguments
+                               # must be: 
+                               [ 'InputSelection2' , 'InputSelection1' ] ,
+                               # not allowed:
+                               [ 'InputSelection'  , 'InputSelections' , 'InputSelection3' ] ,
+                               algName , line ) ;
+            # 
+        elif 'InputSelections' in alg.Type.__slots__ :
+            # check input selections
+            _checkSelections ( margs ,  # arguments
+                               # must be: 
+                               [ 'InputSelections' ] ,
+                               # not allowed:
+                               [ 'InputSelection'  , 'InputSelection1' , 'InputSelection2' , 'InputSelection3' ] ,
+                               algName , line ) ;
+            #
+        elif 'InputSelection' in alg.Type.__slots__ :
+            # come manual work 
+            _inputsel = self._outputsel
+            if margs.has_key ( 'InputSelection' ) :
+                _checkSelection ( 'InputSelection' , margs , algName , line )
+                _inputsel = margs['InputSelection']
+            if not _inputsel :
+                raise AttributeError, 'Cannot deduce InputSelection neither from argument nor from previous alg'
+            margs['InputSelection'] = _inputsel
+            # here start the machinery check input selections
+            _checkSelections ( margs ,  # arguments
+                               # must be: 
+                               [ 'InputSelection' ] ,
+                               # not allowed:
+                               [ 'InputSelections'  , 'InputSelection1' , 'InputSelection2' , 'InputSelection3' ] ,
+                               algName , line ) ;
+            #
+        else :
+            print "# WARNING: Line '%s', Member '%s'  with strange configuration " % ( line , algName )
+
+        
+        ## output selection (default: the algorithm instance name)
+        if 'OutputSelection' in alg.Type.__slots__ : 
+            self._outputsel = algName
+            if margs.has_key ( 'OutputSelection' ) :
+                _checkSelection ( 'OutputSelection' , margs , algName , line ) 
+                self._outputsel = margs['OutputSelection']
+        
+        # create (the configurable for) the algorithm and add it to the sequencer:
+        self._members += [ alg.createConfigurable( line , **margs ) ]
+
+    def __init__( self, line, algos ) :
         self._members = []
         self._outputsel = None
-
         for alg in algos:
-
-            # allow chaining of previously bound members...
-            if type(alg) is bindMembers:
-                self._members  += alg.members()
-                # sometimes, we want to ignore this... 
-                # add a flag to allow to skip this (when set to None?)
-                if alg.outputSelection() : self._outputsel = alg.outputSelection()
-                # self._outputsel = alg.outputSelection()
-                continue
-
-            # if Hlt2Member, ask it to creats a configurable instance for this line..
-            if type(alg) is Hlt2Member:
-                if line == None: raise AttributeError, 'Must have a line name to bind to'
-                self._members += [ alg.createConfigurable( line, **alg.Args ) ]
-                # find the PhysDesktop tool, and its' OutputLocation' property..'
-                continue
-
-            # allow automatic picking up of shared L0 candidates...
-            if type(alg) is L0CaloCandidates or type(alg) is L0MuonCandidates:
-                self._members += [ alg ]
-                self._outputsel = alg.OutputSelection
-                continue
-
-            # if not Hlt1Member, blindly copy -- not much else we can do
-            if type(alg) is not Hlt1Member:
-                self._members += [ alg ]
-                if hasattr ( type(alg) , 'OutputSelection' ) :
-                    if hasattr ( alg , 'OutputSelection' ) :
-                        self._outputsel = alg.OutputSelection 
-                    else :
-                        self._outputsel = alg.name()
-                continue
-                
-            # if Hlt1Member, verify, expand, and chain
-            if line == None: raise AttributeError, 'Must have a line name to bind to'
-            margs = alg.Args.copy() 
-            #### TODO: use _checkSelection to make sure the result is valid!!!
-            #    expand '%' in FilterDescriptor, InputSelection{,1,2} to allow bound selections
-            _subs_cand_ =  ['FilterDescriptor', 'OutputSelection', 'InputSelections'
-                           , 'InputSelection', 'InputSelection1','InputSelection2','InputSelecion3' ]
-            for key in set(margs).intersection(set(_subs_cand_)) :
-                if type(margs[key]) is str  : margs[key] =   re.sub('%','Hlt1%s'%line,margs[key])
-                if type(margs[key]) is list : margs[key] = [ re.sub('%','Hlt1%s'%line,i) for i in margs[key] ]
-            algName = alg.name ( line )
-            
-            ## need input selection?
-            if   'InputSelection3' in alg.Type.__slots__ :
-                # check input selections
-                _checkSelections ( margs ,  # arguments
-                                   # must be: 
-                                   [ 'InputSelection3' , 'InputSelection2' , 'InputSelection1' ] ,
-                                   # not allowed:
-                                   [ 'InputSelection'  , 'InputSelections' ] ,
-                                   algName , line ) ;
-                #
-            elif 'InputSelection2' in alg.Type.__slots__ :
-                # check input selections
-                _checkSelections ( margs ,  # arguments
-                                   # must be: 
-                                   [ 'InputSelection2' , 'InputSelection1' ] ,
-                                   # not allowed:
-                                   [ 'InputSelection'  , 'InputSelections' , 'InputSelection3' ] ,
-                                   algName , line ) ;
-                # 
-            elif 'InputSelections' in alg.Type.__slots__ :
-                # check input selections
-                _checkSelections ( margs ,  # arguments
-                                   # must be: 
-                                   [ 'InputSelections' ] ,
-                                   # not allowed:
-                                   [ 'InputSelection'  , 'InputSelection1' , 'InputSelection2' , 'InputSelection3' ] ,
-                                   algName , line ) ;
-                #
-            elif 'InputSelection' in alg.Type.__slots__ :
-                # come manual work 
-                _inputsel = self._outputsel
-                if margs.has_key ( 'InputSelection' ) :
-                    _checkSelection ( 'InputSelection' , margs , algName , line )
-                    _inputsel = margs['InputSelection']
-                if not _inputsel :
-                    raise AttributeError, 'Cannot deduce InputSelection neither from argument nor from previous alg'
-                margs['InputSelection'] = _inputsel
-                # here start the machinery check input selections
-                _checkSelections ( margs ,  # arguments
-                                   # must be: 
-                                   [ 'InputSelection' ] ,
-                                   # not allowed:
-                                   [ 'InputSelections'  , 'InputSelection1' , 'InputSelection2' , 'InputSelection3' ] ,
-                                   algName , line ) ;
-                #
-            else :
-                print "# WARNING: Line '%s', Member '%s'  with strange configuration " % ( line , algName )
-
-            
-            ## output selection (default: the algorithm instance name)
-            if 'OutputSelection' in alg.Type.__slots__ : 
-                self._outputsel = algName
-                if margs.has_key ( 'OutputSelection' ) :
-                    _checkSelection ( 'OutputSelection' , margs , algName , line ) 
-                    self._outputsel = margs['OutputSelection']
-            
-            # create (the configurable for) the algorithm and add it to the sequencer:
-            self._members += [ alg.createConfigurable( line , **margs ) ]
-
+            # dispatch according to the type of alg...
+            x = '_handle_' + type(alg).__name__
+            handle = getattr(self, x if hasattr(self, x) else '_default_handler_')
+            handle(line,alg)
 
 # =============================================================================
 ## @class Hlt1Tool
@@ -1048,7 +1047,10 @@ class Hlt2Member ( object ) :
         # intercept special keys...
         if 'InputLocations' in Args :
             #TODO: must check no PhysDesktop explicitly specified... if so, add to it...
-            self.Tools.append( Hlt1Tool( PhysDesktop, InputLocations = Args.pop('InputLocations') )) 
+            #TODO: implement delayed substitution of InputLocations...
+            adaptor = lambda x : x.outputSelection() if type(x) is bindMembers else x
+            inputs = [ adaptor(i) for i in Args.pop('InputLocations') ]
+            self.Tools.append( Hlt1Tool( PhysDesktop, InputLocations = inputs )) 
         for key in Args :
             if  key not in self.Type.__slots__  :
                 raise AttributeError, "The key %s is not allowed"%key

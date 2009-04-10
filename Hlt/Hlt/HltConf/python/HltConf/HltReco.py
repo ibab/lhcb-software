@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.2 2009-04-06 13:04:25 graven Exp $
+# $Id: HltReco.py,v 1.3 2009-04-10 21:07:11 graven Exp $
 # =============================================================================
 ## @file HltConf/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -184,3 +184,4 @@ Velo     = bindMembers( None, [                  RZVelo , reco1Velo ] )
 Forward  = bindMembers( None, [                                Velo,  recoFwd ] )
 
 HltRecoSequence = recoSeq
+# HltRecoVeloSequence = GaudiSequencer('HltRecoVeloSequence', Members = [ patVeloR, recoVelo ] )
