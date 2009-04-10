@@ -1,4 +1,4 @@
-// $Id: L0DUConfigProvider.cpp,v 1.11 2009-03-08 22:36:14 odescham Exp $
+// $Id: L0DUConfigProvider.cpp,v 1.12 2009-04-10 14:53:19 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -164,15 +164,12 @@ StatusCode L0DUConfigProvider::initialize(){
 
   //=====================================
 
-
+  if(m_def == "")m_def = "No Description";
   if(m_channels.size()   == 0  || 
-     m_conditions.size() == 0  || 
-     m_def               == "") {
+     m_conditions.size() == 0) {
     error() << "Incomplete description for configuration (TCK = " << m_tckopts << ")" << endreq;
     return StatusCode::FAILURE;  
   }
-  
-
 
   // create L0DU configuration 
   m_config = new LHCb::L0DUConfig(m_tckopts);
@@ -206,7 +203,8 @@ StatusCode L0DUConfigProvider::initialize(){
 }
 
 void L0DUConfigProvider::printConfig(LHCb::L0DUConfig config){
-  info() << "**** L0DU Configs loading : TCK = " << format("0x%04X" , config.tck()) << endreq;
+  info() <<  "-------------------------------------------------------------"<<endreq;
+  info() << "**** L0DU Config loading : L0TCK = " << format("0x%04X" , config.tck()) << " ==> OK " << endreq;
   debug() << "              - " << config.data().size()<< " data with "<<endreq;
   debug() << "                    - " << m_pData << " predefined data "<<endreq;
   debug() << "                    - " << m_cData << " constant   data "<<endreq;
