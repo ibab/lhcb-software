@@ -10,7 +10,7 @@ killall -9 CameraServ.exe
 
 # The executables will look for their config files in the directory etc from where
 # they were executed. Make sure we are in that directory.
-cd $CAMERAROOT/scripts/etc
+cd $CAMERAROOT/scripts/
 
 # This is where we save the log files.
 export CAMDIR=$HOME/Camera
@@ -18,8 +18,8 @@ export CAMDIR=$HOME/Camera
 mkdir -p $CAMDIR/data
 
 # Start the Camera server and the web server.
-CameraWebServ.exe > $CAMDIR/CameraWebServ.log 2>&1 &
-CameraServ.exe > $CAMDIR/CameraServ.log 2>&1 &
+CameraWebServ.exe > $CAMDIR/log/CameraWebServ.log 2>&1 &
+CameraServ.exe > $CAMDIR/log/CameraServ.log 2>&1 &
 
 # Creates a new warnings.out file when the camera server is started.
 $CAMERAROOT/scripts/newCameraLog.sh
