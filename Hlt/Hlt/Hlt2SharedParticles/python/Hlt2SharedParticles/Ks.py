@@ -9,6 +9,7 @@
 from Gaudi.Configuration import *
 from Hlt2SharedParticles.GoodParticles import GoodPions
 from Configurables import CombineParticles, PhysDesktop
+from HltConf.HltLine import bindMembers
 
 __all__ = ( 'KsLL' )
 
@@ -18,6 +19,6 @@ Hlt2SharedKsLL.DaughtersCuts = { "pi+" : "(P>2*GeV) & (MIPCHI2DV(PRIMARY)>9) & (
 Hlt2SharedKsLL.CombinationCut = "(ADAMASS('KS0')<50*MeV)"
 Hlt2SharedKsLL.MotherCut = "(ADMASS('KS0')<35*MeV) & (VFASPF(VCHI2/VDOF)<30)"
 Hlt2SharedKsLL.addTool(PhysDesktop)
-Hlt2SharedKsLL.PhysDesktop.InputLocations = [ GoodPions ]
+Hlt2SharedKsLL.PhysDesktop.InputLocations = [ "Hlt2GoodPions" ]
 
 KsLL = bindMembers( None, [ GoodPions, Hlt2SharedKsLL ] )
