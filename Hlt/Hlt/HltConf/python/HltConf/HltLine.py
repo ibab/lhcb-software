@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.52 2009-04-10 21:07:11 graven Exp $ 
+# $Id: HltLine.py,v 1.53 2009-04-11 12:36:32 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.52 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.53 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -326,11 +326,12 @@ def typeFromNick ( nick ) :
 #  The convention is
 #     - if the selection name is defined as  'pattern', e.g. '%RZVelo',
 #       the full name would include the Hlt line name: 'Hlt1SingleMuonRZVelo'
-#     - if the selection name does not incldue 'pattern', it is unchanged
+#     - if the selection name does not include 'pattern', it is unchanged
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date   2008-08-06
 def _selectionName ( name ,      ## the selection name or pattern 
-                     line ) :    ## the name of Hlt1 line 
+                     line ,      ## the name of line 
+                     level = 'Hlt1') :   ## Hlt1 or Hlt2?
     """
     Construct the full selection name.
     
@@ -362,7 +363,7 @@ def _selectionName ( name ,      ## the selection name or pattern
         if 'outputSelection' in dir(name)  : name = name.outputSelection()
         if hasattr(name,'OutputSelection') : name = getattr(name,'OutputSelection')
     if '%' != name[0] : return name 
-    return 'Hlt1' + line + name[1:]
+    return level + line + name[1:]
 
 
 # =============================================================================
@@ -489,7 +490,6 @@ class bindMembers (object) :
     def _handle_Hlt2Member( self, line, alg ) :
         if line == None: raise AttributeError, 'Must have a line name to bind to'
         alg = alg.createConfigurable( line, **alg.Args )
-        # if alg in 
         return self._default_handler_( line,  alg )
 
     # if Hlt1Member, verify, expand, and chain
@@ -1004,56 +1004,47 @@ class Hlt1Line(object):
 class Hlt2Member ( object ) :
     """
     Simple class to represent the member of Hlt2 line
-    Only the specific algorithm types are allowed to be 'members' of Hlt lines
-    Each such algorithm has a short 'type'
+    Only some specific algorithm types are allowed to be 'members' of Hlt lines
     
+    @author Gerhard Raven Gerhard.Raven@nikhef.nl
+    based on the original Hlt1Member by
     @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
     @date   2008-08-06
     
-    >>> m1 = Member ( Type , 'Velo'   , RecoName = 'Velo' ) # 'HltTrackUpgrade'
-    
     """
-    __slots__ = ( 'Type' , 'Name' , 'Args', 'Tools' )
+    __slots__ = ( 'Type' , 'Name' , 'Args', 'Tools', 'InputLocations' )
     
     ### The standard constructor to create the  Hlt1Member instance:
     def __init__ ( self       ,    ## ...
                    Type       ,    ## type of members
                    name  = '' ,    ## the specific part of the algorithm name 
+                   InputLocations = None,  ## inputLocations to be parsed & fwd-ed to PhysDesktop
                    tools = [] ,    ## list of tool options for this algorithm
                    **Args     ) :  ## arguments 
         """
         The standard constructor to create the  Hlt1Member instance:
         >>> m1 = Hlt2Member ( FilterDesktop , 'Filter', Code = '...', InputLocations = ... ,
         """
-        from Configurables import FilterDesktop, CombineParticles, PhysDesktop
+        from Configurables import FilterDesktop, CombineParticles
         ## (0) verify input
         # Type must be a (configurable) class name, and only
         # a limited set is allowed (which must be DVAlgorithms...)
         if Type not in [ FilterDesktop, CombineParticles ] :
             raise AttributeError, "The type  %s is not known for Hlt2Member"%Type
-
+        for key in Args :
+            if  key not in Type.__slots__  :
+                raise AttributeError, "The key %s is not allowed for type %s"%(key,Type.__name__)
 
         ## (1) "clone" all agruments
-        Type  = deepcopy ( Type  )
-        name  = deepcopy ( name  )
-        tools = deepcopy ( tools )
-        Args  = deepcopy ( Args  )
-        ##
-        Name = name
-        self.Type = Type 
-        self.Name = Name 
-        self.Args = Args
-        self.Tools = tools
-        # intercept special keys...
-        if 'InputLocations' in Args :
-            #TODO: must check no PhysDesktop explicitly specified... if so, add to it...
-            #TODO: implement delayed substitution of InputLocations...
-            adaptor = lambda x : x.outputSelection() if type(x) is bindMembers else x
-            inputs = [ adaptor(i) for i in Args.pop('InputLocations') ]
-            self.Tools.append( Hlt1Tool( PhysDesktop, InputLocations = inputs )) 
-        for key in Args :
-            if  key not in self.Type.__slots__  :
-                raise AttributeError, "The key %s is not allowed"%key
+        self.Type  = deepcopy ( Type  )
+        self.Name  = deepcopy ( name  )
+        self.Args  = deepcopy ( Args  )
+        self.Tools = deepcopy ( tools )
+        if InputLocations :
+            _adaptor = lambda x : x.outputSelection() if type(x) is bindMembers else x
+            self.InputLocations = deepcopy( [ _adaptor(i) for i in  InputLocations ] )
+        else :
+            self.InputLocations = None
         
 
     def subtype( self )        :
@@ -1068,6 +1059,13 @@ class Hlt2Member ( object ) :
     def subname( self )        :
         " Return the specific part of the name "        
         return self.id()
+    def _InputLocations( self, line ) :
+        _input = []
+        for i in  self.InputLocations :
+            if type(i) is bindMembers : i = i.outputSelection() 
+            if i[0] == '%' : i = 'Hlt2' + line + i[1:]
+            _input += [ i ]
+        return _input
     def createConfigurable( self, line, **args ) :
         """
         Create the configurable, and, if needed, deal with tool configuration
@@ -1079,6 +1077,12 @@ class Hlt2Member ( object ) :
         # see if alg has any special Tool requests...
         instance =  self.Type( _name, **args)
         for tool in self.Tools : tool.createConfigurable( instance )
+        #TODO: must check no PhysDesktop explicitly specified... if so, update it!...
+        if hasattr(instance,'PhysDesktop') and self.InputLocations: 
+            raise AttributeError, "'%s' already has a PhysDesktop, and a request to forward InputLocations" % ( _name ) 
+        if self.InputLocations:
+            from Configurables import PhysDesktop
+            Hlt1Tool( PhysDesktop, InputLocations = self._InputLocations(line) ).createConfigurable(instance) 
         return instance
 
 # ============================================================================
@@ -1109,8 +1113,10 @@ class Hlt2Member ( object ) :
 class Hlt2Line(object):
     """
     The major class which represent the Hlt2 Line, the sequence.
+    @author Gerhard Raven, Gerhard.Raven@nikher.nl,
+    based on the original Hlt1Line by
     @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-    @date   2008-08-06   
+    @date   2009-03-25   
     """
     ## The constructor, which defines the line
     #

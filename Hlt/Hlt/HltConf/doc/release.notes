@@ -1,12 +1,17 @@
-! $Id: release.notes,v 1.205 2009-04-10 21:07:11 graven Exp $ 
+! $Id: release.notes,v 1.206 2009-04-11 12:36:32 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2009-04-11 - Gerhard Raven
+ - make Hlt2Member substitute % by the line name in InputLocation
+   when generating the configurable
+ - some clean up of Hlt2Member, Hlt2Line
+
 ! 2009-04-10 - Gerhard Raven
- - make Hlt2Member support substitution of bindMembers instanceds 
+ - make Hlt2Member support substitution of bindMembers instances 
    in InputLocation
 
 !========================== HltConf v2r7 2009-04-08 ===================
