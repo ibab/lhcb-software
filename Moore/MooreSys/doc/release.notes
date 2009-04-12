@@ -3,6 +3,12 @@ Package     : MooreSys
 Package Coordinator : G.Raven
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v5r6>2009-04-11 Moore v6r2</A></H1><PRE>
+Based on Hlt v5r2, but includes almost all changes which
+will appear in Hlt v6r0. This version, unlike Hlt v6r0, 
+however still uses the LHCb v26r2 stack instead so we can
+continue to use Online v4r20 for FEST3.
+
 </PRE><H1><A NAME=v5r6>2009-03-11 Moore v6r1</A></H1><PRE>
 Based on Hlt v5r1, Lbcom v6r26, Phys v8r1, Online v4r20
   Release used during the FEST week first week of February

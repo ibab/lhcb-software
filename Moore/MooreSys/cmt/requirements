@@ -7,10 +7,20 @@ branches doc cmt
 # Don't forget the applications
 #=======================================================
 
-use  Moore                  v6r1    Hlt
-use  TCKData                v1r8    Hlt
+use  Moore                  v6r2    Hlt
+use  TCKData                v1r9    Hlt
 use  HltLuminosityMonitor   v1r2    Hlt
 
+
+## temporarily
+use HltSelections           v9r0    Hlt
+use Hlt2SharedParticles     v1r0    Hlt
+use HltBase                 v6r2p1  Hlt
+use HltCommon               v5r3p1  Hlt
+use HltConf                 v2r7    Hlt
+use HltGlobalMonitor        v2r4    Hlt
+use HltHidValley            v1r2p2  Hlt
+use ParticleMaker           v4r3    Phys
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
