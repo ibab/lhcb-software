@@ -11,7 +11,7 @@ from Configurables import CombineParticles, FilterDesktop, PhysDesktop
 from Hlt2SharedParticles.GoodParticles import GoodKaons, GoodPions
 from HltConf.HltLine import bindMembers
 
-__all__ = ( 'Dplus2KPiPi','Dplus2KKPi','Dplus2PiPiPi' )
+__all__ = ( 'Dplus2KPiPi','Dplus2KKPi','Dplus2KPiPiCS','Dplus2PiPiPi' )
 
 ##########################################################################################
 # D0 -> K Pi
