@@ -37,6 +37,13 @@ Hlt2SharedDplus2KKPi.DecayDescriptor = "[D+ -> K- K+ pi+]cc"
 
 Dplus2KKPi = bindMembers( None, [ GoodKaons, GoodPions, Hlt2SharedDplus2KKPi ] )
 ##########################################################################################
+# Need a second D+ -> K Pi Pi where the pions have opposite charge, the CS mode of the Ds
+#
+Hlt2SharedDplus2KPiPiCS = Hlt2SharedDplus2KPiPi.clone("Hlt2SharedDplus2KPiPiCS")
+Hlt2SharedDplus2KPiPiCS.DecayDescriptor = "[D+ -> K+ pi+ pi-]cc"
+
+Dplus2KPiPiCS = bindMembers( None, [ GoodKaons, GoodPions, Hlt2SharedDplus2KPiPiCS ] )
+##########################################################################################
 # D+ -> 3 pi is a clone of D+ -> K Pi Pi 
 #
 Hlt2SharedDplus2PiPiPi = Hlt2SharedDplus2KPiPi.clone("Hlt2SharedDplus2PiPiPi")
