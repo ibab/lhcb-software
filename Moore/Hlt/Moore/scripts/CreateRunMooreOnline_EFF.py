@@ -17,6 +17,17 @@ if len(sys.argv)>2:
     setup = os.path.join(moore,'job',env)
     print 'generating ' + setup
     ret = subprocess.call(['python',os.path.join(os.environ['LHCBPYTHON'],'SetupProject.py'),'--dev-dir=/home/online/ONLINE:/group/hlt/GAUDI','--shell=sh','--output='+setup,'Moore',version])
+    print 'removing use of StripPath.sh'
+    # remove call to StripPath.sh from generated SetupProject.sh
+    f = open(setup, 'r')
+    txt = f.read()
+    f.close()
+    f = open(setup, 'w')
+    import re
+    f.write(re.sub('test -f [^ ]*StripPath.sh','false', txt))
+    f.close()
+
+
 
 print 'using ' + setup
 

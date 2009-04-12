@@ -1,12 +1,12 @@
 #============================================================================
-# $Id: requirements,v 1.47 2009-03-04 09:55:32 graven Exp $
+# $Id: requirements,v 1.48 2009-04-12 13:20:08 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : G. Raven
 #============================================================================
 
 #============================================================================
 package Moore
-version v6r1
+version v6r2
 
 branches doc cmt options python
 
@@ -25,7 +25,7 @@ use HepMC              v*    LCG_Interfaces -no_auto_imports
 
 # Databases
 use DDDB               v1r*  Det            -no_auto_imports
-use ParamFiles         v7r3                 -no_auto_imports
+use ParamFiles         v8r0                 -no_auto_imports
 use FieldMap           v5r*                 -no_auto_imports
 use TCKData            v*    Hlt            -no_auto_imports
 
@@ -48,8 +48,39 @@ use LbcomSys            v*        -no_auto_imports
 use RecSys              v*         -no_auto_imports
 
 #-- HLT packages 
-use HltSys		v*	     -no_auto_imports
-use HltConf	    v*        Hlt
+#-- TMP overrule HltSys..
+use HltSelections           v9r0    Hlt
+use Hlt2SharedParticles     v1r0    Hlt
+use HltBase                 v6r2p1  Hlt
+use HltCommon               v5r4    Hlt
+use HltConf                 v2r7    Hlt
+use HltGlobalMonitor        v2r4    Hlt
+use HltHidValley            v1r2p2  Hlt
+use ParticleMaker           v4r3    Phys
+
+#-- TMP overrule HltSys.. as cmt complains about HltSelections..
+use HltTracking         v3r8    Hlt   # Jose Angel Hernando-Morata
+use HltHadAlley         v3r3p1  Hlt   # Jose Angel Hernando-Morata
+use HltEcalAlley        v1r6p1  Hlt   # Mariusz Witek
+use HltMuon             v3r4p1  Hlt   # Alessia Satta          
+use HltMuonAlley        v2r8    Hlt   # Sandra Amato 
+use HltL0Conf           v2r8    Hlt   # Johannes Albrecht
+use HltL0MuonConf       v3r5    Hlt   # Alessia Satta/Sandra Amato  
+use HltLuminosity       v2r6    Hlt   # Jaap Panman
+use HltRawData          v1r9    Hlt   # Tomasz Skwarnicki
+use Fidel               v1r3p1  Phys  # Sara Furcas    
+use HltKshort           v1r6    Hlt   # Jaap Panman
+use LoKiTrigger         v9r0   Phys   # Vanya Belyaev
+use TisTosTobbing       v3r3   Phys   # Tomasz Skwarnicki  
+use DaVinciTools        v18r2p3 Phys
+use LoKiPhys            v8r3 Phys
+use LoKiArrayFunctors   v8r2 Phys
+
+##
+#use HltSys		v*	     -no_auto_imports
+
+####
+#use HltConf	    v*        Hlt
 
 #-- Phys packages 
 use PhysSys		v*	     -no_auto_imports
@@ -58,10 +89,8 @@ use PhysSys		v*	     -no_auto_imports
 use OnlineSys           v*           -no_auto_imports
 
 #============================================================================
-#application Moore $(GAUDICONFROOT)/src/GaudiMain.cpp
 
 #============================================================================
-#macro Moore_linkopts    "$(application_linkopts)"
 
 apply_pattern application_path
 apply_pattern install_python_modules
