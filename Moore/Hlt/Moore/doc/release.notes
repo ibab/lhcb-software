@@ -5,6 +5,7 @@ Purpose     : LHCb HLT application
 ! 2009-04-12 - Gerhard Raven
  - remove StripPath from SetupMoore_vXXX.sh
  - update requirements for v6r2
+ - add FEST.py with FEST settings
 
 ! 2009-03-12 - Gerhard Raven for Eric Van Herwijnen
  - add options for TAE data in LHCb and FEST partitions
