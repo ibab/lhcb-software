@@ -18,7 +18,7 @@ Hlt2SharedKstar2KPi.addTool(PhysDesktop)
 Hlt2SharedKstar2KPi.PhysDesktop.InputLocations = [ "Hlt2GoodKaons", "Hlt2GoodPions" ]
 Hlt2SharedKstar2KPi.DecayDescriptor = "[K*(892)0 -> K+ pi-]cc" 
 
-Hlt2SharedKstar2KPi.DaughtersCuts = { "pi+" : "(MIPCHI2DV(PRIMARY)>2.25)", "K+" : "(MIPCHI2DV(PRIMARY)>2.25)" } 
+Hlt2SharedKstar2KPi.DaughtersCuts = { "pi+" : "ALL", "K+" : "ALL" } 
 Hlt2SharedKstar2KPi.CombinationCut = "(ADAMASS('K*(892)0')<300)"
 Hlt2SharedKstar2KPi.MotherCut = "(VFASPF(VCHI2/VDOF)<25)"
 

@@ -18,7 +18,7 @@ Hlt2SharedPhi2KK.addTool(PhysDesktop)
 Hlt2SharedPhi2KK.PhysDesktop.InputLocations = [ "Hlt2GoodKaons" ]
 Hlt2SharedPhi2KK.DecayDescriptor = "phi(1020) -> K+ K-" 
 
-Hlt2SharedPhi2KK.DaughtersCuts = { "K+" : "(MIPCHI2DV(PRIMARY)>4)"} 
+Hlt2SharedPhi2KK.DaughtersCuts = { "K+" : "ALL"} 
 Hlt2SharedPhi2KK.CombinationCut = "(ADAMASS('phi(1020)')<50*MeV)"
 Hlt2SharedPhi2KK.MotherCut = "(VFASPF(VCHI2/VDOF)<25)"
 

@@ -1,9 +1,14 @@
-$Id: release.notes,v 1.5 2009-04-11 18:45:41 graven Exp $
+$Id: release.notes,v 1.6 2009-04-12 15:09:03 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+
+! 2009-04-12 - V. Gligorov
+  - Good partilces now use a robust IP cut of 0.05mm, not an IPChi2 cut.
+  - Added the CS decay mode of the Ds (Ds->Kpipi with opp. charge pions) to Dplus.py
+  - Removed repetition of cuts for shared particles using GoodPions/Kaons 
 
 !========================== Hlt2SharedParticles v1r0 2009-04-11 ===================
 ! 2009-04-10 - Gerhard Raven

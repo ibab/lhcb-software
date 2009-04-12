@@ -18,9 +18,9 @@ __all__ = ( 'D02KPi', 'D02PiPi', 'D02KK', 'D02KsPiPi', 'D02KsKK' )
 #
 Hlt2SharedD02KPi = CombineParticles("Hlt2SharedD02KPi")
 Hlt2SharedD02KPi.DecayDescriptor = "[D0 -> K- pi+]cc" 
-Hlt2SharedD02KPi.DaughtersCuts = { "K+" : "(PT>300*MeV) & (P>2*GeV) & (MIPCHI2DV(PRIMARY)>4)",
-                                  "pi+" : "(PT>300*MeV) & (P>2*GeV) & (MIPCHI2DV(PRIMARY)>4)"} 
-Hlt2SharedD02KPi.CombinationCut = "(ADAMASS('D0')<50) & (APT>1*GeV)"
+Hlt2SharedD02KPi.DaughtersCuts = { "K+" : "ALL",
+                                  "pi+" : "ALL"
+Hlt2SharedD02KPi.CombinationCut = "(ADAMASS('D0')<50*MeV) & (APT>1*GeV)"
 Hlt2SharedD02KPi.MotherCut = "(VFASPF(VCHI2/VDOF)<25)"
 Hlt2SharedD02KPi.addTool(PhysDesktop)
 Hlt2SharedD02KPi.PhysDesktop.InputLocations = [ "Hlt2GoodKaons", "Hlt2GoodPions" ]

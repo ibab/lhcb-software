@@ -15,7 +15,7 @@ from Configurables import FilterDesktop, PhysDesktop
 Hlt2GoodKaons = FilterDesktop("Hlt2GoodKaons")
 Hlt2GoodKaons.addTool(PhysDesktop)
 Hlt2GoodKaons.PhysDesktop.InputLocations = [ "Hlt2Kaons" ]
-Hlt2GoodKaons.Code = "(PT > 300.*MeV) & (P>2*GeV) & (MIPCHI2DV(PRIMARY)>4.)"
+Hlt2GoodKaons.Code = "(PT > 300.*MeV) & (P>2*GeV) & (MIPDV(PRIMARY)>0.05*mm)"
 ##########################################################################
 # Prepare the Pions -- pt cuts
 #
