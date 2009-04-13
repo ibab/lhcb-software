@@ -1,11 +1,11 @@
-! $Id: release.notes,v 1.209 2009-04-13 13:05:34 graven Exp $ 
+! $Id: release.notes,v 1.210 2009-04-13 13:05:54 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
-!========================== HltConf v2r7 2009-04-11 ===================
+!========================== HltConf v2r7 2009-04-13 ===================
 ! 2009-04-13 - Gerhard Raven
  - remove HltSelectionDecision/Hlt2Decision, and add an Hlt2Line
    which corresponds to Hlt2Global
