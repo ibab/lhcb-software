@@ -19,7 +19,7 @@ __all__ = ( 'D02KPi', 'D02PiPi', 'D02KK', 'D02KsPiPi', 'D02KsKK' )
 Hlt2SharedD02KPi = CombineParticles("Hlt2SharedD02KPi")
 Hlt2SharedD02KPi.DecayDescriptor = "[D0 -> K- pi+]cc" 
 Hlt2SharedD02KPi.DaughtersCuts = { "K+" : "ALL",
-                                  "pi+" : "ALL"
+                                  "pi+" : "ALL" }
 Hlt2SharedD02KPi.CombinationCut = "(ADAMASS('D0')<50*MeV) & (APT>1*GeV)"
 Hlt2SharedD02KPi.MotherCut = "(VFASPF(VCHI2/VDOF)<25)"
 Hlt2SharedD02KPi.addTool(PhysDesktop)
