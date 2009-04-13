@@ -4,6 +4,11 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2009-04-13 - Wouter Hulsbergen
+ - add HltFixedRateScaler which uses IHltReferenceClockSvc to downscale a 
+   trigger line to a fixed rate
+ - add HltReferenceClockSvc.cpp, which implements an IHltReferenceClockSvc
+
 ! 2009-04-02 - David Hutchcroft
  - move explicit ROOT manipulations to HltBase
 
