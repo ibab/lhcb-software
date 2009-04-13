@@ -12,9 +12,23 @@ class HltReferenceClockSvc : public Service,
 public:
   HltReferenceClockSvc(const std::string& name, ISvcLocator* pSvcLocator);
   virtual ~HltReferenceClockSvc( ) ;
+
+  /** Query interfaces (\see{IInterface})
+      @param riid       ID of Interface to be retrieved
+      @param ppvUnknown Pointer to Location for interface pointer
+  */
+  virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown);
+
+  /// Initialize Service
   StatusCode initialize();
+
+  /// Handle BeginEvent incident.
   void handle(const Incident&);
+
+  /// Return the rate (reciproke period) of this clock 
   double rate() const { return m_rate ; }
+
+  /// Return the current tick of this clock
   size_t tick() const { return m_tick ; }
   
 private:
@@ -38,6 +52,19 @@ private:
 #include "Event/ODIN.h"
 
 DECLARE_SERVICE_FACTORY( HltReferenceClockSvc );
+
+
+//=============================================================================
+// IInterface implementation
+//=============================================================================
+StatusCode HltReferenceClockSvc::queryInterface(const InterfaceID& riid, void** ppvUnknown){
+  if ( IHltReferenceClockSvc::interfaceID().versionMatch(riid) ) {
+    *ppvUnknown = (IHltReferenceClockSvc*)this;
+    addRef();
+    return StatusCode::SUCCESS;
+  }
+  return Service::queryInterface(riid,ppvUnknown);
+}
 
 HltReferenceClockSvc::~HltReferenceClockSvc()
 {
@@ -73,6 +100,7 @@ HltReferenceClockSvc::initialize()
       return StatusCode::FAILURE;
     m_incidentSvc->addListener(this,IncidentType::BeginEvent) ;
   }
+  return sc ;
 }
 
 void HltReferenceClockSvc::handle ( const Incident& incident )
