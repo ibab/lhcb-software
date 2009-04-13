@@ -4,6 +4,10 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2009-04-08 - Wouter Hulsbergen
+ - add IHltReferenceClockSvc, which provides a reference 'clock' for 
+   triggers with a fixed rate
+
 !========================== HltBase v6r3 2009-04-08 ===================
 ! 2009-04-03 - Gerhard Raven
  - add some utilities which allow to set histogram binlabels
