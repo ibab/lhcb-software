@@ -50,6 +50,8 @@ use HltSelChecker       v8r0    Hlt   # Patrick Koppenburg
 use LoKiTrigger         v9r1   Phys   # Vanya Belyaev
 use TisTosTobbing       v3r3   Phys   # Tomasz Skwarnicki  
 
+use LoKiPhys v8r3 Phys
+use LoKiArrayFunctors v8r2 Phys
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
