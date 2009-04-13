@@ -26,7 +26,7 @@ exec my_moore
 
 # now reconfigure as needed
 EventSelector().PrintFreq = 200
-Moore().EvtMax = 29000 
+Moore().EvtMax = 25000 
 
 # finally run Moore
 Moore().applyConf()

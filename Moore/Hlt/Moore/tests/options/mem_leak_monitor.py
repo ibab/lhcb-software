@@ -56,7 +56,7 @@ result = None
 # with an event number > 20000
 # and compare it to the last 
 for (event, vmsize) in data_log:
-  if event > 20000:
+  if event > 15000:
     result = [ (event, vmsize), data_log[-1] ]
     break  
 
