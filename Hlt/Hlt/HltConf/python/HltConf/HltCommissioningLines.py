@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltCommissioningLines.py,v 1.7 2009-04-02 09:25:22 graven Exp $
+# $Id: HltCommissioningLines.py,v 1.8 2009-04-13 17:56:41 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines for commissioning
@@ -11,13 +11,12 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $"
 # =============================================================================
 
 from HltConf.HltLinesConfigurableUser import *
 from HltConf.HltLine import Hlt1Line   as Line
 from HltConf.HltLine import Hlt1Member as Member
-from Configurables   import HltIncidentFilter
 
 
 class HltCommissioningLinesConf(HltLinesConfigurableUser):
@@ -40,12 +39,14 @@ class HltCommissioningLinesConf(HltLinesConfigurableUser):
         #    , prescale = self.prescale
         #    , postscale = self.postscale
         #    )
+        from Configurables import HltTriggerRawConversion
         Line('RawBankConversion'
             , ODIN = 'ODIN_TRGTYP != LHCb.ODIN.RandomTrigger'
             , algos = [ HltTriggerRawConversion() ]
             , prescale = self.prescale
             , postscale = self.postscale
             )
+        from Configurables import HltIncidentFilter
         Line('Incident'
             , ODIN = 'ODIN_ALL'
             , algos = [ HltIncidentFilter() ]
