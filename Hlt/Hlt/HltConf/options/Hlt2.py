@@ -41,7 +41,3 @@ importOptions( "$HLTSELECTIONSROOT/options/Hlt2Shared.py" )
 # ---------------------------------------------------------------------
 Hlt2.Members += [ GaudiSequencer('Hlt2Lines',ModeOR=True,ShortCircuit=False) ] 
 importOptions( "$HLTSELECTIONSROOT/options/Hlt2Lines.py" )
-# --------------------------------------------------------------------
-#  Decision
-# --------------------------------------------------------------------
-Hlt2.Members += [ HltSelectionsDecision('Hlt2Decision') ] 

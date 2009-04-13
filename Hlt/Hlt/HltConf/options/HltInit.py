@@ -1,9 +1,12 @@
 from Configurables import HltANNSvc 
 
+# quick hack to make sure Hlt2Global is OK...
+Hlt2ID = HltANNSvc().Hlt2SelectionID
+if "Hlt2Global" not in Hlt2ID : Hlt2ID.update( {  "Hlt2Global" : 2 } )
+
 HltANNSvc().Hlt1SelectionID = {
     # Global
     "Hlt1Global"                            :    1,
-    "Hlt2Global"                            :    2,
     # L0 (prescaled)
     "Hlt1L0MuonDecision"                    :   10,
     "Hlt1L0MuonNoGlobDecision"              :   11,

@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.64 2009-04-06 13:04:25 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.65 2009-04-13 10:22:00 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -201,7 +201,8 @@ class HltConf(LHCbConfigurableUser):
             
 
     def postConfigAction(self) : 
-        from HltConf.HltLine     import Hlt1Line   as Line
+        from HltConf.HltLine     import Hlt1Line
+        from HltConf.HltLine     import Hlt2Line
         ## Should find a more elegant way of doing this...
         ## there are too many implicit assumptions in this action...
         ##
@@ -210,10 +211,10 @@ class HltConf(LHCbConfigurableUser):
         lumi = [ "'" + i +"'"  for i in hlt1Decisions() if i.find('Lumi') != -1 ]
         if lumi: 
             lumi = ','.join(lumi) # Note: at max 4 entries... then should switch to a list..
-            Line('IgnoringLumi', HLT = "HLT_PASSIGNORING(" + lumi + ")" )
-            Line('Lumi',         HLT = "HLT_PASS("         + lumi + ")" )
+            Hlt1Line('IgnoringLumi', HLT = "HLT_PASSIGNORING(" + lumi + ")" )
+            Hlt1Line('Lumi',         HLT = "HLT_PASS("         + lumi + ")" )
         ## finally, add the Hlt1Global line...
-        Line('Global', HLT = 'HLT_DECISION' )
+        Hlt1Line('Global', HLT = 'HLT_DECISION' )
 
         activeLines = self.getProp('ActiveHlt1Lines') 
         lines1 = [ i for i in hlt1Lines() if ( not activeLines or i.name() in activeLines ) ]
@@ -223,13 +224,10 @@ class HltConf(LHCbConfigurableUser):
 
         ### TEMPORARY HACK until HltSelectionsDecision completely obsolete...
         print '# List of configured Hlt2Lines : ' + str(hlt2Lines()) 
-        from Configurables       import HltSelectionsDecision
-        Hlt2Decision = HltSelectionsDecision('Hlt2Decision')
-        Hlt2Decision.Ignore = [ i.name() for i in hlt2Lines() ]
-        print '# Hlt2Decision.Ignore = ' + str(Hlt2Decision.Ignore)
         activeLines = self.getProp('ActiveHlt2Lines') 
         lines2 = [ i for i in hlt2Lines() if ( not activeLines or i.name() in activeLines ) ]
-        Sequence('Hlt2Lines').Members += [ i.configurable() for i in lines2 ] 
+        Hlt2Global = Hlt2Line( "Global", HLT= "HLT_PASS( strings(" + str([ i.name()+'Decision' for i in lines2 ]) + "))")
+        Sequence('Hlt2Lines').Members += [ i.configurable() for i in lines2+[ Hlt2Global] ] 
         print Sequence('Hlt2Lines').Members
 
 
