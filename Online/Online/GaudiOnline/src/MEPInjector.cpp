@@ -1790,7 +1790,8 @@ StatusCode MEPInjector::receiveOdinMEP(char *bufMEP, int *retLen) {
     return StatusCode::SUCCESS;
 }
 
-/** 
+/** Receives the MEP requests from the HLT farm nodes   
+ * @param req: The buffer where to store the MEP request
  */
 StatusCode MEPInjector::receiveMEPReq(char *req) {
     static MsgStream msgLog(msgSvc(), name());
@@ -1822,6 +1823,9 @@ StatusCode MEPInjector::receiveMEPReq(char *req) {
     return StatusCode::SUCCESS;
 }
 
+/** Manage the MEP requests from the HLT farm nodes
+ * i.e. receives them and record which farm are available.
+ */
 StatusCode MEPInjector::manageMEPRequest() {
     static MsgStream msgLog(msgSvc(), name());
     StatusCode sc;
@@ -1878,9 +1882,6 @@ StatusCode MEPInjector::manageMEPRequest() {
             msgLog << MSG::DEBUG << "Total of MEP requested : " << m_TotMEPReqRx << endmsg;
         }
 
-       
-
- 
         for(unsigned int i=0; i< (unsigned int) (mreq->nmep &0x000000ff); ++i) {
             
 	    if(sem_post(&m_MEPReqCount)==-1) {
@@ -1902,6 +1903,8 @@ StatusCode MEPInjector::manageMEPRequest() {
     return StatusCode::SUCCESS;
 }
 
+/** Manage the Odin MEPs, i.e. push them to a queue as they come, for further processing in MEP building     
+ */
 StatusCode MEPInjector::manageOdinMEP() {
     static MsgStream msgLog(msgSvc(), name());
     StatusCode sc;
@@ -1967,21 +1970,8 @@ StatusCode MEPInjector::manageOdinMEP() {
 }
 
 
-StatusCode MEPInjector::getInfoFromOdinMEP() {
-
-    /// XXX get all data from all banks, according to the pf, it means copy the complete mep (memcpy)   
-    /// Set packing factor, L0ID, and all "global" variable according to the Odin MEP received
-    struct MEPHdr *mh =
-        (struct MEPHdr *) &(((u_int8_t *) (m_OdinMEP)->start())[20]);
-
-    m_L0ID = mh->m_l0ID;
-    m_PackingFactor = mh->m_nEvt;
-    m_PartitionID = mh->m_partitionID;
-
-
-    return StatusCode::SUCCESS;
-}
-
+/** Select an available farm node to use it as a destination for the next MEP  
+ */
 StatusCode MEPInjector::getHLTInfo() {
     static MsgStream msgLog(msgSvc(), name());    //Message stream for output
     StatusCode ret=StatusCode::RECOVERABLE;
@@ -2051,6 +2041,9 @@ StatusCode MEPInjector::getHLTInfo() {
     return ret;
 }
 
+
+/** Get an Odin MEP from the FIFO, it will be used for the processing of the next MEP 
+ */
 StatusCode MEPInjector::getOdinInfo() {
 
     StatusCode ret=StatusCode::RECOVERABLE;
@@ -2124,13 +2117,17 @@ StatusCode MEPInjector::getOdinInfo() {
     return ret;
 }
 
-
+/** Display error message and exit on failure
+ */
 StatusCode MEPInjector::error(const std::string & msg) {
     static MsgStream msgLog(msgSvc(), name());
     msgLog << MSG::ERROR << msg << endmsg;
     return StatusCode::FAILURE;
 }
 
+/** Save a histogram of the TELL1 presence in a file
+ * @deprecated since it was only used for a small debugging/understanding at the beginning of the project
+ */
 void saveHisto() {
     for (int bkType = RawBank::L0Calo; bkType < RawBank::LastType; ++bkType) {
         std::string str = "HISTOS/"+RawBank::typeName((RawBank::BankType)bkType);
@@ -2146,7 +2143,9 @@ void saveHisto() {
     }
 }
 
-
+/** Extended service finalization
+ * Cleans everything 
+ */
 StatusCode MEPInjector::finalize() {
     static MsgStream msgLog(msgSvc(), name());
 
@@ -2302,6 +2301,9 @@ StatusCode MEPInjector::finalize() {
     return StatusCode::SUCCESS;
 }
 
+/** Extended service main routine
+ * Performs the MEP building and sending.
+ */
 StatusCode MEPInjector::run() {
     static MsgStream msgLog(msgSvc(), name());
     m_IncidentSvc->addListener(this, "DAQ_CANCEL", 0, true, true);
@@ -2348,7 +2350,8 @@ template <typename T> static void resetCounters(T& cnt,size_t len) {
   std::for_each(cnt.begin(),cnt.end(),resetCounter<typename T::value_type>);
 } 
 
-
+/**
+ */
 void MEPInjector::publishCounters() {
     PUBCNT(TotBytesTx,         "Total amount of bytes sent to the farms");
     PUBCNT(TotMEPReqRx,        "Total MEP requests received from farms");
@@ -2370,6 +2373,8 @@ void MEPInjector::publishCounters() {
 //  PUBARRAYCNT(badLenPkt,     "MEPs with mismatched length");
 }
 
+/**
+ */
 void MEPInjector::clearCounters() {
 //  resetCounters(m_rxOct, m_nSrc);
 //  m_totMEPReq          = 0;
@@ -2392,6 +2397,8 @@ void MEPInjector::clearCounters() {
     gettimeofday(&m_InitTime, NULL);
 }
 
+/**
+ */
 int MEPInjector::setupCounters() {
   MsgStream msgLog(msgSvc(),name());
   clearCounters();
@@ -2409,8 +2416,8 @@ int MEPInjector::setupCounters() {
   return 0;
 }
 
-
-
+/** Extended incident handler, to be able to perform actions on DIM commands
+ */
 void MEPInjector::handle(const Incident& inc) {
   MsgStream msgLog(msgSvc(),name());
   msgLog << MSG::ALWAYS << __PRETTY_FUNCTION__ << endmsg;
@@ -2437,6 +2444,8 @@ void MEPInjector::handle(const Incident& inc) {
 }
 
 // These startup functions are helper functions. They have normal C linkage.
+/** pthread startup function to manage MEP requests
+ */
 void *MEPReqMgrStartup(void *object) {
     MEPInjector *injector = (MEPInjector *) object;
 
@@ -2451,6 +2460,8 @@ void *MEPReqMgrStartup(void *object) {
 	return (void *) 0;
 }
 
+/** pthread startup function to manage Odin MEP
+ */
 void *OdinMEPMgrStartup(void *object) {
     MEPInjector *injector = (MEPInjector *) object;
 
@@ -2465,6 +2476,9 @@ void *OdinMEPMgrStartup(void *object) {
 	return (void *) 0;
 }
 
+/** pthread startup function to manage MEP building
+ * @deprecated since this processing has been moved to the main routine
+ */
 void *injectorProcessingStartup(void *object) {
     MEPInjector *injector = (MEPInjector *) object;
 
