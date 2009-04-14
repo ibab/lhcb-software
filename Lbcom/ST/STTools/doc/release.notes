@@ -2,6 +2,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2009-04-15 M Needham
+ - Add tool to select spillover clusters using previous sample [STSelectSpilloverCluster]
+
 ! 2009-03-23 M Needham
  - Add STSelectChannelIDByTruth [select by spillover, particle type etc]
 
