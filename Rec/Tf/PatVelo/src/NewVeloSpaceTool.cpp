@@ -1,4 +1,4 @@
-// $Id: NewVeloSpaceTool.cpp,v 1.1 2009-04-01 08:11:45 ocallot Exp $
+// $Id: NewVeloSpaceTool.cpp,v 1.2 2009-04-14 13:09:21 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -248,7 +248,7 @@ StatusCode NewVeloSpaceTool::tracksFromTrack ( const LHCb::Track& in,
     //== 3. Check if acceptable range: Not same end, good size, enough hits
     if ( itH2 != prevItH2 &&
          tolPhi > (*itH2)->referencePhi() - (*itH1)->referencePhi() &&
-         itH2 - itH1 +1 >= minExpected ) {
+         itH2 - itH1 +1 - minExpected >= 0 ) {
       prevItH2 = itH2;
       NewSpaceTrack candidate( itH1, itH2 );
       if ( m_isDebug ) {
