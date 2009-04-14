@@ -4,6 +4,10 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2009-04-14 - Eduardo Rodrigues
+ - VeloExpertClusterMonitor: several simplifications profiting from
+   VeloMonitorBase inheritance
+
 ! 2009-04-07 - Eduardo Rodrigues
  - all monitoring algos in this package now print the full list of job options
    during initialization

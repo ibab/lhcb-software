@@ -1,4 +1,4 @@
-// $Id: VeloExpertClusterMonitor.h,v 1.3 2009-04-07 14:39:08 jmylroie Exp $
+// $Id: VeloExpertClusterMonitor.h,v 1.4 2009-04-14 10:05:51 erodrigu Exp $
 #ifndef VELOEXPERTCLUSTERMONITOR_H 
 #define VELOEXPERTCLUSTERMONITOR_H 1
 
@@ -12,13 +12,12 @@
 #include "TrackInterfaces/IVeloExpectation.h"
 #include "TrackInterfaces/IMeasurementProvider.h"
 
-/** @class ClusterMon ClusterMon.h
+/** @class VeloExpertClusterMonitor VeloExpertClusterMonitor.h
  *  
  *
  *  @author Abdirizack NOOR
  *  @date   2008-12-04
  */
-//class ClusterMon : public GaudiAlgorithm {
 namespace Velo
 {
   class VeloExpertClusterMonitor : public VeloMonitorBase {//GaudiHistoAlg
@@ -33,9 +32,8 @@ namespace Velo
     virtual StatusCode finalize  ();    ///< Algorithm finalization
     
   protected:
-    LHCb::Tracks* tracks;
-    DeVelo* m_veloDet;
-     LHCb::VeloClusters* m_clusters;
+    LHCb::Tracks*       tracks;
+    LHCb::VeloClusters* m_clusters;
    
       
   private:
@@ -58,4 +56,4 @@ namespace Velo
   };
 }
 
-#endif // CLUSTERMON_H
+#endif // VELOEXPERTCLUSTERMONITOR_H

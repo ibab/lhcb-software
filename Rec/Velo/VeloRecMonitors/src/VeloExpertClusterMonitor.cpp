@@ -1,4 +1,4 @@
-// $Id: VeloExpertClusterMonitor.cpp,v 1.3 2009-04-07 14:39:08 jmylroie Exp $
+// $Id: VeloExpertClusterMonitor.cpp,v 1.4 2009-04-14 10:05:51 erodrigu Exp $
 // Include files// from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "GaudiKernel/AlgFactory.h" 
@@ -10,7 +10,6 @@
 #include "VeloEvent/EvtInfo.h"
 
 //velo
-#include "VeloDet/DeVelo.h"
 #include "VeloDet/DeVeloSensor.h"
 #include "Kernel/VeloChannelID.h"
 #include "Event/VeloCluster.h"
@@ -26,9 +25,9 @@
 #include <cmath>
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : ClusterMon
+// Implementation file for class : VeloExpertClusterMonitor
 //
-// another VELO clusters monitoring algorithm should probably be combined with 
+// nother VELO clusters monitoring algorithm should probably be combined with 
 // veloclustermonitor and velo trackmonitor.
 // Produces a set of histograms from clusters and tracks
 // seperate plots are made for each sensor 
@@ -52,13 +51,12 @@ Velo::VeloExpertClusterMonitor::VeloExpertClusterMonitor( const std::string& nam
                         ISvcLocator* pSvcLocator)
   //  : GaudiAlgorithm ( name , pSvcLocator )
   : Velo::VeloMonitorBase ( name , pSvcLocator )//GaudiHistoAlg
-   ,m_veloDet ( 0 )
 {
-  declareProperty("UseExpertMode", m_useExpert = false);
-  declareProperty("UseShiftMode", m_useShift = true);
-  declareProperty( "TrackLocation", m_trackCont = LHCb::TrackLocation::Velo);
+  declareProperty( "UseExpertMode",   m_useExpert = false );
+  declareProperty( "UseShiftMode",    m_useShift = true );
+  declareProperty( "TrackLocation",   m_trackCont = LHCb::TrackLocation::Velo );
   declareProperty( "ClusterLocation", m_clusterCont = LHCb::VeloClusterLocation::Default );
-
+  
 }
 //=============================================================================
 // Destructor
@@ -69,18 +67,11 @@ Velo::VeloExpertClusterMonitor::~VeloExpertClusterMonitor() {}
 // Initialization
 //=============================================================================
 StatusCode Velo::VeloExpertClusterMonitor::initialize() {
-  //  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
-  StatusCode sc = VeloMonitorBase::initialize();
-  //  StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
- 
+  StatusCode sc = VeloMonitorBase::initialize(); 
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
+  if ( m_debugLevel ) debug() << "==> Initialize" << endmsg;
   
-  m_veloDet = getDet<DeVelo>( DeVeloLocation::Default );
-//   if(m_veloDet == 0)
-//     Error("Can't fint detector element. Exiting with Failure",StatusCode::FAILURE);
-
   return StatusCode::SUCCESS;
 }
 
@@ -89,12 +80,15 @@ StatusCode Velo::VeloExpertClusterMonitor::initialize() {
 //=============================================================================
 StatusCode Velo::VeloExpertClusterMonitor::execute() {
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
+  if ( m_debugLevel ) debug() << "==> Execute" << endmsg;
   //  plotClusters();
   loopTracks ();
   return StatusCode::SUCCESS;
 }
 
+//=============================================================================
+// 
+//=============================================================================
 StatusCode Velo::VeloExpertClusterMonitor::loopTracks (){
  
   debug() << " ==> plotClusters " << endmsg;
@@ -122,7 +116,6 @@ StatusCode Velo::VeloExpertClusterMonitor::loopTracks (){
   debug() << "Before making itereators" << endmsg;
   LHCb::Tracks::const_iterator itT ; 
   LHCb::VeloClusters::const_iterator itClusters ;
-  //LHCb::VeloClusters* m_clusters=get<LHCb::VeloClusters>("Raw/Velo/Clusters");
 
   
   char dirName[100];
@@ -393,7 +386,7 @@ StatusCode Velo::VeloExpertClusterMonitor::plotRPhiRange( LHCb::VeloCluster* clu
       plot1D(radius, ClusterType+"/radius", "Cluster adc R", 0, 100, 100);
 
       if(radius<max_radius && radius>min_radius){
-        snprintf(radiusname,99,"/r_range/adc_cluster_r_max_%03f", max_radius);    
+        snprintf(radiusname,99,"/r_range/adc_cluster_r_max_%03f", max_radius);
         radiusName = path + (radiusname);
         plotSensorsADC(adc,radiusName,ClusterType,clsens);
         plotSensorsSize(clsize,radiusName,ClusterType,clsens);
@@ -472,8 +465,12 @@ StatusCode Velo::VeloExpertClusterMonitor::plotSensorsADC(double& adc, std::stri
 //============================================================================
 // plot all sensors size
 //============================================================================
-StatusCode Velo::VeloExpertClusterMonitor::plotSensorsSize(double& clsize, std::string corr,std::string& ClusterType,int sensor_num){
-
+StatusCode
+Velo::VeloExpertClusterMonitor::plotSensorsSize( double& clsize,
+                                                 std::string corr,
+                                                 std::string& ClusterType,
+                                                 int sensor_num ) {
+  
   plot1D(clsize, ClusterType+corr+"/cluster_size", "Cluster Size ", -0.5, 9.5, 10);
   if(sensor_num!= -400){
     char senName[100];
@@ -486,10 +483,13 @@ StatusCode Velo::VeloExpertClusterMonitor::plotSensorsSize(double& clsize, std::
 
 //============================================================================
 // seperate angular plots
-//============================================================================}
-
-StatusCode Velo::VeloExpertClusterMonitor::plotAngles(double& adc, std::string& range,std::string& ClusterType,double theta,int sensor_num){
-
+//============================================================================
+StatusCode
+Velo::VeloExpertClusterMonitor::plotAngles( double& adc,
+                                            std::string& range,
+                                            std::string& ClusterType,
+                                            double theta,int sensor_num ) {
+  
   plot1D(adc, ClusterType+range, "Cluster ADC ", 0, 100, 100);
   //+"/theta/adc/"
   if(sensor_num!= -400){
@@ -509,9 +509,7 @@ StatusCode Velo::VeloExpertClusterMonitor::finalize() {
   
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
-  //  return GaudiAlgorithm::finalize();  // must be called after all other actions
   return VeloMonitorBase::finalize(); // must be called after all other actions
-  //  return GaudiHistoAlg::finalize();  // must be called after all other actions
 }
 
 //=============================================================================
