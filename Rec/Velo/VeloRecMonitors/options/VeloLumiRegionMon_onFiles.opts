@@ -41,7 +41,7 @@ ApplicationMgr.TopAlg += { "ProcessPhase/Moni" };
 
 Moni.DetectorList+={ "VELO" };
 
-#include "HltInit.opts"
+#include "VeloLumiRegionMon_HltInit.opts"
 MoniVELOSeq.Members += {"createODIN",
 			"HltVertexReportsReader",
 			"Velo::VeloLumiRegionMonitor/ASideLumiRegionMonitor",
