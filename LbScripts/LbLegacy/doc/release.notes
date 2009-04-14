@@ -1,3 +1,8 @@
+2009-04-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: moved to use the LbScript tarball for
+	bootstrapping. Use the LbLegacy.LHCb_config for the old settings.
+
 2009-04-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/mkMCGentar: fixed the install_project import.

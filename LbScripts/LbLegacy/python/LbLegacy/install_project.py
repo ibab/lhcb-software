@@ -146,7 +146,7 @@
  080917 - change the permissions of the newly created base directories.
  080922 - Fixed problem in the recusive function to move the file from the directory where
           the untarring has happened.
-        - Fix link problem in the removeall function (Vladimir Romanovskiy)
+        - Fix link problem in the removeAll function (Vladimir Romanovskiy)
         - added the read/write permissions after untarring on windows too.
         - fixed mistake in the previous change. Have to use the absolute path in the os.walk function
  080924 - fixed typo in compile_project
@@ -195,6 +195,7 @@
 """
 #------------------------------------------------------------------------------
 import sys, os, getopt, time, shutil, urllib
+import atexit
 import stat
 import commands
 import logging
@@ -220,6 +221,7 @@ lcg_dir     = None
 lhcb_dir    = None
 html_dir    = None
 scripts_dir = None
+newscripts_dir = None
 targz_dir   = None
 system_dir  = None
 tmp_dir     = None
@@ -231,7 +233,7 @@ globalmask = None
 multiple_mysiteroot = False
 
 # build flags
-full_flag = None
+full_flag = False
 make_flag = None
 
 # cmt stuff
@@ -241,19 +243,14 @@ cmtversion = 0
 grid_version = 0
 
 # various flags
-debug_flag = 0
-list_flag = 0
-remove_flag = 0
+debug_flag = False
+list_flag = False
+remove_flag = False
 make_flag = ' '
-full_flag = 0
 md5_check = True
 nb_retries = 1
 check_only = False
 overwrite_mode = False
-
-# set the python path to import LHCb_config.py
-# the import is done in the main program
-sys.path.append(os.getcwd())
 
 #----------------------------------------------------------------------------------
 def usage() :
@@ -354,7 +351,7 @@ def isProjectRegistered(project):
 #  helper function to remove a directory recursively
 #  This functionality is not implemented in some python version
 #
-def removeall(path):
+def removeAll(path):
     """
     Recursively remove directories and files.
     """
@@ -365,7 +362,7 @@ def removeall(path):
             if os.path.isdir(path) and not os.path.islink(path):
                 lst = os.listdir(path)
                 for p in lst:
-                    removeall(os.path.join(path,p))
+                    removeAll(os.path.join(path,p))
                 os.rmdir(path)
             else:
                 os.remove(path)
@@ -489,14 +486,14 @@ def createTmpDirectory():
 def destroyTmpDirectory():
     log = logging.getLogger()
     log.info( '     Removing %s' % getTmpDirectory())
-    removeall(getTmpDirectory())                    
+    removeAll(getTmpDirectory())                    
 
 def cleanTmpDirectory():
     log = logging.getLogger()
     log.info('     Cleaning up %s' % getTmpDirectory())
     tmpdir = getTmpDirectory()
     for f in os.listdir(tmpdir) :
-        removeall(os.path.join(tmpdir,f))
+        removeAll(os.path.join(tmpdir,f))
 
 #----------------------------------------------------------------------------
 
@@ -541,7 +538,7 @@ def createDir(here , logname):
     log.info(" =========== Python %s %s " % (txt_python_version, this_time) )
     for dir in subdir:
         if os.path.isdir(os.path.join(here,dir)):
-            log.info('%s exists in %s '%(dir,here))
+            log.debug('%s exists in %s '%(dir,here))
         else:
             os.mkdir(dir)
             log.info('%s is created in %s '%(dir,here))
@@ -629,7 +626,7 @@ def getCMT(version=0):
         file ='CMT_'+cmtvers+'_'+platform+'.tar.gz'
         rc = unTarFileInTmp(os.path.join(this_targz_dir,file), os.getcwd(), overwrite=overwrite_mode)
         if rc != 0 :
-            removeall(os.path.join(this_contrib_dir, 'CMT'))
+            removeAll(os.path.join(this_contrib_dir, 'CMT'))
             log.info('CMT directory removed')
             sys.exit("getCMT: Exiting ...\n")
 
@@ -649,7 +646,7 @@ def getCMT(version=0):
     newpath = os.path.join(os.getenv('CMTROOT'),cmtbin)+os.pathsep+os.getenv('PATH')
     os.environ['PATH'] = newpath
 
-    if debug_flag == 1:
+    if debug_flag :
         log.debug( 'CMTROOT %s' % os.getenv('CMTROOT'))
         log.debug( 'PATH %s ' % os.getenv('PATH'))
         log.debug( 'CMTBIN %s '% os.getenv('CMTBIN'))
@@ -685,7 +682,7 @@ def getFile(url,file):
             for f in file_base :
                 if bin != '':
         # download binary tar file if InstallArea is not there
-                    if pack_ver[0] in LHCb_config.ext_lhcb:
+                    if pack_ver[0] in LbLegacy.LHCb_config.ext_lhcb:
                         f = os.path.join(f,bin)
                     else:
                         f = os.path.join(f,'InstallArea',bin)
@@ -808,7 +805,7 @@ def checkMD5(url, file, dest):
     isok = False
     log.debug("Checking %s tar ball consistency ..." % file)
     refmd5 = getReferenceMD5(url, file, dest)
-    if debug_flag ==1:
+    if debug_flag :
         log.info("   reference md5 sum is: %s" % refmd5)
     compmd5 = calculateMD5(os.path.join(dest,file))
     log.info("       local md5 sum is: %s" % compmd5)
@@ -839,17 +836,21 @@ def getPackVer(file):
     this_contrib_dir = contrib_dir.split(os.pathsep)[0]
 
     # get the binary if any
-    for b in LHCb_config.lhcb_binary:
-        if file.find(b) != -1:
-            bin = b
-            if file.find('_'+b) != -1 :
-                ffile = file[:file.find('_'+b)]
-            else :
-                ffile = file[:file.find('.tar.gz')]                
-            break
-        else:
-            bin = ''
-            ffile = file[:file.find('.tar.gz')]
+    if file.find("LBSCRIPTS") == -1 :
+        for b in LbLegacy.LHCb_config.lhcb_binary:
+            if file.find(b) != -1:
+                bin = b
+                if file.find('_'+b) != -1 :
+                    ffile = file[:file.find('_'+b)]
+                else :
+                    ffile = file[:file.find('.tar.gz')]                
+                break
+            else:
+                bin = ''
+                ffile = file[:file.find('.tar.gz')]
+    else :
+        bin = ''
+        ffile = file[:file.find('.tar.gz')]        
     packver = ffile.split('_')
     vers = packver[-1]
     name = packver[0]
@@ -905,8 +906,8 @@ def getProjectList(name,version,binary=' '):
     log.debug('get list of projects to install %s %s %s' % (name, version, binary))
     here = os.getcwd()
 
-    if LHCb_config.data_files.has_key(name) == 1:
-        tar_file = LHCb_config.data_files[name]+'_'+version
+    if LbLegacy.LHCb_config.data_files.has_key(name) == 1:
+        tar_file = LbLegacy.LHCb_config.data_files[name]+'_'+version
     else:
         tar_file = name.upper()+'_'+name.upper()
         if version != 0 :
@@ -948,7 +949,7 @@ def getProjectList(name,version,binary=' '):
             if pack_ver[2] != cmtconfig:
                 del project_list[file]
                 html_list.remove(file)
-                if cmtconfig in LHCb_config.lhcb_binary:
+                if cmtconfig in LbLegacy.LHCb_config.lhcb_binary:
                     newbin = cmtconfig
                     if newbin.find('_dbg') != -1: newbin = newbin[:newbin.find('_dbg')]
                     file = file.replace(pack_ver[2],newbin)
@@ -1001,7 +1002,7 @@ def checkInstalledProjects(project_list):
         if project_list[file] == "source":
             pack_ver = getPackVer(file)
             if pack_ver[2] != cmtconfig:
-                if cmtconfig in LHCb_config.lhcb_binary:
+                if cmtconfig in LbLegacy.LHCb_config.lhcb_binary:
                     newbin = cmtconfig
                     if newbin.find('_dbg') != -1: newbin = newbin[:newbin.find('_dbg')]
                     file = file.replace(pack_ver[2],newbin)
@@ -1068,10 +1069,10 @@ def getProjectTar(tar_list, already_present_list=None):
                 rc = unTarFileInTmp(os.path.join(this_targz_dir,file), os.getcwd(), overwrite=overwrite_mode)
                 pack_ver = getPackVer(file)
                 if rc != 0 and pack_ver[0] != 'LCGGrid' :
-                    removeall(pack_ver[3])
+                    removeAll(pack_ver[3])
                     log.info('Cleaning up %s' % pack_ver[3])
                     sys.exit("getProjectTar: Exiting ...")                 
-                if pack_ver[0] in LHCb_config.ext_lhcb:
+                if pack_ver[0] in LbLegacy.LHCb_config.ext_lhcb:
                     # if it is a ext_lhcb project
                     # create a ext_lhcb project/vers/binary directory
                     # to remember which binary tar file has been untar
@@ -1189,7 +1190,7 @@ def getScripts(bin):
     rc = unTarFileInTmp(os.path.join(this_targz_dir,tarscript), os.getcwd(), overwrite=True)
     os.chdir(here)
     if rc != 0 :
-        removeall(this_scripts_dir)
+        removeAll(this_scripts_dir)
         os.mkdir(this_scripts_dir)
         sys.exit('getScripts: Exiting ...')
     else :
@@ -1198,7 +1199,44 @@ def getScripts(bin):
     if sys.platform != 'win32' :
         sys.path.append(os.path.join(this_scripts_dir,'python'))
 
+def getNewScripts():
+    log = logging.getLogger()
+    here = os.getcwd()
+    cleanNewScripts()
+    scripttar = "LBSCRIPTS_LBSCRIPTS_%s.tar.gz" % lbscripts_version
+    if isInstalled(scripttar) :
+        log.debug("LbScripts %s is already installed" % lbscripts_version)
+        this_lhcb_dir = lhcb_dir.split(os.pathsep)[0]
+        sys.path.insert(0, os.path.join(this_lhcb_dir, "LBSCRIPTS", "LBSCRIPTS_%s" % lbscripts_version, "InstallArea", "python"))
+        log.debug("sys.path is %s" % os.pathsep.join(sys.path))
+        import LbLegacy
+    else :
+        log.info("LbScripts %s is not installed. Dowloading it." % lbscripts_version)
+        getFile(url_dist+'LBSCRIPTS/',scripttar)
+        this_newscripts_dir = newscripts_dir.split(os.pathsep)[0]
+        this_targz_dir = targz_dir.split(os.pathsep)[0]
+        if not os.path.isdir(this_newscripts_dir) :
+            os.mkdir(this_newscripts_dir)
+        checkWriteAccess(this_newscripts_dir)
+        os.chdir(this_newscripts_dir)
+        rc = unTarFileInTmp(os.path.join(this_targz_dir,scripttar), os.getcwd(), overwrite=True)
+        os.chdir(here)
+        if rc != 0 :
+            removeAll(this_newscripts_dir)
+            sys.exit('getNewScripts: Exiting ...')
+        else :
+            changePermissions(this_newscripts_dir, recursive=True)
+            sys.path.insert(0, os.path.join(this_newscripts_dir, "LBSCRIPTS", "LBSCRIPTS_%s" % lbscripts_version, "InstallArea", "python"))
+            log.debug("sys.path is %s" % os.pathsep.join(sys.path))
+            import LbLegacy
+    atexit.register(cleanNewScripts)
 
+def cleanNewScripts():
+    log = logging.getLogger()
+    this_newscripts_dir = newscripts_dir.split(os.pathsep)[0]
+    if os.path.isdir(this_newscripts_dir) :
+        log.debug("Removing the %s directory" % this_newscripts_dir)
+        removeAll(this_newscripts_dir)
 #
 #  get untar_flag ==========================================================
 #
@@ -1211,7 +1249,6 @@ def getUntarFlag(file,exist_flag):
     else:
         untar_flag = 'yes'
     return untar_flag
-
 
 
 #
@@ -1258,7 +1295,7 @@ def removeProject(project,pvers):
     
 
     PROJECT = project.upper()
-    if LHCb_config.lhcb_projects.has_key(PROJECT):
+    if LbLegacy.LHCb_config.lhcb_projects.has_key(PROJECT):
         head = this_lhcb_dir
         VERSION = PROJECT+'_'+pvers
 
@@ -1496,7 +1533,8 @@ def StripPath(path):
 def createBaseDirs():
     global multiple_mysiteroot
     global cmtconfig
-    global log_dir, contrib_dir, lcg_dir, lhcb_dir, html_dir, scripts_dir, targz_dir, system_dir, tmp_dir
+    global log_dir, contrib_dir, lcg_dir, lhcb_dir, html_dir 
+    global scripts_dir, newscripts_dir, targz_dir, system_dir, tmp_dir
     
     
     # removes the trailing "/" at the end of the path
@@ -1538,6 +1576,7 @@ def createBaseDirs():
     lhcb_dir = []
     html_dir = []
     scripts_dir = []
+    newscripts_dir = []
     targz_dir = []
     system_dir = []
     tmp_dir = []
@@ -1548,6 +1587,7 @@ def createBaseDirs():
         lhcb_dir.append(os.path.join(p,'lhcb'))
         html_dir.append(os.path.join(p,'html'))
         scripts_dir.append(os.path.join(p,'scripts'))
+        newscripts_dir.append(os.path.join(p,'newscripts'))
         targz_dir.append(os.path.join(p,'targz'))
         system_dir.append(os.path.join(p,cmtconfig))
         if sys.platform != "win32" :
@@ -1561,6 +1601,7 @@ def createBaseDirs():
     lhcb_dir = os.pathsep.join(lhcb_dir)
     html_dir = os.pathsep.join(html_dir)
     scripts_dir = os.pathsep.join(scripts_dir)
+    newscripts_dir = os.pathsep.join(newscripts_dir)
     targz_dir = os.pathsep.join(targz_dir)
     system_dir = os.pathsep.join(system_dir)
     tmp_dir = os.pathsep.join(tmp_dir)
@@ -1615,19 +1656,22 @@ def runInstall(pname,pversion,binary=''):
     log.info(' +++++++ start install_project.py version= %s ' % script_version)
     log.info('cmt version =%s, make_flag= %s, debug_flag= %s, list_flag= %s, remove_flag= %s' % (cmtversion, make_flag, debug_flag, list_flag, remove_flag))
 # if list_flag is set: give the list of available versions for this project
-    if list_flag == 1:
+    if list_flag :
         listVersions(pname)
         sys.exit()
 
 # if remove flag is set then correspondind tar files and directories will
 # be removed
-    if remove_flag == 1:
+    if remove_flag :
         removeProject(pname,pversion)
         sys.exit()
 
 # start the project installation
     getScripts(binary)
+    getNewScripts()
 
+# check binary name
+    checkBinaryName(binary)
 
     cmtvers = getCMT(cmtversion)
 
@@ -1660,7 +1704,7 @@ def runInstall(pname,pversion,binary=''):
 
 
 # if full_flag is set : download binary_dbg tar files and configure the projects
-    if full_flag == 1 and binary.find('_dbg') == -1:
+    if full_flag and binary.find('_dbg') == -1:
         log.info('download debug version and reconfigure it')
         binary_dbg = binary+'_dbg'
         os.environ['CMTCONFIG'] = binary_dbg
@@ -1670,7 +1714,7 @@ def runInstall(pname,pversion,binary=''):
     if setup_script :
         os.chdir(os.environ["MYSITEROOT"].split(os.pathsep)[0])
         genSetupScript(pname, pversion, cmtconfig, setup_script)
-
+        
     end_time = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
     log.info( '+++++++++++++++++++++++ %s end install_project.py -version no %s' % (end_time, script_version))
 
@@ -1726,6 +1770,7 @@ def setLHCbEnv(cmtvers):
 #
 
 def tarFileList(filename):
+    log = logging.getLogger()
     if not useTarFileModule() :
         lststr =  'tar --list --ungzip --file %s' % filename
         for l in os.popen(lststr) :
@@ -1954,7 +1999,7 @@ def checkBinaryName(binary):
     global full_flag
     global make_flag
     if binary != ' ':
-        for b in LHCb_config.lhcb_binary:
+        for b in LbLegacy.LHCb_config.lhcb_binary:
             if b == binary:
                 os.environ['CMTCONFIG'] = binary
                 if binary.endswith("_dbg") :
@@ -1963,17 +2008,17 @@ def checkBinaryName(binary):
                     os.environ['CMTDEB'] = binary + "_dbg"
                 # if a win32 binary is installed from a non win32 platform then do not cmt config
                 if sys.platform != 'win32' and binary.find('win32') != 'win32':
-                    full_flag = 0
+                    full_flag = True
                     make_flag = ' '
                 break
         else:
             print ' this binary %s is not part of LHCb distribution '% binary
-            print ' choose another one from the list %s '% LHCb_config.lhcb_binary
+            print ' choose another one from the list %s '% LbLegacy.LHCb_config.lhcb_binary
             print ' or do not require the binary  '
             sys.exit(' %s is not part of LHCb distribution '%(binary)+'\n' )
     else:
-        if not os.getenv('CMTCONFIG') in LHCb_config.lhcb_binary:
-            print 'BE CAREFUL - your CMTCONFIG %s is not part of the lhcb_binary %s'%(os.getenv('CMTCONFIG'),LHCb_config.lhcb_binary)
+        if not os.getenv('CMTCONFIG') in LbLegacy.LHCb_config.lhcb_binary:
+            print 'BE CAREFUL - your CMTCONFIG %s is not part of the lhcb_binary %s'%(os.getenv('CMTCONFIG'),LbLegacy.LHCb_config.lhcb_binary)
             print 'do you want to continue? [yes|no]'
             next = sys.stdin.readline()
             if next.lower()[0] != 'y': 
@@ -2007,15 +2052,15 @@ if __name__ == "__main__":
 
     for key,value in keys:
         if key in ('-d', '--debug'):
-            debug_flag = 1
+            debug_flag = True
         if key in ('-f', '--full'):
-            full_flag = 1
+            full_flag = True
         if key in ('-h', '--help'):
             help()
         if key in ('-l', '--list'):
-            list_flag = 1
+            list_flag = True
         if key in ('-r', '--remove'):
-            remove_flag = 1
+            remove_flag = True
         if key in ( '-c', '--cmtversion'):
             cmtversion = value
         if key in ( '-v', '--version'):
@@ -2039,31 +2084,27 @@ if __name__ == "__main__":
         if key == '--overwrite':
             overwrite_mode = True
             
-    log = logging.getLogger()
-    log.setLevel(logging.DEBUG)
+    thelog = logging.getLogger()
+    thelog.setLevel(logging.DEBUG)
     console = logging.StreamHandler()
     if python_version < (2, 5, 1) :
         console.setFormatter(logging.Formatter("%(levelname)-8s: %(message)s"))
     else :
-        console.setFormatter(logging.Formatter("%(levelname)-8s: %(funcName)-25s - %(message)s"))
+        if debug_flag == 1 :
+            console.setFormatter(logging.Formatter("%(levelname)-8s: %(funcName)-25s - %(message)s"))
+        else :
+            console.setFormatter(logging.Formatter("%(levelname)-8s: %(message)s"))            
     if debug_flag == 1 :
         console.setLevel(logging.DEBUG) 
     else :
         console.setLevel(logging.INFO)
-    log.addHandler(console)
+    thelog.addHandler(console)
 
     changePermissions('install_project.py', recursive=False)    
 
-    rc = getFile(url_dist,'LHCb_config.py')
-    import LHCb_config
-
-
-# check binary name
-    checkBinaryName(binary)
-
 # check pversion
     if pversion == ' ' and pname != 'LHCbGrid':
-        list_flag = 1
+        list_flag = True
 
 
     lognm = createBaseDirs()
@@ -2074,7 +2115,7 @@ if __name__ == "__main__":
     else :
         filehandler.setFormatter(logging.Formatter("%(asctime)s %(levelname)-8s: %(funcName)-25s - %(message)s"))
     filehandler.setLevel(logging.DEBUG)
-    log.addHandler(filehandler)
+    thelog.addHandler(filehandler)
 
     runInstall(pname,pversion,binary)
     
