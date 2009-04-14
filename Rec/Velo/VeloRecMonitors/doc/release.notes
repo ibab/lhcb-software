@@ -3,6 +3,18 @@
 ! Responsible : VELO monitoring group
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
+! 2009-04-14 - Malcolm John
+ - Several additions to VeloLumiRegionMonitor and VeloHltLiteClusterMonitor inc.:
+  trend plotting for the last 1000 lumi region position measurements
+  profiling of position and occupancy vs LHC bunchId
+
+ - Add two gaudirun scripts that add my histos into the histoDB and layout my pages
+  VeloLumiRegion_addToHistDb.py
+  VeloLumiRegion_setupPages.py
+
+ - Now there are two almost identical run scripts in the options directory
+  VeloLumiRegionMon.opts
+  VeloLumiRegionMon_onFiles.opts
 
 ! 2009-04-14 - Eduardo Rodrigues
  - VeloExpertClusterMonitor: several simplifications profiting from
