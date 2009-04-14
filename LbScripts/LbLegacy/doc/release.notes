@@ -7,6 +7,7 @@
 	LbConfiguration.
 	* python/LbLegacy/install_project.py: moved to use the LbScript tarball for
 	bootstrapping. Use the LbLegacy.LHCb_config for the old settings.
+	moved version of LbScripts to be used to be the current one.
 
 2009-04-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 

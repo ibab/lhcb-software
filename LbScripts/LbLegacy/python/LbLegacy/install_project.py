@@ -192,6 +192,9 @@
  090401 - fixed small hickup in the installation of a local data package.
  090406 - removed the obsolete string module
         - moved to LbScripts v3r1
+ 090414 - moved to use the LbScript tarball for bootstrapping. 
+        - Use the LbLegacy.LHCb_config for the old settings.
+        - moved version of LbScripts to be used to be the current one (v3r2).      
 """
 #------------------------------------------------------------------------------
 import sys, os, getopt, time, shutil, urllib
@@ -201,10 +204,10 @@ import commands
 import logging
 from shutil import rmtree
 
-script_version = '090406'
+script_version = '090414'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
-lbscripts_version = "v3r1"
+lbscripts_version = "v3r2"
 #-----------------------------------------------------------------------------------
 
 # url from which to get files
