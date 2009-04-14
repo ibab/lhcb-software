@@ -1,10 +1,13 @@
-// $Id: VeloHltLiteClusterMonitor.h,v 1.2 2008-09-02 09:39:27 mjohn Exp $
+// $Id: VeloHltLiteClusterMonitor.h,v 1.3 2009-04-14 11:25:51 mjohn Exp $
 #ifndef VELORECMONITORS_VELOHLTLITECLUSTERMONITOR_H 
 #define VELORECMONITORS_VELOHLTLITECLUSTERMONITOR_H 1
 
-// form
+// from Gaudi
 #include "AIDA/IProfile1D.h"
 #include "AIDA/IHistogram1D.h"
+
+// from LHCb
+#include "Event/ODIN.h"
 
 // from DigiEvent
 #include "Event/VeloLiteCluster.h"
@@ -44,8 +47,9 @@ namespace Velo
     void monitorLiteClusters();
 
     // Data members
+    LHCb::ODIN* m_odin;
     LHCb::VeloLiteCluster::FastContainer* m_liteClusters;
-    std::vector< std::vector<int> > m_nClusters;
+    std::vector< std::vector<int> > m_nRClusters;
     std::string m_liteClusterLocation;
     unsigned int m_nRSensorsOn;
     bool m_histogramByZone;
@@ -54,6 +58,7 @@ namespace Velo
     std::vector<IHistogram1D*> h_nClustersSmallRange;
     std::vector<IHistogram1D*> h_nClustersLargeRange;
     std::vector< IProfile1D* > h_nClustersVsZ;
+    std::vector< IProfile1D* > h_nClustersVsBunchId;
     std::vector< std::vector<IHistogram1D*> > h_nClustersByZone;
     std::vector< std::vector< IProfile1D* > > h_nClustersVsZByZone;
    };
