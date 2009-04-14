@@ -1,3 +1,7 @@
+2009-04-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/group_shell.sh: fixed small problem in file redirection.
+
 2009-04-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/group_login.csh: 
