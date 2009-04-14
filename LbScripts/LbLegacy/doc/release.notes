@@ -1,5 +1,8 @@
 2009-04-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbLegacy/LHCb_config.py: uncommented the fields needed by install_project.
+	This is a temporary solution until install_project is moved completely to use
+	LbConfiguration.
 	* python/LbLegacy/install_project.py: moved to use the LbScript tarball for
 	bootstrapping. Use the LbLegacy.LHCb_config for the old settings.
 
