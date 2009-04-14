@@ -1,4 +1,4 @@
-// $Id: OdinTypesFilter.cpp,v 1.6 2009-04-06 15:51:17 odescham Exp $
+// $Id: OdinTypesFilter.cpp,v 1.7 2009-04-14 12:12:35 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -55,8 +55,7 @@ StatusCode OdinTypesFilter::initialize() {
 
   // check properties
   if(m_log != "AND" && m_log != "OR"){
-    error() << "the Logical operator should be 'AND' or 'OR' " <<endreq;
-    return StatusCode::FAILURE;
+    return Error( "The Logical operator should be 'AND' or 'OR' " );
   }
 
 
@@ -74,7 +73,7 @@ StatusCode OdinTypesFilter::initialize() {
       k++;
     }
     if( !ok ){
-      error() << "The requested BXType '" << *ibx << "' is not a valid type" << endreq;
+      error() << "The requested BXType '" << *ibx << "' is not a valid type" << endmsg;
       return StatusCode::FAILURE;
     }
   }
@@ -93,7 +92,7 @@ StatusCode OdinTypesFilter::initialize() {
       k++;
     }
     if( !ok ){
-      error() << "The requested TriggerType '" << *itr << "' is not a valid type" << endreq;
+      error() << "The requested TriggerType '" << *itr << "' is not a valid type" << endmsg;
       return StatusCode::FAILURE;
     }
   }
@@ -113,19 +112,19 @@ StatusCode OdinTypesFilter::initialize() {
       k++;
     }
     if( !ok ){
-      error() << "The requested ReadoutType '" << *iro << "' is not a valid type" << endreq;
+      error() << "The requested ReadoutType '" << *iro << "' is not a valid type" << endmsg;
       return StatusCode::FAILURE;
     }
   }  
 
   // selection :
-  info() << "Accepted BXTypes : " << m_bxs << endreq;
-  info() << m_log << endreq;
-  info() << "Accepted TriggerTypes : " << m_trs << endreq;
-  info() << m_log << endreq;
-  info() << "Accepted ReadoutTypes : " << m_ros << endreq;
-  info() << m_log << endreq;
-  info() << "TAE Window in [" << m_winmin << "," << m_winmax <<"]"<< endreq;
+  info() << "Accepted BXTypes : " << m_bxs << endmsg;
+  info() << m_log << endmsg;
+  info() << "Accepted TriggerTypes : " << m_trs << endmsg;
+  info() << m_log << endmsg;
+  info() << "Accepted ReadoutTypes : " << m_ros << endmsg;
+  info() << m_log << endmsg;
+  info() << "TAE Window in [" << m_winmin << "," << m_winmax <<"]"<< endmsg;
 
 
 
@@ -188,8 +187,7 @@ StatusCode OdinTypesFilter::execute() {
   if( exist<LHCb::ODIN>(LHCb::ODINLocation::Default) ){
     odin = get<LHCb::ODIN> (LHCb::ODINLocation::Default);
   }else{
-    StatusCode sc = Error("ODIN cannot be loaded",StatusCode::FAILURE);
-    return sc;
+    return Error("ODIN cannot be loaded");
   }
 
   
@@ -201,7 +199,7 @@ StatusCode OdinTypesFilter::execute() {
   roType << (LHCb::ODIN::ReadoutTypes) odin->readoutType();
 
 
-  debug() << " Trigger Type : " << trType.str() << " BXType : " << bxType.str() << endreq;
+  debug() << " Trigger Type : " << trType.str() << " BXType : " << bxType.str() << endmsg;
 
   bool bxPass =  false;
   for(std::vector<std::string>::iterator ibx = m_bxs.begin(); ibx != m_bxs.end() ; ++ibx){
@@ -247,14 +245,14 @@ StatusCode OdinTypesFilter::finalize() {
   debug() << "==> Finalize" << endmsg;
 
 
-  info() << "Accepted BXTypes : " << m_bxs << endreq;
-  info() << m_log << endreq;
-  info() << "Accepted TriggerTypes : " << m_trs << endreq;
-  info() << m_log << endreq;
-  info() << "Accepted ReadoutTypes : " << m_ros << endreq;
-  info() << m_log << endreq;
-  info() << "TAE Window in [" << m_winmin << "," << m_winmax <<"]"<< endreq;
-  
+  info() << "Accepted BXTypes : " << m_bxs << endmsg;
+  info() << m_log << endmsg;
+  info() << "Accepted TriggerTypes : " << m_trs << endmsg;
+  info() << m_log << endmsg;
+  info() << "Accepted ReadoutTypes : " << m_ros << endmsg;
+  info() << m_log << endmsg;
+  info() << "TAE Window in [" << m_winmin << "," << m_winmax <<"]"<< endmsg;
+  info() << "   ---> " << m_acc << " accepted events among " << m_all << endmsg;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }

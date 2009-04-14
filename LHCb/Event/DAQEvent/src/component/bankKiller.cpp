@@ -1,4 +1,4 @@
-// $Id: bankKiller.cpp,v 1.6 2008-08-25 11:05:05 panmanj Exp $
+// $Id: bankKiller.cpp,v 1.7 2009-04-14 12:12:35 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -43,18 +43,18 @@ StatusCode bankKiller::initialize() {
   
   if( m_defaultIsKill ) {
     if(m_bankTypes.size() == 0)warning() << "bankKiller : nothing specified to be kept - all will be removed " 
-					 << endreq;
+					 << endmsg;
     
     for(std::vector< std::string >::iterator ityp = m_bankTypes.begin() ; 
 	ityp!= m_bankTypes.end() ; ++ ityp ){
-      info() << "bankKiller : all banks of type '" << *ityp << "' will be kept." <<endreq;
+      info() << "bankKiller : all banks of type '" << *ityp << "' will be kept." <<endmsg;
     }
   } else {
-    if(m_bankTypes.size() == 0)warning() << "bankKiller : nothing to be removed " << endreq;
+    if(m_bankTypes.size() == 0)warning() << "bankKiller : nothing to be removed " << endmsg;
     
     for(std::vector< std::string >::iterator ityp = m_bankTypes.begin() ; 
 	ityp!= m_bankTypes.end() ; ++ ityp ){
-      info() << "bankKiller : all banks of type '" << *ityp << "' will be removed." <<endreq;
+      info() << "bankKiller : all banks of type '" << *ityp << "' will be removed." <<endmsg;
     }
   }
 
@@ -115,18 +115,18 @@ void  bankKiller::killBankType( LHCb::RawBank::BankType bankType,
     return;
   }
   
-  debug() << "All banks of type '" << bankTypeName << "'  are to be removed - banks size =  " << banks.size() << endreq;
+  debug() << "All banks of type '" << bankTypeName << "'  are to be removed - banks size =  " << banks.size() << endmsg;
 
   
   for(std::vector<LHCb::RawBank*>::const_iterator itB = banks.begin() ; itB !=  banks.end() ; ++itB ) {
     
     bool success = m_rawEvt -> removeBank ( *itB );
     if( !success && warningmsg) 
-      warning() << "The bank " << * itB << " of type '" << bankTypeName << "' has not been found to be removed " << endreq;
+      warning() << "The bank " << * itB << " of type '" << bankTypeName << "' has not been found to be removed " << endmsg;
     
   }
   debug() << "All banks of type '" << bankTypeName 
 	  << "' have been removed  - " 
-	  << " banks size is now : " << ( m_rawEvt->banks( bankType ) ).size() << endreq;
+	  << " banks size is now : " << ( m_rawEvt->banks( bankType ) ).size() << endmsg;
   
 };

@@ -49,15 +49,15 @@ StatusCode OdinBCIDFilter::initialize() {
   if( m_comparator != "=" && m_comparator != "==" && m_comparator != "!=" &&
       m_comparator != ">" && m_comparator != ">=" &&
       m_comparator != "<" && m_comparator != "<=" ){
-    error() << "Comparator '"<< m_comparator << "' is not supported" << endreq;
-    error() << " Choose among : ('=' , '!=' , '>' , '>=' , '<' , '<=')" << endreq;
+    error() << "Comparator '"<< m_comparator << "' is not supported" << endmsg;
+    error() << " Choose among : ('=' , '!=' , '>' , '>=' , '<' , '<=')" << endmsg;
     return StatusCode::FAILURE;
   }
   //
   if( m_revert )
-    info() << " Filtering criteria : ![(BXID & " << m_mask <<")" << m_comparator << " " << m_value << "]" << endreq;
+    info() << " Filtering criteria : ![(BXID & " << m_mask <<")" << m_comparator << " " << m_value << "]" << endmsg;
   else
-    info() << " Filtering criteria :  [(BXID & " << m_mask <<")" << m_comparator << " " << m_value << "]" << endreq;
+    info() << " Filtering criteria :  [(BXID & " << m_mask <<")" << m_comparator << " " << m_value << "]" << endmsg;
 
   
   return StatusCode::SUCCESS;
@@ -86,7 +86,7 @@ StatusCode OdinBCIDFilter::execute() {
   long bx = odin->bunchId();
 
   bool decision = (m_revert) ? !rule(bx) : rule(bx);
-  debug() << "Accept event : " << bx << " : " << decision << endreq;
+  debug() << "Accept event : " << bx << " : " << decision << endmsg;
   setFilterPassed( decision );
   if(decision)m_acc++;
 
@@ -114,10 +114,10 @@ StatusCode OdinBCIDFilter::finalize() {
 
 
   if( m_revert )
-    info() << " Filtering criteria : ![(BXID & " << m_mask <<")" << m_comparator << " " << m_value << "]" << endreq;
+    info() << " Filtering criteria : ![(BXID & " << m_mask <<")" << m_comparator << " " << m_value << "]" << endmsg;
   else
-    info() << " Filtering criteria :  [(BXID & " << m_mask <<")" << m_comparator << " " << m_value << "]" << endreq;
-  info() << "   ---> " << m_acc << " accepted events among " << m_all << endreq;
+    info() << " Filtering criteria :  [(BXID & " << m_mask <<")" << m_comparator << " " << m_value << "]" << endmsg;
+  info() << "   ---> " << m_acc << " accepted events among " << m_all << endmsg;
   
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions

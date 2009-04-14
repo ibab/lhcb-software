@@ -1,4 +1,4 @@
-// $Id: RawBankReadoutStatusMonitor.cpp,v 1.8 2009-03-05 15:36:36 odescham Exp $
+// $Id: RawBankReadoutStatusMonitor.cpp,v 1.9 2009-04-14 12:12:35 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -63,10 +63,10 @@ StatusCode RawBankReadoutStatusMonitor::initialize() {
   debug() << "==> Initialize" << endmsg;
 
   m_first = true;
-  info() << "---- Histo bins label : " << endreq  ;
+  info() << "---- Histo bins label : " << endmsg  ;
   int k = -1;
   for( std::vector<std::string>::iterator i = m_labels.begin() ; i != m_labels.end() ; i++){
-    info() <<  " | " << k << " = '" <<  *i  <<"' | " << endreq;
+    info() <<  " | " << k << " = '" <<  *i  <<"' | " << endmsg;
     k++;
   }
   return StatusCode::SUCCESS;
@@ -140,12 +140,12 @@ StatusCode RawBankReadoutStatusMonitor::execute() {
     AIDA::IHistogram1D* histo1D =
       plot1D( -1., base.str() + "/1",  tit1D.str() ,  -1, (double) m_degree , m_degree+1);
     setLabels1D( histo1D  );
-    debug() << "Status " << status->status() << endreq;
+    debug() << "Status " << status->status() << endmsg;
     for(int i = 0; i < m_degree ; ++i ){
       int word = status->status() >> i;
       if( ( 0x1 & word) )plot1D( (double) i , base.str() + "/1",  tit1D.str() ,   -1, (double) m_degree , m_degree+1);
       int isok = (0x1 & word);
-      debug() << i << " -> " <<  isok << endreq;
+      debug() << i << " -> " <<  isok << endmsg;
     }
 
 

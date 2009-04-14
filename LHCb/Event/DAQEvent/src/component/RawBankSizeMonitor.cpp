@@ -1,4 +1,4 @@
-// $Id: RawBankSizeMonitor.cpp,v 1.4 2008-04-02 18:53:09 odescham Exp $
+// $Id: RawBankSizeMonitor.cpp,v 1.5 2009-04-14 12:12:35 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -64,7 +64,7 @@ StatusCode RawBankSizeMonitor::initialize() {
         m_bankTypes.push_back( (LHCb::RawBank::BankType) i );        
       }
     }
-    if( !found) warning() << "Requested bank '" << *it << "' is not a valid name" << endreq;
+    if( !found) warning() << "Requested bank '" << *it << "' is not a valid name" << endmsg;
   }
   
   return StatusCode::SUCCESS;

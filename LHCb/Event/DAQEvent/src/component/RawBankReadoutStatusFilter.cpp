@@ -1,4 +1,4 @@
-// $Id: RawBankReadoutStatusFilter.cpp,v 1.4 2007-12-05 15:04:07 odescham Exp $
+// $Id: RawBankReadoutStatusFilter.cpp,v 1.5 2009-04-14 12:12:35 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -59,7 +59,7 @@ StatusCode RawBankReadoutStatusFilter::execute() {
   int value = LHCb::RawBankReadoutStatus::OK;
 
   if(m_type == LHCb::RawBank::LastType){
-    warning() << "No BankType requested in RawBankReadoutStatusFilter -> filterPassed = true" << endreq;
+    warning() << "No BankType requested in RawBankReadoutStatusFilter -> filterPassed = true" << endmsg;
     return StatusCode::SUCCESS;
   }
   
@@ -71,21 +71,21 @@ StatusCode RawBankReadoutStatusFilter::execute() {
     status = statuss->object( LHCb::RawBank::BankType(m_type) );  
   } else {
     warning() << "No Readout status container found at "<< LHCb::RawBankReadoutStatusLocation::Default 
-              <<" -> will act as the bank " << m_type << " was Missing !!"  << endreq;    
+              <<" -> will act as the bank " << m_type << " was Missing !!"  << endmsg;    
     value = LHCb::RawBankReadoutStatus::Missing;
   }
   if(NULL != status){
     value = status->status();
   }else{ 
     warning() << "No Readout status found for bankType "<< m_type 
-              <<" -> will act as the bank " << m_type << " was Missing !!"  << endreq; 
+              <<" -> will act as the bank " << m_type << " was Missing !!"  << endmsg; 
     value = LHCb::RawBankReadoutStatus::Missing;
   }
 
   int decision = value && m_mask;  
   if(decision !=0 )setFilterPassed(false); // reject
 
-  debug() << "Status value : " << value << " Mask : " << m_mask << " => " << filterPassed() << endreq;
+  debug() << "Status value : " << value << " Mask : " << m_mask << " => " << filterPassed() << endmsg;
 
 
   return StatusCode::SUCCESS;
