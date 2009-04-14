@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.87 2009-04-08 17:35:27 jpalac Exp $
+# $Id: requirements,v 1.88 2009-04-14 13:24:36 jpalac Exp $
 package AnalysisSys
 version v3r1
 
@@ -56,12 +56,12 @@ use  MicroDSTBase        	v1r3    MicroDST          # Juan Palacios
 use  MicroDSTInterfaces  	v1r1    MicroDST          # Juan Palacios
 use  MicroDSTTools      	v1r3p1  MicroDST          # Juan Palacios
 use  MicroDSTAlgorithm   	v3r5    MicroDST          # Juan Palacios
-use  MicroDSTConf               v2r1    MicroDST          # Juan Palacios
+use  MicroDSTConf               v2r1p1  MicroDST          # Juan Palacios
 
 ####################################################################
 use Analysis            	v8r1p1  Tutorial          # P. Koppenburg
 use LoKiExample         	v8r2    Ex                # Vanya Belyaev
-use MicroDSTExample             v2r2    Ex                # Juan Palacios
+use MicroDSTExample             v2r2p1  Ex                # Juan Palacios
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
