@@ -271,8 +271,8 @@ EvtModelReg::EvtModelReg(const std::list<EvtDecayBase*>* extraModels)
     modelist.registerModel(new EvtbTosllAli);
     //    modelist.registerModel(new EvtBToDDalitzCPK);
     modelist.registerModel(new EvtLambdaB2LambdaV);
-    //    modelist.registerModel(new EvtLambda2PPiForLambdaB2LambdaV);
-    //    modelist.registerModel(new EvtV2VpVmForLambdaB2LambdaV);
+    modelist.registerModel(new EvtLambda2PPiForLambdaB2LambdaV);
+    modelist.registerModel(new EvtV2VpVmForLambdaB2LambdaV);
     //    modelist.registerModel(new EvtPVVCPLH);
     //   modelist.registerModel(new EvtSSD_DirectCP);
 
