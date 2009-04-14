@@ -1,5 +1,9 @@
 2009-04-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of version v3r2
+
+2009-04-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* scripts/group_shell.sh: fixed small problem in file redirection.
 
 2009-04-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
