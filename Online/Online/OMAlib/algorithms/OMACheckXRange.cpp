@@ -1,4 +1,4 @@
-// $Id: OMACheckXRange.cpp,v 1.5 2009-04-02 10:27:25 ggiacomo Exp $
+// $Id: OMACheckXRange.cpp,v 1.6 2009-04-14 10:34:41 ggiacomo Exp $
 
 #include <TH1F.h>
 #include "OMAlib/OMAAlgorithms.h"
@@ -32,7 +32,6 @@ void OMACheckXRange::exec(TH1 &Histo,
                           float alarm_min,
                           float alarm_max,
                           unsigned int anaID) {
-  bool ok=true;
   OMAMessage::OMAMsgLevel level = OMAMessage::INFO;
   std::string hname(Histo.GetName());
   std::stringstream message;
