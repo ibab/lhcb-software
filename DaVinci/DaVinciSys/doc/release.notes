@@ -13,7 +13,6 @@ Highlights:
   * MicroDST: 
      - Add copying of HltDecReports (Juan)
      - Move Particle->MCParticle relations table to Phys/SelectionName/P2MCPRelations (Juan)
-     - New configurable PhysMicroDST for easy confuguring of "standard" Physics selectionMicroDST job (Juan)
   * DecayTreeTuple:
      - Various improvements (Rob & Patrick K)
 
