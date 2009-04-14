@@ -236,7 +236,11 @@ class PresenterMainFrame : public TGMainFrame
     void refreshHistoDBListTree();
     void refreshPagesDBListTree();
     void refreshHistogramSvcList(bool withTree);
-    void listRootHistogramsFrom(TDirectory* rootFile, std::vector<std::string> & histogramList, std::vector<std::string> & histogramTypes, std::string& taskName);
+    void listRootHistogramsFrom(TDirectory* rootFile,
+                                std::vector<std::string> & histogramList,
+                                std::vector<std::string> & histogramTypes,
+                                std::string& taskName,
+                                pres::SavesetType savesetType);
     void refreshPartitionSelectorPopupMenu();
     void hideDBTools();
     void showDBTools(pres::DatabaseMode databasePermissions);
@@ -275,7 +279,7 @@ class PresenterMainFrame : public TGMainFrame
 
 //    TGPopupMenu* histoSvcTreeContextMenu() const { return m_histoSvcTreeContextMenu; }
 
-    void addDimSvcToHistoDB();
+    void addHistoToHistoDB();
     void addDimHistosToPage();
     void addDbHistoToPage(bool overlapMode);
     void addHistoToPage(const std::string& histogramUrl, bool overlapMode);
@@ -539,8 +543,8 @@ class PresenterMainFrame : public TGMainFrame
 
     std::vector<int> m_alarmMessageIDs;
 
-    std::vector<std::string>      m_knownDimServices;
-    std::vector<std::string>::const_iterator m_knownDimServicesIt;
+    std::vector<std::string>      m_knownHistogramServices;
+//    std::vector<std::string>::const_iterator m_knownDimServicesIt;
     
     std::vector<std::string>      m_candidateDimServices;
     std::vector<std::string>::const_iterator m_candidateDimServicesIt;
