@@ -1,4 +1,4 @@
-#$Id: TestMicroDSTMake.py,v 1.11 2009-01-13 17:05:31 jpalac Exp $
+#$Id: TestMicroDSTMake.py,v 1.12 2009-04-14 13:22:15 jpalac Exp $
 from Gaudi.Configuration import *
 from DaVinci.Configuration import DaVinci
 from Configurables import MCParticleArrayFilterAlg
@@ -52,6 +52,7 @@ else :
     
 importOptions('$MICRODSTOPTS/MicroDSTStream.py')
 MicroDSTStream=OutputStream('MicroDSTStream')
+ApplicationMgr().OutStream.append(MicroDSTStream)
 evtString = ""
 if not (nEvents==-1) :
     evtString = str(nEvents/1000.)
