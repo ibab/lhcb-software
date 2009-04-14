@@ -1,0 +1,101 @@
+///////////////////////////////////////////////////////////////////////////////
+// Enable histogram publishing
+ApplicationMgr.TopAlg ={"UpdateAndReset"};
+UpdateAndReset.saveHistograms=1;
+UpdateAndReset.saverCycle=600; //seconds between savesets
+UpdateAndReset.resetHistosAfterSave=1;
+UpdateAndReset.saveSetDir="/hist/Savesets";
+
+// General settings
+#include "$STDOPTS/LHCbApplication.opts"
+#include "$STDOPTS/DigiDicts.opts"
+#include "$STDOPTS/RawDataIO.opts"
+
+// Monitoring - histogram persistency Svc
+//#include "$STDOPTS/RootHist.opts"
+ApplicationMgr.HistogramPersistency  = "NONE";
+
+RootHistCnv.ForceAlphaIds = true;
+
+#pragma print off
+/// time profiling
+AuditorSvc.Auditors = { "ChronoAuditor" };
+ApplicationMgr.ExtSvc += { "AuditorSvc" };
+ChronoAuditor.Enable = true;
+
+// 2008 database tags
+DDDB.DefaultTAG = "head-20080702";
+LHCBCOND.DefaultTAG = "head-20080702";
+SIMCOND.DefaultTAG="head-20080702";
+
+EventPersistencySvc.CnvServices += {"LHCb::RawDataCnvSvc/RawDataCnvSvc"};
+
+ApplicationMgr.AuditAlgorithms = True;
+ApplicationMgr.ExtSvc += { "ToolSvc", "AuditorSvc"};
+AuditorSvc.Auditors += {"TimingAuditor/TIMER" } ;
+ApplicationMgr.ExtSvc += { "MonitorSvc" };
+
+MessageSvc.OutputLevel           = 4;
+
+ApplicationMgr.TopAlg += { "ProcessPhase/Moni" };
+
+Moni.DetectorList+={ "VELO" };
+
+#include "HltInit.opts"
+MoniVELOSeq.Members += {"createODIN",
+			"HltVertexReportsReader",
+			"Velo::VeloLumiRegionMonitor/ASideLumiRegionMonitor",
+			"Velo::VeloLumiRegionMonitor/CSideLumiRegionMonitor"};
+//---------------------------------------------------------
+ASideLumiRegionMonitor.HltLineName="Hlt1VeloASideDecision";
+CSideLumiRegionMonitor.HltLineName="Hlt1VeloCSideDecision";
+
+ASideLumiRegionMonitor.RefreshRate=1000;
+CSideLumiRegionMonitor.RefreshRate=1000;
+
+ASideLumiRegionMonitor.MinimumNumberofTracks=5;
+CSideLumiRegionMonitor.MinimumNumberofTracks=5;
+//---------------------------------------------------------
+
+ASideLumiRegionMonitor.VertexReportLocation="Hlt/ASideVertexReports";
+ASideLumiRegionMonitor.GenerateLumiRegion=True;
+ASideLumiRegionMonitor.GeneratedXPosition=-0.;
+CSideLumiRegionMonitor.VertexReportLocation="Hlt/CSideVertexReports";
+CSideLumiRegionMonitor.GenerateLumiRegion=True;
+CSideLumiRegionMonitor.GeneratedXPosition=+0.;
+//---------------------------------------------------------
+
+MoniVELOSeq.Members += {"createODIN",
+			"DecodeVeloRawBuffer",
+			"Velo::VeloHltLiteClusterMonitor/VeloLiteClusterMonitor",
+			"LHCb::DelaySleepAlg/Delay"
+};
+Delay.DelayTime=0;
+//---------------------------------------------------------
+
+EventSelector.PrintFreq  = 500;
+EventSelector.FirstEvent = 1;
+EventSelector.Input += {
+"DATAFILE='file:///daqarea/lhcb/data/2009/RAW/LHCb/FEST/42956/042956_0000000001.raw' svc='LHCb::MDFSelector'",
+"DATAFILE='file:///daqarea/lhcb/data/2009/RAW/LHCb/FEST/42956/042956_0000000002.raw' svc='LHCb::MDFSelector'",
+"DATAFILE='file:///daqarea/lhcb/data/2009/RAW/LHCb/FEST/42956/042956_0000000003.raw' svc='LHCb::MDFSelector'",
+"DATAFILE='file:///daqarea/lhcb/data/2009/RAW/LHCb/FEST/42956/042956_0000000004.raw' svc='LHCb::MDFSelector'",
+"DATAFILE='file:///daqarea/lhcb/data/2009/RAW/LHCb/FEST/42956/042956_0000000005.raw' svc='LHCb::MDFSelector'",
+"DATAFILE='file:///daqarea/lhcb/data/2009/RAW/LHCb/FEST/42956/042956_0000000006.raw' svc='LHCb::MDFSelector'",
+"DATAFILE='file:///daqarea/lhcb/data/2009/RAW/LHCb/FEST/42956/042956_0000000007.raw' svc='LHCb::MDFSelector'",
+"DATAFILE='file:///daqarea/lhcb/data/2009/RAW/LHCb/FEST/42956/042956_0000000008.raw' svc='LHCb::MDFSelector'",
+"DATAFILE='file:///daqarea/lhcb/data/2009/RAW/LHCb/FEST/42956/042956_0000000009.raw' svc='LHCb::MDFSelector'",
+"DATAFILE='file:///daqarea/lhcb/data/2009/RAW/LHCb/FEST/42956/042956_0000000010.raw' svc='LHCb::MDFSelector'",
+"DATAFILE='file:///daqarea/lhcb/data/2009/RAW/LHCb/FEST/42956/042956_0000000011.raw' svc='LHCb::MDFSelector'",
+"DATAFILE='file:///daqarea/lhcb/data/2009/RAW/LHCb/FEST/42956/042956_0000000012.raw' svc='LHCb::MDFSelector'",
+"DATAFILE='file:///daqarea/lhcb/data/2009/RAW/LHCb/FEST/42956/042956_0000000013.raw' svc='LHCb::MDFSelector'",
+"DATAFILE='file:///daqarea/lhcb/data/2009/RAW/LHCb/FEST/42956/042956_0000000014.raw' svc='LHCb::MDFSelector'",
+"DATAFILE='file:///daqarea/lhcb/data/2009/RAW/LHCb/FEST/42956/042956_0000000015.raw' svc='LHCb::MDFSelector'",
+"DATAFILE='file:///daqarea/lhcb/data/2009/RAW/LHCb/FEST/42956/042956_0000000016.raw' svc='LHCb::MDFSelector'",
+"DATAFILE='file:///daqarea/lhcb/data/2009/RAW/LHCb/FEST/42956/042956_0000000017.raw' svc='LHCb::MDFSelector'",
+"DATAFILE='file:///daqarea/lhcb/data/2009/RAW/LHCb/FEST/42956/042956_0000000018.raw' svc='LHCb::MDFSelector'",
+"DATAFILE='file:///daqarea/lhcb/data/2009/RAW/LHCb/FEST/42956/042956_0000000019.raw' svc='LHCb::MDFSelector'",
+"DATAFILE='file:///daqarea/lhcb/data/2009/RAW/LHCb/FEST/42956/042956_0000000020.raw' svc='LHCb::MDFSelector'",
+"DATAFILE='file:///daqarea/lhcb/data/2009/RAW/LHCb/FEST/42956/042956_0000000021.raw' svc='LHCb::MDFSelector'",
+"DATAFILE='file:///daqarea/lhcb/data/2009/RAW/LHCb/FEST/42956/042956_0000000022.raw' svc='LHCb::MDFSelector'"
+};
