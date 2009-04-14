@@ -3,6 +3,64 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v18r0>2009-04-14 Boole v18r0</A></H1><PRE>
+This version uses projects Gaudi v20r4, LHCb v26r3, Lbcom v6r27
+ and SQLDDDB v5r3, ParamFiles v8r1, FieldMap v5r2, L0TCK v1r1, AppConfig v2r*
+
+Production version for MC09. Output needs Brunel v34r3 or later
+
+ - New packaging
+   . Explicitly use CASTOR from LCG_Interfaces for QMTests
+
+ - Functionality changes
+   . Remove possibility to add spillover, now done in Gauss, needs Gauss v36r3
+     o Boole().SkipSpill option removed
+     o Boole().UseSpillover used to steer spillover usage in sub-detectors
+     o Boole().SpilloverPaths now defines which paths to use from input file
+   . Remove DC06 support
+   . Remove obsolete option Boole().WriteL0Only
+   . Remove Boole().UseOracle flag, set it directly in CondDB configurable
+   . Add BooleInit().PrintEventTime (default False) (DigiAlg v4r16)
+
+ - Persistency changes
+   . DIGI content now defined by DigiConf() configurable, steered by 
+     Boole().DigiType, possible values ['Minimal','Default','Extended']
+     o Boole().DigiType = 'Extended' replaces Boole().ExtendedDigi
+     o Boole().DigiType = 'Minimal' contains RawEvent, GenHeader, MCHeader and
+       MC truth for the primary vertices only in MC/Vertices (uncompressed,
+       this container is filtered by the new algorithm FilterMCPrimaryVtx
+       (DigiAlg v4r16, GaudiConf v12r2)
+   . Add two new data members to GenHeader, the total inelastic cross section
+     and frequency of crossing of filled-filled bunches (GenEvent v5r5)
+
+ - New tuning
+   . Adapt to removal of SpilloverAlg (MuonAlgs v6r8, MuonBackground v2r9)
+   . Add sanity checks to avoid switching off linkers needed by monitors
+     o For MDF and 'Minimal' DIGI output only run Link sequences needed for
+       monitoring
+   . New default L0 TCK with tuning for MC09 (L0DU v8r15, L0TCK v1r1)
+
+ - Bug fixes
+   . Protect divides by zero in MCOTDepositMonitor in case of empty events
+     (OTMonitor v2r10)
+   . Fix untested StatusCodes (RichDAQ v3r23p1)
+
+ - Monitoring changes
+   . MuonDigitization::finalize prints number of hits found not inside gap
+     (MuonAlgs v6r8)
+
+ - Changes to tests and example options:
+   . Add options for MC09 simulation: 
+     Boole-MC09-NoTruth.py, Boole-MC09-WithTruth.py, MC09-Files.py
+   . Add tests for MC09 simulation: boole-mc09-notruth, boole-mc09-withtruth
+   . Input file for FEST09 test changed to latest Gauss file in MC09-Files.py
+   . Move Expert histograms QMTest from FEST09 test to MC09-WithTruth test
+   . Add printing of event time to boole-fest09 test
+   . Remove options and tests for 2008 and DC06 simulations 
+   . Remove obsolete file Copy.opts
+   . Remove .slc4_amd64 from filename of default test refs, to provide default
+     also for other platforms 
+
 </PRE><H1><A NAME=v17r3>2009-02-26 Boole v17r3</A></H1><PRE>
 This version uses projects Gaudi v20r4, LHCb v26r2, Lbcom v6r26
  and SQLDDDB v5r2, ParamFiles v8r0, FieldMap v5r2, L0TCK v1r0, AppConfig v2r*
