@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-04-14 - Marco Cattaneo
+ - Fix valgrind.job for new lbLogin environment
+ - Change version to v34r4
+
 </PRE><H1><A NAME=v34r3>2009-04-09 Brunel v34r3</A></H1><PRE>
  - Changes to requirements:
    . Add dependency to AppConfig v2r*, to pick up options for production

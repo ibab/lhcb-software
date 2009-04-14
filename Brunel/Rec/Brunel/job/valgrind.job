@@ -40,7 +40,7 @@ while ($i < $nar)
   echo ${options}  
 end
 
-set Bversion = "v34r3"
+set Bversion = "v34r4"
 echo "Executing valgrind for Brunel $Bversion using options $options"
 
 # If not set (interactive and CAF), set WORKDIR to submission directory
@@ -60,7 +60,7 @@ endif
 
 # == set the program environment
 source /afs/cern.ch/lhcb/group/rich/vol4/jonrob/scripts/new-valgrind.csh
-source /afs/cern.ch/lhcb/scripts/SetupProject.csh Brunel $Bversion
+SetupProject Brunel $Bversion
 
 # Go to working directory
 cd $WORKDIR
