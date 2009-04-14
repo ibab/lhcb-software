@@ -45,7 +45,7 @@ def create_volume(pname,pversion,size=0):
 
 
 # create the new volume
-    strcmd = 'afs_admin create -u %s -q %d %s %s' % (MNAME, size, PPATH, vol_name)
+    strcmd = 'afs_admin create -u %s -q %d %s %s' % (MYNAME, size, PPATH, vol_name)
     log.info(strcmd)
     os.system(strcmd)
 

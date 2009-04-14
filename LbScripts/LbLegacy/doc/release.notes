@@ -1,5 +1,6 @@
 2009-04-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbLegacy/vol_for_releases.py: fixed glitch in variable name.
 	* scripts/install_project.bat: Removed to avoid a direct call. It will be reenabled
 	when install_project will be working.
 	* python/LbLegacy/LHCb_config.py: uncommented the fields needed by install_project.
