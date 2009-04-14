@@ -1,9 +1,15 @@
-!$Id: release.notes,v 1.21 2009-04-08 13:55:08 jpalac Exp $
+!$Id: release.notes,v 1.22 2009-04-14 13:21:52 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Ex/MicroDSTExample
 ! Responsible : Juan PALACIOS
 ! Purpose     : MicroDST making and reading examples.
 !-----------------------------------------------------------------------------
+
+!======================= Ex/MicroDSTExample v2r2p1 2009-04-14 ================
+
+ - options/TestMicroDSTMake.py
+  . Add ApplicationMgr().OutStream.append(MicroDSTStream), which has been 
+    removed from $MICRODSTOPTS/MicroDSTStream.py
 
 !======================= Ex/MicroDSTExample v2r2 2009-04-08 ==================
 
