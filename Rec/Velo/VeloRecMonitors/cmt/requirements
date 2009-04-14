@@ -3,7 +3,7 @@
 # Maintainer : Eduardo Rodrigues
 #============================================================================
 package           VeloRecMonitors
-version           v1r6
+version           mjohn_20090414
 
 #============================================================================
 # Structure, i.e. directories to process. 
