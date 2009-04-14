@@ -5,6 +5,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-04-14 - Eduardo Rodrigues
+ - VeloMonitorBase updated to be able to deal with the printing of options
+ - algos run in Brunel set not to print their options
  - VeloExpertClusterMonitor: removal of several warning messages
 
 ! 2009-04-14 - Malcolm John

@@ -4,7 +4,7 @@
 #
 ##############################################################################
 
-from Configurables import ProcessPhase, GaudiSequencer
+from Configurables import GaudiSequencer
 
 from Configurables import Velo__VeloClusterMonitor
 from Configurables import Velo__VeloTrackMonitor
@@ -13,6 +13,9 @@ GaudiSequencer( 'MoniVELOSeq' ).Members +=\
                 [   Velo__VeloClusterMonitor( 'VeloClusterMonitor' )
                   , Velo__VeloTrackMonitor  ( 'VeloTrackMonitor'   )
                   ]
+
+Velo__VeloClusterMonitor( 'VeloClusterMonitor' ).PropertiesPrint = False
+Velo__VeloTrackMonitor  ( 'VeloTrackMonitor'   ).PropertiesPrint = False
 
 #TrackUser = Velo__VeloTrackMonitor( 'VeloTrackMonitor' )
 #TrackUser.TrackLocation     = "Rec/Track/Best"

@@ -1,4 +1,4 @@
-// $Id: VeloMonitorBase.cpp,v 1.2 2009-04-07 17:12:24 erodrigu Exp $
+// $Id: VeloMonitorBase.cpp,v 1.3 2009-04-14 15:30:50 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -27,6 +27,7 @@ VeloMonitorBase::VeloMonitorBase( const std::string& name,
   : GaudiHistoAlg ( name , pSvcLocator )
     , m_veloDet ( 0 )
 {
+  setProperty ( "PropertiesPrint", true ).ignore();
 }
 
 //=============================================================================
@@ -42,8 +43,8 @@ StatusCode VeloMonitorBase::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiHistoAlg
 
   setHistoTopDir( "Velo/" );
-
-  printProps();
+  
+  if ( propsPrint() ) printProps();
 
   m_debugLevel = msgLevel( MSG::DEBUG );
 
