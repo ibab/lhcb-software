@@ -1,5 +1,7 @@
 2009-04-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* scripts/install_project.bat: Removed to avoid a direct call. It will be reenabled
+	when install_project will be working.
 	* python/LbLegacy/LHCb_config.py: uncommented the fields needed by install_project.
 	This is a temporary solution until install_project is moved completely to use
 	LbConfiguration.

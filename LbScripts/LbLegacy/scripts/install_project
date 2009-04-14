@@ -1,3 +1,0 @@
-#!/usr/bin/env sh
-
-runpy LbLegacy.install_project "$@"
