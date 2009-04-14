@@ -4,6 +4,8 @@
 
 2009-04-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbConfiguration/LbLogin.py: removed the development statement
+	in the manifest.
 	* scripts/group_shell.sh: fixed small problem in file redirection.
 
 2009-04-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>

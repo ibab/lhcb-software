@@ -43,7 +43,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.24 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.25 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -810,8 +810,8 @@ class LbLoginScript(Script):
             else : # for windows
                 toprint = "*" + " " * 11 + "Building with %s on %s system" % (self.compdef, self.platform)
             self._add_echo(toprint + " " * (80-len(toprint)-1) + "*")
-            toprint = "*" + " " * 11 + "DEVELOPMENT SCRIPT"
-            self._add_echo( toprint + " " * (80-len(toprint)-1) + "*" )
+#            toprint = "*" + " " * 11 + "DEVELOPMENT SCRIPT"
+#            self._add_echo( toprint + " " * (80-len(toprint)-1) + "*" )
             self._add_echo( "*" * 80 )
             self._add_echo( " --- CMTROOT is set to %s " % ev["CMTROOT"] )
             self._add_echo( " --- CMTCONFIG is set to %s " % ev["CMTCONFIG"] )
