@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2009-04-14 - Gerhard Raven
+ - update prefetch directory to MOORE_v6r2, default TCK to 0x80410000
+
 ! 2009-04-12 - Gerhard Raven
  - remove StripPath from SetupMoore_vXXX.sh
  - update requirements for v6r2

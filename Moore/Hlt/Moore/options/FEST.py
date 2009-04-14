@@ -12,15 +12,17 @@ from HltConf.HltVeloLines     import HltVeloLinesConf
 
 
 # if you want to generate a configuration, uncomment the following lines:
-#Moore().generateConfig = True
-#Moore().configLabel = 'NO prescale'
+Moore().generateConfig = True
+Moore().configLabel = 'PA accept=1'
 
-Moore().hltType = 'Hlt1' # +Hlt2'
+Moore().hltType = 'PA' # +Hlt2'
 Moore().Verbose = True
 
 # FEST specific options...
 HltConf().LumiBankKillerAcceptFraction = 0.9999
-HltVeloLinesConf().Prescale = 1
+if 'Hlt1' in Moore().hltType or 'VE' in Moore().hltType :
+    HltVeloLinesConf().Prescale = { '.*' : 1 }
+
 
 Moore().Simulation = True
 Moore().DataType   = '2008'
