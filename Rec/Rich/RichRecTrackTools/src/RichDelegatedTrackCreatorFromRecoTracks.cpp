@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::DelegatedTrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichDelegatedTrackCreatorFromRecoTracks.cpp,v 1.3 2008-10-29 14:41:38 jonrob Exp $
+ *  $Id: RichDelegatedTrackCreatorFromRecoTracks.cpp,v 1.4 2009-04-14 14:43:12 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -142,7 +142,7 @@ DelegatedTrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) co
   const Rich::Rec::Track::Type trType = Rich::Rec::Track::type(trTrack);
   if ( Rich::Rec::Track::Unknown == trType )
   {
-    Warning( "Track of unknown algorithm type" );
+    Warning( "Track of unknown algorithm type" ).ignore();
     return NULL;
   }
 

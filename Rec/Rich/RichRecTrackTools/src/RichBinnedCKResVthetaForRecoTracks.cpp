@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::BinnedCKResVthetaForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichBinnedCKResVthetaForRecoTracks.cpp,v 1.1.1.1 2007-11-26 17:28:18 jonrob Exp $
+ *  $Id: RichBinnedCKResVthetaForRecoTracks.cpp,v 1.2 2009-04-14 14:43:12 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -214,7 +214,7 @@ BinnedCKResVthetaForRecoTracks::ckThetaResolution_Imp( LHCb::RichRecSegment * se
     }
     if ( !OK )
     {
-      Error( "Failed to find binned CK resolution for : " + Rich::text(rad) + " " + Rich::text(type) );
+      Error( "Failed to find binned CK resolution for : " + Rich::text(rad) + " " + Rich::text(type) ).ignore();
     }
 
   }

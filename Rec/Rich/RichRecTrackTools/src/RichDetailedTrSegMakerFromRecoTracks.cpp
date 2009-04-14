@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::DetailedTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.7 2008-10-15 12:43:09 jonrob Exp $
+ * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.8 2009-04-14 14:43:12 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -207,7 +207,7 @@ constructSegments( const ContainedObject * obj,
 
     // Get the track entry state points
     const LHCb::State * entryPStateRaw = &(track->closestState(zStart));
-    if ( !entryPStateRaw ) { Error( "Problem getting track state" ); continue; }
+    if ( !entryPStateRaw ) { Error( "Problem getting track state" ).ignore(); continue; }
 
     // check tolerance
     if ( fabs(zStart-entryPStateRaw->z()) > m_zTolerance[rad] ) 
@@ -238,7 +238,7 @@ constructSegments( const ContainedObject * obj,
 
     // Get the track enrty state points
     const LHCb::State * exitPStateRaw = &(track->closestState(zEnd));
-    if ( !exitPStateRaw ) { Error( "Problem getting track state" ); continue; }
+    if ( !exitPStateRaw ) { Error( "Problem getting track state" ).ignore(); continue; }
 
     // check tolerance
     if ( fabs(zEnd-exitPStateRaw->z()) > m_zTolerance[rad] )

@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : Rich::Rec::BaseTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichBaseTrackSelector.cpp,v 1.1.1.1 2007-11-26 17:28:18 jonrob Exp $
+ *  $Id: RichBaseTrackSelector.cpp,v 1.2 2009-04-14 14:43:12 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -97,7 +97,7 @@ StatusCode BaseTrackSelector::finalize()
 bool
 BaseTrackSelector::trackSelected( const LHCb::Track * track ) const
 {
-  if (!track) { Warning("Null Track pointer"); return false; }
+  if (!track) { Warning("Null Track pointer").ignore(); return false; }
 
   if ( msgLevel(MSG::VERBOSE) )
   {
@@ -157,7 +157,7 @@ bool
 BaseTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
 {
 
-  if (!track) { Warning("Null RichRecTrack pointer"); return false; }
+  if (!track) { Warning("Null RichRecTrack pointer").ignore(); return false; }
 
   if ( msgLevel(MSG::VERBOSE) )
   {

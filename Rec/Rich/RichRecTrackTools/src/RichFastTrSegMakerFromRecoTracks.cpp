@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::FastTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichFastTrSegMakerFromRecoTracks.cpp,v 1.3 2008-05-06 19:15:33 jonrob Exp $
+ * $Id: RichFastTrSegMakerFromRecoTracks.cpp,v 1.4 2009-04-14 14:43:12 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 23/08/2004
@@ -184,7 +184,7 @@ FastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj,
   const LHCb::Track * track = dynamic_cast<const LHCb::Track *>(obj);
   if ( !track )
   {
-    Warning("Input data object is not of type Track");
+    Warning("Input data object is not of type Track").ignore();
     return 0;
   }
   if ( msgLevel(MSG::VERBOSE) )
@@ -323,13 +323,13 @@ FastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj,
     if ( (entryPoint.z() > exitPoint.z()) )
     {
       Warning( "Entry state after exist state for " + Rich::text(*rad) + "  -> rejecting segment",
-               StatusCode::SUCCESS, 5 );
+               StatusCode::SUCCESS, 5 ).ignore();
       continue;
     }
     if ( (exitPoint.z()-entryPoint.z()) < m_minStateDiff[*rad] )
     {
       Warning( "Track states for " + Rich::text(*rad) + " too close in z -> rejecting segment",
-               StatusCode::SUCCESS, 5 );
+               StatusCode::SUCCESS, 5 ).ignore();
       continue;
     }
 
@@ -368,7 +368,7 @@ FastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj,
     }
     catch ( const std::exception & excpt )
     {
-      Warning( "Exception whilst creating RichTrackSegment '"+std::string(excpt.what())+"'" );
+      Warning( "Exception whilst creating RichTrackSegment '"+std::string(excpt.what())+"'" ).ignore();
     }
 
   }
@@ -430,7 +430,7 @@ FastTrSegMakerFromRecoTracks::stateInfo( const LHCb::Track * track,
   else
   {
 
-    Error("Unknown radiator type");
+    Error("Unknown radiator type").ignore();
     return false;
 
   }

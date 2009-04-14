@@ -4,6 +4,9 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-04-14 - Marco Cattaneo
+ - Fix untested StatusCodes due to missing .ignore() on Warning/Error calls
+
 !======================== RichRecTrackTools v1r9 2009-03-10 ==================
 ! 2009-03-04 - Chris Jones
  - Suppress warning about isolation tool not implemented for Aerogel.

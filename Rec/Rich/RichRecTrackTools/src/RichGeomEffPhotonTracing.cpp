@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::GeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.cpp,v 1.3 2008-05-06 19:15:33 jonrob Exp $
+ *  $Id: RichGeomEffPhotonTracing.cpp,v 1.4 2009-04-14 14:43:12 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -62,7 +62,7 @@ StatusCode GeomEffPhotonTracing::initialize()
   {
     m_richSys = getDet<DeRichSystem>( DeRichLocations::RichSystem );
     Warning( "Will check each pixel for HPD status. Takes additional CPU.",
-             StatusCode::SUCCESS );
+             StatusCode::SUCCESS ).ignore();
   }
 
   // Set up cached parameters for geometrical efficiency calculation

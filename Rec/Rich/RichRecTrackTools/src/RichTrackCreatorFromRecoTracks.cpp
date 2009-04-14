@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::TrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.8 2008-10-29 14:41:38 jonrob Exp $
+ *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.9 2009-04-14 14:43:12 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -90,7 +90,7 @@ StatusCode TrackCreatorFromRecoTracks::newTracks() const
             track != tracks->end(); ++track )
       {
         LHCb::RichRecTrack * tmpTrack = newTrack( *track );
-        if ( m_makeOneTrack && tmpTrack ) { Warning("Only making ONE track"); break; }
+        if ( m_makeOneTrack && tmpTrack ) { Warning("Only making ONE track").ignore(); break; }
       }
     }
 
@@ -138,7 +138,7 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
   const LHCb::Track * trTrack = dynamic_cast<const LHCb::Track*>(obj);
   if ( !trTrack )
   {
-    Warning( "Input data object is not of type 'Track'" );
+    Warning( "Input data object is not of type 'Track'" ).ignore();
     return NULL;
   }
 
@@ -151,7 +151,7 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
   // Catch exceptions ( track type unknown )
   catch ( const GaudiException & expt )
   {
-    Error( expt.message() );
+    Error( expt.message() ).ignore();
     return NULL;
   }
 

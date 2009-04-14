@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::BaseTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichBaseTrSegMakerFromRecoTracks.cpp,v 1.2 2008-03-27 11:49:04 jonrob Exp $
+ * $Id: RichBaseTrSegMakerFromRecoTracks.cpp,v 1.3 2009-04-14 14:43:12 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -65,15 +65,15 @@ StatusCode BaseTrSegMakerFromRecoTracks::initialize()
 
   if ( !usedRads(Rich::Aerogel) )
   {
-    Warning("Track segments for Aerogel are disabled",StatusCode::SUCCESS);
+    Warning("Track segments for Aerogel are disabled",StatusCode::SUCCESS).ignore();
   }
   if ( !usedRads(Rich::Rich1Gas) )
   {
-    Warning("Track segments for Rich1Gas are disabled",StatusCode::SUCCESS);
+    Warning("Track segments for Rich1Gas are disabled",StatusCode::SUCCESS).ignore();
   }
   if ( !usedRads(Rich::Rich2Gas) )
   {
-    Warning("Track segments for Rich2Gas are disabled",StatusCode::SUCCESS);
+    Warning("Track segments for Rich2Gas are disabled",StatusCode::SUCCESS).ignore();
   }
 
   info() << "Beam pipe intersection test (Aero/R1Gas/R2Gas) = " << m_checkBeamP << endreq;

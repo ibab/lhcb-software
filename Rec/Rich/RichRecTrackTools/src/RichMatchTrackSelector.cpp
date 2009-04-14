@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : Rich::Rec::MatchTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichMatchTrackSelector.cpp,v 1.1.1.1 2007-11-26 17:28:18 jonrob Exp $
+ *  $Id: RichMatchTrackSelector.cpp,v 1.2 2009-04-14 14:43:12 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -70,7 +70,7 @@ MatchTrackSelector::trackSelected( const LHCb::Track * track ) const
   LHCb::Track::ExtraInfo::const_iterator i = track->extraInfo().find( LHCb::Track::MatchChi2 );
   if ( i == track->extraInfo().end() )
   {
-    Warning( "Match track does not have MatchChi2 info");
+    Warning( "Match track does not have MatchChi2 info").ignore();
     return false;
   }
   if ( i->second < m_minMatchChi2 || i->second > m_maxMatchChi2 )
@@ -92,7 +92,7 @@ MatchTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
   const LHCb::Track * tT = dynamic_cast<const LHCb::Track *>(track->parentTrack());
   if ( !tT )
   {
-    Warning( "Cannot use RichMatchTrackSelector on non-Track RichRecTracks" );
+    Warning( "Cannot use RichMatchTrackSelector on non-Track RichRecTracks" ).ignore();
     return false;
   }
 
