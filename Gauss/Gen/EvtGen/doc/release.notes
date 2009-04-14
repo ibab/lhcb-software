@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2009-04-14 - Patrick Robbe
+ - EvtModelReg.cpp: reintroduce EvtLambdaB2LambdaV decay model
+
 !========================== EvtGen v11r0 2009-04-08 ==========================
 ! 2009-04-08 - Patrick Robbe
  - Pythia.F: fix decay routine (wrong index when calling PYSHOW routine)
