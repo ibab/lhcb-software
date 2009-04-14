@@ -3,6 +3,10 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+! 2009-04-14 - Marco Cattaneo
+ - Fix valgrind.job to work with new Lblogin environment
+ - Increment version to v18r1
+
 </PRE><H1><A NAME=v18r0>2009-04-14 Boole v18r0</A></H1><PRE>
 
  - Changes to requirements
