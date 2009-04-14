@@ -1,4 +1,4 @@
-// $Id: VeloExpertClusterMonitor.cpp,v 1.4 2009-04-14 10:05:51 erodrigu Exp $
+// $Id: VeloExpertClusterMonitor.cpp,v 1.5 2009-04-14 13:54:02 erodrigu Exp $
 // Include files// from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "GaudiKernel/AlgFactory.h" 
@@ -228,7 +228,6 @@ StatusCode Velo::VeloExpertClusterMonitor::loopTracks (){
 
         double prap = track->pseudoRapidity();
         plot1D(prap,"ontrack/pseudoRap_plot", "pseudorapidity",0,6.2,100);
-        LHCb::Track::Types tType = track->type();
         if (m_useExpert){
           
           plotCluster(cluster,dirName,theta,prap);
@@ -378,9 +377,8 @@ StatusCode Velo::VeloExpertClusterMonitor::plotRPhiRange( LHCb::VeloCluster* clu
       double max_radius = (i+10);
       double min_radius = (i+7);
       std::string radiusName;
-      //std::string corr_radiusName;
       char radiusname[100];
-      char corr_radiusname[100];
+      //char corr_radiusname[100];
       double r_strfr = cluster->interStripFraction();
       double radius = rsens->rOfStrip(clstr,r_strfr);
       plot1D(radius, ClusterType+"/radius", "Cluster adc R", 0, 100, 100);
@@ -416,8 +414,7 @@ StatusCode Velo::VeloExpertClusterMonitor::plotRPhiRange( LHCb::VeloCluster* clu
       double min_phi = -Gaudi::Units::pi+step*(i);
       std::string phiName;
       char phiname[100];
-      //std::string corr_phiName;
-      char corr_phiname[100];
+      //char corr_phiname[100];
       double phi_strfr = cluster->interStripFraction();
       double phi = psens->idealPhi(clstr,phi_strfr);
       if(phi<max_phi && phi>min_phi){
@@ -488,7 +485,8 @@ StatusCode
 Velo::VeloExpertClusterMonitor::plotAngles( double& adc,
                                             std::string& range,
                                             std::string& ClusterType,
-                                            double theta,int sensor_num ) {
+                                            //double theta,
+                                            int sensor_num ) {
   
   plot1D(adc, ClusterType+range, "Cluster ADC ", 0, 100, 100);
   //+"/theta/adc/"

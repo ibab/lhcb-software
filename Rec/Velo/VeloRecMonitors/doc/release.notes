@@ -3,6 +3,10 @@
 ! Responsible : VELO monitoring group
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
+
+! 2009-04-14 - Eduardo Rodrigues
+ - VeloExpertClusterMonitor: removal of several warning messages
+
 ! 2009-04-14 - Malcolm John
  - Several additions to VeloLumiRegionMonitor and VeloHltLiteClusterMonitor inc.:
   trend plotting for the last 1000 lumi region position measurements
