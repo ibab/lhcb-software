@@ -1,9 +1,15 @@
-!$Id: release.notes,v 1.9 2009-04-08 13:51:20 jpalac Exp $
+!$Id: release.notes,v 1.10 2009-04-14 13:19:25 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTConf
 ! Responsible : Juan PALACIOS
 ! Purpose     : Configuration and options files for MicroDST making.
 !-----------------------------------------------------------------------------
+
+!========================== MicroDSTConf v2r1p1 2009-04-14 ================
+
+! 2009-04-14 - Juan PALACIOS
+ - python/MicroDST/MicroDSTAlgorithm.py
+  . Fix typo: CopyParticle2PVLink.h -> CopyParticle2PVLink
 
 !========================== MicroDSTConf v2r1 2009-04-08 ==================
 

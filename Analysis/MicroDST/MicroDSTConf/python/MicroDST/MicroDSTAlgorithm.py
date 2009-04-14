@@ -4,7 +4,7 @@ from Configurables import CopyRecHeader
 from Configurables import CopyProtoParticles
 from Configurables import CopyPrimaryVertices
 from Configurables import CopyParticles
-from Configurables import CopyParticle2PVLink.h
+from Configurables import CopyParticle2PVLink
 from Configurables import CopyODIN
 from Configurables import CopyMCParticles
 from Configurables import CopyMCHeader
