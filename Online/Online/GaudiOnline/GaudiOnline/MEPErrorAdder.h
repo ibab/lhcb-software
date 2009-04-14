@@ -31,7 +31,7 @@
 // Forward declarations
 class MsgStream;
 class ISvcLocator;
-
+class IIncidentSvc;
 
 /*
  *  LHCb namespace declaration
@@ -142,7 +142,7 @@ namespace LHCb  {
     void infoHandler();
     int setupCounters();
     bool ReceiveArrayService(DimInfo * curr, DimInfo * subs,  std::vector<int64_t> &rArray, std::vector<int64_t> &sArray);
-    bool ReceiveSingleService(DimInfo * curr, DimInfo * subs, int64_t rValue, int64_t sValue);
+    bool ReceiveSingleService(DimInfo * curr, DimInfo * subs, int64_t &rValue, int64_t &sValue);
 
     MsgStream                   m_log;
   };

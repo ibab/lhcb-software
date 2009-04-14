@@ -47,19 +47,22 @@ MEPErrorAdder::MEPErrorAdder(const std::string& nam, ISvcLocator* svc)
 {
 
   
-  declareProperty("listenerDnsNode",    m_listenerDnsNode); 		//Also where we get RunInfo (ECSXX)
-  declareProperty("updateFrequency",    m_updateFrequency =5);		//How often the statistics should be updated
+  declareProperty("listenerDnsNode",    m_listenerDnsNode = "localhost.localdomain"); 		//Also where we get RunInfo (ECSXX)
+  declareProperty("updateFrequency",    m_updateFrequency =5);					//How often the statistics should be updated
   
-  declareProperty("sumPartition",	m_sumPartition=false); 	  	//Is this a sum over nodes in subfarm, or subfarms in partition?
+  declareProperty("sumPartition",	m_sumPartition=false);			 	  	//Is this a sum over nodes in subfarm, or subfarms in partition?
   
   //Options for sum over partition 
   declareProperty("partitionName",      m_partitionName = "LHCb");	 
-  declareProperty("runInfoDnsNode",	m_runInfoDnsNode = "");		// DIM_DNS_NODE for RunInfo, if other than listenerDnsNode  
+  declareProperty("runInfoDnsNode",	m_runInfoDnsNode = "");					// DIM_DNS_NODE for RunInfo, if other than listenerDnsNode  
 
   //Options for sum over subfarm
-  declareProperty("nrSubNodes",         m_nrSubNodes =4);         	//Number of nodes per subfarm
+  declareProperty("nrSubNodes",         m_nrSubNodes =4);			         	//Number of nodes per subfarm
   
-  declareProperty("nSrc",               m_nSrc=100);			//Numer of TELL1 sources this partition have
+  declareProperty("nSrc",               m_nSrc=100);						//Numer of TELL1 sources this partition have
+
+  // HOST set by job file
+  if (m_listenerDnsNode=="localhost.localdomain") m_listenerDnsNode= getenv("HOST");
 
 }
 
@@ -142,8 +145,16 @@ MEPErrorAdder::initialize() {
   if (!sc.isSuccess()) {
     return StatusCode::FAILURE; 
   }
-  m_log << MSG::DEBUG << "Partition Name: " << m_partitionName << endmsg;
-  
+  if (!service("IncidentSvc", m_incidentSvc).isSuccess()) {
+    m_log << MSG::ERROR << "Failed to access incident service." << endmsg;
+    return StatusCode::FAILURE;
+  } 
+  else {
+    m_incidentSvc->addListener(this, "DAQ_CANCEL");
+    m_incidentSvc->addListener(this, "DAQ_ENABLE");
+  }
+ 
+ 
   char temp[100];
 
   if (m_sumPartition) {    
@@ -237,43 +248,43 @@ MEPErrorAdder::initialize() {
     //Partition sum
     for (int i=0;i<m_nrSubFarms;i++) {
   	//all subfarms
-	sprintf(temp,"%s_MEPRx_1/Runable/badLenPkt",m_subFarms[i].c_str());
+	sprintf(temp,"%s_MEPRxSTAT_1/Runable/badLenPkt",m_subFarms[i].c_str());
 	m_subsBadLenPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
-    	sprintf(temp,"%s_MEPRx_1/Runable/badPckFktPkt",m_subFarms[i].c_str());
+    	sprintf(temp,"%s_MEPRxSTAT_1/Runable/badPckFktPkt",m_subFarms[i].c_str());
    	m_subsBadPckFktPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
-   	sprintf(temp,"%s_MEPRx_1/Runable/misPkt",m_subFarms[i].c_str());
+   	sprintf(temp,"%s_MEPRxSTAT_1/Runable/misPkt",m_subFarms[i].c_str());
    	m_subsMisPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
-    	sprintf(temp,"%s_MEPRx_1/Runable/truncPkt",m_subFarms[i].c_str());
+    	sprintf(temp,"%s_MEPRxSTAT_1/Runable/truncPkt",m_subFarms[i].c_str());
     	m_subsTruncPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
-    	sprintf(temp,"%s_MEPRx_1/Runable/multipleEvt",m_subFarms[i].c_str());
+    	sprintf(temp,"%s_MEPRxSTAT_1/Runable/multipleEvt",m_subFarms[i].c_str());
     	m_subsMultipleEvt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
-    	sprintf(temp,"%s_MEPRx_1/Runable/rxOct",m_subFarms[i].c_str());
+    	sprintf(temp,"%s_MEPRxSTAT_1/Runable/rxOct",m_subFarms[i].c_str());
     	m_subsRxOct[i] = new DimInfo(temp,m_updateFrequency,zero,this);
-    	sprintf(temp,"%s_MEPRx_1/Runable/rxPkt",m_subFarms[i].c_str());
+    	sprintf(temp,"%s_MEPRxSTAT_1/Runable/rxPkt",m_subFarms[i].c_str());
     	m_subsRxPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
-    	sprintf(temp,"%s_MEPRx_1/Runable/rxEvt",m_subFarms[i].c_str());
+    	sprintf(temp,"%s_MEPRxSTAT_1/Runable/rxEvt",m_subFarms[i].c_str());
     	m_subsRxEvt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
 	
-	sprintf(temp,"%s_MEPRx_1/Runable/totRxOct",m_subFarms[i].c_str());
+	sprintf(temp,"%s_MEPRxSTAT_1/Runable/totRxOct",m_subFarms[i].c_str());
 	m_subsTotRxOct[i] = new DimInfo(temp,m_updateFrequency,zero,this);
-    	sprintf(temp,"%s_MEPRx_1/Runable/totRxPkt",m_subFarms[i].c_str());
+    	sprintf(temp,"%s_MEPRxSTAT_1/Runable/totRxPkt",m_subFarms[i].c_str());
 	m_subsTotRxPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
-    	sprintf(temp,"%s_MEPRx_1/Runable/incEvt",m_subFarms[i].c_str());
+    	sprintf(temp,"%s_MEPRxSTAT_1/Runable/incEvt",m_subFarms[i].c_str());
 	m_subsIncEvt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
-    	sprintf(temp,"%s_MEPRx_1/Runable/totBadMEP",m_subFarms[i].c_str());
+    	sprintf(temp,"%s_MEPRxSTAT_1/Runable/totBadMEP",m_subFarms[i].c_str());
 	m_subsTotBadMEP[i] = new DimInfo(temp,m_updateFrequency,zero,this);
-    	sprintf(temp,"%s_MEPRx_1/Runable/totMEPReq",m_subFarms[i].c_str());
+    	sprintf(temp,"%s_MEPRxSTAT_1/Runable/totMEPReq",m_subFarms[i].c_str());
 	m_subsTotMEPReq[i] = new DimInfo(temp,m_updateFrequency,zero,this);
-    	sprintf(temp,"%s_MEPRx_1/Runable/totMEPReqPkt",m_subFarms[i].c_str());
+    	sprintf(temp,"%s_MEPRxSTAT_1/Runable/totMEPReqPkt",m_subFarms[i].c_str());
 	m_subsTotMEPReqPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
-    	sprintf(temp,"%s_MEPRx_1/Runable/numMEPRecvTimeouts",m_subFarms[i].c_str());
+    	sprintf(temp,"%s_MEPRxSTAT_1/Runable/numMEPRecvTimeouts",m_subFarms[i].c_str());
 	m_subsNumMEPRecvTimeouts[i] = new DimInfo(temp,m_updateFrequency,zero,this);
-    	sprintf(temp,"%s_MEPRx_1/Runable/notReqPkt",m_subFarms[i].c_str());
+    	sprintf(temp,"%s_MEPRxSTAT_1/Runable/notReqPkt",m_subFarms[i].c_str());
 	m_subsNotReqPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
-    	sprintf(temp,"%s_MEPRx_1/Runable/totWrongPartID",m_subFarms[i].c_str());
+    	sprintf(temp,"%s_MEPRxSTAT_1/Runable/totWrongPartID",m_subFarms[i].c_str());
 	m_subsBadLenPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
     
-	sprintf(temp,"%s_MEPRx_1/Runable/srcName",m_subFarms[i].c_str());
+	sprintf(temp,"%s_MEPRxSTAT_1/Runable/srcName",m_subFarms[i].c_str());
 	m_subsSrcName[i] = new DimInfo(temp,m_updateFrequency,"",this);
     }
   } else {
@@ -323,7 +334,8 @@ MEPErrorAdder::initialize() {
   }
  
   m_log << MSG::DEBUG << "Initialization done" << endmsg;
-
+  m_svcState = READY;
+  
   return StatusCode::SUCCESS;
 }
 
@@ -369,11 +381,11 @@ MEPErrorAdder::ReceiveArrayService(DimInfo * curr, DimInfo * subs,  std::vector<
 
   int arraySize = curr->getSize()/sizeof(int64_t);
   if (arraySize<m_nSrc) {
-    m_log << MSG::INFO << "Received less data than number of sources from a service." << endmsg;
+    m_log << MSG::INFO << "Received less data than number of sources from service " << curr->getName() << ". (received " << arraySize << " 64bit ints)" << endmsg;
   }
   else if (arraySize>m_nSrc) {
     //This is an error, we can't receive more data than the number of sources.
-    m_log << MSG::WARNING << "Received too much data from a service (compared to number of sources), ignoring..." << endmsg;	
+    m_log << MSG::WARNING << "Received too much data from service " << curr->getName() << " (compared to number of sources), ignoring... (received " << arraySize << " 64bit ints)" << endmsg;	
     arraySize = m_nSrc;
   }
 
@@ -392,17 +404,16 @@ MEPErrorAdder::ReceiveArrayService(DimInfo * curr, DimInfo * subs,  std::vector<
  *
  */
 bool
-MEPErrorAdder::ReceiveSingleService(DimInfo * curr, DimInfo * subs, int64_t rValue, int64_t sValue) {
+MEPErrorAdder::ReceiveSingleService(DimInfo * curr, DimInfo * subs, int64_t &rValue, int64_t &sValue) {
 
   // Return false if not the correct service
   if (curr != subs) return false;
 
   int64_t data = *((int64_t*) curr->getData());
-  
   int64_t diff = data - rValue;
+  
   rValue = data;
   sValue += diff;
-
   return true;
 
 }
@@ -411,7 +422,7 @@ void
 MEPErrorAdder::infoHandler() {
   DimInfo * curr = getInfo();
  
-  m_log << MSG::DEBUG << "Receiving data from " << curr->getName() << endmsg;
+  m_log << MSG::VERBOSE << "Receiving data from " << curr->getName() << endmsg;
 
   //To know what service, we must iterate over all...
   for (int i=0;i<m_nrServices; i++) {
@@ -463,9 +474,9 @@ StatusCode MEPErrorAdder::run() {
     switch(m_svcState) {
     case STOPPED:
     case NOT_READY:
-      //m_log << MSG::DEBUG << "Not ready anymore" << endmsg;
-      continue;
-      //return StatusCode::SUCCESS;
+      m_log << MSG::DEBUG << "Exiting from receive loop" << endmsg;
+      //continue;
+      return StatusCode::SUCCESS;
     case READY:
       MEPRxSys::microsleep(100000); // 100 ms
       break;
@@ -479,7 +490,7 @@ StatusCode MEPErrorAdder::run() {
       
       return StatusCode::SUCCESS;
     }
-    MEPRxSys::microsleep(100000);
+    MEPRxSys::microsleep(100000); // 100 ms
   }
 
   return 1;
