@@ -4,6 +4,10 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+! 2009-04-14 - Marco Cattaneo
+ - src/components/OdinTypesFilter : put back printout of number of selected evts
+ - replace obsolescent endreq by endmsg 
+
 ! 2009-04-06 - Deschamps Olivier
  - src/components/OdinTypesFilter : improve finalize printout 
 
