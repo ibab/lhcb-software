@@ -1,4 +1,4 @@
-// $Id: MCSTDepositCreator.cpp,v 1.8 2008-10-22 14:44:05 mneedham Exp $
+// $Id: MCSTDepositCreator.cpp,v 1.9 2009-04-14 13:17:53 mneedham Exp $
 
 // GSL 
 #include "gsl/gsl_math.h"
@@ -26,9 +26,13 @@
 #include "ISTChargeSharingTool.h"
 #include "MCSTDepositCreator.h"
 
+#include <boost/foreach.hpp>
+#include "boost/assign/list_of.hpp"
+
 using namespace LHCb;
 
 DECLARE_ALGORITHM_FACTORY( MCSTDepositCreator );
+
 
 MCSTDepositCreator::MCSTDepositCreator( const std::string& name, 
                                         ISvcLocator* pSvcLocator ) :
@@ -38,8 +42,10 @@ MCSTDepositCreator::MCSTDepositCreator( const std::string& name,
   m_spillTimes.push_back(0.*Gaudi::Units::ns);
 
   declareProperty("TofVector", m_tofVector, "vector of flight times");
-  declareProperty("SpillVector", m_spillNames);
-  declareProperty("SpillTimes", m_spillTimes);
+  declareProperty("SamplesVector", m_sampleNames = boost::assign::list_of("/"));
+  declareProperty("SampleTimes", m_sampleTimes = boost::assign::list_of(0.0));
+  declareProperty("SpillVector", m_spillNames = boost::assign::list_of("/")("/Prev/")("/PrevPrev/")("/Next/")("/LHCBackground/"));
+  declareProperty("SpillTimes", m_spillTimes = boost::assign::list_of(0.0)(-25.0)(-50.0)(25.0)(-3.3));
   declareProperty("MinDist", m_minDistance = 10.0e-3*Gaudi::Units::mm);
 
   declareProperty("ChargeSharerName",m_chargeSharerName ="STChargeSharingTool");
@@ -61,12 +67,14 @@ MCSTDepositCreator::MCSTDepositCreator( const std::string& name,
   declareProperty("useStatusConditions", m_useStatusConditions = true);
   declareProperty("useSensDetID", m_useSensDetID = false);
 
+  declareProperty("pMin", m_pMin = 1e-3 *Gaudi::Units::MeV);
 
   m_inputLocation = MCHitLocation::TT; 
   m_outputLocation = MCSTDepositLocation::TTDeposits;
 
   addToFlipList(&m_inputLocation);
   addToFlipList(&m_outputLocation);
+
 
   setForcedInit();
 }
@@ -112,15 +120,28 @@ StatusCode MCSTDepositCreator::initialize()
     ++iSpillName;
   }
 
+  std::vector<std::string>::const_iterator iSampleName = m_sampleNames.begin() ;
+  while (iSampleName != m_sampleNames.end()){
+    // path in Transient data store
+    m_outPaths.push_back("/Event"+(*iSampleName)+m_outputLocation);
+    ++iSampleName;
+  }
+
   return StatusCode::SUCCESS;
 }
 
 StatusCode MCSTDepositCreator::execute() 
 {
-  // execute   
-  MCSTDeposits* depositsCont = new MCSTDeposits();
-  depositsCont->reserve(10000);
-
+ 
+  // make output containers and put them in the store  
+  std::vector<MCSTDeposits*> depositsVec;
+  BOOST_FOREACH(std::string path, m_outPaths) {
+    MCSTDeposits* depositsCont = new MCSTDeposits();
+    depositsCont->reserve(10000);
+    put (depositsCont, path);
+    depositsVec.push_back(depositsCont);
+  } // for each
+ 
   // loop over spills
   for (unsigned int iSpill = 0; iSpill < m_spillPaths.size(); ++iSpill){
 
@@ -131,16 +152,15 @@ StatusCode MCSTDepositCreator::execute()
     else {
       // found spill - create digitizations and add them to deposits container
       const MCHits* hits = get<MCHits>(m_spillPaths[iSpill]);
-      createDeposits(hits,m_spillTimes[iSpill],depositsCont);
+      createDeposits(hits,m_spillTimes[iSpill],depositsVec);
     }
   } // iSpill
 
   // sort by channel
-  std::stable_sort(depositsCont->begin(), depositsCont->end(),
-                   STDataFunctor::Less_by_Channel<const MCSTDeposit*>());
-
-  // register container in store
-  put(depositsCont,m_outputLocation);
+  BOOST_FOREACH(MCSTDeposits* depositsCont, depositsVec){ 
+    std::stable_sort(depositsCont->begin(), depositsCont->end(),
+                     STDataFunctor::Less_by_Channel<const MCSTDeposit*>());
+  } // for each
 
   return StatusCode::SUCCESS;
 }
@@ -148,7 +168,7 @@ StatusCode MCSTDepositCreator::execute()
 
 void MCSTDepositCreator::createDeposits( const MCHits* mcHitsCont, 
                                          const double spillTime, 
-                                         MCSTDeposits* depositCont )
+                                         std::vector<MCSTDeposits*>& depositCont )
 {
   // loop over MChits
   MCHits::const_iterator iterHit = mcHitsCont->begin();
@@ -218,32 +238,35 @@ void MCSTDepositCreator::createDeposits( const MCHits* mcHitsCont,
               + xTalkLevel*(nextCharge+prevCharge); 
             
             // amplifier response - fraction of charge it sees
-            double beetleFraction;          
-            if (iStrip != firstStrip && iStrip != lastStrip){
-              beetleFraction = beetleResponse(m_tofVector[elemChan.station()-1]
-                                              -aHit->time()-spillTime,
+            for (unsigned int iTime = 0; iTime < m_outPaths.size(); ++iTime) {
+              double beetleFraction;          
+              double samplingTime = m_sampleTimes[iTime];
+              if (iStrip != firstStrip && iStrip != lastStrip){
+                beetleFraction = beetleResponse(m_tofVector[elemChan.station()-1]
+                                              -aHit->time()-spillTime + samplingTime,
                                               aSector->capacitance(),
                                               SiAmpliferResponseType::signal);
-            }
-            else {
-              beetleFraction = beetleResponse(m_tofVector[elemChan.station()-1]
-                                              -aHit->time()-spillTime,
+              }
+              else {
+                beetleFraction = beetleResponse(m_tofVector[elemChan.station()-1]
+                                              -aHit->time()-spillTime + samplingTime,
                                               aSector->capacitance(),
                                            SiAmpliferResponseType::capCoupling);
-            }
+              }
 
-            STChannelID aChan = aSector->stripToChan(iStrip);
+              STChannelID aChan = aSector->stripToChan(iStrip);
 
-            if ( m_useStatusConditions == false || aSector->isOKStrip(aChan) == true){
+              if ( m_useStatusConditions == false || aSector->isOKStrip(aChan) == true){
             
-              const double electrons = ionization*beetleFraction*scaling*weightedCharge
-                                 /totWeightedCharge;
+                const double electrons = ionization*beetleFraction*scaling*weightedCharge
+                                   /totWeightedCharge;
 
-              const double adcCounts = m_sigNoiseTool->convertToADC(electrons);
+                const double adcCounts = m_sigNoiseTool->convertToADC(electrons);
             
-              MCSTDeposit* newDeposit = new MCSTDeposit(adcCounts,aChan,aHit); 
-              depositCont->insert(newDeposit);
-	    } // ok strip
+                MCSTDeposit* newDeposit = new MCSTDeposit(adcCounts,aChan,aHit); 
+                depositCont[iTime]->insert(newDeposit);
+	      } // ok strip
+	    } // loop sampling times
           } // loop strip
         } // if has some charge
       }  // in active area
@@ -261,7 +284,7 @@ bool MCSTDepositCreator::hitToDigitize(const MCHit* aHit) const
   if (aHit->pathLength() < m_minDistance ) return false;
 
   // some hits have a zero p...
-  if (aHit->p() < 1e-3){
+  if (aHit->p() < m_pMin){
     Warning( "Hit with zero p - not digitized", StatusCode::SUCCESS, 1 ).ignore();
     return false;
   }

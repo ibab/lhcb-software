@@ -1,4 +1,4 @@
-// $Id: MCSTDepositCreator.h,v 1.4 2008-10-22 14:44:05 mneedham Exp $
+// $Id: MCSTDepositCreator.h,v 1.5 2009-04-14 13:17:53 mneedham Exp $
 #ifndef MCSTDEPOSITCREATOR_H
 #define MCSTDEPOSITCREATOR_H 1
 
@@ -53,7 +53,7 @@ private:
 
   /// create the deposits
   void createDeposits(const LHCb::MCHits* mcHitsCont, const double spillTime, 
-                      LHCb::MCSTDeposits* depositCont);
+                      std::vector<LHCb::MCSTDeposits*>& depositCont);
 
   /// check can digitize this tracking hit
   bool hitToDigitize(const LHCb::MCHit* aHit) const;
@@ -78,8 +78,8 @@ private:
   std::string m_inputLocation;           ///< Input: MCHits
   std::string m_outputLocation;          ///< Output: MCSTDeposits
   std::vector<std::string> m_spillPaths; ///< Full path name of spills
-
-
+  std::vector<std::string> m_outPaths; /// < Output paths
+ 
   /// List of tools for different beetle responses
   std::vector<ISiAmplifierResponse*> m_amplifierResponse;
  
@@ -87,6 +87,8 @@ private:
   std::vector<double> m_tofVector;       ///< Time offsets for the stations
   std::vector<std::string> m_spillNames; ///< Names of spills (e.g. Next, Prev)
   std::vector<double> m_spillTimes;      ///< Corresponding time offsets
+  std::vector<std::string> m_sampleNames; ///< Names of spills (e.g. Next, Prev)
+  std::vector<double> m_sampleTimes;      ///< Corresponding time offsets
   double m_minDistance;                  ///< Min. pathlength through sensor
   std::string m_chargeSharerName;        ///< Charge charing tool name
   std::string  m_depChargeToolName;      ///< Name of tool to calculate charge
@@ -100,6 +102,7 @@ private:
   std::vector<std::string> m_beetleResponseTypes;
   bool m_useStatusConditions; ///< use dead strip info
   bool m_useSensDetID;
+  double m_pMin; ///< min momentum particle to digitize
 
 };
 

@@ -4,6 +4,11 @@
 ! Purpose     : Algorithms for ST Digitization
 !-----------------------------------------------------------------------------
 
+! 2009-04-15 M Needham
+ - Remove unneeded options from it/ttDigi.opts
+ - Add STCommonModeSim
+ - Changes in MCSTDepositCreator for TAE mode-like running 
+
 !========================= STDigiAlgorithms v1r5 2009-02-24 ==================
 ! 2009-02-03 M Needham
  - Remove some unneed options from itDigi.opts [now done in Boole configurable]
