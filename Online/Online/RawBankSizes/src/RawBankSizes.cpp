@@ -1,4 +1,4 @@
-// $Id: RawBankSizes.cpp,v 1.6 2008-08-13 12:01:12 jost Exp $
+// $Id: RawBankSizes.cpp,v 1.7 2009-04-15 11:57:20 jost Exp $
 // Include files 
 
 // from Gaudi
@@ -176,7 +176,7 @@ StatusCode RawBankSizes::execute()
       double rms;
       double smin,smax;
       Banks[bnkid].stat(mean,rms,smin,smax);
-      if (rms < 1.0) rms=100.0;
+      if (rms < 1.0) rms=0.2*mean;
       double bmin = mean-m_nRMS*rms;
       if (bmin<0.0) bmin=0.0;
       plot1D((double)bs,bname+" Size in Bytes",bmin,mean+m_nRMS*rms,m_bin);
