@@ -4,6 +4,10 @@
 ! Purpose     : EventModel for Lumi data
 !-----------------------------------------------------------------------------
 
+! 2009-04-15 - Marco Cattaneo
+ - Change default location of LumiFSR to be under /FileRecords instead of
+   /RunRecords, following reimplementation of FileRecordSvc in Gaudi v21
+
 !======================== LumiEvent v1r0 2009-02-18 ==========================
 ! 2009-02-17 - Marco Cattaneo
  - Make only the component library, linker library not needed

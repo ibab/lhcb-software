@@ -3,7 +3,7 @@
 # Maintainer : Jaap Panman
 #============================================================================
 package           LumiEvent
-version           v1r0
+version           v2r0
 
 #============================================================================
 # Structure, i.e. directories to process. 
