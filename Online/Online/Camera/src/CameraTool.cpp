@@ -1,4 +1,4 @@
-// $Id: CameraTool.cpp,v 1.3 2009-02-10 13:57:33 rogers Exp $
+// $Id: CameraTool.cpp,v 1.4 2009-04-15 09:44:19 rogers Exp $
 // Include files
 
 // local
@@ -107,8 +107,8 @@ int CameraTool::SendAndClear(int l,const std::string& who,const std::string& wha
       }
       else 
       {
-        error() << "DANGER! All threads of camserv are busy!" << endreq;
-        error() << " -> Aborting message '" << ss.str() << "'" << endreq;
+        info() << "DANGER! All threads of camserv are busy!" << endmsg;
+        info() << " -> Aborting message '" << ss.str() << endmsg;
       }
 
       m_camc->new_sock();

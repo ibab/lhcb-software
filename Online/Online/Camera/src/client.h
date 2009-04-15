@@ -97,7 +97,7 @@ int client::Connect(){
  #ifndef _WIN32
   //  printf("to connect\n");
   if (connect (sock, (struct sockaddr *)&server, sizeof (server)) < 0) {
-    perror ("connect()"); 
+    //perror ("connect()"); 
     return -1;
   }
   //  printf("from connect\n");
