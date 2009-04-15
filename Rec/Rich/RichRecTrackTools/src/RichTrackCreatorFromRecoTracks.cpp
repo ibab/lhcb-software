@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::TrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.9 2009-04-14 14:43:12 cattanem Exp $
+ *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.10 2009-04-15 17:16:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -151,7 +151,7 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
   // Catch exceptions ( track type unknown )
   catch ( const GaudiException & expt )
   {
-    Error( expt.message() ).ignore();
+    Error( expt.message(), expt.code() ).ignore();
     return NULL;
   }
 
