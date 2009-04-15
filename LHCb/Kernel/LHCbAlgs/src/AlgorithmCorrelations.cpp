@@ -1,4 +1,4 @@
-// $Id: AlgorithmCorrelations.cpp,v 1.5 2008-10-29 10:01:10 pkoppenb Exp $
+// $Id: AlgorithmCorrelations.cpp,v 1.6 2009-04-15 09:48:14 pkoppenb Exp $
 // Include files 
 #include <boost/format.hpp>
 #include <boost/lexical_cast.hpp>
@@ -73,12 +73,14 @@ StatusCode AlgorithmCorrelations::reset(){
   m_testResults.clear();
 
   info() << "Algorithms to check correlations: " << m_algorithmsToTest << endmsg ;
+  if (!testAlgos(m_algorithmsToTest)) return StatusCode::FAILURE;
   if (m_conditionAlgorithms.empty()){
     info() << "No algorithms row defined. Will make a square matrix using algorithms column." << endmsg;
     m_square = true ;
     m_conditionAlgorithms = m_algorithmsToTest ; // copy one in the other
   } else {
     info() << "Algorithms to check correlations against: " << m_conditionAlgorithms << endmsg ;
+    if (!testAlgos(m_conditionAlgorithms)) return StatusCode::FAILURE;
     m_square = false ;
   }
 
@@ -91,19 +93,19 @@ StatusCode AlgorithmCorrelations::reset(){
 
   //  int i1 = 0 ;
 
-  for( std::vector<std::string>::iterator ialg2 =  m_conditionAlgorithms.begin() ; 
+  for( strings::iterator ialg2 =  m_conditionAlgorithms.begin() ; 
        ialg2 != m_conditionAlgorithms.end(); ++ialg2 ){
     AlgoResult AR(*ialg2);
     m_conditionResults.push_back(AR);
   }
   
-  for( std::vector<std::string>::iterator ialg1 = m_algorithmsToTest.begin(); 
+  for( strings::iterator ialg1 = m_algorithmsToTest.begin(); 
        ialg1 != m_algorithmsToTest.end(); ++ialg1 ){
     AlgoResult AR(*ialg1);
     m_testResults.push_back(AR);
     unsigned int l = ialg1->length();
     if ( l > m_longestName ) m_longestName = l ;
-    for( std::vector<std::string>::iterator ialg2 =  m_conditionAlgorithms.begin() ; 
+    for( strings::iterator ialg2 =  m_conditionAlgorithms.begin() ; 
          ialg2 != m_conditionAlgorithms.end(); ++ialg2 ){
       AlgoMatrix SRM( *(ialg1), *(ialg2) );
       m_AlgoMatrices.push_back( SRM ) ;
@@ -221,16 +223,31 @@ StatusCode AlgorithmCorrelations::fillResult(const std::string& algo,
 //=============================================================================
 // Set algorithms
 //=============================================================================
-StatusCode AlgorithmCorrelations::algorithms(const std::vector<std::string>& algos){
+StatusCode AlgorithmCorrelations::algorithms(const strings& algos){
   m_algorithmsToTest = algos ;
-  m_algorithmsToTest.insert(m_algorithmsToTest.begin(),"ALWAYS");
+  m_algorithmsToTest.insert(m_algorithmsToTest.begin(),"ALWAYS");  
   return reset();
 }
 //=============================================================================
-StatusCode AlgorithmCorrelations::algorithmsRow(const std::vector<std::string>& algos){
+StatusCode AlgorithmCorrelations::algorithmsRow(const strings& algos){
   m_conditionAlgorithms = algos ;
   m_conditionAlgorithms.insert(m_conditionAlgorithms.begin(),"ALWAYS");
   return reset();
+}
+//=============================================================================
+//  Test
+//=============================================================================
+StatusCode AlgorithmCorrelations::testAlgos(const strings& algos) const{
+  for ( strings::const_iterator i1 = algos.begin() ; i1!= algos.end(); ++i1){
+    for ( strings::const_iterator i2 = algos.begin() ; i1!= i2; ++i2){
+      if (*i1==*i2){
+        err() << "Duplicate instance of ``" << *i1 << "''" << endmsg ;
+        err() << "Fix you options" << endmsg ;
+        return StatusCode::FAILURE ;
+      }
+    }
+  }
+  return StatusCode::SUCCESS;
 }
 //=============================================================================
 //  Print a list
@@ -303,7 +320,7 @@ StatusCode AlgorithmCorrelations::printTable(void) {
   if (!m_useNumbers) always() << std::string(decimals,' ');    // don't ask why I need this        
 
   unsigned int i = 0 ;
-  for( std::vector<std::string>::const_iterator ia = m_conditionAlgorithms.begin();
+  for( strings::const_iterator ia = m_conditionAlgorithms.begin();
        ia!= m_conditionAlgorithms.end() ; ++ia  ){
     if ( *ia == "ALWAYS" ) continue ;
     if (( isEffective(*ia) )|| (!m_minimize)) {
@@ -368,7 +385,7 @@ StatusCode AlgorithmCorrelations::printTable(void) {
   if ( (!m_square) && (m_useNumbers)){
     unsigned int i = 0 ;
     always() << "Column labels are : \n" ;
-    for( std::vector<std::string>::const_iterator ia = m_conditionAlgorithms.begin();
+    for( strings::const_iterator ia = m_conditionAlgorithms.begin();
          ia!= m_conditionAlgorithms.end() ; ++ia  ){
       if (*ia == "ALWAYS" ) continue ;
       if ((m_minimize) && !(isEffective( *ia ))) continue;
@@ -403,7 +420,7 @@ int AlgorithmCorrelations::happyAlgorithms(void) const {
   if ( !m_minimize ) return m_conditionAlgorithms.size() ;  
   int nalgow = 0 ;
   std::string firstalgo = "" ;
-  for( std::vector<std::string>::const_iterator ia = m_conditionAlgorithms.begin();
+  for( strings::const_iterator ia = m_conditionAlgorithms.begin();
        ia!= m_conditionAlgorithms.end() ; ++ia  ){
      if (( isEffective(*ia) ) && (*ia != "ALWAYS" )) ++nalgow ;
      if (msgLevel(MSG::VERBOSE)) verbose() << "Algorithm " << *ia << " says: " << isEffective(*ia) << endmsg ;

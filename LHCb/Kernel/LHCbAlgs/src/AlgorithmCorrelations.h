@@ -1,4 +1,4 @@
-// $Id: AlgorithmCorrelations.h,v 1.4 2008-10-29 10:01:10 pkoppenb Exp $
+// $Id: AlgorithmCorrelations.h,v 1.5 2009-04-15 09:48:14 pkoppenb Exp $
 #ifndef ALGORITHMCORRELATIONS_H 
 #define ALGORITHMCORRELATIONS_H 1
 
@@ -27,6 +27,7 @@
  *  @author Patrick KOPPENBURG
  *  @date   2005-04-19
  */
+typedef std::vector<std::string> strings;
 class AlgorithmCorrelations : public GaudiTool, virtual public IAlgorithmCorrelations {
   class AlgoMatrix ;
   class AlgoResult ;
@@ -38,8 +39,8 @@ public:
 
   virtual ~AlgorithmCorrelations( ); ///< Destructor
   StatusCode initialize() ;
-  StatusCode algorithms(const std::vector<std::string>&)  ;
-  StatusCode algorithmsRow(const std::vector<std::string>&);
+  StatusCode algorithms(const strings&)  ;
+  StatusCode algorithmsRow(const strings&);
   StatusCode printTable(void) ;
   StatusCode printList(void) ;
   ///< Fill results one by one for each algorithm
@@ -47,7 +48,7 @@ public:
   ///< Actually tell the tool that we reached the end of the event (only for one-by-one filling)
   StatusCode endEvent() ;
 
-protected:
+private:
   StatusCode reset(void);                     ///< reset everything
   bool isEffective(const std::string& ) const ; ///< Algo did something
   double algoRate(const std::string& ) const ; ///< Algo did something
@@ -56,13 +57,14 @@ protected:
   StatusCode addResults(void);                ///< add all results
   StatusCode resetAlgoResult(std::vector<AlgoResult>&); ///< reset algo Results
   StatusCode fillResult(const std::string&,const bool&,std::vector<AlgoResult>&) ; ///< fill results
+  StatusCode testAlgos(const strings&) const ;
   
 private:
-  std::vector<std::string> m_conditionAlgorithms ;    ///< Algorithms to check against
-  std::vector<std::string> m_algorithmsToTest ; ///< Algorithms to check
-  std::vector<AlgoMatrix> m_AlgoMatrices ; ///< Pairs of correlations
-  std::vector<AlgoResult> m_conditionResults;         ///< results of algorithms in this event
-  std::vector<AlgoResult> m_testResults;      ///< results of algorithms in this event
+  strings m_conditionAlgorithms ;    ///< Algorithms to check against
+  strings m_algorithmsToTest ; ///< Algorithms to check
+  std::vector<AlgoMatrix> m_AlgoMatrices ;     ///< Pairs of correlations
+  std::vector<AlgoResult> m_conditionResults ; ///< results of algorithms in this event
+  std::vector<AlgoResult> m_testResults;       ///< results of algorithms in this event
   
   unsigned int m_longestName ; ///< Longest algorithm name
   bool m_minimize ; ///< Use mimimal table width
