@@ -1,8 +1,8 @@
-# --> Including file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/ReadHepMC.opts'
+# --> Including file '/build/cattanem/Brunel_HEAD/Ex/IOExample/tests/options/ReadHepMC.opts'
 # ApplicationMgr.HistogramPersistency = "NONE";
 # ApplicationMgr.EvtMax   = 2;
 # EventSelector.PrintFreq = 1;
-# --> Including file '/afs/cern.ch/sw/lcg/app/nightlies/dev1/Thu/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# --> Including file '/afs/cern.ch/sw/lcg/app/nightlies/dev/Wed/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # ApplicationMgr.ExtSvc    += { "Gaudi::MultiFileCatalog/FileCatalog",                              "Gaudi::IODataManager/IODataManager",                              "PoolDbCacheSvc/PoolDbCacheSvc",                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"                            };
 # EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" };
 # EventPersistencySvc.CnvServices += { "PoolRootTreeEvtCnvSvc" };
@@ -13,31 +13,32 @@
 # PoolDbCacheSvc.Dlls              = {"lcg_RootStorageSvc", "GaudiKernelDict" };
 # PoolDbCacheSvc.OutputLevel       = 4;
 # PoolDbCacheSvc.DomainOpts        = { "Domain[ROOT_All].TREE_MAX_SIZE=500000000000 TYP=longlong" };
-# ApplicationMgr.ExtSvc               += { "PoolDbCnvSvc/RunRecordCnvSvc" };
-# RunRecordPersistencySvc.CnvServices += { "RunRecordCnvSvc" };
-# RunRecordCnvSvc.DbType               = "POOL_ROOTTREE";
-# RunRecordCnvSvc.ShareFiles           = true;
-# RunRecordDataSvc.ForceLeaves         = true;
-# RunRecordDataSvc.EnableFaultHandler  = true;
-# RunRecordDataSvc.RootCLID            =    1;
-# PoolRootEvtCnvSvc.EnableIncident     =    1;
-# PoolRootKeyEvtCnvSvc.EnableIncident  =    1;
-# PoolRootTreeEvtCnvSvc.EnableIncident =    1;
-# <-- End of file '/afs/cern.ch/sw/lcg/app/nightlies/dev1/Thu/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
-# --> Including file '/build/cattanem/LHCb_HEAD/Ex/IOExample/options/PoolDst.opts'
+# ApplicationMgr.ExtSvc                += { "PoolDbCnvSvc/FileRecordCnvSvc" };
+# FileRecordPersistencySvc.CnvServices += { "FileRecordCnvSvc" };
+# FileRecordCnvSvc.DbType               = "POOL_ROOTTREE";
+# FileRecordCnvSvc.ShareFiles           = true;
+# FileRecordDataSvc.ForceLeaves         = true;
+# FileRecordDataSvc.EnableFaultHandler  = true;
+# FileRecordDataSvc.RootCLID            =    1;
+# PoolRootEvtCnvSvc.EnableIncident      =    1;
+# PoolRootKeyEvtCnvSvc.EnableIncident   =    1;
+# PoolRootTreeEvtCnvSvc.EnableIncident  =    1;
+# <-- End of file '/afs/cern.ch/sw/lcg/app/nightlies/dev/Wed/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# --> Including file '/build/cattanem/Brunel_HEAD/Ex/IOExample/options/PoolDst.opts'
 # EventSelector.Input   = {  "DATAFILE='PFN:rfio:/castor/cern.ch/user/c/cattanem/Brunel/v32r1/00001820_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"};
 # InputCopyStream.Output = "DATAFILE='PFN:PoolDst.root' TYP='POOL_ROOTTREE' OPT='REC'";
 # ApplicationMgr.Dlls += { "HepMCBack" };
-# <-- End of file '/build/cattanem/LHCb_HEAD/Ex/IOExample/options/PoolDst.opts'
+# <-- End of file '/build/cattanem/Brunel_HEAD/Ex/IOExample/options/PoolDst.opts'
 # ApplicationMgr.TopAlg += { "DumpHepMC" };
-# <-- End of file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/ReadHepMC.opts'
+# <-- End of file '/build/cattanem/Brunel_HEAD/Ex/IOExample/tests/options/ReadHepMC.opts'
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.4 $
-                                          running on lxbuild120.cern.ch on Fri Dec 12 07:38:04 2008
+                                                   Welcome to ApplicationMgr $Revision: 1.5 $
+                                          running on lxbuild135.cern.ch on Wed Apr 15 09:31:54 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Successfully loaded modules : HepMCBack
 ApplicationMgr       INFO Application Manager Configured successfully
+Note: (file "(tmpfile)", line 2) File "set" already loaded
 EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootEvtCnvSvc
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
@@ -48,7 +49,7 @@ ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
 RootDBase.open    SUCCESS rfio:/castor/cern.ch/user/c/cattanem/Brunel/v32r1/00001820_00000001_5.dst File version:51400
 RootDBase.open    SUCCESS rfio:/castor/cern.ch/user/c/cattanem/Brunel/v32r1/00001820_00000001_5.dst File version:51400
-PoolRootTreeEvt...   INFO No RunRecords present in:CAA89D27-E42D-DC11-B844-003048836626
+PoolRootTreeEvt...   INFO No Records /FileRecords present in:CAA89D27-E42D-DC11-B844-003048836626
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 DumpHepMC            INFO  HepMC container 'Gen/HepMCEvents' 	 has 1 event(s)
 DumpHepMC            INFO   Generator 'Pythia'

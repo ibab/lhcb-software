@@ -1,9 +1,9 @@
-# --> Including file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/WriteDigi.opts'
+# --> Including file '/build/cattanem/Brunel_HEAD/Ex/IOExample/tests/options/WriteDigi.opts'
 # ApplicationMgr.HistogramPersistency = "NONE";
 # ApplicationMgr.EvtMax = 5;
 # EventSelector.PrintFreq = 1;
 # ApplicationMgr.OutStream += {"InputCopyStream/InputCopyStream"};
-# --> Including file '/afs/cern.ch/sw/lcg/app/nightlies/dev1/Thu/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# --> Including file '/afs/cern.ch/sw/lcg/app/nightlies/dev/Wed/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # ApplicationMgr.ExtSvc    += { "Gaudi::MultiFileCatalog/FileCatalog",                              "Gaudi::IODataManager/IODataManager",                              "PoolDbCacheSvc/PoolDbCacheSvc",                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"                            };
 # EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" };
 # EventPersistencySvc.CnvServices += { "PoolRootTreeEvtCnvSvc" };
@@ -14,30 +14,31 @@
 # PoolDbCacheSvc.Dlls              = {"lcg_RootStorageSvc", "GaudiKernelDict" };
 # PoolDbCacheSvc.OutputLevel       = 4;
 # PoolDbCacheSvc.DomainOpts        = { "Domain[ROOT_All].TREE_MAX_SIZE=500000000000 TYP=longlong" };
-# ApplicationMgr.ExtSvc               += { "PoolDbCnvSvc/RunRecordCnvSvc" };
-# RunRecordPersistencySvc.CnvServices += { "RunRecordCnvSvc" };
-# RunRecordCnvSvc.DbType               = "POOL_ROOTTREE";
-# RunRecordCnvSvc.ShareFiles           = true;
-# RunRecordDataSvc.ForceLeaves         = true;
-# RunRecordDataSvc.EnableFaultHandler  = true;
-# RunRecordDataSvc.RootCLID            =    1;
-# PoolRootEvtCnvSvc.EnableIncident     =    1;
-# PoolRootKeyEvtCnvSvc.EnableIncident  =    1;
-# PoolRootTreeEvtCnvSvc.EnableIncident =    1;
-# <-- End of file '/afs/cern.ch/sw/lcg/app/nightlies/dev1/Thu/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
-# --> Including file '/build/cattanem/LHCb_HEAD/Ex/IOExample/options/PoolDigi.opts'
+# ApplicationMgr.ExtSvc                += { "PoolDbCnvSvc/FileRecordCnvSvc" };
+# FileRecordPersistencySvc.CnvServices += { "FileRecordCnvSvc" };
+# FileRecordCnvSvc.DbType               = "POOL_ROOTTREE";
+# FileRecordCnvSvc.ShareFiles           = true;
+# FileRecordDataSvc.ForceLeaves         = true;
+# FileRecordDataSvc.EnableFaultHandler  = true;
+# FileRecordDataSvc.RootCLID            =    1;
+# PoolRootEvtCnvSvc.EnableIncident      =    1;
+# PoolRootKeyEvtCnvSvc.EnableIncident   =    1;
+# PoolRootTreeEvtCnvSvc.EnableIncident  =    1;
+# <-- End of file '/afs/cern.ch/sw/lcg/app/nightlies/dev/Wed/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# --> Including file '/build/cattanem/Brunel_HEAD/Ex/IOExample/options/PoolDigi.opts'
 # EventSelector.Input = {  "DATAFILE='PFN:rfio:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/DIGI/0000/00001820_00000001_4.digi' TYP='POOL_ROOT' OPT='READ'"};
 # InputCopyStream.Output = "DATAFILE='PFN:PoolDigi.root' TYP='POOL_ROOTTREE' OPT='REC'";
 # ApplicationMgr.Dlls += { "HepMCBack" };
-# <-- End of file '/build/cattanem/LHCb_HEAD/Ex/IOExample/options/PoolDigi.opts'
-# <-- End of file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/WriteDigi.opts'
+# <-- End of file '/build/cattanem/Brunel_HEAD/Ex/IOExample/options/PoolDigi.opts'
+# <-- End of file '/build/cattanem/Brunel_HEAD/Ex/IOExample/tests/options/WriteDigi.opts'
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.5 $
-                                          running on lxbuild120.cern.ch on Fri Dec 12 07:31:28 2008
+                                                   Welcome to ApplicationMgr $Revision: 1.6 $
+                                          running on lxbuild135.cern.ch on Wed Apr 15 09:26:55 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Successfully loaded modules : HepMCBack
 ApplicationMgr       INFO Application Manager Configured successfully
+Note: (file "(tmpfile)", line 2) File "set" already loaded
 EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootEvtCnvSvc
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
@@ -49,10 +50,10 @@ ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
 RootDBase.open    SUCCESS rfio:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/DIGI/0000/00001820_00000001_4.digi File version:51304
 RootDBase.open    SUCCESS rfio:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/DIGI/0000/00001820_00000001_4.digi File version:51304
-PoolRootEvtCnvSvc    INFO No RunRecords present in:7230E749-29DA-DB11-A4E7-0002B3B0DEA0
+PoolRootEvtCnvSvc    INFO No Records /FileRecords present in:7230E749-29DA-DB11-A4E7-0002B3B0DEA0
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
-IODataManager        INFO Referring to dataset PoolDigi.root by its file ID:AEB3378A-16C8-DD11-A8B9-0030487C5E0E
-RootDBase.open    SUCCESS PoolDigi.root File version:51800
+IODataManager        INFO Referring to dataset PoolDigi.root by its file ID:C666D4D9-8E29-DE11-BDC8-001E4F3D8360
+RootDBase.open    SUCCESS PoolDigi.root File version:52200
 EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
 EventSelector     SUCCESS Reading Event record 3. Record number within stream 1: 3
 EventSelector     SUCCESS Reading Event record 4. Record number within stream 1: 4
@@ -61,7 +62,7 @@ ApplicationMgr       INFO Application Manager Stopped successfully
 InputCopyStream      INFO Events output: 5
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
-PoolRootTreeEvt...   INFO Disconnected data IO:AEB3378A-16C8-DD11-A8B9-0030487C5E0E[PoolDigi.root]
+PoolRootTreeEvt...   INFO Disconnected data IO:C666D4D9-8E29-DE11-BDC8-001E4F3D8360[PoolDigi.root]
 PoolRootEvtCnvSvc    INFO Disconnected data IO:7230E749-29DA-DB11-A4E7-0002B3B0DEA0[rfio:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/DIGI/0000/00001820_00000001_4.digi]
 XMLCatalog           INFO File 'test_catalog.xml' does not exist. New file created.
 ApplicationMgr       INFO Application Manager Finalized successfully
