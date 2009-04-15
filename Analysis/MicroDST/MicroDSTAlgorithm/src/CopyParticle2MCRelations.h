@@ -1,4 +1,4 @@
-// $Id: CopyParticle2MCRelations.h,v 1.1 2009-04-15 16:44:03 jpalac Exp $
+// $Id: CopyParticle2MCRelations.h,v 1.2 2009-04-15 17:04:17 jpalac Exp $
 #ifndef COPYPARTICLE2MCRELATIONS_H 
 #define COPYPARTICLE2MCRELATIONS_H 1
 
@@ -13,37 +13,38 @@
 /** @class CopyParticle2MCRelations CopyParticle2MCRelations.h
  *  
  *  MicroDSTAlgorithm to clone the associations between an LHCb::Particle
- *  and and LHCb::RecVertex. Typically this association should be between
- *  a candidate LHCb::Particle and any primary vertices used to select
- *  it. 
+ *  and LHCb::MCParticles. 
  *  It inherits the std::string properties InputLocation and OutputPrefix from
  *  MicroDSTCommon. The associations are taken from the TES location 
  *  defined by InputLocation, and are cloned and put in TES location 
  *  "/Event" + OutputPrefix + InputLocation. If InputLocation already contains
  *  a leading "/Event" it is removed.
- *  The associations are typically in a Particle2Vertex::Table in a TES 
- *  location like "/Event/Phys/SomeParticleMakingAlg/Particle2VertexRelations".
+ *  The associations are typically in a Particle2MCParticle::WTable in a TES 
+ *  location like "/Event/Phys/SomeParticleMakingAlg/P2MCPRelations".
  *  The algorithm picks up this relations table, which relates LHCb::Particles
- *  from "/Event/Phys/SomaParticleMakingAlg/Particles" to LHCb::RecVertex.
- *  For each LHCb::Particle to LHCb::RecVertex association, it picks up the 
- *  corresponding <b>previously cloned</b> LHCb::Particle and LHCb::RecVertex 
- *  from "/Event/MyLocation/Phys/SomeParticleMakerAlg/Particles" and
- *  "/Event/MyLocation/Phys/<location of associated vertices>" respectively.
- *  If these have not been previously cloned, no association is cloned or 
- *  stored. This algorithm <b>is not resopnsible for cloning the associated
- *  TES objects</b>
+ *  from "/Event/Phys/SomaParticleMakingAlg/Particles" to LHCb::MCParticles.
+ *  For each LHCb::Particle to LHCb::MCParticle association, it picks up the 
+ *  corresponding <b>previously cloned</b> LHCb::Particle from 
+ *  "/Event/MyLocation/Phys/SomeParticleMakerAlg/Particles", and clones the 
+ *  associated LHCb::MCParticles. If the LHCb::MCParticle has not been 
+ *  previously cloned, no association is cloned or stored. The algorithm
+ *  constructs a new Particle2MCParticle::WTable relating the clones and 
+ *  stored it in a TES location as described above.
  *
  *  <b>Important conditions</b>: This algorithm relies on the LHCb::Particle
- *  and LHCb::MCParticle sets in the associations to have been previously
- *  cloned by CopyParticles and CopyRelatedMCParticles.
+ *  set in the associations to have been previously cloned by CopyParticles,
+ *  and the existence of the Particle2MCParticle::WTable associating the origin
+ *  LHCb::Particles to LHCb::MCParticles
  *
  *  <b>Example</b>: Clone LHCb::Particle -> LHCb::MCParticle associations
  *  from "/Event/Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/P2MCPRelations"
  *  to "/Event/MyLocation/Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/P2MCPRelations"
  *  @code
- *  SeqDC06selBd2Jpsi2MuMu_Kst2KPi.Members += {"CopyParticle2MCRelations"};
- *  CopyParticle2MCRelations.InputLocation = "Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/Particle2VertexRelations";
- *  CopyParticle2MCRelations.OutputPrefix = "MyLocation";
+ *  mySeq = GaudiSequencer('SeqDC06selBd2Jpsi2MuMu_Kst2KPi')
+ *  copyP2MCP = CopyParticle2MCRelations()
+ *  mySeq.Members += [copyP2MCP]
+ *  copyP2MCP.InputLocation = "Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/P2MCPRelations";
+ *  copyP2MCP.OutputPrefix = "MyLocation";
  *  @endcode
  *
  *  @author Juan PALACIOS juan.palacios@nikhef.nl
