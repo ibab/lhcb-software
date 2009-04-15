@@ -46,17 +46,38 @@ DaVinciSmartAssociator::relatedMCPsImpl(const LHCb::Particle* particle,
 //for composites. The associator wrapper makes sure the linkers thus created are
 //deleted in the correct manner.
 
+  if (msgLevel(MSG::VERBOSE)) 
+    verbose() << "Performing smart association on " 
+              << particle 
+              << endmsg;
+
   Particle2MCParticle::ToVector associatedParts;
+
+  if (!particle) Exception("The smart associator was asked to associate a NULL particle, exiting.").ignore();
+
   //Now we get the association result based on the particle type
   if (particle->isBasicParticle()){ //if this is a stable
+      if (msgLevel(MSG::VERBOSE)) 
+        verbose() << "Associating a basic particle with pid = " 
+                  << particle->particleID().pid() 
+                  << endmsg; 
+
       associatedParts = m_weightedAssociation->relatedMCPs(particle,mcps);
+
+      if (msgLevel(MSG::VERBOSE)) 
+        verbose() << "Associated a basic particle with pid = " 
+                  << particle->particleID().pid() 
+                  << endmsg;
   } else{ //If composite use BackCat
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Associating a composite particle with pid = " 
+                                          << particle->particleID().pid() 
+                                          << endmsg;
     if ( 0!=m_bkg ) {
-      const LHCb::MCParticle* assocMCP = m_bkg->origin(particle);
-      if (0!=assocMCP ) {
-        associatedParts.push_back(MCAssociation(m_bkg->origin(particle), 1.)); 
-      }
-    }
+      associatedParts.push_back(MCAssociation(m_bkg->origin(particle), 1.)); 
+    } else Exception("The BackCat tool could not be found, exiting.").ignore();
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Associated a composite particle with pid = " 
+                                          << particle->particleID().pid() 
+                                          << endmsg;
   }
 
   // check if the associaited MCPs are in the input container, if not,

@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.258 2009-04-09 19:15:04 gligorov Exp $
+! $Id: release.notes,v 1.259 2009-04-15 12:31:39 gligorov Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2009-04-15 - V. Gligorov
+ - Update DaVinciSmartAssociator.{h,cpp} to include more debug printouts.
 
 ! 2009-04-09 - V. Gligorov
  - Update BackgroundCategory.{h,cpp} to use P2MCPFromProtoP for associating stables.
@@ -14,7 +17,7 @@
   . fix trivial but deadly bug
 
 ! 2009-04-08 - V. Gligorov
- - Update DaVinciSmartAsscoator.{h,cpp} to use P2MCPFromProtoP for associating stables. 
+ - Update DaVinciSmartAssociator.{h,cpp} to use P2MCPFromProtoP for associating stables. 
 
 ! 2009-03-31 - Juan PALACIOS
  - Add P2MCPFromProtoP, an IParticle2MCWeightedAssociator that uses ProtoParticle -> MCParticle relations tables.
