@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.84 2009-04-08 12:34:43 jpalac Exp $
+! $Id: release.notes,v 1.85 2009-04-15 16:58:03 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
+
+! 2009-04-15 - Juan PALACIOS
+ - Kernel/Particle2MCParticle.h
+  . Add typedef for weighted Particle -> MCParticle relations table.
 
 ! 2009-04-08 - Juan PALACIOS
  - dict/DaVinciMCKernelDict.h
