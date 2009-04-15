@@ -1,5 +1,9 @@
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/Algorithm.h"
+#include "GaudiKernel/IRunable.h"
+#include "GaudiKernel/Message.h"
+#include "GaudiKernel/IIncidentListener.h"
+#include "GaudiKernel/IMonitorSvc.h"
 #include "MDF/StreamDescriptor.h"
 #include "MDF/MDFWriter.h"
 #include "MDF/MDFIO.h"
@@ -26,6 +30,9 @@
 
 #ifndef MDFWRITERNET_H
 #define MDFWRITERNET_H
+
+class ISvcLocator;
+class IIncidentSvc;
 
 /*
  * LHCb namespace
@@ -264,7 +271,7 @@ namespace LHCb {
    * @version: 1.0
    */
 
-  class MDFWriterNet : public MDFWriter, INotifyClient {
+  class MDFWriterNet : public MDFWriter, INotifyClient, virtual public IIncidentListener {
     typedef LHCb::Connection Connection;
   protected:
     /// The initial storage server hostname to connect to.
@@ -312,6 +319,8 @@ namespace LHCb {
     /// The connection object being used to talk to the server.
     Connection *m_srvConnection;
 
+    IIncidentSvc* m_incidentSvc;
+    
     /// The object that encapsulates all RPC communication.
     RPCComm *m_rpcObj;
 
@@ -374,6 +383,9 @@ namespace LHCb {
     /// Sends the command required to close a file given the file object.
     void closeFile(File *file);
 
+    // handle incidents
+    void handle(const Incident&);
+    
     /// Writes a chunk to the storage cluster server. Overrides Algorithm::writeBuffer().
     virtual StatusCode writeBuffer(void *const ioDesc, const void *data, size_t len);
 

@@ -23,6 +23,8 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/Incident.h"
+#include "GaudiKernel/IIncidentSvc.h"
 #include "MDF/RawEventHelpers.h"
 #include "MDF/MDFWriter.h"
 #include "MDF/MDFHeader.h"
@@ -145,7 +147,7 @@ MDFWriterNet::MDFWriterNet(MDFIO::Writer_t typ, const std::string& nam,  ISvcLoc
 }
 
 /// Standard algorithm constructor
-MDFWriterNet::MDFWriterNet(const std::string& nam, ISvcLocator* pSvc) : MDFWriter(nam, pSvc)
+MDFWriterNet::MDFWriterNet(const std::string& nam, ISvcLocator* pSvc) : MDFWriter(nam, pSvc), m_incidentSvc(0)
 {
   constructNet();
 }
@@ -229,7 +231,12 @@ StatusCode MDFWriterNet::initialize(void)
       msg = NULL;
       
   }
-                      
+  if (!service("IncidentSvc", m_incidentSvc).isSuccess()) {
+      return StatusCode::FAILURE;
+  } else {
+        m_incidentSvc->addListener(this, "DAQ_CANCEL");
+  }
+
   *m_log << " Writer " << getpid() << " Initialized." << endmsg;
   return StatusCode::SUCCESS;
 }
@@ -415,6 +422,18 @@ void MDFWriterNet::closeFile(File *currFile)
   } 
   *m_log << MSG::INFO << WHERE << endmsg;
 }
+
+/* Implements a method from the incident listener
+ * interface to be able to handle incidenrs. Here
+ * the send thread will be stopped.
+ */
+void  MDFWriterNet::handle(const Incident& inc)    {
+   *m_log << MSG::INFO << "Got incident:" << inc.source() << " of type " << inc.type() << endmsg;
+  if (inc.type() == "DAQ_CANCEL")  {
+      m_srvConnection->stopSendThread();
+  }
+}
+
 
 /* Writes out the buffer to the socket through the Connection object.
  * This function first checks if a new file needs to be created. After

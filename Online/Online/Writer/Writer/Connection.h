@@ -156,6 +156,9 @@ namespace LHCb {
       /// Returns the state in which the Connection is.
       int getState() { return m_state; }
 
+      /// Stops the sender thread.
+      void stopSendThread();
+
       /// Sets a notification listener for events on this connection.
       void setNotifyClient(INotifyClient *nClient) {
         m_ackThread->setNotifyClient(nClient);

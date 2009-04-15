@@ -45,7 +45,7 @@ Connection::Connection(std::string serverAddr, int serverPort, int sndRcvSizes,
   m_notifyClient = nClient;
   m_sndRcvSizes = sndRcvSizes;
   m_failoverMonitor = NULL;
-
+  m_stopSending = 0;
   pthread_mutex_init(&m_failoverLock, NULL);
 }
 
@@ -262,21 +262,29 @@ void Connection::sendCommand(struct cmd_header *header, void *data)
       break;
   }
   newHeader = NULL;
-  int retry = 0;
-  int maxRetries = 3;
   do {
       newHeader = m_mmObj.allocAndCopyCommand(header, data);  /* Will always succeed. */
       if(newHeader == NULL) {
           *m_log << MSG::FATAL << "Buffer is full! MaxQueueSizeBytes=" << m_maxQueueSize << endmsg;
-          sleep(5);
-          retry++;
+          sleep(1);
       }
-  } while(newHeader == NULL and retry < maxRetries);
+  } while(newHeader == NULL && m_stopSending == 0);
+  if(m_stopSending == 1) {
+      // do a clean shutdown
+      // m_mmObj and its buffer will be deleted when the
+      // connection object will be deleted
+      return;
+  }
   if(newHeader != NULL) {
       m_mmObj.enqueueCommand(newHeader);
   } else {
+        // Should normally never happen
         *m_log << MSG::FATAL << "ERROR: Buffer is still full, giving up. Event is lost!" << endmsg;
     }
+}
+
+void Connection::stopSendThread() {
+    m_stopSending = 1;
 }
 
 #endif /* _WIN32 */
