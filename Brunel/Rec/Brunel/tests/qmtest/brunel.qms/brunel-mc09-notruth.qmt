@@ -19,8 +19,7 @@ preprocessor = normalizeExamples + \
     LineSkipper(["--- Reader", "--- CFMlpANN", "PARAM/ParamFiles"]) + \
     LineSkipper(["INFO Connected to database"]) + \
     LineSkipper(["INFO Connecting to database"]) + \
-    LineSkipper(["INFO Disconnect from database after being idle"]) + \
-    LineSkipper(["ChronoStatSvc.f...   INFO  Service finalized succes"])
+    LineSkipper(["INFO Disconnect from database after being idle"])
 validateWithReference(preproc = preprocessor)
 </text></argument>
 </extension>

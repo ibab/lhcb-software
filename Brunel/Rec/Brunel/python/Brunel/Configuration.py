@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.70 2009-04-06 15:28:57 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.71 2009-04-15 16:42:07 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -314,10 +314,10 @@ class Brunel(LHCbConfigurableUser):
 
             # FSR output stream
             if self.getProp("WriteFSR"):
-                FSRWriter = RunRecordStream( "FSRWriter",
-                                             ItemList = [ "/RunRecords#999" ],
-                                             EvtDataSvc = "RunRecordDataSvc",
-                                             EvtConversionSvc = "RunRecordPersistencySvc" )
+                FSRWriter = RecordStream( "FSRWriter",
+                                          ItemList = [ "/FileRecords#999" ],
+                                          EvtDataSvc = "FileRecordDataSvc",
+                                          EvtConversionSvc = "FileRecordPersistencySvc" )
                 # Write the FSRs to the same file as the events
                 if FSRWriter.isPropertySet( "Output" ):
                     log.warning("Ignoring FSRWriter.Output option, FSRs will be written to same file as the events")
@@ -326,8 +326,8 @@ class Brunel(LHCbConfigurableUser):
                 ApplicationMgr().OutStream.append(FSRWriter)
                 # Suppress spurious error when reading POOL files without run records
                 if self.getProp( "InputType" ).upper() not in [ "MDF" ]:
-                    from Configurables import RunRecordDataSvc
-                    RunRecordDataSvc().OutputLevel = FATAL
+                    from Configurables import FileRecordDataSvc
+                    FileRecordDataSvc().OutputLevel = FATAL
 
             from Configurables import TrackToDST
             if dstType == "DST":
