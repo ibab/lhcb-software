@@ -64,6 +64,7 @@ namespace Tf {
       int m_min_overlap;
 
       bool m_debugLevel;
+      bool m_verboseLevel;
 
       int m_3Dhits[ 360 ][ 360 ][ 42 ];
       int m_hits[ 360 ][ 360 ];
