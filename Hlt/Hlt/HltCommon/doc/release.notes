@@ -9,11 +9,12 @@
    trigger line to a fixed rate
  - add HltReferenceClockSvc.cpp, which implements an IHltReferenceClockSvc
 
-! 2009-04-02 - David Hutchcroft
- - move explicit ROOT manipulations to HltBase
-
 ! 2009-04-01 - David Hutchcroft
  - Changed enum of number of expected Velo clusters
+
+!========================== HltCommon v5r4 2009-03-23 ===================
+! 2009-04-02 - Gerhard Raven
+ - move explicit ROOT manipulations to HltBase
 
 ! 2009-03-31 - Gerhard Raven
  - add HltCopySelection to copy (possible from TES) to an HltSelection
