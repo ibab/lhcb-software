@@ -4,6 +4,9 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2009-04-15 - Gerhard Raven
+ - fix cut+paste typo in IHltReferenceClockSvc
+
 ! 2009-04-08 - Wouter Hulsbergen
  - add IHltReferenceClockSvc, which provides a reference 'clock' for 
    triggers with a fixed rate

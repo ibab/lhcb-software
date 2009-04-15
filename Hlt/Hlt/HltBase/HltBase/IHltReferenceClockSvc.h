@@ -1,4 +1,4 @@
-// $Id: IHltReferenceClockSvc.h,v 1.1 2009-04-13 20:02:12 wouter Exp $
+// $Id: IHltReferenceClockSvc.h,v 1.2 2009-04-15 07:20:23 graven Exp $
 #ifndef IHltReferenceClockSvc_h
 #define IHltReferenceClockSvc_h
 
@@ -19,7 +19,7 @@ class IHltReferenceClockSvc : virtual public INamedInterface
 {
 public:
   static const InterfaceID& interfaceID() {
-    static const InterfaceID id( "IPropertyConfigSvc", 1, 0 );
+    static const InterfaceID id( "IHltReferenceClockSvc", 1, 0 );
     return id; 
   }
   
