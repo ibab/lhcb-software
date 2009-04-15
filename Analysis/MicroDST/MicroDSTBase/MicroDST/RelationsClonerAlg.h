@@ -1,4 +1,4 @@
-// $Id: RelationsClonerAlg.h,v 1.1 2009-04-15 16:39:11 jpalac Exp $
+// $Id: RelationsClonerAlg.h,v 1.2 2009-04-15 17:01:48 jpalac Exp $
 #ifndef MICRODST_RELATIONSCLONERALG_H 
 #define MICRODST_RELATIONSCLONERALG_H 1
 
@@ -90,7 +90,8 @@ public:
       if (table) {
         verbose() << "found table!" << endmsg;
         TABLE* cloneTable = tableOfClones(table);
-        verbose() << "Going to store relations table from " << inputTESLocation()
+        verbose() << "Going to store relations table from " 
+                  << inputTESLocation()
                   << " into " << fullOutputTESLocation() << endmsg;
         put( cloneTable, fullOutputTESLocation() );
         return StatusCode::SUCCESS;
