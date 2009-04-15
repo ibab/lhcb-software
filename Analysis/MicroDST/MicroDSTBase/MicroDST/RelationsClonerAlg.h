@@ -1,4 +1,4 @@
-// $Id: RelationsClonerAlg.h,v 1.2 2009-04-15 17:01:48 jpalac Exp $
+// $Id: RelationsClonerAlg.h,v 1.3 2009-04-15 20:28:53 jpalac Exp $
 #ifndef MICRODST_RELATIONSCLONERALG_H 
 #define MICRODST_RELATIONSCLONERALG_H 1
 
@@ -121,6 +121,7 @@ private:
   {
 
     typedef typename boost::remove_pointer<typename TABLE::From>::type _From;
+    typedef typename boost::remove_pointer<typename TABLE::To>::type _To;
 
     TABLE* cloneTable = new TABLE();
 
@@ -143,7 +144,10 @@ private:
                     << " with weight " << iRange->weight() << endmsg;
           const typename TABLE::From clonedFrom = 
             getStoredClone< _From >(from);
-          const typename TABLE::To clonedTo = (*m_cloner)( iRange->to()  );
+          const typename TABLE::To storedTo = 
+            getStoredClone< _To >(iRange->to());
+          const typename TABLE::To clonedTo = (0!=storedTo) ? storedTo : 
+            (*m_cloner)(iRange->to());
           if (clonedFrom&&clonedTo) {
             cloneTable->relate(clonedFrom, clonedTo, iRange->weight());
             verbose() << "\ncloned From "    
