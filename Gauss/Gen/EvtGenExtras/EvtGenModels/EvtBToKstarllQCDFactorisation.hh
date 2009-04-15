@@ -87,12 +87,6 @@ public:
 	
 	void init();
 	
-	//physics related utility functions
-	double getAFB(const double q2) const;
-	double findAFBZero() const;
-	double getDstar(const double q2, const std::vector<EvtComplex>& tensors) const;
-	double getGammaKstar(const double q2) const;
-	
 	enum TensorLabels {A = 0, B, C, D, E, F, G, H, S2, NUMBER_OF_TENSORS};//NUMBER_OF_TENSORS needs to be last
 	const static std::string bquark;
 	const static std::string antibquark;
