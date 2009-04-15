@@ -4,8 +4,11 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2009-04-15 - Marco Cattaneo
+ - Really fix the compilation warning...
+
 ! 2009-04-14 - Marco Cattaneo
- - Fixed gcc43 compilation warning in NewVeloSpaceTool.cpp
+ - Fixed compilation warning in NewVeloSpaceTool.cpp
 
 ! 2009-04-01 - David Hutchcroft
  - Tweaked the setting of the number of missing clusters to better cope with
