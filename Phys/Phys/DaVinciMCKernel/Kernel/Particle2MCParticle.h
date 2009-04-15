@@ -1,4 +1,4 @@
-// $Id: Particle2MCParticle.h,v 1.9 2009-04-06 13:10:38 jpalac Exp $
+// $Id: Particle2MCParticle.h,v 1.10 2009-04-15 16:56:46 jpalac Exp $
 #ifndef KERNEL_PARTICLE2MCPARTICLE_H 
 #define KERNEL_PARTICLE2MCPARTICLE_H 1
 
@@ -7,6 +7,7 @@
 #include "Event/Particle.h"
 #include "Relations/Relation.h"
 #include "Relations/Relation1D.h"
+#include "Relations/RelationWeighted1D.h"
 #include "Kernel/MCAssociation.h"
 
 /** @namespace Particle2MCParticle Kernel/Particle2MCParticle.h
@@ -19,7 +20,10 @@
  *  @date   2009-01-20
  */
 namespace Particle2MCParticle {
-
+  typedef double                                          WeightType ;
+  typedef LHCb::RelationWeighted1D<LHCb::Particle, 
+                                   LHCb::MCParticle, 
+                                   WeightType>            WTable     ;
   typedef LHCb::Relation1D<LHCb::Particle, 
                            LHCb::MCParticle  >            Table      ;
 
