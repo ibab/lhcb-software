@@ -1,4 +1,4 @@
-// $Id: HltLumiSummaryDecoder.cpp,v 1.1.1.1 2009-02-16 16:04:17 panmanj Exp $
+// $Id: HltLumiSummaryDecoder.cpp,v 1.2 2009-04-15 16:01:13 cattanem Exp $
 // Include files
 #include <algorithm>
 
@@ -97,7 +97,7 @@ StatusCode HltLumiSummaryDecoder::execute() {
       int iVal = (*itW & 0xFFFF);
       if ( MSG::VERBOSE >= msgLevel() ) {
 	verbose() << format ( " %8x %11d %11d %11d ", *itW, *itW, iKey, iVal ) 
-		  << endreq;
+		  << endmsg;
       }
       // add this counter
       m_HltLumiSummary->addInfo( iKey, iVal);
@@ -112,7 +112,7 @@ StatusCode HltLumiSummaryDecoder::execute() {
     if ( msgLevel( MSG::DEBUG ) ) {
       debug() << "Bank size: ";
       debug() << format( "%4d ", (*ibank)->size() ) 
-	      << "Total Data bank size " << totDataSize << endreq;
+	      << "Total Data bank size " << totDataSize << endmsg;
     }
   }
 
@@ -127,7 +127,7 @@ StatusCode HltLumiSummaryDecoder::finalize()
   if ( 0 < m_nbEvents ) {
     m_totDataSize /= m_nbEvents;
     info() << "Average event size : " << format( "%7.1f words", m_totDataSize ) 
-	   << endreq;
+	   << endmsg;
   }
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 };
