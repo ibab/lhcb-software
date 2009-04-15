@@ -273,6 +273,7 @@ void Connection::sendCommand(struct cmd_header *header, void *data)
       // do a clean shutdown
       // m_mmObj and its buffer will be deleted when the
       // connection object will be deleted
+      *m_log << MSG::FATAL << m_mmObj.getAllocByteCount() << " Bytes are lost." << endmsg;
       return;
   }
   if(newHeader != NULL) {
