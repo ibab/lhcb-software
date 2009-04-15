@@ -3,7 +3,7 @@
 #  @author Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.5 2009-03-11 16:28:45 wouter Exp $"
+__version__ = "$Id: Configuration.py,v 1.6 2009-04-15 16:11:48 jblouw Exp $"
 __author__  = "Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>"
 
 from Gaudi.Configuration  import *
@@ -141,12 +141,10 @@ class Escher(LHCbConfigurableUser):
                ProcessPhase("Align").DetectorList += ["OT"]
                ta = TAlignment()
                ta.Method = "Millepede"
- 	       ta.TrackContainer = self.getProp("TrackContainer")
+ 	       ta.TrackLocation = self.getProp("TrackContainer")
 	       ta.Detectors =  self.getProp("Detectors")
-               ta.Sequencer = GaudiSequencer("AlignOTSeq")
-               seqname= ta.Sequencer.getName()
-               alignSeq.Members.append(seqname)
-               self.AlignSequence += alignSeq
+               ta.Sequencer = GaudiSequencer("MpedeAlignSeq")
+               alignSeq.Members.append(ta.Sequencer)
         if self.getProp("Kalman") :
             TrackSys().ExpertTracking += [ "kalmanSmoother" ]
 	    log.info("Using Kalman style alignment!")
