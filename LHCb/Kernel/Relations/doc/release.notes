@@ -1,12 +1,14 @@
-! $Id: release.notes,v 1.61 2009-04-09 13:16:58 ibelyaev Exp $ 
+! $Id: release.notes,v 1.62 2009-04-15 07:46:00 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
 
-! 2009-04-09 - Vanya BELYAEV 
+! 2009-04-15 - Marco Cattaneo
+ - Fix dependecies or RelationsTest, for make -j
 
+! 2009-04-09 - Vanya BELYAEV 
  - src/Relations.cpp
    remove local instances of relation tables. 
    Due to some unknown reasons
