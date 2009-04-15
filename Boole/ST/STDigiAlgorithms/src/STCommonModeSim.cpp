@@ -88,7 +88,7 @@ StatusCode STCommonModeSim::execute() {
   return StatusCode::SUCCESS;
 }
 
-STDigits::const_iterator STCommonModeSim::collectByPort(STDigits::const_iterator& start,
+STDigits::const_iterator STCommonModeSim::collectByPort(STDigits::const_iterator& ,
 							STDigits::const_iterator& end){
   return end;
 }
