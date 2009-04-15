@@ -11,7 +11,7 @@
 
 #===========================================================================
 set exec_name = "Lbglimpse"
-set script_dir = "$LHCBSCRIPTS"
+# set script_dir = "$LHCBSCRIPTS"
 set script_version = "070129"
 #
 set nar = $#argv
