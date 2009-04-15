@@ -9,7 +9,7 @@ Based on Phys v8r2, Analysis v3r2, Rec v6r3, HLT v6r0, Lbcom v6r27, LHCb v26r3, 
 
 Highlights:
   * Hlt:
-     - Complete re-write of Hlt2Lines (Vanya and Gerhard)
+     - Complete re-write of Hlt2Lines (Vava and Gerhard)
   * MicroDST: 
      - Add copying of HltDecReports (Juan)
      - Move Particle->MCParticle relations table to Phys/SelectionName/P2MCPRelations (Juan)
