@@ -12,7 +12,7 @@
 ! 2009-04-01 - David Hutchcroft
  - Changed enum of number of expected Velo clusters
 
-!========================== HltCommon v5r4 2009-03-23 ===================
+!========================== HltCommon v5r4 2009-04-13 ===================
 ! 2009-04-02 - Gerhard Raven
  - move explicit ROOT manipulations to HltBase
 
