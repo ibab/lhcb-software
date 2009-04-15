@@ -1,4 +1,4 @@
-// $Id: TupleToolMCTruth.cpp,v 1.12 2009-04-09 19:10:07 gligorov Exp $
+// $Id: TupleToolMCTruth.cpp,v 1.13 2009-04-15 12:34:24 gligorov Exp $
 // Include files
 #include "gsl/gsl_sys.h"
 // from Gaudi
@@ -107,13 +107,13 @@ StatusCode TupleToolMCTruth::fill( const LHCb::Particle*
     const SmartRefVector< LHCb::MCVertex > & endVertices = mcp->endVertices();
     if (endVertices.size() != 0 ) {
     
-      if (endVertices.front() != NULL) {
+      if (endVertices.front()) {
         endVertex = endVertices.front()->position(); // the first item, the other are discarded.
       } else {
         endVertex.SetXYZ(-9999.,-9999.,-9999.);
         badTrueTAU = true;
       }
-      if (mcp->originVertex() != NULL) {
+      if (mcp->originVertex()) {
         originVertex = mcp->originVertex()->position();
       } else {
         originVertex.SetXYZ(-9999.,-9999.,-9999.);
