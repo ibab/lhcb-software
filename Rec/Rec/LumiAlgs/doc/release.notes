@@ -4,6 +4,10 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2009-04-15 - Marco Cattaneo
+ - Change input and output FSR locations to be under /FileRecords instead of
+   /RunRecords, following reimplementation of FileRecordSvc in Gaudi v21
+
 !========================== LumiAlgs v1r0 2009-02-20 =========================
 ! 2009-02-19 - Marco Cattaneo
  - Clean up configurable to remove unneccessary imports and fix dependency

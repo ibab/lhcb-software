@@ -1,4 +1,4 @@
-// $Id: LumiAccounting.cpp,v 1.1.1.1 2009-02-16 16:28:12 panmanj Exp $
+// $Id: LumiAccounting.cpp,v 1.2 2009-04-15 16:05:06 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -54,12 +54,8 @@ StatusCode LumiAccounting::initialize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
-  // get MsgStream
-  sc = service("RunRecordDataSvc", m_runRecordSvc, true);
-  if( sc.isFailure() ) {
-    if ( msgLevel(MSG::ERROR) ) error() << "Unable to retrieve run records service" << endreq;
-    return sc;
-  }
+  // get the File Records service
+  m_fileRecordSvc = svc<IDataProviderSvc>("FileRecordDataSvc", true);
 
   // file counting 
   m_current_fname = "";
@@ -68,7 +64,7 @@ StatusCode LumiAccounting::initialize() {
   // prepare TDS for FSR
   m_lumiFSRs = new LHCb::LumiFSRs();
   m_lumiFSR = 0;
-  put(m_runRecordSvc, m_lumiFSRs, m_FSRName);
+  put(m_fileRecordSvc, m_lumiFSRs, m_FSRName);
 
   return StatusCode::SUCCESS;
 }
@@ -175,7 +171,7 @@ StatusCode LumiAccounting::finalize() {
 
   // check if the FSRs can be retrieved from the TS
   if ( msgLevel(MSG::DEBUG) ) {
-    LHCb::LumiFSRs* readFSRs = get<LHCb::LumiFSRs>(m_runRecordSvc, m_FSRName);
+    LHCb::LumiFSRs* readFSRs = get<LHCb::LumiFSRs>(m_fileRecordSvc, m_FSRName);
     LHCb::LumiFSRs::iterator fsr;
     for ( fsr = readFSRs->begin(); fsr != readFSRs->end(); fsr++ ) {
       // print the FSR just retrieved from TS
@@ -198,10 +194,6 @@ StatusCode LumiAccounting::finalize() {
       }
     }
   }
-
-  // release service
-  if ( m_runRecordSvc ) m_runRecordSvc->release();
-  m_runRecordSvc = 0;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }

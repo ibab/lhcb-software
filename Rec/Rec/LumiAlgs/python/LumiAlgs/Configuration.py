@@ -54,7 +54,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
             seqMembers.append( HltLumiSummaryDecoder('LumiDecode'+i,
                                                   OutputLevel = debugOPL ))
             seqMembers.append( LumiAccounting('LumiCount'+i,
-                                              OutputDataContainer = "/RunRecords/EOR/LumiFSR"+i,
+                                              OutputDataContainer = "/FileRecords/EOR/LumiFSR"+i,
                                               OutputLevel = debugOPL ))
             
             BXMembers.append( GaudiSequencer('Lumi'+i+'Seq', 

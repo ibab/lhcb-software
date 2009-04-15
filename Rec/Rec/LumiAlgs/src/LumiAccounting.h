@@ -1,4 +1,4 @@
-// $Id: LumiAccounting.h,v 1.1.1.1 2009-02-16 16:28:12 panmanj Exp $
+// $Id: LumiAccounting.h,v 1.2 2009-04-15 16:05:06 cattanem Exp $
 #ifndef LUMIACCOUNTING_H 
 #define LUMIACCOUNTING_H 1
 
@@ -29,8 +29,8 @@ public:
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
-  /// Reference to run records data service
-  IDataProviderSvc* m_runRecordSvc;
+  /// Reference to file records data service
+  IDataProviderSvc* m_fileRecordSvc;
 
   std::string m_rawEventLocation;     // Location where we get the RawEvent
   std::string m_DataName;             // input location of summary data
