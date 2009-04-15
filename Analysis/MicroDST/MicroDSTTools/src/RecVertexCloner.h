@@ -1,4 +1,4 @@
-// $Id: RecVertexCloner.h,v 1.3 2008-08-21 14:45:38 jpalac Exp $
+// $Id: RecVertexCloner.h,v 1.4 2009-04-15 20:18:47 jpalac Exp $
 #ifndef RECVERTEXCLONER_H 
 #define RECVERTEXCLONER_H 1
 
@@ -29,7 +29,7 @@ public:
 
   virtual ~RecVertexCloner( ); ///< Destructor
 
-  virtual LHCb::RecVertex* operator() (const LHCb::RecVertex* vertex);
+  virtual LHCb::RecVertex* operator() (const LHCb::VertexBase* vertex);
 
   StatusCode initialize();
 
