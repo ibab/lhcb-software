@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.89 2009-04-15 09:41:35 jpalac Exp $
+# $Id: requirements,v 1.90 2009-04-15 09:46:02 jpalac Exp $
 package AnalysisSys
 version v3r3
 
@@ -18,7 +18,7 @@ use  RichPIDQC                  v1r0     Rich   # Chris Jones
 use  DstCalibSel                v1r0     Rich   # Andrew Powell
 
 ####################################################################
-use  DaVinciMCTools     	v9r18    Phys   # Juan Palacios
+use  DaVinciMCTools     	v9r19    Phys   # Juan Palacios
 use  DaVinciAssociators         v9r3p2   Phys   # Philippe Charpentier
 use  VertexFitCheck             v1r3p1   Phys   # Yuehong Xie
 use  MCStandardParticles        v1r2     Phys   # Juan Palacios
