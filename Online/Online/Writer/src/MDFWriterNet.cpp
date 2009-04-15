@@ -433,7 +433,6 @@ void  MDFWriterNet::handle(const Incident& inc)    {
       m_srvConnection->stopSendThread();
   }
   sleep(1); // time for the send thread to finish the current step in the infitie loop
-  finalize();
 }
 
 
