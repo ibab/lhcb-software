@@ -1,10 +1,12 @@
-! $Id: release.notes,v 1.80 2009-04-15 16:44:22 jpalac Exp $
+! $Id: release.notes,v 1.81 2009-04-15 20:32:24 jpalac Exp $
 !==============================================================================
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel, Juan Palacios
 !==============================================================================
 
 ! 2009-04-15 - Juan PALACIOS
+ - Add CopyParticle2PVRelations, a MicroDSTAlgorithm to copy a 
+   Particle->RecVertex relations table and all the Tos that the Froms point to
  - cmt/requirements
   . Increase version to v3r6
   . Use Phys/DaVinciMCKernel
