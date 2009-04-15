@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.17 2009-03-20 14:03:02 jpalac Exp $
+# $Id: requirements,v 1.18 2009-04-15 16:43:13 jpalac Exp $
 package MicroDST
-version v3r5
+version v3r6
 
 #############################################################
 # BRANCHES
@@ -11,6 +11,7 @@ branches src cmt doc
 # USE
 #############################################################
 use DaVinciKernel      v*  Phys
+use DaVinciMCKernel    v*  Phys
 use MCEvent            v*  Event
 use PhysEvent          v*  Event
 use LinkerEvent        v*  Event
