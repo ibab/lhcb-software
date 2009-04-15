@@ -1,10 +1,17 @@
-!$Id: release.notes,v 1.24 2009-04-08 13:46:00 jpalac Exp $
+!$Id: release.notes,v 1.25 2009-04-15 16:39:30 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTBase
 ! Responsible : Juan Palacios
 ! Purpose     : Base classes for MicroDST algorithms and tools, plus helper
 !               functions and functors.
 !-----------------------------------------------------------------------------
+
+! 2009-04-15 - Juan PALACIOS
+ - Add MicroDST/RelationsClonerAlg.h, a templated MicroDSTAlgorithm to copy
+   a relations table and the "Tos" of the relations. The Froms have to be 
+   already cloned.
+ - cmt/requirements
+  . Increase version to v1r4
 
 !====================== MicroDSTBase v1r3 2008-04-08 ======================
 
