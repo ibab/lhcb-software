@@ -1,4 +1,4 @@
-// $Id: ICloneRecVertex.h,v 1.2 2009-04-15 20:23:04 jpalac Exp $
+// $Id: ICloneRecVertex.h,v 1.3 2009-04-16 12:12:38 jpalac Exp $
 #ifndef MICRODST_ICLONERECVERTEX_H 
 #define MICRODST_ICLONERECVERTEX_H 1
 
@@ -30,7 +30,7 @@ public:
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_ICloneRecVertex; }
 
-  virtual LHCb::RecVertex* operator() (const LHCb::VertexBase* vertex) = 0;
+  virtual LHCb::VertexBase* operator() (const LHCb::VertexBase* vertex) = 0;
 
   virtual LHCb::RecVertex* operator() (const LHCb::RecVertex* vertex) = 0;
 
