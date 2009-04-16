@@ -1,0 +1,35 @@
+Particle anti_lambda_b0 has a strange PDGEncoding 
+Particle lambda_b0 has a strange PDGEncoding 
+Particle anti_xi_b0 has a strange PDGEncoding 
+Particle xi_b0 has a strange PDGEncoding 
+ Message from PHCORK(MODCOR):: initialization
+ MODOP=1 -- no corrections on event: DEFAULT
+ Message from PHOTOS: IPHQRK(MODCOR):: (re)initialization
+ MODOP=1 -- blocks emission from light quarks: DEFAULT
+ Message from PHOTOS: IPHEKL(MODCOR):: (re)initialization
+ MODOP=2 -- blocks emission in pi0 to gamma e+e-: DEFAULT
+ MODOP=2 -- blocks emission in Kl  to gamma e+e-: DEFAULT
+WARNING - G4Navigator::ComputeStep()
+          Track stuck, not moving for 10 steps
+          in volume -/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1- at point (298.2967293,326.2828862,895)
+          direction: (0.2952207462,0.3170522156,0.9012894117).
+          Potential geometry or navigation problem !
+          Trying pushing it of 9e-10 mm ...
+WARNING - G4Navigator::ComputeStep()
+          Track stuck, not moving for 10 steps
+          in volume -/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1- at point (-358.0190408,-364.3895805,895)
+          direction: (0.2527725151,-0.7704220071,0.5852828262).
+          Potential geometry or navigation problem !
+          Trying pushing it of 9e-10 mm ...
+WARNING - G4Navigator::ComputeStep()
+          Track stuck, not moving for 10 steps
+          in volume -/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1- at point (-343.4561613,-376.2462041,895)
+          direction: (0.273040844,-0.7742896936,0.570897686).
+          Potential geometry or navigation problem !
+          Trying pushing it of 9e-10 mm ...
+WARNING - G4Navigator::ComputeStep()
+          Track stuck, not moving for 10 steps
+          in volume -/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1- at point (192.4363692,-373.2690312,895)
+          direction: (0.1691920297,-0.3744424917,0.9116835402).
+          Potential geometry or navigation problem !
+          Trying pushing it of 9e-10 mm ...

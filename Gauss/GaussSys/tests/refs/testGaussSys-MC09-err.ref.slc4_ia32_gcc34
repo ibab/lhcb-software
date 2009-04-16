@@ -1,0 +1,7 @@
+ Message from PHCORK(MODCOR):: initialization
+ MODOP=1 -- no corrections on event: DEFAULT
+ Message from PHOTOS: IPHQRK(MODCOR):: (re)initialization
+ MODOP=1 -- blocks emission from light quarks: DEFAULT
+ Message from PHOTOS: IPHEKL(MODCOR):: (re)initialization
+ MODOP=2 -- blocks emission in pi0 to gamma e+e-: DEFAULT
+ MODOP=2 -- blocks emission in Kl  to gamma e+e-: DEFAULT
