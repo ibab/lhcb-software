@@ -1,4 +1,4 @@
-// $Id: CopyParticle2PVRelations.h,v 1.1 2009-04-15 20:30:23 jpalac Exp $
+// $Id: CopyParticle2PVRelations.h,v 1.2 2009-04-16 07:42:16 jpalac Exp $
 #ifndef COPYPARTICLE2PVRELATIONS_H 
 #define COPYPARTICLE2PVRELATIONS_H 1
 
@@ -9,7 +9,7 @@
 #include "MicroDST/BindType2ClonerDef.h"
 // from DaVinci
 #include "Kernel/Particle2Vertex.h"
-
+#include "Event/RecVertex.h"
 /** @class CopyParticle2PVRelations CopyParticle2PVRelations.h
  *  
  *  MicroDSTAlgorithm to clone the associations between an LHCb::Particle
@@ -53,7 +53,7 @@
 //=============================================================================
 template <> struct BindType2Cloner<Particle2Vertex::Table> 
 {
-  typedef LHCb::RecVertex type;
+  typedef LHCb::RecVertex toType;
   typedef ICloneRecVertex toCloner;
 };
 //=============================================================================
