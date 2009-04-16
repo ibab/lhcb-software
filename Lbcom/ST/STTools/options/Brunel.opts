@@ -1,4 +1,17 @@
-// default tune
-//ToolSvc.ITClusterPosition.ErrorVec ={ 0.20, 0.10, 0.22, 0.18};
-// proposed new tune
-ToolSvc.ITClusterPosition.ErrorVec ={ 0.22, 0.11, 0.24, 0.2};
+// New tune (JvT - 16.04.2009)
+ToolSvc.ITClusterPosition.ErrorVec ={ 0.18, 0.10, 0.17, 0.03};
+ToolSvc.ITClusterPosition.LinSharingCorr2 = 0.61;
+ToolSvc.ITClusterPosition.CubicSharingCorr2 = 7.4;
+ToolSvc.ITClusterPosition.LinSharingCorr4 = 0.63;
+ToolSvc.ITClusterPosition.DetType = "IT";
+
+// Uncomment to switch to old settings
+//ToolSvc.STOfflinePosition.SharingCorr = 112.0;
+//ToolSvc.STOfflinePosition.trim = 0.3;
+//ToolSvc.STOfflinePosition.ErrorVec ={ 0.24, 0.13, 0.26, 0.23};
+//ToolSvc.ITClusterPosition.MaxNtoCorr = 3;
+//ToolSvc.ITClusterPosition.SharingCorr = 112.0;
+//ToolSvc.ITClusterPosition.trim = 0.3;
+//ToolSvc.ITClusterPosition.ErrorVec ={ 0.22, 0.11, 0.24, 0.2};
+//ToolSvc.ITClusterPosition.MaxNtoCorr = 3;
+

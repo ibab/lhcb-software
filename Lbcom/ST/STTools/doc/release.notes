@@ -2,6 +2,12 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2009-04-16 - Jeroen van Tilburg
+ - STOfflinePosition: New charge sharing functions. Cubic plus linear term for
+   2-strip clusters, cubic term for 3-strip clusters, linear term for 4-strip
+   clusters, no correction applied for the others. The error estimates are also
+   changed.
+
 ! 2009-04-15 M Needham
  - Add tool to select spillover clusters using previous sample [STSelectSpilloverCluster]
 

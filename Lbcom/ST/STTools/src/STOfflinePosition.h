@@ -1,4 +1,4 @@
-// $Id: STOfflinePosition.h,v 1.7 2009-01-09 16:15:36 jvantilb Exp $
+// $Id: STOfflinePosition.h,v 1.8 2009-04-16 12:28:38 jvantilb Exp $
 #ifndef STOfflinePosition_H
 #define STOfflinePosition_H 1
 
@@ -62,7 +62,10 @@ private:
 
   // job options
   std::vector<double> m_errorVec;  ///< Error parametrized by cluster size
-  double m_sharingCorr;            ///< Charge sharing correction factor
+  double m_sharingCorr;            ///< Old charge sharing correction factor
+  double m_cubicSharingCorr2;      ///< Corr factor cubic term 2-strip clusters
+  double m_linSharingCorr2;        ///< Corr factor linear term 2-strip clusters
+  double m_linSharingCorr4;        ///< Corr factor linear term 4-strip clusters
   int m_maxNtoCorr;                ///< Maximum size of cluster for S-shape corr
   double m_trim;                   ///< Trimming value to suppress cap. coupling
   bool m_mergeClusters;            ///< Flag to merge split clusters

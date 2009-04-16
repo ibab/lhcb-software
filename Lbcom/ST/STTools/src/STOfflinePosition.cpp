@@ -1,4 +1,4 @@
-// $Id: STOfflinePosition.cpp,v 1.15 2009-01-09 16:15:36 jvantilb Exp $
+// $Id: STOfflinePosition.cpp,v 1.16 2009-04-16 12:28:38 jvantilb Exp $
  
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
@@ -33,12 +33,15 @@ STOfflinePosition::STOfflinePosition(const std::string& type,
                                      const IInterface* parent) :
   ST::ToolBase( type, name, parent )
 {
-  //  m_errorVec += 0.22, 0.12, 0.24, 0.21;
-  m_errorVec += 0.24, 0.13, 0.26, 0.23;
+  // m_errorVec += 0.24, 0.13, 0.26, 0.23;
+  m_errorVec += 0.18, 0.13, 0.17, 0.04;
   declareProperty("ErrorVec",m_errorVec);
-  declareProperty("SharingCorr",m_sharingCorr = 112.);
+  declareProperty("SharingCorr",m_sharingCorr = -112.); 
+  declareProperty("CubicSharingCorr2",m_cubicSharingCorr2 = 5.4); 
+  declareProperty("LinSharingCorr2",m_linSharingCorr2 = 1.1);
+  declareProperty("LinSharingCorr4",m_linSharingCorr4 = 0.67);
   declareProperty("MaxNtoCorr",m_maxNtoCorr = 4);
-  declareProperty("trim", m_trim = 0.3);
+  declareProperty("trim", m_trim = 0.0);
   declareProperty("MergeClusters", m_mergeClusters = false );
   declareSTConfigProperty("InputData", m_clusterLocation , 
                           STClusterLocation::TTClusters);
@@ -165,13 +168,30 @@ double STOfflinePosition::stripFraction(const double stripNum,
 {
   // 'S- shape correction' for non-linear charge sharing
   double corStripPos = stripNum - floor(stripNum);
-  if ( (clusterSize>1) && ((int)clusterSize < m_maxNtoCorr) ) {
-    corStripPos = this->chargeSharingCorr(corStripPos);
+  if ( (clusterSize>1) && ((int)clusterSize <= m_maxNtoCorr) ) {
+
+    if ( m_sharingCorr > 0.0 ) { // Old charge sharing correction
+      corStripPos = chargeSharingCorr( corStripPos );
+    } else { // New charge sharing correction
+      if (clusterSize == 2) {
+        // Linear plus cubic term
+        corStripPos = (corStripPos-0.5)*m_linSharingCorr2 +
+          pow((corStripPos-0.5), 3.0)*m_cubicSharingCorr2 + 0.5;    
+      } else if( clusterSize == 3 ) {
+        // Cubic term
+        corStripPos = pow((corStripPos-0.5), 3.0)*4.0+0.5;
+      } else if( clusterSize == 4 ) {
+        // Linear term only
+        corStripPos = (corStripPos-0.5)*m_linSharingCorr4+0.5;
+      }    
+    }
   }
 
   return corStripPos;
 }
 
+
+// Old charge
 double STOfflinePosition::chargeSharingCorr(const double origDist) const
 {
   // non-linear charge sharing correction
@@ -193,4 +213,5 @@ double STOfflinePosition::chargeSharingCorr(const double origDist) const
   } // apply corr
 
   return newDist+0.5;
+  
 }
