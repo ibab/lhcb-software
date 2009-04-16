@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.53 2009-04-11 12:36:32 graven Exp $ 
+# $Id: HltLine.py,v 1.54 2009-04-16 21:26:15 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.53 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.54 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -1314,6 +1314,8 @@ class Hlt2Line(object):
         for alg in [ i for i in __algos if type(i) is Hlt2Member ] :
             id = alg.id()
             if id in _other :
+                 if 'InputLocations' in _other[id] :
+                    alg.InputLocations = _other[id].pop('InputLocations')
                  alg.Args.update( _other [id] ) 
                  del _other [id]
 
