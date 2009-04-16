@@ -1,4 +1,4 @@
-// $Id: Functions.h,v 1.4 2009-03-20 13:52:24 jpalac Exp $
+// $Id: Functions.h,v 1.5 2009-04-16 15:32:28 jpalac Exp $
 #ifndef MICRODST_FUNCTIONS_H 
 #define MICRODST_FUNCTIONS_H 1
 
@@ -58,7 +58,7 @@ namespace MicroDST {
    * @date 20-03-2009
    * @author Juan Palacios juancho@nikhef.nl
    **/
-  const std::string trunkLocation(const std::string& location);  
+  std::string trunkLocation(const std::string& location);  
 
 }
 #endif // MICRODST_FUNCTIONS_H
