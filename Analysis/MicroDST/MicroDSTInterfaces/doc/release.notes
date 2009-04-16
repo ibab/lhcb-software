@@ -4,8 +4,12 @@
 ! Purpose     : Interfaces for MicroDST cloning and storing of LHCb event
 !               model classes
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.9 2009-04-15 20:25:18 jpalac Exp $
+! $Id: release.notes,v 1.10 2009-04-16 12:12:50 jpalac Exp $
 !-----------------------------------------------------------------------------
+
+! 2009-04-16 - Juan PALACIOS
+ - MicroDST/ICloneRecVertex
+  .Change to virtual LHCb::VertexBase* operator() (const LHCb::VertexBase* vertex) = 0;
 
 ! 2009-04-15 - Juan PALACIOS
  - MicroDST/ICloneRecVertex
