@@ -4,6 +4,16 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-04-16 - Patrick Koppenburg
+ - options/DVMonitorDst.py : split functiunality out, to make the 
+   copy of it in AppConfig smaller.
+ - options/DaVinciMonitoring.py : functionality
+ - options/DVMonitorWithBrunel.py : Same monitoring, but running the reco
+   sequence before. 
+ - options/FullReco.py : Reco sequence. 
+   @todo : split monitoring out of Brunel into RecoSys.
+ - options/FEST.py : some fest data
+   
 !========================== DaVinciMonitors v1r2 2009-04-08 ==================
 
 ! 2009-04-07 - Patrick Koppenburg

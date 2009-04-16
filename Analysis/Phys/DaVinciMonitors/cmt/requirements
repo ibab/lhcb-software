@@ -3,7 +3,7 @@
 # Maintainer : Patrick Koppenburg
 #============================================================================
 package           DaVinciMonitors
-version           v1r2
+version           v1r3
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -15,8 +15,8 @@ branches          cmt doc src options
 #============================================================================
 use PartProp v* Kernel
 use DaVinciKernel  v*    Phys
-use  LoKiPhys              v* Phys
-use  LoKiArrayFunctors     v* Phys
+use LoKiPhys              v* Phys
+use LoKiArrayFunctors     v* Phys
 
 include_path      none
 #============================================================================
