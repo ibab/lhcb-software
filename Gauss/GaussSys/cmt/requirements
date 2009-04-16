@@ -86,6 +86,9 @@ use XmlVis              v1r11      Vis
 use GenTests            v1r3      Gen
 use SimChecks           v1r0      Sim
 
+# Allow to run the QMTests  
+apply_pattern QMTest
+
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
 
