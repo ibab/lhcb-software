@@ -1,4 +1,4 @@
-// $Id: MCParticleCloner.cpp,v 1.6 2008-08-22 12:24:22 jpalac Exp $
+// $Id: MCParticleCloner.cpp,v 1.7 2009-04-16 12:14:47 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -69,7 +69,7 @@ LHCb::MCParticle* MCParticleCloner::clone(const LHCb::MCParticle* mcp)
   typedef MicroDST::BasicItemCloner<LHCb::MCVertex> BasicVtxCloner;
 
   if ( cloneOriginVertex(originVertex) ) {
-    LHCb::MCVertex* originVertexClone = getStoredClone(originVertex);
+    LHCb::MCVertex* originVertexClone = getStoredClone<LHCb::MCVertex>(originVertex);
     if (!originVertexClone) {
       debug() << "Found origin vertex\n " << *originVertex << endmsg;
       originVertexClone = 
