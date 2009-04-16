@@ -5,6 +5,13 @@
 !               Particle2MCAssociatorBase for Particle -> MCTruth matching
 !-----------------------------------------------------------------------------
 
+! 2009-04-16 - Juan PALACIOS
+ - src/P2MCRelatorAlg.cpp
+ - src/P2MCRelatorAlg.h
+  . New GaudiAlgorithm that takes an MCParticle and Particle location, and uses
+    an IP2MCP to create a Particle2MCParticle::Table of associations between
+    Particles and MCParticles that pass IP2MCP::isMatched.
+
 ! 2009-03-31 - Juan PALACIOS
  - P2MCP/IP2MCP.h
   . Now inherits from IParticle2MCAssociator (DaVinciMCKernel)
