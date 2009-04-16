@@ -1,4 +1,4 @@
-// $Id: RelationsClonerAlg.h,v 1.4 2009-04-16 07:36:12 jpalac Exp $
+// $Id: RelationsClonerAlg.h,v 1.5 2009-04-16 12:11:06 jpalac Exp $
 #ifndef MICRODST_RELATIONSCLONERALG_H 
 #define MICRODST_RELATIONSCLONERALG_H 1
 
@@ -122,6 +122,7 @@ private:
   TABLE* tableOfClones(const TABLE* table) 
   {
     typedef typename BindType2Cloner<TABLE>::toType TO_TYPE;
+    typedef typename boost::remove_pointer<typename TABLE::To>::type _To;
     typedef typename boost::remove_pointer<typename TABLE::From>::type _From;
 
     TABLE* cloneTable = new TABLE();
@@ -146,9 +147,9 @@ private:
 
           const typename TABLE::From clonedFrom = 
             getStoredClone< _From >(from);
-          const TO_TYPE* storedTo = 
-            getStoredClone< TO_TYPE >(dynamic_cast<const TO_TYPE*>(iRange->to()));
-          const TO_TYPE* clonedTo = (0!=storedTo) ? storedTo : 
+          const typename TABLE::To storedTo = 
+            getStoredClone< TO_TYPE >( iRange->to());
+          const typename TABLE::To clonedTo = (0!=storedTo) ? storedTo : 
             (*m_cloner)( iRange->to() );
           if (clonedFrom&&clonedTo) {
             cloneTable->relate(clonedFrom, clonedTo, iRange->weight());
