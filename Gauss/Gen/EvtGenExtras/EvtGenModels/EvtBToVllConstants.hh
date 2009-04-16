@@ -1,7 +1,7 @@
 #ifndef EVTBTOVLLCONSTANTS_H_
 #define EVTBTOVLLCONSTANTS_H_
 
-#define WRDEBUG
+//#define WRDEBUG
 #ifdef WRDEBUG
 #define DEBUGPRINT(L,W) std::cout << __FILE__ << ":" << __LINE__ << " " <<(L) << (W) << std::endl
 #else

@@ -51,7 +51,6 @@ EvtBToVllParameters::EvtBToVllParameters(bool _includeRHC,
 		CR_mb_conj(qcd::WilsonCoefficients<qcd::WilsonType>::conjugate(*CR_mb)),
 		CR_mb3_conj(qcd::WilsonCoefficients<qcd::WilsonType>::conjugate(*CR_mb3)),
 		isBbar(true){
-	std::cout << "Constructed the parameters struct" << std::endl;
 }
 
 void EvtBToVllParameters::setParentID(const EvtId parentID){
