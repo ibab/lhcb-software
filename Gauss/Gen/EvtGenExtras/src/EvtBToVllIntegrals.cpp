@@ -135,10 +135,10 @@ DataBlock<EvtComplex> Integrate::getTnf(const double& u) const {
 	const double ub = 1 - u;
 
 	const EvtComplex h_mc = qcd::h((ub*MB*MB) + (u*q2), constants::mc,
-			C_mb3->getScale());
+			C_mb3->getScaleValue());
 	const EvtComplex h_mb = qcd::h((ub*MB*MB) + (u*q2), constants::mb,
-			C_mb3->getScale());
-	const EvtComplex h_0 = qcd::h((ub*MB*MB) + (u*q2), 0, C_mb3->getScale());
+			C_mb3->getScaleValue());
+	const EvtComplex h_0 = qcd::h((ub*MB*MB) + (u*q2), 0, C_mb3->getScaleValue());
 
 	const EvtComplex tnf_2_2 = chop(constants::eq * ( ((8*(*C_mb3)(8))/(ub
 			+ ((u*q2)/(MB*MB)))) + ( (6*MB/constants::mb)*( (h_mc*((*C_mb3)(2)
@@ -197,7 +197,7 @@ ComplexPair Integrate::PhiBint() const {
 }
 
 EvtComplex Integrate::getT(const int& sign, const int a, const double& u) const{
-	DataBlock<EvtComplex> kT0 = ((qcd::alpha_s(C_mb3->getScale(), 5)/(4
+	DataBlock<EvtComplex> kT0 = ((qcd::alpha_s(C_mb3->getScaleValue(), 5)/(4
 			*constants::Pi))*constants::CF*getT1(u));
 	return T0(sign, a) + kT0(sign, a);
 }
@@ -271,7 +271,7 @@ EvtComplex Integrate::get_t(const int& a, const SignedPair<double>& xi,
 	const EvtComplex one(doIntegral(re_one), doIntegral(im_one));
 	const EvtComplex two(doIntegral(re_two), doIntegral(im_two));
 
-	return (xi[a]*(qcd::as1(C_mb->getScale(), 5)*constants::CF*C1[a]))
+	return (xi[a]*(qcd::as1(C_mb->getScaleValue(), 5)*constants::CF*C1[a]))
 			+ (((constants::Pi*constants::Pi)/constants::Nc)*Xi[a]
 					*((constants::fB*fK[a])/MB)*(one + two));
 
@@ -344,7 +344,7 @@ SignedPair<EvtComplex> IntegrateRight::getC1(const EvtComplex& /*_F_2_7*/,
 ;
 
 EvtComplex IntegrateRight::getT(const int& sign, const int a, const double& u) const{
-	DataBlock<EvtComplex> kT0 = ((qcd::alpha_s(C_mb3->getScale(), 5)/(4
+	DataBlock<EvtComplex> kT0 = ((qcd::alpha_s(C_mb3->getScaleValue(), 5)/(4
 			*constants::Pi))*constants::CF*getT1(u));
 	return kT0(sign, a);
 }

@@ -1,7 +1,7 @@
 #ifndef EVTBTOVLLCONSTANTS_H_
 #define EVTBTOVLLCONSTANTS_H_
 
-//#define WRDEBUG
+#define WRDEBUG
 #ifdef WRDEBUG
 #define DEBUGPRINT(L,W) std::cout << __FILE__ << ":" << __LINE__ << " " <<(L) << (W) << std::endl
 #else
@@ -34,13 +34,14 @@ namespace constants{
 	static const int Nc = 3;
 	static const double mB = 5.27953;//GeV
 	static const double mb = 4.8;//GeV
-	static const double mc = 1.27;//GeV
+	static const double mc = 1.4;//GeV
 	static const double mmu = 0.106;
 	static const double mKstar = 0.892;//GeV
 	static const double ms = 0.104;//GeV
 	static const double mt = 162.3;
 	static const double mu_h = 2.2;//GeV
 	static const double mu_mb = 4.8;//GeV
+	static const double mu_mw = 80.4;//GeV
 	static const double MW =  80.4;//GeV
 	static const double MZ =  91.1876;//GeV
 	static const double sw2 = 0.23;//Weak mixing angle

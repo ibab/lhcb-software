@@ -24,17 +24,23 @@ typedef std::pair<const WilsonCoefficients<WilsonType>*,const WilsonCoefficients
  * dimension matrix.
  */
 
-class EvtBToVllEvolveWC10D : public std::unary_function<double,WilsonPair*>{
+class EvtBToVllEvolveWC10D : public std::unary_function<qcd::Scale,WilsonPair*>{
 	
 public:
 	
-	EvtBToVllEvolveWC10D(const WilsonCoefficients<WilsonType>&, const WilsonCoefficients<WilsonType>&);
+	EvtBToVllEvolveWC10D(const WilsonCoefficients<WilsonType>&,
+			const WilsonCoefficients<WilsonType>&,
+			const WilsonCoefficients<WilsonType>&);
 	result_type operator()(const argument_type& scale); 
+	
+	WilsonType runC7(const WilsonType C7h, const WilsonType C8h, const argument_type& scale) const;
+	WilsonType runC8(const WilsonType C8h, const argument_type& scale) const;
 	
 	const static unsigned int dimension = 10;
 
 private:
 	const WilsonCoefficients<WilsonType>& C;//left-handed coefficients
+	const WilsonCoefficients<WilsonType>& CNP;//left-handed NP contributions
 	const WilsonCoefficients<WilsonType>& CR;//right-handed coefficients
 };
 

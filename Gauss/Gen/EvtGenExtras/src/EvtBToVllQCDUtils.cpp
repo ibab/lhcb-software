@@ -69,7 +69,7 @@ EvtComplex qcd::h(const double& s, const double& mq, const double& mu){
 
 //Used for C9_eff
 EvtComplex qcd::Y(const double& s, const WilsonCoefficients<EvtComplex>& C){
-	const double mu = C.getScale();
+	const double mu = C.getScaleValue();
 	//eqn 10 of hep-ph/0106067
 	const double mbp = mb_pole(constants::mb);
 	return (h(s,constants::mc, mu)*( (3*C(1)) + C(2) + (3*C(3)) + C(4) + (3*C(5)) + C(6))) - 

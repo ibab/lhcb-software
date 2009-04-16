@@ -27,6 +27,7 @@
 
 #include "EvtGenModels/EvtBToVllPhysicsModel.hh"
 #include "EvtGenModels/EvtBToVllBenchMarkPhysicsModels.hh"
+#include "EvtGenModels/EvtBToVllGenericModel.hh"
 #include "EvtGenModels/EvtBToVllParameterisedFFCalc.hh"
 
 #include "EvtGenBase/EvtPatches.hh"
@@ -450,8 +451,6 @@ void EvtBToKStarllDurham07::handleModelCommand(const std::string& modelName){
 	models.push_back(new qcd::FBMSSMPhysicsModel);
 	models.push_back(new qcd::GMSSMPhysicsModel);
 	models.push_back(new qcd::LHTPhysicsModel);
-	models.push_back(new qcd::MSSMLowTanBeta);
-	models.push_back(new qcd::MSSMHighTanBeta);
 	models.push_back(new qcd::NegC7PhysicsModel);
 	models.push_back(new qcd::SMPhysicsModel);
 	models.push_back(new qcd::UEDPhysicsModel);

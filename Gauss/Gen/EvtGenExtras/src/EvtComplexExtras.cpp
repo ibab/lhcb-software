@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <iostream>
+#include <iomanip>
 #include <locale>
 #include <math.h>
 #include <string>
@@ -53,7 +54,7 @@ EvtComplex sqrt_real(const double value){
 
 std::ostream& operator<<(std::ostream& s, const EvtComplex& c){
 
-	s<< "(" << real(c) << "," << imag(c) << ")";
+	s<< "(" << std::setprecision(5) << real(c) << "," << std::setprecision(5) << imag(c) << ")";
 	return s;
 }
 

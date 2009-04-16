@@ -78,11 +78,12 @@ void QCDFactorisation::init(){
 
 	//find the WCs at mu = mb
 	qcd::WCPtr  C_mw = model.getLeftWilsonCoefficientsMW();
+	qcd::WCPtr  CNP_mw = model.getLeftNewPhysicsDeltasMW();
 	qcd::WCPtr  CR_mw = model.getRightWilsonCoefficientsMW();
 
-	qcd::EvtBToVllEvolveWC10D evolveMb(*C_mw,*CR_mw);
-	std::auto_ptr<qcd::WilsonPair> _mb(evolveMb(constants::mu_mb));
-	std::auto_ptr<qcd::WilsonPair> _mb3(evolveMb(constants::mu_h));
+	qcd::EvtBToVllEvolveWC10D evolveMb(*C_mw,*CNP_mw,*CR_mw);
+	std::auto_ptr<qcd::WilsonPair> _mb(evolveMb(qcd::MU_MB));
+	std::auto_ptr<qcd::WilsonPair> _mb3(evolveMb(qcd::MU_H));
 
 	parameters = new EvtBToVllParameters(model.hasRightHandedCurrents(),
 			qcd::WCPtr(_mb->first),qcd::WCPtr(_mb3->first),
@@ -92,6 +93,7 @@ void QCDFactorisation::init(){
 	assert(C_mw->getOperatorBasis() == parameters->getC_mb3()->getOperatorBasis());
 	
 	DEBUGPRINT("C_mw: ", (*C_mw));//V
+	DEBUGPRINT("CNP_mw: ", (*CNP_mw));
 	DEBUGPRINT("CR_mw: ", (*CR_mw));//V
 
 	const bool saveFlavour = parameters->getisBbar();
@@ -205,7 +207,7 @@ void QCDFactorisation::getAmp(EvtParticle* parent, EvtAmp& amp) const{
 
 	//set the parent ID so that we get the right WC
 	parameters->setParentID(parent->getId());
-	//parameters->setBbar(false);
+	//parameters->setBbar(true);
 	
 	DEBUGPRINT("Flavour: ", parameters->flavourString());
 	DEBUGPRINT("C_mb: ", *(parameters->getC_mb()));
@@ -476,7 +478,7 @@ void QCDFactorisation::getTnAmplitudes(const double q2, const double MB, const d
 	const double s2 = q2/(constants::mb*constants::mb);
 	const double Lc = log(mc1);
 	const double Ls = log(s2);
-	const double Lm = log(parameters->getC_mb()->getScale()/constants::mb);
+	const double Lm = log(parameters->getC_mb()->getScaleValue()/constants::mb);
 	
 	DEBUGPRINT("mc1: ", mc1);//V
 	DEBUGPRINT("s2: ", s2);//V
@@ -529,10 +531,10 @@ void QCDFactorisation::getTnAmplitudes(const double q2, const double MB, const d
 	DEBUGPRINT("F[8,9]: ", F_8_9);//V
 	
 	DEBUGPRINT("mbp: ", qcd::mb_pole(constants::mb));//V
-	DEBUGPRINT("h3(q^2,0): ", qcd::h(q2,0,parameters->getC_mb3()->getScale()));//V
-	DEBUGPRINT("h3(q^2,mc): ", qcd::h(q2,constants::mc,parameters->getC_mb3()->getScale()));//V
-	DEBUGPRINT("h3(q^2,mb): ", qcd::h(q2,constants::mb,parameters->getC_mb3()->getScale()));//V
-	DEBUGPRINT("h3(q^2,mbp): ", qcd::h(q2,qcd::mb_pole(constants::mb),parameters->getC_mb3()->getScale()));//V
+	DEBUGPRINT("h3(q^2,0): ", qcd::h(q2,0,parameters->getC_mb3()->getScaleValue()));//V
+	DEBUGPRINT("h3(q^2,mc): ", qcd::h(q2,constants::mc,parameters->getC_mb3()->getScaleValue()));//V
+	DEBUGPRINT("h3(q^2,mb): ", qcd::h(q2,constants::mb,parameters->getC_mb3()->getScaleValue()));//V
+	DEBUGPRINT("h3(q^2,mbp): ", qcd::h(q2,qcd::mb_pole(constants::mb),parameters->getC_mb3()->getScaleValue()));//V
 	DEBUGPRINT("Y3(q^2): ", qcd::Y(q2,*(parameters->getC_mb3())));//V
 	
 	DEBUGPRINT("PolyLog[2, 10102.3465 - 78798.918 I]",PolyLog(2,EvtComplex(10102.3465,78798.918)));
