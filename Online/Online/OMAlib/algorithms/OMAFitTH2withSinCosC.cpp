@@ -10,10 +10,11 @@
 #include "TMath.h"
 #include "TList.h"
 #include "TCanvas.h"
+//#include "TFile.h"
 
 //=============================================================================
 // Algorithm for RICH global alignment : FitTH2withSinCosC
-// 2009-04-02 : Christopher Blanks
+// 2009-04-16 : Christopher Blanks
 //=============================================================================
 
 OMAFitTH2withSinCosC::OMAFitTH2withSinCosC() :
@@ -53,6 +54,7 @@ void OMAFitTH2withSinCosC::fit(TH1* histo, std::vector<float>* initValues) {
   //Read RICH from histo name
   TString name = histo->GetName(); // RICH/RichAlignMoniR1/dThetavphiRecSide0
   bool R1 = name.Contains("R1"); 
+  m_fitfun->SetName(name+"_fitted"); //
   
   //define variables
   TGraphErrors cleanPlot;
@@ -135,5 +137,16 @@ void OMAFitTH2withSinCosC::fit(TH1* histo, std::vector<float>* initValues) {
   m_fitfun->SetParameter(2, ShiftEst);
 
   cleanPlot.Fit(m_fitfun);  
+
+  TF1* clone = (TF1*) m_fitfun->Clone();
+  clone->SetName(name + "fit");
+  inHist->GetListOfFunctions()->Add(clone);
+  clone->SetParent(inHist);
+  //inHist->GetListOfFunctions()->ls();
+  
+  //TFile outFile("outFile.root", "UPDATE");
+  //inHist->Write();
+  //outFile.Close();
+
   return;
 }
