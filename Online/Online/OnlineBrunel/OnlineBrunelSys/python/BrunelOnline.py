@@ -3,7 +3,7 @@
 
      @author M.Frank
 """
-__version__ = "$Id: BrunelOnline.py,v 1.9 2009-03-03 13:45:44 frankb Exp $"
+__version__ = "$Id: BrunelOnline.py,v 1.10 2009-04-16 08:51:24 jblouw Exp $"
 __author__  = "Markus Frank <Markus.Frank@cern.ch>"
 
 import os
@@ -20,8 +20,9 @@ def patchBrunel(true_online_version):
         @author M.Frank
   """
   import Brunel.Configuration
-  from Configurables import HistogramPersistencySvc
+  from Configurables import HistogramPersistencySvc,EventLoopMgr
   brunel = Brunel.Configuration.Brunel()
+  EventLoopMgr().OutputLevel = 0
   # Brunel.Configuration.Brunel.defineMonitors = dummy
   Brunel.Configuration.Brunel.configureOutput = dummy
   #if debug: print dir(brunel)
@@ -40,6 +41,12 @@ def patchBrunel(true_online_version):
   # Set the property, used to build other file names
   brunel.setProp( "DatasetName", 'GaudiSerialize' )
   HistogramPersistencySvc().OutputFile = ""
+  brunel.MainSequence = [ "UpdateAndReset",
+                          "ProcessPhase/Init",
+                          "ProcessPhase/Reco",
+                          "ProcessPhase/Moni",
+                          "ProcessPhase/Output" ]
+
 
 def setupOnline():
   """
@@ -66,7 +73,7 @@ def setupOnline():
   DstConf().Writer       = 'DstWriter'
   DstConf().DstType      = 'DST'
   DstConf().PackType     = 'NONE'
-  DstConf().Simulation   = False
+#  DstConf().Simulation   = False
   Serialisation().Writer = 'Writer'
   
   app.AuditAlgorithms = False
