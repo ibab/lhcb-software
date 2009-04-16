@@ -1,4 +1,4 @@
-// $Id: CaloTrackMatchAlg.h,v 1.4 2008-06-30 15:37:34 odescham Exp $
+// $Id: CaloTrackMatchAlg.h,v 1.5 2009-04-16 14:25:36 odescham Exp $
 // ============================================================================
 #ifndef CALOTRACKMATCHALG_H 
 #define CALOTRACKMATCHALG_H 1
@@ -139,8 +139,7 @@ inline StatusCode CaloTrackMatchAlg::doTheJob ( TABLE* table ) const
   if ( !m_filter.empty() ) { filter = get<Filter> ( m_filter ) ; }
   
   // loop over the tracks containers 
-  for ( Inputs::const_iterator i = m_tracks.begin() ; m_tracks.end() != i ; ++i ) 
-  {
+  for ( Inputs::const_iterator i = m_tracks.begin() ; m_tracks.end() != i ; ++i ){
 
     if( !exist<Tracks>(*i) ){
       debug() << " Container " << *i << " has not been found " << endreq;
@@ -150,14 +149,12 @@ inline StatusCode CaloTrackMatchAlg::doTheJob ( TABLE* table ) const
     debug() << " Found " << c->size() << "tracks in " << *i << endreq;
     if ( 0 == c ) { continue ; }
     // loop over all tracks in container 
-    for ( Tracks::const_iterator it = c->begin() ; c->end() != it ; ++it ) 
-    {
+    for ( Tracks::const_iterator it = c->begin() ; c->end() != it ; ++it ){
       const Track* track = *it ;
       // skip track?
       if ( !use ( track ) )                 { continue ; }      // CONTINUE 
       // use filter?
-      if ( 0 != filter    )
-      {
+      if ( 0 != filter    ){
         Filter::Range r = filter->relations( track ) ;
         if ( r.empty() || !r.front().to() ) { continue ; }      // CONTINUE  
       } 
@@ -167,7 +164,7 @@ inline StatusCode CaloTrackMatchAlg::doTheJob ( TABLE* table ) const
   } // end of loop over tarck containers
   
   const size_t nTracks = tracks.size() ;
-  if ( 0 == nTracks ) { Warning("No good tracks have been selected") ; }
+  if ( 0 == nTracks ) { Warning("No good tracks have been selected").ignore() ; }
   
   // get the matching tool 
   ICaloTrackMatch* matcher = match() ;
@@ -175,28 +172,24 @@ inline StatusCode CaloTrackMatchAlg::doTheJob ( TABLE* table ) const
   size_t nCalos    = 0 ;
   size_t nOverflow = 0 ;
   // loop over cluster containers 
-  for ( Inputs::const_iterator ic = m_calos.begin() ; m_calos.end() != ic ; ++ic)
-  {
+  for ( Inputs::const_iterator ic = m_calos.begin() ; m_calos.end() != ic ; ++ic){
     const Calos* c = get<Calos> ( *ic ) ;
     // loop over all calos
     for ( typename Calos::const_iterator icalo = c->begin() ; 
-          c->end() != icalo ; ++icalo )
-    {
+          c->end() != icalo ; ++icalo ){
       const Calo* calo = *icalo;
       if ( 0 == calo || 0 == position ( calo ) ) { continue ; }
       // overall number of calos
       ++nCalos ; 
       // loop over all good tracks 
       for ( TRACKS::const_iterator itrack = tracks.begin() ; 
-            tracks.end() != itrack ; ++itrack ) 
-      {
+            tracks.end() != itrack ; ++itrack ){
         const LHCb::Track* track = *itrack ;
         // use the tool 
         double chi2 = 0 ;
         StatusCode sc = matcher->match ( position ( calo ) , track , chi2 ) ;
-        if ( sc.isFailure() ) 
-        { 
-          Warning ( "Failure from Tool::match, skip" , sc ) ;
+        if ( sc.isFailure() ){ 
+          Warning ( "Failure from Tool::match, skip" , sc ).ignore() ;
           continue ;                                            // CONTINUE 
         }
         if ( m_threshold < chi2  ) { ++nOverflow ; continue  ; } // CONTINUE 
@@ -211,8 +204,7 @@ inline StatusCode CaloTrackMatchAlg::doTheJob ( TABLE* table ) const
   table->i_sort() ;                                             // NB: i_sort
   
   // a bit of statistics 
-  if ( statPrint() || msgLevel ( MSG::DEBUG ) ) 
-  {
+  if ( statPrint() || msgLevel ( MSG::DEBUG ) ){
     counter ( "#tracks"   ) += nTracks   ;
     counter ( "#calos"    ) += nCalos    ;
     counter ( "#overflow" ) += nOverflow ;

@@ -1,8 +1,11 @@
-// $Id: InCaloAcceptanceAlg.cpp,v 1.3 2008-06-30 15:37:34 odescham Exp $
+// $Id: InCaloAcceptanceAlg.cpp,v 1.4 2009-04-16 14:25:36 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $, version $Revsion:$
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2008/06/30 15:37:34  odescham
+// prepare for HLT processing
+//
 // Revision 1.2  2007/08/24 21:25:18  odescham
 // fix uncheck. StatusCodes
 //
@@ -98,16 +101,12 @@ StatusCode InCaloAcceptanceAlg::execute()
   size_t nTracks = 0 ;
   size_t nAccept = 0 ;
   // loop over all track containers  
-  for ( Inputs::const_iterator input = m_inputs.begin() ; 
-        m_inputs.end() != input ; ++input ) 
-  {
-
+  for ( Inputs::const_iterator input = m_inputs.begin() ;m_inputs.end() != input ; ++input ){
     if( !exist<Tracks>( *input ) )continue;
     const Tracks* tracks = get<Tracks> ( *input ) ;
     // loop over all tracks in the container 
     for ( Tracks::const_iterator itrack = tracks->begin() ; 
-          tracks->end() != itrack ; ++itrack ) 
-    {
+          tracks->end() != itrack ; ++itrack ){
       const Track* track = *itrack ;
       ++nTracks ;
       if ( !use ( track ) ) { continue ; }                      // CONTINUE
@@ -122,8 +121,7 @@ StatusCode InCaloAcceptanceAlg::execute()
   table -> i_sort () ;
   
   // a bit of statistics 
-  if ( statPrint() || msgLevel ( MSG::DEBUG ) ) 
-  {
+  if ( statPrint() || msgLevel ( MSG::DEBUG ) ){
     counter ( "#tracks" ) += nTracks ;
     counter ( "#accept" ) += nAccept ;
     counter ( "#links"  ) += table->i_relations().size() ;

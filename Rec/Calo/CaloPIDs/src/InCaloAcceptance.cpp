@@ -1,4 +1,4 @@
-// $Id: InCaloAcceptance.cpp,v 1.6 2008-10-20 09:22:36 odescham Exp $
+// $Id: InCaloAcceptance.cpp,v 1.7 2009-04-16 14:25:36 odescham Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -121,8 +121,10 @@ bool InCaloAcceptance::inAcceptance ( const LHCb::Track* track) const
   {
     // if there is no porper state - add it into the track! 
     StatusCode sc = propagate ( *track , plane() , m_state ) ;
-    if ( sc.isFailure() ) 
-    { Error ( "failure from propagate()", sc ) ; return false ; }    // RETURN 
+    if ( sc.isFailure() ){ 
+      Error ( "failure from propagate()", sc ).ignore() ; 
+      return false ;     // RETURN 
+    }
     m_state.setLocation ( m_loc ) ;
     const_cast<LHCb::Track*>(track)->addToStates( m_state ) ;
     state = &m_state ;
