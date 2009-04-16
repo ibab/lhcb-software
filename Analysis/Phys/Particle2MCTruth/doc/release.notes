@@ -1,8 +1,8 @@
 !-----------------------------------------------------------------------------
 ! Package     : Phys/Particle2MCTruth
 ! Responsible : Juan PALACIOS
-! Purpose     : Collection of implementations of IParticle2MCAssociator and
-!               Particle2MCAssociatorBase for Particle -> MCTruth matching
+! Purpose     : Collection of implementations of IP2MCP and
+!               P2MCPBase for Particle -> MCTruth matching
 !-----------------------------------------------------------------------------
 
 ! 2009-04-16 - Juan PALACIOS
