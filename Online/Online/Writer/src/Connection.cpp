@@ -45,7 +45,7 @@ Connection::Connection(std::string serverAddr, int serverPort, int sndRcvSizes,
   m_notifyClient = nClient;
   m_sndRcvSizes = sndRcvSizes;
   m_failoverMonitor = NULL;
-  m_stopSending = 0;
+  m_stopRetrying = 0;
   pthread_mutex_init(&m_failoverLock, NULL);
 }
 
@@ -268,7 +268,7 @@ void Connection::sendCommand(struct cmd_header *header, void *data)
           *m_log << MSG::FATAL << "Buffer is full! MaxQueueSizeBytes=" << m_maxQueueSize << endmsg;
           sleep(1);
       }
-  } while(newHeader == NULL && m_stopSending == 0);
+  } while(newHeader == NULL && m_stopRetrying == 0);
   if(m_stopSending == 1) {
       // do a clean shutdown
       // m_mmObj and its buffer will be deleted when the
@@ -284,8 +284,8 @@ void Connection::sendCommand(struct cmd_header *header, void *data)
     }
 }
 
-void Connection::stopSendThread() {
-    m_stopSending = 1;
+void Connection::stopRetrying() {
+    m_stopRetrying = 1;
 }
 
 #endif /* _WIN32 */

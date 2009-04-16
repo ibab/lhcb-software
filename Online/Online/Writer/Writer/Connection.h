@@ -65,6 +65,10 @@ namespace LHCb {
       /// Flag to tell the sending thread to shut down.
       volatile int m_stopSending;
 
+      /// Flag to tell the connection object to stop
+      /// retyring to send commands when the buffer is full.
+      volatile int m_stopRetrying;
+
       /// A lock to be held by a thread that goes into failover.
       /// This is to prevent both threads from initiating failover.
       pthread_mutex_t m_failoverLock;
@@ -156,8 +160,10 @@ namespace LHCb {
       /// Returns the state in which the Connection is.
       int getState() { return m_state; }
 
-      /// Stops the sender thread.
-      void stopSendThread();
+      /// Stops retrying to send a command when the buffer is full.
+      /// Used to stop the infitie Retry-Loop when a run shall
+      /// be stopped.
+      void stopRetrying();
 
       /// Sets a notification listener for events on this connection.
       void setNotifyClient(INotifyClient *nClient) {
