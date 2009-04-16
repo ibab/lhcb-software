@@ -1,4 +1,4 @@
-// $Id: ICaloHypo2Calo.h,v 1.2 2009-04-16 13:09:04 odescham Exp $
+// $Id: ICaloHypo2Calo.h,v 1.3 2009-04-16 16:08:44 odescham Exp $
 #ifndef ICALOHYPO2CALO_H 
 #define ICALOHYPO2CALO_H 1
 
@@ -31,7 +31,8 @@ public:
   static const InterfaceID& interfaceID() { return IID_ICaloHypo2Calo; }
 
   virtual StatusCode initialize()=0;
-  virtual const std::vector<LHCb::CaloCellID>& cellIDs(LHCb::CaloHypo  fromHypo, std::string toCalo)=0;
+  virtual void setCalos(std::string from, std::string to)=0;
+   virtual const std::vector<LHCb::CaloCellID>& cellIDs(LHCb::CaloHypo  fromHypo, std::string toCalo)=0;
   virtual const std::vector<LHCb::CaloCellID>& cellIDs(LHCb::CaloCluster  fromCluster, std::string toCalo)=0;
   virtual const std::vector<LHCb::CaloCellID>& cellIDs()=0;
 
