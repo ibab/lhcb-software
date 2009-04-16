@@ -1,4 +1,4 @@
-// $Id: Calo2Calo.cpp,v 1.2 2008-09-22 00:47:12 odescham Exp $
+// $Id: Calo2Calo.cpp,v 1.3 2009-04-16 13:07:43 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -31,6 +31,7 @@ Calo2Calo::Calo2Calo( const std::string& type,
     ,m_count(0)
 {
   declareInterface<ICalo2Calo>(this);
+  declareProperty("IdealGeometry", m_geo = true );
 
 }
 //=============================================================================
@@ -68,7 +69,8 @@ void Calo2Calo::reset(){
   m_count  = 0;
 }
 
-std::vector<LHCb::CaloCellID> Calo2Calo::cellIDs(LHCb::CaloCluster fromCluster, std::string toCalo){
+//=======================================================================================================
+const std::vector<LHCb::CaloCellID>& Calo2Calo::cellIDs(LHCb::CaloCluster fromCluster, std::string toCalo){
 
   reset();
 
@@ -79,35 +81,62 @@ std::vector<LHCb::CaloCellID> Calo2Calo::cellIDs(LHCb::CaloCluster fromCluster, 
   }
   return m_cells;
 }
+//=======================================================================================================
+const std::vector<LHCb::CaloCellID>& Calo2Calo::addCell( LHCb::CaloCellID id, std::string toCalo){
+  // check duplicate
+  for(std::vector<LHCb::CaloCellID>::const_iterator icel = m_cells.begin(); icel != m_cells.end();++icel){
+    if( id == (*icel) )return m_cells;
+  }
+  // add the cells
+  m_cells.push_back( id );
+  LHCb::CaloDigits* digits = get<LHCb::CaloDigits>( m_loc[ toCalo ] );
+  LHCb::CaloDigit* digit = digits->object( id );
+  if( NULL != digit ) {
+    m_digits.push_back( digit );
+    m_energy += digit->e();
+    m_count++;
+  }
+  return m_cells;
+}
 
 
-
-std::vector<LHCb::CaloCellID> Calo2Calo::cellIDs(LHCb::CaloCellID fromId, std::string toCalo , bool init){
+//=======================================================================================================
+const std::vector<LHCb::CaloCellID>& Calo2Calo::cellIDs(LHCb::CaloCellID fromId, std::string toCalo , bool init){
 
   if( init )reset();
 
   m_fromCalo = CaloCellCode::CaloNameFromNum( fromId.calo() );
   m_toCalo   = toCalo;
+  LHCb::CaloCellID toId = fromId;
+  // ---- Assume ideal geometry : trivial mapping for detectors having the same granularity (Prs/Spd/Ecal)
+  if( ( m_geo && (m_fromCalo == "Ecal" || m_fromCalo == "Prs" || m_fromCalo == "Spd") 
+        && (m_toCalo == "Ecal" || m_toCalo == "Prs" || m_toCalo == "Spd") ) 
+      || m_fromCalo == m_toCalo ){
+    toId.setCalo( CaloCellCode::CaloNumFromName( m_toCalo ));
+    return addCell( toId , m_toCalo);
+  }
+  
 
+  // ---- Else use the actual geometry to connet detectors
   DeCalorimeter* fromDet = m_det[ m_fromCalo ];
   DeCalorimeter* toDet   = m_det[ m_toCalo ];
-  
-  // z-scaling
-  double scale = m_refSize[ m_toCalo ] / m_refSize[ m_fromCalo ] ;
-  
-  Gaudi::XYZPoint  center  = 
-    toDet->plane(CaloPlane::Middle).ProjectOntoPlane( fromDet->cellCenter( fromId )*scale );
-  // connect
-  LHCb::CaloCellID toId  = toDet->Cell( center );
-
-
-    //cell-center does is outside 'toCalo' - check corners  
+  double scale = 1.;
+  Gaudi::XYZPoint  center = fromDet->cellCenter( fromId );
+  if( m_fromCalo != m_toCalo ){
+    // z-scaling
+    scale = m_refSize[ m_toCalo ] / m_refSize[ m_fromCalo ] ;
+    center  = toDet->plane(CaloPlane::Middle).ProjectOntoPlane( fromDet->cellCenter( fromId )*scale );
+    // connect
+    toId  = toDet->Cell( center );
+  }
+  double fromSize = fromDet->cellSize( fromId )*scale;
+  //cell-center is outside 'toCalo' - check corners  
   if( LHCb::CaloCellID() == toId){
     for( int i = 0 ; i != 2; ++i){
       for( int j = 0 ; j != 2; ++j){
-        double x = fromDet->cellCenter( fromId ).X() + (i*2-1) * fromDet->cellSize( fromId );        
-        double y = fromDet->cellCenter( fromId ).Y() + (j*2-1) * fromDet->cellSize( fromId );
-        Gaudi::XYZPoint  corner = Gaudi::XYZPoint(x*scale,y*scale,center.Z());
+        double x = fromDet->cellCenter( fromId ).X() + (i*2-1) * fromSize;        
+        double y = fromDet->cellCenter( fromId ).Y() + (j*2-1) * fromSize;
+        Gaudi::XYZPoint  corner = Gaudi::XYZPoint(x,y,center.Z());
         LHCb::CaloCellID cornerId  = toDet->Cell( corner );
         if( LHCb::CaloCellID() == cornerId)continue;
         toId=cornerId;
@@ -115,38 +144,24 @@ std::vector<LHCb::CaloCellID> Calo2Calo::cellIDs(LHCb::CaloCellID fromId, std::s
     }
   }
   if( LHCb::CaloCellID() == toId)return m_cells;
-
-  
-  
-  double fromSize = fromDet->cellSize( fromId )*scale;
-  double toSize   = toDet->cellSize( toId ) ;
-  int pad =  (int) floor( fromSize  / toSize + 0.25); // warning int precision
-  if(pad < 1)pad=1;
-  double x0 = center.X() - (pad-1)*fromSize/2./pad;
-  double y0 = center.Y() - (pad-1)*fromSize/2./pad;  
+  int pad = 1;
+  double x0  = center.X();
+  double y0  = center.Y();
+  if( fromDet != toDet ){
+    double toSize   = toDet->cellSize( toId ) ;
+    pad =  (int) floor( fromSize  / toSize + 0.25); // warning int precision
+    if(pad < 1)pad=1;
+    x0 = center.X() - (pad-1)*fromSize/2./pad;
+    y0 = center.Y() - (pad-1)*fromSize/2./pad;  
+  }
   for( int i = 0 ; i != pad; ++i){
     for( int j = 0 ; j != pad; ++j){
       double x = x0 + i * fromSize/pad;
-      double y = y0 + j * fromSize/pad;
-      
+      double y = y0 + j * fromSize/pad;    
       Gaudi::XYZPoint  pos(x,y,center.Z());
-      toId  = toDet->Cell( pos ) ;
+      if( fromDet != toDet ) toId  = toDet->Cell( pos ) ;
       if( LHCb::CaloCellID() == toId)continue;
-      bool ok = true;
-      for(std::vector<LHCb::CaloCellID>::const_iterator icel = m_cells.begin();
-          icel != m_cells.end();++icel){
-        if( toId == (*icel) )ok=false;
-      }
-      if(ok){
-        m_cells.push_back( toId );
-        LHCb::CaloDigits* digits = get<LHCb::CaloDigits>( m_loc[ m_toCalo ] );
-        LHCb::CaloDigit* digit = digits->object( toId );
-        if( NULL != digit ) {
-          m_digits.push_back( digit );
-          m_energy += digit->e();
-          m_count++;
-        } 
-      }
+      addCell( toId, m_toCalo);
     }        
   }
   return m_cells;
@@ -154,11 +169,11 @@ std::vector<LHCb::CaloCellID> Calo2Calo::cellIDs(LHCb::CaloCellID fromId, std::s
 
 
 // Digits
-std::vector<LHCb::CaloDigit*> Calo2Calo::digits(LHCb::CaloCellID fromId, std::string toCalo){  
+const std::vector<LHCb::CaloDigit*>& Calo2Calo::digits(LHCb::CaloCellID fromId, std::string toCalo){  
   cellIDs( fromId, toCalo);
   return m_digits;
 }
-std::vector<LHCb::CaloDigit*> Calo2Calo::digits(LHCb::CaloCluster fromCluster, std::string toCalo){  
+const std::vector<LHCb::CaloDigit*>& Calo2Calo::digits(LHCb::CaloCluster fromCluster, std::string toCalo){  
   cellIDs( fromCluster, toCalo);
   return m_digits;
 }  

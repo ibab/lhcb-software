@@ -1,4 +1,4 @@
-// $Id: CaloHypo2Calo.h,v 1.1 2008-09-22 00:47:12 odescham Exp $
+// $Id: CaloHypo2Calo.h,v 1.2 2009-04-16 13:07:43 odescham Exp $
 #ifndef CALOHYPO2CALO_H 
 #define CALOHYPO2CALO_H 1
 
@@ -26,13 +26,13 @@ public:
 
   StatusCode initialize();
   // cellIDs
-  std::vector<LHCb::CaloCellID> cellIDs(LHCb::CaloHypo fromHypo, std::string toCalo);
-  std::vector<LHCb::CaloCellID> cellIDs(LHCb::CaloCluster fromCluster, std::string toCalo);
-  std::vector<LHCb::CaloCellID> cellIDs(){return m_cells;};
+  const std::vector<LHCb::CaloCellID>& cellIDs(LHCb::CaloHypo fromHypo, std::string toCalo);
+  const std::vector<LHCb::CaloCellID>& cellIDs(LHCb::CaloCluster fromCluster, std::string toCalo);
+  const std::vector<LHCb::CaloCellID>& cellIDs(){return m_cells;};
   // digits
-  std::vector<LHCb::CaloDigit*> digits(LHCb::CaloHypo  fromHypo, std::string toCalo);
-  std::vector<LHCb::CaloDigit*> digits(LHCb::CaloCluster  fromCluster, std::string toCalo);
-  std::vector<LHCb::CaloDigit*> digits(){return m_digits;};
+  const std::vector<LHCb::CaloDigit*>& digits(LHCb::CaloHypo  fromHypo, std::string toCalo);
+  const std::vector<LHCb::CaloDigit*>& digits(LHCb::CaloCluster  fromCluster, std::string toCalo);
+  const std::vector<LHCb::CaloDigit*>& digits(){return m_digits;};
   // energy
   double energy(LHCb::CaloHypo  fromCluster, std::string toCalo);
   double energy(LHCb::CaloCluster  fromCluster, std::string toCalo);
