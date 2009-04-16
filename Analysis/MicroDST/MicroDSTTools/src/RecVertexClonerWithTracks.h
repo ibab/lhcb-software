@@ -1,4 +1,4 @@
-// $Id: RecVertexClonerWithTracks.h,v 1.2 2008-08-21 14:45:55 jpalac Exp $
+// $Id: RecVertexClonerWithTracks.h,v 1.3 2009-04-16 07:43:06 jpalac Exp $
 #ifndef RECVERTEXCLONERWITHTRACKS_H 
 #define RECVERTEXCLONERWITHTRACKS_H 1
 
@@ -29,6 +29,8 @@ public:
                              const IInterface* parent);
 
   virtual ~RecVertexClonerWithTracks( ); ///< Destructor
+
+  virtual LHCb::RecVertex* operator() (const LHCb::VertexBase* vertex);
 
   virtual LHCb::RecVertex* operator() (const LHCb::RecVertex* vertex);
 

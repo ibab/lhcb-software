@@ -1,4 +1,4 @@
-// $Id: RecVertexClonerWithTracks.cpp,v 1.2 2008-08-21 14:45:55 jpalac Exp $
+// $Id: RecVertexClonerWithTracks.cpp,v 1.3 2009-04-16 07:43:06 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -58,6 +58,12 @@ StatusCode RecVertexClonerWithTracks::initialize()
 LHCb::RecVertex* RecVertexClonerWithTracks::operator() (const LHCb::RecVertex* vertex)
 {
   return this->clone(vertex);
+}
+//=============================================================================
+LHCb::RecVertex* RecVertexClonerWithTracks::operator() (const LHCb::VertexBase* vertex)
+{
+  const LHCb::RecVertex* recVertex = dynamic_cast<const LHCb::RecVertex*>(vertex);
+  return (0 != recVertex) ? this->clone(recVertex) : 0;
 }
 //=============================================================================
 LHCb::RecVertex* RecVertexClonerWithTracks::clone(const LHCb::RecVertex* vertex)
