@@ -1,4 +1,4 @@
-// $Id: P2MCRelatorAlg.cpp,v 1.1 2009-04-16 15:29:12 jpalac Exp $
+// $Id: P2MCRelatorAlg.cpp,v 1.2 2009-04-16 16:00:25 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -64,7 +64,7 @@ StatusCode P2MCRelatorAlg::execute() {
   m_mcParticles = get<LHCb::MCParticle::Container>( m_mcpLocation );
   m_table.clear();
   i_particleLoop( particles->begin(), particles->end() );
-  
+  m_table.i_sort();
   Particle2MCParticle::Table* table = new Particle2MCParticle::Table(m_table);
   const std::string outputLocation = 
     trunkLocation(m_particleLocation) + "/P2MCPRelations";
