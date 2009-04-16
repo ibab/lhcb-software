@@ -43,5 +43,6 @@ private:
   double m_cut;
   double m_mult;
   ICaloHypo2Calo* m_toPrs;
+  std::string m_det;
 };
 #endif // CALORECO_CALOSELECTCLUSTERWITHPRS_H

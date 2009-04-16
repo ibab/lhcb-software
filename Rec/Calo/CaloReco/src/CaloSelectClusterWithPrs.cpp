@@ -16,6 +16,7 @@ CaloSelectClusterWithPrs::CaloSelectClusterWithPrs
   //
   declareProperty ("MinEnergy"        , m_cut = -10. *Gaudi::Units::MeV ) ;
   declareProperty ("MinMultiplicity"  , m_mult = 0. ) ;
+  declareProperty ("Detector"           , m_det = "Ecal" );
 };
 // ============================================================================
 
@@ -29,7 +30,7 @@ StatusCode CaloSelectClusterWithPrs::initialize (){
   StatusCode sc = GaudiTool::initialize () ;
   //
   m_toPrs = tool<ICaloHypo2Calo>("CaloHypo2Calo", "CaloHypo2Prs");
-
+  m_toPrs->setCalos(m_det,"Prs");
   return sc;
 }; 
 

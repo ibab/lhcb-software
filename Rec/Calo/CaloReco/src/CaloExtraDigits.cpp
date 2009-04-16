@@ -1,4 +1,4 @@
-// $Id: CaloExtraDigits.cpp,v 1.13 2009-04-16 12:56:08 odescham Exp $
+// $Id: CaloExtraDigits.cpp,v 1.14 2009-04-16 16:10:11 odescham Exp $
 // ============================================================================
 // Include files
 // STL 
@@ -35,6 +35,7 @@ CaloExtraDigits::CaloExtraDigits( const std::string& type,
   declareProperty ( "ExtraDigitFrom"      , m_toDet ) ;
   m_toDet.push_back("Prs");
   m_toDet.push_back("Spd");
+  declareProperty ("Detector"           , m_det = "Ecal" );
 };
 
 // ============================================================================
@@ -54,6 +55,7 @@ StatusCode CaloExtraDigits::initialize ()
 
   for(std::vector<std::string>::iterator idet = m_toDet.begin(); idet!=m_toDet.end();idet++){
     m_toCalo[*idet]=tool<ICaloHypo2Calo>("CaloHypo2Calo", "CaloHypo2" + *idet );
+    m_toCalo[*idet]->setCalos(m_det,*idet);
   }
   return StatusCode::SUCCESS ;
 };

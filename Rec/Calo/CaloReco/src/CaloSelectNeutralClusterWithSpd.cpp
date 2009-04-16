@@ -15,6 +15,7 @@ CaloSelectNeutralClusterWithSpd::CaloSelectNeutralClusterWithSpd
   declareInterface<ICaloClusterSelector> ( this ) ;
   //
   declareProperty ("MinMultiplicity"    , m_cut=0       ) ;
+  declareProperty ("Detector"           , m_det = "Ecal" );
 };
 // ============================================================================
 
@@ -27,6 +28,7 @@ StatusCode CaloSelectNeutralClusterWithSpd::initialize (){
   // initialize the base class 
   StatusCode sc = GaudiTool::initialize () ;  
   m_toSpd = tool<ICaloHypo2Calo>("CaloHypo2Calo", "CaloHypo2Spd");
+  m_toSpd->setCalos(m_det,"Spd");
   return sc ;
 
 }; 

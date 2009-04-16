@@ -1,4 +1,4 @@
-// $Id: CaloExtraDigits.h,v 1.7 2008-09-22 01:41:23 odescham Exp $
+// $Id: CaloExtraDigits.h,v 1.8 2009-04-16 16:10:11 odescham Exp $
 // ============================================================================
 #ifndef CALORECO_CALOEXTRADIGITS_H 
 #define CALORECO_CALOEXTRADIGITS_H 1
@@ -51,5 +51,6 @@ private:
 
   std::vector<std::string> m_toDet;
   std::map<std::string,ICaloHypo2Calo*> m_toCalo;
+  std::string m_det;
 };
 #endif // CALOEXTRADIGITS_H

@@ -42,5 +42,6 @@ private:
 private:
   int    m_cut;
   ICaloHypo2Calo* m_toSpd;
+  std::string m_det;
 };
 #endif // CALORECO_CALOSELECTNEUTRALCLUSTERWITHSPD_H
