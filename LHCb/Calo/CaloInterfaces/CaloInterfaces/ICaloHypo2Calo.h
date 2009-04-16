@@ -1,4 +1,4 @@
-// $Id: ICaloHypo2Calo.h,v 1.1 2008-09-22 07:21:12 odescham Exp $
+// $Id: ICaloHypo2Calo.h,v 1.2 2009-04-16 13:09:04 odescham Exp $
 #ifndef ICALOHYPO2CALO_H 
 #define ICALOHYPO2CALO_H 1
 
@@ -14,7 +14,7 @@
 #include "GaudiKernel/IAlgTool.h"
 // forward declaration
 
-static const InterfaceID IID_ICaloHypo2Calo ( "ICaloHypo2Calo", 1, 0 );
+static const InterfaceID IID_ICaloHypo2Calo ( "ICaloHypo2Calo", 1, 1 );
 
 /** @class ICaloHypo2Calo ICaloHypo2Calo.h
  *  
@@ -31,13 +31,13 @@ public:
   static const InterfaceID& interfaceID() { return IID_ICaloHypo2Calo; }
 
   virtual StatusCode initialize()=0;
-  virtual std::vector<LHCb::CaloCellID> cellIDs(LHCb::CaloHypo  fromHypo, std::string toCalo)=0;
-  virtual std::vector<LHCb::CaloCellID> cellIDs(LHCb::CaloCluster  fromCluster, std::string toCalo)=0;
-  virtual std::vector<LHCb::CaloCellID> cellIDs()=0;
+  virtual const std::vector<LHCb::CaloCellID>& cellIDs(LHCb::CaloHypo  fromHypo, std::string toCalo)=0;
+  virtual const std::vector<LHCb::CaloCellID>& cellIDs(LHCb::CaloCluster  fromCluster, std::string toCalo)=0;
+  virtual const std::vector<LHCb::CaloCellID>& cellIDs()=0;
 
-  virtual std::vector<LHCb::CaloDigit*> digits(LHCb::CaloCluster  fromCluster, std::string toCalo)=0;
-  virtual std::vector<LHCb::CaloDigit*> digits(LHCb::CaloHypo  fromHypo, std::string toCalo)=0;
-  virtual std::vector<LHCb::CaloDigit*> digits()=0;
+  virtual const std::vector<LHCb::CaloDigit*>& digits(LHCb::CaloCluster  fromCluster, std::string toCalo)=0;
+  virtual const std::vector<LHCb::CaloDigit*>& digits(LHCb::CaloHypo  fromHypo, std::string toCalo)=0;
+  virtual const std::vector<LHCb::CaloDigit*>& digits()=0;
 
   virtual double energy(LHCb::CaloCluster  fromCluster, std::string toCalo)=0;
   virtual double energy(LHCb::CaloHypo  fromHypo, std::string toCalo)=0;

@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.49 2009-01-08 12:49:08 cattanem Exp $
+! $Id: release.notes,v 1.50 2009-04-16 13:09:04 odescham Exp $
 ! =============================================================================
 ! Package     : CaloInterfaces
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+
+! 2008-04-16 - Olivier Deschamps
+ - ICalo2Calo/ICaloHypo2Calo : virtual methods set to const
 
 !========================== CaloInterfaces v7r9 2009-01-08 ====================
 ! 2008-12-10 - Marco Cattaneo
