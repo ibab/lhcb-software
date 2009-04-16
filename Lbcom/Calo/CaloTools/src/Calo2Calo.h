@@ -1,4 +1,4 @@
-// $Id: Calo2Calo.h,v 1.3 2009-04-16 13:07:43 odescham Exp $
+// $Id: Calo2Calo.h,v 1.4 2009-04-16 16:09:01 odescham Exp $
 #ifndef CALO2CALO_H 
 #define CALO2CALO_H 1
 
@@ -24,6 +24,8 @@ public:
 
   virtual ~Calo2Calo( ); ///< Destructor
   StatusCode initialize();
+  // setting
+  void setCalos(std::string fromCalo,std::string toCalo);
   // CaloCellIDs
   const std::vector<LHCb::CaloCellID>& cellIDs(LHCb::CaloCluster fromCluster, std::string toCalo);
   const std::vector<LHCb::CaloCellID>& cellIDs(LHCb::CaloCellID  fromId     , std::string toCalo, bool init=true);
@@ -40,7 +42,6 @@ public:
   int multiplicity(LHCb::CaloCellID   fromId     , std::string toCalo);
   int multiplicity(LHCb::CaloCluster  fromCluster, std::string toCalo);
   int multiplicity(){return m_count;};
-
   // Additional
   bool isLocalMax(LHCb::CaloDigit digit);
 
@@ -51,14 +52,20 @@ protected:
   std::map<std::string,DeCalorimeter*> m_det;
   std::map<std::string,std::string> m_loc;
   std::map<std::string,double>m_refSize;
+  std::map<std::string,Gaudi::Plane3D> m_plane;
   //
+  std::string m_fromCalo;
+  std::string m_toCalo;
   std::vector<LHCb::CaloCellID> m_cells;
   std::vector<LHCb::CaloDigit*>  m_digits;
   double m_energy;
-  std::string m_fromCalo;
   int m_count;
+  DeCalorimeter* m_fromDet;
+  DeCalorimeter* m_toDet;
+  double m_fromSize;
+  double m_toSize;
+  Gaudi::Plane3D m_toPlane;
 private:
-  std::string m_toCalo;
   bool m_geo;
 };
 #endif // CALO2CALO_H

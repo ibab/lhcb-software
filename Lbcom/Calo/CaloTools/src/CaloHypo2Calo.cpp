@@ -1,4 +1,4 @@
-// $Id: CaloHypo2Calo.cpp,v 1.3 2009-04-16 13:07:43 odescham Exp $
+// $Id: CaloHypo2Calo.cpp,v 1.4 2009-04-16 16:09:01 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -62,6 +62,7 @@ StatusCode CaloHypo2Calo::initialize(){
 const std::vector<LHCb::CaloCellID>& CaloHypo2Calo::cellIDs(LHCb::CaloHypo fromHypo, std::string toCalo){
   LHCb::CaloHypo::Clusters clusters = fromHypo.clusters();
 
+
   // get the smallest cluster (i.e. for merged photons)
   LHCb::CaloCluster* cluster = 0;
   unsigned int minSize = 999999;
@@ -74,25 +75,26 @@ const std::vector<LHCb::CaloCellID>& CaloHypo2Calo::cellIDs(LHCb::CaloHypo fromH
     return m_cells;
   }
 
+  LHCb::CaloCellID seedID = cluster->seed();
+  std::string fromCalo = CaloCellCode::CaloNameFromNum( seedID.calo() );
+  if( toCalo != m_toCalo || fromCalo != m_fromCalo)setCalos(fromCalo,toCalo);
+
   if(m_whole){
     return Calo2Calo::cellIDs( *cluster, toCalo);
   }
 
-  DeCalorimeter* toDet   = m_det[ toCalo ];
   m_point  = Gaudi::XYZPoint();
   m_lineID = LHCb::CaloCellID();
   if(m_line && fromHypo.position() != NULL){
     const Gaudi::XYZPoint  ref( fromHypo.position()->x(), fromHypo.position()->y(),fromHypo.position()->z() );
     const Gaudi::XYZVector vec = (ref-Gaudi::XYZPoint(0,0,0));
-    const Gaudi::Plane3D   plane = toDet->plane(CaloPlane::ShowerMax);
+    const Gaudi::Plane3D   plane = m_toPlane;
     Gaudi::Math::XYZLine   line(ref, vec);
     double mu;
     Gaudi::Math::intersection<Gaudi::Math::XYZLine,Gaudi::Plane3D>(line,plane,m_point,mu);
-    m_lineID = toDet->Cell( m_point );
+    m_lineID = m_toDet->Cell( m_point );
     if ( msgLevel( MSG::DEBUG) ) debug() << "Matching cell " << m_lineID << endreq;
   }
-
-
   return cellIDs( *cluster, toCalo);
 }
 
@@ -102,12 +104,11 @@ const std::vector<LHCb::CaloCellID>& CaloHypo2Calo::cellIDs(LHCb::CaloCluster fr
   debug() << " toCalo " << toCalo << endreq;
   reset();
   LHCb::CaloCellID seedID = fromCluster.seed();
-  if ( msgLevel( MSG::DEBUG) ) debug() << "-----  cluster energy " <<  fromCluster.e()<< " " << seedID << endreq;
   std::string fromCalo = CaloCellCode::CaloNameFromNum( seedID.calo() );
-  //
-  DeCalorimeter* fromDet = m_det[ fromCalo ];
-  DeCalorimeter* toDet   = m_det[ toCalo ];
-  m_neighbour.setDet ( fromDet );
+  if( toCalo != m_toCalo || fromCalo != m_fromCalo)setCalos(fromCalo,toCalo);
+
+  if ( msgLevel( MSG::DEBUG) ) debug() << "-----  cluster energy " <<  fromCluster.e()<< " " << seedID << endreq;
+  m_neighbour.setDet ( m_fromDet );
 
   //matching cluster
   for(LHCb::CaloCluster::Entries::const_iterator ent = fromCluster.entries().begin();
@@ -129,21 +130,21 @@ const std::vector<LHCb::CaloCellID>& CaloHypo2Calo::cellIDs(LHCb::CaloCluster fr
     if( m_lineID == LHCb::CaloCellID() ){
       const Gaudi::XYZPoint  ref( fromCluster.position().x(), fromCluster.position().y(),fromCluster.position().z() );
       const Gaudi::XYZVector vec = (ref-Gaudi::XYZPoint(0,0,0));
-      const Gaudi::Plane3D   plane = toDet->plane(CaloPlane::ShowerMax);
+      const Gaudi::Plane3D   plane = m_toPlane;
       Gaudi::Math::XYZLine   line(ref, vec);
       double mu;
       Gaudi::Math::intersection<Gaudi::Math::XYZLine,Gaudi::Plane3D>(line,plane,m_point,mu);
-      m_lineID = toDet->Cell( m_point );
+      m_lineID = m_toDet->Cell( m_point );
     }
     if( !(m_lineID == LHCb::CaloCellID()) ){
-      Calo2Calo::cellIDs( m_lineID , toCalo, false ); 
+      Calo2Calo::addCell( m_lineID , toCalo );
       if ( msgLevel( MSG::DEBUG) )debug() << toCalo << " : digit is selected in the photon line : " 
                                           << m_lineID << "/" << seedID << " " << m_digits.size() << endreq;
       if(m_neighb){
-        std::vector<LHCb::CaloCellID>  neighbors = toDet->neighborCells( m_lineID );
+        std::vector<LHCb::CaloCellID>  neighbors = m_toDet->neighborCells( m_lineID );
         for( std::vector<LHCb::CaloCellID>::iterator n = neighbors.begin();n!=neighbors.end();n++){
-          double halfCell = toDet->cellSize( *n )*0.5;
-          const Gaudi::XYZPoint cellCenter = toDet -> cellCenter ( *n ) ;
+          double halfCell = m_toDet->cellSize( *n )*0.5;
+          const Gaudi::XYZPoint cellCenter = m_toDet -> cellCenter ( *n ) ;
           if( msgLevel(MSG::DEBUG))
             debug() << *n 
                     << " Point : (" << m_point.X() << "," << m_point.Y() 
@@ -151,7 +152,7 @@ const std::vector<LHCb::CaloCellID>& CaloHypo2Calo::cellIDs(LHCb::CaloCluster fr
                     << " size/2  : " << halfCell << " Tolerance : " << m_x << "/" << m_y << endreq;
           if( fabs(m_point.X() - cellCenter.X()) < (halfCell+m_x) &&
               fabs(m_point.Y() - cellCenter.Y()) < (halfCell+m_y) ){
-            Calo2Calo::cellIDs( *n , toCalo, false ); 
+            Calo2Calo::addCell( *n , toCalo );
             if ( msgLevel( MSG::DEBUG) )debug() << toCalo << " : digit is selected in the photon line neighborhood : " 
                                                 << *n << "/" << seedID  << " " << m_digits.size() << endreq;
           } 
