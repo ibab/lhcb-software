@@ -13,6 +13,7 @@
  - options/FullReco.py : Reco sequence. 
    @todo : split monitoring out of Brunel into RecoSys.
  - options/FEST.py : some fest data
+ - Increment to v1r3
    
 !========================== DaVinciMonitors v1r2 2009-04-08 ==================
 

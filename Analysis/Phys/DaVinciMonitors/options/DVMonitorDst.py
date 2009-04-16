@@ -1,5 +1,5 @@
 ##############################################################################
-# $Id: DVMonitorDst.py,v 1.14 2009-02-26 17:11:09 pkoppenb Exp $
+# $Id: DVMonitorDst.py,v 1.15 2009-04-16 07:20:16 pkoppenb Exp $
 #
 # syntax: gaudirun.py $DAVINCIMONITORSROOT/options/DVMonitorDst.py
 #
@@ -10,24 +10,9 @@ from DaVinci.Configuration import *
 from Gaudi.Configuration import *
 ##############################################################################
 #
-# Count Events
+# the stuff
 #
-from Configurables import EventCountHisto
-DaVinci().MoniSequence += [EventCountHisto("DaVinciMonitor") ] 
-##############################################################################
-#
-# Get right selection @todo does not work yet 
-#
-# from Configurables import LoKi__HDRFilter   as HltDecReportsFilter
-# HltDecReportsFilter  ( 'myname', Code = "HLT_PASS('somedecisionname')" )
-#
-#
-# Imported stuff
-#
-importOptions( "$DAVINCIMONITORSROOT/options/Jpsi2MuPi.py") 
-importOptions( "$DAVINCIMONITORSROOT/options/RichCalib.py") 
-importOptions( "$DAVINCIMONITORSROOT/options/MuonPidJpCalib.py") 
-importOptions( "$DAVINCIMONITORSROOT/options/MuonPidLaCalib.py") 
+importOptions( "$DAVINCIMONITORSROOT/options/DaVinciMonitoring.py") 
 ##############################################################################
 #
 # Histograms
