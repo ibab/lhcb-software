@@ -1,4 +1,4 @@
-// $Id: Particle2MCParticle.h,v 1.10 2009-04-15 16:56:46 jpalac Exp $
+// $Id: Particle2MCParticle.h,v 1.11 2009-04-16 15:34:19 jpalac Exp $
 #ifndef KERNEL_PARTICLE2MCPARTICLE_H 
 #define KERNEL_PARTICLE2MCPARTICLE_H 1
 
@@ -24,6 +24,9 @@ namespace Particle2MCParticle {
   typedef LHCb::RelationWeighted1D<LHCb::Particle, 
                                    LHCb::MCParticle, 
                                    WeightType>            WTable     ;
+  typedef Relations::RelationWeighted<LHCb::Particle, 
+                                      LHCb::MCParticle, 
+                                      WeightType>         LightWTable;
   typedef LHCb::Relation1D<LHCb::Particle, 
                            LHCb::MCParticle  >            Table      ;
 
