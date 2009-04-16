@@ -1,4 +1,4 @@
-// $Id: CaloExtraDigits.cpp,v 1.12 2008-09-22 01:41:23 odescham Exp $
+// $Id: CaloExtraDigits.cpp,v 1.13 2009-04-16 12:56:08 odescham Exp $
 // ============================================================================
 // Include files
 // STL 
@@ -72,8 +72,8 @@ StatusCode CaloExtraDigits::operator() ( LHCb::CaloHypo* hypo  ) const{
     int count = 0;
     std::map<std::string,ICaloHypo2Calo*>::const_iterator itoCalo = m_toCalo.find(*idet);
     if(itoCalo == m_toCalo.end())continue;
-    std::vector<LHCb::CaloDigit*> digits = ((*itoCalo).second)->digits( *hypo, *idet);
-    for(std::vector<LHCb::CaloDigit*>::iterator id = digits.begin() ; id != digits.end(); id++){
+    const std::vector<LHCb::CaloDigit*>& digits = ((*itoCalo).second)->digits( *hypo, *idet);
+    for(std::vector<LHCb::CaloDigit*>::const_iterator id = digits.begin() ; id != digits.end(); id++){
       hypo->addToDigits( *id );
       count++;
     }  

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.134 2009-03-11 21:28:13 cattanem Exp $
+! $Id: release.notes,v 1.135 2009-04-16 12:56:07 odescham Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
@@ -20,10 +20,17 @@
    . Fix untested status codes from Warning() and Error()
    . Replace endreq with endmsg
 
+<<<<<<< release.notes
+! 2009-04-16 - Olivier Deschamps
+ - fix minor bug in HltClusterSelection.opts + adapt to change in CaloTools
+
+! 2009-05-09 - Olivier Deschamps
+=======
 ! 2009-03-10 - Olivier Deschamps
  - Fix FPE occurring in CaloMergedPi0Alg (missing initialization)
 
 ! 2009-03-09 - Olivier Deschamps
+>>>>>>> 1.134
  - options/CaloECorrectionParam.opts : 2nd iteration of DC09 tuning (Ecorrection for electron from e/p)
 
 ! 2009-03-05 - Olivier Deschamps

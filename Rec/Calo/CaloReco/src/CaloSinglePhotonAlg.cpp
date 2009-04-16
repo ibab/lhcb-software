@@ -1,4 +1,4 @@
-// $Id: CaloSinglePhotonAlg.cpp,v 1.12 2008-09-22 01:41:23 odescham Exp $
+// $Id: CaloSinglePhotonAlg.cpp,v 1.13 2009-04-16 12:56:08 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -203,8 +203,7 @@ CaloSinglePhotonAlg::finalize()
  */
 // ============================================================================
 StatusCode 
-CaloSinglePhotonAlg::execute() 
-{
+CaloSinglePhotonAlg::execute(){
   using namespace  LHCb::CaloDataFunctor;
   // avoid long names 
   typedef LHCb::CaloClusters             Clusters ;
@@ -222,15 +221,12 @@ CaloSinglePhotonAlg::execute()
   LHCb::CaloDataFunctor::EnergyTransverse<const LHCb::CaloCluster*,const DeCalorimeter*> eT ( det ) ;
 
   // loop over clusters 
-  for( iterator cluster = clusters->begin() ; 
-       clusters->end() != cluster ; ++cluster )
-  {
+  for( iterator cluster = clusters->begin() ;clusters->end() != cluster ; ++cluster ){
     if ( m_eTcut > 0 && eT( *cluster ) < m_eTcut ) { continue ; }
 
     bool select = true ;
     // loop over all selectors 
-    for( Selectors::const_iterator selector = m_selectors.begin() ;
-         select && m_selectors.end() != selector ; ++selector ){ 
+    for( Selectors::const_iterator selector = m_selectors.begin() ; select && m_selectors.end() != selector ; ++selector ){ 
       select = (**selector)( *cluster ); 
     }
     // cluster to be selected? 
@@ -248,11 +244,11 @@ CaloSinglePhotonAlg::execute()
     
     // loop over all corrections and apply corrections  
     for( Corrections::const_iterator correction = m_corrections.begin() ;
-         sc.isSuccess() && m_corrections.end() != correction ; ++correction )
-    { sc = (**correction) ( hypo ); }
+         sc.isSuccess() && m_corrections.end() != correction ; ++correction ){ 
+      sc = (**correction) ( hypo ); 
+    }
     
-    if( sc.isFailure() ) 
-    {
+    if( sc.isFailure() ){
       delete hypo ; hypo = 0 ;                        // ATTENTION !
       Error("Error from Correction Tool, skip the cluster  " , sc ); 
       continue ;                                      // CONTINUE  !  
@@ -260,25 +256,23 @@ CaloSinglePhotonAlg::execute()
     
     // loop over other hypo tools (e.g. add extra digits)
     for( HypoTools::const_iterator hypotool = m_hypotools.begin() ;
-         sc.isSuccess() && m_hypotools.end() != hypotool ; ++hypotool )
-    { sc = (**hypotool) ( hypo ); }
+         sc.isSuccess() && m_hypotools.end() != hypotool ; ++hypotool ){ 
+      sc = (**hypotool) ( hypo ); 
+    }
     
-    if( sc.isFailure() ) 
-    {
+    if( sc.isFailure() ){
       delete hypo ; hypo = 0 ;                       // ATTENTION !
       Error("Error from Other Hypo Tool, skip the cluster  " , sc );
       continue  ;                                    // ATTENTION ! 
     }
-    
-
 
     // loop over all corrections and apply corrections  
     for( Corrections::const_iterator cor2 = m_corrections2.begin() ;
-         sc.isSuccess() && m_corrections2.end() != cor2 ; ++cor2 )
-    { sc = (**cor2) ( hypo ); }
+         sc.isSuccess() && m_corrections2.end() != cor2 ; ++cor2 ){ 
+      sc = (**cor2) ( hypo ); 
+    }
     
-    if( sc.isFailure() ) 
-    {
+    if( sc.isFailure() ){
       delete hypo ; hypo = 0 ;                      // ATTENTION !
       Error("Error from Correction Tool 2 skip the cluster" , sc );  
       continue ;                                    // CONTINUE  ! 
@@ -286,11 +280,10 @@ CaloSinglePhotonAlg::execute()
 
     // loop over other hypo tools (e.g. add extra digits)
     for( HypoTools::const_iterator hypotool2 = m_hypotools2.begin() ;
-         sc.isSuccess() && m_hypotools2.end() != hypotool2 ; ++hypotool2 )
-    { sc = (**hypotool2) ( hypo ); }
+         sc.isSuccess() && m_hypotools2.end() != hypotool2 ; ++hypotool2 ){ 
+      sc = (**hypotool2) ( hypo ); }
     
-    if( sc.isFailure() ) 
-    {
+    if( sc.isFailure() ){
       delete hypo ; hypo = 0 ;                      // ATTENTION !
       Error("Error from Other Hypo Tool 2, skip the cluster" , sc ); 
       continue ;                                    // CONTINUE !
