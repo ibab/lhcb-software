@@ -1,4 +1,4 @@
-// $Id: RecVertexClonerWithTracks.cpp,v 1.3 2009-04-16 07:43:06 jpalac Exp $
+// $Id: RecVertexClonerWithTracks.cpp,v 1.4 2009-04-16 12:16:17 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -31,7 +31,6 @@ RecVertexClonerWithTracks::RecVertexClonerWithTracks( const std::string& type,
   m_trackClonerType("TrackCloner")
 {
   declareInterface<ICloneRecVertex>(this);
-
   declareProperty("ICloneTrack", m_trackClonerType);
 
 }
@@ -55,15 +54,15 @@ StatusCode RecVertexClonerWithTracks::initialize()
 
 }
 //=============================================================================
-LHCb::RecVertex* RecVertexClonerWithTracks::operator() (const LHCb::RecVertex* vertex)
-{
-  return this->clone(vertex);
-}
-//=============================================================================
-LHCb::RecVertex* RecVertexClonerWithTracks::operator() (const LHCb::VertexBase* vertex)
+LHCb::VertexBase* RecVertexClonerWithTracks::operator() (const LHCb::VertexBase* vertex)
 {
   const LHCb::RecVertex* recVertex = dynamic_cast<const LHCb::RecVertex*>(vertex);
   return (0 != recVertex) ? this->clone(recVertex) : 0;
+}
+//=============================================================================
+LHCb::RecVertex* RecVertexClonerWithTracks::operator() (const LHCb::RecVertex* vertex)
+{
+  return this->clone(vertex);
 }
 //=============================================================================
 LHCb::RecVertex* RecVertexClonerWithTracks::clone(const LHCb::RecVertex* vertex)
