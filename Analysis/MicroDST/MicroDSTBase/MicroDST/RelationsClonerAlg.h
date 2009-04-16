@@ -1,4 +1,4 @@
-// $Id: RelationsClonerAlg.h,v 1.3 2009-04-15 20:28:53 jpalac Exp $
+// $Id: RelationsClonerAlg.h,v 1.4 2009-04-16 07:36:12 jpalac Exp $
 #ifndef MICRODST_RELATIONSCLONERALG_H 
 #define MICRODST_RELATIONSCLONERALG_H 1
 
@@ -30,6 +30,8 @@ private:
   typedef Defaults<TABLE> DEFAULTS;
   typedef Location<TABLE> LOCATION;
   typedef typename BindType2Cloner<TABLE>::toCloner CLONER;
+
+
 public:
   //===========================================================================
   /// Standard constructor
@@ -119,9 +121,8 @@ private:
 
   TABLE* tableOfClones(const TABLE* table) 
   {
-
+    typedef typename BindType2Cloner<TABLE>::toType TO_TYPE;
     typedef typename boost::remove_pointer<typename TABLE::From>::type _From;
-    typedef typename boost::remove_pointer<typename TABLE::To>::type _To;
 
     TABLE* cloneTable = new TABLE();
 
@@ -142,12 +143,13 @@ private:
                     << " is related to To " 
                     << *(iRange->to()) 
                     << " with weight " << iRange->weight() << endmsg;
+
           const typename TABLE::From clonedFrom = 
             getStoredClone< _From >(from);
-          const typename TABLE::To storedTo = 
-            getStoredClone< _To >(iRange->to());
-          const typename TABLE::To clonedTo = (0!=storedTo) ? storedTo : 
-            (*m_cloner)(iRange->to());
+          const TO_TYPE* storedTo = 
+            getStoredClone< TO_TYPE >(dynamic_cast<const TO_TYPE*>(iRange->to()));
+          const TO_TYPE* clonedTo = (0!=storedTo) ? storedTo : 
+            (*m_cloner)( iRange->to() );
           if (clonedFrom&&clonedTo) {
             cloneTable->relate(clonedFrom, clonedTo, iRange->weight());
             verbose() << "\ncloned From "    
