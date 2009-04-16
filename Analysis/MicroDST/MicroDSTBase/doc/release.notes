@@ -1,10 +1,17 @@
-!$Id: release.notes,v 1.25 2009-04-15 16:39:30 jpalac Exp $
+!$Id: release.notes,v 1.26 2009-04-16 12:11:25 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTBase
 ! Responsible : Juan Palacios
 ! Purpose     : Base classes for MicroDST algorithms and tools, plus helper
 !               functions and functors.
 !-----------------------------------------------------------------------------
+
+! 2009-04-16 - Juan PALACIOS
+ - MicroDSTCommon::getStoredClone<T> now takes KeyedObject<int> as argument,
+   the common base class for all Event Model contained types
+ - MicroDST/RelationsClonerAlg.h
+  . Avoid casting to the derived class of To that is in relations. Derived type
+    is now only needed to satisfy the getStoredClone templated method.
 
 ! 2009-04-15 - Juan PALACIOS
  - Add MicroDST/RelationsClonerAlg.h, a templated MicroDSTAlgorithm to copy
