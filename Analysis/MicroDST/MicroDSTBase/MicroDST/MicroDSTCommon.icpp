@@ -1,4 +1,4 @@
-// $Id: MicroDSTCommon.icpp,v 1.5 2009-03-20 13:52:36 jpalac Exp $
+// $Id: MicroDSTCommon.icpp,v 1.6 2009-04-16 12:08:58 jpalac Exp $
 //-----------------------------------------------------------------------------
 // Implementation file for templated methods of class : MicroDSTCommon
 //
@@ -140,14 +140,14 @@ T* MicroDSTCommon<PBASE>::cloneKeyedContainerItem( const T* item )
 //=============================================================================
 template <class PBASE>
 template <class T>
-const T* MicroDSTCommon<PBASE>::getStoredClone( const T* original    ) const
+const T* MicroDSTCommon<PBASE>::getStoredClone( const KeyedObject<int>* original    ) const
 {
   return getStoredClone<T>(original);
 }
 //=============================================================================
 template <class PBASE>
 template <class T>
-T* MicroDSTCommon<PBASE>::getStoredClone( const T* original    ) 
+T* MicroDSTCommon<PBASE>::getStoredClone( const KeyedObject<int>* original ) 
 {
   const std::string cloneLocation = 
     outputTESLocation(MicroDST::objectLocation(original->parent()));

@@ -1,10 +1,10 @@
-// $Id: MicroDSTCommon.h,v 1.2 2007-12-11 16:44:37 jpalac Exp $
+// $Id: MicroDSTCommon.h,v 1.3 2009-04-16 12:08:57 jpalac Exp $
 #ifndef MICRODST_MICRODSTCOMMON_H 
 #define MICRODST_MICRODSTCOMMON_H 1
 
 // Include files
 #include <MicroDST/Functors.hpp>
-
+#include <GaudiKernel/KeyedObject.h>
 
 class ISvcLocator;
 class IInterface;
@@ -106,14 +106,14 @@ public:
    * @author Juan Palacios juancho@nikhef.nl
    */
   template <class T>
-  const T* getStoredClone( const T* original    ) const;
+  const T* getStoredClone( const KeyedObject<int>* original    ) const;
 
   /**
    *
    * @author Juan Palacios juancho@nikhef.nl
    */
   template <class T>
-  T* getStoredClone( const T* original    ) ;
+  T* getStoredClone( const KeyedObject<int>* original    ) ;
 
 
   /**
