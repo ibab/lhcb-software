@@ -1,4 +1,4 @@
-// $Id: CellularAutomaton.cpp,v 1.14 2009-02-12 10:59:37 cattanem Exp $
+// $Id: CellularAutomaton.cpp,v 1.15 2009-04-16 13:04:03 odescham Exp $
 // ============================================================================
 #include "GaudiKernel/AlgFactory.h" 
 #include "Event/CaloDigit.h"
@@ -300,9 +300,9 @@ StatusCode CellularAutomaton::execute()
     if ( itTagLastClustered == itTagFirst && m_release ){
       itTagLastClustered = taggedCellsSeq.end(); // stop iteration and report the problem
       const long number = taggedCellsSeq.end() - itTagLastClustered ;
-      Warning ( " TAGGING NOT FULL - Remain " 
-                + boost::lexical_cast<std::string> ( number  ) 
-                + " not clustered cells" , StatusCode::SUCCESS ) ;
+      debug() << " TAGGING NOT FULL - Remain "
+              << boost::lexical_cast<std::string> ( number  )
+              << " not clustered cells" << endmsg ;
     }
     if( itTagLastClustered == itTagFirst )m_release = true; // try additional passes releasing appliRulesTagger criteria
 

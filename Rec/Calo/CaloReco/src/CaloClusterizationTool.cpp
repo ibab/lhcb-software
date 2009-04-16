@@ -1,4 +1,4 @@
-// $Id: CaloClusterizationTool.cpp,v 1.3 2009-02-12 10:59:37 cattanem Exp $
+// $Id: CaloClusterizationTool.cpp,v 1.4 2009-04-16 13:04:03 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -354,9 +354,9 @@ StatusCode CaloClusterizationTool::clusterize(std::vector<LHCb::CaloCluster*>&  
     // Test if cells are tagged in this pass    
     if ( itTagLastClustered == itTagFirst && m_release ){
       const long number = taggedCellsSeq.end() - itTagLastClustered ;
-      Warning ( " TAGGING NOT FULL - Remain " 
-                + boost::lexical_cast<std::string> ( number  ) 
-                + " not clustered cells" , StatusCode::SUCCESS ) ;
+      debug() << " TAGGING NOT FULL - Remain " 
+              << boost::lexical_cast<std::string> ( number  )
+              << " not clustered cells" << endmsg ;
       itTagLastClustered = taggedCellsSeq.end();
     }
     if( itTagLastClustered == itTagFirst )m_release = true; // try additional passes releasing appliRulesTagger criteria
