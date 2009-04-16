@@ -74,7 +74,8 @@ namespace LHCb
     Gaudi::XYZPoint position() const { return Gaudi::XYZPoint(m_pos(0),m_pos(1),m_pos(2)) ; }
     /// Position covariance of the vertex
     const Gaudi::SymMatrix3x3& covMatrix() const { return m_poscov ; }
-
+    /// Projection matrix for state i to vertex position (matrixA in Fruhwirth)
+    const ROOT::Math::SMatrix<double,5,3>& matrixA(size_t i) const ;
   private:
     typedef TrackVertexHelpers::VertexTrack VertexTrack ;
     typedef std::vector< TrackVertexHelpers::VertexTrack* > VertexTrackContainer ;

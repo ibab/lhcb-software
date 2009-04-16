@@ -4,7 +4,10 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
-! 2009-06-04 Jose A. Hernando
+! 2009-04-16 Wouter Hulsbergen
+ - added accessor to matrix A in TrackStateVertex
+
+! 2009-04-06 Jose A. Hernando
  - in src/MuonMeasurement.cpp x,y 
    x-type, measures x, error = x-size/sqrt(12), j-vector trayectory, range +- y-size/2 
 

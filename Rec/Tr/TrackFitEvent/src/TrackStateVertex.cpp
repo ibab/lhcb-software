@@ -316,6 +316,11 @@ namespace LHCb
     return m_tracks[i]->state() ;
   } 
 
+  const ROOT::Math::SMatrix<double,5,3>& TrackStateVertex::matrixA(size_t i) const
+  {
+    return m_tracks[i]->A() ;
+  }
+
   LHCb::TwoProngVertex* TrackStateVertex::createTwoProngVertex(bool computemomcov) const 
   {
     LHCb::TwoProngVertex* vertex = 
