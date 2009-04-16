@@ -3,8 +3,17 @@
 ! Responsible : Juan Palacios juan.palacios@nikhef.nl
 ! Purpose     : Implementation of cloner MicroDSTTools
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.23 2009-04-15 20:20:37 jpalac Exp $
+! $Id: release.notes,v 1.24 2009-04-16 12:16:33 jpalac Exp $
 !-----------------------------------------------------------------------------
+
+! 2009-04-16 - Juan PALACIOS
+ - src/MCParticleCloner.cpp
+  . Add explicit template parameter for getStoredClone method.
+ - src/RecVertexCloner.cpp
+ - src/RecVertexCloner.h
+ - src/RecVertexClonerWithTracks.cpp
+ - src/RecVertexClonerWithTracks.h
+  . Implement new ICloneRecVertex interface method LHCb::VertexBase* RecVertexCloner::operator() (const LHCb::VertexBase* vertex)
 
 ! 2008-04-15 - Juan PALACIOS
  - RecVertexCloner
