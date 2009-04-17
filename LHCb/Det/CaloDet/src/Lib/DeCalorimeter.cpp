@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.cpp,v 1.56 2009-04-06 15:42:33 odescham Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.57 2009-04-17 13:41:04 cattanem Exp $ 
 // ============================================================================
 #define  CALODET_DECALORIMETER_CPP 1
 // STL
@@ -76,7 +76,7 @@ StatusCode DeCalorimeter::initialize()
   m_caloIndex =  CaloCellCode::CaloNumFromName( name() );
   m_caloDet = CaloCellCode::CaloNameFromNum( m_caloIndex ) + "Det";
   MsgStream msg( msgSvc(), m_caloDet );
-  msg << MSG::DEBUG << "'INITIALIZE DeCalorimeter "<< name() <<endreq;
+  msg << MSG::DEBUG << "'INITIALIZE DeCalorimeter "<< name() <<endmsg;
 
 
   
@@ -84,7 +84,7 @@ StatusCode DeCalorimeter::initialize()
   // collect the sub-calorimeters
   //=============================
   IDetectorElement::IDEContainer& subdets = childIDetectorElements();
-  msg << MSG::DEBUG << " Number of subCalorimeter " << subdets.size() << endreq;
+  msg << MSG::DEBUG << " Number of subCalorimeter " << subdets.size() << endmsg;
   for(IDetectorElement::IDEContainer::iterator ichild = subdets.begin() ; ichild != subdets.end() ; ++ichild){
     IDetectorElement* child = *ichild ;
     if ( 0 == child ) { continue ; }
@@ -185,19 +185,19 @@ StatusCode DeCalorimeter::initialize()
     m_initialized = true;
     // DEBUG
 
-    msg << MSG::DEBUG << "'DeCalorimeter " << name() << " correctly initalized with : " <<endreq;
-    msg << MSG::DEBUG << " - " << numberOfCells()  << " channels "    << endreq;
-    msg << MSG::DEBUG << " - " << numberOfCards()  << " FE-boards "   << endreq;
-    msg << MSG::DEBUG << " - " << numberOfTell1s() << " Tell1s "      << endreq;
-    msg << MSG::DEBUG << " - " << numberOfPins()   << " PIN-diodes "  << endreq;
-    msg << MSG::DEBUG << " - " << numberOfLeds()   << " LEDs "        << endreq;    
+    msg << MSG::DEBUG << "'DeCalorimeter " << name() << " correctly initalized with : " <<endmsg;
+    msg << MSG::DEBUG << " - " << numberOfCells()  << " channels "    << endmsg;
+    msg << MSG::DEBUG << " - " << numberOfCards()  << " FE-boards "   << endmsg;
+    msg << MSG::DEBUG << " - " << numberOfTell1s() << " Tell1s "      << endmsg;
+    msg << MSG::DEBUG << " - " << numberOfPins()   << " PIN-diodes "  << endmsg;
+    msg << MSG::DEBUG << " - " << numberOfLeds()   << " LEDs "        << endmsg;    
 
     // VERBOSE
     msg << MSG::VERBOSE << "DDDB parameters : " 
         << " Y/X ratio = " <<  m_YToXSizeRatio 
         << " zOffset   = " <<  m_zOffset
         << " zSize     = " <<  m_zSize 
-        << endreq;
+        << endmsg;
     
 
     // LONG VERBOSE
@@ -210,7 +210,7 @@ StatusCode DeCalorimeter::initialize()
            <<  cellGain(id) <<  " MeV/ADC " 
            << " = (nominal * calib * shift) = " 
            << m_cells[id].nominalGain() << " x " << m_cells[id].calibration() << " x" << m_cells[id].gainShift()
-           << endreq;
+           << endmsg;
       if( m_caloDet == "EcalDet" || m_caloDet == "HcalDet"){
         double ect = cellGain(id) *  m_cells[id].sine() / m_l0Et *1024;
         double act = (double) m_cells[id].l0Constant();
@@ -219,24 +219,24 @@ StatusCode DeCalorimeter::initialize()
         msg2 << MSG::VERBOSE << "Chan : " << id << " : nominal L0gain => " 
              << m_l0Et<< " MeV/ADC => expected L0Cte is : " << (int) ect 
              << "  | actual L0Cte : " << act << " => "  << ag << " MeV/ADC"
-             << endreq;
+             << endmsg;
       } 
     }
     // Verbosity
     msg3 << MSG::VERBOSE << " ----------- List of " << CaloCellCode::CaloNameFromNum( m_caloIndex ) 
-         << " channels " << " ----------- " << endreq;
+         << " channels " << " ----------- " << endmsg;
     long k = 1;
     for( CaloVector<CellParam>::iterator ic = m_cells.begin() ;m_cells.end() != ic ; ++ic ) {
       msg3 << MSG::VERBOSE << k << " : " << (*ic).cellID() 
            << " pos : (" << (*ic).x() << "," << (*ic).y() << "," << (*ic).z() 
            << ") "<< " #neigh " << (*ic).neighbors().size() << " | ";
-      if( k%2 == 0) msg3 << MSG::VERBOSE <<endreq;  
+      if( k%2 == 0) msg3 << MSG::VERBOSE <<endmsg;  
       k++;
     } 
-    msg3 << MSG::VERBOSE << endreq;
+    msg3 << MSG::VERBOSE << endmsg;
   }
   else{
-    msg << MSG::ERROR << "'DeCalorimeter initalization failed "<< name() <<endreq;
+    msg << MSG::ERROR << "'DeCalorimeter initalization failed "<< name() <<endmsg;
   }  
 
 
@@ -255,7 +255,7 @@ Gaudi::Plane3D DeCalorimeter::plane( const double dz) const{
         << " dz = " << dz
         << " z-enveloppe of the active area = ["<< m_zOffset-m_zSize/2. << " ; " 
         << m_zOffset+m_zSize/2. << " ] "
-        << endreq ; 
+        << endmsg ; 
   }
   Gaudi::XYZPoint loff(0. , 0. , dz-1.); //arbitrary but non-0 z-offset
   Gaudi::XYZPoint  point = geometry->toGlobal(local);
@@ -279,7 +279,7 @@ StatusCode DeCalorimeter::buildCells( ) {
   for(SubCalos::iterator is = m_subCalos.begin() ; is != m_subCalos.end() ; ++is ){
     m_nArea = (*is)->subSubCalos().size();
     msg << MSG::DEBUG << " SubCalos :  Side " << (*is)->sideName() 
-        << " | #areas " << (*is)->subSubCalos().size() << endreq;
+        << " | #areas " << (*is)->subSubCalos().size() << endmsg;
     int side = (*is)->side();
     // loop over sub-sub-calo (calo areas)
     SubSubCalos subSubCalos = (*is)->subSubCalos();
@@ -289,7 +289,7 @@ StatusCode DeCalorimeter::buildCells( ) {
       msg << MSG::DEBUG<< "SubSubCalo : Area " << Area 
           << " | cellSize : " << (*iss)->cellSize() 
           << " | local center X-offset: " << xOffset 
-          << endreq; 
+          << endmsg; 
       while( cellSize.size() <= Area ) { cellSize.push_back(0) ; } ;
       cellSize[Area]   = (*iss)->cellSize();
       
@@ -430,7 +430,7 @@ StatusCode DeCalorimeter::buildCells( ) {
 
 
   msg << MSG::DEBUG << "Initialized  " << m_caloDet << ", " 
-      << nbCells    << " channels" << endreq;
+      << nbCells    << " channels" << endmsg;
   
   return StatusCode::SUCCESS;
 }; 
@@ -463,12 +463,12 @@ StatusCode DeCalorimeter::buildCards( )  {
   // condition not mandatory (e.g. Spd)
   // get FEB readout
   if ( !m_readout->exists( "FEB" ) || !m_readout->exists( "size") ) {    
-    msg << MSG::ERROR << "incomplete 'cards' description in 'Readout' condition" << endreq;
+    msg << MSG::ERROR << "incomplete 'cards' description in 'Readout' condition" << endmsg;
     return StatusCode::FAILURE; 
   }
   // get pin ID.area
   if ( !m_readout->exists( "pinArea" ) ) {
-    msg << MSG::DEBUG << "No PIN FE-board for " << m_caloDet << endreq;
+    msg << MSG::DEBUG << "No PIN FE-board for " << m_caloDet << endmsg;
     m_pinArea = -1;
   } else{
     m_pinArea = m_readout->paramAsInt( "pinArea" ) ; 
@@ -483,10 +483,10 @@ StatusCode DeCalorimeter::buildCards( )  {
 
   while( k < vec.size() ){
     int typ = vec[k];
-    msg << MSG::DEBUG << "Building mapping : type =  " << typ << endreq;
+    msg << MSG::DEBUG << "Building mapping : type =  " << typ << endmsg;
     if( typ == CardParam::None ){
       msg << MSG::ERROR << "The map type = " << typ 
-          << " is reserved ! Please change in condDB" << endreq;
+          << " is reserved ! Please change in condDB" << endmsg;
       return StatusCode::FAILURE;
     }
     k++;
@@ -498,17 +498,17 @@ StatusCode DeCalorimeter::buildCards( )  {
     }
     k++;
     if( k == vec.size() ){
-      msg << MSG::DEBUG << "Maps from condDB are completed " << endreq;
+      msg << MSG::DEBUG << "Maps from condDB are completed " << endmsg;
     }    
   }
 
-  msg << MSG::DEBUG << "Defined " << maps.size() << " different channel mappings" << endreq;
+  msg << MSG::DEBUG << "Defined " << maps.size() << " different channel mappings" << endmsg;
 
   // decode cards array
   // ------------------
   int aSize = m_readout->paramAsInt( "size" );
   std::vector<int> temp = m_readout->paramAsIntVect( "FEB" );
-  msg << MSG::DEBUG << "The calorimeter has " << temp.size()/aSize << " front end cards." << endreq;
+  msg << MSG::DEBUG << "The calorimeter has " << temp.size()/aSize << " front end cards." << endmsg;
   int firstCrate = temp[6];
   for ( unsigned int kk = 0; temp.size()/aSize > kk  ; ++kk ) {
     int ll = aSize*kk;
@@ -529,7 +529,7 @@ StatusCode DeCalorimeter::buildCards( )  {
     if(m_pinArea == area)myCard.setIsPin(true);
     if ( (int) kk != cardNum ) {
       msg << MSG::ERROR << "FE-Card number not in sequence: Found " 
-          << cardNum  << " expect " << kk << endreq;
+          << cardNum  << " expect " << kk << endmsg;
       return StatusCode::FAILURE;
     }
 
@@ -553,13 +553,13 @@ StatusCode DeCalorimeter::buildCards( )  {
     std::map<int , std::vector<int> >::iterator it = maps.find( mapType );
     if( it == maps.end() && mapType != CardParam::None ){
       msg << MSG::ERROR << "The requested map type = " << mapType 
-          << " is not defined in condDB." << endreq;
+          << " is not defined in condDB." << endmsg;
       return StatusCode::FAILURE;
     }
 
     if( it != maps.end() ){
       msg << MSG::VERBOSE << "The FE-board " << cardNum 
-          << " channels are re-mapped using mapping type = " << mapType << endreq;
+          << " channels are re-mapped using mapping type = " << mapType << endmsg;
       std::vector<int> map = (*it).second;
       unsigned int count = 0;
       for( std::vector<int>::iterator i = map.begin() ; i != map.end() ; ++i){
@@ -571,13 +571,13 @@ StatusCode DeCalorimeter::buildCards( )  {
           myCard.addID( cellids [ *i ] );
         }else{
           msg << MSG::ERROR << "The FEB "<< cardNum << " has no channel number " << *i
-              << " as it is expected with mapping " << mapType << endreq;
+              << " as it is expected with mapping " << mapType << endmsg;
           return StatusCode::FAILURE;            
         }
       }
       if( cellids.size()  != count ){
         msg << MSG::ERROR << "The mapping with type = " << mapType 
-            << " is not consistent with the FEB "<< cardNum << endreq;
+            << " is not consistent with the FEB "<< cardNum << endmsg;
         return StatusCode::FAILURE;
       }    
     }
@@ -601,7 +601,7 @@ StatusCode DeCalorimeter::buildCards( )  {
     }
   }
   else{
-    msg << MSG::DEBUG << "No 'SelectionBoard' parameters in 'Readout' condition" << endreq;
+    msg << MSG::DEBUG << "No 'SelectionBoard' parameters in 'Readout' condition" << endmsg;
   }   
 
   // EcalDet only :  Validation Board -> Hcal FE relation 
@@ -619,7 +619,7 @@ StatusCode DeCalorimeter::buildCards( )  {
     }
   }
   else{
-    msg << MSG::DEBUG << "No 'ValidationBoard' parameters in 'Readout' condition" << endreq;
+    msg << MSG::DEBUG << "No 'ValidationBoard' parameters in 'Readout' condition" << endmsg;
   }
 
   // 2nd loop on FE-Cards - 
@@ -699,17 +699,17 @@ StatusCode DeCalorimeter::buildCards( )  {
                   card.downNumber(), card.leftNumber(),card.cornerNumber(),card.previousNumber() ) 
         << format(" validation %2d Selection %2d #channels% 5d", 
                   card.validationNumber(),card.selectionType() ,card.ids().size())
-        << endreq;
+        << endmsg;
     msg << MSG::VERBOSE << " >> boundaries : " 
         << cardFirstValidRow(card.number())    << " (" << cardFirstRow( card.number() )     << ") -> "   
         << cardLastValidRow(card.number())     << " (" << cardLastRow( card.number() )      << ")  && "  
         << cardFirstValidColumn(card.number()) << " (" << cardFirstColumn( card.number() )  << ")  -> "  
         << cardLastValidColumn(card.number())  << " (" << cardLastColumn( card.number() )   << ") "     
-        << endreq;
+        << endmsg;
   }
 
 
-  msg << MSG::DEBUG << "Initialized, " << numberOfCards() << " front-end cards." << endreq;  
+  msg << MSG::DEBUG << "Initialized, " << numberOfCards() << " front-end cards." << endmsg;  
   return StatusCode::SUCCESS;
 };
 
@@ -730,7 +730,7 @@ StatusCode DeCalorimeter::buildTell1s( )  {
 
   // Tell1 description
   if ( !m_readout->exists( "Tell1" ) ) {
-    msg << MSG::ERROR << "No 'Tell1' parameters in 'Readout' condition" << endreq;
+    msg << MSG::ERROR << "No 'Tell1' parameters in 'Readout' condition" << endmsg;
     return StatusCode::FAILURE;
   }
   
@@ -740,22 +740,22 @@ StatusCode DeCalorimeter::buildTell1s( )  {
     unsigned int num = (*it++);
     if ( num != m_tell1Boards.size() ) {
       msg << MSG::ERROR << "TELL1 number not in sequence: Found " << num 
-          << " expect " << m_tell1Boards.size() << endreq;
+          << " expect " << m_tell1Boards.size() << endmsg;
       return StatusCode::FAILURE;
     }
     int nb  = (*it++);
     Tell1Param tell1( num );
-    msg << MSG::DEBUG << " create Tell1 number " << num << " handling : " << endreq;
+    msg << MSG::DEBUG << " create Tell1 number " << num << " handling : " << endmsg;
     while ( 0 < nb-- ) {
       unsigned int feCard = *it++;
-      msg << MSG::DEBUG << "   ----> FE-Card number " << feCard << endreq;
+      msg << MSG::DEBUG << "   ----> FE-Card number " << feCard << endmsg;
       if ( m_feCards.size() < feCard ) {
-        msg << MSG::ERROR << "**** TELL1 " << num << " reads unknown card " << feCard << endreq;
+        msg << MSG::ERROR << "**** TELL1 " << num << " reads unknown card " << feCard << endmsg;
         return StatusCode::FAILURE;
       }
       if( m_feCards[feCard].tell1() > 0 ){
         msg << MSG::ERROR << "**** FE-Card " << feCard << " already linked to Tell1 board " 
-            << m_feCards[feCard].tell1() << " - Cannot link to Tell1 board " << num << endreq;
+            << m_feCards[feCard].tell1() << " - Cannot link to Tell1 board " << num << endmsg;
         return StatusCode::FAILURE;
       }
       m_feCards[feCard].setTell1( num );
@@ -765,7 +765,7 @@ StatusCode DeCalorimeter::buildTell1s( )  {
     if ( tell1.readPin() )m_pinTell1s.push_back( num );
     m_tell1Boards.push_back( tell1 );   
   }  
-  msg << MSG::DEBUG << "Initialized, " << numberOfTell1s() << " Tell1 board "<< endreq;  
+  msg << MSG::DEBUG << "Initialized, " << numberOfTell1s() << " Tell1 board "<< endmsg;  
   return StatusCode::SUCCESS;
 }
 
@@ -785,7 +785,7 @@ StatusCode DeCalorimeter::buildMonitoring( )  {
   
   // check PIN array
   if ( !m_monitor->exists( "PIN" ) ) {
-    msg << MSG::ERROR << "No 'PIN' parameters in 'Monitoring' condition" << endreq;
+    msg << MSG::ERROR << "No 'PIN' parameters in 'Monitoring' condition" << endmsg;
     return StatusCode::FAILURE;
   }
   
@@ -833,7 +833,7 @@ StatusCode DeCalorimeter::buildMonitoring( )  {
     int iCard = cardIndexByCode( crate , slot );
     if( 0 > iCard ){
       msg << MSG::ERROR << " No FE-Card defined in crate/slot "
-          << crate << "/" << slot << endreq;
+          << crate << "/" << slot << endmsg;
       return StatusCode::FAILURE; 
     }
     LHCb::CaloCellID pinId(m_caloIndex, 
@@ -846,10 +846,10 @@ StatusCode DeCalorimeter::buildMonitoring( )  {
       // the caloPin already exist
       pin = m_pins[pinId];      
       if( box != pin.box() || pinIndex != pin.index() || side != pin.side() ){
-        msg << MSG::ERROR << "PIN-diode with same ID but different location already exists " << endreq;
+        msg << MSG::ERROR << "PIN-diode with same ID but different location already exists " << endmsg;
         return StatusCode::FAILURE;
       }
-      msg << MSG::DEBUG << "Extended definition for an existing  PIN-diode is found  " << endreq;
+      msg << MSG::DEBUG << "Extended definition for an existing  PIN-diode is found  " << endmsg;
     }else{
       // create a new one and store it
       pin = CaloPin(pinId);
@@ -864,14 +864,14 @@ StatusCode DeCalorimeter::buildMonitoring( )  {
       std::vector<LHCb::CaloCellID>& ids = (std::vector<LHCb::CaloCellID>&) m_feCards[iCard].ids(); // no-const
       ids[channel] = pinId;
       kk++;
-      msg << MSG::DEBUG << "PIN diode " << kk << "  ------" << endreq;    
+      msg << MSG::DEBUG << "PIN diode " << kk << "  ------" << endmsg;    
     }
     // update CaloRegion
     m_pins[pinId].addCaloRegion(area, fCol,fRow,lCol,lRow);
     if( area2 >= 0)m_pins[pinId].addCaloRegion(area2,fCol2,fRow2,lCol2,lRow2); 
     // Hcal Leds can be  distributed on 2 areas
 
-    msg << MSG::DEBUG << "-->"  << m_pins[pinId] << endreq;    
+    msg << MSG::DEBUG << "-->"  << m_pins[pinId] << endmsg;    
 
 
     int nleds = m_pins[pinId].leds().size();
@@ -921,13 +921,13 @@ StatusCode DeCalorimeter::buildMonitoring( )  {
           if( 1 != rLed*cLed ){
             msg << MSG::ERROR 
                 << "Don't know how to distributed Leds array on several Calo area" 
-                << endreq;
+                << endmsg;
             return StatusCode::FAILURE;
           }
           led.addCaloRegion(area2,fCol2,fRow2,lCol2,lRow2);
         }
         m_leds.push_back(led); // store CaloLed
-        msg << MSG::DEBUG << "   --- " << led << endreq;
+        msg << MSG::DEBUG << "   --- " << led << endmsg;
       }
     }
     
@@ -941,7 +941,7 @@ StatusCode DeCalorimeter::buildMonitoring( )  {
       
       int ledNum = (*iled); 
       CaloLed& led = m_leds[ ledNum ];
-      msg << MSG::VERBOSE << " LED " << ledNum << endreq;
+      msg << MSG::VERBOSE << " LED " << ledNum << endmsg;
 
       for( unsigned int ireg = 0 ; ireg < led.areas().size();  ++ireg ){
         int ar = led.areas()[ireg];
@@ -952,7 +952,7 @@ StatusCode DeCalorimeter::buildMonitoring( )  {
        for ( int row = fr ; lr >= row; ++row ) {
          for ( int col = fc; lc >= col; ++col ) {
            LHCb::CaloCellID id( m_caloIndex, ar, row, col );
-           msg << MSG::VERBOSE << " Connected cells to LED/Pin " << id << " valid ? " << valid(id) << endreq;
+           msg << MSG::VERBOSE << " Connected cells to LED/Pin " << id << " valid ? " << valid(id) << endmsg;
            if ( valid( id ) ) {
              m_cells[id].addPin( pinId );
              m_cells[id].addLed( ledNum );
@@ -969,16 +969,16 @@ StatusCode DeCalorimeter::buildMonitoring( )  {
   // check all cells (including virtual) are connected to a Led
   for(CaloVector<CellParam>::iterator icel = m_cells.begin(); icel != m_cells.end() ; ++icel){
     msg << MSG::VERBOSE << " Cell " << (*icel).cellID() 
-        << " <- Led " << (*icel).leds() << " -> Pin " << (*icel).pins() << endreq;
+        << " <- Led " << (*icel).leds() << " -> Pin " << (*icel).pins() << endmsg;
     if(  0 == (*icel).leds().size() ){
-      msg << MSG::ERROR << "Cell id = " << (*icel).cellID() << " is not connect to the monitoring system."<< endreq;
+      msg << MSG::ERROR << "Cell id = " << (*icel).cellID() << " is not connect to the monitoring system."<< endmsg;
       return StatusCode::FAILURE;
     }    
   }
 
 
-  msg << MSG::DEBUG << "Initialized, " << m_leds.size() << " monitoring LEDs" << endreq;
-  msg << MSG::DEBUG << "Initialized, " << m_pins.size() << " PIN-diodes." << endreq;
+  msg << MSG::DEBUG << "Initialized, " << m_leds.size() << " monitoring LEDs" << endmsg;
+  msg << MSG::DEBUG << "Initialized, " << m_pins.size() << " PIN-diodes." << endmsg;
 
   return StatusCode::SUCCESS;
 };
@@ -993,7 +993,7 @@ StatusCode DeCalorimeter::getCalibration( )  {
   
   // check array
   if ( !m_calib->exists( "data" ) || !m_calib->exists( "size") ) {
-    msg << MSG::DEBUG << "No 'data' in 'Calibration' condition : will assume deltaG = 1." << endreq;
+    msg << MSG::DEBUG << "No 'data' in 'Calibration' condition : will assume deltaG = 1." << endmsg;
     return StatusCode::SUCCESS;
   }
   int size = m_calib->paramAsInt( "size" );
@@ -1016,13 +1016,13 @@ StatusCode DeCalorimeter::getCalibration( )  {
       m_cells[id].setRefLedData( pmtRef, pinRef );
       msg << MSG::VERBOSE << "Added calibration for channel " << id 
           << " : dG = " << dg 
-          << " Reference PMT/PIN from LED signal " << pmtRef << "/" << pinRef << endreq;
+          << " Reference PMT/PIN from LED signal " << pmtRef << "/" << pinRef << endmsg;
       count++;
     }else{
-      msg << MSG::WARNING << "Trying to add calibration on non-valid channel : " << id << endreq;
+      msg << MSG::WARNING << "Trying to add calibration on non-valid channel : " << id << endmsg;
     }
   }
-  msg << MSG::DEBUG << "Calibration constant added for " << count << " channel " << endreq;
+  msg << MSG::DEBUG << "Calibration constant added for " << count << " channel " << endmsg;
   return StatusCode::SUCCESS;
 }
 
@@ -1037,7 +1037,7 @@ StatusCode DeCalorimeter::getQuality( )  {
   
   // check array
   if ( !m_quality->exists( "data" ) || !m_quality->exists( "size") ) {
-    msg << MSG::DEBUG << "No 'data' in 'Quality condition : will assume Flag = 0" << endreq;
+    msg << MSG::DEBUG << "No 'data' in 'Quality condition : will assume Flag = 0" << endmsg;
     return StatusCode::SUCCESS;
   }
   int size = m_quality->paramAsInt( "size" );
@@ -1060,13 +1060,13 @@ StatusCode DeCalorimeter::getQuality( )  {
       m_cells[id].setLedData( pmt, pin );
       msg << MSG::VERBOSE << "Added quality for channel " << id 
           << " : quality = " << qFlag 
-          << "  current PMT/PIN from LED signal " << pmt << "/" << pin << endreq;
+          << "  current PMT/PIN from LED signal " << pmt << "/" << pin << endmsg;
       count++;
     }else{
-      msg << MSG::WARNING << "Trying to add quality on non-valid channel : " << id << endreq;
+      msg << MSG::WARNING << "Trying to add quality on non-valid channel : " << id << endmsg;
     }
   }
-  msg << MSG::DEBUG << "Quality constant added for " << count << " channel " << endreq;
+  msg << MSG::DEBUG << "Quality constant added for " << count << " channel " << endmsg;
   return StatusCode::SUCCESS;  
 }
 
@@ -1081,7 +1081,7 @@ StatusCode DeCalorimeter::getL0Calibration( )  {
   
   // check array
   if ( !m_l0calib->exists( "data" ) || !m_l0calib->exists( "size") ) {
-    msg << MSG::DEBUG << "No 'data' in 'L0calibration' condition : will assume cte = 0" << endreq;
+    msg << MSG::DEBUG << "No 'data' in 'L0calibration' condition : will assume cte = 0" << endmsg;
     return StatusCode::SUCCESS;
   }
   int size = m_l0calib->paramAsInt( "size" );
@@ -1098,13 +1098,13 @@ StatusCode DeCalorimeter::getL0Calibration( )  {
     if( m_cells[id].valid() ){
       m_cells[id].setL0Constant( ct );
       msg << MSG::VERBOSE << "Added l0calibration for channel " << id 
-          << " : L0 calibration constant  = " << ct << endreq;
+          << " : L0 calibration constant  = " << ct << endmsg;
       count++;
     }else{
-      msg << MSG::WARNING << "Trying to add l0calibration on non-valid channel : " << id << endreq;
+      msg << MSG::WARNING << "Trying to add l0calibration on non-valid channel : " << id << endmsg;
     }
   }
-  msg << MSG::DEBUG << "L0calibration constant added for " << count << " channel " << endreq;
+  msg << MSG::DEBUG << "L0calibration constant added for " << count << " channel " << endmsg;
   return StatusCode::SUCCESS;
 }
   
@@ -1172,31 +1172,31 @@ MsgStream&    DeCalorimeter::printOut( MsgStream&    os ) const {
      << ", fullname ='"            << name ()  << "'";
 
   os << "\t Parameters"
-     << endreq
+     << endmsg
      << "\t\tEt value for maximum ADC value at theta(0) =  "
      << m_maxEtInCenter 
-     << endreq
+     << endmsg
      << "\t\tIncrease in Et per radian                  =  "
      << ( m_maxEtSlope    )
-     << endreq
+     << endmsg
      << "\t\tMaximum codage in the ADC                  =  "
      << ( m_adcMax        )
-     << endreq
+     << endmsg
      << "\t\tConversion from activeE() to energy seen   =  "
      << ( m_activeToTotal )
-     << endreq
+     << endmsg
      << "\t\tZ of the shower maximum in the local frame =  "
      << ( m_zShowerMax    )
-     << endreq
+     << endmsg
      << "\t\tMaximum value for Row/Column               =  "
      << (  m_maxRowCol      )
-     << endreq
+     << endmsg
      << "\t\tFirst Row or Column  over center           =  "
      << ( m_firstRowUp      )
-     << endreq
+     << endmsg
      << "\t\tCentral Value = m_maxRowCol/2                =  "
      << ( m_centerRowCol    )
-     << endreq ;
+     << endmsg ;
 
     const MSG::Level lev = os.currentLevel();
     os.report( lev - 1 );
@@ -1208,7 +1208,7 @@ MsgStream&    DeCalorimeter::printOut( MsgStream&    os ) const {
       std::copy( neighborCells( id ).begin() ,
                  neighborCells( id ).end()   ,
                  OS_iterator<LHCb::CaloCellID,MsgStream>(os,",") );
-      os << endreq;
+      os << endmsg;
     }
     ///
     os.report( lev );
@@ -1221,12 +1221,12 @@ MsgStream&    DeCalorimeter::printOut( MsgStream&    os ) const {
 //
 bool DeCalorimeter::loadCondition( SmartRef<Condition>& cond, std::string name , bool mandatory){
   MsgStream msg( msgSvc(), m_caloDet );
-  msg << MSG::DEBUG << "Loading condition '"<<name<<"'"<<endreq;
+  msg << MSG::DEBUG << "Loading condition '"<<name<<"'"<<endmsg;
   if ( hasCondition(name) ){
     cond = condition( name );
     return true;
   }
-  msg << (mandatory ? MSG::ERROR  : MSG::DEBUG) <<"'" << name << "'  condition not found" << endreq;
+  msg << (mandatory ? MSG::ERROR  : MSG::DEBUG) <<"'" << name << "'  condition not found" << endmsg;
   return false;
 }
 
@@ -1236,7 +1236,7 @@ bool DeCalorimeter::loadCondition( SmartRef<Condition>& cond, std::string name ,
 // Update cache
 StatusCode DeCalorimeter::updGain(){
   MsgStream msg( msgSvc(), m_caloDet );
-  msg << MSG::DEBUG << "Updating condition 'Gain" << endreq;
+  msg << MSG::DEBUG << "Updating condition 'Gain" << endmsg;
 
   if( !hasCondition("Gain") )return StatusCode::FAILURE; // the gain condition must exist
 
@@ -1248,15 +1248,15 @@ StatusCode DeCalorimeter::updGain(){
 
 
   if( etInCenter.size() != etSlope.size() ){
-    msg << MSG::ERROR << "The gain parameters per region are not consistent" << endreq;
+    msg << MSG::ERROR << "The gain parameters per region are not consistent" << endmsg;
     return StatusCode::FAILURE;
   }
   m_maxEtInCenter = etInCenter  ;
   m_maxEtSlope    = etSlope     ;
   if( (m_maxEtInCenter.size() != m_nArea && m_maxEtInCenter.size() !=1 ) ||
       (m_maxEtSlope.size() != m_nArea && m_maxEtSlope.size() != 1) ){
-    msg << MSG::ERROR << " Found " << m_maxEtInCenter.size() << " gain parameters " << endreq;
-    msg << MSG::ERROR << " There should be " << m_nArea << " parameters (or a single one for all regions)"  << endreq;
+    msg << MSG::ERROR << " Found " << m_maxEtInCenter.size() << " gain parameters " << endmsg;
+    msg << MSG::ERROR << " There should be " << m_nArea << " parameters (or a single one for all regions)"  << endmsg;
     return StatusCode::FAILURE;
   }
   // ** update gain/channel
@@ -1281,7 +1281,7 @@ StatusCode DeCalorimeter::updGain(){
 
 StatusCode DeCalorimeter::updReco(){
   MsgStream msg( msgSvc(), m_caloDet );
-  msg << MSG::DEBUG << "Updating condition 'Reco'" << endreq;
+  msg << MSG::DEBUG << "Updating condition 'Reco'" << endmsg;
 
   if( !hasCondition("Reco") )return StatusCode::FAILURE; // the reco condition MUST exist
 
@@ -1294,7 +1294,7 @@ StatusCode DeCalorimeter::updReco(){
 
 StatusCode DeCalorimeter::updHardware(){
   MsgStream msg( msgSvc(), m_caloDet );
-  msg << MSG::DEBUG << "Updating condition 'Hardware'" << endreq;
+  msg << MSG::DEBUG << "Updating condition 'Hardware'" << endmsg;
   if( !hasCondition("Hardware") )return StatusCode::FAILURE;  // the hardware condition MUST exist
   m_adcMax = m_hardware->paramAsInt( "AdcMax"    ); 
   m_coding = m_hardware->paramAsInt( "CodingBit" ); 
@@ -1308,7 +1308,7 @@ StatusCode DeCalorimeter::updHardware(){
 
 StatusCode DeCalorimeter::updReadout(){
   MsgStream msg( msgSvc(), m_caloDet );
-  msg << MSG::DEBUG << "Updating condition 'Readout'" << endreq;
+  msg << MSG::DEBUG << "Updating condition 'Readout'" << endmsg;
   if( !hasCondition("Readout") )return StatusCode::SUCCESS;  
   // the readout condition is not mandatory (e.g Spd)
   StatusCode sc = buildCards();
@@ -1318,7 +1318,7 @@ StatusCode DeCalorimeter::updReadout(){
 
 StatusCode DeCalorimeter::updMonitor(){
   MsgStream msg( msgSvc(), m_caloDet );
-  msg << MSG::DEBUG << "Updating condition 'Monitoring'" << endreq;
+  msg << MSG::DEBUG << "Updating condition 'Monitoring'" << endmsg;
   if( !hasCondition("Monitoring") )return StatusCode::SUCCESS; 
       //  the monitoring condition is not mandatory (e.g Spd/Prs)
   StatusCode sc = buildMonitoring();
@@ -1327,7 +1327,7 @@ StatusCode DeCalorimeter::updMonitor(){
 
 StatusCode DeCalorimeter::updGeometry(){
   MsgStream msg( msgSvc(), m_caloDet );
-  msg << MSG::DEBUG << "Updating condition 'IGeometry'" << endreq;
+  msg << MSG::DEBUG << "Updating condition 'IGeometry'" << endmsg;
   if(0 == geometry() )return StatusCode::FAILURE;  
   StatusCode sc = buildCells();
   return sc;
@@ -1335,7 +1335,7 @@ StatusCode DeCalorimeter::updGeometry(){
 
 StatusCode DeCalorimeter::updCalib(){
   MsgStream msg( msgSvc(), m_caloDet );
-  msg << MSG::DEBUG << "Updating condition 'Calibration'" << endreq;
+  msg << MSG::DEBUG << "Updating condition 'Calibration'" << endmsg;
   if( !hasCondition("Calibration") )return StatusCode::SUCCESS; // the calibration condition is NOT mandatory
   StatusCode sc = getCalibration();
   return sc;
@@ -1343,7 +1343,7 @@ StatusCode DeCalorimeter::updCalib(){
 
 StatusCode DeCalorimeter::updQuality(){
   MsgStream msg( msgSvc(), m_caloDet );
-  msg << MSG::DEBUG << "Updating condition 'Quality'" << endreq;
+  msg << MSG::DEBUG << "Updating condition 'Quality'" << endmsg;
   if( !hasCondition("Quality") )return StatusCode::SUCCESS; // the quality condition is NOT mandatory
   StatusCode sc = getQuality();
   return sc;
@@ -1352,7 +1352,7 @@ StatusCode DeCalorimeter::updQuality(){
 
 StatusCode DeCalorimeter::updL0Calib(){
   MsgStream msg( msgSvc(), m_caloDet );
-  msg << MSG::DEBUG << "Updating condition 'L0Calibration'" << endreq;
+  msg << MSG::DEBUG << "Updating condition 'L0Calibration'" << endmsg;
   if( !hasCondition("L0Calibration") )return StatusCode::SUCCESS; // the L0Calibration condition is NOT mandatory
   StatusCode sc = getL0Calibration();
   return sc;

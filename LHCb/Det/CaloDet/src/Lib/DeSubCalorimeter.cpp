@@ -65,7 +65,7 @@ StatusCode DeSubCalorimeter::initialize()
   {
     // collect the sub-sub-calorimeters (calo areas)
     IDetectorElement::IDEContainer& subdets = childIDetectorElements();
-    msg << MSG::DEBUG << name() << " :  number of subSubCalorimeter " << subdets.size() << endreq;
+    msg << MSG::DEBUG << name() << " :  number of subSubCalorimeter " << subdets.size() << endmsg;
     for(IDetectorElement::IDEContainer::iterator ichild = subdets.begin() ; ichild != subdets.end() ; ++ichild){
       IDetectorElement* child = *ichild ;
       if ( 0 == child ) { continue ; }
@@ -98,8 +98,8 @@ std::ostream& DeSubCalorimeter::printOut( std::ostream& os ) const
 // ============================================================================
 MsgStream&    DeSubCalorimeter::printOut( MsgStream&    os ) const
 {
-  os << "\tDeSubCalorimeter"<< " fullname ='"    << name () << endreq;
-  os << "\t\t\tSide=" << sideName() << " #areas " << subSubCalos().size() << endreq   ;
+  os << "\tDeSubCalorimeter"<< " fullname ='"    << name () << endmsg;
+  os << "\t\t\tSide=" << sideName() << " #areas " << subSubCalos().size() << endmsg   ;
   return os;
 };
 

@@ -67,7 +67,7 @@ operator<<( MsgStream&    os , const DeSubSubCalorimeter& de )
 inline MsgStream&     
 operator<<( MsgStream&    os , const DeSubSubCalorimeter* de )
 { return de ? (os<<*de) : 
-  (os<<" DeSubSubCalorimeter* points to NULL!"<<endreq   ); }
+  (os<<" DeSubSubCalorimeter* points to NULL!"<<endmsg   ); }
 // ============================================================================
 
 // ============================================================================

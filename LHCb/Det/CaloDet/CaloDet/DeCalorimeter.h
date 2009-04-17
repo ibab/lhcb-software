@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.h,v 1.37 2009-04-06 15:42:33 odescham Exp $ 
+// $Id: DeCalorimeter.h,v 1.38 2009-04-17 13:41:03 cattanem Exp $ 
 // ============================================================================
 #ifndef       CALODET_DECALORIMETER_H
 #define       CALODET_DECALORIMETER_H 1
@@ -342,7 +342,7 @@ inline MsgStream&     operator<<( MsgStream&    os , const DeCalorimeter& de )
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  */
 inline MsgStream&     operator<<( MsgStream&    os , const DeCalorimeter* de )
-{ return de ? (os<<*de) : (os<<" DeCalorimeter* points to NULL!"<<endreq   ); }
+{ return de ? (os<<*de) : (os<<" DeCalorimeter* points to NULL!"<<endmsg   ); }
 // ===========================================================================
 
 // ===========================================================================

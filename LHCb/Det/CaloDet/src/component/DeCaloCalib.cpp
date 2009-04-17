@@ -1,4 +1,4 @@
-// $Id: DeCaloCalib.cpp,v 1.3 2009-04-10 14:51:08 odescham Exp $
+// $Id: DeCaloCalib.cpp,v 1.4 2009-04-17 13:41:04 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -77,11 +77,11 @@ StatusCode DeCaloCalib::initialize() {
   } else if ( "Spd" == m_detectorName ) {
     m_calo     = getDet<DeCalorimeter>( DeCalorimeterLocation::Spd ); 
   } else {
-    error() << "Unknown Calo detector name " << m_detectorName << endreq;
+    error() << "Unknown Calo detector name " << m_detectorName << endmsg;
     return StatusCode::FAILURE;
   }
 
-  info() << " ======= SIMULATING THE (MIS)Calibration of "<< m_detectorName << " gains  ======= " << endreq;
+  info() << " ======= SIMULATING THE (MIS)Calibration of "<< m_detectorName << " gains  ======= " << endmsg;
   
   
   // Params
@@ -90,42 +90,42 @@ StatusCode DeCaloCalib::initialize() {
   double a,b;
   if( m_method == "Gauss" ){
     // Gaussian random (mean, rms)
-    info() << "---- Method : gaussian random timing values "<< endreq;
-    if(m_params.size() != 2)error() << "wrong parameters size" << endreq;
+    info() << "---- Method : gaussian random timing values "<< endmsg;
+    if(m_params.size() != 2)error() << "wrong parameters size" << endmsg;
     a= *(m_params.begin());
     b= *(m_params.begin()+1);
-    info() << " mean/sigma = " << a << "/" << b << endreq;
+    info() << " mean/sigma = " << a << "/" << b << endmsg;
     sc = m_shoot.initialize(rndmSvc() , Rndm::Gauss( a , b ));
     if( !sc.isSuccess() )return sc;
   }
   else if(m_method == "Flat"){
     // Flat random (min, max)
-    info() << "---- Method : flat random timing values "<< endreq;
-    if(m_params.size() != 2)error() << "wrong parameters size" << endreq;
+    info() << "---- Method : flat random timing values "<< endmsg;
+    if(m_params.size() != 2)error() << "wrong parameters size" << endmsg;
     a= *(m_params.begin());
     b= *(m_params.begin()+1);
-    info() << " min/max = " << a << "/" << b << endreq;
+    info() << " min/max = " << a << "/" << b << endmsg;
     sc=m_shoot.initialize(rndmSvc() , Rndm::Flat( a , b ));
     if( !sc.isSuccess() )return sc;
   }  
   else if(m_method == "User"){
-    info() << "---- Method : user-defined timing values "<< endreq;
-    info() << "Timing value have been defined for " << m_deltas.size() << " cells " << endreq;
+    info() << "---- Method : user-defined timing values "<< endmsg;
+    info() << "Timing value have been defined for " << m_deltas.size() << " cells " << endmsg;
     info() << "Default value [" << m_deltas["Default"] <<  "] will be applied to " 
-           << m_calo->numberOfCells()- m_deltas.size() << " other cells." << endreq;
+           << m_calo->numberOfCells()- m_deltas.size() << " other cells." << endmsg;
     if( m_key == "CellID" ){
-      info() << "The calib values are mapped with KEY = CellID " << endreq;
+      info() << "The calib values are mapped with KEY = CellID " << endmsg;
     }
     else if( m_key == "Index" ){
-      info() << "The calib values are are mapped with KEY = Index" << endreq;
+      info() << "The calib values are are mapped with KEY = Index" << endmsg;
     }
     else{
-      error() << "undefined deltaKey : must be either 'CellID' or 'Index' " << endreq;
+      error() << "undefined deltaKey : must be either 'CellID' or 'Index' " << endmsg;
     return StatusCode::FAILURE;
     }
   }
   else{
-    error() << "Method " << m_method << " unknown - should be 'Flat', 'Gauss' or 'User'"<< endreq;
+    error() << "Method " << m_method << " unknown - should be 'Flat', 'Gauss' or 'User'"<< endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -184,7 +184,7 @@ void DeCaloCalib::update() {
     else
       dt = m_shoot();
     
-    debug() << num << " Calibration constant for cellID " << id << " : " << dt << endreq;
+    debug() << num << " Calibration constant for cellID " << id << " : " << dt << endmsg;
     (*icell).setCalibration ( dt ) ; //
     cellids.push_back( id.index()      );
     cellind.push_back( num             );

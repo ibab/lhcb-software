@@ -1,9 +1,11 @@
-! $Id: release.notes,v 1.103 2009-04-10 14:51:08 odescham Exp $ 
+! $Id: release.notes,v 1.104 2009-04-17 13:41:04 cattanem Exp $ 
 ! =============================================================================
 ! Package         : CaloDet   
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+! 2009-04-17 - Marco Cattaneo
+ - Replace endreq by endmsg
 
 ! 2009-04-09 Olivier Deschamps
     - fix bug in CellParam (addQualityFlag() method)

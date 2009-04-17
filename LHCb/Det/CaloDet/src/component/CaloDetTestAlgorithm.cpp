@@ -1,26 +1,4 @@
-// $Id: CaloDetTestAlgorithm.cpp,v 1.7 2009-04-06 15:42:33 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.6  2008/09/26 15:45:39  odescham
-// implement updMgrSvc
-//
-// Revision 1.5  2008/06/05 06:37:24  cattanem
-// fix compiler warning
-//
-// Revision 1.4  2007/12/05 16:36:20  odescham
-// update CaloDetTestAlgorithm
-//
-// Revision 1.3  2006/12/14 10:48:18  ranjard
-// v8r0 - InstallArea and new Plugins
-//
-// Revision 1.2  2005/12/16 17:12:40  odescham
-// v8r0 - LHCb v20 migration + cleaning
-//
-// Revision 1.1  2001/12/15 18:28:17  ibelyaev
-//  update for new policy of versions and new test algorithm
-//
+// $Id: CaloDetTestAlgorithm.cpp,v 1.8 2009-04-17 13:41:04 cattanem Exp $
 // ============================================================================
 // Include files
 // from Gaudi
@@ -89,7 +67,7 @@ StatusCode CaloDetTestAlgorithm::initialize()
 {
   
   MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Initialise" << endreq;
+  log << MSG::DEBUG << "==> Initialise" << endmsg;
   
   StatusCode sc = GaudiAlgorithm::initialize();
   if( sc.isFailure() ) 
@@ -116,7 +94,7 @@ StatusCode CaloDetTestAlgorithm::initialize()
               << calo->cardCrate(card)     << " | "
               << calo->cardSlot(card)      << " | "
               << calo->cardToTell1(card)   << " | " 
-              << endreq;
+              << endmsg;
   }
   
 
@@ -134,7 +112,7 @@ StatusCode CaloDetTestAlgorithm::finalize()
 {
   
   MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Finalize" << endreq;
+  log << MSG::DEBUG << "==> Finalize" << endmsg;
   
   /// finalize the base class 
   return GaudiAlgorithm::finalize();

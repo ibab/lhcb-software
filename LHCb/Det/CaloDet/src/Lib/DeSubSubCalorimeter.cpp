@@ -1,4 +1,4 @@
-// $Id: DeSubSubCalorimeter.cpp,v 1.2 2008-11-19 06:33:23 cattanem Exp $ 
+// $Id: DeSubSubCalorimeter.cpp,v 1.3 2009-04-17 13:41:04 cattanem Exp $ 
 // ============================================================================
 #define CALODET_DESUBSUBCALORIMETER_CPP 1
 // ============================================================================
@@ -104,9 +104,9 @@ std::ostream& DeSubSubCalorimeter::printOut( std::ostream& os ) const{
 // standard printout to Gaudi standard stream
 // ============================================================================
 MsgStream&    DeSubSubCalorimeter::printOut( MsgStream&    os ) const{
-  os << "\tDeSubSubCalorimeter"  << " fullname ='"    << name ()     << endreq   ;
+  os << "\tDeSubSubCalorimeter"  << " fullname ='"    << name ()     << endmsg   ;
   os << "\t\t\tCellSize=" << std::setw(12) << m_cellSize << " Area-ID = " << m_area  
-     << " X-center offset : " << xSize()/2 << endreq;
+     << " X-center offset : " << xSize()/2 << endmsg;
   return os;
 };
 
