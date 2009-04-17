@@ -1,4 +1,4 @@
-// $Id: HybridBase.h,v 1.2 2007-12-11 18:37:04 ibelyaev Exp $
+// $Id: HybridBase.h,v 1.3 2009-04-17 14:48:56 cattanem Exp $
 // ============================================================================
 #ifndef LOKIHYBRID_HYBRIDBASE_H 
 #define LOKIHYBRID_HYBRIDBASE_H 1
@@ -112,7 +112,7 @@ inline void LoKi::Hybrid::Base::_set
   if ( msgLevel ( MSG::DEBUG ) ) 
   {
     debug() << "The 'cut' is set to be '" << (*local) << "' = '"
-            << System::typeinfoName( typeid( *local) ) << endreq  ;
+            << System::typeinfoName( typeid( *local) ) << endmsg  ;
   } ;
   //
 }

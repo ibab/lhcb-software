@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.135 2009-03-24 17:35:15 ibelyaev Exp $ 
+! $Id: release.notes,v 1.136 2009-04-17 14:48:56 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,26 +15,22 @@
 ! 
 ! -----------------------------------------------------------------------------
 
-! 2009-03-24 - Vanya BELYAEV
+! 2009-04-17 - Marco Cattaneo
+ - Replace endreq with endmsg
 
+! 2009-03-24 - Vanya BELYAEV
  - fix misprint for the default CoreFactory 
 
-
 ! 2009-03-22 - Vanya BELYAEV
-
  - more flexible&robust monitoring 
 
 ! 2009-03-20 - Vanya BELYAEV
-
  - LoKi/HistoBook.h
-
      add more methods for histogram booking 
      (needed for monitoring functors) 
 
 - cmt/requirements 
-
      version increment to v9r0 
-
 
 ! =========================== LoKiCore v8r1 2009-01-08 ========================
 ! 2008-12-18 - Vanya Belyaev

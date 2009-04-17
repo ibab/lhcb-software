@@ -1,4 +1,4 @@
-// $Id: HybridBase.cpp,v 1.9 2008-11-18 15:58:07 ibelyaev Exp $
+// $Id: HybridBase.cpp,v 1.10 2009-04-17 14:48:56 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -102,7 +102,7 @@ StatusCode LoKi::Hybrid::Base::initialize ()
   // Initialize python if it not yet done 
   if ( !Py_IsInitialized() ) 
   {
-    info() << "Initialization of Python is triggered" << endreq ;
+    info() << "Initialization of Python is triggered" << endmsg ;
     Py_Initialize () ;
     m_pyInit = true ;
   }  
@@ -116,7 +116,7 @@ StatusCode LoKi::Hybrid::Base::finalize  ()
   // finalize python (if the owner)
   if ( Py_IsInitialized() && m_pyInit ) 
   {
-    info() << "Finalization   of Python is triggered" << endreq ;
+    info() << "Finalization   of Python is triggered" << endmsg ;
     std::string line ; 
     line += "                                                           # " + name() + "\n" ;
     line += "import atexit                                              # " + name() + "\n" ;
@@ -129,7 +129,7 @@ StatusCode LoKi::Hybrid::Base::finalize  ()
     if ( 0 != result ) 
     {
       Warning ( "Error code from PyRun_SimpleString" , 1000 + result ).ignore() ;
-      warning() << "The problematic code is \n" << line << endreq ;
+      warning() << "The problematic code is \n" << line << endmsg ;
       if ( PyErr_Occurred() ) { PyErr_Print() ; } 
     }
     Py_Finalize () ;
@@ -155,7 +155,7 @@ StatusCode LoKi::Hybrid::Base::executeCode ( const std::string& pycode ) const
   PyObject* locals  = PyEval_GetLocals  () ;
   if ( 0 == locals ) 
   {
-    info() << "PyEval_GetLocals:  'locals'  points to NULL" << endreq ;
+    info() << "PyEval_GetLocals:  'locals'  points to NULL" << endmsg ;
     if ( PyErr_Occurred() ) { PyErr_Print() ; }
   }
   // global scope 
@@ -163,7 +163,7 @@ StatusCode LoKi::Hybrid::Base::executeCode ( const std::string& pycode ) const
   bool globnew = false ;
   if ( 0 == globals ) 
   { 
-    info() << "PyEval_GetGlobals: 'globals' points to NULL" << endreq ;
+    info() << "PyEval_GetGlobals: 'globals' points to NULL" << endmsg ;
     if ( PyErr_Occurred() ) { PyErr_Print() ; }
     globals  = PyDict_New() ;
     if ( PyErr_Occurred() ) { PyErr_Print() ; }
@@ -191,9 +191,9 @@ StatusCode LoKi::Hybrid::Base::executeCode ( const std::string& pycode ) const
   if ( !ok ) 
   {
     err () << " Error has occured in Python: the problematic code is : "
-           << endreq 
+           << endmsg 
            << pycode  
-           << endreq ;
+           << endmsg ;
     return Error( " Error has occured in Python " ) ;
   }
 
@@ -273,7 +273,7 @@ std::string LoKi::Hybrid::Base::makeCode
   {
     debug() << "Generated Python code:" << std::endl 
             << result 
-            << endreq ;  
+            << endmsg ;  
   }
   ///
   return result ;
