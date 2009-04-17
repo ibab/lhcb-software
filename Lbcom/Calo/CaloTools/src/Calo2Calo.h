@@ -1,4 +1,4 @@
-// $Id: Calo2Calo.h,v 1.4 2009-04-16 16:09:01 odescham Exp $
+// $Id: Calo2Calo.h,v 1.5 2009-04-17 11:43:51 odescham Exp $
 #ifndef CALO2CALO_H 
 #define CALO2CALO_H 1
 
@@ -7,7 +7,7 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "CaloInterfaces/ICalo2Calo.h"            // Interface
 #include "CaloDet/DeCalorimeter.h"
-
+#include  "CaloInterfaces/ICaloGetterTool.h"
 /** @class Calo2Calo Calo2Calo.h
  *  
  *
@@ -64,9 +64,13 @@ protected:
   DeCalorimeter* m_toDet;
   double m_fromSize;
   double m_toSize;
+  std::string m_toLoc;
   Gaudi::Plane3D m_toPlane;
+  LHCb::CaloDigits* m_digs;
+  ICaloGetterTool* m_getter;
 private:
   bool m_geo;
+  std::string m_getterName;
 };
 #endif // CALO2CALO_H
 

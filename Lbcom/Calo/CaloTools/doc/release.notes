@@ -1,13 +1,17 @@
-! $Id: release.notes,v 1.59 2009-04-16 13:07:43 odescham Exp $
+! $Id: release.notes,v 1.60 2009-04-17 11:43:51 odescham Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+! 2008-04-17 - Olivier Deschamps
+ - new tool CaloGetterTool : helps to speed-up CaloReco processing
+ - Calo2Calo/CaloHypo2Calo : get digits data via CaloGetterTool
+
 
 ! 2009-04-16 Olivier Deschamps
  - Calo2Calo/CaloHypo2Calo : speed-up processing + new property ('IdealGeometry') when perfect alignment is assumed
 
 !========================== CaloTools v5r7 2009-03-10 =========================
->>>>>>> 1.58
 ! 2009-03-09 Olivier Deschamps
  - Fix bad default setting for CaloHypo2Calo.cpp (Seed=false -> true)  + minor bug fix
 
