@@ -3,6 +3,11 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-04-17 - Marco Cattaneo
+ - Update references for 
+   . fix in Rich StatusCode check in case of exceptions
+   . changes to STOfflinePosition Tool (minor effect on track fit and outliers)
+
 ! 2009-04-15 - Marco Cattaneo
  - Fix Configurable to use FileRecordSvc instead of RunRecordSvc, for Gaudi v21
  - Change version to v35r0
