@@ -4,6 +4,11 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-04-17 - Chris Jones
+ - Various small monitoring changes
+  + Make PID performance plots for Long tracks as well as All tracks
+  + A few new CK theta resolution plots
+
 !======================= RichRecQC v2r27 2009-03-10 ==========================
 ! 2009-03-05 - Chris Jones
  - Suppress empty plot in MC free running from Rich::Rec::MC::PixelQC

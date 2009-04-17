@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::RecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.44 2008-10-21 19:23:41 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.45 2009-04-17 11:16:49 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -35,7 +35,8 @@ RecoQC::RecoQC( const std::string& name,
     m_trSelector        ( NULL ),
     m_isoTrack          ( NULL ),
     m_fitter            ( NULL ),
-    m_minBeta           ( Rich::NRadiatorTypes, 0.999 ),
+    m_minBeta           ( Rich::NRadiatorTypes, 0.9999 ),
+    m_maxBeta           ( Rich::NRadiatorTypes, 999.99 ),
     m_truePhotCount     ( Rich::NRadiatorTypes, 0 ),
     m_nSegs             ( Rich::NRadiatorTypes, 0 )
 {
@@ -43,6 +44,7 @@ RecoQC::RecoQC( const std::string& name,
 
   // min beta
   declareProperty( "MinBeta", m_minBeta );
+  declareProperty( "MaxBeta", m_maxBeta );
 
   // Ch Theta Rec histogram limits: low, high -> aerogel, C4F10, Cf4
   declareProperty( "ChThetaRecHistoLimitMin",
@@ -50,7 +52,7 @@ RecoQC::RecoQC( const std::string& name,
   declareProperty( "ChThetaRecHistoLimitMax",
                    m_ckThetaMax = boost::assign::list_of(0.3)(0.08)(0.05) );
   declareProperty( "CKResHistoRange",
-                   m_ckResRange = boost::assign::list_of(0.01)(0.005)(0.0025) );
+                   m_ckResRange = boost::assign::list_of(0.012)(0.006)(0.004) );
 
   declareProperty( "NumberBins", m_nBins = 100 );
 
@@ -140,8 +142,8 @@ StatusCode RecoQC::execute()
     // beta
     const double beta = m_richPartProp->beta( pTot, mcType );
     // selection cuts
-    if ( beta < m_minBeta[rad] ) continue; // skip non-saturated tracks
-    verbose() << "   => Passed min beta cut" << endreq;
+    if ( beta < m_minBeta[rad] || beta > m_maxBeta[rad] ) continue;
+    verbose() << "   => Passed beta cut" << endreq;
 
     // isolated track ?
     const bool isolated = m_isoTrack->isIsolated( segment, mcType );
@@ -153,10 +155,19 @@ StatusCode RecoQC::execute()
       const IStereoFitter::Result fitR = m_fitter->Fit( segment, config );
       // refitted CK theta
       if ( fitR.status == IStereoFitter::Result::Succeeded )
+      {
         plot1D( fitR.thcFit-thetaExpTrue,
                 hid(rad,"ckResAllStereoRefit"),
                 RAD+" Rec-Exp Cktheta : All photons : Stereographic Refit",
                 -m_ckResRange[rad], m_ckResRange[rad], m_nBins );
+        if ( isolated )
+        { 
+          plot1D( fitR.thcFit-thetaExpTrue,
+                  hid(rad,"ckResAllStereoRefitIsolated"),
+                  RAD+" Rec-Exp Cktheta : All photons : Stereographic Refit : Isolated Tracks",
+                  -m_ckResRange[rad], m_ckResRange[rad], m_nBins );
+        }
+      }
     }
 
     // loop over photons for this segment 
@@ -176,7 +187,7 @@ StatusCode RecoQC::execute()
       plot1D( thetaRec, hid(rad,"thetaRec"), RAD+" Reconstructed Ch Theta : All photons",
               m_ckThetaMin[rad], m_ckThetaMax[rad], m_nBins );
       plot1D( phiRec, hid(rad,"phiRec"), RAD+" Reconstructed Ch Phi : All photons",
-              0.0, 2*Gaudi::Units::pi, m_nBins );
+              0.0, 2.0*Gaudi::Units::pi, m_nBins );
       plot1D( thetaRec-thetaExpTrue,
               hid(rad,"ckResAll"), RAD+" Rec-Exp Cktheta : All photons",
               -m_ckResRange[rad], m_ckResRange[rad], m_nBins );
@@ -266,7 +277,7 @@ StatusCode RecoQC::finalize()
 
   // track selection
   info() << " Track Selection : " << m_trSelector->selectedTracks() << endreq;
-  info() << "                 : beta > " << m_minBeta << endreq;
+  info() << "                 : " << m_maxBeta << " > beta > " << m_minBeta << endreq;
 
   // loop over radiators
   for ( int irad = 0; irad < Rich::NRadiatorTypes; ++irad )

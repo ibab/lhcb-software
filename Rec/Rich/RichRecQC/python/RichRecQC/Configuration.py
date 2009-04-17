@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.19 2009-02-12 21:52:56 papanest Exp $"
+__version__ = "$Id: Configuration.py,v 1.20 2009-04-17 11:16:49 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -35,7 +35,7 @@ class RichRecQCConf(RichConfigurableUser):
        ,"TracklessRingMonitoring"   : False
        ,"AlignmentMonitoring" : True
        ,"PidMomentumRanges": [ [2,100], [2,10], [10,70], [70,100] ]
-       ,"PidTrackTypes":  [ ["All"] ]
+       ,"PidTrackTypes":  [ ["All"], ["Forward","Match"] ]
        ,"RecoTrackTypes": [ ["All"],
                             ["Forward","Match"],
                             ["Forward"],["Match"],["KsTrack"],["VeloTT"],["Seed"] ]
@@ -44,8 +44,9 @@ class RichRecQCConf(RichConfigurableUser):
        ,"ExpertTests" : [ "RichPixelPositions",
                           "RichTrackGeometry","RichGhostTracks","RichCKThetaResolution",
                           "RichTrackResolution","RichPhotonSignal","RichTrackCKResolutions",
-                          "RichPhotonGeometry","PhotonRecoEfficiency","RichPhotonTrajectory"
-                          #,"RichRayTracingTests","RichStereoFitterTests"
+                          "RichPhotonGeometry","PhotonRecoEfficiency","RichPhotonTrajectory",
+                          "RichStereoFitterTests"
+                          #,"RichRayTracingTests"
                           #,"RichDataObjectChecks"
                           #,"RichRecoTiming"
                           ]
@@ -96,6 +97,7 @@ class RichRecQCConf(RichConfigurableUser):
         # Suppress errors from Linker
         MessageSvc().setFatal += [ "LinkedTo::MC/Rich/Hits2MCRichOpticalPhotons",
                                    "LinkedTo::MC/Rich/MCPartsToMCRichTracks",
+                                   "Link/MC/Particles2MCRichTracks"
                                    "LinkedTo::MC/Rich/MCRichHitsToOpPhotons" ]
 
         # Expert Monitoring

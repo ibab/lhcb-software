@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::RecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.h,v 1.24 2008-05-14 09:57:42 jonrob Exp $
+ *  $Id: RichRecoQC.h,v 1.25 2009-04-17 11:16:49 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -96,7 +96,8 @@ namespace Rich
         const IStereoFitter * m_fitter;
 
         // job options selection cuts
-        std::vector<double> m_minBeta; ///< minimum beta value for 'saturated' tracks
+        std::vector<double> m_minBeta; ///< minimum beta value for tracks
+        std::vector<double> m_maxBeta; ///< maximum beta value for tracks
 
         std::vector<unsigned int> m_truePhotCount; ///< Total number of true cherenkov photons per radiator
         std::vector<unsigned int> m_nSegs;         ///< Total number of track segments per radiator

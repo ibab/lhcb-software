@@ -4,8 +4,7 @@
  *  Implementation file for algorithm class : RichAlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.cpp,v 1.10 2009-02-18 10:14:43 asolomin Exp $
-
+ *  $Id: RichAlignmentMonitor.cpp,v 1.11 2009-04-17 11:16:49 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2004-02-19
@@ -13,7 +12,6 @@
 
 // local
 #include "RichAlignmentMonitor.h"
-
 // From Gaudi
 #include "GaudiKernel/SystemOfUnits.h"
 // RichKernel
@@ -39,7 +37,6 @@ AlignmentMonitor::AlignmentMonitor( const std::string& name,
     m_ckAngle           ( 0 ),
     m_plotAllHPDs       ( false )
 {
-
   // Maximum number of tracks
   declareProperty( "MaxRichRecTracks",    m_maxUsedTracks = 200 );
   declareProperty( "DeltaThetaRange",     m_deltaThetaRange = 0.004 );
@@ -50,8 +47,8 @@ AlignmentMonitor::AlignmentMonitor( const std::string& name,
   declareProperty( "MinimalHistoOutput",  m_minimalHistoOutput = true );
   declareProperty( "OnlyPrebookedMirrors",m_onlyPrebookedMirrors = true );
   declareProperty( "HPDList",             m_HPDList );
-
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -190,7 +187,9 @@ StatusCode AlignmentMonitor::execute() {
 
     // Radiator info
     const Rich::RadiatorType rad = segment->trackSegment().radiator();
+
     if (rad == Rich::Aerogel || rich != m_rich) continue;
+
     const std::string RAD = Rich::text(rad);
 
     // track selection
@@ -228,7 +227,7 @@ StatusCode AlignmentMonitor::execute() {
 
       // Cherenkov angles
       const double thetaRec = gPhoton.CherenkovTheta();
-      const double phiRec = gPhoton.CherenkovPhi();
+      const double phiRec   = gPhoton.CherenkovPhi();
       if ( !gPhoton.primaryMirror() || !gPhoton.secondaryMirror() )
       {
         Error( "Mirror information not set in photon !" );
@@ -248,40 +247,40 @@ StatusCode AlignmentMonitor::execute() {
       }
 
       const bool unAmbiguousPhoton = photon->geomPhoton().unambiguousPhoton();
-      plot(static_cast<int>(unAmbiguousPhoton), "Un_Amb",
-           "Ambigious/Unambigious photons",-0.5,1.5,2 );
+      plot1D(static_cast<int>(unAmbiguousPhoton), "Un_Amb",
+             "Ambigious/Unambigious photons",-0.5,1.5,2 );
 
       if (m_useMCTruth && trueParent ) {
-        plot( delThetaTrue, "deltaThetaTrueAll", "Ch angle error MC ALL",
-              -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
+        plot1D( delThetaTrue, "deltaThetaTrueAll", "Ch angle error MC ALL",
+                -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
 
         if ( unAmbiguousPhoton ) {
-          plot( delThetaTrue, "deltaThetaTrueUnamb", "Ch angle error MC Unambiguous",
-                -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
-          plot( delTheta, "deltaThetaUnambTP", "Ch angle error (Tru parent only) Unamb",
-                -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
+          plot1D( delThetaTrue, "deltaThetaTrueUnamb", "Ch angle error MC Unambiguous",
+                  -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
+          plot1D( delTheta, "deltaThetaUnambTP", "Ch angle error (Tru parent only) Unamb",
+                  -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
         }
         else
-          plot( delThetaTrue, "deltaThetaTrueAmb", "Ch angle error MC Ambiguous",
-                -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
+          plot1D( delThetaTrue, "deltaThetaTrueAmb", "Ch angle error MC Ambiguous",
+                  -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
       }
 
       if ( !unAmbiguousPhoton )
       {
-        plot( delTheta, "deltaThetaAmb","Ch angle error (Ambiguous photons)",
-              -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
+        plot1D( delTheta, "deltaThetaAmb","Ch angle error (Ambiguous photons)",
+                -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
         continue;
       }
 
-      plot( delTheta, "deltaThetaUnamb","Ch angle error (Unambigous photons)",
-            -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
+      plot1D( delTheta, "deltaThetaUnamb","Ch angle error (Unambigous photons)",
+              -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
 
       int side;
 
       if ( rich == Rich::Rich1 )
       {
-        plot( sphMirNum, "sphMirR1","Sph Mirror Numbers Rich1",-0.5,3.5,4);
-        plot( flatMirNum, "fltMirR1","Flat Mirror Numbers Rich1",-0.5,15.5,16);
+        plot1D( sphMirNum, "sphMirR1","Sph Mirror Numbers Rich1",-0.5,3.5,4);
+        plot1D( flatMirNum, "fltMirR1","Flat Mirror Numbers Rich1",-0.5,15.5,16);
 
         if ( !m_minimalHistoOutput )
         {
@@ -296,8 +295,8 @@ StatusCode AlignmentMonitor::execute() {
       }
       else
       {
-        plot( sphMirNum, "sphMirR2","Sph Mirror Numbers Rich2",-0.5,55.5,56);
-        plot( flatMirNum, "fltMirR2","Flat Mirror Numbers Rich2",-0.5,39.5,40);
+        plot1D( sphMirNum, "sphMirR2","Sph Mirror Numbers Rich2",-0.5,55.5,56);
+        plot1D( flatMirNum, "fltMirR2","Flat Mirror Numbers Rich2",-0.5,39.5,40);
         if ( !m_minimalHistoOutput )
         {
           plot2D( gPhoton.sphMirReflectionPoint().x(),gPhoton.sphMirReflectionPoint().y(),
@@ -376,7 +375,7 @@ StatusCode AlignmentMonitor::execute() {
 
         if ( hpd != 0 )
         {
-          std::string hpd_id( "HPD_"+boost::lexical_cast<std::string>(hpd) );
+          const std::string hpd_id( "HPD_"+boost::lexical_cast<std::string>(hpd) );
           plot2D( phiRec, delTheta, "HPDs/"+hpd_id, hpd_id, 0.0, 2*Gaudi::Units::pi,
                   -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 );
         }
