@@ -11,6 +11,7 @@
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IProfile1D.h"
 #include "AIDA/IAxis.h"
+#include "VeloDet/DeVelo.h"
 
 class TrackVertexMonitor : public GaudiHistoAlg 
 {
@@ -41,6 +42,11 @@ private:
   double m_zpvmax ;
   double m_maxLongTrackChisqPerDof ;
   size_t m_nprbins ;
+
+  DeVelo* m_velo;
+  const DeVeloSensor* leftSensor;
+  const DeVeloSensor* rightSensor;
+  
 
   ToolHandle<ITrackVertexer> m_vertexer ;
 
@@ -117,6 +123,10 @@ StatusCode TrackVertexMonitor::initialize()
   m_twoprongDocaPull  = book1D("twoprong doca pull",-5,5) ;
   m_twoprongDocaVsEta = bookProfile1D("twoprong doca vs vs eta",2.0,5.0,m_nprbins) ;
   m_twoprongDocaVsPhi = bookProfile1D("twoprong doca vs phi",-Gaudi::Units::pi,Gaudi::Units::pi,m_nprbins) ;
+
+  m_velo = getDet<DeVelo>("/dd/Structure/LHCb/BeforeMagnetRegion/Velo" );
+  leftSensor = (m_velo->sensor(0));
+  rightSensor = (m_velo->sensor(1)) ;
 
   return sc;
 }
@@ -223,6 +233,7 @@ StatusCode TrackVertexMonitor::execute()
     plot( pv->position().x(), "PV x position",-m_rpvmax,m_rpvmax) ;
     plot( pv->position().y(), "PV y position",-m_rpvmax,m_rpvmax) ;
     plot( pv->position().z(), "PV z position", m_zpvmin,m_zpvmax) ;
+ 
     if( fabs( pv->position().y() ) < m_rpvmax ) 
       profile1D( pv->position().z(), pv->position().y(),"PV y versus z",m_zpvmin,m_zpvmax,m_nprbins) ;
     if( fabs( pv->position().x() ) < m_rpvmax ) 
@@ -241,16 +252,21 @@ StatusCode TrackVertexMonitor::execute()
     if( lefttracks.size() >= 2 && righttracks.size() >= 2 ) {
       // fit two vertices
       LHCb::RecVertex* leftvertex  = m_vertexer->fit( lefttracks ) ;
+      
       if( leftvertex ) {
-	plot( leftvertex->position().x(), "PV left x",-m_rpvmax,m_rpvmax) ;
-	plot( leftvertex->position().y(), "PV left y",-m_rpvmax,m_rpvmax) ;
-	plot( leftvertex->position().z(), "PV left z", m_zpvmin,m_zpvmax) ;
-      }
+        plot( leftvertex->position().x(), "PV left x",-m_rpvmax,m_rpvmax) ;
+        plot( leftvertex->position().y(), "PV left y",-m_rpvmax,m_rpvmax) ;
+        plot( leftvertex->position().z(), "PV left z", m_zpvmin,m_zpvmax) ;
+        plot( -(leftSensor->globalToVeloHalfBox(leftvertex->position())).x(), "PV left-Left half x",-m_rpvmax/2,m_rpvmax/2) ;
+        plot( -(leftSensor->globalToVeloHalfBox(leftvertex->position())).y(), "PV left-Left half y",-m_rpvmax/2,m_rpvmax/2) ;
+	      }
       LHCb::RecVertex* rightvertex = m_vertexer->fit( righttracks ) ;
       if( rightvertex) {
-	plot( rightvertex->position().x(), "PV right x",-m_rpvmax,m_rpvmax) ;
-	plot( rightvertex->position().y(), "PV right y",-m_rpvmax,m_rpvmax) ;
-	plot( rightvertex->position().z(), "PV right z", m_zpvmin,m_zpvmax) ;
+        plot( rightvertex->position().x(), "PV right x",-m_rpvmax,m_rpvmax) ;
+        plot( rightvertex->position().y(), "PV right y",-m_rpvmax,m_rpvmax) ;
+        plot( rightvertex->position().z(), "PV right z", m_zpvmin,m_zpvmax) ;
+        plot( -(rightSensor->globalToVeloHalfBox(rightvertex->position())).x(), "PV right-Right half x",-m_rpvmax/2,m_rpvmax/2) ;
+        plot( -(rightSensor->globalToVeloHalfBox(rightvertex->position())).y(), "PV right-Right half y",-m_rpvmax/2,m_rpvmax/2) ;
       }
       if( leftvertex && rightvertex) {
 	// draw the difference
