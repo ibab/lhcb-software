@@ -1,4 +1,4 @@
-// $Id: TransportSvc.h,v 1.6 2008-06-02 11:30:58 cattanem Exp $ 
+// $Id: TransportSvc.h,v 1.7 2009-04-17 12:47:39 cattanem Exp $ 
 // ============================================================================
 #ifndef     _DETDESCSVC_TRANSPORTSVC_H
 #define     _DETDESCSVC_TRANSPORTSVC_H
@@ -95,24 +95,24 @@ public:
    *  @see ITransportSvc
    *  @see IGeometryInfo
    *  @see ILVolume
-   *  @param Point               initial point on the line  
-   *  @param Vector              direction vector of the line 
-   *  @param TickMin             minimal value of line paramater
-   *  @param TickMax             maximal value of line parameter 
-   *  @param Intersept           (output) container of intersections
-   *  @param Threshold           threshold value 
-   *  @param AlternativeGeometry source of alternative geometry information 
-   *  @param GeometryGuess       a guess for navigation 
+   *  @param point               initial point on the line  
+   *  @param vect                direction vector of the line 
+   *  @param tickMin             minimal value of line paramater
+   *  @param tickMax             maximal value of line parameter 
+   *  @param intersept           (output) container of intersections
+   *  @param threshold           threshold value 
+   *  @param alternativeGeometry source of alternative geometry information 
+   *  @param geometryGuess       a guess for navigation 
    */
   virtual unsigned long intersections
-  ( const Gaudi::XYZPoint&   Point               ,   
-    const Gaudi::XYZVector&  Vector              ,    
-    const ISolid::Tick&      TickMin             ,    
-    const ISolid::Tick&      TickMax             ,    
-    ILVolume::Intersections& Intersept           ,    
-    double                   Threshold           ,    
-    IGeometryInfo*           AlternativeGeometry ,    
-    IGeometryInfo*           GeometryGuess       )  ; 
+  ( const Gaudi::XYZPoint&   point               ,   
+    const Gaudi::XYZVector&  vect                ,    
+    const ISolid::Tick&      tickMin             ,    
+    const ISolid::Tick&      tickMax             ,    
+    ILVolume::Intersections& intersept           ,    
+    double                   threshold           ,    
+    IGeometryInfo*           alternativeGeometry ,    
+    IGeometryInfo*           geometryGuess       )  ; 
   // ==========================================================================
 public:
   // ==========================================================================

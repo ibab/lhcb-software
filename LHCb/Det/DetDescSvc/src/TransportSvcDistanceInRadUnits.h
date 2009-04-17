@@ -1,4 +1,4 @@
-// $Id: TransportSvcDistanceInRadUnits.h,v 1.3 2006-07-26 09:46:58 cattanem Exp $
+// $Id: TransportSvcDistanceInRadUnits.h,v 1.4 2009-04-17 12:47:39 cattanem Exp $
 // ============================================================================
 #ifndef    __DETDESC_TRANSPORTSVC_TRASNPORTSVCDISTANCEINRADUNITS_H__
 #define    __DETDESC_TRANSPORTSVC_TRASNPORTSVCDISTANCEINRADUNITS_H__ 1
@@ -24,11 +24,11 @@
 /** Estimate the distance between 2 points in 
  *  units of radiation length units 
  *  @see ITransportSvc 
- *  @param Point1 first point
- *  @param Point2 second point 
- *  @param Threshold threshold value 
- *  @param AlternativeGeometry  source ot alternative geomtry 
- *  @param GeometryGuess guess for geometry
+ *  @param point1 first point
+ *  @param point2 second point 
+ *  @param threshold threshold value 
+ *  @param alternativeGeometry  source ot alternative geomtry 
+ *  @param geometryGuess guess for geometry
  *  @return distance in rad length units 
  */
 // ============================================================================

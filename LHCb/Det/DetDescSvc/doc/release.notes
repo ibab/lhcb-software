@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.65 2009-02-18 12:51:21 cattanem Exp $ 
+! $Id: release.notes,v 1.66 2009-04-17 12:47:39 cattanem Exp $ 
 ! =============================================================================
 ! package DetDescSvc
 ! package manager : Marco Clemencic, Juan Palacios ?
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
+
+! 2009-04-17 - Marco Cattaneo
+ - Replace endreq by endmsg
+ - Fix doxygen warnings
 
 !========================= DetDescSvc v2r3 2009-02-18 =========================
 ! 2009-02-16 - Marco Cattaneo

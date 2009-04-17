@@ -1,4 +1,4 @@
-// $Id: TransportSvc.cpp,v 1.9 2008-01-22 16:03:04 cattanem Exp $
+// $Id: TransportSvc.cpp,v 1.10 2009-04-17 12:47:39 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -135,7 +135,7 @@ StatusCode TransportSvc::initialize()
   else { 
     log << MSG::FATAL
         << " Unable to locate  Detector Data Service=" 
-        << m_detDataSvc_name << endreq; 
+        << m_detDataSvc_name << endmsg; 
     m_detDataSvc = 0 ;  
     return StatusCode::FAILURE ;
   } 
@@ -150,7 +150,7 @@ StatusCode TransportSvc::initialize()
   if ( 0 == DetDesc::IntersectionErrors::service() ) 
   {
     log << MSG::INFO 
-        << "Initialize the static pointer to DetDesc::IGeometryErrorSvc" << endreq ;
+        << "Initialize the static pointer to DetDesc::IGeometryErrorSvc" << endmsg ;
     DetDesc::IntersectionErrors::setService ( this ) ;
   }
 
@@ -269,7 +269,7 @@ StatusCode TransportSvc::finalize()
   if ( this == DetDesc::IntersectionErrors::service() ) 
   {
     log << MSG::INFO 
-        << "Reset the static pointer to DetDesc::IGeometyrErrorSvc" << endreq ;
+        << "Reset the static pointer to DetDesc::IGeometyrErrorSvc" << endmsg ;
     DetDesc::IntersectionErrors::setService ( 0 ) ;
   }
   ///
@@ -279,9 +279,9 @@ StatusCode TransportSvc::finalize()
     {
       log << MSG::ERROR
           << "DetDesc::IntersectionErrors has " 
-          << nErrors << " errors " << endreq ;
+          << nErrors << " errors " << endmsg ;
       log << MSG::ERROR
-          << "Rerun the job with activated error handling!" << endreq ;  
+          << "Rerun the job with activated error handling!" << endmsg ;  
     }
   }  
   ///
@@ -293,7 +293,7 @@ StatusCode TransportSvc::finalize()
     { detSvc      () -> release()    ; m_detDataSvc       = 0 ; } 
   }  
   ///
-  log << MSG::DEBUG << "Service finalised successfully" << endreq;
+  log << MSG::DEBUG << "Service finalised successfully" << endmsg;
   ///  
   return Service::finalize();
   ///
@@ -353,7 +353,7 @@ void TransportSvc::setCode
 /*  inspect the potential error in intersections 
  *  @param  volume   the problematic volume 
  *  @param  point    3D point 
- *  @param  vector   3D direction vector 
+ *  @param  vect     3D direction vector 
  *  @param  cnt  the problematic container of intersections  
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2007-12-14
@@ -369,12 +369,12 @@ void TransportSvc::inspect
   MsgStream log ( msgSvc () , name () );
   
   log << MSG::ERROR 
-      << " DetDesc::IntersectionError for LV='" << volume->name()  <<"'" << endreq ;
+      << " DetDesc::IntersectionError for LV='" << volume->name()  <<"'" << endmsg ;
   log << MSG::ERROR 
       << " Local Frame: " 
       << " point="       << pnt 
       << "/vector="      << vect 
-      << " Tick Length=" << vect.R() << endreq ;
+      << " Tick Length=" << vect.R() << endmsg ;
   
   boost::format fmt1 
     ( "| %1$1.1s |%2$=15.15s %3$=15.15s|%4$=27.27s %5$=27.27s|%6$=3s %7$=16.16s | %8$=16.16s |" ) ;
@@ -386,7 +386,7 @@ void TransportSvc::inspect
   fmt1 % "#"             ;
   fmt1 % "phys.volume"   ;
   fmt1 % "material"      ;
-  log << MSG::ERROR << fmt1.str() << endreq ;
+  log << MSG::ERROR << fmt1.str() << endmsg ;
   
   for ( ILVolume::Intersections::const_iterator i = 
           cnt.begin() ; cnt.end() != i ; ++i ) 
@@ -430,7 +430,7 @@ void TransportSvc::inspect
     else { fmt %  std::string ( n , n.size() - 16 ) ; } // (6) the material name
     
     //
-    log << MSG::ERROR << fmt.str() << endreq ;
+    log << MSG::ERROR << fmt.str() << endmsg ;
   }
 }
 // ============================================================================
