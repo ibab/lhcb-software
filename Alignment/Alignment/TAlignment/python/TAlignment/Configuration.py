@@ -62,7 +62,7 @@ class TAlignment( LHCbConfigurableUser ):
             mainseq = GaudiSequencer("Align")
             
         import  TAlignment.TAlignmentConf 
-        if self.getProp("Method") == 'Millepede' :
+        if self.getProp("Method") == 'Millepede' and "OT" in self.getProp("Detectors"):
             self.setProp("Incident", 'GlobalMPedeFit')
             ga = TAlignment.TAlignmentConf.GAlign()
             print "Adding ", ga.name(), " to sequence ", mainseq.name()

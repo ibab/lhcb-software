@@ -2,6 +2,7 @@ from TAlignment.TAlignmentConf import GAlign
 GAlign().forceIterations = False
 GAlign().MinIterations = 7
 GAlign().MaxIterations = 7
+GAlign().OutputLevel = 4
 GAlign().evtsPerRun = 3000
 from Configurables import AlignTrTools
 AlignTrTools().Tools = ["TAConfig", "Derivatives", "WriteAlignmentConditions" ]
