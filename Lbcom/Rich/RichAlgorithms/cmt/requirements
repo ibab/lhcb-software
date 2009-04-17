@@ -3,25 +3,24 @@
 # Maintainer : Chris Jones
 #============================================================================
 package           RichAlgorithms
-version           v1r0
+version           v1r1
 
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc src
+
 #============================================================================
-# Used packages. Specify the version, * at the end specifies 'any revision'
-#    Put as many lines as needed, with all packages, without the '#'
+# Used packages.
 #============================================================================
 use   RichKernel   v*  Rich
 use   RichDet      v*  Det
 
 include_path      none
+
 #============================================================================
 # Component library building rule
 #============================================================================
 library          RichAlgorithms    ../src/*.cpp 
-#============================================================================
-# define component library link options
-#============================================================================
 apply_pattern    component_library library=RichAlgorithms
+
