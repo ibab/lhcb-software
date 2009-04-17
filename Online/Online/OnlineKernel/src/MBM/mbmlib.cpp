@@ -876,8 +876,11 @@ int _mbm_get_sp (BMID bm, USER* us, int size, int** ptr)  {
 
 // try to get a single event ... 
 int _mbm_get_ev(BMID bm, USER* u)  {
-  MBMQueue<EVENT> que(bm->evDesc, -EVENT_next_off);
-  for(EVENT* e = que.get(); e != 0; e = que.get() )  {
+  //MBMQueue<EVENT> que(bm->evDesc, -EVENT_next_off);
+  //for(EVENT* e = que.get(); e != 0; e = que.get() )  {
+  EVENT* start = (EVENT*)bm->evDesc;
+  for(EVENT* ee = (EVENT*)(((char*)start)+(((long)start->next))); ee != start; ee = (EVENT*)(((char*)ee)+(((long)ee->next))) )  {
+    EVENT* e = add_ptr(ee,-EVENT_next_off);
     if ( e->isValid() && (e->busy != 2) && (e->busy !=0) )  {
       int req_one = e->umask2.test(u->uid);
       if ( req_one || e->umask0.test(u->uid) || e->umask1.test(u->uid) )  {
@@ -1871,8 +1874,12 @@ int _mbm_check_cons (BMID bm)  {
   if (us->uid != owner)  {
     _mbm_return_err (MBM_INTERNAL);
   }
-  MBMQueue<EVENT> que(bm->evDesc, -EVENT_next_off);
-  for(EVENT* e=que.get(); e; e=que.get() )  {
+  //MBMQueue<EVENT> que(bm->evDesc, -EVENT_next_off);
+  //for(EVENT* e=que.get(); e; e=que.get() )  {
+  EVENT* start = (EVENT*)bm->evDesc;
+  EVENT* ee = (EVENT*)bm->evDesc;
+  for(ee = (EVENT*)(((char*)ee)+(((long)ee->next))); ee != start; ee = (EVENT*)(((char*)ee)+(((long)ee->next))) )  {
+    EVENT* e = add_ptr(ee,-EVENT_next_off);
     e->isValid();
     if (e->busy != 2)     {
       continue;
