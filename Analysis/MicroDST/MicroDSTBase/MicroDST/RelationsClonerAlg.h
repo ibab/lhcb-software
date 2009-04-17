@@ -1,4 +1,4 @@
-// $Id: RelationsClonerAlg.h,v 1.6 2009-04-17 20:51:50 jpalac Exp $
+// $Id: RelationsClonerAlg.h,v 1.7 2009-04-17 21:45:42 jpalac Exp $
 #ifndef MICRODST_RELATIONSCLONERALG_H 
 #define MICRODST_RELATIONSCLONERALG_H 1
 
@@ -34,8 +34,7 @@ namespace MicroDST
     typedef Defaults<TABLE> DEFAULTS;
     typedef Location<TABLE> LOCATION;
     typedef typename BindType2Cloner<TABLE>::toCloner CLONER;
-    typedef boost::function< const typename TABLE::From (const typename TABLE::From )> FromCloner;
-    typedef boost::function< const typename TABLE::To (const typename TABLE::To )> ToCloner;
+    typedef Relations::TableCloner<TABLE> TableCloner;
 
   public:
     //===========================================================================
@@ -44,10 +43,10 @@ namespace MicroDST
       :
       MicroDSTAlgorithm ( name , pSvcLocator ),
       m_cloner(0),
-      m_clonerType(DEFAULTS::clonerType)
+      m_clonerType(DEFAULTS::clonerType),
+      m_tableCloner(boost::bind(&RelationsClonerAlg<TABLE>::cloneFrom, &(*this), _1),
+                    boost::bind(&RelationsClonerAlg<TABLE>::cloneTo, &(*this), _1))               
     {
-      m_fromCloner = boost::bind(&RelationsClonerAlg<TABLE>::cloneFrom, &(*this), _1);
-      m_toCloner = boost::bind(&RelationsClonerAlg<TABLE>::cloneTo, &(*this), _1);
       declareProperty("ClonerType", m_clonerType);
     }
     //===========================================================================
@@ -98,7 +97,7 @@ namespace MicroDST
         const TABLE* table = get<TABLE>(inputTESLocation());
         if (table) {
           verbose() << "found table!" << endmsg;
-          TABLE* cloneTable = tableOfClones(table);
+          TABLE* cloneTable = m_tableCloner(table);
           verbose() << "Going to store relations table from " 
                     << inputTESLocation()
                     << " into " << fullOutputTESLocation() << endmsg;
@@ -129,52 +128,6 @@ namespace MicroDST
     typedef typename BindType2Cloner<TABLE>::toType TO_TYPE;
     typedef typename boost::remove_pointer<typename TABLE::From>::type _From;
 
-    TABLE* tableOfClones(const TABLE* table) 
-    {
-
-      TABLE* cloneTable = new TABLE();
-
-      typename TABLE::Range relations = table->relations();
-      verbose() << "Found " << relations.size() 
-                << " relations" << endmsg;
-      typename Relations::Traits<TABLE>::EntryCloner entryCloner(m_fromCloner,
-                                                                 m_toCloner);
-
-      for (typename TABLE::Range::const_iterator iRel = relations.begin();
-           iRel != relations.end();
-           ++iRel ) {
-        const typename TABLE::From from = iRel->from();
-        if (from) {
-          typename TABLE::Range range = table->relations(from);
-          for (typename TABLE::Range::const_iterator iRange = range.begin();
-               iRange != range.end();
-               ++iRange) {
-            //           verbose() << "\nFrom " << *from 
-            //                     << " is related to To " 
-            //                     << *(iRange->to()) 
-            //                     << " with weight " << iRange->weight() << endmsg;
-            entryCloner(*iRange, cloneTable);
-            //           const typename TABLE::From clonedFrom = 
-            //             getStoredClone< _From >(from);
-            //           const typename TABLE::To storedTo = 
-            //             getStoredClone< TO_TYPE >( iRange->to());
-            //           const typename TABLE::To clonedTo = (0!=storedTo) ? storedTo : 
-            //             (*m_cloner)( iRange->to() );
-            //           if (clonedFrom&&clonedTo) {
-            //             cloneTable->relate(clonedFrom, clonedTo, iRange->weight());
-            //             verbose() << "\ncloned From "    
-            //                       << *clonedFrom 
-            //                       << " is related to cloned To " 
-            //                       << *clonedTo 
-            //                       << " with weight " << iRange->weight() << endmsg;
-            //           } // if cloned From AND cloned To
-          } // loop on related Tos
-        } // if From* found
-      } // loop on all relations
-  
-      return cloneTable;
-
-    }
 
   private:
     inline const CLONER* cloner() { return m_cloner; }
@@ -194,9 +147,8 @@ namespace MicroDST
 
     CLONER* m_cloner;
     std::string m_clonerType;
-    FromCloner m_fromCloner;
-    ToCloner m_toCloner;
-
+    TableCloner m_tableCloner;
+    
   };
 
 

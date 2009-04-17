@@ -1,4 +1,4 @@
-// $Id: TableExtraTraits.h,v 1.1 2009-04-17 20:49:20 jpalac Exp $
+// $Id: TableExtraTraits.h,v 1.2 2009-04-17 21:45:42 jpalac Exp $
 #ifndef MICRODST_TABLETRAITS_H 
 #define MICRODST_TABLETRAITS_H 1
 
@@ -112,6 +112,44 @@ namespace Relations
   {
     typedef Relations::WEntry_<LHCb::Particle, LHCb::VertexBase, double> Entry;
     typedef WEntryCloner< LHCb::RelationWeighted1D<LHCb::Particle,LHCb::VertexBase, double> > EntryCloner;    
+  };
+
+  template <class TABLE>
+  struct TableCloner
+  {
+    TableCloner(const typename Relations::Cloners<TABLE>::From& fromCloner,
+                const typename Relations::Cloners<TABLE>::To& toCloner)
+      :
+      m_cloner(fromCloner, toCloner)
+    {
+    }
+    TABLE* operator() (const TABLE* table) 
+    {
+      TABLE* cloneTable = new TABLE();
+
+      typename TABLE::Range relations = table->relations();
+
+      for (typename TABLE::Range::const_iterator iRel = relations.begin();
+           iRel != relations.end();
+           ++iRel ) {
+        if ( iRel->from() ) {
+          typename TABLE::Range range = table->relations(iRel->from());
+          for (typename TABLE::Range::const_iterator iRange = range.begin();
+               iRange != range.end();
+               ++iRange) {
+            m_cloner(*iRange, cloneTable);
+          } // loop on related Tos
+        } // if From* found
+      } // loop on all relations
+  
+      return cloneTable;
+
+    }
+  protected:
+    typename Relations::Traits<TABLE>::EntryCloner m_cloner;
+
+  private:
+    TableCloner() {}
   };
   
   
