@@ -3,15 +3,13 @@
 #  @author Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.6 2009-04-15 16:11:48 jblouw Exp $"
+__version__ = "$Id: Configuration.py,v 1.7 2009-04-17 13:04:56 jblouw Exp $"
 __author__  = "Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>"
 
 from Gaudi.Configuration  import *
 import GaudiKernel.ProcessJobOptions
 from Configurables import ( LHCbConfigurableUser, LHCbApp, RecSysConf, TrackSys,
-                            ProcessPhase, GaudiSequencer, DstConf, TAlignment )
-
-#importOptions('$STDOPTS/PreloadUnits.opts')
+                            ProcessPhase, GaudiSequencer, DstConf, TAlignment, VeloAlignment )
 
 
 ## @class Escher
@@ -21,7 +19,7 @@ from Configurables import ( LHCbConfigurableUser, LHCbApp, RecSysConf, TrackSys,
 class Escher(LHCbConfigurableUser):
 
     ## Possible used Configurables
-    __used_configurables__ = [ TAlignment, TrackSys, RecSysConf, LHCbApp, DstConf ]
+    __used_configurables__ = [ TAlignment, VeloAlignment, TrackSys, RecSysConf, LHCbApp, DstConf ]
 
     ## Default main sequences for real and simulated data
     DefaultSequence = [   "ProcessPhase/Init"
@@ -127,8 +125,12 @@ class Escher(LHCbConfigurableUser):
             log.info("Using Millepede type alignment!")
             self.setProp("Incident", "GlobalMPedeFit")
             if "VELO" in self.getProp("Detectors") : # generate the proper tracking sequence depending on which detectors one wants to align            
-               TrackSys.TrackPatRecAlgorithms = ["Velo"] 
+               TrackSys.TrackPatRecAlgorithms = ["PatSeed"]
                log.info("Aligning VELO")
+               va = VeloAlignment()
+               va.ElementsToAlign = [ self.getProp( "AlignmentLevel" ) ]
+               va.Sequencer = GaudiSequencer("VeloAlignSeq")
+               alignSeq.Members.append( va.Sequencer )
             if "OT" in self.getProp("Detectors") or "ot" in self.getProp("Detectors"):
 	       log.info("Aligning OT")
                TrackSys.TrackPatRecAlgorithms = ["PatSeed"]
