@@ -1,4 +1,4 @@
-// $Id: FarmMonitor.h,v 1.3 2009-03-26 14:49:05 frankb Exp $
+// $Id: FarmMonitor.h,v 1.4 2009-04-17 13:16:37 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmMonitor.h,v 1.3 2009-03-26 14:49:05 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmMonitor.h,v 1.4 2009-04-17 13:16:37 frankb Exp $
 #ifndef ROMON_FARMMONITOR_H
 #define ROMON_FARMMONITOR_H 1
 
@@ -71,7 +71,15 @@ namespace ROMon {
     ERR_NODE_STUCK             = 19  +ERR_LVL_ALARM,
     ERR_LAST_ERROR             = 20  +ERR_LVL_MONITOR,
     ERR_REMOVED                = 21  +ERR_LVL_MONITOR,
-    ERR_REMOVEDALL             = 22  +ERR_LVL_MONITOR
+    ERR_REMOVEDALL             = 22  +ERR_LVL_MONITOR,
+
+
+    ERR_NODE_DEAD              = 41  +ERR_LVL_ALARM,
+    ERR_NO_PVSS_PROJECT        = 42  +ERR_LVL_ERROR,
+    ERR_NO_CONNECTIONS         = 43  +ERR_LVL_ERROR,
+    ERR_CONNECTION_MISSING     = 44  +ERR_LVL_WARNING,
+    ERR_NO_TASKS               = 45  +ERR_LVL_ALARM,
+    ERR_TASK_MISSING           = 46  +ERR_LVL_ERROR
   };
 
   class AlarmTag {
@@ -201,10 +209,10 @@ namespace ROMon {
     virtual void setTimeoutError();
 
     /// Extract data for monitoring
-    virtual void extractData(const Nodeset& ns) = 0;
+    virtual void extractData(const Nodeset& /* ns */) {}
 
     /// Analyse monitored data
-    virtual void analyzeData() = 0;
+    virtual void analyzeData() {}
 
     /// Check monitor for errors
     virtual void check(time_t now);

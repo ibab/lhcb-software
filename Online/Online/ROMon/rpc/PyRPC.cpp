@@ -735,7 +735,7 @@ bool Server::connect(const string& server, int port) {
       return true;
     }
     cout << RTL::processName() << " Connect failed to " << server
-         << ::strerror(m_channel->error()) << endl;
+         << "  [" << ::strerror(m_channel->error()) << "]" << endl;
     delete m_channel;
     m_channel = 0;
     return false;

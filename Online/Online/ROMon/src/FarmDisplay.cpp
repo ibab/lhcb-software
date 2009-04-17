@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.38 2009-02-24 16:05:42 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.39 2009-04-17 13:16:37 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,13 +11,10 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.38 2009-02-24 16:05:42 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.39 2009-04-17 13:16:37 frankb Exp $
 
-#include "ROMon/CtrlSubfarmDisplay.h"
-#include "ROMon/RecSubfarmDisplay.h"
-#include "ROMon/MonitoringDisplay.h"
-#include "ROMon/SubfarmDisplay.h"
-#include "ROMon/StorageDisplay.h"
+// Framework include files
+#include "ROMon/ClusterDisplay.h"
 #include "ROMon/FarmDisplay.h"
 #include "ROMon/CPUMon.h"
 #include "SCR/MouseSensor.h"
@@ -50,14 +47,13 @@ typedef Nodeset::Nodes               Nodes;
 typedef Node::Buffers                Buffers;
 typedef MBMBuffer::Clients           Clients;
 typedef Node::Tasks                  Tasks;
+typedef vector<string>               StringV;
 
 // Max. 15 seconds without update allowed
 #define UPDATE_TIME_MAX 15
 
-typedef vector<string> StringV;
-
 static FarmDisplay* s_fd = 0;
-static const char *sstat[17] = {" nl", "   ", "*SL","*EV","*SP","WSL","WEV","WSP","wsl","wev","wsp"," ps"," ac", "SPR", "WER", "   "};
+
 //static const int   INT_min = numeric_limits<int>::min();
 static const int   INT_max = numeric_limits<int>::max();
 static const float FLT_max = numeric_limits<float>::max();
@@ -83,6 +79,11 @@ namespace ROMon {
   InternalDisplay* createCtrlFarmSubDisplay(FarmDisplay* parent, const string& title);
   InternalDisplay* createMonitoringSubDisplay(FarmDisplay* parent, const string& title);
   InternalDisplay* createStorageSubDisplay(FarmDisplay* parent, const string& title);
+  ClusterDisplay*  createSubfarmDisplay(int width, int height, int posx, int posy, int argc, char** argv);
+  ClusterDisplay*  createRecSubfarmDisplay(int width, int height, int posx, int posy, int argc, char** argv);
+  ClusterDisplay*  createCtrlSubfarmDisplay(int width, int height, int posx, int posy, int argc, char** argv);
+  ClusterDisplay*  createStorageDisplay(int width, int height, int posx, int posy, int argc, char** argv);
+  ClusterDisplay*  createMonitoringDisplay(int width, int height, int posx, int posy, int argc, char** argv);
 }
 namespace {
   struct DisplayUpdate {
@@ -133,497 +134,6 @@ HelpDisplay::HelpDisplay(FarmDisplay* parent, const string& title, const string&
     }
   }
   ::scrc_set_border(m_display,head.c_str(),INVERSE|BLUE);
-}
-
-
-BufferDisplay::BufferDisplay(FarmDisplay* parent, const string& title) 
-  : InternalDisplay(parent,title), m_node(0)
-{
-  ::scrc_create_display(&m_display,55,130,MAGENTA,ON,"MBM Monitor display for node:");
-}
-
-void BufferDisplay::update(const void* data) {
-  const Nodeset* ns = (const Nodeset*)data;
-  if ( 0 != ns ) {
-    string key;
-    map<string,string> entries;
-    StringV lines;
-    string nam;
-    int line = 0, node = 0;
-    char txt[1024], name[128];
-    char *p, *bnam, *cnam;
-    Nodes::const_iterator n;
-
-    for (n=ns->nodes.begin(), line=1; n!=ns->nodes.end(); n=ns->nodes.next(n), ++node)  {
-      if ( node == m_node ) {
-        time_t tim = (*n).time;
-        const Buffers& buffs = *(*n).buffers();
-        ::strftime(name,sizeof(name),"%H:%M:%S",::localtime(&tim));
-        ::sprintf(txt,"MBM Monitor display for node:%s  [%s]",(*n).name,name);
-        ::scrc_set_border(m_display,txt,BLUE|INVERSE);
-        for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
-          const Buffers::value_type::Control& c = (*ib).ctrl;
-          bnam = (char*)(*ib).name;
-          //if ( ::strlen(bnam)>10 ) {
-          //  p = strchr(bnam,'_');
-          //  if ( p ) *p = 0;
-          //}
-          ::sprintf(name," Buffer \"%s\"",bnam);
-          ::sprintf(txt,"%-26s  Events: Produced:%d Actual:%d Seen:%d Pending:%d Max:%d",
-                    name, c.tot_produced, c.tot_actual, c.tot_seen, c.i_events, c.p_emax);
-          ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
-          ::sprintf(txt,"%-26s  Space(kB):[Tot:%d Free:%d] Users:[Tot:%d Max:%d]",
-                    "",(c.bm_size*c.bytes_p_Bit)/1024, (c.i_space*c.bytes_p_Bit)/1024, 
-                    c.i_users, c.p_umax);
-          ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
-          ::scrc_put_chars(m_display,"  Occupancy [Events]:",NORMAL,++line,1,1);
-          draw_bar(29,line,float(c.i_events)/float(c.p_emax),95);
-          ::scrc_put_chars(m_display,"            [Space]: ",NORMAL,++line,1,1);
-          draw_bar(29,line,float(c.bm_size-c.i_space)/float(c.bm_size),95);
-          ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
-        }
-        break;
-      }
-    }
-    if ( line > 1 ) {
-      ::sprintf(txt,"%-20s%5s%6s  %6s%12s %-4s %s","   Name","Part","PID","State","Seen/Prod","REQ","Buffer");
-      ::scrc_put_chars(m_display,txt,INVERSE,++line,1,0);
-      ::scrc_put_chars(m_display,txt,INVERSE,line,3+m_display->cols/2,1);
-    }
-    else {
-      time_t t = ::time(0);
-      ::scrc_put_chars(m_display,"   Unknown Node. No buffers found.",INVERSE|BOLD,++line,1,1);
-      ::strftime(txt,sizeof(txt),"           %H:%M:%S",::localtime(&t));
-      ::scrc_put_chars(m_display,txt,INVERSE|BOLD,++line,1,1);
-      ::scrc_set_border(m_display,"Unknown Node. No buffers found.",INVERSE|RED|BOLD);
-    }
-    for (n=ns->nodes.begin(), node=0; n!=ns->nodes.end(); n=ns->nodes.next(n), ++node)  {
-      if ( node == m_node ) {
-        const Buffers& buffs = *(*n).buffers();
-        for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
-          const Clients& clients = (*ib).clients;
-          char* bnam = (char*)(*ib).name;
-	  if ( ::strncmp(bnam,"Events_",7)==0 ) bnam += 7;
-          for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
-            Clients::const_reference c = (*ic);
-            cnam = (char*)c.name;
-            if ( ::strlen(cnam)>19 ) {
-              p = ::strchr(cnam,'_');
-              if ( p ) cnam = ++p;
-              if ( ::strlen(cnam)>19 ) {
-                p = ::strchr(cnam,'_');
-                if ( p ) cnam = ++p;
-              }
-            }
-            if ( c.type == 'C' )
-              ::sprintf(txt,"%-20s%5X%6d C%6s%12d %c%c%c%c %s",cnam,c.partitionID,c.processID,
-                        sstat[(size_t)c.state],c.events,c.reqs[0],c.reqs[1],c.reqs[2],c.reqs[3],bnam);
-            else if ( c.type == 'P' )
-              ::sprintf(txt,"%-20s%5X%6d P%6s%12d %4s %s",cnam,c.partitionID,c.processID,
-                        sstat[(size_t)c.state],c.events,"",bnam);
-            else
-              ::sprintf(txt,"%-20s%5X%6d ?%6s%12s %4s %s",cnam,c.partitionID,c.processID,"","","",bnam);
-            key = bnam;
-            key += cnam;
-            entries[key] = txt;
-          }
-        }
-        break;
-      }
-    }
-    lines.clear();
-    for(map<string,string>::const_iterator m=entries.begin();m!=entries.end();++m) {
-      lines.push_back((*m).second);
-    }
-    
-    for(size_t i=0,len=lines.size(),cnt=len/2+(len%2),j=cnt; i<cnt; ++i, ++j)  {
-      if ( j<len ) {
-        ::sprintf(name,"%%-%ds  %%-%ds",m_display->cols/2,m_display->cols/2);
-        ::sprintf(txt,name,lines[i].c_str(),lines[j].c_str());
-      }
-      else {
-        ::sprintf(name,"%%-%ds",m_display->cols);
-        ::sprintf(txt,name,lines[i].c_str());
-      }
-      ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
-    }
-    ::memset(txt,' ',m_display->cols);
-    txt[m_display->cols-1]=0;
-    while(line<m_display->rows)
-      ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
-  }
-}
-
-CtrlDisplay::CtrlDisplay(FarmDisplay* parent, const string& title) 
-  : InternalDisplay(parent,title), m_node(0)
-{
-  ::scrc_create_display(&m_display,55,130,MAGENTA,ON,"Node Control display for node:");
-}
-
-void CtrlDisplay::update(const void* data) {
-  char txt[255], name[255];
-  time_t tim = ::time(0);
-  int node=0, cnt=0, line=1;
-  Cluster* c = (Cluster*)data;
-  if ( c ) {
-    const Cluster::Nodes& n = c->nodes;
-    //const char* fmt = "  %-24s %12s %17zd / %-5zd     %17zd / %-5zd      %s";
-
-    ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
-    ::sprintf(txt, "  Cluster:%s  status:%12s  last update:%s",c->name.c_str(),c->status.c_str(),c->time.c_str());
-    ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
-    for(Cluster::Nodes::const_iterator i=n.begin(); i!=n.end();++i, ++node) {
-      if ( node == m_node ) {
-        const Cluster::Node& n = (*i).second;
-        Cluster::Node::Tasks::const_iterator j;
-        ::strftime(name,sizeof(name),"%H:%M:%S",::localtime(&tim));
-        ::sprintf(txt,"Task Control display for node:%s  [%s]",n.name.c_str(),name);
-        ::scrc_set_border(m_display,txt,BLUE|INVERSE);
-
-        ::sprintf(txt, "  Node:%s  last update:%s",n.name.c_str(),n.time.c_str());
-        ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
-
-        ::sprintf(txt," %-12s %8s    Tasks       Connections  %6s %6s %6s %6s %3s %3s",
-                  "","","RSS","Stack","Data","VSize","CPU","MEM");
-        ::scrc_put_chars(m_display,txt,INVERSE,++line,1,1);
-        ::sprintf(txt," %-12s %8s found/missing found/missing %6s %6s %6s %6s %3s %3s %s",
-                  "Node","Status","[MB]","[MB]","[MB]","[MB]","[%]","[%]","Boot time");
-        ::scrc_put_chars(m_display,txt,INVERSE,++line,1,1);
-        ::sprintf(txt," %-12s %8s %5zd/%-7zd %5zd/%-7zd %6d %6d %6d %6d %3.0f %3.0f %s",
-                  n.name.c_str(),n.status.c_str(),
-                  n.taskCount,n.missTaskCount,n.connCount,n.missConnCount,
-                  int(n.rss/1024),int(n.stack/1024),int(n.data/1024),int(n.vsize/1024),
-                  n.perc_cpu, n.perc_mem, n.boot.c_str());
-        ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
-
-        //::sprintf(txt,"  %-24s %12s %17s / Missing   %17s / Missing    %s","Node","Status","Tasks found","Connections found","Timestamp");
-        //::scrc_put_chars(m_display,txt,INVERSE,++line,1,1);
-        //::sprintf(txt,fmt,n.name.c_str(),n.status.c_str(),n.taskCount,n.missTaskCount,n.connCount,n.missConnCount,n.time.c_str());
-        //::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
-        if ( n.status == "DEAD" ) {
-          ::scrc_put_chars(m_display,"",INVERSE|RED|BOLD,++line,1,1);
-          ::scrc_put_chars(m_display,"                        -------------------------------------",INVERSE|RED|BOLD,++line,1,1);
-          ::scrc_put_chars(m_display,"                        Node is DEAD. Severe problem present.",INVERSE|RED|BOLD,++line,1,1);
-          ::scrc_put_chars(m_display,"                        -------------------------------------",INVERSE|RED|BOLD,++line,1,1);
-          ::scrc_put_chars(m_display,"",INVERSE|RED|BOLD,++line,1,1);
-        }
-        else {
-          typedef map<string,bool> _O;
-          int l, x;
-          _O ord;
-          _O::iterator k;
-          ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
-          if ( n.taskCount > 0 ) {
-            ::scrc_put_chars(m_display,"  Task Summary:",n.missTaskCount > 0 ? INVERSE|BOLD|RED : INVERSE|GREEN,++line,1,1);
-            for(j=n.tasks.begin(); j != n.tasks.end(); ++j) ord[(*j).first]=(*j).second;
-            for(k=ord.begin(),cnt=0,l=line,x=1; k !=ord.end(); ++k,++cnt) {
-              bool ok = (*k).second;
-              if ( cnt==int((ord.size()+1)/2) ) l = line, x=61;
-              ::sprintf(txt,"   [%03d]  %-32s %-10s",cnt,(*k).first.c_str(),ok ? "OK" : "MISSING");
-              ::scrc_put_chars(m_display,txt,ok ? NORMAL : INVERSE|RED,++l,x,1);
-            }
-            line += (ord.size()+3)/2;
-            ord.clear();
-          }
-          else {
-            ::scrc_put_chars(m_display,"  No tasks found",INVERSE|BOLD|RED,++line,1,1);
-          }
-          if ( n.projects.size() > 0 ) {
-            cnt=0;
-            ::sprintf(txt,"%-15s %-16s %-10s %-10s %-10s %-10s %-10s",
-                      "PVSS Summary:","Project name","Event Mgr","Data Mgr","Dist Mgr","FSM Server","Dev Handler");
-            ::scrc_put_chars(m_display,txt,INVERSE|GREEN,++line,1,1);
-            for(Cluster::Projects::const_iterator q=n.projects.begin(); q != n.projects.end(); ++q,++cnt)  {
-              const Cluster::PVSSProject& p = *q;
-              bool ok = p.eventMgr && p.dataMgr && p.distMgr;
-              ::sprintf(txt,"   [%03d]        %-16s %-10s %-10s %-10s %-10s %-10s",cnt,p.name.c_str(), 
-                        p.eventMgr ? "RUNNING" : "DEAD",
-                        p.dataMgr  ? "RUNNING" : "DEAD",
-                        p.distMgr  ? "RUNNING" : "DEAD",
-                        p.fsmSrv   ? "RUNNING" : "DEAD",
-                        p.devHdlr  ? "RUNNING" : "DEAD");
-              ::scrc_put_chars(m_display,txt,ok ? NORMAL : INVERSE|RED,++line,1,1);
-            }
-            ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
-          }
-          if ( n.connCount > 0 ) {
-            ::scrc_put_chars(m_display,"  Connection Summary:",n.missConnCount > 0 ? INVERSE|BOLD|RED : INVERSE|GREEN,++line,1,1);
-            for(j=n.conns.begin(); j != n.conns.end(); ++j) ord[(*j).first]=(*j).second;
-            for(k=ord.begin(),cnt=0,l=line,x=1; k !=ord.end(); ++k,++cnt) {
-              bool ok = (*k).second;
-              if ( cnt==int((ord.size()+1)/2) ) l = line, x=61;
-              ::sprintf(txt,"   [%03d]  %-32s %-10s",cnt,(*k).first.c_str(),ok ? "OK" : "MISSING");
-              ::scrc_put_chars(m_display,txt,ok ? NORMAL : INVERSE|RED,++l,x,1);
-            }
-            line += (ord.size()+3)/2;
-            ord.clear();
-          }
-          else {
-            ::scrc_put_chars(m_display,"  No connections found",INVERSE|BOLD|RED,++line,1,1);
-          }
-          ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
-          if ( n.missTaskCount == 0 && n.missConnCount == 0 )
-            ::scrc_put_chars(m_display,"  Node looks fine. No missing tasks/network connections found.",INVERSE|GREEN,++line,1,1);
-          else if ( n.missTaskCount == 0 )
-            ::scrc_put_chars(m_display,"  No missing tasks found, but missing network connections .....",INVERSE|RED,++line,1,1);
-          else if ( n.missConnCount == 0 )
-            ::scrc_put_chars(m_display,"  No missing network connections found, but missing tasks .....",INVERSE|RED,++line,1,1);
-          ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
-        }
-      }
-    }
-  }
-  else {
-    ::scrc_put_chars(m_display,"   Unknown Node. No data found.",INVERSE|BOLD,++line,1,1);
-    ::strftime(txt,sizeof(txt),"           %H:%M:%S",::localtime(&tim));
-    ::scrc_put_chars(m_display,txt,INVERSE|BOLD,++line,1,1);
-    ::scrc_set_border(m_display,"Unknown Node. No data found.",INVERSE|RED|BOLD);
-  }
-  ::memset(txt,' ',m_display->cols);
-  txt[m_display->cols-1]=0;
-  while(line<m_display->rows)
-    ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
-}
-
-ProcessDisplay::ProcessDisplay(FarmDisplay* parent, const string& title, const string& cluster, int flag, int height, int width)
-  : InternalDisplay(parent, title), m_flag(flag)
-{
-  size_t i;
-  string svc = "/";
-  m_name = "";
-  for(i=0; i<title.length() && title[i]!='.';++i)
-    m_name += ::tolower(title[i]);
-  for(i=0; i<cluster.length() && cluster[i]!='.';++i)
-    svc += ::tolower(cluster[i]);
-  svc += (flag ? "/ROpublish/Tasks" : "/ROpublish/ROTasks");
-  m_title = "Process monitor on "+m_title+" Service:"+svc;
-  ::scrc_create_display(&m_display,height,width,NORMAL,ON,m_title.c_str());
-  ::scrc_put_chars(m_display,".....waiting for data from DIM service.....",BOLD,2,10,1);
-  m_svc = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,dataHandler,(long)this,0,0);
-}
-
-ProcessDisplay::~ProcessDisplay() {
-}
-
-/// DIM command service callback
-void ProcessDisplay::update(const void* address) {
-  const ProcFarm* pf = (const ProcFarm*)address;
-  if ( pf->type == ProcFarm::TYPE ) {
-    updateContent(*pf);
-  }
-}
-
-static inline bool __procmatch(const char* nam, const char* pattern) {
-  return ::strncmp(nam,pattern,strlen(pattern))==0;
-}
-static bool is_driver(const char* cmd) {
-  return
-    __procmatch(cmd,"aio/") ||
-    __procmatch(cmd,"ata/") ||
-    __procmatch(cmd,"events/") ||
-    __procmatch(cmd,"lockd") ||
-    __procmatch(cmd,"khubd") ||
-    __procmatch(cmd,"kacpid") ||
-    __procmatch(cmd,"kjournald") ||
-    __procmatch(cmd,"kauditd") ||
-    __procmatch(cmd,"kblockd/") ||
-    __procmatch(cmd,"khelper") ||
-    __procmatch(cmd,"kswapd") ||
-    __procmatch(cmd,"kseriod") ||
-    __procmatch(cmd,"krfcommd") ||
-    __procmatch(cmd,"migration/") ||
-    __procmatch(cmd,"ata_aux") ||
-    __procmatch(cmd,"scsi_eh_") ||
-    __procmatch(cmd,"md0_raid") ||
-    __procmatch(cmd,"md1_raid") ||
-    __procmatch(cmd,"md2_raid") ||
-    __procmatch(cmd,"pdflush") ||
-    __procmatch(cmd,"rpciod") ||
-    __procmatch(cmd,"ksoftirqd/");
-}
-static inline bool is_sys_task(const char* cmd) { 
-  return
-    __procmatch(cmd,"init") ||
-    __procmatch(cmd,"gpm ") ||
-    __procmatch(cmd,"xfs ") ||
-    __procmatch(cmd,"nfsd") ||
-    __procmatch(cmd,"ntpd") ||
-    __procmatch(cmd,"rpc.") ||
-    __procmatch(cmd,"crond") ||
-    __procmatch(cmd,"dhcpd") ||
-    __procmatch(cmd,"klogd") ||
-    __procmatch(cmd,"cupsd") ||
-    __procmatch(cmd,"mdadm") ||
-    __procmatch(cmd,"acpid") ||
-    __procmatch(cmd,"xinetd") ||
-    __procmatch(cmd,"lm_ip ") ||
-    __procmatch(cmd,"portmap") ||
-    __procmatch(cmd,"syslogd") ||
-    __procmatch(cmd,"irqbalance") ||
-    __procmatch(cmd,"sendmail:") ||
-    __procmatch(cmd,"dbus-daemon") ||
-    __procmatch(cmd,"clientmqueue") ||
-    __procmatch(cmd,"mingetty") ||
-    __procmatch(cmd,"smartd") ||
-    __procmatch(cmd,"dhclient");
-}
-static inline bool is_pvss_task(const char* cmd) { 
-  return __procmatch(cmd,"PVSS00") || __procmatch(cmd,"smiSM ");
-}
-
-/// Update display content
-void ProcessDisplay::updateContent(const ProcFarm& pf) {
-  typedef Procset::Processes _P;
-  typedef ProcFarm::Nodes _N;
-  char state, txt[255], text[64], tmb[32];
-  int cnt = 0;
-  int line = 1;
-  time_t t1;
-  for(_N::const_iterator i=pf.nodes.begin(); i!=pf.nodes.end(); i=pf.nodes.next(i)) {
-    const Procset& ps = (*i);
-    char* dot = strchr(ps.name,'.');
-    if (0 == ::strncmp(ps.name,m_name.c_str(),3+(dot ? dot-ps.name : m_name.length()))) {
-      const _P& procs = ps.processes;
-      t1 = ps.time;
-      ::scrc_set_border(m_display,m_title.c_str(),INVERSE|BLUE);
-      ::strftime(text,sizeof(text),"%H:%M:%S",::localtime(&t1));
-      ::sprintf(txt,"Node:%s last update:%s [%d processes]",ps.name,text,procs.size());
-      ::scrc_put_chars(m_display,txt,BOLD,++line,10,1);
-      if ( m_flag == 0 )
-	::scrc_put_chars(m_display,"The display shows tasks with a UTGID",NORMAL,++line,10,1);
-      else if ( m_flag == 1 )
-	::scrc_put_chars(m_display,"The display shows NON-system, NON-UTGID, NON-PVSS tasks",NORMAL,++line,10,1);
-      else if ( m_flag == 2 )
-	::scrc_put_chars(m_display,"The display shows SYSTEM tasks",NORMAL,++line,10,1);
-      else if ( m_flag == 3 )
-	::scrc_put_chars(m_display,"The display shows PVSS tasks",NORMAL,++line,10,1);
-      else if ( m_flag == 4 )
-	::scrc_put_chars(m_display,"The display shows DRIVER tasks",NORMAL,++line,10,1);
-      ::sprintf(txt,"      %-32s %-6s %-5s %5s %5s %6s %6s %7s %7s %6s %3s   %s",
-		"UTGID","Owner","State","PID","PPID","Mem[%]","VM[kB]","RSS[kB]","Stk[kB]","CPU[%]","Thr","Started");
-      ::scrc_put_chars(m_display,txt,INVERSE,++line,1,1);
-      for(_P::const_iterator ip=procs.begin(); ip!=procs.end(); ip=procs.next(ip)) {
-	const Process& p = *ip;
-	switch(m_flag) {
-	case 0:
-	  if ( ::strncmp(p.utgid,"N/A",3)==0 ) continue;
-	  break;
-	case 1:  // Fall-through option if nothing else catches....
-	  if ( ::strncmp(p.utgid,"N/A",3)!=0 ) continue;
-	  if ( is_pvss_task(p.cmd) ) continue;
-	  if ( is_sys_task(p.cmd) ) continue;
-	  if ( is_driver(p.cmd) ) continue;
-	  break;
-	case 2:
-	  if ( !is_sys_task(p.cmd) ) continue;
-	  break;
-	case 3:
-	  if ( !is_pvss_task(p.cmd) ) continue;
-	  break;
-	case 4:
-	  if ( !is_driver(p.cmd) ) continue;
-	  break;
-	default:
-	  break;
-	}
-	t1 = p.start;
-	::strftime(tmb,sizeof(tmb),"%b %d %H:%M",::localtime(&t1));
-	state = p.state == 0 ? '?' : p.state;
-	if ( ::strncmp(p.utgid,"N/A",3)==0 ) {
-	  ::strncpy(text,p.cmd,sizeof(text));
-	  text[27] = 0;
-	  text[26]=text[25]=text[24]='.';
-	  ::sprintf(txt,"%3d: %3s:%-28s %-10s %c %5d %5d %6.3f %6.0f %7.0f %7.0f %6.2f %3d   %s",
-		    ++cnt, p.utgid,text,p.owner,state,p.pid,p.ppid,p.mem,p.vsize,p.rss,p.stack,p.cpu,p.threads,tmb);
-	}
-	else {
-	  ::sprintf(txt,"%3d: %-32s %-10s %c %5d %5d %6.3f %6.0f %7.0f %7.0f %6.2f %3d   %s",
-		    ++cnt, p.utgid,p.owner,state,p.pid,p.ppid,p.mem,p.vsize,p.rss,p.stack,p.cpu,p.threads,tmb);
-	}
-	::scrc_put_chars(m_display,txt,NORMAL,++line,2,1);
-      }
-      return;
-    }
-  }
-  t1 = ::time(0);
-  ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
-  ::sprintf(txt,"   Unknown Node '%s'. No corresponding process information found.",m_name.c_str());
-  ::scrc_put_chars(m_display,txt, INVERSE|BOLD,++line,5,1);
-  ::strftime(txt,sizeof(txt),"         %H:%M:%S",::localtime(&t1));
-  ::scrc_put_chars(m_display,txt,INVERSE|BOLD,++line,5,1);
-  ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
-  ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED|BOLD);
-}
-
-CPUDisplay::CPUDisplay(FarmDisplay* parent, const string& title, const string& node, int height, int width)
-  : InternalDisplay(parent, title), m_node(node)
-{
-  string svc = "/";
-  for(size_t i=0; i<title.length() && title[i]!='.';++i) svc += ::tolower(title[i]);
-  svc += "/ROpublish/CPU";
-  m_title = "CPU monitor on "+m_title+" Service:"+svc;
-  ::scrc_create_display(&m_display,height,width,NORMAL,ON,m_title.c_str());
-  ::scrc_put_chars(m_display,".....waiting for data from DIM service.....",BOLD,2,10,1);
-  m_svc = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,dataHandler,(long)this,0,0);
-}
-
-CPUDisplay::~CPUDisplay() {
-}
-
-/// DIM command service callback
-void CPUDisplay::update(const void* address) {
-  const CPUfarm* f = (const CPUfarm*)address;
-  if ( f->type == CPUfarm::TYPE ) {
-    updateContent(*f);
-  }
-}
-
-/// Update display content
-void CPUDisplay::updateContent(const CPUfarm& f) {
-  typedef CPUset::Cores _C;
-  typedef CPUfarm::Nodes _N;
-  char txt[255], text[64];
-  int cnt = 0;
-  int line = 1;
-  time_t t1 = f.time;
-  ::strftime(text,sizeof(text),"%H:%M:%S",::localtime(&t1));
-  ::sprintf(txt,"      CPU farm:%s %s  [%d nodes]",f.name,text,f.nodes.size());
-  ::scrc_put_chars(m_display,txt,BOLD,++line,3,1);
-  ::scrc_put_chars(m_display,"",NORMAL,++line,3,1);
-  for(_N::const_iterator i=f.nodes.begin(); i!=f.nodes.end(); i=f.nodes.next(i)) {
-    const CPUset& cs = (*i);
-    const _C& cores = cs.cores;
-    const CPU::Stat& avg = cs.averages;
-    t1 = cs.time;
-    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|BLUE);
-    ::strftime(text,sizeof(text),"%H:%M:%S",::localtime(&t1));
-    ::sprintf(txt,"      Node:%-8s  Family: %s last update:%s [%d cores] Context switch rate:%9.0f Hz",
-              cs.name,cs.family,text,cores.size(),cs.ctxtRate);
-    ::scrc_put_chars(m_display,txt,INVERSE,++line,3,1);
-    ::sprintf(txt,"      Average values: %9s %9.3f %9.3f %9.3f %10.3f %9.3f %9.3f %9.0f",
-              "",avg.user,avg.system,avg.idle,avg.iowait,avg.IRQ,avg.softIRQ,avg.nice);
-    ::scrc_put_chars(m_display,txt,NORMAL,++line,3,1);
-    if ( strcasecmp(m_node.c_str(),cs.name) != 0 ) continue;
-    ::sprintf(txt,"        %9s %5s %9s %9s %9s %9s %10s %9s %9s %9s",
-              "Clock","Cache","Mips","User[%]","System[%]","Idle[%]","IO wait[%]","IRQ","SoftIRQ","Nice");
-    ::scrc_put_chars(m_display,txt,BOLD,++line,1,1);
-    for(_C::const_iterator ic=cores.begin(); ic!=cores.end(); ic=cores.next(ic)) {
-      const CPU& c = *ic;
-      ::sprintf(txt,"Core %3d:%6.0f %5d %9.0f %9.3f %9.3f %9.3f %10.3f %9.3f %9.3f %9.0f",
-                ++cnt, c.clock,c.cache,c.bogomips,c.stats.user,c.stats.system,c.stats.idle,
-                c.stats.iowait,c.stats.IRQ,c.stats.softIRQ,c.stats.nice);
-      ::scrc_put_chars(m_display,txt,NORMAL,++line,3,1);
-    }
-    ::scrc_put_chars(m_display,"",NORMAL,++line,3,1);
-  }
-  if ( 0 == f.nodes.size() ) {
-    t1 = ::time(0);
-    ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
-    ::strftime(txt,sizeof(txt),"   No CPU information found.         %H:%M:%S",::localtime(&t1));
-    ::scrc_put_chars(m_display,txt,INVERSE|BOLD,++line,5,1);
-    ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
-    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED|BOLD);
-  }
 }
 
 /// Standard constructor
@@ -705,7 +215,7 @@ FarmDisplay::~FarmDisplay()  {
   disconnect();
   m_listener = auto_ptr<PartitionListener>(0);
   ::scrc_begin_pasteboard_update(m_pasteboard);
-  m_ctrlDisplay = auto_ptr<CtrlDisplay>(0);
+  m_ctrlDisplay = auto_ptr<CtrlNodeDisplay>(0);
   m_mbmDisplay = auto_ptr<BufferDisplay>(0);
   if ( m_subfarmDisplay ) {
     MouseSensor::instance().remove(m_subfarmDisplay->display());
@@ -790,7 +300,7 @@ int FarmDisplay::showSubfarm()    {
     m_subfarmDisplay = 0;
     m_cpuDisplay = auto_ptr<CPUDisplay>(0);
     m_mbmDisplay = auto_ptr<BufferDisplay>(0);
-    m_ctrlDisplay = auto_ptr<CtrlDisplay>(0);
+    m_ctrlDisplay = auto_ptr<CtrlNodeDisplay>(0);
     m_procDisplay = auto_ptr<ProcessDisplay>(0);
     m_subPosCursor = 8;
     m_nodeSelector = 0;
@@ -803,29 +313,29 @@ int FarmDisplay::showSubfarm()    {
     if ( m_mode == CTRL_MODE ) {
       svc = "-servicename=/"+strUpper(dnam)+"/TaskSupervisor/Status";
       const char* argv[] = {"",svc.c_str(), "-delay=300"};
-      m_subfarmDisplay = new CtrlSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
+      m_subfarmDisplay = createCtrlSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
     }
     else if ( strncasecmp(dnam.c_str(),"storectl01",10)==0 && m_name != "ALL" ) {
       const char* argv[] = {"",svc.c_str(), part.c_str(), "-delay=300"};
-      m_subfarmDisplay = new StorageDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,4,(char**)argv);
+      m_subfarmDisplay = createStorageDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,4,(char**)argv);
     }
     else if ( strncasecmp(dnam.c_str(),"mona08",6)==0 && m_name != "ALL" ) {
       string relay = "-namerelay="+dnam+"01";
       const char* argv[] = {"",svc.c_str(), part.c_str(), "-delay=300", "-relayheight=12", "-nodeheight=12", relay.c_str()};
-      m_subfarmDisplay = new MonitoringDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,7,(char**)argv);
+      m_subfarmDisplay = createMonitoringDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,7,(char**)argv);
     }
     else if ( strncasecmp(dnam.c_str(),"mona09",6)==0 && m_name != "ALL" ) {
       string relay = "-namerelay="+dnam+"01";
       const char* argv[] = {"",svc.c_str(), part.c_str(), "-delay=300", "-relayheight=14", "-nodeheight=22", relay.c_str()};
-      m_subfarmDisplay = new MonitoringDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,7,(char**)argv);
+      m_subfarmDisplay = createMonitoringDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,7,(char**)argv);
     }
     else if ( m_mode == RECO_MODE ) {
       const char* argv[] = {"",svc.c_str(), "-delay=300"};
-      m_subfarmDisplay = new RecSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
+      m_subfarmDisplay = createRecSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
     }
     else if ( m_mode == HLT_MODE ) {
       const char* argv[] = {"",svc.c_str(), "-delay=300"};
-      m_subfarmDisplay = new SubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
+      m_subfarmDisplay = createSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
     }
     else {
       m_nodeSelector = 0;
@@ -919,10 +429,10 @@ int FarmDisplay::showCtrlWindow() {
   if ( m_ctrlDisplay.get() ) {
     if ( m_helpDisplay.get() ) showHelpWindow();
     MouseSensor::instance().remove(this,m_ctrlDisplay->display());
-    m_ctrlDisplay = auto_ptr<CtrlDisplay>(0);
+    m_ctrlDisplay = auto_ptr<CtrlNodeDisplay>(0);
   }
   else if ( m_subfarmDisplay ) {
-    m_ctrlDisplay = auto_ptr<CtrlDisplay>(new CtrlDisplay(this,"CTRL Monitor display"));
+    m_ctrlDisplay = auto_ptr<CtrlNodeDisplay>(new CtrlNodeDisplay(this,"CTRL Monitor display"));
     m_ctrlDisplay->setNode(m_subPosCursor-SUBFARM_NODE_OFFSET);
     m_ctrlDisplay->update(m_subfarmDisplay->data().pointer);
     m_ctrlDisplay->show(m_anchorY+5,m_anchorX+12);

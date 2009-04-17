@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.h,v 1.17 2009-02-24 10:38:19 frankb Exp $
+// $Id: FarmDisplay.h,v 1.18 2009-04-17 13:16:37 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.17 2009-02-24 10:38:19 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.18 2009-04-17 13:16:37 frankb Exp $
 #ifndef ROMON_FARMDISPLAY_H
 #define ROMON_FARMDISPLAY_H 1
 
@@ -123,21 +123,21 @@ namespace ROMon {
     virtual void update(const void* data);
   };
 
-  /**@class CtrlDisplay ROMon.h GaudiOnline/FarmDisplay.h
+  /**@class CtrlNodeDisplay ROMon.h GaudiOnline/FarmDisplay.h
    *
    *   Internal Task control display, when spying on individual nodes.
    *
    *   @author M.Frank
    */
-  class CtrlDisplay : public InternalDisplay {
+  class CtrlNodeDisplay : public InternalDisplay {
   protected:
     /// Node number in node set
     int m_node;
   public:
     /// Initializing constructor
-    CtrlDisplay(FarmDisplay* parent, const std::string& title);
+    CtrlNodeDisplay(FarmDisplay* parent, const std::string& title);
     /// Standard destructor
-    virtual ~CtrlDisplay() {}
+    virtual ~CtrlNodeDisplay() {}
     /// Set the node number for the display
     void setNode(int which) { m_node = which; }
     /// Update display content
@@ -159,7 +159,7 @@ namespace ROMon {
     std::auto_ptr<PartitionListener> m_listener;
     ClusterDisplay*                  m_subfarmDisplay;
     std::auto_ptr<ProcessDisplay>    m_procDisplay;
-    std::auto_ptr<CtrlDisplay>       m_ctrlDisplay;
+    std::auto_ptr<CtrlNodeDisplay>   m_ctrlDisplay;
     std::auto_ptr<BufferDisplay>     m_mbmDisplay;
     std::auto_ptr<HelpDisplay>       m_helpDisplay;
     std::auto_ptr<CPUDisplay>        m_cpuDisplay;

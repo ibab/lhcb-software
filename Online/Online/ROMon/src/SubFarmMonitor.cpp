@@ -10,10 +10,10 @@ namespace ROMon {
   class Nodeset;
   class FSMTask;
 
-  /** @class SubFarmMonitor SubFarmMonitor.cpp
+  /** @class SubfarmMonitor SubfarmMonitor.cpp
    *
    */
-  class SubFarmMonitor : public InternalMonitor {
+  class SubfarmMonitor : public InternalMonitor {
 
     struct NodeMon {
       struct Task {
@@ -56,10 +56,10 @@ namespace ROMon {
 
   public:
     /// Initializing constructor
-    SubFarmMonitor(FarmMonitor* parent, const std::string& title);
+    SubfarmMonitor(FarmMonitor* parent, const std::string& title);
 
     /// Standard destructor
-    virtual ~SubFarmMonitor();
+    virtual ~SubfarmMonitor();
 
     /// Extract data for monitoring
     virtual void extractData(const Nodeset& ns);
@@ -68,7 +68,7 @@ namespace ROMon {
     virtual void analyzeData();
 
   };
-  InternalMonitor* createSubFarmMonitor(FarmMonitor* parent, const std::string& title);
+  InternalMonitor* createSubfarmMonitor(FarmMonitor* parent, const std::string& title);
 }
 #endif // ROMON_SUBFARMMONITOR_H
 
@@ -94,13 +94,13 @@ namespace {
   }
 };
 
-InternalMonitor* ROMon::createSubFarmMonitor(FarmMonitor* parent, const string& title) {
+InternalMonitor* ROMon::createSubfarmMonitor(FarmMonitor* parent, const string& title) {
   cout << "Connecting to subfarm " << title << endl;
-  InternalMonitor* m = new SubFarmMonitor(parent,title);
+  InternalMonitor* m = new SubfarmMonitor(parent,title);
   return m;
 }
 
-SubFarmMonitor::NodeMon& SubFarmMonitor::NodeMon::operator=(const NodeMon& c) {
+SubfarmMonitor::NodeMon& SubfarmMonitor::NodeMon::operator=(const NodeMon& c) {
   if ( this != &c ) {
     numBuffs     = c.numBuffs;
     numClients   = c.numClients;
@@ -125,7 +125,7 @@ SubFarmMonitor::NodeMon& SubFarmMonitor::NodeMon::operator=(const NodeMon& c) {
   return *this;
 }
 
-void SubFarmMonitor::NodeMon::reset() {
+void SubfarmMonitor::NodeMon::reset() {
   numBuffs = 0;
   numClients = 0;
   minEVENT = maxEVENT  = 0;
@@ -142,7 +142,7 @@ void SubFarmMonitor::NodeMon::reset() {
 }
 
 /// Initializing constructor
-SubFarmMonitor::SubFarmMonitor(FarmMonitor* parent, const string& title) 
+SubfarmMonitor::SubfarmMonitor(FarmMonitor* parent, const string& title) 
   : InternalMonitor(parent,title)
 {
   string svc = "/";
@@ -153,14 +153,14 @@ SubFarmMonitor::SubFarmMonitor(FarmMonitor* parent, const string& title)
 }
 
 /// Standard destructor
-SubFarmMonitor::~SubFarmMonitor() {
+SubfarmMonitor::~SubfarmMonitor() {
   for(Monitors::iterator i=m_nodes.begin(); i!=m_nodes.end();++i)
     delete (*i).second;
   for(Monitors::iterator j=m_history.begin(); j!=m_history.end();++j)
     delete (*j).second;
 }
 
-void SubFarmMonitor::extractData(const Nodeset& ns) {
+void SubfarmMonitor::extractData(const Nodeset& ns) {
   NodeMon sum;
   string subfarm = ns.name;
   TaskMap::iterator tm;
@@ -343,7 +343,7 @@ void SubFarmMonitor::extractData(const Nodeset& ns) {
   m_sum        = sum;
 }
 
-void SubFarmMonitor::analyzeData() {
+void SubfarmMonitor::analyzeData() {
   char txt[128];
   time_t now = time(0);
   bool    running  = parent()->isRunning();

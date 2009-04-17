@@ -1,4 +1,4 @@
-// $Id: RecSubfarmDisplay.h,v 1.5 2008-11-13 08:29:41 frankb Exp $
+// $Id: RecSubfarmDisplay.h,v 1.6 2009-04-17 13:16:37 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/RecSubfarmDisplay.h,v 1.5 2008-11-13 08:29:41 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/RecSubfarmDisplay.h,v 1.6 2009-04-17 13:16:37 frankb Exp $
 #ifndef ROMON_RECSUBFARMDISPLAY_H
 #define ROMON_RECSUBFARMDISPLAY_H 1
 
@@ -81,6 +81,8 @@ namespace ROMon {
     /// Update all displays
     virtual void updateDisplay(const Nodeset& ns);
   };
+  /// Static abstract object creator.
+  ClusterDisplay*  createRecSubfarmDisplay(int width, int height, int posx, int posy, int argc, char** argv);
 }      // End namespace ROMon
 #endif /* ROMON_RECSUBFARMDISPLAY_H */
 

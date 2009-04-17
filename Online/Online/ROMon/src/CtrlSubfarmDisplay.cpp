@@ -1,4 +1,4 @@
-// $Id: CtrlSubfarmDisplay.cpp,v 1.6 2008-11-17 07:40:40 frankb Exp $
+// $Id: CtrlSubfarmDisplay.cpp,v 1.7 2009-04-17 13:16:37 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CtrlSubfarmDisplay.cpp,v 1.6 2008-11-17 07:40:40 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CtrlSubfarmDisplay.cpp,v 1.7 2009-04-17 13:16:37 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -31,6 +31,12 @@ static void help() {
             <<"       -d[elay]=<number>            Time delay in millisecond between 2 updates.              " << std::endl
             <<"       -s[ervicename]=<name>        Name of the DIM service  providing monitoring information." << std::endl
             << std::endl;
+}
+
+
+/// Static abstract object creator.
+ClusterDisplay* ROMon::createCtrlSubfarmDisplay(int width, int height, int posx, int posy, int argc, char** argv) {
+  return new CtrlSubfarmDisplay(width,height,posx,posy,argc,argv);
 }
 
 /// Standard constructor

@@ -1,4 +1,4 @@
-// $Id: MonitoringDisplay.cpp,v 1.14 2009-02-11 16:51:43 frankb Exp $
+// $Id: MonitoringDisplay.cpp,v 1.15 2009-04-17 13:16:37 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/MonitoringDisplay.cpp,v 1.14 2009-02-11 16:51:43 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/MonitoringDisplay.cpp,v 1.15 2009-04-17 13:16:37 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -69,6 +69,11 @@ static void help() {
        <<"       -s[ervicename]=<name>        Name of the DIM service  providing monitoring information." << endl
        <<"       -p[partition]=<name>         Name of the partition to be displayed.                    " << endl
        << endl;
+}
+
+/// Static abstract object creator.
+ClusterDisplay* ROMon::createMonitoringDisplay(int width, int height, int posx, int posy, int argc, char** argv) {
+  return new MonitoringDisplay(width,height,posx,posy,argc,argv);
 }
 
 /// Initializing constructor for using display as sub-display

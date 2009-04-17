@@ -1,4 +1,4 @@
-// $Id: StorageDisplay.cpp,v 1.13 2009-02-11 16:51:43 frankb Exp $
+// $Id: StorageDisplay.cpp,v 1.14 2009-04-17 13:16:37 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/StorageDisplay.cpp,v 1.13 2009-02-11 16:51:43 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/StorageDisplay.cpp,v 1.14 2009-04-17 13:16:37 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -79,6 +79,11 @@ static void help() {
        <<"       -p[partition]=<name>         Name of the partition to be displayed.                    " << endl
        << endl;
 
+}
+
+/// Static abstract object creator.
+ClusterDisplay* ROMon::createStorageDisplay(int width, int height, int posx, int posy, int argc, char** argv) {
+  return new StorageDisplay(width,height,posx,posy,argc,argv);
 }
 
 /// Initializing constructor for using display as sub-display

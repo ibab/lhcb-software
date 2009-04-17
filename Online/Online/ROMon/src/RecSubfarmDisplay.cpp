@@ -1,4 +1,4 @@
-// $Id: RecSubfarmDisplay.cpp,v 1.5 2008-11-13 12:13:33 frankb Exp $
+// $Id: RecSubfarmDisplay.cpp,v 1.6 2009-04-17 13:16:37 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/RecSubfarmDisplay.cpp,v 1.5 2008-11-13 12:13:33 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/RecSubfarmDisplay.cpp,v 1.6 2009-04-17 13:16:37 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -64,6 +64,11 @@ static void help() {
        <<"       -s[ervicename]=<name>        Name of the DIM service  providing monitoring information." << endl
        << endl;
 
+}
+
+/// Static abstract object creator.
+ClusterDisplay* ROMon::createRecSubfarmDisplay(int width, int height, int posx, int posy, int argc, char** argv) {
+  return new RecSubfarmDisplay(width,height,posx,posy,argc,argv);
 }
 
 /// Standard constructor

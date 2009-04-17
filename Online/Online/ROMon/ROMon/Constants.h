@@ -5,6 +5,7 @@ namespace ROMon {
     CMD_ADD = 100,
     CMD_CONNECT,
     CMD_CHECK = 102,
+    CMD_CHECK_CTRL,
     CMD_DELETE,
     CMD_UPDATE,
     CMD_SETCURSOR,

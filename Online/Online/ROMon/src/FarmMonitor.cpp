@@ -1,4 +1,4 @@
-// $Id: FarmMonitor.cpp,v 1.4 2009-03-26 14:37:51 frankb Exp $
+// $Id: FarmMonitor.cpp,v 1.5 2009-04-17 13:16:37 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmMonitor.cpp,v 1.4 2009-03-26 14:37:51 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmMonitor.cpp,v 1.5 2009-04-17 13:16:37 frankb Exp $
 
 #define MBM_IMPLEMENTATION
 #include "ROMon/ROMon.h"
@@ -35,7 +35,6 @@ extern "C" {
 #include <cstdarg>
 #include <fstream>
 #include <iostream>
-#include <sstream>
 #include <algorithm>
 
 using namespace ROMon;
@@ -105,8 +104,9 @@ namespace ROMon {
     void operator()(const pair<char,int>& p) const { cout << ' ' << p.first << ':' << p.second; }
   };
 
-  InternalMonitor* createSubFarmMonitor(FarmMonitor* parent, const string& title);
-  InternalMonitor* createRecSubFarmMonitor(FarmMonitor* parent, const string& title);
+  InternalMonitor* createSubfarmMonitor(FarmMonitor* parent, const string& title);
+  InternalMonitor* createRecSubfarmMonitor(FarmMonitor* parent, const string& title);
+  InternalMonitor* createCtrlSubfarmMonitor(FarmMonitor* parent, const string& title);
   InternalMonitor* createMonitoringMonitor(FarmMonitor* parent, const string& title);
   InternalMonitor* createStorageMonitor(FarmMonitor* parent, const string& title);
 }
@@ -119,104 +119,8 @@ static void help() {
        << endl;
 }
 
-Alarm::Alarm(const string& txt) : AlarmTag(0,"","") {
-  this->fromString(txt);
-}
-
-string Alarm::toString(const string& t)  const {
-  stringstream s;
-  tag = t;
-  char txt[32];
-  ::sprintf(txt,"#%08lx#%08x#",when,code);
-  s << t << txt << subfarm << "#" << node << "#" << description << "#" << optional;
-  return s.str();
-}
-
-void Alarm::fromString(const string& str) {
-  string copy(str);
-  char *p1, *p2, *p3, *p4, *p5, *p6, *s = (char*)copy.c_str();
-  if ( (p1=::strchr(s,'#')) ) {
-    *p1 = 0;
-    if ( (p2=::strchr(p1+1,'#')) ) {
-      *p2 = 0;
-      if ( (p3=::strchr(p2+1,'#')) ) {
-	*p3 = 0;
-	if ( (p4=::strchr(p3+1,'#')) ) {
-	  *p4 = 0;
-	  if ( (p5=::strchr(p4+1,'#')) ) {
-	    *p5 = 0;
-	    if ( (p6=::strchr(p5+1,'#')) ) {
-	      *p6 = 0;
-	      tag = s;
-	      ::sscanf(p1+1,"%08lx",&when);
-	      ::sscanf(p2+1,"%08x",&code);
-	      subfarm = p3+1;
-	      node = p4+1;
-	      description = p5+1;
-	      optional = p6+1;
-	    }
-	  }
-	}
-      }
-    }
-  }
-}
-
-int Alarm::level() const {
-  static int mask = ERR_LVL_MONITOR|ERR_LVL_WARNING|ERR_LVL_ERROR|ERR_LVL_ALARM;
-  return code&mask;
-}
-
-int Alarm::color() const {
-  int color = NORMAL;
-  if ( code&ERR_LVL_MONITOR ) color = NORMAL;
-  if ( code&ERR_LVL_WARNING ) color = YELLOW;
-  if ( code&ERR_LVL_ERROR   ) color = RED|BOLD;
-  if ( code&ERR_LVL_ALARM   ) color = RED|INVERSE|BOLD;
-  return color;
-}
-
-const char* Alarm::message() const {
-  switch(code) {
-  case ERR_NO_ERROR:              return "No obvious Errors detected... ";
-  case ERR_NO_UPDATES:            return "No update information available ";
-  case ERR_NOT_USED:              return "Node not used.... ";
-  case ERR_SLOTS_LIMIT:           return "MBM buffers: SLOTS at limit ";
-  case ERR_SPACE_LIMIT:           return "MBM buffers: SPACE at limit ";
-  case ERR_NODE_STUCK:            return "MBM buffers at limit ";
-  case ERR_MEPRX_MISSING:         return "Event builder task MEPRX dead ";
-  case ERR_MEPRX_STUCK:           return "Event builder task MEPRx stuck ";
-  case ERR_RECEIVER_MISSING:      return "Event receiver dead ";
-  case ERR_RECEIVER_STUCK:        return "Event receiver stuck ";
-  case ERR_MONITOR_MISSING:       return "Event monitor dead ";
-  case ERR_MONITOR_STUCK:         return "Event monitor stuck ";
-  case ERR_SENDER_MISSING:        return "Sender dead ";
-  case ERR_SENDER_STUCK:          return "Sender stuck ";
-  case ERR_MOORE_MISSING:         return "Event filter task MOORE dead ";
-  case ERR_MOORE_STUCK:           return "Event filter task MOORE stuck ";
-  case ERR_NODAQ_ACTIVITY:        return "No DAQ activity visible ";
-  case ERR_NOHLT_ACTIVITY:        return "No HLT activity visible ";
-  case ERR_NOSTORAGE_ACTIVITY:    return "No STORAGE activity visible ";
-  case ERR_NOMONITORING_ACTIVITY: return "No MONITORING activity visible ";
-  case ERR_REMOVED:               return "Alarm value became normal. Alarm removed";
-  case ERR_REMOVEDALL:            return "All alarms cleared";
-  default:                        return "Unknown Alarm - Never heard of this error code";
-  }
-}
-
-string Alarm::time() const {
-  char txt[32];
-  ::strftime(txt,sizeof(txt),"%H:%M:%S",::localtime(&when));
-  return txt;
-}
-
-ostream& operator<<(ostream& os, const Alarm& a) {
-  os << setw(13) << left << a.node << left << setw(12) << a.time() << " " << a.message() << a.description;
-  return os;
-}
-
 namespace ROMon {
-  InternalMonitor* createRecSubFarmMonitor(FarmMonitor* m, const string& title) { return createSubFarmMonitor(m,title);}
+  InternalMonitor* createRecSubfarmMonitor(FarmMonitor* m, const string& title) { return createSubfarmMonitor(m,title);}
 
 #ifndef OutputLogger_H
 #define OutputLogger_H
@@ -324,11 +228,14 @@ InternalMonitor::~InternalMonitor() {
 
 /// Log message with tag
 ostream& InternalMonitor::log(const string& tag,const string& node) {
+  char txt[32];
+  time_t when = time(0);
+  ::strftime(txt,sizeof(txt),"%H:%M:%S",::localtime(&when));
   if ( node.empty() ) {
-    cout << left << setw(8) << tag << setw(12) << left << m_name << ":";
+    cout << left << setw(9) << tag << setw(13) << left << m_name << left << setw(12) << txt << " ";
   }
   else {
-    cout << left << setw(8) << tag << setw(12) << left << node << ":";
+    cout << left << setw(9) << tag << setw(13) << left << node << left << setw(12) << txt << " ";
   }
   return cout;
 }
@@ -411,7 +318,7 @@ void InternalMonitor::update(const void* address) {
 
 /// Set a new alarm
 void InternalMonitor::setAlarm(Alarms& alms, const string& node, int typ, time_t when, const string& dsc, const string& opt) {
-  string subfarm = node.substr(0,node.length()-2);
+  string subfarm = ::isdigit(node[node.length()-3]) ? node.substr(0,node.length()-2) : node;
   alms.push_back(Alarm(typ,when,subfarm,node,dsc,opt));
   m_hasProblems = true;
 }
@@ -462,6 +369,7 @@ FarmMonitor::FarmMonitor(int argc, char** argv) : InternalMonitor(0,""), m_mode(
 
   all = 0 != cli.getopt("all",2);
   m_mode = cli.getopt("reconstruction",2) == 0 ? HLT_MODE : RECO_MODE;
+  if ( cli.getopt("taskmonitor",2) != 0 ) m_mode = CTRL_MODE;
 
   ::lib_rtl_create_lock(0,&s_lock);
   if ( m_mode == RECO_MODE && all && m_match=="*" )
@@ -470,6 +378,12 @@ FarmMonitor::FarmMonitor(int argc, char** argv) : InternalMonitor(0,""), m_mode(
     ::sprintf(txt,"Reconstruction farm display of all known subfarms with name '%s'",m_match.c_str());
   else if ( m_mode == RECO_MODE )
     ::sprintf(txt,"Reconstruction farm display of partition %s ",m_name.c_str());
+  else if ( m_mode == CTRL_MODE && all && m_match=="*" )
+    ::sprintf(txt,"Task Control farm display of all known subfarms ");
+  else if ( m_mode == CTRL_MODE && all )
+    ::sprintf(txt,"Task Control farm display of all known subfarms with name '%s'",m_match.c_str());
+  else if ( m_mode == CTRL_MODE )
+    ::sprintf(txt,"Task Control farm display of partition %s ",m_name.c_str());
   else if ( m_match == "*" && all )
     ::sprintf(txt,"HLT Farm display of all known subfarms ");
   else if ( all )
@@ -675,6 +589,15 @@ void FarmMonitor::handle(const Event& ev) {
       connect(m_farms);
       return;
     }
+    case CMD_CHECK_CTRL: {
+      time_t now = time(0);
+      auto_ptr<AlarmInfo> alms(ev.iocPtr<AlarmInfo>());
+      m_stateSummary.clear();
+      for_each(m_farmMonitors.begin(),m_farmMonitors.end(),CheckMonitor(now));
+      updateAlarms(alms->first, alms->second);
+      IocSensor::instance().send(this,int(CMD_UPDATE),this);
+      break;
+    }
     case CMD_CHECK: {
       time_t now = time(0);
       auto_ptr<AlarmInfo> alms(ev.iocPtr<AlarmInfo>());
@@ -719,13 +642,15 @@ void FarmMonitor::connect(const vector<string>& farms) {
     k = m_farmMonitors.find(*i);
     if ( k == m_farmMonitors.end() ) {
       if ( m_mode == RECO_MODE )
-	copy.insert(make_pair(*i,createRecSubFarmMonitor(this,*i)));
+	copy.insert(make_pair(*i,createRecSubfarmMonitor(this,*i)));
+      else if ( m_mode == CTRL_MODE )
+	copy.insert(make_pair(*i,createCtrlSubfarmMonitor(this,*i)));
       else if ( ::strncasecmp((*i).c_str(),"mona0",5)==0 )
 	copy.insert(make_pair(*i,createMonitoringMonitor(this,*i)));
       else if ( ::strncasecmp((*i).c_str(),"storectl",8)==0 )
 	copy.insert(make_pair(*i,createStorageMonitor(this,*i)));
       else
-	copy.insert(make_pair(*i,createSubFarmMonitor(this,*i)));
+	copy.insert(make_pair(*i,createSubfarmMonitor(this,*i)));
     }
     else {
       copy.insert(*k);

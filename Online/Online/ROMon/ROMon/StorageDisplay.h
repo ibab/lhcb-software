@@ -1,4 +1,4 @@
-// $Id: StorageDisplay.h,v 1.5 2009-01-09 10:30:18 frankb Exp $
+// $Id: StorageDisplay.h,v 1.6 2009-04-17 13:16:37 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/StorageDisplay.h,v 1.5 2009-01-09 10:30:18 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/StorageDisplay.h,v 1.6 2009-04-17 13:16:37 frankb Exp $
 #ifndef ROMON_STORAGEDISPLAY_H
 #define ROMON_STORAGEDISPLAY_H 1
 
@@ -103,6 +103,8 @@ namespace ROMon {
     /// Update all displays
     virtual void updateDisplay(const Nodeset& ns);
   };
+  /// Static abstract object creator.
+  ClusterDisplay*  createStorageDisplay(int width, int height, int posx, int posy, int argc, char** argv);
 }      // End namespace ROMon
 #endif /* ROMON_STORAGEDISPLAY_H */
 

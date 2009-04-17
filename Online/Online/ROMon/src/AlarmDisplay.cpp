@@ -1,4 +1,4 @@
-// $Id: AlarmDisplay.cpp,v 1.2 2009-03-26 14:49:05 frankb Exp $
+// $Id: AlarmDisplay.cpp,v 1.3 2009-04-17 13:16:37 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/AlarmDisplay.cpp,v 1.2 2009-03-26 14:49:05 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/AlarmDisplay.cpp,v 1.3 2009-04-17 13:16:37 frankb Exp $
 
 #include "ROMon/AlarmDisplay.h"
 #include "ROMon/FarmMonitor.h"
@@ -110,7 +110,7 @@ void MessageWindow::update(const void* data) {
 	else  {
 	  const Alarm* a = s.nodes[0];
 	  color = a->color();
-	  ::sprintf(text,"%-4d %-8s %-12s %s",int(s.nodes.size()),"nodes",a->time().c_str(),a->message());
+	  ::sprintf(text,"%-4d %-8s %-12s %s",int(s.nodes.size()),"alarms",a->time().c_str(),a->message());
 	  set<string> opts;
 	  for(size_t k=0; k<s.nodes.size(); ++k) {
 	    const string& item = s.nodes[k]->node;
@@ -146,7 +146,7 @@ AlarmDisplay::AlarmDisplay(int argc, char** argv)
   RTL::CLI cli(argc,argv,help);
   cli.getopt("partition",   2, m_name = "ALL");
   s_fd = this;
-  m_title = "Alarm monitor for partition:"+m_name;
+  m_title = "  Alarm monitor  ";
   ::scrc_create_pasteboard (&m_pasteboard, 0, &m_height, &m_width);
   m_width -= 2;
   m_height -= 2;
@@ -341,11 +341,11 @@ void AlarmDisplay::handle(const Event& ev) {
     case CMD_CONNECT:
       h = (m_height-11)/2;
       ::scrc_begin_pasteboard_update (m_pasteboard);
-      m_alarmDisplay = new MessageWindow(this,"ALARMS: "+m_name,h,m_width,ERR_LVL_ALARM);
+      m_alarmDisplay = new MessageWindow(this,"  ALARMS  ",h,m_width,ERR_LVL_ALARM);
       m_alarmDisplay->show(4,2);
-      m_warnDisplay  = new MessageWindow(this,"ERRORS/WARNINGS: "+m_name,h,m_width,ERR_LVL_ERROR|ERR_LVL_WARNING);
+      m_warnDisplay  = new MessageWindow(this,"  ERRORS/WARNINGS  ",h,m_width,ERR_LVL_ERROR|ERR_LVL_WARNING);
       m_warnDisplay->show(6+h,2);
-      m_monDisplay  = new MessageWindow(this,"MONITOR: "+m_name,7,m_width,ERR_LVL_MONITOR);
+      m_monDisplay  = new MessageWindow(this,"  MONITOR  ",7,m_width,ERR_LVL_MONITOR);
       m_monDisplay->show(7+h+h,2);
       ::scrc_end_pasteboard_update (m_pasteboard);
       IocSensor::instance().send(this,CMD_UPDATE,0UL);
