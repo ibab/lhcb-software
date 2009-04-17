@@ -1,4 +1,4 @@
-// $Id: P2MCRelatorAlg.h,v 1.1 2009-04-16 16:00:05 jpalac Exp $
+// $Id: P2MCRelatorAlg.h,v 1.2 2009-04-17 20:54:12 jpalac Exp $
 #ifndef P2MCRELATORALG_H 
 #define P2MCRELATORALG_H 1
 
@@ -31,8 +31,9 @@
  *  @code
  *  from Configurables import P2MCRelatorAlg
  *  p2mc = P2MCRelatorAlg()
- *  seq = GaudiSequencer('SeqDC06selBd2Jpsi2MuMu_Kst2KPi')
  *  p2mc.ParticleLocation = "Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/Particles"
+ *  # Add it to a selection sequence
+ *  seq = GaudiSequencer('SeqDC06selBd2Jpsi2MuMu_Kst2KPi')
  *  seq.Members += [p2mc]
  *  @endcode
  *
