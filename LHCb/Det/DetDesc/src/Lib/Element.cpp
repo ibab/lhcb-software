@@ -1,4 +1,4 @@
-// $Id: Element.cpp,v 1.17 2008-10-28 12:04:37 cattanem Exp $
+// $Id: Element.cpp,v 1.18 2009-04-17 08:54:24 cattanem Exp $
 /// STL and STD 
 #include <math.h>
 #include <iostream>
@@ -158,12 +158,12 @@ MsgStream&        Element::fillStream ( MsgStream&   s ) const
     << " CoulombFactor="  << std::setw(8) << coulombFactor() 
     << " TsaiFactor="     << std::setw(8) << tsaiFactor   ()
     << " #isotopes="      << std::setw(2) << isotopes().size() 
-    << endreq;
+    << endmsg;
   for( Isotopes::const_iterator it = isotopes().begin() ; isotopes().end() != it ; ++it )
     { 
       s << " \t\tisotope#"      << std::setw(2) << it - isotopes().begin() 
         << " fraction="  << std::setw(8) << it->first 
-        << endreq 
+        << endmsg 
         << "\t"           << it->second; 
     }
   return s;

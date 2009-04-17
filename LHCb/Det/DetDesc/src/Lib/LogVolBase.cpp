@@ -1,4 +1,4 @@
-// $Id: LogVolBase.cpp,v 1.19 2007-12-19 09:42:40 ibelyaev Exp $
+// $Id: LogVolBase.cpp,v 1.20 2009-04-17 08:54:24 cattanem Exp $
 // ============================================================================
 // Incldue files 
 // ============================================================================
@@ -196,10 +196,10 @@ MsgStream& LogVolBase::printOut( MsgStream & os ) const
   {
     os 
       << "#"   <<  it - m_pvolumes.begin() 
-      << " "   << (*it) << endreq ;
+      << " "   << (*it) << endmsg ;
   }
   ///
-  return os << endreq ;
+  return os << endmsg ;
 }
 // ===========================================================================
 /*  create EMPTY daughter physical volume 
@@ -260,7 +260,7 @@ IPVolume* LogVolBase::createPVolume()
 //          << " LogVolBase: copy number ' " 
 //          << copy_read << "' deduced from '" 
 //          << tmp << "' is ignored! (use forced numbers > 100000) "
-//          << " PV='" << pvName << "'" << endreq ;
+//          << " PV='" << pvName << "'" << endmsg ;
 //      return copy_number ;    
 //    }
 
@@ -272,8 +272,8 @@ IPVolume* LogVolBase::createPVolume()
 /*  create daughter physical volume 
  *  @param PVname name of daughter volume 
  *  @param LVnameForPV name of logical volume for the physical volume 
- *  @param position position of logical volume 
- *  @param rotation rotation of logical volume 
+ *  @param Position position of logical volume 
+ *  @param Rotation rotation of logical volume 
  *  @return pointer to created physical volume  
  */
 // ===========================================================================

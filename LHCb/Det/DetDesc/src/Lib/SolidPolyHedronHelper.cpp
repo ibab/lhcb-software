@@ -1,4 +1,4 @@
-// $Id: SolidPolyHedronHelper.cpp,v 1.13 2007-09-20 15:17:05 wouter Exp $ 
+// $Id: SolidPolyHedronHelper.cpp,v 1.14 2009-04-17 08:54:24 cattanem Exp $ 
 // ===========================================================================
 #include "DetDesc/SolidPolyHedronHelper.h"
 
@@ -130,32 +130,32 @@ bool SolidPolyHedronHelper::isInsideImpl( const aPoint& point ) const
  */
 // ============================================================================
 unsigned int 
-SolidPolyHedronHelper::intersectionTicks( const Gaudi::XYZPoint& point,
-                                          const Gaudi::XYZVector& vect,
-                                          ISolid::Ticks&    ticks ) const 
+SolidPolyHedronHelper::intersectionTicks( const Gaudi::XYZPoint&  Point,
+                                          const Gaudi::XYZVector& Vector,
+                                          ISolid::Ticks&          ticks ) const 
 {
-  return intersectionTicksImpl(point, vect, ticks);
+  return intersectionTicksImpl(Point, Vector, ticks);
 };
 // ============================================================================
 unsigned int 
-SolidPolyHedronHelper::intersectionTicks( const Gaudi::Polar3DPoint& point,
-                                          const Gaudi::Polar3DVector& vect,
-                                          ISolid::Ticks&    ticks ) const 
+SolidPolyHedronHelper::intersectionTicks( const Gaudi::Polar3DPoint&  Point,
+                                          const Gaudi::Polar3DVector& Vector,
+                                          ISolid::Ticks&              ticks ) const 
 {
-  return intersectionTicksImpl(point, vect, ticks);
+  return intersectionTicksImpl(Point, Vector, ticks);
 };
 // ============================================================================
 unsigned int 
-SolidPolyHedronHelper::intersectionTicks( const Gaudi::RhoZPhiPoint& point,
-                                          const Gaudi::RhoZPhiVector& vect, 
-                                          ISolid::Ticks&    ticks ) const 
+SolidPolyHedronHelper::intersectionTicks( const Gaudi::RhoZPhiPoint&  Point,
+                                          const Gaudi::RhoZPhiVector& Vector, 
+                                          ISolid::Ticks&              ticks ) const 
 {
-  return intersectionTicksImpl(point, vect, ticks);
+  return intersectionTicksImpl(Point, Vector, ticks);
 };
 // ============================================================================
 template <class aPoint, class aVector>
 unsigned int 
-SolidPolyHedronHelper::intersectionTicksImpl(const aPoint& Point,
+SolidPolyHedronHelper::intersectionTicksImpl(const aPoint&  Point,
                                              const aVector& Vector,
                                              ISolid::Ticks& ticks  ) const
 {

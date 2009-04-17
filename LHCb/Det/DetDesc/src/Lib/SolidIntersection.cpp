@@ -1,6 +1,4 @@
-// $Id: SolidIntersection.cpp,v 1.13 2006-06-02 06:59:02 cattanem Exp $
-// ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// $Id: SolidIntersection.cpp,v 1.14 2009-04-17 08:54:24 cattanem Exp $
 // ===========================================================================
 #include <iostream> 
 #include <string> 
@@ -102,18 +100,3 @@ StatusCode  SolidIntersection::intersect
 { return addChild( solid , position , rotation ) ; }; 
 
 // ============================================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

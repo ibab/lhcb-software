@@ -1,4 +1,4 @@
-// $Id: PVolume.cpp,v 1.24 2007-12-04 11:43:48 jpalac Exp $ 
+// $Id: PVolume.cpp,v 1.25 2009-04-17 08:54:24 cattanem Exp $ 
 
 // GaudiKernel includes 
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -429,7 +429,7 @@ unsigned int PVolume::intersectLine
 
 // ============================================================================
 /** apply the  misalignemnt to the transformation matrix 
- *  @param ms misalignment matrix (assumed to be small!!!)
+ *  @param ma misalignment matrix (assumed to be small!!!)
  *  @return the resulting transformation matrix
  */
 // ============================================================================

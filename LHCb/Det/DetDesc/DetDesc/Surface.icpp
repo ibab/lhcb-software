@@ -1,4 +1,4 @@
-// $Id: Surface.icpp,v 1.4 2008-10-28 12:04:37 cattanem Exp $
+// $Id: Surface.icpp,v 1.5 2009-04-17 08:54:24 cattanem Exp $
 #ifndef      DETDESC_SURFACE_ICPP
 #define      DETDESC_SURFACE_ICPP 1 
 ///  Gaudi 
@@ -18,7 +18,7 @@ inline std::ostream& operator<<( std::ostream& os , const Surface* surf )
 { return surf ? (os<<*surf) : (os<<" Surface* points to NULL!"<<std::endl) ; }
 /////////////////////////////////////////////////////////////////////////
 inline MsgStream&    operator<<( MsgStream&    os , const Surface* surf )           
-{ return surf ? (os<<*surf) : (os<<" Surface* points to NULL!"<<endreq) ; }
+{ return surf ? (os<<*surf) : (os<<" Surface* points to NULL!"<<endmsg) ; }
 /////////////////////////////////////////////////////////////////////////
 
 

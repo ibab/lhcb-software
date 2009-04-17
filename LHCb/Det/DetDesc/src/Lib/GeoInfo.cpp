@@ -1,48 +1,4 @@
-// $Id: GeoInfo.cpp,v 1.5 2006-04-20 14:39:56 ranjard Exp $
-/// ===========================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.4  2005/07/05 13:28:34  jpalac
-///
-///
-/// ! 2005-07-05 - Juan Palacios
-///  - Remove GeometryInfo class.
-///  - Add methods to re-set AlignmentConditions to IGeometryInfo.
-///
-/// Revision 1.3  2005/06/03 10:19:44  jpalac
-///
-///
-/// ! 2005-06-03 Juan Palacios
-///
-///  - Added ALignmentCondition class files:
-///           DetDesc/AlignmentCondition.h
-///           DetDesc/CLIDAlignmentCondition.h
-///           src/Lib/AlignmentCondition.cpp
-///
-///  - Added new implementation of IGeometryInfo:
-///           src/Lib/GeometryInfoPlus.cp
-///           src/Lib/GeometryInfoPlus.h
-///
-///  - Modify DetectorElement to read in condition path in createGeometryInfo
-///
-///  - Added misalignment matrix access methods to IGeometryInfo and propagated to
-///    the GeometryInfo implementations.
-///
-///  - Modified GeoInfo namespace functions to point to new GeometryInfoPlus
-///    implementation of IGeometryInfo
-///
-///  - Modified GeometryInfoException to take as arguments IGeometryInfo* and not
-///    specific derived class.
-///
-///  - requirements file change version to v15r1
-///
-/// Revision 1.2  2003/04/25 08:52:24  sponce
-/// fixes after valgrind tests, application of code conventions
-///
-/// Revision 1.1  2001/08/10 14:59:02  ibelyaev
-/// modifications in IGeometryInfo and related classes
-/// 
+// $Id: GeoInfo.cpp,v 1.6 2009-04-17 08:54:24 cattanem Exp $
 /// ===========================================================================
 /// DetDesc 
 #include "DetDesc/IGeometryInfo.h"

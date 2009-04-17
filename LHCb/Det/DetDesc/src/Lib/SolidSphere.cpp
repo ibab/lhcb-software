@@ -1,4 +1,4 @@
-// $Id: SolidSphere.cpp,v 1.20 2007-03-16 15:57:23 cattanem Exp $ 
+// $Id: SolidSphere.cpp,v 1.21 2009-04-17 08:54:24 cattanem Exp $ 
 // ===========================================================================
 // STD & STL 
 #include <algorithm>
@@ -434,58 +434,58 @@ const ISolid* SolidSphere::cover () const
  *  @return the number of intersection points
  */
 // ============================================================================
-unsigned int SolidSphere::intersectionTicks( const Gaudi::XYZPoint& point,
-                                             const Gaudi::XYZVector& vect,
-                                             ISolid::Ticks&    ticks ) const 
+unsigned int SolidSphere::intersectionTicks( const Gaudi::XYZPoint&  Point,
+                                             const Gaudi::XYZVector& Vector,
+                                             ISolid::Ticks&          ticks ) const 
 {
-  return intersectionTicksImpl(point, vect, ticks);
+  return intersectionTicksImpl(Point, Vector, ticks);
 };
 // ============================================================================
-unsigned int SolidSphere::intersectionTicks( const Gaudi::Polar3DPoint& point,
-                                             const Gaudi::Polar3DVector& vect,
-                                             ISolid::Ticks&    ticks ) const 
+unsigned int SolidSphere::intersectionTicks( const Gaudi::Polar3DPoint&  Point,
+                                             const Gaudi::Polar3DVector& Vector,
+                                             ISolid::Ticks&              ticks ) const 
 {
-  return intersectionTicksImpl(point, vect, ticks);
+  return intersectionTicksImpl(Point, Vector, ticks);
 };
 // ============================================================================
-unsigned int SolidSphere::intersectionTicks( const Gaudi::RhoZPhiPoint& point,
-                                             const Gaudi::RhoZPhiVector& vect, 
-                                             ISolid::Ticks&    ticks ) const 
+unsigned int SolidSphere::intersectionTicks( const Gaudi::RhoZPhiPoint&  Point,
+                                             const Gaudi::RhoZPhiVector& Vector, 
+                                             ISolid::Ticks&              ticks ) const 
 {
-  return intersectionTicksImpl(point, vect, ticks);
+  return intersectionTicksImpl(Point, Vector, ticks);
 };
 // ============================================================================
 template<class aPoint, class aVector>
-unsigned int SolidSphere::intersectionTicksImpl( const aPoint&  point,
-                                                 const aVector& vect,
+unsigned int SolidSphere::intersectionTicksImpl( const aPoint&  Point,
+                                                 const aVector& Vector,
                                                  ISolid::Ticks& ticks  ) const 
 {
   ticks.clear();
   /// line with null direction vector in not able to intersect something
-  if( vect.mag2() <= 0 ) { return 0; }   ///<  RETURN !!!
+  if( Vector.mag2() <= 0 ) { return 0; }   ///<  RETURN !!!
   ///  try to intersect with sphere outer radius
   if( 0 == 
-      SolidTicks::LineIntersectsTheSphere( point                       , 
-                                           vect                        , 
+      SolidTicks::LineIntersectsTheSphere( Point                       , 
+                                           Vector                      , 
                                            outerRadius()               , 
                                            std::back_inserter( ticks ) ) ) 
     { return 0; }                         ///< RETURN !!!
   /// check for intersection with inner radius 
   if( insideRadius() > 0 ) 
-    { SolidTicks::LineIntersectsTheSphere( point                       , 
-                                           vect                        , 
+    { SolidTicks::LineIntersectsTheSphere( Point                       , 
+                                           Vector                      , 
                                            insideRadius ()             , 
                                            std::back_inserter( ticks ) ) ; }
   // check for phi angle 
   if( 0   * Gaudi::Units::degree != startPhiAngle() || 
       360 * Gaudi::Units::degree != deltaPhiAngle() ) 
     {
-      SolidTicks::LineIntersectsThePhi( point                       , 
-                                        vect                        , 
+      SolidTicks::LineIntersectsThePhi( Point                       , 
+                                        Vector                      , 
                                         startPhiAngle()             , 
                                         std::back_inserter( ticks ) ) ;  
-      SolidTicks::LineIntersectsThePhi( point                       , 
-                                        vect                        , 
+      SolidTicks::LineIntersectsThePhi( Point                       , 
+                                        Vector                      , 
                                         endPhiAngle()               , 
                                         std::back_inserter( ticks ) ) ;  
     }
@@ -493,19 +493,19 @@ unsigned int SolidSphere::intersectionTicksImpl( const aPoint&  point,
   if( 0   * Gaudi::Units::degree != startThetaAngle() || 
       180 * Gaudi::Units::degree != deltaThetaAngle() )
     {
-      SolidTicks::LineIntersectsTheTheta( point                       , 
-                                          vect                        , 
+      SolidTicks::LineIntersectsTheTheta( Point                       , 
+                                          Vector                      , 
                                           startThetaAngle()           , 
                                           std::back_inserter( ticks ) ) ;  
-      SolidTicks::LineIntersectsTheTheta( point                       , 
-                                          vect                        , 
+      SolidTicks::LineIntersectsTheTheta( Point                       , 
+                                          Vector                      , 
                                           endThetaAngle()             , 
                                           std::back_inserter( ticks ) ) ;  
     }
   /// sort and remove adjancent and some EXTRA ticks and return
   return SolidTicks::RemoveAdjancentTicks( ticks , 
-                                           point , 
-                                           vect  , 
+                                           Point , 
+                                           Vector, 
                                            *this );    
 };
 
@@ -580,7 +580,7 @@ MsgStream&     SolidSphere::printOut      ( MsgStream&     os ) const
          <<  DetDesc::print( deltaPhiAngle   () / Gaudi::Units::degree ) ;
     }
   ///
-  return os << endreq ;
+  return os << endmsg ;
 };
 // ============================================================================ 
 

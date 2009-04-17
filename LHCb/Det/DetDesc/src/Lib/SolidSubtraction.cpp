@@ -1,6 +1,4 @@
-// $Id: SolidSubtraction.cpp,v 1.15 2006-06-02 06:59:02 cattanem Exp $
-// ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// $Id: SolidSubtraction.cpp,v 1.16 2009-04-17 08:54:24 cattanem Exp $
 // ===========================================================================
 /** STD & STL */
 #include <iostream> 
@@ -27,11 +25,11 @@
  */
 // ============================================================================
 SolidSubtraction::SolidSubtraction( const std::string& name  , 
-                                    ISolid*            First )
+                                    ISolid*            first )
   : SolidBase    ( name         )
-  , SolidBoolean ( name , First )
+  , SolidBoolean ( name , first )
 {
-  if( 0 == First ) 
+  if( 0 == first ) 
     { throw SolidException(" SolidSubtraction:: ISolid* points to NULL! "); }
 };
 // ============================================================================
@@ -106,15 +104,16 @@ StatusCode  SolidSubtraction::subtract( ISolid*                solid    ,
 
 // ============================================================================
 /** subtract child solid from  the solid 
- *  @param solid pointer to child solid 
+ *  @param child    pointer to child solid 
  *  @param position position  
+ *  @param rotation rotation  
  *  @return status code 
  */
 // ============================================================================
-StatusCode  SolidSubtraction::subtract ( ISolid*                  solid    , 
+StatusCode  SolidSubtraction::subtract ( ISolid*                  child    , 
                                          const Gaudi::XYZPoint&   position , 
                                          const Gaudi::Rotation3D& rotation )
-{ return addChild( solid , position , rotation ) ; };
+{ return addChild( child , position , rotation ) ; };
 // ============================================================================
 
 // ============================================================================

@@ -1,6 +1,4 @@
-// $Id: Mixture.cpp,v 1.14 2008-10-28 12:04:37 cattanem Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// $Id: Mixture.cpp,v 1.15 2009-04-17 08:54:24 cattanem Exp $ 
 // ============================================================================
 // DetDesc 
 #include "DetDesc/MaterialException.h"
@@ -251,13 +249,13 @@ MsgStream&        Mixture::fillStream ( MsgStream&   s ) const
   if( !m_elements.empty() )
     {
       s << "\t #MassComponents=" << std::setw(2)  << m_elements.size() 
-        << endreq ;
+        << endmsg ;
       for( Elements::const_iterator it  = m_elements.begin() ; 
            m_elements.end() != it ; ++it )
         { 
           s << "\t\tcomponent#"     << std::setw(2) << it - m_elements.begin() 
             << " massfraction="     << std::setw(9) << it->first 
-            << endreq 
+            << endmsg 
             << "\t"                 << it->second; 
         }
     }
@@ -265,13 +263,13 @@ MsgStream&        Mixture::fillStream ( MsgStream&   s ) const
   if( !m_atoms.empty() )
     {
       s << "\t #AtomComponents=" << std::setw(2)  << m_atoms.size() 
-        << endreq ;
+        << endmsg ;
       for( Atoms::const_iterator it  = m_atoms.begin() ; 
            m_atoms.end() != it ; ++it )
         { 
           s << "\t\tcomponent#"  << std::setw(2) << it - m_atoms.begin() 
             << " atom="          << std::setw(2) << *it  
-            << endreq ; 
+            << endmsg ; 
         }
     }
   return s;

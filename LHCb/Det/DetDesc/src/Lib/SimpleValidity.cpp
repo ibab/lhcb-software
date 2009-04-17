@@ -1,6 +1,4 @@
-// $Id: SimpleValidity.cpp,v 1.8 2006-06-02 14:33:10 cattanem Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// $Id: SimpleValidity.cpp,v 1.9 2009-04-17 08:54:24 cattanem Exp $
 // ============================================================================
 // Include files
 // GaudiKernel

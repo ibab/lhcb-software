@@ -1,4 +1,4 @@
-// $Id: SolidUnion.cpp,v 1.15 2007-02-26 12:07:11 cattanem Exp $ 
+// $Id: SolidUnion.cpp,v 1.16 2009-04-17 08:54:24 cattanem Exp $ 
 // ===========================================================================
 /** STD & STL  */
 #include <iostream> 
@@ -26,12 +26,12 @@
  */
 // ============================================================================
 SolidUnion::SolidUnion( const std::string& name  , 
-                        ISolid*            First )
+                        ISolid*            first )
   : SolidBase    ( name         )
-  , SolidBoolean ( name , First )
+  , SolidBoolean ( name , first )
   , m_coverTop   ( 0 ) 
 {
-  if( 0 == First ) 
+  if( 0 == first ) 
     { throw SolidException(" SolidUnion:: ISolid* points to NULL!"); }
 };
 // ============================================================================
@@ -41,9 +41,9 @@ SolidUnion::SolidUnion( const std::string& name  ,
  *  @param name name of the solid union 
  */
 // ============================================================================
-SolidUnion::SolidUnion( const std::string& Name )
-  : SolidBase    ( Name )
-  , SolidBoolean ( Name )
+SolidUnion::SolidUnion( const std::string& name )
+  : SolidBase    ( name )
+  , SolidBoolean ( name )
   , m_coverTop( 0 ) 
 {};
 // ============================================================================
@@ -115,16 +115,16 @@ StatusCode  SolidUnion::unite( ISolid*                solid    ,
 
 // ============================================================================
 /** add child solid to the solid union
- *  @param solid pointer to child solid 
+ *  @param child pointer to child solid 
  *  @param position position  
  *  @return status code 
  */
 // ============================================================================
-StatusCode  SolidUnion::unite ( ISolid*               solid    , 
-                                const Gaudi::XYZPoint&     position , 
-                                const Gaudi::Rotation3D&    rotation )
+StatusCode  SolidUnion::unite ( ISolid*                  child    , 
+                                const Gaudi::XYZPoint&   position , 
+                                const Gaudi::Rotation3D& rotation )
 {
-  StatusCode sc = addChild( solid , position , rotation ); 
+  StatusCode sc = addChild( child , position , rotation ); 
   if( sc.isFailure() ) { return sc ; }
   return updateBP();
 };

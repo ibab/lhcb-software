@@ -1,6 +1,4 @@
-// $Id: Material.cpp,v 1.7 2007-09-14 15:40:31 wouter Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// $Id: Material.cpp,v 1.8 2009-04-17 08:54:24 cattanem Exp $ 
 // ============================================================================
 /// GaudiKernel
 #include "GaudiKernel/System.h"
@@ -37,17 +35,17 @@ MsgStream&        Material::fillStream ( MsgStream&   s ) const
   ///
   s << " Material/"        << System::typeinfoName( typeid( *this ) )  
     << " \tname='"         << name() << "'"
-    << endreq              << "\t" 
+    << endmsg              << "\t" 
     << " Atomic[g/mole] =" 
     << std::setw(12)   << A()                /(g/mole)               
     << " Z            ="   << std::setw(12)   << Z() 
     << " #Nucleons  ="     << std::setw(12)   << (int) N()  
-    << endreq              << "\t" 
+    << endmsg              << "\t" 
     << " Density[g/cm3] ="
     << std::setw(12)   << m_density          /(g/cm3)            
     << " X0 [cm]      ="   << std::setw(12)   << m_radiationLength  /cm      
     << " Lambda[cm] ="     << std::setw(12)   << m_absorptionLength /cm        
-    << endreq              << "\t" 
+    << endmsg              << "\t" 
     << " Temperature [K]=" << std::setw(12)   << m_temperature      /kelvin     
     << " Pressure[atm]="   << std::setw(12)   << m_pressure         /atmosphere
     << " State="    ;   
@@ -58,7 +56,7 @@ MsgStream&        Material::fillStream ( MsgStream&   s ) const
   else                               { s << "undefined" ; } 
   ///
   s <<  " #properties="       << std::setw(2)   << m_props.size() 
-    << endreq ;
+    << endmsg ;
   for( SmartRefVector<TabulatedProperty>::const_iterator it = 
          m_props.begin() ; m_props.end() != it ; ++it )
     { s << "\t property#" << std::setw(2) 

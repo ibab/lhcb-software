@@ -1,4 +1,4 @@
-// $Id: DetectorElement.icpp,v 1.14 2006-06-15 14:32:48 ibelyaev Exp $
+// $Id: DetectorElement.icpp,v 1.15 2009-04-17 08:54:24 cattanem Exp $
 
 #ifndef       DETDESC_DETECTORELEMENT_ICPP 
 #define       DETDESC_DETECTORELEMENT_ICPP  1 
@@ -18,7 +18,7 @@ inline MsgStream& operator<< (MsgStream& os, const DetectorElement& de) {
 
 inline MsgStream& operator<< (MsgStream& os, const DetectorElement* de) {
   if (0 == de) {
-    return os << "DetectorElement* points to NULL"<< endreq;
+    return os << "DetectorElement* points to NULL"<< endmsg;
   } else {
     return os << *de;
   }

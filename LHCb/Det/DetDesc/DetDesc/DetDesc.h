@@ -1,4 +1,4 @@
-// $Id: DetDesc.h,v 1.3 2002-11-21 15:39:56 sponce Exp $
+// $Id: DetDesc.h,v 1.4 2009-04-17 08:54:24 cattanem Exp $
 #ifndef DETDESC_DETDESC_H 
 #define DETDESC_DETDESC_H 1
 
@@ -23,7 +23,7 @@ namespace DetDesc {
    * print double value using format
    * @param value   value to be printed 
    * @param format  desirable format
-   * @returnstring representation of the "value"
+   * @return string representation of the "value"
    */
   const std::string print (const double value, const char* format = "%9.3g");
   
@@ -31,7 +31,7 @@ namespace DetDesc {
    * print  long value using format
    * @param value   value to be printed 
    * @param format  desirable format
-   * @returnstring representation of the "value"
+   * @return string representation of the "value"
    */
   const std::string print (const long value, const char* format = "%d");
 

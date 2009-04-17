@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.396 2009-03-17 13:34:16 wouter Exp $ 
+! $Id: release.notes,v 1.397 2009-04-17 08:54:24 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2009-04-17 - Marco Cattaneo
+ - Replaced all endreq by endmsg, obsolescent in Gaudi v21
+ - Fixed many doxygen warnings
 
 ! 2009-03-17 - Wouter Hulsbergen
  - Added another virtual function hook to AlignmentCondition to allow

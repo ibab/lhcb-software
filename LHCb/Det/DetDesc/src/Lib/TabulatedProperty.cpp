@@ -1,4 +1,4 @@
-// $Id: TabulatedProperty.cpp,v 1.10 2005-12-07 13:19:07 cattanem Exp $
+// $Id: TabulatedProperty.cpp,v 1.11 2009-04-17 08:54:24 cattanem Exp $
 
 // DetDesc 
 #include "DetDesc/TabulatedProperty.h"
@@ -47,7 +47,7 @@ MsgStream&    TabulatedProperty::fillStream ( MsgStream&    s ) const
     << " \ttype="       << type() 
     << " \txAxis="      << xAxis() 
     << " \tyAxis="      << yAxis() 
-    << " \t#entries="   << table().size() << endreq; 
+    << " \t#entries="   << table().size() << endmsg; 
   for( Table::const_iterator it = table().begin() ; table().end() != it ; ++it )
     {
       s << " \t\t\t( entry#" 
@@ -55,7 +55,7 @@ MsgStream&    TabulatedProperty::fillStream ( MsgStream&    s ) const
         << "   "      
         << std::setw(12) << it->first 
         << "   " 
-        << std::setw(12) << it->second << " )" << endreq ;
+        << std::setw(12) << it->second << " )" << endmsg ;
     }
   return s ;
 };

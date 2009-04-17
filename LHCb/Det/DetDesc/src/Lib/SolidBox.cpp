@@ -1,4 +1,4 @@
-// $Id: SolidBox.cpp,v 1.19 2007-09-14 15:41:02 wouter Exp $ 
+// $Id: SolidBox.cpp,v 1.20 2009-04-17 08:54:24 cattanem Exp $ 
 // ===========================================================================
 // DetDesc 
 #include "DetDesc/DetDesc.h" 
@@ -95,25 +95,25 @@ SolidBox::~SolidBox(){ if ( this == m_cover ) { m_cover = 0 ; } ; };
  *  @return the number of intersection points (=size of Ticks container)
  */
 // ============================================================================
-unsigned int SolidBox::intersectionTicks( const Gaudi::XYZPoint& point,
-                                           const Gaudi::XYZVector& vect,
-                                           ISolid::Ticks&    ticks ) const 
+unsigned int SolidBox::intersectionTicks( const Gaudi::XYZPoint&  Point,
+                                          const Gaudi::XYZVector& Vector,
+                                          ISolid::Ticks&          ticks ) const 
 {
-  return intersectionTicksImpl(point, vect, ticks);
+  return intersectionTicksImpl(Point, Vector, ticks);
 };
 // ============================================================================
-unsigned int SolidBox::intersectionTicks( const Gaudi::Polar3DPoint& point,
-                                           const Gaudi::Polar3DVector& vect,
-                                           ISolid::Ticks&    ticks ) const 
+unsigned int SolidBox::intersectionTicks( const Gaudi::Polar3DPoint&  Point,
+                                          const Gaudi::Polar3DVector& Vector,
+                                          ISolid::Ticks&              ticks ) const 
 {
-  return intersectionTicksImpl(point, vect, ticks);
+  return intersectionTicksImpl(Point, Vector, ticks);
 };
 // ============================================================================
-unsigned int SolidBox::intersectionTicks( const Gaudi::RhoZPhiPoint& point,
-                                           const Gaudi::RhoZPhiVector& vect, 
-                                           ISolid::Ticks&    ticks ) const 
+unsigned int SolidBox::intersectionTicks( const Gaudi::RhoZPhiPoint&  Point,
+                                          const Gaudi::RhoZPhiVector& Vector, 
+                                          ISolid::Ticks&              ticks ) const 
 {
-  return intersectionTicksImpl(point, vect, ticks);
+  return intersectionTicksImpl(Point, Vector, ticks);
 };
 
 // ============================================================================
@@ -189,7 +189,7 @@ unsigned int SolidBox::intersectionTicksImpl( const aPoint & point  ,
   return ntick;
 }
 
-/// ===========================================================================
+// ===========================================================================
 /** - check for the given 3D-point. 
  *    Point coordinated are in the local reference 
  *    frame of the solid.   
@@ -198,7 +198,7 @@ unsigned int SolidBox::intersectionTicksImpl( const aPoint & point  ,
  *  @param point point (in local reference system of the solid)
  *  @return true if the point is inside the solid
  */
-/// ===========================================================================
+// ===========================================================================
 bool SolidBox::isInside( const Gaudi::XYZPoint   & point ) const 
 {
   return isInsideImpl(point);
@@ -332,7 +332,7 @@ MsgStream&    SolidBox::printOut  ( MsgStream&     os ) const
        << " xsize[mm]=" << DetDesc::print( xsize() / Gaudi::Units::mm ) 
        << " ysize[mm]=" << DetDesc::print( ysize() / Gaudi::Units::mm ) 
        << " zsize[mm]=" << DetDesc::print( zsize() / Gaudi::Units::mm )  
-       << "]" << endreq ;
+       << "]" << endmsg ;
 };
 // ============================================================================
 

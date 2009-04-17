@@ -1,4 +1,4 @@
-// $Id: DetectorElementException.cpp,v 1.5 2006-06-15 14:32:48 ibelyaev Exp $
+// $Id: DetectorElementException.cpp,v 1.6 2009-04-17 08:54:24 cattanem Exp $
 /// GaudiKernel
 #include "GaudiKernel/MsgStream.h"
 /// DetDesc 
@@ -69,6 +69,6 @@ MsgStream&    DetectorElementException::printOut( MsgStream& os  ) const
   else
   { os << "\t for UKNNOWN DetectorElement"           ; }
   ///
-  return  previous() ? ( previous()->printOut(os) ) : ( os << endreq ) ;
+  return  previous() ? ( previous()->printOut(os) ) : ( os << endmsg ) ;
 }; 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////

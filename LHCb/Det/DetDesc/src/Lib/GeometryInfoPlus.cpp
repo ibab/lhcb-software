@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.cpp,v 1.33 2009-02-02 12:20:22 marcocle Exp $
+// $Id: GeometryInfoPlus.cpp,v 1.34 2009-04-17 08:54:24 cattanem Exp $
 // Include files
 
 // GaudiKernel
@@ -1103,7 +1103,7 @@ MsgStream& GeometryInfoPlus::printOut( MsgStream& os ) const
     os << " !!! Unable to print GeometryInfo out !!!";
   }
   //
-  return os << endreq ;
+  return os << endmsg ;
 }
 //=============================================================================
 ILVolume* GeometryInfoPlus::findLogical() const

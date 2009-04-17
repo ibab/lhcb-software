@@ -1,6 +1,4 @@
-// $Id: SolidTrd.cpp,v 1.18 2006-10-11 15:02:58 cattanem Exp $ 
-// ===========================================================================
-// CVS $Name: not supported by cvs2svn $ 
+// $Id: SolidTrd.cpp,v 1.19 2009-04-17 08:54:24 cattanem Exp $ 
 // ===========================================================================
 
 // Units
@@ -26,7 +24,7 @@
 // ============================================================================
 /** constructor 
  *  @param name name of the solid object
- *  @param zHalfLength half-length in z-direction 
+ *  @param ZHalfLength half-length in z-direction 
  *  @param XHalfLength1 half-length in x-direction at z1  
  *  @param YHalfLength1 half-length in y-direction at z1  
  *  @param XHalfLength2 half-length in x-direction at z2  
@@ -255,7 +253,7 @@ MsgStream&     SolidTrd::printOut      ( MsgStream&     os ) const
        << " sizeY1[mm]=" << DetDesc::print( yLength1 () / Gaudi::Units::mm )  
        << " sizeX2[mm]=" << DetDesc::print( xLength2 () / Gaudi::Units::mm ) 
        << " sizeY2[mm]=" << DetDesc::print( yLength2 () / Gaudi::Units::mm )
-       << "]" << endreq ;
+       << "]" << endmsg ;
 };
 // ============================================================================
 

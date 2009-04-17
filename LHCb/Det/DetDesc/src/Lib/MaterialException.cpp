@@ -1,4 +1,4 @@
-// $Id: MaterialException.cpp,v 1.7 2006-06-02 06:59:01 cattanem Exp $
+// $Id: MaterialException.cpp,v 1.8 2009-04-17 08:54:24 cattanem Exp $
 ///
 /// GaudiKernbel
 #include "GaudiKernel/MsgStream.h"
@@ -59,7 +59,7 @@ MsgStream&    MaterialException::printOut( MsgStream&    os ) const
     default                  : os << "\t StatusCode=" << std::setw(7) << code() ;  break ; 
     }
   ///  
-  os << m_me_mat << endreq ; 
+  os << m_me_mat << endmsg ; 
   ///
   return previous() ? ( previous()->printOut( os ) ) : os   ; 
   ///

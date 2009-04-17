@@ -1,4 +1,4 @@
-// $Id: PVolumeException.cpp,v 1.6 2006-04-20 14:39:56 ranjard Exp $
+// $Id: PVolumeException.cpp,v 1.7 2009-04-17 08:54:24 cattanem Exp $
 
 // GaudiKernel
 #include "GaudiKernel/MsgStream.h"
@@ -54,7 +54,7 @@ MsgStream&    PVolumeException::printOut( MsgStream&    os             ) const
     default                  : os << "\t StatusCode=" << code() ;  break ; 
     }
   ///
-  os << " \t" << m_pve_pvolume << endreq;
+  os << " \t" << m_pve_pvolume << endmsg;
   ///
   return ( 0 != previous() ) ? previous()->printOut( os ) : os ; 
   ///

@@ -1,4 +1,4 @@
-// $Id: SolidException.cpp,v 1.6 2003-04-25 08:52:24 sponce Exp $
+// $Id: SolidException.cpp,v 1.7 2009-04-17 08:54:24 cattanem Exp $
 
 // GaudiKernel
 #include "DetDesc/ISolid.h"
@@ -52,7 +52,7 @@ MsgStream&    SolidException::printOut( MsgStream&    os             ) const
     default                  : os << "\t StatusCode=" << code() ;  break ; 
     }
   ///
-  os << " \tSolid=" <<  m_se_solid << endreq;
+  os << " \tSolid=" <<  m_se_solid << endmsg;
   ///
   return ( 0 != previous() ) ? previous()->printOut( os ) :  os ;  
   ///

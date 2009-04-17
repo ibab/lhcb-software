@@ -1,4 +1,4 @@
-// $Id: SolidBase.cpp,v 1.18 2007-09-20 15:44:50 wouter Exp $
+// $Id: SolidBase.cpp,v 1.19 2009-04-17 08:54:24 cattanem Exp $
 
 // Units
 #include "GaudiKernel/SystemOfUnits.h"
@@ -148,7 +148,7 @@ MsgStream&    SolidBase::printOut ( MsgStream&    st ) const
   return 
     st << " SolidType='"     << typeName () << "'" 
        << " \tname='"        << name     () << "'" 
-       << endreq 
+       << endmsg 
        << " BPs: (x,y,z,r,rho)[Min/Max][mm]=(" 
        << DetDesc::print(   xMin () / Gaudi::Units::mm )  << "/" 
        << DetDesc::print(   xMax () / Gaudi::Units::mm )  << "," 
@@ -242,8 +242,6 @@ unsigned int SolidBase::intersectionTicksImpl( const aPoint  & Point,
  *  @see ISolid 
  *  @param Point initial point for the line
  *  @param Vector vector along the line
- *  @param tickMin minimum value of Tick 
- *  @param tickMax maximu value of Tick 
  *  @param ticks output container of "Ticks"
  *  @return the number of intersection points
  */
@@ -295,7 +293,7 @@ void SolidBase::checkBP() const
       log << MSG::FATAL
           << " SolidBase::checkPB "
           << m_name 
-          << " Wrong Bounding Parameters "            << endreq ;
+          << " Wrong Bounding Parameters "            << endmsg ;
       log << MSG::ERROR 
           << " BPs: (x,y,z,r,rho)[Min/Max][mm]=(" 
           << DetDesc::print(   xMin () / Gaudi::Units::mm )  << "/" 
@@ -316,7 +314,7 @@ void SolidBase::checkBP() const
       log << MSG::FATAL
           << " SolidBase::checkPB "
           << m_name  
-          << " Wrong Bounding Parameters "            << endreq ;
+          << " Wrong Bounding Parameters "            << endmsg ;
       log << MSG::ERROR 
           << " BPs: (x,y,z,r,rho)[Min/Max][mm]=(" 
           << DetDesc::print(   xMin () / Gaudi::Units::mm )  << "/" 
@@ -337,7 +335,7 @@ void SolidBase::checkBP() const
       log << MSG::FATAL
           << " SolidBase::checkPB "
           << m_name 
-          << " Wrong Bounding Parameters "            << endreq ;
+          << " Wrong Bounding Parameters "            << endmsg ;
       log << MSG::ERROR 
           << " BPs: (x,y,z,r,rho)[Min/Max][mm]=(" 
           << DetDesc::print(   xMin () / Gaudi::Units::mm )  << "/" 
@@ -358,7 +356,7 @@ void SolidBase::checkBP() const
       log << MSG::FATAL
           << " SolidBase::checkPB "
           << m_name 
-          << " Wrong Bounding Parameters "            << endreq ;
+          << " Wrong Bounding Parameters "            << endmsg ;
       log << MSG::ERROR 
           << " BPs: (x,y,z,r,rho)[Min/Max][mm]=(" 
           << DetDesc::print(   xMin () / Gaudi::Units::mm )  << "/" 
@@ -378,7 +376,7 @@ void SolidBase::checkBP() const
       log << MSG::FATAL
           << " SolidBase::checkPB "
           << m_name
-          << " Wrong Bounding Parameters "            << endreq ;
+          << " Wrong Bounding Parameters "            << endmsg ;
       log << MSG::ERROR 
           << " BPs: (x,y,z,r,rho)[Min/Max][mm]=(" 
           << DetDesc::print(   xMin () / Gaudi::Units::mm )  << "/" 

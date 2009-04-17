@@ -1,4 +1,4 @@
-// $Id: LVolume.cpp,v 1.35 2007-12-19 09:42:40 ibelyaev Exp $ 
+// $Id: LVolume.cpp,v 1.36 2009-04-17 08:54:24 cattanem Exp $ 
 // ============================================================================
 /// STD & STL includes 
 // ============================================================================
@@ -204,9 +204,9 @@ MsgStream&    LVolume::printOut
   LogVolBase::printOut( os ) ;
   /// 
   os << solid() 
-     << endreq;
+     << endmsg;
   ///
-  return os << "Material name='" << materialName() << "' " << endreq;
+  return os << "Material name='" << materialName() << "' " << endmsg;
 }
 // ============================================================================
 /*  Auxillary method  to calculate own intersections

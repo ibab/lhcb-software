@@ -1,4 +1,4 @@
-// $Id: SolidCons.cpp,v 1.21 2007-09-20 15:44:50 wouter Exp $ 
+// $Id: SolidCons.cpp,v 1.22 2009-04-17 08:54:24 cattanem Exp $ 
 // ===========================================================================
 // Units
 #include "GaudiKernel/SystemOfUnits.h"
@@ -354,49 +354,49 @@ const ISolid* SolidCons::cover () const
  *  @return the number of intersection points (=size of Ticks container)
  */
 // ============================================================================
-unsigned int SolidCons::intersectionTicks( const Gaudi::XYZPoint& point,
-                                           const Gaudi::XYZVector& vect,
-                                           ISolid::Ticks&    ticks ) const 
+unsigned int SolidCons::intersectionTicks( const Gaudi::XYZPoint&  Point,
+                                           const Gaudi::XYZVector& Vector,
+                                           ISolid::Ticks&          ticks ) const 
 {
-  return intersectionTicksImpl(point, vect, ticks);
+  return intersectionTicksImpl(Point, Vector, ticks);
 };
 // ============================================================================
-unsigned int SolidCons::intersectionTicks( const Gaudi::Polar3DPoint& point,
-                                           const Gaudi::Polar3DVector& vect,
-                                           ISolid::Ticks&    ticks ) const 
+unsigned int SolidCons::intersectionTicks( const Gaudi::Polar3DPoint&  Point,
+                                           const Gaudi::Polar3DVector& Vector,
+                                           ISolid::Ticks&              ticks ) const 
 {
-  return intersectionTicksImpl(point, vect, ticks);
+  return intersectionTicksImpl(Point, Vector, ticks);
 };
 // ============================================================================
-unsigned int SolidCons::intersectionTicks( const Gaudi::RhoZPhiPoint& point,
-                                           const Gaudi::RhoZPhiVector& vect, 
-                                           ISolid::Ticks&    ticks ) const 
+unsigned int SolidCons::intersectionTicks( const Gaudi::RhoZPhiPoint&  Point,
+                                           const Gaudi::RhoZPhiVector& Vector, 
+                                           ISolid::Ticks&              ticks ) const 
 {
-  return intersectionTicksImpl(point, vect, ticks);
+  return intersectionTicksImpl(Point, Vector, ticks);
 };
 // ============================================================================
 template<class aPoint, class aVector>
-unsigned int SolidCons::intersectionTicksImpl( const aPoint & point,
-                                               const aVector& vect,
+unsigned int SolidCons::intersectionTicksImpl( const aPoint & Point,
+                                               const aVector& Vector,
                                                ISolid::Ticks& ticks  ) const
 {
   // Clear the tick vector
   ticks.clear();
   
   // line with null direction vector is not able to intersect any solid 
-  if( vect.mag2() <= 0 )  { return 0 ;}  ///< RETURN!!!
+  if( Vector.mag2() <= 0 )  { return 0 ;}  ///< RETURN!!!
   
   // cross bounding cylinder ?
-  if( !crossBCylinder( point , vect ) ) { return 0 ; }
+  if( !crossBCylinder( Point , Vector ) ) { return 0 ; }
 
   // intersect with first z-plane
   typedef StaticArray<ISolid::Tick,6> LocalTickContainer ;
   LocalTickContainer tmpticks ;
   tmpticks.clear() ; 
-  if(SolidTicks::LineIntersectsTheZ( point, vect, -zHalfLength(), std::back_inserter( tmpticks ))) {
+  if(SolidTicks::LineIntersectsTheZ( Point, Vector, -zHalfLength(), std::back_inserter( tmpticks ))) {
     double tick = tmpticks.front() ;
-    double x = point.x() + tick * vect.x() ;
-    double y = point.y() + tick  * vect.y() ;
+    double x = Point.x() + tick * Vector.x() ;
+    double y = Point.y() + tick * Vector.y() ;
     double r = sqrt(x*x+y*y) ;
     if(innerRadiusAtMinusZ()<=r && r<=outerRadiusAtMinusZ() && (noPhiGap() || insidePhi( atan2(y,x) ) ) )
       ticks.push_back(tick) ;
@@ -404,10 +404,10 @@ unsigned int SolidCons::intersectionTicksImpl( const aPoint & point,
 
   // intersect with 2nd z-plane
   tmpticks.clear() ; 
-  if(SolidTicks::LineIntersectsTheZ( point, vect, zHalfLength(), std::back_inserter( tmpticks ))) {
+  if(SolidTicks::LineIntersectsTheZ( Point, Vector, zHalfLength(), std::back_inserter( tmpticks ))) {
     double tick = tmpticks.front() ;
-    double x = point.x() + tick * vect.x() ;
-    double y = point.y() + tick  * vect.y() ;
+    double x = Point.x() + tick * Vector.x() ;
+    double y = Point.y() + tick * Vector.y() ;
     double r = sqrt(x*x+y*y) ;
     if(innerRadiusAtPlusZ()<=r && r<=outerRadiusAtPlusZ() && (noPhiGap() || insidePhi( atan2(y,x) ) ) )
       ticks.push_back(tick) ;
@@ -416,42 +416,42 @@ unsigned int SolidCons::intersectionTicksImpl( const aPoint & point,
   if( !noPhiGap() ) {
     // intersect with phi planes
     tmpticks.clear() ; 
-    SolidTicks::LineIntersectsThePhi( point,vect,startPhiAngle(), std::back_inserter( tmpticks ) );  
+    SolidTicks::LineIntersectsThePhi( Point,Vector,startPhiAngle(), std::back_inserter( tmpticks ) );  
     //if( deltaPhiAngle() != M_PI )
-    SolidTicks::LineIntersectsThePhi( point,vect,startPhiAngle() + deltaPhiAngle(), std::back_inserter( tmpticks ));
+    SolidTicks::LineIntersectsThePhi( Point,Vector,startPhiAngle() + deltaPhiAngle(), std::back_inserter( tmpticks ));
     
     // check that we are anywhere inside this cylinder
     for( LocalTickContainer::const_iterator it = tmpticks.begin(); it != tmpticks.end(); ++it) {
-      double zfrac = (point.z() + *it * vect.z())/zHalfLength() ;
+      double zfrac = (Point.z() + *it * Vector.z())/zHalfLength() ;
       if( fabs(zfrac) <= 1 ) {
-	double x = point.x() + *it * vect.x() ;
-	double y = point.y() + *it * vect.y() ;
-	double r = sqrt(x*x+y*y) ;
-	if( r >= 0.5*( (1-zfrac)*innerRadiusAtMinusZ() + (1+zfrac)*innerRadiusAtMinusZ()) && 
-	    r<=  0.5*( (1-zfrac)*outerRadiusAtMinusZ() + (1+zfrac)*outerRadiusAtMinusZ()) )
-	  ticks.push_back(*it) ;
+        double x = Point.x() + *it * Vector.x() ;
+        double y = Point.y() + *it * Vector.y() ;
+        double r = sqrt(x*x+y*y) ;
+        if( r >= 0.5*( (1-zfrac)*innerRadiusAtMinusZ() + (1+zfrac)*innerRadiusAtMinusZ()) && 
+            r<=  0.5*( (1-zfrac)*outerRadiusAtMinusZ() + (1+zfrac)*outerRadiusAtMinusZ()) )
+          ticks.push_back(*it) ;
       }
     }
   }
   
   // intersect with outer conical surface
   tmpticks.clear() ;
-  SolidTicks::LineIntersectsTheCone( point, vect, outerRadiusAtMinusZ(), outerRadiusAtPlusZ (), 
+  SolidTicks::LineIntersectsTheCone( Point, Vector, outerRadiusAtMinusZ(), outerRadiusAtPlusZ (), 
 				     -zHalfLength(), zHalfLength(), std::back_inserter( tmpticks ));
   // intersect with inner conical surface
   if( ( 0 < innerRadiusAtPlusZ() ) || ( 0 < innerRadiusAtMinusZ() )  )
-    SolidTicks::LineIntersectsTheCone( point, vect, innerRadiusAtMinusZ(), innerRadiusAtPlusZ (), 
+    SolidTicks::LineIntersectsTheCone( Point, Vector, innerRadiusAtMinusZ(), innerRadiusAtPlusZ (), 
 				       -zHalfLength(), zHalfLength(), std::back_inserter( tmpticks ) ); 
     
   // check that we are in the right z and phi range
   for( LocalTickContainer::const_iterator it = tmpticks.begin(); it != tmpticks.end(); ++it)
-    if( fabs(point.z() + *it * vect.z()) <= zHalfLength() &&
+    if( fabs(Point.z() + *it * Vector.z()) <= zHalfLength() &&
 	(noPhiGap() ||
-	 insidePhi(atan2( point.y() + *it * vect.y(), point.x() + *it * vect.x())) ) )
+	 insidePhi(atan2( Point.y() + *it * Vector.y(), Point.x() + *it * Vector.x())) ) )
       ticks.push_back(*it) ;
 
   std::sort(ticks.begin(),ticks.end()) ;
-  return SolidTicks::RemoveAdjacentTicksFast(ticks , point , vect , *this );
+  return SolidTicks::RemoveAdjacentTicksFast(ticks , Point , Vector , *this );
 };
 
 // ============================================================================
@@ -515,7 +515,7 @@ MsgStream&     SolidCons::printOut      ( MsgStream&     os ) const
       os << " deltaPhiAngle[deg]" 
          << DetDesc::print( deltaPhiAngle() / Gaudi::Units::degree ) ;
     }
-  return os << "]" << endreq ;
+  return os << "]" << endmsg ;
 };
 
 // ============================================================================

@@ -1,14 +1,4 @@
-// $Id: LogVolumeException.cpp,v 1.3 2003-01-17 14:03:38 sponce Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2001/11/18 15:48:50  ibelyaev
-//  bug fix for Win2k
-//
-// Revision 1.1  2001/11/18 15:32:45  ibelyaev
-//  update for Logical Assemblies
-// 
+// $Id: LogVolumeException.cpp,v 1.4 2009-04-17 08:54:24 cattanem Exp $
 // ============================================================================
 // Include files
 // local
@@ -107,11 +97,11 @@ MsgStream&    LogVolumeException::printOut
     case StatusCode::FAILURE : os << "\t StatusCode=FAILURE"    ;  break ; 
     default                  : os << "\t StatusCode=" << code() ;  break ; 
     } 
-  os << endreq ;
+  os << endmsg ;
   /// print the logvol 
   os << " Exception logvol: " 
      << m_logvol 
-     << endreq  ; 
+     << endmsg  ; 
   /// print all previous (linked) exceptions     
   return ( 0 != previous() ) ? previous()->printOut( os ) : os ;
 };

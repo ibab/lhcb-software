@@ -1,4 +1,4 @@
-// $Id: VolumeIntersectionIntervals.h,v 1.14 2007-12-19 09:42:39 ibelyaev Exp $ 
+// $Id: VolumeIntersectionIntervals.h,v 1.15 2009-04-17 08:54:24 cattanem Exp $ 
 // ==============================================================================
 #ifndef       DETDESC_VOLUMEINTERSECTIONIINTERVALS_H
 #define       DETDESC_VOLUMEINTERSECTIONIINTERVALS_H 
@@ -223,7 +223,7 @@ namespace  VolumeIntersectionIntervals
               << intervalLoc.first << " "
               << intervalLoc.second << " master "
               << intervalTop.first << " " 
-              << intervalTop.second << endreq;
+              << intervalTop.second << endmsg;
           services->release();
           return StatusCode(15) ;
         }
@@ -274,7 +274,7 @@ namespace  VolumeIntersectionIntervals
               << intervalLocal.first << " "
               << intervalLocal.second << " master "
               << leftTick << " " 
-              << mostRightTick << endreq;
+              << mostRightTick << endmsg;
           services->release();
           return StatusCode(17) ; 
         }         // RETURN !!!

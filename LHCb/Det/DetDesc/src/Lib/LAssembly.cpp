@@ -1,4 +1,4 @@
-// $Id: LAssembly.cpp,v 1.18 2007-12-19 09:42:40 ibelyaev Exp $
+// $Id: LAssembly.cpp,v 1.19 2009-04-17 08:54:24 cattanem Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -299,14 +299,14 @@ void LAssembly::computeCover()
         } else {
           MsgStream log ( msgSvc() , "TransportSvc" );
           log << MSG::ERROR << " === No cover for assembly " << name() 
-              << " pv " << pv->name() << endreq;;
+              << " pv " << pv->name() << endmsg;;
         }
       } else {  //== No solid : This is an assembly
         const LAssembly* assem = dynamic_cast<const LAssembly*>(pv->lvolume());
         if ( 0 == assem ) {
           MsgStream log ( msgSvc() , "TransportSvc" );
           log << MSG::ERROR << " === No solid for assembly " << name() 
-              << " pv " << pv->name() << " not assembly !" << endreq;
+              << " pv " << pv->name() << " not assembly !" << endmsg;
         } else {
           LAssembly* myAss = const_cast<LAssembly*>( assem );
           //== Compute the cover of the assembly
@@ -341,7 +341,7 @@ void LAssembly::computeCover()
   //    << " x [" << m_xMin << "," << m_xMax
   //    << "], y [" << m_yMin << "," << m_yMax
   //    << "], z [" << m_zMin << "," << m_zMax
-  //    << "]" << endreq;
+  //    << "]" << endmsg;
   m_coverComputed = true;
 }
 // ============================================================================

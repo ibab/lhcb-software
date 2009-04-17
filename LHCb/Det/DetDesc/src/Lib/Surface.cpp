@@ -1,4 +1,4 @@
-// $Id: Surface.cpp,v 1.8 2005-12-07 13:19:07 cattanem Exp $
+// $Id: Surface.cpp,v 1.9 2009-04-17 08:54:24 cattanem Exp $
 
 // GaudiKernel
 #include "GaudiKernel/System.h"
@@ -47,7 +47,7 @@ MsgStream&        Surface::fillStream ( MsgStream&    s ) const
     << "\tfirstVol='"  << firstVol ()   <<"'"
     << "\tsecondVol='" << secondVol()   <<"'" 
     << "\t#props="     << std::setw(2)  << m_props.size() 
-    << endreq ;
+    << endmsg ;
   for (Tables::const_iterator it = m_props.begin() ; m_props.end() != it ; ++it)
     { s << "\t" << (*it) ; } 
   return s;

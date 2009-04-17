@@ -1,4 +1,4 @@
-// $Id: SolidTrap.cpp,v 1.20 2006-10-11 15:02:58 cattanem Exp $
+// $Id: SolidTrap.cpp,v 1.21 2009-04-17 08:54:24 cattanem Exp $
 // ===========================================================================
 
 // Units
@@ -24,18 +24,18 @@
 
 // ============================================================================
 /** constructor 
- *  @param name                   name of trap solid 
- *  @param zHalfLength            half length in z 
- *  @param theta                  theta angle 
- *  @param phi                    phi angle 
- *  @param dyAtMinusZ             delta y at bottom face
- *  @param dxAtMinusZMinusY       delta x at bottom face , minus y
- *  @param dxAtMinusZPlusY        delta x at bottom face , plus y 
- *  @param alphaAtMinusZ          alpha angle at bottom face 
- *  @param dyAtPlusZ              delta y at top face 
- *  @param dxAtPlusZMinusY        delta x at top face, minus y 
- *  @param dxAtPlusZPlusY         delta x at top face, plus y     
- *  @param alphaAtPlusZ           alpha angle at top face 
+ *  @param Name                   name of trap solid 
+ *  @param ZHalfLength            half length in z 
+ *  @param Theta                  theta angle 
+ *  @param Phi                    phi angle 
+ *  @param DyAtMinusZ             delta y at bottom face
+ *  @param DxAtMinusZMinusY       delta x at bottom face , minus y
+ *  @param DxAtMinusZPlusY        delta x at bottom face , plus y 
+ *  @param AlphaAtMinusZ          alpha angle at bottom face 
+ *  @param DyAtPlusZ              delta y at top face 
+ *  @param DxAtPlusZMinusY        delta x at top face, minus y 
+ *  @param DxAtPlusZPlusY         delta x at top face, plus y     
+ *  @param AlphaAtPlusZ           alpha angle at top face 
  *  @exception SolidException wrong parameters range 
  */   
 // ============================================================================
@@ -88,7 +88,7 @@ SolidTrap::SolidTrap( const std::string&  Name             ,
 
 // ============================================================================
 /** constructor 
- *  @param name name of general trapezoid 
+ *  @param Name name of general trapezoid 
  */
 // ============================================================================
 SolidTrap::SolidTrap( const std::string& Name )

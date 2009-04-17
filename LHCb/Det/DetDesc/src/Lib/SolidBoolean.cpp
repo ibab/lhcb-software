@@ -1,6 +1,4 @@
-// $Id: SolidBoolean.cpp,v 1.19 2007-09-20 15:17:05 wouter Exp $
-// ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// $Id: SolidBoolean.cpp,v 1.20 2009-04-17 08:54:24 cattanem Exp $
 // ===========================================================================
 // STD & STL 
 #include <functional>
@@ -106,7 +104,7 @@ ISolid* SolidBoolean::reset()
 
 // ============================================================================
 /** add child to daughter container 
- *  @param chidl pointer to solid 
+ *  @param child pointer to solid 
  *  @param mtrx  pointer to transformation 
  *  @return status code 
  */
@@ -124,7 +122,7 @@ StatusCode SolidBoolean::addChild( ISolid*                  child ,
 
 // ============================================================================
 /** add child to daughter container 
- *  @param pointer to solid 
+ *  @param child    pointer to solid 
  *  @param position position 
  *  @param rotation rotation 
  */
@@ -151,38 +149,38 @@ StatusCode SolidBoolean::addChild   ( ISolid*               child    ,
  *  @return the number of intersection points (=size of Ticks container)
  */
 // ============================================================================
-unsigned int SolidBoolean::intersectionTicks( const Gaudi::XYZPoint& point,
-                                           const Gaudi::XYZVector& vect,
-                                           ISolid::Ticks&    ticks ) const 
+unsigned int SolidBoolean::intersectionTicks( const Gaudi::XYZPoint& Point,
+                                              const Gaudi::XYZVector& Vector,
+                                              ISolid::Ticks&    ticks ) const 
 {
-  return intersectionTicksImpl(point, vect, ticks);
+  return intersectionTicksImpl(Point, Vector, ticks);
 };
 // ============================================================================
-unsigned int SolidBoolean::intersectionTicks( const Gaudi::Polar3DPoint& point,
-                                           const Gaudi::Polar3DVector& vect,
-                                           ISolid::Ticks&    ticks ) const 
+unsigned int SolidBoolean::intersectionTicks( const Gaudi::Polar3DPoint& Point,
+                                              const Gaudi::Polar3DVector& Vector,
+                                              ISolid::Ticks&    ticks ) const 
 {
-  return intersectionTicksImpl(point, vect, ticks);
+  return intersectionTicksImpl(Point, Vector, ticks);
 };
 // ============================================================================
-unsigned int SolidBoolean::intersectionTicks( const Gaudi::RhoZPhiPoint& point,
-                                           const Gaudi::RhoZPhiVector& vect, 
-                                           ISolid::Ticks&    ticks ) const 
+unsigned int SolidBoolean::intersectionTicks( const Gaudi::RhoZPhiPoint& Point,
+                                              const Gaudi::RhoZPhiVector& Vector, 
+                                              ISolid::Ticks&    ticks ) const 
 {
-  return intersectionTicksImpl(point, vect, ticks);
+  return intersectionTicksImpl(Point, Vector, ticks);
 };
 // ============================================================================
 template<class aPoint, class aVector>
-unsigned int SolidBoolean::intersectionTicksImpl( const aPoint & point,
-                                                  const aVector& vect,
+unsigned int SolidBoolean::intersectionTicksImpl( const aPoint & Point,
+                                                  const aVector& Vector,
                                                   ISolid::Ticks& ticks) const
 {
   ///
   ticks.clear();
   /// line with null direction vector is not able to intersect any solid
-  if( vect.mag2() <= 0 ) { return 0; }
+  if( Vector.mag2() <= 0 ) { return 0; }
   // find intersection with main solid:
-  first()->intersectionTicks( point , vect , ticks ); 
+  first()->intersectionTicks( Point , Vector , ticks ); 
   /// find intersections with child solids:
   ISolid::Ticks childTicks; 
   for( SolidChildrens::const_iterator ci = childBegin() ; 
@@ -190,13 +188,13 @@ unsigned int SolidBoolean::intersectionTicksImpl( const aPoint & point,
     {
       const ISolid* child = *ci; 
       if( 0 != child ) 
-        { child->intersectionTicks( point , vect, childTicks ); } 
+        { child->intersectionTicks( Point , Vector, childTicks ); } 
       std::copy( childTicks.begin() , childTicks.end() , 
                  std::back_inserter( ticks ) );
       childTicks.clear();
     } 
   /// sort and remove adjancent and some EXTRA ticks and return 
-  return SolidTicks::RemoveAdjancentTicks( ticks , point , vect , *this );  
+  return SolidTicks::RemoveAdjancentTicks( ticks , Point , Vector , *this );  
 };
 // ============================================================================
 /** Calculate the maximum number of ticks that a straight line could make with this solid
@@ -299,15 +297,15 @@ MsgStream&    SolidBoolean::printOut( MsgStream&    os ) const
 {
   // printout the base class 
   SolidBase::printOut( os );
-  os     << " ** 'Main' solid is " << endreq;
+  os     << " ** 'Main' solid is " << endmsg;
   first()->printOut( os )  ;
   for( SolidChildrens::const_iterator child = childBegin() ;
        childEnd() != child ; ++child ) 
     { 
-      os << " ** 'Booled' with "   << endreq ;
+      os << " ** 'Booled' with "   << endmsg ;
       (*child)->printOut( os ); 
     }
-  return os << std::endl ;
+  return os << endmsg ;
 };
 // ============================================================================
 

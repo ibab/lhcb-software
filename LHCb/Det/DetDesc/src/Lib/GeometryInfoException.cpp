@@ -1,4 +1,4 @@
-// $Id: GeometryInfoException.cpp,v 1.6 2006-04-20 14:39:56 ranjard Exp $
+// $Id: GeometryInfoException.cpp,v 1.7 2009-04-17 08:54:24 cattanem Exp $
 /// GaudiKernel
 #include "GaudiKernel/MsgStream.h"
 #include "DetDesc/IGeometryInfo.h" 
@@ -56,7 +56,7 @@ MsgStream&    GeometryInfoException::printOut( MsgStream&  os     ) const
     default                  : os << "\t StatusCode=" << std::setw(7) << code() ;  break ; 
     }
   ///  
-  os << m_gie_geometryInfo << endreq ; 
+  os << m_gie_geometryInfo << endmsg ; 
   ///
   return previous() ? ( previous()->printOut( os ) ) :  os  ; 
   ///
