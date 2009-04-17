@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.65 2009-04-13 10:22:00 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.66 2009-04-17 11:53:39 snies Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -161,30 +161,58 @@ class HltConf(LHCbConfigurableUser):
         print '# added ' + str(len(missingSelections)) + ' selections to HltANNSvc'
         print '# added ' + str(len(missingDecisions)) + ' decisions to HltANNSvc' 
 
+
     def configureHltMonitoring(self, lines) :
+        import re
         ## and tell the monitoring what it should expect..
         from Configurables import HltGlobalMonitor
         HltGlobalMonitor().Hlt1Decisions = [ i.decision() for i in lines ]
-        ## group lines into 'alleys'
-        groupingRules = [ ( 'Hlt1L0.*Decision' , 'L0' )
-                        , ( '.*IgnoreLumi.*'   , 'IgnoreLumi' )
-                        , ( '.*Global.*'       , 'Global' )
-                        ] 
-        for i in [ 'XPress','Hadron','SingleMuon','DiMuon','MuTrack','Lumi','Velo','Electron','Pho' ] :
-            groupingRules.append( ( 'Hlt1.*'+i+'.*Decision' ,  i ) )
+       
+        # the keys are the Labels for the Histograms in the GUI
+        # the values are the Pattern Rules to for the Decisions contributing 
+        alley_string_patterns = [ ("L0"         , "Hlt1L0.*Decision"),
+                                  ("XPress"     , "Hlt1.*XPress.*Decision"),
+                                  ("Hadron"     , "Hlt1.*Hadron.*Decision"),
+                                  ("SingleMuon" , "Hlt1.*SingleMuon.*Decision"),
+                                  ("DiMuon"     , "Hlt1.*DiMuon.*Decision"),
+                                  ("MounTrack"  , "Hlt1.*MuonTrack.*Decision"),
+                                  ("Lumi"       , "Hlt1.*Lumi.*Decision"),
+                                  ("Velo"       , "Hlt1.*Velo.*Decision"),
+                                  ("Electron"   , "Hlt1.*Electron.*Decision"),
+                                  ("Photon"     , "Hlt1.*Pho.*Decision"),
+                                  ("IgnoreLumi" , ".*IgnoreLumi.*"),
+                                  ("Global"     , ".*Global.*")]
 
-        grouping = { }
-        import re
-        for i in [ j.decision() for j in lines ] :
-            for rule in groupingRules :
-                if re.match(rule[0],i) :
-                    if i not in grouping.keys() : grouping[i] = rule[1] 
-                    #else :
-                    #    print 'WARNING: could not make unique assignement for %s'%i 
-        #print '\n\ngenerated monitoring grouping table:'
-        #print grouping
-        #print '\n\n'
-        #HltGlobalMonitor().GroupLines = grouping
+        # prepare compiled regex patterns         
+        # and a list of names for the Labels  
+        patterns = []
+        group_labels = [] 
+        for pos in range(len(alley_string_patterns)):
+          (name, pattern_string) = alley_string_patterns[pos]
+          patterns.append(re.compile(pattern_string))
+          group_labels.append(name) 
+
+        import pprint
+        pp = pprint.PrettyPrinter(indent=4)
+
+        pp.pprint( alley_string_patterns)
+ 
+        pp.pprint( patterns)
+        
+        # prepare the group map dictionary
+        decision_group_map = {}
+        for decision_name in HltGlobalMonitor().Hlt1Decisions: 
+          for pos in range(len(patterns)):
+            m = patterns[pos].match(decision_name)
+            if m:
+              if not decision_name in decision_group_map:
+                decision_group_map[decision_name]=pos
+
+
+        # set property (in C++: std::map< std::string, std::vector<std::string> > ) 
+        HltGlobalMonitor().DecToGroup  = decision_group_map
+        HltGlobalMonitor().GroupLabels = group_labels 
+
 
         def disableHistograms(c,filter = lambda x : True) :
             if 'HistoProduce' in c.getDefaultProperties() and filter(c):
