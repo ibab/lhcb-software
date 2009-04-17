@@ -1,4 +1,4 @@
-// $Id: MIFWriter.cpp,v 1.11 2009-02-06 09:37:57 frankb Exp $
+// $Id: MIFWriter.cpp,v 1.12 2009-04-17 13:24:36 cattanem Exp $
 //  ====================================================================
 //  MIFWriter.cpp
 //  --------------------------------------------------------------------
@@ -42,7 +42,7 @@ StatusCode MIFWriter::initialize()   {
   if( !status.isSuccess() ) {
     log << MSG::ERROR 
         << "Unable to localize interface IID_IIODataManager from service:" 
-        << m_ioMgrName << endreq;
+        << m_ioMgrName << endmsg;
     return status;
   }
   m_connection = new RawDataConnection(this,m_connectParams);

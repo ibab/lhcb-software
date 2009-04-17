@@ -6,6 +6,9 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+! 2009-04-17 - Marco Cattaneo
+ - Replace all endreq by endmsg
+
 !========================= MDF v3r17 2009-02-18 ===============================
 ! 2009-02-06  Markus Frank
  - Split the MDF library into a pure linker library (MDFLib) and a components

@@ -1,4 +1,4 @@
-// $Id: RawDataWriter.cpp,v 1.14 2009-02-06 09:37:57 frankb Exp $
+// $Id: RawDataWriter.cpp,v 1.15 2009-04-17 13:24:36 cattanem Exp $
 //  ====================================================================
 //  RawDataWriter.cpp
 //  --------------------------------------------------------------------
@@ -107,7 +107,7 @@ StatusCode RawDataWriter::initialize()   {
     MsgStream log(msgSvc(), name());
     log << MSG::ERROR 
         << "Unable to localize interface IID_IIODataManager from service:" 
-        << m_ioMgr << endreq;
+        << m_ioMgr << endmsg;
     return status;
   }
   return status;

@@ -1,4 +1,4 @@
-// $Id: MDFWriter.cpp,v 1.29 2009-02-06 09:37:57 frankb Exp $
+// $Id: MDFWriter.cpp,v 1.30 2009-04-17 13:24:36 cattanem Exp $
 //  ====================================================================
 //  MDFWriter.cpp
 //  --------------------------------------------------------------------
@@ -71,7 +71,7 @@ StatusCode MDFWriter::initialize()   {
   if( !status.isSuccess() ) {
     log << MSG::ERROR 
         << "Unable to localize interface IID_IIODataManager from service:" 
-        << m_ioMgrName << endreq;
+        << m_ioMgrName << endmsg;
     return status;
   }
   m_bytesWritten = 0;
@@ -114,7 +114,7 @@ StatusCode MDFWriter::execute()    {
   setupMDFIO(msgSvc(),eventSvc());
   MsgStream log(msgSvc(), name());
   log << MSG::VERBOSE << "Got data as " << m_inputType 
-      << " Send as " << m_dataType << endreq;
+      << " Send as " << m_dataType << endmsg;
   switch(m_inputType)   {
     case MDFIO::MDF_NONE:
       return commitRawBanks(m_compress, m_genChecksum, m_connection, m_bankLocation);

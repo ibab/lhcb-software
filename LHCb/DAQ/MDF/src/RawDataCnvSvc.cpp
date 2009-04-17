@@ -1,4 +1,4 @@
-// $Id: RawDataCnvSvc.cpp,v 1.34 2009-02-06 09:37:57 frankb Exp $
+// $Id: RawDataCnvSvc.cpp,v 1.35 2009-04-17 13:24:36 cattanem Exp $
 //  ====================================================================
 //  RawDataCnvSvc.cpp
 //  --------------------------------------------------------------------
@@ -86,7 +86,7 @@ StatusCode RawDataCnvSvc::initialize()     {
   MsgStream log(msgSvc(),name());
   m_dataMgr = 0;
   if ( !sc.isSuccess() )  {
-    log << MSG::ERROR << "Unable to initialize base class ConversionSvc." << endreq;
+    log << MSG::ERROR << "Unable to initialize base class ConversionSvc." << endmsg;
     return sc;
   }
 
@@ -94,13 +94,13 @@ StatusCode RawDataCnvSvc::initialize()     {
   IPersistencySvc *pSvc = 0;
   sc = service("EventPersistencySvc",pSvc,true);
   if ( !sc.isSuccess() )  {
-    log << MSG::ERROR << "Unable to localize EventPersistencySvc." << endreq;
+    log << MSG::ERROR << "Unable to localize EventPersistencySvc." << endmsg;
     return sc;
   }
 
   sc = pSvc->addCnvService( this );
   if ( !sc.isSuccess() )  {
-    log << MSG::ERROR << "Unable to add conversion service" << endreq;
+    log << MSG::ERROR << "Unable to add conversion service" << endmsg;
     return sc;
   }
   
@@ -109,7 +109,7 @@ StatusCode RawDataCnvSvc::initialize()     {
                                       (void**)&m_dataMgr);
   if ( !sc.isSuccess() )  {
     log << MSG::ERROR << "Conversion service " << name() 
-        << "not registered to EventPersistencySvc." << endreq;
+        << "not registered to EventPersistencySvc." << endmsg;
     return sc;
   }
 
@@ -118,7 +118,7 @@ StatusCode RawDataCnvSvc::initialize()     {
   if( !sc.isSuccess() ) {
     log << MSG::ERROR 
         << "Unable to localize interface IID_IIODataManager from service:" 
-        << m_ioMgrName << endreq;
+        << m_ioMgrName << endmsg;
     return sc;
   }
   /// All OK

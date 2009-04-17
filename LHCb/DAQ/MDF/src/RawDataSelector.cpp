@@ -1,4 +1,4 @@
-// $Id: RawDataSelector.cpp,v 1.23 2009-01-23 13:30:07 cattanem Exp $
+// $Id: RawDataSelector.cpp,v 1.24 2009-04-17 13:24:36 cattanem Exp $
 //====================================================================
 //  OnlineMDFEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -80,7 +80,7 @@ StatusCode RawDataSelector::initialize()  {
   StatusCode status = Service::initialize();
   MsgStream log(msgSvc(), name());
   if ( !status.isSuccess() )    {
-    log << MSG::ERROR << "Error initializing base class Service!" << endreq;
+    log << MSG::ERROR << "Error initializing base class Service!" << endmsg;
     return status;
   }
   // Retrieve conversion service handling event iteration
@@ -88,7 +88,7 @@ StatusCode RawDataSelector::initialize()  {
   if( !status.isSuccess() ) {
     log << MSG::ERROR 
         << "Unable to localize interface IID_IIODataManager from service:" 
-        << m_ioMgrName << endreq;
+        << m_ioMgrName << endmsg;
     return status;
   }
   // Get DataSvc
@@ -122,7 +122,7 @@ StatusCode RawDataSelector::next(Context& ctxt) const  {
     if ( m_printFreq>0 && (m_evtCount%m_printFreq)==0 ) {
       MsgStream log(messageService(), name());
       log << MSG::ALWAYS << "Reading Event record " << (m_evtCount-m_skipEvents)
-          << ". Record number within stream " << m_evtCount << endreq;
+          << ". Record number within stream " << m_evtCount << endmsg;
     }
     return pCtxt->receiveData(msgSvc());
   }
