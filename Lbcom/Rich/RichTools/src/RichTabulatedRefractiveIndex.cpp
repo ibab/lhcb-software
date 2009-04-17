@@ -5,7 +5,7 @@
  * Implementation file for class : RichTabulatedRefractiveIndex
  *
  * CVS Log :-
- * $Id: RichTabulatedRefractiveIndex.cpp,v 1.16 2008-11-30 10:43:47 jonrob Exp $
+ * $Id: RichTabulatedRefractiveIndex.cpp,v 1.17 2009-04-17 11:07:27 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/03/2002
@@ -95,17 +95,17 @@ StatusCode Rich::TabulatedRefractiveIndex::updateRich2GasRefIndex()
 StatusCode
 Rich::TabulatedRefractiveIndex::updateRefIndex( const Rich::RadiatorType rad )
 {
+  /// @todo Figure out how to fix this hack properly ...
 
   // RMS values
   //m_refRMS[rad] = m_deRads[rad]->refIndex()->rms( m_deRads[rad]->refIndex()->minX(),
   //                                                m_deRads[rad]->refIndex()->maxX(),
   //                                                100 );
-  info() << "RMS hack : " << rad << " : " << m_refRMS[rad];
   // temp hack (to be removed)
   m_refRMS[Rich::Aerogel]  = 0.488e-3;
   m_refRMS[Rich::Rich1Gas] = 0.393e-4;
   m_refRMS[Rich::Rich2Gas] = 0.123e-4;
-  info() << " " << m_refRMS[rad] << endreq;
+  debug() << "RMS hack : " << rad << " : " << m_refRMS[rad];
 
   return StatusCode::SUCCESS;
 }
