@@ -1,4 +1,4 @@
-// $Id: CondDBLayeringSvc.cpp,v 1.5 2008-06-26 14:22:45 marcocle Exp $
+// $Id: CondDBLayeringSvc.cpp,v 1.6 2009-04-17 13:32:10 cattanem Exp $
 // Include files 
 
 #include "GaudiKernel/SvcFactory.h"
@@ -72,12 +72,12 @@ StatusCode CondDBLayeringSvc::initialize(){
     ICondDBReader *svcPtr;
     sc = service(*lname,svcPtr,true);
     if (  !sc.isSuccess() ) {
-      log << MSG::ERROR << "Could not locate " << *lname << endreq;
+      log << MSG::ERROR << "Could not locate " << *lname << endmsg;
       return sc;
     }
 
     m_layers.push_back(svcPtr);
-    log << MSG::DEBUG << "Retrieved '" << *lname << "'" << endreq;
+    log << MSG::DEBUG << "Retrieved '" << *lname << "'" << endmsg;
 
   }
   

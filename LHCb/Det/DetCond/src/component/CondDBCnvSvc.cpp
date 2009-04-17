@@ -1,4 +1,4 @@
-//$Id: CondDBCnvSvc.cpp,v 1.15 2008-06-26 14:22:45 marcocle Exp $
+//$Id: CondDBCnvSvc.cpp,v 1.16 2009-04-17 13:32:10 cattanem Exp $
 #include <string>
 
 #include "CondDBCnvSvc.h"
@@ -40,17 +40,17 @@ StatusCode CondDBCnvSvc::initialize()
 
   // Now we can get a handle to the MessageSvc
   MsgStream log(msgSvc(), name() );
-  log << MSG::DEBUG << "Specific initialization starting" << endreq;
+  log << MSG::DEBUG << "Specific initialization starting" << endmsg;
 
   // Locate the Database Access Service
   sc = service(m_dbReaderName,m_dbReader,true);
   if (  !sc.isSuccess() ) {
-    log << MSG::ERROR << "Could not locate " << m_dbReaderName << endreq;
+    log << MSG::ERROR << "Could not locate " << m_dbReaderName << endmsg;
     return sc;
   }
-  log << MSG::DEBUG << "Retrieved " << m_dbReaderName << endreq;
+  log << MSG::DEBUG << "Retrieved " << m_dbReaderName << endmsg;
   
-  log << MSG::DEBUG << "Specific initialization completed" << endreq;
+  log << MSG::DEBUG << "Specific initialization completed" << endmsg;
   return sc;
 }
 
@@ -60,7 +60,7 @@ StatusCode CondDBCnvSvc::initialize()
 StatusCode CondDBCnvSvc::finalize()
 {
   MsgStream log(msgSvc(), name() );
-  log << MSG::DEBUG << "Finalizing" << endreq;
+  log << MSG::DEBUG << "Finalizing" << endmsg;
   if (m_dbReader) m_dbReader->release();
   return ConversionSvc::finalize();
 }
@@ -84,7 +84,7 @@ StatusCode CondDBCnvSvc::createAddress( long svc_type,
     log << MSG::ERROR 
         << "Cannot create addresses of type " << (int)svc_type 
         << " which is different from " << (int)CONDDB_StorageType 
-        << endreq;
+        << endmsg;
     return StatusCode::FAILURE;
   }
   

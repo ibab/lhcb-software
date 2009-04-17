@@ -1,4 +1,4 @@
-// $Id: CondDBDispatcherSvc.cpp,v 1.8 2008-07-23 14:46:24 marcocle Exp $
+// $Id: CondDBDispatcherSvc.cpp,v 1.9 2009-04-17 13:32:10 cattanem Exp $
 // Include files
 
 #include "GaudiKernel/SvcFactory.h"
@@ -71,7 +71,7 @@ StatusCode CondDBDispatcherSvc::initialize(){
   // locate the main access service
   sc = service(m_mainAccessSvcName,m_mainDB,true);
   if (  !sc.isSuccess() ) {
-    log << MSG::ERROR << "Could not locate " << m_mainAccessSvcName << endreq;
+    log << MSG::ERROR << "Could not locate " << m_mainAccessSvcName << endmsg;
     return sc;
   }
 
@@ -82,19 +82,19 @@ StatusCode CondDBDispatcherSvc::initialize(){
     const std::string &svcName = decl->second;
     
     if ( m_alternatives.find(altPath) != m_alternatives.end() ) {
-      log << MSG::ERROR << "More than one alternative for path " << altPath << endreq;
+      log << MSG::ERROR << "More than one alternative for path " << altPath << endmsg;
       return StatusCode::FAILURE;
     }
 
     ICondDBReader *svcPtr;
     sc = service(svcName,svcPtr,true);
     if (  !sc.isSuccess() ) {
-      log << MSG::ERROR << "Could not locate " << svcName << endreq;
+      log << MSG::ERROR << "Could not locate " << svcName << endmsg;
       return sc;
     }
 
     m_alternatives[altPath] = svcPtr;
-    log << MSG::DEBUG << "Retrieved '" << svcName << "' (for path '" << altPath << "')" << endreq;
+    log << MSG::DEBUG << "Retrieved '" << svcName << "' (for path '" << altPath << "')" << endmsg;
 
   }
   

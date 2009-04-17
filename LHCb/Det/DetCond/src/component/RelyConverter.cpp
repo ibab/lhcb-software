@@ -1,4 +1,4 @@
-// $Id: RelyConverter.cpp,v 1.22 2007-02-19 17:10:12 marcocle Exp $
+// $Id: RelyConverter.cpp,v 1.23 2009-04-17 13:32:10 cattanem Exp $
 // Include files 
 #include "RelyConverter.h"
 
@@ -56,11 +56,11 @@ StatusCode RelyConverter::initialize() {
   sc = serviceLocator()->service("DetectorPersistencySvc", m_detPersSvc, true);
   if ( !sc.isSuccess() ) {
     MsgStream log(msgSvc(),"RelyConverter");
-    log << MSG::ERROR << "Cannot locate IConversionSvc interface of DetectorPersistencySvc" << endreq;
+    log << MSG::ERROR << "Cannot locate IConversionSvc interface of DetectorPersistencySvc" << endmsg;
     return sc;
   } else {
     MsgStream log(msgSvc(),"RelyConverter");
-    log << MSG::DEBUG << "Retrieved IConversionSvc interface of DetectorPersistencySvc" << endreq;
+    log << MSG::DEBUG << "Retrieved IConversionSvc interface of DetectorPersistencySvc" << endmsg;
   }
   return sc;
 }
@@ -113,7 +113,7 @@ StatusCode RelyConverter::fillObjRefs (IOpaqueAddress* pAddress, DataObject *pOb
 StatusCode RelyConverter::updateObj (IOpaqueAddress* pAddress, DataObject* pObject)
 {
   MsgStream log(msgSvc(),"RelyConverter");
-  log << MSG::DEBUG << "Method updateObj starting" << endreq;
+  log << MSG::DEBUG << "Method updateObj starting" << endmsg;
       
   DataObject* pNewObject; // create a new object and copy it to the old version
   StatusCode sc = i_delegatedCreation(pAddress,pNewObject,CreateObject);
@@ -135,7 +135,7 @@ StatusCode RelyConverter::updateObj (IOpaqueAddress* pAddress, DataObject* pObje
     log << MSG::ERROR
         << "Cannot update objects other than ValidDataObject: " 
         << "update() must be defined!"
-        << endreq;
+        << endmsg;
     return StatusCode::FAILURE;
   }
   // Deep copy the new Condition into the old DataObject
@@ -144,7 +144,7 @@ StatusCode RelyConverter::updateObj (IOpaqueAddress* pAddress, DataObject* pObje
   // Delete the useless Condition
   delete pNewVDO;
 
-  log << MSG::DEBUG << "Object successfully updated" << endreq;
+  log << MSG::DEBUG << "Object successfully updated" << endmsg;
   return StatusCode::SUCCESS;
 }
 
@@ -308,7 +308,7 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
     ->createAddress( storage_type,pAddress->clID() , par, ipar, tmpAddress );
   if (sc.isFailure()){
     log << MSG::ERROR 
-        << "Persistency service could not create a new address" << endreq;
+        << "Persistency service could not create a new address" << endmsg;
     return sc;
   }
   
@@ -341,16 +341,16 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
   tmpAddress->release();
   if ( sc.isFailure() ) {
     log << MSG::ERROR 
-        << "Persistency service could not create a new object" << endreq;
+        << "Persistency service could not create a new object" << endmsg;
     return sc;
   }
   
   if (op == CreateObject){
-    log << MSG::DEBUG << "Setting object validity" << endreq;
+    log << MSG::DEBUG << "Setting object validity" << endmsg;
     setObjValidity(since,until,pObject);
 
   } 
-  log << MSG::DEBUG << "New object successfully created" << endreq;
+  log << MSG::DEBUG << "New object successfully created" << endmsg;
   
   return StatusCode::SUCCESS;
 }

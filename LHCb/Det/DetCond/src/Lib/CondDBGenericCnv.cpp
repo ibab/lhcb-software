@@ -1,4 +1,4 @@
-// $Id: CondDBGenericCnv.cpp,v 1.14 2007-02-14 16:13:31 marcocle Exp $
+// $Id: CondDBGenericCnv.cpp,v 1.15 2009-04-17 13:32:10 cattanem Exp $
 // Include files 
 #include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/Time.h"
@@ -48,17 +48,17 @@ StatusCode CondDBGenericCnv::initialize() {
   sc = serviceLocator()->service("DetectorDataSvc",m_detDataSvc);
   if( !sc.isSuccess() ) {
     MsgStream log(msgSvc(),"CondDBGenericCnv");
-    log << MSG::ERROR << "Can't locate DetectorDataSvc" << endreq;
+    log << MSG::ERROR << "Can't locate DetectorDataSvc" << endmsg;
     return sc;
   } else {
     MsgStream log(msgSvc(),"CondDBGenericCnv");
-    log << MSG::DEBUG << "Succesfully located DetectorDataSvc" << endreq;
+    log << MSG::DEBUG << "Succesfully located DetectorDataSvc" << endmsg;
   }
   // Get a pointer to the CondDBReader (implemented by the conversion service)
   sc = conversionSvc()->queryInterface(ICondDBReader::interfaceID(),(void**)&m_condDBReader);
   if ( !sc.isSuccess() ) {
     MsgStream log(msgSvc(),"CondDBGenericCnv");
-    log << MSG::ERROR << "The conversion service does not implement ICondDBReader!" << endreq;
+    log << MSG::ERROR << "The conversion service does not implement ICondDBReader!" << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -104,7 +104,7 @@ void CondDBGenericCnv::setObjValidity(Gaudi::Time &since, Gaudi::Time &till, Dat
     log << MSG::DEBUG
         << "Created object (CLID = " << pObject->clID()
         << ") does not implement IValidity: cannot set validity"
-        << endreq;
+        << endmsg;
   }
 }
 

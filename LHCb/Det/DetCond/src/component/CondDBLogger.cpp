@@ -1,4 +1,4 @@
-// $Id: CondDBLogger.cpp,v 1.3 2008-06-26 14:22:45 marcocle Exp $
+// $Id: CondDBLogger.cpp,v 1.4 2009-04-17 13:32:10 cattanem Exp $
 // Include files 
 
 #include "GaudiKernel/SvcFactory.h"
@@ -69,32 +69,32 @@ StatusCode CondDBLogger::initialize(){
   log << MSG::DEBUG << "Initialize" << endmsg;
 
   if ( m_loggedReaderName.empty() ){
-    log << MSG::ERROR << "Property LoggedReader is not set." << endreq;
+    log << MSG::ERROR << "Property LoggedReader is not set." << endmsg;
     return StatusCode::FAILURE;
   }
   
   // locate the CondDBReader
   sc = service(m_loggedReaderName,m_loggedReader,true);
   if (  !sc.isSuccess() ) {
-    log << MSG::ERROR << "Could not locate " << m_loggedReaderName << endreq;
+    log << MSG::ERROR << "Could not locate " << m_loggedReaderName << endmsg;
     return sc;
   }
-  log << MSG::DEBUG << "Retrieved '" << m_loggedReaderName  << "'" << endreq;
+  log << MSG::DEBUG << "Retrieved '" << m_loggedReaderName  << "'" << endmsg;
 
   // Set the default value of the file name if not specified.
   if ( m_logFileName.empty() ){
     m_logFileName = name() + ".log";
     log << MSG::INFO << "Property LogFile not specified, using '"
-                     << m_logFileName << "'" << endreq; 
+                     << m_logFileName << "'" << endmsg; 
   }
 
   // Open the output file and start writing.
   m_logFile =  std::auto_ptr<std::ostream>(new std::ofstream(m_logFileName.c_str()));
   if ( ! m_logFile->good() ) {
-    log << MSG::ERROR << "Problems opening " << m_logFileName << endreq;
+    log << MSG::ERROR << "Problems opening " << m_logFileName << endmsg;
     return StatusCode::FAILURE;
   }
-  log << MSG::DEBUG << "File '" << m_logFileName << "' opened for writing." << endreq;
+  log << MSG::DEBUG << "File '" << m_logFileName << "' opened for writing." << endmsg;
 
   (*m_logFile) << "INI: " << Gaudi::Time::current().ns() << " " << name() << " logging " << m_loggedReaderName << std::endl;
 
