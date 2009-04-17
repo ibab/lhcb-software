@@ -1,4 +1,4 @@
-// $Id: XmlTabulatedPropertyCnv.cpp,v 1.6 2009-01-23 12:57:27 cattanem Exp $
+// $Id: XmlTabulatedPropertyCnv.cpp,v 1.7 2009-04-17 12:25:18 cattanem Exp $
 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
@@ -137,7 +137,7 @@ XmlTabulatedPropertyCnv::i_fillObj (xercesc::DOMElement* childElement,
     // Something goes wrong, does it?
     char* tagNameString = xercesc::XMLString::transcode(tagName);
     log << MSG::WARNING << "This tag makes no sense to tabulated property : "
-        << tagNameString << endreq;
+        << tagNameString << endmsg;
     xercesc::XMLString::release(&tagNameString);
   }
   // returns

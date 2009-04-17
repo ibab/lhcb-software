@@ -1,4 +1,4 @@
-// $Id: XmlSurfaceCnv.cpp,v 1.5 2006-12-14 13:14:10 ranjard Exp $
+// $Id: XmlSurfaceCnv.cpp,v 1.6 2009-04-17 12:25:18 cattanem Exp $
 
 // Include files
 #include <cstdlib>
@@ -84,7 +84,7 @@ StatusCode XmlSurfaceCnv::i_createObj (xercesc::DOMElement* element,
           << " parameter '"      << "model"     << "'" 
           << "("                 << value       << ")"
           << "="                 << v_value 
-          << " is truncated to=" << i_value     << endreq; 
+          << " is truncated to=" << i_value     << endmsg; 
     }
     dataObj->setModel (i_value);
   }
@@ -99,7 +99,7 @@ StatusCode XmlSurfaceCnv::i_createObj (xercesc::DOMElement* element,
           << " parameter '"      << "finish"    << "'" 
           << "("                 << value       << ")"
           << "="                 << v_value 
-          << " is truncated to=" << i_value     << endreq; 
+          << " is truncated to=" << i_value     << endmsg; 
     }           
     dataObj->setFinish (i_value); 
   }
@@ -114,7 +114,7 @@ StatusCode XmlSurfaceCnv::i_createObj (xercesc::DOMElement* element,
           << " parameter '"      << "type"      << "'"  
           << "("                 << value       << ")"
           << "="                 << v_value 
-          << " is truncated to=" << i_value     << endreq; 
+          << " is truncated to=" << i_value     << endmsg; 
     }
     dataObj->setType (i_value); 
   }
@@ -152,7 +152,7 @@ StatusCode XmlSurfaceCnv::i_fillObj (xercesc::DOMElement* childElement,
   const XMLCh* tagName = childElement->getNodeName();
   // dispatches, based on the name
   if( 0 == xercesc::XMLString::compareString(tabpropsString, tagName)) {
-    log << MSG::VERBOSE << "looking at tabprops" << endreq;
+    log << MSG::VERBOSE << "looking at tabprops" << endmsg;
     // if we have a tabprops element, adds it to the current object
     const std::string address =
       dom2Std (childElement->getAttribute (addressString));
@@ -163,7 +163,7 @@ StatusCode XmlSurfaceCnv::i_fillObj (xercesc::DOMElement* childElement,
     // Something goes wrong, does it?
     char* tagNameString = xercesc::XMLString::transcode(tagName);
     log << MSG::WARNING << "This tag makes no sense to surface : "
-        << tagNameString << endreq;
+        << tagNameString << endmsg;
     xercesc::XMLString::release(&tagNameString);
   }
   return StatusCode::SUCCESS;

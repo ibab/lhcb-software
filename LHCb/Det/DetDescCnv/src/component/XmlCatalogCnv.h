@@ -1,10 +1,11 @@
-// $Id: XmlCatalogCnv.h,v 1.4 2005-03-24 16:21:18 cattanem Exp $
+// $Id: XmlCatalogCnv.h,v 1.5 2009-04-17 12:25:18 cattanem Exp $
 
 #ifndef DETDESCCNV_XMLCATALOGCNV_H
 #define DETDESCCNV_XMLCATALOGCNV_H
 
 // Include files
 #include "GaudiKernel/ClassID.h"
+#include "GaudiKernel/CnvFactory.h"
 
 #include <xercesc/dom/DOMNode.hpp>
 

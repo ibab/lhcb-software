@@ -121,7 +121,7 @@ StatusCode
 XmlUserDetElemCnv<DeType>::i_createObj(xercesc::DOMElement* /*element*/,
                                        DataObject*& refpObject) {
   MsgStream log(msgSvc(), "XmlUserDetElemCnv" );
-  log << MSG::DEBUG << "entering i_createObj" << endreq;
+  log << MSG::DEBUG << "entering i_createObj" << endmsg;
   
   // creates an object for the node found
   refpObject = new DeType();

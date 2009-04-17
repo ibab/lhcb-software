@@ -1,4 +1,4 @@
-// $Id: XmlIsotopeCnv.cpp,v 1.7 2008-05-20 08:19:25 smenzeme Exp $
+// $Id: XmlIsotopeCnv.cpp,v 1.8 2009-04-17 12:25:18 cattanem Exp $
 // include files
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/GenericAddress.h"
@@ -176,7 +176,7 @@ StatusCode XmlIsotopeCnv::i_fillObj (xercesc::DOMElement* childElement,
     // Something goes wrong, does it?
     char* tagNameString = xercesc::XMLString::transcode(tagName);
     log << MSG::WARNING << "This tag makes no sense to isotope: "
-        << tagNameString << endreq;
+        << tagNameString << endmsg;
     xercesc::XMLString::release(&tagNameString);
   }
 

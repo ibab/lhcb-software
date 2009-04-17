@@ -4,6 +4,9 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !------------------------------------------------------------------------------
 
+! 2009-04-17 - Marco Cattaneo
+ - Replace endreq by endmsg everywhere
+
 ! 2009-03-18 - Marco Clemencic
  - Use SmartIF to for the cached pointer to IXmlSvc in XmlGenericCnv to solve
    a compatibility problem with the HEAD version of Gaudi.

@@ -1,4 +1,4 @@
-// $Id: XmlCatalogCnv.cpp,v 1.8 2009-01-23 12:57:27 cattanem Exp $
+// $Id: XmlCatalogCnv.cpp,v 1.9 2009-04-17 12:25:18 cattanem Exp $
 
 // include files
 #include <stdlib.h>
@@ -6,18 +6,13 @@
 #include <string>
 #include <vector>
 
-#include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/DataObject.h"
-#include "GaudiKernel/System.h"
 #include "GaudiKernel/ISvcLocator.h"
-#include "GaudiKernel/IAddressCreator.h"
 #include "GaudiKernel/IOpaqueAddress.h"
-#include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IDataManagerSvc.h"
-#include "GaudiKernel/Converter.h"
 #include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/RegistryEntry.h"
+#include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/SmartIF.h"
 
 #include <xercesc/util/XMLString.hpp>
@@ -199,11 +194,11 @@ StatusCode XmlCatalogCnv::i_fillObj (xercesc::DOMElement* childElement,
     log << MSG::ERROR << tagNameString
         << " : unable to find a CLID for this tag."
         << " This tag may be forbiden as child of catalog."
-        << endreq;
+        << endmsg;
     return StatusCode::FAILURE;
   }
   log << MSG::VERBOSE << "tag is " << tagNameString
-      << ", clsID is " << clsID << endreq;
+      << ", clsID is " << clsID << endmsg;
   xercesc::XMLString::release(&tagNameString);
   checkConverterExistence(clsID);
   std::string entryName;
@@ -238,11 +233,11 @@ StatusCode XmlCatalogCnv::i_fillObj (xercesc::DOMElement* childElement,
     status = mgr->registerAddress(searchedDir, xmlAddr->par()[1], xmlAddr);
   }
   if ( !status.isSuccess() )   {
-    log << MSG::FATAL << " File " << __FILE__ << " line " << __LINE__ << endreq;
-    log << MSG::FATAL << " XML address:" << endreq;
+    log << MSG::FATAL << " File " << __FILE__ << " line " << __LINE__ << endmsg;
+    log << MSG::FATAL << " XML address:" << endmsg;
     log << MSG::FATAL << " location : " << xmlAddr->par()[0]
         << " entryName : " << xmlAddr->par()[1]
-        << " isString : " << xmlAddr->ipar()[0] << endreq;
+        << " isString : " << xmlAddr->ipar()[0] << endmsg;
     xmlAddr->release();
     xmlAddr = 0;
     StatusCode stcod = ERROR_ADDING_TO_TS;
@@ -288,7 +283,7 @@ void XmlCatalogCnv::checkConverterExistence (const CLID& clsID) {
     MsgStream log (msgSvc(), "XmlCatalogCnv");
     log << MSG::ERROR
         << "class ID "
-        << clsID << ", proper converter not found" << endreq;
+        << clsID << ", proper converter not found" << endmsg;
     stcod.setCode (INVALID_CLASS_ID);  
     throw XmlCnvException ("Unknown class ID", stcod);
   } 

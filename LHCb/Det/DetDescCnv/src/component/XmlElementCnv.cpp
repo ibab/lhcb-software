@@ -1,4 +1,4 @@
-// $Id: XmlElementCnv.cpp,v 1.8 2008-05-20 08:19:25 smenzeme Exp $ 
+// $Id: XmlElementCnv.cpp,v 1.9 2009-04-17 12:25:18 cattanem Exp $ 
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/IConversionSvc.h"
@@ -176,7 +176,7 @@ StatusCode XmlElementCnv::i_fillObj (xercesc::DOMElement*        childElement ,
   
   // dispatches, based on the name
   if (0 == xercesc::XMLString::compareString(tabpropsString, tagName)) {
-    log << MSG::VERBOSE << "looking at tabprops" << endreq;
+    log << MSG::VERBOSE << "looking at tabprops" << endmsg;
     // if we have a tabprops element, adds it to the current object
     const std::string address =
       dom2Std (childElement->getAttribute (addressString));
@@ -185,7 +185,7 @@ StatusCode XmlElementCnv::i_fillObj (xercesc::DOMElement*        childElement ,
     dataObj->tabulatedProperties().push_back(ref); 
   } else if (0 == xercesc::XMLString::compareString(atomString, tagName)) {
     
-    log << MSG::VERBOSE << "looking at an atom" << endreq;
+    log << MSG::VERBOSE << "looking at an atom" << endmsg;
     // Now we have to process atom attributes
     std::string aAttribute = dom2Std (childElement->getAttribute (AString));
     if (!aAttribute.empty()) 
@@ -199,25 +199,25 @@ StatusCode XmlElementCnv::i_fillObj (xercesc::DOMElement*        childElement ,
   } else if (0 == xercesc::XMLString::compareString
              (isotoperefString, tagName)) {
 
-    log << MSG::VERBOSE << "looking at an isotoperef" << endreq;
+    log << MSG::VERBOSE << "looking at an isotoperef" << endmsg;
     // Unlike XmlCatalogCnv we don't create XmlAddress hooks for children
     // we try to load the referred elements and mixtures instead
     // gets and parses the href attribute
     std::string hrefAttribute =
       dom2Std (childElement->getAttribute (hrefString));
-    log << MSG::VERBOSE << "href attribute is : " << hrefAttribute << endreq;
+    log << MSG::VERBOSE << "href attribute is : " << hrefAttribute << endmsg;
     unsigned int poundPosition = hrefAttribute.find_last_of('#');
     // builds an entry name for the child
     std::string entryName = "/dd/Materials/" +
       hrefAttribute.substr(poundPosition + 1);
     log << MSG::VERBOSE << "entry name to retrieve is " << entryName
-        << endreq;
+        << endmsg;
     // retrieves the object corresponding to this child
     DataObject* itemObj = 0;
     StatusCode stcod = dataProvider()->retrieveObject (entryName, itemObj);
     if (stcod.isFailure()) {
       log << MSG::ERROR << "Failed to retrieve isotoperef "
-          << entryName << endreq;
+          << entryName << endmsg;
       stcod = CANT_RETRIEVE_OBJECT;
       itemObj->release();
       std::string msg = "Can't retrieve material ";
@@ -251,7 +251,7 @@ StatusCode XmlElementCnv::i_fillObj (xercesc::DOMElement*        childElement ,
     // Something goes wrong, does it?
     char* tagNameString = xercesc::XMLString::transcode(tagName);
     log << MSG::WARNING << "This tag makes no sense to element : "
-        << tagNameString << endreq;
+        << tagNameString << endmsg;
     xercesc::XMLString::release(&tagNameString);
   }
 

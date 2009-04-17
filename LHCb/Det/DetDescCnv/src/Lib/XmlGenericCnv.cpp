@@ -1,4 +1,4 @@
-// $Id: XmlGenericCnv.cpp,v 1.22 2009-03-18 09:05:56 marcocle Exp $
+// $Id: XmlGenericCnv.cpp,v 1.23 2009-04-17 12:25:18 cattanem Exp $
 
 // Include files
 #include "DetDescCnv/XmlGenericCnv.h"
@@ -146,7 +146,7 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
   } else if ( isAString ) {
     document = xmlSvc()->parseString(addr->par()[0].c_str()); // this has to be released too
   } else {
-    log << MSG::FATAL << "XmlParser failed, invalid flag isString=" << addr->ipar()[0] << "!" << endreq;
+    log << MSG::FATAL << "XmlParser failed, invalid flag isString=" << addr->ipar()[0] << "!" << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -163,7 +163,7 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
         xercesc::DOMNode* childNode = list->item(index);
         xercesc::DOMElement* childElement = (xercesc::DOMElement*) childNode;
         log << MSG::VERBOSE << "found element " << dom2Std (childElement->getNodeName())
-            << " at top level of xml file." << endreq;
+            << " at top level of xml file." << endmsg;
         if (0 == xercesc::XMLString::compareString(childElement->getNodeName(),DDDBString) ||
             0 == xercesc::XMLString::compareString(childElement->getNodeName(),materialsString)) {
           mainNode = childElement;
@@ -186,7 +186,7 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
         defaultMajorVersion = "v5";
         defaultMinorVersion = "0";
       }
-      log << MSG::DEBUG << "Detector Description Markup Language Version " << versionAttribute << endreq;
+      log << MSG::DEBUG << "Detector Description Markup Language Version " << versionAttribute << endmsg;
       std::string::size_type dotPos = versionAttribute.find ('.');
       std::string majorVersion;
       std::string minorVersion = "0";
@@ -205,7 +205,7 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
               << "You are currently using Version " << versionAttribute
               << ". Everything should work fine but you may get some "
               << "error messages about unknown tags."
-              << endreq;
+              << endmsg;
         }
         // deals with macro definitions
         // get the parameters
@@ -217,7 +217,7 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
           std::string name = dom2Std (macro->getAttribute (nameString));
           std::string value = dom2Std (macro->getAttribute (valueString));
           xmlSvc()->addParameter(name, value);
-          log << MSG::DEBUG << "Added DDDB Macro " << name << " = " << value << endreq;
+          log << MSG::DEBUG << "Added DDDB Macro " << name << " = " << value << endmsg;
         }
         // deals with old parameter definitions
         // get the parameters
@@ -229,7 +229,7 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
           std::string name = dom2Std (parameter->getAttribute (nameString));
           std::string value = dom2Std (parameter->getAttribute (valueString));
           xmlSvc()->addParameter(name, value);
-          log << MSG::DEBUG << "Added DDDB Parameter " << name << " = " << value << endreq;
+          log << MSG::DEBUG << "Added DDDB Parameter " << name << " = " << value << endmsg;
         }
    
         // retrieve the name of the object we want to create. Removes the leading
@@ -261,7 +261,7 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
             sc =  e.code();
           }
         } else { // (element == NULL)
-          log << MSG::FATAL << objectName << " : " << "No such object in file " << addr->par()[0] << endreq;
+          log << MSG::FATAL << objectName << " : " << "No such object in file " << addr->par()[0] << endmsg;
         }
       } else { // (majorVersion != defaultMajorVersion)
         // this is a problem
@@ -271,15 +271,15 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
             << ". Please update your DTD and XML data files. "
             << "If you are using the XmlDDDB package, please "
             << "get a new version of it."
-            << endreq;
+            << endmsg;
       }
     } else { // (mainNode == NULL)
-      log << MSG::FATAL << addr->par()[1] << " has no DDDB element at the beginning of the file." << endreq;
+      log << MSG::FATAL << addr->par()[1] << " has no DDDB element at the beginning of the file." << endmsg;
     }
     // ---- release the document
     xmlSvc()->releaseDoc(document);
   } else { // (document == NULL)
-    log << MSG::FATAL << "XmlParser failed, can't convert " << addr->par()[1] << "!" << endreq;
+    log << MSG::FATAL << "XmlParser failed, can't convert " << addr->par()[1] << "!" << endmsg;
   }
   return sc;
 } // end createObj
@@ -315,7 +315,7 @@ StatusCode XmlGenericCnv::internalCreateObj (xercesc::DOMElement* element,
             << ", the default converter for " << dom2Std(tagName)
             << " will be used. This message may be ignored in case you are "
             << "fine with the default converter (ie you don't use the "
-            << "content of the specific part)." << endreq;
+            << "content of the specific part)." << endmsg;
       } else {
         converter = dynamic_cast <XmlGenericCnv*> (conv);
         if (0 == converter) {
@@ -323,7 +323,7 @@ StatusCode XmlGenericCnv::internalCreateObj (xercesc::DOMElement* element,
               << "The converter found for classID " << clsID
               << " was not a descendant of XmlGenericCnv as it should be "
               << "( was of type " << typeid (*converter).name() << "). "
-              << "The default converter will be used" << endreq;
+              << "The default converter will be used" << endmsg;
           converter = this;
         }
         GenericAddress *gaddr = dynamic_cast<GenericAddress *>(address);
@@ -355,7 +355,7 @@ StatusCode XmlGenericCnv::internalCreateObj (xercesc::DOMElement* element,
             << dom2Std (element->getNodeName())
             << " with its child "
             << dom2Std (childElement->getNodeName())
-            << endreq;
+            << endmsg;
       }
     } else if (childList->item(i)->getNodeType() ==
                xercesc::DOMNode::TEXT_NODE) {
@@ -369,7 +369,7 @@ StatusCode XmlGenericCnv::internalCreateObj (xercesc::DOMElement* element,
             << dom2Std(element->getNodeName())
             << " with text node containing : \""
             << dom2Std (textNode->getData())
-            << endreq;
+            << endmsg;
       }     
     }
   }
@@ -500,7 +500,7 @@ XmlGenericCnv::createAddressForHref (std::string href,
   bool condDB = m_have_CONDDB_StorageType && (0==href.find("conddb:/"));
   if (condDB) {
     log << MSG::VERBOSE 
-        << "Href points to a conddb URL: " << href << endreq;
+        << "Href points to a conddb URL: " << href << endmsg;
 
     // the href should have the format:
     // "conddb:/path/to/folder[:channel_id][#object_name]"
@@ -543,12 +543,12 @@ XmlGenericCnv::createAddressForHref (std::string href,
     log << MSG::VERBOSE 
         << "Now build a CondDB address for path=" << path
         << " channelId=" << channelId
-        << " and entryName=" << entryName << endreq;
+        << " and entryName=" << entryName << endmsg;
     // Then build a new Address
     return createCondDBAddress (path, entryName, channelId, clid);    
   } else {
     log << MSG::VERBOSE 
-        << "Href points to a regular URL: " << href << endreq;
+        << "Href points to a regular URL: " << href << endmsg;
     // here we deal with a regular URL
     // first parse the href to get entryName and location
     std::string::size_type poundPosition = href.find_last_of('#');
@@ -667,7 +667,7 @@ XmlGenericCnv::createAddressForHref (std::string href,
 
     log << MSG::VERBOSE
         << "Now build an XML address for location=" << location
-        << " and entryName=" << entryName << endreq;
+        << " and entryName=" << entryName << endmsg;
     // Then build a new Address
     return createXmlAddress (location, entryName, clid);  
   }
@@ -703,7 +703,7 @@ IOpaqueAddress* XmlGenericCnv::createXmlAddress (std::string location,
 
   log << MSG::DEBUG << "New address created : location = "
       << location << ", entry name = " 
-      << entryName << " isString : " << isString << endreq;
+      << entryName << " isString : " << isString << endmsg;
   return result;
 }
 
@@ -728,7 +728,7 @@ IOpaqueAddress* XmlGenericCnv::createCondDBAddress (std::string path,
   MsgStream log( msgSvc(), "XmlGenericCnv" );
   log << MSG::DEBUG << "New address created : path = " << path
       << ", channel id = " << channelId
-      << ", entry name = " << entryName << endreq;
+      << ", entry name = " << entryName << endmsg;
   return result;
 }
 

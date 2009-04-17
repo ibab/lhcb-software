@@ -1,4 +1,4 @@
-// $Id: XmlBaseDetElemCnv.cpp,v 1.15 2009-01-23 12:57:27 cattanem Exp $
+// $Id: XmlBaseDetElemCnv.cpp,v 1.16 2009-04-17 12:25:17 cattanem Exp $
 
 // include files
 
@@ -120,11 +120,11 @@ StatusCode XmlBaseDetElemCnv::initialize() {
   StatusCode sc = XmlGenericCnv::initialize();
   if (sc.isSuccess()) {
     MsgStream log (msgSvc(), "XmlBaseDetElemCnv");
-    log << MSG::VERBOSE << "Initializing converter for class ID " << classID() << endreq;
+    log << MSG::VERBOSE << "Initializing converter for class ID " << classID() << endmsg;
     if (0 != m_xmlSvc) {
       m_doGenericCnv = m_xmlSvc->allowGenericCnv();
       log << MSG::VERBOSE << "Generic conversion status: "
-          << (unsigned int)m_doGenericCnv << endreq;
+          << (unsigned int)m_doGenericCnv << endmsg;
     }
   }
   return sc;
@@ -137,11 +137,11 @@ StatusCode XmlBaseDetElemCnv::initialize() {
 StatusCode XmlBaseDetElemCnv::fillObjRefs (IOpaqueAddress* childElement,
                                            DataObject* refpObject) {
   MsgStream log( msgSvc(), "XmlBaseDetElemCnv" );
-  log << MSG::VERBOSE << "Method fillObjRefs() starting" << endreq;
+  log << MSG::VERBOSE << "Method fillObjRefs() starting" << endmsg;
   // processes the base class
   StatusCode sc = XmlGenericCnv::fillObjRefs ( childElement, refpObject );
   if ( !sc.isSuccess() ) {
-    log << MSG::ERROR << "Could not fill object references" << endreq;
+    log << MSG::ERROR << "Could not fill object references" << endmsg;
     return sc;
   }
   // gets the object
@@ -158,11 +158,11 @@ StatusCode XmlBaseDetElemCnv::fillObjRefs (IOpaqueAddress* childElement,
   sc = dataObj->initialize();
   if (!sc.isSuccess()) {
     log << MSG::ERROR << "DetectorElement " << dataObj->name()
-        << ": initialization failed." << endreq;
+        << ": initialization failed." << endmsg;
     return sc;
   }
   // returns
-  log << MSG::VERBOSE << "Method fillObjRefs() ending" << endreq;
+  log << MSG::VERBOSE << "Method fillObjRefs() ending" << endmsg;
   return StatusCode::SUCCESS;
 }
 
@@ -175,7 +175,7 @@ StatusCode XmlBaseDetElemCnv::i_createObj (xercesc::DOMElement* element,
   MsgStream log(msgSvc(), "XmlBaseDetElemCnv" );
   
   // creates an object for the node found
-  log << MSG::VERBOSE << "Normal generic detector element conversion" << endreq;
+  log << MSG::VERBOSE << "Normal generic detector element conversion" << endmsg;
   std::string elementName = dom2Std (element->getAttribute(nameString));
   refpObject = new DetectorElement (elementName);
   
@@ -279,7 +279,7 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (xercesc::DOMElement* childElement,
             i = (unsigned int)atol (buf);
             repPath.push_back (i);
             log << MSG::VERBOSE << "Found replica number "
-                << repPath.back() << endreq;
+                << repPath.back() << endmsg;
             replica = buf;
             i = 0;
           }
@@ -294,7 +294,7 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (xercesc::DOMElement* childElement,
           << " Missing \"rpath\" or \"npath\" element, "
           << "please correct XML data\n"
           << " Either remove support element or provide proper rpath or npath"
-          << endreq;
+          << endmsg;
       xercesc::XMLString::release(&tagNameString);
       StatusCode st( CORRUPTED_DATA );
       throw XmlCnvException( " Corrupted XML data", st );            
@@ -305,7 +305,7 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (xercesc::DOMElement* childElement,
     std::string condition =
       dom2Std (childElement->getAttribute (conditionString));
     log << MSG::DEBUG 
-        << "Create AlignmentInfo with condition : " << condition  << endreq;
+        << "Create AlignmentInfo with condition : " << condition  << endmsg;
     dataObj->createAlignment(condition);
   } else if (0 == xercesc::XMLString::compareString
              (calibrationinfoString, tagName)) {
@@ -313,7 +313,7 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (xercesc::DOMElement* childElement,
     std::string condition =
       dom2Std (childElement->getAttribute (conditionString));
     log << MSG::DEBUG 
-        << "Create CalibrationInfo with condition : " << condition  << endreq;
+        << "Create CalibrationInfo with condition : " << condition  << endmsg;
     dataObj->createCalibration(condition);
   } else if (0 == xercesc::XMLString::compareString
              (readoutinfoString, tagName)) {
@@ -321,7 +321,7 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (xercesc::DOMElement* childElement,
     std::string condition =
       dom2Std (childElement->getAttribute (conditionString));
     log << MSG::DEBUG 
-        << "Create ReadOutInfo with condition : " << condition  << endreq;
+        << "Create ReadOutInfo with condition : " << condition  << endmsg;
     dataObj->createReadOut(condition);
   } else if (0 == xercesc::XMLString::compareString
              (slowcontrolinfoString, tagName)) {
@@ -329,7 +329,7 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (xercesc::DOMElement* childElement,
     std::string condition =
       dom2Std (childElement->getAttribute (conditionString));
     log << MSG::DEBUG 
-        << "Create SlowControlInfo with condition : " << condition  << endreq;
+        << "Create SlowControlInfo with condition : " << condition  << endmsg;
     dataObj->createSlowControl(condition);
   } else if (0 == xercesc::XMLString::compareString
              (fastcontrolinfoString, tagName)) {
@@ -337,7 +337,7 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (xercesc::DOMElement* childElement,
     std::string condition =
       dom2Std (childElement->getAttribute (conditionString));
     log << MSG::DEBUG 
-        << "Create FastControlInfo with condition : " << condition  << endreq;
+        << "Create FastControlInfo with condition : " << condition  << endmsg;
     dataObj->createFastControl(condition);
   } else if (0 == xercesc::XMLString::compareString(tagName, specificString)) {
     // this is the place where the user will put new elements he wants
@@ -359,7 +359,7 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (xercesc::DOMElement* childElement,
             dom2Std (((xercesc::DOMElement *) childNode)->getNodeName());
           log << MSG::WARNING << "parsing of specific child "
               << childNodeName << " raised errors."
-              << endreq;
+              << endmsg;
         }
       }
     }
@@ -422,7 +422,7 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (xercesc::DOMElement* childElement,
       }
       log << MSG::VERBOSE << "Added user parameter " << name << " with value "
           << value << ", type " << type << " and comment \"" << comment
-          << "\"" << endreq;
+          << "\"" << endmsg;
     } else {
       // we have a vector of parameters here
       // parses the value
@@ -458,7 +458,7 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (xercesc::DOMElement* childElement,
         log << *it2 << " ";
       }
       log << ", type " << type << " and comment \""
-          << comment << "\"." << endreq;
+          << comment << "\"." << endmsg;
       if ("int" == type) {
         dataObj->addParam(name,i_vect,comment);
       } else if ("double" == type) {
@@ -472,14 +472,14 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (xercesc::DOMElement* childElement,
 
     std::string name = dom2Std(childElement->getAttribute(nameString));
     std::string path = dom2Std(childElement->getAttribute(conditionString));
-    log << MSG::DEBUG << "Create SmartRef<Condition> : \"" << name << "\" -> " << path  << endreq;
+    log << MSG::DEBUG << "Create SmartRef<Condition> : \"" << name << "\" -> " << path  << endmsg;
     dataObj->createCondition(name,path);
 
   } else {
     // Something goes wrong, does it?
     char* tagNameString = xercesc::XMLString::transcode(tagName);
     log << MSG::WARNING << "This tag makes no sense to element : "
-        << tagNameString << endreq;
+        << tagNameString << endmsg;
     xercesc::XMLString::release(&tagNameString);
   }
 

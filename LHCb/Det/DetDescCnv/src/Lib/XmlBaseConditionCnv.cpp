@@ -1,4 +1,4 @@
-// $Id: XmlBaseConditionCnv.cpp,v 1.12 2009-01-23 12:57:27 cattanem Exp $
+// $Id: XmlBaseConditionCnv.cpp,v 1.13 2009-04-17 12:25:17 cattanem Exp $
 
 // include files
 #include "GaudiKernel/CnvFactory.h"
@@ -86,11 +86,11 @@ StatusCode XmlBaseConditionCnv::initialize() {
   StatusCode sc = XmlGenericCnv::initialize();
   if (sc.isSuccess()) {
     MsgStream log (msgSvc(), "XmlBaseConditionCnv");
-    log << MSG::VERBOSE << "Initializing converter for class ID " << classID() << endreq;
+    log << MSG::VERBOSE << "Initializing converter for class ID " << classID() << endmsg;
     if (0 != m_xmlSvc) {
       m_doGenericCnv = m_xmlSvc->allowGenericCnv();
       log << MSG::DEBUG << "Generic conversion status: "
-          << (unsigned int)m_doGenericCnv << endreq;
+          << (unsigned int)m_doGenericCnv << endmsg;
     }
   }
   return sc;
@@ -133,7 +133,7 @@ StatusCode XmlBaseConditionCnv::i_createObj (xercesc::DOMElement* /*element*/,
   MsgStream log(msgSvc(), "XmlBaseConditionCnv" );
   
   // creates an object for the node found
-  log << MSG::DEBUG << "Normal generic condition conversion" << endreq;
+  log << MSG::DEBUG << "Normal generic condition conversion" << endmsg;
   // const XMLCh* elementName = element->getAttribute(nameString);
   // Since the name is never used afterwars, we just don't pass it to
   // the condition object
@@ -176,7 +176,7 @@ StatusCode XmlBaseConditionCnv::i_fillObj (xercesc::DOMElement* childElement,
             ((xercesc::DOMElement*) childNode)->getNodeName();
           char* nameString = xercesc::XMLString::transcode(childNodeName);
           log << MSG::WARNING << "parsing of specific child "
-              << nameString << " raised errors." << endreq;
+              << nameString << " raised errors." << endmsg;
           xercesc::XMLString::release(&nameString);
         }
       }
@@ -215,7 +215,7 @@ StatusCode XmlBaseConditionCnv::i_fillObj (xercesc::DOMElement* childElement,
       // adds the new parameter to the detectorElement
       log << MSG::DEBUG << "Adding user parameter " << name << " with value "
           << value << ", type " << type << " and comment \"" << comment
-          << "\"" << endreq;
+          << "\"" << endmsg;
       if (type == "int") {
         dataObj->addParam<int>(name,(int)xmlSvc()->eval(value, false),comment);
       } else if(type == "double") {
@@ -258,7 +258,7 @@ StatusCode XmlBaseConditionCnv::i_fillObj (xercesc::DOMElement* childElement,
         log << *it2 << " ";
       }
       log << ", type " << type << " and comment \""
-          << comment << "\"." << endreq;
+          << comment << "\"." << endmsg;
       if ("int" == type) {
         dataObj->addParam(name,i_vect,comment);
       } else if ("double" == type) {
@@ -303,7 +303,7 @@ StatusCode XmlBaseConditionCnv::i_fillObj (xercesc::DOMElement* childElement,
     // Something goes wrong, does it?
     char* tagNameString = xercesc::XMLString::transcode(tagName);
     log << MSG::WARNING << "This tag makes no sense to element : "
-        << tagNameString << endreq;
+        << tagNameString << endmsg;
     xercesc::XMLString::release(&tagNameString);
   }
   // returns

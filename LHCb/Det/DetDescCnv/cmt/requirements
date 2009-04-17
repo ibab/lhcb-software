@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.41 2009-01-23 12:57:27 cattanem Exp $ 
+# $Id: requirements,v 1.42 2009-04-17 12:25:17 cattanem Exp $ 
 # =============================================================================
 package       DetDescCnv
-version       v4r8
+version       v4r9
 
 # =========== structure =======================================================
 branches      DetDescCnv doc cmt src
@@ -9,6 +9,8 @@ branches      DetDescCnv doc cmt src
 # =========== dependencies ====================================================
 use	DetDesc		v*	Det
 use	XmlTools	v*	Tools
+use     GaudiKernel     v*
+use     XercesC         v*      LCG_Interfaces
 
 # =========== own includes ====================================================
 apply_pattern	install_more_includes more=DetDescCnv

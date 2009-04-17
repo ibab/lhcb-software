@@ -1,4 +1,4 @@
-// $Id: XmlMixtureCnv.cpp,v 1.10 2008-05-20 08:19:25 smenzeme Exp $
+// $Id: XmlMixtureCnv.cpp,v 1.11 2009-04-17 12:25:18 cattanem Exp $
 // Include files
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/IOpaqueAddress.h"
@@ -170,7 +170,7 @@ StatusCode XmlMixtureCnv::i_fillObj (xercesc::DOMElement* childElement,
   
   // dispatches, based on the name
   if (0 == xercesc::XMLString::compareString(tabpropsString, tagName)) {
-    log << MSG::VERBOSE << "looking at tabprops" << endreq;
+    log << MSG::VERBOSE << "looking at tabprops" << endmsg;
     // if we have a tabprops element, adds it to the current object
     const std::string address =
       dom2Std (childElement->getAttribute (addressString));
@@ -202,12 +202,12 @@ StatusCode XmlMixtureCnv::i_fillObj (xercesc::DOMElement* childElement,
       if (0 != itemObj) {
         itemObj->release();
       }
-      log << MSG::ERROR << "Error retrieving material: " << entryName << endreq;
+      log << MSG::ERROR << "Error retrieving material: " << entryName << endmsg;
       return StatusCode::FAILURE;
     }
     log << MSG::VERBOSE << "Converter for " << address->par()[1]
         << " retrieved successfully " << ((Material *)itemObj)->name()
-        << endreq;
+        << endmsg;
     
     // Get now the natoms or fraction mass from the attributes
     // The default in the DTD is "-1" for both, so it can be used
@@ -217,7 +217,7 @@ StatusCode XmlMixtureCnv::i_fillObj (xercesc::DOMElement* childElement,
     std::string fract =
       dom2Std (childElement->getAttribute (fractionmassString));
     
-    log << MSG::VERBOSE << "MixMode has value " << m_mixMode << endreq;
+    log << MSG::VERBOSE << "MixMode has value " << m_mixMode << endmsg;
     if (m_mixMode == MM_undefined) {
       if (natom != "-1") {
         m_mixMode = MM_byNAtoms;
@@ -235,7 +235,7 @@ StatusCode XmlMixtureCnv::i_fillObj (xercesc::DOMElement* childElement,
       itemObj->release();
       log << MSG::VERBOSE
           << "XmlCnvException due to natoms/fractionmass inconsistency"
-          << endreq;
+          << endmsg;
       std::string msg = "Material references for material ";
       msg += address->par()[1];
       msg += " are not consistent.";
@@ -258,7 +258,7 @@ StatusCode XmlMixtureCnv::i_fillObj (xercesc::DOMElement* childElement,
       } else {
         log << MSG::VERBOSE
             << "XmlCnvException due clID inconsistency"
-            << endreq;
+            << endmsg;
         // This should not happen
         itemObj->release();
         StatusCode stcod;
@@ -276,7 +276,7 @@ StatusCode XmlMixtureCnv::i_fillObj (xercesc::DOMElement* childElement,
     // Something goes wrong, does it?
     char* tagNameString = xercesc::XMLString::transcode(tagName);
     log << MSG::WARNING << "This tag makes no sense to mixture : "
-        << tagNameString << endreq;
+        << tagNameString << endmsg;
     xercesc::XMLString::release(&tagNameString);
   }
   // returns
