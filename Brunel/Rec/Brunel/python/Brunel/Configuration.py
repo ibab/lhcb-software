@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.71 2009-04-15 16:42:07 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.72 2009-04-17 16:11:07 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -259,7 +259,8 @@ class Brunel(LHCbConfigurableUser):
         importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
 
         # By default, Brunel only needs to open one input file at a time
-        IODataManager().AgeLimit = 0
+        # Only set to zero if not previously set to something else.
+        if not IODataManager().isPropertySet("AgeLimit") : IODataManager().AgeLimit = 0
         
         if inputType in [ "DST", "RDST", "ETC" ]:
             # Kill knowledge of any previous Brunel processing

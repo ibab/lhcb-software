@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-04-17 - Chris Jones
+ - Only set IODataManager().AgeLimit = 0 if the option has not been previously 
+   set. Allows more user control over this setting.
+
 ! 2009-04-17 - Marco Cattaneo
  - Update references for 
    . fix in Rich StatusCode check in case of exceptions
