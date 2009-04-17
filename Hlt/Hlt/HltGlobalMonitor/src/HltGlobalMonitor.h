@@ -7,8 +7,6 @@
 
 #include "HltBase/HltBaseAlg.h"
 
-
-
 /** @class HltGlobalMonitor HltGlobalMonitor.h
  *
  *  functionality:
@@ -41,6 +39,10 @@ private:
   std::string m_L0DUReportLocation;
   std::string m_HltDecReportsLocation;
   std::vector<std::string>  m_Hlt1Lines;
+  typedef std::map< std::string, int >  m_DecToGroupType;
+  m_DecToGroupType m_DecToGroup;
+  typedef std::vector< std::string >  m_GroupLabelsType;
+  m_GroupLabelsType m_GroupLabels;
   
   int m_gpstimesec;
   longlong m_time;

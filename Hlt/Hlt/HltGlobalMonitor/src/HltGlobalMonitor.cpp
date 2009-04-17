@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.32 2009-04-03 12:12:04 graven Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.33 2009-04-17 11:48:17 snies Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -72,7 +72,8 @@ HltGlobalMonitor::HltGlobalMonitor( const std::string& name,
   declareProperty("ScanEvents",        m_scanevents = 2000 );
   declareProperty("TotalTime",         m_totaltime  = 2000 );
   declareProperty("TotalMemory",       m_totalmem   = 5000 );
-
+  declareProperty("DecToGroup",        m_DecToGroup);
+  declareProperty("GroupLabels",       m_GroupLabels);
 }
 //=============================================================================
 // Destructor
@@ -101,16 +102,12 @@ StatusCode HltGlobalMonitor::initialize() {
    if (!setBinLabels( m_odin, odinLabels )) {
     error() << "failed to set binlables on ODIN hist" << endmsg;
   }
-  
-  //TODO: grab alley names (and mapping) from job options, count instead of hardwiring 12..
+
+  // create a histogram with one bin per Alley
+  // the order and the names for the bins are
+  // configured in HLTConf/Configuration.py  
   m_hlt1alley       = book1D("Hlt1 Alleys", "Hlt1 Alleys", -0.5, 11.5 , 12 );
-  std::vector<std::string> alleyLabels = boost::assign::list_of<std::string> 
-                ( "L0" )( "XPress" )( "Hadron" )
-                ( "SingleMuon" )( "DiMuon" )( "MuonTrack" )
-                ( "Lumi" )( "Velo" )
-                ( "Electron" )( "Photon" )
-                ( "IgnoreLumi" )( "Global" );
-  if (!setBinLabels( m_hlt1alley, alleyLabels )) {
+  if (!setBinLabels( m_hlt1alley, m_GroupLabels )) {
     error() << "failed to set binlables on Alley hist" << endmsg;
   }
 
@@ -295,23 +292,18 @@ void HltGlobalMonitor::monitorHLT(const LHCb::ODIN*,
     }
   }
 
-  //TODO: move this into python configuration...
-  //      make a map once such that we do not do regex matches / searches every event...
-  const char *names[] = { "Hlt1L0.*Decision", "Hlt1.*XPress.*Decision", "Hlt1.*Hadron.*Decision",
-                          "Hlt1.*SingleMuon.*Decision", "Hlt1.*DiMuon.*Decision", "Hlt1.*MuonTrack.*Decision",
-                          "Hlt1.*Lumi.*Decision", "Hlt1.*Velo.*Decision",
-                          "Hlt1.*Electron.*Decision", "Hlt1.*Pho.*Decision",
-                          ".*IgnoreLumi.*", ".*Global.*",0 };
-
+  // m_DecToGroup is a mapping of a Decision to the BinNumber
+  // of the Group it should be accounted for
+  // Together with the BinLabels this is configured
+  // in HLTConf/Configuration.py
+  m_DecToGroupType::iterator end   = m_DecToGroup.end();
+  m_DecToGroupType::iterator found = m_DecToGroup.end();
   for(size_t j = 0; j < reps.size(); ++j) {
-    for (size_t i=0;names[i]!=0;++i) {
-        boost::regex exp( names[i] );
-        boost::smatch what;
-        if (boost::regex_match(reps[j].first,what,exp)) {
-            fill(m_hlt1alley, i, reps[j].second->decision());
-        }
+    found = m_DecToGroup.find(reps[j].first);
+    if (found != end) { 
+      fill(m_hlt1alley, found->second, reps[j].second->decision());
     }
-  }
+  }  
 }
 
 
