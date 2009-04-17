@@ -1,4 +1,4 @@
-// $Id: CopyParticle2MCRelations.h,v 1.3 2009-04-16 07:42:16 jpalac Exp $
+// $Id: CopyParticle2MCRelations.h,v 1.4 2009-04-17 20:53:23 jpalac Exp $
 #ifndef COPYPARTICLE2MCRELATIONS_H 
 #define COPYPARTICLE2MCRELATIONS_H 1
 
@@ -19,7 +19,7 @@
  *  defined by InputLocation, and are cloned and put in TES location 
  *  "/Event" + OutputPrefix + InputLocation. If InputLocation already contains
  *  a leading "/Event" it is removed.
- *  The associations are typically in a Particle2MCParticle::WTable in a TES 
+ *  The associations are typically in a Particle2MCParticle::Table in a TES 
  *  location like "/Event/Phys/SomeParticleMakingAlg/P2MCPRelations".
  *  The algorithm picks up this relations table, which relates LHCb::Particles
  *  from "/Event/Phys/SomaParticleMakingAlg/Particles" to LHCb::MCParticles.
@@ -28,12 +28,12 @@
  *  "/Event/MyLocation/Phys/SomeParticleMakerAlg/Particles", and clones the 
  *  associated LHCb::MCParticles. If the LHCb::MCParticle has not been 
  *  previously cloned, no association is cloned or stored. The algorithm
- *  constructs a new Particle2MCParticle::WTable relating the clones and 
+ *  constructs a new Particle2MCParticle::Table relating the clones and 
  *  stored it in a TES location as described above.
  *
  *  <b>Important conditions</b>: This algorithm relies on the LHCb::Particle
  *  set in the associations to have been previously cloned by CopyParticles,
- *  and the existence of the Particle2MCParticle::WTable associating the origin
+ *  and the existence of the Particle2MCParticle::Table associating the origin
  *  LHCb::Particles to LHCb::MCParticles
  *
  *  <b>Example</b>: Clone LHCb::Particle -> LHCb::MCParticle associations
@@ -51,24 +51,24 @@
  *  @date   2009-04-15
  */
 //=============================================================================
-template <> struct BindType2Cloner<Particle2MCParticle::WTable> 
+template <> struct BindType2Cloner<Particle2MCParticle::Table> 
 {
   typedef LHCb::MCParticle toType;
   typedef ICloneMCParticle toCloner;
 };
 //=============================================================================
-template<> struct Defaults<Particle2MCParticle::WTable>
+template<> struct Defaults<Particle2MCParticle::Table>
 {
   const static std::string clonerType;
 };
-const std::string Defaults<Particle2MCParticle::WTable>::clonerType = "MCParticleCloner";
+const std::string Defaults<Particle2MCParticle::Table>::clonerType = "MCParticleCloner";
 //=============================================================================
-template<> struct Location<Particle2MCParticle::WTable>
+template<> struct Location<Particle2MCParticle::Table>
 {
   const static std::string Default;
 };
-const std::string Location<Particle2MCParticle::WTable>::Default = "NO DEFAULT LOCATION";
+const std::string Location<Particle2MCParticle::Table>::Default = "NO DEFAULT LOCATION";
 //=============================================================================
-typedef MicroDST::RelationsClonerAlg<Particle2MCParticle::WTable> CopyParticle2MCRelations;
+typedef MicroDST::RelationsClonerAlg<Particle2MCParticle::Table> CopyParticle2MCRelations;
 DECLARE_NAMED_ALGORITHM_FACTORY( CopyParticle2MCRelations, CopyParticle2MCRelations )
 #endif // COPYPARTICLE2MCRELATIONS_H
