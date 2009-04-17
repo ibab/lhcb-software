@@ -1,4 +1,4 @@
-// $Id: Functors.hpp,v 1.5 2008-09-02 09:19:32 jpalac Exp $
+// $Id: Functors.hpp,v 1.6 2009-04-17 20:47:43 jpalac Exp $
 #ifndef MICRODST_FUNCTORS_HPP 
 #define MICRODST_FUNCTORS_HPP 1
 
@@ -99,6 +99,54 @@ namespace MicroDST {
     static T* copy(const T* item) { return item ? new T(*item) : 0; }
     static T* clone(const T* item) { return copy(item); }
   };
+
+//   template <class TABLE, class ENTRY_CLONER>
+//   struct RelationTableCloner
+//   {
+ 
+//     RelationTableCloner(const FromCloner& fromCloner,
+//                         const ToCloner& toCloner)
+//       :
+//       m_entryCloner(fromCloner, toCloner)
+//     {
+//     }
+    
+//     typename TABLE* operator(const typename TABLE* table) 
+//     {
+//       typedef typename BindType2Cloner<TABLE>::toType TO_TYPE;
+//       typedef typename boost::remove_pointer<typename TABLE::To>::type _To;
+//       typedef typename boost::remove_pointer<typename TABLE::From>::type _From;
+ 
+//      TABLE* cloneTable = new TABLE();
+
+//       typename TABLE::Range relations = table->relations();
+
+//       const EntryCloner<TABLE, typename Relations::Traits<TABLE>::Entry> entryCloner(this);
+
+//       for (typename TABLE::Range::const_iterator iRel = relations.begin();
+//            iRel != relations.end();
+//            ++iRel ) {
+//         const typename TABLE::From from = iRel->from();
+//         if (from) {
+//           typename TABLE::Range range = table->relations(from);
+//           for (typename TABLE::Range::const_iterator iRange = range.begin();
+//                iRange != range.end();
+//                ++iRange) {
+//             entryCloner(*iRange, cloneTable);
+//           } // loop on related Tos
+//         } // if From* found
+//       } // loop on all relations
+  
+//       return cloneTable;
+
+//     }
+//   private:
+//     ToCloner m_toCloner;
+//     FromCloner m_fromCloner;
+//   };
+
+
+  //===========================================================================
 
 
 }
