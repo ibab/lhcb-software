@@ -16,11 +16,10 @@ DeBcmSens::~DeBcmSens()
 
 StatusCode DeBcmSens::initialize()
 {
-  MsgStream msg( msgSvc(), name() );
-
   StatusCode sc = DetectorElement::initialize();
   if( sc.isFailure() ) {
-    msg << MSG::ERROR << "Failure to initialize DetectorElement" << endreq;
+    MsgStream msg( msgSvc(), name() );
+    msg << MSG::ERROR << "Failure to initialize DetectorElement" << endmsg;
     return sc ;
   }
 
