@@ -1,4 +1,4 @@
-// $Id: CaloExtraDigits.cpp,v 1.14 2009-04-16 16:10:11 odescham Exp $
+// $Id: CaloExtraDigits.cpp,v 1.15 2009-04-17 11:44:53 odescham Exp $
 // ============================================================================
 // Include files
 // STL 
@@ -70,11 +70,11 @@ return (*this) ( hypo );
 StatusCode CaloExtraDigits::operator() ( LHCb::CaloHypo* hypo  ) const{  
   if( 0 == hypo        ) { return Error("CaloHypo* points to NULL!" , 200 ) ; }
 
-  for(std::vector<std::string>::const_iterator idet = m_toDet.begin(); idet!=m_toDet.end();idet++){
+  for(std::map<std::string,ICaloHypo2Calo*>::const_iterator idet = m_toCalo.begin(); idet!=m_toCalo.end();idet++){
+    ICaloHypo2Calo* tool = (*idet).second;
+    std::string toCalo = (*idet).first;
     int count = 0;
-    std::map<std::string,ICaloHypo2Calo*>::const_iterator itoCalo = m_toCalo.find(*idet);
-    if(itoCalo == m_toCalo.end())continue;
-    const std::vector<LHCb::CaloDigit*>& digits = ((*itoCalo).second)->digits( *hypo, *idet);
+    const std::vector<LHCb::CaloDigit*>& digits = tool->digits( *hypo, toCalo);
     for(std::vector<LHCb::CaloDigit*>::const_iterator id = digits.begin() ; id != digits.end(); id++){
       hypo->addToDigits( *id );
       count++;

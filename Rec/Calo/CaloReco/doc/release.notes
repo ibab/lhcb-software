@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.136 2009-04-16 13:04:03 odescham Exp $
+! $Id: release.notes,v 1.137 2009-04-17 11:44:53 odescham Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
+
+! 2008-04-17 - Olivier Deschamps
+ - new alg  CaloGetterInit : create a public instance of CaloGetterTool (from CaloTools) and process the event-update
+ - Brunel.opts/HltCaloSeq.opts : add CaloGetterInit in the reconstruction sequence to have fast access to CaloDigits
 
 ! 2009-04-16 - Olivier Deschamps
  - fix minor bug in HltClusterSelection.opts + adapt to change in CaloTools

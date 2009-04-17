@@ -8,7 +8,7 @@
 
 
 /// hypo tools 
-HltSinglePhotonRec.HypoTools          = { "CaloExtraDigits/SpdPrsExtraG"              } ;
+HltSinglePhotonRec.HypoTools          = { "CaloExtraDigits/SpdPrsExtraG"     } ;
 HltSinglePhotonRec.CorrectionTools2   = { "CaloECorrection/ECorrection"      } ;
 HltSinglePhotonRec.CorrectionTools2  += { "CaloSCorrection/SCorrection"      } ;
 HltSinglePhotonRec.CorrectionTools2  += { "CaloLCorrection/LCorrection"      } ;

@@ -7,15 +7,22 @@
 //ApplicationMgr.TopAlg += {"GaudiSequencer/HltRecoCaloSeq"};
 
 HltRecoCALOSeq.Context = "HLT";
+ToolSvc.CaloGetter.Context = "HLT";
 
 // The main stream 
 // almost the same as in Brunel : just change the instance name and the default locations + CaloDigits on-Demand
 #include "$CALODAQROOT/options/CaloDigitsOnDemand.opts"
-HltRecoCALOSeq.Members +=     { 	"GaudiSequencer/HltCaloClusters",
+
+HltRecoCALOSeq.Members +=     { 	"CaloGetterInit/CaloDigitGetter",
+                                  "GaudiSequencer/HltCaloClusters",
                                   "GaudiSequencer/HltCaloTrackMatch" ,
                                   "GaudiSequencer/HltCaloRec",
                                   "GaudiSequencer/HltCaloPIDs" };
 
+CaloDigits.Members = {  "CaloZSupAlg/EcalZSup",                 
+                        "CaloZSupAlg/HcalZSup",                  
+                        "CaloDigitsFromRaw/PrsFromRaw",        
+                        "CaloDigitsFromRaw/SpdFromRaw"};
 
 //------ Clusterize, clean & compute cluster parameters 
 HltCaloClusters.Members += { "CellularAutomatonAlg/EcalHltClust",
@@ -44,7 +51,8 @@ HltCaloAcceptance.Members = { "InSpdAcceptanceAlg/HltInSPD" ,
 HltCaloRec.Members += {"CaloMergedPi0Alg/HltMergedPi0Rec", 
                        "CaloHypoAlg/HltPhotonFromMergedRec",
                        "CaloSinglePhotonAlg/HltSinglePhotonRec",
-                       "CaloElectronAlg/HltElectronRec"};
+                       "CaloElectronAlg/HltElectronRec"
+};
 
 
 #include "$CALORECOOPTS/HltClusterSelection.opts" 
