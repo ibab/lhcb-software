@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.39 2008-12-10 09:57:07 cattanem Exp $
+# $Id: requirements,v 1.40 2009-04-17 11:41:29 odescham Exp $
 # =============================================================================
 package           CaloInterfaces
 version           v7r9
@@ -9,6 +9,7 @@ branches          cmt doc CaloInterfaces
 # =============== dependencies ================================================
 use GaudiKernel     v*
 use LHCbKernel      v*    Kernel
+use DigiEvent       v*    Event
 use RecEvent        v*    Event
 use PhysEvent       v*    Event
 use CaloDet         v*    Det
